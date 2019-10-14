@@ -1,0 +1,18 @@
+<?php
+/**
+ * Piwik - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ *
+ */
+namespace Piwik\Plugins\Referrers\Columns;
+
+use Piwik\Columns\Dimension;
+use Piwik\Piwik;
+
+class SearchEngine extends Dimension
+{
+    protected $type = self::TYPE_TEXT;
+    protected $nameSingular = 'Referrers_ColumnSearchEngine';
+}

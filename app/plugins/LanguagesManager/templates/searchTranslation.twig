@@ -1,0 +1,11 @@
+{% extends 'admin.twig' %}
+
+{% set title %}{{ 'LanguagesManager_TranslationSearch'|translate }}{% endset %}
+
+{% block content %}
+
+    <div piwik-content-block content-title="{{ title|e('html_attr') }}" feature="true">
+        <div piwik-translation-search></div>
+    </div>
+
+{% endblock %}

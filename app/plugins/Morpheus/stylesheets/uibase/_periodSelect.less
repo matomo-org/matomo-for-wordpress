@@ -1,0 +1,79 @@
+#periodString {
+  display: block;
+  color: @theme-color-text-light;
+  font-size: 14px;
+  border: 1px solid #e4e5e4;
+  float: left;
+  margin-right: 10px;
+  position: absolute;
+  z-index: 122; /* must be higher than segmentEditor z-index */
+  background-color: #f7f7f7;
+}
+
+#ajaxLoadingCalendar {
+  white-space: nowrap;
+}
+
+#periodString:hover {
+  background-color: #f1f0eb;
+  border-color: #a9a399;
+}
+
+#periodString td {
+  vertical-align: top;
+  border-radius: 0;
+}
+
+#periodString {
+  .ui-widget-header,
+  .ui-datepicker {
+    &.ui-helper-clearfix::before,
+ &.ui-helper-clearfix::after {
+      display: inline;
+      clear: none;
+      content: none !important;
+    }
+  }
+}
+
+#periodString .calendar-icon {
+  width: 13px;
+  height: 15px;
+  display: inline-block;
+  position: absolute;
+  right: 19px;
+  top: 9px;
+  background: url("plugins/Morpheus/images/icon-calendar.png") no-repeat scroll;
+  cursor: pointer;
+}
+
+#periodString strong {
+  color: #255792;
+}
+
+#periodString h6 {
+  font-size: 14px;
+  padding: 0 0 4px 0;
+}
+
+#periodMore {
+  overflow: hidden;
+}
+
+#periodString .period-date,
+#periodString .period-range {
+  padding: 0 16px 0 0;
+}
+
+#periodString .period-type {
+  padding: 0;
+}
+
+#periodString .period-type label {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+#periodString label.selected-period-label {
+  text-decoration: underline;
+}

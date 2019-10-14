@@ -1,0 +1,89 @@
+parameters:
+    git_dir: .
+    bin_dir: vendor/bin
+    ascii:
+        failed: ~
+        succeeded: ~
+    tasks:
+        composer:
+            file: ./composer.json
+            no_check_all: false
+            no_check_lock: false
+            no_check_publish: false
+            no_local_repository: false
+            with_dependencies: false
+            strict: false
+        jsonlint:
+            ignore_patterns: []
+            detect_key_conflicts: false
+        phpcpd:
+            directory: '.'
+            exclude: ['vendor']
+            names_exclude: []
+            fuzzy: false
+            min_lines: 5
+            min_tokens: 70
+            triggered_by: ['php']
+        phpcsfixer2:
+            allow_risky: true
+            cache_file: ~
+            config: .php_cs
+            rules: []
+            using_cache: false
+            config_contains_finder: true
+            verbose: true
+            diff: false
+            triggered_by: ['php']
+        php_cs_auto_fixerv2:
+            allow_risky: true
+            cache_file: ~
+            config: .php_cs
+            rules: []
+            using_cache: true
+            verbose: true
+            diff: false
+            triggered_by: ['php']
+            metadata:
+                priority: 1
+                blocking: false
+        phpcs:
+            standard: 'PSR2'
+            show_warnings: true
+            tab_width: 4
+            whitelist_patterns: []
+            encoding: ~
+            ignore_patterns: ['\/tests\/']
+            sniffs: []
+            triggered_by: ['php']
+        phplint:
+            exclude: []
+            jobs: ~
+            triggered_by: ['php']
+        phpmnd:
+            directory: .
+            exclude: []
+            exclude_name: []
+            exclude_path: []
+            extensions: []
+            hint: false
+            ignore_numbers: []
+            ignore_strings: []
+            strings: false
+            triggered_by: ['php']
+        phpunit:
+            config_file: ~
+            testsuite: ~
+            group: []
+            always_execute: false
+        securitychecker:
+            lockfile: ./composer.lock
+            format: ~
+            end_point: ~
+            timeout: ~
+            run_always: false
+        yamllint:
+            ignore_patterns: []
+            object_support: false
+            exception_on_invalid_type: false
+    extensions:
+            - Wearejust\GrumPHPExtra\Extension\Loader

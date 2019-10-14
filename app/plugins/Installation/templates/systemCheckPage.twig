@@ -1,0 +1,29 @@
+{% extends 'admin.twig' %}
+
+{% set title %}{{ 'Installation_SystemCheck'|translate }}{% endset %}
+
+{% block content %}
+
+    <div piwik-content-block content-title="{{ title|e('html_attr') }}" feature="true">
+
+        {% if diagnosticReport.hasErrors() %}
+            <div class="alert alert-danger">
+                {{ 'Installation_SystemCheckSummaryThereWereErrors'|translate('<strong>','</strong>','<strong>','</strong>')|raw }}
+                {{ 'Installation_SeeBelowForMoreInfo'|translate }}
+            </div>
+        {% elseif diagnosticReport.hasWarnings() %}
+            <div class="alert alert-warning">
+                {{ 'Installation_SystemCheckSummaryThereWereWarnings'|translate }}
+                {{ 'Installation_SeeBelowForMoreInfo'|translate }}
+            </div>
+        {% else %}
+            <div class="alert alert-success">
+                {{ 'Installation_SystemCheckSummaryNoProblems'|translate }}
+            </div>
+        {% endif %}
+
+            {% include "@Installation/_systemCheckSection.twig" %}
+    </div>
+
+
+{% endblock %}

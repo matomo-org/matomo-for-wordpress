@@ -1,0 +1,54 @@
+.matomo-tracking-form th {
+    width: 30%;
+}
+
+.matomo-tracking-form th {
+    width: 30%;
+}
+
+ul.matomo-list {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+ol.matomo-list {
+    list-style-type: decimal;
+    margin-left: 20px;
+}
+
+.matomo-blockquote {
+    margin: .5em 10px;
+    border-left: 4px solid #ccc;
+    padding-left: 10px;
+    font-weight: bold;
+}
+.matomo-footer {
+    margin-top: 48px;
+    text-align: center;
+}
+
+.matomo-footer ul {
+    list-style: none;
+      padding: 0 0 0 20px;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.matomo-footer ul li {
+    display: inline-block;
+    margin: 0 20px 10px;
+}
+
+.matomo-footer ul a {
+    color: #37474f;
+}
+.matomo-systemreport .widefat .warning td {
+    color: orange;
+}
+
+.matomo-systemreport .widefat .error td {
+    color: red;
+}
+
+.matomo-systemreport .widefat .section {
+    font-weight: bold;
+}

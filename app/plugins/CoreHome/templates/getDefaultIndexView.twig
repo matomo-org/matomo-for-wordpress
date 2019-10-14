@@ -1,0 +1,23 @@
+{% extends "dashboard.twig" %}
+{% import 'ajaxMacros.twig' as ajax %}
+
+{% block topcontrols %}
+    {% include "@CoreHome/_siteSelectHeader.twig" %}
+    {% include "@CoreHome/_periodSelect.twig" %}
+    {{ postEvent("Template.nextToCalendar") }}
+    {% render dashboardSettingsControl %}
+    {% include "@CoreHome/_headerMessage.twig" %}
+{% endblock %}
+
+{% block content %}
+    {{ ajax.requestErrorDiv(emailSuperUser|default(''), areAdsForProfessionalServicesEnabled, currentModule) }}
+    {{ ajax.loadingDiv() }}
+
+    <div id="content" class="home">
+        {% if content %}{{ content }}{% endif %}
+        <div piwik-reporting-page ng-cloak></div>
+    </div>
+    <div class="clear"></div>
+
+{% endblock %}
+

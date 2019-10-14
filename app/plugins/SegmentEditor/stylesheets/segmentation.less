@@ -1,0 +1,513 @@
+/* ADDITIONAL STYLES*/
+.youMustBeLoggedIn {
+    font-size: 8pt;
+    font-style: italic;
+
+}
+
+.searchFound {
+    border: 0px solid red;
+}
+
+.others {
+    border: 0px solid green;
+}
+
+.clear {
+    clear: both;
+}
+
+.segment-row-inputs {
+    margin-bottom: 5px;
+}
+
+.hovered {
+    border-radius: 4px;
+    border: 2px dashed #000 !important;
+    padding: 0px;
+}
+
+.metricListBlock {
+    border-radius: 4px;
+    width: 292px;
+    margin-right: 11px;
+    border: 2px dashed #EFEFEB;
+}
+
+.metricListBlock > select {
+    margin: 0 !important;
+    width: 98% !important;
+    margin-left: 2px !important;
+}
+
+.metricMatchBlock {
+    margin-right: 11px;
+}
+
+.metricValueBlock {
+    width: 500px;
+}
+
+div.scrollable {
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.no_results {
+    position: absolute;
+    margin: -225px 0 0 10px;
+}
+
+.segment-element {
+    border: 1px solid #a9a399;
+    background-color: #f1f0eb;
+    padding: 6px 4px;
+    border-radius: 3px;
+    position: absolute;
+    left: -1px;
+    top: 37px;
+}
+
+.segment-element .custom_select_search {
+    width: 146px;
+    background: url(plugins/SegmentEditor/images/bg-segment-search.png) 0 10px no-repeat;
+    padding: 10px 0 0 0;
+    margin: 0 0 10px 15px;
+    position: relative;
+    height: 32px;
+}
+
+.segment-element .custom_select_search input[type="text"] {
+    font-size: 11px !important;
+    color: #454545 !important;
+    width: 125px;
+    padding: 0 0 3px 7px !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: none !important;
+}
+
+.segment-element .custom_select_search a {
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    right: 5px;
+    top: 14px;
+    background: url(plugins/SegmentEditor/images/reset_search.png);
+}
+
+.segment-element .segment-content {
+    min-height: 300px;
+    padding: 0 0 20px 0;
+}
+
+.segment-element .segment-content h3 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #505050;
+    margin: 0 0 0 0;
+    text-shadow: 0 1px 0 #fff;
+}
+
+.segment-element .segment-content h3 a {
+    font-size: 11px;
+    text-decoration: none;
+    margin: -1px 0 0 0;
+}
+
+.segment-element .edit_segment_name {
+    width: 200px;
+}
+
+
+.segment-element .segment-top {
+    font-size: 11px;
+    color: #505050;
+    text-align: right;
+    padding: 3px 7px 0 0;
+}
+
+.segment-element .segment-top a {
+    text-decoration: none;
+}
+
+.segment-element .segment-footer {
+    background: #eae8e3;
+    border-top: 1px solid @theme-color-background-tinyContrast;
+    text-align: right;
+    padding: 7px 10px;
+    margin: 0 -4px -6px -4px;
+}
+
+.segment-element .segment-footer a.delete {
+    color: red;
+}
+
+.segment-element .segment-footer a {
+    font-size: 14px;
+    color: #255792;
+    margin: 0 5px;
+    text-decoration: none;
+}
+
+.segment-element .segment-footer button {
+    margin: 0 0 0 15px;
+}
+
+.segmentEditorPanel {
+    display: inline-block;
+    position: relative;
+    z-index: 121; /* Should be bigger than 'Dashboard widget selector' (z-index: 120) */
+    background: #f7f7f7;
+    border: 1px solid #e4e5e4;
+    margin-right: 10px;
+    border-radius: 4px;
+
+    .segmentListContainer {
+        line-height: 14px;
+    }
+}
+
+.top_controls .segmentEditorPanel {
+    position: absolute;
+}
+
+.segmentEditorPanel:hover {
+    background: #f1f0eb;
+    border-color: #a9a399;
+}
+
+.segmentationContainer > span > strong {
+    color: #255792;
+}
+
+.segmentationContainer .submenu {
+    font-size: 13px;
+    min-width: 206px;
+}
+
+.segmentationContainer .submenu ul {
+    color: @theme-color-text-light;
+    float: none;
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 20px;
+    list-style: none outside none;
+    margin-right: 0;
+    padding-top: 10px;
+}
+
+
+
+.segmentationContainer .submenu ul li {
+    padding: 2px 0 1px 0;
+    margin: 3px 0 0 0;
+    cursor: pointer;
+}
+
+.segmentationContainer .submenu ul li:hover {
+    color: #255792;
+    background: @color-silver-l95;
+}
+
+.segmentationContainer ul.submenu {
+    padding-top: 5px;
+    display: none;
+    margin-bottom: 5px;
+}
+
+.segmentationContainer ul.submenu > li span.editSegment {
+    display: block;
+    float: right;
+    text-align: center;
+    margin-right: 4px;
+    font-weight: normal;
+    background: url(plugins/SegmentEditor/images/edit_segment.png) no-repeat;
+    width: 16px;
+    height: 16px;
+    .opacity(0.5);
+
+    &:hover {
+        .opacity(1);
+    }
+}
+
+.segmentEditorPanel.expanded .segmentationContainer {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    .dropdown-body {
+        width: 240px;
+    }
+}
+
+.segmentEditorPanel.expanded ul.submenu {
+    display: inline-block;
+    list-style: none;
+}
+
+.segmentFilterContainer {
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.segmentEditorPanel.expanded .segmentFilterContainer > input[type="text"] {
+    font-size: 11px;
+    width: 206px;
+    padding: 0;
+    border: 1px solid #d0d0d0;
+    border-width: 1px;
+    color: #999;
+    padding: 7px 10px 7px 10px;
+}
+
+.segmentEditorPanel.expanded .segmentFilterContainer > span {
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    right: 23px;
+    top: 24px;
+    cursor: pointer;
+}
+
+.segmentEditorPanel.expanded .segmentFilterContainer:hover > span {
+    background: url(plugins/SegmentEditor/images/reset_search.png);
+}
+
+.segmentEditorPanel.expanded .filterNoResults {
+    font-style: italic;
+}
+
+.segmentEditorPanel.expanded .add_new_segment {
+    width: 100%;
+    margin: 16px 0 8px 0;
+    height: auto;
+    min-height: 36px;
+}
+
+.segmentationContainer > ul.submenu > li {
+    padding: 5px 0;
+    clear: both;
+    cursor: pointer;
+}
+
+.segmentList {
+    max-height: 300px;
+    margin-top: 5px;
+}
+
+.segmentListContainer {
+    overflow: hidden; /* Create a BFC */
+}
+
+.jspVerticalBar {
+    background: transparent !important;
+}
+
+/* ADDITIONAL STYLES*/
+body > a.ddmetric {
+    display: block;
+    cursor: move;
+    padding: 1px 0 2px 18px;
+    background: #eae8e3 url(plugins/SegmentEditor/images/segment-move.png) 100% 50% no-repeat;
+    color: @theme-color-text-light;
+    font-weight: normal;
+    font-size: 11px;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #fff;
+    border: 1px solid #cfccbd;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #7c7a72;
+}
+
+.segment-element .segment-nav div > ul > li ul {
+    margin-left: 0;
+}
+
+.segment-element .segment-nav div > ul > li li a,
+.segment-element .segment-nav div > ul > li li a:hover {
+    padding-right: 18px;
+}
+
+.hovered {
+    border-color: #a0a0a0 !important;
+}
+
+a.metric_category {
+    display: block;
+    width: 100%;
+}
+
+.segment-content > h3 {
+    padding-bottom: 7px;
+}
+
+.no_results {
+    margin: 0;
+    position: relative;
+}
+
+.no_results a {
+    cursor: default;
+}
+
+.ui-widget-segmentation {
+    border: 1px solid #D4D4D4 !important;
+}
+
+.clearfix {
+    zoom: 1;
+}
+
+.clearfix:after {
+    display: block;
+    visibility: hidden;
+    height: 0;
+    clear: both;
+    content: ".";
+}
+
+.metricValueBlock input {
+    padding: 8px !important;
+}
+
+.segmentationContainer {
+    z-index: 120;
+}
+
+.segment-element {
+    z-index: 999;
+    width: 908px;
+}
+
+.segmentationSelectorContainer {
+    margin: 8px;
+}
+
+.segmentSelected, .segmentSelected:hover, .segmentEditorPanel .segmentationContainer .submenu li .segmentSelected {
+    font-weight: bold;
+}
+
+.ui-autocomplete {
+    position: absolute;
+    cursor: default;
+    z-index: 1000 !important;
+}
+
+.ui-autocomplete.ui-menu.ui-widget {
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.2), 0 1px 5px 0 rgba(0,0,0,0.12);
+}
+
+@media all and (max-width: 749px) {
+    span.segmentationTitle,
+    .segmentEditorPanel.expanded .segmentationContainer {
+        width: auto;
+    }
+}
+
+.segment-definition-change-confirm .description {
+    margin-top: 20px;
+    float: left;
+    width: 100%;
+    text-align: center;
+
+    > span {
+        display: inline-block;
+    }
+}
+
+.dropdown-body {
+    border-top-width: 0;
+    display: none;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.segmentEditorPanel.expanded .dropdown-body {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.segmentEditorPanel.expanded {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.segment-element.anchorRight {
+    right: -1px;
+    left: auto;
+}
+
+.segmentationTitle,
+.segment-element .segment-nav a.dropdown,
+.segname {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.segment-element .segment-nav a.dropdown {
+    max-width: 180px;
+}
+
+.segname {
+    max-width: 145px;
+}
+
+.segmentEditorPanel .segmentationTitle {
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: top;
+    max-width: 170px;
+}
+
+.segment-clicked {
+    font-weight: bold;
+}
+
+.segmentEditorPanel.expanded a.title {
+    padding-bottom: 10px;
+}
+
+.segment-element .segment-nav a.dropdown,
+.segname {
+    display: inline-block;
+}
+
+.segment-element .segment-nav a.dropdown,
+.segment-element .segment-top a.dropdown {
+    padding: 0 17px 0 0;
+    background: none !important;
+}
+
+.segment-element .segment-nav a.dropdown {
+    background: url("plugins/Morpheus/images/sort_subtable_desc.png") no-repeat scroll 100% -2px transparent !important;
+}
+
+.segment-element .segment-top a.dropdown:after {
+    content: " \25BC";
+    font-size: 0px;
+    color: @theme-color-brand;
+    border-left: 4px solid rgba(0, 0, 0, 0);
+    border-right: 4px solid rgba(0, 0, 0, 0);
+    border-top: 5px solid @theme-color-brand;
+    margin-left: 7px;
+    display: inline-block;
+    vertical-align: sub;
+}
+
+.segmentsVisibleToSuperUser, .segmentsSharedWithMeBySuperUser {
+    font-style: italic;
+
+    li {
+        font-style: normal;
+    }
+}
+
+.segment-element .segment-footer a.delete {
+    color: #d4291f !important;
+}
+
+.segment-element .segment-footer a {
+    color: @theme-color-link !important;
+}

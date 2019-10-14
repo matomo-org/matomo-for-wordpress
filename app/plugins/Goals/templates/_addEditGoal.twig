@@ -1,0 +1,34 @@
+
+{% import 'ajaxMacros.twig' as ajax %}
+{{ ajax.errorDiv() }}
+
+<script type="text/javascript">
+    {% if userCanEditGoals %}
+        {% if onlyShowAddNewGoal is not defined %}
+            piwik.goals = {{ goalsJSON|raw }};
+        {% endif %}
+    {% else %}
+        piwik.goals = {{ goalsJSON|raw }};
+    {% endif %}
+
+</script>
+
+<div piwik-manage-goals
+        {% if userCanEditGoals %}
+            {% if onlyShowAddNewGoal is not defined %}
+                {% if idGoal %}
+                    show-goal="{{ idGoal|e('js') }}"
+                {% endif %}
+            {% else %}
+                show-add-goal="true"
+            {% endif %}
+        {% endif %}>
+
+    {% if onlyShowAddNewGoal is not defined %}
+        {% include "@Goals/_listGoalEdit.twig" %}
+    {% endif %}
+    {% if userCanEditGoals %}
+        {% include "@Goals/_formAddGoal.twig" %}
+    {% endif %}
+    <a id='bottom'></a>
+</div>

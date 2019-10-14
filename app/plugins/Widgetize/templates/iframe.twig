@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html id="ng-app" ng-app="piwikApp">
+    <head>
+        <meta charset="utf-8">
+        <meta name="robots" content="noindex,nofollow">
+        <meta name="google" content="notranslate">
+        {% include "_jsGlobalVariables.twig" %}
+
+        {% include "_jsCssIncludes.twig" %}
+    </head>
+    <body ng-app="app" class="widgetized">
+        <div piwik-popover-handler></div>
+        <div class="widget">
+            {{ content|raw }}
+        </div>
+        <div id="pageFooter">
+            {{ postEvent('Template.pageFooter') }}
+        </div>
+    </body>
+</html>

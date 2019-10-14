@@ -1,0 +1,34 @@
+{% extends 'admin.twig' %}
+
+{% set title %}{{ 'API_ReportingApiReference'|translate }}{% endset %}
+
+{% block topcontrols %}
+    {% include "@CoreHome/_siteSelectHeader.twig" %}
+    {% include "@CoreHome/_periodSelect.twig" %}
+{% endblock %}
+
+{% block content %}
+
+<div class="api-list">
+    <div piwik-content-block content-title="{{ title }}" rate="true">
+        <p>{{ 'API_PluginDescription'|translate }}</p>
+
+        <p>
+            {{ 'API_MoreInformation'|translate("<a target='_blank' rel='noreferrer noopener' href='https://matomo.org/docs/analytics-api'>","</a>","<a target='_blank' rel='noreferrer' href='https://matomo.org/docs/analytics-api/reference'>","</a>")|raw }}
+        </p>
+    </div>
+    <div piwik-content-block content-title="{{ 'API_UserAuthentication'|translate|e('html_attr') }}">
+        <p>
+            {{ 'API_UsingTokenAuth'|translate('','',"")|raw }}<br/>
+            <pre piwik-select-on-focus id='token_auth'>&amp;token_auth=<strong piwik-show-sensitive-data="{{ token_auth }}" data-click-element-selector="#token_auth"></strong></pre><br/>
+            {{ 'API_KeepTokenSecret'|translate('<b>','</b>')|raw }}<br />
+            {{ 'API_ChangeTokenHint'|translate('<a href="' ~ linkTo({
+                'module': 'UsersManager',
+                'action': 'userSettings',
+            }) ~ '">', '</a>')|raw }}
+        </p>
+    </div>
+    {{ list_api_methods_with_links|raw }}
+    <br/>
+</div>
+{% endblock %}
