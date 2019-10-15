@@ -1,4 +1,4 @@
-VERSION="$1"
+#!/usr/bin/env bash
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 MATOMO_ROOT="$SCRIPTPATH/../app/";
