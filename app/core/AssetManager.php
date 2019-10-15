@@ -313,7 +313,7 @@ class AssetManager extends Singleton
      * @param UIAssetFetcher $assetFetcher
      * @return string
      */
-    private function getIndividualJsIncludesFromAssetFetcher($assetFetcher)
+    protected function getIndividualJsIncludesFromAssetFetcher($assetFetcher)
     {
         $jsIncludeString = '';
 
@@ -332,7 +332,7 @@ class AssetManager extends Singleton
         return new JScriptUIAssetFetcher($this->getLoadedPlugins(true), $this->theme);
     }
 
-    private function getNonCoreJScriptFetcher()
+    protected function getNonCoreJScriptFetcher()
     {
         return new JScriptUIAssetFetcher($this->getLoadedPlugins(false), $this->theme);
     }
@@ -398,7 +398,7 @@ class AssetManager extends Singleton
     /**
      * @return UIAsset
      */
-    private function getMergedNonCoreJSAsset()
+    protected function getMergedNonCoreJSAsset()
     {
         return $this->getMergedUIAsset(self::MERGED_NON_CORE_JS_FILE);
     }

@@ -58,9 +58,14 @@ class WpAssetManager extends AssetManager
 		}
 
 		$result .= "<script type=\"text/javascript\">window.$ = jQuery;</script>";
-
 		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, self::GET_CORE_JS_MODULE_ACTION);
-		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, self::GET_NON_CORE_JS_MODULE_ACTION);
+
+		if ($this->isMergedAssetsDisabled()) {
+			$this->getMergedNonCoreJSAsset()->delete();
+			$result .= $this->getIndividualJsIncludesFromAssetFetcher($this->getNonCoreJScriptFetcher());
+		} else {
+			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, self::GET_NON_CORE_JS_MODULE_ACTION);
+		}
 
 		return $result;
 	}
