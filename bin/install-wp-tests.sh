@@ -18,11 +18,11 @@ WP_TESTS_DIR=${WP_TESTS_DIR-$TMPDIR/wordpress-tests-lib}
 WP_CORE_DIR=${WP_CORE_DIR-$TMPDIR/wordpress/}
 
 download() {
-    if [ `which curl` ]; then
-        curl -s "$1" > "$2";
-    elif [ `which wget` ]; then
-        wget -nv -O "$2" "$1"
-    fi
+	if [ `which curl` ]; then
+		curl -s "$1" > "$2";
+	elif [ `which wget` ]; then
+		wget -nv -O "$2" "$1"
+	fi
 }
 
 if [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+\-(beta|RC)[0-9]+$ ]]; then
@@ -74,9 +74,9 @@ install_wp() {
 				LATEST_VERSION=${WP_VERSION%??}
 			else
 				# otherwise, scan the releases and get the most up to date minor version of the major release
-  			# https serves multiple offers, whereas http serves single.
-  			download https://api.wordpress.org/core/version-check/1.7/ $TMPDIR/wp-latest.json
-        LATEST_VERSION=$(jq -r ".offers[0]".version < /tmp/wp-latest.json)
+				# https serves multiple offers, whereas http serves single.
+				download https://api.wordpress.org/core/version-check/1.7/ $TMPDIR/wp-latest.json
+				LATEST_VERSION=$(jq -r ".offers[0]".version < /tmp/wp-latest.json)
 			fi
 			if [[ -z "$LATEST_VERSION" ]]; then
 				local ARCHIVE_NAME="wordpress-$WP_VERSION"
