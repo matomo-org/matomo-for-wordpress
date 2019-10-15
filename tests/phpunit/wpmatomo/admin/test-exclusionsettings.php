@@ -7,7 +7,7 @@ use Piwik\Plugins\SitesManager\API;
 use WpMatomo\Admin\ExclusionSettings;
 use WpMatomo\Capabilities;
 
-class AdminPrivacySettingsTest extends MatomoAnalytics_TestCase {
+class AdminExclusionSettingsTest extends MatomoAnalytics_TestCase {
 
 	/**
 	 * @var ExclusionSettings
