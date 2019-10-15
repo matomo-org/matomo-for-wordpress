@@ -92,4 +92,12 @@ class Bootstrap {
 		$bootstrap = new Bootstrap();
 		$bootstrap->bootstrap();
 	}
+
+	public static function autoload_matomo() {
+		require_once plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'app/vendor/autoload.php';
+
+		if (!empty($GLOBALS['MATOMO_PLUGIN_DIRS'])) {
+			\Piwik\Plugin\Manager::registerPluginDirAutoload($GLOBALS['MATOMO_PLUGIN_DIRS']);
+		}
+	}
 }
