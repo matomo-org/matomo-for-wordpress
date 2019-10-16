@@ -35,8 +35,6 @@ use Piwik\Theme;
 use Piwik\Translation\Translator;
 use Piwik\Updater;
 
-require_once PIWIK_INCLUDE_PATH . '/core/EventDispatcher.php';
-
 /**
  * The singleton that manages plugin loading/unloading and installation/uninstallation.
  */
