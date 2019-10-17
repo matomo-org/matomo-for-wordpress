@@ -46,7 +46,7 @@ class OptOut {
 		}
 		foreach ( $map as $param => $urlparam ) {
 			if ( ! empty( $a[ $param ] ) ) {
-				$params[ $param ] = urlencode( $a[ $param ] );
+				$params[ $urlparam ] = urlencode( $a[ $param ] );
 			}
 		}
 
