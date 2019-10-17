@@ -1,4 +1,4 @@
-=== Matomo Analytics ===
+# Matomo Analytics
 Contributors: matomoteam
 Tags: matomo,piwik,analytics,statistics,tracking,ecommerce
 Requires at least: 4.8
@@ -9,9 +9,9 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Matomo is the most powerful web analytics for WordPress giving you 100% data ownership and privacy protection.
 
-== Description ==
-
+## Description
 For all you Wordpress website owners wanting an easier way to get customer insights to grow your business; with a tool that is entirely free for you to use and own; this one’s for you.
+
 Introducing Matomo Analytics for Wordpress. A hassle-free and cost-free web analytics platform which lets you stay in full control with 100% data ownership and user-privacy protection.
 
 Already have a [Matomo On-Premise](https://matomo.org/matomo-on-premise/) or [Matomo Cloud](https://matomo.org/pricing/) account? Use the [WP-Matomo integration](https://wordpress.org/plugins/wp-piwik/) instead of this plugin.
@@ -65,49 +65,48 @@ Used 3rd party resources:
 * After activating this plugin, it will download a Geolocation database (GeoLite2-City.tar.gz) from [MaxMind](https://dev.maxmind.com/geoip/geoip2/geolite2/) into your uploads directory. The GeoLite2 database is distributed under the [Creative Commons Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/) license. This database is needed to detect the location of your visitors based on their IP.
 * When you enter a URL in the SEO ranking widget, then a request with the entered URL may be sent to Google, Alexa, Bing, and other SEO providers.
 
-== Installation ==
+## Installation
 * Install the plugin
 * Go to Matomo-Analytics
 * Activate tracking on the "Matomo Analytics => Get started" page.
 
-== Frequently Asked Questions ==
+## Frequently Asked Questions
 
-= Is there a demo available?
-Yes, check out the online demo for Matomo at https://demo.matomo.org
+### Is there a demo available?
+Yes, check out the online demo for Matomo at [demo.matomo.org](https://demo.matomo.org/).
 
-= Do you care about security?
+### Do you care about security?
 Security is a top priority at Matomo. As potential issues are discovered, we validate, patch and release fixes as quickly as we can. We have a security bug bounty program in place that rewards researchers for finding security issues and disclosing them to us.
 [Learn more](https://matomo.org/security/) or check out our [HackerOne program](https://hackerone.com/matomo).
 
-= How can I get involved?
+### How can I get involved?
 We believe in liberating Web Analytics, providing a free platform for simple and advanced analytics. Matomo was built by dozens of people like you,
 and we need your help to make Matomo better… Why not participate in a useful project today? [Learn how you can contribute to Matomo.](https://matomo.org/get-involved)
 
-= How do you ensure quality?
+### How do you ensure quality?
 The Matomo project uses an ever-expanding comprehensive set of thousands of unit tests and hundreds of automated integration tests, system tests, JavaScript tests, and screenshot UI tests, running on a continuous integration server as part of its software quality assurance. [Learn more](https://developer.matomo.org/guides/tests)
 
-= Does the Matomo Mobile App work with WordPress?
+### Does the Matomo Mobile App work with WordPress?
 No, this doesn't work just yet. It will likely be possible to use Matomo for Android / iOS once Matomo 4 has been released
 as it will have a new feature called [app specific passwords](https://github.com/matomo-org/matomo/issues/6559).
 
-= Can I disable the Tag Manager?
+### Can I disable the Tag Manager?
 The Tag Manager can be disabled by placing `define('MATOMO_DISABLE_TAG_MANAGER', true);` in your `wp-config.php`.
 
 The Tag Manager does currently not work in WP Multisite mode.
 
-= Which MySQL versions are supported?
+### Which MySQL versions are supported?
 Matomo should run on most MySQL versions. However, we only support MySQL 5.1 and newer. It should also work with MariaDB and other MySQL compatible databases.
 
-= Which browsers do you support?
+### Which browsers do you support?
 * Tracking: We support pretty much all browsers even very old browsers when it comes to tracking
 * Admin: The Matomo UI does not support IE9 or older.
 
-= What are your contact details?
+### What are your contact details?
 Website: [matomo.org](https://matomo.org)
 About us: [matomo.org/team/](https://matomo.org/team/)
 Contact us: [matomo.org/contact/](https://matomo.org/contact/)
 
-== Credits ==
-
+## Credits
 * The entire Matomo team and everyone who contributed
-* Andr&eacute; Br&auml;kling who is the Author of WP-Matomo https://github.com/braekling/WP-Matomo
+* [Andr&eacute; Br&auml;kling](https://github.com/braekling/WP-Matomo) who is the Author of WP-Matomo
