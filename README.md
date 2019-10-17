@@ -1,10 +1,16 @@
 # Matomo Analytics
 Contributors: matomoteam
+
 Tags: matomo,piwik,analytics,statistics,tracking,ecommerce
+
 Requires at least: 4.8
+
 Tested up to: 5.2
+
 Requires PHP: 5.5.9
+
 License: GPLv3 or later
+
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Matomo is the most powerful web analytics for WordPress giving you 100% data ownership and privacy protection.
@@ -87,8 +93,7 @@ and we need your help to make Matomo better… Why not participate in a useful p
 The Matomo project uses an ever-expanding comprehensive set of thousands of unit tests and hundreds of automated integration tests, system tests, JavaScript tests, and screenshot UI tests, running on a continuous integration server as part of its software quality assurance. [Learn more](https://developer.matomo.org/guides/tests)
 
 ### Does the Matomo Mobile App work with WordPress?
-No, this doesn't work just yet. It will likely be possible to use Matomo for Android / iOS once Matomo 4 has been released
-as it will have a new feature called [app specific passwords](https://github.com/matomo-org/matomo/issues/6559).
+No, this doesn't work just yet. It will likely be possible to use Matomo for Android / iOS once Matomo 4 has been released as it will have a new feature called [app specific passwords](https://github.com/matomo-org/matomo/issues/6559).
 
 ### Can I disable the Tag Manager?
 The Tag Manager can be disabled by placing `define('MATOMO_DISABLE_TAG_MANAGER', true);` in your `wp-config.php`.
@@ -104,7 +109,9 @@ Matomo should run on most MySQL versions. However, we only support MySQL 5.1 and
 
 ### What are your contact details?
 Website: [matomo.org](https://matomo.org)
+
 About us: [matomo.org/team/](https://matomo.org/team/)
+
 Contact us: [matomo.org/contact/](https://matomo.org/contact/)
 
 ## Credits
