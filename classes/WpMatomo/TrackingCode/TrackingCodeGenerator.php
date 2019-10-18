@@ -167,7 +167,7 @@ class TrackingCodeGenerator {
 				return '*.' . $host;
 			}, $hosts );
 			if ( ! empty( $hosts ) ) {
-				$options .= '  _paq.push(["setDomains", ' . json_encode( $hosts ) . ']);';
+				$options[] = '  _paq.push(["setDomains", ' . json_encode( $hosts ) . ']);';
 			}
 		}
 
