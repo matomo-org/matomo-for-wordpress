@@ -217,6 +217,42 @@ class SystemReport {
 		);
 
 		$rows[] = array(
+			'section' => 'Crons',
+		);
+
+		$scheduled_tasks = new ScheduledTasks( $this->settings );
+		$all_events = $scheduled_tasks->get_all_events();
+
+		$rows[] = array(
+			'name'    => 'Server time',
+			'value'   => $this->convert_time_to_date(time(), false),
+			'comment' => ''
+		);
+
+		$rows[] = array(
+			'name'    => 'Blog time',
+			'value'   => $this->convert_time_to_date(time(), true),
+			'comment' => ''
+		);
+
+		foreach ($all_events as $event_name => $event_config) {
+			$last_run_before = $scheduled_tasks->get_last_time_before_cron($event_name);
+			$last_run_after = $scheduled_tasks->get_last_time_after_cron($event_name);
+
+			$comment  = 'Last started: ' . $this->convert_time_to_date($last_run_before, true) . '.';
+			$comment .= ' Last ended: ' . $this->convert_time_to_date($last_run_after, true) . '.';
+			$comment .= ' Interval: ' . $event_config['interval'];
+
+			$next_scheduled = wp_next_scheduled($event_name);
+			$rows[] = array(
+				'name'    => $event_config['name'],
+				'value'   => 'Next run: ' . $this->convert_time_to_date($next_scheduled, true),
+				'comment' => $comment
+			);
+
+		}
+
+		$rows[] = array(
 			'section' => 'Mandatory checks',
 		);
 
@@ -236,6 +272,21 @@ class SystemReport {
 		);
 
 		return $rows;
+	}
+
+	private function convert_time_to_date($time, $in_blog_timezone)
+	{
+		if (empty($time)) {
+			return 'Unknown';
+		}
+
+		$date = date( 'Y-m-d H:i:s', $time );
+
+		if ($in_blog_timezone) {
+			$date = get_date_from_gmt( $date, 'Y-m-d H:i:s' );
+		}
+
+		return $date;
 	}
 
 	private function add_diagnostic_results( $rows, $results ) {

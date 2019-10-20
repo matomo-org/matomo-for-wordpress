@@ -27,6 +27,9 @@ class ScheduledTasks {
 	const EVENT_GEOIP = 'matomo_scheduled_geoipdb';
 	const EVENT_UPDATE = 'matomo_update_core';
 
+	const KEY_BEFORE_CRON = 'before-cron-';
+	const KEY_AFTER_CRON = 'after-cron-';
+
 	/**
 	 * @var Settings
 	 */
@@ -52,24 +55,67 @@ class ScheduledTasks {
 	}
 
 	public function schedule() {
-		add_action( self::EVENT_SYNC, array( $this, 'sync' ) );
-		add_action( self::EVENT_ARCHIVE, array( $this, 'archive' ) );
-		add_action( self::EVENT_GEOIP, array( $this, 'update_geo_ip2_db' ) );
 		add_action( self::EVENT_UPDATE, array( $this, 'perform_update' ) );
-
 		add_filter( 'cron_schedules', array( $this, 'add_weekly_schedule' ) );
 
-		if ( ! wp_next_scheduled( self::EVENT_ARCHIVE ) ) {
-			wp_schedule_event( time(), 'hourly', self::EVENT_ARCHIVE );
-		}
-		if ( ! wp_next_scheduled( self::EVENT_SYNC ) ) {
-			wp_schedule_event( time(), 'daily', self::EVENT_SYNC );
-		}
-		if ( ! wp_next_scheduled( self::EVENT_GEOIP ) ) {
-			wp_schedule_event( time(), 'matomo_weekly', self::EVENT_GEOIP );
+		$self           = $this;
+		$event_priority = 10;
+
+		foreach ( $this->get_all_events() as $event_name => $event_config ) {
+			if ( ! wp_next_scheduled( $event_name ) ) {
+				wp_schedule_event( time(), $event_config['interval'], $event_name );
+			}
+
+			// logging last execution start time
+			add_action( $event_name, function () use ( $self, $event_name ) {
+				$self->set_last_time_before_cron( $event_name, time() );
+			}, $event_priority / 2, $accepted_args = 0 );
+
+			// actual event
+			add_action( $event_name, array( $this, $event_config['method'] ), $event_priority, $accepted_args = 0 );
+
+			// logging last execution end time
+			add_action( $event_name, function () use ( $self, $event_name ) {
+				$self->set_last_time_after_cron( $event_name, time() );
+			}, $event_priority * 2, $accepted_args = 0 );
 		}
 
 		register_deactivation_hook( MATOMO_ANALYTICS_FILE, array( $this, 'uninstall' ) );
+	}
+
+	public function get_last_time_before_cron( $event_name ) {
+		return get_option( Settings::OPTION_PREFIX . self::KEY_BEFORE_CRON . $event_name );
+	}
+
+	public function set_last_time_before_cron( $event_name, $time ) {
+		// we use settings prefix so data automatically gets removed when uninstalling
+		update_option( Settings::OPTION_PREFIX . self::KEY_BEFORE_CRON . $event_name, $time );
+	}
+
+	public function get_last_time_after_cron( $event_name ) {
+		return get_option( Settings::OPTION_PREFIX . self::KEY_AFTER_CRON . $event_name );
+	}
+
+	public function set_last_time_after_cron( $event_name, $time ) {
+		// we use settings prefix so data automatically gets removed when uninstalling
+		update_option( Settings::OPTION_PREFIX . self::KEY_AFTER_CRON . $event_name, $time );
+	}
+
+	public function get_all_events() {
+		return array(
+			self::EVENT_SYNC    => array( 'name' => 'Sync users & sites',
+			                              'interval' => 'daily',
+			                              'method' => 'sync'
+			),
+			self::EVENT_ARCHIVE => array( 'name' => 'Archive',
+			                              'interval' => 'hourly',
+			                              'method' => 'archive'
+			),
+			self::EVENT_GEOIP   => array( 'name'     => 'Update GeoIP DB',
+			                              'interval' => 'matomo_weekly',
+			                              'method'   => 'update_geo_ip2_db'
+			)
+		);
 	}
 
 	public function perform_update() {
@@ -78,14 +124,10 @@ class ScheduledTasks {
 		try {
 			$updater = new Updater( $this->settings );
 			$updater->update();
-		} catch (\Exception $e) {
+		} catch ( \Exception $e ) {
 			$this->logger->log( 'Update failed: ' . $e->getMessage() );
 			throw $e;
 		}
-	}
-
-	public function get_all_events() {
-		return array( self::EVENT_SYNC, self::EVENT_ARCHIVE, self::EVENT_GEOIP );
 	}
 
 	public function update_geo_ip2_db() {
@@ -98,7 +140,7 @@ class ScheduledTasks {
 			if ( LocationProvider::getCurrentProviderId() !== Php::ID && LocationProvider::getProviderById( Php::ID ) ) {
 				LocationProvider::setCurrentProvider( Php::ID );
 			}
-		} catch (\Exception $e) {
+		} catch ( \Exception $e ) {
 			$this->logger->log( 'Update GeoIP DB failed' . $e->getMessage() );
 			throw $e;
 		}
@@ -112,14 +154,14 @@ class ScheduledTasks {
 			$site->sync_all();
 			$user = new UserSync();
 			$user->sync_all();
-		} catch (\Exception $e) {
+		} catch ( \Exception $e ) {
 			$this->logger->log( 'Sync failed' . $e->getMessage() );
 			throw $e;
 		}
 	}
 
 	public function archive( $force = false ) {
-		if (defined('MATOMO_DISABLE_WP_ARCHIVING') && MATOMO_DISABLE_WP_ARCHIVING) {
+		if ( defined( 'MATOMO_DISABLE_WP_ARCHIVING' ) && MATOMO_DISABLE_WP_ARCHIVING ) {
 			return;
 		}
 
@@ -127,7 +169,7 @@ class ScheduledTasks {
 
 		try {
 			Bootstrap::do_bootstrap();
-		} catch (\Exception $e) {
+		} catch ( \Exception $e ) {
 			$this->logger->log( 'Archive bootstrap failed' . $e->getMessage() );
 			throw $e;
 		}
@@ -168,14 +210,14 @@ class ScheduledTasks {
 	public function uninstall() {
 		$this->logger->log( 'Scheduled tasks uninstall all events' );
 
-		foreach ( $this->get_all_events() as $event ) {
-			$timestamp = wp_next_scheduled( $event );
+		foreach ( $this->get_all_events() as $event_name => $config ) {
+			$timestamp = wp_next_scheduled( $event_name );
 			if ( $timestamp ) {
-				wp_unschedule_event( $timestamp, $event );
+				wp_unschedule_event( $timestamp, $event_name );
 			}
 		}
-		foreach ( $this->get_all_events() as $event ) {
-			wp_clear_scheduled_hook( $event );
+		foreach ( $this->get_all_events() as $event_name => $config ) {
+			wp_clear_scheduled_hook( $event_name );
 		}
 	}
 }
