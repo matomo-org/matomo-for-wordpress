@@ -12,6 +12,7 @@ namespace WpMatomo\Admin;
 use Piwik\CliMulti;
 use Piwik\Container\StaticContainer;
 use Piwik\Filesystem;
+use Piwik\MetricsFormatter;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
 use WpMatomo\Bootstrap;
@@ -217,6 +218,43 @@ class SystemReport {
 		);
 
 		$rows[] = array(
+			'section' => 'Crons',
+		);
+
+		$scheduled_tasks = new ScheduledTasks( $this->settings );
+		$all_events = $scheduled_tasks->get_all_events();
+
+		$rows[] = array(
+			'name'    => 'Server time',
+			'value'   => $this->convert_time_to_date(time(), false),
+			'comment' => ''
+		);
+
+		$rows[] = array(
+			'name'    => 'Blog time',
+			'value'   => $this->convert_time_to_date(time(), true),
+			'comment' => 'Below dates are shown in blog timezone'
+		);
+
+		foreach ($all_events as $event_name => $event_config) {
+			$last_run_before = $scheduled_tasks->get_last_time_before_cron($event_name);
+			$last_run_after = $scheduled_tasks->get_last_time_after_cron($event_name);
+
+			$next_scheduled = wp_next_scheduled($event_name);
+
+			$comment  = ' Last started: ' . $this->convert_time_to_date($last_run_before, true, true) . '.';
+			$comment .= ' Last ended: ' . $this->convert_time_to_date($last_run_after, true, true) . '.';
+			$comment .= ' Interval: ' . $event_config['interval'];
+
+			$rows[] = array(
+				'name'    => $event_config['name'],
+				'value'   => 'Next run: ' . $this->convert_time_to_date($next_scheduled, true, true),
+				'comment' => $comment
+			);
+
+		}
+
+		$rows[] = array(
 			'section' => 'Mandatory checks',
 		);
 
@@ -236,6 +274,25 @@ class SystemReport {
 		);
 
 		return $rows;
+	}
+
+	private function convert_time_to_date($time, $in_blog_timezone, $print_diff = false)
+	{
+		if (empty($time)) {
+			return 'Unknown';
+		}
+
+		$date = date( 'Y-m-d H:i:s', $time );
+
+		if ($in_blog_timezone) {
+			$date = get_date_from_gmt( $date, 'Y-m-d H:i:s' );
+		}
+
+		if ($print_diff && class_exists('\Piwik\MetricsFormatter')) {
+			$date .= ' (' . MetricsFormatter::getPrettyTimeFromSeconds($time - time(), true, false, true ) . ')';
+		}
+
+		return $date;
 	}
 
 	private function add_diagnostic_results( $rows, $results ) {
@@ -261,6 +318,8 @@ class SystemReport {
 	}
 
 	private function get_wordpress_info() {
+		global $wpdb;
+
 		$is_multi_site      = is_multisite();
 		$num_blogs          = 1;
 		$is_network_enabled = false;
@@ -281,6 +340,7 @@ class SystemReport {
 		$rows[] = array( 'name' => 'Network Enabled', 'value' => $is_network_enabled );
 		$rows[] = array( 'name' => 'Debug Mode Enabled', 'value' => defined( 'WP_DEBUG' ) && WP_DEBUG );
 		$rows[] = array( 'name' => 'Cron Enabled', 'value' => defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON );
+		$rows[] = array( 'name' => 'DB Prefix', 'value' => $wpdb->prefix );
 
 		return $rows;
 	}
@@ -295,6 +355,7 @@ class SystemReport {
 		$rows[] = array( 'name' => 'Timezone', 'value' => date_default_timezone_get() );
 		$rows[] = array( 'name' => 'Locale', 'value' => get_locale() );
 		$rows[] = array( 'name' => 'Memory Limit', 'value' => max( WP_MEMORY_LIMIT, @ini_get( 'memory_limit' ) ) );
+		$rows[] = array( 'name' => 'Time', 'value' => time() );
 
 		$rows[] = array( 'name' => 'Max Execution Time', 'value' => ini_get( 'max_execution_time' ) );
 		$rows[] = array( 'name' => 'Max Post Size', 'value' => ini_get( 'post_max_size' ) );
