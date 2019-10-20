@@ -233,7 +233,7 @@ class SystemReport {
 		$rows[] = array(
 			'name'    => 'Blog time',
 			'value'   => $this->convert_time_to_date(time(), true),
-			'comment' => ''
+			'comment' => 'Below dates are shown in blog timezone'
 		);
 
 		foreach ($all_events as $event_name => $event_config) {
@@ -318,6 +318,8 @@ class SystemReport {
 	}
 
 	private function get_wordpress_info() {
+		global $wpdb;
+
 		$is_multi_site      = is_multisite();
 		$num_blogs          = 1;
 		$is_network_enabled = false;
@@ -338,6 +340,7 @@ class SystemReport {
 		$rows[] = array( 'name' => 'Network Enabled', 'value' => $is_network_enabled );
 		$rows[] = array( 'name' => 'Debug Mode Enabled', 'value' => defined( 'WP_DEBUG' ) && WP_DEBUG );
 		$rows[] = array( 'name' => 'Cron Enabled', 'value' => defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON );
+		$rows[] = array( 'name' => 'DB Prefix', 'value' => $wpdb->prefix );
 
 		return $rows;
 	}
@@ -352,6 +355,7 @@ class SystemReport {
 		$rows[] = array( 'name' => 'Timezone', 'value' => date_default_timezone_get() );
 		$rows[] = array( 'name' => 'Locale', 'value' => get_locale() );
 		$rows[] = array( 'name' => 'Memory Limit', 'value' => max( WP_MEMORY_LIMIT, @ini_get( 'memory_limit' ) ) );
+		$rows[] = array( 'name' => 'Time', 'value' => time() );
 
 		$rows[] = array( 'name' => 'Max Execution Time', 'value' => ini_get( 'max_execution_time' ) );
 		$rows[] = array( 'name' => 'Max Post Size', 'value' => ini_get( 'post_max_size' ) );
