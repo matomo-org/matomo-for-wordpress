@@ -12,6 +12,7 @@ namespace WpMatomo\Admin;
 use Piwik\CliMulti;
 use Piwik\Container\StaticContainer;
 use Piwik\Filesystem;
+use Piwik\MetricsFormatter;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
 use WpMatomo\Bootstrap;
@@ -239,14 +240,15 @@ class SystemReport {
 			$last_run_before = $scheduled_tasks->get_last_time_before_cron($event_name);
 			$last_run_after = $scheduled_tasks->get_last_time_after_cron($event_name);
 
-			$comment  = 'Last started: ' . $this->convert_time_to_date($last_run_before, true) . '.';
-			$comment .= ' Last ended: ' . $this->convert_time_to_date($last_run_after, true) . '.';
+			$next_scheduled = wp_next_scheduled($event_name);
+
+			$comment  = ' Last started: ' . $this->convert_time_to_date($last_run_before, true, true) . '.';
+			$comment .= ' Last ended: ' . $this->convert_time_to_date($last_run_after, true, true) . '.';
 			$comment .= ' Interval: ' . $event_config['interval'];
 
-			$next_scheduled = wp_next_scheduled($event_name);
 			$rows[] = array(
 				'name'    => $event_config['name'],
-				'value'   => 'Next run: ' . $this->convert_time_to_date($next_scheduled, true),
+				'value'   => 'Next run: ' . $this->convert_time_to_date($next_scheduled, true, true),
 				'comment' => $comment
 			);
 
@@ -274,7 +276,7 @@ class SystemReport {
 		return $rows;
 	}
 
-	private function convert_time_to_date($time, $in_blog_timezone)
+	private function convert_time_to_date($time, $in_blog_timezone, $print_diff = false)
 	{
 		if (empty($time)) {
 			return 'Unknown';
@@ -284,6 +286,10 @@ class SystemReport {
 
 		if ($in_blog_timezone) {
 			$date = get_date_from_gmt( $date, 'Y-m-d H:i:s' );
+		}
+
+		if ($print_diff && class_exists('\Piwik\MetricsFormatter')) {
+			$date .= ' (' . MetricsFormatter::getPrettyTimeFromSeconds($time - time(), true, false, true ) . ')';
 		}
 
 		return $date;
