@@ -50,15 +50,10 @@ return array(
 			$port = 3306;
 		}
 
-		if (\WpMatomo\Bootstrap::is_bootstrapped()) {
-			// we allow calling the API methods etc when being bootstrapped from within WordPress
+		if (defined('FORCE_SSL_ADMIN') && FORCE_SSL_ADMIN) {
 			$general = $previous->General;
-			$general['enable_sites_admin'] = 1;
-			$general['enable_users_admin'] = 1;
-			if (defined('FORCE_SSL_ADMIN') && FORCE_SSL_ADMIN) {
-				$general['force_ssl'] = 1;
-				$general['assume_secure_protocol'] = 1;
-			}
+			$general['force_ssl'] = 1;
+			$general['assume_secure_protocol'] = 1;
 			$previous->General = $general;
 		}
 
