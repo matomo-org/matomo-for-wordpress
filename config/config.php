@@ -57,6 +57,7 @@ return array(
 			$general['enable_users_admin'] = 1;
 			if (defined('FORCE_SSL_ADMIN') && FORCE_SSL_ADMIN) {
 				$general['force_ssl'] = 1;
+				$general['assume_secure_protocol'] = 1;
 			}
 			$previous->General = $general;
 		}
