@@ -49,6 +49,9 @@ class GenerateLanguageFiles extends ConsoleCommand
 				}
 			}
 
+			// TODO we always need to make sure to set a default value for all translations probably... if a translation
+			// for a different language is not there, we probably need to set the english translation manually.
+
 			foreach ($translator->getAllTranslations() as $group => $translations) {
 				foreach ($translations as $key => $translation) {
 					$insertedTranslation = $translationsGettext->insert('', $group . '_' . $key);
