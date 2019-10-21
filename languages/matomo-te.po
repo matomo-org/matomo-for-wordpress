@@ -1,0 +1,4166 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-10-21T03:38:38+00:00\n"
+"PO-Revision-Date: 2019-10-21T03:38:38+00:00\n"
+"Language: te\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Domain: matomo\n"
+
+msgid "General_AboutPiwikX"
+msgstr "పివిక్ %s గురించి"
+
+msgid "General_Action"
+msgstr "చర్య"
+
+msgid "General_Actions"
+msgstr "చర్యలు"
+
+msgid "General_Add"
+msgstr "చేర్చు"
+
+msgid "General_AllWebsitesDashboard"
+msgstr "అన్ని వెబ్‌సైట్లడాష్‌బోర్డు"
+
+msgid "General_AverageOrderValue"
+msgstr "సగటు ఆర్డరు విలువ"
+
+msgid "General_AveragePrice"
+msgstr "సగటు వెల"
+
+msgid "General_AverageQuantity"
+msgstr "సగటు పరిమాణం"
+
+msgid "General_BackToPiwik"
+msgstr "తిరిగి పివిక్‌కి"
+
+msgid "General_Cancel"
+msgstr "రద్దుచేయి"
+
+msgid "General_ChooseLanguage"
+msgstr "భాషని ఎంచుకోండి"
+
+msgid "General_ChoosePeriod"
+msgstr "కాలవ్యవధిని ఎంచుకోండి"
+
+msgid "General_Close"
+msgstr "మూసివేయి"
+
+msgid "General_ColumnActionsPerVisit"
+msgstr "సందర్శనకి చర్యలు"
+
+msgid "General_ColumnConversionRate"
+msgstr "మార్పిడి రేటు"
+
+msgid "General_ColumnEntrances"
+msgstr "ప్రవేశాలు"
+
+msgid "General_ColumnExitRate"
+msgstr "నిష్క్రమణ రేటు"
+
+msgid "General_ColumnExits"
+msgstr "నిష్క్రమణలు"
+
+msgid "General_ColumnKeyword"
+msgstr "కీపదం"
+
+msgid "General_ColumnLabel"
+msgstr "నామాంకం"
+
+msgid "General_ColumnNbActions"
+msgstr "చర్యలు"
+
+msgid "General_ColumnNbUsers"
+msgstr "వాడుకరులు"
+
+msgid "General_ColumnNbVisits"
+msgstr "సందర్శనలు"
+
+msgid "General_ColumnPageviews"
+msgstr "పేజీవీక్షణలు"
+
+msgid "General_ColumnRevenue"
+msgstr "ఆదాయం"
+
+msgid "General_ColumnValuePerVisit"
+msgstr "సందర్శనకి విలువ"
+
+msgid "General_ColumnVisitsWithConversions"
+msgstr "మార్పిళ్ళతో ఉన్న సందర్శనలు"
+
+msgid "General_Continue"
+msgstr "కొనసాగించు"
+
+msgid "General_ContinueToPiwik"
+msgstr "పివిక్‌కు కొనసాగండి"
+
+msgid "General_CurrentMonth"
+msgstr "ఈ నెల"
+
+msgid "General_CurrentWeek"
+msgstr "ఈ వారం"
+
+msgid "General_CurrentYear"
+msgstr "ఈ సంవత్సరం"
+
+msgid "General_Daily"
+msgstr "రోజూ"
+
+msgid "General_Date"
+msgstr "తేదీ"
+
+msgid "General_DateRange"
+msgstr "తేదీ అవధి:"
+
+msgid "General_DateRangeFrom"
+msgstr "కాదు"
+
+msgid "General_DaysHours"
+msgstr "%1$s రోజులు %2$s గంటలు"
+
+msgid "General_Default"
+msgstr "అప్రమేయం"
+
+msgid "General_Delete"
+msgstr "తొలగించు"
+
+msgid "General_Description"
+msgstr "వివరణ"
+
+msgid "General_Details"
+msgstr "వివరాలు"
+
+msgid "General_Done"
+msgstr "పూర్తయ్యింది"
+
+msgid "General_Download"
+msgstr "దింపుకోలు"
+
+msgid "General_Downloads"
+msgstr "దింపుకోళ్ళు"
+
+msgid "General_Edit"
+msgstr "మార్చు"
+
+msgid "General_Error"
+msgstr "పొరపాటు"
+
+msgid "General_First"
+msgstr "మొదటి"
+
+msgid "General_ForExampleShort"
+msgstr "ఉదా."
+
+msgid "General_GeneralInformation"
+msgstr "సాధారణ సమాచారం"
+
+msgid "General_GiveUsYourFeedback"
+msgstr "మీ సూచనలనూ సలహాలనూ తెలియజేయండి!"
+
+msgid "General_GoTo"
+msgstr "%sకి వెళ్ళండి"
+
+msgid "General_HelloUser"
+msgstr "హలో, %s!"
+
+msgid "General_Help"
+msgstr "సహాయం"
+
+msgid "General_HoursMinutes"
+msgstr "%1$s గంటలు %2$s నిమి"
+
+msgid "General_Id"
+msgstr "కాదు"
+
+msgid "General_Language"
+msgstr "భాష"
+
+msgid "General_LastDaysShort"
+msgstr "గత %s రోజులు"
+
+msgid "General_Loading"
+msgstr "లోడవుతూంది..."
+
+msgid "General_LoadingData"
+msgstr "భోగట్టా లోడవుతూంది..."
+
+msgid "General_Locale"
+msgstr "te_IN.UTF-8"
+
+msgid "General_Logout"
+msgstr "నిష్క్రమించు"
+
+msgid "General_MinutesSeconds"
+msgstr "%1$s నిమి %2$sక్ష"
+
+msgid "General_MultiSitesSummary"
+msgstr "అన్ని వెబ్‌సైట్లూ"
+
+msgid "General_Name"
+msgstr "పేరు"
+
+msgid "General_NewUpdatePiwikX"
+msgstr "నవీకరణ: పివిక్ %s"
+
+msgid "General_Next"
+msgstr "తదుపరి"
+
+msgid "General_No"
+msgstr "కాదు"
+
+msgid "General_NoDataForGraph"
+msgstr "ఈ గ్రాఫుకి భోగట్టా లేదు."
+
+msgid "General_Note"
+msgstr "గమనిక"
+
+msgid "General_NotValid"
+msgstr "%s సరైనది కాదు"
+
+msgid "General_NumberOfVisits"
+msgstr "సందర్శనల సంఖ్య"
+
+msgid "General_NVisits"
+msgstr "%s సందర్శనలు"
+
+msgid "General_Ok"
+msgstr "సరే"
+
+msgid "General_OneVisit"
+msgstr "1 సందర్శన"
+
+msgid "General_OrCancel"
+msgstr "లేదా %1$s రద్దుచేయి %2$s"
+
+msgid "General_Others"
+msgstr "ఇతరాలు"
+
+msgid "General_Outlinks"
+msgstr "బయటిలంకెలు"
+
+msgid "General_Overview"
+msgstr "అవలోకనం"
+
+msgid "General_Pages"
+msgstr "పుటలు"
+
+msgid "General_Password"
+msgstr "సంకేతపదం"
+
+msgid "General_Period"
+msgstr "కాలవ్యవధి"
+
+msgid "General_PleaseUpdatePiwik"
+msgstr "దయచేసి మీ పివిక్‌ని నవీకరించుకోండి"
+
+msgid "General_Plugin"
+msgstr "ప్లగిన్"
+
+msgid "General_Plugins"
+msgstr "ప్లగిన్లు"
+
+msgid "General_Previous"
+msgstr "గత"
+
+msgid "General_PreviousDaysShort"
+msgstr "గత %s రోజులు"
+
+msgid "General_Price"
+msgstr "వెల"
+
+msgid "General_Report"
+msgstr "నివేదించు"
+
+msgid "General_Reports"
+msgstr "నివేదికలు"
+
+msgid "General_Required"
+msgstr "%s తప్పనిసరి"
+
+msgid "General_Save"
+msgstr "భద్రపరచు"
+
+msgid "General_Search"
+msgstr "వెతుకు"
+
+msgid "General_Settings"
+msgstr "అమరికలు"
+
+msgid "General_Table"
+msgstr "పట్టిక"
+
+msgid "General_TagCloud"
+msgstr "ట్యాగు మేఘం"
+
+msgid "General_Total"
+msgstr "మొత్తం"
+
+msgid "General_TotalRevenue"
+msgstr "మొత్తం ఆదాయం"
+
+msgid "General_TranslatorName"
+msgstr "వీవెన్ (Veeven)"
+
+msgid "General_Upload"
+msgstr "ఎక్కించు"
+
+msgid "General_Username"
+msgstr "వాడుకరి పేరు"
+
+msgid "General_Value"
+msgstr "విలువ"
+
+msgid "General_Visitors"
+msgstr "సందర్శకులు"
+
+msgid "General_VisitorSettings"
+msgstr "సందర్శకుల అమరికలు"
+
+msgid "General_Warning"
+msgstr "హెచ్చరిక"
+
+msgid "General_Website"
+msgstr "వెబ్‌సైటు"
+
+msgid "General_Widgets"
+msgstr "విడ్జెట్లు"
+
+msgid "General_YearsDays"
+msgstr "%1$s సంవత్సరాలు %2$s రోజులు"
+
+msgid "General_Yes"
+msgstr "అవును"
+
+msgid "General_YouMustBeLoggedIn"
+msgstr "ఈ సౌలభ్యాన్ని ఉపయోగించుకోడానికి మీరు ప్రవేశించివుండాలి."
+
+msgid "General_YourChangesHaveBeenSaved"
+msgstr "మీ మార్పులు భద్రమయ్యాయి."
+
+msgid "Mobile_Accounts"
+msgstr "ఖాతాలు"
+
+msgid "Mobile_DefaultReportDate"
+msgstr "నివేదిక తేదీ"
+
+msgid "Mobile_NoPiwikAccount"
+msgstr "పివిక్ ఖాతా లేదా?"
+
+msgid "API_UserAuthentication"
+msgstr "వాడుకరి అధీకరణ"
+
+msgid "Actions_ColumnClickedURL"
+msgstr "నొక్కిన URL"
+
+msgid "Actions_ColumnClicks"
+msgstr "నొక్కులు"
+
+msgid "Actions_ColumnClicksDocumentation"
+msgstr "ఎన్నిసార్లు ఈ లింక్ క్లిక్ చేయబడింది"
+
+msgid "Actions_ColumnDownloadURL"
+msgstr "దింపుకోలు URL"
+
+msgid "Actions_ColumnEntryPageTitle"
+msgstr "చర్యలు"
+
+msgid "Actions_ColumnEntryPageURL"
+msgstr "పేజీ URL ను ఎంటర్ చేయండి"
+
+msgid "Actions_ColumnExitPageTitle"
+msgstr "Exit పేజి పేరు"
+
+msgid "Actions_ColumnExitPageURL"
+msgstr "Exit పేజి URL"
+
+msgid "Actions_ColumnPageName"
+msgstr "పుట పేరు"
+
+msgid "Actions_ColumnPagesPerSearch"
+msgstr "శోధన ఫలితాల పేజీలు"
+
+msgid "Actions_ColumnPageURL"
+msgstr "పుట చిరునామా"
+
+msgid "Actions_ColumnSearchCategory"
+msgstr "శోధన వర్గం"
+
+msgid "Actions_ColumnSearches"
+msgstr "శోధనలు"
+
+msgid "Actions_ColumnSearchResultsCount"
+msgstr "శోధన ఫలితాల కౌంట్"
+
+msgid "Actions_ColumnSiteSearchKeywords"
+msgstr "ప్రత్యేక కీవర్డ్లు"
+
+msgid "Actions_ColumnUniqueClicks"
+msgstr "ప్రత్యేక క్లిక్"
+
+msgid "Actions_ColumnUniqueDownloads"
+msgstr "ప్రత్యేక డౌన్ లోడ్"
+
+msgid "Actions_ColumnUniqueOutlinks"
+msgstr "డౌన్ లోడ్"
+
+msgid "Actions_EntryPageTitles"
+msgstr "ఎంట్రీ పేజీ శీర్షికలు"
+
+msgid "Actions_ExitPageTitles"
+msgstr "నిష్క్రమణ పేజీ శీర్షికలు"
+
+msgid "Actions_OneSearch"
+msgstr "1 శోధన"
+
+msgid "Actions_PageUrls"
+msgstr "పేజీ URL లు"
+
+msgid "Actions_SubmenuPagesEntry"
+msgstr "ప్రవేశ పుటలు"
+
+msgid "Actions_SubmenuPagesExit"
+msgstr "నిష్క్రమణ పుటలు"
+
+msgid "Actions_SubmenuPageTitles"
+msgstr "పుటల శీర్షికలు"
+
+msgid "Actions_WidgetPageTitles"
+msgstr "పేజీ శీర్షికలు"
+
+msgid "Annotations_ClickToEdit"
+msgstr "మార్చడానికి నొక్కండి"
+
+msgid "CoreAdminHome_Administration"
+msgstr "నిర్వహణ"
+
+msgid "CoreAdminHome_MenuGeneralSettings"
+msgstr "సాధారణ అమరికలు"
+
+msgid "CoreHome_Default"
+msgstr "అప్రమేయం"
+
+msgid "CorePluginsAdmin_Activate"
+msgstr "చేతనించు"
+
+msgid "CorePluginsAdmin_Activated"
+msgstr "చేతనమయ్యింది"
+
+msgid "CorePluginsAdmin_Active"
+msgstr "చేతనం"
+
+msgid "CorePluginsAdmin_Deactivate"
+msgstr "అచేతనించు"
+
+msgid "CorePluginsAdmin_Inactive"
+msgstr "అచేతనం"
+
+msgid "CorePluginsAdmin_PluginsManagement"
+msgstr "ప్లగిన్ల నిర్వహణ"
+
+msgid "CorePluginsAdmin_Status"
+msgstr "స్థితి"
+
+msgid "CorePluginsAdmin_Version"
+msgstr "సంచిక"
+
+msgid "CorePluginsAdmin_Websites"
+msgstr "జాలగూళ్ళు"
+
+msgid "CoreUpdater_ReadyToGo"
+msgstr "వెళ్ళడానికి సిద్ధమా?"
+
+msgid "CoreUpdater_UpdateTitle"
+msgstr "నవీకరించు"
+
+msgid "CoreUpdater_UpgradeComplete"
+msgstr "నవీకరణ పూర్తయ్యింది!"
+
+msgid "CoreUpdater_UpgradePiwik"
+msgstr "పివిక్ నవీకరణ"
+
+msgid "CoreUpdater_WarningMessages"
+msgstr "హెచ్చరిక సందేశాలు:"
+
+msgid "DBStats_OtherTables"
+msgstr "ఇతర పట్టికలు"
+
+msgid "DBStats_Table"
+msgstr "పట్టిక"
+
+msgid "Dashboard_Dashboard"
+msgstr "డాష్‌బోర్డు"
+
+msgid "Dashboard_LoadingWidget"
+msgstr "విడ్జెట్ లోడవుతూండి, దయచేసి వేచివుండండి..."
+
+msgid "Dashboard_WidgetPreview"
+msgstr "విడ్జెట్ మునుజూపు"
+
+msgid "DevicesDetection_BrowserEngine"
+msgstr "విహారిణి"
+
+msgid "DevicesDetection_BrowserFamily"
+msgstr "విహారిణి కుటుంబం"
+
+msgid "DevicesDetection_Browsers"
+msgstr "విహారిణులు"
+
+msgid "DevicesDetection_BrowserVersion"
+msgstr "విహారిణి సంచిక"
+
+msgid "DevicesDetection_ColumnBrowser"
+msgstr "విహారిణి"
+
+msgid "DevicesDetection_ColumnOperatingSystem"
+msgstr "నిర్వాహక వ్యవస్థ"
+
+msgid "DevicesDetection_dataTableLabelTypes"
+msgstr "రకం"
+
+msgid "DevicesDetection_OperatingSystemFamily"
+msgstr "నిర్వాహక వ్యవస్థ కుటుంబం"
+
+msgid "DevicesDetection_OperatingSystems"
+msgstr "నిర్వాహక వ్యవస్థలు"
+
+msgid "DevicesDetection_WidgetBrowsers"
+msgstr "సందర్శకుల విహారిణులు"
+
+msgid "Goals_ColumnConversions"
+msgstr "మార్పిళ్ళు"
+
+msgid "Goals_GoalName"
+msgstr "లక్ష్యపు పేరు"
+
+msgid "Goals_Goals"
+msgstr "లక్ష్యాలు"
+
+msgid "Goals_Optional"
+msgstr "(ఐచ్చికం)"
+
+msgid "Installation_Congratulations"
+msgstr "అభినందనలు"
+
+msgid "Installation_DatabaseSetupLogin"
+msgstr "వాడుకరి పేరు"
+
+msgid "Installation_Installation"
+msgstr "స్థాపన"
+
+msgid "Installation_InstallationStatus"
+msgstr "స్థాపన స్థితి"
+
+msgid "Installation_Optional"
+msgstr "ఐచ్చికం"
+
+msgid "Installation_PercentDone"
+msgstr "%s %% పూర్తి"
+
+msgid "Installation_PleaseFixTheFollowingErrors"
+msgstr "దయచేసి ఈ కింది పొరపాట్లను సరిదిద్దండి"
+
+msgid "Installation_Requirements"
+msgstr "పివిక్ ఆవశ్యకాలు"
+
+msgid "Installation_Welcome"
+msgstr "స్వాగతం!"
+
+msgid "Intl_Continent_afr"
+msgstr "ఆఫ్రికా"
+
+msgid "Intl_Continent_amc"
+msgstr "మధ్యమ అమెరికా"
+
+msgid "Intl_Continent_amn"
+msgstr "ఉత్తర అమెరికా"
+
+msgid "Intl_Continent_ams"
+msgstr "దక్షిణ అమెరికా"
+
+msgid "Intl_Continent_ant"
+msgstr "అంటార్కిటికా"
+
+msgid "Intl_Continent_asi"
+msgstr "ఆసియా"
+
+msgid "Intl_Continent_eur"
+msgstr "యూరోప్"
+
+msgid "Intl_Continent_oce"
+msgstr "ఓషినియా"
+
+msgid "Intl_Country_AD"
+msgstr "ఆండోరా"
+
+msgid "Intl_Country_AE"
+msgstr "యునైటెడ్ అరబ్ ఎమిరేట్స్"
+
+msgid "Intl_Country_AF"
+msgstr "ఆఫ్ఘనిస్తాన్"
+
+msgid "Intl_Country_AG"
+msgstr "ఆంటిగ్వా మరియు బార్బుడా"
+
+msgid "Intl_Country_AI"
+msgstr "ఆంగ్విల్లా"
+
+msgid "Intl_Country_AL"
+msgstr "అల్బేనియా"
+
+msgid "Intl_Country_AM"
+msgstr "ఆర్మేనియా"
+
+msgid "Intl_Country_AO"
+msgstr "అంగోలా"
+
+msgid "Intl_Country_AQ"
+msgstr "అంటార్కిటికా"
+
+msgid "Intl_Country_AR"
+msgstr "అర్జెంటీనా"
+
+msgid "Intl_Country_AS"
+msgstr "అమెరికన్ సమోవా"
+
+msgid "Intl_Country_AT"
+msgstr "ఆస్ట్రియా"
+
+msgid "Intl_Country_AU"
+msgstr "ఆస్ట్రేలియా"
+
+msgid "Intl_Country_AW"
+msgstr "అరుబా"
+
+msgid "Intl_Country_AX"
+msgstr "ఆలాండ్ దీవులు"
+
+msgid "Intl_Country_AZ"
+msgstr "అజర్బైజాన్"
+
+msgid "Intl_Country_BA"
+msgstr "బోస్నియా మరియు హెర్జిగోవినా"
+
+msgid "Intl_Country_BB"
+msgstr "బార్బడోస్"
+
+msgid "Intl_Country_BD"
+msgstr "బంగ్లాదేశ్"
+
+msgid "Intl_Country_BE"
+msgstr "బెల్జియం"
+
+msgid "Intl_Country_BF"
+msgstr "బుర్కినా ఫాసో"
+
+msgid "Intl_Country_BG"
+msgstr "బల్గేరియా"
+
+msgid "Intl_Country_BH"
+msgstr "బహ్రెయిన్"
+
+msgid "Intl_Country_BI"
+msgstr "బురుండి"
+
+msgid "Intl_Country_BJ"
+msgstr "బెనిన్"
+
+msgid "Intl_Country_BL"
+msgstr "సెయింట్ బర్థెలిమి"
+
+msgid "Intl_Country_BM"
+msgstr "బెర్ముడా"
+
+msgid "Intl_Country_BN"
+msgstr "బ్రూనే"
+
+msgid "Intl_Country_BO"
+msgstr "బొలీవియా"
+
+msgid "Intl_Country_BQ"
+msgstr "కరీబియన్ నెదర్లాండ్స్"
+
+msgid "Intl_Country_BR"
+msgstr "బ్రెజిల్"
+
+msgid "Intl_Country_BS"
+msgstr "బహామాస్"
+
+msgid "Intl_Country_BT"
+msgstr "భూటాన్"
+
+msgid "Intl_Country_BV"
+msgstr "బువై దీవి"
+
+msgid "Intl_Country_BW"
+msgstr "బోట్స్వానా"
+
+msgid "Intl_Country_BY"
+msgstr "బెలారస్"
+
+msgid "Intl_Country_BZ"
+msgstr "బెలిజ్"
+
+msgid "Intl_Country_CA"
+msgstr "కెనడా"
+
+msgid "Intl_Country_CC"
+msgstr "కోకోస్ (కీలింగ్) దీవులు"
+
+msgid "Intl_Country_CD"
+msgstr "కాంగో- కిన్షాసా"
+
+msgid "Intl_Country_CF"
+msgstr "సెంట్రల్ ఆఫ్రికన్ రిపబ్లిక్"
+
+msgid "Intl_Country_CG"
+msgstr "కాంగో- బ్రాజావిల్లి"
+
+msgid "Intl_Country_CH"
+msgstr "స్విట్జర్లాండ్"
+
+msgid "Intl_Country_CI"
+msgstr "కోట్ డి ఐవోర్"
+
+msgid "Intl_Country_CK"
+msgstr "కుక్ దీవులు"
+
+msgid "Intl_Country_CL"
+msgstr "చిలీ"
+
+msgid "Intl_Country_CM"
+msgstr "కామెరూన్"
+
+msgid "Intl_Country_CN"
+msgstr "చైనా"
+
+msgid "Intl_Country_CO"
+msgstr "కొలంబియా"
+
+msgid "Intl_Country_CR"
+msgstr "కోస్టా రికా"
+
+msgid "Intl_Country_CU"
+msgstr "క్యూబా"
+
+msgid "Intl_Country_CV"
+msgstr "కేప్ వెర్డె"
+
+msgid "Intl_Country_CW"
+msgstr "క్యూరసో"
+
+msgid "Intl_Country_CX"
+msgstr "క్రిస్మస్ దీవి"
+
+msgid "Intl_Country_CY"
+msgstr "సైప్రస్"
+
+msgid "Intl_Country_CZ"
+msgstr "చెకియా"
+
+msgid "Intl_Country_DE"
+msgstr "జర్మనీ"
+
+msgid "Intl_Country_DJ"
+msgstr "జిబౌటి"
+
+msgid "Intl_Country_DK"
+msgstr "డెన్మార్క్"
+
+msgid "Intl_Country_DM"
+msgstr "డొమినికా"
+
+msgid "Intl_Country_DO"
+msgstr "డొమినికన్ రిపబ్లిక్"
+
+msgid "Intl_Country_DZ"
+msgstr "అల్జీరియా"
+
+msgid "Intl_Country_EC"
+msgstr "ఈక్వడార్"
+
+msgid "Intl_Country_EE"
+msgstr "ఎస్టోనియా"
+
+msgid "Intl_Country_EG"
+msgstr "ఈజిప్ట్"
+
+msgid "Intl_Country_EH"
+msgstr "పడమటి సహారా"
+
+msgid "Intl_Country_ER"
+msgstr "ఎరిట్రియా"
+
+msgid "Intl_Country_ES"
+msgstr "స్పెయిన్"
+
+msgid "Intl_Country_ET"
+msgstr "ఇథియోపియా"
+
+msgid "Intl_Country_FI"
+msgstr "ఫిన్లాండ్"
+
+msgid "Intl_Country_FJ"
+msgstr "ఫిజీ"
+
+msgid "Intl_Country_FK"
+msgstr "ఫాక్‌ల్యాండ్ దీవులు"
+
+msgid "Intl_Country_FM"
+msgstr "మైక్రోనేషియా"
+
+msgid "Intl_Country_FO"
+msgstr "ఫారో దీవులు"
+
+msgid "Intl_Country_FR"
+msgstr "ఫ్రాన్స్‌"
+
+msgid "Intl_Country_GA"
+msgstr "గేబన్"
+
+msgid "Intl_Country_GB"
+msgstr "యునైటెడ్ కింగ్‌డమ్"
+
+msgid "Intl_Country_GD"
+msgstr "గ్రెనడా"
+
+msgid "Intl_Country_GE"
+msgstr "జార్జియా"
+
+msgid "Intl_Country_GF"
+msgstr "ఫ్రెంచ్ గియానా"
+
+msgid "Intl_Country_GG"
+msgstr "గర్న్‌సీ"
+
+msgid "Intl_Country_GH"
+msgstr "ఘనా"
+
+msgid "Intl_Country_GI"
+msgstr "జిబ్రాల్టర్"
+
+msgid "Intl_Country_GL"
+msgstr "గ్రీన్‌ల్యాండ్"
+
+msgid "Intl_Country_GM"
+msgstr "గాంబియా"
+
+msgid "Intl_Country_GN"
+msgstr "గినియా"
+
+msgid "Intl_Country_GP"
+msgstr "గ్వాడెలోప్"
+
+msgid "Intl_Country_GQ"
+msgstr "ఈక్వటోరియల్ గినియా"
+
+msgid "Intl_Country_GR"
+msgstr "గ్రీస్"
+
+msgid "Intl_Country_GS"
+msgstr "దక్షిణ జార్జియా మరియు దక్షిణ శాండ్విచ్ దీవులు"
+
+msgid "Intl_Country_GT"
+msgstr "గ్వాటిమాలా"
+
+msgid "Intl_Country_GU"
+msgstr "గ్వామ్"
+
+msgid "Intl_Country_GW"
+msgstr "గినియా-బిస్సావ్"
+
+msgid "Intl_Country_GY"
+msgstr "గయానా"
+
+msgid "Intl_Country_HK"
+msgstr "హాంకాంగ్ ఎస్ఏఆర్"
+
+msgid "Intl_Country_HM"
+msgstr "హెర్డ్ దీవి మరియు మెక్‌డొనాల్డ్ దీవులు"
+
+msgid "Intl_Country_HN"
+msgstr "హోండురాస్"
+
+msgid "Intl_Country_HR"
+msgstr "క్రొయేషియా"
+
+msgid "Intl_Country_HT"
+msgstr "హైటి"
+
+msgid "Intl_Country_HU"
+msgstr "హంగేరీ"
+
+msgid "Intl_Country_ID"
+msgstr "ఇండోనేషియా"
+
+msgid "Intl_Country_IE"
+msgstr "ఐర్లాండ్"
+
+msgid "Intl_Country_IL"
+msgstr "ఇజ్రాయెల్"
+
+msgid "Intl_Country_IM"
+msgstr "ఐల్ ఆఫ్ మాన్"
+
+msgid "Intl_Country_IN"
+msgstr "భారతదేశం"
+
+msgid "Intl_Country_IO"
+msgstr "బ్రిటీష్ హిందూ మహాసముద్ర ప్రాంతం"
+
+msgid "Intl_Country_IQ"
+msgstr "ఇరాక్"
+
+msgid "Intl_Country_IR"
+msgstr "ఇరాన్"
+
+msgid "Intl_Country_IS"
+msgstr "ఐస్లాండ్"
+
+msgid "Intl_Country_IT"
+msgstr "ఇటలీ"
+
+msgid "Intl_Country_JE"
+msgstr "జెర్సీ"
+
+msgid "Intl_Country_JM"
+msgstr "జమైకా"
+
+msgid "Intl_Country_JO"
+msgstr "జోర్డాన్"
+
+msgid "Intl_Country_JP"
+msgstr "జపాన్"
+
+msgid "Intl_Country_KE"
+msgstr "కెన్యా"
+
+msgid "Intl_Country_KG"
+msgstr "కిర్గిజిస్తాన్"
+
+msgid "Intl_Country_KH"
+msgstr "కంబోడియా"
+
+msgid "Intl_Country_KI"
+msgstr "కిరిబాటి"
+
+msgid "Intl_Country_KM"
+msgstr "కొమొరోస్"
+
+msgid "Intl_Country_KN"
+msgstr "సెయింట్ కిట్స్ మరియు నెవిస్"
+
+msgid "Intl_Country_KP"
+msgstr "ఉత్తర కొరియా"
+
+msgid "Intl_Country_KR"
+msgstr "దక్షిణ కొరియా"
+
+msgid "Intl_Country_KW"
+msgstr "కువైట్"
+
+msgid "Intl_Country_KY"
+msgstr "కేమాన్ దీవులు"
+
+msgid "Intl_Country_KZ"
+msgstr "కజకిస్తాన్"
+
+msgid "Intl_Country_LA"
+msgstr "లావోస్"
+
+msgid "Intl_Country_LB"
+msgstr "లెబనాన్"
+
+msgid "Intl_Country_LC"
+msgstr "సెయింట్ లూసియా"
+
+msgid "Intl_Country_LI"
+msgstr "లిక్టెన్‌స్టెయిన్"
+
+msgid "Intl_Country_LK"
+msgstr "శ్రీలంక"
+
+msgid "Intl_Country_LR"
+msgstr "లైబీరియా"
+
+msgid "Intl_Country_LS"
+msgstr "లెసోతో"
+
+msgid "Intl_Country_LT"
+msgstr "లిథువేనియా"
+
+msgid "Intl_Country_LU"
+msgstr "లక్సెంబర్గ్"
+
+msgid "Intl_Country_LV"
+msgstr "లాత్వియా"
+
+msgid "Intl_Country_LY"
+msgstr "లిబియా"
+
+msgid "Intl_Country_MA"
+msgstr "మొరాకో"
+
+msgid "Intl_Country_MC"
+msgstr "మొనాకో"
+
+msgid "Intl_Country_MD"
+msgstr "మోల్డోవా"
+
+msgid "Intl_Country_ME"
+msgstr "మాంటెనెగ్రో"
+
+msgid "Intl_Country_MF"
+msgstr "సెయింట్ మార్టిన్"
+
+msgid "Intl_Country_MG"
+msgstr "మడగాస్కర్"
+
+msgid "Intl_Country_MH"
+msgstr "మార్షల్ దీవులు"
+
+msgid "Intl_Country_MK"
+msgstr "మేసిడోనియా"
+
+msgid "Intl_Country_ML"
+msgstr "మాలి"
+
+msgid "Intl_Country_MM"
+msgstr "మయన్మార్"
+
+msgid "Intl_Country_MN"
+msgstr "మంగోలియా"
+
+msgid "Intl_Country_MO"
+msgstr "మకావ్ ఎస్ఏఆర్ చైనా"
+
+msgid "Intl_Country_MP"
+msgstr "ఉత్తర మరియానా దీవులు"
+
+msgid "Intl_Country_MQ"
+msgstr "మార్టినీక్"
+
+msgid "Intl_Country_MR"
+msgstr "మౌరిటేనియా"
+
+msgid "Intl_Country_MS"
+msgstr "మాంట్సెరాట్"
+
+msgid "Intl_Country_MT"
+msgstr "మాల్టా"
+
+msgid "Intl_Country_MU"
+msgstr "మారిషస్"
+
+msgid "Intl_Country_MV"
+msgstr "మాల్దీవులు"
+
+msgid "Intl_Country_MW"
+msgstr "మలావీ"
+
+msgid "Intl_Country_MX"
+msgstr "మెక్సికో"
+
+msgid "Intl_Country_MY"
+msgstr "మలేషియా"
+
+msgid "Intl_Country_MZ"
+msgstr "మొజాంబిక్"
+
+msgid "Intl_Country_NA"
+msgstr "నమీబియా"
+
+msgid "Intl_Country_NC"
+msgstr "క్రొత్త కాలెడోనియా"
+
+msgid "Intl_Country_NE"
+msgstr "నైజర్"
+
+msgid "Intl_Country_NF"
+msgstr "నార్ఫోక్ దీవి"
+
+msgid "Intl_Country_NG"
+msgstr "నైజీరియా"
+
+msgid "Intl_Country_NI"
+msgstr "నికరాగువా"
+
+msgid "Intl_Country_NL"
+msgstr "నెదర్లాండ్స్"
+
+msgid "Intl_Country_NO"
+msgstr "నార్వే"
+
+msgid "Intl_Country_NP"
+msgstr "నేపాల్"
+
+msgid "Intl_Country_NR"
+msgstr "నౌరు"
+
+msgid "Intl_Country_NU"
+msgstr "నియూ"
+
+msgid "Intl_Country_NZ"
+msgstr "న్యూజిలాండ్"
+
+msgid "Intl_Country_OM"
+msgstr "ఓమన్"
+
+msgid "Intl_Country_PA"
+msgstr "పనామా"
+
+msgid "Intl_Country_PE"
+msgstr "పెరూ"
+
+msgid "Intl_Country_PF"
+msgstr "ఫ్రెంచ్ పోలినీషియా"
+
+msgid "Intl_Country_PG"
+msgstr "పాపువా న్యూ గినియా"
+
+msgid "Intl_Country_PH"
+msgstr "ఫిలిప్పైన్స్"
+
+msgid "Intl_Country_PK"
+msgstr "పాకిస్తాన్"
+
+msgid "Intl_Country_PL"
+msgstr "పోలాండ్"
+
+msgid "Intl_Country_PM"
+msgstr "సెయింట్ పియెర్ మరియు మికెలాన్"
+
+msgid "Intl_Country_PN"
+msgstr "పిట్‌కెయిర్న్ దీవులు"
+
+msgid "Intl_Country_PR"
+msgstr "ప్యూర్టో రికో"
+
+msgid "Intl_Country_PS"
+msgstr "పాలస్తీనియన్ ప్రాంతాలు"
+
+msgid "Intl_Country_PT"
+msgstr "పోర్చుగల్"
+
+msgid "Intl_Country_PW"
+msgstr "పాలావ్"
+
+msgid "Intl_Country_PY"
+msgstr "పరాగ్వే"
+
+msgid "Intl_Country_QA"
+msgstr "ఖతార్"
+
+msgid "Intl_Country_RE"
+msgstr "రీయూనియన్"
+
+msgid "Intl_Country_RO"
+msgstr "రోమేనియా"
+
+msgid "Intl_Country_RS"
+msgstr "సెర్బియా"
+
+msgid "Intl_Country_RU"
+msgstr "రష్యా"
+
+msgid "Intl_Country_RW"
+msgstr "రువాండా"
+
+msgid "Intl_Country_SA"
+msgstr "సౌదీ అరేబియా"
+
+msgid "Intl_Country_SB"
+msgstr "సోలమన్ దీవులు"
+
+msgid "Intl_Country_SC"
+msgstr "సీషెల్స్"
+
+msgid "Intl_Country_SD"
+msgstr "సూడాన్"
+
+msgid "Intl_Country_SE"
+msgstr "స్వీడన్"
+
+msgid "Intl_Country_SG"
+msgstr "సింగపూర్"
+
+msgid "Intl_Country_SH"
+msgstr "సెయింట్ హెలెనా"
+
+msgid "Intl_Country_SI"
+msgstr "స్లోవేనియా"
+
+msgid "Intl_Country_SJ"
+msgstr "స్వాల్‌బార్డ్ మరియు జాన్ మాయెన్"
+
+msgid "Intl_Country_SK"
+msgstr "స్లొవేకియా"
+
+msgid "Intl_Country_SL"
+msgstr "సియెర్రా లియాన్"
+
+msgid "Intl_Country_SM"
+msgstr "శాన్ మారినో"
+
+msgid "Intl_Country_SN"
+msgstr "సెనెగల్"
+
+msgid "Intl_Country_SO"
+msgstr "సోమాలియా"
+
+msgid "Intl_Country_SR"
+msgstr "సూరినామ్"
+
+msgid "Intl_Country_SS"
+msgstr "దక్షిణ సూడాన్"
+
+msgid "Intl_Country_ST"
+msgstr "సావో టోమ్ మరియు ప్రిన్సిపి"
+
+msgid "Intl_Country_SV"
+msgstr "ఎల్ సాల్వడోర్"
+
+msgid "Intl_Country_SX"
+msgstr "సింట్ మార్టెన్"
+
+msgid "Intl_Country_SY"
+msgstr "సిరియా"
+
+msgid "Intl_Country_SZ"
+msgstr "స్వాజిల్యాండ్"
+
+msgid "Intl_Country_TC"
+msgstr "టర్క్స్ మరియు కైకోస్ దీవులు"
+
+msgid "Intl_Country_TD"
+msgstr "చాద్"
+
+msgid "Intl_Country_TF"
+msgstr "ఫ్రెంచ్ దక్షిణ ప్రాంతాలు"
+
+msgid "Intl_Country_TG"
+msgstr "టోగో"
+
+msgid "Intl_Country_TH"
+msgstr "థాయిలాండ్"
+
+msgid "Intl_Country_TJ"
+msgstr "తజికిస్తాన్"
+
+msgid "Intl_Country_TK"
+msgstr "టోకెలావ్"
+
+msgid "Intl_Country_TL"
+msgstr "టిమోర్-లెస్టె"
+
+msgid "Intl_Country_TM"
+msgstr "టర్క్‌మెనిస్తాన్"
+
+msgid "Intl_Country_TN"
+msgstr "ట్యునీషియా"
+
+msgid "Intl_Country_TO"
+msgstr "టోంగా"
+
+msgid "Intl_Country_TR"
+msgstr "టర్కీ"
+
+msgid "Intl_Country_TT"
+msgstr "ట్రినిడాడ్ మరియు టొబాగో"
+
+msgid "Intl_Country_TV"
+msgstr "టువాలు"
+
+msgid "Intl_Country_TW"
+msgstr "తైవాన్"
+
+msgid "Intl_Country_TZ"
+msgstr "టాంజానియా"
+
+msgid "Intl_Country_UA"
+msgstr "ఉక్రెయిన్"
+
+msgid "Intl_Country_UG"
+msgstr "ఉగాండా"
+
+msgid "Intl_Country_UM"
+msgstr "సంయుక్త రాజ్య అమెరికా బయట ఉన్న దీవులు"
+
+msgid "Intl_Country_US"
+msgstr "యునైటెడ్ స్టేట్స్"
+
+msgid "Intl_Country_UY"
+msgstr "ఉరుగ్వే"
+
+msgid "Intl_Country_UZ"
+msgstr "ఉజ్బెకిస్తాన్"
+
+msgid "Intl_Country_VA"
+msgstr "వాటికన్ నగరం"
+
+msgid "Intl_Country_VC"
+msgstr "సెయింట్ విన్సెంట్ మరియు గ్రెనడీన్స్"
+
+msgid "Intl_Country_VE"
+msgstr "వెనిజులా"
+
+msgid "Intl_Country_VG"
+msgstr "బ్రిటిష్ వర్జిన్ దీవులు"
+
+msgid "Intl_Country_VI"
+msgstr "యు.ఎస్. వర్జిన్ దీవులు"
+
+msgid "Intl_Country_VN"
+msgstr "వియత్నాం"
+
+msgid "Intl_Country_VU"
+msgstr "వనాటు"
+
+msgid "Intl_Country_WF"
+msgstr "వాల్లిస్ మరియు ఫుటునా"
+
+msgid "Intl_Country_WS"
+msgstr "సమోవా"
+
+msgid "Intl_Country_YE"
+msgstr "యెమెన్"
+
+msgid "Intl_Country_YT"
+msgstr "మాయొట్"
+
+msgid "Intl_Country_ZA"
+msgstr "దక్షిణ ఆఫ్రికా"
+
+msgid "Intl_Country_ZM"
+msgstr "జాంబియా"
+
+msgid "Intl_Country_ZW"
+msgstr "జింబాబ్వే"
+
+msgid "Intl_CurrencySymbol_AED"
+msgstr "AED"
+
+msgid "Intl_CurrencySymbol_AFN"
+msgstr "AFN"
+
+msgid "Intl_CurrencySymbol_ALL"
+msgstr "ALL"
+
+msgid "Intl_CurrencySymbol_AMD"
+msgstr "AMD"
+
+msgid "Intl_CurrencySymbol_ANG"
+msgstr "ANG"
+
+msgid "Intl_CurrencySymbol_AOA"
+msgstr "AOA"
+
+msgid "Intl_CurrencySymbol_ARS"
+msgstr "ARS"
+
+msgid "Intl_CurrencySymbol_AUD"
+msgstr "A$"
+
+msgid "Intl_CurrencySymbol_AWG"
+msgstr "AWG"
+
+msgid "Intl_CurrencySymbol_AZN"
+msgstr "AZN"
+
+msgid "Intl_CurrencySymbol_BAM"
+msgstr "BAM"
+
+msgid "Intl_CurrencySymbol_BBD"
+msgstr "BBD"
+
+msgid "Intl_CurrencySymbol_BDT"
+msgstr "BDT"
+
+msgid "Intl_CurrencySymbol_BGN"
+msgstr "BGN"
+
+msgid "Intl_CurrencySymbol_BHD"
+msgstr "BHD"
+
+msgid "Intl_CurrencySymbol_BIF"
+msgstr "BIF"
+
+msgid "Intl_CurrencySymbol_BMD"
+msgstr "BMD"
+
+msgid "Intl_CurrencySymbol_BND"
+msgstr "BND"
+
+msgid "Intl_CurrencySymbol_BOB"
+msgstr "BOB"
+
+msgid "Intl_CurrencySymbol_BRL"
+msgstr "R$"
+
+msgid "Intl_CurrencySymbol_BSD"
+msgstr "BSD"
+
+msgid "Intl_CurrencySymbol_BTC"
+msgstr "BTC"
+
+msgid "Intl_CurrencySymbol_BTN"
+msgstr "BTN"
+
+msgid "Intl_CurrencySymbol_BWP"
+msgstr "BWP"
+
+msgid "Intl_CurrencySymbol_BYN"
+msgstr "BYN"
+
+msgid "Intl_CurrencySymbol_BZD"
+msgstr "BZD"
+
+msgid "Intl_CurrencySymbol_CAD"
+msgstr "CA$"
+
+msgid "Intl_CurrencySymbol_CDF"
+msgstr "CDF"
+
+msgid "Intl_CurrencySymbol_CHF"
+msgstr "CHF"
+
+msgid "Intl_CurrencySymbol_CLP"
+msgstr "CLP"
+
+msgid "Intl_CurrencySymbol_CNY"
+msgstr "CN¥"
+
+msgid "Intl_CurrencySymbol_COP"
+msgstr "COP"
+
+msgid "Intl_CurrencySymbol_CRC"
+msgstr "CRC"
+
+msgid "Intl_CurrencySymbol_CUC"
+msgstr "CUC"
+
+msgid "Intl_CurrencySymbol_CUP"
+msgstr "CUP"
+
+msgid "Intl_CurrencySymbol_CVE"
+msgstr "CVE"
+
+msgid "Intl_CurrencySymbol_CZK"
+msgstr "CZK"
+
+msgid "Intl_CurrencySymbol_DJF"
+msgstr "DJF"
+
+msgid "Intl_CurrencySymbol_DKK"
+msgstr "DKK"
+
+msgid "Intl_CurrencySymbol_DOP"
+msgstr "DOP"
+
+msgid "Intl_CurrencySymbol_DZD"
+msgstr "DZD"
+
+msgid "Intl_CurrencySymbol_EGP"
+msgstr "EGP"
+
+msgid "Intl_CurrencySymbol_ERN"
+msgstr "ERN"
+
+msgid "Intl_CurrencySymbol_ETB"
+msgstr "ETB"
+
+msgid "Intl_CurrencySymbol_EUR"
+msgstr "€"
+
+msgid "Intl_CurrencySymbol_FJD"
+msgstr "FJD"
+
+msgid "Intl_CurrencySymbol_FKP"
+msgstr "FKP"
+
+msgid "Intl_CurrencySymbol_GBP"
+msgstr "£"
+
+msgid "Intl_CurrencySymbol_GEL"
+msgstr "GEL"
+
+msgid "Intl_CurrencySymbol_GHS"
+msgstr "GHS"
+
+msgid "Intl_CurrencySymbol_GIP"
+msgstr "GIP"
+
+msgid "Intl_CurrencySymbol_GMD"
+msgstr "GMD"
+
+msgid "Intl_CurrencySymbol_GNF"
+msgstr "GNF"
+
+msgid "Intl_CurrencySymbol_GTQ"
+msgstr "GTQ"
+
+msgid "Intl_CurrencySymbol_GYD"
+msgstr "GYD"
+
+msgid "Intl_CurrencySymbol_HKD"
+msgstr "HK$"
+
+msgid "Intl_CurrencySymbol_HNL"
+msgstr "HNL"
+
+msgid "Intl_CurrencySymbol_HRK"
+msgstr "HRK"
+
+msgid "Intl_CurrencySymbol_HTG"
+msgstr "HTG"
+
+msgid "Intl_CurrencySymbol_HUF"
+msgstr "HUF"
+
+msgid "Intl_CurrencySymbol_IDR"
+msgstr "IDR"
+
+msgid "Intl_CurrencySymbol_ILS"
+msgstr "₪"
+
+msgid "Intl_CurrencySymbol_INR"
+msgstr "₹"
+
+msgid "Intl_CurrencySymbol_IQD"
+msgstr "IQD"
+
+msgid "Intl_CurrencySymbol_IRR"
+msgstr "IRR"
+
+msgid "Intl_CurrencySymbol_ISK"
+msgstr "ISK"
+
+msgid "Intl_CurrencySymbol_JMD"
+msgstr "JMD"
+
+msgid "Intl_CurrencySymbol_JOD"
+msgstr "JOD"
+
+msgid "Intl_CurrencySymbol_JPY"
+msgstr "JP¥"
+
+msgid "Intl_CurrencySymbol_KES"
+msgstr "KES"
+
+msgid "Intl_CurrencySymbol_KGS"
+msgstr "KGS"
+
+msgid "Intl_CurrencySymbol_KHR"
+msgstr "KHR"
+
+msgid "Intl_CurrencySymbol_KMF"
+msgstr "KMF"
+
+msgid "Intl_CurrencySymbol_KPW"
+msgstr "KPW"
+
+msgid "Intl_CurrencySymbol_KRW"
+msgstr "₩"
+
+msgid "Intl_CurrencySymbol_KWD"
+msgstr "KWD"
+
+msgid "Intl_CurrencySymbol_KYD"
+msgstr "KYD"
+
+msgid "Intl_CurrencySymbol_KZT"
+msgstr "KZT"
+
+msgid "Intl_CurrencySymbol_LAK"
+msgstr "LAK"
+
+msgid "Intl_CurrencySymbol_LBP"
+msgstr "LBP"
+
+msgid "Intl_CurrencySymbol_LKR"
+msgstr "LKR"
+
+msgid "Intl_CurrencySymbol_LRD"
+msgstr "LRD"
+
+msgid "Intl_CurrencySymbol_LSL"
+msgstr "LSL"
+
+msgid "Intl_CurrencySymbol_LYD"
+msgstr "LYD"
+
+msgid "Intl_CurrencySymbol_MAD"
+msgstr "MAD"
+
+msgid "Intl_CurrencySymbol_MDL"
+msgstr "MDL"
+
+msgid "Intl_CurrencySymbol_MGA"
+msgstr "MGA"
+
+msgid "Intl_CurrencySymbol_MKD"
+msgstr "MKD"
+
+msgid "Intl_CurrencySymbol_MMK"
+msgstr "MMK"
+
+msgid "Intl_CurrencySymbol_MNT"
+msgstr "MNT"
+
+msgid "Intl_CurrencySymbol_MOP"
+msgstr "MOP"
+
+msgid "Intl_CurrencySymbol_MRU"
+msgstr "MRU"
+
+msgid "Intl_CurrencySymbol_MUR"
+msgstr "MUR"
+
+msgid "Intl_CurrencySymbol_MVR"
+msgstr "MVR"
+
+msgid "Intl_CurrencySymbol_MWK"
+msgstr "MWK"
+
+msgid "Intl_CurrencySymbol_MXN"
+msgstr "MX$"
+
+msgid "Intl_CurrencySymbol_MYR"
+msgstr "MYR"
+
+msgid "Intl_CurrencySymbol_MZN"
+msgstr "MZN"
+
+msgid "Intl_CurrencySymbol_NAD"
+msgstr "NAD"
+
+msgid "Intl_CurrencySymbol_NGN"
+msgstr "NGN"
+
+msgid "Intl_CurrencySymbol_NIO"
+msgstr "NIO"
+
+msgid "Intl_CurrencySymbol_NOK"
+msgstr "NOK"
+
+msgid "Intl_CurrencySymbol_NPR"
+msgstr "NPR"
+
+msgid "Intl_CurrencySymbol_NZD"
+msgstr "NZ$"
+
+msgid "Intl_CurrencySymbol_OMR"
+msgstr "OMR"
+
+msgid "Intl_CurrencySymbol_PAB"
+msgstr "PAB"
+
+msgid "Intl_CurrencySymbol_PEN"
+msgstr "PEN"
+
+msgid "Intl_CurrencySymbol_PGK"
+msgstr "PGK"
+
+msgid "Intl_CurrencySymbol_PHP"
+msgstr "PHP"
+
+msgid "Intl_CurrencySymbol_PKR"
+msgstr "PKR"
+
+msgid "Intl_CurrencySymbol_PLN"
+msgstr "PLN"
+
+msgid "Intl_CurrencySymbol_PYG"
+msgstr "PYG"
+
+msgid "Intl_CurrencySymbol_QAR"
+msgstr "QAR"
+
+msgid "Intl_CurrencySymbol_RON"
+msgstr "RON"
+
+msgid "Intl_CurrencySymbol_RSD"
+msgstr "RSD"
+
+msgid "Intl_CurrencySymbol_RUB"
+msgstr "RUB"
+
+msgid "Intl_CurrencySymbol_RWF"
+msgstr "RWF"
+
+msgid "Intl_CurrencySymbol_SAR"
+msgstr "SAR"
+
+msgid "Intl_CurrencySymbol_SBD"
+msgstr "SBD"
+
+msgid "Intl_CurrencySymbol_SCR"
+msgstr "SCR"
+
+msgid "Intl_CurrencySymbol_SDG"
+msgstr "SDG"
+
+msgid "Intl_CurrencySymbol_SEK"
+msgstr "SEK"
+
+msgid "Intl_CurrencySymbol_SGD"
+msgstr "SGD"
+
+msgid "Intl_CurrencySymbol_SHP"
+msgstr "SHP"
+
+msgid "Intl_CurrencySymbol_SLL"
+msgstr "SLL"
+
+msgid "Intl_CurrencySymbol_SOS"
+msgstr "SOS"
+
+msgid "Intl_CurrencySymbol_SRD"
+msgstr "SRD"
+
+msgid "Intl_CurrencySymbol_SSP"
+msgstr "SSP"
+
+msgid "Intl_CurrencySymbol_STN"
+msgstr "STN"
+
+msgid "Intl_CurrencySymbol_SYP"
+msgstr "SYP"
+
+msgid "Intl_CurrencySymbol_SZL"
+msgstr "SZL"
+
+msgid "Intl_CurrencySymbol_THB"
+msgstr "฿"
+
+msgid "Intl_CurrencySymbol_TJS"
+msgstr "TJS"
+
+msgid "Intl_CurrencySymbol_TMT"
+msgstr "TMT"
+
+msgid "Intl_CurrencySymbol_TND"
+msgstr "TND"
+
+msgid "Intl_CurrencySymbol_TOP"
+msgstr "TOP"
+
+msgid "Intl_CurrencySymbol_TRY"
+msgstr "TRY"
+
+msgid "Intl_CurrencySymbol_TTD"
+msgstr "TTD"
+
+msgid "Intl_CurrencySymbol_TWD"
+msgstr "NT$"
+
+msgid "Intl_CurrencySymbol_TZS"
+msgstr "TZS"
+
+msgid "Intl_CurrencySymbol_UAH"
+msgstr "UAH"
+
+msgid "Intl_CurrencySymbol_UGX"
+msgstr "UGX"
+
+msgid "Intl_CurrencySymbol_USD"
+msgstr "$"
+
+msgid "Intl_CurrencySymbol_UYU"
+msgstr "UYU"
+
+msgid "Intl_CurrencySymbol_UZS"
+msgstr "UZS"
+
+msgid "Intl_CurrencySymbol_VEF"
+msgstr "VEF"
+
+msgid "Intl_CurrencySymbol_VND"
+msgstr "₫"
+
+msgid "Intl_CurrencySymbol_VUV"
+msgstr "VUV"
+
+msgid "Intl_CurrencySymbol_WST"
+msgstr "WST"
+
+msgid "Intl_CurrencySymbol_XAF"
+msgstr "FCFA"
+
+msgid "Intl_CurrencySymbol_XCD"
+msgstr "EC$"
+
+msgid "Intl_CurrencySymbol_XOF"
+msgstr "CFA"
+
+msgid "Intl_CurrencySymbol_XPF"
+msgstr "CFPF"
+
+msgid "Intl_CurrencySymbol_YER"
+msgstr "YER"
+
+msgid "Intl_CurrencySymbol_ZAR"
+msgstr "ZAR"
+
+msgid "Intl_CurrencySymbol_ZMW"
+msgstr "ZMW"
+
+msgid "Intl_Currency_AED"
+msgstr "యునైటెడ్ ఆరబ్ ఎమిరేట్స్ దిరామ్"
+
+msgid "Intl_Currency_AFN"
+msgstr "ఆఫ్ఘాన్ ఆఫ్ఘాని"
+
+msgid "Intl_Currency_ALL"
+msgstr "ఆల్బేనియన్ లేక్"
+
+msgid "Intl_Currency_AMD"
+msgstr "అమెరికన్ డ్రామ్"
+
+msgid "Intl_Currency_ANG"
+msgstr "నెదర్లాండ్స్ యాంటిల్లియన్ గిల్‌డర్"
+
+msgid "Intl_Currency_AOA"
+msgstr "అంగోలాన్ క్వాన్‌జా"
+
+msgid "Intl_Currency_ARS"
+msgstr "అర్జెంటీనా పెసో"
+
+msgid "Intl_Currency_AUD"
+msgstr "ఆస్ట్రేలియన్ డాలర్"
+
+msgid "Intl_Currency_AWG"
+msgstr "అరుబన్ ఫ్లోరిన్"
+
+msgid "Intl_Currency_AZN"
+msgstr "అజర్బైజాన్ మానట్"
+
+msgid "Intl_Currency_BAM"
+msgstr "బోస్నియా-హెర్జగోవినా మార్పిడి చెయ్యగలిగే మార్క్"
+
+msgid "Intl_Currency_BBD"
+msgstr "బర్బాడియన్ డాలర్"
+
+msgid "Intl_Currency_BDT"
+msgstr "బాంగ్లాదేశ్ టాకా"
+
+msgid "Intl_Currency_BGN"
+msgstr "బల్గేరియన్ లేవ్"
+
+msgid "Intl_Currency_BHD"
+msgstr "బహ్రెయిన్ దినార్"
+
+msgid "Intl_Currency_BIF"
+msgstr "బురిండియన్ ఫ్రాంక్"
+
+msgid "Intl_Currency_BMD"
+msgstr "బెర్ముడన్ డాలర్"
+
+msgid "Intl_Currency_BND"
+msgstr "బ్రూనై డాలర్"
+
+msgid "Intl_Currency_BOB"
+msgstr "బొలీవియన్ బొలీవియానో"
+
+msgid "Intl_Currency_BRL"
+msgstr "బ్రెజిలియన్ రియల్"
+
+msgid "Intl_Currency_BSD"
+msgstr "బహామియన్ డాలర్"
+
+msgid "Intl_Currency_BTC"
+msgstr "Bitcoin"
+
+msgid "Intl_Currency_BTN"
+msgstr "భూటానీయుల గుల్‌ట్రుమ్"
+
+msgid "Intl_Currency_BWP"
+msgstr "బోట్స్‌వానా పులా"
+
+msgid "Intl_Currency_BYN"
+msgstr "బెలరూసియన్ రూబల్"
+
+msgid "Intl_Currency_BZD"
+msgstr "బెలీజ్ డాలర్"
+
+msgid "Intl_Currency_CAD"
+msgstr "కెనడియన్ డాలర్"
+
+msgid "Intl_Currency_CDF"
+msgstr "కొంగోలిస్ ఫ్రాంక్"
+
+msgid "Intl_Currency_CHF"
+msgstr "స్విస్ ఫ్రాంక్"
+
+msgid "Intl_Currency_CLP"
+msgstr "చిలియన్ పెసో"
+
+msgid "Intl_Currency_CNY"
+msgstr "చైనా దేశ యువాన్"
+
+msgid "Intl_Currency_COP"
+msgstr "కొలంబియన్ పెసో"
+
+msgid "Intl_Currency_CRC"
+msgstr "కోస్టా రికన్ కోలోన్"
+
+msgid "Intl_Currency_CUC"
+msgstr "క్యూబన్ కన్వర్టబుల్ పెసో"
+
+msgid "Intl_Currency_CUP"
+msgstr "క్యూబన్ పెసో"
+
+msgid "Intl_Currency_CVE"
+msgstr "కేప్ వెర్డియన్ ఎస్కుడో"
+
+msgid "Intl_Currency_CZK"
+msgstr "చెక్ రిపబ్లిక్ కోరునా"
+
+msgid "Intl_Currency_DJF"
+msgstr "జిబోటియన్ ఫ్రాంక్"
+
+msgid "Intl_Currency_DKK"
+msgstr "డానిష్ క్రోన్"
+
+msgid "Intl_Currency_DOP"
+msgstr "డోమినికన్ పెసో"
+
+msgid "Intl_Currency_DZD"
+msgstr "అల్జీరియన్ దీనార్"
+
+msgid "Intl_Currency_EGP"
+msgstr "ఈజిప్షియన్ పౌండ్"
+
+msgid "Intl_Currency_ERN"
+msgstr "ఎరిట్రీన్ నక్ఫా"
+
+msgid "Intl_Currency_ETB"
+msgstr "ఇథియోపియన్ బర్"
+
+msgid "Intl_Currency_EUR"
+msgstr "యురొ"
+
+msgid "Intl_Currency_FJD"
+msgstr "ఫీజియన్ డాలర్"
+
+msgid "Intl_Currency_FKP"
+msgstr "ఫాక్‌ల్యాండ్ దీవులు పౌండ్"
+
+msgid "Intl_Currency_GBP"
+msgstr "బ్రిటిష్ పౌండ్"
+
+msgid "Intl_Currency_GEL"
+msgstr "జార్జియన్ లారి"
+
+msgid "Intl_Currency_GHS"
+msgstr "గానెయన్ సెడి"
+
+msgid "Intl_Currency_GIP"
+msgstr "జిబ్రల్‌టూర్ పౌండ్"
+
+msgid "Intl_Currency_GMD"
+msgstr "గాంబియన్ దలాసి"
+
+msgid "Intl_Currency_GNF"
+msgstr "గ్వినియన్ ఫ్రాంక్"
+
+msgid "Intl_Currency_GTQ"
+msgstr "గ్యుటెమాలన్ క్వెట్‌జల్"
+
+msgid "Intl_Currency_GYD"
+msgstr "గుయనియాస్ డాలర్"
+
+msgid "Intl_Currency_HKD"
+msgstr "హాంకాంగ్ డాలర్"
+
+msgid "Intl_Currency_HNL"
+msgstr "హోండురన్ లెమిపిరా"
+
+msgid "Intl_Currency_HRK"
+msgstr "క్రొయేషియన్ క్యూన"
+
+msgid "Intl_Currency_HTG"
+msgstr "హైటియన్ గ్వోర్డే"
+
+msgid "Intl_Currency_HUF"
+msgstr "హంగేరియన్ ఫోరింట్"
+
+msgid "Intl_Currency_IDR"
+msgstr "ఇండోనేషియా రూపాయి"
+
+msgid "Intl_Currency_ILS"
+msgstr "ఐరాయిలి న్యూ షెక్యెల్"
+
+msgid "Intl_Currency_INR"
+msgstr "రూపాయి"
+
+msgid "Intl_Currency_IQD"
+msgstr "ఇరాకీ దీనార్"
+
+msgid "Intl_Currency_IRR"
+msgstr "ఇరానియన్ రీయల్"
+
+msgid "Intl_Currency_ISK"
+msgstr "ఐస్లాండిక్ క్రోనా"
+
+msgid "Intl_Currency_JMD"
+msgstr "జమైకన్ డాలర్"
+
+msgid "Intl_Currency_JOD"
+msgstr "జోర్‌డానియన్ దీనార్"
+
+msgid "Intl_Currency_JPY"
+msgstr "జపాను దేశ యెన్"
+
+msgid "Intl_Currency_KES"
+msgstr "కెన్యాన్ షిల్లింగ్"
+
+msgid "Intl_Currency_KGS"
+msgstr "కిర్గిస్థాని సౌమ్"
+
+msgid "Intl_Currency_KHR"
+msgstr "కాంబోడియన్ రీల్"
+
+msgid "Intl_Currency_KMF"
+msgstr "కొమోరియన్ ఫ్రాంక్"
+
+msgid "Intl_Currency_KPW"
+msgstr "ఉత్తర కొరియా వోన్"
+
+msgid "Intl_Currency_KRW"
+msgstr "దక్షిణ కొరియా వోన్"
+
+msgid "Intl_Currency_KWD"
+msgstr "కువైట్ దీనార్"
+
+msgid "Intl_Currency_KYD"
+msgstr "కేమాన్ దీవుల డాలర్"
+
+msgid "Intl_Currency_KZT"
+msgstr "ఖజికిస్థాన్ టెంగే"
+
+msgid "Intl_Currency_LAK"
+msgstr "లాటియన్ కిప్"
+
+msgid "Intl_Currency_LBP"
+msgstr "లెబనీస్ పౌండ్"
+
+msgid "Intl_Currency_LKR"
+msgstr "శ్రీలంక రూపాయి"
+
+msgid "Intl_Currency_LRD"
+msgstr "లిబేరియన్ డాలర్"
+
+msgid "Intl_Currency_LSL"
+msgstr "లెసోధో లోటి"
+
+msgid "Intl_Currency_LYD"
+msgstr "లిబియన్ దీనార్"
+
+msgid "Intl_Currency_MAD"
+msgstr "మోరోకన్ దిర్హుమ్"
+
+msgid "Intl_Currency_MDL"
+msgstr "మోల్‌డోవన్ ల్యూ"
+
+msgid "Intl_Currency_MGA"
+msgstr "మలగసీ అరియరీ"
+
+msgid "Intl_Currency_MKD"
+msgstr "మెసిడోనియన్ దినార్"
+
+msgid "Intl_Currency_MMK"
+msgstr "మయన్మార్ క్యాట్"
+
+msgid "Intl_Currency_MNT"
+msgstr "మంగోలియన్ టుగ్రిక్"
+
+msgid "Intl_Currency_MOP"
+msgstr "మకనీస్ పటాక"
+
+msgid "Intl_Currency_MRU"
+msgstr "మౌరిటానియన్ ఒగ్యియా"
+
+msgid "Intl_Currency_MUR"
+msgstr "మారిషన్ రూపాయి"
+
+msgid "Intl_Currency_MVR"
+msgstr "మాల్దీవియన్ రుఫియా"
+
+msgid "Intl_Currency_MWK"
+msgstr "మలావియన్ క్వాచా"
+
+msgid "Intl_Currency_MXN"
+msgstr "మెక్సికన్ పెసో"
+
+msgid "Intl_Currency_MYR"
+msgstr "మలేషియా రింగ్గిట్"
+
+msgid "Intl_Currency_MZN"
+msgstr "మొజాంబికన్ మెటికల్"
+
+msgid "Intl_Currency_NAD"
+msgstr "నమిబియన్ డాలర్"
+
+msgid "Intl_Currency_NGN"
+msgstr "నైజీరియన్ నైరా"
+
+msgid "Intl_Currency_NIO"
+msgstr "నికరగ్యుయన్ కొర్‌డుబు"
+
+msgid "Intl_Currency_NOK"
+msgstr "నార్వేజీయన్ క్రోన్"
+
+msgid "Intl_Currency_NPR"
+msgstr "నేపాలీయుల రూపాయి"
+
+msgid "Intl_Currency_NZD"
+msgstr "న్యూజిలాండ్ డాలర్"
+
+msgid "Intl_Currency_OMR"
+msgstr "ఒమాని రీయల్"
+
+msgid "Intl_Currency_PAB"
+msgstr "పనామనియన్ బల్బోవ"
+
+msgid "Intl_Currency_PEN"
+msgstr "పెరువియన్ సోల్"
+
+msgid "Intl_Currency_PGK"
+msgstr "పప్యూ న్యూ గ్యినియన్ కినా"
+
+msgid "Intl_Currency_PHP"
+msgstr "ఫిలిప్పిన్ పెసో"
+
+msgid "Intl_Currency_PKR"
+msgstr "పాకిస్థాన్ రూపాయి"
+
+msgid "Intl_Currency_PLN"
+msgstr "పోలిష్ జ్లోటీ"
+
+msgid "Intl_Currency_PYG"
+msgstr "పరగ్వాయన్ గ్వారని"
+
+msgid "Intl_Currency_QAR"
+msgstr "క్వాటరి రీయల్"
+
+msgid "Intl_Currency_RON"
+msgstr "రోమానియాన్ లెయు"
+
+msgid "Intl_Currency_RSD"
+msgstr "సెర్బియన్ దీనార్"
+
+msgid "Intl_Currency_RUB"
+msgstr "రష్యన్ రూబల్"
+
+msgid "Intl_Currency_RWF"
+msgstr "ర్వానడాన్ ఫ్రాంక్"
+
+msgid "Intl_Currency_SAR"
+msgstr "సౌది రియల్"
+
+msgid "Intl_Currency_SBD"
+msgstr "సోలోమన్ దీవుల డాలర్"
+
+msgid "Intl_Currency_SCR"
+msgstr "సెయిచెల్లోయిస్ రూపాయి"
+
+msgid "Intl_Currency_SDG"
+msgstr "సుడానీస్ పౌండ్"
+
+msgid "Intl_Currency_SEK"
+msgstr "స్వీడిష్ క్రోనా"
+
+msgid "Intl_Currency_SGD"
+msgstr "సింగపూర్ డాలర్"
+
+msgid "Intl_Currency_SHP"
+msgstr "సెయింట్ హెలెనా పౌండ్"
+
+msgid "Intl_Currency_SLL"
+msgstr "సీయిరు లియోనియన్ లీయోన్"
+
+msgid "Intl_Currency_SOS"
+msgstr "సొమాలి షిల్లింగ్"
+
+msgid "Intl_Currency_SRD"
+msgstr "సురినామీయుల డాలర్"
+
+msgid "Intl_Currency_SSP"
+msgstr "దక్షిణ సుడానీస్ పౌండ్"
+
+msgid "Intl_Currency_STN"
+msgstr "సావో టోమ్ మరియు ప్రిన్సిపి డోబ్రా"
+
+msgid "Intl_Currency_SYP"
+msgstr "సిరీయన్ పౌండ్"
+
+msgid "Intl_Currency_SZL"
+msgstr "స్వాజి లిలాన్గేని"
+
+msgid "Intl_Currency_THB"
+msgstr "థాయ్ బాట్"
+
+msgid "Intl_Currency_TJS"
+msgstr "తజికిస్థాన్ సమోని"
+
+msgid "Intl_Currency_TMT"
+msgstr "తుర్క్‌మెనిస్థాని మనాట్"
+
+msgid "Intl_Currency_TND"
+msgstr "తునీషియన్ దీనార్"
+
+msgid "Intl_Currency_TOP"
+msgstr "టోంగాన్ పాంʻగా"
+
+msgid "Intl_Currency_TRY"
+msgstr "తుర్కిష్ లిరా"
+
+msgid "Intl_Currency_TTD"
+msgstr "ట్రినిడాడ్ మరియు టొబాగో డాలర్"
+
+msgid "Intl_Currency_TWD"
+msgstr "క్రొత్త తైవాన్ డాలర్"
+
+msgid "Intl_Currency_TZS"
+msgstr "టాంజానియన్ షిల్లింగ్"
+
+msgid "Intl_Currency_UAH"
+msgstr "ఉక్రయినియన్ హ్రివ్‌నియా"
+
+msgid "Intl_Currency_UGX"
+msgstr "ఉగాండన్ షిల్లింగ్"
+
+msgid "Intl_Currency_USD"
+msgstr "అమెరికా డాలర్"
+
+msgid "Intl_Currency_UYU"
+msgstr "ఉరుగ్వెయన్ పెసో"
+
+msgid "Intl_Currency_UZS"
+msgstr "ఉజ్‌బెకిస్తాన్ సౌమ్"
+
+msgid "Intl_Currency_VEF"
+msgstr "వెనుజులా బోలివర్ (2008–2018)"
+
+msgid "Intl_Currency_VND"
+msgstr "వియత్నామీయుల డాంగ్"
+
+msgid "Intl_Currency_VUV"
+msgstr "వనాటు వటు"
+
+msgid "Intl_Currency_WST"
+msgstr "సమోయన్ తాలా"
+
+msgid "Intl_Currency_XAF"
+msgstr "సెంట్రల్ ఆఫ్రికన్ సిఎఫ్‌ఎ ఫ్రాంక్"
+
+msgid "Intl_Currency_XCD"
+msgstr "తూర్పు కరీబియన్ డాలర్"
+
+msgid "Intl_Currency_XOF"
+msgstr "పశ్చిమ ఆఫ్రికన్ సిఏఫ్ఏ ఫ్రాంక్"
+
+msgid "Intl_Currency_XPF"
+msgstr "సిఎఫ్‌పి ఫ్రాంక్"
+
+msgid "Intl_Currency_YER"
+msgstr "ఎమునీ రీయల్"
+
+msgid "Intl_Currency_ZAR"
+msgstr "దక్షిణ ఆఫ్రికా ర్యాండ్"
+
+msgid "Intl_Currency_ZMW"
+msgstr "జాంబియన్ క్వాచా"
+
+msgid "Intl_Day_Long_1"
+msgstr "సోమవారం"
+
+msgid "Intl_Day_Long_2"
+msgstr "మంగళవారం"
+
+msgid "Intl_Day_Long_3"
+msgstr "బుధవారం"
+
+msgid "Intl_Day_Long_4"
+msgstr "గురువారం"
+
+msgid "Intl_Day_Long_5"
+msgstr "శుక్రవారం"
+
+msgid "Intl_Day_Long_6"
+msgstr "శనివారం"
+
+msgid "Intl_Day_Long_7"
+msgstr "ఆదివారం"
+
+msgid "Intl_Day_Long_StandAlone_1"
+msgstr "సోమవారం"
+
+msgid "Intl_Day_Long_StandAlone_2"
+msgstr "మంగళవారం"
+
+msgid "Intl_Day_Long_StandAlone_3"
+msgstr "బుధవారం"
+
+msgid "Intl_Day_Long_StandAlone_4"
+msgstr "గురువారం"
+
+msgid "Intl_Day_Long_StandAlone_5"
+msgstr "శుక్రవారం"
+
+msgid "Intl_Day_Long_StandAlone_6"
+msgstr "శనివారం"
+
+msgid "Intl_Day_Long_StandAlone_7"
+msgstr "ఆదివారం"
+
+msgid "Intl_Day_Min_1"
+msgstr "సోమ"
+
+msgid "Intl_Day_Min_2"
+msgstr "మం"
+
+msgid "Intl_Day_Min_3"
+msgstr "బుధ"
+
+msgid "Intl_Day_Min_4"
+msgstr "గురు"
+
+msgid "Intl_Day_Min_5"
+msgstr "శుక్ర"
+
+msgid "Intl_Day_Min_6"
+msgstr "శని"
+
+msgid "Intl_Day_Min_7"
+msgstr "ఆది"
+
+msgid "Intl_Day_Min_StandAlone_1"
+msgstr "సోమ"
+
+msgid "Intl_Day_Min_StandAlone_2"
+msgstr "మం"
+
+msgid "Intl_Day_Min_StandAlone_3"
+msgstr "బుధ"
+
+msgid "Intl_Day_Min_StandAlone_4"
+msgstr "గురు"
+
+msgid "Intl_Day_Min_StandAlone_5"
+msgstr "శుక్ర"
+
+msgid "Intl_Day_Min_StandAlone_6"
+msgstr "శని"
+
+msgid "Intl_Day_Min_StandAlone_7"
+msgstr "ఆది"
+
+msgid "Intl_Day_Short_1"
+msgstr "సోమ"
+
+msgid "Intl_Day_Short_2"
+msgstr "మంగళ"
+
+msgid "Intl_Day_Short_3"
+msgstr "బుధ"
+
+msgid "Intl_Day_Short_4"
+msgstr "గురు"
+
+msgid "Intl_Day_Short_5"
+msgstr "శుక్ర"
+
+msgid "Intl_Day_Short_6"
+msgstr "శని"
+
+msgid "Intl_Day_Short_7"
+msgstr "ఆది"
+
+msgid "Intl_Day_Short_StandAlone_1"
+msgstr "సోమ"
+
+msgid "Intl_Day_Short_StandAlone_2"
+msgstr "మంగళ"
+
+msgid "Intl_Day_Short_StandAlone_3"
+msgstr "బుధ"
+
+msgid "Intl_Day_Short_StandAlone_4"
+msgstr "గురు"
+
+msgid "Intl_Day_Short_StandAlone_5"
+msgstr "శుక్ర"
+
+msgid "Intl_Day_Short_StandAlone_6"
+msgstr "శని"
+
+msgid "Intl_Day_Short_StandAlone_7"
+msgstr "ఆది"
+
+msgid "Intl_EnglishLanguageName"
+msgstr "Telugu"
+
+msgid "Intl_Format_DateTime_Long"
+msgstr "d, MMMM y, EEEE {time}"
+
+msgid "Intl_Format_DateTime_Short"
+msgstr "d MMM, y {time}"
+
+msgid "Intl_Format_Date_Day_Month"
+msgstr "d MMM, E"
+
+msgid "Intl_Format_Date_Long"
+msgstr "d, MMMM y, EEEE"
+
+msgid "Intl_Format_Date_Short"
+msgstr "d MMM, y"
+
+msgid "Intl_Format_Hour_12"
+msgstr "h a"
+
+msgid "Intl_Format_Hour_24"
+msgstr "HH"
+
+msgid "Intl_Format_Interval_Long_D"
+msgstr "d–d MMMM, y"
+
+msgid "Intl_Format_Interval_Long_M"
+msgstr "d MMMM – d MMMM, y"
+
+msgid "Intl_Format_Interval_Long_Y"
+msgstr "d MMMM, y – d MMMM, y"
+
+msgid "Intl_Format_Interval_Short_D"
+msgstr "d–d MMM, y"
+
+msgid "Intl_Format_Interval_Short_M"
+msgstr "d MMM – d MMM, y"
+
+msgid "Intl_Format_Interval_Short_Y"
+msgstr "d MMM, y – d MMM, y"
+
+msgid "Intl_Format_Month_Long"
+msgstr "MMMM y"
+
+msgid "Intl_Format_Month_Short"
+msgstr "MMM y"
+
+msgid "Intl_Format_Time"
+msgstr "{time}"
+
+msgid "Intl_Format_Time_12"
+msgstr "h:mm:ss a"
+
+msgid "Intl_Format_Time_24"
+msgstr "HH:mm:ss"
+
+msgid "Intl_Format_Year"
+msgstr "y"
+
+msgid "Intl_Hours"
+msgstr "గంటలు"
+
+msgid "Intl_Language_aa"
+msgstr "అఫార్"
+
+msgid "Intl_Language_ab"
+msgstr "అబ్ఖాజియన్"
+
+msgid "Intl_Language_ae"
+msgstr "అవేస్టాన్"
+
+msgid "Intl_Language_af"
+msgstr "ఆఫ్రికాన్స్"
+
+msgid "Intl_Language_ak"
+msgstr "అకాన్"
+
+msgid "Intl_Language_am"
+msgstr "అమ్హారిక్"
+
+msgid "Intl_Language_an"
+msgstr "అరగోనిస్"
+
+msgid "Intl_Language_ar"
+msgstr "అరబిక్"
+
+msgid "Intl_Language_as"
+msgstr "అస్సామీస్"
+
+msgid "Intl_Language_av"
+msgstr "అవారిక్"
+
+msgid "Intl_Language_ay"
+msgstr "ఐమారా"
+
+msgid "Intl_Language_az"
+msgstr "అజర్బైజాని"
+
+msgid "Intl_Language_ba"
+msgstr "బాష్కిర్"
+
+msgid "Intl_Language_be"
+msgstr "బెలారుషియన్"
+
+msgid "Intl_Language_bg"
+msgstr "బల్గేరియన్"
+
+msgid "Intl_Language_bi"
+msgstr "బిస్లామా"
+
+msgid "Intl_Language_bm"
+msgstr "బంబారా"
+
+msgid "Intl_Language_bn"
+msgstr "బంగ్లా"
+
+msgid "Intl_Language_bo"
+msgstr "టిబెటన్"
+
+msgid "Intl_Language_br"
+msgstr "బ్రెటన్"
+
+msgid "Intl_Language_bs"
+msgstr "బోస్నియన్"
+
+msgid "Intl_Language_ca"
+msgstr "కాటలాన్"
+
+msgid "Intl_Language_ce"
+msgstr "చెచెన్"
+
+msgid "Intl_Language_ch"
+msgstr "చమర్రో"
+
+msgid "Intl_Language_co"
+msgstr "కోర్సికన్"
+
+msgid "Intl_Language_cr"
+msgstr "క్రి"
+
+msgid "Intl_Language_cs"
+msgstr "చెక్"
+
+msgid "Intl_Language_cu"
+msgstr "చర్చ్ స్లావిక్"
+
+msgid "Intl_Language_cv"
+msgstr "చువాష్"
+
+msgid "Intl_Language_cy"
+msgstr "వెల్ష్"
+
+msgid "Intl_Language_da"
+msgstr "డానిష్"
+
+msgid "Intl_Language_de"
+msgstr "జర్మన్"
+
+msgid "Intl_Language_dv"
+msgstr "దివేహి"
+
+msgid "Intl_Language_dz"
+msgstr "జోంఖా"
+
+msgid "Intl_Language_ee"
+msgstr "యూ"
+
+msgid "Intl_Language_el"
+msgstr "గ్రీక్"
+
+msgid "Intl_Language_en"
+msgstr "ఆంగ్లం"
+
+msgid "Intl_Language_eo"
+msgstr "ఎస్పెరాంటో"
+
+msgid "Intl_Language_es"
+msgstr "స్పానిష్"
+
+msgid "Intl_Language_et"
+msgstr "ఎస్టోనియన్"
+
+msgid "Intl_Language_eu"
+msgstr "బాస్క్యూ"
+
+msgid "Intl_Language_fa"
+msgstr "పర్షియన్"
+
+msgid "Intl_Language_ff"
+msgstr "ఫ్యుల"
+
+msgid "Intl_Language_fi"
+msgstr "ఫిన్నిష్"
+
+msgid "Intl_Language_fj"
+msgstr "ఫిజియన్"
+
+msgid "Intl_Language_fo"
+msgstr "ఫారోస్"
+
+msgid "Intl_Language_fr"
+msgstr "ఫ్రెంచ్"
+
+msgid "Intl_Language_fy"
+msgstr "పశ్చిమ ఫ్రిసియన్"
+
+msgid "Intl_Language_ga"
+msgstr "ఐరిష్"
+
+msgid "Intl_Language_gd"
+msgstr "స్కాటిష్ గేలిక్"
+
+msgid "Intl_Language_gl"
+msgstr "గాలిషియన్"
+
+msgid "Intl_Language_gn"
+msgstr "గ్వారనీ"
+
+msgid "Intl_Language_gu"
+msgstr "గుజరాతి"
+
+msgid "Intl_Language_gv"
+msgstr "మాంక్స్"
+
+msgid "Intl_Language_ha"
+msgstr "హౌసా"
+
+msgid "Intl_Language_he"
+msgstr "హిబ్రూ"
+
+msgid "Intl_Language_hi"
+msgstr "హిందీ"
+
+msgid "Intl_Language_ho"
+msgstr "హిరి మోటు"
+
+msgid "Intl_Language_hr"
+msgstr "క్రొయేషియన్"
+
+msgid "Intl_Language_ht"
+msgstr "హైటియన్ క్రియోల్"
+
+msgid "Intl_Language_hu"
+msgstr "హంగేరియన్"
+
+msgid "Intl_Language_hy"
+msgstr "ఆర్మేనియన్"
+
+msgid "Intl_Language_hz"
+msgstr "హెరెరో"
+
+msgid "Intl_Language_ia"
+msgstr "ఇంటర్లింగ్వా"
+
+msgid "Intl_Language_id"
+msgstr "ఇండోనేషియన్"
+
+msgid "Intl_Language_ie"
+msgstr "ఇంటర్లింగ్"
+
+msgid "Intl_Language_ig"
+msgstr "ఇగ్బో"
+
+msgid "Intl_Language_ii"
+msgstr "శిషువన్ ఈ"
+
+msgid "Intl_Language_ik"
+msgstr "ఇనుపైయాక్"
+
+msgid "Intl_Language_io"
+msgstr "ఈడో"
+
+msgid "Intl_Language_is"
+msgstr "ఐస్లాండిక్"
+
+msgid "Intl_Language_it"
+msgstr "ఇటాలియన్"
+
+msgid "Intl_Language_iu"
+msgstr "ఇనుక్టిటుట్"
+
+msgid "Intl_Language_ja"
+msgstr "జపనీస్"
+
+msgid "Intl_Language_jv"
+msgstr "జావనీస్"
+
+msgid "Intl_Language_ka"
+msgstr "జార్జియన్"
+
+msgid "Intl_Language_kg"
+msgstr "కోంగో"
+
+msgid "Intl_Language_ki"
+msgstr "కికుయు"
+
+msgid "Intl_Language_kj"
+msgstr "క్వాన్యామ"
+
+msgid "Intl_Language_kk"
+msgstr "కజఖ్"
+
+msgid "Intl_Language_kl"
+msgstr "కలాల్లిసూట్"
+
+msgid "Intl_Language_km"
+msgstr "ఖ్మేర్"
+
+msgid "Intl_Language_kn"
+msgstr "కన్నడ"
+
+msgid "Intl_Language_ko"
+msgstr "కొరియన్"
+
+msgid "Intl_Language_kr"
+msgstr "కానురి"
+
+msgid "Intl_Language_ks"
+msgstr "కాశ్మీరి"
+
+msgid "Intl_Language_ku"
+msgstr "కుర్దిష్"
+
+msgid "Intl_Language_kv"
+msgstr "కోమి"
+
+msgid "Intl_Language_kw"
+msgstr "కోర్నిష్"
+
+msgid "Intl_Language_ky"
+msgstr "కిర్గిజ్"
+
+msgid "Intl_Language_la"
+msgstr "లాటిన్"
+
+msgid "Intl_Language_lb"
+msgstr "లక్సెంబర్గిష్"
+
+msgid "Intl_Language_lg"
+msgstr "గాండా"
+
+msgid "Intl_Language_li"
+msgstr "లిమ్బర్గిష్"
+
+msgid "Intl_Language_ln"
+msgstr "లింగాల"
+
+msgid "Intl_Language_lo"
+msgstr "లావో"
+
+msgid "Intl_Language_lt"
+msgstr "లిథువేనియన్"
+
+msgid "Intl_Language_lu"
+msgstr "లూబ-కటాంగ"
+
+msgid "Intl_Language_lv"
+msgstr "లాట్వియన్"
+
+msgid "Intl_Language_mg"
+msgstr "మలగాసి"
+
+msgid "Intl_Language_mh"
+msgstr "మార్షలీస్"
+
+msgid "Intl_Language_mi"
+msgstr "మావొరీ"
+
+msgid "Intl_Language_mk"
+msgstr "మాసిడోనియన్"
+
+msgid "Intl_Language_ml"
+msgstr "మలయాళం"
+
+msgid "Intl_Language_mn"
+msgstr "మంగోలియన్"
+
+msgid "Intl_Language_mr"
+msgstr "మరాఠీ"
+
+msgid "Intl_Language_ms"
+msgstr "మలయ్"
+
+msgid "Intl_Language_mt"
+msgstr "మాల్టీస్"
+
+msgid "Intl_Language_my"
+msgstr "బర్మీస్"
+
+msgid "Intl_Language_na"
+msgstr "నౌరు"
+
+msgid "Intl_Language_nb"
+msgstr "నార్వేజియన్ బొక్మాల్"
+
+msgid "Intl_Language_nd"
+msgstr "ఉత్తర దెబెలె"
+
+msgid "Intl_Language_ne"
+msgstr "నేపాలి"
+
+msgid "Intl_Language_ng"
+msgstr "డోంగా"
+
+msgid "Intl_Language_nl"
+msgstr "డచ్"
+
+msgid "Intl_Language_nn"
+msgstr "నార్వేజియాన్ న్యోర్స్క్"
+
+msgid "Intl_Language_no"
+msgstr "నార్వేజియన్"
+
+msgid "Intl_Language_nr"
+msgstr "దక్షిణ దెబెలె"
+
+msgid "Intl_Language_nv"
+msgstr "నవాజొ"
+
+msgid "Intl_Language_ny"
+msgstr "న్యాన్జా"
+
+msgid "Intl_Language_oc"
+msgstr "ఆక్సిటన్"
+
+msgid "Intl_Language_oj"
+msgstr "చేవా"
+
+msgid "Intl_Language_om"
+msgstr "ఒరోమో"
+
+msgid "Intl_Language_or"
+msgstr "ఒడియా"
+
+msgid "Intl_Language_os"
+msgstr "ఒసేటిక్"
+
+msgid "Intl_Language_pa"
+msgstr "పంజాబీ"
+
+msgid "Intl_Language_pi"
+msgstr "పాలీ"
+
+msgid "Intl_Language_pl"
+msgstr "పోలిష్"
+
+msgid "Intl_Language_ps"
+msgstr "పాష్టో"
+
+msgid "Intl_Language_pt"
+msgstr "పోర్చుగీస్"
+
+msgid "Intl_Language_qu"
+msgstr "కెచువా"
+
+msgid "Intl_Language_rm"
+msgstr "రోమన్ష్"
+
+msgid "Intl_Language_rn"
+msgstr "రుండి"
+
+msgid "Intl_Language_ro"
+msgstr "రోమేనియన్"
+
+msgid "Intl_Language_ru"
+msgstr "రష్యన్"
+
+msgid "Intl_Language_rw"
+msgstr "కిన్యర్వాండా"
+
+msgid "Intl_Language_sa"
+msgstr "సంస్కృతం"
+
+msgid "Intl_Language_sc"
+msgstr "సార్డీనియన్"
+
+msgid "Intl_Language_sd"
+msgstr "సింధీ"
+
+msgid "Intl_Language_se"
+msgstr "ఉత్తర సామి"
+
+msgid "Intl_Language_sg"
+msgstr "సాంగో"
+
+msgid "Intl_Language_si"
+msgstr "సింహళం"
+
+msgid "Intl_Language_sk"
+msgstr "స్లోవక్"
+
+msgid "Intl_Language_sl"
+msgstr "స్లోవేనియన్"
+
+msgid "Intl_Language_sm"
+msgstr "సమోవన్"
+
+msgid "Intl_Language_sn"
+msgstr "షోన"
+
+msgid "Intl_Language_so"
+msgstr "సోమాలి"
+
+msgid "Intl_Language_sq"
+msgstr "అల్బేనియన్"
+
+msgid "Intl_Language_sr"
+msgstr "సెర్బియన్"
+
+msgid "Intl_Language_ss"
+msgstr "స్వాతి"
+
+msgid "Intl_Language_st"
+msgstr "దక్షిణ సోతో"
+
+msgid "Intl_Language_su"
+msgstr "సండానీస్"
+
+msgid "Intl_Language_sv"
+msgstr "స్వీడిష్"
+
+msgid "Intl_Language_sw"
+msgstr "స్వాహిలి"
+
+msgid "Intl_Language_ta"
+msgstr "తమిళము"
+
+msgid "Intl_Language_te"
+msgstr "తెలుగు"
+
+msgid "Intl_Language_tg"
+msgstr "తజిక్"
+
+msgid "Intl_Language_th"
+msgstr "థాయ్"
+
+msgid "Intl_Language_ti"
+msgstr "టిగ్రిన్యా"
+
+msgid "Intl_Language_tk"
+msgstr "తుర్క్‌మెన్"
+
+msgid "Intl_Language_tl"
+msgstr "టగలాగ్"
+
+msgid "Intl_Language_tn"
+msgstr "స్వానా"
+
+msgid "Intl_Language_to"
+msgstr "టాంగాన్"
+
+msgid "Intl_Language_tr"
+msgstr "టర్కిష్"
+
+msgid "Intl_Language_ts"
+msgstr "సోంగా"
+
+msgid "Intl_Language_tt"
+msgstr "టాటర్"
+
+msgid "Intl_Language_tw"
+msgstr "ట్వి"
+
+msgid "Intl_Language_ty"
+msgstr "తహితియన్"
+
+msgid "Intl_Language_ug"
+msgstr "ఉయ్‌ఘర్"
+
+msgid "Intl_Language_uk"
+msgstr "ఉక్రెయినియన్"
+
+msgid "Intl_Language_ur"
+msgstr "ఉర్దూ"
+
+msgid "Intl_Language_uz"
+msgstr "ఉజ్బెక్"
+
+msgid "Intl_Language_ve"
+msgstr "వెండా"
+
+msgid "Intl_Language_vi"
+msgstr "వియత్నామీస్"
+
+msgid "Intl_Language_vo"
+msgstr "వోలాపుక్"
+
+msgid "Intl_Language_wa"
+msgstr "వాలూన్"
+
+msgid "Intl_Language_wo"
+msgstr "ఉలూఫ్"
+
+msgid "Intl_Language_xh"
+msgstr "షోసా"
+
+msgid "Intl_Language_yi"
+msgstr "ఇడ్డిష్"
+
+msgid "Intl_Language_yo"
+msgstr "యోరుబా"
+
+msgid "Intl_Language_za"
+msgstr "జువాన్"
+
+msgid "Intl_Language_zh"
+msgstr "చైనీస్"
+
+msgid "Intl_Language_zu"
+msgstr "జూలూ"
+
+msgid "Intl_LayoutDirection"
+msgstr "ltr"
+
+msgid "Intl_Minutes"
+msgstr "నిమిషాలు"
+
+msgid "Intl_Month_Long_1"
+msgstr "జనవరి"
+
+msgid "Intl_Month_Long_10"
+msgstr "అక్టోబర్"
+
+msgid "Intl_Month_Long_11"
+msgstr "నవంబర్"
+
+msgid "Intl_Month_Long_12"
+msgstr "డిసెంబర్"
+
+msgid "Intl_Month_Long_2"
+msgstr "ఫిబ్రవరి"
+
+msgid "Intl_Month_Long_3"
+msgstr "మార్చి"
+
+msgid "Intl_Month_Long_4"
+msgstr "ఏప్రిల్"
+
+msgid "Intl_Month_Long_5"
+msgstr "మే"
+
+msgid "Intl_Month_Long_6"
+msgstr "జూన్"
+
+msgid "Intl_Month_Long_7"
+msgstr "జులై"
+
+msgid "Intl_Month_Long_8"
+msgstr "ఆగస్టు"
+
+msgid "Intl_Month_Long_9"
+msgstr "సెప్టెంబర్"
+
+msgid "Intl_Month_Long_StandAlone_1"
+msgstr "జనవరి"
+
+msgid "Intl_Month_Long_StandAlone_10"
+msgstr "అక్టోబర్"
+
+msgid "Intl_Month_Long_StandAlone_11"
+msgstr "నవంబర్"
+
+msgid "Intl_Month_Long_StandAlone_12"
+msgstr "డిసెంబర్"
+
+msgid "Intl_Month_Long_StandAlone_2"
+msgstr "ఫిబ్రవరి"
+
+msgid "Intl_Month_Long_StandAlone_3"
+msgstr "మార్చి"
+
+msgid "Intl_Month_Long_StandAlone_4"
+msgstr "ఏప్రిల్"
+
+msgid "Intl_Month_Long_StandAlone_5"
+msgstr "మే"
+
+msgid "Intl_Month_Long_StandAlone_6"
+msgstr "జూన్"
+
+msgid "Intl_Month_Long_StandAlone_7"
+msgstr "జులై"
+
+msgid "Intl_Month_Long_StandAlone_8"
+msgstr "ఆగస్టు"
+
+msgid "Intl_Month_Long_StandAlone_9"
+msgstr "సెప్టెంబర్"
+
+msgid "Intl_Month_Short_1"
+msgstr "జన"
+
+msgid "Intl_Month_Short_10"
+msgstr "అక్టో"
+
+msgid "Intl_Month_Short_11"
+msgstr "నవం"
+
+msgid "Intl_Month_Short_12"
+msgstr "డిసెం"
+
+msgid "Intl_Month_Short_2"
+msgstr "ఫిబ్ర"
+
+msgid "Intl_Month_Short_3"
+msgstr "మార్చి"
+
+msgid "Intl_Month_Short_4"
+msgstr "ఏప్రి"
+
+msgid "Intl_Month_Short_5"
+msgstr "మే"
+
+msgid "Intl_Month_Short_6"
+msgstr "జూన్"
+
+msgid "Intl_Month_Short_7"
+msgstr "జులై"
+
+msgid "Intl_Month_Short_8"
+msgstr "ఆగ"
+
+msgid "Intl_Month_Short_9"
+msgstr "సెప్టెం"
+
+msgid "Intl_Month_Short_StandAlone_1"
+msgstr "జన"
+
+msgid "Intl_Month_Short_StandAlone_10"
+msgstr "అక్టో"
+
+msgid "Intl_Month_Short_StandAlone_11"
+msgstr "నవం"
+
+msgid "Intl_Month_Short_StandAlone_12"
+msgstr "డిసెం"
+
+msgid "Intl_Month_Short_StandAlone_2"
+msgstr "ఫిబ్ర"
+
+msgid "Intl_Month_Short_StandAlone_3"
+msgstr "మార్చి"
+
+msgid "Intl_Month_Short_StandAlone_4"
+msgstr "ఏప్రి"
+
+msgid "Intl_Month_Short_StandAlone_5"
+msgstr "మే"
+
+msgid "Intl_Month_Short_StandAlone_6"
+msgstr "జూన్"
+
+msgid "Intl_Month_Short_StandAlone_7"
+msgstr "జులై"
+
+msgid "Intl_Month_Short_StandAlone_8"
+msgstr "ఆగ"
+
+msgid "Intl_Month_Short_StandAlone_9"
+msgstr "సెప్టెం"
+
+msgid "Intl_NDays"
+msgstr "%s రోజులు"
+
+msgid "Intl_NHoursShort"
+msgstr "%sగం"
+
+msgid "Intl_NMinutes"
+msgstr "%s నిమిషాలు"
+
+msgid "Intl_NMinutesShort"
+msgstr "%s నిమి."
+
+msgid "Intl_NSeconds"
+msgstr "%s సెకన్లు"
+
+msgid "Intl_NSecondsShort"
+msgstr "%sసె"
+
+msgid "Intl_NumberFormatCurrency"
+msgstr "¤#,##,##0.00"
+
+msgid "Intl_NumberFormatNumber"
+msgstr "#,##,##0.###"
+
+msgid "Intl_NumberFormatPercent"
+msgstr "#,##0%"
+
+msgid "Intl_NumberSymbolDecimal"
+msgstr "."
+
+msgid "Intl_NumberSymbolGroup"
+msgstr ","
+
+msgid "Intl_NumberSymbolMinus"
+msgstr "-"
+
+msgid "Intl_NumberSymbolPercent"
+msgstr "%"
+
+msgid "Intl_NumberSymbolPlus"
+msgstr "+"
+
+msgid "Intl_OneDay"
+msgstr "1 రోజు"
+
+msgid "Intl_OneMinute"
+msgstr "1 నిమిషం"
+
+msgid "Intl_OneMinuteShort"
+msgstr "1 నిమి."
+
+msgid "Intl_OriginalLanguageName"
+msgstr "తెలుగు"
+
+msgid "Intl_PeriodDay"
+msgstr "దినం"
+
+msgid "Intl_PeriodDays"
+msgstr "రోజులు"
+
+msgid "Intl_PeriodMonth"
+msgstr "నెల"
+
+msgid "Intl_PeriodMonths"
+msgstr "నెలలు"
+
+msgid "Intl_PeriodWeek"
+msgstr "వారము"
+
+msgid "Intl_PeriodWeeks"
+msgstr "వారాలు"
+
+msgid "Intl_PeriodYear"
+msgstr "సంవత్సరం"
+
+msgid "Intl_PeriodYears"
+msgstr "సంవత్సరాలు"
+
+msgid "Intl_Seconds"
+msgstr "సెకన్లు"
+
+msgid "Intl_Time_AM"
+msgstr "AM"
+
+msgid "Intl_Time_PM"
+msgstr "PM"
+
+msgid "Intl_Timezone_Africa_Asmera"
+msgstr "అస్మారా"
+
+msgid "Intl_Timezone_Africa_Ceuta"
+msgstr "స్యూటా"
+
+msgid "Intl_Timezone_Africa_Kinshasa"
+msgstr "కిన్షాసా"
+
+msgid "Intl_Timezone_Africa_Lubumbashi"
+msgstr "లుబంబాషి"
+
+msgid "Intl_Timezone_America_Adak"
+msgstr "అడాక్"
+
+msgid "Intl_Timezone_America_Anchorage"
+msgstr "యాంకరేజ్"
+
+msgid "Intl_Timezone_America_Araguaina"
+msgstr "అరాగ్వేయీనా"
+
+msgid "Intl_Timezone_America_Argentina_LaRioja"
+msgstr "లా రియోజ"
+
+msgid "Intl_Timezone_America_Argentina_RioGallegos"
+msgstr "రియో గల్లేగోస్"
+
+msgid "Intl_Timezone_America_Argentina_Salta"
+msgstr "సాల్టా"
+
+msgid "Intl_Timezone_America_Argentina_SanJuan"
+msgstr "శాన్ జ్యూన్"
+
+msgid "Intl_Timezone_America_Argentina_SanLuis"
+msgstr "శాన్ లూయిస్"
+
+msgid "Intl_Timezone_America_Argentina_Tucuman"
+msgstr "టుకుమన్"
+
+msgid "Intl_Timezone_America_Argentina_Ushuaia"
+msgstr "ఉష్యూయ"
+
+msgid "Intl_Timezone_America_Bahia"
+msgstr "బహియ"
+
+msgid "Intl_Timezone_America_BahiaBanderas"
+msgstr "బహియా బండరాస్"
+
+msgid "Intl_Timezone_America_Belem"
+msgstr "బెలెమ్"
+
+msgid "Intl_Timezone_America_Blanc-Sablon"
+msgstr "బ్లాంక్-సబ్లోన్"
+
+msgid "Intl_Timezone_America_BoaVista"
+msgstr "బోవా విస్టా"
+
+msgid "Intl_Timezone_America_Boise"
+msgstr "బొయిసీ"
+
+msgid "Intl_Timezone_America_BuenosAires"
+msgstr "బ్యూనోస్ ఎయిర్స్"
+
+msgid "Intl_Timezone_America_CambridgeBay"
+msgstr "కేంబ్రిడ్జ్ బే"
+
+msgid "Intl_Timezone_America_CampoGrande"
+msgstr "కాంపో గ్రాండ్"
+
+msgid "Intl_Timezone_America_Cancun"
+msgstr "కన్‌కూన్"
+
+msgid "Intl_Timezone_America_Catamarca"
+msgstr "కటమార్కా"
+
+msgid "Intl_Timezone_America_Chicago"
+msgstr "చికాగో"
+
+msgid "Intl_Timezone_America_Chihuahua"
+msgstr "చువావా"
+
+msgid "Intl_Timezone_America_CoralHarbour"
+msgstr "అటికోకన్"
+
+msgid "Intl_Timezone_America_Cordoba"
+msgstr "కోర్డోబా"
+
+msgid "Intl_Timezone_America_Creston"
+msgstr "క్రెస్టన్"
+
+msgid "Intl_Timezone_America_Cuiaba"
+msgstr "కుయబా"
+
+msgid "Intl_Timezone_America_Danmarkshavn"
+msgstr "డెన్మార్క్‌షాన్"
+
+msgid "Intl_Timezone_America_Dawson"
+msgstr "డాసన్"
+
+msgid "Intl_Timezone_America_DawsonCreek"
+msgstr "డాసన్ క్రీక్"
+
+msgid "Intl_Timezone_America_Denver"
+msgstr "డెన్వెర్"
+
+msgid "Intl_Timezone_America_Detroit"
+msgstr "డిట్రోయిట్"
+
+msgid "Intl_Timezone_America_Edmonton"
+msgstr "ఎడ్మోంటన్"
+
+msgid "Intl_Timezone_America_Eirunepe"
+msgstr "ఇరునెప్"
+
+msgid "Intl_Timezone_America_FortNelson"
+msgstr "ఫోర్ట్ నెల్సన్"
+
+msgid "Intl_Timezone_America_Fortaleza"
+msgstr "ఫోర్టలేజా"
+
+msgid "Intl_Timezone_America_GlaceBay"
+msgstr "గ్లేస్ బే"
+
+msgid "Intl_Timezone_America_Godthab"
+msgstr "నూక్"
+
+msgid "Intl_Timezone_America_GooseBay"
+msgstr "గూస్ బే"
+
+msgid "Intl_Timezone_America_Guayaquil"
+msgstr "గయాక్విల్"
+
+msgid "Intl_Timezone_America_Halifax"
+msgstr "హాలిఫాక్స్"
+
+msgid "Intl_Timezone_America_Hermosillo"
+msgstr "హెర్మోసిల్లో"
+
+msgid "Intl_Timezone_America_Indiana_Knox"
+msgstr "నోక్స్, ఇండియాన"
+
+msgid "Intl_Timezone_America_Indiana_Marengo"
+msgstr "మరెంగో, ఇండియాన"
+
+msgid "Intl_Timezone_America_Indiana_Petersburg"
+msgstr "పీటర్స్‌బర్గ్, ఇండియాన"
+
+msgid "Intl_Timezone_America_Indiana_TellCity"
+msgstr "టెల్ నగరం, ఇండియాన"
+
+msgid "Intl_Timezone_America_Indiana_Vevay"
+msgstr "వెవయ్, ఇండియాన"
+
+msgid "Intl_Timezone_America_Indiana_Vincennes"
+msgstr "విన్‌సెన్నెస్, ఇండియాన"
+
+msgid "Intl_Timezone_America_Indiana_Winamac"
+msgstr "వినామాక్, ఇండియాన"
+
+msgid "Intl_Timezone_America_Indianapolis"
+msgstr "ఇండియానపోలిస్"
+
+msgid "Intl_Timezone_America_Inuvik"
+msgstr "ఇనువిక్"
+
+msgid "Intl_Timezone_America_Iqaluit"
+msgstr "ఇక్వాలిట్"
+
+msgid "Intl_Timezone_America_Jujuy"
+msgstr "జుజుయ్"
+
+msgid "Intl_Timezone_America_Juneau"
+msgstr "జూనో"
+
+msgid "Intl_Timezone_America_Kentucky_Monticello"
+msgstr "మోంటిసెల్లో, కెన్‌టుక్కీ"
+
+msgid "Intl_Timezone_America_LosAngeles"
+msgstr "లాస్ ఏంజల్స్"
+
+msgid "Intl_Timezone_America_Louisville"
+msgstr "లూయివిల్"
+
+msgid "Intl_Timezone_America_Maceio"
+msgstr "మాసియో"
+
+msgid "Intl_Timezone_America_Manaus"
+msgstr "మనాస్"
+
+msgid "Intl_Timezone_America_Matamoros"
+msgstr "మాటమొరోస్"
+
+msgid "Intl_Timezone_America_Mazatlan"
+msgstr "మాసట్‌లాన్"
+
+msgid "Intl_Timezone_America_Mendoza"
+msgstr "మెండోజా"
+
+msgid "Intl_Timezone_America_Menominee"
+msgstr "మెనోమినీ"
+
+msgid "Intl_Timezone_America_Merida"
+msgstr "మెరిడా"
+
+msgid "Intl_Timezone_America_Metlakatla"
+msgstr "మెట్లకట్ల"
+
+msgid "Intl_Timezone_America_MexicoCity"
+msgstr "మెక్సికో నగరం"
+
+msgid "Intl_Timezone_America_Moncton"
+msgstr "మోన్‌క్టోన్"
+
+msgid "Intl_Timezone_America_Monterrey"
+msgstr "మోంటెర్రే"
+
+msgid "Intl_Timezone_America_NewYork"
+msgstr "న్యూయార్క్"
+
+msgid "Intl_Timezone_America_Nipigon"
+msgstr "నిపిగోన్"
+
+msgid "Intl_Timezone_America_Nome"
+msgstr "నోమ్"
+
+msgid "Intl_Timezone_America_Noronha"
+msgstr "నరోన్హా"
+
+msgid "Intl_Timezone_America_NorthDakota_Beulah"
+msgstr "బ్యులా, ఉత్తర డకోట"
+
+msgid "Intl_Timezone_America_NorthDakota_Center"
+msgstr "సెంటర్, ఉత్తర డకోటా"
+
+msgid "Intl_Timezone_America_NorthDakota_NewSalem"
+msgstr "న్యూ సలేమ్, ఉత్తర డకోట"
+
+msgid "Intl_Timezone_America_Ojinaga"
+msgstr "ఒజినగ"
+
+msgid "Intl_Timezone_America_Pangnirtung"
+msgstr "పాంగ్‌నీర్‌టుంగ్"
+
+msgid "Intl_Timezone_America_Phoenix"
+msgstr "ఫినిక్స్"
+
+msgid "Intl_Timezone_America_PortoVelho"
+msgstr "పోర్టో వెల్హో"
+
+msgid "Intl_Timezone_America_PuntaArenas"
+msgstr "పుంటా అరీనస్"
+
+msgid "Intl_Timezone_America_RainyRiver"
+msgstr "రెయినీ రివర్"
+
+msgid "Intl_Timezone_America_RankinInlet"
+msgstr "రన్‌కిన్ ఇన్‌లెట్"
+
+msgid "Intl_Timezone_America_Recife"
+msgstr "రెసిఫీ"
+
+msgid "Intl_Timezone_America_Regina"
+msgstr "రెజీనా"
+
+msgid "Intl_Timezone_America_Resolute"
+msgstr "రిజల్యూట్"
+
+msgid "Intl_Timezone_America_RioBranco"
+msgstr "రియో బ్రాంకో"
+
+msgid "Intl_Timezone_America_SantaIsabel"
+msgstr "శాంటా ఇసబెల్"
+
+msgid "Intl_Timezone_America_Santarem"
+msgstr "సాంటరెమ్"
+
+msgid "Intl_Timezone_America_Santiago"
+msgstr "శాంటియాగో"
+
+msgid "Intl_Timezone_America_SaoPaulo"
+msgstr "సావో పాలో"
+
+msgid "Intl_Timezone_America_Scoresbysund"
+msgstr "ఇటోక్కోర్టూర్మిట్"
+
+msgid "Intl_Timezone_America_Sitka"
+msgstr "సిట్కా"
+
+msgid "Intl_Timezone_America_StJohns"
+msgstr "సెయింట్ జాన్స్"
+
+msgid "Intl_Timezone_America_SwiftCurrent"
+msgstr "స్విఫ్ట్ కరెంట్"
+
+msgid "Intl_Timezone_America_Thule"
+msgstr "థులే"
+
+msgid "Intl_Timezone_America_ThunderBay"
+msgstr "థండర్ బే"
+
+msgid "Intl_Timezone_America_Tijuana"
+msgstr "టిజువానా"
+
+msgid "Intl_Timezone_America_Toronto"
+msgstr "టొరంటో"
+
+msgid "Intl_Timezone_America_Vancouver"
+msgstr "వాన్కూవర్"
+
+msgid "Intl_Timezone_America_Whitehorse"
+msgstr "వైట్‌హార్స్"
+
+msgid "Intl_Timezone_America_Winnipeg"
+msgstr "విన్నిపెగ్"
+
+msgid "Intl_Timezone_America_Yakutat"
+msgstr "యకుటాట్"
+
+msgid "Intl_Timezone_America_Yellowknife"
+msgstr "ఎల్లోనైఫ్"
+
+msgid "Intl_Timezone_Antarctica_Casey"
+msgstr "కేసీ"
+
+msgid "Intl_Timezone_Antarctica_Davis"
+msgstr "డెవిస్"
+
+msgid "Intl_Timezone_Antarctica_DumontDUrville"
+msgstr "డ్యూమాంట్ డి’ఉర్విల్లే"
+
+msgid "Intl_Timezone_Antarctica_Macquarie"
+msgstr "మకారీ"
+
+msgid "Intl_Timezone_Antarctica_Mawson"
+msgstr "మాసన్"
+
+msgid "Intl_Timezone_Antarctica_McMurdo"
+msgstr "మెక్‌ముర్డో"
+
+msgid "Intl_Timezone_Antarctica_Palmer"
+msgstr "పాల్మర్"
+
+msgid "Intl_Timezone_Antarctica_Rothera"
+msgstr "రొతేరా"
+
+msgid "Intl_Timezone_Antarctica_Syowa"
+msgstr "స్యోవా"
+
+msgid "Intl_Timezone_Antarctica_Troll"
+msgstr "ట్రోల్"
+
+msgid "Intl_Timezone_Antarctica_Vostok"
+msgstr "వోస్టోక్"
+
+msgid "Intl_Timezone_Asia_Almaty"
+msgstr "ఆల్మాటి"
+
+msgid "Intl_Timezone_Asia_Anadyr"
+msgstr "అనడైర్"
+
+msgid "Intl_Timezone_Asia_Aqtau"
+msgstr "అక్టావ్"
+
+msgid "Intl_Timezone_Asia_Aqtobe"
+msgstr "అక్టోబ్"
+
+msgid "Intl_Timezone_Asia_Atyrau"
+msgstr "ఆటిరా"
+
+msgid "Intl_Timezone_Asia_Barnaul"
+msgstr "బార్నాల్"
+
+msgid "Intl_Timezone_Asia_Calcutta"
+msgstr "కోల్‌కతా"
+
+msgid "Intl_Timezone_Asia_Chita"
+msgstr "చితా"
+
+msgid "Intl_Timezone_Asia_Choibalsan"
+msgstr "చోయిబాల్సన్"
+
+msgid "Intl_Timezone_Asia_Famagusta"
+msgstr "ఫామగుస్టా"
+
+msgid "Intl_Timezone_Asia_Gaza"
+msgstr "గాజా"
+
+msgid "Intl_Timezone_Asia_Hebron"
+msgstr "హెబ్రాన్"
+
+msgid "Intl_Timezone_Asia_Hovd"
+msgstr "హోవ్డ్"
+
+msgid "Intl_Timezone_Asia_Irkutsk"
+msgstr "ఇర్కుట్స్క్"
+
+msgid "Intl_Timezone_Asia_Jakarta"
+msgstr "జకార్తా"
+
+msgid "Intl_Timezone_Asia_Jayapura"
+msgstr "జయపుర"
+
+msgid "Intl_Timezone_Asia_Kamchatka"
+msgstr "కమ్‌చత్కా"
+
+msgid "Intl_Timezone_Asia_Katmandu"
+msgstr "ఖాట్మండు"
+
+msgid "Intl_Timezone_Asia_Khandyga"
+msgstr "కంద్యాగ"
+
+msgid "Intl_Timezone_Asia_Krasnoyarsk"
+msgstr "క్రసనోయార్స్క్"
+
+msgid "Intl_Timezone_Asia_KualaLumpur"
+msgstr "కౌలాలంపూర్"
+
+msgid "Intl_Timezone_Asia_Kuching"
+msgstr "కుచింగ్"
+
+msgid "Intl_Timezone_Asia_Magadan"
+msgstr "మగడాన్"
+
+msgid "Intl_Timezone_Asia_Makassar"
+msgstr "మకాస్సర్"
+
+msgid "Intl_Timezone_Asia_Nicosia"
+msgstr "నికోసియా"
+
+msgid "Intl_Timezone_Asia_Novokuznetsk"
+msgstr "నొవొకుజ్‌నెట్‌స్క్"
+
+msgid "Intl_Timezone_Asia_Novosibirsk"
+msgstr "నవోసిబిర్స్క్"
+
+msgid "Intl_Timezone_Asia_Omsk"
+msgstr "ఓమ్స్క్"
+
+msgid "Intl_Timezone_Asia_Oral"
+msgstr "ఓరల్"
+
+msgid "Intl_Timezone_Asia_Pontianak"
+msgstr "పొన్టియనాక్"
+
+msgid "Intl_Timezone_Asia_Qyzylorda"
+msgstr "క్విజిలోర్డా"
+
+msgid "Intl_Timezone_Asia_Rangoon"
+msgstr "యాంగన్"
+
+msgid "Intl_Timezone_Asia_Saigon"
+msgstr "హో చి మిన్హ్ నగరం"
+
+msgid "Intl_Timezone_Asia_Sakhalin"
+msgstr "సఖాలిన్"
+
+msgid "Intl_Timezone_Asia_Samarkand"
+msgstr "సమర్కాండ్"
+
+msgid "Intl_Timezone_Asia_Shanghai"
+msgstr "షాంఘై"
+
+msgid "Intl_Timezone_Asia_Srednekolymsk"
+msgstr "స్రెడ్నెకొలిమ్స్క్"
+
+msgid "Intl_Timezone_Asia_Tashkent"
+msgstr "తాష్కెంట్"
+
+msgid "Intl_Timezone_Asia_Tomsk"
+msgstr "టామ్స్క్"
+
+msgid "Intl_Timezone_Asia_Ulaanbaatar"
+msgstr "ఉలాన్బాటర్"
+
+msgid "Intl_Timezone_Asia_Urumqi"
+msgstr "ఉరుమ్‌కీ"
+
+msgid "Intl_Timezone_Asia_Ust-Nera"
+msgstr "అస్ట్-నెరా"
+
+msgid "Intl_Timezone_Asia_Vladivostok"
+msgstr "వ్లాడివోస్టోక్"
+
+msgid "Intl_Timezone_Asia_Yakutsk"
+msgstr "యకుట్స్క్"
+
+msgid "Intl_Timezone_Asia_Yekaterinburg"
+msgstr "యెకటెరింబర్గ్"
+
+msgid "Intl_Timezone_Atlantic_Azores"
+msgstr "అజోర్స్"
+
+msgid "Intl_Timezone_Atlantic_Canary"
+msgstr "కెనరీ"
+
+msgid "Intl_Timezone_Atlantic_Faeroe"
+msgstr "ఫారో"
+
+msgid "Intl_Timezone_Atlantic_Madeira"
+msgstr "మదైరా"
+
+msgid "Intl_Timezone_Australia_Adelaide"
+msgstr "అడెలైడ్"
+
+msgid "Intl_Timezone_Australia_Brisbane"
+msgstr "బ్రిస్‌బెయిన్"
+
+msgid "Intl_Timezone_Australia_BrokenHill"
+msgstr "బ్రోకెన్ హిల్"
+
+msgid "Intl_Timezone_Australia_Currie"
+msgstr "కర్రీ"
+
+msgid "Intl_Timezone_Australia_Darwin"
+msgstr "డార్విన్"
+
+msgid "Intl_Timezone_Australia_Eucla"
+msgstr "యుక్లా"
+
+msgid "Intl_Timezone_Australia_Hobart"
+msgstr "హోబర్ట్"
+
+msgid "Intl_Timezone_Australia_Lindeman"
+msgstr "లిండెమాన్"
+
+msgid "Intl_Timezone_Australia_LordHowe"
+msgstr "లార్డ్ హౌ"
+
+msgid "Intl_Timezone_Australia_Melbourne"
+msgstr "మెల్బోర్న్"
+
+msgid "Intl_Timezone_Australia_Perth"
+msgstr "పెర్త్"
+
+msgid "Intl_Timezone_Australia_Sydney"
+msgstr "సిడ్నీ"
+
+msgid "Intl_Timezone_Europe_Astrakhan"
+msgstr "అస్ట్రఖాన్"
+
+msgid "Intl_Timezone_Europe_Berlin"
+msgstr "బెర్లిన్"
+
+msgid "Intl_Timezone_Europe_Busingen"
+msgstr "బసింజన్"
+
+msgid "Intl_Timezone_Europe_Kaliningrad"
+msgstr "కలినిన్‌గ్రద్"
+
+msgid "Intl_Timezone_Europe_Kiev"
+msgstr "కీవ్"
+
+msgid "Intl_Timezone_Europe_Kirov"
+msgstr "కిరోవ్"
+
+msgid "Intl_Timezone_Europe_Lisbon"
+msgstr "లిస్బన్"
+
+msgid "Intl_Timezone_Europe_Madrid"
+msgstr "మాడ్రిడ్"
+
+msgid "Intl_Timezone_Europe_Moscow"
+msgstr "మాస్కో"
+
+msgid "Intl_Timezone_Europe_Samara"
+msgstr "సమార"
+
+msgid "Intl_Timezone_Europe_Saratov"
+msgstr "సరాటవ్"
+
+msgid "Intl_Timezone_Europe_Simferopol"
+msgstr "సిమ్‌ఫెరోపోల్"
+
+msgid "Intl_Timezone_Europe_Ulyanovsk"
+msgstr "ఉల్యనోవ్స్క్"
+
+msgid "Intl_Timezone_Europe_Uzhgorod"
+msgstr "ఉజ్‌హోరోడ్"
+
+msgid "Intl_Timezone_Europe_Volgograd"
+msgstr "వోల్గోగ్రాడ్"
+
+msgid "Intl_Timezone_Europe_Zaporozhye"
+msgstr "జపరోజై"
+
+msgid "Intl_Timezone_Pacific_Auckland"
+msgstr "ఆక్లాండ్"
+
+msgid "Intl_Timezone_Pacific_Bougainville"
+msgstr "బొగెయిన్‌విల్లే"
+
+msgid "Intl_Timezone_Pacific_Chatham"
+msgstr "చాథమ్"
+
+msgid "Intl_Timezone_Pacific_Easter"
+msgstr "ఈస్టర్"
+
+msgid "Intl_Timezone_Pacific_Enderbury"
+msgstr "ఎండర్బెరీ"
+
+msgid "Intl_Timezone_Pacific_Galapagos"
+msgstr "గాలాపాగోస్"
+
+msgid "Intl_Timezone_Pacific_Gambier"
+msgstr "గాంబియేర్"
+
+msgid "Intl_Timezone_Pacific_Honolulu"
+msgstr "హోనోలులు"
+
+msgid "Intl_Timezone_Pacific_Johnston"
+msgstr "జాన్సటన్"
+
+msgid "Intl_Timezone_Pacific_Kiritimati"
+msgstr "కిరీటిమాటి"
+
+msgid "Intl_Timezone_Pacific_Kosrae"
+msgstr "కోస్రే"
+
+msgid "Intl_Timezone_Pacific_Kwajalein"
+msgstr "క్వాజాలైన్"
+
+msgid "Intl_Timezone_Pacific_Majuro"
+msgstr "మజురో"
+
+msgid "Intl_Timezone_Pacific_Marquesas"
+msgstr "మార్క్వేసాస్"
+
+msgid "Intl_Timezone_Pacific_Midway"
+msgstr "మిడ్వే"
+
+msgid "Intl_Timezone_Pacific_Ponape"
+msgstr "పోన్‌పై"
+
+msgid "Intl_Timezone_Pacific_PortMoresby"
+msgstr "పోర్ట్ మోరెస్బే"
+
+msgid "Intl_Timezone_Pacific_Tahiti"
+msgstr "తహితి"
+
+msgid "Intl_Timezone_Pacific_Tarawa"
+msgstr "టరావా"
+
+msgid "Intl_Timezone_Pacific_Truk"
+msgstr "చుక్"
+
+msgid "Intl_Timezone_Pacific_Wake"
+msgstr "వేక్"
+
+msgid "Intl_Today"
+msgstr "ఈ రోజు"
+
+msgid "Intl_Year_Short"
+msgstr "సం."
+
+msgid "Intl_Yesterday"
+msgstr "నిన్న"
+
+msgid "LanguagesManager_AboutPiwikTranslations"
+msgstr "పివిక్ అనువాదాల గురించి"
+
+msgid "Live_GoalType"
+msgstr "రకం"
+
+msgid "Live_LastHours"
+msgstr "గత %s గంటలు"
+
+msgid "Live_LastMinutes"
+msgstr "గత %s నిమిషాలు"
+
+msgid "Login_LostYourPassword"
+msgstr "మీ సంకేతపదం మర్చిపోయారా?"
+
+msgid "Login_PasswordRepeat"
+msgstr "సంకేతపదం (మళ్ళీ)"
+
+msgid "Login_RememberMe"
+msgstr "నన్ను గుర్తుంచుకో"
+
+msgid "Marketplace_ActivateLicenseKey"
+msgstr "చేతనించు"
+
+msgid "Marketplace_PluginKeywords"
+msgstr "కీపదాలు"
+
+msgid "Marketplace_SubscriptionType"
+msgstr "రకం"
+
+msgid "Overlay_Clicks"
+msgstr "%s నొక్కులు"
+
+msgid "Overlay_Link"
+msgstr "లంకె"
+
+msgid "Overlay_Location"
+msgstr "ప్రాంతం"
+
+msgid "PrivacyManager_DeleteMaxRowsNoLimit"
+msgstr "పరిమితి లేదు"
+
+msgid "PrivacyManager_MenuPrivacySettings"
+msgstr "గోప్యత"
+
+msgid "PrivacyManager_TeaserHeadline"
+msgstr "గోప్యతా అమరికలు"
+
+msgid "Referrers_Campaigns"
+msgstr "ప్రచారాలు"
+
+msgid "Referrers_ColumnCampaign"
+msgstr "ప్రచారం"
+
+msgid "Referrers_ColumnSearchEngine"
+msgstr "శోధనయంత్రం"
+
+msgid "Referrers_ColumnWebsite"
+msgstr "వెబ్‌సైటు"
+
+msgid "Referrers_ColumnWebsitePage"
+msgstr "జాలగూడు పుట"
+
+msgid "Referrers_DirectEntry"
+msgstr "నేరు సందర్శన"
+
+msgid "Referrers_Keywords"
+msgstr "కీపదాలు"
+
+msgid "Referrers_SearchEngines"
+msgstr "శోధనయంత్రాలు"
+
+msgid "Referrers_SubmenuWebsitesOnly"
+msgstr "జాలగూళ్ళు"
+
+msgid "Referrers_Websites"
+msgstr "జాలగూళ్ళు"
+
+msgid "Referrers_WidgetExternalWebsites"
+msgstr "బయటి జాలగూళ్ళ యొక్క జాబితా"
+
+msgid "Resolution_ColumnConfiguration"
+msgstr "స్వరూపణం"
+
+msgid "Resolution_Configurations"
+msgstr "స్వరూపణలు"
+
+msgid "SEO_AlexaRank"
+msgstr "అలెక్సా ర్యాంకు"
+
+msgid "SEO_Rank"
+msgstr "ర్యాంకు"
+
+msgid "ScheduledReports_PiwikReports"
+msgstr "పివిక్ నివేదికలు"
+
+msgid "ScheduledReports_SentToMe"
+msgstr "నాకు పంపించు"
+
+msgid "ScheduledReports_TopOfReport"
+msgstr "తిరిగి పైకి"
+
+msgid "SitesManager_Currency"
+msgstr "మారక ద్రవ్యం"
+
+msgid "SitesManager_GlobalWebsitesSettings"
+msgstr "సార్వత్రిక వెబ్‌సైటు అమరికలు"
+
+msgid "SitesManager_Sites"
+msgstr "జాలగూళ్ళు"
+
+msgid "SitesManager_Timezone"
+msgstr "కాల మండలం"
+
+msgid "TagManager_CategoryClicks"
+msgstr "నొక్కులు"
+
+msgid "TagManager_CategoryDate"
+msgstr "తేదీ"
+
+msgid "TagManager_CategoryEmail"
+msgstr "ఈమెయిలు"
+
+msgid "TagManager_PageUrlVariableName"
+msgstr "పుట చిరునామా"
+
+msgid "TagManager_Type"
+msgstr "రకం"
+
+msgid "TagManager_Version"
+msgstr "సంచిక"
+
+msgid "UserCountry_City"
+msgstr "నగరం"
+
+msgid "UserCountry_Continent"
+msgstr "ఖండం"
+
+msgid "UserCountry_Country"
+msgstr "దేశం"
+
+msgid "UserCountry_DistinctCountries"
+msgstr "%s ఇతర దేశాలు"
+
+msgid "UserCountry_Latitude"
+msgstr "అక్షాంశం"
+
+msgid "UserCountry_Location"
+msgstr "ప్రాంతం"
+
+msgid "UserCountry_Longitude"
+msgstr "రేఖాంశం"
+
+msgid "UserCountry_SubmenuLocations"
+msgstr "ప్రాంతాలు"
+
+msgid "UserCountryMap_map"
+msgstr "పటం"
+
+msgid "UserId_UserReportTitle"
+msgstr "వాడుకరులు"
+
+msgid "UserLanguage_LanguageCode"
+msgstr "భాషా సంకేతం"
+
+msgid "UsersManager_AddUser"
+msgstr "ఒక కొత్త వాడుకరిని చేర్చు"
+
+msgid "UsersManager_Alias"
+msgstr "మారుపేరు"
+
+msgid "UsersManager_AllWebsites"
+msgstr "అన్ని వెబ్‌సైట్లూ"
+
+msgid "UsersManager_Email"
+msgstr "ఈమెయిలు"
+
+msgid "UsersManager_ExceptionEmailExists"
+msgstr "'%s' అనే ఈమెయిలుతో వాడుకరి ఇప్పటికే ఉన్నారు."
+
+msgid "UsersManager_ExceptionInvalidEmail"
+msgstr "ఈ ఈమెయిలు సరైన రీతిలో లేదు."
+
+msgid "UsersManager_ExceptionUserDoesNotExist"
+msgstr "'%s' వాడుకరి లేనే లేరు."
+
+msgid "UsersManager_MenuAnonymousUserSettings"
+msgstr "ఆజ్ఞాత వాడుకరుల అమరికలు"
+
+msgid "UsersManager_MenuUsers"
+msgstr "వాడుకరులు"
+
+msgid "UsersManager_MenuUserSettings"
+msgstr "వాడుకరి అమరికలు"
+
+msgid "UsersManager_User"
+msgstr "వాడుకరి"
+
+msgid "UsersManager_UsersManagement"
+msgstr "వాడుకరుల నిర్వహణ"
+
+msgid "UsersManager_YourUsernameCannotBeChanged"
+msgstr "మీ వాడుకరి పేరుని మార్చలేరు."
+
+msgid "UsersManager_Username"
+msgstr "వాడుకరి పేరు"
+
+msgid "VisitFrequency_ColumnReturningVisits"
+msgstr "పునః సందర్శనలు"
+
+msgid "VisitFrequency_SubmenuFrequency"
+msgstr "తరచుదనం"
+
+msgid "VisitTime_ColumnLocalTime"
+msgstr "స్థానిక సమయం"
+
+msgid "VisitTime_NHour"
+msgstr "%sగం"
+
+msgid "VisitorInterest_BetweenXYMinutes"
+msgstr "%1$s-%2$s నిమి"
+
+msgid "VisitorInterest_BetweenXYSeconds"
+msgstr "%1$s-%2$sక్ష"
+
+msgid "VisitorInterest_ColumnPagesPerVisit"
+msgstr "సందర్శనలో పుటలు"
+
+msgid "VisitorInterest_ColumnVisitDuration"
+msgstr "సందర్శన నిడివి"
+
+msgid "VisitorInterest_NPages"
+msgstr "%s పుటలు"
+
+msgid "VisitorInterest_OnePage"
+msgstr "1 పుట"
+
+msgid "VisitorInterest_VisitsPerDuration"
+msgstr "నిడివి ప్రకారం సందర్శనలు"
+
+msgid "VisitorInterest_VisitsPerNbOfPages"
+msgstr "పుటల సంఖ్య ప్రకారం సందర్శనలు"
+
+msgid "VisitorInterest_WidgetLengths"
+msgstr "సందర్శనల పొడవు"
+
+msgid "VisitorInterest_WidgetPages"
+msgstr "సందర్శనలో పుటలు"
+
+msgid "VisitsSummary_NbActionsDescription"
+msgstr "%s చర్యలు"
+
+msgid "VisitsSummary_VisitsSummary"
+msgstr "సందర్శనల సంగ్రహం"

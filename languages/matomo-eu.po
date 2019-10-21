@@ -1,0 +1,4616 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-10-21T03:38:22+00:00\n"
+"PO-Revision-Date: 2019-10-21T03:38:22+00:00\n"
+"Language: eu\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Domain: matomo\n"
+
+msgid "General_AboutPiwikX"
+msgstr "Matomo %s(r)i buruz"
+
+msgid "General_Action"
+msgstr "Ekintza"
+
+msgid "General_Actions"
+msgstr "Ekintzak"
+
+msgid "General_AllWebsitesDashboard"
+msgstr "Webgune guztien arbela"
+
+msgid "General_API"
+msgstr "APIa"
+
+msgid "General_AuthenticationMethodSmtp"
+msgstr "SMTPrako autentifikazio metodoa"
+
+msgid "General_BackToPiwik"
+msgstr "Itzuli Matomo-era"
+
+msgid "General_ChangePassword"
+msgstr "Aldatu pasahitza"
+
+msgid "General_ChooseLanguage"
+msgstr "Aukeratu hizkuntza"
+
+msgid "General_ChoosePeriod"
+msgstr "Aukeratu aldia"
+
+msgid "General_Close"
+msgstr "Itxi"
+
+msgid "General_ColumnActionsPerVisit"
+msgstr "Ekintzak bisitako"
+
+msgid "General_ColumnAverageTimeOnPage"
+msgstr "B.b.ko denbora orrialdean"
+
+msgid "General_ColumnAvgTimeOnSite"
+msgstr "B.b.ko denbora webgunean"
+
+msgid "General_ColumnBounceRate"
+msgstr "Errebotatze-tasa"
+
+msgid "General_ColumnBounces"
+msgstr "Erreboteak"
+
+msgid "General_ColumnConversionRate"
+msgstr "Bihurketa-tasa"
+
+msgid "General_ColumnEntrances"
+msgstr "Sarrerak"
+
+msgid "General_ColumnExitRate"
+msgstr "Irteera-tasa"
+
+msgid "General_ColumnExits"
+msgstr "Irteerak"
+
+msgid "General_ColumnKeyword"
+msgstr "Gako-hitza"
+
+msgid "General_ColumnLabel"
+msgstr "Etiketa"
+
+msgid "General_ColumnMaxActions"
+msgstr "Bisita bateko gehienezko ekintzak"
+
+msgid "General_ColumnNbActions"
+msgstr "Ekintzak"
+
+msgid "General_ColumnNbUniqVisitors"
+msgstr "Bisitari desberdinak"
+
+msgid "General_ColumnNbUsers"
+msgstr "Erabiltzaileak"
+
+msgid "General_ColumnNbVisits"
+msgstr "Bisitak"
+
+msgid "General_ColumnPageviews"
+msgstr "Orri-bistaratzeak"
+
+msgid "General_ColumnRevenue"
+msgstr "Etekina"
+
+msgid "General_ColumnSumVisitLength"
+msgstr "Bisitariek guztira igarotako denbora (segundotan)"
+
+msgid "General_ColumnUniquePageviews"
+msgstr "Orri-bistaratze desberdinak"
+
+msgid "General_ColumnValuePerVisit"
+msgstr "Balioa bisitako"
+
+msgid "General_ColumnVisitsWithConversions"
+msgstr "Bihurketak dituzten bisitak"
+
+msgid "General_ContinueToPiwik"
+msgstr "Jarraitu Matomo-era"
+
+msgid "General_CurrentMonth"
+msgstr "Hilabete hau"
+
+msgid "General_CurrentWeek"
+msgstr "Aste hau"
+
+msgid "General_CurrentYear"
+msgstr "Urte hau"
+
+msgid "General_Daily"
+msgstr "Egunero"
+
+msgid "General_DashboardForASpecificWebsite"
+msgstr "Webgune jakin baterako arbela"
+
+msgid "General_Date"
+msgstr "Data"
+
+msgid "General_DateRange"
+msgstr "Data tartea:"
+
+msgid "General_DateRangeFrom"
+msgstr "Ez"
+
+msgid "General_DaysHours"
+msgstr "%1$s egun %2$s ordu"
+
+msgid "General_Default"
+msgstr "Lehenetsia"
+
+msgid "General_Delete"
+msgstr "Ezabatu"
+
+msgid "General_Description"
+msgstr "Azalpena"
+
+msgid "General_Details"
+msgstr "Xehetasunak"
+
+msgid "General_DisplaySimpleTable"
+msgstr "Bistaratu taula sinplea"
+
+msgid "General_DisplayTableWithGoalMetrics"
+msgstr "Bistaratu taula helburuen estatistikekin"
+
+msgid "General_DisplayTableWithMoreMetrics"
+msgstr "Bistaratu taula estatistika gehiagorekin"
+
+msgid "General_Done"
+msgstr "Eginda"
+
+msgid "General_Download"
+msgstr "Deskargatu"
+
+msgid "General_Downloads"
+msgstr "Deskargak"
+
+msgid "General_Edit"
+msgstr "Editatu"
+
+msgid "General_Error"
+msgstr "Errorea"
+
+msgid "General_EvolutionOverPeriod"
+msgstr "Bilakaera periodoan zehar"
+
+msgid "General_ExceptionConfigurationFileNotFound"
+msgstr "{%s} konfigurazio-fitxategia ez da aurkitu."
+
+msgid "General_ExceptionDatabaseVersion"
+msgstr "Zure %1$s bertsioa %2$s da baina Matomo-ek gutxienez %3$s behar du."
+
+msgid "General_ExceptionFileIntegrity"
+msgstr "Osotasun egiaztapenak huts egin du: %s"
+
+msgid "General_ExceptionFilesizeMismatch"
+msgstr "Fitxategien tamainak ez datoz bat: %1$s (esperotako luzera: %2$s, aurkitua: %3$s)"
+
+msgid "General_ExceptionInvalidToken"
+msgstr "Tokena baliogabea da."
+
+msgid "General_ExceptionMethodNotFound"
+msgstr "'%1$s' metodoa ez dago edo ez dago eskura '%2$s' moduluan."
+
+msgid "General_ExceptionMissingFile"
+msgstr "Fitxategia falta da: %s"
+
+msgid "General_ExceptionNonceMismatch"
+msgstr "Ezin da segurtasun-tokena egiaztatu inprimaki honetan."
+
+msgid "General_ExceptionUndeletableFile"
+msgstr "Ezin da %s ezabatu"
+
+msgid "General_Export"
+msgstr "Esportatu"
+
+msgid "General_ExportAsImage"
+msgstr "Esportatu irudi gisa"
+
+msgid "General_ExportThisReport"
+msgstr "Esportatu datu multzoa beste formatutan"
+
+msgid "General_ForExampleShort"
+msgstr "adib."
+
+msgid "General_GiveUsYourFeedback"
+msgstr "Emaiguzu zure iritzia!"
+
+msgid "General_GoTo"
+msgstr "Joan %s(e)ra"
+
+msgid "General_GraphHelp"
+msgstr "Matomo grafikoak bistaratzeko informazio gehiago."
+
+msgid "General_HelloUser"
+msgstr "Kaixo %s!"
+
+msgid "General_HoursMinutes"
+msgstr "%1$s ordu %2$s min"
+
+msgid "General_Id"
+msgstr "Ez"
+
+msgid "General_InvalidResponse"
+msgstr "Jasotako datuak baliogabeak dira."
+
+msgid "General_JsTrackingTag"
+msgstr "JavaScript jarraipen-etiketa"
+
+msgid "General_Language"
+msgstr "Hizkuntza"
+
+msgid "General_Loading"
+msgstr "Kargatzen..."
+
+msgid "General_LoadingData"
+msgstr "Datuak kargatzen..."
+
+msgid "General_Locale"
+msgstr "eu_ES.UTF-8"
+
+msgid "General_Logout"
+msgstr "Amaitu saioa"
+
+msgid "General_MinutesSeconds"
+msgstr "%1$s min %2$s s"
+
+msgid "General_Monthly"
+msgstr "Hilero"
+
+msgid "General_MultiSitesSummary"
+msgstr "Webgune guztiak"
+
+msgid "General_Name"
+msgstr "Izena"
+
+msgid "General_NewUpdatePiwikX"
+msgstr "Eguneraketa berria: Matomo %s"
+
+msgid "General_Next"
+msgstr "Hurrengoa"
+
+msgid "General_No"
+msgstr "Ez"
+
+msgid "General_NoDataForGraph"
+msgstr "Daturik ez grafiko honentzat."
+
+msgid "General_NoDataForTagCloud"
+msgstr "Daturik ez etiketa-hodei honentzat."
+
+msgid "General_NotValid"
+msgstr "%s ez da baliozkoa"
+
+msgid "General_NVisits"
+msgstr "%s bisita"
+
+msgid "General_NUniqueVisitors"
+msgstr "%s bisitari desberdin"
+
+msgid "General_Ok"
+msgstr "Ados"
+
+msgid "General_OnlyEnterIfRequired"
+msgstr "Idatzi erabiltzaile-izena soilik zure SMTP zerbitzariak behar badu"
+
+msgid "General_OnlyEnterIfRequiredPassword"
+msgstr "Idatzi pasahitza soilik zure SMTP zerbitzariak behar badu"
+
+msgid "General_OpenSourceWebAnalytics"
+msgstr "Kode irekiko web analitikak"
+
+msgid "General_OrCancel"
+msgstr "edo %1$s utzi %2$s"
+
+msgid "General_Others"
+msgstr "Besteak"
+
+msgid "General_Outlinks"
+msgstr "Kanpo-loturak"
+
+msgid "General_Overview"
+msgstr "Orokorra"
+
+msgid "General_Password"
+msgstr "Pasahitza"
+
+msgid "General_Period"
+msgstr "Tartea"
+
+msgid "General_Piechart"
+msgstr "Tarta-diagrama"
+
+msgid "General_PiwikXIsAvailablePleaseUpdateNow"
+msgstr "Matomo %1$s eskura dago. %2$s Eguneratu orain!%3$s (ikusi %4$s aldaketak%5$s)."
+
+msgid "General_PleaseSpecifyValue"
+msgstr "Mesedez zehaztu balioa '%s'(r)entzat."
+
+msgid "General_PleaseUpdatePiwik"
+msgstr "Mesedez eguneratu zure Matomo"
+
+msgid "General_Plugin"
+msgstr "Plugina"
+
+msgid "General_Plugins"
+msgstr "Pluginak"
+
+msgid "General_Previous"
+msgstr "Aurrekoa"
+
+msgid "General_RefreshPage"
+msgstr "Berritu orria"
+
+msgid "General_Report"
+msgstr "Txostena"
+
+msgid "General_Reports"
+msgstr "Txostena"
+
+msgid "General_RequestTimedOut"
+msgstr "%s(r)a egindako datu-eskaera denboraz kanpo geratu da. Saiatu berriro mesedez."
+
+msgid "General_Required"
+msgstr "%s behar da"
+
+msgid "General_Save"
+msgstr "Gorde"
+
+msgid "General_SaveImageOnYourComputer"
+msgstr "Irudia zure ordenagailuan gordetzeko, egin eskuin-klika irudian eta hautatu \"Gorde irudia honela...\""
+
+msgid "General_Search"
+msgstr "Bilatu"
+
+msgid "General_Settings"
+msgstr "Ezarpenak"
+
+msgid "General_SmtpPassword"
+msgstr "SMTP pasahitza"
+
+msgid "General_SmtpPort"
+msgstr "SMTP ataka"
+
+msgid "General_SmtpServerAddress"
+msgstr "SMT zerbitzariaren helbidea"
+
+msgid "General_SmtpUsername"
+msgstr "SMTP erabiltzaile-izena"
+
+msgid "General_Table"
+msgstr "Taula"
+
+msgid "General_TagCloud"
+msgstr "Etiketa-hodeia"
+
+msgid "General_TrackingScopeAction"
+msgstr "Ekintza"
+
+msgid "General_TranslatorName"
+msgstr "Librezale.org"
+
+msgid "General_Unknown"
+msgstr "Ezezaguna"
+
+msgid "General_Username"
+msgstr "Erabiltzaile-izena"
+
+msgid "General_UseSMTPServerForEmail"
+msgstr "Erabili SMTP zerbitzaria e-postarako"
+
+msgid "General_Value"
+msgstr "Balioa"
+
+msgid "General_VBarGraph"
+msgstr "Barra-diagrama bertikala"
+
+msgid "General_View"
+msgstr "Ikusi"
+
+msgid "General_VisitDuration"
+msgstr "B.b.ko bisiten iraupena (segundotan)"
+
+msgid "General_Visitors"
+msgstr "Bisitariak"
+
+msgid "General_VisitorSettings"
+msgstr "Bisitariaren ezarpenak"
+
+msgid "General_Warning"
+msgstr "Abisua"
+
+msgid "General_Website"
+msgstr "Webgunea"
+
+msgid "General_Weekly"
+msgstr "Astero"
+
+msgid "General_Widgets"
+msgstr "Widget-ak"
+
+msgid "General_YearsDays"
+msgstr "%1$s urte %2$s egun"
+
+msgid "General_Yes"
+msgstr "Bai"
+
+msgid "General_YouMustBeLoggedIn"
+msgstr "Saioa hasi behar duzu funtzionaltasun hau erabiltzeko."
+
+msgid "General_YourChangesHaveBeenSaved"
+msgstr "Zure aldaketak gorde egin dira."
+
+msgid "API_LoadedAPIs"
+msgstr "%s API ondo kargatu dira"
+
+msgid "Actions_ColumnClickedURL"
+msgstr "Klik egindako URLa"
+
+msgid "Actions_ColumnClicks"
+msgstr "Klikak"
+
+msgid "Actions_ColumnDownloadURL"
+msgstr "Deskargaren URLa"
+
+msgid "Actions_ColumnPageName"
+msgstr "Orriaren izena"
+
+msgid "Actions_ColumnPageURL"
+msgstr "Orriaren URLa"
+
+msgid "Actions_ColumnUniqueClicks"
+msgstr "Klik desberdinak"
+
+msgid "Actions_ColumnUniqueDownloads"
+msgstr "Deskarga desberdinak"
+
+msgid "Actions_SubmenuPageTitles"
+msgstr "Orrien izenburuak"
+
+msgid "CoreHome_CategoryNoData"
+msgstr "Daturik ez kategoria honetan. Saiatu \"Sartu populazio guztia\" aukerarekin."
+
+msgid "CoreHome_JavascriptDisabled"
+msgstr "JavaScript-ek gaituta egon behar du Matomo ikuspegi estandarrean erabiltzeko.<br />Badirudi ordea JavaScript desgaituta dagoela edo zure nabigatzaileak ez duela onartzen.<br />Ikuspegi estandarra erabiltzeako, gaitu JavaScript zure nabigatzailearen aukeretan eta ondoren %1$ssaiatu berriro%2$s.<br />"
+
+msgid "CoreHome_ShowJSCode"
+msgstr "Erakutsi txertatu beharreko JavaScript kodea"
+
+msgid "CoreHome_SystemSummaryPhpVersion"
+msgstr "PHP bertsioa"
+
+msgid "CorePluginsAdmin_Activate"
+msgstr "Gaitu"
+
+msgid "CorePluginsAdmin_Activated"
+msgstr "Gaituta"
+
+msgid "CorePluginsAdmin_Active"
+msgstr "Gaituta"
+
+msgid "CorePluginsAdmin_Deactivate"
+msgstr "Ezgaitu"
+
+msgid "CorePluginsAdmin_Inactive"
+msgstr "Ezgaituta"
+
+msgid "CorePluginsAdmin_PluginsExtendPiwik"
+msgstr "Matomo funtzionaltasunak hedatu eta zabaltzen dituzte pluginek."
+
+msgid "CorePluginsAdmin_OncePluginIsInstalledYouMayActivateHere"
+msgstr "Plugin bat instalatu ondoren, hemendik gaitu edo ezgaitu dezakezu."
+
+msgid "CorePluginsAdmin_PluginHomepage"
+msgstr "Pluginaren hasiera-orria"
+
+msgid "CorePluginsAdmin_PluginsManagement"
+msgstr "Pluginen kudeaketa"
+
+msgid "CorePluginsAdmin_Status"
+msgstr "Egoera"
+
+msgid "CorePluginsAdmin_Version"
+msgstr "Bertsioa"
+
+msgid "CorePluginsAdmin_Websites"
+msgstr "Webguneak"
+
+msgid "CoreUpdater_CriticalErrorDuringTheUpgradeProcess"
+msgstr "Errore kritikoa eguneraketa prozesuan:"
+
+msgid "CoreUpdater_DatabaseUpgradeRequired"
+msgstr "Datu-basearen bertsio-berritzea beharrezkoa"
+
+msgid "CoreUpdater_DownloadingUpdateFromX"
+msgstr "Eguneraketa deskargatzen: %s"
+
+msgid "CoreUpdater_DownloadX"
+msgstr "Deskargatu %s"
+
+msgid "CoreUpdater_EmptyDatabaseError"
+msgstr "%s datu-basea hutsik dago. Zure Matomo konfigurazio-fitxategi editatu edo ezabatu behar duzu."
+
+msgid "CoreUpdater_ErrorDIYHelp"
+msgstr "Erabiltzaile aurreratua bazara eta datu-basearen bertsio-berritzean errore bat aurkitzen baduzu:"
+
+msgid "CoreUpdater_ErrorDIYHelp_1"
+msgstr "identifikatu eta zuzendu arazoaren iturburua (adibidez, memory_limit edo max_execution_time)"
+
+msgid "CoreUpdater_ErrorDIYHelp_2"
+msgstr "exekutatu falta diren galderak huts egin duen eguneraketan"
+
+msgid "CoreUpdater_ErrorDIYHelp_3"
+msgstr "eguneratu eskuz zure Matomo datu-baseko `option` taula, version_core-ren balioa huts egin duen eguneraketara ezarriz"
+
+msgid "CoreUpdater_ErrorDIYHelp_4"
+msgstr "exekutatu berriro eguneratzailea (nabigatzailearen bidez edo komando-lerrotik) falta diren eguneraketekin jarraitzeko"
+
+msgid "CoreUpdater_ErrorDIYHelp_5"
+msgstr "eman arazoaren (eta soluzioaren) berri, Matomo hobetu dadin"
+
+msgid "CoreUpdater_ErrorDuringPluginsUpdates"
+msgstr "Errorea pluginak eguneratzean:"
+
+msgid "CoreUpdater_ExceptionAlreadyLatestVersion"
+msgstr "Zure Matomo %s bertsioa eguneratuta dago."
+
+msgid "CoreUpdater_ExceptionArchiveEmpty"
+msgstr "Artxibo hutsa."
+
+msgid "CoreUpdater_ExceptionArchiveIncompatible"
+msgstr "Artxibo bateraezina: %s"
+
+msgid "CoreUpdater_ExceptionArchiveIncomplete"
+msgstr "Artxiboa osatu gabe dago: fitxategi batzuk falta dira (adib. %s)."
+
+msgid "CoreUpdater_HelpMessageContent"
+msgstr "Emaiozu begirada %1$s Matomo FAQari %2$s, zeinak eguneraketetan gerta litezkeen ohiko erroreak azaltzen dituen. %3$s Galdeiozu zure sistemaren kudeatzaileari - ziurrenik laguntzeko moduan izango da, errorea zerbitzariarekin edo MySQLren konfigurazioari lotuta egon baitaiteke."
+
+msgid "CoreUpdater_HelpMessageIntroductionWhenError"
+msgstr "Goikoa muinare errore-mezua da. Arrazoia azaltzen lagun lezake, baina laguntza gehiago behar izanez gero:"
+
+msgid "CoreUpdater_HelpMessageIntroductionWhenWarning"
+msgstr "Eguneraketa ondo burutu da, baina arazoak egon dira prozesuan zehar. Mesedez irakur ezazu goiko azalpenak xehetasun gehiagorako. Laguntza gehiago jasotzeko:"
+
+msgid "CoreUpdater_InstallingTheLatestVersion"
+msgstr "Azkenengo bertsioa instalatzen"
+
+msgid "CoreUpdater_PiwikHasBeenSuccessfullyUpgraded"
+msgstr "Matomo ondo eguneratu da!"
+
+msgid "CoreUpdater_PiwikUpdatedSuccessfully"
+msgstr "Matomo ondo eguneratu da!"
+
+msgid "CoreUpdater_PiwikWillBeUpgradedFromVersionXToVersionY"
+msgstr "Matomo datu-basea %1$s bertsiotik %2$s bertsio berrira bertsio-berrituko da."
+
+msgid "CoreUpdater_TheFollowingPluginsWillBeUpgradedX"
+msgstr "Ondorengo pluginak eguneratuko dira: %s."
+
+msgid "CoreUpdater_ThereIsNewVersionAvailableForUpdate"
+msgstr "Matomo bertsio berria eskura dago eguneratzeko"
+
+msgid "CoreUpdater_TheUpgradeProcessMayFailExecuteCommand"
+msgstr "Matomo datu-base handia badaukazu, eguneraketek oso luze jo dezakete nabigatzailean exekutatuta. Egoera honetan komando-lerrotik exekuta ditzakezu eguneraketak: %s"
+
+msgid "CoreUpdater_TheUpgradeProcessMayTakeAWhilePleaseBePatient"
+msgstr "Datu-basea bertsio-berritzeko prozesuak denbora bat har lezake, izan pazientzia beraz."
+
+msgid "CoreUpdater_UnpackingTheUpdate"
+msgstr "Eguneraketa despaketatzen"
+
+msgid "CoreUpdater_UpdateAutomatically"
+msgstr "Eguneratu automatikoki"
+
+msgid "CoreUpdater_UpdateHasBeenCancelledExplanation"
+msgstr "Matomo klik bakarreko eguneraketa utzi egin da. Goiko errore-mezua ezin baduzu konpondu, Matomo eskuz eguneratzea gomendatzen da. %1$s Emaiozu begirada bat %2$seguneraketen dokumentazioari%3$s konponbidea bilatzeko!"
+
+msgid "CoreUpdater_UpdateTitle"
+msgstr "Eguneratu"
+
+msgid "CoreUpdater_UpdateSuccessTitle"
+msgstr "Matomo ondo eguneratu da!"
+
+msgid "CoreUpdater_UpgradeComplete"
+msgstr "Bertsio-berritzea burututa!"
+
+msgid "CoreUpdater_UpgradePiwik"
+msgstr "Bertsio-berritu Matomo"
+
+msgid "CoreUpdater_VerifyingUnpackedFiles"
+msgstr "Despaketatutako fitxategiak egiaztatzen"
+
+msgid "CoreUpdater_WarningMessages"
+msgstr "Abisuak:"
+
+msgid "CoreUpdater_WeAutomaticallyDeactivatedTheFollowingPlugins"
+msgstr "Ondorengo pluginak automatikoki ezgaitu ditugu: %s"
+
+msgid "CoreUpdater_YouCanUpgradeAutomaticallyOrDownloadPackage"
+msgstr "%s bertsiora automatikoi egunera dezakezu edo paketea deskargatu eta eskuz instalatu:"
+
+msgid "CoreUpdater_YourDatabaseIsOutOfDate"
+msgstr "Zure Matomo datu-basea zaharkituta dago eta jarraitu aurretik bertsio-berritu behar da."
+
+msgid "DBStats_DatabaseUsage"
+msgstr "Datu-basearen erabilera"
+
+msgid "DBStats_DataSize"
+msgstr "Datuen tamaina"
+
+msgid "DBStats_IndexSize"
+msgstr "Indizearen tamaina"
+
+msgid "DBStats_LearnMore"
+msgstr "Matomo datuak nola prozesatzen dituen eta Matomo trafiko ertain eta handikjo webguneetarako nola moldatu jakiteko, emaiozu begirada dokumentazioari: %s."
+
+msgid "DBStats_MainDescription"
+msgstr "Zure web analitiken datu guztiak MySQL datu-basean biltegiratzen ari da Matomo. Une honetan Matomo-en taulek tamaina hau hartzen dute: %s."
+
+msgid "DBStats_RowCount"
+msgstr "Errenkada kopurua"
+
+msgid "DBStats_Table"
+msgstr "Taula"
+
+msgid "DBStats_TotalSize"
+msgstr "Tamaina osoa"
+
+msgid "Dashboard_AddPreviewedWidget"
+msgstr "Gehitu arbelean aurrebistako widget-a"
+
+msgid "Dashboard_Dashboard"
+msgstr "Arbela"
+
+msgid "Dashboard_DeleteWidgetConfirm"
+msgstr "Ziur zaude widget hau arbeletik ezabatu nahi duzula?"
+
+msgid "Dashboard_LoadingWidget"
+msgstr "Widget-a kargatzen, itxaron mesedez..."
+
+msgid "Dashboard_SelectWidget"
+msgstr "Hautatu arbelean gehitzeko widget-a"
+
+msgid "Dashboard_WidgetNotFound"
+msgstr "Ez da widget-a aurkitu"
+
+msgid "Dashboard_WidgetPreview"
+msgstr "Widget-aren aurrebista"
+
+msgid "DevicePlugins_WidgetPlugins"
+msgstr "Pluginen zerrenda"
+
+msgid "DevicesDetection_BrowserEngine"
+msgstr "Nabigatzailea"
+
+msgid "DevicesDetection_BrowserFamily"
+msgstr "Nabigatzaile-familia"
+
+msgid "DevicesDetection_Browsers"
+msgstr "Nabigatzaileak"
+
+msgid "DevicesDetection_ColumnBrowser"
+msgstr "Nabigatzailea"
+
+msgid "DevicesDetection_ColumnOperatingSystem"
+msgstr "Sistema eragilea"
+
+msgid "DevicesDetection_OperatingSystems"
+msgstr "Sistema eragileak"
+
+msgid "DevicesDetection_WidgetBrowsers"
+msgstr "Bisitarien nabigatzaileak"
+
+msgid "Goals_AddGoal"
+msgstr "Gehitu helburua"
+
+msgid "Goals_AddNewGoal"
+msgstr "Gehitu helburu berria"
+
+msgid "Goals_AddNewGoalOrEditExistingGoal"
+msgstr "%1$sGehitu helburu berria%2$s edo %3$sEditatu%4$s dauden helburuak"
+
+msgid "Goals_CategoryTextReferrers_Referrers"
+msgstr "Erreferenteak"
+
+msgid "Goals_ClickOutlink"
+msgstr "Egin klik kanpoko webgune baterako loturan"
+
+msgid "Goals_ColumnConversions"
+msgstr "Bihurketa"
+
+msgid "Goals_ConversionsOverview"
+msgstr "Bihurketen ikuspegi orokorra"
+
+msgid "Goals_DeleteGoalConfirm"
+msgstr "Ziur zaude %s helburua ezabatu nahi duzula?"
+
+msgid "Goals_Download"
+msgstr "Deskargatu fitxategia"
+
+msgid "Goals_ExternalWebsiteUrl"
+msgstr "kanpoko webgunearen URLa"
+
+msgid "Goals_Filename"
+msgstr "fitxategi-izena"
+
+msgid "Goals_GoalName"
+msgstr "Helburu-izena"
+
+msgid "Goals_Goals"
+msgstr "Helburuak"
+
+msgid "Goals_GoalsOverview"
+msgstr "Helburuen ikuspegi orokorra"
+
+msgid "Goals_GoalX"
+msgstr "%s helburua"
+
+msgid "Goals_Optional"
+msgstr "(aukerazkoa)"
+
+msgid "Goals_Pattern"
+msgstr "Eredua"
+
+msgid "Goals_UpdateGoal"
+msgstr "Eguneratu helburua"
+
+msgid "Goals_URL"
+msgstr "URLa"
+
+msgid "Goals_ViewAndEditGoals"
+msgstr "Ikusi eta editatu helburuak"
+
+msgid "Installation_ConfirmDeleteExistingTables"
+msgstr "Ziur zaude ondorengo taulak: %s datu-basetik ezabatu nahi dituzula? OHARRA: TAULA HAUETAKO DATUAK EZINGO DIRA BERRESKURATU!"
+
+msgid "Installation_Congratulations"
+msgstr "Zorionak"
+
+msgid "Installation_DatabaseCreation"
+msgstr "Datu-basea sortzea"
+
+msgid "Installation_DatabaseErrorConnect"
+msgstr "Errorea datu-basearen zerbitzariarekin konektatzen saiatzean"
+
+msgid "Installation_DatabaseServerVersion"
+msgstr "Datu-basearen zerbitzariaren bertsioa"
+
+msgid "Installation_DatabaseSetup"
+msgstr "Datu-basearen konfigurazioa"
+
+msgid "Installation_DatabaseSetupAdapter"
+msgstr "egokitzailea"
+
+msgid "Installation_DatabaseSetupDatabaseName"
+msgstr "datu-basearen izena"
+
+msgid "Installation_DatabaseSetupLogin"
+msgstr "erabiltzaile-izena"
+
+msgid "Installation_DatabaseSetupServer"
+msgstr "datu-basearen zerbitzaria"
+
+msgid "Installation_DatabaseSetupTablePrefix"
+msgstr "taularen aurrizkia"
+
+msgid "Installation_Email"
+msgstr "E-posta"
+
+msgid "Installation_Extension"
+msgstr "hedapena"
+
+msgid "Installation_GoBackAndDefinePrefix"
+msgstr "Zoaz atzera eta definitu aurrizki bat Matomo-en taulentzat"
+
+msgid "Installation_Installation"
+msgstr "Instalazioa"
+
+msgid "Installation_InstallationStatus"
+msgstr "Instalazioaren egoera"
+
+msgid "Installation_LargePiwikInstances"
+msgstr "Laguntza Matomo instalazio handientzat"
+
+msgid "Installation_Legend"
+msgstr "Legenda"
+
+msgid "Installation_Optional"
+msgstr "Aukerazkoa"
+
+msgid "Installation_Password"
+msgstr "Pasahitza"
+
+msgid "Installation_PasswordDoNotMatch"
+msgstr "pasahitzak ez datoz bat"
+
+msgid "Installation_PasswordRepeat"
+msgstr "Pasahitza (errepikatu)"
+
+msgid "Installation_PercentDone"
+msgstr "%% %s eginda"
+
+msgid "Installation_Requirements"
+msgstr "Matomo beharrak"
+
+msgid "Installation_SetupWebsite"
+msgstr "Konfiguratu webgunea"
+
+msgid "Installation_SetupWebsiteError"
+msgstr "Errorea gertatu da webgunea gehitzean"
+
+msgid "Installation_SetupWebsiteSetupSuccess"
+msgstr "%s webgunea ondo sortu da!"
+
+msgid "Installation_SystemCheck"
+msgstr "Sistemaren egiaztapena"
+
+msgid "Installation_SystemCheckDatabaseHelp"
+msgstr "Matomo mysqli hedapena edo PDO eta pdo_mysql hedapenak behar ditu."
+
+msgid "Installation_SystemCheckError"
+msgstr "Errorea gertatu da - aurrera jarraitu aurretik konpondu behar da"
+
+msgid "Installation_SystemCheckExtensions"
+msgstr "Beharrezko bestelako hedapenak"
+
+msgid "Installation_SystemCheckFunctions"
+msgstr "Beharrezko funtzioak"
+
+msgid "Installation_SystemCheckGDHelp"
+msgstr "Grafika txikiek ez dute funtzionatuko."
+
+msgid "Installation_SystemCheckIconvHelp"
+msgstr "\"iconv\" gaituta duela konfiguratu eta birkonpilatu behar duzu PHP, --with-iconv aukerarekin."
+
+msgid "Installation_SystemCheckMailHelp"
+msgstr "Erreakzioak eta galdutako pasahitzen mezuak ezingo dira bidali mail() gabe."
+
+msgid "Installation_SystemCheckMemoryLimit"
+msgstr "Memoriaren muga"
+
+msgid "Installation_SystemCheckMemoryLimitHelp"
+msgstr "Trafiko handiko webgune batean, artxibatzeko prozesuak onartutako memoria baino gehiago har lezake. Beharrezkoa bada, aldatu memory_limit direktiba zure php.ini fitxategian."
+
+msgid "Installation_SystemCheckOpenURL"
+msgstr "Ireki URLa"
+
+msgid "Installation_SystemCheckOpenURLHelp"
+msgstr "Buletinen harpidetzek, eguneraketen jakinarazpenek eta klik bakarreko eguneraketek \"curl\" hedapena, allow_url_fopen=On edo fsockopen() gaituta egotea behar dute."
+
+msgid "Installation_SystemCheckPdoAndMysqliHelp"
+msgstr "Linux zerbitzari batean ondorengo aukerekin konpila dezakezu php:: %1$s Gehitu ondorengo lerroak zure php.ini fitxategian: %2$s"
+
+msgid "Installation_SystemCheckPhp"
+msgstr "PHP bertsioa"
+
+msgid "Installation_SystemCheckPhpPdoAndMysqli"
+msgstr "Argibide gehiago: %1$sPHP PDO%2$s eta %3$sMYSQLI%4$s."
+
+msgid "Installation_SystemCheckSplHelp"
+msgstr "Standard PHP Library (SPL) lehenetsita gaituta duela konfiguratu eta birkonpilatu behar duzu PHP."
+
+msgid "Installation_SystemCheckTimeLimitHelp"
+msgstr "Trafiko handiko webgune batean, artxibatzeko prozesuak onartutako denbora baino gehiago har lezake. Beharrezkoa bada, aldatu max_execution_time direktiba zure php.ini fitxategian."
+
+msgid "Installation_SystemCheckWarning"
+msgstr "Matomo ondo ibiliko da baina zenbait ezaugarri falta litezke"
+
+msgid "Installation_SystemCheckWinPdoAndMysqliHelp"
+msgstr "Windows zerbitzari batean ondorengo lerroak gehi ditzakezu zure php.ini fitxategian: %s"
+
+msgid "Installation_SystemCheckWriteDirs"
+msgstr "Idazteko baimena duten direktorioak"
+
+msgid "Installation_SystemCheckWriteDirsHelp"
+msgstr "Errore hau konpontzeko zure Linux sisteman, saiatu ondorengo komandoa(k) exekutatzen"
+
+msgid "Installation_SystemCheckZlibHelp"
+msgstr "\"zlib\" gaituta duela konfiguratu eta birkonpilatu behar duzu PHP, --with-zlib aukerarekin."
+
+msgid "Installation_Tables"
+msgstr "Taulak sortzen"
+
+msgid "Installation_TablesCreatedSuccess"
+msgstr "Taulak ondo sortu dira!"
+
+msgid "Installation_TablesDelete"
+msgstr "Ezabatu atzemandako taulak"
+
+msgid "Installation_TablesDeletedSuccess"
+msgstr "Aurretik zeuden Matomo taulak ondo ezabatu dira"
+
+msgid "Installation_TablesFound"
+msgstr "Ondorengo taulak aurkitu dira datu-basean"
+
+msgid "Installation_TablesReuse"
+msgstr "Berrerabili dauden taulak"
+
+msgid "Installation_TablesWarningHelp"
+msgstr "Aukeratu dagoen datu-baseko taulak berrerabiltzea edo hautatu instalazio garbia dauden datuak datu-basetik ezabatzeko."
+
+msgid "Installation_TablesWithSameNamesFound"
+msgstr "Zure %1$s datu-baseko zenbait taulek %2$s Matomo sortzen saiatzen ari den taulen izen berak dituzte"
+
+msgid "Installation_Welcome"
+msgstr "Ongi etorri!"
+
+msgid "Intl_Continent_afr"
+msgstr "Afrika"
+
+msgid "Intl_Continent_amc"
+msgstr "Erdialdeko Amerika"
+
+msgid "Intl_Continent_amn"
+msgstr "Ipar Amerika"
+
+msgid "Intl_Continent_ams"
+msgstr "Hego Amerika"
+
+msgid "Intl_Continent_ant"
+msgstr "Antartika"
+
+msgid "Intl_Continent_asi"
+msgstr "Asia"
+
+msgid "Intl_Continent_eur"
+msgstr "Europa"
+
+msgid "Intl_Continent_oce"
+msgstr "Ozeania"
+
+msgid "Intl_Country_AD"
+msgstr "Andorra"
+
+msgid "Intl_Country_AE"
+msgstr "Arabiar Emirerri Batuak"
+
+msgid "Intl_Country_AF"
+msgstr "Afganistan"
+
+msgid "Intl_Country_AG"
+msgstr "Antigua eta Barbuda"
+
+msgid "Intl_Country_AI"
+msgstr "Aingira"
+
+msgid "Intl_Country_AL"
+msgstr "Albania"
+
+msgid "Intl_Country_AM"
+msgstr "Armenia"
+
+msgid "Intl_Country_AO"
+msgstr "Angola"
+
+msgid "Intl_Country_AQ"
+msgstr "Antartika"
+
+msgid "Intl_Country_AR"
+msgstr "Argentina"
+
+msgid "Intl_Country_AS"
+msgstr "Samoa Estatubatuarra"
+
+msgid "Intl_Country_AT"
+msgstr "Austria"
+
+msgid "Intl_Country_AU"
+msgstr "Australia"
+
+msgid "Intl_Country_AW"
+msgstr "Aruba"
+
+msgid "Intl_Country_AX"
+msgstr "Åland"
+
+msgid "Intl_Country_AZ"
+msgstr "Azerbaijan"
+
+msgid "Intl_Country_BA"
+msgstr "Bosnia-Herzegovina"
+
+msgid "Intl_Country_BB"
+msgstr "Barbados"
+
+msgid "Intl_Country_BD"
+msgstr "Bangladesh"
+
+msgid "Intl_Country_BE"
+msgstr "Belgika"
+
+msgid "Intl_Country_BF"
+msgstr "Burkina Faso"
+
+msgid "Intl_Country_BG"
+msgstr "Bulgaria"
+
+msgid "Intl_Country_BH"
+msgstr "Bahrain"
+
+msgid "Intl_Country_BI"
+msgstr "Burundi"
+
+msgid "Intl_Country_BJ"
+msgstr "Benin"
+
+msgid "Intl_Country_BL"
+msgstr "Saint Barthélemy"
+
+msgid "Intl_Country_BM"
+msgstr "Bermuda"
+
+msgid "Intl_Country_BN"
+msgstr "Brunei"
+
+msgid "Intl_Country_BO"
+msgstr "Bolivia"
+
+msgid "Intl_Country_BQ"
+msgstr "Karibeko Herbehereak"
+
+msgid "Intl_Country_BR"
+msgstr "Brasil"
+
+msgid "Intl_Country_BS"
+msgstr "Bahamak"
+
+msgid "Intl_Country_BT"
+msgstr "Bhutan"
+
+msgid "Intl_Country_BV"
+msgstr "Bouvet uhartea"
+
+msgid "Intl_Country_BW"
+msgstr "Botswana"
+
+msgid "Intl_Country_BY"
+msgstr "Bielorrusia"
+
+msgid "Intl_Country_BZ"
+msgstr "Belize"
+
+msgid "Intl_Country_CA"
+msgstr "Kanada"
+
+msgid "Intl_Country_CC"
+msgstr "Cocos (Keeling) uharteak"
+
+msgid "Intl_Country_CD"
+msgstr "Kongoko Errepublika Demokratikoa"
+
+msgid "Intl_Country_CF"
+msgstr "Afrika Erdiko Errepublika"
+
+msgid "Intl_Country_CG"
+msgstr "Kongo"
+
+msgid "Intl_Country_CH"
+msgstr "Suitza"
+
+msgid "Intl_Country_CI"
+msgstr "Boli Kosta"
+
+msgid "Intl_Country_CK"
+msgstr "Cook uharteak"
+
+msgid "Intl_Country_CL"
+msgstr "Txile"
+
+msgid "Intl_Country_CM"
+msgstr "Kamerun"
+
+msgid "Intl_Country_CN"
+msgstr "Txina"
+
+msgid "Intl_Country_CO"
+msgstr "Kolonbia"
+
+msgid "Intl_Country_CR"
+msgstr "Costa Rica"
+
+msgid "Intl_Country_CU"
+msgstr "Kuba"
+
+msgid "Intl_Country_CV"
+msgstr "Cabo Verde"
+
+msgid "Intl_Country_CW"
+msgstr "Curaçao"
+
+msgid "Intl_Country_CX"
+msgstr "Christmas uhartea"
+
+msgid "Intl_Country_CY"
+msgstr "Zipre"
+
+msgid "Intl_Country_CZ"
+msgstr "Txekia"
+
+msgid "Intl_Country_DE"
+msgstr "Alemania"
+
+msgid "Intl_Country_DJ"
+msgstr "Djibuti"
+
+msgid "Intl_Country_DK"
+msgstr "Danimarka"
+
+msgid "Intl_Country_DM"
+msgstr "Dominika"
+
+msgid "Intl_Country_DO"
+msgstr "Dominikar Errepublika"
+
+msgid "Intl_Country_DZ"
+msgstr "Aljeria"
+
+msgid "Intl_Country_EC"
+msgstr "Ekuador"
+
+msgid "Intl_Country_EE"
+msgstr "Estonia"
+
+msgid "Intl_Country_EG"
+msgstr "Egipto"
+
+msgid "Intl_Country_EH"
+msgstr "Mendebaldeko Sahara"
+
+msgid "Intl_Country_ER"
+msgstr "Eritrea"
+
+msgid "Intl_Country_ES"
+msgstr "Espainia"
+
+msgid "Intl_Country_ET"
+msgstr "Etiopia"
+
+msgid "Intl_Country_FI"
+msgstr "Finlandia"
+
+msgid "Intl_Country_FJ"
+msgstr "Fiji"
+
+msgid "Intl_Country_FK"
+msgstr "Falklandak"
+
+msgid "Intl_Country_FM"
+msgstr "Mikronesia"
+
+msgid "Intl_Country_FO"
+msgstr "Faroe uharteak"
+
+msgid "Intl_Country_FR"
+msgstr "Frantzia"
+
+msgid "Intl_Country_GA"
+msgstr "Gabon"
+
+msgid "Intl_Country_GB"
+msgstr "Erresuma Batua"
+
+msgid "Intl_Country_GD"
+msgstr "Grenada"
+
+msgid "Intl_Country_GE"
+msgstr "Georgia"
+
+msgid "Intl_Country_GF"
+msgstr "Guyana Frantsesa"
+
+msgid "Intl_Country_GG"
+msgstr "Guernesey"
+
+msgid "Intl_Country_GH"
+msgstr "Ghana"
+
+msgid "Intl_Country_GI"
+msgstr "Gibraltar"
+
+msgid "Intl_Country_GL"
+msgstr "Groenlandia"
+
+msgid "Intl_Country_GM"
+msgstr "Gambia"
+
+msgid "Intl_Country_GN"
+msgstr "Ginea"
+
+msgid "Intl_Country_GP"
+msgstr "Guadalupe"
+
+msgid "Intl_Country_GQ"
+msgstr "Ekuatore Ginea"
+
+msgid "Intl_Country_GR"
+msgstr "Grezia"
+
+msgid "Intl_Country_GS"
+msgstr "Hegoaldeko Georgia eta Hegoaldeko Sandwich uharteak"
+
+msgid "Intl_Country_GT"
+msgstr "Guatemala"
+
+msgid "Intl_Country_GU"
+msgstr "Guam"
+
+msgid "Intl_Country_GW"
+msgstr "Ginea Bissau"
+
+msgid "Intl_Country_GY"
+msgstr "Guyana"
+
+msgid "Intl_Country_HK"
+msgstr "Hong Kong Txinako AEB"
+
+msgid "Intl_Country_HM"
+msgstr "Heard eta McDonald uharteak"
+
+msgid "Intl_Country_HN"
+msgstr "Honduras"
+
+msgid "Intl_Country_HR"
+msgstr "Kroazia"
+
+msgid "Intl_Country_HT"
+msgstr "Haiti"
+
+msgid "Intl_Country_HU"
+msgstr "Hungaria"
+
+msgid "Intl_Country_ID"
+msgstr "Indonesia"
+
+msgid "Intl_Country_IE"
+msgstr "Irlanda"
+
+msgid "Intl_Country_IL"
+msgstr "Israel"
+
+msgid "Intl_Country_IM"
+msgstr "Man uhartea"
+
+msgid "Intl_Country_IN"
+msgstr "India"
+
+msgid "Intl_Country_IO"
+msgstr "Indiako Ozeanoko lurralde britainiarra"
+
+msgid "Intl_Country_IQ"
+msgstr "Irak"
+
+msgid "Intl_Country_IR"
+msgstr "Iran"
+
+msgid "Intl_Country_IS"
+msgstr "Islandia"
+
+msgid "Intl_Country_IT"
+msgstr "Italia"
+
+msgid "Intl_Country_JE"
+msgstr "Jersey"
+
+msgid "Intl_Country_JM"
+msgstr "Jamaika"
+
+msgid "Intl_Country_JO"
+msgstr "Jordania"
+
+msgid "Intl_Country_JP"
+msgstr "Japonia"
+
+msgid "Intl_Country_KE"
+msgstr "Kenya"
+
+msgid "Intl_Country_KG"
+msgstr "Kirgizistan"
+
+msgid "Intl_Country_KH"
+msgstr "Kanbodia"
+
+msgid "Intl_Country_KI"
+msgstr "Kiribati"
+
+msgid "Intl_Country_KM"
+msgstr "Komoreak"
+
+msgid "Intl_Country_KN"
+msgstr "Saint Kitts eta Nevis"
+
+msgid "Intl_Country_KP"
+msgstr "Ipar Korea"
+
+msgid "Intl_Country_KR"
+msgstr "Hego Korea"
+
+msgid "Intl_Country_KW"
+msgstr "Kuwait"
+
+msgid "Intl_Country_KY"
+msgstr "Kaiman uharteak"
+
+msgid "Intl_Country_KZ"
+msgstr "Kazakhstan"
+
+msgid "Intl_Country_LA"
+msgstr "Laos"
+
+msgid "Intl_Country_LB"
+msgstr "Libano"
+
+msgid "Intl_Country_LC"
+msgstr "Santa Luzia"
+
+msgid "Intl_Country_LI"
+msgstr "Liechtenstein"
+
+msgid "Intl_Country_LK"
+msgstr "Sri Lanka"
+
+msgid "Intl_Country_LR"
+msgstr "Liberia"
+
+msgid "Intl_Country_LS"
+msgstr "Lesotho"
+
+msgid "Intl_Country_LT"
+msgstr "Lituania"
+
+msgid "Intl_Country_LU"
+msgstr "Luxenburgo"
+
+msgid "Intl_Country_LV"
+msgstr "Letonia"
+
+msgid "Intl_Country_LY"
+msgstr "Libia"
+
+msgid "Intl_Country_MA"
+msgstr "Maroko"
+
+msgid "Intl_Country_MC"
+msgstr "Monako"
+
+msgid "Intl_Country_MD"
+msgstr "Moldavia"
+
+msgid "Intl_Country_ME"
+msgstr "Montenegro"
+
+msgid "Intl_Country_MF"
+msgstr "San Martin"
+
+msgid "Intl_Country_MG"
+msgstr "Madagaskar"
+
+msgid "Intl_Country_MH"
+msgstr "Marshall Uharteak"
+
+msgid "Intl_Country_MK"
+msgstr "Mazedonia"
+
+msgid "Intl_Country_ML"
+msgstr "Mali"
+
+msgid "Intl_Country_MM"
+msgstr "Myanmar (Birmania)"
+
+msgid "Intl_Country_MN"
+msgstr "Mongolia"
+
+msgid "Intl_Country_MO"
+msgstr "Macau Txinako AEB"
+
+msgid "Intl_Country_MP"
+msgstr "Ipar Mariana uharteak"
+
+msgid "Intl_Country_MQ"
+msgstr "Martinika"
+
+msgid "Intl_Country_MR"
+msgstr "Mauritania"
+
+msgid "Intl_Country_MS"
+msgstr "Montserrat"
+
+msgid "Intl_Country_MT"
+msgstr "Malta"
+
+msgid "Intl_Country_MU"
+msgstr "Maurizio"
+
+msgid "Intl_Country_MV"
+msgstr "Maldivak"
+
+msgid "Intl_Country_MW"
+msgstr "Malawi"
+
+msgid "Intl_Country_MX"
+msgstr "Mexiko"
+
+msgid "Intl_Country_MY"
+msgstr "Malaysia"
+
+msgid "Intl_Country_MZ"
+msgstr "Mozambike"
+
+msgid "Intl_Country_NA"
+msgstr "Namibia"
+
+msgid "Intl_Country_NC"
+msgstr "Kaledonia Berria"
+
+msgid "Intl_Country_NE"
+msgstr "Niger"
+
+msgid "Intl_Country_NF"
+msgstr "Norfolk uhartea"
+
+msgid "Intl_Country_NG"
+msgstr "Nigeria"
+
+msgid "Intl_Country_NI"
+msgstr "Nikaragua"
+
+msgid "Intl_Country_NL"
+msgstr "Herbehereak"
+
+msgid "Intl_Country_NO"
+msgstr "Norvegia"
+
+msgid "Intl_Country_NP"
+msgstr "Nepal"
+
+msgid "Intl_Country_NR"
+msgstr "Nauru"
+
+msgid "Intl_Country_NU"
+msgstr "Niue"
+
+msgid "Intl_Country_NZ"
+msgstr "Zeelanda Berria"
+
+msgid "Intl_Country_OM"
+msgstr "Oman"
+
+msgid "Intl_Country_PA"
+msgstr "Panama"
+
+msgid "Intl_Country_PE"
+msgstr "Peru"
+
+msgid "Intl_Country_PF"
+msgstr "Polinesia Frantsesa"
+
+msgid "Intl_Country_PG"
+msgstr "Papua Ginea Berria"
+
+msgid "Intl_Country_PH"
+msgstr "Filipinak"
+
+msgid "Intl_Country_PK"
+msgstr "Pakistan"
+
+msgid "Intl_Country_PL"
+msgstr "Polonia"
+
+msgid "Intl_Country_PM"
+msgstr "Saint-Pierre eta Mikelune"
+
+msgid "Intl_Country_PN"
+msgstr "Pitcairn uharteak"
+
+msgid "Intl_Country_PR"
+msgstr "Puerto Rico"
+
+msgid "Intl_Country_PS"
+msgstr "Palestinar Lurralde Okupatuak"
+
+msgid "Intl_Country_PT"
+msgstr "Portugal"
+
+msgid "Intl_Country_PW"
+msgstr "Palau"
+
+msgid "Intl_Country_PY"
+msgstr "Paraguai"
+
+msgid "Intl_Country_QA"
+msgstr "Qatar"
+
+msgid "Intl_Country_RE"
+msgstr "Reunion"
+
+msgid "Intl_Country_RO"
+msgstr "Errumania"
+
+msgid "Intl_Country_RS"
+msgstr "Serbia"
+
+msgid "Intl_Country_RU"
+msgstr "Errusia"
+
+msgid "Intl_Country_RW"
+msgstr "Ruanda"
+
+msgid "Intl_Country_SA"
+msgstr "Saudi Arabia"
+
+msgid "Intl_Country_SB"
+msgstr "Salomon Uharteak"
+
+msgid "Intl_Country_SC"
+msgstr "Seychelleak"
+
+msgid "Intl_Country_SD"
+msgstr "Sudan"
+
+msgid "Intl_Country_SE"
+msgstr "Suedia"
+
+msgid "Intl_Country_SG"
+msgstr "Singapur"
+
+msgid "Intl_Country_SH"
+msgstr "Santa Helena"
+
+msgid "Intl_Country_SI"
+msgstr "Eslovenia"
+
+msgid "Intl_Country_SJ"
+msgstr "Svalbard eta Jan Mayen uharteak"
+
+msgid "Intl_Country_SK"
+msgstr "Eslovakia"
+
+msgid "Intl_Country_SL"
+msgstr "Sierra Leona"
+
+msgid "Intl_Country_SM"
+msgstr "San Marino"
+
+msgid "Intl_Country_SN"
+msgstr "Senegal"
+
+msgid "Intl_Country_SO"
+msgstr "Somalia"
+
+msgid "Intl_Country_SR"
+msgstr "Surinam"
+
+msgid "Intl_Country_SS"
+msgstr "Hego Sudan"
+
+msgid "Intl_Country_ST"
+msgstr "Sao Tome eta Principe"
+
+msgid "Intl_Country_SV"
+msgstr "El Salvador"
+
+msgid "Intl_Country_SX"
+msgstr "Sint Maarten"
+
+msgid "Intl_Country_SY"
+msgstr "Siria"
+
+msgid "Intl_Country_SZ"
+msgstr "Swazilandia"
+
+msgid "Intl_Country_TC"
+msgstr "Turk eta Caico uharteak"
+
+msgid "Intl_Country_TD"
+msgstr "Txad"
+
+msgid "Intl_Country_TF"
+msgstr "Hegoaldeko lurralde frantsesak"
+
+msgid "Intl_Country_TG"
+msgstr "Togo"
+
+msgid "Intl_Country_TH"
+msgstr "Thailandia"
+
+msgid "Intl_Country_TJ"
+msgstr "Tajikistan"
+
+msgid "Intl_Country_TK"
+msgstr "Tokelau"
+
+msgid "Intl_Country_TL"
+msgstr "Ekialdeko Timor"
+
+msgid "Intl_Country_TM"
+msgstr "Turkmenistan"
+
+msgid "Intl_Country_TN"
+msgstr "Tunisia"
+
+msgid "Intl_Country_TO"
+msgstr "Tonga"
+
+msgid "Intl_Country_TR"
+msgstr "Turkia"
+
+msgid "Intl_Country_TT"
+msgstr "Trinidad eta Tobago"
+
+msgid "Intl_Country_TV"
+msgstr "Tuvalu"
+
+msgid "Intl_Country_TW"
+msgstr "Taiwan"
+
+msgid "Intl_Country_TZ"
+msgstr "Tanzania"
+
+msgid "Intl_Country_UA"
+msgstr "Ukraina"
+
+msgid "Intl_Country_UG"
+msgstr "Uganda"
+
+msgid "Intl_Country_UM"
+msgstr "Ameriketako Estatu Batuetako Kanpoaldeko Uharte Txikiak"
+
+msgid "Intl_Country_US"
+msgstr "Ameriketako Estatu Batuak"
+
+msgid "Intl_Country_UY"
+msgstr "Uruguai"
+
+msgid "Intl_Country_UZ"
+msgstr "Uzbekistan"
+
+msgid "Intl_Country_VA"
+msgstr "Vatikano Hiria"
+
+msgid "Intl_Country_VC"
+msgstr "Saint Vincent eta Grenadinak"
+
+msgid "Intl_Country_VE"
+msgstr "Venezuela"
+
+msgid "Intl_Country_VG"
+msgstr "Birjina uharte britainiarrak"
+
+msgid "Intl_Country_VI"
+msgstr "Birjina uharte amerikarrak"
+
+msgid "Intl_Country_VN"
+msgstr "Vietnam"
+
+msgid "Intl_Country_VU"
+msgstr "Vanuatu"
+
+msgid "Intl_Country_WF"
+msgstr "Wallis eta Futuna"
+
+msgid "Intl_Country_WS"
+msgstr "Samoa"
+
+msgid "Intl_Country_YE"
+msgstr "Yemen"
+
+msgid "Intl_Country_YT"
+msgstr "Mayotte"
+
+msgid "Intl_Country_ZA"
+msgstr "Hegoafrika"
+
+msgid "Intl_Country_ZM"
+msgstr "Zambia"
+
+msgid "Intl_Country_ZW"
+msgstr "Zimbabwe"
+
+msgid "Intl_CurrencySymbol_AED"
+msgstr "AED"
+
+msgid "Intl_CurrencySymbol_AFN"
+msgstr "AFN"
+
+msgid "Intl_CurrencySymbol_ALL"
+msgstr "ALL"
+
+msgid "Intl_CurrencySymbol_AMD"
+msgstr "AMD"
+
+msgid "Intl_CurrencySymbol_ANG"
+msgstr "ANG"
+
+msgid "Intl_CurrencySymbol_AOA"
+msgstr "AOA"
+
+msgid "Intl_CurrencySymbol_ARS"
+msgstr "ARS"
+
+msgid "Intl_CurrencySymbol_AUD"
+msgstr "A$"
+
+msgid "Intl_CurrencySymbol_AWG"
+msgstr "AWG"
+
+msgid "Intl_CurrencySymbol_AZN"
+msgstr "AZN"
+
+msgid "Intl_CurrencySymbol_BAM"
+msgstr "BAM"
+
+msgid "Intl_CurrencySymbol_BBD"
+msgstr "BBD"
+
+msgid "Intl_CurrencySymbol_BDT"
+msgstr "BDT"
+
+msgid "Intl_CurrencySymbol_BGN"
+msgstr "BGN"
+
+msgid "Intl_CurrencySymbol_BHD"
+msgstr "BHD"
+
+msgid "Intl_CurrencySymbol_BIF"
+msgstr "BIF"
+
+msgid "Intl_CurrencySymbol_BMD"
+msgstr "BMD"
+
+msgid "Intl_CurrencySymbol_BND"
+msgstr "BND"
+
+msgid "Intl_CurrencySymbol_BOB"
+msgstr "BOB"
+
+msgid "Intl_CurrencySymbol_BRL"
+msgstr "R$"
+
+msgid "Intl_CurrencySymbol_BSD"
+msgstr "BSD"
+
+msgid "Intl_CurrencySymbol_BTC"
+msgstr "BTC"
+
+msgid "Intl_CurrencySymbol_BTN"
+msgstr "BTN"
+
+msgid "Intl_CurrencySymbol_BWP"
+msgstr "BWP"
+
+msgid "Intl_CurrencySymbol_BYN"
+msgstr "BYN"
+
+msgid "Intl_CurrencySymbol_BZD"
+msgstr "BZD"
+
+msgid "Intl_CurrencySymbol_CAD"
+msgstr "CA$"
+
+msgid "Intl_CurrencySymbol_CDF"
+msgstr "CDF"
+
+msgid "Intl_CurrencySymbol_CHF"
+msgstr "CHF"
+
+msgid "Intl_CurrencySymbol_CLP"
+msgstr "CLP"
+
+msgid "Intl_CurrencySymbol_CNY"
+msgstr "CN¥"
+
+msgid "Intl_CurrencySymbol_COP"
+msgstr "COP"
+
+msgid "Intl_CurrencySymbol_CRC"
+msgstr "CRC"
+
+msgid "Intl_CurrencySymbol_CUC"
+msgstr "CUC"
+
+msgid "Intl_CurrencySymbol_CUP"
+msgstr "CUP"
+
+msgid "Intl_CurrencySymbol_CVE"
+msgstr "CVE"
+
+msgid "Intl_CurrencySymbol_CZK"
+msgstr "CZK"
+
+msgid "Intl_CurrencySymbol_DJF"
+msgstr "DJF"
+
+msgid "Intl_CurrencySymbol_DKK"
+msgstr "DKK"
+
+msgid "Intl_CurrencySymbol_DOP"
+msgstr "DOP"
+
+msgid "Intl_CurrencySymbol_DZD"
+msgstr "DZD"
+
+msgid "Intl_CurrencySymbol_EGP"
+msgstr "EGP"
+
+msgid "Intl_CurrencySymbol_ERN"
+msgstr "ERN"
+
+msgid "Intl_CurrencySymbol_ETB"
+msgstr "ETB"
+
+msgid "Intl_CurrencySymbol_EUR"
+msgstr "€"
+
+msgid "Intl_CurrencySymbol_FJD"
+msgstr "FJD"
+
+msgid "Intl_CurrencySymbol_FKP"
+msgstr "FKP"
+
+msgid "Intl_CurrencySymbol_GBP"
+msgstr "£"
+
+msgid "Intl_CurrencySymbol_GEL"
+msgstr "GEL"
+
+msgid "Intl_CurrencySymbol_GHS"
+msgstr "GHS"
+
+msgid "Intl_CurrencySymbol_GIP"
+msgstr "GIP"
+
+msgid "Intl_CurrencySymbol_GMD"
+msgstr "GMD"
+
+msgid "Intl_CurrencySymbol_GNF"
+msgstr "GNF"
+
+msgid "Intl_CurrencySymbol_GTQ"
+msgstr "GTQ"
+
+msgid "Intl_CurrencySymbol_GYD"
+msgstr "GYD"
+
+msgid "Intl_CurrencySymbol_HKD"
+msgstr "HK$"
+
+msgid "Intl_CurrencySymbol_HNL"
+msgstr "HNL"
+
+msgid "Intl_CurrencySymbol_HRK"
+msgstr "HRK"
+
+msgid "Intl_CurrencySymbol_HTG"
+msgstr "HTG"
+
+msgid "Intl_CurrencySymbol_HUF"
+msgstr "HUF"
+
+msgid "Intl_CurrencySymbol_IDR"
+msgstr "IDR"
+
+msgid "Intl_CurrencySymbol_ILS"
+msgstr "₪"
+
+msgid "Intl_CurrencySymbol_INR"
+msgstr "₹"
+
+msgid "Intl_CurrencySymbol_IQD"
+msgstr "IQD"
+
+msgid "Intl_CurrencySymbol_IRR"
+msgstr "IRR"
+
+msgid "Intl_CurrencySymbol_ISK"
+msgstr "ISK"
+
+msgid "Intl_CurrencySymbol_JMD"
+msgstr "JMD"
+
+msgid "Intl_CurrencySymbol_JOD"
+msgstr "JOD"
+
+msgid "Intl_CurrencySymbol_JPY"
+msgstr "JP¥"
+
+msgid "Intl_CurrencySymbol_KES"
+msgstr "KES"
+
+msgid "Intl_CurrencySymbol_KGS"
+msgstr "KGS"
+
+msgid "Intl_CurrencySymbol_KHR"
+msgstr "KHR"
+
+msgid "Intl_CurrencySymbol_KMF"
+msgstr "KMF"
+
+msgid "Intl_CurrencySymbol_KPW"
+msgstr "KPW"
+
+msgid "Intl_CurrencySymbol_KRW"
+msgstr "₩"
+
+msgid "Intl_CurrencySymbol_KWD"
+msgstr "KWD"
+
+msgid "Intl_CurrencySymbol_KYD"
+msgstr "KYD"
+
+msgid "Intl_CurrencySymbol_KZT"
+msgstr "KZT"
+
+msgid "Intl_CurrencySymbol_LAK"
+msgstr "LAK"
+
+msgid "Intl_CurrencySymbol_LBP"
+msgstr "LBP"
+
+msgid "Intl_CurrencySymbol_LKR"
+msgstr "LKR"
+
+msgid "Intl_CurrencySymbol_LRD"
+msgstr "LRD"
+
+msgid "Intl_CurrencySymbol_LSL"
+msgstr "LSL"
+
+msgid "Intl_CurrencySymbol_LYD"
+msgstr "LYD"
+
+msgid "Intl_CurrencySymbol_MAD"
+msgstr "MAD"
+
+msgid "Intl_CurrencySymbol_MDL"
+msgstr "MDL"
+
+msgid "Intl_CurrencySymbol_MGA"
+msgstr "MGA"
+
+msgid "Intl_CurrencySymbol_MKD"
+msgstr "MKD"
+
+msgid "Intl_CurrencySymbol_MMK"
+msgstr "MMK"
+
+msgid "Intl_CurrencySymbol_MNT"
+msgstr "MNT"
+
+msgid "Intl_CurrencySymbol_MOP"
+msgstr "MOP"
+
+msgid "Intl_CurrencySymbol_MRU"
+msgstr "MRU"
+
+msgid "Intl_CurrencySymbol_MUR"
+msgstr "MUR"
+
+msgid "Intl_CurrencySymbol_MVR"
+msgstr "MVR"
+
+msgid "Intl_CurrencySymbol_MWK"
+msgstr "MWK"
+
+msgid "Intl_CurrencySymbol_MXN"
+msgstr "MX$"
+
+msgid "Intl_CurrencySymbol_MYR"
+msgstr "MYR"
+
+msgid "Intl_CurrencySymbol_MZN"
+msgstr "MZN"
+
+msgid "Intl_CurrencySymbol_NAD"
+msgstr "NAD"
+
+msgid "Intl_CurrencySymbol_NGN"
+msgstr "NGN"
+
+msgid "Intl_CurrencySymbol_NIO"
+msgstr "NIO"
+
+msgid "Intl_CurrencySymbol_NOK"
+msgstr "NOK"
+
+msgid "Intl_CurrencySymbol_NPR"
+msgstr "NPR"
+
+msgid "Intl_CurrencySymbol_NZD"
+msgstr "NZ$"
+
+msgid "Intl_CurrencySymbol_OMR"
+msgstr "OMR"
+
+msgid "Intl_CurrencySymbol_PAB"
+msgstr "PAB"
+
+msgid "Intl_CurrencySymbol_PEN"
+msgstr "PEN"
+
+msgid "Intl_CurrencySymbol_PGK"
+msgstr "PGK"
+
+msgid "Intl_CurrencySymbol_PHP"
+msgstr "PHP"
+
+msgid "Intl_CurrencySymbol_PKR"
+msgstr "PKR"
+
+msgid "Intl_CurrencySymbol_PLN"
+msgstr "PLN"
+
+msgid "Intl_CurrencySymbol_PYG"
+msgstr "PYG"
+
+msgid "Intl_CurrencySymbol_QAR"
+msgstr "QAR"
+
+msgid "Intl_CurrencySymbol_RON"
+msgstr "RON"
+
+msgid "Intl_CurrencySymbol_RSD"
+msgstr "RSD"
+
+msgid "Intl_CurrencySymbol_RUB"
+msgstr "RUB"
+
+msgid "Intl_CurrencySymbol_RWF"
+msgstr "RWF"
+
+msgid "Intl_CurrencySymbol_SAR"
+msgstr "SAR"
+
+msgid "Intl_CurrencySymbol_SBD"
+msgstr "SBD"
+
+msgid "Intl_CurrencySymbol_SCR"
+msgstr "SCR"
+
+msgid "Intl_CurrencySymbol_SDG"
+msgstr "SDG"
+
+msgid "Intl_CurrencySymbol_SEK"
+msgstr "SEK"
+
+msgid "Intl_CurrencySymbol_SGD"
+msgstr "SGD"
+
+msgid "Intl_CurrencySymbol_SHP"
+msgstr "SHP"
+
+msgid "Intl_CurrencySymbol_SLL"
+msgstr "SLL"
+
+msgid "Intl_CurrencySymbol_SOS"
+msgstr "SOS"
+
+msgid "Intl_CurrencySymbol_SRD"
+msgstr "SRD"
+
+msgid "Intl_CurrencySymbol_SSP"
+msgstr "SSP"
+
+msgid "Intl_CurrencySymbol_STN"
+msgstr "STN"
+
+msgid "Intl_CurrencySymbol_SYP"
+msgstr "SYP"
+
+msgid "Intl_CurrencySymbol_SZL"
+msgstr "SZL"
+
+msgid "Intl_CurrencySymbol_THB"
+msgstr "฿"
+
+msgid "Intl_CurrencySymbol_TJS"
+msgstr "TJS"
+
+msgid "Intl_CurrencySymbol_TMT"
+msgstr "TMT"
+
+msgid "Intl_CurrencySymbol_TND"
+msgstr "TND"
+
+msgid "Intl_CurrencySymbol_TOP"
+msgstr "TOP"
+
+msgid "Intl_CurrencySymbol_TRY"
+msgstr "TRY"
+
+msgid "Intl_CurrencySymbol_TTD"
+msgstr "TTD"
+
+msgid "Intl_CurrencySymbol_TWD"
+msgstr "NT$"
+
+msgid "Intl_CurrencySymbol_TZS"
+msgstr "TZS"
+
+msgid "Intl_CurrencySymbol_UAH"
+msgstr "UAH"
+
+msgid "Intl_CurrencySymbol_UGX"
+msgstr "UGX"
+
+msgid "Intl_CurrencySymbol_USD"
+msgstr "US$"
+
+msgid "Intl_CurrencySymbol_UYU"
+msgstr "UYU"
+
+msgid "Intl_CurrencySymbol_UZS"
+msgstr "UZS"
+
+msgid "Intl_CurrencySymbol_VEF"
+msgstr "VEF"
+
+msgid "Intl_CurrencySymbol_VND"
+msgstr "₫"
+
+msgid "Intl_CurrencySymbol_VUV"
+msgstr "VUV"
+
+msgid "Intl_CurrencySymbol_WST"
+msgstr "WST"
+
+msgid "Intl_CurrencySymbol_XAF"
+msgstr "FCFA"
+
+msgid "Intl_CurrencySymbol_XCD"
+msgstr "EC$"
+
+msgid "Intl_CurrencySymbol_XOF"
+msgstr "CFA"
+
+msgid "Intl_CurrencySymbol_XPF"
+msgstr "CFPF"
+
+msgid "Intl_CurrencySymbol_YER"
+msgstr "YER"
+
+msgid "Intl_CurrencySymbol_ZAR"
+msgstr "ZAR"
+
+msgid "Intl_CurrencySymbol_ZMW"
+msgstr "ZMW"
+
+msgid "Intl_Currency_AED"
+msgstr "Arabiar Emirerri Batuetako dirhama"
+
+msgid "Intl_Currency_AFN"
+msgstr "Afganistango afghania"
+
+msgid "Intl_Currency_ALL"
+msgstr "Albaniako leka"
+
+msgid "Intl_Currency_AMD"
+msgstr "Armeniako drama"
+
+msgid "Intl_Currency_ANG"
+msgstr "Holandarren Antilletako guilderra"
+
+msgid "Intl_Currency_AOA"
+msgstr "Angolako kwanza"
+
+msgid "Intl_Currency_ARS"
+msgstr "Argentinako pesoa"
+
+msgid "Intl_Currency_AUD"
+msgstr "Australiako dolarra"
+
+msgid "Intl_Currency_AWG"
+msgstr "Arubako florina"
+
+msgid "Intl_Currency_AZN"
+msgstr "Azerbaijango manata"
+
+msgid "Intl_Currency_BAM"
+msgstr "Bosnia-Herzegovinako marko trukakorra"
+
+msgid "Intl_Currency_BBD"
+msgstr "Barbadosetako dolarra"
+
+msgid "Intl_Currency_BDT"
+msgstr "Bangladesheko taka"
+
+msgid "Intl_Currency_BGN"
+msgstr "Bulgariako leva"
+
+msgid "Intl_Currency_BHD"
+msgstr "Bahraingo dinarra"
+
+msgid "Intl_Currency_BIF"
+msgstr "Burundiko frankoa"
+
+msgid "Intl_Currency_BMD"
+msgstr "Bermudetako dolarra"
+
+msgid "Intl_Currency_BND"
+msgstr "Bruneiko dolarra"
+
+msgid "Intl_Currency_BOB"
+msgstr "Boliviako bolivianoa"
+
+msgid "Intl_Currency_BRL"
+msgstr "Brasilgo erreala"
+
+msgid "Intl_Currency_BSD"
+msgstr "Bahametako dolarra"
+
+msgid "Intl_Currency_BTC"
+msgstr "Bitcoin"
+
+msgid "Intl_Currency_BTN"
+msgstr "Bhutango ngultruma"
+
+msgid "Intl_Currency_BWP"
+msgstr "Bosniako pula"
+
+msgid "Intl_Currency_BYN"
+msgstr "Bielorrusiako errubloa"
+
+msgid "Intl_Currency_BZD"
+msgstr "Belizeko dolarra"
+
+msgid "Intl_Currency_CAD"
+msgstr "Kanadako dolarra"
+
+msgid "Intl_Currency_CDF"
+msgstr "Kongoko frankoa"
+
+msgid "Intl_Currency_CHF"
+msgstr "Suitzako frankoa"
+
+msgid "Intl_Currency_CLP"
+msgstr "Txileko pesoa"
+
+msgid "Intl_Currency_CNY"
+msgstr "Txinako yuana"
+
+msgid "Intl_Currency_COP"
+msgstr "Kolonbiako pesoa"
+
+msgid "Intl_Currency_CRC"
+msgstr "Costa Ricako colona"
+
+msgid "Intl_Currency_CUC"
+msgstr "Kubako peso trukakorra"
+
+msgid "Intl_Currency_CUP"
+msgstr "Kubako pesoa"
+
+msgid "Intl_Currency_CVE"
+msgstr "Cabo Verdeko ezkutua"
+
+msgid "Intl_Currency_CZK"
+msgstr "Txekiar Errepublikako koroa"
+
+msgid "Intl_Currency_DJF"
+msgstr "Djibutiko frankoa"
+
+msgid "Intl_Currency_DKK"
+msgstr "Danimarkako koroa"
+
+msgid "Intl_Currency_DOP"
+msgstr "Dominikar Errepublikako pesoa"
+
+msgid "Intl_Currency_DZD"
+msgstr "Aljeriako dinarra"
+
+msgid "Intl_Currency_EGP"
+msgstr "Egiptoko libera"
+
+msgid "Intl_Currency_ERN"
+msgstr "Eritreako nakfa"
+
+msgid "Intl_Currency_ETB"
+msgstr "Etiopiako birra"
+
+msgid "Intl_Currency_EUR"
+msgstr "Euroa"
+
+msgid "Intl_Currency_FJD"
+msgstr "Fijiko dolarra"
+
+msgid "Intl_Currency_FKP"
+msgstr "Falkland uharteetako libera"
+
+msgid "Intl_Currency_GBP"
+msgstr "Libera esterlina"
+
+msgid "Intl_Currency_GEL"
+msgstr "Georgiako laria"
+
+msgid "Intl_Currency_GHS"
+msgstr "Ghanako cedia"
+
+msgid "Intl_Currency_GIP"
+msgstr "Gibraltarreko libera"
+
+msgid "Intl_Currency_GMD"
+msgstr "Ganbiako dalasia"
+
+msgid "Intl_Currency_GNF"
+msgstr "Gineako frankoa"
+
+msgid "Intl_Currency_GTQ"
+msgstr "Guatemalako quetzala"
+
+msgid "Intl_Currency_GYD"
+msgstr "Guyanako dolarra"
+
+msgid "Intl_Currency_HKD"
+msgstr "Hong Kongeko dolarra"
+
+msgid "Intl_Currency_HNL"
+msgstr "Hondurasko lempira"
+
+msgid "Intl_Currency_HRK"
+msgstr "Kroaziako kuna"
+
+msgid "Intl_Currency_HTG"
+msgstr "Haitiko gourdea"
+
+msgid "Intl_Currency_HUF"
+msgstr "Hungariako florina"
+
+msgid "Intl_Currency_IDR"
+msgstr "Indonesiako errupia"
+
+msgid "Intl_Currency_ILS"
+msgstr "Israelgo shekel berria"
+
+msgid "Intl_Currency_INR"
+msgstr "Indiako errupia"
+
+msgid "Intl_Currency_IQD"
+msgstr "Irakeko dinarra"
+
+msgid "Intl_Currency_IRR"
+msgstr "Irango riala"
+
+msgid "Intl_Currency_ISK"
+msgstr "Islandiako koroa"
+
+msgid "Intl_Currency_JMD"
+msgstr "Jamaikako dolarra"
+
+msgid "Intl_Currency_JOD"
+msgstr "Jordaniako dinarra"
+
+msgid "Intl_Currency_JPY"
+msgstr "Japoniako yena"
+
+msgid "Intl_Currency_KES"
+msgstr "Kenyako txelina"
+
+msgid "Intl_Currency_KGS"
+msgstr "Kirgizistango soma"
+
+msgid "Intl_Currency_KHR"
+msgstr "Kanbodiako riela"
+
+msgid "Intl_Currency_KMF"
+msgstr "Komoreetako frankoa"
+
+msgid "Intl_Currency_KPW"
+msgstr "Ipar Koreako wona"
+
+msgid "Intl_Currency_KRW"
+msgstr "Hego Koreako wona"
+
+msgid "Intl_Currency_KWD"
+msgstr "Kuwaiteko dinarra"
+
+msgid "Intl_Currency_KYD"
+msgstr "Kaiman uharteetako dolarra"
+
+msgid "Intl_Currency_KZT"
+msgstr "Kazakhstango tengea"
+
+msgid "Intl_Currency_LAK"
+msgstr "Laoseko kipa"
+
+msgid "Intl_Currency_LBP"
+msgstr "Libanoko libera"
+
+msgid "Intl_Currency_LKR"
+msgstr "Sri Lankako errupia"
+
+msgid "Intl_Currency_LRD"
+msgstr "Liberiako dolarra"
+
+msgid "Intl_Currency_LSL"
+msgstr "Lesothoko lotia"
+
+msgid "Intl_Currency_LYD"
+msgstr "Libiako dinarra"
+
+msgid "Intl_Currency_MAD"
+msgstr "Marokoko dirhama"
+
+msgid "Intl_Currency_MDL"
+msgstr "Moldaviako leua"
+
+msgid "Intl_Currency_MGA"
+msgstr "Madagaskarreko ariarya"
+
+msgid "Intl_Currency_MKD"
+msgstr "Mazedoniako dinarra"
+
+msgid "Intl_Currency_MMK"
+msgstr "Myanmarreko kyata"
+
+msgid "Intl_Currency_MNT"
+msgstr "Mongoliako tugrika"
+
+msgid "Intl_Currency_MOP"
+msgstr "Macanako pataca"
+
+msgid "Intl_Currency_MRU"
+msgstr "Mauritaniako ouguiya"
+
+msgid "Intl_Currency_MUR"
+msgstr "Maurizio uharteetako errupia"
+
+msgid "Intl_Currency_MVR"
+msgstr "Maldivetako rufiyaa"
+
+msgid "Intl_Currency_MWK"
+msgstr "Malawiko kwacha"
+
+msgid "Intl_Currency_MXN"
+msgstr "Mexikoko pesoa"
+
+msgid "Intl_Currency_MYR"
+msgstr "Malaysiako ringgita"
+
+msgid "Intl_Currency_MZN"
+msgstr "Mozambikeko metikala"
+
+msgid "Intl_Currency_NAD"
+msgstr "Namibiako dolarra"
+
+msgid "Intl_Currency_NGN"
+msgstr "Nigeriako naira"
+
+msgid "Intl_Currency_NIO"
+msgstr "Nikaraguako cordoba"
+
+msgid "Intl_Currency_NOK"
+msgstr "Norvegiako koroa"
+
+msgid "Intl_Currency_NPR"
+msgstr "Nepalgo errupia"
+
+msgid "Intl_Currency_NZD"
+msgstr "Zeelanda Berriko dolarra"
+
+msgid "Intl_Currency_OMR"
+msgstr "Omango riala"
+
+msgid "Intl_Currency_PAB"
+msgstr "Panamako balboa"
+
+msgid "Intl_Currency_PEN"
+msgstr "Peruko sol"
+
+msgid "Intl_Currency_PGK"
+msgstr "Papua Ginea Berriko kina"
+
+msgid "Intl_Currency_PHP"
+msgstr "Filipinetako pesoa"
+
+msgid "Intl_Currency_PKR"
+msgstr "Pakistango errupia"
+
+msgid "Intl_Currency_PLN"
+msgstr "Poloniako zlotya"
+
+msgid "Intl_Currency_PYG"
+msgstr "Paraguaiko guarania"
+
+msgid "Intl_Currency_QAR"
+msgstr "Qatarreko riala"
+
+msgid "Intl_Currency_RON"
+msgstr "Errumaniako leua"
+
+msgid "Intl_Currency_RSD"
+msgstr "Serbiako dinarra"
+
+msgid "Intl_Currency_RUB"
+msgstr "Errusiako errubloa"
+
+msgid "Intl_Currency_RWF"
+msgstr "Ruandako frankoa"
+
+msgid "Intl_Currency_SAR"
+msgstr "Arabia Saudiko riala"
+
+msgid "Intl_Currency_SBD"
+msgstr "Salomon uharteetako dolarra"
+
+msgid "Intl_Currency_SCR"
+msgstr "Seychelleetako errupia"
+
+msgid "Intl_Currency_SDG"
+msgstr "Sudango libera"
+
+msgid "Intl_Currency_SEK"
+msgstr "Suediako koroa"
+
+msgid "Intl_Currency_SGD"
+msgstr "Singapurreko dolarra"
+
+msgid "Intl_Currency_SHP"
+msgstr "Santa Helenako libera"
+
+msgid "Intl_Currency_SLL"
+msgstr "Sierra Leonako leona"
+
+msgid "Intl_Currency_SOS"
+msgstr "Somaliako txelina"
+
+msgid "Intl_Currency_SRD"
+msgstr "Surinameko dolarra"
+
+msgid "Intl_Currency_SSP"
+msgstr "Hego Sudango libera"
+
+msgid "Intl_Currency_STN"
+msgstr "Sao Tome eta Principeko dobra"
+
+msgid "Intl_Currency_SYP"
+msgstr "Siriako libera"
+
+msgid "Intl_Currency_SZL"
+msgstr "Swazilandiako lilangenia"
+
+msgid "Intl_Currency_THB"
+msgstr "Thailandiako bahta"
+
+msgid "Intl_Currency_TJS"
+msgstr "Tajikistango somonia"
+
+msgid "Intl_Currency_TMT"
+msgstr "Turkmenistango manata"
+
+msgid "Intl_Currency_TND"
+msgstr "Tunisiako dinarra"
+
+msgid "Intl_Currency_TOP"
+msgstr "Tongako Paʻanga"
+
+msgid "Intl_Currency_TRY"
+msgstr "Turkiako lira"
+
+msgid "Intl_Currency_TTD"
+msgstr "Trinidad eta Tobagoko dolarra"
+
+msgid "Intl_Currency_TWD"
+msgstr "Taiwango dolar berria"
+
+msgid "Intl_Currency_TZS"
+msgstr "Tanzaniako txelina"
+
+msgid "Intl_Currency_UAH"
+msgstr "Ukrainako hryvnia"
+
+msgid "Intl_Currency_UGX"
+msgstr "Ugandako txelina"
+
+msgid "Intl_Currency_USD"
+msgstr "AEBko dolarra"
+
+msgid "Intl_Currency_UYU"
+msgstr "Uruguaiko pesoa"
+
+msgid "Intl_Currency_UZS"
+msgstr "Uzbekistango soma"
+
+msgid "Intl_Currency_VEF"
+msgstr "Venezuelako bolivarra (2008–2018)"
+
+msgid "Intl_Currency_VND"
+msgstr "Vietnameko donga"
+
+msgid "Intl_Currency_VUV"
+msgstr "Vanuatuko vatua"
+
+msgid "Intl_Currency_WST"
+msgstr "Samoko tala"
+
+msgid "Intl_Currency_XAF"
+msgstr "Afrika erdialdeko CFA frankoa"
+
+msgid "Intl_Currency_XCD"
+msgstr "Karibe ekialdeko dolarra"
+
+msgid "Intl_Currency_XOF"
+msgstr "Afrika mendebaldeko CFA frankoa"
+
+msgid "Intl_Currency_XPF"
+msgstr "CFP frankoa"
+
+msgid "Intl_Currency_YER"
+msgstr "Yemengo riala"
+
+msgid "Intl_Currency_ZAR"
+msgstr "Hegoafrikako randa"
+
+msgid "Intl_Currency_ZMW"
+msgstr "Zambiako kwacha"
+
+msgid "Intl_Day_Long_1"
+msgstr "astelehena"
+
+msgid "Intl_Day_Long_2"
+msgstr "asteartea"
+
+msgid "Intl_Day_Long_3"
+msgstr "asteazkena"
+
+msgid "Intl_Day_Long_4"
+msgstr "osteguna"
+
+msgid "Intl_Day_Long_5"
+msgstr "ostirala"
+
+msgid "Intl_Day_Long_6"
+msgstr "larunbata"
+
+msgid "Intl_Day_Long_7"
+msgstr "igandea"
+
+msgid "Intl_Day_Long_StandAlone_1"
+msgstr "astelehena"
+
+msgid "Intl_Day_Long_StandAlone_2"
+msgstr "asteartea"
+
+msgid "Intl_Day_Long_StandAlone_3"
+msgstr "asteazkena"
+
+msgid "Intl_Day_Long_StandAlone_4"
+msgstr "osteguna"
+
+msgid "Intl_Day_Long_StandAlone_5"
+msgstr "ostirala"
+
+msgid "Intl_Day_Long_StandAlone_6"
+msgstr "larunbata"
+
+msgid "Intl_Day_Long_StandAlone_7"
+msgstr "igandea"
+
+msgid "Intl_Day_Min_1"
+msgstr "al."
+
+msgid "Intl_Day_Min_2"
+msgstr "ar."
+
+msgid "Intl_Day_Min_3"
+msgstr "az."
+
+msgid "Intl_Day_Min_4"
+msgstr "og."
+
+msgid "Intl_Day_Min_5"
+msgstr "or."
+
+msgid "Intl_Day_Min_6"
+msgstr "lr."
+
+msgid "Intl_Day_Min_7"
+msgstr "ig."
+
+msgid "Intl_Day_Min_StandAlone_1"
+msgstr "al."
+
+msgid "Intl_Day_Min_StandAlone_2"
+msgstr "ar."
+
+msgid "Intl_Day_Min_StandAlone_3"
+msgstr "az."
+
+msgid "Intl_Day_Min_StandAlone_4"
+msgstr "og."
+
+msgid "Intl_Day_Min_StandAlone_5"
+msgstr "or."
+
+msgid "Intl_Day_Min_StandAlone_6"
+msgstr "lr."
+
+msgid "Intl_Day_Min_StandAlone_7"
+msgstr "ig."
+
+msgid "Intl_Day_Short_1"
+msgstr "al."
+
+msgid "Intl_Day_Short_2"
+msgstr "ar."
+
+msgid "Intl_Day_Short_3"
+msgstr "az."
+
+msgid "Intl_Day_Short_4"
+msgstr "og."
+
+msgid "Intl_Day_Short_5"
+msgstr "or."
+
+msgid "Intl_Day_Short_6"
+msgstr "lr."
+
+msgid "Intl_Day_Short_7"
+msgstr "ig."
+
+msgid "Intl_Day_Short_StandAlone_1"
+msgstr "al."
+
+msgid "Intl_Day_Short_StandAlone_2"
+msgstr "ar."
+
+msgid "Intl_Day_Short_StandAlone_3"
+msgstr "az."
+
+msgid "Intl_Day_Short_StandAlone_4"
+msgstr "og."
+
+msgid "Intl_Day_Short_StandAlone_5"
+msgstr "or."
+
+msgid "Intl_Day_Short_StandAlone_6"
+msgstr "lr."
+
+msgid "Intl_Day_Short_StandAlone_7"
+msgstr "ig."
+
+msgid "Intl_EnglishLanguageName"
+msgstr "Basque"
+
+msgid "Intl_Format_DateTime_Long"
+msgstr "y('e')'ko' MMMM'ren' d('a'), EEEE {time}"
+
+msgid "Intl_Format_DateTime_Short"
+msgstr "y('e')'ko' MMM d('a') {time}"
+
+msgid "Intl_Format_Date_Day_Month"
+msgstr "MMM d, E"
+
+msgid "Intl_Format_Date_Long"
+msgstr "y('e')'ko' MMMM'ren' d('a'), EEEE"
+
+msgid "Intl_Format_Date_Short"
+msgstr "y('e')'ko' MMM d('a')"
+
+msgid "Intl_Format_Hour_12"
+msgstr "h a"
+
+msgid "Intl_Format_Hour_24"
+msgstr "HH"
+
+msgid "Intl_Format_Interval_Long_D"
+msgstr "y('e')'ko' MMMM d–d"
+
+msgid "Intl_Format_Interval_Long_M"
+msgstr "y('e')'ko' MMMM d – MMMM d"
+
+msgid "Intl_Format_Interval_Long_Y"
+msgstr "y('e')'ko' MMMM d – y('e')'ko' MMMM d"
+
+msgid "Intl_Format_Interval_Short_D"
+msgstr "y('e')'ko' MMM d–d"
+
+msgid "Intl_Format_Interval_Short_M"
+msgstr "y('e')'ko' MMM d – MMM d"
+
+msgid "Intl_Format_Interval_Short_Y"
+msgstr "y('e')'ko' MMM d – y('e')'ko' MMM d"
+
+msgid "Intl_Format_Month_Long"
+msgstr "y('e')'ko' MMMM"
+
+msgid "Intl_Format_Month_Short"
+msgstr "y MMM"
+
+msgid "Intl_Format_Time"
+msgstr "{time}"
+
+msgid "Intl_Format_Time_12"
+msgstr "h:mm:ss a"
+
+msgid "Intl_Format_Time_24"
+msgstr "HH:mm:ss"
+
+msgid "Intl_Format_Year"
+msgstr "y"
+
+msgid "Intl_Hours"
+msgstr "ordu"
+
+msgid "Intl_Language_aa"
+msgstr "Afarera"
+
+msgid "Intl_Language_ab"
+msgstr "Abkhaziera"
+
+msgid "Intl_Language_af"
+msgstr "Afrikaans"
+
+msgid "Intl_Language_ak"
+msgstr "Akanera"
+
+msgid "Intl_Language_am"
+msgstr "Amharera"
+
+msgid "Intl_Language_an"
+msgstr "Aragoiera"
+
+msgid "Intl_Language_ar"
+msgstr "Arabiera"
+
+msgid "Intl_Language_as"
+msgstr "Assamera"
+
+msgid "Intl_Language_av"
+msgstr "Avarera"
+
+msgid "Intl_Language_ay"
+msgstr "Aimara"
+
+msgid "Intl_Language_az"
+msgstr "Azerbaijanera"
+
+msgid "Intl_Language_ba"
+msgstr "Baxkirera"
+
+msgid "Intl_Language_be"
+msgstr "Bielorrusiera"
+
+msgid "Intl_Language_bg"
+msgstr "Bulgariera"
+
+msgid "Intl_Language_bi"
+msgstr "Bislama"
+
+msgid "Intl_Language_bm"
+msgstr "Bambarera"
+
+msgid "Intl_Language_bn"
+msgstr "Bengalera"
+
+msgid "Intl_Language_bo"
+msgstr "Tibetera"
+
+msgid "Intl_Language_br"
+msgstr "Bretoiera"
+
+msgid "Intl_Language_bs"
+msgstr "Bosniera"
+
+msgid "Intl_Language_ca"
+msgstr "Katalan"
+
+msgid "Intl_Language_ce"
+msgstr "Txetxenera"
+
+msgid "Intl_Language_ch"
+msgstr "Chamorrera"
+
+msgid "Intl_Language_co"
+msgstr "Korsikera"
+
+msgid "Intl_Language_cs"
+msgstr "Txekiera"
+
+msgid "Intl_Language_cu"
+msgstr "Elizako eslaviera"
+
+msgid "Intl_Language_cv"
+msgstr "Txuvaxera"
+
+msgid "Intl_Language_cy"
+msgstr "Gales"
+
+msgid "Intl_Language_da"
+msgstr "Daniera"
+
+msgid "Intl_Language_de"
+msgstr "Aleman"
+
+msgid "Intl_Language_dv"
+msgstr "Divehiera"
+
+msgid "Intl_Language_dz"
+msgstr "Dzongkha"
+
+msgid "Intl_Language_ee"
+msgstr "Eweera"
+
+msgid "Intl_Language_el"
+msgstr "Greziera"
+
+msgid "Intl_Language_en"
+msgstr "Ingeles"
+
+msgid "Intl_Language_eo"
+msgstr "Esperanto"
+
+msgid "Intl_Language_es"
+msgstr "Espainiera"
+
+msgid "Intl_Language_et"
+msgstr "Estoniera"
+
+msgid "Intl_Language_eu"
+msgstr "Euskara"
+
+msgid "Intl_Language_fa"
+msgstr "Persiera"
+
+msgid "Intl_Language_ff"
+msgstr "Fula"
+
+msgid "Intl_Language_fi"
+msgstr "Finlandiera"
+
+msgid "Intl_Language_fj"
+msgstr "Fijiera"
+
+msgid "Intl_Language_fo"
+msgstr "Faroera"
+
+msgid "Intl_Language_fr"
+msgstr "Frantses"
+
+msgid "Intl_Language_fy"
+msgstr "Frisiera"
+
+msgid "Intl_Language_ga"
+msgstr "Gaeliko"
+
+msgid "Intl_Language_gd"
+msgstr "Eskoziako gaeliko"
+
+msgid "Intl_Language_gl"
+msgstr "Galiziera"
+
+msgid "Intl_Language_gn"
+msgstr "Guaraniera"
+
+msgid "Intl_Language_gu"
+msgstr "Gujaratera"
+
+msgid "Intl_Language_gv"
+msgstr "Manxera"
+
+msgid "Intl_Language_ha"
+msgstr "Hausa"
+
+msgid "Intl_Language_he"
+msgstr "Hebreera"
+
+msgid "Intl_Language_hi"
+msgstr "Hindi"
+
+msgid "Intl_Language_hr"
+msgstr "Kroaziera"
+
+msgid "Intl_Language_ht"
+msgstr "Haitiko kreolera"
+
+msgid "Intl_Language_hu"
+msgstr "Hungariera"
+
+msgid "Intl_Language_hy"
+msgstr "Armeniera"
+
+msgid "Intl_Language_hz"
+msgstr "Hereroera"
+
+msgid "Intl_Language_ia"
+msgstr "Interlingua"
+
+msgid "Intl_Language_id"
+msgstr "Indonesiera"
+
+msgid "Intl_Language_ie"
+msgstr "Interlingue"
+
+msgid "Intl_Language_ig"
+msgstr "Igboera"
+
+msgid "Intl_Language_ii"
+msgstr "Sichuango yiera"
+
+msgid "Intl_Language_io"
+msgstr "Ido"
+
+msgid "Intl_Language_is"
+msgstr "Islandiera"
+
+msgid "Intl_Language_it"
+msgstr "Italiera"
+
+msgid "Intl_Language_iu"
+msgstr "Inuktitut"
+
+msgid "Intl_Language_ja"
+msgstr "Japoniera"
+
+msgid "Intl_Language_jv"
+msgstr "Javera"
+
+msgid "Intl_Language_ka"
+msgstr "Georgiera"
+
+msgid "Intl_Language_kg"
+msgstr "Kikongoa"
+
+msgid "Intl_Language_ki"
+msgstr "Kikuyuera"
+
+msgid "Intl_Language_kj"
+msgstr "Kuanyama"
+
+msgid "Intl_Language_kk"
+msgstr "Kazakhera"
+
+msgid "Intl_Language_kl"
+msgstr "Groenlandiera"
+
+msgid "Intl_Language_km"
+msgstr "Khemerera"
+
+msgid "Intl_Language_kn"
+msgstr "Kannada"
+
+msgid "Intl_Language_ko"
+msgstr "Koreera"
+
+msgid "Intl_Language_kr"
+msgstr "Kanuriera"
+
+msgid "Intl_Language_ks"
+msgstr "Kaxmirera"
+
+msgid "Intl_Language_ku"
+msgstr "Kurduera"
+
+msgid "Intl_Language_kv"
+msgstr "Komiera"
+
+msgid "Intl_Language_kw"
+msgstr "Kornubiera"
+
+msgid "Intl_Language_ky"
+msgstr "Kirgizera"
+
+msgid "Intl_Language_la"
+msgstr "Latin"
+
+msgid "Intl_Language_lb"
+msgstr "Luxenburgera"
+
+msgid "Intl_Language_lg"
+msgstr "Gandera"
+
+msgid "Intl_Language_li"
+msgstr "Limburgera"
+
+msgid "Intl_Language_ln"
+msgstr "Lingala"
+
+msgid "Intl_Language_lo"
+msgstr "Laosera"
+
+msgid "Intl_Language_lt"
+msgstr "Lituaniera"
+
+msgid "Intl_Language_lu"
+msgstr "Luba-katangera"
+
+msgid "Intl_Language_lv"
+msgstr "Letoniera"
+
+msgid "Intl_Language_mg"
+msgstr "Malgaxe"
+
+msgid "Intl_Language_mh"
+msgstr "Marshallera"
+
+msgid "Intl_Language_mi"
+msgstr "Maoriera"
+
+msgid "Intl_Language_mk"
+msgstr "Mazedoniera"
+
+msgid "Intl_Language_ml"
+msgstr "Malabarera"
+
+msgid "Intl_Language_mn"
+msgstr "Mongoliera"
+
+msgid "Intl_Language_mr"
+msgstr "Marathera"
+
+msgid "Intl_Language_ms"
+msgstr "Malaysiera"
+
+msgid "Intl_Language_mt"
+msgstr "Maltera"
+
+msgid "Intl_Language_my"
+msgstr "Birmaniera"
+
+msgid "Intl_Language_na"
+msgstr "Nauruera"
+
+msgid "Intl_Language_nb"
+msgstr "Bokmål (norvegiera)"
+
+msgid "Intl_Language_nd"
+msgstr "Iparraldeko ndebeleera"
+
+msgid "Intl_Language_ne"
+msgstr "Nepalera"
+
+msgid "Intl_Language_ng"
+msgstr "Ndongera"
+
+msgid "Intl_Language_nl"
+msgstr "Nederlandera"
+
+msgid "Intl_Language_nn"
+msgstr "Nynorsk (norvegiera)"
+
+msgid "Intl_Language_no"
+msgstr "Norvegiera"
+
+msgid "Intl_Language_nr"
+msgstr "Hegoaldeko ndebelera"
+
+msgid "Intl_Language_nv"
+msgstr "Navajoera"
+
+msgid "Intl_Language_ny"
+msgstr "Chewera"
+
+msgid "Intl_Language_oc"
+msgstr "Okzitaniera"
+
+msgid "Intl_Language_om"
+msgstr "Oromoera"
+
+msgid "Intl_Language_or"
+msgstr "Oriya"
+
+msgid "Intl_Language_os"
+msgstr "Osetiera"
+
+msgid "Intl_Language_pa"
+msgstr "Punjabera"
+
+msgid "Intl_Language_pl"
+msgstr "Poloniera"
+
+msgid "Intl_Language_ps"
+msgstr "Paxtuera"
+
+msgid "Intl_Language_pt"
+msgstr "Portuges"
+
+msgid "Intl_Language_qu"
+msgstr "Kitxua"
+
+msgid "Intl_Language_rm"
+msgstr "Erretorromaniera"
+
+msgid "Intl_Language_rn"
+msgstr "Rundiera"
+
+msgid "Intl_Language_ro"
+msgstr "Errumaniera"
+
+msgid "Intl_Language_ru"
+msgstr "Errusiera"
+
+msgid "Intl_Language_rw"
+msgstr "Kinyaruanda"
+
+msgid "Intl_Language_sa"
+msgstr "Sanskrito"
+
+msgid "Intl_Language_sc"
+msgstr "Sardiniera"
+
+msgid "Intl_Language_sd"
+msgstr "Sindhi"
+
+msgid "Intl_Language_se"
+msgstr "Iparraldeko samiera"
+
+msgid "Intl_Language_sg"
+msgstr "Sango"
+
+msgid "Intl_Language_si"
+msgstr "Sinhala"
+
+msgid "Intl_Language_sk"
+msgstr "Eslovakiera"
+
+msgid "Intl_Language_sl"
+msgstr "Esloveniera"
+
+msgid "Intl_Language_sm"
+msgstr "Samoera"
+
+msgid "Intl_Language_sn"
+msgstr "Shonera"
+
+msgid "Intl_Language_so"
+msgstr "Somaliera"
+
+msgid "Intl_Language_sq"
+msgstr "Albaniera"
+
+msgid "Intl_Language_sr"
+msgstr "Serbiera"
+
+msgid "Intl_Language_ss"
+msgstr "Swatiera"
+
+msgid "Intl_Language_st"
+msgstr "Hegoaldeko sothoera"
+
+msgid "Intl_Language_su"
+msgstr "Sundanera"
+
+msgid "Intl_Language_sv"
+msgstr "Suediera"
+
+msgid "Intl_Language_sw"
+msgstr "Swahilia"
+
+msgid "Intl_Language_ta"
+msgstr "Tamilera"
+
+msgid "Intl_Language_te"
+msgstr "Telugu"
+
+msgid "Intl_Language_tg"
+msgstr "Tajikera"
+
+msgid "Intl_Language_th"
+msgstr "Thailandiera"
+
+msgid "Intl_Language_ti"
+msgstr "Tigrinyera"
+
+msgid "Intl_Language_tk"
+msgstr "Turkmenera"
+
+msgid "Intl_Language_tl"
+msgstr "Tagalog"
+
+msgid "Intl_Language_tn"
+msgstr "Tswanera"
+
+msgid "Intl_Language_to"
+msgstr "Tongera"
+
+msgid "Intl_Language_tr"
+msgstr "Turkiera"
+
+msgid "Intl_Language_ts"
+msgstr "Tsongera"
+
+msgid "Intl_Language_tt"
+msgstr "Tatarera"
+
+msgid "Intl_Language_tw"
+msgstr "Twia"
+
+msgid "Intl_Language_ty"
+msgstr "Tahitiera"
+
+msgid "Intl_Language_ug"
+msgstr "Uigurrera"
+
+msgid "Intl_Language_uk"
+msgstr "Ukrainera"
+
+msgid "Intl_Language_ur"
+msgstr "Urdu"
+
+msgid "Intl_Language_uz"
+msgstr "Uzbekera"
+
+msgid "Intl_Language_ve"
+msgstr "Vendera"
+
+msgid "Intl_Language_vi"
+msgstr "Vietnamera"
+
+msgid "Intl_Language_vo"
+msgstr "Volapük"
+
+msgid "Intl_Language_wa"
+msgstr "Waloiera"
+
+msgid "Intl_Language_wo"
+msgstr "Wolofera"
+
+msgid "Intl_Language_xh"
+msgstr "Xhosera"
+
+msgid "Intl_Language_yi"
+msgstr "Yiddish"
+
+msgid "Intl_Language_yo"
+msgstr "Jorubera"
+
+msgid "Intl_Language_zh"
+msgstr "Txinera"
+
+msgid "Intl_Language_zu"
+msgstr "Zuluera"
+
+msgid "Intl_LayoutDirection"
+msgstr "ltr"
+
+msgid "Intl_Minutes"
+msgstr "minutu"
+
+msgid "Intl_Month_Long_1"
+msgstr "urtarrila"
+
+msgid "Intl_Month_Long_10"
+msgstr "urria"
+
+msgid "Intl_Month_Long_11"
+msgstr "azaroa"
+
+msgid "Intl_Month_Long_12"
+msgstr "abendua"
+
+msgid "Intl_Month_Long_2"
+msgstr "otsaila"
+
+msgid "Intl_Month_Long_3"
+msgstr "martxoa"
+
+msgid "Intl_Month_Long_4"
+msgstr "apirila"
+
+msgid "Intl_Month_Long_5"
+msgstr "maiatza"
+
+msgid "Intl_Month_Long_6"
+msgstr "ekaina"
+
+msgid "Intl_Month_Long_7"
+msgstr "uztaila"
+
+msgid "Intl_Month_Long_8"
+msgstr "abuztua"
+
+msgid "Intl_Month_Long_9"
+msgstr "iraila"
+
+msgid "Intl_Month_Long_StandAlone_1"
+msgstr "urtarrila"
+
+msgid "Intl_Month_Long_StandAlone_10"
+msgstr "urria"
+
+msgid "Intl_Month_Long_StandAlone_11"
+msgstr "azaroa"
+
+msgid "Intl_Month_Long_StandAlone_12"
+msgstr "abendua"
+
+msgid "Intl_Month_Long_StandAlone_2"
+msgstr "otsaila"
+
+msgid "Intl_Month_Long_StandAlone_3"
+msgstr "martxoa"
+
+msgid "Intl_Month_Long_StandAlone_4"
+msgstr "apirila"
+
+msgid "Intl_Month_Long_StandAlone_5"
+msgstr "maiatza"
+
+msgid "Intl_Month_Long_StandAlone_6"
+msgstr "ekaina"
+
+msgid "Intl_Month_Long_StandAlone_7"
+msgstr "uztaila"
+
+msgid "Intl_Month_Long_StandAlone_8"
+msgstr "abuztua"
+
+msgid "Intl_Month_Long_StandAlone_9"
+msgstr "iraila"
+
+msgid "Intl_Month_Short_1"
+msgstr "urt."
+
+msgid "Intl_Month_Short_10"
+msgstr "urr."
+
+msgid "Intl_Month_Short_11"
+msgstr "aza."
+
+msgid "Intl_Month_Short_12"
+msgstr "abe."
+
+msgid "Intl_Month_Short_2"
+msgstr "ots."
+
+msgid "Intl_Month_Short_3"
+msgstr "mar."
+
+msgid "Intl_Month_Short_4"
+msgstr "api."
+
+msgid "Intl_Month_Short_5"
+msgstr "mai."
+
+msgid "Intl_Month_Short_6"
+msgstr "eka."
+
+msgid "Intl_Month_Short_7"
+msgstr "uzt."
+
+msgid "Intl_Month_Short_8"
+msgstr "abu."
+
+msgid "Intl_Month_Short_9"
+msgstr "ira."
+
+msgid "Intl_Month_Short_StandAlone_1"
+msgstr "urt."
+
+msgid "Intl_Month_Short_StandAlone_10"
+msgstr "urr."
+
+msgid "Intl_Month_Short_StandAlone_11"
+msgstr "aza."
+
+msgid "Intl_Month_Short_StandAlone_12"
+msgstr "abe."
+
+msgid "Intl_Month_Short_StandAlone_2"
+msgstr "ots."
+
+msgid "Intl_Month_Short_StandAlone_3"
+msgstr "mar."
+
+msgid "Intl_Month_Short_StandAlone_4"
+msgstr "api."
+
+msgid "Intl_Month_Short_StandAlone_5"
+msgstr "mai."
+
+msgid "Intl_Month_Short_StandAlone_6"
+msgstr "eka."
+
+msgid "Intl_Month_Short_StandAlone_7"
+msgstr "uzt."
+
+msgid "Intl_Month_Short_StandAlone_8"
+msgstr "abu."
+
+msgid "Intl_Month_Short_StandAlone_9"
+msgstr "ira."
+
+msgid "Intl_NDays"
+msgstr "%s egun"
+
+msgid "Intl_NHoursShort"
+msgstr "%s h"
+
+msgid "Intl_NMinutes"
+msgstr "%s minutu"
+
+msgid "Intl_NMinutesShort"
+msgstr "%s min"
+
+msgid "Intl_NSeconds"
+msgstr "%s segundo"
+
+msgid "Intl_NSecondsShort"
+msgstr "%s s"
+
+msgid "Intl_NumberFormatCurrency"
+msgstr "#,##0.00 ¤"
+
+msgid "Intl_NumberFormatNumber"
+msgstr "#,##0.###"
+
+msgid "Intl_NumberFormatPercent"
+msgstr "% #,##0"
+
+msgid "Intl_NumberSymbolDecimal"
+msgstr ","
+
+msgid "Intl_NumberSymbolGroup"
+msgstr "."
+
+msgid "Intl_NumberSymbolMinus"
+msgstr "−"
+
+msgid "Intl_NumberSymbolPercent"
+msgstr "%"
+
+msgid "Intl_NumberSymbolPlus"
+msgstr "+"
+
+msgid "Intl_OneDay"
+msgstr "1 egun"
+
+msgid "Intl_OneMinute"
+msgstr "1 minutu"
+
+msgid "Intl_OneMinuteShort"
+msgstr "1 min"
+
+msgid "Intl_OriginalLanguageName"
+msgstr "Euskara"
+
+msgid "Intl_PeriodDay"
+msgstr "eguna"
+
+msgid "Intl_PeriodDays"
+msgstr "egun"
+
+msgid "Intl_PeriodMonth"
+msgstr "hilabetea"
+
+msgid "Intl_PeriodMonths"
+msgstr "hilabete"
+
+msgid "Intl_PeriodWeek"
+msgstr "astea"
+
+msgid "Intl_PeriodWeeks"
+msgstr "aste"
+
+msgid "Intl_PeriodYear"
+msgstr "urtea"
+
+msgid "Intl_PeriodYears"
+msgstr "urte"
+
+msgid "Intl_Seconds"
+msgstr "segundo"
+
+msgid "Intl_Time_AM"
+msgstr "AM"
+
+msgid "Intl_Time_PM"
+msgstr "PM"
+
+msgid "Intl_Timezone_Africa_Asmera"
+msgstr "Asmara"
+
+msgid "Intl_Timezone_Africa_Ceuta"
+msgstr "Ceuta"
+
+msgid "Intl_Timezone_Africa_Kinshasa"
+msgstr "Kinshasa"
+
+msgid "Intl_Timezone_Africa_Lubumbashi"
+msgstr "Lubumbashi"
+
+msgid "Intl_Timezone_America_Adak"
+msgstr "Adak"
+
+msgid "Intl_Timezone_America_Anchorage"
+msgstr "Anchorage"
+
+msgid "Intl_Timezone_America_Araguaina"
+msgstr "Araguaína"
+
+msgid "Intl_Timezone_America_Argentina_LaRioja"
+msgstr "La Rioja"
+
+msgid "Intl_Timezone_America_Argentina_RioGallegos"
+msgstr "Rio Gallegos"
+
+msgid "Intl_Timezone_America_Argentina_Salta"
+msgstr "Salta"
+
+msgid "Intl_Timezone_America_Argentina_SanJuan"
+msgstr "San Juan"
+
+msgid "Intl_Timezone_America_Argentina_SanLuis"
+msgstr "San Luis"
+
+msgid "Intl_Timezone_America_Argentina_Tucuman"
+msgstr "Tucumán"
+
+msgid "Intl_Timezone_America_Argentina_Ushuaia"
+msgstr "Ushuaia"
+
+msgid "Intl_Timezone_America_Bahia"
+msgstr "Bahia"
+
+msgid "Intl_Timezone_America_BahiaBanderas"
+msgstr "Bahía de Banderas"
+
+msgid "Intl_Timezone_America_Belem"
+msgstr "Belem"
+
+msgid "Intl_Timezone_America_Blanc-Sablon"
+msgstr "Blanc-Sablon"
+
+msgid "Intl_Timezone_America_BoaVista"
+msgstr "Boa Vista"
+
+msgid "Intl_Timezone_America_Boise"
+msgstr "Boise"
+
+msgid "Intl_Timezone_America_BuenosAires"
+msgstr "Buenos Aires"
+
+msgid "Intl_Timezone_America_CambridgeBay"
+msgstr "Cambridge Bay"
+
+msgid "Intl_Timezone_America_CampoGrande"
+msgstr "Campo Grande"
+
+msgid "Intl_Timezone_America_Cancun"
+msgstr "Cancún"
+
+msgid "Intl_Timezone_America_Catamarca"
+msgstr "Catamarca"
+
+msgid "Intl_Timezone_America_Chicago"
+msgstr "Chicago"
+
+msgid "Intl_Timezone_America_Chihuahua"
+msgstr "Chihuahua"
+
+msgid "Intl_Timezone_America_CoralHarbour"
+msgstr "Atikokan"
+
+msgid "Intl_Timezone_America_Cordoba"
+msgstr "Córdoba"
+
+msgid "Intl_Timezone_America_Creston"
+msgstr "Creston"
+
+msgid "Intl_Timezone_America_Cuiaba"
+msgstr "Cuiabá"
+
+msgid "Intl_Timezone_America_Danmarkshavn"
+msgstr "Danmarkshavn"
+
+msgid "Intl_Timezone_America_Dawson"
+msgstr "Dawson"
+
+msgid "Intl_Timezone_America_DawsonCreek"
+msgstr "Dawson Creek"
+
+msgid "Intl_Timezone_America_Denver"
+msgstr "Denver"
+
+msgid "Intl_Timezone_America_Detroit"
+msgstr "Detroit"
+
+msgid "Intl_Timezone_America_Edmonton"
+msgstr "Edmonton"
+
+msgid "Intl_Timezone_America_Eirunepe"
+msgstr "Eirunepé"
+
+msgid "Intl_Timezone_America_FortNelson"
+msgstr "Fort Nelson"
+
+msgid "Intl_Timezone_America_Fortaleza"
+msgstr "Fortaleza"
+
+msgid "Intl_Timezone_America_GlaceBay"
+msgstr "Glace Bay"
+
+msgid "Intl_Timezone_America_Godthab"
+msgstr "Nuuk"
+
+msgid "Intl_Timezone_America_GooseBay"
+msgstr "Goose Bay"
+
+msgid "Intl_Timezone_America_Guayaquil"
+msgstr "Guayaquil"
+
+msgid "Intl_Timezone_America_Halifax"
+msgstr "Halifax"
+
+msgid "Intl_Timezone_America_Hermosillo"
+msgstr "Hermosillo"
+
+msgid "Intl_Timezone_America_Indiana_Knox"
+msgstr "Knox, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Marengo"
+msgstr "Marengo, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Petersburg"
+msgstr "Petersburg, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_TellCity"
+msgstr "Tell City, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vevay"
+msgstr "Vevay, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vincennes"
+msgstr "Vincennes, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Winamac"
+msgstr "Winamac, Indiana"
+
+msgid "Intl_Timezone_America_Indianapolis"
+msgstr "Indianapolis"
+
+msgid "Intl_Timezone_America_Inuvik"
+msgstr "Inuvik"
+
+msgid "Intl_Timezone_America_Iqaluit"
+msgstr "Iqaluit"
+
+msgid "Intl_Timezone_America_Jujuy"
+msgstr "Jujuy"
+
+msgid "Intl_Timezone_America_Juneau"
+msgstr "Juneau"
+
+msgid "Intl_Timezone_America_Kentucky_Monticello"
+msgstr "Monticello, Kentucky"
+
+msgid "Intl_Timezone_America_LosAngeles"
+msgstr "Los Angeles"
+
+msgid "Intl_Timezone_America_Louisville"
+msgstr "Louisville"
+
+msgid "Intl_Timezone_America_Maceio"
+msgstr "Maceió"
+
+msgid "Intl_Timezone_America_Manaus"
+msgstr "Manaus"
+
+msgid "Intl_Timezone_America_Matamoros"
+msgstr "Matamoros"
+
+msgid "Intl_Timezone_America_Mazatlan"
+msgstr "Mazatlán"
+
+msgid "Intl_Timezone_America_Mendoza"
+msgstr "Mendoza"
+
+msgid "Intl_Timezone_America_Menominee"
+msgstr "Menominee"
+
+msgid "Intl_Timezone_America_Merida"
+msgstr "Mérida"
+
+msgid "Intl_Timezone_America_Metlakatla"
+msgstr "Metlakatla"
+
+msgid "Intl_Timezone_America_MexicoCity"
+msgstr "Mexiko Hiria"
+
+msgid "Intl_Timezone_America_Moncton"
+msgstr "Moncton"
+
+msgid "Intl_Timezone_America_Monterrey"
+msgstr "Monterrey"
+
+msgid "Intl_Timezone_America_NewYork"
+msgstr "New York"
+
+msgid "Intl_Timezone_America_Nipigon"
+msgstr "Nipigon"
+
+msgid "Intl_Timezone_America_Nome"
+msgstr "Nome"
+
+msgid "Intl_Timezone_America_Noronha"
+msgstr "Noronha"
+
+msgid "Intl_Timezone_America_NorthDakota_Beulah"
+msgstr "Beulah, Ipar Dakota"
+
+msgid "Intl_Timezone_America_NorthDakota_Center"
+msgstr "Center, Ipar Dakota"
+
+msgid "Intl_Timezone_America_NorthDakota_NewSalem"
+msgstr "New Salem, Ipar Dakota"
+
+msgid "Intl_Timezone_America_Ojinaga"
+msgstr "Ojinaga"
+
+msgid "Intl_Timezone_America_Pangnirtung"
+msgstr "Pangnirtung"
+
+msgid "Intl_Timezone_America_Phoenix"
+msgstr "Phoenix"
+
+msgid "Intl_Timezone_America_PortoVelho"
+msgstr "Porto Velho"
+
+msgid "Intl_Timezone_America_PuntaArenas"
+msgstr "Punta Arenas"
+
+msgid "Intl_Timezone_America_RainyRiver"
+msgstr "Rainy River"
+
+msgid "Intl_Timezone_America_RankinInlet"
+msgstr "Rankin Inlet"
+
+msgid "Intl_Timezone_America_Recife"
+msgstr "Recife"
+
+msgid "Intl_Timezone_America_Regina"
+msgstr "Regina"
+
+msgid "Intl_Timezone_America_Resolute"
+msgstr "Resolute"
+
+msgid "Intl_Timezone_America_RioBranco"
+msgstr "Rio Branco"
+
+msgid "Intl_Timezone_America_SantaIsabel"
+msgstr "Santa Isabel"
+
+msgid "Intl_Timezone_America_Santarem"
+msgstr "Santarém"
+
+msgid "Intl_Timezone_America_Santiago"
+msgstr "Santiago"
+
+msgid "Intl_Timezone_America_SaoPaulo"
+msgstr "São Paulo"
+
+msgid "Intl_Timezone_America_Scoresbysund"
+msgstr "Ittoqqortoormiit"
+
+msgid "Intl_Timezone_America_Sitka"
+msgstr "Sitka"
+
+msgid "Intl_Timezone_America_StJohns"
+msgstr "Saint John’s"
+
+msgid "Intl_Timezone_America_SwiftCurrent"
+msgstr "Swift Current"
+
+msgid "Intl_Timezone_America_Thule"
+msgstr "Qaanaac"
+
+msgid "Intl_Timezone_America_ThunderBay"
+msgstr "Thunder Bay"
+
+msgid "Intl_Timezone_America_Tijuana"
+msgstr "Tijuana"
+
+msgid "Intl_Timezone_America_Toronto"
+msgstr "Toronto"
+
+msgid "Intl_Timezone_America_Vancouver"
+msgstr "Vancouver"
+
+msgid "Intl_Timezone_America_Whitehorse"
+msgstr "Whitehorse"
+
+msgid "Intl_Timezone_America_Winnipeg"
+msgstr "Winnipeg"
+
+msgid "Intl_Timezone_America_Yakutat"
+msgstr "Yakutat"
+
+msgid "Intl_Timezone_America_Yellowknife"
+msgstr "Yellowknife"
+
+msgid "Intl_Timezone_Antarctica_Casey"
+msgstr "Casey"
+
+msgid "Intl_Timezone_Antarctica_Davis"
+msgstr "Davis"
+
+msgid "Intl_Timezone_Antarctica_DumontDUrville"
+msgstr "Dumont d’Urville"
+
+msgid "Intl_Timezone_Antarctica_Macquarie"
+msgstr "Macquarie"
+
+msgid "Intl_Timezone_Antarctica_Mawson"
+msgstr "Mawson"
+
+msgid "Intl_Timezone_Antarctica_McMurdo"
+msgstr "McMurdo"
+
+msgid "Intl_Timezone_Antarctica_Palmer"
+msgstr "Palmer"
+
+msgid "Intl_Timezone_Antarctica_Rothera"
+msgstr "Rothera"
+
+msgid "Intl_Timezone_Antarctica_Syowa"
+msgstr "Syowa"
+
+msgid "Intl_Timezone_Antarctica_Troll"
+msgstr "Troll"
+
+msgid "Intl_Timezone_Antarctica_Vostok"
+msgstr "Vostok"
+
+msgid "Intl_Timezone_Asia_Almaty"
+msgstr "Almaty"
+
+msgid "Intl_Timezone_Asia_Anadyr"
+msgstr "Anadyr"
+
+msgid "Intl_Timezone_Asia_Aqtau"
+msgstr "Aktau"
+
+msgid "Intl_Timezone_Asia_Aqtobe"
+msgstr "Aktobe"
+
+msgid "Intl_Timezone_Asia_Atyrau"
+msgstr "Atyrau"
+
+msgid "Intl_Timezone_Asia_Barnaul"
+msgstr "Barnaul"
+
+msgid "Intl_Timezone_Asia_Calcutta"
+msgstr "Kalkuta"
+
+msgid "Intl_Timezone_Asia_Chita"
+msgstr "Chita"
+
+msgid "Intl_Timezone_Asia_Choibalsan"
+msgstr "Txoibalsan"
+
+msgid "Intl_Timezone_Asia_Famagusta"
+msgstr "Famagusta"
+
+msgid "Intl_Timezone_Asia_Gaza"
+msgstr "Gaza"
+
+msgid "Intl_Timezone_Asia_Hebron"
+msgstr "Hebron"
+
+msgid "Intl_Timezone_Asia_Hovd"
+msgstr "Khovd"
+
+msgid "Intl_Timezone_Asia_Irkutsk"
+msgstr "Irkutsk"
+
+msgid "Intl_Timezone_Asia_Jakarta"
+msgstr "Jakarta"
+
+msgid "Intl_Timezone_Asia_Jayapura"
+msgstr "Jayapura"
+
+msgid "Intl_Timezone_Asia_Kamchatka"
+msgstr "Kamtxatka"
+
+msgid "Intl_Timezone_Asia_Katmandu"
+msgstr "Katmandu"
+
+msgid "Intl_Timezone_Asia_Khandyga"
+msgstr "Khandiga"
+
+msgid "Intl_Timezone_Asia_Krasnoyarsk"
+msgstr "Krasnoiarsk"
+
+msgid "Intl_Timezone_Asia_KualaLumpur"
+msgstr "Kuala Lumpur"
+
+msgid "Intl_Timezone_Asia_Kuching"
+msgstr "Kuching"
+
+msgid "Intl_Timezone_Asia_Magadan"
+msgstr "Magadan"
+
+msgid "Intl_Timezone_Asia_Makassar"
+msgstr "Makassar"
+
+msgid "Intl_Timezone_Asia_Nicosia"
+msgstr "Nikosia"
+
+msgid "Intl_Timezone_Asia_Novokuznetsk"
+msgstr "Novokuznetsk"
+
+msgid "Intl_Timezone_Asia_Novosibirsk"
+msgstr "Novosibirsk"
+
+msgid "Intl_Timezone_Asia_Omsk"
+msgstr "Omsk"
+
+msgid "Intl_Timezone_Asia_Oral"
+msgstr "Oral"
+
+msgid "Intl_Timezone_Asia_Pontianak"
+msgstr "Pontianak"
+
+msgid "Intl_Timezone_Asia_Qyzylorda"
+msgstr "Kyzylorda"
+
+msgid "Intl_Timezone_Asia_Rangoon"
+msgstr "Yangon"
+
+msgid "Intl_Timezone_Asia_Saigon"
+msgstr "Ho Chi Minh"
+
+msgid "Intl_Timezone_Asia_Sakhalin"
+msgstr "Sakhalin"
+
+msgid "Intl_Timezone_Asia_Samarkand"
+msgstr "Samarkanda"
+
+msgid "Intl_Timezone_Asia_Shanghai"
+msgstr "Shanghai"
+
+msgid "Intl_Timezone_Asia_Srednekolymsk"
+msgstr "Srednekolimsk"
+
+msgid "Intl_Timezone_Asia_Tashkent"
+msgstr "Taxkent"
+
+msgid "Intl_Timezone_Asia_Tomsk"
+msgstr "Tomsk"
+
+msgid "Intl_Timezone_Asia_Ulaanbaatar"
+msgstr "Ulan Bator"
+
+msgid "Intl_Timezone_Asia_Urumqi"
+msgstr "Ürümqi"
+
+msgid "Intl_Timezone_Asia_Ust-Nera"
+msgstr "Ust-Nera"
+
+msgid "Intl_Timezone_Asia_Vladivostok"
+msgstr "Vladivostok"
+
+msgid "Intl_Timezone_Asia_Yakutsk"
+msgstr "Jakutsk"
+
+msgid "Intl_Timezone_Asia_Yekaterinburg"
+msgstr "Jekaterinburg"
+
+msgid "Intl_Timezone_Atlantic_Azores"
+msgstr "Azoreak"
+
+msgid "Intl_Timezone_Atlantic_Canary"
+msgstr "Kanariak"
+
+msgid "Intl_Timezone_Atlantic_Faeroe"
+msgstr "Faroe"
+
+msgid "Intl_Timezone_Atlantic_Madeira"
+msgstr "Madeira"
+
+msgid "Intl_Timezone_Australia_Adelaide"
+msgstr "Adelaide"
+
+msgid "Intl_Timezone_Australia_Brisbane"
+msgstr "Brisbane"
+
+msgid "Intl_Timezone_Australia_BrokenHill"
+msgstr "Broken Hill"
+
+msgid "Intl_Timezone_Australia_Currie"
+msgstr "Currie"
+
+msgid "Intl_Timezone_Australia_Darwin"
+msgstr "Darwin"
+
+msgid "Intl_Timezone_Australia_Eucla"
+msgstr "Eucla"
+
+msgid "Intl_Timezone_Australia_Hobart"
+msgstr "Hobart"
+
+msgid "Intl_Timezone_Australia_Lindeman"
+msgstr "Lindeman"
+
+msgid "Intl_Timezone_Australia_LordHowe"
+msgstr "Lord Howe"
+
+msgid "Intl_Timezone_Australia_Melbourne"
+msgstr "Melbourne"
+
+msgid "Intl_Timezone_Australia_Perth"
+msgstr "Perth"
+
+msgid "Intl_Timezone_Australia_Sydney"
+msgstr "Sydney"
+
+msgid "Intl_Timezone_Europe_Astrakhan"
+msgstr "Astrakhan"
+
+msgid "Intl_Timezone_Europe_Berlin"
+msgstr "Berlin"
+
+msgid "Intl_Timezone_Europe_Busingen"
+msgstr "Büsingen"
+
+msgid "Intl_Timezone_Europe_Kaliningrad"
+msgstr "Kaliningrad"
+
+msgid "Intl_Timezone_Europe_Kiev"
+msgstr "Kiev"
+
+msgid "Intl_Timezone_Europe_Kirov"
+msgstr "Kirov"
+
+msgid "Intl_Timezone_Europe_Lisbon"
+msgstr "Lisboa"
+
+msgid "Intl_Timezone_Europe_Madrid"
+msgstr "Madril"
+
+msgid "Intl_Timezone_Europe_Moscow"
+msgstr "Mosku"
+
+msgid "Intl_Timezone_Europe_Samara"
+msgstr "Samara"
+
+msgid "Intl_Timezone_Europe_Saratov"
+msgstr "Saratov"
+
+msgid "Intl_Timezone_Europe_Simferopol"
+msgstr "Simferopol"
+
+msgid "Intl_Timezone_Europe_Ulyanovsk"
+msgstr "Ulianovsk"
+
+msgid "Intl_Timezone_Europe_Uzhgorod"
+msgstr "Uzhhorod"
+
+msgid "Intl_Timezone_Europe_Volgograd"
+msgstr "Volgograd"
+
+msgid "Intl_Timezone_Europe_Zaporozhye"
+msgstr "Zaporozhye"
+
+msgid "Intl_Timezone_Pacific_Auckland"
+msgstr "Auckland"
+
+msgid "Intl_Timezone_Pacific_Bougainville"
+msgstr "Bougainville"
+
+msgid "Intl_Timezone_Pacific_Chatham"
+msgstr "Chatham"
+
+msgid "Intl_Timezone_Pacific_Easter"
+msgstr "Pazko uhartea"
+
+msgid "Intl_Timezone_Pacific_Enderbury"
+msgstr "Enderbury"
+
+msgid "Intl_Timezone_Pacific_Galapagos"
+msgstr "Galapagoak"
+
+msgid "Intl_Timezone_Pacific_Gambier"
+msgstr "Gambier"
+
+msgid "Intl_Timezone_Pacific_Honolulu"
+msgstr "Honolulu"
+
+msgid "Intl_Timezone_Pacific_Johnston"
+msgstr "Johnston"
+
+msgid "Intl_Timezone_Pacific_Kiritimati"
+msgstr "Kiritimati"
+
+msgid "Intl_Timezone_Pacific_Kosrae"
+msgstr "Kosrae"
+
+msgid "Intl_Timezone_Pacific_Kwajalein"
+msgstr "Kwajalein"
+
+msgid "Intl_Timezone_Pacific_Majuro"
+msgstr "Majuro"
+
+msgid "Intl_Timezone_Pacific_Marquesas"
+msgstr "Markesak"
+
+msgid "Intl_Timezone_Pacific_Midway"
+msgstr "Midway"
+
+msgid "Intl_Timezone_Pacific_Ponape"
+msgstr "Pohnpei"
+
+msgid "Intl_Timezone_Pacific_PortMoresby"
+msgstr "Port Moresby"
+
+msgid "Intl_Timezone_Pacific_Tahiti"
+msgstr "Tahiti"
+
+msgid "Intl_Timezone_Pacific_Tarawa"
+msgstr "Tarawa"
+
+msgid "Intl_Timezone_Pacific_Truk"
+msgstr "Chuuk"
+
+msgid "Intl_Timezone_Pacific_Wake"
+msgstr "Wake"
+
+msgid "Intl_Today"
+msgstr "Gaur"
+
+msgid "Intl_Year_Short"
+msgstr "urtea"
+
+msgid "Intl_Yesterday"
+msgstr "Atzo"
+
+msgid "Live_Referrer_URL"
+msgstr "URL erreferentea"
+
+msgid "Login_InvalidOrExpiredToken"
+msgstr "Tokena baliogabea da edo iraungi egin da"
+
+msgid "Login_InvalidUsernameEmail"
+msgstr "Erabiltzaile-izen edo helbide elektroniko baliogabea"
+
+msgid "Login_LogIn"
+msgstr "Hasi saioa"
+
+msgid "Login_LoginPasswordNotCorrect"
+msgstr "Erabiltzaile-izena eta pasahitza ez datoz bat"
+
+msgid "Login_LostYourPassword"
+msgstr "Pasahitza galdu duzu?"
+
+msgid "Login_PasswordRepeat"
+msgstr "Pasahitza (errepikatu)"
+
+msgid "Login_PasswordsDoNotMatch"
+msgstr "Pasahitzak ez datoz bat."
+
+msgid "Marketplace_ActivateLicenseKey"
+msgstr "Gaitu"
+
+msgid "Marketplace_PluginKeywords"
+msgstr "Gako-hitzak"
+
+msgid "Provider_ColumnProvider"
+msgstr "Hornitzailea"
+
+msgid "Provider_WidgetProviders"
+msgstr "Hornitzaileak"
+
+msgid "Referrers_Campaigns"
+msgstr "Kanpainak"
+
+msgid "Referrers_ColumnCampaign"
+msgstr "Kanpaina"
+
+msgid "Referrers_ColumnSearchEngine"
+msgstr "Bilaketa-motorra"
+
+msgid "Referrers_ColumnWebsite"
+msgstr "Webgunea"
+
+msgid "Referrers_ColumnWebsitePage"
+msgstr "Webguneko orria"
+
+msgid "Referrers_DirectEntry"
+msgstr "Sarrera zuzena"
+
+msgid "Referrers_DistinctCampaigns"
+msgstr "kanpaina desberdin"
+
+msgid "Referrers_DistinctKeywords"
+msgstr "gako-hitz desberdin"
+
+msgid "Referrers_DistinctSearchEngines"
+msgstr "bilaketa-motor desberdin"
+
+msgid "Referrers_DistinctWebsites"
+msgstr "webgune desberdin"
+
+msgid "Referrers_Keywords"
+msgstr "Gako-hitzak"
+
+msgid "Referrers_Referrers"
+msgstr "Erreferenteak"
+
+msgid "Referrers_SearchEngines"
+msgstr "Bilaketa-motorrak"
+
+msgid "Referrers_SubmenuSearchEngines"
+msgstr "Bilaketa-motorrak eta gako-hitzak"
+
+msgid "Referrers_SubmenuWebsitesOnly"
+msgstr "Webguneak"
+
+msgid "Referrers_TypeCampaigns"
+msgstr "%s kanpainetatik"
+
+msgid "Referrers_TypeDirectEntries"
+msgstr "%s sarbide zuzen"
+
+msgid "Referrers_TypeSearchEngines"
+msgstr "%s bilaketa-motorretatik"
+
+msgid "Referrers_TypeWebsites"
+msgstr "%s webguneetatik"
+
+msgid "Referrers_Websites"
+msgstr "Webguneak"
+
+msgid "Referrers_WidgetExternalWebsites"
+msgstr "Kanpoko webguneen zerrenda"
+
+msgid "Resolution_ColumnConfiguration"
+msgstr "Konfigurazioa"
+
+msgid "Resolution_ColumnResolution"
+msgstr "Bereizmena"
+
+msgid "Resolution_Configurations"
+msgstr "Konfigurazioak"
+
+msgid "Resolution_Resolutions"
+msgstr "Bereizmenak"
+
+msgid "Resolution_WidgetGlobalVisitors"
+msgstr "Bisitarien konfigurazioa"
+
+msgid "Resolution_WidgetResolutions"
+msgstr "Pantailaren bereizmenak"
+
+msgid "SitesManager_AddSite"
+msgstr "Gehitu webgune berria"
+
+msgid "SitesManager_AliasUrlHelp"
+msgstr "Gomendagarria da, baina ez beharrezkoa, bisitariek webgune hau atzitzeko erabiltzen dituzten URL ezberdinak zehaztea. Webgune baterako alias URLak ez dira agertuko Erreferenteak > Webguneak txostenean. Konturatu ez dela beharrezkoa URLak 'www'-rekin edo gabe zehaztea, Matomo-ek automatikoki biak hartzen baititu kontuan."
+
+msgid "SitesManager_Currency"
+msgstr "Moneta"
+
+msgid "SitesManager_DeleteConfirm"
+msgstr "Ziur zaude %s webgunea ezabatu nahi duzula?"
+
+msgid "SitesManager_ExceptionDeleteSite"
+msgstr "Ezin da webgune hau ezabatu erregistratutako bakarra delako. Gehitu webgune berri bat lehenik eta ezabatu hau ondoren."
+
+msgid "SitesManager_ExceptionEmptyName"
+msgstr "Webgunearen izenak ezin du hutsa izan."
+
+msgid "SitesManager_ExceptionInvalidUrl"
+msgstr "'%s' URLa ez da baliozko URL bat."
+
+msgid "SitesManager_ExceptionNoUrl"
+msgstr "Webgunearentzat URL bat zehaztu behar duzu gutxienez."
+
+msgid "SitesManager_JsTrackingTagHelp"
+msgstr "Hemen da zure orri guztietan txertatu beharreko JavaScript jarraipen-etiketa"
+
+msgid "SitesManager_MainDescription"
+msgstr "Zure web analitiken txostenek webguneak behar dituzte! Gehitu, eguneratu, ezabatu webguneak eta erakutsi zure orrietan txertatu beharreko JavaScript kodea."
+
+msgid "SitesManager_NoWebsites"
+msgstr "Ez daukazu kudeatzeko webgunerik."
+
+msgid "SitesManager_ShowTrackingTag"
+msgstr "erakutsi jarraipen-etiketa"
+
+msgid "SitesManager_Sites"
+msgstr "Webguneak"
+
+msgid "SitesManager_Timezone"
+msgstr "Ordu-zona"
+
+msgid "SitesManager_Urls"
+msgstr "URLak"
+
+msgid "SitesManager_WebsitesManagement"
+msgstr "Webguneen kudeaketa"
+
+msgid "TagManager_CategoryClicks"
+msgstr "Klikak"
+
+msgid "TagManager_CategoryDate"
+msgstr "Data"
+
+msgid "TagManager_CategoryEmail"
+msgstr "E-posta"
+
+msgid "TagManager_PageUrlVariableName"
+msgstr "Orriaren URLa"
+
+msgid "TagManager_ReferrerUrlVariableName"
+msgstr "URL erreferentea"
+
+msgid "TagManager_ReferrerVariableName"
+msgstr "URL erreferentea"
+
+msgid "TagManager_Version"
+msgstr "Bertsioa"
+
+msgid "UserCountry_Continent"
+msgstr "Kontinentea"
+
+msgid "UserCountry_Country"
+msgstr "Herrialdea"
+
+msgid "UserCountry_DistinctCountries"
+msgstr "%s herrialde desberdin"
+
+msgid "UserCountry_SubmenuLocations"
+msgstr "Kokalekuak"
+
+msgid "UserId_UserReportTitle"
+msgstr "Erabiltzaileak"
+
+msgid "UserLanguage_LanguageCode"
+msgstr "Hizkuntza-kodea"
+
+msgid "UsersManager_AddUser"
+msgstr "Gehitu erabiltzaile berria"
+
+msgid "UsersManager_Alias"
+msgstr "Alias"
+
+msgid "UsersManager_AllWebsites"
+msgstr "Webgune guztiak"
+
+msgid "UsersManager_ApplyToAllWebsites"
+msgstr "Aplikatu webgune guztiei"
+
+msgid "UsersManager_DeleteConfirm"
+msgstr "Ziur zaude %s erabiltzailea ezabatu nahi duzula?"
+
+msgid "UsersManager_Email"
+msgstr "E-posta"
+
+msgid "UsersManager_ExceptionDeleteDoesNotExist"
+msgstr "'%s' erabiltzailea ez dago beraz ezin da ezabatu."
+
+msgid "UsersManager_ExceptionEditAnonymous"
+msgstr "anonymous erabiltzailea ezin da editatu edo ezabatu. Saioa hasi gabeko erabiltzaileak definitzeko erabiltzen du Matomo-ek. Adibidez, estatistikak publiko egiteko 'ikusi' atzipena eman besterik ez duzu 'anonymous' erabiltzailearentzat."
+
+msgid "UsersManager_ExceptionEmailExists"
+msgstr "'%s' helbide elektronikoa duen erabiltzailea badago."
+
+msgid "UsersManager_ExceptionInvalidEmail"
+msgstr "Helbide elektronikoaren formatua baliogabea da."
+
+msgid "UsersManager_ExceptionUserDoesNotExist"
+msgstr "'%s' erabiltzailea ez dago."
+
+msgid "UsersManager_ManageAccess"
+msgstr "Kudeatu atzipena"
+
+msgid "UsersManager_MenuUsers"
+msgstr "Erabiltzaileak"
+
+msgid "UsersManager_PrivAdmin"
+msgstr "Kudeatu"
+
+msgid "UsersManager_PrivNone"
+msgstr "Atzipenik ez"
+
+msgid "UsersManager_PrivView"
+msgstr "Ikusi"
+
+msgid "UsersManager_User"
+msgstr "Erabiltzailea"
+
+msgid "UsersManager_UsersManagement"
+msgstr "Erabiltzaileen kudeaketa"
+
+msgid "UsersManager_UsersManagementMainDescription"
+msgstr "Sortu erabiltzaile berriak edo eguneratu daudenak. Ondoren hauen baimenak goian ezar ditzakezu."
+
+msgid "UsersManager_Username"
+msgstr "Erabiltzaile-izena"
+
+msgid "VisitFrequency_ColumnActionsByReturningVisits"
+msgstr "Itzulerako bisiten ekintzak"
+
+msgid "VisitFrequency_ColumnBounceRateForReturningVisits"
+msgstr "Itzulerako bisiten errebotatze-tasa"
+
+msgid "VisitFrequency_ColumnReturningVisits"
+msgstr "Itzulerako bisitak"
+
+msgid "VisitFrequency_SubmenuFrequency"
+msgstr "Maiztasuna"
+
+msgid "VisitFrequency_WidgetGraphReturning"
+msgstr "Itzulerako bisiten grafikoa"
+
+msgid "VisitFrequency_WidgetOverview"
+msgstr "Maiztasunaren ikuspegi orokorra"
+
+msgid "VisitTime_ColumnLocalTime"
+msgstr "Ordu lokala"
+
+msgid "VisitTime_ColumnServerTime"
+msgstr "Zerbitzariaren ordua"
+
+msgid "VisitTime_LocalTime"
+msgstr "Ordu lokaleko bisitak"
+
+msgid "VisitTime_NHour"
+msgstr "%sh"
+
+msgid "VisitTime_ServerTime"
+msgstr "Zerbitzariaren orduko bisitak"
+
+msgid "VisitTime_SubmenuTimes"
+msgstr "Orduak"
+
+msgid "VisitTime_WidgetLocalTime"
+msgstr "Ordu lokaleko bisitak"
+
+msgid "VisitTime_WidgetServerTime"
+msgstr "Zerbitzariaren orduko bisitak"
+
+msgid "VisitorInterest_ColumnPagesPerVisit"
+msgstr "Orriak bisitako"
+
+msgid "VisitorInterest_ColumnVisitDuration"
+msgstr "Bisitaren iraupena"
+
+msgid "VisitorInterest_NPages"
+msgstr "%s orri"
+
+msgid "VisitorInterest_OnePage"
+msgstr "orri bat"
+
+msgid "VisitorInterest_VisitsPerDuration"
+msgstr "Bisitak bisitaren iraupeneko"
+
+msgid "VisitorInterest_VisitsPerNbOfPages"
+msgstr "Bisitak orri kopuruko"
+
+msgid "VisitorInterest_WidgetLengths"
+msgstr "Bisiten iraupena"
+
+msgid "VisitorInterest_WidgetPages"
+msgstr "Orriak bisitako"
+
+msgid "VisitsSummary_GenerateQueries"
+msgstr "%s galdera exekutatuta"
+
+msgid "VisitsSummary_GenerateTime"
+msgstr "%s segundo orria sortzeko"
+
+msgid "VisitsSummary_VisitsSummary"
+msgstr "Bisiten laburpena"
+
+msgid "VisitsSummary_WidgetLastVisits"
+msgstr "Azken bisiten grafikoa"
+
+msgid "VisitsSummary_WidgetOverviewGraph"
+msgstr "Ikuspegi orokorra grafikoarekin"
+
+msgid "VisitsSummary_WidgetVisits"
+msgstr "Bisiten ikuspegi orokorra"
+
+msgid "WebsiteMeasurable_Website"
+msgstr "Webgunea"
+
+msgid "WebsiteMeasurable_Websites"
+msgstr "Webguneak"

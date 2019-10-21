@@ -1,0 +1,5981 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-10-21T03:38:24+00:00\n"
+"PO-Revision-Date: 2019-10-21T03:38:24+00:00\n"
+"Language: he\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && n % 10 == 0) ? 2 : 3));\n"
+"X-Domain: matomo\n"
+
+msgid "General_12HourClock"
+msgstr "שעון 12 שעות"
+
+msgid "General_24HourClock"
+msgstr "שעון 24 שעות"
+
+msgid "General_AbandonedCarts"
+msgstr "עגלות קניה שנעזבו"
+
+msgid "General_AboutPiwikX"
+msgstr "אודות Matomo %s"
+
+msgid "General_Action"
+msgstr "פעולה"
+
+msgid "General_Actions"
+msgstr "פעולות"
+
+msgid "General_Add"
+msgstr "הוספה"
+
+msgid "General_AfterEntry"
+msgstr "אחרי שנכנסו לפה"
+
+msgid "General_All"
+msgstr "הכל"
+
+msgid "General_AllowPiwikArchivingToTriggerBrowser"
+msgstr "אחסן דוחות כאשר הם נצפים מהדפדפן"
+
+msgid "General_AllWebsitesDashboard"
+msgstr "פאנל סקירה לכל האתרים"
+
+msgid "General_And"
+msgstr "ו"
+
+msgid "General_API"
+msgstr "API"
+
+msgid "General_Apply"
+msgstr "החל"
+
+msgid "General_ArchivingInlineHelp"
+msgstr "עבור אתרים בעלי תעבורה בינוניתעד גבוהה, מומלץ לבטל את ארכיון Matomo בעת צפייה דרך הדפדפן בדוחות. במקום זאת, מומלץ להגדיר עבודה כרונית (cron job) שתעבד דוחות Matomo בכל שעה."
+
+msgid "General_ArchivingTriggerDescription"
+msgstr "מומלץ להתקנות גדולות יותר של Matomo, צריך %1$sלהגדיר עבודה כרונית%2$s שתעבד את הדוחות אוטומטית."
+
+msgid "General_AuthenticationMethodSmtp"
+msgstr "שיטת אימות עבור SMTP"
+
+msgid "General_AverageOrderValue"
+msgstr "ערך הזמנה ממוצע"
+
+msgid "General_AveragePrice"
+msgstr "מחיר ממוצע"
+
+msgid "General_AverageQuantity"
+msgstr "כמות ממוצעת"
+
+msgid "General_AverageX"
+msgstr "ממוצע. %s"
+
+msgid "General_BackToPiwik"
+msgstr "חזרה ל Matomo"
+
+msgid "General_Broken"
+msgstr "שבור"
+
+msgid "General_BrokenDownReportDocumentation"
+msgstr "בוצעה חלוקה למספר דוחות, שמוצגים במיקרו-גרפים בתחתית העמוד. אפשר להגדיל את הגרפים על ידי הקלקה על הדוח שאותו ברצונך לראות."
+
+msgid "General_Cancel"
+msgstr "ביטול"
+
+msgid "General_CannotUnzipFile"
+msgstr "לא יכול לחלץ את הקובץ %1$s: %2$s"
+
+msgid "General_ChangePassword"
+msgstr "שינוי סיסמה"
+
+msgid "General_ChangeTagCloudView"
+msgstr "נא שימו לב שאפשר לצפות בדוח בדרכים אחרות מאשר בצורת tag cloud. השתמשו בבקרים בתחתית בדוח על מנת לשנות את אופן הצגתם."
+
+msgid "General_ChooseDate"
+msgstr "בחרו בתאריך, התאריך שבחר כעת הוא: %s"
+
+msgid "General_ChooseLanguage"
+msgstr "בחירת שפה"
+
+msgid "General_ChoosePeriod"
+msgstr "בחירת תקופה"
+
+msgid "General_ClickHere"
+msgstr "הקליקו כאן לקבלת יותר מידע."
+
+msgid "General_DoubleClickToChangePeriod"
+msgstr "לחץ פעמיים כדי להחיל תקופה זו."
+
+msgid "General_Close"
+msgstr "לסגור"
+
+msgid "General_ClickToSearch"
+msgstr "הקליקו לחיפוש"
+
+msgid "General_Copy"
+msgstr "העתק"
+
+msgid "General_Confirm"
+msgstr "אשר"
+
+msgid "General_ColumnActionsPerVisit"
+msgstr "פעולות בכל ביקור"
+
+msgid "General_ColumnActionsPerVisitDocumentation"
+msgstr "המספר הממוצע של פעולות (קריאת דפים, חיפוש באתר, הורדות או קישורי-חוץ) שבוצעו במהלך הביקורים."
+
+msgid "General_ColumnAverageGenerationTime"
+msgstr "זמן עיבוד ממוצע"
+
+msgid "General_ColumnViewsWithGenerationTime"
+msgstr "צפיות בדף עם זמן יצירה"
+
+msgid "General_ColumnAverageGenerationTimeDocumentation"
+msgstr "הזמן הממוצע שנדרש לעבד את הדף. המדד הזה כולל את הזמן שנדרש לשרת ליצור את הדף בתוספת הזמן שנדרש למבקר להוריד את התוצאה מהשרת. זמן עיבוד ממוצע נמוך פירושו שאתרכם מהר יותר למבקרים!"
+
+msgid "General_ColumnAverageTimeOnPage"
+msgstr "זמן ממוצע בעמוד"
+
+msgid "General_ColumnAverageTimeOnPageDocumentation"
+msgstr "הזמן הממוצע שמבקרים שהו בדף זה (על הדף, לא על כל האתר)."
+
+msgid "General_ColumnAvgTimeOnSite"
+msgstr "משך שהייה ממוצע באתר"
+
+msgid "General_ColumnSumTimeOnSite"
+msgstr "סה\"כ זמן באתר"
+
+msgid "General_ColumnAvgTimeOnSiteDocumentation"
+msgstr "האורך הממוצע של ביקור"
+
+msgid "General_ColumnBounceRate"
+msgstr "שיעור נטישה"
+
+msgid "General_ColumnBounceRateDocumentation"
+msgstr "אחוז הביקורים שכללו רק הצגת דף אחד. פירוש הדבר שהמבקר עזב את האתר מיידית מדף הכניסה."
+
+msgid "General_ColumnBounces"
+msgstr "נטישות"
+
+msgid "General_RealTime"
+msgstr "זמן אמת"
+
+msgid "General_ColumnBouncesDocumentation"
+msgstr "מספר הביקורים שהתחילו והסתיימו בדף זה. פירוש הדבר שהמבקר עזב את האתר אחרי שראה דף זה בלבד."
+
+msgid "General_ColumnConversionRate"
+msgstr "שעור המרה"
+
+msgid "General_ColumnConversionRateDocumentation"
+msgstr "אחוז הביקורים שגרמו לשינוי ביעד."
+
+msgid "General_ColumnDestinationPage"
+msgstr "דף היעד"
+
+msgid "General_ColumnEntrances"
+msgstr "כניסות"
+
+msgid "General_ColumnEntrancesDocumentation"
+msgstr "מספר הביקורים שהתחילו בעמוד זה."
+
+msgid "General_ColumnExitRate"
+msgstr "שיעור יציאה"
+
+msgid "General_ColumnExitRateDocumentation"
+msgstr "אחוז הביקורים שעזבו את האתר אחרי שצפו בדף זה."
+
+msgid "General_ColumnExits"
+msgstr "יציאות"
+
+msgid "General_ColumnExitsDocumentation"
+msgstr "מספר הביקורים בהסתיימו בדף זה."
+
+msgid "General_ColumnGenerationTime"
+msgstr "זמן עיבוד"
+
+msgid "General_ColumnPageGenerationTime"
+msgstr "זמן יצירת הדף"
+
+msgid "General_ColumnKeyword"
+msgstr "מילת מפתח"
+
+msgid "General_ColumnLabel"
+msgstr "כותרת"
+
+msgid "General_ColumnHits"
+msgstr "כניסות"
+
+msgid "General_ColumnMaxActions"
+msgstr "מקסימום פעולות בביקור בודד"
+
+msgid "General_ColumnNbActions"
+msgstr "פעולות"
+
+msgid "General_ColumnNbActionsDocumentation"
+msgstr "מספר הפעולות שבוצעו על ידי המבקרים. ביצועים יכולים להיות צפייה בדפים, חיפושים פנימיים באתר, הורדות וקשרי-חוץ."
+
+msgid "General_ColumnNbUniqVisitors"
+msgstr "מבקרים יחודיים"
+
+msgid "General_ColumnNbUniqVisitorsDocumentation"
+msgstr "מספר המבקרים הייחודיים שהגיעו לאתר שלך. כל משתמש נספר פעם אחת בלבד, גם אם הוא מבקר באתר מספר פעמים ביום."
+
+msgid "General_ColumnNbUsers"
+msgstr "משתמשים"
+
+msgid "General_ColumnNbUsersDocumentation"
+msgstr "מספר המשתמשים שנרשמו באתר שלך. זהו מספר המשתמשים הפעילים הייחודיים שיש להם User ID מוגדר (באמצעות הפונקציה קוד מעקב 'setUserId')."
+
+msgid "General_ColumnNbVisits"
+msgstr "ביקורים"
+
+msgid "General_ColumnNbVisitsDocumentation"
+msgstr "אם מבקר באתר שלך בפעם הראשונה או אם מבקר בדף יותר מ -30 דקות לאחר הדף האחרון בו צפה, הדבר יתועד כביקור חדש."
+
+msgid "General_ColumnPageBounceRateDocumentation"
+msgstr "אחוז הביקורים שהתחילו בעמוד זה ועזבו מיד את האתר."
+
+msgid "General_ColumnPageviews"
+msgstr "צפיות"
+
+msgid "General_ColumnPageviewsDocumentation"
+msgstr "מספר הפעמים שביקרו בדף זה."
+
+msgid "General_ColumnPercentageVisits"
+msgstr "%% ביקורים"
+
+msgid "General_ColumnRevenue"
+msgstr "רווח"
+
+msgid "General_ColumnSumVisitLength"
+msgstr "הזמן הכולל שהשקיעו המבקרים (שניות)"
+
+msgid "General_ColumnTotalPageviews"
+msgstr "סך כל הצפיות בדפים"
+
+msgid "General_ColumnUniqueEntrances"
+msgstr "כניסות ייחודיות"
+
+msgid "General_ColumnUniqueExits"
+msgstr "יציאות ייחודיות"
+
+msgid "General_ColumnUniquePageviews"
+msgstr "צפיות יחודייות"
+
+msgid "General_ColumnUniquePageviewsDocumentation"
+msgstr "מספר הביקורים שכללו דף זה. אם ביקרו בדף זה מספר פעמים במהלך ביקור אחד, הוא ייספר רק פעם אחת."
+
+msgid "General_ColumnValuePerVisit"
+msgstr "תפוקה בכל ביקור"
+
+msgid "General_ColumnViewedAfterSearch"
+msgstr "הוקלק בתוצאות חיפוש"
+
+msgid "General_ColumnViewedAfterSearchDocumentation"
+msgstr "מספר הפעמים שדף זה נצפה לאחר שמבקר חיפש את האתר שלך ולחץ על דף זה בתוצאות החיפוש."
+
+msgid "General_ColumnVisitDuration"
+msgstr "משך ביקור (בשניות)"
+
+msgid "General_ColumnVisitsWithConversions"
+msgstr "ביקורים עם המרות"
+
+msgid "General_ComputedMetricAverage"
+msgstr "ממוצע %1$s לכל %2$s"
+
+msgid "General_ComputedMetricAverageDocumentation"
+msgstr "ערך ממוצע של \"%1$s\" לכל \"%2$s\"."
+
+msgid "General_ComputedMetricAverageShortDocumentation"
+msgstr "ערך ממוצע של \"%1$s\"."
+
+msgid "General_ComputedMetricRate"
+msgstr "%s קצב"
+
+msgid "General_ComputedMetricRateDocumentation"
+msgstr "היחס של \"%1$s\" מתוך \"%2$s\"."
+
+msgid "General_ComputedMetricRateShortDocumentation"
+msgstr "אחוז מ \"%1$s\"."
+
+msgid "General_ComputedMetricCountDocumentation"
+msgstr "מספר %s"
+
+msgid "General_ComputedMetricSum"
+msgstr "סה\"כ %s"
+
+msgid "General_ComputedMetricSumDocumentation"
+msgstr "המספר הכולל (סכום) %s"
+
+msgid "General_ComputedMetricMax"
+msgstr "מקסימום %s"
+
+msgid "General_ComputedMetricMaxDocumentation"
+msgstr "הערך המרבי עבור %s"
+
+msgid "General_ComputedMetricMin"
+msgstr "מינימום%s"
+
+msgid "General_ComputedMetricMinDocumentation"
+msgstr "הערך המינימלי עבור %s"
+
+msgid "General_ComputedMetricUniqueCount"
+msgstr "ייחודיים %s"
+
+msgid "General_ComputedMetricUniqueCountDocumentation"
+msgstr "המספר הייחודי של %s"
+
+msgid "General_ComputedMetricCountWithValue"
+msgstr "ביקורים עם %s"
+
+msgid "General_ComputedMetricCountWithValueDocumentation"
+msgstr "מספר ביקורים שיש להם ערך עבור %s"
+
+msgid "General_ConfigFileIsNotWritable"
+msgstr "קובץ תצורת Matomo %1$s אינו ניתן לכתיבה, ייתכן שחלק מהשינויים שלך לא יישמרו. אנא שנה את ההרשאות של קובץ ההגדרות %2$s כדי להפוך אותו לכתיבה."
+
+msgid "General_Continue"
+msgstr "להמשיך"
+
+msgid "General_ContinueToPiwik"
+msgstr "חזרה לMatomo"
+
+msgid "General_CurrentlyUsingUnsecureHttp"
+msgstr "אתם משתמשים כעת בפיוויק באמצעות קשר HTTP שאינו בטוח. אנו ממליצים שתגדירו את פיוויק לשימוש ב-SSL (HTTPS) לשיפור רמת האבטחה."
+
+msgid "General_CreatedByUser"
+msgstr "נוצר על די %s"
+
+msgid "General_CurrentMonth"
+msgstr "חודש נוכחי"
+
+msgid "General_CurrentWeek"
+msgstr "שבוע נוכחי"
+
+msgid "General_CurrentYear"
+msgstr "שנה נוכחית"
+
+msgid "General_Daily"
+msgstr "יומי"
+
+msgid "General_DailyReport"
+msgstr "יומי"
+
+msgid "General_DailyReports"
+msgstr "דוחות יומיים"
+
+msgid "General_DailySum"
+msgstr "סך יומי"
+
+msgid "General_DashboardForASpecificWebsite"
+msgstr "פאנל סקירה לאתר מסויים"
+
+msgid "General_DataForThisGraphHasBeenPurged"
+msgstr "הנתונים לגרף זה הם בני יותר מ-%s חודשים ובוטלו."
+
+msgid "General_DataForThisTagCloudHasBeenPurged"
+msgstr "הנתונים לתג זה הם בני יותר מ-%s חודשים ובוטלו."
+
+msgid "General_Date"
+msgstr "תאריך"
+
+msgid "General_DateRange"
+msgstr "טווח תאריכים:"
+
+msgid "General_DateRangeFrom"
+msgstr "מ"
+
+msgid "General_DateRangeFromTo"
+msgstr "מ-%1$s עד %2$s"
+
+msgid "General_DateRangeInPeriodList"
+msgstr "טווח התאריכים"
+
+msgid "General_DateRangeTo"
+msgstr "עד"
+
+msgid "General_DaysHours"
+msgstr "%1$s ימים ו-%2$s שעות"
+
+msgid "General_DaysSinceFirstVisit"
+msgstr "ימים מאז ביקור ראשון"
+
+msgid "General_DaysSinceLastEcommerceOrder"
+msgstr "ימים מאז הזמנת ה-Ecommerce האחרון."
+
+msgid "General_DaysSinceLastVisit"
+msgstr "ימים מאז ביקור אחרון"
+
+msgid "General_Default"
+msgstr "בררת מחדל"
+
+msgid "General_DefaultAppended"
+msgstr "(ברירת מחדל)"
+
+msgid "General_Delete"
+msgstr "למחוק"
+
+msgid "General_Description"
+msgstr "תיאור"
+
+msgid "General_Desktop"
+msgstr "מחשב PC"
+
+msgid "General_Details"
+msgstr "פרטים"
+
+msgid "General_Discount"
+msgstr "הנחה"
+
+msgid "General_DisplaySimpleTable"
+msgstr "להציג טבלה פשוטה"
+
+msgid "General_DisplayTableWithGoalMetrics"
+msgstr "להציג טבלה עם נתוני יעדים"
+
+msgid "General_DisplayTableWithMoreMetrics"
+msgstr "להציג טבלה עם יותר נתונים"
+
+msgid "General_Documentation"
+msgstr "תיעוד"
+
+msgid "General_Donate"
+msgstr "תרומה"
+
+msgid "General_Done"
+msgstr "סיום"
+
+msgid "General_Download"
+msgstr "להוריד"
+
+msgid "General_DownloadFail_FileExists"
+msgstr "הקובץ %s כבר קיים!"
+
+msgid "General_DownloadFail_FileExistsContinue"
+msgstr "מנסים להמשיך את ההורדה של %s אבל כבר קיים קובץ שהורד במלואו!"
+
+msgid "General_DownloadFail_HttpRequestFail"
+msgstr "לא הצלחנו להוריד את הקובץ! אולי יש בעיה באתר ממנו אתם מורידים אותו. אפשר לנסות יותר מאוחר או להשיג את הקובץ באופן עצמאי."
+
+msgid "General_DownloadFullVersion"
+msgstr "%1$sהורדת%2$s הגרסה המלאה! כנסו ל%3$s"
+
+msgid "General_DownloadPleaseRemoveExisting"
+msgstr "אם אתם רוצים להחליף אותו, אז הסירו את הקובץ הקיים."
+
+msgid "General_Downloads"
+msgstr "הורדות"
+
+msgid "General_EcommerceOrders"
+msgstr "הזמנות Ecommerce"
+
+msgid "General_EcommerceVisitStatusDesc"
+msgstr "בקרו בסטטוס Ecommerce בתום הביקור"
+
+msgid "General_EcommerceVisitStatusEg"
+msgstr "לדוגמא, על מנת לבחור את כל הביקורים שביצעו הזמנת Ecommerce, שאילתת ה-API צריך לכלול %s"
+
+msgid "General_Edit"
+msgstr "לערוך"
+
+msgid "General_EncryptedSmtpTransport"
+msgstr "יש להזין את שכבת ההצפנה הדרושה ע\"י שרת ה-SMTP שלך."
+
+msgid "General_Error"
+msgstr "שגיאה"
+
+msgid "General_Errors"
+msgstr "שגיאות"
+
+msgid "General_ErrorRequest"
+msgstr "אופס ... הייתה בעיה במהלך הבקשה. אולי לשרת היה בעיה זמנית, או אולי ביקשת דוח עם יותר מדי נתונים. נסה שוב. אם שגיאה זו מתרחשת שוב ושוב, אנא %1$s פנה למנהל Matomo שלך %2$sלקבלת סיוע."
+
+msgid "General_EvolutionOverPeriod"
+msgstr "התפתחות במהלך התקופה"
+
+msgid "General_EvolutionSummaryGeneric"
+msgstr "%1$s ב- %2$s בהשוואה ל- %3$s ב- %4$s. אבולוציה: %5$s"
+
+msgid "General_ExceptionContactSupportGeneric"
+msgstr "אם הבעיה ממשיכה אנא %1$s צור קשר עם מנהל Matomo %2$s על מנת לקבל סיוע."
+
+msgid "General_ExceptionCheckUserHasSuperUserAccessOrIsTheUser"
+msgstr "המשתמש צריך להיות משתמש-על או המשתמש '%s' עצמו."
+
+msgid "General_ExceptionConfigurationFileNotFound"
+msgstr "קובץ ההגדרות {%s} לא נמצא."
+
+msgid "General_ExceptionConfigurationFileExistsButNotReadable"
+msgstr "נראה שקובץ ההגדרות %s קיים, אבל פיוויק לא היה מסוגל לקרוא אותו."
+
+msgid "General_ExceptionConfigurationFilePleaseCheckReadableByUser"
+msgstr "נא בדקו ש %1$s ניתן לצפייה על ידי המשתמש '%2$s'"
+
+msgid "General_ExceptionDatabaseVersion"
+msgstr "גרסאת ה%1$s שלך היא %2$s אך Matomo דורשת לפחות %3$s."
+
+msgid "General_ExceptionDatabaseVersionNewerThanCodebase"
+msgstr "קוד הקוד של Matomo שלך מפעיל את הגירסה הישנה %1$s וגילינו שמסד הנתונים של Matomo שלך שודרג לגרסה החדשה %2$s."
+
+msgid "General_ExceptionDatabaseVersionNewerThanCodebaseWait"
+msgstr "אולי מנהל Matomo שלך כרגע מסיים את תהליך השדרוג. נסה שוב בעוד מספר דקות."
+
+msgid "General_ExceptionFileIntegrity"
+msgstr "בדיקת שלמות נכשלה: %s"
+
+msgid "General_ExceptionFilesizeMismatch"
+msgstr "אין התאמה במשקל הקובץ: %1$s (מצופה: %2$s, נמצא: %3$s)"
+
+msgid "General_ExceptionIncompatibleClientServerVersions"
+msgstr "גרסת צד הלקוח של %1$s היא %2$s בעוד גרסת צד השרת היא %3$s."
+
+msgid "General_ExceptionInvalidAggregateReportsFormat"
+msgstr "פורמט הדוחות המצטבר '%1$s' אינו חוקי. במקום זאת, נסה לבצע אחת מהפעולות הבאות: %2$s."
+
+msgid "General_ExceptionInvalidArchiveTimeToLive"
+msgstr "זמן החיים של ארכיון היום חייב להיות מספר שניות הגדול מ-0."
+
+msgid "General_ExceptionInvalidDateFormat"
+msgstr "תבנית התאריך מוכרחה להיות: %1$s או כל מילת מפתח שנתמכת על ידי פונקצית ה %2$s (ראו %3$s בשביל מידע נוסף)"
+
+msgid "General_ExceptionInvalidDateBeforeFirstWebsite"
+msgstr "התאריך '%1$s' הוא תאריך לפני שהאתר הראשון היה מקוון. נסה את התאריך שאחרי %2$s (חותמת זמן %3$s)."
+
+msgid "General_ExceptionInvalidDateRange"
+msgstr "התאריך '%1$s' אינו טווח תאריכים נכון. הוא צריך להיכתב בתבנית הבאה: %2$s."
+
+msgid "General_ExceptionInvalidPeriod"
+msgstr "התקופה '%1$s' לא נתמכת. יש לנסות את אחת מהבאות במקום: %2$s"
+
+msgid "General_ExceptionInvalidRendererFormat"
+msgstr "הפורמט '%1$s' אינו תקין. יש לנסות אחד מהבאים במקום: %2$s."
+
+msgid "General_ExceptionInvalidReportRendererFormat"
+msgstr "פורמט הדוח '%1$s' אינו חוקי. במקום זאת, נסה לבצע אחת מהפעולות הבאות: %2$s."
+
+msgid "General_ExceptionInvalidStaticGraphType"
+msgstr "סוג הגרף הסטטי \"%1$s\" אינו חוקי. במקום זאת, נסה לבצע אחת מהפעולות הבאות: %2$s."
+
+msgid "General_ExceptionInvalidToken"
+msgstr "הכרטיס לא תקף."
+
+msgid "General_ExceptionLanguageFileNotFound"
+msgstr "קובץ השפה '%s' לא נמצא."
+
+msgid "General_ExceptionMethodNotFound"
+msgstr "המתודה '%1$s' לא קיימת או לא נמצאה במודל '%2$s'."
+
+msgid "General_ExceptionMissingFile"
+msgstr "קובץ חסר: %s"
+
+msgid "General_ExceptionUnexpectedFilePleaseDelete"
+msgstr "אנא מחק קבצים אלו על מנת למנוע שגיאות."
+
+msgid "General_ExceptionUnexpectedDirectoryPleaseDelete"
+msgstr "אנא מחק תיקיות אלו על מנת למנוע שגיאות."
+
+msgid "General_ExceptionFileToDelete"
+msgstr "קבצים למחיקה: %s"
+
+msgid "General_ExceptionDirectoryToDelete"
+msgstr "תיקיות למחיקה: %s"
+
+msgid "General_ExceptionNonceMismatch"
+msgstr "לא ניתן לאמת את כרטיס האבטחה בטופס זה."
+
+msgid "General_ExceptionPrivilege"
+msgstr "לא ניתן לגשת למשאב זה מכיוון שהוא דורש גישת %s."
+
+msgid "General_ExceptionPrivilegeAccessWebsite"
+msgstr "לא ניתן לגשת למשאב זה מכיוון שהוא מחייב גישה %s עבור מזהה האתר = %d."
+
+msgid "General_ExceptionCapabilityAccessWebsite"
+msgstr "לא ניתן לגשת למשאב זה מכיוון שהוא מחייב יכולת %s עבור מזהה האתר = %d."
+
+msgid "General_ExceptionPrivilegeAtLeastOneWebsite"
+msgstr "לא ניתן לגשת למשאב זה מכיוון שהוא מחייב גישה %s עבור אתר אינטרנט אחד לפחות."
+
+msgid "General_ExceptionUnableToStartSession"
+msgstr "לא מצליח להתחיל session."
+
+msgid "General_ExceptionUndeletableFile"
+msgstr "לא ניתן למחוק את %s"
+
+msgid "General_ExceptionUnreadableFileDisabledMethod"
+msgstr "קובץ ההגדרות {%1$s} לא ניתן לקריאה. המארח אולי חסם את %2$s."
+
+msgid "General_ExceptionReportNotFound"
+msgstr "הדוח המבוקש אינו קיים."
+
+msgid "General_ExceptionWidgetNotFound"
+msgstr "הווידג'ט המבוקש אינו קיים."
+
+msgid "General_ExceptionReportNotEnabled"
+msgstr "הדוח המבוקש לא הופעל. בדרך כלל זה אומר שהתוסף שמגדיר את הדוח בוטל או שאין לך מספיק הרשאות לשם כניסה לדוח זה."
+
+msgid "General_ExceptionWidgetNotEnabled"
+msgstr "הווידג'ט המבוקש לא מופעל. בדרך כלל זה אומר שהתוסף שמגדיר את הווידג'ט בוטל או שאין לך מספיק הרשאות לשם כניסה לווידג'ט זה."
+
+msgid "General_ExpandDataTableFooter"
+msgstr "שנו את אופן ההצגה או הגדירו את הדוח"
+
+msgid "General_Export"
+msgstr "ייצוא"
+
+msgid "General_ExportAsImage"
+msgstr "לייצא כתמונה"
+
+msgid "General_ExportThisReport"
+msgstr "לייצא מידע בפורמטים אחרים"
+
+msgid "General_Faq"
+msgstr "שאלות ותשובות נפוצות"
+
+msgid "General_FileIntegrityWarning"
+msgstr "בדיקת תקינות הקובץ נכשלה ודיווחה על מספר שגיאות. עליך לתקן בעיה זו ולאחר מכן לרענן דף זה עד שלא תוצג שגיאה."
+
+msgid "General_FileIntegrityWarningReupload"
+msgstr "השגיאות שלהלן עשויות להיות עקב העלאה חלקית או העלאת קבצים של Matomo שנכשלה."
+
+msgid "General_FileIntegrityWarningReuploadBis"
+msgstr "נסה להעלות מחדש את כל קבצי Matomo במצב בינארי."
+
+msgid "General_First"
+msgstr "ראשון"
+
+msgid "General_Flatten"
+msgstr "לשטח"
+
+msgid "General_ForcedSSL"
+msgstr "חייב חיבור SSL"
+
+msgid "General_ForceSSLRecommended"
+msgstr "אנו ממליצים להשתמש ב- Matomo דרך חיבורי SSL מאובטחים בלבד. כדי למנוע גישה לא מאובטחת דרך http, הוסף %1$s לקטע %2$s בקובץ Matomo config / config.ini.php שלך."
+
+msgid "General_NotPossibleWithoutHttps"
+msgstr "הערה: פעולה זו מבלי להגדיר אישור SSL לשימוש ב- HTTPS תשבור את Matomo."
+
+msgid "General_UseSSLInstall"
+msgstr "אנו ממליצים להשתמש ב- Matomo דרך חיבורי SSL מאובטחים בלבד. אנא %1$s לחץ כאן כדי להמשיך בתהליך ההתקנה על %2$s SSL."
+
+msgid "General_ForExampleShort"
+msgstr "לדוגמה"
+
+msgid "General_Forums"
+msgstr "פורומים"
+
+msgid "General_FromReferrer"
+msgstr "מ-"
+
+msgid "General_GeneralInformation"
+msgstr "מידע כללי"
+
+msgid "General_GeneralSettings"
+msgstr "הגדרות כלליות"
+
+msgid "General_GetStarted"
+msgstr "צאו לדרך"
+
+msgid "General_GiveUsYourFeedback"
+msgstr "העברת משוב למפתחים!"
+
+msgid "General_Goal"
+msgstr "יעד"
+
+msgid "General_GoTo"
+msgstr "עבור ל%s"
+
+msgid "General_GraphHelp"
+msgstr "מידע נוסף עבור הצגת גרפים ב Matomo."
+
+msgid "General_HelloUser"
+msgstr "שלום, %s!"
+
+msgid "General_Help"
+msgstr "עזרה"
+
+msgid "General_Hide"
+msgstr "להסתיר"
+
+msgid "General_HoursMinutes"
+msgstr "%1$s שעות ו-%2$s דקות"
+
+msgid "General_Id"
+msgstr "מספר סידורי"
+
+msgid "General_InfoFor"
+msgstr "מידע על %s"
+
+msgid "General_Installed"
+msgstr "מותקן"
+
+msgid "General_InvalidDateRange"
+msgstr "טווח התאריכים לא תקף, נא לנסות שוב"
+
+msgid "General_InvalidResponse"
+msgstr "המידע שהתקבל אינו תקף."
+
+msgid "General_IP"
+msgstr "IP"
+
+msgid "General_JsTrackingTag"
+msgstr "JavaScript Tracking Code"
+
+msgid "General_Language"
+msgstr "שפה"
+
+msgid "General_LastDays"
+msgstr "%s ימים אחרונים (כולל היום)"
+
+msgid "General_LastDaysShort"
+msgstr "%s הימים האחרונים"
+
+msgid "General_LearnMore"
+msgstr "%1$s למדו יותר %2$s"
+
+msgid "General_Live"
+msgstr "חי"
+
+msgid "General_Loading"
+msgstr "טוען..."
+
+msgid "General_LoadingData"
+msgstr "טוען מידע..."
+
+msgid "General_LoadingPopover"
+msgstr "טוען %s..."
+
+msgid "General_LoadingPopoverFor"
+msgstr "טעון %s עבור"
+
+msgid "General_Locale"
+msgstr "he_IL.UTF-8"
+
+msgid "General_Logout"
+msgstr "להתנתק"
+
+msgid "General_MainMetrics"
+msgstr "מדדים עיקריים"
+
+msgid "General_Matches"
+msgstr "התאמות"
+
+msgid "General_MediumToHighTrafficItIsRecommendedTo"
+msgstr "לאתרים בעלי תעבודה בינונית עד גבוהה, אנו ממליצים לעבד דוחות להיום לכל היותר בכל חצי שעה (%1$s שניות) או בכל שעה (%2$s שניות)"
+
+msgid "General_Metadata"
+msgstr "מידע-על"
+
+msgid "General_Metric"
+msgstr "מדד"
+
+msgid "General_Metrics"
+msgstr "מדדים"
+
+msgid "General_MetricsToPlot"
+msgstr "מדדים להתוויה"
+
+msgid "General_MetricToPlot"
+msgstr "מדד להתוויה"
+
+msgid "General_MinutesSeconds"
+msgstr "%1$s דקות ו-%2$s שניות"
+
+msgid "General_Mobile"
+msgstr "נייד"
+
+msgid "General_Monthly"
+msgstr "חודשי"
+
+msgid "General_MonthlyReport"
+msgstr "חודשי"
+
+msgid "General_MonthlyReports"
+msgstr "דוחות חודשיים"
+
+msgid "General_More"
+msgstr "יותר"
+
+msgid "General_MoreDetails"
+msgstr "פרטים נוספים"
+
+msgid "General_MoreLowerCase"
+msgstr "יותר"
+
+msgid "General_MultiSitesSummary"
+msgstr "כל האתרים"
+
+msgid "General_Name"
+msgstr "שם"
+
+msgid "General_NbActions"
+msgstr "מספר פעולות"
+
+msgid "General_NbSearches"
+msgstr "מספר חיפושים פנימיים"
+
+msgid "General_NeedMoreHelp"
+msgstr "זקוקים לעזרה נוספת?"
+
+msgid "General_Never"
+msgstr "לעולם לא"
+
+msgid "General_NewReportsWillBeProcessedByCron"
+msgstr "כאשר ארכיון Matomo אינו מורץ על ידי הדפדפן, דוחות חדשים יעובדו ע\"י עבודה כרונית (crontab)."
+
+msgid "General_NewUpdatePiwikX"
+msgstr "עדכון חדש: Matomo %s"
+
+msgid "General_NewVisitor"
+msgstr "מבקר חדש"
+
+msgid "General_NewVisits"
+msgstr "ביקורים חדשים"
+
+msgid "General_Next"
+msgstr "הבא"
+
+msgid "General_No"
+msgstr "לא"
+
+msgid "General_NoDataForGraph"
+msgstr "חסר מידע עבור גרף זה."
+
+msgid "General_NoDataForTagCloud"
+msgstr "חסר מידע עבור ענן תגים זה."
+
+msgid "General_NotDefined"
+msgstr "%s לא הוגדר"
+
+msgid "General_Note"
+msgstr "הערה"
+
+msgid "General_NotInstalled"
+msgstr "לא מותקן"
+
+msgid "General_NotRecommended"
+msgstr "לא מומלץ"
+
+msgid "General_NotValid"
+msgstr "%s לא תקף"
+
+msgid "General_NumberOfVisits"
+msgstr "מספר ביוקרים"
+
+msgid "General_NUsers"
+msgstr "%s משתמשים"
+
+msgid "General_NVisits"
+msgstr "%s ביקורים"
+
+msgid "General_NUniqueVisitors"
+msgstr "%s מבקרים יחודיים"
+
+msgid "General_Ok"
+msgstr "או.קי."
+
+msgid "General_OneAction"
+msgstr "פעולה 1"
+
+msgid "General_OneVisit"
+msgstr "ביקור 1"
+
+msgid "General_OnlyEnterIfRequired"
+msgstr "יש להזין שם משתמש רק אם שרת ה-SMTP מבקש זאת."
+
+msgid "General_OnlyEnterIfRequiredPassword"
+msgstr "יש להזין סיסמה רק אם שרת ה-SMTP מבקש זאת."
+
+msgid "General_OnlyUsedIfUserPwdIsSet"
+msgstr "משומש רק אם שם המשתמש/סיסמה מוגדרים, יש לברר עם הספק במקרה של חוסר וודאות באיזה שיטה לבחור."
+
+msgid "General_OpenSourceWebAnalytics"
+msgstr "ניתוח פעילות אתרים בקוד פתוח"
+
+msgid "General_OperationAtLeast"
+msgstr "לפחות"
+
+msgid "General_OperationAtMost"
+msgstr "לכל היותר"
+
+msgid "General_OperationContains"
+msgstr "מכיל"
+
+msgid "General_OperationDoesNotContain"
+msgstr "אינו מכיל"
+
+msgid "General_OperationEquals"
+msgstr "שווה ל-"
+
+msgid "General_OperationGreaterThan"
+msgstr "גדול מ-"
+
+msgid "General_OperationIs"
+msgstr "הנו"
+
+msgid "General_OperationIsNot"
+msgstr "אינו"
+
+msgid "General_OperationLessThan"
+msgstr "פחות מ-"
+
+msgid "General_OperationNotEquals"
+msgstr "אינו שווה ל-"
+
+msgid "General_OperationStartsWith"
+msgstr "מתחיל עם"
+
+msgid "General_OperationEndsWith"
+msgstr "מסתיים עם"
+
+msgid "General_OptionalSmtpPort"
+msgstr "אופציונלי. ברירת המחדל היא 25 עבור לא מוצפן ו-TLS SMTP, 465 עבור SSL SMTP."
+
+msgid "General_Options"
+msgstr "אפשרויות"
+
+msgid "General_Or"
+msgstr "או"
+
+msgid "General_OrCancel"
+msgstr "או %1$s ביטול %2$s"
+
+msgid "General_Others"
+msgstr "אחרים"
+
+msgid "General_Outlink"
+msgstr "קישור חוץ"
+
+msgid "General_Outlinks"
+msgstr "קישורים יוצאים"
+
+msgid "General_OverlayRowActionTooltip"
+msgstr "צפו בסטטיסטיקה ישירות מהאתר שלכם (פותח טאב חדש)"
+
+msgid "General_OverlayRowActionTooltipTitle"
+msgstr "Open Page Overlay"
+
+msgid "General_Overview"
+msgstr "מבט כללי"
+
+msgid "General_Pages"
+msgstr "עמודים"
+
+msgid "General_Password"
+msgstr "סיסמה"
+
+msgid "General_Period"
+msgstr "תקופה"
+
+msgid "General_Piechart"
+msgstr "גרף עוגה"
+
+msgid "General_PiwikXIsAvailablePleaseUpdateNow"
+msgstr "Matomo %1$s עכשיו זמינה. %2$s נא לשדרג עכשיו! %3$s (ראו %4$s שינויים %5$s)"
+
+msgid "General_PleaseContactYourPiwikAdministrator"
+msgstr "נא צרו קשר עם מנהל הפיוויק שלכם."
+
+msgid "General_PleaseSpecifyValue"
+msgstr "יד להגדיר ערך עבור '%s'."
+
+msgid "General_PleaseUpdatePiwik"
+msgstr "יש לעדכן את ה-Matomo שלך"
+
+msgid "General_Plugin"
+msgstr "תוסף"
+
+msgid "General_Plugins"
+msgstr "תוספים"
+
+msgid "General_PoweredBy"
+msgstr "מופעל על ידי"
+
+msgid "General_Previous"
+msgstr "הקודם"
+
+msgid "General_PreviousDays"
+msgstr "%s ימים קודמים (לא כולל היום)"
+
+msgid "General_PreviousDaysShort"
+msgstr "%s הימים הקודמים"
+
+msgid "General_Price"
+msgstr "מחיר"
+
+msgid "General_ProductConversionRate"
+msgstr "Product Conversion Rate"
+
+msgid "General_ProductRevenue"
+msgstr "רווח למוצר"
+
+msgid "General_Measurable"
+msgstr "מדיד"
+
+msgid "General_Measurables"
+msgstr "מדידים"
+
+msgid "General_PurchasedProducts"
+msgstr "מוצרים שנרכשו"
+
+msgid "General_Quantity"
+msgstr "כמות"
+
+msgid "General_RangeReports"
+msgstr "טווחי תאריכים הניתנים להגדרה עצמית"
+
+msgid "General_ReadThisToLearnMore"
+msgstr "%1$s קראו זאת כדי ללמוד עוד.%2$s"
+
+msgid "General_Recommended"
+msgstr "מומלץ"
+
+msgid "General_RecordsToPlot"
+msgstr "רשומות להתוויה"
+
+msgid "General_Refresh"
+msgstr "ריענון"
+
+msgid "General_RefreshPage"
+msgstr "לרענן את העמוד"
+
+msgid "General_RelatedReport"
+msgstr "דוח קשור"
+
+msgid "General_RelatedReports"
+msgstr "דוחות קשורים"
+
+msgid "General_Remove"
+msgstr "מחיקה"
+
+msgid "General_Report"
+msgstr "לדווח"
+
+msgid "General_ReportGeneratedFrom"
+msgstr "דוח זה נוצר על ידי שימוש בנתונים מ-%s"
+
+msgid "General_ReportRatioTooltip"
+msgstr "'%1$s' represents %2$s of %3$s %4$s with %5$s."
+
+msgid "General_Reports"
+msgstr "דוחות"
+
+msgid "General_ReportsContainingTodayWillBeProcessedAtMostEvery"
+msgstr "העבר דוחות לארכיון כל X שניות לכל היותר"
+
+msgid "General_RearchiveTimeIntervalOnlyForTodayReports"
+msgstr "זה רק נוגע לדוחות להים (או כל טווח תאריכים שכולל את היום)"
+
+msgid "General_ReportsWillBeProcessedAtMostEveryHour"
+msgstr "דוחות יעובדו כמו כן לכל היותר בכל שעה."
+
+msgid "General_RequestTimedOut"
+msgstr "בקשת מידע מ %s נקטעה. יש לנסות שוב."
+
+msgid "General_Required"
+msgstr "דרוש %s"
+
+msgid "General_ReturningVisitor"
+msgstr "מבקר חוזר"
+
+msgid "General_ReturningVisitorAllVisits"
+msgstr "צפו בכל הביקורים"
+
+msgid "General_RowEvolutionRowActionTooltip"
+msgstr "צפו כיצד המדדים לשורה זו השתנו במהלך הזמן"
+
+msgid "General_RowEvolutionRowActionTooltipTitle"
+msgstr "פתחו התפתחות השורה"
+
+msgid "General_Rows"
+msgstr "שורות"
+
+msgid "General_RowsToDisplay"
+msgstr "שורות להצגה"
+
+msgid "General_Save"
+msgstr "לשמור"
+
+msgid "General_SaveImageOnYourComputer"
+msgstr "בכדי לשמור את התמונה על מחשבך: כפתור ימני על התמונה ולחיצה על \"שמירת תמונה בשם...\""
+
+msgid "General_Search"
+msgstr "חיפוש"
+
+msgid "General_Clear"
+msgstr "נקה"
+
+msgid "General_SearchNoResults"
+msgstr "אין תוצאות"
+
+msgid "General_SeeAll"
+msgstr "להציג הכל"
+
+msgid "General_SeeTheOfficialDocumentationForMoreInformation"
+msgstr "ראו %1$sתיעוד רשמי%2$s למידע נוסף."
+
+msgid "General_SeeThisFaq"
+msgstr "See %1$sthis faq%2$s."
+
+msgid "General_Segment"
+msgstr "מקטע"
+
+msgid "General_SelectYesIfYouWantToSendEmailsViaServer"
+msgstr "יש לבחור \"כן\" אם רוצים או חייבים לשלוח דוא\"ל דרך שרת ולא דרך פונקצית הדוא\"ל המקומית"
+
+msgid "General_Settings"
+msgstr "הגדרות"
+
+msgid "General_Shipping"
+msgstr "משלוח"
+
+msgid "General_Show"
+msgstr "להציג"
+
+msgid "General_SingleWebsitesDashboard"
+msgstr "פאנל סקירה לאתר אחד"
+
+msgid "General_SmallTrafficYouCanLeaveDefault"
+msgstr "לאתרים בעלי תעבורה נמוכה, ניתן להשאיר את ברירת המחדל של %s שניות ולגשת לדוחות בזמן אמת."
+
+msgid "General_SmtpEncryption"
+msgstr "הצפנת SMTP"
+
+msgid "General_SmtpPassword"
+msgstr "סיסמת SMTP"
+
+msgid "General_SmtpPort"
+msgstr "נתיב SMTP"
+
+msgid "General_SmtpServerAddress"
+msgstr "כתובת שרת SMTP"
+
+msgid "General_SmtpUsername"
+msgstr "שם משתמש SMTP"
+
+msgid "General_Source"
+msgstr "מקור"
+
+msgid "General_Subtotal"
+msgstr "סך ביניים"
+
+msgid "General_Summary"
+msgstr "סיכום"
+
+msgid "General_Table"
+msgstr "טבלה"
+
+msgid "General_TagCloud"
+msgstr "ענן תגים"
+
+msgid "General_Tax"
+msgstr "מס"
+
+msgid "General_TimeAgo"
+msgstr "לפני %s"
+
+msgid "General_TimeFormat"
+msgstr "פורמט הזמן"
+
+msgid "General_TimeOnPage"
+msgstr "זמן בדף"
+
+msgid "General_ToDeleteAllDirectoriesRunThisCommand"
+msgstr "על מנת למחוק את כל התיקיות בבת אחת, ניתן להריץ את הפקודה הבאה:"
+
+msgid "General_ToDeleteAllFilesRunThisCommand"
+msgstr "על מנת למחוק את כל הקבצים בבת אחת, ניתן להריץ את הפקודה הבאה:"
+
+msgid "General_Total"
+msgstr "סך הכל"
+
+msgid "General_TotalRatioTooltip"
+msgstr "This is %1$s of all %2$s %3$s."
+
+msgid "General_TotalRevenue"
+msgstr "סה\"כ הרווח"
+
+msgid "General_TotalVisitsPageviewsActionsRevenue"
+msgstr "(סל הכל: %1$s ביקורים, %2$s צפיות בדפים, %3$s פעולות, %4$s רווח)"
+
+msgid "General_TrackingScopeAction"
+msgstr "פעולה"
+
+msgid "General_TrackingScopePage"
+msgstr "דף"
+
+msgid "General_TrackingScopeVisit"
+msgstr "ביקור"
+
+msgid "General_TransitionsRowActionTooltip"
+msgstr "צפו מה עשו המבקרים לפני ואחרי שצפו בדף זה"
+
+msgid "General_TranslatorName"
+msgstr "Nirlah - Nir Lahad"
+
+msgid "General_UniquePurchases"
+msgstr "רכישות ייחודיות"
+
+msgid "General_Unknown"
+msgstr "לא ידוע"
+
+msgid "General_Upload"
+msgstr "העלאה"
+
+msgid "General_UsePlusMinusIconsDocumentation"
+msgstr "השתמש בצלמיות הפלוס והמינוס בצד שמאל על מהת לנווט."
+
+msgid "General_UserId"
+msgstr "User ID"
+
+msgid "General_Username"
+msgstr "שם משתמש"
+
+msgid "General_UseSMTPServerForEmail"
+msgstr "שימוש בשרת SMTP עבור דוא\"ל"
+
+msgid "General_Value"
+msgstr "ערך"
+
+msgid "General_VBarGraph"
+msgstr "גרף עמודות"
+
+msgid "General_View"
+msgstr "תצוגה"
+
+msgid "General_ViewDocumentationFor"
+msgstr "צפו בתיעוד עבור %1$s"
+
+msgid "General_Visit"
+msgstr "ביקור"
+
+msgid "General_VisitConvertedGoal"
+msgstr "הביקור השפיע על לפחות יעד אחד"
+
+msgid "General_VisitConvertedGoalId"
+msgstr "הביקור השפיע על ID ספציפי של יעד"
+
+msgid "General_VisitConvertedNGoals"
+msgstr "הביקור השפיע על %s יעדים"
+
+msgid "General_VisitDuration"
+msgstr "משך ביקור ממוצע (בשניות)"
+
+msgid "General_Visitor"
+msgstr "מבקר"
+
+msgid "General_VisitorID"
+msgstr "מספר מבקר"
+
+msgid "General_VisitorIP"
+msgstr "IP מבקר"
+
+msgid "General_Visitors"
+msgstr "מבקרים"
+
+msgid "General_VisitsWith"
+msgstr "ביקורים עם %s"
+
+msgid "General_VisitorSettings"
+msgstr "הגדרת מבקרים"
+
+msgid "General_VisitType"
+msgstr "סוג הביקור"
+
+msgid "General_VisitTypeExample"
+msgstr "למשל, על מנת לבחור את כל המבקרים שחזרו לאתר, לרבות אלה שרכשו משהו בביקוריהם הקודמים, שאילתת ה-API צריכה לכלול %s"
+
+msgid "General_Warning"
+msgstr "אזהרה"
+
+msgid "General_Warnings"
+msgstr "אזהרות"
+
+msgid "General_WarningPiwikWillStopSupportingPHPVersion"
+msgstr "פיוויק יפסיק לתמוך ב-PHP %1$s בשדרוג הראשי הבא. שדרגו את גירסת ה-PHP שלכם לפחות לגירסת PHP %2$s לפני שזה מאוחר מדי!"
+
+msgid "General_YouMustUpgradePhpVersionToReceiveLatestPiwik"
+msgstr "עליכם לשדרג את גירסת ה-PHP שלכם על מהת לקבל את גירסת הפיוויק האחרונה."
+
+msgid "General_PiwikCannotBeUpgradedBecausePhpIsTooOld"
+msgstr "לא ניתן לשדרג את פיוויק לגירסה הראשית האחרונה מכיוון שגירסת ה-PHP שלך ישן מדי."
+
+msgid "General_PleaseUpgradeYourPhpVersionSoYourPiwikDataStaysSecure"
+msgstr "נא שדרגו את גירסת ה-PHP שלכם לפחות לגירסת PHP %s על מנת שנתוני הסטטיסטיקה של פיוויק יישארו מאובטחים."
+
+msgid "General_WarningFileIntegrityNoManifest"
+msgstr "לא ניתן לבצע בדיקת תקינות קבצים מכיוון שהקובץ manifest.inc.php חסר."
+
+msgid "General_WarningFileIntegrityNoManifestDeployingFromGit"
+msgstr "אם אתם מפעילים את פיוויק מתוך GIT, אז ההודעה הזו רגילה."
+
+msgid "General_WarningFileIntegrityNoMd5file"
+msgstr "לא ניתן לבצע בדיקת תקינות קבצים מכיוון שהפונקציה md5_file() חסרה."
+
+msgid "General_WarningPasswordStored"
+msgstr "%1$sאזהרה:%2$s הסיסמה תאוכסן בקובץ ההגדרות וחושפת לכל כיצד להתחבר."
+
+msgid "General_Website"
+msgstr "אתר"
+
+msgid "General_Weekly"
+msgstr "שבועי"
+
+msgid "General_WeeklyReport"
+msgstr "שבועי"
+
+msgid "General_WeeklyReports"
+msgstr "דוחות שבועיים"
+
+msgid "General_WellDone"
+msgstr "כל הכבוד!"
+
+msgid "General_Widgets"
+msgstr "ווידג'טים"
+
+msgid "General_Widget"
+msgstr "ווידג'ט"
+
+msgid "General_XComparedToY"
+msgstr "%1$s בהשוואה ל-%2$s"
+
+msgid "General_XFromY"
+msgstr "%1$s מתוך %2$s"
+
+msgid "General_YearlyReport"
+msgstr "שנתי"
+
+msgid "General_YearlyReports"
+msgstr "דוחות שנתיים"
+
+msgid "General_YearsDays"
+msgstr "%1$s שנים ו-%2$s ימים"
+
+msgid "General_Yes"
+msgstr "כן"
+
+msgid "General_YouAreCurrentlyUsing"
+msgstr "אתה משתמש כעת בפיוויק %s."
+
+msgid "General_YouMustBeLoggedIn"
+msgstr "חובה להתחבר למערכת בכדי לבצע פעולה זו."
+
+msgid "General_YourChangesHaveBeenSaved"
+msgstr "השינויים נשמרו."
+
+msgid "Mobile_AboutPiwikMobile"
+msgstr "אודות Matomo בנייד"
+
+msgid "Mobile_AccessUrlLabel"
+msgstr "כתובת הגישה ל-Matomo"
+
+msgid "Mobile_Account"
+msgstr "חשבון"
+
+msgid "Mobile_Accounts"
+msgstr "חשבונות"
+
+msgid "Mobile_AddAccount"
+msgstr "הוספת חשבון"
+
+msgid "Mobile_AddPiwikDemo"
+msgstr "הוסף הדגמה של Matomo"
+
+msgid "Mobile_Advanced"
+msgstr "מתקדם"
+
+msgid "Mobile_AnonymousAccess"
+msgstr "גישה אנונימית"
+
+msgid "Mobile_AnonymousTracking"
+msgstr "איסוף נתונים אנונימי"
+
+msgid "Mobile_AskForAnonymousTrackingPermission"
+msgstr "כאשר מאופשר, Matomo Mobile ישלח נתוני שימוש אנונימיים ל- matomo.org. הכוונה היא להשתמש בנתונים אלה כדי לסייע למפתחי Matomo Mobile להבין טוב יותר את השימוש באפליקציה. מידע שנשלח הוא: תפריטים והגדרות לחיצה על, שם מערכת ההפעלה ואת הגירסה, כל שגיאה המוצגת Matomo נייד. לא נעקוב אחר נתוני הניתוח שלך. מידע אנונימי זה לעולם לא יפורסם. תוכל להשבית / להפעיל מעקב אנונימי ב'הגדרות 'בכל עת."
+
+msgid "Mobile_ChooseHttpTimeout"
+msgstr "בחר זמן מקסימלי לשליחת בקשת HTTP"
+
+msgid "Mobile_ChooseMetric"
+msgstr "בחר מדד"
+
+msgid "Mobile_ChooseReport"
+msgstr "בחר דו\"ח"
+
+msgid "Mobile_ChooseSegment"
+msgstr "בחר חיתוך"
+
+msgid "Mobile_ConfirmRemoveAccount"
+msgstr "האם ברצונך למחוק את החשבון הנ\"ל?"
+
+msgid "Mobile_DefaultReportDate"
+msgstr "תאריך דו\"ח"
+
+msgid "Mobile_EmailUs"
+msgstr "פנה אלינו במייל"
+
+msgid "Mobile_EnableGraphsLabel"
+msgstr "הצג גרפים"
+
+msgid "Mobile_EvolutionGraph"
+msgstr "גרף היסטורי"
+
+msgid "Mobile_HelpUsToImprovePiwikMobile"
+msgstr "האם ברצונך לשפעל איסוף נתונים אנונימי ב-Matomo בנייד?"
+
+msgid "Mobile_HowtoDeleteAnAccount"
+msgstr "לחץ לחיצה ארוכה כדי להסיר את החשבון"
+
+msgid "Mobile_HowtoDeleteAnAccountOniOS"
+msgstr "גרור שמאלה כדי למחוק את החשבון"
+
+msgid "Mobile_HowtoLoginAnonymous"
+msgstr "השאר את שם המשתמש והסיסמא ריקים כדי להתחבר אנונימית"
+
+msgid "Mobile_HttpIsNotSecureWarning"
+msgstr "קוד האבטחה של Matomo נשלח בטקסט שאינו מוצפן אם אתה משתמש ב- HTTP. מסיבה זו אנו ממליצים להשתמש בפרוטוקול HTTPS להעברה מאובטחת של נתונים דרך האינטרנט. האם ברצונך להמשיך?"
+
+msgid "Mobile_HttpTimeout"
+msgstr "HTTP Timeout"
+
+msgid "Mobile_IncompatiblePiwikVersion"
+msgstr "גירסת הפיוויק שבשימושך אינה תואמת לפיוויק מובייל 2. שדרגו את התקנת הפיוויק שלכם ונסו שוב או התקינו את פיוויק מובייל 1."
+
+msgid "Mobile_LastUpdated"
+msgstr "עדכון אחרון: %s"
+
+msgid "Mobile_LoadingReport"
+msgstr "טוען %s"
+
+msgid "Mobile_LoginCredentials"
+msgstr "אישורים"
+
+msgid "Mobile_LoginToPiwikToChangeSettings"
+msgstr "היכנסו לשרת הפיוויק שלכם על מנת ליצור ולעדכן אתרים ומשתמשים או על מנת לשנות הגדרות כלליות כגון איזה דוח ייטען כברירת מחדל."
+
+msgid "Mobile_LoginUseHttps"
+msgstr "השתמשו ב-https"
+
+msgid "Mobile_MultiChartLabel"
+msgstr "הצג מיקרו-גרפים (sparklines)"
+
+msgid "Mobile_NavigationBack"
+msgstr "חזרה"
+
+msgid "Mobile_NetworkError"
+msgstr "שגיאת רשת"
+
+msgid "Mobile_NetworkErrorWithStatusCode"
+msgstr "אירעה שגיאה \"%1$s\". הבקשה החזירה את הסטטוס \"%2$s\". כתובת האתר הייתה \"%3$s\". בדוק את כתובת האתר שלך ואת יומני השגיאה בשרת זה לקבלת מידע נוסף על השגיאה וכיצד לפתור אותה."
+
+msgid "Mobile_NetworkErrorWithStatusCodeShort"
+msgstr "שגיאת רשת %s"
+
+msgid "Mobile_NetworkNotReachable"
+msgstr "לא ניתן ליצור קשר עם הרשת"
+
+msgid "Mobile_NoAccountIsSelected"
+msgstr "עליך לבחור חשבון. הוסיפו חשבון חדש עם טרם הגדרתם חשבון."
+
+msgid "Mobile_NoDataShort"
+msgstr "אין נתונים"
+
+msgid "Mobile_NoPiwikAccount"
+msgstr "אין לכם חשבון פיוויק?"
+
+msgid "Mobile_NoReportsShort"
+msgstr "אין דוחות"
+
+msgid "Mobile_NoVisitorFound"
+msgstr "לא נמצא מבקר"
+
+msgid "Mobile_NoVisitorsShort"
+msgstr "אין מבקרים"
+
+msgid "Mobile_NoWebsiteFound"
+msgstr "לא נמצא אתר"
+
+msgid "Mobile_NoWebsitesShort"
+msgstr "אין אתרים"
+
+msgid "Mobile_PullDownToRefresh"
+msgstr "משכו למטה לריענון..."
+
+msgid "Mobile_PossibleSslError"
+msgstr "ייתכן שיש שגיאה בתעודת ה-SSL"
+
+msgid "Mobile_PossibleSslErrorExplanation"
+msgstr "אירעה שגיאה שעשויה להיגרם על ידי אישור לא חוקי או חתימה עצמית: \"%s\". ייתכן שתהליך ההתחברות יעבוד עבורך בעת התעלמות מאימות SSL, אך הוא פחות מאובטח. ניתן לשנות את אימות SSL בכל עת בהגדרות."
+
+msgid "Mobile_IgnoreSslError"
+msgstr "התעלם משגיאת SSL"
+
+msgid "Mobile_RatingDontRemindMe"
+msgstr "אל תזכיר לי"
+
+msgid "Mobile_RatingNotNow"
+msgstr "לא כעת"
+
+msgid "Mobile_RatingNow"
+msgstr "בסדר, אני אתן עכשין הערכה."
+
+msgid "Mobile_RatingPleaseRateUs"
+msgstr "Matomo Mobile App היא תוכנה חופשית, נשמח אם ניקח דקה אחת כדי לדרג את האפליקציה ב- %1$s. אם יש לך הצעות לגבי תכונות חדשות או דוחות באגים, צור קשר עם %2$s"
+
+msgid "Mobile_ReleaseToRefresh"
+msgstr "שחררו על מנת לרענן..."
+
+msgid "Mobile_Reloading"
+msgstr "טוען מחדש..."
+
+msgid "Mobile_RequestTimedOutShort"
+msgstr "Network Timeout Error"
+
+msgid "Mobile_RestrictedCompatibility"
+msgstr "תאימות מוגבלת"
+
+msgid "Mobile_RestrictedCompatibilityExplanation"
+msgstr "גרסת Matomo בה אתה משתמש %s אינו נתמך במלואו על ידי Matomo Mobile 2. אתה עלול להיתקל כמה באגים. אנו ממליצים לעדכן את Matomo לגרסה העדכנית ביותר או להשתמש ב- Matomo Mobile 1."
+
+msgid "Mobile_SaveSuccessError"
+msgstr "כתובת פיוויק או שם משתמש וסיסמה שגויים."
+
+msgid "Mobile_SearchWebsite"
+msgstr "חפש באתרים"
+
+msgid "Mobile_ShowAll"
+msgstr "הצג הכל"
+
+msgid "Mobile_ShowLess"
+msgstr "הצג פחות"
+
+msgid "Mobile_StaticGraph"
+msgstr "סקירה כללית של גרף"
+
+msgid "Mobile_TopVisitedWebsites"
+msgstr "האתרים שקיבלו את מירב הביקורים"
+
+msgid "Mobile_TryIt"
+msgstr "נסו את זה!"
+
+msgid "Mobile_UseSearchBarHint"
+msgstr "רק %s האתרים הראשונים מוצגים כאן. נא השתמשו בתיבת החיפוש על מנת להציג את יתר האתרים שלך."
+
+msgid "Mobile_VerifyAccount"
+msgstr "מאמת את החשבון"
+
+msgid "Mobile_ValidateSslCertificate"
+msgstr "בדוק תוקף תעודת ה-SSL"
+
+msgid "Mobile_VerifyLoginData"
+msgstr "וודאו ששילוב שם המשתמש והסיסמה נכונים."
+
+msgid "Mobile_YouAreOffline"
+msgstr "סליחה, אבל אתם כרגע לא מקוונים"
+
+msgid "RowEvolution_AvailableMetrics"
+msgstr "מדדים זמינים"
+
+msgid "RowEvolution_CompareDocumentation"
+msgstr "הקלקו על הקישור להלן ותפתחו את החלון הקופץ הזה לקבלת שורה נוספת מאותה טבלה על מנת להשוות רשומות מרובות.<br />השתמשו ב-shift-click על מנת לסמן את השורה לצורך השוואה מבלי לפתוח חלון קופץ זה."
+
+msgid "RowEvolution_CompareRows"
+msgstr "השווה תוצאות"
+
+msgid "RowEvolution_ComparingRecords"
+msgstr "משווה %s שורות"
+
+msgid "RowEvolution_Documentation"
+msgstr "לחץ על המדדים כדי להציגם בגרף התקדמות. השתמש בלחיצה על המדדים עם המקש shift כדי להציג מספר מדדים ביחד."
+
+msgid "RowEvolution_MetricBetweenText"
+msgstr "מ-%1$s עד %2$s"
+
+msgid "RowEvolution_MetricChangeText"
+msgstr "%s שינוי במשך התקופה"
+
+msgid "RowEvolution_MetricMinMax"
+msgstr "%1$s בטווח בין %2$s ו-%3$s במשך התקופה"
+
+msgid "RowEvolution_MetricsFor"
+msgstr "מדדים עבור %s"
+
+msgid "RowEvolution_MultiRowEvolutionTitle"
+msgstr "התקדמות של מספר שורות"
+
+msgid "RowEvolution_PickAnotherRow"
+msgstr "בחר שורה נוספת להשוואה"
+
+msgid "RowEvolution_PickARow"
+msgstr "בחר שורה להשוואה"
+
+msgid "API_GenerateVisits"
+msgstr "אם אין לך מידע להיום ניתן קודם כל לחולל מידע בעזרת התוסף %1$s. ניתן להפעיל את התוסף %2$s, ולאחר מכן לחולל מידע על מבקרים דרך פאנל הניהול של Matomo."
+
+msgid "API_KeepTokenSecret"
+msgstr "הtoken_auth סודי ביותר כמו שם המשתמש והסיסמה, %1$s אין לשתף אף אחד בפרטים אלו%2$s!"
+
+msgid "API_LoadedAPIs"
+msgstr "%s APIים נטענו בהצלחה"
+
+msgid "API_MoreInformation"
+msgstr "למידע נוסף עבור הAPIים של Matomo, מומלץ להציץ ב%1$sהיכרות עם הAPI של Matomo%2$s וגם ב%3$sהעמקה אודות הAPI של Matomo%4$s."
+
+msgid "API_UserAuthentication"
+msgstr "אימות משתמש"
+
+msgid "API_UsingTokenAuth"
+msgstr "אם ברצונך %1$s לדרוש מידע מתוך סקריטפ, עבודה כרונית וכד' %2$s יש צורך להוסיף את הפרמטר %3$s לכל קריאת API מהURLים שדורשים אימות."
+
+msgid "Actions_AvgGenerationTimeTooltip"
+msgstr "ממוצע מבוסס על %1$s מופע(ים) %2$s בין %3$s ו-%4$s"
+
+msgid "Actions_ColumnClickedURL"
+msgstr "כתובת שנלחצה"
+
+msgid "Actions_ColumnClicks"
+msgstr "לחיצות"
+
+msgid "Actions_ColumnClicksDocumentation"
+msgstr "מספר הפעמים שקישור זה נלחץ"
+
+msgid "Actions_ColumnDownloadURL"
+msgstr "הורדת כתובת"
+
+msgid "Actions_ColumnEntryPageTitle"
+msgstr "כותרת עמוד כניסה"
+
+msgid "Actions_ColumnEntryPageURL"
+msgstr "כתובת עמוד כניסה"
+
+msgid "Actions_ColumnExitPageTitle"
+msgstr "כותרת עמוד יציאה"
+
+msgid "Actions_ColumnExitPageURL"
+msgstr "כתובת עמוד יציאה"
+
+msgid "Actions_ColumnNoResultKeyword"
+msgstr "מילות מפתח ללא תוצאות חיפוש"
+
+msgid "Actions_ColumnPageName"
+msgstr "שם העמוד"
+
+msgid "Actions_ColumnPagesPerSearch"
+msgstr "עמודי תוצאות חיפוש"
+
+msgid "Actions_ColumnPagesPerSearchDocumentation"
+msgstr "מבקרים יחפשו באתרך, ולפעמים ילחצו ״קדימה״ לצפייה בתוצאות נוספות. זהו ממוצע עמודי תוצאות החיפוש שנצפו למילת מפתח זו."
+
+msgid "Actions_ColumnPageURL"
+msgstr "כתובת העמוד"
+
+msgid "Actions_ColumnSearchCategory"
+msgstr "קטגורית חיפוש"
+
+msgid "Actions_ColumnSearches"
+msgstr "חיפושים"
+
+msgid "Actions_ColumnSearchesDocumentation"
+msgstr "מספר הביקורים שחיפשו אחר מילת מפתח זו במנוע החיפוש של אתרך."
+
+msgid "Actions_ColumnSearchExitsDocumentation"
+msgstr "אחוז הביקורים שעזבו את האתר אחרי חיפוש מילת מפתח זו במנוע החיפוש של אתרך."
+
+msgid "Actions_ColumnSearchResultsCount"
+msgstr "מספר תוצאות חיפוש"
+
+msgid "Actions_ColumnSiteSearchKeywords"
+msgstr "מילות מפתח ייחודיות"
+
+msgid "Actions_ColumnUniqueClicks"
+msgstr "לחיצות ייחודיות"
+
+msgid "Actions_ColumnUniqueClicksDocumentation"
+msgstr "מספר הביקורים שכללו לחיצה על קישור זה. אם קישור נלחץ יותר מפעם אחת במהלך ביקור, הוא יספר פעם אחת בלבד."
+
+msgid "Actions_ColumnUniqueDownloads"
+msgstr "הורדות ייחודיות"
+
+msgid "Actions_ColumnUniqueOutlinks"
+msgstr "קישורים יוצאים ייחודיים"
+
+msgid "Actions_DownloadsReportDocumentation"
+msgstr "בדו״ח זה, ניתן לראות אילו קבצים מבקרים הורידו. %s מה ש-Matomo סופרת כהורדה זה לחיצה על קישור ההורדה. בין אם ההורדה הסתיימה או לא - את זה Matomo לא יודעת."
+
+msgid "Actions_EntryPageTitles"
+msgstr "כותרות עמוד כניסה"
+
+msgid "Actions_EntryPageTitlesReportDocumentation"
+msgstr "דו״ח זה מכיל מידע אודות הכותרות של עמודי כניסה שהיו בשימוש במהלך התקופה המוגדרת."
+
+msgid "Actions_ExitPageTitles"
+msgstr "כותרות עמוד יציאה"
+
+msgid "Actions_ExitPageTitlesReportDocumentation"
+msgstr "דו״ח זה מכיל מידע אודות כותרות של עמודי יציאה שהתקיימו במהלך התקופה המוגדרת."
+
+msgid "Actions_LearnMoreAboutSiteSearchLink"
+msgstr "למידה אודות מעקב אחר אופן השימוש של משתמשיך במנוע החיפוש של אתרך."
+
+msgid "Actions_OneSearch"
+msgstr "חיפוש 1"
+
+msgid "Actions_OutlinkDocumentation"
+msgstr "קישור יוצא הוא קישור שמוביל את המשתמש מחוץ לאתרך (לדומיין אחר)."
+
+msgid "Actions_OutlinksReportDocumentation"
+msgstr "דו״ח זה מציג רשימה היררכית של כתובות שנלחצו על ידי משתמשי אתרך."
+
+msgid "Actions_PagesReportDocumentation"
+msgstr "דו״ח זה מכיל מידע אודות כתובת עמודים שבוקרו. %s הטבלה מאורגנת באופן היררכי, הכתובות מוצגות כמבנה תיקיות."
+
+msgid "Actions_PageTitlesReportDocumentation"
+msgstr "דו״ח זה מכיל מידע אודות כותרות העמודים שבוקרו. %1$s כותרת העמוד היא תגית HTML %2$s שרוב הדפדפנים מציגים בכותרת החלון שלהם."
+
+msgid "Actions_PageUrls"
+msgstr "כתובות עמוד"
+
+msgid "Actions_SiteSearchCategories1"
+msgstr "דו״ח זה מציג רשימה של קטגוריות שמבקרים בחרו כאשר חיפשו באתרך."
+
+msgid "Actions_SiteSearchCategories2"
+msgstr "לדוגמה, אתרי מסחר מקוונים מציגים בד״כ בחירת ״קטגוריה״ כדי שהמבקרים יוכלו לצמצם את תוצאות החיפוש למוצרים בקטגוריה מסויימת."
+
+msgid "Actions_SiteSearchKeyword"
+msgstr "מילת מפתח (חיפוש באתר)"
+
+msgid "Actions_SiteSearchKeywordsDocumentation"
+msgstr "דו״ח זה מציג רשימה של מילות חיפוש שמבקרים חיפשו אחריהן במנוע החיפוש הפנימי של אתרך."
+
+msgid "Actions_SubmenuPagesEntry"
+msgstr "עמודי כניסה"
+
+msgid "Actions_SubmenuPagesExit"
+msgstr "עמודי יציאה"
+
+msgid "Actions_SubmenuPageTitles"
+msgstr "כותרות עמוד"
+
+msgid "Actions_SubmenuSitesearch"
+msgstr "חיפוש באתר"
+
+msgid "Actions_WidgetEntryPageTitles"
+msgstr "כותרות עמוד כניסה"
+
+msgid "Actions_WidgetExitPageTitles"
+msgstr "כותרות עמוד יציאה"
+
+msgid "Actions_WidgetPagesEntry"
+msgstr "עמודי כניסה"
+
+msgid "Actions_WidgetPagesExit"
+msgstr "עמודי יציאה"
+
+msgid "Actions_WidgetPageTitles"
+msgstr "כותרות עמוד"
+
+msgid "Actions_WidgetSearchCategories"
+msgstr "קטגוריות חיפוש"
+
+msgid "Actions_WidgetSearchKeywords"
+msgstr "מילות חיפוש באתר"
+
+msgid "Actions_WidgetSearchNoResultKeywords"
+msgstr "מילות חיפוש ללא תוצאות"
+
+msgid "Annotations_Annotations"
+msgstr "הערות הסבר"
+
+msgid "Annotations_ClickToDelete"
+msgstr "לחץ כדי למחוק הערה זו."
+
+msgid "Annotations_ClickToEdit"
+msgstr "לחץ כדי לערוך הערה זו."
+
+msgid "Annotations_ClickToEditOrAdd"
+msgstr "לחץ כדי לערוך או להוסיף הערה חדשה."
+
+msgid "Annotations_ClickToStarOrUnstar"
+msgstr "לחץ כדי לסמן או להוריד סימון מהערה זו."
+
+msgid "Annotations_CreateNewAnnotation"
+msgstr "יצירת הערה חדשה.."
+
+msgid "Annotations_EnterAnnotationText"
+msgstr "הקלידו הערה..."
+
+msgid "Annotations_IconDesc"
+msgstr "הראה הערות לטווח תאריכים המבוקש"
+
+msgid "Annotations_IconDescHideNotes"
+msgstr "הסתר הערות של טווח תאריכים זה"
+
+msgid "Annotations_LoginToAnnotate"
+msgstr "יש להתחבר כדי ליצור הערה."
+
+msgid "Annotations_NoAnnotations"
+msgstr "אין הסברים על טווח תאריכים זה"
+
+msgid "CoreAdminHome_Administration"
+msgstr "ניהול"
+
+msgid "CoreAdminHome_BrandingSettings"
+msgstr "הגדרות מיתוג"
+
+msgid "CoreAdminHome_ClickHereToOptIn"
+msgstr "לחץ כאן להצטרפות."
+
+msgid "CoreAdminHome_ClickHereToOptOut"
+msgstr "לחץ כאן לביטול."
+
+msgid "CoreAdminHome_EmailServerSettings"
+msgstr "הגדרות שרת אימייל"
+
+msgid "CoreAdminHome_ForBetaTestersOnly"
+msgstr "עבור גרסת ניסיון בלבד"
+
+msgid "CoreAdminHome_ImageTracking"
+msgstr "תמונת מעקב"
+
+msgid "CoreAdminHome_ImageTrackingIntro1"
+msgstr "כאשר המבקרים ביטלו את יישום הג'אווה או שלא בשימוש, אתה יכול להשתמש בתמונת קישור למעקב אחרי המבקרים"
+
+msgid "CoreAdminHome_ImageTrackingLink"
+msgstr "קישור מעקב כתמונה"
+
+msgid "CoreAdminHome_JavaScriptTracking"
+msgstr "מעקב בג'אווה-סקריפט"
+
+msgid "CoreAdminHome_LogoUpload"
+msgstr "בחירת קובץ לוגו"
+
+msgid "CoreAdminHome_MenuDiagnostic"
+msgstr "אבחון"
+
+msgid "CoreAdminHome_MenuGeneralSettings"
+msgstr "הגדרות כלליות"
+
+msgid "CoreAdminHome_MenuMeasurables"
+msgstr "מדידים"
+
+msgid "CoreAdminHome_OptOutForYourVisitors"
+msgstr "התחמקות מ-Matomo עבור גולשיך"
+
+msgid "CoreAdminHome_PiwikIsInstalledAt"
+msgstr "Matomo מותקן ב"
+
+msgid "CoreAdminHome_TrackAGoal"
+msgstr "עקיבה אחר יעד"
+
+msgid "CoreAdminHome_TrackingCode"
+msgstr "קוד מעקב"
+
+msgid "CoreAdminHome_TrustedHostSettings"
+msgstr "מארח מהימן ע״י Matomo"
+
+msgid "CoreAdminHome_UseCustomLogo"
+msgstr "להשתמש בלוגו מותאם אישית"
+
+msgid "CoreHome_CategoryNoData"
+msgstr "אין מידע בקטגוריה זו. נא לנסות \"לכלול את כלל האוכלוסייה\""
+
+msgid "CoreHome_CheckForUpdates"
+msgstr "בדוק עדכונים"
+
+msgid "CoreHome_Default"
+msgstr "ברירת מחדל"
+
+msgid "CoreHome_DonateCall1"
+msgstr "תמיד השימוש ב-Matomo לא יעלה לך דבר, אך זה לא אומר שלהכין אותו לא עולה לנו כסף"
+
+msgid "CoreHome_HowMuchIsPiwikWorth"
+msgstr "כמה Matomo שווה עבורך?"
+
+msgid "CoreHome_MakeOneTimeDonation"
+msgstr "במקום,בצע תרומה חד-פעמית"
+
+msgid "CoreHome_PeriodRange"
+msgstr "טווח"
+
+msgid "CoreHome_SharePiwikShort"
+msgstr "Matomo! ניתוח רשת חינמי ופתוח. שליטה בנתונים של עצמך."
+
+msgid "CoreHome_ShowJSCode"
+msgstr "הצגת הJavaScript להטמעה"
+
+msgid "CoreHome_SupportPiwik"
+msgstr "תמיכה ב-Matomo!"
+
+msgid "CoreHome_ThereIsNoDataForThisReport"
+msgstr "אין מידע להצגה עבור הדוח"
+
+msgid "CoreHome_ViewAllPiwikVideoTutorials"
+msgstr "צפייה בכל סרטי ההדרכה של Matomo"
+
+msgid "CoreHome_WebAnalyticsReports"
+msgstr "דוחות פעילות"
+
+msgid "CoreHome_SystemSummaryPhpVersion"
+msgstr "גרסת PHP"
+
+msgid "CorePluginsAdmin_Activate"
+msgstr "הפעל"
+
+msgid "CorePluginsAdmin_Activated"
+msgstr "הופעל"
+
+msgid "CorePluginsAdmin_Active"
+msgstr "פעיל"
+
+msgid "CorePluginsAdmin_Activity"
+msgstr "פעילות"
+
+msgid "CorePluginsAdmin_AuthorHomepage"
+msgstr "אתר היוצר"
+
+msgid "CorePluginsAdmin_Deactivate"
+msgstr "כבה"
+
+msgid "CorePluginsAdmin_Inactive"
+msgstr "לא פעיל"
+
+msgid "CorePluginsAdmin_LicenseHomepage"
+msgstr "אתר רישון השימוש"
+
+msgid "CorePluginsAdmin_PluginsExtendPiwik"
+msgstr "תוספים מרחיבים את היכולות של Matomo."
+
+msgid "CorePluginsAdmin_OncePluginIsInstalledYouMayActivateHere"
+msgstr "ברגע שתוסף מותקן, ניתן להפעילו או לבטלו כאן."
+
+msgid "CorePluginsAdmin_MenuPlatform"
+msgstr "פלטפורמה"
+
+msgid "CorePluginsAdmin_PluginHomepage"
+msgstr "אתר התוסף"
+
+msgid "CorePluginsAdmin_PluginsManagement"
+msgstr "ניהול תוספים"
+
+msgid "CorePluginsAdmin_Status"
+msgstr "מצב"
+
+msgid "CorePluginsAdmin_Theme"
+msgstr "ערכת עיצוב"
+
+msgid "CorePluginsAdmin_Themes"
+msgstr "ערכות עיצוב"
+
+msgid "CorePluginsAdmin_ThemesManagement"
+msgstr "ניהול ערכות עיצוב"
+
+msgid "CorePluginsAdmin_Version"
+msgstr "גרסה"
+
+msgid "CorePluginsAdmin_Websites"
+msgstr "אתרים"
+
+msgid "CoreUpdater_CriticalErrorDuringTheUpgradeProcess"
+msgstr "שגיאה קריטית במהלך תהליך השדרוג:"
+
+msgid "CoreUpdater_DatabaseUpgradeRequired"
+msgstr "שדרוג בסיס נתונים נדרש"
+
+msgid "CoreUpdater_DownloadingUpdateFromX"
+msgstr "מוריד עדכון מ%s"
+
+msgid "CoreUpdater_DownloadX"
+msgstr "להוריד %s"
+
+msgid "CoreUpdater_EmptyDatabaseError"
+msgstr "מסד התונים %s ריק. צריך לערוך או להסיר את קובץ ההגדרות של Matomo."
+
+msgid "CoreUpdater_ErrorDIYHelp"
+msgstr "במידה והינך משתמש/ת מתקדמ/ת ונתקלת בשגיאה בשדרוג מסד הנתונים:"
+
+msgid "CoreUpdater_ErrorDIYHelp_1"
+msgstr "זיהוי ותיקון מקור התקלה (לדוגמה memory_limit או max_execution_time)"
+
+msgid "CoreUpdater_ErrorDIYHelp_2"
+msgstr "הרצת השאילתות שנותרו בשדרוג ונכשלו"
+
+msgid "CoreUpdater_ErrorDIYHelp_3"
+msgstr "שדרוג ידני של טבלת 'option' במסד הנתונים של Matomo, הגדרת הערך של version_core לגירסה של השדרוג הכושל"
+
+msgid "CoreUpdater_ErrorDIYHelp_4"
+msgstr "יש להריץ מחדש את המשדרג (דרך הדפדפן או שורת הפקודה) בכדי להמשיך בשדרוגים שנותרו"
+
+msgid "CoreUpdater_ErrorDIYHelp_5"
+msgstr "לדווח על התקלה (והפיתרון) כך שMatomo תוכל להשתפר"
+
+msgid "CoreUpdater_ErrorDuringPluginsUpdates"
+msgstr "שגיאה בהמלך שדרוגי תוסף:"
+
+msgid "CoreUpdater_ExceptionAlreadyLatestVersion"
+msgstr "גרסת הMatomo שלך %s עדכנית."
+
+msgid "CoreUpdater_ExceptionArchiveEmpty"
+msgstr "ארכיון ריק."
+
+msgid "CoreUpdater_ExceptionArchiveIncompatible"
+msgstr "ארכיון לא תואם: %s."
+
+msgid "CoreUpdater_ExceptionArchiveIncomplete"
+msgstr "ארכיון לא שלם: חלק מהקבצים חסרים (לדוגמה: %s)."
+
+msgid "CoreUpdater_HelpMessageContent"
+msgstr "יש לעיין ב%1$sשאלות ותשובות של Matomo %2$s בכדי לקבל הסבר עבור רוב השגיאות הנפוצות במהלך השדרוג. %3$s מומלץ להתייעץ עם מנהל המערכת שלך - הם בדרך כלל מסוגלים לעזור לך עם השגיאה שסביר להניח קשורה למסד הנתונים או לשרת."
+
+msgid "CoreUpdater_HelpMessageIntroductionWhenError"
+msgstr "ההודעה להעיל הינה שגיאת הליבה. היא אמורה להסביר את הגורם, במידה ודרושה עזרה נוספת, אנא:"
+
+msgid "CoreUpdater_HelpMessageIntroductionWhenWarning"
+msgstr "השדרוג הושלם בהצלחה, בכל אופן התרחשו מספר תקלות במהלך התהליך. יש לקרוא את התיאור להעיל לפרטים. לעזרה נוספת:"
+
+msgid "CoreUpdater_InstallingTheLatestVersion"
+msgstr "מתקין את הגירסה העדכנית ביותר"
+
+msgid "CoreUpdater_NoteForLargePiwikInstances"
+msgstr "הערה חשובה עבור אתרי Matomo גדולים"
+
+msgid "CoreUpdater_PiwikHasBeenSuccessfullyUpgraded"
+msgstr "Matomo שודרגה בהצלחה!"
+
+msgid "CoreUpdater_PiwikUpdatedSuccessfully"
+msgstr "שדרוג Matomo הושלם בהצלחה!"
+
+msgid "CoreUpdater_PiwikWillBeUpgradedFromVersionXToVersionY"
+msgstr "מסד הנתונים של Matomo ישודרג מגירסה %1$s לגירסה %2$s."
+
+msgid "CoreUpdater_ReadyToGo"
+msgstr "שנתחיל?"
+
+msgid "CoreUpdater_TheFollowingPluginsWillBeUpgradedX"
+msgstr "התוספים הבאים ישודרגו: %s."
+
+msgid "CoreUpdater_ThereIsNewVersionAvailableForUpdate"
+msgstr "ישנה גירסה חדשה של Matomo זמינה עבורך"
+
+msgid "CoreUpdater_TheUpgradeProcessMayFailExecuteCommand"
+msgstr "במידה ויש לך מסד נתונים גדול של Matomo, השדרוג עלול לקחת זמן רב מדי עבור הדפדפן. במצב זה, ניתן להריץ את השדרוג דרך שורת הפקודה: %s"
+
+msgid "CoreUpdater_TheUpgradeProcessMayTakeAWhilePleaseBePatient"
+msgstr "תהליך שדרוג מסד הנתונים צפוי לארוך זמן-מה, יש להתאזר בסבלנות."
+
+msgid "CoreUpdater_UnpackingTheUpdate"
+msgstr "מחלץ את העדכון"
+
+msgid "CoreUpdater_UpdateAutomatically"
+msgstr "שדרוג אוטומטי"
+
+msgid "CoreUpdater_UpdateHasBeenCancelledExplanation"
+msgstr "ההתקנה-בקליק-אחד של Matomo בוטלה. במידה ואין ביכלותך לתקן את הודעת השגיאה להעיל, מומלץ לשדרג את Matomo באופן ידני. %1$s יש לעיין ב%2$sהוראות השדרוג%3$s בכדי להתחיל!"
+
+msgid "CoreUpdater_UpdateTitle"
+msgstr "שדרוג"
+
+msgid "CoreUpdater_UpdateSuccessTitle"
+msgstr "Matomo שודרגה בהצלחה!"
+
+msgid "CoreUpdater_UpgradeComplete"
+msgstr "השדרוג הושלם!"
+
+msgid "CoreUpdater_UpgradePiwik"
+msgstr "שדרוג Matomo"
+
+msgid "CoreUpdater_VerifyingUnpackedFiles"
+msgstr "מאמת את הקבצים המחולצים"
+
+msgid "CoreUpdater_WarningMessages"
+msgstr "הודעה אזהרה:"
+
+msgid "CoreUpdater_WeAutomaticallyDeactivatedTheFollowingPlugins"
+msgstr "הפעלנו באופן אוטומטי את התוספים הבאים: %s"
+
+msgid "CoreUpdater_YouCanUpgradeAutomaticallyOrDownloadPackage"
+msgstr "ניתן לשדרג לגירסה %s באופן אוטומטי או להוריד חבילה ולהתקינה באופן ידני:"
+
+msgid "CoreUpdater_YourDatabaseIsOutOfDate"
+msgstr "מסד הנתונים של הMatomo שלך לא בתוקף, חובה לשדרג אותו לפני שנמשיך."
+
+msgid "CustomVariables_ColumnCustomVariableName"
+msgstr "שם המשתנה"
+
+msgid "CustomVariables_ColumnCustomVariableValue"
+msgstr "ערך המשתנה"
+
+msgid "CustomVariables_CustomVariables"
+msgstr "משתנים מותאמים אישים"
+
+msgid "DBStats_DatabaseUsage"
+msgstr "צריכת מסד נתונים"
+
+msgid "DBStats_DataSize"
+msgstr "משקל מידע"
+
+msgid "DBStats_IndexSize"
+msgstr "משקל מפתח (index)"
+
+msgid "DBStats_LearnMore"
+msgstr "בכדי ללמוד עוד אודות כיצד Matomo מעבדת מידע וכיצד לשפר את ביצועיה של Matomo עבור אתרים בעלי תעבורה בינונית עד גבוהה, מומלץ להציץ במדריך %s."
+
+msgid "DBStats_MainDescription"
+msgstr "Matomo מאכסנת את כל המידע אודות ניתוח פעילות הרשת במסד נתונים. כרגע, טבלאות Matomo צורכות %s."
+
+msgid "DBStats_RowCount"
+msgstr "מספר שורות"
+
+msgid "DBStats_Table"
+msgstr "טבלה"
+
+msgid "DBStats_TotalSize"
+msgstr "משקל כולל"
+
+msgid "Dashboard_AddAWidget"
+msgstr "הוספת וידג'ט"
+
+msgid "Dashboard_AddPreviewedWidget"
+msgstr "הוספת היישומון המוצג לפאנל הסקירה"
+
+msgid "Dashboard_CreateNewDashboard"
+msgstr "יצירת לוח בקרה חדש"
+
+msgid "Dashboard_Dashboard"
+msgstr "פאנל סקירה"
+
+msgid "Dashboard_DashboardName"
+msgstr "שם לוח בקרה:"
+
+msgid "Dashboard_DeleteWidgetConfirm"
+msgstr "למחוק את היישומון מפאנל הסקירה? 100%?"
+
+msgid "Dashboard_LoadingWidget"
+msgstr "טוען יישומון, נא להמתין..."
+
+msgid "Dashboard_ManageDashboard"
+msgstr "ניהול לוח בקרה"
+
+msgid "Dashboard_Maximise"
+msgstr "הגדלה"
+
+msgid "Dashboard_RenameDashboard"
+msgstr "שינוי שם לוח בקרה"
+
+msgid "Dashboard_SelectWidget"
+msgstr "בחירת היישומון להוספה לפאנל הסקירה"
+
+msgid "Dashboard_WidgetNotFound"
+msgstr "יישומון לא נמצא"
+
+msgid "Dashboard_WidgetPreview"
+msgstr "הצגת יישומון"
+
+msgid "DevicesDetection_BrowserEngine"
+msgstr "דפדפן"
+
+msgid "DevicesDetection_BrowserFamily"
+msgstr "משפחת דפדפן"
+
+msgid "DevicesDetection_Browsers"
+msgstr "דפדפן"
+
+msgid "DevicesDetection_BrowserVersion"
+msgstr "גרסת דפדפן"
+
+msgid "DevicesDetection_ColumnBrowser"
+msgstr "דפדפן"
+
+msgid "Goals_CategoryTextReferrers_Referrers"
+msgstr "הפניות"
+
+msgid "Goals_ColumnConversions"
+msgstr "המרות"
+
+msgid "Installation_Congratulations"
+msgstr "ברכות"
+
+msgid "Installation_DatabaseSetup"
+msgstr "התקנת מסד נתונים"
+
+msgid "Installation_DatabaseSetupAdapter"
+msgstr "מתאם"
+
+msgid "Installation_DatabaseSetupDatabaseName"
+msgstr "שם מסד הנתונים"
+
+msgid "Installation_DatabaseSetupLogin"
+msgstr "משתמש"
+
+msgid "Installation_DatabaseSetupServer"
+msgstr "שרת"
+
+msgid "Installation_DatabaseSetupTablePrefix"
+msgstr "מקדם טבלאות"
+
+msgid "Installation_Email"
+msgstr "אימייל"
+
+msgid "Installation_Extension"
+msgstr "הרחבה"
+
+msgid "Installation_Installation"
+msgstr "התקנה"
+
+msgid "Installation_InstallationStatus"
+msgstr "מצב התקנה"
+
+msgid "Installation_Optional"
+msgstr "אופציונלי"
+
+msgid "Installation_Password"
+msgstr "סיסמה"
+
+msgid "Installation_PasswordDoNotMatch"
+msgstr "סיסמה לא תואמת"
+
+msgid "Installation_PercentDone"
+msgstr "%s %% עברו"
+
+msgid "Installation_Requirements"
+msgstr "דרישות Matomo"
+
+msgid "Installation_SetupWebsite"
+msgstr "הגדרת אתר"
+
+msgid "Installation_SystemCheck"
+msgstr "בדיקת מערכת"
+
+msgid "Installation_SystemCheckPhp"
+msgstr "גרסת PHP"
+
+msgid "Installation_Welcome"
+msgstr "ברוכים הבאים!"
+
+msgid "Intl_Continent_afr"
+msgstr "אפריקה"
+
+msgid "Intl_Continent_amc"
+msgstr "מרכז אמריקה"
+
+msgid "Intl_Continent_amn"
+msgstr "צפון אמריקה"
+
+msgid "Intl_Continent_ams"
+msgstr "דרום אמריקה"
+
+msgid "Intl_Continent_ant"
+msgstr "אנטארקטיקה"
+
+msgid "Intl_Continent_asi"
+msgstr "אסיה"
+
+msgid "Intl_Continent_eur"
+msgstr "אירופה"
+
+msgid "Intl_Continent_oce"
+msgstr "אוקיאניה"
+
+msgid "Intl_Country_AD"
+msgstr "אנדורה"
+
+msgid "Intl_Country_AE"
+msgstr "איחוד האמירויות הערביות"
+
+msgid "Intl_Country_AF"
+msgstr "אפגניסטן"
+
+msgid "Intl_Country_AG"
+msgstr "אנטיגואה וברבודה"
+
+msgid "Intl_Country_AI"
+msgstr "אנגווילה"
+
+msgid "Intl_Country_AL"
+msgstr "אלבניה"
+
+msgid "Intl_Country_AM"
+msgstr "ארמניה"
+
+msgid "Intl_Country_AO"
+msgstr "אנגולה"
+
+msgid "Intl_Country_AQ"
+msgstr "אנטארקטיקה"
+
+msgid "Intl_Country_AR"
+msgstr "ארגנטינה"
+
+msgid "Intl_Country_AS"
+msgstr "סמואה האמריקנית"
+
+msgid "Intl_Country_AT"
+msgstr "אוסטריה"
+
+msgid "Intl_Country_AU"
+msgstr "אוסטרליה"
+
+msgid "Intl_Country_AW"
+msgstr "ארובה"
+
+msgid "Intl_Country_AX"
+msgstr "איי אולנד"
+
+msgid "Intl_Country_AZ"
+msgstr "אזרבייג׳ן"
+
+msgid "Intl_Country_BA"
+msgstr "בוסניה והרצגובינה"
+
+msgid "Intl_Country_BB"
+msgstr "ברבדוס"
+
+msgid "Intl_Country_BD"
+msgstr "בנגלדש"
+
+msgid "Intl_Country_BE"
+msgstr "בלגיה"
+
+msgid "Intl_Country_BF"
+msgstr "בורקינה פאסו"
+
+msgid "Intl_Country_BG"
+msgstr "בולגריה"
+
+msgid "Intl_Country_BH"
+msgstr "בחריין"
+
+msgid "Intl_Country_BI"
+msgstr "בורונדי"
+
+msgid "Intl_Country_BJ"
+msgstr "בנין"
+
+msgid "Intl_Country_BL"
+msgstr "סנט ברתולומיאו"
+
+msgid "Intl_Country_BM"
+msgstr "ברמודה"
+
+msgid "Intl_Country_BN"
+msgstr "ברוניי"
+
+msgid "Intl_Country_BO"
+msgstr "בוליביה"
+
+msgid "Intl_Country_BQ"
+msgstr "האיים הקריביים ההולנדיים"
+
+msgid "Intl_Country_BR"
+msgstr "ברזיל"
+
+msgid "Intl_Country_BS"
+msgstr "איי בהאמה"
+
+msgid "Intl_Country_BT"
+msgstr "בהוטן"
+
+msgid "Intl_Country_BV"
+msgstr "האי בובה"
+
+msgid "Intl_Country_BW"
+msgstr "בוצוואנה"
+
+msgid "Intl_Country_BY"
+msgstr "בלארוס"
+
+msgid "Intl_Country_BZ"
+msgstr "בליז"
+
+msgid "Intl_Country_CA"
+msgstr "קנדה"
+
+msgid "Intl_Country_CC"
+msgstr "איי קוקוס (קילינג)"
+
+msgid "Intl_Country_CD"
+msgstr "קונגו - קינשאסה"
+
+msgid "Intl_Country_CF"
+msgstr "הרפובליקה המרכז-אפריקאית"
+
+msgid "Intl_Country_CG"
+msgstr "קונגו - ברזאויל"
+
+msgid "Intl_Country_CH"
+msgstr "שווייץ"
+
+msgid "Intl_Country_CI"
+msgstr "חוף השנהב"
+
+msgid "Intl_Country_CK"
+msgstr "איי קוק"
+
+msgid "Intl_Country_CL"
+msgstr "צ׳ילה"
+
+msgid "Intl_Country_CM"
+msgstr "קמרון"
+
+msgid "Intl_Country_CN"
+msgstr "סין"
+
+msgid "Intl_Country_CO"
+msgstr "קולומביה"
+
+msgid "Intl_Country_CR"
+msgstr "קוסטה ריקה"
+
+msgid "Intl_Country_CU"
+msgstr "קובה"
+
+msgid "Intl_Country_CV"
+msgstr "כף ורדה"
+
+msgid "Intl_Country_CW"
+msgstr "קוראסאו"
+
+msgid "Intl_Country_CX"
+msgstr "אי חג המולד"
+
+msgid "Intl_Country_CY"
+msgstr "קפריסין"
+
+msgid "Intl_Country_CZ"
+msgstr "צ׳כיה"
+
+msgid "Intl_Country_DE"
+msgstr "גרמניה"
+
+msgid "Intl_Country_DJ"
+msgstr "ג׳יבוטי"
+
+msgid "Intl_Country_DK"
+msgstr "דנמרק"
+
+msgid "Intl_Country_DM"
+msgstr "דומיניקה"
+
+msgid "Intl_Country_DO"
+msgstr "הרפובליקה הדומיניקנית"
+
+msgid "Intl_Country_DZ"
+msgstr "אלג׳יריה"
+
+msgid "Intl_Country_EC"
+msgstr "אקוודור"
+
+msgid "Intl_Country_EE"
+msgstr "אסטוניה"
+
+msgid "Intl_Country_EG"
+msgstr "מצרים"
+
+msgid "Intl_Country_EH"
+msgstr "סהרה המערבית"
+
+msgid "Intl_Country_ER"
+msgstr "אריתריאה"
+
+msgid "Intl_Country_ES"
+msgstr "ספרד"
+
+msgid "Intl_Country_ET"
+msgstr "אתיופיה"
+
+msgid "Intl_Country_FI"
+msgstr "פינלנד"
+
+msgid "Intl_Country_FJ"
+msgstr "פיג׳י"
+
+msgid "Intl_Country_FK"
+msgstr "איי פוקלנד"
+
+msgid "Intl_Country_FM"
+msgstr "מיקרונזיה"
+
+msgid "Intl_Country_FO"
+msgstr "איי פארו"
+
+msgid "Intl_Country_FR"
+msgstr "צרפת"
+
+msgid "Intl_Country_GA"
+msgstr "גבון"
+
+msgid "Intl_Country_GB"
+msgstr "בריטניה"
+
+msgid "Intl_Country_GD"
+msgstr "גרנדה"
+
+msgid "Intl_Country_GE"
+msgstr "גאורגיה"
+
+msgid "Intl_Country_GF"
+msgstr "גיאנה הצרפתית"
+
+msgid "Intl_Country_GG"
+msgstr "גרנזי"
+
+msgid "Intl_Country_GH"
+msgstr "גאנה"
+
+msgid "Intl_Country_GI"
+msgstr "גיברלטר"
+
+msgid "Intl_Country_GL"
+msgstr "גרינלנד"
+
+msgid "Intl_Country_GM"
+msgstr "גמביה"
+
+msgid "Intl_Country_GN"
+msgstr "גינאה"
+
+msgid "Intl_Country_GP"
+msgstr "גוואדלופ"
+
+msgid "Intl_Country_GQ"
+msgstr "גינאה המשוונית"
+
+msgid "Intl_Country_GR"
+msgstr "יוון"
+
+msgid "Intl_Country_GS"
+msgstr "ג׳ורג׳יה הדרומית ואיי סנדוויץ׳ הדרומיים"
+
+msgid "Intl_Country_GT"
+msgstr "גואטמלה"
+
+msgid "Intl_Country_GU"
+msgstr "גואם"
+
+msgid "Intl_Country_GW"
+msgstr "גינאה-ביסאו"
+
+msgid "Intl_Country_GY"
+msgstr "גיאנה"
+
+msgid "Intl_Country_HK"
+msgstr "הונג קונג (אזור מנהלי מיוחד של סין)"
+
+msgid "Intl_Country_HM"
+msgstr "איי הרד ומקדונלד"
+
+msgid "Intl_Country_HN"
+msgstr "הונדורס"
+
+msgid "Intl_Country_HR"
+msgstr "קרואטיה"
+
+msgid "Intl_Country_HT"
+msgstr "האיטי"
+
+msgid "Intl_Country_HU"
+msgstr "הונגריה"
+
+msgid "Intl_Country_ID"
+msgstr "אינדונזיה"
+
+msgid "Intl_Country_IE"
+msgstr "אירלנד"
+
+msgid "Intl_Country_IL"
+msgstr "ישראל"
+
+msgid "Intl_Country_IM"
+msgstr "האי מאן"
+
+msgid "Intl_Country_IN"
+msgstr "הודו"
+
+msgid "Intl_Country_IO"
+msgstr "הטריטוריה הבריטית באוקיינוס ההודי"
+
+msgid "Intl_Country_IQ"
+msgstr "עיראק"
+
+msgid "Intl_Country_IR"
+msgstr "איראן"
+
+msgid "Intl_Country_IS"
+msgstr "איסלנד"
+
+msgid "Intl_Country_IT"
+msgstr "איטליה"
+
+msgid "Intl_Country_JE"
+msgstr "ג׳רזי"
+
+msgid "Intl_Country_JM"
+msgstr "ג׳מייקה"
+
+msgid "Intl_Country_JO"
+msgstr "ירדן"
+
+msgid "Intl_Country_JP"
+msgstr "יפן"
+
+msgid "Intl_Country_KE"
+msgstr "קניה"
+
+msgid "Intl_Country_KG"
+msgstr "קירגיזסטן"
+
+msgid "Intl_Country_KH"
+msgstr "קמבודיה"
+
+msgid "Intl_Country_KI"
+msgstr "קיריבאטי"
+
+msgid "Intl_Country_KM"
+msgstr "קומורו"
+
+msgid "Intl_Country_KN"
+msgstr "סנט קיטס ונוויס"
+
+msgid "Intl_Country_KP"
+msgstr "קוריאה הצפונית"
+
+msgid "Intl_Country_KR"
+msgstr "קוריאה הדרומית"
+
+msgid "Intl_Country_KW"
+msgstr "כווית"
+
+msgid "Intl_Country_KY"
+msgstr "איי קיימן"
+
+msgid "Intl_Country_KZ"
+msgstr "קזחסטן"
+
+msgid "Intl_Country_LA"
+msgstr "לאוס"
+
+msgid "Intl_Country_LB"
+msgstr "לבנון"
+
+msgid "Intl_Country_LC"
+msgstr "סנט לוסיה"
+
+msgid "Intl_Country_LI"
+msgstr "ליכטנשטיין"
+
+msgid "Intl_Country_LK"
+msgstr "סרי לנקה"
+
+msgid "Intl_Country_LR"
+msgstr "ליבריה"
+
+msgid "Intl_Country_LS"
+msgstr "לסוטו"
+
+msgid "Intl_Country_LT"
+msgstr "ליטא"
+
+msgid "Intl_Country_LU"
+msgstr "לוקסמבורג"
+
+msgid "Intl_Country_LV"
+msgstr "לטביה"
+
+msgid "Intl_Country_LY"
+msgstr "לוב"
+
+msgid "Intl_Country_MA"
+msgstr "מרוקו"
+
+msgid "Intl_Country_MC"
+msgstr "מונקו"
+
+msgid "Intl_Country_MD"
+msgstr "מולדובה"
+
+msgid "Intl_Country_ME"
+msgstr "מונטנגרו"
+
+msgid "Intl_Country_MF"
+msgstr "סן מרטן"
+
+msgid "Intl_Country_MG"
+msgstr "מדגסקר"
+
+msgid "Intl_Country_MH"
+msgstr "איי מרשל"
+
+msgid "Intl_Country_MK"
+msgstr "מקדוניה"
+
+msgid "Intl_Country_ML"
+msgstr "מאלי"
+
+msgid "Intl_Country_MM"
+msgstr "מיאנמר (בורמה)"
+
+msgid "Intl_Country_MN"
+msgstr "מונגוליה"
+
+msgid "Intl_Country_MO"
+msgstr "מקאו (אזור מנהלי מיוחד של סין)"
+
+msgid "Intl_Country_MP"
+msgstr "איי מריאנה הצפוניים"
+
+msgid "Intl_Country_MQ"
+msgstr "מרטיניק"
+
+msgid "Intl_Country_MR"
+msgstr "מאוריטניה"
+
+msgid "Intl_Country_MS"
+msgstr "מונסראט"
+
+msgid "Intl_Country_MT"
+msgstr "מלטה"
+
+msgid "Intl_Country_MU"
+msgstr "מאוריציוס"
+
+msgid "Intl_Country_MV"
+msgstr "האיים המלדיביים"
+
+msgid "Intl_Country_MW"
+msgstr "מלאווי"
+
+msgid "Intl_Country_MX"
+msgstr "מקסיקו"
+
+msgid "Intl_Country_MY"
+msgstr "מלזיה"
+
+msgid "Intl_Country_MZ"
+msgstr "מוזמביק"
+
+msgid "Intl_Country_NA"
+msgstr "נמיביה"
+
+msgid "Intl_Country_NC"
+msgstr "קלדוניה החדשה"
+
+msgid "Intl_Country_NE"
+msgstr "ניז׳ר"
+
+msgid "Intl_Country_NF"
+msgstr "האי נורפוק"
+
+msgid "Intl_Country_NG"
+msgstr "ניגריה"
+
+msgid "Intl_Country_NI"
+msgstr "ניקרגואה"
+
+msgid "Intl_Country_NL"
+msgstr "הולנד"
+
+msgid "Intl_Country_NO"
+msgstr "נורווגיה"
+
+msgid "Intl_Country_NP"
+msgstr "נפאל"
+
+msgid "Intl_Country_NR"
+msgstr "נאורו"
+
+msgid "Intl_Country_NU"
+msgstr "ניווה"
+
+msgid "Intl_Country_NZ"
+msgstr "ניו זילנד"
+
+msgid "Intl_Country_OM"
+msgstr "עומאן"
+
+msgid "Intl_Country_PA"
+msgstr "פנמה"
+
+msgid "Intl_Country_PE"
+msgstr "פרו"
+
+msgid "Intl_Country_PF"
+msgstr "פולינזיה הצרפתית"
+
+msgid "Intl_Country_PG"
+msgstr "פפואה גינאה החדשה"
+
+msgid "Intl_Country_PH"
+msgstr "הפיליפינים"
+
+msgid "Intl_Country_PK"
+msgstr "פקיסטן"
+
+msgid "Intl_Country_PL"
+msgstr "פולין"
+
+msgid "Intl_Country_PM"
+msgstr "סנט פייר ומיקלון"
+
+msgid "Intl_Country_PN"
+msgstr "איי פיטקרן"
+
+msgid "Intl_Country_PR"
+msgstr "פוארטו ריקו"
+
+msgid "Intl_Country_PS"
+msgstr "השטחים הפלסטיניים"
+
+msgid "Intl_Country_PT"
+msgstr "פורטוגל"
+
+msgid "Intl_Country_PW"
+msgstr "פלאו"
+
+msgid "Intl_Country_PY"
+msgstr "פרגוואי"
+
+msgid "Intl_Country_QA"
+msgstr "קטאר"
+
+msgid "Intl_Country_RE"
+msgstr "ראוניון"
+
+msgid "Intl_Country_RO"
+msgstr "רומניה"
+
+msgid "Intl_Country_RS"
+msgstr "סרביה"
+
+msgid "Intl_Country_RU"
+msgstr "רוסיה"
+
+msgid "Intl_Country_RW"
+msgstr "רואנדה"
+
+msgid "Intl_Country_SA"
+msgstr "ערב הסעודית"
+
+msgid "Intl_Country_SB"
+msgstr "איי שלמה"
+
+msgid "Intl_Country_SC"
+msgstr "איי סיישל"
+
+msgid "Intl_Country_SD"
+msgstr "סודן"
+
+msgid "Intl_Country_SE"
+msgstr "שוודיה"
+
+msgid "Intl_Country_SG"
+msgstr "סינגפור"
+
+msgid "Intl_Country_SH"
+msgstr "סנט הלנה"
+
+msgid "Intl_Country_SI"
+msgstr "סלובניה"
+
+msgid "Intl_Country_SJ"
+msgstr "סבאלברד ויאן מאיין"
+
+msgid "Intl_Country_SK"
+msgstr "סלובקיה"
+
+msgid "Intl_Country_SL"
+msgstr "סיירה לאונה"
+
+msgid "Intl_Country_SM"
+msgstr "סן מרינו"
+
+msgid "Intl_Country_SN"
+msgstr "סנגל"
+
+msgid "Intl_Country_SO"
+msgstr "סומליה"
+
+msgid "Intl_Country_SR"
+msgstr "סורינאם"
+
+msgid "Intl_Country_SS"
+msgstr "דרום סודן"
+
+msgid "Intl_Country_ST"
+msgstr "סאו טומה ופרינסיפה"
+
+msgid "Intl_Country_SV"
+msgstr "אל סלבדור"
+
+msgid "Intl_Country_SX"
+msgstr "סנט מארטן"
+
+msgid "Intl_Country_SY"
+msgstr "סוריה"
+
+msgid "Intl_Country_SZ"
+msgstr "סווזילנד"
+
+msgid "Intl_Country_TC"
+msgstr "איי טרקס וקייקוס"
+
+msgid "Intl_Country_TD"
+msgstr "צ׳אד"
+
+msgid "Intl_Country_TF"
+msgstr "הטריטוריות הדרומיות של צרפת"
+
+msgid "Intl_Country_TG"
+msgstr "טוגו"
+
+msgid "Intl_Country_TH"
+msgstr "תאילנד"
+
+msgid "Intl_Country_TJ"
+msgstr "טג׳יקיסטן"
+
+msgid "Intl_Country_TK"
+msgstr "טוקלאו"
+
+msgid "Intl_Country_TL"
+msgstr "טימור-לסטה"
+
+msgid "Intl_Country_TM"
+msgstr "טורקמניסטן"
+
+msgid "Intl_Country_TN"
+msgstr "תוניסיה"
+
+msgid "Intl_Country_TO"
+msgstr "טונגה"
+
+msgid "Intl_Country_TR"
+msgstr "טורקיה"
+
+msgid "Intl_Country_TT"
+msgstr "טרינידד וטובגו"
+
+msgid "Intl_Country_TV"
+msgstr "טובאלו"
+
+msgid "Intl_Country_TW"
+msgstr "טייוואן"
+
+msgid "Intl_Country_TZ"
+msgstr "טנזניה"
+
+msgid "Intl_Country_UA"
+msgstr "אוקראינה"
+
+msgid "Intl_Country_UG"
+msgstr "אוגנדה"
+
+msgid "Intl_Country_UM"
+msgstr "האיים המרוחקים הקטנים של ארה״ב"
+
+msgid "Intl_Country_US"
+msgstr "ארצות הברית"
+
+msgid "Intl_Country_UY"
+msgstr "אורוגוואי"
+
+msgid "Intl_Country_UZ"
+msgstr "אוזבקיסטן"
+
+msgid "Intl_Country_VA"
+msgstr "הוותיקן"
+
+msgid "Intl_Country_VC"
+msgstr "סנט וינסנט והגרנדינים"
+
+msgid "Intl_Country_VE"
+msgstr "ונצואלה"
+
+msgid "Intl_Country_VG"
+msgstr "איי הבתולה הבריטיים"
+
+msgid "Intl_Country_VI"
+msgstr "איי הבתולה של ארצות הברית"
+
+msgid "Intl_Country_VN"
+msgstr "וייטנאם"
+
+msgid "Intl_Country_VU"
+msgstr "ונואטו"
+
+msgid "Intl_Country_WF"
+msgstr "איי ווליס ופוטונה"
+
+msgid "Intl_Country_WS"
+msgstr "סמואה"
+
+msgid "Intl_Country_YE"
+msgstr "תימן"
+
+msgid "Intl_Country_YT"
+msgstr "מאיוט"
+
+msgid "Intl_Country_ZA"
+msgstr "דרום אפריקה"
+
+msgid "Intl_Country_ZM"
+msgstr "זמביה"
+
+msgid "Intl_Country_ZW"
+msgstr "זימבבואה"
+
+msgid "Intl_CurrencySymbol_AED"
+msgstr "AED"
+
+msgid "Intl_CurrencySymbol_AFN"
+msgstr "AFN"
+
+msgid "Intl_CurrencySymbol_ALL"
+msgstr "ALL"
+
+msgid "Intl_CurrencySymbol_AMD"
+msgstr "AMD"
+
+msgid "Intl_CurrencySymbol_ANG"
+msgstr "ANG"
+
+msgid "Intl_CurrencySymbol_AOA"
+msgstr "AOA"
+
+msgid "Intl_CurrencySymbol_ARS"
+msgstr "ARS"
+
+msgid "Intl_CurrencySymbol_AUD"
+msgstr "A$"
+
+msgid "Intl_CurrencySymbol_AWG"
+msgstr "AWG"
+
+msgid "Intl_CurrencySymbol_AZN"
+msgstr "AZN"
+
+msgid "Intl_CurrencySymbol_BAM"
+msgstr "BAM"
+
+msgid "Intl_CurrencySymbol_BBD"
+msgstr "BBD"
+
+msgid "Intl_CurrencySymbol_BDT"
+msgstr "BDT"
+
+msgid "Intl_CurrencySymbol_BGN"
+msgstr "BGN"
+
+msgid "Intl_CurrencySymbol_BHD"
+msgstr "BHD"
+
+msgid "Intl_CurrencySymbol_BIF"
+msgstr "BIF"
+
+msgid "Intl_CurrencySymbol_BMD"
+msgstr "BMD"
+
+msgid "Intl_CurrencySymbol_BND"
+msgstr "BND"
+
+msgid "Intl_CurrencySymbol_BOB"
+msgstr "BOB"
+
+msgid "Intl_CurrencySymbol_BRL"
+msgstr "R$"
+
+msgid "Intl_CurrencySymbol_BSD"
+msgstr "BSD"
+
+msgid "Intl_CurrencySymbol_BTC"
+msgstr "BTC"
+
+msgid "Intl_CurrencySymbol_BTN"
+msgstr "BTN"
+
+msgid "Intl_CurrencySymbol_BWP"
+msgstr "BWP"
+
+msgid "Intl_CurrencySymbol_BYN"
+msgstr "BYN"
+
+msgid "Intl_CurrencySymbol_BZD"
+msgstr "BZD"
+
+msgid "Intl_CurrencySymbol_CAD"
+msgstr "CA$"
+
+msgid "Intl_CurrencySymbol_CDF"
+msgstr "CDF"
+
+msgid "Intl_CurrencySymbol_CHF"
+msgstr "CHF"
+
+msgid "Intl_CurrencySymbol_CLP"
+msgstr "CLP"
+
+msgid "Intl_CurrencySymbol_CNY"
+msgstr "‎CN¥‎"
+
+msgid "Intl_CurrencySymbol_COP"
+msgstr "COP"
+
+msgid "Intl_CurrencySymbol_CRC"
+msgstr "CRC"
+
+msgid "Intl_CurrencySymbol_CUC"
+msgstr "CUC"
+
+msgid "Intl_CurrencySymbol_CUP"
+msgstr "CUP"
+
+msgid "Intl_CurrencySymbol_CVE"
+msgstr "CVE"
+
+msgid "Intl_CurrencySymbol_CZK"
+msgstr "CZK"
+
+msgid "Intl_CurrencySymbol_DJF"
+msgstr "DJF"
+
+msgid "Intl_CurrencySymbol_DKK"
+msgstr "DKK"
+
+msgid "Intl_CurrencySymbol_DOP"
+msgstr "DOP"
+
+msgid "Intl_CurrencySymbol_DZD"
+msgstr "DZD"
+
+msgid "Intl_CurrencySymbol_EGP"
+msgstr "EGP"
+
+msgid "Intl_CurrencySymbol_ERN"
+msgstr "ERN"
+
+msgid "Intl_CurrencySymbol_ETB"
+msgstr "ETB"
+
+msgid "Intl_CurrencySymbol_EUR"
+msgstr "€"
+
+msgid "Intl_CurrencySymbol_FJD"
+msgstr "FJD"
+
+msgid "Intl_CurrencySymbol_FKP"
+msgstr "FKP"
+
+msgid "Intl_CurrencySymbol_GBP"
+msgstr "£"
+
+msgid "Intl_CurrencySymbol_GEL"
+msgstr "GEL"
+
+msgid "Intl_CurrencySymbol_GHS"
+msgstr "GHS"
+
+msgid "Intl_CurrencySymbol_GIP"
+msgstr "GIP"
+
+msgid "Intl_CurrencySymbol_GMD"
+msgstr "GMD"
+
+msgid "Intl_CurrencySymbol_GNF"
+msgstr "GNF"
+
+msgid "Intl_CurrencySymbol_GTQ"
+msgstr "GTQ"
+
+msgid "Intl_CurrencySymbol_GYD"
+msgstr "GYD"
+
+msgid "Intl_CurrencySymbol_HKD"
+msgstr "HK$"
+
+msgid "Intl_CurrencySymbol_HNL"
+msgstr "HNL"
+
+msgid "Intl_CurrencySymbol_HRK"
+msgstr "HRK"
+
+msgid "Intl_CurrencySymbol_HTG"
+msgstr "HTG"
+
+msgid "Intl_CurrencySymbol_HUF"
+msgstr "HUF"
+
+msgid "Intl_CurrencySymbol_IDR"
+msgstr "IDR"
+
+msgid "Intl_CurrencySymbol_ILS"
+msgstr "₪"
+
+msgid "Intl_CurrencySymbol_INR"
+msgstr "₹"
+
+msgid "Intl_CurrencySymbol_IQD"
+msgstr "IQD"
+
+msgid "Intl_CurrencySymbol_IRR"
+msgstr "IRR"
+
+msgid "Intl_CurrencySymbol_ISK"
+msgstr "ISK"
+
+msgid "Intl_CurrencySymbol_JMD"
+msgstr "JMD"
+
+msgid "Intl_CurrencySymbol_JOD"
+msgstr "JOD"
+
+msgid "Intl_CurrencySymbol_JPY"
+msgstr "¥"
+
+msgid "Intl_CurrencySymbol_KES"
+msgstr "KES"
+
+msgid "Intl_CurrencySymbol_KGS"
+msgstr "KGS"
+
+msgid "Intl_CurrencySymbol_KHR"
+msgstr "KHR"
+
+msgid "Intl_CurrencySymbol_KMF"
+msgstr "KMF"
+
+msgid "Intl_CurrencySymbol_KPW"
+msgstr "KPW"
+
+msgid "Intl_CurrencySymbol_KRW"
+msgstr "₩"
+
+msgid "Intl_CurrencySymbol_KWD"
+msgstr "KWD"
+
+msgid "Intl_CurrencySymbol_KYD"
+msgstr "KYD"
+
+msgid "Intl_CurrencySymbol_KZT"
+msgstr "KZT"
+
+msgid "Intl_CurrencySymbol_LAK"
+msgstr "LAK"
+
+msgid "Intl_CurrencySymbol_LBP"
+msgstr "LBP"
+
+msgid "Intl_CurrencySymbol_LKR"
+msgstr "LKR"
+
+msgid "Intl_CurrencySymbol_LRD"
+msgstr "LRD"
+
+msgid "Intl_CurrencySymbol_LSL"
+msgstr "LSL"
+
+msgid "Intl_CurrencySymbol_LYD"
+msgstr "LYD"
+
+msgid "Intl_CurrencySymbol_MAD"
+msgstr "MAD"
+
+msgid "Intl_CurrencySymbol_MDL"
+msgstr "MDL"
+
+msgid "Intl_CurrencySymbol_MGA"
+msgstr "MGA"
+
+msgid "Intl_CurrencySymbol_MKD"
+msgstr "MKD"
+
+msgid "Intl_CurrencySymbol_MMK"
+msgstr "MMK"
+
+msgid "Intl_CurrencySymbol_MNT"
+msgstr "MNT"
+
+msgid "Intl_CurrencySymbol_MOP"
+msgstr "MOP"
+
+msgid "Intl_CurrencySymbol_MRU"
+msgstr "MRU"
+
+msgid "Intl_CurrencySymbol_MUR"
+msgstr "MUR"
+
+msgid "Intl_CurrencySymbol_MVR"
+msgstr "MVR"
+
+msgid "Intl_CurrencySymbol_MWK"
+msgstr "MWK"
+
+msgid "Intl_CurrencySymbol_MXN"
+msgstr "MX$"
+
+msgid "Intl_CurrencySymbol_MYR"
+msgstr "MYR"
+
+msgid "Intl_CurrencySymbol_MZN"
+msgstr "MZN"
+
+msgid "Intl_CurrencySymbol_NAD"
+msgstr "NAD"
+
+msgid "Intl_CurrencySymbol_NGN"
+msgstr "NGN"
+
+msgid "Intl_CurrencySymbol_NIO"
+msgstr "NIO"
+
+msgid "Intl_CurrencySymbol_NOK"
+msgstr "NOK"
+
+msgid "Intl_CurrencySymbol_NPR"
+msgstr "NPR"
+
+msgid "Intl_CurrencySymbol_NZD"
+msgstr "NZ$"
+
+msgid "Intl_CurrencySymbol_OMR"
+msgstr "OMR"
+
+msgid "Intl_CurrencySymbol_PAB"
+msgstr "PAB"
+
+msgid "Intl_CurrencySymbol_PEN"
+msgstr "PEN"
+
+msgid "Intl_CurrencySymbol_PGK"
+msgstr "PGK"
+
+msgid "Intl_CurrencySymbol_PHP"
+msgstr "PHP"
+
+msgid "Intl_CurrencySymbol_PKR"
+msgstr "PKR"
+
+msgid "Intl_CurrencySymbol_PLN"
+msgstr "PLN"
+
+msgid "Intl_CurrencySymbol_PYG"
+msgstr "PYG"
+
+msgid "Intl_CurrencySymbol_QAR"
+msgstr "QAR"
+
+msgid "Intl_CurrencySymbol_RON"
+msgstr "RON"
+
+msgid "Intl_CurrencySymbol_RSD"
+msgstr "RSD"
+
+msgid "Intl_CurrencySymbol_RUB"
+msgstr "RUB"
+
+msgid "Intl_CurrencySymbol_RWF"
+msgstr "RWF"
+
+msgid "Intl_CurrencySymbol_SAR"
+msgstr "SAR"
+
+msgid "Intl_CurrencySymbol_SBD"
+msgstr "SBD"
+
+msgid "Intl_CurrencySymbol_SCR"
+msgstr "SCR"
+
+msgid "Intl_CurrencySymbol_SDG"
+msgstr "SDG"
+
+msgid "Intl_CurrencySymbol_SEK"
+msgstr "SEK"
+
+msgid "Intl_CurrencySymbol_SGD"
+msgstr "SGD"
+
+msgid "Intl_CurrencySymbol_SHP"
+msgstr "SHP"
+
+msgid "Intl_CurrencySymbol_SLL"
+msgstr "SLL"
+
+msgid "Intl_CurrencySymbol_SOS"
+msgstr "SOS"
+
+msgid "Intl_CurrencySymbol_SRD"
+msgstr "SRD"
+
+msgid "Intl_CurrencySymbol_SSP"
+msgstr "SSP"
+
+msgid "Intl_CurrencySymbol_STN"
+msgstr "STN"
+
+msgid "Intl_CurrencySymbol_SYP"
+msgstr "SYP"
+
+msgid "Intl_CurrencySymbol_SZL"
+msgstr "SZL"
+
+msgid "Intl_CurrencySymbol_THB"
+msgstr "฿"
+
+msgid "Intl_CurrencySymbol_TJS"
+msgstr "TJS"
+
+msgid "Intl_CurrencySymbol_TMT"
+msgstr "TMT"
+
+msgid "Intl_CurrencySymbol_TND"
+msgstr "TND"
+
+msgid "Intl_CurrencySymbol_TOP"
+msgstr "TOP"
+
+msgid "Intl_CurrencySymbol_TRY"
+msgstr "TRY"
+
+msgid "Intl_CurrencySymbol_TTD"
+msgstr "TTD"
+
+msgid "Intl_CurrencySymbol_TWD"
+msgstr "NT$"
+
+msgid "Intl_CurrencySymbol_TZS"
+msgstr "TZS"
+
+msgid "Intl_CurrencySymbol_UAH"
+msgstr "UAH"
+
+msgid "Intl_CurrencySymbol_UGX"
+msgstr "UGX"
+
+msgid "Intl_CurrencySymbol_USD"
+msgstr "$"
+
+msgid "Intl_CurrencySymbol_UYU"
+msgstr "UYU"
+
+msgid "Intl_CurrencySymbol_UZS"
+msgstr "UZS"
+
+msgid "Intl_CurrencySymbol_VEF"
+msgstr "VEF"
+
+msgid "Intl_CurrencySymbol_VND"
+msgstr "₫"
+
+msgid "Intl_CurrencySymbol_VUV"
+msgstr "VUV"
+
+msgid "Intl_CurrencySymbol_WST"
+msgstr "WST"
+
+msgid "Intl_CurrencySymbol_XAF"
+msgstr "FCFA"
+
+msgid "Intl_CurrencySymbol_XCD"
+msgstr "EC$"
+
+msgid "Intl_CurrencySymbol_XOF"
+msgstr "CFA"
+
+msgid "Intl_CurrencySymbol_XPF"
+msgstr "CFPF"
+
+msgid "Intl_CurrencySymbol_YER"
+msgstr "YER"
+
+msgid "Intl_CurrencySymbol_ZAR"
+msgstr "ZAR"
+
+msgid "Intl_CurrencySymbol_ZMW"
+msgstr "ZMW"
+
+msgid "Intl_Currency_AED"
+msgstr "דירהם של איחוד הנסיכויות הערביות"
+
+msgid "Intl_Currency_AFN"
+msgstr "אפגני אפגני"
+
+msgid "Intl_Currency_ALL"
+msgstr "לק אלבני"
+
+msgid "Intl_Currency_AMD"
+msgstr "דראם ארמני"
+
+msgid "Intl_Currency_ANG"
+msgstr "גילדר של האנטילים ההולנדיים"
+
+msgid "Intl_Currency_AOA"
+msgstr "קואנזה אנגולי"
+
+msgid "Intl_Currency_ARS"
+msgstr "פסו ארגנטינאי"
+
+msgid "Intl_Currency_AUD"
+msgstr "דולר אוסטרלי"
+
+msgid "Intl_Currency_AWG"
+msgstr "פלורין של ארובה"
+
+msgid "Intl_Currency_AZN"
+msgstr "מאנאט אזרבייג׳ני"
+
+msgid "Intl_Currency_BAM"
+msgstr "מארק סחיר של בוסניה והרצגובינה"
+
+msgid "Intl_Currency_BBD"
+msgstr "דולר ברבדיאני"
+
+msgid "Intl_Currency_BDT"
+msgstr "טאקה בנגלדשי"
+
+msgid "Intl_Currency_BGN"
+msgstr "לב בולגרי"
+
+msgid "Intl_Currency_BHD"
+msgstr "דינר בחרייני"
+
+msgid "Intl_Currency_BIF"
+msgstr "פרנק בורונדי"
+
+msgid "Intl_Currency_BMD"
+msgstr "דולר ברמודה"
+
+msgid "Intl_Currency_BND"
+msgstr "דולר ברוניי"
+
+msgid "Intl_Currency_BOB"
+msgstr "בוליביאנו"
+
+msgid "Intl_Currency_BRL"
+msgstr "ריאל ברזילאי"
+
+msgid "Intl_Currency_BSD"
+msgstr "דולר בהאמי"
+
+msgid "Intl_Currency_BTC"
+msgstr "Bitcoin"
+
+msgid "Intl_Currency_BTN"
+msgstr "נגולטרום בהוטני"
+
+msgid "Intl_Currency_BWP"
+msgstr "פולה בוטסואני"
+
+msgid "Intl_Currency_BYN"
+msgstr "רובל בלרוסי"
+
+msgid "Intl_Currency_BZD"
+msgstr "דולר בליזי"
+
+msgid "Intl_Currency_CAD"
+msgstr "דולר קנדי"
+
+msgid "Intl_Currency_CDF"
+msgstr "פרנק קונגולזי"
+
+msgid "Intl_Currency_CHF"
+msgstr "פרנק שוויצרי"
+
+msgid "Intl_Currency_CLP"
+msgstr "פסו צ׳ילאני"
+
+msgid "Intl_Currency_CNY"
+msgstr "יואן סיני"
+
+msgid "Intl_Currency_COP"
+msgstr "פסו קולומביאני"
+
+msgid "Intl_Currency_CRC"
+msgstr "קולון קוסטה־ריקני"
+
+msgid "Intl_Currency_CUC"
+msgstr "פזו קובני להמרה"
+
+msgid "Intl_Currency_CUP"
+msgstr "פזו קובני"
+
+msgid "Intl_Currency_CVE"
+msgstr "אסקודו כף ורדה"
+
+msgid "Intl_Currency_CZK"
+msgstr "קורונה צ׳כית"
+
+msgid "Intl_Currency_DJF"
+msgstr "פרנק ג׳יבוטי"
+
+msgid "Intl_Currency_DKK"
+msgstr "כתר דני"
+
+msgid "Intl_Currency_DOP"
+msgstr "פזו דומיניקני"
+
+msgid "Intl_Currency_DZD"
+msgstr "דינר אלג׳ירי"
+
+msgid "Intl_Currency_EGP"
+msgstr "לירה מצרית"
+
+msgid "Intl_Currency_ERN"
+msgstr "נאקפה אריתראי"
+
+msgid "Intl_Currency_ETB"
+msgstr "ביר אתיופי"
+
+msgid "Intl_Currency_EUR"
+msgstr "אירו"
+
+msgid "Intl_Currency_FJD"
+msgstr "דולר פיג׳י"
+
+msgid "Intl_Currency_FKP"
+msgstr "לירה של איי פוקלנד"
+
+msgid "Intl_Currency_GBP"
+msgstr "לירה שטרלינג"
+
+msgid "Intl_Currency_GEL"
+msgstr "לארי גאורגי"
+
+msgid "Intl_Currency_GHS"
+msgstr "סדי גאני"
+
+msgid "Intl_Currency_GIP"
+msgstr "פאונד גיברלטר"
+
+msgid "Intl_Currency_GMD"
+msgstr "דלסי גמבי"
+
+msgid "Intl_Currency_GNF"
+msgstr "פרנק גינאי"
+
+msgid "Intl_Currency_GTQ"
+msgstr "קצאל גואטמלי"
+
+msgid "Intl_Currency_GYD"
+msgstr "דולר גיאני"
+
+msgid "Intl_Currency_HKD"
+msgstr "דולר הונג קונגי"
+
+msgid "Intl_Currency_HNL"
+msgstr "למפירה הונדורי"
+
+msgid "Intl_Currency_HRK"
+msgstr "קונה קרואטי"
+
+msgid "Intl_Currency_HTG"
+msgstr "גורד האיטי"
+
+msgid "Intl_Currency_HUF"
+msgstr "פורינט הונגרי"
+
+msgid "Intl_Currency_IDR"
+msgstr "רופיה אינדונזית"
+
+msgid "Intl_Currency_ILS"
+msgstr "שקל חדש"
+
+msgid "Intl_Currency_INR"
+msgstr "רופי הודי"
+
+msgid "Intl_Currency_IQD"
+msgstr "דינר עיראקי"
+
+msgid "Intl_Currency_IRR"
+msgstr "ריאל איראני"
+
+msgid "Intl_Currency_ISK"
+msgstr "כתר איסלנדי"
+
+msgid "Intl_Currency_JMD"
+msgstr "דולר ג׳מייקני"
+
+msgid "Intl_Currency_JOD"
+msgstr "דינר ירדני"
+
+msgid "Intl_Currency_JPY"
+msgstr "ין יפני"
+
+msgid "Intl_Currency_KES"
+msgstr "שילינג קנייתי"
+
+msgid "Intl_Currency_KGS"
+msgstr "סום קירגיזי"
+
+msgid "Intl_Currency_KHR"
+msgstr "ריל קמבודי"
+
+msgid "Intl_Currency_KMF"
+msgstr "פרנק קומורואי"
+
+msgid "Intl_Currency_KPW"
+msgstr "וון צפון קוריאני"
+
+msgid "Intl_Currency_KRW"
+msgstr "וון דרום קוריאני"
+
+msgid "Intl_Currency_KWD"
+msgstr "דינר כוויתי"
+
+msgid "Intl_Currency_KYD"
+msgstr "דולר קיימני"
+
+msgid "Intl_Currency_KZT"
+msgstr "טנגה קזחסטני"
+
+msgid "Intl_Currency_LAK"
+msgstr "קיפ לאי"
+
+msgid "Intl_Currency_LBP"
+msgstr "לירה לבנונית"
+
+msgid "Intl_Currency_LKR"
+msgstr "רופי סרי לנקי"
+
+msgid "Intl_Currency_LRD"
+msgstr "דולר ליברי"
+
+msgid "Intl_Currency_LSL"
+msgstr "לוטי לסותי"
+
+msgid "Intl_Currency_LYD"
+msgstr "דינר לובי"
+
+msgid "Intl_Currency_MAD"
+msgstr "דירהם מרוקאי"
+
+msgid "Intl_Currency_MDL"
+msgstr "לאו מולדובני"
+
+msgid "Intl_Currency_MGA"
+msgstr "אריארי מלגשי"
+
+msgid "Intl_Currency_MKD"
+msgstr "דינר מקדוני"
+
+msgid "Intl_Currency_MMK"
+msgstr "קיאט מיאנמרי"
+
+msgid "Intl_Currency_MNT"
+msgstr "טוגרוג מונגולי"
+
+msgid "Intl_Currency_MOP"
+msgstr "פטקה של מקאו"
+
+msgid "Intl_Currency_MRU"
+msgstr "אואוגויה מאוריטני"
+
+msgid "Intl_Currency_MUR"
+msgstr "רופי מאוריציני"
+
+msgid "Intl_Currency_MVR"
+msgstr "רופיה מלדיבית"
+
+msgid "Intl_Currency_MWK"
+msgstr "קואצ׳ה מלאווי"
+
+msgid "Intl_Currency_MXN"
+msgstr "פזו מקסיקני"
+
+msgid "Intl_Currency_MYR"
+msgstr "רינגיט מלזי"
+
+msgid "Intl_Currency_MZN"
+msgstr "מטיקל מוזמביני"
+
+msgid "Intl_Currency_NAD"
+msgstr "דולר נמיבי"
+
+msgid "Intl_Currency_NGN"
+msgstr "נאירה ניגרי"
+
+msgid "Intl_Currency_NIO"
+msgstr "קורדובה ניקרגואה"
+
+msgid "Intl_Currency_NOK"
+msgstr "כתר נורווגי"
+
+msgid "Intl_Currency_NPR"
+msgstr "רופי נפאלי"
+
+msgid "Intl_Currency_NZD"
+msgstr "דולר ניו זילנדי"
+
+msgid "Intl_Currency_OMR"
+msgstr "ריאל עומאני"
+
+msgid "Intl_Currency_PAB"
+msgstr "בלבואה פנמי"
+
+msgid "Intl_Currency_PEN"
+msgstr "סול פרואני"
+
+msgid "Intl_Currency_PGK"
+msgstr "קינה של פפואה גינאה החדשה"
+
+msgid "Intl_Currency_PHP"
+msgstr "פזו פיליפיני"
+
+msgid "Intl_Currency_PKR"
+msgstr "רופי פקיסטני"
+
+msgid "Intl_Currency_PLN"
+msgstr "זלוטי פולני"
+
+msgid "Intl_Currency_PYG"
+msgstr "גוארני פרגוואי"
+
+msgid "Intl_Currency_QAR"
+msgstr "ריאל קטארי"
+
+msgid "Intl_Currency_RON"
+msgstr "לאו רומני"
+
+msgid "Intl_Currency_RSD"
+msgstr "דינר סרבי"
+
+msgid "Intl_Currency_RUB"
+msgstr "רובל רוסי"
+
+msgid "Intl_Currency_RWF"
+msgstr "פרנק רואנדי"
+
+msgid "Intl_Currency_SAR"
+msgstr "ריאל סעודי"
+
+msgid "Intl_Currency_SBD"
+msgstr "דולר איי שלמה"
+
+msgid "Intl_Currency_SCR"
+msgstr "רופי סיישלי"
+
+msgid "Intl_Currency_SDG"
+msgstr "לירה סודנית"
+
+msgid "Intl_Currency_SEK"
+msgstr "כתר שוודי"
+
+msgid "Intl_Currency_SGD"
+msgstr "דולר סינגפורי"
+
+msgid "Intl_Currency_SHP"
+msgstr "פאונד סנט הלני"
+
+msgid "Intl_Currency_SLL"
+msgstr "ליאון סיירה לאוני"
+
+msgid "Intl_Currency_SOS"
+msgstr "שילינג סומלי"
+
+msgid "Intl_Currency_SRD"
+msgstr "דולר סורינאמי"
+
+msgid "Intl_Currency_SSP"
+msgstr "לירה דרום-סודנית"
+
+msgid "Intl_Currency_STN"
+msgstr "דוברה של סן טומה ופרינסיפה"
+
+msgid "Intl_Currency_SYP"
+msgstr "לירה סורית"
+
+msgid "Intl_Currency_SZL"
+msgstr "לילנגני סווזילנדי"
+
+msgid "Intl_Currency_THB"
+msgstr "בהט תאילנדי"
+
+msgid "Intl_Currency_TJS"
+msgstr "סומוני טג׳קיסטני"
+
+msgid "Intl_Currency_TMT"
+msgstr "מאנאט טורקמני"
+
+msgid "Intl_Currency_TND"
+msgstr "דינר טוניסאי"
+
+msgid "Intl_Currency_TOP"
+msgstr "פאנגה טונגי"
+
+msgid "Intl_Currency_TRY"
+msgstr "לירה טורקית חדשה"
+
+msgid "Intl_Currency_TTD"
+msgstr "דולר טרינידדי"
+
+msgid "Intl_Currency_TWD"
+msgstr "דולר טייוואני חדש"
+
+msgid "Intl_Currency_TZS"
+msgstr "שילינג טנזני"
+
+msgid "Intl_Currency_UAH"
+msgstr "הריבנה אוקראיני"
+
+msgid "Intl_Currency_UGX"
+msgstr "שילינג אוגנדי"
+
+msgid "Intl_Currency_USD"
+msgstr "דולר אמריקאי"
+
+msgid "Intl_Currency_UYU"
+msgstr "פסו אורוגוואי"
+
+msgid "Intl_Currency_UZS"
+msgstr "סום אוזבקי"
+
+msgid "Intl_Currency_VEF"
+msgstr "בוליבר ונצואלי (2008–2018)"
+
+msgid "Intl_Currency_VND"
+msgstr "דונג וייטנאמי"
+
+msgid "Intl_Currency_VUV"
+msgstr "ואטו של ונואטו"
+
+msgid "Intl_Currency_WST"
+msgstr "טאלה סמואי"
+
+msgid "Intl_Currency_XAF"
+msgstr "פרנק CFA מרכז אפריקני"
+
+msgid "Intl_Currency_XCD"
+msgstr "דולר מזרח קריבי"
+
+msgid "Intl_Currency_XOF"
+msgstr "פרנק CFA מערב אפריקני"
+
+msgid "Intl_Currency_XPF"
+msgstr "פרנק פולינזיה הצרפתית"
+
+msgid "Intl_Currency_YER"
+msgstr "ריאל תימני"
+
+msgid "Intl_Currency_ZAR"
+msgstr "ראנד דרום אפריקאי"
+
+msgid "Intl_Currency_ZMW"
+msgstr "קוואצ׳ה זמבי"
+
+msgid "Intl_Day_Long_1"
+msgstr "יום שני"
+
+msgid "Intl_Day_Long_2"
+msgstr "יום שלישי"
+
+msgid "Intl_Day_Long_3"
+msgstr "יום רביעי"
+
+msgid "Intl_Day_Long_4"
+msgstr "יום חמישי"
+
+msgid "Intl_Day_Long_5"
+msgstr "יום שישי"
+
+msgid "Intl_Day_Long_6"
+msgstr "יום שבת"
+
+msgid "Intl_Day_Long_7"
+msgstr "יום ראשון"
+
+msgid "Intl_Day_Long_StandAlone_1"
+msgstr "יום שני"
+
+msgid "Intl_Day_Long_StandAlone_2"
+msgstr "יום שלישי"
+
+msgid "Intl_Day_Long_StandAlone_3"
+msgstr "יום רביעי"
+
+msgid "Intl_Day_Long_StandAlone_4"
+msgstr "יום חמישי"
+
+msgid "Intl_Day_Long_StandAlone_5"
+msgstr "יום שישי"
+
+msgid "Intl_Day_Long_StandAlone_6"
+msgstr "יום שבת"
+
+msgid "Intl_Day_Long_StandAlone_7"
+msgstr "יום ראשון"
+
+msgid "Intl_Day_Min_1"
+msgstr "ב׳"
+
+msgid "Intl_Day_Min_2"
+msgstr "ג׳"
+
+msgid "Intl_Day_Min_3"
+msgstr "ד׳"
+
+msgid "Intl_Day_Min_4"
+msgstr "ה׳"
+
+msgid "Intl_Day_Min_5"
+msgstr "ו׳"
+
+msgid "Intl_Day_Min_6"
+msgstr "ש׳"
+
+msgid "Intl_Day_Min_7"
+msgstr "א׳"
+
+msgid "Intl_Day_Min_StandAlone_1"
+msgstr "ב׳"
+
+msgid "Intl_Day_Min_StandAlone_2"
+msgstr "ג׳"
+
+msgid "Intl_Day_Min_StandAlone_3"
+msgstr "ד׳"
+
+msgid "Intl_Day_Min_StandAlone_4"
+msgstr "ה׳"
+
+msgid "Intl_Day_Min_StandAlone_5"
+msgstr "ו׳"
+
+msgid "Intl_Day_Min_StandAlone_6"
+msgstr "ש׳"
+
+msgid "Intl_Day_Min_StandAlone_7"
+msgstr "א׳"
+
+msgid "Intl_Day_Short_1"
+msgstr "יום ב׳"
+
+msgid "Intl_Day_Short_2"
+msgstr "יום ג׳"
+
+msgid "Intl_Day_Short_3"
+msgstr "יום ד׳"
+
+msgid "Intl_Day_Short_4"
+msgstr "יום ה׳"
+
+msgid "Intl_Day_Short_5"
+msgstr "יום ו׳"
+
+msgid "Intl_Day_Short_6"
+msgstr "שבת"
+
+msgid "Intl_Day_Short_7"
+msgstr "יום א׳"
+
+msgid "Intl_Day_Short_StandAlone_1"
+msgstr "יום ב׳"
+
+msgid "Intl_Day_Short_StandAlone_2"
+msgstr "יום ג׳"
+
+msgid "Intl_Day_Short_StandAlone_3"
+msgstr "יום ד׳"
+
+msgid "Intl_Day_Short_StandAlone_4"
+msgstr "יום ה׳"
+
+msgid "Intl_Day_Short_StandAlone_5"
+msgstr "יום ו׳"
+
+msgid "Intl_Day_Short_StandAlone_6"
+msgstr "שבת"
+
+msgid "Intl_Day_Short_StandAlone_7"
+msgstr "יום א׳"
+
+msgid "Intl_EnglishLanguageName"
+msgstr "Hebrew"
+
+msgid "Intl_Format_DateTime_Long"
+msgstr "EEEE, d בMMMM y {time}"
+
+msgid "Intl_Format_DateTime_Short"
+msgstr "d בMMM y {time}"
+
+msgid "Intl_Format_Date_Day_Month"
+msgstr "E, d בMMM"
+
+msgid "Intl_Format_Date_Long"
+msgstr "EEEE, d בMMMM y"
+
+msgid "Intl_Format_Date_Short"
+msgstr "d בMMM y"
+
+msgid "Intl_Format_Hour_12"
+msgstr "‏h a"
+
+msgid "Intl_Format_Hour_24"
+msgstr "H"
+
+msgid "Intl_Format_Interval_Long_D"
+msgstr "d–d בMMMM y"
+
+msgid "Intl_Format_Interval_Long_M"
+msgstr "d MMMM – d MMMM y"
+
+msgid "Intl_Format_Interval_Long_Y"
+msgstr "d MMMM y – d MMMM y"
+
+msgid "Intl_Format_Interval_Short_D"
+msgstr "d–d בMMM y"
+
+msgid "Intl_Format_Interval_Short_M"
+msgstr "d MMM – d MMM y"
+
+msgid "Intl_Format_Interval_Short_Y"
+msgstr "d MMM y – d MMM y"
+
+msgid "Intl_Format_Month_Long"
+msgstr "MMMM y"
+
+msgid "Intl_Format_Month_Short"
+msgstr "MMM y"
+
+msgid "Intl_Format_Time"
+msgstr "{time}"
+
+msgid "Intl_Format_Time_12"
+msgstr "h:mm:ss a"
+
+msgid "Intl_Format_Time_24"
+msgstr "H:mm:ss"
+
+msgid "Intl_Format_Year"
+msgstr "y"
+
+msgid "Intl_Hours"
+msgstr "שעות"
+
+msgid "Intl_Language_aa"
+msgstr "אפארית"
+
+msgid "Intl_Language_ab"
+msgstr "אבחזית"
+
+msgid "Intl_Language_ae"
+msgstr "אבסטן"
+
+msgid "Intl_Language_af"
+msgstr "אפריקאנס"
+
+msgid "Intl_Language_ak"
+msgstr "אקאן"
+
+msgid "Intl_Language_am"
+msgstr "אמהרית"
+
+msgid "Intl_Language_an"
+msgstr "אראגונית"
+
+msgid "Intl_Language_ar"
+msgstr "ערבית"
+
+msgid "Intl_Language_as"
+msgstr "אסאמית"
+
+msgid "Intl_Language_av"
+msgstr "אווארית"
+
+msgid "Intl_Language_ay"
+msgstr "איימארית"
+
+msgid "Intl_Language_az"
+msgstr "אזרית"
+
+msgid "Intl_Language_ba"
+msgstr "בשקירית"
+
+msgid "Intl_Language_be"
+msgstr "בלארוסית"
+
+msgid "Intl_Language_bg"
+msgstr "בולגרית"
+
+msgid "Intl_Language_bi"
+msgstr "ביסלמה"
+
+msgid "Intl_Language_bm"
+msgstr "במבארה"
+
+msgid "Intl_Language_bn"
+msgstr "בנגלית"
+
+msgid "Intl_Language_bo"
+msgstr "טיבטית"
+
+msgid "Intl_Language_br"
+msgstr "ברטונית"
+
+msgid "Intl_Language_bs"
+msgstr "בוסנית"
+
+msgid "Intl_Language_ca"
+msgstr "קטלאנית"
+
+msgid "Intl_Language_ce"
+msgstr "צ׳צ׳נית"
+
+msgid "Intl_Language_ch"
+msgstr "צ׳מורו"
+
+msgid "Intl_Language_co"
+msgstr "קורסיקנית"
+
+msgid "Intl_Language_cr"
+msgstr "קרי"
+
+msgid "Intl_Language_cs"
+msgstr "צ׳כית"
+
+msgid "Intl_Language_cu"
+msgstr "סלאבית כנסייתית עתיקה"
+
+msgid "Intl_Language_cv"
+msgstr "צ׳ובאש"
+
+msgid "Intl_Language_cy"
+msgstr "וולשית"
+
+msgid "Intl_Language_da"
+msgstr "דנית"
+
+msgid "Intl_Language_de"
+msgstr "גרמנית"
+
+msgid "Intl_Language_dv"
+msgstr "דיבהי"
+
+msgid "Intl_Language_dz"
+msgstr "דזונקה"
+
+msgid "Intl_Language_ee"
+msgstr "אווה"
+
+msgid "Intl_Language_el"
+msgstr "יוונית"
+
+msgid "Intl_Language_en"
+msgstr "אנגלית"
+
+msgid "Intl_Language_eo"
+msgstr "אספרנטו"
+
+msgid "Intl_Language_es"
+msgstr "ספרדית"
+
+msgid "Intl_Language_et"
+msgstr "אסטונית"
+
+msgid "Intl_Language_eu"
+msgstr "בסקית"
+
+msgid "Intl_Language_fa"
+msgstr "פרסית"
+
+msgid "Intl_Language_ff"
+msgstr "פולה"
+
+msgid "Intl_Language_fi"
+msgstr "פינית"
+
+msgid "Intl_Language_fj"
+msgstr "פיג׳ית"
+
+msgid "Intl_Language_fo"
+msgstr "פארואזית"
+
+msgid "Intl_Language_fr"
+msgstr "צרפתית"
+
+msgid "Intl_Language_fy"
+msgstr "פריזית מערבית"
+
+msgid "Intl_Language_ga"
+msgstr "אירית"
+
+msgid "Intl_Language_gd"
+msgstr "גאלית סקוטית"
+
+msgid "Intl_Language_gl"
+msgstr "גליציאנית"
+
+msgid "Intl_Language_gn"
+msgstr "גוארני"
+
+msgid "Intl_Language_gu"
+msgstr "גוג׳ארטי"
+
+msgid "Intl_Language_gv"
+msgstr "מאנית"
+
+msgid "Intl_Language_ha"
+msgstr "האוסה"
+
+msgid "Intl_Language_he"
+msgstr "עברית"
+
+msgid "Intl_Language_hi"
+msgstr "הינדי"
+
+msgid "Intl_Language_ho"
+msgstr "הירי מוטו"
+
+msgid "Intl_Language_hr"
+msgstr "קרואטית"
+
+msgid "Intl_Language_ht"
+msgstr "קריאולית (האיטי)"
+
+msgid "Intl_Language_hu"
+msgstr "הונגרית"
+
+msgid "Intl_Language_hy"
+msgstr "ארמנית"
+
+msgid "Intl_Language_hz"
+msgstr "הררו"
+
+msgid "Intl_Language_ia"
+msgstr "‏אינטרלינגואה"
+
+msgid "Intl_Language_id"
+msgstr "אינדונזית"
+
+msgid "Intl_Language_ie"
+msgstr "אינטרלינגה"
+
+msgid "Intl_Language_ig"
+msgstr "איגבו"
+
+msgid "Intl_Language_ii"
+msgstr "סצ׳ואן יי"
+
+msgid "Intl_Language_ik"
+msgstr "אינופיאק"
+
+msgid "Intl_Language_io"
+msgstr "אידו"
+
+msgid "Intl_Language_is"
+msgstr "איסלנדית"
+
+msgid "Intl_Language_it"
+msgstr "איטלקית"
+
+msgid "Intl_Language_iu"
+msgstr "אינוקטיטוט"
+
+msgid "Intl_Language_ja"
+msgstr "יפנית"
+
+msgid "Intl_Language_jv"
+msgstr "יאוואית"
+
+msgid "Intl_Language_ka"
+msgstr "גאורגית"
+
+msgid "Intl_Language_kg"
+msgstr "קונגו"
+
+msgid "Intl_Language_ki"
+msgstr "קיקויו"
+
+msgid "Intl_Language_kj"
+msgstr "קואניאמה"
+
+msgid "Intl_Language_kk"
+msgstr "קזחית"
+
+msgid "Intl_Language_kl"
+msgstr "גרינלנדית"
+
+msgid "Intl_Language_km"
+msgstr "חמרית"
+
+msgid "Intl_Language_kn"
+msgstr "קנאדה"
+
+msgid "Intl_Language_ko"
+msgstr "קוריאנית"
+
+msgid "Intl_Language_kr"
+msgstr "קאנורי"
+
+msgid "Intl_Language_ks"
+msgstr "קשמירית"
+
+msgid "Intl_Language_ku"
+msgstr "כורדית"
+
+msgid "Intl_Language_kv"
+msgstr "קומי"
+
+msgid "Intl_Language_kw"
+msgstr "קורנית"
+
+msgid "Intl_Language_ky"
+msgstr "קירגיזית"
+
+msgid "Intl_Language_la"
+msgstr "לטינית"
+
+msgid "Intl_Language_lb"
+msgstr "לוקסמבורגית"
+
+msgid "Intl_Language_lg"
+msgstr "גאנדה"
+
+msgid "Intl_Language_li"
+msgstr "לימבורגית"
+
+msgid "Intl_Language_ln"
+msgstr "לינגלה"
+
+msgid "Intl_Language_lo"
+msgstr "לאו"
+
+msgid "Intl_Language_lt"
+msgstr "ליטאית"
+
+msgid "Intl_Language_lu"
+msgstr "לובה-קטנגה"
+
+msgid "Intl_Language_lv"
+msgstr "לטבית"
+
+msgid "Intl_Language_mg"
+msgstr "מלגשית"
+
+msgid "Intl_Language_mh"
+msgstr "מרשלית"
+
+msgid "Intl_Language_mi"
+msgstr "מאורית"
+
+msgid "Intl_Language_mk"
+msgstr "מקדונית"
+
+msgid "Intl_Language_ml"
+msgstr "מליאלאם"
+
+msgid "Intl_Language_mn"
+msgstr "מונגולית"
+
+msgid "Intl_Language_mr"
+msgstr "מראטהי"
+
+msgid "Intl_Language_ms"
+msgstr "מלאית"
+
+msgid "Intl_Language_mt"
+msgstr "מלטית"
+
+msgid "Intl_Language_my"
+msgstr "בורמזית"
+
+msgid "Intl_Language_na"
+msgstr "נאורית"
+
+msgid "Intl_Language_nb"
+msgstr "נורווגית ספרותית"
+
+msgid "Intl_Language_nd"
+msgstr "נדבלה צפונית"
+
+msgid "Intl_Language_ne"
+msgstr "נפאלית"
+
+msgid "Intl_Language_ng"
+msgstr "נדונגה"
+
+msgid "Intl_Language_nl"
+msgstr "הולנדית"
+
+msgid "Intl_Language_nn"
+msgstr "נורווגית חדשה"
+
+msgid "Intl_Language_no"
+msgstr "נורווגית"
+
+msgid "Intl_Language_nr"
+msgstr "נדבלה דרומית"
+
+msgid "Intl_Language_nv"
+msgstr "נאוואחו"
+
+msgid "Intl_Language_ny"
+msgstr "ניאנג׳ה"
+
+msgid "Intl_Language_oc"
+msgstr "אוקסיטנית"
+
+msgid "Intl_Language_oj"
+msgstr "אוג׳יבווה"
+
+msgid "Intl_Language_om"
+msgstr "אורומו"
+
+msgid "Intl_Language_or"
+msgstr "אורייה"
+
+msgid "Intl_Language_os"
+msgstr "אוסטית"
+
+msgid "Intl_Language_pa"
+msgstr "פנג׳אבי"
+
+msgid "Intl_Language_pi"
+msgstr "פאלי"
+
+msgid "Intl_Language_pl"
+msgstr "פולנית"
+
+msgid "Intl_Language_ps"
+msgstr "פאשטו"
+
+msgid "Intl_Language_pt"
+msgstr "פורטוגזית"
+
+msgid "Intl_Language_qu"
+msgstr "קצ׳ואה"
+
+msgid "Intl_Language_rm"
+msgstr "רומאנש"
+
+msgid "Intl_Language_rn"
+msgstr "קירונדי"
+
+msgid "Intl_Language_ro"
+msgstr "רומנית"
+
+msgid "Intl_Language_ru"
+msgstr "רוסית"
+
+msgid "Intl_Language_rw"
+msgstr "קנירואנדית"
+
+msgid "Intl_Language_sa"
+msgstr "סנסקריט"
+
+msgid "Intl_Language_sc"
+msgstr "סרדינית"
+
+msgid "Intl_Language_sd"
+msgstr "סינדהית"
+
+msgid "Intl_Language_se"
+msgstr "סמי צפונית"
+
+msgid "Intl_Language_sg"
+msgstr "סנגו"
+
+msgid "Intl_Language_si"
+msgstr "סינהלה"
+
+msgid "Intl_Language_sk"
+msgstr "סלובקית"
+
+msgid "Intl_Language_sl"
+msgstr "סלובנית"
+
+msgid "Intl_Language_sm"
+msgstr "סמואית"
+
+msgid "Intl_Language_sn"
+msgstr "שונה"
+
+msgid "Intl_Language_so"
+msgstr "סומלית"
+
+msgid "Intl_Language_sq"
+msgstr "אלבנית"
+
+msgid "Intl_Language_sr"
+msgstr "סרבית"
+
+msgid "Intl_Language_ss"
+msgstr "סאווזי"
+
+msgid "Intl_Language_st"
+msgstr "סותו דרומית"
+
+msgid "Intl_Language_su"
+msgstr "סונדנזית"
+
+msgid "Intl_Language_sv"
+msgstr "שוודית"
+
+msgid "Intl_Language_sw"
+msgstr "סווהילי"
+
+msgid "Intl_Language_ta"
+msgstr "טמילית"
+
+msgid "Intl_Language_te"
+msgstr "טלוגו"
+
+msgid "Intl_Language_tg"
+msgstr "טג׳יקית"
+
+msgid "Intl_Language_th"
+msgstr "תאית"
+
+msgid "Intl_Language_ti"
+msgstr "תיגרינית"
+
+msgid "Intl_Language_tk"
+msgstr "טורקמנית"
+
+msgid "Intl_Language_tl"
+msgstr "טאגאלוג"
+
+msgid "Intl_Language_tn"
+msgstr "סוואנה"
+
+msgid "Intl_Language_to"
+msgstr "טונגאית"
+
+msgid "Intl_Language_tr"
+msgstr "טורקית"
+
+msgid "Intl_Language_ts"
+msgstr "טסונגה"
+
+msgid "Intl_Language_tt"
+msgstr "טטרית"
+
+msgid "Intl_Language_tw"
+msgstr "טווי"
+
+msgid "Intl_Language_ty"
+msgstr "טהיטית"
+
+msgid "Intl_Language_ug"
+msgstr "אויגור"
+
+msgid "Intl_Language_uk"
+msgstr "אוקראינית"
+
+msgid "Intl_Language_ur"
+msgstr "אורדו"
+
+msgid "Intl_Language_uz"
+msgstr "אוזבקית"
+
+msgid "Intl_Language_ve"
+msgstr "וונדה"
+
+msgid "Intl_Language_vi"
+msgstr "ויאטנמית"
+
+msgid "Intl_Language_vo"
+msgstr "‏וולאפיק"
+
+msgid "Intl_Language_wa"
+msgstr "ולונית"
+
+msgid "Intl_Language_wo"
+msgstr "וולוף"
+
+msgid "Intl_Language_xh"
+msgstr "קוסה"
+
+msgid "Intl_Language_yi"
+msgstr "יידיש"
+
+msgid "Intl_Language_yo"
+msgstr "יורובה"
+
+msgid "Intl_Language_za"
+msgstr "זואנג"
+
+msgid "Intl_Language_zh"
+msgstr "סינית"
+
+msgid "Intl_Language_zu"
+msgstr "זולו"
+
+msgid "Intl_LayoutDirection"
+msgstr "rtl"
+
+msgid "Intl_Minutes"
+msgstr "דקות"
+
+msgid "Intl_Month_Long_1"
+msgstr "ינואר"
+
+msgid "Intl_Month_Long_10"
+msgstr "אוקטובר"
+
+msgid "Intl_Month_Long_11"
+msgstr "נובמבר"
+
+msgid "Intl_Month_Long_12"
+msgstr "דצמבר"
+
+msgid "Intl_Month_Long_2"
+msgstr "פברואר"
+
+msgid "Intl_Month_Long_3"
+msgstr "מרץ"
+
+msgid "Intl_Month_Long_4"
+msgstr "אפריל"
+
+msgid "Intl_Month_Long_5"
+msgstr "מאי"
+
+msgid "Intl_Month_Long_6"
+msgstr "יוני"
+
+msgid "Intl_Month_Long_7"
+msgstr "יולי"
+
+msgid "Intl_Month_Long_8"
+msgstr "אוגוסט"
+
+msgid "Intl_Month_Long_9"
+msgstr "ספטמבר"
+
+msgid "Intl_Month_Long_StandAlone_1"
+msgstr "ינואר"
+
+msgid "Intl_Month_Long_StandAlone_10"
+msgstr "אוקטובר"
+
+msgid "Intl_Month_Long_StandAlone_11"
+msgstr "נובמבר"
+
+msgid "Intl_Month_Long_StandAlone_12"
+msgstr "דצמבר"
+
+msgid "Intl_Month_Long_StandAlone_2"
+msgstr "פברואר"
+
+msgid "Intl_Month_Long_StandAlone_3"
+msgstr "מרץ"
+
+msgid "Intl_Month_Long_StandAlone_4"
+msgstr "אפריל"
+
+msgid "Intl_Month_Long_StandAlone_5"
+msgstr "מאי"
+
+msgid "Intl_Month_Long_StandAlone_6"
+msgstr "יוני"
+
+msgid "Intl_Month_Long_StandAlone_7"
+msgstr "יולי"
+
+msgid "Intl_Month_Long_StandAlone_8"
+msgstr "אוגוסט"
+
+msgid "Intl_Month_Long_StandAlone_9"
+msgstr "ספטמבר"
+
+msgid "Intl_Month_Short_1"
+msgstr "ינו׳"
+
+msgid "Intl_Month_Short_10"
+msgstr "אוק׳"
+
+msgid "Intl_Month_Short_11"
+msgstr "נוב׳"
+
+msgid "Intl_Month_Short_12"
+msgstr "דצמ׳"
+
+msgid "Intl_Month_Short_2"
+msgstr "פבר׳"
+
+msgid "Intl_Month_Short_3"
+msgstr "מרץ"
+
+msgid "Intl_Month_Short_4"
+msgstr "אפר׳"
+
+msgid "Intl_Month_Short_5"
+msgstr "מאי"
+
+msgid "Intl_Month_Short_6"
+msgstr "יוני"
+
+msgid "Intl_Month_Short_7"
+msgstr "יולי"
+
+msgid "Intl_Month_Short_8"
+msgstr "אוג׳"
+
+msgid "Intl_Month_Short_9"
+msgstr "ספט׳"
+
+msgid "Intl_Month_Short_StandAlone_1"
+msgstr "ינו׳"
+
+msgid "Intl_Month_Short_StandAlone_10"
+msgstr "אוק׳"
+
+msgid "Intl_Month_Short_StandAlone_11"
+msgstr "נוב׳"
+
+msgid "Intl_Month_Short_StandAlone_12"
+msgstr "דצמ׳"
+
+msgid "Intl_Month_Short_StandAlone_2"
+msgstr "פבר׳"
+
+msgid "Intl_Month_Short_StandAlone_3"
+msgstr "מרץ"
+
+msgid "Intl_Month_Short_StandAlone_4"
+msgstr "אפר׳"
+
+msgid "Intl_Month_Short_StandAlone_5"
+msgstr "מאי"
+
+msgid "Intl_Month_Short_StandAlone_6"
+msgstr "יוני"
+
+msgid "Intl_Month_Short_StandAlone_7"
+msgstr "יולי"
+
+msgid "Intl_Month_Short_StandAlone_8"
+msgstr "אוג׳"
+
+msgid "Intl_Month_Short_StandAlone_9"
+msgstr "ספט׳"
+
+msgid "Intl_NDays"
+msgstr "%s ימים"
+
+msgid "Intl_NHoursShort"
+msgstr "%s שע׳"
+
+msgid "Intl_NMinutes"
+msgstr "%s דקות"
+
+msgid "Intl_NMinutesShort"
+msgstr "%s דק׳"
+
+msgid "Intl_NSeconds"
+msgstr "%s שניות"
+
+msgid "Intl_NSecondsShort"
+msgstr "%s שנ׳"
+
+msgid "Intl_NumberFormatCurrency"
+msgstr "‏#,##0.00 ¤;‏-#,##0.00 ¤"
+
+msgid "Intl_NumberFormatNumber"
+msgstr "#,##0.###"
+
+msgid "Intl_NumberFormatPercent"
+msgstr "#,##0%"
+
+msgid "Intl_NumberSymbolDecimal"
+msgstr "."
+
+msgid "Intl_NumberSymbolGroup"
+msgstr ","
+
+msgid "Intl_NumberSymbolMinus"
+msgstr "‎-"
+
+msgid "Intl_NumberSymbolPercent"
+msgstr "%"
+
+msgid "Intl_NumberSymbolPlus"
+msgstr "‎+"
+
+msgid "Intl_OneDay"
+msgstr "יום 1"
+
+msgid "Intl_OneMinute"
+msgstr "דקה"
+
+msgid "Intl_OneMinuteShort"
+msgstr "דקה"
+
+msgid "Intl_OriginalLanguageName"
+msgstr "עברית"
+
+msgid "Intl_PeriodDay"
+msgstr "יום"
+
+msgid "Intl_PeriodDays"
+msgstr "ימים"
+
+msgid "Intl_PeriodMonth"
+msgstr "חודש"
+
+msgid "Intl_PeriodMonths"
+msgstr "חודשים"
+
+msgid "Intl_PeriodWeek"
+msgstr "שבוע"
+
+msgid "Intl_PeriodWeeks"
+msgstr "שבועות"
+
+msgid "Intl_PeriodYear"
+msgstr "שנה"
+
+msgid "Intl_PeriodYears"
+msgstr "שנים"
+
+msgid "Intl_Seconds"
+msgstr "שניות"
+
+msgid "Intl_Time_AM"
+msgstr "לפנה״צ"
+
+msgid "Intl_Time_PM"
+msgstr "אחה״צ"
+
+msgid "Intl_Timezone_Africa_Asmera"
+msgstr "אסמרה"
+
+msgid "Intl_Timezone_Africa_Ceuta"
+msgstr "סאוטה"
+
+msgid "Intl_Timezone_Africa_Kinshasa"
+msgstr "קינשסה"
+
+msgid "Intl_Timezone_Africa_Lubumbashi"
+msgstr "לובומבאשי"
+
+msgid "Intl_Timezone_America_Adak"
+msgstr "אדאק"
+
+msgid "Intl_Timezone_America_Anchorage"
+msgstr "אנקורג׳"
+
+msgid "Intl_Timezone_America_Araguaina"
+msgstr "אראגואינה"
+
+msgid "Intl_Timezone_America_Argentina_LaRioja"
+msgstr "לה ריוחה"
+
+msgid "Intl_Timezone_America_Argentina_RioGallegos"
+msgstr "ריו גאייגוס"
+
+msgid "Intl_Timezone_America_Argentina_Salta"
+msgstr "סלטה"
+
+msgid "Intl_Timezone_America_Argentina_SanJuan"
+msgstr "סן חואן"
+
+msgid "Intl_Timezone_America_Argentina_SanLuis"
+msgstr "סן לואיס"
+
+msgid "Intl_Timezone_America_Argentina_Tucuman"
+msgstr "טוקומן"
+
+msgid "Intl_Timezone_America_Argentina_Ushuaia"
+msgstr "אושוואיה"
+
+msgid "Intl_Timezone_America_Bahia"
+msgstr "באהיה"
+
+msgid "Intl_Timezone_America_BahiaBanderas"
+msgstr "באהיה בנדרס"
+
+msgid "Intl_Timezone_America_Belem"
+msgstr "בלם"
+
+msgid "Intl_Timezone_America_Blanc-Sablon"
+msgstr "בלאן-סבלון"
+
+msgid "Intl_Timezone_America_BoaVista"
+msgstr "בואה ויסטה"
+
+msgid "Intl_Timezone_America_Boise"
+msgstr "בויסי"
+
+msgid "Intl_Timezone_America_BuenosAires"
+msgstr "בואנוס איירס"
+
+msgid "Intl_Timezone_America_CambridgeBay"
+msgstr "קיימברידג׳ ביי"
+
+msgid "Intl_Timezone_America_CampoGrande"
+msgstr "קמפו גרנדה"
+
+msgid "Intl_Timezone_America_Cancun"
+msgstr "קנקון"
+
+msgid "Intl_Timezone_America_Catamarca"
+msgstr "קטמרקה"
+
+msgid "Intl_Timezone_America_Chicago"
+msgstr "שיקגו"
+
+msgid "Intl_Timezone_America_Chihuahua"
+msgstr "צ׳יוואווה"
+
+msgid "Intl_Timezone_America_CoralHarbour"
+msgstr "אטיקוקן"
+
+msgid "Intl_Timezone_America_Cordoba"
+msgstr "קורדובה"
+
+msgid "Intl_Timezone_America_Creston"
+msgstr "קרסטון"
+
+msgid "Intl_Timezone_America_Cuiaba"
+msgstr "קויאבה"
+
+msgid "Intl_Timezone_America_Danmarkshavn"
+msgstr "דנמרקסהוון"
+
+msgid "Intl_Timezone_America_Dawson"
+msgstr "דוסון"
+
+msgid "Intl_Timezone_America_DawsonCreek"
+msgstr "דוסון קריק"
+
+msgid "Intl_Timezone_America_Denver"
+msgstr "דנוור"
+
+msgid "Intl_Timezone_America_Detroit"
+msgstr "דטרויט"
+
+msgid "Intl_Timezone_America_Edmonton"
+msgstr "אדמונטון"
+
+msgid "Intl_Timezone_America_Eirunepe"
+msgstr "אירונפי"
+
+msgid "Intl_Timezone_America_FortNelson"
+msgstr "פורט נלסון"
+
+msgid "Intl_Timezone_America_Fortaleza"
+msgstr "פורטאלזה"
+
+msgid "Intl_Timezone_America_GlaceBay"
+msgstr "גלייס ביי"
+
+msgid "Intl_Timezone_America_Godthab"
+msgstr "נואוק"
+
+msgid "Intl_Timezone_America_GooseBay"
+msgstr "גוס ביי"
+
+msgid "Intl_Timezone_America_Guayaquil"
+msgstr "גואיאקיל"
+
+msgid "Intl_Timezone_America_Halifax"
+msgstr "הליפקס"
+
+msgid "Intl_Timezone_America_Hermosillo"
+msgstr "הרמוסיו"
+
+msgid "Intl_Timezone_America_Indiana_Knox"
+msgstr "נוקס, אינדיאנה"
+
+msgid "Intl_Timezone_America_Indiana_Marengo"
+msgstr "מרנגו, אינדיאנה"
+
+msgid "Intl_Timezone_America_Indiana_Petersburg"
+msgstr "פיטרסבורג, אינדיאנה"
+
+msgid "Intl_Timezone_America_Indiana_TellCity"
+msgstr "טל סיטי, אינדיאנה"
+
+msgid "Intl_Timezone_America_Indiana_Vevay"
+msgstr "ויוואיי, אינדיאנה"
+
+msgid "Intl_Timezone_America_Indiana_Vincennes"
+msgstr "וינסנס, אינדיאנה"
+
+msgid "Intl_Timezone_America_Indiana_Winamac"
+msgstr "וינמאק, אינדיאנה"
+
+msgid "Intl_Timezone_America_Indianapolis"
+msgstr "אינדיאנפוליס"
+
+msgid "Intl_Timezone_America_Inuvik"
+msgstr "אינוויק"
+
+msgid "Intl_Timezone_America_Iqaluit"
+msgstr "איקלואיט"
+
+msgid "Intl_Timezone_America_Jujuy"
+msgstr "חוחוי"
+
+msgid "Intl_Timezone_America_Juneau"
+msgstr "ג׳ונו"
+
+msgid "Intl_Timezone_America_Kentucky_Monticello"
+msgstr "מונטיצ׳לו, קנטאקי"
+
+msgid "Intl_Timezone_America_LosAngeles"
+msgstr "לוס אנג׳לס"
+
+msgid "Intl_Timezone_America_Louisville"
+msgstr "לואיוויל"
+
+msgid "Intl_Timezone_America_Maceio"
+msgstr "מסייאו"
+
+msgid "Intl_Timezone_America_Manaus"
+msgstr "מנאוס"
+
+msgid "Intl_Timezone_America_Matamoros"
+msgstr "מטמורוס"
+
+msgid "Intl_Timezone_America_Mazatlan"
+msgstr "מזטלן"
+
+msgid "Intl_Timezone_America_Mendoza"
+msgstr "מנדוזה"
+
+msgid "Intl_Timezone_America_Menominee"
+msgstr "מנומיני"
+
+msgid "Intl_Timezone_America_Merida"
+msgstr "מרידה"
+
+msgid "Intl_Timezone_America_Metlakatla"
+msgstr "מטלקטלה"
+
+msgid "Intl_Timezone_America_MexicoCity"
+msgstr "מקסיקו סיטי"
+
+msgid "Intl_Timezone_America_Moncton"
+msgstr "מונקטון"
+
+msgid "Intl_Timezone_America_Monterrey"
+msgstr "מונטריי"
+
+msgid "Intl_Timezone_America_NewYork"
+msgstr "ניו יורק"
+
+msgid "Intl_Timezone_America_Nipigon"
+msgstr "ניפיגון"
+
+msgid "Intl_Timezone_America_Nome"
+msgstr "נום"
+
+msgid "Intl_Timezone_America_Noronha"
+msgstr "נורוניה"
+
+msgid "Intl_Timezone_America_NorthDakota_Beulah"
+msgstr "ביולה, צפון דקוטה"
+
+msgid "Intl_Timezone_America_NorthDakota_Center"
+msgstr "סנטר, צפון דקוטה"
+
+msgid "Intl_Timezone_America_NorthDakota_NewSalem"
+msgstr "ניו סיילם, צפון דקוטה"
+
+msgid "Intl_Timezone_America_Ojinaga"
+msgstr "אוג׳ינאגה"
+
+msgid "Intl_Timezone_America_Pangnirtung"
+msgstr "פנגנירטונג"
+
+msgid "Intl_Timezone_America_Phoenix"
+msgstr "פיניקס"
+
+msgid "Intl_Timezone_America_PortoVelho"
+msgstr "פורטו וליו"
+
+msgid "Intl_Timezone_America_PuntaArenas"
+msgstr "פונטה ארנס"
+
+msgid "Intl_Timezone_America_RainyRiver"
+msgstr "רייני ריבר"
+
+msgid "Intl_Timezone_America_RankinInlet"
+msgstr "רנקין אינלט"
+
+msgid "Intl_Timezone_America_Recife"
+msgstr "רסיפה"
+
+msgid "Intl_Timezone_America_Regina"
+msgstr "רג׳ינה"
+
+msgid "Intl_Timezone_America_Resolute"
+msgstr "רזולוט"
+
+msgid "Intl_Timezone_America_RioBranco"
+msgstr "ריו ברנקו"
+
+msgid "Intl_Timezone_America_SantaIsabel"
+msgstr "סנטה איזבל"
+
+msgid "Intl_Timezone_America_Santarem"
+msgstr "סנטרם"
+
+msgid "Intl_Timezone_America_Santiago"
+msgstr "סנטיאגו"
+
+msgid "Intl_Timezone_America_SaoPaulo"
+msgstr "סאו פאולו"
+
+msgid "Intl_Timezone_America_Scoresbysund"
+msgstr "סקורסביסונד"
+
+msgid "Intl_Timezone_America_Sitka"
+msgstr "סיטקה"
+
+msgid "Intl_Timezone_America_StJohns"
+msgstr "סנט ג׳ונס"
+
+msgid "Intl_Timezone_America_SwiftCurrent"
+msgstr "סוויפט קרנט"
+
+msgid "Intl_Timezone_America_Thule"
+msgstr "תולה"
+
+msgid "Intl_Timezone_America_ThunderBay"
+msgstr "ת׳אנדר ביי"
+
+msgid "Intl_Timezone_America_Tijuana"
+msgstr "טיחואנה"
+
+msgid "Intl_Timezone_America_Toronto"
+msgstr "טורונטו"
+
+msgid "Intl_Timezone_America_Vancouver"
+msgstr "ונקובר"
+
+msgid "Intl_Timezone_America_Whitehorse"
+msgstr "ווייטהורס"
+
+msgid "Intl_Timezone_America_Winnipeg"
+msgstr "וויניפג"
+
+msgid "Intl_Timezone_America_Yakutat"
+msgstr "יקוטאט"
+
+msgid "Intl_Timezone_America_Yellowknife"
+msgstr "ילונייף"
+
+msgid "Intl_Timezone_Antarctica_Casey"
+msgstr "קאסיי"
+
+msgid "Intl_Timezone_Antarctica_Davis"
+msgstr "דיוויס"
+
+msgid "Intl_Timezone_Antarctica_DumontDUrville"
+msgstr "דומון ד׳אורוויל"
+
+msgid "Intl_Timezone_Antarctica_Macquarie"
+msgstr "מקרי"
+
+msgid "Intl_Timezone_Antarctica_Mawson"
+msgstr "מוסון"
+
+msgid "Intl_Timezone_Antarctica_McMurdo"
+msgstr "מק-מרדו"
+
+msgid "Intl_Timezone_Antarctica_Palmer"
+msgstr "פאלמר"
+
+msgid "Intl_Timezone_Antarctica_Rothera"
+msgstr "רות׳רה"
+
+msgid "Intl_Timezone_Antarctica_Syowa"
+msgstr "סיוואה"
+
+msgid "Intl_Timezone_Antarctica_Troll"
+msgstr "טרול"
+
+msgid "Intl_Timezone_Antarctica_Vostok"
+msgstr "ווסטוק"
+
+msgid "Intl_Timezone_Asia_Almaty"
+msgstr "אלמאטי"
+
+msgid "Intl_Timezone_Asia_Anadyr"
+msgstr "אנדיר"
+
+msgid "Intl_Timezone_Asia_Aqtau"
+msgstr "אקטאו"
+
+msgid "Intl_Timezone_Asia_Aqtobe"
+msgstr "אקטובה"
+
+msgid "Intl_Timezone_Asia_Atyrau"
+msgstr "אטיראו"
+
+msgid "Intl_Timezone_Asia_Barnaul"
+msgstr "ברנאול"
+
+msgid "Intl_Timezone_Asia_Calcutta"
+msgstr "קולקטה"
+
+msgid "Intl_Timezone_Asia_Chita"
+msgstr "צ׳יטה"
+
+msgid "Intl_Timezone_Asia_Choibalsan"
+msgstr "צ׳ויבלסן"
+
+msgid "Intl_Timezone_Asia_Famagusta"
+msgstr "פמגוסטה"
+
+msgid "Intl_Timezone_Asia_Gaza"
+msgstr "עזה"
+
+msgid "Intl_Timezone_Asia_Hebron"
+msgstr "חברון"
+
+msgid "Intl_Timezone_Asia_Hovd"
+msgstr "חובד"
+
+msgid "Intl_Timezone_Asia_Irkutsk"
+msgstr "אירקוטסק"
+
+msgid "Intl_Timezone_Asia_Jakarta"
+msgstr "ג׳קרטה"
+
+msgid "Intl_Timezone_Asia_Jayapura"
+msgstr "ג׳איאפורה"
+
+msgid "Intl_Timezone_Asia_Kamchatka"
+msgstr "קמצ׳טקה"
+
+msgid "Intl_Timezone_Asia_Katmandu"
+msgstr "קטמנדו"
+
+msgid "Intl_Timezone_Asia_Khandyga"
+msgstr "חנדיגה"
+
+msgid "Intl_Timezone_Asia_Krasnoyarsk"
+msgstr "קרסנויארסק"
+
+msgid "Intl_Timezone_Asia_KualaLumpur"
+msgstr "קואלה לומפור"
+
+msgid "Intl_Timezone_Asia_Kuching"
+msgstr "קוצ׳ינג"
+
+msgid "Intl_Timezone_Asia_Magadan"
+msgstr "מגדן"
+
+msgid "Intl_Timezone_Asia_Makassar"
+msgstr "מאקאסאר"
+
+msgid "Intl_Timezone_Asia_Nicosia"
+msgstr "ניקוסיה"
+
+msgid "Intl_Timezone_Asia_Novokuznetsk"
+msgstr "נובוקוזנטסק"
+
+msgid "Intl_Timezone_Asia_Novosibirsk"
+msgstr "נובוסיבירסק"
+
+msgid "Intl_Timezone_Asia_Omsk"
+msgstr "אומסק"
+
+msgid "Intl_Timezone_Asia_Oral"
+msgstr "אורל"
+
+msgid "Intl_Timezone_Asia_Pontianak"
+msgstr "פונטיאנק"
+
+msgid "Intl_Timezone_Asia_Qyzylorda"
+msgstr "קיזילורדה"
+
+msgid "Intl_Timezone_Asia_Rangoon"
+msgstr "רנגון"
+
+msgid "Intl_Timezone_Asia_Saigon"
+msgstr "הו צ׳י מין סיטי"
+
+msgid "Intl_Timezone_Asia_Sakhalin"
+msgstr "סחלין"
+
+msgid "Intl_Timezone_Asia_Samarkand"
+msgstr "סמרקנד"
+
+msgid "Intl_Timezone_Asia_Shanghai"
+msgstr "שנחאי"
+
+msgid "Intl_Timezone_Asia_Srednekolymsk"
+msgstr "סרדנייקולימסק"
+
+msgid "Intl_Timezone_Asia_Tashkent"
+msgstr "טשקנט"
+
+msgid "Intl_Timezone_Asia_Tomsk"
+msgstr "טומסק"
+
+msgid "Intl_Timezone_Asia_Ulaanbaatar"
+msgstr "אולאאנבטאר"
+
+msgid "Intl_Timezone_Asia_Urumqi"
+msgstr "אורומקי"
+
+msgid "Intl_Timezone_Asia_Ust-Nera"
+msgstr "אוסט-נרה"
+
+msgid "Intl_Timezone_Asia_Vladivostok"
+msgstr "ולדיווסטוק"
+
+msgid "Intl_Timezone_Asia_Yakutsk"
+msgstr "יקוטסק"
+
+msgid "Intl_Timezone_Asia_Yekaterinburg"
+msgstr "יקטרינבורג"
+
+msgid "Intl_Timezone_Atlantic_Azores"
+msgstr "האיים האזוריים"
+
+msgid "Intl_Timezone_Atlantic_Canary"
+msgstr "האיים הקנריים"
+
+msgid "Intl_Timezone_Atlantic_Faeroe"
+msgstr "פארו"
+
+msgid "Intl_Timezone_Atlantic_Madeira"
+msgstr "מדיירה"
+
+msgid "Intl_Timezone_Australia_Adelaide"
+msgstr "אדלייד"
+
+msgid "Intl_Timezone_Australia_Brisbane"
+msgstr "בריסביין"
+
+msgid "Intl_Timezone_Australia_BrokenHill"
+msgstr "ברוקן היל"
+
+msgid "Intl_Timezone_Australia_Currie"
+msgstr "קרי"
+
+msgid "Intl_Timezone_Australia_Darwin"
+msgstr "דרווין"
+
+msgid "Intl_Timezone_Australia_Eucla"
+msgstr "יוקלה"
+
+msgid "Intl_Timezone_Australia_Hobart"
+msgstr "הוברט"
+
+msgid "Intl_Timezone_Australia_Lindeman"
+msgstr "לינדמן"
+
+msgid "Intl_Timezone_Australia_LordHowe"
+msgstr "אי הלורד האו"
+
+msgid "Intl_Timezone_Australia_Melbourne"
+msgstr "מלבורן"
+
+msgid "Intl_Timezone_Australia_Perth"
+msgstr "פרת׳"
+
+msgid "Intl_Timezone_Australia_Sydney"
+msgstr "סידני"
+
+msgid "Intl_Timezone_Europe_Astrakhan"
+msgstr "אסטרחן"
+
+msgid "Intl_Timezone_Europe_Berlin"
+msgstr "ברלין"
+
+msgid "Intl_Timezone_Europe_Busingen"
+msgstr "ביזינגן"
+
+msgid "Intl_Timezone_Europe_Kaliningrad"
+msgstr "קלינינגרד"
+
+msgid "Intl_Timezone_Europe_Kiev"
+msgstr "קייב"
+
+msgid "Intl_Timezone_Europe_Kirov"
+msgstr "קירוב"
+
+msgid "Intl_Timezone_Europe_Lisbon"
+msgstr "ליסבון"
+
+msgid "Intl_Timezone_Europe_Madrid"
+msgstr "מדריד"
+
+msgid "Intl_Timezone_Europe_Moscow"
+msgstr "מוסקבה"
+
+msgid "Intl_Timezone_Europe_Samara"
+msgstr "סמרה"
+
+msgid "Intl_Timezone_Europe_Saratov"
+msgstr "סראטוב"
+
+msgid "Intl_Timezone_Europe_Simferopol"
+msgstr "סימפרופול"
+
+msgid "Intl_Timezone_Europe_Ulyanovsk"
+msgstr "אוליאנובסק"
+
+msgid "Intl_Timezone_Europe_Uzhgorod"
+msgstr "אוז׳הורוד"
+
+msgid "Intl_Timezone_Europe_Volgograd"
+msgstr "וולגוגרד"
+
+msgid "Intl_Timezone_Europe_Zaporozhye"
+msgstr "זפורוז׳יה"
+
+msgid "Intl_Timezone_Pacific_Auckland"
+msgstr "אוקלנד"
+
+msgid "Intl_Timezone_Pacific_Bougainville"
+msgstr "בוגנוויל"
+
+msgid "Intl_Timezone_Pacific_Chatham"
+msgstr "צ׳אטהאם"
+
+msgid "Intl_Timezone_Pacific_Easter"
+msgstr "אי הפסחא"
+
+msgid "Intl_Timezone_Pacific_Enderbury"
+msgstr "אנדרבורי"
+
+msgid "Intl_Timezone_Pacific_Galapagos"
+msgstr "גלפאגוס"
+
+msgid "Intl_Timezone_Pacific_Gambier"
+msgstr "איי גמבייה"
+
+msgid "Intl_Timezone_Pacific_Honolulu"
+msgstr "הונולולו"
+
+msgid "Intl_Timezone_Pacific_Johnston"
+msgstr "ג׳ונסטון"
+
+msgid "Intl_Timezone_Pacific_Kiritimati"
+msgstr "קיריטימאטי"
+
+msgid "Intl_Timezone_Pacific_Kosrae"
+msgstr "קוסרה"
+
+msgid "Intl_Timezone_Pacific_Kwajalein"
+msgstr "קוואג׳ליין"
+
+msgid "Intl_Timezone_Pacific_Majuro"
+msgstr "מאג׳ורו"
+
+msgid "Intl_Timezone_Pacific_Marquesas"
+msgstr "איי מרקיז"
+
+msgid "Intl_Timezone_Pacific_Midway"
+msgstr "מידוויי"
+
+msgid "Intl_Timezone_Pacific_Ponape"
+msgstr "פונפיי"
+
+msgid "Intl_Timezone_Pacific_PortMoresby"
+msgstr "פורט מורסבי"
+
+msgid "Intl_Timezone_Pacific_Tahiti"
+msgstr "טהיטי"
+
+msgid "Intl_Timezone_Pacific_Tarawa"
+msgstr "טאראווה"
+
+msgid "Intl_Timezone_Pacific_Truk"
+msgstr "צ׳וק"
+
+msgid "Intl_Timezone_Pacific_Wake"
+msgstr "וייק"
+
+msgid "Intl_Today"
+msgstr "היום"
+
+msgid "Intl_Year_Short"
+msgstr "שנ׳"
+
+msgid "Intl_Yesterday"
+msgstr "אתמול"
+
+msgid "Login_InvalidUsernameEmail"
+msgstr "שם משתמש ו/או אימייל לא תקניים"
+
+msgid "Login_LogIn"
+msgstr "התחברות"
+
+msgid "Login_LoginPasswordNotCorrect"
+msgstr "שם משתמש וסיסמה אינם תואמים"
+
+msgid "Login_LostYourPassword"
+msgstr "שכחת סיסמה?"
+
+msgid "Login_PasswordRepeat"
+msgstr "סיסמה (שוב)"
+
+msgid "Login_PasswordsDoNotMatch"
+msgstr "הסיסמאות אינן תואמות."
+
+msgid "Login_RememberMe"
+msgstr "זכור אותי"
+
+msgid "Marketplace_ActivateLicenseKey"
+msgstr "הפעל"
+
+msgid "Marketplace_ActionActivatePlugin"
+msgstr "הפעל תוסף"
+
+msgid "Marketplace_ActionInstall"
+msgstr "להתקין"
+
+msgid "Marketplace_Authors"
+msgstr "כותבים"
+
+msgid "Marketplace_PluginKeywords"
+msgstr "מילות מפתח"
+
+msgid "Marketplace_PluginVersionInfo"
+msgstr "%1$s מתוך %2$s"
+
+msgid "MultiSites_Pagination"
+msgstr "%1$s - %2$s of %3$s"
+
+msgid "Overlay_Clicks"
+msgstr "%s לחיצות"
+
+msgid "Overlay_Location"
+msgstr "מיקום"
+
+msgid "Overlay_OneClick"
+msgstr "לחיצה 1"
+
+msgid "PrivacyManager_AnonymizeIpInlineHelp"
+msgstr "הסתרת הספרות האחרונות של כתובת הIP של המבקרים בכדי להתיישר עם החוקים / תקנות המקומיים."
+
+msgid "Referrers_Campaigns"
+msgstr "קמפיינים"
+
+msgid "Referrers_ColumnSocial"
+msgstr "רשת חברתית"
+
+msgid "Referrers_ColumnWebsite"
+msgstr "אתר"
+
+msgid "Referrers_ColumnWebsitePage"
+msgstr "עמוד אתר"
+
+msgid "Referrers_Keywords"
+msgstr "מילות מפתח"
+
+msgid "Referrers_Referrer"
+msgstr "מפנה"
+
+msgid "Referrers_ReferrerName"
+msgstr "שם הפניה"
+
+msgid "Referrers_Referrers"
+msgstr "הפניות"
+
+msgid "Referrers_ReferrersOverview"
+msgstr "סקירת הפניות"
+
+msgid "Referrers_SearchEngines"
+msgstr "מנועי חיפוש"
+
+msgid "Referrers_Socials"
+msgstr "רשתות חברתיות"
+
+msgid "Referrers_SubmenuWebsitesOnly"
+msgstr "אתרים"
+
+msgid "Referrers_Websites"
+msgstr "אתרים"
+
+msgid "Resolution_WidgetResolutions"
+msgstr "רזולוציית מסך"
+
+msgid "SEO_Rank"
+msgstr "דירוג"
+
+msgid "ScheduledReports_CreateReport"
+msgstr "יצירת דוח"
+
+msgid "ScheduledReports_EmailHello"
+msgstr "שלום,"
+
+msgid "ScheduledReports_SendReportTo"
+msgstr "שלח דוח אל"
+
+msgid "ScheduledReports_SentToMe"
+msgstr "שלח אלי"
+
+msgid "SegmentEditor_DefaultAllVisits"
+msgstr "כל הביקורים"
+
+msgid "SegmentEditor_VisibleToAllUsers"
+msgstr "כל המשתמשים"
+
+msgid "SitesManager_Currency"
+msgstr "מטבע"
+
+msgid "SitesManager_Sites"
+msgstr "אתרים"
+
+msgid "SitesManager_Timezone"
+msgstr "אזור זמן"
+
+msgid "TagManager_CategoryClicks"
+msgstr "לחיצות"
+
+msgid "TagManager_CategoryDate"
+msgstr "תאריך"
+
+msgid "TagManager_CategoryEmail"
+msgstr "אימייל"
+
+msgid "TagManager_CategoryErrors"
+msgstr "שגיאות"
+
+msgid "TagManager_PageUrlVariableName"
+msgstr "כתובת העמוד"
+
+msgid "TagManager_Version"
+msgstr "גרסה"
+
+msgid "UserCountry_City"
+msgstr "עיר"
+
+msgid "UserCountry_CityAndCountry"
+msgstr "%1$s, %2$s"
+
+msgid "UserCountry_Continent"
+msgstr "יבשת"
+
+msgid "UserCountry_Country"
+msgstr "מדינה"
+
+msgid "UserCountry_country_a1"
+msgstr "מתווך אנונימי"
+
+msgid "UserCountry_country_a2"
+msgstr "ספק לוויני"
+
+msgid "UserCountry_country_cat"
+msgstr "קהילות דוברות קטלאנית"
+
+msgid "UserCountry_country_o1"
+msgstr "מדינה אחרת"
+
+msgid "UserCountry_GeoIPDatabases"
+msgstr "מסד נתונים GeoIP"
+
+msgid "UserCountry_Geolocation"
+msgstr "מיקום גאוגרפי"
+
+msgid "UserCountry_Location"
+msgstr "מיקום"
+
+msgid "UserCountryMap_Cities"
+msgstr "ערים"
+
+msgid "UserCountryMap_Countries"
+msgstr "מדינות"
+
+msgid "UserCountryMap_map"
+msgstr "מפה"
+
+msgid "UserCountryMap_MinutesAgo"
+msgstr "לפני %s דקות"
+
+msgid "UserCountryMap_VisitorMap"
+msgstr "מפת מבקרים"
+
+msgid "UserCountryMap_WorldWide"
+msgstr "כלל-עולמי"
+
+msgid "UserId_UserReportTitle"
+msgstr "משתמשים"
+
+msgid "UserLanguage_LanguageCode"
+msgstr "קוד שפה"
+
+msgid "UsersManager_AllWebsites"
+msgstr "כל האתרים"
+
+msgid "UsersManager_Email"
+msgstr "אימייל"
+
+msgid "UsersManager_ManageAccess"
+msgstr "ניהול הרשאות"
+
+msgid "UsersManager_MenuUsers"
+msgstr "משתמשים"
+
+msgid "UsersManager_MenuUserSettings"
+msgstr "הגדרות משתמש"
+
+msgid "UsersManager_PrivNone"
+msgstr "אין הרשאות"
+
+msgid "UsersManager_PrivView"
+msgstr "הצג"
+
+msgid "UsersManager_User"
+msgstr "משתמש"
+
+msgid "UsersManager_UsersManagement"
+msgstr "ניהול משתמשים"
+
+msgid "UsersManager_ShowAll"
+msgstr "הצג הכל"
+
+msgid "UsersManager_Username"
+msgstr "שם משתמש"
+
+msgid "VisitFrequency_ColumnActionsByReturningVisits"
+msgstr "פעולות לפי ביקורים חוזרים"
+
+msgid "VisitFrequency_ColumnAverageVisitDurationForReturningVisitors"
+msgstr "משך ממוצע של ביקור חוזר (שניות)"
+
+msgid "VisitFrequency_ColumnAvgActionsPerReturningVisit"
+msgstr "ממוצע פעולות לביקור חוזר"
+
+msgid "VisitFrequency_ColumnMaxActionsInReturningVisit"
+msgstr "מקסימום פעולות בביקור חוזר אחד"
+
+msgid "VisitFrequency_ColumnNbReturningVisitsConverted"
+msgstr "מספר ביקורים חוזרים שהומרו"
+
+msgid "VisitFrequency_ColumnReturningVisits"
+msgstr "ביקורים חוזרים"
+
+msgid "VisitFrequency_ColumnSumVisitLengthReturning"
+msgstr "סך הזמן ע״י מבקרים חוזרים (שניות)"
+
+msgid "VisitFrequency_ColumnUniqueReturningVisitors"
+msgstr "מבקרים חוזרים ייחודיים"
+
+msgid "VisitFrequency_ReturningVisitsDocumentation"
+msgstr "זו סקירה של ביקורים חוזרים."
+
+msgid "VisitFrequency_SubmenuFrequency"
+msgstr "תדירות"
+
+msgid "VisitFrequency_WidgetGraphReturning"
+msgstr "ביקורים חוזרים לאורך זמן"
+
+msgid "VisitFrequency_WidgetOverview"
+msgstr "סקירת תדירות"
+
+msgid "VisitTime_ColumnLocalTime"
+msgstr "זמן מקומי"
+
+msgid "VisitTime_ColumnServerTime"
+msgstr "זמן שרת"
+
+msgid "VisitTime_DayOfWeek"
+msgstr "יום בשבוע"
+
+msgid "VisitTime_LocalTime"
+msgstr "ביקורים לזמן מקומי"
+
+msgid "VisitTime_NHour"
+msgstr "שעה %s"
+
+msgid "VisitTime_ServerTime"
+msgstr "ביקורים לזמן שרת"
+
+msgid "VisitTime_SubmenuTimes"
+msgstr "זמנים"
+
+msgid "VisitTime_VisitsByDayOfWeek"
+msgstr "ביקורים לפי יום בשבוע"
+
+msgid "VisitTime_WidgetByDayOfWeekDocumentation"
+msgstr "גרף זה מציג את מספר הביקורים שאתרך קיבל בכל יום בשבוע."
+
+msgid "VisitTime_WidgetLocalTime"
+msgstr "ביקורים לפי זמן מקומי"
+
+msgid "VisitTime_WidgetServerTime"
+msgstr "ביקורים לפי זמן שרת"
+
+msgid "VisitorInterest_BetweenXYMinutes"
+msgstr "%1$s-%2$s דקות"
+
+msgid "VisitorInterest_BetweenXYSeconds"
+msgstr "%1$s-%2$s שניות"
+
+msgid "VisitorInterest_ColumnPagesPerVisit"
+msgstr "עמודים לביקור"
+
+msgid "VisitorInterest_ColumnVisitDuration"
+msgstr "משך ביקור"
+
+msgid "VisitorInterest_Engagement"
+msgstr "מעורבות"
+
+msgid "VisitorInterest_NPages"
+msgstr "%s עמודים"
+
+msgid "VisitorInterest_OnePage"
+msgstr "עמוד 1"
+
+msgid "VisitorInterest_VisitNum"
+msgstr "מספר ביקור"
+
+msgid "VisitorInterest_VisitsByDaysSinceLast"
+msgstr "ביקורים לפי ימים מאז ביקור אחרון"
+
+msgid "VisitorInterest_visitsByVisitCount"
+msgstr "ביקורים לפי מספר ביקור"
+
+msgid "VisitorInterest_VisitsPerDuration"
+msgstr "ביקורים למשך ביקור"
+
+msgid "VisitorInterest_VisitsPerNbOfPages"
+msgstr "ביקורים למספר עמודים"
+
+msgid "VisitorInterest_WidgetLengths"
+msgstr "משך ביקורים"
+
+msgid "VisitorInterest_WidgetPages"
+msgstr "עמודים לביקור"
+
+msgid "VisitorInterest_WidgetVisitsByDaysSinceLast"
+msgstr "ביקורים לפי ימים מאז ביקור אחרון"
+
+msgid "VisitsSummary_GenerateQueries"
+msgstr "%s שאילתות בוצעו"
+
+msgid "VisitsSummary_GenerateTime"
+msgstr "%s שניות בכדי לחולל את העמוד"
+
+msgid "VisitsSummary_NbActionsDescription"
+msgstr "%s פעולות (צפייה בעמודים, הורדות וקישורים יוצאים)"
+
+msgid "VisitsSummary_VisitsSummary"
+msgstr "תקציר ביקורים"
+
+msgid "VisitsSummary_VisitsSummaryDocumentation"
+msgstr "זו סקירה של התפתחות הביקור."
+
+msgid "VisitsSummary_WidgetLastVisits"
+msgstr "גרף ביקורים אחרונים"
+
+msgid "VisitsSummary_WidgetOverviewGraph"
+msgstr "מבט כללי עם גרף"
+
+msgid "VisitsSummary_WidgetVisits"
+msgstr "מבט כללי על ביקורים"
+
+msgid "WebsiteMeasurable_Website"
+msgstr "אתר"
+
+msgid "WebsiteMeasurable_Websites"
+msgstr "אתרים"
+
+msgid "Widgetize_OpenInNewWindow"
+msgstr "פתיחה בחלון חדש"
+
+msgid "Widgetize_TopLinkTooltip"
+msgstr "ייצוא דוחות Matomo כוידג׳טים והטמעת לוח הבקרה באפליקציה שלך כ-iframe."

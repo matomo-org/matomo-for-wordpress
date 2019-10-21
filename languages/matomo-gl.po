@@ -1,0 +1,4358 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-10-21T03:38:24+00:00\n"
+"PO-Revision-Date: 2019-10-21T03:38:24+00:00\n"
+"Language: gl\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Domain: matomo\n"
+
+msgid "General_AboutPiwikX"
+msgstr "Acerca de Matomo %s"
+
+msgid "General_Action"
+msgstr "Acción"
+
+msgid "General_Actions"
+msgstr "Accións"
+
+msgid "General_Add"
+msgstr "Engadir"
+
+msgid "General_AfterEntry"
+msgstr "despois de entrar aquí"
+
+msgid "General_All"
+msgstr "Todo"
+
+msgid "General_AllWebsitesDashboard"
+msgstr "Tableiro de todas as Webs"
+
+msgid "General_And"
+msgstr "e"
+
+msgid "General_API"
+msgstr "API"
+
+msgid "General_AveragePrice"
+msgstr "Prezo medio"
+
+msgid "General_AverageQuantity"
+msgstr "Cantidade media"
+
+msgid "General_BackToPiwik"
+msgstr "Voltar a Matomo"
+
+msgid "General_Cancel"
+msgstr "Cancelar"
+
+msgid "General_ChangePassword"
+msgstr "Cambiar o contrasinal"
+
+msgid "General_ClickHere"
+msgstr "Prema aquí para máis información."
+
+msgid "General_Close"
+msgstr "Pechar"
+
+msgid "General_ColumnActionsPerVisit"
+msgstr "Accións por Visita"
+
+msgid "General_ColumnAverageTimeOnPage"
+msgstr "Tempo medio na pax."
+
+msgid "General_ColumnAvgTimeOnSite"
+msgstr "Tempo Medio na Web"
+
+msgid "General_ColumnBounceRate"
+msgstr "Ratio de Rebotes"
+
+msgid "General_ColumnBounces"
+msgstr "Rebotes"
+
+msgid "General_ColumnConversionRate"
+msgstr "Tasa de Conversión"
+
+msgid "General_ColumnEntrances"
+msgstr "Entradas"
+
+msgid "General_ColumnExitRate"
+msgstr "Tasa de Saídas"
+
+msgid "General_ColumnExits"
+msgstr "Saídas"
+
+msgid "General_ColumnLabel"
+msgstr "Etiqueta"
+
+msgid "General_ColumnMaxActions"
+msgstr "Máximas accións nunha visita"
+
+msgid "General_ColumnNbActions"
+msgstr "Accións"
+
+msgid "General_ColumnNbUniqVisitors"
+msgstr "Visitantes únicos"
+
+msgid "General_ColumnNbUsers"
+msgstr "Usuario"
+
+msgid "General_ColumnNbVisits"
+msgstr "Visitas"
+
+msgid "General_ColumnPageviews"
+msgstr "Páxinas Vistas"
+
+msgid "General_ColumnSumVisitLength"
+msgstr "Tempo por visitantes (en segundos)"
+
+msgid "General_ColumnUniquePageviews"
+msgstr "Páxinas Únicas"
+
+msgid "General_ColumnValuePerVisit"
+msgstr "Valor por Visita"
+
+msgid "General_ColumnVisitDuration"
+msgstr "Duración Visita (en segs)"
+
+msgid "General_ColumnVisitsWithConversions"
+msgstr "Visitas con Conversións"
+
+msgid "General_CurrentMonth"
+msgstr "Mes Actual"
+
+msgid "General_CurrentWeek"
+msgstr "Semana Actual"
+
+msgid "General_CurrentYear"
+msgstr "Ano Actual"
+
+msgid "General_Daily"
+msgstr "Diariamente"
+
+msgid "General_DashboardForASpecificWebsite"
+msgstr "Tableiro dunha soa Web"
+
+msgid "General_Date"
+msgstr "Data"
+
+msgid "General_DateRange"
+msgstr "Rango de Datas"
+
+msgid "General_DateRangeFrom"
+msgstr "Non"
+
+msgid "General_DaysHours"
+msgstr "%1$s días %2$s horas"
+
+msgid "General_DaysSinceFirstVisit"
+msgstr "Días desde Primeira Visita"
+
+msgid "General_DaysSinceLastVisit"
+msgstr "Días desde Última Visita"
+
+msgid "General_Default"
+msgstr "Predeterminado"
+
+msgid "General_Delete"
+msgstr "Borrar"
+
+msgid "General_Description"
+msgstr "Descripción"
+
+msgid "General_Details"
+msgstr "Detalle"
+
+msgid "General_DisplaySimpleTable"
+msgstr "Amosar táboa sinxela"
+
+msgid "General_DisplayTableWithGoalMetrics"
+msgstr "Amosar táboa con Obexctivos"
+
+msgid "General_DisplayTableWithMoreMetrics"
+msgstr "Amosar táboa con máis medidas"
+
+msgid "General_Done"
+msgstr "Feito"
+
+msgid "General_Download"
+msgstr "Descarga"
+
+msgid "General_Downloads"
+msgstr "Descargas"
+
+msgid "General_Edit"
+msgstr "Editar"
+
+msgid "General_Error"
+msgstr "Erro"
+
+msgid "General_EvolutionOverPeriod"
+msgstr "Evolución no período"
+
+msgid "General_ExportAsImage"
+msgstr "Exportar como Imaxe"
+
+msgid "General_ExportThisReport"
+msgstr "Exportar datos noutros formatos"
+
+msgid "General_ForExampleShort"
+msgstr "ex."
+
+msgid "General_GiveUsYourFeedback"
+msgstr "Contacte con Nos"
+
+msgid "General_GoTo"
+msgstr "Ir a %s"
+
+msgid "General_HelloUser"
+msgstr "Ola, %s!"
+
+msgid "General_HoursMinutes"
+msgstr "%1$s horas %2$s min"
+
+msgid "General_Id"
+msgstr "ID"
+
+msgid "General_JsTrackingTag"
+msgstr "Etiqueta Javascript"
+
+msgid "General_Loading"
+msgstr "Cargando"
+
+msgid "General_LoadingData"
+msgstr "Cargando Datos..."
+
+msgid "General_Locale"
+msgstr "gl_ES.UTF-8"
+
+msgid "General_Logout"
+msgstr "Desconectarse"
+
+msgid "General_MinutesSeconds"
+msgstr "%1$s min %2$segs"
+
+msgid "General_Monthly"
+msgstr "Mensualmente"
+
+msgid "General_MultiSitesSummary"
+msgstr "Todas as Webs"
+
+msgid "General_Name"
+msgstr "Nome"
+
+msgid "General_NbActions"
+msgstr "Numero de Accións"
+
+msgid "General_Never"
+msgstr "Nunca"
+
+msgid "General_NewUpdatePiwikX"
+msgstr "Nova Actualización: Matomo %s"
+
+msgid "General_NewVisitor"
+msgstr "Nova Visita"
+
+msgid "General_Next"
+msgstr "Seguinte"
+
+msgid "General_No"
+msgstr "Non"
+
+msgid "General_NoDataForGraph"
+msgstr "Sin datos para este Gráfico"
+
+msgid "General_NoDataForTagCloud"
+msgstr "Sin datos para esta Nube"
+
+msgid "General_NotValid"
+msgstr "%s non é valido"
+
+msgid "General_NumberOfVisits"
+msgstr "Número de Visitas"
+
+msgid "General_NVisits"
+msgstr "%s visitas"
+
+msgid "General_NUniqueVisitors"
+msgstr "%s visitas únicas"
+
+msgid "General_Ok"
+msgstr "Ok"
+
+msgid "General_OpenSourceWebAnalytics"
+msgstr "Analise Web de Open Source"
+
+msgid "General_OrCancel"
+msgstr "ou %1$s Cancelar %2$s"
+
+msgid "General_Others"
+msgstr "Outros"
+
+msgid "General_Outlinks"
+msgstr "Ligazóns externos"
+
+msgid "General_Overview"
+msgstr "Xeral"
+
+msgid "General_Password"
+msgstr "Contrasinal"
+
+msgid "General_Period"
+msgstr "Periodo"
+
+msgid "General_Piechart"
+msgstr "Gráfico circular"
+
+msgid "General_Plugin"
+msgstr "Complemento"
+
+msgid "General_Plugins"
+msgstr "Plugins"
+
+msgid "General_Previous"
+msgstr "Anterior"
+
+msgid "General_RefreshPage"
+msgstr "Actualizar páxina"
+
+msgid "General_Report"
+msgstr "Informe"
+
+msgid "General_Reports"
+msgstr "Informe"
+
+msgid "General_Required"
+msgstr "%s necesario"
+
+msgid "General_ReturningVisitor"
+msgstr "Re-Visita"
+
+msgid "General_Save"
+msgstr "Gardar"
+
+msgid "General_SaveImageOnYourComputer"
+msgstr "Para grabar a imaxe no computador faga click-dereito na imaxe e seleccione \"Grabar Imaxe como..\""
+
+msgid "General_Search"
+msgstr "Procurar"
+
+msgid "General_Settings"
+msgstr "Configuración"
+
+msgid "General_Table"
+msgstr "Táboa"
+
+msgid "General_TagCloud"
+msgstr "Nube de etiquetas"
+
+msgid "General_TrackingScopeAction"
+msgstr "Acción"
+
+msgid "General_TrackingScopeVisit"
+msgstr "Visita"
+
+msgid "General_TranslatorName"
+msgstr "OUSLI - Ourense Software Libre, Antonio Andina"
+
+msgid "General_Unknown"
+msgstr "Descoñecido"
+
+msgid "General_Username"
+msgstr "Usuario"
+
+msgid "General_Value"
+msgstr "Valor"
+
+msgid "General_VBarGraph"
+msgstr "Gráfico de barras"
+
+msgid "General_View"
+msgstr "Ver"
+
+msgid "General_Visit"
+msgstr "Visita"
+
+msgid "General_VisitConvertedGoal"
+msgstr "Visita convertida en Obxectivo"
+
+msgid "General_VisitDuration"
+msgstr "Duración Media Visita (en segs)"
+
+msgid "General_VisitorIP"
+msgstr "IP Visita"
+
+msgid "General_Visitors"
+msgstr "Visitantes"
+
+msgid "General_Warning"
+msgstr "Advertencia"
+
+msgid "General_Website"
+msgstr "Web"
+
+msgid "General_Weekly"
+msgstr "Semanalmente"
+
+msgid "General_Widgets"
+msgstr "Engadidos"
+
+msgid "General_YearsDays"
+msgstr "%1$s anos %2$s días"
+
+msgid "General_Yes"
+msgstr "Si"
+
+msgid "General_YouMustBeLoggedIn"
+msgstr "Debes de rexistrate para acceder a esta función."
+
+msgid "General_YourChangesHaveBeenSaved"
+msgstr "Os cambios foron grabados"
+
+msgid "Mobile_Account"
+msgstr "Conta"
+
+msgid "Mobile_Accounts"
+msgstr "Contas"
+
+msgid "Mobile_AddAccount"
+msgstr "Engadir conta"
+
+msgid "Mobile_Advanced"
+msgstr "Avanzado"
+
+msgid "Mobile_AnonymousAccess"
+msgstr "Acceso anónimo"
+
+msgid "Mobile_DefaultReportDate"
+msgstr "Data do informe"
+
+msgid "Mobile_LoadingReport"
+msgstr "A cargar %s"
+
+msgid "RowEvolution_CompareRows"
+msgstr "Comparar rexistros"
+
+msgid "RowEvolution_ComparingRecords"
+msgstr "A comparar %s filas"
+
+msgid "API_LoadedAPIs"
+msgstr "%s APIs foro cargadas con éxito"
+
+msgid "API_UserAuthentication"
+msgstr "Autenticación do usuario"
+
+msgid "Actions_ColumnPageName"
+msgstr "Nome da páxina"
+
+msgid "Actions_ColumnPageURL"
+msgstr "URL da páxina"
+
+msgid "Actions_ColumnSearches"
+msgstr "Buscas"
+
+msgid "Annotations_AddAnnotationsFor"
+msgstr "Engadir anotación para %s..."
+
+msgid "Annotations_Annotations"
+msgstr "Anotacións"
+
+msgid "Annotations_ClickToDelete"
+msgstr "Prema para eliminar esta anotación."
+
+msgid "Annotations_ClickToEdit"
+msgstr "Prema para editar esta anotación."
+
+msgid "Annotations_ClickToEditOrAdd"
+msgstr "Prema para editar ou engadir unha anotación nova."
+
+msgid "Annotations_CreateNewAnnotation"
+msgstr "Crear unha anotación nova..."
+
+msgid "Annotations_EnterAnnotationText"
+msgstr "Introduza a súa nota..."
+
+msgid "Contents_Impressions"
+msgstr "Impresións"
+
+msgid "Contents_ContentName"
+msgstr "Nome do contido"
+
+msgid "Contents_Contents"
+msgstr "Contido"
+
+msgid "CoreHome_CategoryNoData"
+msgstr "Non hai datos nesta categoría. Intente \"Incluir todos os datos\"."
+
+msgid "CoreHome_ShowJSCode"
+msgstr "Ver o código javascript para insertar"
+
+msgid "CoreHome_SystemSummaryPhpVersion"
+msgstr "Versión PHP"
+
+msgid "CorePluginsAdmin_Activate"
+msgstr "Activar"
+
+msgid "CorePluginsAdmin_Activated"
+msgstr "Activado"
+
+msgid "CorePluginsAdmin_Deactivate"
+msgstr "Desactivar"
+
+msgid "CorePluginsAdmin_Websites"
+msgstr "Sitios"
+
+msgid "CoreUpdater_DownloadX"
+msgstr "Descargar %s"
+
+msgid "CoreUpdater_ExceptionArchiveEmpty"
+msgstr "Arquivo baleiro."
+
+msgid "CoreUpdater_ExceptionArchiveIncompatible"
+msgstr "Arquivo incompatíbel: %s"
+
+msgid "CoreUpdater_ExceptionArchiveIncomplete"
+msgstr "O arquivo está incompleto: faltan algúns ficheiros (p.ex. %s)."
+
+msgid "CoreUpdater_InstallingTheLatestVersion"
+msgstr "A instalar a versión máis recente"
+
+msgid "CoreUpdater_LatestBetaRelease"
+msgstr "Versión beta máis recente"
+
+msgid "CoreUpdater_LatestStableRelease"
+msgstr "Versión estábel máis recente"
+
+msgid "CoreUpdater_NotificationClickToUpdateThemes"
+msgstr "Prema aquí para actualizar os temas agora:"
+
+msgid "CoreUpdater_PiwikHasBeenSuccessfullyUpgraded"
+msgstr "Matomo foi actualizado correctamente!"
+
+msgid "CoreUpdater_UpdateTitle"
+msgstr "Actualizar"
+
+msgid "CoreUpdater_UpdateSuccessTitle"
+msgstr "Matomo foi actualizado correctamente!"
+
+msgid "CoreUpdater_UpdateErrorTitle"
+msgstr "Erro de actualización"
+
+msgid "CoreUpdater_ThankYouUpdatePiwik"
+msgstr "Grazas por usar Matomo e mantelo actualizado!"
+
+msgid "CoreUpdater_UpgradeComplete"
+msgstr "Anovación rematada!"
+
+msgid "CoreUpdater_UpgradePiwik"
+msgstr "Anovar Matomo"
+
+msgid "CoreUpdater_VerifyingUnpackedFiles"
+msgstr "A comprobar os ficheiros desempaquetados"
+
+msgid "CoreUpdater_WarningMessages"
+msgstr "Mensaxes de advertencia:"
+
+msgid "CoreUpdater_ViewVersionChangelog"
+msgstr "Ver o rexistro de cambios desta versión:"
+
+msgid "DBStats_Table"
+msgstr "Táboa"
+
+msgid "Dashboard_AddAWidget"
+msgstr "Engadir un trebello"
+
+msgid "Dashboard_Dashboard"
+msgstr "Tableiro"
+
+msgid "Dashboard_DeleteWidgetConfirm"
+msgstr "¿Está seguro de que desexa borrar este widget desde el tablón?"
+
+msgid "Dashboard_LoadingWidget"
+msgstr "Cargando widget, agarde por favor..."
+
+msgid "Dashboard_Maximise"
+msgstr "Maximizar"
+
+msgid "Dashboard_Minimise"
+msgstr "Minimizar"
+
+msgid "Dashboard_NotUndo"
+msgstr "Non lle será posíbel desfacer esta operación."
+
+msgid "Dashboard_SelectWidget"
+msgstr "Seleccione un widget para engadilo no tablón"
+
+msgid "Dashboard_WidgetNotFound"
+msgstr "Trebello non atopado"
+
+msgid "DevicePlugins_WidgetPlugins"
+msgstr "Lista de plugins"
+
+msgid "DevicesDetection_Browsers"
+msgstr "Navegadores"
+
+msgid "DevicesDetection_OperatingSystems"
+msgstr "Sistemas Operativos"
+
+msgid "DevicesDetection_WidgetBrowsers"
+msgstr "Navegadores dos visitantes"
+
+msgid "Feedback_IWantTo"
+msgstr "Quero:"
+
+msgid "Feedback_CommunityHelp"
+msgstr "Axuda da comunidade"
+
+msgid "Feedback_ProfessionalHelp"
+msgstr "Axuda profesional"
+
+msgid "Feedback_ContactUs"
+msgstr "Contacte connosco"
+
+msgid "Goals_AddGoal"
+msgstr "Engadir un obxectivo"
+
+msgid "Goals_AddNewGoal"
+msgstr "Engadir un novo obxectivo"
+
+msgid "Goals_AllowMultipleConversionsPerVisit"
+msgstr "Permitir varias conversións por visita"
+
+msgid "Goals_ColumnConversions"
+msgstr "Conversións"
+
+msgid "Goals_Download"
+msgstr "Descargar un ficheiro"
+
+msgid "Goals_Ecommerce"
+msgstr "Comercio electrónico"
+
+msgid "Goals_ExternalWebsiteUrl"
+msgstr "URL de sitio web externo"
+
+msgid "Insights_DayComparedToPreviousDay"
+msgstr "día anterior"
+
+msgid "Insights_DayComparedToPreviousWeek"
+msgstr "o mesmo día a semana anterior"
+
+msgid "Insights_DayComparedToPreviousYear"
+msgstr "o mesmo día o ano anterior"
+
+msgid "Insights_MonthComparedToPreviousMonth"
+msgstr "o mes anterior"
+
+msgid "Insights_MonthComparedToPreviousYear"
+msgstr "o mesmo mes o ano anterior"
+
+msgid "Insights_WeekComparedToPreviousWeek"
+msgstr "a semana anterior"
+
+msgid "Installation_Congratulations"
+msgstr "Noraboa!"
+
+msgid "Installation_Email"
+msgstr "Enderezo electrónico"
+
+msgid "Installation_Installation"
+msgstr "Instalación"
+
+msgid "Installation_InstallationStatus"
+msgstr "Estado da instalación"
+
+msgid "Installation_Password"
+msgstr "Contrasinal"
+
+msgid "Installation_PercentDone"
+msgstr "%s %%Hecho"
+
+msgid "Installation_SetupWebsite"
+msgstr "Configurar unha páxina web"
+
+msgid "Installation_SetupWebsiteError"
+msgstr "Houbo un erro ao engadir o sitio"
+
+msgid "Installation_SystemCheck"
+msgstr "Comprobación do sitio"
+
+msgid "Installation_SystemCheckError"
+msgstr "Houbo un erro - Debe arranxarse antes de continuar"
+
+msgid "Installation_SystemCheckGDHelp"
+msgstr "Os sparklines (gráficos pequenos) non funcionarán."
+
+msgid "Installation_SystemCheckMemoryLimit"
+msgstr "Límite de memoria"
+
+msgid "Installation_SystemCheckMemoryLimitHelp"
+msgstr "Nun sitio web cun tráfico elevado, o proceso de arquivado pode requirir máis memoria da que está dispoñible.<br>Mire o apartado memory_limit no seu ficheiro php.ini se é necesario."
+
+msgid "Installation_SystemCheckPhp"
+msgstr "Versión PHP"
+
+msgid "Installation_SystemCheckTimeLimitHelp"
+msgstr "Nun sitio web cun tráfico elevado, o proceso de arquivado pode requirir máis memoria da que está dispoñible.<br>Mire a directiva max_execution_time no seu ficheiro php.ini se fose necesario"
+
+msgid "Installation_SystemCheckWarning"
+msgstr "Matomo traballará correctamente, pero algunhas características poden faltar"
+
+msgid "Installation_SystemCheckWriteDirs"
+msgstr "Directorios con permisos de escrita"
+
+msgid "Installation_SystemCheckWriteDirsHelp"
+msgstr "Para arranxar este erro no seu sistema GNU/Linux, tente inserindo os seguintes comandos"
+
+msgid "Installation_Tables"
+msgstr "Creando as táboas"
+
+msgid "Installation_TablesCreatedSuccess"
+msgstr "Táboas creadas con éxito!"
+
+msgid "Installation_TablesDelete"
+msgstr "Eliminar as táboas detectadas"
+
+msgid "Installation_TablesDeletedSuccess"
+msgstr "Táboas existentes de Matomo eliminadas con éxito"
+
+msgid "Installation_TablesFound"
+msgstr "As seguintes táboas atopáronse na base de datos"
+
+msgid "Installation_TablesReuse"
+msgstr "Reutilizar as táboas xa existentes"
+
+msgid "Installation_TablesWarningHelp"
+msgstr "Ou ben optar pola reutilización de táboas de bases de datos existentes ou seleccionar unha instalación limpa para eliminar todos os datos existentes na base de datos."
+
+msgid "Installation_Welcome"
+msgstr "Benvido!"
+
+msgid "Intl_Continent_afr"
+msgstr "África"
+
+msgid "Intl_Continent_amc"
+msgstr "América Central"
+
+msgid "Intl_Continent_amn"
+msgstr "Norteamérica"
+
+msgid "Intl_Continent_ams"
+msgstr "Suramérica"
+
+msgid "Intl_Continent_ant"
+msgstr "A Antártida"
+
+msgid "Intl_Continent_asi"
+msgstr "Asia"
+
+msgid "Intl_Continent_eur"
+msgstr "Europa"
+
+msgid "Intl_Continent_oce"
+msgstr "Oceanía"
+
+msgid "Intl_Country_AD"
+msgstr "Andorra"
+
+msgid "Intl_Country_AE"
+msgstr "Os Emiratos Árabes Unidos"
+
+msgid "Intl_Country_AF"
+msgstr "Afganistán"
+
+msgid "Intl_Country_AG"
+msgstr "Antigua e Barbuda"
+
+msgid "Intl_Country_AI"
+msgstr "Anguila"
+
+msgid "Intl_Country_AL"
+msgstr "Albania"
+
+msgid "Intl_Country_AM"
+msgstr "Armenia"
+
+msgid "Intl_Country_AO"
+msgstr "Angola"
+
+msgid "Intl_Country_AQ"
+msgstr "A Antártida"
+
+msgid "Intl_Country_AR"
+msgstr "A Arxentina"
+
+msgid "Intl_Country_AS"
+msgstr "Samoa Americana"
+
+msgid "Intl_Country_AT"
+msgstr "Austria"
+
+msgid "Intl_Country_AU"
+msgstr "Australia"
+
+msgid "Intl_Country_AW"
+msgstr "Aruba"
+
+msgid "Intl_Country_AX"
+msgstr "Illas Åland"
+
+msgid "Intl_Country_AZ"
+msgstr "Acerbaixán"
+
+msgid "Intl_Country_BA"
+msgstr "Bosnia e Hercegovina"
+
+msgid "Intl_Country_BB"
+msgstr "Barbados"
+
+msgid "Intl_Country_BD"
+msgstr "Bangladesh"
+
+msgid "Intl_Country_BE"
+msgstr "Bélxica"
+
+msgid "Intl_Country_BF"
+msgstr "Burkina Faso"
+
+msgid "Intl_Country_BG"
+msgstr "Bulgaria"
+
+msgid "Intl_Country_BH"
+msgstr "Bahrain"
+
+msgid "Intl_Country_BI"
+msgstr "Burundi"
+
+msgid "Intl_Country_BJ"
+msgstr "Benín"
+
+msgid "Intl_Country_BL"
+msgstr "Saint Barthélemy"
+
+msgid "Intl_Country_BM"
+msgstr "Illas Bermudas"
+
+msgid "Intl_Country_BN"
+msgstr "Brunei"
+
+msgid "Intl_Country_BO"
+msgstr "Bolivia"
+
+msgid "Intl_Country_BQ"
+msgstr "Caribe Neerlandés"
+
+msgid "Intl_Country_BR"
+msgstr "O Brasil"
+
+msgid "Intl_Country_BS"
+msgstr "Bahamas"
+
+msgid "Intl_Country_BT"
+msgstr "Bután"
+
+msgid "Intl_Country_BV"
+msgstr "Illa Bouvet"
+
+msgid "Intl_Country_BW"
+msgstr "Botswana"
+
+msgid "Intl_Country_BY"
+msgstr "Belarús"
+
+msgid "Intl_Country_BZ"
+msgstr "Belize"
+
+msgid "Intl_Country_CA"
+msgstr "O Canadá"
+
+msgid "Intl_Country_CC"
+msgstr "Illas Cocos (Keeling)"
+
+msgid "Intl_Country_CD"
+msgstr "República Democrática do Congo"
+
+msgid "Intl_Country_CF"
+msgstr "República Centroafricana"
+
+msgid "Intl_Country_CG"
+msgstr "República do Congo"
+
+msgid "Intl_Country_CH"
+msgstr "Suíza"
+
+msgid "Intl_Country_CI"
+msgstr "Costa do Marfil"
+
+msgid "Intl_Country_CK"
+msgstr "Illas Cook"
+
+msgid "Intl_Country_CL"
+msgstr "Chile"
+
+msgid "Intl_Country_CM"
+msgstr "Camerún"
+
+msgid "Intl_Country_CN"
+msgstr "A China"
+
+msgid "Intl_Country_CO"
+msgstr "Colombia"
+
+msgid "Intl_Country_CR"
+msgstr "Costa Rica"
+
+msgid "Intl_Country_CU"
+msgstr "Cuba"
+
+msgid "Intl_Country_CV"
+msgstr "Cabo Verde"
+
+msgid "Intl_Country_CW"
+msgstr "Curaçao"
+
+msgid "Intl_Country_CX"
+msgstr "Illa Christmas"
+
+msgid "Intl_Country_CY"
+msgstr "Chipre"
+
+msgid "Intl_Country_CZ"
+msgstr "Chequia"
+
+msgid "Intl_Country_DE"
+msgstr "Alemaña"
+
+msgid "Intl_Country_DJ"
+msgstr "Djibuti"
+
+msgid "Intl_Country_DK"
+msgstr "Dinamarca"
+
+msgid "Intl_Country_DM"
+msgstr "Dominica"
+
+msgid "Intl_Country_DO"
+msgstr "República Dominicana"
+
+msgid "Intl_Country_DZ"
+msgstr "Alxeria"
+
+msgid "Intl_Country_EC"
+msgstr "Ecuador"
+
+msgid "Intl_Country_EE"
+msgstr "Estonia"
+
+msgid "Intl_Country_EG"
+msgstr "Exipto"
+
+msgid "Intl_Country_EH"
+msgstr "O Sáhara Occidental"
+
+msgid "Intl_Country_ER"
+msgstr "Eritrea"
+
+msgid "Intl_Country_ES"
+msgstr "España"
+
+msgid "Intl_Country_ET"
+msgstr "Etiopía"
+
+msgid "Intl_Country_FI"
+msgstr "Finlandia"
+
+msgid "Intl_Country_FJ"
+msgstr "Fixi"
+
+msgid "Intl_Country_FK"
+msgstr "Illas Malvinas"
+
+msgid "Intl_Country_FM"
+msgstr "Micronesia"
+
+msgid "Intl_Country_FO"
+msgstr "Illas Feroe"
+
+msgid "Intl_Country_FR"
+msgstr "Francia"
+
+msgid "Intl_Country_GA"
+msgstr "Gabón"
+
+msgid "Intl_Country_GB"
+msgstr "O Reino Unido"
+
+msgid "Intl_Country_GD"
+msgstr "Granada"
+
+msgid "Intl_Country_GE"
+msgstr "Xeorxia"
+
+msgid "Intl_Country_GF"
+msgstr "Güiana Francesa"
+
+msgid "Intl_Country_GG"
+msgstr "Guernsey"
+
+msgid "Intl_Country_GH"
+msgstr "Ghana"
+
+msgid "Intl_Country_GI"
+msgstr "Xibraltar"
+
+msgid "Intl_Country_GL"
+msgstr "Groenlandia"
+
+msgid "Intl_Country_GM"
+msgstr "Gambia"
+
+msgid "Intl_Country_GN"
+msgstr "Guinea"
+
+msgid "Intl_Country_GP"
+msgstr "Guadalupe"
+
+msgid "Intl_Country_GQ"
+msgstr "Guinea Ecuatorial"
+
+msgid "Intl_Country_GR"
+msgstr "Grecia"
+
+msgid "Intl_Country_GS"
+msgstr "Illas Xeorxia do Sur e Sandwich do Sur"
+
+msgid "Intl_Country_GT"
+msgstr "Guatemala"
+
+msgid "Intl_Country_GU"
+msgstr "Guam"
+
+msgid "Intl_Country_GW"
+msgstr "A Guinea Bissau"
+
+msgid "Intl_Country_GY"
+msgstr "Güiana"
+
+msgid "Intl_Country_HK"
+msgstr "Hong Kong RAE da China"
+
+msgid "Intl_Country_HM"
+msgstr "Illa Heard e Illas McDonald"
+
+msgid "Intl_Country_HN"
+msgstr "Honduras"
+
+msgid "Intl_Country_HR"
+msgstr "Croacia"
+
+msgid "Intl_Country_HT"
+msgstr "Haití"
+
+msgid "Intl_Country_HU"
+msgstr "Hungría"
+
+msgid "Intl_Country_ID"
+msgstr "Indonesia"
+
+msgid "Intl_Country_IE"
+msgstr "Irlanda"
+
+msgid "Intl_Country_IL"
+msgstr "Israel"
+
+msgid "Intl_Country_IM"
+msgstr "Illa de Man"
+
+msgid "Intl_Country_IN"
+msgstr "A India"
+
+msgid "Intl_Country_IO"
+msgstr "Territorio Británico do Océano Índico"
+
+msgid "Intl_Country_IQ"
+msgstr "Iraq"
+
+msgid "Intl_Country_IR"
+msgstr "Irán"
+
+msgid "Intl_Country_IS"
+msgstr "Islandia"
+
+msgid "Intl_Country_IT"
+msgstr "Italia"
+
+msgid "Intl_Country_JE"
+msgstr "Jersey"
+
+msgid "Intl_Country_JM"
+msgstr "Xamaica"
+
+msgid "Intl_Country_JO"
+msgstr "Xordania"
+
+msgid "Intl_Country_JP"
+msgstr "O Xapón"
+
+msgid "Intl_Country_KE"
+msgstr "Kenya"
+
+msgid "Intl_Country_KG"
+msgstr "Kirguizistán"
+
+msgid "Intl_Country_KH"
+msgstr "Camboxa"
+
+msgid "Intl_Country_KI"
+msgstr "Kiribati"
+
+msgid "Intl_Country_KM"
+msgstr "Comores"
+
+msgid "Intl_Country_KN"
+msgstr "Saint Kitts e Nevis"
+
+msgid "Intl_Country_KP"
+msgstr "Corea do Norte"
+
+msgid "Intl_Country_KR"
+msgstr "Corea do Sur"
+
+msgid "Intl_Country_KW"
+msgstr "Kuwait"
+
+msgid "Intl_Country_KY"
+msgstr "Illas Caimán"
+
+msgid "Intl_Country_KZ"
+msgstr "Casaquistán"
+
+msgid "Intl_Country_LA"
+msgstr "Laos"
+
+msgid "Intl_Country_LB"
+msgstr "O Líbano"
+
+msgid "Intl_Country_LC"
+msgstr "Santa Lucía"
+
+msgid "Intl_Country_LI"
+msgstr "Liechtenstein"
+
+msgid "Intl_Country_LK"
+msgstr "Sri Lanka"
+
+msgid "Intl_Country_LR"
+msgstr "Liberia"
+
+msgid "Intl_Country_LS"
+msgstr "Lesotho"
+
+msgid "Intl_Country_LT"
+msgstr "Lituania"
+
+msgid "Intl_Country_LU"
+msgstr "Luxemburgo"
+
+msgid "Intl_Country_LV"
+msgstr "Letonia"
+
+msgid "Intl_Country_LY"
+msgstr "Libia"
+
+msgid "Intl_Country_MA"
+msgstr "Marrocos"
+
+msgid "Intl_Country_MC"
+msgstr "Mónaco"
+
+msgid "Intl_Country_MD"
+msgstr "Moldavia"
+
+msgid "Intl_Country_ME"
+msgstr "Montenegro"
+
+msgid "Intl_Country_MF"
+msgstr "Saint Martin"
+
+msgid "Intl_Country_MG"
+msgstr "Madagascar"
+
+msgid "Intl_Country_MH"
+msgstr "Illas Marshall"
+
+msgid "Intl_Country_MK"
+msgstr "Macedonia"
+
+msgid "Intl_Country_ML"
+msgstr "Malí"
+
+msgid "Intl_Country_MM"
+msgstr "Myanmar (Birmania)"
+
+msgid "Intl_Country_MN"
+msgstr "Mongolia"
+
+msgid "Intl_Country_MO"
+msgstr "Macau RAE da China"
+
+msgid "Intl_Country_MP"
+msgstr "Illas Marianas do Norte"
+
+msgid "Intl_Country_MQ"
+msgstr "Martinica"
+
+msgid "Intl_Country_MR"
+msgstr "Mauritania"
+
+msgid "Intl_Country_MS"
+msgstr "Montserrat"
+
+msgid "Intl_Country_MT"
+msgstr "Malta"
+
+msgid "Intl_Country_MU"
+msgstr "Mauricio"
+
+msgid "Intl_Country_MV"
+msgstr "Maldivas"
+
+msgid "Intl_Country_MW"
+msgstr "Malawi"
+
+msgid "Intl_Country_MX"
+msgstr "México"
+
+msgid "Intl_Country_MY"
+msgstr "Malaisia"
+
+msgid "Intl_Country_MZ"
+msgstr "Mozambique"
+
+msgid "Intl_Country_NA"
+msgstr "Namibia"
+
+msgid "Intl_Country_NC"
+msgstr "Nova Caledonia"
+
+msgid "Intl_Country_NE"
+msgstr "Níxer"
+
+msgid "Intl_Country_NF"
+msgstr "Illa Norfolk"
+
+msgid "Intl_Country_NG"
+msgstr "Nixeria"
+
+msgid "Intl_Country_NI"
+msgstr "Nicaragua"
+
+msgid "Intl_Country_NL"
+msgstr "Países Baixos"
+
+msgid "Intl_Country_NO"
+msgstr "Noruega"
+
+msgid "Intl_Country_NP"
+msgstr "Nepal"
+
+msgid "Intl_Country_NR"
+msgstr "Nauru"
+
+msgid "Intl_Country_NU"
+msgstr "Niue"
+
+msgid "Intl_Country_NZ"
+msgstr "Nova Zelandia"
+
+msgid "Intl_Country_OM"
+msgstr "Omán"
+
+msgid "Intl_Country_PA"
+msgstr "Panamá"
+
+msgid "Intl_Country_PE"
+msgstr "O Perú"
+
+msgid "Intl_Country_PF"
+msgstr "A Polinesia Francesa"
+
+msgid "Intl_Country_PG"
+msgstr "Papúa-Nova Guinea"
+
+msgid "Intl_Country_PH"
+msgstr "Filipinas"
+
+msgid "Intl_Country_PK"
+msgstr "Paquistán"
+
+msgid "Intl_Country_PL"
+msgstr "Polonia"
+
+msgid "Intl_Country_PM"
+msgstr "Saint Pierre et Miquelon"
+
+msgid "Intl_Country_PN"
+msgstr "Illas Pitcairn"
+
+msgid "Intl_Country_PR"
+msgstr "Porto Rico"
+
+msgid "Intl_Country_PS"
+msgstr "Territorios Palestinos"
+
+msgid "Intl_Country_PT"
+msgstr "Portugal"
+
+msgid "Intl_Country_PW"
+msgstr "Palau"
+
+msgid "Intl_Country_PY"
+msgstr "O Paraguai"
+
+msgid "Intl_Country_QA"
+msgstr "Qatar"
+
+msgid "Intl_Country_RE"
+msgstr "Reunión"
+
+msgid "Intl_Country_RO"
+msgstr "Romanía"
+
+msgid "Intl_Country_RS"
+msgstr "Serbia"
+
+msgid "Intl_Country_RU"
+msgstr "Rusia"
+
+msgid "Intl_Country_RW"
+msgstr "Ruanda"
+
+msgid "Intl_Country_SA"
+msgstr "Arabia Saudita"
+
+msgid "Intl_Country_SB"
+msgstr "Illas Salomón"
+
+msgid "Intl_Country_SC"
+msgstr "Seychelles"
+
+msgid "Intl_Country_SD"
+msgstr "O Sudán"
+
+msgid "Intl_Country_SE"
+msgstr "Suecia"
+
+msgid "Intl_Country_SG"
+msgstr "Singapur"
+
+msgid "Intl_Country_SH"
+msgstr "Santa Helena"
+
+msgid "Intl_Country_SI"
+msgstr "Eslovenia"
+
+msgid "Intl_Country_SJ"
+msgstr "Svalbard e Jan Mayen"
+
+msgid "Intl_Country_SK"
+msgstr "Eslovaquia"
+
+msgid "Intl_Country_SL"
+msgstr "Serra Leoa"
+
+msgid "Intl_Country_SM"
+msgstr "San Marino"
+
+msgid "Intl_Country_SN"
+msgstr "Senegal"
+
+msgid "Intl_Country_SO"
+msgstr "Somalia"
+
+msgid "Intl_Country_SR"
+msgstr "Suriname"
+
+msgid "Intl_Country_SS"
+msgstr "O Sudán do Sur"
+
+msgid "Intl_Country_ST"
+msgstr "San Tomé e Príncipe"
+
+msgid "Intl_Country_SV"
+msgstr "O Salvador"
+
+msgid "Intl_Country_SX"
+msgstr "Sint Maarten"
+
+msgid "Intl_Country_SY"
+msgstr "Siria"
+
+msgid "Intl_Country_SZ"
+msgstr "Suazilandia"
+
+msgid "Intl_Country_TC"
+msgstr "Illas Turks e Caicos"
+
+msgid "Intl_Country_TD"
+msgstr "Chad"
+
+msgid "Intl_Country_TF"
+msgstr "Territorios Austrais Franceses"
+
+msgid "Intl_Country_TG"
+msgstr "Togo"
+
+msgid "Intl_Country_TH"
+msgstr "Tailandia"
+
+msgid "Intl_Country_TJ"
+msgstr "Taxiquistán"
+
+msgid "Intl_Country_TK"
+msgstr "Tokelau"
+
+msgid "Intl_Country_TL"
+msgstr "Timor Leste"
+
+msgid "Intl_Country_TM"
+msgstr "Turkmenistán"
+
+msgid "Intl_Country_TN"
+msgstr "Tunisia"
+
+msgid "Intl_Country_TO"
+msgstr "Tonga"
+
+msgid "Intl_Country_TR"
+msgstr "Turquía"
+
+msgid "Intl_Country_TT"
+msgstr "Trinidad e Tobago"
+
+msgid "Intl_Country_TV"
+msgstr "Tuvalu"
+
+msgid "Intl_Country_TW"
+msgstr "Taiwán"
+
+msgid "Intl_Country_TZ"
+msgstr "Tanzania"
+
+msgid "Intl_Country_UA"
+msgstr "Ucraína"
+
+msgid "Intl_Country_UG"
+msgstr "Uganda"
+
+msgid "Intl_Country_UM"
+msgstr "Illas Menores Distantes dos Estados Unidos"
+
+msgid "Intl_Country_US"
+msgstr "Os Estados Unidos"
+
+msgid "Intl_Country_UY"
+msgstr "O Uruguai"
+
+msgid "Intl_Country_UZ"
+msgstr "Uzbequistán"
+
+msgid "Intl_Country_VA"
+msgstr "Cidade do Vaticano"
+
+msgid "Intl_Country_VC"
+msgstr "San Vicente e As Granadinas"
+
+msgid "Intl_Country_VE"
+msgstr "Venezuela"
+
+msgid "Intl_Country_VG"
+msgstr "Illas Virxes Británicas"
+
+msgid "Intl_Country_VI"
+msgstr "Illas Virxes Estadounidenses"
+
+msgid "Intl_Country_VN"
+msgstr "Vietnam"
+
+msgid "Intl_Country_VU"
+msgstr "Vanuatu"
+
+msgid "Intl_Country_WF"
+msgstr "Wallis e Futuna"
+
+msgid "Intl_Country_WS"
+msgstr "Samoa"
+
+msgid "Intl_Country_YE"
+msgstr "O Iemen"
+
+msgid "Intl_Country_YT"
+msgstr "Mayotte"
+
+msgid "Intl_Country_ZA"
+msgstr "Suráfrica"
+
+msgid "Intl_Country_ZM"
+msgstr "Zambia"
+
+msgid "Intl_Country_ZW"
+msgstr "Zimbabwe"
+
+msgid "Intl_CurrencySymbol_AED"
+msgstr "AED"
+
+msgid "Intl_CurrencySymbol_AFN"
+msgstr "AFN"
+
+msgid "Intl_CurrencySymbol_ALL"
+msgstr "ALL"
+
+msgid "Intl_CurrencySymbol_AMD"
+msgstr "AMD"
+
+msgid "Intl_CurrencySymbol_ANG"
+msgstr "ANG"
+
+msgid "Intl_CurrencySymbol_AOA"
+msgstr "AOA"
+
+msgid "Intl_CurrencySymbol_ARS"
+msgstr "ARS"
+
+msgid "Intl_CurrencySymbol_AUD"
+msgstr "A$"
+
+msgid "Intl_CurrencySymbol_AWG"
+msgstr "AWG"
+
+msgid "Intl_CurrencySymbol_AZN"
+msgstr "AZN"
+
+msgid "Intl_CurrencySymbol_BAM"
+msgstr "BAM"
+
+msgid "Intl_CurrencySymbol_BBD"
+msgstr "BBD"
+
+msgid "Intl_CurrencySymbol_BDT"
+msgstr "BDT"
+
+msgid "Intl_CurrencySymbol_BGN"
+msgstr "BGN"
+
+msgid "Intl_CurrencySymbol_BHD"
+msgstr "BHD"
+
+msgid "Intl_CurrencySymbol_BIF"
+msgstr "BIF"
+
+msgid "Intl_CurrencySymbol_BMD"
+msgstr "BMD"
+
+msgid "Intl_CurrencySymbol_BND"
+msgstr "BND"
+
+msgid "Intl_CurrencySymbol_BOB"
+msgstr "BOB"
+
+msgid "Intl_CurrencySymbol_BRL"
+msgstr "R$"
+
+msgid "Intl_CurrencySymbol_BSD"
+msgstr "BSD"
+
+msgid "Intl_CurrencySymbol_BTC"
+msgstr "BTC"
+
+msgid "Intl_CurrencySymbol_BTN"
+msgstr "BTN"
+
+msgid "Intl_CurrencySymbol_BWP"
+msgstr "BWP"
+
+msgid "Intl_CurrencySymbol_BYN"
+msgstr "BYN"
+
+msgid "Intl_CurrencySymbol_BZD"
+msgstr "BZD"
+
+msgid "Intl_CurrencySymbol_CAD"
+msgstr "CA$"
+
+msgid "Intl_CurrencySymbol_CDF"
+msgstr "CDF"
+
+msgid "Intl_CurrencySymbol_CHF"
+msgstr "CHF"
+
+msgid "Intl_CurrencySymbol_CLP"
+msgstr "CLP"
+
+msgid "Intl_CurrencySymbol_CNY"
+msgstr "CN¥"
+
+msgid "Intl_CurrencySymbol_COP"
+msgstr "COP"
+
+msgid "Intl_CurrencySymbol_CRC"
+msgstr "CRC"
+
+msgid "Intl_CurrencySymbol_CUC"
+msgstr "CUC"
+
+msgid "Intl_CurrencySymbol_CUP"
+msgstr "CUP"
+
+msgid "Intl_CurrencySymbol_CVE"
+msgstr "CVE"
+
+msgid "Intl_CurrencySymbol_CZK"
+msgstr "CZK"
+
+msgid "Intl_CurrencySymbol_DJF"
+msgstr "DJF"
+
+msgid "Intl_CurrencySymbol_DKK"
+msgstr "DKK"
+
+msgid "Intl_CurrencySymbol_DOP"
+msgstr "DOP"
+
+msgid "Intl_CurrencySymbol_DZD"
+msgstr "DZD"
+
+msgid "Intl_CurrencySymbol_EGP"
+msgstr "EGP"
+
+msgid "Intl_CurrencySymbol_ERN"
+msgstr "ERN"
+
+msgid "Intl_CurrencySymbol_ETB"
+msgstr "ETB"
+
+msgid "Intl_CurrencySymbol_EUR"
+msgstr "€"
+
+msgid "Intl_CurrencySymbol_FJD"
+msgstr "FJD"
+
+msgid "Intl_CurrencySymbol_FKP"
+msgstr "FKP"
+
+msgid "Intl_CurrencySymbol_GBP"
+msgstr "£"
+
+msgid "Intl_CurrencySymbol_GEL"
+msgstr "GEL"
+
+msgid "Intl_CurrencySymbol_GHS"
+msgstr "GHS"
+
+msgid "Intl_CurrencySymbol_GIP"
+msgstr "GIP"
+
+msgid "Intl_CurrencySymbol_GMD"
+msgstr "GMD"
+
+msgid "Intl_CurrencySymbol_GNF"
+msgstr "GNF"
+
+msgid "Intl_CurrencySymbol_GTQ"
+msgstr "GTQ"
+
+msgid "Intl_CurrencySymbol_GYD"
+msgstr "GYD"
+
+msgid "Intl_CurrencySymbol_HKD"
+msgstr "HK$"
+
+msgid "Intl_CurrencySymbol_HNL"
+msgstr "HNL"
+
+msgid "Intl_CurrencySymbol_HRK"
+msgstr "HRK"
+
+msgid "Intl_CurrencySymbol_HTG"
+msgstr "HTG"
+
+msgid "Intl_CurrencySymbol_HUF"
+msgstr "HUF"
+
+msgid "Intl_CurrencySymbol_IDR"
+msgstr "IDR"
+
+msgid "Intl_CurrencySymbol_ILS"
+msgstr "₪"
+
+msgid "Intl_CurrencySymbol_INR"
+msgstr "₹"
+
+msgid "Intl_CurrencySymbol_IQD"
+msgstr "IQD"
+
+msgid "Intl_CurrencySymbol_IRR"
+msgstr "IRR"
+
+msgid "Intl_CurrencySymbol_ISK"
+msgstr "ISK"
+
+msgid "Intl_CurrencySymbol_JMD"
+msgstr "JMD"
+
+msgid "Intl_CurrencySymbol_JOD"
+msgstr "JOD"
+
+msgid "Intl_CurrencySymbol_JPY"
+msgstr "JP¥"
+
+msgid "Intl_CurrencySymbol_KES"
+msgstr "KES"
+
+msgid "Intl_CurrencySymbol_KGS"
+msgstr "KGS"
+
+msgid "Intl_CurrencySymbol_KHR"
+msgstr "KHR"
+
+msgid "Intl_CurrencySymbol_KMF"
+msgstr "KMF"
+
+msgid "Intl_CurrencySymbol_KPW"
+msgstr "KPW"
+
+msgid "Intl_CurrencySymbol_KRW"
+msgstr "₩"
+
+msgid "Intl_CurrencySymbol_KWD"
+msgstr "KWD"
+
+msgid "Intl_CurrencySymbol_KYD"
+msgstr "KYD"
+
+msgid "Intl_CurrencySymbol_KZT"
+msgstr "KZT"
+
+msgid "Intl_CurrencySymbol_LAK"
+msgstr "LAK"
+
+msgid "Intl_CurrencySymbol_LBP"
+msgstr "LBP"
+
+msgid "Intl_CurrencySymbol_LKR"
+msgstr "LKR"
+
+msgid "Intl_CurrencySymbol_LRD"
+msgstr "LRD"
+
+msgid "Intl_CurrencySymbol_LSL"
+msgstr "LSL"
+
+msgid "Intl_CurrencySymbol_LYD"
+msgstr "LYD"
+
+msgid "Intl_CurrencySymbol_MAD"
+msgstr "MAD"
+
+msgid "Intl_CurrencySymbol_MDL"
+msgstr "MDL"
+
+msgid "Intl_CurrencySymbol_MGA"
+msgstr "MGA"
+
+msgid "Intl_CurrencySymbol_MKD"
+msgstr "MKD"
+
+msgid "Intl_CurrencySymbol_MMK"
+msgstr "MMK"
+
+msgid "Intl_CurrencySymbol_MNT"
+msgstr "MNT"
+
+msgid "Intl_CurrencySymbol_MOP"
+msgstr "MOP"
+
+msgid "Intl_CurrencySymbol_MRU"
+msgstr "MRU"
+
+msgid "Intl_CurrencySymbol_MUR"
+msgstr "MUR"
+
+msgid "Intl_CurrencySymbol_MVR"
+msgstr "MVR"
+
+msgid "Intl_CurrencySymbol_MWK"
+msgstr "MWK"
+
+msgid "Intl_CurrencySymbol_MXN"
+msgstr "$MX"
+
+msgid "Intl_CurrencySymbol_MYR"
+msgstr "MYR"
+
+msgid "Intl_CurrencySymbol_MZN"
+msgstr "MZN"
+
+msgid "Intl_CurrencySymbol_NAD"
+msgstr "NAD"
+
+msgid "Intl_CurrencySymbol_NGN"
+msgstr "NGN"
+
+msgid "Intl_CurrencySymbol_NIO"
+msgstr "NIO"
+
+msgid "Intl_CurrencySymbol_NOK"
+msgstr "NOK"
+
+msgid "Intl_CurrencySymbol_NPR"
+msgstr "NPR"
+
+msgid "Intl_CurrencySymbol_NZD"
+msgstr "NZ$"
+
+msgid "Intl_CurrencySymbol_OMR"
+msgstr "OMR"
+
+msgid "Intl_CurrencySymbol_PAB"
+msgstr "PAB"
+
+msgid "Intl_CurrencySymbol_PEN"
+msgstr "PEN"
+
+msgid "Intl_CurrencySymbol_PGK"
+msgstr "PGK"
+
+msgid "Intl_CurrencySymbol_PHP"
+msgstr "PHP"
+
+msgid "Intl_CurrencySymbol_PKR"
+msgstr "PKR"
+
+msgid "Intl_CurrencySymbol_PLN"
+msgstr "PLN"
+
+msgid "Intl_CurrencySymbol_PYG"
+msgstr "PYG"
+
+msgid "Intl_CurrencySymbol_QAR"
+msgstr "QAR"
+
+msgid "Intl_CurrencySymbol_RON"
+msgstr "RON"
+
+msgid "Intl_CurrencySymbol_RSD"
+msgstr "RSD"
+
+msgid "Intl_CurrencySymbol_RUB"
+msgstr "RUB"
+
+msgid "Intl_CurrencySymbol_RWF"
+msgstr "RWF"
+
+msgid "Intl_CurrencySymbol_SAR"
+msgstr "SAR"
+
+msgid "Intl_CurrencySymbol_SBD"
+msgstr "SBD"
+
+msgid "Intl_CurrencySymbol_SCR"
+msgstr "SCR"
+
+msgid "Intl_CurrencySymbol_SDG"
+msgstr "SDG"
+
+msgid "Intl_CurrencySymbol_SEK"
+msgstr "SEK"
+
+msgid "Intl_CurrencySymbol_SGD"
+msgstr "SGD"
+
+msgid "Intl_CurrencySymbol_SHP"
+msgstr "SHP"
+
+msgid "Intl_CurrencySymbol_SLL"
+msgstr "SLL"
+
+msgid "Intl_CurrencySymbol_SOS"
+msgstr "SOS"
+
+msgid "Intl_CurrencySymbol_SRD"
+msgstr "SRD"
+
+msgid "Intl_CurrencySymbol_SSP"
+msgstr "SSP"
+
+msgid "Intl_CurrencySymbol_STN"
+msgstr "STN"
+
+msgid "Intl_CurrencySymbol_SYP"
+msgstr "SYP"
+
+msgid "Intl_CurrencySymbol_SZL"
+msgstr "SZL"
+
+msgid "Intl_CurrencySymbol_THB"
+msgstr "฿"
+
+msgid "Intl_CurrencySymbol_TJS"
+msgstr "TJS"
+
+msgid "Intl_CurrencySymbol_TMT"
+msgstr "TMT"
+
+msgid "Intl_CurrencySymbol_TND"
+msgstr "TND"
+
+msgid "Intl_CurrencySymbol_TOP"
+msgstr "TOP"
+
+msgid "Intl_CurrencySymbol_TRY"
+msgstr "TRY"
+
+msgid "Intl_CurrencySymbol_TTD"
+msgstr "TTD"
+
+msgid "Intl_CurrencySymbol_TWD"
+msgstr "NT$"
+
+msgid "Intl_CurrencySymbol_TZS"
+msgstr "TZS"
+
+msgid "Intl_CurrencySymbol_UAH"
+msgstr "UAH"
+
+msgid "Intl_CurrencySymbol_UGX"
+msgstr "UGX"
+
+msgid "Intl_CurrencySymbol_USD"
+msgstr "$"
+
+msgid "Intl_CurrencySymbol_UYU"
+msgstr "UYU"
+
+msgid "Intl_CurrencySymbol_UZS"
+msgstr "UZS"
+
+msgid "Intl_CurrencySymbol_VEF"
+msgstr "VEF"
+
+msgid "Intl_CurrencySymbol_VND"
+msgstr "₫"
+
+msgid "Intl_CurrencySymbol_VUV"
+msgstr "VUV"
+
+msgid "Intl_CurrencySymbol_WST"
+msgstr "WST"
+
+msgid "Intl_CurrencySymbol_XAF"
+msgstr "FCFA"
+
+msgid "Intl_CurrencySymbol_XCD"
+msgstr "EC$"
+
+msgid "Intl_CurrencySymbol_XOF"
+msgstr "CFA"
+
+msgid "Intl_CurrencySymbol_XPF"
+msgstr "CFPF"
+
+msgid "Intl_CurrencySymbol_YER"
+msgstr "YER"
+
+msgid "Intl_CurrencySymbol_ZAR"
+msgstr "ZAR"
+
+msgid "Intl_CurrencySymbol_ZMW"
+msgstr "ZMW"
+
+msgid "Intl_Currency_AED"
+msgstr "Dirham dos Emiratos Árabes Unidos"
+
+msgid "Intl_Currency_AFN"
+msgstr "Afgani afgano"
+
+msgid "Intl_Currency_ALL"
+msgstr "Lek albanés"
+
+msgid "Intl_Currency_AMD"
+msgstr "Dram armenio"
+
+msgid "Intl_Currency_ANG"
+msgstr "Florín das Antillas Neerlandesas"
+
+msgid "Intl_Currency_AOA"
+msgstr "Kwanza angolano"
+
+msgid "Intl_Currency_ARS"
+msgstr "Peso arxentino"
+
+msgid "Intl_Currency_AUD"
+msgstr "Dólar australiano"
+
+msgid "Intl_Currency_AWG"
+msgstr "Florín de Aruba"
+
+msgid "Intl_Currency_AZN"
+msgstr "Manat acerbaixano"
+
+msgid "Intl_Currency_BAM"
+msgstr "Marco convertible de Bosnia e Hercegovina"
+
+msgid "Intl_Currency_BBD"
+msgstr "Dólar de Barbados"
+
+msgid "Intl_Currency_BDT"
+msgstr "Taka de Bangladés"
+
+msgid "Intl_Currency_BGN"
+msgstr "Lev búlgaro"
+
+msgid "Intl_Currency_BHD"
+msgstr "Dinar de Bahrain"
+
+msgid "Intl_Currency_BIF"
+msgstr "Franco burundiano"
+
+msgid "Intl_Currency_BMD"
+msgstr "Dólar das Bemudas"
+
+msgid "Intl_Currency_BND"
+msgstr "Dólar de Brunei"
+
+msgid "Intl_Currency_BOB"
+msgstr "Boliviano"
+
+msgid "Intl_Currency_BRL"
+msgstr "Real brasileiro"
+
+msgid "Intl_Currency_BSD"
+msgstr "Dólar das Bahamas"
+
+msgid "Intl_Currency_BTC"
+msgstr "Bitcoin"
+
+msgid "Intl_Currency_BTN"
+msgstr "Ngultrum butanés"
+
+msgid "Intl_Currency_BWP"
+msgstr "Pula botsuaniano"
+
+msgid "Intl_Currency_BYN"
+msgstr "Rublo bielorruso"
+
+msgid "Intl_Currency_BZD"
+msgstr "Dólar belizense"
+
+msgid "Intl_Currency_CAD"
+msgstr "Dólar canadense"
+
+msgid "Intl_Currency_CDF"
+msgstr "Franco congolés"
+
+msgid "Intl_Currency_CHF"
+msgstr "Franco suízo"
+
+msgid "Intl_Currency_CLP"
+msgstr "Peso chileno"
+
+msgid "Intl_Currency_CNY"
+msgstr "Iuán chinés"
+
+msgid "Intl_Currency_COP"
+msgstr "Peso colombiano"
+
+msgid "Intl_Currency_CRC"
+msgstr "Colón costarriqueño"
+
+msgid "Intl_Currency_CUC"
+msgstr "Peso cubano convertible"
+
+msgid "Intl_Currency_CUP"
+msgstr "Peso cubano"
+
+msgid "Intl_Currency_CVE"
+msgstr "Escudo caboverdiano"
+
+msgid "Intl_Currency_CZK"
+msgstr "Coroa checa"
+
+msgid "Intl_Currency_DJF"
+msgstr "Franco xibutiano"
+
+msgid "Intl_Currency_DKK"
+msgstr "Coroa dinamarquesa"
+
+msgid "Intl_Currency_DOP"
+msgstr "Peso dominicano"
+
+msgid "Intl_Currency_DZD"
+msgstr "Dinar alxeriano"
+
+msgid "Intl_Currency_EGP"
+msgstr "Libra exipcia"
+
+msgid "Intl_Currency_ERN"
+msgstr "Nakfa eritreo"
+
+msgid "Intl_Currency_ETB"
+msgstr "Birr etíope"
+
+msgid "Intl_Currency_EUR"
+msgstr "Euro"
+
+msgid "Intl_Currency_FJD"
+msgstr "Dólar fidxiano"
+
+msgid "Intl_Currency_FKP"
+msgstr "Libra das Malvinas"
+
+msgid "Intl_Currency_GBP"
+msgstr "Libra esterlina"
+
+msgid "Intl_Currency_GEL"
+msgstr "Lari xeorxiano"
+
+msgid "Intl_Currency_GHS"
+msgstr "Cedi de Ghana"
+
+msgid "Intl_Currency_GIP"
+msgstr "Libra xibraltareña"
+
+msgid "Intl_Currency_GMD"
+msgstr "Dalasi gambiano"
+
+msgid "Intl_Currency_GNF"
+msgstr "Franco guineano"
+
+msgid "Intl_Currency_GTQ"
+msgstr "Quetzal guatemalteco"
+
+msgid "Intl_Currency_GYD"
+msgstr "Dólar güianés"
+
+msgid "Intl_Currency_HKD"
+msgstr "Dólar de Hong Kong"
+
+msgid "Intl_Currency_HNL"
+msgstr "Lempira hondureño"
+
+msgid "Intl_Currency_HRK"
+msgstr "Kuna croata"
+
+msgid "Intl_Currency_HTG"
+msgstr "Gourde haitiano"
+
+msgid "Intl_Currency_HUF"
+msgstr "Florín húngaro"
+
+msgid "Intl_Currency_IDR"
+msgstr "Rupia indonesia"
+
+msgid "Intl_Currency_ILS"
+msgstr "Novo shequel israelí"
+
+msgid "Intl_Currency_INR"
+msgstr "Rupia india"
+
+msgid "Intl_Currency_IQD"
+msgstr "Dinar iraquí"
+
+msgid "Intl_Currency_IRR"
+msgstr "Rial iraniano"
+
+msgid "Intl_Currency_ISK"
+msgstr "Coroa islandesa"
+
+msgid "Intl_Currency_JMD"
+msgstr "Dólar xamaicano"
+
+msgid "Intl_Currency_JOD"
+msgstr "Dinar xordano"
+
+msgid "Intl_Currency_JPY"
+msgstr "Ien xaponés"
+
+msgid "Intl_Currency_KES"
+msgstr "Xilin kenyano"
+
+msgid "Intl_Currency_KGS"
+msgstr "Som quirguicistano"
+
+msgid "Intl_Currency_KHR"
+msgstr "Riel camboxano"
+
+msgid "Intl_Currency_KMF"
+msgstr "Franco comoriano"
+
+msgid "Intl_Currency_KPW"
+msgstr "Won norcoreano"
+
+msgid "Intl_Currency_KRW"
+msgstr "Won surcoreano"
+
+msgid "Intl_Currency_KWD"
+msgstr "Dinar kuwaití"
+
+msgid "Intl_Currency_KYD"
+msgstr "Dólar das Illas Caimán"
+
+msgid "Intl_Currency_KZT"
+msgstr "Tenge casaco"
+
+msgid "Intl_Currency_LAK"
+msgstr "Kip laosiano"
+
+msgid "Intl_Currency_LBP"
+msgstr "Libra libanesa"
+
+msgid "Intl_Currency_LKR"
+msgstr "Rupia de Sri Lanka"
+
+msgid "Intl_Currency_LRD"
+msgstr "Dólar liberiano"
+
+msgid "Intl_Currency_LSL"
+msgstr "Loti de Lesoto"
+
+msgid "Intl_Currency_LYD"
+msgstr "Dinar libio"
+
+msgid "Intl_Currency_MAD"
+msgstr "Dirham marroquí"
+
+msgid "Intl_Currency_MDL"
+msgstr "Leu moldavo"
+
+msgid "Intl_Currency_MGA"
+msgstr "Ariary malgaxe"
+
+msgid "Intl_Currency_MKD"
+msgstr "Dinar macedonio"
+
+msgid "Intl_Currency_MMK"
+msgstr "Kyat birmano"
+
+msgid "Intl_Currency_MNT"
+msgstr "Tugrik mongol"
+
+msgid "Intl_Currency_MOP"
+msgstr "Pataca de Macau"
+
+msgid "Intl_Currency_MRU"
+msgstr "Ouguiya mauritano"
+
+msgid "Intl_Currency_MUR"
+msgstr "Rupia mauriciana"
+
+msgid "Intl_Currency_MVR"
+msgstr "Rupia maldivana"
+
+msgid "Intl_Currency_MWK"
+msgstr "Kwacha de Malaui"
+
+msgid "Intl_Currency_MXN"
+msgstr "Peso mexicano"
+
+msgid "Intl_Currency_MYR"
+msgstr "Ringgit malaio"
+
+msgid "Intl_Currency_MZN"
+msgstr "Metical de Mozambique"
+
+msgid "Intl_Currency_NAD"
+msgstr "Dólar namibio"
+
+msgid "Intl_Currency_NGN"
+msgstr "Naira nixeriano"
+
+msgid "Intl_Currency_NIO"
+msgstr "Córdoba de ouro nicaraguano"
+
+msgid "Intl_Currency_NOK"
+msgstr "Coroa norueguesa"
+
+msgid "Intl_Currency_NPR"
+msgstr "Rupia nepalesa"
+
+msgid "Intl_Currency_NZD"
+msgstr "Dólar neozelandés"
+
+msgid "Intl_Currency_OMR"
+msgstr "Rial omaní"
+
+msgid "Intl_Currency_PAB"
+msgstr "Balboa panameño"
+
+msgid "Intl_Currency_PEN"
+msgstr "Sol peruano"
+
+msgid "Intl_Currency_PGK"
+msgstr "Kina de Papúa-Nova Guinea"
+
+msgid "Intl_Currency_PHP"
+msgstr "Peso filipino"
+
+msgid "Intl_Currency_PKR"
+msgstr "Rupia paquistaní"
+
+msgid "Intl_Currency_PLN"
+msgstr "Zloty polaco"
+
+msgid "Intl_Currency_PYG"
+msgstr "Guaraní paraguaio"
+
+msgid "Intl_Currency_QAR"
+msgstr "Rial qatarí"
+
+msgid "Intl_Currency_RON"
+msgstr "Leu romanés"
+
+msgid "Intl_Currency_RSD"
+msgstr "Dinar serbio"
+
+msgid "Intl_Currency_RUB"
+msgstr "Rublo ruso"
+
+msgid "Intl_Currency_RWF"
+msgstr "Franco ruandés"
+
+msgid "Intl_Currency_SAR"
+msgstr "Rial saudita"
+
+msgid "Intl_Currency_SBD"
+msgstr "Dólar das Illas Salomón"
+
+msgid "Intl_Currency_SCR"
+msgstr "Rupia de Seixeles"
+
+msgid "Intl_Currency_SDG"
+msgstr "Libra sudanesa"
+
+msgid "Intl_Currency_SEK"
+msgstr "Coroa sueca"
+
+msgid "Intl_Currency_SGD"
+msgstr "Dólar de Singapur"
+
+msgid "Intl_Currency_SHP"
+msgstr "Libra de Santa Helena"
+
+msgid "Intl_Currency_SLL"
+msgstr "Leone de Serra Leoa"
+
+msgid "Intl_Currency_SOS"
+msgstr "Xilin somalí"
+
+msgid "Intl_Currency_SRD"
+msgstr "Dólar surinamés"
+
+msgid "Intl_Currency_SSP"
+msgstr "Libra sursudanesa"
+
+msgid "Intl_Currency_STN"
+msgstr "Dobra de São Tomé e Príncipe"
+
+msgid "Intl_Currency_SYP"
+msgstr "Libra siria"
+
+msgid "Intl_Currency_SZL"
+msgstr "Lilangeni de Suacilandia"
+
+msgid "Intl_Currency_THB"
+msgstr "Baht tailandés"
+
+msgid "Intl_Currency_TJS"
+msgstr "Somoni taxiquistano"
+
+msgid "Intl_Currency_TMT"
+msgstr "Manat turcomán"
+
+msgid "Intl_Currency_TND"
+msgstr "Dinar tunisiano"
+
+msgid "Intl_Currency_TOP"
+msgstr "Paʻanga de Tonga"
+
+msgid "Intl_Currency_TRY"
+msgstr "Lira turca"
+
+msgid "Intl_Currency_TTD"
+msgstr "Dólar de Trinidad e Tobago"
+
+msgid "Intl_Currency_TWD"
+msgstr "Novo dólar taiwanés"
+
+msgid "Intl_Currency_TZS"
+msgstr "Xilin tanzano"
+
+msgid "Intl_Currency_UAH"
+msgstr "Hrivna ucraína"
+
+msgid "Intl_Currency_UGX"
+msgstr "Xilin ugandés"
+
+msgid "Intl_Currency_USD"
+msgstr "Dólar estadounidense"
+
+msgid "Intl_Currency_UYU"
+msgstr "Peso uruguaio"
+
+msgid "Intl_Currency_UZS"
+msgstr "Som usbeco"
+
+msgid "Intl_Currency_VEF"
+msgstr "Bolívar venezolano (2008–2018)"
+
+msgid "Intl_Currency_VND"
+msgstr "Dong vietnamita"
+
+msgid "Intl_Currency_VUV"
+msgstr "Vatu vanuatiano"
+
+msgid "Intl_Currency_WST"
+msgstr "Tala samoano"
+
+msgid "Intl_Currency_XAF"
+msgstr "Franco CFA (BEAC)"
+
+msgid "Intl_Currency_XCD"
+msgstr "Dólar do Caribe Oriental"
+
+msgid "Intl_Currency_XOF"
+msgstr "Franco CFA (BCEAO)"
+
+msgid "Intl_Currency_XPF"
+msgstr "Franco CFP"
+
+msgid "Intl_Currency_YER"
+msgstr "Rial iemení"
+
+msgid "Intl_Currency_ZAR"
+msgstr "Rand surafricano"
+
+msgid "Intl_Currency_ZMW"
+msgstr "Kwacha zambiano"
+
+msgid "Intl_Day_Long_1"
+msgstr "luns"
+
+msgid "Intl_Day_Long_2"
+msgstr "martes"
+
+msgid "Intl_Day_Long_3"
+msgstr "mércores"
+
+msgid "Intl_Day_Long_4"
+msgstr "xoves"
+
+msgid "Intl_Day_Long_5"
+msgstr "venres"
+
+msgid "Intl_Day_Long_6"
+msgstr "sábado"
+
+msgid "Intl_Day_Long_7"
+msgstr "domingo"
+
+msgid "Intl_Day_Long_StandAlone_1"
+msgstr "Luns"
+
+msgid "Intl_Day_Long_StandAlone_2"
+msgstr "Martes"
+
+msgid "Intl_Day_Long_StandAlone_3"
+msgstr "Mércores"
+
+msgid "Intl_Day_Long_StandAlone_4"
+msgstr "Xoves"
+
+msgid "Intl_Day_Long_StandAlone_5"
+msgstr "Venres"
+
+msgid "Intl_Day_Long_StandAlone_6"
+msgstr "Sábado"
+
+msgid "Intl_Day_Long_StandAlone_7"
+msgstr "Domingo"
+
+msgid "Intl_Day_Min_1"
+msgstr "lu."
+
+msgid "Intl_Day_Min_2"
+msgstr "ma."
+
+msgid "Intl_Day_Min_3"
+msgstr "mé."
+
+msgid "Intl_Day_Min_4"
+msgstr "xo."
+
+msgid "Intl_Day_Min_5"
+msgstr "ve."
+
+msgid "Intl_Day_Min_6"
+msgstr "sá."
+
+msgid "Intl_Day_Min_7"
+msgstr "do."
+
+msgid "Intl_Day_Min_StandAlone_1"
+msgstr "Lu"
+
+msgid "Intl_Day_Min_StandAlone_2"
+msgstr "Ma"
+
+msgid "Intl_Day_Min_StandAlone_3"
+msgstr "Mé"
+
+msgid "Intl_Day_Min_StandAlone_4"
+msgstr "Xo"
+
+msgid "Intl_Day_Min_StandAlone_5"
+msgstr "Ve"
+
+msgid "Intl_Day_Min_StandAlone_6"
+msgstr "Sá"
+
+msgid "Intl_Day_Min_StandAlone_7"
+msgstr "Do"
+
+msgid "Intl_Day_Short_1"
+msgstr "luns"
+
+msgid "Intl_Day_Short_2"
+msgstr "mar."
+
+msgid "Intl_Day_Short_3"
+msgstr "mér."
+
+msgid "Intl_Day_Short_4"
+msgstr "xov."
+
+msgid "Intl_Day_Short_5"
+msgstr "ven."
+
+msgid "Intl_Day_Short_6"
+msgstr "sáb."
+
+msgid "Intl_Day_Short_7"
+msgstr "dom."
+
+msgid "Intl_Day_Short_StandAlone_1"
+msgstr "Luns"
+
+msgid "Intl_Day_Short_StandAlone_2"
+msgstr "Mar."
+
+msgid "Intl_Day_Short_StandAlone_3"
+msgstr "Mér."
+
+msgid "Intl_Day_Short_StandAlone_4"
+msgstr "Xov."
+
+msgid "Intl_Day_Short_StandAlone_5"
+msgstr "Ven."
+
+msgid "Intl_Day_Short_StandAlone_6"
+msgstr "Sáb."
+
+msgid "Intl_Day_Short_StandAlone_7"
+msgstr "Dom."
+
+msgid "Intl_EnglishLanguageName"
+msgstr "Galician"
+
+msgid "Intl_Format_DateTime_Long"
+msgstr "EEEE, d 'de' MMMM 'de' y {time}"
+
+msgid "Intl_Format_DateTime_Short"
+msgstr "d 'de' MMM 'de' y {time}"
+
+msgid "Intl_Format_Date_Day_Month"
+msgstr "E, d 'de' MMM"
+
+msgid "Intl_Format_Date_Long"
+msgstr "EEEE, d 'de' MMMM 'de' y"
+
+msgid "Intl_Format_Date_Short"
+msgstr "d 'de' MMM 'de' y"
+
+msgid "Intl_Format_Hour_12"
+msgstr "h a"
+
+msgid "Intl_Format_Hour_24"
+msgstr "HH"
+
+msgid "Intl_Format_Interval_Long_D"
+msgstr "d–d 'de' MMMM 'de' y"
+
+msgid "Intl_Format_Interval_Long_M"
+msgstr "d MMMM – d MMMM 'de' y"
+
+msgid "Intl_Format_Interval_Long_Y"
+msgstr "d MMMM y – d MMMM y"
+
+msgid "Intl_Format_Interval_Short_D"
+msgstr "d–d 'de' MMMM 'de' y"
+
+msgid "Intl_Format_Interval_Short_M"
+msgstr "d MMM – d MMM 'de' y"
+
+msgid "Intl_Format_Interval_Short_Y"
+msgstr "d MMM y – d MMM y"
+
+msgid "Intl_Format_Month_Long"
+msgstr "MMMM 'de' y"
+
+msgid "Intl_Format_Month_Short"
+msgstr "MMM 'de' y"
+
+msgid "Intl_Format_Time"
+msgstr "{time}"
+
+msgid "Intl_Format_Time_12"
+msgstr "h:mm:ss a"
+
+msgid "Intl_Format_Time_24"
+msgstr "HH:mm:ss"
+
+msgid "Intl_Format_Year"
+msgstr "y"
+
+msgid "Intl_Hours"
+msgstr "horas"
+
+msgid "Intl_Language_aa"
+msgstr "Afar"
+
+msgid "Intl_Language_ab"
+msgstr "Abkhazo"
+
+msgid "Intl_Language_af"
+msgstr "Afrikaans"
+
+msgid "Intl_Language_ak"
+msgstr "Akan"
+
+msgid "Intl_Language_am"
+msgstr "Amhárico"
+
+msgid "Intl_Language_an"
+msgstr "Aragonés"
+
+msgid "Intl_Language_ar"
+msgstr "Árabe"
+
+msgid "Intl_Language_as"
+msgstr "Assamés"
+
+msgid "Intl_Language_av"
+msgstr "Avar"
+
+msgid "Intl_Language_ay"
+msgstr "Aimará"
+
+msgid "Intl_Language_az"
+msgstr "Acerbaixano"
+
+msgid "Intl_Language_ba"
+msgstr "Baxkir"
+
+msgid "Intl_Language_be"
+msgstr "Bielorruso"
+
+msgid "Intl_Language_bg"
+msgstr "Búlgaro"
+
+msgid "Intl_Language_bi"
+msgstr "Bislama"
+
+msgid "Intl_Language_bm"
+msgstr "Bambara"
+
+msgid "Intl_Language_bn"
+msgstr "Bengalí"
+
+msgid "Intl_Language_bo"
+msgstr "Tibetano"
+
+msgid "Intl_Language_br"
+msgstr "Bretón"
+
+msgid "Intl_Language_bs"
+msgstr "Bosníaco"
+
+msgid "Intl_Language_ca"
+msgstr "Catalán"
+
+msgid "Intl_Language_ce"
+msgstr "Checheno"
+
+msgid "Intl_Language_ch"
+msgstr "Chamorro"
+
+msgid "Intl_Language_co"
+msgstr "Corso"
+
+msgid "Intl_Language_cs"
+msgstr "Checo"
+
+msgid "Intl_Language_cu"
+msgstr "Eslavo eclesiástico"
+
+msgid "Intl_Language_cv"
+msgstr "Chuvaxo"
+
+msgid "Intl_Language_cy"
+msgstr "Galés"
+
+msgid "Intl_Language_da"
+msgstr "Dinamarqués"
+
+msgid "Intl_Language_de"
+msgstr "Alemán"
+
+msgid "Intl_Language_dv"
+msgstr "Divehi"
+
+msgid "Intl_Language_dz"
+msgstr "Dzongkha"
+
+msgid "Intl_Language_ee"
+msgstr "Ewe"
+
+msgid "Intl_Language_el"
+msgstr "Grego"
+
+msgid "Intl_Language_en"
+msgstr "Inglés"
+
+msgid "Intl_Language_eo"
+msgstr "Esperanto"
+
+msgid "Intl_Language_es"
+msgstr "Español"
+
+msgid "Intl_Language_et"
+msgstr "Estoniano"
+
+msgid "Intl_Language_eu"
+msgstr "Éuscaro"
+
+msgid "Intl_Language_fa"
+msgstr "Persa"
+
+msgid "Intl_Language_ff"
+msgstr "Fula"
+
+msgid "Intl_Language_fi"
+msgstr "Finés"
+
+msgid "Intl_Language_fj"
+msgstr "Fixiano"
+
+msgid "Intl_Language_fo"
+msgstr "Feroés"
+
+msgid "Intl_Language_fr"
+msgstr "Francés"
+
+msgid "Intl_Language_fy"
+msgstr "Frisón occidental"
+
+msgid "Intl_Language_ga"
+msgstr "Irlandés"
+
+msgid "Intl_Language_gd"
+msgstr "Gaélico escocés"
+
+msgid "Intl_Language_gl"
+msgstr "Galego"
+
+msgid "Intl_Language_gn"
+msgstr "Guaraní"
+
+msgid "Intl_Language_gu"
+msgstr "Guxarati"
+
+msgid "Intl_Language_gv"
+msgstr "Manx"
+
+msgid "Intl_Language_ha"
+msgstr "Hausa"
+
+msgid "Intl_Language_he"
+msgstr "Hebreo"
+
+msgid "Intl_Language_hi"
+msgstr "Hindi"
+
+msgid "Intl_Language_hr"
+msgstr "Croata"
+
+msgid "Intl_Language_ht"
+msgstr "Crioulo haitiano"
+
+msgid "Intl_Language_hu"
+msgstr "Húngaro"
+
+msgid "Intl_Language_hy"
+msgstr "Armenio"
+
+msgid "Intl_Language_hz"
+msgstr "Herero"
+
+msgid "Intl_Language_ia"
+msgstr "Interlingua"
+
+msgid "Intl_Language_id"
+msgstr "Indonesio"
+
+msgid "Intl_Language_ig"
+msgstr "Igbo"
+
+msgid "Intl_Language_ii"
+msgstr "Yi sichuanés"
+
+msgid "Intl_Language_io"
+msgstr "Ido"
+
+msgid "Intl_Language_is"
+msgstr "Islandés"
+
+msgid "Intl_Language_it"
+msgstr "Italiano"
+
+msgid "Intl_Language_iu"
+msgstr "Inuktitut"
+
+msgid "Intl_Language_ja"
+msgstr "Xaponés"
+
+msgid "Intl_Language_jv"
+msgstr "Xavanés"
+
+msgid "Intl_Language_ka"
+msgstr "Xeorxiano"
+
+msgid "Intl_Language_kg"
+msgstr "Kongo"
+
+msgid "Intl_Language_ki"
+msgstr "Kikuyu"
+
+msgid "Intl_Language_kj"
+msgstr "Kuanyama"
+
+msgid "Intl_Language_kk"
+msgstr "Casaco"
+
+msgid "Intl_Language_kl"
+msgstr "Groenlandés"
+
+msgid "Intl_Language_km"
+msgstr "Khmer"
+
+msgid "Intl_Language_kn"
+msgstr "Kannará"
+
+msgid "Intl_Language_ko"
+msgstr "Coreano"
+
+msgid "Intl_Language_kr"
+msgstr "Kanuri"
+
+msgid "Intl_Language_ks"
+msgstr "Caxemirés"
+
+msgid "Intl_Language_ku"
+msgstr "Kurdo"
+
+msgid "Intl_Language_kv"
+msgstr "Komi"
+
+msgid "Intl_Language_kw"
+msgstr "Córnico"
+
+msgid "Intl_Language_ky"
+msgstr "Kirguiz"
+
+msgid "Intl_Language_la"
+msgstr "Latín"
+
+msgid "Intl_Language_lb"
+msgstr "Luxemburgués"
+
+msgid "Intl_Language_lg"
+msgstr "Ganda"
+
+msgid "Intl_Language_li"
+msgstr "Limburgués"
+
+msgid "Intl_Language_ln"
+msgstr "Lingala"
+
+msgid "Intl_Language_lo"
+msgstr "Laosiano"
+
+msgid "Intl_Language_lt"
+msgstr "Lituano"
+
+msgid "Intl_Language_lu"
+msgstr "Luba-katanga"
+
+msgid "Intl_Language_lv"
+msgstr "Letón"
+
+msgid "Intl_Language_mg"
+msgstr "Malgaxe"
+
+msgid "Intl_Language_mh"
+msgstr "Marshalés"
+
+msgid "Intl_Language_mi"
+msgstr "Maorí"
+
+msgid "Intl_Language_mk"
+msgstr "Macedonio"
+
+msgid "Intl_Language_ml"
+msgstr "Malabar"
+
+msgid "Intl_Language_mn"
+msgstr "Mongol"
+
+msgid "Intl_Language_mr"
+msgstr "Marathi"
+
+msgid "Intl_Language_ms"
+msgstr "Malaio"
+
+msgid "Intl_Language_mt"
+msgstr "Maltés"
+
+msgid "Intl_Language_my"
+msgstr "Birmano"
+
+msgid "Intl_Language_na"
+msgstr "Nauruano"
+
+msgid "Intl_Language_nb"
+msgstr "Noruegués bokmål"
+
+msgid "Intl_Language_nd"
+msgstr "Ndebele setentrional"
+
+msgid "Intl_Language_ne"
+msgstr "Nepalí"
+
+msgid "Intl_Language_ng"
+msgstr "Ndonga"
+
+msgid "Intl_Language_nl"
+msgstr "Neerlandés"
+
+msgid "Intl_Language_nn"
+msgstr "Noruegués nynorsk"
+
+msgid "Intl_Language_no"
+msgstr "Noruegués"
+
+msgid "Intl_Language_nr"
+msgstr "Ndebele meridional"
+
+msgid "Intl_Language_nv"
+msgstr "Navajo"
+
+msgid "Intl_Language_ny"
+msgstr "Nyanja"
+
+msgid "Intl_Language_oc"
+msgstr "Occitano"
+
+msgid "Intl_Language_om"
+msgstr "Oromo"
+
+msgid "Intl_Language_or"
+msgstr "Odiá"
+
+msgid "Intl_Language_os"
+msgstr "Ossetio"
+
+msgid "Intl_Language_pa"
+msgstr "Panxabí"
+
+msgid "Intl_Language_pl"
+msgstr "Polaco"
+
+msgid "Intl_Language_ps"
+msgstr "Paxto"
+
+msgid "Intl_Language_pt"
+msgstr "Portugués"
+
+msgid "Intl_Language_qu"
+msgstr "Quechua"
+
+msgid "Intl_Language_rm"
+msgstr "Romanche"
+
+msgid "Intl_Language_rn"
+msgstr "Rundi"
+
+msgid "Intl_Language_ro"
+msgstr "Romanés"
+
+msgid "Intl_Language_ru"
+msgstr "Ruso"
+
+msgid "Intl_Language_rw"
+msgstr "Kiñaruanda"
+
+msgid "Intl_Language_sa"
+msgstr "Sánscrito"
+
+msgid "Intl_Language_sc"
+msgstr "Sardo"
+
+msgid "Intl_Language_sd"
+msgstr "Sindhi"
+
+msgid "Intl_Language_se"
+msgstr "Saami setentrional"
+
+msgid "Intl_Language_sg"
+msgstr "Sango"
+
+msgid "Intl_Language_si"
+msgstr "Cingalés"
+
+msgid "Intl_Language_sk"
+msgstr "Eslovaco"
+
+msgid "Intl_Language_sl"
+msgstr "Esloveno"
+
+msgid "Intl_Language_sm"
+msgstr "Samoano"
+
+msgid "Intl_Language_sn"
+msgstr "Shona"
+
+msgid "Intl_Language_so"
+msgstr "Somalí"
+
+msgid "Intl_Language_sq"
+msgstr "Albanés"
+
+msgid "Intl_Language_sr"
+msgstr "Serbio"
+
+msgid "Intl_Language_ss"
+msgstr "Suazi"
+
+msgid "Intl_Language_st"
+msgstr "Sesotho"
+
+msgid "Intl_Language_su"
+msgstr "Sundanés"
+
+msgid "Intl_Language_sv"
+msgstr "Sueco"
+
+msgid "Intl_Language_sw"
+msgstr "Suahili"
+
+msgid "Intl_Language_ta"
+msgstr "Támil"
+
+msgid "Intl_Language_te"
+msgstr "Telugu"
+
+msgid "Intl_Language_tg"
+msgstr "Taxico"
+
+msgid "Intl_Language_th"
+msgstr "Tailandés"
+
+msgid "Intl_Language_ti"
+msgstr "Tigriña"
+
+msgid "Intl_Language_tk"
+msgstr "Turcomán"
+
+msgid "Intl_Language_tl"
+msgstr "Tagalo"
+
+msgid "Intl_Language_tn"
+msgstr "Tswana"
+
+msgid "Intl_Language_to"
+msgstr "Tongano"
+
+msgid "Intl_Language_tr"
+msgstr "Turco"
+
+msgid "Intl_Language_ts"
+msgstr "Tsonga"
+
+msgid "Intl_Language_tt"
+msgstr "Tártaro"
+
+msgid "Intl_Language_tw"
+msgstr "Twi"
+
+msgid "Intl_Language_ty"
+msgstr "Tahitiano"
+
+msgid "Intl_Language_ug"
+msgstr "Uigur"
+
+msgid "Intl_Language_uk"
+msgstr "Ucraíno"
+
+msgid "Intl_Language_ur"
+msgstr "Urdú"
+
+msgid "Intl_Language_uz"
+msgstr "Uzbeco"
+
+msgid "Intl_Language_ve"
+msgstr "Venda"
+
+msgid "Intl_Language_vi"
+msgstr "Vietnamita"
+
+msgid "Intl_Language_vo"
+msgstr "Volapuk"
+
+msgid "Intl_Language_wa"
+msgstr "Valón"
+
+msgid "Intl_Language_wo"
+msgstr "Wólof"
+
+msgid "Intl_Language_xh"
+msgstr "Xhosa"
+
+msgid "Intl_Language_yi"
+msgstr "Yiddish"
+
+msgid "Intl_Language_yo"
+msgstr "Ioruba"
+
+msgid "Intl_Language_zh"
+msgstr "Chinés"
+
+msgid "Intl_Language_zu"
+msgstr "Zulú"
+
+msgid "Intl_LayoutDirection"
+msgstr "ltr"
+
+msgid "Intl_Minutes"
+msgstr "minutos"
+
+msgid "Intl_Month_Long_1"
+msgstr "xaneiro"
+
+msgid "Intl_Month_Long_10"
+msgstr "outubro"
+
+msgid "Intl_Month_Long_11"
+msgstr "novembro"
+
+msgid "Intl_Month_Long_12"
+msgstr "decembro"
+
+msgid "Intl_Month_Long_2"
+msgstr "febreiro"
+
+msgid "Intl_Month_Long_3"
+msgstr "marzo"
+
+msgid "Intl_Month_Long_4"
+msgstr "abril"
+
+msgid "Intl_Month_Long_5"
+msgstr "maio"
+
+msgid "Intl_Month_Long_6"
+msgstr "xuño"
+
+msgid "Intl_Month_Long_7"
+msgstr "xullo"
+
+msgid "Intl_Month_Long_8"
+msgstr "agosto"
+
+msgid "Intl_Month_Long_9"
+msgstr "setembro"
+
+msgid "Intl_Month_Long_StandAlone_1"
+msgstr "Xaneiro"
+
+msgid "Intl_Month_Long_StandAlone_10"
+msgstr "Outubro"
+
+msgid "Intl_Month_Long_StandAlone_11"
+msgstr "Novembro"
+
+msgid "Intl_Month_Long_StandAlone_12"
+msgstr "Decembro"
+
+msgid "Intl_Month_Long_StandAlone_2"
+msgstr "Febreiro"
+
+msgid "Intl_Month_Long_StandAlone_3"
+msgstr "Marzo"
+
+msgid "Intl_Month_Long_StandAlone_4"
+msgstr "Abril"
+
+msgid "Intl_Month_Long_StandAlone_5"
+msgstr "Maio"
+
+msgid "Intl_Month_Long_StandAlone_6"
+msgstr "Xuño"
+
+msgid "Intl_Month_Long_StandAlone_7"
+msgstr "Xullo"
+
+msgid "Intl_Month_Long_StandAlone_8"
+msgstr "Agosto"
+
+msgid "Intl_Month_Long_StandAlone_9"
+msgstr "Setembro"
+
+msgid "Intl_Month_Short_1"
+msgstr "xan."
+
+msgid "Intl_Month_Short_10"
+msgstr "out."
+
+msgid "Intl_Month_Short_11"
+msgstr "nov."
+
+msgid "Intl_Month_Short_12"
+msgstr "dec."
+
+msgid "Intl_Month_Short_2"
+msgstr "feb."
+
+msgid "Intl_Month_Short_3"
+msgstr "mar."
+
+msgid "Intl_Month_Short_4"
+msgstr "abr."
+
+msgid "Intl_Month_Short_5"
+msgstr "maio"
+
+msgid "Intl_Month_Short_6"
+msgstr "xuño"
+
+msgid "Intl_Month_Short_7"
+msgstr "xul."
+
+msgid "Intl_Month_Short_8"
+msgstr "ago."
+
+msgid "Intl_Month_Short_9"
+msgstr "set."
+
+msgid "Intl_Month_Short_StandAlone_1"
+msgstr "Xan."
+
+msgid "Intl_Month_Short_StandAlone_10"
+msgstr "Out."
+
+msgid "Intl_Month_Short_StandAlone_11"
+msgstr "Nov."
+
+msgid "Intl_Month_Short_StandAlone_12"
+msgstr "Dec."
+
+msgid "Intl_Month_Short_StandAlone_2"
+msgstr "Feb."
+
+msgid "Intl_Month_Short_StandAlone_3"
+msgstr "Mar."
+
+msgid "Intl_Month_Short_StandAlone_4"
+msgstr "Abr."
+
+msgid "Intl_Month_Short_StandAlone_5"
+msgstr "Maio"
+
+msgid "Intl_Month_Short_StandAlone_6"
+msgstr "Xuño"
+
+msgid "Intl_Month_Short_StandAlone_7"
+msgstr "Xul."
+
+msgid "Intl_Month_Short_StandAlone_8"
+msgstr "Ago."
+
+msgid "Intl_Month_Short_StandAlone_9"
+msgstr "Set."
+
+msgid "Intl_NDays"
+msgstr "%s días"
+
+msgid "Intl_NHoursShort"
+msgstr "%s h"
+
+msgid "Intl_NMinutes"
+msgstr "%s minutos"
+
+msgid "Intl_NMinutesShort"
+msgstr "%s min"
+
+msgid "Intl_NSeconds"
+msgstr "%s segundos"
+
+msgid "Intl_NSecondsShort"
+msgstr "%s s"
+
+msgid "Intl_NumberFormatCurrency"
+msgstr "#,##0.00 ¤"
+
+msgid "Intl_NumberFormatNumber"
+msgstr "#,##0.###"
+
+msgid "Intl_NumberFormatPercent"
+msgstr "#,##0 %"
+
+msgid "Intl_NumberSymbolDecimal"
+msgstr ","
+
+msgid "Intl_NumberSymbolGroup"
+msgstr "."
+
+msgid "Intl_NumberSymbolMinus"
+msgstr "-"
+
+msgid "Intl_NumberSymbolPercent"
+msgstr "%"
+
+msgid "Intl_NumberSymbolPlus"
+msgstr "+"
+
+msgid "Intl_OneDay"
+msgstr "1 día"
+
+msgid "Intl_OneMinute"
+msgstr "1 minuto"
+
+msgid "Intl_OneMinuteShort"
+msgstr "1 min"
+
+msgid "Intl_OriginalLanguageName"
+msgstr "Galego"
+
+msgid "Intl_PeriodDay"
+msgstr "día"
+
+msgid "Intl_PeriodDays"
+msgstr "días"
+
+msgid "Intl_PeriodMonth"
+msgstr "mes"
+
+msgid "Intl_PeriodMonths"
+msgstr "meses"
+
+msgid "Intl_PeriodWeek"
+msgstr "semana"
+
+msgid "Intl_PeriodWeeks"
+msgstr "semanas"
+
+msgid "Intl_PeriodYear"
+msgstr "ano"
+
+msgid "Intl_PeriodYears"
+msgstr "anos"
+
+msgid "Intl_Seconds"
+msgstr "segundos"
+
+msgid "Intl_Time_AM"
+msgstr "a.m."
+
+msgid "Intl_Time_PM"
+msgstr "p.m."
+
+msgid "Intl_Timezone_Africa_Asmera"
+msgstr "Asmara"
+
+msgid "Intl_Timezone_Africa_Ceuta"
+msgstr "Ceuta"
+
+msgid "Intl_Timezone_Africa_Kinshasa"
+msgstr "Kinshasa"
+
+msgid "Intl_Timezone_Africa_Lubumbashi"
+msgstr "Lubumbashi"
+
+msgid "Intl_Timezone_America_Adak"
+msgstr "Adak"
+
+msgid "Intl_Timezone_America_Anchorage"
+msgstr "Anchorage"
+
+msgid "Intl_Timezone_America_Araguaina"
+msgstr "Araguaína"
+
+msgid "Intl_Timezone_America_Argentina_LaRioja"
+msgstr "A Rioxa"
+
+msgid "Intl_Timezone_America_Argentina_RioGallegos"
+msgstr "Río Gallegos"
+
+msgid "Intl_Timezone_America_Argentina_Salta"
+msgstr "Salta"
+
+msgid "Intl_Timezone_America_Argentina_SanJuan"
+msgstr "San Juan"
+
+msgid "Intl_Timezone_America_Argentina_SanLuis"
+msgstr "San Luis"
+
+msgid "Intl_Timezone_America_Argentina_Tucuman"
+msgstr "Tucumán"
+
+msgid "Intl_Timezone_America_Argentina_Ushuaia"
+msgstr "Ushuaia"
+
+msgid "Intl_Timezone_America_Bahia"
+msgstr "Baía"
+
+msgid "Intl_Timezone_America_BahiaBanderas"
+msgstr "Bahía de Banderas"
+
+msgid "Intl_Timezone_America_Belem"
+msgstr "Belém"
+
+msgid "Intl_Timezone_America_Blanc-Sablon"
+msgstr "Blanc-Sablon"
+
+msgid "Intl_Timezone_America_BoaVista"
+msgstr "Boa Vista"
+
+msgid "Intl_Timezone_America_Boise"
+msgstr "Boise"
+
+msgid "Intl_Timezone_America_BuenosAires"
+msgstr "Buenos Aires"
+
+msgid "Intl_Timezone_America_CambridgeBay"
+msgstr "Cambridge Bay"
+
+msgid "Intl_Timezone_America_CampoGrande"
+msgstr "Campo Grande"
+
+msgid "Intl_Timezone_America_Cancun"
+msgstr "Cancún"
+
+msgid "Intl_Timezone_America_Catamarca"
+msgstr "Catamarca"
+
+msgid "Intl_Timezone_America_Chicago"
+msgstr "Chicago"
+
+msgid "Intl_Timezone_America_Chihuahua"
+msgstr "Chihuahua"
+
+msgid "Intl_Timezone_America_CoralHarbour"
+msgstr "Atikokan"
+
+msgid "Intl_Timezone_America_Cordoba"
+msgstr "Córdoba"
+
+msgid "Intl_Timezone_America_Creston"
+msgstr "Creston"
+
+msgid "Intl_Timezone_America_Cuiaba"
+msgstr "Cuiabá"
+
+msgid "Intl_Timezone_America_Danmarkshavn"
+msgstr "Danmarkshavn"
+
+msgid "Intl_Timezone_America_Dawson"
+msgstr "Dawson"
+
+msgid "Intl_Timezone_America_DawsonCreek"
+msgstr "Dawson Creek"
+
+msgid "Intl_Timezone_America_Denver"
+msgstr "Denver"
+
+msgid "Intl_Timezone_America_Detroit"
+msgstr "Detroit"
+
+msgid "Intl_Timezone_America_Edmonton"
+msgstr "Edmonton"
+
+msgid "Intl_Timezone_America_Eirunepe"
+msgstr "Eirunepé"
+
+msgid "Intl_Timezone_America_FortNelson"
+msgstr "Fort Nelson"
+
+msgid "Intl_Timezone_America_Fortaleza"
+msgstr "Fortaleza"
+
+msgid "Intl_Timezone_America_GlaceBay"
+msgstr "Glace Bay"
+
+msgid "Intl_Timezone_America_Godthab"
+msgstr "Nuuk"
+
+msgid "Intl_Timezone_America_GooseBay"
+msgstr "Goose Bay"
+
+msgid "Intl_Timezone_America_Guayaquil"
+msgstr "Guayaquil"
+
+msgid "Intl_Timezone_America_Halifax"
+msgstr "Halifax"
+
+msgid "Intl_Timezone_America_Hermosillo"
+msgstr "Hermosillo"
+
+msgid "Intl_Timezone_America_Indiana_Knox"
+msgstr "Knox, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Marengo"
+msgstr "Marengo, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Petersburg"
+msgstr "Petersburg, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_TellCity"
+msgstr "Tell City, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vevay"
+msgstr "Vevay, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vincennes"
+msgstr "Vincennes, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Winamac"
+msgstr "Winamac, Indiana"
+
+msgid "Intl_Timezone_America_Indianapolis"
+msgstr "Indianápolis"
+
+msgid "Intl_Timezone_America_Inuvik"
+msgstr "Inuvik"
+
+msgid "Intl_Timezone_America_Iqaluit"
+msgstr "Iqaluit"
+
+msgid "Intl_Timezone_America_Jujuy"
+msgstr "Jujuy"
+
+msgid "Intl_Timezone_America_Juneau"
+msgstr "Juneau"
+
+msgid "Intl_Timezone_America_Kentucky_Monticello"
+msgstr "Monticello, Kentucky"
+
+msgid "Intl_Timezone_America_LosAngeles"
+msgstr "Os Ánxeles"
+
+msgid "Intl_Timezone_America_Louisville"
+msgstr "Louisville"
+
+msgid "Intl_Timezone_America_Maceio"
+msgstr "Maceió"
+
+msgid "Intl_Timezone_America_Manaus"
+msgstr "Manaus"
+
+msgid "Intl_Timezone_America_Matamoros"
+msgstr "Matamoros"
+
+msgid "Intl_Timezone_America_Mazatlan"
+msgstr "Mazatlán"
+
+msgid "Intl_Timezone_America_Mendoza"
+msgstr "Mendoza"
+
+msgid "Intl_Timezone_America_Menominee"
+msgstr "Menominee"
+
+msgid "Intl_Timezone_America_Merida"
+msgstr "Mérida"
+
+msgid "Intl_Timezone_America_Metlakatla"
+msgstr "Metlakatla"
+
+msgid "Intl_Timezone_America_MexicoCity"
+msgstr "Cidade de México"
+
+msgid "Intl_Timezone_America_Moncton"
+msgstr "Moncton"
+
+msgid "Intl_Timezone_America_Monterrey"
+msgstr "Monterrey"
+
+msgid "Intl_Timezone_America_NewYork"
+msgstr "Nova York"
+
+msgid "Intl_Timezone_America_Nipigon"
+msgstr "Nipigon"
+
+msgid "Intl_Timezone_America_Nome"
+msgstr "Nome"
+
+msgid "Intl_Timezone_America_Noronha"
+msgstr "Noronha"
+
+msgid "Intl_Timezone_America_NorthDakota_Beulah"
+msgstr "Beulah, Dacota do Norte"
+
+msgid "Intl_Timezone_America_NorthDakota_Center"
+msgstr "Center, Dacota do Norte"
+
+msgid "Intl_Timezone_America_NorthDakota_NewSalem"
+msgstr "New Salem, Dacota do Norte"
+
+msgid "Intl_Timezone_America_Ojinaga"
+msgstr "Ojinaga"
+
+msgid "Intl_Timezone_America_Pangnirtung"
+msgstr "Pangnirtung"
+
+msgid "Intl_Timezone_America_Phoenix"
+msgstr "Phoenix"
+
+msgid "Intl_Timezone_America_PortoVelho"
+msgstr "Porto Velho"
+
+msgid "Intl_Timezone_America_PuntaArenas"
+msgstr "Punta Arenas"
+
+msgid "Intl_Timezone_America_RainyRiver"
+msgstr "Rainy River"
+
+msgid "Intl_Timezone_America_RankinInlet"
+msgstr "Rankin Inlet"
+
+msgid "Intl_Timezone_America_Recife"
+msgstr "Recife"
+
+msgid "Intl_Timezone_America_Regina"
+msgstr "Regina"
+
+msgid "Intl_Timezone_America_Resolute"
+msgstr "Resolute"
+
+msgid "Intl_Timezone_America_RioBranco"
+msgstr "Río Branco"
+
+msgid "Intl_Timezone_America_SantaIsabel"
+msgstr "Santa Isabel"
+
+msgid "Intl_Timezone_America_Santarem"
+msgstr "Santarém"
+
+msgid "Intl_Timezone_America_Santiago"
+msgstr "Santiago"
+
+msgid "Intl_Timezone_America_SaoPaulo"
+msgstr "São Paulo"
+
+msgid "Intl_Timezone_America_Scoresbysund"
+msgstr "Ittoqqortoormiit"
+
+msgid "Intl_Timezone_America_Sitka"
+msgstr "Sitka"
+
+msgid "Intl_Timezone_America_StJohns"
+msgstr "Saint John’s"
+
+msgid "Intl_Timezone_America_SwiftCurrent"
+msgstr "Swift Current"
+
+msgid "Intl_Timezone_America_Thule"
+msgstr "Thule"
+
+msgid "Intl_Timezone_America_ThunderBay"
+msgstr "Thunder Bay"
+
+msgid "Intl_Timezone_America_Tijuana"
+msgstr "Tijuana"
+
+msgid "Intl_Timezone_America_Toronto"
+msgstr "Toronto"
+
+msgid "Intl_Timezone_America_Vancouver"
+msgstr "Vancouver"
+
+msgid "Intl_Timezone_America_Whitehorse"
+msgstr "Whitehorse"
+
+msgid "Intl_Timezone_America_Winnipeg"
+msgstr "Winnipeg"
+
+msgid "Intl_Timezone_America_Yakutat"
+msgstr "Yakutat"
+
+msgid "Intl_Timezone_America_Yellowknife"
+msgstr "Yellowknife"
+
+msgid "Intl_Timezone_Antarctica_Casey"
+msgstr "Casey"
+
+msgid "Intl_Timezone_Antarctica_Davis"
+msgstr "Davis"
+
+msgid "Intl_Timezone_Antarctica_DumontDUrville"
+msgstr "Dumont-d’Urville"
+
+msgid "Intl_Timezone_Antarctica_Macquarie"
+msgstr "Macquarie"
+
+msgid "Intl_Timezone_Antarctica_Mawson"
+msgstr "Mawson"
+
+msgid "Intl_Timezone_Antarctica_McMurdo"
+msgstr "McMurdo"
+
+msgid "Intl_Timezone_Antarctica_Palmer"
+msgstr "Palmer"
+
+msgid "Intl_Timezone_Antarctica_Rothera"
+msgstr "Rothera"
+
+msgid "Intl_Timezone_Antarctica_Syowa"
+msgstr "Syowa"
+
+msgid "Intl_Timezone_Antarctica_Troll"
+msgstr "Troll"
+
+msgid "Intl_Timezone_Antarctica_Vostok"
+msgstr "Vostok"
+
+msgid "Intl_Timezone_Asia_Almaty"
+msgstr "Almati"
+
+msgid "Intl_Timezone_Asia_Anadyr"
+msgstr "Anadyr"
+
+msgid "Intl_Timezone_Asia_Aqtau"
+msgstr "Aktau"
+
+msgid "Intl_Timezone_Asia_Aqtobe"
+msgstr "Aktobe"
+
+msgid "Intl_Timezone_Asia_Atyrau"
+msgstr "Atyrau"
+
+msgid "Intl_Timezone_Asia_Barnaul"
+msgstr "Barnaul"
+
+msgid "Intl_Timezone_Asia_Calcutta"
+msgstr "Calcuta"
+
+msgid "Intl_Timezone_Asia_Chita"
+msgstr "Chitá"
+
+msgid "Intl_Timezone_Asia_Choibalsan"
+msgstr "Choibalsan"
+
+msgid "Intl_Timezone_Asia_Famagusta"
+msgstr "Famagusta"
+
+msgid "Intl_Timezone_Asia_Gaza"
+msgstr "Gaza"
+
+msgid "Intl_Timezone_Asia_Hebron"
+msgstr "Hebrón"
+
+msgid "Intl_Timezone_Asia_Hovd"
+msgstr "Hovd"
+
+msgid "Intl_Timezone_Asia_Irkutsk"
+msgstr "Irkutsk"
+
+msgid "Intl_Timezone_Asia_Jakarta"
+msgstr "Iacarta"
+
+msgid "Intl_Timezone_Asia_Jayapura"
+msgstr "Jayapura"
+
+msgid "Intl_Timezone_Asia_Kamchatka"
+msgstr "Kamchatka"
+
+msgid "Intl_Timezone_Asia_Katmandu"
+msgstr "Katmandú"
+
+msgid "Intl_Timezone_Asia_Khandyga"
+msgstr "Chandyga"
+
+msgid "Intl_Timezone_Asia_Krasnoyarsk"
+msgstr "Krasnoyarsk"
+
+msgid "Intl_Timezone_Asia_KualaLumpur"
+msgstr "Kuala Lumpur"
+
+msgid "Intl_Timezone_Asia_Kuching"
+msgstr "Kuching"
+
+msgid "Intl_Timezone_Asia_Magadan"
+msgstr "Magadan"
+
+msgid "Intl_Timezone_Asia_Makassar"
+msgstr "Makassar"
+
+msgid "Intl_Timezone_Asia_Nicosia"
+msgstr "Nicosia"
+
+msgid "Intl_Timezone_Asia_Novokuznetsk"
+msgstr "Novokuznetsk"
+
+msgid "Intl_Timezone_Asia_Novosibirsk"
+msgstr "Novosibirsk"
+
+msgid "Intl_Timezone_Asia_Omsk"
+msgstr "Omsk"
+
+msgid "Intl_Timezone_Asia_Oral"
+msgstr "Oral"
+
+msgid "Intl_Timezone_Asia_Pontianak"
+msgstr "Pontianak"
+
+msgid "Intl_Timezone_Asia_Qyzylorda"
+msgstr "Kyzylorda"
+
+msgid "Intl_Timezone_Asia_Rangoon"
+msgstr "Yangon"
+
+msgid "Intl_Timezone_Asia_Saigon"
+msgstr "Ho Chi Minh"
+
+msgid "Intl_Timezone_Asia_Sakhalin"
+msgstr "Sakhalin"
+
+msgid "Intl_Timezone_Asia_Samarkand"
+msgstr "Samarcanda"
+
+msgid "Intl_Timezone_Asia_Shanghai"
+msgstr "Shanghai"
+
+msgid "Intl_Timezone_Asia_Srednekolymsk"
+msgstr "Srednekolimsk"
+
+msgid "Intl_Timezone_Asia_Tashkent"
+msgstr "Tashkent"
+
+msgid "Intl_Timezone_Asia_Tomsk"
+msgstr "Tomsk"
+
+msgid "Intl_Timezone_Asia_Ulaanbaatar"
+msgstr "Ulaanbaatar"
+
+msgid "Intl_Timezone_Asia_Urumqi"
+msgstr "Urumqi"
+
+msgid "Intl_Timezone_Asia_Ust-Nera"
+msgstr "Ust-Nera"
+
+msgid "Intl_Timezone_Asia_Vladivostok"
+msgstr "Vladivostok"
+
+msgid "Intl_Timezone_Asia_Yakutsk"
+msgstr "Iakutsk"
+
+msgid "Intl_Timezone_Asia_Yekaterinburg"
+msgstr "Ekaterinburgo"
+
+msgid "Intl_Timezone_Atlantic_Azores"
+msgstr "Azores"
+
+msgid "Intl_Timezone_Atlantic_Canary"
+msgstr "Illas Canarias"
+
+msgid "Intl_Timezone_Atlantic_Faeroe"
+msgstr "Feroe"
+
+msgid "Intl_Timezone_Atlantic_Madeira"
+msgstr "Madeira"
+
+msgid "Intl_Timezone_Australia_Adelaide"
+msgstr "Adelaida"
+
+msgid "Intl_Timezone_Australia_Brisbane"
+msgstr "Brisbane"
+
+msgid "Intl_Timezone_Australia_BrokenHill"
+msgstr "Broken Hill"
+
+msgid "Intl_Timezone_Australia_Currie"
+msgstr "Currie"
+
+msgid "Intl_Timezone_Australia_Darwin"
+msgstr "Darwin"
+
+msgid "Intl_Timezone_Australia_Eucla"
+msgstr "Eucla"
+
+msgid "Intl_Timezone_Australia_Hobart"
+msgstr "Hobart"
+
+msgid "Intl_Timezone_Australia_Lindeman"
+msgstr "Lindeman"
+
+msgid "Intl_Timezone_Australia_LordHowe"
+msgstr "Lord Howe"
+
+msgid "Intl_Timezone_Australia_Melbourne"
+msgstr "Melbourne"
+
+msgid "Intl_Timezone_Australia_Perth"
+msgstr "Perth"
+
+msgid "Intl_Timezone_Australia_Sydney"
+msgstr "Sidney"
+
+msgid "Intl_Timezone_Europe_Astrakhan"
+msgstr "Astrakán"
+
+msgid "Intl_Timezone_Europe_Berlin"
+msgstr "Berlín"
+
+msgid "Intl_Timezone_Europe_Busingen"
+msgstr "Busingen"
+
+msgid "Intl_Timezone_Europe_Kaliningrad"
+msgstr "Kaliningrado"
+
+msgid "Intl_Timezone_Europe_Kiev"
+msgstr "Kiev"
+
+msgid "Intl_Timezone_Europe_Kirov"
+msgstr "Kirov"
+
+msgid "Intl_Timezone_Europe_Lisbon"
+msgstr "Lisboa"
+
+msgid "Intl_Timezone_Europe_Madrid"
+msgstr "Madrid"
+
+msgid "Intl_Timezone_Europe_Moscow"
+msgstr "Moscova"
+
+msgid "Intl_Timezone_Europe_Samara"
+msgstr "Samara"
+
+msgid "Intl_Timezone_Europe_Saratov"
+msgstr "Saratov"
+
+msgid "Intl_Timezone_Europe_Simferopol"
+msgstr "Simferópol"
+
+msgid "Intl_Timezone_Europe_Ulyanovsk"
+msgstr "Ulianovsk"
+
+msgid "Intl_Timezone_Europe_Uzhgorod"
+msgstr "Úzhgorod"
+
+msgid "Intl_Timezone_Europe_Volgograd"
+msgstr "Volgogrado"
+
+msgid "Intl_Timezone_Europe_Zaporozhye"
+msgstr "Zaporizhia"
+
+msgid "Intl_Timezone_Pacific_Auckland"
+msgstr "Auckland"
+
+msgid "Intl_Timezone_Pacific_Bougainville"
+msgstr "Bougainville"
+
+msgid "Intl_Timezone_Pacific_Chatham"
+msgstr "Chatham"
+
+msgid "Intl_Timezone_Pacific_Easter"
+msgstr "Illa de Pascua"
+
+msgid "Intl_Timezone_Pacific_Enderbury"
+msgstr "Enderbury"
+
+msgid "Intl_Timezone_Pacific_Galapagos"
+msgstr "Illas Galápagos"
+
+msgid "Intl_Timezone_Pacific_Gambier"
+msgstr "Gambier"
+
+msgid "Intl_Timezone_Pacific_Honolulu"
+msgstr "Honolulú"
+
+msgid "Intl_Timezone_Pacific_Johnston"
+msgstr "Johnston"
+
+msgid "Intl_Timezone_Pacific_Kiritimati"
+msgstr "Kiritimati"
+
+msgid "Intl_Timezone_Pacific_Kosrae"
+msgstr "Kosrae"
+
+msgid "Intl_Timezone_Pacific_Kwajalein"
+msgstr "Kwajalein"
+
+msgid "Intl_Timezone_Pacific_Majuro"
+msgstr "Majuro"
+
+msgid "Intl_Timezone_Pacific_Marquesas"
+msgstr "Marquesas"
+
+msgid "Intl_Timezone_Pacific_Midway"
+msgstr "Midway"
+
+msgid "Intl_Timezone_Pacific_Ponape"
+msgstr "Pohnpei"
+
+msgid "Intl_Timezone_Pacific_PortMoresby"
+msgstr "Port Moresby"
+
+msgid "Intl_Timezone_Pacific_Tahiti"
+msgstr "Tahití"
+
+msgid "Intl_Timezone_Pacific_Tarawa"
+msgstr "Tarawa"
+
+msgid "Intl_Timezone_Pacific_Truk"
+msgstr "Chuuk"
+
+msgid "Intl_Timezone_Pacific_Wake"
+msgstr "Wake"
+
+msgid "Intl_Today"
+msgstr "Hoxe"
+
+msgid "Intl_Year_Short"
+msgstr "ano"
+
+msgid "Intl_Yesterday"
+msgstr "Onte"
+
+msgid "Login_InvalidUsernameEmail"
+msgstr "O nome do usuario ou o enderezo de correo electrónicoo son incorrectos"
+
+msgid "Login_LogIn"
+msgstr "Conectar"
+
+msgid "Login_LoginPasswordNotCorrect"
+msgstr "Usuario e contrasinal incorrectos"
+
+msgid "Login_LostYourPassword"
+msgstr "Esqueceu o contrasinal?"
+
+msgid "Marketplace_ActivateLicenseKey"
+msgstr "Activar"
+
+msgid "Marketplace_PluginKeywords"
+msgstr "Palabras clave"
+
+msgid "Provider_WidgetProviders"
+msgstr "Provedores"
+
+msgid "Referrers_Campaigns"
+msgstr "Campañas"
+
+msgid "Referrers_ColumnWebsite"
+msgstr "Web"
+
+msgid "Referrers_DirectEntry"
+msgstr "Entrada directa"
+
+msgid "Referrers_Keywords"
+msgstr "Palabras clave"
+
+msgid "Referrers_SearchEngines"
+msgstr "Motores de busca"
+
+msgid "Referrers_SubmenuSearchEngines"
+msgstr "Motores de busca e palabras clave"
+
+msgid "Referrers_SubmenuWebsitesOnly"
+msgstr "Sitios"
+
+msgid "Referrers_TypeCampaigns"
+msgstr "%s desde campañas"
+
+msgid "Referrers_TypeDirectEntries"
+msgstr "%s entradas directas"
+
+msgid "Referrers_TypeSearchEngines"
+msgstr "%s desde motores de busca"
+
+msgid "Referrers_TypeWebsites"
+msgstr "%s desde outras webs"
+
+msgid "Referrers_Websites"
+msgstr "Sitios"
+
+msgid "Referrers_WidgetExternalWebsites"
+msgstr "Lista de webs externas"
+
+msgid "Resolution_ColumnConfiguration"
+msgstr "Configuración"
+
+msgid "Resolution_ColumnResolution"
+msgstr "Resolución"
+
+msgid "Resolution_Configurations"
+msgstr "Configuracións"
+
+msgid "Resolution_PluginDescription"
+msgstr "Informa sobre as resolucións de pantalla das visitas."
+
+msgid "Resolution_Resolutions"
+msgstr "Resolucións"
+
+msgid "Resolution_WidgetGlobalVisitors"
+msgstr "Configuración global de visitantes"
+
+msgid "Resolution_WidgetGlobalVisitorsDocumentation"
+msgstr "Este informa mostra as configuracións xerais máis frecuentes utilizadas polas visitas. Unha configuración é a combinación de sistema operativo, tipo de navegador e resolución de pantalla."
+
+msgid "Resolution_WidgetResolutions"
+msgstr "Resolución de pantalla"
+
+msgid "SitesManager_AddSite"
+msgstr "Engadir un sitio"
+
+msgid "SitesManager_Currency"
+msgstr "Moeda"
+
+msgid "SitesManager_DeleteConfirm"
+msgstr "Está seguro de querer eliminar o sitio %s?"
+
+msgid "SitesManager_ExceptionDeleteSite"
+msgstr "Non é posible eliminar este sitio xa que é o único que hai rexistrado. Antes de eliminalo, engada un novo."
+
+msgid "SitesManager_ExceptionEmptyName"
+msgstr "O nome do sitio non pode estar baleiro."
+
+msgid "SitesManager_ExceptionInvalidUrl"
+msgstr "A URL '%s' non é unha URL válida."
+
+msgid "SitesManager_ExceptionNoUrl"
+msgstr "Debe especificar polo menos unha URL do seu sitio."
+
+msgid "SitesManager_NoWebsites"
+msgstr "Vostede non ten ningunha web que administrar"
+
+msgid "SitesManager_Sites"
+msgstr "Sitios"
+
+msgid "SitesManager_Timezone"
+msgstr "Fuso horario"
+
+msgid "SitesManager_Urls"
+msgstr "URLs"
+
+msgid "TagManager_CategoryDate"
+msgstr "Data"
+
+msgid "TagManager_CategoryEmail"
+msgstr "Enderezo electrónico"
+
+msgid "TagManager_ComparisonContains"
+msgstr "contén"
+
+msgid "TagManager_ComparisonEndsWith"
+msgstr "remata en"
+
+msgid "TagManager_ComparisonGreaterThan"
+msgstr "é maior de"
+
+msgid "TagManager_ComparisonStartsWith"
+msgstr "comeza por"
+
+msgid "TagManager_Condition"
+msgstr "Condición"
+
+msgid "TagManager_PageUrlVariableName"
+msgstr "URL da páxina"
+
+msgid "TagManager_Tag"
+msgstr "Etiqueta"
+
+msgid "UserCountry_Continent"
+msgstr "Continente"
+
+msgid "UserCountry_Country"
+msgstr "País"
+
+msgid "UserCountry_country_o1"
+msgstr "Outro país"
+
+msgid "UserCountry_DistinctCountries"
+msgstr "%s continentes distintos"
+
+msgid "UserCountry_DownloadingDb"
+msgstr "A descargar %s"
+
+msgid "UserCountry_DownloadNewDatabasesEvery"
+msgstr "Actualizar as bases de datos cada"
+
+msgid "UserCountry_Region"
+msgstr "Rexión"
+
+msgid "UserCountry_SubmenuLocations"
+msgstr "Lugares"
+
+msgid "UserCountry_UpdaterHasNotBeenRun"
+msgstr "O actualizador non foi executado nunca."
+
+msgid "UserCountry_UpdaterIsNotScheduledToRun"
+msgstr "Non está planificado para ser executado no futuro."
+
+msgid "UserCountry_UpdaterScheduledForNextRun"
+msgstr "Está planificado para ser executado durante a próxima execución da orde core:archive de cron."
+
+msgid "UserCountry_UpdaterWasLastRun"
+msgstr "O actualizador foi executado por última vez o %s."
+
+msgid "UserCountry_UpdaterWillRunNext"
+msgstr "Está planificado para ser executado o %s."
+
+msgid "UserId_UserReportTitle"
+msgstr "Usuario"
+
+msgid "UserLanguage_BrowserLanguage"
+msgstr "Idioma do navegador"
+
+msgid "UserLanguage_LanguageCode"
+msgstr "Código de idioma"
+
+msgid "UserLanguage_PluginDescription"
+msgstr "Informa sobre o idioma empregado polos navegadores das visitas."
+
+msgid "UsersManager_AddUser"
+msgstr "Engadir un novo usuario"
+
+msgid "UsersManager_Alias"
+msgstr "Alias"
+
+msgid "UsersManager_AllWebsites"
+msgstr "Todas as webs"
+
+msgid "UsersManager_ApplyToAllWebsites"
+msgstr "Aplicar a todos os sitios"
+
+msgid "UsersManager_DeleteConfirm"
+msgstr "Está seguro de que desexa eliminar ao usuario %s?"
+
+msgid "UsersManager_Email"
+msgstr "Enderezo electrónico"
+
+msgid "UsersManager_ExceptionDeleteDoesNotExist"
+msgstr "O usuario '%s' non existe, polo que non pode ser eliminado."
+
+msgid "UsersManager_ExceptionEditAnonymous"
+msgstr "O usuario anónimo non pode ser eliminado ou modificado, xa que é empregado por Matomo para identificar a usuarios non conectados. Por exemplo, pode facer as súas estatísticas públicas dando acceso á 'visión' aos visitantes 'anónimos'."
+
+msgid "UsersManager_ExceptionInvalidEmail"
+msgstr "O enderezo electrónico non ten un formato correcto."
+
+msgid "UsersManager_ExceptionUserDoesNotExist"
+msgstr "O usuario '%s' non existe."
+
+msgid "UsersManager_ManageAccess"
+msgstr "Administrar o acceso"
+
+msgid "UsersManager_MenuUsers"
+msgstr "Usuario"
+
+msgid "UsersManager_PrivAdmin"
+msgstr "Admin"
+
+msgid "UsersManager_PrivNone"
+msgstr "Acceso denegado"
+
+msgid "UsersManager_PrivView"
+msgstr "Ver"
+
+msgid "UsersManager_User"
+msgstr "Usuario"
+
+msgid "UsersManager_Username"
+msgstr "Usuario"
+
+msgid "VisitFrequency_SubmenuFrequency"
+msgstr "Frecuencia"
+
+msgid "VisitFrequency_WidgetGraphReturning"
+msgstr "Gráfico de visitantes que volven"
+
+msgid "VisitFrequency_WidgetOverview"
+msgstr "Listado de frecuencias"
+
+msgid "VisitTime_LocalTime"
+msgstr "Visitas por hora local"
+
+msgid "VisitTime_NHour"
+msgstr "%s h"
+
+msgid "VisitTime_ServerTime"
+msgstr "Visitas por hora do servidor"
+
+msgid "VisitTime_SubmenuTimes"
+msgstr "Tempos"
+
+msgid "VisitTime_WidgetLocalTime"
+msgstr "Visitas por hora local"
+
+msgid "VisitTime_WidgetServerTime"
+msgstr "Visitas por hora do servidor"
+
+msgid "VisitorInterest_VisitsPerDuration"
+msgstr "Visitas por duración"
+
+msgid "VisitorInterest_VisitsPerNbOfPages"
+msgstr "Visitas por número de páxinas visitadas"
+
+msgid "VisitorInterest_WidgetLengths"
+msgstr "Duración das visitas"
+
+msgid "VisitorInterest_WidgetPages"
+msgstr "Páxinas vistas por visita"
+
+msgid "VisitsSummary_GenerateQueries"
+msgstr "%s consultas executadas"
+
+msgid "VisitsSummary_GenerateTime"
+msgstr "%s segundos para xerar a páxina"
+
+msgid "VisitsSummary_WidgetLastVisits"
+msgstr "Gráfico das últimas visitas"
+
+msgid "VisitsSummary_WidgetOverviewGraph"
+msgstr "Visión xeral con gráfico"
+
+msgid "VisitsSummary_WidgetVisits"
+msgstr "Visión xeral de visitas"
+
+msgid "WebsiteMeasurable_Website"
+msgstr "Web"
+
+msgid "WebsiteMeasurable_Websites"
+msgstr "Sitios"
+
+msgid "Widgetize_OpenInNewWindow"
+msgstr "Abrir en nova Xanela"

@@ -1,0 +1,5744 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-10-21T03:38:10+00:00\n"
+"PO-Revision-Date: 2019-10-21T03:38:10+00:00\n"
+"Language: be\n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);\n"
+"X-Domain: matomo\n"
+
+msgid "General_AbandonedCarts"
+msgstr "Адмовілася ад замоў"
+
+msgid "General_AboutPiwikX"
+msgstr "Аб Matomo %s"
+
+msgid "General_Action"
+msgstr "Дзеянне"
+
+msgid "General_Actions"
+msgstr "Дзеянні"
+
+msgid "General_AfterEntry"
+msgstr "пасля ўваходны тут"
+
+msgid "General_AllWebsitesDashboard"
+msgstr "Галоўная панэль ўсіх вэб-сайтаў"
+
+msgid "General_API"
+msgstr "API-функцыі"
+
+msgid "General_ArchivingInlineHelp"
+msgstr "Для сайтаў з сярэднім і высокім трафікам, рэкамендуецца адключыць функцыю архівавання Matomo для запуску з браўзэра."
+
+msgid "General_ArchivingTriggerDescription"
+msgstr "Рэкамендуецца для Matomo на сайтах з высокім трафікам, патрэбна %1$sўсталяваць заданне для крону%2$s для аўтаматычнай апрацоўкі справаздач."
+
+msgid "General_AuthenticationMethodSmtp"
+msgstr "Метад праверкі сапраўднасці для SMTP"
+
+msgid "General_AverageOrderValue"
+msgstr "Сярэдні кошт замоў"
+
+msgid "General_AveragePrice"
+msgstr "Сярэднш кошт"
+
+msgid "General_AverageQuantity"
+msgstr "Сярэдняя колькасць"
+
+msgid "General_BackToPiwik"
+msgstr "Вярнуцца да Matomo"
+
+msgid "General_BrokenDownReportDocumentation"
+msgstr "Яна разбіта на некалькі справаздач, якія адлюстроўваюцца ў спарклайны ў ніжняй частцы старонкі. Вы можаце павялічыць графікі, націснуўшы на справаздачу, якую вы хацелі б бачыць."
+
+msgid "General_ChangePassword"
+msgstr "Змяніць пароль"
+
+msgid "General_ChangeTagCloudView"
+msgstr "Калі ласка, звярніце ўвагу на то, што вы можаце прагледзець справаздачу не толькі як воблака тэгаў. Каб зрабіць гэта, выкарыстоўвайце элементы кіравання ў ніжняй частцы справаздачы."
+
+msgid "General_ChooseLanguage"
+msgstr "Абярыце мову"
+
+msgid "General_ChoosePeriod"
+msgstr "Абярыце перыяд"
+
+msgid "General_ClickHere"
+msgstr "Націсніце тут для атрымання дадатковай інфармацыі."
+
+msgid "General_Close"
+msgstr "Зачыніць"
+
+msgid "General_ColumnActionsPerVisit"
+msgstr "Дзеянні за наведванне"
+
+msgid "General_ColumnActionsPerVisitDocumentation"
+msgstr "Сярэдні лік дзеянняў (прагляд старонак, запампоўка або аутлінкі), якія праводзіліся падчас візітаў."
+
+msgid "General_ColumnAverageTimeOnPage"
+msgstr "Сяр. час на старонцы"
+
+msgid "General_ColumnAverageTimeOnPageDocumentation"
+msgstr "Сярэдняе колькасць часу, праведзенага наведвальнікамі на гэтай старонцы (толькі старонкі, а не ўвесь вэб-сайт)."
+
+msgid "General_ColumnAvgTimeOnSite"
+msgstr "Сяр. час на вэб-сайце"
+
+msgid "General_ColumnAvgTimeOnSiteDocumentation"
+msgstr "Сярэдняя працягласць наведвання."
+
+msgid "General_ColumnBounceRate"
+msgstr "Узровень адмоў"
+
+msgid "General_ColumnBounceRateDocumentation"
+msgstr "Працэнт наведванняў, якія выказалі толькі азін прагляд старонкі. Гэта азначае, што наведвальнік пакінуў сайт прама са старонкі ўваходу."
+
+msgid "General_ColumnBounces"
+msgstr "Адмовы"
+
+msgid "General_ColumnBouncesDocumentation"
+msgstr "Колькасць наведванняў, якая пачалася і скончылася на гэтай старонцы. Гэта азначае, што наведвальнік пакінуў сайт пасля прагляду толькі гэтай старонкі."
+
+msgid "General_ColumnConversionRate"
+msgstr "Узровень канверсій"
+
+msgid "General_ColumnConversionRateDocumentation"
+msgstr "Працэнт наведванняў, якія выклікалі мэты канверсіі."
+
+msgid "General_ColumnEntrances"
+msgstr "Уваходы"
+
+msgid "General_ColumnEntrancesDocumentation"
+msgstr "Колькасць наведванняў, якія пачаліся на гэтай старонцы."
+
+msgid "General_ColumnExitRate"
+msgstr "Узровень выхадаў"
+
+msgid "General_ColumnExitRateDocumentation"
+msgstr "Працэнт наведванняў, якія пакінулі вэб-сайт пасля прагляду гэтай старонкі (унікальныя прагляды старонак падзелены на выхады)"
+
+msgid "General_ColumnExits"
+msgstr "Выхады"
+
+msgid "General_ColumnExitsDocumentation"
+msgstr "Колькасць наведванняў, якія скончыліся на гэтай старонцы."
+
+msgid "General_ColumnKeyword"
+msgstr "Ключавое слова"
+
+msgid "General_ColumnLabel"
+msgstr "Пазнака"
+
+msgid "General_ColumnMaxActions"
+msgstr "Максімальная колькасць дзеянняў ў адно наведванне"
+
+msgid "General_ColumnNbActions"
+msgstr "Дзеянні"
+
+msgid "General_ColumnNbActionsDocumentation"
+msgstr "Колькасць дзеянняў, якія выконваюцца вашымі наведвальнікамі. Дзеянні могуць быць прагляды старонак, запампоўка або аутлінкі."
+
+msgid "General_ColumnNbUniqVisitors"
+msgstr "Унікальных наведвальнікаў"
+
+msgid "General_ColumnNbUsers"
+msgstr "Карыстачы"
+
+msgid "General_ColumnNbVisits"
+msgstr "Наведванні"
+
+msgid "General_ColumnPageBounceRateDocumentation"
+msgstr "Працэнт наведванняў, якія пачаліся на гэтай старонцы і адразу пакінулі вэб-сайт."
+
+msgid "General_ColumnPageviews"
+msgstr "Прагляды старонак"
+
+msgid "General_ColumnPageviewsDocumentation"
+msgstr "Колькі раз гэтая старонка была праглядзена."
+
+msgid "General_ColumnRevenue"
+msgstr "Прыбытак"
+
+msgid "General_ColumnSumVisitLength"
+msgstr "Агульны час, праведзены наведвальнікамі (у секундах)"
+
+msgid "General_ColumnUniqueEntrances"
+msgstr "Унікальныя ўваходы"
+
+msgid "General_ColumnUniqueExits"
+msgstr "Унікальныя выхады"
+
+msgid "General_ColumnUniquePageviews"
+msgstr "Унікальныя прагляды старонак"
+
+msgid "General_ColumnUniquePageviewsDocumentation"
+msgstr "Колькасць наведванняў, якія ўключалі гэтую старонку. Калі старонка была праглядзена некалькіх разоў на працягу аднаго наведвання, то яна лічыцца толькі адзін раз."
+
+msgid "General_ColumnValuePerVisit"
+msgstr "Прыбытак за кожнае наведванне"
+
+msgid "General_ColumnVisitDuration"
+msgstr "Працягласць наведвання (у секундах)"
+
+msgid "General_ColumnVisitsWithConversions"
+msgstr "Наведванні з канверсіяй"
+
+msgid "General_ConfigFileIsNotWritable"
+msgstr "Файл канфігурацыі Matomo %1$s недаступны для запісу, некаторыя з Вашых змяненняў могуць быць не захованы. %2$s Калі ласка, змяніце дазвол канфігурацыйнага файла, каб зрабіць яго даступным для запісу."
+
+msgid "General_ContinueToPiwik"
+msgstr "Перайсці да Matomo"
+
+msgid "General_CurrentMonth"
+msgstr "Бягучы месяц"
+
+msgid "General_CurrentWeek"
+msgstr "Бягучы тыдзень"
+
+msgid "General_CurrentYear"
+msgstr "Бягучы год"
+
+msgid "General_Daily"
+msgstr "Штодзень"
+
+msgid "General_DailySum"
+msgstr "штодзённая сума"
+
+msgid "General_DashboardForASpecificWebsite"
+msgstr "Галоўная панэль пэўнага вэб-сайта"
+
+msgid "General_Date"
+msgstr "Дата"
+
+msgid "General_DateRange"
+msgstr "Дыяпазон дат:"
+
+msgid "General_DateRangeFrom"
+msgstr "Ад"
+
+msgid "General_DateRangeFromTo"
+msgstr "Ад %1$s Да %2$s"
+
+msgid "General_DateRangeTo"
+msgstr "Да"
+
+msgid "General_DaysHours"
+msgstr "%1$s дзён %2$s гадзін"
+
+msgid "General_DaysSinceFirstVisit"
+msgstr "Лік дзён з даты першага наведвання"
+
+msgid "General_DaysSinceLastEcommerceOrder"
+msgstr "Лік дзён з даты апошняй замовы электроннай камерцыі"
+
+msgid "General_DaysSinceLastVisit"
+msgstr "Лік дзён з даты апошняга наведвання"
+
+msgid "General_Default"
+msgstr "Пазмаўчанні"
+
+msgid "General_Delete"
+msgstr "Выдаліць"
+
+msgid "General_Description"
+msgstr "Апісанне"
+
+msgid "General_Details"
+msgstr "Дэталі"
+
+msgid "General_Discount"
+msgstr "Зніжка"
+
+msgid "General_DisplaySimpleTable"
+msgstr "Паказаць простую табліцу"
+
+msgid "General_DisplayTableWithGoalMetrics"
+msgstr "Паказаць табліцу з Мэтамі метрыкі"
+
+msgid "General_DisplayTableWithMoreMetrics"
+msgstr "Паказаць табліцу з больш метрыкамі"
+
+msgid "General_Done"
+msgstr "Завершана"
+
+msgid "General_Download"
+msgstr "Спампаваць"
+
+msgid "General_DownloadFullVersion"
+msgstr "%1$sСпампуйце%2$s поўную версію! праверце %3$s"
+
+msgid "General_Downloads"
+msgstr "Запампоўкі"
+
+msgid "General_EcommerceOrders"
+msgstr "Замовы электроннай камерціі"
+
+msgid "General_EcommerceVisitStatusDesc"
+msgstr "Наведаць статус электроннай камерцыі у канцы"
+
+msgid "General_EcommerceVisitStatusEg"
+msgstr "Напрыклад, каб выбраць усе наведванні, якія зрабілі электронна-камерцыйнаю замову, API-запыт будзе змяшчаць %s"
+
+msgid "General_Edit"
+msgstr "Рэдагаваць"
+
+msgid "General_EncryptedSmtpTransport"
+msgstr "Калі ласка, увядзіце тып шыфравання які патрабуе ваш SMTP-сервер."
+
+msgid "General_Error"
+msgstr "Памылка"
+
+msgid "General_EvolutionOverPeriod"
+msgstr "Змена за перыяд"
+
+msgid "General_ExceptionConfigurationFileNotFound"
+msgstr "Файл канфігурацыі {%s} не знойдзены."
+
+msgid "General_ExceptionDatabaseVersion"
+msgstr "Ваша %1$s версія %2$s, але Matomo патрабуе па меншай меры версію %3$s."
+
+msgid "General_ExceptionFileIntegrity"
+msgstr "Праверка цэласнасці не ўдалася: %s"
+
+msgid "General_ExceptionFilesizeMismatch"
+msgstr "Неадпаведнасць памеру файла: %1$s (чаканы памер: %2$s, атрыманы памер: %3$s)"
+
+msgid "General_ExceptionIncompatibleClientServerVersions"
+msgstr "Ваш кліент %1$s версіі %2$s несумяшчальнs з версіяй сервера %3$s."
+
+msgid "General_ExceptionInvalidAggregateReportsFormat"
+msgstr "Сукупны фармат справаздач '%1$s' несапраўдныя. Паспрабуйце любы з наступных замест: %2$s."
+
+msgid "General_ExceptionInvalidArchiveTimeToLive"
+msgstr "Сённяшни архіўны час павинен быць колькасцю секунд больш за нуль"
+
+msgid "General_ExceptionInvalidDateFormat"
+msgstr "Фармат даты павінен быць: %1$s, або на любое ключавое слова, падтрымліваемае функцыяй %2$s (глядзі %3$s для больш падрабязнай інфармацыі)"
+
+msgid "General_ExceptionInvalidDateRange"
+msgstr "Дата - '%1$s' - няправільны дыяпазон дат. Ён павінен мець наступны фармат: %2$s."
+
+msgid "General_ExceptionInvalidPeriod"
+msgstr "Перыяд '%1$s' не падтрымліваецца. Паспрабуйце любы з наступных замест перыяда: %2$s"
+
+msgid "General_ExceptionInvalidRendererFormat"
+msgstr "Фармат рэндара '%1$s' не падтрымліваецца. Паспрабуйце любы з наступных замест рэндара: %2$s"
+
+msgid "General_ExceptionInvalidReportRendererFormat"
+msgstr "Фармат справаздачы '%1$s' не падтрымліваецца. Паспрабуйце любы з наступных замест справаздачы: %2$s"
+
+msgid "General_ExceptionInvalidToken"
+msgstr "Маркер з'яўляецца няправільным."
+
+msgid "General_ExceptionLanguageFileNotFound"
+msgstr "Моўны файл '%s' не знойдзены."
+
+msgid "General_ExceptionMethodNotFound"
+msgstr "Метад '%1$s' не існуе ці не даступны ў модулі '%2$s'."
+
+msgid "General_ExceptionMissingFile"
+msgstr "Адсутнічае файл: %s"
+
+msgid "General_ExceptionNonceMismatch"
+msgstr "Не атрымалася праверыць токэн бяспекі ў гэтай форме."
+
+msgid "General_ExceptionPrivilege"
+msgstr "Вы не можаце атрымаць доступ да гэтага рэсурсу, таму што ён патрабуе %s доступ."
+
+msgid "General_ExceptionUnableToStartSession"
+msgstr "Немагчыма запусціць сесію."
+
+msgid "General_ExceptionUndeletableFile"
+msgstr "Немагчыма выдаліць %s"
+
+msgid "General_ExceptionUnreadableFileDisabledMethod"
+msgstr "Файл канфігурацыі {%1$s} не можа быць прачытаны. Магчыма ваш хост адключыў %2$s."
+
+msgid "General_Export"
+msgstr "Экспартаваць"
+
+msgid "General_ExportAsImage"
+msgstr "Экспартаваць у малюнак"
+
+msgid "General_ExportThisReport"
+msgstr "Экспартаваць гэты набор дадзеных у іншыя фарматы"
+
+msgid "General_First"
+msgstr "Першы"
+
+msgid "General_ForExampleShort"
+msgstr "напр."
+
+msgid "General_FromReferrer"
+msgstr "ад"
+
+msgid "General_GeneralSettings"
+msgstr "Агульныя наладкі"
+
+msgid "General_GiveUsYourFeedback"
+msgstr "Дайце нам водгук!"
+
+msgid "General_Goal"
+msgstr "Мэта"
+
+msgid "General_GoTo"
+msgstr "Перайсці да %s"
+
+msgid "General_GraphHelp"
+msgstr "Больш інфармаціі аб адлюстраванні графікаў у Matomo."
+
+msgid "General_HelloUser"
+msgstr "Прывітанне, %s!"
+
+msgid "General_Help"
+msgstr "Дапамога"
+
+msgid "General_HoursMinutes"
+msgstr "%1$s гадзін %2$s хв"
+
+msgid "General_Id"
+msgstr "Id"
+
+msgid "General_InvalidDateRange"
+msgstr "Няправільны дыяпазон дат, паспрабуйце яшчэ раз"
+
+msgid "General_InvalidResponse"
+msgstr "Атрыманыя дадзеныя несапраўдныя."
+
+msgid "General_JsTrackingTag"
+msgstr "Код JavaScript"
+
+msgid "General_Language"
+msgstr "Мова"
+
+msgid "General_LastDays"
+msgstr "Апошніх %s дзён (уключаючы сёння)"
+
+msgid "General_Loading"
+msgstr "Загрузка…"
+
+msgid "General_LoadingData"
+msgstr "Загрузка дадзеных…"
+
+msgid "General_Locale"
+msgstr "be_BY.UTF-8"
+
+msgid "General_Logout"
+msgstr "Выйсці"
+
+msgid "General_MainMetrics"
+msgstr "Галоўная метрыкі"
+
+msgid "General_MediumToHighTrafficItIsRecommendedTo"
+msgstr "Для вэб-сайтаў з сярэднім і высокім трафікам, мы рэкамендуем апрацоўваць справаздачы на сённяшні дзень не больш чым праз кожныя паўгадзіны (%1$s секунд) або кожную гадзіну (%2$s секунд)."
+
+msgid "General_Metadata"
+msgstr "Метададзеныя"
+
+msgid "General_MetricsToPlot"
+msgstr "Метрыкі для пабудовы"
+
+msgid "General_MetricToPlot"
+msgstr "Метрычная пабудаваць"
+
+msgid "General_MinutesSeconds"
+msgstr "%1$s хв %2$sс"
+
+msgid "General_Monthly"
+msgstr "Штомесяц"
+
+msgid "General_MultiSitesSummary"
+msgstr "Усе вэб-сайты"
+
+msgid "General_Name"
+msgstr "Імя"
+
+msgid "General_NbActions"
+msgstr "Колькасць дзеянняў"
+
+msgid "General_Never"
+msgstr "Ніколі"
+
+msgid "General_NewReportsWillBeProcessedByCron"
+msgstr "Калі архіваванне Matomo не запускаецца ў браўзэры, новыя справаздачы будуць апрацаваныя кронтабам."
+
+msgid "General_NewUpdatePiwikX"
+msgstr "Новае абнаўленне: Matomo %s"
+
+msgid "General_NewVisitor"
+msgstr "Новы наведвальнік"
+
+msgid "General_NewVisits"
+msgstr "Новыя наведвання"
+
+msgid "General_Next"
+msgstr "Далей"
+
+msgid "General_No"
+msgstr "Не"
+
+msgid "General_NoDataForGraph"
+msgstr "Няма дадзеных для пабудовы графіка"
+
+msgid "General_NoDataForTagCloud"
+msgstr "Няма дадзеных для гэтага аблока тэгаў."
+
+msgid "General_NotDefined"
+msgstr "%s не вызначана"
+
+msgid "General_NotValid"
+msgstr "%s не сапраўдны"
+
+msgid "General_NumberOfVisits"
+msgstr "Колькасць наведванняў"
+
+msgid "General_NVisits"
+msgstr "%s наведванняў"
+
+msgid "General_NUniqueVisitors"
+msgstr "%s унікальных наведвальнікаў"
+
+msgid "General_Ok"
+msgstr "Ок"
+
+msgid "General_OneVisit"
+msgstr "1 наведванне"
+
+msgid "General_OnlyEnterIfRequired"
+msgstr "Увядзіце імя карыстальніка толькі, калі ваш SMTP-сервер патрабуе гэтага."
+
+msgid "General_OnlyEnterIfRequiredPassword"
+msgstr "Увядзіце пароль толькі, калі ваш SMTP-сервер патрабуе гэтага."
+
+msgid "General_OnlyUsedIfUserPwdIsSet"
+msgstr "Выкарыстоўваецца толькі калі імя карыстальніка / пароль ўстаноўлены. Калі вы не ўпэўненыя, які метад выкарыстаць, папытаеце вашага правайдэра."
+
+msgid "General_OpenSourceWebAnalytics"
+msgstr "Вэб аналітыка з адчыненым кодам"
+
+msgid "General_OptionalSmtpPort"
+msgstr "Неабавязкова. Па змаўчанні - 25 - для незашыфраваных злучэнняў і TLS SMTP. 465 - для зашыфраваных і SSL SMTP."
+
+msgid "General_OrCancel"
+msgstr "або %1$s Адмена %2$s"
+
+msgid "General_Others"
+msgstr "Іншыя"
+
+msgid "General_Outlink"
+msgstr "Аутлінк"
+
+msgid "General_Outlinks"
+msgstr "Знешнія спасылкі"
+
+msgid "General_Overview"
+msgstr "Агляд"
+
+msgid "General_Pages"
+msgstr "Старонкі"
+
+msgid "General_ParameterMustIntegerBetween"
+msgstr "Параметр %1$s павінна быць цэлае лік у дыяпазоне ад %2$s і %3$s"
+
+msgid "General_Password"
+msgstr "Пароль"
+
+msgid "General_Period"
+msgstr "Перыяд"
+
+msgid "General_Piechart"
+msgstr "Кругавая дыяграма"
+
+msgid "General_PiwikXIsAvailablePleaseUpdateNow"
+msgstr "Matomo %1$s даступны для спампоўкі. %2$s Калі ласка, абновіцеся!%3$s (глядзі %4$sзмены%5$s)."
+
+msgid "General_PleaseSpecifyValue"
+msgstr "Калі ласка, увядзіце значэнне для '%s'."
+
+msgid "General_PleaseUpdatePiwik"
+msgstr "Ваш Matomo патрабуе абнаўлення"
+
+msgid "General_Plugin"
+msgstr "Плагін"
+
+msgid "General_Plugins"
+msgstr "Плагіны"
+
+msgid "General_PoweredBy"
+msgstr "Распрацавана на"
+
+msgid "General_Previous"
+msgstr "Папярэдняе"
+
+msgid "General_PreviousDays"
+msgstr "Папярэдніх %s дзён (не ўключаючы сёння)"
+
+msgid "General_Price"
+msgstr "Кошт"
+
+msgid "General_ProductConversionRate"
+msgstr "Узровень канверсіі прадукту"
+
+msgid "General_ProductRevenue"
+msgstr "Прыбытак ад прадукту"
+
+msgid "General_PurchasedProducts"
+msgstr "Набытыя тавары"
+
+msgid "General_Quantity"
+msgstr "Колькасць"
+
+msgid "General_RecordsToPlot"
+msgstr "Справаздачы для пабудовы"
+
+msgid "General_RefreshPage"
+msgstr "Абнавіць старонку"
+
+msgid "General_Report"
+msgstr "Справаздача"
+
+msgid "General_Reports"
+msgstr "Справаздачы"
+
+msgid "General_ReportsWillBeProcessedAtMostEveryHour"
+msgstr "Справаздачы будуць апрацоўвацца не больш чым кожную гадзіну."
+
+msgid "General_RequestTimedOut"
+msgstr "Запыт дадзеных к %s выклікаў тайм-аўт. Калі ласка, паспрабуйце яшчэ раз."
+
+msgid "General_Required"
+msgstr "%s патрабуецца"
+
+msgid "General_ReturningVisitor"
+msgstr "Наведвальнік, які вярнуўся"
+
+msgid "General_Save"
+msgstr "Захаваць"
+
+msgid "General_SaveImageOnYourComputer"
+msgstr "Каб захаваць малюнак на ваш кампутар, націсніце правай кнопкай мышы на малюнак і абярыце \"Захаваць малюнак як…\""
+
+msgid "General_Search"
+msgstr "Пошук"
+
+msgid "General_SeeTheOfficialDocumentationForMoreInformation"
+msgstr "Глядзіце %1$sафіцыйную дакументацыю%2$s для атрымання падрабязнай інфармацыі."
+
+msgid "General_SelectYesIfYouWantToSendEmailsViaServer"
+msgstr "Адзначце \"Так\" калі патрэбна адправіць электронную пошту праз імянны сервер, замест выкарысання лакальнай паштовай функціі"
+
+msgid "General_Settings"
+msgstr "Наладкі"
+
+msgid "General_Shipping"
+msgstr "Дастаўка"
+
+msgid "General_SmallTrafficYouCanLeaveDefault"
+msgstr "Для сайтаў з невялікім трафікам, вы можаце пакінуць значэнне секунд па змаўчанні %s, таксама апрацоўваць ўсе справаздачы ў рэальным часе."
+
+msgid "General_SmtpEncryption"
+msgstr "SMTP шыфраванне"
+
+msgid "General_SmtpPassword"
+msgstr "SMTP пароль"
+
+msgid "General_SmtpPort"
+msgstr "SMTP порт"
+
+msgid "General_SmtpServerAddress"
+msgstr "SMTP адрас сервера"
+
+msgid "General_SmtpUsername"
+msgstr "SMTP імя карыстальніка"
+
+msgid "General_Subtotal"
+msgstr "Разам"
+
+msgid "General_Table"
+msgstr "Табліца"
+
+msgid "General_TagCloud"
+msgstr "Воблака тэгаў"
+
+msgid "General_Tax"
+msgstr "Падатак"
+
+msgid "General_Total"
+msgstr "Агульна"
+
+msgid "General_TotalRevenue"
+msgstr "Агульны прыбытак"
+
+msgid "General_TrackingScopeAction"
+msgstr "Дзеянне"
+
+msgid "General_TrackingScopeVisit"
+msgstr "Наведванне"
+
+msgid "General_TranslatorName"
+msgstr "Marcis G, Alban 'r4bble' Ardua, Iflexion design"
+
+msgid "General_UniquePurchases"
+msgstr "Унікальныя пакупкі"
+
+msgid "General_Unknown"
+msgstr "Невядома"
+
+msgid "General_Upload"
+msgstr "Загрузіць"
+
+msgid "General_UsePlusMinusIconsDocumentation"
+msgstr "Выкарыстоўвайце значкі плюса і мінуса, якія знаходзяцца злева, для навігацыі."
+
+msgid "General_Username"
+msgstr "Імя карыстальніка"
+
+msgid "General_UseSMTPServerForEmail"
+msgstr "Выкарыстоўвайце SMTP сервер для электроннай пошты"
+
+msgid "General_Value"
+msgstr "Значэнне"
+
+msgid "General_VBarGraph"
+msgstr "Вертыкальны графік"
+
+msgid "General_View"
+msgstr "Наведвання"
+
+msgid "General_Visit"
+msgstr "Наведванне"
+
+msgid "General_VisitConvertedGoal"
+msgstr "Наведванне пераўтвораннае хаця б у адну Мэту"
+
+msgid "General_VisitConvertedGoalId"
+msgstr "Наведаць пераўтвораны вызначаным ідэнтыфікатарам мэты"
+
+msgid "General_VisitConvertedNGoals"
+msgstr "Наведванне, якое канвертавалася %s мэту"
+
+msgid "General_VisitDuration"
+msgstr "Сяр. працягласць наведвання (у секундах)"
+
+msgid "General_Visitor"
+msgstr "Наведвальнік"
+
+msgid "General_VisitorID"
+msgstr "ID наведвальніка"
+
+msgid "General_VisitorIP"
+msgstr "IP наведвальніка"
+
+msgid "General_Visitors"
+msgstr "Наведвальнікі"
+
+msgid "General_VisitsWith"
+msgstr "Наведванняў з %s"
+
+msgid "General_VisitorSettings"
+msgstr "Налады карыстача"
+
+msgid "General_VisitTypeExample"
+msgstr "Напрыклад, каб выбраць усіх наведвальнікаў, якія вяртаюцца на вэб-сайт, у тым ліку і тых, хто купіў нешта ў сваіх папярэдніх візітах, API-запыт будзе змяшчаць %s"
+
+msgid "General_Warning"
+msgstr "Увага"
+
+msgid "General_WarningFileIntegrityNoManifest"
+msgstr "Праверка цэласнасці файлаў не можа быць выканана з-за адсутнасці файла manifest.inc.php."
+
+msgid "General_WarningFileIntegrityNoMd5file"
+msgstr "Праверка цэласнасці файлаў не можа быць завершана з-за адсутнасці md5_file () функцыі."
+
+msgid "General_WarningPasswordStored"
+msgstr "%1$sWarning:%2$s Гэты пароль будзе захаваны ў файле канфігурацыі, ен будзе бачным ўсім, хто мае да яго доступ."
+
+msgid "General_Website"
+msgstr "Сайт"
+
+msgid "General_Weekly"
+msgstr "Штотыдзень"
+
+msgid "General_Widgets"
+msgstr "Віджэты"
+
+msgid "General_YearsDays"
+msgstr "%1$s гадоў %2$s дзён"
+
+msgid "General_Yes"
+msgstr "Так"
+
+msgid "General_YouMustBeLoggedIn"
+msgstr "Каб атрымаць доступ да гэтай функцыянальнасці, Вы павінны аўтарызавацца."
+
+msgid "General_YourChangesHaveBeenSaved"
+msgstr "Вашы змены былі захаваныя."
+
+msgid "API_GenerateVisits"
+msgstr "Калі ў вас няма дадзеных на сённяшні дзень, вы можаце стварыць некаторыя дадзеныя, выкарыстоўваючы даданы модуль %1$s. Уключыце даданы модуль %2$s, затым націсніце на \"Генератар наведванняў\" у адміністрацыйнай частцы Matomo."
+
+msgid "API_KeepTokenSecret"
+msgstr "Гэта ідэнтыфікацыйны токэн, ён такі жа сакрэтны, як ваш лагін і пароль, %1$s не дзеліцеся ім ня з кім%2$s!"
+
+msgid "API_LoadedAPIs"
+msgstr "%s API паспяхова загружаны"
+
+msgid "API_MoreInformation"
+msgstr "Дадатковыя звесткі аб Matomo API, калі ласка, звярніце ўвагу на %1$s Уводзіны ў Matomo API %2$s і %3$s Matomo API спасылкі %4$s."
+
+msgid "API_UserAuthentication"
+msgstr "Аўтэнтыфікацыя карыстальніка"
+
+msgid "API_UsingTokenAuth"
+msgstr "Калі вы жадаеце %1$s запытаць дадзеныя ў рамках скрыпта, кронтаба і г.д. %2$s. Вам патрабуецца дадаць параметр %3$s да API каб выклікаць URL-адрасоў, якія патрабуюць праверкі сапраўднасці."
+
+msgid "Actions_ColumnClickedURL"
+msgstr "націснуты URL"
+
+msgid "Actions_ColumnClicks"
+msgstr "Націскі"
+
+msgid "Actions_ColumnClicksDocumentation"
+msgstr "Колькасць націскаў па гэтай спасылцы."
+
+msgid "Actions_ColumnDownloadURL"
+msgstr "URL запамповак"
+
+msgid "Actions_ColumnEntryPageTitle"
+msgstr "Назва старонкі ўваходу"
+
+msgid "Actions_ColumnEntryPageURL"
+msgstr "URL старонкі ўваходу"
+
+msgid "Actions_ColumnExitPageTitle"
+msgstr "Назва старонак выхаду"
+
+msgid "Actions_ColumnExitPageURL"
+msgstr "URL старонкі выхаду"
+
+msgid "Actions_ColumnPageName"
+msgstr "Імя старонкі"
+
+msgid "Actions_ColumnPageURL"
+msgstr "URL старонкі"
+
+msgid "Actions_ColumnUniqueClicks"
+msgstr "Унікальныя націскі"
+
+msgid "Actions_ColumnUniqueClicksDocumentation"
+msgstr "Колькасць наведвалнікаў, якія націснулі на гэтую спасылку. Калі спасылка была націснутая некалькі разоў на працягу аднаго наведвання, то яна лічыцца адзін раз."
+
+msgid "Actions_ColumnUniqueDownloads"
+msgstr "Унікальныя запампоўкі"
+
+msgid "Actions_DownloadsReportDocumentation"
+msgstr "На гэтай справаздачы, можна ўбачыць, якія файлы былі спампаваны вашымя наведвальнікамі. %s Matomo лічыць за спампаўку націск на адпаведную спасылку. Была запампоўка завершана ці не, гэта не вядома Matomo."
+
+msgid "Actions_OutlinkDocumentation"
+msgstr "Знешняя спасылка - гэта такая спасылка, якая вядзе наведвальніка прэч з вашага сайта (да іншага дамену)."
+
+msgid "Actions_OutlinksReportDocumentation"
+msgstr "Гэтая справаздача паказвае іерархічны спіс URL-адрасоў знешніх спасылак, якія былі націснуты вашымі наведвальнікамі."
+
+msgid "Actions_PagesReportDocumentation"
+msgstr "Гэтая справаздача змяшчае інфармацыю аб URL-адрасах старонак, якія былі наведаны. %s Табліца арганізавана іерархічна, URL-адрасы адлюстроўваюцца ў выглядзе тэчакавай структуры."
+
+msgid "Actions_PageTitlesReportDocumentation"
+msgstr "Гэтая справаздача змяшчае інфармацыю аб назвах старонак, якія былі наведаны. %1$s Назва старонкі гэта HTML %2$s тэг, які большасць брасзэраў паказваюць у загалоўке акна."
+
+msgid "Actions_SubmenuPagesEntry"
+msgstr "Старонкі ўваходу"
+
+msgid "Actions_SubmenuPagesExit"
+msgstr "Старонкі выхаду"
+
+msgid "Actions_SubmenuPageTitles"
+msgstr "Назвы старонак"
+
+msgid "CoreAdminHome_Administration"
+msgstr "Адміністрацыя"
+
+msgid "CoreAdminHome_BrandingSettings"
+msgstr "Брэндынг наладкі"
+
+msgid "CoreAdminHome_ClickHereToOptIn"
+msgstr "Націсніце тут, каб адмяніць адмову."
+
+msgid "CoreAdminHome_ClickHereToOptOut"
+msgstr "Націсніце тут, каб адмовіцца."
+
+msgid "CoreAdminHome_CustomLogoFeedbackInfo"
+msgstr "Калі Вы наладзілі свой лагатып, магчыма вы будзіце зацікаўлены ў схаванні %1$s спасылкі у верхнім меню. Для гэтага, вы можаце адключыць плагін зваротнай сувязі на старонцы %2$sУпраўлення плагінамі%3$s."
+
+msgid "CoreAdminHome_CustomLogoHelpText"
+msgstr "Вы можаце наладзіць свой лагатып, які будзе адлюстроўвацца ў карыстацкім інтэрфейсе і ў справаздачах, якія атрымліваюць па электроннай пошце."
+
+msgid "CoreAdminHome_EmailServerSettings"
+msgstr "Наладкі сервера электроннай пошты"
+
+msgid "CoreAdminHome_LogoUpload"
+msgstr "Выбраць лагатып для загрузкі"
+
+msgid "CoreAdminHome_MenuGeneralSettings"
+msgstr "Агульныя наладкі"
+
+msgid "CoreAdminHome_OptOutComplete"
+msgstr "Адмова завершана; вашы наведванні гэтага вэб-сайта не будуць запісаны інструментам Вэб-Аналітыкі."
+
+msgid "CoreAdminHome_OptOutCompleteBis"
+msgstr "Заўважце, што калі вы выдаляеце cookies, выдаляеце спецыяльны cookie для адмовы, змяняяце кампутары або вэб-браўзэры, вам трэба выканаць працэдуру адмовы зноў."
+
+msgid "CoreAdminHome_OptOutExplanation"
+msgstr "Matomo прысвечаны забеспячэнню канфідэнцыяльнасці ў Інтэрнэце. Каб прапанаваць сваім наведвальнікам адмовіцца ад Matomo Вэб-Аналітыкі, вы можаце дадаць наступны код на адной з старонак вашага сайта, напрыклад, на старонцы Палітыка прыватнасці."
+
+msgid "CoreAdminHome_OptOutForYourVisitors"
+msgstr "Адмова ад Matomo для вашых наведвальнікаў"
+
+msgid "CoreAdminHome_UseCustomLogo"
+msgstr "Выкарыстаць ўласны лагатып"
+
+msgid "CoreAdminHome_YouAreOptedOut"
+msgstr "У дадзены момант Вы адмоўлены."
+
+msgid "CoreAdminHome_YouMayOptOut"
+msgstr "Вы можаце выбраць, і атрымаць унікальны ідэнтыфікацыйны cookie з нумарам, прысвоеным вашаму кампутару, каб пазбегнуць агрэгацыі і аналізу дадзеных, сабраных на гэтым вэб-сайце."
+
+msgid "CoreAdminHome_YouMayOptOutBis"
+msgstr "Каб зрабіць гэты выбар, калі ласка, націсніце ніжэй, каб атрымаць спецыяльны cookie для адмовы."
+
+msgid "CoreHome_CategoryNoData"
+msgstr "Няма дадзеных у гэтай катэгорыі. Паспрабуйце \"Ўключыць усе паказчыкі\"."
+
+msgid "CoreHome_JavascriptDisabled"
+msgstr "Java-скрыпт павінен быць уключаны, каб выкарыстоўваць Matomo ў звычайны рэжыме прагляду.<br />Аднак, здаецца, што Java-скрыпт адключаны або не падтрымліваецца браўзэрам.<br />Каб выкарыстоўваць стандартны выгляд, уключыце JavaScript, змяніўшы наладкі браўзэра , затым %1$sпаспрабуйце зноў%2$s.<br />"
+
+msgid "CoreHome_NoPrivilegesAskPiwikAdmin"
+msgstr "Вы ўвайшлі як '%1$s', але здаецца, што у вас няма патрэбнага дазволу у Matomo. %2$s Спытайце свайго Matomo адміністратара (націснуць, каб паслаць паведамленне)%3$s, каб падаць вам дазвол для прагляду вэб-сайту."
+
+msgid "CoreHome_ShowJSCode"
+msgstr "Паказаць Java-код для ўстаўкі"
+
+msgid "CoreHome_ThereIsNoDataForThisReport"
+msgstr "Няма дадзеных для гэтай справаздачы."
+
+msgid "CoreHome_WebAnalyticsReports"
+msgstr "Справаздачы Вэб-Аналітыкі"
+
+msgid "CoreHome_SystemSummaryPhpVersion"
+msgstr "Версія PHP"
+
+msgid "CorePluginsAdmin_Activate"
+msgstr "Актываваць"
+
+msgid "CorePluginsAdmin_Activated"
+msgstr "Актывавана"
+
+msgid "CorePluginsAdmin_Active"
+msgstr "Актыўныя"
+
+msgid "CorePluginsAdmin_AuthorHomepage"
+msgstr "Хатняя старонка аўтара"
+
+msgid "CorePluginsAdmin_Deactivate"
+msgstr "Дэактываваць"
+
+msgid "CorePluginsAdmin_Inactive"
+msgstr "Неактыўныя"
+
+msgid "CorePluginsAdmin_LicenseHomepage"
+msgstr "Хатняя старонка ліцэнзіі"
+
+msgid "CorePluginsAdmin_PluginsExtendPiwik"
+msgstr "Плагіны пашыраюць функцыянальнасць Matomo."
+
+msgid "CorePluginsAdmin_OncePluginIsInstalledYouMayActivateHere"
+msgstr "Пасля ўсталёўкі плагіна Вы можаце актываваць ці дэактываваць яго тут."
+
+msgid "CorePluginsAdmin_PluginHomepage"
+msgstr "Хатняя старонка плагіна"
+
+msgid "CorePluginsAdmin_PluginsManagement"
+msgstr "Кіраванне плагінамі"
+
+msgid "CorePluginsAdmin_Status"
+msgstr "Статус"
+
+msgid "CorePluginsAdmin_Version"
+msgstr "Версія"
+
+msgid "CorePluginsAdmin_Websites"
+msgstr "Вэб-сайты"
+
+msgid "CoreUpdater_CriticalErrorDuringTheUpgradeProcess"
+msgstr "Крытычная памылка падчас абнаўлення:"
+
+msgid "CoreUpdater_DatabaseUpgradeRequired"
+msgstr "Патрабуецца абнаўленне базы дадзеных"
+
+msgid "CoreUpdater_DownloadingUpdateFromX"
+msgstr "Запампоўка абнаўленняў %s"
+
+msgid "CoreUpdater_DownloadX"
+msgstr "Запампаваць %s"
+
+msgid "CoreUpdater_EmptyDatabaseError"
+msgstr "База дадзеных %s пустая. Вам неабходна кіраваць уручную ці выдаліць файл канфігурацыі Matomo."
+
+msgid "CoreUpdater_ErrorDIYHelp"
+msgstr "Калі вы дасведчаны карыстач і сутыкнуліся з памылкай у абнаўленні базы дадзеных:"
+
+msgid "CoreUpdater_ErrorDIYHelp_1"
+msgstr "выявіце і выправіце крыніцу праблемы (e.g., memory_limit or max_execution_time)"
+
+msgid "CoreUpdater_ErrorDIYHelp_2"
+msgstr "выканаце астатнія запыты ў абнаўленне, якое не атрымалася"
+
+msgid "CoreUpdater_ErrorDIYHelp_3"
+msgstr "ўручную абнавіце `option` табліцу ў базе дадзеных Matomo, усталёўваючы значэнне version_core на версію няўдалага абнаўлення"
+
+msgid "CoreUpdater_ErrorDIYHelp_4"
+msgstr "паўторна запусціце абнаўленне (праз браўзэр або камандны радок), каб працягнуць астатнія абнаўленні"
+
+msgid "CoreUpdater_ErrorDIYHelp_5"
+msgstr "паведаміце аб гэтай праблеме (і рашэнні), каб палепшыць Matomo"
+
+msgid "CoreUpdater_ErrorDuringPluginsUpdates"
+msgstr "Памылка падчас абнаўлення плагіна:"
+
+msgid "CoreUpdater_ExceptionAlreadyLatestVersion"
+msgstr "Ваш версія Matomo %s ў актуальным стане."
+
+msgid "CoreUpdater_ExceptionArchiveEmpty"
+msgstr "Пусты архіў."
+
+msgid "CoreUpdater_ExceptionArchiveIncompatible"
+msgstr "Несумяшчальны архіў: %s"
+
+msgid "CoreUpdater_ExceptionArchiveIncomplete"
+msgstr "Архіў з'яўляецца няпоўным: некаторыя файлы адсутнічаюць (напр.,%s)."
+
+msgid "CoreUpdater_HelpMessageContent"
+msgstr "Праверце %1$s Matomo FAQ %2$s, у якім тлумачыцца большасць вядомых памылак, якія могуць здарыцца падчас абнаўлення. %3$s Звернецеся да сістэмнага адміністратара - ён можа дапамагчы Вам з рашэннем праблемы на серверы ці з наладамі MySQL."
+
+msgid "CoreUpdater_HelpMessageIntroductionWhenError"
+msgstr "Вышэй падаецца код памылкі ядра сістэмы. Ён дапаможа Вам растлумачыць чыннік памылкі, але калі ж Вам неабходна дадатковая дапамога, калі ласка:"
+
+msgid "CoreUpdater_HelpMessageIntroductionWhenWarning"
+msgstr "Абнаўленне завершана паспяхова, аднак падчас паўстала некалькі папярэджанняў. Калі ласка, прачытайце нататкі ніжэй. Для дадатковай дапамогі:"
+
+msgid "CoreUpdater_InstallingTheLatestVersion"
+msgstr "Усталёўка апошняй версіі"
+
+msgid "CoreUpdater_NoteForLargePiwikInstances"
+msgstr "Важныя заўвагі для буйных усталёвак Matomo"
+
+msgid "CoreUpdater_PiwikHasBeenSuccessfullyUpgraded"
+msgstr "Matomo паспяхова абноўлены!"
+
+msgid "CoreUpdater_PiwikUpdatedSuccessfully"
+msgstr "Matomo абноўлены паспяхова!"
+
+msgid "CoreUpdater_PiwikWillBeUpgradedFromVersionXToVersionY"
+msgstr "Matomo база будзе абноўлена з версіі %1$s да версіі %2$s."
+
+msgid "CoreUpdater_ReadyToGo"
+msgstr "Гатовы пачаць?"
+
+msgid "CoreUpdater_TheFollowingPluginsWillBeUpgradedX"
+msgstr "Наступныя плагіны будуць абноўлены: %s."
+
+msgid "CoreUpdater_ThereIsNewVersionAvailableForUpdate"
+msgstr "Даступная новая версія Matomo"
+
+msgid "CoreUpdater_TheUpgradeProcessMayFailExecuteCommand"
+msgstr "Калі ў вас вялікая база дадзеных Matomo, абнаўленне можа заняць шмат часу для працы ў браўзэры. У гэтай сітуацыі, вы можаце выконваць абнаўлення з каманднага радка: %s"
+
+msgid "CoreUpdater_TheUpgradeProcessMayTakeAWhilePleaseBePatient"
+msgstr "Абнаўленне базы дадзеных можа заняць некаторы час, пачакайце трохі."
+
+msgid "CoreUpdater_UnpackingTheUpdate"
+msgstr "Распакаванне абнаўленняў"
+
+msgid "CoreUpdater_UpdateAutomatically"
+msgstr "Абнавіць аўтаматычна"
+
+msgid "CoreUpdater_UpdateHasBeenCancelledExplanation"
+msgstr "Matomo One Click Update адменены. Калі Вы не можаце выправіць вышэйапісаныя памылкі, рэкамендуецца абнавіць Matomo уручную. %1$s Калі ласка, праверце %2$sдокументацію абнаўленні%3$s для тона, каб пачаць!"
+
+msgid "CoreUpdater_UpdateTitle"
+msgstr "Абнаўленне"
+
+msgid "CoreUpdater_UpdateSuccessTitle"
+msgstr "Matomo паспяхова абноўлены!"
+
+msgid "CoreUpdater_UpgradeComplete"
+msgstr "Абнаўленне завершана!"
+
+msgid "CoreUpdater_UpgradePiwik"
+msgstr "Абнавіць Matomo"
+
+msgid "CoreUpdater_VerifyingUnpackedFiles"
+msgstr "Правяраю распакаваныя файлы"
+
+msgid "CoreUpdater_WarningMessages"
+msgstr "Папярэджанні:"
+
+msgid "CoreUpdater_WeAutomaticallyDeactivatedTheFollowingPlugins"
+msgstr "Наступныя плагіны аўтаматычна дэактываваны: %s"
+
+msgid "CoreUpdater_YouCanUpgradeAutomaticallyOrDownloadPackage"
+msgstr "Вы можаце абнавіцца да версіі %s аўтаматычна ці запампаваць усталявальны пакет і ўручную ўсталяваць яго:"
+
+msgid "CoreUpdater_YourDatabaseIsOutOfDate"
+msgstr "Тэрмін дзеяння Вашай Matomo базы мінуў, Вам трэба яе абнавіць для працягу."
+
+msgid "CustomVariables_ColumnCustomVariableName"
+msgstr "Назва карыстацкай зменнай"
+
+msgid "CustomVariables_ColumnCustomVariableValue"
+msgstr "Значэнне карыстацкай зменнай"
+
+msgid "CustomVariables_CustomVariables"
+msgstr "Карыстацкія зменныя"
+
+msgid "DBStats_DatabaseUsage"
+msgstr "Выкарыстанне БД"
+
+msgid "DBStats_DataSize"
+msgstr "Памер дадзеных"
+
+msgid "DBStats_IndexSize"
+msgstr "Памер індэксу"
+
+msgid "DBStats_LearnMore"
+msgstr "Каб даведацца больш аб тым, як Matomo апрацоўвае дадзеныя і як налдзцца больш аб тым, як Matomo апрацоўвае дадзеныя і як налдзиціць Matomo для добрага працавання на сайтах з сярэднімі і высокім трафікам, праверце дакументацыю %s."
+
+msgid "DBStats_MainDescription"
+msgstr "Matomo захоўвае ўсю Вашу web статыстыку ў базе MySQL. Выкарыстанне Matomo табліц на дадзены момант %s."
+
+msgid "DBStats_RowCount"
+msgstr "Колькасць радкоў"
+
+msgid "DBStats_Table"
+msgstr "Табліца"
+
+msgid "DBStats_TotalSize"
+msgstr "Агульны памер"
+
+msgid "Dashboard_AddPreviewedWidget"
+msgstr "Дадаць предпросмотренный віджэт на інформпанель"
+
+msgid "Dashboard_Dashboard"
+msgstr "Інфармацыйная панэль"
+
+msgid "Dashboard_DeleteWidgetConfirm"
+msgstr "Вы ўпэўнены, што жадаеце выдаліць гэты віджэт з інфармацыйнай панэлі?"
+
+msgid "Dashboard_LoadingWidget"
+msgstr "Загрузка віджэта, калі ласка пачакайце..."
+
+msgid "Dashboard_Maximise"
+msgstr "Максімалізаваць"
+
+msgid "Dashboard_SelectWidget"
+msgstr "Абярыце віджэт для дадання на інформпанель"
+
+msgid "Dashboard_WidgetNotFound"
+msgstr "Віджэт не знойдзены"
+
+msgid "Dashboard_WidgetPreview"
+msgstr "Прадпрагляд віджэта"
+
+msgid "DevicePlugins_WidgetPlugins"
+msgstr "Спіс плагінаў"
+
+msgid "DevicePlugins_WidgetPluginsDocumentation"
+msgstr "Гэтая справаздача паказвае, якія плагіны были ўключаны ў браўзэраў Вашых наведвальнікаў. Гэтая інфармацыя можа мець важнае значэнне для выбару правільнага спосабу дастаўкі кантэнту."
+
+msgid "DevicesDetection_BrowserEngine"
+msgstr "Браўзэр"
+
+msgid "DevicesDetection_BrowserEngineDocumentation"
+msgstr "Гэты графік паказвае браўзэры наведвальнікаў, разбітыя па сем'ях. %s Найбольш важная інфармацыю для вэб-распрацоўнікаў у тым, што я ны могуць даведацца аб тыпах вэб-рэндэрынгу сваіх наведвальнікаў. Пазнакі ўтрымліваюць імёны рухавікоў найбольш распаўсюджаныя адзначаныя ў браўзэрам дужках."
+
+msgid "DevicesDetection_BrowserFamily"
+msgstr "Сямейства браўзэраў"
+
+msgid "DevicesDetection_Browsers"
+msgstr "Па браўзарах"
+
+msgid "DevicesDetection_BrowserVersion"
+msgstr "Версія браўзэра"
+
+msgid "DevicesDetection_ColumnBrowser"
+msgstr "Браўзэр"
+
+msgid "DevicesDetection_ColumnOperatingSystem"
+msgstr "Аперацыйная сістэма"
+
+msgid "DevicesDetection_dataTableLabelTypes"
+msgstr "Тып"
+
+msgid "DevicesDetection_OperatingSystems"
+msgstr "Па аперацыйных сістэмах"
+
+msgid "DevicesDetection_WidgetBrowsers"
+msgstr "Браўзары карыстачоў"
+
+msgid "DevicesDetection_WidgetBrowsersDocumentation"
+msgstr "Гэтая справаздача змяшчае інфармацыю аб тым, які браўзэр выкарыстоўвалі наведвальнікі. Кожная версія браўзэра пералічана асобна."
+
+msgid "Feedback_DoYouHaveBugReportOrFeatureRequest"
+msgstr "Ці ёсць у вас памылка аб якой неабходна певедаміць?"
+
+msgid "Feedback_IWantTo"
+msgstr "Я хачу, каб:"
+
+msgid "Feedback_LearnWaysToParticipate"
+msgstr "Даведайцеся пра ўсе спосабы %1$s ўдзельнічыства %2$s"
+
+msgid "Feedback_ManuallySendEmailTo"
+msgstr "Калі ласка, уручную адпраўце паведамленне да"
+
+msgid "Feedback_SendFeedback"
+msgstr "Адправіць водгук"
+
+msgid "Feedback_ThankYou"
+msgstr "Дзякуй за дапамогу нам зрабіць Matomo лепш!"
+
+msgid "Goals_AbandonedCart"
+msgstr "Адмененых Кошыкаў"
+
+msgid "Goals_AddGoal"
+msgstr "Дадаць Мэту"
+
+msgid "Goals_AddNewGoal"
+msgstr "Дадаць новую Мэту"
+
+msgid "Goals_AddNewGoalOrEditExistingGoal"
+msgstr "%1$sДадаць новую Мэту%2$s або %3$sРэдагаваць%4$s існуючыя Мэты"
+
+msgid "Goals_AllowGoalConvertedMoreThanOncePerVisit"
+msgstr "Дазволіць канвертаванне Мэты больш чым адзін раз за наведванне"
+
+msgid "Goals_AllowMultipleConversionsPerVisit"
+msgstr "Дазволіць некалькі канверсій за адно наведванне"
+
+msgid "Goals_BestCountries"
+msgstr "Краіны з самай лепшай канверсіяй:"
+
+msgid "Goals_BestKeywords"
+msgstr "Ключавые словы з самай лепшай канверсіяй:"
+
+msgid "Goals_BestReferrers"
+msgstr "Спасыльнікі з самай лепшай канверсіяй:"
+
+msgid "Goals_CaseSensitive"
+msgstr "З улікам рэгістра"
+
+msgid "Goals_CategoryTextReferrers_Referrers"
+msgstr "Спасыльнікі"
+
+msgid "Goals_ClickOutlink"
+msgstr "Націсніце на спасылку на вонкавы сайт"
+
+msgid "Goals_ColumnAverageOrderRevenueDocumentation"
+msgstr "Сярэдні кошт замовы (СКЗ) - гэта агульная сума прыбытку ад усіх камерцыйных замоў падзяленная на колькасць замоў."
+
+msgid "Goals_ColumnAveragePriceDocumentation"
+msgstr "Сярэдні прыбытак для гэтага %s."
+
+msgid "Goals_ColumnAverageQuantityDocumentation"
+msgstr "Сярэдняя колькасць гэтага %s прададзена праз замовы электроннай камерцыі."
+
+msgid "Goals_ColumnConversionRateDocumentation"
+msgstr "Працэнт наведванняў, за якія адбыліся мэты %s."
+
+msgid "Goals_ColumnConversionRateProductDocumentation"
+msgstr "%s Узровень канверсіі - колькасць замоў, якія змяшчаюць гэты прадукт, падзяленная на колькасць наведванняў на старонку прадукта."
+
+msgid "Goals_ColumnConversions"
+msgstr "Канверсіі"
+
+msgid "Goals_ColumnConversionsDocumentation"
+msgstr "Колькасць канверсий для %s."
+
+msgid "Goals_ColumnOrdersDocumentation"
+msgstr "Агульная колькасць электронна-камерцыйных замоў у якіх змяшчаецца гэтая %s па меншай меры адзін раз."
+
+msgid "Goals_ColumnPurchasedProductsDocumentation"
+msgstr "Колькасць набытых прадуктаў з'яўляецца сумай прадуктаў прададзеных ва ўсіх парадках электроннай камерцыі."
+
+msgid "Goals_ColumnQuantityDocumentation"
+msgstr "Агульная колькасць рэалізаванай прадукцыі для кожнага %s."
+
+msgid "Goals_ColumnRevenueDocumentation"
+msgstr "Агульны прыбытак ад %s."
+
+msgid "Goals_ColumnRevenuePerVisitDocumentation"
+msgstr "Агульны прыбытак ад %s падзяленны на колькасць наведванняў."
+
+msgid "Goals_ColumnVisits"
+msgstr "Агульная колькасць наведванняў, незалежна ад таго, выканалася мэта ці не."
+
+msgid "Goals_ColumnVisitsProductDocumentation"
+msgstr "Колькасць наведванняў на старонках Прадукт/Катэгорыя. Гэта выкарыстоўваецца, каб выканаць %s узровень канверсіі."
+
+msgid "Goals_Contains"
+msgstr "змяшчае %s"
+
+msgid "Goals_ConversionRate"
+msgstr "%s ўзровень канверсіі"
+
+msgid "Goals_Conversions"
+msgstr "%s канверсіі"
+
+msgid "Goals_ConversionsOverview"
+msgstr "Агляд Канверсій"
+
+msgid "Goals_ConversionsOverviewBy"
+msgstr "Агляд канверсій па тыпу наведвання"
+
+msgid "Goals_DefaultGoalConvertedOncePerVisit"
+msgstr "(па змаўчанні) Мэта можа быць канвертавана толькі адзін раз за наведванне"
+
+msgid "Goals_DefaultRevenueHelp"
+msgstr "Напрыклад, Кантактная фарма запоўненая наведвальнікам можа каштаваць у сярэднім $10. Matomo дапаможа вам зразумець, наколькі добра выконваюцца вашы сегменты наведвальнікаў."
+
+msgid "Goals_DeleteGoalConfirm"
+msgstr "Вы сапраўды хочаце выдаліць Мэту %s?"
+
+msgid "Goals_DocumentationRevenueGeneratedByProductSales"
+msgstr "Рэалізаваныя прадукты. Выключаючы падатак, дастаўку і скідкі"
+
+msgid "Goals_Download"
+msgstr "Спампаваць файл"
+
+msgid "Goals_Ecommerce"
+msgstr "Электронная камерцыя"
+
+msgid "Goals_EcommerceAndGoalsMenu"
+msgstr "Электронная камерцыя і Мэты"
+
+msgid "Goals_EcommerceLog"
+msgstr "Электронна-камерцыйны запіс"
+
+msgid "Goals_EcommerceOrder"
+msgstr "Электронна-камерцыйная замова"
+
+msgid "Goals_EcommerceOverview"
+msgstr "Агляд Электроннай камерцыі"
+
+msgid "Goals_EcommerceReports"
+msgstr "Справаздачы электроннай камерцыі"
+
+msgid "Goals_ExceptionInvalidMatchingString"
+msgstr "Калі вы вылучыце 'дакладнае супадзенне', адпавядаючы радок павінен быць URL-адрасам, пачынаючы %1$s. Напрыклад, '%2$s'."
+
+msgid "Goals_ExternalWebsiteUrl"
+msgstr "знешні URL-адрас сайта"
+
+msgid "Goals_Filename"
+msgstr "імя файла"
+
+msgid "Goals_GoalConversion"
+msgstr "Канверсія Мэты"
+
+msgid "Goals_GoalConversions"
+msgstr "Канверсіі Мэты"
+
+msgid "Goals_GoalConversionsBy"
+msgstr "Мэта %s канверсіі па тыпу наведвання"
+
+msgid "Goals_GoalIsTriggered"
+msgstr "Мэта адбылася"
+
+msgid "Goals_GoalIsTriggeredWhen"
+msgstr "Мэта адбылася калі"
+
+msgid "Goals_GoalName"
+msgstr "Імя Мэты"
+
+msgid "Goals_Goals"
+msgstr "Мэты"
+
+msgid "Goals_GoalsOverview"
+msgstr "Аглят Мэт"
+
+msgid "Goals_GoalsOverviewDocumentation"
+msgstr "Гэта агляд вашых дасягнутых мэт канверсій. Першапачаткова, графік паказвае суму ўсіх канверсій. %s Ніжэй графік, на якім можна ўбачыць справаздачы канверсій для кожнай з вашых мэтаў. Спарклайны можна павялічыць, націснуўшы на іх."
+
+msgid "Goals_GoalX"
+msgstr "Мэта %s"
+
+msgid "Goals_HelpOneConversionPerVisit"
+msgstr "Калі старонка, якая адпавядае гэтай Мэце абнаўляецца ці наведваецца больш чым адзін раз, Мэта будзе адсочвацца толькі ў ходзе першага наведвання."
+
+msgid "Goals_IsExactly"
+msgstr "дакладна %s"
+
+msgid "Goals_Manually"
+msgstr "уручную"
+
+msgid "Goals_ManuallyTriggeredUsingJavascriptFunction"
+msgstr "Мэта адбылася ўручную праз Java-скрыпт API trackGoal()"
+
+msgid "Goals_MatchesExpression"
+msgstr "супадае з выразам %s"
+
+msgid "Goals_NewVisitorsConversionRateIs"
+msgstr "Канверсія новых наведвальнікаў - %s"
+
+msgid "Goals_Optional"
+msgstr "(неабавязкова)"
+
+msgid "Goals_PageTitle"
+msgstr "Назва старонкі"
+
+msgid "Goals_Pattern"
+msgstr "Шаблон"
+
+msgid "Goals_ProductCategory"
+msgstr "Катэгорыя прадукта"
+
+msgid "Goals_ProductName"
+msgstr "Імя прадукта"
+
+msgid "Goals_Products"
+msgstr "Прадукты"
+
+msgid "Goals_ProductSKU"
+msgstr "Прадукт SKU"
+
+msgid "Goals_ReturningVisitorsConversionRateIs"
+msgstr "Канверсія вяртаючыхя наведвальнікаў - %s"
+
+msgid "Goals_SingleGoalOverviewDocumentation"
+msgstr "Гэта агляд канверсій для адной мэты. %s Спарклайны можна павялічыць, націснуўшы на іх."
+
+msgid "Goals_UpdateGoal"
+msgstr "Абнаўленне Мэты"
+
+msgid "Goals_URL"
+msgstr "URL"
+
+msgid "Goals_ViewAndEditGoals"
+msgstr "Прагляд і Рэдагаванне Мэтаў"
+
+msgid "Goals_VisitPageTitle"
+msgstr "Наведайце назву старонкі"
+
+msgid "Goals_VisitUrl"
+msgstr "Наведайце URL-адрас (старонкі, або групу старонак)"
+
+msgid "Goals_WhenVisitors"
+msgstr "калі наведвальнікі"
+
+msgid "Goals_WhereThe"
+msgstr "дзе"
+
+msgid "Goals_YouCanEnableEcommerceReports"
+msgstr "Вы можаце ўключыць %1$s для гэтага вэб-сайта ў %2$s старонкі."
+
+msgid "Installation_ConfirmDeleteExistingTables"
+msgstr "Вы сапраўды жадаеце выдаліць табліцы: %s з базы дадзеных? УВАГА: ВЫДАЛЕНЫЯ ДАДЗЕНЫЯ НЕМАГЧЫМА АДНАВІЦЬ!"
+
+msgid "Installation_Congratulations"
+msgstr "Віншуем"
+
+msgid "Installation_DatabaseCreation"
+msgstr "Стварэнне базы дадзеных"
+
+msgid "Installation_DatabaseErrorConnect"
+msgstr "Адбылася памылка пры спробе падключэння да сервера базы дадзеных"
+
+msgid "Installation_DatabaseServerVersion"
+msgstr "Серверная версія баз дадзеных"
+
+msgid "Installation_DatabaseSetup"
+msgstr "Наладкі базы дадзеных"
+
+msgid "Installation_DatabaseSetupAdapter"
+msgstr "адаптар"
+
+msgid "Installation_DatabaseSetupDatabaseName"
+msgstr "імя базы дадзеных"
+
+msgid "Installation_DatabaseSetupLogin"
+msgstr "лагін"
+
+msgid "Installation_DatabaseSetupServer"
+msgstr "сервер базы дадзеных"
+
+msgid "Installation_DatabaseSetupTablePrefix"
+msgstr "прэфікс табліцы"
+
+msgid "Installation_Extension"
+msgstr "пашырэнне"
+
+msgid "Installation_GoBackAndDefinePrefix"
+msgstr "Вярніцеся назад і ўвядзіце прэфікс для табліц Matomo"
+
+msgid "Installation_Installation"
+msgstr "Усталёўка"
+
+msgid "Installation_InstallationStatus"
+msgstr "Статут усталёўкі"
+
+msgid "Installation_LargePiwikInstances"
+msgstr "Дапамога для буйных усталёвак Matomo"
+
+msgid "Installation_Legend"
+msgstr "Легенда"
+
+msgid "Installation_Optional"
+msgstr "Апцыянальна"
+
+msgid "Installation_Password"
+msgstr "Пароль"
+
+msgid "Installation_PasswordDoNotMatch"
+msgstr "пароль не супадае"
+
+msgid "Installation_PasswordRepeat"
+msgstr "Пароль (паўтор)"
+
+msgid "Installation_PercentDone"
+msgstr "%s %% Завершана"
+
+msgid "Installation_PleaseFixTheFollowingErrors"
+msgstr "Калі ласка, выпраўце наступныя памылкі"
+
+msgid "Installation_Requirements"
+msgstr "Патрабаванні Matomo"
+
+msgid "Installation_SetupWebsite"
+msgstr "Дадаць сайт"
+
+msgid "Installation_SetupWebsiteError"
+msgstr "Паўстала памылка пры даданні сайта"
+
+msgid "Installation_SetupWebsiteSetupSuccess"
+msgstr "Вэб-сайт %s створаны з поспехам!"
+
+msgid "Installation_SuperUser"
+msgstr "Супер Карыстач"
+
+msgid "Installation_SuperUserSetupSuccess"
+msgstr "Супер Карыстач створаны з поспехам!"
+
+msgid "Installation_SystemCheck"
+msgstr "Праверка сістэмы"
+
+msgid "Installation_SystemCheckAutoUpdateHelp"
+msgstr "Заўважце: абнаўленне Matomo у рэжыме \\\"аднаго націска\\\" п атрабуе дазвол запісу да тэчцы Matomo і яё змесціва."
+
+msgid "Installation_SystemCheckCreateFunctionHelp"
+msgstr "Matomo выкарыстоўвае ананімныя функцыі зваротнага выкліку."
+
+msgid "Installation_SystemCheckDatabaseHelp"
+msgstr "Matomo патрабуе пашырэнне mysqli альбо абодва пашырэння PDO і pdo_mysql."
+
+msgid "Installation_SystemCheckDebugBacktraceHelp"
+msgstr "Прагляд::сістэма не ў стане стварыць прадстаўленне для выкліку модуля."
+
+msgid "Installation_SystemCheckError"
+msgstr "Паўстала памылка - павінна быць выпраўлена перад працягам"
+
+msgid "Installation_SystemCheckEvalHelp"
+msgstr "Патрабуецца для HTML QuickForm і сістэмы шаблонаў Smarty."
+
+msgid "Installation_SystemCheckExtensions"
+msgstr "Неабходныя модулі"
+
+msgid "Installation_SystemCheckFileIntegrity"
+msgstr "Цэласнасць файлаў"
+
+msgid "Installation_SystemCheckFunctions"
+msgstr "Патрабаваныя функцыі"
+
+msgid "Installation_SystemCheckGDHelp"
+msgstr "Адлюстраванне тонкіх (маленькіх) графікаў не будзе працаваць."
+
+msgid "Installation_SystemCheckGlobHelp"
+msgstr "Гэтая убудаваная функцыя адключана на вашым хосце. Matomo паспрабуе эмуляваць гэтую функцыю, але могуць паўстаць дадатковыя абмежаванні бяспекі. Функцыянальныя магчымасці могуць быць закрануты."
+
+msgid "Installation_SystemCheckGzcompressHelp"
+msgstr "Вам неабходна ўключыць пашырэнне zlib і функцыю gzcompress."
+
+msgid "Installation_SystemCheckGzuncompressHelp"
+msgstr "Вам неабходна ўключыць пашырэнне zlib і функцыю gzuncompress."
+
+msgid "Installation_SystemCheckIconvHelp"
+msgstr "Вам неабходна сканфігураваць PHP на падтрымку \"iconv\", і перакампіляваць з параметрам --with-iconv."
+
+msgid "Installation_SystemCheckMailHelp"
+msgstr "Функцыі водгукаў о Matomo і аднаўленне пароляў не будуць працаваць без mail()."
+
+msgid "Installation_SystemCheckMbstring"
+msgstr "mbstring"
+
+msgid "Installation_SystemCheckMemoryLimit"
+msgstr "Абмежаванне памяці"
+
+msgid "Installation_SystemCheckMemoryLimitHelp"
+msgstr "На вэб-сайтах з высокім трафікам, працэс архівавання можа запатрабаваць больш памяці, чым дазволена. Пры неабходнасці, змяніце memory_limit дырэктыву ў файле php.ini."
+
+msgid "Installation_SystemCheckOpenURL"
+msgstr "адкрыць URL-адрас"
+
+msgid "Installation_SystemCheckOpenURLHelp"
+msgstr "Падпіскі на рассылкі, паведамленні аб абнаўленнях і абнаўленні \"аднаго націска\" патрабуюць пашырэнне \"curl\", allow_url_fopen=On або ўключаны fsockopen()."
+
+msgid "Installation_SystemCheckOtherExtensions"
+msgstr "Іншыя пашырэнні"
+
+msgid "Installation_SystemCheckOtherFunctions"
+msgstr "Іншыя функцыі"
+
+msgid "Installation_SystemCheckPackHelp"
+msgstr "Функцыя pack() патрабуецца для адсочвання наведвальнікаў у Matomo."
+
+msgid "Installation_SystemCheckParseIniFileHelp"
+msgstr "Гэтая убудаваная функцыя адключана на вашым хосце. Matomo паспрабуе эмуляваць гэтую функцыю, але могуць паўстаць дадатковыя абмежаванні бяспекі. Трэкер прадукцыйнасці таксама будзе закрануты."
+
+msgid "Installation_SystemCheckPdoAndMysqliHelp"
+msgstr "На Linux серверы вы можаце скампіляваць php з наступнымі параметрамі:%1$s у вашым php.ini, дадаць наступныя радкі: %2$s"
+
+msgid "Installation_SystemCheckPhp"
+msgstr "Версія PHP"
+
+msgid "Installation_SystemCheckPhpPdoAndMysqli"
+msgstr "Больш падрабязная інфармацыя па: %1$sPHP PDO%2$s and %3$sMYSQLI%4$s."
+
+msgid "Installation_SystemCheckSplHelp"
+msgstr "Вам неабходна сканфігураваць і перасабраць PHP з уключанай стандартнай бібліятэкай (значэнне па змаўчанні)."
+
+msgid "Installation_SystemCheckTimeLimitHelp"
+msgstr "На вэб-сайтах з высокім трафікам, працэс архівавання можа спатрабаваць больш часу, чым дазволена. Калі неабходна, змяніце дырэктыву max_execution_time ў файле php.ini."
+
+msgid "Installation_SystemCheckTracker"
+msgstr "Статус адсочвання"
+
+msgid "Installation_SystemCheckWarnDomHelp"
+msgstr "Вы павінны ўключыць пашырэнне \"dom\" (Напр., усталяваць пакеты \"php-dom\" і/або \"php-xml\")"
+
+msgid "Installation_SystemCheckWarning"
+msgstr "Matomo будзе працаваць звычайна, але некаторыя функцыі не будуць даступныя"
+
+msgid "Installation_SystemCheckWarnJsonHelp"
+msgstr "Вы павінны ўключыць пашырэнне \"json\" (Напр., усталяваць пакет \"php-json\") для лепшай прадукцыйнасці."
+
+msgid "Installation_SystemCheckWarnLibXmlHelp"
+msgstr "Вы павінны ўключыць пашырэнне \"libxml\" (Напр., усталяваць пакет \"php-libxml\"), гэта патрабуецца для іншых пашырэнняў ядра PHP."
+
+msgid "Installation_SystemCheckWarnSimpleXMLHelp"
+msgstr "Вы павінны ўключыць пашырэнне \"SimpleXML\" (Напр., усталяваць пакеты \"php-simplexml\" і/або \"php-xml\")"
+
+msgid "Installation_SystemCheckWinPdoAndMysqliHelp"
+msgstr "На Windows серверы, вы можаце дадаць наступныя радкі ў ваш php.ini: %s"
+
+msgid "Installation_SystemCheckWriteDirs"
+msgstr "Тэчкі з правамі запісу"
+
+msgid "Installation_SystemCheckWriteDirsHelp"
+msgstr "Для выпраўлення гэтай памылкі ў АС Linux, паспрабуйце ўвесці наступныя каманды"
+
+msgid "Installation_SystemCheckZlibHelp"
+msgstr "Вам неабходна сканфігураваць PHP на падтрымку \"zlib\", ці перакампіляваць з параметрам --with-zlib."
+
+msgid "Installation_Tables"
+msgstr "Стварэнне табліц"
+
+msgid "Installation_TablesCreatedSuccess"
+msgstr "Табліцы паспяхова створаны!"
+
+msgid "Installation_TablesDelete"
+msgstr "Выдаліць знойдзеныя табліцы"
+
+msgid "Installation_TablesDeletedSuccess"
+msgstr "Існыя табліцы Matomo паспяхова выдалены"
+
+msgid "Installation_TablesFound"
+msgstr "Наступныя табліцы знойдзены ў БД"
+
+msgid "Installation_TablesReuse"
+msgstr "Выкарыстоўваць існыя табліцы"
+
+msgid "Installation_TablesWarningHelp"
+msgstr "Абярыце адно з дзвюх: выкарыстоўваць існых табліц БД, ці чыстую ўсталёўку, якая выдаліць усе існыя дадзеныя ў базе дадзеных."
+
+msgid "Installation_TablesWithSameNamesFound"
+msgstr "Некаторыя %1$s табліцы ў Вашай базе дадзеных %2$s маюць супадальныя назвы з табліцамі, якія Matomo спрабуе стварыць."
+
+msgid "Installation_Welcome"
+msgstr "Сардэчна запрашаем!"
+
+msgid "Intl_Continent_afr"
+msgstr "Афрыка"
+
+msgid "Intl_Continent_amc"
+msgstr "Цэнтральная Амерыка"
+
+msgid "Intl_Continent_amn"
+msgstr "Паўночная Амерыка"
+
+msgid "Intl_Continent_ams"
+msgstr "Паўднёвая Амерыка"
+
+msgid "Intl_Continent_ant"
+msgstr "Антарктыка"
+
+msgid "Intl_Continent_asi"
+msgstr "Азія"
+
+msgid "Intl_Continent_eur"
+msgstr "Еўропа"
+
+msgid "Intl_Continent_oce"
+msgstr "Акіянія"
+
+msgid "Intl_Country_AD"
+msgstr "Андора"
+
+msgid "Intl_Country_AE"
+msgstr "Аб’яднаныя Арабскія Эміраты"
+
+msgid "Intl_Country_AF"
+msgstr "Афганістан"
+
+msgid "Intl_Country_AG"
+msgstr "Антыгуа і Барбуда"
+
+msgid "Intl_Country_AI"
+msgstr "Ангілья"
+
+msgid "Intl_Country_AL"
+msgstr "Албанія"
+
+msgid "Intl_Country_AM"
+msgstr "Арменія"
+
+msgid "Intl_Country_AO"
+msgstr "Ангола"
+
+msgid "Intl_Country_AQ"
+msgstr "Антарктыка"
+
+msgid "Intl_Country_AR"
+msgstr "Аргенціна"
+
+msgid "Intl_Country_AS"
+msgstr "Амерыканскае Самоа"
+
+msgid "Intl_Country_AT"
+msgstr "Аўстрыя"
+
+msgid "Intl_Country_AU"
+msgstr "Аўстралія"
+
+msgid "Intl_Country_AW"
+msgstr "Аруба"
+
+msgid "Intl_Country_AX"
+msgstr "Аландскія астравы"
+
+msgid "Intl_Country_AZ"
+msgstr "Азербайджан"
+
+msgid "Intl_Country_BA"
+msgstr "Боснія і Герцагавіна"
+
+msgid "Intl_Country_BB"
+msgstr "Барбадас"
+
+msgid "Intl_Country_BD"
+msgstr "Бангладэш"
+
+msgid "Intl_Country_BE"
+msgstr "Бельгія"
+
+msgid "Intl_Country_BF"
+msgstr "Буркіна-Фасо"
+
+msgid "Intl_Country_BG"
+msgstr "Балгарыя"
+
+msgid "Intl_Country_BH"
+msgstr "Бахрэйн"
+
+msgid "Intl_Country_BI"
+msgstr "Бурундзі"
+
+msgid "Intl_Country_BJ"
+msgstr "Бенін"
+
+msgid "Intl_Country_BL"
+msgstr "Сен-Бартэльмі"
+
+msgid "Intl_Country_BM"
+msgstr "Бермудскія астравы"
+
+msgid "Intl_Country_BN"
+msgstr "Бруней"
+
+msgid "Intl_Country_BO"
+msgstr "Балівія"
+
+msgid "Intl_Country_BQ"
+msgstr "Карыбскія Нідэрланды"
+
+msgid "Intl_Country_BR"
+msgstr "Бразілія"
+
+msgid "Intl_Country_BS"
+msgstr "Багамскія астравы"
+
+msgid "Intl_Country_BT"
+msgstr "Бутан"
+
+msgid "Intl_Country_BV"
+msgstr "Востраў Бувэ"
+
+msgid "Intl_Country_BW"
+msgstr "Батсвана"
+
+msgid "Intl_Country_BY"
+msgstr "Беларусь"
+
+msgid "Intl_Country_BZ"
+msgstr "Беліз"
+
+msgid "Intl_Country_CA"
+msgstr "Канада"
+
+msgid "Intl_Country_CC"
+msgstr "Какосавыя (Кілінг) астравы"
+
+msgid "Intl_Country_CD"
+msgstr "Конга (Кіншаса)"
+
+msgid "Intl_Country_CF"
+msgstr "Цэнтральна-Афрыканская Рэспубліка"
+
+msgid "Intl_Country_CG"
+msgstr "Конга - Бразавіль"
+
+msgid "Intl_Country_CH"
+msgstr "Швейцарыя"
+
+msgid "Intl_Country_CI"
+msgstr "Кот-д’Івуар"
+
+msgid "Intl_Country_CK"
+msgstr "Астравы Кука"
+
+msgid "Intl_Country_CL"
+msgstr "Чылі"
+
+msgid "Intl_Country_CM"
+msgstr "Камерун"
+
+msgid "Intl_Country_CN"
+msgstr "Кітай"
+
+msgid "Intl_Country_CO"
+msgstr "Калумбія"
+
+msgid "Intl_Country_CR"
+msgstr "Коста-Рыка"
+
+msgid "Intl_Country_CU"
+msgstr "Куба"
+
+msgid "Intl_Country_CV"
+msgstr "Каба-Вердэ"
+
+msgid "Intl_Country_CW"
+msgstr "Кюрасаа"
+
+msgid "Intl_Country_CX"
+msgstr "Востраў Каляд"
+
+msgid "Intl_Country_CY"
+msgstr "Кіпр"
+
+msgid "Intl_Country_CZ"
+msgstr "Чэхія"
+
+msgid "Intl_Country_DE"
+msgstr "Германія"
+
+msgid "Intl_Country_DJ"
+msgstr "Джыбуці"
+
+msgid "Intl_Country_DK"
+msgstr "Данія"
+
+msgid "Intl_Country_DM"
+msgstr "Дамініка"
+
+msgid "Intl_Country_DO"
+msgstr "Дамініканская Рэспубліка"
+
+msgid "Intl_Country_DZ"
+msgstr "Алжыр"
+
+msgid "Intl_Country_EC"
+msgstr "Эквадор"
+
+msgid "Intl_Country_EE"
+msgstr "Эстонія"
+
+msgid "Intl_Country_EG"
+msgstr "Егіпет"
+
+msgid "Intl_Country_EH"
+msgstr "Заходняя Сахара"
+
+msgid "Intl_Country_ER"
+msgstr "Эрытрэя"
+
+msgid "Intl_Country_ES"
+msgstr "Іспанія"
+
+msgid "Intl_Country_ET"
+msgstr "Эфіопія"
+
+msgid "Intl_Country_FI"
+msgstr "Фінляндыя"
+
+msgid "Intl_Country_FJ"
+msgstr "Фіджы"
+
+msgid "Intl_Country_FK"
+msgstr "Фалклендскія астравы"
+
+msgid "Intl_Country_FM"
+msgstr "Мікранезія"
+
+msgid "Intl_Country_FO"
+msgstr "Фарэрскія астравы"
+
+msgid "Intl_Country_FR"
+msgstr "Францыя"
+
+msgid "Intl_Country_GA"
+msgstr "Габон"
+
+msgid "Intl_Country_GB"
+msgstr "Вялікабрытанія"
+
+msgid "Intl_Country_GD"
+msgstr "Грэнада"
+
+msgid "Intl_Country_GE"
+msgstr "Грузія"
+
+msgid "Intl_Country_GF"
+msgstr "Французская Гвіяна"
+
+msgid "Intl_Country_GG"
+msgstr "Гернсі"
+
+msgid "Intl_Country_GH"
+msgstr "Гана"
+
+msgid "Intl_Country_GI"
+msgstr "Гібралтар"
+
+msgid "Intl_Country_GL"
+msgstr "Грэнландыя"
+
+msgid "Intl_Country_GM"
+msgstr "Гамбія"
+
+msgid "Intl_Country_GN"
+msgstr "Гвінея"
+
+msgid "Intl_Country_GP"
+msgstr "Гвадэлупа"
+
+msgid "Intl_Country_GQ"
+msgstr "Экватарыяльная Гвінея"
+
+msgid "Intl_Country_GR"
+msgstr "Грэцыя"
+
+msgid "Intl_Country_GS"
+msgstr "Паўднёвая Джорджыя і Паўднёвыя Сандвічавы астравы"
+
+msgid "Intl_Country_GT"
+msgstr "Гватэмала"
+
+msgid "Intl_Country_GU"
+msgstr "Гуам"
+
+msgid "Intl_Country_GW"
+msgstr "Гвінея-Бісау"
+
+msgid "Intl_Country_GY"
+msgstr "Гаяна"
+
+msgid "Intl_Country_HK"
+msgstr "Ганконг, САР (Кітай)"
+
+msgid "Intl_Country_HM"
+msgstr "Астравы Херд і Макдональд"
+
+msgid "Intl_Country_HN"
+msgstr "Гандурас"
+
+msgid "Intl_Country_HR"
+msgstr "Харватыя"
+
+msgid "Intl_Country_HT"
+msgstr "Гаіці"
+
+msgid "Intl_Country_HU"
+msgstr "Венгрыя"
+
+msgid "Intl_Country_ID"
+msgstr "Інданезія"
+
+msgid "Intl_Country_IE"
+msgstr "Ірландыя"
+
+msgid "Intl_Country_IL"
+msgstr "Ізраіль"
+
+msgid "Intl_Country_IM"
+msgstr "Востраў Мэн"
+
+msgid "Intl_Country_IN"
+msgstr "Індыя"
+
+msgid "Intl_Country_IO"
+msgstr "Брытанская тэрыторыя ў Індыйскім акіяне"
+
+msgid "Intl_Country_IQ"
+msgstr "Ірак"
+
+msgid "Intl_Country_IR"
+msgstr "Іран"
+
+msgid "Intl_Country_IS"
+msgstr "Ісландыя"
+
+msgid "Intl_Country_IT"
+msgstr "Італія"
+
+msgid "Intl_Country_JE"
+msgstr "Джэрсі"
+
+msgid "Intl_Country_JM"
+msgstr "Ямайка"
+
+msgid "Intl_Country_JO"
+msgstr "Іарданія"
+
+msgid "Intl_Country_JP"
+msgstr "Японія"
+
+msgid "Intl_Country_KE"
+msgstr "Кенія"
+
+msgid "Intl_Country_KG"
+msgstr "Кыргызстан"
+
+msgid "Intl_Country_KH"
+msgstr "Камбоджа"
+
+msgid "Intl_Country_KI"
+msgstr "Кірыбаці"
+
+msgid "Intl_Country_KM"
+msgstr "Каморскія астравы"
+
+msgid "Intl_Country_KN"
+msgstr "Сент-Кітс і Невіс"
+
+msgid "Intl_Country_KP"
+msgstr "Паўночная Карэя"
+
+msgid "Intl_Country_KR"
+msgstr "Паўднёвая Карэя"
+
+msgid "Intl_Country_KW"
+msgstr "Кувейт"
+
+msgid "Intl_Country_KY"
+msgstr "Кайманавы астравы"
+
+msgid "Intl_Country_KZ"
+msgstr "Казахстан"
+
+msgid "Intl_Country_LA"
+msgstr "Лаос"
+
+msgid "Intl_Country_LB"
+msgstr "Ліван"
+
+msgid "Intl_Country_LC"
+msgstr "Сент-Люсія"
+
+msgid "Intl_Country_LI"
+msgstr "Ліхтэнштэйн"
+
+msgid "Intl_Country_LK"
+msgstr "Шры-Ланка"
+
+msgid "Intl_Country_LR"
+msgstr "Ліберыя"
+
+msgid "Intl_Country_LS"
+msgstr "Лесота"
+
+msgid "Intl_Country_LT"
+msgstr "Літва"
+
+msgid "Intl_Country_LU"
+msgstr "Люксембург"
+
+msgid "Intl_Country_LV"
+msgstr "Латвія"
+
+msgid "Intl_Country_LY"
+msgstr "Лівія"
+
+msgid "Intl_Country_MA"
+msgstr "Марока"
+
+msgid "Intl_Country_MC"
+msgstr "Манака"
+
+msgid "Intl_Country_MD"
+msgstr "Малдова"
+
+msgid "Intl_Country_ME"
+msgstr "Чарнагорыя"
+
+msgid "Intl_Country_MF"
+msgstr "Сен-Мартэн"
+
+msgid "Intl_Country_MG"
+msgstr "Мадагаскар"
+
+msgid "Intl_Country_MH"
+msgstr "Маршалавы астравы"
+
+msgid "Intl_Country_MK"
+msgstr "Македонія"
+
+msgid "Intl_Country_ML"
+msgstr "Малі"
+
+msgid "Intl_Country_MM"
+msgstr "М’янма (Бірма)"
+
+msgid "Intl_Country_MN"
+msgstr "Манголія"
+
+msgid "Intl_Country_MO"
+msgstr "Макаа, САР (Кітай)"
+
+msgid "Intl_Country_MP"
+msgstr "Паўночныя Марыянскія астравы"
+
+msgid "Intl_Country_MQ"
+msgstr "Марцініка"
+
+msgid "Intl_Country_MR"
+msgstr "Маўрытанія"
+
+msgid "Intl_Country_MS"
+msgstr "Мантсерат"
+
+msgid "Intl_Country_MT"
+msgstr "Мальта"
+
+msgid "Intl_Country_MU"
+msgstr "Маўрыкій"
+
+msgid "Intl_Country_MV"
+msgstr "Мальдывы"
+
+msgid "Intl_Country_MW"
+msgstr "Малаві"
+
+msgid "Intl_Country_MX"
+msgstr "Мексіка"
+
+msgid "Intl_Country_MY"
+msgstr "Малайзія"
+
+msgid "Intl_Country_MZ"
+msgstr "Мазамбік"
+
+msgid "Intl_Country_NA"
+msgstr "Намібія"
+
+msgid "Intl_Country_NC"
+msgstr "Новая Каледонія"
+
+msgid "Intl_Country_NE"
+msgstr "Нігер"
+
+msgid "Intl_Country_NF"
+msgstr "Востраў Норфалк"
+
+msgid "Intl_Country_NG"
+msgstr "Нігерыя"
+
+msgid "Intl_Country_NI"
+msgstr "Нікарагуа"
+
+msgid "Intl_Country_NL"
+msgstr "Нідэрланды"
+
+msgid "Intl_Country_NO"
+msgstr "Нарвегія"
+
+msgid "Intl_Country_NP"
+msgstr "Непал"
+
+msgid "Intl_Country_NR"
+msgstr "Науру"
+
+msgid "Intl_Country_NU"
+msgstr "Ніуэ"
+
+msgid "Intl_Country_NZ"
+msgstr "Новая Зеландыя"
+
+msgid "Intl_Country_OM"
+msgstr "Аман"
+
+msgid "Intl_Country_PA"
+msgstr "Панама"
+
+msgid "Intl_Country_PE"
+msgstr "Перу"
+
+msgid "Intl_Country_PF"
+msgstr "Французская Палінезія"
+
+msgid "Intl_Country_PG"
+msgstr "Папуа-Новая Гвінея"
+
+msgid "Intl_Country_PH"
+msgstr "Філіпіны"
+
+msgid "Intl_Country_PK"
+msgstr "Пакістан"
+
+msgid "Intl_Country_PL"
+msgstr "Польшча"
+
+msgid "Intl_Country_PM"
+msgstr "Сен-П’ер і Мікелон"
+
+msgid "Intl_Country_PN"
+msgstr "Астравы Піткэрн"
+
+msgid "Intl_Country_PR"
+msgstr "Пуэрта-Рыка"
+
+msgid "Intl_Country_PS"
+msgstr "Палесцінскія Тэрыторыі"
+
+msgid "Intl_Country_PT"
+msgstr "Партугалія"
+
+msgid "Intl_Country_PW"
+msgstr "Палау"
+
+msgid "Intl_Country_PY"
+msgstr "Парагвай"
+
+msgid "Intl_Country_QA"
+msgstr "Катар"
+
+msgid "Intl_Country_RE"
+msgstr "Рэюньён"
+
+msgid "Intl_Country_RO"
+msgstr "Румынія"
+
+msgid "Intl_Country_RS"
+msgstr "Сербія"
+
+msgid "Intl_Country_RU"
+msgstr "Расія"
+
+msgid "Intl_Country_RW"
+msgstr "Руанда"
+
+msgid "Intl_Country_SA"
+msgstr "Саудаўская Аравія"
+
+msgid "Intl_Country_SB"
+msgstr "Саламонавы астравы"
+
+msgid "Intl_Country_SC"
+msgstr "Сейшэльскія астравы"
+
+msgid "Intl_Country_SD"
+msgstr "Судан"
+
+msgid "Intl_Country_SE"
+msgstr "Швецыя"
+
+msgid "Intl_Country_SG"
+msgstr "Сінгапур"
+
+msgid "Intl_Country_SH"
+msgstr "Востраў Святой Алены"
+
+msgid "Intl_Country_SI"
+msgstr "Славенія"
+
+msgid "Intl_Country_SJ"
+msgstr "Шпіцберген і Ян-Маен"
+
+msgid "Intl_Country_SK"
+msgstr "Славакія"
+
+msgid "Intl_Country_SL"
+msgstr "Сьера-Леонэ"
+
+msgid "Intl_Country_SM"
+msgstr "Сан-Марына"
+
+msgid "Intl_Country_SN"
+msgstr "Сенегал"
+
+msgid "Intl_Country_SO"
+msgstr "Самалі"
+
+msgid "Intl_Country_SR"
+msgstr "Сурынам"
+
+msgid "Intl_Country_SS"
+msgstr "Паўднёвы Судан"
+
+msgid "Intl_Country_ST"
+msgstr "Сан-Тамэ і Прынсіпі"
+
+msgid "Intl_Country_SV"
+msgstr "Сальвадор"
+
+msgid "Intl_Country_SX"
+msgstr "Сінт-Мартэн"
+
+msgid "Intl_Country_SY"
+msgstr "Сірыя"
+
+msgid "Intl_Country_SZ"
+msgstr "Свазіленд"
+
+msgid "Intl_Country_TC"
+msgstr "Астравы Цёркс і Кайкас"
+
+msgid "Intl_Country_TD"
+msgstr "Чад"
+
+msgid "Intl_Country_TF"
+msgstr "Французскія паўднёвыя тэрыторыі"
+
+msgid "Intl_Country_TG"
+msgstr "Тога"
+
+msgid "Intl_Country_TH"
+msgstr "Тайланд"
+
+msgid "Intl_Country_TJ"
+msgstr "Таджыкістан"
+
+msgid "Intl_Country_TK"
+msgstr "Такелау"
+
+msgid "Intl_Country_TL"
+msgstr "Тымор-Лешці"
+
+msgid "Intl_Country_TM"
+msgstr "Туркменістан"
+
+msgid "Intl_Country_TN"
+msgstr "Туніс"
+
+msgid "Intl_Country_TO"
+msgstr "Тонга"
+
+msgid "Intl_Country_TR"
+msgstr "Турцыя"
+
+msgid "Intl_Country_TT"
+msgstr "Трынідад і Табага"
+
+msgid "Intl_Country_TV"
+msgstr "Тувалу"
+
+msgid "Intl_Country_TW"
+msgstr "Тайвань"
+
+msgid "Intl_Country_TZ"
+msgstr "Танзанія"
+
+msgid "Intl_Country_UA"
+msgstr "Украіна"
+
+msgid "Intl_Country_UG"
+msgstr "Уганда"
+
+msgid "Intl_Country_UM"
+msgstr "Малыя Аддаленыя астравы ЗША"
+
+msgid "Intl_Country_US"
+msgstr "Злучаныя Штаты Амерыкі"
+
+msgid "Intl_Country_UY"
+msgstr "Уругвай"
+
+msgid "Intl_Country_UZ"
+msgstr "Узбекістан"
+
+msgid "Intl_Country_VA"
+msgstr "Ватыкан"
+
+msgid "Intl_Country_VC"
+msgstr "Сент-Вінсент і Грэнадзіны"
+
+msgid "Intl_Country_VE"
+msgstr "Венесуэла"
+
+msgid "Intl_Country_VG"
+msgstr "Брытанскія Віргінскія астравы"
+
+msgid "Intl_Country_VI"
+msgstr "Амерыканскія Віргінскія астравы"
+
+msgid "Intl_Country_VN"
+msgstr "В’етнам"
+
+msgid "Intl_Country_VU"
+msgstr "Вануату"
+
+msgid "Intl_Country_WF"
+msgstr "Уоліс і Футуна"
+
+msgid "Intl_Country_WS"
+msgstr "Самоа"
+
+msgid "Intl_Country_YE"
+msgstr "Емен"
+
+msgid "Intl_Country_YT"
+msgstr "Маёта"
+
+msgid "Intl_Country_ZA"
+msgstr "Паўднёва-Афрыканская Рэспубліка"
+
+msgid "Intl_Country_ZM"
+msgstr "Замбія"
+
+msgid "Intl_Country_ZW"
+msgstr "Зімбабвэ"
+
+msgid "Intl_CurrencySymbol_AED"
+msgstr "AED"
+
+msgid "Intl_CurrencySymbol_AFN"
+msgstr "AFN"
+
+msgid "Intl_CurrencySymbol_ALL"
+msgstr "ALL"
+
+msgid "Intl_CurrencySymbol_AMD"
+msgstr "AMD"
+
+msgid "Intl_CurrencySymbol_ANG"
+msgstr "ANG"
+
+msgid "Intl_CurrencySymbol_AOA"
+msgstr "AOA"
+
+msgid "Intl_CurrencySymbol_ARS"
+msgstr "ARS"
+
+msgid "Intl_CurrencySymbol_AUD"
+msgstr "A$"
+
+msgid "Intl_CurrencySymbol_AWG"
+msgstr "AWG"
+
+msgid "Intl_CurrencySymbol_AZN"
+msgstr "AZN"
+
+msgid "Intl_CurrencySymbol_BAM"
+msgstr "BAM"
+
+msgid "Intl_CurrencySymbol_BBD"
+msgstr "BBD"
+
+msgid "Intl_CurrencySymbol_BDT"
+msgstr "BDT"
+
+msgid "Intl_CurrencySymbol_BGN"
+msgstr "BGN"
+
+msgid "Intl_CurrencySymbol_BHD"
+msgstr "BHD"
+
+msgid "Intl_CurrencySymbol_BIF"
+msgstr "BIF"
+
+msgid "Intl_CurrencySymbol_BMD"
+msgstr "BMD"
+
+msgid "Intl_CurrencySymbol_BND"
+msgstr "BND"
+
+msgid "Intl_CurrencySymbol_BOB"
+msgstr "BOB"
+
+msgid "Intl_CurrencySymbol_BRL"
+msgstr "BRL"
+
+msgid "Intl_CurrencySymbol_BSD"
+msgstr "BSD"
+
+msgid "Intl_CurrencySymbol_BTC"
+msgstr "BTC"
+
+msgid "Intl_CurrencySymbol_BTN"
+msgstr "BTN"
+
+msgid "Intl_CurrencySymbol_BWP"
+msgstr "BWP"
+
+msgid "Intl_CurrencySymbol_BYN"
+msgstr "Br"
+
+msgid "Intl_CurrencySymbol_BZD"
+msgstr "BZD"
+
+msgid "Intl_CurrencySymbol_CAD"
+msgstr "CAD"
+
+msgid "Intl_CurrencySymbol_CDF"
+msgstr "CDF"
+
+msgid "Intl_CurrencySymbol_CHF"
+msgstr "CHF"
+
+msgid "Intl_CurrencySymbol_CLP"
+msgstr "CLP"
+
+msgid "Intl_CurrencySymbol_CNY"
+msgstr "CN¥"
+
+msgid "Intl_CurrencySymbol_COP"
+msgstr "COP"
+
+msgid "Intl_CurrencySymbol_CRC"
+msgstr "CRC"
+
+msgid "Intl_CurrencySymbol_CUC"
+msgstr "CUC"
+
+msgid "Intl_CurrencySymbol_CUP"
+msgstr "CUP"
+
+msgid "Intl_CurrencySymbol_CVE"
+msgstr "CVE"
+
+msgid "Intl_CurrencySymbol_CZK"
+msgstr "CZK"
+
+msgid "Intl_CurrencySymbol_DJF"
+msgstr "DJF"
+
+msgid "Intl_CurrencySymbol_DKK"
+msgstr "DKK"
+
+msgid "Intl_CurrencySymbol_DOP"
+msgstr "DOP"
+
+msgid "Intl_CurrencySymbol_DZD"
+msgstr "DZD"
+
+msgid "Intl_CurrencySymbol_EGP"
+msgstr "EGP"
+
+msgid "Intl_CurrencySymbol_ERN"
+msgstr "ERN"
+
+msgid "Intl_CurrencySymbol_ETB"
+msgstr "ETB"
+
+msgid "Intl_CurrencySymbol_EUR"
+msgstr "€"
+
+msgid "Intl_CurrencySymbol_FJD"
+msgstr "FJD"
+
+msgid "Intl_CurrencySymbol_FKP"
+msgstr "FKP"
+
+msgid "Intl_CurrencySymbol_GBP"
+msgstr "£"
+
+msgid "Intl_CurrencySymbol_GEL"
+msgstr "GEL"
+
+msgid "Intl_CurrencySymbol_GHS"
+msgstr "GHS"
+
+msgid "Intl_CurrencySymbol_GIP"
+msgstr "GIP"
+
+msgid "Intl_CurrencySymbol_GMD"
+msgstr "GMD"
+
+msgid "Intl_CurrencySymbol_GNF"
+msgstr "GNF"
+
+msgid "Intl_CurrencySymbol_GTQ"
+msgstr "GTQ"
+
+msgid "Intl_CurrencySymbol_GYD"
+msgstr "GYD"
+
+msgid "Intl_CurrencySymbol_HKD"
+msgstr "HK$"
+
+msgid "Intl_CurrencySymbol_HNL"
+msgstr "HNL"
+
+msgid "Intl_CurrencySymbol_HRK"
+msgstr "HRK"
+
+msgid "Intl_CurrencySymbol_HTG"
+msgstr "HTG"
+
+msgid "Intl_CurrencySymbol_HUF"
+msgstr "HUF"
+
+msgid "Intl_CurrencySymbol_IDR"
+msgstr "IDR"
+
+msgid "Intl_CurrencySymbol_ILS"
+msgstr "₪"
+
+msgid "Intl_CurrencySymbol_INR"
+msgstr "₹"
+
+msgid "Intl_CurrencySymbol_IQD"
+msgstr "IQD"
+
+msgid "Intl_CurrencySymbol_IRR"
+msgstr "IRR"
+
+msgid "Intl_CurrencySymbol_ISK"
+msgstr "ISK"
+
+msgid "Intl_CurrencySymbol_JMD"
+msgstr "JMD"
+
+msgid "Intl_CurrencySymbol_JOD"
+msgstr "JOD"
+
+msgid "Intl_CurrencySymbol_JPY"
+msgstr "¥"
+
+msgid "Intl_CurrencySymbol_KES"
+msgstr "KES"
+
+msgid "Intl_CurrencySymbol_KGS"
+msgstr "KGS"
+
+msgid "Intl_CurrencySymbol_KHR"
+msgstr "KHR"
+
+msgid "Intl_CurrencySymbol_KMF"
+msgstr "KMF"
+
+msgid "Intl_CurrencySymbol_KPW"
+msgstr "KPW"
+
+msgid "Intl_CurrencySymbol_KRW"
+msgstr "₩"
+
+msgid "Intl_CurrencySymbol_KWD"
+msgstr "KWD"
+
+msgid "Intl_CurrencySymbol_KYD"
+msgstr "KYD"
+
+msgid "Intl_CurrencySymbol_KZT"
+msgstr "KZT"
+
+msgid "Intl_CurrencySymbol_LAK"
+msgstr "LAK"
+
+msgid "Intl_CurrencySymbol_LBP"
+msgstr "LBP"
+
+msgid "Intl_CurrencySymbol_LKR"
+msgstr "LKR"
+
+msgid "Intl_CurrencySymbol_LRD"
+msgstr "LRD"
+
+msgid "Intl_CurrencySymbol_LSL"
+msgstr "LSL"
+
+msgid "Intl_CurrencySymbol_LYD"
+msgstr "LYD"
+
+msgid "Intl_CurrencySymbol_MAD"
+msgstr "MAD"
+
+msgid "Intl_CurrencySymbol_MDL"
+msgstr "MDL"
+
+msgid "Intl_CurrencySymbol_MGA"
+msgstr "MGA"
+
+msgid "Intl_CurrencySymbol_MKD"
+msgstr "MKD"
+
+msgid "Intl_CurrencySymbol_MMK"
+msgstr "MMK"
+
+msgid "Intl_CurrencySymbol_MNT"
+msgstr "MNT"
+
+msgid "Intl_CurrencySymbol_MOP"
+msgstr "MOP"
+
+msgid "Intl_CurrencySymbol_MRU"
+msgstr "MRU"
+
+msgid "Intl_CurrencySymbol_MUR"
+msgstr "MUR"
+
+msgid "Intl_CurrencySymbol_MVR"
+msgstr "MVR"
+
+msgid "Intl_CurrencySymbol_MWK"
+msgstr "MWK"
+
+msgid "Intl_CurrencySymbol_MXN"
+msgstr "MX$"
+
+msgid "Intl_CurrencySymbol_MYR"
+msgstr "MYR"
+
+msgid "Intl_CurrencySymbol_MZN"
+msgstr "MZN"
+
+msgid "Intl_CurrencySymbol_NAD"
+msgstr "NAD"
+
+msgid "Intl_CurrencySymbol_NGN"
+msgstr "NGN"
+
+msgid "Intl_CurrencySymbol_NIO"
+msgstr "NIO"
+
+msgid "Intl_CurrencySymbol_NOK"
+msgstr "NOK"
+
+msgid "Intl_CurrencySymbol_NPR"
+msgstr "NPR"
+
+msgid "Intl_CurrencySymbol_NZD"
+msgstr "NZD"
+
+msgid "Intl_CurrencySymbol_OMR"
+msgstr "OMR"
+
+msgid "Intl_CurrencySymbol_PAB"
+msgstr "PAB"
+
+msgid "Intl_CurrencySymbol_PEN"
+msgstr "PEN"
+
+msgid "Intl_CurrencySymbol_PGK"
+msgstr "PGK"
+
+msgid "Intl_CurrencySymbol_PHP"
+msgstr "PHP"
+
+msgid "Intl_CurrencySymbol_PKR"
+msgstr "PKR"
+
+msgid "Intl_CurrencySymbol_PLN"
+msgstr "PLN"
+
+msgid "Intl_CurrencySymbol_PYG"
+msgstr "PYG"
+
+msgid "Intl_CurrencySymbol_QAR"
+msgstr "QAR"
+
+msgid "Intl_CurrencySymbol_RON"
+msgstr "RON"
+
+msgid "Intl_CurrencySymbol_RSD"
+msgstr "RSD"
+
+msgid "Intl_CurrencySymbol_RUB"
+msgstr "₽"
+
+msgid "Intl_CurrencySymbol_RWF"
+msgstr "RWF"
+
+msgid "Intl_CurrencySymbol_SAR"
+msgstr "SAR"
+
+msgid "Intl_CurrencySymbol_SBD"
+msgstr "SBD"
+
+msgid "Intl_CurrencySymbol_SCR"
+msgstr "SCR"
+
+msgid "Intl_CurrencySymbol_SDG"
+msgstr "SDG"
+
+msgid "Intl_CurrencySymbol_SEK"
+msgstr "SEK"
+
+msgid "Intl_CurrencySymbol_SGD"
+msgstr "SGD"
+
+msgid "Intl_CurrencySymbol_SHP"
+msgstr "SHP"
+
+msgid "Intl_CurrencySymbol_SLL"
+msgstr "SLL"
+
+msgid "Intl_CurrencySymbol_SOS"
+msgstr "SOS"
+
+msgid "Intl_CurrencySymbol_SRD"
+msgstr "SRD"
+
+msgid "Intl_CurrencySymbol_SSP"
+msgstr "SSP"
+
+msgid "Intl_CurrencySymbol_STN"
+msgstr "STN"
+
+msgid "Intl_CurrencySymbol_SYP"
+msgstr "SYP"
+
+msgid "Intl_CurrencySymbol_SZL"
+msgstr "SZL"
+
+msgid "Intl_CurrencySymbol_THB"
+msgstr "THB"
+
+msgid "Intl_CurrencySymbol_TJS"
+msgstr "TJS"
+
+msgid "Intl_CurrencySymbol_TMT"
+msgstr "TMT"
+
+msgid "Intl_CurrencySymbol_TND"
+msgstr "TND"
+
+msgid "Intl_CurrencySymbol_TOP"
+msgstr "TOP"
+
+msgid "Intl_CurrencySymbol_TRY"
+msgstr "TRY"
+
+msgid "Intl_CurrencySymbol_TTD"
+msgstr "TTD"
+
+msgid "Intl_CurrencySymbol_TWD"
+msgstr "NT$"
+
+msgid "Intl_CurrencySymbol_TZS"
+msgstr "TZS"
+
+msgid "Intl_CurrencySymbol_UAH"
+msgstr "UAH"
+
+msgid "Intl_CurrencySymbol_UGX"
+msgstr "UGX"
+
+msgid "Intl_CurrencySymbol_USD"
+msgstr "$"
+
+msgid "Intl_CurrencySymbol_UYU"
+msgstr "UYU"
+
+msgid "Intl_CurrencySymbol_UZS"
+msgstr "UZS"
+
+msgid "Intl_CurrencySymbol_VEF"
+msgstr "VEF"
+
+msgid "Intl_CurrencySymbol_VND"
+msgstr "₫"
+
+msgid "Intl_CurrencySymbol_VUV"
+msgstr "VUV"
+
+msgid "Intl_CurrencySymbol_WST"
+msgstr "WST"
+
+msgid "Intl_CurrencySymbol_XAF"
+msgstr "FCFA"
+
+msgid "Intl_CurrencySymbol_XCD"
+msgstr "EC$"
+
+msgid "Intl_CurrencySymbol_XOF"
+msgstr "CFA"
+
+msgid "Intl_CurrencySymbol_XPF"
+msgstr "CFPF"
+
+msgid "Intl_CurrencySymbol_YER"
+msgstr "YER"
+
+msgid "Intl_CurrencySymbol_ZAR"
+msgstr "ZAR"
+
+msgid "Intl_CurrencySymbol_ZMW"
+msgstr "ZMW"
+
+msgid "Intl_Currency_AED"
+msgstr "Дырхем ААЭ"
+
+msgid "Intl_Currency_AFN"
+msgstr "Афганскі афгані"
+
+msgid "Intl_Currency_ALL"
+msgstr "Албанскі лек"
+
+msgid "Intl_Currency_AMD"
+msgstr "Армянскі драм"
+
+msgid "Intl_Currency_ANG"
+msgstr "Нідэрландскі антыльскі гульдэн"
+
+msgid "Intl_Currency_AOA"
+msgstr "Ангольская кванза"
+
+msgid "Intl_Currency_ARS"
+msgstr "Аргенцінскае песа"
+
+msgid "Intl_Currency_AUD"
+msgstr "Аўстралійскі долар"
+
+msgid "Intl_Currency_AWG"
+msgstr "Арубанскі фларын"
+
+msgid "Intl_Currency_AZN"
+msgstr "Азербайджанскі манат"
+
+msgid "Intl_Currency_BAM"
+msgstr "Канверсоўная марка Босніі і Герцагавіны"
+
+msgid "Intl_Currency_BBD"
+msgstr "Барбадоскі долар"
+
+msgid "Intl_Currency_BDT"
+msgstr "Бангладэшская така"
+
+msgid "Intl_Currency_BGN"
+msgstr "Балгарскі леў"
+
+msgid "Intl_Currency_BHD"
+msgstr "Бахрэйнскі дынар"
+
+msgid "Intl_Currency_BIF"
+msgstr "Бурундзійскі франк"
+
+msgid "Intl_Currency_BMD"
+msgstr "Бермудскі долар"
+
+msgid "Intl_Currency_BND"
+msgstr "Брунейскі долар"
+
+msgid "Intl_Currency_BOB"
+msgstr "Балівіяна"
+
+msgid "Intl_Currency_BRL"
+msgstr "Бразільскі рэал"
+
+msgid "Intl_Currency_BSD"
+msgstr "Багамскі долар"
+
+msgid "Intl_Currency_BTC"
+msgstr "Bitcoin"
+
+msgid "Intl_Currency_BTN"
+msgstr "Бутанскі нгултрум"
+
+msgid "Intl_Currency_BWP"
+msgstr "Батсванская пула"
+
+msgid "Intl_Currency_BYN"
+msgstr "Беларускі рубель"
+
+msgid "Intl_Currency_BZD"
+msgstr "Белізскі долар"
+
+msgid "Intl_Currency_CAD"
+msgstr "Канадскі долар"
+
+msgid "Intl_Currency_CDF"
+msgstr "Кангалезскі франк"
+
+msgid "Intl_Currency_CHF"
+msgstr "Швейцарскі франк"
+
+msgid "Intl_Currency_CLP"
+msgstr "Чылійскае песа"
+
+msgid "Intl_Currency_CNY"
+msgstr "Кітайскі юань"
+
+msgid "Intl_Currency_COP"
+msgstr "Калумбійскае песа"
+
+msgid "Intl_Currency_CRC"
+msgstr "Коста-рыканскі калон"
+
+msgid "Intl_Currency_CUC"
+msgstr "Кубінскае канверсоўнае песа"
+
+msgid "Intl_Currency_CUP"
+msgstr "Кубінскае песа"
+
+msgid "Intl_Currency_CVE"
+msgstr "Эскуда Каба-Вердэ"
+
+msgid "Intl_Currency_CZK"
+msgstr "Чэшская крона"
+
+msgid "Intl_Currency_DJF"
+msgstr "Джыбуційскі франк"
+
+msgid "Intl_Currency_DKK"
+msgstr "Дацкая крона"
+
+msgid "Intl_Currency_DOP"
+msgstr "Дамініканскае песа"
+
+msgid "Intl_Currency_DZD"
+msgstr "Алжырскі дынар"
+
+msgid "Intl_Currency_EGP"
+msgstr "Егіпецкі фунт"
+
+msgid "Intl_Currency_ERN"
+msgstr "Эрытрэйская накфа"
+
+msgid "Intl_Currency_ETB"
+msgstr "Эфіопскі быр"
+
+msgid "Intl_Currency_EUR"
+msgstr "Еўра"
+
+msgid "Intl_Currency_FJD"
+msgstr "Фіджыйскі долар"
+
+msgid "Intl_Currency_FKP"
+msgstr "Фунт Фалклендскіх астравоў"
+
+msgid "Intl_Currency_GBP"
+msgstr "Брытанскі фунт стэрлінгаў"
+
+msgid "Intl_Currency_GEL"
+msgstr "Грузінскі лары"
+
+msgid "Intl_Currency_GHS"
+msgstr "Ганскі седзі"
+
+msgid "Intl_Currency_GIP"
+msgstr "Гібралтарскі фунт"
+
+msgid "Intl_Currency_GMD"
+msgstr "Гамбійскі даласі"
+
+msgid "Intl_Currency_GNF"
+msgstr "Гвінейскі франк"
+
+msgid "Intl_Currency_GTQ"
+msgstr "Гватэмальскі кетсаль"
+
+msgid "Intl_Currency_GYD"
+msgstr "Гаянскі долар"
+
+msgid "Intl_Currency_HKD"
+msgstr "Ганконгскі долар"
+
+msgid "Intl_Currency_HNL"
+msgstr "Гандураская лемпіра"
+
+msgid "Intl_Currency_HRK"
+msgstr "Харвацкая куна"
+
+msgid "Intl_Currency_HTG"
+msgstr "Гаіцянскі гурд"
+
+msgid "Intl_Currency_HUF"
+msgstr "Венгерскі форынт"
+
+msgid "Intl_Currency_IDR"
+msgstr "Інданезійская рупія"
+
+msgid "Intl_Currency_ILS"
+msgstr "Новы ізраільскі шэкель"
+
+msgid "Intl_Currency_INR"
+msgstr "Індыйская рупія"
+
+msgid "Intl_Currency_IQD"
+msgstr "Іракскі дынар"
+
+msgid "Intl_Currency_IRR"
+msgstr "Іранскі рыал"
+
+msgid "Intl_Currency_ISK"
+msgstr "Ісландская крона"
+
+msgid "Intl_Currency_JMD"
+msgstr "Ямайскі долар"
+
+msgid "Intl_Currency_JOD"
+msgstr "Іарданскі дынар"
+
+msgid "Intl_Currency_JPY"
+msgstr "Японская іена"
+
+msgid "Intl_Currency_KES"
+msgstr "Кенійскі шылінг"
+
+msgid "Intl_Currency_KGS"
+msgstr "Кіргізскі сом"
+
+msgid "Intl_Currency_KHR"
+msgstr "Камбаджыйскі рыэль"
+
+msgid "Intl_Currency_KMF"
+msgstr "Каморскі франк"
+
+msgid "Intl_Currency_KPW"
+msgstr "Паўночнакарэйская вона"
+
+msgid "Intl_Currency_KRW"
+msgstr "Паўднёвакарэйская вона"
+
+msgid "Intl_Currency_KWD"
+msgstr "Кувейцкі дынар"
+
+msgid "Intl_Currency_KYD"
+msgstr "Долар Кайманавых астравоў"
+
+msgid "Intl_Currency_KZT"
+msgstr "Казахстанскі тэнгэ"
+
+msgid "Intl_Currency_LAK"
+msgstr "Лаоскі кіп"
+
+msgid "Intl_Currency_LBP"
+msgstr "Ліванскі фунт"
+
+msgid "Intl_Currency_LKR"
+msgstr "Шры-ланкійская рупія"
+
+msgid "Intl_Currency_LRD"
+msgstr "Ліберыйскі долар"
+
+msgid "Intl_Currency_LSL"
+msgstr "LSL"
+
+msgid "Intl_Currency_LYD"
+msgstr "Лівійскі дынар"
+
+msgid "Intl_Currency_MAD"
+msgstr "Мараканскі дырхам"
+
+msgid "Intl_Currency_MDL"
+msgstr "Малдаўскі лей"
+
+msgid "Intl_Currency_MGA"
+msgstr "Малагасійскі арыяры"
+
+msgid "Intl_Currency_MKD"
+msgstr "Македонскі дэнар"
+
+msgid "Intl_Currency_MMK"
+msgstr "М’янманскі к’ят"
+
+msgid "Intl_Currency_MNT"
+msgstr "Мангольскі тугрык"
+
+msgid "Intl_Currency_MOP"
+msgstr "Патака Макаа"
+
+msgid "Intl_Currency_MRU"
+msgstr "Маўрытанская ўгія"
+
+msgid "Intl_Currency_MUR"
+msgstr "Маўрыкійская рупія"
+
+msgid "Intl_Currency_MVR"
+msgstr "Мальдыўская руфія"
+
+msgid "Intl_Currency_MWK"
+msgstr "Малавійская квача"
+
+msgid "Intl_Currency_MXN"
+msgstr "Мексіканскае песа"
+
+msgid "Intl_Currency_MYR"
+msgstr "Малайзійскі рынгіт"
+
+msgid "Intl_Currency_MZN"
+msgstr "Мазамбікскі метыкал"
+
+msgid "Intl_Currency_NAD"
+msgstr "Намібійскі долар"
+
+msgid "Intl_Currency_NGN"
+msgstr "Нігерыйская найра"
+
+msgid "Intl_Currency_NIO"
+msgstr "Нікарагуанская кордаба"
+
+msgid "Intl_Currency_NOK"
+msgstr "Нарвежская крона"
+
+msgid "Intl_Currency_NPR"
+msgstr "Непальская рупія"
+
+msgid "Intl_Currency_NZD"
+msgstr "Новазеландскі долар"
+
+msgid "Intl_Currency_OMR"
+msgstr "Аманскі рыал"
+
+msgid "Intl_Currency_PAB"
+msgstr "Панамскае бальбоа"
+
+msgid "Intl_Currency_PEN"
+msgstr "Перуанскі соль"
+
+msgid "Intl_Currency_PGK"
+msgstr "Кіна"
+
+msgid "Intl_Currency_PHP"
+msgstr "Філіпінскае песа"
+
+msgid "Intl_Currency_PKR"
+msgstr "Пакістанская рупія"
+
+msgid "Intl_Currency_PLN"
+msgstr "Польскі злоты"
+
+msgid "Intl_Currency_PYG"
+msgstr "Парагвайскі гуарані"
+
+msgid "Intl_Currency_QAR"
+msgstr "Катарскі рыал"
+
+msgid "Intl_Currency_RON"
+msgstr "Румынскі лей"
+
+msgid "Intl_Currency_RSD"
+msgstr "Сербскі дынар"
+
+msgid "Intl_Currency_RUB"
+msgstr "Расійскі рубель"
+
+msgid "Intl_Currency_RWF"
+msgstr "Руандыйскі франк"
+
+msgid "Intl_Currency_SAR"
+msgstr "Саудаўскі рыял"
+
+msgid "Intl_Currency_SBD"
+msgstr "Долар Саламонавых астравоў"
+
+msgid "Intl_Currency_SCR"
+msgstr "Сейшэльская рупія"
+
+msgid "Intl_Currency_SDG"
+msgstr "Суданскі фунт"
+
+msgid "Intl_Currency_SEK"
+msgstr "Шведская крона"
+
+msgid "Intl_Currency_SGD"
+msgstr "Сінгапурскі долар"
+
+msgid "Intl_Currency_SHP"
+msgstr "Фунт Святой Алены"
+
+msgid "Intl_Currency_SLL"
+msgstr "Леонэ"
+
+msgid "Intl_Currency_SOS"
+msgstr "Самалійскі шылінг"
+
+msgid "Intl_Currency_SRD"
+msgstr "Сурынамскі долар"
+
+msgid "Intl_Currency_SSP"
+msgstr "Паўднёвасуданскі фунт"
+
+msgid "Intl_Currency_STN"
+msgstr "Добра Сан-Тамэ і Прынсіпі"
+
+msgid "Intl_Currency_SYP"
+msgstr "Сірыйскі фунт"
+
+msgid "Intl_Currency_SZL"
+msgstr "Свазілендскі лілангені"
+
+msgid "Intl_Currency_THB"
+msgstr "Тайскі бат"
+
+msgid "Intl_Currency_TJS"
+msgstr "Таджыкскі самані"
+
+msgid "Intl_Currency_TMT"
+msgstr "Туркменскі манат"
+
+msgid "Intl_Currency_TND"
+msgstr "Туніскі дынар"
+
+msgid "Intl_Currency_TOP"
+msgstr "Танганская паанга"
+
+msgid "Intl_Currency_TRY"
+msgstr "Турэцкая ліра"
+
+msgid "Intl_Currency_TTD"
+msgstr "Долар Трынідада і Табага"
+
+msgid "Intl_Currency_TWD"
+msgstr "Новы тайваньскі долар"
+
+msgid "Intl_Currency_TZS"
+msgstr "Танзанійскі шылінг"
+
+msgid "Intl_Currency_UAH"
+msgstr "Украінская грыўня"
+
+msgid "Intl_Currency_UGX"
+msgstr "Угандыйскі шылінг"
+
+msgid "Intl_Currency_USD"
+msgstr "Долар ЗША"
+
+msgid "Intl_Currency_UYU"
+msgstr "Уругвайскае песа"
+
+msgid "Intl_Currency_UZS"
+msgstr "Узбекскі сум"
+
+msgid "Intl_Currency_VEF"
+msgstr "Венесуальскі балівар (2008–2018)"
+
+msgid "Intl_Currency_VND"
+msgstr "В’етнамскі донг"
+
+msgid "Intl_Currency_VUV"
+msgstr "Вату"
+
+msgid "Intl_Currency_WST"
+msgstr "Самаанская тала"
+
+msgid "Intl_Currency_XAF"
+msgstr "Цэнтральнаафрыканскі франк КФА"
+
+msgid "Intl_Currency_XCD"
+msgstr "Усходнекарыбскі долар"
+
+msgid "Intl_Currency_XOF"
+msgstr "Заходнеафрыканскі франк КФА"
+
+msgid "Intl_Currency_XPF"
+msgstr "Французскі ціхаакіянскі франк"
+
+msgid "Intl_Currency_YER"
+msgstr "Еменскі рыал"
+
+msgid "Intl_Currency_ZAR"
+msgstr "Паўднёваафрыканскі ранд"
+
+msgid "Intl_Currency_ZMW"
+msgstr "Замбійская квача"
+
+msgid "Intl_Day_Long_1"
+msgstr "панядзелак"
+
+msgid "Intl_Day_Long_2"
+msgstr "аўторак"
+
+msgid "Intl_Day_Long_3"
+msgstr "серада"
+
+msgid "Intl_Day_Long_4"
+msgstr "чацвер"
+
+msgid "Intl_Day_Long_5"
+msgstr "пятніца"
+
+msgid "Intl_Day_Long_6"
+msgstr "субота"
+
+msgid "Intl_Day_Long_7"
+msgstr "нядзеля"
+
+msgid "Intl_Day_Long_StandAlone_1"
+msgstr "панядзелак"
+
+msgid "Intl_Day_Long_StandAlone_2"
+msgstr "аўторак"
+
+msgid "Intl_Day_Long_StandAlone_3"
+msgstr "серада"
+
+msgid "Intl_Day_Long_StandAlone_4"
+msgstr "чацвер"
+
+msgid "Intl_Day_Long_StandAlone_5"
+msgstr "пятніца"
+
+msgid "Intl_Day_Long_StandAlone_6"
+msgstr "субота"
+
+msgid "Intl_Day_Long_StandAlone_7"
+msgstr "нядзеля"
+
+msgid "Intl_Day_Min_1"
+msgstr "пн"
+
+msgid "Intl_Day_Min_2"
+msgstr "аў"
+
+msgid "Intl_Day_Min_3"
+msgstr "ср"
+
+msgid "Intl_Day_Min_4"
+msgstr "чц"
+
+msgid "Intl_Day_Min_5"
+msgstr "пт"
+
+msgid "Intl_Day_Min_6"
+msgstr "сб"
+
+msgid "Intl_Day_Min_7"
+msgstr "нд"
+
+msgid "Intl_Day_Min_StandAlone_1"
+msgstr "пн"
+
+msgid "Intl_Day_Min_StandAlone_2"
+msgstr "аў"
+
+msgid "Intl_Day_Min_StandAlone_3"
+msgstr "ср"
+
+msgid "Intl_Day_Min_StandAlone_4"
+msgstr "чц"
+
+msgid "Intl_Day_Min_StandAlone_5"
+msgstr "пт"
+
+msgid "Intl_Day_Min_StandAlone_6"
+msgstr "сб"
+
+msgid "Intl_Day_Min_StandAlone_7"
+msgstr "нд"
+
+msgid "Intl_Day_Short_1"
+msgstr "пн"
+
+msgid "Intl_Day_Short_2"
+msgstr "аў"
+
+msgid "Intl_Day_Short_3"
+msgstr "ср"
+
+msgid "Intl_Day_Short_4"
+msgstr "чц"
+
+msgid "Intl_Day_Short_5"
+msgstr "пт"
+
+msgid "Intl_Day_Short_6"
+msgstr "сб"
+
+msgid "Intl_Day_Short_7"
+msgstr "нд"
+
+msgid "Intl_Day_Short_StandAlone_1"
+msgstr "пн"
+
+msgid "Intl_Day_Short_StandAlone_2"
+msgstr "аў"
+
+msgid "Intl_Day_Short_StandAlone_3"
+msgstr "ср"
+
+msgid "Intl_Day_Short_StandAlone_4"
+msgstr "чц"
+
+msgid "Intl_Day_Short_StandAlone_5"
+msgstr "пт"
+
+msgid "Intl_Day_Short_StandAlone_6"
+msgstr "сб"
+
+msgid "Intl_Day_Short_StandAlone_7"
+msgstr "нд"
+
+msgid "Intl_EnglishLanguageName"
+msgstr "Belarusian"
+
+msgid "Intl_Format_DateTime_Long"
+msgstr "EEEE, d MMMM y 'г'. {time}"
+
+msgid "Intl_Format_DateTime_Short"
+msgstr "d.MM.y {time}"
+
+msgid "Intl_Format_Date_Day_Month"
+msgstr "E, d MMM"
+
+msgid "Intl_Format_Date_Long"
+msgstr "EEEE, d MMMM y 'г'."
+
+msgid "Intl_Format_Date_Short"
+msgstr "d.MM.y"
+
+msgid "Intl_Format_Hour_12"
+msgstr "hh a"
+
+msgid "Intl_Format_Hour_24"
+msgstr "HH"
+
+msgid "Intl_Format_Interval_Long_D"
+msgstr "d–d MMMM y"
+
+msgid "Intl_Format_Interval_Long_M"
+msgstr "d MMMM – d MMMM y"
+
+msgid "Intl_Format_Interval_Long_Y"
+msgstr "d MMMM y – d MMMM y"
+
+msgid "Intl_Format_Interval_Short_D"
+msgstr "d–d MMM y"
+
+msgid "Intl_Format_Interval_Short_M"
+msgstr "d MMM – d MMM y"
+
+msgid "Intl_Format_Interval_Short_Y"
+msgstr "d MMM y – d MMM y"
+
+msgid "Intl_Format_Month_Long"
+msgstr "LLLL y"
+
+msgid "Intl_Format_Month_Short"
+msgstr "LLL y"
+
+msgid "Intl_Format_Time"
+msgstr "{time}"
+
+msgid "Intl_Format_Time_12"
+msgstr "h:mm:ss a"
+
+msgid "Intl_Format_Time_24"
+msgstr "HH:mm:ss"
+
+msgid "Intl_Format_Year"
+msgstr "y"
+
+msgid "Intl_Hours"
+msgstr "гадзіны"
+
+msgid "Intl_Language_aa"
+msgstr "Афарская"
+
+msgid "Intl_Language_ab"
+msgstr "Абхазская"
+
+msgid "Intl_Language_af"
+msgstr "Афрыкаанс"
+
+msgid "Intl_Language_ak"
+msgstr "Акан"
+
+msgid "Intl_Language_am"
+msgstr "Амхарская"
+
+msgid "Intl_Language_an"
+msgstr "Арагонская"
+
+msgid "Intl_Language_ar"
+msgstr "Арабская"
+
+msgid "Intl_Language_as"
+msgstr "Асамская"
+
+msgid "Intl_Language_av"
+msgstr "Аварская"
+
+msgid "Intl_Language_ay"
+msgstr "Аймара"
+
+msgid "Intl_Language_az"
+msgstr "Азербайджанская"
+
+msgid "Intl_Language_ba"
+msgstr "Башкірская"
+
+msgid "Intl_Language_be"
+msgstr "Беларуская"
+
+msgid "Intl_Language_bg"
+msgstr "Балгарская"
+
+msgid "Intl_Language_bi"
+msgstr "Біслама"
+
+msgid "Intl_Language_bm"
+msgstr "Бамбара"
+
+msgid "Intl_Language_bn"
+msgstr "Бенгальская"
+
+msgid "Intl_Language_bo"
+msgstr "Тыбецкая"
+
+msgid "Intl_Language_br"
+msgstr "Брэтонская"
+
+msgid "Intl_Language_bs"
+msgstr "Баснійская"
+
+msgid "Intl_Language_ca"
+msgstr "Каталанская"
+
+msgid "Intl_Language_ce"
+msgstr "Чачэнская"
+
+msgid "Intl_Language_ch"
+msgstr "Чамора"
+
+msgid "Intl_Language_co"
+msgstr "Карсіканская"
+
+msgid "Intl_Language_cs"
+msgstr "Чэшская"
+
+msgid "Intl_Language_cu"
+msgstr "Царкоўнаславянская"
+
+msgid "Intl_Language_cv"
+msgstr "Чувашская"
+
+msgid "Intl_Language_cy"
+msgstr "Валійская"
+
+msgid "Intl_Language_da"
+msgstr "Дацкая"
+
+msgid "Intl_Language_de"
+msgstr "Нямецкая"
+
+msgid "Intl_Language_dv"
+msgstr "Мальдыўская"
+
+msgid "Intl_Language_dz"
+msgstr "Дзонг-кэ"
+
+msgid "Intl_Language_ee"
+msgstr "Эве"
+
+msgid "Intl_Language_el"
+msgstr "Грэчаская"
+
+msgid "Intl_Language_en"
+msgstr "Англійская"
+
+msgid "Intl_Language_eo"
+msgstr "Эсперанта"
+
+msgid "Intl_Language_es"
+msgstr "Іспанская"
+
+msgid "Intl_Language_et"
+msgstr "Эстонская"
+
+msgid "Intl_Language_eu"
+msgstr "Баскская"
+
+msgid "Intl_Language_fa"
+msgstr "Фарсі"
+
+msgid "Intl_Language_ff"
+msgstr "Фула"
+
+msgid "Intl_Language_fi"
+msgstr "Фінская"
+
+msgid "Intl_Language_fj"
+msgstr "Фіджыйская"
+
+msgid "Intl_Language_fo"
+msgstr "Фарэрская"
+
+msgid "Intl_Language_fr"
+msgstr "Французская"
+
+msgid "Intl_Language_fy"
+msgstr "Заходняя фрызская"
+
+msgid "Intl_Language_ga"
+msgstr "Ірландская"
+
+msgid "Intl_Language_gd"
+msgstr "Шатландская гэльская"
+
+msgid "Intl_Language_gl"
+msgstr "Галісійская"
+
+msgid "Intl_Language_gn"
+msgstr "Гуарані"
+
+msgid "Intl_Language_gu"
+msgstr "Гуджараці"
+
+msgid "Intl_Language_gv"
+msgstr "Мэнская"
+
+msgid "Intl_Language_ha"
+msgstr "Хауса"
+
+msgid "Intl_Language_he"
+msgstr "Іўрыт"
+
+msgid "Intl_Language_hi"
+msgstr "Хіндзі"
+
+msgid "Intl_Language_hr"
+msgstr "Харвацкая"
+
+msgid "Intl_Language_ht"
+msgstr "Гаіцянская крэольская"
+
+msgid "Intl_Language_hu"
+msgstr "Венгерская"
+
+msgid "Intl_Language_hy"
+msgstr "Армянская"
+
+msgid "Intl_Language_hz"
+msgstr "Герэра"
+
+msgid "Intl_Language_ia"
+msgstr "Інтэрлінгва"
+
+msgid "Intl_Language_id"
+msgstr "Інданезійская"
+
+msgid "Intl_Language_ie"
+msgstr "Інтэрлінгвэ"
+
+msgid "Intl_Language_ig"
+msgstr "Ігба"
+
+msgid "Intl_Language_ii"
+msgstr "Сычуаньская йі"
+
+msgid "Intl_Language_io"
+msgstr "Іда"
+
+msgid "Intl_Language_is"
+msgstr "Ісландская"
+
+msgid "Intl_Language_it"
+msgstr "Італьянская"
+
+msgid "Intl_Language_iu"
+msgstr "Інуктытут"
+
+msgid "Intl_Language_ja"
+msgstr "Японская"
+
+msgid "Intl_Language_jv"
+msgstr "Яванская"
+
+msgid "Intl_Language_ka"
+msgstr "Грузінская"
+
+msgid "Intl_Language_ki"
+msgstr "Кікуйю"
+
+msgid "Intl_Language_kj"
+msgstr "Куаньяма"
+
+msgid "Intl_Language_kk"
+msgstr "Казахская"
+
+msgid "Intl_Language_kl"
+msgstr "Грэнландская"
+
+msgid "Intl_Language_km"
+msgstr "Кхмерская"
+
+msgid "Intl_Language_kn"
+msgstr "Канада"
+
+msgid "Intl_Language_ko"
+msgstr "Карэйская"
+
+msgid "Intl_Language_kr"
+msgstr "Кануры"
+
+msgid "Intl_Language_ks"
+msgstr "Кашмірская"
+
+msgid "Intl_Language_ku"
+msgstr "Курдская"
+
+msgid "Intl_Language_kv"
+msgstr "Комі"
+
+msgid "Intl_Language_kw"
+msgstr "Корнская"
+
+msgid "Intl_Language_ky"
+msgstr "Кіргізская"
+
+msgid "Intl_Language_la"
+msgstr "Лацінская"
+
+msgid "Intl_Language_lb"
+msgstr "Люксембургская"
+
+msgid "Intl_Language_lg"
+msgstr "Ганда"
+
+msgid "Intl_Language_li"
+msgstr "Лімбургская"
+
+msgid "Intl_Language_ln"
+msgstr "Лінгала"
+
+msgid "Intl_Language_lo"
+msgstr "Лаоская"
+
+msgid "Intl_Language_lt"
+msgstr "Літоўская"
+
+msgid "Intl_Language_lu"
+msgstr "Луба-катанга"
+
+msgid "Intl_Language_lv"
+msgstr "Латышская"
+
+msgid "Intl_Language_mg"
+msgstr "Малагасійская"
+
+msgid "Intl_Language_mh"
+msgstr "Маршальская"
+
+msgid "Intl_Language_mi"
+msgstr "Маары"
+
+msgid "Intl_Language_mk"
+msgstr "Македонская"
+
+msgid "Intl_Language_ml"
+msgstr "Малаялам"
+
+msgid "Intl_Language_mn"
+msgstr "Мангольская"
+
+msgid "Intl_Language_mr"
+msgstr "Маратхі"
+
+msgid "Intl_Language_ms"
+msgstr "Малайская"
+
+msgid "Intl_Language_mt"
+msgstr "Мальтыйская"
+
+msgid "Intl_Language_my"
+msgstr "Бірманская"
+
+msgid "Intl_Language_na"
+msgstr "Науру"
+
+msgid "Intl_Language_nb"
+msgstr "Нарвежская (букмол)"
+
+msgid "Intl_Language_nd"
+msgstr "Паўночная ндэбеле"
+
+msgid "Intl_Language_ne"
+msgstr "Непальская"
+
+msgid "Intl_Language_ng"
+msgstr "Ндонга"
+
+msgid "Intl_Language_nl"
+msgstr "Нідэрландская"
+
+msgid "Intl_Language_nn"
+msgstr "Нарвежская (нюношк)"
+
+msgid "Intl_Language_no"
+msgstr "Нарвежская"
+
+msgid "Intl_Language_nr"
+msgstr "Паўднёвая ндэбеле"
+
+msgid "Intl_Language_nv"
+msgstr "Наваха"
+
+msgid "Intl_Language_ny"
+msgstr "Ньянджа"
+
+msgid "Intl_Language_oc"
+msgstr "Аксітанская"
+
+msgid "Intl_Language_oj"
+msgstr "Аджыбва"
+
+msgid "Intl_Language_om"
+msgstr "Арома"
+
+msgid "Intl_Language_or"
+msgstr "Орыя"
+
+msgid "Intl_Language_os"
+msgstr "Асецінская"
+
+msgid "Intl_Language_pa"
+msgstr "Панджабі"
+
+msgid "Intl_Language_pl"
+msgstr "Польская"
+
+msgid "Intl_Language_ps"
+msgstr "Пушту"
+
+msgid "Intl_Language_pt"
+msgstr "Партугальская"
+
+msgid "Intl_Language_qu"
+msgstr "Кечуа"
+
+msgid "Intl_Language_rm"
+msgstr "Рэтараманская"
+
+msgid "Intl_Language_rn"
+msgstr "Рундзі"
+
+msgid "Intl_Language_ro"
+msgstr "Румынская"
+
+msgid "Intl_Language_ru"
+msgstr "Руская"
+
+msgid "Intl_Language_rw"
+msgstr "Руанда"
+
+msgid "Intl_Language_sa"
+msgstr "Санскрыт"
+
+msgid "Intl_Language_sc"
+msgstr "Сардзінская"
+
+msgid "Intl_Language_sd"
+msgstr "Сіндхі"
+
+msgid "Intl_Language_se"
+msgstr "Паўночнасаамская"
+
+msgid "Intl_Language_sg"
+msgstr "Санга"
+
+msgid "Intl_Language_si"
+msgstr "Сінгальская"
+
+msgid "Intl_Language_sk"
+msgstr "Славацкая"
+
+msgid "Intl_Language_sl"
+msgstr "Славенская"
+
+msgid "Intl_Language_sm"
+msgstr "Самоа"
+
+msgid "Intl_Language_sn"
+msgstr "Шона"
+
+msgid "Intl_Language_so"
+msgstr "Самалі"
+
+msgid "Intl_Language_sq"
+msgstr "Албанская"
+
+msgid "Intl_Language_sr"
+msgstr "Сербская"
+
+msgid "Intl_Language_ss"
+msgstr "Суаці"
+
+msgid "Intl_Language_st"
+msgstr "Сесута"
+
+msgid "Intl_Language_su"
+msgstr "Сунда"
+
+msgid "Intl_Language_sv"
+msgstr "Шведская"
+
+msgid "Intl_Language_sw"
+msgstr "Суахілі"
+
+msgid "Intl_Language_ta"
+msgstr "Тамільская"
+
+msgid "Intl_Language_te"
+msgstr "Тэлугу"
+
+msgid "Intl_Language_tg"
+msgstr "Таджыкская"
+
+msgid "Intl_Language_th"
+msgstr "Тайская"
+
+msgid "Intl_Language_ti"
+msgstr "Тыгрынья"
+
+msgid "Intl_Language_tk"
+msgstr "Туркменская"
+
+msgid "Intl_Language_tn"
+msgstr "Тсвана"
+
+msgid "Intl_Language_to"
+msgstr "Танганская"
+
+msgid "Intl_Language_tr"
+msgstr "Турэцкая"
+
+msgid "Intl_Language_ts"
+msgstr "Тсонга"
+
+msgid "Intl_Language_tt"
+msgstr "Татарская"
+
+msgid "Intl_Language_ty"
+msgstr "Таіці"
+
+msgid "Intl_Language_ug"
+msgstr "Уйгурская"
+
+msgid "Intl_Language_uk"
+msgstr "Украінская"
+
+msgid "Intl_Language_ur"
+msgstr "Урду"
+
+msgid "Intl_Language_uz"
+msgstr "Узбекская"
+
+msgid "Intl_Language_ve"
+msgstr "Венда"
+
+msgid "Intl_Language_vi"
+msgstr "В’етнамская"
+
+msgid "Intl_Language_vo"
+msgstr "Валапюк"
+
+msgid "Intl_Language_wa"
+msgstr "Валонская"
+
+msgid "Intl_Language_wo"
+msgstr "Валоф"
+
+msgid "Intl_Language_xh"
+msgstr "Коса"
+
+msgid "Intl_Language_yi"
+msgstr "Ідыш"
+
+msgid "Intl_Language_yo"
+msgstr "Ёруба"
+
+msgid "Intl_Language_zh"
+msgstr "Кітайская"
+
+msgid "Intl_Language_zu"
+msgstr "Зулу"
+
+msgid "Intl_LayoutDirection"
+msgstr "ltr"
+
+msgid "Intl_Minutes"
+msgstr "хвіліны"
+
+msgid "Intl_Month_Long_1"
+msgstr "студзеня"
+
+msgid "Intl_Month_Long_10"
+msgstr "кастрычніка"
+
+msgid "Intl_Month_Long_11"
+msgstr "лістапада"
+
+msgid "Intl_Month_Long_12"
+msgstr "снежня"
+
+msgid "Intl_Month_Long_2"
+msgstr "лютага"
+
+msgid "Intl_Month_Long_3"
+msgstr "сакавіка"
+
+msgid "Intl_Month_Long_4"
+msgstr "красавіка"
+
+msgid "Intl_Month_Long_5"
+msgstr "мая"
+
+msgid "Intl_Month_Long_6"
+msgstr "чэрвеня"
+
+msgid "Intl_Month_Long_7"
+msgstr "ліпеня"
+
+msgid "Intl_Month_Long_8"
+msgstr "жніўня"
+
+msgid "Intl_Month_Long_9"
+msgstr "верасня"
+
+msgid "Intl_Month_Long_StandAlone_1"
+msgstr "студзень"
+
+msgid "Intl_Month_Long_StandAlone_10"
+msgstr "кастрычнік"
+
+msgid "Intl_Month_Long_StandAlone_11"
+msgstr "лістапад"
+
+msgid "Intl_Month_Long_StandAlone_12"
+msgstr "снежань"
+
+msgid "Intl_Month_Long_StandAlone_2"
+msgstr "люты"
+
+msgid "Intl_Month_Long_StandAlone_3"
+msgstr "сакавік"
+
+msgid "Intl_Month_Long_StandAlone_4"
+msgstr "красавік"
+
+msgid "Intl_Month_Long_StandAlone_5"
+msgstr "май"
+
+msgid "Intl_Month_Long_StandAlone_6"
+msgstr "чэрвень"
+
+msgid "Intl_Month_Long_StandAlone_7"
+msgstr "ліпень"
+
+msgid "Intl_Month_Long_StandAlone_8"
+msgstr "жнівень"
+
+msgid "Intl_Month_Long_StandAlone_9"
+msgstr "верасень"
+
+msgid "Intl_Month_Short_1"
+msgstr "сту"
+
+msgid "Intl_Month_Short_10"
+msgstr "кас"
+
+msgid "Intl_Month_Short_11"
+msgstr "ліс"
+
+msgid "Intl_Month_Short_12"
+msgstr "сне"
+
+msgid "Intl_Month_Short_2"
+msgstr "лют"
+
+msgid "Intl_Month_Short_3"
+msgstr "сак"
+
+msgid "Intl_Month_Short_4"
+msgstr "кра"
+
+msgid "Intl_Month_Short_5"
+msgstr "мая"
+
+msgid "Intl_Month_Short_6"
+msgstr "чэр"
+
+msgid "Intl_Month_Short_7"
+msgstr "ліп"
+
+msgid "Intl_Month_Short_8"
+msgstr "жні"
+
+msgid "Intl_Month_Short_9"
+msgstr "вер"
+
+msgid "Intl_Month_Short_StandAlone_1"
+msgstr "сту"
+
+msgid "Intl_Month_Short_StandAlone_10"
+msgstr "кас"
+
+msgid "Intl_Month_Short_StandAlone_11"
+msgstr "ліс"
+
+msgid "Intl_Month_Short_StandAlone_12"
+msgstr "сне"
+
+msgid "Intl_Month_Short_StandAlone_2"
+msgstr "лют"
+
+msgid "Intl_Month_Short_StandAlone_3"
+msgstr "сак"
+
+msgid "Intl_Month_Short_StandAlone_4"
+msgstr "кра"
+
+msgid "Intl_Month_Short_StandAlone_5"
+msgstr "май"
+
+msgid "Intl_Month_Short_StandAlone_6"
+msgstr "чэр"
+
+msgid "Intl_Month_Short_StandAlone_7"
+msgstr "ліп"
+
+msgid "Intl_Month_Short_StandAlone_8"
+msgstr "жні"
+
+msgid "Intl_Month_Short_StandAlone_9"
+msgstr "вер"
+
+msgid "Intl_NDays"
+msgstr "%s сутак"
+
+msgid "Intl_NHoursShort"
+msgstr "%s гадз"
+
+msgid "Intl_NMinutes"
+msgstr "%s хвіліны"
+
+msgid "Intl_NMinutesShort"
+msgstr "%s хв"
+
+msgid "Intl_NSeconds"
+msgstr "%s секунды"
+
+msgid "Intl_NSecondsShort"
+msgstr "%s с"
+
+msgid "Intl_NumberFormatCurrency"
+msgstr "#,##0.00 ¤"
+
+msgid "Intl_NumberFormatNumber"
+msgstr "#,##0.###"
+
+msgid "Intl_NumberFormatPercent"
+msgstr "#,##0 %"
+
+msgid "Intl_NumberSymbolDecimal"
+msgstr ","
+
+msgid "Intl_NumberSymbolGroup"
+msgstr " "
+
+msgid "Intl_NumberSymbolMinus"
+msgstr "-"
+
+msgid "Intl_NumberSymbolPercent"
+msgstr "%"
+
+msgid "Intl_NumberSymbolPlus"
+msgstr "+"
+
+msgid "Intl_OneDay"
+msgstr "1 суткі"
+
+msgid "Intl_OneMinute"
+msgstr "1 хвіліна"
+
+msgid "Intl_OneMinuteShort"
+msgstr "1 хв"
+
+msgid "Intl_OriginalLanguageName"
+msgstr "Беларуская"
+
+msgid "Intl_PeriodDay"
+msgstr "дзень"
+
+msgid "Intl_PeriodDays"
+msgstr "суткі"
+
+msgid "Intl_PeriodMonth"
+msgstr "месяц"
+
+msgid "Intl_PeriodMonths"
+msgstr "месяцы"
+
+msgid "Intl_PeriodWeek"
+msgstr "тыд"
+
+msgid "Intl_PeriodWeeks"
+msgstr "тыдні"
+
+msgid "Intl_PeriodYear"
+msgstr "год"
+
+msgid "Intl_PeriodYears"
+msgstr "гады"
+
+msgid "Intl_Seconds"
+msgstr "секунды"
+
+msgid "Intl_Time_AM"
+msgstr "AM"
+
+msgid "Intl_Time_PM"
+msgstr "PM"
+
+msgid "Intl_Timezone_Africa_Asmera"
+msgstr "Асмара"
+
+msgid "Intl_Timezone_Africa_Ceuta"
+msgstr "Сеўта"
+
+msgid "Intl_Timezone_Africa_Kinshasa"
+msgstr "Кіншаса"
+
+msgid "Intl_Timezone_Africa_Lubumbashi"
+msgstr "Лубумбашы"
+
+msgid "Intl_Timezone_America_Adak"
+msgstr "Адак"
+
+msgid "Intl_Timezone_America_Anchorage"
+msgstr "Анкарыдж"
+
+msgid "Intl_Timezone_America_Araguaina"
+msgstr "Арагуаіна"
+
+msgid "Intl_Timezone_America_Argentina_LaRioja"
+msgstr "Ла-Рыёха"
+
+msgid "Intl_Timezone_America_Argentina_RioGallegos"
+msgstr "Рыа-Гальегас"
+
+msgid "Intl_Timezone_America_Argentina_Salta"
+msgstr "Сальта"
+
+msgid "Intl_Timezone_America_Argentina_SanJuan"
+msgstr "Сан-Хуан"
+
+msgid "Intl_Timezone_America_Argentina_SanLuis"
+msgstr "Сан-Луіс"
+
+msgid "Intl_Timezone_America_Argentina_Tucuman"
+msgstr "Тукуман"
+
+msgid "Intl_Timezone_America_Argentina_Ushuaia"
+msgstr "Ушуая"
+
+msgid "Intl_Timezone_America_Bahia"
+msgstr "Баія"
+
+msgid "Intl_Timezone_America_BahiaBanderas"
+msgstr "Баія-дэ-Бандэрас"
+
+msgid "Intl_Timezone_America_Belem"
+msgstr "Белен"
+
+msgid "Intl_Timezone_America_Blanc-Sablon"
+msgstr "Бланк-Саблон"
+
+msgid "Intl_Timezone_America_BoaVista"
+msgstr "Боа-Віста"
+
+msgid "Intl_Timezone_America_Boise"
+msgstr "Бойсэ"
+
+msgid "Intl_Timezone_America_BuenosAires"
+msgstr "Буэнас-Айрэс"
+
+msgid "Intl_Timezone_America_CambridgeBay"
+msgstr "Кембрыдж-Бей"
+
+msgid "Intl_Timezone_America_CampoGrande"
+msgstr "Кампу-Гранды"
+
+msgid "Intl_Timezone_America_Cancun"
+msgstr "Канкун"
+
+msgid "Intl_Timezone_America_Catamarca"
+msgstr "Катамарка"
+
+msgid "Intl_Timezone_America_Chicago"
+msgstr "Чыкага"
+
+msgid "Intl_Timezone_America_Chihuahua"
+msgstr "Чыўаўа"
+
+msgid "Intl_Timezone_America_CoralHarbour"
+msgstr "Атыкокан"
+
+msgid "Intl_Timezone_America_Cordoba"
+msgstr "Кордава"
+
+msgid "Intl_Timezone_America_Creston"
+msgstr "Крэстан"
+
+msgid "Intl_Timezone_America_Cuiaba"
+msgstr "Куяба"
+
+msgid "Intl_Timezone_America_Danmarkshavn"
+msgstr "Данмарксхаўн"
+
+msgid "Intl_Timezone_America_Dawson"
+msgstr "Доўсан"
+
+msgid "Intl_Timezone_America_DawsonCreek"
+msgstr "Досан-Крык"
+
+msgid "Intl_Timezone_America_Denver"
+msgstr "Дэнвер"
+
+msgid "Intl_Timezone_America_Detroit"
+msgstr "Дэтройт"
+
+msgid "Intl_Timezone_America_Edmonton"
+msgstr "Эдмантан"
+
+msgid "Intl_Timezone_America_Eirunepe"
+msgstr "Эйрунэпе"
+
+msgid "Intl_Timezone_America_FortNelson"
+msgstr "Форт-Нельсан"
+
+msgid "Intl_Timezone_America_Fortaleza"
+msgstr "Фарталеза"
+
+msgid "Intl_Timezone_America_GlaceBay"
+msgstr "Глэйс-Бэй"
+
+msgid "Intl_Timezone_America_Godthab"
+msgstr "Нук"
+
+msgid "Intl_Timezone_America_GooseBay"
+msgstr "Гус-Бэй"
+
+msgid "Intl_Timezone_America_Guayaquil"
+msgstr "Гуаякіль"
+
+msgid "Intl_Timezone_America_Halifax"
+msgstr "Галіфакс"
+
+msgid "Intl_Timezone_America_Hermosillo"
+msgstr "Эрмасілья"
+
+msgid "Intl_Timezone_America_Indiana_Knox"
+msgstr "Нокс, Індыяна"
+
+msgid "Intl_Timezone_America_Indiana_Marengo"
+msgstr "Марэнга, Індыяна"
+
+msgid "Intl_Timezone_America_Indiana_Petersburg"
+msgstr "Пітэрсберг, Індыяна"
+
+msgid "Intl_Timezone_America_Indiana_TellCity"
+msgstr "Тэл Сіці, Індыяна"
+
+msgid "Intl_Timezone_America_Indiana_Vevay"
+msgstr "Віві, Індыяна"
+
+msgid "Intl_Timezone_America_Indiana_Vincennes"
+msgstr "Вінсенс, Індыяна"
+
+msgid "Intl_Timezone_America_Indiana_Winamac"
+msgstr "Уінамак, Індыяна"
+
+msgid "Intl_Timezone_America_Indianapolis"
+msgstr "Індыянапаліс"
+
+msgid "Intl_Timezone_America_Inuvik"
+msgstr "Інувік"
+
+msgid "Intl_Timezone_America_Iqaluit"
+msgstr "Ікалуіт"
+
+msgid "Intl_Timezone_America_Jujuy"
+msgstr "Жужуй"
+
+msgid "Intl_Timezone_America_Juneau"
+msgstr "Джуна"
+
+msgid "Intl_Timezone_America_Kentucky_Monticello"
+msgstr "Мантысела, Кентукі"
+
+msgid "Intl_Timezone_America_LosAngeles"
+msgstr "Лос-Анджэлес"
+
+msgid "Intl_Timezone_America_Louisville"
+msgstr "Луісвіл"
+
+msgid "Intl_Timezone_America_Maceio"
+msgstr "Масеё"
+
+msgid "Intl_Timezone_America_Manaus"
+msgstr "Манаўс"
+
+msgid "Intl_Timezone_America_Matamoros"
+msgstr "Матаморас"
+
+msgid "Intl_Timezone_America_Mazatlan"
+msgstr "Масатлан"
+
+msgid "Intl_Timezone_America_Mendoza"
+msgstr "Мендоса"
+
+msgid "Intl_Timezone_America_Menominee"
+msgstr "Меноміні"
+
+msgid "Intl_Timezone_America_Merida"
+msgstr "Мерыда"
+
+msgid "Intl_Timezone_America_Metlakatla"
+msgstr "Метлакатла"
+
+msgid "Intl_Timezone_America_MexicoCity"
+msgstr "Мехіка"
+
+msgid "Intl_Timezone_America_Moncton"
+msgstr "Манктан"
+
+msgid "Intl_Timezone_America_Monterrey"
+msgstr "Мантэрэй"
+
+msgid "Intl_Timezone_America_NewYork"
+msgstr "Нью-Ёрк"
+
+msgid "Intl_Timezone_America_Nipigon"
+msgstr "Ніпіган"
+
+msgid "Intl_Timezone_America_Nome"
+msgstr "Ном"
+
+msgid "Intl_Timezone_America_Noronha"
+msgstr "Наронья"
+
+msgid "Intl_Timezone_America_NorthDakota_Beulah"
+msgstr "Б’юла, Паўночная Дакота"
+
+msgid "Intl_Timezone_America_NorthDakota_Center"
+msgstr "Сентэр, Паўночная Дакота"
+
+msgid "Intl_Timezone_America_NorthDakota_NewSalem"
+msgstr "Нью-Сейлем, Паўночная Дакота"
+
+msgid "Intl_Timezone_America_Ojinaga"
+msgstr "Ахінага"
+
+msgid "Intl_Timezone_America_Pangnirtung"
+msgstr "Пангніртунг"
+
+msgid "Intl_Timezone_America_Phoenix"
+msgstr "Фінікс"
+
+msgid "Intl_Timezone_America_PortoVelho"
+msgstr "Порту-Велью"
+
+msgid "Intl_Timezone_America_PuntaArenas"
+msgstr "Пунта Арэнас"
+
+msgid "Intl_Timezone_America_RainyRiver"
+msgstr "Рэйні-Рывер"
+
+msgid "Intl_Timezone_America_RankinInlet"
+msgstr "Ранкін-Інлет"
+
+msgid "Intl_Timezone_America_Recife"
+msgstr "Рэсіфі"
+
+msgid "Intl_Timezone_America_Regina"
+msgstr "Рэджайна"
+
+msgid "Intl_Timezone_America_Resolute"
+msgstr "Рэзальют"
+
+msgid "Intl_Timezone_America_RioBranco"
+msgstr "Рыу-Бранку"
+
+msgid "Intl_Timezone_America_SantaIsabel"
+msgstr "Санта-Ісабель"
+
+msgid "Intl_Timezone_America_Santarem"
+msgstr "Сантарэн"
+
+msgid "Intl_Timezone_America_Santiago"
+msgstr "Сант’яга"
+
+msgid "Intl_Timezone_America_SaoPaulo"
+msgstr "Сан-Паўлу"
+
+msgid "Intl_Timezone_America_Scoresbysund"
+msgstr "Ітакортаарміут"
+
+msgid "Intl_Timezone_America_Sitka"
+msgstr "Сітка"
+
+msgid "Intl_Timezone_America_StJohns"
+msgstr "Сент-Джонс"
+
+msgid "Intl_Timezone_America_SwiftCurrent"
+msgstr "Свіфт-Керэнт"
+
+msgid "Intl_Timezone_America_Thule"
+msgstr "Каанаак"
+
+msgid "Intl_Timezone_America_ThunderBay"
+msgstr "Тандэр-Бэй"
+
+msgid "Intl_Timezone_America_Tijuana"
+msgstr "Тыхуана"
+
+msgid "Intl_Timezone_America_Toronto"
+msgstr "Таронта"
+
+msgid "Intl_Timezone_America_Vancouver"
+msgstr "Ванкувер"
+
+msgid "Intl_Timezone_America_Whitehorse"
+msgstr "Уайтхорс"
+
+msgid "Intl_Timezone_America_Winnipeg"
+msgstr "Вініпег"
+
+msgid "Intl_Timezone_America_Yakutat"
+msgstr "Якутат"
+
+msgid "Intl_Timezone_America_Yellowknife"
+msgstr "Йелаўнайф"
+
+msgid "Intl_Timezone_Antarctica_Casey"
+msgstr "Кэйсі"
+
+msgid "Intl_Timezone_Antarctica_Davis"
+msgstr "Дэйвіс"
+
+msgid "Intl_Timezone_Antarctica_DumontDUrville"
+msgstr "Дзюмон-Дзюрвіль"
+
+msgid "Intl_Timezone_Antarctica_Macquarie"
+msgstr "Макуоры"
+
+msgid "Intl_Timezone_Antarctica_Mawson"
+msgstr "Моўсан"
+
+msgid "Intl_Timezone_Antarctica_McMurdo"
+msgstr "Мак-Мерда"
+
+msgid "Intl_Timezone_Antarctica_Palmer"
+msgstr "Палмер"
+
+msgid "Intl_Timezone_Antarctica_Rothera"
+msgstr "Ротэра"
+
+msgid "Intl_Timezone_Antarctica_Syowa"
+msgstr "Сёва"
+
+msgid "Intl_Timezone_Antarctica_Troll"
+msgstr "Трол"
+
+msgid "Intl_Timezone_Antarctica_Vostok"
+msgstr "Васток"
+
+msgid "Intl_Timezone_Asia_Almaty"
+msgstr "Алматы"
+
+msgid "Intl_Timezone_Asia_Anadyr"
+msgstr "Анадыр"
+
+msgid "Intl_Timezone_Asia_Aqtau"
+msgstr "Актау"
+
+msgid "Intl_Timezone_Asia_Aqtobe"
+msgstr "Актабэ"
+
+msgid "Intl_Timezone_Asia_Atyrau"
+msgstr "Атырау"
+
+msgid "Intl_Timezone_Asia_Barnaul"
+msgstr "Барнаул"
+
+msgid "Intl_Timezone_Asia_Calcutta"
+msgstr "Калькута"
+
+msgid "Intl_Timezone_Asia_Chita"
+msgstr "Чыта"
+
+msgid "Intl_Timezone_Asia_Choibalsan"
+msgstr "Чайбалсан"
+
+msgid "Intl_Timezone_Asia_Famagusta"
+msgstr "Фамагуста"
+
+msgid "Intl_Timezone_Asia_Gaza"
+msgstr "Газа"
+
+msgid "Intl_Timezone_Asia_Hebron"
+msgstr "Хеўрон"
+
+msgid "Intl_Timezone_Asia_Hovd"
+msgstr "Хоўд"
+
+msgid "Intl_Timezone_Asia_Irkutsk"
+msgstr "Іркуцк"
+
+msgid "Intl_Timezone_Asia_Jakarta"
+msgstr "Джакарта"
+
+msgid "Intl_Timezone_Asia_Jayapura"
+msgstr "Джаяпура"
+
+msgid "Intl_Timezone_Asia_Kamchatka"
+msgstr "Камчатка"
+
+msgid "Intl_Timezone_Asia_Katmandu"
+msgstr "Катманду"
+
+msgid "Intl_Timezone_Asia_Khandyga"
+msgstr "Хандыга"
+
+msgid "Intl_Timezone_Asia_Krasnoyarsk"
+msgstr "Краснаярск"
+
+msgid "Intl_Timezone_Asia_KualaLumpur"
+msgstr "Куала-Лумпур"
+
+msgid "Intl_Timezone_Asia_Kuching"
+msgstr "Кучынг"
+
+msgid "Intl_Timezone_Asia_Magadan"
+msgstr "Магадан"
+
+msgid "Intl_Timezone_Asia_Makassar"
+msgstr "Макасар"
+
+msgid "Intl_Timezone_Asia_Nicosia"
+msgstr "Нікасія"
+
+msgid "Intl_Timezone_Asia_Novokuznetsk"
+msgstr "Новакузнецк"
+
+msgid "Intl_Timezone_Asia_Novosibirsk"
+msgstr "Новасібірск"
+
+msgid "Intl_Timezone_Asia_Omsk"
+msgstr "Омск"
+
+msgid "Intl_Timezone_Asia_Oral"
+msgstr "Уральск"
+
+msgid "Intl_Timezone_Asia_Pontianak"
+msgstr "Пантыянак"
+
+msgid "Intl_Timezone_Asia_Qyzylorda"
+msgstr "Кзыларда"
+
+msgid "Intl_Timezone_Asia_Rangoon"
+msgstr "Рангун"
+
+msgid "Intl_Timezone_Asia_Saigon"
+msgstr "Хашымін"
+
+msgid "Intl_Timezone_Asia_Sakhalin"
+msgstr "Сахалін"
+
+msgid "Intl_Timezone_Asia_Samarkand"
+msgstr "Самарканд"
+
+msgid "Intl_Timezone_Asia_Shanghai"
+msgstr "Шанхай"
+
+msgid "Intl_Timezone_Asia_Srednekolymsk"
+msgstr "Сярэднекалымск"
+
+msgid "Intl_Timezone_Asia_Tashkent"
+msgstr "Ташкент"
+
+msgid "Intl_Timezone_Asia_Tomsk"
+msgstr "Томск"
+
+msgid "Intl_Timezone_Asia_Ulaanbaatar"
+msgstr "Улан-Батар"
+
+msgid "Intl_Timezone_Asia_Urumqi"
+msgstr "Урумчы"
+
+msgid "Intl_Timezone_Asia_Ust-Nera"
+msgstr "Вусць-Нера"
+
+msgid "Intl_Timezone_Asia_Vladivostok"
+msgstr "Уладзівасток"
+
+msgid "Intl_Timezone_Asia_Yakutsk"
+msgstr "Якуцк"
+
+msgid "Intl_Timezone_Asia_Yekaterinburg"
+msgstr "Екацярынбург"
+
+msgid "Intl_Timezone_Atlantic_Azores"
+msgstr "Азорскія астравы"
+
+msgid "Intl_Timezone_Atlantic_Canary"
+msgstr "Канарскія астравы"
+
+msgid "Intl_Timezone_Atlantic_Faeroe"
+msgstr "Фарэрскія астравы"
+
+msgid "Intl_Timezone_Atlantic_Madeira"
+msgstr "Мадэйра"
+
+msgid "Intl_Timezone_Australia_Adelaide"
+msgstr "Адэлаіда"
+
+msgid "Intl_Timezone_Australia_Brisbane"
+msgstr "Брысбен"
+
+msgid "Intl_Timezone_Australia_BrokenHill"
+msgstr "Брокен-Хіл"
+
+msgid "Intl_Timezone_Australia_Currie"
+msgstr "Керы"
+
+msgid "Intl_Timezone_Australia_Darwin"
+msgstr "Дарвін"
+
+msgid "Intl_Timezone_Australia_Eucla"
+msgstr "Юкла"
+
+msgid "Intl_Timezone_Australia_Hobart"
+msgstr "Хобарт"
+
+msgid "Intl_Timezone_Australia_Lindeman"
+msgstr "Ліндэман"
+
+msgid "Intl_Timezone_Australia_LordHowe"
+msgstr "Лорд-Хау"
+
+msgid "Intl_Timezone_Australia_Melbourne"
+msgstr "Мельбурн"
+
+msgid "Intl_Timezone_Australia_Perth"
+msgstr "Перт"
+
+msgid "Intl_Timezone_Australia_Sydney"
+msgstr "Сідней"
+
+msgid "Intl_Timezone_Europe_Astrakhan"
+msgstr "Астрахань"
+
+msgid "Intl_Timezone_Europe_Berlin"
+msgstr "Берлін"
+
+msgid "Intl_Timezone_Europe_Busingen"
+msgstr "Бюзінген"
+
+msgid "Intl_Timezone_Europe_Kaliningrad"
+msgstr "Калінінград"
+
+msgid "Intl_Timezone_Europe_Kiev"
+msgstr "Кіеў"
+
+msgid "Intl_Timezone_Europe_Kirov"
+msgstr "Кіраў"
+
+msgid "Intl_Timezone_Europe_Lisbon"
+msgstr "Лісабон"
+
+msgid "Intl_Timezone_Europe_Madrid"
+msgstr "Мадрыд"
+
+msgid "Intl_Timezone_Europe_Moscow"
+msgstr "Масква"
+
+msgid "Intl_Timezone_Europe_Samara"
+msgstr "Самара"
+
+msgid "Intl_Timezone_Europe_Saratov"
+msgstr "Саратаў"
+
+msgid "Intl_Timezone_Europe_Simferopol"
+msgstr "Сімферопаль"
+
+msgid "Intl_Timezone_Europe_Ulyanovsk"
+msgstr "Ульянаўск"
+
+msgid "Intl_Timezone_Europe_Uzhgorod"
+msgstr "Ужгарад"
+
+msgid "Intl_Timezone_Europe_Volgograd"
+msgstr "Валгаград"
+
+msgid "Intl_Timezone_Europe_Zaporozhye"
+msgstr "Запарожжа"
+
+msgid "Intl_Timezone_Pacific_Auckland"
+msgstr "Окленд"
+
+msgid "Intl_Timezone_Pacific_Bougainville"
+msgstr "Бугенвіль"
+
+msgid "Intl_Timezone_Pacific_Chatham"
+msgstr "Чатэм"
+
+msgid "Intl_Timezone_Pacific_Easter"
+msgstr "Пасхі востраў"
+
+msgid "Intl_Timezone_Pacific_Enderbury"
+msgstr "Эндэрберы"
+
+msgid "Intl_Timezone_Pacific_Galapagos"
+msgstr "Галапагас"
+
+msgid "Intl_Timezone_Pacific_Gambier"
+msgstr "Астравы Гамб’е"
+
+msgid "Intl_Timezone_Pacific_Honolulu"
+msgstr "Ганалулу"
+
+msgid "Intl_Timezone_Pacific_Johnston"
+msgstr "Джонстан"
+
+msgid "Intl_Timezone_Pacific_Kiritimati"
+msgstr "Кірыцімаці"
+
+msgid "Intl_Timezone_Pacific_Kosrae"
+msgstr "Кусаіе"
+
+msgid "Intl_Timezone_Pacific_Kwajalein"
+msgstr "Кваджалейн"
+
+msgid "Intl_Timezone_Pacific_Majuro"
+msgstr "Маджура"
+
+msgid "Intl_Timezone_Pacific_Marquesas"
+msgstr "Маркізскія астравы"
+
+msgid "Intl_Timezone_Pacific_Midway"
+msgstr "Мідуэй"
+
+msgid "Intl_Timezone_Pacific_Ponape"
+msgstr "Понпеі"
+
+msgid "Intl_Timezone_Pacific_PortMoresby"
+msgstr "Порт-Морсбі"
+
+msgid "Intl_Timezone_Pacific_Tahiti"
+msgstr "Таіці"
+
+msgid "Intl_Timezone_Pacific_Tarawa"
+msgstr "Тарава"
+
+msgid "Intl_Timezone_Pacific_Truk"
+msgstr "Чуук"
+
+msgid "Intl_Timezone_Pacific_Wake"
+msgstr "Уэйк"
+
+msgid "Intl_Today"
+msgstr "Сёння"
+
+msgid "Intl_Year_Short"
+msgstr "г."
+
+msgid "Intl_Yesterday"
+msgstr "Учора"
+
+msgid "LanguagesManager_AboutPiwikTranslations"
+msgstr "Аб перакладах Matomo"
+
+msgid "Live_GoalType"
+msgstr "Тып"
+
+msgid "Live_KeywordRankedOnSearchResultForThisVisitor"
+msgstr "Ключавое слова %1$s заняла %2$s на %3$s старонцы вынікаў пошуку для гэтага наведвальніка"
+
+msgid "Live_LastHours"
+msgstr "Апошніх %s гадзін"
+
+msgid "Live_LastMinutes"
+msgstr "Апошніх %s хвілін"
+
+msgid "Live_Referrer_URL"
+msgstr "URL спасыльніка"
+
+msgid "Live_VisitorLogDocumentation"
+msgstr "Гэтая табліца паказвае апошнія наведванні ў межах выбранага дыяпазону дат. %1$s Калі дыяпазон дат ўключае ў сябе сёння, то вы можаце ўбачыць вашых наведвальнікаў у рэжыме рэальнага часу! %2$s Дадзеныя, якія адлюстроўваюцца тут заўсёды \"жывыя\", незалежна ад таго, і як часта вы карыстаецеся cron архіваваннем."
+
+msgid "Login_ExceptionPasswordMD5HashExpected"
+msgstr "Параметр пароля апынуўся MD5-хэшаваным паролям."
+
+msgid "Login_InvalidNonceOrHeadersOrReferrer"
+msgstr "Бяспека формы не атрымалася. Калі ласка, перазагрузіце форму і пераканаецеся, што вашы cookies ўключаны. Калі вы выкарыстоўваеце проксі-сервер, то неабходна %1$s наладзіць Matomo да прыняцця проксі загалоўкаў%2$s, якія перанакіроўваюць да загалоўкаў вузлоў. Акрамя таго, праверце, што ваш Referer загаловак перадаецца правільна."
+
+msgid "Login_InvalidOrExpiredToken"
+msgstr "Токэн з'яўляецца несапраўдным або мінуў."
+
+msgid "Login_InvalidUsernameEmail"
+msgstr "Няслушнае імя карыстача і/ці e-mail"
+
+msgid "Login_LogIn"
+msgstr "Увайсці"
+
+msgid "Login_LoginPasswordNotCorrect"
+msgstr "Лагін ці пароль няслушныя"
+
+msgid "Login_LostYourPassword"
+msgstr "Страцілі пароль?"
+
+msgid "Login_PasswordRepeat"
+msgstr "Пароль (паўтор)"
+
+msgid "Login_PasswordsDoNotMatch"
+msgstr "Паролі не супадаюць."
+
+msgid "Login_RememberMe"
+msgstr "Запомніць мяне"
+
+msgid "Marketplace_ActivateLicenseKey"
+msgstr "Актываваць"
+
+msgid "Marketplace_PluginKeywords"
+msgstr "Ключавыя словы"
+
+msgid "Marketplace_SubscriptionType"
+msgstr "Тып"
+
+msgid "MultiSites_Evolution"
+msgstr "Змены"
+
+msgid "Overlay_Location"
+msgstr "Лакаця"
+
+msgid "PrivacyManager_AnonymizeIpInlineHelp"
+msgstr "Схаваць апошні байт(ы) IP-адрасоў наведвальнікаў, каб выканаць вашы мясцовыя законы кіруючых органаў."
+
+msgid "PrivacyManager_AnonymizeIpMaskLengtDescription"
+msgstr "Выбраць, колькі байтаў IP-адрасоў наведвальнікаў павінны быць схаваныя."
+
+msgid "PrivacyManager_AnonymizeIpMaskLength"
+msgstr "%1$s байт(ы) - напр., %2$s"
+
+msgid "PrivacyManager_ClickHereSettings"
+msgstr "Націсніце тут, каб атрымаць доступ да %s наладак."
+
+msgid "PrivacyManager_DeleteLogDescription2"
+msgstr "Калі вы ўключыце аўтаматычнае выдаленне запісаў, вы павінны пераканацца, што ўсе папярэднія штодзённыя справаздачы былі апрацаваны, каб пазбегнуць гублення дадзеных."
+
+msgid "PrivacyManager_DeleteLogsOlderThan"
+msgstr "Выдаліць запісы старэй чым"
+
+msgid "PrivacyManager_DeleteMaxRows"
+msgstr "Максімальная колькасць радкоў для выдалення за адзін праход:"
+
+msgid "PrivacyManager_LastDelete"
+msgstr "Апошняе выдаленне было"
+
+msgid "PrivacyManager_LeastDaysInput"
+msgstr "Калі ласка, пазначце колькасць дзён больш, чым %s."
+
+msgid "PrivacyManager_MenuPrivacySettings"
+msgstr "Прыватнасць"
+
+msgid "PrivacyManager_NextDelete"
+msgstr "Наступнае запланавана выдаленне"
+
+msgid "PrivacyManager_TeaserHeadline"
+msgstr "Наладкі прыватнасці"
+
+msgid "PrivacyManager_UseAnonymizeIp"
+msgstr "Ананімазаваць IP-адрасы наведвальнікаў"
+
+msgid "Provider_ColumnProvider"
+msgstr "Правайдар"
+
+msgid "Provider_ProviderReportDocumentation"
+msgstr "Гэтая справаздача паказвае, якія інтэрнэт-правайдэры наведвальнікаў выкарыстоўваюцца для доступу да вэб-сайту. Вы можаце націснуць на імя правайдэра для больш падрабязнай інфармацыі. %s Калі Matomo не можа вызначыць, правайдэра наведвальніка, ён паказваецца ў якасці IP-адраса."
+
+msgid "Provider_WidgetProviders"
+msgstr "Правайдары"
+
+msgid "Referrers_Campaigns"
+msgstr "Кампаніі"
+
+msgid "Referrers_CampaignsDocumentation"
+msgstr "Наведвальнікі, якія прыйшлі на ваш сайт у выніку кампаніі. %1$s Глядзі %2$s справаздачу для больш падрабязнай інфармацыі."
+
+msgid "Referrers_CampaignsReportDocumentation"
+msgstr "Гэтая справаздача паказвае, якія кампаніі спаслалі наведвальнікаў на ваш сайт. %1$s Для атрымання дадатковай інфармацыі аб кампаніі, чытайце %2$sДакументацыю па кампаніях на matomo.org%3$s"
+
+msgid "Referrers_ColumnCampaign"
+msgstr "Кампанія"
+
+msgid "Referrers_ColumnSearchEngine"
+msgstr "Пошукавая сістэма"
+
+msgid "Referrers_ColumnWebsite"
+msgstr "Вэб-сайт"
+
+msgid "Referrers_ColumnWebsitePage"
+msgstr "Старонка вэб-сайта"
+
+msgid "Referrers_DirectEntry"
+msgstr "Прамы ўваход"
+
+msgid "Referrers_DistinctCampaigns"
+msgstr "Розныя кампаніі"
+
+msgid "Referrers_DistinctKeywords"
+msgstr "Розныя ключавыя словы"
+
+msgid "Referrers_DistinctSearchEngines"
+msgstr "Розныя пошукавыя сістэмы"
+
+msgid "Referrers_DistinctWebsites"
+msgstr "Розныя вэб-сайты"
+
+msgid "Referrers_EvolutionDocumentation"
+msgstr "Гэта агляд спасыльнікаў, якія прывялі наведвальнікаў на ваш вэб-сайт."
+
+msgid "Referrers_Keywords"
+msgstr "Ключавыя словы"
+
+msgid "Referrers_KeywordsReportDocumentation"
+msgstr "Гэтая справаздача паказвае, якія ключавыя словы шукалі карыстальнікі, каб трапіць на ваш вэб-сайт. %s Пры націску на радок табліцы, можна ўбачыць размеркаванне пошукавых сістэм, якія былі запытаны па ключавым слове."
+
+msgid "Referrers_ReferrerName"
+msgstr "Імя спасыльніка"
+
+msgid "Referrers_Referrers"
+msgstr "Спасыльнікі"
+
+msgid "Referrers_SearchEngines"
+msgstr "Пошукавыя сістэмы"
+
+msgid "Referrers_SearchEnginesDocumentation"
+msgstr "Наведвальнік спасланы на ваш вэб-сайт пошукавай сістэмай. %1$s Глядзі %2$s справаздачу для больш падрабязнай інфармацыі."
+
+msgid "Referrers_SearchEnginesReportDocumentation"
+msgstr "Гэтая справаздача паказвае, якія пошукавыя сістэмы спасылаюць карыстальнікаў на ваш вэб-сайт. %s Пры націску на радок табліцы, можна ўбачыць, якія карыстальнікі шукалі з дапамогай якой пошукавай сістэмы."
+
+msgid "Referrers_SubmenuSearchEngines"
+msgstr "Пошукавыя сістэмы і ключавые словы"
+
+msgid "Referrers_SubmenuWebsitesOnly"
+msgstr "Вэб-сайты"
+
+msgid "Referrers_TypeCampaigns"
+msgstr "%s уваходаў з кампаній"
+
+msgid "Referrers_TypeDirectEntries"
+msgstr "%s прамых уваходаў"
+
+msgid "Referrers_TypeSearchEngines"
+msgstr "%s уваходаў з пошукавых сістэм"
+
+msgid "Referrers_TypeWebsites"
+msgstr "%s уваходаў з вэб-сайтаў"
+
+msgid "Referrers_UsingNDistinctUrls"
+msgstr "(з выкарыстаннем %s розных URL-адрасоў)"
+
+msgid "Referrers_Websites"
+msgstr "Вэб-сайты"
+
+msgid "Referrers_WebsitesDocumentation"
+msgstr "Наведвальнік перайшоў па спасылцы на іншы сайце, які прывёў да вашага сайту. %1$s Глядзі %2$s справаздачу для для больш падрабязнай інфармацыі."
+
+msgid "Referrers_WebsitesReportDocumentation"
+msgstr "У гэтай табліцы вы можаце ўбачыць, якія сайты спасылалі наведвальнікаў на ваш сайт. %s Пры націску на радок табліцы, можна ўбачыць URL старонкак, якія ўтрымліваюць спасылкі на на ваш вэб-сайт."
+
+msgid "Referrers_WidgetExternalWebsites"
+msgstr "Спіс вонкавых вэбсайтаў"
+
+msgid "Resolution_ColumnConfiguration"
+msgstr "Канфігурацыя"
+
+msgid "Resolution_ColumnResolution"
+msgstr "Дазвол"
+
+msgid "Resolution_Configurations"
+msgstr "Па канфігурацыі"
+
+msgid "Resolution_Resolutions"
+msgstr "Па дазволе манітораў"
+
+msgid "Resolution_WidgetGlobalVisitors"
+msgstr "Глабальная канфігурацыя"
+
+msgid "Resolution_WidgetGlobalVisitorsDocumentation"
+msgstr "Гэтая справаздача паказвае найбольш распаўсюджаныя агульныя канфігурацыі, якія мелі вашы наведвальнікі. Канфігурацыя - гэта спалучэнне аперацыйнай сістэмы, тыпу браўзэра і дазволу экрана."
+
+msgid "Resolution_WidgetResolutions"
+msgstr "Дазвол манітораў"
+
+msgid "SEO_AlexaRank"
+msgstr "Alexa ранг"
+
+msgid "SEO_DomainAge"
+msgstr "Узрост дамена"
+
+msgid "SEO_Rank"
+msgstr "Ранг"
+
+msgid "SEO_SeoRankings"
+msgstr "SEO рэйтынгі"
+
+msgid "SEO_SEORankingsFor"
+msgstr "SEO рэйтынгі для %s"
+
+msgid "ScheduledReports_AlsoSendReportToTheseEmails"
+msgstr "Акрамя таго, адправіць справаздачу на гэтыя электронныя адрасы (па аднаму ў радку):"
+
+msgid "ScheduledReports_AreYouSureDeleteReport"
+msgstr "Вы сапраўды жадаеце выдаліць гэты даклад і яго расклад?"
+
+msgid "ScheduledReports_CancelAndReturnToReports"
+msgstr "Адмяніць і %1$sвярнуцца да спісу справаздач %2$s"
+
+msgid "ScheduledReports_CreateAndScheduleReport"
+msgstr "Стварыць справаздачу і зрабіць расклад"
+
+msgid "ScheduledReports_CreateReport"
+msgstr "Стварыць справаздачу"
+
+msgid "ScheduledReports_DescriptionOnFirstPage"
+msgstr "Апісанне справаздачы будзе адлюстроўвацца на першай старонцы справаздачы."
+
+msgid "ScheduledReports_EmailHello"
+msgstr "Прывітанне,"
+
+msgid "ScheduledReports_EmailReports"
+msgstr "Справаздачы па Email"
+
+msgid "ScheduledReports_EmailSchedule"
+msgstr "Расклад электроннай пошты"
+
+msgid "ScheduledReports_FrontPage"
+msgstr "Галоўная старонка"
+
+msgid "ScheduledReports_MonthlyScheduleHelp"
+msgstr "Штомесячны расклад: справаздача будзе адпраўлена першым днём кожнага месяца."
+
+msgid "ScheduledReports_MustBeLoggedIn"
+msgstr "Вы павінны ўвайсці ў сістэму для стварэння і планавання карыстацкіх справаздач."
+
+msgid "ScheduledReports_Pagination"
+msgstr "Старонка %1$s з %2$s"
+
+msgid "ScheduledReports_PiwikReports"
+msgstr "Matomo справаздачы"
+
+msgid "ScheduledReports_PleaseFindBelow"
+msgstr "Ніжэй вы знойдзеце вашу %1$s справаздачу для %2$s."
+
+msgid "ScheduledReports_ReportFormat"
+msgstr "Фармат справаздачы"
+
+msgid "ScheduledReports_ReportsIncluded"
+msgstr "Уключаная статыстыка"
+
+msgid "ScheduledReports_SendReportNow"
+msgstr "Адправіць справаздачу зараз"
+
+msgid "ScheduledReports_SendReportTo"
+msgstr "Адправіць справаздачу да"
+
+msgid "ScheduledReports_SentToMe"
+msgstr "Адправіць да мяне"
+
+msgid "ScheduledReports_TableOfContent"
+msgstr "Спіс справаздач"
+
+msgid "ScheduledReports_ThereIsNoReportToManage"
+msgstr "Не існуе ніякіх справаздач для гэтага вэб-сайта %s"
+
+msgid "ScheduledReports_TopOfReport"
+msgstr "Вярнуцца наверх"
+
+msgid "ScheduledReports_UpdateReport"
+msgstr "Абнавіць справаздачу"
+
+msgid "ScheduledReports_WeeklyScheduleHelp"
+msgstr "Штотыднёвы расклад: справаздача будзе адпраўлена першым панядзелакам кожнага тыдня."
+
+msgid "SitesManager_AddSite"
+msgstr "Дадаць новы сайт"
+
+msgid "SitesManager_AdvancedTimezoneSupportNotFound"
+msgstr "Пашыраная падтрымка гадзінных паясоў не была знойдзена ў вашай версіі PHP (падтрымліваецца ў PHP>=5.2). Вы можаце выбраць UTC у ручным рэжыме."
+
+msgid "SitesManager_AliasUrlHelp"
+msgstr "Рэкамендуецца, але не патрабуецца, задаць розныя URL-адрасы, па адным у радку, якія наведвальнікі выкарыстоўваюць для доступу да гэтага вэб-сайта. Псеўданімы URL-адрасоў для вэб-сайта не будуць адлюстроўвацца ў Спасыльнікі > Справаздачы Сайтаў. Звярніце ўвагу, што няма неабходнасці пазначаць URL-адрасы з і без \\\"WWW\\\", Matomo аўтаматычна ўлічвае абодва тыпа."
+
+msgid "SitesManager_ChangingYourTimezoneWillOnlyAffectDataForward"
+msgstr "Змяна гадзіннага пояса ўплывае толькі на будучыя дадзеныя, і не будуць мець зваротнай сілы."
+
+msgid "SitesManager_Currency"
+msgstr "Валюта"
+
+msgid "SitesManager_CurrencySymbolWillBeUsedForGoals"
+msgstr "Сімвал валюты будзе адлюстроўвацца побач з Мэтай прыбыткаў."
+
+msgid "SitesManager_DefaultCurrencyForNewWebsites"
+msgstr "Валюта па змаўчанні для новых вэб-сайтаў"
+
+msgid "SitesManager_DefaultTimezoneForNewWebsites"
+msgstr "Гадзінны пояс па змаўчанні для новых вэб-сайтаў"
+
+msgid "SitesManager_DeleteConfirm"
+msgstr "Вы сапраўды жадаеце выдаліць гэты сайт %s?"
+
+msgid "SitesManager_EcommerceHelp"
+msgstr "Калі функцыя \"Мэты\" ўключана, у справаздачах з'явіцца новая частцка \"Электронная камерцыя\"."
+
+msgid "SitesManager_EnableEcommerce"
+msgstr "Электронная камерцыя уключана"
+
+msgid "SitesManager_ExceptionDeleteSite"
+msgstr "Немагчыма выдаліць, бо гэта адзіны сайт у вашым спісе. Дадайце яшчэ які-небудзь сайт для выдалення дадзенага."
+
+msgid "SitesManager_ExceptionEmptyName"
+msgstr "Назва сайта не можа быць пустое."
+
+msgid "SitesManager_ExceptionInvalidCurrency"
+msgstr "Валюта \"%1$s\" з'яўляецца недапушчальнай. Калі ласка, увядзіце правільны сімвал валюты (напр., %2$s)"
+
+msgid "SitesManager_ExceptionInvalidIPFormat"
+msgstr "IP-адрас для выключэння \"%1$s\" не мае правільны фармат IP-адраса (напр., %2$s)."
+
+msgid "SitesManager_ExceptionInvalidTimezone"
+msgstr "Гадзінны пояс \"%s\" з'яўляецца недапушчальным. Калі ласка, увядзіце правільны гадзінны пояс."
+
+msgid "SitesManager_ExceptionInvalidUrl"
+msgstr "URL '%s' не дакладны."
+
+msgid "SitesManager_ExceptionNoUrl"
+msgstr "Вы павінны паказаць хоць бы адзін URL для гэтага сайта."
+
+msgid "SitesManager_ExcludedIps"
+msgstr "Выключаныя IP-адрасы"
+
+msgid "SitesManager_ExcludedParameters"
+msgstr "Сключаныя параметры"
+
+msgid "SitesManager_GlobalListExcludedIps"
+msgstr "Глабальны спіс выключаных IP-адрасоў"
+
+msgid "SitesManager_GlobalListExcludedQueryParameters"
+msgstr "Глабальны спіс параметраў запыту URL-адрасоў да сключэння"
+
+msgid "SitesManager_GlobalWebsitesSettings"
+msgstr "Глабальныя наладкі вэб-сайтаў"
+
+msgid "SitesManager_JsTrackingTagHelp"
+msgstr "Гэта код JavaScript, які неабходна ўставіць ва ўсе вашы старонкі"
+
+msgid "SitesManager_ListOfIpsToBeExcludedOnAllWebsites"
+msgstr "IP-адрасы паказаныя ніжэй, будуць выключаныя з адсочвання на ўсіх вэб-сайтах."
+
+msgid "SitesManager_ListOfQueryParametersToBeExcludedOnAllWebsites"
+msgstr "Параметры запыту URL-адрасоў, паказаныя ніжэй, будуць сключаныя з URL-адрасоў на ўсіх вэб-сайтаў."
+
+msgid "SitesManager_MainDescription"
+msgstr "Для вядзення статыстыкі патрабуецца дадаць сайты! Дадавайце, абнаўляйце, выдаляйце інфармацыю пра сайты, а таксама прагледзіце Java-код для ўстаўкі на Вашы старонкі."
+
+msgid "SitesManager_NotAnEcommerceSite"
+msgstr "Некамерцыйны сайт"
+
+msgid "SitesManager_NotFound"
+msgstr "Няма знойдзеных сайтаў"
+
+msgid "SitesManager_NoWebsites"
+msgstr "Вы не маеце ніводнага сайта на ўліку."
+
+msgid "SitesManager_OnlyOneSiteAtTime"
+msgstr "Вы можаце рэдагаваць толькі адзін вэб-сайт за адзін раз. Калі ласка, захаваце ці адмяніце змены ў бягучым сайце %s."
+
+msgid "SitesManager_PiwikOffersEcommerceAnalytics"
+msgstr "Matomo прапаноўвае пашыранае адсочванне і рэпартаванне для камерцыйных вэб-сайтаў. Даведайцеся больш пра %1$s Аналітыку Электронна-камерцыйных сайтаў%2$s."
+
+msgid "SitesManager_PiwikWillAutomaticallyExcludeCommonSessionParameters"
+msgstr "Matomo аўтаматычна выключае агульныя параметры сесіі (%s)."
+
+msgid "SitesManager_SelectACity"
+msgstr "Абярыце горад"
+
+msgid "SitesManager_SelectDefaultCurrency"
+msgstr "Вы можаце выбраць валюту для ўстаноўкі па змаўчанні для новых вэб-сайтаў."
+
+msgid "SitesManager_SelectDefaultTimezone"
+msgstr "Вы можаце абраць гадзінны пояс па змаўчанні для новых вэб-сайтаў."
+
+msgid "SitesManager_ShowTrackingTag"
+msgstr "Паказаць код"
+
+msgid "SitesManager_Sites"
+msgstr "Вэб-сайты"
+
+msgid "SitesManager_Timezone"
+msgstr "Гадзінны пояс"
+
+msgid "SitesManager_TrackingTags"
+msgstr "Код адсочвання для %s"
+
+msgid "SitesManager_Urls"
+msgstr "URL-ы"
+
+msgid "SitesManager_Type"
+msgstr "Тып"
+
+msgid "SitesManager_UTCTimeIs"
+msgstr "UTC час - %s."
+
+msgid "SitesManager_WebsitesManagement"
+msgstr "Кіраванне сайтамі"
+
+msgid "SitesManager_YouCurrentlyHaveAccessToNWebsites"
+msgstr "Вы маеце доступ да %s сайтаў."
+
+msgid "SitesManager_YourCurrentIpAddressIs"
+msgstr "Ваш бягучы IP-адрас - %s"
+
+msgid "TagManager_CategoryClicks"
+msgstr "Націскі"
+
+msgid "TagManager_CategoryDate"
+msgstr "Дата"
+
+msgid "TagManager_PageTitleVariableName"
+msgstr "Назва старонкі"
+
+msgid "TagManager_PageUrlVariableName"
+msgstr "URL старонкі"
+
+msgid "TagManager_ReferrerUrlVariableName"
+msgstr "URL спасыльніка"
+
+msgid "TagManager_ReferrerVariableName"
+msgstr "URL спасыльніка"
+
+msgid "TagManager_Type"
+msgstr "Тып"
+
+msgid "TagManager_Version"
+msgstr "Версія"
+
+msgid "UserCountry_Continent"
+msgstr "Кантынент"
+
+msgid "UserCountry_Country"
+msgstr "Краіна"
+
+msgid "UserCountry_country_a1"
+msgstr "Ананімныя проксі"
+
+msgid "UserCountry_country_a2"
+msgstr "Спадарожнікавы правайдар"
+
+msgid "UserCountry_country_cat"
+msgstr "Абшчыны, якія гавораць па Каталонскі"
+
+msgid "UserCountry_country_o1"
+msgstr "Іншыя краіны"
+
+msgid "UserCountry_DistinctCountries"
+msgstr "%s унікальных краін"
+
+msgid "UserCountry_Location"
+msgstr "Лакаця"
+
+msgid "UserCountry_SubmenuLocations"
+msgstr "Лакацыі"
+
+msgid "UserCountryMap_map"
+msgstr "карта"
+
+msgid "UserId_UserReportTitle"
+msgstr "Карыстачы"
+
+msgid "UserLanguage_LanguageCode"
+msgstr "Код мовы"
+
+msgid "UsersManager_AddUser"
+msgstr "Дадаць новага карыстача"
+
+msgid "UsersManager_Alias"
+msgstr "Аліас"
+
+msgid "UsersManager_AllWebsites"
+msgstr "Усе сайты"
+
+msgid "UsersManager_ApplyToAllWebsites"
+msgstr "Ужыць да ўсіх сайтаў"
+
+msgid "UsersManager_ClickHereToDeleteTheCookie"
+msgstr "Націсніце тут, каб выдаліць cookie і пачаць адсочванне вашых наведванняў Matomo"
+
+msgid "UsersManager_ClickHereToSetTheCookieOnDomain"
+msgstr "Націсніце тут, каб усталяваць cookie, які выключыць адсочванне вашых наведванняў на вэб-сайтах з Matomo на %s"
+
+msgid "UsersManager_DeleteConfirm"
+msgstr "Вы сапраўды жадаеце выдаліць карыстача %s?"
+
+msgid "UsersManager_ExceptionDeleteDoesNotExist"
+msgstr "Карыстача '%s' не існуе, таму ён не можа быць выдалены."
+
+msgid "UsersManager_ExceptionEditAnonymous"
+msgstr "Ананімны карыстач не можа быць выдалены. Ён неабходзен Matomo для ідэнтыфікацыі карыстачоў, якія не ўвайшлі ў сістэму. Дапушчальна, вы можаце зрабіць статыстыку публічнай, падаючы права 'Прагляд' ананімнаму карыстачу."
+
+msgid "UsersManager_ExceptionEmailExists"
+msgstr "Карыстач з Email '%s' ужо існуе."
+
+msgid "UsersManager_ExceptionInvalidEmail"
+msgstr "Email няправільнага фармату"
+
+msgid "UsersManager_ExceptionPasswordMD5HashExpected"
+msgstr "UsersManager.getTokenAuth партабуе MD5-хэшаваны пароль ( даужыней ў 32 знака). Калі ласка, запытайце md5() функцыю перад выклікам гэтага метаду."
+
+msgid "UsersManager_ExceptionUserDoesNotExist"
+msgstr "Карыстач '%s' не існуе."
+
+msgid "UsersManager_ExcludeVisitsViaCookie"
+msgstr "Сключыць вашыя наведванні выкарыстоўваючы cookie"
+
+msgid "UsersManager_ForAnonymousUsersReportDateToLoadByDefault"
+msgstr "Дата справаздачы для загрузкі па змаўчанні, для ананімных карыстальнікаў"
+
+msgid "UsersManager_ManageAccess"
+msgstr "Кіраванне правамі дазволу"
+
+msgid "UsersManager_MenuAnonymousUserSettings"
+msgstr "Ананімныя карыстацкія наладкі"
+
+msgid "UsersManager_MenuUsers"
+msgstr "Карыстачы"
+
+msgid "UsersManager_MenuUserSettings"
+msgstr "Наладкі карыстальніка"
+
+msgid "UsersManager_PrivAdmin"
+msgstr "Адмін"
+
+msgid "UsersManager_PrivNone"
+msgstr "Няма доступу"
+
+msgid "UsersManager_PrivView"
+msgstr "Прагляд"
+
+msgid "UsersManager_ReportDateToLoadByDefault"
+msgstr "Дата справаздачы для загрузкі па змаўчанні"
+
+msgid "UsersManager_ReportToLoadByDefault"
+msgstr "Справаздача, якая загружаецца па змаўчанні"
+
+msgid "UsersManager_TheLoginScreen"
+msgstr "Форма аўтарызацыі"
+
+msgid "UsersManager_ThereAreCurrentlyNRegisteredUsers"
+msgstr "Зарэгістраваныя карыстальнікі %s."
+
+msgid "UsersManager_TypeYourPasswordAgain"
+msgstr "Калі ласка, увядзіце новы пароль яшчэ раз."
+
+msgid "UsersManager_User"
+msgstr "Карыстач"
+
+msgid "UsersManager_UsersManagement"
+msgstr "Кіраванне карыстачамі"
+
+msgid "UsersManager_UsersManagementMainDescription"
+msgstr "Стварэнне новых карыстачоў ці рэдагаванне існуючых. Таксама Вы можаце задаць правы дазволу для карыстача."
+
+msgid "UsersManager_YourUsernameCannotBeChanged"
+msgstr "Ваша імя карыстальніка не можа быць зменена."
+
+msgid "UsersManager_YourVisitsAreIgnoredOnDomain"
+msgstr "%1$sВашы наведванні ігнаруюцца Matomo на %2$s %3$s (Matomo знайшоў ў вашым браўзэры ігнаруючыя cookie)."
+
+msgid "UsersManager_YourVisitsAreNotIgnored"
+msgstr "%1$sВашы наведванні не ігнаруюцца Matomo%2$s (Matomo не знайшоў ў вашым браўзэры ігнаруючыя cookie)."
+
+msgid "UsersManager_Username"
+msgstr "Імя карыстальніка"
+
+msgid "VisitFrequency_ColumnActionsByReturningVisits"
+msgstr "Дзеянняў за паўторнае наведванне"
+
+msgid "VisitFrequency_ColumnAverageVisitDurationForReturningVisitors"
+msgstr "Сяр. працягласць наведванняў для вяртаючыхся наведвальнікаў (у секундах)"
+
+msgid "VisitFrequency_ColumnAvgActionsPerReturningVisit"
+msgstr "Сяр. колькасць дзеянняў за паўторнае наведванне"
+
+msgid "VisitFrequency_ColumnBounceRateForReturningVisits"
+msgstr "Паказчык адмоў для паўторных наведванняў"
+
+msgid "VisitFrequency_ColumnReturningVisits"
+msgstr "Паўторныя наведванні"
+
+msgid "VisitFrequency_ReturningVisitDocumentation"
+msgstr "Паўторнае наведванне (у адрозненне ад новага наведвання) зрабіў той, хто наведаў вэб-сайт па крайняй меры двойчы."
+
+msgid "VisitFrequency_ReturningVisitsDocumentation"
+msgstr "Гэта агляд паўторных наведванняў."
+
+msgid "VisitFrequency_SubmenuFrequency"
+msgstr "Чашчыня"
+
+msgid "VisitFrequency_WidgetGraphReturning"
+msgstr "Графік паўторных наведванняў"
+
+msgid "VisitFrequency_WidgetOverview"
+msgstr "Агляд чашчыні наведванняў"
+
+msgid "VisitTime_ColumnLocalTime"
+msgstr "Мясцовы час"
+
+msgid "VisitTime_ColumnServerTime"
+msgstr "Серверны час"
+
+msgid "VisitTime_LocalTime"
+msgstr "Наведванняў па мясцовым часе"
+
+msgid "VisitTime_NHour"
+msgstr "%s ч."
+
+msgid "VisitTime_ServerTime"
+msgstr "Наведванняў па серверным часе"
+
+msgid "VisitTime_SubmenuTimes"
+msgstr "Па часе"
+
+msgid "VisitTime_WidgetLocalTime"
+msgstr "Наведванняў па мясцовым часе"
+
+msgid "VisitTime_WidgetLocalTimeDocumentation"
+msgstr "Гэты графік паказвае, які %1$s час быў у наведвальніка %2$s пад час наведвання веб-сайту."
+
+msgid "VisitTime_WidgetServerTime"
+msgstr "Наведванняў па серверным часе"
+
+msgid "VisitTime_WidgetServerTimeDocumentation"
+msgstr "Гэты графік паказвае, які %1$s час быў на серверы %2$s пад час наведвання веб-сайту."
+
+msgid "VisitorInterest_BetweenXYMinutes"
+msgstr "%1$s-%2$s хв"
+
+msgid "VisitorInterest_BetweenXYSeconds"
+msgstr "%1$s-%2$sс"
+
+msgid "VisitorInterest_ColumnPagesPerVisit"
+msgstr "Старонак за наведванне"
+
+msgid "VisitorInterest_ColumnVisitDuration"
+msgstr "Даўжыня наведванняў"
+
+msgid "VisitorInterest_Engagement"
+msgstr "Абавязацельства"
+
+msgid "VisitorInterest_NPages"
+msgstr "%s старонак"
+
+msgid "VisitorInterest_OnePage"
+msgstr "1 старонка"
+
+msgid "VisitorInterest_VisitsPerDuration"
+msgstr "Наведванняў па даўжыні візіту"
+
+msgid "VisitorInterest_VisitsPerNbOfPages"
+msgstr "Наведванняў па колькасці старонак"
+
+msgid "VisitorInterest_WidgetLengths"
+msgstr "Даўжыня наведванняў"
+
+msgid "VisitorInterest_WidgetLengthsDocumentation"
+msgstr "У гэтай справаздачы, можна ўбачыць, колькі наведванняў была па пэнай працягласці часу на вэб-сайце. Першапачаткова, справаздачы паказаны, як воблака тэгаў, буйным шрыфтам адлюстроўваюцца працягласці, якия адбыліся часцей за ўсё."
+
+msgid "VisitorInterest_WidgetPages"
+msgstr "Старніц за наведванне"
+
+msgid "VisitorInterest_WidgetPagesDocumentation"
+msgstr "У гэтай справаздачы, можна ўбачыць, колькі наведванняў была па пэўнай колькасці праглядаў старонак. Першапачаткова, справаздачы паказаны, як воблака тэгаў, буйным шрыфтам адлюстроўваюцца прагляды, якия адбыліся часцей за ўсё."
+
+msgid "VisitsSummary_GenerateQueries"
+msgstr "%s запытаў выканана"
+
+msgid "VisitsSummary_GenerateTime"
+msgstr "Старонка згенеравана за %s секунд"
+
+msgid "VisitsSummary_NbActionsDescription"
+msgstr "%s дзеянні (прагляды старонак, запампоўка і знешнія спасылкі)"
+
+msgid "VisitsSummary_VisitsSummary"
+msgstr "Наведванні сумарна"
+
+msgid "VisitsSummary_VisitsSummaryDocumentation"
+msgstr "Гэта агляд зменаў наведванняў."
+
+msgid "VisitsSummary_WidgetLastVisits"
+msgstr "Графік апошніх наведванняў"
+
+msgid "VisitsSummary_WidgetOverviewGraph"
+msgstr "Агляд па ўсіх графіках"
+
+msgid "VisitsSummary_WidgetVisits"
+msgstr "Агляд наведванняў"
+
+msgid "WebsiteMeasurable_Website"
+msgstr "Вэб-сайт"
+
+msgid "WebsiteMeasurable_Websites"
+msgstr "Вэб-сайты"
+
+msgid "Widgetize_OpenInNewWindow"
+msgstr "Адкрыць у новым акне"

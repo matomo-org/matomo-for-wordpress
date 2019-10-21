@@ -1,0 +1,7652 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-10-21T03:38:12+00:00\n"
+"PO-Revision-Date: 2019-10-21T03:38:12+00:00\n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Domain: matomo\n"
+
+msgid "General_12HourClock"
+msgstr "Rellotge 12-hores"
+
+msgid "General_24HourClock"
+msgstr "Rellotge 24-hores"
+
+msgid "General_AbandonedCarts"
+msgstr "Cistelles abandonades"
+
+msgid "General_AboutPiwikX"
+msgstr "Sobre Matomo %s"
+
+msgid "General_Action"
+msgstr "Acció"
+
+msgid "General_Actions"
+msgstr "Accions"
+
+msgid "General_Add"
+msgstr "Afegir"
+
+msgid "General_AfterEntry"
+msgstr "després d'entrar aquí"
+
+msgid "General_All"
+msgstr "Tots"
+
+msgid "General_AllowPiwikArchivingToTriggerBrowser"
+msgstr "Permetre que l'arxivat del Matomo es dispari quan els informes es veuen des del navegador"
+
+msgid "General_AllWebsitesDashboard"
+msgstr "Tauler de tots els llocs web"
+
+msgid "General_And"
+msgstr "i"
+
+msgid "General_API"
+msgstr "API"
+
+msgid "General_Apply"
+msgstr "Aplica"
+
+msgid "General_ArchivingInlineHelp"
+msgstr "Per llocs amb transit entre mig i alt, es recomana desactivar l'arxivat del Matomo des del navegador. En canvi, recomanem que configureu una tasca de cron per processar els informes de Matomo cada hora."
+
+msgid "General_ArchivingTriggerDescription"
+msgstr "Recomanat per instal·lacions grans de Matomo, es pot %1$sconfigurar una %2$stasca programada per processar les entrades automàticament."
+
+msgid "General_AuthenticationMethodSmtp"
+msgstr "Mètode d'autenticació SMTP"
+
+msgid "General_AverageOrderValue"
+msgstr "Valor mig de les comandes"
+
+msgid "General_AveragePrice"
+msgstr "Preu mig"
+
+msgid "General_AverageQuantity"
+msgstr "Qualitat mitja"
+
+msgid "General_BackToPiwik"
+msgstr "Torna al Matomo"
+
+msgid "General_Broken"
+msgstr "Trencat"
+
+msgid "General_BrokenDownReportDocumentation"
+msgstr "Està separada en diferents informes, que es mostren amb línies de punts al peu de la pàgina. Podeu augmentar aquests gràfics clicant en l'informe que voleu veure."
+
+msgid "General_Cancel"
+msgstr "Cancel·lar"
+
+msgid "General_CannotUnzipFile"
+msgstr "No es pot descomprimir el fitxer %1$s: %2$s"
+
+msgid "General_ChangePassword"
+msgstr "Canvia la contrasenya"
+
+msgid "General_ChangeTagCloudView"
+msgstr "Si us plau, tingueu en compte que podeu veure l'informe en altres formes que en nuvol d'etiquetes. Feu servir els controls al peu de l'informe per fer-ho."
+
+msgid "General_ChooseDate"
+msgstr "Seleccioneu una data, la data seleccionada actualment es: %s"
+
+msgid "General_ChooseLanguage"
+msgstr "Tria idioma"
+
+msgid "General_ChoosePeriod"
+msgstr "Triar període"
+
+msgid "General_ClickHere"
+msgstr "Fes clic aquí per més informació."
+
+msgid "General_Close"
+msgstr "Tanca"
+
+msgid "General_ClickToSearch"
+msgstr "Cliqueu per cercar"
+
+msgid "General_ColumnActionsPerVisit"
+msgstr "Accions per visita"
+
+msgid "General_ColumnActionsPerVisitDocumentation"
+msgstr "El número mig d'accions (pàgines vistes, descarregues o enllaços de sortida) que s'han fet durant les visites."
+
+msgid "General_ColumnAverageTimeOnPage"
+msgstr "Temps mig a la pàgina"
+
+msgid "General_ColumnAverageTimeOnPageDocumentation"
+msgstr "La mitjana de temps que els visitants s'han passat en aquesta pàgina (només la pàgina no el lloc enter)."
+
+msgid "General_ColumnAvgTimeOnSite"
+msgstr "Temps mitjà per visita"
+
+msgid "General_ColumnAvgTimeOnSiteDocumentation"
+msgstr "La durada mitja de una visita."
+
+msgid "General_ColumnBounceRate"
+msgstr "Raó de rebots"
+
+msgid "General_ColumnBounceRateDocumentation"
+msgstr "El percentatge de visites que només han vist una pàgina. Això significa, que el visitant ha marxat del lloc web directament per la pàgina d'entrada."
+
+msgid "General_ColumnBounces"
+msgstr "Rebots"
+
+msgid "General_ColumnBouncesDocumentation"
+msgstr "El número de visites que han començat i acabat en aquesta pàgina. Això significa que la visita ha deixat el lloc web després de veure només aquesta pàgina."
+
+msgid "General_ColumnConversionRate"
+msgstr "Tarifa de conversió"
+
+msgid "General_ColumnConversionRateDocumentation"
+msgstr "El percentatge de visites que han disparat una conversió d'objectiu."
+
+msgid "General_ColumnDestinationPage"
+msgstr "Pàgina destí"
+
+msgid "General_ColumnEntrances"
+msgstr "Entrades"
+
+msgid "General_ColumnEntrancesDocumentation"
+msgstr "Número de visites que han començat en aquesta pàgina."
+
+msgid "General_ColumnExitRate"
+msgstr "Taxa de sortida"
+
+msgid "General_ColumnExitRateDocumentation"
+msgstr "El percentatge de visites que han deixat el lloc web després de veure aquesta pàgina."
+
+msgid "General_ColumnExits"
+msgstr "Sortides"
+
+msgid "General_ColumnExitsDocumentation"
+msgstr "Número de visites que acaben en aquesta pàgina."
+
+msgid "General_ColumnGenerationTime"
+msgstr "Temps de generació"
+
+msgid "General_ColumnKeyword"
+msgstr "Paraula clau"
+
+msgid "General_ColumnLabel"
+msgstr "Etiqueta"
+
+msgid "General_ColumnMaxActions"
+msgstr "Accions màximes en una visita"
+
+msgid "General_ColumnNbActions"
+msgstr "Accions"
+
+msgid "General_ColumnNbActionsDocumentation"
+msgstr "El número d'accions que han realitzat els vostres visitant. Les accions poden ser pàgines vistes, descarregues o enllaços externs."
+
+msgid "General_ColumnNbUniqVisitors"
+msgstr "Visitants únics"
+
+msgid "General_ColumnNbUsers"
+msgstr "Usuaris"
+
+msgid "General_ColumnNbVisits"
+msgstr "Visites"
+
+msgid "General_ColumnPageBounceRateDocumentation"
+msgstr "El percentatge de visites que han començat en aquesta pàgina i han deixat el lloc web directament."
+
+msgid "General_ColumnPageviews"
+msgstr "Visualitzacions de pàgina"
+
+msgid "General_ColumnPageviewsDocumentation"
+msgstr "El número de vegades que s'ha visitat aquesta pàgina."
+
+msgid "General_ColumnRevenue"
+msgstr "Ingressos"
+
+msgid "General_ColumnSumVisitLength"
+msgstr "Temps total acumulat pels visitants (en segons)"
+
+msgid "General_ColumnTotalPageviews"
+msgstr "Total de pàgines vistes"
+
+msgid "General_ColumnUniqueEntrances"
+msgstr "Entrades úniques"
+
+msgid "General_ColumnUniqueExits"
+msgstr "Sortides úniques"
+
+msgid "General_ColumnUniquePageviews"
+msgstr "Visualitzacions de pàgina úniques"
+
+msgid "General_ColumnUniquePageviewsDocumentation"
+msgstr "El número de visites que incloïen aquesta pàgina. Si una pàgina s'ha vist múltiples vegades durant una visita, només es compta un cop."
+
+msgid "General_ColumnValuePerVisit"
+msgstr "Valor per visita"
+
+msgid "General_ColumnViewedAfterSearch"
+msgstr "Clicat als resultats de cerca"
+
+msgid "General_ColumnViewedAfterSearchDocumentation"
+msgstr "El nombre de vegades que aquesta pàgina s'ha visitat desprès de que el visitant faigi una cerca al vostre lloc web i haigi clicat en aquesta pàgina als resultats."
+
+msgid "General_ColumnVisitDuration"
+msgstr "Durada de la visita (en segons)"
+
+msgid "General_ColumnVisitsWithConversions"
+msgstr "Visites amb conversions"
+
+msgid "General_ConfigFileIsNotWritable"
+msgstr "El fitxer de configuració del Matomoi %1$s no es pot modificar, alguns dels canvis que has fet no es guardaran. Si us plau %2$s canvia els permisos del fitxer de configuració per tal que es pugui modificar."
+
+msgid "General_Continue"
+msgstr "Continuar"
+
+msgid "General_ContinueToPiwik"
+msgstr "Vés cap al Matomo"
+
+msgid "General_CreatedByUser"
+msgstr "Creat per %s"
+
+msgid "General_CurrentMonth"
+msgstr "Mes actual"
+
+msgid "General_CurrentWeek"
+msgstr "Setmana actual"
+
+msgid "General_CurrentYear"
+msgstr "Any actual"
+
+msgid "General_Daily"
+msgstr "Diariament"
+
+msgid "General_DailyReport"
+msgstr "diari"
+
+msgid "General_DailyReports"
+msgstr "Informe diari"
+
+msgid "General_DailySum"
+msgstr "suma diaria"
+
+msgid "General_DashboardForASpecificWebsite"
+msgstr "Tauler per un lloc web concret"
+
+msgid "General_DataForThisGraphHasBeenPurged"
+msgstr "Les dades per aquest gràfic tenen més de %s mesos d'antiguitat i s'han purgat"
+
+msgid "General_DataForThisTagCloudHasBeenPurged"
+msgstr "Les dades per aquest nuvol d'etiquetes tenen més de %s mesos i s'han purgat."
+
+msgid "General_Date"
+msgstr "Data"
+
+msgid "General_DateRange"
+msgstr "Rang de dates:"
+
+msgid "General_DateRangeFrom"
+msgstr "De"
+
+msgid "General_DateRangeFromTo"
+msgstr "De %1$s fins a %2$s"
+
+msgid "General_DateRangeTo"
+msgstr "Fins"
+
+msgid "General_DaysHours"
+msgstr "%1$s dies %2$s hores"
+
+msgid "General_DaysSinceFirstVisit"
+msgstr "Dies des de la primera visita"
+
+msgid "General_DaysSinceLastEcommerceOrder"
+msgstr "Dies des de la última comanda d'e-commerce"
+
+msgid "General_DaysSinceLastVisit"
+msgstr "Dies des de l'última visita"
+
+msgid "General_Default"
+msgstr "Per defecte"
+
+msgid "General_DefaultAppended"
+msgstr "(per defecte)"
+
+msgid "General_Delete"
+msgstr "Esborra"
+
+msgid "General_Description"
+msgstr "Descripció"
+
+msgid "General_Desktop"
+msgstr "Escriptori"
+
+msgid "General_Details"
+msgstr "Detalls"
+
+msgid "General_Discount"
+msgstr "Descompte"
+
+msgid "General_DisplaySimpleTable"
+msgstr "Mostrar una taula simple"
+
+msgid "General_DisplayTableWithGoalMetrics"
+msgstr "Mostrar una taula amb paràmetres globals"
+
+msgid "General_DisplayTableWithMoreMetrics"
+msgstr "Mostrar una taula amb més paràmetres"
+
+msgid "General_Documentation"
+msgstr "Documentació"
+
+msgid "General_Donate"
+msgstr "Donar"
+
+msgid "General_Done"
+msgstr "Fet"
+
+msgid "General_Download"
+msgstr "Descàrrega"
+
+msgid "General_DownloadFail_FileExists"
+msgstr "El fitxer %s ja existeix."
+
+msgid "General_DownloadFail_FileExistsContinue"
+msgstr "Provant de continuar la descàrrega de %s, però ja existeix un fitxer completament descarregat."
+
+msgid "General_DownloadFail_HttpRequestFail"
+msgstr "No s'ha pogut descarregar el fitxer! Alguna cosa no ha anat bé amb el lloc web d'on esteu descarregant. Podeu provar-ho més tard o obtenir el fitxer per vosaltres mateixos."
+
+msgid "General_DownloadFullVersion"
+msgstr "%1$sDescarrega%2$s la versió completa! Ves a %3$s"
+
+msgid "General_DownloadPleaseRemoveExisting"
+msgstr "Si voleu que es sobreescrigui, elimineu el fitxer existent."
+
+msgid "General_Downloads"
+msgstr "Descàrregues"
+
+msgid "General_EcommerceOrders"
+msgstr "Comandes d'e-commerce"
+
+msgid "General_EcommerceVisitStatusDesc"
+msgstr "Visita l'estat de l'e-commerce al final de la visita"
+
+msgid "General_EcommerceVisitStatusEg"
+msgstr "Per exempel, seleccionar totes les visites que han fet una comanda d'e-commerce, la petició de l'API tindrà %s"
+
+msgid "General_Edit"
+msgstr "Edita"
+
+msgid "General_EncryptedSmtpTransport"
+msgstr "Entreu el xifrat de la capa de transport requerit per el vostre servidor SMTP."
+
+msgid "General_Error"
+msgstr "Error"
+
+msgid "General_Errors"
+msgstr "Errors"
+
+msgid "General_EvolutionOverPeriod"
+msgstr "Evolució del període"
+
+msgid "General_ExceptionConfigurationFileNotFound"
+msgstr "El fitxer de configuració {%s} no s'ha trobat."
+
+msgid "General_ExceptionDatabaseVersion"
+msgstr "La teva %1$s versió és %2$s però el Matomo necessita com a mínim %3$s"
+
+msgid "General_ExceptionFileIntegrity"
+msgstr "Ha fallat la verificació de integritat: %s"
+
+msgid "General_ExceptionFilesizeMismatch"
+msgstr "Mida de fitxer incohoerent: %1$s (mida esperada: %2$s, real: %3$s)"
+
+msgid "General_ExceptionIncompatibleClientServerVersions"
+msgstr "El vostre client %1$s té la versió %2$s que és incompatbile amb la versió de servidor %3$s."
+
+msgid "General_ExceptionInvalidAggregateReportsFormat"
+msgstr "El format de informes agregats '%1$s' no és vàlid. Proveu-ne algun dels següents en el seu lloc: %2$s."
+
+msgid "General_ExceptionInvalidArchiveTimeToLive"
+msgstr "El temps límit per fer l'arxivat avui ha de ser més gran que zero."
+
+msgid "General_ExceptionInvalidDateFormat"
+msgstr "El format de data ha de ser: %1$s o una altra paraula clau suportada per la funció %2$s (vegeu %3$s per més informació)"
+
+msgid "General_ExceptionInvalidDateRange"
+msgstr "La data '%1$s' no és un rang correcte de data. Hauria de tenir el format següent: %2$s."
+
+msgid "General_ExceptionInvalidPeriod"
+msgstr "El període '%1$s' no està suportat. Proveu-ne algun dels següents en el seu lloc: %2$s."
+
+msgid "General_ExceptionInvalidRendererFormat"
+msgstr "El format generador '%1$s' no és vàlid. Proveu-ne un dels següents en el seu lloc: %2$s."
+
+msgid "General_ExceptionInvalidReportRendererFormat"
+msgstr "El format de l'informe '%1$s' no és vàlid. Proveu-ne un dels següent en el seu lloc: %2$s."
+
+msgid "General_ExceptionInvalidStaticGraphType"
+msgstr "El gràfic estàtic tipus '%1$s' no és vàlid. Proveu-ne un dels següents en el seu lloc: %2$s."
+
+msgid "General_ExceptionInvalidToken"
+msgstr "El token no és vàlid."
+
+msgid "General_ExceptionLanguageFileNotFound"
+msgstr "El fitxer d'idioma '%s' no s'ha trobat."
+
+msgid "General_ExceptionMethodNotFound"
+msgstr "El mètode '%1$s' no existeix o no està disponible en el mòdul '%2$s'."
+
+msgid "General_ExceptionMissingFile"
+msgstr "Falta fitxer: %s"
+
+msgid "General_ExceptionNonceMismatch"
+msgstr "No s'ha pogut verificar el token del formulari."
+
+msgid "General_ExceptionPrivilege"
+msgstr "No podeu accedir a aquest recurs perquè requereix un accés de %s"
+
+msgid "General_ExceptionUnableToStartSession"
+msgstr "No s'ha pogut començar la sessió."
+
+msgid "General_ExceptionUndeletableFile"
+msgstr "No s'ha pogut esborrar %s"
+
+msgid "General_ExceptionUnreadableFileDisabledMethod"
+msgstr "El fitxer de configuració {%1$s} no s'ha pogut llegir. El vostre host pot tenir deshabilitat %2$s."
+
+msgid "General_ExceptionReportNotFound"
+msgstr "El informe que s'ha seleccionat no existeix."
+
+msgid "General_Export"
+msgstr "Exporta"
+
+msgid "General_ExportAsImage"
+msgstr "Exportar com a imatge"
+
+msgid "General_ExportThisReport"
+msgstr "Guardar aquestes dades en altres formats"
+
+msgid "General_Faq"
+msgstr "PMF"
+
+msgid "General_First"
+msgstr "Primer"
+
+msgid "General_ForExampleShort"
+msgstr "p.ex."
+
+msgid "General_Forums"
+msgstr "Fòrums"
+
+msgid "General_FromReferrer"
+msgstr "de"
+
+msgid "General_GeneralInformation"
+msgstr "Informació General"
+
+msgid "General_GeneralSettings"
+msgstr "Configuració general"
+
+msgid "General_GetStarted"
+msgstr "Comenceu"
+
+msgid "General_GiveUsYourFeedback"
+msgstr "Què penseu del Matomo?"
+
+msgid "General_Goal"
+msgstr "Objectiu"
+
+msgid "General_GoTo"
+msgstr "Anar a %s"
+
+msgid "General_GraphHelp"
+msgstr "Més informació sobre mostrar gràfiques al Matomo."
+
+msgid "General_HelloUser"
+msgstr "Hola, %s!"
+
+msgid "General_Help"
+msgstr "Ajuda"
+
+msgid "General_Hide"
+msgstr "amaga"
+
+msgid "General_HoursMinutes"
+msgstr "%1$s hores %2$s min"
+
+msgid "General_Id"
+msgstr "Id"
+
+msgid "General_InfoFor"
+msgstr "Informació per %s"
+
+msgid "General_Installed"
+msgstr "Instal·lat"
+
+msgid "General_InvalidDateRange"
+msgstr "Rang de dates no vàlid, si us plau proveu-ho de nou"
+
+msgid "General_InvalidResponse"
+msgstr "Les dades rebudes són invàlides."
+
+msgid "General_IP"
+msgstr "IP"
+
+msgid "General_JsTrackingTag"
+msgstr "Etiqueta de seguiment JavaScript"
+
+msgid "General_Language"
+msgstr "Idioma"
+
+msgid "General_LastDays"
+msgstr "Últims %s dies (incloent avui)"
+
+msgid "General_LastDaysShort"
+msgstr "Últims %s dies"
+
+msgid "General_Loading"
+msgstr "Carregant…"
+
+msgid "General_LoadingData"
+msgstr "Les dades s'estan carregant…"
+
+msgid "General_LoadingPopover"
+msgstr "Carregant %s..."
+
+msgid "General_LoadingPopoverFor"
+msgstr "Carregant %s per"
+
+msgid "General_Locale"
+msgstr "ca_ES.UTF-8"
+
+msgid "General_Logout"
+msgstr "Surt"
+
+msgid "General_MainMetrics"
+msgstr "Mètriques principals"
+
+msgid "General_MediumToHighTrafficItIsRecommendedTo"
+msgstr "Per llocs de mig i alt transit, recomanem processar informes per avui com a molt cada mitja hora (%1$s segons) o cada hora (%2$s segons)"
+
+msgid "General_Metadata"
+msgstr "Metadata"
+
+msgid "General_Metric"
+msgstr "Mètrica"
+
+msgid "General_Metrics"
+msgstr "Mètriques"
+
+msgid "General_MetricsToPlot"
+msgstr "Valors per graficar"
+
+msgid "General_MetricToPlot"
+msgstr "Mètrica a mostrar"
+
+msgid "General_MinutesSeconds"
+msgstr "%1$s min %2$ss"
+
+msgid "General_Mobile"
+msgstr "Mòbil"
+
+msgid "General_Monthly"
+msgstr "Mensualment"
+
+msgid "General_MonthlyReport"
+msgstr "mensual"
+
+msgid "General_MonthlyReports"
+msgstr "Informe mensual"
+
+msgid "General_More"
+msgstr "Més"
+
+msgid "General_MoreDetails"
+msgstr "Més detalls"
+
+msgid "General_MoreLowerCase"
+msgstr "més"
+
+msgid "General_MultiSitesSummary"
+msgstr "Tots els llocs web"
+
+msgid "General_Name"
+msgstr "Nom"
+
+msgid "General_NbActions"
+msgstr "Número d'accions"
+
+msgid "General_NbSearches"
+msgstr "Nombre de cerques internes"
+
+msgid "General_NeedMoreHelp"
+msgstr "Necessiteu més ajuda?"
+
+msgid "General_Never"
+msgstr "Mai"
+
+msgid "General_NewReportsWillBeProcessedByCron"
+msgstr "Quan l'arxivat del Matomo no es dispara per el navegador, els nous informes es processaran per el crontab."
+
+msgid "General_NewUpdatePiwikX"
+msgstr "Nova actualització: Matomo %s"
+
+msgid "General_NewVisitor"
+msgstr "Nova visita"
+
+msgid "General_NewVisits"
+msgstr "Noves visites"
+
+msgid "General_Next"
+msgstr "Següent"
+
+msgid "General_No"
+msgstr "No"
+
+msgid "General_NoDataForGraph"
+msgstr "No hi ha dades..."
+
+msgid "General_NoDataForTagCloud"
+msgstr "No hi ha dades..."
+
+msgid "General_NotDefined"
+msgstr "%s sense definir"
+
+msgid "General_Note"
+msgstr "Nota"
+
+msgid "General_NotInstalled"
+msgstr "No instal·lat"
+
+msgid "General_NotRecommended"
+msgstr "no recomanat"
+
+msgid "General_NotValid"
+msgstr "%s no és vàlid"
+
+msgid "General_NumberOfVisits"
+msgstr "Número de visites"
+
+msgid "General_NUsers"
+msgstr "%s usuaris"
+
+msgid "General_NVisits"
+msgstr "%s visites"
+
+msgid "General_NUniqueVisitors"
+msgstr "%s visitants únics"
+
+msgid "General_Ok"
+msgstr "D'acord"
+
+msgid "General_OneAction"
+msgstr "1 acció"
+
+msgid "General_OneVisit"
+msgstr "1 visita"
+
+msgid "General_OnlyEnterIfRequired"
+msgstr "Només entreu un usuari si el vostre servidor SMTP ho requereix."
+
+msgid "General_OnlyEnterIfRequiredPassword"
+msgstr "Només entreu una contrasenya si el vostre servidor STMP ho requereix."
+
+msgid "General_OnlyUsedIfUserPwdIsSet"
+msgstr "Només es fa servir si l'usuari/contrasenya estan configurats, pregunteu al vostre proveïdor si no esteu segur de quin mètode fer servir."
+
+msgid "General_OpenSourceWebAnalytics"
+msgstr "Anàlisi web de codi obert"
+
+msgid "General_OperationAtLeast"
+msgstr "Com a mínim"
+
+msgid "General_OperationAtMost"
+msgstr "Com a màxim"
+
+msgid "General_OperationContains"
+msgstr "Conté"
+
+msgid "General_OperationDoesNotContain"
+msgstr "No conté"
+
+msgid "General_OperationEquals"
+msgstr "Es igual"
+
+msgid "General_OperationGreaterThan"
+msgstr "Major que"
+
+msgid "General_OperationLessThan"
+msgstr "Menor que"
+
+msgid "General_OperationNotEquals"
+msgstr "Diferent"
+
+msgid "General_OperationStartsWith"
+msgstr "Comença amb"
+
+msgid "General_OperationEndsWith"
+msgstr "Acaba amb"
+
+msgid "General_OptionalSmtpPort"
+msgstr "Opcional. Per defecte té el valor 25 per no xifrat i TLS SMTP, i 465 per SSL SMTP."
+
+msgid "General_Options"
+msgstr "Opcions"
+
+msgid "General_OrCancel"
+msgstr "o %1$s cancel·la %2$s"
+
+msgid "General_Others"
+msgstr "Altres"
+
+msgid "General_Outlink"
+msgstr "Enllaç extern"
+
+msgid "General_Outlinks"
+msgstr "Enllaços externs"
+
+msgid "General_OverlayRowActionTooltip"
+msgstr "Mostrar la informació analítica directament al vostre lloc web (obre una nova pestanya)"
+
+msgid "General_OverlayRowActionTooltipTitle"
+msgstr "Obre una pàgina superposada"
+
+msgid "General_Overview"
+msgstr "Resum"
+
+msgid "General_Pages"
+msgstr "Pàgines"
+
+msgid "General_ParameterMustIntegerBetween"
+msgstr "El paràmetre %1$s ha de ser un enter entre %2$s i %3$s"
+
+msgid "General_Password"
+msgstr "Contrasenya"
+
+msgid "General_Period"
+msgstr "Període"
+
+msgid "General_Piechart"
+msgstr "Gràfic de sectors"
+
+msgid "General_PiwikXIsAvailablePleaseUpdateNow"
+msgstr "Hi ha una nova versió del Matomo, %1$s, disponible! %2$s Si us plau, actualitzeu ara!%3$s (%4$s Mostra els canvis%5$s)"
+
+msgid "General_PleaseContactYourPiwikAdministrator"
+msgstr "Si us plau, contacteu amb el vostre administrador del Matomo."
+
+msgid "General_PleaseSpecifyValue"
+msgstr "Si us plau especifiqueu el valor per '%s'"
+
+msgid "General_PleaseUpdatePiwik"
+msgstr "Si us plau actualitzeu el Matomo"
+
+msgid "General_Plugin"
+msgstr "Connector"
+
+msgid "General_Plugins"
+msgstr "Connectors"
+
+msgid "General_PoweredBy"
+msgstr "Funcionant amb"
+
+msgid "General_Previous"
+msgstr "Anterior"
+
+msgid "General_PreviousDays"
+msgstr "%s dies anteriors (sense incloure avui)"
+
+msgid "General_PreviousDaysShort"
+msgstr "Anteriors %s dies"
+
+msgid "General_Price"
+msgstr "Preu"
+
+msgid "General_ProductConversionRate"
+msgstr "Taxa de conversió del producte"
+
+msgid "General_ProductRevenue"
+msgstr "Ingressos de productes"
+
+msgid "General_PurchasedProducts"
+msgstr "Productes comprats"
+
+msgid "General_Quantity"
+msgstr "Quantitat"
+
+msgid "General_RangeReports"
+msgstr "Rang de data personalitzat"
+
+msgid "General_Recommended"
+msgstr "Recomanat"
+
+msgid "General_RecordsToPlot"
+msgstr "Entrades a mostrar"
+
+msgid "General_Refresh"
+msgstr "Actualitza"
+
+msgid "General_RefreshPage"
+msgstr "Actualitza la pàgina"
+
+msgid "General_RelatedReport"
+msgstr "Informe relacionat"
+
+msgid "General_RelatedReports"
+msgstr "Informes relacionats"
+
+msgid "General_Remove"
+msgstr "Elimina"
+
+msgid "General_Report"
+msgstr "Informe"
+
+msgid "General_ReportGeneratedFrom"
+msgstr "Aquest informe s'ha generat fent servir dades de %s."
+
+msgid "General_Reports"
+msgstr "Informes"
+
+msgid "General_ReportsWillBeProcessedAtMostEveryHour"
+msgstr "El informes per tant es processaran com a molt cada hora."
+
+msgid "General_RequestTimedOut"
+msgstr "Una petició a %s ha caducat. Proveu-ho de nou."
+
+msgid "General_Required"
+msgstr "%s requerit"
+
+msgid "General_ReturningVisitor"
+msgstr "Visita que retorna"
+
+msgid "General_ReturningVisitorAllVisits"
+msgstr "Veure totes les visites"
+
+msgid "General_RowEvolutionRowActionTooltip"
+msgstr "Observeu com les mètriques d'aquesta fila han canviat durant el pas del temps"
+
+msgid "General_RowEvolutionRowActionTooltipTitle"
+msgstr "Obrir l'evolució de la fila"
+
+msgid "General_Rows"
+msgstr "Files"
+
+msgid "General_RowsToDisplay"
+msgstr "Files a mostrar"
+
+msgid "General_Save"
+msgstr "Desa"
+
+msgid "General_SaveImageOnYourComputer"
+msgstr "Per guardar la imatge al vostre ordinador, feu click amb el botó dret sobre la imatge i trieu \"Guardar la imatge com..\""
+
+msgid "General_Search"
+msgstr "Cerca"
+
+msgid "General_Clear"
+msgstr "Neteja"
+
+msgid "General_SearchNoResults"
+msgstr "Sense resultats"
+
+msgid "General_SeeAll"
+msgstr "veure-ho tot"
+
+msgid "General_SeeTheOfficialDocumentationForMoreInformation"
+msgstr "Vegeu la %1$sinformació oficial%2$s per més informació."
+
+msgid "General_Segment"
+msgstr "Segment"
+
+msgid "General_SelectYesIfYouWantToSendEmailsViaServer"
+msgstr "Trieu \"si\" si voleu o heu d'enviar el correu a través de un servidor enlloc de a través de la funció mail local."
+
+msgid "General_Settings"
+msgstr "Tauler de control"
+
+msgid "General_Shipping"
+msgstr "Enviament"
+
+msgid "General_Show"
+msgstr "mostra"
+
+msgid "General_SingleWebsitesDashboard"
+msgstr "Tauler per un sol lloc web"
+
+msgid "General_SmallTrafficYouCanLeaveDefault"
+msgstr "Per llocs amb poc transit, pots deixar el valor per defecte de %s segons i accedir als informes en temps real."
+
+msgid "General_SmtpEncryption"
+msgstr "encriptació SMTP"
+
+msgid "General_SmtpPassword"
+msgstr "contrasenya SMTP"
+
+msgid "General_SmtpPort"
+msgstr "Port SMTP"
+
+msgid "General_SmtpServerAddress"
+msgstr "adreça del servidor SMTP"
+
+msgid "General_SmtpUsername"
+msgstr "usuari SMTP"
+
+msgid "General_Subtotal"
+msgstr "Subtotal"
+
+msgid "General_Summary"
+msgstr "Resum"
+
+msgid "General_Table"
+msgstr "Taula"
+
+msgid "General_TagCloud"
+msgstr "Núvol d'etiquetes"
+
+msgid "General_Tax"
+msgstr "Impostos"
+
+msgid "General_TimeOnPage"
+msgstr "Temps a la pàgina"
+
+msgid "General_Total"
+msgstr "Total"
+
+msgid "General_TotalRevenue"
+msgstr "Total Ingressos"
+
+msgid "General_TrackingScopeAction"
+msgstr "Acció"
+
+msgid "General_TrackingScopePage"
+msgstr "Pàgina"
+
+msgid "General_TrackingScopeVisit"
+msgstr "Visita"
+
+msgid "General_TransitionsRowActionTooltip"
+msgstr "Observar que van fer els visitants abans i desprès de veure aquesta pàgina"
+
+msgid "General_TransitionsRowActionTooltipTitle"
+msgstr "Obre les transicions"
+
+msgid "General_TranslatorName"
+msgstr "Isaac Sánchez Barrera, Joan Juvanteny"
+
+msgid "General_UniquePurchases"
+msgstr "Compres úniques"
+
+msgid "General_Unknown"
+msgstr "Desconegut"
+
+msgid "General_Upload"
+msgstr "Càrrega"
+
+msgid "General_UsePlusMinusIconsDocumentation"
+msgstr "Fes servir les icones de més i menys a l'esquerra per navegar."
+
+msgid "General_UserId"
+msgstr "Identificador Usuari"
+
+msgid "General_Username"
+msgstr "Usuari"
+
+msgid "General_UseSMTPServerForEmail"
+msgstr "Fer servir un servidor SMTP per el correu"
+
+msgid "General_Value"
+msgstr "Valor"
+
+msgid "General_VBarGraph"
+msgstr "Gràfic de barres"
+
+msgid "General_View"
+msgstr "Vista"
+
+msgid "General_Visit"
+msgstr "Visita"
+
+msgid "General_VisitConvertedGoal"
+msgstr "La visita ha convertit al menys un objectiu"
+
+msgid "General_VisitConvertedGoalId"
+msgstr "La visita ha convertit un id d'objectiu especific"
+
+msgid "General_VisitConvertedNGoals"
+msgstr "La visita ha convertit %s objectius"
+
+msgid "General_VisitDuration"
+msgstr "Temps mig de visita (en segons)"
+
+msgid "General_Visitor"
+msgstr "Visita"
+
+msgid "General_VisitorID"
+msgstr "ID del visitant"
+
+msgid "General_VisitorIP"
+msgstr "Ip del visitant"
+
+msgid "General_Visitors"
+msgstr "Visitants"
+
+msgid "General_VisitsWith"
+msgstr "Visites amb %s"
+
+msgid "General_VisitorSettings"
+msgstr "Configuració del visitant"
+
+msgid "General_VisitType"
+msgstr "Tipus de visitant"
+
+msgid "General_VisitTypeExample"
+msgstr "Per exemple, per seleccionar tots els visitants que han retornat al lloc web, incloent els que han comprat alguna cosa en anteriors visites, la petició de l'API tindria %s"
+
+msgid "General_Warning"
+msgstr "Avís"
+
+msgid "General_WarningFileIntegrityNoManifest"
+msgstr "La verificació de la integritat dels fitxers no s'ha pogut fer perquè falta el manifest.inc.php."
+
+msgid "General_WarningFileIntegrityNoMd5file"
+msgstr "La verificació de la integritat dels fitxers no s'ha pogut completar perquè falta la funció md5_file();"
+
+msgid "General_WarningPasswordStored"
+msgstr "%1$sAlerta:%2$s Aquesta contrasenya es guardarà en un fitxer de configuració visible on tothom pot accedir."
+
+msgid "General_Website"
+msgstr "Lloc web"
+
+msgid "General_Weekly"
+msgstr "Setmanalment"
+
+msgid "General_WeeklyReport"
+msgstr "setmanal"
+
+msgid "General_WeeklyReports"
+msgstr "Informe setmanal"
+
+msgid "General_WellDone"
+msgstr "Ben fet!"
+
+msgid "General_Widgets"
+msgstr "Ginys"
+
+msgid "General_Widget"
+msgstr "Giny"
+
+msgid "General_YearlyReport"
+msgstr "anual"
+
+msgid "General_YearlyReports"
+msgstr "Informe anual"
+
+msgid "General_YearsDays"
+msgstr "%1$s anys %2$s dies"
+
+msgid "General_Yes"
+msgstr "Sí"
+
+msgid "General_YouAreCurrentlyUsing"
+msgstr "Ara mateix estàs fent servir el Matomo %s."
+
+msgid "General_YouMustBeLoggedIn"
+msgstr "Has d'entrar per accedir a aquesta funcionalitat."
+
+msgid "General_YourChangesHaveBeenSaved"
+msgstr "Els vostres canvis s'han guardat"
+
+msgid "Mobile_AboutPiwikMobile"
+msgstr "Sobre el Matomo al mòbil"
+
+msgid "Mobile_AccessUrlLabel"
+msgstr "Url d'access al Matomo"
+
+msgid "Mobile_Account"
+msgstr "Compte"
+
+msgid "Mobile_Accounts"
+msgstr "Comptes"
+
+msgid "Mobile_AddAccount"
+msgstr "Afegir un compte"
+
+msgid "Mobile_AddPiwikDemo"
+msgstr "Afegir una demo del Matomo"
+
+msgid "Mobile_Advanced"
+msgstr "Avançat"
+
+msgid "Mobile_AnonymousAccess"
+msgstr "Accès anònim"
+
+msgid "Mobile_AnonymousTracking"
+msgstr "Rastreig anònim"
+
+msgid "Mobile_ChooseHttpTimeout"
+msgstr "Seleccioneu el temps d'expiració HTTP"
+
+msgid "Mobile_ChooseMetric"
+msgstr "Trieu una mètrica"
+
+msgid "Mobile_ChooseReport"
+msgstr "Trieu un informe"
+
+msgid "Mobile_ChooseSegment"
+msgstr "Seleccioneu un segment"
+
+msgid "Mobile_ConfirmRemoveAccount"
+msgstr "Voleu eliminar aquest compte?"
+
+msgid "Mobile_DefaultReportDate"
+msgstr "Data de l'informe"
+
+msgid "Mobile_EmailUs"
+msgstr "Envia'ns un email"
+
+msgid "Mobile_EnableGraphsLabel"
+msgstr "Mostra gràfiques"
+
+msgid "Mobile_EvolutionGraph"
+msgstr "Gràfic històric"
+
+msgid "Mobile_HelpUsToImprovePiwikMobile"
+msgstr "T'agradaria activar el rastreig anònim de l'us del Matomo en el teu mòbil?"
+
+msgid "Mobile_HowtoDeleteAnAccountOniOS"
+msgstr "Pasa de l'esquerra cap a la dreta per eliminar un compte"
+
+msgid "Mobile_HttpTimeout"
+msgstr "Temps d'expiració HTTP"
+
+msgid "Mobile_LastUpdated"
+msgstr "Ultima actualització: %s"
+
+msgid "Mobile_LoadingReport"
+msgstr "Carregant %s"
+
+msgid "Mobile_LoginCredentials"
+msgstr "Credencials"
+
+msgid "Mobile_LoginUseHttps"
+msgstr "Utilitza https"
+
+msgid "Mobile_MultiChartLabel"
+msgstr "Mostra minigràfics"
+
+msgid "Mobile_NavigationBack"
+msgstr "Enrere"
+
+msgid "Mobile_NetworkError"
+msgstr "Error de xarxa"
+
+msgid "Mobile_NetworkErrorWithStatusCodeShort"
+msgstr "Error de xarxa %s"
+
+msgid "Mobile_NetworkNotReachable"
+msgstr "La xarxa no és accessible"
+
+msgid "Mobile_NoDataShort"
+msgstr "Sense óinformaci"
+
+msgid "Mobile_NoPiwikAccount"
+msgstr "No teniu un compte de Matomo?"
+
+msgid "Mobile_NoReportsShort"
+msgstr "Sense informes"
+
+msgid "Mobile_NoVisitorFound"
+msgstr "No s'han trobat visitants"
+
+msgid "Mobile_NoVisitorsShort"
+msgstr "Sense visitants"
+
+msgid "Mobile_NoWebsiteFound"
+msgstr "No s'ha trobat el lloc web"
+
+msgid "Mobile_NoWebsitesShort"
+msgstr "Sense llocs web"
+
+msgid "Mobile_PullDownToRefresh"
+msgstr "Estireu per actualitzar..."
+
+msgid "Mobile_IgnoreSslError"
+msgstr "Ignorar error SSL"
+
+msgid "Mobile_RatingDontRemindMe"
+msgstr "No em recordis"
+
+msgid "Mobile_RatingNotNow"
+msgstr "Ara no"
+
+msgid "Mobile_RatingNow"
+msgstr "D'acord, el puntuaré ara"
+
+msgid "Mobile_ReleaseToRefresh"
+msgstr "Solta per refrescar..."
+
+msgid "Mobile_Reloading"
+msgstr "Carregant..."
+
+msgid "Mobile_SaveSuccessError"
+msgstr "La URL del Matomo o la combinació d'usuari contrasenya es incorrecta."
+
+msgid "Mobile_SearchWebsite"
+msgstr "Cerca llocs web"
+
+msgid "Mobile_ShowAll"
+msgstr "Mostra-ho tot"
+
+msgid "Mobile_ShowLess"
+msgstr "Mostra menys"
+
+msgid "Mobile_StaticGraph"
+msgstr "Gràfic de visió general"
+
+msgid "Mobile_TopVisitedWebsites"
+msgstr "Llocs web més visitats"
+
+msgid "Mobile_TryIt"
+msgstr "Prova-ho"
+
+msgid "Mobile_UseSearchBarHint"
+msgstr "Nomes es mostren els %s primers llocs webs aquí. Utilitzeu la barra de cerca per accedir als altres llocs web."
+
+msgid "Mobile_VerifyAccount"
+msgstr "Verificant el compte"
+
+msgid "Mobile_ValidateSslCertificate"
+msgstr "Validar certificat SSL"
+
+msgid "Mobile_VerifyLoginData"
+msgstr "Asegureu-vos del que el vostre nom d'usuari i contrasenya és correcte."
+
+msgid "Mobile_YouAreOffline"
+msgstr "Ho sentim, actualment estàs fora de línia."
+
+msgid "RowEvolution_AvailableMetrics"
+msgstr "Mètriques disponibles"
+
+msgid "RowEvolution_CompareDocumentation"
+msgstr "Feu click a l'enllaç a continuació per obrir aquesta finestra emergent per la mateixa taula i comparar múltiples registres <br /> Utilitzeu la tecla Shit per marcar la fila per a comparació sense obrir aquesta finestra emergent."
+
+msgid "RowEvolution_CompareRows"
+msgstr "Compareu registres"
+
+msgid "RowEvolution_ComparingRecords"
+msgstr "Comparant %s files"
+
+msgid "RowEvolution_Documentation"
+msgstr "Feu click a les mètriques per mostrarle al gràfic d'evolució. Utiltizeu la tecla shift per mostrar múltiples mètriques d'una vegada."
+
+msgid "RowEvolution_MetricBetweenText"
+msgstr "entre %1$s i %2$s"
+
+msgid "RowEvolution_MetricChangeText"
+msgstr "%s en el període"
+
+msgid "RowEvolution_MetricsFor"
+msgstr "Mètriques per %s"
+
+msgid "RowEvolution_MultiRowEvolutionTitle"
+msgstr "Evolució de múltiples files"
+
+msgid "RowEvolution_PickAnotherRow"
+msgstr "Seleccioneu una altra fila per comparar"
+
+msgid "RowEvolution_PickARow"
+msgstr "Seleccioneu una fila per comparar"
+
+msgid "API_GenerateVisits"
+msgstr "Si no disposeu d'informació d'avui podeu generar informació utilitzant l'extensió: %1$s. Heu d'activar l'extensió %2$s i desprès anar al menú 'Generador de visites' de l'espai d'administració del Matomo."
+
+msgid "API_KeepTokenSecret"
+msgstr "El token_auth es tan secret com el vostre usuari i la vostra contrasenya, %1$s no compartiu el seu %2$s!"
+
+msgid "API_LoadedAPIs"
+msgstr "S'ha carregat correctament un total de %s API"
+
+msgid "API_MoreInformation"
+msgstr "Per mes informació sobre les APIs de Matomo, siusplau reviseu %1$s Introducció a l'API de Matomo %2$s i %3$s la Referència de l'API de Matomo %4$s."
+
+msgid "API_TopLinkTooltip"
+msgstr "Accediu a la vostra informació de l'anàlisis Web d'una forma programada a través d'una API simple en json, xml, etc."
+
+msgid "API_UserAuthentication"
+msgstr "Autentificació de l'usuari"
+
+msgid "API_UsingTokenAuth"
+msgstr "Si voleu %1$s obtenir informació a través d'un script, un crontab, etc %2$s heu d'afegir el paràmetre %3$s a les crides a la APU per les URLs que requereixen autentificació."
+
+msgid "Actions_AvgGenerationTimeTooltip"
+msgstr "Promig basat en %1$s accessos %2$s entre %3$s i %4$s"
+
+msgid "Actions_ColumnClickedURL"
+msgstr "URL picada"
+
+msgid "Actions_ColumnClicks"
+msgstr "Clics"
+
+msgid "Actions_ColumnClicksDocumentation"
+msgstr "Nombre de vegades que s'ha fet clic en aquest enllaç"
+
+msgid "Actions_ColumnDownloadURL"
+msgstr "URL de descàrrega"
+
+msgid "Actions_ColumnEntryPageTitle"
+msgstr "Títol de la pàgina d'entrada"
+
+msgid "Actions_ColumnEntryPageURL"
+msgstr "URL de la pàgina d'entrada"
+
+msgid "Actions_ColumnExitPageTitle"
+msgstr "URL de la pàgina de sortida"
+
+msgid "Actions_ColumnExitPageURL"
+msgstr "URL de la pàgina de sortida"
+
+msgid "Actions_ColumnNoResultKeyword"
+msgstr "Paraula clau sense cap resultat de cerca"
+
+msgid "Actions_ColumnPageName"
+msgstr "Nom de la pàgina"
+
+msgid "Actions_ColumnPagesPerSearch"
+msgstr "Pàgines dels resultats de la cerca"
+
+msgid "Actions_ColumnPagesPerSearchDocumentation"
+msgstr "Els visitants busquen al vostre lloc web i a vegades cliquen sobre el botó següent. Aquest nombre es la mitga de pàgines de resultats de la cerca vistes per aquesta paraula clau."
+
+msgid "Actions_ColumnPageURL"
+msgstr "URL de la pàgina"
+
+msgid "Actions_ColumnSearchCategory"
+msgstr "Categoria de cerca"
+
+msgid "Actions_ColumnSearches"
+msgstr "Cerques"
+
+msgid "Actions_ColumnSearchesDocumentation"
+msgstr "Nombre de visitants que han cercat aquesta paraula clau al cercador de la vostra pàgina web."
+
+msgid "Actions_ColumnSearchExitsDocumentation"
+msgstr "El percentatge de visites que marxen del vostre lloc web desprès de cercar aquesta paraula al cercador del vostre lloc web."
+
+msgid "Actions_ColumnSearchResultsCount"
+msgstr "Resultats de la cerca"
+
+msgid "Actions_ColumnSiteSearchKeywords"
+msgstr "Paraules clau úniques"
+
+msgid "Actions_ColumnUniqueClicks"
+msgstr "Clics únics"
+
+msgid "Actions_ColumnUniqueClicksDocumentation"
+msgstr "EL nombre de visites que han fet click en aquest enllaç. Si l'enllaç s'ha clicat més d'una vegada durant una visita només es conta un."
+
+msgid "Actions_ColumnUniqueDownloads"
+msgstr "Descàrregues úniques"
+
+msgid "Actions_ColumnUniqueOutlinks"
+msgstr "Enllaços de sortida únics"
+
+msgid "Actions_DownloadsReportDocumentation"
+msgstr "En aquest informe podeu observar quins fitxers han descarrregats els visitants. %s El Matomo només té constància dels clicks als enllaços de descarga, desconeix si la descàrrega s'ha completat o no."
+
+msgid "Actions_EntryPageTitles"
+msgstr "Títols de les pàgines d'entrada"
+
+msgid "Actions_EntryPageTitlesReportDocumentation"
+msgstr "Aquest informe conté la informació sobre els títols de les pàgines d'entrada que s'han utilitzat durant el període especificat."
+
+msgid "Actions_ExitPageTitles"
+msgstr "Títols de les pàgines de sortida"
+
+msgid "Actions_ExitPageTitlesReportDocumentation"
+msgstr "Aquest informe conté els títols de les pàgins de sortida que s'han utiltizat durant el període especificat."
+
+msgid "Actions_LearnMoreAboutSiteSearchLink"
+msgstr "Apren més sobre com els teus visitants utiltizent el motor de cerca del teu lloc web."
+
+msgid "Actions_OneSearch"
+msgstr "1 cerca"
+
+msgid "Actions_OutlinkDocumentation"
+msgstr "Un enllaç de sortida es un enllaç que porta el visitant fora del teu lloc web (a un altre domini)"
+
+msgid "Actions_OutlinksReportDocumentation"
+msgstr "Aquest informe mostra una lista jeràrquica de les URL de sortida que han estat clicades pels vostres visitants."
+
+msgid "Actions_PagesReportDocumentation"
+msgstr "Aquest informe conté les URL de les pàgines que s'han visitat. %s La taula s'organitza jerarquicament, i les URL es mostren amb estructura de directoris."
+
+msgid "Actions_PageTitlesReportDocumentation"
+msgstr "Aquest informe conté informació sobre els títols de les pàgines que s'han visitat. %1$s El títol de la pàgina es el tag HTML: %2$s, que es mostra al títol de la finestra en la majoría de navegadors."
+
+msgid "Actions_PageUrls"
+msgstr "URLs de les pàgines"
+
+msgid "Actions_PluginDescription"
+msgstr "Informa sobre les vistes i títols de pàgina. Et permet mesurar el motor de cerca intern del teu lloc web. Monitoritza automàticament els clics en enllaços externs i descàrregues de fitxers."
+
+msgid "Actions_SiteSearchCategories1"
+msgstr "Aquest informe mostra les categoríes que han seleccionat els visitants quan han fet una cerca al vostre lloc web"
+
+msgid "Actions_SiteSearchCategories2"
+msgstr "Per exemple, els llocs de Ecommers normalment tenen un selector de categoria que permet als visitants restringir les seves cerces als productes d'una Categoría concreta."
+
+msgid "Actions_SiteSearchFollowingPagesDoc"
+msgstr "Quan els visitants cerquen al teu lloc web, estan buscant una pàgina, un contingut, un producte o un servei en particular. Aquest informe mostra les pàgines que han estat clicades més vegades desprès d'una cerca interna. En altres paraules, la llista de pàgines que han estat més cercades pels visitants que ja están al vostre lloc web."
+
+msgid "Actions_SiteSearchIntro"
+msgstr "Observar les cerques que els visitants fan al vostre lloc web és una forma molt efectiva d'aprendre més sobre el que està cercant la teva audiència. Pot ajudar a trobar idees per a nou contingut, nous productes que els teus visitants poden estar buscar i permet millorar l'experiència dels visitants al vostre lloc web."
+
+msgid "Actions_SiteSearchKeyword"
+msgstr "Paraula clau (Cerca en lloc web)"
+
+msgid "Actions_SiteSearchKeywordsDocumentation"
+msgstr "Aquest informe mostra les Paraules clau que els visitants han utiltizat per cercar al cercador del vostre lloc web."
+
+msgid "Actions_SiteSearchKeywordsNoResultDocumentation"
+msgstr "Aquest informe llista les paraules clau que no han tingut cap resultat. Potser es pot optimitzar l'algorisme de cerca o potser els vostres visitants estan cercant contingut que (encara) no existeix al vostre lloc web?"
+
+msgid "Actions_SubmenuPagesEntry"
+msgstr "Pàgines d'entrada"
+
+msgid "Actions_SubmenuPagesExit"
+msgstr "Pàgines de sortida"
+
+msgid "Actions_SubmenuPageTitles"
+msgstr "Títols de les pàgines"
+
+msgid "Actions_SubmenuSitesearch"
+msgstr "Cerca al lloc"
+
+msgid "Actions_WidgetEntryPageTitles"
+msgstr "Títols de les pàgines d'entrada"
+
+msgid "Actions_WidgetExitPageTitles"
+msgstr "Títols de les pàgines de sortida"
+
+msgid "Actions_WidgetPagesEntry"
+msgstr "Pàgines d'entrada"
+
+msgid "Actions_WidgetPagesExit"
+msgstr "Pàgines de sortida"
+
+msgid "Actions_WidgetPageTitles"
+msgstr "Títols de les pàgines"
+
+msgid "Actions_WidgetPageTitlesFollowingSearch"
+msgstr "Títols de les pàgines desprès d'una cerca Interna"
+
+msgid "Actions_WidgetPageUrlsFollowingSearch"
+msgstr "Pàgines despes d'una cerca interna"
+
+msgid "Actions_WidgetSearchCategories"
+msgstr "Categoríes de cerca"
+
+msgid "Actions_WidgetSearchKeywords"
+msgstr "Paraules de cerca al lloc"
+
+msgid "Actions_WidgetSearchNoResultKeywords"
+msgstr "Paraules Clau de cerca sense resultats"
+
+msgid "Annotations_AddAnnotationsFor"
+msgstr "Afegir una anotació per %s"
+
+msgid "Annotations_AnnotationOnDate"
+msgstr "Anotació per %1$s: %2$s"
+
+msgid "Annotations_Annotations"
+msgstr "Anotacions"
+
+msgid "Annotations_ClickToDelete"
+msgstr "Feu click per eliminar l'anotació"
+
+msgid "Annotations_ClickToEdit"
+msgstr "Feu click per editar aquesta anotació"
+
+msgid "Annotations_ClickToEditOrAdd"
+msgstr "Feu click per editar o afegir una anotació"
+
+msgid "Annotations_ClickToStarOrUnstar"
+msgstr "Feu click per marcar o desmarcar aquesta nota."
+
+msgid "Annotations_CreateNewAnnotation"
+msgstr "Crea una nova anotació..."
+
+msgid "Annotations_EnterAnnotationText"
+msgstr "Introduix la teva nota..."
+
+msgid "Annotations_HideAnnotationsFor"
+msgstr "Amaga les anotacións per %s..."
+
+msgid "Annotations_IconDesc"
+msgstr "Veure les notes d'aquest rang."
+
+msgid "Annotations_IconDescHideNotes"
+msgstr "Amaga les notes d'aquest rang."
+
+msgid "Annotations_InlineQuickHelp"
+msgstr "Podeu crear anotacions per marcar events especials (una nova entrada al blog, el rediseny del web). Les annotacions us permeten guardar el vostre anàlisis de la informació o qualsevol altra cosa que creïeu important."
+
+msgid "Annotations_LoginToAnnotate"
+msgstr "Identifiqueu-vos per crear una anotació."
+
+msgid "Annotations_NoAnnotations"
+msgstr "No hi ha notes per aquest rang de pàgines."
+
+msgid "Annotations_PluginDescription"
+msgstr "Permet afegir notes als diferents dies perquè pogueu recordar perquè la vostra inforamció es mostra d'una determinada forma."
+
+msgid "Annotations_ViewAndAddAnnotations"
+msgstr "Mostra i afegeix anotacions per %s..."
+
+msgid "Annotations_YouCannotModifyThisNote"
+msgstr "No podeu modificar aquesta nota perquè o bé no l'heu creada vosatres, o no teni accès d'administrador per aquest lloc web."
+
+msgid "Contents_ContentName"
+msgstr "Nom del contingut"
+
+msgid "Contents_Contents"
+msgstr "Continguts"
+
+msgid "CoreAdminHome_Administration"
+msgstr "Administració"
+
+msgid "CoreAdminHome_BrandingSettings"
+msgstr "Preferències del Branding"
+
+msgid "CoreAdminHome_ClickHereToOptIn"
+msgstr "Feu click aquí per apuntar-vos."
+
+msgid "CoreAdminHome_ClickHereToOptOut"
+msgstr "Feu click aquí per desapuntar-vos."
+
+msgid "CoreAdminHome_CustomLogoFeedbackInfo"
+msgstr "Si heu personalitzat el log de Matomo, potser també estareu interesants en amagar %1$s l'enllaç al menú superior. Per a fer-ho, podeu deshabilitar l'extensió de Feedback a la pàgina %2$sManage Plugins%3$s"
+
+msgid "CoreAdminHome_CustomLogoHelpText"
+msgstr "Podeu personalitzar el logo de Matomo que es mostrarà a l'interfície d'usuari i als informes d'emails."
+
+msgid "CoreAdminHome_EmailServerSettings"
+msgstr "Configuració del servidor de correu"
+
+msgid "CoreAdminHome_ImageTracking"
+msgstr "Seguiment per imatge"
+
+msgid "CoreAdminHome_ImageTrackingIntro1"
+msgstr "Quan un visitant ha deshabilitat el JavaScript, o quan el JavaScript no es pot fer servir, podeu fer servir un enllaç a una imatge de seguiment per seguir les vistes."
+
+msgid "CoreAdminHome_ImageTrackingIntro2"
+msgstr "Generar l'enllaç de sota i copiar-enganxar el codi HTML generat a la pàgina. Si esteu fent servir això com alternativa al seguiment amb JavaScript, heu d'envoltar el codi en %1$s tags."
+
+msgid "CoreAdminHome_ImageTrackingIntro3"
+msgstr "Per la llista completa d'opcions que podeu fer servir amb una imatge de seguiment, mireu a la %1$sDocumentació de Tracking API%2$s."
+
+msgid "CoreAdminHome_ImageTrackingLink"
+msgstr "Enllaç de seguiment amb imatge"
+
+msgid "CoreAdminHome_ImportingServerLogs"
+msgstr "Important els Registres del Servidor"
+
+msgid "CoreAdminHome_ImportingServerLogsDesc"
+msgstr "Una alternativa a seguir els visitants a través del navegador (tant amb JavaScript com amb un enllaç de imatge) és important continuament els registres del servidor. Informeu-vos més a %1$sServer Log File Analytics%2$s."
+
+msgid "CoreAdminHome_JavaScriptTracking"
+msgstr "Seguiment amb Javascript"
+
+msgid "CoreAdminHome_JSTrackingIntro5"
+msgstr "Si desitja fer més que rastrejar visites de pàgina, revisa la %1$sDocumentació javascript de Matomo %2$s sobre la llista de funcions disponibles. Utilitzant aquestes funcions, pots rastrejar objectius, variables personalitzades, compres d'e-comerç, compres abandonades i més."
+
+msgid "CoreAdminHome_LogoUpload"
+msgstr "Seleccioneu un logo per pujar"
+
+msgid "CoreAdminHome_MenuGeneralSettings"
+msgstr "Configuració general"
+
+msgid "CoreAdminHome_OptOutComplete"
+msgstr "Baixa complerta. Les teves visites en aquest lloc web no es tindrán en compte per l'eina d'anàlisis Web."
+
+msgid "CoreAdminHome_OptOutCompleteBis"
+msgstr "Teniu en compte que si borreu les cookies, borreu la cookie de baixa o si canvieu d'ordenador o de navegadaor web, haureu de tornar a realitzar el proces de baixa."
+
+msgid "CoreAdminHome_OptOutExplanation"
+msgstr "El Matomo, podeu afegir el següent codi HTML a una de les pàgiens del vostre lloc web, per exemple a la pàgina de política de privacitat."
+
+msgid "CoreAdminHome_OptOutForYourVisitors"
+msgstr "Pàgina de baixa del Matomo pels vostres visitants"
+
+msgid "CoreAdminHome_PiwikIsInstalledAt"
+msgstr "El Matomo està instal·lat a"
+
+msgid "CoreAdminHome_TrustedHostConfirm"
+msgstr "Esteu segur que voleu canviar el nom nom de la màquina (hostname) de confiança del Matomo?"
+
+msgid "CoreAdminHome_TrustedHostSettings"
+msgstr "Nom del host de Matomo de confiança"
+
+msgid "CoreAdminHome_UseCustomLogo"
+msgstr "Utilitza un logo personalitzat"
+
+msgid "CoreAdminHome_ValidPiwikHostname"
+msgstr "Nom del host de Matomo vàlid"
+
+msgid "CoreAdminHome_YouAreOptedOut"
+msgstr "Actualment esteu donat de baixa."
+
+msgid "CoreAdminHome_YouMayOptOut"
+msgstr "Podeu escollir no tenir un únic nombre d'identificació assignat al vostre ordinador per evitar l'agregació i l'anàlisi de la informació recollida en aquest lloc web."
+
+msgid "CoreAdminHome_YouMayOptOutBis"
+msgstr "Per prendre aquesta decisió, feu click a continuació per rebre una cookie de baixa."
+
+msgid "CoreHome_CategoryNoData"
+msgstr "No hi ha dades en aquesta categoria. Proveu d'incloure tota la població."
+
+msgid "CoreHome_CheckForUpdates"
+msgstr "Cerca actualitzacions"
+
+msgid "CoreHome_DataForThisReportHasBeenPurged"
+msgstr "La informació d'aquest informés és anterior a %s mesos d'antiguitat i s'ha purgat."
+
+msgid "CoreHome_DataTableExcludeAggregateRows"
+msgstr "Es mostren les files aggrupades %s Amaga-ho"
+
+msgid "CoreHome_DataTableIncludeAggregateRows"
+msgstr "No es mostren les files agrupades %s Mostra-les"
+
+msgid "CoreHome_Default"
+msgstr "per defecte"
+
+msgid "CoreHome_ExcludeRowsWithLowPopulation"
+msgstr "Es mostren totes les files %s No mostris la població inferior"
+
+msgid "CoreHome_FlattenDataTable"
+msgstr "L'informe es jeràrquic %s Feu-lo pla."
+
+msgid "CoreHome_IncludeRowsWithLowPopulation"
+msgstr "No es mostren les files amb polbació inferior %s Mostra totes les files"
+
+msgid "CoreHome_InjectedHostEmailBody"
+msgstr "Hola, He provat d'accedir al Matomo avui i m'he trobat amb l'avís de nom de la màquina desconegut."
+
+msgid "CoreHome_InjectedHostEmailSubject"
+msgstr "S'ha accedit al Matomo amb un nom de màquina desconegut: %s"
+
+msgid "CoreHome_InjectedHostNonSuperUserWarning"
+msgstr "%1$sClick here to access Matomo safely%2$s i eliminar aaquest avíst. Potse també voldreu contractar amb l'administrador del vostre Matomo i notificar-li aquesta incidència (%3$sclick here to email%4$s)."
+
+msgid "CoreHome_InjectedHostSuperUserWarning"
+msgstr "Pot ser que el Matomo estigui mal configurat (per exemple, si el Matomo s'ha mogut a un nou servidor o URL). Podeu %1$sfer click aquí i afegir %2$s com el nom de la màquina vàlid (si hi confieu)%3$s, o bé %4$s fer click aquí %5$s per accedir al Matomo de forma segura%6$s."
+
+msgid "CoreHome_InjectedHostWarningIntro"
+msgstr "Esteu accedint al Matomo desde %1$s, però el Matomo està configurat per escoltar a l'adreça: %2$s."
+
+msgid "CoreHome_JavascriptDisabled"
+msgstr "S'ha de tenir el Javascript activat per vistualitzar la vista estàndar del Matomo.<br/> No obstant això, sembla que el Javascript esta deshabilitat or no està suportat pel vostre navegador<br/> Per utilitzar la vista estàndarc, activeu el Javascript canviant les opcions del navegador i %1$storneu-ho a probar%2$s.<br />"
+
+msgid "CoreHome_NoPrivilegesAskPiwikAdmin"
+msgstr "Esteu identificat com a '%1$s' però sembla que no teniu cap permís establert al Matomo. %2$s Pregunteu al vostre administrador de Matomo (feu click per enviar un email)%3$s que us dongui access per veure un lloc web."
+
+msgid "CoreHome_PeriodRange"
+msgstr "Rang"
+
+msgid "CoreHome_ReportGeneratedOn"
+msgstr "Informe generat el %s"
+
+msgid "CoreHome_ReportGeneratedXAgo"
+msgstr "Informe generat fa %s"
+
+msgid "CoreHome_ShowJSCode"
+msgstr "Mostra el codi JavaScript necessari"
+
+msgid "CoreHome_ThereIsNoDataForThisReport"
+msgstr "No hi ha informació per aquest informe."
+
+msgid "CoreHome_UnFlattenDataTable"
+msgstr "Aquest informe es pla %s Feu-lo jeràrquic"
+
+msgid "CoreHome_WebAnalyticsReports"
+msgstr "Informe d'analítica web"
+
+msgid "CoreHome_YouAreUsingTheLatestVersion"
+msgstr "Esteu fent servir l'última versió de Matomo!"
+
+msgid "CoreHome_SystemSummaryPhpVersion"
+msgstr "Versió del PHP"
+
+msgid "CorePluginsAdmin_Activate"
+msgstr "Activa"
+
+msgid "CorePluginsAdmin_Activated"
+msgstr "Actiu"
+
+msgid "CorePluginsAdmin_Active"
+msgstr "Actiu"
+
+msgid "CorePluginsAdmin_Activity"
+msgstr "Activitat"
+
+msgid "CorePluginsAdmin_AuthorHomepage"
+msgstr "Pàgina de l'autor"
+
+msgid "CorePluginsAdmin_Deactivate"
+msgstr "Desactiva"
+
+msgid "CorePluginsAdmin_Inactive"
+msgstr "Inactiu"
+
+msgid "CorePluginsAdmin_LicenseHomepage"
+msgstr "Pàgina de la llicència"
+
+msgid "CorePluginsAdmin_PluginsExtendPiwik"
+msgstr "Els connectors augmenten la funcionalitat del Matomo."
+
+msgid "CorePluginsAdmin_OncePluginIsInstalledYouMayActivateHere"
+msgstr "Un cop hi ha un connector instal·lat, podeu activar-lo i desactivar-lo aquí."
+
+msgid "CorePluginsAdmin_PluginHomepage"
+msgstr "Pàgina web"
+
+msgid "CorePluginsAdmin_PluginsManagement"
+msgstr "Gestiona els connectors"
+
+msgid "CorePluginsAdmin_Status"
+msgstr "Estat"
+
+msgid "CorePluginsAdmin_Version"
+msgstr "Versió"
+
+msgid "CorePluginsAdmin_Websites"
+msgstr "Llocs"
+
+msgid "CoreUpdater_CriticalErrorDuringTheUpgradeProcess"
+msgstr "Hi ha hagut un error crític durant el procés d'actualització:"
+
+msgid "CoreUpdater_DatabaseUpgradeRequired"
+msgstr "És necessari actualitzar la base de dades"
+
+msgid "CoreUpdater_DownloadingUpdateFromX"
+msgstr "S'està descarregant l'actualització de %s"
+
+msgid "CoreUpdater_DownloadX"
+msgstr "Descarrega %s"
+
+msgid "CoreUpdater_EmptyDatabaseError"
+msgstr "La base de dades %s està buida. Heu d'editar o esborrar el fitxer de configuració del Matomo."
+
+msgid "CoreUpdater_ErrorDIYHelp"
+msgstr "Si sou un usuari avançat i trobeu un error en l'actualització de la base de dades:"
+
+msgid "CoreUpdater_ErrorDIYHelp_1"
+msgstr "identifiqueu i corregiu l'origen de l'error (per exemple: memory_limit o max_execution_time)"
+
+msgid "CoreUpdater_ErrorDIYHelp_2"
+msgstr "executeu les consultes restants de l'actualització que han fallat"
+
+msgid "CoreUpdater_ErrorDIYHelp_3"
+msgstr "actualitzeu la taula `option` de la base de dades del Matomo, introduint la versió que ha fallat a l'hora d'actualitzar a version_core"
+
+msgid "CoreUpdater_ErrorDIYHelp_4"
+msgstr "torneu a engegar l'actualització (a través del navegador o la línia de comandes) per a continuar amb les actualitzacions restants."
+
+msgid "CoreUpdater_ErrorDIYHelp_5"
+msgstr "informeu sobre el problema (i la solució) per tal que puguem millorar el Matomo"
+
+msgid "CoreUpdater_ErrorDuringPluginsUpdates"
+msgstr "Hi ha hagut errors en l'actualització dels connectors"
+
+msgid "CoreUpdater_ExceptionAlreadyLatestVersion"
+msgstr "El Matomo està actualitzat a la versió %s."
+
+msgid "CoreUpdater_ExceptionArchiveEmpty"
+msgstr "Arxiu buit"
+
+msgid "CoreUpdater_ExceptionArchiveIncompatible"
+msgstr "Arxiu incompatible: %s"
+
+msgid "CoreUpdater_ExceptionArchiveIncomplete"
+msgstr "L'arxiu és incomplet: manquen alguns fitxers (per exemple, %s)."
+
+msgid "CoreUpdater_HelpMessageContent"
+msgstr "Comproveu les %1$s PMF del Matomo (en anglès) %2$s, que intenten explicar els errors més comuns a l'actualització. %3$s Pregunteu a l'administrador del sistema, podria ajudar-vos amb l'error, que sembla estar relacionat amb el servidor o la instal·lació del MySQL."
+
+msgid "CoreUpdater_HelpMessageIntroductionWhenError"
+msgstr "El que hi ha a sobre és l'error del nucli. Hauria d'explicar la causa, però si necessiteu més ajuda, si us plau:"
+
+msgid "CoreUpdater_HelpMessageIntroductionWhenWarning"
+msgstr "La actualització s'ha completat amb èxit, però hi ha hagut alguns problemes durant el procés. Si us plau, llegiu les descripcions que hi ha a sobre per a saber més detalls. Si voleu més informació:"
+
+msgid "CoreUpdater_InstallingTheLatestVersion"
+msgstr "S'està instal·lant la darrera versió"
+
+msgid "CoreUpdater_MajorUpdateWarning1"
+msgstr "Es tracta una actualització major! Tardarà més de l'habitual"
+
+msgid "CoreUpdater_MajorUpdateWarning2"
+msgstr "Aquest avís és extremadament important per instalacion amb gran quantitat d'informació."
+
+msgid "CoreUpdater_NoteForLargePiwikInstances"
+msgstr "Notes importants per instalacions del Matomo amb gran quanitat d'informació"
+
+msgid "CoreUpdater_PiwikHasBeenSuccessfullyUpgraded"
+msgstr "El Matomo s'ha actualitzat amb èxit!"
+
+msgid "CoreUpdater_PiwikUpdatedSuccessfully"
+msgstr "El Matomo s'ha actualitzat correctament!"
+
+msgid "CoreUpdater_PiwikWillBeUpgradedFromVersionXToVersionY"
+msgstr "La base de dades s'actualitzarà de la versió %1$s a la nova %2$s."
+
+msgid "CoreUpdater_ReadyToGo"
+msgstr "Preparat?"
+
+msgid "CoreUpdater_TheFollowingPluginsWillBeUpgradedX"
+msgstr "Aquests connectors s'actualitzaran: %s."
+
+msgid "CoreUpdater_ThereIsNewVersionAvailableForUpdate"
+msgstr "Hi ha una nova versió del Matomo disponible."
+
+msgid "CoreUpdater_TheUpgradeProcessMayFailExecuteCommand"
+msgstr "Si teuniu una gran base de dades del Matomo, les actualitzacions poden tardar massa per executar-les des del navegador. En aquesta situació podeu executar les actualitzacions desde la línia de comandes: %s"
+
+msgid "CoreUpdater_TheUpgradeProcessMayTakeAWhilePleaseBePatient"
+msgstr "El procés d'actualització pot durar una estona, tingueu paciència."
+
+msgid "CoreUpdater_UnpackingTheUpdate"
+msgstr "S'està desempacant l'actualització"
+
+msgid "CoreUpdater_UpdateAutomatically"
+msgstr "Actualitza automàticament"
+
+msgid "CoreUpdater_UpdateHasBeenCancelledExplanation"
+msgstr "L'actualització en un clic del Matomo ha estat cancel·lada. Si no podeu arreglar l'error de més amunt, us recomanem que actualitzeu el Matomo manualment. %1$s Si us plau, mireu-vos la %2$sDocumentació d'actualització (en anglès)%3$s per a començar!"
+
+msgid "CoreUpdater_UpdateTitle"
+msgstr "Actualització del Matomo"
+
+msgid "CoreUpdater_UpdateSuccessTitle"
+msgstr "El Matomo s'ha actualitzat amb èxit!"
+
+msgid "CoreUpdater_UpgradeComplete"
+msgstr "S'ha actualitzat amb èxit!"
+
+msgid "CoreUpdater_UpgradePiwik"
+msgstr "Actualitza el Matomo"
+
+msgid "CoreUpdater_VerifyingUnpackedFiles"
+msgstr "S'estan verificant els fitxers"
+
+msgid "CoreUpdater_WarningMessages"
+msgstr "Avisos:"
+
+msgid "CoreUpdater_WeAutomaticallyDeactivatedTheFollowingPlugins"
+msgstr "S'han desactivat automàticament els connectors següents: %s"
+
+msgid "CoreUpdater_YouCanUpgradeAutomaticallyOrDownloadPackage"
+msgstr "Podeu actualitzar a la versió %s automàticament o baixar-vos el paquet i instal·lar-lo manualment."
+
+msgid "CoreUpdater_YourDatabaseIsOutOfDate"
+msgstr "La base de dades del Matomo és antiga i cal actualitzar-la abans de continuar."
+
+msgid "CustomVariables_ColumnCustomVariableName"
+msgstr "Nom de la variable personalitzada"
+
+msgid "CustomVariables_ColumnCustomVariableValue"
+msgstr "Valor de la variable personalitzada"
+
+msgid "CustomVariables_CustomVariables"
+msgstr "Variables personalitzades"
+
+msgid "CustomVariables_CustomVariablesReportDocumentation"
+msgstr "Aquest informe conté informació sobre les variables personaltizades. Feu click al nom d'una variable per veure la distribució dels valors. %1$s Per més informació sobre les variables personalitzades, podeu llegir la %2$sdocumentació sobre variables peronalitzades a matomo.org%3$s"
+
+msgid "CustomVariables_ScopePage"
+msgstr "àmbit de la pàgina"
+
+msgid "CustomVariables_ScopeVisit"
+msgstr "àmbit de la visita"
+
+msgid "DBStats_DatabaseUsage"
+msgstr "Ús de la base de dades"
+
+msgid "DBStats_DataSize"
+msgstr "Grandària de les dades"
+
+msgid "DBStats_DBSize"
+msgstr "Mida de la BD"
+
+msgid "DBStats_EstimatedSize"
+msgstr "Mida estimada"
+
+msgid "DBStats_IndexSize"
+msgstr "Grandària del l'índex"
+
+msgid "DBStats_LearnMore"
+msgstr "Per obtenir més informació sobre com el Matomo procesa la informació i com fer que el Matomo funcioni correctament en llocs amb un tràfic mitja o elevat, consulteu la següent documentació: %s."
+
+msgid "DBStats_MainDescription"
+msgstr "El Matomo desa totes les anàlisis web la base de dades MySQL. Ara per ara, les taules del Matomo fan servir %s."
+
+msgid "DBStats_MetricDataByYear"
+msgstr "Taules de mètriques per any."
+
+msgid "DBStats_MetricTables"
+msgstr "Taules de mètriques"
+
+msgid "DBStats_OtherTables"
+msgstr "Altres taules"
+
+msgid "DBStats_ReportDataByYear"
+msgstr "Taules d'informes per any"
+
+msgid "DBStats_ReportTables"
+msgstr "Taules d'informes"
+
+msgid "DBStats_RowCount"
+msgstr "Nombre de files"
+
+msgid "DBStats_Table"
+msgstr "Taula"
+
+msgid "DBStats_TotalSize"
+msgstr "Grandària total"
+
+msgid "DBStats_TrackerTables"
+msgstr "Taules de rastreig"
+
+msgid "Dashboard_AddAWidget"
+msgstr "Afegir un Giny"
+
+msgid "Dashboard_AddPreviewedWidget"
+msgstr "Afegeix el giny al tauler"
+
+msgid "Dashboard_ChangeDashboardLayout"
+msgstr "Canviar el disseny del tauler"
+
+msgid "Dashboard_CopyDashboardToUser"
+msgstr "Copiar tauler a l'usuari"
+
+msgid "Dashboard_CreateNewDashboard"
+msgstr "Crear un nou tauler"
+
+msgid "Dashboard_Dashboard"
+msgstr "Tauler"
+
+msgid "Dashboard_DashboardCopied"
+msgstr "S'ha copiat correctament el tauler a l'usuari seleccionat"
+
+msgid "Dashboard_DashboardEmptyNotification"
+msgstr "El vostre tauler no conté cap giny. Comenceu per afegir alguns ginys o restablieu el tauler a la selecció de ginys per defecte."
+
+msgid "Dashboard_DashboardName"
+msgstr "Nom del tauler:"
+
+msgid "Dashboard_DashboardOf"
+msgstr "Tauler de %s"
+
+msgid "Dashboard_DefaultDashboard"
+msgstr "Tauler per defecte - Utilitzant la selecció de ginys i l'estructura de columnes per defecte"
+
+msgid "Dashboard_DeleteWidgetConfirm"
+msgstr "Realment voleu esborrar aquest giny?"
+
+msgid "Dashboard_EmptyDashboard"
+msgstr "Tauler buit - Seleccioneu els vostres ginys preferits"
+
+msgid "Dashboard_LoadingWidget"
+msgstr "S'està carregant el giny…"
+
+msgid "Dashboard_ManageDashboard"
+msgstr "Administrar tauler"
+
+msgid "Dashboard_Maximise"
+msgstr "Maximitza"
+
+msgid "Dashboard_Minimise"
+msgstr "Minimitza"
+
+msgid "Dashboard_NotUndo"
+msgstr "No podreu desfer aquesta operació"
+
+msgid "Dashboard_PluginDescription"
+msgstr "El teu taulell d'analítica web. Personalitza el teu taulell afegint nous ginys, arrossega i solta per a moure'ls i canvia l'estructura de columnes. Cada usuari pot tenir el seu taulell personalitzat."
+
+msgid "Dashboard_RemoveDashboard"
+msgstr "Elimina el tauler"
+
+msgid "Dashboard_RemoveDashboardConfirm"
+msgstr "Esteu segurs que voleu eliminar el tauler \"%s\"?"
+
+msgid "Dashboard_RenameDashboard"
+msgstr "Reanomena el tauler"
+
+msgid "Dashboard_ResetDashboard"
+msgstr "Reinicialitza el tauler"
+
+msgid "Dashboard_ResetDashboardConfirm"
+msgstr "Esteu segurs que voleu reiniciar la disposició del vostre tauler a la selecció de ginys per defecte?"
+
+msgid "Dashboard_SelectDashboardLayout"
+msgstr "Seleccioneu la nova disposició del vostre tauler"
+
+msgid "Dashboard_SelectWidget"
+msgstr "Escolliu el giny que voleu afegir a la consola"
+
+msgid "Dashboard_SetAsDefaultWidgets"
+msgstr "Marca com a selecció de ginys per defecte."
+
+msgid "Dashboard_SetAsDefaultWidgetsConfirm"
+msgstr "Esteu segurs que voleu definir la selecció de ginys i la disposició del tauler actuals per a la plantilla de tauler per defecte?"
+
+msgid "Dashboard_SetAsDefaultWidgetsConfirmHelp"
+msgstr "Aquesta selecció de ginys i la disposició de columnes del tauler es faran servir quan qualsevol usuari crei un nou tauler o quan s'utiltiza la funció \"%s\"."
+
+msgid "Dashboard_TopLinkTooltip"
+msgstr "Mostra els informes d'analítica web per %s."
+
+msgid "Dashboard_WidgetNotFound"
+msgstr "Aquest giny no s'ha trobat"
+
+msgid "Dashboard_WidgetPreview"
+msgstr "Previsualitza el giny"
+
+msgid "DevicePlugins_BrowserWithNoPluginsEnabled"
+msgstr "%1$s sense connectors activats"
+
+msgid "DevicePlugins_BrowserWithPluginsEnabled"
+msgstr "%1$s amb els connectors %2$s activats"
+
+msgid "DevicePlugins_PluginDescription"
+msgstr "Mostra la llista de connectors que suporten els navegadors dels visitants"
+
+msgid "DevicePlugins_WidgetPlugins"
+msgstr "Llistat de connectors"
+
+msgid "DevicePlugins_WidgetPluginsDocumentation"
+msgstr "Aquest informe mostra quins connectors tenen els vostres visitants activades. Aquesta informació pot ser important per determinar la forma correcta de mostrar el contingut."
+
+msgid "DevicesDetection_BrowserEngine"
+msgstr "Navegador"
+
+msgid "DevicesDetection_BrowserEngineDocumentation"
+msgstr "Aquest gràfic mostra els navegadors dels vostres visitants dividits en famílies. %s La informació més important per als desenvolupadors web es quin tipus de sistema de renderització estan utilitzant els seus visitants. Les etiquetiquetes contenen els noms dels sistemes, seguit pel navegador més comú utilitzant aquest sistema."
+
+msgid "DevicesDetection_BrowserEngines"
+msgstr "motors de navegació"
+
+msgid "DevicesDetection_BrowserFamily"
+msgstr "Família del navegador"
+
+msgid "DevicesDetection_Browsers"
+msgstr "Navegadors"
+
+msgid "DevicesDetection_BrowserVersion"
+msgstr "Versió del navegador"
+
+msgid "DevicesDetection_BrowserVersions"
+msgstr "versions del navegador"
+
+msgid "DevicesDetection_Camera"
+msgstr "càmera"
+
+msgid "DevicesDetection_CarBrowser"
+msgstr "navegador de cotxe"
+
+msgid "DevicesDetection_Software"
+msgstr "Software"
+
+msgid "DevicesDetection_ColumnBrowser"
+msgstr "Navegador"
+
+msgid "DevicesDetection_ColumnOperatingSystem"
+msgstr "Sistema operatiu"
+
+msgid "DevicesDetection_ColumnOperatingSystemVersion"
+msgstr "Versió del sistema operatiu"
+
+msgid "DevicesDetection_Console"
+msgstr "Consola"
+
+msgid "DevicesDetection_dataTableLabelBrands"
+msgstr "Marca"
+
+msgid "DevicesDetection_dataTableLabelModels"
+msgstr "Model"
+
+msgid "DevicesDetection_dataTableLabelSystemVersion"
+msgstr "Versió del sistema operatiu"
+
+msgid "DevicesDetection_dataTableLabelTypes"
+msgstr "Tipus"
+
+msgid "DevicesDetection_Device"
+msgstr "Dispositiu"
+
+msgid "DevicesDetection_DeviceBrand"
+msgstr "Marca del dispositiu"
+
+msgid "DevicesDetection_DeviceBrands"
+msgstr "Marques de dispositius"
+
+msgid "DevicesDetection_DeviceDetection"
+msgstr "Detecció de dispositius"
+
+msgid "DevicesDetection_DeviceModel"
+msgstr "Model del dispositiu"
+
+msgid "DevicesDetection_DeviceModels"
+msgstr "Models de dispositiu"
+
+msgid "DevicesDetection_DevicesDetection"
+msgstr "Dispositius del visitant"
+
+msgid "DevicesDetection_DeviceType"
+msgstr "Tipus de dispositiu"
+
+msgid "DevicesDetection_DeviceTypes"
+msgstr "Tipus de dispositius"
+
+msgid "DevicesDetection_FeaturePhone"
+msgstr "Característiques del telèfon"
+
+msgid "DevicesDetection_OperatingSystemFamilies"
+msgstr "Famílies del sistema operatiu"
+
+msgid "DevicesDetection_OperatingSystemFamily"
+msgstr "Família del Sistema Operatiu"
+
+msgid "DevicesDetection_OperatingSystems"
+msgstr "Sistemes operatius"
+
+msgid "DevicesDetection_OperatingSystemVersions"
+msgstr "Versions del sistema operatiu"
+
+msgid "DevicesDetection_PluginDescription"
+msgstr "Proporciona informació extesa sobre els dispositius dels usuaris, tals com marca (fabricant), model (versió del dispositiu), tipus de dispositiu (tv, consola, telèfon intel·ligent, d'escriptori, etc.) i més."
+
+msgid "DevicesDetection_SmartDisplay"
+msgstr "Pantalla intel·ligent"
+
+msgid "DevicesDetection_Smartphone"
+msgstr "Telèfon intel·ligent"
+
+msgid "DevicesDetection_PortableMediaPlayer"
+msgstr "Reproductor de medis portàtils"
+
+msgid "DevicesDetection_Devices"
+msgstr "Dispositius"
+
+msgid "DevicesDetection_GenericDevice"
+msgstr "Genèric %s"
+
+msgid "DevicesDetection_MobileDevice"
+msgstr "Dispositiu mòbil"
+
+msgid "DevicesDetection_Tablet"
+msgstr "Tauleta"
+
+msgid "DevicesDetection_Phablet"
+msgstr "Phablet"
+
+msgid "DevicesDetection_TV"
+msgstr "Televisió"
+
+msgid "DevicesDetection_UserAgent"
+msgstr "Agent d'usuari"
+
+msgid "DevicesDetection_XVisitsFromDevices"
+msgstr "%1$s de visites provenen de %2$s dispositius"
+
+msgid "DevicesDetection_WidgetBrowsers"
+msgstr "Navegadors"
+
+msgid "DevicesDetection_WidgetBrowsersDocumentation"
+msgstr "Aquest informe conté informació sobre quin tipus de navegador està utilitzant els vostres visitants. Cada versió del navegador es llista per separat."
+
+msgid "Events_Event"
+msgstr "Esdeveniment"
+
+msgid "Events_EventCategory"
+msgstr "Categoria d'esdeveniment"
+
+msgid "Events_EventName"
+msgstr "Nom de l'esdeveniment"
+
+msgid "Events_EventNames"
+msgstr "Noms dels esdeveniments"
+
+msgid "Events_Events"
+msgstr "Esdeveniments"
+
+msgid "Events_EventsWithValue"
+msgstr "Esdeveniments amb valor"
+
+msgid "Events_EventsWithValueDocumentation"
+msgstr "Nombre d'esdeveniments que tenen un valor"
+
+msgid "Events_MaxValueDocumentation"
+msgstr "El valor màxim per aquest esdeveniment"
+
+msgid "Events_MinValueDocumentation"
+msgstr "El valor mínim per aquest esdeveniment"
+
+msgid "Feedback_DoYouHaveBugReportOrFeatureRequest"
+msgstr "Teniu algun error que reportar o una petició de noves funcionalitats?"
+
+msgid "Feedback_IWantTo"
+msgstr "Jo vull:"
+
+msgid "Feedback_LearnWaysToParticipate"
+msgstr "Apren sobre les formes en que tu pots %1$s participar %2$s"
+
+msgid "Feedback_ManuallySendEmailTo"
+msgstr "Siusplau envia el vostre missatge manualmetn a"
+
+msgid "Feedback_SendFeedback"
+msgstr "Enviar Feedback"
+
+msgid "Feedback_ThankYou"
+msgstr "Gràcies per ajudar-nos a fer el Matomo millor!"
+
+msgid "Feedback_TopLinkTooltip"
+msgstr "Digue'ns que en penses o demana suport Professional."
+
+msgid "Goals_AbandonedCart"
+msgstr "Cistella abandonada"
+
+msgid "Goals_AddGoal"
+msgstr "Afegir un objectiu"
+
+msgid "Goals_AddNewGoal"
+msgstr "Afegir un nou objectiu"
+
+msgid "Goals_AddNewGoalOrEditExistingGoal"
+msgstr "%1$sAfegeix un nou objectiu%2$s o %3$sEdita objectius existents%4$s"
+
+msgid "Goals_AllowGoalConvertedMoreThanOncePerVisit"
+msgstr "Permetre convertir un objectiu més d'una vegada per visita"
+
+msgid "Goals_AllowMultipleConversionsPerVisit"
+msgstr "Permetre múltiples conversions per visita"
+
+msgid "Goals_BestCountries"
+msgstr "Els millors paísos amb conversions són:"
+
+msgid "Goals_BestKeywords"
+msgstr "Les paraules clau amb més conversions són:"
+
+msgid "Goals_BestReferrers"
+msgstr "Els llocs webs de referència amb més conversions són:"
+
+msgid "Goals_CaseSensitive"
+msgstr "Concidència sensible a minúscules/majúscules"
+
+msgid "Goals_CategoryTextReferrers_Referrers"
+msgstr "Referents"
+
+msgid "Goals_CategoryTextVisitsSummary_VisitsSummary"
+msgstr "atribut d'usuari"
+
+msgid "Goals_CategoryTextDevicesDetection_DevicesDetection"
+msgstr "Dispositius"
+
+msgid "Goals_ClickOutlink"
+msgstr "Click a un enllaç a un lloc web extern"
+
+msgid "Goals_ColumnAverageOrderRevenueDocumentation"
+msgstr "La Mitja de Valor d'una Commanda (MVC) és el nombre total d'ingressos de totes les comandes electròniques dividit pel nombre de comandes."
+
+msgid "Goals_ColumnAveragePriceDocumentation"
+msgstr "La mitja d'ingresos per aquest %s."
+
+msgid "Goals_ColumnAverageQuantityDocumentation"
+msgstr "La quantitat mitja d'aquest %s venut a les comandes Ecommerce."
+
+msgid "Goals_ColumnConversionRateDocumentation"
+msgstr "El percentatge de visites que han arribat a l'objectiu %s."
+
+msgid "Goals_ColumnConversionRateProductDocumentation"
+msgstr "El %s rati de conversió és el nombre de comandes que contenen aquest producte dividit pel nombre de visites a la pàgina del producte."
+
+msgid "Goals_ColumnConversions"
+msgstr "Conversions"
+
+msgid "Goals_ColumnConversionsDocumentation"
+msgstr "El nombre de conversions per %s"
+
+msgid "Goals_ColumnOrdersDocumentation"
+msgstr "El nombre total de comandes de compra que contenen aquest %s almenys una vegada."
+
+msgid "Goals_ColumnPurchasedProductsDocumentation"
+msgstr "El nombre de productes comprats és la suma de les quantitats de productes que s'han venut en els comandes."
+
+msgid "Goals_ColumnQuantityDocumentation"
+msgstr "La quantitat és el nombre total de productes que s'han venut per cada %s."
+
+msgid "Goals_ColumnRevenueDocumentation"
+msgstr "Ingressos totals generats per %s."
+
+msgid "Goals_ColumnRevenuePerVisitDocumentation"
+msgstr "Els ingresos totals generats per %s dividit pel nombre de visites."
+
+msgid "Goals_ColumnVisits"
+msgstr "El nombre total de visites, sense tenir en compte si s'ha assolit l'objectiu o no."
+
+msgid "Goals_ColumnVisitsProductDocumentation"
+msgstr "El nombre de visites a la pagina del Producte/Categoria. S'utiltiza per calcular el rati de conversió del %s. Aquesta mètrica està a l'informe si"
+
+msgid "Goals_Contains"
+msgstr "conté %s"
+
+msgid "Goals_ConversionByTypeReportDocumentation"
+msgstr "Aquest informe proporciona informació detallada sobre la productivitat dels objectius (conversions, rati de conversións i ingresos per visita) per cada una de les catagories disponibles al panell de l'esquerra. %1$s Cliqueu alguna de les categories per veure l'informe. %2$s Per mes informació, llegiu %3$s la documetnació sobre el rastreig d'objectius a piwik.org%4$s"
+
+msgid "Goals_ConversionRate"
+msgstr "Rati de coversió de %s"
+
+msgid "Goals_Conversions"
+msgstr "%s conversions"
+
+msgid "Goals_ConversionsOverview"
+msgstr "Vista general de les conversions"
+
+msgid "Goals_ConversionsOverviewBy"
+msgstr "Vista general de les conversións per tipus de visita"
+
+msgid "Goals_DaysToConv"
+msgstr "Dies per la conversió"
+
+msgid "Goals_DefaultGoalConvertedOncePerVisit"
+msgstr "(per defecte) Un objectiu només es pot assolir una vegada per visita."
+
+msgid "Goals_DefaultRevenueHelp"
+msgstr "Per exemple, un formulari de contacte emplenat per un visitant pot valdre 10€ de mitja. El Matomo t'ajuda a entendre com es comportent els segments de visitants."
+
+msgid "Goals_DeleteGoalConfirm"
+msgstr "Esteu segurs que voleu eliminar l'objectiu %s?"
+
+msgid "Goals_DocumentationRevenueGeneratedByProductSales"
+msgstr "Ventes de productes. Sense impostos, despeses d'enviament ni descomptes"
+
+msgid "Goals_Download"
+msgstr "Descarrega un fitxer"
+
+msgid "Goals_Ecommerce"
+msgstr "Ecomerç"
+
+msgid "Goals_EcommerceAndGoalsMenu"
+msgstr "Ecomerç i Objectius"
+
+msgid "Goals_EcommerceLog"
+msgstr "Registre d'ecomerç"
+
+msgid "Goals_EcommerceOrder"
+msgstr "Ordre d'ecomerç"
+
+msgid "Goals_EcommerceOverview"
+msgstr "Vista general ecomerç"
+
+msgid "Goals_EcommerceReports"
+msgstr "Informes d'Ecommerce"
+
+msgid "Goals_ExceptionInvalidMatchingString"
+msgstr "Si escolleu 'coïncidencia exacta', el cadena de coincidència ha de ser una URL que comença per %1$s. Per exemple, '%2$s'."
+
+msgid "Goals_ExternalWebsiteUrl"
+msgstr "URL del lloc web extern"
+
+msgid "Goals_Filename"
+msgstr "nom del fitxer"
+
+msgid "Goals_GoalConversion"
+msgstr "Conversió d'objectius"
+
+msgid "Goals_GoalConversions"
+msgstr "Conversió d'objectiu"
+
+msgid "Goals_GoalConversionsBy"
+msgstr "Conversións %s d'objectius per tipus de visita"
+
+msgid "Goals_GoalIsTriggered"
+msgstr "S'ha assolit l'objectiu"
+
+msgid "Goals_GoalIsTriggeredWhen"
+msgstr "S'asoleix l'objectiu quan"
+
+msgid "Goals_GoalName"
+msgstr "Nom de l'objectiu"
+
+msgid "Goals_Goals"
+msgstr "Objectius"
+
+msgid "Goals_GoalsOverview"
+msgstr "Vista general d'objectius"
+
+msgid "Goals_GoalsOverviewDocumentation"
+msgstr "Això es una vista global de les conversions dels vostres objectius. Inicialment el gràfic mostra la suma de totes les conversions. %s Davalla del gràfic, podeu veure els informes de conversions per cada un dels vostres objectius. Els minigràfics es pot ampliar fent clic sobre ells."
+
+msgid "Goals_GoalX"
+msgstr "Objectiu %s"
+
+msgid "Goals_HelpOneConversionPerVisit"
+msgstr "Si la pàgina de l'objectiu es refresca o es visita més d'una vegada en una sola visita l'objectiu només es contarà una vegada (la primera de totes)."
+
+msgid "Goals_IsExactly"
+msgstr "es exactament %s"
+
+msgid "Goals_LeftInCart"
+msgstr "queda %s a la cistella"
+
+msgid "Goals_Manually"
+msgstr "manualment"
+
+msgid "Goals_ManuallyTriggeredUsingJavascriptFunction"
+msgstr "L'objectiu s'asoleix manualment utilitzat la funció trackGoal() de l'API de Javascript."
+
+msgid "Goals_MatchesExpression"
+msgstr "compleix l'expresió %s"
+
+msgid "Goals_NewVisitorsConversionRateIs"
+msgstr "El rati de conversió dels nous visitants es %s"
+
+msgid "Goals_Optional"
+msgstr "(opcional)"
+
+msgid "Goals_PageTitle"
+msgstr "Títol de la pàgina"
+
+msgid "Goals_Pattern"
+msgstr "Patró"
+
+msgid "Goals_ProductCategory"
+msgstr "Categoria de Producte"
+
+msgid "Goals_ProductName"
+msgstr "Nom del producte"
+
+msgid "Goals_Products"
+msgstr "Productes"
+
+msgid "Goals_ProductSKU"
+msgstr "Referència del producte"
+
+msgid "Goals_ReturningVisitorsConversionRateIs"
+msgstr "EL rati de conversió dels visitants que retornen és %s"
+
+msgid "Goals_SingleGoalOverviewDocumentation"
+msgstr "Això es una visió global de les conversions d'un únic objectiu. %s Els minigràfics es poden ampliar fent clic sobre ells."
+
+msgid "Goals_UpdateGoal"
+msgstr "Actualtizar objectiu"
+
+msgid "Goals_URL"
+msgstr "URL"
+
+msgid "Goals_ViewAndEditGoals"
+msgstr "Mostra i edita els objectius"
+
+msgid "Goals_VisitPageTitle"
+msgstr "Visitar un pàgina amb el títol donat"
+
+msgid "Goals_VisitsUntilConv"
+msgstr "Visites convertides"
+
+msgid "Goals_VisitUrl"
+msgstr "Visitar una URL donada (pàgina o grup de pàgines)"
+
+msgid "Goals_WhenVisitors"
+msgstr "quan el visitant"
+
+msgid "Goals_WhereThe"
+msgstr "quan el"
+
+msgid "Goals_YouCanEnableEcommerceReports"
+msgstr "Podeu activar el %1$s per aquest lloc web a la pàgina %2$s."
+
+msgid "ImageGraph_ColumnOrdinateMissing"
+msgstr "La columan '%1$s' no s'ha trobat en aquest informe. Proveu algun dels següents: %2$s"
+
+msgid "Insights_MoversAndShakersWidgetTitle"
+msgstr "Els més actius"
+
+msgid "Installation_ConfirmDeleteExistingTables"
+msgstr "Realment voleu esborrar les taules %s de la base de dades? AVÍS: NO ES PODRAN RECUPERAR LES DADES!"
+
+msgid "Installation_Congratulations"
+msgstr "Felicitats"
+
+msgid "Installation_DatabaseAbilities"
+msgstr "Habilitats de la Base de Dades"
+
+msgid "Installation_DatabaseCreation"
+msgstr "Creació de la base de dades"
+
+msgid "Installation_DatabaseErrorConnect"
+msgstr "Hi ha hagut un error amb la connexió al servidor de bases de dades."
+
+msgid "Installation_DatabaseServerVersion"
+msgstr "Versió del servidor de base de dades"
+
+msgid "Installation_DatabaseSetup"
+msgstr "Configuració de la base de dades"
+
+msgid "Installation_DatabaseSetupAdapter"
+msgstr "Adaptador"
+
+msgid "Installation_DatabaseSetupDatabaseName"
+msgstr "Nom de la base de dades"
+
+msgid "Installation_DatabaseSetupLogin"
+msgstr "Usuari"
+
+msgid "Installation_DatabaseSetupServer"
+msgstr "Servidor de la base de dades"
+
+msgid "Installation_DatabaseSetupTablePrefix"
+msgstr "Prefix de les taules"
+
+msgid "Installation_Email"
+msgstr "Correu-e"
+
+msgid "Installation_Extension"
+msgstr "extensió"
+
+msgid "Installation_Filesystem"
+msgstr "Sistema de fitxers"
+
+msgid "Installation_GoBackAndDefinePrefix"
+msgstr "Torna enrere i defineix un prefix per a les taules"
+
+msgid "Installation_Installation"
+msgstr "Instal·lació"
+
+msgid "Installation_InstallationStatus"
+msgstr "Estat de la instal·lació"
+
+msgid "Installation_InsufficientPrivilegesHelp"
+msgstr "Podeu afegir aquest usuaris previlegiats utiltizat eines com el phpMyAdmin o executant les sentències SQL corresponents. Si no sabeu com fer cap d'aquestes coses, siusplau poseu-vos amb contacte amb el vostre administrador de sistemes per donar aquestos privilegis per vosaltres."
+
+msgid "Installation_LargePiwikInstances"
+msgstr "Ajuda per grans instàncies de Matomo"
+
+msgid "Installation_Legend"
+msgstr "Llegenda"
+
+msgid "Installation_LoadDataInfileUnavailableHelp"
+msgstr "Fent servir %1$s millorarà la velocitat del proces d'arxiu de Matomo. Per a que estigui disponible per a Matomo, proeu actualitzant el vostre doftwar PHP & MySQL i asegureu-vos que el vostre usuari de base de dades té el privilegi %2$s."
+
+msgid "Installation_NfsFilesystemWarning"
+msgstr "El vostre servidor està utiltizant un sistema de fitxers NFS."
+
+msgid "Installation_NfsFilesystemWarningSuffixAdmin"
+msgstr "Això vol dir que el Matomo serà extremadament lent quan utilitzi les sessions basades en fitxers."
+
+msgid "Installation_NfsFilesystemWarningSuffixInstall"
+msgstr "Utilitzar sessions basades en fitxers amb NFS es extremadament lent, per això Matomo utilizarà les sessions de bases de dades. Si teniu molt usuaris concurrents, potser haureu d'incrementar el nombre de conexions concurrens al servidor de bases de dades."
+
+msgid "Installation_Optional"
+msgstr "Opcional"
+
+msgid "Installation_Password"
+msgstr "Contrasenya"
+
+msgid "Installation_PasswordDoNotMatch"
+msgstr "Les contrasenyes no coincideixen"
+
+msgid "Installation_PasswordRepeat"
+msgstr "Contrasenya (torneu-la a escriure)"
+
+msgid "Installation_PercentDone"
+msgstr "%s%% fet"
+
+msgid "Installation_PleaseFixTheFollowingErrors"
+msgstr "Siusplau corregiu els següents errors"
+
+msgid "Installation_Requirements"
+msgstr "Requeriments del Matomo"
+
+msgid "Installation_RestartWebServer"
+msgstr "Desprès de fer aquest canvi, reinicieu el vostre servidor web."
+
+msgid "Installation_SeeBelowForMoreInfo"
+msgstr "Llegiu a continuació per més informació."
+
+msgid "Installation_SetupWebsite"
+msgstr "Configura un lloc"
+
+msgid "Installation_SetupWebsiteError"
+msgstr "Hi ha hagut un problema en el moment d'afegir el lloc."
+
+msgid "Installation_SetupWebsiteSetupSuccess"
+msgstr "El lloc %s s'ha creat amb èxit!"
+
+msgid "Installation_SiteSetup"
+msgstr "Siusplau, configureu el primer lloc web que voleu rastrejar i anarlitzar amb el Matomo"
+
+msgid "Installation_SiteSetupFootnote"
+msgstr "Nota: Quan s'haigin finalitzat la instal·lació del Matomo podreu afegir més llocs webs per fer-n'he el seguiment."
+
+msgid "Installation_SuperUser"
+msgstr "Superusuari"
+
+msgid "Installation_SuperUserSetupSuccess"
+msgstr "Superusuari creat correctament"
+
+msgid "Installation_SystemCheck"
+msgstr "Comprovació del sistema"
+
+msgid "Installation_SystemCheckAutoUpdateHelp"
+msgstr "Nota: L'actualització en un click del Matomo requereix permisos d'escriptura a la carpeta Matomo i el seu contingut."
+
+msgid "Installation_SystemCheckCreateFunctionHelp"
+msgstr "El Matomo utiltiza funcions anònimes pels callbacks."
+
+msgid "Installation_SystemCheckDatabaseHelp"
+msgstr "El Matomo necessita l'extensió mysqli o ambdues extensións PDO i pdo_mysql."
+
+msgid "Installation_SystemCheckDebugBacktraceHelp"
+msgstr "View::factory no serà capaç de crear vistes per mòdul que la crida."
+
+msgid "Installation_SystemCheckError"
+msgstr "Hi ha hagut un error i s'ha d'arreglar abans de que pugueu continuar."
+
+msgid "Installation_SystemCheckEvalHelp"
+msgstr "Necessari per Sistema de plantilles Smarty i el HTML QuickForm"
+
+msgid "Installation_SystemCheckExtensions"
+msgstr "Altres extensions necessàries"
+
+msgid "Installation_SystemCheckFileIntegrity"
+msgstr "Integritat dels fitxers"
+
+msgid "Installation_SystemCheckFunctions"
+msgstr "Funcions necessàries"
+
+msgid "Installation_SystemCheckGDHelp"
+msgstr "Els gràfics petits no funcionaran."
+
+msgid "Installation_SystemCheckGlobHelp"
+msgstr "Aquesta funció s'ha deshabilitat al vostre host. El Matomo probarà d'emular aquesta funció però pot trobar-se amb altres restriccions de seguretat. Això impactarà a la funcionalitat."
+
+msgid "Installation_SystemCheckGzcompressHelp"
+msgstr "Heu d'activar l'extensió zlib i la funció gzcompress."
+
+msgid "Installation_SystemCheckGzuncompressHelp"
+msgstr "Heu d'activar l'extensió zlib i la funcció gzuncompress."
+
+msgid "Installation_SystemCheckIconvHelp"
+msgstr "Heu de configurar i tornar a contruir el PHP amb el suport per \"iconv\" activat, --with-iconv."
+
+msgid "Installation_SystemCheckMailHelp"
+msgstr "Les opinions i els missatges de pèrdua de la contrassenya no s'enviaran sense la funció mail()."
+
+msgid "Installation_SystemCheckMbstring"
+msgstr "mbstring"
+
+msgid "Installation_SystemCheckMemoryLimit"
+msgstr "Límit de memòria"
+
+msgid "Installation_SystemCheckMemoryLimitHelp"
+msgstr "En un lloc web amb trànsit elevat, la creació de l'arxiu pot necessitar més memòria de l'acceptada actualment.<br />Feu una ullada al 'memory_limit' del vostre fitxer php.ini si és necessari."
+
+msgid "Installation_SystemCheckOpenURL"
+msgstr "Obre l'adreça"
+
+msgid "Installation_SystemCheckOpenURLHelp"
+msgstr "Les subscripcions a les llistes de correu, notificacions d'actualització i actualitzacions en un clic necessiten l'extensió \"curl\", allow_url_fopen=On, o fsockopen() actiu."
+
+msgid "Installation_SystemCheckOtherExtensions"
+msgstr "Altres extensions"
+
+msgid "Installation_SystemCheckOtherFunctions"
+msgstr "Altres funcions"
+
+msgid "Installation_SystemCheckPackHelp"
+msgstr "La funció pack() es necessària per fer el seguiment de visitants al Matomo."
+
+msgid "Installation_SystemCheckParseIniFileHelp"
+msgstr "Aquesta funció ha estat deshabilitada al vostre host. El Matomo intentarà emular la seva funcionalitat però pot trobar altres restriccions de seguretat. El rendiment del seguiment es veurà impactat."
+
+msgid "Installation_SystemCheckPdoAndMysqliHelp"
+msgstr "En un servidor Linux podeu compilar el php amb les següents opcions: %1$s Al fitxer php.ini, afegiu les línies: %2$s"
+
+msgid "Installation_SystemCheckPhp"
+msgstr "Versió del PHP"
+
+msgid "Installation_SystemCheckPhpPdoAndMysqli"
+msgstr "Trobareu més informació a %1$sPHP PDO%2$s i %3$sMYSQLI%4$s."
+
+msgid "Installation_SystemCheckSplHelp"
+msgstr "Heu de configurar i recompilar el PHP amb la biblioteca Standard PHP Library (SPL) activada (per defecte)."
+
+msgid "Installation_SystemCheckSummaryNoProblems"
+msgstr "Urra!! No hi ha cap problema amb la vostra configuració de Matomo."
+
+msgid "Installation_SystemCheckSummaryThereWereErrors"
+msgstr "Ohhh! El Matomo ha trobat algunes %1$s incidències crítiques %2$s amb la vostra configuració de Matomo. %3$s Aquestes incidències s'han de solucionar inmediatament. %4$s"
+
+msgid "Installation_SystemCheckSummaryThereWereWarnings"
+msgstr "Hi ha alguna incidència amb el vostre sistema. El Matomo funcionarà, però podeu tenir alguns problemes menors."
+
+msgid "Installation_SystemCheckTimeLimitHelp"
+msgstr "En un lloc web amb trànsit elevat, la creació de l'arxiu pot necessitar més temps de l'acceptada actualment.<br />Feu una ullada al 'max_execution_time' del vostre fitxer php.ini si és necessari."
+
+msgid "Installation_SystemCheckTracker"
+msgstr "Estat del rastrejador"
+
+msgid "Installation_SystemCheckWarnDomHelp"
+msgstr "Heu d'habilitar l'extensió \"dom\" (p.e, instalar els paquets \"php-dom\" i/o \"php-xml\")."
+
+msgid "Installation_SystemCheckWarning"
+msgstr "El Matomo funcionarà amb normalitat, però algunes funcions potser no estaran disponibles"
+
+msgid "Installation_SystemCheckWarnJsonHelp"
+msgstr "Heu d'instalar l'extensió \"json\" (p.e., instalar el paquet \"php-json\") per un millor rendiment."
+
+msgid "Installation_SystemCheckWarnLibXmlHelp"
+msgstr "Heu d'activar l'extensió \"libxml\" (e.g., instalar el paquet \"php-libxml\") perquè es necesària per altres extensions del nucli de PHP."
+
+msgid "Installation_SystemCheckWarnSimpleXMLHelp"
+msgstr "Heu d'activar l'extensió \"SimpleXML\" (p.e., installar el paquet \"php-simplexml\" i/o \"php-xml\")"
+
+msgid "Installation_SystemCheckWinPdoAndMysqliHelp"
+msgstr "En un servidor Windows podeu afegir les línies següents al fitxer php.ini: %s"
+
+msgid "Installation_SystemCheckWriteDirs"
+msgstr "Directoris amb permisos d'escriptura"
+
+msgid "Installation_SystemCheckWriteDirsHelp"
+msgstr "Per a arreglar aquest error al vostre sistema Linux, proveu d'entrar les ordres següents"
+
+msgid "Installation_SystemCheckZlibHelp"
+msgstr "Heu de configurar i recompilar el PHP amb el suport per a \"zlib\" habilitat, --with-zlib."
+
+msgid "Installation_Tables"
+msgstr "S'estan creant les taules…"
+
+msgid "Installation_TablesCreatedSuccess"
+msgstr "Les taules s'han creat amb èxit!"
+
+msgid "Installation_TablesDelete"
+msgstr "Esborra les taules existents"
+
+msgid "Installation_TablesDeletedSuccess"
+msgstr "Les taules del Matomo existents s'han esborrat amb èxit."
+
+msgid "Installation_TablesFound"
+msgstr "Aquestes taules s'han trobat a la base de dades:"
+
+msgid "Installation_TablesReuse"
+msgstr "Fes servir les taules existents"
+
+msgid "Installation_TablesWarningHelp"
+msgstr "Podeu escollir entre fer servir les taules existents de la base de dades o fer una instal·lació neta per a esborrar les dades existents a la base de dades."
+
+msgid "Installation_TablesWithSameNamesFound"
+msgstr "Algunes %1$s taules de la base de dades %2$s tenen el mateix nom que les taules que el Matomo intenta crear"
+
+msgid "Installation_Welcome"
+msgstr "Benvingut/da!"
+
+msgid "Intl_Continent_afr"
+msgstr "Àfrica"
+
+msgid "Intl_Continent_amc"
+msgstr "Amèrica Central"
+
+msgid "Intl_Continent_amn"
+msgstr "Amèrica del Nord"
+
+msgid "Intl_Continent_ams"
+msgstr "Amèrica del Sud"
+
+msgid "Intl_Continent_ant"
+msgstr "Antàrtida"
+
+msgid "Intl_Continent_asi"
+msgstr "Àsia"
+
+msgid "Intl_Continent_eur"
+msgstr "Europa"
+
+msgid "Intl_Continent_oce"
+msgstr "Oceania"
+
+msgid "Intl_Country_AD"
+msgstr "Andorra"
+
+msgid "Intl_Country_AE"
+msgstr "Emirats Àrabs Units"
+
+msgid "Intl_Country_AF"
+msgstr "Afganistan"
+
+msgid "Intl_Country_AG"
+msgstr "Antigua i Barbuda"
+
+msgid "Intl_Country_AI"
+msgstr "Anguilla"
+
+msgid "Intl_Country_AL"
+msgstr "Albània"
+
+msgid "Intl_Country_AM"
+msgstr "Armènia"
+
+msgid "Intl_Country_AO"
+msgstr "Angola"
+
+msgid "Intl_Country_AQ"
+msgstr "Antàrtida"
+
+msgid "Intl_Country_AR"
+msgstr "Argentina"
+
+msgid "Intl_Country_AS"
+msgstr "Samoa Nord-americana"
+
+msgid "Intl_Country_AT"
+msgstr "Àustria"
+
+msgid "Intl_Country_AU"
+msgstr "Austràlia"
+
+msgid "Intl_Country_AW"
+msgstr "Aruba"
+
+msgid "Intl_Country_AX"
+msgstr "Illes Åland"
+
+msgid "Intl_Country_AZ"
+msgstr "Azerbaidjan"
+
+msgid "Intl_Country_BA"
+msgstr "Bòsnia i Hercegovina"
+
+msgid "Intl_Country_BB"
+msgstr "Barbados"
+
+msgid "Intl_Country_BD"
+msgstr "Bangla Desh"
+
+msgid "Intl_Country_BE"
+msgstr "Bèlgica"
+
+msgid "Intl_Country_BF"
+msgstr "Burkina Faso"
+
+msgid "Intl_Country_BG"
+msgstr "Bulgària"
+
+msgid "Intl_Country_BH"
+msgstr "Bahrain"
+
+msgid "Intl_Country_BI"
+msgstr "Burundi"
+
+msgid "Intl_Country_BJ"
+msgstr "Benín"
+
+msgid "Intl_Country_BL"
+msgstr "Saint Barthélemy"
+
+msgid "Intl_Country_BM"
+msgstr "Bermudes"
+
+msgid "Intl_Country_BN"
+msgstr "Brunei"
+
+msgid "Intl_Country_BO"
+msgstr "Bolívia"
+
+msgid "Intl_Country_BQ"
+msgstr "Carib Neerlandès"
+
+msgid "Intl_Country_BR"
+msgstr "Brasil"
+
+msgid "Intl_Country_BS"
+msgstr "Bahames"
+
+msgid "Intl_Country_BT"
+msgstr "Bhutan"
+
+msgid "Intl_Country_BV"
+msgstr "Bouvet"
+
+msgid "Intl_Country_BW"
+msgstr "Botswana"
+
+msgid "Intl_Country_BY"
+msgstr "Belarús"
+
+msgid "Intl_Country_BZ"
+msgstr "Belize"
+
+msgid "Intl_Country_CA"
+msgstr "Canadà"
+
+msgid "Intl_Country_CC"
+msgstr "Illes Cocos"
+
+msgid "Intl_Country_CD"
+msgstr "Congo - Kinshasa"
+
+msgid "Intl_Country_CF"
+msgstr "República Centreafricana"
+
+msgid "Intl_Country_CG"
+msgstr "Congo - Brazzaville"
+
+msgid "Intl_Country_CH"
+msgstr "Suïssa"
+
+msgid "Intl_Country_CI"
+msgstr "Costa d’Ivori"
+
+msgid "Intl_Country_CK"
+msgstr "Illes Cook"
+
+msgid "Intl_Country_CL"
+msgstr "Xile"
+
+msgid "Intl_Country_CM"
+msgstr "Camerun"
+
+msgid "Intl_Country_CN"
+msgstr "Xina"
+
+msgid "Intl_Country_CO"
+msgstr "Colòmbia"
+
+msgid "Intl_Country_CR"
+msgstr "Costa Rica"
+
+msgid "Intl_Country_CU"
+msgstr "Cuba"
+
+msgid "Intl_Country_CV"
+msgstr "Cap Verd"
+
+msgid "Intl_Country_CW"
+msgstr "Curaçao"
+
+msgid "Intl_Country_CX"
+msgstr "Illa Christmas"
+
+msgid "Intl_Country_CY"
+msgstr "Xipre"
+
+msgid "Intl_Country_CZ"
+msgstr "Txèquia"
+
+msgid "Intl_Country_DE"
+msgstr "Alemanya"
+
+msgid "Intl_Country_DJ"
+msgstr "Djibouti"
+
+msgid "Intl_Country_DK"
+msgstr "Dinamarca"
+
+msgid "Intl_Country_DM"
+msgstr "Dominica"
+
+msgid "Intl_Country_DO"
+msgstr "República Dominicana"
+
+msgid "Intl_Country_DZ"
+msgstr "Algèria"
+
+msgid "Intl_Country_EC"
+msgstr "Equador"
+
+msgid "Intl_Country_EE"
+msgstr "Estònia"
+
+msgid "Intl_Country_EG"
+msgstr "Egipte"
+
+msgid "Intl_Country_EH"
+msgstr "Sàhara Occidental"
+
+msgid "Intl_Country_ER"
+msgstr "Eritrea"
+
+msgid "Intl_Country_ES"
+msgstr "Espanya"
+
+msgid "Intl_Country_ET"
+msgstr "Etiòpia"
+
+msgid "Intl_Country_FI"
+msgstr "Finlàndia"
+
+msgid "Intl_Country_FJ"
+msgstr "Fiji"
+
+msgid "Intl_Country_FK"
+msgstr "Illes Malvines"
+
+msgid "Intl_Country_FM"
+msgstr "Micronèsia"
+
+msgid "Intl_Country_FO"
+msgstr "Illes Fèroe"
+
+msgid "Intl_Country_FR"
+msgstr "França"
+
+msgid "Intl_Country_GA"
+msgstr "Gabon"
+
+msgid "Intl_Country_GB"
+msgstr "Regne Unit"
+
+msgid "Intl_Country_GD"
+msgstr "Grenada"
+
+msgid "Intl_Country_GE"
+msgstr "Geòrgia"
+
+msgid "Intl_Country_GF"
+msgstr "Guaiana Francesa"
+
+msgid "Intl_Country_GG"
+msgstr "Guernsey"
+
+msgid "Intl_Country_GH"
+msgstr "Ghana"
+
+msgid "Intl_Country_GI"
+msgstr "Gibraltar"
+
+msgid "Intl_Country_GL"
+msgstr "Grenlàndia"
+
+msgid "Intl_Country_GM"
+msgstr "Gàmbia"
+
+msgid "Intl_Country_GN"
+msgstr "Guinea"
+
+msgid "Intl_Country_GP"
+msgstr "Guadeloupe"
+
+msgid "Intl_Country_GQ"
+msgstr "Guinea Equatorial"
+
+msgid "Intl_Country_GR"
+msgstr "Grècia"
+
+msgid "Intl_Country_GS"
+msgstr "Illes Geòrgia del Sud i Sandwich del Sud"
+
+msgid "Intl_Country_GT"
+msgstr "Guatemala"
+
+msgid "Intl_Country_GU"
+msgstr "Guam"
+
+msgid "Intl_Country_GW"
+msgstr "Guinea Bissau"
+
+msgid "Intl_Country_GY"
+msgstr "Guyana"
+
+msgid "Intl_Country_HK"
+msgstr "Hong Kong (RAE Xina)"
+
+msgid "Intl_Country_HM"
+msgstr "Illa Heard i Illes McDonald"
+
+msgid "Intl_Country_HN"
+msgstr "Hondures"
+
+msgid "Intl_Country_HR"
+msgstr "Croàcia"
+
+msgid "Intl_Country_HT"
+msgstr "Haití"
+
+msgid "Intl_Country_HU"
+msgstr "Hongria"
+
+msgid "Intl_Country_ID"
+msgstr "Indonèsia"
+
+msgid "Intl_Country_IE"
+msgstr "Irlanda"
+
+msgid "Intl_Country_IL"
+msgstr "Israel"
+
+msgid "Intl_Country_IM"
+msgstr "Illa de Man"
+
+msgid "Intl_Country_IN"
+msgstr "Índia"
+
+msgid "Intl_Country_IO"
+msgstr "Territori Britànic de l’Oceà Índic"
+
+msgid "Intl_Country_IQ"
+msgstr "Iraq"
+
+msgid "Intl_Country_IR"
+msgstr "Iran"
+
+msgid "Intl_Country_IS"
+msgstr "Islàndia"
+
+msgid "Intl_Country_IT"
+msgstr "Itàlia"
+
+msgid "Intl_Country_JE"
+msgstr "Jersey"
+
+msgid "Intl_Country_JM"
+msgstr "Jamaica"
+
+msgid "Intl_Country_JO"
+msgstr "Jordània"
+
+msgid "Intl_Country_JP"
+msgstr "Japó"
+
+msgid "Intl_Country_KE"
+msgstr "Kenya"
+
+msgid "Intl_Country_KG"
+msgstr "Kirguizistan"
+
+msgid "Intl_Country_KH"
+msgstr "Cambodja"
+
+msgid "Intl_Country_KI"
+msgstr "Kiribati"
+
+msgid "Intl_Country_KM"
+msgstr "Comores"
+
+msgid "Intl_Country_KN"
+msgstr "Saint Christopher i Nevis"
+
+msgid "Intl_Country_KP"
+msgstr "Corea del Nord"
+
+msgid "Intl_Country_KR"
+msgstr "Corea del Sud"
+
+msgid "Intl_Country_KW"
+msgstr "Kuwait"
+
+msgid "Intl_Country_KY"
+msgstr "Illes Caiman"
+
+msgid "Intl_Country_KZ"
+msgstr "Kazakhstan"
+
+msgid "Intl_Country_LA"
+msgstr "Laos"
+
+msgid "Intl_Country_LB"
+msgstr "Líban"
+
+msgid "Intl_Country_LC"
+msgstr "Saint Lucia"
+
+msgid "Intl_Country_LI"
+msgstr "Liechtenstein"
+
+msgid "Intl_Country_LK"
+msgstr "Sri Lanka"
+
+msgid "Intl_Country_LR"
+msgstr "Libèria"
+
+msgid "Intl_Country_LS"
+msgstr "Lesotho"
+
+msgid "Intl_Country_LT"
+msgstr "Lituània"
+
+msgid "Intl_Country_LU"
+msgstr "Luxemburg"
+
+msgid "Intl_Country_LV"
+msgstr "Letònia"
+
+msgid "Intl_Country_LY"
+msgstr "Líbia"
+
+msgid "Intl_Country_MA"
+msgstr "Marroc"
+
+msgid "Intl_Country_MC"
+msgstr "Mònaco"
+
+msgid "Intl_Country_MD"
+msgstr "Moldàvia"
+
+msgid "Intl_Country_ME"
+msgstr "Montenegro"
+
+msgid "Intl_Country_MF"
+msgstr "Saint Martin"
+
+msgid "Intl_Country_MG"
+msgstr "Madagascar"
+
+msgid "Intl_Country_MH"
+msgstr "Illes Marshall"
+
+msgid "Intl_Country_MK"
+msgstr "Macedònia"
+
+msgid "Intl_Country_ML"
+msgstr "Mali"
+
+msgid "Intl_Country_MM"
+msgstr "Myanmar (Birmània)"
+
+msgid "Intl_Country_MN"
+msgstr "Mongòlia"
+
+msgid "Intl_Country_MO"
+msgstr "Macau (RAE Xina)"
+
+msgid "Intl_Country_MP"
+msgstr "Illes Mariannes del Nord"
+
+msgid "Intl_Country_MQ"
+msgstr "Martinica"
+
+msgid "Intl_Country_MR"
+msgstr "Mauritània"
+
+msgid "Intl_Country_MS"
+msgstr "Montserrat"
+
+msgid "Intl_Country_MT"
+msgstr "Malta"
+
+msgid "Intl_Country_MU"
+msgstr "Maurici"
+
+msgid "Intl_Country_MV"
+msgstr "Maldives"
+
+msgid "Intl_Country_MW"
+msgstr "Malawi"
+
+msgid "Intl_Country_MX"
+msgstr "Mèxic"
+
+msgid "Intl_Country_MY"
+msgstr "Malàisia"
+
+msgid "Intl_Country_MZ"
+msgstr "Moçambic"
+
+msgid "Intl_Country_NA"
+msgstr "Namíbia"
+
+msgid "Intl_Country_NC"
+msgstr "Nova Caledònia"
+
+msgid "Intl_Country_NE"
+msgstr "Níger"
+
+msgid "Intl_Country_NF"
+msgstr "Norfolk"
+
+msgid "Intl_Country_NG"
+msgstr "Nigèria"
+
+msgid "Intl_Country_NI"
+msgstr "Nicaragua"
+
+msgid "Intl_Country_NL"
+msgstr "Països Baixos"
+
+msgid "Intl_Country_NO"
+msgstr "Noruega"
+
+msgid "Intl_Country_NP"
+msgstr "Nepal"
+
+msgid "Intl_Country_NR"
+msgstr "Nauru"
+
+msgid "Intl_Country_NU"
+msgstr "Niue"
+
+msgid "Intl_Country_NZ"
+msgstr "Nova Zelanda"
+
+msgid "Intl_Country_OM"
+msgstr "Oman"
+
+msgid "Intl_Country_PA"
+msgstr "Panamà"
+
+msgid "Intl_Country_PE"
+msgstr "Perú"
+
+msgid "Intl_Country_PF"
+msgstr "Polinèsia Francesa"
+
+msgid "Intl_Country_PG"
+msgstr "Papua Nova Guinea"
+
+msgid "Intl_Country_PH"
+msgstr "Filipines"
+
+msgid "Intl_Country_PK"
+msgstr "Pakistan"
+
+msgid "Intl_Country_PL"
+msgstr "Polònia"
+
+msgid "Intl_Country_PM"
+msgstr "Saint-Pierre-et-Miquelon"
+
+msgid "Intl_Country_PN"
+msgstr "Illes Pitcairn"
+
+msgid "Intl_Country_PR"
+msgstr "Puerto Rico"
+
+msgid "Intl_Country_PS"
+msgstr "Territoris palestins"
+
+msgid "Intl_Country_PT"
+msgstr "Portugal"
+
+msgid "Intl_Country_PW"
+msgstr "Palau"
+
+msgid "Intl_Country_PY"
+msgstr "Paraguai"
+
+msgid "Intl_Country_QA"
+msgstr "Qatar"
+
+msgid "Intl_Country_RE"
+msgstr "Illa de la Reunió"
+
+msgid "Intl_Country_RO"
+msgstr "Romania"
+
+msgid "Intl_Country_RS"
+msgstr "Sèrbia"
+
+msgid "Intl_Country_RU"
+msgstr "Rússia"
+
+msgid "Intl_Country_RW"
+msgstr "Ruanda"
+
+msgid "Intl_Country_SA"
+msgstr "Aràbia Saudita"
+
+msgid "Intl_Country_SB"
+msgstr "Illes Salomó"
+
+msgid "Intl_Country_SC"
+msgstr "Seychelles"
+
+msgid "Intl_Country_SD"
+msgstr "Sudan"
+
+msgid "Intl_Country_SE"
+msgstr "Suècia"
+
+msgid "Intl_Country_SG"
+msgstr "Singapur"
+
+msgid "Intl_Country_SH"
+msgstr "Saint Helena"
+
+msgid "Intl_Country_SI"
+msgstr "Eslovènia"
+
+msgid "Intl_Country_SJ"
+msgstr "Svalbard i Jan Mayen"
+
+msgid "Intl_Country_SK"
+msgstr "Eslovàquia"
+
+msgid "Intl_Country_SL"
+msgstr "Sierra Leone"
+
+msgid "Intl_Country_SM"
+msgstr "San Marino"
+
+msgid "Intl_Country_SN"
+msgstr "Senegal"
+
+msgid "Intl_Country_SO"
+msgstr "Somàlia"
+
+msgid "Intl_Country_SR"
+msgstr "Surinam"
+
+msgid "Intl_Country_SS"
+msgstr "Sudan del Sud"
+
+msgid "Intl_Country_ST"
+msgstr "São Tomé i Príncipe"
+
+msgid "Intl_Country_SV"
+msgstr "El Salvador"
+
+msgid "Intl_Country_SX"
+msgstr "Sint Maarten"
+
+msgid "Intl_Country_SY"
+msgstr "Síria"
+
+msgid "Intl_Country_SZ"
+msgstr "Swazilàndia"
+
+msgid "Intl_Country_TC"
+msgstr "Illes Turks i Caicos"
+
+msgid "Intl_Country_TD"
+msgstr "Txad"
+
+msgid "Intl_Country_TF"
+msgstr "Territoris Australs Francesos"
+
+msgid "Intl_Country_TG"
+msgstr "Togo"
+
+msgid "Intl_Country_TH"
+msgstr "Tailàndia"
+
+msgid "Intl_Country_TJ"
+msgstr "Tadjikistan"
+
+msgid "Intl_Country_TK"
+msgstr "Tokelau"
+
+msgid "Intl_Country_TL"
+msgstr "Timor Oriental"
+
+msgid "Intl_Country_TM"
+msgstr "Turkmenistan"
+
+msgid "Intl_Country_TN"
+msgstr "Tunísia"
+
+msgid "Intl_Country_TO"
+msgstr "Tonga"
+
+msgid "Intl_Country_TR"
+msgstr "Turquia"
+
+msgid "Intl_Country_TT"
+msgstr "Trinitat i Tobago"
+
+msgid "Intl_Country_TV"
+msgstr "Tuvalu"
+
+msgid "Intl_Country_TW"
+msgstr "Taiwan"
+
+msgid "Intl_Country_TZ"
+msgstr "Tanzània"
+
+msgid "Intl_Country_UA"
+msgstr "Ucraïna"
+
+msgid "Intl_Country_UG"
+msgstr "Uganda"
+
+msgid "Intl_Country_UM"
+msgstr "Illes Perifèriques Menors dels EUA"
+
+msgid "Intl_Country_US"
+msgstr "Estats Units"
+
+msgid "Intl_Country_UY"
+msgstr "Uruguai"
+
+msgid "Intl_Country_UZ"
+msgstr "Uzbekistan"
+
+msgid "Intl_Country_VA"
+msgstr "Ciutat del Vaticà"
+
+msgid "Intl_Country_VC"
+msgstr "Saint Vincent i les Grenadines"
+
+msgid "Intl_Country_VE"
+msgstr "Veneçuela"
+
+msgid "Intl_Country_VG"
+msgstr "Illes Verges Britàniques"
+
+msgid "Intl_Country_VI"
+msgstr "Illes Verges Nord-americanes"
+
+msgid "Intl_Country_VN"
+msgstr "Vietnam"
+
+msgid "Intl_Country_VU"
+msgstr "Vanuatu"
+
+msgid "Intl_Country_WF"
+msgstr "Wallis i Futuna"
+
+msgid "Intl_Country_WS"
+msgstr "Samoa"
+
+msgid "Intl_Country_YE"
+msgstr "Iemen"
+
+msgid "Intl_Country_YT"
+msgstr "Mayotte"
+
+msgid "Intl_Country_ZA"
+msgstr "República de Sud-àfrica"
+
+msgid "Intl_Country_ZM"
+msgstr "Zàmbia"
+
+msgid "Intl_Country_ZW"
+msgstr "Zimbàbue"
+
+msgid "Intl_CurrencySymbol_AED"
+msgstr "AED"
+
+msgid "Intl_CurrencySymbol_AFN"
+msgstr "AFN"
+
+msgid "Intl_CurrencySymbol_ALL"
+msgstr "ALL"
+
+msgid "Intl_CurrencySymbol_AMD"
+msgstr "AMD"
+
+msgid "Intl_CurrencySymbol_ANG"
+msgstr "ANG"
+
+msgid "Intl_CurrencySymbol_AOA"
+msgstr "AOA"
+
+msgid "Intl_CurrencySymbol_ARS"
+msgstr "ARS"
+
+msgid "Intl_CurrencySymbol_AUD"
+msgstr "AU$"
+
+msgid "Intl_CurrencySymbol_AWG"
+msgstr "AWG"
+
+msgid "Intl_CurrencySymbol_AZN"
+msgstr "AZN"
+
+msgid "Intl_CurrencySymbol_BAM"
+msgstr "BAM"
+
+msgid "Intl_CurrencySymbol_BBD"
+msgstr "BBD"
+
+msgid "Intl_CurrencySymbol_BDT"
+msgstr "BDT"
+
+msgid "Intl_CurrencySymbol_BGN"
+msgstr "BGN"
+
+msgid "Intl_CurrencySymbol_BHD"
+msgstr "BHD"
+
+msgid "Intl_CurrencySymbol_BIF"
+msgstr "BIF"
+
+msgid "Intl_CurrencySymbol_BMD"
+msgstr "BMD"
+
+msgid "Intl_CurrencySymbol_BND"
+msgstr "BND"
+
+msgid "Intl_CurrencySymbol_BOB"
+msgstr "BOB"
+
+msgid "Intl_CurrencySymbol_BRL"
+msgstr "BRL"
+
+msgid "Intl_CurrencySymbol_BSD"
+msgstr "BSD"
+
+msgid "Intl_CurrencySymbol_BTC"
+msgstr "BTC"
+
+msgid "Intl_CurrencySymbol_BTN"
+msgstr "BTN"
+
+msgid "Intl_CurrencySymbol_BWP"
+msgstr "BWP"
+
+msgid "Intl_CurrencySymbol_BYN"
+msgstr "BYN"
+
+msgid "Intl_CurrencySymbol_BZD"
+msgstr "BZD"
+
+msgid "Intl_CurrencySymbol_CAD"
+msgstr "CAD"
+
+msgid "Intl_CurrencySymbol_CDF"
+msgstr "CDF"
+
+msgid "Intl_CurrencySymbol_CHF"
+msgstr "CHF"
+
+msgid "Intl_CurrencySymbol_CLP"
+msgstr "CLP"
+
+msgid "Intl_CurrencySymbol_CNY"
+msgstr "CNY"
+
+msgid "Intl_CurrencySymbol_COP"
+msgstr "COP"
+
+msgid "Intl_CurrencySymbol_CRC"
+msgstr "CRC"
+
+msgid "Intl_CurrencySymbol_CUC"
+msgstr "CUC"
+
+msgid "Intl_CurrencySymbol_CUP"
+msgstr "CUP"
+
+msgid "Intl_CurrencySymbol_CVE"
+msgstr "CVE"
+
+msgid "Intl_CurrencySymbol_CZK"
+msgstr "CZK"
+
+msgid "Intl_CurrencySymbol_DJF"
+msgstr "DJF"
+
+msgid "Intl_CurrencySymbol_DKK"
+msgstr "DKK"
+
+msgid "Intl_CurrencySymbol_DOP"
+msgstr "DOP"
+
+msgid "Intl_CurrencySymbol_DZD"
+msgstr "DZD"
+
+msgid "Intl_CurrencySymbol_EGP"
+msgstr "EGP"
+
+msgid "Intl_CurrencySymbol_ERN"
+msgstr "ERN"
+
+msgid "Intl_CurrencySymbol_ETB"
+msgstr "ETB"
+
+msgid "Intl_CurrencySymbol_EUR"
+msgstr "€"
+
+msgid "Intl_CurrencySymbol_FJD"
+msgstr "FJD"
+
+msgid "Intl_CurrencySymbol_FKP"
+msgstr "FKP"
+
+msgid "Intl_CurrencySymbol_GBP"
+msgstr "£"
+
+msgid "Intl_CurrencySymbol_GEL"
+msgstr "GEL"
+
+msgid "Intl_CurrencySymbol_GHS"
+msgstr "GHS"
+
+msgid "Intl_CurrencySymbol_GIP"
+msgstr "GIP"
+
+msgid "Intl_CurrencySymbol_GMD"
+msgstr "GMD"
+
+msgid "Intl_CurrencySymbol_GNF"
+msgstr "GNF"
+
+msgid "Intl_CurrencySymbol_GTQ"
+msgstr "GTQ"
+
+msgid "Intl_CurrencySymbol_GYD"
+msgstr "GYD"
+
+msgid "Intl_CurrencySymbol_HKD"
+msgstr "HK$"
+
+msgid "Intl_CurrencySymbol_HNL"
+msgstr "HNL"
+
+msgid "Intl_CurrencySymbol_HRK"
+msgstr "HRK"
+
+msgid "Intl_CurrencySymbol_HTG"
+msgstr "HTG"
+
+msgid "Intl_CurrencySymbol_HUF"
+msgstr "HUF"
+
+msgid "Intl_CurrencySymbol_IDR"
+msgstr "IDR"
+
+msgid "Intl_CurrencySymbol_ILS"
+msgstr "₪"
+
+msgid "Intl_CurrencySymbol_INR"
+msgstr "₹"
+
+msgid "Intl_CurrencySymbol_IQD"
+msgstr "IQD"
+
+msgid "Intl_CurrencySymbol_IRR"
+msgstr "IRR"
+
+msgid "Intl_CurrencySymbol_ISK"
+msgstr "ISK"
+
+msgid "Intl_CurrencySymbol_JMD"
+msgstr "JMD"
+
+msgid "Intl_CurrencySymbol_JOD"
+msgstr "JOD"
+
+msgid "Intl_CurrencySymbol_JPY"
+msgstr "JP¥"
+
+msgid "Intl_CurrencySymbol_KES"
+msgstr "KES"
+
+msgid "Intl_CurrencySymbol_KGS"
+msgstr "KGS"
+
+msgid "Intl_CurrencySymbol_KHR"
+msgstr "KHR"
+
+msgid "Intl_CurrencySymbol_KMF"
+msgstr "KMF"
+
+msgid "Intl_CurrencySymbol_KPW"
+msgstr "KPW"
+
+msgid "Intl_CurrencySymbol_KRW"
+msgstr "₩"
+
+msgid "Intl_CurrencySymbol_KWD"
+msgstr "KWD"
+
+msgid "Intl_CurrencySymbol_KYD"
+msgstr "KYD"
+
+msgid "Intl_CurrencySymbol_KZT"
+msgstr "KZT"
+
+msgid "Intl_CurrencySymbol_LAK"
+msgstr "LAK"
+
+msgid "Intl_CurrencySymbol_LBP"
+msgstr "LBP"
+
+msgid "Intl_CurrencySymbol_LKR"
+msgstr "LKR"
+
+msgid "Intl_CurrencySymbol_LRD"
+msgstr "LRD"
+
+msgid "Intl_CurrencySymbol_LSL"
+msgstr "LSL"
+
+msgid "Intl_CurrencySymbol_LYD"
+msgstr "LYD"
+
+msgid "Intl_CurrencySymbol_MAD"
+msgstr "MAD"
+
+msgid "Intl_CurrencySymbol_MDL"
+msgstr "MDL"
+
+msgid "Intl_CurrencySymbol_MGA"
+msgstr "MGA"
+
+msgid "Intl_CurrencySymbol_MKD"
+msgstr "MKD"
+
+msgid "Intl_CurrencySymbol_MMK"
+msgstr "MMK"
+
+msgid "Intl_CurrencySymbol_MNT"
+msgstr "MNT"
+
+msgid "Intl_CurrencySymbol_MOP"
+msgstr "MOP"
+
+msgid "Intl_CurrencySymbol_MRU"
+msgstr "MRU"
+
+msgid "Intl_CurrencySymbol_MUR"
+msgstr "MUR"
+
+msgid "Intl_CurrencySymbol_MVR"
+msgstr "MVR"
+
+msgid "Intl_CurrencySymbol_MWK"
+msgstr "MWK"
+
+msgid "Intl_CurrencySymbol_MXN"
+msgstr "MXN"
+
+msgid "Intl_CurrencySymbol_MYR"
+msgstr "MYR"
+
+msgid "Intl_CurrencySymbol_MZN"
+msgstr "MZN"
+
+msgid "Intl_CurrencySymbol_NAD"
+msgstr "NAD"
+
+msgid "Intl_CurrencySymbol_NGN"
+msgstr "NGN"
+
+msgid "Intl_CurrencySymbol_NIO"
+msgstr "NIO"
+
+msgid "Intl_CurrencySymbol_NOK"
+msgstr "NOK"
+
+msgid "Intl_CurrencySymbol_NPR"
+msgstr "NPR"
+
+msgid "Intl_CurrencySymbol_NZD"
+msgstr "NZ$"
+
+msgid "Intl_CurrencySymbol_OMR"
+msgstr "OMR"
+
+msgid "Intl_CurrencySymbol_PAB"
+msgstr "PAB"
+
+msgid "Intl_CurrencySymbol_PEN"
+msgstr "PEN"
+
+msgid "Intl_CurrencySymbol_PGK"
+msgstr "PGK"
+
+msgid "Intl_CurrencySymbol_PHP"
+msgstr "PHP"
+
+msgid "Intl_CurrencySymbol_PKR"
+msgstr "PKR"
+
+msgid "Intl_CurrencySymbol_PLN"
+msgstr "PLN"
+
+msgid "Intl_CurrencySymbol_PYG"
+msgstr "PYG"
+
+msgid "Intl_CurrencySymbol_QAR"
+msgstr "QAR"
+
+msgid "Intl_CurrencySymbol_RON"
+msgstr "RON"
+
+msgid "Intl_CurrencySymbol_RSD"
+msgstr "RSD"
+
+msgid "Intl_CurrencySymbol_RUB"
+msgstr "RUB"
+
+msgid "Intl_CurrencySymbol_RWF"
+msgstr "RWF"
+
+msgid "Intl_CurrencySymbol_SAR"
+msgstr "SAR"
+
+msgid "Intl_CurrencySymbol_SBD"
+msgstr "SBD"
+
+msgid "Intl_CurrencySymbol_SCR"
+msgstr "SCR"
+
+msgid "Intl_CurrencySymbol_SDG"
+msgstr "SDG"
+
+msgid "Intl_CurrencySymbol_SEK"
+msgstr "SEK"
+
+msgid "Intl_CurrencySymbol_SGD"
+msgstr "SGD"
+
+msgid "Intl_CurrencySymbol_SHP"
+msgstr "SHP"
+
+msgid "Intl_CurrencySymbol_SLL"
+msgstr "SLL"
+
+msgid "Intl_CurrencySymbol_SOS"
+msgstr "SOS"
+
+msgid "Intl_CurrencySymbol_SRD"
+msgstr "SRD"
+
+msgid "Intl_CurrencySymbol_SSP"
+msgstr "SSP"
+
+msgid "Intl_CurrencySymbol_STN"
+msgstr "STN"
+
+msgid "Intl_CurrencySymbol_SYP"
+msgstr "SYP"
+
+msgid "Intl_CurrencySymbol_SZL"
+msgstr "SZL"
+
+msgid "Intl_CurrencySymbol_THB"
+msgstr "฿"
+
+msgid "Intl_CurrencySymbol_TJS"
+msgstr "TJS"
+
+msgid "Intl_CurrencySymbol_TMT"
+msgstr "TMT"
+
+msgid "Intl_CurrencySymbol_TND"
+msgstr "TND"
+
+msgid "Intl_CurrencySymbol_TOP"
+msgstr "TOP"
+
+msgid "Intl_CurrencySymbol_TRY"
+msgstr "TRY"
+
+msgid "Intl_CurrencySymbol_TTD"
+msgstr "TTD"
+
+msgid "Intl_CurrencySymbol_TWD"
+msgstr "NT$"
+
+msgid "Intl_CurrencySymbol_TZS"
+msgstr "TZS"
+
+msgid "Intl_CurrencySymbol_UAH"
+msgstr "UAH"
+
+msgid "Intl_CurrencySymbol_UGX"
+msgstr "UGX"
+
+msgid "Intl_CurrencySymbol_USD"
+msgstr "USD"
+
+msgid "Intl_CurrencySymbol_UYU"
+msgstr "UYU"
+
+msgid "Intl_CurrencySymbol_UZS"
+msgstr "UZS"
+
+msgid "Intl_CurrencySymbol_VEF"
+msgstr "VEF"
+
+msgid "Intl_CurrencySymbol_VND"
+msgstr "₫"
+
+msgid "Intl_CurrencySymbol_VUV"
+msgstr "VUV"
+
+msgid "Intl_CurrencySymbol_WST"
+msgstr "WST"
+
+msgid "Intl_CurrencySymbol_XAF"
+msgstr "FCFA"
+
+msgid "Intl_CurrencySymbol_XCD"
+msgstr "XCD"
+
+msgid "Intl_CurrencySymbol_XOF"
+msgstr "CFA"
+
+msgid "Intl_CurrencySymbol_XPF"
+msgstr "CFPF"
+
+msgid "Intl_CurrencySymbol_YER"
+msgstr "YER"
+
+msgid "Intl_CurrencySymbol_ZAR"
+msgstr "ZAR"
+
+msgid "Intl_CurrencySymbol_ZMW"
+msgstr "ZMW"
+
+msgid "Intl_Currency_AED"
+msgstr "Dírham de la UEA"
+
+msgid "Intl_Currency_AFN"
+msgstr "Afgani afganès"
+
+msgid "Intl_Currency_ALL"
+msgstr "Lek albanès"
+
+msgid "Intl_Currency_AMD"
+msgstr "Dram armeni"
+
+msgid "Intl_Currency_ANG"
+msgstr "Florí de les Antilles Neerlandeses"
+
+msgid "Intl_Currency_AOA"
+msgstr "Kwanza angolès"
+
+msgid "Intl_Currency_ARS"
+msgstr "Peso argentí"
+
+msgid "Intl_Currency_AUD"
+msgstr "Dòlar australià"
+
+msgid "Intl_Currency_AWG"
+msgstr "Florí d’Aruba"
+
+msgid "Intl_Currency_AZN"
+msgstr "Manat azerbaidjanès"
+
+msgid "Intl_Currency_BAM"
+msgstr "Marc convertible de Bòsnia i Hercegovina"
+
+msgid "Intl_Currency_BBD"
+msgstr "Dòlar de Barbados"
+
+msgid "Intl_Currency_BDT"
+msgstr "Taka de Bangla Desh"
+
+msgid "Intl_Currency_BGN"
+msgstr "Lev búlgar"
+
+msgid "Intl_Currency_BHD"
+msgstr "Dinar de Bahrain"
+
+msgid "Intl_Currency_BIF"
+msgstr "Franc de Burundi"
+
+msgid "Intl_Currency_BMD"
+msgstr "Dòlar de les Bermudes"
+
+msgid "Intl_Currency_BND"
+msgstr "Dòlar de Brunei"
+
+msgid "Intl_Currency_BOB"
+msgstr "Bolivià"
+
+msgid "Intl_Currency_BRL"
+msgstr "Real brasiler"
+
+msgid "Intl_Currency_BSD"
+msgstr "Dòlar de les Bahames"
+
+msgid "Intl_Currency_BTC"
+msgstr "Bitcoin"
+
+msgid "Intl_Currency_BTN"
+msgstr "Ngultrum de Bhutan"
+
+msgid "Intl_Currency_BWP"
+msgstr "Pula de Botswana"
+
+msgid "Intl_Currency_BYN"
+msgstr "Ruble bielorús"
+
+msgid "Intl_Currency_BZD"
+msgstr "Dòlar de Belize"
+
+msgid "Intl_Currency_CAD"
+msgstr "Dòlar canadenc"
+
+msgid "Intl_Currency_CDF"
+msgstr "Franc congolès"
+
+msgid "Intl_Currency_CHF"
+msgstr "Franc suís"
+
+msgid "Intl_Currency_CLP"
+msgstr "Peso xilè"
+
+msgid "Intl_Currency_CNY"
+msgstr "Iuan xinès"
+
+msgid "Intl_Currency_COP"
+msgstr "Peso colombià"
+
+msgid "Intl_Currency_CRC"
+msgstr "Colon costa-riqueny"
+
+msgid "Intl_Currency_CUC"
+msgstr "Peso convertible cubà"
+
+msgid "Intl_Currency_CUP"
+msgstr "Peso cubà"
+
+msgid "Intl_Currency_CVE"
+msgstr "Escut de Cap Verd"
+
+msgid "Intl_Currency_CZK"
+msgstr "Corona txeca"
+
+msgid "Intl_Currency_DJF"
+msgstr "Franc de Djibouti"
+
+msgid "Intl_Currency_DKK"
+msgstr "Corona danesa"
+
+msgid "Intl_Currency_DOP"
+msgstr "Peso dominicà"
+
+msgid "Intl_Currency_DZD"
+msgstr "Dinar algerià"
+
+msgid "Intl_Currency_EGP"
+msgstr "Lliura egípcia"
+
+msgid "Intl_Currency_ERN"
+msgstr "Nakfa eritreu"
+
+msgid "Intl_Currency_ETB"
+msgstr "Birr etíop"
+
+msgid "Intl_Currency_EUR"
+msgstr "Euro"
+
+msgid "Intl_Currency_FJD"
+msgstr "Dòlar fijià"
+
+msgid "Intl_Currency_FKP"
+msgstr "Lliura de les illes Malvines"
+
+msgid "Intl_Currency_GBP"
+msgstr "Lliura esterlina britànica"
+
+msgid "Intl_Currency_GEL"
+msgstr "Lari georgià"
+
+msgid "Intl_Currency_GHS"
+msgstr "Cedi ghanès"
+
+msgid "Intl_Currency_GIP"
+msgstr "Lliura de Gibraltar"
+
+msgid "Intl_Currency_GMD"
+msgstr "Dalasi gambià"
+
+msgid "Intl_Currency_GNF"
+msgstr "Franc guineà"
+
+msgid "Intl_Currency_GTQ"
+msgstr "Quetzal guatemalenc"
+
+msgid "Intl_Currency_GYD"
+msgstr "Dòlar de Guyana"
+
+msgid "Intl_Currency_HKD"
+msgstr "Dòlar de Hong Kong"
+
+msgid "Intl_Currency_HNL"
+msgstr "Lempira hondurenya"
+
+msgid "Intl_Currency_HRK"
+msgstr "Kuna croata"
+
+msgid "Intl_Currency_HTG"
+msgstr "Gourde haitià"
+
+msgid "Intl_Currency_HUF"
+msgstr "Fòrint hongarès"
+
+msgid "Intl_Currency_IDR"
+msgstr "Rupia indonèsia"
+
+msgid "Intl_Currency_ILS"
+msgstr "Nou xéquel israelià"
+
+msgid "Intl_Currency_INR"
+msgstr "Rupia índia"
+
+msgid "Intl_Currency_IQD"
+msgstr "Dinar iraquià"
+
+msgid "Intl_Currency_IRR"
+msgstr "Rial iranià"
+
+msgid "Intl_Currency_ISK"
+msgstr "Corona islandesa"
+
+msgid "Intl_Currency_JMD"
+msgstr "Dòlar jamaicà"
+
+msgid "Intl_Currency_JOD"
+msgstr "Dinar jordà"
+
+msgid "Intl_Currency_JPY"
+msgstr "Ien japonès"
+
+msgid "Intl_Currency_KES"
+msgstr "Xíling kenyà"
+
+msgid "Intl_Currency_KGS"
+msgstr "Som kirguís"
+
+msgid "Intl_Currency_KHR"
+msgstr "Riel cambodjà"
+
+msgid "Intl_Currency_KMF"
+msgstr "Franc de les Comores"
+
+msgid "Intl_Currency_KPW"
+msgstr "Won nord-coreà"
+
+msgid "Intl_Currency_KRW"
+msgstr "Won sud-coreà"
+
+msgid "Intl_Currency_KWD"
+msgstr "Dinar kuwaitià"
+
+msgid "Intl_Currency_KYD"
+msgstr "Dòlar de les illes Caiman"
+
+msgid "Intl_Currency_KZT"
+msgstr "Tenge kazakh"
+
+msgid "Intl_Currency_LAK"
+msgstr "Kip laosià"
+
+msgid "Intl_Currency_LBP"
+msgstr "Lliura libanesa"
+
+msgid "Intl_Currency_LKR"
+msgstr "Rupia de Sri Lanka"
+
+msgid "Intl_Currency_LRD"
+msgstr "Dòlar liberià"
+
+msgid "Intl_Currency_LSL"
+msgstr "Loti de Lesotho"
+
+msgid "Intl_Currency_LYD"
+msgstr "Dinar libi"
+
+msgid "Intl_Currency_MAD"
+msgstr "Dírham marroquí"
+
+msgid "Intl_Currency_MDL"
+msgstr "Leu moldau"
+
+msgid "Intl_Currency_MGA"
+msgstr "Ariary malgaix"
+
+msgid "Intl_Currency_MKD"
+msgstr "Denar macedoni"
+
+msgid "Intl_Currency_MMK"
+msgstr "Kyat de Myanmar"
+
+msgid "Intl_Currency_MNT"
+msgstr "Tögrög mongol"
+
+msgid "Intl_Currency_MOP"
+msgstr "Pataca de Macau"
+
+msgid "Intl_Currency_MRU"
+msgstr "Ouguiya maurità"
+
+msgid "Intl_Currency_MUR"
+msgstr "Rupia mauriciana"
+
+msgid "Intl_Currency_MVR"
+msgstr "Rupia de les Maldives"
+
+msgid "Intl_Currency_MWK"
+msgstr "Kwacha malawià"
+
+msgid "Intl_Currency_MXN"
+msgstr "Peso mexicà"
+
+msgid "Intl_Currency_MYR"
+msgstr "Ringgit de Malàisia"
+
+msgid "Intl_Currency_MZN"
+msgstr "Metical moçambiquès"
+
+msgid "Intl_Currency_NAD"
+msgstr "Dòlar namibià"
+
+msgid "Intl_Currency_NGN"
+msgstr "Naira nigerià"
+
+msgid "Intl_Currency_NIO"
+msgstr "Córdoba nicaragüenc"
+
+msgid "Intl_Currency_NOK"
+msgstr "Corona noruega"
+
+msgid "Intl_Currency_NPR"
+msgstr "Rupia nepalesa"
+
+msgid "Intl_Currency_NZD"
+msgstr "Dòlar neozelandès"
+
+msgid "Intl_Currency_OMR"
+msgstr "Rial omanita"
+
+msgid "Intl_Currency_PAB"
+msgstr "Balboa panameny"
+
+msgid "Intl_Currency_PEN"
+msgstr "Sol peruà"
+
+msgid "Intl_Currency_PGK"
+msgstr "Kina de Papua Nova Guinea"
+
+msgid "Intl_Currency_PHP"
+msgstr "Peso filipí"
+
+msgid "Intl_Currency_PKR"
+msgstr "Rupia pakistanesa"
+
+msgid "Intl_Currency_PLN"
+msgstr "Zloty polonès"
+
+msgid "Intl_Currency_PYG"
+msgstr "Guaraní paraguaià"
+
+msgid "Intl_Currency_QAR"
+msgstr "Rial de Qatar"
+
+msgid "Intl_Currency_RON"
+msgstr "Leu romanès"
+
+msgid "Intl_Currency_RSD"
+msgstr "Dinar serbi"
+
+msgid "Intl_Currency_RUB"
+msgstr "Ruble rus"
+
+msgid "Intl_Currency_RWF"
+msgstr "Franc de Ruanda"
+
+msgid "Intl_Currency_SAR"
+msgstr "Rial saudita"
+
+msgid "Intl_Currency_SBD"
+msgstr "Dòlar de les illes Salomó"
+
+msgid "Intl_Currency_SCR"
+msgstr "Rupia de les Seychelles"
+
+msgid "Intl_Currency_SDG"
+msgstr "Lliura sudanesa"
+
+msgid "Intl_Currency_SEK"
+msgstr "Corona sueca"
+
+msgid "Intl_Currency_SGD"
+msgstr "Dòlar de Singapur"
+
+msgid "Intl_Currency_SHP"
+msgstr "Lliura de Santa Helena"
+
+msgid "Intl_Currency_SLL"
+msgstr "Leone de Sierra Leone"
+
+msgid "Intl_Currency_SOS"
+msgstr "Xíling somali"
+
+msgid "Intl_Currency_SRD"
+msgstr "Dòlar de Surinam"
+
+msgid "Intl_Currency_SSP"
+msgstr "Lliura del Sudan del Sud"
+
+msgid "Intl_Currency_STN"
+msgstr "Dobra de São Tomé i Príncipe"
+
+msgid "Intl_Currency_SYP"
+msgstr "Lliura síria"
+
+msgid "Intl_Currency_SZL"
+msgstr "Lilangeni swazi"
+
+msgid "Intl_Currency_THB"
+msgstr "Baht tailandès"
+
+msgid "Intl_Currency_TJS"
+msgstr "Somoni tadjik"
+
+msgid "Intl_Currency_TMT"
+msgstr "Manat turcman"
+
+msgid "Intl_Currency_TND"
+msgstr "Dinar tunisià"
+
+msgid "Intl_Currency_TOP"
+msgstr "Pa‘anga tongà"
+
+msgid "Intl_Currency_TRY"
+msgstr "Lira turca"
+
+msgid "Intl_Currency_TTD"
+msgstr "Dòlar de Trinitat i Tobago"
+
+msgid "Intl_Currency_TWD"
+msgstr "Nou dòlar de Taiwan"
+
+msgid "Intl_Currency_TZS"
+msgstr "Xíling tanzà"
+
+msgid "Intl_Currency_UAH"
+msgstr "Hrívnia ucraïnesa"
+
+msgid "Intl_Currency_UGX"
+msgstr "Xíling ugandès"
+
+msgid "Intl_Currency_USD"
+msgstr "Dòlar dels Estats Units"
+
+msgid "Intl_Currency_UYU"
+msgstr "Peso uruguaià"
+
+msgid "Intl_Currency_UZS"
+msgstr "Som uzbek"
+
+msgid "Intl_Currency_VEF"
+msgstr "Bolívar veneçolà (2008–2018)"
+
+msgid "Intl_Currency_VND"
+msgstr "Dong vietnamita"
+
+msgid "Intl_Currency_VUV"
+msgstr "Vatu de Vanuatu"
+
+msgid "Intl_Currency_WST"
+msgstr "Tala samoà"
+
+msgid "Intl_Currency_XAF"
+msgstr "Franc CFA BEAC"
+
+msgid "Intl_Currency_XCD"
+msgstr "Dòlar del Carib Oriental"
+
+msgid "Intl_Currency_XOF"
+msgstr "Franc CFA BCEAO"
+
+msgid "Intl_Currency_XPF"
+msgstr "Franc CFP"
+
+msgid "Intl_Currency_YER"
+msgstr "Rial iemenita"
+
+msgid "Intl_Currency_ZAR"
+msgstr "Rand sud-africà"
+
+msgid "Intl_Currency_ZMW"
+msgstr "Kwacha zambià"
+
+msgid "Intl_Day_Long_1"
+msgstr "dilluns"
+
+msgid "Intl_Day_Long_2"
+msgstr "dimarts"
+
+msgid "Intl_Day_Long_3"
+msgstr "dimecres"
+
+msgid "Intl_Day_Long_4"
+msgstr "dijous"
+
+msgid "Intl_Day_Long_5"
+msgstr "divendres"
+
+msgid "Intl_Day_Long_6"
+msgstr "dissabte"
+
+msgid "Intl_Day_Long_7"
+msgstr "diumenge"
+
+msgid "Intl_Day_Long_StandAlone_1"
+msgstr "dilluns"
+
+msgid "Intl_Day_Long_StandAlone_2"
+msgstr "dimarts"
+
+msgid "Intl_Day_Long_StandAlone_3"
+msgstr "dimecres"
+
+msgid "Intl_Day_Long_StandAlone_4"
+msgstr "dijous"
+
+msgid "Intl_Day_Long_StandAlone_5"
+msgstr "divendres"
+
+msgid "Intl_Day_Long_StandAlone_6"
+msgstr "dissabte"
+
+msgid "Intl_Day_Long_StandAlone_7"
+msgstr "diumenge"
+
+msgid "Intl_Day_Min_1"
+msgstr "dl."
+
+msgid "Intl_Day_Min_2"
+msgstr "dt."
+
+msgid "Intl_Day_Min_3"
+msgstr "dc."
+
+msgid "Intl_Day_Min_4"
+msgstr "dj."
+
+msgid "Intl_Day_Min_5"
+msgstr "dv."
+
+msgid "Intl_Day_Min_6"
+msgstr "ds."
+
+msgid "Intl_Day_Min_7"
+msgstr "dg."
+
+msgid "Intl_Day_Min_StandAlone_1"
+msgstr "dl."
+
+msgid "Intl_Day_Min_StandAlone_2"
+msgstr "dt."
+
+msgid "Intl_Day_Min_StandAlone_3"
+msgstr "dc."
+
+msgid "Intl_Day_Min_StandAlone_4"
+msgstr "dj."
+
+msgid "Intl_Day_Min_StandAlone_5"
+msgstr "dv."
+
+msgid "Intl_Day_Min_StandAlone_6"
+msgstr "ds."
+
+msgid "Intl_Day_Min_StandAlone_7"
+msgstr "dg."
+
+msgid "Intl_Day_Short_1"
+msgstr "dl."
+
+msgid "Intl_Day_Short_2"
+msgstr "dt."
+
+msgid "Intl_Day_Short_3"
+msgstr "dc."
+
+msgid "Intl_Day_Short_4"
+msgstr "dj."
+
+msgid "Intl_Day_Short_5"
+msgstr "dv."
+
+msgid "Intl_Day_Short_6"
+msgstr "ds."
+
+msgid "Intl_Day_Short_7"
+msgstr "dg."
+
+msgid "Intl_Day_Short_StandAlone_1"
+msgstr "dl."
+
+msgid "Intl_Day_Short_StandAlone_2"
+msgstr "dt."
+
+msgid "Intl_Day_Short_StandAlone_3"
+msgstr "dc."
+
+msgid "Intl_Day_Short_StandAlone_4"
+msgstr "dj."
+
+msgid "Intl_Day_Short_StandAlone_5"
+msgstr "dv."
+
+msgid "Intl_Day_Short_StandAlone_6"
+msgstr "ds."
+
+msgid "Intl_Day_Short_StandAlone_7"
+msgstr "dg."
+
+msgid "Intl_EnglishLanguageName"
+msgstr "Catalan"
+
+msgid "Intl_Format_DateTime_Long"
+msgstr "EEEE, d MMMM 'de' y {time}"
+
+msgid "Intl_Format_DateTime_Short"
+msgstr "d MMM y {time}"
+
+msgid "Intl_Format_Date_Day_Month"
+msgstr "E, d MMM"
+
+msgid "Intl_Format_Date_Long"
+msgstr "EEEE, d MMMM 'de' y"
+
+msgid "Intl_Format_Date_Short"
+msgstr "d MMM y"
+
+msgid "Intl_Format_Hour_12"
+msgstr "h a"
+
+msgid "Intl_Format_Hour_24"
+msgstr "H"
+
+msgid "Intl_Format_Interval_Long_D"
+msgstr "d–d MMMM 'de' y"
+
+msgid "Intl_Format_Interval_Long_M"
+msgstr "d MMMM – d MMMM 'de' y"
+
+msgid "Intl_Format_Interval_Long_Y"
+msgstr "d MMMM 'de' y – d MMMM 'de' y"
+
+msgid "Intl_Format_Interval_Short_D"
+msgstr "d–d MMM y"
+
+msgid "Intl_Format_Interval_Short_M"
+msgstr "d MMM – d MMM y"
+
+msgid "Intl_Format_Interval_Short_Y"
+msgstr "d MMM y – d MMM y"
+
+msgid "Intl_Format_Month_Long"
+msgstr "LLLL 'de' y"
+
+msgid "Intl_Format_Month_Short"
+msgstr "LLL 'de' y"
+
+msgid "Intl_Format_Time"
+msgstr "{time}"
+
+msgid "Intl_Format_Time_12"
+msgstr "h:mm:ss a"
+
+msgid "Intl_Format_Time_24"
+msgstr "H:mm:ss"
+
+msgid "Intl_Format_Year"
+msgstr "y"
+
+msgid "Intl_Hours"
+msgstr "hores"
+
+msgid "Intl_Language_aa"
+msgstr "Àfar"
+
+msgid "Intl_Language_ab"
+msgstr "Abkhaz"
+
+msgid "Intl_Language_ae"
+msgstr "Avèstic"
+
+msgid "Intl_Language_af"
+msgstr "Afrikaans"
+
+msgid "Intl_Language_ak"
+msgstr "Àkan"
+
+msgid "Intl_Language_am"
+msgstr "Amhàric"
+
+msgid "Intl_Language_an"
+msgstr "Aragonès"
+
+msgid "Intl_Language_ar"
+msgstr "Àrab"
+
+msgid "Intl_Language_as"
+msgstr "Assamès"
+
+msgid "Intl_Language_av"
+msgstr "Àvar"
+
+msgid "Intl_Language_ay"
+msgstr "Aimara"
+
+msgid "Intl_Language_az"
+msgstr "Azerbaidjanès"
+
+msgid "Intl_Language_ba"
+msgstr "Baixkir"
+
+msgid "Intl_Language_be"
+msgstr "Belarús"
+
+msgid "Intl_Language_bg"
+msgstr "Búlgar"
+
+msgid "Intl_Language_bi"
+msgstr "Bislama"
+
+msgid "Intl_Language_bm"
+msgstr "Bambara"
+
+msgid "Intl_Language_bn"
+msgstr "Bengalí"
+
+msgid "Intl_Language_bo"
+msgstr "Tibetà"
+
+msgid "Intl_Language_br"
+msgstr "Bretó"
+
+msgid "Intl_Language_bs"
+msgstr "Bosnià"
+
+msgid "Intl_Language_ca"
+msgstr "Català"
+
+msgid "Intl_Language_ce"
+msgstr "Txetxè"
+
+msgid "Intl_Language_ch"
+msgstr "Chamorro"
+
+msgid "Intl_Language_co"
+msgstr "Cors"
+
+msgid "Intl_Language_cr"
+msgstr "Cree"
+
+msgid "Intl_Language_cs"
+msgstr "Txec"
+
+msgid "Intl_Language_cu"
+msgstr "Eslau eclesiàstic"
+
+msgid "Intl_Language_cv"
+msgstr "Txuvaix"
+
+msgid "Intl_Language_cy"
+msgstr "Gal·lès"
+
+msgid "Intl_Language_da"
+msgstr "Danès"
+
+msgid "Intl_Language_de"
+msgstr "Alemany"
+
+msgid "Intl_Language_dv"
+msgstr "Divehi"
+
+msgid "Intl_Language_dz"
+msgstr "Dzongka"
+
+msgid "Intl_Language_ee"
+msgstr "Ewe"
+
+msgid "Intl_Language_el"
+msgstr "Grec"
+
+msgid "Intl_Language_en"
+msgstr "Anglès"
+
+msgid "Intl_Language_eo"
+msgstr "Esperanto"
+
+msgid "Intl_Language_es"
+msgstr "Espanyol"
+
+msgid "Intl_Language_et"
+msgstr "Estonià"
+
+msgid "Intl_Language_eu"
+msgstr "Basc"
+
+msgid "Intl_Language_fa"
+msgstr "Persa"
+
+msgid "Intl_Language_ff"
+msgstr "Ful"
+
+msgid "Intl_Language_fi"
+msgstr "Finès"
+
+msgid "Intl_Language_fj"
+msgstr "Fijià"
+
+msgid "Intl_Language_fo"
+msgstr "Feroès"
+
+msgid "Intl_Language_fr"
+msgstr "Francès"
+
+msgid "Intl_Language_fy"
+msgstr "Frisó occidental"
+
+msgid "Intl_Language_ga"
+msgstr "Irlandès"
+
+msgid "Intl_Language_gd"
+msgstr "Gaèlic escocès"
+
+msgid "Intl_Language_gl"
+msgstr "Gallec"
+
+msgid "Intl_Language_gn"
+msgstr "Guaraní"
+
+msgid "Intl_Language_gu"
+msgstr "Gujarati"
+
+msgid "Intl_Language_gv"
+msgstr "Manx"
+
+msgid "Intl_Language_ha"
+msgstr "Haussa"
+
+msgid "Intl_Language_he"
+msgstr "Hebreu"
+
+msgid "Intl_Language_hi"
+msgstr "Hindi"
+
+msgid "Intl_Language_ho"
+msgstr "Hiri motu"
+
+msgid "Intl_Language_hr"
+msgstr "Croat"
+
+msgid "Intl_Language_ht"
+msgstr "Crioll d’Haití"
+
+msgid "Intl_Language_hu"
+msgstr "Hongarès"
+
+msgid "Intl_Language_hy"
+msgstr "Armeni"
+
+msgid "Intl_Language_hz"
+msgstr "Herero"
+
+msgid "Intl_Language_ia"
+msgstr "Interlingua"
+
+msgid "Intl_Language_id"
+msgstr "Indonesi"
+
+msgid "Intl_Language_ie"
+msgstr "Interlingue"
+
+msgid "Intl_Language_ig"
+msgstr "Igbo"
+
+msgid "Intl_Language_ii"
+msgstr "Yi sichuan"
+
+msgid "Intl_Language_ik"
+msgstr "Inupiak"
+
+msgid "Intl_Language_io"
+msgstr "Ido"
+
+msgid "Intl_Language_is"
+msgstr "Islandès"
+
+msgid "Intl_Language_it"
+msgstr "Italià"
+
+msgid "Intl_Language_iu"
+msgstr "Inuktitut"
+
+msgid "Intl_Language_ja"
+msgstr "Japonès"
+
+msgid "Intl_Language_jv"
+msgstr "Javanès"
+
+msgid "Intl_Language_ka"
+msgstr "Georgià"
+
+msgid "Intl_Language_kg"
+msgstr "Kongo"
+
+msgid "Intl_Language_ki"
+msgstr "Kikuiu"
+
+msgid "Intl_Language_kj"
+msgstr "Kuanyama"
+
+msgid "Intl_Language_kk"
+msgstr "Kazakh"
+
+msgid "Intl_Language_kl"
+msgstr "Grenlandès"
+
+msgid "Intl_Language_km"
+msgstr "Khmer"
+
+msgid "Intl_Language_kn"
+msgstr "Kannada"
+
+msgid "Intl_Language_ko"
+msgstr "Coreà"
+
+msgid "Intl_Language_kr"
+msgstr "Kanuri"
+
+msgid "Intl_Language_ks"
+msgstr "Caixmiri"
+
+msgid "Intl_Language_ku"
+msgstr "Kurd"
+
+msgid "Intl_Language_kv"
+msgstr "Komi"
+
+msgid "Intl_Language_kw"
+msgstr "Còrnic"
+
+msgid "Intl_Language_ky"
+msgstr "Kirguís"
+
+msgid "Intl_Language_la"
+msgstr "Llatí"
+
+msgid "Intl_Language_lb"
+msgstr "Luxemburguès"
+
+msgid "Intl_Language_lg"
+msgstr "Ganda"
+
+msgid "Intl_Language_li"
+msgstr "Limburguès"
+
+msgid "Intl_Language_ln"
+msgstr "Lingala"
+
+msgid "Intl_Language_lo"
+msgstr "Laosià"
+
+msgid "Intl_Language_lt"
+msgstr "Lituà"
+
+msgid "Intl_Language_lu"
+msgstr "Luba katanga"
+
+msgid "Intl_Language_lv"
+msgstr "Letó"
+
+msgid "Intl_Language_mg"
+msgstr "Malgaix"
+
+msgid "Intl_Language_mh"
+msgstr "Marshallès"
+
+msgid "Intl_Language_mi"
+msgstr "Maori"
+
+msgid "Intl_Language_mk"
+msgstr "Macedoni"
+
+msgid "Intl_Language_ml"
+msgstr "Malaiàlam"
+
+msgid "Intl_Language_mn"
+msgstr "Mongol"
+
+msgid "Intl_Language_mr"
+msgstr "Marathi"
+
+msgid "Intl_Language_ms"
+msgstr "Malai"
+
+msgid "Intl_Language_mt"
+msgstr "Maltès"
+
+msgid "Intl_Language_my"
+msgstr "Birmà"
+
+msgid "Intl_Language_na"
+msgstr "Nauruà"
+
+msgid "Intl_Language_nb"
+msgstr "Noruec bokmål"
+
+msgid "Intl_Language_nd"
+msgstr "Ndebele septentrional"
+
+msgid "Intl_Language_ne"
+msgstr "Nepalès"
+
+msgid "Intl_Language_ng"
+msgstr "Ndonga"
+
+msgid "Intl_Language_nl"
+msgstr "Neerlandès"
+
+msgid "Intl_Language_nn"
+msgstr "Noruec nynorsk"
+
+msgid "Intl_Language_no"
+msgstr "Noruec"
+
+msgid "Intl_Language_nr"
+msgstr "Ndebele meridional"
+
+msgid "Intl_Language_nv"
+msgstr "Navaho"
+
+msgid "Intl_Language_ny"
+msgstr "Nyanja"
+
+msgid "Intl_Language_oc"
+msgstr "Occità"
+
+msgid "Intl_Language_oj"
+msgstr "Ojibwa"
+
+msgid "Intl_Language_om"
+msgstr "Oromo"
+
+msgid "Intl_Language_or"
+msgstr "Oriya"
+
+msgid "Intl_Language_os"
+msgstr "Osseta"
+
+msgid "Intl_Language_pa"
+msgstr "Panjabi"
+
+msgid "Intl_Language_pi"
+msgstr "Pali"
+
+msgid "Intl_Language_pl"
+msgstr "Polonès"
+
+msgid "Intl_Language_ps"
+msgstr "Paixtu"
+
+msgid "Intl_Language_pt"
+msgstr "Portuguès"
+
+msgid "Intl_Language_qu"
+msgstr "Quítxua"
+
+msgid "Intl_Language_rm"
+msgstr "Retoromànic"
+
+msgid "Intl_Language_rn"
+msgstr "Rundi"
+
+msgid "Intl_Language_ro"
+msgstr "Romanès"
+
+msgid "Intl_Language_ru"
+msgstr "Rus"
+
+msgid "Intl_Language_rw"
+msgstr "Ruandès"
+
+msgid "Intl_Language_sa"
+msgstr "Sànscrit"
+
+msgid "Intl_Language_sc"
+msgstr "Sard"
+
+msgid "Intl_Language_sd"
+msgstr "Sindi"
+
+msgid "Intl_Language_se"
+msgstr "Sami septentrional"
+
+msgid "Intl_Language_sg"
+msgstr "Sango"
+
+msgid "Intl_Language_si"
+msgstr "Singalès"
+
+msgid "Intl_Language_sk"
+msgstr "Eslovac"
+
+msgid "Intl_Language_sl"
+msgstr "Eslovè"
+
+msgid "Intl_Language_sm"
+msgstr "Samoà"
+
+msgid "Intl_Language_sn"
+msgstr "Shona"
+
+msgid "Intl_Language_so"
+msgstr "Somali"
+
+msgid "Intl_Language_sq"
+msgstr "Albanès"
+
+msgid "Intl_Language_sr"
+msgstr "Serbi"
+
+msgid "Intl_Language_ss"
+msgstr "Swazi"
+
+msgid "Intl_Language_st"
+msgstr "Sotho meridional"
+
+msgid "Intl_Language_su"
+msgstr "Sondanès"
+
+msgid "Intl_Language_sv"
+msgstr "Suec"
+
+msgid "Intl_Language_sw"
+msgstr "Suahili"
+
+msgid "Intl_Language_ta"
+msgstr "Tàmil"
+
+msgid "Intl_Language_te"
+msgstr "Telugu"
+
+msgid "Intl_Language_tg"
+msgstr "Tadjik"
+
+msgid "Intl_Language_th"
+msgstr "Tai"
+
+msgid "Intl_Language_ti"
+msgstr "Tigrinya"
+
+msgid "Intl_Language_tk"
+msgstr "Turcman"
+
+msgid "Intl_Language_tl"
+msgstr "Tagal"
+
+msgid "Intl_Language_tn"
+msgstr "Setswana"
+
+msgid "Intl_Language_to"
+msgstr "Tongalès"
+
+msgid "Intl_Language_tr"
+msgstr "Turc"
+
+msgid "Intl_Language_ts"
+msgstr "Tsonga"
+
+msgid "Intl_Language_tt"
+msgstr "Tàtar"
+
+msgid "Intl_Language_tw"
+msgstr "Twi"
+
+msgid "Intl_Language_ty"
+msgstr "Tahitià"
+
+msgid "Intl_Language_ug"
+msgstr "Uigur"
+
+msgid "Intl_Language_uk"
+msgstr "Ucraïnès"
+
+msgid "Intl_Language_ur"
+msgstr "Urdú"
+
+msgid "Intl_Language_uz"
+msgstr "Uzbek"
+
+msgid "Intl_Language_ve"
+msgstr "Venda"
+
+msgid "Intl_Language_vi"
+msgstr "Vietnamita"
+
+msgid "Intl_Language_vo"
+msgstr "Volapük"
+
+msgid "Intl_Language_wa"
+msgstr "Való"
+
+msgid "Intl_Language_wo"
+msgstr "Wòlof"
+
+msgid "Intl_Language_xh"
+msgstr "Xosa"
+
+msgid "Intl_Language_yi"
+msgstr "Ídix"
+
+msgid "Intl_Language_yo"
+msgstr "Ioruba"
+
+msgid "Intl_Language_za"
+msgstr "Zhuang"
+
+msgid "Intl_Language_zh"
+msgstr "Xinès"
+
+msgid "Intl_Language_zu"
+msgstr "Zulu"
+
+msgid "Intl_LayoutDirection"
+msgstr "ltr"
+
+msgid "Intl_Minutes"
+msgstr "minuts"
+
+msgid "Intl_Month_Long_1"
+msgstr "de gener"
+
+msgid "Intl_Month_Long_10"
+msgstr "d’octubre"
+
+msgid "Intl_Month_Long_11"
+msgstr "de novembre"
+
+msgid "Intl_Month_Long_12"
+msgstr "de desembre"
+
+msgid "Intl_Month_Long_2"
+msgstr "de febrer"
+
+msgid "Intl_Month_Long_3"
+msgstr "de març"
+
+msgid "Intl_Month_Long_4"
+msgstr "d’abril"
+
+msgid "Intl_Month_Long_5"
+msgstr "de maig"
+
+msgid "Intl_Month_Long_6"
+msgstr "de juny"
+
+msgid "Intl_Month_Long_7"
+msgstr "de juliol"
+
+msgid "Intl_Month_Long_8"
+msgstr "d’agost"
+
+msgid "Intl_Month_Long_9"
+msgstr "de setembre"
+
+msgid "Intl_Month_Long_StandAlone_1"
+msgstr "gener"
+
+msgid "Intl_Month_Long_StandAlone_10"
+msgstr "octubre"
+
+msgid "Intl_Month_Long_StandAlone_11"
+msgstr "novembre"
+
+msgid "Intl_Month_Long_StandAlone_12"
+msgstr "desembre"
+
+msgid "Intl_Month_Long_StandAlone_2"
+msgstr "febrer"
+
+msgid "Intl_Month_Long_StandAlone_3"
+msgstr "març"
+
+msgid "Intl_Month_Long_StandAlone_4"
+msgstr "abril"
+
+msgid "Intl_Month_Long_StandAlone_5"
+msgstr "maig"
+
+msgid "Intl_Month_Long_StandAlone_6"
+msgstr "juny"
+
+msgid "Intl_Month_Long_StandAlone_7"
+msgstr "juliol"
+
+msgid "Intl_Month_Long_StandAlone_8"
+msgstr "agost"
+
+msgid "Intl_Month_Long_StandAlone_9"
+msgstr "setembre"
+
+msgid "Intl_Month_Short_1"
+msgstr "de gen."
+
+msgid "Intl_Month_Short_10"
+msgstr "d’oct."
+
+msgid "Intl_Month_Short_11"
+msgstr "de nov."
+
+msgid "Intl_Month_Short_12"
+msgstr "de des."
+
+msgid "Intl_Month_Short_2"
+msgstr "de febr."
+
+msgid "Intl_Month_Short_3"
+msgstr "de març"
+
+msgid "Intl_Month_Short_4"
+msgstr "d’abr."
+
+msgid "Intl_Month_Short_5"
+msgstr "de maig"
+
+msgid "Intl_Month_Short_6"
+msgstr "de juny"
+
+msgid "Intl_Month_Short_7"
+msgstr "de jul."
+
+msgid "Intl_Month_Short_8"
+msgstr "d’ag."
+
+msgid "Intl_Month_Short_9"
+msgstr "de set."
+
+msgid "Intl_Month_Short_StandAlone_1"
+msgstr "gen."
+
+msgid "Intl_Month_Short_StandAlone_10"
+msgstr "oct."
+
+msgid "Intl_Month_Short_StandAlone_11"
+msgstr "nov."
+
+msgid "Intl_Month_Short_StandAlone_12"
+msgstr "des."
+
+msgid "Intl_Month_Short_StandAlone_2"
+msgstr "febr."
+
+msgid "Intl_Month_Short_StandAlone_3"
+msgstr "març"
+
+msgid "Intl_Month_Short_StandAlone_4"
+msgstr "abr."
+
+msgid "Intl_Month_Short_StandAlone_5"
+msgstr "maig"
+
+msgid "Intl_Month_Short_StandAlone_6"
+msgstr "juny"
+
+msgid "Intl_Month_Short_StandAlone_7"
+msgstr "jul."
+
+msgid "Intl_Month_Short_StandAlone_8"
+msgstr "ag."
+
+msgid "Intl_Month_Short_StandAlone_9"
+msgstr "set."
+
+msgid "Intl_NDays"
+msgstr "%s dies"
+
+msgid "Intl_NHoursShort"
+msgstr "%s h"
+
+msgid "Intl_NMinutes"
+msgstr "%s minuts"
+
+msgid "Intl_NMinutesShort"
+msgstr "%s min"
+
+msgid "Intl_NSeconds"
+msgstr "%s segons"
+
+msgid "Intl_NSecondsShort"
+msgstr "%s s"
+
+msgid "Intl_NumberFormatCurrency"
+msgstr "#,##0.00 ¤"
+
+msgid "Intl_NumberFormatNumber"
+msgstr "#,##0.###"
+
+msgid "Intl_NumberFormatPercent"
+msgstr "#,##0%"
+
+msgid "Intl_NumberSymbolDecimal"
+msgstr ","
+
+msgid "Intl_NumberSymbolGroup"
+msgstr "."
+
+msgid "Intl_NumberSymbolMinus"
+msgstr "-"
+
+msgid "Intl_NumberSymbolPercent"
+msgstr "%"
+
+msgid "Intl_NumberSymbolPlus"
+msgstr "+"
+
+msgid "Intl_OneDay"
+msgstr "1 dia"
+
+msgid "Intl_OneMinute"
+msgstr "1 minut"
+
+msgid "Intl_OneMinuteShort"
+msgstr "1 min"
+
+msgid "Intl_OriginalLanguageName"
+msgstr "Català"
+
+msgid "Intl_PeriodDay"
+msgstr "dia"
+
+msgid "Intl_PeriodDays"
+msgstr "dies"
+
+msgid "Intl_PeriodMonth"
+msgstr "mes"
+
+msgid "Intl_PeriodMonths"
+msgstr "mesos"
+
+msgid "Intl_PeriodWeek"
+msgstr "setmana"
+
+msgid "Intl_PeriodWeeks"
+msgstr "setmanes"
+
+msgid "Intl_PeriodYear"
+msgstr "any"
+
+msgid "Intl_PeriodYears"
+msgstr "anys"
+
+msgid "Intl_Seconds"
+msgstr "segons"
+
+msgid "Intl_Time_AM"
+msgstr "a. m."
+
+msgid "Intl_Time_PM"
+msgstr "p. m."
+
+msgid "Intl_Timezone_Africa_Asmera"
+msgstr "Asmara"
+
+msgid "Intl_Timezone_Africa_Ceuta"
+msgstr "Ceuta"
+
+msgid "Intl_Timezone_Africa_Kinshasa"
+msgstr "Kinshasa"
+
+msgid "Intl_Timezone_Africa_Lubumbashi"
+msgstr "Lubumbashi"
+
+msgid "Intl_Timezone_America_Adak"
+msgstr "Adak"
+
+msgid "Intl_Timezone_America_Anchorage"
+msgstr "Anchorage"
+
+msgid "Intl_Timezone_America_Araguaina"
+msgstr "Araguaína"
+
+msgid "Intl_Timezone_America_Argentina_LaRioja"
+msgstr "La Rioja"
+
+msgid "Intl_Timezone_America_Argentina_RioGallegos"
+msgstr "Río Gallegos"
+
+msgid "Intl_Timezone_America_Argentina_Salta"
+msgstr "Salta"
+
+msgid "Intl_Timezone_America_Argentina_SanJuan"
+msgstr "San Juan"
+
+msgid "Intl_Timezone_America_Argentina_SanLuis"
+msgstr "San Luis"
+
+msgid "Intl_Timezone_America_Argentina_Tucuman"
+msgstr "Tucumán"
+
+msgid "Intl_Timezone_America_Argentina_Ushuaia"
+msgstr "Ushuaia"
+
+msgid "Intl_Timezone_America_Bahia"
+msgstr "Bahia"
+
+msgid "Intl_Timezone_America_BahiaBanderas"
+msgstr "Bahía de Banderas"
+
+msgid "Intl_Timezone_America_Belem"
+msgstr "Belém"
+
+msgid "Intl_Timezone_America_Blanc-Sablon"
+msgstr "Blanc Sablon"
+
+msgid "Intl_Timezone_America_BoaVista"
+msgstr "Boa Vista"
+
+msgid "Intl_Timezone_America_Boise"
+msgstr "Boise"
+
+msgid "Intl_Timezone_America_BuenosAires"
+msgstr "Buenos Aires"
+
+msgid "Intl_Timezone_America_CambridgeBay"
+msgstr "Cambridge Bay"
+
+msgid "Intl_Timezone_America_CampoGrande"
+msgstr "Campo Grande"
+
+msgid "Intl_Timezone_America_Cancun"
+msgstr "Cancun"
+
+msgid "Intl_Timezone_America_Catamarca"
+msgstr "Catamarca"
+
+msgid "Intl_Timezone_America_Chicago"
+msgstr "Chicago"
+
+msgid "Intl_Timezone_America_Chihuahua"
+msgstr "Chihuahua"
+
+msgid "Intl_Timezone_America_CoralHarbour"
+msgstr "Atikokan"
+
+msgid "Intl_Timezone_America_Cordoba"
+msgstr "Córdoba"
+
+msgid "Intl_Timezone_America_Creston"
+msgstr "Creston"
+
+msgid "Intl_Timezone_America_Cuiaba"
+msgstr "Cuiabá"
+
+msgid "Intl_Timezone_America_Danmarkshavn"
+msgstr "Danmarkshavn"
+
+msgid "Intl_Timezone_America_Dawson"
+msgstr "Dawson"
+
+msgid "Intl_Timezone_America_DawsonCreek"
+msgstr "Dawson Creek"
+
+msgid "Intl_Timezone_America_Denver"
+msgstr "Denver"
+
+msgid "Intl_Timezone_America_Detroit"
+msgstr "Detroit"
+
+msgid "Intl_Timezone_America_Edmonton"
+msgstr "Edmonton"
+
+msgid "Intl_Timezone_America_Eirunepe"
+msgstr "Eirunepé"
+
+msgid "Intl_Timezone_America_FortNelson"
+msgstr "Fort Nelson"
+
+msgid "Intl_Timezone_America_Fortaleza"
+msgstr "Fortaleza"
+
+msgid "Intl_Timezone_America_GlaceBay"
+msgstr "Glace Bay"
+
+msgid "Intl_Timezone_America_Godthab"
+msgstr "Nuuk"
+
+msgid "Intl_Timezone_America_GooseBay"
+msgstr "Goose Bay"
+
+msgid "Intl_Timezone_America_Guayaquil"
+msgstr "Guayaquil"
+
+msgid "Intl_Timezone_America_Halifax"
+msgstr "Halifax"
+
+msgid "Intl_Timezone_America_Hermosillo"
+msgstr "Hermosillo"
+
+msgid "Intl_Timezone_America_Indiana_Knox"
+msgstr "Knox, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Marengo"
+msgstr "Marengo, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Petersburg"
+msgstr "Petersburg, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_TellCity"
+msgstr "Tell City, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vevay"
+msgstr "Vevay, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vincennes"
+msgstr "Vincennes, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Winamac"
+msgstr "Winamac, Indiana"
+
+msgid "Intl_Timezone_America_Indianapolis"
+msgstr "Indianapolis"
+
+msgid "Intl_Timezone_America_Inuvik"
+msgstr "Inuvik"
+
+msgid "Intl_Timezone_America_Iqaluit"
+msgstr "Iqaluit"
+
+msgid "Intl_Timezone_America_Jujuy"
+msgstr "Jujuy"
+
+msgid "Intl_Timezone_America_Juneau"
+msgstr "Juneau"
+
+msgid "Intl_Timezone_America_Kentucky_Monticello"
+msgstr "Monticello, Kentucky"
+
+msgid "Intl_Timezone_America_LosAngeles"
+msgstr "Los Angeles"
+
+msgid "Intl_Timezone_America_Louisville"
+msgstr "Louisville"
+
+msgid "Intl_Timezone_America_Maceio"
+msgstr "Maceió"
+
+msgid "Intl_Timezone_America_Manaus"
+msgstr "Manaus"
+
+msgid "Intl_Timezone_America_Matamoros"
+msgstr "Matamoros"
+
+msgid "Intl_Timezone_America_Mazatlan"
+msgstr "Mazatlán"
+
+msgid "Intl_Timezone_America_Mendoza"
+msgstr "Mendoza"
+
+msgid "Intl_Timezone_America_Menominee"
+msgstr "Menominee"
+
+msgid "Intl_Timezone_America_Merida"
+msgstr "Mérida"
+
+msgid "Intl_Timezone_America_Metlakatla"
+msgstr "Metlakatla"
+
+msgid "Intl_Timezone_America_MexicoCity"
+msgstr "Ciutat de Mèxic"
+
+msgid "Intl_Timezone_America_Moncton"
+msgstr "Moncton"
+
+msgid "Intl_Timezone_America_Monterrey"
+msgstr "Monterrey"
+
+msgid "Intl_Timezone_America_NewYork"
+msgstr "Nova York"
+
+msgid "Intl_Timezone_America_Nipigon"
+msgstr "Nipigon"
+
+msgid "Intl_Timezone_America_Nome"
+msgstr "Nome"
+
+msgid "Intl_Timezone_America_Noronha"
+msgstr "Noronha"
+
+msgid "Intl_Timezone_America_NorthDakota_Beulah"
+msgstr "Beulah, Dakota del Nord"
+
+msgid "Intl_Timezone_America_NorthDakota_Center"
+msgstr "Center, Dakota del Nord"
+
+msgid "Intl_Timezone_America_NorthDakota_NewSalem"
+msgstr "New Salem, Dakota del Nord"
+
+msgid "Intl_Timezone_America_Ojinaga"
+msgstr "Ojinaga"
+
+msgid "Intl_Timezone_America_Pangnirtung"
+msgstr "Pangnirtung"
+
+msgid "Intl_Timezone_America_Phoenix"
+msgstr "Phoenix"
+
+msgid "Intl_Timezone_America_PortoVelho"
+msgstr "Porto Velho"
+
+msgid "Intl_Timezone_America_PuntaArenas"
+msgstr "Punta Arenas"
+
+msgid "Intl_Timezone_America_RainyRiver"
+msgstr "Rainy River"
+
+msgid "Intl_Timezone_America_RankinInlet"
+msgstr "Rankin Inlet"
+
+msgid "Intl_Timezone_America_Recife"
+msgstr "Recife"
+
+msgid "Intl_Timezone_America_Regina"
+msgstr "Regina"
+
+msgid "Intl_Timezone_America_Resolute"
+msgstr "Resolute"
+
+msgid "Intl_Timezone_America_RioBranco"
+msgstr "Río Branco"
+
+msgid "Intl_Timezone_America_SantaIsabel"
+msgstr "Santa Isabel"
+
+msgid "Intl_Timezone_America_Santarem"
+msgstr "Santarém"
+
+msgid "Intl_Timezone_America_Santiago"
+msgstr "Santiago"
+
+msgid "Intl_Timezone_America_SaoPaulo"
+msgstr "São Paulo"
+
+msgid "Intl_Timezone_America_Scoresbysund"
+msgstr "Scoresbysund"
+
+msgid "Intl_Timezone_America_Sitka"
+msgstr "Sitka"
+
+msgid "Intl_Timezone_America_StJohns"
+msgstr "Saint John’s"
+
+msgid "Intl_Timezone_America_SwiftCurrent"
+msgstr "Swift Current"
+
+msgid "Intl_Timezone_America_Thule"
+msgstr "Thule"
+
+msgid "Intl_Timezone_America_ThunderBay"
+msgstr "Thunder Bay"
+
+msgid "Intl_Timezone_America_Tijuana"
+msgstr "Tijuana"
+
+msgid "Intl_Timezone_America_Toronto"
+msgstr "Toronto"
+
+msgid "Intl_Timezone_America_Vancouver"
+msgstr "Vancouver"
+
+msgid "Intl_Timezone_America_Whitehorse"
+msgstr "Whitehorse"
+
+msgid "Intl_Timezone_America_Winnipeg"
+msgstr "Winnipeg"
+
+msgid "Intl_Timezone_America_Yakutat"
+msgstr "Yakutat"
+
+msgid "Intl_Timezone_America_Yellowknife"
+msgstr "Yellowknife"
+
+msgid "Intl_Timezone_Antarctica_Casey"
+msgstr "Casey"
+
+msgid "Intl_Timezone_Antarctica_Davis"
+msgstr "Davis"
+
+msgid "Intl_Timezone_Antarctica_DumontDUrville"
+msgstr "Dumont d’Urville"
+
+msgid "Intl_Timezone_Antarctica_Macquarie"
+msgstr "Macquarie"
+
+msgid "Intl_Timezone_Antarctica_Mawson"
+msgstr "Mawson"
+
+msgid "Intl_Timezone_Antarctica_McMurdo"
+msgstr "McMurdo"
+
+msgid "Intl_Timezone_Antarctica_Palmer"
+msgstr "Palmer"
+
+msgid "Intl_Timezone_Antarctica_Rothera"
+msgstr "Rothera"
+
+msgid "Intl_Timezone_Antarctica_Syowa"
+msgstr "Syowa"
+
+msgid "Intl_Timezone_Antarctica_Troll"
+msgstr "Troll"
+
+msgid "Intl_Timezone_Antarctica_Vostok"
+msgstr "Vostok"
+
+msgid "Intl_Timezone_Asia_Almaty"
+msgstr "Almaty"
+
+msgid "Intl_Timezone_Asia_Anadyr"
+msgstr "Anadyr’"
+
+msgid "Intl_Timezone_Asia_Aqtau"
+msgstr "Aqtaū"
+
+msgid "Intl_Timezone_Asia_Aqtobe"
+msgstr "Aqtobe"
+
+msgid "Intl_Timezone_Asia_Atyrau"
+msgstr "Atirau"
+
+msgid "Intl_Timezone_Asia_Barnaul"
+msgstr "Barnaul"
+
+msgid "Intl_Timezone_Asia_Calcutta"
+msgstr "Calcuta"
+
+msgid "Intl_Timezone_Asia_Chita"
+msgstr "Txità"
+
+msgid "Intl_Timezone_Asia_Choibalsan"
+msgstr "Choibalsan"
+
+msgid "Intl_Timezone_Asia_Famagusta"
+msgstr "Famagusta"
+
+msgid "Intl_Timezone_Asia_Gaza"
+msgstr "Gaza"
+
+msgid "Intl_Timezone_Asia_Hebron"
+msgstr "Hebron"
+
+msgid "Intl_Timezone_Asia_Hovd"
+msgstr "Hovd"
+
+msgid "Intl_Timezone_Asia_Irkutsk"
+msgstr "Irkutsk"
+
+msgid "Intl_Timezone_Asia_Jakarta"
+msgstr "Jakarta"
+
+msgid "Intl_Timezone_Asia_Jayapura"
+msgstr "Jaipur"
+
+msgid "Intl_Timezone_Asia_Kamchatka"
+msgstr "Kamtxatka"
+
+msgid "Intl_Timezone_Asia_Katmandu"
+msgstr "Katmandú"
+
+msgid "Intl_Timezone_Asia_Khandyga"
+msgstr "Khandyga"
+
+msgid "Intl_Timezone_Asia_Krasnoyarsk"
+msgstr "Krasnoiarsk"
+
+msgid "Intl_Timezone_Asia_KualaLumpur"
+msgstr "Kuala Lumpur"
+
+msgid "Intl_Timezone_Asia_Kuching"
+msgstr "Kuching"
+
+msgid "Intl_Timezone_Asia_Magadan"
+msgstr "Magadan"
+
+msgid "Intl_Timezone_Asia_Makassar"
+msgstr "Makasar"
+
+msgid "Intl_Timezone_Asia_Nicosia"
+msgstr "Nicòsia"
+
+msgid "Intl_Timezone_Asia_Novokuznetsk"
+msgstr "Novokuznetsk"
+
+msgid "Intl_Timezone_Asia_Novosibirsk"
+msgstr "Novosibirsk"
+
+msgid "Intl_Timezone_Asia_Omsk"
+msgstr "Omsk"
+
+msgid "Intl_Timezone_Asia_Oral"
+msgstr "Oral"
+
+msgid "Intl_Timezone_Asia_Pontianak"
+msgstr "Pontianak"
+
+msgid "Intl_Timezone_Asia_Qyzylorda"
+msgstr "Kizil-Orda"
+
+msgid "Intl_Timezone_Asia_Rangoon"
+msgstr "Yangôn"
+
+msgid "Intl_Timezone_Asia_Saigon"
+msgstr "Ho Chi Minh"
+
+msgid "Intl_Timezone_Asia_Sakhalin"
+msgstr "Sakhalin"
+
+msgid "Intl_Timezone_Asia_Samarkand"
+msgstr "Samarcanda"
+
+msgid "Intl_Timezone_Asia_Shanghai"
+msgstr "Xangai"
+
+msgid "Intl_Timezone_Asia_Srednekolymsk"
+msgstr "Srednekolimsk"
+
+msgid "Intl_Timezone_Asia_Tashkent"
+msgstr "Taixkent"
+
+msgid "Intl_Timezone_Asia_Tomsk"
+msgstr "Tomsk"
+
+msgid "Intl_Timezone_Asia_Ulaanbaatar"
+msgstr "Ulan Bator"
+
+msgid "Intl_Timezone_Asia_Urumqi"
+msgstr "Urumchi"
+
+msgid "Intl_Timezone_Asia_Ust-Nera"
+msgstr "Ust’-Nera"
+
+msgid "Intl_Timezone_Asia_Vladivostok"
+msgstr "Vladivostok"
+
+msgid "Intl_Timezone_Asia_Yakutsk"
+msgstr "Jakutsk"
+
+msgid "Intl_Timezone_Asia_Yekaterinburg"
+msgstr "Jekaterinburg"
+
+msgid "Intl_Timezone_Atlantic_Azores"
+msgstr "Açores"
+
+msgid "Intl_Timezone_Atlantic_Canary"
+msgstr "Illes Canàries"
+
+msgid "Intl_Timezone_Atlantic_Faeroe"
+msgstr "Illes Fèroe"
+
+msgid "Intl_Timezone_Atlantic_Madeira"
+msgstr "Madeira"
+
+msgid "Intl_Timezone_Australia_Adelaide"
+msgstr "Adelaide"
+
+msgid "Intl_Timezone_Australia_Brisbane"
+msgstr "Brisbane"
+
+msgid "Intl_Timezone_Australia_BrokenHill"
+msgstr "Broken Hill"
+
+msgid "Intl_Timezone_Australia_Currie"
+msgstr "Currie"
+
+msgid "Intl_Timezone_Australia_Darwin"
+msgstr "Darwin"
+
+msgid "Intl_Timezone_Australia_Eucla"
+msgstr "Eucla"
+
+msgid "Intl_Timezone_Australia_Hobart"
+msgstr "Hobart"
+
+msgid "Intl_Timezone_Australia_Lindeman"
+msgstr "Lindeman"
+
+msgid "Intl_Timezone_Australia_LordHowe"
+msgstr "Lord Howe"
+
+msgid "Intl_Timezone_Australia_Melbourne"
+msgstr "Melbourne"
+
+msgid "Intl_Timezone_Australia_Perth"
+msgstr "Perth"
+
+msgid "Intl_Timezone_Australia_Sydney"
+msgstr "Sydney"
+
+msgid "Intl_Timezone_Europe_Astrakhan"
+msgstr "Astrakhan"
+
+msgid "Intl_Timezone_Europe_Berlin"
+msgstr "Berlín"
+
+msgid "Intl_Timezone_Europe_Busingen"
+msgstr "Busingen"
+
+msgid "Intl_Timezone_Europe_Kaliningrad"
+msgstr "Kaliningrad"
+
+msgid "Intl_Timezone_Europe_Kiev"
+msgstr "Kíev"
+
+msgid "Intl_Timezone_Europe_Kirov"
+msgstr "Kirov"
+
+msgid "Intl_Timezone_Europe_Lisbon"
+msgstr "Lisboa"
+
+msgid "Intl_Timezone_Europe_Madrid"
+msgstr "Madrid"
+
+msgid "Intl_Timezone_Europe_Moscow"
+msgstr "Moscou"
+
+msgid "Intl_Timezone_Europe_Samara"
+msgstr "Samara"
+
+msgid "Intl_Timezone_Europe_Saratov"
+msgstr "Saràtov"
+
+msgid "Intl_Timezone_Europe_Simferopol"
+msgstr "Simferopol"
+
+msgid "Intl_Timezone_Europe_Ulyanovsk"
+msgstr "Uliànovsk"
+
+msgid "Intl_Timezone_Europe_Uzhgorod"
+msgstr "Uzhgorod"
+
+msgid "Intl_Timezone_Europe_Volgograd"
+msgstr "Volgograd"
+
+msgid "Intl_Timezone_Europe_Zaporozhye"
+msgstr "Zaporíjia"
+
+msgid "Intl_Timezone_Pacific_Auckland"
+msgstr "Auckland"
+
+msgid "Intl_Timezone_Pacific_Bougainville"
+msgstr "Bougainville"
+
+msgid "Intl_Timezone_Pacific_Chatham"
+msgstr "Chatham"
+
+msgid "Intl_Timezone_Pacific_Easter"
+msgstr "Illa de Pasqua"
+
+msgid "Intl_Timezone_Pacific_Enderbury"
+msgstr "Enderbury"
+
+msgid "Intl_Timezone_Pacific_Galapagos"
+msgstr "Galápagos"
+
+msgid "Intl_Timezone_Pacific_Gambier"
+msgstr "Gambier"
+
+msgid "Intl_Timezone_Pacific_Honolulu"
+msgstr "Honolulu"
+
+msgid "Intl_Timezone_Pacific_Johnston"
+msgstr "Johnston"
+
+msgid "Intl_Timezone_Pacific_Kiritimati"
+msgstr "Kiritimati"
+
+msgid "Intl_Timezone_Pacific_Kosrae"
+msgstr "Kosrae"
+
+msgid "Intl_Timezone_Pacific_Kwajalein"
+msgstr "Kwajalein"
+
+msgid "Intl_Timezone_Pacific_Majuro"
+msgstr "Majuro"
+
+msgid "Intl_Timezone_Pacific_Marquesas"
+msgstr "Marqueses"
+
+msgid "Intl_Timezone_Pacific_Midway"
+msgstr "Midway"
+
+msgid "Intl_Timezone_Pacific_Ponape"
+msgstr "Pohnpei"
+
+msgid "Intl_Timezone_Pacific_PortMoresby"
+msgstr "Port Moresby"
+
+msgid "Intl_Timezone_Pacific_Tahiti"
+msgstr "Tahití"
+
+msgid "Intl_Timezone_Pacific_Tarawa"
+msgstr "Tarawa"
+
+msgid "Intl_Timezone_Pacific_Truk"
+msgstr "Chuuk"
+
+msgid "Intl_Timezone_Pacific_Wake"
+msgstr "Wake"
+
+msgid "Intl_Today"
+msgstr "Avui"
+
+msgid "Intl_Year_Short"
+msgstr "any"
+
+msgid "Intl_Yesterday"
+msgstr "Ahir"
+
+msgid "LanguagesManager_AboutPiwikTranslations"
+msgstr "Quant a les traduccions del Matomo"
+
+msgid "LanguagesManager_TranslationSearch"
+msgstr "Cerca traduccions"
+
+msgid "Live_GoalType"
+msgstr "Tipus"
+
+msgid "Live_KeywordRankedOnSearchResultForThisVisitor"
+msgstr "La paraula clau %1$s està a la posició %2$s del ranking de %3$s resultats de cerca per aquest visitant."
+
+msgid "Live_LastHours"
+msgstr "Últimes %s hores"
+
+msgid "Live_LastMinutes"
+msgstr "Últims %s minuts"
+
+msgid "Live_MorePagesNotDisplayed"
+msgstr "No es mostre més pàgines per aquest visitant"
+
+msgid "Live_PageRefreshed"
+msgstr "Nombre de vegades que s'ha vist/refrescat una pàgina"
+
+msgid "Live_Referrer_URL"
+msgstr "URL del referent"
+
+msgid "Live_VisitorLogDocumentation"
+msgstr "Aquesta taula mostra les últimes visites pel període de temps seleccionat. Podeu veure quan s'ha produït l'últim accès d'un visitant pasant per damunt de la data de visita. %1$s Si el període de temps inclou avui, podeu veure els visitants en temps real! %2$s La informació que es mostra és sempre en directa, sense dependre de cada quan executeu el treball programat d'arxivat."
+
+msgid "Live_VisitorsLastVisit"
+msgstr "L'ultima visita d'aquest visitant va ser fa %s dies."
+
+msgid "Login_ConfirmationLinkSent"
+msgstr "S'ha enviat un enllaç de confirmació a la vostra bústia d'entrada. Reviseu el vostre correu electrònic i visiteu l'enllaç per autoritzar la sol·licitud de canvi de password."
+
+msgid "Login_ExceptionInvalidSuperUserAccessAuthenticationMethod"
+msgstr "No es pot autentificar mitjançant el mecanisme '%s' un usuari amb accessos de super usuari."
+
+msgid "Login_ExceptionPasswordMD5HashExpected"
+msgstr "El paràmetre contrasenya hauria de ser un hash MD5 de la contrasenya."
+
+msgid "Login_InvalidNonceOrHeadersOrReferrer"
+msgstr "El formulari de seguretat ha fallat. Sisuplau recarregeu el formaulari i reviseu que teniu les cookies activades. Si feu servir un proxy, heu de %1$s configurar el Matomo per a que accepti la capcelera del proxy %2$s que conté la capçalera del host. També reviseu que el la vostra capçalera de referent s'envia correctament."
+
+msgid "Login_InvalidOrExpiredToken"
+msgstr "El codi és invàlid o ha caducat"
+
+msgid "Login_InvalidUsernameEmail"
+msgstr "Aquest usuari i/o direcció de correu-e és invàlid."
+
+msgid "Login_LogIn"
+msgstr "Inicia la sessió"
+
+msgid "Login_LoginPasswordNotCorrect"
+msgstr "L'usuari o la contrasenya no són correctes"
+
+msgid "Login_LostYourPassword"
+msgstr "Heu perdut la contrasenya?"
+
+msgid "Login_MailTopicPasswordChange"
+msgstr "Confirmeu el canvi de contrasenya"
+
+msgid "Login_PasswordChanged"
+msgstr "S'ha canviat la vostra contrasenya"
+
+msgid "Login_PasswordRepeat"
+msgstr "Contrasenya (torneu-la a escriure)"
+
+msgid "Login_PasswordsDoNotMatch"
+msgstr "Les contrasenyes no coincideixen"
+
+msgid "Login_RememberMe"
+msgstr "Recorda'm"
+
+msgid "Marketplace_ActivateLicenseKey"
+msgstr "Activa"
+
+msgid "Marketplace_ActionInstall"
+msgstr "Instal·la"
+
+msgid "Marketplace_Authors"
+msgstr "Autors"
+
+msgid "Marketplace_PluginKeywords"
+msgstr "Paraules clau"
+
+msgid "Marketplace_SubscriptionType"
+msgstr "Tipus"
+
+msgid "MobileMessaging_MobileReport_NoPhoneNumbers"
+msgstr "Siusplau, activeu com a mínim un numbre de telèfon per accedir."
+
+msgid "MobileMessaging_MultiSites_Must_Be_Activated"
+msgstr "Per generar SMS de les vostres estadístiques web, siusplau activeu la extensió MultiSites de Matomo."
+
+msgid "MobileMessaging_PhoneNumbers"
+msgstr "Nombres de telèfon"
+
+msgid "MobileMessaging_PluginDescription"
+msgstr "Crea i descarrega informes personalitzats per SMS i envieu-los al vostre mobil de forma diària, semanal o mensual."
+
+msgid "MobileMessaging_Settings_APIKey"
+msgstr "Clau API"
+
+msgid "MobileMessaging_Settings_CountryCode"
+msgstr "Codi de país"
+
+msgid "MobileMessaging_Settings_CredentialNotProvided"
+msgstr "Abans de crear i gestionar els vostres nombres de telèfon, siusplau conecteu el Matomo a la vostra compta de SMS."
+
+msgid "MobileMessaging_Settings_CredentialProvided"
+msgstr "La vostra compta de la API de SMS %s ha estat configurada correctament!"
+
+msgid "MobileMessaging_Settings_DeleteAccountConfirm"
+msgstr "Esteu segurs d'esborrar aquest compte de SMS?"
+
+msgid "MobileMessaging_Settings_InvalidActivationCode"
+msgstr "El codi introduït és invàlid, sisplau torneu-ho a probar."
+
+msgid "MobileMessaging_Settings_LetUsersManageAPICredential"
+msgstr "Permetre als usuaris administrar les seves credencials de la API de SMS"
+
+msgid "MobileMessaging_Settings_LetUsersManageAPICredential_No_Help"
+msgstr "Tots els usuaris poden rebre informes per SMS i faran servir els credits de la vostra compta."
+
+msgid "MobileMessaging_Settings_ManagePhoneNumbers"
+msgstr "Administra nombres de telèfon"
+
+msgid "MobileMessaging_Settings_PhoneActivated"
+msgstr "Nombre de telèfon validat! Ara podeu rebre SMS amb les vostres estadístiques."
+
+msgid "MobileMessaging_Settings_PhoneNumber"
+msgstr "Telèfon"
+
+msgid "MobileMessaging_Settings_PhoneNumbers_Add"
+msgstr "Afegir un nou telèfon"
+
+msgid "MobileMessaging_Settings_SMSAPIAccount"
+msgstr "Administra el compte de l'API de SMS"
+
+msgid "MobileMessaging_Settings_SMSProvider"
+msgstr "Proveïdor SMS"
+
+msgid "MobileMessaging_Settings_SuperAdmin"
+msgstr "Preferències del Super Usuari"
+
+msgid "MobileMessaging_Settings_ValidatePhoneNumber"
+msgstr "Valida"
+
+msgid "MobileMessaging_SettingsMenu"
+msgstr "Missatgeria Mòbil"
+
+msgid "MobileMessaging_SMS_Content_Too_Long"
+msgstr "[massa llarg]"
+
+msgid "MobileMessaging_TopMenu"
+msgstr "Informes per Email i SMS"
+
+msgid "MultiSites_Evolution"
+msgstr "Evolució"
+
+msgid "MultiSites_TopLinkTooltip"
+msgstr "Compareu les estadístiques anàlitiques de tots els vostres llocs web."
+
+msgid "Overlay_Clicks"
+msgstr "%s clicks"
+
+msgid "Overlay_ClicksFromXLinks"
+msgstr "%1$s clicks de un de %2$s enllaços"
+
+msgid "Overlay_Domain"
+msgstr "Domini"
+
+msgid "Overlay_ErrorNotLoading"
+msgstr "No es pot iniciar la sessió de pàgines Overlay"
+
+msgid "Overlay_ErrorNotLoadingDetails"
+msgstr "Potser la pàgina carregada a la dreta no te el codi de rastreig de Matomo. En aquest cas, proveu de llençar el Overlay d'un altra pàgina del informe de pàgines."
+
+msgid "Overlay_ErrorNotLoadingDetailsSSL"
+msgstr "Com esteu fent servir Matomo a través de https, es possible que el vostre lloc web no suporti el SSL. Proveu utilitzant el Matomo sobre http."
+
+msgid "Overlay_ErrorNotLoadingLink"
+msgstr "Feu click aquí per obtenir més informació sobre com solucionar el problema."
+
+msgid "Overlay_Link"
+msgstr "Enllaç"
+
+msgid "Overlay_Location"
+msgstr "Ubicació"
+
+msgid "Overlay_NoData"
+msgstr "No hi ha informació per aquesta pàgina en el període seleccionat."
+
+msgid "Overlay_OneClick"
+msgstr "1 click"
+
+msgid "Overlay_OpenFullScreen"
+msgstr "Mostra a pantalla complerta (sense barra lateral)"
+
+msgid "Overlay_Overlay"
+msgstr "Overlay de pàgina"
+
+msgid "Overlay_RedirectUrlErrorAdmin"
+msgstr "Podeu afegir una URL addicional per un domini a %1$s les preferències%2$s."
+
+msgid "Overlay_RedirectUrlErrorUser"
+msgstr "Contacteu amb el vostre administrador per afegir el domini com una URL adicional."
+
+msgid "PrivacyManager_AnonymizeIpInlineHelp"
+msgstr "Anonimitzar el(s) últim(s) de la IP de les adreces dels visitants per complir amb la vostra política de privacitat/llei."
+
+msgid "PrivacyManager_AnonymizeIpMaskLengtDescription"
+msgstr "Seleccioneu quans bytes de l'adreça IP del visitant voleu enmascarar."
+
+msgid "PrivacyManager_AnonymizeIpMaskLength"
+msgstr "%1$s byte(s) - p.e. %2$s"
+
+msgid "PrivacyManager_ClickHereSettings"
+msgstr "Feu click aquí per entrar a %s la configuració"
+
+msgid "PrivacyManager_CurrentDBSize"
+msgstr "Tamany actual de la Base de dades"
+
+msgid "PrivacyManager_DBPurged"
+msgstr "Base de dades purgada"
+
+msgid "PrivacyManager_DeleteDataInterval"
+msgstr "Esborrar la informació antiga cada"
+
+msgid "PrivacyManager_DeleteLogDescription2"
+msgstr "Quan activeu l'eliminació automàtica us heu d'asegurar que tots els informes diaris han estat processats, així no perdeu informació."
+
+msgid "PrivacyManager_DeleteLogsOlderThan"
+msgstr "Eliminar elsb registres anterior a"
+
+msgid "PrivacyManager_DeleteMaxRows"
+msgstr "Nombre màxim de files per eliminar en una sola execució:"
+
+msgid "PrivacyManager_DeleteMaxRowsNoLimit"
+msgstr "sense límit"
+
+msgid "PrivacyManager_DeleteReportsConfirm"
+msgstr "Esteu a punt d'activar l'eliminació de la informació dels informes. Si els informes antics s'eliminen, haure de tornar-los a procesar per veure'ls. Esteu segur que voleu fer això?"
+
+msgid "PrivacyManager_DeleteReportsOlderThan"
+msgstr "Elmina els informes anteriors a"
+
+msgid "PrivacyManager_DeleteDataSettings"
+msgstr "Eliminar el registre de visitants i informes antics"
+
+msgid "PrivacyManager_DoNotTrack_Description"
+msgstr "La tecnologia de no traquejar permet als usuris donar-se de baixa de les estadístiques pels llocs web que ells no visiten, incloïent els serveis analítiques, les xarxes públicitaries i els xarxes socials."
+
+msgid "PrivacyManager_DoNotTrack_Disable"
+msgstr "Desactiveu el suport per a la desactivació del rastreig."
+
+msgid "PrivacyManager_DoNotTrack_Enable"
+msgstr "Activeu el suport per la desactivació del restreig"
+
+msgid "PrivacyManager_DoNotTrack_Enabled"
+msgstr "Bravo! Esteu respectant la privacitat dels vostres usuaris."
+
+msgid "PrivacyManager_DoNotTrack_SupportDNTPreference"
+msgstr "Suportar la configuració de No Rastreig"
+
+msgid "PrivacyManager_EstimatedDBSizeAfterPurge"
+msgstr "Tamany de la base de dades desprès de la purga"
+
+msgid "PrivacyManager_EstimatedSpaceSaved"
+msgstr "Tamany estalviat (estimació)"
+
+msgid "PrivacyManager_GeolocationAnonymizeIpNote"
+msgstr "Nota: La geocalitazció tindrà els mateixos resultats amb 1 bit anònim. Amb 2 bits o més, la geocalització no serà acurada."
+
+msgid "PrivacyManager_GetPurgeEstimate"
+msgstr "Obtenir l'estimació de la purga"
+
+msgid "PrivacyManager_KeepBasicMetrics"
+msgstr "Conserveu les mètriques bàsiques ( visites, pàgines vistes, raó de rebot, conversió d'objectius, conversións ecommerce, etc.)"
+
+msgid "PrivacyManager_KeepReportSegments"
+msgstr "Per mantenir aquesta informació també heu de mantenir els informes segmentats."
+
+msgid "PrivacyManager_LastDelete"
+msgstr "La última eliminació va ser el"
+
+msgid "PrivacyManager_LeastDaysInput"
+msgstr "Siusplau especifieu un nombre de díes més gran que %s."
+
+msgid "PrivacyManager_LeastMonthsInput"
+msgstr "Siusplau, especifiqueu un nombre de dies més gran que %s."
+
+msgid "PrivacyManager_MenuPrivacySettings"
+msgstr "Privacitat"
+
+msgid "PrivacyManager_NextDelete"
+msgstr "La pròxima eliminació programada el"
+
+msgid "PrivacyManager_PurgeNow"
+msgstr "Purga la BD ara"
+
+msgid "PrivacyManager_PurgeNowConfirm"
+msgstr "Esteu a punt d'esborrar tota la informació de la vostra base de ades. Esteu segur que voleu continuar?"
+
+msgid "PrivacyManager_PurgingData"
+msgstr "Prugant la informació..."
+
+msgid "PrivacyManager_ReportsDataSavedEstimate"
+msgstr "Mida de la Base de dades"
+
+msgid "PrivacyManager_SaveSettingsBeforePurge"
+msgstr "Heu canviat la configuració d'esborrament. Sisplau, guardeu les vostres preferències abans de començar la purga."
+
+msgid "PrivacyManager_TeaserHeadline"
+msgstr "Preferències de Privacitat"
+
+msgid "PrivacyManager_UseAnonymizeIp"
+msgstr "Convertir la IP dels vostres visitants en anònima"
+
+msgid "PrivacyManager_UseDeleteReports"
+msgstr "Esobrreu els informes de la base de dades de forma períodica"
+
+msgid "Provider_ColumnProvider"
+msgstr "Proveïdor"
+
+msgid "Provider_ProviderReportDocumentation"
+msgstr "Aquest informe mostra quin Proveïdor d'Internet han utiltizat els vostres visitants per accedir al lloc. Podeu click al nom del proveïdor per més detalls. %s Si el Matomo no pot determinar el proveïdor del visitant, es mostra la seva adreça IP."
+
+msgid "Provider_WidgetProviders"
+msgstr "Proveïdors"
+
+msgid "Referrers_Campaigns"
+msgstr "Campanyes"
+
+msgid "Referrers_CampaignsDocumentation"
+msgstr "Visitants que visiten el vostre lloc web com a resultat d'una campanya. %1$s Visualitzeu l'inforrme %2$s per més detalls."
+
+msgid "Referrers_CampaignsReportDocumentation"
+msgstr "Aquest informe mostra quines campanyes han portat visitants al vostre lloc web. %1$s Per mes informació sobre la gestió de campanyes, llegiu la %2$s documetnació de campanyes a matomo.org %3$s"
+
+msgid "Referrers_ColumnCampaign"
+msgstr "Campanya"
+
+msgid "Referrers_ColumnSearchEngine"
+msgstr "Cercador"
+
+msgid "Referrers_ColumnSocial"
+msgstr "Xarxa social"
+
+msgid "Referrers_ColumnWebsite"
+msgstr "Lloc web"
+
+msgid "Referrers_ColumnWebsitePage"
+msgstr "Pàgina web"
+
+msgid "Referrers_DirectEntry"
+msgstr "Registre directe"
+
+msgid "Referrers_DistinctCampaigns"
+msgstr "campanyes diferents"
+
+msgid "Referrers_DistinctKeywords"
+msgstr "paraules clau diferents"
+
+msgid "Referrers_DistinctSearchEngines"
+msgstr "cercadors diferents"
+
+msgid "Referrers_DistinctWebsites"
+msgstr "llocs web diferents"
+
+msgid "Referrers_EvolutionDocumentation"
+msgstr "Això es una vista global dels referents que us han portat visitants al vostre lloc web."
+
+msgid "Referrers_Keywords"
+msgstr "Paraules clau"
+
+msgid "Referrers_KeywordsReportDocumentation"
+msgstr "Aquest informe mostra quines paraules clau han utilitzat els vostres visitants abans de ser dirigits al vostre lloc web. %s Clicant en una fila de la taula podeu veure la distribució de cercadors en que s'ha cercat la paraula clau."
+
+msgid "Referrers_Referrer"
+msgstr "Referent"
+
+msgid "Referrers_ReferrerName"
+msgstr "Nom del referent"
+
+msgid "Referrers_Referrers"
+msgstr "Referents"
+
+msgid "Referrers_ReferrersOverview"
+msgstr "Resum dels referents"
+
+msgid "Referrers_SearchEngines"
+msgstr "Cercadors"
+
+msgid "Referrers_SearchEnginesDocumentation"
+msgstr "Un visitant ha vingut al vostre lloc web a través d'un navegador web. %1$s Visualitzeu l'informe %2$s per a més informació."
+
+msgid "Referrers_SearchEnginesReportDocumentation"
+msgstr "Aquest informa mostra quins motors de cerca han portat usuaris al vostre lloc web. %s Clicant en una fila de la tabla, pedeu veureu que han estat cercant els vostres usuris en aquest lloc web."
+
+msgid "Referrers_Socials"
+msgstr "Xarxes socials"
+
+msgid "Referrers_SocialsReportDocumentation"
+msgstr "Aquest informe mostra quines xarxes socials han portat visitants al vostre lloc web. <br/> Cliqueu una fila de la taule per mostrar de quines pàgines de les xarxes socials venen els vostres visitants."
+
+msgid "Referrers_SubmenuSearchEngines"
+msgstr "Cercadors i paraules clau"
+
+msgid "Referrers_SubmenuWebsitesOnly"
+msgstr "Llocs"
+
+msgid "Referrers_TypeCampaigns"
+msgstr "Hi ha %s visites provinents de campanyes"
+
+msgid "Referrers_TypeDirectEntries"
+msgstr "Hi ha %s entrades directes"
+
+msgid "Referrers_TypeSearchEngines"
+msgstr "Hi ha %s visites provinents dels motors de cerca"
+
+msgid "Referrers_TypeWebsites"
+msgstr "Hi ha %s visites provinents d'altres llocs"
+
+msgid "Referrers_UsingNDistinctUrls"
+msgstr "(utiltizant %s urls diferents)"
+
+msgid "Referrers_ViewAllReferrers"
+msgstr "Veure tots els referents"
+
+msgid "Referrers_ViewReferrersBy"
+msgstr "Veure els referents agrupats per %s"
+
+msgid "Referrers_Websites"
+msgstr "Llocs"
+
+msgid "Referrers_WebsitesDocumentation"
+msgstr "Els visitant ha seguit un enllaç en un altre lloc web que ha portat al vostre lloc web. %1$s Visualitzeu l'informe %2$s per a més detalls."
+
+msgid "Referrers_WebsitesReportDocumentation"
+msgstr "En aquesta taula podeu observar quins llocs web han portat visitants al vostre lloc web. %s Cliqueu en una fila de la taule per veure les URL dels enllaços a les vostres pàgines."
+
+msgid "Referrers_WidgetExternalWebsites"
+msgstr "Llistat de llocs web externs"
+
+msgid "Referrers_WidgetSocials"
+msgstr "Llista de xarxes socials"
+
+msgid "Resolution_ColumnConfiguration"
+msgstr "Configuració"
+
+msgid "Resolution_ColumnResolution"
+msgstr "Resolució"
+
+msgid "Resolution_Configurations"
+msgstr "Configuracions"
+
+msgid "Resolution_Resolutions"
+msgstr "Resolucions"
+
+msgid "Resolution_WidgetGlobalVisitors"
+msgstr "Configuracions globals dels visitants"
+
+msgid "Resolution_WidgetGlobalVisitorsDocumentation"
+msgstr "Aquest informe mostra les configuracions més comuns que tenen els vostres visitants. Una configuració es la combinació de Sistema Operatiu, tipus de navegador i resolució de pantalla."
+
+msgid "Resolution_WidgetResolutions"
+msgstr "Resolucions"
+
+msgid "SEO_AlexaRank"
+msgstr "Ranking Alexa"
+
+msgid "SEO_Bing_IndexedPages"
+msgstr "Pàgines indexades per Bing"
+
+msgid "SEO_DomainAge"
+msgstr "Edat del domini"
+
+msgid "SEO_Google_IndexedPages"
+msgstr "Pàgines indexades per Google"
+
+msgid "SEO_Rank"
+msgstr "Ranking"
+
+msgid "SEO_SeoRankings"
+msgstr "Ranking SEO"
+
+msgid "SEO_SEORankingsFor"
+msgstr "Ranking SEO per %s"
+
+msgid "ScheduledReports_AggregateReportsFormat_GraphsOnly"
+msgstr "Mostra només els gràfics (sense taules)"
+
+msgid "ScheduledReports_AggregateReportsFormat_TablesAndGraphs"
+msgstr "Mostrar les taules i els gràfics per a tots els informes."
+
+msgid "ScheduledReports_AggregateReportsFormat_TablesOnly"
+msgstr "(per defecte) Mostra les taules d'informe (Gràfiques només per les mètriques clau)"
+
+msgid "ScheduledReports_AlsoSendReportToTheseEmails"
+msgstr "Envía també l'informe als seguents correus electrònics (un per línia):"
+
+msgid "ScheduledReports_AreYouSureDeleteReport"
+msgstr "Esteu segurs que voleu eliminar aquest informe i la seva programació?"
+
+msgid "ScheduledReports_CancelAndReturnToReports"
+msgstr "Cancela i %1$storna a la llista d'informes%2$s"
+
+msgid "ScheduledReports_CreateAndScheduleReport"
+msgstr "Crear i programar un informe"
+
+msgid "ScheduledReports_CreateReport"
+msgstr "Crear un informe"
+
+msgid "ScheduledReports_DescriptionOnFirstPage"
+msgstr "La descripció del informes es mostrarà a la primera pàgina del informe."
+
+msgid "ScheduledReports_DisplayFormat_TablesOnly"
+msgstr "Mostra només taules (sense gràfics)"
+
+msgid "ScheduledReports_EmailHello"
+msgstr "Hola,"
+
+msgid "ScheduledReports_EmailReports"
+msgstr "Informes per correu electrònic"
+
+msgid "ScheduledReports_EmailSchedule"
+msgstr "Programació per correu electrònic"
+
+msgid "ScheduledReports_EvolutionGraph"
+msgstr "Mostrar els valors històrics pels %s valors més representatius."
+
+msgid "ScheduledReports_FrontPage"
+msgstr "Portada"
+
+msgid "ScheduledReports_MonthlyScheduleHelp"
+msgstr "Programació mensual: L'informe s'enviarà el primer día de cada més."
+
+msgid "ScheduledReports_MustBeLoggedIn"
+msgstr "Heu d'estar identificat per crear i programar informes personalitzats"
+
+msgid "ScheduledReports_NoRecipients"
+msgstr "Aquest informe no té destinataris"
+
+msgid "ScheduledReports_Pagination"
+msgstr "Pàgina %1$s de %2$s"
+
+msgid "ScheduledReports_PiwikReports"
+msgstr "Informes Matomo"
+
+msgid "ScheduledReports_PleaseFindBelow"
+msgstr "A continuació podeu trobar el vostre informe %1$s per a %2$s."
+
+msgid "ScheduledReports_ReportFormat"
+msgstr "Format de l'informe"
+
+msgid "ScheduledReports_ReportIncludeNWebsites"
+msgstr "L'informe incloura les mètriques més importants de tots els llocs webs que tinguin almenys una visita (dels %s llocs web actualment disponibles)"
+
+msgid "ScheduledReports_ReportsIncluded"
+msgstr "Estadístiques incloses"
+
+msgid "ScheduledReports_ReportType"
+msgstr "Envia l'informe a través de"
+
+msgid "ScheduledReports_SendReportNow"
+msgstr "Envia l'informe ara"
+
+msgid "ScheduledReports_SendReportTo"
+msgstr "Envia l'informe a"
+
+msgid "ScheduledReports_SentToMe"
+msgstr "Enviam l'informe a mi"
+
+msgid "ScheduledReports_TableOfContent"
+msgstr "Llista d'informes"
+
+msgid "ScheduledReports_ThereIsNoReportToManage"
+msgstr "No hi ha cap informe per administrar el lloc web %s"
+
+msgid "ScheduledReports_TopLinkTooltip"
+msgstr "Creeu informes per correu electrònic per a que les estadístiques del Matomo es dipositin al vostre correu electrònic (o als dels vostres clients) automàticament"
+
+msgid "ScheduledReports_TopOfReport"
+msgstr "Torna a dalt"
+
+msgid "ScheduledReports_UpdateReport"
+msgstr "Actualitza l'informe"
+
+msgid "ScheduledReports_WeeklyScheduleHelp"
+msgstr "Programació semanal: L'informe s'enviara el Dilluns de cada setmana."
+
+msgid "SitesManager_AddSite"
+msgstr "Afegeix un lloc nou"
+
+msgid "SitesManager_AdvancedTimezoneSupportNotFound"
+msgstr "El suport per a zones horaries avançat no està disponible a la vostra versió de PHP (suportat a partir de la versio 5.2). Encara podeu utilitzar la diferencia UTC de forma manual."
+
+msgid "SitesManager_AliasUrlHelp"
+msgstr "Es recomanat, però no obligatori, especificar totes les URL (una per líniea) que els vostres visitants utilizen per accedir al lloc web. Les URL de Alias no apareixeran al informe de Referents > LLocs web. No es necessàri especificar les URL amb i sense 'www' ja que el Matomo té en compte les dos de forma automàtica."
+
+msgid "SitesManager_ChangingYourTimezoneWillOnlyAffectDataForward"
+msgstr "Canviar la vostra zona horaria només afecta les dades futures, no s'aplicarà de forma retroactiva."
+
+msgid "SitesManager_Currency"
+msgstr "Moneda"
+
+msgid "SitesManager_CurrencySymbolWillBeUsedForGoals"
+msgstr "El simbol de la moneda es mostrarà al costat dels ingresos dels objectius."
+
+msgid "SitesManager_DefaultCurrencyForNewWebsites"
+msgstr "Moneda per defecte per als nous llocs web"
+
+msgid "SitesManager_DefaultTimezoneForNewWebsites"
+msgstr "Zona horària per als nous llocs web"
+
+msgid "SitesManager_DeleteConfirm"
+msgstr "Realment voleu esborrar el lloc '%s'?"
+
+msgid "SitesManager_DisableSiteSearch"
+msgstr "No rastregeu la Cerca del vostre lloc web"
+
+msgid "SitesManager_EcommerceHelp"
+msgstr "Quan s'activi, l'apartat \"Objectius\" tindrà una nova secció \"Ecommerce\"."
+
+msgid "SitesManager_EnableEcommerce"
+msgstr "Ecommerce activat"
+
+msgid "SitesManager_EnableSiteSearch"
+msgstr "Rastreig de les cerques al lloc web activat"
+
+msgid "SitesManager_EnableSiteSpecificUserAgentExclude"
+msgstr "Activa l'exclusió per user-agent específic per al lloc web."
+
+msgid "SitesManager_EnableSiteSpecificUserAgentExclude_Help"
+msgstr "Si necessiteu excluïr diferents user-agent per a diferents llocs webs, marque aquesta opció, guardeu les opcions i %1$s afegiu user-agents a continuaicó %2$s."
+
+msgid "SitesManager_ExceptionDeleteSite"
+msgstr "No és possible eliminar aquest lloc ja que és l'únic configurat. Afegiu un altre lloc primer i, llavors, ja esborrareu aquest."
+
+msgid "SitesManager_ExceptionEmptyName"
+msgstr "El nom del lloc no pot estar buit."
+
+msgid "SitesManager_ExceptionInvalidCurrency"
+msgstr "La moneda \"%1$s\" no es vàlida. Sisplau, introduïu un símbol de moneda vàlid (p.e. %2$s)"
+
+msgid "SitesManager_ExceptionInvalidIPFormat"
+msgstr "La IP a excloure \"%1$s\" no te un format IP vàlid (p.e. %2$s)."
+
+msgid "SitesManager_ExceptionInvalidTimezone"
+msgstr "La zona horària \"%s\" no es vàlida. Sisplau introduïu una zona horària vàlida."
+
+msgid "SitesManager_ExceptionInvalidUrl"
+msgstr "L'adreça '%s' no és vàlida."
+
+msgid "SitesManager_ExceptionNoUrl"
+msgstr "Heu d'especificar una URL com a mínim."
+
+msgid "SitesManager_ExcludedIps"
+msgstr "IPs excloses"
+
+msgid "SitesManager_ExcludedParameters"
+msgstr "Paràmetres exclosos"
+
+msgid "SitesManager_ExcludedUserAgents"
+msgstr "Agents d'usuari exclosos"
+
+msgid "SitesManager_GlobalExcludedUserAgentHelp1"
+msgstr "Introduïeu la llista de user-agents per excloure del rastreig de Matomo."
+
+msgid "SitesManager_GlobalExcludedUserAgentHelp2"
+msgstr "Podeu utilizar això per excloure robots del rastreig."
+
+msgid "SitesManager_GlobalListExcludedIps"
+msgstr "Llista global de IPs Excloses."
+
+msgid "SitesManager_GlobalListExcludedQueryParameters"
+msgstr "Llista global de paràmetres d'URL per excloure"
+
+msgid "SitesManager_GlobalListExcludedUserAgents"
+msgstr "LLista global d'user-agents a excloure"
+
+msgid "SitesManager_GlobalListExcludedUserAgents_Desc"
+msgstr "Si el user-agent del visitant conté alguna de les cadenes especificades, el visitant serà exclòs del Matomo."
+
+msgid "SitesManager_GlobalWebsitesSettings"
+msgstr "Preferències globals dels llocs web"
+
+msgid "SitesManager_JsTrackingTagHelp"
+msgstr "Aquí teniu l'etiqueta de seguiment JavaScript per tal d'incloure-la a totes les pàgines"
+
+msgid "SitesManager_ListOfIpsToBeExcludedOnAllWebsites"
+msgstr "Les IPs indicades a continuació serán excloses del rastreig a tots els llocs web."
+
+msgid "SitesManager_ListOfQueryParametersToBeExcludedOnAllWebsites"
+msgstr "Els paràmetres de URL indicats a continuació seran exclosos de les URL a tots els llocs web."
+
+msgid "SitesManager_MainDescription"
+msgstr "Els informes d'anàlisi web necessiten llocs web! Afegiu, actualitzeu i esborreu-ne. Veieu també el codi JavaScript que heu d'inserir a les pàgines."
+
+msgid "SitesManager_NotAnEcommerceSite"
+msgstr "No es un lloc d'Ecommerce"
+
+msgid "SitesManager_NotFound"
+msgstr "No s'han trobat llocs web per"
+
+msgid "SitesManager_NoWebsites"
+msgstr "No teniu cap lloc que pugueu administrar"
+
+msgid "SitesManager_OnlyOneSiteAtTime"
+msgstr "Només podeu editar un lloc web a la vegada. Sisplau, Guardeu o Canceleu les modificacions al lloc web %s."
+
+msgid "SitesManager_PiwikOffersEcommerceAnalytics"
+msgstr "EL Matomo permet analítiques avançades per a Eccomerce. Sabeu més de les %1$s Analítiques per a Ecommerce %2$s."
+
+msgid "SitesManager_PiwikWillAutomaticallyExcludeCommonSessionParameters"
+msgstr "Matomo exclourà automàticament els paràmetres de sessió comuns (%s)."
+
+msgid "SitesManager_SearchCategoryDesc"
+msgstr "El Matomo també pot gestionar la categoria de Cerca per cada una de les paraules clau de la carca interna."
+
+msgid "SitesManager_SearchCategoryLabel"
+msgstr "Paràmetre de la categoria"
+
+msgid "SitesManager_SearchCategoryParametersDesc"
+msgstr "Podeu introduir una llista separada per comes de paràmetres que especifíquen la categoria de cerca."
+
+msgid "SitesManager_SearchKeywordLabel"
+msgstr "Paràmetre"
+
+msgid "SitesManager_SearchKeywordParametersDesc"
+msgstr "Introduïu una llista separada per comes de paràmetres que conte la paraula clau de cerca al lloc web."
+
+msgid "SitesManager_SearchParametersNote"
+msgstr "Nota: Els parametres de cerca i categoria de cerca només s'utilitzaran per llocs webs que tenen la Cerca al lloc activada pero que tenen aquest paràmetres en blanc."
+
+msgid "SitesManager_SearchParametersNote2"
+msgstr "Per deshabilitar la Cerca al lloc per als nous llocs web, deixeu aquest dos camps en blanc."
+
+msgid "SitesManager_SearchUseDefault"
+msgstr "Utilitzar els paràmetres de Cerca al Lloc %1$s per defecte %2$s"
+
+msgid "SitesManager_SelectACity"
+msgstr "Seleccioneu una ciutat"
+
+msgid "SitesManager_SelectDefaultCurrency"
+msgstr "Podeu seleccionar la moneda per defecte dels nous llocs web."
+
+msgid "SitesManager_SelectDefaultTimezone"
+msgstr "Podeu seleccionar la zona horària per defecte dels nous llocs web."
+
+msgid "SitesManager_ShowTrackingTag"
+msgstr "mostra l'etiqueta de seguiment"
+
+msgid "SitesManager_Sites"
+msgstr "Llocs"
+
+msgid "SitesManager_SiteSearchUse"
+msgstr "Podeu utilitzar el Matomo per rastrejar i vistualitzar informes sobre que estan cercant els vostres visitants a la cerca interna del vostre lloc web."
+
+msgid "SitesManager_Timezone"
+msgstr "Zona horària"
+
+msgid "SitesManager_TrackingSiteSearch"
+msgstr "Rastreig de la Cerca Interna."
+
+msgid "SitesManager_TrackingTags"
+msgstr "Codi de rastreig per %s"
+
+msgid "SitesManager_Urls"
+msgstr "Adreces"
+
+msgid "SitesManager_Type"
+msgstr "Tipus"
+
+msgid "SitesManager_UTCTimeIs"
+msgstr "L'hora UTC es %s."
+
+msgid "SitesManager_WebsitesManagement"
+msgstr "Gestiona els llocs"
+
+msgid "SitesManager_YouCurrentlyHaveAccessToNWebsites"
+msgstr "Actualment teniu accés a %s llocs web."
+
+msgid "SitesManager_YourCurrentIpAddressIs"
+msgstr "La vostra adreça IP es %s"
+
+msgid "TagManager_CategoryClicks"
+msgstr "Clics"
+
+msgid "TagManager_CategoryDate"
+msgstr "Data"
+
+msgid "TagManager_CategoryDevice"
+msgstr "Dispositiu"
+
+msgid "TagManager_CategoryEmail"
+msgstr "Correu-e"
+
+msgid "TagManager_CategoryErrors"
+msgstr "Errors"
+
+msgid "TagManager_Condition"
+msgstr "condició"
+
+msgid "TagManager_PageTitleVariableName"
+msgstr "Títol de la pàgina"
+
+msgid "TagManager_PageUrlVariableName"
+msgstr "URL de la pàgina"
+
+msgid "TagManager_ReferrerUrlVariableName"
+msgstr "URL del referent"
+
+msgid "TagManager_ReferrerVariableName"
+msgstr "URL del referent"
+
+msgid "TagManager_Type"
+msgstr "Tipus"
+
+msgid "TagManager_Version"
+msgstr "Versió"
+
+msgid "Transitions_BouncesInline"
+msgstr "%s rebots"
+
+msgid "Transitions_DirectEntries"
+msgstr "Entrades directes"
+
+msgid "Transitions_ErrorBack"
+msgstr "Ves a l'acció anterior"
+
+msgid "Transitions_ExitsInline"
+msgstr "%s surts"
+
+msgid "Transitions_FromCampaigns"
+msgstr "De campanyes"
+
+msgid "Transitions_FromPreviousPages"
+msgstr "De pàgines internes"
+
+msgid "Transitions_FromPreviousPagesInline"
+msgstr "%s de pàgines internes"
+
+msgid "Transitions_FromPreviousSiteSearches"
+msgstr "De la cerca interna"
+
+msgid "Transitions_FromPreviousSiteSearchesInline"
+msgstr "%s de la cerques internes"
+
+msgid "Transitions_FromSearchEngines"
+msgstr "De cercadors"
+
+msgid "Transitions_FromWebsites"
+msgstr "De llocs web"
+
+msgid "Transitions_IncomingTraffic"
+msgstr "Tràfic entrant"
+
+msgid "Transitions_LoopsInline"
+msgstr "%s refrescos de pàgina"
+
+msgid "Transitions_NoDataForAction"
+msgstr "No hi ha informació per %s"
+
+msgid "Transitions_NoDataForActionDetails"
+msgstr "O l'acció no ha estat vista cap vegada durant el període %s o és invàlida."
+
+msgid "Transitions_OutgoingTraffic"
+msgstr "Tràfic surtint"
+
+msgid "Transitions_ShareOfAllPageviews"
+msgstr "Aquesta pàgina ha tingut %1$s visites (%2$s de totes les visites)"
+
+msgid "Transitions_ToFollowingPages"
+msgstr "A pàgines internes"
+
+msgid "Transitions_ToFollowingPagesInline"
+msgstr "%s a pàgines internes"
+
+msgid "Transitions_ToFollowingSiteSearches"
+msgstr "Cerques internes"
+
+msgid "Transitions_ToFollowingSiteSearchesInline"
+msgstr "%s cerques internes"
+
+msgid "Transitions_XOfAllPageviews"
+msgstr "%s de totes les visualitzacions d'aquesta pàgina"
+
+msgid "Transitions_XOutOfYVisits"
+msgstr "%1$s (de %2$s)"
+
+msgid "UserCountry_AssumingNonApache"
+msgstr "No s'ha pogut trobar la funció apache_get_modules, s'asumeix que s'utilitza un servidor web diferent del Apache."
+
+msgid "UserCountry_CannotFindGeoIPDatabaseInArchive"
+msgstr "No s'ha pogut trobar el fitxer %1$s al fitxer tar %2$s!"
+
+msgid "UserCountry_CannotFindGeoIPServerVar"
+msgstr "La variable %s no està definida. Pot ser que el vostre servidor web no estigui configurat correctament."
+
+msgid "UserCountry_CannotFindPeclGeoIPDb"
+msgstr "No s'ha pogut trobar una base de dades de països, regions o ciutats pel modul GeoIP PECL. Assegureu-vos que la vostra base de dades GeoIP es troba a %1$s, i s'anomena %2$s o %3$s, sinó el mòdul PECL lo la detectarà."
+
+msgid "UserCountry_CannotListContent"
+msgstr "No s'ha pogut llistar el contingut de %1$s: %2$s"
+
+msgid "UserCountry_CannotLocalizeLocalIP"
+msgstr "L'adreça IP %s és una adreça local i no pot ser Geolocalitzada."
+
+msgid "UserCountry_CannotSetupGeoIPAutoUpdating"
+msgstr "Sembla que esteu guardant la vostra base de dades de GeoIP fora del Matomo (ho podem assegurar perquè no hi ha bases de dades al directori misc, però la GeoIP està funcionant). El Matomo no podrà actualitzar automàticament les vostres bases de dades GeoIP si aquestes es troben fora del directori misc."
+
+msgid "UserCountry_CannotUnzipDatFile"
+msgstr "No s'ha pogut descomprimir el fitxer dat de %1$s: %2$s"
+
+msgid "UserCountry_City"
+msgstr "Ciutat"
+
+msgid "UserCountry_Continent"
+msgstr "Continent"
+
+msgid "UserCountry_Country"
+msgstr "País"
+
+msgid "UserCountry_country_a1"
+msgstr "Proxy Anònim"
+
+msgid "UserCountry_country_a2"
+msgstr "Proveïdor per satelit"
+
+msgid "UserCountry_country_cat"
+msgstr "Comunitats catalano-parlants"
+
+msgid "UserCountry_country_o1"
+msgstr "Un altre pais"
+
+msgid "UserCountry_CurrentLocationIntro"
+msgstr "Segons el proveïdor, la vostra localització actual és"
+
+msgid "UserCountry_DefaultLocationProviderDesc1"
+msgstr "El proveïdor de localització per defecte suposa el país del visitant en funció del llenguatge que fan servir."
+
+msgid "UserCountry_DefaultLocationProviderDesc2"
+msgstr "Això no és molt precís, per tant %1$s recomanem instal·lar i utilitzar %2$sGeoIP%3$s.%4$s"
+
+msgid "UserCountry_DistinctCountries"
+msgstr "Hi ha %s països diferents"
+
+msgid "UserCountry_DownloadingDb"
+msgstr "Descarregant %s"
+
+msgid "UserCountry_DownloadNewDatabasesEvery"
+msgstr "Actualitza la base de dades cada"
+
+msgid "UserCountry_FatalErrorDuringDownload"
+msgstr "S'ha produït un error fatal mentre es descarregava el fitxer. Deu haver algun problema amb la vostra connexió a Internet o amb la base de dades GeoIP que heu Baixat. Proveu de descarregar-la instal·lar-la manualment."
+
+msgid "UserCountry_FoundApacheModules"
+msgstr "El Matomo ha trobat els següents mòduls d'Apache"
+
+msgid "UserCountry_GeoIPCannotFindMbstringExtension"
+msgstr "No s'ha pogut trobar la funció %1$s. Assegureu-vos que l'extensió %2$s està instal·lada i carregada."
+
+msgid "UserCountry_GeoIPDatabases"
+msgstr "Base de dades GeoIP"
+
+msgid "UserCountry_GeoIPDocumentationSuffix"
+msgstr "Per a veure informació d'aquest informe, heu de configurar la GeoIP a la pestanya Geolocalització. Les bases de dades comercials de %1$sMaxmind%2$s són més acurades que les gratuïtes. Podeu veure com són d'acurades fent click %3$saquí%4$s."
+
+msgid "UserCountry_GeoIPImplHasAccessTo"
+msgstr "Aquesta implementació de GeoIP té accés als següents tipus de bases de dades"
+
+msgid "UserCountry_GeoIpLocationProviderDesc_Pecl1"
+msgstr "Aquest proveïdor de localització utilitza una base de dades GeoIP i un mòdul PECL per determinar de forma eficient i acurada la localització dels vostres visitants."
+
+msgid "UserCountry_GeoIpLocationProviderDesc_Pecl2"
+msgstr "No hi ha cap limitació amb aquest proveïdor, per tant és el que recomanem que utilzeu."
+
+msgid "UserCountry_GeoIpLocationProviderDesc_Php2"
+msgstr "Si el vostre lloc web té molt tràfic trobareu que aquest proveïdor de localització és massa lent. En aquest cas podeu instalar la %1$s Extensió PECL %2$s o un %3$s mòdul del serviro %4$s."
+
+msgid "UserCountry_GeoIpLocationProviderDesc_ServerBased1"
+msgstr "Aquest proveïdor de localització utiltiza el modul GeoIP que ha estat instal·lat al vostre servidor HTTP. Aquest proveïdor es ràpid i acurat, però %1$s només es pot fer servir l'escaneig amb el rastreig de webs normal .%2$s"
+
+msgid "UserCountry_GeoIpLocationProviderDesc_ServerBased2"
+msgstr "Si heu d'importar els fitxers de Log o alguna altra cosa que requereixi utilizar addreces IP, utilitzeu la %1$sImplementació GeoIP PECL (recomanada)%2$s o la %3$s implementació GeoIP PHP%4$s."
+
+msgid "UserCountry_GeoIpLocationProviderDesc_ServerBasedAnonWarn"
+msgstr "Nota: L'anonimització IP no té cap efecte amb les localitzacions reportades per aquest proveïdor. Abans d'utilitzar amb l'anonimització IP, assegureu-vos que no viola cap llei de privacitat a la que podeu estar subjectes."
+
+msgid "UserCountry_GeoIPNoServerVars"
+msgstr "El Matomo no ho pogut trobar cap variable GeoIP a %s"
+
+msgid "UserCountry_GeoIPPeclCustomDirNotSet"
+msgstr "L'opció %s del PHP ini no està definida"
+
+msgid "UserCountry_GeoIPServerVarsFound"
+msgstr "El Matomo detecta les següents variables GeoIP a %s"
+
+msgid "UserCountry_GeoIPUpdaterInstructions"
+msgstr "Introduïu els enllaços de descàrrega de les vostres bases de dades a continuació. Si heu comprat bases de dades de %3$sMaxMind%4$s podeu trobar els enllaços %1$saquí%2$s. Poseu-vos amb contacte amb %3$sMaxMind%4$s si teniu problemes per accedir-hi."
+
+msgid "UserCountry_GeoIPUpdaterIntro"
+msgstr "El Matomo està gestionant les actualitzacions de les següents bases de dades GeoIP"
+
+msgid "UserCountry_GeoLiteCityLink"
+msgstr "Si esteu fent servir la Base de dades de ciutats GeoLite feu servir aquest enllaç: %1$s%2$s%3$s."
+
+msgid "UserCountry_Geolocation"
+msgstr "Geolocalització"
+
+msgid "UserCountry_GeolocationPageDesc"
+msgstr "En aquesta pàgina podeu canviar com el Matomo determina la localització dels vostres visitants."
+
+msgid "UserCountry_getCityDocumentation"
+msgstr "Aquest informe mostra les ciutats on estaven els vostres visitants quan van accedir el vostre lloc web."
+
+msgid "UserCountry_getContinentDocumentation"
+msgstr "Aquest informe mostra el continent on eren els vostres visitants quan van accedir al vostre lloc web."
+
+msgid "UserCountry_getCountryDocumentation"
+msgstr "Aquest informe mostra el país on estaven els vostres visitants quan van accedir al vostre lloc web."
+
+msgid "UserCountry_getRegionDocumentation"
+msgstr "Aquest informe mostra la regió on estaven els vostres visitants quan van accedir al vostre lloc web."
+
+msgid "UserCountry_HowToInstallApacheModule"
+msgstr "Com instal·lo el módul GeoIP per l'Apache?"
+
+msgid "UserCountry_HowToInstallGeoIPDatabases"
+msgstr "Com puc obtenir una base de dades GeoIP?"
+
+msgid "UserCountry_HowToInstallGeoIpPecl"
+msgstr "Com instal·lo l'extensió GeoIP PECL?"
+
+msgid "UserCountry_HowToInstallNginxModule"
+msgstr "Com instal·lo el modul GeoIP per Nginx?"
+
+msgid "UserCountry_HowToSetupGeoIP"
+msgstr "Com configuració la geocalitazció acurada amb GeoIP"
+
+msgid "UserCountry_HowToSetupGeoIP_Step1"
+msgstr "%1$sDescàrrega%2$s la base de dades GeoLite City de %3$sMaxMind%4$s."
+
+msgid "UserCountry_HowToSetupGeoIP_Step2"
+msgstr "Extraieu el aquest fitxer i copieu el resultat, %1$s al subdirectori %2$smisc%3$s del Matomo (ho podeu fer per FTP o per SSH)."
+
+msgid "UserCountry_HowToSetupGeoIP_Step3"
+msgstr "Recàrrega aquesta pantalla. El proveïdor %1$sGeoIP (PHP)%2$s està ara %3$s instal·lat %4$s. Seleccioneu-lo."
+
+msgid "UserCountry_HowToSetupGeoIP_Step4"
+msgstr "I ja esta tot! Acabeu de configurar el Matomo per utilitzar GeoIP que vol dir que podeu veure les regions i les ciutats dels vostres visitants i una informació molt acurada dels seus països."
+
+msgid "UserCountry_HowToSetupGeoIPIntro"
+msgstr "Sembla que no teniu configurada la Geolocalització. Es tracta d'una característica molt útil, i sense ella no podreu veure de forma acurada la localització completa dels vostres visitants. Tot seguit us expliquem com podeu començar a fer-la servir:"
+
+msgid "UserCountry_HttpServerModule"
+msgstr "Mòdul del Servidor HTTP"
+
+msgid "UserCountry_InvalidGeoIPUpdatePeriod"
+msgstr "Període invàlid de l'actualització GeoIP: %1$s. Els valors vàlids són %2$s."
+
+msgid "UserCountry_IPurchasedGeoIPDBs"
+msgstr "He comprat %1$suna base de dades més acurada de MaxMind%2$s i vull utilitzar les actualitzacions automàtiques"
+
+msgid "UserCountry_ISPDatabase"
+msgstr "Base de dades de ISP"
+
+msgid "UserCountry_IWantToDownloadFreeGeoIP"
+msgstr "Vull utilitzar la base de dades GeoIP gratuïta..."
+
+msgid "UserCountry_Latitude"
+msgstr "Latitud"
+
+msgid "UserCountry_Location"
+msgstr "Ubicació"
+
+msgid "UserCountry_LocationDatabase"
+msgstr "Base de dades de Localització"
+
+msgid "UserCountry_LocationDatabaseHint"
+msgstr "Una base de dades de localització és una base de dades de països, regions o ciutats."
+
+msgid "UserCountry_LocationProvider"
+msgstr "Proveïdor de localitzacions"
+
+msgid "UserCountry_Longitude"
+msgstr "Longitud"
+
+msgid "UserCountry_NoDataForGeoIPReport1"
+msgstr "No hi ha informació per aquest informe perquè la informació de localització no esta disponible o l'adreça IP del visitant no pot ser geolocalitzada."
+
+msgid "UserCountry_NoDataForGeoIPReport2"
+msgstr "Per activar la geolocalització acurada, canvieu les preferències %1$saquí%2$s i utilitzeu una %3$sbase de dades a nivell de ciutat%4$s."
+
+msgid "UserCountry_Organization"
+msgstr "Organització"
+
+msgid "UserCountry_OrgDatabase"
+msgstr "Base de dades d'Organització"
+
+msgid "UserCountry_PeclGeoIPNoDBDir"
+msgstr "El mòdul de PECL està cercant la base de dades a %1$s, però aquest directori no existeix. Sisplau, creu-lo i afegiu bases de dades de Geolocalització allí. Alternativament, podeu modificar el paràmetre %2$s del vostre fitxer php.ini per utilizar el directori correcte."
+
+msgid "UserCountry_PeclGeoLiteError"
+msgstr "La vostra base de dades de Geocalització es troba a %1$s amb el nom %2$s. Desafortunadament, el mòdul PECL no la pot reconèixer amb aquest nom. Sisuaplau, renombreu-la a %3$s."
+
+msgid "UserCountry_PiwikNotManagingGeoIPDBs"
+msgstr "El Matomo actualment no gestiona cap base de dades de Geolocalització"
+
+msgid "UserCountry_Region"
+msgstr "Regió"
+
+msgid "UserCountry_SetupAutomaticUpdatesOfGeoIP"
+msgstr "Configureu les actualitzacions automàtiques de les bases de Dades de Geolocalització."
+
+msgid "UserCountry_SubmenuLocations"
+msgstr "Localització"
+
+msgid "UserCountry_TestIPLocatorFailed"
+msgstr "El Matomo ha provat de localitzar la IP coneguda (%1$s), però el servidor ha retornat %2$s. Si el proveïdor està correctament configurat hauria d'haver retornat %3$s."
+
+msgid "UserCountry_ThisUrlIsNotAValidGeoIPDB"
+msgstr "El fitxer descarregat no es una Base de dades de Geolocalització vàlida. Sisplau, reviseu la URL o descarregueu el fitxer manualment."
+
+msgid "UserCountry_ToGeolocateOldVisits"
+msgstr "Per obtenir la localització de les visites anteriors, utilitzeu el script descrit %1$saquí%2$s."
+
+msgid "UserCountry_UnsupportedArchiveType"
+msgstr "S'ha trobat un tipus de fitxer no soportat %1$s."
+
+msgid "UserCountry_WidgetLocation"
+msgstr "Ubicació del visitant"
+
+msgid "UserCountryMap_map"
+msgstr "mapa"
+
+msgid "UserCountryMap_ShowingVisits"
+msgstr "Visites geolocalitzades des de l'última vegada"
+
+msgid "UserId_UserReportTitle"
+msgstr "Usuaris"
+
+msgid "UserLanguage_LanguageCode"
+msgstr "Codi de l'idioma"
+
+msgid "UsersManager_AddUser"
+msgstr "Afegeix un usuari nou"
+
+msgid "UsersManager_Alias"
+msgstr "Àlies"
+
+msgid "UsersManager_AllWebsites"
+msgstr "Tots els llocs"
+
+msgid "UsersManager_ApplyToAllWebsites"
+msgstr "Aplica a tots els llocs"
+
+msgid "UsersManager_ClickHereToDeleteTheCookie"
+msgstr "Feu click aquí per eliminar la galeta i permetre al Matomo rastrejar les vostres visites."
+
+msgid "UsersManager_ClickHereToSetTheCookieOnDomain"
+msgstr "Feu click aquí per guardar una galeta que exclourà les vostres visitis al Matomo de %s"
+
+msgid "UsersManager_DeleteConfirm"
+msgstr "Esteu segur que voleu eliminar l'usuari %s?"
+
+msgid "UsersManager_Email"
+msgstr "Correu-e"
+
+msgid "UsersManager_EmailYourAdministrator"
+msgstr "%1$sEnvieu un email al vostre administrador explicant el problema%2$s."
+
+msgid "UsersManager_ExceptionDeleteDoesNotExist"
+msgstr "L'usuari '%s' no existeix i, per tant, no es pot esborrar."
+
+msgid "UsersManager_ExceptionEditAnonymous"
+msgstr "L'usuari anònim no es pot editar o esborrar. El Matomo el fa servir per als usuaris que no han iniciat encara la sessió. Per exemple, podeu fer públiques les vostres estadístiques garantint el permís 'vista' a l'usuari 'anonymous' (anònim)."
+
+msgid "UsersManager_ExceptionEmailExists"
+msgstr "La direcció de correu-e '%s' ja està en un altre compte."
+
+msgid "UsersManager_ExceptionInvalidEmail"
+msgstr "La direcció de correu-e no té un format vàlid."
+
+msgid "UsersManager_ExceptionUserDoesNotExist"
+msgstr "L'usuari '%s' no existeix."
+
+msgid "UsersManager_ExcludeVisitsViaCookie"
+msgstr "Exclou les teues visites utilitzant cookies"
+
+msgid "UsersManager_ForAnonymousUsersReportDateToLoadByDefault"
+msgstr "Pels usuaris anònims, introduïu la data dels informes per defecte"
+
+msgid "UsersManager_InjectedHostCannotChangePwd"
+msgstr "Actualment esteu visitan amb un host desconegut (%1$s). No podeu canviar la vostra contrasenya fins que corregiu aquest problema."
+
+msgid "UsersManager_ManageAccess"
+msgstr "Gestiona els permisos"
+
+msgid "UsersManager_MenuAnonymousUserSettings"
+msgstr "Preferències de l'usuari anònim"
+
+msgid "UsersManager_MenuUsers"
+msgstr "Usuaris"
+
+msgid "UsersManager_MenuUserSettings"
+msgstr "Preferències d'usuari"
+
+msgid "UsersManager_NoteNoAnonymousUserAccessSettingsWontBeUsed2"
+msgstr "Nota: No podeu canviar la configuració en aquest secció, perquè no teniu cap lloc web que pot ser visitat per usuaris anònims."
+
+msgid "UsersManager_PrivAdmin"
+msgstr "Administració"
+
+msgid "UsersManager_PrivNone"
+msgstr "Sense accés"
+
+msgid "UsersManager_PrivView"
+msgstr "Vista"
+
+msgid "UsersManager_ReportDateToLoadByDefault"
+msgstr "Data dels informes per defecte"
+
+msgid "UsersManager_ReportToLoadByDefault"
+msgstr "Informe per defecte"
+
+msgid "UsersManager_TheLoginScreen"
+msgstr "Pàgina d'entrada"
+
+msgid "UsersManager_ThereAreCurrentlyNRegisteredUsers"
+msgstr "Actualment hi ha %s usuaris registrats"
+
+msgid "UsersManager_TypeYourPasswordAgain"
+msgstr "Introduïu de nou la nova contrasenya."
+
+msgid "UsersManager_User"
+msgstr "Usuari"
+
+msgid "UsersManager_UsersManagement"
+msgstr "Gestiona els usuaris"
+
+msgid "UsersManager_UsersManagementMainDescription"
+msgstr "Creeu nous usuaris o actualitzeu els existents. Podeu configurar els seus permisos a dalt."
+
+msgid "UsersManager_YourUsernameCannotBeChanged"
+msgstr "No es pot canviar el vostre nom d'usuari"
+
+msgid "UsersManager_YourVisitsAreIgnoredOnDomain"
+msgstr "%1$sLes vostres visites són ignorades pel Matomo %2$s %3$s (la galeta d'ignorància del Matomo s'ha trobat al vostre navegador)."
+
+msgid "UsersManager_YourVisitsAreNotIgnored"
+msgstr "%1$sLes vostres visites no són ignorades pel Matomo%2$s (la galeta d'ignorància del Matomo no s'ha trobat al vostre navegador)."
+
+msgid "UsersManager_ShowAll"
+msgstr "Mostra-ho tot"
+
+msgid "UsersManager_Username"
+msgstr "Usuari"
+
+msgid "VisitFrequency_ColumnActionsByReturningVisits"
+msgstr "Accions dels visitants antics"
+
+msgid "VisitFrequency_ColumnAverageVisitDurationForReturningVisitors"
+msgstr "Duració mitja d'una visita que retorna (en seg.)"
+
+msgid "VisitFrequency_ColumnAvgActionsPerReturningVisit"
+msgstr "Mitja d'accions per visitant que retorna"
+
+msgid "VisitFrequency_ColumnBounceCountForReturningVisits"
+msgstr "Nombre de rebots dels visitants que retornen"
+
+msgid "VisitFrequency_ColumnBounceRateForReturningVisits"
+msgstr "Raó de rebots"
+
+msgid "VisitFrequency_ColumnMaxActionsInReturningVisit"
+msgstr "Màxim d'accions en una vista que torna"
+
+msgid "VisitFrequency_ColumnNbReturningVisitsConverted"
+msgstr "Nombre de conversions per als visitants que retornen"
+
+msgid "VisitFrequency_ColumnReturningVisits"
+msgstr "Visitants que retornen (antics)"
+
+msgid "VisitFrequency_ColumnSumVisitLengthReturning"
+msgstr "Temps total dels visitants que retornen (en segons)"
+
+msgid "VisitFrequency_ColumnUniqueReturningVisitors"
+msgstr "Visitants únics que retornen"
+
+msgid "VisitFrequency_ColumnReturningUsers"
+msgstr "Usuaris que retornen"
+
+msgid "VisitFrequency_PluginDescription"
+msgstr "Informes de mètriques sobre nous visitants i visitants que retornen."
+
+msgid "VisitFrequency_ReturnActions"
+msgstr "Accions dels visitants freqüents"
+
+msgid "VisitFrequency_ReturnAverageVisitDuration"
+msgstr "duració promig de la visita per visitants que retornen"
+
+msgid "VisitFrequency_ReturnAvgActions"
+msgstr "accions per visitant que retorna"
+
+msgid "VisitFrequency_ReturnBounceRate"
+msgstr "visitants que han tornat i han rebotat (abandonat el lloc després de veure una pàgina)"
+
+msgid "VisitFrequency_ReturningVisitDocumentation"
+msgstr "Un visitant que retorna és (al contrari d'un visitant nou) un usuari que ja ha visitat el vostre lloc web almenys una vegada en el passat."
+
+msgid "VisitFrequency_ReturningVisitsDocumentation"
+msgstr "Això es una visió global dels visitants que retornen."
+
+msgid "VisitFrequency_ReturnVisits"
+msgstr "visitants que retornen"
+
+msgid "VisitFrequency_SubmenuFrequency"
+msgstr "Freqüència"
+
+msgid "VisitFrequency_WidgetGraphReturning"
+msgstr "Gràfic de les visites que han tornat"
+
+msgid "VisitFrequency_WidgetOverview"
+msgstr "Resum de la freqüència"
+
+msgid "VisitTime_ColumnLocalTime"
+msgstr "Hora local"
+
+msgid "VisitTime_ColumnServerTime"
+msgstr "Hora del servidor"
+
+msgid "VisitTime_DayOfWeek"
+msgstr "Dia de la setmana"
+
+msgid "VisitTime_LocalTime"
+msgstr "Visites segons l'hora local"
+
+msgid "VisitTime_NHour"
+msgstr "%sh"
+
+msgid "VisitTime_PluginDescription"
+msgstr "Mostra l'hora local i l'hora del servidor en que els visitants naveguen pel vostre lloc web o aplicació."
+
+msgid "VisitTime_ServerTime"
+msgstr "Visites segons l'hora del servidor"
+
+msgid "VisitTime_SubmenuTimes"
+msgstr "Hores"
+
+msgid "VisitTime_VisitsByDayOfWeek"
+msgstr "Visites per día de la setmana"
+
+msgid "VisitTime_WidgetByDayOfWeekDocumentation"
+msgstr "Aquest gràfic mostre el nombre de visites que ha rebut el vostre lloc web cada dia de la setmana."
+
+msgid "VisitTime_WidgetLocalTime"
+msgstr "Visites segons l'hora local"
+
+msgid "VisitTime_WidgetLocalTimeDocumentation"
+msgstr "Aquest gràfic mostra a quina hora era a %1$s la zona horària del visitant %2$s durant la seva visita."
+
+msgid "VisitTime_WidgetServerTime"
+msgstr "Visites segons l'hora del servidor"
+
+msgid "VisitTime_WidgetServerTimeDocumentation"
+msgstr "Aquest gràfic quina hora era a la %1$s zona horària del servidor %2$s durant la visita."
+
+msgid "VisitorInterest_BetweenXYMinutes"
+msgstr "%1$s-%2$s min"
+
+msgid "VisitorInterest_BetweenXYSeconds"
+msgstr "%1$s-%2$ss"
+
+msgid "VisitorInterest_ColumnPagesPerVisit"
+msgstr "Pàgines per visita"
+
+msgid "VisitorInterest_ColumnVisitDuration"
+msgstr "Durada de la visita"
+
+msgid "VisitorInterest_Engagement"
+msgstr "Compromís"
+
+msgid "VisitorInterest_NPages"
+msgstr "%s pàgines"
+
+msgid "VisitorInterest_OnePage"
+msgstr "1 pàgina"
+
+msgid "VisitorInterest_VisitNum"
+msgstr "Nombre de visites"
+
+msgid "VisitorInterest_VisitsByDaysSinceLast"
+msgstr "Visites per dia des de l'última visita"
+
+msgid "VisitorInterest_visitsByVisitCount"
+msgstr "Visites per nombre de visita"
+
+msgid "VisitorInterest_VisitsPerDuration"
+msgstr "Visites segons la durada"
+
+msgid "VisitorInterest_VisitsPerNbOfPages"
+msgstr "Visites segons el nombre de pàgines"
+
+msgid "VisitorInterest_WidgetLengths"
+msgstr "Durada de les visites"
+
+msgid "VisitorInterest_WidgetLengthsDocumentation"
+msgstr "En aquest informe tu pots veure quantes visites han tingut una determinada duració. Inicialment, l'informe es mostra com un núvol d'etiquetes, on les duracions amb visites es mostren més gran."
+
+msgid "VisitorInterest_WidgetPages"
+msgstr "Pàgines per visita"
+
+msgid "VisitorInterest_WidgetPagesDocumentation"
+msgstr "En aquest informe podeu veure quantes visites han produït un nombre de pàgines vistes. Inicialment, la informació es mostra com un núvol d'etiquetes, on els nombres més comuns es mostren amb una mida més gran."
+
+msgid "VisitorInterest_WidgetVisitsByDaysSinceLast"
+msgstr "Visites per dia des de l'última visita"
+
+msgid "VisitorInterest_WidgetVisitsByDaysSinceLastDocumentation"
+msgstr "En aquest informe, podeu veure quantes visites han estat de visitant que la seva visita va ser fa un cert nombre de dies."
+
+msgid "VisitorInterest_WidgetVisitsByNumDocumentation"
+msgstr "En aquest informe podeu veure qui va ser la visita número N. Per exemple, els visitants que han vist el vostre lloc web com a mínim N vegades."
+
+msgid "VisitsSummary_AverageGenerationTime"
+msgstr "temps promig de generació (càrrega)"
+
+msgid "VisitsSummary_AverageVisitDuration"
+msgstr "duració mitja de la visita"
+
+msgid "VisitsSummary_GenerateQueries"
+msgstr "S'ha executat un total de %s consultes"
+
+msgid "VisitsSummary_GenerateTime"
+msgstr "S'han trigat %s segons en generar la pàgina"
+
+msgid "VisitsSummary_MaxNbActions"
+msgstr "màxim d'accions en una visita"
+
+msgid "VisitsSummary_NbActionsDescription"
+msgstr "%s accions"
+
+msgid "VisitsSummary_NbActionsPerVisit"
+msgstr "accions del visitant (visualitzacions de pàgina, descàrregues i enllaços exteriors) per visita"
+
+msgid "VisitsSummary_NbDownloadsDescription"
+msgstr "descàrregues"
+
+msgid "VisitsSummary_NbKeywordsDescription"
+msgstr "paraules clau úniques"
+
+msgid "VisitsSummary_NbOutlinksDescription"
+msgstr "enllaços externs"
+
+msgid "VisitsSummary_NbPageviewsDescription"
+msgstr "visualitzacions de pàgina"
+
+msgid "VisitsSummary_NbSearchesDescription"
+msgstr "cerques totals al lloc web"
+
+msgid "VisitsSummary_NbUniqueDownloadsDescription"
+msgstr "descàrregues úniques"
+
+msgid "VisitsSummary_NbUniqueOutlinksDescription"
+msgstr "enllaços externs únics"
+
+msgid "VisitsSummary_NbUniquePageviewsDescription"
+msgstr "visualitzacions de pàgina úniques"
+
+msgid "VisitsSummary_NbUniqueVisitors"
+msgstr "visitants únics"
+
+msgid "VisitsSummary_NbUsersDescription"
+msgstr "usuaris"
+
+msgid "VisitsSummary_NbVisitsDescription"
+msgstr "visites"
+
+msgid "VisitsSummary_NbVisitsBounced"
+msgstr "visites han rebotat (abandonat el lloc després de veure una pàgina)"
+
+msgid "VisitsSummary_PluginDescription"
+msgstr "Informes generals d'anàlisi de mètriques: visites, visitants únics, número d'accions, percentatge de rebot, etc."
+
+msgid "VisitsSummary_VisitsSummary"
+msgstr "Resum de les visites"
+
+msgid "VisitsSummary_VisitsSummaryDocumentation"
+msgstr "Aquesta és una visió general de l'evolució visita."
+
+msgid "VisitsSummary_WidgetLastVisits"
+msgstr "Gràfic de les darreres visites"
+
+msgid "VisitsSummary_WidgetOverviewGraph"
+msgstr "Resum amb gràfic"
+
+msgid "VisitsSummary_WidgetVisits"
+msgstr "Resum de les visites"
+
+msgid "WebsiteMeasurable_Website"
+msgstr "Lloc web"
+
+msgid "WebsiteMeasurable_Websites"
+msgstr "Llocs"
+
+msgid "Widgetize_OpenInNewWindow"
+msgstr "Obrir en una nova finestra"
+
+msgid "Widgetize_TopLinkTooltip"
+msgstr "Exporteu informes i ginys de Matomo i incrusteu el Tauler de Control a la vostra aplicació com un iframe."

@@ -1,0 +1,5837 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-10-21T03:38:29+00:00\n"
+"PO-Revision-Date: 2019-10-21T03:38:29+00:00\n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
+"X-Domain: matomo\n"
+
+msgid "General_12HourClock"
+msgstr "12 stundu pulkstenis"
+
+msgid "General_24HourClock"
+msgstr "24 stundu pulkstenis"
+
+msgid "General_AbandonedCarts"
+msgstr "Pamestie iepirkumu grozi"
+
+msgid "General_AboutPiwikX"
+msgstr "Par Matomo %s"
+
+msgid "General_Action"
+msgstr "Darbība"
+
+msgid "General_Actions"
+msgstr "Darbības"
+
+msgid "General_Add"
+msgstr "Pievienot"
+
+msgid "General_AfterEntry"
+msgstr "pēc nonākšanas šeit"
+
+msgid "General_All"
+msgstr "Viss"
+
+msgid "General_AllowPiwikArchivingToTriggerBrowser"
+msgstr "Arhivēt ziņojumus, kad tiek skatīts no pārlūka."
+
+msgid "General_AllWebsitesDashboard"
+msgstr "Visu vietņu panelis"
+
+msgid "General_And"
+msgstr "un"
+
+msgid "General_API"
+msgstr "API"
+
+msgid "General_Apply"
+msgstr "Pielietot"
+
+msgid "General_ArchivingInlineHelp"
+msgstr "Vidēja un augsta apmeklējuma vietnēm rekomendējam atslēgt pārlūka izsauktu Matomo arhivēšanu. Tā vietā iesakam lietot cron darbu, kas arhivē Matomo katru stundu."
+
+msgid "General_ArchivingTriggerDescription"
+msgstr "Apjomīgām Matomo instalācijām iesakam %1$siestatīt cron darbu%2$s, kas apstrādās atskaites automātiski."
+
+msgid "General_AuthenticationMethodSmtp"
+msgstr "SMTP autentifikācijas metode"
+
+msgid "General_AverageOrderValue"
+msgstr "Vidējā pasūtījuma vērtība"
+
+msgid "General_AveragePrice"
+msgstr "Vidējā cena"
+
+msgid "General_AverageQuantity"
+msgstr "Vidējais apjoms"
+
+msgid "General_AverageX"
+msgstr "Apm. %s"
+
+msgid "General_BackToPiwik"
+msgstr "Atpakaļ uz Matomo"
+
+msgid "General_Broken"
+msgstr "Salauzts"
+
+msgid "General_Cancel"
+msgstr "Atcelt"
+
+msgid "General_CannotUnzipFile"
+msgstr "Nevar atahivēt datni %1$s: %2$s"
+
+msgid "General_ChangePassword"
+msgstr "Mainīt paroli"
+
+msgid "General_ChooseDate"
+msgstr "Izvēlaties datumu. Pagaidām izvēlātais datums ir: %s"
+
+msgid "General_ChooseLanguage"
+msgstr "Izvēlieties valodu"
+
+msgid "General_ChoosePeriod"
+msgstr "Izvēlieties periodu"
+
+msgid "General_ClickHere"
+msgstr "Lai saņemtu papildus informāciju, klikšķiniet šeit."
+
+msgid "General_DoubleClickToChangePeriod"
+msgstr "Dubultklikšķis lai pielietotu šo periodu."
+
+msgid "General_Close"
+msgstr "Aizvērt"
+
+msgid "General_ClickToSearch"
+msgstr "Spiediet, lai meklētu"
+
+msgid "General_Copy"
+msgstr "Kopēt"
+
+msgid "General_Confirm"
+msgstr "Apstiprināt"
+
+msgid "General_ColumnActionsPerVisit"
+msgstr "Darbības vienā apmeklējumā"
+
+msgid "General_ColumnActionsPerVisitDocumentation"
+msgstr "Vidējais darbību (lapas skatījumu, lejupielāžu un ārējo saišu) skaits, kas tika veiktas apmeklējuma laikā."
+
+msgid "General_ColumnAverageGenerationTime"
+msgstr "Vid. ielādes laiks"
+
+msgid "General_ColumnViewsWithGenerationTime"
+msgstr "Lapu skatījumi ar ģenerēšanas laiku"
+
+msgid "General_ColumnAverageTimeOnPage"
+msgstr "Vid. laiks lapā"
+
+msgid "General_ColumnAverageTimeOnPageDocumentation"
+msgstr "Vidējais šīs lapas apmeklējuma garums (tikai šīs lapas, ne visas vietnes)."
+
+msgid "General_ColumnAvgTimeOnSite"
+msgstr "Vid. laiks vietnē"
+
+msgid "General_ColumnSumTimeOnSite"
+msgstr "Kopējais laiks mājaslapā"
+
+msgid "General_ColumnAvgTimeOnSiteDocumentation"
+msgstr "Vidējais apmeklējuma laiks"
+
+msgid "General_ColumnBounceRate"
+msgstr "Atlēcienu biežums"
+
+msgid "General_ColumnBounceRateDocumentation"
+msgstr "Apmeklējumu daļa, kuru laikā bija tikai viens lapas skatījums. Tas nozīmē, ka apmeklētājs pameta vietni uzreiz pēc ierašanās tajā."
+
+msgid "General_ColumnBounces"
+msgstr "Atlēcieni"
+
+msgid "General_RealTime"
+msgstr "Reāllaiks"
+
+msgid "General_ColumnBouncesDocumentation"
+msgstr "To apmeklējumu skaits, kuri sākās un beidzās šajā lapā. T.i. apmeklētājs, apskatījis tikai šo lapu, pameta vietni."
+
+msgid "General_ColumnConversionRate"
+msgstr "Konversijas likme"
+
+msgid "General_ColumnConversionRateDocumentation"
+msgstr "To apmeklējumu daļa, kuri sasnieguši kādu no mērķiem."
+
+msgid "General_ColumnDestinationPage"
+msgstr "Galamērķa lapa"
+
+msgid "General_ColumnEntrances"
+msgstr "Ieejas"
+
+msgid "General_ColumnEntrancesDocumentation"
+msgstr "To apmeklējumu skaits, kas sākās šajā lapā"
+
+msgid "General_ColumnExitRate"
+msgstr "Izejas biežums"
+
+msgid "General_ColumnExitRateDocumentation"
+msgstr "Apmeklējumu daļa, kas beidzās pēc šīs lapas apskates."
+
+msgid "General_ColumnExits"
+msgstr "Izejas"
+
+msgid "General_ColumnExitsDocumentation"
+msgstr "To apmeklējumu skaits, kas beidzās šajā lapā"
+
+msgid "General_ColumnGenerationTime"
+msgstr "Ģenerēšanas laiks"
+
+msgid "General_ColumnPageGenerationTime"
+msgstr "Lapas ģenerēšanas laiks"
+
+msgid "General_ColumnKeyword"
+msgstr "Atslēgvārds"
+
+msgid "General_ColumnLabel"
+msgstr "Etiķete"
+
+msgid "General_ColumnHits"
+msgstr "Padomi"
+
+msgid "General_ColumnMaxActions"
+msgstr "Maksimālais darbību skaits vienā apmeklējumā"
+
+msgid "General_ColumnNbActions"
+msgstr "Darbības"
+
+msgid "General_ColumnNbActionsDocumentation"
+msgstr "Apmeklētāju veikto darbību skaits. Darbības ir lapu skatījumi, lejupielādes vai ārējās saites."
+
+msgid "General_ColumnNbUniqVisitors"
+msgstr "Unikālie apmeklētāji"
+
+msgid "General_ColumnNbUsers"
+msgstr "Lietotāji"
+
+msgid "General_ColumnNbVisits"
+msgstr "Apmeklējumi"
+
+msgid "General_ColumnPageBounceRateDocumentation"
+msgstr "Apmeklējumu daļa, kas sākās un uzreiz beidzās šajā lapā."
+
+msgid "General_ColumnPageviews"
+msgstr "Lapu skatījumi"
+
+msgid "General_ColumnPageviewsDocumentation"
+msgstr "Lapu skatījumu skaits."
+
+msgid "General_ColumnPercentageVisits"
+msgstr "%% Apmeklējumi"
+
+msgid "General_ColumnRevenue"
+msgstr "Ienākumi"
+
+msgid "General_ColumnSumVisitLength"
+msgstr "Kopā apmeklētāju pavadītais laiks (sekundēs)"
+
+msgid "General_ColumnTotalPageviews"
+msgstr "Kopējie lapu skatījumi"
+
+msgid "General_ColumnUniqueEntrances"
+msgstr "Unikālas ieejas"
+
+msgid "General_ColumnUniqueExits"
+msgstr "Unikālas izejas"
+
+msgid "General_ColumnUniquePageviews"
+msgstr "Unikāli lapu skatījumi"
+
+msgid "General_ColumnUniquePageviewsDocumentation"
+msgstr "Apmeklējumu, kuri iekļauj šo lapu, skaits. Ja lapa tika apskatīta vairākas reizes, tā tika pieskaitīta vienreiz."
+
+msgid "General_ColumnValuePerVisit"
+msgstr "Ienākumi uz vienu apmeklējumu"
+
+msgid "General_ColumnViewedAfterSearch"
+msgstr "Noklikšķināts uz meklēšanas rezultātiem"
+
+msgid "General_ColumnVisitDuration"
+msgstr "Apmeklējuma ilgums (sekundēs)"
+
+msgid "General_ColumnVisitsWithConversions"
+msgstr "Apmeklējumi ar reklāmguvumiem"
+
+msgid "General_ComputedMetricAverage"
+msgstr "Vidēji %1$s no %2$s"
+
+msgid "General_ComputedMetricAverageDocumentation"
+msgstr "Vidējā vērtība \"%1$s\" no \"%2$s\"."
+
+msgid "General_ComputedMetricAverageShortDocumentation"
+msgstr "Vidējā vērtība ir \"%1$s\"."
+
+msgid "General_ComputedMetricRate"
+msgstr "%s Likme"
+
+msgid "General_ComputedMetricRateDocumentation"
+msgstr "Attiecība \"%1$s\" no visiem \"%2$s\"."
+
+msgid "General_ComputedMetricRateShortDocumentation"
+msgstr "Procentuāli \"%1$s\"."
+
+msgid "General_ComputedMetricCountDocumentation"
+msgstr "%s skaits"
+
+msgid "General_ComputedMetricSum"
+msgstr "%skopā"
+
+msgid "General_ComputedMetricSumDocumentation"
+msgstr "%s kopējā summa"
+
+msgid "General_ComputedMetricMax"
+msgstr "%s maksimums"
+
+msgid "General_ComputedMetricMaxDocumentation"
+msgstr "%s maksimālā vērtība"
+
+msgid "General_ComputedMetricMin"
+msgstr "%s minimums"
+
+msgid "General_ComputedMetricMinDocumentation"
+msgstr "%s minimālā vērtība"
+
+msgid "General_ComputedMetricUniqueCount"
+msgstr "%s unikāls"
+
+msgid "General_ComputedMetricUniqueCountDocumentation"
+msgstr "%s unikāli"
+
+msgid "General_ComputedMetricCountWithValue"
+msgstr "%s ieraksti"
+
+msgid "General_ComputedMetricCountWithValueDocumentation"
+msgstr "Ierakstu daudzums, kam vērtība ir %s"
+
+msgid "General_ConfigFileIsNotWritable"
+msgstr "Matomo iestatījumu datne %1$s nav rakstāma, dažas no izmaiņām iespējams netiks saglabātas. %2$s Lūdzu izmainiet iestatījumu datnes atļaujas, lai tajā varētu ierakstīt."
+
+msgid "General_Continue"
+msgstr "Turpināt"
+
+msgid "General_ContinueToPiwik"
+msgstr "Turpināt uz Matomo"
+
+msgid "General_CurrentlyUsingUnsecureHttp"
+msgstr "Jūs pagaidām izmantojat Matomo caur HTTP, kas var būt riskanti. Mēs rekomendējam, lai jūs nokonfigurētu Matomo, lai tas izmanto SSL (HTTPS) priekš uzlabotas drošības."
+
+msgid "General_CreatedByUser"
+msgstr "izveidojis %s"
+
+msgid "General_CurrentMonth"
+msgstr "Pašreizējais mēnesis"
+
+msgid "General_CurrentWeek"
+msgstr "Pašreizējā nedēļa"
+
+msgid "General_CurrentYear"
+msgstr "Pašreizējais gads"
+
+msgid "General_Daily"
+msgstr "Katru dienu"
+
+msgid "General_DailyReport"
+msgstr "katru dienu"
+
+msgid "General_DailyReports"
+msgstr "Ikdienas atskaites"
+
+msgid "General_DailySum"
+msgstr "dienas summa"
+
+msgid "General_DashboardForASpecificWebsite"
+msgstr "Izvēlētas vietnes panelis"
+
+msgid "General_DataForThisGraphHasBeenPurged"
+msgstr "Šī grafika dati ir vairāk kā %s mēnešus veci un ir izdzēsti."
+
+msgid "General_DataForThisTagCloudHasBeenPurged"
+msgstr "Dati priekš ši birku mākoņa ir %s mēnešus veci un ir izdzēsti."
+
+msgid "General_Date"
+msgstr "Datums"
+
+msgid "General_DateRange"
+msgstr "Datumu diapazons:"
+
+msgid "General_DateRangeFrom"
+msgstr "No"
+
+msgid "General_DateRangeFromTo"
+msgstr "No %1$s līdz %2$s"
+
+msgid "General_DateRangeInPeriodList"
+msgstr "datumu diapazons"
+
+msgid "General_DateRangeTo"
+msgstr "Līdz"
+
+msgid "General_DaysHours"
+msgstr "%1$s dienas %2$s stundas"
+
+msgid "General_DaysSinceFirstVisit"
+msgstr "Dienas kopš pirmā apmeklējuma"
+
+msgid "General_DaysSinceLastEcommerceOrder"
+msgstr "Dienas kopš pēdējā e-komercijas pasūtījuma"
+
+msgid "General_DaysSinceLastVisit"
+msgstr "Dienas kopš pēdējā apmeklējuma"
+
+msgid "General_Default"
+msgstr "Noklusējuma"
+
+msgid "General_DefaultAppended"
+msgstr "(noklusējuma)"
+
+msgid "General_Delete"
+msgstr "Dzēst"
+
+msgid "General_Description"
+msgstr "Apraksts"
+
+msgid "General_Desktop"
+msgstr "Darbvirsma"
+
+msgid "General_Details"
+msgstr "Sīkāka informācija"
+
+msgid "General_Discount"
+msgstr "Atlaide"
+
+msgid "General_DisplaySimpleTable"
+msgstr "Rādīt vienkāršu tabulu"
+
+msgid "General_DisplayTableWithGoalMetrics"
+msgstr "Rādīt tabulu ar mērķu datiem"
+
+msgid "General_DisplayTableWithMoreMetrics"
+msgstr "Rādīt tabulu ar vairāk datiem"
+
+msgid "General_Documentation"
+msgstr "Dokumentācija"
+
+msgid "General_Donate"
+msgstr "Ziedot"
+
+msgid "General_Done"
+msgstr "Pabeigts"
+
+msgid "General_Download"
+msgstr "Lejupielādēt"
+
+msgid "General_DownloadFail_FileExists"
+msgstr "Šī datne %s jau eksistē!"
+
+msgid "General_DownloadFail_FileExistsContinue"
+msgstr "Mēģinu turpināt lejuplādi %s, bet pilnībā lejuplādēts fails jau eksistē!"
+
+msgid "General_DownloadFail_HttpRequestFail"
+msgstr "Nevarēju lejuplādēt failu! Kaut kas ir noticis ar mājaslapu no kuras Jūs to lejuplādējat. Pamēģini vēlāk vēlreiz, vai arī tiec pie faila pats."
+
+msgid "General_DownloadFullVersion"
+msgstr "%1$sLejupielādējiet%2$s pilno versiju! Paskaties %3$s"
+
+msgid "General_DownloadPleaseRemoveExisting"
+msgstr "Ja Jūs vēlaties, lai to aizstāj, lūdzu izdzēsiet jau esošo datni."
+
+msgid "General_Downloads"
+msgstr "Lejupielādes"
+
+msgid "General_EcommerceOrders"
+msgstr "E-komercijas pasūtījumi"
+
+msgid "General_EcommerceVisitStatusDesc"
+msgstr "Apmeklējuma e-komercijas statuss apmeklējuma beigās"
+
+msgid "General_EcommerceVisitStatusEg"
+msgstr "Piemēra, lai izvēlētos visus apmeklējumus, kuros tikai veikts e-komercijas pasūtījums, API pieprasījums saturētu %s"
+
+msgid "General_Edit"
+msgstr "Labot"
+
+msgid "General_EncryptedSmtpTransport"
+msgstr "Ievadi sava SMTP servera transport slāņa kriptāciju."
+
+msgid "General_Error"
+msgstr "Kļūda"
+
+msgid "General_Errors"
+msgstr "Kļūdas"
+
+msgid "General_EvolutionOverPeriod"
+msgstr "Izaugsme periodā"
+
+msgid "General_ExceptionCheckUserHasSuperUserAccessOrIsTheUser"
+msgstr "Lietotājam jābūt \"Super Lietotājam\" vai arī pašam \"%s\"."
+
+msgid "General_ExceptionConfigurationFileNotFound"
+msgstr "Iestatījumu datne {%s} netika atrasta."
+
+msgid "General_ExceptionConfigurationFileExistsButNotReadable"
+msgstr "Configurācijas fails %s eksistē, bet Matomo nevar to nolasīt."
+
+msgid "General_ExceptionConfigurationFilePleaseCheckReadableByUser"
+msgstr "Lūdzu pārbaudiet vai lietotājam '%2$s' ir iespēja izlasīt %1$s."
+
+msgid "General_ExceptionDatabaseVersion"
+msgstr "Jūsu %1$s versija ir %2$s, bet Matomo nepieciešams vismaz %3$s."
+
+msgid "General_ExceptionFileIntegrity"
+msgstr "Integritātes pārbaude izgāzās: %s"
+
+msgid "General_ExceptionFilesizeMismatch"
+msgstr "Faila izmērs nesakrīt: %1$s (sagaidāmais izmērs: %2$s, atrasts: %3$s)"
+
+msgid "General_ExceptionIncompatibleClientServerVersions"
+msgstr "Jūsu %1$s klienta versija ir %2$s, kas nav saderīga ar servera %3$s versiju."
+
+msgid "General_ExceptionInvalidArchiveTimeToLive"
+msgstr "Šodienas arhīva saglabāšanas laikam jābūt lielākam par 0 sekundēm."
+
+msgid "General_ExceptionInvalidToken"
+msgstr "Kods nav pareizs."
+
+msgid "General_ExceptionLanguageFileNotFound"
+msgstr "'%s' valodas datne netika atrasta."
+
+msgid "General_ExceptionMissingFile"
+msgstr "Fails: %s neeksistē"
+
+msgid "General_ExceptionFileToDelete"
+msgstr "Dzēst failu: %s"
+
+msgid "General_ExceptionDirectoryToDelete"
+msgstr "Dzēs mapi: %s"
+
+msgid "General_ExceptionPrivilege"
+msgstr "Lai apskatītu šo sadaļu, Jums ir nepieciešama %s pieeja."
+
+msgid "General_ExceptionUnableToStartSession"
+msgstr "Nav iespējams sākt sesiju."
+
+msgid "General_ExceptionUndeletableFile"
+msgstr "Nevar izdzēst %s"
+
+msgid "General_ExceptionUnreadableFileDisabledMethod"
+msgstr "Iestatījumu datni {%1$s} nav iespējams nolasīt. Jūsu resursdatorā iespējams ir izslēgts %2$s."
+
+msgid "General_Export"
+msgstr "Eksports"
+
+msgid "General_ExportAsImage"
+msgstr "Eksportēt kā bildi"
+
+msgid "General_ExportThisReport"
+msgstr "Eksportēt šo datu kopu citos formātos"
+
+msgid "General_Faq"
+msgstr "BUJ"
+
+msgid "General_First"
+msgstr "Pirmais"
+
+msgid "General_Flatten"
+msgstr "Saplacināt"
+
+msgid "General_ForcedSSL"
+msgstr "Piespiedu SSL savienojums"
+
+msgid "General_ForExampleShort"
+msgstr "piemēram,"
+
+msgid "General_Forums"
+msgstr "Forumi"
+
+msgid "General_FromReferrer"
+msgstr "no"
+
+msgid "General_Generic"
+msgstr "Vispārējs"
+
+msgid "General_GeneralInformation"
+msgstr "Vispārējā informācija"
+
+msgid "General_GeneralSettings"
+msgstr "Vispārējie iestatījumi"
+
+msgid "General_GetStarted"
+msgstr "Sākt"
+
+msgid "General_GiveUsYourFeedback"
+msgstr "Rakstiet mums atsauksmes!"
+
+msgid "General_Goal"
+msgstr "Mērķis"
+
+msgid "General_GoTo"
+msgstr "Iet uz %s"
+
+msgid "General_GoTo2"
+msgstr "Iet uz"
+
+msgid "General_GraphHelp"
+msgstr "Vairāk informācijas par grafiku parādīšanu Matomo"
+
+msgid "General_HelloUser"
+msgstr "Sveiki, %s!"
+
+msgid "General_Help"
+msgstr "Palīdzība"
+
+msgid "General_Hide"
+msgstr "paslēpt"
+
+msgid "General_HoursMinutes"
+msgstr "%1$s stundas, %2$s min."
+
+msgid "General_Id"
+msgstr "Id"
+
+msgid "General_InfoFor"
+msgstr "Informācija par %s"
+
+msgid "General_Installed"
+msgstr "Ieinstalēts"
+
+msgid "General_InvalidDateRange"
+msgstr "Nepareizs datumu diapozons, mēģinien no jauna"
+
+msgid "General_InvalidResponse"
+msgstr "Saņemtie dati nav pareizi."
+
+msgid "General_IP"
+msgstr "Ip adrese"
+
+msgid "General_JsTrackingTag"
+msgstr "JavaScript izsekošanas kods"
+
+msgid "General_Language"
+msgstr "Valoda"
+
+msgid "General_Languages"
+msgstr "Valodas"
+
+msgid "General_LastDays"
+msgstr "Pēdējās %s dienas (ieskaitot šodienu)"
+
+msgid "General_LastDaysShort"
+msgstr "Pēdējās %s dienas"
+
+msgid "General_Live"
+msgstr "Dzīvajā"
+
+msgid "General_Loading"
+msgstr "Ielāde..."
+
+msgid "General_LoadingData"
+msgstr "Ielādē datus..."
+
+msgid "General_LoadingPopover"
+msgstr "Ielāde %s..."
+
+msgid "General_LoadingPopoverFor"
+msgstr "Ielāde %s priekš"
+
+msgid "General_Locale"
+msgstr "lv_LV.UTF-8"
+
+msgid "General_Logout"
+msgstr "Iziet"
+
+msgid "General_MainMetrics"
+msgstr "Galvenie mērījumi"
+
+msgid "General_MediumToHighTrafficItIsRecommendedTo"
+msgstr "Vidēja un augsta apmklējuma vietnēm iesakam apstrādāt atskaites ne biežāk kā katru pusstundu (%1$s sekundes) vai katru stundu (%2$s sekundes)."
+
+msgid "General_Metadata"
+msgstr "Metadati"
+
+msgid "General_Metric"
+msgstr "Metriskā"
+
+msgid "General_MetricsToPlot"
+msgstr "Mērījumi plānošanai"
+
+msgid "General_MetricToPlot"
+msgstr "Mērījums plānošanai"
+
+msgid "General_MinutesSeconds"
+msgstr "%1$s min., %2$ss"
+
+msgid "General_Mobile"
+msgstr "Mobilā"
+
+msgid "General_Monthly"
+msgstr "Katru mēnesi"
+
+msgid "General_MonthlyReport"
+msgstr "ikmēneša"
+
+msgid "General_MonthlyReports"
+msgstr "Ikmēneša atskaites"
+
+msgid "General_More"
+msgstr "Vairāk"
+
+msgid "General_MoreDetails"
+msgstr "Vairāk Detaļas"
+
+msgid "General_MoreLowerCase"
+msgstr "vairāk"
+
+msgid "General_MultiSitesSummary"
+msgstr "Visas vietnes"
+
+msgid "General_Name"
+msgstr "Vārds"
+
+msgid "General_NbActions"
+msgstr "Darbību skaits"
+
+msgid "General_Never"
+msgstr "Nekad"
+
+msgid "General_NewReportsWillBeProcessedByCron"
+msgstr "Kad Matomo arhivēšanu neizsauc pārlūkprogramma, jaunas atskaites tiek apstrādātas izmantojot cron darbus."
+
+msgid "General_NewUpdatePiwikX"
+msgstr "Jauns atjauninājums: Matomo %s"
+
+msgid "General_NewVisitor"
+msgstr "Jauns apmeklētājs"
+
+msgid "General_NewVisits"
+msgstr "Jauni apmeklējumi"
+
+msgid "General_Next"
+msgstr "Nākamā"
+
+msgid "General_No"
+msgstr "Nē"
+
+msgid "General_NoDataForGraph"
+msgstr "Nav datu šim grafikam."
+
+msgid "General_NoDataForTagCloud"
+msgstr "Nav datu šim iezīmju mākonim."
+
+msgid "General_NotDefined"
+msgstr "%s nav definēts"
+
+msgid "General_NotValid"
+msgstr "%s nekorekts"
+
+msgid "General_NumberOfVisits"
+msgstr "Apmeklējumu skaits"
+
+msgid "General_NVisits"
+msgstr "%s apmeklējumi"
+
+msgid "General_NUniqueVisitors"
+msgstr "%s unikāli apmeklētāji"
+
+msgid "General_Ok"
+msgstr "Labi"
+
+msgid "General_OneVisit"
+msgstr "1 apmeklējums"
+
+msgid "General_OnlyEnterIfRequired"
+msgstr "Ievadiet lietotājvārdu tikai tad, ja Jūsu SMTP serveris to pieprasa."
+
+msgid "General_OnlyEnterIfRequiredPassword"
+msgstr "Ievadiet paroli tikai tad, ja Jūsu SMTP serveris to pieprasa."
+
+msgid "General_OpenSourceWebAnalytics"
+msgstr "Atvērtā koda tīkla analīze"
+
+msgid "General_OptionalSmtpPort"
+msgstr "Izvēles. Pēc noklusējuma 25 nekriptētētam un TLS SMTP, bet 465 izmantojot SSL SMTP."
+
+msgid "General_OrCancel"
+msgstr "vai %1$s atcelt %2$s"
+
+msgid "General_Others"
+msgstr "Citi"
+
+msgid "General_Outlink"
+msgstr "Ārēja saite"
+
+msgid "General_Outlinks"
+msgstr "Ārējās saites"
+
+msgid "General_Overview"
+msgstr "Pārskats"
+
+msgid "General_Pages"
+msgstr "lapas"
+
+msgid "General_ParameterMustIntegerBetween"
+msgstr "Parametra %1$s vērtībai ir jābūt skaitlim no %2$s līdz %3$s."
+
+msgid "General_Password"
+msgstr "Parole"
+
+msgid "General_Period"
+msgstr "Periods"
+
+msgid "General_Piechart"
+msgstr "Sektoru diagramma"
+
+msgid "General_PiwikXIsAvailablePleaseUpdateNow"
+msgstr "Ir pieejams Matomo %1$s. %2$sLūdzu atjauniniet tagad!%3$s (apskatiet %4$sizmaiņas%5$s)."
+
+msgid "General_PleaseSpecifyValue"
+msgstr "Lūdzu norādiet '%s' vērtību."
+
+msgid "General_PleaseUpdatePiwik"
+msgstr "Lūdzu modernizējiet savu Matomo"
+
+msgid "General_Plugin"
+msgstr "Spraudnis"
+
+msgid "General_Plugins"
+msgstr "Spraudņi"
+
+msgid "General_PoweredBy"
+msgstr "Darbina"
+
+msgid "General_Previous"
+msgstr "Iepriekšējā"
+
+msgid "General_PreviousDays"
+msgstr "Iepriekšējās %s dienas (neskaitot šodienu)"
+
+msgid "General_Price"
+msgstr "Cena"
+
+msgid "General_ProductConversionRate"
+msgstr "Produktu konversijas likme"
+
+msgid "General_ProductRevenue"
+msgstr "Ienākumi no produkta"
+
+msgid "General_PurchasedProducts"
+msgstr "Iegādātie produkti"
+
+msgid "General_Quantity"
+msgstr "Skaits"
+
+msgid "General_RecordsToPlot"
+msgstr "Ieraksti plānošanai"
+
+msgid "General_Refresh"
+msgstr "Atjaunināt"
+
+msgid "General_RefreshPage"
+msgstr "Atsvaidzināt lapu"
+
+msgid "General_Report"
+msgstr "Ziņot"
+
+msgid "General_Reports"
+msgstr "Atskaites"
+
+msgid "General_ReportsWillBeProcessedAtMostEveryHour"
+msgstr "Tāpēc atskaites tiks apstrādātas ne biežāk kā vienreiz stundā."
+
+msgid "General_RequestTimedOut"
+msgstr "%s datu pieprasījumam iestājās noilgums. Lūdzu mēģiniet vēlreiz."
+
+msgid "General_Required"
+msgstr "%s nepieciešams"
+
+msgid "General_ReturningVisitor"
+msgstr "Atkārtots apmeklētājs"
+
+msgid "General_RowsToDisplay"
+msgstr "Rindas parādīšanai"
+
+msgid "General_Save"
+msgstr "Saglabāt"
+
+msgid "General_SaveImageOnYourComputer"
+msgstr "Lai saglabātu bildi datora, uz bildes spiediet labo peles pogu un izvēlieties \"Save Image As...\""
+
+msgid "General_Search"
+msgstr "Meklēt"
+
+msgid "General_SeeTheOfficialDocumentationForMoreInformation"
+msgstr "Lai iegūtu vairāk informāciju, apskatiet %1$soficiālo dokumentāciju%2$s."
+
+msgid "General_SelectYesIfYouWantToSendEmailsViaServer"
+msgstr "Ja vēlies vai ir nepieciešans sūtīt e-pastus caur serveri neizmantojot lokālo \"mail\" metodi, izvēlies \"Jā\""
+
+msgid "General_Settings"
+msgstr "Iestatījumi"
+
+msgid "General_Shipping"
+msgstr "Piegāde"
+
+msgid "General_SmallTrafficYouCanLeaveDefault"
+msgstr "Maza apmeklējuma vietnēm Jūs varat atstāt pēc noklusējuma iestatītās %s sekundes un visas atskates būs pieejamas reāllaikā."
+
+msgid "General_SmtpEncryption"
+msgstr "SMTP kriptēšana"
+
+msgid "General_SmtpPassword"
+msgstr "SMTP parole"
+
+msgid "General_SmtpPort"
+msgstr "SMTP ports"
+
+msgid "General_SmtpServerAddress"
+msgstr "SMTP servera adrese"
+
+msgid "General_SmtpUsername"
+msgstr "SMTP lietotājvārds"
+
+msgid "General_Subtotal"
+msgstr "Starpsumma"
+
+msgid "General_Table"
+msgstr "Tabula"
+
+msgid "General_TagCloud"
+msgstr "Tagu mākonis"
+
+msgid "General_Tax"
+msgstr "Nodokļi"
+
+msgid "General_Total"
+msgstr "Kopā"
+
+msgid "General_TotalRevenue"
+msgstr "Kopējie ienākumi"
+
+msgid "General_TranslatorName"
+msgstr "Ēriks Remess"
+
+msgid "General_UniquePurchases"
+msgstr "Unikāli pirkumi"
+
+msgid "General_Unknown"
+msgstr "Nezināms"
+
+msgid "General_Upload"
+msgstr "Augšuplādēt"
+
+msgid "General_UsePlusMinusIconsDocumentation"
+msgstr "Lai pārvietotos, lietojiet pa kreisi esošās plusa un mīnusa ikonas."
+
+msgid "General_Username"
+msgstr "Lietotājvārds"
+
+msgid "General_UseSMTPServerForEmail"
+msgstr "Lietot SMTP serveri e-pastam"
+
+msgid "General_Value"
+msgstr "Vērtība"
+
+msgid "General_VBarGraph"
+msgstr "Vertikālo joslu diagramma"
+
+msgid "General_View"
+msgstr "Skatījums"
+
+msgid "General_Visit"
+msgstr "Apmeklējums"
+
+msgid "General_VisitConvertedGoal"
+msgstr "Apmeklējums sasniedza vismaz vienu mērķi"
+
+msgid "General_VisitConvertedGoalId"
+msgstr "Apmeklējums sasniedza konkrētu mērķi ar Id"
+
+msgid "General_VisitConvertedNGoals"
+msgstr "Apmeklējums sasniedza %s mērķus"
+
+msgid "General_VisitDuration"
+msgstr "Vid. apmeklējuma garums (sekundēs)"
+
+msgid "General_Visitor"
+msgstr "Apmeklētājs"
+
+msgid "General_VisitorID"
+msgstr "Apmeklētāja ID"
+
+msgid "General_VisitorIP"
+msgstr "Apmeklētāja IP"
+
+msgid "General_Visitors"
+msgstr "Apmeklētāji"
+
+msgid "General_VisitsWith"
+msgstr "Apmeklējumi ar %s"
+
+msgid "General_VisitorSettings"
+msgstr "Apmeklētāju iestatījumi"
+
+msgid "General_VisitTypeExample"
+msgstr "Piemēram, lai izvēlētos visus apmeklētājus, kas atgriezušies vietnē (ieskaitot tos, kas veikuši pasūtījumu kādā no iepriekšējiem apmeklējumiem), API pieprasījumam būtu jāsatur %s"
+
+msgid "General_Warning"
+msgstr "Brīdinājums"
+
+msgid "General_WarningFileIntegrityNoManifest"
+msgstr "Datņu integritātes pārbaudi nav iespējams veikt, jo trūkst manifest.inc.php."
+
+msgid "General_WarningFileIntegrityNoMd5file"
+msgstr "Datņu integritātes pārbaudi nav iespējams pabeigt, jo trūkst md5_file() metodes."
+
+msgid "General_Website"
+msgstr "Vietne"
+
+msgid "General_Weekly"
+msgstr "Katru nedēļu"
+
+msgid "General_Widgets"
+msgstr "Logdaļas"
+
+msgid "General_YearsDays"
+msgstr "%1$s gadi, %2$s dienas"
+
+msgid "General_Yes"
+msgstr "Jā"
+
+msgid "General_YouMustBeLoggedIn"
+msgstr "Lai tiktu pie šīs funkcionalitātes, Jums jāpiesakās."
+
+msgid "General_YourChangesHaveBeenSaved"
+msgstr "Izmaiņas saglabātas."
+
+msgid "Mobile_AboutPiwikMobile"
+msgstr "Par Matomo Mobile"
+
+msgid "Mobile_AccessUrlLabel"
+msgstr "Matomo pieejas URL"
+
+msgid "Mobile_Account"
+msgstr "Konts"
+
+msgid "Mobile_Accounts"
+msgstr "Konti"
+
+msgid "Mobile_AddAccount"
+msgstr "Pievienot kontu"
+
+msgid "Mobile_AddPiwikDemo"
+msgstr "Pievienot Matomo Demo"
+
+msgid "Mobile_Advanced"
+msgstr "Papildus"
+
+msgid "Mobile_AnonymousAccess"
+msgstr "Anonīma pieeja"
+
+msgid "Mobile_AnonymousTracking"
+msgstr "Anonīma izsekošana"
+
+msgid "Mobile_AskForAnonymousTrackingPermission"
+msgstr "Kad iespējots, Matomo Mobile nosūtīs anonīmus datus uz matomo.org. Mērķis tam ir palīdzēt Matomo Mobile izstrādātājiem labāk saprast kā aplikācija tiek izmantota. Nosūtītā informācija: Lietotās izvēlnes un iestatījumi, OS nosaukums un versija, jebkādi kļūdu paziņojumi, kas tiek pārādīti Matomo Mobile aplikācijā. Mēs nesaglabāsim jebkādus jūsu analītikas datus. Šie anonīmie dati nekad netiks parādīti publiski. Jūs variet atspējot vai iespējot anonīmus datu nosūtīšanu jebkurā brīdī iestatījumos."
+
+msgid "Mobile_ChooseHttpTimeout"
+msgstr "Izvēlies HTTP pārtraukuma vērtību"
+
+msgid "Mobile_ChooseMetric"
+msgstr "Izvēlēties mērijumu"
+
+msgid "Mobile_ChooseReport"
+msgstr "Izvēlies atskaiti"
+
+msgid "Mobile_ChooseSegment"
+msgstr "Izvēlies segmentu"
+
+msgid "Mobile_ConfirmRemoveAccount"
+msgstr "Vai Jūs vēlaties dzēst šo kontu?"
+
+msgid "Mobile_DefaultReportDate"
+msgstr "Atskaites datums"
+
+msgid "Mobile_EmailUs"
+msgstr "Sūtiet mums e-pastu"
+
+msgid "Mobile_EnableGraphsLabel"
+msgstr "Rādīt grafikus"
+
+msgid "Mobile_EvolutionGraph"
+msgstr "Vēsturiskais grafiks"
+
+msgid "Mobile_HelpUsToImprovePiwikMobile"
+msgstr "Vai jūs vēlaties iespējot Matomo Mobile anonīmu lietojuma saglabāšanu?"
+
+msgid "Mobile_HowtoDeleteAnAccount"
+msgstr "Nospied un paturi ilgāk, lai izdzēstu kontu."
+
+msgid "Mobile_HowtoDeleteAnAccountOniOS"
+msgstr "Pabīdi no labās puses uz kreiso, lai izdzēstu kontu"
+
+msgid "Mobile_HowtoLoginAnonymous"
+msgstr "Atstājiet lietotājvārdu un paroli laukus tukšus, lai izmantotu anonīmu pierakstīšanos"
+
+msgid "Mobile_HttpTimeout"
+msgstr "HTTP noilgums"
+
+msgid "Mobile_LastUpdated"
+msgstr "Atjaunināts: %s"
+
+msgid "Mobile_LoadingReport"
+msgstr "Ielādē %s"
+
+msgid "Mobile_LoginCredentials"
+msgstr "Ielogošanās dati"
+
+msgid "Mobile_LoginToPiwikToChangeSettings"
+msgstr "Ielogojies savā Matomo serverī, lai izveidotu vai atjaunotu mājaslapas, lietotājus, vai izmainītu tādus iestatījumus kā piemēram \"Noklusējuma atskaite\"."
+
+msgid "Mobile_LoginUseHttps"
+msgstr "Izmantot https"
+
+msgid "Mobile_MatomoMobile"
+msgstr "Matomo Mobile aplikācija"
+
+msgid "Mobile_NavigationBack"
+msgstr "Atpakaļ"
+
+msgid "Mobile_NetworkError"
+msgstr "Tīkla kļūda"
+
+msgid "Mobile_NetworkErrorWithStatusCodeShort"
+msgstr "Tīkla kļūda %s"
+
+msgid "Mobile_NetworkNotReachable"
+msgstr "Tīkls nav sasniedzams"
+
+msgid "Mobile_NoDataShort"
+msgstr "Nav datu"
+
+msgid "Mobile_NoPiwikAccount"
+msgstr "Nav Matomo konta?"
+
+msgid "Mobile_NoReportsShort"
+msgstr "Nevienas atskaites"
+
+msgid "Mobile_NoVisitorFound"
+msgstr "Netika atrasts neviens apmeklētājs"
+
+msgid "Mobile_NoVisitorsShort"
+msgstr "Neviena apmeklētāja"
+
+msgid "Mobile_NoWebsiteFound"
+msgstr "Netika atrasta neviena mājaslapa"
+
+msgid "Mobile_NoWebsitesShort"
+msgstr "Nevienas mājaslapas"
+
+msgid "Mobile_PullDownToRefresh"
+msgstr "Velc lai atjauninātu..."
+
+msgid "Mobile_PossibleSslError"
+msgstr "Iespējama SSL sertifikāta kļūda"
+
+msgid "Mobile_IgnoreSslError"
+msgstr "Ignorēt SSL kļūdu"
+
+msgid "Mobile_RatingDontRemindMe"
+msgstr "Neatgādināt"
+
+msgid "Mobile_RatingNotNow"
+msgstr "Ne tagad"
+
+msgid "Mobile_RatingNow"
+msgstr "Ok, es novērtēšu tagad"
+
+msgid "Mobile_ReleaseToRefresh"
+msgstr "Atlaidiet lai atjaunotu..."
+
+msgid "Mobile_Reloading"
+msgstr "Notiek pārlāde..."
+
+msgid "Mobile_RequestTimedOutShort"
+msgstr "Tīkla pārtraukuma kļūda"
+
+msgid "Mobile_RestrictedCompatibility"
+msgstr "Ierobežota saderība"
+
+msgid "Mobile_SaveSuccessError"
+msgstr "Lūdzu pārbaudiet iestatījumus"
+
+msgid "Mobile_SearchWebsite"
+msgstr "Meklēt vietnes"
+
+msgid "Mobile_ShowAll"
+msgstr "Rādīt visu"
+
+msgid "Mobile_ShowLess"
+msgstr "Rādīt mazāk"
+
+msgid "Mobile_StaticGraph"
+msgstr "Pārskata grafiks"
+
+msgid "Mobile_TopVisitedWebsites"
+msgstr "Top apmeklētākās mājaslapas"
+
+msgid "Mobile_TryIt"
+msgstr "Pamēģini!"
+
+msgid "Mobile_UseSearchBarHint"
+msgstr "Tiek atrādītas tikai pirmās %s mājaslapas. Lūdzu, izmantojie meklēšanas lauku, lai atrastu pārējās mājaslapas."
+
+msgid "Mobile_VerifyAccount"
+msgstr "Notiek konta pārbaude"
+
+msgid "Mobile_ValidateSslCertificate"
+msgstr "Pārbaudīt SSL sertifikātu"
+
+msgid "Mobile_VerifyLoginData"
+msgstr "Pārliecinies, ka lietotājvārda un paroles kombinācija ir pareiza."
+
+msgid "Mobile_YouAreOffline"
+msgstr "Atvainojiet, bet Jūs paļaik atrodaties bezsaistē"
+
+msgid "RowEvolution_AvailableMetrics"
+msgstr "Pieejamie mērījumi"
+
+msgid "RowEvolution_CompareDocumentation"
+msgstr "Lai salīdzinātu vairākus ierakstus, nospied apakšā uz saites, atverot uznirstošo logu vēlvienai rindai no tās pašas tabulas.<br />Izmanto \"shift + peles kreisais klikšķis\", lai iezīmētu rindu salīdzināšanai bez uznirstošā loga."
+
+msgid "RowEvolution_CompareRows"
+msgstr "Salīdzināt ierakstus"
+
+msgid "RowEvolution_ComparingRecords"
+msgstr "Salīdzināt %s rindas"
+
+msgid "RowEvolution_Documentation"
+msgstr "Nospied uz mērījumi, lai tos parādītu lielā izaugsmes grafikā. Izmanto \"Shift + peles kreisais klikšķis\", lai parādītu vairākus mērījumus vienlaicīgi."
+
+msgid "RowEvolution_MetricBetweenText"
+msgstr "no %1$s līdz %2$s"
+
+msgid "RowEvolution_MetricChangeText"
+msgstr "%s pārmaiņas periodā"
+
+msgid "RowEvolution_MetricMinMax"
+msgstr "%1$s starp %2$s un %3$s par periodu"
+
+msgid "RowEvolution_MetricsFor"
+msgstr "Mērijumi priekš %s"
+
+msgid "RowEvolution_MultiRowEvolutionTitle"
+msgstr "Vairāku rindu attīstība"
+
+msgid "RowEvolution_PickAnotherRow"
+msgstr "Izvēlies vēlvienu rindu lai salīdzinātu"
+
+msgid "RowEvolution_PickARow"
+msgstr "Izvēlies rindu, lai salīdzinātu"
+
+msgid "API_UserAuthentication"
+msgstr "Lietotāja autentifikācija"
+
+msgid "Actions_ColumnClickedURL"
+msgstr "Klikšķinātais URL"
+
+msgid "Actions_ColumnClicks"
+msgstr "Klikšķi"
+
+msgid "Actions_ColumnClicksDocumentation"
+msgstr "Saites klikšķu skaits."
+
+msgid "Actions_ColumnDownloadURL"
+msgstr "Lejupielādes URL"
+
+msgid "Actions_ColumnEntryPageTitle"
+msgstr "Ieejas lapas virsraksts"
+
+msgid "Actions_ColumnEntryPageURL"
+msgstr "Ieejas lapas URL"
+
+msgid "Actions_ColumnExitPageTitle"
+msgstr "Izejas lapas virsraksts"
+
+msgid "Actions_ColumnExitPageURL"
+msgstr "Izejas lapas URL"
+
+msgid "Actions_ColumnPageName"
+msgstr "Lapas virsraksts"
+
+msgid "Actions_ColumnPageURL"
+msgstr "Lapas URL"
+
+msgid "Actions_ColumnUniqueClicks"
+msgstr "Unikālie klikšķi"
+
+msgid "Actions_ColumnUniqueDownloads"
+msgstr "Unikālas lejupielādes"
+
+msgid "Actions_ColumnUniqueOutlinks"
+msgstr "Unikālās arējās saites"
+
+msgid "Actions_SubmenuPagesEntry"
+msgstr "Ieejas lapas"
+
+msgid "Actions_SubmenuPagesExit"
+msgstr "Izejas lapas"
+
+msgid "Actions_SubmenuPageTitles"
+msgstr "Lapas virsraksti"
+
+msgid "CoreAdminHome_Administration"
+msgstr "Administrācija"
+
+msgid "CoreAdminHome_BrandingSettings"
+msgstr "Zīmola iestatījumi"
+
+msgid "CoreAdminHome_ClickHereToOptIn"
+msgstr "Lai piedalītos, klikšķiniet šeit."
+
+msgid "CoreAdminHome_ClickHereToOptOut"
+msgstr "Lai nepiedalītos, klikšķiniet šeit."
+
+msgid "CoreAdminHome_EmailServerSettings"
+msgstr "E-pasta servera iestatījumi"
+
+msgid "CoreAdminHome_LogoUpload"
+msgstr "Izvēlēties logo augšuplādei"
+
+msgid "CoreAdminHome_MenuGeneralSettings"
+msgstr "Vispārīgie iestatījumi"
+
+msgid "CoreAdminHome_UseCustomLogo"
+msgstr "Lietot izvēles logo"
+
+msgid "CoreAdminHome_YouAreOptedOut"
+msgstr "Jūs pašlaik esiet izvēlējušies nepiedalīties."
+
+msgid "CoreHome_CategoryNoData"
+msgstr "Nav datu šajā kategorijā. Mēģiniet izvēlēties \"Iekļaut visu apmeklējumu\"."
+
+msgid "CoreHome_NoPrivilegesAskPiwikAdmin"
+msgstr "Jūs esat ienākuši kā '%1$s', bet izskatās, ka Jums nav iestatītas vajadzīgās Matomo atļaujas. %2$s Pieprasiet savam Matomo administratoram (klikšķiniet, lai nosūtītu e-pastu)%3$s Jums pieslēgt vietnes apskates atļauju."
+
+msgid "CoreHome_ShowJSCode"
+msgstr "Rādīt ievietošanai paredzēto JavaScript kodu"
+
+msgid "CoreHome_ThereIsNoDataForThisReport"
+msgstr "Nav šajai atskaitei vajadzīgo datu."
+
+msgid "CoreHome_WebAnalyticsReports"
+msgstr "Tīkla analīzes atskaites"
+
+msgid "CorePluginsAdmin_Activate"
+msgstr "Aktivizēt"
+
+msgid "CorePluginsAdmin_Activated"
+msgstr "Aktivizēts"
+
+msgid "CorePluginsAdmin_Active"
+msgstr "Aktīvs"
+
+msgid "CorePluginsAdmin_AuthorHomepage"
+msgstr "Autora vietne"
+
+msgid "CorePluginsAdmin_Deactivate"
+msgstr "Deaktivizēt"
+
+msgid "CorePluginsAdmin_Inactive"
+msgstr "Neaktīvs"
+
+msgid "CorePluginsAdmin_LicenseHomepage"
+msgstr "Licences vietne"
+
+msgid "CorePluginsAdmin_PluginsExtendPiwik"
+msgstr "Spraudņi paplašina Matomo funkcionalitāti."
+
+msgid "CorePluginsAdmin_OncePluginIsInstalledYouMayActivateHere"
+msgstr "Pēc spraudņa instalācijas, Jūs to varat aktivizēt (vai deaktivizēt) šeit."
+
+msgid "CorePluginsAdmin_PluginHomepage"
+msgstr "Spraudņa vietne"
+
+msgid "CorePluginsAdmin_PluginsManagement"
+msgstr "Spraudņu pārvaldība"
+
+msgid "CorePluginsAdmin_Status"
+msgstr "Statuss"
+
+msgid "CorePluginsAdmin_Version"
+msgstr "Versija"
+
+msgid "CorePluginsAdmin_Websites"
+msgstr "Vietnes"
+
+msgid "CoreUpdater_DatabaseUpgradeRequired"
+msgstr "Vajadzīgs datubāzes atjauninājums"
+
+msgid "CoreUpdater_DownloadingUpdateFromX"
+msgstr "Notiek atjauninājuma ielāde no %s"
+
+msgid "CoreUpdater_DownloadX"
+msgstr "Lejupielādē %s"
+
+msgid "CoreUpdater_EmptyDatabaseError"
+msgstr "Datubāze %s ir tukša. Jums jāizlabo vai jāizdzēš Jūsu Matomo iestatījumu datne."
+
+msgid "CoreUpdater_ErrorDuringPluginsUpdates"
+msgstr "Kļūda atjaunojot spraudņus:"
+
+msgid "CoreUpdater_ExceptionAlreadyLatestVersion"
+msgstr "Jūsu Matomo versija %s ir jaunākā pieejamā."
+
+msgid "CoreUpdater_ExceptionArchiveEmpty"
+msgstr "Tukšs arhīvs"
+
+msgid "CoreUpdater_ExceptionArchiveIncompatible"
+msgstr "Nesaderīgs arhīvs: %s"
+
+msgid "CoreUpdater_ExceptionArchiveIncomplete"
+msgstr "Arhīvs nav pilnīgs: trūkst dažas datnes (piem., %s)."
+
+msgid "CoreUpdater_InstallingTheLatestVersion"
+msgstr "Tiek instalēta jaunākā versija"
+
+msgid "CoreUpdater_NoteForLargePiwikInstances"
+msgstr "Svarīgas piezīmes lielām Matomo instalācijām"
+
+msgid "CoreUpdater_PiwikHasBeenSuccessfullyUpgraded"
+msgstr "Matomo tika veiksmīgi atjaunināts"
+
+msgid "CoreUpdater_PiwikUpdatedSuccessfully"
+msgstr "Matomo atjaunināts veiksmīgi!"
+
+msgid "CoreUpdater_PiwikWillBeUpgradedFromVersionXToVersionY"
+msgstr "Matomo datubāze tiks atjaunināta no %1$s līdz %2$s versijai."
+
+msgid "CoreUpdater_ReadyToGo"
+msgstr "Esat gatavi?"
+
+msgid "CoreUpdater_TheFollowingPluginsWillBeUpgradedX"
+msgstr "Sekojošie spraudņi tiks atjaunināti: %s."
+
+msgid "CoreUpdater_ThereIsNewVersionAvailableForUpdate"
+msgstr "Ir pieejama atjaunināšanai jauna Matomo versija"
+
+msgid "CoreUpdater_TheUpgradeProcessMayTakeAWhilePleaseBePatient"
+msgstr "Datubāzes atjaunināšana var aizņemt kādu laiku, esiet pacietīgi."
+
+msgid "CoreUpdater_UnpackingTheUpdate"
+msgstr "Notiek atjauninājuma atpakošana"
+
+msgid "CoreUpdater_UpdateAutomatically"
+msgstr "Atjaunināt automātiski"
+
+msgid "CoreUpdater_UpdateTitle"
+msgstr "Atjaunināt"
+
+msgid "CoreUpdater_UpdateSuccessTitle"
+msgstr "Matomo tika veiksmīgi atjaunināts"
+
+msgid "CoreUpdater_UpgradeComplete"
+msgstr "Atjaunināšana pabeigta!"
+
+msgid "CoreUpdater_UpgradePiwik"
+msgstr "Atjaunināt Matomo"
+
+msgid "CoreUpdater_VerifyingUnpackedFiles"
+msgstr "Notiek atpakoto datņu pārbaude"
+
+msgid "CoreUpdater_WarningMessages"
+msgstr "Brīdinājumi:"
+
+msgid "CoreUpdater_WeAutomaticallyDeactivatedTheFollowingPlugins"
+msgstr "Mēs automātiski deaktivizējām sekojošus spraudņus: %s"
+
+msgid "CoreUpdater_YourDatabaseIsOutOfDate"
+msgstr "Jūsu Matomo datubāze ir novecojusi un tā ir jaatjaunina pirms varēsiet turpināt"
+
+msgid "DBStats_DatabaseUsage"
+msgstr "Datubāzes lietojums"
+
+msgid "DBStats_DataSize"
+msgstr "Datu izmērs"
+
+msgid "DBStats_IndexSize"
+msgstr "Indeksa izmērs"
+
+msgid "DBStats_LearnMore"
+msgstr "Lai uzzinātu vairāk par to, kā Matomo apstrādā datus un kā Matomo tiek galā ar vidēja un augsta apmeklējuma vietnēm, apskatiet dokumentāciju %s."
+
+msgid "DBStats_MainDescription"
+msgstr "Matomo glabā visus Jūsu tīkla analīzes datus MySQL datubāzē. Pašlaik Matomo tabulas lieto %s."
+
+msgid "DBStats_RowCount"
+msgstr "Rindu skaits"
+
+msgid "DBStats_Table"
+msgstr "Tabula"
+
+msgid "DBStats_TotalSize"
+msgstr "Kopējais izmērs"
+
+msgid "Dashboard_AddAWidget"
+msgstr "Pievienot logrīku"
+
+msgid "Dashboard_AddPreviewedWidget"
+msgstr "Pievienot apskatīto logdaļu panelim"
+
+msgid "Dashboard_ChangeDashboardLayout"
+msgstr "Izmainīt paneļa izkārtojumu"
+
+msgid "Dashboard_CopyDashboardToUser"
+msgstr "Kopēt paneli uz lietotāju"
+
+msgid "Dashboard_CreateNewDashboard"
+msgstr "Izveidot jaunu paneli"
+
+msgid "Dashboard_Dashboard"
+msgstr "Panelis"
+
+msgid "Dashboard_DashboardName"
+msgstr "Paneļa vārds:"
+
+msgid "Dashboard_DashboardOf"
+msgstr "%s panelis"
+
+msgid "Dashboard_DeleteWidgetConfirm"
+msgstr "Vai tiešām vēlaties dzēst šo logdaļu no paneļa?"
+
+msgid "Dashboard_LoadingWidget"
+msgstr "Notiek logdaļas ielāde, lūdzu uzgaidiet..."
+
+msgid "Dashboard_ManageDashboard"
+msgstr "Pārvaldīt paneli"
+
+msgid "Dashboard_Maximise"
+msgstr "Izvērst"
+
+msgid "Dashboard_Minimise"
+msgstr "Samazināt"
+
+msgid "Dashboard_NotUndo"
+msgstr "Jūs nevarēsiet atgriezt šo operāciju."
+
+msgid "Dashboard_RemoveDashboard"
+msgstr "Noņemt paneli"
+
+msgid "Dashboard_RemoveDashboardConfirm"
+msgstr "Vai Jūs tiešām vēlaties noņemt paneli \"%s\"?"
+
+msgid "Dashboard_RemoveDefaultDashboardNotPossible"
+msgstr "Noklusējuma paneli nevar noņemt"
+
+msgid "Dashboard_RenameDashboard"
+msgstr "Pārsaukt paneli"
+
+msgid "Dashboard_ResetDashboard"
+msgstr "Atiestatīt paneli"
+
+msgid "Dashboard_SelectDashboardLayout"
+msgstr "Lūdzu izvēlieties Jūsu jaunā paneļa izkārtojumu"
+
+msgid "Dashboard_SelectWidget"
+msgstr "Izvēlieties to logdaļu, kuru vēlaties pievienot panelim"
+
+msgid "Dashboard_WidgetNotFound"
+msgstr "Logdaļa nav atrasta"
+
+msgid "Dashboard_WidgetPreview"
+msgstr "Logdaļas priekšstatījums"
+
+msgid "DevicePlugins_WidgetPlugins"
+msgstr "Spraudņu saraksts"
+
+msgid "DevicePlugins_WidgetPluginsDocumentation"
+msgstr "Šajā atskaitē ir redzami pārlūku spraudņi, kuri bija ieslēgti apmeklētāju pārlūkos. Šī informācija ir svarīga, lai izvēlētos vislabāko veidu kā piegādāt saturu apmeklētājiem."
+
+msgid "DevicesDetection_BrowserEngine"
+msgstr "Pārlūks"
+
+msgid "DevicesDetection_BrowserEngineDocumentation"
+msgstr "Šis grafiks rāda apmeklētāju pārlūkus izdalītus pa pārlūku ģimenēm. %s Vissvarīgākā informācija tīkla izstrādātājiem ir kādu atveidojuma dzinēju apmeklētāji izmanto. Etiķetes satur dzinēju nosaukumus, kuriem seko visbiežāk izmantotie dzinēji."
+
+msgid "DevicesDetection_BrowserFamily"
+msgstr "Pārlūku ģimene"
+
+msgid "DevicesDetection_Browsers"
+msgstr "Pārlūki"
+
+msgid "DevicesDetection_BrowserVersion"
+msgstr "Pārlūka versija"
+
+msgid "DevicesDetection_ColumnBrowser"
+msgstr "Pārlūks"
+
+msgid "DevicesDetection_ColumnOperatingSystem"
+msgstr "Operētājsistēma"
+
+msgid "DevicesDetection_dataTableLabelTypes"
+msgstr "Tips"
+
+msgid "DevicesDetection_OperatingSystems"
+msgstr "Operētājsistēmas"
+
+msgid "DevicesDetection_WidgetBrowsers"
+msgstr "Apmeklētāju pārlūki"
+
+msgid "DevicesDetection_WidgetBrowsersDocumentation"
+msgstr "Šajā atskaitē ir informācija par to kādus pārlūkus Jūsu apmeklētāji izmanto. Katra pārlūka versija ir izdalīta atsevišķi."
+
+msgid "Feedback_DoYouHaveBugReportOrFeatureRequest"
+msgstr "Vai Jums ir kļūdas ziņojums vai papildus funkcionalitātes pieprasījums?"
+
+msgid "Feedback_IWantTo"
+msgstr "Es vēlos:"
+
+msgid "Feedback_LearnWaysToParticipate"
+msgstr "Uzzināt vairāk par to, kā Jūs varat %1$s piedalīties%2$s"
+
+msgid "Feedback_ManuallySendEmailTo"
+msgstr "Lūdzu manuāli nosūtiet savu ziņu uz"
+
+msgid "Feedback_SendFeedback"
+msgstr "Sūtīt atsauksmes"
+
+msgid "Feedback_ThankYou"
+msgstr "Paldies, ka palīdzat uzlabot Matomo!"
+
+msgid "Goals_AbandonedCart"
+msgstr "Pamestie iepirkumu grozi"
+
+msgid "Goals_AddGoal"
+msgstr "Pievienot mērķi"
+
+msgid "Goals_AddNewGoal"
+msgstr "Pievienot jaunu mērķi"
+
+msgid "Goals_CaseSensitive"
+msgstr "Reģistrjūtīga saderība"
+
+msgid "Goals_ClickOutlink"
+msgstr "Klikšķis uz ārējas vietnes saites"
+
+msgid "Goals_ColumnAveragePriceDocumentation"
+msgstr "Vidējie ienākumi %s."
+
+msgid "Goals_ColumnAverageQuantityDocumentation"
+msgstr "%s vidējais pārdotais skaits e-komercijas pasūtījumos."
+
+msgid "Goals_ColumnRevenueDocumentation"
+msgstr "Kopējie ienākumi, kurus veido %s."
+
+msgid "Goals_Contains"
+msgstr "satur %s"
+
+msgid "Goals_DeleteGoalConfirm"
+msgstr "Vai tiešām vēlaties dzēst mērķi %s?"
+
+msgid "Goals_DocumentationRevenueGeneratedByProductSales"
+msgstr "Pārdotie produkti. Neskaitot nodokļus, piegādi un atlaidi."
+
+msgid "Goals_Download"
+msgstr "Lejupielādēt datni"
+
+msgid "Goals_Ecommerce"
+msgstr "E-komercija"
+
+msgid "Goals_EcommerceAndGoalsMenu"
+msgstr "E-komercija un mērķi"
+
+msgid "Goals_EcommerceLog"
+msgstr "E-komercijas žurnāls"
+
+msgid "Goals_EcommerceOrder"
+msgstr "E-komercijas pasūtījums"
+
+msgid "Goals_EcommerceOverview"
+msgstr "E-komercijas pārskats"
+
+msgid "Goals_EcommerceReports"
+msgstr "E-komercijas atskaites"
+
+msgid "Goals_ExternalWebsiteUrl"
+msgstr "ārējās vietnes URL"
+
+msgid "Goals_Filename"
+msgstr "datnes nosaukums"
+
+msgid "Goals_GoalIsTriggered"
+msgstr "Mērķis tiek sasniegts"
+
+msgid "Goals_GoalIsTriggeredWhen"
+msgstr "Mērķis tiek sasniegts, kad"
+
+msgid "Goals_GoalName"
+msgstr "Mērķa nosaukums"
+
+msgid "Goals_Goals"
+msgstr "Mērķi"
+
+msgid "Goals_GoalsOverview"
+msgstr "Mērķu pārskats"
+
+msgid "Goals_GoalX"
+msgstr "Mērķis %s"
+
+msgid "Goals_IsExactly"
+msgstr "ir precīzi %s"
+
+msgid "Goals_LeftInCart"
+msgstr "%s atstāti grozā"
+
+msgid "Goals_Manually"
+msgstr "manuāli"
+
+msgid "Goals_ManuallyTriggeredUsingJavascriptFunction"
+msgstr "Mērķis tiem manuāli sasniegts izmantojot JavaScript API trackGoal() metodi"
+
+msgid "Goals_MatchesExpression"
+msgstr "sakrīt ar %s"
+
+msgid "Goals_Optional"
+msgstr "(izvēles)"
+
+msgid "Goals_PageTitle"
+msgstr "Lapas virsraksts"
+
+msgid "Goals_Pattern"
+msgstr "Modelis"
+
+msgid "Goals_ProductCategory"
+msgstr "Produkta kategorija"
+
+msgid "Goals_ProductName"
+msgstr "Produkta nosaukums"
+
+msgid "Goals_Products"
+msgstr "Produkti"
+
+msgid "Goals_ProductSKU"
+msgstr "Produkta kods"
+
+msgid "Goals_UpdateGoal"
+msgstr "Atjaunināt mērķi"
+
+msgid "Goals_URL"
+msgstr "URL"
+
+msgid "Goals_ViewAndEditGoals"
+msgstr "Skatīt un labot mērķus"
+
+msgid "Goals_VisitPageTitle"
+msgstr "Apmeklēt doto lapas virsrakstu"
+
+msgid "Goals_WhenVisitors"
+msgstr "kad apmeklētāji"
+
+msgid "Goals_WhereThe"
+msgstr ", kur"
+
+msgid "ImageGraph_PluginDescription"
+msgstr "Ģenerējiet skaistus, statiskus PNG formāta grafikus jebkurai Matomo atskaitei."
+
+msgid "Installation_Congratulations"
+msgstr "Apsveicam"
+
+msgid "Installation_DatabaseCreation"
+msgstr "Datubāzes izveide"
+
+msgid "Installation_DatabaseErrorConnect"
+msgstr "Kļūda mēģinot sasniegt datubāzes serveri"
+
+msgid "Installation_DatabaseServerVersion"
+msgstr "Datubāzes servera versija"
+
+msgid "Installation_DatabaseSetup"
+msgstr "Datubāzes iestatīšana"
+
+msgid "Installation_DatabaseSetupAdapter"
+msgstr "adapteris"
+
+msgid "Installation_DatabaseSetupDatabaseName"
+msgstr "datubāzes nosaukums"
+
+msgid "Installation_DatabaseSetupLogin"
+msgstr "lietotājvārds"
+
+msgid "Installation_DatabaseSetupServer"
+msgstr "datubāzes serveris"
+
+msgid "Installation_DatabaseSetupTablePrefix"
+msgstr "tabulas prefikss"
+
+msgid "Installation_Extension"
+msgstr "paplašinājums"
+
+msgid "Installation_GoBackAndDefinePrefix"
+msgstr "Dodieties atpakaļ un nodefinējiet Matomo tabulu prefiksu"
+
+msgid "Installation_Installation"
+msgstr "Instalācija"
+
+msgid "Installation_InstallationStatus"
+msgstr "Instalācijas statuss"
+
+msgid "Installation_LargePiwikInstances"
+msgstr "Palīdzība ar lielām Matomo instancēm"
+
+msgid "Installation_Legend"
+msgstr "Leģenda"
+
+msgid "Installation_Optional"
+msgstr "Izvēles"
+
+msgid "Installation_PasswordDoNotMatch"
+msgstr "paroles nesakrīt"
+
+msgid "Installation_PercentDone"
+msgstr "%s %% pabeigts"
+
+msgid "Installation_PleaseFixTheFollowingErrors"
+msgstr "Lūdzu izlabojiet sekojošās kļūdas"
+
+msgid "Installation_Requirements"
+msgstr "Matomo prasības"
+
+msgid "Installation_SetupWebsite"
+msgstr "Iestatiet vietni"
+
+msgid "Installation_SetupWebsiteError"
+msgstr "Vietnes pievienošana izraisīja kļūdu"
+
+msgid "Installation_SetupWebsiteSetupSuccess"
+msgstr "Vietne %s ir veiksmīgi izveidota!"
+
+msgid "Installation_SuperUser"
+msgstr "Superlietotājs"
+
+msgid "Installation_SuperUserSetupSuccess"
+msgstr "Superlietotājs tika veiksmīgi izveidots!"
+
+msgid "Installation_SystemCheck"
+msgstr "Sistēmas pārbaude"
+
+msgid "Installation_SystemCheckDatabaseHelp"
+msgstr "Matomo vajag vai nu mysqli paplašinājumu vai gan PDO un pdo_mysql paplašinājumus."
+
+msgid "Installation_SystemCheckExtensions"
+msgstr "Citi vajadzīgie paplašinājumi"
+
+msgid "Installation_SystemCheckFileIntegrity"
+msgstr "Datņu integritāte"
+
+msgid "Installation_SystemCheckFunctions"
+msgstr "Nepieciešamās metodes"
+
+msgid "Installation_SystemCheckIconvHelp"
+msgstr "Jums jāiestata un jāpārbūvē PHP ar ieslēgtu \"iconv\" atbalstu, --with-iconv."
+
+msgid "Installation_SystemCheckMbstring"
+msgstr "mbstring"
+
+msgid "Installation_SystemCheckMemoryLimit"
+msgstr "Atmiņas limits"
+
+msgid "Installation_SystemCheckOpenURL"
+msgstr "Atvērt URL"
+
+msgid "Installation_SystemCheckOtherExtensions"
+msgstr "Citi paplašinājumi"
+
+msgid "Installation_SystemCheckOtherFunctions"
+msgstr "Citas metodes"
+
+msgid "Installation_SystemCheckPdoAndMysqliHelp"
+msgstr "Uz Linux servera Jūs varat kompilēt php ar sekojošiem parametriem: %1$s Savā php.ini datnē pievienojiet sekojošas līnijas: %2$s"
+
+msgid "Installation_SystemCheckPhp"
+msgstr "PHP versija"
+
+msgid "Installation_SystemCheckPhpPdoAndMysqli"
+msgstr "Vairāk informācija par %1$sPHP PDO%2$s un %3$sMYSQLI%4$s."
+
+msgid "Installation_SystemCheckSplHelp"
+msgstr "Jums jāiestata un jāpārbūvē PHP ar ieslēgtu Standard PHP Library (SPL) (pēc noklusējuma)."
+
+msgid "Installation_SystemCheckWarnDomHelp"
+msgstr "Jums ir jāieslēdz \"dom\" paplašinājums (piem., instalējiet \"php-dom\" un/vai \"php-xml\" pakotnes)."
+
+msgid "Installation_SystemCheckWarnJsonHelp"
+msgstr "Jums ir jāieslēdz \"json\" paplašinājums (piem., instalējiet \"php-json\" pakotni) labākai veiktspējai."
+
+msgid "Installation_SystemCheckWarnLibXmlHelp"
+msgstr "Jums ir jāieslēdz \"libxml\" paplašinājums (piem., instalējiet \"php-libxml\" pakotni), jo tā ir nepieciešama citiem PHP paplašinājumiem."
+
+msgid "Installation_SystemCheckWarnSimpleXMLHelp"
+msgstr "Jums ir jāieslēdz \"SimpleXML\" paplašinājums (piem., instalējiet \"php-simplexml\" un/vai \"php-xml\" pakotnes)."
+
+msgid "Installation_SystemCheckWinPdoAndMysqliHelp"
+msgstr "Uz Windows servera Jūs varat pievienot sekojošas līnijas savā php.ini datnē: %s"
+
+msgid "Installation_SystemCheckWriteDirs"
+msgstr "Mapes ar rakstīšanas pieeju"
+
+msgid "Installation_SystemCheckWriteDirsHelp"
+msgstr "Lai salabotu šo kļūdu Jūsu Linux sistēmā, pamēģiniet ierakstīt sekojošas komandas"
+
+msgid "Installation_SystemCheckZlibHelp"
+msgstr "Jums jāiestata un jāpārbūvē PHP ar ieslēgtu \"zlib\" atbalstu, --with-zlib."
+
+msgid "Installation_Tables"
+msgstr "Tiek izveidotas tabulas"
+
+msgid "Installation_TablesCreatedSuccess"
+msgstr "Tabulas veiksmīgi izveidotas!"
+
+msgid "Installation_Welcome"
+msgstr "Esiet sveicināti!"
+
+msgid "Intl_Continent_afr"
+msgstr "Āfrika"
+
+msgid "Intl_Continent_amc"
+msgstr "Centrālamerika"
+
+msgid "Intl_Continent_amn"
+msgstr "Ziemeļamerika"
+
+msgid "Intl_Continent_ams"
+msgstr "Dienvidamerika"
+
+msgid "Intl_Continent_ant"
+msgstr "Antarktika"
+
+msgid "Intl_Continent_asi"
+msgstr "Āzija"
+
+msgid "Intl_Continent_eur"
+msgstr "Eiropa"
+
+msgid "Intl_Continent_oce"
+msgstr "Okeānija"
+
+msgid "Intl_Country_AD"
+msgstr "Andora"
+
+msgid "Intl_Country_AE"
+msgstr "Apvienotie Arābu Emirāti"
+
+msgid "Intl_Country_AF"
+msgstr "Afganistāna"
+
+msgid "Intl_Country_AG"
+msgstr "Antigva un Barbuda"
+
+msgid "Intl_Country_AI"
+msgstr "Angilja"
+
+msgid "Intl_Country_AL"
+msgstr "Albānija"
+
+msgid "Intl_Country_AM"
+msgstr "Armēnija"
+
+msgid "Intl_Country_AO"
+msgstr "Angola"
+
+msgid "Intl_Country_AQ"
+msgstr "Antarktika"
+
+msgid "Intl_Country_AR"
+msgstr "Argentīna"
+
+msgid "Intl_Country_AS"
+msgstr "ASV Samoa"
+
+msgid "Intl_Country_AT"
+msgstr "Austrija"
+
+msgid "Intl_Country_AU"
+msgstr "Austrālija"
+
+msgid "Intl_Country_AW"
+msgstr "Aruba"
+
+msgid "Intl_Country_AX"
+msgstr "Olandes salas"
+
+msgid "Intl_Country_AZ"
+msgstr "Azerbaidžāna"
+
+msgid "Intl_Country_BA"
+msgstr "Bosnija un Hercegovina"
+
+msgid "Intl_Country_BB"
+msgstr "Barbadosa"
+
+msgid "Intl_Country_BD"
+msgstr "Bangladeša"
+
+msgid "Intl_Country_BE"
+msgstr "Beļģija"
+
+msgid "Intl_Country_BF"
+msgstr "Burkinafaso"
+
+msgid "Intl_Country_BG"
+msgstr "Bulgārija"
+
+msgid "Intl_Country_BH"
+msgstr "Bahreina"
+
+msgid "Intl_Country_BI"
+msgstr "Burundija"
+
+msgid "Intl_Country_BJ"
+msgstr "Benina"
+
+msgid "Intl_Country_BL"
+msgstr "Senbartelmī"
+
+msgid "Intl_Country_BM"
+msgstr "Bermudu salas"
+
+msgid "Intl_Country_BN"
+msgstr "Bruneja"
+
+msgid "Intl_Country_BO"
+msgstr "Bolīvija"
+
+msgid "Intl_Country_BQ"
+msgstr "Nīderlandes Karību salas"
+
+msgid "Intl_Country_BR"
+msgstr "Brazīlija"
+
+msgid "Intl_Country_BS"
+msgstr "Bahamu salas"
+
+msgid "Intl_Country_BT"
+msgstr "Butāna"
+
+msgid "Intl_Country_BV"
+msgstr "Buvē sala"
+
+msgid "Intl_Country_BW"
+msgstr "Botsvāna"
+
+msgid "Intl_Country_BY"
+msgstr "Baltkrievija"
+
+msgid "Intl_Country_BZ"
+msgstr "Beliza"
+
+msgid "Intl_Country_CA"
+msgstr "Kanāda"
+
+msgid "Intl_Country_CC"
+msgstr "Kokosu (Kīlinga) salas"
+
+msgid "Intl_Country_CD"
+msgstr "Kongo (Kinšasa)"
+
+msgid "Intl_Country_CF"
+msgstr "Centrālāfrikas Republika"
+
+msgid "Intl_Country_CG"
+msgstr "Kongo (Brazavila)"
+
+msgid "Intl_Country_CH"
+msgstr "Šveice"
+
+msgid "Intl_Country_CI"
+msgstr "Kotdivuāra"
+
+msgid "Intl_Country_CK"
+msgstr "Kuka salas"
+
+msgid "Intl_Country_CL"
+msgstr "Čīle"
+
+msgid "Intl_Country_CM"
+msgstr "Kamerūna"
+
+msgid "Intl_Country_CN"
+msgstr "Ķīna"
+
+msgid "Intl_Country_CO"
+msgstr "Kolumbija"
+
+msgid "Intl_Country_CR"
+msgstr "Kostarika"
+
+msgid "Intl_Country_CU"
+msgstr "Kuba"
+
+msgid "Intl_Country_CV"
+msgstr "Kaboverde"
+
+msgid "Intl_Country_CW"
+msgstr "Kirasao"
+
+msgid "Intl_Country_CX"
+msgstr "Ziemsvētku sala"
+
+msgid "Intl_Country_CY"
+msgstr "Kipra"
+
+msgid "Intl_Country_CZ"
+msgstr "Čehija"
+
+msgid "Intl_Country_DE"
+msgstr "Vācija"
+
+msgid "Intl_Country_DJ"
+msgstr "Džibutija"
+
+msgid "Intl_Country_DK"
+msgstr "Dānija"
+
+msgid "Intl_Country_DM"
+msgstr "Dominika"
+
+msgid "Intl_Country_DO"
+msgstr "Dominikāna"
+
+msgid "Intl_Country_DZ"
+msgstr "Alžīrija"
+
+msgid "Intl_Country_EC"
+msgstr "Ekvadora"
+
+msgid "Intl_Country_EE"
+msgstr "Igaunija"
+
+msgid "Intl_Country_EG"
+msgstr "Ēģipte"
+
+msgid "Intl_Country_EH"
+msgstr "Rietumsahāra"
+
+msgid "Intl_Country_ER"
+msgstr "Eritreja"
+
+msgid "Intl_Country_ES"
+msgstr "Spānija"
+
+msgid "Intl_Country_ET"
+msgstr "Etiopija"
+
+msgid "Intl_Country_FI"
+msgstr "Somija"
+
+msgid "Intl_Country_FJ"
+msgstr "Fidži"
+
+msgid "Intl_Country_FK"
+msgstr "Folklenda salas"
+
+msgid "Intl_Country_FM"
+msgstr "Mikronēzija"
+
+msgid "Intl_Country_FO"
+msgstr "Fēru salas"
+
+msgid "Intl_Country_FR"
+msgstr "Francija"
+
+msgid "Intl_Country_GA"
+msgstr "Gabona"
+
+msgid "Intl_Country_GB"
+msgstr "Apvienotā Karaliste"
+
+msgid "Intl_Country_GD"
+msgstr "Grenāda"
+
+msgid "Intl_Country_GE"
+msgstr "Gruzija"
+
+msgid "Intl_Country_GF"
+msgstr "Francijas Gviāna"
+
+msgid "Intl_Country_GG"
+msgstr "Gērnsija"
+
+msgid "Intl_Country_GH"
+msgstr "Gana"
+
+msgid "Intl_Country_GI"
+msgstr "Gibraltārs"
+
+msgid "Intl_Country_GL"
+msgstr "Grenlande"
+
+msgid "Intl_Country_GM"
+msgstr "Gambija"
+
+msgid "Intl_Country_GN"
+msgstr "Gvineja"
+
+msgid "Intl_Country_GP"
+msgstr "Gvadelupa"
+
+msgid "Intl_Country_GQ"
+msgstr "Ekvatoriālā Gvineja"
+
+msgid "Intl_Country_GR"
+msgstr "Grieķija"
+
+msgid "Intl_Country_GS"
+msgstr "Dienviddžordžija un Dienvidsendviču salas"
+
+msgid "Intl_Country_GT"
+msgstr "Gvatemala"
+
+msgid "Intl_Country_GU"
+msgstr "Guama"
+
+msgid "Intl_Country_GW"
+msgstr "Gvineja-Bisava"
+
+msgid "Intl_Country_GY"
+msgstr "Gajāna"
+
+msgid "Intl_Country_HK"
+msgstr "Ķīnas īpašās pārvaldes apgabals Honkonga"
+
+msgid "Intl_Country_HM"
+msgstr "Hērda sala un Makdonalda salas"
+
+msgid "Intl_Country_HN"
+msgstr "Hondurasa"
+
+msgid "Intl_Country_HR"
+msgstr "Horvātija"
+
+msgid "Intl_Country_HT"
+msgstr "Haiti"
+
+msgid "Intl_Country_HU"
+msgstr "Ungārija"
+
+msgid "Intl_Country_ID"
+msgstr "Indonēzija"
+
+msgid "Intl_Country_IE"
+msgstr "Īrija"
+
+msgid "Intl_Country_IL"
+msgstr "Izraēla"
+
+msgid "Intl_Country_IM"
+msgstr "Mena"
+
+msgid "Intl_Country_IN"
+msgstr "Indija"
+
+msgid "Intl_Country_IO"
+msgstr "Indijas okeāna Britu teritorija"
+
+msgid "Intl_Country_IQ"
+msgstr "Irāka"
+
+msgid "Intl_Country_IR"
+msgstr "Irāna"
+
+msgid "Intl_Country_IS"
+msgstr "Islande"
+
+msgid "Intl_Country_IT"
+msgstr "Itālija"
+
+msgid "Intl_Country_JE"
+msgstr "Džērsija"
+
+msgid "Intl_Country_JM"
+msgstr "Jamaika"
+
+msgid "Intl_Country_JO"
+msgstr "Jordānija"
+
+msgid "Intl_Country_JP"
+msgstr "Japāna"
+
+msgid "Intl_Country_KE"
+msgstr "Kenija"
+
+msgid "Intl_Country_KG"
+msgstr "Kirgizstāna"
+
+msgid "Intl_Country_KH"
+msgstr "Kambodža"
+
+msgid "Intl_Country_KI"
+msgstr "Kiribati"
+
+msgid "Intl_Country_KM"
+msgstr "Komoru salas"
+
+msgid "Intl_Country_KN"
+msgstr "Sentkitsa un Nevisa"
+
+msgid "Intl_Country_KP"
+msgstr "Ziemeļkoreja"
+
+msgid "Intl_Country_KR"
+msgstr "Dienvidkoreja"
+
+msgid "Intl_Country_KW"
+msgstr "Kuveita"
+
+msgid "Intl_Country_KY"
+msgstr "Kaimanu salas"
+
+msgid "Intl_Country_KZ"
+msgstr "Kazahstāna"
+
+msgid "Intl_Country_LA"
+msgstr "Laosa"
+
+msgid "Intl_Country_LB"
+msgstr "Libāna"
+
+msgid "Intl_Country_LC"
+msgstr "Sentlūsija"
+
+msgid "Intl_Country_LI"
+msgstr "Lihtenšteina"
+
+msgid "Intl_Country_LK"
+msgstr "Šrilanka"
+
+msgid "Intl_Country_LR"
+msgstr "Libērija"
+
+msgid "Intl_Country_LS"
+msgstr "Lesoto"
+
+msgid "Intl_Country_LT"
+msgstr "Lietuva"
+
+msgid "Intl_Country_LU"
+msgstr "Luksemburga"
+
+msgid "Intl_Country_LV"
+msgstr "Latvija"
+
+msgid "Intl_Country_LY"
+msgstr "Lībija"
+
+msgid "Intl_Country_MA"
+msgstr "Maroka"
+
+msgid "Intl_Country_MC"
+msgstr "Monako"
+
+msgid "Intl_Country_MD"
+msgstr "Moldova"
+
+msgid "Intl_Country_ME"
+msgstr "Melnkalne"
+
+msgid "Intl_Country_MF"
+msgstr "Senmartēna"
+
+msgid "Intl_Country_MG"
+msgstr "Madagaskara"
+
+msgid "Intl_Country_MH"
+msgstr "Māršala salas"
+
+msgid "Intl_Country_MK"
+msgstr "Maķedonija"
+
+msgid "Intl_Country_ML"
+msgstr "Mali"
+
+msgid "Intl_Country_MM"
+msgstr "Mjanma (Birma)"
+
+msgid "Intl_Country_MN"
+msgstr "Mongolija"
+
+msgid "Intl_Country_MO"
+msgstr "Ķīnas īpašās pārvaldes apgabals Makao"
+
+msgid "Intl_Country_MP"
+msgstr "Ziemeļu Marianas salas"
+
+msgid "Intl_Country_MQ"
+msgstr "Martinika"
+
+msgid "Intl_Country_MR"
+msgstr "Mauritānija"
+
+msgid "Intl_Country_MS"
+msgstr "Montserrata"
+
+msgid "Intl_Country_MT"
+msgstr "Malta"
+
+msgid "Intl_Country_MU"
+msgstr "Maurīcija"
+
+msgid "Intl_Country_MV"
+msgstr "Maldīvija"
+
+msgid "Intl_Country_MW"
+msgstr "Malāvija"
+
+msgid "Intl_Country_MX"
+msgstr "Meksika"
+
+msgid "Intl_Country_MY"
+msgstr "Malaizija"
+
+msgid "Intl_Country_MZ"
+msgstr "Mozambika"
+
+msgid "Intl_Country_NA"
+msgstr "Namībija"
+
+msgid "Intl_Country_NC"
+msgstr "Jaunkaledonija"
+
+msgid "Intl_Country_NE"
+msgstr "Nigēra"
+
+msgid "Intl_Country_NF"
+msgstr "Norfolkas sala"
+
+msgid "Intl_Country_NG"
+msgstr "Nigērija"
+
+msgid "Intl_Country_NI"
+msgstr "Nikaragva"
+
+msgid "Intl_Country_NL"
+msgstr "Nīderlande"
+
+msgid "Intl_Country_NO"
+msgstr "Norvēģija"
+
+msgid "Intl_Country_NP"
+msgstr "Nepāla"
+
+msgid "Intl_Country_NR"
+msgstr "Nauru"
+
+msgid "Intl_Country_NU"
+msgstr "Niue"
+
+msgid "Intl_Country_NZ"
+msgstr "Jaunzēlande"
+
+msgid "Intl_Country_OM"
+msgstr "Omāna"
+
+msgid "Intl_Country_PA"
+msgstr "Panama"
+
+msgid "Intl_Country_PE"
+msgstr "Peru"
+
+msgid "Intl_Country_PF"
+msgstr "Francijas Polinēzija"
+
+msgid "Intl_Country_PG"
+msgstr "Papua-Jaungvineja"
+
+msgid "Intl_Country_PH"
+msgstr "Filipīnas"
+
+msgid "Intl_Country_PK"
+msgstr "Pakistāna"
+
+msgid "Intl_Country_PL"
+msgstr "Polija"
+
+msgid "Intl_Country_PM"
+msgstr "Senpjēra un Mikelona"
+
+msgid "Intl_Country_PN"
+msgstr "Pitkērnas salas"
+
+msgid "Intl_Country_PR"
+msgstr "Puertoriko"
+
+msgid "Intl_Country_PS"
+msgstr "Palestīna"
+
+msgid "Intl_Country_PT"
+msgstr "Portugāle"
+
+msgid "Intl_Country_PW"
+msgstr "Palau"
+
+msgid "Intl_Country_PY"
+msgstr "Paragvaja"
+
+msgid "Intl_Country_QA"
+msgstr "Katara"
+
+msgid "Intl_Country_RE"
+msgstr "Reinjona"
+
+msgid "Intl_Country_RO"
+msgstr "Rumānija"
+
+msgid "Intl_Country_RS"
+msgstr "Serbija"
+
+msgid "Intl_Country_RU"
+msgstr "Krievija"
+
+msgid "Intl_Country_RW"
+msgstr "Ruanda"
+
+msgid "Intl_Country_SA"
+msgstr "Saūda Arābija"
+
+msgid "Intl_Country_SB"
+msgstr "Zālamana salas"
+
+msgid "Intl_Country_SC"
+msgstr "Seišelu salas"
+
+msgid "Intl_Country_SD"
+msgstr "Sudāna"
+
+msgid "Intl_Country_SE"
+msgstr "Zviedrija"
+
+msgid "Intl_Country_SG"
+msgstr "Singapūra"
+
+msgid "Intl_Country_SH"
+msgstr "Sv.Helēnas sala"
+
+msgid "Intl_Country_SI"
+msgstr "Slovēnija"
+
+msgid "Intl_Country_SJ"
+msgstr "Svalbāra un Jana Majena sala"
+
+msgid "Intl_Country_SK"
+msgstr "Slovākija"
+
+msgid "Intl_Country_SL"
+msgstr "Sjerraleone"
+
+msgid "Intl_Country_SM"
+msgstr "Sanmarīno"
+
+msgid "Intl_Country_SN"
+msgstr "Senegāla"
+
+msgid "Intl_Country_SO"
+msgstr "Somālija"
+
+msgid "Intl_Country_SR"
+msgstr "Surinama"
+
+msgid "Intl_Country_SS"
+msgstr "Dienvidsudāna"
+
+msgid "Intl_Country_ST"
+msgstr "Santome un Prinsipi"
+
+msgid "Intl_Country_SV"
+msgstr "Salvadora"
+
+msgid "Intl_Country_SX"
+msgstr "Sintmārtena"
+
+msgid "Intl_Country_SY"
+msgstr "Sīrija"
+
+msgid "Intl_Country_SZ"
+msgstr "Svazilenda"
+
+msgid "Intl_Country_TC"
+msgstr "Tērksas un Kaikosas salas"
+
+msgid "Intl_Country_TD"
+msgstr "Čada"
+
+msgid "Intl_Country_TF"
+msgstr "Francijas Dienvidjūru teritorija"
+
+msgid "Intl_Country_TG"
+msgstr "Togo"
+
+msgid "Intl_Country_TH"
+msgstr "Taizeme"
+
+msgid "Intl_Country_TJ"
+msgstr "Tadžikistāna"
+
+msgid "Intl_Country_TK"
+msgstr "Tokelau"
+
+msgid "Intl_Country_TL"
+msgstr "Austrumtimora"
+
+msgid "Intl_Country_TM"
+msgstr "Turkmenistāna"
+
+msgid "Intl_Country_TN"
+msgstr "Tunisija"
+
+msgid "Intl_Country_TO"
+msgstr "Tonga"
+
+msgid "Intl_Country_TR"
+msgstr "Turcija"
+
+msgid "Intl_Country_TT"
+msgstr "Trinidāda un Tobāgo"
+
+msgid "Intl_Country_TV"
+msgstr "Tuvalu"
+
+msgid "Intl_Country_TW"
+msgstr "Taivāna"
+
+msgid "Intl_Country_TZ"
+msgstr "Tanzānija"
+
+msgid "Intl_Country_UA"
+msgstr "Ukraina"
+
+msgid "Intl_Country_UG"
+msgstr "Uganda"
+
+msgid "Intl_Country_UM"
+msgstr "ASV Mazās Aizjūras salas"
+
+msgid "Intl_Country_US"
+msgstr "Amerikas Savienotās Valstis"
+
+msgid "Intl_Country_UY"
+msgstr "Urugvaja"
+
+msgid "Intl_Country_UZ"
+msgstr "Uzbekistāna"
+
+msgid "Intl_Country_VA"
+msgstr "Vatikāns"
+
+msgid "Intl_Country_VC"
+msgstr "Sentvinsenta un Grenadīnas"
+
+msgid "Intl_Country_VE"
+msgstr "Venecuēla"
+
+msgid "Intl_Country_VG"
+msgstr "Britu Virdžīnas"
+
+msgid "Intl_Country_VI"
+msgstr "ASV Virdžīnas"
+
+msgid "Intl_Country_VN"
+msgstr "Vjetnama"
+
+msgid "Intl_Country_VU"
+msgstr "Vanuatu"
+
+msgid "Intl_Country_WF"
+msgstr "Volisa un Futunas salas"
+
+msgid "Intl_Country_WS"
+msgstr "Samoa"
+
+msgid "Intl_Country_YE"
+msgstr "Jemena"
+
+msgid "Intl_Country_YT"
+msgstr "Majota"
+
+msgid "Intl_Country_ZA"
+msgstr "Dienvidāfrikas Republika"
+
+msgid "Intl_Country_ZM"
+msgstr "Zambija"
+
+msgid "Intl_Country_ZW"
+msgstr "Zimbabve"
+
+msgid "Intl_CurrencySymbol_AED"
+msgstr "AED"
+
+msgid "Intl_CurrencySymbol_AFN"
+msgstr "AFN"
+
+msgid "Intl_CurrencySymbol_ALL"
+msgstr "ALL"
+
+msgid "Intl_CurrencySymbol_AMD"
+msgstr "AMD"
+
+msgid "Intl_CurrencySymbol_ANG"
+msgstr "ANG"
+
+msgid "Intl_CurrencySymbol_AOA"
+msgstr "AOA"
+
+msgid "Intl_CurrencySymbol_ARS"
+msgstr "ARS"
+
+msgid "Intl_CurrencySymbol_AUD"
+msgstr "AU$"
+
+msgid "Intl_CurrencySymbol_AWG"
+msgstr "AWG"
+
+msgid "Intl_CurrencySymbol_AZN"
+msgstr "AZN"
+
+msgid "Intl_CurrencySymbol_BAM"
+msgstr "BAM"
+
+msgid "Intl_CurrencySymbol_BBD"
+msgstr "BBD"
+
+msgid "Intl_CurrencySymbol_BDT"
+msgstr "BDT"
+
+msgid "Intl_CurrencySymbol_BGN"
+msgstr "BGN"
+
+msgid "Intl_CurrencySymbol_BHD"
+msgstr "BHD"
+
+msgid "Intl_CurrencySymbol_BIF"
+msgstr "BIF"
+
+msgid "Intl_CurrencySymbol_BMD"
+msgstr "BMD"
+
+msgid "Intl_CurrencySymbol_BND"
+msgstr "BND"
+
+msgid "Intl_CurrencySymbol_BOB"
+msgstr "BOB"
+
+msgid "Intl_CurrencySymbol_BRL"
+msgstr "R$"
+
+msgid "Intl_CurrencySymbol_BSD"
+msgstr "BSD"
+
+msgid "Intl_CurrencySymbol_BTC"
+msgstr "BTC"
+
+msgid "Intl_CurrencySymbol_BTN"
+msgstr "BTN"
+
+msgid "Intl_CurrencySymbol_BWP"
+msgstr "BWP"
+
+msgid "Intl_CurrencySymbol_BYN"
+msgstr "BYN"
+
+msgid "Intl_CurrencySymbol_BZD"
+msgstr "BZD"
+
+msgid "Intl_CurrencySymbol_CAD"
+msgstr "CA$"
+
+msgid "Intl_CurrencySymbol_CDF"
+msgstr "CDF"
+
+msgid "Intl_CurrencySymbol_CHF"
+msgstr "CHF"
+
+msgid "Intl_CurrencySymbol_CLP"
+msgstr "CLP"
+
+msgid "Intl_CurrencySymbol_CNY"
+msgstr "CN¥"
+
+msgid "Intl_CurrencySymbol_COP"
+msgstr "COP"
+
+msgid "Intl_CurrencySymbol_CRC"
+msgstr "CRC"
+
+msgid "Intl_CurrencySymbol_CUC"
+msgstr "CUC"
+
+msgid "Intl_CurrencySymbol_CUP"
+msgstr "CUP"
+
+msgid "Intl_CurrencySymbol_CVE"
+msgstr "CVE"
+
+msgid "Intl_CurrencySymbol_CZK"
+msgstr "CZK"
+
+msgid "Intl_CurrencySymbol_DJF"
+msgstr "DJF"
+
+msgid "Intl_CurrencySymbol_DKK"
+msgstr "DKK"
+
+msgid "Intl_CurrencySymbol_DOP"
+msgstr "DOP"
+
+msgid "Intl_CurrencySymbol_DZD"
+msgstr "DZD"
+
+msgid "Intl_CurrencySymbol_EGP"
+msgstr "EGP"
+
+msgid "Intl_CurrencySymbol_ERN"
+msgstr "ERN"
+
+msgid "Intl_CurrencySymbol_ETB"
+msgstr "ETB"
+
+msgid "Intl_CurrencySymbol_EUR"
+msgstr "€"
+
+msgid "Intl_CurrencySymbol_FJD"
+msgstr "FJD"
+
+msgid "Intl_CurrencySymbol_FKP"
+msgstr "FKP"
+
+msgid "Intl_CurrencySymbol_GBP"
+msgstr "£"
+
+msgid "Intl_CurrencySymbol_GEL"
+msgstr "GEL"
+
+msgid "Intl_CurrencySymbol_GHS"
+msgstr "GHS"
+
+msgid "Intl_CurrencySymbol_GIP"
+msgstr "GIP"
+
+msgid "Intl_CurrencySymbol_GMD"
+msgstr "GMD"
+
+msgid "Intl_CurrencySymbol_GNF"
+msgstr "GNF"
+
+msgid "Intl_CurrencySymbol_GTQ"
+msgstr "GTQ"
+
+msgid "Intl_CurrencySymbol_GYD"
+msgstr "GYD"
+
+msgid "Intl_CurrencySymbol_HKD"
+msgstr "HK$"
+
+msgid "Intl_CurrencySymbol_HNL"
+msgstr "HNL"
+
+msgid "Intl_CurrencySymbol_HRK"
+msgstr "HRK"
+
+msgid "Intl_CurrencySymbol_HTG"
+msgstr "HTG"
+
+msgid "Intl_CurrencySymbol_HUF"
+msgstr "HUF"
+
+msgid "Intl_CurrencySymbol_IDR"
+msgstr "IDR"
+
+msgid "Intl_CurrencySymbol_ILS"
+msgstr "₪"
+
+msgid "Intl_CurrencySymbol_INR"
+msgstr "₹"
+
+msgid "Intl_CurrencySymbol_IQD"
+msgstr "IQD"
+
+msgid "Intl_CurrencySymbol_IRR"
+msgstr "IRR"
+
+msgid "Intl_CurrencySymbol_ISK"
+msgstr "ISK"
+
+msgid "Intl_CurrencySymbol_JMD"
+msgstr "JMD"
+
+msgid "Intl_CurrencySymbol_JOD"
+msgstr "JOD"
+
+msgid "Intl_CurrencySymbol_JPY"
+msgstr "¥"
+
+msgid "Intl_CurrencySymbol_KES"
+msgstr "KES"
+
+msgid "Intl_CurrencySymbol_KGS"
+msgstr "KGS"
+
+msgid "Intl_CurrencySymbol_KHR"
+msgstr "KHR"
+
+msgid "Intl_CurrencySymbol_KMF"
+msgstr "KMF"
+
+msgid "Intl_CurrencySymbol_KPW"
+msgstr "KPW"
+
+msgid "Intl_CurrencySymbol_KRW"
+msgstr "₩"
+
+msgid "Intl_CurrencySymbol_KWD"
+msgstr "KWD"
+
+msgid "Intl_CurrencySymbol_KYD"
+msgstr "KYD"
+
+msgid "Intl_CurrencySymbol_KZT"
+msgstr "KZT"
+
+msgid "Intl_CurrencySymbol_LAK"
+msgstr "LAK"
+
+msgid "Intl_CurrencySymbol_LBP"
+msgstr "LBP"
+
+msgid "Intl_CurrencySymbol_LKR"
+msgstr "LKR"
+
+msgid "Intl_CurrencySymbol_LRD"
+msgstr "LRD"
+
+msgid "Intl_CurrencySymbol_LSL"
+msgstr "LSL"
+
+msgid "Intl_CurrencySymbol_LYD"
+msgstr "LYD"
+
+msgid "Intl_CurrencySymbol_MAD"
+msgstr "MAD"
+
+msgid "Intl_CurrencySymbol_MDL"
+msgstr "MDL"
+
+msgid "Intl_CurrencySymbol_MGA"
+msgstr "MGA"
+
+msgid "Intl_CurrencySymbol_MKD"
+msgstr "MKD"
+
+msgid "Intl_CurrencySymbol_MMK"
+msgstr "MMK"
+
+msgid "Intl_CurrencySymbol_MNT"
+msgstr "MNT"
+
+msgid "Intl_CurrencySymbol_MOP"
+msgstr "MOP"
+
+msgid "Intl_CurrencySymbol_MRU"
+msgstr "MRU"
+
+msgid "Intl_CurrencySymbol_MUR"
+msgstr "MUR"
+
+msgid "Intl_CurrencySymbol_MVR"
+msgstr "MVR"
+
+msgid "Intl_CurrencySymbol_MWK"
+msgstr "MWK"
+
+msgid "Intl_CurrencySymbol_MXN"
+msgstr "MX$"
+
+msgid "Intl_CurrencySymbol_MYR"
+msgstr "MYR"
+
+msgid "Intl_CurrencySymbol_MZN"
+msgstr "MZN"
+
+msgid "Intl_CurrencySymbol_NAD"
+msgstr "NAD"
+
+msgid "Intl_CurrencySymbol_NGN"
+msgstr "NGN"
+
+msgid "Intl_CurrencySymbol_NIO"
+msgstr "NIO"
+
+msgid "Intl_CurrencySymbol_NOK"
+msgstr "NOK"
+
+msgid "Intl_CurrencySymbol_NPR"
+msgstr "NPR"
+
+msgid "Intl_CurrencySymbol_NZD"
+msgstr "NZ$"
+
+msgid "Intl_CurrencySymbol_OMR"
+msgstr "OMR"
+
+msgid "Intl_CurrencySymbol_PAB"
+msgstr "PAB"
+
+msgid "Intl_CurrencySymbol_PEN"
+msgstr "PEN"
+
+msgid "Intl_CurrencySymbol_PGK"
+msgstr "PGK"
+
+msgid "Intl_CurrencySymbol_PHP"
+msgstr "PHP"
+
+msgid "Intl_CurrencySymbol_PKR"
+msgstr "PKR"
+
+msgid "Intl_CurrencySymbol_PLN"
+msgstr "PLN"
+
+msgid "Intl_CurrencySymbol_PYG"
+msgstr "PYG"
+
+msgid "Intl_CurrencySymbol_QAR"
+msgstr "QAR"
+
+msgid "Intl_CurrencySymbol_RON"
+msgstr "RON"
+
+msgid "Intl_CurrencySymbol_RSD"
+msgstr "RSD"
+
+msgid "Intl_CurrencySymbol_RUB"
+msgstr "RUB"
+
+msgid "Intl_CurrencySymbol_RWF"
+msgstr "RWF"
+
+msgid "Intl_CurrencySymbol_SAR"
+msgstr "SAR"
+
+msgid "Intl_CurrencySymbol_SBD"
+msgstr "SBD"
+
+msgid "Intl_CurrencySymbol_SCR"
+msgstr "SCR"
+
+msgid "Intl_CurrencySymbol_SDG"
+msgstr "SDG"
+
+msgid "Intl_CurrencySymbol_SEK"
+msgstr "SEK"
+
+msgid "Intl_CurrencySymbol_SGD"
+msgstr "SGD"
+
+msgid "Intl_CurrencySymbol_SHP"
+msgstr "SHP"
+
+msgid "Intl_CurrencySymbol_SLL"
+msgstr "SLL"
+
+msgid "Intl_CurrencySymbol_SOS"
+msgstr "SOS"
+
+msgid "Intl_CurrencySymbol_SRD"
+msgstr "SRD"
+
+msgid "Intl_CurrencySymbol_SSP"
+msgstr "SSP"
+
+msgid "Intl_CurrencySymbol_STN"
+msgstr "STN"
+
+msgid "Intl_CurrencySymbol_SYP"
+msgstr "SYP"
+
+msgid "Intl_CurrencySymbol_SZL"
+msgstr "SZL"
+
+msgid "Intl_CurrencySymbol_THB"
+msgstr "฿"
+
+msgid "Intl_CurrencySymbol_TJS"
+msgstr "TJS"
+
+msgid "Intl_CurrencySymbol_TMT"
+msgstr "TMT"
+
+msgid "Intl_CurrencySymbol_TND"
+msgstr "TND"
+
+msgid "Intl_CurrencySymbol_TOP"
+msgstr "TOP"
+
+msgid "Intl_CurrencySymbol_TRY"
+msgstr "TRY"
+
+msgid "Intl_CurrencySymbol_TTD"
+msgstr "TTD"
+
+msgid "Intl_CurrencySymbol_TWD"
+msgstr "NT$"
+
+msgid "Intl_CurrencySymbol_TZS"
+msgstr "TZS"
+
+msgid "Intl_CurrencySymbol_UAH"
+msgstr "UAH"
+
+msgid "Intl_CurrencySymbol_UGX"
+msgstr "UGX"
+
+msgid "Intl_CurrencySymbol_USD"
+msgstr "$"
+
+msgid "Intl_CurrencySymbol_UYU"
+msgstr "UYU"
+
+msgid "Intl_CurrencySymbol_UZS"
+msgstr "UZS"
+
+msgid "Intl_CurrencySymbol_VEF"
+msgstr "VEF"
+
+msgid "Intl_CurrencySymbol_VND"
+msgstr "₫"
+
+msgid "Intl_CurrencySymbol_VUV"
+msgstr "VUV"
+
+msgid "Intl_CurrencySymbol_WST"
+msgstr "WST"
+
+msgid "Intl_CurrencySymbol_XAF"
+msgstr "FCFA"
+
+msgid "Intl_CurrencySymbol_XCD"
+msgstr "EC$"
+
+msgid "Intl_CurrencySymbol_XOF"
+msgstr "CFA"
+
+msgid "Intl_CurrencySymbol_XPF"
+msgstr "CFPF"
+
+msgid "Intl_CurrencySymbol_YER"
+msgstr "YER"
+
+msgid "Intl_CurrencySymbol_ZAR"
+msgstr "ZAR"
+
+msgid "Intl_CurrencySymbol_ZMW"
+msgstr "ZMW"
+
+msgid "Intl_Currency_AED"
+msgstr "Apvienoto Arābu Emirātu dirhēms"
+
+msgid "Intl_Currency_AFN"
+msgstr "Afganistānas afgāns"
+
+msgid "Intl_Currency_ALL"
+msgstr "Albānijas leks"
+
+msgid "Intl_Currency_AMD"
+msgstr "Armēnijas drams"
+
+msgid "Intl_Currency_ANG"
+msgstr "Nīderlandes Antiļu guldenis"
+
+msgid "Intl_Currency_AOA"
+msgstr "Angolas kvanza"
+
+msgid "Intl_Currency_ARS"
+msgstr "Argentīnas peso"
+
+msgid "Intl_Currency_AUD"
+msgstr "Austrālijas dolārs"
+
+msgid "Intl_Currency_AWG"
+msgstr "Arubas guldenis"
+
+msgid "Intl_Currency_AZN"
+msgstr "Azerbaidžānas manats"
+
+msgid "Intl_Currency_BAM"
+msgstr "Bosnijas un Hercogovinas konvertējamā marka"
+
+msgid "Intl_Currency_BBD"
+msgstr "Barbadosas dolārs"
+
+msgid "Intl_Currency_BDT"
+msgstr "Bangladešas taka"
+
+msgid "Intl_Currency_BGN"
+msgstr "Bulgārijas leva"
+
+msgid "Intl_Currency_BHD"
+msgstr "Bahreinas dinārs"
+
+msgid "Intl_Currency_BIF"
+msgstr "Burundi franks"
+
+msgid "Intl_Currency_BMD"
+msgstr "Bermudu dolārs"
+
+msgid "Intl_Currency_BND"
+msgstr "Brunejas dolārs"
+
+msgid "Intl_Currency_BOB"
+msgstr "Bolīvijas boliviano"
+
+msgid "Intl_Currency_BRL"
+msgstr "Brazīlijas reāls"
+
+msgid "Intl_Currency_BSD"
+msgstr "Bahamu dolārs"
+
+msgid "Intl_Currency_BTC"
+msgstr "Bitcoin"
+
+msgid "Intl_Currency_BTN"
+msgstr "Butānas ngultrums"
+
+msgid "Intl_Currency_BWP"
+msgstr "Botsvanas pula"
+
+msgid "Intl_Currency_BYN"
+msgstr "Baltkrievijas rubelis"
+
+msgid "Intl_Currency_BZD"
+msgstr "Belizas dolārs"
+
+msgid "Intl_Currency_CAD"
+msgstr "Kanādas dolārs"
+
+msgid "Intl_Currency_CDF"
+msgstr "KDR franks"
+
+msgid "Intl_Currency_CHF"
+msgstr "Šveices franks"
+
+msgid "Intl_Currency_CLP"
+msgstr "Čīles peso"
+
+msgid "Intl_Currency_CNY"
+msgstr "Ķīnas juaņs"
+
+msgid "Intl_Currency_COP"
+msgstr "Kolumbijas peso"
+
+msgid "Intl_Currency_CRC"
+msgstr "Kostarikas kolons"
+
+msgid "Intl_Currency_CUC"
+msgstr "Kubas konvertējamais peso"
+
+msgid "Intl_Currency_CUP"
+msgstr "Kubas peso"
+
+msgid "Intl_Currency_CVE"
+msgstr "Kaboverdes eskudo"
+
+msgid "Intl_Currency_CZK"
+msgstr "Čehijas krona"
+
+msgid "Intl_Currency_DJF"
+msgstr "Džibutijas franks"
+
+msgid "Intl_Currency_DKK"
+msgstr "Dānijas krona"
+
+msgid "Intl_Currency_DOP"
+msgstr "Dominikānas peso"
+
+msgid "Intl_Currency_DZD"
+msgstr "Alžīrijas dinārs"
+
+msgid "Intl_Currency_EGP"
+msgstr "Ēģiptes mārciņa"
+
+msgid "Intl_Currency_ERN"
+msgstr "Eritrejas nakfa"
+
+msgid "Intl_Currency_ETB"
+msgstr "Etiopijas birs"
+
+msgid "Intl_Currency_EUR"
+msgstr "Eiro"
+
+msgid "Intl_Currency_FJD"
+msgstr "Fidži dolārs"
+
+msgid "Intl_Currency_FKP"
+msgstr "Folklenda Salu mārciņa"
+
+msgid "Intl_Currency_GBP"
+msgstr "Lielbritānijas mārciņa"
+
+msgid "Intl_Currency_GEL"
+msgstr "Gruzijas lari"
+
+msgid "Intl_Currency_GHS"
+msgstr "Ganas sedi"
+
+msgid "Intl_Currency_GIP"
+msgstr "Gibraltāra mārciņa"
+
+msgid "Intl_Currency_GMD"
+msgstr "Gambijas dalasi"
+
+msgid "Intl_Currency_GNF"
+msgstr "Gvinejas franks"
+
+msgid "Intl_Currency_GTQ"
+msgstr "Gvatemalas ketsals"
+
+msgid "Intl_Currency_GYD"
+msgstr "Gajānas dolārs"
+
+msgid "Intl_Currency_HKD"
+msgstr "Honkongas dolārs"
+
+msgid "Intl_Currency_HNL"
+msgstr "Hondurasas lempīra"
+
+msgid "Intl_Currency_HRK"
+msgstr "Horvātijas kuna"
+
+msgid "Intl_Currency_HTG"
+msgstr "Haiti gurds"
+
+msgid "Intl_Currency_HUF"
+msgstr "Ungārijas forints"
+
+msgid "Intl_Currency_IDR"
+msgstr "Indonēzijas rūpija"
+
+msgid "Intl_Currency_ILS"
+msgstr "Izraēlas šekelis"
+
+msgid "Intl_Currency_INR"
+msgstr "Indijas rūpija"
+
+msgid "Intl_Currency_IQD"
+msgstr "Irākas dinārs"
+
+msgid "Intl_Currency_IRR"
+msgstr "Irānas riāls"
+
+msgid "Intl_Currency_ISK"
+msgstr "Islandes krona"
+
+msgid "Intl_Currency_JMD"
+msgstr "Jamaikas dolārs"
+
+msgid "Intl_Currency_JOD"
+msgstr "Jordānas dinārs"
+
+msgid "Intl_Currency_JPY"
+msgstr "Japānas jena"
+
+msgid "Intl_Currency_KES"
+msgstr "Kenijas šiliņš"
+
+msgid "Intl_Currency_KGS"
+msgstr "Kirgizstānas soms"
+
+msgid "Intl_Currency_KHR"
+msgstr "Kambodžas riels"
+
+msgid "Intl_Currency_KMF"
+msgstr "Komoru franks"
+
+msgid "Intl_Currency_KPW"
+msgstr "Ziemeļkorejas vona"
+
+msgid "Intl_Currency_KRW"
+msgstr "Dienvidkorejas vona"
+
+msgid "Intl_Currency_KWD"
+msgstr "Kuveitas dinārs"
+
+msgid "Intl_Currency_KYD"
+msgstr "Kaimanu salu dolārs"
+
+msgid "Intl_Currency_KZT"
+msgstr "Kazahstānas tenge"
+
+msgid "Intl_Currency_LAK"
+msgstr "Laosas kips"
+
+msgid "Intl_Currency_LBP"
+msgstr "Libānas mārciņa"
+
+msgid "Intl_Currency_LKR"
+msgstr "Šrilankas rūpija"
+
+msgid "Intl_Currency_LRD"
+msgstr "Libērijas dolārs"
+
+msgid "Intl_Currency_LSL"
+msgstr "Lesoto loti"
+
+msgid "Intl_Currency_LYD"
+msgstr "Lībijas dinārs"
+
+msgid "Intl_Currency_MAD"
+msgstr "Marokas dirhēms"
+
+msgid "Intl_Currency_MDL"
+msgstr "Moldovas leja"
+
+msgid "Intl_Currency_MGA"
+msgstr "Madagaskaras ariari"
+
+msgid "Intl_Currency_MKD"
+msgstr "Maķedonijas denārs"
+
+msgid "Intl_Currency_MMK"
+msgstr "Mjanmas kjats"
+
+msgid "Intl_Currency_MNT"
+msgstr "Mongolijas tugriks"
+
+msgid "Intl_Currency_MOP"
+msgstr "Makao pataka"
+
+msgid "Intl_Currency_MRU"
+msgstr "Mauritānijas ugija"
+
+msgid "Intl_Currency_MUR"
+msgstr "Maurīcijas rūpija"
+
+msgid "Intl_Currency_MVR"
+msgstr "Maldīvijas rūfija"
+
+msgid "Intl_Currency_MWK"
+msgstr "Malāvijas kvača"
+
+msgid "Intl_Currency_MXN"
+msgstr "Meksikas peso"
+
+msgid "Intl_Currency_MYR"
+msgstr "Malaizijas ringits"
+
+msgid "Intl_Currency_MZN"
+msgstr "Mozambikas metikals"
+
+msgid "Intl_Currency_NAD"
+msgstr "Namībijas dolārs"
+
+msgid "Intl_Currency_NGN"
+msgstr "Nigērijas naira"
+
+msgid "Intl_Currency_NIO"
+msgstr "Nikaragvas kordoba"
+
+msgid "Intl_Currency_NOK"
+msgstr "Norvēģijas krona"
+
+msgid "Intl_Currency_NPR"
+msgstr "Nepālas rūpija"
+
+msgid "Intl_Currency_NZD"
+msgstr "Jaunzēlandes dolārs"
+
+msgid "Intl_Currency_OMR"
+msgstr "Omānas riāls"
+
+msgid "Intl_Currency_PAB"
+msgstr "Panamas balboa"
+
+msgid "Intl_Currency_PEN"
+msgstr "Peru sols"
+
+msgid "Intl_Currency_PGK"
+msgstr "Papua-Jaungvinejas kina"
+
+msgid "Intl_Currency_PHP"
+msgstr "Filipīnu peso"
+
+msgid "Intl_Currency_PKR"
+msgstr "Pakistānas rūpija"
+
+msgid "Intl_Currency_PLN"
+msgstr "Polijas zlots"
+
+msgid "Intl_Currency_PYG"
+msgstr "Paragvajas guarani"
+
+msgid "Intl_Currency_QAR"
+msgstr "Kataras riāls"
+
+msgid "Intl_Currency_RON"
+msgstr "Rumānijas leja"
+
+msgid "Intl_Currency_RSD"
+msgstr "Serbijas dinārs"
+
+msgid "Intl_Currency_RUB"
+msgstr "Krievijas rublis"
+
+msgid "Intl_Currency_RWF"
+msgstr "Ruandas franks"
+
+msgid "Intl_Currency_SAR"
+msgstr "Saūda Arābijas riāls"
+
+msgid "Intl_Currency_SBD"
+msgstr "Zālamana Salu dolārs"
+
+msgid "Intl_Currency_SCR"
+msgstr "Seišelu salu rūpija"
+
+msgid "Intl_Currency_SDG"
+msgstr "Sudānas mārciņa"
+
+msgid "Intl_Currency_SEK"
+msgstr "Zviedrijas krona"
+
+msgid "Intl_Currency_SGD"
+msgstr "Singapūras dolārs"
+
+msgid "Intl_Currency_SHP"
+msgstr "Sv.Helēnas salas mārciņa"
+
+msgid "Intl_Currency_SLL"
+msgstr "Sjerraleones leone"
+
+msgid "Intl_Currency_SOS"
+msgstr "Somālijas šiliņš"
+
+msgid "Intl_Currency_SRD"
+msgstr "Surinamas dolārs"
+
+msgid "Intl_Currency_SSP"
+msgstr "Dienvidsudānas mārciņa"
+
+msgid "Intl_Currency_STN"
+msgstr "Santome un Prinsipi dobra"
+
+msgid "Intl_Currency_SYP"
+msgstr "Sīrijas mārciņa"
+
+msgid "Intl_Currency_SZL"
+msgstr "Svazilendas lilangeni"
+
+msgid "Intl_Currency_THB"
+msgstr "Taizemes bāts"
+
+msgid "Intl_Currency_TJS"
+msgstr "Tadžikistānas somons"
+
+msgid "Intl_Currency_TMT"
+msgstr "Turkmenistānas manats"
+
+msgid "Intl_Currency_TND"
+msgstr "Tunisijas dinārs"
+
+msgid "Intl_Currency_TOP"
+msgstr "Tongas paanga"
+
+msgid "Intl_Currency_TRY"
+msgstr "Turcijas lira"
+
+msgid "Intl_Currency_TTD"
+msgstr "Trinidādas un Tobāgo dolārs"
+
+msgid "Intl_Currency_TWD"
+msgstr "Taivānas jaunais dolārs"
+
+msgid "Intl_Currency_TZS"
+msgstr "Tanzānijas šiliņš"
+
+msgid "Intl_Currency_UAH"
+msgstr "Ukrainas grivna"
+
+msgid "Intl_Currency_UGX"
+msgstr "Ugandas šiliņš"
+
+msgid "Intl_Currency_USD"
+msgstr "ASV dolārs"
+
+msgid "Intl_Currency_UYU"
+msgstr "Urugvajas peso"
+
+msgid "Intl_Currency_UZS"
+msgstr "Uzbekistānas sums"
+
+msgid "Intl_Currency_VEF"
+msgstr "Venecuēlas bolivārs (2008–2018)"
+
+msgid "Intl_Currency_VND"
+msgstr "Vjetnamas dongi"
+
+msgid "Intl_Currency_VUV"
+msgstr "Vanuatu vatu"
+
+msgid "Intl_Currency_WST"
+msgstr "Samoa tala"
+
+msgid "Intl_Currency_XAF"
+msgstr "Centrālāfrikas CFA franks"
+
+msgid "Intl_Currency_XCD"
+msgstr "Austrumkarību dolārs"
+
+msgid "Intl_Currency_XOF"
+msgstr "Rietumāfrikas CFA franks"
+
+msgid "Intl_Currency_XPF"
+msgstr "CFP franks"
+
+msgid "Intl_Currency_YER"
+msgstr "Jemenas riāls"
+
+msgid "Intl_Currency_ZAR"
+msgstr "Dienvidāfrikas rends"
+
+msgid "Intl_Currency_ZMW"
+msgstr "Zambijas kvača"
+
+msgid "Intl_Day_Long_1"
+msgstr "pirmdiena"
+
+msgid "Intl_Day_Long_2"
+msgstr "otrdiena"
+
+msgid "Intl_Day_Long_3"
+msgstr "trešdiena"
+
+msgid "Intl_Day_Long_4"
+msgstr "ceturtdiena"
+
+msgid "Intl_Day_Long_5"
+msgstr "piektdiena"
+
+msgid "Intl_Day_Long_6"
+msgstr "sestdiena"
+
+msgid "Intl_Day_Long_7"
+msgstr "svētdiena"
+
+msgid "Intl_Day_Long_StandAlone_1"
+msgstr "Pirmdiena"
+
+msgid "Intl_Day_Long_StandAlone_2"
+msgstr "Otrdiena"
+
+msgid "Intl_Day_Long_StandAlone_3"
+msgstr "Trešdiena"
+
+msgid "Intl_Day_Long_StandAlone_4"
+msgstr "Ceturtdiena"
+
+msgid "Intl_Day_Long_StandAlone_5"
+msgstr "Piektdiena"
+
+msgid "Intl_Day_Long_StandAlone_6"
+msgstr "Sestdiena"
+
+msgid "Intl_Day_Long_StandAlone_7"
+msgstr "Svētdiena"
+
+msgid "Intl_Day_Min_1"
+msgstr "Pr"
+
+msgid "Intl_Day_Min_2"
+msgstr "Ot"
+
+msgid "Intl_Day_Min_3"
+msgstr "Tr"
+
+msgid "Intl_Day_Min_4"
+msgstr "Ce"
+
+msgid "Intl_Day_Min_5"
+msgstr "Pk"
+
+msgid "Intl_Day_Min_6"
+msgstr "Se"
+
+msgid "Intl_Day_Min_7"
+msgstr "Sv"
+
+msgid "Intl_Day_Min_StandAlone_1"
+msgstr "Pr"
+
+msgid "Intl_Day_Min_StandAlone_2"
+msgstr "Ot"
+
+msgid "Intl_Day_Min_StandAlone_3"
+msgstr "Tr"
+
+msgid "Intl_Day_Min_StandAlone_4"
+msgstr "Ce"
+
+msgid "Intl_Day_Min_StandAlone_5"
+msgstr "Pk"
+
+msgid "Intl_Day_Min_StandAlone_6"
+msgstr "Se"
+
+msgid "Intl_Day_Min_StandAlone_7"
+msgstr "Sv"
+
+msgid "Intl_Day_Short_1"
+msgstr "pirmd."
+
+msgid "Intl_Day_Short_2"
+msgstr "otrd."
+
+msgid "Intl_Day_Short_3"
+msgstr "trešd."
+
+msgid "Intl_Day_Short_4"
+msgstr "ceturtd."
+
+msgid "Intl_Day_Short_5"
+msgstr "piektd."
+
+msgid "Intl_Day_Short_6"
+msgstr "sestd."
+
+msgid "Intl_Day_Short_7"
+msgstr "svētd."
+
+msgid "Intl_Day_Short_StandAlone_1"
+msgstr "Pirmd."
+
+msgid "Intl_Day_Short_StandAlone_2"
+msgstr "Otrd."
+
+msgid "Intl_Day_Short_StandAlone_3"
+msgstr "Trešd."
+
+msgid "Intl_Day_Short_StandAlone_4"
+msgstr "Ceturtd."
+
+msgid "Intl_Day_Short_StandAlone_5"
+msgstr "Piektd."
+
+msgid "Intl_Day_Short_StandAlone_6"
+msgstr "Sestd."
+
+msgid "Intl_Day_Short_StandAlone_7"
+msgstr "Svētd."
+
+msgid "Intl_EnglishLanguageName"
+msgstr "Latvian"
+
+msgid "Intl_Format_DateTime_Long"
+msgstr "EEEE, y. 'gada' d. MMMM {time}"
+
+msgid "Intl_Format_DateTime_Short"
+msgstr "y. 'gada' d. MMM {time}"
+
+msgid "Intl_Format_Date_Day_Month"
+msgstr "E, d. MMM"
+
+msgid "Intl_Format_Date_Long"
+msgstr "EEEE, y. 'gada' d. MMMM"
+
+msgid "Intl_Format_Date_Short"
+msgstr "y. 'gada' d. MMM"
+
+msgid "Intl_Format_Hour_12"
+msgstr "h a"
+
+msgid "Intl_Format_Hour_24"
+msgstr "HH"
+
+msgid "Intl_Format_Interval_Long_D"
+msgstr "y. 'gada' d.–d. MMMM"
+
+msgid "Intl_Format_Interval_Long_M"
+msgstr "y. 'gada' d. MMMM – d. MMMM"
+
+msgid "Intl_Format_Interval_Long_Y"
+msgstr "y. 'gada' d. MMMM – y. 'gada' d. MMMM"
+
+msgid "Intl_Format_Interval_Short_D"
+msgstr "y. 'gada' d.–d. MMM"
+
+msgid "Intl_Format_Interval_Short_M"
+msgstr "y. 'gada' d. MMM – d. MMM"
+
+msgid "Intl_Format_Interval_Short_Y"
+msgstr "y. 'gada' d. MMM – y. 'gada' d. MMM"
+
+msgid "Intl_Format_Month_Long"
+msgstr "y. 'g'. MMMM"
+
+msgid "Intl_Format_Month_Short"
+msgstr "y. 'g'. MMM"
+
+msgid "Intl_Format_Time"
+msgstr "{time}"
+
+msgid "Intl_Format_Time_12"
+msgstr "h:mm:ss a"
+
+msgid "Intl_Format_Time_24"
+msgstr "HH:mm:ss"
+
+msgid "Intl_Format_Year"
+msgstr "y. 'g'."
+
+msgid "Intl_Hours"
+msgstr "stundas"
+
+msgid "Intl_Language_aa"
+msgstr "Afāru"
+
+msgid "Intl_Language_ab"
+msgstr "Abhāzu"
+
+msgid "Intl_Language_ae"
+msgstr "Avesta"
+
+msgid "Intl_Language_af"
+msgstr "Afrikandu"
+
+msgid "Intl_Language_ak"
+msgstr "Akanu"
+
+msgid "Intl_Language_am"
+msgstr "Amharu"
+
+msgid "Intl_Language_an"
+msgstr "Aragoniešu"
+
+msgid "Intl_Language_ar"
+msgstr "Arābu"
+
+msgid "Intl_Language_as"
+msgstr "Asamiešu"
+
+msgid "Intl_Language_av"
+msgstr "Avāru"
+
+msgid "Intl_Language_ay"
+msgstr "Aimaru"
+
+msgid "Intl_Language_az"
+msgstr "Azerbaidžāņu"
+
+msgid "Intl_Language_ba"
+msgstr "Baškīru"
+
+msgid "Intl_Language_be"
+msgstr "Baltkrievu"
+
+msgid "Intl_Language_bg"
+msgstr "Bulgāru"
+
+msgid "Intl_Language_bi"
+msgstr "Bišlamā"
+
+msgid "Intl_Language_bm"
+msgstr "Bambaru"
+
+msgid "Intl_Language_bn"
+msgstr "Bengāļu"
+
+msgid "Intl_Language_bo"
+msgstr "Tibetiešu"
+
+msgid "Intl_Language_br"
+msgstr "Bretoņu"
+
+msgid "Intl_Language_bs"
+msgstr "Bosniešu"
+
+msgid "Intl_Language_ca"
+msgstr "Katalāņu"
+
+msgid "Intl_Language_ce"
+msgstr "Čečenu"
+
+msgid "Intl_Language_ch"
+msgstr "Čamorru"
+
+msgid "Intl_Language_co"
+msgstr "Korsikāņu"
+
+msgid "Intl_Language_cr"
+msgstr "Krī"
+
+msgid "Intl_Language_cs"
+msgstr "Čehu"
+
+msgid "Intl_Language_cu"
+msgstr "Baznīcslāvu"
+
+msgid "Intl_Language_cv"
+msgstr "Čuvašu"
+
+msgid "Intl_Language_cy"
+msgstr "Velsiešu"
+
+msgid "Intl_Language_da"
+msgstr "Dāņu"
+
+msgid "Intl_Language_de"
+msgstr "Vācu"
+
+msgid "Intl_Language_dv"
+msgstr "Maldīviešu"
+
+msgid "Intl_Language_dz"
+msgstr "Dzongke"
+
+msgid "Intl_Language_ee"
+msgstr "Evu"
+
+msgid "Intl_Language_el"
+msgstr "Grieķu"
+
+msgid "Intl_Language_en"
+msgstr "Angļu"
+
+msgid "Intl_Language_eo"
+msgstr "Esperanto"
+
+msgid "Intl_Language_es"
+msgstr "Spāņu"
+
+msgid "Intl_Language_et"
+msgstr "Igauņu"
+
+msgid "Intl_Language_eu"
+msgstr "Basku"
+
+msgid "Intl_Language_fa"
+msgstr "Persiešu"
+
+msgid "Intl_Language_ff"
+msgstr "Fulu"
+
+msgid "Intl_Language_fi"
+msgstr "Somu"
+
+msgid "Intl_Language_fj"
+msgstr "Fidžiešu"
+
+msgid "Intl_Language_fo"
+msgstr "Fēru"
+
+msgid "Intl_Language_fr"
+msgstr "Franču"
+
+msgid "Intl_Language_fy"
+msgstr "Rietumfrīzu"
+
+msgid "Intl_Language_ga"
+msgstr "Īru"
+
+msgid "Intl_Language_gd"
+msgstr "Skotu gēlu"
+
+msgid "Intl_Language_gl"
+msgstr "Galisiešu"
+
+msgid "Intl_Language_gn"
+msgstr "Gvaranu"
+
+msgid "Intl_Language_gu"
+msgstr "Gudžaratu"
+
+msgid "Intl_Language_gv"
+msgstr "Meniešu"
+
+msgid "Intl_Language_ha"
+msgstr "Hausu"
+
+msgid "Intl_Language_he"
+msgstr "Ivrits"
+
+msgid "Intl_Language_hi"
+msgstr "Hindi"
+
+msgid "Intl_Language_ho"
+msgstr "Hirimotu"
+
+msgid "Intl_Language_hr"
+msgstr "Horvātu"
+
+msgid "Intl_Language_ht"
+msgstr "Haitiešu"
+
+msgid "Intl_Language_hu"
+msgstr "Ungāru"
+
+msgid "Intl_Language_hy"
+msgstr "Armēņu"
+
+msgid "Intl_Language_hz"
+msgstr "Hereru"
+
+msgid "Intl_Language_ia"
+msgstr "Interlingva"
+
+msgid "Intl_Language_id"
+msgstr "Indonēziešu"
+
+msgid "Intl_Language_ie"
+msgstr "Interlingve"
+
+msgid "Intl_Language_ig"
+msgstr "Igbo"
+
+msgid "Intl_Language_ii"
+msgstr "Sičuaņas ji"
+
+msgid "Intl_Language_ik"
+msgstr "Inupiaku"
+
+msgid "Intl_Language_io"
+msgstr "Ido"
+
+msgid "Intl_Language_is"
+msgstr "Islandiešu"
+
+msgid "Intl_Language_it"
+msgstr "Itāļu"
+
+msgid "Intl_Language_iu"
+msgstr "Inuītu"
+
+msgid "Intl_Language_ja"
+msgstr "Japāņu"
+
+msgid "Intl_Language_jv"
+msgstr "Javiešu"
+
+msgid "Intl_Language_ka"
+msgstr "Gruzīnu"
+
+msgid "Intl_Language_kg"
+msgstr "Kongu"
+
+msgid "Intl_Language_ki"
+msgstr "Kikuju"
+
+msgid "Intl_Language_kj"
+msgstr "Kvaņamu"
+
+msgid "Intl_Language_kk"
+msgstr "Kazahu"
+
+msgid "Intl_Language_kl"
+msgstr "Grenlandiešu"
+
+msgid "Intl_Language_km"
+msgstr "Khmeru"
+
+msgid "Intl_Language_kn"
+msgstr "Kannadu"
+
+msgid "Intl_Language_ko"
+msgstr "Korejiešu"
+
+msgid "Intl_Language_kr"
+msgstr "Kanuru"
+
+msgid "Intl_Language_ks"
+msgstr "Kašmiriešu"
+
+msgid "Intl_Language_ku"
+msgstr "Kurdu"
+
+msgid "Intl_Language_kv"
+msgstr "Komiešu"
+
+msgid "Intl_Language_kw"
+msgstr "Korniešu"
+
+msgid "Intl_Language_ky"
+msgstr "Kirgīzu"
+
+msgid "Intl_Language_la"
+msgstr "Latīņu"
+
+msgid "Intl_Language_lb"
+msgstr "Luksemburgiešu"
+
+msgid "Intl_Language_lg"
+msgstr "Gandu"
+
+msgid "Intl_Language_li"
+msgstr "Limburgiešu"
+
+msgid "Intl_Language_ln"
+msgstr "Lingala"
+
+msgid "Intl_Language_lo"
+msgstr "Laosiešu"
+
+msgid "Intl_Language_lt"
+msgstr "Lietuviešu"
+
+msgid "Intl_Language_lu"
+msgstr "Lubakatanga"
+
+msgid "Intl_Language_lv"
+msgstr "Latviešu"
+
+msgid "Intl_Language_mg"
+msgstr "Malagasu"
+
+msgid "Intl_Language_mh"
+msgstr "Māršaliešu"
+
+msgid "Intl_Language_mi"
+msgstr "Maoru"
+
+msgid "Intl_Language_mk"
+msgstr "Maķedoniešu"
+
+msgid "Intl_Language_ml"
+msgstr "Malajalu"
+
+msgid "Intl_Language_mn"
+msgstr "Mongoļu"
+
+msgid "Intl_Language_mr"
+msgstr "Marathu"
+
+msgid "Intl_Language_ms"
+msgstr "Malajiešu"
+
+msgid "Intl_Language_mt"
+msgstr "Maltiešu"
+
+msgid "Intl_Language_my"
+msgstr "Birmiešu"
+
+msgid "Intl_Language_na"
+msgstr "Nauruiešu"
+
+msgid "Intl_Language_nb"
+msgstr "Norvēģu bukmols"
+
+msgid "Intl_Language_nd"
+msgstr "Ziemeļndebelu"
+
+msgid "Intl_Language_ne"
+msgstr "Nepāliešu"
+
+msgid "Intl_Language_ng"
+msgstr "Ndongu"
+
+msgid "Intl_Language_nl"
+msgstr "Holandiešu"
+
+msgid "Intl_Language_nn"
+msgstr "Jaunnorvēģu"
+
+msgid "Intl_Language_no"
+msgstr "Norvēģu"
+
+msgid "Intl_Language_nr"
+msgstr "Dienvidndebelu"
+
+msgid "Intl_Language_nv"
+msgstr "Navahu"
+
+msgid "Intl_Language_ny"
+msgstr "Čičeva"
+
+msgid "Intl_Language_oc"
+msgstr "Oksitāņu"
+
+msgid "Intl_Language_oj"
+msgstr "Odžibvu"
+
+msgid "Intl_Language_om"
+msgstr "Oromu"
+
+msgid "Intl_Language_or"
+msgstr "Oriju"
+
+msgid "Intl_Language_os"
+msgstr "Osetīnu"
+
+msgid "Intl_Language_pa"
+msgstr "Pandžabu"
+
+msgid "Intl_Language_pi"
+msgstr "Pāli"
+
+msgid "Intl_Language_pl"
+msgstr "Poļu"
+
+msgid "Intl_Language_ps"
+msgstr "Puštu"
+
+msgid "Intl_Language_pt"
+msgstr "Portugāļu"
+
+msgid "Intl_Language_qu"
+msgstr "Kečvu"
+
+msgid "Intl_Language_rm"
+msgstr "Retoromāņu"
+
+msgid "Intl_Language_rn"
+msgstr "Rundu"
+
+msgid "Intl_Language_ro"
+msgstr "Rumāņu"
+
+msgid "Intl_Language_ru"
+msgstr "Krievu"
+
+msgid "Intl_Language_rw"
+msgstr "Kiņaruanda"
+
+msgid "Intl_Language_sa"
+msgstr "Sanskrits"
+
+msgid "Intl_Language_sc"
+msgstr "Sardīniešu"
+
+msgid "Intl_Language_sd"
+msgstr "Sindhu"
+
+msgid "Intl_Language_se"
+msgstr "Ziemeļsāmu"
+
+msgid "Intl_Language_sg"
+msgstr "Sango"
+
+msgid "Intl_Language_si"
+msgstr "Singāļu"
+
+msgid "Intl_Language_sk"
+msgstr "Slovāku"
+
+msgid "Intl_Language_sl"
+msgstr "Slovēņu"
+
+msgid "Intl_Language_sm"
+msgstr "Samoāņu"
+
+msgid "Intl_Language_sn"
+msgstr "Šonu"
+
+msgid "Intl_Language_so"
+msgstr "Somāļu"
+
+msgid "Intl_Language_sq"
+msgstr "Albāņu"
+
+msgid "Intl_Language_sr"
+msgstr "Serbu"
+
+msgid "Intl_Language_ss"
+msgstr "Svatu"
+
+msgid "Intl_Language_st"
+msgstr "Dienvidsotu"
+
+msgid "Intl_Language_su"
+msgstr "Zundu"
+
+msgid "Intl_Language_sv"
+msgstr "Zviedru"
+
+msgid "Intl_Language_sw"
+msgstr "Svahili"
+
+msgid "Intl_Language_ta"
+msgstr "Tamilu"
+
+msgid "Intl_Language_te"
+msgstr "Telugu"
+
+msgid "Intl_Language_tg"
+msgstr "Tadžiku"
+
+msgid "Intl_Language_th"
+msgstr "Taju"
+
+msgid "Intl_Language_ti"
+msgstr "Tigrinja"
+
+msgid "Intl_Language_tk"
+msgstr "Turkmēņu"
+
+msgid "Intl_Language_tl"
+msgstr "Tagalu"
+
+msgid "Intl_Language_tn"
+msgstr "Cvanu"
+
+msgid "Intl_Language_to"
+msgstr "Tongiešu"
+
+msgid "Intl_Language_tr"
+msgstr "Turku"
+
+msgid "Intl_Language_ts"
+msgstr "Congu"
+
+msgid "Intl_Language_tt"
+msgstr "Tatāru"
+
+msgid "Intl_Language_tw"
+msgstr "Tvī"
+
+msgid "Intl_Language_ty"
+msgstr "Taitiešu"
+
+msgid "Intl_Language_ug"
+msgstr "Uiguru"
+
+msgid "Intl_Language_uk"
+msgstr "Ukraiņu"
+
+msgid "Intl_Language_ur"
+msgstr "Urdu"
+
+msgid "Intl_Language_uz"
+msgstr "Uzbeku"
+
+msgid "Intl_Language_ve"
+msgstr "Vendu"
+
+msgid "Intl_Language_vi"
+msgstr "Vjetnamiešu"
+
+msgid "Intl_Language_vo"
+msgstr "Volapiks"
+
+msgid "Intl_Language_wa"
+msgstr "Valoņu"
+
+msgid "Intl_Language_wo"
+msgstr "Volofu"
+
+msgid "Intl_Language_xh"
+msgstr "Khosu"
+
+msgid "Intl_Language_yi"
+msgstr "Jidišs"
+
+msgid "Intl_Language_yo"
+msgstr "Jorubu"
+
+msgid "Intl_Language_za"
+msgstr "Džuanu"
+
+msgid "Intl_Language_zh"
+msgstr "Ķīniešu"
+
+msgid "Intl_Language_zu"
+msgstr "Zulu"
+
+msgid "Intl_LayoutDirection"
+msgstr "ltr"
+
+msgid "Intl_Minutes"
+msgstr "minūtes"
+
+msgid "Intl_Month_Long_1"
+msgstr "janvāris"
+
+msgid "Intl_Month_Long_10"
+msgstr "oktobris"
+
+msgid "Intl_Month_Long_11"
+msgstr "novembris"
+
+msgid "Intl_Month_Long_12"
+msgstr "decembris"
+
+msgid "Intl_Month_Long_2"
+msgstr "februāris"
+
+msgid "Intl_Month_Long_3"
+msgstr "marts"
+
+msgid "Intl_Month_Long_4"
+msgstr "aprīlis"
+
+msgid "Intl_Month_Long_5"
+msgstr "maijs"
+
+msgid "Intl_Month_Long_6"
+msgstr "jūnijs"
+
+msgid "Intl_Month_Long_7"
+msgstr "jūlijs"
+
+msgid "Intl_Month_Long_8"
+msgstr "augusts"
+
+msgid "Intl_Month_Long_9"
+msgstr "septembris"
+
+msgid "Intl_Month_Long_StandAlone_1"
+msgstr "janvāris"
+
+msgid "Intl_Month_Long_StandAlone_10"
+msgstr "oktobris"
+
+msgid "Intl_Month_Long_StandAlone_11"
+msgstr "novembris"
+
+msgid "Intl_Month_Long_StandAlone_12"
+msgstr "decembris"
+
+msgid "Intl_Month_Long_StandAlone_2"
+msgstr "februāris"
+
+msgid "Intl_Month_Long_StandAlone_3"
+msgstr "marts"
+
+msgid "Intl_Month_Long_StandAlone_4"
+msgstr "aprīlis"
+
+msgid "Intl_Month_Long_StandAlone_5"
+msgstr "maijs"
+
+msgid "Intl_Month_Long_StandAlone_6"
+msgstr "jūnijs"
+
+msgid "Intl_Month_Long_StandAlone_7"
+msgstr "jūlijs"
+
+msgid "Intl_Month_Long_StandAlone_8"
+msgstr "augusts"
+
+msgid "Intl_Month_Long_StandAlone_9"
+msgstr "septembris"
+
+msgid "Intl_Month_Short_1"
+msgstr "janv."
+
+msgid "Intl_Month_Short_10"
+msgstr "okt."
+
+msgid "Intl_Month_Short_11"
+msgstr "nov."
+
+msgid "Intl_Month_Short_12"
+msgstr "dec."
+
+msgid "Intl_Month_Short_2"
+msgstr "febr."
+
+msgid "Intl_Month_Short_3"
+msgstr "marts"
+
+msgid "Intl_Month_Short_4"
+msgstr "apr."
+
+msgid "Intl_Month_Short_5"
+msgstr "maijs"
+
+msgid "Intl_Month_Short_6"
+msgstr "jūn."
+
+msgid "Intl_Month_Short_7"
+msgstr "jūl."
+
+msgid "Intl_Month_Short_8"
+msgstr "aug."
+
+msgid "Intl_Month_Short_9"
+msgstr "sept."
+
+msgid "Intl_Month_Short_StandAlone_1"
+msgstr "janv."
+
+msgid "Intl_Month_Short_StandAlone_10"
+msgstr "okt."
+
+msgid "Intl_Month_Short_StandAlone_11"
+msgstr "nov."
+
+msgid "Intl_Month_Short_StandAlone_12"
+msgstr "dec."
+
+msgid "Intl_Month_Short_StandAlone_2"
+msgstr "febr."
+
+msgid "Intl_Month_Short_StandAlone_3"
+msgstr "marts"
+
+msgid "Intl_Month_Short_StandAlone_4"
+msgstr "apr."
+
+msgid "Intl_Month_Short_StandAlone_5"
+msgstr "maijs"
+
+msgid "Intl_Month_Short_StandAlone_6"
+msgstr "jūn."
+
+msgid "Intl_Month_Short_StandAlone_7"
+msgstr "jūl."
+
+msgid "Intl_Month_Short_StandAlone_8"
+msgstr "aug."
+
+msgid "Intl_Month_Short_StandAlone_9"
+msgstr "sept."
+
+msgid "Intl_NDays"
+msgstr "%s dienas"
+
+msgid "Intl_NHoursShort"
+msgstr "%sh"
+
+msgid "Intl_NMinutes"
+msgstr "%s minūtes"
+
+msgid "Intl_NMinutesShort"
+msgstr "%s min."
+
+msgid "Intl_NSeconds"
+msgstr "%s sekundes"
+
+msgid "Intl_NSecondsShort"
+msgstr "%ss"
+
+msgid "Intl_NumberFormatCurrency"
+msgstr "#,##0.00 ¤"
+
+msgid "Intl_NumberFormatNumber"
+msgstr "#,##0.###"
+
+msgid "Intl_NumberFormatPercent"
+msgstr "#,##0%"
+
+msgid "Intl_NumberSymbolDecimal"
+msgstr ","
+
+msgid "Intl_NumberSymbolGroup"
+msgstr " "
+
+msgid "Intl_NumberSymbolMinus"
+msgstr "-"
+
+msgid "Intl_NumberSymbolPercent"
+msgstr "%"
+
+msgid "Intl_NumberSymbolPlus"
+msgstr "+"
+
+msgid "Intl_OneDay"
+msgstr "1 diena"
+
+msgid "Intl_OneMinute"
+msgstr "1 minūte"
+
+msgid "Intl_OneMinuteShort"
+msgstr "1 min."
+
+msgid "Intl_OriginalLanguageName"
+msgstr "Latviešu"
+
+msgid "Intl_PeriodDay"
+msgstr "diena"
+
+msgid "Intl_PeriodDays"
+msgstr "dienas"
+
+msgid "Intl_PeriodMonth"
+msgstr "mēnesis"
+
+msgid "Intl_PeriodMonths"
+msgstr "mēneši"
+
+msgid "Intl_PeriodWeek"
+msgstr "nedēļa"
+
+msgid "Intl_PeriodWeeks"
+msgstr "nedēļas"
+
+msgid "Intl_PeriodYear"
+msgstr "gads"
+
+msgid "Intl_PeriodYears"
+msgstr "gadi"
+
+msgid "Intl_Seconds"
+msgstr "sekundes"
+
+msgid "Intl_Time_AM"
+msgstr "priekšpusdienā"
+
+msgid "Intl_Time_PM"
+msgstr "pēcpusdienā"
+
+msgid "Intl_Timezone_Africa_Asmera"
+msgstr "Asmara"
+
+msgid "Intl_Timezone_Africa_Ceuta"
+msgstr "Seuta"
+
+msgid "Intl_Timezone_Africa_Kinshasa"
+msgstr "Kinšasa"
+
+msgid "Intl_Timezone_Africa_Lubumbashi"
+msgstr "Lubumbaši"
+
+msgid "Intl_Timezone_America_Adak"
+msgstr "Adaka"
+
+msgid "Intl_Timezone_America_Anchorage"
+msgstr "Ankurāža"
+
+msgid "Intl_Timezone_America_Araguaina"
+msgstr "Aragvaina"
+
+msgid "Intl_Timezone_America_Argentina_LaRioja"
+msgstr "Larjoha"
+
+msgid "Intl_Timezone_America_Argentina_RioGallegos"
+msgstr "Riogaljegosa"
+
+msgid "Intl_Timezone_America_Argentina_Salta"
+msgstr "Salta"
+
+msgid "Intl_Timezone_America_Argentina_SanJuan"
+msgstr "Sanhuana"
+
+msgid "Intl_Timezone_America_Argentina_SanLuis"
+msgstr "Sanluisa"
+
+msgid "Intl_Timezone_America_Argentina_Tucuman"
+msgstr "Tukumana"
+
+msgid "Intl_Timezone_America_Argentina_Ushuaia"
+msgstr "Ušuaja"
+
+msgid "Intl_Timezone_America_Bahia"
+msgstr "Baija"
+
+msgid "Intl_Timezone_America_BahiaBanderas"
+msgstr "Bajabanderasa"
+
+msgid "Intl_Timezone_America_Belem"
+msgstr "Belena"
+
+msgid "Intl_Timezone_America_Blanc-Sablon"
+msgstr "Blansablona"
+
+msgid "Intl_Timezone_America_BoaVista"
+msgstr "Boavista"
+
+msgid "Intl_Timezone_America_Boise"
+msgstr "Boisisitija"
+
+msgid "Intl_Timezone_America_BuenosAires"
+msgstr "Buenosairesa"
+
+msgid "Intl_Timezone_America_CambridgeBay"
+msgstr "Kembridžbeja"
+
+msgid "Intl_Timezone_America_CampoGrande"
+msgstr "Kampugrandi"
+
+msgid "Intl_Timezone_America_Cancun"
+msgstr "Kankuna"
+
+msgid "Intl_Timezone_America_Catamarca"
+msgstr "Katamarka"
+
+msgid "Intl_Timezone_America_Chicago"
+msgstr "Čikāga"
+
+msgid "Intl_Timezone_America_Chihuahua"
+msgstr "Čivava"
+
+msgid "Intl_Timezone_America_CoralHarbour"
+msgstr "Atikokana"
+
+msgid "Intl_Timezone_America_Cordoba"
+msgstr "Kordova"
+
+msgid "Intl_Timezone_America_Creston"
+msgstr "Krestona"
+
+msgid "Intl_Timezone_America_Cuiaba"
+msgstr "Kujaba"
+
+msgid "Intl_Timezone_America_Danmarkshavn"
+msgstr "Denmārkšavna"
+
+msgid "Intl_Timezone_America_Dawson"
+msgstr "Dousona"
+
+msgid "Intl_Timezone_America_DawsonCreek"
+msgstr "Dousonkrīka"
+
+msgid "Intl_Timezone_America_Denver"
+msgstr "Denvera"
+
+msgid "Intl_Timezone_America_Detroit"
+msgstr "Detroita"
+
+msgid "Intl_Timezone_America_Edmonton"
+msgstr "Edmontona"
+
+msgid "Intl_Timezone_America_Eirunepe"
+msgstr "Eirunepe"
+
+msgid "Intl_Timezone_America_FortNelson"
+msgstr "Fortnelsona"
+
+msgid "Intl_Timezone_America_Fortaleza"
+msgstr "Fortaleza"
+
+msgid "Intl_Timezone_America_GlaceBay"
+msgstr "Gleisbeja"
+
+msgid "Intl_Timezone_America_Godthab"
+msgstr "Nūka"
+
+msgid "Intl_Timezone_America_GooseBay"
+msgstr "Gūsbeja"
+
+msgid "Intl_Timezone_America_Guayaquil"
+msgstr "Gvajakila"
+
+msgid "Intl_Timezone_America_Halifax"
+msgstr "Helifeksa"
+
+msgid "Intl_Timezone_America_Hermosillo"
+msgstr "Ermosiljo"
+
+msgid "Intl_Timezone_America_Indiana_Knox"
+msgstr "Noksa, Indiāna"
+
+msgid "Intl_Timezone_America_Indiana_Marengo"
+msgstr "Marengo, Indiāna"
+
+msgid "Intl_Timezone_America_Indiana_Petersburg"
+msgstr "Pītersbērga, Indiāna"
+
+msgid "Intl_Timezone_America_Indiana_TellCity"
+msgstr "Telsitija, Indiāna"
+
+msgid "Intl_Timezone_America_Indiana_Vevay"
+msgstr "Vīveja, Indiāna"
+
+msgid "Intl_Timezone_America_Indiana_Vincennes"
+msgstr "Vinsensa, Indiāna"
+
+msgid "Intl_Timezone_America_Indiana_Winamac"
+msgstr "Vinamaka, Indiāna"
+
+msgid "Intl_Timezone_America_Indianapolis"
+msgstr "Indianapolisa"
+
+msgid "Intl_Timezone_America_Inuvik"
+msgstr "Inuvika"
+
+msgid "Intl_Timezone_America_Iqaluit"
+msgstr "Ikaluita"
+
+msgid "Intl_Timezone_America_Jujuy"
+msgstr "Huhuja"
+
+msgid "Intl_Timezone_America_Juneau"
+msgstr "Džuno"
+
+msgid "Intl_Timezone_America_Kentucky_Monticello"
+msgstr "Montičelo, Kentuki"
+
+msgid "Intl_Timezone_America_LosAngeles"
+msgstr "Losandželosa"
+
+msgid "Intl_Timezone_America_Louisville"
+msgstr "Lūivila"
+
+msgid "Intl_Timezone_America_Maceio"
+msgstr "Masejo"
+
+msgid "Intl_Timezone_America_Manaus"
+msgstr "Manausa"
+
+msgid "Intl_Timezone_America_Matamoros"
+msgstr "Matamorosa"
+
+msgid "Intl_Timezone_America_Mazatlan"
+msgstr "Masatlana"
+
+msgid "Intl_Timezone_America_Mendoza"
+msgstr "Mendosa"
+
+msgid "Intl_Timezone_America_Menominee"
+msgstr "Menominī"
+
+msgid "Intl_Timezone_America_Merida"
+msgstr "Merida"
+
+msgid "Intl_Timezone_America_Metlakatla"
+msgstr "Metlakatla"
+
+msgid "Intl_Timezone_America_MexicoCity"
+msgstr "Mehiko"
+
+msgid "Intl_Timezone_America_Moncton"
+msgstr "Monktona"
+
+msgid "Intl_Timezone_America_Monterrey"
+msgstr "Monterreja"
+
+msgid "Intl_Timezone_America_NewYork"
+msgstr "Ņujorka"
+
+msgid "Intl_Timezone_America_Nipigon"
+msgstr "Nipigona"
+
+msgid "Intl_Timezone_America_Nome"
+msgstr "Noma"
+
+msgid "Intl_Timezone_America_Noronha"
+msgstr "Noroņa"
+
+msgid "Intl_Timezone_America_NorthDakota_Beulah"
+msgstr "Bjula, Ziemeļdakota"
+
+msgid "Intl_Timezone_America_NorthDakota_Center"
+msgstr "Sentera, Ziemeļdakota"
+
+msgid "Intl_Timezone_America_NorthDakota_NewSalem"
+msgstr "Ņūseilema, Ziemeļdakota"
+
+msgid "Intl_Timezone_America_Ojinaga"
+msgstr "Ohinaga"
+
+msgid "Intl_Timezone_America_Pangnirtung"
+msgstr "Pannirtuna"
+
+msgid "Intl_Timezone_America_Phoenix"
+msgstr "Fīniksa"
+
+msgid "Intl_Timezone_America_PortoVelho"
+msgstr "Portuveļu"
+
+msgid "Intl_Timezone_America_PuntaArenas"
+msgstr "Puntaarenasa"
+
+msgid "Intl_Timezone_America_RainyRiver"
+msgstr "Reinirivera"
+
+msgid "Intl_Timezone_America_RankinInlet"
+msgstr "Rankininleta"
+
+msgid "Intl_Timezone_America_Recife"
+msgstr "Resifi"
+
+msgid "Intl_Timezone_America_Regina"
+msgstr "Ridžaina"
+
+msgid "Intl_Timezone_America_Resolute"
+msgstr "Rezolūta"
+
+msgid "Intl_Timezone_America_RioBranco"
+msgstr "Riobranko"
+
+msgid "Intl_Timezone_America_SantaIsabel"
+msgstr "Santaisabela"
+
+msgid "Intl_Timezone_America_Santarem"
+msgstr "Santarena"
+
+msgid "Intl_Timezone_America_Santiago"
+msgstr "Santjago"
+
+msgid "Intl_Timezone_America_SaoPaulo"
+msgstr "Sanpaulu"
+
+msgid "Intl_Timezone_America_Scoresbysund"
+msgstr "Itokortormita"
+
+msgid "Intl_Timezone_America_Sitka"
+msgstr "Sitka"
+
+msgid "Intl_Timezone_America_StJohns"
+msgstr "Sentdžonsa"
+
+msgid "Intl_Timezone_America_SwiftCurrent"
+msgstr "Sviftkarenta"
+
+msgid "Intl_Timezone_America_Thule"
+msgstr "Tule"
+
+msgid "Intl_Timezone_America_ThunderBay"
+msgstr "Tanderbeja"
+
+msgid "Intl_Timezone_America_Tijuana"
+msgstr "Tihuana"
+
+msgid "Intl_Timezone_America_Toronto"
+msgstr "Toronto"
+
+msgid "Intl_Timezone_America_Vancouver"
+msgstr "Vankūvera"
+
+msgid "Intl_Timezone_America_Whitehorse"
+msgstr "Vaithorsa"
+
+msgid "Intl_Timezone_America_Winnipeg"
+msgstr "Vinipega"
+
+msgid "Intl_Timezone_America_Yakutat"
+msgstr "Jakutata"
+
+msgid "Intl_Timezone_America_Yellowknife"
+msgstr "Jelounaifa"
+
+msgid "Intl_Timezone_Antarctica_Casey"
+msgstr "Keisi"
+
+msgid "Intl_Timezone_Antarctica_Davis"
+msgstr "Deivisa"
+
+msgid "Intl_Timezone_Antarctica_DumontDUrville"
+msgstr "Dimondirvila"
+
+msgid "Intl_Timezone_Antarctica_Macquarie"
+msgstr "Makvori"
+
+msgid "Intl_Timezone_Antarctica_Mawson"
+msgstr "Mosona"
+
+msgid "Intl_Timezone_Antarctica_McMurdo"
+msgstr "Makmerdo"
+
+msgid "Intl_Timezone_Antarctica_Palmer"
+msgstr "Pālmera"
+
+msgid "Intl_Timezone_Antarctica_Rothera"
+msgstr "Rotera"
+
+msgid "Intl_Timezone_Antarctica_Syowa"
+msgstr "Šova"
+
+msgid "Intl_Timezone_Antarctica_Troll"
+msgstr "Trolla"
+
+msgid "Intl_Timezone_Antarctica_Vostok"
+msgstr "Vostoka"
+
+msgid "Intl_Timezone_Asia_Almaty"
+msgstr "Almati"
+
+msgid "Intl_Timezone_Asia_Anadyr"
+msgstr "Anadira"
+
+msgid "Intl_Timezone_Asia_Aqtau"
+msgstr "Aktau"
+
+msgid "Intl_Timezone_Asia_Aqtobe"
+msgstr "Aktebe"
+
+msgid "Intl_Timezone_Asia_Atyrau"
+msgstr "Atirau"
+
+msgid "Intl_Timezone_Asia_Barnaul"
+msgstr "Barnaula"
+
+msgid "Intl_Timezone_Asia_Calcutta"
+msgstr "Kalkāta"
+
+msgid "Intl_Timezone_Asia_Chita"
+msgstr "Čita"
+
+msgid "Intl_Timezone_Asia_Choibalsan"
+msgstr "Čoibalsana"
+
+msgid "Intl_Timezone_Asia_Famagusta"
+msgstr "Famagusta"
+
+msgid "Intl_Timezone_Asia_Gaza"
+msgstr "Gaza"
+
+msgid "Intl_Timezone_Asia_Hebron"
+msgstr "Hebrona"
+
+msgid "Intl_Timezone_Asia_Hovd"
+msgstr "Hovda"
+
+msgid "Intl_Timezone_Asia_Irkutsk"
+msgstr "Irkutska"
+
+msgid "Intl_Timezone_Asia_Jakarta"
+msgstr "Džakarta"
+
+msgid "Intl_Timezone_Asia_Jayapura"
+msgstr "Džajapura"
+
+msgid "Intl_Timezone_Asia_Kamchatka"
+msgstr "Kamčatka"
+
+msgid "Intl_Timezone_Asia_Katmandu"
+msgstr "Katmandu"
+
+msgid "Intl_Timezone_Asia_Khandyga"
+msgstr "Handiga"
+
+msgid "Intl_Timezone_Asia_Krasnoyarsk"
+msgstr "Krasnojarska"
+
+msgid "Intl_Timezone_Asia_KualaLumpur"
+msgstr "Kualalumpura"
+
+msgid "Intl_Timezone_Asia_Kuching"
+msgstr "Kučina"
+
+msgid "Intl_Timezone_Asia_Magadan"
+msgstr "Magadana"
+
+msgid "Intl_Timezone_Asia_Makassar"
+msgstr "Makasara"
+
+msgid "Intl_Timezone_Asia_Nicosia"
+msgstr "Nikosija"
+
+msgid "Intl_Timezone_Asia_Novokuznetsk"
+msgstr "Novokuzņecka"
+
+msgid "Intl_Timezone_Asia_Novosibirsk"
+msgstr "Novosibirska"
+
+msgid "Intl_Timezone_Asia_Omsk"
+msgstr "Omska"
+
+msgid "Intl_Timezone_Asia_Oral"
+msgstr "Orala"
+
+msgid "Intl_Timezone_Asia_Pontianak"
+msgstr "Pontianaka"
+
+msgid "Intl_Timezone_Asia_Qyzylorda"
+msgstr "Kizilorda"
+
+msgid "Intl_Timezone_Asia_Rangoon"
+msgstr "Ranguna"
+
+msgid "Intl_Timezone_Asia_Saigon"
+msgstr "Hošimina"
+
+msgid "Intl_Timezone_Asia_Sakhalin"
+msgstr "Sahalīna"
+
+msgid "Intl_Timezone_Asia_Samarkand"
+msgstr "Samarkanda"
+
+msgid "Intl_Timezone_Asia_Shanghai"
+msgstr "Šanhaja"
+
+msgid "Intl_Timezone_Asia_Srednekolymsk"
+msgstr "Sredņekolimska"
+
+msgid "Intl_Timezone_Asia_Tashkent"
+msgstr "Taškenta"
+
+msgid "Intl_Timezone_Asia_Tomsk"
+msgstr "Tomska"
+
+msgid "Intl_Timezone_Asia_Ulaanbaatar"
+msgstr "Ulanbatora"
+
+msgid "Intl_Timezone_Asia_Urumqi"
+msgstr "Urumči"
+
+msgid "Intl_Timezone_Asia_Ust-Nera"
+msgstr "Ustjņera"
+
+msgid "Intl_Timezone_Asia_Vladivostok"
+msgstr "Vladivostoka"
+
+msgid "Intl_Timezone_Asia_Yakutsk"
+msgstr "Jakutska"
+
+msgid "Intl_Timezone_Asia_Yekaterinburg"
+msgstr "Jekaterinburga"
+
+msgid "Intl_Timezone_Atlantic_Azores"
+msgstr "Azoru salas"
+
+msgid "Intl_Timezone_Atlantic_Canary"
+msgstr "Kanāriju salas"
+
+msgid "Intl_Timezone_Atlantic_Faeroe"
+msgstr "Fēru salas"
+
+msgid "Intl_Timezone_Atlantic_Madeira"
+msgstr "Madeira"
+
+msgid "Intl_Timezone_Australia_Adelaide"
+msgstr "Adelaida"
+
+msgid "Intl_Timezone_Australia_Brisbane"
+msgstr "Brisbena"
+
+msgid "Intl_Timezone_Australia_BrokenHill"
+msgstr "Brokenhila"
+
+msgid "Intl_Timezone_Australia_Currie"
+msgstr "Kari"
+
+msgid "Intl_Timezone_Australia_Darwin"
+msgstr "Dārvina"
+
+msgid "Intl_Timezone_Australia_Eucla"
+msgstr "Jukla"
+
+msgid "Intl_Timezone_Australia_Hobart"
+msgstr "Hobārta"
+
+msgid "Intl_Timezone_Australia_Lindeman"
+msgstr "Lindemana"
+
+msgid "Intl_Timezone_Australia_LordHowe"
+msgstr "Lordhava"
+
+msgid "Intl_Timezone_Australia_Melbourne"
+msgstr "Melburna"
+
+msgid "Intl_Timezone_Australia_Perth"
+msgstr "Pērta"
+
+msgid "Intl_Timezone_Australia_Sydney"
+msgstr "Sidneja"
+
+msgid "Intl_Timezone_Europe_Astrakhan"
+msgstr "Astrahaņa"
+
+msgid "Intl_Timezone_Europe_Berlin"
+msgstr "Berlīne"
+
+msgid "Intl_Timezone_Europe_Busingen"
+msgstr "Bīzingene"
+
+msgid "Intl_Timezone_Europe_Kaliningrad"
+msgstr "Kaļiņingrada"
+
+msgid "Intl_Timezone_Europe_Kiev"
+msgstr "Kijeva"
+
+msgid "Intl_Timezone_Europe_Kirov"
+msgstr "Kirova"
+
+msgid "Intl_Timezone_Europe_Lisbon"
+msgstr "Lisabona"
+
+msgid "Intl_Timezone_Europe_Madrid"
+msgstr "Madride"
+
+msgid "Intl_Timezone_Europe_Moscow"
+msgstr "Maskava"
+
+msgid "Intl_Timezone_Europe_Samara"
+msgstr "Samara"
+
+msgid "Intl_Timezone_Europe_Saratov"
+msgstr "Saratova"
+
+msgid "Intl_Timezone_Europe_Simferopol"
+msgstr "Simferopole"
+
+msgid "Intl_Timezone_Europe_Ulyanovsk"
+msgstr "Uļjanovska"
+
+msgid "Intl_Timezone_Europe_Uzhgorod"
+msgstr "Užhoroda"
+
+msgid "Intl_Timezone_Europe_Volgograd"
+msgstr "Volgograda"
+
+msgid "Intl_Timezone_Europe_Zaporozhye"
+msgstr "Zaporožje"
+
+msgid "Intl_Timezone_Pacific_Auckland"
+msgstr "Oklenda"
+
+msgid "Intl_Timezone_Pacific_Bougainville"
+msgstr "Bugenvila sala"
+
+msgid "Intl_Timezone_Pacific_Chatham"
+msgstr "Četema"
+
+msgid "Intl_Timezone_Pacific_Easter"
+msgstr "Lieldienu sala"
+
+msgid "Intl_Timezone_Pacific_Enderbury"
+msgstr "Enderberija"
+
+msgid "Intl_Timezone_Pacific_Galapagos"
+msgstr "Galapagu salas"
+
+msgid "Intl_Timezone_Pacific_Gambier"
+msgstr "Gambjē salas"
+
+msgid "Intl_Timezone_Pacific_Honolulu"
+msgstr "Honolulu"
+
+msgid "Intl_Timezone_Pacific_Johnston"
+msgstr "Džonstona atols"
+
+msgid "Intl_Timezone_Pacific_Kiritimati"
+msgstr "Kirisimasi"
+
+msgid "Intl_Timezone_Pacific_Kosrae"
+msgstr "Kosraja"
+
+msgid "Intl_Timezone_Pacific_Kwajalein"
+msgstr "Kvadžaleina"
+
+msgid "Intl_Timezone_Pacific_Majuro"
+msgstr "Madžuro"
+
+msgid "Intl_Timezone_Pacific_Marquesas"
+msgstr "Marķīza salas"
+
+msgid "Intl_Timezone_Pacific_Midway"
+msgstr "Midvejs"
+
+msgid "Intl_Timezone_Pacific_Ponape"
+msgstr "Ponpeja"
+
+msgid "Intl_Timezone_Pacific_PortMoresby"
+msgstr "Portmorsbi"
+
+msgid "Intl_Timezone_Pacific_Tahiti"
+msgstr "Taiti"
+
+msgid "Intl_Timezone_Pacific_Tarawa"
+msgstr "Tarava"
+
+msgid "Intl_Timezone_Pacific_Truk"
+msgstr "Čūka"
+
+msgid "Intl_Timezone_Pacific_Wake"
+msgstr "Veika sala"
+
+msgid "Intl_Today"
+msgstr "Šodien"
+
+msgid "Intl_Year_Short"
+msgstr "g."
+
+msgid "Intl_Yesterday"
+msgstr "Vakar"
+
+msgid "LanguagesManager_AboutPiwikTranslations"
+msgstr "Par Matomo tulkojumiem"
+
+msgid "Live_GoalType"
+msgstr "Tips"
+
+msgid "Live_KeywordRankedOnSearchResultForThisVisitor"
+msgstr "Atslēgvārds %1$s ir %2$s vietā %3$s šī lietotāja meklēšanas rezultātu lapā."
+
+msgid "Live_LastHours"
+msgstr "Pēdējās %s stundas"
+
+msgid "Live_LastMinutes"
+msgstr "Pēdējās %s minūtes"
+
+msgid "Live_Referrer_URL"
+msgstr "Atsauces URL"
+
+msgid "Live_VisitorLogDocumentation"
+msgstr "Šī tabula atspoguļo pēdējos apmeklējumus izvēlētajā datumu intervālā. Jūs varat apskatīt pēdējo apmeklētāja apmeklējuma laiku kursoru uzbīdot uz apmeklējuma datuma. %1$s Ja datumu intervāls iekļauj šodienu, Jūs varat skatīt apmeklētājus reāllaikā! %2$s Dati, kas apskatāmi šeit, ir vienmēr aktuālie, neatkarīgi no tā vai lietojat arhivēšanas darbu, vai nē."
+
+msgid "Live_VisitorsLastVisit"
+msgstr "Šī apmeklētāja pēdējais apmklējums bija %s dienas atpakaļ."
+
+msgid "Login_ExceptionPasswordMD5HashExpected"
+msgstr "Paroles parametram ir jābūt paroles MD5 summai."
+
+msgid "Login_InvalidNonceOrHeadersOrReferrer"
+msgstr "Formas drošība nenostrādāja. Lūdzu pārlādējiet formu un pārbaudiet vai sīkfailu atbalsts ir ieslēgts. Ja lietojat starpniekserveri, Jums %1$s jāiestata Matomo lai pieņemtu starpniekservera galveni %2$s, kas pārsūta resursdatora galveni. Papildus pārbaudiet vai Jūsu iepriekšējās vietnes galvene ir nosūtīta pareizi."
+
+msgid "Login_InvalidOrExpiredToken"
+msgstr "Kods ir nepareizs vai tam ir beidzies termiņš."
+
+msgid "Login_InvalidUsernameEmail"
+msgstr "Nepareizs lietotājvārds un/vai e-pasta adrese"
+
+msgid "Login_LogIn"
+msgstr "Pieteikties"
+
+msgid "Login_LoginPasswordNotCorrect"
+msgstr "Lietotājvārds un parole nav korekti"
+
+msgid "Login_LostYourPassword"
+msgstr "Pazaudēji savu paroli?"
+
+msgid "Login_PasswordRepeat"
+msgstr "Parole (atkārtoti)"
+
+msgid "Login_PasswordsDoNotMatch"
+msgstr "Paroles nesakrīt."
+
+msgid "Login_RememberMe"
+msgstr "Atcerēties mani"
+
+msgid "Marketplace_ActivateLicenseKey"
+msgstr "Aktivizēt"
+
+msgid "Marketplace_PluginKeywords"
+msgstr "Atslēgvārdi"
+
+msgid "Marketplace_SubscriptionType"
+msgstr "Tips"
+
+msgid "Overlay_Location"
+msgstr "Lokācijas"
+
+msgid "PrivacyManager_AnonymizeIpInlineHelp"
+msgstr "Anonimizē apmeklētāju IP adrešu pēdējo baitu(s). Nepieciešamību nosaka Jūsu vietējie privātuma likumi/pavadlīnijas."
+
+msgid "PrivacyManager_ClickHereSettings"
+msgstr "Klikšķiniet šeit lai piekļūtu %s iestatījumiem."
+
+msgid "PrivacyManager_DeleteLogsOlderThan"
+msgstr "Dzēst vecākus žurnālus par"
+
+msgid "PrivacyManager_DeleteMaxRows"
+msgstr "Maksimālais rindu skaits ko dzēst vienā reizē:"
+
+msgid "PrivacyManager_LastDelete"
+msgstr "Pēdējā dzēšana notika"
+
+msgid "PrivacyManager_LeastDaysInput"
+msgstr "Lūdzu izvēlieties dienu skaitu lielāku par %s."
+
+msgid "PrivacyManager_MenuPrivacySettings"
+msgstr "Privātums"
+
+msgid "PrivacyManager_NextDelete"
+msgstr "Nākošā dzēšana paredzēta"
+
+msgid "PrivacyManager_TeaserHeadline"
+msgstr "Privātuma iestatījumi"
+
+msgid "PrivacyManager_UseAnonymizeIp"
+msgstr "Anonimizēt apmeklētāju IP adreses"
+
+msgid "Provider_ColumnProvider"
+msgstr "Pakalpojumu sniedzējs"
+
+msgid "Provider_WidgetProviders"
+msgstr "Pakalpojumu sniedzēji"
+
+msgid "Referrers_Campaigns"
+msgstr "Kampaņas"
+
+msgid "Referrers_ColumnCampaign"
+msgstr "Kampaņa"
+
+msgid "Referrers_ColumnSearchEngine"
+msgstr "Meklēšanas dzinējs"
+
+msgid "Referrers_ColumnWebsite"
+msgstr "Vietne"
+
+msgid "Referrers_ColumnWebsitePage"
+msgstr "Vietnes lapa"
+
+msgid "Referrers_DirectEntry"
+msgstr "Tiešā ieeja"
+
+msgid "Referrers_Keywords"
+msgstr "Atslēgvārdi"
+
+msgid "Referrers_ReferrerName"
+msgstr "Referera nosaukums"
+
+msgid "Referrers_Referrers"
+msgstr "Refereri"
+
+msgid "Referrers_SearchEngines"
+msgstr "Meklēšanas dzinēji"
+
+msgid "Referrers_SubmenuSearchEngines"
+msgstr "Meklēšanas dzinēji un atslēgvārdi"
+
+msgid "Referrers_SubmenuWebsitesOnly"
+msgstr "Vietnes"
+
+msgid "Referrers_TypeCampaigns"
+msgstr "%s no kampaņām"
+
+msgid "Referrers_TypeDirectEntries"
+msgstr "%s tiešās ieejas"
+
+msgid "Referrers_TypeSearchEngines"
+msgstr "%s no meklēšanas dzinējiem"
+
+msgid "Referrers_TypeWebsites"
+msgstr "%s no vietnēm"
+
+msgid "Referrers_Websites"
+msgstr "Vietnes"
+
+msgid "Referrers_WidgetExternalWebsites"
+msgstr "Ārējo vietņu saraksts"
+
+msgid "Resolution_ColumnConfiguration"
+msgstr "Konfigurācija"
+
+msgid "Resolution_ColumnResolution"
+msgstr "Ekrāna izšķirtspēja"
+
+msgid "Resolution_Configurations"
+msgstr "Konfigurācijas"
+
+msgid "Resolution_Resolutions"
+msgstr "Ekrāna izšķirtspējas"
+
+msgid "Resolution_WidgetGlobalVisitors"
+msgstr "Globālā apmeklētāju konfigurācija"
+
+msgid "Resolution_WidgetGlobalVisitorsDocumentation"
+msgstr "Šajā atskaitē redzamas visbiežāk izmantotās apmeklētāju konfigurācijas. Konfigurācija ir operētājsistēmas, pārlūka tipa un ekrāna izšķirtspējas kombinācija."
+
+msgid "Resolution_WidgetResolutions"
+msgstr "Ekrāna izšķirtspējas"
+
+msgid "SEO_AlexaRank"
+msgstr "Alexa ranks"
+
+msgid "SEO_DomainAge"
+msgstr "Domēna vecums"
+
+msgid "SEO_Rank"
+msgstr "ranks"
+
+msgid "SEO_SeoRankings"
+msgstr "SEO ranks"
+
+msgid "SEO_SEORankingsFor"
+msgstr "%s SEO ranks"
+
+msgid "ScheduledReports_CreateReport"
+msgstr "Izveidot atskaiti"
+
+msgid "ScheduledReports_EmailHello"
+msgstr "Sveiki,"
+
+msgid "ScheduledReports_EmailReports"
+msgstr "E-pasta atskaites"
+
+msgid "ScheduledReports_FrontPage"
+msgstr "Pirmā lapa"
+
+msgid "ScheduledReports_Pagination"
+msgstr "%1$s. lapa no %2$s"
+
+msgid "ScheduledReports_PiwikReports"
+msgstr "Matomo atskaites"
+
+msgid "ScheduledReports_ReportFormat"
+msgstr "Atskaites formāts"
+
+msgid "ScheduledReports_ReportsIncluded"
+msgstr "Iekļautā statistika"
+
+msgid "ScheduledReports_SendReportNow"
+msgstr "Sūtīt atskaiti tagad"
+
+msgid "ScheduledReports_SendReportTo"
+msgstr "Sūtīt atskaites uz"
+
+msgid "ScheduledReports_SentToMe"
+msgstr "Sūtīt man"
+
+msgid "ScheduledReports_TableOfContent"
+msgstr "Atskaišu saraksts"
+
+msgid "ScheduledReports_TopOfReport"
+msgstr "Atpakaļ uz sākumu"
+
+msgid "ScheduledReports_UpdateReport"
+msgstr "Atjaunināt atskaiti"
+
+msgid "SitesManager_AddSite"
+msgstr "Pievienot jaunu vietni"
+
+msgid "SitesManager_Currency"
+msgstr "Valūta"
+
+msgid "SitesManager_CurrencySymbolWillBeUsedForGoals"
+msgstr "Valūtas simbols tiks norādīts blakus mērķu ienākumiem."
+
+msgid "SitesManager_DefaultCurrencyForNewWebsites"
+msgstr "Noklusētā valūta jaunām vietnēm"
+
+msgid "SitesManager_DefaultTimezoneForNewWebsites"
+msgstr "Noklusētā laika zona jaunām vietnēm"
+
+msgid "SitesManager_DeleteConfirm"
+msgstr "Vai tiešām vēlaties dzēst vietni %s?"
+
+msgid "SitesManager_EnableEcommerce"
+msgstr "E-komercija ieslēgta"
+
+msgid "SitesManager_ExceptionEmptyName"
+msgstr "Vietnes nosaukums nedrīkst būt tukšs."
+
+msgid "SitesManager_ExceptionInvalidCurrency"
+msgstr "Valūta \"%1$s\" nav pareizi ievadīta. Lūdzu ievadiet pareizu valūtas simbolu (piem., %2$s)"
+
+msgid "SitesManager_ExceptionInvalidIPFormat"
+msgstr "Izlaižamajai IP \"%1$s\" nav pareizs IP formāts (piem., %2$s)."
+
+msgid "SitesManager_ExceptionInvalidTimezone"
+msgstr "Laika zona \"%s\" nav pareizi ievadīta. Lūdzu izvēlieties pareizu laika zonu."
+
+msgid "SitesManager_ExceptionInvalidUrl"
+msgstr "URL '%s' nav pareizs URL."
+
+msgid "SitesManager_ExceptionNoUrl"
+msgstr "Jums jānorāda vismaz viens vietnes URL."
+
+msgid "SitesManager_ExcludedIps"
+msgstr "Atslēgtās IP adreses"
+
+msgid "SitesManager_ExcludedParameters"
+msgstr "Atslēgtie parametri"
+
+msgid "SitesManager_GlobalListExcludedIps"
+msgstr "Atslēgto IP adrešu globālais saraksts"
+
+msgid "SitesManager_GlobalListExcludedQueryParameters"
+msgstr "Izlaižamo pieprasījuma URL parametru globālais saraksts"
+
+msgid "SitesManager_GlobalWebsitesSettings"
+msgstr "Globālie vietņu iestatījumi"
+
+msgid "SitesManager_JsTrackingTagHelp"
+msgstr "Šeit ir JavaScript izsekošanas kods, kas paredzēts ievietošanai visās Jūsu lapās"
+
+msgid "SitesManager_ListOfIpsToBeExcludedOnAllWebsites"
+msgstr "Zemāk esošās IP adreses netiks iekļautas visu vietņu izsekošanā."
+
+msgid "SitesManager_ListOfQueryParametersToBeExcludedOnAllWebsites"
+msgstr "Zemāk norādītie pieprasījuma URL parametri tiks izlasti no visu vietņu URL."
+
+msgid "SitesManager_MainDescription"
+msgstr "Jūsu tīkla analīzes atskaitēm ir vajadzīgas vietnes! Pievienojiet, atjauniniet, dzēsiet vietnes un apskatiet ievietošanai lapās paredzēto kodu."
+
+msgid "SitesManager_NotAnEcommerceSite"
+msgstr "Šī nav e-komercijas vietne"
+
+msgid "SitesManager_NotFound"
+msgstr "Nav atrastas vietnes priekš"
+
+msgid "SitesManager_NoWebsites"
+msgstr "Jums nav nevienas vietnes ko administrēt."
+
+msgid "SitesManager_OnlyOneSiteAtTime"
+msgstr "Jūs varat vienlaicīgi labot tikai vienas vietnes iestatījumus. Lūdzu saglabājiet vai atceļiet savas pašlaik veiktās izmaiņas vietnei %s."
+
+msgid "SitesManager_SelectACity"
+msgstr "Izvēlieties pilsētu"
+
+msgid "SitesManager_ShowTrackingTag"
+msgstr "Apskatīt izsekošanas kodu"
+
+msgid "SitesManager_Sites"
+msgstr "Vietnes"
+
+msgid "SitesManager_Timezone"
+msgstr "Laika zona"
+
+msgid "SitesManager_TrackingTags"
+msgstr "%s izsekošanas kods"
+
+msgid "SitesManager_Urls"
+msgstr "Adreses"
+
+msgid "SitesManager_UTCTimeIs"
+msgstr "UTC laiks ir %s."
+
+msgid "SitesManager_WebsitesManagement"
+msgstr "Vietņu pārvaldība"
+
+msgid "SitesManager_YouCurrentlyHaveAccessToNWebsites"
+msgstr "Jums pašlaik ir pieeja %s vietnēm."
+
+msgid "SitesManager_YourCurrentIpAddressIs"
+msgstr "Jūsu pašreizējā IP adrese ir %s"
+
+msgid "TagManager_CategoryClicks"
+msgstr "Klikšķi"
+
+msgid "TagManager_CategoryDate"
+msgstr "Datums"
+
+msgid "TagManager_CategoryEmail"
+msgstr "E-pasta adrese"
+
+msgid "TagManager_CategoryErrors"
+msgstr "Kļūdas"
+
+msgid "TagManager_ComparisonContains"
+msgstr "satur"
+
+msgid "TagManager_PageTitleVariableName"
+msgstr "Lapas virsraksts"
+
+msgid "TagManager_PageUrlVariableName"
+msgstr "Lapas URL"
+
+msgid "TagManager_ReferrerUrlVariableName"
+msgstr "Atsauces URL"
+
+msgid "TagManager_ReferrerVariableName"
+msgstr "Atsauces URL"
+
+msgid "TagManager_Type"
+msgstr "Tips"
+
+msgid "TagManager_Version"
+msgstr "Versija"
+
+msgid "UserCountry_Continent"
+msgstr "Kontinents"
+
+msgid "UserCountry_Country"
+msgstr "Valsts"
+
+msgid "UserCountry_country_a1"
+msgstr "Anonīms starpniekserveris"
+
+msgid "UserCountry_country_a2"
+msgstr "Satelītpieslēgums"
+
+msgid "UserCountry_country_cat"
+msgstr "Katalāņu valodā runājošās kopienas"
+
+msgid "UserCountry_country_o1"
+msgstr "Cita valsts"
+
+msgid "UserCountry_Location"
+msgstr "Lokācijas"
+
+msgid "UserCountry_SubmenuLocations"
+msgstr "Lokācijas"
+
+msgid "UserCountryMap_map"
+msgstr "karte"
+
+msgid "UserId_UserReportTitle"
+msgstr "Lietotāji"
+
+msgid "UserLanguage_LanguageCode"
+msgstr "Valodas kods"
+
+msgid "UsersManager_AddUser"
+msgstr "Pievienot jaunu lietotāju"
+
+msgid "UsersManager_Alias"
+msgstr "Aizstājējvārds"
+
+msgid "UsersManager_AllWebsites"
+msgstr "Visas vietnes"
+
+msgid "UsersManager_ApplyToAllWebsites"
+msgstr "Apstipriniet visām vietnēm"
+
+msgid "UsersManager_ClickHereToDeleteTheCookie"
+msgstr "Klikšķiniet šeit, lai dzēstu sīkdatni un atļautu Matomo izsekot Jūsu pašu apmeklējumus"
+
+msgid "UsersManager_ClickHereToSetTheCookieOnDomain"
+msgstr "Klikšķiniet šeit, lai iestatītu sīkdatni, kas aizliegs izsekot Jūsu pašu apmeklējumus %s"
+
+msgid "UsersManager_DeleteConfirm"
+msgstr "Vai Jūs tiešām vēlaties dzēst lietotāju %s?"
+
+msgid "UsersManager_Email"
+msgstr "E-pasta adrese"
+
+msgid "UsersManager_ExceptionDeleteDoesNotExist"
+msgstr "Lietotāju '%s' nevar izdzēst, jo tāds neeksistē."
+
+msgid "UsersManager_ExceptionEditAnonymous"
+msgstr "Anonīmo lietotāju nav iespējams labot vai dzēst. Tas tiek izmantots, lai definētu lietotāju, kurš vēl nav pieteicies. Piemēram, Jūs varat publiskot statistiku atļaujot apskates pieeju anonīmajam lietotājam."
+
+msgid "UsersManager_ExceptionEmailExists"
+msgstr "Lietotājs ar e-pasta adresi '%s' jau eksistē."
+
+msgid "UsersManager_ExceptionInvalidEmail"
+msgstr "E-pasta adresei nav pareizs formāts"
+
+msgid "UsersManager_ExceptionPasswordMD5HashExpected"
+msgstr "UsersManager.getTokenAuth sagaida MD5 kodētu paroli (32 simbolu garu tekstu). Lūdzu pielietojiet md5() metodi parolei pirms izsaucat šo metodi."
+
+msgid "UsersManager_ExceptionUserDoesNotExist"
+msgstr "Lietotājs '%s' neeksistē."
+
+msgid "UsersManager_ExcludeVisitsViaCookie"
+msgstr "Neiekļaut Jūsu pašu apmeklējumus izmantojot sīkdatni"
+
+msgid "UsersManager_ForAnonymousUsersReportDateToLoadByDefault"
+msgstr "Atskaite, kuru ielādēt pēc noklusējuma anonīmiem lietotājiem"
+
+msgid "UsersManager_ManageAccess"
+msgstr "Pārvaldiet pieejas"
+
+msgid "UsersManager_MenuAnonymousUserSettings"
+msgstr "Anonīmu lietotāju iestatījumi"
+
+msgid "UsersManager_MenuUsers"
+msgstr "Lietotāji"
+
+msgid "UsersManager_MenuUserSettings"
+msgstr "Lietotāju iestatījumi"
+
+msgid "UsersManager_PrivAdmin"
+msgstr "Administrēt"
+
+msgid "UsersManager_PrivNone"
+msgstr "Nav pieejas"
+
+msgid "UsersManager_PrivView"
+msgstr "Skatījums"
+
+msgid "UsersManager_ReportDateToLoadByDefault"
+msgstr "Atskaites datums, kuru ielādēt pēc noklusējuma"
+
+msgid "UsersManager_ReportToLoadByDefault"
+msgstr "Atskaite, kuru ielādēt pēc noklusējuma"
+
+msgid "UsersManager_TheLoginScreen"
+msgstr "Pieteikšanās skats"
+
+msgid "UsersManager_ThereAreCurrentlyNRegisteredUsers"
+msgstr "Pašlaik ir %s reģistrēti lietotāji."
+
+msgid "UsersManager_TypeYourPasswordAgain"
+msgstr "Ierakstiet savu jauno paroli atkārtoti."
+
+msgid "UsersManager_User"
+msgstr "Lietotājs"
+
+msgid "UsersManager_UsersManagement"
+msgstr "Lietotāju pārvaldīšana"
+
+msgid "UsersManager_UsersManagementMainDescription"
+msgstr "Izveidojiet jaunus vai labojiet esošu lietotāju iestatījumus. Augstāk Jūs varat uzstādīt šo lietotāju pieejas atļaujas."
+
+msgid "UsersManager_YourUsernameCannotBeChanged"
+msgstr "Jūsu lietotājvārdu nav iespējams izmainīt."
+
+msgid "UsersManager_YourVisitsAreIgnoredOnDomain"
+msgstr "%1$sJūsu apmeklējumi tiek ignorēti %2$s %3$s (pārlūkā tika atrasta Matomo ignorēšanas sīkdatne)."
+
+msgid "UsersManager_ShowAll"
+msgstr "Rādīt visu"
+
+msgid "UsersManager_Username"
+msgstr "Lietotājvārds"
+
+msgid "VisitFrequency_ColumnReturningVisits"
+msgstr "Atkārtoti apmeklējumi"
+
+msgid "VisitFrequency_ColumnUniqueReturningVisitors"
+msgstr "Unikālie atkārtotie apmeklētāji"
+
+msgid "VisitFrequency_ReturningVisitsDocumentation"
+msgstr "Šis ir atkārtotu apmeklējumu pārskats."
+
+msgid "VisitFrequency_SubmenuFrequency"
+msgstr "Biežums"
+
+msgid "VisitFrequency_WidgetOverview"
+msgstr "Biežuma pārskats"
+
+msgid "VisitTime_ColumnLocalTime"
+msgstr "Lokālais laiks"
+
+msgid "VisitTime_ColumnServerTime"
+msgstr "Servera laiks"
+
+msgid "VisitTime_LocalTime"
+msgstr "Apmeklējumi pēc vietējā laika"
+
+msgid "VisitTime_NHour"
+msgstr "%s st."
+
+msgid "VisitTime_ServerTime"
+msgstr "Apmeklējumi pēc servera laika"
+
+msgid "VisitTime_SubmenuTimes"
+msgstr "Laiki"
+
+msgid "VisitTime_WidgetLocalTime"
+msgstr "Apmeklējumi pēc lokālā laika"
+
+msgid "VisitorInterest_BetweenXYMinutes"
+msgstr "%1$s-%2$s min."
+
+msgid "VisitorInterest_BetweenXYSeconds"
+msgstr "%1$s-%2$ss"
+
+msgid "VisitorInterest_ColumnPagesPerVisit"
+msgstr "Lapas apmeklējumā"
+
+msgid "VisitorInterest_ColumnVisitDuration"
+msgstr "Apmeklējuma ilgums"
+
+msgid "VisitorInterest_NPages"
+msgstr "%s lapas"
+
+msgid "VisitorInterest_OnePage"
+msgstr "1 lapa"
+
+msgid "VisitorInterest_VisitNum"
+msgstr "Apmeklējuma numurs"
+
+msgid "VisitorInterest_visitsByVisitCount"
+msgstr "Apmeklējumu pēc apmeklējuma numura"
+
+msgid "VisitorInterest_VisitsPerDuration"
+msgstr "Apmeklējumi pēc apmeklējuma ilguma"
+
+msgid "VisitorInterest_VisitsPerNbOfPages"
+msgstr "Apmeklējumi pēc lapu skaita"
+
+msgid "VisitorInterest_WidgetLengths"
+msgstr "Apmeklējumu garums"
+
+msgid "VisitorInterest_WidgetPages"
+msgstr "Lapas apmeklējumā"
+
+msgid "VisitsSummary_NbActionsDescription"
+msgstr "%s darbības"
+
+msgid "VisitsSummary_WidgetLastVisits"
+msgstr "Pēdējo apmeklējumu grafiks"
+
+msgid "VisitsSummary_WidgetVisits"
+msgstr "Apmeklējumu pārskats"
+
+msgid "Widgetize_OpenInNewWindow"
+msgstr "Atvērt jaunā logā"

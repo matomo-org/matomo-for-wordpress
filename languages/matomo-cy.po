@@ -1,0 +1,4007 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-10-21T03:38:13+00:00\n"
+"PO-Revision-Date: 2019-10-21T03:38:13+00:00\n"
+"Language: cy\n"
+"Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n == 3) ? 3 : ((n == 6) ? 4 : 5))));\n"
+"X-Domain: matomo\n"
+
+msgid "General_AbandonedCarts"
+msgstr "Troliau Siopa a Adawyd"
+
+msgid "General_AboutPiwikX"
+msgstr "Am dan Matomo %s"
+
+msgid "General_Actions"
+msgstr "Camau gweithredu"
+
+msgid "General_AllWebsitesDashboard"
+msgstr "Dangosfwrdd Holl Wefannau"
+
+msgid "General_API"
+msgstr "API"
+
+msgid "General_ArchivingInlineHelp"
+msgstr "Ar gyfer gwefannau sydd a traffig canolig i uchel, argymhellir i analluogi'r system archifo Matomo gael ei sbarduno gan y porwr. Yn hytrach, rydym yn argymell eich bod yn sefydlu swydd cron i brosesu adroddiadau Matomo bob awr."
+
+msgid "General_AuthenticationMethodSmtp"
+msgstr "Dull dilysu ar gyfer SMTP"
+
+msgid "General_AverageOrderValue"
+msgstr "Gwerth yr Archeb (ar gyfartaledd)"
+
+msgid "General_AveragePrice"
+msgstr "Ar Gyfartaledd Pris"
+
+msgid "General_AverageQuantity"
+msgstr "Argyfataledd Nifer"
+
+msgid "General_BackToPiwik"
+msgstr "Yn ôl i"
+
+msgid "General_BrokenDownReportDocumentation"
+msgstr "Mae'n cael ei dorri lawr i wahanol adroddiadau, sy'n cael eu harddangos mewn sparklines ar waelod y dudalen. Gallwch chwyddo y graffiau drwy glicio ar yr adroddiad hoffech ei weld."
+
+msgid "General_ChangeTagCloudView"
+msgstr "Nodwch, y gallwch weld yr adroddiad mewn ffyrdd heblaw fel cwmwl tag. Defnyddiwch y rheolaethau ar waelod yr adroddiad i wneud hynny."
+
+msgid "General_ChooseLanguage"
+msgstr "Dewiswch Iaith"
+
+msgid "General_ChoosePeriod"
+msgstr "Dewiswch gyfnod"
+
+msgid "General_ClickHere"
+msgstr "Cliciwch yma am fwy o wybodaeth"
+
+msgid "General_Close"
+msgstr "Cau"
+
+msgid "General_ColumnActionsPerVisit"
+msgstr "Nifer o gamau gweitredu fesul ymweliad"
+
+msgid "General_ColumnActionsPerVisitDocumentation"
+msgstr "Nifer cyfartalog o gamau gweithredu (edrych ar dudalennau, lawrlwythiadau neu cysylltiadau allanol) a berfformiwyd yn ystod yr ymweliadau."
+
+msgid "General_ColumnAverageTimeOnPage"
+msgstr "Amser gyfartaledd ar dudalen"
+
+msgid "General_ColumnAverageTimeOnPageDocumentation"
+msgstr "Y swm cyfartalog o'r amser a dreuliwyd gan ymwelwyr ar y dudalen hon (dim ond y dudalen, nid y wefan gyfan)."
+
+msgid "General_ColumnAvgTimeOnSite"
+msgstr "Hyd Amser ar Wefan (cyfartaledd)"
+
+msgid "General_ColumnAvgTimeOnSiteDocumentation"
+msgstr "Hyd Ymweliad (cyfartaledd)"
+
+msgid "General_ColumnBounceRate"
+msgstr "Cyfradd Adlam"
+
+msgid "General_ColumnBounceRateDocumentation"
+msgstr "Canran o ymweliadau sydd ond wedi agor un dudalen. Mae hyn yn golygu, bod yr ymwelydd yn gadael y wefan yn uniongyrchol o'r dudalen fynedfa."
+
+msgid "General_ColumnBounces"
+msgstr "Adlamau"
+
+msgid "General_ColumnBouncesDocumentation"
+msgstr "Nifer o ymweliadau a ddechreuodd a ddaeth i ben ar y dudalen hon. Mae hyn yn golygu bod yr ymwelydd wedi gadael y wefan ar ôl edrych ar y dudalen hon yn unig."
+
+msgid "General_ColumnConversionRate"
+msgstr "Cyfradd Trosi"
+
+msgid "General_ColumnConversionRateDocumentation"
+msgstr "Canran yr ymweliadau sy'n sbarduno trosi gôl."
+
+msgid "General_ColumnEntrances"
+msgstr "Mynedfeydd"
+
+msgid "General_ColumnEntrancesDocumentation"
+msgstr "Nifer o ymweliadau a ddechreuodd ar y dudalen hon."
+
+msgid "General_ColumnExitRate"
+msgstr "Cyfradd Gadael"
+
+msgid "General_ColumnExitRateDocumentation"
+msgstr "Canran yr ymweliadau sy'n gadael y wefan ar ôl edrych ar y dudalen hon (golygu tudalennau unigryw wedi'i rannu â allanfeydd)"
+
+msgid "General_ColumnExits"
+msgstr "Allanfeydd"
+
+msgid "General_ColumnExitsDocumentation"
+msgstr "Nifer o ymweliadau a ddaeth i ben ar y dudalen hon."
+
+msgid "General_ColumnLabel"
+msgstr "Label"
+
+msgid "General_ColumnMaxActions"
+msgstr "Uchafswm camau gweithredu mewn un ymweliad"
+
+msgid "General_ColumnNbActions"
+msgstr "Camau gweithredu"
+
+msgid "General_ColumnNbActionsDocumentation"
+msgstr "Nifer o gamau gweithredu a gyflawnir gan eich ymwelwyr. Gall eu bod yn olygfeydd tudalennau, lawrlwythiadau neu cysylltiadau allanol"
+
+msgid "General_ColumnNbUniqVisitors"
+msgstr "Ymwelwyr unigol"
+
+msgid "General_ColumnNbVisits"
+msgstr "Ymweliadau"
+
+msgid "General_ColumnPageBounceRateDocumentation"
+msgstr "Canran yr ymweliadau a ddechreuodd ar y dudalen hon a gadawodd y wefan yn syth."
+
+msgid "General_ColumnPageviews"
+msgstr "Golygu Tudalennau"
+
+msgid "General_ColumnPageviewsDocumentation"
+msgstr "Nifer o weithiau mae'r dudalen hon wedi ymweld â hi."
+
+msgid "General_ColumnSumVisitLength"
+msgstr "Cyfanswm yr amser a dreulir gan ymwelwyr (mewn eiliadau)"
+
+msgid "General_ColumnUniquePageviews"
+msgstr "Golygu Tudalennau Unigryw"
+
+msgid "General_ColumnUniquePageviewsDocumentation"
+msgstr "Nifer o ymweliadau a oedd yn cynnwys y dudalen hon. Os oedd y dudalen hon wedi ei gweld sawl gwaith yn ystod un ymweliad, mae'n cael ei chyfrif unwaith yn unig."
+
+msgid "General_ColumnValuePerVisit"
+msgstr "Refeniw fesul Ymweliad"
+
+msgid "General_ColumnVisitDuration"
+msgstr "Hyd Ymweliad (mewn eiliadau)"
+
+msgid "General_ColumnVisitsWithConversions"
+msgstr "Ymweliadau â Addasiadau"
+
+msgid "General_ConfigFileIsNotWritable"
+msgstr "Nid yw ffeil ffurfweddu %1$s Matomo yn ysgrifenadwy, efallai na fydd rhai o'ch newidiadau yn cael eu cadw. %2$s Newidiwch caniatadau y ffeil config i'w gwneud yn ysgrifenadwy os gwelwch yn dda."
+
+msgid "General_CurrentMonth"
+msgstr "Mis Cyfredol"
+
+msgid "General_CurrentWeek"
+msgstr "Wythnos Cyfredol"
+
+msgid "General_CurrentYear"
+msgstr "Blwyddyn Cyfredol"
+
+msgid "General_Daily"
+msgstr "Dyddiol"
+
+msgid "General_DashboardForASpecificWebsite"
+msgstr "Dangosfwrdd ar gyfer gwefan penodol"
+
+msgid "General_Date"
+msgstr "Dyddiad"
+
+msgid "General_DateRange"
+msgstr "Amrediad dyddiad:"
+
+msgid "General_DateRangeFrom"
+msgstr "Oddiwrth"
+
+msgid "General_DateRangeFromTo"
+msgstr "O %1$s i %2$s"
+
+msgid "General_DateRangeTo"
+msgstr "I"
+
+msgid "General_DaysHours"
+msgstr "%1$s diwrnodau %2$s oriau"
+
+msgid "General_DaysSinceFirstVisit"
+msgstr "Nifer o ddiwrnodau ers yr ymweliad cyntaf"
+
+msgid "General_DaysSinceLastEcommerceOrder"
+msgstr "Nifer o ddiwrnodau ers yr archeb eFasnach diwethaf"
+
+msgid "General_DaysSinceLastVisit"
+msgstr "Diwrnodau ers yr ymweliad diwethaf"
+
+msgid "General_Default"
+msgstr "Diofyn"
+
+msgid "General_Delete"
+msgstr "Dileu"
+
+msgid "General_Description"
+msgstr "Disgrifiad"
+
+msgid "General_Details"
+msgstr "Manylion"
+
+msgid "General_Discount"
+msgstr "Gostyngiad"
+
+msgid "General_DisplaySimpleTable"
+msgstr "Dangos tabl syml"
+
+msgid "General_DisplayTableWithGoalMetrics"
+msgstr "Dangos tabl gyda metrics Nodau"
+
+msgid "General_DisplayTableWithMoreMetrics"
+msgstr "Dangos tabl gyda mwy o metrics"
+
+msgid "General_Done"
+msgstr "Wedi Gorffen"
+
+msgid "General_Download"
+msgstr "Lawrlwytho"
+
+msgid "General_DownloadFullVersion"
+msgstr "%1$sLawrlwytho%2$s y fersiwn llawn! Ewch yma %3$s"
+
+msgid "General_Downloads"
+msgstr "Lawrlwytho"
+
+msgid "General_EcommerceOrders"
+msgstr "Archebion eFasnach"
+
+msgid "General_EcommerceVisitStatusDesc"
+msgstr "Ymwelwch â statws eFasnach ar ddiwedd yr ymweliad"
+
+msgid "General_EcommerceVisitStatusEg"
+msgstr "Er enghraifft, i ddewis yr holl ymweliadau sydd wedi gwneud archeb Efasnach, byddai'r cais API yn cynnwys %s"
+
+msgid "General_Edit"
+msgstr "Golygu"
+
+msgid "General_EncryptedSmtpTransport"
+msgstr "Nodwch y cludiant amgryptio haen sy'n ofynnol gan eich gweinyddwr SMTP."
+
+msgid "General_Error"
+msgstr "Gwall"
+
+msgid "General_ExceptionConfigurationFileNotFound"
+msgstr "Nid yw'r ffeil cyfluniad {%s} wedi ei darganfod."
+
+msgid "General_ExceptionDatabaseVersion"
+msgstr "Rydych yn defnyddio %1$s fersiwn %2$s ond mae Matomo angen o leiaf fersiwn %3$s"
+
+msgid "General_ExceptionFileIntegrity"
+msgstr "Gwirio uniondeb wedi methu: %s"
+
+msgid "General_ExceptionFilesizeMismatch"
+msgstr "Diffyg cyfatebiaeth maint y ffeil: %1$s (disgwylir hyd o: %2$s, wedi dod o hyd i: %3$s)"
+
+msgid "General_ExceptionInvalidArchiveTimeToLive"
+msgstr "I drosglwyddo amser archif i amser byw rhaid fod y nifer o eiliadau fwy na sero"
+
+msgid "General_ExceptionInvalidDateFormat"
+msgstr "Rhaid i fformat dyddiadau fod yn: %1$s neu unrhyw air allweddol a gefnogir gan y gweithred %2$s (gweler %3$s am fwy o wybodaeth)"
+
+msgid "General_ExceptionInvalidDateRange"
+msgstr "Nid yw'r '%1$s' dyddiad mewn ystod dyddiad cywir. Dylai fod yn y ffurf canlynol: %2$s."
+
+msgid "General_ExceptionInvalidPeriod"
+msgstr "Nid yw'r cyfnod '%1$s' yn cael ei gefnogi Rhowch gynnig ar unrhyw un o'r canlynol yn lle hynny: %2$s"
+
+msgid "General_ExceptionInvalidReportRendererFormat"
+msgstr "Nid yw '%1$s' yn ddilys. Rhowch gynnig ar unrhyw un o'r canlynol yn lle hynny: %2$s."
+
+msgid "General_ExceptionInvalidToken"
+msgstr "Nid yw'r tocyn yn ddilys."
+
+msgid "General_ExceptionLanguageFileNotFound"
+msgstr "Nid yw'r ffeil Iaith '%s' wedi ei chanfod."
+
+msgid "General_ExceptionMethodNotFound"
+msgstr "Nid yw'r dull '%1$s' yn bodoli neu nid yw ar gael yn y modiwl '%2$s'."
+
+msgid "General_ExceptionMissingFile"
+msgstr "Ffeil ar goll: %s"
+
+msgid "General_ExceptionNonceMismatch"
+msgstr "Doedd dim modd gwirio'r tocyn diogelwch ar y ffurflen hon."
+
+msgid "General_ExceptionPrivilege"
+msgstr "Ni allwch ddefnyddio'r adnodd hwn, mae'n ofynnol cael %s i gael mynediad."
+
+msgid "General_ExceptionUnableToStartSession"
+msgstr "Methu dechrau sesiwn"
+
+msgid "General_ExceptionUndeletableFile"
+msgstr "Wedi methu dileu %s"
+
+msgid "General_ExceptionUnreadableFileDisabledMethod"
+msgstr "Nid oedd modd darllen y ffeil cyfluniad {%1$s}. Efallai bod eich cynhaliwr gwefan wedi ei anablu %2$s."
+
+msgid "General_Export"
+msgstr "Allforio"
+
+msgid "General_ExportAsImage"
+msgstr "Allforio fel llun"
+
+msgid "General_ExportThisReport"
+msgstr "Allforio'r set ddata hon mewn fformatau eraill"
+
+msgid "General_First"
+msgstr "Cyntaf"
+
+msgid "General_ForExampleShort"
+msgstr "ee."
+
+msgid "General_FromReferrer"
+msgstr "oddiwrth"
+
+msgid "General_GiveUsYourFeedback"
+msgstr "Gyrrwch Adborth!"
+
+msgid "General_GoTo"
+msgstr "Ewch i %s"
+
+msgid "General_GraphHelp"
+msgstr "Mwy o wybodaeth am ddangos graffiau yn Matomo."
+
+msgid "General_HelloUser"
+msgstr "Helo, %s!"
+
+msgid "General_HoursMinutes"
+msgstr "%1$s oriau %2$s isafswm"
+
+msgid "General_Id"
+msgstr "Id"
+
+msgid "General_InvalidDateRange"
+msgstr "Amrediad Dyddiad Annilys, Ceisiwch Eto os Gwelwch yn Dda"
+
+msgid "General_InvalidResponse"
+msgstr "Mae'r data a dderbyniwyd yn annilys."
+
+msgid "General_Language"
+msgstr "Iaith"
+
+msgid "General_LastDays"
+msgstr "Dyddiau %s diwethaf (yn cynnwys heddiw)"
+
+msgid "General_Loading"
+msgstr "Yn llwytho..."
+
+msgid "General_LoadingData"
+msgstr "Wrthi'n llwytho data..."
+
+msgid "General_Locale"
+msgstr "cy_GB.UTF-8"
+
+msgid "General_Logout"
+msgstr "Allgofnodi"
+
+msgid "General_MinutesSeconds"
+msgstr "%1$s isafswm %2$ss"
+
+msgid "General_Monthly"
+msgstr "Misol"
+
+msgid "General_MultiSitesSummary"
+msgstr "Yr Holl Wefannau"
+
+msgid "General_Name"
+msgstr "Enw"
+
+msgid "General_NbActions"
+msgstr "Nifer o gamau gweithredu"
+
+msgid "General_Never"
+msgstr "Byth"
+
+msgid "General_NewReportsWillBeProcessedByCron"
+msgstr "Os nad yw system archifo Matomo wedi ei sbarduno gan y porwr, bydd adroddiadau newydd yn cael eu prosesu gan y crontab"
+
+msgid "General_NewUpdatePiwikX"
+msgstr "Diweddariad Newydd: Matomo %s"
+
+msgid "General_NewVisitor"
+msgstr "Ymwelydd Newydd"
+
+msgid "General_Next"
+msgstr "Nesaf"
+
+msgid "General_No"
+msgstr "Na"
+
+msgid "General_NoDataForGraph"
+msgstr "Nid oes data ar gyfer y graff yma."
+
+msgid "General_NoDataForTagCloud"
+msgstr "Dim data ar gyfer y tag cwmwl."
+
+msgid "General_NotDefined"
+msgstr "%s heb ei ddiffinio"
+
+msgid "General_NotValid"
+msgstr "%s ddim yn ddilys"
+
+msgid "General_NumberOfVisits"
+msgstr "Nifer o Ymweliadau"
+
+msgid "General_Ok"
+msgstr "Iawn"
+
+msgid "General_OnlyEnterIfRequired"
+msgstr "Dim ond rhoi enw defnyddiwr os yw eich gweinyddwr SMTP yn gofyn amdano."
+
+msgid "General_OnlyEnterIfRequiredPassword"
+msgstr "Dim ond rhoi cyfrinair os yw eich gweinyddwr SMTP yn gofyn amdano."
+
+msgid "General_OnlyUsedIfUserPwdIsSet"
+msgstr "Yn cael ei ddefnyddio ond pan fydd enw defnyddiwr / cyfrinair wedi ei osod, gofynnwch i'ch darparwr os ydych yn ansicr pa ddull i'w ddefnyddio."
+
+msgid "General_OpenSourceWebAnalytics"
+msgstr "Dadansoddwr Gwefannol Ffynhonnell Agored"
+
+msgid "General_OptionalSmtpPort"
+msgstr "Dewisol. Yn rhagosod i 25 os heb eu amgryptio a TLS SMTP, a 465 ar gyfer SSL SMTP."
+
+msgid "General_OrCancel"
+msgstr "neu %1$s Canslo %2$s"
+
+msgid "General_Others"
+msgstr "Eraill"
+
+msgid "General_Period"
+msgstr "Cyfnod"
+
+msgid "General_Piechart"
+msgstr "Siart Cylch"
+
+msgid "General_PiwikXIsAvailablePleaseUpdateNow"
+msgstr "Mae Matomo %1$s ar gael. %2$sDiweddarwch nawr!%3$s (gweler %4$snewidiadau%5$s)."
+
+msgid "General_PleaseSpecifyValue"
+msgstr "Nodwch werth i '%s'"
+
+msgid "General_PleaseUpdatePiwik"
+msgstr "Diweddarwch Matomo os gwelwch yn dda"
+
+msgid "General_PoweredBy"
+msgstr "Pwerwyd gan"
+
+msgid "General_Previous"
+msgstr "Blaenorol"
+
+msgid "General_PreviousDays"
+msgstr "Diwrnodau %s Blaenorol (heb gynnwys heddiw)"
+
+msgid "General_Price"
+msgstr "Pris"
+
+msgid "General_ProductConversionRate"
+msgstr "Cyfradd Trosi Cynnyrch"
+
+msgid "General_ProductRevenue"
+msgstr "Cyfanswm Cynnyrch"
+
+msgid "General_PurchasedProducts"
+msgstr "Cynhyrchion a Brynwyd"
+
+msgid "General_Quantity"
+msgstr "Nifer"
+
+msgid "General_RefreshPage"
+msgstr "Adnewyddwch y dudalen"
+
+msgid "General_Report"
+msgstr "Adroddiad"
+
+msgid "General_Reports"
+msgstr "Adroddiadau"
+
+msgid "General_ReportsWillBeProcessedAtMostEveryHour"
+msgstr "Felly bydd adroddiadau yn cael ei prosesu ar y mwyaf pob awr."
+
+msgid "General_RequestTimedOut"
+msgstr "Mae cais data i %s wedi dod i ben. Rhowch gynnig arall arni."
+
+msgid "General_Required"
+msgstr "%s angenrheidiol"
+
+msgid "General_ReturningVisitor"
+msgstr "Ymwelydd yn ail ymweld"
+
+msgid "General_Save"
+msgstr "Cadw"
+
+msgid "General_SaveImageOnYourComputer"
+msgstr "I gadw copi o'r llun ar eich cyfrifiadur, cliciwch a'r y botwm dde a dewiswch \"Save Image As...\""
+
+msgid "General_Search"
+msgstr "Chwilio"
+
+msgid "General_SelectYesIfYouWantToSendEmailsViaServer"
+msgstr "Dewiswch \"Oes\" os ydych eisiau, neu ydych yn gorfod anfon e-bost trwy weinyddwr a enwir yn lle y defnyddio gweithred post lleol"
+
+msgid "General_Settings"
+msgstr "Gosodiadau"
+
+msgid "General_Shipping"
+msgstr "Cludiant"
+
+msgid "General_SmallTrafficYouCanLeaveDefault"
+msgstr "Ar gyfer gwefannau heb lawer o draffig, gallwch adael yr eiliadau %s diofyn, a agor pob adroddiad mewn amser real."
+
+msgid "General_SmtpEncryption"
+msgstr "Amgryptio SMTP"
+
+msgid "General_SmtpPassword"
+msgstr "Cyfrinair SMTP"
+
+msgid "General_SmtpPort"
+msgstr "Porth SMTP"
+
+msgid "General_SmtpServerAddress"
+msgstr "Cyfeiriad y gweinyddwr SMTP"
+
+msgid "General_SmtpUsername"
+msgstr "Enw defnyddiwr SMTP"
+
+msgid "General_Subtotal"
+msgstr "Is-gyfanswm"
+
+msgid "General_Table"
+msgstr "Tabl"
+
+msgid "General_TagCloud"
+msgstr "Tag Cwmwl"
+
+msgid "General_Tax"
+msgstr "Treth"
+
+msgid "General_Total"
+msgstr "Cyfanswm"
+
+msgid "General_TotalRevenue"
+msgstr "Cyfanswm Refeniw"
+
+msgid "General_TranslatorName"
+msgstr "Hefin Williams"
+
+msgid "General_UniquePurchases"
+msgstr "Pryniant Unigol"
+
+msgid "General_Unknown"
+msgstr "Anadnabyddus"
+
+msgid "General_Upload"
+msgstr "Uwchlwytho"
+
+msgid "General_UsePlusMinusIconsDocumentation"
+msgstr "Defnyddiwch yr eiconau mwy (+) a llai (-) ar y chwith i lywio."
+
+msgid "General_Username"
+msgstr "Enw Defnyddiwr"
+
+msgid "General_UseSMTPServerForEmail"
+msgstr "Defnyddiwch gweinyddwr SMTP ar gyfer e-bost"
+
+msgid "General_Value"
+msgstr "Gwerth"
+
+msgid "General_VBarGraph"
+msgstr "Graff bar fertigol"
+
+msgid "General_Visit"
+msgstr "Ymweliad"
+
+msgid "General_VisitConvertedGoal"
+msgstr "Mae'r ymweliad wedi trosi o leiaf un Nod"
+
+msgid "General_VisitConvertedNGoals"
+msgstr "Mae'r ymweliad wedi trosi %s Nod"
+
+msgid "General_VisitDuration"
+msgstr "Hyd Ymweliadau Mewn Eiliadau (cyfartaledd)"
+
+msgid "General_VisitorID"
+msgstr "ID yr Ymwelwydd"
+
+msgid "General_VisitorIP"
+msgstr "IP yr Ymwelydd"
+
+msgid "General_Visitors"
+msgstr "Ymwelwyr"
+
+msgid "General_VisitsWith"
+msgstr "Ymweliadau gyda %s"
+
+msgid "General_VisitTypeExample"
+msgstr "Fel enghraifft, i ddewis pob ymwelydd sydd wedi ail ddychwelyd i'r safle, yn cynnwys y rhai hynny sydd wedi prynu rhywbeth yn ystod eu hymweliad diwethaf, bydd y cais API yn cynnwys %s"
+
+msgid "General_Warning"
+msgstr "Rhybudd"
+
+msgid "General_WarningFileIntegrityNoManifest"
+msgstr "Nid oedd yn bosib perfformio gwiriad cywirdeb ar y ffeil am fod manifest.inc.php ar goll."
+
+msgid "General_WarningFileIntegrityNoMd5file"
+msgstr "Nid oedd yn bosib perfformio gwiriad cywirdeb ar y ffeil am fod gweithred md5_file() ar goll."
+
+msgid "General_WarningPasswordStored"
+msgstr "%1$sRhybudd:%2$s Bydd y cyfrinair yn cael ei storio yn y ffeil config ac yn weladwy i bawb sydd a mynediad iddo."
+
+msgid "General_Website"
+msgstr "Gwefan"
+
+msgid "General_Weekly"
+msgstr "Wythnosol"
+
+msgid "General_Widgets"
+msgstr "Widgets"
+
+msgid "General_YearsDays"
+msgstr "%1$s blynyddoedd %2$s diwrnodau"
+
+msgid "General_Yes"
+msgstr "Ia"
+
+msgid "General_YouMustBeLoggedIn"
+msgstr "Rhaid i chi fewngofnodi i ddefnyddio'r gweithred hwn."
+
+msgid "General_YourChangesHaveBeenSaved"
+msgstr "Mae eich newidiadau wedi eu cadw."
+
+msgid "DBStats_Table"
+msgstr "Tabl"
+
+msgid "Dashboard_Dashboard"
+msgstr "Dangosfwrdd"
+
+msgid "Intl_Continent_afr"
+msgstr "Affrica"
+
+msgid "Intl_Continent_amc"
+msgstr "Canolbarth America"
+
+msgid "Intl_Continent_amn"
+msgstr "Gogledd America"
+
+msgid "Intl_Continent_ams"
+msgstr "De America"
+
+msgid "Intl_Continent_ant"
+msgstr "Antarctica"
+
+msgid "Intl_Continent_asi"
+msgstr "Asia"
+
+msgid "Intl_Continent_eur"
+msgstr "Ewrop"
+
+msgid "Intl_Continent_oce"
+msgstr "Oceania"
+
+msgid "Intl_Country_AD"
+msgstr "Andorra"
+
+msgid "Intl_Country_AE"
+msgstr "Emiradau Arabaidd Unedig"
+
+msgid "Intl_Country_AF"
+msgstr "Afghanistan"
+
+msgid "Intl_Country_AG"
+msgstr "Antigua a Barbuda"
+
+msgid "Intl_Country_AI"
+msgstr "Anguilla"
+
+msgid "Intl_Country_AL"
+msgstr "Albania"
+
+msgid "Intl_Country_AM"
+msgstr "Armenia"
+
+msgid "Intl_Country_AO"
+msgstr "Angola"
+
+msgid "Intl_Country_AQ"
+msgstr "Antarctica"
+
+msgid "Intl_Country_AR"
+msgstr "Yr Ariannin"
+
+msgid "Intl_Country_AS"
+msgstr "Samoa America"
+
+msgid "Intl_Country_AT"
+msgstr "Awstria"
+
+msgid "Intl_Country_AU"
+msgstr "Awstralia"
+
+msgid "Intl_Country_AW"
+msgstr "Aruba"
+
+msgid "Intl_Country_AX"
+msgstr "Ynysoedd Åland"
+
+msgid "Intl_Country_AZ"
+msgstr "Azerbaijan"
+
+msgid "Intl_Country_BA"
+msgstr "Bosnia & Herzegovina"
+
+msgid "Intl_Country_BB"
+msgstr "Barbados"
+
+msgid "Intl_Country_BD"
+msgstr "Bangladesh"
+
+msgid "Intl_Country_BE"
+msgstr "Gwlad Belg"
+
+msgid "Intl_Country_BF"
+msgstr "Burkina Faso"
+
+msgid "Intl_Country_BG"
+msgstr "Bwlgaria"
+
+msgid "Intl_Country_BH"
+msgstr "Bahrain"
+
+msgid "Intl_Country_BI"
+msgstr "Burundi"
+
+msgid "Intl_Country_BJ"
+msgstr "Benin"
+
+msgid "Intl_Country_BL"
+msgstr "Saint Barthélemy"
+
+msgid "Intl_Country_BM"
+msgstr "Bermuda"
+
+msgid "Intl_Country_BN"
+msgstr "Brunei"
+
+msgid "Intl_Country_BO"
+msgstr "Bolifia"
+
+msgid "Intl_Country_BQ"
+msgstr "Antilles yr Iseldiroedd"
+
+msgid "Intl_Country_BR"
+msgstr "Brasil"
+
+msgid "Intl_Country_BS"
+msgstr "Y Bahamas"
+
+msgid "Intl_Country_BT"
+msgstr "Bhutan"
+
+msgid "Intl_Country_BV"
+msgstr "Ynys Bouvet"
+
+msgid "Intl_Country_BW"
+msgstr "Botswana"
+
+msgid "Intl_Country_BY"
+msgstr "Belarws"
+
+msgid "Intl_Country_BZ"
+msgstr "Belize"
+
+msgid "Intl_Country_CA"
+msgstr "Canada"
+
+msgid "Intl_Country_CC"
+msgstr "Ynysoedd Cocos (Keeling)"
+
+msgid "Intl_Country_CD"
+msgstr "Y Congo - Kinshasa"
+
+msgid "Intl_Country_CF"
+msgstr "Gweriniaeth Canolbarth Affrica"
+
+msgid "Intl_Country_CG"
+msgstr "Y Congo - Brazzaville"
+
+msgid "Intl_Country_CH"
+msgstr "Y Swistir"
+
+msgid "Intl_Country_CI"
+msgstr "Côte d’Ivoire"
+
+msgid "Intl_Country_CK"
+msgstr "Ynysoedd Cook"
+
+msgid "Intl_Country_CL"
+msgstr "Chile"
+
+msgid "Intl_Country_CM"
+msgstr "Camerŵn"
+
+msgid "Intl_Country_CN"
+msgstr "Tsieina"
+
+msgid "Intl_Country_CO"
+msgstr "Colombia"
+
+msgid "Intl_Country_CR"
+msgstr "Costa Rica"
+
+msgid "Intl_Country_CU"
+msgstr "Ciwba"
+
+msgid "Intl_Country_CV"
+msgstr "Cabo Verde"
+
+msgid "Intl_Country_CW"
+msgstr "Curaçao"
+
+msgid "Intl_Country_CX"
+msgstr "Ynys y Nadolig"
+
+msgid "Intl_Country_CY"
+msgstr "Cyprus"
+
+msgid "Intl_Country_CZ"
+msgstr "Tsiecia"
+
+msgid "Intl_Country_DE"
+msgstr "Yr Almaen"
+
+msgid "Intl_Country_DJ"
+msgstr "Djibouti"
+
+msgid "Intl_Country_DK"
+msgstr "Denmarc"
+
+msgid "Intl_Country_DM"
+msgstr "Dominica"
+
+msgid "Intl_Country_DO"
+msgstr "Gweriniaeth Dominica"
+
+msgid "Intl_Country_DZ"
+msgstr "Algeria"
+
+msgid "Intl_Country_EC"
+msgstr "Ecuador"
+
+msgid "Intl_Country_EE"
+msgstr "Estonia"
+
+msgid "Intl_Country_EG"
+msgstr "Yr Aifft"
+
+msgid "Intl_Country_EH"
+msgstr "Gorllewin Sahara"
+
+msgid "Intl_Country_ER"
+msgstr "Eritrea"
+
+msgid "Intl_Country_ES"
+msgstr "Sbaen"
+
+msgid "Intl_Country_ET"
+msgstr "Ethiopia"
+
+msgid "Intl_Country_FI"
+msgstr "Y Ffindir"
+
+msgid "Intl_Country_FJ"
+msgstr "Fiji"
+
+msgid "Intl_Country_FK"
+msgstr "Ynysoedd y Falkland/Malvinas"
+
+msgid "Intl_Country_FM"
+msgstr "Micronesia"
+
+msgid "Intl_Country_FO"
+msgstr "Ynysoedd Ffaro"
+
+msgid "Intl_Country_FR"
+msgstr "Ffrainc"
+
+msgid "Intl_Country_GA"
+msgstr "Gabon"
+
+msgid "Intl_Country_GB"
+msgstr "Y Deyrnas Unedig"
+
+msgid "Intl_Country_GD"
+msgstr "Grenada"
+
+msgid "Intl_Country_GE"
+msgstr "Georgia"
+
+msgid "Intl_Country_GF"
+msgstr "Guyane Ffrengig"
+
+msgid "Intl_Country_GG"
+msgstr "Ynys y Garn"
+
+msgid "Intl_Country_GH"
+msgstr "Ghana"
+
+msgid "Intl_Country_GI"
+msgstr "Gibraltar"
+
+msgid "Intl_Country_GL"
+msgstr "Yr Ynys Las"
+
+msgid "Intl_Country_GM"
+msgstr "Gambia"
+
+msgid "Intl_Country_GN"
+msgstr "Guinée"
+
+msgid "Intl_Country_GP"
+msgstr "Guadeloupe"
+
+msgid "Intl_Country_GQ"
+msgstr "Guinea Gyhydeddol"
+
+msgid "Intl_Country_GR"
+msgstr "Gwlad Groeg"
+
+msgid "Intl_Country_GS"
+msgstr "De Georgia ac Ynysoedd Sandwich y De"
+
+msgid "Intl_Country_GT"
+msgstr "Guatemala"
+
+msgid "Intl_Country_GU"
+msgstr "Guam"
+
+msgid "Intl_Country_GW"
+msgstr "Guiné-Bissau"
+
+msgid "Intl_Country_GY"
+msgstr "Guyana"
+
+msgid "Intl_Country_HK"
+msgstr "Hong Kong SAR Tseina"
+
+msgid "Intl_Country_HM"
+msgstr "Ynys Heard ac Ynysoedd McDonald"
+
+msgid "Intl_Country_HN"
+msgstr "Honduras"
+
+msgid "Intl_Country_HR"
+msgstr "Croatia"
+
+msgid "Intl_Country_HT"
+msgstr "Haiti"
+
+msgid "Intl_Country_HU"
+msgstr "Hwngari"
+
+msgid "Intl_Country_ID"
+msgstr "Indonesia"
+
+msgid "Intl_Country_IE"
+msgstr "Iwerddon"
+
+msgid "Intl_Country_IL"
+msgstr "Israel"
+
+msgid "Intl_Country_IM"
+msgstr "Ynys Manaw"
+
+msgid "Intl_Country_IN"
+msgstr "India"
+
+msgid "Intl_Country_IO"
+msgstr "Tiriogaeth Brydeinig Cefnfor India"
+
+msgid "Intl_Country_IQ"
+msgstr "Irac"
+
+msgid "Intl_Country_IR"
+msgstr "Iran"
+
+msgid "Intl_Country_IS"
+msgstr "Gwlad yr Iâ"
+
+msgid "Intl_Country_IT"
+msgstr "Yr Eidal"
+
+msgid "Intl_Country_JE"
+msgstr "Jersey"
+
+msgid "Intl_Country_JM"
+msgstr "Jamaica"
+
+msgid "Intl_Country_JO"
+msgstr "Gwlad Iorddonen"
+
+msgid "Intl_Country_JP"
+msgstr "Japan"
+
+msgid "Intl_Country_KE"
+msgstr "Kenya"
+
+msgid "Intl_Country_KG"
+msgstr "Kyrgyzstan"
+
+msgid "Intl_Country_KH"
+msgstr "Cambodia"
+
+msgid "Intl_Country_KI"
+msgstr "Kiribati"
+
+msgid "Intl_Country_KM"
+msgstr "Comoros"
+
+msgid "Intl_Country_KN"
+msgstr "Saint Kitts a Nevis"
+
+msgid "Intl_Country_KP"
+msgstr "Gogledd Korea"
+
+msgid "Intl_Country_KR"
+msgstr "De Korea"
+
+msgid "Intl_Country_KW"
+msgstr "Kuwait"
+
+msgid "Intl_Country_KY"
+msgstr "Ynysoedd Cayman"
+
+msgid "Intl_Country_KZ"
+msgstr "Kazakstan"
+
+msgid "Intl_Country_LA"
+msgstr "Laos"
+
+msgid "Intl_Country_LB"
+msgstr "Libanus"
+
+msgid "Intl_Country_LC"
+msgstr "Saint Lucia"
+
+msgid "Intl_Country_LI"
+msgstr "Liechtenstein"
+
+msgid "Intl_Country_LK"
+msgstr "Sri Lanka"
+
+msgid "Intl_Country_LR"
+msgstr "Liberia"
+
+msgid "Intl_Country_LS"
+msgstr "Lesotho"
+
+msgid "Intl_Country_LT"
+msgstr "Lithuania"
+
+msgid "Intl_Country_LU"
+msgstr "Lwcsembwrg"
+
+msgid "Intl_Country_LV"
+msgstr "Latfia"
+
+msgid "Intl_Country_LY"
+msgstr "Libya"
+
+msgid "Intl_Country_MA"
+msgstr "Moroco"
+
+msgid "Intl_Country_MC"
+msgstr "Monaco"
+
+msgid "Intl_Country_MD"
+msgstr "Moldofa"
+
+msgid "Intl_Country_ME"
+msgstr "Montenegro"
+
+msgid "Intl_Country_MF"
+msgstr "Saint Martin"
+
+msgid "Intl_Country_MG"
+msgstr "Madagascar"
+
+msgid "Intl_Country_MH"
+msgstr "Ynysoedd Marshall"
+
+msgid "Intl_Country_MK"
+msgstr "Macedonia"
+
+msgid "Intl_Country_ML"
+msgstr "Mali"
+
+msgid "Intl_Country_MM"
+msgstr "Myanmar (Burma)"
+
+msgid "Intl_Country_MN"
+msgstr "Mongolia"
+
+msgid "Intl_Country_MO"
+msgstr "Macau RhGA Tsieina"
+
+msgid "Intl_Country_MP"
+msgstr "Ynysoedd Gogledd Mariana"
+
+msgid "Intl_Country_MQ"
+msgstr "Martinique"
+
+msgid "Intl_Country_MR"
+msgstr "Mauritania"
+
+msgid "Intl_Country_MS"
+msgstr "Montserrat"
+
+msgid "Intl_Country_MT"
+msgstr "Malta"
+
+msgid "Intl_Country_MU"
+msgstr "Mauritius"
+
+msgid "Intl_Country_MV"
+msgstr "Y Maldives"
+
+msgid "Intl_Country_MW"
+msgstr "Malawi"
+
+msgid "Intl_Country_MX"
+msgstr "Mecsico"
+
+msgid "Intl_Country_MY"
+msgstr "Malaysia"
+
+msgid "Intl_Country_MZ"
+msgstr "Mozambique"
+
+msgid "Intl_Country_NA"
+msgstr "Namibia"
+
+msgid "Intl_Country_NC"
+msgstr "Caledonia Newydd"
+
+msgid "Intl_Country_NE"
+msgstr "Niger"
+
+msgid "Intl_Country_NF"
+msgstr "Ynys Norfolk"
+
+msgid "Intl_Country_NG"
+msgstr "Nigeria"
+
+msgid "Intl_Country_NI"
+msgstr "Nicaragua"
+
+msgid "Intl_Country_NL"
+msgstr "Yr Iseldiroedd"
+
+msgid "Intl_Country_NO"
+msgstr "Norwy"
+
+msgid "Intl_Country_NP"
+msgstr "Nepal"
+
+msgid "Intl_Country_NR"
+msgstr "Nauru"
+
+msgid "Intl_Country_NU"
+msgstr "Niue"
+
+msgid "Intl_Country_NZ"
+msgstr "Seland Newydd"
+
+msgid "Intl_Country_OM"
+msgstr "Oman"
+
+msgid "Intl_Country_PA"
+msgstr "Panama"
+
+msgid "Intl_Country_PE"
+msgstr "Periw"
+
+msgid "Intl_Country_PF"
+msgstr "Polynesia Ffrengig"
+
+msgid "Intl_Country_PG"
+msgstr "Papua Guinea Newydd"
+
+msgid "Intl_Country_PH"
+msgstr "Y Philipinau"
+
+msgid "Intl_Country_PK"
+msgstr "Pakistan"
+
+msgid "Intl_Country_PL"
+msgstr "Gwlad Pwyl"
+
+msgid "Intl_Country_PM"
+msgstr "Saint-Pierre-et-Miquelon"
+
+msgid "Intl_Country_PN"
+msgstr "Ynysoedd Pitcairn"
+
+msgid "Intl_Country_PR"
+msgstr "Puerto Rico"
+
+msgid "Intl_Country_PS"
+msgstr "Tiriogaethau Palesteinaidd"
+
+msgid "Intl_Country_PT"
+msgstr "Portiwgal"
+
+msgid "Intl_Country_PW"
+msgstr "Palau"
+
+msgid "Intl_Country_PY"
+msgstr "Paraguay"
+
+msgid "Intl_Country_QA"
+msgstr "Qatar"
+
+msgid "Intl_Country_RE"
+msgstr "Réunion"
+
+msgid "Intl_Country_RO"
+msgstr "Rwmania"
+
+msgid "Intl_Country_RS"
+msgstr "Serbia"
+
+msgid "Intl_Country_RU"
+msgstr "Rwsia"
+
+msgid "Intl_Country_RW"
+msgstr "Rwanda"
+
+msgid "Intl_Country_SA"
+msgstr "Saudi Arabia"
+
+msgid "Intl_Country_SB"
+msgstr "Ynysoedd Solomon"
+
+msgid "Intl_Country_SC"
+msgstr "Seychelles"
+
+msgid "Intl_Country_SD"
+msgstr "Swdan"
+
+msgid "Intl_Country_SE"
+msgstr "Sweden"
+
+msgid "Intl_Country_SG"
+msgstr "Singapore"
+
+msgid "Intl_Country_SH"
+msgstr "Saint Helena"
+
+msgid "Intl_Country_SI"
+msgstr "Slofenia"
+
+msgid "Intl_Country_SJ"
+msgstr "Svalbard a Jan Mayen"
+
+msgid "Intl_Country_SK"
+msgstr "Slofacia"
+
+msgid "Intl_Country_SL"
+msgstr "Sierra Leone"
+
+msgid "Intl_Country_SM"
+msgstr "San Marino"
+
+msgid "Intl_Country_SN"
+msgstr "Senegal"
+
+msgid "Intl_Country_SO"
+msgstr "Somalia"
+
+msgid "Intl_Country_SR"
+msgstr "Suriname"
+
+msgid "Intl_Country_SS"
+msgstr "De Swdan"
+
+msgid "Intl_Country_ST"
+msgstr "São Tomé a Príncipe"
+
+msgid "Intl_Country_SV"
+msgstr "El Salvador"
+
+msgid "Intl_Country_SX"
+msgstr "Sint Maarten"
+
+msgid "Intl_Country_SY"
+msgstr "Syria"
+
+msgid "Intl_Country_SZ"
+msgstr "Gwlad Swazi"
+
+msgid "Intl_Country_TC"
+msgstr "Ynysoedd Turks a Caicos"
+
+msgid "Intl_Country_TD"
+msgstr "Tchad"
+
+msgid "Intl_Country_TF"
+msgstr "Tiroedd Deheuol ac Antarctig Ffrainc"
+
+msgid "Intl_Country_TG"
+msgstr "Togo"
+
+msgid "Intl_Country_TH"
+msgstr "Gwlad Thai"
+
+msgid "Intl_Country_TJ"
+msgstr "Tajikistan"
+
+msgid "Intl_Country_TK"
+msgstr "Tokelau"
+
+msgid "Intl_Country_TL"
+msgstr "Timor-Leste"
+
+msgid "Intl_Country_TM"
+msgstr "Turkmenistan"
+
+msgid "Intl_Country_TN"
+msgstr "Tunisia"
+
+msgid "Intl_Country_TO"
+msgstr "Tonga"
+
+msgid "Intl_Country_TR"
+msgstr "Twrci"
+
+msgid "Intl_Country_TT"
+msgstr "Trinidad a Tobago"
+
+msgid "Intl_Country_TV"
+msgstr "Tuvalu"
+
+msgid "Intl_Country_TW"
+msgstr "Taiwan"
+
+msgid "Intl_Country_TZ"
+msgstr "Tanzania"
+
+msgid "Intl_Country_UA"
+msgstr "Wcráin"
+
+msgid "Intl_Country_UG"
+msgstr "Uganda"
+
+msgid "Intl_Country_UM"
+msgstr "Ynysoedd Pellennig UDA"
+
+msgid "Intl_Country_US"
+msgstr "Yr Unol Daleithiau"
+
+msgid "Intl_Country_UY"
+msgstr "Uruguay"
+
+msgid "Intl_Country_UZ"
+msgstr "Uzbekistan"
+
+msgid "Intl_Country_VA"
+msgstr "Y Fatican"
+
+msgid "Intl_Country_VC"
+msgstr "Saint Vincent a’r Grenadines"
+
+msgid "Intl_Country_VE"
+msgstr "Venezuela"
+
+msgid "Intl_Country_VG"
+msgstr "Ynysoedd Gwyryf Prydain"
+
+msgid "Intl_Country_VI"
+msgstr "Ynysoedd Gwyryf yr Unol Daleithiau"
+
+msgid "Intl_Country_VN"
+msgstr "Fietnam"
+
+msgid "Intl_Country_VU"
+msgstr "Vanuatu"
+
+msgid "Intl_Country_WF"
+msgstr "Wallis a Futuna"
+
+msgid "Intl_Country_WS"
+msgstr "Samoa"
+
+msgid "Intl_Country_YE"
+msgstr "Yemen"
+
+msgid "Intl_Country_YT"
+msgstr "Mayotte"
+
+msgid "Intl_Country_ZA"
+msgstr "De Affrica"
+
+msgid "Intl_Country_ZM"
+msgstr "Zambia"
+
+msgid "Intl_Country_ZW"
+msgstr "Zimbabwe"
+
+msgid "Intl_CurrencySymbol_AED"
+msgstr "AED"
+
+msgid "Intl_CurrencySymbol_AFN"
+msgstr "AFN"
+
+msgid "Intl_CurrencySymbol_ALL"
+msgstr "ALL"
+
+msgid "Intl_CurrencySymbol_AMD"
+msgstr "AMD"
+
+msgid "Intl_CurrencySymbol_ANG"
+msgstr "ANG"
+
+msgid "Intl_CurrencySymbol_AOA"
+msgstr "AOA"
+
+msgid "Intl_CurrencySymbol_ARS"
+msgstr "ARS"
+
+msgid "Intl_CurrencySymbol_AUD"
+msgstr "A$"
+
+msgid "Intl_CurrencySymbol_AWG"
+msgstr "AWG"
+
+msgid "Intl_CurrencySymbol_AZN"
+msgstr "AZN"
+
+msgid "Intl_CurrencySymbol_BAM"
+msgstr "BAM"
+
+msgid "Intl_CurrencySymbol_BBD"
+msgstr "BBD"
+
+msgid "Intl_CurrencySymbol_BDT"
+msgstr "BDT"
+
+msgid "Intl_CurrencySymbol_BGN"
+msgstr "BGN"
+
+msgid "Intl_CurrencySymbol_BHD"
+msgstr "BHD"
+
+msgid "Intl_CurrencySymbol_BIF"
+msgstr "BIF"
+
+msgid "Intl_CurrencySymbol_BMD"
+msgstr "BMD"
+
+msgid "Intl_CurrencySymbol_BND"
+msgstr "BND"
+
+msgid "Intl_CurrencySymbol_BOB"
+msgstr "BOB"
+
+msgid "Intl_CurrencySymbol_BRL"
+msgstr "R$"
+
+msgid "Intl_CurrencySymbol_BSD"
+msgstr "BSD"
+
+msgid "Intl_CurrencySymbol_BTC"
+msgstr "BTC"
+
+msgid "Intl_CurrencySymbol_BTN"
+msgstr "BTN"
+
+msgid "Intl_CurrencySymbol_BWP"
+msgstr "BWP"
+
+msgid "Intl_CurrencySymbol_BYN"
+msgstr "BYN"
+
+msgid "Intl_CurrencySymbol_BZD"
+msgstr "BZD"
+
+msgid "Intl_CurrencySymbol_CAD"
+msgstr "CA$"
+
+msgid "Intl_CurrencySymbol_CDF"
+msgstr "CDF"
+
+msgid "Intl_CurrencySymbol_CHF"
+msgstr "CHF"
+
+msgid "Intl_CurrencySymbol_CLP"
+msgstr "CLP"
+
+msgid "Intl_CurrencySymbol_CNY"
+msgstr "CN¥"
+
+msgid "Intl_CurrencySymbol_COP"
+msgstr "COP"
+
+msgid "Intl_CurrencySymbol_CRC"
+msgstr "CRC"
+
+msgid "Intl_CurrencySymbol_CUC"
+msgstr "CUC"
+
+msgid "Intl_CurrencySymbol_CUP"
+msgstr "CUP"
+
+msgid "Intl_CurrencySymbol_CVE"
+msgstr "CVE"
+
+msgid "Intl_CurrencySymbol_CZK"
+msgstr "CZK"
+
+msgid "Intl_CurrencySymbol_DJF"
+msgstr "DJF"
+
+msgid "Intl_CurrencySymbol_DKK"
+msgstr "DKK"
+
+msgid "Intl_CurrencySymbol_DOP"
+msgstr "DOP"
+
+msgid "Intl_CurrencySymbol_DZD"
+msgstr "DZD"
+
+msgid "Intl_CurrencySymbol_EGP"
+msgstr "EGP"
+
+msgid "Intl_CurrencySymbol_ERN"
+msgstr "ERN"
+
+msgid "Intl_CurrencySymbol_ETB"
+msgstr "ETB"
+
+msgid "Intl_CurrencySymbol_EUR"
+msgstr "€"
+
+msgid "Intl_CurrencySymbol_FJD"
+msgstr "FJD"
+
+msgid "Intl_CurrencySymbol_FKP"
+msgstr "FKP"
+
+msgid "Intl_CurrencySymbol_GBP"
+msgstr "£"
+
+msgid "Intl_CurrencySymbol_GEL"
+msgstr "GEL"
+
+msgid "Intl_CurrencySymbol_GHS"
+msgstr "GHS"
+
+msgid "Intl_CurrencySymbol_GIP"
+msgstr "GIP"
+
+msgid "Intl_CurrencySymbol_GMD"
+msgstr "GMD"
+
+msgid "Intl_CurrencySymbol_GNF"
+msgstr "GNF"
+
+msgid "Intl_CurrencySymbol_GTQ"
+msgstr "GTQ"
+
+msgid "Intl_CurrencySymbol_GYD"
+msgstr "GYD"
+
+msgid "Intl_CurrencySymbol_HKD"
+msgstr "HK$"
+
+msgid "Intl_CurrencySymbol_HNL"
+msgstr "HNL"
+
+msgid "Intl_CurrencySymbol_HRK"
+msgstr "HRK"
+
+msgid "Intl_CurrencySymbol_HTG"
+msgstr "HTG"
+
+msgid "Intl_CurrencySymbol_HUF"
+msgstr "HUF"
+
+msgid "Intl_CurrencySymbol_IDR"
+msgstr "IDR"
+
+msgid "Intl_CurrencySymbol_ILS"
+msgstr "₪"
+
+msgid "Intl_CurrencySymbol_INR"
+msgstr "₹"
+
+msgid "Intl_CurrencySymbol_IQD"
+msgstr "IQD"
+
+msgid "Intl_CurrencySymbol_IRR"
+msgstr "IRR"
+
+msgid "Intl_CurrencySymbol_ISK"
+msgstr "ISK"
+
+msgid "Intl_CurrencySymbol_JMD"
+msgstr "JMD"
+
+msgid "Intl_CurrencySymbol_JOD"
+msgstr "JOD"
+
+msgid "Intl_CurrencySymbol_JPY"
+msgstr "JP¥"
+
+msgid "Intl_CurrencySymbol_KES"
+msgstr "KES"
+
+msgid "Intl_CurrencySymbol_KGS"
+msgstr "KGS"
+
+msgid "Intl_CurrencySymbol_KHR"
+msgstr "KHR"
+
+msgid "Intl_CurrencySymbol_KMF"
+msgstr "KMF"
+
+msgid "Intl_CurrencySymbol_KPW"
+msgstr "KPW"
+
+msgid "Intl_CurrencySymbol_KRW"
+msgstr "KRW"
+
+msgid "Intl_CurrencySymbol_KWD"
+msgstr "KWD"
+
+msgid "Intl_CurrencySymbol_KYD"
+msgstr "KYD"
+
+msgid "Intl_CurrencySymbol_KZT"
+msgstr "KZT"
+
+msgid "Intl_CurrencySymbol_LAK"
+msgstr "LAK"
+
+msgid "Intl_CurrencySymbol_LBP"
+msgstr "LBP"
+
+msgid "Intl_CurrencySymbol_LKR"
+msgstr "LKR"
+
+msgid "Intl_CurrencySymbol_LRD"
+msgstr "LRD"
+
+msgid "Intl_CurrencySymbol_LSL"
+msgstr "LSL"
+
+msgid "Intl_CurrencySymbol_LYD"
+msgstr "LYD"
+
+msgid "Intl_CurrencySymbol_MAD"
+msgstr "MAD"
+
+msgid "Intl_CurrencySymbol_MDL"
+msgstr "MDL"
+
+msgid "Intl_CurrencySymbol_MGA"
+msgstr "MGA"
+
+msgid "Intl_CurrencySymbol_MKD"
+msgstr "MKD"
+
+msgid "Intl_CurrencySymbol_MMK"
+msgstr "MMK"
+
+msgid "Intl_CurrencySymbol_MNT"
+msgstr "MNT"
+
+msgid "Intl_CurrencySymbol_MOP"
+msgstr "MOP"
+
+msgid "Intl_CurrencySymbol_MRU"
+msgstr "MRU"
+
+msgid "Intl_CurrencySymbol_MUR"
+msgstr "MUR"
+
+msgid "Intl_CurrencySymbol_MVR"
+msgstr "MVR"
+
+msgid "Intl_CurrencySymbol_MWK"
+msgstr "MWK"
+
+msgid "Intl_CurrencySymbol_MXN"
+msgstr "MX$"
+
+msgid "Intl_CurrencySymbol_MYR"
+msgstr "MYR"
+
+msgid "Intl_CurrencySymbol_MZN"
+msgstr "MZN"
+
+msgid "Intl_CurrencySymbol_NAD"
+msgstr "NAD"
+
+msgid "Intl_CurrencySymbol_NGN"
+msgstr "NGN"
+
+msgid "Intl_CurrencySymbol_NIO"
+msgstr "NIO"
+
+msgid "Intl_CurrencySymbol_NOK"
+msgstr "NOK"
+
+msgid "Intl_CurrencySymbol_NPR"
+msgstr "NPR"
+
+msgid "Intl_CurrencySymbol_NZD"
+msgstr "NZ$"
+
+msgid "Intl_CurrencySymbol_OMR"
+msgstr "OMR"
+
+msgid "Intl_CurrencySymbol_PAB"
+msgstr "PAB"
+
+msgid "Intl_CurrencySymbol_PEN"
+msgstr "PEN"
+
+msgid "Intl_CurrencySymbol_PGK"
+msgstr "PGK"
+
+msgid "Intl_CurrencySymbol_PHP"
+msgstr "PHP"
+
+msgid "Intl_CurrencySymbol_PKR"
+msgstr "PKR"
+
+msgid "Intl_CurrencySymbol_PLN"
+msgstr "PLN"
+
+msgid "Intl_CurrencySymbol_PYG"
+msgstr "PYG"
+
+msgid "Intl_CurrencySymbol_QAR"
+msgstr "QAR"
+
+msgid "Intl_CurrencySymbol_RON"
+msgstr "RON"
+
+msgid "Intl_CurrencySymbol_RSD"
+msgstr "RSD"
+
+msgid "Intl_CurrencySymbol_RUB"
+msgstr "RUB"
+
+msgid "Intl_CurrencySymbol_RWF"
+msgstr "RWF"
+
+msgid "Intl_CurrencySymbol_SAR"
+msgstr "SAR"
+
+msgid "Intl_CurrencySymbol_SBD"
+msgstr "SBD"
+
+msgid "Intl_CurrencySymbol_SCR"
+msgstr "SCR"
+
+msgid "Intl_CurrencySymbol_SDG"
+msgstr "SDG"
+
+msgid "Intl_CurrencySymbol_SEK"
+msgstr "SEK"
+
+msgid "Intl_CurrencySymbol_SGD"
+msgstr "SGD"
+
+msgid "Intl_CurrencySymbol_SHP"
+msgstr "SHP"
+
+msgid "Intl_CurrencySymbol_SLL"
+msgstr "SLL"
+
+msgid "Intl_CurrencySymbol_SOS"
+msgstr "SOS"
+
+msgid "Intl_CurrencySymbol_SRD"
+msgstr "SRD"
+
+msgid "Intl_CurrencySymbol_SSP"
+msgstr "SSP"
+
+msgid "Intl_CurrencySymbol_STN"
+msgstr "STN"
+
+msgid "Intl_CurrencySymbol_SYP"
+msgstr "SYP"
+
+msgid "Intl_CurrencySymbol_SZL"
+msgstr "SZL"
+
+msgid "Intl_CurrencySymbol_THB"
+msgstr "฿"
+
+msgid "Intl_CurrencySymbol_TJS"
+msgstr "TJS"
+
+msgid "Intl_CurrencySymbol_TMT"
+msgstr "TMT"
+
+msgid "Intl_CurrencySymbol_TND"
+msgstr "TND"
+
+msgid "Intl_CurrencySymbol_TOP"
+msgstr "TOP"
+
+msgid "Intl_CurrencySymbol_TRY"
+msgstr "TRY"
+
+msgid "Intl_CurrencySymbol_TTD"
+msgstr "TTD"
+
+msgid "Intl_CurrencySymbol_TWD"
+msgstr "NT$"
+
+msgid "Intl_CurrencySymbol_TZS"
+msgstr "TZS"
+
+msgid "Intl_CurrencySymbol_UAH"
+msgstr "UAH"
+
+msgid "Intl_CurrencySymbol_UGX"
+msgstr "UGX"
+
+msgid "Intl_CurrencySymbol_USD"
+msgstr "US$"
+
+msgid "Intl_CurrencySymbol_UYU"
+msgstr "UYU"
+
+msgid "Intl_CurrencySymbol_UZS"
+msgstr "UZS"
+
+msgid "Intl_CurrencySymbol_VEF"
+msgstr "VEF"
+
+msgid "Intl_CurrencySymbol_VND"
+msgstr "₫"
+
+msgid "Intl_CurrencySymbol_VUV"
+msgstr "VUV"
+
+msgid "Intl_CurrencySymbol_WST"
+msgstr "WST"
+
+msgid "Intl_CurrencySymbol_XAF"
+msgstr "FCFA"
+
+msgid "Intl_CurrencySymbol_XCD"
+msgstr "EC$"
+
+msgid "Intl_CurrencySymbol_XOF"
+msgstr "CFA"
+
+msgid "Intl_CurrencySymbol_XPF"
+msgstr "CFPF"
+
+msgid "Intl_CurrencySymbol_YER"
+msgstr "YER"
+
+msgid "Intl_CurrencySymbol_ZAR"
+msgstr "ZAR"
+
+msgid "Intl_CurrencySymbol_ZMW"
+msgstr "ZMW"
+
+msgid "Intl_Currency_AED"
+msgstr "Dirham Yr Emiradau Arabaidd Unedig"
+
+msgid "Intl_Currency_AFN"
+msgstr "Afghani Afghanistan"
+
+msgid "Intl_Currency_ALL"
+msgstr "Lek Albania"
+
+msgid "Intl_Currency_AMD"
+msgstr "Dram Armenia"
+
+msgid "Intl_Currency_ANG"
+msgstr "Guilder Antilles yr Iseldiroedd"
+
+msgid "Intl_Currency_AOA"
+msgstr "Kwanza Angola"
+
+msgid "Intl_Currency_ARS"
+msgstr "Peso yr Ariannin"
+
+msgid "Intl_Currency_AUD"
+msgstr "Doler Awstralia"
+
+msgid "Intl_Currency_AWG"
+msgstr "Fflorin Aruba"
+
+msgid "Intl_Currency_AZN"
+msgstr "Manat Azerbaijan"
+
+msgid "Intl_Currency_BAM"
+msgstr "Marc Trosadwy Bosnia a Hercegovina"
+
+msgid "Intl_Currency_BBD"
+msgstr "Doler Barbados"
+
+msgid "Intl_Currency_BDT"
+msgstr "Taka Bangladesh"
+
+msgid "Intl_Currency_BGN"
+msgstr "Lev Bwlgaria"
+
+msgid "Intl_Currency_BHD"
+msgstr "Dinar Bahrain"
+
+msgid "Intl_Currency_BIF"
+msgstr "Ffranc Burundi"
+
+msgid "Intl_Currency_BMD"
+msgstr "Doler Bermuda"
+
+msgid "Intl_Currency_BND"
+msgstr "Doler Brunei"
+
+msgid "Intl_Currency_BOB"
+msgstr "Boliviano Bolifia"
+
+msgid "Intl_Currency_BRL"
+msgstr "Real Brasil"
+
+msgid "Intl_Currency_BSD"
+msgstr "Doler y Bahamas"
+
+msgid "Intl_Currency_BTC"
+msgstr "Bitcoin"
+
+msgid "Intl_Currency_BTN"
+msgstr "Ngultrum Bhutan"
+
+msgid "Intl_Currency_BWP"
+msgstr "Pula Botswana"
+
+msgid "Intl_Currency_BYN"
+msgstr "Rwbl Belarws"
+
+msgid "Intl_Currency_BZD"
+msgstr "Doler Belize"
+
+msgid "Intl_Currency_CAD"
+msgstr "Doler Canada"
+
+msgid "Intl_Currency_CDF"
+msgstr "Ffranc Congo"
+
+msgid "Intl_Currency_CHF"
+msgstr "Ffranc y Swistir"
+
+msgid "Intl_Currency_CLP"
+msgstr "Peso Chile"
+
+msgid "Intl_Currency_CNY"
+msgstr "Yuan Tsieina"
+
+msgid "Intl_Currency_COP"
+msgstr "Peso Colombia"
+
+msgid "Intl_Currency_CRC"
+msgstr "Colón Costa Rica"
+
+msgid "Intl_Currency_CUC"
+msgstr "Peso Trosadwy Ciwba"
+
+msgid "Intl_Currency_CUP"
+msgstr "Peso Ciwba"
+
+msgid "Intl_Currency_CVE"
+msgstr "Esgwdo Cabo Verde"
+
+msgid "Intl_Currency_CZK"
+msgstr "Koruna’r Weriniaeth Tsiec"
+
+msgid "Intl_Currency_DJF"
+msgstr "Ffranc Djibouti"
+
+msgid "Intl_Currency_DKK"
+msgstr "Krone Denmarc"
+
+msgid "Intl_Currency_DOP"
+msgstr "Peso Gweriniaeth Dominica"
+
+msgid "Intl_Currency_DZD"
+msgstr "Dinar Algeria"
+
+msgid "Intl_Currency_EGP"
+msgstr "Punt Yr Aifft"
+
+msgid "Intl_Currency_ERN"
+msgstr "Nakfa Eritrea"
+
+msgid "Intl_Currency_ETB"
+msgstr "Birr Ethiopia"
+
+msgid "Intl_Currency_EUR"
+msgstr "Ewro"
+
+msgid "Intl_Currency_FJD"
+msgstr "Doler Ffiji"
+
+msgid "Intl_Currency_FKP"
+msgstr "Punt Ynysoedd Falkland/Malvinas"
+
+msgid "Intl_Currency_GBP"
+msgstr "Punt Prydain"
+
+msgid "Intl_Currency_GEL"
+msgstr "Lari Georgia"
+
+msgid "Intl_Currency_GHS"
+msgstr "Cedi Ghana"
+
+msgid "Intl_Currency_GIP"
+msgstr "Punt Gibraltar"
+
+msgid "Intl_Currency_GMD"
+msgstr "Dalasi Gambia"
+
+msgid "Intl_Currency_GNF"
+msgstr "Ffranc Guinée"
+
+msgid "Intl_Currency_GTQ"
+msgstr "Quetzal Guatemala"
+
+msgid "Intl_Currency_GYD"
+msgstr "Doler Guyana"
+
+msgid "Intl_Currency_HKD"
+msgstr "Doler Hong Kong"
+
+msgid "Intl_Currency_HNL"
+msgstr "Lempira Honduras"
+
+msgid "Intl_Currency_HRK"
+msgstr "Kuna Croatia"
+
+msgid "Intl_Currency_HTG"
+msgstr "Gourde Haiti"
+
+msgid "Intl_Currency_HUF"
+msgstr "Fforint Hwngari"
+
+msgid "Intl_Currency_IDR"
+msgstr "Rupiah Indonesia"
+
+msgid "Intl_Currency_ILS"
+msgstr "Shegel Newydd Israel"
+
+msgid "Intl_Currency_INR"
+msgstr "Rwpî India"
+
+msgid "Intl_Currency_IQD"
+msgstr "Dinar Irac"
+
+msgid "Intl_Currency_IRR"
+msgstr "Rial Iran"
+
+msgid "Intl_Currency_ISK"
+msgstr "Króna Gwlad yr Iâ"
+
+msgid "Intl_Currency_JMD"
+msgstr "Doler Jamaica"
+
+msgid "Intl_Currency_JOD"
+msgstr "Dinar Gwlad yr Iorddonen"
+
+msgid "Intl_Currency_JPY"
+msgstr "Yen Japan"
+
+msgid "Intl_Currency_KES"
+msgstr "Swllt Kenya"
+
+msgid "Intl_Currency_KGS"
+msgstr "Som Kyrgyzstan"
+
+msgid "Intl_Currency_KHR"
+msgstr "Riel Cambodia"
+
+msgid "Intl_Currency_KMF"
+msgstr "Ffranc Comoros"
+
+msgid "Intl_Currency_KPW"
+msgstr "Won Gogledd Corea"
+
+msgid "Intl_Currency_KRW"
+msgstr "Won De Corea"
+
+msgid "Intl_Currency_KWD"
+msgstr "Dinar Kuwait"
+
+msgid "Intl_Currency_KYD"
+msgstr "Doler Ynysoedd Cayman"
+
+msgid "Intl_Currency_KZT"
+msgstr "Tenge Kazakstan"
+
+msgid "Intl_Currency_LAK"
+msgstr "Kip Laos"
+
+msgid "Intl_Currency_LBP"
+msgstr "Punt Libanus"
+
+msgid "Intl_Currency_LKR"
+msgstr "Rwpî Sri Lanka"
+
+msgid "Intl_Currency_LRD"
+msgstr "Doler Liberia"
+
+msgid "Intl_Currency_LSL"
+msgstr "Loti Lesotho"
+
+msgid "Intl_Currency_LYD"
+msgstr "Dinar Libya"
+
+msgid "Intl_Currency_MAD"
+msgstr "Dirham Moroco"
+
+msgid "Intl_Currency_MDL"
+msgstr "Leu Moldofa"
+
+msgid "Intl_Currency_MGA"
+msgstr "Ariary Madagascar"
+
+msgid "Intl_Currency_MKD"
+msgstr "Denar Macedonia"
+
+msgid "Intl_Currency_MMK"
+msgstr "Kyat Myanmar"
+
+msgid "Intl_Currency_MNT"
+msgstr "Tugrik Mongolia"
+
+msgid "Intl_Currency_MOP"
+msgstr "Pataca Macau"
+
+msgid "Intl_Currency_MRU"
+msgstr "Ouguiya Mauritania"
+
+msgid "Intl_Currency_MUR"
+msgstr "Rwpî Mauritius"
+
+msgid "Intl_Currency_MVR"
+msgstr "Rufiyaa’r Maldives"
+
+msgid "Intl_Currency_MWK"
+msgstr "Kwacha Malawi"
+
+msgid "Intl_Currency_MXN"
+msgstr "Peso Mecsico"
+
+msgid "Intl_Currency_MYR"
+msgstr "Ringgit Malaysia"
+
+msgid "Intl_Currency_MZN"
+msgstr "Metical Mozambique"
+
+msgid "Intl_Currency_NAD"
+msgstr "Doler Namibia"
+
+msgid "Intl_Currency_NGN"
+msgstr "Naira Nigeria"
+
+msgid "Intl_Currency_NIO"
+msgstr "Cordoba Nicaragwa"
+
+msgid "Intl_Currency_NOK"
+msgstr "Krone Norwy"
+
+msgid "Intl_Currency_NPR"
+msgstr "Rwpî Nepal"
+
+msgid "Intl_Currency_NZD"
+msgstr "Doler Seland Newydd"
+
+msgid "Intl_Currency_OMR"
+msgstr "Rial Oman"
+
+msgid "Intl_Currency_PAB"
+msgstr "Balboa Panama"
+
+msgid "Intl_Currency_PEN"
+msgstr "Sol Periw"
+
+msgid "Intl_Currency_PGK"
+msgstr "Kina Papua Guinea Newydd"
+
+msgid "Intl_Currency_PHP"
+msgstr "Peso’r Philipinau"
+
+msgid "Intl_Currency_PKR"
+msgstr "Rwpî Pacistan"
+
+msgid "Intl_Currency_PLN"
+msgstr "Zloty Gwlad Pwyl"
+
+msgid "Intl_Currency_PYG"
+msgstr "Guarani Paraguay"
+
+msgid "Intl_Currency_QAR"
+msgstr "Rial Qatar"
+
+msgid "Intl_Currency_RON"
+msgstr "Leu Rwmania"
+
+msgid "Intl_Currency_RSD"
+msgstr "Dinar Serbia"
+
+msgid "Intl_Currency_RUB"
+msgstr "Rwbl Rwsia"
+
+msgid "Intl_Currency_RWF"
+msgstr "Ffranc Rwanda"
+
+msgid "Intl_Currency_SAR"
+msgstr "Riyal Saudi Arabia"
+
+msgid "Intl_Currency_SBD"
+msgstr "Doler Ynysoedd Solomon"
+
+msgid "Intl_Currency_SCR"
+msgstr "Rwpî Seychelles"
+
+msgid "Intl_Currency_SDG"
+msgstr "Punt Sudan"
+
+msgid "Intl_Currency_SEK"
+msgstr "Krona Sweden"
+
+msgid "Intl_Currency_SGD"
+msgstr "Doler Singapore"
+
+msgid "Intl_Currency_SHP"
+msgstr "Punt St Helena"
+
+msgid "Intl_Currency_SLL"
+msgstr "Leone Sierra Leone"
+
+msgid "Intl_Currency_SOS"
+msgstr "Swllt Somalia"
+
+msgid "Intl_Currency_SRD"
+msgstr "Doler Surinam"
+
+msgid "Intl_Currency_SSP"
+msgstr "Punt De Sudan"
+
+msgid "Intl_Currency_STN"
+msgstr "Dobra São Tomé a Príncipe"
+
+msgid "Intl_Currency_SYP"
+msgstr "Punt Syria"
+
+msgid "Intl_Currency_SZL"
+msgstr "Lilangeni Gwlad Swazi"
+
+msgid "Intl_Currency_THB"
+msgstr "Baht Gwlad Thai"
+
+msgid "Intl_Currency_TJS"
+msgstr "Somoni Tajikistan"
+
+msgid "Intl_Currency_TMT"
+msgstr "Manat Turkmenistan"
+
+msgid "Intl_Currency_TND"
+msgstr "Dinar Tunisia"
+
+msgid "Intl_Currency_TOP"
+msgstr "Paʻanga Tonga"
+
+msgid "Intl_Currency_TRY"
+msgstr "Lira Twrci"
+
+msgid "Intl_Currency_TTD"
+msgstr "Doler Trinidad a Tobago"
+
+msgid "Intl_Currency_TWD"
+msgstr "Doler Newydd Taiwan"
+
+msgid "Intl_Currency_TZS"
+msgstr "Swllt Tanzania"
+
+msgid "Intl_Currency_UAH"
+msgstr "Hryvnia Wcráin"
+
+msgid "Intl_Currency_UGX"
+msgstr "Swllt Uganda"
+
+msgid "Intl_Currency_USD"
+msgstr "Doler UDA"
+
+msgid "Intl_Currency_UYU"
+msgstr "Peso Uruguay"
+
+msgid "Intl_Currency_UZS"
+msgstr "Som Uzbekistan"
+
+msgid "Intl_Currency_VEF"
+msgstr "Bolívar Venezuela (2008–2018)"
+
+msgid "Intl_Currency_VND"
+msgstr "Dong Fietnam"
+
+msgid "Intl_Currency_VUV"
+msgstr "Vatu Vanuatu"
+
+msgid "Intl_Currency_WST"
+msgstr "Tala Samoa"
+
+msgid "Intl_Currency_XAF"
+msgstr "Ffranc CFA Canol Affrica"
+
+msgid "Intl_Currency_XCD"
+msgstr "Doler Dwyrain y Caribî"
+
+msgid "Intl_Currency_XOF"
+msgstr "Ffranc CFA Gorllewin Affrica"
+
+msgid "Intl_Currency_XPF"
+msgstr "Ffranc CFP"
+
+msgid "Intl_Currency_YER"
+msgstr "Rial Yemen"
+
+msgid "Intl_Currency_ZAR"
+msgstr "Rand De Affrica"
+
+msgid "Intl_Currency_ZMW"
+msgstr "Kwacha Zambia"
+
+msgid "Intl_Day_Long_1"
+msgstr "Dydd Llun"
+
+msgid "Intl_Day_Long_2"
+msgstr "Dydd Mawrth"
+
+msgid "Intl_Day_Long_3"
+msgstr "Dydd Mercher"
+
+msgid "Intl_Day_Long_4"
+msgstr "Dydd Iau"
+
+msgid "Intl_Day_Long_5"
+msgstr "Dydd Gwener"
+
+msgid "Intl_Day_Long_6"
+msgstr "Dydd Sadwrn"
+
+msgid "Intl_Day_Long_7"
+msgstr "Dydd Sul"
+
+msgid "Intl_Day_Long_StandAlone_1"
+msgstr "Dydd Llun"
+
+msgid "Intl_Day_Long_StandAlone_2"
+msgstr "Dydd Mawrth"
+
+msgid "Intl_Day_Long_StandAlone_3"
+msgstr "Dydd Mercher"
+
+msgid "Intl_Day_Long_StandAlone_4"
+msgstr "Dydd Iau"
+
+msgid "Intl_Day_Long_StandAlone_5"
+msgstr "Dydd Gwener"
+
+msgid "Intl_Day_Long_StandAlone_6"
+msgstr "Dydd Sadwrn"
+
+msgid "Intl_Day_Long_StandAlone_7"
+msgstr "Dydd Sul"
+
+msgid "Intl_Day_Min_1"
+msgstr "Ll"
+
+msgid "Intl_Day_Min_2"
+msgstr "Ma"
+
+msgid "Intl_Day_Min_3"
+msgstr "Me"
+
+msgid "Intl_Day_Min_4"
+msgstr "Ia"
+
+msgid "Intl_Day_Min_5"
+msgstr "Gw"
+
+msgid "Intl_Day_Min_6"
+msgstr "Sa"
+
+msgid "Intl_Day_Min_7"
+msgstr "Su"
+
+msgid "Intl_Day_Min_StandAlone_1"
+msgstr "Ll"
+
+msgid "Intl_Day_Min_StandAlone_2"
+msgstr "Ma"
+
+msgid "Intl_Day_Min_StandAlone_3"
+msgstr "Me"
+
+msgid "Intl_Day_Min_StandAlone_4"
+msgstr "Ia"
+
+msgid "Intl_Day_Min_StandAlone_5"
+msgstr "Gw"
+
+msgid "Intl_Day_Min_StandAlone_6"
+msgstr "Sa"
+
+msgid "Intl_Day_Min_StandAlone_7"
+msgstr "Su"
+
+msgid "Intl_Day_Short_1"
+msgstr "Llun"
+
+msgid "Intl_Day_Short_2"
+msgstr "Maw"
+
+msgid "Intl_Day_Short_3"
+msgstr "Mer"
+
+msgid "Intl_Day_Short_4"
+msgstr "Iau"
+
+msgid "Intl_Day_Short_5"
+msgstr "Gwen"
+
+msgid "Intl_Day_Short_6"
+msgstr "Sad"
+
+msgid "Intl_Day_Short_7"
+msgstr "Sul"
+
+msgid "Intl_Day_Short_StandAlone_1"
+msgstr "Llun"
+
+msgid "Intl_Day_Short_StandAlone_2"
+msgstr "Maw"
+
+msgid "Intl_Day_Short_StandAlone_3"
+msgstr "Mer"
+
+msgid "Intl_Day_Short_StandAlone_4"
+msgstr "Iau"
+
+msgid "Intl_Day_Short_StandAlone_5"
+msgstr "Gwe"
+
+msgid "Intl_Day_Short_StandAlone_6"
+msgstr "Sad"
+
+msgid "Intl_Day_Short_StandAlone_7"
+msgstr "Sul"
+
+msgid "Intl_EnglishLanguageName"
+msgstr "Welsh"
+
+msgid "Intl_Format_DateTime_Long"
+msgstr "EEEE, d MMMM y {time}"
+
+msgid "Intl_Format_DateTime_Short"
+msgstr "d MMM y {time}"
+
+msgid "Intl_Format_Date_Day_Month"
+msgstr "E, d MMM"
+
+msgid "Intl_Format_Date_Long"
+msgstr "EEEE, d MMMM y"
+
+msgid "Intl_Format_Date_Short"
+msgstr "d MMM y"
+
+msgid "Intl_Format_Hour_12"
+msgstr "h a"
+
+msgid "Intl_Format_Hour_24"
+msgstr "HH"
+
+msgid "Intl_Format_Interval_Long_D"
+msgstr "d–d MMMM y"
+
+msgid "Intl_Format_Interval_Long_M"
+msgstr "d MMMM – d MMMM y"
+
+msgid "Intl_Format_Interval_Long_Y"
+msgstr "d MMMM, y – d MMMM y"
+
+msgid "Intl_Format_Interval_Short_D"
+msgstr "d–d MMM y"
+
+msgid "Intl_Format_Interval_Short_M"
+msgstr "d MMM – d MMM y"
+
+msgid "Intl_Format_Interval_Short_Y"
+msgstr "d MMM, y – d MMM y"
+
+msgid "Intl_Format_Month_Long"
+msgstr "MMMM y"
+
+msgid "Intl_Format_Month_Short"
+msgstr "MMM y"
+
+msgid "Intl_Format_Time"
+msgstr "{time}"
+
+msgid "Intl_Format_Time_12"
+msgstr "h:mm:ss a"
+
+msgid "Intl_Format_Time_24"
+msgstr "HH:mm:ss"
+
+msgid "Intl_Format_Year"
+msgstr "y"
+
+msgid "Intl_Hours"
+msgstr "oriau"
+
+msgid "Intl_Language_aa"
+msgstr "Affareg"
+
+msgid "Intl_Language_ab"
+msgstr "Abchaseg"
+
+msgid "Intl_Language_ae"
+msgstr "Afestaneg"
+
+msgid "Intl_Language_af"
+msgstr "Affricâneg"
+
+msgid "Intl_Language_ak"
+msgstr "Acaneg"
+
+msgid "Intl_Language_am"
+msgstr "Amhareg"
+
+msgid "Intl_Language_an"
+msgstr "Aragoneg"
+
+msgid "Intl_Language_ar"
+msgstr "Arabeg"
+
+msgid "Intl_Language_as"
+msgstr "Asameg"
+
+msgid "Intl_Language_av"
+msgstr "Afareg"
+
+msgid "Intl_Language_ay"
+msgstr "Aymareg"
+
+msgid "Intl_Language_az"
+msgstr "Aserbaijaneg"
+
+msgid "Intl_Language_ba"
+msgstr "Bashcorteg"
+
+msgid "Intl_Language_be"
+msgstr "Belarwseg"
+
+msgid "Intl_Language_bg"
+msgstr "Bwlgareg"
+
+msgid "Intl_Language_bi"
+msgstr "Bislama"
+
+msgid "Intl_Language_bm"
+msgstr "Bambareg"
+
+msgid "Intl_Language_bn"
+msgstr "Bengaleg"
+
+msgid "Intl_Language_bo"
+msgstr "Tibeteg"
+
+msgid "Intl_Language_br"
+msgstr "Llydaweg"
+
+msgid "Intl_Language_bs"
+msgstr "Bosnieg"
+
+msgid "Intl_Language_ca"
+msgstr "Catalaneg"
+
+msgid "Intl_Language_ce"
+msgstr "Tsietsieneg"
+
+msgid "Intl_Language_ch"
+msgstr "Tsiamorro"
+
+msgid "Intl_Language_co"
+msgstr "Corseg"
+
+msgid "Intl_Language_cr"
+msgstr "Cri"
+
+msgid "Intl_Language_cs"
+msgstr "Tsieceg"
+
+msgid "Intl_Language_cu"
+msgstr "Hen Slafoneg"
+
+msgid "Intl_Language_cv"
+msgstr "Tshwfasheg"
+
+msgid "Intl_Language_cy"
+msgstr "Cymraeg"
+
+msgid "Intl_Language_da"
+msgstr "Daneg"
+
+msgid "Intl_Language_de"
+msgstr "Almaeneg"
+
+msgid "Intl_Language_dv"
+msgstr "Difehi"
+
+msgid "Intl_Language_dz"
+msgstr "Dzongkha"
+
+msgid "Intl_Language_ee"
+msgstr "Ewe"
+
+msgid "Intl_Language_el"
+msgstr "Groeg"
+
+msgid "Intl_Language_en"
+msgstr "Saesneg"
+
+msgid "Intl_Language_eo"
+msgstr "Esperanto"
+
+msgid "Intl_Language_es"
+msgstr "Sbaeneg"
+
+msgid "Intl_Language_et"
+msgstr "Estoneg"
+
+msgid "Intl_Language_eu"
+msgstr "Basgeg"
+
+msgid "Intl_Language_fa"
+msgstr "Perseg"
+
+msgid "Intl_Language_ff"
+msgstr "Ffwla"
+
+msgid "Intl_Language_fi"
+msgstr "Ffinneg"
+
+msgid "Intl_Language_fj"
+msgstr "Ffijïeg"
+
+msgid "Intl_Language_fo"
+msgstr "Ffaröeg"
+
+msgid "Intl_Language_fr"
+msgstr "Ffrangeg"
+
+msgid "Intl_Language_fy"
+msgstr "Ffriseg y Gorllewin"
+
+msgid "Intl_Language_ga"
+msgstr "Gwyddeleg"
+
+msgid "Intl_Language_gd"
+msgstr "Gaeleg yr Alban"
+
+msgid "Intl_Language_gl"
+msgstr "Galisieg"
+
+msgid "Intl_Language_gn"
+msgstr "Guaraní"
+
+msgid "Intl_Language_gu"
+msgstr "Gwjarati"
+
+msgid "Intl_Language_gv"
+msgstr "Manaweg"
+
+msgid "Intl_Language_ha"
+msgstr "Hawsa"
+
+msgid "Intl_Language_he"
+msgstr "Hebraeg"
+
+msgid "Intl_Language_hi"
+msgstr "Hindi"
+
+msgid "Intl_Language_hr"
+msgstr "Croateg"
+
+msgid "Intl_Language_ht"
+msgstr "Creol Haiti"
+
+msgid "Intl_Language_hu"
+msgstr "Hwngareg"
+
+msgid "Intl_Language_hy"
+msgstr "Armeneg"
+
+msgid "Intl_Language_hz"
+msgstr "Herero"
+
+msgid "Intl_Language_ia"
+msgstr "Interlingua"
+
+msgid "Intl_Language_id"
+msgstr "Indoneseg"
+
+msgid "Intl_Language_ie"
+msgstr "Interlingue"
+
+msgid "Intl_Language_ig"
+msgstr "Igbo"
+
+msgid "Intl_Language_ii"
+msgstr "Nwosw"
+
+msgid "Intl_Language_ik"
+msgstr "Inwpiaceg"
+
+msgid "Intl_Language_io"
+msgstr "Ido"
+
+msgid "Intl_Language_is"
+msgstr "Islandeg"
+
+msgid "Intl_Language_it"
+msgstr "Eidaleg"
+
+msgid "Intl_Language_iu"
+msgstr "Inwctitwt"
+
+msgid "Intl_Language_ja"
+msgstr "Japaneeg"
+
+msgid "Intl_Language_jv"
+msgstr "Jafanaeg"
+
+msgid "Intl_Language_ka"
+msgstr "Georgeg"
+
+msgid "Intl_Language_kg"
+msgstr "Congo"
+
+msgid "Intl_Language_ki"
+msgstr "Kikuyu"
+
+msgid "Intl_Language_kj"
+msgstr "Kuanyama"
+
+msgid "Intl_Language_kk"
+msgstr "Casacheg"
+
+msgid "Intl_Language_kl"
+msgstr "Kalaallisut"
+
+msgid "Intl_Language_km"
+msgstr "Chmereg"
+
+msgid "Intl_Language_kn"
+msgstr "Kannada"
+
+msgid "Intl_Language_ko"
+msgstr "Coreeg"
+
+msgid "Intl_Language_kr"
+msgstr "Canwri"
+
+msgid "Intl_Language_ks"
+msgstr "Cashmireg"
+
+msgid "Intl_Language_ku"
+msgstr "Cwrdeg"
+
+msgid "Intl_Language_kv"
+msgstr "Comi"
+
+msgid "Intl_Language_kw"
+msgstr "Cernyweg"
+
+msgid "Intl_Language_ky"
+msgstr "Cirgiseg"
+
+msgid "Intl_Language_la"
+msgstr "Lladin"
+
+msgid "Intl_Language_lb"
+msgstr "Lwcsembwrgeg"
+
+msgid "Intl_Language_lg"
+msgstr "Ganda"
+
+msgid "Intl_Language_li"
+msgstr "Limbwrgeg"
+
+msgid "Intl_Language_ln"
+msgstr "Lingala"
+
+msgid "Intl_Language_lo"
+msgstr "Laoeg"
+
+msgid "Intl_Language_lt"
+msgstr "Lithwaneg"
+
+msgid "Intl_Language_lu"
+msgstr "Luba-Katanga"
+
+msgid "Intl_Language_lv"
+msgstr "Latfieg"
+
+msgid "Intl_Language_mg"
+msgstr "Malagaseg"
+
+msgid "Intl_Language_mh"
+msgstr "Marsialeg"
+
+msgid "Intl_Language_mi"
+msgstr "Maori"
+
+msgid "Intl_Language_mk"
+msgstr "Macedoneg"
+
+msgid "Intl_Language_ml"
+msgstr "Malayalam"
+
+msgid "Intl_Language_mn"
+msgstr "Mongoleg"
+
+msgid "Intl_Language_mr"
+msgstr "Marathi"
+
+msgid "Intl_Language_ms"
+msgstr "Maleieg"
+
+msgid "Intl_Language_mt"
+msgstr "Malteg"
+
+msgid "Intl_Language_my"
+msgstr "Byrmaneg"
+
+msgid "Intl_Language_na"
+msgstr "Nawrŵeg"
+
+msgid "Intl_Language_nb"
+msgstr "Norwyeg Bokmål"
+
+msgid "Intl_Language_nd"
+msgstr "Ndebele Gogleddol"
+
+msgid "Intl_Language_ne"
+msgstr "Nepaleg"
+
+msgid "Intl_Language_ng"
+msgstr "Ndonga"
+
+msgid "Intl_Language_nl"
+msgstr "Iseldireg"
+
+msgid "Intl_Language_nn"
+msgstr "Norwyeg Nynorsk"
+
+msgid "Intl_Language_no"
+msgstr "Norwyeg"
+
+msgid "Intl_Language_nr"
+msgstr "Ndebele Deheuol"
+
+msgid "Intl_Language_nv"
+msgstr "Nafaho"
+
+msgid "Intl_Language_ny"
+msgstr "Nianja"
+
+msgid "Intl_Language_oc"
+msgstr "Ocsitaneg"
+
+msgid "Intl_Language_oj"
+msgstr "Ojibwa"
+
+msgid "Intl_Language_om"
+msgstr "Oromo"
+
+msgid "Intl_Language_or"
+msgstr "Odia"
+
+msgid "Intl_Language_os"
+msgstr "Oseteg"
+
+msgid "Intl_Language_pa"
+msgstr "Pwnjabeg"
+
+msgid "Intl_Language_pi"
+msgstr "Pali"
+
+msgid "Intl_Language_pl"
+msgstr "Pwyleg"
+
+msgid "Intl_Language_ps"
+msgstr "Pashto"
+
+msgid "Intl_Language_pt"
+msgstr "Portiwgeeg"
+
+msgid "Intl_Language_qu"
+msgstr "Quechua"
+
+msgid "Intl_Language_rm"
+msgstr "Románsh"
+
+msgid "Intl_Language_rn"
+msgstr "Rwndi"
+
+msgid "Intl_Language_ro"
+msgstr "Rwmaneg"
+
+msgid "Intl_Language_ru"
+msgstr "Rwseg"
+
+msgid "Intl_Language_rw"
+msgstr "Ciniarŵandeg"
+
+msgid "Intl_Language_sa"
+msgstr "Sansgrit"
+
+msgid "Intl_Language_sc"
+msgstr "Sardeg"
+
+msgid "Intl_Language_sd"
+msgstr "Sindhi"
+
+msgid "Intl_Language_se"
+msgstr "Sami Gogleddol"
+
+msgid "Intl_Language_sg"
+msgstr "Sango"
+
+msgid "Intl_Language_si"
+msgstr "Sinhaleg"
+
+msgid "Intl_Language_sk"
+msgstr "Slofaceg"
+
+msgid "Intl_Language_sl"
+msgstr "Slofeneg"
+
+msgid "Intl_Language_sm"
+msgstr "Samöeg"
+
+msgid "Intl_Language_sn"
+msgstr "Shona"
+
+msgid "Intl_Language_so"
+msgstr "Somaleg"
+
+msgid "Intl_Language_sq"
+msgstr "Albaneg"
+
+msgid "Intl_Language_sr"
+msgstr "Serbeg"
+
+msgid "Intl_Language_ss"
+msgstr "Swati"
+
+msgid "Intl_Language_st"
+msgstr "Sesotheg Deheuol"
+
+msgid "Intl_Language_su"
+msgstr "Swndaneg"
+
+msgid "Intl_Language_sv"
+msgstr "Swedeg"
+
+msgid "Intl_Language_sw"
+msgstr "Swahili"
+
+msgid "Intl_Language_ta"
+msgstr "Tamileg"
+
+msgid "Intl_Language_te"
+msgstr "Telugu"
+
+msgid "Intl_Language_tg"
+msgstr "Tajiceg"
+
+msgid "Intl_Language_th"
+msgstr "Thai"
+
+msgid "Intl_Language_ti"
+msgstr "Tigrinya"
+
+msgid "Intl_Language_tk"
+msgstr "Twrcmeneg"
+
+msgid "Intl_Language_tl"
+msgstr "Tagalog"
+
+msgid "Intl_Language_tn"
+msgstr "Tswana"
+
+msgid "Intl_Language_to"
+msgstr "Tongeg"
+
+msgid "Intl_Language_tr"
+msgstr "Tyrceg"
+
+msgid "Intl_Language_ts"
+msgstr "Tsongaeg"
+
+msgid "Intl_Language_tt"
+msgstr "Tatareg"
+
+msgid "Intl_Language_tw"
+msgstr "Twi"
+
+msgid "Intl_Language_ty"
+msgstr "Tahitïeg"
+
+msgid "Intl_Language_ug"
+msgstr "Uighur"
+
+msgid "Intl_Language_uk"
+msgstr "Wcreineg"
+
+msgid "Intl_Language_ur"
+msgstr "Wrdw"
+
+msgid "Intl_Language_uz"
+msgstr "Wsbeceg"
+
+msgid "Intl_Language_ve"
+msgstr "Fendeg"
+
+msgid "Intl_Language_vi"
+msgstr "Fietnameg"
+
+msgid "Intl_Language_vo"
+msgstr "Folapük"
+
+msgid "Intl_Language_wa"
+msgstr "Walwneg"
+
+msgid "Intl_Language_wo"
+msgstr "Woloff"
+
+msgid "Intl_Language_xh"
+msgstr "Xhosa"
+
+msgid "Intl_Language_yi"
+msgstr "Iddew-Almaeneg"
+
+msgid "Intl_Language_yo"
+msgstr "Iorwba"
+
+msgid "Intl_Language_zh"
+msgstr "Tsieineeg"
+
+msgid "Intl_Language_zu"
+msgstr "Swlw"
+
+msgid "Intl_LayoutDirection"
+msgstr "ltr"
+
+msgid "Intl_Minutes"
+msgstr "munudau"
+
+msgid "Intl_Month_Long_1"
+msgstr "Ionawr"
+
+msgid "Intl_Month_Long_10"
+msgstr "Hydref"
+
+msgid "Intl_Month_Long_11"
+msgstr "Tachwedd"
+
+msgid "Intl_Month_Long_12"
+msgstr "Rhagfyr"
+
+msgid "Intl_Month_Long_2"
+msgstr "Chwefror"
+
+msgid "Intl_Month_Long_3"
+msgstr "Mawrth"
+
+msgid "Intl_Month_Long_4"
+msgstr "Ebrill"
+
+msgid "Intl_Month_Long_5"
+msgstr "Mai"
+
+msgid "Intl_Month_Long_6"
+msgstr "Mehefin"
+
+msgid "Intl_Month_Long_7"
+msgstr "Gorffennaf"
+
+msgid "Intl_Month_Long_8"
+msgstr "Awst"
+
+msgid "Intl_Month_Long_9"
+msgstr "Medi"
+
+msgid "Intl_Month_Long_StandAlone_1"
+msgstr "Ionawr"
+
+msgid "Intl_Month_Long_StandAlone_10"
+msgstr "Hydref"
+
+msgid "Intl_Month_Long_StandAlone_11"
+msgstr "Tachwedd"
+
+msgid "Intl_Month_Long_StandAlone_12"
+msgstr "Rhagfyr"
+
+msgid "Intl_Month_Long_StandAlone_2"
+msgstr "Chwefror"
+
+msgid "Intl_Month_Long_StandAlone_3"
+msgstr "Mawrth"
+
+msgid "Intl_Month_Long_StandAlone_4"
+msgstr "Ebrill"
+
+msgid "Intl_Month_Long_StandAlone_5"
+msgstr "Mai"
+
+msgid "Intl_Month_Long_StandAlone_6"
+msgstr "Mehefin"
+
+msgid "Intl_Month_Long_StandAlone_7"
+msgstr "Gorffennaf"
+
+msgid "Intl_Month_Long_StandAlone_8"
+msgstr "Awst"
+
+msgid "Intl_Month_Long_StandAlone_9"
+msgstr "Medi"
+
+msgid "Intl_Month_Short_1"
+msgstr "Ion"
+
+msgid "Intl_Month_Short_10"
+msgstr "Hyd"
+
+msgid "Intl_Month_Short_11"
+msgstr "Tach"
+
+msgid "Intl_Month_Short_12"
+msgstr "Rhag"
+
+msgid "Intl_Month_Short_2"
+msgstr "Chwef"
+
+msgid "Intl_Month_Short_3"
+msgstr "Maw"
+
+msgid "Intl_Month_Short_4"
+msgstr "Ebrill"
+
+msgid "Intl_Month_Short_5"
+msgstr "Mai"
+
+msgid "Intl_Month_Short_6"
+msgstr "Meh"
+
+msgid "Intl_Month_Short_7"
+msgstr "Gorff"
+
+msgid "Intl_Month_Short_8"
+msgstr "Awst"
+
+msgid "Intl_Month_Short_9"
+msgstr "Medi"
+
+msgid "Intl_Month_Short_StandAlone_1"
+msgstr "Ion"
+
+msgid "Intl_Month_Short_StandAlone_10"
+msgstr "Hyd"
+
+msgid "Intl_Month_Short_StandAlone_11"
+msgstr "Tach"
+
+msgid "Intl_Month_Short_StandAlone_12"
+msgstr "Rhag"
+
+msgid "Intl_Month_Short_StandAlone_2"
+msgstr "Chw"
+
+msgid "Intl_Month_Short_StandAlone_3"
+msgstr "Maw"
+
+msgid "Intl_Month_Short_StandAlone_4"
+msgstr "Ebr"
+
+msgid "Intl_Month_Short_StandAlone_5"
+msgstr "Mai"
+
+msgid "Intl_Month_Short_StandAlone_6"
+msgstr "Meh"
+
+msgid "Intl_Month_Short_StandAlone_7"
+msgstr "Gor"
+
+msgid "Intl_Month_Short_StandAlone_8"
+msgstr "Awst"
+
+msgid "Intl_Month_Short_StandAlone_9"
+msgstr "Medi"
+
+msgid "Intl_NDays"
+msgstr "%s diwrnod"
+
+msgid "Intl_NHoursShort"
+msgstr "%s awr"
+
+msgid "Intl_NMinutes"
+msgstr "%s munud"
+
+msgid "Intl_NMinutesShort"
+msgstr "%s mun"
+
+msgid "Intl_NSeconds"
+msgstr "%s eiliad"
+
+msgid "Intl_NSecondsShort"
+msgstr "%s eil"
+
+msgid "Intl_NumberFormatCurrency"
+msgstr "¤#,##0.00"
+
+msgid "Intl_NumberFormatNumber"
+msgstr "#,##0.###"
+
+msgid "Intl_NumberFormatPercent"
+msgstr "#,##0%"
+
+msgid "Intl_NumberSymbolDecimal"
+msgstr "."
+
+msgid "Intl_NumberSymbolGroup"
+msgstr ","
+
+msgid "Intl_NumberSymbolMinus"
+msgstr "-"
+
+msgid "Intl_NumberSymbolPercent"
+msgstr "%"
+
+msgid "Intl_NumberSymbolPlus"
+msgstr "+"
+
+msgid "Intl_OneDay"
+msgstr "1 diwrnod"
+
+msgid "Intl_OneMinute"
+msgstr "1 munud"
+
+msgid "Intl_OneMinuteShort"
+msgstr "1 mun"
+
+msgid "Intl_OriginalLanguageName"
+msgstr "Cymraeg"
+
+msgid "Intl_PeriodDay"
+msgstr "diwrnod"
+
+msgid "Intl_PeriodDays"
+msgstr "diwrnodau"
+
+msgid "Intl_PeriodMonth"
+msgstr "mis"
+
+msgid "Intl_PeriodMonths"
+msgstr "misoedd"
+
+msgid "Intl_PeriodWeek"
+msgstr "wythnos"
+
+msgid "Intl_PeriodWeeks"
+msgstr "wythnosau"
+
+msgid "Intl_PeriodYear"
+msgstr "blwyddyn"
+
+msgid "Intl_PeriodYears"
+msgstr "blynyddoedd"
+
+msgid "Intl_Seconds"
+msgstr "eiliadau"
+
+msgid "Intl_Time_AM"
+msgstr "yb"
+
+msgid "Intl_Time_PM"
+msgstr "yh"
+
+msgid "Intl_Timezone_Africa_Asmera"
+msgstr "Asmera"
+
+msgid "Intl_Timezone_Africa_Ceuta"
+msgstr "Ceuta"
+
+msgid "Intl_Timezone_Africa_Kinshasa"
+msgstr "Kinshasa"
+
+msgid "Intl_Timezone_Africa_Lubumbashi"
+msgstr "Lubumbashi"
+
+msgid "Intl_Timezone_America_Adak"
+msgstr "Adak"
+
+msgid "Intl_Timezone_America_Anchorage"
+msgstr "Anchorage"
+
+msgid "Intl_Timezone_America_Araguaina"
+msgstr "Araguaina"
+
+msgid "Intl_Timezone_America_Argentina_LaRioja"
+msgstr "La Rioja"
+
+msgid "Intl_Timezone_America_Argentina_RioGallegos"
+msgstr "Rio Gallegos"
+
+msgid "Intl_Timezone_America_Argentina_Salta"
+msgstr "Salta"
+
+msgid "Intl_Timezone_America_Argentina_SanJuan"
+msgstr "San Juan"
+
+msgid "Intl_Timezone_America_Argentina_SanLuis"
+msgstr "San Luis"
+
+msgid "Intl_Timezone_America_Argentina_Tucuman"
+msgstr "Tucumán"
+
+msgid "Intl_Timezone_America_Argentina_Ushuaia"
+msgstr "Ushuaia"
+
+msgid "Intl_Timezone_America_Bahia"
+msgstr "Bahia"
+
+msgid "Intl_Timezone_America_BahiaBanderas"
+msgstr "Bae Banderas"
+
+msgid "Intl_Timezone_America_Belem"
+msgstr "Belém"
+
+msgid "Intl_Timezone_America_Blanc-Sablon"
+msgstr "Blanc-Sablon"
+
+msgid "Intl_Timezone_America_BoaVista"
+msgstr "Boa Vista"
+
+msgid "Intl_Timezone_America_Boise"
+msgstr "Boise"
+
+msgid "Intl_Timezone_America_BuenosAires"
+msgstr "Buenos Aires"
+
+msgid "Intl_Timezone_America_CambridgeBay"
+msgstr "Bae Cambridge"
+
+msgid "Intl_Timezone_America_CampoGrande"
+msgstr "Campo Grande"
+
+msgid "Intl_Timezone_America_Cancun"
+msgstr "Cancún"
+
+msgid "Intl_Timezone_America_Catamarca"
+msgstr "Catamarca"
+
+msgid "Intl_Timezone_America_Chicago"
+msgstr "Chicago"
+
+msgid "Intl_Timezone_America_Chihuahua"
+msgstr "Chihuahua"
+
+msgid "Intl_Timezone_America_CoralHarbour"
+msgstr "Atikokan"
+
+msgid "Intl_Timezone_America_Cordoba"
+msgstr "Cordoba"
+
+msgid "Intl_Timezone_America_Creston"
+msgstr "Creston"
+
+msgid "Intl_Timezone_America_Cuiaba"
+msgstr "Cuiabá"
+
+msgid "Intl_Timezone_America_Danmarkshavn"
+msgstr "Danmarkshavn"
+
+msgid "Intl_Timezone_America_Dawson"
+msgstr "Dawson"
+
+msgid "Intl_Timezone_America_DawsonCreek"
+msgstr "Dawson Creek"
+
+msgid "Intl_Timezone_America_Denver"
+msgstr "Denver"
+
+msgid "Intl_Timezone_America_Detroit"
+msgstr "Detroit"
+
+msgid "Intl_Timezone_America_Edmonton"
+msgstr "Edmonton"
+
+msgid "Intl_Timezone_America_Eirunepe"
+msgstr "Eirunepé"
+
+msgid "Intl_Timezone_America_FortNelson"
+msgstr "Fort Nelson"
+
+msgid "Intl_Timezone_America_Fortaleza"
+msgstr "Fortaleza"
+
+msgid "Intl_Timezone_America_GlaceBay"
+msgstr "Glace Bay"
+
+msgid "Intl_Timezone_America_Godthab"
+msgstr "Nuuk"
+
+msgid "Intl_Timezone_America_GooseBay"
+msgstr "Goose Bay"
+
+msgid "Intl_Timezone_America_Guayaquil"
+msgstr "Guayaquil"
+
+msgid "Intl_Timezone_America_Halifax"
+msgstr "Halifax"
+
+msgid "Intl_Timezone_America_Hermosillo"
+msgstr "Hermosillo"
+
+msgid "Intl_Timezone_America_Indiana_Knox"
+msgstr "Knox, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Marengo"
+msgstr "Marengo, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Petersburg"
+msgstr "Petersburg, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_TellCity"
+msgstr "Dinas Tell, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vevay"
+msgstr "Vevay, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vincennes"
+msgstr "Vincennes, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Winamac"
+msgstr "Winamac, Indiana"
+
+msgid "Intl_Timezone_America_Indianapolis"
+msgstr "Indianapolis"
+
+msgid "Intl_Timezone_America_Inuvik"
+msgstr "Inuvik"
+
+msgid "Intl_Timezone_America_Iqaluit"
+msgstr "Iqaluit"
+
+msgid "Intl_Timezone_America_Jujuy"
+msgstr "Jujuy"
+
+msgid "Intl_Timezone_America_Juneau"
+msgstr "Juneau"
+
+msgid "Intl_Timezone_America_Kentucky_Monticello"
+msgstr "Monticello, Kentucky"
+
+msgid "Intl_Timezone_America_LosAngeles"
+msgstr "Los Angeles"
+
+msgid "Intl_Timezone_America_Louisville"
+msgstr "Louisville"
+
+msgid "Intl_Timezone_America_Maceio"
+msgstr "Maceio"
+
+msgid "Intl_Timezone_America_Manaus"
+msgstr "Manaus"
+
+msgid "Intl_Timezone_America_Matamoros"
+msgstr "Matamoros"
+
+msgid "Intl_Timezone_America_Mazatlan"
+msgstr "Mazatlan"
+
+msgid "Intl_Timezone_America_Mendoza"
+msgstr "Mendoza"
+
+msgid "Intl_Timezone_America_Menominee"
+msgstr "Menominee"
+
+msgid "Intl_Timezone_America_Merida"
+msgstr "Merida"
+
+msgid "Intl_Timezone_America_Metlakatla"
+msgstr "Metlakatla"
+
+msgid "Intl_Timezone_America_MexicoCity"
+msgstr "Dinas Mecsico"
+
+msgid "Intl_Timezone_America_Moncton"
+msgstr "Moncton"
+
+msgid "Intl_Timezone_America_Monterrey"
+msgstr "Monterrey"
+
+msgid "Intl_Timezone_America_NewYork"
+msgstr "Efrog Newydd"
+
+msgid "Intl_Timezone_America_Nipigon"
+msgstr "Nipigon"
+
+msgid "Intl_Timezone_America_Nome"
+msgstr "Nome"
+
+msgid "Intl_Timezone_America_Noronha"
+msgstr "Noronha"
+
+msgid "Intl_Timezone_America_NorthDakota_Beulah"
+msgstr "Beulah, Gogledd Dakota"
+
+msgid "Intl_Timezone_America_NorthDakota_Center"
+msgstr "Center, Gogledd Dakota"
+
+msgid "Intl_Timezone_America_NorthDakota_NewSalem"
+msgstr "New Salem, Gogledd Dakota"
+
+msgid "Intl_Timezone_America_Ojinaga"
+msgstr "Ojinaga"
+
+msgid "Intl_Timezone_America_Pangnirtung"
+msgstr "Pangnirtung"
+
+msgid "Intl_Timezone_America_Phoenix"
+msgstr "Phoenix"
+
+msgid "Intl_Timezone_America_PortoVelho"
+msgstr "Porto Velho"
+
+msgid "Intl_Timezone_America_PuntaArenas"
+msgstr "Punta Arenas"
+
+msgid "Intl_Timezone_America_RainyRiver"
+msgstr "Rainy River"
+
+msgid "Intl_Timezone_America_RankinInlet"
+msgstr "Rankin Inlet"
+
+msgid "Intl_Timezone_America_Recife"
+msgstr "Recife"
+
+msgid "Intl_Timezone_America_Regina"
+msgstr "Regina"
+
+msgid "Intl_Timezone_America_Resolute"
+msgstr "Resolute"
+
+msgid "Intl_Timezone_America_RioBranco"
+msgstr "Rio Branco"
+
+msgid "Intl_Timezone_America_SantaIsabel"
+msgstr "Santa Isabel"
+
+msgid "Intl_Timezone_America_Santarem"
+msgstr "Santarem"
+
+msgid "Intl_Timezone_America_Santiago"
+msgstr "Santiago"
+
+msgid "Intl_Timezone_America_SaoPaulo"
+msgstr "Sao Paulo"
+
+msgid "Intl_Timezone_America_Scoresbysund"
+msgstr "Ittoqqortoormiit"
+
+msgid "Intl_Timezone_America_Sitka"
+msgstr "Sitka"
+
+msgid "Intl_Timezone_America_StJohns"
+msgstr "St. John’s"
+
+msgid "Intl_Timezone_America_SwiftCurrent"
+msgstr "Swift Current"
+
+msgid "Intl_Timezone_America_Thule"
+msgstr "Thule"
+
+msgid "Intl_Timezone_America_ThunderBay"
+msgstr "Thunder Bay"
+
+msgid "Intl_Timezone_America_Tijuana"
+msgstr "Tijuana"
+
+msgid "Intl_Timezone_America_Toronto"
+msgstr "Toronto"
+
+msgid "Intl_Timezone_America_Vancouver"
+msgstr "Vancouver"
+
+msgid "Intl_Timezone_America_Whitehorse"
+msgstr "Whitehorse"
+
+msgid "Intl_Timezone_America_Winnipeg"
+msgstr "Winnipeg"
+
+msgid "Intl_Timezone_America_Yakutat"
+msgstr "Yakutat"
+
+msgid "Intl_Timezone_America_Yellowknife"
+msgstr "Yellowknife"
+
+msgid "Intl_Timezone_Antarctica_Casey"
+msgstr "Casey"
+
+msgid "Intl_Timezone_Antarctica_Davis"
+msgstr "Davis"
+
+msgid "Intl_Timezone_Antarctica_DumontDUrville"
+msgstr "Dumont d’Urville"
+
+msgid "Intl_Timezone_Antarctica_Macquarie"
+msgstr "Macquarie"
+
+msgid "Intl_Timezone_Antarctica_Mawson"
+msgstr "Mawson"
+
+msgid "Intl_Timezone_Antarctica_McMurdo"
+msgstr "McMurdo"
+
+msgid "Intl_Timezone_Antarctica_Palmer"
+msgstr "Palmer"
+
+msgid "Intl_Timezone_Antarctica_Rothera"
+msgstr "Rothera"
+
+msgid "Intl_Timezone_Antarctica_Syowa"
+msgstr "Syowa"
+
+msgid "Intl_Timezone_Antarctica_Troll"
+msgstr "Troll"
+
+msgid "Intl_Timezone_Antarctica_Vostok"
+msgstr "Vostok"
+
+msgid "Intl_Timezone_Asia_Almaty"
+msgstr "Almaty"
+
+msgid "Intl_Timezone_Asia_Anadyr"
+msgstr "Anadyr"
+
+msgid "Intl_Timezone_Asia_Aqtau"
+msgstr "Aqtau"
+
+msgid "Intl_Timezone_Asia_Aqtobe"
+msgstr "Aqtobe"
+
+msgid "Intl_Timezone_Asia_Atyrau"
+msgstr "Atyrau"
+
+msgid "Intl_Timezone_Asia_Barnaul"
+msgstr "Barnaul"
+
+msgid "Intl_Timezone_Asia_Calcutta"
+msgstr "Kolkata"
+
+msgid "Intl_Timezone_Asia_Chita"
+msgstr "Chita"
+
+msgid "Intl_Timezone_Asia_Choibalsan"
+msgstr "Choibalsan"
+
+msgid "Intl_Timezone_Asia_Famagusta"
+msgstr "Famagusta"
+
+msgid "Intl_Timezone_Asia_Gaza"
+msgstr "Gasa"
+
+msgid "Intl_Timezone_Asia_Hebron"
+msgstr "Hebron"
+
+msgid "Intl_Timezone_Asia_Hovd"
+msgstr "Hovd"
+
+msgid "Intl_Timezone_Asia_Irkutsk"
+msgstr "Irkutsk"
+
+msgid "Intl_Timezone_Asia_Jakarta"
+msgstr "Jakarta"
+
+msgid "Intl_Timezone_Asia_Jayapura"
+msgstr "Jayapura"
+
+msgid "Intl_Timezone_Asia_Kamchatka"
+msgstr "Kamchatka"
+
+msgid "Intl_Timezone_Asia_Katmandu"
+msgstr "Kathmandu"
+
+msgid "Intl_Timezone_Asia_Khandyga"
+msgstr "Khandyga"
+
+msgid "Intl_Timezone_Asia_Krasnoyarsk"
+msgstr "Krasnoyarsk"
+
+msgid "Intl_Timezone_Asia_KualaLumpur"
+msgstr "Kuala Lumpur"
+
+msgid "Intl_Timezone_Asia_Kuching"
+msgstr "Kuching"
+
+msgid "Intl_Timezone_Asia_Magadan"
+msgstr "Magadan"
+
+msgid "Intl_Timezone_Asia_Makassar"
+msgstr "Makassar"
+
+msgid "Intl_Timezone_Asia_Nicosia"
+msgstr "Nicosia"
+
+msgid "Intl_Timezone_Asia_Novokuznetsk"
+msgstr "Novokuznetsk"
+
+msgid "Intl_Timezone_Asia_Novosibirsk"
+msgstr "Novosibirsk"
+
+msgid "Intl_Timezone_Asia_Omsk"
+msgstr "Omsk"
+
+msgid "Intl_Timezone_Asia_Oral"
+msgstr "Oral"
+
+msgid "Intl_Timezone_Asia_Pontianak"
+msgstr "Pontianak"
+
+msgid "Intl_Timezone_Asia_Qyzylorda"
+msgstr "Qyzylorda"
+
+msgid "Intl_Timezone_Asia_Rangoon"
+msgstr "Yangon"
+
+msgid "Intl_Timezone_Asia_Saigon"
+msgstr "Dinas Hô Chi Minh"
+
+msgid "Intl_Timezone_Asia_Sakhalin"
+msgstr "Sakhalin"
+
+msgid "Intl_Timezone_Asia_Samarkand"
+msgstr "Samarkand"
+
+msgid "Intl_Timezone_Asia_Shanghai"
+msgstr "Shanghai"
+
+msgid "Intl_Timezone_Asia_Srednekolymsk"
+msgstr "Srednekolymsk"
+
+msgid "Intl_Timezone_Asia_Tashkent"
+msgstr "Tashkent"
+
+msgid "Intl_Timezone_Asia_Tomsk"
+msgstr "Tomsk"
+
+msgid "Intl_Timezone_Asia_Ulaanbaatar"
+msgstr "Ulan Bator"
+
+msgid "Intl_Timezone_Asia_Urumqi"
+msgstr "Urumqi"
+
+msgid "Intl_Timezone_Asia_Ust-Nera"
+msgstr "Ust-Nera"
+
+msgid "Intl_Timezone_Asia_Vladivostok"
+msgstr "Vladivostok"
+
+msgid "Intl_Timezone_Asia_Yakutsk"
+msgstr "Yakutsk"
+
+msgid "Intl_Timezone_Asia_Yekaterinburg"
+msgstr "Yekaterinburg"
+
+msgid "Intl_Timezone_Atlantic_Azores"
+msgstr "Azores"
+
+msgid "Intl_Timezone_Atlantic_Canary"
+msgstr "Yr Ynysoedd Dedwydd"
+
+msgid "Intl_Timezone_Atlantic_Faeroe"
+msgstr "Ffaro"
+
+msgid "Intl_Timezone_Atlantic_Madeira"
+msgstr "Madeira"
+
+msgid "Intl_Timezone_Australia_Adelaide"
+msgstr "Adelaide"
+
+msgid "Intl_Timezone_Australia_Brisbane"
+msgstr "Brisbane"
+
+msgid "Intl_Timezone_Australia_BrokenHill"
+msgstr "Broken Hill"
+
+msgid "Intl_Timezone_Australia_Currie"
+msgstr "Currie"
+
+msgid "Intl_Timezone_Australia_Darwin"
+msgstr "Darwin"
+
+msgid "Intl_Timezone_Australia_Eucla"
+msgstr "Eucla"
+
+msgid "Intl_Timezone_Australia_Hobart"
+msgstr "Hobart"
+
+msgid "Intl_Timezone_Australia_Lindeman"
+msgstr "Lindeman"
+
+msgid "Intl_Timezone_Australia_LordHowe"
+msgstr "Lord Howe"
+
+msgid "Intl_Timezone_Australia_Melbourne"
+msgstr "Melbourne"
+
+msgid "Intl_Timezone_Australia_Perth"
+msgstr "Perth"
+
+msgid "Intl_Timezone_Australia_Sydney"
+msgstr "Sydney"
+
+msgid "Intl_Timezone_Europe_Astrakhan"
+msgstr "Astrakhan"
+
+msgid "Intl_Timezone_Europe_Berlin"
+msgstr "Berlin"
+
+msgid "Intl_Timezone_Europe_Busingen"
+msgstr "Busingen"
+
+msgid "Intl_Timezone_Europe_Kaliningrad"
+msgstr "Kaliningrad"
+
+msgid "Intl_Timezone_Europe_Kiev"
+msgstr "Kiev"
+
+msgid "Intl_Timezone_Europe_Kirov"
+msgstr "Kirov"
+
+msgid "Intl_Timezone_Europe_Lisbon"
+msgstr "Lisbon"
+
+msgid "Intl_Timezone_Europe_Madrid"
+msgstr "Madrid"
+
+msgid "Intl_Timezone_Europe_Moscow"
+msgstr "Moscfa"
+
+msgid "Intl_Timezone_Europe_Samara"
+msgstr "Samara"
+
+msgid "Intl_Timezone_Europe_Saratov"
+msgstr "Saratov"
+
+msgid "Intl_Timezone_Europe_Simferopol"
+msgstr "Simferopol"
+
+msgid "Intl_Timezone_Europe_Ulyanovsk"
+msgstr "Ulyanovsk"
+
+msgid "Intl_Timezone_Europe_Uzhgorod"
+msgstr "Uzhhorod"
+
+msgid "Intl_Timezone_Europe_Volgograd"
+msgstr "Volgograd"
+
+msgid "Intl_Timezone_Europe_Zaporozhye"
+msgstr "Zaporizhzhya"
+
+msgid "Intl_Timezone_Pacific_Auckland"
+msgstr "Auckland"
+
+msgid "Intl_Timezone_Pacific_Bougainville"
+msgstr "Bougainville"
+
+msgid "Intl_Timezone_Pacific_Chatham"
+msgstr "Chatham"
+
+msgid "Intl_Timezone_Pacific_Easter"
+msgstr "Ynys y Pasg"
+
+msgid "Intl_Timezone_Pacific_Enderbury"
+msgstr "Enderbury"
+
+msgid "Intl_Timezone_Pacific_Galapagos"
+msgstr "Galapagos"
+
+msgid "Intl_Timezone_Pacific_Gambier"
+msgstr "Gambier"
+
+msgid "Intl_Timezone_Pacific_Honolulu"
+msgstr "Honolulu"
+
+msgid "Intl_Timezone_Pacific_Johnston"
+msgstr "Johnston"
+
+msgid "Intl_Timezone_Pacific_Kiritimati"
+msgstr "Kiritimati"
+
+msgid "Intl_Timezone_Pacific_Kosrae"
+msgstr "Kosrae"
+
+msgid "Intl_Timezone_Pacific_Kwajalein"
+msgstr "Kwajalein"
+
+msgid "Intl_Timezone_Pacific_Majuro"
+msgstr "Majuro"
+
+msgid "Intl_Timezone_Pacific_Marquesas"
+msgstr "Marquesas"
+
+msgid "Intl_Timezone_Pacific_Midway"
+msgstr "Midway"
+
+msgid "Intl_Timezone_Pacific_Ponape"
+msgstr "Pohnpei"
+
+msgid "Intl_Timezone_Pacific_PortMoresby"
+msgstr "Port Moresby"
+
+msgid "Intl_Timezone_Pacific_Tahiti"
+msgstr "Tahiti"
+
+msgid "Intl_Timezone_Pacific_Tarawa"
+msgstr "Tarawa"
+
+msgid "Intl_Timezone_Pacific_Truk"
+msgstr "Chuuk"
+
+msgid "Intl_Timezone_Pacific_Wake"
+msgstr "Wake"
+
+msgid "Intl_Today"
+msgstr "Heddiw"
+
+msgid "Intl_Year_Short"
+msgstr "bl."
+
+msgid "Intl_Yesterday"
+msgstr "Ddoe"
+
+msgid "Referrers_ColumnWebsite"
+msgstr "Gwefan"
+
+msgid "SitesManager_Currency"
+msgstr "Arian Breiniol"
+
+msgid "TagManager_CategoryDate"
+msgstr "Dyddiad"
+
+msgid "UsersManager_Username"
+msgstr "Enw Defnyddiwr"
+
+msgid "VisitTime_NHour"
+msgstr "%s awr"
+
+msgid "Widgetize_OpenInNewWindow"
+msgstr "Agor mewn ffenestr newydd"

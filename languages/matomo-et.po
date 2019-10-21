@@ -1,0 +1,7349 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-10-21T03:38:22+00:00\n"
+"PO-Revision-Date: 2019-10-21T03:38:22+00:00\n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Domain: matomo\n"
+
+msgid "General_12HourClock"
+msgstr "12-tunni kell"
+
+msgid "General_24HourClock"
+msgstr "24-tunni kell"
+
+msgid "General_AbandonedCarts"
+msgstr "Hüljatud ostukorvid"
+
+msgid "General_AboutPiwikX"
+msgstr "Lisainfo Matomo %s"
+
+msgid "General_Action"
+msgstr "Tegevus"
+
+msgid "General_Actions"
+msgstr "Tegevused"
+
+msgid "General_Add"
+msgstr "Lisa"
+
+msgid "General_AfterEntry"
+msgstr "peale siia sisenemist"
+
+msgid "General_All"
+msgstr "Kõik"
+
+msgid "General_AllowPiwikArchivingToTriggerBrowser"
+msgstr "Arhiveeri raportid peale lehitsejas vaatamist."
+
+msgid "General_AllWebsitesDashboard"
+msgstr "Kõigi veebilehtede töölaud"
+
+msgid "General_And"
+msgstr "ja"
+
+msgid "General_API"
+msgstr "API"
+
+msgid "General_Apply"
+msgstr "Rakenda"
+
+msgid "General_ArchivingInlineHelp"
+msgstr "Keskmise ja suure liiklusega veebilehtede puhul soovitame veebilehitseja kaudu arhiveerimise välja lülitada. Selle asemel soovitame kasutada cron-i mis võiks arhiveerida iga tunni järel."
+
+msgid "General_AuthenticationMethodSmtp"
+msgstr "SMTP serveri autentimismeetod"
+
+msgid "General_AverageOrderValue"
+msgstr "Keskmine tellimuse väärtus"
+
+msgid "General_AveragePrice"
+msgstr "Keskmine hind"
+
+msgid "General_AverageQuantity"
+msgstr "Keskmine kogus"
+
+msgid "General_AverageX"
+msgstr "Keskm. %s"
+
+msgid "General_BackToPiwik"
+msgstr "Matomosse tagasi."
+
+msgid "General_Broken"
+msgstr "Katki"
+
+msgid "General_BrokenDownReportDocumentation"
+msgstr "See on jagatud osadeks mitme raporti vahel mida näidatakse lehe allosas. Soovitud raportil klikkides näidatakse seda suurelt."
+
+msgid "General_Cancel"
+msgstr "Katkesta"
+
+msgid "General_CannotUnzipFile"
+msgstr "Ei saa lahtipakkida faili %1$s: %2$s"
+
+msgid "General_ChangePassword"
+msgstr "Vaheta salasõna"
+
+msgid "General_ChangeTagCloudView"
+msgstr "Soovi korral saad raportit vaadata ka muudmoodi kasutades allolevaid nuppe."
+
+msgid "General_ChooseDate"
+msgstr "Vali kuupäev, praegu on määratud sedasi %s"
+
+msgid "General_ChooseLanguage"
+msgstr "Vali keel"
+
+msgid "General_ChoosePeriod"
+msgstr "Vali periood"
+
+msgid "General_ClickHere"
+msgstr "Vajuta siia lisainfo saamiseks."
+
+msgid "General_DoubleClickToChangePeriod"
+msgstr "Selle perioodi rakendamiseks kasuta topelklikki."
+
+msgid "General_Close"
+msgstr "Sulge"
+
+msgid "General_ClickToSearch"
+msgstr "Otsimiseks kliki"
+
+msgid "General_Copy"
+msgstr "Kopeeri"
+
+msgid "General_Confirm"
+msgstr "Kinnita"
+
+msgid "General_ColumnActionsPerVisit"
+msgstr "Tegevusi külastuse jooksul"
+
+msgid "General_ColumnActionsPerVisitDocumentation"
+msgstr "Keskmine tegevuste (lehe vaatamine, lehe otsing, allalaadimine või väljuv link) arv külastuste jooksul."
+
+msgid "General_ColumnAverageGenerationTime"
+msgstr "Keskmine lehe genereerimise aeg"
+
+msgid "General_ColumnViewsWithGenerationTime"
+msgstr "Lehe vaatamisi koos genereerimiseks kulunud ajaga"
+
+msgid "General_ColumnAverageGenerationTimeDocumentation"
+msgstr "Keskmine lehe genereerimse aeg. See mõõdik koondab aega mis kulus lehe genereerimiseks ning külastajal selle lehe laadimiseks. Väiksem keskmine aeg tähendab sinu külastajatele kiiremat veebilehte!"
+
+msgid "General_ColumnAverageTimeOnPage"
+msgstr "Keskmine lehel viibitud aeg"
+
+msgid "General_ColumnAverageTimeOnPageDocumentation"
+msgstr "Keskmine külastaja poolt lehel kulutatud aeg (ainult sellel lehel, mitte kõikidel sinu lehtedel kokku)."
+
+msgid "General_ColumnAvgTimeOnSite"
+msgstr "Keskmine aeg veebilehel"
+
+msgid "General_ColumnSumTimeOnSite"
+msgstr "Aeg kokku veebisaidil"
+
+msgid "General_ColumnAvgTimeOnSiteDocumentation"
+msgstr "Kesmine külastuse kestus."
+
+msgid "General_ColumnBounceRate"
+msgstr "Põrkemäär"
+
+msgid "General_ColumnBounceRateDocumentation"
+msgstr "Vaid ühte lehet vaadanud külastajate protsent. See tähendab, et külastaja lahkus vaid ühte lehte vaadates."
+
+msgid "General_ColumnBounces"
+msgstr "Põrked"
+
+msgid "General_RealTime"
+msgstr "Reaalajas"
+
+msgid "General_ColumnBouncesDocumentation"
+msgstr "Vaid ühte lehet vaadanud külastajate arv. See tähendab, et külastaja lahkus vaid ühte lehte vaadates."
+
+msgid "General_ColumnConversionRate"
+msgstr "Tulumäär"
+
+msgid "General_ColumnConversionRateDocumentation"
+msgstr "Nende külastuse protsent mis viisid ostmiseni."
+
+msgid "General_ColumnDestinationPage"
+msgstr "Sihtkoha lehekülg"
+
+msgid "General_ColumnEntrances"
+msgstr "Sisenemised"
+
+msgid "General_ColumnEntrancesDocumentation"
+msgstr "Sellelt lehelt alguse saanud külastuste hulk."
+
+msgid "General_ColumnExitRate"
+msgstr "Väljumiste määr"
+
+msgid "General_ColumnExits"
+msgstr "Väljumisi"
+
+msgid "General_ColumnExitsDocumentation"
+msgstr "Külastuste arv, mis lõppesid valitud lehel."
+
+msgid "General_ColumnGenerationTime"
+msgstr "Genereerimise aeg"
+
+msgid "General_ColumnPageGenerationTime"
+msgstr "Lehe genereerimise aeg"
+
+msgid "General_ColumnKeyword"
+msgstr "Võtmesõna"
+
+msgid "General_ColumnLabel"
+msgstr "Tiitel"
+
+msgid "General_ColumnHits"
+msgstr "Klikke"
+
+msgid "General_ColumnMaxActions"
+msgstr "Maksimaalne tegevuste arv ühe külastuse jooksul"
+
+msgid "General_ColumnNbActions"
+msgstr "Tegevused"
+
+msgid "General_ColumnNbUniqVisitors"
+msgstr "Unikaalsed külastajad"
+
+msgid "General_ColumnNbUsers"
+msgstr "Kasutajaid"
+
+msgid "General_ColumnNbVisits"
+msgstr "Külastused"
+
+msgid "General_ColumnPageviews"
+msgstr "Lehevaatamisi"
+
+msgid "General_ColumnPercentageVisits"
+msgstr "%% külastust"
+
+msgid "General_ColumnRevenue"
+msgstr "Tulu"
+
+msgid "General_ColumnSumVisitLength"
+msgstr "Külastajate poolt lehel viibitud aeg kokku (sek)"
+
+msgid "General_ColumnTotalPageviews"
+msgstr "Lehe vaatamisi kokku"
+
+msgid "General_ColumnUniqueEntrances"
+msgstr "Unikaalseid sisenemisi"
+
+msgid "General_ColumnUniqueExits"
+msgstr "Unikaalseid väljumisi"
+
+msgid "General_ColumnUniquePageviews"
+msgstr "Unikaalseid lehe vaatamisi"
+
+msgid "General_ColumnValuePerVisit"
+msgstr "Tulu külastuse kohta"
+
+msgid "General_ColumnViewedAfterSearch"
+msgstr "Klikke otsingutulemustes"
+
+msgid "General_ColumnVisitDuration"
+msgstr "Külastuse kestvus (sekundites)"
+
+msgid "General_ColumnVisitsWithConversions"
+msgstr "Külastused tulu tekitamisega"
+
+msgid "General_ComputedMetricAverage"
+msgstr "Kekm. %1$s %2$s kohta"
+
+msgid "General_ComputedMetricSum"
+msgstr "Kokku %s"
+
+msgid "General_ComputedMetricMax"
+msgstr "Maks %s"
+
+msgid "General_ComputedMetricMin"
+msgstr "Min %s"
+
+msgid "General_ComputedMetricUniqueCount"
+msgstr "Unikaalne %s"
+
+msgid "General_Continue"
+msgstr "Jätka"
+
+msgid "General_ContinueToPiwik"
+msgstr "Jätka Matomou kasutamist"
+
+msgid "General_CreatedByUser"
+msgstr "loonud %s"
+
+msgid "General_CurrentMonth"
+msgstr "Praegune kuu"
+
+msgid "General_CurrentWeek"
+msgstr "Praegune nädal"
+
+msgid "General_CurrentYear"
+msgstr "Praegune aasta"
+
+msgid "General_Daily"
+msgstr "Igapäevaselt"
+
+msgid "General_DailyReport"
+msgstr "igapäevaselt"
+
+msgid "General_DailyReports"
+msgstr "Igapäevased rapordid"
+
+msgid "General_DailySum"
+msgstr "päevane summa"
+
+msgid "General_DashboardForASpecificWebsite"
+msgstr "Valitud veebilehe töölaud"
+
+msgid "General_Date"
+msgstr "Kuupäev"
+
+msgid "General_DateRange"
+msgstr "Kuupäeva vahemik:"
+
+msgid "General_DateRangeFrom"
+msgstr "Alates"
+
+msgid "General_DateRangeFromTo"
+msgstr "Alates %1$s kuni %2$s"
+
+msgid "General_DateRangeInPeriodList"
+msgstr "kuupäevade vahemik"
+
+msgid "General_DateRangeTo"
+msgstr "Kuni"
+
+msgid "General_DaysHours"
+msgstr "%1$s päeva %2$s tundi"
+
+msgid "General_DaysSinceFirstVisit"
+msgstr "Päevi esmasest külastusest"
+
+msgid "General_DaysSinceLastEcommerceOrder"
+msgstr "Päevi viimasest e-tellimusest"
+
+msgid "General_DaysSinceLastVisit"
+msgstr "Päevi viimasest külastusest"
+
+msgid "General_Default"
+msgstr "Vaikimisi"
+
+msgid "General_DefaultAppended"
+msgstr "(vaikimisi)"
+
+msgid "General_Delete"
+msgstr "Kustuta"
+
+msgid "General_Description"
+msgstr "Kirjeldus"
+
+msgid "General_Desktop"
+msgstr "Töölaud"
+
+msgid "General_Details"
+msgstr "Detailid"
+
+msgid "General_Discount"
+msgstr "Allahindlus"
+
+msgid "General_DisplaySimpleTable"
+msgstr "Kuva lihtne tabel"
+
+msgid "General_DisplayTableWithGoalMetrics"
+msgstr "Kuva eesmärkidega tabel"
+
+msgid "General_DisplayTableWithMoreMetrics"
+msgstr "Kuva rohkema statistikaga tabel"
+
+msgid "General_Documentation"
+msgstr "Dokumentatsioon"
+
+msgid "General_Donate"
+msgstr "Anneta"
+
+msgid "General_Done"
+msgstr "Tehtud"
+
+msgid "General_Download"
+msgstr "Allalaadimine"
+
+msgid "General_DownloadFail_FileExists"
+msgstr "Fail %s on juba olemas!"
+
+msgid "General_Downloads"
+msgstr "Allalaadimised"
+
+msgid "General_EcommerceOrders"
+msgstr "E-äri tellimused"
+
+msgid "General_Edit"
+msgstr "Muuda"
+
+msgid "General_Error"
+msgstr "Viga"
+
+msgid "General_Errors"
+msgstr "Vead"
+
+msgid "General_EvolutionOverPeriod"
+msgstr "Perioodi areng"
+
+msgid "General_EvolutionSummaryGeneric"
+msgstr "%1$s %2$s jooksul võrreldes %3$s %4$s jooksul. Muutus ajas: %5$s"
+
+msgid "General_ExceptionLanguageFileNotFound"
+msgstr "Keelefaili '%s' ei leitud."
+
+msgid "General_ExceptionMissingFile"
+msgstr "Puuduv fail: %s"
+
+msgid "General_ExceptionFileToDelete"
+msgstr "Fail, mida kustutada: %s"
+
+msgid "General_ExceptionDirectoryToDelete"
+msgstr "Kaust, mida kustutada: %s"
+
+msgid "General_ExceptionNonceMismatch"
+msgstr "Antud vormi turvakoodi verifitseerimine ebaõnnestus."
+
+msgid "General_ExceptionUnableToStartSession"
+msgstr "Sessiooni käivitamine ebaõnnestus."
+
+msgid "General_ExceptionUndeletableFile"
+msgstr "%s kustutamine ebaõnnestus"
+
+msgid "General_Export"
+msgstr "Ekspordi"
+
+msgid "General_ExportAsImage"
+msgstr "Ekspordi pildina"
+
+msgid "General_ExportThisReport"
+msgstr "Ekspordi andmed teistesse vormingutesse"
+
+msgid "General_Faq"
+msgstr "KKK"
+
+msgid "General_First"
+msgstr "Esimene"
+
+msgid "General_Flatten"
+msgstr "Tee lamedaks"
+
+msgid "General_ForExampleShort"
+msgstr "n."
+
+msgid "General_Forums"
+msgstr "Foorumid"
+
+msgid "General_FromReferrer"
+msgstr "tuli"
+
+msgid "General_Generic"
+msgstr "Üldine"
+
+msgid "General_GeneralInformation"
+msgstr "Üldine info"
+
+msgid "General_GeneralSettings"
+msgstr "Põhiseaded"
+
+msgid "General_GetStarted"
+msgstr "Alusta kasutamist"
+
+msgid "General_GiveUsYourFeedback"
+msgstr "Tagasiside!"
+
+msgid "General_Goal"
+msgstr "Eesmärk"
+
+msgid "General_GoTo"
+msgstr "Mine %s"
+
+msgid "General_GoTo2"
+msgstr "Mine"
+
+msgid "General_HelloUser"
+msgstr "Tere, %s!"
+
+msgid "General_Help"
+msgstr "Abi"
+
+msgid "General_HelpTranslatePiwik"
+msgstr "Äkki soovid %1$saidata meil Matomou tõlkeid täiendada%2$s?"
+
+msgid "General_Hide"
+msgstr "peida"
+
+msgid "General_HoursMinutes"
+msgstr "%1$s tundi %2$s min"
+
+msgid "General_Id"
+msgstr "Id"
+
+msgid "General_InfoFor"
+msgstr "Info %s kohta"
+
+msgid "General_Installed"
+msgstr "Paigaldatud"
+
+msgid "General_InvalidDateRange"
+msgstr "Vigane kuupäeva vahemik, palun proovi uuesti"
+
+msgid "General_InvalidResponse"
+msgstr "Vastuvõetud andmed on vigased."
+
+msgid "General_IP"
+msgstr "IP"
+
+msgid "General_JsTrackingTag"
+msgstr "JavaScript jälgimiskood"
+
+msgid "General_Language"
+msgstr "Keel"
+
+msgid "General_Languages"
+msgstr "Keeled"
+
+msgid "General_LastDays"
+msgstr "Viimased %s päeva (sh. täna)"
+
+msgid "General_LastDaysShort"
+msgstr "Viimased %s päeva"
+
+msgid "General_Live"
+msgstr "Reaalajas"
+
+msgid "General_Loading"
+msgstr "Laen..."
+
+msgid "General_LoadingData"
+msgstr "Laen infot..."
+
+msgid "General_LoadingPopover"
+msgstr "Laen %s..."
+
+msgid "General_LoadingPopoverFor"
+msgstr "Laen %s"
+
+msgid "General_Locale"
+msgstr "et_ET.UTF-8"
+
+msgid "General_Logout"
+msgstr "Logi välja"
+
+msgid "General_MainMetrics"
+msgstr "Põhimõõdikud"
+
+msgid "General_Matches"
+msgstr "Vastavused"
+
+msgid "General_Metadata"
+msgstr "Metaandmed"
+
+msgid "General_Metric"
+msgstr "Mõõdik"
+
+msgid "General_Metrics"
+msgstr "Mõõdikud"
+
+msgid "General_MetricsToPlot"
+msgstr "Väljastatavad mõõdikud"
+
+msgid "General_MetricToPlot"
+msgstr "Väljastatav mõõdik"
+
+msgid "General_MinutesSeconds"
+msgstr "%1$s min %2$ss"
+
+msgid "General_Mobile"
+msgstr "Mobiilne"
+
+msgid "General_Monthly"
+msgstr "Igakuine"
+
+msgid "General_MonthlyReport"
+msgstr "igakuine"
+
+msgid "General_MonthlyReports"
+msgstr "Igakuised raportid"
+
+msgid "General_More"
+msgstr "Rohkem"
+
+msgid "General_MoreDetails"
+msgstr "Rohkem detaile"
+
+msgid "General_MoreLowerCase"
+msgstr "rohkem"
+
+msgid "General_MultiSitesSummary"
+msgstr "Kõik veebilehed"
+
+msgid "General_Name"
+msgstr "Nimi"
+
+msgid "General_NbActions"
+msgstr "Tegevuste arv"
+
+msgid "General_NbInteractions"
+msgstr "Suhtluste arv"
+
+msgid "General_NbSearches"
+msgstr "Sisemiste otsingute arv"
+
+msgid "General_NeedMoreHelp"
+msgstr "Vajad rohkem abi?"
+
+msgid "General_Never"
+msgstr "Mitte kunagi"
+
+msgid "General_New"
+msgstr "Uus"
+
+msgid "General_NewUpdatePiwikX"
+msgstr "Uus uuendus: Matomo %s"
+
+msgid "General_NewVisitor"
+msgstr "Uus külaline"
+
+msgid "General_NewVisits"
+msgstr "Uued külastused"
+
+msgid "General_Next"
+msgstr "Järgmine"
+
+msgid "General_No"
+msgstr "Ei"
+
+msgid "General_NoDataForGraph"
+msgstr "Graafiku info puudub."
+
+msgid "General_NoDataForTagCloud"
+msgstr "Sildipilve info puudub."
+
+msgid "General_NotDefined"
+msgstr "%s on defineerimata"
+
+msgid "General_Note"
+msgstr "Märkus"
+
+msgid "General_NotInstalled"
+msgstr "Pole paigaldatud"
+
+msgid "General_NotRecommended"
+msgstr "pole soovituslik"
+
+msgid "General_NotValid"
+msgstr "%s ei ole kehtiv"
+
+msgid "General_NumberOfVisits"
+msgstr "Külastuste arv"
+
+msgid "General_NUsers"
+msgstr "%s kasutajaid"
+
+msgid "General_NVisits"
+msgstr "%s külastust"
+
+msgid "General_NUniqueVisitors"
+msgstr "%s unikaalset külastajat"
+
+msgid "General_Ok"
+msgstr "Ok"
+
+msgid "General_OneAction"
+msgstr "1 tegevus"
+
+msgid "General_OneVisit"
+msgstr "1 külastus"
+
+msgid "General_OnlyEnterIfRequired"
+msgstr "Sisesta kasutajanimi ainult juhul, kui SMTP server nõuab seda."
+
+msgid "General_OnlyEnterIfRequiredPassword"
+msgstr "Sisesta salasõna ainult juhul, kui SMTP server nõuab seda."
+
+msgid "General_OpenSourceWebAnalytics"
+msgstr "Avatud lähtekoodiga veebistatistika"
+
+msgid "General_OperationAtLeast"
+msgstr "Vähemalt"
+
+msgid "General_OperationAtMost"
+msgstr "Kõige enam"
+
+msgid "General_OperationContains"
+msgstr "Sisaldab"
+
+msgid "General_OperationDoesNotContain"
+msgstr "Ei sisalda"
+
+msgid "General_OperationEquals"
+msgstr "Võrdub"
+
+msgid "General_OperationGreaterThan"
+msgstr "Suurem kui"
+
+msgid "General_OperationIs"
+msgstr "On"
+
+msgid "General_OperationIsNot"
+msgstr "Ei ole"
+
+msgid "General_OperationLessThan"
+msgstr "Vähem kui"
+
+msgid "General_OperationNotEquals"
+msgstr "Ei võrdu"
+
+msgid "General_OperationStartsWith"
+msgstr "Algab"
+
+msgid "General_OperationEndsWith"
+msgstr "Lõppeb"
+
+msgid "General_OptionalSmtpPort"
+msgstr "Valikuline. Vaikimisi 25 kaitsmata ja TLS ning 465 krüpteeritud SSL SMTP jaoks."
+
+msgid "General_Options"
+msgstr "Valikud"
+
+msgid "General_Or"
+msgstr "või"
+
+msgid "General_OrCancel"
+msgstr "või %1$s Katkesta %2$s"
+
+msgid "General_Others"
+msgstr "Teised"
+
+msgid "General_Outlink"
+msgstr "Väljuv link"
+
+msgid "General_Outlinks"
+msgstr "Väljuvad lingid"
+
+msgid "General_OverlayRowActionTooltip"
+msgstr "Näitab statistikat otse sinu veebilehel eraldi kihis (avaneb uues aknas)"
+
+msgid "General_OverlayRowActionTooltipTitle"
+msgstr "Ava statistika kiht"
+
+msgid "General_Overview"
+msgstr "Ülevaade"
+
+msgid "General_Pages"
+msgstr "Leheküljed"
+
+msgid "General_Pagination"
+msgstr "%1$s–%2$s / %3$s"
+
+msgid "General_PaginationWithoutTotal"
+msgstr "%1$s–%2$s"
+
+msgid "General_Password"
+msgstr "Salasõna"
+
+msgid "General_Period"
+msgstr "Periood"
+
+msgid "General_Piechart"
+msgstr "Sektordiagramm"
+
+msgid "General_Print"
+msgstr "Prindi"
+
+msgid "General_Profiles"
+msgstr "Profiilid"
+
+msgid "General_PiwikXIsAvailablePleaseUpdateNow"
+msgstr "Matomo %1$s on saadaval. %2$sPalun uuenda kohe!%3$s (vaata %4$smuudatusi%5$s)."
+
+msgid "General_PleaseSpecifyValue"
+msgstr "Palun täpsusta '%s' väärtust."
+
+msgid "General_PleaseUpdatePiwik"
+msgstr "Palun uuenda oma Matomout"
+
+msgid "General_Plugin"
+msgstr "Lisatarkvara"
+
+msgid "General_Plugins"
+msgstr "Lisatarkvarad"
+
+msgid "General_PoweredBy"
+msgstr "Valmistanud"
+
+msgid "General_Previous"
+msgstr "Eelmine"
+
+msgid "General_PreviousDays"
+msgstr "Eelnevad %s päeva (va. täna)"
+
+msgid "General_PreviousDaysShort"
+msgstr "Eelnevad %s päeva"
+
+msgid "General_Price"
+msgstr "Hind"
+
+msgid "General_ProductConversionRate"
+msgstr "Toote tulutoovaks muutmise määr"
+
+msgid "General_ProductRevenue"
+msgstr "Toote tulu"
+
+msgid "General_PurchasedProducts"
+msgstr "Ostetud kaubad"
+
+msgid "General_Quantity"
+msgstr "Kogus"
+
+msgid "General_RangeReports"
+msgstr "Enda määratud ajavahemik"
+
+msgid "General_ReadThisToLearnMore"
+msgstr "%1$sLoe seda, et õppida rohkem.%2$s"
+
+msgid "General_Recommended"
+msgstr "Soovituslik"
+
+msgid "General_RecordsToPlot"
+msgstr "Väljastatavad tulemused"
+
+msgid "General_Refresh"
+msgstr "Värskenda"
+
+msgid "General_RefreshPage"
+msgstr "Värskenda lehte"
+
+msgid "General_RelatedReport"
+msgstr "Seotud raport"
+
+msgid "General_RelatedReports"
+msgstr "Seotud raportid"
+
+msgid "General_Remove"
+msgstr "Eemalda"
+
+msgid "General_Report"
+msgstr "Raport"
+
+msgid "General_ReportRatioTooltip"
+msgstr "%5$s '%1$s' esindab %2$s (%4$s kokku: %3$s)."
+
+msgid "General_Reports"
+msgstr "Raportid"
+
+msgid "General_Required"
+msgstr "%s on nõutav"
+
+msgid "General_Required2"
+msgstr "Nõutud"
+
+msgid "General_ReturningVisitor"
+msgstr "Korduv külastaja"
+
+msgid "General_ReturningVisitorAllVisits"
+msgstr "Kuva kõik külastused"
+
+msgid "General_RowEvolutionRowActionTooltip"
+msgstr "Vaata kuidas antud rea mõõdikud muutusid ajas"
+
+msgid "General_RowEvolutionRowActionTooltipTitle"
+msgstr "Ava rea muutus ajas"
+
+msgid "General_Rows"
+msgstr "Ridu"
+
+msgid "General_RowsToDisplay"
+msgstr "Ridu näitamiseks"
+
+msgid "General_Save"
+msgstr "Salvesta"
+
+msgid "General_Search"
+msgstr "Otsi"
+
+msgid "General_Clear"
+msgstr "Tühjenda"
+
+msgid "General_SearchNoResults"
+msgstr "Tulemused puuduvad"
+
+msgid "General_SeeAll"
+msgstr "näita kõiki"
+
+msgid "General_Segment"
+msgstr "Segment"
+
+msgid "General_Settings"
+msgstr "Seaded"
+
+msgid "General_Shipping"
+msgstr "Kohaletoimetamine"
+
+msgid "General_Show"
+msgstr "kuva"
+
+msgid "General_SingleWebsitesDashboard"
+msgstr "Ühe veebilehe töölaud"
+
+msgid "General_SmtpEncryption"
+msgstr "SMTP krüpteering"
+
+msgid "General_SmtpPassword"
+msgstr "SMTP salasõna"
+
+msgid "General_SmtpPort"
+msgstr "SMTP port"
+
+msgid "General_SmtpServerAddress"
+msgstr "SMTP serveri aadress"
+
+msgid "General_SmtpUsername"
+msgstr "SMTP kasutajanimi"
+
+msgid "General_Source"
+msgstr "Allikas"
+
+msgid "General_Subtotal"
+msgstr "Kokku"
+
+msgid "General_Summary"
+msgstr "Kokkuvõte"
+
+msgid "General_Table"
+msgstr "Tabel"
+
+msgid "General_TagCloud"
+msgstr "Sildipilv"
+
+msgid "General_Tax"
+msgstr "Maksud"
+
+msgid "General_TimeAgo"
+msgstr "%s tagasi"
+
+msgid "General_TimeFormat"
+msgstr "Aja vorming"
+
+msgid "General_TimeOnPage"
+msgstr "Aeg lehel"
+
+msgid "General_Total"
+msgstr "Kokku"
+
+msgid "General_TotalRatioTooltip"
+msgstr "See on %1$s kõigist %2$s %3$s."
+
+msgid "General_TotalRevenue"
+msgstr "Kogutulu"
+
+msgid "General_TrackingScopeAction"
+msgstr "Tegevus"
+
+msgid "General_TrackingScopePage"
+msgstr "Lehekülg"
+
+msgid "General_TrackingScopeVisit"
+msgstr "Külastus"
+
+msgid "General_TransitionsRowActionTooltip"
+msgstr "Vaata mida külastajad tegid enne ja peale selle lehe vaatamist"
+
+msgid "General_TransitionsRowActionTooltipTitle"
+msgstr "Ava üleminekud"
+
+msgid "General_TranslatorName"
+msgstr "<a href=\"http://ee.linkedin.com/in/aivokoger/\">Aivo Koger</a>, Kaido Toomingas"
+
+msgid "General_UniquePurchases"
+msgstr "Unikaalseid oste"
+
+msgid "General_Unknown"
+msgstr "Tundmatu"
+
+msgid "General_Upload"
+msgstr "Üleslaadimine"
+
+msgid "General_UsePlusMinusIconsDocumentation"
+msgstr "Kasuta pluss ja miinus ikoone vasakul, et navigeerida"
+
+msgid "General_UserId"
+msgstr "Kasutaja ID"
+
+msgid "General_UserIds"
+msgstr "KAsutaja ID-d"
+
+msgid "General_Username"
+msgstr "Kasutajanimi"
+
+msgid "General_UseSMTPServerForEmail"
+msgstr "Kasuta e-posti edastamiseks SMTP serverit"
+
+msgid "General_Value"
+msgstr "Väärtus"
+
+msgid "General_VBarGraph"
+msgstr "Vertikaaltulbad"
+
+msgid "General_View"
+msgstr "Vaata"
+
+msgid "General_ViewDocumentationFor"
+msgstr "Vaata %1$s dokumentatsiooni"
+
+msgid "General_Visit"
+msgstr "Külastus"
+
+msgid "General_VisitId"
+msgstr "Külastuse ID"
+
+msgid "General_VisitConvertedGoal"
+msgstr "Külastusega täideti vähemalt 1 eesmärk"
+
+msgid "General_VisitConvertedGoalId"
+msgstr "Külastus tõi tulu spetsiifilise eesmärgi ID'ga"
+
+msgid "General_VisitConvertedNGoals"
+msgstr "Külastusega täideti %s eesmärki"
+
+msgid "General_VisitDuration"
+msgstr "Keskmine külastuse kestvus (sek)"
+
+msgid "General_Visitor"
+msgstr "Külastaja"
+
+msgid "General_VisitorID"
+msgstr "Külastaja ID"
+
+msgid "General_VisitorIP"
+msgstr "Külastaja IP"
+
+msgid "General_VisitorIPs"
+msgstr "Külastaja IP"
+
+msgid "General_Visitors"
+msgstr "Külastajad"
+
+msgid "General_VisitsWith"
+msgstr "Külastused koos %s"
+
+msgid "General_VisitorFingerprint"
+msgstr "Sõrmejälg"
+
+msgid "General_VisitorSettings"
+msgstr "Külastajate seaded"
+
+msgid "General_VisitType"
+msgstr "Külastuse tüüp"
+
+msgid "General_VisitTypes"
+msgstr "Külastuste liigid"
+
+msgid "General_Warning"
+msgstr "Hoiatus"
+
+msgid "General_Warnings"
+msgstr "Hoiatused"
+
+msgid "General_ValidatorErrorNotANumber"
+msgstr "Väärtus pole arv."
+
+msgid "General_Website"
+msgstr "Veebileht"
+
+msgid "General_Weekly"
+msgstr "Iganädalane"
+
+msgid "General_WeeklyReport"
+msgstr "iganädalane"
+
+msgid "General_WeeklyReports"
+msgstr "Iganädalased raportid"
+
+msgid "General_WellDone"
+msgstr "Hästi tehtud!"
+
+msgid "General_Widgets"
+msgstr "Moodulid"
+
+msgid "General_Widget"
+msgstr "Moodul"
+
+msgid "General_XComparedToY"
+msgstr "%1$s võrreldes %2$s"
+
+msgid "General_XFromY"
+msgstr "%1$s, tuli: %2$s"
+
+msgid "General_YearlyReport"
+msgstr "iga-aastane"
+
+msgid "General_YearlyReports"
+msgstr "Iga-aastased raportid"
+
+msgid "General_YearsDays"
+msgstr "%1$s aastat %2$s päeva"
+
+msgid "General_Yes"
+msgstr "Jah"
+
+msgid "General_YouAreCurrentlyUsing"
+msgstr "Kasutad hetkel Matomo versiooni %s."
+
+msgid "General_YouMustBeLoggedIn"
+msgstr "Antud funktsionaalsusele ligipääsuks pead olema sisselogitud."
+
+msgid "General_YourChangesHaveBeenSaved"
+msgstr "Sinu muudatused on salvestatud."
+
+msgid "Mobile_AboutPiwikMobile"
+msgstr "Rohkem infot Matomo mobiilis kohta"
+
+msgid "Mobile_AccessUrlLabel"
+msgstr "Matomo paigalduse URL"
+
+msgid "Mobile_Account"
+msgstr "Konto"
+
+msgid "Mobile_Accounts"
+msgstr "Kontod"
+
+msgid "Mobile_AddAccount"
+msgstr "Lisa konto"
+
+msgid "Mobile_AddPiwikDemo"
+msgstr "Lisa Matomo demo"
+
+msgid "Mobile_Advanced"
+msgstr "Detailseadistus"
+
+msgid "Mobile_AnonymousAccess"
+msgstr "Anonüümne juurdepääs"
+
+msgid "Mobile_AnonymousTracking"
+msgstr "Anonüümne info kogumine"
+
+msgid "Mobile_AskForAnonymousTrackingPermission"
+msgstr "Kui on lubatud siis saadab Matomo anonüüselt andemd matomo.org keskkonnale. Selle eesmärk on aidata arendajatel paremini mõista kuidas seda rakendust kasutatakse. Saadetud andmete hulgas on: menüüd seadetel klikkimised, opsüsteemi nimi ja versioon, igasugused Matomo Mobile veateated. Me ei jälgi mitte mingeid analüüsi andmeid. Anonüümseid andmeid ei avaldata mitte kunagi. Saad keelata/lubada anonüümse jälgimise igal ajal (Settings)."
+
+msgid "Mobile_ChooseHttpTimeout"
+msgstr "Vali HTTP timeout väärtus"
+
+msgid "Mobile_ChooseMetric"
+msgstr "Vali mõõdik"
+
+msgid "Mobile_ChooseReport"
+msgstr "Vali raport"
+
+msgid "Mobile_ChooseSegment"
+msgstr "Vali segment"
+
+msgid "Mobile_ConfirmRemoveAccount"
+msgstr "Kas sa soovid eemaldada antud kontot?"
+
+msgid "Mobile_DefaultReportDate"
+msgstr "Raporti kuupäev"
+
+msgid "Mobile_EmailUs"
+msgstr "Kirjuta meile"
+
+msgid "Mobile_EnableGraphsLabel"
+msgstr "Kuva graafikud"
+
+msgid "Mobile_EvolutionGraph"
+msgstr "Ajalooline graafik"
+
+msgid "Mobile_HelpUsToImprovePiwikMobile"
+msgstr "Kas soovid lubada anonüümse jälgimise võimaluse Matomo Mobile puhul ?"
+
+msgid "Mobile_HowtoDeleteAnAccount"
+msgstr "Konto eemaldamiseks vajuta pikalt."
+
+msgid "Mobile_HowtoDeleteAnAccountOniOS"
+msgstr "Konto kustutamiseks nihuta paremalt vasakule."
+
+msgid "Mobile_HowtoLoginAnonymous"
+msgstr "Anonüümse kasutaja jaoks jätke tühjaks nii kasutajanimi kui ka salasõna."
+
+msgid "Mobile_HttpIsNotSecureWarning"
+msgstr "Kui kasutad HTTP protokolli siis saadetakse sinu autoriseerimise info (token_auth) tavalise tekstina. Seepärast soovitame kasutada HTTPS protokolli info saatmiseks. Kas soovid jätkata ?"
+
+msgid "Mobile_HttpTimeout"
+msgstr "HTTP Timeout"
+
+msgid "Mobile_IncompatiblePiwikVersion"
+msgstr "Kasutusel olev Matomo versioon ei sobi kokku Matomo Mobile versiooniga. Uuendam oma Matomo versiooni või kasuta Matomo Mobile puhul versiooni 1."
+
+msgid "Mobile_LastUpdated"
+msgstr "Viimati uuendatud: %s"
+
+msgid "Mobile_LoadingReport"
+msgstr "Laen %s"
+
+msgid "Mobile_LoginCredentials"
+msgstr "Mandaadid"
+
+msgid "Mobile_LoginToPiwikToChangeSettings"
+msgstr "Logi sisse oma Matomo serverisse, et luua ja uuendada veebilehti, kasutajaid või muuta Üldiseid seadeid nagu \"Vaikimis laetavad raportid\""
+
+msgid "Mobile_LoginUseHttps"
+msgstr "Kasuta https ühendust"
+
+msgid "Mobile_MatomoMobile"
+msgstr "Matomo Mobile App"
+
+msgid "Mobile_NavigationBack"
+msgstr "Tagasi"
+
+msgid "Mobile_NetworkError"
+msgstr "Võrgu viga"
+
+msgid "Mobile_NetworkErrorWithStatusCode"
+msgstr "Leiti viga \"%1$s.\" Päring väljastas oleku \"%2$s.\" URL oli \"%3$s.\" Palun kontrolli sisestatud URLi ja vealogisid serveris, et saada rohkem infot ja leida võimalus vea kõrvaldamiseks."
+
+msgid "Mobile_NetworkErrorWithStatusCodeShort"
+msgstr "Võrgu viga %s"
+
+msgid "Mobile_NetworkNotReachable"
+msgstr "Võrk pole kättesaadav"
+
+msgid "Mobile_NoAccountIsSelected"
+msgstr "Pead konto valima. Kui pole veel ühtegi kontot siis pead konto lisama."
+
+msgid "Mobile_NoDataShort"
+msgstr "Andmed puuduvad"
+
+msgid "Mobile_NoPiwikAccount"
+msgstr "Matomo konto puudub?"
+
+msgid "Mobile_NoReportsShort"
+msgstr "Raporteid ei leitud"
+
+msgid "Mobile_NoVisitorFound"
+msgstr "Külastajaid ei leitud"
+
+msgid "Mobile_NoVisitorsShort"
+msgstr "Külastajad puuduvad"
+
+msgid "Mobile_NoWebsiteFound"
+msgstr "Veebilehti ei leitud"
+
+msgid "Mobile_NoWebsitesShort"
+msgstr "Veebilehed puuduvad"
+
+msgid "Mobile_PullDownToRefresh"
+msgstr "Värskendamiseks tõmba allapoole."
+
+msgid "Mobile_PossibleSslError"
+msgstr "Võimalik SSL sertifikaadi viga."
+
+msgid "Mobile_PossibleSslErrorExplanation"
+msgstr "Tekkis viga mille põhjuseks vigane või ise allkirjastatud sertifikaat: \"%s\". Saad sisse logida SSL hoiatust eirates aga turvalisus on madalam. Saad igal ajal SSL valideerimist muuta."
+
+msgid "Mobile_IgnoreSslError"
+msgstr "Ignoreeri SSL viga"
+
+msgid "Mobile_RatingDontRemindMe"
+msgstr "Ära tuleta meelde"
+
+msgid "Mobile_RatingNotNow"
+msgstr "Mitte praegu"
+
+msgid "Mobile_RatingNow"
+msgstr "Jah, ma hindan seda praegu."
+
+msgid "Mobile_ReleaseToRefresh"
+msgstr "Värskendamiseks vabasta..."
+
+msgid "Mobile_Reloading"
+msgstr "Värskendan..."
+
+msgid "Mobile_RequestTimedOutShort"
+msgstr "Võrgu aegumise tõrge"
+
+msgid "Mobile_RestrictedCompatibility"
+msgstr "Piiratud ühilduvus"
+
+msgid "Mobile_SearchWebsite"
+msgstr "Otsi veebilehti"
+
+msgid "Mobile_ShowAll"
+msgstr "Kuva kõik"
+
+msgid "Mobile_ShowLess"
+msgstr "Näita vähem"
+
+msgid "Mobile_StaticGraph"
+msgstr "Ülevaate graafik"
+
+msgid "Mobile_TopVisitedWebsites"
+msgstr "Peamised külastatud veebilehed"
+
+msgid "Mobile_TryIt"
+msgstr "Proovi seda!"
+
+msgid "Mobile_VerifyAccount"
+msgstr "Konto kinnitamine"
+
+msgid "Mobile_ValidateSslCertificate"
+msgstr "Kinnita SSL sertifikaat"
+
+msgid "Mobile_YouAreOffline"
+msgstr "Vabandust, aga sul pole hetkel võrguühendust"
+
+msgid "RowEvolution_AvailableMetrics"
+msgstr "Saadaolevad mõõdikud"
+
+msgid "RowEvolution_CompareDocumentation"
+msgstr "Kliki alloleval lingil ja ava hüpikaken samas tabeli mõne teise rea kohta kohta, et võrrelda mitut tulemust.<br /> Rea valimiseks ilma avamiseta hoia alla nuppu Shift."
+
+msgid "RowEvolution_CompareRows"
+msgstr "Võrdle tulemusi"
+
+msgid "RowEvolution_ComparingRecords"
+msgstr "Võrdlen %s rida"
+
+msgid "RowEvolution_Documentation"
+msgstr "Kliki mõõdikutel, et vaadata neid suuremalt. Mitme näidu üheaegseks kuvamiseks kasuta klikkimisel nuppu Shift."
+
+msgid "RowEvolution_MetricBetweenText"
+msgstr "alates %1$s kuni %2$s"
+
+msgid "RowEvolution_MetricChangeText"
+msgstr "%s muutus perioodi jooksul"
+
+msgid "RowEvolution_MetricMinMax"
+msgstr "%1$s varieerus perioodil %2$s ja %3$s vahel"
+
+msgid "RowEvolution_MetricsFor"
+msgstr "%s mõõdikud"
+
+msgid "RowEvolution_MultiRowEvolutionTitle"
+msgstr "Mitme rea muutus ajas"
+
+msgid "RowEvolution_PickAnotherRow"
+msgstr "Vali veel üks rida võrdluseks"
+
+msgid "RowEvolution_PickARow"
+msgstr "Vali rida, millega võrrelda"
+
+msgid "API_LoadedAPIs"
+msgstr "Edukalt laetud %s API-id"
+
+msgid "API_MoreInformation"
+msgstr "Et saada rohkem infot Matomou API-st, vaata %1$sMatomou API tutvustus%2$s ja %3$sMatomou API juhend%4$s."
+
+msgid "API_UserAuthentication"
+msgstr "Kasutaja autentimine"
+
+msgid "API_Glossary"
+msgstr "Sõnastik"
+
+msgid "Actions_AvgGenerationTimeTooltip"
+msgstr "Keskmine, mis baseerub %1$s laadimisel %2$s, %3$s ja %4$s vahel."
+
+msgid "Actions_ColumnClickedURL"
+msgstr "Külastatud URL"
+
+msgid "Actions_ColumnClicks"
+msgstr "Hiireklikke"
+
+msgid "Actions_ColumnClicksDocumentation"
+msgstr "Arv, mitu korda antud linki on klikitud."
+
+msgid "Actions_ColumnDownloadURL"
+msgstr "Allalaadimise URL"
+
+msgid "Actions_ColumnEntryPageTitle"
+msgstr "Sisenetud lehe pealkiri"
+
+msgid "Actions_ColumnEntryPageURL"
+msgstr "Sisenetud lehe URL"
+
+msgid "Actions_ColumnExitPageTitle"
+msgstr "Väljutud lehe pealkiri"
+
+msgid "Actions_ColumnExitPageURL"
+msgstr "Väljutud lehe URL"
+
+msgid "Actions_ColumnNoResultKeyword"
+msgstr "Ilma tulemusteta võtmesõna"
+
+msgid "Actions_ColumnPageName"
+msgstr "Lehe nimi"
+
+msgid "Actions_ColumnPagesPerSearch"
+msgstr "Otsingu tulemuste lehed"
+
+msgid "Actions_ColumnPageURL"
+msgstr "Lehe URL"
+
+msgid "Actions_ColumnSearchCategory"
+msgstr "Otsingu Kategooria"
+
+msgid "Actions_ColumnSearches"
+msgstr "Otsinguid"
+
+msgid "Actions_ColumnSearchesDocumentation"
+msgstr "Külastuste arv, mille jooksul otsiti antud märksõna veebilehe enda otsingumootoriga."
+
+msgid "Actions_ColumnSearchResultsCount"
+msgstr "Otisngutulemuste arv"
+
+msgid "Actions_ColumnSiteSearchKeywords"
+msgstr "Unikaalseid Võtmesõnu"
+
+msgid "Actions_ColumnUniqueClicks"
+msgstr "Unikaalseid Klikke"
+
+msgid "Actions_ColumnUniqueDownloads"
+msgstr "Unikaalseid Allalaadimisi"
+
+msgid "Actions_ColumnUniqueOutlinks"
+msgstr "Unikaalsed väljuvad lingid"
+
+msgid "Actions_EntryPageTitles"
+msgstr "Sisenetud lehtede pealkirjad"
+
+msgid "Actions_ExitPageTitles"
+msgstr "Väljutud lehtede pealkirjad"
+
+msgid "Actions_OneSearch"
+msgstr "1 otsing"
+
+msgid "Actions_PageUrls"
+msgstr "Lehe URL'id"
+
+msgid "Actions_SiteSearchKeyword"
+msgstr "Võtmesõna (lehe otsing)"
+
+msgid "Actions_SubmenuPagesEntry"
+msgstr "Sisenetud lehed"
+
+msgid "Actions_SubmenuPagesExit"
+msgstr "Väljutud lehed"
+
+msgid "Actions_SubmenuPageTitles"
+msgstr "Lehe pealkirjad"
+
+msgid "Actions_SubmenuSitesearch"
+msgstr "Lehe otsing"
+
+msgid "Actions_WidgetEntryPageTitles"
+msgstr "Sisenetud lehtede pealkirjad"
+
+msgid "Actions_WidgetExitPageTitles"
+msgstr "Väljutud lehtede pealkirjad"
+
+msgid "Actions_WidgetPagesEntry"
+msgstr "Sisenetud lehed"
+
+msgid "Actions_WidgetPagesExit"
+msgstr "Lehed kust väljutakse"
+
+msgid "Actions_WidgetPageTitles"
+msgstr "Lehe pealkirjad"
+
+msgid "Actions_WidgetPageTitlesFollowingSearch"
+msgstr "Peale otsingut külastatud lehtede pealkirjad"
+
+msgid "Actions_WidgetPageUrlsFollowingSearch"
+msgstr "Peale otsingut külastatud lehed"
+
+msgid "Actions_WidgetSearchCategories"
+msgstr "Otsingu Kategooriad"
+
+msgid "Actions_WidgetSearchKeywords"
+msgstr "Lehe otsingu võtmesõnad"
+
+msgid "Actions_WidgetSearchNoResultKeywords"
+msgstr "Ilma tulemusteta otsingu võtmesõnad"
+
+msgid "Annotations_AddAnnotationsFor"
+msgstr "%s kommentaari lisamine..."
+
+msgid "Annotations_AnnotationOnDate"
+msgstr "%1$s kommentaar: %2$s"
+
+msgid "Annotations_Annotations"
+msgstr "Kommentaarid"
+
+msgid "Annotations_ClickToDelete"
+msgstr "Vali et kustutada kommentaar"
+
+msgid "Annotations_ClickToEdit"
+msgstr "Vali et kommentaari muuta"
+
+msgid "Annotations_ClickToEditOrAdd"
+msgstr "Vali et lisada või muuta kommentaari"
+
+msgid "Annotations_ClickToStarOrUnstar"
+msgstr "Vali et kommentaari hinnata"
+
+msgid "Annotations_CreateNewAnnotation"
+msgstr "Loo uus kommentaar"
+
+msgid "Annotations_EnterAnnotationText"
+msgstr "Sisesta oma märkmed..."
+
+msgid "Annotations_HideAnnotationsFor"
+msgstr "Peida %s kommentaarid.."
+
+msgid "Annotations_IconDesc"
+msgstr "Vaata antud ajavahemiku märkmeid."
+
+msgid "Annotations_IconDescHideNotes"
+msgstr "Peida antud ajavahemiku märkmed."
+
+msgid "Annotations_LoginToAnnotate"
+msgstr "Sisene, et luua kommentaar."
+
+msgid "Annotations_NoAnnotations"
+msgstr "Antud ajavahemiku kohta puuduvad märkmed."
+
+msgid "Annotations_ViewAndAddAnnotations"
+msgstr "Vaata ja lisa märkmeid %s kohta..."
+
+msgid "Contents_InteractionRate"
+msgstr "Koostoime mõju"
+
+msgid "Contents_ContentName"
+msgstr "Sisu nimi"
+
+msgid "Contents_ContentPiece"
+msgstr "Sisu tükk"
+
+msgid "Contents_Contents"
+msgstr "Sisud"
+
+msgid "CoreAdminHome_AddNewTrustedHost"
+msgstr "Lisa uus usaldusväärne host"
+
+msgid "CoreAdminHome_Administration"
+msgstr "Administreerimine"
+
+msgid "CoreAdminHome_ArchivingSettings"
+msgstr "Arhiveerimise seaded"
+
+msgid "CoreAdminHome_BrandingSettings"
+msgstr "Brändingu seaded"
+
+msgid "CoreAdminHome_ReleaseChannel"
+msgstr "Vabasta kanal"
+
+msgid "CoreAdminHome_ClickHereToOptIn"
+msgstr "Vajuta et lisada valikusse."
+
+msgid "CoreAdminHome_ClickHereToOptOut"
+msgstr "Vajuta et eemaldada valikust."
+
+msgid "CoreAdminHome_EmailServerSettings"
+msgstr "E-posti serveri seaded"
+
+msgid "CoreAdminHome_ForBetaTestersOnly"
+msgstr "Ainult beta testijatele"
+
+msgid "CoreAdminHome_ImageTracking"
+msgstr "Infot koguv pilt"
+
+msgid "CoreAdminHome_ImageTrackingLink"
+msgstr "Infot koguva pildifaili link"
+
+msgid "CoreAdminHome_ImportingServerLogs"
+msgstr "Serveri logide importimine"
+
+msgid "CoreAdminHome_JavaScriptTracking"
+msgstr "JavaScriptiga info kogumine"
+
+msgid "CoreAdminHome_JSTracking_CampaignKwdParam"
+msgstr "Kampaania märksõna parameeter"
+
+msgid "CoreAdminHome_JSTracking_CampaignNameParam"
+msgstr "Kampaania nime parameeter"
+
+msgid "CoreAdminHome_JSTracking_EnableDoNotTrack"
+msgstr "Aktiveeri kliendipoolne DoNotTrack tuvastamine"
+
+msgid "CoreAdminHome_LogoUpload"
+msgstr "Vali üleslaadimiseks Logo"
+
+msgid "CoreAdminHome_FaviconUpload"
+msgstr "Vali Favicon, mida üles laadida"
+
+msgid "CoreAdminHome_MenuDiagnostic"
+msgstr "Diagnostika"
+
+msgid "CoreAdminHome_MenuGeneralSettings"
+msgstr "Põhiseaded"
+
+msgid "CoreAdminHome_MenuSystem"
+msgstr "Süsteem"
+
+msgid "CoreAdminHome_MenuDevelopment"
+msgstr "Arendamine"
+
+msgid "CoreAdminHome_OptOutForYourVisitors"
+msgstr "Matomo külastajate väljaarvamine"
+
+msgid "CoreAdminHome_PiwikIsInstalledAt"
+msgstr "Matomo on paigaldatud"
+
+msgid "CoreAdminHome_PluginSettings"
+msgstr "Plugina seaded"
+
+msgid "CoreAdminHome_PluginSettingsSaveFailed"
+msgstr "Plugina seadete salvestamine ebaõnnestus"
+
+msgid "CoreAdminHome_SystemPluginSettings"
+msgstr "Süsteemiplugina seaded"
+
+msgid "CoreAdminHome_TrackAGoal"
+msgstr "Kogu infot eesmärgi kohta"
+
+msgid "CoreAdminHome_TrackingCode"
+msgstr "Jälgimiskood"
+
+msgid "CoreAdminHome_TrustedHostSettings"
+msgstr "Usaldatud Matomou server"
+
+msgid "CoreAdminHome_UpdateSettings"
+msgstr "Uuenda seadeid"
+
+msgid "CoreAdminHome_UseCustomLogo"
+msgstr "Kasuta enda logo"
+
+msgid "CoreAdminHome_ValidPiwikHostname"
+msgstr "Kehtiv Matomou server (IP/host)"
+
+msgid "CoreAdminHome_WithOptionalRevenue"
+msgstr "koos valikulise tuluga"
+
+msgid "CoreAdminHome_YouAreOptedOut"
+msgstr "Sa oled valikust väljas."
+
+msgid "CoreHome_CategoryNoData"
+msgstr "Informatsioon puudub selles kategoorias. Proovi \"Include all population\"."
+
+msgid "CoreHome_ChangeVisualization"
+msgstr "Muuda visualiseerimist"
+
+msgid "CoreHome_CheckForUpdates"
+msgstr "Kontrolli uuendusi"
+
+msgid "CoreHome_CheckPiwikOut"
+msgstr "Proovi Matomout!"
+
+msgid "CoreHome_CloseSearch"
+msgstr "Sulge otsing"
+
+msgid "CoreHome_CloseWidgetDirections"
+msgstr "Sa saad antud vidina sulgeda, valides 'X' vidina ülaservas."
+
+msgid "CoreHome_Default"
+msgstr "vaikimisi"
+
+msgid "CoreHome_ExcludeRowsWithLowPopulation"
+msgstr "Kuvatakse kõiki ridu %s Eemalda ebapopulaarsemad"
+
+msgid "CoreHome_ExternalHelp"
+msgstr "Abi (avaneb uues aknas)"
+
+msgid "CoreHome_FlattenDataTable"
+msgstr "Antud raport on hierarhiline %s Tee see lamedaks"
+
+msgid "CoreHome_HowMuchIsPiwikWorth"
+msgstr "Kui palju on Matomo sulle väärt?"
+
+msgid "CoreHome_IncludeRowsWithLowPopulation"
+msgstr "Ebapopulaarsed read on peidetud %s Kuva kõik read"
+
+msgid "CoreHome_MakeOneTimeDonation"
+msgstr "Või tee hoopis ühekordne annetus."
+
+msgid "CoreHome_Menu"
+msgstr "Menüü"
+
+msgid "CoreHome_PeriodRange"
+msgstr "vahemik"
+
+msgid "CoreHome_ReportGeneratedOn"
+msgstr "Raport genereeritud %s"
+
+msgid "CoreHome_ReportGeneratedXAgo"
+msgstr "Raport genereeritud %s tagasi"
+
+msgid "CoreHome_SharePiwikShort"
+msgstr "Matomo! Tasuta ja avatud lähtekoodiga veebianalüütika tarkvara. Oma enda andmeid!"
+
+msgid "CoreHome_ShareThis"
+msgstr "Jaga seda"
+
+msgid "CoreHome_ShowJSCode"
+msgstr "Näita sisestatavat JavaScript koodi"
+
+msgid "CoreHome_SkipToContent"
+msgstr "Mine sisu juurde"
+
+msgid "CoreHome_SupportPiwik"
+msgstr "Toeta Matomout!"
+
+msgid "CoreHome_TableNoData"
+msgstr "Antud tabeli jaoks andmed puuduvad."
+
+msgid "CoreHome_ThereIsNoDataForThisReport"
+msgstr "Raporti jaoks puuduvad antud perioodis andmed."
+
+msgid "CoreHome_UnFlattenDataTable"
+msgstr "Antud raport on lame %s Tee see hierarhiliseks"
+
+msgid "CoreHome_ViewAllPiwikVideoTutorials"
+msgstr "Vaata kõiki Matomou video õpetusi"
+
+msgid "CoreHome_WebAnalyticsReports"
+msgstr "Veebi analüüsi raportid"
+
+msgid "CoreHome_YouAreUsingTheLatestVersion"
+msgstr "Kasutad uusimat Matomou versiooni!"
+
+msgid "CoreHome_SystemSummaryWidget"
+msgstr "Süsteemi kokkuvõte"
+
+msgid "CoreHome_SystemSummaryNWebsites"
+msgstr "%d veebilehte"
+
+msgid "CoreHome_SystemSummaryPhpVersion"
+msgstr "PHP versioon"
+
+msgid "CorePluginsAdmin_ActionUninstall"
+msgstr "Eemalda"
+
+msgid "CorePluginsAdmin_Activate"
+msgstr "Aktiveeri"
+
+msgid "CorePluginsAdmin_Activated"
+msgstr "Aktiveeritud"
+
+msgid "CorePluginsAdmin_Active"
+msgstr "Aktiivne"
+
+msgid "CorePluginsAdmin_Activity"
+msgstr "Aktiivsus"
+
+msgid "CorePluginsAdmin_AuthorHomepage"
+msgstr "Autori veebileht"
+
+msgid "CorePluginsAdmin_Changelog"
+msgstr "Muudatuste logi"
+
+msgid "CorePluginsAdmin_Deactivate"
+msgstr "Lülita välja"
+
+msgid "CorePluginsAdmin_History"
+msgstr "Ajalugu"
+
+msgid "CorePluginsAdmin_Inactive"
+msgstr "Mitteaktiivne"
+
+msgid "CorePluginsAdmin_InstallNewPlugins"
+msgstr "Paigalda uut lisatarkvara"
+
+msgid "CorePluginsAdmin_InstallNewThemes"
+msgstr "Paigalda uusi kujundusi"
+
+msgid "CorePluginsAdmin_LicenseHomepage"
+msgstr "Litsentsi koduleht"
+
+msgid "CorePluginsAdmin_PluginsExtendPiwik"
+msgstr "Plugins võimendavad ja suurendavad Matomo-i funktsionaalsust."
+
+msgid "CorePluginsAdmin_OncePluginIsInstalledYouMayActivateHere"
+msgstr "Kui plugin on installeeritud ja aktiveeritud saad seda sisse ja välja lülitada siin."
+
+msgid "CorePluginsAdmin_MenuPlatform"
+msgstr "Platvorm"
+
+msgid "CorePluginsAdmin_NoZipFileSelected"
+msgstr "Palun vali ZIP fail."
+
+msgid "CorePluginsAdmin_NumUpdatesAvailable"
+msgstr "%s uuendus(t) saadaval"
+
+msgid "CorePluginsAdmin_Origin"
+msgstr "Päritolu"
+
+msgid "CorePluginsAdmin_OriginCore"
+msgstr "Tuumik"
+
+msgid "CorePluginsAdmin_OriginThirdParty"
+msgstr "Kolmanda osapoole"
+
+msgid "CorePluginsAdmin_PluginHomepage"
+msgstr "Lisatarkvara koduleht"
+
+msgid "CorePluginsAdmin_PluginsManagement"
+msgstr "Lisatarkvara haldus"
+
+msgid "CorePluginsAdmin_Status"
+msgstr "Olek"
+
+msgid "CorePluginsAdmin_TeaserExtendPiwik"
+msgstr "Laienda Matomout lisatarkvara ja kujunduste abil"
+
+msgid "CorePluginsAdmin_Theme"
+msgstr "Kujundus"
+
+msgid "CorePluginsAdmin_Themes"
+msgstr "Kujundused"
+
+msgid "CorePluginsAdmin_ThemesManagement"
+msgstr "Halda kujundusi"
+
+msgid "CorePluginsAdmin_Version"
+msgstr "Versioon"
+
+msgid "CorePluginsAdmin_Websites"
+msgstr "Veebilehed"
+
+msgid "CoreUpdater_CriticalErrorDuringTheUpgradeProcess"
+msgstr "Kriitiline viga uuendamise protsessi ajal:"
+
+msgid "CoreUpdater_DatabaseUpgradeRequired"
+msgstr "Andmebaasi uuendus on vajalik"
+
+msgid "CoreUpdater_DownloadingUpdateFromX"
+msgstr "Laen uuendust %s"
+
+msgid "CoreUpdater_DownloadX"
+msgstr "Lae alla %s"
+
+msgid "CoreUpdater_EmptyDatabaseError"
+msgstr "Andmebaas %s on tühi. Sa pead muutma või eemaldama Matomou konfiguratsiooni faili."
+
+msgid "CoreUpdater_ErrorDuringPluginsUpdates"
+msgstr "Viga lisatarkvara uuendamisel:"
+
+msgid "CoreUpdater_ExceptionArchiveEmpty"
+msgstr "Tühi arhiiv."
+
+msgid "CoreUpdater_HelpMessageContent"
+msgstr "Vaata %1$s Matomo KKK %2$s milles selgitadakse tavapäraste probleemide põhjuseid ja lahendusi. %3$s Kui sa ei leia lahendust, siis küsi oma süsteemi administraatoritelt abi- nad võivad aidata juhul, kui need vead on seotud serveri või MySQL seadetega."
+
+msgid "CoreUpdater_HelpMessageIntroductionWhenWarning"
+msgstr "Uuendamine edukalt lõpetatud, siiski esines protsessis vigu. Palun tutvu ülal vigade kirjeldustega. Saamaks rohkem abi:"
+
+msgid "CoreUpdater_HighTrafficPiwikServerEnableMaintenance"
+msgstr "Kui sa haldad suure liiklusega Matomo serverit, soovitame korraks %1$slülitada Matomou kasutajaliides hooldusrežiimi ja katkestada külastuste kohta info kogumine%2$s."
+
+msgid "CoreUpdater_InstallingTheLatestVersion"
+msgstr "Paigaldan uusimat versiooni"
+
+msgid "CoreUpdater_LatestBetaRelease"
+msgstr "Viimane beetaversioon"
+
+msgid "CoreUpdater_LatestStableRelease"
+msgstr "Viimane stabiilne versioon"
+
+msgid "CoreUpdater_MajorUpdateWarning1"
+msgstr "Tegemist on suure uuendusega! See võtab tavapärasest kauem aega."
+
+msgid "CoreUpdater_MajorUpdateWarning2"
+msgstr "Järgnev info on eriti oluline suure külastatavusega paigaldustele."
+
+msgid "CoreUpdater_NoteForLargePiwikInstances"
+msgstr "Oluline teave suure liiklusega Matomou paigaldustele"
+
+msgid "CoreUpdater_NotificationSubjectAvailableCoreUpdate"
+msgstr "Uus Matomo %s on saadaval"
+
+msgid "CoreUpdater_PiwikHasBeenSuccessfullyUpgraded"
+msgstr "Matomo edukalt uuendatud!"
+
+msgid "CoreUpdater_PiwikUpdatedSuccessfully"
+msgstr "Matomo edukalt uuendatud!"
+
+msgid "CoreUpdater_PiwikWillBeUpgradedFromVersionXToVersionY"
+msgstr "Matomo andmebaas uuendatakse versioonilt %1$s uuele versioonile %2$s."
+
+msgid "CoreUpdater_ReadyToGo"
+msgstr "Valmis jätkamiseks?"
+
+msgid "CoreUpdater_TheFollowingPluginsWillBeUpgradedX"
+msgstr "Valitud lisatarkvarad uuendatakse: %s."
+
+msgid "CoreUpdater_ThereIsNewVersionAvailableForUpdate"
+msgstr "Uus Matomou versioon on saadaval"
+
+msgid "CoreUpdater_TheUpgradeProcessMayFailExecuteCommand"
+msgstr "Kui sul on suur Matomou andmebaas, siis uuendused võivad veebisirvikus võtta liiga kaua aega. Sellisel juhul saad uuenduse teha käsurealt: %s"
+
+msgid "CoreUpdater_TheUpgradeProcessMayTakeAWhilePleaseBePatient"
+msgstr "Andmebaasi uuendamise protsess võtab veidi aega, palun ole kannatlik."
+
+msgid "CoreUpdater_UnpackingTheUpdate"
+msgstr "Pakin uuendust lahti"
+
+msgid "CoreUpdater_UpdateAutomatically"
+msgstr "Uuenda automaatselt"
+
+msgid "CoreUpdater_UpdateTitle"
+msgstr "Uuendus"
+
+msgid "CoreUpdater_UpdateSuccessTitle"
+msgstr "Matomo edukalt uuendatud!"
+
+msgid "CoreUpdater_UpdateErrorTitle"
+msgstr "Uuendamise viga"
+
+msgid "CoreUpdater_CloudHosting"
+msgstr "Pilvemajutus"
+
+msgid "CoreUpdater_UpgradeComplete"
+msgstr "Uuendamine lõpuni viidud!"
+
+msgid "CoreUpdater_UpgradePiwik"
+msgstr "Uuenda Matomo"
+
+msgid "CoreUpdater_VerifyingUnpackedFiles"
+msgstr "Kontrollin lahtipakitud failide terviklikkust"
+
+msgid "CoreUpdater_WarningMessages"
+msgstr "Hoiatussõnumid:"
+
+msgid "CoreUpdater_WeAutomaticallyDeactivatedTheFollowingPlugins"
+msgstr "Lülitame automaatselt välja järgnevad lisatarkvarad: %s"
+
+msgid "CoreUpdater_YouCanUpgradeAutomaticallyOrDownloadPackage"
+msgstr "Sa võid uuendada versioonile %s automaatselt või laadida alla paki ja paigaldada käsitsi:"
+
+msgid "CoreUpdater_YourDatabaseIsOutOfDate"
+msgstr "Sinu Matomou andmebaas on vananenud ja tuleb enne jätkamist uuendada."
+
+msgid "CustomVariables_ColumnCustomVariableName"
+msgstr "Kohandatud muutuja nimi"
+
+msgid "CustomVariables_ColumnCustomVariableValue"
+msgstr "Kohandatud muutuja väärtus"
+
+msgid "CustomVariables_CustomVariables"
+msgstr "Kohandatud muutujad"
+
+msgid "CustomVariables_ScopePage"
+msgstr "skoop: lehekülg"
+
+msgid "CustomVariables_ScopeVisit"
+msgstr "skoop: külastus"
+
+msgid "CustomVariables_Index"
+msgstr "Indeks"
+
+msgid "CustomVariables_Usages"
+msgstr "Kasutamised"
+
+msgid "DBStats_DatabaseUsage"
+msgstr "Andmebaasi kasutus"
+
+msgid "DBStats_DataSize"
+msgstr "Andmemaht"
+
+msgid "DBStats_DBSize"
+msgstr "Andmebaasi suurus"
+
+msgid "DBStats_EstimatedSize"
+msgstr "Ennustatud maht"
+
+msgid "DBStats_IndexSize"
+msgstr "Indeksi maht"
+
+msgid "DBStats_LearnMore"
+msgstr "Et saada rohkem infot, kuidas Matomo töötleb andmeid ja kuidas optimeerida Matomout tööks keskmise ja kõrge külastatavusega veebilehtedele, vaata seda dokumentatsiooni: %s."
+
+msgid "DBStats_MainDescription"
+msgstr "Matomo salvestab kõik veebianalüütika andmed MySQL andmebaasi. Matomou tabelid kasutavad hetkel %s."
+
+msgid "DBStats_MetricDataByYear"
+msgstr "Mõõttabelid aasta järgi"
+
+msgid "DBStats_MetricTables"
+msgstr "Mõõttabelid"
+
+msgid "DBStats_OtherTables"
+msgstr "Muud tabelid"
+
+msgid "DBStats_ReportDataByYear"
+msgstr "Raporti tabelid aasta järgi"
+
+msgid "DBStats_ReportTables"
+msgstr "Raporti tabelid"
+
+msgid "DBStats_RowCount"
+msgstr "Ridade arv"
+
+msgid "DBStats_Table"
+msgstr "Tabel"
+
+msgid "DBStats_TotalSize"
+msgstr "Kogusuurus"
+
+msgid "DBStats_TrackerTables"
+msgstr "Jälitustabelid"
+
+msgid "Dashboard_AddAWidget"
+msgstr "Lisa vidin"
+
+msgid "Dashboard_AddPreviewedWidget"
+msgstr "Vali et lisada vidin töölauale"
+
+msgid "Dashboard_ChangeDashboardLayout"
+msgstr "Muuda töölaua paigutust"
+
+msgid "Dashboard_CopyDashboardToUser"
+msgstr "Kopeeri töölaud kasutajale"
+
+msgid "Dashboard_CreateNewDashboard"
+msgstr "Loo uus töölaud"
+
+msgid "Dashboard_Dashboard"
+msgstr "Töölaud"
+
+msgid "Dashboard_DashboardName"
+msgstr "Töölaua nimi:"
+
+msgid "Dashboard_DashboardOf"
+msgstr "%s töölaud"
+
+msgid "Dashboard_DefaultDashboard"
+msgstr "Vaikimisi töölaud - kasutab vaikimisi vidinaid ja paigutust"
+
+msgid "Dashboard_DeleteWidgetConfirm"
+msgstr "Oled sa kindel selle mooduli kustutamises oma töölaualt?"
+
+msgid "Dashboard_EmptyDashboard"
+msgstr "Tühi töölaud - vali oma lemmik vidinad"
+
+msgid "Dashboard_LoadingWidget"
+msgstr "Laen moodulit, palun oota..."
+
+msgid "Dashboard_ManageDashboard"
+msgstr "Halda töölauda"
+
+msgid "Dashboard_Maximise"
+msgstr "Maksimeeri"
+
+msgid "Dashboard_Minimise"
+msgstr "Minimeeri"
+
+msgid "Dashboard_NotUndo"
+msgstr "Sul ei ole võimalik antud tegevust tagasi võtta."
+
+msgid "Dashboard_RemoveDashboard"
+msgstr "Eemalda töölaud"
+
+msgid "Dashboard_RenameDashboard"
+msgstr "Nimeta töölaud ümber"
+
+msgid "Dashboard_ResetDashboard"
+msgstr "Algseadista töölaud"
+
+msgid "Dashboard_SelectWidget"
+msgstr "Vali töölauale lisatav moodul"
+
+msgid "Dashboard_SetAsDefaultWidgets"
+msgstr "Määra vaikimisi valitud vidinateks"
+
+msgid "Dashboard_TopLinkTooltip"
+msgstr "Kuva veebianalüütika raport lehele %s."
+
+msgid "Dashboard_WidgetNotFound"
+msgstr "Moodulit ei leitud"
+
+msgid "Dashboard_WidgetPreview"
+msgstr "Vidina eelvaade"
+
+msgid "DevicePlugins_WidgetPlugins"
+msgstr "Sirviku lisatarkvarad"
+
+msgid "DevicesDetection_BrowserEngine"
+msgstr "Veebisirvija"
+
+msgid "DevicesDetection_BrowserEngines"
+msgstr "Veebimootorid"
+
+msgid "DevicesDetection_BrowserFamily"
+msgstr "Sirvija tüüp"
+
+msgid "DevicesDetection_Browsers"
+msgstr "Veebisirvijad"
+
+msgid "DevicesDetection_BrowserVersion"
+msgstr "Sirvija versioon"
+
+msgid "DevicesDetection_BrowserVersions"
+msgstr "Brauseri versioonid"
+
+msgid "DevicesDetection_Camera"
+msgstr "Kaamera"
+
+msgid "DevicesDetection_CarBrowser"
+msgstr "Sõiduki sirvik"
+
+msgid "DevicesDetection_Software"
+msgstr "Tarkvara"
+
+msgid "DevicesDetection_ColumnBrowser"
+msgstr "Veebisirvija"
+
+msgid "DevicesDetection_ColumnOperatingSystem"
+msgstr "Operatsioonisüsteem"
+
+msgid "DevicesDetection_ColumnOperatingSystemVersion"
+msgstr "Operatsioonisüsteemi versioon"
+
+msgid "DevicesDetection_Console"
+msgstr "Konsool"
+
+msgid "DevicesDetection_dataTableLabelBrands"
+msgstr "Bränd"
+
+msgid "DevicesDetection_dataTableLabelModels"
+msgstr "Mudel"
+
+msgid "DevicesDetection_dataTableLabelSystemVersion"
+msgstr "Operatsioonisüsteemi versioon"
+
+msgid "DevicesDetection_dataTableLabelTypes"
+msgstr "Tüüp"
+
+msgid "DevicesDetection_Device"
+msgstr "Seade"
+
+msgid "DevicesDetection_DeviceBrand"
+msgstr "Seadme bränd"
+
+msgid "DevicesDetection_DeviceDetection"
+msgstr "Seadme tuvastus"
+
+msgid "DevicesDetection_DeviceModel"
+msgstr "Seadme mudel"
+
+msgid "DevicesDetection_DevicesDetection"
+msgstr "Külastajate seadmed"
+
+msgid "DevicesDetection_DeviceType"
+msgstr "Seadme tüüp"
+
+msgid "DevicesDetection_FeaturePhone"
+msgstr "Tark telefon"
+
+msgid "DevicesDetection_OperatingSystemFamilies"
+msgstr "Operatsioonisüsteemide tüübid"
+
+msgid "DevicesDetection_OperatingSystemFamily"
+msgstr "OP-süsteemi tüüp"
+
+msgid "DevicesDetection_OperatingSystems"
+msgstr "Operatsioonisüsteemid"
+
+msgid "DevicesDetection_OperatingSystemVersions"
+msgstr "Operatsioonisüsteemide versioonid"
+
+msgid "DevicesDetection_SmartDisplay"
+msgstr "Nutikas kuvar"
+
+msgid "DevicesDetection_Smartphone"
+msgstr "Nutitelefon"
+
+msgid "DevicesDetection_Devices"
+msgstr "Seadmed"
+
+msgid "DevicesDetection_Tablet"
+msgstr "Tahvelarvuti"
+
+msgid "DevicesDetection_TV"
+msgstr "Televiisor"
+
+msgid "DevicesDetection_UserAgent"
+msgstr "Veebisirvija tüüp"
+
+msgid "DevicesDetection_WidgetBrowsers"
+msgstr "Külastajate veebisirvijad"
+
+msgid "Diagnostics_ConfigFileTitle"
+msgstr "Seadistuste fail"
+
+msgid "Diagnostics_Sections"
+msgstr "Sektsioonid"
+
+msgid "Ecommerce_Sales"
+msgstr "Müük"
+
+msgid "Ecommerce_SalesAdjective"
+msgstr "Müük %s"
+
+msgid "Events_AvgValue"
+msgstr "Keskmine väärtus"
+
+msgid "Events_Event"
+msgstr "Sündmus"
+
+msgid "Events_EventAction"
+msgstr "Sündmuse tegevus"
+
+msgid "Events_EventActions"
+msgstr "Sündmuste tegevused"
+
+msgid "Events_EventCategories"
+msgstr "Ürituse kategooriad"
+
+msgid "Events_EventCategory"
+msgstr "Sündmuse kategooria"
+
+msgid "Events_EventName"
+msgstr "Sündmuse nimi"
+
+msgid "Events_EventNames"
+msgstr "Sündmuste nimed"
+
+msgid "Events_Events"
+msgstr "Sündmused"
+
+msgid "Feedback_IWantTo"
+msgstr "Ma tahan:"
+
+msgid "Feedback_SendFeedback"
+msgstr "Saada tagasisidet"
+
+msgid "Feedback_CommunityHelp"
+msgstr "Kogukonna abi"
+
+msgid "Feedback_ProfessionalHelp"
+msgstr "Proffesionaalne abi"
+
+msgid "Feedback_ContactUs"
+msgstr "Võta meiega ühendust"
+
+msgid "Goals_AbandonedCart"
+msgstr "Hüljatud ostukorv"
+
+msgid "Goals_AddGoal"
+msgstr "Lisa eesmärk"
+
+msgid "Goals_AddNewGoal"
+msgstr "Lisa uus eesmärk"
+
+msgid "Goals_AddNewGoalOrEditExistingGoal"
+msgstr "%1$sLisa uus eesmärk%2$s või %3$sMuuda%4$s olemasolevaid eesmärke"
+
+msgid "Goals_AllowGoalConvertedMoreThanOncePerVisit"
+msgstr "Luba külastajate muundamist rohkem kui ühe korra külastuse jooksul (võib mitu korda muutuda tulu toovaks kliendiks)"
+
+msgid "Goals_AllowMultipleConversionsPerVisit"
+msgstr "Luba mitu tulutoomist ühe külastuse jooksul"
+
+msgid "Goals_BestCountries"
+msgstr "Sinu parimad tulutoovad riigid on:"
+
+msgid "Goals_BestKeywords"
+msgstr "Sinu parimad tulutoovad märksõnad on:"
+
+msgid "Goals_BestReferrers"
+msgstr "Sinu parimad tulutoovad veebilehtede suunajad on:"
+
+msgid "Goals_CaseSensitive"
+msgstr "Tähtede tõusutundlik võrdlus"
+
+msgid "Goals_CategoryTextGeneral_Visitors"
+msgstr "Kasutaja asukoht"
+
+msgid "Goals_CategoryTextReferrers_Referrers"
+msgstr "Viitajad"
+
+msgid "Goals_ClickOutlink"
+msgstr "Klikivad välise lehe lingile"
+
+msgid "Goals_ColumnConversions"
+msgstr "Tulu tekitamised"
+
+msgid "Goals_ColumnVisits"
+msgstr "Külastuste koguarv, hoolimata sellest, kas eesmärgini jõuti või ei."
+
+msgid "Goals_Contains"
+msgstr "sisaldab %s"
+
+msgid "Goals_ConversionRate"
+msgstr "%s tulumäär"
+
+msgid "Goals_Conversions"
+msgstr "%s tulu tekitamist"
+
+msgid "Goals_ConversionsOverview"
+msgstr "Tulu tekitamiste ülevaade"
+
+msgid "Goals_ConversionsOverviewBy"
+msgstr "Tulu tekitamiste ülevaade külastuse tüübi järgi"
+
+msgid "Goals_DaysToConv"
+msgstr "Päevi tulu tekitamiseni"
+
+msgid "Goals_Details"
+msgstr "Eesmärgi andmed"
+
+msgid "Goals_DefaultGoalConvertedOncePerVisit"
+msgstr "(vaikimisi) Eesmärgi jaoks saab klienti muudada ainult ühe korra külastuse jooksul (hetk kui külastajast saab tulutoov klient)"
+
+msgid "Goals_Download"
+msgstr "Laevad alla faili"
+
+msgid "Goals_Ecommerce"
+msgstr "E-äri"
+
+msgid "Goals_EcommerceAndGoalsMenu"
+msgstr "E-äri ja eesmärgid"
+
+msgid "Goals_EcommerceLog"
+msgstr "E-äri logid"
+
+msgid "Goals_EcommerceOrder"
+msgstr "E-äri tellimus"
+
+msgid "Goals_EcommerceOverview"
+msgstr "E-äri ülevaade"
+
+msgid "Goals_EcommerceReports"
+msgstr "E-äri raportid"
+
+msgid "Goals_ExternalWebsiteUrl"
+msgstr "välise veebilehe URL"
+
+msgid "Goals_Filename"
+msgstr "failinimi"
+
+msgid "Goals_GoalConversion"
+msgstr "Eesmärgi tulu"
+
+msgid "Goals_GoalConversions"
+msgstr "Eesmärgi tulud"
+
+msgid "Goals_GoalIsTriggered"
+msgstr "Eesmärk käivitub"
+
+msgid "Goals_GoalIsTriggeredWhen"
+msgstr "Eesmärk käivitub kui"
+
+msgid "Goals_GoalName"
+msgstr "Eesmärgi nimi"
+
+msgid "Goals_Goals"
+msgstr "Eesmärgid"
+
+msgid "Goals_ManageGoals"
+msgstr "Halda eesmärke"
+
+msgid "Goals_GoalsOverview"
+msgstr "Eesmärkide ülevaade"
+
+msgid "Goals_GoalX"
+msgstr "Eesmärk %s"
+
+msgid "Goals_IsExactly"
+msgstr "on täpselt %s"
+
+msgid "Goals_LeftInCart"
+msgstr "%s jäetud ostukorvi"
+
+msgid "Goals_Manually"
+msgstr "manuaalselt"
+
+msgid "Goals_MatchesExpression"
+msgstr "vastab reeglile %s"
+
+msgid "Goals_Optional"
+msgstr "(valikuline)"
+
+msgid "Goals_OverallRevenue"
+msgstr "üldine tulu"
+
+msgid "Goals_PageTitle"
+msgstr "Lehe pealkiri"
+
+msgid "Goals_Pattern"
+msgstr "Muster"
+
+msgid "Goals_ProductCategory"
+msgstr "Toote kategooria"
+
+msgid "Goals_ProductName"
+msgstr "Toote nimi"
+
+msgid "Goals_Products"
+msgstr "Tooted"
+
+msgid "Goals_ProductSKU"
+msgstr "Tootekood"
+
+msgid "Goals_UpdateGoal"
+msgstr "Uuenda eesmärki"
+
+msgid "Goals_URL"
+msgstr "URL"
+
+msgid "Goals_ViewAndEditGoals"
+msgstr "Vaata ja muuda eesmärke"
+
+msgid "Goals_VisitPageTitle"
+msgstr "Külastavad määratud pealkirjaga lehte"
+
+msgid "Goals_VisitsUntilConv"
+msgstr "Külastusi tulu tekitamiseni"
+
+msgid "Goals_VisitUrl"
+msgstr "Külastavad määratud URLi (leht või lehtede grupp)"
+
+msgid "Goals_WhenVisitors"
+msgstr "kui külastajad"
+
+msgid "Goals_WhereThe"
+msgstr "kus"
+
+msgid "Goals_YouCanEnableEcommerceReports"
+msgstr "Sa saad aktiveerida %1$s antud veebilehele %2$s lehel."
+
+msgid "Insights_DayComparedToPreviousDay"
+msgstr "eelmine päev"
+
+msgid "Insights_DayComparedToPreviousWeek"
+msgstr "sama päev eelmisel nädalal"
+
+msgid "Insights_DayComparedToPreviousYear"
+msgstr "sama päev eelmisel aastal"
+
+msgid "Insights_Filter"
+msgstr "Filter"
+
+msgid "Insights_FilterOnlyMovers"
+msgstr "Ainult liikujad"
+
+msgid "Insights_FilterOnlyNew"
+msgstr "Ainult uus"
+
+msgid "Insights_MonthComparedToPreviousMonth"
+msgstr "eelmine kuu"
+
+msgid "Insights_WeekComparedToPreviousWeek"
+msgstr "eelmine nädal"
+
+msgid "Insights_YearComparedToPreviousYear"
+msgstr "eelmine aasta"
+
+msgid "Installation_CollaborativeProject"
+msgstr "Matomo on koostööprojekt, mis on valminud armastusega inimeste poolt üle kogu maailma."
+
+msgid "Installation_Congratulations"
+msgstr "Õnnitleme"
+
+msgid "Installation_DatabaseAbilities"
+msgstr "Andmebaasi võimalused"
+
+msgid "Installation_DatabaseCreation"
+msgstr "Andmebaasi loomine"
+
+msgid "Installation_DatabaseErrorConnect"
+msgstr "Andmebaasi serveriga ühendumisel tekkis tõrge"
+
+msgid "Installation_DatabaseServerVersion"
+msgstr "Andmebaasi serveri versioon"
+
+msgid "Installation_DatabaseSetup"
+msgstr "Andmebaasi seadistamine"
+
+msgid "Installation_DatabaseSetupAdapter"
+msgstr "Adapter"
+
+msgid "Installation_DatabaseSetupDatabaseName"
+msgstr "Andmebaasi nimi"
+
+msgid "Installation_DatabaseSetupLogin"
+msgstr "Kasutajakonto"
+
+msgid "Installation_DatabaseSetupServer"
+msgstr "Andmebaasi server"
+
+msgid "Installation_DatabaseSetupTablePrefix"
+msgstr "Tabelite eesliide"
+
+msgid "Installation_Email"
+msgstr "E-post"
+
+msgid "Installation_Extension"
+msgstr "laiendus"
+
+msgid "Installation_Filesystem"
+msgstr "Failisüsteem"
+
+msgid "Installation_GetInvolved"
+msgstr "Kui sulle meeldib, mida sa näed, siis %1$saita arengule kaasa%2$s."
+
+msgid "Installation_GoBackAndDefinePrefix"
+msgstr "Mine tagasi ja defineeri eesliide Matomou tabelitele"
+
+msgid "Installation_HappyAnalysing"
+msgstr "Õnnelikku analüüsi!"
+
+msgid "Installation_Installation"
+msgstr "Paigaldus"
+
+msgid "Installation_InstallationStatus"
+msgstr "Paigalduse olek"
+
+msgid "Installation_JSTracking_Intro"
+msgstr "Matomo veebilehe külastuste kohta info kogumiseks, tuleb igale lehele lisada spetsiaalne kood."
+
+msgid "Installation_LargePiwikInstances"
+msgstr "Abi tiheda külastusega veebilehtede kasutajatele"
+
+msgid "Installation_Legend"
+msgstr "Seletus"
+
+msgid "Installation_NfsFilesystemWarning"
+msgstr "Sinu server kasutab NFS failisüsteemi"
+
+msgid "Installation_NfsFilesystemWarningSuffixAdmin"
+msgstr "See tähendab, et Matomo on väga aeglane faili põhiste sessioonidega töötamisel."
+
+msgid "Installation_Optional"
+msgstr "Valikuline"
+
+msgid "Installation_Password"
+msgstr "Parool"
+
+msgid "Installation_PasswordDoNotMatch"
+msgstr "salasõnad ei kattu"
+
+msgid "Installation_PasswordRepeat"
+msgstr "Parool (korda)"
+
+msgid "Installation_PercentDone"
+msgstr "%s %% Tehtud"
+
+msgid "Installation_PleaseFixTheFollowingErrors"
+msgstr "Palun paranda järgnevad vead"
+
+msgid "Installation_DefaultSettings"
+msgstr "Matomo vaikimisi seaded"
+
+msgid "Installation_Requirements"
+msgstr "Matomo nõuded"
+
+msgid "Installation_RestartWebServer"
+msgstr "Peale selle muudatuse teostamist, palun taaskäivita oma veebiserver."
+
+msgid "Installation_ReusingTables"
+msgstr "Tabelite uuesti kasutamine"
+
+msgid "Installation_SeeBelowForMoreInfo"
+msgstr "Vaata allapoole täpsema info jaoks."
+
+msgid "Installation_SetupWebsite"
+msgstr "Seadista veebileht"
+
+msgid "Installation_SetupWebsiteError"
+msgstr "Veebilehe lisamisel tekkis viga"
+
+msgid "Installation_SetupWebSiteName"
+msgstr "Veebisaidi nimi"
+
+msgid "Installation_SetupWebsiteSetupSuccess"
+msgstr "Veebileht %s loodi edukalt!"
+
+msgid "Installation_SetupWebSiteURL"
+msgstr "Veebisaidi URL"
+
+msgid "Installation_SiteSetup"
+msgstr "Palun seadista esimene veebileht, mille kohta soovid andmeid koguda ja Matomouga analüüsida:"
+
+msgid "Installation_SiteSetupFootnote"
+msgstr "Märge: peale Matomou paigalduse lõppu on võimalik lisada teisi veebilehti analüüsimiseks juurde!"
+
+msgid "Installation_SuperUser"
+msgstr "Peakasutaja"
+
+msgid "Installation_SuperUserLogin"
+msgstr "Peakasutaja kasutajanimi"
+
+msgid "Installation_SuperUserSetupError"
+msgstr "Peakasutaja lisamisel tekkis viga"
+
+msgid "Installation_SuperUserSetupSuccess"
+msgstr "Peakasutaja on edukalt loodud!"
+
+msgid "Installation_SystemCheck"
+msgstr "Süsteemi kontroll"
+
+msgid "Installation_SystemCheckAutoUpdateHelp"
+msgstr "Märge: Matomo automaatne uuendus nõuab kirjutusõigust Matomou juurkataloogi ja selle sisule."
+
+msgid "Installation_SystemCheckCreateFunctionHelp"
+msgstr "Matomo kasutab anonüümseid funktsioone süsteemile vastuste saatmiseks."
+
+msgid "Installation_SystemCheckDatabaseExtensions"
+msgstr "MySQL-i laiendid"
+
+msgid "Installation_SystemCheckDatabaseHelp"
+msgstr "Matomo vajab kas ainult mysqli või nii PDO kui ka pdo_mysql laiendust mõlemat."
+
+msgid "Installation_SystemCheckError"
+msgstr "Ilmnes viga - Enne jätkamist tuleb see parandada"
+
+msgid "Installation_SystemCheckEvalHelp"
+msgstr "Nõutud HTML QuickForm ja Smarty süsteemi poolt."
+
+msgid "Installation_SystemCheckExtensions"
+msgstr "Muud nõutud laiendused"
+
+msgid "Installation_SystemCheckFileIntegrity"
+msgstr "Failide terviklikkus"
+
+msgid "Installation_SystemCheckFunctions"
+msgstr "Nõutud funktsioonid"
+
+msgid "Installation_SystemCheckGDFreeType"
+msgstr "GD > 2.x + Freetype (graafika)"
+
+msgid "Installation_SystemCheckGDHelp"
+msgstr "Statistika jaoks genereeritud graafikud (väiksed joongraafikud veebis, mobiilses rakenduses ja e-posti raportites) ei tööta."
+
+msgid "Installation_SystemCheckGzcompressHelp"
+msgstr "Sa pead aktiveerima zlib laienduse ja gzcompress funktsiooni."
+
+msgid "Installation_SystemCheckGzuncompressHelp"
+msgstr "Sa pead aktiveerima zlib laienduse ja gzuncompress funktsiooni."
+
+msgid "Installation_SystemCheckIconvHelp"
+msgstr "Sa pead PHP seadistama ja uuesti laadima koos \"iconv\" toega, --with-iconv."
+
+msgid "Installation_SystemCheckMailHelp"
+msgstr "Tagasiside ja kaotatud salasõna sõnumeid ei saadeta ilma mail() funktsiooni toeta."
+
+msgid "Installation_SystemCheckMbstring"
+msgstr "mbstring"
+
+msgid "Installation_SystemCheckMemoryLimit"
+msgstr "Mälu limiit"
+
+msgid "Installation_SystemCheckMemoryLimitHelp"
+msgstr "Suure liiklusega veebileht võib vajada arhiveerimiseks rohkem mälu, kui hetkel lubatud.<br />Vaata üle oma memory_limit oma php.ini failis, kui see osutub vajalikuks."
+
+msgid "Installation_SystemCheckOpenURL"
+msgstr "Ava URL"
+
+msgid "Installation_SystemCheckOtherExtensions"
+msgstr "Muud laiendused"
+
+msgid "Installation_SystemCheckOtherFunctions"
+msgstr "Muud funktsioonid"
+
+msgid "Installation_SystemCheckPackHelp"
+msgstr "Funktsioon pack() on nõutud, et koguda külatuste infot."
+
+msgid "Installation_SystemCheckPhp"
+msgstr "PHP versioon"
+
+msgid "Installation_SystemCheckPhpPdoAndMysqli"
+msgstr "Rohkem infot: %1$sPHP PDO%2$s ja %3$sMYSQLI%4$s kohta."
+
+msgid "Installation_SystemCheckSummaryNoProblems"
+msgstr "Huraa! Kõik nõuded on täidetud ja Matomou paigaldusel ei esine ühtegi probleemi. Võid endale pai teha."
+
+msgid "Installation_SystemCheckSummaryThereWereErrors"
+msgstr "Oi-oi! Matomo tuvastas mõned %1$skriitilised probleemid%2$s paigaldusel. %3$sNeed probleemid tuleb koheselt kõrvaldada.%4$s"
+
+msgid "Installation_SystemCheckSummaryThereWereWarnings"
+msgstr "Sinu süsteemis tuvastati mõningaid puudujääke. Matomo läheb küll tööle, kuid kasutamisel võib esineda väiksemaid probleeme."
+
+msgid "Installation_SystemCheckTimeLimitHelp"
+msgstr "Suure liiklusega veebilehe puhul, või arhiveerimisprotssess võtta rohkem aega, kui hetkel lubatud.<br />Vaata direktiiv max_execution_time oma php.ini failis, kui see on vajalik"
+
+msgid "Installation_SystemCheckTracker"
+msgstr "Andmete kogumiskoodi staatus"
+
+msgid "Installation_SystemCheckWarning"
+msgstr "Matomo toimib normaalselt, kuid osad võimalused võivad puududa."
+
+msgid "Installation_SystemCheckWriteDirs"
+msgstr "Kaustad kirjutusõigusega"
+
+msgid "Installation_SystemCheckWriteDirsHelp"
+msgstr "Parandamaks seda viga Linux süsteemis, proovi sisestada järgnevad käsud"
+
+msgid "Installation_NotSupported"
+msgstr "pole toetatud"
+
+msgid "Installation_Tables"
+msgstr "Tabelite loomine"
+
+msgid "Installation_TablesCreatedSuccess"
+msgstr "Tabelid loodud!"
+
+msgid "Installation_TablesDelete"
+msgstr "Kustuta leitud tabelid"
+
+msgid "Installation_TablesDeletedSuccess"
+msgstr "Olemasolevad tabelid kustutatud"
+
+msgid "Installation_TablesFound"
+msgstr "Andmebaasist leiti järgnevad tabelid"
+
+msgid "Installation_TablesReuse"
+msgstr "Taaskasuta olemasolevaid tabeleid"
+
+msgid "Installation_TablesWarningHelp"
+msgstr "Nüüd saad valida, kas kasutad olemasolevaid tabeleid ja andmeid või lood uued tabelid."
+
+msgid "Installation_Timezone"
+msgstr "Veebisaidi ajavöönd"
+
+msgid "Installation_WeHopeYouWillEnjoyPiwik"
+msgstr "Me loodame, et sa naudid Matomou kasutamist sama palju, kui meie selle valmistamist."
+
+msgid "Installation_Welcome"
+msgstr "Tere tulemast!"
+
+msgid "Installation_WelcomeToCommunity"
+msgstr "Tere tulemast Matomou kommuuni!"
+
+msgid "Installation_CannotConnectToDb"
+msgstr "Andmebaasiga ei saa ühendust"
+
+msgid "Intl_Continent_afr"
+msgstr "Aafrika"
+
+msgid "Intl_Continent_amc"
+msgstr "Kesk-Ameerika"
+
+msgid "Intl_Continent_amn"
+msgstr "Põhja-Ameerika"
+
+msgid "Intl_Continent_ams"
+msgstr "Lõuna-Ameerika"
+
+msgid "Intl_Continent_ant"
+msgstr "Antarktika"
+
+msgid "Intl_Continent_asi"
+msgstr "Aasia"
+
+msgid "Intl_Continent_eur"
+msgstr "Euroopa"
+
+msgid "Intl_Continent_oce"
+msgstr "Okeaania"
+
+msgid "Intl_Country_AD"
+msgstr "Andorra"
+
+msgid "Intl_Country_AE"
+msgstr "Araabia Ühendemiraadid"
+
+msgid "Intl_Country_AF"
+msgstr "Afganistan"
+
+msgid "Intl_Country_AG"
+msgstr "Antigua ja Barbuda"
+
+msgid "Intl_Country_AI"
+msgstr "Anguilla"
+
+msgid "Intl_Country_AL"
+msgstr "Albaania"
+
+msgid "Intl_Country_AM"
+msgstr "Armeenia"
+
+msgid "Intl_Country_AO"
+msgstr "Angola"
+
+msgid "Intl_Country_AQ"
+msgstr "Antarktika"
+
+msgid "Intl_Country_AR"
+msgstr "Argentina"
+
+msgid "Intl_Country_AS"
+msgstr "Ameerika Samoa"
+
+msgid "Intl_Country_AT"
+msgstr "Austria"
+
+msgid "Intl_Country_AU"
+msgstr "Austraalia"
+
+msgid "Intl_Country_AW"
+msgstr "Aruba"
+
+msgid "Intl_Country_AX"
+msgstr "Ahvenamaa"
+
+msgid "Intl_Country_AZ"
+msgstr "Aserbaidžaan"
+
+msgid "Intl_Country_BA"
+msgstr "Bosnia ja Hertsegoviina"
+
+msgid "Intl_Country_BB"
+msgstr "Barbados"
+
+msgid "Intl_Country_BD"
+msgstr "Bangladesh"
+
+msgid "Intl_Country_BE"
+msgstr "Belgia"
+
+msgid "Intl_Country_BF"
+msgstr "Burkina Faso"
+
+msgid "Intl_Country_BG"
+msgstr "Bulgaaria"
+
+msgid "Intl_Country_BH"
+msgstr "Bahrein"
+
+msgid "Intl_Country_BI"
+msgstr "Burundi"
+
+msgid "Intl_Country_BJ"
+msgstr "Benin"
+
+msgid "Intl_Country_BL"
+msgstr "Saint-Barthélemy"
+
+msgid "Intl_Country_BM"
+msgstr "Bermuda"
+
+msgid "Intl_Country_BN"
+msgstr "Brunei"
+
+msgid "Intl_Country_BO"
+msgstr "Boliivia"
+
+msgid "Intl_Country_BQ"
+msgstr "Hollandi Kariibi mere saared"
+
+msgid "Intl_Country_BR"
+msgstr "Brasiilia"
+
+msgid "Intl_Country_BS"
+msgstr "Bahama"
+
+msgid "Intl_Country_BT"
+msgstr "Bhutan"
+
+msgid "Intl_Country_BV"
+msgstr "Bouvet’ saar"
+
+msgid "Intl_Country_BW"
+msgstr "Botswana"
+
+msgid "Intl_Country_BY"
+msgstr "Valgevene"
+
+msgid "Intl_Country_BZ"
+msgstr "Belize"
+
+msgid "Intl_Country_CA"
+msgstr "Kanada"
+
+msgid "Intl_Country_CC"
+msgstr "Kookossaared"
+
+msgid "Intl_Country_CD"
+msgstr "Kongo DV"
+
+msgid "Intl_Country_CF"
+msgstr "Kesk-Aafrika Vabariik"
+
+msgid "Intl_Country_CG"
+msgstr "Kongo Vabariik"
+
+msgid "Intl_Country_CH"
+msgstr "Šveits"
+
+msgid "Intl_Country_CI"
+msgstr "Côte d’Ivoire"
+
+msgid "Intl_Country_CK"
+msgstr "Cooki saared"
+
+msgid "Intl_Country_CL"
+msgstr "Tšiili"
+
+msgid "Intl_Country_CM"
+msgstr "Kamerun"
+
+msgid "Intl_Country_CN"
+msgstr "Hiina"
+
+msgid "Intl_Country_CO"
+msgstr "Colombia"
+
+msgid "Intl_Country_CR"
+msgstr "Costa Rica"
+
+msgid "Intl_Country_CU"
+msgstr "Kuuba"
+
+msgid "Intl_Country_CV"
+msgstr "Roheneemesaared"
+
+msgid "Intl_Country_CW"
+msgstr "Curaçao"
+
+msgid "Intl_Country_CX"
+msgstr "Jõulusaar"
+
+msgid "Intl_Country_CY"
+msgstr "Küpros"
+
+msgid "Intl_Country_CZ"
+msgstr "Tšehhi"
+
+msgid "Intl_Country_DE"
+msgstr "Saksamaa"
+
+msgid "Intl_Country_DJ"
+msgstr "Djibouti"
+
+msgid "Intl_Country_DK"
+msgstr "Taani"
+
+msgid "Intl_Country_DM"
+msgstr "Dominica"
+
+msgid "Intl_Country_DO"
+msgstr "Dominikaani Vabariik"
+
+msgid "Intl_Country_DZ"
+msgstr "Alžeeria"
+
+msgid "Intl_Country_EC"
+msgstr "Ecuador"
+
+msgid "Intl_Country_EE"
+msgstr "Eesti"
+
+msgid "Intl_Country_EG"
+msgstr "Egiptus"
+
+msgid "Intl_Country_EH"
+msgstr "Lääne-Sahara"
+
+msgid "Intl_Country_ER"
+msgstr "Eritrea"
+
+msgid "Intl_Country_ES"
+msgstr "Hispaania"
+
+msgid "Intl_Country_ET"
+msgstr "Etioopia"
+
+msgid "Intl_Country_FI"
+msgstr "Soome"
+
+msgid "Intl_Country_FJ"
+msgstr "Fidži"
+
+msgid "Intl_Country_FK"
+msgstr "Falklandi saared"
+
+msgid "Intl_Country_FM"
+msgstr "Mikroneesia"
+
+msgid "Intl_Country_FO"
+msgstr "Fääri saared"
+
+msgid "Intl_Country_FR"
+msgstr "Prantsusmaa"
+
+msgid "Intl_Country_GA"
+msgstr "Gabon"
+
+msgid "Intl_Country_GB"
+msgstr "Suurbritannia"
+
+msgid "Intl_Country_GD"
+msgstr "Grenada"
+
+msgid "Intl_Country_GE"
+msgstr "Gruusia"
+
+msgid "Intl_Country_GF"
+msgstr "Prantsuse Guajaana"
+
+msgid "Intl_Country_GG"
+msgstr "Guernsey"
+
+msgid "Intl_Country_GH"
+msgstr "Ghana"
+
+msgid "Intl_Country_GI"
+msgstr "Gibraltar"
+
+msgid "Intl_Country_GL"
+msgstr "Gröönimaa"
+
+msgid "Intl_Country_GM"
+msgstr "Gambia"
+
+msgid "Intl_Country_GN"
+msgstr "Guinea"
+
+msgid "Intl_Country_GP"
+msgstr "Guadeloupe"
+
+msgid "Intl_Country_GQ"
+msgstr "Ekvatoriaal-Guinea"
+
+msgid "Intl_Country_GR"
+msgstr "Kreeka"
+
+msgid "Intl_Country_GS"
+msgstr "Lõuna-Georgia ja Lõuna-Sandwichi saared"
+
+msgid "Intl_Country_GT"
+msgstr "Guatemala"
+
+msgid "Intl_Country_GU"
+msgstr "Guam"
+
+msgid "Intl_Country_GW"
+msgstr "Guinea-Bissau"
+
+msgid "Intl_Country_GY"
+msgstr "Guyana"
+
+msgid "Intl_Country_HK"
+msgstr "Hongkongi erihalduspiirkond"
+
+msgid "Intl_Country_HM"
+msgstr "Heardi ja McDonaldi saared"
+
+msgid "Intl_Country_HN"
+msgstr "Honduras"
+
+msgid "Intl_Country_HR"
+msgstr "Horvaatia"
+
+msgid "Intl_Country_HT"
+msgstr "Haiti"
+
+msgid "Intl_Country_HU"
+msgstr "Ungari"
+
+msgid "Intl_Country_ID"
+msgstr "Indoneesia"
+
+msgid "Intl_Country_IE"
+msgstr "Iirimaa"
+
+msgid "Intl_Country_IL"
+msgstr "Iisrael"
+
+msgid "Intl_Country_IM"
+msgstr "Mani saar"
+
+msgid "Intl_Country_IN"
+msgstr "India"
+
+msgid "Intl_Country_IO"
+msgstr "Briti India ookeani ala"
+
+msgid "Intl_Country_IQ"
+msgstr "Iraak"
+
+msgid "Intl_Country_IR"
+msgstr "Iraan"
+
+msgid "Intl_Country_IS"
+msgstr "Island"
+
+msgid "Intl_Country_IT"
+msgstr "Itaalia"
+
+msgid "Intl_Country_JE"
+msgstr "Jersey"
+
+msgid "Intl_Country_JM"
+msgstr "Jamaica"
+
+msgid "Intl_Country_JO"
+msgstr "Jordaania"
+
+msgid "Intl_Country_JP"
+msgstr "Jaapan"
+
+msgid "Intl_Country_KE"
+msgstr "Keenia"
+
+msgid "Intl_Country_KG"
+msgstr "Kõrgõzstan"
+
+msgid "Intl_Country_KH"
+msgstr "Kambodža"
+
+msgid "Intl_Country_KI"
+msgstr "Kiribati"
+
+msgid "Intl_Country_KM"
+msgstr "Komoorid"
+
+msgid "Intl_Country_KN"
+msgstr "Saint Kitts ja Nevis"
+
+msgid "Intl_Country_KP"
+msgstr "Põhja-Korea"
+
+msgid "Intl_Country_KR"
+msgstr "Lõuna-Korea"
+
+msgid "Intl_Country_KW"
+msgstr "Kuveit"
+
+msgid "Intl_Country_KY"
+msgstr "Kaimanisaared"
+
+msgid "Intl_Country_KZ"
+msgstr "Kasahstan"
+
+msgid "Intl_Country_LA"
+msgstr "Laos"
+
+msgid "Intl_Country_LB"
+msgstr "Liibanon"
+
+msgid "Intl_Country_LC"
+msgstr "Saint Lucia"
+
+msgid "Intl_Country_LI"
+msgstr "Liechtenstein"
+
+msgid "Intl_Country_LK"
+msgstr "Sri Lanka"
+
+msgid "Intl_Country_LR"
+msgstr "Libeeria"
+
+msgid "Intl_Country_LS"
+msgstr "Lesotho"
+
+msgid "Intl_Country_LT"
+msgstr "Leedu"
+
+msgid "Intl_Country_LU"
+msgstr "Luksemburg"
+
+msgid "Intl_Country_LV"
+msgstr "Läti"
+
+msgid "Intl_Country_LY"
+msgstr "Liibüa"
+
+msgid "Intl_Country_MA"
+msgstr "Maroko"
+
+msgid "Intl_Country_MC"
+msgstr "Monaco"
+
+msgid "Intl_Country_MD"
+msgstr "Moldova"
+
+msgid "Intl_Country_ME"
+msgstr "Montenegro"
+
+msgid "Intl_Country_MF"
+msgstr "Saint-Martin"
+
+msgid "Intl_Country_MG"
+msgstr "Madagaskar"
+
+msgid "Intl_Country_MH"
+msgstr "Marshalli Saared"
+
+msgid "Intl_Country_MK"
+msgstr "Makedoonia"
+
+msgid "Intl_Country_ML"
+msgstr "Mali"
+
+msgid "Intl_Country_MM"
+msgstr "Myanmar (Birma)"
+
+msgid "Intl_Country_MN"
+msgstr "Mongoolia"
+
+msgid "Intl_Country_MO"
+msgstr "Macau erihalduspiirkond"
+
+msgid "Intl_Country_MP"
+msgstr "Põhja-Mariaanid"
+
+msgid "Intl_Country_MQ"
+msgstr "Martinique"
+
+msgid "Intl_Country_MR"
+msgstr "Mauritaania"
+
+msgid "Intl_Country_MS"
+msgstr "Montserrat"
+
+msgid "Intl_Country_MT"
+msgstr "Malta"
+
+msgid "Intl_Country_MU"
+msgstr "Mauritius"
+
+msgid "Intl_Country_MV"
+msgstr "Maldiivid"
+
+msgid "Intl_Country_MW"
+msgstr "Malawi"
+
+msgid "Intl_Country_MX"
+msgstr "Mehhiko"
+
+msgid "Intl_Country_MY"
+msgstr "Malaisia"
+
+msgid "Intl_Country_MZ"
+msgstr "Mosambiik"
+
+msgid "Intl_Country_NA"
+msgstr "Namiibia"
+
+msgid "Intl_Country_NC"
+msgstr "Uus-Kaledoonia"
+
+msgid "Intl_Country_NE"
+msgstr "Niger"
+
+msgid "Intl_Country_NF"
+msgstr "Norfolk"
+
+msgid "Intl_Country_NG"
+msgstr "Nigeeria"
+
+msgid "Intl_Country_NI"
+msgstr "Nicaragua"
+
+msgid "Intl_Country_NL"
+msgstr "Holland"
+
+msgid "Intl_Country_NO"
+msgstr "Norra"
+
+msgid "Intl_Country_NP"
+msgstr "Nepal"
+
+msgid "Intl_Country_NR"
+msgstr "Nauru"
+
+msgid "Intl_Country_NU"
+msgstr "Niue"
+
+msgid "Intl_Country_NZ"
+msgstr "Uus-Meremaa"
+
+msgid "Intl_Country_OM"
+msgstr "Omaan"
+
+msgid "Intl_Country_PA"
+msgstr "Panama"
+
+msgid "Intl_Country_PE"
+msgstr "Peruu"
+
+msgid "Intl_Country_PF"
+msgstr "Prantsuse Polüneesia"
+
+msgid "Intl_Country_PG"
+msgstr "Paapua Uus-Guinea"
+
+msgid "Intl_Country_PH"
+msgstr "Filipiinid"
+
+msgid "Intl_Country_PK"
+msgstr "Pakistan"
+
+msgid "Intl_Country_PL"
+msgstr "Poola"
+
+msgid "Intl_Country_PM"
+msgstr "Saint-Pierre ja Miquelon"
+
+msgid "Intl_Country_PN"
+msgstr "Pitcairni saared"
+
+msgid "Intl_Country_PR"
+msgstr "Puerto Rico"
+
+msgid "Intl_Country_PS"
+msgstr "Palestiina alad"
+
+msgid "Intl_Country_PT"
+msgstr "Portugal"
+
+msgid "Intl_Country_PW"
+msgstr "Belau"
+
+msgid "Intl_Country_PY"
+msgstr "Paraguay"
+
+msgid "Intl_Country_QA"
+msgstr "Katar"
+
+msgid "Intl_Country_RE"
+msgstr "Réunion"
+
+msgid "Intl_Country_RO"
+msgstr "Rumeenia"
+
+msgid "Intl_Country_RS"
+msgstr "Serbia"
+
+msgid "Intl_Country_RU"
+msgstr "Venemaa"
+
+msgid "Intl_Country_RW"
+msgstr "Rwanda"
+
+msgid "Intl_Country_SA"
+msgstr "Saudi Araabia"
+
+msgid "Intl_Country_SB"
+msgstr "Saalomoni Saared"
+
+msgid "Intl_Country_SC"
+msgstr "Seišellid"
+
+msgid "Intl_Country_SD"
+msgstr "Sudaan"
+
+msgid "Intl_Country_SE"
+msgstr "Rootsi"
+
+msgid "Intl_Country_SG"
+msgstr "Singapur"
+
+msgid "Intl_Country_SH"
+msgstr "Saint Helena"
+
+msgid "Intl_Country_SI"
+msgstr "Sloveenia"
+
+msgid "Intl_Country_SJ"
+msgstr "Svalbard ja Jan Mayen"
+
+msgid "Intl_Country_SK"
+msgstr "Slovakkia"
+
+msgid "Intl_Country_SL"
+msgstr "Sierra Leone"
+
+msgid "Intl_Country_SM"
+msgstr "San Marino"
+
+msgid "Intl_Country_SN"
+msgstr "Senegal"
+
+msgid "Intl_Country_SO"
+msgstr "Somaalia"
+
+msgid "Intl_Country_SR"
+msgstr "Suriname"
+
+msgid "Intl_Country_SS"
+msgstr "Lõuna-Sudaan"
+
+msgid "Intl_Country_ST"
+msgstr "São Tomé ja Príncipe"
+
+msgid "Intl_Country_SV"
+msgstr "El Salvador"
+
+msgid "Intl_Country_SX"
+msgstr "Sint Maarten"
+
+msgid "Intl_Country_SY"
+msgstr "Süüria"
+
+msgid "Intl_Country_SZ"
+msgstr "Svaasimaa"
+
+msgid "Intl_Country_TC"
+msgstr "Turks ja Caicos"
+
+msgid "Intl_Country_TD"
+msgstr "Tšaad"
+
+msgid "Intl_Country_TF"
+msgstr "Prantsuse Lõunaalad"
+
+msgid "Intl_Country_TG"
+msgstr "Togo"
+
+msgid "Intl_Country_TH"
+msgstr "Tai"
+
+msgid "Intl_Country_TJ"
+msgstr "Tadžikistan"
+
+msgid "Intl_Country_TK"
+msgstr "Tokelau"
+
+msgid "Intl_Country_TL"
+msgstr "Ida-Timor"
+
+msgid "Intl_Country_TM"
+msgstr "Türkmenistan"
+
+msgid "Intl_Country_TN"
+msgstr "Tuneesia"
+
+msgid "Intl_Country_TO"
+msgstr "Tonga"
+
+msgid "Intl_Country_TR"
+msgstr "Türgi"
+
+msgid "Intl_Country_TT"
+msgstr "Trinidad ja Tobago"
+
+msgid "Intl_Country_TV"
+msgstr "Tuvalu"
+
+msgid "Intl_Country_TW"
+msgstr "Taiwan"
+
+msgid "Intl_Country_TZ"
+msgstr "Tansaania"
+
+msgid "Intl_Country_UA"
+msgstr "Ukraina"
+
+msgid "Intl_Country_UG"
+msgstr "Uganda"
+
+msgid "Intl_Country_UM"
+msgstr "Ühendriikide hajasaared"
+
+msgid "Intl_Country_US"
+msgstr "Ameerika Ühendriigid"
+
+msgid "Intl_Country_UY"
+msgstr "Uruguay"
+
+msgid "Intl_Country_UZ"
+msgstr "Usbekistan"
+
+msgid "Intl_Country_VA"
+msgstr "Vatikan"
+
+msgid "Intl_Country_VC"
+msgstr "Saint Vincent ja Grenadiinid"
+
+msgid "Intl_Country_VE"
+msgstr "Venezuela"
+
+msgid "Intl_Country_VG"
+msgstr "Briti Neitsisaared"
+
+msgid "Intl_Country_VI"
+msgstr "USA Neitsisaared"
+
+msgid "Intl_Country_VN"
+msgstr "Vietnam"
+
+msgid "Intl_Country_VU"
+msgstr "Vanuatu"
+
+msgid "Intl_Country_WF"
+msgstr "Wallis ja Futuna"
+
+msgid "Intl_Country_WS"
+msgstr "Samoa"
+
+msgid "Intl_Country_YE"
+msgstr "Jeemen"
+
+msgid "Intl_Country_YT"
+msgstr "Mayotte"
+
+msgid "Intl_Country_ZA"
+msgstr "Lõuna-Aafrika Vabariik"
+
+msgid "Intl_Country_ZM"
+msgstr "Sambia"
+
+msgid "Intl_Country_ZW"
+msgstr "Zimbabwe"
+
+msgid "Intl_CurrencySymbol_AED"
+msgstr "AED"
+
+msgid "Intl_CurrencySymbol_AFN"
+msgstr "AFN"
+
+msgid "Intl_CurrencySymbol_ALL"
+msgstr "ALL"
+
+msgid "Intl_CurrencySymbol_AMD"
+msgstr "AMD"
+
+msgid "Intl_CurrencySymbol_ANG"
+msgstr "ANG"
+
+msgid "Intl_CurrencySymbol_AOA"
+msgstr "AOA"
+
+msgid "Intl_CurrencySymbol_ARS"
+msgstr "ARS"
+
+msgid "Intl_CurrencySymbol_AUD"
+msgstr "AU$"
+
+msgid "Intl_CurrencySymbol_AWG"
+msgstr "AWG"
+
+msgid "Intl_CurrencySymbol_AZN"
+msgstr "AZN"
+
+msgid "Intl_CurrencySymbol_BAM"
+msgstr "BAM"
+
+msgid "Intl_CurrencySymbol_BBD"
+msgstr "BBD"
+
+msgid "Intl_CurrencySymbol_BDT"
+msgstr "BDT"
+
+msgid "Intl_CurrencySymbol_BGN"
+msgstr "BGN"
+
+msgid "Intl_CurrencySymbol_BHD"
+msgstr "BHD"
+
+msgid "Intl_CurrencySymbol_BIF"
+msgstr "BIF"
+
+msgid "Intl_CurrencySymbol_BMD"
+msgstr "BMD"
+
+msgid "Intl_CurrencySymbol_BND"
+msgstr "BND"
+
+msgid "Intl_CurrencySymbol_BOB"
+msgstr "BOB"
+
+msgid "Intl_CurrencySymbol_BRL"
+msgstr "R$"
+
+msgid "Intl_CurrencySymbol_BSD"
+msgstr "BSD"
+
+msgid "Intl_CurrencySymbol_BTC"
+msgstr "BTC"
+
+msgid "Intl_CurrencySymbol_BTN"
+msgstr "BTN"
+
+msgid "Intl_CurrencySymbol_BWP"
+msgstr "BWP"
+
+msgid "Intl_CurrencySymbol_BYN"
+msgstr "BYN"
+
+msgid "Intl_CurrencySymbol_BZD"
+msgstr "BZD"
+
+msgid "Intl_CurrencySymbol_CAD"
+msgstr "CA$"
+
+msgid "Intl_CurrencySymbol_CDF"
+msgstr "CDF"
+
+msgid "Intl_CurrencySymbol_CHF"
+msgstr "CHF"
+
+msgid "Intl_CurrencySymbol_CLP"
+msgstr "CLP"
+
+msgid "Intl_CurrencySymbol_CNY"
+msgstr "CN¥"
+
+msgid "Intl_CurrencySymbol_COP"
+msgstr "COP"
+
+msgid "Intl_CurrencySymbol_CRC"
+msgstr "CRC"
+
+msgid "Intl_CurrencySymbol_CUC"
+msgstr "CUC"
+
+msgid "Intl_CurrencySymbol_CUP"
+msgstr "CUP"
+
+msgid "Intl_CurrencySymbol_CVE"
+msgstr "CVE"
+
+msgid "Intl_CurrencySymbol_CZK"
+msgstr "CZK"
+
+msgid "Intl_CurrencySymbol_DJF"
+msgstr "DJF"
+
+msgid "Intl_CurrencySymbol_DKK"
+msgstr "DKK"
+
+msgid "Intl_CurrencySymbol_DOP"
+msgstr "DOP"
+
+msgid "Intl_CurrencySymbol_DZD"
+msgstr "DZD"
+
+msgid "Intl_CurrencySymbol_EGP"
+msgstr "EGP"
+
+msgid "Intl_CurrencySymbol_ERN"
+msgstr "ERN"
+
+msgid "Intl_CurrencySymbol_ETB"
+msgstr "ETB"
+
+msgid "Intl_CurrencySymbol_EUR"
+msgstr "€"
+
+msgid "Intl_CurrencySymbol_FJD"
+msgstr "FJD"
+
+msgid "Intl_CurrencySymbol_FKP"
+msgstr "FKP"
+
+msgid "Intl_CurrencySymbol_GBP"
+msgstr "£"
+
+msgid "Intl_CurrencySymbol_GEL"
+msgstr "GEL"
+
+msgid "Intl_CurrencySymbol_GHS"
+msgstr "GHS"
+
+msgid "Intl_CurrencySymbol_GIP"
+msgstr "GIP"
+
+msgid "Intl_CurrencySymbol_GMD"
+msgstr "GMD"
+
+msgid "Intl_CurrencySymbol_GNF"
+msgstr "GNF"
+
+msgid "Intl_CurrencySymbol_GTQ"
+msgstr "GTQ"
+
+msgid "Intl_CurrencySymbol_GYD"
+msgstr "GYD"
+
+msgid "Intl_CurrencySymbol_HKD"
+msgstr "HK$"
+
+msgid "Intl_CurrencySymbol_HNL"
+msgstr "HNL"
+
+msgid "Intl_CurrencySymbol_HRK"
+msgstr "HRK"
+
+msgid "Intl_CurrencySymbol_HTG"
+msgstr "HTG"
+
+msgid "Intl_CurrencySymbol_HUF"
+msgstr "HUF"
+
+msgid "Intl_CurrencySymbol_IDR"
+msgstr "IDR"
+
+msgid "Intl_CurrencySymbol_ILS"
+msgstr "₪"
+
+msgid "Intl_CurrencySymbol_INR"
+msgstr "₹"
+
+msgid "Intl_CurrencySymbol_IQD"
+msgstr "IQD"
+
+msgid "Intl_CurrencySymbol_IRR"
+msgstr "IRR"
+
+msgid "Intl_CurrencySymbol_ISK"
+msgstr "ISK"
+
+msgid "Intl_CurrencySymbol_JMD"
+msgstr "JMD"
+
+msgid "Intl_CurrencySymbol_JOD"
+msgstr "JOD"
+
+msgid "Intl_CurrencySymbol_JPY"
+msgstr "¥"
+
+msgid "Intl_CurrencySymbol_KES"
+msgstr "KES"
+
+msgid "Intl_CurrencySymbol_KGS"
+msgstr "KGS"
+
+msgid "Intl_CurrencySymbol_KHR"
+msgstr "KHR"
+
+msgid "Intl_CurrencySymbol_KMF"
+msgstr "KMF"
+
+msgid "Intl_CurrencySymbol_KPW"
+msgstr "KPW"
+
+msgid "Intl_CurrencySymbol_KRW"
+msgstr "₩"
+
+msgid "Intl_CurrencySymbol_KWD"
+msgstr "KWD"
+
+msgid "Intl_CurrencySymbol_KYD"
+msgstr "KYD"
+
+msgid "Intl_CurrencySymbol_KZT"
+msgstr "KZT"
+
+msgid "Intl_CurrencySymbol_LAK"
+msgstr "LAK"
+
+msgid "Intl_CurrencySymbol_LBP"
+msgstr "LBP"
+
+msgid "Intl_CurrencySymbol_LKR"
+msgstr "LKR"
+
+msgid "Intl_CurrencySymbol_LRD"
+msgstr "LRD"
+
+msgid "Intl_CurrencySymbol_LSL"
+msgstr "LSL"
+
+msgid "Intl_CurrencySymbol_LYD"
+msgstr "LYD"
+
+msgid "Intl_CurrencySymbol_MAD"
+msgstr "MAD"
+
+msgid "Intl_CurrencySymbol_MDL"
+msgstr "MDL"
+
+msgid "Intl_CurrencySymbol_MGA"
+msgstr "MGA"
+
+msgid "Intl_CurrencySymbol_MKD"
+msgstr "MKD"
+
+msgid "Intl_CurrencySymbol_MMK"
+msgstr "MMK"
+
+msgid "Intl_CurrencySymbol_MNT"
+msgstr "MNT"
+
+msgid "Intl_CurrencySymbol_MOP"
+msgstr "MOP"
+
+msgid "Intl_CurrencySymbol_MRU"
+msgstr "MRU"
+
+msgid "Intl_CurrencySymbol_MUR"
+msgstr "MUR"
+
+msgid "Intl_CurrencySymbol_MVR"
+msgstr "MVR"
+
+msgid "Intl_CurrencySymbol_MWK"
+msgstr "MWK"
+
+msgid "Intl_CurrencySymbol_MXN"
+msgstr "MX$"
+
+msgid "Intl_CurrencySymbol_MYR"
+msgstr "MYR"
+
+msgid "Intl_CurrencySymbol_MZN"
+msgstr "MZN"
+
+msgid "Intl_CurrencySymbol_NAD"
+msgstr "NAD"
+
+msgid "Intl_CurrencySymbol_NGN"
+msgstr "NGN"
+
+msgid "Intl_CurrencySymbol_NIO"
+msgstr "NIO"
+
+msgid "Intl_CurrencySymbol_NOK"
+msgstr "NOK"
+
+msgid "Intl_CurrencySymbol_NPR"
+msgstr "NPR"
+
+msgid "Intl_CurrencySymbol_NZD"
+msgstr "NZ$"
+
+msgid "Intl_CurrencySymbol_OMR"
+msgstr "OMR"
+
+msgid "Intl_CurrencySymbol_PAB"
+msgstr "PAB"
+
+msgid "Intl_CurrencySymbol_PEN"
+msgstr "PEN"
+
+msgid "Intl_CurrencySymbol_PGK"
+msgstr "PGK"
+
+msgid "Intl_CurrencySymbol_PHP"
+msgstr "PHP"
+
+msgid "Intl_CurrencySymbol_PKR"
+msgstr "PKR"
+
+msgid "Intl_CurrencySymbol_PLN"
+msgstr "PLN"
+
+msgid "Intl_CurrencySymbol_PYG"
+msgstr "PYG"
+
+msgid "Intl_CurrencySymbol_QAR"
+msgstr "QAR"
+
+msgid "Intl_CurrencySymbol_RON"
+msgstr "RON"
+
+msgid "Intl_CurrencySymbol_RSD"
+msgstr "RSD"
+
+msgid "Intl_CurrencySymbol_RUB"
+msgstr "RUB"
+
+msgid "Intl_CurrencySymbol_RWF"
+msgstr "RWF"
+
+msgid "Intl_CurrencySymbol_SAR"
+msgstr "SAR"
+
+msgid "Intl_CurrencySymbol_SBD"
+msgstr "SBD"
+
+msgid "Intl_CurrencySymbol_SCR"
+msgstr "SCR"
+
+msgid "Intl_CurrencySymbol_SDG"
+msgstr "SDG"
+
+msgid "Intl_CurrencySymbol_SEK"
+msgstr "SEK"
+
+msgid "Intl_CurrencySymbol_SGD"
+msgstr "SGD"
+
+msgid "Intl_CurrencySymbol_SHP"
+msgstr "SHP"
+
+msgid "Intl_CurrencySymbol_SLL"
+msgstr "SLL"
+
+msgid "Intl_CurrencySymbol_SOS"
+msgstr "SOS"
+
+msgid "Intl_CurrencySymbol_SRD"
+msgstr "SRD"
+
+msgid "Intl_CurrencySymbol_SSP"
+msgstr "SSP"
+
+msgid "Intl_CurrencySymbol_STN"
+msgstr "STN"
+
+msgid "Intl_CurrencySymbol_SYP"
+msgstr "SYP"
+
+msgid "Intl_CurrencySymbol_SZL"
+msgstr "SZL"
+
+msgid "Intl_CurrencySymbol_THB"
+msgstr "฿"
+
+msgid "Intl_CurrencySymbol_TJS"
+msgstr "TJS"
+
+msgid "Intl_CurrencySymbol_TMT"
+msgstr "TMT"
+
+msgid "Intl_CurrencySymbol_TND"
+msgstr "TND"
+
+msgid "Intl_CurrencySymbol_TOP"
+msgstr "TOP"
+
+msgid "Intl_CurrencySymbol_TRY"
+msgstr "TRY"
+
+msgid "Intl_CurrencySymbol_TTD"
+msgstr "TTD"
+
+msgid "Intl_CurrencySymbol_TWD"
+msgstr "NT$"
+
+msgid "Intl_CurrencySymbol_TZS"
+msgstr "TZS"
+
+msgid "Intl_CurrencySymbol_UAH"
+msgstr "UAH"
+
+msgid "Intl_CurrencySymbol_UGX"
+msgstr "UGX"
+
+msgid "Intl_CurrencySymbol_USD"
+msgstr "$"
+
+msgid "Intl_CurrencySymbol_UYU"
+msgstr "UYU"
+
+msgid "Intl_CurrencySymbol_UZS"
+msgstr "UZS"
+
+msgid "Intl_CurrencySymbol_VEF"
+msgstr "VEF"
+
+msgid "Intl_CurrencySymbol_VND"
+msgstr "₫"
+
+msgid "Intl_CurrencySymbol_VUV"
+msgstr "VUV"
+
+msgid "Intl_CurrencySymbol_WST"
+msgstr "WST"
+
+msgid "Intl_CurrencySymbol_XAF"
+msgstr "FCFA"
+
+msgid "Intl_CurrencySymbol_XCD"
+msgstr "EC$"
+
+msgid "Intl_CurrencySymbol_XOF"
+msgstr "CFA"
+
+msgid "Intl_CurrencySymbol_XPF"
+msgstr "CFPF"
+
+msgid "Intl_CurrencySymbol_YER"
+msgstr "YER"
+
+msgid "Intl_CurrencySymbol_ZAR"
+msgstr "ZAR"
+
+msgid "Intl_CurrencySymbol_ZMW"
+msgstr "ZMW"
+
+msgid "Intl_Currency_AED"
+msgstr "Araabia Ühendemiraatide dirhem"
+
+msgid "Intl_Currency_AFN"
+msgstr "Afganistani afgaani"
+
+msgid "Intl_Currency_ALL"
+msgstr "Albaania lekk"
+
+msgid "Intl_Currency_AMD"
+msgstr "Armeenia dramm"
+
+msgid "Intl_Currency_ANG"
+msgstr "Hollandi Antillide kulden"
+
+msgid "Intl_Currency_AOA"
+msgstr "Angola kvanza"
+
+msgid "Intl_Currency_ARS"
+msgstr "Argentina peeso"
+
+msgid "Intl_Currency_AUD"
+msgstr "Austraalia dollar"
+
+msgid "Intl_Currency_AWG"
+msgstr "Aruba kulden"
+
+msgid "Intl_Currency_AZN"
+msgstr "Aserbaidžaani manat"
+
+msgid "Intl_Currency_BAM"
+msgstr "Bosnia ja Hertsegoviina konverteeritav mark"
+
+msgid "Intl_Currency_BBD"
+msgstr "Barbadose dollar"
+
+msgid "Intl_Currency_BDT"
+msgstr "Bangladeshi taka"
+
+msgid "Intl_Currency_BGN"
+msgstr "Bulgaaria leev"
+
+msgid "Intl_Currency_BHD"
+msgstr "Bahreini dinaar"
+
+msgid "Intl_Currency_BIF"
+msgstr "Burundi frank"
+
+msgid "Intl_Currency_BMD"
+msgstr "Bermuda dollar"
+
+msgid "Intl_Currency_BND"
+msgstr "Brunei dollar"
+
+msgid "Intl_Currency_BOB"
+msgstr "Boliivia boliviaano"
+
+msgid "Intl_Currency_BRL"
+msgstr "Brasiilia reaal"
+
+msgid "Intl_Currency_BSD"
+msgstr "Bahama dollar"
+
+msgid "Intl_Currency_BTC"
+msgstr "Bitcoin"
+
+msgid "Intl_Currency_BTN"
+msgstr "Bhutani ngultrum"
+
+msgid "Intl_Currency_BWP"
+msgstr "Botswana pula"
+
+msgid "Intl_Currency_BYN"
+msgstr "Valgevene rubla"
+
+msgid "Intl_Currency_BZD"
+msgstr "Belize’i dollar"
+
+msgid "Intl_Currency_CAD"
+msgstr "Kanada dollar"
+
+msgid "Intl_Currency_CDF"
+msgstr "Kongo frank"
+
+msgid "Intl_Currency_CHF"
+msgstr "Šveitsi frank"
+
+msgid "Intl_Currency_CLP"
+msgstr "Tšiili peeso"
+
+msgid "Intl_Currency_CNY"
+msgstr "Hiina jüaan"
+
+msgid "Intl_Currency_COP"
+msgstr "Colombia peeso"
+
+msgid "Intl_Currency_CRC"
+msgstr "Costa Rica koloon"
+
+msgid "Intl_Currency_CUC"
+msgstr "Kuuba konverteeritav peeso"
+
+msgid "Intl_Currency_CUP"
+msgstr "Kuuba peeso"
+
+msgid "Intl_Currency_CVE"
+msgstr "Cabo Verde eskuudo"
+
+msgid "Intl_Currency_CZK"
+msgstr "Tšehhi kroon"
+
+msgid "Intl_Currency_DJF"
+msgstr "Djibouti frank"
+
+msgid "Intl_Currency_DKK"
+msgstr "Taani kroon"
+
+msgid "Intl_Currency_DOP"
+msgstr "Dominikaani peeso"
+
+msgid "Intl_Currency_DZD"
+msgstr "Alžeeria dinaar"
+
+msgid "Intl_Currency_EGP"
+msgstr "Egiptuse nael"
+
+msgid "Intl_Currency_ERN"
+msgstr "Eritrea nakfa"
+
+msgid "Intl_Currency_ETB"
+msgstr "Etioopia birr"
+
+msgid "Intl_Currency_EUR"
+msgstr "Euro"
+
+msgid "Intl_Currency_FJD"
+msgstr "Fidži dollar"
+
+msgid "Intl_Currency_FKP"
+msgstr "Falklandi saarte nael"
+
+msgid "Intl_Currency_GBP"
+msgstr "Suurbritannia naelsterling"
+
+msgid "Intl_Currency_GEL"
+msgstr "Gruusia lari"
+
+msgid "Intl_Currency_GHS"
+msgstr "Ghana sedi"
+
+msgid "Intl_Currency_GIP"
+msgstr "Gibraltari nael"
+
+msgid "Intl_Currency_GMD"
+msgstr "Gambia dalasi"
+
+msgid "Intl_Currency_GNF"
+msgstr "Guinea frank"
+
+msgid "Intl_Currency_GTQ"
+msgstr "Guatemala ketsaal"
+
+msgid "Intl_Currency_GYD"
+msgstr "Guyana dollar"
+
+msgid "Intl_Currency_HKD"
+msgstr "Hongkongi dollar"
+
+msgid "Intl_Currency_HNL"
+msgstr "Hondurase lempiira"
+
+msgid "Intl_Currency_HRK"
+msgstr "Horvaatia kuna"
+
+msgid "Intl_Currency_HTG"
+msgstr "Haiti gurd"
+
+msgid "Intl_Currency_HUF"
+msgstr "Ungari forint"
+
+msgid "Intl_Currency_IDR"
+msgstr "Indoneesia ruupia"
+
+msgid "Intl_Currency_ILS"
+msgstr "Iisraeli uus seekel"
+
+msgid "Intl_Currency_INR"
+msgstr "India ruupia"
+
+msgid "Intl_Currency_IQD"
+msgstr "Iraagi dinaar"
+
+msgid "Intl_Currency_IRR"
+msgstr "Iraani riaal"
+
+msgid "Intl_Currency_ISK"
+msgstr "Islandi kroon"
+
+msgid "Intl_Currency_JMD"
+msgstr "Jamaica dollar"
+
+msgid "Intl_Currency_JOD"
+msgstr "Jordaania dinaar"
+
+msgid "Intl_Currency_JPY"
+msgstr "Jaapani jeen"
+
+msgid "Intl_Currency_KES"
+msgstr "Keenia šilling"
+
+msgid "Intl_Currency_KGS"
+msgstr "Kõrgõzstani somm"
+
+msgid "Intl_Currency_KHR"
+msgstr "Kambodža riaal"
+
+msgid "Intl_Currency_KMF"
+msgstr "Komoori frank"
+
+msgid "Intl_Currency_KPW"
+msgstr "Põhja-Korea vonn"
+
+msgid "Intl_Currency_KRW"
+msgstr "Lõuna-Korea vonn"
+
+msgid "Intl_Currency_KWD"
+msgstr "Kuveidi dinaar"
+
+msgid "Intl_Currency_KYD"
+msgstr "Kaimanisaarte dollar"
+
+msgid "Intl_Currency_KZT"
+msgstr "Kasahstani tenge"
+
+msgid "Intl_Currency_LAK"
+msgstr "Laose kiip"
+
+msgid "Intl_Currency_LBP"
+msgstr "Liibanoni nael"
+
+msgid "Intl_Currency_LKR"
+msgstr "Sri Lanka ruupia"
+
+msgid "Intl_Currency_LRD"
+msgstr "Libeeria dollar"
+
+msgid "Intl_Currency_LSL"
+msgstr "Lesotho loti"
+
+msgid "Intl_Currency_LYD"
+msgstr "Liibüa dinaar"
+
+msgid "Intl_Currency_MAD"
+msgstr "Maroko dirhem"
+
+msgid "Intl_Currency_MDL"
+msgstr "Moldova leu"
+
+msgid "Intl_Currency_MGA"
+msgstr "Madagaskari ariari"
+
+msgid "Intl_Currency_MKD"
+msgstr "Makedoonia dinaar"
+
+msgid "Intl_Currency_MMK"
+msgstr "Myanmari kjatt"
+
+msgid "Intl_Currency_MNT"
+msgstr "Mongoolia tugrik"
+
+msgid "Intl_Currency_MOP"
+msgstr "Macau pataaka"
+
+msgid "Intl_Currency_MRU"
+msgstr "Mauritaania ugia"
+
+msgid "Intl_Currency_MUR"
+msgstr "Mauritiuse ruupia"
+
+msgid "Intl_Currency_MVR"
+msgstr "Maldiivi ruupia"
+
+msgid "Intl_Currency_MWK"
+msgstr "Malawi kvatša"
+
+msgid "Intl_Currency_MXN"
+msgstr "Mehhiko peeso"
+
+msgid "Intl_Currency_MYR"
+msgstr "Malaisia ringgit"
+
+msgid "Intl_Currency_MZN"
+msgstr "Mosambiigi metikal"
+
+msgid "Intl_Currency_NAD"
+msgstr "Namiibia dollar"
+
+msgid "Intl_Currency_NGN"
+msgstr "Nigeeria naira"
+
+msgid "Intl_Currency_NIO"
+msgstr "Nicaragua kordoba"
+
+msgid "Intl_Currency_NOK"
+msgstr "Norra kroon"
+
+msgid "Intl_Currency_NPR"
+msgstr "Nepali ruupia"
+
+msgid "Intl_Currency_NZD"
+msgstr "Uus-Meremaa dollar"
+
+msgid "Intl_Currency_OMR"
+msgstr "Omaani riaal"
+
+msgid "Intl_Currency_PAB"
+msgstr "Panama balboa"
+
+msgid "Intl_Currency_PEN"
+msgstr "Peruu soll"
+
+msgid "Intl_Currency_PGK"
+msgstr "Paapua Uus-Guinea kina"
+
+msgid "Intl_Currency_PHP"
+msgstr "Filipiini peeso"
+
+msgid "Intl_Currency_PKR"
+msgstr "Pakistani ruupia"
+
+msgid "Intl_Currency_PLN"
+msgstr "Poola zlott"
+
+msgid "Intl_Currency_PYG"
+msgstr "Paraguay guaranii"
+
+msgid "Intl_Currency_QAR"
+msgstr "Katari riaal"
+
+msgid "Intl_Currency_RON"
+msgstr "Rumeenia leu"
+
+msgid "Intl_Currency_RSD"
+msgstr "Serbia dinaar"
+
+msgid "Intl_Currency_RUB"
+msgstr "Venemaa rubla"
+
+msgid "Intl_Currency_RWF"
+msgstr "Rwanda frank"
+
+msgid "Intl_Currency_SAR"
+msgstr "Saudi Araabia riaal"
+
+msgid "Intl_Currency_SBD"
+msgstr "Saalomoni Saarte dollar"
+
+msgid "Intl_Currency_SCR"
+msgstr "Seišelli ruupia"
+
+msgid "Intl_Currency_SDG"
+msgstr "Sudaani nael"
+
+msgid "Intl_Currency_SEK"
+msgstr "Rootsi kroon"
+
+msgid "Intl_Currency_SGD"
+msgstr "Singapuri dollar"
+
+msgid "Intl_Currency_SHP"
+msgstr "Saint Helena nael"
+
+msgid "Intl_Currency_SLL"
+msgstr "Sierra Leone leoone"
+
+msgid "Intl_Currency_SOS"
+msgstr "Somaalia šilling"
+
+msgid "Intl_Currency_SRD"
+msgstr "Suriname dollar"
+
+msgid "Intl_Currency_SSP"
+msgstr "Lõuna-Sudaani nael"
+
+msgid "Intl_Currency_STN"
+msgstr "São Tomé ja Príncipe dobra"
+
+msgid "Intl_Currency_SYP"
+msgstr "Süüria nael"
+
+msgid "Intl_Currency_SZL"
+msgstr "Svaasimaa lilangeni"
+
+msgid "Intl_Currency_THB"
+msgstr "Tai baat"
+
+msgid "Intl_Currency_TJS"
+msgstr "Tadžikistani somoni"
+
+msgid "Intl_Currency_TMT"
+msgstr "Türkmenistani manat"
+
+msgid "Intl_Currency_TND"
+msgstr "Tuneesia dinaar"
+
+msgid "Intl_Currency_TOP"
+msgstr "Tonga pa’anga"
+
+msgid "Intl_Currency_TRY"
+msgstr "Türgi liir"
+
+msgid "Intl_Currency_TTD"
+msgstr "Trinidadi ja Tobago dollar"
+
+msgid "Intl_Currency_TWD"
+msgstr "Uus Taiwani dollar"
+
+msgid "Intl_Currency_TZS"
+msgstr "Tansaania šilling"
+
+msgid "Intl_Currency_UAH"
+msgstr "Ukraina grivna"
+
+msgid "Intl_Currency_UGX"
+msgstr "Uganda šilling"
+
+msgid "Intl_Currency_USD"
+msgstr "USA dollar"
+
+msgid "Intl_Currency_UYU"
+msgstr "Uruguay peeso"
+
+msgid "Intl_Currency_UZS"
+msgstr "Usbekistani somm"
+
+msgid "Intl_Currency_VEF"
+msgstr "Venezuela boliivar (2008–2018)"
+
+msgid "Intl_Currency_VND"
+msgstr "Vietnami dong"
+
+msgid "Intl_Currency_VUV"
+msgstr "Vanuatu vatu"
+
+msgid "Intl_Currency_WST"
+msgstr "Samoa taala"
+
+msgid "Intl_Currency_XAF"
+msgstr "Kesk-Aafrika CFA frank"
+
+msgid "Intl_Currency_XCD"
+msgstr "Ida-Kariibi dollar"
+
+msgid "Intl_Currency_XOF"
+msgstr "Lääne-Aafrika CFA frank"
+
+msgid "Intl_Currency_XPF"
+msgstr "CFP frank"
+
+msgid "Intl_Currency_YER"
+msgstr "Jeemeni riaal"
+
+msgid "Intl_Currency_ZAR"
+msgstr "Lõuna-Aafrika rand"
+
+msgid "Intl_Currency_ZMW"
+msgstr "Sambia kvatša"
+
+msgid "Intl_Day_Long_1"
+msgstr "esmaspäev"
+
+msgid "Intl_Day_Long_2"
+msgstr "teisipäev"
+
+msgid "Intl_Day_Long_3"
+msgstr "kolmapäev"
+
+msgid "Intl_Day_Long_4"
+msgstr "neljapäev"
+
+msgid "Intl_Day_Long_5"
+msgstr "reede"
+
+msgid "Intl_Day_Long_6"
+msgstr "laupäev"
+
+msgid "Intl_Day_Long_7"
+msgstr "pühapäev"
+
+msgid "Intl_Day_Long_StandAlone_1"
+msgstr "esmaspäev"
+
+msgid "Intl_Day_Long_StandAlone_2"
+msgstr "teisipäev"
+
+msgid "Intl_Day_Long_StandAlone_3"
+msgstr "kolmapäev"
+
+msgid "Intl_Day_Long_StandAlone_4"
+msgstr "neljapäev"
+
+msgid "Intl_Day_Long_StandAlone_5"
+msgstr "reede"
+
+msgid "Intl_Day_Long_StandAlone_6"
+msgstr "laupäev"
+
+msgid "Intl_Day_Long_StandAlone_7"
+msgstr "pühapäev"
+
+msgid "Intl_Day_Min_1"
+msgstr "E"
+
+msgid "Intl_Day_Min_2"
+msgstr "T"
+
+msgid "Intl_Day_Min_3"
+msgstr "K"
+
+msgid "Intl_Day_Min_4"
+msgstr "N"
+
+msgid "Intl_Day_Min_5"
+msgstr "R"
+
+msgid "Intl_Day_Min_6"
+msgstr "L"
+
+msgid "Intl_Day_Min_7"
+msgstr "P"
+
+msgid "Intl_Day_Min_StandAlone_1"
+msgstr "E"
+
+msgid "Intl_Day_Min_StandAlone_2"
+msgstr "T"
+
+msgid "Intl_Day_Min_StandAlone_3"
+msgstr "K"
+
+msgid "Intl_Day_Min_StandAlone_4"
+msgstr "N"
+
+msgid "Intl_Day_Min_StandAlone_5"
+msgstr "R"
+
+msgid "Intl_Day_Min_StandAlone_6"
+msgstr "L"
+
+msgid "Intl_Day_Min_StandAlone_7"
+msgstr "P"
+
+msgid "Intl_Day_Short_1"
+msgstr "E"
+
+msgid "Intl_Day_Short_2"
+msgstr "T"
+
+msgid "Intl_Day_Short_3"
+msgstr "K"
+
+msgid "Intl_Day_Short_4"
+msgstr "N"
+
+msgid "Intl_Day_Short_5"
+msgstr "R"
+
+msgid "Intl_Day_Short_6"
+msgstr "L"
+
+msgid "Intl_Day_Short_7"
+msgstr "P"
+
+msgid "Intl_Day_Short_StandAlone_1"
+msgstr "E"
+
+msgid "Intl_Day_Short_StandAlone_2"
+msgstr "T"
+
+msgid "Intl_Day_Short_StandAlone_3"
+msgstr "K"
+
+msgid "Intl_Day_Short_StandAlone_4"
+msgstr "N"
+
+msgid "Intl_Day_Short_StandAlone_5"
+msgstr "R"
+
+msgid "Intl_Day_Short_StandAlone_6"
+msgstr "L"
+
+msgid "Intl_Day_Short_StandAlone_7"
+msgstr "P"
+
+msgid "Intl_EnglishLanguageName"
+msgstr "Estonian"
+
+msgid "Intl_Format_DateTime_Long"
+msgstr "EEEE, d. MMMM y {time}"
+
+msgid "Intl_Format_DateTime_Short"
+msgstr "d. MMM y {time}"
+
+msgid "Intl_Format_Date_Day_Month"
+msgstr "E, d. MMM"
+
+msgid "Intl_Format_Date_Long"
+msgstr "EEEE, d. MMMM y"
+
+msgid "Intl_Format_Date_Short"
+msgstr "d. MMM y"
+
+msgid "Intl_Format_Hour_12"
+msgstr "h a"
+
+msgid "Intl_Format_Hour_24"
+msgstr "HH"
+
+msgid "Intl_Format_Interval_Long_D"
+msgstr "d.–d. MMMM y"
+
+msgid "Intl_Format_Interval_Long_M"
+msgstr "d. MMMM – d. MMMM y"
+
+msgid "Intl_Format_Interval_Long_Y"
+msgstr "d. MMMM y – d. MMMM y"
+
+msgid "Intl_Format_Interval_Short_D"
+msgstr "d.–d. MMM y"
+
+msgid "Intl_Format_Interval_Short_M"
+msgstr "d. MMM – d. MMM y"
+
+msgid "Intl_Format_Interval_Short_Y"
+msgstr "d. MMM y – d. MMM y"
+
+msgid "Intl_Format_Month_Long"
+msgstr "MMMM y"
+
+msgid "Intl_Format_Month_Short"
+msgstr "MMM y"
+
+msgid "Intl_Format_Time"
+msgstr "{time}"
+
+msgid "Intl_Format_Time_12"
+msgstr "h:mm:ss a"
+
+msgid "Intl_Format_Time_24"
+msgstr "HH:mm:ss"
+
+msgid "Intl_Format_Year"
+msgstr "y"
+
+msgid "Intl_Hours"
+msgstr "tunnid"
+
+msgid "Intl_Language_aa"
+msgstr "Afari"
+
+msgid "Intl_Language_ab"
+msgstr "Abhaasi"
+
+msgid "Intl_Language_ae"
+msgstr "Avesta"
+
+msgid "Intl_Language_af"
+msgstr "Afrikaani"
+
+msgid "Intl_Language_ak"
+msgstr "Akani"
+
+msgid "Intl_Language_am"
+msgstr "Amhara"
+
+msgid "Intl_Language_an"
+msgstr "Aragoni"
+
+msgid "Intl_Language_ar"
+msgstr "Araabia"
+
+msgid "Intl_Language_as"
+msgstr "Assami"
+
+msgid "Intl_Language_av"
+msgstr "Avaari"
+
+msgid "Intl_Language_ay"
+msgstr "Aimara"
+
+msgid "Intl_Language_az"
+msgstr "Aserbaidžaani"
+
+msgid "Intl_Language_ba"
+msgstr "Baškiiri"
+
+msgid "Intl_Language_be"
+msgstr "Valgevene"
+
+msgid "Intl_Language_bg"
+msgstr "Bulgaaria"
+
+msgid "Intl_Language_bi"
+msgstr "Bislama"
+
+msgid "Intl_Language_bm"
+msgstr "Bambara"
+
+msgid "Intl_Language_bn"
+msgstr "Bengali"
+
+msgid "Intl_Language_bo"
+msgstr "Tiibeti"
+
+msgid "Intl_Language_br"
+msgstr "Bretooni"
+
+msgid "Intl_Language_bs"
+msgstr "Bosnia"
+
+msgid "Intl_Language_ca"
+msgstr "Katalaani"
+
+msgid "Intl_Language_ce"
+msgstr "Tšetšeeni"
+
+msgid "Intl_Language_ch"
+msgstr "Tšamorro"
+
+msgid "Intl_Language_co"
+msgstr "Korsika"
+
+msgid "Intl_Language_cr"
+msgstr "Krii"
+
+msgid "Intl_Language_cs"
+msgstr "Tšehhi"
+
+msgid "Intl_Language_cu"
+msgstr "Kirikuslaavi"
+
+msgid "Intl_Language_cv"
+msgstr "Tšuvaši"
+
+msgid "Intl_Language_cy"
+msgstr "Kõmri"
+
+msgid "Intl_Language_da"
+msgstr "Taani"
+
+msgid "Intl_Language_de"
+msgstr "Saksa"
+
+msgid "Intl_Language_dv"
+msgstr "Maldiivi"
+
+msgid "Intl_Language_dz"
+msgstr "Dzongkha"
+
+msgid "Intl_Language_ee"
+msgstr "Eve"
+
+msgid "Intl_Language_el"
+msgstr "Kreeka"
+
+msgid "Intl_Language_en"
+msgstr "Inglise"
+
+msgid "Intl_Language_eo"
+msgstr "Esperanto"
+
+msgid "Intl_Language_es"
+msgstr "Hispaania"
+
+msgid "Intl_Language_et"
+msgstr "Eesti"
+
+msgid "Intl_Language_eu"
+msgstr "Baski"
+
+msgid "Intl_Language_fa"
+msgstr "Pärsia"
+
+msgid "Intl_Language_ff"
+msgstr "Fula"
+
+msgid "Intl_Language_fi"
+msgstr "Soome"
+
+msgid "Intl_Language_fj"
+msgstr "Fidži"
+
+msgid "Intl_Language_fo"
+msgstr "Fääri"
+
+msgid "Intl_Language_fr"
+msgstr "Prantsuse"
+
+msgid "Intl_Language_fy"
+msgstr "Läänefriisi"
+
+msgid "Intl_Language_ga"
+msgstr "Iiri"
+
+msgid "Intl_Language_gd"
+msgstr "Gaeli"
+
+msgid "Intl_Language_gl"
+msgstr "Galeegi"
+
+msgid "Intl_Language_gn"
+msgstr "Guaranii"
+
+msgid "Intl_Language_gu"
+msgstr "Gudžarati"
+
+msgid "Intl_Language_gv"
+msgstr "Mänksi"
+
+msgid "Intl_Language_ha"
+msgstr "Hausa"
+
+msgid "Intl_Language_he"
+msgstr "Heebrea"
+
+msgid "Intl_Language_hi"
+msgstr "Hindi"
+
+msgid "Intl_Language_ho"
+msgstr "Hirimotu"
+
+msgid "Intl_Language_hr"
+msgstr "Horvaadi"
+
+msgid "Intl_Language_ht"
+msgstr "Haiti"
+
+msgid "Intl_Language_hu"
+msgstr "Ungari"
+
+msgid "Intl_Language_hy"
+msgstr "Armeenia"
+
+msgid "Intl_Language_hz"
+msgstr "Herero"
+
+msgid "Intl_Language_ia"
+msgstr "Interlingua"
+
+msgid "Intl_Language_id"
+msgstr "Indoneesia"
+
+msgid "Intl_Language_ie"
+msgstr "Interlingue"
+
+msgid "Intl_Language_ig"
+msgstr "Ibo"
+
+msgid "Intl_Language_ii"
+msgstr "Sichuani jii"
+
+msgid "Intl_Language_ik"
+msgstr "Injupiaki"
+
+msgid "Intl_Language_io"
+msgstr "Ido"
+
+msgid "Intl_Language_is"
+msgstr "Islandi"
+
+msgid "Intl_Language_it"
+msgstr "Itaalia"
+
+msgid "Intl_Language_iu"
+msgstr "Inuktituti"
+
+msgid "Intl_Language_ja"
+msgstr "Jaapani"
+
+msgid "Intl_Language_jv"
+msgstr "Jaava"
+
+msgid "Intl_Language_ka"
+msgstr "Gruusia"
+
+msgid "Intl_Language_kg"
+msgstr "Kongo"
+
+msgid "Intl_Language_ki"
+msgstr "Kikuju"
+
+msgid "Intl_Language_kj"
+msgstr "Kvanjama"
+
+msgid "Intl_Language_kk"
+msgstr "Kasahhi"
+
+msgid "Intl_Language_kl"
+msgstr "Grööni"
+
+msgid "Intl_Language_km"
+msgstr "Khmeeri"
+
+msgid "Intl_Language_kn"
+msgstr "Kannada"
+
+msgid "Intl_Language_ko"
+msgstr "Korea"
+
+msgid "Intl_Language_kr"
+msgstr "Kanuri"
+
+msgid "Intl_Language_ks"
+msgstr "Kašmiiri"
+
+msgid "Intl_Language_ku"
+msgstr "Kurdi"
+
+msgid "Intl_Language_kv"
+msgstr "Komi"
+
+msgid "Intl_Language_kw"
+msgstr "Korni"
+
+msgid "Intl_Language_ky"
+msgstr "Kirgiisi"
+
+msgid "Intl_Language_la"
+msgstr "Ladina"
+
+msgid "Intl_Language_lb"
+msgstr "Letseburgi"
+
+msgid "Intl_Language_lg"
+msgstr "Ganda"
+
+msgid "Intl_Language_li"
+msgstr "Limburgi"
+
+msgid "Intl_Language_ln"
+msgstr "Lingala"
+
+msgid "Intl_Language_lo"
+msgstr "Lao"
+
+msgid "Intl_Language_lt"
+msgstr "Leedu"
+
+msgid "Intl_Language_lu"
+msgstr "Luba"
+
+msgid "Intl_Language_lv"
+msgstr "Läti"
+
+msgid "Intl_Language_mg"
+msgstr "Malagassi"
+
+msgid "Intl_Language_mh"
+msgstr "Maršalli"
+
+msgid "Intl_Language_mi"
+msgstr "Maoori"
+
+msgid "Intl_Language_mk"
+msgstr "Makedoonia"
+
+msgid "Intl_Language_ml"
+msgstr "Malajalami"
+
+msgid "Intl_Language_mn"
+msgstr "Mongoli"
+
+msgid "Intl_Language_mr"
+msgstr "Marathi"
+
+msgid "Intl_Language_ms"
+msgstr "Malai"
+
+msgid "Intl_Language_mt"
+msgstr "Malta"
+
+msgid "Intl_Language_my"
+msgstr "Birma"
+
+msgid "Intl_Language_na"
+msgstr "Nauru"
+
+msgid "Intl_Language_nb"
+msgstr "Norra bokmål"
+
+msgid "Intl_Language_nd"
+msgstr "Põhjandebele"
+
+msgid "Intl_Language_ne"
+msgstr "Nepali"
+
+msgid "Intl_Language_ng"
+msgstr "Ndonga"
+
+msgid "Intl_Language_nl"
+msgstr "Hollandi"
+
+msgid "Intl_Language_nn"
+msgstr "Uusnorra"
+
+msgid "Intl_Language_no"
+msgstr "Norra"
+
+msgid "Intl_Language_nr"
+msgstr "Lõunandebele"
+
+msgid "Intl_Language_nv"
+msgstr "Navaho"
+
+msgid "Intl_Language_ny"
+msgstr "Njandža"
+
+msgid "Intl_Language_oc"
+msgstr "Oksitaani"
+
+msgid "Intl_Language_oj"
+msgstr "Odžibvei"
+
+msgid "Intl_Language_om"
+msgstr "Oromo"
+
+msgid "Intl_Language_or"
+msgstr "Oria"
+
+msgid "Intl_Language_os"
+msgstr "Osseedi"
+
+msgid "Intl_Language_pa"
+msgstr "Pandžabi"
+
+msgid "Intl_Language_pi"
+msgstr "Paali"
+
+msgid "Intl_Language_pl"
+msgstr "Poola"
+
+msgid "Intl_Language_ps"
+msgstr "Puštu"
+
+msgid "Intl_Language_pt"
+msgstr "Portugali"
+
+msgid "Intl_Language_qu"
+msgstr "Ketšua"
+
+msgid "Intl_Language_rm"
+msgstr "Romanši"
+
+msgid "Intl_Language_rn"
+msgstr "Rundi"
+
+msgid "Intl_Language_ro"
+msgstr "Rumeenia"
+
+msgid "Intl_Language_ru"
+msgstr "Vene"
+
+msgid "Intl_Language_rw"
+msgstr "Ruanda"
+
+msgid "Intl_Language_sa"
+msgstr "Sanskriti"
+
+msgid "Intl_Language_sc"
+msgstr "Sardi"
+
+msgid "Intl_Language_sd"
+msgstr "Sindhi"
+
+msgid "Intl_Language_se"
+msgstr "Põhjasaami"
+
+msgid "Intl_Language_sg"
+msgstr "Sango"
+
+msgid "Intl_Language_si"
+msgstr "Singali"
+
+msgid "Intl_Language_sk"
+msgstr "Slovaki"
+
+msgid "Intl_Language_sl"
+msgstr "Sloveeni"
+
+msgid "Intl_Language_sm"
+msgstr "Samoa"
+
+msgid "Intl_Language_sn"
+msgstr "Šona"
+
+msgid "Intl_Language_so"
+msgstr "Somaali"
+
+msgid "Intl_Language_sq"
+msgstr "Albaania"
+
+msgid "Intl_Language_sr"
+msgstr "Serbia"
+
+msgid "Intl_Language_ss"
+msgstr "Svaasi"
+
+msgid "Intl_Language_st"
+msgstr "Lõunasotho"
+
+msgid "Intl_Language_su"
+msgstr "Sunda"
+
+msgid "Intl_Language_sv"
+msgstr "Rootsi"
+
+msgid "Intl_Language_sw"
+msgstr "Suahiili"
+
+msgid "Intl_Language_ta"
+msgstr "Tamili"
+
+msgid "Intl_Language_te"
+msgstr "Telugu"
+
+msgid "Intl_Language_tg"
+msgstr "Tadžiki"
+
+msgid "Intl_Language_th"
+msgstr "Tai"
+
+msgid "Intl_Language_ti"
+msgstr "Tigrinja"
+
+msgid "Intl_Language_tk"
+msgstr "Türkmeeni"
+
+msgid "Intl_Language_tl"
+msgstr "Tagalogi"
+
+msgid "Intl_Language_tn"
+msgstr "Tsvana"
+
+msgid "Intl_Language_to"
+msgstr "Tonga"
+
+msgid "Intl_Language_tr"
+msgstr "Türgi"
+
+msgid "Intl_Language_ts"
+msgstr "Tsonga"
+
+msgid "Intl_Language_tt"
+msgstr "Tatari"
+
+msgid "Intl_Language_tw"
+msgstr "Tvii"
+
+msgid "Intl_Language_ty"
+msgstr "Tahiti"
+
+msgid "Intl_Language_ug"
+msgstr "Uiguuri"
+
+msgid "Intl_Language_uk"
+msgstr "Ukraina"
+
+msgid "Intl_Language_ur"
+msgstr "Urdu"
+
+msgid "Intl_Language_uz"
+msgstr "Usbeki"
+
+msgid "Intl_Language_ve"
+msgstr "Venda"
+
+msgid "Intl_Language_vi"
+msgstr "Vietnami"
+
+msgid "Intl_Language_vo"
+msgstr "Volapüki"
+
+msgid "Intl_Language_wa"
+msgstr "Vallooni"
+
+msgid "Intl_Language_wo"
+msgstr "Volofi"
+
+msgid "Intl_Language_xh"
+msgstr "Koosa"
+
+msgid "Intl_Language_yi"
+msgstr "Jidiši"
+
+msgid "Intl_Language_yo"
+msgstr "Joruba"
+
+msgid "Intl_Language_za"
+msgstr "Tšuangi"
+
+msgid "Intl_Language_zh"
+msgstr "Hiina"
+
+msgid "Intl_Language_zu"
+msgstr "Suulu"
+
+msgid "Intl_LayoutDirection"
+msgstr "ltr"
+
+msgid "Intl_Minutes"
+msgstr "minutid"
+
+msgid "Intl_Month_Long_1"
+msgstr "jaanuar"
+
+msgid "Intl_Month_Long_10"
+msgstr "oktoober"
+
+msgid "Intl_Month_Long_11"
+msgstr "november"
+
+msgid "Intl_Month_Long_12"
+msgstr "detsember"
+
+msgid "Intl_Month_Long_2"
+msgstr "veebruar"
+
+msgid "Intl_Month_Long_3"
+msgstr "märts"
+
+msgid "Intl_Month_Long_4"
+msgstr "aprill"
+
+msgid "Intl_Month_Long_5"
+msgstr "mai"
+
+msgid "Intl_Month_Long_6"
+msgstr "juuni"
+
+msgid "Intl_Month_Long_7"
+msgstr "juuli"
+
+msgid "Intl_Month_Long_8"
+msgstr "august"
+
+msgid "Intl_Month_Long_9"
+msgstr "september"
+
+msgid "Intl_Month_Long_StandAlone_1"
+msgstr "jaanuar"
+
+msgid "Intl_Month_Long_StandAlone_10"
+msgstr "oktoober"
+
+msgid "Intl_Month_Long_StandAlone_11"
+msgstr "november"
+
+msgid "Intl_Month_Long_StandAlone_12"
+msgstr "detsember"
+
+msgid "Intl_Month_Long_StandAlone_2"
+msgstr "veebruar"
+
+msgid "Intl_Month_Long_StandAlone_3"
+msgstr "märts"
+
+msgid "Intl_Month_Long_StandAlone_4"
+msgstr "aprill"
+
+msgid "Intl_Month_Long_StandAlone_5"
+msgstr "mai"
+
+msgid "Intl_Month_Long_StandAlone_6"
+msgstr "juuni"
+
+msgid "Intl_Month_Long_StandAlone_7"
+msgstr "juuli"
+
+msgid "Intl_Month_Long_StandAlone_8"
+msgstr "august"
+
+msgid "Intl_Month_Long_StandAlone_9"
+msgstr "september"
+
+msgid "Intl_Month_Short_1"
+msgstr "jaan"
+
+msgid "Intl_Month_Short_10"
+msgstr "okt"
+
+msgid "Intl_Month_Short_11"
+msgstr "nov"
+
+msgid "Intl_Month_Short_12"
+msgstr "dets"
+
+msgid "Intl_Month_Short_2"
+msgstr "veebr"
+
+msgid "Intl_Month_Short_3"
+msgstr "märts"
+
+msgid "Intl_Month_Short_4"
+msgstr "apr"
+
+msgid "Intl_Month_Short_5"
+msgstr "mai"
+
+msgid "Intl_Month_Short_6"
+msgstr "juuni"
+
+msgid "Intl_Month_Short_7"
+msgstr "juuli"
+
+msgid "Intl_Month_Short_8"
+msgstr "aug"
+
+msgid "Intl_Month_Short_9"
+msgstr "sept"
+
+msgid "Intl_Month_Short_StandAlone_1"
+msgstr "jaan"
+
+msgid "Intl_Month_Short_StandAlone_10"
+msgstr "okt"
+
+msgid "Intl_Month_Short_StandAlone_11"
+msgstr "nov"
+
+msgid "Intl_Month_Short_StandAlone_12"
+msgstr "dets"
+
+msgid "Intl_Month_Short_StandAlone_2"
+msgstr "veebr"
+
+msgid "Intl_Month_Short_StandAlone_3"
+msgstr "märts"
+
+msgid "Intl_Month_Short_StandAlone_4"
+msgstr "apr"
+
+msgid "Intl_Month_Short_StandAlone_5"
+msgstr "mai"
+
+msgid "Intl_Month_Short_StandAlone_6"
+msgstr "juuni"
+
+msgid "Intl_Month_Short_StandAlone_7"
+msgstr "juuli"
+
+msgid "Intl_Month_Short_StandAlone_8"
+msgstr "aug"
+
+msgid "Intl_Month_Short_StandAlone_9"
+msgstr "sept"
+
+msgid "Intl_NDays"
+msgstr "%s ööpäeva"
+
+msgid "Intl_NHoursShort"
+msgstr "%s t"
+
+msgid "Intl_NMinutes"
+msgstr "%s minutit"
+
+msgid "Intl_NMinutesShort"
+msgstr "%s min"
+
+msgid "Intl_NSeconds"
+msgstr "%s sekundit"
+
+msgid "Intl_NSecondsShort"
+msgstr "%s s"
+
+msgid "Intl_NumberFormatCurrency"
+msgstr "#,##0.00 ¤"
+
+msgid "Intl_NumberFormatNumber"
+msgstr "#,##0.###"
+
+msgid "Intl_NumberFormatPercent"
+msgstr "#,##0%"
+
+msgid "Intl_NumberSymbolDecimal"
+msgstr ","
+
+msgid "Intl_NumberSymbolGroup"
+msgstr " "
+
+msgid "Intl_NumberSymbolMinus"
+msgstr "−"
+
+msgid "Intl_NumberSymbolPercent"
+msgstr "%"
+
+msgid "Intl_NumberSymbolPlus"
+msgstr "+"
+
+msgid "Intl_OneDay"
+msgstr "1 ööpäev"
+
+msgid "Intl_OneMinute"
+msgstr "1 minut"
+
+msgid "Intl_OneMinuteShort"
+msgstr "1 min"
+
+msgid "Intl_OriginalLanguageName"
+msgstr "Eesti"
+
+msgid "Intl_PeriodDay"
+msgstr "päev"
+
+msgid "Intl_PeriodDays"
+msgstr "ööpäevad"
+
+msgid "Intl_PeriodMonth"
+msgstr "kuu"
+
+msgid "Intl_PeriodMonths"
+msgstr "kuud"
+
+msgid "Intl_PeriodWeek"
+msgstr "nädal"
+
+msgid "Intl_PeriodWeeks"
+msgstr "nädalad"
+
+msgid "Intl_PeriodYear"
+msgstr "aasta"
+
+msgid "Intl_PeriodYears"
+msgstr "aastad"
+
+msgid "Intl_Seconds"
+msgstr "sekundid"
+
+msgid "Intl_Time_AM"
+msgstr "AM"
+
+msgid "Intl_Time_PM"
+msgstr "PM"
+
+msgid "Intl_Timezone_Africa_Asmera"
+msgstr "Asmara"
+
+msgid "Intl_Timezone_Africa_Ceuta"
+msgstr "Ceuta"
+
+msgid "Intl_Timezone_Africa_Kinshasa"
+msgstr "Kinshasa"
+
+msgid "Intl_Timezone_Africa_Lubumbashi"
+msgstr "Lubumbashi"
+
+msgid "Intl_Timezone_America_Adak"
+msgstr "Adak"
+
+msgid "Intl_Timezone_America_Anchorage"
+msgstr "Anchorage"
+
+msgid "Intl_Timezone_America_Araguaina"
+msgstr "Araguaína"
+
+msgid "Intl_Timezone_America_Argentina_LaRioja"
+msgstr "La Rioja"
+
+msgid "Intl_Timezone_America_Argentina_RioGallegos"
+msgstr "Río Gallegos"
+
+msgid "Intl_Timezone_America_Argentina_Salta"
+msgstr "Salta"
+
+msgid "Intl_Timezone_America_Argentina_SanJuan"
+msgstr "San Juan"
+
+msgid "Intl_Timezone_America_Argentina_SanLuis"
+msgstr "San Luis"
+
+msgid "Intl_Timezone_America_Argentina_Tucuman"
+msgstr "Tucumán"
+
+msgid "Intl_Timezone_America_Argentina_Ushuaia"
+msgstr "Ushuaia"
+
+msgid "Intl_Timezone_America_Bahia"
+msgstr "Bahia"
+
+msgid "Intl_Timezone_America_BahiaBanderas"
+msgstr "Bahia Banderas"
+
+msgid "Intl_Timezone_America_Belem"
+msgstr "Belém"
+
+msgid "Intl_Timezone_America_Blanc-Sablon"
+msgstr "Blanc-Sablon"
+
+msgid "Intl_Timezone_America_BoaVista"
+msgstr "Boa Vista"
+
+msgid "Intl_Timezone_America_Boise"
+msgstr "Boise"
+
+msgid "Intl_Timezone_America_BuenosAires"
+msgstr "Buenos Aires"
+
+msgid "Intl_Timezone_America_CambridgeBay"
+msgstr "Cambridge Bay"
+
+msgid "Intl_Timezone_America_CampoGrande"
+msgstr "Campo Grande"
+
+msgid "Intl_Timezone_America_Cancun"
+msgstr "Cancún"
+
+msgid "Intl_Timezone_America_Catamarca"
+msgstr "Catamarca"
+
+msgid "Intl_Timezone_America_Chicago"
+msgstr "Chicago"
+
+msgid "Intl_Timezone_America_Chihuahua"
+msgstr "Chihuahua"
+
+msgid "Intl_Timezone_America_CoralHarbour"
+msgstr "Atikokan"
+
+msgid "Intl_Timezone_America_Cordoba"
+msgstr "Córdoba"
+
+msgid "Intl_Timezone_America_Creston"
+msgstr "Creston"
+
+msgid "Intl_Timezone_America_Cuiaba"
+msgstr "Cuiabá"
+
+msgid "Intl_Timezone_America_Danmarkshavn"
+msgstr "Danmarkshavn"
+
+msgid "Intl_Timezone_America_Dawson"
+msgstr "Dawson"
+
+msgid "Intl_Timezone_America_DawsonCreek"
+msgstr "Dawson Creek"
+
+msgid "Intl_Timezone_America_Denver"
+msgstr "Denver"
+
+msgid "Intl_Timezone_America_Detroit"
+msgstr "Detroit"
+
+msgid "Intl_Timezone_America_Edmonton"
+msgstr "Edmonton"
+
+msgid "Intl_Timezone_America_Eirunepe"
+msgstr "Eirunepé"
+
+msgid "Intl_Timezone_America_FortNelson"
+msgstr "Fort Nelson"
+
+msgid "Intl_Timezone_America_Fortaleza"
+msgstr "Fortaleza"
+
+msgid "Intl_Timezone_America_GlaceBay"
+msgstr "Glace Bay"
+
+msgid "Intl_Timezone_America_Godthab"
+msgstr "Nuuk"
+
+msgid "Intl_Timezone_America_GooseBay"
+msgstr "Goose Bay"
+
+msgid "Intl_Timezone_America_Guayaquil"
+msgstr "Guayaquil"
+
+msgid "Intl_Timezone_America_Halifax"
+msgstr "Halifax"
+
+msgid "Intl_Timezone_America_Hermosillo"
+msgstr "Hermosillo"
+
+msgid "Intl_Timezone_America_Indiana_Knox"
+msgstr "Knox, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Marengo"
+msgstr "Marengo, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Petersburg"
+msgstr "Petersburg, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_TellCity"
+msgstr "Tell City, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vevay"
+msgstr "Vevay, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vincennes"
+msgstr "Vincennes, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Winamac"
+msgstr "Winamac, Indiana"
+
+msgid "Intl_Timezone_America_Indianapolis"
+msgstr "Indianapolis"
+
+msgid "Intl_Timezone_America_Inuvik"
+msgstr "Inuvik"
+
+msgid "Intl_Timezone_America_Iqaluit"
+msgstr "Iqaluit"
+
+msgid "Intl_Timezone_America_Jujuy"
+msgstr "Jujuy"
+
+msgid "Intl_Timezone_America_Juneau"
+msgstr "Juneau"
+
+msgid "Intl_Timezone_America_Kentucky_Monticello"
+msgstr "Monticello, Kentucky"
+
+msgid "Intl_Timezone_America_LosAngeles"
+msgstr "Los Angeles"
+
+msgid "Intl_Timezone_America_Louisville"
+msgstr "Louisville"
+
+msgid "Intl_Timezone_America_Maceio"
+msgstr "Maceió"
+
+msgid "Intl_Timezone_America_Manaus"
+msgstr "Manaus"
+
+msgid "Intl_Timezone_America_Matamoros"
+msgstr "Matamoros"
+
+msgid "Intl_Timezone_America_Mazatlan"
+msgstr "Mazatlán"
+
+msgid "Intl_Timezone_America_Mendoza"
+msgstr "Mendoza"
+
+msgid "Intl_Timezone_America_Menominee"
+msgstr "Menominee"
+
+msgid "Intl_Timezone_America_Merida"
+msgstr "Mérida"
+
+msgid "Intl_Timezone_America_Metlakatla"
+msgstr "Metlakatla"
+
+msgid "Intl_Timezone_America_MexicoCity"
+msgstr "México"
+
+msgid "Intl_Timezone_America_Moncton"
+msgstr "Moncton"
+
+msgid "Intl_Timezone_America_Monterrey"
+msgstr "Monterrey"
+
+msgid "Intl_Timezone_America_NewYork"
+msgstr "New York"
+
+msgid "Intl_Timezone_America_Nipigon"
+msgstr "Nipigon"
+
+msgid "Intl_Timezone_America_Nome"
+msgstr "Nome"
+
+msgid "Intl_Timezone_America_Noronha"
+msgstr "Noronha"
+
+msgid "Intl_Timezone_America_NorthDakota_Beulah"
+msgstr "Beulah, Põhja-Dakota"
+
+msgid "Intl_Timezone_America_NorthDakota_Center"
+msgstr "Center, Põhja-Dakota"
+
+msgid "Intl_Timezone_America_NorthDakota_NewSalem"
+msgstr "New Salem, Põhja-Dakota"
+
+msgid "Intl_Timezone_America_Ojinaga"
+msgstr "Ojinaga"
+
+msgid "Intl_Timezone_America_Pangnirtung"
+msgstr "Pangnirtung"
+
+msgid "Intl_Timezone_America_Phoenix"
+msgstr "Phoenix"
+
+msgid "Intl_Timezone_America_PortoVelho"
+msgstr "Porto Velho"
+
+msgid "Intl_Timezone_America_PuntaArenas"
+msgstr "Punta Arenas"
+
+msgid "Intl_Timezone_America_RainyRiver"
+msgstr "Rainy River"
+
+msgid "Intl_Timezone_America_RankinInlet"
+msgstr "Rankin Inlet"
+
+msgid "Intl_Timezone_America_Recife"
+msgstr "Recife"
+
+msgid "Intl_Timezone_America_Regina"
+msgstr "Regina"
+
+msgid "Intl_Timezone_America_Resolute"
+msgstr "Resolute"
+
+msgid "Intl_Timezone_America_RioBranco"
+msgstr "Rio Branco"
+
+msgid "Intl_Timezone_America_SantaIsabel"
+msgstr "Santa Isabel"
+
+msgid "Intl_Timezone_America_Santarem"
+msgstr "Santarém"
+
+msgid "Intl_Timezone_America_Santiago"
+msgstr "Santiago"
+
+msgid "Intl_Timezone_America_SaoPaulo"
+msgstr "São Paulo"
+
+msgid "Intl_Timezone_America_Scoresbysund"
+msgstr "Ittoqqortoormiit"
+
+msgid "Intl_Timezone_America_Sitka"
+msgstr "Sitka"
+
+msgid "Intl_Timezone_America_StJohns"
+msgstr "Saint John’s"
+
+msgid "Intl_Timezone_America_SwiftCurrent"
+msgstr "Swift Current"
+
+msgid "Intl_Timezone_America_Thule"
+msgstr "Thule"
+
+msgid "Intl_Timezone_America_ThunderBay"
+msgstr "Thunder Bay"
+
+msgid "Intl_Timezone_America_Tijuana"
+msgstr "Tijuana"
+
+msgid "Intl_Timezone_America_Toronto"
+msgstr "Toronto"
+
+msgid "Intl_Timezone_America_Vancouver"
+msgstr "Vancouver"
+
+msgid "Intl_Timezone_America_Whitehorse"
+msgstr "Whitehorse"
+
+msgid "Intl_Timezone_America_Winnipeg"
+msgstr "Winnipeg"
+
+msgid "Intl_Timezone_America_Yakutat"
+msgstr "Yakutat"
+
+msgid "Intl_Timezone_America_Yellowknife"
+msgstr "Yellowknife"
+
+msgid "Intl_Timezone_Antarctica_Casey"
+msgstr "Casey"
+
+msgid "Intl_Timezone_Antarctica_Davis"
+msgstr "Davis"
+
+msgid "Intl_Timezone_Antarctica_DumontDUrville"
+msgstr "Dumont d’Urville"
+
+msgid "Intl_Timezone_Antarctica_Macquarie"
+msgstr "Macquarie"
+
+msgid "Intl_Timezone_Antarctica_Mawson"
+msgstr "Mawson"
+
+msgid "Intl_Timezone_Antarctica_McMurdo"
+msgstr "McMurdo"
+
+msgid "Intl_Timezone_Antarctica_Palmer"
+msgstr "Palmer"
+
+msgid "Intl_Timezone_Antarctica_Rothera"
+msgstr "Rothera"
+
+msgid "Intl_Timezone_Antarctica_Syowa"
+msgstr "Syowa"
+
+msgid "Intl_Timezone_Antarctica_Troll"
+msgstr "Troll"
+
+msgid "Intl_Timezone_Antarctica_Vostok"
+msgstr "Vostok"
+
+msgid "Intl_Timezone_Asia_Almaty"
+msgstr "Almatõ"
+
+msgid "Intl_Timezone_Asia_Anadyr"
+msgstr "Anadõr"
+
+msgid "Intl_Timezone_Asia_Aqtau"
+msgstr "Aktau"
+
+msgid "Intl_Timezone_Asia_Aqtobe"
+msgstr "Aktöbe"
+
+msgid "Intl_Timezone_Asia_Atyrau"
+msgstr "Atõrau"
+
+msgid "Intl_Timezone_Asia_Barnaul"
+msgstr "Barnaul"
+
+msgid "Intl_Timezone_Asia_Calcutta"
+msgstr "Kolkata"
+
+msgid "Intl_Timezone_Asia_Chita"
+msgstr "Tšita"
+
+msgid "Intl_Timezone_Asia_Choibalsan"
+msgstr "Tšojbalsan"
+
+msgid "Intl_Timezone_Asia_Famagusta"
+msgstr "Famagusta"
+
+msgid "Intl_Timezone_Asia_Gaza"
+msgstr "Gaza"
+
+msgid "Intl_Timezone_Asia_Hebron"
+msgstr "Hebron"
+
+msgid "Intl_Timezone_Asia_Hovd"
+msgstr "Hovd"
+
+msgid "Intl_Timezone_Asia_Irkutsk"
+msgstr "Irkutsk"
+
+msgid "Intl_Timezone_Asia_Jakarta"
+msgstr "Jakarta"
+
+msgid "Intl_Timezone_Asia_Jayapura"
+msgstr "Jayapura"
+
+msgid "Intl_Timezone_Asia_Kamchatka"
+msgstr "Kamtšatka"
+
+msgid "Intl_Timezone_Asia_Katmandu"
+msgstr "Katmandu"
+
+msgid "Intl_Timezone_Asia_Khandyga"
+msgstr "Handõga"
+
+msgid "Intl_Timezone_Asia_Krasnoyarsk"
+msgstr "Krasnojarsk"
+
+msgid "Intl_Timezone_Asia_KualaLumpur"
+msgstr "Kuala Lumpur"
+
+msgid "Intl_Timezone_Asia_Kuching"
+msgstr "Kuching"
+
+msgid "Intl_Timezone_Asia_Magadan"
+msgstr "Magadan"
+
+msgid "Intl_Timezone_Asia_Makassar"
+msgstr "Makassar"
+
+msgid "Intl_Timezone_Asia_Nicosia"
+msgstr "Nikosia"
+
+msgid "Intl_Timezone_Asia_Novokuznetsk"
+msgstr "Novokuznetsk"
+
+msgid "Intl_Timezone_Asia_Novosibirsk"
+msgstr "Novosibirsk"
+
+msgid "Intl_Timezone_Asia_Omsk"
+msgstr "Omsk"
+
+msgid "Intl_Timezone_Asia_Oral"
+msgstr "Oral"
+
+msgid "Intl_Timezone_Asia_Pontianak"
+msgstr "Pontianak"
+
+msgid "Intl_Timezone_Asia_Qyzylorda"
+msgstr "Kõzõlorda"
+
+msgid "Intl_Timezone_Asia_Rangoon"
+msgstr "Yangon"
+
+msgid "Intl_Timezone_Asia_Saigon"
+msgstr "Ho Chi Minh"
+
+msgid "Intl_Timezone_Asia_Sakhalin"
+msgstr "Sahhalin"
+
+msgid "Intl_Timezone_Asia_Samarkand"
+msgstr "Samarkand"
+
+msgid "Intl_Timezone_Asia_Shanghai"
+msgstr "Shanghai"
+
+msgid "Intl_Timezone_Asia_Srednekolymsk"
+msgstr "Srednekolõmsk"
+
+msgid "Intl_Timezone_Asia_Tashkent"
+msgstr "Taškent"
+
+msgid "Intl_Timezone_Asia_Tomsk"
+msgstr "Tomsk"
+
+msgid "Intl_Timezone_Asia_Ulaanbaatar"
+msgstr "Ulaanbaatar"
+
+msgid "Intl_Timezone_Asia_Urumqi"
+msgstr "Ürümqi"
+
+msgid "Intl_Timezone_Asia_Ust-Nera"
+msgstr "Ust-Nera"
+
+msgid "Intl_Timezone_Asia_Vladivostok"
+msgstr "Vladivostok"
+
+msgid "Intl_Timezone_Asia_Yakutsk"
+msgstr "Jakutsk"
+
+msgid "Intl_Timezone_Asia_Yekaterinburg"
+msgstr "Jekaterinburg"
+
+msgid "Intl_Timezone_Atlantic_Azores"
+msgstr "Assoorid"
+
+msgid "Intl_Timezone_Atlantic_Canary"
+msgstr "Kanaari saared"
+
+msgid "Intl_Timezone_Atlantic_Faeroe"
+msgstr "Fääri saared"
+
+msgid "Intl_Timezone_Atlantic_Madeira"
+msgstr "Madeira"
+
+msgid "Intl_Timezone_Australia_Adelaide"
+msgstr "Adelaide"
+
+msgid "Intl_Timezone_Australia_Brisbane"
+msgstr "Brisbane"
+
+msgid "Intl_Timezone_Australia_BrokenHill"
+msgstr "Broken Hill"
+
+msgid "Intl_Timezone_Australia_Currie"
+msgstr "Currie"
+
+msgid "Intl_Timezone_Australia_Darwin"
+msgstr "Darwin"
+
+msgid "Intl_Timezone_Australia_Eucla"
+msgstr "Eucla"
+
+msgid "Intl_Timezone_Australia_Hobart"
+msgstr "Hobart"
+
+msgid "Intl_Timezone_Australia_Lindeman"
+msgstr "Lindeman"
+
+msgid "Intl_Timezone_Australia_LordHowe"
+msgstr "Lord Howe"
+
+msgid "Intl_Timezone_Australia_Melbourne"
+msgstr "Melbourne"
+
+msgid "Intl_Timezone_Australia_Perth"
+msgstr "Perth"
+
+msgid "Intl_Timezone_Australia_Sydney"
+msgstr "Sydney"
+
+msgid "Intl_Timezone_Europe_Astrakhan"
+msgstr "Astrahan"
+
+msgid "Intl_Timezone_Europe_Berlin"
+msgstr "Berliin"
+
+msgid "Intl_Timezone_Europe_Busingen"
+msgstr "Büsingen"
+
+msgid "Intl_Timezone_Europe_Kaliningrad"
+msgstr "Kaliningrad"
+
+msgid "Intl_Timezone_Europe_Kiev"
+msgstr "Kiiev"
+
+msgid "Intl_Timezone_Europe_Kirov"
+msgstr "Kirov"
+
+msgid "Intl_Timezone_Europe_Lisbon"
+msgstr "Lissabon"
+
+msgid "Intl_Timezone_Europe_Madrid"
+msgstr "Madrid"
+
+msgid "Intl_Timezone_Europe_Moscow"
+msgstr "Moskva"
+
+msgid "Intl_Timezone_Europe_Samara"
+msgstr "Samara"
+
+msgid "Intl_Timezone_Europe_Saratov"
+msgstr "Saratov"
+
+msgid "Intl_Timezone_Europe_Simferopol"
+msgstr "Simferopol"
+
+msgid "Intl_Timezone_Europe_Ulyanovsk"
+msgstr "Uljanovsk"
+
+msgid "Intl_Timezone_Europe_Uzhgorod"
+msgstr "Užgorod"
+
+msgid "Intl_Timezone_Europe_Volgograd"
+msgstr "Volgograd"
+
+msgid "Intl_Timezone_Europe_Zaporozhye"
+msgstr "Zaporožje"
+
+msgid "Intl_Timezone_Pacific_Auckland"
+msgstr "Auckland"
+
+msgid "Intl_Timezone_Pacific_Bougainville"
+msgstr "Bougainville"
+
+msgid "Intl_Timezone_Pacific_Chatham"
+msgstr "Chatham"
+
+msgid "Intl_Timezone_Pacific_Easter"
+msgstr "Lihavõttesaar"
+
+msgid "Intl_Timezone_Pacific_Enderbury"
+msgstr "Enderbury"
+
+msgid "Intl_Timezone_Pacific_Galapagos"
+msgstr "Galápagos"
+
+msgid "Intl_Timezone_Pacific_Gambier"
+msgstr "Gambier"
+
+msgid "Intl_Timezone_Pacific_Honolulu"
+msgstr "Honolulu"
+
+msgid "Intl_Timezone_Pacific_Johnston"
+msgstr "Johnston"
+
+msgid "Intl_Timezone_Pacific_Kiritimati"
+msgstr "Kiritimati"
+
+msgid "Intl_Timezone_Pacific_Kosrae"
+msgstr "Kosrae"
+
+msgid "Intl_Timezone_Pacific_Kwajalein"
+msgstr "Kwajalein"
+
+msgid "Intl_Timezone_Pacific_Majuro"
+msgstr "Majuro"
+
+msgid "Intl_Timezone_Pacific_Marquesas"
+msgstr "Markiisaared"
+
+msgid "Intl_Timezone_Pacific_Midway"
+msgstr "Midway"
+
+msgid "Intl_Timezone_Pacific_Ponape"
+msgstr "Pohnpei"
+
+msgid "Intl_Timezone_Pacific_PortMoresby"
+msgstr "Port Moresby"
+
+msgid "Intl_Timezone_Pacific_Tahiti"
+msgstr "Tahiti"
+
+msgid "Intl_Timezone_Pacific_Tarawa"
+msgstr "Tarawa"
+
+msgid "Intl_Timezone_Pacific_Truk"
+msgstr "Chuuk"
+
+msgid "Intl_Timezone_Pacific_Wake"
+msgstr "Wake"
+
+msgid "Intl_Today"
+msgstr "Täna"
+
+msgid "Intl_Year_Short"
+msgstr "a"
+
+msgid "Intl_Yesterday"
+msgstr "Eile"
+
+msgid "LanguagesManager_AboutPiwikTranslations"
+msgstr "Rohkem infot Matomou tõlkimisest"
+
+msgid "LanguagesManager_TranslationSearch"
+msgstr "Tõlke otsing"
+
+msgid "Live_AveragePageGenerationTime"
+msgstr "Iga lehe laadimine võttis antud külastajal keskeltläbi %1$s."
+
+msgid "Live_CalculatedOverNPageViews"
+msgstr "Arvutatud kasutades külastaja viimast %1$s lehe kuvamist."
+
+msgid "Live_ClickToViewMoreAboutVisit"
+msgstr "Vali, et kuvada külastuse kohta rohkem infot"
+
+msgid "Live_ConvertedNGoals"
+msgstr "Muutus tulutoovaks %s korral"
+
+msgid "Live_FirstVisit"
+msgstr "Esimene külastus"
+
+msgid "Live_GoalType"
+msgstr "Tüüp"
+
+msgid "Live_HideMap"
+msgstr "peida kaart"
+
+msgid "Live_LastHours"
+msgstr "Viimased %s tundi"
+
+msgid "Live_LastMinutes"
+msgstr "Viimased %s minutit"
+
+msgid "Live_LastVisit"
+msgstr "Viimane külastus"
+
+msgid "Live_LinkVisitorLog"
+msgstr "Vaata üksikasjalikku külastuste logi"
+
+msgid "Live_LoadMoreVisits"
+msgstr "Ava rohkem külastusi"
+
+msgid "Live_MorePagesNotDisplayed"
+msgstr "rohkem lehti külastaja kohta ei kuvata"
+
+msgid "Live_NbVisitor"
+msgstr "1 külastaja"
+
+msgid "Live_NbVisitors"
+msgstr "%s külastajat"
+
+msgid "Live_NextVisitor"
+msgstr "Järgmine külastaja"
+
+msgid "Live_NoMoreVisits"
+msgstr "Antud külastajalt rohkem külastusi ei leitud."
+
+msgid "Live_PageRefreshed"
+msgstr "Arv, mitu korda antud lehte vaadati / värskendati järjest"
+
+msgid "Live_PreviousVisitor"
+msgstr "Eelmine külastaja"
+
+msgid "Live_RealTimeVisitorCount"
+msgstr "Reaalajas külastuste arv"
+
+msgid "Live_Referrer_URL"
+msgstr "Viitaja URL"
+
+msgid "Live_ShowMap"
+msgstr "kuva kaart"
+
+msgid "Live_SimpleRealTimeWidget_Message"
+msgstr "%1$s ja %2$s perioodis viimased %3$s"
+
+msgid "Live_ViewVisitorProfile"
+msgstr "Kuva külastaja profiil"
+
+msgid "Live_VisitedPages"
+msgstr "Külastatud lehed"
+
+msgid "Live_VisitsLog"
+msgstr "lastuste logi"
+
+msgid "Live_VisitorLog"
+msgstr "lastuste logi"
+
+msgid "Live_VisitorProfile"
+msgstr "Külastaja profiil"
+
+msgid "Live_VisitorsInRealTime"
+msgstr "Külastused reaalajas"
+
+msgid "Live_VisitorsLastVisit"
+msgstr "Antud külastaja viimane külastus lehel oli %s päeva tagasi."
+
+msgid "Live_VisitsFrom"
+msgstr "%1$s%2$s külastust %3$s pärineb"
+
+msgid "Login_InvalidOrExpiredToken"
+msgstr "Kontrollkood on kehtetu."
+
+msgid "Login_InvalidUsernameEmail"
+msgstr "Vale kasutajanimi ja/või e-maili address"
+
+msgid "Login_LogIn"
+msgstr "Sisene"
+
+msgid "Login_LoginOrEmail"
+msgstr "Kasutajanimi või e-post"
+
+msgid "Login_LoginPasswordNotCorrect"
+msgstr "Kasutajanimi & salasõna olid valed"
+
+msgid "Login_LostYourPassword"
+msgstr "Kaotasid oma salasõna?"
+
+msgid "Login_MailTopicPasswordChange"
+msgstr "Kinnita salasõna vahetust"
+
+msgid "Login_PasswordChanged"
+msgstr "Sinu salasõna on vahetatud."
+
+msgid "Login_PasswordRepeat"
+msgstr "Salasõna (kordus)"
+
+msgid "Login_PasswordsDoNotMatch"
+msgstr "Salasõnad ei kattu."
+
+msgid "Login_RememberMe"
+msgstr "Pea meeles"
+
+msgid "Marketplace_ActivateLicenseKey"
+msgstr "Aktiveeri"
+
+msgid "Marketplace_ActionActivatePlugin"
+msgstr "Aktiveeri lisatarkvara"
+
+msgid "Marketplace_ActionActivateTheme"
+msgstr "Aktiveeri kujundus"
+
+msgid "Marketplace_ActionInstall"
+msgstr "Paigalda"
+
+msgid "Marketplace_AddToCart"
+msgstr "Lisa ostukorvi"
+
+msgid "Marketplace_Authors"
+msgstr "Autorid"
+
+msgid "Marketplace_BackToMarketplace"
+msgstr "Tagasi Marketisse"
+
+msgid "Marketplace_ByXDevelopers"
+msgstr "arendajate %s poolt"
+
+msgid "Marketplace_CannotInstall"
+msgstr "Ei saa paigaldada"
+
+msgid "Marketplace_Developer"
+msgstr "Arendaja"
+
+msgid "Marketplace_Marketplace"
+msgstr "Market"
+
+msgid "Marketplace_FeaturedPlugin"
+msgstr "Esiletõstetud lisatarkvara"
+
+msgid "Marketplace_InstallingPlugin"
+msgstr "Paigaldan %s"
+
+msgid "Marketplace_LastCommitTime"
+msgstr "(viimane muudatus %s)"
+
+msgid "Marketplace_LastUpdated"
+msgstr "Viimati uuendatud"
+
+msgid "Marketplace_NoPluginsFound"
+msgstr "Lisatarkvara ei leitud"
+
+msgid "Marketplace_NoThemesFound"
+msgstr "Kujundusi ei leitud"
+
+msgid "Marketplace_NumDownloadsLatestVersion"
+msgstr "Viimane versioon: %s allalaadimist"
+
+msgid "Marketplace_PluginKeywords"
+msgstr "Võtmesõnad"
+
+msgid "Marketplace_PluginVersionInfo"
+msgstr "%1$s, tuli: %2$s"
+
+msgid "Marketplace_PluginWebsite"
+msgstr "Lisatarkvara veebileht"
+
+msgid "Marketplace_Screenshots"
+msgstr "Ekraanitõmmised"
+
+msgid "Marketplace_StepDownloadingPluginFromMarketplace"
+msgstr "Laen marketist lisatarkvara alla"
+
+msgid "Marketplace_StepDownloadingThemeFromMarketplace"
+msgstr "Laen alla kujundust marketist"
+
+msgid "Marketplace_StepUnzippingPlugin"
+msgstr "Pakin lisatarkvara lahti"
+
+msgid "Marketplace_StepUnzippingTheme"
+msgstr "Pakin kujundust lahti"
+
+msgid "Marketplace_StepReplaceExistingPlugin"
+msgstr "Asendan olemasolevat lisatarkvara"
+
+msgid "Marketplace_StepReplaceExistingTheme"
+msgstr "Asendan olemasolevat kujundust"
+
+msgid "Marketplace_SubscriptionType"
+msgstr "Tüüp"
+
+msgid "Marketplace_Support"
+msgstr "Tugi"
+
+msgid "Marketplace_Updated"
+msgstr "Uuendatud"
+
+msgid "Marketplace_UploadZipFile"
+msgstr "Lae üles ZIP arhiiv"
+
+msgid "Marketplace_ViewRepositoryChangelog"
+msgstr "Vaata muudatusi"
+
+msgid "MobileAppMeasurable_MobileApp"
+msgstr "Mobiilirakendus"
+
+msgid "MobileAppMeasurable_MobileApps"
+msgstr "Mobiilirakendused"
+
+msgid "MobileMessaging_PhoneNumbers"
+msgstr "Telefoninumbrid"
+
+msgid "MobileMessaging_Settings_APIKey"
+msgstr "API võti"
+
+msgid "MobileMessaging_Settings_CountryCode"
+msgstr "Riigikood"
+
+msgid "MobileMessaging_Settings_SelectCountry"
+msgstr "Vali riik"
+
+msgid "MobileMessaging_Settings_CredentialNotProvided"
+msgstr "Enne kui saad luua ja hallata telefoninumbreid, palun ühenda Matomo oma SMS kontoga ülal."
+
+msgid "MobileMessaging_Settings_CredentialNotProvidedByAdmin"
+msgstr "Enne kui saad luua ja hallata telefoninumbreid, palu Matomou haldajal luua ühendus SMS kontoga."
+
+msgid "MobileMessaging_Settings_CredentialProvided"
+msgstr "Sinu %s SMS API konto on korrektselt seadistatud!"
+
+msgid "MobileMessaging_Settings_LetUsersManageAPICredential"
+msgstr "Luba kasutajatel muuta nende enda SMS API seadeid"
+
+msgid "MobileMessaging_Settings_ManagePhoneNumbers"
+msgstr "Halda telefoninumbreid"
+
+msgid "MobileMessaging_Settings_PhoneNumber"
+msgstr "Telefoninumber"
+
+msgid "MobileMessaging_Settings_PhoneNumbers_Add"
+msgstr "Lisa uus telefoninumber"
+
+msgid "MobileMessaging_Settings_SMSAPIAccount"
+msgstr "Halda SMS API kontot"
+
+msgid "MobileMessaging_Settings_SMSProvider"
+msgstr "SMS teenusepakkuja"
+
+msgid "MobileMessaging_Settings_SuperAdmin"
+msgstr "Peakasutaja seaded"
+
+msgid "MobileMessaging_Settings_ValidatePhoneNumber"
+msgstr "Valideeri"
+
+msgid "MobileMessaging_SettingsMenu"
+msgstr "Mobiilsed teenused"
+
+msgid "MobileMessaging_SMS_Content_Too_Long"
+msgstr "[liiga pikk]"
+
+msgid "MobileMessaging_TopMenu"
+msgstr "E-posti ja SMS raportid"
+
+msgid "MultiSites_Evolution"
+msgstr "Muutus ajas"
+
+msgid "MultiSites_LoadingWebsites"
+msgstr "Veebilehtede avamine"
+
+msgid "Overlay_Clicks"
+msgstr "%s klikki"
+
+msgid "Overlay_ClicksFromXLinks"
+msgstr "%1$s klikki %2$s lingilt"
+
+msgid "Overlay_Domain"
+msgstr "Domeen"
+
+msgid "Overlay_Link"
+msgstr "Link"
+
+msgid "Overlay_Location"
+msgstr "Asukoht"
+
+msgid "Overlay_OneClick"
+msgstr "1 klikk"
+
+msgid "Overlay_OpenFullScreen"
+msgstr "Ava täisekraani vaade (ilma külgribata)"
+
+msgid "Overlay_Overlay"
+msgstr "Lehe statistika kiht"
+
+msgid "PrivacyManager_AnonymizeIpMaskLength"
+msgstr "%1$s bait(i) - nt. %2$s"
+
+msgid "PrivacyManager_ClickHereSettings"
+msgstr "Vajuta siia, et minna %s seadete lehele."
+
+msgid "PrivacyManager_CurrentDBSize"
+msgstr "Praegune andmebaasi suurus"
+
+msgid "PrivacyManager_DBPurged"
+msgstr "Andmebaas tühjendatud."
+
+msgid "PrivacyManager_DeleteDataInterval"
+msgstr "Kustuta vanad andmed iga"
+
+msgid "PrivacyManager_DeleteLogsOlderThan"
+msgstr "Kustuta logid, mis on vanemad kui"
+
+msgid "PrivacyManager_DeleteMaxRowsNoLimit"
+msgstr "piirangut pole"
+
+msgid "PrivacyManager_DeleteDataSettings"
+msgstr "Kustuta vanad külastajate logid ja raportid"
+
+msgid "PrivacyManager_EstimatedSpaceSaved"
+msgstr "Ennustatud kettaruumi sääst"
+
+msgid "PrivacyManager_LastDelete"
+msgstr "Viimane kustutamine"
+
+msgid "PrivacyManager_MenuPrivacySettings"
+msgstr "Privaatsus"
+
+msgid "PrivacyManager_NextDelete"
+msgstr "Järgmine kustutamine"
+
+msgid "PrivacyManager_PurgeNow"
+msgstr "Tühjenda andmebaas kohe"
+
+msgid "PrivacyManager_PurgingData"
+msgstr "Andmete kustutamine..."
+
+msgid "PrivacyManager_ReportsDataSavedEstimate"
+msgstr "Andmebaasi suurus"
+
+msgid "PrivacyManager_TeaserHeadline"
+msgstr "Privaatsusseaded"
+
+msgid "PrivacyManager_UseDeleteReports"
+msgstr "Kustuta regulaarselt vanad raportid andmebaasist"
+
+msgid "Provider_ColumnProvider"
+msgstr "Teenusepakkuja"
+
+msgid "Provider_WidgetProviders"
+msgstr "Teenusepakkujad"
+
+msgid "Referrers_Campaigns"
+msgstr "Kampaaniad"
+
+msgid "Referrers_ColumnCampaign"
+msgstr "Kampaania"
+
+msgid "Referrers_ColumnSearchEngine"
+msgstr "Otsingumootor"
+
+msgid "Referrers_ColumnSocial"
+msgstr "Sotsiaalvõrgustik"
+
+msgid "Referrers_ColumnWebsite"
+msgstr "Veebileht"
+
+msgid "Referrers_ColumnWebsitePage"
+msgstr "Veebi lehekülg"
+
+msgid "Referrers_DirectEntry"
+msgstr "Otse sisenetud"
+
+msgid "Referrers_Keywords"
+msgstr "Võtmesõnad"
+
+msgid "Referrers_Referrer"
+msgstr "Viitaja"
+
+msgid "Referrers_ReferrerName"
+msgstr "Viitaja nimi"
+
+msgid "Referrers_Referrers"
+msgstr "Viitajad"
+
+msgid "Referrers_ReferrersOverview"
+msgstr "Viitajate ülevaade"
+
+msgid "Referrers_ReferrerTypes"
+msgstr "Kanali liigid"
+
+msgid "Referrers_SearchEngines"
+msgstr "Otsingumootorid"
+
+msgid "Referrers_Socials"
+msgstr "Sotsiaalvõrgustikud"
+
+msgid "Referrers_SubmenuSearchEngines"
+msgstr "Otsingumootorid ja võtmesõnad"
+
+msgid "Referrers_SubmenuWebsitesOnly"
+msgstr "Veebilehed"
+
+msgid "Referrers_Type"
+msgstr "Kanali liik"
+
+msgid "Referrers_TypeCampaigns"
+msgstr "%s kampaaniatest"
+
+msgid "Referrers_TypeDirectEntries"
+msgstr "%s otse sisenemist"
+
+msgid "Referrers_TypeSearchEngines"
+msgstr "%s otsingumootoritest"
+
+msgid "Referrers_TypeWebsites"
+msgstr "%s veebilehtedelt"
+
+msgid "Referrers_ViewAllReferrers"
+msgstr "Vaata kõiki viitajaid"
+
+msgid "Referrers_ViewReferrersBy"
+msgstr "Viitajate reastamise aluseks: %s"
+
+msgid "Referrers_Websites"
+msgstr "Veebilehed"
+
+msgid "Referrers_WidgetExternalWebsites"
+msgstr "Väliste viitajate nimekiri"
+
+msgid "Referrers_WidgetGetAll"
+msgstr "Kõik kanalid"
+
+msgid "Referrers_WidgetSocials"
+msgstr "Nimekiri sotsiaalvõrgustikest"
+
+msgid "Referrers_WidgetTopKeywordsForPages"
+msgstr "Lehe URL peamised võtmesõnad"
+
+msgid "Referrers_XPercentOfVisits"
+msgstr "%s külastustest"
+
+msgid "Resolution_ColumnConfiguration"
+msgstr "Konfiguratsioon"
+
+msgid "Resolution_ColumnResolution"
+msgstr "Resolutsioon"
+
+msgid "Resolution_Configurations"
+msgstr "Konfiguratsioonid"
+
+msgid "Resolution_Resolutions"
+msgstr "Ekraani resolutsioonid"
+
+msgid "Resolution_WidgetGlobalVisitors"
+msgstr "Kohalike külastajate seaded"
+
+msgid "Resolution_WidgetResolutions"
+msgstr "Ekraani resolutsioonid"
+
+msgid "SEO_AlexaRank"
+msgstr "Alexa reiting"
+
+msgid "SEO_Bing_IndexedPages"
+msgstr "Bingi indekseeritud lehti"
+
+msgid "SEO_DomainAge"
+msgstr "Domeeni vanus"
+
+msgid "SEO_Google_IndexedPages"
+msgstr "Googles indekseeritud lehed"
+
+msgid "SEO_Rank"
+msgstr "Reiting"
+
+msgid "SEO_SeoRankings"
+msgstr "SEO reiting"
+
+msgid "SEO_SEORankingsFor"
+msgstr "SEO reiting %s jaoks"
+
+msgid "ScheduledReports_AggregateReportsFormat"
+msgstr "Kuvamise seaded"
+
+msgid "ScheduledReports_AggregateReportsFormat_GraphsOnly"
+msgstr "Kuva ainult graafikud (tabelid puuduvad)"
+
+msgid "ScheduledReports_AggregateReportsFormat_TablesAndGraphs"
+msgstr "Kuva tabelid ja graafikud kõikidele raportitele"
+
+msgid "ScheduledReports_AggregateReportsFormat_TablesOnly"
+msgstr "(vaikimisi) Kuva raportite tabelid (ja olulistele mõõdikutele ka graafikud)"
+
+msgid "ScheduledReports_AlsoSendReportToTheseEmails"
+msgstr "Saada raport ka järgnevatele e-posti aadressitele (iga aadress eraldi real):"
+
+msgid "ScheduledReports_CancelAndReturnToReports"
+msgstr "Katkesta ja %1$snaase raportite nimekirja%2$s"
+
+msgid "ScheduledReports_CreateAndScheduleReport"
+msgstr "Loo ja ajasta raporti käivitumine"
+
+msgid "ScheduledReports_CreateReport"
+msgstr "Loo raport"
+
+msgid "ScheduledReports_CustomVisitorSegment"
+msgstr "Kohandatud külastaja segment:"
+
+msgid "ScheduledReports_EmailHello"
+msgstr "Tere,"
+
+msgid "ScheduledReports_EmailReports"
+msgstr "E-posti raportid"
+
+msgid "ScheduledReports_EmailSchedule"
+msgstr "E-posti ajastamine"
+
+msgid "ScheduledReports_FrontPage"
+msgstr "Esileht"
+
+msgid "ScheduledReports_Pagination"
+msgstr "Lehekülg %1$s / %2$s"
+
+msgid "ScheduledReports_PiwikReports"
+msgstr "Matomo raportid"
+
+msgid "ScheduledReports_ReportFormat"
+msgstr "Raporti formaat"
+
+msgid "ScheduledReports_ReportIncludeNWebsites"
+msgstr "Antud raport sisaldab põhimõõdikuid kõikide veebilehtede kohta, millel on vähemalt üks külastus (%s veebilehest, mis on kokku saadaval)."
+
+msgid "ScheduledReports_ReportSent"
+msgstr "Raport saadetud"
+
+msgid "ScheduledReports_ReportsIncluded"
+msgstr "Statistika osade kaasamine"
+
+msgid "ScheduledReports_ReportType"
+msgstr "Raporti saatmise kanal"
+
+msgid "ScheduledReports_ReportUpdated"
+msgstr "Raport uuendatud"
+
+msgid "ScheduledReports_SendReportNow"
+msgstr "Saada raport kohe"
+
+msgid "ScheduledReports_SendReportTo"
+msgstr "Raporti saaja"
+
+msgid "ScheduledReports_SentToMe"
+msgstr "Saada mulle"
+
+msgid "ScheduledReports_ThereIsNoReportToManage"
+msgstr "Puuduvad olemasolevad raportid veebilehe %s kohta"
+
+msgid "ScheduledReports_TopOfReport"
+msgstr "Tagasi üles"
+
+msgid "ScheduledReports_UpdateReport"
+msgstr "Uuenda raportit"
+
+msgid "SegmentEditor_AddANDorORCondition"
+msgstr "Lisa %s tingimus"
+
+msgid "SegmentEditor_AddNewSegment"
+msgstr "Lisa uus segment"
+
+msgid "SegmentEditor_AutoArchivePreProcessed"
+msgstr "segmentide raportid protsessitakse ette (kiirem, aga vajab archive.php cron seadistust)"
+
+msgid "SegmentEditor_AutoArchiveRealTime"
+msgstr "segmentide raportid protsessitakse reaalajas"
+
+msgid "SegmentEditor_ChooseASegment"
+msgstr "Vali segment"
+
+msgid "SegmentEditor_DefaultAllVisits"
+msgstr "Kõik külastused"
+
+msgid "SegmentEditor_DragDropCondition"
+msgstr "Lohista hiirega tingimused siia"
+
+msgid "SegmentEditor_OperatorAND"
+msgstr "JA"
+
+msgid "SegmentEditor_OperatorOR"
+msgstr "VÕI"
+
+msgid "SegmentEditor_SaveAndApply"
+msgstr "Salvesta ja rakenda"
+
+msgid "SegmentEditor_SegmentDisplayedAllWebsites"
+msgstr "kõik veebilehed"
+
+msgid "SegmentEditor_SegmentDisplayedThisWebsiteOnly"
+msgstr "ainult see veebileht"
+
+msgid "SegmentEditor_ThisSegmentIsVisibleTo"
+msgstr "Antud segment on nähtav:"
+
+msgid "SegmentEditor_VisibleToAllUsers"
+msgstr "kõik kasutajad"
+
+msgid "SegmentEditor_VisibleToMe"
+msgstr "mina"
+
+msgid "SitesManager_AddSite"
+msgstr "Lisa uus veebileht"
+
+msgid "SitesManager_Currency"
+msgstr "vääring"
+
+msgid "SitesManager_DeleteConfirm"
+msgstr "Oled sa kindel %s kustutamises?"
+
+msgid "SitesManager_DisableSiteSearch"
+msgstr "Ära kogu andmeid lehe otsingust"
+
+msgid "SitesManager_EnableEcommerce"
+msgstr "E-äri aktiivne"
+
+msgid "SitesManager_EnableSiteSearch"
+msgstr "Kogu andmeid lehe otsingust"
+
+msgid "SitesManager_ExceptionDeleteSite"
+msgstr "Seda veebilehte ei ole võimalik kustutada, sest see on ainuke registreeritud leht selles andmebaasis. Lisa ennem uus leht ja siis kustuta see leht."
+
+msgid "SitesManager_ExceptionEmptyName"
+msgstr "Saidi nimi ei saa olla tühi."
+
+msgid "SitesManager_ExceptionInvalidUrl"
+msgstr "Aadress '%s' ei ole kehtiv veebiaadress."
+
+msgid "SitesManager_ExceptionNoUrl"
+msgstr "Pead määratlema vähemasti ühe saidil oleva URL-i."
+
+msgid "SitesManager_ExcludedIps"
+msgstr "Väljaarvatud IPd"
+
+msgid "SitesManager_ExcludedParameters"
+msgstr "Väljaarvatud parameetrid"
+
+msgid "SitesManager_ExcludedUserAgents"
+msgstr "Väljaarvatud sirvikud"
+
+msgid "SitesManager_GlobalListExcludedIps"
+msgstr "Globaalselt väljaarvatud IPd"
+
+msgid "SitesManager_GlobalWebsitesSettings"
+msgstr "Globaalsed veebilehtede seaded"
+
+msgid "SitesManager_MainDescription"
+msgstr "Sinu veebianalüütika vajab veebilehti, mida hallata! Lisa, uuenda, kustuta veebilehti, ja näita Javascript koodi mida lisada veebilehtedele."
+
+msgid "SitesManager_NotAnEcommerceSite"
+msgstr "Ei ole e-äri lehekülg"
+
+msgid "SitesManager_NoWebsites"
+msgstr "Sul pole veebilehti, mida administreerida."
+
+msgid "SitesManager_PiwikOffersEcommerceAnalytics"
+msgstr "Matomo võimaldab detailsemat e-äri analüüsi ja raporteid. Loe rohkem %1$s e-äri analüüsist%2$s."
+
+msgid "SitesManager_SearchCategoryLabel"
+msgstr "Kategooria parameeter"
+
+msgid "SitesManager_SearchKeywordLabel"
+msgstr "Päringu parameeter"
+
+msgid "SitesManager_SelectACity"
+msgstr "Vali linn"
+
+msgid "SitesManager_ShowTrackingTag"
+msgstr "Kuva jälgimiskood"
+
+msgid "SitesManager_Sites"
+msgstr "Veebilehed"
+
+msgid "SitesManager_Timezone"
+msgstr "Ajavöönd"
+
+msgid "SitesManager_TrackingSiteSearch"
+msgstr "Lehe sisemisest otsingust andmete kogumine"
+
+msgid "SitesManager_TrackingTags"
+msgstr "Jälgimiskood lehele %s"
+
+msgid "SitesManager_Urls"
+msgstr "URL-id"
+
+msgid "SitesManager_Type"
+msgstr "Tüüp"
+
+msgid "SitesManager_UTCTimeIs"
+msgstr "UTC aeg on %s."
+
+msgid "SitesManager_WebsitesManagement"
+msgstr "Veebilehe haldamine"
+
+msgid "TagManager_CategoryClicks"
+msgstr "Hiireklikke"
+
+msgid "TagManager_CategoryDate"
+msgstr "Kuupäev"
+
+msgid "TagManager_CategoryDevice"
+msgstr "Seade"
+
+msgid "TagManager_CategoryEmail"
+msgstr "E-post"
+
+msgid "TagManager_CategoryErrors"
+msgstr "Vead"
+
+msgid "TagManager_CategoryHistory"
+msgstr "Ajalugu"
+
+msgid "TagManager_ComparisonContains"
+msgstr "sisaldab"
+
+msgid "TagManager_ComparisonEndsWith"
+msgstr "lõppeb"
+
+msgid "TagManager_ComparisonGreaterThan"
+msgstr "on rohkem kui"
+
+msgid "TagManager_ComparisonStartsWith"
+msgstr "algab kui"
+
+msgid "TagManager_Condition"
+msgstr "Tingimus"
+
+msgid "TagManager_Filter"
+msgstr "Filter"
+
+msgid "TagManager_PageTitleVariableName"
+msgstr "Lehe pealkiri"
+
+msgid "TagManager_PageUrlVariableName"
+msgstr "Lehe URL"
+
+msgid "TagManager_ReferrerUrlVariableName"
+msgstr "Viitaja URL"
+
+msgid "TagManager_ReferrerVariableName"
+msgstr "Viitaja URL"
+
+msgid "TagManager_Tag"
+msgstr "Silt"
+
+msgid "TagManager_Type"
+msgstr "Tüüp"
+
+msgid "TagManager_Version"
+msgstr "Versioon"
+
+msgid "Transitions_BouncesInline"
+msgstr "%s põrget"
+
+msgid "Transitions_DirectEntries"
+msgstr "Otse sisenemisi"
+
+msgid "Transitions_ErrorBack"
+msgstr "Mine tagasi eelmisele tegevusele"
+
+msgid "Transitions_ExitsInline"
+msgstr "%s väljumist"
+
+msgid "Transitions_FromCampaigns"
+msgstr "Tuldud kampaaniad"
+
+msgid "Transitions_FromPreviousPages"
+msgstr "Tuldud sisemised lehed"
+
+msgid "Transitions_FromPreviousPagesInline"
+msgstr "%s tuli sisemistelt lehtedelt"
+
+msgid "Transitions_FromPreviousSiteSearches"
+msgstr "Tuldud sisemised otsingud"
+
+msgid "Transitions_FromPreviousSiteSearchesInline"
+msgstr "%s tuli sisemisest otsingust"
+
+msgid "Transitions_FromSearchEngines"
+msgstr "Tuldud otsingumootorid"
+
+msgid "Transitions_FromWebsites"
+msgstr "Tuldud veebilehed"
+
+msgid "Transitions_IncomingTraffic"
+msgstr "Sisenev liiklus"
+
+msgid "Transitions_LoopsInline"
+msgstr "%s lehe korduvat laadimist"
+
+msgid "Transitions_NoDataForAction"
+msgstr "Tegevuse %s kohta puuduvad andmed"
+
+msgid "Transitions_OutgoingTraffic"
+msgstr "Väljuv liiklus"
+
+msgid "Transitions_ShareOfAllPageviews"
+msgstr "See leht sai %1$s vaatamist (%2$s kõigist vaatamistest)"
+
+msgid "Transitions_ToFollowingPages"
+msgstr "Sisemistele lehtedele"
+
+msgid "Transitions_ToFollowingPagesInline"
+msgstr "%s läks sisemistele lehtedele"
+
+msgid "Transitions_ToFollowingSiteSearches"
+msgstr "Sisemised otsingud"
+
+msgid "Transitions_ToFollowingSiteSearchesInline"
+msgstr "%s sisemist otsingut"
+
+msgid "Transitions_XOfAllPageviews"
+msgstr "%s kõigist antud lehe vaatamistest"
+
+msgid "Transitions_XOutOfYVisits"
+msgstr "%1$s (%2$s kõigist)"
+
+msgid "UserCountry_City"
+msgstr "Linn"
+
+msgid "UserCountry_CityAndCountry"
+msgstr "%1$s, %2$s"
+
+msgid "UserCountry_Continent"
+msgstr "Kontinent"
+
+msgid "UserCountry_Country"
+msgstr "Riik"
+
+msgid "UserCountry_country_a1"
+msgstr "Anonüümne vahendusserver"
+
+msgid "UserCountry_country_a2"
+msgstr "Satelliidi pakkuja"
+
+msgid "UserCountry_country_cat"
+msgstr "Katalaani kommuunid"
+
+msgid "UserCountry_country_o1"
+msgstr "Muu riik"
+
+msgid "UserCountry_CurrentLocationIntro"
+msgstr "Antud pakkuja andmete alusel on sinu praegune asukoht"
+
+msgid "UserCountry_DistinctCountries"
+msgstr "%s eri riigist"
+
+msgid "UserCountry_DownloadingDb"
+msgstr "Laen alla %s"
+
+msgid "UserCountry_DownloadNewDatabasesEvery"
+msgstr "Uuenda andmebaasi iga"
+
+msgid "UserCountry_FromDifferentCities"
+msgstr "erinevad linnad"
+
+msgid "UserCountry_GeoIPDatabases"
+msgstr "GeoIP andmebaas"
+
+msgid "UserCountry_Geolocation"
+msgstr "Geolokatsioon"
+
+msgid "UserCountry_GeolocationPageDesc"
+msgstr "Sellel lehel saad muuta, kuidas Matomo tuvastab külastajate asukoha infot."
+
+msgid "UserCountry_ISPDatabase"
+msgstr "ISP andmebaas"
+
+msgid "UserCountry_Latitude"
+msgstr "Laiuskraad"
+
+msgid "UserCountry_Location"
+msgstr "Asukoht"
+
+msgid "UserCountry_LocationDatabase"
+msgstr "Asukoha andmebaas"
+
+msgid "UserCountry_LocationProvider"
+msgstr "Asukohainfo pakkuja"
+
+msgid "UserCountry_Longitude"
+msgstr "Pikkuskraad"
+
+msgid "UserCountry_NoDataForGeoIPReport1"
+msgstr "Antud raporti jaoks puuduvad andmed, kuna Matomo asukoha andmebaas on tühi või külastajate IP aadresse ei ole olnud võimalik kaardil tuvastada."
+
+msgid "UserCountry_Organization"
+msgstr "Organisatsioon"
+
+msgid "UserCountry_OrgDatabase"
+msgstr "Organisatsiooni andmebaas"
+
+msgid "UserCountry_Region"
+msgstr "Regioon"
+
+msgid "UserCountry_SetupAutomaticUpdatesOfGeoIP"
+msgstr "Seadista GeoIP andmebaaside automaatsed uuendused"
+
+msgid "UserCountry_SubmenuLocations"
+msgstr "Asukohad"
+
+msgid "UserCountry_UpdaterWasLastRun"
+msgstr "Uuendaja käivitus viimati %s."
+
+msgid "UserCountry_WidgetLocation"
+msgstr "Külastajate asukohad"
+
+msgid "UserCountryMap_AndNOthers"
+msgstr "ja %s muud"
+
+msgid "UserCountryMap_Cities"
+msgstr "Linnad"
+
+msgid "UserCountryMap_Countries"
+msgstr "Riigid"
+
+msgid "UserCountryMap_DaysAgo"
+msgstr "%s päeva tagasi"
+
+msgid "UserCountryMap_GoalConversions"
+msgstr "%s tulutoovaid eesmärke"
+
+msgid "UserCountryMap_HoursAgo"
+msgstr "%s tundi tagasi"
+
+msgid "UserCountryMap_map"
+msgstr "kaart"
+
+msgid "UserCountryMap_MinutesAgo"
+msgstr "%s minutit tagasi"
+
+msgid "UserCountryMap_None"
+msgstr "Mitte ükski"
+
+msgid "UserCountryMap_NoVisit"
+msgstr "Külastused puuduvad"
+
+msgid "UserCountryMap_RealTimeMap"
+msgstr "Reaalaja kaart"
+
+msgid "UserCountryMap_Regions"
+msgstr "Regioonid"
+
+msgid "UserCountryMap_Searches"
+msgstr "%s otsingut"
+
+msgid "UserCountryMap_SecondsAgo"
+msgstr "%s sekundit tagasi"
+
+msgid "UserCountryMap_ShowingVisits"
+msgstr "Tuvastatud asukohaga külastused viimase"
+
+msgid "UserCountryMap_VisitorMap"
+msgstr "Külastuste kaart"
+
+msgid "UserCountryMap_WorldWide"
+msgstr "Globaalne"
+
+msgid "UserId_UserId"
+msgstr "KasutajaID"
+
+msgid "UserId_UserReportTitle"
+msgstr "KAsutaja ID-d"
+
+msgid "UserLanguage_BrowserLanguage"
+msgstr "Veebisirvija keel"
+
+msgid "UserLanguage_LanguageCode"
+msgstr "Keele kood"
+
+msgid "UsersManager_AddUser"
+msgstr "Lisa uus kasutaja"
+
+msgid "UsersManager_Alias"
+msgstr "Alias"
+
+msgid "UsersManager_AllWebsites"
+msgstr "Kõik veebilehed"
+
+msgid "UsersManager_AnonymousUser"
+msgstr "Anonüümne kasutaja"
+
+msgid "UsersManager_ApplyToAllWebsites"
+msgstr "Laienda kõigile veebilehtedele"
+
+msgid "UsersManager_ClickHereToSetTheCookieOnDomain"
+msgstr "Vajuta siia, et käesolevasse veebisirvikusse tekitada küpsis, mis ei lase sinu külastusi arvestada veebilehel %s"
+
+msgid "UsersManager_DeleteConfirm"
+msgstr "Kas oled kindel, et soovid %s kustutada?"
+
+msgid "UsersManager_Email"
+msgstr "E-post"
+
+msgid "UsersManager_ExceptionDeleteDoesNotExist"
+msgstr "Kasutajat nimega '%s' ei eksisteeri seepärast ei saa teda ka kustutada."
+
+msgid "UsersManager_ExceptionEditAnonymous"
+msgstr "Anonüümset kasutajat ei saa muuta ega kustutada. Matomo kasutab seda määratlemaks kasutajat, kes ei ole veel sisse loginud. Näiteks, saad teha statistika lubada 'view' statistikat õigused 'anonymous' kasutajale."
+
+msgid "UsersManager_ExceptionEmailExists"
+msgstr "Sellise e-mailiga '%s' kasutaja on olemas."
+
+msgid "UsersManager_ExceptionInvalidEmail"
+msgstr "Emaili aadress ei ole õiges formaadis."
+
+msgid "UsersManager_ExceptionUserDoesNotExist"
+msgstr "Kasutaja '%s' puudub."
+
+msgid "UsersManager_ExcludeVisitsViaCookie"
+msgstr "Arva ennast külastajate hulgast välja kasutades küpsist"
+
+msgid "UsersManager_LastSeen"
+msgstr "Viimati nähtud"
+
+msgid "UsersManager_ManageAccess"
+msgstr "Halda ligipääsu"
+
+msgid "UsersManager_MenuAnonymousUserSettings"
+msgstr "Tundmatu kasutaja seaded"
+
+msgid "UsersManager_MenuUsers"
+msgstr "Kasutajaid"
+
+msgid "UsersManager_MenuUserSettings"
+msgstr "Kasutaja seaded"
+
+msgid "UsersManager_MenuPersonal"
+msgstr "Isiklik"
+
+msgid "UsersManager_PersonalSettings"
+msgstr "Isiklikud seaded"
+
+msgid "UsersManager_NoteNoAnonymousUserAccessSettingsWontBeUsed2"
+msgstr "Märkus: Sa ei saa antud sätteid muuta, kuna puuduvad veebilehed, millele oleks anonüümne ligipääs Matomo lubatud."
+
+msgid "UsersManager_NoUsersExist"
+msgstr "Hetkel puuduvad teised kasutajad."
+
+msgid "UsersManager_PrivAdmin"
+msgstr "Haldaja"
+
+msgid "UsersManager_PrivNone"
+msgstr "Ligipääs puudub"
+
+msgid "UsersManager_PrivView"
+msgstr "Vaata"
+
+msgid "UsersManager_ReportDateToLoadByDefault"
+msgstr "Vaikimisi laetav raporti kuupäev"
+
+msgid "UsersManager_ReportToLoadByDefault"
+msgstr "Vaikimisi laetav raport"
+
+msgid "UsersManager_SuperUserAccessManagement"
+msgstr "Halda peakasutaja ligipääse"
+
+msgid "UsersManager_TheLoginScreen"
+msgstr "Sisselogimise vaade"
+
+msgid "UsersManager_ThereAreCurrentlyNRegisteredUsers"
+msgstr "Hetkel on %s registreeritud kasutajat."
+
+msgid "UsersManager_TypeYourPasswordAgain"
+msgstr "Korda oma uut salasõna."
+
+msgid "UsersManager_User"
+msgstr "Kasutaja"
+
+msgid "UsersManager_UsersManagement"
+msgstr "Kasutajate haldamine"
+
+msgid "UsersManager_UsersManagementMainDescription"
+msgstr "Loo uusi kasutajakontosid või uuenda olemasolevaid. Saad seada nende õigused ülalpool."
+
+msgid "UsersManager_YourUsernameCannotBeChanged"
+msgstr "Sinu kasutajanime ei saa muuta."
+
+msgid "UsersManager_YourVisitsAreNotIgnored"
+msgstr "%1$sMatomo ei arva sinu külastusi statistikast välja%2$s (ignoreerimiseks vajalikku küpsist ei leitud sirvikust)."
+
+msgid "UsersManager_ShowAll"
+msgstr "Kuva kõik"
+
+msgid "UsersManager_Username"
+msgstr "Kasutajanimi"
+
+msgid "VisitFrequency_ColumnActionsByReturningVisits"
+msgstr "Tegevused korduvate külastuste kaupa"
+
+msgid "VisitFrequency_ColumnAverageVisitDurationForReturningVisitors"
+msgstr "Korduva külastuse keskmine aeg (sek)"
+
+msgid "VisitFrequency_ColumnAvgActionsPerReturningVisit"
+msgstr "Keskmine tegevuste arv korduvatel külastustel"
+
+msgid "VisitFrequency_ColumnBounceCountForReturningVisits"
+msgstr "Korduvate külastuste põrke arv"
+
+msgid "VisitFrequency_ColumnBounceRateForReturningVisits"
+msgstr "Korduvate külastuste põrkemäär"
+
+msgid "VisitFrequency_ColumnMaxActionsInReturningVisit"
+msgstr "Maksimaalne tegevuste arv ühel korduval külastusel"
+
+msgid "VisitFrequency_ColumnNbReturningVisitsConverted"
+msgstr "Tulutoovaid korduvaid külastusi"
+
+msgid "VisitFrequency_ColumnReturningVisits"
+msgstr "Korduvad külastused"
+
+msgid "VisitFrequency_ColumnSumVisitLengthReturning"
+msgstr "Korduvate külastuste kogu lehel viibitud aeg (sek)"
+
+msgid "VisitFrequency_ColumnUniqueReturningVisitors"
+msgstr "Unikaalsed korduvkülastajad"
+
+msgid "VisitFrequency_ReturnAvgActions"
+msgstr "tegevust korduvatel külastustel"
+
+msgid "VisitFrequency_ReturningVisitsDocumentation"
+msgstr "See on korduvate külastuste ülevaade."
+
+msgid "VisitFrequency_ReturnVisits"
+msgstr "korduvad külastused"
+
+msgid "VisitFrequency_SubmenuFrequency"
+msgstr "Sagedus"
+
+msgid "VisitFrequency_WidgetGraphReturning"
+msgstr "Korduvate külastuste graafik"
+
+msgid "VisitFrequency_WidgetOverview"
+msgstr "Sageduse ülevaade"
+
+msgid "VisitTime_ColumnLocalTime"
+msgstr "Lokaalne aeg"
+
+msgid "VisitTime_ColumnServerTime"
+msgstr "Serveri aeg"
+
+msgid "VisitTime_DayOfWeek"
+msgstr "Nädalapäev"
+
+msgid "VisitTime_LocalTime"
+msgstr "Külastused kohaliku kellaaja järgi"
+
+msgid "VisitTime_NHour"
+msgstr "%s"
+
+msgid "VisitTime_ServerTime"
+msgstr "Külastused serveri kellaaja järgi"
+
+msgid "VisitTime_SubmenuTimes"
+msgstr "Külastusajad"
+
+msgid "VisitTime_VisitsByDayOfWeek"
+msgstr "Külastused nädalapäeva järgi"
+
+msgid "VisitTime_WidgetLocalTime"
+msgstr "Külastused kohaliku kellaaja järgi"
+
+msgid "VisitTime_WidgetServerTime"
+msgstr "Külastused serveri kellaaja järgi"
+
+msgid "VisitorInterest_BetweenXYMinutes"
+msgstr "%1$s-%2$s min"
+
+msgid "VisitorInterest_BetweenXYSeconds"
+msgstr "%1$s-%2$ss"
+
+msgid "VisitorInterest_ColumnPagesPerVisit"
+msgstr "Lehekülgi külastuse jooksul"
+
+msgid "VisitorInterest_ColumnVisitDuration"
+msgstr "Külastuse kestvus"
+
+msgid "VisitorInterest_Engagement"
+msgstr "Korduvused"
+
+msgid "VisitorInterest_NPages"
+msgstr "%s lehte"
+
+msgid "VisitorInterest_OnePage"
+msgstr "1 leht"
+
+msgid "VisitorInterest_VisitNum"
+msgstr "Külastuste arv"
+
+msgid "VisitorInterest_VisitsByDaysSinceLast"
+msgstr "Külastused viimase külastusaja järgi"
+
+msgid "VisitorInterest_visitsByVisitCount"
+msgstr "Külastused külastuste arvu järgi"
+
+msgid "VisitorInterest_VisitsPerDuration"
+msgstr "Külastused külastuste pikkuse järgi"
+
+msgid "VisitorInterest_VisitsPerNbOfPages"
+msgstr "Külastused külastatud lehtede arvu järgi"
+
+msgid "VisitorInterest_WidgetLengths"
+msgstr "Külastuste kestvus"
+
+msgid "VisitorInterest_WidgetPages"
+msgstr "Erinevaid lehti külastuse kohta"
+
+msgid "VisitorInterest_WidgetVisitsByDaysSinceLast"
+msgstr "Külastused viimase külastusaja järgi"
+
+msgid "VisitsSummary_AverageGenerationTime"
+msgstr "Keskmine genereerimise aeg"
+
+msgid "VisitsSummary_AverageVisitDuration"
+msgstr "keskmine külastuse kestus"
+
+msgid "VisitsSummary_GenerateQueries"
+msgstr "%s katkestatud päringut"
+
+msgid "VisitsSummary_GenerateTime"
+msgstr "Lehe genereerimiseks kulus %s sekundit"
+
+msgid "VisitsSummary_NbActionsDescription"
+msgstr "%s tegevust"
+
+msgid "VisitsSummary_NbDownloadsDescription"
+msgstr "allalaadimised"
+
+msgid "VisitsSummary_VisitsSummary"
+msgstr "Külastuste kokkuvõte"
+
+msgid "VisitsSummary_VisitsSummaryDocumentation"
+msgstr "See on külastuste muutuse ajas ülevaade."
+
+msgid "VisitsSummary_WidgetLastVisits"
+msgstr "Viimaste külastuste graafik"
+
+msgid "VisitsSummary_WidgetOverviewGraph"
+msgstr "Graafikutega ülevaade"
+
+msgid "VisitsSummary_WidgetVisits"
+msgstr "Külastuste ülevaade"
+
+msgid "WebsiteMeasurable_Website"
+msgstr "Veebileht"
+
+msgid "WebsiteMeasurable_Websites"
+msgstr "Veebisaidid"
+
+msgid "Widgetize_OpenInNewWindow"
+msgstr "Ava uues aknas"

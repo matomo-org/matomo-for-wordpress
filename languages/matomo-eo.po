@@ -1,0 +1,4403 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-10-21T03:38:20+00:00\n"
+"PO-Revision-Date: 2019-10-21T03:38:20+00:00\n"
+"Language: eo\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Domain: matomo\n"
+
+msgid "General_12HourClock"
+msgstr "12-hora horloĝo"
+
+msgid "General_24HourClock"
+msgstr "24-hora horloĝo"
+
+msgid "General_AbandonedCarts"
+msgstr "Forlasitaj aĉet-ĉaretoj"
+
+msgid "General_AboutPiwikX"
+msgstr "Pri Matomo %s"
+
+msgid "General_Action"
+msgstr "Ago"
+
+msgid "General_Actions"
+msgstr "Agoj"
+
+msgid "General_Add"
+msgstr "Aldoni"
+
+msgid "General_AfterEntry"
+msgstr "post eniri ĉi tien"
+
+msgid "General_All"
+msgstr "Ĉiuj"
+
+msgid "General_AllWebsitesDashboard"
+msgstr "Panelo de ĉiuj retejoj"
+
+msgid "General_And"
+msgstr "kaj"
+
+msgid "General_API"
+msgstr "API"
+
+msgid "General_Apply"
+msgstr "Apliki"
+
+msgid "General_AuthenticationMethodSmtp"
+msgstr "Aŭtentiga metodo por SMTP"
+
+msgid "General_AverageOrderValue"
+msgstr "Mezvaloro de la mendoj"
+
+msgid "General_AveragePrice"
+msgstr "Mezprezo"
+
+msgid "General_AverageQuantity"
+msgstr "Meznombro"
+
+msgid "General_BackToPiwik"
+msgstr "Reen al matomo"
+
+msgid "General_Broken"
+msgstr "Rompita"
+
+msgid "General_BrokenDownReportDocumentation"
+msgstr "Ĝi dividiĝas en diversajn raportojn kiujn oni montras en la suba parto de la paĝo. Vi povas grandigi la diagramojn klikante sur la raporto kiun vi volas rigardi."
+
+msgid "General_Cancel"
+msgstr "Nuligi"
+
+msgid "General_CannotUnzipFile"
+msgstr "La dosiero .zip-a ne estas maldensigebla %1$s:%2$s"
+
+msgid "General_ChangePassword"
+msgstr "Ŝanĝi pasvorto"
+
+msgid "General_ChangeTagCloudView"
+msgstr "Bonvolu, rimarki ke vi povas vidigi la raportojn en aliaj diversaj formoj ol etiked-nubo. Uzu la kontrolilojn en la suba parto de la paĝo por fari tion."
+
+msgid "General_ChooseDate"
+msgstr "Elekti daton. La selektita estas nun: %s"
+
+msgid "General_ChooseLanguage"
+msgstr "Elekti lingvon"
+
+msgid "General_ChoosePeriod"
+msgstr "Elekti intertempon"
+
+msgid "General_ClickHere"
+msgstr "Klaku ĉi tie por pli da informo"
+
+msgid "General_Close"
+msgstr "Fermi"
+
+msgid "General_ClickToSearch"
+msgstr "klaku por serĉi"
+
+msgid "General_Copy"
+msgstr "Kopii"
+
+msgid "General_Confirm"
+msgstr "Konfirmi"
+
+msgid "General_ColumnActionsPerVisit"
+msgstr "Agoj vizite"
+
+msgid "General_ColumnActionsPerVisitDocumentation"
+msgstr "La meznombro da agoj (paĝmontroj, elŝutaĵoj aŭ eksteraj ligiloj)"
+
+msgid "General_ColumnAverageTimeOnPage"
+msgstr "Meztempo en la retpaĝo"
+
+msgid "General_ColumnAverageTimeOnPageDocumentation"
+msgstr "Meztempo pasigita de la vizitantoj en ĉi-retpaĝo (nur la retpaĝo, ne la tuta retejo)"
+
+msgid "General_ColumnAvgTimeOnSite"
+msgstr "Meztempo en la retejo"
+
+msgid "General_ColumnAvgTimeOnSiteDocumentation"
+msgstr "Meztempo de la vizitoj"
+
+msgid "General_ColumnBounceRate"
+msgstr "Procento de tujforirintoj"
+
+msgid "General_ColumnBounceRateDocumentation"
+msgstr "Elcento da vizitoj kiuj havas nur unu paĝmontron. Ĝi signifas ke la vizitantoj forlasis la retejon rekte el la enirpaĝo."
+
+msgid "General_ColumnBounces"
+msgstr "Revenoj"
+
+msgid "General_RealTime"
+msgstr "realtempa"
+
+msgid "General_ColumnBouncesDocumentation"
+msgstr "Nombro da vizitoj kiuj komenciĝis kaj finiĝis en ĉi-retpaĝo. Ĝi signifas ke la vizitanto forlasis la retejon post vidigi nur ĉi-retpaĝon."
+
+msgid "General_ColumnConversionRate"
+msgstr "Konverta Indico"
+
+msgid "General_ColumnConversionRateDocumentation"
+msgstr "Elcento da vizitoj kiuj lanĉis konvertocelon."
+
+msgid "General_ColumnDestinationPage"
+msgstr "Destina paĝo"
+
+msgid "General_ColumnEntrances"
+msgstr "Eniroj"
+
+msgid "General_ColumnEntrancesDocumentation"
+msgstr "Nombro da vizitoj kiuj komenciĝis en ĉi-paĝo"
+
+msgid "General_ColumnExitRate"
+msgstr "Indico de eliro."
+
+msgid "General_ColumnExitRateDocumentation"
+msgstr "Elcento da vizitoj kiuj forlasis la retejon post vidigi ĉi retpaĝon."
+
+msgid "General_ColumnExits"
+msgstr "Eliroj"
+
+msgid "General_ColumnExitsDocumentation"
+msgstr "Nombro da vizitoj kiuj finiĝis en ĉi-paĝo"
+
+msgid "General_ColumnKeyword"
+msgstr "Klavvorto"
+
+msgid "General_ColumnLabel"
+msgstr "Etikedo"
+
+msgid "General_ColumnMaxActions"
+msgstr "Plej granda nombro da agoj en unu vizito"
+
+msgid "General_ColumnNbActions"
+msgstr "Agoj"
+
+msgid "General_ColumnNbActionsDocumentation"
+msgstr "La nombro da agoj plenumitaj de viaj vizitantoj. Agoj estas paĝmontroj, elŝutaĵoj aŭ eksteraj ligiloj."
+
+msgid "General_ColumnNbUniqVisitors"
+msgstr "Unikaj vizitantoj"
+
+msgid "General_ColumnNbUsers"
+msgstr "Uzantoj"
+
+msgid "General_ColumnNbVisits"
+msgstr "Vizitoj"
+
+msgid "General_ColumnPageBounceRateDocumentation"
+msgstr "Elcento da vizitoj kiuj komenciĝis en ĉi-retpaĝo kaj rekte forlasis la retejon."
+
+msgid "General_ColumnPageviews"
+msgstr "Paĝmontroj"
+
+msgid "General_ColumnPageviewsDocumentation"
+msgstr "La nombro da fojoj kiom ĉi-retpaĝo estis vizitita"
+
+msgid "General_ColumnPercentageVisits"
+msgstr "%%Vizitoj"
+
+msgid "General_ColumnSumVisitLength"
+msgstr "Totala tempo pasigita de via vizitantoj (en sekundoj)"
+
+msgid "General_ColumnTotalPageviews"
+msgstr "Totalaj paĝomontroj"
+
+msgid "General_ColumnUniqueEntrances"
+msgstr "Unikaj eniroj"
+
+msgid "General_ColumnUniqueExits"
+msgstr "Unikaj eliroj"
+
+msgid "General_ColumnUniquePageviews"
+msgstr "Unikaj paĝmontroj"
+
+msgid "General_ColumnUniquePageviewsDocumentation"
+msgstr "Nombro da vizitoj kiuj inkludas ĉi-retpaĝon. Se retpaĝo estis vidigita plurfoje dum la lasta vizito, ĝi estos kalkulita nur unufoje."
+
+msgid "General_ColumnValuePerVisit"
+msgstr "Elspezo vizite"
+
+msgid "General_ColumnVisitDuration"
+msgstr "Tempo de la vizito (en sekundoj)"
+
+msgid "General_ColumnVisitsWithConversions"
+msgstr "Vizitoj kun konvertoj"
+
+msgid "General_ComputedMetricRateShortDocumentation"
+msgstr "La elcento de \"%1$s\"."
+
+msgid "General_ComputedMetricCountDocumentation"
+msgstr "%s"
+
+msgid "General_ComputedMetricSum"
+msgstr "Totala %s"
+
+msgid "General_ComputedMetricMax"
+msgstr "Maks. %s"
+
+msgid "General_ComputedMetricMaxDocumentation"
+msgstr "Maksimuma valoro por %s"
+
+msgid "General_ComputedMetricMin"
+msgstr "Min%s"
+
+msgid "General_ComputedMetricMinDocumentation"
+msgstr "Minimuma valoro por %s"
+
+msgid "General_ComputedMetricUniqueCount"
+msgstr "Unika%s"
+
+msgid "General_ComputedMetricCountWithValue"
+msgstr "Eniroj kun %s"
+
+msgid "General_Continue"
+msgstr "Daŭrigi"
+
+msgid "General_CreatedByUser"
+msgstr "Kreita de %s"
+
+msgid "General_CurrentMonth"
+msgstr "Nuna monato"
+
+msgid "General_CurrentWeek"
+msgstr "Nuna semajno"
+
+msgid "General_CurrentYear"
+msgstr "Nuna jaro"
+
+msgid "General_Daily"
+msgstr "Ĉiutage"
+
+msgid "General_DailyReport"
+msgstr "ĉiutage"
+
+msgid "General_DailyReports"
+msgstr "Ĉiutagaj raportoj"
+
+msgid "General_DailySum"
+msgstr "ĉiutaga adicio"
+
+msgid "General_DashboardForASpecificWebsite"
+msgstr "Panelo de specifa retejo"
+
+msgid "General_DataForThisGraphHasBeenPurged"
+msgstr "La datumoj por ĉi diagramo estas pli ol %s monatojn malnovaj kaj konsekvence estis senrubigitaj."
+
+msgid "General_DataForThisTagCloudHasBeenPurged"
+msgstr "La datumoj por ĉi etiked-nubo estis pli ol %s monatojn malnova kaj konsekvence estis senrubigitaj."
+
+msgid "General_Date"
+msgstr "Dato"
+
+msgid "General_DateRange"
+msgstr "Intertempo:"
+
+msgid "General_DateRangeFrom"
+msgstr "De"
+
+msgid "General_DateRangeFromTo"
+msgstr "de %1$s ĝis %2$s"
+
+msgid "General_DateRangeTo"
+msgstr "Ĝis"
+
+msgid "General_DaysSinceFirstVisit"
+msgstr "Tagoj ekde la unua vizito"
+
+msgid "General_DaysSinceLastEcommerceOrder"
+msgstr "Tagoj ekde la lasta mendo"
+
+msgid "General_DaysSinceLastVisit"
+msgstr "Tagoj ekde la lasta vizito"
+
+msgid "General_Default"
+msgstr "Implicita"
+
+msgid "General_DefaultAppended"
+msgstr "(defaùlta)"
+
+msgid "General_Delete"
+msgstr "Forigi"
+
+msgid "General_Description"
+msgstr "Priskribo"
+
+msgid "General_Desktop"
+msgstr "Labortablo"
+
+msgid "General_Details"
+msgstr "Detaloj"
+
+msgid "General_Discount"
+msgstr "Rabato"
+
+msgid "General_DisplaySimpleTable"
+msgstr "Vidigi simplan tabelon."
+
+msgid "General_DisplayTableWithGoalMetrics"
+msgstr "Vidigi tabelon kun mezuroj pri celoj"
+
+msgid "General_DisplayTableWithMoreMetrics"
+msgstr "Vidigi tabelon kun pli da mezuroj"
+
+msgid "General_Documentation"
+msgstr "Dokumentaro"
+
+msgid "General_Donate"
+msgstr "Donaci"
+
+msgid "General_Done"
+msgstr "Farite"
+
+msgid "General_Download"
+msgstr "Elŝuti"
+
+msgid "General_DownloadFail_FileExists"
+msgstr "La dosiero %sjam ekzistas!"
+
+msgid "General_DownloadFullVersion"
+msgstr "%1$sElŝutu%2$s la plenan version! Kontrolu %3$s"
+
+msgid "General_DownloadPleaseRemoveExisting"
+msgstr "Se vi volas anstataùi ĝin, bonvole forviŝu la ekzistantan dosieron"
+
+msgid "General_Downloads"
+msgstr "Elŝuti"
+
+msgid "General_EcommerceOrders"
+msgstr "Retkomercaj Mendoj"
+
+msgid "General_EcommerceVisitStatusDesc"
+msgstr "Vizitu staton de la Reta komerco je la fino de la vizito"
+
+msgid "General_EcommerceVisitStatusEg"
+msgstr "Ekzemple, por elekti ĉiujn la vizitojn kiuj faris mendojn, la API-demando enhavos %s"
+
+msgid "General_Edit"
+msgstr "Redakti"
+
+msgid "General_EncryptedSmtpTransport"
+msgstr "Enmeti la transportan tavolon de ĉifrado bezonata de via SMTP servilo."
+
+msgid "General_Error"
+msgstr "Eraro"
+
+msgid "General_Errors"
+msgstr "Eraroj"
+
+msgid "General_ExceptionConfigurationFileNotFound"
+msgstr "La konfigurdosiero {%s} ne estis trovita."
+
+msgid "General_ExceptionFileIntegrity"
+msgstr "Testo de integreco fiaskis: %s"
+
+msgid "General_ExceptionFilesizeMismatch"
+msgstr "Miskongruo en la dosiergrando: %1$s (atendita longo: %2$s, trovita: %3$s)"
+
+msgid "General_ExceptionInvalidAggregateReportsFormat"
+msgstr "La formato kunmetitaj raportoj '%1$s' ne estas valida. Anstataŭe provu iun el la sekvaj: %2$s."
+
+msgid "General_ExceptionInvalidArchiveTimeToLive"
+msgstr "La hodiaŭa arkivo devas havi vivtempon en sekundoj kiu estu pli granda ol nulo"
+
+msgid "General_ExceptionInvalidDateFormat"
+msgstr "La formato de la datumoj devas esti %1$s aŭ iu subtenita de la funkcio %2$s (vidu %3$s por pli da informo)"
+
+msgid "General_ExceptionInvalidDateRange"
+msgstr "La dato '%1$s' ne estas korekta intertempo. Ĝi devas havi la sekvan formaton: %2$s."
+
+msgid "General_ExceptionInvalidPeriod"
+msgstr "La periodo '%1$s' ne estas subtenita. Anstataŭe provu iun el la sekvaj: %2$s."
+
+msgid "General_ExceptionInvalidRendererFormat"
+msgstr "La bildiga formato '%1$s' ne estas valida. Anstataŭe provu iun el la la sekvaj: %2$s."
+
+msgid "General_ExceptionInvalidReportRendererFormat"
+msgstr "La formato '%1$s' de raporto ne estas valida. Anstataŭe provu iun el la sekvaj: %2$s."
+
+msgid "General_ExceptionInvalidStaticGraphType"
+msgstr "La tipo de statika diagramo '%1$s' ne estas valida. Anstataŭe provu iun el la sekvaj: %2$s."
+
+msgid "General_ExceptionInvalidToken"
+msgstr "La ĵetono ne estas valida."
+
+msgid "General_ExceptionLanguageFileNotFound"
+msgstr "La lingvo-dosiero '%s' ne estis trovita"
+
+msgid "General_ExceptionMethodNotFound"
+msgstr "La metodo '%1$s' ne ĉeestas en la modulo '%2$s'."
+
+msgid "General_ExceptionMissingFile"
+msgstr "La dosiero %s ne estis trovita"
+
+msgid "General_ExceptionUnexpectedFilePleaseDelete"
+msgstr "Bonvole forviŝu tiujn dosierojn por eviti erarojn."
+
+msgid "General_ExceptionUnexpectedDirectoryPleaseDelete"
+msgstr "Bonvole forviŝu tiujn dosierojn por eviti erarojn."
+
+msgid "General_ExceptionFileToDelete"
+msgstr "Dosiero por forviŝi %s"
+
+msgid "General_ExceptionDirectoryToDelete"
+msgstr "Dsierujo por forviŝi:%s"
+
+msgid "General_ExceptionNonceMismatch"
+msgstr "Oni ne povas kontroli la sekurigan ĵetonon de ĉi-formularo."
+
+msgid "General_ExceptionPrivilege"
+msgstr "Vi ne povas atingi ĉi risurcon ĉar ĝi bezonas %s atingo"
+
+msgid "General_ExceptionUnableToStartSession"
+msgstr "Ne eblas startigi la seancon."
+
+msgid "General_ExceptionUndeletableFile"
+msgstr "Ne eblas forigi %s"
+
+msgid "General_ExceptionUnreadableFileDisabledMethod"
+msgstr "La konfigurdosiero {%1$s} estas ne legebla. Via gastigo devas malpermesi %2$s."
+
+msgid "General_Export"
+msgstr "Eksporti"
+
+msgid "General_ExportAsImage"
+msgstr "Eksporti kiel bildo"
+
+msgid "General_ExportThisReport"
+msgstr "Eksporti la datumaron en aliaj formatoj"
+
+msgid "General_Faq"
+msgstr "Respondaro"
+
+msgid "General_First"
+msgstr "Unua"
+
+msgid "General_ForExampleShort"
+msgstr "ekz."
+
+msgid "General_Forums"
+msgstr "Forumoj"
+
+msgid "General_FromReferrer"
+msgstr "el"
+
+msgid "General_Generic"
+msgstr "Ĝenerala"
+
+msgid "General_GeneralInformation"
+msgstr "Ĝenerala informo."
+
+msgid "General_GeneralSettings"
+msgstr "Ĝeneralaj agordoj"
+
+msgid "General_GetStarted"
+msgstr "Komenciĝi"
+
+msgid "General_GiveUsYourFeedback"
+msgstr "Donu al ni viajn prijuĝajn rimarkojn!"
+
+msgid "General_Goal"
+msgstr "Celo"
+
+msgid "General_GoTo"
+msgstr "Iri al %s"
+
+msgid "General_GoTo2"
+msgstr "Iri"
+
+msgid "General_HelloUser"
+msgstr "Saluton, %s!"
+
+msgid "General_Help"
+msgstr "Helpo"
+
+msgid "General_Hide"
+msgstr "kaŝi"
+
+msgid "General_Id"
+msgstr "Id"
+
+msgid "General_Installed"
+msgstr "Insatalita"
+
+msgid "General_InvalidDateRange"
+msgstr "Nevalida intertempo, bonvolu provi denove"
+
+msgid "General_InvalidResponse"
+msgstr "La ricevitaj datumoj ne estas validaj."
+
+msgid "General_IP"
+msgstr "IP"
+
+msgid "General_Language"
+msgstr "Lingvo"
+
+msgid "General_Languages"
+msgstr "Lingvoj"
+
+msgid "General_LastDays"
+msgstr "Lastaj %s tagoj (ne inkludante la hodiaŭan)"
+
+msgid "General_LastDaysShort"
+msgstr "Lastaj %s tagoj"
+
+msgid "General_Loading"
+msgstr "Ŝargado..."
+
+msgid "General_LoadingData"
+msgstr "Ŝargado de datumoj..."
+
+msgid "General_Locale"
+msgstr "eo.UTF-8"
+
+msgid "General_Logout"
+msgstr "Elsaluti"
+
+msgid "General_MainMetrics"
+msgstr "Ĉefaj mezuroj."
+
+msgid "General_Matches"
+msgstr "Trovaĵoj"
+
+msgid "General_MediumToHighTrafficItIsRecommendedTo"
+msgstr "Por retejoj kun mezaj kaj grandaj datumtrafiko, ni konsilas kalkuli hodiaŭajn raportojn maksimume ĉiun duonhoron (%1$s sekundoj) aŭ ĉiun horon (%2$s sekundoj)."
+
+msgid "General_Metadata"
+msgstr "Metadatumoj"
+
+msgid "General_Metric"
+msgstr "Mezuro"
+
+msgid "General_Metrics"
+msgstr "Mezuroj"
+
+msgid "General_MetricsToPlot"
+msgstr "Mezuroj por kalkuli"
+
+msgid "General_MetricToPlot"
+msgstr "Mezuro por kalkuli"
+
+msgid "General_Mobile"
+msgstr "Portebla"
+
+msgid "General_Monthly"
+msgstr "Ĉiumonate"
+
+msgid "General_MonthlyReport"
+msgstr "ĉiumonate"
+
+msgid "General_MonthlyReports"
+msgstr "Ĉiumonataj raportoj"
+
+msgid "General_More"
+msgstr "Pli"
+
+msgid "General_MoreDetails"
+msgstr "Pli detala"
+
+msgid "General_MoreLowerCase"
+msgstr "pli"
+
+msgid "General_MultiSitesSummary"
+msgstr "Ĉiuj la retejoj"
+
+msgid "General_Name"
+msgstr "Nomo"
+
+msgid "General_NbActions"
+msgstr "Nombro da agoj"
+
+msgid "General_NbInteractions"
+msgstr "Nombro da interagoj"
+
+msgid "General_NbSearches"
+msgstr "Nombro da enaj serĉoj"
+
+msgid "General_NeedMoreHelp"
+msgstr "Pli da helpo?"
+
+msgid "General_Never"
+msgstr "Neniam"
+
+msgid "General_New"
+msgstr "Nova"
+
+msgid "General_NewUpdatePiwikX"
+msgstr "Nova ĝisdatigo: Matomo %s"
+
+msgid "General_NewVisitor"
+msgstr "Nova vizitanto"
+
+msgid "General_NewVisits"
+msgstr "Novaj vizitoj"
+
+msgid "General_Next"
+msgstr "Sekva"
+
+msgid "General_No"
+msgstr "Ne"
+
+msgid "General_NoDataForGraph"
+msgstr "Ne estas datumoj por ĉi diagramo."
+
+msgid "General_NoDataForTagCloud"
+msgstr "Ne estas datumoj por ĉi etiked-nubo"
+
+msgid "General_NotDefined"
+msgstr "%s ne estas definita"
+
+msgid "General_NotInstalled"
+msgstr "Ne instalita"
+
+msgid "General_NotRecommended"
+msgstr "Ne rekomendita"
+
+msgid "General_NotValid"
+msgstr "%s ne estas valida"
+
+msgid "General_NumberOfVisits"
+msgstr "Nombro da vizitoj"
+
+msgid "General_NUsers"
+msgstr "%s uzantoj"
+
+msgid "General_NVisits"
+msgstr "%s vizitoj"
+
+msgid "General_NUniqueVisitors"
+msgstr "%sunikaj uzantoj"
+
+msgid "General_Ok"
+msgstr "En ordo!"
+
+msgid "General_OneAction"
+msgstr "1 ago"
+
+msgid "General_OneVisit"
+msgstr "1 vizito"
+
+msgid "General_OnlyEnterIfRequired"
+msgstr "Nur enmetu uzantnomon se via SMTP-servilo bezonas ĝin."
+
+msgid "General_OnlyEnterIfRequiredPassword"
+msgstr "Nur enmetu pasvorton se via SMTP-servilo bezonas ĝin."
+
+msgid "General_OnlyUsedIfUserPwdIsSet"
+msgstr "Nur uzata se uzantnomo/pasvorto estas agordita. Demandi al via provizanto se vi ne certas pri kiun metodon devas uzi."
+
+msgid "General_OpenSourceWebAnalytics"
+msgstr "Malfermitkoda TTT-analizilo"
+
+msgid "General_OperationAtLeast"
+msgstr "Minumume"
+
+msgid "General_OperationAtMost"
+msgstr "Maksimume"
+
+msgid "General_OperationContains"
+msgstr "Enhavas"
+
+msgid "General_OperationDoesNotContain"
+msgstr "Ne enhavas"
+
+msgid "General_OperationEquals"
+msgstr "Egalas al"
+
+msgid "General_OperationGreaterThan"
+msgstr "Pli granda ol"
+
+msgid "General_OperationIs"
+msgstr "Estas"
+
+msgid "General_OperationIsNot"
+msgstr "Ne estas"
+
+msgid "General_OperationLessThan"
+msgstr "Malpli ol"
+
+msgid "General_OperationNotEquals"
+msgstr "Ne egalas al"
+
+msgid "General_OperationStartsWith"
+msgstr "Komenciĝas per"
+
+msgid "General_OperationEndsWith"
+msgstr "Finiĝas per"
+
+msgid "General_OptionalSmtpPort"
+msgstr "Nedeviga. Estas implicite 25n por ne ĉifrita kaj TLS SMTP, kaj 465 por SSL SMTP."
+
+msgid "General_Options"
+msgstr "Ebloj"
+
+msgid "General_Or"
+msgstr "aŭ"
+
+msgid "General_OrCancel"
+msgstr "aŭ %1$s Nuligi %2$s"
+
+msgid "General_Others"
+msgstr "Aliaj"
+
+msgid "General_Outlink"
+msgstr "Ekstera ligilo"
+
+msgid "General_Outlinks"
+msgstr "Eksteraj ligiloj"
+
+msgid "General_Overview"
+msgstr "Superrigardo"
+
+msgid "General_Pages"
+msgstr "Paĝoj"
+
+msgid "General_ParameterMustIntegerBetween"
+msgstr "La parametro %1$s devas esti entjero inter %2$s kaj %3$s."
+
+msgid "General_Password"
+msgstr "Pasvorto"
+
+msgid "General_Period"
+msgstr "Periodo"
+
+msgid "General_Piechart"
+msgstr "Torta diagramo"
+
+msgid "General_Profiles"
+msgstr "Profiloj"
+
+msgid "General_PleaseSpecifyValue"
+msgstr "Bonvolu specifi valoron por '%s'."
+
+msgid "General_Plugin"
+msgstr "Kromprogramo"
+
+msgid "General_Plugins"
+msgstr "Kromprogramoj"
+
+msgid "General_PoweredBy"
+msgstr "Povigita de"
+
+msgid "General_Previous"
+msgstr "Antaŭa"
+
+msgid "General_PreviousDays"
+msgstr "Antaŭaj %s tagoj (ne inkludante la hodiaŭan)"
+
+msgid "General_PreviousDaysShort"
+msgstr "Antaŭaj %s tagoj"
+
+msgid "General_Price"
+msgstr "Prezo"
+
+msgid "General_ProductConversionRate"
+msgstr "Indico de konverto de produkto"
+
+msgid "General_ProductRevenue"
+msgstr "Enspezo de la produkto"
+
+msgid "General_PurchasedProducts"
+msgstr "Aĉetitaj produktoj"
+
+msgid "General_Quantity"
+msgstr "Kvanto"
+
+msgid "General_RangeReports"
+msgstr "Tajlorita intertempo"
+
+msgid "General_Recommended"
+msgstr "Rekomendita"
+
+msgid "General_RecordsToPlot"
+msgstr "Rikordoj por kalkuli"
+
+msgid "General_Refresh"
+msgstr "Refreŝi"
+
+msgid "General_RefreshPage"
+msgstr "Freŝigi la paĝon"
+
+msgid "General_RelatedReport"
+msgstr "Rilata raporto"
+
+msgid "General_RelatedReports"
+msgstr "Rilataj raportoj"
+
+msgid "General_Remove"
+msgstr "Forigi"
+
+msgid "General_Report"
+msgstr "Raporto"
+
+msgid "General_ReportGeneratedFrom"
+msgstr "Ĉi raporto estis farita per datumoj el %s."
+
+msgid "General_Reports"
+msgstr "Raportoj"
+
+msgid "General_ReportsWillBeProcessedAtMostEveryHour"
+msgstr "Raportoj estos konsekvence kalkulitaj maksimume ĉiuhore."
+
+msgid "General_RequestTimedOut"
+msgstr "Datumopeto %s trafis tempolimon. Bonvolu provi denove."
+
+msgid "General_Required"
+msgstr "%s estas nepra"
+
+msgid "General_ReturningVisitor"
+msgstr "Revenanto"
+
+msgid "General_ReturningVisitorAllVisits"
+msgstr "Vidi ĉiujn vizitojn"
+
+msgid "General_Rows"
+msgstr "Vicoj"
+
+msgid "General_RowsToDisplay"
+msgstr "Vicoj por montri"
+
+msgid "General_Save"
+msgstr "Konservi"
+
+msgid "General_SaveImageOnYourComputer"
+msgstr "Por konservi la bildon en vian komputilon, dekstre klaku sur la bildo kaj elektu «Konservi bildon kiel...»"
+
+msgid "General_Search"
+msgstr "Serĉi"
+
+msgid "General_SeeAll"
+msgstr "vidi ĉiujn"
+
+msgid "General_SeeTheOfficialDocumentationForMoreInformation"
+msgstr "Vidu la %1$soficialan dokumentadon%2$s por pli da informo."
+
+msgid "General_SelectYesIfYouWantToSendEmailsViaServer"
+msgstr "Elekti \"Jes\" se vi volas sendi retmesaĝojn per via servilo anstataŭ uzi la lokan funkcion por retmesaĝi."
+
+msgid "General_Settings"
+msgstr "Agordoj"
+
+msgid "General_Shipping"
+msgstr "Sendo"
+
+msgid "General_Show"
+msgstr "montri"
+
+msgid "General_SingleWebsitesDashboard"
+msgstr "Panelo de individua retejo"
+
+msgid "General_SmallTrafficYouCanLeaveDefault"
+msgstr "Por retejoj kun malgranda datumtrafiko, vi povas lasi la implicitajn %s sekundojn, kaj vidi ĉiujn la raportojn realtempe."
+
+msgid "General_SmtpEncryption"
+msgstr "SMTP-ĉifrado"
+
+msgid "General_SmtpPassword"
+msgstr "Pasvorto de SMTP"
+
+msgid "General_SmtpPort"
+msgstr "SMTP-a porto."
+
+msgid "General_SmtpServerAddress"
+msgstr "Adreso de la SMTP-servilo"
+
+msgid "General_SmtpUsername"
+msgstr "Uzantnomo de SMTP"
+
+msgid "General_Source"
+msgstr "Fonto"
+
+msgid "General_Subtotal"
+msgstr "Subtotalo"
+
+msgid "General_Table"
+msgstr "Tabelo"
+
+msgid "General_TagCloud"
+msgstr "Etiked-nubo"
+
+msgid "General_Tax"
+msgstr "Imposto"
+
+msgid "General_TimeOnPage"
+msgstr "Tempo en la retpaĝo"
+
+msgid "General_Total"
+msgstr "Totalo"
+
+msgid "General_Totals"
+msgstr "Totaloj"
+
+msgid "General_TotalRatioTooltip"
+msgstr "Ĉi tio estas %1$sde ĉiuj %2$s%3$s."
+
+msgid "General_TotalRevenue"
+msgstr "Totalaj enspezoj"
+
+msgid "General_TrackingScopeAction"
+msgstr "Ago"
+
+msgid "General_TrackingScopePage"
+msgstr "Paĝo"
+
+msgid "General_TransitionsRowActionTooltipTitle"
+msgstr "Malfermaj tradukoj"
+
+msgid "General_TranslatorName"
+msgstr "David de Ugarte, Manuel Ortega"
+
+msgid "General_UniquePurchases"
+msgstr "Unikaj aĉetoj"
+
+msgid "General_Unknown"
+msgstr "Nekonata"
+
+msgid "General_Upload"
+msgstr "Alŝuti"
+
+msgid "General_UsePlusMinusIconsDocumentation"
+msgstr "Uzi la plus kaj minus ikonoj maldekstre por foliumi."
+
+msgid "General_Username"
+msgstr "Uzantnomo"
+
+msgid "General_UseSMTPServerForEmail"
+msgstr "Uzi SMTP servilon por retmesaĝado"
+
+msgid "General_Value"
+msgstr "Valoro"
+
+msgid "General_VBarGraph"
+msgstr "Vertikala bastona diagramo"
+
+msgid "General_View"
+msgstr "vidigi"
+
+msgid "General_ViewDocumentationFor"
+msgstr "Vidi dokumentojn por%1$s"
+
+msgid "General_Visit"
+msgstr "Vizito"
+
+msgid "General_VisitConvertedGoal"
+msgstr "Vizito plenumis almenaŭ unu celon"
+
+msgid "General_VisitConvertedGoalId"
+msgstr "Vizito plenumis specifan celon Id"
+
+msgid "General_VisitConvertedNGoals"
+msgstr "La vizito plenumis %s celojn"
+
+msgid "General_VisitDuration"
+msgstr "Meztempo de la vizitoj (en sekundoj)"
+
+msgid "General_Visitor"
+msgstr "Vizitanto"
+
+msgid "General_VisitorID"
+msgstr "ID de la vizitanto"
+
+msgid "General_VisitorIP"
+msgstr "IP-adreso de la vizitanto"
+
+msgid "General_Visitors"
+msgstr "Vizitantoj"
+
+msgid "General_VisitsWith"
+msgstr "Vizitoj kun %s"
+
+msgid "General_VisitTypeExample"
+msgstr "Ekzemple, por elekti ĉiujn la vizitantojn kiuj revenis al la retejo, eĉ tiujn kiuj ion aĉetis en siaj antaŭaj vizitoj, la API-demando enhavos %s"
+
+msgid "General_Warning"
+msgstr "Averto"
+
+msgid "General_Warnings"
+msgstr "Avertoj"
+
+msgid "General_WarningFileIntegrityNoManifest"
+msgstr "La testo de integreco ne povas esti farita ĉar manifest.inc.php ne troviĝas."
+
+msgid "General_WarningFileIntegrityNoMd5file"
+msgstr "La testo de integreco ne povis kompletiĝi ĉar md5_file() funkcio ne troviĝas."
+
+msgid "General_WarningPasswordStored"
+msgstr "%1$sAverto:%2$s Ĉi-pasvorto estos konservita en la konfigurdosiero videbla de ĉiuj kiuj povas atingis ĝin."
+
+msgid "General_Website"
+msgstr "Retejo"
+
+msgid "General_Weekly"
+msgstr "Ĉiusemajne"
+
+msgid "General_WeeklyReports"
+msgstr "Ĉiu-semajnaj raportoj"
+
+msgid "General_WellDone"
+msgstr "Bone!"
+
+msgid "General_Widgets"
+msgstr "fenestraĵoj"
+
+msgid "General_Widget"
+msgstr "fenestraĵo"
+
+msgid "General_YearlyReport"
+msgstr "jare"
+
+msgid "General_YearlyReports"
+msgstr "Ĉiujaraj raportoj"
+
+msgid "General_Yes"
+msgstr "Jes"
+
+msgid "General_YouAreCurrentlyUsing"
+msgstr "Vi nun uzas Matomo %s."
+
+msgid "General_YouMustBeLoggedIn"
+msgstr "Vi devas esti ensalutinta por uzi ĉi funkcion."
+
+msgid "General_YourChangesHaveBeenSaved"
+msgstr "Viaj ŝanĝoj estas konservitaj"
+
+msgid "Mobile_Account"
+msgstr "Konto"
+
+msgid "Mobile_Accounts"
+msgstr "Kontoj"
+
+msgid "Mobile_AddAccount"
+msgstr "Aldoni konton"
+
+msgid "Mobile_AnonymousAccess"
+msgstr "Anonima eniro"
+
+msgid "Mobile_AnonymousTracking"
+msgstr "Sennoma sekvado"
+
+msgid "Mobile_ChooseSegment"
+msgstr "Elekti segmenton"
+
+msgid "Mobile_ConfirmRemoveAccount"
+msgstr "Cû vi volas forviŝ ĉi tiun konton?"
+
+msgid "Mobile_EmailUs"
+msgstr "Retmesaĝu nin"
+
+msgid "Mobile_EnableGraphsLabel"
+msgstr "Mintri grafikaĵojn"
+
+msgid "Mobile_EvolutionGraph"
+msgstr "Historia grafikaĵo"
+
+msgid "Mobile_LastUpdated"
+msgstr "Lasta ĝisdatigo %s"
+
+msgid "Mobile_LoadingReport"
+msgstr "ŝarĝanta %s"
+
+msgid "Mobile_LoginUseHttps"
+msgstr "Uzi https"
+
+msgid "Mobile_NavigationBack"
+msgstr "Reen"
+
+msgid "Mobile_NetworkError"
+msgstr "Reteraro"
+
+msgid "Mobile_NetworkErrorWithStatusCodeShort"
+msgstr "Reteraro %s"
+
+msgid "Mobile_NoDataShort"
+msgstr "Sen datumoj"
+
+msgid "Mobile_NoVisitorFound"
+msgstr "Neniu vizitanto trovita"
+
+msgid "Mobile_PossibleSslError"
+msgstr "Ebla eraro pri SSL-a atestilo"
+
+msgid "Mobile_RatingDontRemindMe"
+msgstr "Ne rememorigi min"
+
+msgid "Mobile_RatingNotNow"
+msgstr "Ne nun"
+
+msgid "Mobile_RatingPleaseRateUs"
+msgstr "La apo por Matomo estas libera softvaro, ni ege ŝatus ke vi prenus 1 minuton por valorigi la apon ĉe %1$s. Se vi havas sugestojn por novaj ecoj aŭ cimoj, bonvolu kontaktu %2$s"
+
+msgid "Mobile_ReleaseToRefresh"
+msgstr "Liberigi por refreŝi"
+
+msgid "Mobile_ShowAll"
+msgstr "Montri ĉiujn"
+
+msgid "Mobile_ShowLess"
+msgstr "Montri malpli"
+
+msgid "Mobile_StaticGraph"
+msgstr "Trarigardo de grafikaĵo"
+
+msgid "Mobile_TryIt"
+msgstr "Provi ĝin!"
+
+msgid "Mobile_VerifyAccount"
+msgstr "kontrolanta konton"
+
+msgid "Mobile_ValidateSslCertificate"
+msgstr "Validigi SSL-an atestilon"
+
+msgid "Mobile_YouAreOffline"
+msgstr "Pardonu, vi ne estas ensalutinta"
+
+msgid "RowEvolution_CompareRows"
+msgstr "Kompari registojn"
+
+msgid "RowEvolution_MetricBetweenText"
+msgstr "De %1$sal%2$s"
+
+msgid "CoreAdminHome_AddNewTrustedHost"
+msgstr "Aldoni fidendan gastejon"
+
+msgid "CoreAdminHome_Administration"
+msgstr "Administrado"
+
+msgid "CoreAdminHome_ArchivingSettings"
+msgstr "Konservanta agordojn"
+
+msgid "CoreAdminHome_ReleaseChannel"
+msgstr "Liberigi kanalon"
+
+msgid "CoreAdminHome_ClickHereToOptIn"
+msgstr "Klaki ĉi tie por permesi."
+
+msgid "CoreAdminHome_ClickHereToOptOut"
+msgstr "Klaki ĉi tie por malpermesi."
+
+msgid "CoreAdminHome_ForBetaTestersOnly"
+msgstr "Nur por betaaj uzantoj"
+
+msgid "CoreAdminHome_ImageTracking"
+msgstr "Bildasekvado"
+
+msgid "CoreAdminHome_JavaScriptTracking"
+msgstr "Sekvado per JavaSkripto"
+
+msgid "CoreAdminHome_JSTracking_DisableCookies"
+msgstr "Malebligi ĉiujn sekvantajn kuketojn"
+
+msgid "CoreAdminHome_JSTracking_MergeSubdomains"
+msgstr "Sekvu ĉiujn vizitantojn ĉe ĉiuj subdomajnoj de"
+
+msgid "CoreAdminHome_JSTracking_MergeSubdomainsDesc"
+msgstr "Do, se unu vizitanto vizitas %1$skaj %2$s, ili estos kalkulitaj kiel unika vizitanto."
+
+msgid "CoreAdminHome_LogoUpload"
+msgstr "Elekti emblemon por alŝuti."
+
+msgid "CoreAdminHome_FaviconUpload"
+msgstr "Elekti Favicon por alŝuti."
+
+msgid "CoreAdminHome_LogoUploadHelp"
+msgstr "Bonvole alŝuti dosieron laŭ la formatoj %1$skaj minimuma alteco de %2$spikseloj."
+
+msgid "CoreAdminHome_MenuGeneralSettings"
+msgstr "Ĝeneralaj agordoj"
+
+msgid "CoreAdminHome_MenuSystem"
+msgstr "Sistemo"
+
+msgid "CoreAdminHome_MenuDevelopment"
+msgstr "Disvolvigo"
+
+msgid "CoreAdminHome_PiwikIsInstalledAt"
+msgstr "Matomo estas instalita ĉe"
+
+msgid "CoreAdminHome_PersonalPluginSettings"
+msgstr "Peronaj agordoj por kromprogramo"
+
+msgid "CoreAdminHome_PluginSettingChangeNotAllowed"
+msgstr "Vi ne rajtas ŝanĝi la valoron de la parametro \"%1$s\" en la kromprogramo \"%2$s\""
+
+msgid "CoreAdminHome_PluginSettingReadNotAllowed"
+msgstr "Vi ne rajtas legi la valoron de la parametro \"%1$s\" en la kromprogramo \"%2$s\""
+
+msgid "CoreAdminHome_PluginSettings"
+msgstr "Kromprogramaj agordoj"
+
+msgid "CoreAdminHome_SettingsSaveSuccess"
+msgstr "Agordoj ĝisdatigitaj"
+
+msgid "CustomPiwikJs_DiagnosticPiwikJsWritable"
+msgstr "Skribebla Sekvanta JavaSkripto (%s)"
+
+msgid "CustomPiwikJs_DiagnosticPiwikJsNotWritable"
+msgstr "La JavaSkriptan sekvanta dosiero %sne stas skriblebla. Pro tio aliaj kromprogramoj ne povas etendi la JavaSkriptan sekvanto. Estontece eĉ kelkaj kernaj funkcioj povus ne funkcii kiel atendite."
+
+msgid "CustomPiwikJs_DiagnosticPiwikJsMakeWritable"
+msgstr "Ni rekomendas fari %1$sskribebla per funkciado de ĉi tiu komando: %2$s"
+
+msgid "DBStats_Table"
+msgstr "Tabelo"
+
+msgid "Dashboard_Dashboard"
+msgstr "Panelo"
+
+msgid "Installation_Password"
+msgstr "Pasvorto"
+
+msgid "Intl_Continent_ant"
+msgstr "Antarkto"
+
+msgid "Intl_Country_AD"
+msgstr "Andoro"
+
+msgid "Intl_Country_AE"
+msgstr "Unuiĝintaj Arabaj Emirlandoj"
+
+msgid "Intl_Country_AF"
+msgstr "Afganujo"
+
+msgid "Intl_Country_AG"
+msgstr "Antigvo-Barbudo"
+
+msgid "Intl_Country_AI"
+msgstr "Angvilo"
+
+msgid "Intl_Country_AL"
+msgstr "Albanujo"
+
+msgid "Intl_Country_AM"
+msgstr "Armenujo"
+
+msgid "Intl_Country_AO"
+msgstr "Angolo"
+
+msgid "Intl_Country_AQ"
+msgstr "Antarkto"
+
+msgid "Intl_Country_AR"
+msgstr "Argentino"
+
+msgid "Intl_Country_AT"
+msgstr "Aŭstrujo"
+
+msgid "Intl_Country_AU"
+msgstr "Aŭstralio"
+
+msgid "Intl_Country_AW"
+msgstr "Arubo"
+
+msgid "Intl_Country_AZ"
+msgstr "Azerbajĝano"
+
+msgid "Intl_Country_BA"
+msgstr "Bosnio-Hercegovino"
+
+msgid "Intl_Country_BB"
+msgstr "Barbado"
+
+msgid "Intl_Country_BD"
+msgstr "Bangladeŝo"
+
+msgid "Intl_Country_BE"
+msgstr "Belgujo"
+
+msgid "Intl_Country_BF"
+msgstr "Burkino"
+
+msgid "Intl_Country_BG"
+msgstr "Bulgarujo"
+
+msgid "Intl_Country_BH"
+msgstr "Barejno"
+
+msgid "Intl_Country_BI"
+msgstr "Burundo"
+
+msgid "Intl_Country_BJ"
+msgstr "Benino"
+
+msgid "Intl_Country_BM"
+msgstr "Bermudoj"
+
+msgid "Intl_Country_BN"
+msgstr "Brunejo"
+
+msgid "Intl_Country_BO"
+msgstr "Bolivio"
+
+msgid "Intl_Country_BR"
+msgstr "Brazilo"
+
+msgid "Intl_Country_BS"
+msgstr "Bahamoj"
+
+msgid "Intl_Country_BT"
+msgstr "Butano"
+
+msgid "Intl_Country_BW"
+msgstr "Bocvano"
+
+msgid "Intl_Country_BY"
+msgstr "Belorusujo"
+
+msgid "Intl_Country_BZ"
+msgstr "Belizo"
+
+msgid "Intl_Country_CA"
+msgstr "Kanado"
+
+msgid "Intl_Country_CF"
+msgstr "Centr-Afrika Respubliko"
+
+msgid "Intl_Country_CG"
+msgstr "Kongolo"
+
+msgid "Intl_Country_CH"
+msgstr "Svisujo"
+
+msgid "Intl_Country_CI"
+msgstr "Ebur-Bordo"
+
+msgid "Intl_Country_CK"
+msgstr "Kukinsuloj"
+
+msgid "Intl_Country_CL"
+msgstr "Ĉilio"
+
+msgid "Intl_Country_CM"
+msgstr "Kameruno"
+
+msgid "Intl_Country_CN"
+msgstr "Ĉinujo"
+
+msgid "Intl_Country_CO"
+msgstr "Kolombio"
+
+msgid "Intl_Country_CR"
+msgstr "Kostariko"
+
+msgid "Intl_Country_CU"
+msgstr "Kubo"
+
+msgid "Intl_Country_CV"
+msgstr "Kabo-Verdo"
+
+msgid "Intl_Country_CY"
+msgstr "Kipro"
+
+msgid "Intl_Country_CZ"
+msgstr "Ĉeĥujo"
+
+msgid "Intl_Country_DE"
+msgstr "Germanujo"
+
+msgid "Intl_Country_DJ"
+msgstr "Ĝibutio"
+
+msgid "Intl_Country_DK"
+msgstr "Danujo"
+
+msgid "Intl_Country_DM"
+msgstr "Dominiko"
+
+msgid "Intl_Country_DO"
+msgstr "Domingo"
+
+msgid "Intl_Country_DZ"
+msgstr "Alĝerio"
+
+msgid "Intl_Country_EC"
+msgstr "Ekvadoro"
+
+msgid "Intl_Country_EE"
+msgstr "Estonujo"
+
+msgid "Intl_Country_EG"
+msgstr "Egipto"
+
+msgid "Intl_Country_EH"
+msgstr "Okcidenta Saharo"
+
+msgid "Intl_Country_ER"
+msgstr "Eritreo"
+
+msgid "Intl_Country_ES"
+msgstr "Hispanujo"
+
+msgid "Intl_Country_ET"
+msgstr "Etiopujo"
+
+msgid "Intl_Country_FI"
+msgstr "Finnlando"
+
+msgid "Intl_Country_FJ"
+msgstr "Fiĝoj"
+
+msgid "Intl_Country_FM"
+msgstr "Mikronezio"
+
+msgid "Intl_Country_FO"
+msgstr "Ferooj"
+
+msgid "Intl_Country_FR"
+msgstr "Francujo"
+
+msgid "Intl_Country_GA"
+msgstr "Gabono"
+
+msgid "Intl_Country_GB"
+msgstr "Unuiĝinta Reĝlando"
+
+msgid "Intl_Country_GD"
+msgstr "Grenado"
+
+msgid "Intl_Country_GE"
+msgstr "Kartvelujo"
+
+msgid "Intl_Country_GF"
+msgstr "Franca Gviano"
+
+msgid "Intl_Country_GH"
+msgstr "Ganao"
+
+msgid "Intl_Country_GI"
+msgstr "Ĝibraltaro"
+
+msgid "Intl_Country_GL"
+msgstr "Gronlando"
+
+msgid "Intl_Country_GM"
+msgstr "Gambio"
+
+msgid "Intl_Country_GN"
+msgstr "Gvineo"
+
+msgid "Intl_Country_GP"
+msgstr "Gvadelupo"
+
+msgid "Intl_Country_GQ"
+msgstr "Ekvatora Gvineo"
+
+msgid "Intl_Country_GR"
+msgstr "Grekujo"
+
+msgid "Intl_Country_GS"
+msgstr "Sud-Georgio kaj Sud-Sandviĉinsuloj"
+
+msgid "Intl_Country_GT"
+msgstr "Gvatemalo"
+
+msgid "Intl_Country_GU"
+msgstr "Gvamo"
+
+msgid "Intl_Country_GW"
+msgstr "Gvineo-Bisaŭo"
+
+msgid "Intl_Country_GY"
+msgstr "Gujano"
+
+msgid "Intl_Country_HM"
+msgstr "Herda kaj Makdonaldaj Insuloj"
+
+msgid "Intl_Country_HN"
+msgstr "Honduro"
+
+msgid "Intl_Country_HR"
+msgstr "Kroatujo"
+
+msgid "Intl_Country_HT"
+msgstr "Haitio"
+
+msgid "Intl_Country_HU"
+msgstr "Hungarujo"
+
+msgid "Intl_Country_ID"
+msgstr "Indonezio"
+
+msgid "Intl_Country_IE"
+msgstr "Irlando"
+
+msgid "Intl_Country_IL"
+msgstr "Israelo"
+
+msgid "Intl_Country_IN"
+msgstr "Hindujo"
+
+msgid "Intl_Country_IO"
+msgstr "Brita Hindoceana Teritorio"
+
+msgid "Intl_Country_IQ"
+msgstr "Irako"
+
+msgid "Intl_Country_IR"
+msgstr "Irano"
+
+msgid "Intl_Country_IS"
+msgstr "Islando"
+
+msgid "Intl_Country_IT"
+msgstr "Italujo"
+
+msgid "Intl_Country_JM"
+msgstr "Jamajko"
+
+msgid "Intl_Country_JO"
+msgstr "Jordanio"
+
+msgid "Intl_Country_JP"
+msgstr "Japanujo"
+
+msgid "Intl_Country_KE"
+msgstr "Kenjo"
+
+msgid "Intl_Country_KG"
+msgstr "Kirgizistano"
+
+msgid "Intl_Country_KH"
+msgstr "Kamboĝo"
+
+msgid "Intl_Country_KI"
+msgstr "Kiribato"
+
+msgid "Intl_Country_KM"
+msgstr "Komoroj"
+
+msgid "Intl_Country_KN"
+msgstr "Sent-Kristofo kaj Neviso"
+
+msgid "Intl_Country_KP"
+msgstr "Nord-Koreo"
+
+msgid "Intl_Country_KR"
+msgstr "Sud-Koreo"
+
+msgid "Intl_Country_KW"
+msgstr "Kuvajto"
+
+msgid "Intl_Country_KY"
+msgstr "Kejmanoj"
+
+msgid "Intl_Country_KZ"
+msgstr "Kazaĥstano"
+
+msgid "Intl_Country_LA"
+msgstr "Laoso"
+
+msgid "Intl_Country_LB"
+msgstr "Libano"
+
+msgid "Intl_Country_LC"
+msgstr "Sent-Lucio"
+
+msgid "Intl_Country_LI"
+msgstr "Liĥtenŝtejno"
+
+msgid "Intl_Country_LK"
+msgstr "Sri-Lanko"
+
+msgid "Intl_Country_LR"
+msgstr "Liberio"
+
+msgid "Intl_Country_LS"
+msgstr "Lesoto"
+
+msgid "Intl_Country_LT"
+msgstr "Litovujo"
+
+msgid "Intl_Country_LU"
+msgstr "Luksemburgo"
+
+msgid "Intl_Country_LV"
+msgstr "Latvujo"
+
+msgid "Intl_Country_LY"
+msgstr "Libio"
+
+msgid "Intl_Country_MA"
+msgstr "Maroko"
+
+msgid "Intl_Country_MC"
+msgstr "Monako"
+
+msgid "Intl_Country_MD"
+msgstr "Moldavujo"
+
+msgid "Intl_Country_MG"
+msgstr "Madagaskaro"
+
+msgid "Intl_Country_MH"
+msgstr "Marŝaloj"
+
+msgid "Intl_Country_MK"
+msgstr "Makedonujo"
+
+msgid "Intl_Country_ML"
+msgstr "Malio"
+
+msgid "Intl_Country_MM"
+msgstr "Mjanmao"
+
+msgid "Intl_Country_MN"
+msgstr "Mongolujo"
+
+msgid "Intl_Country_MP"
+msgstr "Nord-Marianoj"
+
+msgid "Intl_Country_MQ"
+msgstr "Martiniko"
+
+msgid "Intl_Country_MR"
+msgstr "Maŭritanujo"
+
+msgid "Intl_Country_MT"
+msgstr "Malto"
+
+msgid "Intl_Country_MU"
+msgstr "Maŭricio"
+
+msgid "Intl_Country_MV"
+msgstr "Maldivoj"
+
+msgid "Intl_Country_MW"
+msgstr "Malavio"
+
+msgid "Intl_Country_MX"
+msgstr "Meksiko"
+
+msgid "Intl_Country_MY"
+msgstr "Malajzio"
+
+msgid "Intl_Country_MZ"
+msgstr "Mozambiko"
+
+msgid "Intl_Country_NA"
+msgstr "Namibio"
+
+msgid "Intl_Country_NC"
+msgstr "Nov-Kaledonio"
+
+msgid "Intl_Country_NE"
+msgstr "Niĝero"
+
+msgid "Intl_Country_NF"
+msgstr "Norfolkinsulo"
+
+msgid "Intl_Country_NG"
+msgstr "Niĝerio"
+
+msgid "Intl_Country_NI"
+msgstr "Nikaragvo"
+
+msgid "Intl_Country_NL"
+msgstr "Nederlando"
+
+msgid "Intl_Country_NO"
+msgstr "Norvegujo"
+
+msgid "Intl_Country_NP"
+msgstr "Nepalo"
+
+msgid "Intl_Country_NR"
+msgstr "Nauro"
+
+msgid "Intl_Country_NU"
+msgstr "Niuo"
+
+msgid "Intl_Country_NZ"
+msgstr "Nov-Zelando"
+
+msgid "Intl_Country_OM"
+msgstr "Omano"
+
+msgid "Intl_Country_PA"
+msgstr "Panamo"
+
+msgid "Intl_Country_PE"
+msgstr "Peruo"
+
+msgid "Intl_Country_PF"
+msgstr "Franca Polinezio"
+
+msgid "Intl_Country_PG"
+msgstr "Papuo-Nov-Gvineo"
+
+msgid "Intl_Country_PH"
+msgstr "Filipinoj"
+
+msgid "Intl_Country_PK"
+msgstr "Pakistano"
+
+msgid "Intl_Country_PL"
+msgstr "Pollando"
+
+msgid "Intl_Country_PM"
+msgstr "Sent-Piero kaj Mikelono"
+
+msgid "Intl_Country_PN"
+msgstr "Pitkarna Insulo"
+
+msgid "Intl_Country_PR"
+msgstr "Puerto-Riko"
+
+msgid "Intl_Country_PT"
+msgstr "Portugalujo"
+
+msgid "Intl_Country_PW"
+msgstr "Belaŭo"
+
+msgid "Intl_Country_PY"
+msgstr "Paragvajo"
+
+msgid "Intl_Country_QA"
+msgstr "Kataro"
+
+msgid "Intl_Country_RE"
+msgstr "Reunio"
+
+msgid "Intl_Country_RO"
+msgstr "Rumanujo"
+
+msgid "Intl_Country_RU"
+msgstr "Rusujo"
+
+msgid "Intl_Country_RW"
+msgstr "Ruando"
+
+msgid "Intl_Country_SA"
+msgstr "Saŭda Arabujo"
+
+msgid "Intl_Country_SB"
+msgstr "Salomonoj"
+
+msgid "Intl_Country_SC"
+msgstr "Sejŝeloj"
+
+msgid "Intl_Country_SD"
+msgstr "Sudano"
+
+msgid "Intl_Country_SE"
+msgstr "Svedujo"
+
+msgid "Intl_Country_SG"
+msgstr "Singapuro"
+
+msgid "Intl_Country_SH"
+msgstr "Sent-Heleno"
+
+msgid "Intl_Country_SI"
+msgstr "Slovenujo"
+
+msgid "Intl_Country_SJ"
+msgstr "Svalbardo kaj Jan-Majen-insulo"
+
+msgid "Intl_Country_SK"
+msgstr "Slovakujo"
+
+msgid "Intl_Country_SL"
+msgstr "Siera-Leono"
+
+msgid "Intl_Country_SM"
+msgstr "San-Marino"
+
+msgid "Intl_Country_SN"
+msgstr "Senegalo"
+
+msgid "Intl_Country_SO"
+msgstr "Somalujo"
+
+msgid "Intl_Country_SR"
+msgstr "Surinamo"
+
+msgid "Intl_Country_ST"
+msgstr "Sao-Tomeo kaj Principeo"
+
+msgid "Intl_Country_SV"
+msgstr "Salvadoro"
+
+msgid "Intl_Country_SY"
+msgstr "Sirio"
+
+msgid "Intl_Country_SZ"
+msgstr "Svazilando"
+
+msgid "Intl_Country_TD"
+msgstr "Ĉado"
+
+msgid "Intl_Country_TG"
+msgstr "Togolo"
+
+msgid "Intl_Country_TH"
+msgstr "Tajlando"
+
+msgid "Intl_Country_TJ"
+msgstr "Taĝikujo"
+
+msgid "Intl_Country_TM"
+msgstr "Turkmenujo"
+
+msgid "Intl_Country_TN"
+msgstr "Tunizio"
+
+msgid "Intl_Country_TO"
+msgstr "Tongo"
+
+msgid "Intl_Country_TR"
+msgstr "Turkujo"
+
+msgid "Intl_Country_TT"
+msgstr "Trinidado kaj Tobago"
+
+msgid "Intl_Country_TV"
+msgstr "Tuvalo"
+
+msgid "Intl_Country_TW"
+msgstr "Tajvano"
+
+msgid "Intl_Country_TZ"
+msgstr "Tanzanio"
+
+msgid "Intl_Country_UA"
+msgstr "Ukrajno"
+
+msgid "Intl_Country_UG"
+msgstr "Ugando"
+
+msgid "Intl_Country_UM"
+msgstr "Usonaj malgrandaj insuloj"
+
+msgid "Intl_Country_US"
+msgstr "Usono"
+
+msgid "Intl_Country_UY"
+msgstr "Urugvajo"
+
+msgid "Intl_Country_UZ"
+msgstr "Uzbekujo"
+
+msgid "Intl_Country_VA"
+msgstr "Vatikano"
+
+msgid "Intl_Country_VC"
+msgstr "Sent-Vincento kaj la Grenadinoj"
+
+msgid "Intl_Country_VE"
+msgstr "Venezuelo"
+
+msgid "Intl_Country_VG"
+msgstr "Britaj Virgulininsuloj"
+
+msgid "Intl_Country_VI"
+msgstr "Usonaj Virgulininsuloj"
+
+msgid "Intl_Country_VN"
+msgstr "Vjetnamo"
+
+msgid "Intl_Country_VU"
+msgstr "Vanuatuo"
+
+msgid "Intl_Country_WF"
+msgstr "Valiso kaj Futuno"
+
+msgid "Intl_Country_WS"
+msgstr "Samoo"
+
+msgid "Intl_Country_YE"
+msgstr "Jemeno"
+
+msgid "Intl_Country_YT"
+msgstr "Majoto"
+
+msgid "Intl_Country_ZA"
+msgstr "Sud-Afriko"
+
+msgid "Intl_Country_ZM"
+msgstr "Zambio"
+
+msgid "Intl_Country_ZW"
+msgstr "Zimbabvo"
+
+msgid "Intl_CurrencySymbol_AED"
+msgstr "AED"
+
+msgid "Intl_CurrencySymbol_AFN"
+msgstr "AFN"
+
+msgid "Intl_CurrencySymbol_ALL"
+msgstr "ALL"
+
+msgid "Intl_CurrencySymbol_AMD"
+msgstr "AMD"
+
+msgid "Intl_CurrencySymbol_ANG"
+msgstr "ANG"
+
+msgid "Intl_CurrencySymbol_AOA"
+msgstr "AOA"
+
+msgid "Intl_CurrencySymbol_ARS"
+msgstr "ARS"
+
+msgid "Intl_CurrencySymbol_AUD"
+msgstr "A$"
+
+msgid "Intl_CurrencySymbol_AWG"
+msgstr "AWG"
+
+msgid "Intl_CurrencySymbol_AZN"
+msgstr "AZN"
+
+msgid "Intl_CurrencySymbol_BAM"
+msgstr "BAM"
+
+msgid "Intl_CurrencySymbol_BBD"
+msgstr "BBD"
+
+msgid "Intl_CurrencySymbol_BDT"
+msgstr "BDT"
+
+msgid "Intl_CurrencySymbol_BGN"
+msgstr "BGN"
+
+msgid "Intl_CurrencySymbol_BHD"
+msgstr "BHD"
+
+msgid "Intl_CurrencySymbol_BIF"
+msgstr "BIF"
+
+msgid "Intl_CurrencySymbol_BMD"
+msgstr "BMD"
+
+msgid "Intl_CurrencySymbol_BND"
+msgstr "BND"
+
+msgid "Intl_CurrencySymbol_BOB"
+msgstr "BOB"
+
+msgid "Intl_CurrencySymbol_BRL"
+msgstr "R$"
+
+msgid "Intl_CurrencySymbol_BSD"
+msgstr "BSD"
+
+msgid "Intl_CurrencySymbol_BTC"
+msgstr "BTC"
+
+msgid "Intl_CurrencySymbol_BTN"
+msgstr "BTN"
+
+msgid "Intl_CurrencySymbol_BWP"
+msgstr "BWP"
+
+msgid "Intl_CurrencySymbol_BYN"
+msgstr "BYN"
+
+msgid "Intl_CurrencySymbol_BZD"
+msgstr "BZD"
+
+msgid "Intl_CurrencySymbol_CAD"
+msgstr "CA$"
+
+msgid "Intl_CurrencySymbol_CDF"
+msgstr "CDF"
+
+msgid "Intl_CurrencySymbol_CHF"
+msgstr "CHF"
+
+msgid "Intl_CurrencySymbol_CLP"
+msgstr "CLP"
+
+msgid "Intl_CurrencySymbol_CNY"
+msgstr "CN¥"
+
+msgid "Intl_CurrencySymbol_COP"
+msgstr "COP"
+
+msgid "Intl_CurrencySymbol_CRC"
+msgstr "CRC"
+
+msgid "Intl_CurrencySymbol_CUC"
+msgstr "CUC"
+
+msgid "Intl_CurrencySymbol_CUP"
+msgstr "CUP"
+
+msgid "Intl_CurrencySymbol_CVE"
+msgstr "CVE"
+
+msgid "Intl_CurrencySymbol_CZK"
+msgstr "CZK"
+
+msgid "Intl_CurrencySymbol_DJF"
+msgstr "DJF"
+
+msgid "Intl_CurrencySymbol_DKK"
+msgstr "DKK"
+
+msgid "Intl_CurrencySymbol_DOP"
+msgstr "DOP"
+
+msgid "Intl_CurrencySymbol_DZD"
+msgstr "DZD"
+
+msgid "Intl_CurrencySymbol_EGP"
+msgstr "EGP"
+
+msgid "Intl_CurrencySymbol_ERN"
+msgstr "ERN"
+
+msgid "Intl_CurrencySymbol_ETB"
+msgstr "ETB"
+
+msgid "Intl_CurrencySymbol_EUR"
+msgstr "€"
+
+msgid "Intl_CurrencySymbol_FJD"
+msgstr "FJD"
+
+msgid "Intl_CurrencySymbol_FKP"
+msgstr "FKP"
+
+msgid "Intl_CurrencySymbol_GBP"
+msgstr "£"
+
+msgid "Intl_CurrencySymbol_GEL"
+msgstr "GEL"
+
+msgid "Intl_CurrencySymbol_GHS"
+msgstr "GHS"
+
+msgid "Intl_CurrencySymbol_GIP"
+msgstr "GIP"
+
+msgid "Intl_CurrencySymbol_GMD"
+msgstr "GMD"
+
+msgid "Intl_CurrencySymbol_GNF"
+msgstr "GNF"
+
+msgid "Intl_CurrencySymbol_GTQ"
+msgstr "GTQ"
+
+msgid "Intl_CurrencySymbol_GYD"
+msgstr "GYD"
+
+msgid "Intl_CurrencySymbol_HKD"
+msgstr "HK$"
+
+msgid "Intl_CurrencySymbol_HNL"
+msgstr "HNL"
+
+msgid "Intl_CurrencySymbol_HRK"
+msgstr "HRK"
+
+msgid "Intl_CurrencySymbol_HTG"
+msgstr "HTG"
+
+msgid "Intl_CurrencySymbol_HUF"
+msgstr "HUF"
+
+msgid "Intl_CurrencySymbol_IDR"
+msgstr "IDR"
+
+msgid "Intl_CurrencySymbol_ILS"
+msgstr "₪"
+
+msgid "Intl_CurrencySymbol_INR"
+msgstr "₹"
+
+msgid "Intl_CurrencySymbol_IQD"
+msgstr "IQD"
+
+msgid "Intl_CurrencySymbol_IRR"
+msgstr "IRR"
+
+msgid "Intl_CurrencySymbol_ISK"
+msgstr "ISK"
+
+msgid "Intl_CurrencySymbol_JMD"
+msgstr "JMD"
+
+msgid "Intl_CurrencySymbol_JOD"
+msgstr "JOD"
+
+msgid "Intl_CurrencySymbol_JPY"
+msgstr "JP¥"
+
+msgid "Intl_CurrencySymbol_KES"
+msgstr "KES"
+
+msgid "Intl_CurrencySymbol_KGS"
+msgstr "KGS"
+
+msgid "Intl_CurrencySymbol_KHR"
+msgstr "KHR"
+
+msgid "Intl_CurrencySymbol_KMF"
+msgstr "KMF"
+
+msgid "Intl_CurrencySymbol_KPW"
+msgstr "KPW"
+
+msgid "Intl_CurrencySymbol_KRW"
+msgstr "₩"
+
+msgid "Intl_CurrencySymbol_KWD"
+msgstr "KWD"
+
+msgid "Intl_CurrencySymbol_KYD"
+msgstr "KYD"
+
+msgid "Intl_CurrencySymbol_KZT"
+msgstr "KZT"
+
+msgid "Intl_CurrencySymbol_LAK"
+msgstr "LAK"
+
+msgid "Intl_CurrencySymbol_LBP"
+msgstr "LBP"
+
+msgid "Intl_CurrencySymbol_LKR"
+msgstr "LKR"
+
+msgid "Intl_CurrencySymbol_LRD"
+msgstr "LRD"
+
+msgid "Intl_CurrencySymbol_LSL"
+msgstr "LSL"
+
+msgid "Intl_CurrencySymbol_LYD"
+msgstr "LYD"
+
+msgid "Intl_CurrencySymbol_MAD"
+msgstr "MAD"
+
+msgid "Intl_CurrencySymbol_MDL"
+msgstr "MDL"
+
+msgid "Intl_CurrencySymbol_MGA"
+msgstr "MGA"
+
+msgid "Intl_CurrencySymbol_MKD"
+msgstr "MKD"
+
+msgid "Intl_CurrencySymbol_MMK"
+msgstr "MMK"
+
+msgid "Intl_CurrencySymbol_MNT"
+msgstr "MNT"
+
+msgid "Intl_CurrencySymbol_MOP"
+msgstr "MOP"
+
+msgid "Intl_CurrencySymbol_MRU"
+msgstr "MRU"
+
+msgid "Intl_CurrencySymbol_MUR"
+msgstr "MUR"
+
+msgid "Intl_CurrencySymbol_MVR"
+msgstr "MVR"
+
+msgid "Intl_CurrencySymbol_MWK"
+msgstr "MWK"
+
+msgid "Intl_CurrencySymbol_MXN"
+msgstr "MX$"
+
+msgid "Intl_CurrencySymbol_MYR"
+msgstr "MYR"
+
+msgid "Intl_CurrencySymbol_MZN"
+msgstr "MZN"
+
+msgid "Intl_CurrencySymbol_NAD"
+msgstr "NAD"
+
+msgid "Intl_CurrencySymbol_NGN"
+msgstr "NGN"
+
+msgid "Intl_CurrencySymbol_NIO"
+msgstr "NIO"
+
+msgid "Intl_CurrencySymbol_NOK"
+msgstr "NOK"
+
+msgid "Intl_CurrencySymbol_NPR"
+msgstr "NPR"
+
+msgid "Intl_CurrencySymbol_NZD"
+msgstr "NZ$"
+
+msgid "Intl_CurrencySymbol_OMR"
+msgstr "OMR"
+
+msgid "Intl_CurrencySymbol_PAB"
+msgstr "PAB"
+
+msgid "Intl_CurrencySymbol_PEN"
+msgstr "PEN"
+
+msgid "Intl_CurrencySymbol_PGK"
+msgstr "PGK"
+
+msgid "Intl_CurrencySymbol_PHP"
+msgstr "PHP"
+
+msgid "Intl_CurrencySymbol_PKR"
+msgstr "PKR"
+
+msgid "Intl_CurrencySymbol_PLN"
+msgstr "PLN"
+
+msgid "Intl_CurrencySymbol_PYG"
+msgstr "PYG"
+
+msgid "Intl_CurrencySymbol_QAR"
+msgstr "QAR"
+
+msgid "Intl_CurrencySymbol_RON"
+msgstr "RON"
+
+msgid "Intl_CurrencySymbol_RSD"
+msgstr "RSD"
+
+msgid "Intl_CurrencySymbol_RUB"
+msgstr "RUB"
+
+msgid "Intl_CurrencySymbol_RWF"
+msgstr "RWF"
+
+msgid "Intl_CurrencySymbol_SAR"
+msgstr "SAR"
+
+msgid "Intl_CurrencySymbol_SBD"
+msgstr "SBD"
+
+msgid "Intl_CurrencySymbol_SCR"
+msgstr "SCR"
+
+msgid "Intl_CurrencySymbol_SDG"
+msgstr "SDG"
+
+msgid "Intl_CurrencySymbol_SEK"
+msgstr "SEK"
+
+msgid "Intl_CurrencySymbol_SGD"
+msgstr "SGD"
+
+msgid "Intl_CurrencySymbol_SHP"
+msgstr "SHP"
+
+msgid "Intl_CurrencySymbol_SLL"
+msgstr "SLL"
+
+msgid "Intl_CurrencySymbol_SOS"
+msgstr "SOS"
+
+msgid "Intl_CurrencySymbol_SRD"
+msgstr "SRD"
+
+msgid "Intl_CurrencySymbol_SSP"
+msgstr "SSP"
+
+msgid "Intl_CurrencySymbol_STN"
+msgstr "STN"
+
+msgid "Intl_CurrencySymbol_SYP"
+msgstr "SYP"
+
+msgid "Intl_CurrencySymbol_SZL"
+msgstr "SZL"
+
+msgid "Intl_CurrencySymbol_THB"
+msgstr "THB"
+
+msgid "Intl_CurrencySymbol_TJS"
+msgstr "TJS"
+
+msgid "Intl_CurrencySymbol_TMT"
+msgstr "TMT"
+
+msgid "Intl_CurrencySymbol_TND"
+msgstr "TND"
+
+msgid "Intl_CurrencySymbol_TOP"
+msgstr "TOP"
+
+msgid "Intl_CurrencySymbol_TRY"
+msgstr "TRY"
+
+msgid "Intl_CurrencySymbol_TTD"
+msgstr "TTD"
+
+msgid "Intl_CurrencySymbol_TWD"
+msgstr "NT$"
+
+msgid "Intl_CurrencySymbol_TZS"
+msgstr "TZS"
+
+msgid "Intl_CurrencySymbol_UAH"
+msgstr "UAH"
+
+msgid "Intl_CurrencySymbol_UGX"
+msgstr "UGX"
+
+msgid "Intl_CurrencySymbol_USD"
+msgstr "US$"
+
+msgid "Intl_CurrencySymbol_UYU"
+msgstr "UYU"
+
+msgid "Intl_CurrencySymbol_UZS"
+msgstr "UZS"
+
+msgid "Intl_CurrencySymbol_VEF"
+msgstr "VEF"
+
+msgid "Intl_CurrencySymbol_VND"
+msgstr "₫"
+
+msgid "Intl_CurrencySymbol_VUV"
+msgstr "VUV"
+
+msgid "Intl_CurrencySymbol_WST"
+msgstr "WST"
+
+msgid "Intl_CurrencySymbol_XAF"
+msgstr "FCFA"
+
+msgid "Intl_CurrencySymbol_XCD"
+msgstr "EC$"
+
+msgid "Intl_CurrencySymbol_XOF"
+msgstr "CFA"
+
+msgid "Intl_CurrencySymbol_XPF"
+msgstr "CFPF"
+
+msgid "Intl_CurrencySymbol_YER"
+msgstr "YER"
+
+msgid "Intl_CurrencySymbol_ZAR"
+msgstr "ZAR"
+
+msgid "Intl_CurrencySymbol_ZMW"
+msgstr "ZMW"
+
+msgid "Intl_Currency_AED"
+msgstr "AED"
+
+msgid "Intl_Currency_AFN"
+msgstr "AFN"
+
+msgid "Intl_Currency_ALL"
+msgstr "ALL"
+
+msgid "Intl_Currency_AMD"
+msgstr "AMD"
+
+msgid "Intl_Currency_ANG"
+msgstr "ANG"
+
+msgid "Intl_Currency_AOA"
+msgstr "AOA"
+
+msgid "Intl_Currency_ARS"
+msgstr "ARS"
+
+msgid "Intl_Currency_AUD"
+msgstr "AUD"
+
+msgid "Intl_Currency_AWG"
+msgstr "AWG"
+
+msgid "Intl_Currency_AZN"
+msgstr "AZN"
+
+msgid "Intl_Currency_BAM"
+msgstr "BAM"
+
+msgid "Intl_Currency_BBD"
+msgstr "BBD"
+
+msgid "Intl_Currency_BDT"
+msgstr "BDT"
+
+msgid "Intl_Currency_BGN"
+msgstr "BGN"
+
+msgid "Intl_Currency_BHD"
+msgstr "BHD"
+
+msgid "Intl_Currency_BIF"
+msgstr "BIF"
+
+msgid "Intl_Currency_BMD"
+msgstr "BMD"
+
+msgid "Intl_Currency_BND"
+msgstr "BND"
+
+msgid "Intl_Currency_BOB"
+msgstr "BOB"
+
+msgid "Intl_Currency_BRL"
+msgstr "BRL"
+
+msgid "Intl_Currency_BSD"
+msgstr "BSD"
+
+msgid "Intl_Currency_BTC"
+msgstr "Bitcoin"
+
+msgid "Intl_Currency_BTN"
+msgstr "BTN"
+
+msgid "Intl_Currency_BWP"
+msgstr "BWP"
+
+msgid "Intl_Currency_BYN"
+msgstr "BYN"
+
+msgid "Intl_Currency_BZD"
+msgstr "BZD"
+
+msgid "Intl_Currency_CAD"
+msgstr "CAD"
+
+msgid "Intl_Currency_CDF"
+msgstr "CDF"
+
+msgid "Intl_Currency_CHF"
+msgstr "CHF"
+
+msgid "Intl_Currency_CLP"
+msgstr "CLP"
+
+msgid "Intl_Currency_CNY"
+msgstr "CNY"
+
+msgid "Intl_Currency_COP"
+msgstr "COP"
+
+msgid "Intl_Currency_CRC"
+msgstr "CRC"
+
+msgid "Intl_Currency_CUC"
+msgstr "CUC"
+
+msgid "Intl_Currency_CUP"
+msgstr "CUP"
+
+msgid "Intl_Currency_CVE"
+msgstr "CVE"
+
+msgid "Intl_Currency_CZK"
+msgstr "CZK"
+
+msgid "Intl_Currency_DJF"
+msgstr "DJF"
+
+msgid "Intl_Currency_DKK"
+msgstr "DKK"
+
+msgid "Intl_Currency_DOP"
+msgstr "DOP"
+
+msgid "Intl_Currency_DZD"
+msgstr "DZD"
+
+msgid "Intl_Currency_EGP"
+msgstr "EGP"
+
+msgid "Intl_Currency_ERN"
+msgstr "ERN"
+
+msgid "Intl_Currency_ETB"
+msgstr "ETB"
+
+msgid "Intl_Currency_EUR"
+msgstr "EUR"
+
+msgid "Intl_Currency_FJD"
+msgstr "FJD"
+
+msgid "Intl_Currency_FKP"
+msgstr "FKP"
+
+msgid "Intl_Currency_GBP"
+msgstr "GBP"
+
+msgid "Intl_Currency_GEL"
+msgstr "GEL"
+
+msgid "Intl_Currency_GHS"
+msgstr "GHS"
+
+msgid "Intl_Currency_GIP"
+msgstr "GIP"
+
+msgid "Intl_Currency_GMD"
+msgstr "GMD"
+
+msgid "Intl_Currency_GNF"
+msgstr "GNF"
+
+msgid "Intl_Currency_GTQ"
+msgstr "GTQ"
+
+msgid "Intl_Currency_GYD"
+msgstr "GYD"
+
+msgid "Intl_Currency_HKD"
+msgstr "HKD"
+
+msgid "Intl_Currency_HNL"
+msgstr "HNL"
+
+msgid "Intl_Currency_HRK"
+msgstr "HRK"
+
+msgid "Intl_Currency_HTG"
+msgstr "HTG"
+
+msgid "Intl_Currency_HUF"
+msgstr "HUF"
+
+msgid "Intl_Currency_IDR"
+msgstr "IDR"
+
+msgid "Intl_Currency_ILS"
+msgstr "ILS"
+
+msgid "Intl_Currency_INR"
+msgstr "INR"
+
+msgid "Intl_Currency_IQD"
+msgstr "IQD"
+
+msgid "Intl_Currency_IRR"
+msgstr "IRR"
+
+msgid "Intl_Currency_ISK"
+msgstr "ISK"
+
+msgid "Intl_Currency_JMD"
+msgstr "JMD"
+
+msgid "Intl_Currency_JOD"
+msgstr "JOD"
+
+msgid "Intl_Currency_JPY"
+msgstr "JPY"
+
+msgid "Intl_Currency_KES"
+msgstr "KES"
+
+msgid "Intl_Currency_KGS"
+msgstr "KGS"
+
+msgid "Intl_Currency_KHR"
+msgstr "KHR"
+
+msgid "Intl_Currency_KMF"
+msgstr "KMF"
+
+msgid "Intl_Currency_KPW"
+msgstr "KPW"
+
+msgid "Intl_Currency_KRW"
+msgstr "KRW"
+
+msgid "Intl_Currency_KWD"
+msgstr "KWD"
+
+msgid "Intl_Currency_KYD"
+msgstr "KYD"
+
+msgid "Intl_Currency_KZT"
+msgstr "KZT"
+
+msgid "Intl_Currency_LAK"
+msgstr "LAK"
+
+msgid "Intl_Currency_LBP"
+msgstr "LBP"
+
+msgid "Intl_Currency_LKR"
+msgstr "LKR"
+
+msgid "Intl_Currency_LRD"
+msgstr "LRD"
+
+msgid "Intl_Currency_LSL"
+msgstr "LSL"
+
+msgid "Intl_Currency_LYD"
+msgstr "LYD"
+
+msgid "Intl_Currency_MAD"
+msgstr "MAD"
+
+msgid "Intl_Currency_MDL"
+msgstr "MDL"
+
+msgid "Intl_Currency_MGA"
+msgstr "MGA"
+
+msgid "Intl_Currency_MKD"
+msgstr "MKD"
+
+msgid "Intl_Currency_MMK"
+msgstr "MMK"
+
+msgid "Intl_Currency_MNT"
+msgstr "MNT"
+
+msgid "Intl_Currency_MOP"
+msgstr "MOP"
+
+msgid "Intl_Currency_MRU"
+msgstr "MRU"
+
+msgid "Intl_Currency_MUR"
+msgstr "MUR"
+
+msgid "Intl_Currency_MVR"
+msgstr "MVR"
+
+msgid "Intl_Currency_MWK"
+msgstr "MWK"
+
+msgid "Intl_Currency_MXN"
+msgstr "MXN"
+
+msgid "Intl_Currency_MYR"
+msgstr "MYR"
+
+msgid "Intl_Currency_MZN"
+msgstr "MZN"
+
+msgid "Intl_Currency_NAD"
+msgstr "NAD"
+
+msgid "Intl_Currency_NGN"
+msgstr "NGN"
+
+msgid "Intl_Currency_NIO"
+msgstr "NIO"
+
+msgid "Intl_Currency_NOK"
+msgstr "NOK"
+
+msgid "Intl_Currency_NPR"
+msgstr "NPR"
+
+msgid "Intl_Currency_NZD"
+msgstr "NZD"
+
+msgid "Intl_Currency_OMR"
+msgstr "OMR"
+
+msgid "Intl_Currency_PAB"
+msgstr "PAB"
+
+msgid "Intl_Currency_PEN"
+msgstr "PEN"
+
+msgid "Intl_Currency_PGK"
+msgstr "PGK"
+
+msgid "Intl_Currency_PHP"
+msgstr "PHP"
+
+msgid "Intl_Currency_PKR"
+msgstr "PKR"
+
+msgid "Intl_Currency_PLN"
+msgstr "PLN"
+
+msgid "Intl_Currency_PYG"
+msgstr "PYG"
+
+msgid "Intl_Currency_QAR"
+msgstr "QAR"
+
+msgid "Intl_Currency_RON"
+msgstr "RON"
+
+msgid "Intl_Currency_RSD"
+msgstr "RSD"
+
+msgid "Intl_Currency_RUB"
+msgstr "RUB"
+
+msgid "Intl_Currency_RWF"
+msgstr "RWF"
+
+msgid "Intl_Currency_SAR"
+msgstr "SAR"
+
+msgid "Intl_Currency_SBD"
+msgstr "SBD"
+
+msgid "Intl_Currency_SCR"
+msgstr "SCR"
+
+msgid "Intl_Currency_SDG"
+msgstr "SDG"
+
+msgid "Intl_Currency_SEK"
+msgstr "SEK"
+
+msgid "Intl_Currency_SGD"
+msgstr "SGD"
+
+msgid "Intl_Currency_SHP"
+msgstr "SHP"
+
+msgid "Intl_Currency_SLL"
+msgstr "SLL"
+
+msgid "Intl_Currency_SOS"
+msgstr "SOS"
+
+msgid "Intl_Currency_SRD"
+msgstr "SRD"
+
+msgid "Intl_Currency_SSP"
+msgstr "SSP"
+
+msgid "Intl_Currency_STN"
+msgstr "STN"
+
+msgid "Intl_Currency_SYP"
+msgstr "SYP"
+
+msgid "Intl_Currency_SZL"
+msgstr "SZL"
+
+msgid "Intl_Currency_THB"
+msgstr "THB"
+
+msgid "Intl_Currency_TJS"
+msgstr "TJS"
+
+msgid "Intl_Currency_TMT"
+msgstr "TMT"
+
+msgid "Intl_Currency_TND"
+msgstr "TND"
+
+msgid "Intl_Currency_TOP"
+msgstr "TOP"
+
+msgid "Intl_Currency_TRY"
+msgstr "TRY"
+
+msgid "Intl_Currency_TTD"
+msgstr "TTD"
+
+msgid "Intl_Currency_TWD"
+msgstr "TWD"
+
+msgid "Intl_Currency_TZS"
+msgstr "TZS"
+
+msgid "Intl_Currency_UAH"
+msgstr "UAH"
+
+msgid "Intl_Currency_UGX"
+msgstr "UGX"
+
+msgid "Intl_Currency_USD"
+msgstr "USD"
+
+msgid "Intl_Currency_UYU"
+msgstr "UYU"
+
+msgid "Intl_Currency_UZS"
+msgstr "UZS"
+
+msgid "Intl_Currency_VEF"
+msgstr "VEF"
+
+msgid "Intl_Currency_VND"
+msgstr "VND"
+
+msgid "Intl_Currency_VUV"
+msgstr "VUV"
+
+msgid "Intl_Currency_WST"
+msgstr "WST"
+
+msgid "Intl_Currency_XAF"
+msgstr "XAF"
+
+msgid "Intl_Currency_XCD"
+msgstr "XCD"
+
+msgid "Intl_Currency_XOF"
+msgstr "XOF"
+
+msgid "Intl_Currency_XPF"
+msgstr "XPF"
+
+msgid "Intl_Currency_YER"
+msgstr "YER"
+
+msgid "Intl_Currency_ZAR"
+msgstr "ZAR"
+
+msgid "Intl_Currency_ZMW"
+msgstr "ZMW"
+
+msgid "Intl_Day_Long_1"
+msgstr "lundo"
+
+msgid "Intl_Day_Long_2"
+msgstr "mardo"
+
+msgid "Intl_Day_Long_3"
+msgstr "merkredo"
+
+msgid "Intl_Day_Long_4"
+msgstr "ĵaŭdo"
+
+msgid "Intl_Day_Long_5"
+msgstr "vendredo"
+
+msgid "Intl_Day_Long_6"
+msgstr "sabato"
+
+msgid "Intl_Day_Long_7"
+msgstr "dimanĉo"
+
+msgid "Intl_Day_Long_StandAlone_1"
+msgstr "lundo"
+
+msgid "Intl_Day_Long_StandAlone_2"
+msgstr "mardo"
+
+msgid "Intl_Day_Long_StandAlone_3"
+msgstr "merkredo"
+
+msgid "Intl_Day_Long_StandAlone_4"
+msgstr "ĵaŭdo"
+
+msgid "Intl_Day_Long_StandAlone_5"
+msgstr "vendredo"
+
+msgid "Intl_Day_Long_StandAlone_6"
+msgstr "sabato"
+
+msgid "Intl_Day_Long_StandAlone_7"
+msgstr "dimanĉo"
+
+msgid "Intl_Day_Min_1"
+msgstr "lu"
+
+msgid "Intl_Day_Min_2"
+msgstr "ma"
+
+msgid "Intl_Day_Min_3"
+msgstr "me"
+
+msgid "Intl_Day_Min_4"
+msgstr "ĵa"
+
+msgid "Intl_Day_Min_5"
+msgstr "ve"
+
+msgid "Intl_Day_Min_6"
+msgstr "sa"
+
+msgid "Intl_Day_Min_7"
+msgstr "di"
+
+msgid "Intl_Day_Min_StandAlone_1"
+msgstr "lu"
+
+msgid "Intl_Day_Min_StandAlone_2"
+msgstr "ma"
+
+msgid "Intl_Day_Min_StandAlone_3"
+msgstr "me"
+
+msgid "Intl_Day_Min_StandAlone_4"
+msgstr "ĵa"
+
+msgid "Intl_Day_Min_StandAlone_5"
+msgstr "ve"
+
+msgid "Intl_Day_Min_StandAlone_6"
+msgstr "sa"
+
+msgid "Intl_Day_Min_StandAlone_7"
+msgstr "di"
+
+msgid "Intl_Day_Short_1"
+msgstr "lu"
+
+msgid "Intl_Day_Short_2"
+msgstr "ma"
+
+msgid "Intl_Day_Short_3"
+msgstr "me"
+
+msgid "Intl_Day_Short_4"
+msgstr "ĵa"
+
+msgid "Intl_Day_Short_5"
+msgstr "ve"
+
+msgid "Intl_Day_Short_6"
+msgstr "sa"
+
+msgid "Intl_Day_Short_7"
+msgstr "di"
+
+msgid "Intl_Day_Short_StandAlone_1"
+msgstr "lu"
+
+msgid "Intl_Day_Short_StandAlone_2"
+msgstr "ma"
+
+msgid "Intl_Day_Short_StandAlone_3"
+msgstr "me"
+
+msgid "Intl_Day_Short_StandAlone_4"
+msgstr "ĵa"
+
+msgid "Intl_Day_Short_StandAlone_5"
+msgstr "ve"
+
+msgid "Intl_Day_Short_StandAlone_6"
+msgstr "sa"
+
+msgid "Intl_Day_Short_StandAlone_7"
+msgstr "di"
+
+msgid "Intl_EnglishLanguageName"
+msgstr "Esperanto"
+
+msgid "Intl_Format_DateTime_Long"
+msgstr "EEEE, d-'a' 'de' MMMM y {time}"
+
+msgid "Intl_Format_DateTime_Short"
+msgstr "y-MMM-dd {time}"
+
+msgid "Intl_Format_Date_Day_Month"
+msgstr "MMM d, E"
+
+msgid "Intl_Format_Date_Long"
+msgstr "EEEE, d-'a' 'de' MMMM y"
+
+msgid "Intl_Format_Date_Short"
+msgstr "y-MMM-dd"
+
+msgid "Intl_Format_Hour_12"
+msgstr "h a"
+
+msgid "Intl_Format_Hour_24"
+msgstr "HH"
+
+msgid "Intl_Format_Interval_Long_D"
+msgstr "y MMMM d–d"
+
+msgid "Intl_Format_Interval_Long_M"
+msgstr "y MMMM d – MMMM d"
+
+msgid "Intl_Format_Interval_Long_Y"
+msgstr "y MMMM d – y MMMM d"
+
+msgid "Intl_Format_Interval_Short_D"
+msgstr "y MMM d–d"
+
+msgid "Intl_Format_Interval_Short_M"
+msgstr "y MMM d – MMM d"
+
+msgid "Intl_Format_Interval_Short_Y"
+msgstr "y MMM d – y MMM d"
+
+msgid "Intl_Format_Month_Long"
+msgstr "y MMMM"
+
+msgid "Intl_Format_Month_Short"
+msgstr "y MMM"
+
+msgid "Intl_Format_Time"
+msgstr "{time}"
+
+msgid "Intl_Format_Time_12"
+msgstr "h:mm:ss a"
+
+msgid "Intl_Format_Time_24"
+msgstr "HH:mm:ss"
+
+msgid "Intl_Format_Year"
+msgstr "y"
+
+msgid "Intl_Hours"
+msgstr "hr"
+
+msgid "Intl_Language_aa"
+msgstr "Afara"
+
+msgid "Intl_Language_ab"
+msgstr "Abĥaza"
+
+msgid "Intl_Language_af"
+msgstr "Afrikansa"
+
+msgid "Intl_Language_am"
+msgstr "Amhara"
+
+msgid "Intl_Language_ar"
+msgstr "Araba"
+
+msgid "Intl_Language_as"
+msgstr "Asama"
+
+msgid "Intl_Language_ay"
+msgstr "Ajmara"
+
+msgid "Intl_Language_az"
+msgstr "Azerbajĝana"
+
+msgid "Intl_Language_ba"
+msgstr "Baŝkira"
+
+msgid "Intl_Language_be"
+msgstr "Belorusa"
+
+msgid "Intl_Language_bg"
+msgstr "Bulgara"
+
+msgid "Intl_Language_bi"
+msgstr "Bislamo"
+
+msgid "Intl_Language_bn"
+msgstr "Bengala"
+
+msgid "Intl_Language_bo"
+msgstr "Tibeta"
+
+msgid "Intl_Language_br"
+msgstr "Bretona"
+
+msgid "Intl_Language_bs"
+msgstr "Bosnia"
+
+msgid "Intl_Language_ca"
+msgstr "Kataluna"
+
+msgid "Intl_Language_co"
+msgstr "Korsika"
+
+msgid "Intl_Language_cs"
+msgstr "Ĉeĥa"
+
+msgid "Intl_Language_cy"
+msgstr "Kimra"
+
+msgid "Intl_Language_da"
+msgstr "Dana"
+
+msgid "Intl_Language_de"
+msgstr "Germana"
+
+msgid "Intl_Language_dv"
+msgstr "Mahla"
+
+msgid "Intl_Language_dz"
+msgstr "Dzonko"
+
+msgid "Intl_Language_el"
+msgstr "Greka"
+
+msgid "Intl_Language_en"
+msgstr "Angla"
+
+msgid "Intl_Language_eo"
+msgstr "Esperanto"
+
+msgid "Intl_Language_es"
+msgstr "Hispana"
+
+msgid "Intl_Language_et"
+msgstr "Estona"
+
+msgid "Intl_Language_eu"
+msgstr "Eŭska"
+
+msgid "Intl_Language_fa"
+msgstr "Persa"
+
+msgid "Intl_Language_fi"
+msgstr "Finna"
+
+msgid "Intl_Language_fj"
+msgstr "Fiĝia"
+
+msgid "Intl_Language_fo"
+msgstr "Feroa"
+
+msgid "Intl_Language_fr"
+msgstr "Franca"
+
+msgid "Intl_Language_fy"
+msgstr "Frisa"
+
+msgid "Intl_Language_ga"
+msgstr "Irlanda"
+
+msgid "Intl_Language_gd"
+msgstr "Gaela"
+
+msgid "Intl_Language_gl"
+msgstr "Galega"
+
+msgid "Intl_Language_gn"
+msgstr "Gvarania"
+
+msgid "Intl_Language_gu"
+msgstr "Guĝarata"
+
+msgid "Intl_Language_ha"
+msgstr "Haŭsa"
+
+msgid "Intl_Language_he"
+msgstr "Hebrea"
+
+msgid "Intl_Language_hi"
+msgstr "Hinda"
+
+msgid "Intl_Language_hr"
+msgstr "Kroata"
+
+msgid "Intl_Language_ht"
+msgstr "Haitia kreola"
+
+msgid "Intl_Language_hu"
+msgstr "Hungara"
+
+msgid "Intl_Language_hy"
+msgstr "Armena"
+
+msgid "Intl_Language_ia"
+msgstr "Interlingvao"
+
+msgid "Intl_Language_id"
+msgstr "Indonezia"
+
+msgid "Intl_Language_ie"
+msgstr "Okcidentalo"
+
+msgid "Intl_Language_ik"
+msgstr "Eskima"
+
+msgid "Intl_Language_is"
+msgstr "Islanda"
+
+msgid "Intl_Language_it"
+msgstr "Itala"
+
+msgid "Intl_Language_iu"
+msgstr "Inuita"
+
+msgid "Intl_Language_ja"
+msgstr "Japana"
+
+msgid "Intl_Language_jv"
+msgstr "Java"
+
+msgid "Intl_Language_ka"
+msgstr "Kartvela"
+
+msgid "Intl_Language_kk"
+msgstr "Kazaĥa"
+
+msgid "Intl_Language_kl"
+msgstr "Gronlanda"
+
+msgid "Intl_Language_km"
+msgstr "Kmera"
+
+msgid "Intl_Language_kn"
+msgstr "Kanara"
+
+msgid "Intl_Language_ko"
+msgstr "Korea"
+
+msgid "Intl_Language_ks"
+msgstr "Kaŝmira"
+
+msgid "Intl_Language_ku"
+msgstr "Kurda"
+
+msgid "Intl_Language_ky"
+msgstr "Kirgiza"
+
+msgid "Intl_Language_la"
+msgstr "Latino"
+
+msgid "Intl_Language_lb"
+msgstr "Luksemburga"
+
+msgid "Intl_Language_ln"
+msgstr "Lingala"
+
+msgid "Intl_Language_lo"
+msgstr "Laŭa"
+
+msgid "Intl_Language_lt"
+msgstr "Litova"
+
+msgid "Intl_Language_lv"
+msgstr "Latva"
+
+msgid "Intl_Language_mg"
+msgstr "Malagasa"
+
+msgid "Intl_Language_mi"
+msgstr "Maoria"
+
+msgid "Intl_Language_mk"
+msgstr "Makedona"
+
+msgid "Intl_Language_ml"
+msgstr "Malajalama"
+
+msgid "Intl_Language_mn"
+msgstr "Mongola"
+
+msgid "Intl_Language_mr"
+msgstr "Marata"
+
+msgid "Intl_Language_ms"
+msgstr "Malaja"
+
+msgid "Intl_Language_mt"
+msgstr "Malta"
+
+msgid "Intl_Language_my"
+msgstr "Birma"
+
+msgid "Intl_Language_na"
+msgstr "Naura"
+
+msgid "Intl_Language_nb"
+msgstr "Dannorvega"
+
+msgid "Intl_Language_ne"
+msgstr "Nepala"
+
+msgid "Intl_Language_nl"
+msgstr "Nederlanda"
+
+msgid "Intl_Language_nn"
+msgstr "Novnorvega"
+
+msgid "Intl_Language_no"
+msgstr "Norvega"
+
+msgid "Intl_Language_oc"
+msgstr "Okcitana"
+
+msgid "Intl_Language_om"
+msgstr "Oroma"
+
+msgid "Intl_Language_or"
+msgstr "Orijo"
+
+msgid "Intl_Language_pa"
+msgstr "Panĝaba"
+
+msgid "Intl_Language_pl"
+msgstr "Pola"
+
+msgid "Intl_Language_ps"
+msgstr "Paŝtoa"
+
+msgid "Intl_Language_pt"
+msgstr "Portugala"
+
+msgid "Intl_Language_qu"
+msgstr "Keĉua"
+
+msgid "Intl_Language_rm"
+msgstr "Romanĉa"
+
+msgid "Intl_Language_rn"
+msgstr "Burunda"
+
+msgid "Intl_Language_ro"
+msgstr "Rumana"
+
+msgid "Intl_Language_ru"
+msgstr "Rusa"
+
+msgid "Intl_Language_rw"
+msgstr "Ruanda"
+
+msgid "Intl_Language_sa"
+msgstr "Sanskrito"
+
+msgid "Intl_Language_sd"
+msgstr "Sinda"
+
+msgid "Intl_Language_sg"
+msgstr "Sangoa"
+
+msgid "Intl_Language_si"
+msgstr "Sinhala"
+
+msgid "Intl_Language_sk"
+msgstr "Slovaka"
+
+msgid "Intl_Language_sl"
+msgstr "Slovena"
+
+msgid "Intl_Language_sm"
+msgstr "Samoa"
+
+msgid "Intl_Language_sn"
+msgstr "Ŝona"
+
+msgid "Intl_Language_so"
+msgstr "Somala"
+
+msgid "Intl_Language_sq"
+msgstr "Albana"
+
+msgid "Intl_Language_sr"
+msgstr "Serba"
+
+msgid "Intl_Language_ss"
+msgstr "Svazia"
+
+msgid "Intl_Language_st"
+msgstr "Sota"
+
+msgid "Intl_Language_su"
+msgstr "Sunda"
+
+msgid "Intl_Language_sv"
+msgstr "Sveda"
+
+msgid "Intl_Language_sw"
+msgstr "Svahila"
+
+msgid "Intl_Language_ta"
+msgstr "Tamila"
+
+msgid "Intl_Language_te"
+msgstr "Telugua"
+
+msgid "Intl_Language_tg"
+msgstr "Taĝika"
+
+msgid "Intl_Language_th"
+msgstr "Taja"
+
+msgid "Intl_Language_ti"
+msgstr "Tigraja"
+
+msgid "Intl_Language_tk"
+msgstr "Turkmena"
+
+msgid "Intl_Language_tl"
+msgstr "Tagaloga"
+
+msgid "Intl_Language_tn"
+msgstr "Cvana"
+
+msgid "Intl_Language_to"
+msgstr "Tongaa"
+
+msgid "Intl_Language_tr"
+msgstr "Turka"
+
+msgid "Intl_Language_ts"
+msgstr "Conga"
+
+msgid "Intl_Language_tt"
+msgstr "Tatara"
+
+msgid "Intl_Language_ug"
+msgstr "Ujgura"
+
+msgid "Intl_Language_uk"
+msgstr "Ukraina"
+
+msgid "Intl_Language_ur"
+msgstr "Urduo"
+
+msgid "Intl_Language_uz"
+msgstr "Uzbeka"
+
+msgid "Intl_Language_vi"
+msgstr "Vjetnama"
+
+msgid "Intl_Language_vo"
+msgstr "Volapuko"
+
+msgid "Intl_Language_wo"
+msgstr "Volofa"
+
+msgid "Intl_Language_xh"
+msgstr "Ksosa"
+
+msgid "Intl_Language_yi"
+msgstr "Jida"
+
+msgid "Intl_Language_yo"
+msgstr "Joruba"
+
+msgid "Intl_Language_za"
+msgstr "Ĝuanga"
+
+msgid "Intl_Language_zh"
+msgstr "Ĉina"
+
+msgid "Intl_Language_zu"
+msgstr "Zulua"
+
+msgid "Intl_LayoutDirection"
+msgstr "ltr"
+
+msgid "Intl_Minutes"
+msgstr "min"
+
+msgid "Intl_Month_Long_1"
+msgstr "januaro"
+
+msgid "Intl_Month_Long_10"
+msgstr "oktobro"
+
+msgid "Intl_Month_Long_11"
+msgstr "novembro"
+
+msgid "Intl_Month_Long_12"
+msgstr "decembro"
+
+msgid "Intl_Month_Long_2"
+msgstr "februaro"
+
+msgid "Intl_Month_Long_3"
+msgstr "marto"
+
+msgid "Intl_Month_Long_4"
+msgstr "aprilo"
+
+msgid "Intl_Month_Long_5"
+msgstr "majo"
+
+msgid "Intl_Month_Long_6"
+msgstr "junio"
+
+msgid "Intl_Month_Long_7"
+msgstr "julio"
+
+msgid "Intl_Month_Long_8"
+msgstr "aŭgusto"
+
+msgid "Intl_Month_Long_9"
+msgstr "septembro"
+
+msgid "Intl_Month_Long_StandAlone_1"
+msgstr "januaro"
+
+msgid "Intl_Month_Long_StandAlone_10"
+msgstr "oktobro"
+
+msgid "Intl_Month_Long_StandAlone_11"
+msgstr "novembro"
+
+msgid "Intl_Month_Long_StandAlone_12"
+msgstr "decembro"
+
+msgid "Intl_Month_Long_StandAlone_2"
+msgstr "februaro"
+
+msgid "Intl_Month_Long_StandAlone_3"
+msgstr "marto"
+
+msgid "Intl_Month_Long_StandAlone_4"
+msgstr "aprilo"
+
+msgid "Intl_Month_Long_StandAlone_5"
+msgstr "majo"
+
+msgid "Intl_Month_Long_StandAlone_6"
+msgstr "junio"
+
+msgid "Intl_Month_Long_StandAlone_7"
+msgstr "julio"
+
+msgid "Intl_Month_Long_StandAlone_8"
+msgstr "aŭgusto"
+
+msgid "Intl_Month_Long_StandAlone_9"
+msgstr "septembro"
+
+msgid "Intl_Month_Short_1"
+msgstr "jan"
+
+msgid "Intl_Month_Short_10"
+msgstr "okt"
+
+msgid "Intl_Month_Short_11"
+msgstr "nov"
+
+msgid "Intl_Month_Short_12"
+msgstr "dec"
+
+msgid "Intl_Month_Short_2"
+msgstr "feb"
+
+msgid "Intl_Month_Short_3"
+msgstr "mar"
+
+msgid "Intl_Month_Short_4"
+msgstr "apr"
+
+msgid "Intl_Month_Short_5"
+msgstr "maj"
+
+msgid "Intl_Month_Short_6"
+msgstr "jun"
+
+msgid "Intl_Month_Short_7"
+msgstr "jul"
+
+msgid "Intl_Month_Short_8"
+msgstr "aŭg"
+
+msgid "Intl_Month_Short_9"
+msgstr "sep"
+
+msgid "Intl_Month_Short_StandAlone_1"
+msgstr "jan"
+
+msgid "Intl_Month_Short_StandAlone_10"
+msgstr "okt"
+
+msgid "Intl_Month_Short_StandAlone_11"
+msgstr "nov"
+
+msgid "Intl_Month_Short_StandAlone_12"
+msgstr "dec"
+
+msgid "Intl_Month_Short_StandAlone_2"
+msgstr "feb"
+
+msgid "Intl_Month_Short_StandAlone_3"
+msgstr "mar"
+
+msgid "Intl_Month_Short_StandAlone_4"
+msgstr "apr"
+
+msgid "Intl_Month_Short_StandAlone_5"
+msgstr "maj"
+
+msgid "Intl_Month_Short_StandAlone_6"
+msgstr "jun"
+
+msgid "Intl_Month_Short_StandAlone_7"
+msgstr "jul"
+
+msgid "Intl_Month_Short_StandAlone_8"
+msgstr "aŭg"
+
+msgid "Intl_Month_Short_StandAlone_9"
+msgstr "sep"
+
+msgid "Intl_NDays"
+msgstr "%s d"
+
+msgid "Intl_NHoursShort"
+msgstr "%s h"
+
+msgid "Intl_NMinutes"
+msgstr "%s min"
+
+msgid "Intl_NMinutesShort"
+msgstr "%s min"
+
+msgid "Intl_NSeconds"
+msgstr "%s s"
+
+msgid "Intl_NSecondsShort"
+msgstr "%s s"
+
+msgid "Intl_NumberFormatCurrency"
+msgstr "¤ #,##0.00"
+
+msgid "Intl_NumberFormatNumber"
+msgstr "#,##0.###"
+
+msgid "Intl_NumberFormatPercent"
+msgstr "#,##0%"
+
+msgid "Intl_NumberSymbolDecimal"
+msgstr ","
+
+msgid "Intl_NumberSymbolGroup"
+msgstr " "
+
+msgid "Intl_NumberSymbolMinus"
+msgstr "-"
+
+msgid "Intl_NumberSymbolPercent"
+msgstr "%"
+
+msgid "Intl_NumberSymbolPlus"
+msgstr "+"
+
+msgid "Intl_OneDay"
+msgstr "1 d"
+
+msgid "Intl_OneMinute"
+msgstr "1 min"
+
+msgid "Intl_OneMinuteShort"
+msgstr "1 min"
+
+msgid "Intl_OriginalLanguageName"
+msgstr "Esperanto"
+
+msgid "Intl_PeriodDay"
+msgstr "Day"
+
+msgid "Intl_PeriodDays"
+msgstr "day"
+
+msgid "Intl_PeriodMonth"
+msgstr "Month"
+
+msgid "Intl_PeriodMonths"
+msgstr "mon"
+
+msgid "Intl_PeriodWeek"
+msgstr "Week"
+
+msgid "Intl_PeriodWeeks"
+msgstr "wk"
+
+msgid "Intl_PeriodYear"
+msgstr "Year"
+
+msgid "Intl_PeriodYears"
+msgstr "yr"
+
+msgid "Intl_Seconds"
+msgstr "sec"
+
+msgid "Intl_Time_AM"
+msgstr "atm"
+
+msgid "Intl_Time_PM"
+msgstr "ptm"
+
+msgid "Intl_Timezone_Africa_Asmera"
+msgstr "Asmara"
+
+msgid "Intl_Timezone_Africa_Ceuta"
+msgstr "Ceuta"
+
+msgid "Intl_Timezone_Africa_Kinshasa"
+msgstr "Kinshasa"
+
+msgid "Intl_Timezone_Africa_Lubumbashi"
+msgstr "Lubumbashi"
+
+msgid "Intl_Timezone_America_Adak"
+msgstr "Adak"
+
+msgid "Intl_Timezone_America_Anchorage"
+msgstr "Anchorage"
+
+msgid "Intl_Timezone_America_Araguaina"
+msgstr "Araguaina"
+
+msgid "Intl_Timezone_America_Argentina_LaRioja"
+msgstr "La Rioja"
+
+msgid "Intl_Timezone_America_Argentina_RioGallegos"
+msgstr "Rio Gallegos"
+
+msgid "Intl_Timezone_America_Argentina_Salta"
+msgstr "Salta"
+
+msgid "Intl_Timezone_America_Argentina_SanJuan"
+msgstr "San Juan"
+
+msgid "Intl_Timezone_America_Argentina_SanLuis"
+msgstr "San Luis"
+
+msgid "Intl_Timezone_America_Argentina_Tucuman"
+msgstr "Tucuman"
+
+msgid "Intl_Timezone_America_Argentina_Ushuaia"
+msgstr "Ushuaia"
+
+msgid "Intl_Timezone_America_Bahia"
+msgstr "Bahia"
+
+msgid "Intl_Timezone_America_BahiaBanderas"
+msgstr "Bahia Banderas"
+
+msgid "Intl_Timezone_America_Belem"
+msgstr "Belem"
+
+msgid "Intl_Timezone_America_Blanc-Sablon"
+msgstr "Blanc-Sablon"
+
+msgid "Intl_Timezone_America_BoaVista"
+msgstr "Boa Vista"
+
+msgid "Intl_Timezone_America_Boise"
+msgstr "Boise"
+
+msgid "Intl_Timezone_America_BuenosAires"
+msgstr "Buenos Aires"
+
+msgid "Intl_Timezone_America_CambridgeBay"
+msgstr "Cambridge Bay"
+
+msgid "Intl_Timezone_America_CampoGrande"
+msgstr "Campo Grande"
+
+msgid "Intl_Timezone_America_Cancun"
+msgstr "Cancun"
+
+msgid "Intl_Timezone_America_Catamarca"
+msgstr "Catamarca"
+
+msgid "Intl_Timezone_America_Chicago"
+msgstr "Chicago"
+
+msgid "Intl_Timezone_America_Chihuahua"
+msgstr "Chihuahua"
+
+msgid "Intl_Timezone_America_CoralHarbour"
+msgstr "Atikokan"
+
+msgid "Intl_Timezone_America_Cordoba"
+msgstr "Cordoba"
+
+msgid "Intl_Timezone_America_Creston"
+msgstr "Creston"
+
+msgid "Intl_Timezone_America_Cuiaba"
+msgstr "Cuiaba"
+
+msgid "Intl_Timezone_America_Danmarkshavn"
+msgstr "Danmarkshavn"
+
+msgid "Intl_Timezone_America_Dawson"
+msgstr "Dawson"
+
+msgid "Intl_Timezone_America_DawsonCreek"
+msgstr "Dawson Creek"
+
+msgid "Intl_Timezone_America_Denver"
+msgstr "Denver"
+
+msgid "Intl_Timezone_America_Detroit"
+msgstr "Detroit"
+
+msgid "Intl_Timezone_America_Edmonton"
+msgstr "Edmonton"
+
+msgid "Intl_Timezone_America_Eirunepe"
+msgstr "Eirunepe"
+
+msgid "Intl_Timezone_America_FortNelson"
+msgstr "Fort Nelson"
+
+msgid "Intl_Timezone_America_Fortaleza"
+msgstr "Fortaleza"
+
+msgid "Intl_Timezone_America_GlaceBay"
+msgstr "Glace Bay"
+
+msgid "Intl_Timezone_America_Godthab"
+msgstr "Nuuk"
+
+msgid "Intl_Timezone_America_GooseBay"
+msgstr "Goose Bay"
+
+msgid "Intl_Timezone_America_Guayaquil"
+msgstr "Guayaquil"
+
+msgid "Intl_Timezone_America_Halifax"
+msgstr "Halifax"
+
+msgid "Intl_Timezone_America_Hermosillo"
+msgstr "Hermosillo"
+
+msgid "Intl_Timezone_America_Indiana_Knox"
+msgstr "Knox, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Marengo"
+msgstr "Marengo, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Petersburg"
+msgstr "Petersburg, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_TellCity"
+msgstr "Tell City, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vevay"
+msgstr "Vevay, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vincennes"
+msgstr "Vincennes, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Winamac"
+msgstr "Winamac, Indiana"
+
+msgid "Intl_Timezone_America_Indianapolis"
+msgstr "Indianapolis"
+
+msgid "Intl_Timezone_America_Inuvik"
+msgstr "Inuvik"
+
+msgid "Intl_Timezone_America_Iqaluit"
+msgstr "Iqaluit"
+
+msgid "Intl_Timezone_America_Jujuy"
+msgstr "Jujuy"
+
+msgid "Intl_Timezone_America_Juneau"
+msgstr "Juneau"
+
+msgid "Intl_Timezone_America_Kentucky_Monticello"
+msgstr "Monticello, Kentucky"
+
+msgid "Intl_Timezone_America_LosAngeles"
+msgstr "Los Angeles"
+
+msgid "Intl_Timezone_America_Louisville"
+msgstr "Louisville"
+
+msgid "Intl_Timezone_America_Maceio"
+msgstr "Maceio"
+
+msgid "Intl_Timezone_America_Manaus"
+msgstr "Manaus"
+
+msgid "Intl_Timezone_America_Matamoros"
+msgstr "Matamoros"
+
+msgid "Intl_Timezone_America_Mazatlan"
+msgstr "Mazatlan"
+
+msgid "Intl_Timezone_America_Mendoza"
+msgstr "Mendoza"
+
+msgid "Intl_Timezone_America_Menominee"
+msgstr "Menominee"
+
+msgid "Intl_Timezone_America_Merida"
+msgstr "Merida"
+
+msgid "Intl_Timezone_America_Metlakatla"
+msgstr "Metlakatla"
+
+msgid "Intl_Timezone_America_MexicoCity"
+msgstr "Mexico City"
+
+msgid "Intl_Timezone_America_Moncton"
+msgstr "Moncton"
+
+msgid "Intl_Timezone_America_Monterrey"
+msgstr "Monterrey"
+
+msgid "Intl_Timezone_America_NewYork"
+msgstr "New York"
+
+msgid "Intl_Timezone_America_Nipigon"
+msgstr "Nipigon"
+
+msgid "Intl_Timezone_America_Nome"
+msgstr "Nome"
+
+msgid "Intl_Timezone_America_Noronha"
+msgstr "Noronha"
+
+msgid "Intl_Timezone_America_NorthDakota_Beulah"
+msgstr "Beulah, North Dakota"
+
+msgid "Intl_Timezone_America_NorthDakota_Center"
+msgstr "Center, North Dakota"
+
+msgid "Intl_Timezone_America_NorthDakota_NewSalem"
+msgstr "New Salem, North Dakota"
+
+msgid "Intl_Timezone_America_Ojinaga"
+msgstr "Ojinaga"
+
+msgid "Intl_Timezone_America_Pangnirtung"
+msgstr "Pangnirtung"
+
+msgid "Intl_Timezone_America_Phoenix"
+msgstr "Phoenix"
+
+msgid "Intl_Timezone_America_PortoVelho"
+msgstr "Porto Velho"
+
+msgid "Intl_Timezone_America_PuntaArenas"
+msgstr "Punta Arenas"
+
+msgid "Intl_Timezone_America_RainyRiver"
+msgstr "Rainy River"
+
+msgid "Intl_Timezone_America_RankinInlet"
+msgstr "Rankin Inlet"
+
+msgid "Intl_Timezone_America_Recife"
+msgstr "Recife"
+
+msgid "Intl_Timezone_America_Regina"
+msgstr "Regina"
+
+msgid "Intl_Timezone_America_Resolute"
+msgstr "Resolute"
+
+msgid "Intl_Timezone_America_RioBranco"
+msgstr "Rio Branco"
+
+msgid "Intl_Timezone_America_Santarem"
+msgstr "Santarem"
+
+msgid "Intl_Timezone_America_Santiago"
+msgstr "Santiago"
+
+msgid "Intl_Timezone_America_SaoPaulo"
+msgstr "Sao Paulo"
+
+msgid "Intl_Timezone_America_Scoresbysund"
+msgstr "Ittoqqortoormiit"
+
+msgid "Intl_Timezone_America_Sitka"
+msgstr "Sitka"
+
+msgid "Intl_Timezone_America_StJohns"
+msgstr "St. John’s"
+
+msgid "Intl_Timezone_America_SwiftCurrent"
+msgstr "Swift Current"
+
+msgid "Intl_Timezone_America_Thule"
+msgstr "Thule"
+
+msgid "Intl_Timezone_America_ThunderBay"
+msgstr "Thunder Bay"
+
+msgid "Intl_Timezone_America_Tijuana"
+msgstr "Tijuana"
+
+msgid "Intl_Timezone_America_Toronto"
+msgstr "Toronto"
+
+msgid "Intl_Timezone_America_Vancouver"
+msgstr "Vancouver"
+
+msgid "Intl_Timezone_America_Whitehorse"
+msgstr "Whitehorse"
+
+msgid "Intl_Timezone_America_Winnipeg"
+msgstr "Winnipeg"
+
+msgid "Intl_Timezone_America_Yakutat"
+msgstr "Yakutat"
+
+msgid "Intl_Timezone_America_Yellowknife"
+msgstr "Yellowknife"
+
+msgid "Intl_Timezone_Antarctica_Casey"
+msgstr "Casey"
+
+msgid "Intl_Timezone_Antarctica_Davis"
+msgstr "Davis"
+
+msgid "Intl_Timezone_Antarctica_DumontDUrville"
+msgstr "Dumont d’Urville"
+
+msgid "Intl_Timezone_Antarctica_Macquarie"
+msgstr "Macquarie"
+
+msgid "Intl_Timezone_Antarctica_Mawson"
+msgstr "Mawson"
+
+msgid "Intl_Timezone_Antarctica_McMurdo"
+msgstr "McMurdo"
+
+msgid "Intl_Timezone_Antarctica_Palmer"
+msgstr "Palmer"
+
+msgid "Intl_Timezone_Antarctica_Rothera"
+msgstr "Rothera"
+
+msgid "Intl_Timezone_Antarctica_Syowa"
+msgstr "Syowa"
+
+msgid "Intl_Timezone_Antarctica_Troll"
+msgstr "Troll"
+
+msgid "Intl_Timezone_Antarctica_Vostok"
+msgstr "Vostok"
+
+msgid "Intl_Timezone_Asia_Almaty"
+msgstr "Almaty"
+
+msgid "Intl_Timezone_Asia_Anadyr"
+msgstr "Anadyr"
+
+msgid "Intl_Timezone_Asia_Aqtau"
+msgstr "Aqtau"
+
+msgid "Intl_Timezone_Asia_Aqtobe"
+msgstr "Aqtobe"
+
+msgid "Intl_Timezone_Asia_Atyrau"
+msgstr "Atyrau"
+
+msgid "Intl_Timezone_Asia_Barnaul"
+msgstr "Barnaul"
+
+msgid "Intl_Timezone_Asia_Calcutta"
+msgstr "Kolkata"
+
+msgid "Intl_Timezone_Asia_Chita"
+msgstr "Chita"
+
+msgid "Intl_Timezone_Asia_Choibalsan"
+msgstr "Choibalsan"
+
+msgid "Intl_Timezone_Asia_Famagusta"
+msgstr "Famagusta"
+
+msgid "Intl_Timezone_Asia_Gaza"
+msgstr "Gaza"
+
+msgid "Intl_Timezone_Asia_Hebron"
+msgstr "Hebron"
+
+msgid "Intl_Timezone_Asia_Hovd"
+msgstr "Hovd"
+
+msgid "Intl_Timezone_Asia_Irkutsk"
+msgstr "Irkutsk"
+
+msgid "Intl_Timezone_Asia_Jakarta"
+msgstr "Jakarta"
+
+msgid "Intl_Timezone_Asia_Jayapura"
+msgstr "Jayapura"
+
+msgid "Intl_Timezone_Asia_Kamchatka"
+msgstr "Kamchatka"
+
+msgid "Intl_Timezone_Asia_Katmandu"
+msgstr "Kathmandu"
+
+msgid "Intl_Timezone_Asia_Khandyga"
+msgstr "Khandyga"
+
+msgid "Intl_Timezone_Asia_Krasnoyarsk"
+msgstr "Krasnoyarsk"
+
+msgid "Intl_Timezone_Asia_KualaLumpur"
+msgstr "Kuala Lumpur"
+
+msgid "Intl_Timezone_Asia_Kuching"
+msgstr "Kuching"
+
+msgid "Intl_Timezone_Asia_Magadan"
+msgstr "Magadan"
+
+msgid "Intl_Timezone_Asia_Makassar"
+msgstr "Makassar"
+
+msgid "Intl_Timezone_Asia_Nicosia"
+msgstr "Nicosia"
+
+msgid "Intl_Timezone_Asia_Novokuznetsk"
+msgstr "Novokuznetsk"
+
+msgid "Intl_Timezone_Asia_Novosibirsk"
+msgstr "Novosibirsk"
+
+msgid "Intl_Timezone_Asia_Omsk"
+msgstr "Omsk"
+
+msgid "Intl_Timezone_Asia_Oral"
+msgstr "Oral"
+
+msgid "Intl_Timezone_Asia_Pontianak"
+msgstr "Pontianak"
+
+msgid "Intl_Timezone_Asia_Qyzylorda"
+msgstr "Qyzylorda"
+
+msgid "Intl_Timezone_Asia_Rangoon"
+msgstr "Yangon"
+
+msgid "Intl_Timezone_Asia_Saigon"
+msgstr "Ho Chi Minh"
+
+msgid "Intl_Timezone_Asia_Sakhalin"
+msgstr "Sakhalin"
+
+msgid "Intl_Timezone_Asia_Samarkand"
+msgstr "Samarkand"
+
+msgid "Intl_Timezone_Asia_Shanghai"
+msgstr "Shanghai"
+
+msgid "Intl_Timezone_Asia_Srednekolymsk"
+msgstr "Srednekolymsk"
+
+msgid "Intl_Timezone_Asia_Tashkent"
+msgstr "Tashkent"
+
+msgid "Intl_Timezone_Asia_Tomsk"
+msgstr "Tomsk"
+
+msgid "Intl_Timezone_Asia_Ulaanbaatar"
+msgstr "Ulaanbaatar"
+
+msgid "Intl_Timezone_Asia_Urumqi"
+msgstr "Urumqi"
+
+msgid "Intl_Timezone_Asia_Ust-Nera"
+msgstr "Ust-Nera"
+
+msgid "Intl_Timezone_Asia_Vladivostok"
+msgstr "Vladivostok"
+
+msgid "Intl_Timezone_Asia_Yakutsk"
+msgstr "Yakutsk"
+
+msgid "Intl_Timezone_Asia_Yekaterinburg"
+msgstr "Yekaterinburg"
+
+msgid "Intl_Timezone_Atlantic_Azores"
+msgstr "Azores"
+
+msgid "Intl_Timezone_Atlantic_Canary"
+msgstr "Canary"
+
+msgid "Intl_Timezone_Atlantic_Faeroe"
+msgstr "Faroe"
+
+msgid "Intl_Timezone_Atlantic_Madeira"
+msgstr "Madeira"
+
+msgid "Intl_Timezone_Australia_Adelaide"
+msgstr "Adelaide"
+
+msgid "Intl_Timezone_Australia_Brisbane"
+msgstr "Brisbane"
+
+msgid "Intl_Timezone_Australia_BrokenHill"
+msgstr "Broken Hill"
+
+msgid "Intl_Timezone_Australia_Currie"
+msgstr "Currie"
+
+msgid "Intl_Timezone_Australia_Darwin"
+msgstr "Darwin"
+
+msgid "Intl_Timezone_Australia_Eucla"
+msgstr "Eucla"
+
+msgid "Intl_Timezone_Australia_Hobart"
+msgstr "Hobart"
+
+msgid "Intl_Timezone_Australia_Lindeman"
+msgstr "Lindeman"
+
+msgid "Intl_Timezone_Australia_LordHowe"
+msgstr "Lord Howe"
+
+msgid "Intl_Timezone_Australia_Melbourne"
+msgstr "Melbourne"
+
+msgid "Intl_Timezone_Australia_Perth"
+msgstr "Perth"
+
+msgid "Intl_Timezone_Australia_Sydney"
+msgstr "Sydney"
+
+msgid "Intl_Timezone_Europe_Astrakhan"
+msgstr "Astrakhan"
+
+msgid "Intl_Timezone_Europe_Berlin"
+msgstr "Berlin"
+
+msgid "Intl_Timezone_Europe_Busingen"
+msgstr "Busingen"
+
+msgid "Intl_Timezone_Europe_Kaliningrad"
+msgstr "Kaliningrad"
+
+msgid "Intl_Timezone_Europe_Kiev"
+msgstr "Kiev"
+
+msgid "Intl_Timezone_Europe_Kirov"
+msgstr "Kirov"
+
+msgid "Intl_Timezone_Europe_Lisbon"
+msgstr "Lisbon"
+
+msgid "Intl_Timezone_Europe_Madrid"
+msgstr "Madrid"
+
+msgid "Intl_Timezone_Europe_Moscow"
+msgstr "Moscow"
+
+msgid "Intl_Timezone_Europe_Samara"
+msgstr "Samara"
+
+msgid "Intl_Timezone_Europe_Saratov"
+msgstr "Saratov"
+
+msgid "Intl_Timezone_Europe_Simferopol"
+msgstr "Simferopol"
+
+msgid "Intl_Timezone_Europe_Ulyanovsk"
+msgstr "Ulyanovsk"
+
+msgid "Intl_Timezone_Europe_Uzhgorod"
+msgstr "Uzhgorod"
+
+msgid "Intl_Timezone_Europe_Volgograd"
+msgstr "Volgograd"
+
+msgid "Intl_Timezone_Europe_Zaporozhye"
+msgstr "Zaporozhye"
+
+msgid "Intl_Timezone_Pacific_Auckland"
+msgstr "Auckland"
+
+msgid "Intl_Timezone_Pacific_Bougainville"
+msgstr "Bougainville"
+
+msgid "Intl_Timezone_Pacific_Chatham"
+msgstr "Chatham"
+
+msgid "Intl_Timezone_Pacific_Easter"
+msgstr "Easter"
+
+msgid "Intl_Timezone_Pacific_Enderbury"
+msgstr "Enderbury"
+
+msgid "Intl_Timezone_Pacific_Galapagos"
+msgstr "Galapagos"
+
+msgid "Intl_Timezone_Pacific_Gambier"
+msgstr "Gambier"
+
+msgid "Intl_Timezone_Pacific_Johnston"
+msgstr "Johnston"
+
+msgid "Intl_Timezone_Pacific_Kiritimati"
+msgstr "Kiritimati"
+
+msgid "Intl_Timezone_Pacific_Kosrae"
+msgstr "Kosrae"
+
+msgid "Intl_Timezone_Pacific_Kwajalein"
+msgstr "Kwajalein"
+
+msgid "Intl_Timezone_Pacific_Majuro"
+msgstr "Majuro"
+
+msgid "Intl_Timezone_Pacific_Marquesas"
+msgstr "Marquesas"
+
+msgid "Intl_Timezone_Pacific_Midway"
+msgstr "Midway"
+
+msgid "Intl_Timezone_Pacific_Ponape"
+msgstr "Pohnpei"
+
+msgid "Intl_Timezone_Pacific_PortMoresby"
+msgstr "Port Moresby"
+
+msgid "Intl_Timezone_Pacific_Tahiti"
+msgstr "Tahiti"
+
+msgid "Intl_Timezone_Pacific_Tarawa"
+msgstr "Tarawa"
+
+msgid "Intl_Timezone_Pacific_Truk"
+msgstr "Chuuk"
+
+msgid "Intl_Timezone_Pacific_Wake"
+msgstr "Wake"
+
+msgid "Intl_Today"
+msgstr "Today"
+
+msgid "Intl_Year_Short"
+msgstr "Year"
+
+msgid "Intl_Yesterday"
+msgstr "Yesterday"
+
+msgid "MultiSites_Pagination"
+msgstr "%1$s - %2$s de %3$s"
+
+msgid "Referrers_ColumnWebsite"
+msgstr "Retejo"
+
+msgid "TagManager_CategoryDate"
+msgstr "Dato"
+
+msgid "TagManager_CategoryErrors"
+msgstr "Eraroj"
+
+msgid "UsersManager_MenuUsers"
+msgstr "Uzantoj"
+
+msgid "UsersManager_PrivView"
+msgstr "vidigi"
+
+msgid "UsersManager_User"
+msgstr "Uzanto"
+
+msgid "UsersManager_ShowAll"
+msgstr "Montri ĉiujn"
+
+msgid "UsersManager_Username"
+msgstr "Uzantnomo"
+
+msgid "VisitorInterest_NPages"
+msgstr "%s paĝoj"
+
+msgid "VisitorInterest_OnePage"
+msgstr "1 paĝo"
+
+msgid "VisitsSummary_NbActionsDescription"
+msgstr "%s agoj"
+
+msgid "Widgetize_OpenInNewWindow"
+msgstr "Fermi en novan fenestron"

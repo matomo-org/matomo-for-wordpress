@@ -1,0 +1,4166 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-10-21T03:38:10+00:00\n"
+"PO-Revision-Date: 2019-10-21T03:38:10+00:00\n"
+"Language: am\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Domain: matomo\n"
+
+msgid "General_Action"
+msgstr "ርምጃ"
+
+msgid "General_Actions"
+msgstr "ርምጃዎች"
+
+msgid "General_API"
+msgstr "ኤፒአይI"
+
+msgid "General_BackToPiwik"
+msgstr "ወደፒዊክ ተመለስ"
+
+msgid "General_Close"
+msgstr "ዝጋ"
+
+msgid "General_ColumnActionsPerVisit"
+msgstr "ርምጃ ከጉብኝት"
+
+msgid "General_ColumnAvgTimeOnSite"
+msgstr "በየድር ጣቢያ የተፈጀ አማካይ ሰዓት"
+
+msgid "General_ColumnBounceRate"
+msgstr "ተመላሽ"
+
+msgid "General_ColumnKeyword"
+msgstr "ቁልፍ ቃላት"
+
+msgid "General_ColumnLabel"
+msgstr "መሰየሚያ"
+
+msgid "General_ColumnMaxActions"
+msgstr "በአንድ ጉብኝት የተወሰዱ ከፍተኛ ርምጃዎች"
+
+msgid "General_ColumnNbActions"
+msgstr "ርምጃዎች"
+
+msgid "General_ColumnNbUniqVisitors"
+msgstr "ብቸኛ ጎብኚዎች"
+
+msgid "General_ColumnNbUsers"
+msgstr "ተጠቃሚዎች"
+
+msgid "General_ColumnNbVisits"
+msgstr "ጉብኝቶች"
+
+msgid "General_ColumnPageviews"
+msgstr "ገፅ ትይታዎች"
+
+msgid "General_ColumnRevenue"
+msgstr "ገቢ"
+
+msgid "General_ColumnSumVisitLength"
+msgstr "በጎብኚዎች የተፈጀ ከፍተኛ ሰዓት (በሰከንዶች)"
+
+msgid "General_ColumnUniquePageviews"
+msgstr "ብቸኛ ገፅ ትይታዎች"
+
+msgid "General_ColumnValuePerVisit"
+msgstr "እሴት በጉብኝት"
+
+msgid "General_ColumnVisitsWithConversions"
+msgstr "ጉብኝት ከልወጣዎች ጋር"
+
+msgid "General_ContinueToPiwik"
+msgstr "ወደ ፒዊክ ቀጥል"
+
+msgid "General_DateRangeFrom"
+msgstr "የለም"
+
+msgid "General_Delete"
+msgstr "ሰርዝ"
+
+msgid "General_Done"
+msgstr "አልቋል"
+
+msgid "General_Downloads"
+msgstr "የወረዱ"
+
+msgid "General_Edit"
+msgstr "አርትእ"
+
+msgid "General_Error"
+msgstr "ስህተት"
+
+msgid "General_EvolutionOverPeriod"
+msgstr "Evolution በፔሬዱ ላይ"
+
+msgid "General_Export"
+msgstr "ላክ"
+
+msgid "General_GiveUsYourFeedback"
+msgstr "እባክዎ መልሰህ መግብ ስጡን!"
+
+msgid "General_HelloUser"
+msgstr "ሃሎ, %s!"
+
+msgid "General_Id"
+msgstr "የለም"
+
+msgid "General_JsTrackingTag"
+msgstr "የጃቫ ስክሪፕት ዱካ መከተያ መለያ"
+
+msgid "General_Loading"
+msgstr "በማስገባት ላይ..."
+
+msgid "General_LoadingData"
+msgstr "ውሂብ በማስገባት ላይ..."
+
+msgid "General_Locale"
+msgstr "am_ET.UTF-8"
+
+msgid "General_Logout"
+msgstr "ውጣ"
+
+msgid "General_Next"
+msgstr "ቀጥል"
+
+msgid "General_No"
+msgstr "የለም"
+
+msgid "General_NoDataForGraph"
+msgstr "ለዚህ ግራፍ ምንም ውሂብ የለም"
+
+msgid "General_NoDataForTagCloud"
+msgstr "ለዚህ መለያ ክላውድ ምንም ውሂብ የለም."
+
+msgid "General_NVisits"
+msgstr "%s ጉበኝቶች"
+
+msgid "General_NUniqueVisitors"
+msgstr "%s የተለዩ ጎብኚዎች"
+
+msgid "General_Ok"
+msgstr "ይሁን"
+
+msgid "General_OpenSourceWebAnalytics"
+msgstr "ክፍት የሆነ የድር ጣቢያ ማመዛዘኛ"
+
+msgid "General_Others"
+msgstr "ለሎች"
+
+msgid "General_Outlinks"
+msgstr "ወጪአገናኞች"
+
+msgid "General_Overview"
+msgstr "አጠቃላይ እይታ"
+
+msgid "General_Password"
+msgstr "የይለፍ ቃል"
+
+msgid "General_Piechart"
+msgstr "አምባሻ ገበታ"
+
+msgid "General_PiwikXIsAvailablePleaseUpdateNow"
+msgstr "ፒዊክን %1$s ማግኘት ይቻላል። %2$s እባክዎን ያልቁት!%3$s (ለውጦቹን%4$s ይመልከቱ%5$s)."
+
+msgid "General_Plugin"
+msgstr "ተሰኪ"
+
+msgid "General_Plugins"
+msgstr "ተሰኪዎች"
+
+msgid "General_Previous"
+msgstr "ቀደም ያለ"
+
+msgid "General_RefreshPage"
+msgstr "ገፁን አድስ"
+
+msgid "General_Required"
+msgstr "%s አስፈላጊ"
+
+msgid "General_Save"
+msgstr "አስቀምጥ"
+
+msgid "General_Search"
+msgstr "ፈልግ"
+
+msgid "General_Settings"
+msgstr "ቅንብሮች"
+
+msgid "General_Table"
+msgstr "ሰንጠረዥ"
+
+msgid "General_TagCloud"
+msgstr "መለያ Cloud"
+
+msgid "General_TrackingScopeAction"
+msgstr "ርምጃ"
+
+msgid "General_TranslatorName"
+msgstr "Alazar Tekle / Ethiopia Map"
+
+msgid "General_Unknown"
+msgstr "ያልታወቀ"
+
+msgid "General_VBarGraph"
+msgstr "አቀባዊ አሞሌ ግራፍ"
+
+msgid "General_View"
+msgstr "ትእይታ"
+
+msgid "General_Visitors"
+msgstr "ጎብኝዎች"
+
+msgid "General_VisitorSettings"
+msgstr "የጎበኚዎች ቅንብሮች"
+
+msgid "General_Warning"
+msgstr "ማስጠንቀቂያ"
+
+msgid "General_Website"
+msgstr "ድር ጣቢያ"
+
+msgid "General_Widgets"
+msgstr "Widgets"
+
+msgid "General_Yes"
+msgstr "አዎን"
+
+msgid "API_LoadedAPIs"
+msgstr "ማስጋባት ተሳክቷል %s ኤፒአይዎች"
+
+msgid "Actions_ColumnClickedURL"
+msgstr "ጠቅ አድርግ ዩ አር ኤል"
+
+msgid "Actions_ColumnClicks"
+msgstr "ጠቃድርጎች"
+
+msgid "Actions_ColumnDownloadURL"
+msgstr "የማውረጃ ዩ አር ኤል"
+
+msgid "Actions_ColumnPageName"
+msgstr "የገፅ ስም"
+
+msgid "Actions_ColumnUniqueClicks"
+msgstr "ብቸኛ ጠቅአድርጎች"
+
+msgid "Actions_ColumnUniqueDownloads"
+msgstr "ብቸኛ የወረዱ"
+
+msgid "CoreHome_CategoryNoData"
+msgstr "በዚህ ፈርጅ ምንም ውሂብ የለም. \"ሁሉንም ምድብ\" ለማጠቃለል ይሞክሩ።"
+
+msgid "CoreHome_ShowJSCode"
+msgstr "ለማስገባት የጃቫ ስክሪፕትን ኮድ አሳይ"
+
+msgid "CoreHome_SystemSummaryPhpVersion"
+msgstr "የፒ ኤች ፒ ስሪት"
+
+msgid "CorePluginsAdmin_Activate"
+msgstr "አግብር"
+
+msgid "CorePluginsAdmin_Activated"
+msgstr "የተገበረ"
+
+msgid "CorePluginsAdmin_Active"
+msgstr "ገባሪ"
+
+msgid "CorePluginsAdmin_Deactivate"
+msgstr "አቦዝን"
+
+msgid "CorePluginsAdmin_Inactive"
+msgstr "ያልተመረጠ"
+
+msgid "CorePluginsAdmin_PluginHomepage"
+msgstr "የተሰኪ መነሻ ገፅ"
+
+msgid "CorePluginsAdmin_PluginsManagement"
+msgstr "ተሰኪዎች መመነጅ"
+
+msgid "CorePluginsAdmin_Status"
+msgstr "ሁኔታ"
+
+msgid "CorePluginsAdmin_Version"
+msgstr "ስሪት"
+
+msgid "CorePluginsAdmin_Websites"
+msgstr "ድር ጣቢያዎች"
+
+msgid "CoreUpdater_CriticalErrorDuringTheUpgradeProcess"
+msgstr "በማላቅ ሂደት ላይ ያጋጠመ ከባድ እንከን:"
+
+msgid "CoreUpdater_DatabaseUpgradeRequired"
+msgstr "የውሂብ ጎታ ማላቅ ያስፈልጋል"
+
+msgid "CoreUpdater_DownloadX"
+msgstr "አውርድ %s"
+
+msgid "CoreUpdater_ErrorDuringPluginsUpdates"
+msgstr "ተሰኪዎችን በማላቅ ሂደት ያጋጠሙ ስህተቶች:"
+
+msgid "CoreUpdater_HelpMessageContent"
+msgstr "የ %1$s ፒዊክን ኤፍ ኤ ኪው %2$s ይመልከቱ ምከነያቱም ባማላቀ ወቅት በጣም ተደጋጋሚ ለሆኑ ስህተቶች መልስ የሰጣልና %3$s የስርዓት አስተዳዳሪዎን ይጠይቁ - ከአገልጋይ ወይም ማይ ኤስ ኪው ኤል መዋቅር ጋር ተዛማጅነት ላላቸው ስህተቶች ርዳታ ሊያገኙ ይችላሉ"
+
+msgid "CoreUpdater_HelpMessageIntroductionWhenError"
+msgstr "ከላይ ያለው የስህተት ኮር መልእክት ነው። ምክንያቱን ለማስረዳት አጋዥ ሊሆን ይችላል ነገር ግን ተጨማሪ ርዳታ ከፈለጉ እባክዎ:"
+
+msgid "CoreUpdater_HelpMessageIntroductionWhenWarning"
+msgstr "ማላቁ በሚጋባ ተጠናቅቋል ቢሆንም በሂደቱ ላይ ችግሮች ነበሩ። ዝርዝር ከፈለጉ ከላይ የተቀመጡትን መግለጫዎች ያንቡ። ለተጨማሪ ርዳታ፡"
+
+msgid "CoreUpdater_InstallingTheLatestVersion"
+msgstr "አዲሱን ስሪት በመጫን ላይ"
+
+msgid "CoreUpdater_PiwikHasBeenSuccessfullyUpgraded"
+msgstr "ፒዊክን ማላቅ በተሳካ ሁኔታ ተጠናቋል!"
+
+msgid "CoreUpdater_PiwikUpdatedSuccessfully"
+msgstr "የፒዊክ ማላቅ ተሳክቷል!"
+
+msgid "CoreUpdater_PiwikWillBeUpgradedFromVersionXToVersionY"
+msgstr "የፒዊክ የውሂብ ጎታዎ ከ %1$sስሪት ወደ %2$sስሪት ይልቃል."
+
+msgid "CoreUpdater_TheFollowingPluginsWillBeUpgradedX"
+msgstr "የሚከተሉት ተሰኪዎችም ይልቃሉ: %s."
+
+msgid "CoreUpdater_ThereIsNewVersionAvailableForUpdate"
+msgstr "ለማላቅ ዝግጁ የሆነ የፒዊክ ሰሪት አለ"
+
+msgid "CoreUpdater_TheUpgradeProcessMayTakeAWhilePleaseBePatient"
+msgstr "የውሂብ ጎታ ማላቅ ሂደቱ ጥቂት ጊዜ ስለሚወስድ እባክዎ በትዕግስት ይጠብቁ"
+
+msgid "CoreUpdater_UpdateAutomatically"
+msgstr "ራስሰር አልቅ"
+
+msgid "CoreUpdater_UpdateHasBeenCancelledExplanation"
+msgstr "ፒዊክ አንድ ጠቅ አርግ ማላቅ ተሰርዟል። ከላይ ያለውን የስህተት መልዕክት መጠገን ካልቻልክ ፒዊክን በእጅ እንድታልቅትመከራለህ። %1$s ለመጀመር የ %2$sማላቂያ ስነዳ %3$sተመልከት!"
+
+msgid "CoreUpdater_UpdateTitle"
+msgstr "ፒዊክ › አልቅ"
+
+msgid "CoreUpdater_UpdateSuccessTitle"
+msgstr "ፒዊክን ማላቅ በተሳካ ሁኔታ ተጠናቋል!"
+
+msgid "CoreUpdater_UpgradeComplete"
+msgstr "ማላቅ ተጠናቋል!"
+
+msgid "CoreUpdater_UpgradePiwik"
+msgstr "ፒዊክን አልቅ"
+
+msgid "CoreUpdater_VerifyingUnpackedFiles"
+msgstr "የተበተኑትን ፋይሎች በመበተን ላይ"
+
+msgid "CoreUpdater_WarningMessages"
+msgstr "የማስጠንቀቂያ መልዕክቶች:"
+
+msgid "CoreUpdater_WeAutomaticallyDeactivatedTheFollowingPlugins"
+msgstr "የሚከተሉትን ተሰኪዎች በራስሰር አቦዝነናል: %s"
+
+msgid "CoreUpdater_YouCanUpgradeAutomaticallyOrDownloadPackage"
+msgstr "ወደ ስሪት %s ራስሰር ማላቅ ወይም አካታቾቹን አውርዶ በጅ መጫን ይቻላል ይቻላል:"
+
+msgid "CoreUpdater_YourDatabaseIsOutOfDate"
+msgstr "የፒዊክ የውሂብ ጎታዎ ቀኑ ሰላለፈበት ከመቀጠልዎ በፊት ማላቅ ያስፈልገዋል"
+
+msgid "DBStats_DatabaseUsage"
+msgstr "የውሂብ ጎታ አጠቃቀም"
+
+msgid "DBStats_DataSize"
+msgstr "የውሂብ መጠን"
+
+msgid "DBStats_IndexSize"
+msgstr "የመረጃ ጠቋሚ መጠን"
+
+msgid "DBStats_MainDescription"
+msgstr "ፒዊክ የድር ምዘናዎቹን ውሂብ በመይ ኤስ ኪው ኤል ይውሂብ ጎታ ውስጥ በማከማቸት ላይ ነው። በአሁን ወቅት የፒዊክ ሰንጠረዦች እየተጠቀሙ ያሉት %s።"
+
+msgid "DBStats_Table"
+msgstr "ሰንጠረዥ"
+
+msgid "DBStats_TotalSize"
+msgstr "አጠቃላይ መጠን"
+
+msgid "Dashboard_AddPreviewedWidget"
+msgstr "ቅድመ እይታ የተሰጠውን widget ወደ ዳሽቦርዱ ጨምር"
+
+msgid "Dashboard_Dashboard"
+msgstr "ዳሽቦርድ"
+
+msgid "Dashboard_DeleteWidgetConfirm"
+msgstr "እርግጠኛ ነህ ይህ widget ከዳሽቦርድ ይሰረዝ?"
+
+msgid "Dashboard_LoadingWidget"
+msgstr "widget በመጫን ላይ, እባክዎ ይጠበቁ..."
+
+msgid "Dashboard_SelectWidget"
+msgstr "ወደ ዳሽቦርድ የሚጨመረውን widget ምረጥ"
+
+msgid "Dashboard_WidgetNotFound"
+msgstr "Widget አልተገኘም"
+
+msgid "Dashboard_WidgetPreview"
+msgstr "የWidget ቅድመእይታ"
+
+msgid "DevicePlugins_WidgetPlugins"
+msgstr "የተሰኪዎች ዝርዝር"
+
+msgid "DevicesDetection_BrowserEngine"
+msgstr "ማሰሺያ"
+
+msgid "DevicesDetection_BrowserFamily"
+msgstr "የማሰሻ ቤተሰብ"
+
+msgid "DevicesDetection_Browsers"
+msgstr "ማሰሻዎች"
+
+msgid "DevicesDetection_ColumnBrowser"
+msgstr "ማሰሺያ"
+
+msgid "DevicesDetection_WidgetBrowsers"
+msgstr "የጎብኚ ማሰሻዎች"
+
+msgid "Goals_CategoryTextReferrers_Referrers"
+msgstr "አመላካቾች"
+
+msgid "Goals_ColumnConversions"
+msgstr "ልወጣዎች"
+
+msgid "Installation_ConfirmDeleteExistingTables"
+msgstr "እርግጠኛ ነህ ይህንን ሰንጠረዥ ከውሂብ ጎታህ ውስጥ : %s መሰረዝ ትፈልጋለህ? ማስጠንቀቂያ: ከዚህ ሰንጠረዥ ውስጥ የጠፉ ውሂቦች ተመልሰው ሊገኙ አይችሉም!"
+
+msgid "Installation_Congratulations"
+msgstr "እንኳን ደስያለዎ"
+
+msgid "Installation_Email"
+msgstr "ኢ-ሜይል"
+
+msgid "Installation_GoBackAndDefinePrefix"
+msgstr "ወደኋላ ተመለስና ለፒዊክ ሰንጠረዦቹ ቅድም ቅጥያውን በይን"
+
+msgid "Installation_Installation"
+msgstr "መጫኛ"
+
+msgid "Installation_InstallationStatus"
+msgstr "የመጫኛ ሁኔታ"
+
+msgid "Installation_Password"
+msgstr "የይለፍ ቃል"
+
+msgid "Installation_PasswordDoNotMatch"
+msgstr "የይለፍ ቃሉ አቻ አይደለም"
+
+msgid "Installation_PasswordRepeat"
+msgstr "የይለፍ ቃል (ድገም)"
+
+msgid "Installation_PercentDone"
+msgstr "%s %% አልቋል"
+
+msgid "Installation_SetupWebsite"
+msgstr "ድር ጣቢያ ጫን"
+
+msgid "Installation_SetupWebsiteError"
+msgstr "ድር ጣቢያውን በመጫን ጊዜ ስህተት አጋጥሟል"
+
+msgid "Installation_SystemCheck"
+msgstr "ስርዓት አረጋግጥ"
+
+msgid "Installation_SystemCheckError"
+msgstr "ስህተት ተከስቷል - ከመቀጠልዎ በፊት መጠገን አለበት"
+
+msgid "Installation_SystemCheckGDHelp"
+msgstr "የብልጭታ መስመሮቹ (ትናንሽ ግራፎች)አይሰሩም"
+
+msgid "Installation_SystemCheckMemoryLimit"
+msgstr "የማህደረ ትውስታ ገደብ"
+
+msgid "Installation_SystemCheckMemoryLimitHelp"
+msgstr "ከፍተኛ የጎብኚ መጨናነቅ ባለባችው ድር ጣቢያዎች ላይ የምዝገባ ሂድት በወቅቱ ከተፈቀደው ብላይ ብዙ ማህደረ ትውስታ ሊያስፈልገው ይችላል።<br />የማህደረ ትውስታውን ገደብ መመሪያ በ php.ini ፋይል ውስጥ አስፈላጊ ከሆነ መመልከት ትችላለህ።"
+
+msgid "Installation_SystemCheckPhp"
+msgstr "የፒ ኤች ፒ ስሪት"
+
+msgid "Installation_SystemCheckTimeLimitHelp"
+msgstr "ከፍተኛ የትራፊክ መጨናነቅ ያለባቸው የድር ጣቢያዎች ላይ የምዝገባ ሂደቱን ማስፈፀም ከተፈቀደው ሰዓት በላይ ሊፈልግ ይችላል።<br />ከፍተኛ_የማስፈፀሚያ_ጊዜ መመሪያውን በ php.ini ፋይል ውስጥ አስፈላጊ ከሆነ መመልከት ትችላለህ።"
+
+msgid "Installation_SystemCheckWarning"
+msgstr "ፒዊክ በመደበኛነት ሊሰራ ይችላል ነገርግን አንዳንድ ባህርይዎች ጠፍተው ሊሆን ይችላል"
+
+msgid "Installation_SystemCheckWriteDirs"
+msgstr "ማውጫ ከፃፍ መድረሻ ጋር"
+
+msgid "Installation_SystemCheckWriteDirsHelp"
+msgstr "ይህንን ስህተት በሊኑክስ ስርዓት ላይ ለማስተካከል የሚከተሉትን ትእዛዝ(ዞች) ይተይቡ"
+
+msgid "Installation_Tables"
+msgstr "ሠንጠረዦቹን በመፍጠር ላይ"
+
+msgid "Installation_TablesCreatedSuccess"
+msgstr "ሰንጠረዦች በሚገባ ተፈጥረዋል!"
+
+msgid "Installation_TablesDelete"
+msgstr "የተገኙትን ሰንጠረዦች ሰርዝ"
+
+msgid "Installation_TablesDeletedSuccess"
+msgstr "ቀደም ሲል የነበሩት የፒዊክ ሰንጠረዦች በሚገባ ተሰርዘዋል"
+
+msgid "Installation_TablesFound"
+msgstr "የሚከተሉት ሰንጠረዦች በውሂብ ጎታዎች ውስጥ ተገኝተዋል"
+
+msgid "Installation_TablesReuse"
+msgstr "ቀደም ሲል የነበሩትን ሰንጠረዦች መልሰህ ተጠቀም"
+
+msgid "Installation_TablesWarningHelp"
+msgstr "ቀደም ሲል የነበሩትን የውሂብ ጎታዎች ስንጠረዥመልሰህ ለመጠቀም ምረጥ ወይም በውሂብ ጎታዎቹ ውስጥ ያሉትን ውሂቦች ለማጥፋት ንፁህ ጫን ምረጥ"
+
+msgid "Installation_TablesWithSameNamesFound"
+msgstr "አንዳንድ %1$s በውሂብ ጎታ ውስጥ ያሉ ሰንጠረዦች%2$s ፒዊክ ለመፍጠር እየሞከረ ካሉት ሰንጠረዦች ጋር ተመሳሳይ ስም አላቸው"
+
+msgid "Installation_Welcome"
+msgstr "እንኳን ደህና መጡ!"
+
+msgid "Intl_Continent_afr"
+msgstr "አፍሪካ"
+
+msgid "Intl_Continent_amc"
+msgstr "መካከለኛው አሜሪካ"
+
+msgid "Intl_Continent_amn"
+msgstr "ሰሜን አሜሪካ"
+
+msgid "Intl_Continent_ams"
+msgstr "ደቡብ አሜሪካ"
+
+msgid "Intl_Continent_ant"
+msgstr "አንታርክቲካ"
+
+msgid "Intl_Continent_asi"
+msgstr "እሲያ"
+
+msgid "Intl_Continent_eur"
+msgstr "አውሮፓ"
+
+msgid "Intl_Continent_oce"
+msgstr "ኦሽኒአ"
+
+msgid "Intl_Country_AD"
+msgstr "አንዶራ"
+
+msgid "Intl_Country_AE"
+msgstr "የተባበሩት ዓረብ ኤምሬትስ"
+
+msgid "Intl_Country_AF"
+msgstr "አፍጋኒስታን"
+
+msgid "Intl_Country_AG"
+msgstr "አንቲጓ እና ባሩዳ"
+
+msgid "Intl_Country_AI"
+msgstr "አንጉይላ"
+
+msgid "Intl_Country_AL"
+msgstr "አልባኒያ"
+
+msgid "Intl_Country_AM"
+msgstr "አርሜኒያ"
+
+msgid "Intl_Country_AO"
+msgstr "አንጐላ"
+
+msgid "Intl_Country_AQ"
+msgstr "አንታርክቲካ"
+
+msgid "Intl_Country_AR"
+msgstr "አርጀንቲና"
+
+msgid "Intl_Country_AS"
+msgstr "የአሜሪካ ሳሞአ"
+
+msgid "Intl_Country_AT"
+msgstr "ኦስትሪያ"
+
+msgid "Intl_Country_AU"
+msgstr "አውስትራልያ"
+
+msgid "Intl_Country_AW"
+msgstr "አሩባ"
+
+msgid "Intl_Country_AX"
+msgstr "የአላንድ ደሴቶች"
+
+msgid "Intl_Country_AZ"
+msgstr "አዘርባጃን"
+
+msgid "Intl_Country_BA"
+msgstr "ቦስኒያ እና ሄርዞጎቪኒያ"
+
+msgid "Intl_Country_BB"
+msgstr "ባርቤዶስ"
+
+msgid "Intl_Country_BD"
+msgstr "ባንግላዲሽ"
+
+msgid "Intl_Country_BE"
+msgstr "ቤልጄም"
+
+msgid "Intl_Country_BF"
+msgstr "ቡርኪና ፋሶ"
+
+msgid "Intl_Country_BG"
+msgstr "ቡልጌሪያ"
+
+msgid "Intl_Country_BH"
+msgstr "ባህሬን"
+
+msgid "Intl_Country_BI"
+msgstr "ብሩንዲ"
+
+msgid "Intl_Country_BJ"
+msgstr "ቤኒን"
+
+msgid "Intl_Country_BL"
+msgstr "ቅዱስ በርቴሎሜ"
+
+msgid "Intl_Country_BM"
+msgstr "ቤርሙዳ"
+
+msgid "Intl_Country_BN"
+msgstr "ብሩኒ"
+
+msgid "Intl_Country_BO"
+msgstr "ቦሊቪያ"
+
+msgid "Intl_Country_BQ"
+msgstr "የካሪቢያን ኔዘርላንድስ"
+
+msgid "Intl_Country_BR"
+msgstr "ብራዚል"
+
+msgid "Intl_Country_BS"
+msgstr "ባሃማስ"
+
+msgid "Intl_Country_BT"
+msgstr "ቡህታን"
+
+msgid "Intl_Country_BV"
+msgstr "ቡቬት ደሴት"
+
+msgid "Intl_Country_BW"
+msgstr "ቦትስዋና"
+
+msgid "Intl_Country_BY"
+msgstr "ቤላሩስ"
+
+msgid "Intl_Country_BZ"
+msgstr "በሊዝ"
+
+msgid "Intl_Country_CA"
+msgstr "ካናዳ"
+
+msgid "Intl_Country_CC"
+msgstr "ኮኮስ(ኬሊንግ) ደሴቶች"
+
+msgid "Intl_Country_CD"
+msgstr "ኮንጎ-ኪንሻሳ"
+
+msgid "Intl_Country_CF"
+msgstr "የመካከለኛው አፍሪካ ሪፐብሊክ"
+
+msgid "Intl_Country_CG"
+msgstr "ኮንጎ ብራዛቪል"
+
+msgid "Intl_Country_CH"
+msgstr "ስዊዘርላንድ"
+
+msgid "Intl_Country_CI"
+msgstr "ኮት ዲቯር"
+
+msgid "Intl_Country_CK"
+msgstr "ኩክ ደሴቶች"
+
+msgid "Intl_Country_CL"
+msgstr "ቺሊ"
+
+msgid "Intl_Country_CM"
+msgstr "ካሜሩን"
+
+msgid "Intl_Country_CN"
+msgstr "ቻይና"
+
+msgid "Intl_Country_CO"
+msgstr "ኮሎምቢያ"
+
+msgid "Intl_Country_CR"
+msgstr "ኮስታሪካ"
+
+msgid "Intl_Country_CU"
+msgstr "ኩባ"
+
+msgid "Intl_Country_CV"
+msgstr "ኬፕ ቬርዴ"
+
+msgid "Intl_Country_CW"
+msgstr "ኩራሳዎ"
+
+msgid "Intl_Country_CX"
+msgstr "ክሪስማስ ደሴት"
+
+msgid "Intl_Country_CY"
+msgstr "ሳይፕረስ"
+
+msgid "Intl_Country_CZ"
+msgstr "ቼቺያ"
+
+msgid "Intl_Country_DE"
+msgstr "ጀርመን"
+
+msgid "Intl_Country_DJ"
+msgstr "ጂቡቲ"
+
+msgid "Intl_Country_DK"
+msgstr "ዴንማርክ"
+
+msgid "Intl_Country_DM"
+msgstr "ዶሚኒካ"
+
+msgid "Intl_Country_DO"
+msgstr "ዶመኒካን ሪፑብሊክ"
+
+msgid "Intl_Country_DZ"
+msgstr "አልጄሪያ"
+
+msgid "Intl_Country_EC"
+msgstr "ኢኳዶር"
+
+msgid "Intl_Country_EE"
+msgstr "ኤስቶኒያ"
+
+msgid "Intl_Country_EG"
+msgstr "ግብጽ"
+
+msgid "Intl_Country_EH"
+msgstr "ምዕራባዊ ሳህራ"
+
+msgid "Intl_Country_ER"
+msgstr "ኤርትራ"
+
+msgid "Intl_Country_ES"
+msgstr "ስፔን"
+
+msgid "Intl_Country_ET"
+msgstr "ኢትዮጵያ"
+
+msgid "Intl_Country_FI"
+msgstr "ፊንላንድ"
+
+msgid "Intl_Country_FJ"
+msgstr "ፊጂ"
+
+msgid "Intl_Country_FK"
+msgstr "የፎክላንድ ደሴቶች"
+
+msgid "Intl_Country_FM"
+msgstr "ሚክሮኔዢያ"
+
+msgid "Intl_Country_FO"
+msgstr "የፋሮ ደሴቶች"
+
+msgid "Intl_Country_FR"
+msgstr "ፈረንሳይ"
+
+msgid "Intl_Country_GA"
+msgstr "ጋቦን"
+
+msgid "Intl_Country_GB"
+msgstr "ዩናይትድ ኪንግደም"
+
+msgid "Intl_Country_GD"
+msgstr "ግሬናዳ"
+
+msgid "Intl_Country_GE"
+msgstr "ጆርጂያ"
+
+msgid "Intl_Country_GF"
+msgstr "የፈረንሳይ ጉዊአና"
+
+msgid "Intl_Country_GG"
+msgstr "ጉርነሲ"
+
+msgid "Intl_Country_GH"
+msgstr "ጋና"
+
+msgid "Intl_Country_GI"
+msgstr "ጂብራልተር"
+
+msgid "Intl_Country_GL"
+msgstr "ግሪንላንድ"
+
+msgid "Intl_Country_GM"
+msgstr "ጋምቢያ"
+
+msgid "Intl_Country_GN"
+msgstr "ጊኒ"
+
+msgid "Intl_Country_GP"
+msgstr "ጉዋደሉፕ"
+
+msgid "Intl_Country_GQ"
+msgstr "ኢኳቶሪያል ጊኒ"
+
+msgid "Intl_Country_GR"
+msgstr "ግሪክ"
+
+msgid "Intl_Country_GS"
+msgstr "ደቡብ ጆርጂያ እና የደቡብ ሳንድዊች ደሴቶች"
+
+msgid "Intl_Country_GT"
+msgstr "ጉዋቲማላ"
+
+msgid "Intl_Country_GU"
+msgstr "ጉዋም"
+
+msgid "Intl_Country_GW"
+msgstr "ጊኒ ቢሳኦ"
+
+msgid "Intl_Country_GY"
+msgstr "ጉያና"
+
+msgid "Intl_Country_HK"
+msgstr "ሆንግ ኮንግ ልዩ የአስተዳደር ክልል ቻይና"
+
+msgid "Intl_Country_HM"
+msgstr "ኽርድ ደሴቶችና ማክዶናልድ ደሴቶች"
+
+msgid "Intl_Country_HN"
+msgstr "ሆንዱራስ"
+
+msgid "Intl_Country_HR"
+msgstr "ክሮኤሽያ"
+
+msgid "Intl_Country_HT"
+msgstr "ሀይቲ"
+
+msgid "Intl_Country_HU"
+msgstr "ሀንጋሪ"
+
+msgid "Intl_Country_ID"
+msgstr "ኢንዶኔዢያ"
+
+msgid "Intl_Country_IE"
+msgstr "አየርላንድ"
+
+msgid "Intl_Country_IL"
+msgstr "እስራኤል"
+
+msgid "Intl_Country_IM"
+msgstr "አይል ኦፍ ማን"
+
+msgid "Intl_Country_IN"
+msgstr "ህንድ"
+
+msgid "Intl_Country_IO"
+msgstr "የብሪታኒያ ህንድ ውቂያኖስ ግዛት"
+
+msgid "Intl_Country_IQ"
+msgstr "ኢራቅ"
+
+msgid "Intl_Country_IR"
+msgstr "ኢራን"
+
+msgid "Intl_Country_IS"
+msgstr "አይስላንድ"
+
+msgid "Intl_Country_IT"
+msgstr "ጣሊያን"
+
+msgid "Intl_Country_JE"
+msgstr "ጀርሲ"
+
+msgid "Intl_Country_JM"
+msgstr "ጃማይካ"
+
+msgid "Intl_Country_JO"
+msgstr "ጆርዳን"
+
+msgid "Intl_Country_JP"
+msgstr "ጃፓን"
+
+msgid "Intl_Country_KE"
+msgstr "ኬንያ"
+
+msgid "Intl_Country_KG"
+msgstr "ኪርጊስታን"
+
+msgid "Intl_Country_KH"
+msgstr "ካምቦዲያ"
+
+msgid "Intl_Country_KI"
+msgstr "ኪሪባቲ"
+
+msgid "Intl_Country_KM"
+msgstr "ኮሞሮስ"
+
+msgid "Intl_Country_KN"
+msgstr "ቅዱስ ኪትስ እና ኔቪስ"
+
+msgid "Intl_Country_KP"
+msgstr "ሰሜን ኮሪያ"
+
+msgid "Intl_Country_KR"
+msgstr "ደቡብ ኮሪያ"
+
+msgid "Intl_Country_KW"
+msgstr "ክዌት"
+
+msgid "Intl_Country_KY"
+msgstr "ካይማን ደሴቶች"
+
+msgid "Intl_Country_KZ"
+msgstr "ካዛኪስታን"
+
+msgid "Intl_Country_LA"
+msgstr "ላኦስ"
+
+msgid "Intl_Country_LB"
+msgstr "ሊባኖስ"
+
+msgid "Intl_Country_LC"
+msgstr "ሴንት ሉቺያ"
+
+msgid "Intl_Country_LI"
+msgstr "ሊችተንስታይን"
+
+msgid "Intl_Country_LK"
+msgstr "ሲሪላንካ"
+
+msgid "Intl_Country_LR"
+msgstr "ላይቤሪያ"
+
+msgid "Intl_Country_LS"
+msgstr "ሌሶቶ"
+
+msgid "Intl_Country_LT"
+msgstr "ሊቱዌኒያ"
+
+msgid "Intl_Country_LU"
+msgstr "ሉክሰምበርግ"
+
+msgid "Intl_Country_LV"
+msgstr "ላትቪያ"
+
+msgid "Intl_Country_LY"
+msgstr "ሊቢያ"
+
+msgid "Intl_Country_MA"
+msgstr "ሞሮኮ"
+
+msgid "Intl_Country_MC"
+msgstr "ሞናኮ"
+
+msgid "Intl_Country_MD"
+msgstr "ሞልዶቫ"
+
+msgid "Intl_Country_ME"
+msgstr "ሞንተኔግሮ"
+
+msgid "Intl_Country_MF"
+msgstr "ሴንት ማርቲን"
+
+msgid "Intl_Country_MG"
+msgstr "ማዳጋስካር"
+
+msgid "Intl_Country_MH"
+msgstr "ማርሻል አይላንድ"
+
+msgid "Intl_Country_MK"
+msgstr "መቄዶንያ"
+
+msgid "Intl_Country_ML"
+msgstr "ማሊ"
+
+msgid "Intl_Country_MM"
+msgstr "ማይናማር(በርማ)"
+
+msgid "Intl_Country_MN"
+msgstr "ሞንጎሊያ"
+
+msgid "Intl_Country_MO"
+msgstr "ማካኡ ልዩ የአስተዳደር ክልል ቻይና"
+
+msgid "Intl_Country_MP"
+msgstr "የሰሜናዊ ማሪያና ደሴቶች"
+
+msgid "Intl_Country_MQ"
+msgstr "ማርቲኒክ"
+
+msgid "Intl_Country_MR"
+msgstr "ሞሪቴኒያ"
+
+msgid "Intl_Country_MS"
+msgstr "ሞንትሴራት"
+
+msgid "Intl_Country_MT"
+msgstr "ማልታ"
+
+msgid "Intl_Country_MU"
+msgstr "ሞሪሸስ"
+
+msgid "Intl_Country_MV"
+msgstr "ማልዲቭስ"
+
+msgid "Intl_Country_MW"
+msgstr "ማላዊ"
+
+msgid "Intl_Country_MX"
+msgstr "ሜክሲኮ"
+
+msgid "Intl_Country_MY"
+msgstr "ማሌዢያ"
+
+msgid "Intl_Country_MZ"
+msgstr "ሞዛምቢክ"
+
+msgid "Intl_Country_NA"
+msgstr "ናሚቢያ"
+
+msgid "Intl_Country_NC"
+msgstr "ኒው ካሌዶኒያ"
+
+msgid "Intl_Country_NE"
+msgstr "ኒጀር"
+
+msgid "Intl_Country_NF"
+msgstr "ኖርፎልክ ደሴት"
+
+msgid "Intl_Country_NG"
+msgstr "ናይጄሪያ"
+
+msgid "Intl_Country_NI"
+msgstr "ኒካራጓ"
+
+msgid "Intl_Country_NL"
+msgstr "ኔዘርላንድ"
+
+msgid "Intl_Country_NO"
+msgstr "ኖርዌይ"
+
+msgid "Intl_Country_NP"
+msgstr "ኔፓል"
+
+msgid "Intl_Country_NR"
+msgstr "ናኡሩ"
+
+msgid "Intl_Country_NU"
+msgstr "ኒኡይ"
+
+msgid "Intl_Country_NZ"
+msgstr "ኒው ዚላንድ"
+
+msgid "Intl_Country_OM"
+msgstr "ኦማን"
+
+msgid "Intl_Country_PA"
+msgstr "ፓናማ"
+
+msgid "Intl_Country_PE"
+msgstr "ፔሩ"
+
+msgid "Intl_Country_PF"
+msgstr "የፈረንሳይ ፖሊኔዢያ"
+
+msgid "Intl_Country_PG"
+msgstr "ፓፑዋ ኒው ጊኒ"
+
+msgid "Intl_Country_PH"
+msgstr "ፊሊፒንስ"
+
+msgid "Intl_Country_PK"
+msgstr "ፓኪስታን"
+
+msgid "Intl_Country_PL"
+msgstr "ፖላንድ"
+
+msgid "Intl_Country_PM"
+msgstr "ቅዱስ ፒዬር እና ሚኩኤሎን"
+
+msgid "Intl_Country_PN"
+msgstr "ፒትካኢርን አይስላንድ"
+
+msgid "Intl_Country_PR"
+msgstr "ፖርታ ሪኮ"
+
+msgid "Intl_Country_PS"
+msgstr "የፍልስጤም ግዛት"
+
+msgid "Intl_Country_PT"
+msgstr "ፖርቱጋል"
+
+msgid "Intl_Country_PW"
+msgstr "ፓላው"
+
+msgid "Intl_Country_PY"
+msgstr "ፓራጓይ"
+
+msgid "Intl_Country_QA"
+msgstr "ኳታር"
+
+msgid "Intl_Country_RE"
+msgstr "ሪዩኒየን"
+
+msgid "Intl_Country_RO"
+msgstr "ሮሜኒያ"
+
+msgid "Intl_Country_RS"
+msgstr "ሰርብያ"
+
+msgid "Intl_Country_RU"
+msgstr "ሩስያ"
+
+msgid "Intl_Country_RW"
+msgstr "ሩዋንዳ"
+
+msgid "Intl_Country_SA"
+msgstr "ሳውድአረቢያ"
+
+msgid "Intl_Country_SB"
+msgstr "ሰሎሞን ደሴት"
+
+msgid "Intl_Country_SC"
+msgstr "ሲሼልስ"
+
+msgid "Intl_Country_SD"
+msgstr "ሱዳን"
+
+msgid "Intl_Country_SE"
+msgstr "ስዊድን"
+
+msgid "Intl_Country_SG"
+msgstr "ሲንጋፖር"
+
+msgid "Intl_Country_SH"
+msgstr "ሴንት ሄለና"
+
+msgid "Intl_Country_SI"
+msgstr "ስሎቬኒያ"
+
+msgid "Intl_Country_SJ"
+msgstr "ስቫልባርድ እና ጃን ማየን"
+
+msgid "Intl_Country_SK"
+msgstr "ስሎቫኪያ"
+
+msgid "Intl_Country_SL"
+msgstr "ሴራሊዮን"
+
+msgid "Intl_Country_SM"
+msgstr "ሳን ማሪኖ"
+
+msgid "Intl_Country_SN"
+msgstr "ሴኔጋል"
+
+msgid "Intl_Country_SO"
+msgstr "ሱማሌ"
+
+msgid "Intl_Country_SR"
+msgstr "ሱሪናም"
+
+msgid "Intl_Country_SS"
+msgstr "ደቡብ ሱዳን"
+
+msgid "Intl_Country_ST"
+msgstr "ሳኦ ቶሜ እና ፕሪንሲፔ"
+
+msgid "Intl_Country_SV"
+msgstr "ኤል ሳልቫዶር"
+
+msgid "Intl_Country_SX"
+msgstr "ሲንት ማርተን"
+
+msgid "Intl_Country_SY"
+msgstr "ሲሪያ"
+
+msgid "Intl_Country_SZ"
+msgstr "ሱዋዚላንድ"
+
+msgid "Intl_Country_TC"
+msgstr "የቱርኮችና የካኢኮስ ደሴቶች"
+
+msgid "Intl_Country_TD"
+msgstr "ቻድ"
+
+msgid "Intl_Country_TF"
+msgstr "የፈረንሳይ ደቡባዊ ግዛቶች"
+
+msgid "Intl_Country_TG"
+msgstr "ቶጐ"
+
+msgid "Intl_Country_TH"
+msgstr "ታይላንድ"
+
+msgid "Intl_Country_TJ"
+msgstr "ታጃኪስታን"
+
+msgid "Intl_Country_TK"
+msgstr "ቶክላው"
+
+msgid "Intl_Country_TL"
+msgstr "ቲሞር ሌስቴ"
+
+msgid "Intl_Country_TM"
+msgstr "ቱርክሜኒስታን"
+
+msgid "Intl_Country_TN"
+msgstr "ቱኒዚያ"
+
+msgid "Intl_Country_TO"
+msgstr "ቶንጋ"
+
+msgid "Intl_Country_TR"
+msgstr "ቱርክ"
+
+msgid "Intl_Country_TT"
+msgstr "ትሪናዳድ እና ቶቤጎ"
+
+msgid "Intl_Country_TV"
+msgstr "ቱቫሉ"
+
+msgid "Intl_Country_TW"
+msgstr "ታይዋን"
+
+msgid "Intl_Country_TZ"
+msgstr "ታንዛኒያ"
+
+msgid "Intl_Country_UA"
+msgstr "ዩክሬን"
+
+msgid "Intl_Country_UG"
+msgstr "ዩጋንዳ"
+
+msgid "Intl_Country_UM"
+msgstr "የዩ ኤስ ጠረፍ ላይ ያሉ ደሴቶች"
+
+msgid "Intl_Country_US"
+msgstr "ዩናይትድ ስቴትስ"
+
+msgid "Intl_Country_UY"
+msgstr "ኡራጓይ"
+
+msgid "Intl_Country_UZ"
+msgstr "ኡዝቤኪስታን"
+
+msgid "Intl_Country_VA"
+msgstr "ቫቲካን ከተማ"
+
+msgid "Intl_Country_VC"
+msgstr "ቅዱስ ቪንሴንት እና ግሬናዲንስ"
+
+msgid "Intl_Country_VE"
+msgstr "ቬንዙዌላ"
+
+msgid "Intl_Country_VG"
+msgstr "የእንግሊዝ ቨርጂን ደሴቶች"
+
+msgid "Intl_Country_VI"
+msgstr "የአሜሪካ ቨርጂን ደሴቶች"
+
+msgid "Intl_Country_VN"
+msgstr "ቬትናም"
+
+msgid "Intl_Country_VU"
+msgstr "ቫኑአቱ"
+
+msgid "Intl_Country_WF"
+msgstr "ዋሊስ እና ፉቱና ደሴቶች"
+
+msgid "Intl_Country_WS"
+msgstr "ሳሞአ"
+
+msgid "Intl_Country_YE"
+msgstr "የመን"
+
+msgid "Intl_Country_YT"
+msgstr "ሜይኦቴ"
+
+msgid "Intl_Country_ZA"
+msgstr "ደቡብ አፍሪካ"
+
+msgid "Intl_Country_ZM"
+msgstr "ዛምቢያ"
+
+msgid "Intl_Country_ZW"
+msgstr "ዚምቧቤ"
+
+msgid "Intl_CurrencySymbol_AED"
+msgstr "AED"
+
+msgid "Intl_CurrencySymbol_AFN"
+msgstr "AFN"
+
+msgid "Intl_CurrencySymbol_ALL"
+msgstr "ALL"
+
+msgid "Intl_CurrencySymbol_AMD"
+msgstr "AMD"
+
+msgid "Intl_CurrencySymbol_ANG"
+msgstr "ANG"
+
+msgid "Intl_CurrencySymbol_AOA"
+msgstr "AOA"
+
+msgid "Intl_CurrencySymbol_ARS"
+msgstr "ARS"
+
+msgid "Intl_CurrencySymbol_AUD"
+msgstr "AU$"
+
+msgid "Intl_CurrencySymbol_AWG"
+msgstr "AWG"
+
+msgid "Intl_CurrencySymbol_AZN"
+msgstr "AZN"
+
+msgid "Intl_CurrencySymbol_BAM"
+msgstr "BAM"
+
+msgid "Intl_CurrencySymbol_BBD"
+msgstr "BBD"
+
+msgid "Intl_CurrencySymbol_BDT"
+msgstr "BDT"
+
+msgid "Intl_CurrencySymbol_BGN"
+msgstr "BGN"
+
+msgid "Intl_CurrencySymbol_BHD"
+msgstr "BHD"
+
+msgid "Intl_CurrencySymbol_BIF"
+msgstr "BIF"
+
+msgid "Intl_CurrencySymbol_BMD"
+msgstr "BMD"
+
+msgid "Intl_CurrencySymbol_BND"
+msgstr "BND"
+
+msgid "Intl_CurrencySymbol_BOB"
+msgstr "BOB"
+
+msgid "Intl_CurrencySymbol_BRL"
+msgstr "R$"
+
+msgid "Intl_CurrencySymbol_BSD"
+msgstr "BSD"
+
+msgid "Intl_CurrencySymbol_BTC"
+msgstr "BTC"
+
+msgid "Intl_CurrencySymbol_BTN"
+msgstr "BTN"
+
+msgid "Intl_CurrencySymbol_BWP"
+msgstr "BWP"
+
+msgid "Intl_CurrencySymbol_BYN"
+msgstr "BYN"
+
+msgid "Intl_CurrencySymbol_BZD"
+msgstr "BZD"
+
+msgid "Intl_CurrencySymbol_CAD"
+msgstr "CA$"
+
+msgid "Intl_CurrencySymbol_CDF"
+msgstr "CDF"
+
+msgid "Intl_CurrencySymbol_CHF"
+msgstr "CHF"
+
+msgid "Intl_CurrencySymbol_CLP"
+msgstr "CLP"
+
+msgid "Intl_CurrencySymbol_CNY"
+msgstr "CN¥"
+
+msgid "Intl_CurrencySymbol_COP"
+msgstr "COP"
+
+msgid "Intl_CurrencySymbol_CRC"
+msgstr "CRC"
+
+msgid "Intl_CurrencySymbol_CUC"
+msgstr "CUC"
+
+msgid "Intl_CurrencySymbol_CUP"
+msgstr "CUP"
+
+msgid "Intl_CurrencySymbol_CVE"
+msgstr "CVE"
+
+msgid "Intl_CurrencySymbol_CZK"
+msgstr "CZK"
+
+msgid "Intl_CurrencySymbol_DJF"
+msgstr "DJF"
+
+msgid "Intl_CurrencySymbol_DKK"
+msgstr "DKK"
+
+msgid "Intl_CurrencySymbol_DOP"
+msgstr "DOP"
+
+msgid "Intl_CurrencySymbol_DZD"
+msgstr "DZD"
+
+msgid "Intl_CurrencySymbol_EGP"
+msgstr "EGP"
+
+msgid "Intl_CurrencySymbol_ERN"
+msgstr "ERN"
+
+msgid "Intl_CurrencySymbol_ETB"
+msgstr "ብር"
+
+msgid "Intl_CurrencySymbol_EUR"
+msgstr "€"
+
+msgid "Intl_CurrencySymbol_FJD"
+msgstr "FJD"
+
+msgid "Intl_CurrencySymbol_FKP"
+msgstr "FKP"
+
+msgid "Intl_CurrencySymbol_GBP"
+msgstr "£"
+
+msgid "Intl_CurrencySymbol_GEL"
+msgstr "GEL"
+
+msgid "Intl_CurrencySymbol_GHS"
+msgstr "GHS"
+
+msgid "Intl_CurrencySymbol_GIP"
+msgstr "GIP"
+
+msgid "Intl_CurrencySymbol_GMD"
+msgstr "GMD"
+
+msgid "Intl_CurrencySymbol_GNF"
+msgstr "GNF"
+
+msgid "Intl_CurrencySymbol_GTQ"
+msgstr "GTQ"
+
+msgid "Intl_CurrencySymbol_GYD"
+msgstr "GYD"
+
+msgid "Intl_CurrencySymbol_HKD"
+msgstr "HK$"
+
+msgid "Intl_CurrencySymbol_HNL"
+msgstr "HNL"
+
+msgid "Intl_CurrencySymbol_HRK"
+msgstr "HRK"
+
+msgid "Intl_CurrencySymbol_HTG"
+msgstr "HTG"
+
+msgid "Intl_CurrencySymbol_HUF"
+msgstr "HUF"
+
+msgid "Intl_CurrencySymbol_IDR"
+msgstr "IDR"
+
+msgid "Intl_CurrencySymbol_ILS"
+msgstr "₪"
+
+msgid "Intl_CurrencySymbol_INR"
+msgstr "₹"
+
+msgid "Intl_CurrencySymbol_IQD"
+msgstr "IQD"
+
+msgid "Intl_CurrencySymbol_IRR"
+msgstr "IRR"
+
+msgid "Intl_CurrencySymbol_ISK"
+msgstr "ISK"
+
+msgid "Intl_CurrencySymbol_JMD"
+msgstr "JMD"
+
+msgid "Intl_CurrencySymbol_JOD"
+msgstr "JOD"
+
+msgid "Intl_CurrencySymbol_JPY"
+msgstr "JP¥"
+
+msgid "Intl_CurrencySymbol_KES"
+msgstr "KES"
+
+msgid "Intl_CurrencySymbol_KGS"
+msgstr "KGS"
+
+msgid "Intl_CurrencySymbol_KHR"
+msgstr "KHR"
+
+msgid "Intl_CurrencySymbol_KMF"
+msgstr "KMF"
+
+msgid "Intl_CurrencySymbol_KPW"
+msgstr "KPW"
+
+msgid "Intl_CurrencySymbol_KRW"
+msgstr "₩"
+
+msgid "Intl_CurrencySymbol_KWD"
+msgstr "KWD"
+
+msgid "Intl_CurrencySymbol_KYD"
+msgstr "KYD"
+
+msgid "Intl_CurrencySymbol_KZT"
+msgstr "KZT"
+
+msgid "Intl_CurrencySymbol_LAK"
+msgstr "LAK"
+
+msgid "Intl_CurrencySymbol_LBP"
+msgstr "LBP"
+
+msgid "Intl_CurrencySymbol_LKR"
+msgstr "LKR"
+
+msgid "Intl_CurrencySymbol_LRD"
+msgstr "LRD"
+
+msgid "Intl_CurrencySymbol_LSL"
+msgstr "LSL"
+
+msgid "Intl_CurrencySymbol_LYD"
+msgstr "LYD"
+
+msgid "Intl_CurrencySymbol_MAD"
+msgstr "MAD"
+
+msgid "Intl_CurrencySymbol_MDL"
+msgstr "MDL"
+
+msgid "Intl_CurrencySymbol_MGA"
+msgstr "MGA"
+
+msgid "Intl_CurrencySymbol_MKD"
+msgstr "MKD"
+
+msgid "Intl_CurrencySymbol_MMK"
+msgstr "MMK"
+
+msgid "Intl_CurrencySymbol_MNT"
+msgstr "MNT"
+
+msgid "Intl_CurrencySymbol_MOP"
+msgstr "MOP"
+
+msgid "Intl_CurrencySymbol_MRU"
+msgstr "MRU"
+
+msgid "Intl_CurrencySymbol_MUR"
+msgstr "MUR"
+
+msgid "Intl_CurrencySymbol_MVR"
+msgstr "MVR"
+
+msgid "Intl_CurrencySymbol_MWK"
+msgstr "MWK"
+
+msgid "Intl_CurrencySymbol_MXN"
+msgstr "MX$"
+
+msgid "Intl_CurrencySymbol_MYR"
+msgstr "MYR"
+
+msgid "Intl_CurrencySymbol_MZN"
+msgstr "MZN"
+
+msgid "Intl_CurrencySymbol_NAD"
+msgstr "NAD"
+
+msgid "Intl_CurrencySymbol_NGN"
+msgstr "NGN"
+
+msgid "Intl_CurrencySymbol_NIO"
+msgstr "NIO"
+
+msgid "Intl_CurrencySymbol_NOK"
+msgstr "NOK"
+
+msgid "Intl_CurrencySymbol_NPR"
+msgstr "NPR"
+
+msgid "Intl_CurrencySymbol_NZD"
+msgstr "NZ$"
+
+msgid "Intl_CurrencySymbol_OMR"
+msgstr "OMR"
+
+msgid "Intl_CurrencySymbol_PAB"
+msgstr "PAB"
+
+msgid "Intl_CurrencySymbol_PEN"
+msgstr "PEN"
+
+msgid "Intl_CurrencySymbol_PGK"
+msgstr "PGK"
+
+msgid "Intl_CurrencySymbol_PHP"
+msgstr "PHP"
+
+msgid "Intl_CurrencySymbol_PKR"
+msgstr "PKR"
+
+msgid "Intl_CurrencySymbol_PLN"
+msgstr "PLN"
+
+msgid "Intl_CurrencySymbol_PYG"
+msgstr "PYG"
+
+msgid "Intl_CurrencySymbol_QAR"
+msgstr "QAR"
+
+msgid "Intl_CurrencySymbol_RON"
+msgstr "RON"
+
+msgid "Intl_CurrencySymbol_RSD"
+msgstr "RSD"
+
+msgid "Intl_CurrencySymbol_RUB"
+msgstr "RUB"
+
+msgid "Intl_CurrencySymbol_RWF"
+msgstr "RWF"
+
+msgid "Intl_CurrencySymbol_SAR"
+msgstr "SAR"
+
+msgid "Intl_CurrencySymbol_SBD"
+msgstr "SBD"
+
+msgid "Intl_CurrencySymbol_SCR"
+msgstr "SCR"
+
+msgid "Intl_CurrencySymbol_SDG"
+msgstr "SDG"
+
+msgid "Intl_CurrencySymbol_SEK"
+msgstr "SEK"
+
+msgid "Intl_CurrencySymbol_SGD"
+msgstr "SGD"
+
+msgid "Intl_CurrencySymbol_SHP"
+msgstr "SHP"
+
+msgid "Intl_CurrencySymbol_SLL"
+msgstr "SLL"
+
+msgid "Intl_CurrencySymbol_SOS"
+msgstr "SOS"
+
+msgid "Intl_CurrencySymbol_SRD"
+msgstr "SRD"
+
+msgid "Intl_CurrencySymbol_SSP"
+msgstr "SSP"
+
+msgid "Intl_CurrencySymbol_STN"
+msgstr "STN"
+
+msgid "Intl_CurrencySymbol_SYP"
+msgstr "SYP"
+
+msgid "Intl_CurrencySymbol_SZL"
+msgstr "SZL"
+
+msgid "Intl_CurrencySymbol_THB"
+msgstr "฿"
+
+msgid "Intl_CurrencySymbol_TJS"
+msgstr "TJS"
+
+msgid "Intl_CurrencySymbol_TMT"
+msgstr "TMT"
+
+msgid "Intl_CurrencySymbol_TND"
+msgstr "TND"
+
+msgid "Intl_CurrencySymbol_TOP"
+msgstr "TOP"
+
+msgid "Intl_CurrencySymbol_TRY"
+msgstr "TRY"
+
+msgid "Intl_CurrencySymbol_TTD"
+msgstr "TTD"
+
+msgid "Intl_CurrencySymbol_TWD"
+msgstr "NT$"
+
+msgid "Intl_CurrencySymbol_TZS"
+msgstr "TZS"
+
+msgid "Intl_CurrencySymbol_UAH"
+msgstr "UAH"
+
+msgid "Intl_CurrencySymbol_UGX"
+msgstr "UGX"
+
+msgid "Intl_CurrencySymbol_USD"
+msgstr "US$"
+
+msgid "Intl_CurrencySymbol_UYU"
+msgstr "UYU"
+
+msgid "Intl_CurrencySymbol_UZS"
+msgstr "UZS"
+
+msgid "Intl_CurrencySymbol_VEF"
+msgstr "VEF"
+
+msgid "Intl_CurrencySymbol_VND"
+msgstr "₫"
+
+msgid "Intl_CurrencySymbol_VUV"
+msgstr "VUV"
+
+msgid "Intl_CurrencySymbol_WST"
+msgstr "WST"
+
+msgid "Intl_CurrencySymbol_XAF"
+msgstr "FCFA"
+
+msgid "Intl_CurrencySymbol_XCD"
+msgstr "EC$"
+
+msgid "Intl_CurrencySymbol_XOF"
+msgstr "CFA"
+
+msgid "Intl_CurrencySymbol_XPF"
+msgstr "CFPF"
+
+msgid "Intl_CurrencySymbol_YER"
+msgstr "YER"
+
+msgid "Intl_CurrencySymbol_ZAR"
+msgstr "ZAR"
+
+msgid "Intl_CurrencySymbol_ZMW"
+msgstr "ZMW"
+
+msgid "Intl_Currency_AED"
+msgstr "የተባበሩት የአረብ ኤምሬትስ ድርሀም"
+
+msgid "Intl_Currency_AFN"
+msgstr "የአፍጋን አፍጋኒ"
+
+msgid "Intl_Currency_ALL"
+msgstr "የአልባንያ ሌክ"
+
+msgid "Intl_Currency_AMD"
+msgstr "የአርመን ድራም"
+
+msgid "Intl_Currency_ANG"
+msgstr "ኔዘርላንድስ አንቲሊአን ጊልደር"
+
+msgid "Intl_Currency_AOA"
+msgstr "የአንጎላ ኩዋንዛ"
+
+msgid "Intl_Currency_ARS"
+msgstr "የአርጀንቲና ፔሶ"
+
+msgid "Intl_Currency_AUD"
+msgstr "የአውስትራሊያ ዶላር"
+
+msgid "Intl_Currency_AWG"
+msgstr "አሩባን ፍሎሪን"
+
+msgid "Intl_Currency_AZN"
+msgstr "የአዛርባጃን ማናት"
+
+msgid "Intl_Currency_BAM"
+msgstr "የቦስኒያ ሄርዞጎቪና የሚመነዘር ማርክ"
+
+msgid "Intl_Currency_BBD"
+msgstr "የባርቤዶስ ዶላር"
+
+msgid "Intl_Currency_BDT"
+msgstr "የባንግላዲሽ ታካ"
+
+msgid "Intl_Currency_BGN"
+msgstr "የቡልጋሪያ ሌቭ"
+
+msgid "Intl_Currency_BHD"
+msgstr "የባኽሬን ዲናር"
+
+msgid "Intl_Currency_BIF"
+msgstr "የብሩንዲ ፍራንክ"
+
+msgid "Intl_Currency_BMD"
+msgstr "የቤርሙዳ ዶላር"
+
+msgid "Intl_Currency_BND"
+msgstr "የብሩኔ ዶላር"
+
+msgid "Intl_Currency_BOB"
+msgstr "የቦሊቪያ ቦሊቪያኖ"
+
+msgid "Intl_Currency_BRL"
+msgstr "የብራዚል ሪል"
+
+msgid "Intl_Currency_BSD"
+msgstr "የባሃማስ ዶላር"
+
+msgid "Intl_Currency_BTC"
+msgstr "Bitcoin"
+
+msgid "Intl_Currency_BTN"
+msgstr "ብሁታኒዝ ንጉልትረም"
+
+msgid "Intl_Currency_BWP"
+msgstr "የቦትስዋና ፑላ"
+
+msgid "Intl_Currency_BYN"
+msgstr "የቤላሩስያ ሩብል"
+
+msgid "Intl_Currency_BZD"
+msgstr "የቤሊዝ ዶላር"
+
+msgid "Intl_Currency_CAD"
+msgstr "የካናዳ ዶላር"
+
+msgid "Intl_Currency_CDF"
+msgstr "የኮንጐ ፍራንክ ኮንጐሌዝ"
+
+msgid "Intl_Currency_CHF"
+msgstr "የስዊስ ፍራንክ"
+
+msgid "Intl_Currency_CLP"
+msgstr "የቺሊ ፔሶ"
+
+msgid "Intl_Currency_CNY"
+msgstr "የቻይና የን"
+
+msgid "Intl_Currency_COP"
+msgstr "የኮሎምቢያ ፔሶ"
+
+msgid "Intl_Currency_CRC"
+msgstr "የኮስታሪካ ኮሎን"
+
+msgid "Intl_Currency_CUC"
+msgstr "የኩባ የሚመነዘር ፔሶ"
+
+msgid "Intl_Currency_CUP"
+msgstr "የኩባ ፔሶ"
+
+msgid "Intl_Currency_CVE"
+msgstr "የኬፕ ቫርዲ ኤስኩዶ"
+
+msgid "Intl_Currency_CZK"
+msgstr "ቼክ ሪፐብሊክ ኮሩና"
+
+msgid "Intl_Currency_DJF"
+msgstr "የጅቡቲ ፍራንክ"
+
+msgid "Intl_Currency_DKK"
+msgstr "የዴንማርክ ክሮን"
+
+msgid "Intl_Currency_DOP"
+msgstr "የዶሚኒክ ፔሶ"
+
+msgid "Intl_Currency_DZD"
+msgstr "የአልጄሪያ ዲናር"
+
+msgid "Intl_Currency_EGP"
+msgstr "የግብጽ ፓውንድ"
+
+msgid "Intl_Currency_ERN"
+msgstr "የኤርትራ ናቅፋ"
+
+msgid "Intl_Currency_ETB"
+msgstr "የኢትዮጵያ ብር"
+
+msgid "Intl_Currency_EUR"
+msgstr "ዩሮ"
+
+msgid "Intl_Currency_FJD"
+msgstr "የፊጂ ዶላር"
+
+msgid "Intl_Currency_FKP"
+msgstr "የፎክላንድ ደሴቶች ፓውንድ"
+
+msgid "Intl_Currency_GBP"
+msgstr "የእንግሊዝ ፓውንድ ስተርሊንግ"
+
+msgid "Intl_Currency_GEL"
+msgstr "የጆርጅያ ላሪ"
+
+msgid "Intl_Currency_GHS"
+msgstr "የጋና ሲዲ"
+
+msgid "Intl_Currency_GIP"
+msgstr "ጂብራልተር ፓውንድ"
+
+msgid "Intl_Currency_GMD"
+msgstr "የጋምቢያ ዳላሲ"
+
+msgid "Intl_Currency_GNF"
+msgstr "የጊኒ ፍራንክ"
+
+msgid "Intl_Currency_GTQ"
+msgstr "ጓቲማላን ኩቲዛል"
+
+msgid "Intl_Currency_GYD"
+msgstr "የጉየና ዶላር"
+
+msgid "Intl_Currency_HKD"
+msgstr "የሆንግኮንግ ዶላር"
+
+msgid "Intl_Currency_HNL"
+msgstr "የሃንዱራ ሌምፓአይራ"
+
+msgid "Intl_Currency_HRK"
+msgstr "HRK"
+
+msgid "Intl_Currency_HTG"
+msgstr "የሃያቲ ጓርዴ"
+
+msgid "Intl_Currency_HUF"
+msgstr "የሃንጋሪያን ፎሪንት"
+
+msgid "Intl_Currency_IDR"
+msgstr "የኢንዶኔዥያ ሩፒሃ"
+
+msgid "Intl_Currency_ILS"
+msgstr "የእስራኤል አዲስ ሽቅል"
+
+msgid "Intl_Currency_INR"
+msgstr "የሕንድ ሩፒ"
+
+msgid "Intl_Currency_IQD"
+msgstr "የኢራቅ ዲናር"
+
+msgid "Intl_Currency_IRR"
+msgstr "የኢራን ሪአል"
+
+msgid "Intl_Currency_ISK"
+msgstr "የአይስላንድ ክሮና"
+
+msgid "Intl_Currency_JMD"
+msgstr "የጃማይካ ዶላር"
+
+msgid "Intl_Currency_JOD"
+msgstr "የጆርዳን ዲናር"
+
+msgid "Intl_Currency_JPY"
+msgstr "የጃፓን የን"
+
+msgid "Intl_Currency_KES"
+msgstr "የኬኒያ ሺሊንግ"
+
+msgid "Intl_Currency_KGS"
+msgstr "የኪርጊስታን ሶም"
+
+msgid "Intl_Currency_KHR"
+msgstr "የካምቦዲያ ሬል"
+
+msgid "Intl_Currency_KMF"
+msgstr "የኮሞሮ ፍራንክ"
+
+msgid "Intl_Currency_KPW"
+msgstr "የሰሜን ኮሪያ ዎን"
+
+msgid "Intl_Currency_KRW"
+msgstr "የደቡብ ኮሪያ ዎን"
+
+msgid "Intl_Currency_KWD"
+msgstr "የኩዌት ዲናር"
+
+msgid "Intl_Currency_KYD"
+msgstr "የካይማን ደሴቶች ዶላር"
+
+msgid "Intl_Currency_KZT"
+msgstr "የካዛኪስታን ተንጌ"
+
+msgid "Intl_Currency_LAK"
+msgstr "የላኦቲ ኪፕ"
+
+msgid "Intl_Currency_LBP"
+msgstr "የሊባኖስ ፓውንድ"
+
+msgid "Intl_Currency_LKR"
+msgstr "የሲሪላንካ ሩፒ"
+
+msgid "Intl_Currency_LRD"
+msgstr "የላይቤሪያ ዶላር"
+
+msgid "Intl_Currency_LSL"
+msgstr "የሌሶቶ ሎቲ"
+
+msgid "Intl_Currency_LYD"
+msgstr "የሊቢያ ዲናር"
+
+msgid "Intl_Currency_MAD"
+msgstr "የሞሮኮ ዲርሀም"
+
+msgid "Intl_Currency_MDL"
+msgstr "ሞልዶቫን ሊኡ"
+
+msgid "Intl_Currency_MGA"
+msgstr "የማደጋስካር ማላጋስይ አሪያርይ"
+
+msgid "Intl_Currency_MKD"
+msgstr "የሜቆድንያ ዲናር"
+
+msgid "Intl_Currency_MMK"
+msgstr "የማያናማር ክያት"
+
+msgid "Intl_Currency_MNT"
+msgstr "የሞንጎሊያን ቱግሪክ"
+
+msgid "Intl_Currency_MOP"
+msgstr "የማካኔዝ ፓታካ"
+
+msgid "Intl_Currency_MRU"
+msgstr "የሞሪቴኒያ ኦውጉያ"
+
+msgid "Intl_Currency_MUR"
+msgstr "የሞሪሸስ ሩፒ"
+
+msgid "Intl_Currency_MVR"
+msgstr "የማልዲቫ ሩፊያ"
+
+msgid "Intl_Currency_MWK"
+msgstr "የማላዊ ኩዋቻ"
+
+msgid "Intl_Currency_MXN"
+msgstr "የሜክሲኮ ፔሶ"
+
+msgid "Intl_Currency_MYR"
+msgstr "የማሌዥያ ሪንጊት"
+
+msgid "Intl_Currency_MZN"
+msgstr "የሞዛምቢክ ሜቲካል"
+
+msgid "Intl_Currency_NAD"
+msgstr "የናሚቢያ ዶላር"
+
+msgid "Intl_Currency_NGN"
+msgstr "የናይጄሪያ ናይራ"
+
+msgid "Intl_Currency_NIO"
+msgstr "የኒካራጓ ኮርዶባ"
+
+msgid "Intl_Currency_NOK"
+msgstr "የኖርዌይ ክሮን"
+
+msgid "Intl_Currency_NPR"
+msgstr "የኔፓል ሩፒ"
+
+msgid "Intl_Currency_NZD"
+msgstr "የኒውዚላንድ ዶላር"
+
+msgid "Intl_Currency_OMR"
+msgstr "የኦማን ሪአል"
+
+msgid "Intl_Currency_PAB"
+msgstr "ፓናማኒአን ባልቦአ"
+
+msgid "Intl_Currency_PEN"
+msgstr "የፔሩቪያ ሶል"
+
+msgid "Intl_Currency_PGK"
+msgstr "የፓፕዋ ኒው ጊኒ ኪና"
+
+msgid "Intl_Currency_PHP"
+msgstr "የፊሊፒንስ ፔሶ"
+
+msgid "Intl_Currency_PKR"
+msgstr "የፓኪስታን ሩፒ"
+
+msgid "Intl_Currency_PLN"
+msgstr "የፖላንድ ዝሎቲ"
+
+msgid "Intl_Currency_PYG"
+msgstr "የፓራጓይ ጉአራኒ"
+
+msgid "Intl_Currency_QAR"
+msgstr "የኳታር ሪአል"
+
+msgid "Intl_Currency_RON"
+msgstr "የሮማኒያ ለው"
+
+msgid "Intl_Currency_RSD"
+msgstr "የሰርቢያ ዲናር"
+
+msgid "Intl_Currency_RUB"
+msgstr "የሩስያ ሩብል"
+
+msgid "Intl_Currency_RWF"
+msgstr "የሩዋንዳ ፍራንክ"
+
+msgid "Intl_Currency_SAR"
+msgstr "የሳውዲ ሪያል"
+
+msgid "Intl_Currency_SBD"
+msgstr "የሰለሞን ደሴቶች ዶላር"
+
+msgid "Intl_Currency_SCR"
+msgstr "የሲሼል ሩፒ"
+
+msgid "Intl_Currency_SDG"
+msgstr "የሱዳን ፓውንድ"
+
+msgid "Intl_Currency_SEK"
+msgstr "የስዊድን ክሮና"
+
+msgid "Intl_Currency_SGD"
+msgstr "የሲንጋፖር ዶላር"
+
+msgid "Intl_Currency_SHP"
+msgstr "የሴይንት ሔሌና ፓውንድ"
+
+msgid "Intl_Currency_SLL"
+msgstr "የሴራሊዎን ሊዎን"
+
+msgid "Intl_Currency_SOS"
+msgstr "የሶማሌ ሺሊንግ"
+
+msgid "Intl_Currency_SRD"
+msgstr "የሰርናሜዝ ዶላር"
+
+msgid "Intl_Currency_SSP"
+msgstr "የደቡብ ሱዳን ፓውንድ"
+
+msgid "Intl_Currency_STN"
+msgstr "የሳኦ ቶሜ እና ፕሪንሲፔ ዶብራ"
+
+msgid "Intl_Currency_SYP"
+msgstr "የሲሪያ ፓውንድ"
+
+msgid "Intl_Currency_SZL"
+msgstr "የስዋዚላንድ ሊላንገኒ"
+
+msgid "Intl_Currency_THB"
+msgstr "የታይላንድ ባህት"
+
+msgid "Intl_Currency_TJS"
+msgstr "የታጂክስታን ሶሞኒ"
+
+msgid "Intl_Currency_TMT"
+msgstr "ቱርክሜኒስታኒ ማናት"
+
+msgid "Intl_Currency_TND"
+msgstr "የቱኒዚያ ዲናር"
+
+msgid "Intl_Currency_TOP"
+msgstr "ቶንጋን ፓ’አንጋ"
+
+msgid "Intl_Currency_TRY"
+msgstr "የቱርክ ሊራ"
+
+msgid "Intl_Currency_TTD"
+msgstr "የትሪንዳድ እና ቶቤጎዶላር"
+
+msgid "Intl_Currency_TWD"
+msgstr "የአዲሷ ታይዋን ዶላር"
+
+msgid "Intl_Currency_TZS"
+msgstr "የታንዛኒያ ሺሊንግ"
+
+msgid "Intl_Currency_UAH"
+msgstr "የዩክሬን ሀሪይቭኒአ"
+
+msgid "Intl_Currency_UGX"
+msgstr "የዩጋንዳ ሺሊንግ"
+
+msgid "Intl_Currency_USD"
+msgstr "የአሜሪካን ዶላር"
+
+msgid "Intl_Currency_UYU"
+msgstr "የኡራጓይ ፔሶ"
+
+msgid "Intl_Currency_UZS"
+msgstr "የኡዝፔኪስታን ሶም"
+
+msgid "Intl_Currency_VEF"
+msgstr "የቬንዝዌላ ቦሊቫር (2008–2018)"
+
+msgid "Intl_Currency_VND"
+msgstr "የቭየትናም ዶንግ"
+
+msgid "Intl_Currency_VUV"
+msgstr "የቫንዋንቱ ቫቱ"
+
+msgid "Intl_Currency_WST"
+msgstr "ሳሞአን ታላ"
+
+msgid "Intl_Currency_XAF"
+msgstr "የመካከለኛው አፍሪካ ሴፋ ፍራንክ"
+
+msgid "Intl_Currency_XCD"
+msgstr "የምዕራብ ካሪብያን ዶላር"
+
+msgid "Intl_Currency_XOF"
+msgstr "የምዕራብ አፍሪካ ሴፋ ፍራንክ"
+
+msgid "Intl_Currency_XPF"
+msgstr "ሲ ኤፍ ፒ ፍራንክ"
+
+msgid "Intl_Currency_YER"
+msgstr "የየመን ሪአል"
+
+msgid "Intl_Currency_ZAR"
+msgstr "የደቡብ አፍሪካ ራንድ"
+
+msgid "Intl_Currency_ZMW"
+msgstr "የዛምቢያ ክዋቻ"
+
+msgid "Intl_Day_Long_1"
+msgstr "ሰኞ"
+
+msgid "Intl_Day_Long_2"
+msgstr "ማክሰኞ"
+
+msgid "Intl_Day_Long_3"
+msgstr "ረቡዕ"
+
+msgid "Intl_Day_Long_4"
+msgstr "ሐሙስ"
+
+msgid "Intl_Day_Long_5"
+msgstr "ዓርብ"
+
+msgid "Intl_Day_Long_6"
+msgstr "ቅዳሜ"
+
+msgid "Intl_Day_Long_7"
+msgstr "እሑድ"
+
+msgid "Intl_Day_Long_StandAlone_1"
+msgstr "ሰኞ"
+
+msgid "Intl_Day_Long_StandAlone_2"
+msgstr "ማክሰኞ"
+
+msgid "Intl_Day_Long_StandAlone_3"
+msgstr "ረቡዕ"
+
+msgid "Intl_Day_Long_StandAlone_4"
+msgstr "ሐሙስ"
+
+msgid "Intl_Day_Long_StandAlone_5"
+msgstr "ዓርብ"
+
+msgid "Intl_Day_Long_StandAlone_6"
+msgstr "ቅዳሜ"
+
+msgid "Intl_Day_Long_StandAlone_7"
+msgstr "እሑድ"
+
+msgid "Intl_Day_Min_1"
+msgstr "ሰ"
+
+msgid "Intl_Day_Min_2"
+msgstr "ማ"
+
+msgid "Intl_Day_Min_3"
+msgstr "ረ"
+
+msgid "Intl_Day_Min_4"
+msgstr "ሐ"
+
+msgid "Intl_Day_Min_5"
+msgstr "ዓ"
+
+msgid "Intl_Day_Min_6"
+msgstr "ቅ"
+
+msgid "Intl_Day_Min_7"
+msgstr "እ"
+
+msgid "Intl_Day_Min_StandAlone_1"
+msgstr "ሰ"
+
+msgid "Intl_Day_Min_StandAlone_2"
+msgstr "ማ"
+
+msgid "Intl_Day_Min_StandAlone_3"
+msgstr "ረ"
+
+msgid "Intl_Day_Min_StandAlone_4"
+msgstr "ሐ"
+
+msgid "Intl_Day_Min_StandAlone_5"
+msgstr "ዓ"
+
+msgid "Intl_Day_Min_StandAlone_6"
+msgstr "ቅ"
+
+msgid "Intl_Day_Min_StandAlone_7"
+msgstr "እ"
+
+msgid "Intl_Day_Short_1"
+msgstr "ሰኞ"
+
+msgid "Intl_Day_Short_2"
+msgstr "ማክሰ"
+
+msgid "Intl_Day_Short_3"
+msgstr "ረቡዕ"
+
+msgid "Intl_Day_Short_4"
+msgstr "ሐሙስ"
+
+msgid "Intl_Day_Short_5"
+msgstr "ዓርብ"
+
+msgid "Intl_Day_Short_6"
+msgstr "ቅዳሜ"
+
+msgid "Intl_Day_Short_7"
+msgstr "እሑድ"
+
+msgid "Intl_Day_Short_StandAlone_1"
+msgstr "ሰኞ"
+
+msgid "Intl_Day_Short_StandAlone_2"
+msgstr "ማክሰ"
+
+msgid "Intl_Day_Short_StandAlone_3"
+msgstr "ረቡዕ"
+
+msgid "Intl_Day_Short_StandAlone_4"
+msgstr "ሐሙስ"
+
+msgid "Intl_Day_Short_StandAlone_5"
+msgstr "ዓርብ"
+
+msgid "Intl_Day_Short_StandAlone_6"
+msgstr "ቅዳሜ"
+
+msgid "Intl_Day_Short_StandAlone_7"
+msgstr "እሑድ"
+
+msgid "Intl_EnglishLanguageName"
+msgstr "Amharic"
+
+msgid "Intl_Format_DateTime_Long"
+msgstr "y MMMM d, EEEE {time}"
+
+msgid "Intl_Format_DateTime_Short"
+msgstr "d MMM y {time}"
+
+msgid "Intl_Format_Date_Day_Month"
+msgstr "E፣ MMM d"
+
+msgid "Intl_Format_Date_Long"
+msgstr "y MMMM d, EEEE"
+
+msgid "Intl_Format_Date_Short"
+msgstr "d MMM y"
+
+msgid "Intl_Format_Hour_12"
+msgstr "h a"
+
+msgid "Intl_Format_Hour_24"
+msgstr "H"
+
+msgid "Intl_Format_Interval_Long_D"
+msgstr "MMMM d–d፣ y"
+
+msgid "Intl_Format_Interval_Long_M"
+msgstr "MMMM d – MMMM d፣ y"
+
+msgid "Intl_Format_Interval_Long_Y"
+msgstr "MMMM d፣ y – MMMM d፣ y"
+
+msgid "Intl_Format_Interval_Short_D"
+msgstr "MMM d–d፣ y"
+
+msgid "Intl_Format_Interval_Short_M"
+msgstr "MMM d – MMM d፣ y"
+
+msgid "Intl_Format_Interval_Short_Y"
+msgstr "MMM d፣ y – MMM d፣ y"
+
+msgid "Intl_Format_Month_Long"
+msgstr "MMMM y"
+
+msgid "Intl_Format_Month_Short"
+msgstr "MMM y"
+
+msgid "Intl_Format_Time"
+msgstr "{time}"
+
+msgid "Intl_Format_Time_12"
+msgstr "h:mm:ss a"
+
+msgid "Intl_Format_Time_24"
+msgstr "HH:mm:ss"
+
+msgid "Intl_Format_Year"
+msgstr "y"
+
+msgid "Intl_Hours"
+msgstr "ሰዓቶች"
+
+msgid "Intl_Language_aa"
+msgstr "አፋርኛ"
+
+msgid "Intl_Language_ab"
+msgstr "አብሐዚኛ"
+
+msgid "Intl_Language_ae"
+msgstr "አቬስታን"
+
+msgid "Intl_Language_af"
+msgstr "አፍሪካንኛ"
+
+msgid "Intl_Language_ak"
+msgstr "አካንኛ"
+
+msgid "Intl_Language_am"
+msgstr "አማርኛ"
+
+msgid "Intl_Language_an"
+msgstr "አራጎንስ"
+
+msgid "Intl_Language_ar"
+msgstr "ዓረብኛ"
+
+msgid "Intl_Language_as"
+msgstr "አሳሜዛዊ"
+
+msgid "Intl_Language_av"
+msgstr "አቫሪክ"
+
+msgid "Intl_Language_ay"
+msgstr "አያማርኛ"
+
+msgid "Intl_Language_az"
+msgstr "አዘርባጃንኛ"
+
+msgid "Intl_Language_ba"
+msgstr "ባስኪርኛ"
+
+msgid "Intl_Language_be"
+msgstr "ቤላራሻኛ"
+
+msgid "Intl_Language_bg"
+msgstr "ቡልጋሪኛ"
+
+msgid "Intl_Language_bi"
+msgstr "ቢስላምኛ"
+
+msgid "Intl_Language_bm"
+msgstr "ባምባርኛ"
+
+msgid "Intl_Language_bn"
+msgstr "ቤንጋሊኛ"
+
+msgid "Intl_Language_bo"
+msgstr "ቲቤታንኛ"
+
+msgid "Intl_Language_br"
+msgstr "ብሬቶንኛ"
+
+msgid "Intl_Language_bs"
+msgstr "ቦስኒያንኛ"
+
+msgid "Intl_Language_ca"
+msgstr "ካታላንኛ"
+
+msgid "Intl_Language_ce"
+msgstr "ችችን"
+
+msgid "Intl_Language_ch"
+msgstr "ቻሞሮ"
+
+msgid "Intl_Language_co"
+msgstr "ኮርሲካኛ"
+
+msgid "Intl_Language_cr"
+msgstr "ክሪ"
+
+msgid "Intl_Language_cs"
+msgstr "ቼክኛ"
+
+msgid "Intl_Language_cu"
+msgstr "ቸርች ስላቪክ"
+
+msgid "Intl_Language_cv"
+msgstr "ቹቫሽ"
+
+msgid "Intl_Language_cy"
+msgstr "ወልሽ"
+
+msgid "Intl_Language_da"
+msgstr "ዴኒሽ"
+
+msgid "Intl_Language_de"
+msgstr "ጀርመን"
+
+msgid "Intl_Language_dv"
+msgstr "ዲቬሂ"
+
+msgid "Intl_Language_dz"
+msgstr "ድዞንግኻኛ"
+
+msgid "Intl_Language_ee"
+msgstr "ኢዊ"
+
+msgid "Intl_Language_el"
+msgstr "ግሪክኛ"
+
+msgid "Intl_Language_en"
+msgstr "እንግሊዝኛ"
+
+msgid "Intl_Language_eo"
+msgstr "ኤስፐራንቶ"
+
+msgid "Intl_Language_es"
+msgstr "ስፓንሽኛ"
+
+msgid "Intl_Language_et"
+msgstr "ኢስቶኒያንኛ"
+
+msgid "Intl_Language_eu"
+msgstr "ባስክኛ"
+
+msgid "Intl_Language_fa"
+msgstr "ፐርሺያኛ"
+
+msgid "Intl_Language_ff"
+msgstr "ፉላህ"
+
+msgid "Intl_Language_fi"
+msgstr "ፊኒሽ"
+
+msgid "Intl_Language_fj"
+msgstr "ፊጂኛ"
+
+msgid "Intl_Language_fo"
+msgstr "ፋሮኛ"
+
+msgid "Intl_Language_fr"
+msgstr "ፈረንሳይኛ"
+
+msgid "Intl_Language_fy"
+msgstr "ምዕራባዊ ፍሪሲኛ"
+
+msgid "Intl_Language_ga"
+msgstr "አይሪሽ"
+
+msgid "Intl_Language_gd"
+msgstr "የስኮቲሽ ጌልክኛ"
+
+msgid "Intl_Language_gl"
+msgstr "ጋሊሺያ"
+
+msgid "Intl_Language_gn"
+msgstr "ጓራኒኛ"
+
+msgid "Intl_Language_gu"
+msgstr "ጉጃርቲኛ"
+
+msgid "Intl_Language_gv"
+msgstr "ማንክስኛ"
+
+msgid "Intl_Language_ha"
+msgstr "ሃውሳኛ"
+
+msgid "Intl_Language_he"
+msgstr "ዕብራይስጥ﻿"
+
+msgid "Intl_Language_hi"
+msgstr "ሒንዱኛ"
+
+msgid "Intl_Language_hr"
+msgstr "ክሮሽያንኛ"
+
+msgid "Intl_Language_ht"
+msgstr "ሃይትኛ"
+
+msgid "Intl_Language_hu"
+msgstr "ሀንጋሪኛ"
+
+msgid "Intl_Language_hy"
+msgstr "አርመናዊ"
+
+msgid "Intl_Language_hz"
+msgstr "ሄሬሮ"
+
+msgid "Intl_Language_ia"
+msgstr "ኢንቴርሊንጓ"
+
+msgid "Intl_Language_id"
+msgstr "ኢንዶኔዥኛ"
+
+msgid "Intl_Language_ie"
+msgstr "እንተርሊንግወ"
+
+msgid "Intl_Language_ig"
+msgstr "ኢግቦኛ"
+
+msgid "Intl_Language_ii"
+msgstr "ሲቹንዪኛ"
+
+msgid "Intl_Language_ik"
+msgstr "እኑፒያቅኛ"
+
+msgid "Intl_Language_io"
+msgstr "ኢዶ"
+
+msgid "Intl_Language_is"
+msgstr "አይስላንድኛ"
+
+msgid "Intl_Language_it"
+msgstr "ጣሊያንኛ"
+
+msgid "Intl_Language_iu"
+msgstr "እኑክቲቱትኛ"
+
+msgid "Intl_Language_ja"
+msgstr "ጃፓንኛ"
+
+msgid "Intl_Language_jv"
+msgstr "ጃቫንኛ"
+
+msgid "Intl_Language_ka"
+msgstr "ጆርጂያን"
+
+msgid "Intl_Language_kg"
+msgstr "ኮንጎኛ"
+
+msgid "Intl_Language_ki"
+msgstr "ኪኩዩ"
+
+msgid "Intl_Language_kj"
+msgstr "ኩንያማ"
+
+msgid "Intl_Language_kk"
+msgstr "ካዛክኛ"
+
+msgid "Intl_Language_kl"
+msgstr "ካላሊሱትኛ"
+
+msgid "Intl_Language_km"
+msgstr "ክህመርኛ"
+
+msgid "Intl_Language_kn"
+msgstr "ካናዳኛ"
+
+msgid "Intl_Language_ko"
+msgstr "ኮሪያኛ"
+
+msgid "Intl_Language_kr"
+msgstr "ካኑሪ"
+
+msgid "Intl_Language_ks"
+msgstr "ካሽሚርኛ"
+
+msgid "Intl_Language_ku"
+msgstr "ኩርድሽኛ"
+
+msgid "Intl_Language_kv"
+msgstr "ኮሚ"
+
+msgid "Intl_Language_kw"
+msgstr "ኮርኒሽ"
+
+msgid "Intl_Language_ky"
+msgstr "ኪርጊዝኛ"
+
+msgid "Intl_Language_la"
+msgstr "ላቲንኛ"
+
+msgid "Intl_Language_lb"
+msgstr "ሉክዘምበርኛ"
+
+msgid "Intl_Language_lg"
+msgstr "ጋንዳኛ"
+
+msgid "Intl_Language_li"
+msgstr "ሊምቡርጊሽ"
+
+msgid "Intl_Language_ln"
+msgstr "ሊንጋላኛ"
+
+msgid "Intl_Language_lo"
+msgstr "ላኦኛ"
+
+msgid "Intl_Language_lt"
+msgstr "ሉቴንያንኛ"
+
+msgid "Intl_Language_lu"
+msgstr "ሉባ ካታንጋ"
+
+msgid "Intl_Language_lv"
+msgstr "ላትቪያን"
+
+msgid "Intl_Language_mg"
+msgstr "ማላጋስኛ"
+
+msgid "Intl_Language_mh"
+msgstr "ማርሻሌዝኛ"
+
+msgid "Intl_Language_mi"
+msgstr "ማኦሪኛ"
+
+msgid "Intl_Language_mk"
+msgstr "ማሴዶንኛ"
+
+msgid "Intl_Language_ml"
+msgstr "ማላያላምኛ"
+
+msgid "Intl_Language_mn"
+msgstr "ሞንጎሊያኛ"
+
+msgid "Intl_Language_mr"
+msgstr "ማራቲኛ"
+
+msgid "Intl_Language_ms"
+msgstr "ማላይኛ"
+
+msgid "Intl_Language_mt"
+msgstr "ማልቲስኛ"
+
+msgid "Intl_Language_my"
+msgstr "ቡርማኛ"
+
+msgid "Intl_Language_na"
+msgstr "ናኡሩ"
+
+msgid "Intl_Language_nb"
+msgstr "የኖርዌይ ቦክማል"
+
+msgid "Intl_Language_nd"
+msgstr "ሰሜን ንዴብሌ"
+
+msgid "Intl_Language_ne"
+msgstr "ኔፓሊኛ"
+
+msgid "Intl_Language_ng"
+msgstr "ንዶንጋ"
+
+msgid "Intl_Language_nl"
+msgstr "ደች"
+
+msgid "Intl_Language_nn"
+msgstr "የኖርዌይ ናይኖርስክ"
+
+msgid "Intl_Language_no"
+msgstr "ኖርዌጂያን"
+
+msgid "Intl_Language_nr"
+msgstr "ደቡብ ንደቤሌ"
+
+msgid "Intl_Language_nv"
+msgstr "ናቫጆ"
+
+msgid "Intl_Language_ny"
+msgstr "ንያንጃ"
+
+msgid "Intl_Language_oc"
+msgstr "ኦኪታንኛ"
+
+msgid "Intl_Language_om"
+msgstr "ኦሮሞኛ"
+
+msgid "Intl_Language_or"
+msgstr "ኦዲያኛ"
+
+msgid "Intl_Language_os"
+msgstr "ኦሴቲክ"
+
+msgid "Intl_Language_pa"
+msgstr "ፑንጃብኛ"
+
+msgid "Intl_Language_pl"
+msgstr "ፖሊሽኛ"
+
+msgid "Intl_Language_ps"
+msgstr "ፓሽቶኛ"
+
+msgid "Intl_Language_pt"
+msgstr "ፖርቹጋልኛ"
+
+msgid "Intl_Language_qu"
+msgstr "ኵቿኛ"
+
+msgid "Intl_Language_rm"
+msgstr "ሮማንሽ"
+
+msgid "Intl_Language_rn"
+msgstr "ሩንዲኛ"
+
+msgid "Intl_Language_ro"
+msgstr "ሮማኒያን"
+
+msgid "Intl_Language_ru"
+msgstr "ራሽያኛ"
+
+msgid "Intl_Language_rw"
+msgstr "ኪንያርዋንድኛ"
+
+msgid "Intl_Language_sa"
+msgstr "ሳንስክሪትኛ"
+
+msgid "Intl_Language_sc"
+msgstr "ሳርዲንያንኛ"
+
+msgid "Intl_Language_sd"
+msgstr "ሲንድሂኛ"
+
+msgid "Intl_Language_se"
+msgstr "ሰሜናዊ ሳሚ"
+
+msgid "Intl_Language_sg"
+msgstr "ሳንጎኛ"
+
+msgid "Intl_Language_si"
+msgstr "ሲንሃልኛ"
+
+msgid "Intl_Language_sk"
+msgstr "ስሎቫክኛ"
+
+msgid "Intl_Language_sl"
+msgstr "ስሎቪኛ"
+
+msgid "Intl_Language_sm"
+msgstr "ሳሞአኛ"
+
+msgid "Intl_Language_sn"
+msgstr "ሾናኛ"
+
+msgid "Intl_Language_so"
+msgstr "ሱማልኛ"
+
+msgid "Intl_Language_sq"
+msgstr "አልባንያንኛ"
+
+msgid "Intl_Language_sr"
+msgstr "ሰርብያኛ"
+
+msgid "Intl_Language_ss"
+msgstr "ስዋቲኛ"
+
+msgid "Intl_Language_st"
+msgstr "ደቡባዊ ሶቶ"
+
+msgid "Intl_Language_su"
+msgstr "ሱዳንኛ"
+
+msgid "Intl_Language_sv"
+msgstr "ስዊድንኛ"
+
+msgid "Intl_Language_sw"
+msgstr "ስዋሂሊኛ"
+
+msgid "Intl_Language_ta"
+msgstr "ታሚልኛ"
+
+msgid "Intl_Language_te"
+msgstr "ተሉጉኛ"
+
+msgid "Intl_Language_tg"
+msgstr "ታጂኪኛ"
+
+msgid "Intl_Language_th"
+msgstr "ታይኛ"
+
+msgid "Intl_Language_ti"
+msgstr "ትግርኛ"
+
+msgid "Intl_Language_tk"
+msgstr "ቱርክሜንኛ"
+
+msgid "Intl_Language_tl"
+msgstr "ታጋሎገኛ"
+
+msgid "Intl_Language_tn"
+msgstr "ጽዋናዊኛ"
+
+msgid "Intl_Language_to"
+msgstr "ቶንጋኛ"
+
+msgid "Intl_Language_tr"
+msgstr "ቱርክኛ"
+
+msgid "Intl_Language_ts"
+msgstr "ጾንጋኛ"
+
+msgid "Intl_Language_tt"
+msgstr "ታታርኛ"
+
+msgid "Intl_Language_tw"
+msgstr "ትዊኛ"
+
+msgid "Intl_Language_ty"
+msgstr "ታሂታንኛ"
+
+msgid "Intl_Language_ug"
+msgstr "ኡዊግሁርኛ"
+
+msgid "Intl_Language_uk"
+msgstr "ዩክሬንኛ"
+
+msgid "Intl_Language_ur"
+msgstr "ኡርዱኛ"
+
+msgid "Intl_Language_uz"
+msgstr "ኡዝቤክኛ"
+
+msgid "Intl_Language_ve"
+msgstr "ቬንዳ"
+
+msgid "Intl_Language_vi"
+msgstr "ቪየትናምኛ"
+
+msgid "Intl_Language_vo"
+msgstr "ቮላፑክኛ"
+
+msgid "Intl_Language_wa"
+msgstr "ዋሎን"
+
+msgid "Intl_Language_wo"
+msgstr "ዎሎፍኛ"
+
+msgid "Intl_Language_xh"
+msgstr "ዞሳኛ"
+
+msgid "Intl_Language_yi"
+msgstr "ይዲሽኛ"
+
+msgid "Intl_Language_yo"
+msgstr "ዮሩባዊኛ"
+
+msgid "Intl_Language_za"
+msgstr "ዡዋንግኛ"
+
+msgid "Intl_Language_zh"
+msgstr "ቻይንኛ"
+
+msgid "Intl_Language_zu"
+msgstr "ዙሉኛ"
+
+msgid "Intl_LayoutDirection"
+msgstr "ltr"
+
+msgid "Intl_Minutes"
+msgstr "ደቂቃዎች"
+
+msgid "Intl_Month_Long_1"
+msgstr "ጃንዩወሪ"
+
+msgid "Intl_Month_Long_10"
+msgstr "ኦክቶበር"
+
+msgid "Intl_Month_Long_11"
+msgstr "ኖቬምበር"
+
+msgid "Intl_Month_Long_12"
+msgstr "ዲሴምበር"
+
+msgid "Intl_Month_Long_2"
+msgstr "ፌብሩወሪ"
+
+msgid "Intl_Month_Long_3"
+msgstr "ማርች"
+
+msgid "Intl_Month_Long_4"
+msgstr "ኤፕሪል"
+
+msgid "Intl_Month_Long_5"
+msgstr "ሜይ"
+
+msgid "Intl_Month_Long_6"
+msgstr "ጁን"
+
+msgid "Intl_Month_Long_7"
+msgstr "ጁላይ"
+
+msgid "Intl_Month_Long_8"
+msgstr "ኦገስት"
+
+msgid "Intl_Month_Long_9"
+msgstr "ሴፕቴምበር"
+
+msgid "Intl_Month_Long_StandAlone_1"
+msgstr "ጃንዩወሪ"
+
+msgid "Intl_Month_Long_StandAlone_10"
+msgstr "ኦክቶበር"
+
+msgid "Intl_Month_Long_StandAlone_11"
+msgstr "ኖቬምበር"
+
+msgid "Intl_Month_Long_StandAlone_12"
+msgstr "ዲሴምበር"
+
+msgid "Intl_Month_Long_StandAlone_2"
+msgstr "ፌብሩወሪ"
+
+msgid "Intl_Month_Long_StandAlone_3"
+msgstr "ማርች"
+
+msgid "Intl_Month_Long_StandAlone_4"
+msgstr "ኤፕሪል"
+
+msgid "Intl_Month_Long_StandAlone_5"
+msgstr "ሜይ"
+
+msgid "Intl_Month_Long_StandAlone_6"
+msgstr "ጁን"
+
+msgid "Intl_Month_Long_StandAlone_7"
+msgstr "ጁላይ"
+
+msgid "Intl_Month_Long_StandAlone_8"
+msgstr "ኦገስት"
+
+msgid "Intl_Month_Long_StandAlone_9"
+msgstr "ሴፕቴምበር"
+
+msgid "Intl_Month_Short_1"
+msgstr "ጃንዩ"
+
+msgid "Intl_Month_Short_10"
+msgstr "ኦክቶ"
+
+msgid "Intl_Month_Short_11"
+msgstr "ኖቬም"
+
+msgid "Intl_Month_Short_12"
+msgstr "ዲሴም"
+
+msgid "Intl_Month_Short_2"
+msgstr "ፌብሩ"
+
+msgid "Intl_Month_Short_3"
+msgstr "ማርች"
+
+msgid "Intl_Month_Short_4"
+msgstr "ኤፕሪ"
+
+msgid "Intl_Month_Short_5"
+msgstr "ሜይ"
+
+msgid "Intl_Month_Short_6"
+msgstr "ጁን"
+
+msgid "Intl_Month_Short_7"
+msgstr "ጁላይ"
+
+msgid "Intl_Month_Short_8"
+msgstr "ኦገስ"
+
+msgid "Intl_Month_Short_9"
+msgstr "ሴፕቴ"
+
+msgid "Intl_Month_Short_StandAlone_1"
+msgstr "ጃንዩ"
+
+msgid "Intl_Month_Short_StandAlone_10"
+msgstr "ኦክቶ"
+
+msgid "Intl_Month_Short_StandAlone_11"
+msgstr "ኖቬም"
+
+msgid "Intl_Month_Short_StandAlone_12"
+msgstr "ዲሴም"
+
+msgid "Intl_Month_Short_StandAlone_2"
+msgstr "ፌብሩ"
+
+msgid "Intl_Month_Short_StandAlone_3"
+msgstr "ማርች"
+
+msgid "Intl_Month_Short_StandAlone_4"
+msgstr "ኤፕሪ"
+
+msgid "Intl_Month_Short_StandAlone_5"
+msgstr "ሜይ"
+
+msgid "Intl_Month_Short_StandAlone_6"
+msgstr "ጁን"
+
+msgid "Intl_Month_Short_StandAlone_7"
+msgstr "ጁላይ"
+
+msgid "Intl_Month_Short_StandAlone_8"
+msgstr "ኦገስ"
+
+msgid "Intl_Month_Short_StandAlone_9"
+msgstr "ሴፕቴ"
+
+msgid "Intl_NDays"
+msgstr "%s ቀናት"
+
+msgid "Intl_NHoursShort"
+msgstr "%s ሰ"
+
+msgid "Intl_NMinutes"
+msgstr "%s ደቂቃዎች"
+
+msgid "Intl_NMinutesShort"
+msgstr "%s ደቂቃ"
+
+msgid "Intl_NSeconds"
+msgstr "%s ሰከንዶች"
+
+msgid "Intl_NSecondsShort"
+msgstr "%s ሰ"
+
+msgid "Intl_NumberFormatCurrency"
+msgstr "¤#,##0.00"
+
+msgid "Intl_NumberFormatNumber"
+msgstr "#,##0.###"
+
+msgid "Intl_NumberFormatPercent"
+msgstr "#,##0%"
+
+msgid "Intl_NumberSymbolDecimal"
+msgstr "."
+
+msgid "Intl_NumberSymbolGroup"
+msgstr ","
+
+msgid "Intl_NumberSymbolMinus"
+msgstr "-"
+
+msgid "Intl_NumberSymbolPercent"
+msgstr "%"
+
+msgid "Intl_NumberSymbolPlus"
+msgstr "+"
+
+msgid "Intl_OneDay"
+msgstr "1 ቀናት"
+
+msgid "Intl_OneMinute"
+msgstr "1 ደቂቃ"
+
+msgid "Intl_OneMinuteShort"
+msgstr "1 ደቂ"
+
+msgid "Intl_OriginalLanguageName"
+msgstr "አማርኛ"
+
+msgid "Intl_PeriodDay"
+msgstr "ቀን"
+
+msgid "Intl_PeriodDays"
+msgstr "ቀናት"
+
+msgid "Intl_PeriodMonth"
+msgstr "ወር"
+
+msgid "Intl_PeriodMonths"
+msgstr "ወራት"
+
+msgid "Intl_PeriodWeek"
+msgstr "ሳምንት"
+
+msgid "Intl_PeriodWeeks"
+msgstr "ሳምንታት"
+
+msgid "Intl_PeriodYear"
+msgstr "ዓመት"
+
+msgid "Intl_PeriodYears"
+msgstr "ዓመታት"
+
+msgid "Intl_Seconds"
+msgstr "ሰከንዶች"
+
+msgid "Intl_Time_AM"
+msgstr "ጥዋት"
+
+msgid "Intl_Time_PM"
+msgstr "ከሰዓት"
+
+msgid "Intl_Timezone_Africa_Asmera"
+msgstr "አስመራ"
+
+msgid "Intl_Timezone_Africa_Ceuta"
+msgstr "ሲኡታ"
+
+msgid "Intl_Timezone_Africa_Kinshasa"
+msgstr "ኪንሻሳ"
+
+msgid "Intl_Timezone_Africa_Lubumbashi"
+msgstr "ሉቡምባሺ"
+
+msgid "Intl_Timezone_America_Adak"
+msgstr "አዳክ"
+
+msgid "Intl_Timezone_America_Anchorage"
+msgstr "አንኮራጅ"
+
+msgid "Intl_Timezone_America_Araguaina"
+msgstr "አራጉየና"
+
+msgid "Intl_Timezone_America_Argentina_LaRioja"
+msgstr "ላ ሪኦጃ"
+
+msgid "Intl_Timezone_America_Argentina_RioGallegos"
+msgstr "ሪዮ ጋሌጎስ"
+
+msgid "Intl_Timezone_America_Argentina_Salta"
+msgstr "ሳልታ"
+
+msgid "Intl_Timezone_America_Argentina_SanJuan"
+msgstr "ሳን ጁአን"
+
+msgid "Intl_Timezone_America_Argentina_SanLuis"
+msgstr "ሳን ሊውስ"
+
+msgid "Intl_Timezone_America_Argentina_Tucuman"
+msgstr "ቱኩማን"
+
+msgid "Intl_Timezone_America_Argentina_Ushuaia"
+msgstr "ኡሹአኢ"
+
+msgid "Intl_Timezone_America_Bahia"
+msgstr "ባሂአ"
+
+msgid "Intl_Timezone_America_BahiaBanderas"
+msgstr "ባሂያ ባንደራስ"
+
+msgid "Intl_Timezone_America_Belem"
+msgstr "ቤለም"
+
+msgid "Intl_Timezone_America_Blanc-Sablon"
+msgstr "ብላንክ- ሳብሎን"
+
+msgid "Intl_Timezone_America_BoaVista"
+msgstr "ቦአ ቪስታ"
+
+msgid "Intl_Timezone_America_Boise"
+msgstr "ቦይዝ"
+
+msgid "Intl_Timezone_America_BuenosAires"
+msgstr "ቦነስ አይረስ"
+
+msgid "Intl_Timezone_America_CambridgeBay"
+msgstr "ካምብሪጅ ቤይ"
+
+msgid "Intl_Timezone_America_CampoGrande"
+msgstr "ካምፖ ግራንዴ"
+
+msgid "Intl_Timezone_America_Cancun"
+msgstr "ካንኩን"
+
+msgid "Intl_Timezone_America_Catamarca"
+msgstr "ካታማርካ"
+
+msgid "Intl_Timezone_America_Chicago"
+msgstr "ቺካጎ"
+
+msgid "Intl_Timezone_America_Chihuahua"
+msgstr "ቺሁዋውአ"
+
+msgid "Intl_Timezone_America_CoralHarbour"
+msgstr "አቲኮካን"
+
+msgid "Intl_Timezone_America_Cordoba"
+msgstr "ኮርዶባ"
+
+msgid "Intl_Timezone_America_Creston"
+msgstr "ክረስተን"
+
+msgid "Intl_Timezone_America_Cuiaba"
+msgstr "ኩየአባ"
+
+msgid "Intl_Timezone_America_Danmarkshavn"
+msgstr "ዳንማርክሻቭን"
+
+msgid "Intl_Timezone_America_Dawson"
+msgstr "ዳውሰን"
+
+msgid "Intl_Timezone_America_DawsonCreek"
+msgstr "ዳውሰን ክሬክ"
+
+msgid "Intl_Timezone_America_Denver"
+msgstr "ዴንቨር"
+
+msgid "Intl_Timezone_America_Detroit"
+msgstr "ዲትሮይት"
+
+msgid "Intl_Timezone_America_Edmonton"
+msgstr "ኤድመንተን"
+
+msgid "Intl_Timezone_America_Eirunepe"
+msgstr "ኢሩኔፕ"
+
+msgid "Intl_Timezone_America_FortNelson"
+msgstr "ፎርት ኔልሰን"
+
+msgid "Intl_Timezone_America_Fortaleza"
+msgstr "ፎርታሌዛ"
+
+msgid "Intl_Timezone_America_GlaceBay"
+msgstr "ግሌስ ቤይ"
+
+msgid "Intl_Timezone_America_Godthab"
+msgstr "ጋድታብ"
+
+msgid "Intl_Timezone_America_GooseBay"
+msgstr "ጉዝ ቤይ"
+
+msgid "Intl_Timezone_America_Guayaquil"
+msgstr "ጉያኩይል"
+
+msgid "Intl_Timezone_America_Halifax"
+msgstr "ሃሊፋክስ"
+
+msgid "Intl_Timezone_America_Hermosillo"
+msgstr "ኸርሞዚሎ"
+
+msgid "Intl_Timezone_America_Indiana_Knox"
+msgstr "ኖክስ, ኢንዲያና"
+
+msgid "Intl_Timezone_America_Indiana_Marengo"
+msgstr "ማሬንጎ, ኢንዲያና"
+
+msgid "Intl_Timezone_America_Indiana_Petersburg"
+msgstr "ፒተርስበርግ, ኢንዲያና"
+
+msgid "Intl_Timezone_America_Indiana_TellCity"
+msgstr "ቴል ከተማ, ኢንዲያና"
+
+msgid "Intl_Timezone_America_Indiana_Vevay"
+msgstr "ቪቫይ, ኢንዲያና"
+
+msgid "Intl_Timezone_America_Indiana_Vincennes"
+msgstr "ቪንቼንስ, ኢንዲያና"
+
+msgid "Intl_Timezone_America_Indiana_Winamac"
+msgstr "ዊናማክ, ኢንዲያና"
+
+msgid "Intl_Timezone_America_Indianapolis"
+msgstr "ኢንዲያናፖሊስ"
+
+msgid "Intl_Timezone_America_Inuvik"
+msgstr "ኢኑቪክ"
+
+msgid "Intl_Timezone_America_Iqaluit"
+msgstr "ኢኳሊውት"
+
+msgid "Intl_Timezone_America_Jujuy"
+msgstr "ጁጁይ"
+
+msgid "Intl_Timezone_America_Juneau"
+msgstr "ጁኒዩ"
+
+msgid "Intl_Timezone_America_Kentucky_Monticello"
+msgstr "ሞንቲሴሎ, ኪንታኪ"
+
+msgid "Intl_Timezone_America_LosAngeles"
+msgstr "ሎስ አንጀለስ"
+
+msgid "Intl_Timezone_America_Louisville"
+msgstr "ሊውስቪል"
+
+msgid "Intl_Timezone_America_Maceio"
+msgstr "ሜሲኦ"
+
+msgid "Intl_Timezone_America_Manaus"
+msgstr "ማናኡስ"
+
+msgid "Intl_Timezone_America_Matamoros"
+msgstr "ማታሞሮስ"
+
+msgid "Intl_Timezone_America_Mazatlan"
+msgstr "ማዛትላን"
+
+msgid "Intl_Timezone_America_Mendoza"
+msgstr "ሜንዶዛ"
+
+msgid "Intl_Timezone_America_Menominee"
+msgstr "ሜኖሚኒ"
+
+msgid "Intl_Timezone_America_Merida"
+msgstr "ሜሪዳ"
+
+msgid "Intl_Timezone_America_Metlakatla"
+msgstr "መትላካትላ"
+
+msgid "Intl_Timezone_America_MexicoCity"
+msgstr "ሜክሲኮ ከተማ"
+
+msgid "Intl_Timezone_America_Moncton"
+msgstr "ሞንክቶን"
+
+msgid "Intl_Timezone_America_Monterrey"
+msgstr "ሞንተርሬይ"
+
+msgid "Intl_Timezone_America_NewYork"
+msgstr "ኒውዮርክ"
+
+msgid "Intl_Timezone_America_Nipigon"
+msgstr "ኒፒጎን"
+
+msgid "Intl_Timezone_America_Nome"
+msgstr "ኖሜ"
+
+msgid "Intl_Timezone_America_Noronha"
+msgstr "ኖሮኛ"
+
+msgid "Intl_Timezone_America_NorthDakota_Beulah"
+msgstr "ቤኡላህ, ሰሜን ዳኮታ"
+
+msgid "Intl_Timezone_America_NorthDakota_Center"
+msgstr "መካከለኛ, ሰሜን ዳኮታ"
+
+msgid "Intl_Timezone_America_NorthDakota_NewSalem"
+msgstr "አዲስ ሳሌም, ሰሜን ዳኮታ"
+
+msgid "Intl_Timezone_America_Ojinaga"
+msgstr "ኦዪናጋ"
+
+msgid "Intl_Timezone_America_Pangnirtung"
+msgstr "ፓንግኒርተንግ"
+
+msgid "Intl_Timezone_America_Phoenix"
+msgstr "ፊኒክስ"
+
+msgid "Intl_Timezone_America_PortoVelho"
+msgstr "ፔትሮ ቬልሆ"
+
+msgid "Intl_Timezone_America_PuntaArenas"
+msgstr "ፑንታ አሬናስ"
+
+msgid "Intl_Timezone_America_RainyRiver"
+msgstr "ሬኒ ሪቨር"
+
+msgid "Intl_Timezone_America_RankinInlet"
+msgstr "ራንኪን ኢንሌት"
+
+msgid "Intl_Timezone_America_Recife"
+msgstr "ረሲፍ"
+
+msgid "Intl_Timezone_America_Regina"
+msgstr "ረጂና"
+
+msgid "Intl_Timezone_America_Resolute"
+msgstr "ሪዞሊዩት"
+
+msgid "Intl_Timezone_America_RioBranco"
+msgstr "ሪዮ ብራንኮ"
+
+msgid "Intl_Timezone_America_SantaIsabel"
+msgstr "ሳንታ ኢዛቤል"
+
+msgid "Intl_Timezone_America_Santarem"
+msgstr "ሳንታሬም"
+
+msgid "Intl_Timezone_America_Santiago"
+msgstr "ሳንቲያጎ"
+
+msgid "Intl_Timezone_America_SaoPaulo"
+msgstr "ሳኦ ፖሎ"
+
+msgid "Intl_Timezone_America_Scoresbysund"
+msgstr "ስኮርስባይሰንድ"
+
+msgid "Intl_Timezone_America_Sitka"
+msgstr "ሲትካ"
+
+msgid "Intl_Timezone_America_StJohns"
+msgstr "ቅዱስ ዮሐንስ"
+
+msgid "Intl_Timezone_America_SwiftCurrent"
+msgstr "የሐዋላ ገንዘብ"
+
+msgid "Intl_Timezone_America_Thule"
+msgstr "ቱሌ"
+
+msgid "Intl_Timezone_America_ThunderBay"
+msgstr "ተንደር ቤይ"
+
+msgid "Intl_Timezone_America_Tijuana"
+msgstr "ቲጁአና"
+
+msgid "Intl_Timezone_America_Toronto"
+msgstr "ቶሮንቶ"
+
+msgid "Intl_Timezone_America_Vancouver"
+msgstr "ቫንኮቨር"
+
+msgid "Intl_Timezone_America_Whitehorse"
+msgstr "ኋይትሆርስ"
+
+msgid "Intl_Timezone_America_Winnipeg"
+msgstr "ዊኒፔግ"
+
+msgid "Intl_Timezone_America_Yakutat"
+msgstr "ያኩታት"
+
+msgid "Intl_Timezone_America_Yellowknife"
+msgstr "የሎውናይፍ"
+
+msgid "Intl_Timezone_Antarctica_Casey"
+msgstr "ካዚይ"
+
+msgid "Intl_Timezone_Antarctica_Davis"
+msgstr "ዳቪስ"
+
+msgid "Intl_Timezone_Antarctica_DumontDUrville"
+msgstr "ደሞንት ዲኡርቪል"
+
+msgid "Intl_Timezone_Antarctica_Macquarie"
+msgstr "ማከሪ"
+
+msgid "Intl_Timezone_Antarctica_Mawson"
+msgstr "ናውሰን"
+
+msgid "Intl_Timezone_Antarctica_McMurdo"
+msgstr "ማክመርዶ"
+
+msgid "Intl_Timezone_Antarctica_Palmer"
+msgstr "ፓልመር"
+
+msgid "Intl_Timezone_Antarctica_Rothera"
+msgstr "ሮቴራ"
+
+msgid "Intl_Timezone_Antarctica_Syowa"
+msgstr "ስዮዋ"
+
+msgid "Intl_Timezone_Antarctica_Troll"
+msgstr "ትሮል"
+
+msgid "Intl_Timezone_Antarctica_Vostok"
+msgstr "ቭስቶክ"
+
+msgid "Intl_Timezone_Asia_Almaty"
+msgstr "አልማትይ"
+
+msgid "Intl_Timezone_Asia_Anadyr"
+msgstr "አናድይር"
+
+msgid "Intl_Timezone_Asia_Aqtau"
+msgstr "አኩታኡ"
+
+msgid "Intl_Timezone_Asia_Aqtobe"
+msgstr "አኩቶቤ"
+
+msgid "Intl_Timezone_Asia_Atyrau"
+msgstr "አትይራኡ"
+
+msgid "Intl_Timezone_Asia_Barnaul"
+msgstr "ባርናኡል"
+
+msgid "Intl_Timezone_Asia_Calcutta"
+msgstr "ኮልካታ"
+
+msgid "Intl_Timezone_Asia_Chita"
+msgstr "ቺታ"
+
+msgid "Intl_Timezone_Asia_Choibalsan"
+msgstr "ቾይባልሳን"
+
+msgid "Intl_Timezone_Asia_Famagusta"
+msgstr "ፋማጉስታ"
+
+msgid "Intl_Timezone_Asia_Gaza"
+msgstr "ጋዛ"
+
+msgid "Intl_Timezone_Asia_Hebron"
+msgstr "ኬብሮን"
+
+msgid "Intl_Timezone_Asia_Hovd"
+msgstr "ሆቭድ"
+
+msgid "Intl_Timezone_Asia_Irkutsk"
+msgstr "ኢርኩትስክ"
+
+msgid "Intl_Timezone_Asia_Jakarta"
+msgstr "ጃካርታ"
+
+msgid "Intl_Timezone_Asia_Jayapura"
+msgstr "ጃያፑራ"
+
+msgid "Intl_Timezone_Asia_Kamchatka"
+msgstr "ካምቻትካ"
+
+msgid "Intl_Timezone_Asia_Katmandu"
+msgstr "ካትማንዱ"
+
+msgid "Intl_Timezone_Asia_Khandyga"
+msgstr "ካንዲጋ"
+
+msgid "Intl_Timezone_Asia_Krasnoyarsk"
+msgstr "ክራስኖያርስክ"
+
+msgid "Intl_Timezone_Asia_KualaLumpur"
+msgstr "ኩዋላ ላምፑር"
+
+msgid "Intl_Timezone_Asia_Kuching"
+msgstr "ኩቺንግ"
+
+msgid "Intl_Timezone_Asia_Magadan"
+msgstr "ማጋዳን"
+
+msgid "Intl_Timezone_Asia_Makassar"
+msgstr "ማካሳር"
+
+msgid "Intl_Timezone_Asia_Nicosia"
+msgstr "ኒኮሲአ"
+
+msgid "Intl_Timezone_Asia_Novokuznetsk"
+msgstr "ኖቮኩትዝኔክ"
+
+msgid "Intl_Timezone_Asia_Novosibirsk"
+msgstr "ኖቮሲቢሪስክ"
+
+msgid "Intl_Timezone_Asia_Omsk"
+msgstr "ኦምስክ"
+
+msgid "Intl_Timezone_Asia_Oral"
+msgstr "ኦራል"
+
+msgid "Intl_Timezone_Asia_Pontianak"
+msgstr "ፖንቲአናክ"
+
+msgid "Intl_Timezone_Asia_Qyzylorda"
+msgstr "ኩይዚሎርዳ"
+
+msgid "Intl_Timezone_Asia_Rangoon"
+msgstr "ያንጎን"
+
+msgid "Intl_Timezone_Asia_Saigon"
+msgstr "ሆ ቺ ሚንህ ከተማ"
+
+msgid "Intl_Timezone_Asia_Sakhalin"
+msgstr "ሳክሃሊን"
+
+msgid "Intl_Timezone_Asia_Samarkand"
+msgstr "ሳማርካንድ"
+
+msgid "Intl_Timezone_Asia_Shanghai"
+msgstr "ሻንጋይ"
+
+msgid "Intl_Timezone_Asia_Srednekolymsk"
+msgstr "ስሬድኔስኮልምስክ"
+
+msgid "Intl_Timezone_Asia_Tashkent"
+msgstr "ታሽኬንት"
+
+msgid "Intl_Timezone_Asia_Tomsk"
+msgstr "ቶምስክ"
+
+msgid "Intl_Timezone_Asia_Ulaanbaatar"
+msgstr "ኡላአንባአታር"
+
+msgid "Intl_Timezone_Asia_Urumqi"
+msgstr "ኡሩምኪ"
+
+msgid "Intl_Timezone_Asia_Ust-Nera"
+msgstr "ኡስት-ኔራ"
+
+msgid "Intl_Timezone_Asia_Vladivostok"
+msgstr "ቭላዲቮስቶክ"
+
+msgid "Intl_Timezone_Asia_Yakutsk"
+msgstr "ያኩትስክ"
+
+msgid "Intl_Timezone_Asia_Yekaterinburg"
+msgstr "የካተሪንበርግ"
+
+msgid "Intl_Timezone_Atlantic_Azores"
+msgstr "አዞረስ"
+
+msgid "Intl_Timezone_Atlantic_Canary"
+msgstr "ካናሪ"
+
+msgid "Intl_Timezone_Atlantic_Faeroe"
+msgstr "ፋሮእ"
+
+msgid "Intl_Timezone_Atlantic_Madeira"
+msgstr "ማዴራ"
+
+msgid "Intl_Timezone_Australia_Adelaide"
+msgstr "አዴሌእድ"
+
+msgid "Intl_Timezone_Australia_Brisbane"
+msgstr "ብሪስቤን"
+
+msgid "Intl_Timezone_Australia_BrokenHill"
+msgstr "ብሮክን ሂል"
+
+msgid "Intl_Timezone_Australia_Currie"
+msgstr "ከሪ"
+
+msgid "Intl_Timezone_Australia_Darwin"
+msgstr "ዳርዊን"
+
+msgid "Intl_Timezone_Australia_Eucla"
+msgstr "ኡክላ"
+
+msgid "Intl_Timezone_Australia_Hobart"
+msgstr "ሆባርት"
+
+msgid "Intl_Timezone_Australia_Lindeman"
+msgstr "ሊንድማን"
+
+msgid "Intl_Timezone_Australia_LordHowe"
+msgstr "ሎርድ ሆዊ"
+
+msgid "Intl_Timezone_Australia_Melbourne"
+msgstr "ሜልቦርን"
+
+msgid "Intl_Timezone_Australia_Perth"
+msgstr "ፐርዝ"
+
+msgid "Intl_Timezone_Australia_Sydney"
+msgstr "ሲድኒ"
+
+msgid "Intl_Timezone_Europe_Astrakhan"
+msgstr "አስትራክሃን"
+
+msgid "Intl_Timezone_Europe_Berlin"
+msgstr "በርሊን"
+
+msgid "Intl_Timezone_Europe_Busingen"
+msgstr "ቡሲንገን"
+
+msgid "Intl_Timezone_Europe_Kaliningrad"
+msgstr "ካሊኒንግራድ"
+
+msgid "Intl_Timezone_Europe_Kiev"
+msgstr "ኪየቭ"
+
+msgid "Intl_Timezone_Europe_Kirov"
+msgstr "ኪሮቭ"
+
+msgid "Intl_Timezone_Europe_Lisbon"
+msgstr "ሊዝበን"
+
+msgid "Intl_Timezone_Europe_Madrid"
+msgstr "ማድሪድ"
+
+msgid "Intl_Timezone_Europe_Moscow"
+msgstr "ሞስኮ"
+
+msgid "Intl_Timezone_Europe_Samara"
+msgstr "ሳማራ"
+
+msgid "Intl_Timezone_Europe_Saratov"
+msgstr "ሳራቶቭ"
+
+msgid "Intl_Timezone_Europe_Simferopol"
+msgstr "ሲምፈሮፖል"
+
+msgid "Intl_Timezone_Europe_Ulyanovsk"
+msgstr "ኡልያኖቭስክ"
+
+msgid "Intl_Timezone_Europe_Uzhgorod"
+msgstr "ኡዝጎሮድ"
+
+msgid "Intl_Timezone_Europe_Volgograd"
+msgstr "ቮልጎራድ"
+
+msgid "Intl_Timezone_Europe_Zaporozhye"
+msgstr "ዛፖሮዚይ"
+
+msgid "Intl_Timezone_Pacific_Auckland"
+msgstr "ኦክላንድ"
+
+msgid "Intl_Timezone_Pacific_Bougainville"
+msgstr "ቦጌይንቪል"
+
+msgid "Intl_Timezone_Pacific_Chatham"
+msgstr "ቻታም"
+
+msgid "Intl_Timezone_Pacific_Easter"
+msgstr "ፋሲካ"
+
+msgid "Intl_Timezone_Pacific_Enderbury"
+msgstr "ኢንደርበሪ"
+
+msgid "Intl_Timezone_Pacific_Galapagos"
+msgstr "ጋላፓጎስ"
+
+msgid "Intl_Timezone_Pacific_Gambier"
+msgstr "ጋምቢየር"
+
+msgid "Intl_Timezone_Pacific_Honolulu"
+msgstr "ሆኖሉሉ"
+
+msgid "Intl_Timezone_Pacific_Johnston"
+msgstr "ጆንስተን"
+
+msgid "Intl_Timezone_Pacific_Kiritimati"
+msgstr "ኪሪቲማቲ"
+
+msgid "Intl_Timezone_Pacific_Kosrae"
+msgstr "ኮስሬ"
+
+msgid "Intl_Timezone_Pacific_Kwajalein"
+msgstr "ክዋጃሊን"
+
+msgid "Intl_Timezone_Pacific_Majuro"
+msgstr "ማጁሩ"
+
+msgid "Intl_Timezone_Pacific_Marquesas"
+msgstr "ማርክዌሳስ"
+
+msgid "Intl_Timezone_Pacific_Midway"
+msgstr "ሚድወይ"
+
+msgid "Intl_Timezone_Pacific_Ponape"
+msgstr "ፖህንፔ"
+
+msgid "Intl_Timezone_Pacific_PortMoresby"
+msgstr "ፖርት ሞሬስባይ"
+
+msgid "Intl_Timezone_Pacific_Tahiti"
+msgstr "ታሂቲ"
+
+msgid "Intl_Timezone_Pacific_Tarawa"
+msgstr "ታራዋ"
+
+msgid "Intl_Timezone_Pacific_Truk"
+msgstr "ቹክ"
+
+msgid "Intl_Timezone_Pacific_Wake"
+msgstr "ዋኬ"
+
+msgid "Intl_Today"
+msgstr "ዛሬ"
+
+msgid "Intl_Year_Short"
+msgstr "ዓመት"
+
+msgid "Intl_Yesterday"
+msgstr "ትናንት"
+
+msgid "Login_InvalidUsernameEmail"
+msgstr "የተሳሳት የተጠቃሚ ስም እና/ወይም ኢ-ሜይል አድራሻ"
+
+msgid "Login_LogIn"
+msgstr "ግባ"
+
+msgid "Login_LoginPasswordNotCorrect"
+msgstr "የተጠቃሚ ስም እና የይለፍ ቃል ትክክል አይደለም"
+
+msgid "Login_LostYourPassword"
+msgstr "የይለፍ ቃል ጠፋብህ?"
+
+msgid "Login_PasswordRepeat"
+msgstr "የይለፍ ቃል (ድገም)"
+
+msgid "Marketplace_ActivateLicenseKey"
+msgstr "አግብር"
+
+msgid "Marketplace_PluginKeywords"
+msgstr "ቁልፍ ቃላት"
+
+msgid "Provider_ColumnProvider"
+msgstr "አቅራቢ"
+
+msgid "Provider_WidgetProviders"
+msgstr "አቅራቢዎች"
+
+msgid "Referrers_ColumnSearchEngine"
+msgstr "የመፈለጊያ ሞተሮች"
+
+msgid "Referrers_ColumnWebsite"
+msgstr "ድር ጣቢያዎች"
+
+msgid "Referrers_ColumnWebsitePage"
+msgstr "የድር ጣቢያዎች ገፅ"
+
+msgid "Referrers_DirectEntry"
+msgstr "ቀጥተኛ ምዝግብ"
+
+msgid "Referrers_DistinctCampaigns"
+msgstr "የተለዩ campaigns"
+
+msgid "Referrers_DistinctKeywords"
+msgstr "የተለዩ ቁልፍ ቃላት"
+
+msgid "Referrers_DistinctSearchEngines"
+msgstr "የተለዩ የመፈለጊያ ሞተሮች"
+
+msgid "Referrers_DistinctWebsites"
+msgstr "የተለዩ ድር ጣቢያዎች"
+
+msgid "Referrers_Keywords"
+msgstr "ቁልፍ ቃላት"
+
+msgid "Referrers_Referrers"
+msgstr "አመላካቾች"
+
+msgid "Referrers_SearchEngines"
+msgstr "የመፈለጊያ ሞተሮች"
+
+msgid "Referrers_SubmenuSearchEngines"
+msgstr "የመፈለጊያ ሞተሮች እና ቁልፍ ቃላት"
+
+msgid "Referrers_SubmenuWebsitesOnly"
+msgstr "ድር ጣቢያዎች"
+
+msgid "Referrers_TypeCampaigns"
+msgstr "%s ከ campaigns"
+
+msgid "Referrers_TypeDirectEntries"
+msgstr "%s ቀጥተኛ ምዝግቦች"
+
+msgid "Referrers_TypeSearchEngines"
+msgstr "%s ከመፈለጊያ ሞተሮች"
+
+msgid "Referrers_TypeWebsites"
+msgstr "%s ከድር ጣቢያዎች"
+
+msgid "Referrers_Websites"
+msgstr "ድር ጣቢያዎች"
+
+msgid "Referrers_WidgetExternalWebsites"
+msgstr "የውጫዊ ድር ጣቢያዎች ዝርዝር"
+
+msgid "Resolution_ColumnConfiguration"
+msgstr "ውቅረት"
+
+msgid "Resolution_ColumnResolution"
+msgstr "ጥራት"
+
+msgid "Resolution_Configurations"
+msgstr "ውቅረቶች"
+
+msgid "Resolution_Resolutions"
+msgstr "ጥራቶች"
+
+msgid "Resolution_WidgetGlobalVisitors"
+msgstr "የሁሉም ጎብኚዎች ውቅረት"
+
+msgid "Resolution_WidgetResolutions"
+msgstr "የማያ ጥራቶች"
+
+msgid "SitesManager_AddSite"
+msgstr "አዲስ ድር ጣቢያ ጨምር"
+
+msgid "SitesManager_Currency"
+msgstr "ገንዘብ"
+
+msgid "SitesManager_DeleteConfirm"
+msgstr "እርግጠኛ ነህ ድር ጣቢያውን ለመሰረዝ %s?"
+
+msgid "SitesManager_ExceptionDeleteSite"
+msgstr "የተመዘገበ ብቸኛው ድር ጣቢያ ስለሆነ ለመዘረዝ አይቻልም። በመጀመሪያ አዲስ ድር ጣቢያ ጨምርና ቀጠሎ ይህንን ሰርዝ።"
+
+msgid "SitesManager_ExceptionEmptyName"
+msgstr "የድር ጣቢያው ስም ባዶ መሆን አይችልም።"
+
+msgid "SitesManager_ExceptionNoUrl"
+msgstr "ለዚህ ድር ጣቢያ ቢያንስ አንድ ዩ አር ኤል ማምር አለብህ።"
+
+msgid "SitesManager_JsTrackingTagHelp"
+msgstr "በሁሉም ገፆች ለማካተት እንዲያስችልህ የጃቫ ስክሪፕት ዱካ መከተያ መለያ እዚህ አለ"
+
+msgid "SitesManager_MainDescription"
+msgstr "የድር ማመዛዘኛ ሪፖርት ድር ጣቢያ ያስፈልጋቸዋል! ጨምር፣ አልቅ፣ ድር ጣቢያ ሰርዝ እና በገፅህ ላይ ለማስገባት የፈለግከውን የጃቫ ስክሪፕት አሳይ"
+
+msgid "SitesManager_NoWebsites"
+msgstr "ለታስተዳድረው የምትችለው ምንም አይነት ድር ጣቢያ የለም"
+
+msgid "SitesManager_ShowTrackingTag"
+msgstr "የዱካ መከተያ መለያ አሳይ"
+
+msgid "SitesManager_Sites"
+msgstr "ድር ጣቢያዎች"
+
+msgid "SitesManager_Timezone"
+msgstr "የሰዓት ሰቅ"
+
+msgid "SitesManager_Urls"
+msgstr "ዩ አር ኤሎች"
+
+msgid "SitesManager_WebsitesManagement"
+msgstr "የድር ጣቢያ ምነጃ"
+
+msgid "TagManager_CategoryClicks"
+msgstr "ጠቃድርጎች"
+
+msgid "TagManager_CategoryEmail"
+msgstr "ኢ-ሜይል"
+
+msgid "TagManager_Version"
+msgstr "ስሪት"
+
+msgid "UserCountry_Continent"
+msgstr "አህጉር"
+
+msgid "UserCountry_Country"
+msgstr "ሀገር"
+
+msgid "UserCountry_DistinctCountries"
+msgstr "%s የተለዩ ሀገራት"
+
+msgid "UserCountry_SubmenuLocations"
+msgstr "አቀማመጦች"
+
+msgid "UserId_UserReportTitle"
+msgstr "ተጠቃሚዎች"
+
+msgid "UserLanguage_LanguageCode"
+msgstr "የቋንቋ ኮድ"
+
+msgid "UsersManager_AddUser"
+msgstr "አዲስ ተጤቃሚ ጨምር"
+
+msgid "UsersManager_Alias"
+msgstr "ተለዋጭ ስም"
+
+msgid "UsersManager_AllWebsites"
+msgstr "ሁሉንም ድር ጣቢያዎች"
+
+msgid "UsersManager_ApplyToAllWebsites"
+msgstr "በሁሉም ድር ጣቢያዎች ላይ ተግብር"
+
+msgid "UsersManager_DeleteConfirm"
+msgstr "እርግጠኛ ነህ ተጠቃሚዎቹን መሰረዝ ትፈልጋለህ %s?"
+
+msgid "UsersManager_Email"
+msgstr "ኢ-ሜይል"
+
+msgid "UsersManager_ExceptionDeleteDoesNotExist"
+msgstr "ተጠቃሚው '%s' የለም ስለዚህ ሊሰረዝ አይችልም"
+
+msgid "UsersManager_ExceptionEditAnonymous"
+msgstr "ያልታወቀው ተጠቃሚን መሰረዝ ወይም አርትእ አይቻልም። በፒዊክ ያልገባን ተጤቃሚ ለመግለፅ ይጠቅማል። ለምሳሌ የርስዎን ስታቲስቲክ 'የትይታ' ፈቃድ 'ላልታወቀ' ተጠቃሚ በመስጠት ግልፅ ማድረግ ትችላለህ።"
+
+msgid "UsersManager_ExceptionEmailExists"
+msgstr "በዚህ ኢ-ሜይል ተጠቃሚ '%s'አለ."
+
+msgid "UsersManager_ExceptionInvalidEmail"
+msgstr "ኢ-ሜይሉ ትክክለኛ ቅርፀት የለውም"
+
+msgid "UsersManager_ManageAccess"
+msgstr "መድረሻ መንጅ"
+
+msgid "UsersManager_MenuUsers"
+msgstr "ተጠቃሚዎች"
+
+msgid "UsersManager_PrivAdmin"
+msgstr "አስተዳዳሪ"
+
+msgid "UsersManager_PrivNone"
+msgstr "መድረሻ የለም"
+
+msgid "UsersManager_PrivView"
+msgstr "ትእይታ"
+
+msgid "UsersManager_User"
+msgstr "ተጠቃሚ"
+
+msgid "UsersManager_UsersManagement"
+msgstr "የተጠቃሚዎች ምነጃ"
+
+msgid "UsersManager_UsersManagementMainDescription"
+msgstr "አዳዲስ ተጤቃሚዎችን ይፍጠሩ ወይም ያሉትን ያልቁ።ፈቃዳቸውን ከላይ ማዘጋጀት ይቻላል."
+
+msgid "VisitFrequency_ColumnActionsByReturningVisits"
+msgstr "በመልስ ጉብኝቶች የተወሰዱ ርምጃዎች"
+
+msgid "VisitFrequency_ColumnBounceRateForReturningVisits"
+msgstr "የመልስ ጉብኝቶች ተመላሽ ፍጥነት"
+
+msgid "VisitFrequency_ColumnReturningVisits"
+msgstr "መልስ ጉበኝቶች"
+
+msgid "VisitFrequency_SubmenuFrequency"
+msgstr "ድግግሞሽ"
+
+msgid "VisitFrequency_WidgetGraphReturning"
+msgstr "የመልስ ጉብኝቶች ግራፍ"
+
+msgid "VisitFrequency_WidgetOverview"
+msgstr "የድግግሞሽ አጠቃላይ እይታ"
+
+msgid "VisitTime_ColumnLocalTime"
+msgstr "አካባቢያዊ ሰዓት"
+
+msgid "VisitTime_ColumnServerTime"
+msgstr "የአገልጋይ ሰዓት"
+
+msgid "VisitTime_LocalTime"
+msgstr "ጉብኝቶች ከአካባቢያዊ ሰዓት"
+
+msgid "VisitTime_NHour"
+msgstr "%s ሰ"
+
+msgid "VisitTime_ServerTime"
+msgstr "ጉብኝቶች ከአገልጋይ ሰዓት"
+
+msgid "VisitTime_SubmenuTimes"
+msgstr "ሰዓታት"
+
+msgid "VisitTime_WidgetLocalTime"
+msgstr "ጉብኝቶች በአካባቢያዊ ሰዓት"
+
+msgid "VisitTime_WidgetServerTime"
+msgstr "ጉብኝቶች በአገልጋይ ሰዓት"
+
+msgid "VisitorInterest_ColumnPagesPerVisit"
+msgstr "ጉብኝት ከገፆች ጋር"
+
+msgid "VisitorInterest_ColumnVisitDuration"
+msgstr "የጉብኝት ቆይታዎች"
+
+msgid "VisitorInterest_NPages"
+msgstr "%s ገፆች"
+
+msgid "VisitorInterest_OnePage"
+msgstr "1 ገፅ"
+
+msgid "VisitorInterest_VisitsPerDuration"
+msgstr "ጉብኝት ከጉብኝት ቆይታ ጋር"
+
+msgid "VisitorInterest_VisitsPerNbOfPages"
+msgstr "ጉብኝት ከገፅ ቁጥር ጋር"
+
+msgid "VisitorInterest_WidgetLengths"
+msgstr "የጉብኝት ርዝመት"
+
+msgid "VisitorInterest_WidgetPages"
+msgstr "ጉብኝት ከገፆች ጋር"
+
+msgid "VisitsSummary_GenerateQueries"
+msgstr "%s ጥያቄዎች ተሰርተዋል"
+
+msgid "VisitsSummary_GenerateTime"
+msgstr "%s ሰከንዶች ገፁን ለማመንጨት"
+
+msgid "VisitsSummary_WidgetLastVisits"
+msgstr "የመጨረሻው ጉብኝቶች ግራፍ"
+
+msgid "VisitsSummary_WidgetOverviewGraph"
+msgstr "አጠቃላይ እይታ ከግራፍ ጋር"
+
+msgid "VisitsSummary_WidgetVisits"
+msgstr "የጉብኝቶች አጠቃላይ እይታ"
+
+msgid "WebsiteMeasurable_Website"
+msgstr "ድር ጣቢያ"
+
+msgid "WebsiteMeasurable_Websites"
+msgstr "ድር ጣቢያዎች"

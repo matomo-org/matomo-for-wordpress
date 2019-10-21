@@ -1,0 +1,6527 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-10-21T03:38:25+00:00\n"
+"PO-Revision-Date: 2019-10-21T03:38:25+00:00\n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Domain: matomo\n"
+
+msgid "General_12HourClock"
+msgstr "12 órás formátum"
+
+msgid "General_24HourClock"
+msgstr "24 órás formátum"
+
+msgid "General_AbandonedCarts"
+msgstr "Otthagyott bevásárló kosarak"
+
+msgid "General_AboutPiwikX"
+msgstr "Matomo %s verzióinformáció"
+
+msgid "General_Action"
+msgstr "Művelet"
+
+msgid "General_Actions"
+msgstr "Műveletek"
+
+msgid "General_Add"
+msgstr "Hozzáad"
+
+msgid "General_AfterEntry"
+msgstr "Miután belépet ide"
+
+msgid "General_All"
+msgstr "Mind"
+
+msgid "General_AllowPiwikArchivingToTriggerBrowser"
+msgstr "Archiválási jelentések a böngészőből történő megtekintésekor"
+
+msgid "General_AllWebsitesDashboard"
+msgstr "Weboldal-összesítő vezérlőpult"
+
+msgid "General_And"
+msgstr "és"
+
+msgid "General_API"
+msgstr "API"
+
+msgid "General_Apply"
+msgstr "Alkalmaz"
+
+msgid "General_ArchivingInlineHelp"
+msgstr "Közepes és nagy forgalmú weboldalak esetén ajánlott letiltani a böngészővel való megnyitás által előidézett archiválást. Ehelyett ajánlott egy cron job beállítása, mely óránként feldolgozza a Matomo jelentéseket."
+
+msgid "General_ArchivingTriggerDescription"
+msgstr "Nagyobb, Matomo-t használó weboldalak esetén ajánlott. A jelentések automatikus feldolgozásához %1$segy cron job beállítása %2$s is szűkséges."
+
+msgid "General_AuthenticationMethodSmtp"
+msgstr "SMTP autentikációs módszer"
+
+msgid "General_AverageOrderValue"
+msgstr "Átlagos rendelési érték"
+
+msgid "General_AveragePrice"
+msgstr "Átlagár"
+
+msgid "General_AverageQuantity"
+msgstr "Átlag mennyiség"
+
+msgid "General_AverageX"
+msgstr "átlag %s"
+
+msgid "General_BackToPiwik"
+msgstr "Vissza a Matomohoz"
+
+msgid "General_Broken"
+msgstr "Sérült"
+
+msgid "General_BrokenDownReportDocumentation"
+msgstr "Több jelentésre van lebontva, melyek szikravonalakként jelennek meg a lap alján. A grafikonok kinagyíthatóak egyébként a megfelelő jelentésre kattintva."
+
+msgid "General_Cancel"
+msgstr "Mégse"
+
+msgid "General_CannotUnzipFile"
+msgstr "Nem lehet kitömöríteni a(z) %1$s: %2$s"
+
+msgid "General_ChangePassword"
+msgstr "Jelszó megváltoztatása"
+
+msgid "General_ChangeTagCloudView"
+msgstr "Figyelmedbe ajánljuk, hogy a jelentés a címkefelhőn kívül más formátumokban is megtekinthető a jelentés alján található gombok segítségével."
+
+msgid "General_ChooseDate"
+msgstr "Válasszon dátumot, aktuálisan választott dátum: %s"
+
+msgid "General_ChooseLanguage"
+msgstr "Válassz nyelvet"
+
+msgid "General_ChoosePeriod"
+msgstr "Válassz időtartamot"
+
+msgid "General_ClickHere"
+msgstr "Kattints ide további információért."
+
+msgid "General_DoubleClickToChangePeriod"
+msgstr "Dupla klikkelés a periódus elfogadásához"
+
+msgid "General_Close"
+msgstr "Bezárás"
+
+msgid "General_ClickToSearch"
+msgstr "Kattintson a kereséshez"
+
+msgid "General_Copy"
+msgstr "Másol"
+
+msgid "General_Confirm"
+msgstr "Jóváhagy"
+
+msgid "General_ColumnActionsPerVisit"
+msgstr "Műveletek/látogatás"
+
+msgid "General_ColumnActionsPerVisitDocumentation"
+msgstr "Különböző akciók átlagos száma (mint például weblapok megtekintése, fájlok letöltése, kimenő linkekre klikkelés), melyeket a látogatások során végrehajtottak."
+
+msgid "General_ColumnAverageGenerationTime"
+msgstr "Átl. lekérdezési idő"
+
+msgid "General_ColumnViewsWithGenerationTime"
+msgstr "Oldalmegtekintések generációs idővel"
+
+msgid "General_ColumnAverageTimeOnPage"
+msgstr "Weblapon töltött átlagos idő"
+
+msgid "General_ColumnAverageTimeOnPageDocumentation"
+msgstr "A látogató által ezen a weblapon töltött idő átlaga (csak a weblapon, és nem a webhely egészén)."
+
+msgid "General_ColumnAvgTimeOnSite"
+msgstr "Átlagidő az oldalon"
+
+msgid "General_ColumnSumTimeOnSite"
+msgstr "A weboldalon eltöltött teljes idő"
+
+msgid "General_ColumnAvgTimeOnSiteDocumentation"
+msgstr "Egy látogatás átlagos időtartama."
+
+msgid "General_ColumnBounceRate"
+msgstr "Visszafordulási arány"
+
+msgid "General_ColumnBounceRateDocumentation"
+msgstr "Látogatások százaléka, mely során csak egy weblapot tekintettek meg. Ez azt jelenti, hogy a látogató a belépési oldalról közvetlenül elhagyta a webhelyet."
+
+msgid "General_ColumnBounces"
+msgstr "Visszafordulások"
+
+msgid "General_RealTime"
+msgstr "Valós idejű"
+
+msgid "General_ColumnBouncesDocumentation"
+msgstr "Látogatások száma, mely ezen a weblapon kezdődött és végződött. Ez azt jelenti, hogy a látogató elhagyta a webhelyet, miután megtekintette ezt a weblapot."
+
+msgid "General_ColumnConversionRate"
+msgstr "Konverziós arány"
+
+msgid "General_ColumnConversionRateDocumentation"
+msgstr "Látogatások százaléka, mely során egy cél teljesült, konverzió történt."
+
+msgid "General_ColumnDestinationPage"
+msgstr "Céloldal"
+
+msgid "General_ColumnEntrances"
+msgstr "Belépések"
+
+msgid "General_ColumnEntrancesDocumentation"
+msgstr "Látogatások száma, mely ezen a weblapon kezdődött."
+
+msgid "General_ColumnExitRate"
+msgstr "Elhagyási arány"
+
+msgid "General_ColumnExitRateDocumentation"
+msgstr "Látogatásoknak mekkora százalékában hagyták el a webhelyet ennek a weblapnak a megtekintése után."
+
+msgid "General_ColumnExits"
+msgstr "Kilépések"
+
+msgid "General_ColumnExitsDocumentation"
+msgstr "Látogatások száma, mely ezen a weblapon végződött."
+
+msgid "General_ColumnGenerationTime"
+msgstr "Generálási idő"
+
+msgid "General_ColumnPageGenerationTime"
+msgstr "Oldalgenerálási idő"
+
+msgid "General_ColumnKeyword"
+msgstr "Kulcsszó"
+
+msgid "General_ColumnLabel"
+msgstr "Címke"
+
+msgid "General_ColumnHits"
+msgstr "Találatok"
+
+msgid "General_ColumnMaxActions"
+msgstr "Egy látogatás maximális akciói"
+
+msgid "General_ColumnNbActions"
+msgstr "Akciók"
+
+msgid "General_ColumnNbActionsDocumentation"
+msgstr "Akciók száma, melyet a látogatók hajtottak végre. Akció lehet egy weblap megtekintése, egy fájl letöltése vagy egy kimenő linkre klikkelés."
+
+msgid "General_ColumnNbUniqVisitors"
+msgstr "Egyedi látogatók"
+
+msgid "General_ColumnNbUsers"
+msgstr "Felhasználók"
+
+msgid "General_ColumnNbVisits"
+msgstr "Látogatások"
+
+msgid "General_ColumnPageBounceRateDocumentation"
+msgstr "Látogatások százaléka, mely ezen a weblapon kezdődött, majd további weblapok megtekintése nélkül itt is fejeződött be."
+
+msgid "General_ColumnPageviews"
+msgstr "Lapmegtekintések"
+
+msgid "General_ColumnPageviewsDocumentation"
+msgstr "Hányszor látogatták meg ezt a weblapot."
+
+msgid "General_ColumnPercentageVisits"
+msgstr "%% megtekintés"
+
+msgid "General_ColumnRevenue"
+msgstr "Bevétel"
+
+msgid "General_ColumnSumVisitLength"
+msgstr "Látogatók által eltöltött összes idő (másodpercben)"
+
+msgid "General_ColumnTotalPageviews"
+msgstr "Összes oldalnézet"
+
+msgid "General_ColumnUniqueEntrances"
+msgstr "egyedi belépések"
+
+msgid "General_ColumnUniqueExits"
+msgstr "egyedi kilépések"
+
+msgid "General_ColumnUniquePageviews"
+msgstr "Egyedi lapmegtekintések"
+
+msgid "General_ColumnUniquePageviewsDocumentation"
+msgstr "Látogatások száma, mely során megtekintették ezt a weblapot. Ha ez többször történt egy látogatás során, akkor is csak az első kerül számításba."
+
+msgid "General_ColumnValuePerVisit"
+msgstr "Látogatásonkénti érték"
+
+msgid "General_ColumnViewedAfterSearch"
+msgstr "Kattintson a keresési eredményekre"
+
+msgid "General_ColumnVisitDuration"
+msgstr "Látogatás időtartama (másodpercekben)"
+
+msgid "General_ColumnVisitsWithConversions"
+msgstr "Látogatások konverzióval"
+
+msgid "General_ComputedMetricAverage"
+msgstr "Átlag %1$s / %2$s"
+
+msgid "General_ComputedMetricAverageShortDocumentation"
+msgstr "\"%1$s\" átlagértéke."
+
+msgid "General_ComputedMetricRate"
+msgstr "%sráta"
+
+msgid "General_ComputedMetricSum"
+msgstr "%steljes"
+
+msgid "General_ComputedMetricMax"
+msgstr "%s maximum"
+
+msgid "General_ComputedMetricMaxDocumentation"
+msgstr "%s maximumértéke"
+
+msgid "General_ComputedMetricMin"
+msgstr "Minimum%s"
+
+msgid "General_ComputedMetricMinDocumentation"
+msgstr "%s minimumértéke"
+
+msgid "General_ComputedMetricUniqueCount"
+msgstr "Egyedi %s"
+
+msgid "General_ComputedMetricCountWithValue"
+msgstr "Bejegyzések a következővel %s"
+
+msgid "General_ComputedMetricCountWithValueDocumentation"
+msgstr "Az értékekhez beállított bejegyzések száma %s"
+
+msgid "General_ConfigFileIsNotWritable"
+msgstr "A Matomo konfigurációs fájl %1$s nem írható, így egyes változtatásokat nem lehet elmenteni. %2$s Kérjük, engedélyezze a konfigurációs fájlra az írási jogot."
+
+msgid "General_Continue"
+msgstr "folytatás"
+
+msgid "General_ContinueToPiwik"
+msgstr "Tovább a Matomo-hoz"
+
+msgid "General_CurrentlyUsingUnsecureHttp"
+msgstr "Ez a Matomo installáció jelenleg nem biztonságos HTTP protokollon fut, ami kockázatot jelent. Javasoljuk, hogy használja a Matomót a nagyobb biztonságot nyújtó SSL (HTTPS) technológiával."
+
+msgid "General_CreatedByUser"
+msgstr "készítette %s"
+
+msgid "General_CurrentMonth"
+msgstr "Aktuális hónap"
+
+msgid "General_CurrentWeek"
+msgstr "Aktuális hét"
+
+msgid "General_CurrentYear"
+msgstr "Aktuális év"
+
+msgid "General_Daily"
+msgstr "Napi"
+
+msgid "General_DailyReport"
+msgstr "napi"
+
+msgid "General_DailyReports"
+msgstr "Napi jelentések"
+
+msgid "General_DailySum"
+msgstr "napi összefoglaló"
+
+msgid "General_DashboardForASpecificWebsite"
+msgstr "Vezérlőpult egy adott weboldalhoz"
+
+msgid "General_Date"
+msgstr "Dátum"
+
+msgid "General_DateRange"
+msgstr "Időintervallum:"
+
+msgid "General_DateRangeFrom"
+msgstr "Ettől"
+
+msgid "General_DateRangeFromTo"
+msgstr "%1$s-tól %2$s-ig"
+
+msgid "General_DateRangeInPeriodList"
+msgstr "adatsáv"
+
+msgid "General_DateRangeTo"
+msgstr "Eddig"
+
+msgid "General_DaysHours"
+msgstr "%1$s nap %2$s óra"
+
+msgid "General_DaysSinceFirstVisit"
+msgstr "Első látogatás óta eltelt napok"
+
+msgid "General_DaysSinceLastEcommerceOrder"
+msgstr "E-kereskedelmi rendelés óta eltelt napok"
+
+msgid "General_DaysSinceLastVisit"
+msgstr "Utolsó látogatás óta eltelt napok"
+
+msgid "General_Default"
+msgstr "Alapértelmezett"
+
+msgid "General_DefaultAppended"
+msgstr "(alapértelmezett)"
+
+msgid "General_Delete"
+msgstr "Törlés"
+
+msgid "General_Description"
+msgstr "Leírás"
+
+msgid "General_Desktop"
+msgstr "Asztal"
+
+msgid "General_Details"
+msgstr "Részletek"
+
+msgid "General_Discount"
+msgstr "Engedmény"
+
+msgid "General_DisplaySimpleTable"
+msgstr "Egyszerű táblázat megjelenítése"
+
+msgid "General_DisplayTableWithGoalMetrics"
+msgstr "A Célokat mutató táblázat megjelenítése"
+
+msgid "General_DisplayTableWithMoreMetrics"
+msgstr "Több adatot mutató táblázat megjelenítése"
+
+msgid "General_Documentation"
+msgstr "Dokumentáció"
+
+msgid "General_Donate"
+msgstr "Támogatás"
+
+msgid "General_Done"
+msgstr "Kész"
+
+msgid "General_Download"
+msgstr "Letöltés"
+
+msgid "General_DownloadFail_FileExists"
+msgstr "%s fájl létezik!"
+
+msgid "General_DownloadFullVersion"
+msgstr "%1$sTöltsd le%2$s a teljes verziót! Nézd meg ezt: %3$s"
+
+msgid "General_DownloadPleaseRemoveExisting"
+msgstr "Ha szeretné lecserélni, kérem távolítsa el a meglévő fájlt."
+
+msgid "General_Downloads"
+msgstr "Letöltések"
+
+msgid "General_EcommerceOrders"
+msgstr "E-kereskedelmi rendelések"
+
+msgid "General_EcommerceVisitStatusDesc"
+msgstr "A látogatás E-kereskedelmi státusza a látogatás végén"
+
+msgid "General_EcommerceVisitStatusEg"
+msgstr "Például azoknak a látogatásoknak a kiválasztására, melyek egy E-kereskedelmi rendelést eredményeztek, az API lekérés tartalmazná ezt: %s"
+
+msgid "General_Edit"
+msgstr "Szerkesztés"
+
+msgid "General_EncryptedSmtpTransport"
+msgstr "Add meg az SMTP szerver által használt titkosítási metódus típusát"
+
+msgid "General_Error"
+msgstr "Hiba"
+
+msgid "General_Errors"
+msgstr "Hibák"
+
+msgid "General_EvolutionOverPeriod"
+msgstr "Tendenciák a periódus alatt"
+
+msgid "General_ExceptionConfigurationFileNotFound"
+msgstr "A konfigurációs fájl {%s} nem található."
+
+msgid "General_ExceptionConfigurationFileExistsButNotReadable"
+msgstr "%s konfigfájl létezik, de Matomo nem tudja olvasni."
+
+msgid "General_ExceptionDatabaseVersion"
+msgstr "A %1$s verziód %2$s, de a Matomo-nak legalább a következőre van szűksége: %3$s."
+
+msgid "General_ExceptionFileIntegrity"
+msgstr "Integritás ellenőrzés sikertelen: %s"
+
+msgid "General_ExceptionFilesizeMismatch"
+msgstr "Fájlméret nem egyezik %1$s (várt hossz: %2$s, ehelyett a talált: %3$s)"
+
+msgid "General_ExceptionIncompatibleClientServerVersions"
+msgstr "A %1$s kliens verzió: %2$s, mely inkompatibilis a következő szerver verzióval: %3$s."
+
+msgid "General_ExceptionInvalidArchiveTimeToLive"
+msgstr "A mai archívum élettartamának nullánál nagyobbnak kell lennie másodpercekben mérve."
+
+msgid "General_ExceptionInvalidDateFormat"
+msgstr "A dátumformátumnak a következőnek kell lennie: %1$s vagy bármely, a %2$s funkció által támogatott kulcsszó (további információ: %3$s)"
+
+msgid "General_ExceptionInvalidDateRange"
+msgstr "A '%1$s' időintervallum nem megfelelő. Kérjük, próbáld meg helyette a következőket: %2$s."
+
+msgid "General_ExceptionInvalidPeriod"
+msgstr "A '%1$s' időtartam nem támogatott. Kérjük, próbáld meg helyette a következőket: %2$s."
+
+msgid "General_ExceptionInvalidRendererFormat"
+msgstr "A '%1$s' megjelenítési formátum érvénytelen. Kérjük, próbáld meg helyette a következőket: %2$s."
+
+msgid "General_ExceptionInvalidReportRendererFormat"
+msgstr "A '%1$s' jelentés formátum érvénytelen. Próbálkozz egy másikkal a következőek közül: %2$s."
+
+msgid "General_ExceptionInvalidToken"
+msgstr "Érvénytelen kód."
+
+msgid "General_ExceptionLanguageFileNotFound"
+msgstr "A '%s' nyelvi fájl nem található"
+
+msgid "General_ExceptionMethodNotFound"
+msgstr "A '%1$s' eljárás nem létezik, vagy nem áll rendelkezésre a '%2$s' modulban."
+
+msgid "General_ExceptionMissingFile"
+msgstr "Hiányzó fájl: %s"
+
+msgid "General_ExceptionUnexpectedFilePleaseDelete"
+msgstr "Kérjük, törölje ezeket a fájlokat a hibák elkerülése érdekében."
+
+msgid "General_ExceptionUnexpectedDirectoryPleaseDelete"
+msgstr "Kérjük, törölje ezeket a könyvtárakat a hibák megelőzése érdekében."
+
+msgid "General_ExceptionFileToDelete"
+msgstr "Törölni kívánt fájl: %s"
+
+msgid "General_ExceptionDirectoryToDelete"
+msgstr "Törölni kívánt könyvtár: %s"
+
+msgid "General_ExceptionNonceMismatch"
+msgstr "Nem lehetett ellenőrizni a biztonsági kódot ezen az űrlapon."
+
+msgid "General_ExceptionPrivilege"
+msgstr "Ez a lehetőség nem elérhető, mivel %s szintű hozzáférés kellene hozzá."
+
+msgid "General_ExceptionUnableToStartSession"
+msgstr "Nem lehet elindítani a munkamenetet."
+
+msgid "General_ExceptionUndeletableFile"
+msgstr "Ezt nem lehet letörölni: %s"
+
+msgid "General_ExceptionUnreadableFileDisabledMethod"
+msgstr "A konfigurációs fájl {%1$s} nem olvasható. Lehet, hogy a szerveren nem engedélyezett a következő: %2$s."
+
+msgid "General_ExceptionReportNotFound"
+msgstr "A kért jelentés nem létezik."
+
+msgid "General_ExceptionWidgetNotFound"
+msgstr "A kért widget nem létezik."
+
+msgid "General_ExceptionReportNotEnabled"
+msgstr "A kért jelentés nem engedélyezett. Ez általában azt jelenti, hogy a jelentés definiált bővítménye deaktiválva van, vagy nincs elég engedélye ennek a jelentésnek a eléréséhez."
+
+msgid "General_ExceptionWidgetNotEnabled"
+msgstr "A kért widget nem engedélyezett. Ez azt jelenti, hogy általában a plugin, amely meghatározza a widgetet, deaktivált, vagy nem rendelkezik elegendő engedéllyel a widget eléréséhez."
+
+msgid "General_ExpandDataTableFooter"
+msgstr "Módosítsa a megjelenítést vagy konfigurálja a jelentést"
+
+msgid "General_Export"
+msgstr "Export"
+
+msgid "General_ExportAsImage"
+msgstr "Exportálás képként"
+
+msgid "General_ExportThisReport"
+msgstr "Adatok exportálása más formátumokba"
+
+msgid "General_Faq"
+msgstr "GyIK"
+
+msgid "General_FileIntegrityWarning"
+msgstr "A fájl integritásának ellenőrzése sikertelen volt, és hibákat jelentett. Javítsa ezt a problémát, majd frissítse ezt az oldalt, amíg hibát nem mutat."
+
+msgid "General_FileIntegrityWarningReupload"
+msgstr "Az alábbi hibák a Matomo fájlok részleges vagy sikertelen feltöltésének tudhatók be."
+
+msgid "General_FileIntegrityWarningReuploadBis"
+msgstr "Próbálja meg újra feltölteni az összes Matomo fájlt BINARY módban."
+
+msgid "General_First"
+msgstr "Első"
+
+msgid "General_Flatten"
+msgstr "Flatten"
+
+msgid "General_ForExampleShort"
+msgstr "pl."
+
+msgid "General_Forums"
+msgstr "Fórumok"
+
+msgid "General_FromReferrer"
+msgstr "tól"
+
+msgid "General_GeneralInformation"
+msgstr "Általános információk"
+
+msgid "General_GeneralSettings"
+msgstr "Alapbeállítások"
+
+msgid "General_GetStarted"
+msgstr "Kezdjük el"
+
+msgid "General_GiveUsYourFeedback"
+msgstr "Visszajelzés küldése"
+
+msgid "General_Goal"
+msgstr "Cél"
+
+msgid "General_GoTo"
+msgstr "Tovább ide: %s"
+
+msgid "General_GoTo2"
+msgstr "Irány a"
+
+msgid "General_GraphHelp"
+msgstr "További információ a Matomo grafikonok megjelenítéséről."
+
+msgid "General_HelloUser"
+msgstr "Üdv, %s!"
+
+msgid "General_Help"
+msgstr "Súgó"
+
+msgid "General_Hide"
+msgstr "elrejt"
+
+msgid "General_HoursMinutes"
+msgstr "%1$s óra %2$s perc"
+
+msgid "General_Id"
+msgstr "Azonosító"
+
+msgid "General_Installed"
+msgstr "Telepítve"
+
+msgid "General_InvalidDateRange"
+msgstr "Érvénytelen időintervallum: kérjük, próbáld újra"
+
+msgid "General_InvalidResponse"
+msgstr "A kapott adat érvénytelen."
+
+msgid "General_IP"
+msgstr "IP"
+
+msgid "General_JsTrackingTag"
+msgstr "JavaScript követőkód"
+
+msgid "General_Language"
+msgstr "Nyelv"
+
+msgid "General_Languages"
+msgstr "Nyelvek"
+
+msgid "General_LastDays"
+msgstr "Utolsó %s nap (beleértve a mait is)"
+
+msgid "General_LastDaysShort"
+msgstr "Utolsó %s nap"
+
+msgid "General_Live"
+msgstr "Élő"
+
+msgid "General_Loading"
+msgstr "Betöltés…"
+
+msgid "General_LoadingData"
+msgstr "Adatok betöltése folyamatban…"
+
+msgid "General_LoadingPopover"
+msgstr "%s betöltése ..."
+
+msgid "General_Locale"
+msgstr "hu_HU.UTF-8"
+
+msgid "General_Logout"
+msgstr "Kilépés"
+
+msgid "General_MainMetrics"
+msgstr "Főbb mutatók"
+
+msgid "General_Matches"
+msgstr "Egyezések"
+
+msgid "General_MediumToHighTrafficItIsRecommendedTo"
+msgstr "Közepes vagy nagy forgalmú weboldalak esetén javasoljuk, hogy a jelentések legfeljebb félóránként (%1$s másodpercenként) vagy óránként (%2$s másodpercenként) kerüljenek feldolgozásra."
+
+msgid "General_Metadata"
+msgstr "Metaadatok"
+
+msgid "General_Metric"
+msgstr "mutató"
+
+msgid "General_Metrics"
+msgstr "mutatók"
+
+msgid "General_MetricsToPlot"
+msgstr "Számlálási mutatók"
+
+msgid "General_MetricToPlot"
+msgstr "Számlálási mutató"
+
+msgid "General_MinutesSeconds"
+msgstr "%1$s perc %2$s mp."
+
+msgid "General_Mobile"
+msgstr "Mobil"
+
+msgid "General_Monthly"
+msgstr "Havi"
+
+msgid "General_MonthlyReport"
+msgstr "havi"
+
+msgid "General_MonthlyReports"
+msgstr "havi jelentések"
+
+msgid "General_More"
+msgstr "több"
+
+msgid "General_MoreDetails"
+msgstr "több részlet"
+
+msgid "General_MoreLowerCase"
+msgstr "több"
+
+msgid "General_MultiSitesSummary"
+msgstr "Összes weboldal"
+
+msgid "General_Name"
+msgstr "Név"
+
+msgid "General_NbActions"
+msgstr "Akciók száma."
+
+msgid "General_NbInteractions"
+msgstr "Interakciók száma"
+
+msgid "General_NbSearches"
+msgstr "Belső keresések száma"
+
+msgid "General_NeedMoreHelp"
+msgstr "További segítségre van szüksége?"
+
+msgid "General_Never"
+msgstr "Soha"
+
+msgid "General_New"
+msgstr "új"
+
+msgid "General_NewReportsWillBeProcessedByCron"
+msgstr "Ha a Matomo archiváló funkcióját nem a jelentések böngésző segítségével történő lehívása aktiválja, akkor a crontab segítségével kerülnek feldolgozásra."
+
+msgid "General_NewUpdatePiwikX"
+msgstr "Új verzió: Matomo %s"
+
+msgid "General_NewVisitor"
+msgstr "Új látogató"
+
+msgid "General_NewVisits"
+msgstr "Új látogatások"
+
+msgid "General_Next"
+msgstr "Következő"
+
+msgid "General_No"
+msgstr "Nem"
+
+msgid "General_NoDataForGraph"
+msgstr "Nincs adat ehhez a grafikonhoz"
+
+msgid "General_NoDataForTagCloud"
+msgstr "Nincs adat ehhez a címkefelhőhöz."
+
+msgid "General_NotDefined"
+msgstr "%s nincs definiálva"
+
+msgid "General_Note"
+msgstr "jegyzet"
+
+msgid "General_NotInstalled"
+msgstr "Nem telepített"
+
+msgid "General_NotRecommended"
+msgstr "nem szükséges"
+
+msgid "General_NotValid"
+msgstr "%s érvénytelen"
+
+msgid "General_NumberOfVisits"
+msgstr "Látogatások száma"
+
+msgid "General_NUsers"
+msgstr "%s felhasználók"
+
+msgid "General_NVisits"
+msgstr "%s látogatás"
+
+msgid "General_NUniqueVisitors"
+msgstr "%s egyedi látogatás"
+
+msgid "General_Ok"
+msgstr "Rendben"
+
+msgid "General_OneAction"
+msgstr "1 tevékenység"
+
+msgid "General_OneVisit"
+msgstr "1 látogatás"
+
+msgid "General_OnlyEnterIfRequired"
+msgstr "Csak akkor adja meg a felhasználói nevet, ha az SMTP szerver kéri."
+
+msgid "General_OnlyEnterIfRequiredPassword"
+msgstr "Csak akkor adja meg a jelszót, ha az SMTP szerver kéri."
+
+msgid "General_OnlyUsedIfUserPwdIsSet"
+msgstr "Csak abban az esetben lesz használva, ha a felhasználói név és jelszó megadásra került. Kérdezd meg a rendszer adminisztrátorod, ha nem vagy biztos, melyik megoldást használd."
+
+msgid "General_OpenSourceWebAnalytics"
+msgstr "Nyílt forráskódú webanalitika"
+
+msgid "General_OperationAtLeast"
+msgstr "legalább"
+
+msgid "General_OperationAtMost"
+msgstr "leginkább"
+
+msgid "General_OperationContains"
+msgstr "tartalmazza"
+
+msgid "General_OperationDoesNotContain"
+msgstr "Nem tartalmazza"
+
+msgid "General_OperationEquals"
+msgstr "egyenlő"
+
+msgid "General_OperationGreaterThan"
+msgstr "Nagyobb mint"
+
+msgid "General_OperationIs"
+msgstr "az"
+
+msgid "General_OperationIsNot"
+msgstr "nem az"
+
+msgid "General_OperationLessThan"
+msgstr "Kissebb mint"
+
+msgid "General_OperationNotEquals"
+msgstr "nem egyenlő"
+
+msgid "General_OperationStartsWith"
+msgstr "kezdet"
+
+msgid "General_OperationEndsWith"
+msgstr "vége"
+
+msgid "General_OptionalSmtpPort"
+msgstr "Opcionális. Alapértelmezettként a 25-ös port a nem titkosított és a TLS SMTP esetén a 465-ös port a SSL SMTP esetén."
+
+msgid "General_Options"
+msgstr "Beállítások"
+
+msgid "General_Or"
+msgstr "vagy"
+
+msgid "General_OrCancel"
+msgstr "vagy %1$s megszakít %2$s"
+
+msgid "General_Others"
+msgstr "Mások"
+
+msgid "General_Outlink"
+msgstr "Kimenő link"
+
+msgid "General_Outlinks"
+msgstr "Kimenő linkek"
+
+msgid "General_OverlayRowActionTooltipTitle"
+msgstr "Nyitott oldal átfedés"
+
+msgid "General_Overview"
+msgstr "Áttekintés"
+
+msgid "General_Pages"
+msgstr "weblap"
+
+msgid "General_Pagination"
+msgstr "%1$s–%2$s / %3$s"
+
+msgid "General_PaginationWithoutTotal"
+msgstr "%1$s–%2$s"
+
+msgid "General_ParameterMustIntegerBetween"
+msgstr "%1$s paraméter %2$s és %3$s közötti integer érték kell legyen."
+
+msgid "General_Password"
+msgstr "Jelszó"
+
+msgid "General_Period"
+msgstr "Időszak"
+
+msgid "General_Piechart"
+msgstr "Tortadiagram"
+
+msgid "General_PiwikXIsAvailablePleaseUpdateNow"
+msgstr "Megjelent a Matomo %1$s verziója. %2$s Kérlek, frissíts most!%3$s (tekintse meg %4$s a változások listáját%5$s)."
+
+msgid "General_PleaseContactYourPiwikAdministrator"
+msgstr "Kérjük vegye fel a kapcsolatot a Matomo adminisztrátorával."
+
+msgid "General_PleaseSpecifyValue"
+msgstr "Kérjük, adj meg egy értéket ehhez: %s."
+
+msgid "General_PleaseUpdatePiwik"
+msgstr "Kérjük frissítse Matomo-ját"
+
+msgid "General_Plugin"
+msgstr "Bővítmény"
+
+msgid "General_Plugins"
+msgstr "Bővítmények"
+
+msgid "General_PoweredBy"
+msgstr "Működteti:"
+
+msgid "General_Previous"
+msgstr "Előző"
+
+msgid "General_PreviousDays"
+msgstr "Az előző %s nap (a mai nap nélkül)"
+
+msgid "General_PreviousDaysShort"
+msgstr "Az előző %s nap"
+
+msgid "General_Price"
+msgstr "Ár"
+
+msgid "General_ProductConversionRate"
+msgstr "Termék konverziós arány"
+
+msgid "General_ProductRevenue"
+msgstr "Termékszintű bevétel"
+
+msgid "General_Measurable"
+msgstr "mérhető"
+
+msgid "General_Measurables"
+msgstr "mérhetők"
+
+msgid "General_MeasurableId"
+msgstr "mérhető ID"
+
+msgid "General_PurchasedProducts"
+msgstr "Vásárolt termékek"
+
+msgid "General_Quantity"
+msgstr "Mennyiség"
+
+msgid "General_RangeReports"
+msgstr "Egyéni dátumtartományok"
+
+msgid "General_Recommended"
+msgstr "szükséges"
+
+msgid "General_RecordsToPlot"
+msgstr "Nyilvántartás"
+
+msgid "General_Refresh"
+msgstr "frissítés"
+
+msgid "General_RefreshPage"
+msgstr "Oldal frissítése"
+
+msgid "General_RelatedReport"
+msgstr "Kapcsolódó jelentés"
+
+msgid "General_RelatedReports"
+msgstr "Kapcsolódó jelentések"
+
+msgid "General_Remove"
+msgstr "törlés"
+
+msgid "General_Report"
+msgstr "Jelentés"
+
+msgid "General_Reports"
+msgstr "Jelentések"
+
+msgid "General_ReportsContainingTodayWillBeProcessedAtMostEvery"
+msgstr "Archiválhat legfeljebb minden X másodpercet"
+
+msgid "General_ReportsWillBeProcessedAtMostEveryHour"
+msgstr "A jelentések ezért legfeljebb óránként kerülnek feldolgozásra."
+
+msgid "General_RequestTimedOut"
+msgstr "Az adat lekérése ehhez: %s időtúllépés miatt meghiúsult. Kérjük, próbáld meg újra."
+
+msgid "General_Required"
+msgstr "%s kötelező"
+
+msgid "General_Required2"
+msgstr "Szükséges"
+
+msgid "General_ReturningVisitor"
+msgstr "Visszatérő látogató"
+
+msgid "General_ReturningVisitorAllVisits"
+msgstr "Összes látogatás megtekintése"
+
+msgid "General_RowEvolutionRowActionTooltip"
+msgstr "Tekintse meg, hogy a sor mutatói idővel változnak"
+
+msgid "General_RowEvolutionRowActionTooltipTitle"
+msgstr "nyílt sor evolúció"
+
+msgid "General_Rows"
+msgstr "Sorok"
+
+msgid "General_RowsToDisplay"
+msgstr "Sorok megjelenítése"
+
+msgid "General_Save"
+msgstr "Mentés"
+
+msgid "General_SaveImageOnYourComputer"
+msgstr "A kép lementéséhez kattints jobb klikkel a képre és válaszd a \"Kép mentése más néven…\" opciót."
+
+msgid "General_Search"
+msgstr "Keresés"
+
+msgid "General_Clear"
+msgstr "tisztítás"
+
+msgid "General_SearchNoResults"
+msgstr "Nincsenek eredmények"
+
+msgid "General_SeeAll"
+msgstr "mutasd mind"
+
+msgid "General_SeeTheOfficialDocumentationForMoreInformation"
+msgstr "A további részletekkel kapcsolatban lásd a %1$shivatalos dokumentációt%2$s."
+
+msgid "General_Segment"
+msgstr "szegmens"
+
+msgid "General_SelectYesIfYouWantToSendEmailsViaServer"
+msgstr "Válaszd az \"Igen\"-t, ha az e-mailek elküldését egy megadott szerverrel, és nem pedig a local mail funkcióval szeretnéd megoldani."
+
+msgid "General_Settings"
+msgstr "Beállítások"
+
+msgid "General_Shipping"
+msgstr "Szállítás"
+
+msgid "General_Show"
+msgstr "mutat"
+
+msgid "General_SingleWebsitesDashboard"
+msgstr "Egyetlen webhelyes dashboard"
+
+msgid "General_SmallTrafficYouCanLeaveDefault"
+msgstr "Kis forgalmú weboldalak esetén megtarthatja az alapértelmezett %s másodperces beállítását, így az összes jelentéshez akár valós időben is hozzáférhet."
+
+msgid "General_SmtpEncryption"
+msgstr "SMTP titkosítás"
+
+msgid "General_SmtpPassword"
+msgstr "SMTP jelszó"
+
+msgid "General_SmtpPort"
+msgstr "SMTP szerver port"
+
+msgid "General_SmtpServerAddress"
+msgstr "SMTP szerver címe"
+
+msgid "General_SmtpUsername"
+msgstr "SMTP felhasználói név"
+
+msgid "General_Source"
+msgstr "Forrás"
+
+msgid "General_Subtotal"
+msgstr "Részösszeg"
+
+msgid "General_Summary"
+msgstr "Összesítés"
+
+msgid "General_Table"
+msgstr "Táblázat"
+
+msgid "General_TagCloud"
+msgstr "Címkefelhő"
+
+msgid "General_Tax"
+msgstr "Adó"
+
+msgid "General_TimeFormat"
+msgstr "idő formátum"
+
+msgid "General_TimeOnPage"
+msgstr "Idő az oldalon"
+
+msgid "General_Total"
+msgstr "Összesítve"
+
+msgid "General_TotalRevenue"
+msgstr "Teljes bevétel"
+
+msgid "General_TrackingScopeAction"
+msgstr "Akció"
+
+msgid "General_TrackingScopePage"
+msgstr "Oldal"
+
+msgid "General_TrackingScopeVisit"
+msgstr "Látogatás"
+
+msgid "General_TransitionsRowActionTooltip"
+msgstr "Tekintse meg, mit tettek a látogatók az oldal megtekintését megelőzően és azt követően"
+
+msgid "General_TranslatorName"
+msgstr "József Jároli, Viktor Horvath & Mr. Balu, KardiWeb"
+
+msgid "General_UniquePurchases"
+msgstr "Egyedi vásárlások"
+
+msgid "General_Unknown"
+msgstr "Ismeretlen"
+
+msgid "General_Upload"
+msgstr "Feltöltés"
+
+msgid "General_UsePlusMinusIconsDocumentation"
+msgstr "Használd a baloldali plusz és mínusz ikonokat a navigációhoz."
+
+msgid "General_UserId"
+msgstr "felhasználó azonosító"
+
+msgid "General_UserIds"
+msgstr "felhasználó azonosítók"
+
+msgid "General_Username"
+msgstr "Felhasználónév"
+
+msgid "General_UseSMTPServerForEmail"
+msgstr "Használd a következő SMTP szervert e-mail küldéshez"
+
+msgid "General_Value"
+msgstr "Érték"
+
+msgid "General_VBarGraph"
+msgstr "Függőleges diagram"
+
+msgid "General_View"
+msgstr "Megtekintés"
+
+msgid "General_Visit"
+msgstr "Látogatás"
+
+msgid "General_VisitId"
+msgstr "Látogatás"
+
+msgid "General_VisitConvertedGoal"
+msgstr "Látogatások legalább egy konverzióval"
+
+msgid "General_VisitConvertedGoalId"
+msgstr "Látogatások egy adott ID-jű cél konverziójával"
+
+msgid "General_VisitConvertedNGoals"
+msgstr "Látogatások %s célkoverzióval"
+
+msgid "General_VisitDuration"
+msgstr "Átlagos látogatás időtartama (másodpercben)"
+
+msgid "General_Visitor"
+msgstr "Látogató"
+
+msgid "General_VisitorID"
+msgstr "Látogató azonosító"
+
+msgid "General_VisitorIP"
+msgstr "Látogató IP-címe"
+
+msgid "General_VisitorIPs"
+msgstr "Látogató IP-címe"
+
+msgid "General_Visitors"
+msgstr "Látogatók"
+
+msgid "General_VisitsWith"
+msgstr "Látogatások ezzel: %s"
+
+msgid "General_VisitorSettings"
+msgstr "Látogatók adatai"
+
+msgid "General_VisitType"
+msgstr "Látogatás típusa"
+
+msgid "General_VisitTypes"
+msgstr "Látogatás típusa"
+
+msgid "General_VisitTypeExample"
+msgstr "Például azoknak a látogatóknak a kiválasztására, akik visszatértek a weboldalra, köztük azok, akik vásároltak valamit a korábbi látogatásaik során, az API lekérés ezt tartalmazná: %s"
+
+msgid "General_Warning"
+msgstr "Figyelmeztetés"
+
+msgid "General_Warnings"
+msgstr "Figyelmeztetések"
+
+msgid "General_ValidatorErrorEmptyValue"
+msgstr "Értéket kell megadni."
+
+msgid "General_ValidatorErrorNotANumber"
+msgstr "Az érték nem szám."
+
+msgid "General_ValidatorErrorCharacterTooShort"
+msgstr "Az érték \"%1$s\" karaktert tartalmaz, de legalább %2$s karaktert kell tartalmazzon."
+
+msgid "General_ValidatorErrorCharacterTooLong"
+msgstr "Az érték \"%1$s\" karaktert tartalmaz, de legalább %2$s karaktert kell tartalmazzon."
+
+msgid "General_ValidatorErrorNotUrlLike"
+msgstr "\"%s\" érték nem látszik URL-nek."
+
+msgid "General_ValidatorErrorNotEmailLike"
+msgstr "\"%s\" érték nem látszik érvényes email-címnek."
+
+msgid "General_WarningFileIntegrityNoManifest"
+msgstr "A fájlintegritás ellenőrzés nem hajtható végre, mivel hiányzik a manifest.inc.php fájl."
+
+msgid "General_WarningFileIntegrityNoMd5file"
+msgstr "A fájlintegritás ellenőrzés nem hajtható végre, mivel az md5_file() funkció nem elérhető."
+
+msgid "General_WarningPasswordStored"
+msgstr "%1$sFigyelmeztetés:%2$s Ez a jelszó eltárolásra kerül a konfigurációs fájlban, így bárki láthatja, aki hozzáfér a fájlhoz."
+
+msgid "General_Website"
+msgstr "Weboldal"
+
+msgid "General_Weekly"
+msgstr "Heti"
+
+msgid "General_WeeklyReport"
+msgstr "heti"
+
+msgid "General_WeeklyReports"
+msgstr "Heti jelentések"
+
+msgid "General_WellDone"
+msgstr "Szép munka!"
+
+msgid "General_Widgets"
+msgstr "Modulok"
+
+msgid "General_Widget"
+msgstr "Modulok"
+
+msgid "General_YearlyReport"
+msgstr "évente"
+
+msgid "General_YearlyReports"
+msgstr "éves jelentések"
+
+msgid "General_YearsDays"
+msgstr "%1$s év %2$s nap"
+
+msgid "General_Yes"
+msgstr "Igen"
+
+msgid "General_YouMustBeLoggedIn"
+msgstr "A funkció eléréséhez be kell lépnie."
+
+msgid "General_YourChangesHaveBeenSaved"
+msgstr "Változtatások elmentve."
+
+msgid "Mobile_AboutPiwikMobile"
+msgstr "Matomo Mobilról"
+
+msgid "Mobile_AccessUrlLabel"
+msgstr "Matomo elérési url"
+
+msgid "Mobile_Account"
+msgstr "Profil"
+
+msgid "Mobile_Accounts"
+msgstr "Profilok"
+
+msgid "Mobile_AddAccount"
+msgstr "Profil hozzáadása"
+
+msgid "Mobile_AddPiwikDemo"
+msgstr "Matomo Demo hozzáadása"
+
+msgid "Mobile_Advanced"
+msgstr "Haladó"
+
+msgid "Mobile_AnonymousAccess"
+msgstr "Névtelen elérés"
+
+msgid "Mobile_AnonymousTracking"
+msgstr "Névtelen követés"
+
+msgid "Mobile_ChooseHttpTimeout"
+msgstr "Válasszon HTTP időtúllépési értéket"
+
+msgid "Mobile_ChooseMetric"
+msgstr "Válasszon metrikát"
+
+msgid "Mobile_ChooseReport"
+msgstr "Válasszon jelentést"
+
+msgid "Mobile_ChooseSegment"
+msgstr "Válasszon szegmenst"
+
+msgid "Mobile_ConfirmRemoveAccount"
+msgstr "El akarja távolítani azt a profilt?"
+
+msgid "Mobile_DefaultReportDate"
+msgstr "Jelentés dátuma"
+
+msgid "Mobile_EmailUs"
+msgstr "Email visszajelzés"
+
+msgid "Mobile_EnableGraphsLabel"
+msgstr "Grafikonok megjelenítése"
+
+msgid "Mobile_EvolutionGraph"
+msgstr "Történelmi grafikon"
+
+msgid "Mobile_HelpUsToImprovePiwikMobile"
+msgstr "Szeretné engedélyezni a névtelen használati követést a Matomo Mobile-ban?"
+
+msgid "Mobile_HowtoDeleteAnAccount"
+msgstr "Tartsa hosszan, hogy eltávolítsa a fiókot."
+
+msgid "Mobile_HowtoDeleteAnAccountOniOS"
+msgstr "Söpörje jobról balra, hogy eltávolítsa a fiókot"
+
+msgid "Mobile_HowtoLoginAnonymous"
+msgstr "Hagyja üresen a felhaszálót és jelszavát hogy névtelenül lépjen be"
+
+msgid "Mobile_HttpTimeout"
+msgstr "HTTP időtúllépés"
+
+msgid "Mobile_LastUpdated"
+msgstr "Legutóbb frissítve: %s"
+
+msgid "Mobile_LoadingReport"
+msgstr "%sbetöltés"
+
+msgid "Mobile_LoginCredentials"
+msgstr "Hitelesítő adatok"
+
+msgid "Mobile_LoginUseHttps"
+msgstr "https használat"
+
+msgid "Mobile_MultiChartLabel"
+msgstr "Értékgörbék megjelenítése"
+
+msgid "Mobile_NavigationBack"
+msgstr "Vissza"
+
+msgid "Mobile_NetworkError"
+msgstr "Hálózati hiba"
+
+msgid "Mobile_NetworkErrorWithStatusCodeShort"
+msgstr "Hálózati hiba: %s"
+
+msgid "Mobile_NetworkNotReachable"
+msgstr "Hálózat nem elérhető"
+
+msgid "Mobile_NoDataShort"
+msgstr "Nincs adat"
+
+msgid "Mobile_NoPiwikAccount"
+msgstr "Nincs Matomo profilja?"
+
+msgid "Mobile_NoReportsShort"
+msgstr "Nincsenek jelentések"
+
+msgid "Mobile_NoVisitorFound"
+msgstr "Nem található látogató"
+
+msgid "Mobile_NoVisitorsShort"
+msgstr "Nincsenek látogatók"
+
+msgid "Mobile_NoWebsiteFound"
+msgstr "Nem található weboldal"
+
+msgid "Mobile_NoWebsitesShort"
+msgstr "Nincsenek weboldalak"
+
+msgid "Mobile_PullDownToRefresh"
+msgstr "Húzza le a frissítéshez..."
+
+msgid "Mobile_PossibleSslError"
+msgstr "Valószínűsíthető SSL tanúsítvány hiba"
+
+msgid "Mobile_IgnoreSslError"
+msgstr "SSL hiba figyelmen kívül hagyása"
+
+msgid "Mobile_RatingDontRemindMe"
+msgstr "Ne értesítsen engem"
+
+msgid "Mobile_RatingNotNow"
+msgstr "Ne most"
+
+msgid "Mobile_RatingNow"
+msgstr "OK, értékelem most"
+
+msgid "Mobile_ReleaseToRefresh"
+msgstr "Elengedés a frissítéshez"
+
+msgid "Mobile_Reloading"
+msgstr "Frissítés..."
+
+msgid "Mobile_RequestTimedOutShort"
+msgstr "Időtúllépési hiba"
+
+msgid "Mobile_RestrictedCompatibility"
+msgstr "korlátozott kompatibilitás"
+
+msgid "Mobile_SaveSuccessError"
+msgstr "Helytelen Matomo hivatkozás vagy felhasználónév és jelszó kombináció"
+
+msgid "Mobile_SearchWebsite"
+msgstr "Weboldalak keresése"
+
+msgid "Mobile_ShowAll"
+msgstr "Összes mutatása"
+
+msgid "Mobile_ShowLess"
+msgstr "Kevesebb mutatása"
+
+msgid "Mobile_StaticGraph"
+msgstr "Grafikon áttekintése"
+
+msgid "Mobile_TopVisitedWebsites"
+msgstr "Leggyakrabban látogatott webhelyek"
+
+msgid "Mobile_TryIt"
+msgstr "Kipróbálás most!"
+
+msgid "Mobile_VerifyAccount"
+msgstr "Fiók ellenőrzés"
+
+msgid "Mobile_ValidateSslCertificate"
+msgstr "SSL hitelesítés érvényesítése"
+
+msgid "Mobile_VerifyLoginData"
+msgstr "Ellenőrizze, hogy a felhasználó és jelszó kombinációja helyes."
+
+msgid "Mobile_YouAreOffline"
+msgstr "Sajnáljuk, jelenleg offline állapotban van"
+
+msgid "RowEvolution_AvailableMetrics"
+msgstr "Elérhető metrikák"
+
+msgid "RowEvolution_CompareDocumentation"
+msgstr "Kattintson az alábbi linkre, és nyissa meg ezt a felugró ablakot egy másik sorhoz ugyanabból az asztalról, ha több rekordot szeretne össze hasonlítani.<br />Használja a shift + kijelölést az összehasonlításhoz használt sor megjelöléséhez anélkül, hogy megnyitná ezt a felugró ablakot."
+
+msgid "RowEvolution_CompareRows"
+msgstr "Adatok összehasonlítása"
+
+msgid "RowEvolution_ComparingRecords"
+msgstr "%s sorok összehasonlítása"
+
+msgid "RowEvolution_Documentation"
+msgstr "Válassza ki a megjelenítendő metrikákat, amelyeket szeretne megtekinteni a nagy evolúciós grafikonon. A shift billentyű nyomva tartásával több metrika egyidejűleg is megjelentíhető."
+
+msgid "RowEvolution_MetricBetweenText"
+msgstr "%1$s-től %2$s-ig"
+
+msgid "RowEvolution_MetricChangeText"
+msgstr "%sváltozás az időszak alatt"
+
+msgid "RowEvolution_MetricMinMax"
+msgstr "%1$sközött mozogtak%2$sés%3$s az időszak alatt"
+
+msgid "RowEvolution_MetricsFor"
+msgstr "%s metrikái"
+
+msgid "RowEvolution_MultiRowEvolutionTitle"
+msgstr "Több sor evolúciója"
+
+msgid "RowEvolution_PickAnotherRow"
+msgstr "Válasszon egy másik sort az összehasonlításhoz"
+
+msgid "RowEvolution_PickARow"
+msgstr "Válasszon egy sort az összehasonlításhoz"
+
+msgid "API_GenerateVisits"
+msgstr "Ha nem volt még ma látogató, automatikusan generálhatsz mintaadatokat a %1$s kiegészítő segítségével. A %2$s kiegészítőt a Matomo adminisztrációs felületén megjelenő Látogatógenerálás menüpontra kattintva engedélyezheted."
+
+msgid "API_KeepTokenSecret"
+msgstr "Ez a token_auth nevű kód pontosan annyira érzékeny adat mint a felhasználói neved és jelszavad, ezért %1$s ne oszd meg mindenkivel%2$s!"
+
+msgid "API_LoadedAPIs"
+msgstr "A(z) %s API sikeresen betöltődött."
+
+msgid "API_MoreInformation"
+msgstr "További információkért a Matomo API-kkal kapcsolatban kérjük, tekintse meg a %1$s Introduction to Matomo API %2$s és a %3$s Matomo API Reference %4$s című leírásokat."
+
+msgid "API_UserAuthentication"
+msgstr "Felhasználó autentikációja"
+
+msgid "API_UsingTokenAuth"
+msgstr "Ha azt szeretné, hogy a %1$s külső alkalmazás adatot kérjen a szkripten belül, a crontab segítségével, stb. %2$s hozzá kell adnia a %3$s paramétert az API hívásoknál használt URL-ekhez, ha autentikáció szükséges számukra."
+
+msgid "Actions_ColumnClickedURL"
+msgstr "Kattintott URL"
+
+msgid "Actions_ColumnActionURL"
+msgstr "Akció URL"
+
+msgid "Actions_ColumnClicks"
+msgstr "Kattintások"
+
+msgid "Actions_ColumnClicksDocumentation"
+msgstr "Erre a linkre történt kattintások száma."
+
+msgid "Actions_ColumnDownloadURL"
+msgstr "Letöltött URL"
+
+msgid "Actions_ColumnEntryPageTitle"
+msgstr "Oldal név"
+
+msgid "Actions_ColumnEntryPageURL"
+msgstr "Oldal Hivatkozás"
+
+msgid "Actions_ColumnExitPageTitle"
+msgstr "Kilépő oldal név"
+
+msgid "Actions_ColumnExitPageURL"
+msgstr "Kilépő oldal hivatkozás"
+
+msgid "Actions_ColumnNoResultKeyword"
+msgstr "Kulcszó keresőtalálat nélkül"
+
+msgid "Actions_ColumnPageName"
+msgstr "Weblap címe"
+
+msgid "Actions_ColumnPagesPerSearch"
+msgstr "Kereső találati oldalai"
+
+msgid "Actions_ColumnPagesPerSearchDocumentation"
+msgstr "A látogatók keresni fognak az ön weboldalán és néha rákattintanak a \"következő\" gombra a további találatok miatt. Ez az átlagosan megtekintett keresési találatok száma erre a kulcsszóra."
+
+msgid "Actions_ColumnPageURL"
+msgstr "Weblap URL-je"
+
+msgid "Actions_ColumnSearchCategory"
+msgstr "Kategória keresés"
+
+msgid "Actions_ColumnSearches"
+msgstr "Keresések"
+
+msgid "Actions_ColumnSiteSearchKeywords"
+msgstr "Egyedi kulcsszavak"
+
+msgid "Actions_ColumnUniqueClicks"
+msgstr "Egyedi kattintások"
+
+msgid "Actions_ColumnUniqueDownloads"
+msgstr "Egyedi letöltések"
+
+msgid "Actions_ColumnUniqueOutlinks"
+msgstr "Egyedi kimenő linkek"
+
+msgid "Actions_DownloadsReportDocumentation"
+msgstr "Ez a jelentés azt mutatja, hogy a látogatók melyik fájlokat töltötték le. %s A Matomo a letöltési linkekre való kattintást számolja letöltésnek. Arról, hogy a letöltés valóban befejeződött-e, a Matomo nem tud."
+
+msgid "Actions_EntryPageTitles"
+msgstr "Üres weblap címek"
+
+msgid "Actions_EntryPageTitlesReportDocumentation"
+msgstr "Ez a jelentés az adott idő alatt felmerült belépési oldalak címeit és statisztikáit foglalja össze."
+
+msgid "Actions_ExitPageTitles"
+msgstr "Kilépő oldal név"
+
+msgid "Actions_ExitPageTitlesReportDocumentation"
+msgstr "Ez a jelentés az adott idő alatt felmerült kilépési oldalak címeit és statisztikáit foglalja össze."
+
+msgid "Actions_OneSearch"
+msgstr "1 keresés"
+
+msgid "Actions_PagesReportDocumentation"
+msgstr "Ez a jelentés a megtekintett URL-ekről tartalmaz információkat. %s A tábla hierarchigusan van szervezve, az URL-ek mappaként jelennek meg."
+
+msgid "Actions_PageTitlesReportDocumentation"
+msgstr "Ez a jelentés a megtekintett oldalak címéről tartalmaz információkat. %1$s Az oldal címe a %2$s HTML Tag, amit a legtöbb bönkésző az ablak címsorában mutat."
+
+msgid "Actions_PageUrls"
+msgstr "Oldal hivatkozások"
+
+msgid "Actions_SiteSearchKeyword"
+msgstr "Kulcsszó (Oldal keresés)"
+
+msgid "Actions_SubmenuPagesEntry"
+msgstr "Belépési lapok"
+
+msgid "Actions_SubmenuPagesExit"
+msgstr "Kilépési lapok"
+
+msgid "Actions_SubmenuPageTitles"
+msgstr "Weblapok címei"
+
+msgid "Actions_SubmenuSitesearch"
+msgstr "Oldal keresés"
+
+msgid "Actions_WidgetEntryPageTitles"
+msgstr "Belépési lapok címe"
+
+msgid "Actions_WidgetExitPageTitles"
+msgstr "Kilépési lapok címe"
+
+msgid "Actions_WidgetPagesEntry"
+msgstr "Belépési lapok"
+
+msgid "Actions_WidgetPagesExit"
+msgstr "Kilépési lapok"
+
+msgid "Actions_WidgetPageTitles"
+msgstr "Oldalak címe"
+
+msgid "Actions_WidgetSearchCategories"
+msgstr "Keresés kategóriák"
+
+msgid "Actions_WidgetSearchKeywords"
+msgstr "Oldal keresés kulcsszavak"
+
+msgid "Actions_WidgetSearchNoResultKeywords"
+msgstr "Kulcsszavak, melyekre nincs találat"
+
+msgid "Actions_ActionType"
+msgstr "Akció típusa"
+
+msgid "CoreAdminHome_AddNewTrustedHost"
+msgstr "Új megbízható host hozzáadása"
+
+msgid "CoreAdminHome_Administration"
+msgstr "Adminisztráció"
+
+msgid "CoreAdminHome_ArchivingSettings"
+msgstr "Archiválási beállítások"
+
+msgid "CoreAdminHome_BrandingSettings"
+msgstr "Arculat beállítások"
+
+msgid "CoreAdminHome_ReleaseChannel"
+msgstr "Release csatorna"
+
+msgid "CoreAdminHome_ClickHereToOptIn"
+msgstr "Kattintson ide a bekapcsoláshoz."
+
+msgid "CoreAdminHome_ClickHereToOptOut"
+msgstr "Kattintson ide a kikapcsoláshoz."
+
+msgid "CoreAdminHome_CustomLogoFeedbackInfo"
+msgstr "A Matomo logó konfigurálása esetén érdekes lehet a felső menüben található %1$s link eltávolítása is. Ehhez a %2$sBővítmények%3$s oldalon ki kell kapcsolni a Feedback bővítményt."
+
+msgid "CoreAdminHome_CustomLogoHelpText"
+msgstr "A felhasználói felületen és az e-mail jelentésekben megjelenő Matomo logó testreszabható."
+
+msgid "CoreAdminHome_EmailServerSettings"
+msgstr "E-mail szerver beállítások"
+
+msgid "CoreAdminHome_ForBetaTestersOnly"
+msgstr "Csak béta tesztelőknek"
+
+msgid "CoreAdminHome_ImageTracking"
+msgstr "Kép Követés"
+
+msgid "CoreAdminHome_ImageTrackingIntro1"
+msgstr "Ha egy látogatónál le van tiltva a JavaScript, vagy JavaScript egyéb okokból nem használható, lehetőség van egy kép követési link segítségével követni a látogatókat."
+
+msgid "CoreAdminHome_ImageTrackingIntro2"
+msgstr "Erre használható az alább generált HTML kód az oldalba ágyazva. %1$s tagbe illesztve helyettesíthető a JavaScript követő kód, ha az valamiért nem használható."
+
+msgid "CoreAdminHome_ImageTrackingIntro3"
+msgstr "Az összes lehetséges opciót %1$sKövetés API dokumentáció%2$s tartalmazza."
+
+msgid "CoreAdminHome_ImageTrackingLink"
+msgstr "Kép Követési Link"
+
+msgid "CoreAdminHome_ImportingServerLogs"
+msgstr "Szervernaplók Importálása"
+
+msgid "CoreAdminHome_ImportingServerLogsDesc"
+msgstr "A látogatók böngésző (JavaScript vagy kép) általi követése helyett lehetőség van a szervernaplók folyamatos importálására. További részletek: %1$sSzervernapló analízis%2$s."
+
+msgid "CoreAdminHome_InvalidPluginsWarning"
+msgstr "A következő bővítmény nem kompatibilisek evvel: %1$s ezért nem lehet őket betölteni: %2$s."
+
+msgid "CoreAdminHome_InvalidPluginsYouCanUninstall"
+msgstr "A bővítmények frissíthetők vagy törölhetők a %1$sBővítmények%2$s oldalon."
+
+msgid "CoreAdminHome_JavaScriptTracking"
+msgstr "JavaScript Követés"
+
+msgid "CoreAdminHome_JSTracking_CampaignKwdParam"
+msgstr "Kampány Kulcsszó paraméter"
+
+msgid "CoreAdminHome_JSTracking_CampaignNameParam"
+msgstr "Kampány Név paraméter"
+
+msgid "CoreAdminHome_JSTracking_CustomCampaignQueryParam"
+msgstr "Saját paraméter nevek használata a kampány név és a kulcsszó mezőkhöz"
+
+msgid "CoreAdminHome_JSTracking_CustomCampaignQueryParamDesc"
+msgstr "Megjegyzés: A %1$sMatomo automatikusan felismeri a Googly Analytics paramétereket.%2$s"
+
+msgid "CoreAdminHome_JSTracking_DisableCookies"
+msgstr "Minden követő süti tiltása"
+
+msgid "CoreAdminHome_JSTracking_DisableCookiesDesc"
+msgstr "Letilt minden első féltől származó sütit. A már meglévő sütik a következő oldalbetöltéskor törlődni fognak."
+
+msgid "CoreAdminHome_JSTracking_EnableDoNotTrack"
+msgstr "Kliens oldali DoNotTrack engedélyezése"
+
+msgid "CoreAdminHome_JSTracking_EnableDoNotTrack_AlreadyEnabled"
+msgstr "Megjegyzés: A szerver oldali DoNotTrack már engedélyezve van, így ennek az opciónak arra nincs hatása."
+
+msgid "CoreAdminHome_JSTracking_EnableDoNotTrackDesc"
+msgstr "A látogatónak lehetősége van a követés megtiltására, így a követési kérések nem lesznek elküldve."
+
+msgid "CoreAdminHome_JSTracking_GroupPageTitlesByDomain"
+msgstr "Az weboldal domain nevének hozzáfűzése az oldal címéhez"
+
+msgid "CoreAdminHome_JSTracking_GroupPageTitlesByDomainDesc1"
+msgstr "Ha valaki a 'Rólunk' oldalt látogatja meg a(z) blog.%1$s weboldalon, a naplóban 'blog / Rólunk' fog szerepelni. Ez a legegyszerűbb módja a látogatások aldomain szerinti áttekintésének."
+
+msgid "CoreAdminHome_JSTracking_MergeAliases"
+msgstr "A \"Kilépési lapok\" jelentésben az ismert álnevek (URLek) elrejtése a következőnél:"
+
+msgid "CoreAdminHome_JSTracking_MergeAliasesDesc"
+msgstr "Egy álnevet (URLt) (pl. %s) tartalmazó linkre kattintás nem lesz \"Kilépési lapként\" számolva."
+
+msgid "CoreAdminHome_JSTracking_MergeSubdomains"
+msgstr "Látogatók követése a következő összes aldomainjén:"
+
+msgid "CoreAdminHome_JSTracking_MergeSubdomainsDesc"
+msgstr "Ha egy látogató meglátogatja a(z) %1$s és %2$s weboldalakat, akkor egyedi látogatásként lesz számolva."
+
+msgid "CoreAdminHome_JSTracking_PageCustomVars"
+msgstr "Saját változók követése minden oldalmegtekintésnél"
+
+msgid "CoreAdminHome_JSTracking_PageCustomVarsDesc"
+msgstr "Példa: változó: \"Kategória\", érték: \"Újság\"."
+
+msgid "CoreAdminHome_JSTracking_VisitorCustomVars"
+msgstr "Saját változó kovetése látogatónként"
+
+msgid "CoreAdminHome_JSTracking_VisitorCustomVarsDesc"
+msgstr "Példa: változó: \"Típus\", érték: \"Ügyfél\"."
+
+msgid "CoreAdminHome_JSTrackingIntro2"
+msgstr "A lent látható generált kódnak (vagy annak egy módosított változatának) szerepelnie kell minden oldalon, amit a Matomonek követnie kell."
+
+msgid "CoreAdminHome_JSTrackingIntro4"
+msgstr "JavaScript követés helyett lehetőség van kép alapú követés használatára is, mely %1$saz alábbi linkre kattintva generálható%2$s."
+
+msgid "CoreAdminHome_JSTrackingIntro5"
+msgstr "Ha az oldalmegtekintések követése nem elég, tekintse meg a %1$sMatomo Javascript Követés dokumentációt%2$s a további funkciókért. Ezek használatával lehetőség van egyéni célok, saját változók, ecommerce rendelések, otthagyott bevásárló kosarak, stb, követésére."
+
+msgid "CoreAdminHome_LogoNotWriteableInstruction"
+msgstr "Egyedi logó használatához írási jogosultságra van szükség a következő könyvtárhoz: %1$s A logók tárolásához a következőfájlokhoz írási jogosultság szükséges: %2$s."
+
+msgid "CoreAdminHome_FileUploadDisabled"
+msgstr "A fájlfeltöltés nincs engedélyezve a PHP konfigurációban. Egyedi logó feltöltéséhez be kell állítani a php.ini fájlban a következőt: %s. A webszerver újraindítása is szükséges lehet."
+
+msgid "CoreAdminHome_LogoUploadFailed"
+msgstr "A feltöltött fájl nem feldolgozható. Kérjük ellenőrizze, hogy a fájl formátuma érvényes-e."
+
+msgid "CoreAdminHome_LogoUpload"
+msgstr "Válasszon egy logót a feltöltéshez"
+
+msgid "CoreAdminHome_FaviconUpload"
+msgstr "Válasszon egy Favicon-t a feltöltéshez"
+
+msgid "CoreAdminHome_LogoUploadHelp"
+msgstr "A feltöltött fájlnak %1$s formátumban, minimum %2$s pixel magasnak kell lennie."
+
+msgid "CoreAdminHome_MenuDiagnostic"
+msgstr "Diagnosztika"
+
+msgid "CoreAdminHome_MenuGeneralSettings"
+msgstr "Alapbeállítások"
+
+msgid "CoreAdminHome_MenuDevelopment"
+msgstr "Fejlesztés"
+
+msgid "CoreAdminHome_MenuMeasurables"
+msgstr "mérhetők"
+
+msgid "CoreAdminHome_OptOutComplete"
+msgstr "Követés kikapcsolva; a látogatások semmilyen statisztikában nem fognak szerepelni."
+
+msgid "CoreAdminHome_OptOutCompleteBis"
+msgstr "Megjegyzés: abban az esetben, ha a követést tiltó süti törlődik, más számítógépről vagy böngészőből látogatja meg a weboldalt, a követést ismét le kell tiltania."
+
+msgid "CoreAdminHome_OptOutDntFound"
+msgstr "Ön nem lekövethető, mert a böngészője azt jelzni, hogy ön ezt nem kívánta. Ez az állapot nem fog addig változni, amíg le nem tiltja a 'Do Not Track' funkciót."
+
+msgid "CoreAdminHome_OptOutExplanation"
+msgstr "A Matomo tiszteletben tartja a magánéletet Internet. Annak érdekében, hogy látogatóinak lehetősége legyen a követés kikapcsolására, helyezze el az alábbi HTML kódot például egy Adatvédelmi Tájékoztató oldalon."
+
+msgid "CoreAdminHome_OptOutForYourVisitors"
+msgstr "Matomo követés letiltása látogatók által"
+
+msgid "CoreAdminHome_PiwikIsInstalledAt"
+msgstr "Matomo telepítve itt:"
+
+msgid "CoreAdminHome_PersonalPluginSettings"
+msgstr "Személyes bővítmény beállítások"
+
+msgid "CoreAdminHome_PluginSettingChangeNotAllowed"
+msgstr "Önnek nincs jogosultsága a(z) \"%1$s\" beállítás módosításához a(z) \"%2$s\" bővítményben"
+
+msgid "CoreAdminHome_PluginSettingReadNotAllowed"
+msgstr "Önnek nincs jogosultséga a(z) \"%1$s\" beállítás megtekintéséhez a(z) \"%2$s\" bővítményben"
+
+msgid "CoreAdminHome_PluginSettings"
+msgstr "Bővítmény beállítások"
+
+msgid "CoreAdminHome_PluginSettingsIntro"
+msgstr "Itt módosíthatók a harmadik féltől származó bővítmények beállításai:"
+
+msgid "CoreAdminHome_PluginSettingsValueNotAllowed"
+msgstr "A(z) \"%1$s\" mező értéke a(z) \"%2$s\" bővítményben érvénytelen"
+
+msgid "CoreAdminHome_PluginSettingsSaveFailed"
+msgstr "A bővítmény beállítások mentése sikertelen"
+
+msgid "CoreAdminHome_SendPluginUpdateCommunication"
+msgstr "Küldjön egy emailt, mikor egy bővítmény frissítés elérhetővé válik"
+
+msgid "CoreAdminHome_SendPluginUpdateCommunicationHelp"
+msgstr "Az adminisztrátorok emailben értesülnek ha egy bővítményhez frissítés érhető el."
+
+msgid "CoreAdminHome_StableReleases"
+msgstr "Ha a Matomo fontos része a vállalkozásának, javasoljuk, hogy a legfrissebb stabil kiadást használja. Ha a legfrissebb béte kiadást használja és hibát talál vagy javaslata van, kérjük %1$skattintson ide%2$s."
+
+msgid "CoreAdminHome_LtsReleases"
+msgstr "LTS (Hosszútávú támogatás) kiadások csak biztonsági és hibajavítási frissítéseket kapnak"
+
+msgid "CoreAdminHome_SystemPluginSettings"
+msgstr "Rendszer bővítmény beállításai"
+
+msgid "CoreAdminHome_TrackAGoal"
+msgstr "Cél követése"
+
+msgid "CoreAdminHome_TrackingCode"
+msgstr "Követőkód"
+
+msgid "CoreAdminHome_TrustedHostConfirm"
+msgstr "Biztosan meg akarja változtatni a megbízható Matomo hosztnevet?"
+
+msgid "CoreAdminHome_TrustedHostSettings"
+msgstr "Megbízható Matomo Hosztnév"
+
+msgid "CoreAdminHome_UpdateSettings"
+msgstr "Beállítások frissítése"
+
+msgid "CoreAdminHome_UseCustomLogo"
+msgstr "Saját logó használata"
+
+msgid "CoreAdminHome_ValidPiwikHostname"
+msgstr "Érvényes Matomo Hosztnév"
+
+msgid "CoreAdminHome_WithOptionalRevenue"
+msgstr "opcionális jövedelemmel"
+
+msgid "CoreAdminHome_YouAreOptedOut"
+msgstr "A követés jelenleg ki van kapcsolva."
+
+msgid "CoreAdminHome_YouMayOptOut"
+msgstr "Lehetőség van a számítógépen tárolt egyedi azonosító süti letiltására, hogy a látogatás ne szerepeljen semmilyen statisztikában."
+
+msgid "CoreAdminHome_YouMayOptOutBis"
+msgstr "Az alábbi kapcsoló segítségével engedélyezhető a követő süti használata."
+
+msgid "CoreAdminHome_OptingYouOut"
+msgstr "Kiléptetés alatt, kis türelmet..."
+
+msgid "CoreAdminHome_ProtocolNotDetectedCorrectly"
+msgstr "Jelenleg biztonságos SSL kapcsolat van ön és a Matomo csak nem biztonságos kapcsolatot tudott észlelni."
+
+msgid "CoreAdminHome_ProtocolNotDetectedCorrectlySolution"
+msgstr "Hogy biztos minden kérés és kiszolgálás HTTPS-en keresztül biztonságosan történjen, szerkeszteni kell a %1$s fájlt és ellenőrizni a proxy beállításokat vagy hozzá kell adni a %2$s sort, lentebb a %3$s szekcióban. %4$sTovábbi információk%5$s"
+
+msgid "CoreHome_CategoryNoData"
+msgstr "Nincs adat ebben a kategóriában. Próbáld meg a \"Tartalmazza a teljes populációt\" opciót."
+
+msgid "CoreHome_NoPrivilegesAskPiwikAdmin"
+msgstr "'%1$s' felhasználóként léptél be, de úgy tűnik, hogy nem rendelkezel semmilyen jogosultsággal. %2$s Kérd meg a Matomo adminisztrátorod (kattints ide egy email írásához)%3$s, hogy adjon számodra 'megtekintési' jogosultságot a webhelyhez."
+
+msgid "CoreHome_ShowJSCode"
+msgstr "Mutasd a JavaScript kódot a beillesztéshez"
+
+msgid "CoreHome_ThereIsNoDataForThisReport"
+msgstr "Nincs adat ehhez a jelentéshez."
+
+msgid "CoreHome_WebAnalyticsReports"
+msgstr "Webanalitikai jelentések"
+
+msgid "CoreHome_SystemSummaryPhpVersion"
+msgstr "PHP verzió"
+
+msgid "CoreHome_Segments"
+msgstr "Szegmensek"
+
+msgid "CorePluginsAdmin_Activate"
+msgstr "Bekapcsol"
+
+msgid "CorePluginsAdmin_Activated"
+msgstr "Bekapcsolva"
+
+msgid "CorePluginsAdmin_Active"
+msgstr "Bekapcsolt"
+
+msgid "CorePluginsAdmin_AuthorHomepage"
+msgstr "Fejlesztő honlapja"
+
+msgid "CorePluginsAdmin_Deactivate"
+msgstr "Kikapcsol"
+
+msgid "CorePluginsAdmin_Inactive"
+msgstr "Kikapcsolt"
+
+msgid "CorePluginsAdmin_LicenseHomepage"
+msgstr "Licencinformációk"
+
+msgid "CorePluginsAdmin_PluginsExtendPiwik"
+msgstr "A bővítmények kiterjesztik a Matomo alapfunkcióit."
+
+msgid "CorePluginsAdmin_OncePluginIsInstalledYouMayActivateHere"
+msgstr "A már telepített bővítményeket itt kapcsolhatod ki vagy be."
+
+msgid "CorePluginsAdmin_PluginHomepage"
+msgstr "Bővítmény honlapja"
+
+msgid "CorePluginsAdmin_PluginsManagement"
+msgstr "Bővítménykezelés"
+
+msgid "CorePluginsAdmin_Status"
+msgstr "Állapot"
+
+msgid "CorePluginsAdmin_Version"
+msgstr "Verzió"
+
+msgid "CorePluginsAdmin_Websites"
+msgstr "Weboldalak"
+
+msgid "CoreUpdater_CriticalErrorDuringTheUpgradeProcess"
+msgstr "Kritikus hiba lépett fel a frissítés során:"
+
+msgid "CoreUpdater_DatabaseUpgradeRequired"
+msgstr "Adatbázis-frissítés szükséges"
+
+msgid "CoreUpdater_DownloadingUpdateFromX"
+msgstr "Frissítés letöltése innen: %s"
+
+msgid "CoreUpdater_DownloadX"
+msgstr "%s letöltése"
+
+msgid "CoreUpdater_EmptyDatabaseError"
+msgstr "A(z) %s adatbázis üres. Kérjük szerkessze, vagy törölje a Matomo konfigurációs fájlt."
+
+msgid "CoreUpdater_ErrorDIYHelp"
+msgstr "Ha haladó felhasználó vagy, és hibát tapasztalsz az adatbázis-frissítés végrehajtása során:"
+
+msgid "CoreUpdater_ErrorDIYHelp_1"
+msgstr "próbáld azonosítani a hiba tényleges forrását (pl. memory_limit vagy max_execution_time)"
+
+msgid "CoreUpdater_ErrorDIYHelp_2"
+msgstr "hajtsd végre a korábban hibaüzenetek miatt végre nem hajtott parancsokat"
+
+msgid "CoreUpdater_ErrorDIYHelp_3"
+msgstr "kézzel aktualizáld az \\\"option\\\" táblát a Matomo adatbázisban, beállítva a version_core paraméter értékét a sikertelenül frissíteni próbált verziónak megfelelő értékre."
+
+msgid "CoreUpdater_ErrorDIYHelp_4"
+msgstr "hajtsd újra a frissítést (vagy a böngésző vagy pedig a parancssor segítségével), folytatva a hátramaradó lépések megtételét"
+
+msgid "CoreUpdater_ErrorDIYHelp_5"
+msgstr "jelentsd a problémát (és a megoldást) a Matomo fejlesztőinek, segítve így a rendszer tökéletesítését."
+
+msgid "CoreUpdater_ErrorDuringPluginsUpdates"
+msgstr "Hiba lépett fel a bővítmény frissítése közben:"
+
+msgid "CoreUpdater_ExceptionAlreadyLatestVersion"
+msgstr "Matomo verziód (%s) a lehető legújabb."
+
+msgid "CoreUpdater_ExceptionArchiveEmpty"
+msgstr "Üres archívum."
+
+msgid "CoreUpdater_ExceptionArchiveIncompatible"
+msgstr "Nem kompatibilis archívum: %s"
+
+msgid "CoreUpdater_ExceptionArchiveIncomplete"
+msgstr "Hiányos archívum: néhány fájl hiányzik (pl. %s)."
+
+msgid "CoreUpdater_HelpMessageContent"
+msgstr "Nézd meg a %1$s Matomo GYIK-et %2$s, melyből megismerheted a frissítés folyamán leggyakrabban fellépő problémákat. %3$s Kérdezd a rendszergazdád - Talán ő tud segíteni, hisz a rendszergazda áll közvetlen kapcsolatban a szervereddel, és segíthet megérteni a MySQL beállításokkal kapcsolatos problémákat!"
+
+msgid "CoreUpdater_HelpMessageIntroductionWhenError"
+msgstr "A fenti hiba a fő hibaüzenet, mely remélhetőleg segít megérteni a hiba okát, de ha további segítségre van szükséged, kérjük:"
+
+msgid "CoreUpdater_HelpMessageIntroductionWhenWarning"
+msgstr "A frissítés sikeres volt, azonban problémák léptek fel a frissítés során. A részletekért kérünk olvasd el a fenti leírást! További segítségért fordulj ide:"
+
+msgid "CoreUpdater_InstallingTheLatestVersion"
+msgstr "Legújabb verzió telepítése"
+
+msgid "CoreUpdater_NoteForLargePiwikInstances"
+msgstr "Fontos megjegyzés nagyobb weboldalakra telepített Matomo rendszerekhez."
+
+msgid "CoreUpdater_PiwikHasBeenSuccessfullyUpgraded"
+msgstr "A Matomo sikeresen frissült!"
+
+msgid "CoreUpdater_PiwikUpdatedSuccessfully"
+msgstr "A Matomo frissítése sikeresen megtörtént!"
+
+msgid "CoreUpdater_PiwikWillBeUpgradedFromVersionXToVersionY"
+msgstr "Matomo adatbázisa frissülni fog %1$s verzióról az új %2$s verzióra."
+
+msgid "CoreUpdater_ReadyToGo"
+msgstr "Készen áll az indulásra?"
+
+msgid "CoreUpdater_TheFollowingPluginsWillBeUpgradedX"
+msgstr "A következő bővítmények kerülnek frissítésre: %s."
+
+msgid "CoreUpdater_ThereIsNewVersionAvailableForUpdate"
+msgstr "Új Matomo verzió áll rendelkezésre a frissítéshez"
+
+msgid "CoreUpdater_TheUpgradeProcessMayFailExecuteCommand"
+msgstr "Ha nagy Matomo adatbázissal rendelkezel, a frissítések lehet, túl sok időt vesznek igénybe a böngészőben futtatáshoz. Ebben az esetben a frissítéseket a parancssorból így lehet végrehajtani: %s"
+
+msgid "CoreUpdater_TheUpgradeProcessMayTakeAWhilePleaseBePatient"
+msgstr "Az adatbázis frissítése eltart egy ideig. Kérjük, várj türelemmel!"
+
+msgid "CoreUpdater_UnpackingTheUpdate"
+msgstr "Frissítés kicsomagolása"
+
+msgid "CoreUpdater_UpdateAutomatically"
+msgstr "Automatikus frissítés"
+
+msgid "CoreUpdater_UpdateHasBeenCancelledExplanation"
+msgstr "Az Egyklikkes Matomo Frissítés modult törölték. Ha nem tudod kijavítani a fenti hibaüzenetben kapott hibát, akkor a Matomo kézzel történő frissítését ajánljuk. %1$s Kérjük, kezdd a %2$s frissítésről szóló dokumentáció %3$s elolvasásával!"
+
+msgid "CoreUpdater_UpdateTitle"
+msgstr "Frissítés"
+
+msgid "CoreUpdater_UpdateSuccessTitle"
+msgstr "A Matomo sikeresen frissült!"
+
+msgid "CoreUpdater_UpgradeComplete"
+msgstr "Frissítés megtörtént!"
+
+msgid "CoreUpdater_UpgradePiwik"
+msgstr "Matomo frissítése"
+
+msgid "CoreUpdater_VerifyingUnpackedFiles"
+msgstr "Kicsomagolt fájlok ellenőrzése"
+
+msgid "CoreUpdater_WarningMessages"
+msgstr "Figyelmeztetések:"
+
+msgid "CoreUpdater_WeAutomaticallyDeactivatedTheFollowingPlugins"
+msgstr "Automatikusan kikapcsoltuk a következő bővítményeket: %s"
+
+msgid "CoreUpdater_YouCanUpgradeAutomaticallyOrDownloadPackage"
+msgstr "Frissíthetsz automatikusan a %s verzióra, vagy töltsd le a csomagot és telepítsd kézzel:"
+
+msgid "CoreUpdater_YourDatabaseIsOutOfDate"
+msgstr "A Matomo adatbázisod elavult. Frissítened kell, mielőtt folytathatnád!"
+
+msgid "DBStats_DatabaseUsage"
+msgstr "Adatbázis-használat"
+
+msgid "DBStats_DataSize"
+msgstr "Adatméret"
+
+msgid "DBStats_IndexSize"
+msgstr "Indexméret"
+
+msgid "DBStats_LearnMore"
+msgstr "Ha többet szeretnél megtudni arról, hogyan dolgozza fel a Matomo az adatokat, és hogyan lehet mindezt hatékonyan megoldani közepes és nagyobb forgalommal rendelkező weboldalak esetén is, olvasd el a vonatkozó dokumentációt: %s"
+
+msgid "DBStats_MainDescription"
+msgstr "A Matomo egy MySQL adatbázisban tárolja a webanalitikai adatokat. Jelenleg a Matomo táblák a következőket használják: %s."
+
+msgid "DBStats_RowCount"
+msgstr "Sorok száma"
+
+msgid "DBStats_Table"
+msgstr "Táblázat"
+
+msgid "DBStats_TotalSize"
+msgstr "Teljes méret"
+
+msgid "Dashboard_AddPreviewedWidget"
+msgstr "Add hozzá a megtekintett modult a vezérlőpultodhoz"
+
+msgid "Dashboard_Dashboard"
+msgstr "Vezérlőpult"
+
+msgid "Dashboard_DeleteWidgetConfirm"
+msgstr "Biztosan törölni akarod ezt a modult a vezérlőpultról?"
+
+msgid "Dashboard_LoadingWidget"
+msgstr "Modul betöltése folyamatban. Kérjük, várj…"
+
+msgid "Dashboard_Maximise"
+msgstr "Maximalizál"
+
+msgid "Dashboard_Minimise"
+msgstr "Minimalizál"
+
+msgid "Dashboard_SelectWidget"
+msgstr "Válaszd ki melyik modult szeretnéd hozzáadni a vezérlőpulthoz!"
+
+msgid "Dashboard_WidgetNotFound"
+msgstr "A modul nem található"
+
+msgid "Dashboard_WidgetPreview"
+msgstr "Modul előnézete"
+
+msgid "DevicePlugins_WidgetPlugins"
+msgstr "Bővítmények listája"
+
+msgid "DevicesDetection_BrowserEngine"
+msgstr "Böngésző"
+
+msgid "DevicesDetection_BrowserFamily"
+msgstr "Böngészőcsalád"
+
+msgid "DevicesDetection_Browsers"
+msgstr "Böngészők"
+
+msgid "DevicesDetection_ColumnBrowser"
+msgstr "Böngésző"
+
+msgid "DevicesDetection_ColumnOperatingSystem"
+msgstr "Operációs rendszer"
+
+msgid "DevicesDetection_dataTableLabelTypes"
+msgstr "Típus"
+
+msgid "DevicesDetection_OperatingSystems"
+msgstr "Operációs rendszerek"
+
+msgid "DevicesDetection_WidgetBrowsers"
+msgstr "Látogatók böngészői"
+
+msgid "Feedback_DoYouHaveBugReportOrFeatureRequest"
+msgstr "Hibát szeretnél bejelenteni, vagy egy funkció kifejlesztését szeretnéd kérni?"
+
+msgid "Feedback_IWantTo"
+msgstr "A következőt szeretném:"
+
+msgid "Feedback_LearnWaysToParticipate"
+msgstr "Győződj meg róla, %1$shányféleképpen segíthetsz%2$s"
+
+msgid "Feedback_ManuallySendEmailTo"
+msgstr "Kérjük, küldd el manuálisan az üzeneted ide:"
+
+msgid "Feedback_SendFeedback"
+msgstr "Visszajelzés elküldése"
+
+msgid "Feedback_ThankYou"
+msgstr "Köszönjük, hogy segítesz jobbá tenni a Matomo-et!"
+
+msgid "Goals_AddGoal"
+msgstr "Cél hozzáadása"
+
+msgid "Goals_AddNewGoal"
+msgstr "Új cél létrehozása"
+
+msgid "Goals_AddNewGoalOrEditExistingGoal"
+msgstr "%1$sHozz létre új célt%2$s vagy %3$sszerkeszd%4$s a már meglévő célokat"
+
+msgid "Goals_BestCountries"
+msgstr "A legjobban konvertáló országok a következőek:"
+
+msgid "Goals_BestKeywords"
+msgstr "A legjobban konvertáló kulcsszavak a következőek:"
+
+msgid "Goals_BestReferrers"
+msgstr "A legjobban konvertáló hivatkozó weboldalak a következőek:"
+
+msgid "Goals_CaseSensitive"
+msgstr "Kisbetű-nagybetű érzékeny egyezés"
+
+msgid "Goals_CategoryTextReferrers_Referrers"
+msgstr "Források"
+
+msgid "Goals_ClickOutlink"
+msgstr "rákattintanak egy külső weboldalra mutató linkre"
+
+msgid "Goals_ColumnConversions"
+msgstr "Konverziók"
+
+msgid "Goals_Contains"
+msgstr "tartalmazza ezt: %s"
+
+msgid "Goals_ConversionRate"
+msgstr "%s konverziós arány"
+
+msgid "Goals_Conversions"
+msgstr "%s konverzió"
+
+msgid "Goals_ConversionsOverview"
+msgstr "Konverziók áttekintése"
+
+msgid "Goals_DefaultRevenueHelp"
+msgstr "Például egy látogató által elküldött kapcsolatfelvételi űrlap 1000 forintnak megfelelő értéket jelenthet átlagosan. A Matomo segít annak megértésében, hogy az egyes látogatói szegmensek hogyan teljesítenek ennek fényében."
+
+msgid "Goals_DeleteGoalConfirm"
+msgstr "Biztosan törölni szeretnéd a %s elnevezésű célt?"
+
+msgid "Goals_Download"
+msgstr "letöltenek egy fájlt"
+
+msgid "Goals_ExceptionInvalidMatchingString"
+msgstr "Ha a pontos egyezést választja, akkor a sztringnek egy %1$s kezdetű URL-nek kell lennie, mint pl. %2$s."
+
+msgid "Goals_ExternalWebsiteUrl"
+msgstr "Külső weboldal URL-je"
+
+msgid "Goals_Filename"
+msgstr "fájlnév"
+
+msgid "Goals_GoalConversion"
+msgstr "Célkonverzió"
+
+msgid "Goals_GoalIsTriggered"
+msgstr "Cél teljesülése"
+
+msgid "Goals_GoalIsTriggeredWhen"
+msgstr "Célt teljesítettnek tekintjük, ha"
+
+msgid "Goals_GoalName"
+msgstr "Cél elnevezése"
+
+msgid "Goals_Goals"
+msgstr "Célok"
+
+msgid "Goals_GoalsOverview"
+msgstr "Célok áttekintése"
+
+msgid "Goals_GoalX"
+msgstr "%s nevű cél"
+
+msgid "Goals_IsExactly"
+msgstr "megegyezik ezzel: %s"
+
+msgid "Goals_Manually"
+msgstr "nem következik be automatikusan, csak ott"
+
+msgid "Goals_ManuallyTriggeredUsingJavascriptFunction"
+msgstr "Nem automatikusan történő célteljesülést a JavaScript API trackGoal() funkciójával lehet létrehozni"
+
+msgid "Goals_MatchesExpression"
+msgstr "egyezik ezzel a kifejezéssel: %s"
+
+msgid "Goals_NewVisitorsConversionRateIs"
+msgstr "Új látogatók konverziós aránya %s"
+
+msgid "Goals_Optional"
+msgstr "(opcionális)"
+
+msgid "Goals_Pattern"
+msgstr "Egyezési minta"
+
+msgid "Goals_ReturningVisitorsConversionRateIs"
+msgstr "A visszatérő látogatók konverziós aránya %s"
+
+msgid "Goals_UpdateGoal"
+msgstr "Cél frissítése"
+
+msgid "Goals_URL"
+msgstr "URL"
+
+msgid "Goals_ViewAndEditGoals"
+msgstr "Célok megtekintése és szerkesztése"
+
+msgid "Goals_VisitUrl"
+msgstr "meglátogatnak egy adott URL-t (mely egy weblapot vagy weblapok csoportját jelenti)"
+
+msgid "Goals_WhenVisitors"
+msgstr "bekövetkezik, ha a látogatók"
+
+msgid "Goals_WhereThe"
+msgstr "ahol a (z)"
+
+msgid "Installation_ConfirmDeleteExistingTables"
+msgstr "Biztos vagy benne, hogy törölni akarod a %s táblákat az adatbázisból? FIGYELEM: A TÖRÖLT TÁBLÁK ADATAI NEM ÁLLÍTHATÓK VISSZA!"
+
+msgid "Installation_Congratulations"
+msgstr "Gratulálunk"
+
+msgid "Installation_DatabaseCreation"
+msgstr "Adatbázis létrehozása"
+
+msgid "Installation_DatabaseErrorConnect"
+msgstr "Hiba lépett fel az adatbázishoz történő csatlakozáskor."
+
+msgid "Installation_DatabaseServerVersion"
+msgstr "Adatbázisszerver verziója"
+
+msgid "Installation_DatabaseSetup"
+msgstr "Adatbázis beállítása"
+
+msgid "Installation_DatabaseSetupAdapter"
+msgstr "adapter"
+
+msgid "Installation_DatabaseSetupDatabaseName"
+msgstr "adatbázis neve"
+
+msgid "Installation_DatabaseSetupLogin"
+msgstr "felhasználó"
+
+msgid "Installation_DatabaseSetupServer"
+msgstr "Adatbázisszerver"
+
+msgid "Installation_DatabaseSetupTablePrefix"
+msgstr "táblanév előtagja"
+
+msgid "Installation_Email"
+msgstr "E-mail cím"
+
+msgid "Installation_Extension"
+msgstr "kiterjesztés"
+
+msgid "Installation_GoBackAndDefinePrefix"
+msgstr "Lépj vissza, és add meg a Matomo táblák nevének előtagját!"
+
+msgid "Installation_Installation"
+msgstr "Telepítés"
+
+msgid "Installation_InstallationStatus"
+msgstr "Telepítés állása"
+
+msgid "Installation_LargePiwikInstances"
+msgstr "Súgó nagyobb weboldalakra telepítéshez"
+
+msgid "Installation_Legend"
+msgstr "Magyarázó felirat"
+
+msgid "Installation_Optional"
+msgstr "Opcionális"
+
+msgid "Installation_Password"
+msgstr "Jelszó"
+
+msgid "Installation_PasswordDoNotMatch"
+msgstr "jelszó nem egyezik"
+
+msgid "Installation_PercentDone"
+msgstr "%s %% kész"
+
+msgid "Installation_PleaseFixTheFollowingErrors"
+msgstr "Kérjük, javítsd a következő hibákat"
+
+msgid "Installation_Requirements"
+msgstr "Matomo Rendszerkövetelmények"
+
+msgid "Installation_SetupWebsite"
+msgstr "Weboldal beállítása"
+
+msgid "Installation_SetupWebsiteError"
+msgstr "Hiba a weboldal hozzáadása közben!"
+
+msgid "Installation_SetupWebsiteSetupSuccess"
+msgstr "A %s weboldal sikeresen létrehozva!"
+
+msgid "Installation_SuperUser"
+msgstr "Mindenható (Super User)"
+
+msgid "Installation_SuperUserSetupSuccess"
+msgstr "Mindenható (Super User) felhasználó sikeresen létrehozva!"
+
+msgid "Installation_SystemCheck"
+msgstr "rendszerellenőrzés"
+
+msgid "Installation_SystemCheckAutoUpdateHelp"
+msgstr "Megjegyzés: Az egyklikkes Matomo frissítés működéséhez írási jogosultság szükséges a Matomo mappára és annak tartalmára egyaránt."
+
+msgid "Installation_SystemCheckCreateFunctionHelp"
+msgstr "A Matomo anonim funkciókat használ a callback-okhoz."
+
+msgid "Installation_SystemCheckDatabaseHelp"
+msgstr "A Matomo-nek szüksége van vagy a mysqli kiterjesztésre vagy a PDO és a pdo_mysql kiterjesztésekre."
+
+msgid "Installation_SystemCheckDebugBacktraceHelp"
+msgstr "View::factory nem áll rendelkezésre a nézetek legenerálásához az azt meghívó modul számára."
+
+msgid "Installation_SystemCheckError"
+msgstr "Hiba lépet fel - ki kell javítanod, mielőtt folytatnád"
+
+msgid "Installation_SystemCheckEvalHelp"
+msgstr "Szükséges a HTML QuickForm és a Smarty sablonrendszerek működéséhez."
+
+msgid "Installation_SystemCheckExtensions"
+msgstr "Egyéb szükséges kiterjesztések"
+
+msgid "Installation_SystemCheckFileIntegrity"
+msgstr "Fájlitegritás"
+
+msgid "Installation_SystemCheckFunctions"
+msgstr "Szükséges funkciók"
+
+msgid "Installation_SystemCheckGDHelp"
+msgstr "A szikravonalak (mini grafikonok) nem fognak működni."
+
+msgid "Installation_SystemCheckGlobHelp"
+msgstr "Ez a beépített funkció le van tiltva a szervereden. Matomo megpróbálja emulálni ezt a funkciót, de további biztonsági korlátozások akadályozhatják ezt. A Matomo működésére kihatással lehet mindez."
+
+msgid "Installation_SystemCheckGzcompressHelp"
+msgstr "Engedélyezned kell a zlib kiterjesztést és a gzcompress funkciót."
+
+msgid "Installation_SystemCheckGzuncompressHelp"
+msgstr "Engedélyezned kell a zlib kiterjesztést és a gzuncompress funkciót."
+
+msgid "Installation_SystemCheckIconvHelp"
+msgstr "Konfigurálni és rebuildelni kell a PHP-t az \"iconv\" támogatás engedélyezésével: --with-iconv"
+
+msgid "Installation_SystemCheckMailHelp"
+msgstr "A Matomo fejlesztőknek szóló visszajelzés és az elveszett jelszó pótlása céljából generált e-mail üzenetek nem lesznek elküldve a mail() nélkül."
+
+msgid "Installation_SystemCheckMbstring"
+msgstr "mbstring"
+
+msgid "Installation_SystemCheckMemoryLimit"
+msgstr "Memória limit"
+
+msgid "Installation_SystemCheckMemoryLimitHelp"
+msgstr "Egy nagy forgalmú weboldalon az archiválási folyamathoz több memória kell, mint a jelenleg engedélyezett. Ha szükséges, változtasd meg a memory_limit direktívát a php.ini fájlodban."
+
+msgid "Installation_SystemCheckOpenURL"
+msgstr "URL megnyitása"
+
+msgid "Installation_SystemCheckOpenURLHelp"
+msgstr "Hírlevélre feliratkozás, frissítésekről értesítés és az egyklikkes frissítések működéséhez szükséges a \"curl\" kiterjesztés, az allow_url_fopen=On beállítás, vagy a or fsockopen() engedélyezése."
+
+msgid "Installation_SystemCheckOtherExtensions"
+msgstr "Egyéb kiterjesztések"
+
+msgid "Installation_SystemCheckOtherFunctions"
+msgstr "Egyéb funkciók"
+
+msgid "Installation_SystemCheckPackHelp"
+msgstr "A pack() funkció szükséges a látogatók Matomo-ben történő nyomon követéséhez."
+
+msgid "Installation_SystemCheckParseIniFileHelp"
+msgstr "Ez a beépített funkció le van tiltva a szervereden. Matomo megpróbálja emulálni ezt a funkciót, de további biztonsági korlátozások akadályozhatják ezt. A nyomon követés teljesítményére szintén kihatással lehet mindez."
+
+msgid "Installation_SystemCheckPdoAndMysqliHelp"
+msgstr "Linux szerveren a következő opciókkal fordíthatja a php-t: %1$s majd a php.ini fájlban a következő sorokat kell hozzáadni: %2$s"
+
+msgid "Installation_SystemCheckPhp"
+msgstr "PHP verzió"
+
+msgid "Installation_SystemCheckPhpPdoAndMysqli"
+msgstr "További információ a %1$sPHP PDO-ról%2$sés %3$sMYSQLI-ról%4$s."
+
+msgid "Installation_SystemCheckSplHelp"
+msgstr "Konfigurálni és rebuildelni kell a PHP-t a Standard PHP Library (SPL) engedélyezésével (alapértelmezettként)."
+
+msgid "Installation_SystemCheckTimeLimitHelp"
+msgstr "Egy nagy forgalmú weboldalon az archiválási folyamat végrehajtásához több idő kell, mint a jelenleg engedélyezett. Ha szükséges, változtasd meg a max_execution_time direktívát a php.ini fájlodban."
+
+msgid "Installation_SystemCheckTracker"
+msgstr "Tracker státusz"
+
+msgid "Installation_SystemCheckWarnDomHelp"
+msgstr "Engedélyezned kell a \"dom\" kiterjesztést (például a \"php-dom\" és/vagy a \"php-xml\" csomag installálásával)."
+
+msgid "Installation_SystemCheckWarning"
+msgstr "A Matomo működni fog normálisan, de néhány funkció hiányozhat"
+
+msgid "Installation_SystemCheckWarnJsonHelp"
+msgstr "Engedélyezned kell a \"json\" kiterjesztést (például a \"php-json\" csomag installálásával) a jobb teljesítmény érdekében."
+
+msgid "Installation_SystemCheckWarnLibXmlHelp"
+msgstr "Engedélyezned kell a \"libxml\" kiterjesztést (például a \"php-libxml\" csomag installásával), mivel erre szüksége van más, PHP core kiterjesztésnek."
+
+msgid "Installation_SystemCheckWarnSimpleXMLHelp"
+msgstr "Engedélyezned kell a \"SimpleXML\" kiterjesztést (például a \"php-simplexml\" és/vagy a \"php-xml\" csomag installálásával)."
+
+msgid "Installation_SystemCheckWinPdoAndMysqliHelp"
+msgstr "Windows szerveren a következő sorokat adhatja hozzá a php.ini fájhoz: %s"
+
+msgid "Installation_SystemCheckWriteDirs"
+msgstr "Könyvtárak írási jogosultsággal"
+
+msgid "Installation_SystemCheckWriteDirsHelp"
+msgstr "Hogy kijavítsd a hibát Linux rendszereden, próbáld ki a következő parancso(ka)t"
+
+msgid "Installation_SystemCheckZlibHelp"
+msgstr "Konfigurálni és rebuildelni kell a PHP-t a \"zlib\" támogatás engedélyezésével: --with-zlib"
+
+msgid "Installation_Tables"
+msgstr "Táblák létrehozása"
+
+msgid "Installation_TablesCreatedSuccess"
+msgstr "Táblák sikeresen létrehozva!"
+
+msgid "Installation_TablesDelete"
+msgstr "Észlelt táblák törlése"
+
+msgid "Installation_TablesDeletedSuccess"
+msgstr "Korábbi Matomo táblák sikeresen törölve!"
+
+msgid "Installation_TablesFound"
+msgstr "A következő táblák találhatók meg az adatbázisban"
+
+msgid "Installation_TablesReuse"
+msgstr "Meglévő táblák felhasználása"
+
+msgid "Installation_TablesWarningHelp"
+msgstr "Dönts a meglévő adatbázis táblák újrafelhasználása mellett vagy válaszd az teljes újratelepítést az adatbázisban található korábbi adatok törlésével."
+
+msgid "Installation_TablesWithSameNamesFound"
+msgstr "Néhány táblának (%1$s) az adatbázisodban (%2$s) ugyanaz a neve, mint amilyet a Matomo próbál létrehozni."
+
+msgid "Installation_Welcome"
+msgstr "Üdvözöllek!"
+
+msgid "Intl_Continent_afr"
+msgstr "Afrika"
+
+msgid "Intl_Continent_amc"
+msgstr "Közép-Amerika"
+
+msgid "Intl_Continent_amn"
+msgstr "Észak-Amerika"
+
+msgid "Intl_Continent_ams"
+msgstr "Dél-Amerika"
+
+msgid "Intl_Continent_ant"
+msgstr "Antarktisz"
+
+msgid "Intl_Continent_asi"
+msgstr "Ázsia"
+
+msgid "Intl_Continent_eur"
+msgstr "Európa"
+
+msgid "Intl_Continent_oce"
+msgstr "Óceánia"
+
+msgid "Intl_Country_AD"
+msgstr "Andorra"
+
+msgid "Intl_Country_AE"
+msgstr "Egyesült Arab Emírségek"
+
+msgid "Intl_Country_AF"
+msgstr "Afganisztán"
+
+msgid "Intl_Country_AG"
+msgstr "Antigua és Barbuda"
+
+msgid "Intl_Country_AI"
+msgstr "Anguilla"
+
+msgid "Intl_Country_AL"
+msgstr "Albánia"
+
+msgid "Intl_Country_AM"
+msgstr "Örményország"
+
+msgid "Intl_Country_AO"
+msgstr "Angola"
+
+msgid "Intl_Country_AQ"
+msgstr "Antarktisz"
+
+msgid "Intl_Country_AR"
+msgstr "Argentína"
+
+msgid "Intl_Country_AS"
+msgstr "Amerikai Szamoa"
+
+msgid "Intl_Country_AT"
+msgstr "Ausztria"
+
+msgid "Intl_Country_AU"
+msgstr "Ausztrália"
+
+msgid "Intl_Country_AW"
+msgstr "Aruba"
+
+msgid "Intl_Country_AX"
+msgstr "Åland-szigetek"
+
+msgid "Intl_Country_AZ"
+msgstr "Azerbajdzsán"
+
+msgid "Intl_Country_BA"
+msgstr "Bosznia-Hercegovina"
+
+msgid "Intl_Country_BB"
+msgstr "Barbados"
+
+msgid "Intl_Country_BD"
+msgstr "Banglades"
+
+msgid "Intl_Country_BE"
+msgstr "Belgium"
+
+msgid "Intl_Country_BF"
+msgstr "Burkina Faso"
+
+msgid "Intl_Country_BG"
+msgstr "Bulgária"
+
+msgid "Intl_Country_BH"
+msgstr "Bahrein"
+
+msgid "Intl_Country_BI"
+msgstr "Burundi"
+
+msgid "Intl_Country_BJ"
+msgstr "Benin"
+
+msgid "Intl_Country_BL"
+msgstr "Saint-Barthélemy"
+
+msgid "Intl_Country_BM"
+msgstr "Bermuda"
+
+msgid "Intl_Country_BN"
+msgstr "Brunei"
+
+msgid "Intl_Country_BO"
+msgstr "Bolívia"
+
+msgid "Intl_Country_BQ"
+msgstr "Holland Karib-térség"
+
+msgid "Intl_Country_BR"
+msgstr "Brazília"
+
+msgid "Intl_Country_BS"
+msgstr "Bahama-szigetek"
+
+msgid "Intl_Country_BT"
+msgstr "Bhután"
+
+msgid "Intl_Country_BV"
+msgstr "Bouvet-sziget"
+
+msgid "Intl_Country_BW"
+msgstr "Botswana"
+
+msgid "Intl_Country_BY"
+msgstr "Belarusz"
+
+msgid "Intl_Country_BZ"
+msgstr "Belize"
+
+msgid "Intl_Country_CA"
+msgstr "Kanada"
+
+msgid "Intl_Country_CC"
+msgstr "Kókusz (Keeling)-szigetek"
+
+msgid "Intl_Country_CD"
+msgstr "Kongó - Kinshasa"
+
+msgid "Intl_Country_CF"
+msgstr "Közép-afrikai Köztársaság"
+
+msgid "Intl_Country_CG"
+msgstr "Kongó - Brazzaville"
+
+msgid "Intl_Country_CH"
+msgstr "Svájc"
+
+msgid "Intl_Country_CI"
+msgstr "Elefántcsontpart"
+
+msgid "Intl_Country_CK"
+msgstr "Cook-szigetek"
+
+msgid "Intl_Country_CL"
+msgstr "Chile"
+
+msgid "Intl_Country_CM"
+msgstr "Kamerun"
+
+msgid "Intl_Country_CN"
+msgstr "Kína"
+
+msgid "Intl_Country_CO"
+msgstr "Kolumbia"
+
+msgid "Intl_Country_CR"
+msgstr "Costa Rica"
+
+msgid "Intl_Country_CU"
+msgstr "Kuba"
+
+msgid "Intl_Country_CV"
+msgstr "Zöld-foki Köztársaság"
+
+msgid "Intl_Country_CW"
+msgstr "Curaçao"
+
+msgid "Intl_Country_CX"
+msgstr "Karácsony-sziget"
+
+msgid "Intl_Country_CY"
+msgstr "Ciprus"
+
+msgid "Intl_Country_CZ"
+msgstr "Csehország"
+
+msgid "Intl_Country_DE"
+msgstr "Németország"
+
+msgid "Intl_Country_DJ"
+msgstr "Dzsibuti"
+
+msgid "Intl_Country_DK"
+msgstr "Dánia"
+
+msgid "Intl_Country_DM"
+msgstr "Dominika"
+
+msgid "Intl_Country_DO"
+msgstr "Dominikai Köztársaság"
+
+msgid "Intl_Country_DZ"
+msgstr "Algéria"
+
+msgid "Intl_Country_EC"
+msgstr "Ecuador"
+
+msgid "Intl_Country_EE"
+msgstr "Észtország"
+
+msgid "Intl_Country_EG"
+msgstr "Egyiptom"
+
+msgid "Intl_Country_EH"
+msgstr "Nyugat-Szahara"
+
+msgid "Intl_Country_ER"
+msgstr "Eritrea"
+
+msgid "Intl_Country_ES"
+msgstr "Spanyolország"
+
+msgid "Intl_Country_ET"
+msgstr "Etiópia"
+
+msgid "Intl_Country_FI"
+msgstr "Finnország"
+
+msgid "Intl_Country_FJ"
+msgstr "Fidzsi"
+
+msgid "Intl_Country_FK"
+msgstr "Falkland-szigetek"
+
+msgid "Intl_Country_FM"
+msgstr "Mikronézia"
+
+msgid "Intl_Country_FO"
+msgstr "Feröer szigetek"
+
+msgid "Intl_Country_FR"
+msgstr "Franciaország"
+
+msgid "Intl_Country_GA"
+msgstr "Gabon"
+
+msgid "Intl_Country_GB"
+msgstr "Egyesült Királyság"
+
+msgid "Intl_Country_GD"
+msgstr "Grenada"
+
+msgid "Intl_Country_GE"
+msgstr "Grúzia"
+
+msgid "Intl_Country_GF"
+msgstr "Francia Guyana"
+
+msgid "Intl_Country_GG"
+msgstr "Guernsey"
+
+msgid "Intl_Country_GH"
+msgstr "Ghána"
+
+msgid "Intl_Country_GI"
+msgstr "Gibraltár"
+
+msgid "Intl_Country_GL"
+msgstr "Grönland"
+
+msgid "Intl_Country_GM"
+msgstr "Gambia"
+
+msgid "Intl_Country_GN"
+msgstr "Guinea"
+
+msgid "Intl_Country_GP"
+msgstr "Guadeloupe"
+
+msgid "Intl_Country_GQ"
+msgstr "Egyenlítői-Guinea"
+
+msgid "Intl_Country_GR"
+msgstr "Görögország"
+
+msgid "Intl_Country_GS"
+msgstr "Déli-Georgia és Déli-Sandwich-szigetek"
+
+msgid "Intl_Country_GT"
+msgstr "Guatemala"
+
+msgid "Intl_Country_GU"
+msgstr "Guam"
+
+msgid "Intl_Country_GW"
+msgstr "Bissau-Guinea"
+
+msgid "Intl_Country_GY"
+msgstr "Guyana"
+
+msgid "Intl_Country_HK"
+msgstr "Hongkong KKT"
+
+msgid "Intl_Country_HM"
+msgstr "Heard-sziget és McDonald-szigetek"
+
+msgid "Intl_Country_HN"
+msgstr "Honduras"
+
+msgid "Intl_Country_HR"
+msgstr "Horvátország"
+
+msgid "Intl_Country_HT"
+msgstr "Haiti"
+
+msgid "Intl_Country_HU"
+msgstr "Magyarország"
+
+msgid "Intl_Country_ID"
+msgstr "Indonézia"
+
+msgid "Intl_Country_IE"
+msgstr "Írország"
+
+msgid "Intl_Country_IL"
+msgstr "Izrael"
+
+msgid "Intl_Country_IM"
+msgstr "Man-sziget"
+
+msgid "Intl_Country_IN"
+msgstr "India"
+
+msgid "Intl_Country_IO"
+msgstr "Brit Indiai-óceáni Terület"
+
+msgid "Intl_Country_IQ"
+msgstr "Irak"
+
+msgid "Intl_Country_IR"
+msgstr "Irán"
+
+msgid "Intl_Country_IS"
+msgstr "Izland"
+
+msgid "Intl_Country_IT"
+msgstr "Olaszország"
+
+msgid "Intl_Country_JE"
+msgstr "Jersey"
+
+msgid "Intl_Country_JM"
+msgstr "Jamaica"
+
+msgid "Intl_Country_JO"
+msgstr "Jordánia"
+
+msgid "Intl_Country_JP"
+msgstr "Japán"
+
+msgid "Intl_Country_KE"
+msgstr "Kenya"
+
+msgid "Intl_Country_KG"
+msgstr "Kirgizisztán"
+
+msgid "Intl_Country_KH"
+msgstr "Kambodzsa"
+
+msgid "Intl_Country_KI"
+msgstr "Kiribati"
+
+msgid "Intl_Country_KM"
+msgstr "Comore-szigetek"
+
+msgid "Intl_Country_KN"
+msgstr "Saint Kitts és Nevis"
+
+msgid "Intl_Country_KP"
+msgstr "Észak-Korea"
+
+msgid "Intl_Country_KR"
+msgstr "Dél-Korea"
+
+msgid "Intl_Country_KW"
+msgstr "Kuvait"
+
+msgid "Intl_Country_KY"
+msgstr "Kajmán-szigetek"
+
+msgid "Intl_Country_KZ"
+msgstr "Kazahsztán"
+
+msgid "Intl_Country_LA"
+msgstr "Laosz"
+
+msgid "Intl_Country_LB"
+msgstr "Libanon"
+
+msgid "Intl_Country_LC"
+msgstr "Saint Lucia"
+
+msgid "Intl_Country_LI"
+msgstr "Liechtenstein"
+
+msgid "Intl_Country_LK"
+msgstr "Srí Lanka"
+
+msgid "Intl_Country_LR"
+msgstr "Libéria"
+
+msgid "Intl_Country_LS"
+msgstr "Lesotho"
+
+msgid "Intl_Country_LT"
+msgstr "Litvánia"
+
+msgid "Intl_Country_LU"
+msgstr "Luxemburg"
+
+msgid "Intl_Country_LV"
+msgstr "Lettország"
+
+msgid "Intl_Country_LY"
+msgstr "Líbia"
+
+msgid "Intl_Country_MA"
+msgstr "Marokkó"
+
+msgid "Intl_Country_MC"
+msgstr "Monaco"
+
+msgid "Intl_Country_MD"
+msgstr "Moldova"
+
+msgid "Intl_Country_ME"
+msgstr "Montenegró"
+
+msgid "Intl_Country_MF"
+msgstr "Saint Martin"
+
+msgid "Intl_Country_MG"
+msgstr "Madagaszkár"
+
+msgid "Intl_Country_MH"
+msgstr "Marshall-szigetek"
+
+msgid "Intl_Country_MK"
+msgstr "Macedónia"
+
+msgid "Intl_Country_ML"
+msgstr "Mali"
+
+msgid "Intl_Country_MM"
+msgstr "Mianmar (Burma)"
+
+msgid "Intl_Country_MN"
+msgstr "Mongólia"
+
+msgid "Intl_Country_MO"
+msgstr "Makaó KKT"
+
+msgid "Intl_Country_MP"
+msgstr "Északi Mariana-szigetek"
+
+msgid "Intl_Country_MQ"
+msgstr "Martinique"
+
+msgid "Intl_Country_MR"
+msgstr "Mauritánia"
+
+msgid "Intl_Country_MS"
+msgstr "Montserrat"
+
+msgid "Intl_Country_MT"
+msgstr "Málta"
+
+msgid "Intl_Country_MU"
+msgstr "Mauritius"
+
+msgid "Intl_Country_MV"
+msgstr "Maldív-szigetek"
+
+msgid "Intl_Country_MW"
+msgstr "Malawi"
+
+msgid "Intl_Country_MX"
+msgstr "Mexikó"
+
+msgid "Intl_Country_MY"
+msgstr "Malajzia"
+
+msgid "Intl_Country_MZ"
+msgstr "Mozambik"
+
+msgid "Intl_Country_NA"
+msgstr "Namíbia"
+
+msgid "Intl_Country_NC"
+msgstr "Új-Kaledónia"
+
+msgid "Intl_Country_NE"
+msgstr "Niger"
+
+msgid "Intl_Country_NF"
+msgstr "Norfolk-sziget"
+
+msgid "Intl_Country_NG"
+msgstr "Nigéria"
+
+msgid "Intl_Country_NI"
+msgstr "Nicaragua"
+
+msgid "Intl_Country_NL"
+msgstr "Hollandia"
+
+msgid "Intl_Country_NO"
+msgstr "Norvégia"
+
+msgid "Intl_Country_NP"
+msgstr "Nepál"
+
+msgid "Intl_Country_NR"
+msgstr "Nauru"
+
+msgid "Intl_Country_NU"
+msgstr "Niue"
+
+msgid "Intl_Country_NZ"
+msgstr "Új-Zéland"
+
+msgid "Intl_Country_OM"
+msgstr "Omán"
+
+msgid "Intl_Country_PA"
+msgstr "Panama"
+
+msgid "Intl_Country_PE"
+msgstr "Peru"
+
+msgid "Intl_Country_PF"
+msgstr "Francia Polinézia"
+
+msgid "Intl_Country_PG"
+msgstr "Pápua Új-Guinea"
+
+msgid "Intl_Country_PH"
+msgstr "Fülöp-szigetek"
+
+msgid "Intl_Country_PK"
+msgstr "Pakisztán"
+
+msgid "Intl_Country_PL"
+msgstr "Lengyelország"
+
+msgid "Intl_Country_PM"
+msgstr "Saint-Pierre és Miquelon"
+
+msgid "Intl_Country_PN"
+msgstr "Pitcairn-szigetek"
+
+msgid "Intl_Country_PR"
+msgstr "Puerto Rico"
+
+msgid "Intl_Country_PS"
+msgstr "Palesztin Terület"
+
+msgid "Intl_Country_PT"
+msgstr "Portugália"
+
+msgid "Intl_Country_PW"
+msgstr "Palau"
+
+msgid "Intl_Country_PY"
+msgstr "Paraguay"
+
+msgid "Intl_Country_QA"
+msgstr "Katar"
+
+msgid "Intl_Country_RE"
+msgstr "Réunion"
+
+msgid "Intl_Country_RO"
+msgstr "Románia"
+
+msgid "Intl_Country_RS"
+msgstr "Szerbia"
+
+msgid "Intl_Country_RU"
+msgstr "Oroszország"
+
+msgid "Intl_Country_RW"
+msgstr "Ruanda"
+
+msgid "Intl_Country_SA"
+msgstr "Szaúd-Arábia"
+
+msgid "Intl_Country_SB"
+msgstr "Salamon-szigetek"
+
+msgid "Intl_Country_SC"
+msgstr "Seychelle-szigetek"
+
+msgid "Intl_Country_SD"
+msgstr "Szudán"
+
+msgid "Intl_Country_SE"
+msgstr "Svédország"
+
+msgid "Intl_Country_SG"
+msgstr "Szingapúr"
+
+msgid "Intl_Country_SH"
+msgstr "Szent Ilona"
+
+msgid "Intl_Country_SI"
+msgstr "Szlovénia"
+
+msgid "Intl_Country_SJ"
+msgstr "Svalbard és Jan Mayen"
+
+msgid "Intl_Country_SK"
+msgstr "Szlovákia"
+
+msgid "Intl_Country_SL"
+msgstr "Sierra Leone"
+
+msgid "Intl_Country_SM"
+msgstr "San Marino"
+
+msgid "Intl_Country_SN"
+msgstr "Szenegál"
+
+msgid "Intl_Country_SO"
+msgstr "Szomália"
+
+msgid "Intl_Country_SR"
+msgstr "Suriname"
+
+msgid "Intl_Country_SS"
+msgstr "Dél-Szudán"
+
+msgid "Intl_Country_ST"
+msgstr "São Tomé és Príncipe"
+
+msgid "Intl_Country_SV"
+msgstr "Salvador"
+
+msgid "Intl_Country_SX"
+msgstr "Sint Maarten"
+
+msgid "Intl_Country_SY"
+msgstr "Szíria"
+
+msgid "Intl_Country_SZ"
+msgstr "Szváziföld"
+
+msgid "Intl_Country_TC"
+msgstr "Turks- és Caicos-szigetek"
+
+msgid "Intl_Country_TD"
+msgstr "Csád"
+
+msgid "Intl_Country_TF"
+msgstr "Francia Déli Területek"
+
+msgid "Intl_Country_TG"
+msgstr "Togo"
+
+msgid "Intl_Country_TH"
+msgstr "Thaiföld"
+
+msgid "Intl_Country_TJ"
+msgstr "Tádzsikisztán"
+
+msgid "Intl_Country_TK"
+msgstr "Tokelau"
+
+msgid "Intl_Country_TL"
+msgstr "Kelet-Timor"
+
+msgid "Intl_Country_TM"
+msgstr "Türkmenisztán"
+
+msgid "Intl_Country_TN"
+msgstr "Tunézia"
+
+msgid "Intl_Country_TO"
+msgstr "Tonga"
+
+msgid "Intl_Country_TR"
+msgstr "Törökország"
+
+msgid "Intl_Country_TT"
+msgstr "Trinidad és Tobago"
+
+msgid "Intl_Country_TV"
+msgstr "Tuvalu"
+
+msgid "Intl_Country_TW"
+msgstr "Tajvan"
+
+msgid "Intl_Country_TZ"
+msgstr "Tanzánia"
+
+msgid "Intl_Country_UA"
+msgstr "Ukrajna"
+
+msgid "Intl_Country_UG"
+msgstr "Uganda"
+
+msgid "Intl_Country_UM"
+msgstr "Az USA lakatlan külbirtokai"
+
+msgid "Intl_Country_US"
+msgstr "Egyesült Államok"
+
+msgid "Intl_Country_UY"
+msgstr "Uruguay"
+
+msgid "Intl_Country_UZ"
+msgstr "Üzbegisztán"
+
+msgid "Intl_Country_VA"
+msgstr "Vatikán"
+
+msgid "Intl_Country_VC"
+msgstr "Saint Vincent és a Grenadine-szigetek"
+
+msgid "Intl_Country_VE"
+msgstr "Venezuela"
+
+msgid "Intl_Country_VG"
+msgstr "Brit Virgin-szigetek"
+
+msgid "Intl_Country_VI"
+msgstr "Amerikai Virgin-szigetek"
+
+msgid "Intl_Country_VN"
+msgstr "Vietnám"
+
+msgid "Intl_Country_VU"
+msgstr "Vanuatu"
+
+msgid "Intl_Country_WF"
+msgstr "Wallis és Futuna"
+
+msgid "Intl_Country_WS"
+msgstr "Szamoa"
+
+msgid "Intl_Country_YE"
+msgstr "Jemen"
+
+msgid "Intl_Country_YT"
+msgstr "Mayotte"
+
+msgid "Intl_Country_ZA"
+msgstr "Dél-afrikai Köztársaság"
+
+msgid "Intl_Country_ZM"
+msgstr "Zambia"
+
+msgid "Intl_Country_ZW"
+msgstr "Zimbabwe"
+
+msgid "Intl_CurrencySymbol_AED"
+msgstr "AED"
+
+msgid "Intl_CurrencySymbol_AFN"
+msgstr "AFN"
+
+msgid "Intl_CurrencySymbol_ALL"
+msgstr "ALL"
+
+msgid "Intl_CurrencySymbol_AMD"
+msgstr "AMD"
+
+msgid "Intl_CurrencySymbol_ANG"
+msgstr "ANG"
+
+msgid "Intl_CurrencySymbol_AOA"
+msgstr "AOA"
+
+msgid "Intl_CurrencySymbol_ARS"
+msgstr "ARS"
+
+msgid "Intl_CurrencySymbol_AUD"
+msgstr "AUD"
+
+msgid "Intl_CurrencySymbol_AWG"
+msgstr "AWG"
+
+msgid "Intl_CurrencySymbol_AZN"
+msgstr "AZN"
+
+msgid "Intl_CurrencySymbol_BAM"
+msgstr "BAM"
+
+msgid "Intl_CurrencySymbol_BBD"
+msgstr "BBD"
+
+msgid "Intl_CurrencySymbol_BDT"
+msgstr "BDT"
+
+msgid "Intl_CurrencySymbol_BGN"
+msgstr "BGN"
+
+msgid "Intl_CurrencySymbol_BHD"
+msgstr "BHD"
+
+msgid "Intl_CurrencySymbol_BIF"
+msgstr "BIF"
+
+msgid "Intl_CurrencySymbol_BMD"
+msgstr "BMD"
+
+msgid "Intl_CurrencySymbol_BND"
+msgstr "BND"
+
+msgid "Intl_CurrencySymbol_BOB"
+msgstr "BOB"
+
+msgid "Intl_CurrencySymbol_BRL"
+msgstr "BRL"
+
+msgid "Intl_CurrencySymbol_BSD"
+msgstr "BSD"
+
+msgid "Intl_CurrencySymbol_BTC"
+msgstr "BTC"
+
+msgid "Intl_CurrencySymbol_BTN"
+msgstr "BTN"
+
+msgid "Intl_CurrencySymbol_BWP"
+msgstr "BWP"
+
+msgid "Intl_CurrencySymbol_BYN"
+msgstr "BYN"
+
+msgid "Intl_CurrencySymbol_BZD"
+msgstr "BZD"
+
+msgid "Intl_CurrencySymbol_CAD"
+msgstr "CAD"
+
+msgid "Intl_CurrencySymbol_CDF"
+msgstr "CDF"
+
+msgid "Intl_CurrencySymbol_CHF"
+msgstr "CHF"
+
+msgid "Intl_CurrencySymbol_CLP"
+msgstr "CLP"
+
+msgid "Intl_CurrencySymbol_CNY"
+msgstr "CNY"
+
+msgid "Intl_CurrencySymbol_COP"
+msgstr "COP"
+
+msgid "Intl_CurrencySymbol_CRC"
+msgstr "CRC"
+
+msgid "Intl_CurrencySymbol_CUC"
+msgstr "CUC"
+
+msgid "Intl_CurrencySymbol_CUP"
+msgstr "CUP"
+
+msgid "Intl_CurrencySymbol_CVE"
+msgstr "CVE"
+
+msgid "Intl_CurrencySymbol_CZK"
+msgstr "CZK"
+
+msgid "Intl_CurrencySymbol_DJF"
+msgstr "DJF"
+
+msgid "Intl_CurrencySymbol_DKK"
+msgstr "DKK"
+
+msgid "Intl_CurrencySymbol_DOP"
+msgstr "DOP"
+
+msgid "Intl_CurrencySymbol_DZD"
+msgstr "DZD"
+
+msgid "Intl_CurrencySymbol_EGP"
+msgstr "EGP"
+
+msgid "Intl_CurrencySymbol_ERN"
+msgstr "ERN"
+
+msgid "Intl_CurrencySymbol_ETB"
+msgstr "ETB"
+
+msgid "Intl_CurrencySymbol_EUR"
+msgstr "EUR"
+
+msgid "Intl_CurrencySymbol_FJD"
+msgstr "FJD"
+
+msgid "Intl_CurrencySymbol_FKP"
+msgstr "FKP"
+
+msgid "Intl_CurrencySymbol_GBP"
+msgstr "GBP"
+
+msgid "Intl_CurrencySymbol_GEL"
+msgstr "GEL"
+
+msgid "Intl_CurrencySymbol_GHS"
+msgstr "GHS"
+
+msgid "Intl_CurrencySymbol_GIP"
+msgstr "GIP"
+
+msgid "Intl_CurrencySymbol_GMD"
+msgstr "GMD"
+
+msgid "Intl_CurrencySymbol_GNF"
+msgstr "GNF"
+
+msgid "Intl_CurrencySymbol_GTQ"
+msgstr "GTQ"
+
+msgid "Intl_CurrencySymbol_GYD"
+msgstr "GYD"
+
+msgid "Intl_CurrencySymbol_HKD"
+msgstr "HKD"
+
+msgid "Intl_CurrencySymbol_HNL"
+msgstr "HNL"
+
+msgid "Intl_CurrencySymbol_HRK"
+msgstr "HRK"
+
+msgid "Intl_CurrencySymbol_HTG"
+msgstr "HTG"
+
+msgid "Intl_CurrencySymbol_HUF"
+msgstr "Ft"
+
+msgid "Intl_CurrencySymbol_IDR"
+msgstr "IDR"
+
+msgid "Intl_CurrencySymbol_ILS"
+msgstr "ILS"
+
+msgid "Intl_CurrencySymbol_INR"
+msgstr "INR"
+
+msgid "Intl_CurrencySymbol_IQD"
+msgstr "IQD"
+
+msgid "Intl_CurrencySymbol_IRR"
+msgstr "IRR"
+
+msgid "Intl_CurrencySymbol_ISK"
+msgstr "ISK"
+
+msgid "Intl_CurrencySymbol_JMD"
+msgstr "JMD"
+
+msgid "Intl_CurrencySymbol_JOD"
+msgstr "JOD"
+
+msgid "Intl_CurrencySymbol_JPY"
+msgstr "¥"
+
+msgid "Intl_CurrencySymbol_KES"
+msgstr "KES"
+
+msgid "Intl_CurrencySymbol_KGS"
+msgstr "KGS"
+
+msgid "Intl_CurrencySymbol_KHR"
+msgstr "KHR"
+
+msgid "Intl_CurrencySymbol_KMF"
+msgstr "KMF"
+
+msgid "Intl_CurrencySymbol_KPW"
+msgstr "KPW"
+
+msgid "Intl_CurrencySymbol_KRW"
+msgstr "KRW"
+
+msgid "Intl_CurrencySymbol_KWD"
+msgstr "KWD"
+
+msgid "Intl_CurrencySymbol_KYD"
+msgstr "KYD"
+
+msgid "Intl_CurrencySymbol_KZT"
+msgstr "KZT"
+
+msgid "Intl_CurrencySymbol_LAK"
+msgstr "LAK"
+
+msgid "Intl_CurrencySymbol_LBP"
+msgstr "LBP"
+
+msgid "Intl_CurrencySymbol_LKR"
+msgstr "LKR"
+
+msgid "Intl_CurrencySymbol_LRD"
+msgstr "LRD"
+
+msgid "Intl_CurrencySymbol_LSL"
+msgstr "LSL"
+
+msgid "Intl_CurrencySymbol_LYD"
+msgstr "LYD"
+
+msgid "Intl_CurrencySymbol_MAD"
+msgstr "MAD"
+
+msgid "Intl_CurrencySymbol_MDL"
+msgstr "MDL"
+
+msgid "Intl_CurrencySymbol_MGA"
+msgstr "MGA"
+
+msgid "Intl_CurrencySymbol_MKD"
+msgstr "MKD"
+
+msgid "Intl_CurrencySymbol_MMK"
+msgstr "MMK"
+
+msgid "Intl_CurrencySymbol_MNT"
+msgstr "MNT"
+
+msgid "Intl_CurrencySymbol_MOP"
+msgstr "MOP"
+
+msgid "Intl_CurrencySymbol_MRU"
+msgstr "MRU"
+
+msgid "Intl_CurrencySymbol_MUR"
+msgstr "MUR"
+
+msgid "Intl_CurrencySymbol_MVR"
+msgstr "MVR"
+
+msgid "Intl_CurrencySymbol_MWK"
+msgstr "MWK"
+
+msgid "Intl_CurrencySymbol_MXN"
+msgstr "MXN"
+
+msgid "Intl_CurrencySymbol_MYR"
+msgstr "MYR"
+
+msgid "Intl_CurrencySymbol_MZN"
+msgstr "MZN"
+
+msgid "Intl_CurrencySymbol_NAD"
+msgstr "NAD"
+
+msgid "Intl_CurrencySymbol_NGN"
+msgstr "NGN"
+
+msgid "Intl_CurrencySymbol_NIO"
+msgstr "NIO"
+
+msgid "Intl_CurrencySymbol_NOK"
+msgstr "NOK"
+
+msgid "Intl_CurrencySymbol_NPR"
+msgstr "NPR"
+
+msgid "Intl_CurrencySymbol_NZD"
+msgstr "NZD"
+
+msgid "Intl_CurrencySymbol_OMR"
+msgstr "OMR"
+
+msgid "Intl_CurrencySymbol_PAB"
+msgstr "PAB"
+
+msgid "Intl_CurrencySymbol_PEN"
+msgstr "PEN"
+
+msgid "Intl_CurrencySymbol_PGK"
+msgstr "PGK"
+
+msgid "Intl_CurrencySymbol_PHP"
+msgstr "PHP"
+
+msgid "Intl_CurrencySymbol_PKR"
+msgstr "PKR"
+
+msgid "Intl_CurrencySymbol_PLN"
+msgstr "PLN"
+
+msgid "Intl_CurrencySymbol_PYG"
+msgstr "PYG"
+
+msgid "Intl_CurrencySymbol_QAR"
+msgstr "QAR"
+
+msgid "Intl_CurrencySymbol_RON"
+msgstr "RON"
+
+msgid "Intl_CurrencySymbol_RSD"
+msgstr "RSD"
+
+msgid "Intl_CurrencySymbol_RUB"
+msgstr "RUB"
+
+msgid "Intl_CurrencySymbol_RWF"
+msgstr "RWF"
+
+msgid "Intl_CurrencySymbol_SAR"
+msgstr "SAR"
+
+msgid "Intl_CurrencySymbol_SBD"
+msgstr "SBD"
+
+msgid "Intl_CurrencySymbol_SCR"
+msgstr "SCR"
+
+msgid "Intl_CurrencySymbol_SDG"
+msgstr "SDG"
+
+msgid "Intl_CurrencySymbol_SEK"
+msgstr "SEK"
+
+msgid "Intl_CurrencySymbol_SGD"
+msgstr "SGD"
+
+msgid "Intl_CurrencySymbol_SHP"
+msgstr "SHP"
+
+msgid "Intl_CurrencySymbol_SLL"
+msgstr "SLL"
+
+msgid "Intl_CurrencySymbol_SOS"
+msgstr "SOS"
+
+msgid "Intl_CurrencySymbol_SRD"
+msgstr "SRD"
+
+msgid "Intl_CurrencySymbol_SSP"
+msgstr "SSP"
+
+msgid "Intl_CurrencySymbol_STN"
+msgstr "STN"
+
+msgid "Intl_CurrencySymbol_SYP"
+msgstr "SYP"
+
+msgid "Intl_CurrencySymbol_SZL"
+msgstr "SZL"
+
+msgid "Intl_CurrencySymbol_THB"
+msgstr "THB"
+
+msgid "Intl_CurrencySymbol_TJS"
+msgstr "TJS"
+
+msgid "Intl_CurrencySymbol_TMT"
+msgstr "TMT"
+
+msgid "Intl_CurrencySymbol_TND"
+msgstr "TND"
+
+msgid "Intl_CurrencySymbol_TOP"
+msgstr "TOP"
+
+msgid "Intl_CurrencySymbol_TRY"
+msgstr "TRY"
+
+msgid "Intl_CurrencySymbol_TTD"
+msgstr "TTD"
+
+msgid "Intl_CurrencySymbol_TWD"
+msgstr "TWD"
+
+msgid "Intl_CurrencySymbol_TZS"
+msgstr "TZS"
+
+msgid "Intl_CurrencySymbol_UAH"
+msgstr "UAH"
+
+msgid "Intl_CurrencySymbol_UGX"
+msgstr "UGX"
+
+msgid "Intl_CurrencySymbol_USD"
+msgstr "USD"
+
+msgid "Intl_CurrencySymbol_UYU"
+msgstr "UYU"
+
+msgid "Intl_CurrencySymbol_UZS"
+msgstr "UZS"
+
+msgid "Intl_CurrencySymbol_VEF"
+msgstr "VEF"
+
+msgid "Intl_CurrencySymbol_VND"
+msgstr "VND"
+
+msgid "Intl_CurrencySymbol_VUV"
+msgstr "VUV"
+
+msgid "Intl_CurrencySymbol_WST"
+msgstr "WST"
+
+msgid "Intl_CurrencySymbol_XAF"
+msgstr "FCFA"
+
+msgid "Intl_CurrencySymbol_XCD"
+msgstr "XCD"
+
+msgid "Intl_CurrencySymbol_XOF"
+msgstr "CFA"
+
+msgid "Intl_CurrencySymbol_XPF"
+msgstr "CFPF"
+
+msgid "Intl_CurrencySymbol_YER"
+msgstr "YER"
+
+msgid "Intl_CurrencySymbol_ZAR"
+msgstr "ZAR"
+
+msgid "Intl_CurrencySymbol_ZMW"
+msgstr "ZMW"
+
+msgid "Intl_Currency_AED"
+msgstr "EAE-dirham"
+
+msgid "Intl_Currency_AFN"
+msgstr "Afgán afghani"
+
+msgid "Intl_Currency_ALL"
+msgstr "Albán lek"
+
+msgid "Intl_Currency_AMD"
+msgstr "Örmény dram"
+
+msgid "Intl_Currency_ANG"
+msgstr "Holland antilláki forint"
+
+msgid "Intl_Currency_AOA"
+msgstr "Angolai kwanza"
+
+msgid "Intl_Currency_ARS"
+msgstr "Argentin peso"
+
+msgid "Intl_Currency_AUD"
+msgstr "Ausztrál dollár"
+
+msgid "Intl_Currency_AWG"
+msgstr "Arubai florin"
+
+msgid "Intl_Currency_AZN"
+msgstr "Azerbajdzsáni manat"
+
+msgid "Intl_Currency_BAM"
+msgstr "Bosznia-hercegovinai konvertibilis márka"
+
+msgid "Intl_Currency_BBD"
+msgstr "Barbadosi dollár"
+
+msgid "Intl_Currency_BDT"
+msgstr "Bangladesi taka"
+
+msgid "Intl_Currency_BGN"
+msgstr "Bolgár új leva"
+
+msgid "Intl_Currency_BHD"
+msgstr "Bahreini dinár"
+
+msgid "Intl_Currency_BIF"
+msgstr "Burundi frank"
+
+msgid "Intl_Currency_BMD"
+msgstr "Bermudai dollár"
+
+msgid "Intl_Currency_BND"
+msgstr "Brunei dollár"
+
+msgid "Intl_Currency_BOB"
+msgstr "Bolíviai boliviano"
+
+msgid "Intl_Currency_BRL"
+msgstr "Brazil real"
+
+msgid "Intl_Currency_BSD"
+msgstr "Bahamai dollár"
+
+msgid "Intl_Currency_BTC"
+msgstr "Bitcoin"
+
+msgid "Intl_Currency_BTN"
+msgstr "Bhutáni ngultrum"
+
+msgid "Intl_Currency_BWP"
+msgstr "Botswanai pula"
+
+msgid "Intl_Currency_BYN"
+msgstr "Fehérorosz rubel"
+
+msgid "Intl_Currency_BZD"
+msgstr "Belize-i dollár"
+
+msgid "Intl_Currency_CAD"
+msgstr "Kanadai dollár"
+
+msgid "Intl_Currency_CDF"
+msgstr "Kongói frank"
+
+msgid "Intl_Currency_CHF"
+msgstr "Svájci frank"
+
+msgid "Intl_Currency_CLP"
+msgstr "Chilei peso"
+
+msgid "Intl_Currency_CNY"
+msgstr "Kínai jüan"
+
+msgid "Intl_Currency_COP"
+msgstr "Kolumbiai peso"
+
+msgid "Intl_Currency_CRC"
+msgstr "Costa Rica-i colon"
+
+msgid "Intl_Currency_CUC"
+msgstr "Kubai konvertibilis peso"
+
+msgid "Intl_Currency_CUP"
+msgstr "Kubai peso"
+
+msgid "Intl_Currency_CVE"
+msgstr "Cape Verde-i escudo"
+
+msgid "Intl_Currency_CZK"
+msgstr "Cseh korona"
+
+msgid "Intl_Currency_DJF"
+msgstr "Dzsibuti frank"
+
+msgid "Intl_Currency_DKK"
+msgstr "Dán korona"
+
+msgid "Intl_Currency_DOP"
+msgstr "Dominikai peso"
+
+msgid "Intl_Currency_DZD"
+msgstr "Algériai dínár"
+
+msgid "Intl_Currency_EGP"
+msgstr "Egyiptomi font"
+
+msgid "Intl_Currency_ERN"
+msgstr "Eritreai nakfa"
+
+msgid "Intl_Currency_ETB"
+msgstr "Etiópiai birr"
+
+msgid "Intl_Currency_EUR"
+msgstr "Euró"
+
+msgid "Intl_Currency_FJD"
+msgstr "Fidzsi dollár"
+
+msgid "Intl_Currency_FKP"
+msgstr "Falkland-szigeteki font"
+
+msgid "Intl_Currency_GBP"
+msgstr "Angol font"
+
+msgid "Intl_Currency_GEL"
+msgstr "Grúz lari"
+
+msgid "Intl_Currency_GHS"
+msgstr "Ghánai cedi"
+
+msgid "Intl_Currency_GIP"
+msgstr "Gibraltári font"
+
+msgid "Intl_Currency_GMD"
+msgstr "Gambiai dalasi"
+
+msgid "Intl_Currency_GNF"
+msgstr "Guineai frank"
+
+msgid "Intl_Currency_GTQ"
+msgstr "Guatemalai quetzal"
+
+msgid "Intl_Currency_GYD"
+msgstr "Guyanai dollár"
+
+msgid "Intl_Currency_HKD"
+msgstr "Hongkongi dollár"
+
+msgid "Intl_Currency_HNL"
+msgstr "Hodurasi lempira"
+
+msgid "Intl_Currency_HRK"
+msgstr "Horvát kuna"
+
+msgid "Intl_Currency_HTG"
+msgstr "Haiti gourde"
+
+msgid "Intl_Currency_HUF"
+msgstr "Magyar forint"
+
+msgid "Intl_Currency_IDR"
+msgstr "Indonéz rúpia"
+
+msgid "Intl_Currency_ILS"
+msgstr "Izraeli új sékel"
+
+msgid "Intl_Currency_INR"
+msgstr "Indiai rúpia"
+
+msgid "Intl_Currency_IQD"
+msgstr "Iraki dínár"
+
+msgid "Intl_Currency_IRR"
+msgstr "Iráni rial"
+
+msgid "Intl_Currency_ISK"
+msgstr "Izlandi korona"
+
+msgid "Intl_Currency_JMD"
+msgstr "Jamaicai dollár"
+
+msgid "Intl_Currency_JOD"
+msgstr "Jordániai dínár"
+
+msgid "Intl_Currency_JPY"
+msgstr "Japán jen"
+
+msgid "Intl_Currency_KES"
+msgstr "Kenyai shilling"
+
+msgid "Intl_Currency_KGS"
+msgstr "Kirgizisztáni szom"
+
+msgid "Intl_Currency_KHR"
+msgstr "Kambodzsai riel"
+
+msgid "Intl_Currency_KMF"
+msgstr "Comorei frank"
+
+msgid "Intl_Currency_KPW"
+msgstr "Észak-koreai won"
+
+msgid "Intl_Currency_KRW"
+msgstr "Dél-koreai won"
+
+msgid "Intl_Currency_KWD"
+msgstr "Kuvaiti dínár"
+
+msgid "Intl_Currency_KYD"
+msgstr "Kajmán-szigeteki dollár"
+
+msgid "Intl_Currency_KZT"
+msgstr "Kazahsztáni tenge"
+
+msgid "Intl_Currency_LAK"
+msgstr "Laoszi kip"
+
+msgid "Intl_Currency_LBP"
+msgstr "Libanoni font"
+
+msgid "Intl_Currency_LKR"
+msgstr "Srí Lanka-i rúpia"
+
+msgid "Intl_Currency_LRD"
+msgstr "Libériai dollár"
+
+msgid "Intl_Currency_LSL"
+msgstr "Lesothoi loti"
+
+msgid "Intl_Currency_LYD"
+msgstr "Líbiai dínár"
+
+msgid "Intl_Currency_MAD"
+msgstr "Marokkói dirham"
+
+msgid "Intl_Currency_MDL"
+msgstr "Moldován lei"
+
+msgid "Intl_Currency_MGA"
+msgstr "Madagaszkári ariary"
+
+msgid "Intl_Currency_MKD"
+msgstr "Macedon dínár"
+
+msgid "Intl_Currency_MMK"
+msgstr "Mianmari kyat"
+
+msgid "Intl_Currency_MNT"
+msgstr "Mongóliai tugrik"
+
+msgid "Intl_Currency_MOP"
+msgstr "Makaói pataca"
+
+msgid "Intl_Currency_MRU"
+msgstr "Mauritániai ouguiya"
+
+msgid "Intl_Currency_MUR"
+msgstr "Mauritiusi rúpia"
+
+msgid "Intl_Currency_MVR"
+msgstr "Maldív-szigeteki rufiyaa"
+
+msgid "Intl_Currency_MWK"
+msgstr "Malawi kwacha"
+
+msgid "Intl_Currency_MXN"
+msgstr "Mexikói peso"
+
+msgid "Intl_Currency_MYR"
+msgstr "Malajziai ringgit"
+
+msgid "Intl_Currency_MZN"
+msgstr "Mozambiki metikális"
+
+msgid "Intl_Currency_NAD"
+msgstr "Namíbiai dollár"
+
+msgid "Intl_Currency_NGN"
+msgstr "Nigériai naira"
+
+msgid "Intl_Currency_NIO"
+msgstr "Nicaraguai córdoba"
+
+msgid "Intl_Currency_NOK"
+msgstr "Norvég korona"
+
+msgid "Intl_Currency_NPR"
+msgstr "Nepáli rúpia"
+
+msgid "Intl_Currency_NZD"
+msgstr "Új-zélandi dollár"
+
+msgid "Intl_Currency_OMR"
+msgstr "Ománi rial"
+
+msgid "Intl_Currency_PAB"
+msgstr "Panamai balboa"
+
+msgid "Intl_Currency_PEN"
+msgstr "Perui sol"
+
+msgid "Intl_Currency_PGK"
+msgstr "Pápua új-guineai kina"
+
+msgid "Intl_Currency_PHP"
+msgstr "Fülöp-szigeteki peso"
+
+msgid "Intl_Currency_PKR"
+msgstr "Pakisztáni rúpia"
+
+msgid "Intl_Currency_PLN"
+msgstr "Lengyel zloty"
+
+msgid "Intl_Currency_PYG"
+msgstr "Paraguayi guarani"
+
+msgid "Intl_Currency_QAR"
+msgstr "Katari rial"
+
+msgid "Intl_Currency_RON"
+msgstr "Román lej"
+
+msgid "Intl_Currency_RSD"
+msgstr "Szerb dínár"
+
+msgid "Intl_Currency_RUB"
+msgstr "Orosz rubel"
+
+msgid "Intl_Currency_RWF"
+msgstr "Ruandai frank"
+
+msgid "Intl_Currency_SAR"
+msgstr "Szaúdi riyal"
+
+msgid "Intl_Currency_SBD"
+msgstr "Salamon-szigeteki dollár"
+
+msgid "Intl_Currency_SCR"
+msgstr "Seychelle-szigeteki rúpia"
+
+msgid "Intl_Currency_SDG"
+msgstr "Szudáni font"
+
+msgid "Intl_Currency_SEK"
+msgstr "Svéd korona"
+
+msgid "Intl_Currency_SGD"
+msgstr "Szingapúri dollár"
+
+msgid "Intl_Currency_SHP"
+msgstr "Szent Ilona-i font"
+
+msgid "Intl_Currency_SLL"
+msgstr "Sierra Leone-i leone"
+
+msgid "Intl_Currency_SOS"
+msgstr "Szomáli shilling"
+
+msgid "Intl_Currency_SRD"
+msgstr "Suriname-i dollár"
+
+msgid "Intl_Currency_SSP"
+msgstr "Dél-szudáni font"
+
+msgid "Intl_Currency_STN"
+msgstr "São Tomé és Príncipe-i dobra"
+
+msgid "Intl_Currency_SYP"
+msgstr "Szíriai font"
+
+msgid "Intl_Currency_SZL"
+msgstr "Szváziföldi lilangeni"
+
+msgid "Intl_Currency_THB"
+msgstr "Thai baht"
+
+msgid "Intl_Currency_TJS"
+msgstr "Tádzsikisztáni somoni"
+
+msgid "Intl_Currency_TMT"
+msgstr "Türkmenisztáni manat"
+
+msgid "Intl_Currency_TND"
+msgstr "Tunéziai dínár"
+
+msgid "Intl_Currency_TOP"
+msgstr "Tongai paanga"
+
+msgid "Intl_Currency_TRY"
+msgstr "Török líra"
+
+msgid "Intl_Currency_TTD"
+msgstr "Trinidad és Tobago-i dollár"
+
+msgid "Intl_Currency_TWD"
+msgstr "Tajvani új dollár"
+
+msgid "Intl_Currency_TZS"
+msgstr "Tanzániai shilling"
+
+msgid "Intl_Currency_UAH"
+msgstr "Ukrán hrivnya"
+
+msgid "Intl_Currency_UGX"
+msgstr "Ugandai shilling"
+
+msgid "Intl_Currency_USD"
+msgstr "USA-dollár"
+
+msgid "Intl_Currency_UYU"
+msgstr "Uruguay-i peso"
+
+msgid "Intl_Currency_UZS"
+msgstr "Üzbegisztáni szum"
+
+msgid "Intl_Currency_VEF"
+msgstr "Venezuelai bolivar (2008–2018)"
+
+msgid "Intl_Currency_VND"
+msgstr "Vietnami dong"
+
+msgid "Intl_Currency_VUV"
+msgstr "Vanuatui vatu"
+
+msgid "Intl_Currency_WST"
+msgstr "Nyugat-szamoai tala"
+
+msgid "Intl_Currency_XAF"
+msgstr "CFA frank BEAC"
+
+msgid "Intl_Currency_XCD"
+msgstr "Kelet-karibi dollár"
+
+msgid "Intl_Currency_XOF"
+msgstr "CFA frank BCEAO"
+
+msgid "Intl_Currency_XPF"
+msgstr "Csendes-óceáni valutaközösségi frank"
+
+msgid "Intl_Currency_YER"
+msgstr "Jemeni rial"
+
+msgid "Intl_Currency_ZAR"
+msgstr "Dél-afrikai rand"
+
+msgid "Intl_Currency_ZMW"
+msgstr "Zambiai kwacha"
+
+msgid "Intl_Day_Long_1"
+msgstr "hétfő"
+
+msgid "Intl_Day_Long_2"
+msgstr "kedd"
+
+msgid "Intl_Day_Long_3"
+msgstr "szerda"
+
+msgid "Intl_Day_Long_4"
+msgstr "csütörtök"
+
+msgid "Intl_Day_Long_5"
+msgstr "péntek"
+
+msgid "Intl_Day_Long_6"
+msgstr "szombat"
+
+msgid "Intl_Day_Long_7"
+msgstr "vasárnap"
+
+msgid "Intl_Day_Long_StandAlone_1"
+msgstr "hétfő"
+
+msgid "Intl_Day_Long_StandAlone_2"
+msgstr "kedd"
+
+msgid "Intl_Day_Long_StandAlone_3"
+msgstr "szerda"
+
+msgid "Intl_Day_Long_StandAlone_4"
+msgstr "csütörtök"
+
+msgid "Intl_Day_Long_StandAlone_5"
+msgstr "péntek"
+
+msgid "Intl_Day_Long_StandAlone_6"
+msgstr "szombat"
+
+msgid "Intl_Day_Long_StandAlone_7"
+msgstr "vasárnap"
+
+msgid "Intl_Day_Min_1"
+msgstr "H"
+
+msgid "Intl_Day_Min_2"
+msgstr "K"
+
+msgid "Intl_Day_Min_3"
+msgstr "Sze"
+
+msgid "Intl_Day_Min_4"
+msgstr "Cs"
+
+msgid "Intl_Day_Min_5"
+msgstr "P"
+
+msgid "Intl_Day_Min_6"
+msgstr "Szo"
+
+msgid "Intl_Day_Min_7"
+msgstr "V"
+
+msgid "Intl_Day_Min_StandAlone_1"
+msgstr "H"
+
+msgid "Intl_Day_Min_StandAlone_2"
+msgstr "K"
+
+msgid "Intl_Day_Min_StandAlone_3"
+msgstr "Sze"
+
+msgid "Intl_Day_Min_StandAlone_4"
+msgstr "Cs"
+
+msgid "Intl_Day_Min_StandAlone_5"
+msgstr "P"
+
+msgid "Intl_Day_Min_StandAlone_6"
+msgstr "Szo"
+
+msgid "Intl_Day_Min_StandAlone_7"
+msgstr "V"
+
+msgid "Intl_Day_Short_1"
+msgstr "H"
+
+msgid "Intl_Day_Short_2"
+msgstr "K"
+
+msgid "Intl_Day_Short_3"
+msgstr "Sze"
+
+msgid "Intl_Day_Short_4"
+msgstr "Cs"
+
+msgid "Intl_Day_Short_5"
+msgstr "P"
+
+msgid "Intl_Day_Short_6"
+msgstr "Szo"
+
+msgid "Intl_Day_Short_7"
+msgstr "V"
+
+msgid "Intl_Day_Short_StandAlone_1"
+msgstr "H"
+
+msgid "Intl_Day_Short_StandAlone_2"
+msgstr "K"
+
+msgid "Intl_Day_Short_StandAlone_3"
+msgstr "Sze"
+
+msgid "Intl_Day_Short_StandAlone_4"
+msgstr "Cs"
+
+msgid "Intl_Day_Short_StandAlone_5"
+msgstr "P"
+
+msgid "Intl_Day_Short_StandAlone_6"
+msgstr "Szo"
+
+msgid "Intl_Day_Short_StandAlone_7"
+msgstr "V"
+
+msgid "Intl_EnglishLanguageName"
+msgstr "Hungarian"
+
+msgid "Intl_Format_DateTime_Long"
+msgstr "y. MMMM d., EEEE {time}"
+
+msgid "Intl_Format_DateTime_Short"
+msgstr "y. MMM d. {time}"
+
+msgid "Intl_Format_Date_Day_Month"
+msgstr "MMM d., E"
+
+msgid "Intl_Format_Date_Long"
+msgstr "y. MMMM d., EEEE"
+
+msgid "Intl_Format_Date_Short"
+msgstr "y. MMM d."
+
+msgid "Intl_Format_Hour_12"
+msgstr "a h"
+
+msgid "Intl_Format_Hour_24"
+msgstr "H"
+
+msgid "Intl_Format_Interval_Long_D"
+msgstr "y. MMMM d–d."
+
+msgid "Intl_Format_Interval_Long_M"
+msgstr "y. MMMM d. – MMMM d."
+
+msgid "Intl_Format_Interval_Long_Y"
+msgstr "y. MMMM d. – y. MMMM d."
+
+msgid "Intl_Format_Interval_Short_D"
+msgstr "y. MMM d–d."
+
+msgid "Intl_Format_Interval_Short_M"
+msgstr "y. MMM d. – MMM d."
+
+msgid "Intl_Format_Interval_Short_Y"
+msgstr "y. MMM d. – y. MMM d."
+
+msgid "Intl_Format_Month_Long"
+msgstr "y. MMMM"
+
+msgid "Intl_Format_Month_Short"
+msgstr "y. MMM"
+
+msgid "Intl_Format_Time"
+msgstr "{time}"
+
+msgid "Intl_Format_Time_12"
+msgstr "a h:mm:ss"
+
+msgid "Intl_Format_Time_24"
+msgstr "H:mm:ss"
+
+msgid "Intl_Format_Year"
+msgstr "y."
+
+msgid "Intl_Hours"
+msgstr "óra"
+
+msgid "Intl_Language_aa"
+msgstr "Afar"
+
+msgid "Intl_Language_ab"
+msgstr "Abház"
+
+msgid "Intl_Language_ae"
+msgstr "Avesztán"
+
+msgid "Intl_Language_af"
+msgstr "Afrikaans"
+
+msgid "Intl_Language_ak"
+msgstr "Akan"
+
+msgid "Intl_Language_am"
+msgstr "Amhara"
+
+msgid "Intl_Language_an"
+msgstr "Aragonéz"
+
+msgid "Intl_Language_ar"
+msgstr "Arab"
+
+msgid "Intl_Language_as"
+msgstr "Asszámi"
+
+msgid "Intl_Language_av"
+msgstr "Avar"
+
+msgid "Intl_Language_ay"
+msgstr "Ajmara"
+
+msgid "Intl_Language_az"
+msgstr "Azerbajdzsáni"
+
+msgid "Intl_Language_ba"
+msgstr "Baskír"
+
+msgid "Intl_Language_be"
+msgstr "Belarusz"
+
+msgid "Intl_Language_bg"
+msgstr "Bolgár"
+
+msgid "Intl_Language_bi"
+msgstr "Bislama"
+
+msgid "Intl_Language_bm"
+msgstr "Bambara"
+
+msgid "Intl_Language_bn"
+msgstr "Bangla"
+
+msgid "Intl_Language_bo"
+msgstr "Tibeti"
+
+msgid "Intl_Language_br"
+msgstr "Breton"
+
+msgid "Intl_Language_bs"
+msgstr "Bosnyák"
+
+msgid "Intl_Language_ca"
+msgstr "Katalán"
+
+msgid "Intl_Language_ce"
+msgstr "Csecsen"
+
+msgid "Intl_Language_ch"
+msgstr "Csamoró"
+
+msgid "Intl_Language_co"
+msgstr "Korzikai"
+
+msgid "Intl_Language_cr"
+msgstr "Krí"
+
+msgid "Intl_Language_cs"
+msgstr "Cseh"
+
+msgid "Intl_Language_cu"
+msgstr "Egyházi szláv"
+
+msgid "Intl_Language_cv"
+msgstr "Csuvas"
+
+msgid "Intl_Language_cy"
+msgstr "Walesi"
+
+msgid "Intl_Language_da"
+msgstr "Dán"
+
+msgid "Intl_Language_de"
+msgstr "Német"
+
+msgid "Intl_Language_dv"
+msgstr "Divehi"
+
+msgid "Intl_Language_dz"
+msgstr "Dzsonga"
+
+msgid "Intl_Language_ee"
+msgstr "Eve"
+
+msgid "Intl_Language_el"
+msgstr "Görög"
+
+msgid "Intl_Language_en"
+msgstr "Angol"
+
+msgid "Intl_Language_eo"
+msgstr "Eszperantó"
+
+msgid "Intl_Language_es"
+msgstr "Spanyol"
+
+msgid "Intl_Language_et"
+msgstr "Észt"
+
+msgid "Intl_Language_eu"
+msgstr "Baszk"
+
+msgid "Intl_Language_fa"
+msgstr "Perzsa"
+
+msgid "Intl_Language_ff"
+msgstr "Fulani"
+
+msgid "Intl_Language_fi"
+msgstr "Finn"
+
+msgid "Intl_Language_fj"
+msgstr "Fidzsi"
+
+msgid "Intl_Language_fo"
+msgstr "Feröeri"
+
+msgid "Intl_Language_fr"
+msgstr "Francia"
+
+msgid "Intl_Language_fy"
+msgstr "Nyugati fríz"
+
+msgid "Intl_Language_ga"
+msgstr "Ír"
+
+msgid "Intl_Language_gd"
+msgstr "Skóciai kelta"
+
+msgid "Intl_Language_gl"
+msgstr "Gallego"
+
+msgid "Intl_Language_gn"
+msgstr "Guarani"
+
+msgid "Intl_Language_gu"
+msgstr "Gudzsaráti"
+
+msgid "Intl_Language_gv"
+msgstr "Man-szigeti"
+
+msgid "Intl_Language_ha"
+msgstr "Hausza"
+
+msgid "Intl_Language_he"
+msgstr "Héber"
+
+msgid "Intl_Language_hi"
+msgstr "Hindi"
+
+msgid "Intl_Language_ho"
+msgstr "Hiri motu"
+
+msgid "Intl_Language_hr"
+msgstr "Horvát"
+
+msgid "Intl_Language_ht"
+msgstr "Haiti kreol"
+
+msgid "Intl_Language_hu"
+msgstr "Magyar"
+
+msgid "Intl_Language_hy"
+msgstr "Örmény"
+
+msgid "Intl_Language_hz"
+msgstr "Herero"
+
+msgid "Intl_Language_ia"
+msgstr "Interlingva"
+
+msgid "Intl_Language_id"
+msgstr "Indonéz"
+
+msgid "Intl_Language_ie"
+msgstr "Interlingue"
+
+msgid "Intl_Language_ig"
+msgstr "Igbó"
+
+msgid "Intl_Language_ii"
+msgstr "Szecsuán ji"
+
+msgid "Intl_Language_ik"
+msgstr "Inupiak"
+
+msgid "Intl_Language_io"
+msgstr "Idó"
+
+msgid "Intl_Language_is"
+msgstr "Izlandi"
+
+msgid "Intl_Language_it"
+msgstr "Olasz"
+
+msgid "Intl_Language_iu"
+msgstr "Inuktitut"
+
+msgid "Intl_Language_ja"
+msgstr "Japán"
+
+msgid "Intl_Language_jv"
+msgstr "Jávai"
+
+msgid "Intl_Language_ka"
+msgstr "Grúz"
+
+msgid "Intl_Language_kg"
+msgstr "Kongo"
+
+msgid "Intl_Language_ki"
+msgstr "Kikuju"
+
+msgid "Intl_Language_kj"
+msgstr "Kuanyama"
+
+msgid "Intl_Language_kk"
+msgstr "Kazah"
+
+msgid "Intl_Language_kl"
+msgstr "Grönlandi"
+
+msgid "Intl_Language_km"
+msgstr "Khmer"
+
+msgid "Intl_Language_kn"
+msgstr "Kannada"
+
+msgid "Intl_Language_ko"
+msgstr "Koreai"
+
+msgid "Intl_Language_kr"
+msgstr "Kanuri"
+
+msgid "Intl_Language_ks"
+msgstr "Kasmíri"
+
+msgid "Intl_Language_ku"
+msgstr "Kurd"
+
+msgid "Intl_Language_kv"
+msgstr "Komi"
+
+msgid "Intl_Language_kw"
+msgstr "Korni"
+
+msgid "Intl_Language_ky"
+msgstr "Kirgiz"
+
+msgid "Intl_Language_la"
+msgstr "Latin"
+
+msgid "Intl_Language_lb"
+msgstr "Luxemburgi"
+
+msgid "Intl_Language_lg"
+msgstr "Ganda"
+
+msgid "Intl_Language_li"
+msgstr "Limburgi"
+
+msgid "Intl_Language_ln"
+msgstr "Lingala"
+
+msgid "Intl_Language_lo"
+msgstr "Lao"
+
+msgid "Intl_Language_lt"
+msgstr "Litván"
+
+msgid "Intl_Language_lu"
+msgstr "Luba-katanga"
+
+msgid "Intl_Language_lv"
+msgstr "Lett"
+
+msgid "Intl_Language_mg"
+msgstr "Malgas"
+
+msgid "Intl_Language_mh"
+msgstr "Marshalli"
+
+msgid "Intl_Language_mi"
+msgstr "Maori"
+
+msgid "Intl_Language_mk"
+msgstr "Macedón"
+
+msgid "Intl_Language_ml"
+msgstr "Malajálam"
+
+msgid "Intl_Language_mn"
+msgstr "Mongol"
+
+msgid "Intl_Language_mr"
+msgstr "Maráthi"
+
+msgid "Intl_Language_ms"
+msgstr "Maláj"
+
+msgid "Intl_Language_mt"
+msgstr "Máltai"
+
+msgid "Intl_Language_my"
+msgstr "Burmai"
+
+msgid "Intl_Language_na"
+msgstr "Naurui"
+
+msgid "Intl_Language_nb"
+msgstr "Norvég (bokmål)"
+
+msgid "Intl_Language_nd"
+msgstr "Északi ndebele"
+
+msgid "Intl_Language_ne"
+msgstr "Nepáli"
+
+msgid "Intl_Language_ng"
+msgstr "Ndonga"
+
+msgid "Intl_Language_nl"
+msgstr "Holland"
+
+msgid "Intl_Language_nn"
+msgstr "Norvég (nynorsk)"
+
+msgid "Intl_Language_no"
+msgstr "Norvég"
+
+msgid "Intl_Language_nr"
+msgstr "Déli ndebele"
+
+msgid "Intl_Language_nv"
+msgstr "Navahó"
+
+msgid "Intl_Language_ny"
+msgstr "Nyandzsa"
+
+msgid "Intl_Language_oc"
+msgstr "Okszitán"
+
+msgid "Intl_Language_oj"
+msgstr "Ojibva"
+
+msgid "Intl_Language_om"
+msgstr "Oromo"
+
+msgid "Intl_Language_or"
+msgstr "Odia"
+
+msgid "Intl_Language_os"
+msgstr "Oszét"
+
+msgid "Intl_Language_pa"
+msgstr "Pandzsábi"
+
+msgid "Intl_Language_pi"
+msgstr "Pali"
+
+msgid "Intl_Language_pl"
+msgstr "Lengyel"
+
+msgid "Intl_Language_ps"
+msgstr "Pastu"
+
+msgid "Intl_Language_pt"
+msgstr "Portugál"
+
+msgid "Intl_Language_qu"
+msgstr "Kecsua"
+
+msgid "Intl_Language_rm"
+msgstr "Rétoromán"
+
+msgid "Intl_Language_rn"
+msgstr "Kirundi"
+
+msgid "Intl_Language_ro"
+msgstr "Román"
+
+msgid "Intl_Language_ru"
+msgstr "Orosz"
+
+msgid "Intl_Language_rw"
+msgstr "Kinyarvanda"
+
+msgid "Intl_Language_sa"
+msgstr "Szanszkrit"
+
+msgid "Intl_Language_sc"
+msgstr "Szardíniai"
+
+msgid "Intl_Language_sd"
+msgstr "Szindhi"
+
+msgid "Intl_Language_se"
+msgstr "Északi számi"
+
+msgid "Intl_Language_sg"
+msgstr "Szangó"
+
+msgid "Intl_Language_si"
+msgstr "Szingaléz"
+
+msgid "Intl_Language_sk"
+msgstr "Szlovák"
+
+msgid "Intl_Language_sl"
+msgstr "Szlovén"
+
+msgid "Intl_Language_sm"
+msgstr "Szamoai"
+
+msgid "Intl_Language_sn"
+msgstr "Sona"
+
+msgid "Intl_Language_so"
+msgstr "Szomáli"
+
+msgid "Intl_Language_sq"
+msgstr "Albán"
+
+msgid "Intl_Language_sr"
+msgstr "Szerb"
+
+msgid "Intl_Language_ss"
+msgstr "Sziszuati"
+
+msgid "Intl_Language_st"
+msgstr "Déli szeszotó"
+
+msgid "Intl_Language_su"
+msgstr "Szundanéz"
+
+msgid "Intl_Language_sv"
+msgstr "Svéd"
+
+msgid "Intl_Language_sw"
+msgstr "Szuahéli"
+
+msgid "Intl_Language_ta"
+msgstr "Tamil"
+
+msgid "Intl_Language_te"
+msgstr "Telugu"
+
+msgid "Intl_Language_tg"
+msgstr "Tadzsik"
+
+msgid "Intl_Language_th"
+msgstr "Thai"
+
+msgid "Intl_Language_ti"
+msgstr "Tigrinya"
+
+msgid "Intl_Language_tk"
+msgstr "Türkmén"
+
+msgid "Intl_Language_tl"
+msgstr "Tagalog"
+
+msgid "Intl_Language_tn"
+msgstr "Szecsuáni"
+
+msgid "Intl_Language_to"
+msgstr "Tongai"
+
+msgid "Intl_Language_tr"
+msgstr "Török"
+
+msgid "Intl_Language_ts"
+msgstr "Conga"
+
+msgid "Intl_Language_tt"
+msgstr "Tatár"
+
+msgid "Intl_Language_tw"
+msgstr "Twi"
+
+msgid "Intl_Language_ty"
+msgstr "Tahiti"
+
+msgid "Intl_Language_ug"
+msgstr "Ujgur"
+
+msgid "Intl_Language_uk"
+msgstr "Ukrán"
+
+msgid "Intl_Language_ur"
+msgstr "Urdu"
+
+msgid "Intl_Language_uz"
+msgstr "Üzbég"
+
+msgid "Intl_Language_ve"
+msgstr "Venda"
+
+msgid "Intl_Language_vi"
+msgstr "Vietnami"
+
+msgid "Intl_Language_vo"
+msgstr "Volapük"
+
+msgid "Intl_Language_wa"
+msgstr "Vallon"
+
+msgid "Intl_Language_wo"
+msgstr "Volof"
+
+msgid "Intl_Language_xh"
+msgstr "Xhosza"
+
+msgid "Intl_Language_yi"
+msgstr "Jiddis"
+
+msgid "Intl_Language_yo"
+msgstr "Joruba"
+
+msgid "Intl_Language_za"
+msgstr "Zsuang"
+
+msgid "Intl_Language_zh"
+msgstr "Kínai"
+
+msgid "Intl_Language_zu"
+msgstr "Zulu"
+
+msgid "Intl_LayoutDirection"
+msgstr "ltr"
+
+msgid "Intl_Minutes"
+msgstr "perc"
+
+msgid "Intl_Month_Long_1"
+msgstr "január"
+
+msgid "Intl_Month_Long_10"
+msgstr "október"
+
+msgid "Intl_Month_Long_11"
+msgstr "november"
+
+msgid "Intl_Month_Long_12"
+msgstr "december"
+
+msgid "Intl_Month_Long_2"
+msgstr "február"
+
+msgid "Intl_Month_Long_3"
+msgstr "március"
+
+msgid "Intl_Month_Long_4"
+msgstr "április"
+
+msgid "Intl_Month_Long_5"
+msgstr "május"
+
+msgid "Intl_Month_Long_6"
+msgstr "június"
+
+msgid "Intl_Month_Long_7"
+msgstr "július"
+
+msgid "Intl_Month_Long_8"
+msgstr "augusztus"
+
+msgid "Intl_Month_Long_9"
+msgstr "szeptember"
+
+msgid "Intl_Month_Long_StandAlone_1"
+msgstr "január"
+
+msgid "Intl_Month_Long_StandAlone_10"
+msgstr "október"
+
+msgid "Intl_Month_Long_StandAlone_11"
+msgstr "november"
+
+msgid "Intl_Month_Long_StandAlone_12"
+msgstr "december"
+
+msgid "Intl_Month_Long_StandAlone_2"
+msgstr "február"
+
+msgid "Intl_Month_Long_StandAlone_3"
+msgstr "március"
+
+msgid "Intl_Month_Long_StandAlone_4"
+msgstr "április"
+
+msgid "Intl_Month_Long_StandAlone_5"
+msgstr "május"
+
+msgid "Intl_Month_Long_StandAlone_6"
+msgstr "június"
+
+msgid "Intl_Month_Long_StandAlone_7"
+msgstr "július"
+
+msgid "Intl_Month_Long_StandAlone_8"
+msgstr "augusztus"
+
+msgid "Intl_Month_Long_StandAlone_9"
+msgstr "szeptember"
+
+msgid "Intl_Month_Short_1"
+msgstr "jan."
+
+msgid "Intl_Month_Short_10"
+msgstr "okt."
+
+msgid "Intl_Month_Short_11"
+msgstr "nov."
+
+msgid "Intl_Month_Short_12"
+msgstr "dec."
+
+msgid "Intl_Month_Short_2"
+msgstr "febr."
+
+msgid "Intl_Month_Short_3"
+msgstr "márc."
+
+msgid "Intl_Month_Short_4"
+msgstr "ápr."
+
+msgid "Intl_Month_Short_5"
+msgstr "máj."
+
+msgid "Intl_Month_Short_6"
+msgstr "jún."
+
+msgid "Intl_Month_Short_7"
+msgstr "júl."
+
+msgid "Intl_Month_Short_8"
+msgstr "aug."
+
+msgid "Intl_Month_Short_9"
+msgstr "szept."
+
+msgid "Intl_Month_Short_StandAlone_1"
+msgstr "jan."
+
+msgid "Intl_Month_Short_StandAlone_10"
+msgstr "okt."
+
+msgid "Intl_Month_Short_StandAlone_11"
+msgstr "nov."
+
+msgid "Intl_Month_Short_StandAlone_12"
+msgstr "dec."
+
+msgid "Intl_Month_Short_StandAlone_2"
+msgstr "febr."
+
+msgid "Intl_Month_Short_StandAlone_3"
+msgstr "márc."
+
+msgid "Intl_Month_Short_StandAlone_4"
+msgstr "ápr."
+
+msgid "Intl_Month_Short_StandAlone_5"
+msgstr "máj."
+
+msgid "Intl_Month_Short_StandAlone_6"
+msgstr "jún."
+
+msgid "Intl_Month_Short_StandAlone_7"
+msgstr "júl."
+
+msgid "Intl_Month_Short_StandAlone_8"
+msgstr "aug."
+
+msgid "Intl_Month_Short_StandAlone_9"
+msgstr "szept."
+
+msgid "Intl_NDays"
+msgstr "%s nap"
+
+msgid "Intl_NHoursShort"
+msgstr "%s h"
+
+msgid "Intl_NMinutes"
+msgstr "%s perc"
+
+msgid "Intl_NMinutesShort"
+msgstr "%s min"
+
+msgid "Intl_NSeconds"
+msgstr "%s másodperc"
+
+msgid "Intl_NSecondsShort"
+msgstr "%s s"
+
+msgid "Intl_NumberFormatCurrency"
+msgstr "#,##0.00 ¤"
+
+msgid "Intl_NumberFormatNumber"
+msgstr "#,##0.###"
+
+msgid "Intl_NumberFormatPercent"
+msgstr "#,##0%"
+
+msgid "Intl_NumberSymbolDecimal"
+msgstr ","
+
+msgid "Intl_NumberSymbolGroup"
+msgstr " "
+
+msgid "Intl_NumberSymbolMinus"
+msgstr "-"
+
+msgid "Intl_NumberSymbolPercent"
+msgstr "%"
+
+msgid "Intl_NumberSymbolPlus"
+msgstr "+"
+
+msgid "Intl_OneDay"
+msgstr "1 nap"
+
+msgid "Intl_OneMinute"
+msgstr "1 perc"
+
+msgid "Intl_OneMinuteShort"
+msgstr "1 min"
+
+msgid "Intl_OriginalLanguageName"
+msgstr "Magyar"
+
+msgid "Intl_PeriodDay"
+msgstr "nap"
+
+msgid "Intl_PeriodDays"
+msgstr "nap"
+
+msgid "Intl_PeriodMonth"
+msgstr "hónap"
+
+msgid "Intl_PeriodMonths"
+msgstr "hónap"
+
+msgid "Intl_PeriodWeek"
+msgstr "hét"
+
+msgid "Intl_PeriodWeeks"
+msgstr "hét"
+
+msgid "Intl_PeriodYear"
+msgstr "év"
+
+msgid "Intl_PeriodYears"
+msgstr "év"
+
+msgid "Intl_Seconds"
+msgstr "másodperc"
+
+msgid "Intl_Time_AM"
+msgstr "de."
+
+msgid "Intl_Time_PM"
+msgstr "du."
+
+msgid "Intl_Timezone_Africa_Asmera"
+msgstr "Asmera"
+
+msgid "Intl_Timezone_Africa_Ceuta"
+msgstr "Ceuta"
+
+msgid "Intl_Timezone_Africa_Kinshasa"
+msgstr "Kinshasa"
+
+msgid "Intl_Timezone_Africa_Lubumbashi"
+msgstr "Lubumbashi"
+
+msgid "Intl_Timezone_America_Adak"
+msgstr "Adak"
+
+msgid "Intl_Timezone_America_Anchorage"
+msgstr "Anchorage"
+
+msgid "Intl_Timezone_America_Araguaina"
+msgstr "Araguaína"
+
+msgid "Intl_Timezone_America_Argentina_LaRioja"
+msgstr "La Rioja"
+
+msgid "Intl_Timezone_America_Argentina_RioGallegos"
+msgstr "Río Gallegos"
+
+msgid "Intl_Timezone_America_Argentina_Salta"
+msgstr "Salta"
+
+msgid "Intl_Timezone_America_Argentina_SanJuan"
+msgstr "San Juan"
+
+msgid "Intl_Timezone_America_Argentina_SanLuis"
+msgstr "San Luis"
+
+msgid "Intl_Timezone_America_Argentina_Tucuman"
+msgstr "Tucumán"
+
+msgid "Intl_Timezone_America_Argentina_Ushuaia"
+msgstr "Ushuaia"
+
+msgid "Intl_Timezone_America_Bahia"
+msgstr "Bahia"
+
+msgid "Intl_Timezone_America_BahiaBanderas"
+msgstr "Bahia Banderas"
+
+msgid "Intl_Timezone_America_Belem"
+msgstr "Belém"
+
+msgid "Intl_Timezone_America_Blanc-Sablon"
+msgstr "Blanc-Sablon"
+
+msgid "Intl_Timezone_America_BoaVista"
+msgstr "Boa Vista"
+
+msgid "Intl_Timezone_America_Boise"
+msgstr "Boise"
+
+msgid "Intl_Timezone_America_BuenosAires"
+msgstr "Buenos Aires"
+
+msgid "Intl_Timezone_America_CambridgeBay"
+msgstr "Cambridge Bay"
+
+msgid "Intl_Timezone_America_CampoGrande"
+msgstr "Campo Grande"
+
+msgid "Intl_Timezone_America_Cancun"
+msgstr "Cancún"
+
+msgid "Intl_Timezone_America_Catamarca"
+msgstr "Catamarca"
+
+msgid "Intl_Timezone_America_Chicago"
+msgstr "Chicago"
+
+msgid "Intl_Timezone_America_Chihuahua"
+msgstr "Chihuahua"
+
+msgid "Intl_Timezone_America_CoralHarbour"
+msgstr "Atikokan"
+
+msgid "Intl_Timezone_America_Cordoba"
+msgstr "Córdoba"
+
+msgid "Intl_Timezone_America_Creston"
+msgstr "Creston"
+
+msgid "Intl_Timezone_America_Cuiaba"
+msgstr "Cuiabá"
+
+msgid "Intl_Timezone_America_Danmarkshavn"
+msgstr "Danmarkshavn"
+
+msgid "Intl_Timezone_America_Dawson"
+msgstr "Dawson"
+
+msgid "Intl_Timezone_America_DawsonCreek"
+msgstr "Dawson Creek"
+
+msgid "Intl_Timezone_America_Denver"
+msgstr "Denver"
+
+msgid "Intl_Timezone_America_Detroit"
+msgstr "Detroit"
+
+msgid "Intl_Timezone_America_Edmonton"
+msgstr "Edmonton"
+
+msgid "Intl_Timezone_America_Eirunepe"
+msgstr "Eirunepé"
+
+msgid "Intl_Timezone_America_FortNelson"
+msgstr "Fort Nelson"
+
+msgid "Intl_Timezone_America_Fortaleza"
+msgstr "Fortaleza"
+
+msgid "Intl_Timezone_America_GlaceBay"
+msgstr "Glace Bay"
+
+msgid "Intl_Timezone_America_Godthab"
+msgstr "Nuuk"
+
+msgid "Intl_Timezone_America_GooseBay"
+msgstr "Goose Bay"
+
+msgid "Intl_Timezone_America_Guayaquil"
+msgstr "Guayaquil"
+
+msgid "Intl_Timezone_America_Halifax"
+msgstr "Halifax"
+
+msgid "Intl_Timezone_America_Hermosillo"
+msgstr "Hermosillo"
+
+msgid "Intl_Timezone_America_Indiana_Knox"
+msgstr "Knox, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Marengo"
+msgstr "Marengo, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Petersburg"
+msgstr "Petersburg, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_TellCity"
+msgstr "Tell City, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vevay"
+msgstr "Vevay, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vincennes"
+msgstr "Vincennes, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Winamac"
+msgstr "Winamac, Indiana"
+
+msgid "Intl_Timezone_America_Indianapolis"
+msgstr "Indianapolis"
+
+msgid "Intl_Timezone_America_Inuvik"
+msgstr "Inuvik"
+
+msgid "Intl_Timezone_America_Iqaluit"
+msgstr "Iqaluit"
+
+msgid "Intl_Timezone_America_Jujuy"
+msgstr "Jujuy"
+
+msgid "Intl_Timezone_America_Juneau"
+msgstr "Juneau"
+
+msgid "Intl_Timezone_America_Kentucky_Monticello"
+msgstr "Monticello, Kentucky"
+
+msgid "Intl_Timezone_America_LosAngeles"
+msgstr "Los Angeles"
+
+msgid "Intl_Timezone_America_Louisville"
+msgstr "Louisville"
+
+msgid "Intl_Timezone_America_Maceio"
+msgstr "Maceió"
+
+msgid "Intl_Timezone_America_Manaus"
+msgstr "Manaus"
+
+msgid "Intl_Timezone_America_Matamoros"
+msgstr "Matamoros"
+
+msgid "Intl_Timezone_America_Mazatlan"
+msgstr "Mazatlán"
+
+msgid "Intl_Timezone_America_Mendoza"
+msgstr "Mendoza"
+
+msgid "Intl_Timezone_America_Menominee"
+msgstr "Menominee"
+
+msgid "Intl_Timezone_America_Merida"
+msgstr "Mérida"
+
+msgid "Intl_Timezone_America_Metlakatla"
+msgstr "Metlakatla"
+
+msgid "Intl_Timezone_America_MexicoCity"
+msgstr "Mexikóváros"
+
+msgid "Intl_Timezone_America_Moncton"
+msgstr "Moncton"
+
+msgid "Intl_Timezone_America_Monterrey"
+msgstr "Monterrey"
+
+msgid "Intl_Timezone_America_NewYork"
+msgstr "New York"
+
+msgid "Intl_Timezone_America_Nipigon"
+msgstr "Nipigon"
+
+msgid "Intl_Timezone_America_Nome"
+msgstr "Nome"
+
+msgid "Intl_Timezone_America_Noronha"
+msgstr "Noronha"
+
+msgid "Intl_Timezone_America_NorthDakota_Beulah"
+msgstr "Beulah, Észak-Dakota"
+
+msgid "Intl_Timezone_America_NorthDakota_Center"
+msgstr "Center, Észak-Dakota"
+
+msgid "Intl_Timezone_America_NorthDakota_NewSalem"
+msgstr "New Salem, Észak-Dakota"
+
+msgid "Intl_Timezone_America_Ojinaga"
+msgstr "Ojinaga"
+
+msgid "Intl_Timezone_America_Pangnirtung"
+msgstr "Pangnirtung"
+
+msgid "Intl_Timezone_America_Phoenix"
+msgstr "Phoenix"
+
+msgid "Intl_Timezone_America_PortoVelho"
+msgstr "Porto Velho"
+
+msgid "Intl_Timezone_America_PuntaArenas"
+msgstr "Punta Arenas"
+
+msgid "Intl_Timezone_America_RainyRiver"
+msgstr "Rainy River"
+
+msgid "Intl_Timezone_America_RankinInlet"
+msgstr "Rankin Inlet"
+
+msgid "Intl_Timezone_America_Recife"
+msgstr "Recife"
+
+msgid "Intl_Timezone_America_Regina"
+msgstr "Regina"
+
+msgid "Intl_Timezone_America_Resolute"
+msgstr "Resolute"
+
+msgid "Intl_Timezone_America_RioBranco"
+msgstr "Río Branco"
+
+msgid "Intl_Timezone_America_SantaIsabel"
+msgstr "Santa Isabel"
+
+msgid "Intl_Timezone_America_Santarem"
+msgstr "Santarem"
+
+msgid "Intl_Timezone_America_Santiago"
+msgstr "Santiago"
+
+msgid "Intl_Timezone_America_SaoPaulo"
+msgstr "São Paulo"
+
+msgid "Intl_Timezone_America_Scoresbysund"
+msgstr "Ittoqqortoormiit"
+
+msgid "Intl_Timezone_America_Sitka"
+msgstr "Sitka"
+
+msgid "Intl_Timezone_America_StJohns"
+msgstr "St. John’s"
+
+msgid "Intl_Timezone_America_SwiftCurrent"
+msgstr "Swift Current"
+
+msgid "Intl_Timezone_America_Thule"
+msgstr "Thule"
+
+msgid "Intl_Timezone_America_ThunderBay"
+msgstr "Thunder Bay"
+
+msgid "Intl_Timezone_America_Tijuana"
+msgstr "Tijuana"
+
+msgid "Intl_Timezone_America_Toronto"
+msgstr "Toronto"
+
+msgid "Intl_Timezone_America_Vancouver"
+msgstr "Vancouver"
+
+msgid "Intl_Timezone_America_Whitehorse"
+msgstr "Whitehorse"
+
+msgid "Intl_Timezone_America_Winnipeg"
+msgstr "Winnipeg"
+
+msgid "Intl_Timezone_America_Yakutat"
+msgstr "Yakutat"
+
+msgid "Intl_Timezone_America_Yellowknife"
+msgstr "Yellowknife"
+
+msgid "Intl_Timezone_Antarctica_Casey"
+msgstr "Casey"
+
+msgid "Intl_Timezone_Antarctica_Davis"
+msgstr "Davis"
+
+msgid "Intl_Timezone_Antarctica_DumontDUrville"
+msgstr "Dumont d’Urville"
+
+msgid "Intl_Timezone_Antarctica_Macquarie"
+msgstr "Macquarie"
+
+msgid "Intl_Timezone_Antarctica_Mawson"
+msgstr "Mawson"
+
+msgid "Intl_Timezone_Antarctica_McMurdo"
+msgstr "McMurdo"
+
+msgid "Intl_Timezone_Antarctica_Palmer"
+msgstr "Palmer"
+
+msgid "Intl_Timezone_Antarctica_Rothera"
+msgstr "Rothera"
+
+msgid "Intl_Timezone_Antarctica_Syowa"
+msgstr "Syowa"
+
+msgid "Intl_Timezone_Antarctica_Troll"
+msgstr "Troll"
+
+msgid "Intl_Timezone_Antarctica_Vostok"
+msgstr "Vosztok"
+
+msgid "Intl_Timezone_Asia_Almaty"
+msgstr "Alma-Ata"
+
+msgid "Intl_Timezone_Asia_Anadyr"
+msgstr "Anadir"
+
+msgid "Intl_Timezone_Asia_Aqtau"
+msgstr "Aktau"
+
+msgid "Intl_Timezone_Asia_Aqtobe"
+msgstr "Aktöbe"
+
+msgid "Intl_Timezone_Asia_Atyrau"
+msgstr "Atyrau"
+
+msgid "Intl_Timezone_Asia_Barnaul"
+msgstr "Barnaul"
+
+msgid "Intl_Timezone_Asia_Calcutta"
+msgstr "Kalkutta"
+
+msgid "Intl_Timezone_Asia_Chita"
+msgstr "Csita"
+
+msgid "Intl_Timezone_Asia_Choibalsan"
+msgstr "Csojbalszan"
+
+msgid "Intl_Timezone_Asia_Famagusta"
+msgstr "Famagusta"
+
+msgid "Intl_Timezone_Asia_Gaza"
+msgstr "Gáza"
+
+msgid "Intl_Timezone_Asia_Hebron"
+msgstr "Hebron"
+
+msgid "Intl_Timezone_Asia_Hovd"
+msgstr "Hovd"
+
+msgid "Intl_Timezone_Asia_Irkutsk"
+msgstr "Irkutszk"
+
+msgid "Intl_Timezone_Asia_Jakarta"
+msgstr "Jakarta"
+
+msgid "Intl_Timezone_Asia_Jayapura"
+msgstr "Jayapura"
+
+msgid "Intl_Timezone_Asia_Kamchatka"
+msgstr "Kamcsatka"
+
+msgid "Intl_Timezone_Asia_Katmandu"
+msgstr "Katmandu"
+
+msgid "Intl_Timezone_Asia_Khandyga"
+msgstr "Handiga"
+
+msgid "Intl_Timezone_Asia_Krasnoyarsk"
+msgstr "Krasznojarszk"
+
+msgid "Intl_Timezone_Asia_KualaLumpur"
+msgstr "Kuala Lumpur"
+
+msgid "Intl_Timezone_Asia_Kuching"
+msgstr "Kucseng"
+
+msgid "Intl_Timezone_Asia_Magadan"
+msgstr "Magadán"
+
+msgid "Intl_Timezone_Asia_Makassar"
+msgstr "Makasar"
+
+msgid "Intl_Timezone_Asia_Nicosia"
+msgstr "Nicosia"
+
+msgid "Intl_Timezone_Asia_Novokuznetsk"
+msgstr "Novokuznyeck"
+
+msgid "Intl_Timezone_Asia_Novosibirsk"
+msgstr "Novoszibirszk"
+
+msgid "Intl_Timezone_Asia_Omsk"
+msgstr "Omszk"
+
+msgid "Intl_Timezone_Asia_Oral"
+msgstr "Oral"
+
+msgid "Intl_Timezone_Asia_Pontianak"
+msgstr "Pontianak"
+
+msgid "Intl_Timezone_Asia_Qyzylorda"
+msgstr "Kizilorda"
+
+msgid "Intl_Timezone_Asia_Rangoon"
+msgstr "Yangon"
+
+msgid "Intl_Timezone_Asia_Saigon"
+msgstr "Ho Si Minh-város"
+
+msgid "Intl_Timezone_Asia_Sakhalin"
+msgstr "Szahalin"
+
+msgid "Intl_Timezone_Asia_Samarkand"
+msgstr "Szamarkand"
+
+msgid "Intl_Timezone_Asia_Shanghai"
+msgstr "Sanghaj"
+
+msgid "Intl_Timezone_Asia_Srednekolymsk"
+msgstr "Szrednekolimszk"
+
+msgid "Intl_Timezone_Asia_Tashkent"
+msgstr "Taskent"
+
+msgid "Intl_Timezone_Asia_Tomsk"
+msgstr "Tomszk"
+
+msgid "Intl_Timezone_Asia_Ulaanbaatar"
+msgstr "Ulánbátor"
+
+msgid "Intl_Timezone_Asia_Urumqi"
+msgstr "Ürümqi"
+
+msgid "Intl_Timezone_Asia_Ust-Nera"
+msgstr "Uszty-Nyera"
+
+msgid "Intl_Timezone_Asia_Vladivostok"
+msgstr "Vlagyivosztok"
+
+msgid "Intl_Timezone_Asia_Yakutsk"
+msgstr "Jakutszk"
+
+msgid "Intl_Timezone_Asia_Yekaterinburg"
+msgstr "Jekatyerinburg"
+
+msgid "Intl_Timezone_Atlantic_Azores"
+msgstr "Azori-szigetek"
+
+msgid "Intl_Timezone_Atlantic_Canary"
+msgstr "Kanári-szigetek"
+
+msgid "Intl_Timezone_Atlantic_Faeroe"
+msgstr "Feröer"
+
+msgid "Intl_Timezone_Atlantic_Madeira"
+msgstr "Madeira"
+
+msgid "Intl_Timezone_Australia_Adelaide"
+msgstr "Adelaide"
+
+msgid "Intl_Timezone_Australia_Brisbane"
+msgstr "Brisbane"
+
+msgid "Intl_Timezone_Australia_BrokenHill"
+msgstr "Broken Hill"
+
+msgid "Intl_Timezone_Australia_Currie"
+msgstr "Currie"
+
+msgid "Intl_Timezone_Australia_Darwin"
+msgstr "Darwin"
+
+msgid "Intl_Timezone_Australia_Eucla"
+msgstr "Eucla"
+
+msgid "Intl_Timezone_Australia_Hobart"
+msgstr "Hobart"
+
+msgid "Intl_Timezone_Australia_Lindeman"
+msgstr "Lindeman"
+
+msgid "Intl_Timezone_Australia_LordHowe"
+msgstr "Lord Howe"
+
+msgid "Intl_Timezone_Australia_Melbourne"
+msgstr "Melbourne"
+
+msgid "Intl_Timezone_Australia_Perth"
+msgstr "Perth"
+
+msgid "Intl_Timezone_Australia_Sydney"
+msgstr "Sydney"
+
+msgid "Intl_Timezone_Europe_Astrakhan"
+msgstr "Asztrahán"
+
+msgid "Intl_Timezone_Europe_Berlin"
+msgstr "Berlin"
+
+msgid "Intl_Timezone_Europe_Busingen"
+msgstr "Büsingen"
+
+msgid "Intl_Timezone_Europe_Kaliningrad"
+msgstr "Kalinyingrád"
+
+msgid "Intl_Timezone_Europe_Kiev"
+msgstr "Kijev"
+
+msgid "Intl_Timezone_Europe_Kirov"
+msgstr "Kirov"
+
+msgid "Intl_Timezone_Europe_Lisbon"
+msgstr "Lisszabon"
+
+msgid "Intl_Timezone_Europe_Madrid"
+msgstr "Madrid"
+
+msgid "Intl_Timezone_Europe_Moscow"
+msgstr "Moszkva"
+
+msgid "Intl_Timezone_Europe_Samara"
+msgstr "Szamara"
+
+msgid "Intl_Timezone_Europe_Saratov"
+msgstr "Szaratov"
+
+msgid "Intl_Timezone_Europe_Simferopol"
+msgstr "Szimferopol"
+
+msgid "Intl_Timezone_Europe_Ulyanovsk"
+msgstr "Uljanovszk"
+
+msgid "Intl_Timezone_Europe_Uzhgorod"
+msgstr "Ungvár"
+
+msgid "Intl_Timezone_Europe_Volgograd"
+msgstr "Volgográd"
+
+msgid "Intl_Timezone_Europe_Zaporozhye"
+msgstr "Zaporozsje"
+
+msgid "Intl_Timezone_Pacific_Auckland"
+msgstr "Auckland"
+
+msgid "Intl_Timezone_Pacific_Bougainville"
+msgstr "Bougainville"
+
+msgid "Intl_Timezone_Pacific_Chatham"
+msgstr "Chatham-szigetek"
+
+msgid "Intl_Timezone_Pacific_Easter"
+msgstr "Húsvét-szigetek"
+
+msgid "Intl_Timezone_Pacific_Enderbury"
+msgstr "Enderbury"
+
+msgid "Intl_Timezone_Pacific_Galapagos"
+msgstr "Galapagos-szigetek"
+
+msgid "Intl_Timezone_Pacific_Gambier"
+msgstr "Gambier-szigetek"
+
+msgid "Intl_Timezone_Pacific_Honolulu"
+msgstr "Honolulu"
+
+msgid "Intl_Timezone_Pacific_Johnston"
+msgstr "Johnston"
+
+msgid "Intl_Timezone_Pacific_Kiritimati"
+msgstr "Kiritimati-sziget"
+
+msgid "Intl_Timezone_Pacific_Kosrae"
+msgstr "Kosrae-szigetek"
+
+msgid "Intl_Timezone_Pacific_Kwajalein"
+msgstr "Kwajalein-zátony"
+
+msgid "Intl_Timezone_Pacific_Majuro"
+msgstr "Majuro-zátony"
+
+msgid "Intl_Timezone_Pacific_Marquesas"
+msgstr "Marquesas-szigetek"
+
+msgid "Intl_Timezone_Pacific_Midway"
+msgstr "Midway-szigetek"
+
+msgid "Intl_Timezone_Pacific_Ponape"
+msgstr "Ponape-szigetek"
+
+msgid "Intl_Timezone_Pacific_PortMoresby"
+msgstr "Port Moresby"
+
+msgid "Intl_Timezone_Pacific_Tahiti"
+msgstr "Tahiti"
+
+msgid "Intl_Timezone_Pacific_Tarawa"
+msgstr "Tarawa"
+
+msgid "Intl_Timezone_Pacific_Truk"
+msgstr "Truk"
+
+msgid "Intl_Timezone_Pacific_Wake"
+msgstr "Wake-sziget"
+
+msgid "Intl_Today"
+msgstr "Ma"
+
+msgid "Intl_Year_Short"
+msgstr "év"
+
+msgid "Intl_Yesterday"
+msgstr "Tegnap"
+
+msgid "LanguagesManager_AboutPiwikTranslations"
+msgstr "A Matomo fordításokról"
+
+msgid "Live_GoalType"
+msgstr "Típus"
+
+msgid "Live_KeywordRankedOnSearchResultForThisVisitor"
+msgstr "A %1$s kulcsszó %2$s. helyezésen jelent meg a(z) %3$s. találati lista oldalon a látogató számára."
+
+msgid "Live_LastHours"
+msgstr "Legutóbbi %s óra"
+
+msgid "Live_LastMinutes"
+msgstr "Legutóbbi %s perc"
+
+msgid "Live_Referrer_URL"
+msgstr "Hivatkozó URL"
+
+msgid "Live_VisitorLogDocumentation"
+msgstr "Ez a táblázat a legutolsó látogatásokat mutatja a kiválasztott időintervallumon belül.%1$s Ha az időintervallum tartalmazz a mai napot is, akkor élőben láthatod látogatóid! %2$s Az itt kijelzett adatok mindig élőek maradnak, függetlenül, hogy hogyan és milyen gyakran használod az archiválásra szolgáló cron job-ot."
+
+msgid "Login_ConfirmationLinkSent"
+msgstr "A megerősítő link továbbításra került postafiókjába. Kérjük ellenőrizze e-mailjeit és kattintson a linkre a jelszóváltoztatás megerősítéséhez."
+
+msgid "Login_ExceptionInvalidSuperUserAccessAuthenticationMethod"
+msgstr "Egy felhasználó, akor Szuper felhasználó szinttel rendelkezik, nem használhatja a %s belépési mechanizmust."
+
+msgid "Login_ExceptionPasswordMD5HashExpected"
+msgstr "A jelszóparaméternek egyeznie kellene a jelszó MD5 hash értékével."
+
+msgid "Login_InvalidNonceOrHeadersOrReferrer"
+msgstr "Űrlap biztonsági probléma. Kérjük töltse újra az űrlapot és ellenőrizze, hogy a sütik engedélyezve vannak-e. Amennyiben proxy szervert használ, akkor engedélyezni kell %1$s a Matomo-nek, hogy elfogadja a proxy fejléceket %2$s, amelyek visszamutatnak a hoszt fejlécére. Ezen felül ellenőrizze, hogy a Hivatkozó fejléc helyesen lett-e elküldve."
+
+msgid "Login_InvalidOrExpiredToken"
+msgstr "A kód érvénytelen vagy lejárt."
+
+msgid "Login_InvalidUsernameEmail"
+msgstr "Helytelen felhasználói név és/vagy e-mail cím"
+
+msgid "Login_LogIn"
+msgstr "Bejelentkezés"
+
+msgid "Login_LoginPasswordNotCorrect"
+msgstr "Felhasználói név/jelszó páros nem megfelelő"
+
+msgid "Login_LostYourPassword"
+msgstr "Elfelejtetted jelszavad?"
+
+msgid "Login_MailTopicPasswordChange"
+msgstr "Jelszóváltoztatás megerősítése"
+
+msgid "Login_PasswordChanged"
+msgstr "Jelszómódosítás sikeres."
+
+msgid "Login_PasswordRepeat"
+msgstr "Jelszó (ismét)"
+
+msgid "Login_PasswordsDoNotMatch"
+msgstr "Nem egyeznek a jelszavak"
+
+msgid "Login_PluginDescription"
+msgstr "Hitelesítés felhasználónévvel és jelszóval, illetve tartalmaz jelszó visszaállítási funkciót. A hitelesítési metódus lecserélhető másik bejelentkezési bővítményre, mint például a LoginLdap, amely elérhető az Árúházban."
+
+msgid "Login_RememberMe"
+msgstr "Megjegyzés"
+
+msgid "Marketplace_ActivateLicenseKey"
+msgstr "Bekapcsol"
+
+msgid "Marketplace_PluginKeywords"
+msgstr "Kulcsszavak"
+
+msgid "Marketplace_SubscriptionType"
+msgstr "Típus"
+
+msgid "MobileAppMeasurable_MobileApp"
+msgstr "Mobil alkalmazás"
+
+msgid "MobileAppMeasurable_MobileApps"
+msgstr "Mobil alkalmazások"
+
+msgid "MobileAppMeasurable_MobileAppDescription"
+msgstr "Egy natív mobil alkalmazás iOS, Android vagy egyéb más mobil operációs rendszerekhez."
+
+msgid "MultiSites_Evolution"
+msgstr "Trendek"
+
+msgid "Overlay_Location"
+msgstr "Hely"
+
+msgid "PrivacyManager_AnonymizeIpInlineHelp"
+msgstr "A látogatók IP címeinek utolsó bájtját törölve megakadályozza a látogatók beazonosítását, hogy megfelelhess a helyi adatvédelmi törvényeknek és ajánlásoknak."
+
+msgid "Provider_ColumnProvider"
+msgstr "Internetszolgáltató"
+
+msgid "Provider_WidgetProviders"
+msgstr "Internetszolgáltatók"
+
+msgid "Referrers_Campaigns"
+msgstr "Kampányok"
+
+msgid "Referrers_ColumnCampaign"
+msgstr "Kampány"
+
+msgid "Referrers_ColumnSearchEngine"
+msgstr "Keresőoldal"
+
+msgid "Referrers_ColumnWebsite"
+msgstr "Weboldal"
+
+msgid "Referrers_ColumnWebsitePage"
+msgstr "Weboldal weblapja"
+
+msgid "Referrers_DirectEntry"
+msgstr "Közvetlen látogatás"
+
+msgid "Referrers_DistinctCampaigns"
+msgstr "különböző kampány"
+
+msgid "Referrers_DistinctKeywords"
+msgstr "különböző kulcsszó"
+
+msgid "Referrers_DistinctSearchEngines"
+msgstr "különböző keresőoldal"
+
+msgid "Referrers_DistinctWebsites"
+msgstr "különböző weboldal"
+
+msgid "Referrers_Keywords"
+msgstr "Kulcsszavak"
+
+msgid "Referrers_Referrers"
+msgstr "Források"
+
+msgid "Referrers_SearchEngines"
+msgstr "Keresőoldalak"
+
+msgid "Referrers_SubmenuSearchEngines"
+msgstr "Keresőoldalak és kulcsszavak"
+
+msgid "Referrers_SubmenuWebsitesOnly"
+msgstr "Weboldalak"
+
+msgid "Referrers_TypeCampaigns"
+msgstr "%s a kampányok által"
+
+msgid "Referrers_TypeDirectEntries"
+msgstr "%s közvetlen látogatás"
+
+msgid "Referrers_TypeSearchEngines"
+msgstr "%s a keresőoldalakról"
+
+msgid "Referrers_TypeWebsites"
+msgstr "%s a weboldalakról"
+
+msgid "Referrers_UsingNDistinctUrls"
+msgstr "(%s különböző URL által)"
+
+msgid "Referrers_Websites"
+msgstr "Weboldalak"
+
+msgid "Referrers_WidgetExternalWebsites"
+msgstr "Külső weboldalak listája"
+
+msgid "Resolution_ColumnConfiguration"
+msgstr "Beállítás"
+
+msgid "Resolution_ColumnResolution"
+msgstr "Felbontás"
+
+msgid "Resolution_Configurations"
+msgstr "Beállítások"
+
+msgid "Resolution_PluginDescription"
+msgstr "Jelentés a látogatók képernyőfelbontásairól."
+
+msgid "Resolution_Resolutions"
+msgstr "Felbontások"
+
+msgid "Resolution_WidgetGlobalVisitors"
+msgstr "Globális látogatói beállítások"
+
+msgid "Resolution_WidgetGlobalVisitorsDocumentation"
+msgstr "Ez a jelentés megmutatja, az általános beállításokat, melyet a látogatók használnak. A beállítás egy kombináció, amely tartalmazza a látogató operációs rendszerét, böngészőjének típusát és a képernyőfelbontását."
+
+msgid "Resolution_WidgetResolutions"
+msgstr "Képernyőfelbontások"
+
+msgid "SEO_AlexaRank"
+msgstr "Alexa rangsor"
+
+msgid "SEO_Bing_IndexedPages"
+msgstr "Bing által indexelt oldalak"
+
+msgid "SEO_DomainAge"
+msgstr "Domain életkor"
+
+msgid "SEO_Google_IndexedPages"
+msgstr "Google által indexelt oldalak"
+
+msgid "SEO_Rank"
+msgstr "Rangsor"
+
+msgid "SEO_SeoRankings"
+msgstr "Keresőoptimalizálási rangsor"
+
+msgid "SEO_SEORankingsFor"
+msgstr "%s oldalhoz tartozó keresőoptimalizálási adatok"
+
+msgid "ScheduledReports_AlsoSendReportToTheseEmails"
+msgstr "Továbbítsd a jelentéseket még az alábbi e-mail címekre is (soronként csak egy e-mail cím szerepeljen)"
+
+msgid "ScheduledReports_EmailHello"
+msgstr "Szia!"
+
+msgid "ScheduledReports_EmailReports"
+msgstr "Jelentés e-mailben"
+
+msgid "ScheduledReports_EmailSchedule"
+msgstr "E-mail küldésének ütemezése"
+
+msgid "ScheduledReports_MonthlyScheduleHelp"
+msgstr "Havi ütemezés: a jelentés a hónap első napján kerül elküldésre."
+
+msgid "ScheduledReports_PiwikReports"
+msgstr "Matomo jelentések"
+
+msgid "ScheduledReports_SendReportNow"
+msgstr "Jelentés elküldése most"
+
+msgid "ScheduledReports_SendReportTo"
+msgstr "Küldd a jelentést ide:"
+
+msgid "ScheduledReports_SentToMe"
+msgstr "Küldd a jelentést nekem"
+
+msgid "ScheduledReports_WeeklyScheduleHelp"
+msgstr "Heti ütemezés: a jelentés hétfőnként kerül elküldésre"
+
+msgid "SitesManager_AddSite"
+msgstr "Új weboldal hozzáadása"
+
+msgid "SitesManager_AdvancedTimezoneSupportNotFound"
+msgstr "Advanced timezones támogatás nem áll rendelkezésre a szerveren használt PHP verzióhoz (pedig PHP 5.2-től ez támogatott). Kézzel megadhatsz manual UTC offset-et."
+
+msgid "SitesManager_AliasUrlHelp"
+msgstr "Javasolt, de nem kötelező megadni azokat a különböző URL-eket, melyek segítségével a látogatók elérhetik a weboldalt. Ezek az alternatív URL-ek nem fognak megjelenni a \\\"Forgalmi források » Weboldalak\\\" jelentésben. Nem szükséges azonban külön megadni www-vel és www nélkül is a domainneveket, mivel a Matomo mindkettőt automatikusan figyelembe veszi."
+
+msgid "SitesManager_ChangingYourTimezoneWillOnlyAffectDataForward"
+msgstr "Az időzóna megváltoztatása csak a jövőben gyűjtött adatokat érinti, visszamenőlegesen nem kerülnek módosításra a statisztikák az új időzónának megfelelően."
+
+msgid "SitesManager_Currency"
+msgstr "Pénznem"
+
+msgid "SitesManager_CurrencySymbolWillBeUsedForGoals"
+msgstr "A választott pénznem szimbóluma a Célokat és bevételeket érintő jelentésekben jelenik meg."
+
+msgid "SitesManager_DefaultCurrencyForNewWebsites"
+msgstr "Alapértelmezett pénznem új weboldalaknál"
+
+msgid "SitesManager_DefaultTimezoneForNewWebsites"
+msgstr "Alapértelmezett időzóna új weboldalaknál"
+
+msgid "SitesManager_DeleteConfirm"
+msgstr "Biztosan törölni akarod a következő weboldalt: %s?"
+
+msgid "SitesManager_ExceptionDeleteSite"
+msgstr "Nem lehetséges a weboldal törlése mindaddig, amíg ez az egyetlen regisztrált weboldal. Előbb adj meg egy újat, és csak aztán törölheted ezt."
+
+msgid "SitesManager_ExceptionEmptyName"
+msgstr "A weboldal neve nem lehet üres."
+
+msgid "SitesManager_ExceptionInvalidCurrency"
+msgstr "A pénznem: \"%1$s\" nem létezik. Kérjük, adja meg egy létező pénznem rövidítését (pl. %2$s)"
+
+msgid "SitesManager_ExceptionInvalidIPFormat"
+msgstr "A kizárni kívánt IP-cím: \"%1$s\" nem megfelelő formátumú (pl. %2$s)"
+
+msgid "SitesManager_ExceptionInvalidTimezone"
+msgstr "Az időzóna: \"%s\" nem létezik."
+
+msgid "SitesManager_ExceptionInvalidUrl"
+msgstr "Az URL: \"%s\" nem megfelelő."
+
+msgid "SitesManager_ExceptionNoUrl"
+msgstr "Meg kell adnod legalább egy URL-t a weboldalhoz."
+
+msgid "SitesManager_ExcludedIps"
+msgstr "Kizárt IP címek"
+
+msgid "SitesManager_ExcludedParameters"
+msgstr "Kizárt paraméterek"
+
+msgid "SitesManager_GlobalListExcludedIps"
+msgstr "Kizárt IP címek globális listája"
+
+msgid "SitesManager_GlobalListExcludedQueryParameters"
+msgstr "A kizárt URL paraméterek globális listája"
+
+msgid "SitesManager_GlobalWebsitesSettings"
+msgstr "Globális weboldal-beállítások"
+
+msgid "SitesManager_JsTrackingTagHelp"
+msgstr "A következő JavaScript követőkódot kell beilleszteni a weboldal összes weblapjának kódjába."
+
+msgid "SitesManager_ListOfIpsToBeExcludedOnAllWebsites"
+msgstr "Az alábbi IP címekről érkező látogatók egyik weboldalon sem kerülnek regisztrálásra."
+
+msgid "SitesManager_ListOfQueryParametersToBeExcludedOnAllWebsites"
+msgstr "Az alábbi URL paraméterek egyik weboldalon sem kerülnek regisztrálásra."
+
+msgid "SitesManager_MainDescription"
+msgstr "A webanalitikai jelentésekhez szükség van weboldalakra! Hozz létre, frissíts vagy törölj weboldalakat, vagy tekintsd meg a weblapokba beillesztendő JavaScript követőkódokat."
+
+msgid "SitesManager_NotFound"
+msgstr "Ilyen weboldal nincs"
+
+msgid "SitesManager_NoWebsites"
+msgstr "Nem került még létrehozásra egyetlen weboldal sem."
+
+msgid "SitesManager_PiwikWillAutomaticallyExcludeCommonSessionParameters"
+msgstr "A Matomo automatikusan kiszűri az általánosan használt session paramétereket (%s)."
+
+msgid "SitesManager_SelectACity"
+msgstr "Válassz egy várost"
+
+msgid "SitesManager_SelectDefaultCurrency"
+msgstr "Kiválaszthatod, melyik legyen az alapértelmezett pénznem új weboldalak létrehozása esetén."
+
+msgid "SitesManager_SelectDefaultTimezone"
+msgstr "Kiválaszthatod, melyik legyen az alapértelmezett időzóna új weboldalak létrehozása esetén."
+
+msgid "SitesManager_ShowTrackingTag"
+msgstr "Követőkódok megjelenítése"
+
+msgid "SitesManager_Sites"
+msgstr "Weboldalak"
+
+msgid "SitesManager_Timezone"
+msgstr "Időzóna"
+
+msgid "SitesManager_TrackingTags"
+msgstr "Követőkód a következő weboldalhoz: %s"
+
+msgid "SitesManager_Urls"
+msgstr "URL-ek"
+
+msgid "SitesManager_Type"
+msgstr "Típus"
+
+msgid "SitesManager_UTCTimeIs"
+msgstr "UTC idő: %s"
+
+msgid "SitesManager_WebsitesManagement"
+msgstr "Weboldalak kezelése"
+
+msgid "SitesManager_YourCurrentIpAddressIs"
+msgstr "Jelenlegi IP címed a következő: %s"
+
+msgid "TagManager_CategoryClicks"
+msgstr "Kattintások"
+
+msgid "TagManager_CategoryDate"
+msgstr "Dátum"
+
+msgid "TagManager_CategoryEmail"
+msgstr "E-mail cím"
+
+msgid "TagManager_CategoryErrors"
+msgstr "Hibák"
+
+msgid "TagManager_PageUrlVariableName"
+msgstr "Weblap URL-je"
+
+msgid "TagManager_ReferrerUrlVariableName"
+msgstr "Hivatkozó URL"
+
+msgid "TagManager_ReferrerVariableName"
+msgstr "Hivatkozó URL"
+
+msgid "TagManager_Type"
+msgstr "Típus"
+
+msgid "TagManager_Version"
+msgstr "Verzió"
+
+msgid "UserCountry_Continent"
+msgstr "Kontinens"
+
+msgid "UserCountry_Country"
+msgstr "Ország"
+
+msgid "UserCountry_country_a1"
+msgstr "Anonim proxy"
+
+msgid "UserCountry_country_a2"
+msgstr "Szatellit szolgáltató"
+
+msgid "UserCountry_country_cat"
+msgstr "Katalán közösségek"
+
+msgid "UserCountry_country_o1"
+msgstr "Egyéb ország"
+
+msgid "UserCountry_DistinctCountries"
+msgstr "%s különböző ország"
+
+msgid "UserCountry_Location"
+msgstr "Hely"
+
+msgid "UserCountry_SubmenuLocations"
+msgstr "Helyek"
+
+msgid "UserCountryMap_map"
+msgstr "térkép"
+
+msgid "UserId_UserReportTitle"
+msgstr "felhasználó azonosítók"
+
+msgid "UserLanguage_LanguageCode"
+msgstr "Nyelvi kód"
+
+msgid "UsersManager_AddUser"
+msgstr "Új felhasználó hozzáadása"
+
+msgid "UsersManager_Alias"
+msgstr "Felhasználói név"
+
+msgid "UsersManager_AllWebsites"
+msgstr "Összes weboldal"
+
+msgid "UsersManager_ApplyToAllWebsites"
+msgstr "Alkalmazás minden weboldalra"
+
+msgid "UsersManager_ClickHereToDeleteTheCookie"
+msgstr "Kattints ide a szűrés érdekében lementett süti törléséhez, hogy a továbbiakban a Matomo regisztrálja látogatásaid."
+
+msgid "UsersManager_ClickHereToSetTheCookieOnDomain"
+msgstr "Kattints ide egy, a %s weboldalon történő látogatásaid kiszűréséhez szükséges süti böngésződben történő elmentéséhez."
+
+msgid "UsersManager_DeleteConfirm"
+msgstr "Biztosan törölni akarod a következő felhasználót: %s?"
+
+msgid "UsersManager_Email"
+msgstr "E-mail cím"
+
+msgid "UsersManager_ExceptionDeleteDoesNotExist"
+msgstr "'%s' felhasználó nem létezik, ezért nem törölhető!"
+
+msgid "UsersManager_ExceptionEditAnonymous"
+msgstr "'Névtelen' felhasználó nem szerkeszthető vagy törölhető. Ezt a Matomo használja a be nem lépett felhasználók azonosítására. Nyilvánossá teheted például statisztikáidat, ha 'megtekintési' jogosultságot adsz a 'névtelen' felhasználók számára."
+
+msgid "UsersManager_ExceptionEmailExists"
+msgstr "'%s' e-mail címmel már létezik felhasználó."
+
+msgid "UsersManager_ExceptionInvalidEmail"
+msgstr "Az e-mail cím nem megfelelő formátumú"
+
+msgid "UsersManager_ExceptionPasswordMD5HashExpected"
+msgstr "Az UsersManager.getTokenAuth funkció MD5-hashed jelszót vár (32 karakter hosszúságban). Kérjük, alkalmazd a md5() funkciót a jelszón, mielőtt meghívod ezt a metódust."
+
+msgid "UsersManager_ExceptionUserDoesNotExist"
+msgstr "'%s' nevű felhasználó nem létezik."
+
+msgid "UsersManager_ExcludeVisitsViaCookie"
+msgstr "Saját látogatások kiszűrése süti segítségével"
+
+msgid "UsersManager_ForAnonymousUsersReportDateToLoadByDefault"
+msgstr "A névtelen felhasználók számára alkalmazott alapértelmezett időintervallum"
+
+msgid "UsersManager_ManageAccess"
+msgstr "Hozzáférési jogosultságok kezelése"
+
+msgid "UsersManager_MenuAnonymousUserSettings"
+msgstr "Névtelen felhasználók beállításai"
+
+msgid "UsersManager_MenuUsers"
+msgstr "Felhasználók"
+
+msgid "UsersManager_MenuUserSettings"
+msgstr "Felhasználói beállítások"
+
+msgid "UsersManager_PrivAdmin"
+msgstr "Adminisztráció"
+
+msgid "UsersManager_PrivNone"
+msgstr "Nincs hozzáférés"
+
+msgid "UsersManager_PrivView"
+msgstr "Megtekintés"
+
+msgid "UsersManager_ReportDateToLoadByDefault"
+msgstr "Alapértelmezett időintervallum a betöltődő jelentésekhez"
+
+msgid "UsersManager_ReportToLoadByDefault"
+msgstr "Alapértelmezettként betöltődő jelentés"
+
+msgid "UsersManager_TheLoginScreen"
+msgstr "Belépési képernyő"
+
+msgid "UsersManager_TypeYourPasswordAgain"
+msgstr "Add meg az új jelszót még egyszer."
+
+msgid "UsersManager_User"
+msgstr "Felhasználó"
+
+msgid "UsersManager_UsersManagement"
+msgstr "Felhasználókezelés"
+
+msgid "UsersManager_UsersManagementMainDescription"
+msgstr "Új felhasználó hozzáadása, vagy a meglévők beállítása. Feljebb beállíthatod a jogosultságaikat."
+
+msgid "UsersManager_YourUsernameCannotBeChanged"
+msgstr "Felhasználói nevedet nem lehet megváltoztatni"
+
+msgid "UsersManager_YourVisitsAreIgnoredOnDomain"
+msgstr "%1$sLátogatásaidat nem veszi figyelembe a Matomo itt: %2$s %3$s (a Matomo megfelelő sütijét megtaláltuk a böngésződben lementve)."
+
+msgid "UsersManager_YourVisitsAreNotIgnored"
+msgstr "%1$sLátogatásaid nem kerültek ignorálásra a Matomo által%2$s (Az ehhez szükséges süti nem volt megtalálható a böngésződben.)"
+
+msgid "UsersManager_ShowAll"
+msgstr "Összes mutatása"
+
+msgid "UsersManager_Username"
+msgstr "Felhasználónév"
+
+msgid "VisitFrequency_ColumnActionsByReturningVisits"
+msgstr "Ismétlődő látogatások akciói"
+
+msgid "VisitFrequency_ColumnAverageVisitDurationForReturningVisitors"
+msgstr "Látogatások átlagos időtartama visszatérő látogatók esetén (másodpercekben)"
+
+msgid "VisitFrequency_ColumnAvgActionsPerReturningVisit"
+msgstr "Akciók átlagos gyakorisága ismétlődő látogatások esetén"
+
+msgid "VisitFrequency_ColumnBounceCountForReturningVisits"
+msgstr "Visszafordulások száma visszatérő látogatók esetén"
+
+msgid "VisitFrequency_ColumnBounceRateForReturningVisits"
+msgstr "Visszafordulások aránya ismétlődő látogatások esetén"
+
+msgid "VisitFrequency_ColumnMaxActionsInReturningVisit"
+msgstr "Maximális akciók egy visszatérés alkalmával"
+
+msgid "VisitFrequency_ColumnNbReturningVisitsConverted"
+msgstr "Konvertált visszatérő látogatások száma"
+
+msgid "VisitFrequency_ColumnReturningVisits"
+msgstr "Ismétlődő látogatások"
+
+msgid "VisitFrequency_ColumnSumVisitLengthReturning"
+msgstr "Visszatérő látogatók által eltöltött összes idő (másodpercben)"
+
+msgid "VisitFrequency_ColumnUniqueReturningVisitors"
+msgstr "Egyedi visszatérő látogatók"
+
+msgid "VisitFrequency_ColumnReturningUsers"
+msgstr "Visszatérő látogatók"
+
+msgid "VisitFrequency_PluginDescription"
+msgstr "Jelentés az új és a visszatérő látogatókról."
+
+msgid "VisitFrequency_ReturningVisitDocumentation"
+msgstr "A visszatérő látogatás (az új látogatással ellentétben) olyasvalakit jelöl, aki korábban már legalább egyszer meglátogatta a webhelyet."
+
+msgid "VisitFrequency_ReturningVisitsDocumentation"
+msgstr "Ez egy összefoglaló nézet a visszatérő látogatásokról."
+
+msgid "VisitFrequency_SubmenuFrequency"
+msgstr "Gyakoriság"
+
+msgid "VisitFrequency_WidgetGraphReturning"
+msgstr "Ismétlődő látogatások diagramja"
+
+msgid "VisitFrequency_WidgetOverview"
+msgstr "Gyakoriság áttekintése"
+
+msgid "VisitTime_ColumnLocalTime"
+msgstr "Helyi idő"
+
+msgid "VisitTime_ColumnServerTime"
+msgstr "Szerveridő"
+
+msgid "VisitTime_LocalTime"
+msgstr "Látogatások/helyi idő"
+
+msgid "VisitTime_NHour"
+msgstr "%s ó"
+
+msgid "VisitTime_ServerTime"
+msgstr "Látogatások/szerveridő"
+
+msgid "VisitTime_SubmenuTimes"
+msgstr "Idő"
+
+msgid "VisitTime_WidgetLocalTime"
+msgstr "Látogatások helyi idő szerint"
+
+msgid "VisitTime_WidgetServerTime"
+msgstr "Látogatások szerveridő szerint"
+
+msgid "VisitorInterest_BetweenXYMinutes"
+msgstr "%1$s-%2$s perc"
+
+msgid "VisitorInterest_BetweenXYSeconds"
+msgstr "%1$s-%2$ss"
+
+msgid "VisitorInterest_ColumnPagesPerVisit"
+msgstr "Weblapok/látogatás"
+
+msgid "VisitorInterest_ColumnVisitDuration"
+msgstr "Látogatás időtartama"
+
+msgid "VisitorInterest_Engagement"
+msgstr "Érdeklődés foka"
+
+msgid "VisitorInterest_NPages"
+msgstr "%s oldal"
+
+msgid "VisitorInterest_OnePage"
+msgstr "1 oldal"
+
+msgid "VisitorInterest_VisitsPerDuration"
+msgstr "Látogatások/látogatás időtartama"
+
+msgid "VisitorInterest_VisitsPerNbOfPages"
+msgstr "Látogatások/weblapok száma"
+
+msgid "VisitorInterest_WidgetLengths"
+msgstr "Látogatások időtartama"
+
+msgid "VisitorInterest_WidgetPages"
+msgstr "Weblapok/látogatás"
+
+msgid "VisitsSummary_GenerateQueries"
+msgstr "%s kérés végrehajtva"
+
+msgid "VisitsSummary_GenerateTime"
+msgstr "%s másodperc kellett a lap legenerálásához"
+
+msgid "VisitsSummary_NbActionsDescription"
+msgstr "%s akció (weblap megnyitása, letöltések és kimenő linkek)"
+
+msgid "VisitsSummary_VisitsSummary"
+msgstr "Látogatások összesítése"
+
+msgid "VisitsSummary_VisitsSummaryDocumentation"
+msgstr "Ez egy összefoglaló nézet a látogatások folyamatáról."
+
+msgid "VisitsSummary_WidgetLastVisits"
+msgstr "Utolsó látogatások grafikonja"
+
+msgid "VisitsSummary_WidgetOverviewGraph"
+msgstr "Áttekintés grafikonnal"
+
+msgid "VisitsSummary_WidgetVisits"
+msgstr "Látogatások áttekintése"
+
+msgid "WebsiteMeasurable_Website"
+msgstr "Weboldal"
+
+msgid "WebsiteMeasurable_Websites"
+msgstr "Weboldalak"
+
+msgid "Widgetize_OpenInNewWindow"
+msgstr "Megnyitás új ablakban"

@@ -1,0 +1,4655 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-10-21T03:38:11+00:00\n"
+"PO-Revision-Date: 2019-10-21T03:38:11+00:00\n"
+"Language: bs\n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);\n"
+"X-Domain: matomo\n"
+
+msgid "General_AbandonedCarts"
+msgstr "Otkazane korpe"
+
+msgid "General_AboutPiwikX"
+msgstr "O Matomo-u%s"
+
+msgid "General_Action"
+msgstr "Akcija"
+
+msgid "General_Actions"
+msgstr "Akcije"
+
+msgid "General_Add"
+msgstr "Dodaj"
+
+msgid "General_AfterEntry"
+msgstr "poslije ulaza ovdje"
+
+msgid "General_AllWebsitesDashboard"
+msgstr "Kontrolne ploče svih web stranica"
+
+msgid "General_And"
+msgstr "i"
+
+msgid "General_API"
+msgstr "API"
+
+msgid "General_ArchivingInlineHelp"
+msgstr "Za web stranice koje imaju veću posjećenost preporučeno je isključiti Matomo arhiviranje pokretača iz browsera. Umjesto toga, preporučujemo cron job koji se procesira svaki sat."
+
+msgid "General_ArchivingTriggerDescription"
+msgstr "Preporučeno za veće Matomo instalacije, moraš %1$s postaviti cron job%2$s da procesiras reporte automatski."
+
+msgid "General_AuthenticationMethodSmtp"
+msgstr "Metoda provjere za SMTP"
+
+msgid "General_AverageOrderValue"
+msgstr "Prosječna vrijednost narudžbe"
+
+msgid "General_AveragePrice"
+msgstr "Prosječna cijena"
+
+msgid "General_AverageQuantity"
+msgstr "Prosječna količina"
+
+msgid "General_BackToPiwik"
+msgstr "Nazad na Matomo"
+
+msgid "General_Broken"
+msgstr "Pokvareno"
+
+msgid "General_BrokenDownReportDocumentation"
+msgstr "Razlomljeno je u različite reporte koji su prikazani na dnu stranice. Možete povećati grafikone klikanjem na reporte koje biste voljeli vidjeti."
+
+msgid "General_Cancel"
+msgstr "Otkaži"
+
+msgid "General_ChangeTagCloudView"
+msgstr "Molimo zapamtite, možete vidjeti reporte na druge načine pored oblaka sa etiketama. Koristite kontrole na dnu reporta da to uradite."
+
+msgid "General_ChooseLanguage"
+msgstr "Izaberite jezik"
+
+msgid "General_ChoosePeriod"
+msgstr "Izaberite period"
+
+msgid "General_ClickHere"
+msgstr "Klikni ovdje za više informacija"
+
+msgid "General_Close"
+msgstr "Zatvori"
+
+msgid "General_ColumnActionsPerVisit"
+msgstr "Akcije po posjeti"
+
+msgid "General_ColumnActionsPerVisitDocumentation"
+msgstr "Prosječan broj akcija (pregleda, downloda ili outlinkova) koji su se desili prilikom posjeta."
+
+msgid "General_ColumnAverageTimeOnPage"
+msgstr "Prosječno vrijeme na stranici"
+
+msgid "General_ColumnAverageTimeOnPageDocumentation"
+msgstr "Prosječno vrijeme na ovoj stranici (samo na ovoj stranici, ne cijelom web sajtu)"
+
+msgid "General_ColumnAvgTimeOnSite"
+msgstr "Prosječno vrijeme na stranici"
+
+msgid "General_ColumnAvgTimeOnSiteDocumentation"
+msgstr "Prosječno trajanje posjete"
+
+msgid "General_ColumnBounceRate"
+msgstr "Bounce stopa"
+
+msgid "General_ColumnBounceRateDocumentation"
+msgstr "Postotak posjetioca koji su pregledali samo jednu stranicu. To znači da je posjetioc napustio stranicu direktno sa ulazne stranice."
+
+msgid "General_ColumnBounces"
+msgstr "Bounces (odskakivanja)"
+
+msgid "General_ColumnBouncesDocumentation"
+msgstr "Broj posjeta koji je započeo i završio na ovoj stranici. To znači da je posjetnik napustio stranicu odmah nakon pregleda te iste stranice."
+
+msgid "General_ColumnConversionRate"
+msgstr "Stopa konverzije"
+
+msgid "General_ColumnConversionRateDocumentation"
+msgstr "Stop posjeta koja je pokrenula cilj konverzije."
+
+msgid "General_ColumnEntrances"
+msgstr "Ulazi"
+
+msgid "General_ColumnEntrancesDocumentation"
+msgstr "Broj posjeta započeni na ovoj stranici."
+
+msgid "General_ColumnExitRate"
+msgstr "Stopa izlaza"
+
+msgid "General_ColumnExitRateDocumentation"
+msgstr "Postotak posjetilaca koji su napustili web sajt nakon pregleda ove stranice."
+
+msgid "General_ColumnExits"
+msgstr "Izlazi"
+
+msgid "General_ColumnExitsDocumentation"
+msgstr "Broj posjeta koji su završili na ovoj stranici."
+
+msgid "General_ColumnKeyword"
+msgstr "Ključna riječ"
+
+msgid "General_ColumnLabel"
+msgstr "Oznaka"
+
+msgid "General_ColumnMaxActions"
+msgstr "Maksimalan broj akcija u jednoj posjeti"
+
+msgid "General_ColumnNbActions"
+msgstr "Akcije"
+
+msgid "General_ColumnNbActionsDocumentation"
+msgstr "Broj akcija pokrenut od tvojih posjetilaca. Akcije mogu biti pregledi stranice, downloadi ili klikanje na izlazeće linkove."
+
+msgid "General_ColumnNbUniqVisitors"
+msgstr "Jedinstveni posjetioci"
+
+msgid "General_ColumnNbVisits"
+msgstr "Posjete"
+
+msgid "General_ColumnPageBounceRateDocumentation"
+msgstr "Postotak posjeta koji su započeli na ovoj stranici i napustili stranicu odmah."
+
+msgid "General_ColumnPageviews"
+msgstr "Pregledi stranice"
+
+msgid "General_ColumnPageviewsDocumentation"
+msgstr "Broj posjeta na ovu stranicu."
+
+msgid "General_ColumnSumVisitLength"
+msgstr "Ukupno vrijeme posjetioca (u sekundama)"
+
+msgid "General_ColumnUniqueEntrances"
+msgstr "Jedinstveni ulazi"
+
+msgid "General_ColumnUniqueExits"
+msgstr "Jedinstveni izlazi"
+
+msgid "General_ColumnUniquePageviews"
+msgstr "Jedinstvene posjete stranice"
+
+msgid "General_ColumnUniquePageviewsDocumentation"
+msgstr "Broj posjeta koji uključuje ovu stranicu. Ako je stranica pregledana više puta, uračunata je samo jednom."
+
+msgid "General_ColumnValuePerVisit"
+msgstr "Zarada po posjeti"
+
+msgid "General_ColumnVisitDuration"
+msgstr "Trajanje posjete (u sekundama)"
+
+msgid "General_ColumnVisitsWithConversions"
+msgstr "Posjete sa konverzijom"
+
+msgid "General_ConfigFileIsNotWritable"
+msgstr "Matomo konfiguracijski fajl %1$s nije otvoren za pisanje i neke promjene se neće sačuvati. %2$s molimo promijenite postavke (permissions) kako bi config file bio dostupan za pisanje."
+
+msgid "General_CurrentMonth"
+msgstr "Trenutni mjesec"
+
+msgid "General_CurrentWeek"
+msgstr "Trenutna sedmica"
+
+msgid "General_CurrentYear"
+msgstr "Trenutna godina"
+
+msgid "General_Daily"
+msgstr "Dnevno"
+
+msgid "General_DailyReports"
+msgstr "Dnevni reporti"
+
+msgid "General_DailySum"
+msgstr "dnevna suma"
+
+msgid "General_DashboardForASpecificWebsite"
+msgstr "Kontrolna ploča za specifičnu web stranicu"
+
+msgid "General_DataForThisGraphHasBeenPurged"
+msgstr "Podaci za ovaj grafikon su stariji od %s mjeseci i informacije su očišćene."
+
+msgid "General_DataForThisTagCloudHasBeenPurged"
+msgstr "Podaci za ovaj oblak su više od %s mjeseci stari i očišćeni su."
+
+msgid "General_Date"
+msgstr "Datum"
+
+msgid "General_DateRange"
+msgstr "Raspon datuma:"
+
+msgid "General_DateRangeFrom"
+msgstr "Iz"
+
+msgid "General_DateRangeFromTo"
+msgstr "Iz %1$s u %2$s"
+
+msgid "General_DateRangeTo"
+msgstr "U"
+
+msgid "General_DaysHours"
+msgstr "%1$s dani %2$s sati"
+
+msgid "General_DaysSinceFirstVisit"
+msgstr "Dani nakon prve posjete"
+
+msgid "General_DaysSinceLastEcommerceOrder"
+msgstr "Dani nakon posljednje E-comerce narudzbe"
+
+msgid "General_DaysSinceLastVisit"
+msgstr "Dani nakon zadnje posjete"
+
+msgid "General_Default"
+msgstr "Default"
+
+msgid "General_Delete"
+msgstr "Izbriši"
+
+msgid "General_Description"
+msgstr "Objašnjenje"
+
+msgid "General_Desktop"
+msgstr "Desktop"
+
+msgid "General_Details"
+msgstr "Detalji"
+
+msgid "General_Discount"
+msgstr "Popust"
+
+msgid "General_DisplaySimpleTable"
+msgstr "Prikaži jednostavnu tabelu"
+
+msgid "General_DisplayTableWithGoalMetrics"
+msgstr "Prikaži tabelu sa metrikama ciljeva"
+
+msgid "General_DisplayTableWithMoreMetrics"
+msgstr "Prikažu tabelu sa više metrika"
+
+msgid "General_Donate"
+msgstr "Doniraj"
+
+msgid "General_Done"
+msgstr "Odrađeno"
+
+msgid "General_Download"
+msgstr "Skini"
+
+msgid "General_DownloadFullVersion"
+msgstr "%1$sDownload%2$s cijelu verziju! Pogledaj %3$s"
+
+msgid "General_Downloads"
+msgstr "Downloadi"
+
+msgid "General_EcommerceOrders"
+msgstr "E-comerce narudžbe"
+
+msgid "General_EcommerceVisitStatusDesc"
+msgstr "Posjeti e-comerce status na kraju posjete"
+
+msgid "General_EcommerceVisitStatusEg"
+msgstr "Na primjer, izaberite sve posjete koje su uradile narudžbu i API zahtjev bi sadržavao %s"
+
+msgid "General_Edit"
+msgstr "Uredi"
+
+msgid "General_EncryptedSmtpTransport"
+msgstr "Upisite transportni sloj (layer) enkripcije potreban za vaš SMTP server."
+
+msgid "General_Error"
+msgstr "Greška"
+
+msgid "General_ExceptionConfigurationFileNotFound"
+msgstr "Konfiguracijski fajl {%s} nije pronađen."
+
+msgid "General_ExceptionDatabaseVersion"
+msgstr "Vaša %1$s verzija je %2$s ali Matomo traži da bude barem %3$s."
+
+msgid "General_ExceptionFileIntegrity"
+msgstr "Integracijska provjera je zaustavljena: %s"
+
+msgid "General_ExceptionFilesizeMismatch"
+msgstr "Veličina fajla nevažeća: %1$s (očekivana veličina: %2$s, pronađeno: %3$s)"
+
+msgid "General_ExceptionIncompatibleClientServerVersions"
+msgstr "Vaša %1$s klijent verzija je %2$s i nije kompatibilna sa verzijom servija %3$s."
+
+msgid "General_ExceptionInvalidAggregateReportsFormat"
+msgstr "Skupljeni reporti u formatu '%1$s' nisu važeći. Probajte jedan od ovih umjesto toga: %2$s."
+
+msgid "General_ExceptionInvalidArchiveTimeToLive"
+msgstr "Današnje vrijeme arhiviranja mora biti u sekundama više od nule."
+
+msgid "General_ExceptionInvalidDateFormat"
+msgstr "Format datuma mora biti: %1$s ili bilo koja ključna riječa podržana od %2$s funkcije (vidi %3$s za više informacija)"
+
+msgid "General_ExceptionInvalidDateRange"
+msgstr "Datum '%1$s' nije važeći raspon datuma. Probajte jedan od ovih umjesto toga: %2$s."
+
+msgid "General_ExceptionInvalidPeriod"
+msgstr "Period '%1$s' nije podržan. Probajte jedan od ovih umjesto toga: %2$s."
+
+msgid "General_ExceptionInvalidRendererFormat"
+msgstr "Format prikazivača (renderer) '%1$s' nije važeći. Molimo probajte ponovo sa: %2$s."
+
+msgid "General_ExceptionInvalidReportRendererFormat"
+msgstr "Format reporta '%1$s' nije važeći. Probajte jedan od ovih: %2$s."
+
+msgid "General_ExceptionInvalidStaticGraphType"
+msgstr "Statički grafikon tipa '%1$s' nije važeći. Probajte jedan od ovih umjesto toga: %2$s."
+
+msgid "General_ExceptionInvalidToken"
+msgstr "Token (žeton) nije važeći."
+
+msgid "General_ExceptionLanguageFileNotFound"
+msgstr "Fajl jezika '%s' nije pronađen."
+
+msgid "General_ExceptionMethodNotFound"
+msgstr "Metoda '%1$s' ne postoji ili nije dostupna modulu '%2$s'."
+
+msgid "General_ExceptionMissingFile"
+msgstr "Nedostajući fajl: %s"
+
+msgid "General_ExceptionNonceMismatch"
+msgstr "Nemogućnost provjere sigurnosti uzete sa ove forme."
+
+msgid "General_ExceptionPrivilege"
+msgstr "Ne možeš dostupiti ovim resursima jer zahtijeva %s pristup."
+
+msgid "General_ExceptionUnableToStartSession"
+msgstr "Nije moguće pokrenuti sesiju."
+
+msgid "General_ExceptionUndeletableFile"
+msgstr "Nije moguće izbrisati %s"
+
+msgid "General_ExceptionUnreadableFileDisabledMethod"
+msgstr "Konfigracijski fajl {%1$s} nije moguće čitati. Vaš host mora onesposobiti %2$s."
+
+msgid "General_Export"
+msgstr "Exportiraj"
+
+msgid "General_ExportAsImage"
+msgstr "Exportiraj kao sliku"
+
+msgid "General_ExportThisReport"
+msgstr "Exportiraj skup podataka u drugim formatima"
+
+msgid "General_Faq"
+msgstr "Pitanja"
+
+msgid "General_First"
+msgstr "Prvo"
+
+msgid "General_ForExampleShort"
+msgstr "npr."
+
+msgid "General_FromReferrer"
+msgstr "iz"
+
+msgid "General_GeneralInformation"
+msgstr "Generalne informacije"
+
+msgid "General_GeneralSettings"
+msgstr "Opšte postavke"
+
+msgid "General_GiveUsYourFeedback"
+msgstr "Recite nam sta mislite!"
+
+msgid "General_Goal"
+msgstr "Cilj"
+
+msgid "General_GoTo"
+msgstr "Idi u %s"
+
+msgid "General_GraphHelp"
+msgstr "Više informacija o pokazivanju grafikona na Matomo-u"
+
+msgid "General_HelloUser"
+msgstr "Mir s tobom, %s!"
+
+msgid "General_Help"
+msgstr "Pomoć"
+
+msgid "General_HoursMinutes"
+msgstr "%1$s sati %2$s minute"
+
+msgid "General_Id"
+msgstr "Id"
+
+msgid "General_Installed"
+msgstr "Instalirano"
+
+msgid "General_InvalidDateRange"
+msgstr "Nevažeći raspon datuma, pokusajte ponovo"
+
+msgid "General_InvalidResponse"
+msgstr "Primljeni podacu su nevažeći."
+
+msgid "General_IP"
+msgstr "IP"
+
+msgid "General_Language"
+msgstr "Jezik"
+
+msgid "General_LastDays"
+msgstr "Posljednji %s dani (uključujući danas)"
+
+msgid "General_LastDaysShort"
+msgstr "Posljednji %s dani"
+
+msgid "General_Live"
+msgstr "Uživo"
+
+msgid "General_Loading"
+msgstr "Učitavanje..."
+
+msgid "General_LoadingData"
+msgstr "Učitavanje informacija..."
+
+msgid "General_Locale"
+msgstr "bs_BA.UTF-8"
+
+msgid "General_Logout"
+msgstr "Izloguj se"
+
+msgid "General_MainMetrics"
+msgstr "Glavne metrike"
+
+msgid "General_MediumToHighTrafficItIsRecommendedTo"
+msgstr "Za stranice sa većom posjećenosti preporučujemo da se reporti procesiraju najviše svakih pola sata (%1$s sekundi) ili svakog sata (%2$s sekundi)"
+
+msgid "General_Metadata"
+msgstr "Metadata"
+
+msgid "General_Metric"
+msgstr "Metrika"
+
+msgid "General_Metrics"
+msgstr "Metrike"
+
+msgid "General_MetricsToPlot"
+msgstr "Metrike na parceli"
+
+msgid "General_MetricToPlot"
+msgstr "Metrika na parceli"
+
+msgid "General_MinutesSeconds"
+msgstr "%1$s minute %2$ss"
+
+msgid "General_Mobile"
+msgstr "Mobitel"
+
+msgid "General_Monthly"
+msgstr "Mjesečno"
+
+msgid "General_MonthlyReport"
+msgstr "mjesečno"
+
+msgid "General_MonthlyReports"
+msgstr "Mjesečni reporti"
+
+msgid "General_More"
+msgstr "Više"
+
+msgid "General_MultiSitesSummary"
+msgstr "Sve web stranice"
+
+msgid "General_Name"
+msgstr "Ime"
+
+msgid "General_NbActions"
+msgstr "Broj akcija"
+
+msgid "General_Never"
+msgstr "Nikad"
+
+msgid "General_NewReportsWillBeProcessedByCron"
+msgstr "Ako Matomo arhiviranje nije pokrenuto od browsera, novi reporti ce biti procesirani od strane crontab-a."
+
+msgid "General_NewUpdatePiwikX"
+msgstr "Novi update: Matomo %s"
+
+msgid "General_NewVisitor"
+msgstr "Novi posjetioci"
+
+msgid "General_NewVisits"
+msgstr "Nove posjete"
+
+msgid "General_Next"
+msgstr "Sljedeće"
+
+msgid "General_No"
+msgstr "No"
+
+msgid "General_NoDataForGraph"
+msgstr "Nema podataka za ovaj grafikon."
+
+msgid "General_NoDataForTagCloud"
+msgstr "Nema podataka za ovaj oblak sa etiketama."
+
+msgid "General_NotDefined"
+msgstr "%s nije definiran"
+
+msgid "General_NotValid"
+msgstr "%s nije važeći"
+
+msgid "General_NumberOfVisits"
+msgstr "Broj posjeta"
+
+msgid "General_NVisits"
+msgstr "%s posjete"
+
+msgid "General_Ok"
+msgstr "Ok"
+
+msgid "General_OneAction"
+msgstr "1 akcija"
+
+msgid "General_OneVisit"
+msgstr "1 posjeta"
+
+msgid "General_OnlyEnterIfRequired"
+msgstr "Samo upišite korisničko ime ako vaš SMTP server to zahtijeva."
+
+msgid "General_OnlyEnterIfRequiredPassword"
+msgstr "SaSamo upišite password ako vaš SMTP server to zahtijeva."
+
+msgid "General_OnlyUsedIfUserPwdIsSet"
+msgstr "Samo ako je korisničko ime/password postavljen, pitajte svog provajdera ako ste nesigurni u vezi metode koju trebate koristiti."
+
+msgid "General_OpenSourceWebAnalytics"
+msgstr "Web Analitika Otvorenog Koda"
+
+msgid "General_OperationAtLeast"
+msgstr "Najmanje"
+
+msgid "General_OperationAtMost"
+msgstr "Najviše"
+
+msgid "General_OperationContains"
+msgstr "Sadrži"
+
+msgid "General_OperationDoesNotContain"
+msgstr "Nesadrži"
+
+msgid "General_OperationEquals"
+msgstr "Jednako je"
+
+msgid "General_OperationGreaterThan"
+msgstr "Veće je od"
+
+msgid "General_OperationIs"
+msgstr "Je"
+
+msgid "General_OperationIsNot"
+msgstr "Nije"
+
+msgid "General_OperationLessThan"
+msgstr "Manje od"
+
+msgid "General_OperationNotEquals"
+msgstr "nije jednako"
+
+msgid "General_OptionalSmtpPort"
+msgstr "Optimalno default je 25 za nekriptovano i TLS SMTP i 465 za SSL SMTP."
+
+msgid "General_Options"
+msgstr "Opcije"
+
+msgid "General_OrCancel"
+msgstr "ili %1$s otkaži %2$s"
+
+msgid "General_Others"
+msgstr "Drugo"
+
+msgid "General_Outlink"
+msgstr "Izlazeći link"
+
+msgid "General_Outlinks"
+msgstr "Izlazni linkovi"
+
+msgid "General_Overview"
+msgstr "Pregled"
+
+msgid "General_Pages"
+msgstr "Stranice"
+
+msgid "General_ParameterMustIntegerBetween"
+msgstr "Parameter %1$s mora biti cijela vrijednost broja između %2$s i %3$s"
+
+msgid "General_Password"
+msgstr "Lozinka"
+
+msgid "General_Period"
+msgstr "Period"
+
+msgid "General_Piechart"
+msgstr "Pita grafikon"
+
+msgid "General_PiwikXIsAvailablePleaseUpdateNow"
+msgstr "Matomo %1$s je važeća. %2$s Molimo nadogradite sada!%3$s (see %4$s promjene%5$s)."
+
+msgid "General_PleaseSpecifyValue"
+msgstr "Molimo navedite vrijednost '%s'."
+
+msgid "General_PleaseUpdatePiwik"
+msgstr "Molimo nadogradite Matomo"
+
+msgid "General_Plugin"
+msgstr "Priključak"
+
+msgid "General_Plugins"
+msgstr "Priključci"
+
+msgid "General_PoweredBy"
+msgstr "Pokrenuto od"
+
+msgid "General_Previous"
+msgstr "Prethodno"
+
+msgid "General_PreviousDays"
+msgstr "Prethodni dani %s (ne uključujući danas)"
+
+msgid "General_PreviousDaysShort"
+msgstr "Prethodni %s dani"
+
+msgid "General_Price"
+msgstr "Cijena"
+
+msgid "General_ProductConversionRate"
+msgstr "Proizvodna konverzna stopa"
+
+msgid "General_ProductRevenue"
+msgstr "Proizvodna zarada"
+
+msgid "General_PurchasedProducts"
+msgstr "Kupljeni proizvodi"
+
+msgid "General_Quantity"
+msgstr "Količina"
+
+msgid "General_RangeReports"
+msgstr "Kustomizirani rasponi datuma"
+
+msgid "General_RecordsToPlot"
+msgstr "Rekordi na parceli"
+
+msgid "General_Refresh"
+msgstr "Osvježi"
+
+msgid "General_RefreshPage"
+msgstr "Osvježi stranicu"
+
+msgid "General_RelatedReport"
+msgstr "Vezani report"
+
+msgid "General_RelatedReports"
+msgstr "Vezani reporti"
+
+msgid "General_Remove"
+msgstr "Ukloni"
+
+msgid "General_Report"
+msgstr "Report"
+
+msgid "General_ReportGeneratedFrom"
+msgstr "Ovaj report je generisan koristeći podatke iz %s."
+
+msgid "General_Reports"
+msgstr "Reporti"
+
+msgid "General_ReportsWillBeProcessedAtMostEveryHour"
+msgstr "Reporti ce biti procesuirani najvise svakog sata."
+
+msgid "General_RequestTimedOut"
+msgstr "Zahtjev podataka za %s je istekao. Molimo pokušajte ponovo."
+
+msgid "General_Required"
+msgstr "%s potrebno"
+
+msgid "General_ReturningVisitor"
+msgstr "Vracajuci posjetioc"
+
+msgid "General_Rows"
+msgstr "Redovi"
+
+msgid "General_RowsToDisplay"
+msgstr "Redovi za prikazivanje"
+
+msgid "General_Save"
+msgstr "Sačuvaj"
+
+msgid "General_SaveImageOnYourComputer"
+msgstr "Da sačuvaš sliku na računar, klikni desni klik na sliku i klikni \"Save Image As...\""
+
+msgid "General_Search"
+msgstr "Traži"
+
+msgid "General_SeeAll"
+msgstr "pogledaj sve"
+
+msgid "General_SeeTheOfficialDocumentationForMoreInformation"
+msgstr "Vidi the %1$sofficial documentation%2$s za više informacija."
+
+msgid "General_SelectYesIfYouWantToSendEmailsViaServer"
+msgstr "Izaberite \"Da\" ako želite da pošaljete e-mail preko servera umjesto lokalne mail funkcije."
+
+msgid "General_Settings"
+msgstr "Postavke"
+
+msgid "General_Shipping"
+msgstr "Utovar"
+
+msgid "General_Show"
+msgstr "prikaži"
+
+msgid "General_SingleWebsitesDashboard"
+msgstr "Kontrolna ploča web stranice"
+
+msgid "General_SmallTrafficYouCanLeaveDefault"
+msgstr "Za manje web stranice možete ostaviti %s sekundi i sve reporte u realnom vremenu."
+
+msgid "General_SmtpEncryption"
+msgstr "SMTP enkripcija"
+
+msgid "General_SmtpPassword"
+msgstr "SMTP password"
+
+msgid "General_SmtpPort"
+msgstr "SMTP Port"
+
+msgid "General_SmtpServerAddress"
+msgstr "SMTP server adresa"
+
+msgid "General_SmtpUsername"
+msgstr "SMTP korisničko ime"
+
+msgid "General_Source"
+msgstr "Izvor"
+
+msgid "General_Subtotal"
+msgstr "Suma stavke"
+
+msgid "General_Table"
+msgstr "Tabela"
+
+msgid "General_TagCloud"
+msgstr "Oblak sa etiketama"
+
+msgid "General_Tax"
+msgstr "Taksa"
+
+msgid "General_TimeOnPage"
+msgstr "Vrijeme na stranici"
+
+msgid "General_Total"
+msgstr "Ukupno"
+
+msgid "General_TotalRevenue"
+msgstr "Ukupna zarada"
+
+msgid "General_TrackingScopeAction"
+msgstr "Akcija"
+
+msgid "General_TrackingScopeVisit"
+msgstr "Posjete"
+
+msgid "General_TranslatorName"
+msgstr "Matomo"
+
+msgid "General_UniquePurchases"
+msgstr "Jedinstvene narudžbe"
+
+msgid "General_Unknown"
+msgstr "Nepoznato"
+
+msgid "General_Upload"
+msgstr "Posalji"
+
+msgid "General_UsePlusMinusIconsDocumentation"
+msgstr "Koriste plus i minus ikone za navigaciju."
+
+msgid "General_Username"
+msgstr "Korisničko ime"
+
+msgid "General_UseSMTPServerForEmail"
+msgstr "Koristi SMTP server za e-mail"
+
+msgid "General_Value"
+msgstr "Vrijednost"
+
+msgid "General_VBarGraph"
+msgstr "Vertikalni bar grafikon"
+
+msgid "General_View"
+msgstr "Vidi"
+
+msgid "General_Visit"
+msgstr "Posjete"
+
+msgid "General_VisitConvertedGoal"
+msgstr "Posjeta je konvertirala po barem jednom cilju"
+
+msgid "General_VisitConvertedGoalId"
+msgstr "Posjeta se konvertirala po specifičnom cilju"
+
+msgid "General_VisitConvertedNGoals"
+msgstr "Posjete konvertirane %s u ciljeve"
+
+msgid "General_VisitDuration"
+msgstr "Prosječno trajanje posjete (u sekundama)"
+
+msgid "General_Visitor"
+msgstr "Posjetilac"
+
+msgid "General_VisitorID"
+msgstr "ID posjetioca"
+
+msgid "General_VisitorIP"
+msgstr "IP posjetioca"
+
+msgid "General_Visitors"
+msgstr "Posjetioci"
+
+msgid "General_VisitsWith"
+msgstr "Posjete sa %s"
+
+msgid "General_VisitTypeExample"
+msgstr "Na primjer, da izabrete sve posjetioce koji su se vratili na stranicu uključujući one koji su kupili nesto u prethodnoj posjeti, API zahtjev bi sadržavao %s"
+
+msgid "General_Warning"
+msgstr "Upozorenje"
+
+msgid "General_WarningFileIntegrityNoManifest"
+msgstr "Provjera integracije fajlova nije mogla biti pokrenuta zbog nedostatka manifest.inc.php."
+
+msgid "General_WarningFileIntegrityNoMd5file"
+msgstr "Provjera fajla nije mogla biti pokrenuta zbog nedostatka md5_file() function."
+
+msgid "General_WarningPasswordStored"
+msgstr "%1$sUpozorenje:%2$s Ovaj password će biti sačuvan u config fajl koji će biti vidljiv svima koji mogu pristupiti tom fajlu."
+
+msgid "General_Website"
+msgstr "Web stranica"
+
+msgid "General_Weekly"
+msgstr "Sedmično"
+
+msgid "General_WeeklyReport"
+msgstr "sedmično"
+
+msgid "General_WeeklyReports"
+msgstr "Sedmični reporti"
+
+msgid "General_WellDone"
+msgstr "Bravo!"
+
+msgid "General_Widgets"
+msgstr "Dodaci"
+
+msgid "General_YearlyReport"
+msgstr "godišnje"
+
+msgid "General_YearlyReports"
+msgstr "Godišnji reporti"
+
+msgid "General_YearsDays"
+msgstr "%1$s godine %2$s dani"
+
+msgid "General_Yes"
+msgstr "Da"
+
+msgid "General_YouAreCurrentlyUsing"
+msgstr "Trenutno koristite Matomo %s."
+
+msgid "General_YouMustBeLoggedIn"
+msgstr "Moras biti ulogovan za ovu funkciju."
+
+msgid "General_YourChangesHaveBeenSaved"
+msgstr "Vaše promjene su sačuvane."
+
+msgid "API_GenerateVisits"
+msgstr "Ako nemate podataka za danas onda možete prvo generisati neke podatke sa dodatkom %1$s. Ovo možete uraditi ako uključite dodatak %2$s i zatim kliknete na 'Proizvođač posjetilaca' u meniju koja se nalazi u Matomo adminskom prostoru."
+
+msgid "API_KeepTokenSecret"
+msgstr "Ovaj token_auth je povjerljiv podatak poput vašeg korisničkog imena i lozine. %1$s Nemojte ga dijeliti sa drugima%2$s!"
+
+msgid "API_LoadedAPIs"
+msgstr "Uspješno učitani %s API(-ovi)"
+
+msgid "Actions_AvgGenerationTimeTooltip"
+msgstr "Prosijek baziran na %1$s pogodak(a) %2$s između %3$s i %4$s"
+
+msgid "Actions_ColumnClickedURL"
+msgstr "Kliknut URL"
+
+msgid "Actions_ColumnClicks"
+msgstr "Klikovi"
+
+msgid "Actions_ColumnClicksDocumentation"
+msgstr "Broj klikova na ovaj link"
+
+msgid "Actions_ColumnDownloadURL"
+msgstr "Download URL"
+
+msgid "Actions_ColumnEntryPageTitle"
+msgstr "Naslov ulazne stranice"
+
+msgid "Actions_ColumnEntryPageURL"
+msgstr "URL ulazne stranice"
+
+msgid "Actions_ColumnExitPageTitle"
+msgstr "Naslov izlazne stranice"
+
+msgid "Actions_ColumnExitPageURL"
+msgstr "URL izlazne stranice"
+
+msgid "Actions_ColumnNoResultKeyword"
+msgstr "Riječ bez rezultata u pretrazi"
+
+msgid "Actions_ColumnPageName"
+msgstr "Ime stranice"
+
+msgid "Actions_ColumnPagesPerSearch"
+msgstr "Pretraži stranice rezultata"
+
+msgid "Actions_ColumnPagesPerSearchDocumentation"
+msgstr "Posjetioci će pretraživati vašu web-stranicu, i ponekada kliknuti na \"sljedeće\" da bi dobili više rezultata. Ovo je prosječan broj rezultata u pretrazi koje se prikazuju za ovu riječ."
+
+msgid "Actions_ColumnPageURL"
+msgstr "URL stranice"
+
+msgid "Actions_ColumnSearchCategory"
+msgstr "Kategorija pretrage"
+
+msgid "Actions_ColumnSearches"
+msgstr "Pretrage"
+
+msgid "Actions_ColumnSearchesDocumentation"
+msgstr "Broj posjeta u kojima je tražena ova riječ preko vaše stranice."
+
+msgid "Actions_ColumnSearchExitsDocumentation"
+msgstr "Percentaža posjeta kod kojih je stranica napuštena poslije pretrage za ovu riječ, izvršeno preko vašeg pretraživača."
+
+msgid "Actions_ColumnSearchResultsCount"
+msgstr "Broj rezultata u pretragama"
+
+msgid "Actions_ColumnSiteSearchKeywords"
+msgstr "Unikatne riječi"
+
+msgid "Actions_ColumnUniqueClicks"
+msgstr "Jedinstveni klikovi"
+
+msgid "Actions_ColumnUniqueClicksDocumentation"
+msgstr "Broj posjeta koji su umiješan sa klikom na ovaj link. Ako je link kliknut više puta prilikom posjete, uračunat je samo jednom."
+
+msgid "Actions_ColumnUniqueDownloads"
+msgstr "Jedinstveni downloadi"
+
+msgid "Actions_ColumnUniqueOutlinks"
+msgstr "Jedinstveni izlazni linkovi"
+
+msgid "Actions_DownloadsReportDocumentation"
+msgstr "U ovom izvještaju možete vidjeti koje fajlove je posjetioc skinuo. %s je šta Matomo računa kao download je klik na download link. Da li je download kompletiran, Matomo ne zna."
+
+msgid "Actions_EntryPageTitles"
+msgstr "Naslovi ulaznih stranica"
+
+msgid "Actions_EntryPageTitlesReportDocumentation"
+msgstr "Ovaj izvještaj sadrži informacije o naslovima ulaznih stranica koje su korištene prilikom specifičnog vremena."
+
+msgid "Actions_ExitPageTitles"
+msgstr "Naslovi izlaznih stranica"
+
+msgid "Actions_ExitPageTitlesReportDocumentation"
+msgstr "Ovaj izvještaj sadrži informacije o naslovima izlaznih stranica koji su se dogodili prilikom specifičnom perioda."
+
+msgid "Actions_LearnMoreAboutSiteSearchLink"
+msgstr "Nauči više o praćenju kako vaši posjetioci koriste pretragu na vašoj stranici."
+
+msgid "Actions_OneSearch"
+msgstr "1 traži"
+
+msgid "Actions_OutlinkDocumentation"
+msgstr "Izlazni link je link na kojeg je izašao posjetilac sa tvoje stranica na neki drugi websajt (druga domena)"
+
+msgid "Actions_OutlinksReportDocumentation"
+msgstr "Ovaj izvještaj sadrži hijerarhalnu listu izlaznih linkova koji su kliknuti od strane tvojih posjetilaca."
+
+msgid "Actions_PagesReportDocumentation"
+msgstr "Ovaj izvještaj sadrži informacije o stranicama koje su posjećene. %s tabela je organizovana hijerarhijski, URL-ovi su prikazani kao struktura foldera."
+
+msgid "Actions_PageTitlesReportDocumentation"
+msgstr "Ovaj raport sadrži informacije o naslovima stranica koje su posjećene. %1$s Naslov stranice je HTML %2$s Oznaka koju većina pregledača prikazuje u njihovom prozornom imenu."
+
+msgid "Actions_PageUrls"
+msgstr "Veze stranice"
+
+msgid "Actions_SiteSearchCategories1"
+msgstr "Ovaj raport prikazuje spisak kategorija koje su posjetioci odabrali kad su vršili istragu na vašoj stranici."
+
+msgid "Actions_SiteSearchCategories2"
+msgstr "Na primjer, stranice sa elektronskom trgovinom tipično imaju birač kategorija tako da se posjetioci mogu ograničiti na pretrage na svim proizvodima u specifičnoj kategoriji."
+
+msgid "Actions_SiteSearchFollowingPagesDoc"
+msgstr "Kada posjetioci traže na vašoj stranici, oni su u potrazi za određenu stranicu, sadržaj, proizvod, ili uslugu. Ovaj raport prikazuje spisak stranica koje su najviše kliknute poslije interne pretrage. S drugim riječima, ovo je spisak stranica koje su posjetioci najčešće pretraživali na vašoj stranici."
+
+msgid "Actions_SiteSearchIntro"
+msgstr "Praćenje pretraga koje vrše vaši posjetioci je efikasan način shvatanja šta vaši posjetioci traže, pomaže u iznalaženju novih ideja i koncepata, novih proizvoda koje potencijalni kupci traže i generalno unapređuje korisničko iskustvo na vašem sajtu."
+
+msgid "Actions_SiteSearchKeyword"
+msgstr "Ključna riječ (pretraživanje)"
+
+msgid "Actions_SiteSearchKeywordsDocumentation"
+msgstr "Ovaj izvještaj prikazuje ključne riječi koje su vaši posjetioci tražili u polju za pretragu."
+
+msgid "Actions_SiteSearchKeywordsNoResultDocumentation"
+msgstr "Ovaj izvještaj prikazuje ključne reči koje nisu vratile nijedan rezultat pretrage. Možda algoritam pretrage može da se poboljša ili možda posjetioci traže sadržaje koji (još uvjek) nisu na sajtu?"
+
+msgid "Actions_SubmenuPagesEntry"
+msgstr "Ulazne stranice"
+
+msgid "Actions_SubmenuPagesExit"
+msgstr "Izlazna stranica"
+
+msgid "Actions_SubmenuPageTitles"
+msgstr "Nazivi stranica"
+
+msgid "Actions_SubmenuSitesearch"
+msgstr "Pretraživanje sajta"
+
+msgid "Actions_WidgetEntryPageTitles"
+msgstr "Nazivi ulaznih stranica"
+
+msgid "Actions_WidgetExitPageTitles"
+msgstr "Naslovi izlaznih stranica"
+
+msgid "Actions_WidgetPagesEntry"
+msgstr "Ulazne stranice"
+
+msgid "Actions_WidgetPagesExit"
+msgstr "Izlazne stranice"
+
+msgid "Actions_WidgetPageTitles"
+msgstr "Naslovi stranica"
+
+msgid "Actions_WidgetPageTitlesFollowingSearch"
+msgstr "Naslovi stranica kod pretraživanja"
+
+msgid "Actions_WidgetPageUrlsFollowingSearch"
+msgstr "Stranice koje slijede poslije pretrage sajta"
+
+msgid "Actions_WidgetSearchCategories"
+msgstr "Kategorije za pretrage"
+
+msgid "Actions_WidgetSearchKeywords"
+msgstr "Ključne riječi za pretragu na sajtu"
+
+msgid "Actions_WidgetSearchNoResultKeywords"
+msgstr "Ključne riječi za pretragu bez rezultata"
+
+msgid "Annotations_AddAnnotationsFor"
+msgstr "Dodaj bilješku za %s..."
+
+msgid "Annotations_AnnotationOnDate"
+msgstr "Bilješka za %1$s: %2$s"
+
+msgid "Annotations_Annotations"
+msgstr "Bilješke"
+
+msgid "Annotations_ClickToDelete"
+msgstr "Kliknite da obrišete ovu bilješku."
+
+msgid "Annotations_ClickToEdit"
+msgstr "Kliknite da uredite ovu bilješku."
+
+msgid "Annotations_ClickToEditOrAdd"
+msgstr "Kliknite da uredite ili dodate novu bilješku."
+
+msgid "Annotations_ClickToStarOrUnstar"
+msgstr "Kliknite da markirate bilješku ili da uklonite markiranje."
+
+msgid "Annotations_CreateNewAnnotation"
+msgstr "Napravi novu bilješku..."
+
+msgid "Annotations_EnterAnnotationText"
+msgstr "Unesite vašu bilješku..."
+
+msgid "Annotations_HideAnnotationsFor"
+msgstr "Sakrij bilješke za %s..."
+
+msgid "Annotations_IconDesc"
+msgstr "Prikaži bilješke za ovaj vremenski period."
+
+msgid "Annotations_IconDescHideNotes"
+msgstr "Sakrij bilješke za ovaj vremenski period."
+
+msgid "Annotations_InlineQuickHelp"
+msgstr "Možete napraviti bilješke kako bi markirali posebne događaje (kao na primjer pravljenje novog članka na blogu, ili ponovno dizajniranje internet stranice), sačuvali vašu analizu podataka ili da sačuvate bilo šta drugo što smatrate važnim."
+
+msgid "Annotations_LoginToAnnotate"
+msgstr "Prijavite se da napravite novu bilješku."
+
+msgid "Annotations_NoAnnotations"
+msgstr "Nema bilješki za ovaj vremenski period."
+
+msgid "CoreAdminHome_Administration"
+msgstr "Administracija"
+
+msgid "CoreAdminHome_EmailServerSettings"
+msgstr "Postavke email servera"
+
+msgid "CoreAdminHome_MenuDiagnostic"
+msgstr "Dijagnostika"
+
+msgid "CoreAdminHome_MenuGeneralSettings"
+msgstr "Opšte postavke"
+
+msgid "CoreHome_CheckForUpdates"
+msgstr "Provjeri nove verzije"
+
+msgid "CoreHome_CheckPiwikOut"
+msgstr "Probajte Matomo!"
+
+msgid "CoreHome_PeriodRange"
+msgstr "Domet"
+
+msgid "CoreHome_ShareThis"
+msgstr "Podijeli ovo"
+
+msgid "CorePluginsAdmin_Activate"
+msgstr "Aktiviraj"
+
+msgid "CorePluginsAdmin_Activated"
+msgstr "Aktivirano"
+
+msgid "CorePluginsAdmin_Active"
+msgstr "Aktivno"
+
+msgid "CorePluginsAdmin_AuthorHomepage"
+msgstr "Početna stranica autora"
+
+msgid "CorePluginsAdmin_Deactivate"
+msgstr "Deaktiviraj"
+
+msgid "CorePluginsAdmin_Inactive"
+msgstr "Neaktivno"
+
+msgid "CorePluginsAdmin_MenuPlatform"
+msgstr "Platforma"
+
+msgid "CorePluginsAdmin_Status"
+msgstr "Status"
+
+msgid "CorePluginsAdmin_Theme"
+msgstr "Tema"
+
+msgid "CorePluginsAdmin_Themes"
+msgstr "Teme"
+
+msgid "CorePluginsAdmin_ThemesManagement"
+msgstr "Uredi teme"
+
+msgid "CorePluginsAdmin_Version"
+msgstr "Verzija"
+
+msgid "CoreUpdater_DownloadX"
+msgstr "Preuzmi %s"
+
+msgid "CoreUpdater_ExceptionArchiveEmpty"
+msgstr "Prazna arhiva"
+
+msgid "CoreUpdater_ExceptionArchiveIncompatible"
+msgstr "Nekompatibilna arhiva: %s"
+
+msgid "DBStats_DataSize"
+msgstr "Veličina podataka"
+
+msgid "DBStats_DBSize"
+msgstr "Veličina baze podataka"
+
+msgid "DBStats_Table"
+msgstr "Tabla"
+
+msgid "DBStats_TotalSize"
+msgstr "Ukupna velična"
+
+msgid "Dashboard_Dashboard"
+msgstr "Kontrolna ploča"
+
+msgid "Dashboard_Maximise"
+msgstr "Maksimiziraj"
+
+msgid "Dashboard_Minimise"
+msgstr "Minimiziraj"
+
+msgid "Goals_ColumnConversions"
+msgstr "Konverzije"
+
+msgid "Goals_Contains"
+msgstr "sadrži %s"
+
+msgid "Goals_Download"
+msgstr "Preuzmi datoteku"
+
+msgid "Goals_GoalName"
+msgstr "Naziv cilja"
+
+msgid "Goals_IsExactly"
+msgstr "je tačno %s"
+
+msgid "Goals_Manually"
+msgstr "ručno"
+
+msgid "Goals_ProductCategory"
+msgstr "Kategorija proizvoda"
+
+msgid "Goals_ProductName"
+msgstr "Ime proizvoda"
+
+msgid "Goals_Products"
+msgstr "Proizvodi"
+
+msgid "Goals_URL"
+msgstr "Veza"
+
+msgid "Installation_DatabaseSetupAdapter"
+msgstr "Adapter"
+
+msgid "Installation_DatabaseSetupLogin"
+msgstr "Prijavi se"
+
+msgid "Installation_Password"
+msgstr "Lozinka"
+
+msgid "Intl_Continent_afr"
+msgstr "Afrika"
+
+msgid "Intl_Continent_amc"
+msgstr "Srednja Amerika"
+
+msgid "Intl_Continent_amn"
+msgstr "Sjeverna Amerika"
+
+msgid "Intl_Continent_ams"
+msgstr "Južna Amerika"
+
+msgid "Intl_Continent_ant"
+msgstr "Antarktika"
+
+msgid "Intl_Continent_asi"
+msgstr "Azija"
+
+msgid "Intl_Continent_eur"
+msgstr "Evropa"
+
+msgid "Intl_Continent_oce"
+msgstr "Okeanija"
+
+msgid "Intl_Country_AD"
+msgstr "Andora"
+
+msgid "Intl_Country_AE"
+msgstr "Ujedinjeni Arapski Emirati"
+
+msgid "Intl_Country_AF"
+msgstr "Afganistan"
+
+msgid "Intl_Country_AG"
+msgstr "Antigva i Barbuda"
+
+msgid "Intl_Country_AI"
+msgstr "Angvila"
+
+msgid "Intl_Country_AL"
+msgstr "Albanija"
+
+msgid "Intl_Country_AM"
+msgstr "Armenija"
+
+msgid "Intl_Country_AO"
+msgstr "Angola"
+
+msgid "Intl_Country_AQ"
+msgstr "Antarktika"
+
+msgid "Intl_Country_AR"
+msgstr "Argentina"
+
+msgid "Intl_Country_AS"
+msgstr "Američka Samoa"
+
+msgid "Intl_Country_AT"
+msgstr "Austrija"
+
+msgid "Intl_Country_AU"
+msgstr "Australija"
+
+msgid "Intl_Country_AW"
+msgstr "Aruba"
+
+msgid "Intl_Country_AX"
+msgstr "Olandska ostrva"
+
+msgid "Intl_Country_AZ"
+msgstr "Azerbejdžan"
+
+msgid "Intl_Country_BA"
+msgstr "Bosna i Hercegovina"
+
+msgid "Intl_Country_BB"
+msgstr "Barbados"
+
+msgid "Intl_Country_BD"
+msgstr "Bangladeš"
+
+msgid "Intl_Country_BE"
+msgstr "Belgija"
+
+msgid "Intl_Country_BF"
+msgstr "Burkina Faso"
+
+msgid "Intl_Country_BG"
+msgstr "Bugarska"
+
+msgid "Intl_Country_BH"
+msgstr "Bahrein"
+
+msgid "Intl_Country_BI"
+msgstr "Burundi"
+
+msgid "Intl_Country_BJ"
+msgstr "Benin"
+
+msgid "Intl_Country_BL"
+msgstr "Sveti Bartolomej"
+
+msgid "Intl_Country_BM"
+msgstr "Bermuda"
+
+msgid "Intl_Country_BN"
+msgstr "Brunej"
+
+msgid "Intl_Country_BO"
+msgstr "Bolivija"
+
+msgid "Intl_Country_BQ"
+msgstr "Karipska Holandija"
+
+msgid "Intl_Country_BR"
+msgstr "Brazil"
+
+msgid "Intl_Country_BS"
+msgstr "Bahami"
+
+msgid "Intl_Country_BT"
+msgstr "Butan"
+
+msgid "Intl_Country_BV"
+msgstr "Ostrvo Buve"
+
+msgid "Intl_Country_BW"
+msgstr "Bocvana"
+
+msgid "Intl_Country_BY"
+msgstr "Bjelorusija"
+
+msgid "Intl_Country_BZ"
+msgstr "Belize"
+
+msgid "Intl_Country_CA"
+msgstr "Kanada"
+
+msgid "Intl_Country_CC"
+msgstr "Kokosova (Keelingova) ostrva"
+
+msgid "Intl_Country_CD"
+msgstr "Demokratska Republika Kongo"
+
+msgid "Intl_Country_CF"
+msgstr "Centralnoafrička Republika"
+
+msgid "Intl_Country_CG"
+msgstr "Kongo"
+
+msgid "Intl_Country_CH"
+msgstr "Švicarska"
+
+msgid "Intl_Country_CI"
+msgstr "Obala Slonovače"
+
+msgid "Intl_Country_CK"
+msgstr "Kukova ostrva"
+
+msgid "Intl_Country_CL"
+msgstr "Čile"
+
+msgid "Intl_Country_CM"
+msgstr "Kamerun"
+
+msgid "Intl_Country_CN"
+msgstr "Kina"
+
+msgid "Intl_Country_CO"
+msgstr "Kolumbija"
+
+msgid "Intl_Country_CR"
+msgstr "Kostarika"
+
+msgid "Intl_Country_CU"
+msgstr "Kuba"
+
+msgid "Intl_Country_CV"
+msgstr "Kape Verde"
+
+msgid "Intl_Country_CW"
+msgstr "Kurasao"
+
+msgid "Intl_Country_CX"
+msgstr "Božićno ostrvo"
+
+msgid "Intl_Country_CY"
+msgstr "Kipar"
+
+msgid "Intl_Country_CZ"
+msgstr "Češka"
+
+msgid "Intl_Country_DE"
+msgstr "Njemačka"
+
+msgid "Intl_Country_DJ"
+msgstr "Džibuti"
+
+msgid "Intl_Country_DK"
+msgstr "Danska"
+
+msgid "Intl_Country_DM"
+msgstr "Dominika"
+
+msgid "Intl_Country_DO"
+msgstr "Dominikanska Republika"
+
+msgid "Intl_Country_DZ"
+msgstr "Alžir"
+
+msgid "Intl_Country_EC"
+msgstr "Ekvador"
+
+msgid "Intl_Country_EE"
+msgstr "Estonija"
+
+msgid "Intl_Country_EG"
+msgstr "Egipat"
+
+msgid "Intl_Country_EH"
+msgstr "Zapadna Sahara"
+
+msgid "Intl_Country_ER"
+msgstr "Eritreja"
+
+msgid "Intl_Country_ES"
+msgstr "Španija"
+
+msgid "Intl_Country_ET"
+msgstr "Etiopija"
+
+msgid "Intl_Country_FI"
+msgstr "Finska"
+
+msgid "Intl_Country_FJ"
+msgstr "Fidži"
+
+msgid "Intl_Country_FK"
+msgstr "Folklandska ostrva"
+
+msgid "Intl_Country_FM"
+msgstr "Mikronezija"
+
+msgid "Intl_Country_FO"
+msgstr "Farska ostrva"
+
+msgid "Intl_Country_FR"
+msgstr "Francuska"
+
+msgid "Intl_Country_GA"
+msgstr "Gabon"
+
+msgid "Intl_Country_GB"
+msgstr "Velika Britanija"
+
+msgid "Intl_Country_GD"
+msgstr "Grenada"
+
+msgid "Intl_Country_GE"
+msgstr "Gruzija"
+
+msgid "Intl_Country_GF"
+msgstr "Francuska Gvajana"
+
+msgid "Intl_Country_GG"
+msgstr "Gernzi"
+
+msgid "Intl_Country_GH"
+msgstr "Gana"
+
+msgid "Intl_Country_GI"
+msgstr "Gibraltar"
+
+msgid "Intl_Country_GL"
+msgstr "Grenland"
+
+msgid "Intl_Country_GM"
+msgstr "Gambija"
+
+msgid "Intl_Country_GN"
+msgstr "Gvineja"
+
+msgid "Intl_Country_GP"
+msgstr "Gvadalupe"
+
+msgid "Intl_Country_GQ"
+msgstr "Ekvatorijalna Gvineja"
+
+msgid "Intl_Country_GR"
+msgstr "Grčka"
+
+msgid "Intl_Country_GS"
+msgstr "Južna Džordžija i Južna Sendvič ostrva"
+
+msgid "Intl_Country_GT"
+msgstr "Gvatemala"
+
+msgid "Intl_Country_GU"
+msgstr "Guam"
+
+msgid "Intl_Country_GW"
+msgstr "Gvineja-Bisao"
+
+msgid "Intl_Country_GY"
+msgstr "Gvajana"
+
+msgid "Intl_Country_HK"
+msgstr "Hong Kong (SAR Kina)"
+
+msgid "Intl_Country_HM"
+msgstr "Herd i arhipelag MekDonald"
+
+msgid "Intl_Country_HN"
+msgstr "Honduras"
+
+msgid "Intl_Country_HR"
+msgstr "Hrvatska"
+
+msgid "Intl_Country_HT"
+msgstr "Haiti"
+
+msgid "Intl_Country_HU"
+msgstr "Mađarska"
+
+msgid "Intl_Country_ID"
+msgstr "Indonezija"
+
+msgid "Intl_Country_IE"
+msgstr "Irska"
+
+msgid "Intl_Country_IL"
+msgstr "Izrael"
+
+msgid "Intl_Country_IM"
+msgstr "Ostrvo Man"
+
+msgid "Intl_Country_IN"
+msgstr "Indija"
+
+msgid "Intl_Country_IO"
+msgstr "Britanska Teritorija u Indijskom Okeanu"
+
+msgid "Intl_Country_IQ"
+msgstr "Irak"
+
+msgid "Intl_Country_IR"
+msgstr "Iran"
+
+msgid "Intl_Country_IS"
+msgstr "Island"
+
+msgid "Intl_Country_IT"
+msgstr "Italija"
+
+msgid "Intl_Country_JE"
+msgstr "Jersey"
+
+msgid "Intl_Country_JM"
+msgstr "Jamajka"
+
+msgid "Intl_Country_JO"
+msgstr "Jordan"
+
+msgid "Intl_Country_JP"
+msgstr "Japan"
+
+msgid "Intl_Country_KE"
+msgstr "Kenija"
+
+msgid "Intl_Country_KG"
+msgstr "Kirgistan"
+
+msgid "Intl_Country_KH"
+msgstr "Kambodža"
+
+msgid "Intl_Country_KI"
+msgstr "Kiribati"
+
+msgid "Intl_Country_KM"
+msgstr "Komori"
+
+msgid "Intl_Country_KN"
+msgstr "Sveti Kits i Nevis"
+
+msgid "Intl_Country_KP"
+msgstr "Sjeverna Koreja"
+
+msgid "Intl_Country_KR"
+msgstr "Južna Koreja"
+
+msgid "Intl_Country_KW"
+msgstr "Kuvajt"
+
+msgid "Intl_Country_KY"
+msgstr "Kajmanska ostrva"
+
+msgid "Intl_Country_KZ"
+msgstr "Kazahstan"
+
+msgid "Intl_Country_LA"
+msgstr "Laos"
+
+msgid "Intl_Country_LB"
+msgstr "Liban"
+
+msgid "Intl_Country_LC"
+msgstr "Sveta Lucija"
+
+msgid "Intl_Country_LI"
+msgstr "Lihtenštajn"
+
+msgid "Intl_Country_LK"
+msgstr "Šri Lanka"
+
+msgid "Intl_Country_LR"
+msgstr "Liberija"
+
+msgid "Intl_Country_LS"
+msgstr "Lesoto"
+
+msgid "Intl_Country_LT"
+msgstr "Litvanija"
+
+msgid "Intl_Country_LU"
+msgstr "Luksemburg"
+
+msgid "Intl_Country_LV"
+msgstr "Latvija"
+
+msgid "Intl_Country_LY"
+msgstr "Libija"
+
+msgid "Intl_Country_MA"
+msgstr "Maroko"
+
+msgid "Intl_Country_MC"
+msgstr "Monako"
+
+msgid "Intl_Country_MD"
+msgstr "Moldavija"
+
+msgid "Intl_Country_ME"
+msgstr "Crna Gora"
+
+msgid "Intl_Country_MF"
+msgstr "Sveti Martin"
+
+msgid "Intl_Country_MG"
+msgstr "Madagaskar"
+
+msgid "Intl_Country_MH"
+msgstr "Maršalova ostrva"
+
+msgid "Intl_Country_MK"
+msgstr "Makedonija"
+
+msgid "Intl_Country_ML"
+msgstr "Mali"
+
+msgid "Intl_Country_MM"
+msgstr "Mjanmar"
+
+msgid "Intl_Country_MN"
+msgstr "Mongolija"
+
+msgid "Intl_Country_MO"
+msgstr "Makao (SAR Kina)"
+
+msgid "Intl_Country_MP"
+msgstr "Sjeverna Marijanska ostrva"
+
+msgid "Intl_Country_MQ"
+msgstr "Martinik"
+
+msgid "Intl_Country_MR"
+msgstr "Mauritanija"
+
+msgid "Intl_Country_MS"
+msgstr "Monserat"
+
+msgid "Intl_Country_MT"
+msgstr "Malta"
+
+msgid "Intl_Country_MU"
+msgstr "Mauricijus"
+
+msgid "Intl_Country_MV"
+msgstr "Maldivi"
+
+msgid "Intl_Country_MW"
+msgstr "Malavi"
+
+msgid "Intl_Country_MX"
+msgstr "Meksiko"
+
+msgid "Intl_Country_MY"
+msgstr "Malezija"
+
+msgid "Intl_Country_MZ"
+msgstr "Mozambik"
+
+msgid "Intl_Country_NA"
+msgstr "Namibija"
+
+msgid "Intl_Country_NC"
+msgstr "Nova Kaledonija"
+
+msgid "Intl_Country_NE"
+msgstr "Niger"
+
+msgid "Intl_Country_NF"
+msgstr "Ostrvo Norfolk"
+
+msgid "Intl_Country_NG"
+msgstr "Nigerija"
+
+msgid "Intl_Country_NI"
+msgstr "Nikaragva"
+
+msgid "Intl_Country_NL"
+msgstr "Holandija"
+
+msgid "Intl_Country_NO"
+msgstr "Norveška"
+
+msgid "Intl_Country_NP"
+msgstr "Nepal"
+
+msgid "Intl_Country_NR"
+msgstr "Nauru"
+
+msgid "Intl_Country_NU"
+msgstr "Niue"
+
+msgid "Intl_Country_NZ"
+msgstr "Novi Zeland"
+
+msgid "Intl_Country_OM"
+msgstr "Oman"
+
+msgid "Intl_Country_PA"
+msgstr "Panama"
+
+msgid "Intl_Country_PE"
+msgstr "Peru"
+
+msgid "Intl_Country_PF"
+msgstr "Francuska Polinezija"
+
+msgid "Intl_Country_PG"
+msgstr "Papua Nova Gvineja"
+
+msgid "Intl_Country_PH"
+msgstr "Filipini"
+
+msgid "Intl_Country_PK"
+msgstr "Pakistan"
+
+msgid "Intl_Country_PL"
+msgstr "Poljska"
+
+msgid "Intl_Country_PM"
+msgstr "Sveti Petar i Mikelon"
+
+msgid "Intl_Country_PN"
+msgstr "Pitkernska Ostrva"
+
+msgid "Intl_Country_PR"
+msgstr "Porto Riko"
+
+msgid "Intl_Country_PS"
+msgstr "Palestinska Teritorija"
+
+msgid "Intl_Country_PT"
+msgstr "Portugal"
+
+msgid "Intl_Country_PW"
+msgstr "Palau"
+
+msgid "Intl_Country_PY"
+msgstr "Paragvaj"
+
+msgid "Intl_Country_QA"
+msgstr "Katar"
+
+msgid "Intl_Country_RE"
+msgstr "Reunion"
+
+msgid "Intl_Country_RO"
+msgstr "Rumunija"
+
+msgid "Intl_Country_RS"
+msgstr "Srbija"
+
+msgid "Intl_Country_RU"
+msgstr "Rusija"
+
+msgid "Intl_Country_RW"
+msgstr "Ruanda"
+
+msgid "Intl_Country_SA"
+msgstr "Saudijska Arabija"
+
+msgid "Intl_Country_SB"
+msgstr "Solomonska Ostrva"
+
+msgid "Intl_Country_SC"
+msgstr "Sejšeli"
+
+msgid "Intl_Country_SD"
+msgstr "Sudan"
+
+msgid "Intl_Country_SE"
+msgstr "Švedska"
+
+msgid "Intl_Country_SG"
+msgstr "Singapur"
+
+msgid "Intl_Country_SH"
+msgstr "Sveta Helena"
+
+msgid "Intl_Country_SI"
+msgstr "Slovenija"
+
+msgid "Intl_Country_SJ"
+msgstr "Svalbard i Jan Majen"
+
+msgid "Intl_Country_SK"
+msgstr "Slovačka"
+
+msgid "Intl_Country_SL"
+msgstr "Sijera Leone"
+
+msgid "Intl_Country_SM"
+msgstr "San Marino"
+
+msgid "Intl_Country_SN"
+msgstr "Senegal"
+
+msgid "Intl_Country_SO"
+msgstr "Somalija"
+
+msgid "Intl_Country_SR"
+msgstr "Surinam"
+
+msgid "Intl_Country_SS"
+msgstr "Južni Sudan"
+
+msgid "Intl_Country_ST"
+msgstr "Sao Tome i Principe"
+
+msgid "Intl_Country_SV"
+msgstr "Salvador"
+
+msgid "Intl_Country_SX"
+msgstr "Sint Marten"
+
+msgid "Intl_Country_SY"
+msgstr "Sirija"
+
+msgid "Intl_Country_SZ"
+msgstr "Svazilend"
+
+msgid "Intl_Country_TC"
+msgstr "Ostrva Turks i Kaikos"
+
+msgid "Intl_Country_TD"
+msgstr "Čad"
+
+msgid "Intl_Country_TF"
+msgstr "Francuske Južne Teritorije"
+
+msgid "Intl_Country_TG"
+msgstr "Togo"
+
+msgid "Intl_Country_TH"
+msgstr "Tajland"
+
+msgid "Intl_Country_TJ"
+msgstr "Tadžikistan"
+
+msgid "Intl_Country_TK"
+msgstr "Tokelau"
+
+msgid "Intl_Country_TL"
+msgstr "Istočni Timor"
+
+msgid "Intl_Country_TM"
+msgstr "Turkmenistan"
+
+msgid "Intl_Country_TN"
+msgstr "Tunis"
+
+msgid "Intl_Country_TO"
+msgstr "Tonga"
+
+msgid "Intl_Country_TR"
+msgstr "Turska"
+
+msgid "Intl_Country_TT"
+msgstr "Trinidad i Tobago"
+
+msgid "Intl_Country_TV"
+msgstr "Tuvalu"
+
+msgid "Intl_Country_TW"
+msgstr "Tajvan"
+
+msgid "Intl_Country_TZ"
+msgstr "Tanzanija"
+
+msgid "Intl_Country_UA"
+msgstr "Ukrajina"
+
+msgid "Intl_Country_UG"
+msgstr "Uganda"
+
+msgid "Intl_Country_UM"
+msgstr "Američka Vanjska Ostrva"
+
+msgid "Intl_Country_US"
+msgstr "Sjedinjene Američke Države"
+
+msgid "Intl_Country_UY"
+msgstr "Urugvaj"
+
+msgid "Intl_Country_UZ"
+msgstr "Uzbekistan"
+
+msgid "Intl_Country_VA"
+msgstr "Vatikan"
+
+msgid "Intl_Country_VC"
+msgstr "Sveti Vinsent i Grenadin"
+
+msgid "Intl_Country_VE"
+msgstr "Venecuela"
+
+msgid "Intl_Country_VG"
+msgstr "Britanska Djevičanska ostrva"
+
+msgid "Intl_Country_VI"
+msgstr "Američka Djevičanska ostrva"
+
+msgid "Intl_Country_VN"
+msgstr "Vijetnam"
+
+msgid "Intl_Country_VU"
+msgstr "Vanuatu"
+
+msgid "Intl_Country_WF"
+msgstr "Ostrva Valis i Futuna"
+
+msgid "Intl_Country_WS"
+msgstr "Samoa"
+
+msgid "Intl_Country_YE"
+msgstr "Jemen"
+
+msgid "Intl_Country_YT"
+msgstr "Majote"
+
+msgid "Intl_Country_ZA"
+msgstr "Južnoafrička Republika"
+
+msgid "Intl_Country_ZM"
+msgstr "Zambija"
+
+msgid "Intl_Country_ZW"
+msgstr "Zimbabve"
+
+msgid "Intl_CurrencySymbol_AED"
+msgstr "AED"
+
+msgid "Intl_CurrencySymbol_AFN"
+msgstr "AFN"
+
+msgid "Intl_CurrencySymbol_ALL"
+msgstr "ALL"
+
+msgid "Intl_CurrencySymbol_AMD"
+msgstr "AMD"
+
+msgid "Intl_CurrencySymbol_ANG"
+msgstr "ANG"
+
+msgid "Intl_CurrencySymbol_AOA"
+msgstr "AOA"
+
+msgid "Intl_CurrencySymbol_ARS"
+msgstr "ARS"
+
+msgid "Intl_CurrencySymbol_AUD"
+msgstr "AUD"
+
+msgid "Intl_CurrencySymbol_AWG"
+msgstr "AWG"
+
+msgid "Intl_CurrencySymbol_AZN"
+msgstr "AZN"
+
+msgid "Intl_CurrencySymbol_BAM"
+msgstr "KM"
+
+msgid "Intl_CurrencySymbol_BBD"
+msgstr "BBD"
+
+msgid "Intl_CurrencySymbol_BDT"
+msgstr "BDT"
+
+msgid "Intl_CurrencySymbol_BGN"
+msgstr "BGN"
+
+msgid "Intl_CurrencySymbol_BHD"
+msgstr "BHD"
+
+msgid "Intl_CurrencySymbol_BIF"
+msgstr "BIF"
+
+msgid "Intl_CurrencySymbol_BMD"
+msgstr "BMD"
+
+msgid "Intl_CurrencySymbol_BND"
+msgstr "BND"
+
+msgid "Intl_CurrencySymbol_BOB"
+msgstr "BOB"
+
+msgid "Intl_CurrencySymbol_BRL"
+msgstr "BRL"
+
+msgid "Intl_CurrencySymbol_BSD"
+msgstr "BSD"
+
+msgid "Intl_CurrencySymbol_BTC"
+msgstr "BTC"
+
+msgid "Intl_CurrencySymbol_BTN"
+msgstr "BTN"
+
+msgid "Intl_CurrencySymbol_BWP"
+msgstr "BWP"
+
+msgid "Intl_CurrencySymbol_BYN"
+msgstr "BYN"
+
+msgid "Intl_CurrencySymbol_BZD"
+msgstr "BZD"
+
+msgid "Intl_CurrencySymbol_CAD"
+msgstr "CAD"
+
+msgid "Intl_CurrencySymbol_CDF"
+msgstr "CDF"
+
+msgid "Intl_CurrencySymbol_CHF"
+msgstr "CHF"
+
+msgid "Intl_CurrencySymbol_CLP"
+msgstr "CLP"
+
+msgid "Intl_CurrencySymbol_CNY"
+msgstr "CNY"
+
+msgid "Intl_CurrencySymbol_COP"
+msgstr "COP"
+
+msgid "Intl_CurrencySymbol_CRC"
+msgstr "CRC"
+
+msgid "Intl_CurrencySymbol_CUC"
+msgstr "CUC"
+
+msgid "Intl_CurrencySymbol_CUP"
+msgstr "CUP"
+
+msgid "Intl_CurrencySymbol_CVE"
+msgstr "CVE"
+
+msgid "Intl_CurrencySymbol_CZK"
+msgstr "CZK"
+
+msgid "Intl_CurrencySymbol_DJF"
+msgstr "DJF"
+
+msgid "Intl_CurrencySymbol_DKK"
+msgstr "DKK"
+
+msgid "Intl_CurrencySymbol_DOP"
+msgstr "DOP"
+
+msgid "Intl_CurrencySymbol_DZD"
+msgstr "DZD"
+
+msgid "Intl_CurrencySymbol_EGP"
+msgstr "EGP"
+
+msgid "Intl_CurrencySymbol_ERN"
+msgstr "ERN"
+
+msgid "Intl_CurrencySymbol_ETB"
+msgstr "ETB"
+
+msgid "Intl_CurrencySymbol_EUR"
+msgstr "€"
+
+msgid "Intl_CurrencySymbol_FJD"
+msgstr "FJD"
+
+msgid "Intl_CurrencySymbol_FKP"
+msgstr "FKP"
+
+msgid "Intl_CurrencySymbol_GBP"
+msgstr "GBP"
+
+msgid "Intl_CurrencySymbol_GEL"
+msgstr "GEL"
+
+msgid "Intl_CurrencySymbol_GHS"
+msgstr "GHS"
+
+msgid "Intl_CurrencySymbol_GIP"
+msgstr "GIP"
+
+msgid "Intl_CurrencySymbol_GMD"
+msgstr "GMD"
+
+msgid "Intl_CurrencySymbol_GNF"
+msgstr "GNF"
+
+msgid "Intl_CurrencySymbol_GTQ"
+msgstr "GTQ"
+
+msgid "Intl_CurrencySymbol_GYD"
+msgstr "GYD"
+
+msgid "Intl_CurrencySymbol_HKD"
+msgstr "HKD"
+
+msgid "Intl_CurrencySymbol_HNL"
+msgstr "HNL"
+
+msgid "Intl_CurrencySymbol_HRK"
+msgstr "kn"
+
+msgid "Intl_CurrencySymbol_HTG"
+msgstr "HTG"
+
+msgid "Intl_CurrencySymbol_HUF"
+msgstr "HUF"
+
+msgid "Intl_CurrencySymbol_IDR"
+msgstr "IDR"
+
+msgid "Intl_CurrencySymbol_ILS"
+msgstr "ILS"
+
+msgid "Intl_CurrencySymbol_INR"
+msgstr "₹"
+
+msgid "Intl_CurrencySymbol_IQD"
+msgstr "IQD"
+
+msgid "Intl_CurrencySymbol_IRR"
+msgstr "IRR"
+
+msgid "Intl_CurrencySymbol_ISK"
+msgstr "ISK"
+
+msgid "Intl_CurrencySymbol_JMD"
+msgstr "JMD"
+
+msgid "Intl_CurrencySymbol_JOD"
+msgstr "JOD"
+
+msgid "Intl_CurrencySymbol_JPY"
+msgstr "¥"
+
+msgid "Intl_CurrencySymbol_KES"
+msgstr "KES"
+
+msgid "Intl_CurrencySymbol_KGS"
+msgstr "KGS"
+
+msgid "Intl_CurrencySymbol_KHR"
+msgstr "KHR"
+
+msgid "Intl_CurrencySymbol_KMF"
+msgstr "KMF"
+
+msgid "Intl_CurrencySymbol_KPW"
+msgstr "KPW"
+
+msgid "Intl_CurrencySymbol_KRW"
+msgstr "₩"
+
+msgid "Intl_CurrencySymbol_KWD"
+msgstr "KWD"
+
+msgid "Intl_CurrencySymbol_KYD"
+msgstr "KYD"
+
+msgid "Intl_CurrencySymbol_KZT"
+msgstr "KZT"
+
+msgid "Intl_CurrencySymbol_LAK"
+msgstr "LAK"
+
+msgid "Intl_CurrencySymbol_LBP"
+msgstr "LBP"
+
+msgid "Intl_CurrencySymbol_LKR"
+msgstr "LKR"
+
+msgid "Intl_CurrencySymbol_LRD"
+msgstr "LRD"
+
+msgid "Intl_CurrencySymbol_LSL"
+msgstr "LSL"
+
+msgid "Intl_CurrencySymbol_LYD"
+msgstr "LYD"
+
+msgid "Intl_CurrencySymbol_MAD"
+msgstr "MAD"
+
+msgid "Intl_CurrencySymbol_MDL"
+msgstr "MDL"
+
+msgid "Intl_CurrencySymbol_MGA"
+msgstr "MGA"
+
+msgid "Intl_CurrencySymbol_MKD"
+msgstr "MKD"
+
+msgid "Intl_CurrencySymbol_MMK"
+msgstr "MMK"
+
+msgid "Intl_CurrencySymbol_MNT"
+msgstr "MNT"
+
+msgid "Intl_CurrencySymbol_MOP"
+msgstr "MOP"
+
+msgid "Intl_CurrencySymbol_MRU"
+msgstr "MRU"
+
+msgid "Intl_CurrencySymbol_MUR"
+msgstr "MUR"
+
+msgid "Intl_CurrencySymbol_MVR"
+msgstr "MVR"
+
+msgid "Intl_CurrencySymbol_MWK"
+msgstr "MWK"
+
+msgid "Intl_CurrencySymbol_MXN"
+msgstr "MXN"
+
+msgid "Intl_CurrencySymbol_MYR"
+msgstr "MYR"
+
+msgid "Intl_CurrencySymbol_MZN"
+msgstr "MZN"
+
+msgid "Intl_CurrencySymbol_NAD"
+msgstr "NAD"
+
+msgid "Intl_CurrencySymbol_NGN"
+msgstr "NGN"
+
+msgid "Intl_CurrencySymbol_NIO"
+msgstr "NIO"
+
+msgid "Intl_CurrencySymbol_NOK"
+msgstr "NOK"
+
+msgid "Intl_CurrencySymbol_NPR"
+msgstr "NPR"
+
+msgid "Intl_CurrencySymbol_NZD"
+msgstr "NZD"
+
+msgid "Intl_CurrencySymbol_OMR"
+msgstr "OMR"
+
+msgid "Intl_CurrencySymbol_PAB"
+msgstr "PAB"
+
+msgid "Intl_CurrencySymbol_PEN"
+msgstr "PEN"
+
+msgid "Intl_CurrencySymbol_PGK"
+msgstr "PGK"
+
+msgid "Intl_CurrencySymbol_PHP"
+msgstr "PHP"
+
+msgid "Intl_CurrencySymbol_PKR"
+msgstr "PKR"
+
+msgid "Intl_CurrencySymbol_PLN"
+msgstr "PLN"
+
+msgid "Intl_CurrencySymbol_PYG"
+msgstr "PYG"
+
+msgid "Intl_CurrencySymbol_QAR"
+msgstr "QAR"
+
+msgid "Intl_CurrencySymbol_RON"
+msgstr "RON"
+
+msgid "Intl_CurrencySymbol_RSD"
+msgstr "din."
+
+msgid "Intl_CurrencySymbol_RUB"
+msgstr "RUB"
+
+msgid "Intl_CurrencySymbol_RWF"
+msgstr "RWF"
+
+msgid "Intl_CurrencySymbol_SAR"
+msgstr "SAR"
+
+msgid "Intl_CurrencySymbol_SBD"
+msgstr "SBD"
+
+msgid "Intl_CurrencySymbol_SCR"
+msgstr "SCR"
+
+msgid "Intl_CurrencySymbol_SDG"
+msgstr "SDG"
+
+msgid "Intl_CurrencySymbol_SEK"
+msgstr "SEK"
+
+msgid "Intl_CurrencySymbol_SGD"
+msgstr "SGD"
+
+msgid "Intl_CurrencySymbol_SHP"
+msgstr "SHP"
+
+msgid "Intl_CurrencySymbol_SLL"
+msgstr "SLL"
+
+msgid "Intl_CurrencySymbol_SOS"
+msgstr "SOS"
+
+msgid "Intl_CurrencySymbol_SRD"
+msgstr "SRD"
+
+msgid "Intl_CurrencySymbol_SSP"
+msgstr "SSP"
+
+msgid "Intl_CurrencySymbol_STN"
+msgstr "STN"
+
+msgid "Intl_CurrencySymbol_SYP"
+msgstr "SYP"
+
+msgid "Intl_CurrencySymbol_SZL"
+msgstr "SZL"
+
+msgid "Intl_CurrencySymbol_THB"
+msgstr "฿"
+
+msgid "Intl_CurrencySymbol_TJS"
+msgstr "TJS"
+
+msgid "Intl_CurrencySymbol_TMT"
+msgstr "TMT"
+
+msgid "Intl_CurrencySymbol_TND"
+msgstr "TND"
+
+msgid "Intl_CurrencySymbol_TOP"
+msgstr "TOP"
+
+msgid "Intl_CurrencySymbol_TRY"
+msgstr "TRY"
+
+msgid "Intl_CurrencySymbol_TTD"
+msgstr "TTD"
+
+msgid "Intl_CurrencySymbol_TWD"
+msgstr "NT$"
+
+msgid "Intl_CurrencySymbol_TZS"
+msgstr "TZS"
+
+msgid "Intl_CurrencySymbol_UAH"
+msgstr "UAH"
+
+msgid "Intl_CurrencySymbol_UGX"
+msgstr "UGX"
+
+msgid "Intl_CurrencySymbol_USD"
+msgstr "USD"
+
+msgid "Intl_CurrencySymbol_UYU"
+msgstr "UYU"
+
+msgid "Intl_CurrencySymbol_UZS"
+msgstr "UZS"
+
+msgid "Intl_CurrencySymbol_VEF"
+msgstr "VEF"
+
+msgid "Intl_CurrencySymbol_VND"
+msgstr "₫"
+
+msgid "Intl_CurrencySymbol_VUV"
+msgstr "VUV"
+
+msgid "Intl_CurrencySymbol_WST"
+msgstr "WST"
+
+msgid "Intl_CurrencySymbol_XAF"
+msgstr "FCFA"
+
+msgid "Intl_CurrencySymbol_XCD"
+msgstr "XCD"
+
+msgid "Intl_CurrencySymbol_XOF"
+msgstr "CFA"
+
+msgid "Intl_CurrencySymbol_XPF"
+msgstr "XPF"
+
+msgid "Intl_CurrencySymbol_YER"
+msgstr "YER"
+
+msgid "Intl_CurrencySymbol_ZAR"
+msgstr "ZAR"
+
+msgid "Intl_CurrencySymbol_ZMW"
+msgstr "ZMW"
+
+msgid "Intl_Currency_AED"
+msgstr "Dirham Ujedinjenih Arapskih Emirata"
+
+msgid "Intl_Currency_AFN"
+msgstr "Afganistanski afgan"
+
+msgid "Intl_Currency_ALL"
+msgstr "Albanski lek"
+
+msgid "Intl_Currency_AMD"
+msgstr "Armenski dram"
+
+msgid "Intl_Currency_ANG"
+msgstr "Holandskoantilski gulden"
+
+msgid "Intl_Currency_AOA"
+msgstr "Angolska kvanza"
+
+msgid "Intl_Currency_ARS"
+msgstr "Argentinski pezos"
+
+msgid "Intl_Currency_AUD"
+msgstr "Australijski dolar"
+
+msgid "Intl_Currency_AWG"
+msgstr "Arubanski florin"
+
+msgid "Intl_Currency_AZN"
+msgstr "Azerbejdžanski manat"
+
+msgid "Intl_Currency_BAM"
+msgstr "Bosanskohercegovačka konvertibilna marka"
+
+msgid "Intl_Currency_BBD"
+msgstr "Barbadoski dolar"
+
+msgid "Intl_Currency_BDT"
+msgstr "Bangladeška taka"
+
+msgid "Intl_Currency_BGN"
+msgstr "Bugarski lev"
+
+msgid "Intl_Currency_BHD"
+msgstr "Bahreinski dinar"
+
+msgid "Intl_Currency_BIF"
+msgstr "Burundski franak"
+
+msgid "Intl_Currency_BMD"
+msgstr "Bermudski dolar"
+
+msgid "Intl_Currency_BND"
+msgstr "Brunejski dolar"
+
+msgid "Intl_Currency_BOB"
+msgstr "Bolivijski boliviano"
+
+msgid "Intl_Currency_BRL"
+msgstr "Brazilski real"
+
+msgid "Intl_Currency_BSD"
+msgstr "Bahamski dolar"
+
+msgid "Intl_Currency_BTC"
+msgstr "Bitcoin"
+
+msgid "Intl_Currency_BTN"
+msgstr "Butanski ngultrum"
+
+msgid "Intl_Currency_BWP"
+msgstr "Bocvanska pula"
+
+msgid "Intl_Currency_BYN"
+msgstr "Bjeloruska rublja"
+
+msgid "Intl_Currency_BZD"
+msgstr "Belizeanski dolar"
+
+msgid "Intl_Currency_CAD"
+msgstr "Kanadski dolar"
+
+msgid "Intl_Currency_CDF"
+msgstr "Kongoanski franak"
+
+msgid "Intl_Currency_CHF"
+msgstr "Švicarski franak"
+
+msgid "Intl_Currency_CLP"
+msgstr "Čileanski pezos"
+
+msgid "Intl_Currency_CNY"
+msgstr "Kineski juan"
+
+msgid "Intl_Currency_COP"
+msgstr "Kolumbijski pezos"
+
+msgid "Intl_Currency_CRC"
+msgstr "Kostarikanski kolon"
+
+msgid "Intl_Currency_CUC"
+msgstr "Kubanski konvertibilni pezos"
+
+msgid "Intl_Currency_CUP"
+msgstr "Kubanski pezos"
+
+msgid "Intl_Currency_CVE"
+msgstr "Zelenortski eskudo"
+
+msgid "Intl_Currency_CZK"
+msgstr "Češka kruna"
+
+msgid "Intl_Currency_DJF"
+msgstr "Džibutski franak"
+
+msgid "Intl_Currency_DKK"
+msgstr "Danska kruna"
+
+msgid "Intl_Currency_DOP"
+msgstr "Dominikanski pezos"
+
+msgid "Intl_Currency_DZD"
+msgstr "Alžirski dinar"
+
+msgid "Intl_Currency_EGP"
+msgstr "Egipatska funta"
+
+msgid "Intl_Currency_ERN"
+msgstr "Eritrejska nakfa"
+
+msgid "Intl_Currency_ETB"
+msgstr "Etiopski bir"
+
+msgid "Intl_Currency_EUR"
+msgstr "Euro"
+
+msgid "Intl_Currency_FJD"
+msgstr "Fidžijski dolar"
+
+msgid "Intl_Currency_FKP"
+msgstr "Folklandska funta"
+
+msgid "Intl_Currency_GBP"
+msgstr "Britanska funta"
+
+msgid "Intl_Currency_GEL"
+msgstr "Gruzijski lari"
+
+msgid "Intl_Currency_GHS"
+msgstr "Ganski cedi"
+
+msgid "Intl_Currency_GIP"
+msgstr "Gibraltarska funta"
+
+msgid "Intl_Currency_GMD"
+msgstr "Gambijski dalasi"
+
+msgid "Intl_Currency_GNF"
+msgstr "Gvinejski franak"
+
+msgid "Intl_Currency_GTQ"
+msgstr "Gvatemalski kecal"
+
+msgid "Intl_Currency_GYD"
+msgstr "Gvajanski dolar"
+
+msgid "Intl_Currency_HKD"
+msgstr "Honkonški dolar"
+
+msgid "Intl_Currency_HNL"
+msgstr "Honduraška lempira"
+
+msgid "Intl_Currency_HRK"
+msgstr "Hrvatska kuna"
+
+msgid "Intl_Currency_HTG"
+msgstr "Haićanski gurd"
+
+msgid "Intl_Currency_HUF"
+msgstr "Mađarska forinta"
+
+msgid "Intl_Currency_IDR"
+msgstr "Indonežanska rupija"
+
+msgid "Intl_Currency_ILS"
+msgstr "Izraelski novi šekel"
+
+msgid "Intl_Currency_INR"
+msgstr "Indijska rupija"
+
+msgid "Intl_Currency_IQD"
+msgstr "Irački dinar"
+
+msgid "Intl_Currency_IRR"
+msgstr "Iranski rijal"
+
+msgid "Intl_Currency_ISK"
+msgstr "Islandska kruna"
+
+msgid "Intl_Currency_JMD"
+msgstr "Jamajčanski dolar"
+
+msgid "Intl_Currency_JOD"
+msgstr "Jordanski dinar"
+
+msgid "Intl_Currency_JPY"
+msgstr "Japanski jen"
+
+msgid "Intl_Currency_KES"
+msgstr "Kenijski šiling"
+
+msgid "Intl_Currency_KGS"
+msgstr "Kirgistanski som"
+
+msgid "Intl_Currency_KHR"
+msgstr "Kambodžanski rijel"
+
+msgid "Intl_Currency_KMF"
+msgstr "Komorski franak"
+
+msgid "Intl_Currency_KPW"
+msgstr "Sjevernokorejski von"
+
+msgid "Intl_Currency_KRW"
+msgstr "Južnokorejski von"
+
+msgid "Intl_Currency_KWD"
+msgstr "Kuvajtski dinar"
+
+msgid "Intl_Currency_KYD"
+msgstr "Kajmanski dolar"
+
+msgid "Intl_Currency_KZT"
+msgstr "Kazahstanski tenge"
+
+msgid "Intl_Currency_LAK"
+msgstr "Laoski kip"
+
+msgid "Intl_Currency_LBP"
+msgstr "Libanska funta"
+
+msgid "Intl_Currency_LKR"
+msgstr "Šrilankanska rupija"
+
+msgid "Intl_Currency_LRD"
+msgstr "Liberijski dolar"
+
+msgid "Intl_Currency_LSL"
+msgstr "Lesotski loti"
+
+msgid "Intl_Currency_LYD"
+msgstr "Libijski dinar"
+
+msgid "Intl_Currency_MAD"
+msgstr "Marokanski dirham"
+
+msgid "Intl_Currency_MDL"
+msgstr "Moldavski lej"
+
+msgid "Intl_Currency_MGA"
+msgstr "Malagaški arijari"
+
+msgid "Intl_Currency_MKD"
+msgstr "Makedonski denar"
+
+msgid "Intl_Currency_MMK"
+msgstr "Mijanmarski kjat"
+
+msgid "Intl_Currency_MNT"
+msgstr "Mongolski tugrik"
+
+msgid "Intl_Currency_MOP"
+msgstr "Makaonska pataka"
+
+msgid "Intl_Currency_MRU"
+msgstr "Mauritanijska ugvija"
+
+msgid "Intl_Currency_MUR"
+msgstr "Mauricijska rupija"
+
+msgid "Intl_Currency_MVR"
+msgstr "Maldivska rufija"
+
+msgid "Intl_Currency_MWK"
+msgstr "Malavijska kvača"
+
+msgid "Intl_Currency_MXN"
+msgstr "Meksički pezos"
+
+msgid "Intl_Currency_MYR"
+msgstr "Malezijski ringit"
+
+msgid "Intl_Currency_MZN"
+msgstr "Mozambijski metikal"
+
+msgid "Intl_Currency_NAD"
+msgstr "Namibijski dolar"
+
+msgid "Intl_Currency_NGN"
+msgstr "Nigerijska naira"
+
+msgid "Intl_Currency_NIO"
+msgstr "Nikaragvanska kordoba"
+
+msgid "Intl_Currency_NOK"
+msgstr "Norveška kruna"
+
+msgid "Intl_Currency_NPR"
+msgstr "Nepalska rupija"
+
+msgid "Intl_Currency_NZD"
+msgstr "Novozelandski dolar"
+
+msgid "Intl_Currency_OMR"
+msgstr "Omanski rijal"
+
+msgid "Intl_Currency_PAB"
+msgstr "Panamska balboa"
+
+msgid "Intl_Currency_PEN"
+msgstr "Peruanski sol"
+
+msgid "Intl_Currency_PGK"
+msgstr "Kina Papue Nove Gvineje"
+
+msgid "Intl_Currency_PHP"
+msgstr "Filipinski pezos"
+
+msgid "Intl_Currency_PKR"
+msgstr "Pakistanska rupija"
+
+msgid "Intl_Currency_PLN"
+msgstr "Poljski zlot"
+
+msgid "Intl_Currency_PYG"
+msgstr "Paragvajski gvarani"
+
+msgid "Intl_Currency_QAR"
+msgstr "Katarski rijal"
+
+msgid "Intl_Currency_RON"
+msgstr "Rumunski lej"
+
+msgid "Intl_Currency_RSD"
+msgstr "Srpski dinar"
+
+msgid "Intl_Currency_RUB"
+msgstr "Ruska rublja"
+
+msgid "Intl_Currency_RWF"
+msgstr "Ruandski franak"
+
+msgid "Intl_Currency_SAR"
+msgstr "Saudijski rijal"
+
+msgid "Intl_Currency_SBD"
+msgstr "Solomonski dolar"
+
+msgid "Intl_Currency_SCR"
+msgstr "Sejšelska rupija"
+
+msgid "Intl_Currency_SDG"
+msgstr "Sudanska funta"
+
+msgid "Intl_Currency_SEK"
+msgstr "Švedska kruna"
+
+msgid "Intl_Currency_SGD"
+msgstr "Singapurski dolar"
+
+msgid "Intl_Currency_SHP"
+msgstr "Svetohelenska funta"
+
+msgid "Intl_Currency_SLL"
+msgstr "Sijeraleonski leone"
+
+msgid "Intl_Currency_SOS"
+msgstr "Somalski šiling"
+
+msgid "Intl_Currency_SRD"
+msgstr "Surinamski dolar"
+
+msgid "Intl_Currency_SSP"
+msgstr "Južnosudanska funta"
+
+msgid "Intl_Currency_STN"
+msgstr "Dobra Sao Toma i Principa"
+
+msgid "Intl_Currency_SYP"
+msgstr "Sirijska funta"
+
+msgid "Intl_Currency_SZL"
+msgstr "Svazilendski lilangeni"
+
+msgid "Intl_Currency_THB"
+msgstr "Tajlandski baht"
+
+msgid "Intl_Currency_TJS"
+msgstr "Tadžikistanski somoni"
+
+msgid "Intl_Currency_TMT"
+msgstr "Turkmenistanski manat"
+
+msgid "Intl_Currency_TND"
+msgstr "Tuniški dinar"
+
+msgid "Intl_Currency_TOP"
+msgstr "Tonganska panga"
+
+msgid "Intl_Currency_TRY"
+msgstr "Turska lira"
+
+msgid "Intl_Currency_TTD"
+msgstr "Trinidadtobaški dolar"
+
+msgid "Intl_Currency_TWD"
+msgstr "Novi tajvanski dolar"
+
+msgid "Intl_Currency_TZS"
+msgstr "Tanzanijski šiling"
+
+msgid "Intl_Currency_UAH"
+msgstr "Ukrajinska hrivnja"
+
+msgid "Intl_Currency_UGX"
+msgstr "Ugandski šiling"
+
+msgid "Intl_Currency_USD"
+msgstr "Američki dolar"
+
+msgid "Intl_Currency_UYU"
+msgstr "Urugvajski pezos"
+
+msgid "Intl_Currency_UZS"
+msgstr "Uzbekistanski som"
+
+msgid "Intl_Currency_VEF"
+msgstr "Venecuelanski bolivar (2008–2018)"
+
+msgid "Intl_Currency_VND"
+msgstr "Vijetnamski dong"
+
+msgid "Intl_Currency_VUV"
+msgstr "Vanuatski vatu"
+
+msgid "Intl_Currency_WST"
+msgstr "Samoanska tala"
+
+msgid "Intl_Currency_XAF"
+msgstr "Centralnoafrički franak (CFA)"
+
+msgid "Intl_Currency_XCD"
+msgstr "Istočnokaripski dolar"
+
+msgid "Intl_Currency_XOF"
+msgstr "Zapadnoafrički franak (CFA)"
+
+msgid "Intl_Currency_XPF"
+msgstr "Franak (CFP)"
+
+msgid "Intl_Currency_YER"
+msgstr "Jemenski rijal"
+
+msgid "Intl_Currency_ZAR"
+msgstr "Južnoafrički rand"
+
+msgid "Intl_Currency_ZMW"
+msgstr "Zambijska kvača"
+
+msgid "Intl_Day_Long_1"
+msgstr "ponedjeljak"
+
+msgid "Intl_Day_Long_2"
+msgstr "utorak"
+
+msgid "Intl_Day_Long_3"
+msgstr "srijeda"
+
+msgid "Intl_Day_Long_4"
+msgstr "četvrtak"
+
+msgid "Intl_Day_Long_5"
+msgstr "petak"
+
+msgid "Intl_Day_Long_6"
+msgstr "subota"
+
+msgid "Intl_Day_Long_7"
+msgstr "nedjelja"
+
+msgid "Intl_Day_Long_StandAlone_1"
+msgstr "ponedjeljak"
+
+msgid "Intl_Day_Long_StandAlone_2"
+msgstr "utorak"
+
+msgid "Intl_Day_Long_StandAlone_3"
+msgstr "srijeda"
+
+msgid "Intl_Day_Long_StandAlone_4"
+msgstr "četvrtak"
+
+msgid "Intl_Day_Long_StandAlone_5"
+msgstr "petak"
+
+msgid "Intl_Day_Long_StandAlone_6"
+msgstr "subota"
+
+msgid "Intl_Day_Long_StandAlone_7"
+msgstr "nedjelja"
+
+msgid "Intl_Day_Min_1"
+msgstr "pon"
+
+msgid "Intl_Day_Min_2"
+msgstr "uto"
+
+msgid "Intl_Day_Min_3"
+msgstr "sri"
+
+msgid "Intl_Day_Min_4"
+msgstr "čet"
+
+msgid "Intl_Day_Min_5"
+msgstr "pet"
+
+msgid "Intl_Day_Min_6"
+msgstr "sub"
+
+msgid "Intl_Day_Min_7"
+msgstr "ned"
+
+msgid "Intl_Day_Min_StandAlone_1"
+msgstr "pon"
+
+msgid "Intl_Day_Min_StandAlone_2"
+msgstr "uto"
+
+msgid "Intl_Day_Min_StandAlone_3"
+msgstr "sri"
+
+msgid "Intl_Day_Min_StandAlone_4"
+msgstr "čet"
+
+msgid "Intl_Day_Min_StandAlone_5"
+msgstr "pet"
+
+msgid "Intl_Day_Min_StandAlone_6"
+msgstr "sub"
+
+msgid "Intl_Day_Min_StandAlone_7"
+msgstr "ned"
+
+msgid "Intl_Day_Short_1"
+msgstr "pon"
+
+msgid "Intl_Day_Short_2"
+msgstr "uto"
+
+msgid "Intl_Day_Short_3"
+msgstr "sri"
+
+msgid "Intl_Day_Short_4"
+msgstr "čet"
+
+msgid "Intl_Day_Short_5"
+msgstr "pet"
+
+msgid "Intl_Day_Short_6"
+msgstr "sub"
+
+msgid "Intl_Day_Short_7"
+msgstr "ned"
+
+msgid "Intl_Day_Short_StandAlone_1"
+msgstr "pon"
+
+msgid "Intl_Day_Short_StandAlone_2"
+msgstr "uto"
+
+msgid "Intl_Day_Short_StandAlone_3"
+msgstr "sri"
+
+msgid "Intl_Day_Short_StandAlone_4"
+msgstr "čet"
+
+msgid "Intl_Day_Short_StandAlone_5"
+msgstr "pet"
+
+msgid "Intl_Day_Short_StandAlone_6"
+msgstr "sub"
+
+msgid "Intl_Day_Short_StandAlone_7"
+msgstr "ned"
+
+msgid "Intl_EnglishLanguageName"
+msgstr "Bosnian"
+
+msgid "Intl_Format_DateTime_Long"
+msgstr "EEEE, d. MMMM y. {time}"
+
+msgid "Intl_Format_DateTime_Short"
+msgstr "d. MMM y. {time}"
+
+msgid "Intl_Format_Date_Day_Month"
+msgstr "E, d. MMM"
+
+msgid "Intl_Format_Date_Long"
+msgstr "EEEE, d. MMMM y."
+
+msgid "Intl_Format_Date_Short"
+msgstr "d. MMM y."
+
+msgid "Intl_Format_Hour_12"
+msgstr "h a"
+
+msgid "Intl_Format_Hour_24"
+msgstr "HH"
+
+msgid "Intl_Format_Interval_Long_D"
+msgstr "d. – d. MMMM y."
+
+msgid "Intl_Format_Interval_Long_M"
+msgstr "d. MMMM – d. MMMM y."
+
+msgid "Intl_Format_Interval_Long_Y"
+msgstr "d. MMMM y. – d. MMMM y."
+
+msgid "Intl_Format_Interval_Short_D"
+msgstr "d. – d. MMM y."
+
+msgid "Intl_Format_Interval_Short_M"
+msgstr "d. MMM – d. MMM y."
+
+msgid "Intl_Format_Interval_Short_Y"
+msgstr "d. MMM y. – d. MMM y."
+
+msgid "Intl_Format_Month_Long"
+msgstr "LLLL y."
+
+msgid "Intl_Format_Month_Short"
+msgstr "MMM y."
+
+msgid "Intl_Format_Time"
+msgstr "{time}"
+
+msgid "Intl_Format_Time_12"
+msgstr "hh:mm:ss a"
+
+msgid "Intl_Format_Time_24"
+msgstr "HH:mm:ss"
+
+msgid "Intl_Format_Year"
+msgstr "y."
+
+msgid "Intl_Hours"
+msgstr "sati"
+
+msgid "Intl_Language_aa"
+msgstr "Afarski"
+
+msgid "Intl_Language_ab"
+msgstr "Abhaski"
+
+msgid "Intl_Language_ae"
+msgstr "Avestanski"
+
+msgid "Intl_Language_af"
+msgstr "Afrikans"
+
+msgid "Intl_Language_ak"
+msgstr "Akan"
+
+msgid "Intl_Language_am"
+msgstr "Amharski"
+
+msgid "Intl_Language_an"
+msgstr "Aragonski"
+
+msgid "Intl_Language_ar"
+msgstr "Arapski"
+
+msgid "Intl_Language_as"
+msgstr "Asamski"
+
+msgid "Intl_Language_av"
+msgstr "Avarski"
+
+msgid "Intl_Language_ay"
+msgstr "Ajmara"
+
+msgid "Intl_Language_az"
+msgstr "Azerbejdžanski"
+
+msgid "Intl_Language_ba"
+msgstr "Baškirski"
+
+msgid "Intl_Language_be"
+msgstr "Bjeloruski"
+
+msgid "Intl_Language_bg"
+msgstr "Bugarski"
+
+msgid "Intl_Language_bi"
+msgstr "Bislama"
+
+msgid "Intl_Language_bm"
+msgstr "Bambara"
+
+msgid "Intl_Language_bn"
+msgstr "Bengalski"
+
+msgid "Intl_Language_bo"
+msgstr "Tibetanski"
+
+msgid "Intl_Language_br"
+msgstr "Bretonski"
+
+msgid "Intl_Language_bs"
+msgstr "Bosanski"
+
+msgid "Intl_Language_ca"
+msgstr "Katalonski"
+
+msgid "Intl_Language_ce"
+msgstr "Čečenski"
+
+msgid "Intl_Language_ch"
+msgstr "Čamoro"
+
+msgid "Intl_Language_co"
+msgstr "Korzikanski"
+
+msgid "Intl_Language_cr"
+msgstr "Kri"
+
+msgid "Intl_Language_cs"
+msgstr "Češki"
+
+msgid "Intl_Language_cu"
+msgstr "Staroslavenski"
+
+msgid "Intl_Language_cv"
+msgstr "Čuvaški"
+
+msgid "Intl_Language_cy"
+msgstr "Velški"
+
+msgid "Intl_Language_da"
+msgstr "Danski"
+
+msgid "Intl_Language_de"
+msgstr "Njemački"
+
+msgid "Intl_Language_dv"
+msgstr "Divehi"
+
+msgid "Intl_Language_dz"
+msgstr "Džonga"
+
+msgid "Intl_Language_ee"
+msgstr "Eve"
+
+msgid "Intl_Language_el"
+msgstr "Grčki"
+
+msgid "Intl_Language_en"
+msgstr "Engleski"
+
+msgid "Intl_Language_eo"
+msgstr "Esperanto"
+
+msgid "Intl_Language_es"
+msgstr "Španski"
+
+msgid "Intl_Language_et"
+msgstr "Estonski"
+
+msgid "Intl_Language_eu"
+msgstr "Baskijski"
+
+msgid "Intl_Language_fa"
+msgstr "Perzijski"
+
+msgid "Intl_Language_ff"
+msgstr "Fulah"
+
+msgid "Intl_Language_fi"
+msgstr "Finski"
+
+msgid "Intl_Language_fj"
+msgstr "Fidžijski"
+
+msgid "Intl_Language_fo"
+msgstr "Farski"
+
+msgid "Intl_Language_fr"
+msgstr "Francuski"
+
+msgid "Intl_Language_fy"
+msgstr "Zapadni frizijski"
+
+msgid "Intl_Language_ga"
+msgstr "Irski"
+
+msgid "Intl_Language_gd"
+msgstr "Škotski galski"
+
+msgid "Intl_Language_gl"
+msgstr "Galicijski"
+
+msgid "Intl_Language_gn"
+msgstr "Gvarani"
+
+msgid "Intl_Language_gu"
+msgstr "Gudžarati"
+
+msgid "Intl_Language_gv"
+msgstr "Manks"
+
+msgid "Intl_Language_ha"
+msgstr "Hausa"
+
+msgid "Intl_Language_he"
+msgstr "Hebrejski"
+
+msgid "Intl_Language_hi"
+msgstr "Hindi"
+
+msgid "Intl_Language_ho"
+msgstr "Hiri motu"
+
+msgid "Intl_Language_hr"
+msgstr "Hrvatski"
+
+msgid "Intl_Language_ht"
+msgstr "Haićanski kreolski"
+
+msgid "Intl_Language_hu"
+msgstr "Mađarski"
+
+msgid "Intl_Language_hy"
+msgstr "Armenski"
+
+msgid "Intl_Language_hz"
+msgstr "Herero"
+
+msgid "Intl_Language_ia"
+msgstr "Interlingva"
+
+msgid "Intl_Language_id"
+msgstr "Indonezijski"
+
+msgid "Intl_Language_ie"
+msgstr "Interlingve"
+
+msgid "Intl_Language_ig"
+msgstr "Igbo"
+
+msgid "Intl_Language_ii"
+msgstr "Sičuan ji"
+
+msgid "Intl_Language_ik"
+msgstr "Inupiak"
+
+msgid "Intl_Language_io"
+msgstr "Ido"
+
+msgid "Intl_Language_is"
+msgstr "Islandski"
+
+msgid "Intl_Language_it"
+msgstr "Italijanski"
+
+msgid "Intl_Language_iu"
+msgstr "Inuktitut"
+
+msgid "Intl_Language_ja"
+msgstr "Japanski"
+
+msgid "Intl_Language_jv"
+msgstr "Javanski"
+
+msgid "Intl_Language_ka"
+msgstr "Gruzijski"
+
+msgid "Intl_Language_kg"
+msgstr "Kongo"
+
+msgid "Intl_Language_ki"
+msgstr "Kikuju"
+
+msgid "Intl_Language_kj"
+msgstr "Kuanjama"
+
+msgid "Intl_Language_kk"
+msgstr "Kazaški"
+
+msgid "Intl_Language_kl"
+msgstr "Kalalisutski"
+
+msgid "Intl_Language_km"
+msgstr "Kmerski"
+
+msgid "Intl_Language_kn"
+msgstr "Kanada"
+
+msgid "Intl_Language_ko"
+msgstr "Korejski"
+
+msgid "Intl_Language_kr"
+msgstr "Kanuri"
+
+msgid "Intl_Language_ks"
+msgstr "Kašmirski"
+
+msgid "Intl_Language_ku"
+msgstr "Kurdski"
+
+msgid "Intl_Language_kv"
+msgstr "Komi"
+
+msgid "Intl_Language_kw"
+msgstr "Kornski"
+
+msgid "Intl_Language_ky"
+msgstr "Kirgiški"
+
+msgid "Intl_Language_la"
+msgstr "Latinski"
+
+msgid "Intl_Language_lb"
+msgstr "Luksemburški"
+
+msgid "Intl_Language_lg"
+msgstr "Ganda"
+
+msgid "Intl_Language_li"
+msgstr "Limburški"
+
+msgid "Intl_Language_ln"
+msgstr "Lingala"
+
+msgid "Intl_Language_lo"
+msgstr "Laoski"
+
+msgid "Intl_Language_lt"
+msgstr "Litvanski"
+
+msgid "Intl_Language_lu"
+msgstr "Luba-katanga"
+
+msgid "Intl_Language_lv"
+msgstr "Latvijski"
+
+msgid "Intl_Language_mg"
+msgstr "Malgaški"
+
+msgid "Intl_Language_mh"
+msgstr "Maršalski"
+
+msgid "Intl_Language_mi"
+msgstr "Maorski"
+
+msgid "Intl_Language_mk"
+msgstr "Makedonski"
+
+msgid "Intl_Language_ml"
+msgstr "Malajalam"
+
+msgid "Intl_Language_mn"
+msgstr "Mongolski"
+
+msgid "Intl_Language_mr"
+msgstr "Marati"
+
+msgid "Intl_Language_ms"
+msgstr "Malajski"
+
+msgid "Intl_Language_mt"
+msgstr "Malteški"
+
+msgid "Intl_Language_my"
+msgstr "Burmanski"
+
+msgid "Intl_Language_na"
+msgstr "Nauru"
+
+msgid "Intl_Language_nb"
+msgstr "Norveški (Bokmal)"
+
+msgid "Intl_Language_nd"
+msgstr "Sjeverni ndebele"
+
+msgid "Intl_Language_ne"
+msgstr "Nepalski"
+
+msgid "Intl_Language_ng"
+msgstr "Ndonga"
+
+msgid "Intl_Language_nl"
+msgstr "Holandski"
+
+msgid "Intl_Language_nn"
+msgstr "Norveški (Nynorsk)"
+
+msgid "Intl_Language_no"
+msgstr "Norveški"
+
+msgid "Intl_Language_nr"
+msgstr "Južni ndebele"
+
+msgid "Intl_Language_nv"
+msgstr "Navaho"
+
+msgid "Intl_Language_ny"
+msgstr "Njanja"
+
+msgid "Intl_Language_oc"
+msgstr "Oksitanski"
+
+msgid "Intl_Language_oj"
+msgstr "Ojibva"
+
+msgid "Intl_Language_om"
+msgstr "Oromo"
+
+msgid "Intl_Language_or"
+msgstr "Orijski"
+
+msgid "Intl_Language_os"
+msgstr "Osetski"
+
+msgid "Intl_Language_pa"
+msgstr "Pandžapski"
+
+msgid "Intl_Language_pi"
+msgstr "Pali"
+
+msgid "Intl_Language_pl"
+msgstr "Poljski"
+
+msgid "Intl_Language_ps"
+msgstr "Paštu"
+
+msgid "Intl_Language_pt"
+msgstr "Portugalski"
+
+msgid "Intl_Language_qu"
+msgstr "Kečua"
+
+msgid "Intl_Language_rm"
+msgstr "Retoromanski"
+
+msgid "Intl_Language_rn"
+msgstr "Rundi"
+
+msgid "Intl_Language_ro"
+msgstr "Rumunski"
+
+msgid "Intl_Language_ru"
+msgstr "Ruski"
+
+msgid "Intl_Language_rw"
+msgstr "Kinjaruanda"
+
+msgid "Intl_Language_sa"
+msgstr "Sanskrit"
+
+msgid "Intl_Language_sc"
+msgstr "Sardinijski"
+
+msgid "Intl_Language_sd"
+msgstr "Sindi"
+
+msgid "Intl_Language_se"
+msgstr "Sjeverni sami"
+
+msgid "Intl_Language_sg"
+msgstr "Sango"
+
+msgid "Intl_Language_si"
+msgstr "Sinhaleški"
+
+msgid "Intl_Language_sk"
+msgstr "Slovački"
+
+msgid "Intl_Language_sl"
+msgstr "Slovenski"
+
+msgid "Intl_Language_sm"
+msgstr "Samoanski"
+
+msgid "Intl_Language_sn"
+msgstr "Šona"
+
+msgid "Intl_Language_so"
+msgstr "Somalski"
+
+msgid "Intl_Language_sq"
+msgstr "Albanski"
+
+msgid "Intl_Language_sr"
+msgstr "Srpski"
+
+msgid "Intl_Language_ss"
+msgstr "Svati"
+
+msgid "Intl_Language_st"
+msgstr "Južni soto"
+
+msgid "Intl_Language_su"
+msgstr "Sundanski"
+
+msgid "Intl_Language_sv"
+msgstr "Švedski"
+
+msgid "Intl_Language_sw"
+msgstr "Svahili"
+
+msgid "Intl_Language_ta"
+msgstr "Tamilski"
+
+msgid "Intl_Language_te"
+msgstr "Telugu"
+
+msgid "Intl_Language_tg"
+msgstr "Tadžički"
+
+msgid "Intl_Language_th"
+msgstr "Tajlandski"
+
+msgid "Intl_Language_ti"
+msgstr "Tigrinja"
+
+msgid "Intl_Language_tk"
+msgstr "Turkmenski"
+
+msgid "Intl_Language_tl"
+msgstr "Tagalog"
+
+msgid "Intl_Language_tn"
+msgstr "Tsvana"
+
+msgid "Intl_Language_to"
+msgstr "Tonganski"
+
+msgid "Intl_Language_tr"
+msgstr "Turski"
+
+msgid "Intl_Language_ts"
+msgstr "Tsonga"
+
+msgid "Intl_Language_tt"
+msgstr "Tatarski"
+
+msgid "Intl_Language_tw"
+msgstr "Tvi"
+
+msgid "Intl_Language_ty"
+msgstr "Tahićanski"
+
+msgid "Intl_Language_ug"
+msgstr "Ujgurski"
+
+msgid "Intl_Language_uk"
+msgstr "Ukrajinski"
+
+msgid "Intl_Language_ur"
+msgstr "Urdu"
+
+msgid "Intl_Language_uz"
+msgstr "Uzbečki"
+
+msgid "Intl_Language_ve"
+msgstr "Venda"
+
+msgid "Intl_Language_vi"
+msgstr "Vijetnamski"
+
+msgid "Intl_Language_vo"
+msgstr "Volapuk"
+
+msgid "Intl_Language_wa"
+msgstr "Valun"
+
+msgid "Intl_Language_wo"
+msgstr "Volof"
+
+msgid "Intl_Language_xh"
+msgstr "Hosa"
+
+msgid "Intl_Language_yi"
+msgstr "Jidiš"
+
+msgid "Intl_Language_yo"
+msgstr "Jorubanski"
+
+msgid "Intl_Language_za"
+msgstr "Zuang"
+
+msgid "Intl_Language_zh"
+msgstr "Kineski"
+
+msgid "Intl_Language_zu"
+msgstr "Zulu"
+
+msgid "Intl_LayoutDirection"
+msgstr "ltr"
+
+msgid "Intl_Minutes"
+msgstr "minute"
+
+msgid "Intl_Month_Long_1"
+msgstr "januar"
+
+msgid "Intl_Month_Long_10"
+msgstr "oktobar"
+
+msgid "Intl_Month_Long_11"
+msgstr "novembar"
+
+msgid "Intl_Month_Long_12"
+msgstr "decembar"
+
+msgid "Intl_Month_Long_2"
+msgstr "februar"
+
+msgid "Intl_Month_Long_3"
+msgstr "mart"
+
+msgid "Intl_Month_Long_4"
+msgstr "april"
+
+msgid "Intl_Month_Long_5"
+msgstr "maj"
+
+msgid "Intl_Month_Long_6"
+msgstr "juni"
+
+msgid "Intl_Month_Long_7"
+msgstr "juli"
+
+msgid "Intl_Month_Long_8"
+msgstr "august"
+
+msgid "Intl_Month_Long_9"
+msgstr "septembar"
+
+msgid "Intl_Month_Long_StandAlone_1"
+msgstr "januar"
+
+msgid "Intl_Month_Long_StandAlone_10"
+msgstr "oktobar"
+
+msgid "Intl_Month_Long_StandAlone_11"
+msgstr "novembar"
+
+msgid "Intl_Month_Long_StandAlone_12"
+msgstr "decembar"
+
+msgid "Intl_Month_Long_StandAlone_2"
+msgstr "februar"
+
+msgid "Intl_Month_Long_StandAlone_3"
+msgstr "mart"
+
+msgid "Intl_Month_Long_StandAlone_4"
+msgstr "april"
+
+msgid "Intl_Month_Long_StandAlone_5"
+msgstr "maj"
+
+msgid "Intl_Month_Long_StandAlone_6"
+msgstr "juni"
+
+msgid "Intl_Month_Long_StandAlone_7"
+msgstr "juli"
+
+msgid "Intl_Month_Long_StandAlone_8"
+msgstr "august"
+
+msgid "Intl_Month_Long_StandAlone_9"
+msgstr "septembar"
+
+msgid "Intl_Month_Short_1"
+msgstr "jan"
+
+msgid "Intl_Month_Short_10"
+msgstr "okt"
+
+msgid "Intl_Month_Short_11"
+msgstr "nov"
+
+msgid "Intl_Month_Short_12"
+msgstr "dec"
+
+msgid "Intl_Month_Short_2"
+msgstr "feb"
+
+msgid "Intl_Month_Short_3"
+msgstr "mar"
+
+msgid "Intl_Month_Short_4"
+msgstr "apr"
+
+msgid "Intl_Month_Short_5"
+msgstr "maj"
+
+msgid "Intl_Month_Short_6"
+msgstr "jun"
+
+msgid "Intl_Month_Short_7"
+msgstr "jul"
+
+msgid "Intl_Month_Short_8"
+msgstr "aug"
+
+msgid "Intl_Month_Short_9"
+msgstr "sep"
+
+msgid "Intl_Month_Short_StandAlone_1"
+msgstr "jan"
+
+msgid "Intl_Month_Short_StandAlone_10"
+msgstr "okt"
+
+msgid "Intl_Month_Short_StandAlone_11"
+msgstr "nov"
+
+msgid "Intl_Month_Short_StandAlone_12"
+msgstr "dec"
+
+msgid "Intl_Month_Short_StandAlone_2"
+msgstr "feb"
+
+msgid "Intl_Month_Short_StandAlone_3"
+msgstr "mar"
+
+msgid "Intl_Month_Short_StandAlone_4"
+msgstr "apr"
+
+msgid "Intl_Month_Short_StandAlone_5"
+msgstr "maj"
+
+msgid "Intl_Month_Short_StandAlone_6"
+msgstr "jun"
+
+msgid "Intl_Month_Short_StandAlone_7"
+msgstr "jul"
+
+msgid "Intl_Month_Short_StandAlone_8"
+msgstr "aug"
+
+msgid "Intl_Month_Short_StandAlone_9"
+msgstr "sep"
+
+msgid "Intl_NDays"
+msgstr "%s dana"
+
+msgid "Intl_NHoursShort"
+msgstr "%s h"
+
+msgid "Intl_NMinutes"
+msgstr "%s minuta"
+
+msgid "Intl_NMinutesShort"
+msgstr "%s min."
+
+msgid "Intl_NSeconds"
+msgstr "%s sekundi"
+
+msgid "Intl_NSecondsShort"
+msgstr "%s s"
+
+msgid "Intl_NumberFormatCurrency"
+msgstr "#,##0.00 ¤"
+
+msgid "Intl_NumberFormatNumber"
+msgstr "#,##0.###"
+
+msgid "Intl_NumberFormatPercent"
+msgstr "#,##0 %"
+
+msgid "Intl_NumberSymbolDecimal"
+msgstr ","
+
+msgid "Intl_NumberSymbolGroup"
+msgstr "."
+
+msgid "Intl_NumberSymbolMinus"
+msgstr "-"
+
+msgid "Intl_NumberSymbolPercent"
+msgstr "%"
+
+msgid "Intl_NumberSymbolPlus"
+msgstr "+"
+
+msgid "Intl_OneDay"
+msgstr "1 dan"
+
+msgid "Intl_OneMinute"
+msgstr "1 minuta"
+
+msgid "Intl_OneMinuteShort"
+msgstr "1 min."
+
+msgid "Intl_OriginalLanguageName"
+msgstr "Bosanski"
+
+msgid "Intl_PeriodDay"
+msgstr "dan"
+
+msgid "Intl_PeriodDays"
+msgstr "dani"
+
+msgid "Intl_PeriodMonth"
+msgstr "mjesec"
+
+msgid "Intl_PeriodMonths"
+msgstr "mjeseci"
+
+msgid "Intl_PeriodWeek"
+msgstr "sedmica"
+
+msgid "Intl_PeriodWeeks"
+msgstr "sedmice"
+
+msgid "Intl_PeriodYear"
+msgstr "godina"
+
+msgid "Intl_PeriodYears"
+msgstr "godine"
+
+msgid "Intl_Seconds"
+msgstr "sekunde"
+
+msgid "Intl_Time_AM"
+msgstr "prijepodne"
+
+msgid "Intl_Time_PM"
+msgstr "popodne"
+
+msgid "Intl_Timezone_Africa_Asmera"
+msgstr "Asmara"
+
+msgid "Intl_Timezone_Africa_Ceuta"
+msgstr "Ceuta"
+
+msgid "Intl_Timezone_Africa_Kinshasa"
+msgstr "Kinshasa"
+
+msgid "Intl_Timezone_Africa_Lubumbashi"
+msgstr "Lubumbashi"
+
+msgid "Intl_Timezone_America_Adak"
+msgstr "Adak"
+
+msgid "Intl_Timezone_America_Anchorage"
+msgstr "Anchorage"
+
+msgid "Intl_Timezone_America_Araguaina"
+msgstr "Araguaina"
+
+msgid "Intl_Timezone_America_Argentina_LaRioja"
+msgstr "La Rioja"
+
+msgid "Intl_Timezone_America_Argentina_RioGallegos"
+msgstr "Rio Gallegos"
+
+msgid "Intl_Timezone_America_Argentina_Salta"
+msgstr "Salta"
+
+msgid "Intl_Timezone_America_Argentina_SanJuan"
+msgstr "San Juan"
+
+msgid "Intl_Timezone_America_Argentina_SanLuis"
+msgstr "San Luis"
+
+msgid "Intl_Timezone_America_Argentina_Tucuman"
+msgstr "Tucuman"
+
+msgid "Intl_Timezone_America_Argentina_Ushuaia"
+msgstr "Ushuaia"
+
+msgid "Intl_Timezone_America_Bahia"
+msgstr "Bahia"
+
+msgid "Intl_Timezone_America_BahiaBanderas"
+msgstr "Bahia Banderas"
+
+msgid "Intl_Timezone_America_Belem"
+msgstr "Belem"
+
+msgid "Intl_Timezone_America_Blanc-Sablon"
+msgstr "Blanc-Sablon"
+
+msgid "Intl_Timezone_America_BoaVista"
+msgstr "Boa Vista"
+
+msgid "Intl_Timezone_America_Boise"
+msgstr "Boise"
+
+msgid "Intl_Timezone_America_BuenosAires"
+msgstr "Buenos Aires"
+
+msgid "Intl_Timezone_America_CambridgeBay"
+msgstr "Cambridge Bay"
+
+msgid "Intl_Timezone_America_CampoGrande"
+msgstr "Campo Grande"
+
+msgid "Intl_Timezone_America_Cancun"
+msgstr "Cancun"
+
+msgid "Intl_Timezone_America_Catamarca"
+msgstr "Catamarca"
+
+msgid "Intl_Timezone_America_Chicago"
+msgstr "Chicago"
+
+msgid "Intl_Timezone_America_Chihuahua"
+msgstr "Chihuahua"
+
+msgid "Intl_Timezone_America_CoralHarbour"
+msgstr "Atikokan"
+
+msgid "Intl_Timezone_America_Cordoba"
+msgstr "Cordoba"
+
+msgid "Intl_Timezone_America_Creston"
+msgstr "Creston"
+
+msgid "Intl_Timezone_America_Cuiaba"
+msgstr "Cuiaba"
+
+msgid "Intl_Timezone_America_Danmarkshavn"
+msgstr "Danmarkshavn"
+
+msgid "Intl_Timezone_America_Dawson"
+msgstr "Dawson"
+
+msgid "Intl_Timezone_America_DawsonCreek"
+msgstr "Dawson Creek"
+
+msgid "Intl_Timezone_America_Denver"
+msgstr "Denver"
+
+msgid "Intl_Timezone_America_Detroit"
+msgstr "Detroit"
+
+msgid "Intl_Timezone_America_Edmonton"
+msgstr "Edmonton"
+
+msgid "Intl_Timezone_America_Eirunepe"
+msgstr "Eirunepe"
+
+msgid "Intl_Timezone_America_FortNelson"
+msgstr "Fort Nelson"
+
+msgid "Intl_Timezone_America_Fortaleza"
+msgstr "Fortaleza"
+
+msgid "Intl_Timezone_America_GlaceBay"
+msgstr "Glace Bay"
+
+msgid "Intl_Timezone_America_Godthab"
+msgstr "Nuuk"
+
+msgid "Intl_Timezone_America_GooseBay"
+msgstr "Goose Bay"
+
+msgid "Intl_Timezone_America_Guayaquil"
+msgstr "Guayaquil"
+
+msgid "Intl_Timezone_America_Halifax"
+msgstr "Halifax"
+
+msgid "Intl_Timezone_America_Hermosillo"
+msgstr "Hermosillo"
+
+msgid "Intl_Timezone_America_Indiana_Knox"
+msgstr "Knox, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Marengo"
+msgstr "Marengo, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Petersburg"
+msgstr "Petersburg, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_TellCity"
+msgstr "Tell City, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vevay"
+msgstr "Vevay, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Vincennes"
+msgstr "Vincennes, Indiana"
+
+msgid "Intl_Timezone_America_Indiana_Winamac"
+msgstr "Winamac, Indiana"
+
+msgid "Intl_Timezone_America_Indianapolis"
+msgstr "Indianapolis"
+
+msgid "Intl_Timezone_America_Inuvik"
+msgstr "Inuvik"
+
+msgid "Intl_Timezone_America_Iqaluit"
+msgstr "Iqaluit"
+
+msgid "Intl_Timezone_America_Jujuy"
+msgstr "Jujuy"
+
+msgid "Intl_Timezone_America_Juneau"
+msgstr "Juneau"
+
+msgid "Intl_Timezone_America_Kentucky_Monticello"
+msgstr "Monticello, Kentucky"
+
+msgid "Intl_Timezone_America_LosAngeles"
+msgstr "Los Angeles"
+
+msgid "Intl_Timezone_America_Louisville"
+msgstr "Louisville"
+
+msgid "Intl_Timezone_America_Maceio"
+msgstr "Maceio"
+
+msgid "Intl_Timezone_America_Manaus"
+msgstr "Manaus"
+
+msgid "Intl_Timezone_America_Matamoros"
+msgstr "Matamoros"
+
+msgid "Intl_Timezone_America_Mazatlan"
+msgstr "Mazatlan"
+
+msgid "Intl_Timezone_America_Mendoza"
+msgstr "Mendoza"
+
+msgid "Intl_Timezone_America_Menominee"
+msgstr "Menominee"
+
+msgid "Intl_Timezone_America_Merida"
+msgstr "Merida"
+
+msgid "Intl_Timezone_America_Metlakatla"
+msgstr "Metlakatla"
+
+msgid "Intl_Timezone_America_MexicoCity"
+msgstr "Mexico City"
+
+msgid "Intl_Timezone_America_Moncton"
+msgstr "Moncton"
+
+msgid "Intl_Timezone_America_Monterrey"
+msgstr "Monterrey"
+
+msgid "Intl_Timezone_America_NewYork"
+msgstr "New York"
+
+msgid "Intl_Timezone_America_Nipigon"
+msgstr "Nipigon"
+
+msgid "Intl_Timezone_America_Nome"
+msgstr "Nome"
+
+msgid "Intl_Timezone_America_Noronha"
+msgstr "Noronha"
+
+msgid "Intl_Timezone_America_NorthDakota_Beulah"
+msgstr "Beulah, Sjeverna Dakota"
+
+msgid "Intl_Timezone_America_NorthDakota_Center"
+msgstr "Center, Sjeverna Dakota"
+
+msgid "Intl_Timezone_America_NorthDakota_NewSalem"
+msgstr "New Salem, Sjeverna Dakota"
+
+msgid "Intl_Timezone_America_Ojinaga"
+msgstr "Ojinaga"
+
+msgid "Intl_Timezone_America_Pangnirtung"
+msgstr "Pangnirtung"
+
+msgid "Intl_Timezone_America_Phoenix"
+msgstr "Phoenix"
+
+msgid "Intl_Timezone_America_PortoVelho"
+msgstr "Porto Velho"
+
+msgid "Intl_Timezone_America_PuntaArenas"
+msgstr "Punta Arenas"
+
+msgid "Intl_Timezone_America_RainyRiver"
+msgstr "Rainy River"
+
+msgid "Intl_Timezone_America_RankinInlet"
+msgstr "Rankin Inlet"
+
+msgid "Intl_Timezone_America_Recife"
+msgstr "Recife"
+
+msgid "Intl_Timezone_America_Regina"
+msgstr "Regina"
+
+msgid "Intl_Timezone_America_Resolute"
+msgstr "Resolute"
+
+msgid "Intl_Timezone_America_RioBranco"
+msgstr "Rio Branco"
+
+msgid "Intl_Timezone_America_SantaIsabel"
+msgstr "Santa Isabel"
+
+msgid "Intl_Timezone_America_Santarem"
+msgstr "Santarem"
+
+msgid "Intl_Timezone_America_Santiago"
+msgstr "Santiago"
+
+msgid "Intl_Timezone_America_SaoPaulo"
+msgstr "Sao Paulo"
+
+msgid "Intl_Timezone_America_Scoresbysund"
+msgstr "Ittoqqortoormiit"
+
+msgid "Intl_Timezone_America_Sitka"
+msgstr "Sitka"
+
+msgid "Intl_Timezone_America_StJohns"
+msgstr "St. John’s"
+
+msgid "Intl_Timezone_America_SwiftCurrent"
+msgstr "Swift Current"
+
+msgid "Intl_Timezone_America_Thule"
+msgstr "Thule"
+
+msgid "Intl_Timezone_America_ThunderBay"
+msgstr "Thunder Bay"
+
+msgid "Intl_Timezone_America_Tijuana"
+msgstr "Tijuana"
+
+msgid "Intl_Timezone_America_Toronto"
+msgstr "Toronto"
+
+msgid "Intl_Timezone_America_Vancouver"
+msgstr "Vancouver"
+
+msgid "Intl_Timezone_America_Whitehorse"
+msgstr "Whitehorse"
+
+msgid "Intl_Timezone_America_Winnipeg"
+msgstr "Winnipeg"
+
+msgid "Intl_Timezone_America_Yakutat"
+msgstr "Yakutat"
+
+msgid "Intl_Timezone_America_Yellowknife"
+msgstr "Yellowknife"
+
+msgid "Intl_Timezone_Antarctica_Casey"
+msgstr "Casey"
+
+msgid "Intl_Timezone_Antarctica_Davis"
+msgstr "Davis"
+
+msgid "Intl_Timezone_Antarctica_DumontDUrville"
+msgstr "Dumont d’Urville"
+
+msgid "Intl_Timezone_Antarctica_Macquarie"
+msgstr "Macquarie"
+
+msgid "Intl_Timezone_Antarctica_Mawson"
+msgstr "Mawson"
+
+msgid "Intl_Timezone_Antarctica_McMurdo"
+msgstr "McMurdo"
+
+msgid "Intl_Timezone_Antarctica_Palmer"
+msgstr "Palmer"
+
+msgid "Intl_Timezone_Antarctica_Rothera"
+msgstr "Rothera"
+
+msgid "Intl_Timezone_Antarctica_Syowa"
+msgstr "Syowa"
+
+msgid "Intl_Timezone_Antarctica_Troll"
+msgstr "Troll"
+
+msgid "Intl_Timezone_Antarctica_Vostok"
+msgstr "Vostok"
+
+msgid "Intl_Timezone_Asia_Almaty"
+msgstr "Almati"
+
+msgid "Intl_Timezone_Asia_Anadyr"
+msgstr "Anadir"
+
+msgid "Intl_Timezone_Asia_Aqtau"
+msgstr "Aktau"
+
+msgid "Intl_Timezone_Asia_Aqtobe"
+msgstr "Akutobe"
+
+msgid "Intl_Timezone_Asia_Atyrau"
+msgstr "Atyrau"
+
+msgid "Intl_Timezone_Asia_Barnaul"
+msgstr "Barnaul"
+
+msgid "Intl_Timezone_Asia_Calcutta"
+msgstr "Kolkata"
+
+msgid "Intl_Timezone_Asia_Chita"
+msgstr "Chita"
+
+msgid "Intl_Timezone_Asia_Choibalsan"
+msgstr "Čojbalsan"
+
+msgid "Intl_Timezone_Asia_Famagusta"
+msgstr "Famagusta"
+
+msgid "Intl_Timezone_Asia_Gaza"
+msgstr "Gaza"
+
+msgid "Intl_Timezone_Asia_Hebron"
+msgstr "Hebron"
+
+msgid "Intl_Timezone_Asia_Hovd"
+msgstr "Hovd"
+
+msgid "Intl_Timezone_Asia_Irkutsk"
+msgstr "Irkutsk"
+
+msgid "Intl_Timezone_Asia_Jakarta"
+msgstr "Džakarta"
+
+msgid "Intl_Timezone_Asia_Jayapura"
+msgstr "Džajapura"
+
+msgid "Intl_Timezone_Asia_Kamchatka"
+msgstr "Kamčatka"
+
+msgid "Intl_Timezone_Asia_Katmandu"
+msgstr "Katmandu"
+
+msgid "Intl_Timezone_Asia_Khandyga"
+msgstr "Handiga"
+
+msgid "Intl_Timezone_Asia_Krasnoyarsk"
+msgstr "Krasnojarsk"
+
+msgid "Intl_Timezone_Asia_KualaLumpur"
+msgstr "Kuala Lumpur"
+
+msgid "Intl_Timezone_Asia_Kuching"
+msgstr "Kučing"
+
+msgid "Intl_Timezone_Asia_Magadan"
+msgstr "Magadan"
+
+msgid "Intl_Timezone_Asia_Makassar"
+msgstr "Makasar"
+
+msgid "Intl_Timezone_Asia_Nicosia"
+msgstr "Nikozija"
+
+msgid "Intl_Timezone_Asia_Novokuznetsk"
+msgstr "Novokuznjeck"
+
+msgid "Intl_Timezone_Asia_Novosibirsk"
+msgstr "Novosibirsk"
+
+msgid "Intl_Timezone_Asia_Omsk"
+msgstr "Omsk"
+
+msgid "Intl_Timezone_Asia_Oral"
+msgstr "Oral"
+
+msgid "Intl_Timezone_Asia_Pontianak"
+msgstr "Pontianak"
+
+msgid "Intl_Timezone_Asia_Qyzylorda"
+msgstr "Kizilorda"
+
+msgid "Intl_Timezone_Asia_Rangoon"
+msgstr "Rangun"
+
+msgid "Intl_Timezone_Asia_Saigon"
+msgstr "Ho Ši Min"
+
+msgid "Intl_Timezone_Asia_Sakhalin"
+msgstr "Sahalin"
+
+msgid "Intl_Timezone_Asia_Samarkand"
+msgstr "Samarkand"
+
+msgid "Intl_Timezone_Asia_Shanghai"
+msgstr "Šangaj"
+
+msgid "Intl_Timezone_Asia_Srednekolymsk"
+msgstr "Srednekolymsk"
+
+msgid "Intl_Timezone_Asia_Tashkent"
+msgstr "Taškent"
+
+msgid "Intl_Timezone_Asia_Tomsk"
+msgstr "Tomsk"
+
+msgid "Intl_Timezone_Asia_Ulaanbaatar"
+msgstr "Ulan Bator"
+
+msgid "Intl_Timezone_Asia_Urumqi"
+msgstr "Urumči"
+
+msgid "Intl_Timezone_Asia_Ust-Nera"
+msgstr "Ust-Nera"
+
+msgid "Intl_Timezone_Asia_Vladivostok"
+msgstr "Vladivostok"
+
+msgid "Intl_Timezone_Asia_Yakutsk"
+msgstr "Jakutsk"
+
+msgid "Intl_Timezone_Asia_Yekaterinburg"
+msgstr "Jekaterinburg"
+
+msgid "Intl_Timezone_Atlantic_Azores"
+msgstr "Azori"
+
+msgid "Intl_Timezone_Atlantic_Canary"
+msgstr "Kanari"
+
+msgid "Intl_Timezone_Atlantic_Faeroe"
+msgstr "Faroe"
+
+msgid "Intl_Timezone_Atlantic_Madeira"
+msgstr "Madeira"
+
+msgid "Intl_Timezone_Australia_Adelaide"
+msgstr "Adelaide"
+
+msgid "Intl_Timezone_Australia_Brisbane"
+msgstr "Brisbane"
+
+msgid "Intl_Timezone_Australia_BrokenHill"
+msgstr "Broken Hill"
+
+msgid "Intl_Timezone_Australia_Currie"
+msgstr "Currie"
+
+msgid "Intl_Timezone_Australia_Darwin"
+msgstr "Darwin"
+
+msgid "Intl_Timezone_Australia_Eucla"
+msgstr "Eucla"
+
+msgid "Intl_Timezone_Australia_Hobart"
+msgstr "Hobart"
+
+msgid "Intl_Timezone_Australia_Lindeman"
+msgstr "Lindeman"
+
+msgid "Intl_Timezone_Australia_LordHowe"
+msgstr "Lord Hau"
+
+msgid "Intl_Timezone_Australia_Melbourne"
+msgstr "Melburn"
+
+msgid "Intl_Timezone_Australia_Perth"
+msgstr "Pert"
+
+msgid "Intl_Timezone_Australia_Sydney"
+msgstr "Sidnej"
+
+msgid "Intl_Timezone_Europe_Astrakhan"
+msgstr "Astrahan"
+
+msgid "Intl_Timezone_Europe_Berlin"
+msgstr "Berlin"
+
+msgid "Intl_Timezone_Europe_Busingen"
+msgstr "Busingen"
+
+msgid "Intl_Timezone_Europe_Kaliningrad"
+msgstr "Kalinjingrad"
+
+msgid "Intl_Timezone_Europe_Kiev"
+msgstr "Kijev"
+
+msgid "Intl_Timezone_Europe_Kirov"
+msgstr "Kirov"
+
+msgid "Intl_Timezone_Europe_Lisbon"
+msgstr "Lisabon"
+
+msgid "Intl_Timezone_Europe_Madrid"
+msgstr "Madrid"
+
+msgid "Intl_Timezone_Europe_Moscow"
+msgstr "Moskva"
+
+msgid "Intl_Timezone_Europe_Samara"
+msgstr "Samara"
+
+msgid "Intl_Timezone_Europe_Saratov"
+msgstr "Saratov"
+
+msgid "Intl_Timezone_Europe_Simferopol"
+msgstr "Simferopolj"
+
+msgid "Intl_Timezone_Europe_Ulyanovsk"
+msgstr "Ulyanovsk"
+
+msgid "Intl_Timezone_Europe_Uzhgorod"
+msgstr "Užgorod"
+
+msgid "Intl_Timezone_Europe_Volgograd"
+msgstr "Volgograd"
+
+msgid "Intl_Timezone_Europe_Zaporozhye"
+msgstr "Zaporožje"
+
+msgid "Intl_Timezone_Pacific_Auckland"
+msgstr "Auckland"
+
+msgid "Intl_Timezone_Pacific_Bougainville"
+msgstr "Bougainville"
+
+msgid "Intl_Timezone_Pacific_Chatham"
+msgstr "Chatham"
+
+msgid "Intl_Timezone_Pacific_Easter"
+msgstr "Easter"
+
+msgid "Intl_Timezone_Pacific_Enderbury"
+msgstr "Enderbury"
+
+msgid "Intl_Timezone_Pacific_Galapagos"
+msgstr "Galapagos"
+
+msgid "Intl_Timezone_Pacific_Gambier"
+msgstr "Gambier"
+
+msgid "Intl_Timezone_Pacific_Honolulu"
+msgstr "Honolulu"
+
+msgid "Intl_Timezone_Pacific_Johnston"
+msgstr "Johnston"
+
+msgid "Intl_Timezone_Pacific_Kiritimati"
+msgstr "Kiritimati"
+
+msgid "Intl_Timezone_Pacific_Kosrae"
+msgstr "Kosrae"
+
+msgid "Intl_Timezone_Pacific_Kwajalein"
+msgstr "Kwajalein"
+
+msgid "Intl_Timezone_Pacific_Majuro"
+msgstr "Majuro"
+
+msgid "Intl_Timezone_Pacific_Marquesas"
+msgstr "Marquesas"
+
+msgid "Intl_Timezone_Pacific_Midway"
+msgstr "Midway"
+
+msgid "Intl_Timezone_Pacific_Ponape"
+msgstr "Pohnpei"
+
+msgid "Intl_Timezone_Pacific_PortMoresby"
+msgstr "Port Moresby"
+
+msgid "Intl_Timezone_Pacific_Tahiti"
+msgstr "Tahiti"
+
+msgid "Intl_Timezone_Pacific_Tarawa"
+msgstr "Tarawa"
+
+msgid "Intl_Timezone_Pacific_Truk"
+msgstr "Chuuk"
+
+msgid "Intl_Timezone_Pacific_Wake"
+msgstr "Wake"
+
+msgid "Intl_Today"
+msgstr "Danas"
+
+msgid "Intl_Year_Short"
+msgstr "g."
+
+msgid "Intl_Yesterday"
+msgstr "Jučer"
+
+msgid "Marketplace_ActivateLicenseKey"
+msgstr "Aktiviraj"
+
+msgid "Referrers_ColumnWebsite"
+msgstr "Web stranica"
+
+msgid "SitesManager_Currency"
+msgstr "Valuta"
+
+msgid "SitesManager_Urls"
+msgstr "Veza"
+
+msgid "TagManager_CategoryClicks"
+msgstr "Klikovi"
+
+msgid "TagManager_CategoryDate"
+msgstr "Datum"
+
+msgid "TagManager_PageUrlVariableName"
+msgstr "URL stranice"
+
+msgid "TagManager_Version"
+msgstr "Verzija"
+
+msgid "UsersManager_PrivAdmin"
+msgstr "Administracija"
+
+msgid "UsersManager_PrivView"
+msgstr "Vidi"
+
+msgid "UsersManager_Username"
+msgstr "Korisničko ime"
+
+msgid "VisitTime_NHour"
+msgstr "%s h"
+
+msgid "WebsiteMeasurable_Website"
+msgstr "Web stranica"
+
+msgid "Widgetize_OpenInNewWindow"
+msgstr "Otvori u novom prozoru"
