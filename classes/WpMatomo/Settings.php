@@ -31,6 +31,8 @@ class Settings {
 	const OPTION_LICENSE_KEY = 'license_key';
 	const SHOW_GET_STARTED_PAGE = 'show_get_started_page';
 
+	public static $is_doing_action_tracking_related = false;
+
 	/**
 	 * Environment variables and default settings container
 	 * @var array
@@ -277,6 +279,13 @@ class Settings {
 		$this->set_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE, time() );
 
 		$this->apply_changes( $values );
+
+		if (!self::$is_doing_action_tracking_related) {
+			// prevent recurison if any plugin was listening to this event and calling this method again
+			self::$is_doing_action_tracking_related = true;
+			do_action('matomo_tracking_settings_changed', $this);
+			self::$is_doing_action_tracking_related = false;
+		}
 	}
 
 	/**

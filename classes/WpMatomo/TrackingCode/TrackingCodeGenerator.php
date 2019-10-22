@@ -43,6 +43,7 @@ class TrackingCodeGenerator {
 
 	public function register_hooks() {
 		add_action( 'matomo_site_synced', array( $this, 'update_tracking_code' ), $prio = 10, $args = 0 );
+		add_action( 'matomo_tracking_settings_changed', array( $this, 'update_tracking_code' ), $prio = 10, $args = 0 );
 	}
 
 	public function update_tracking_code() {
