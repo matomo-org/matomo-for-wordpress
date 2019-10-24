@@ -99,7 +99,9 @@ class TrackingSettings implements AdminSettingsInterface {
 		$values['add_post_annotations']         = array();
 		$values[ Settings::OPTION_KEY_STEALTH ] = array();
 
-		if ( $_POST[ self::FORM_NAME ][ 'track_mode' ] === self::TRACK_MODE_MANUALLY) {
+		if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_MANUALLY
+		     || ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_DISABLED &&
+		          $this->settings->get_global_option( 'track_mode' ) === self::TRACK_MODE_MANUALLY ) ) {
 			if ( !empty($_POST[ self::FORM_NAME ][ 'tracking_code' ])) {
 				$_POST[ self::FORM_NAME ][ 'tracking_code' ] = stripslashes($_POST[ self::FORM_NAME ][ 'tracking_code' ]);
 			} else {
