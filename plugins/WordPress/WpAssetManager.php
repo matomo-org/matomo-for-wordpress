@@ -12,6 +12,7 @@ namespace Piwik\Plugins\WordPress;
 use Piwik\AssetManager;
 use Piwik\Plugins\WordPress\AssetManager\NeverDeleteOnDiskUiAsset;
 use Piwik\Translate;
+use Piwik\Version;
 
 if (!defined( 'ABSPATH')) {
     exit; // if accessed directly
@@ -59,7 +60,7 @@ class WpAssetManager extends AssetManager
 		}
 
 		$result .= "<script type=\"text/javascript\">window.$ = jQuery;</script>";
-		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, self::GET_CORE_JS_MODULE_ACTION);
+		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../assets/js/asset_manager_core_js.js?v=' . Version::VERSION);
 
 		if ($this->isMergedAssetsDisabled()) {
 			$this->getMergedNonCoreJSAsset()->delete();
