@@ -42,4 +42,41 @@ class ReportMetadataTest extends MatomoAnalytics_TestCase {
 		$this->assertSame( 'get', $report['action'] );
 	}
 
+	public function test_get_all_report_pages() {
+		$report_pages = $this->metadata->get_all_report_pages();
+		$this->assertNotEmpty($report_pages);
+		$this->assertTrue(is_array($report_pages));
+		$this->assertNotEmpty($report_pages[0]['uniqueId']);
+		$this->assertNotEmpty($report_pages[0]['category']['id']);
+		$this->assertNotEmpty($report_pages[0]['widgets']['id']);
+		$this->assertNotEmpty($report_pages[1]['uniqueId']);
+		$this->assertNotEmpty($report_pages[1]['category']['id']);
+		$this->assertNotEmpty($report_pages[1]['widgets']['id']);
+	}
+
+	public function test_find_report_page_params_by_report_metadata() {
+		$report_page = $this->metadata->find_report_page_params_by_report_metadata(array(
+			'module' => 'UserCountry',
+			'action' => 'getCountry'
+		));
+		$this->assertSame( array('category' => 'General_Visitors', 'subcategory' => 'UserCountry_SubmenuLocations'), $report_page );
+	}
+
+	public function test_find_report_page_params_by_report_metadata_manually_found_through_unique_id() {
+		$report_page = $this->metadata->find_report_page_params_by_report_metadata(array(
+			'module' => 'Actions',
+			'action' => 'get',
+			'uniqueId' => 'Actions_get'
+		));
+		$this->assertSame( array('category' => 'General_Visitors', 'subcategory' => 'General_Overview'), $report_page );
+	}
+
+	public function test_find_report_page_params_by_report_metadata_when_no_report_found_returns_empty_array() {
+		$report_page = $this->metadata->find_report_page_params_by_report_metadata(array(
+			'module' => 'Foo',
+			'action' => 'bar'
+		));
+		$this->assertSame( array(), $report_page );
+	}
+
 }

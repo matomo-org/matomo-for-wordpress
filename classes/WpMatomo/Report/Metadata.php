@@ -33,7 +33,7 @@ class Metadata {
 		if ( $idsite ) {
 			Bootstrap::do_bootstrap();
 
-			$all_reports = Request::processRequest( 'API.getReportMetadata', array( 'idSite' => $idsite ) );
+			$all_reports = Request::processRequest( 'API.getReportMetadata', array( 'idSite' => $idsite, 'filter_limit' => -1 ) );
 			foreach ( $all_reports as $single_report ) {
 				if ( isset( $single_report['uniqueId'] ) ) {
 					self::$CACHE_ALL_REPORTS[ $single_report['uniqueId'] ] = $single_report;
@@ -50,6 +50,7 @@ class Metadata {
 	 */
 	public static function clear_cache() {
 		self::$CACHE_ALL_REPORTS = array();
+		self::$CACHE_ALL_REPORT_PAGES = array();
 	}
 
 	public function find_report_by_unique_id( $unique_id ) {
@@ -71,7 +72,7 @@ class Metadata {
 		if ( $idsite ) {
 			Bootstrap::do_bootstrap();
 
-			self::$CACHE_ALL_REPORT_PAGES = Request::processRequest( 'API.getReportPagesMetadata', array( 'idSite' => $idsite ) );
+			self::$CACHE_ALL_REPORT_PAGES = Request::processRequest( 'API.getReportPagesMetadata', array( 'idSite' => $idsite, 'filter_limit' => -1 ) );
 		}
 
 		return self::$CACHE_ALL_REPORT_PAGES;
@@ -83,16 +84,18 @@ class Metadata {
 			return array();
 		}
 
-		$all_reports = self::get_all_report_pages();
+		$report_pages = self::get_all_report_pages();
 
-		foreach ($all_reports as $all_report) {
-			foreach ($all_report['widgets'] as $widget) {
-				if (!empty($widget['module']) && $widget['module'] === $report_metadata['module']
-				&& !empty($widget['action']) && $widget['action'] === $report_metadata['action']) {
-					return array(
-						'category' => $all_report['category']['id'],
-						'subcategory' => $all_report['subcategory']['id']
-					);
+		foreach ($report_pages as $report_page) {
+			if (!empty($report_page['widgets'])) {
+				foreach ($report_page['widgets'] as $widget) {
+					if (!empty($widget['module']) && $widget['module'] === $report_metadata['module']
+					    && !empty($widget['action']) && $widget['action'] === $report_metadata['action']) {
+						return array(
+							'category' => $report_page['category']['id'],
+							'subcategory' => $report_page['subcategory']['id']
+						);
+					}
 				}
 			}
 		}
@@ -122,6 +125,7 @@ class Metadata {
 			);
 		}
 
+		return array();
 	}
 
 }
