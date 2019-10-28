@@ -25,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var string $excluded_user_agents */
 /** @var string $excluded_query_params */
 /** @var bool|string|int $keep_url_fragments */
+/** @var \WpMatomo\Settings $settings */
 
 ?>
 
@@ -34,11 +35,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 <form method="post">
 	<?php wp_nonce_field( ExclusionSettings::NONCE_NAME ); ?>
 
-    <p>Configure which tracking requests should be ignored. Additionally, you can configure a "Tracking filter" under
-        "Tracking".</p>
+    <p>Configure exclusions.</p>
     <table class="matomo-tracking-form widefat">
         <tbody>
 
+        <tr>
+            <th width="20%" scope="row"><label
+                        for="%2$s"><?php echo __( 'Tracking filter', 'matomo' ) ?></label>:
+            </th>
+            <td colspan="2">
+                <?php
+                $trackingCaps = \WpMatomo\Settings::OPTION_KEY_STEALTH;
+                $filter = $settings->get_global_option( $trackingCaps );
+                foreach ( $wp_roles->role_names as $key => $name ) {
+                echo '<input type="checkbox" ' . ( isset ( $filter [ $key ] ) && $filter [ $key ] ? 'checked="checked" ' : '' ) . 'value="1" name="' . ExclusionSettings::FORM_NAME . '[' . $trackingCaps . '][' . $key . ']" /> ' . $name . ' &nbsp; ';
+                }
+                echo '<span class="dashicons dashicons-editor-help" style="cursor:pointer;" onclick="jQuery(\'#stealthcap-desc\').toggleClass(\'hidden\');"></span> <p class="description hidden" id="stealthcap-desc">' . __( 'Choose users by user role you do <strong>not</strong> want to track.', 'matomo' ) . '</p>';
+            ?>
+        </td>
+        </tr>
         <tr>
             <th width="20%" scope="row"><label
                         for="%2$s"><?php echo Piwik::translate( 'SitesManager_GlobalListExcludedIps' ) ?></label>:

@@ -102,15 +102,6 @@ $paths = new Paths();
 
 		$form->show_checkbox( 'track_admin', __( 'Track admin pages', 'matomo' ), __( 'Enable to track users on admin pages (remember to configure the tracking filter appropriately).', 'matomo' ), $isNotTracking, $fullGeneratedTrackingGroup . ' matomo-track-option-manually' );
 
-		$trackingCaps = \WpMatomo\Settings::OPTION_KEY_STEALTH;
-		echo '<tr class="' . $fullGeneratedTrackingGroup . ' matomo-track-option-manually' . ( $isNotTracking ? ' hidden' : '' ) . '">';
-		echo '<th scope="row"><label for="' . $trackingCaps . '">' . __( 'Tracking filter', 'matomo' ) . '</label>:</th><td>';
-		$filter = $settings->get_global_option( $trackingCaps );
-		foreach ( $wp_roles->role_names as $key => $name ) {
-			echo '<input type="checkbox" ' . ( isset ( $filter [ $key ] ) && $filter [ $key ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[' . $trackingCaps . '][' . $key . ']" /> ' . $name . ' &nbsp; ';
-		}
-		echo '<span class="dashicons dashicons-editor-help" style="cursor:pointer;" onclick="jQuery(\'#stealthcap-desc\').toggleClass(\'hidden\');"></span> <p class="description hidden" id="stealthcap-desc">' . __( 'Choose users by user role you do <strong>not</strong> want to track.', 'matomo' ) . '</p></td></tr>';
-
 		$form->show_checkbox( 'track_across', __( 'Track subdomains in the same website', 'matomo' ), __( 'Adds *.-prefix to cookie domain.', 'matomo' ) . ' ' . sprintf( __( 'See %sMatomo documentation%s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide#tracking-subdomains-in-the-same-website" target="_BLANK">', '</a>' ), $isNotGeneratedTracking, $fullGeneratedTrackingGroup );
 
 		$form->show_checkbox( 'track_across_alias', __( 'Do not count subdomains as outlink', 'matomo' ), __( 'Adds *.-prefix to tracked domain.', 'matomo' ) . ' ' . sprintf( __( 'See %sMatomo documentation%s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide#outlink-tracking-exclusions" target="_BLANK">', '</a>' ), $isNotGeneratedTracking, $fullGeneratedTrackingGroup );
