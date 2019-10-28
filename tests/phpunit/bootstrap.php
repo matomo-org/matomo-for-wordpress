@@ -16,6 +16,10 @@ if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
 	exit( 1 );
 }
 
+if (!defined('MATOMO_PHPUNIT_TEST')) {
+	define('MATOMO_PHPUNIT_TEST', true);
+}
+
 // Give access to tests_add_filter() function.
 require_once $_tests_dir . '/includes/functions.php';
 

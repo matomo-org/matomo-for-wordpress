@@ -21,7 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-if ( !is_plugin_active('matomo/matomo.php') ) {
+if ( !is_plugin_active('matomo/matomo.php')
+     && !defined( 'MATOMO_PHPUNIT_TEST' )
+     && !MATOMO_PHPUNIT_TEST ) { // during tests the plugin may temporarily not be active
 	exit;
 }
 
