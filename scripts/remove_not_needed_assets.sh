@@ -3,6 +3,8 @@
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 MATOMO_ROOT="$SCRIPTPATH/../app/";
 
+php MATOMO_ROOT/console wordpress:generate-language-files
+
 # we need to remove jquery as it is shipped with wordpress and we use their jquery
 rm -rf $MATOMO_ROOT/libs/bower_components/jquery
 rm -rf $MATOMO_ROOT/libs/bower_components/jquery-ui
