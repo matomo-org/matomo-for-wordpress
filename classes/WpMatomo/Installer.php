@@ -17,6 +17,7 @@ use Piwik\Exception\NotYetInstalledException;
 use Piwik\Filesystem;
 use Piwik\Plugin\API;
 use Piwik\Plugins\Installation\FormDatabaseSetup;
+use Piwik\Plugins\Installation\ServerFilesGenerator;
 use Piwik\SettingsPiwik;
 use WpMatomo\Site\Sync;
 
@@ -140,6 +141,9 @@ class Installer {
 				@file_put_contents( $upload_dir . '/index.php', '//hello' );
 				@file_put_contents( $upload_dir . '/index.html', '//hello' );
 				@file_put_contents( $upload_dir . '/index.htm', '//hello' );
+				@file_put_contents( $upload_dir . '/.htaccess', '<Files GeoLite2-City.mmdb>
++'.ServerFilesGenerator::getDenyHtaccessContent().'
++</Files>' );
 			}
 			$config_dir = $paths->get_config_ini_path();
 			if (is_dir($config_dir) && is_writable($config_dir)) {
