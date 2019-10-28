@@ -7,8 +7,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2019-10-21T03:38:23+00:00\n"
-"PO-Revision-Date: 2019-10-21T03:38:23+00:00\n"
+"POT-Creation-Date: 2019-10-28T01:22:53+00:00\n"
+"PO-Revision-Date: 2019-10-28T01:22:53+00:00\n"
 "Language: fi\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Domain: matomo\n"
@@ -1708,6 +1708,24 @@ msgstr "Varmista, että käyttäjätunnus ja salasana ovat oikein."
 msgid "Mobile_YouAreOffline"
 msgstr "Sinulla ei ole verkkoyhteyttä juuri nyt"
 
+msgid "Mobile_ExceptionNoViewAccess"
+msgstr "Please check your username and password and make sure you have %s access for at least one website."
+
+msgid "Mobile_Mobile_HowtoExitAndroid"
+msgstr "Please click BACK again to exit"
+
+msgid "Mobile_MatomoMarketplace"
+msgstr "Matomo Marketplace"
+
+msgid "Mobile_EnterAuthCode"
+msgstr "Enter authentication code"
+
+msgid "Mobile_EnterCorrectAuthCode"
+msgstr "Enter correct authentication code"
+
+msgid "Mobile_EnterAuthCodeExplanation"
+msgstr "It looks like you may be using two-factor authentication. Please enter the six-digit code to log in to your account."
+
 msgid "RowEvolution_AvailableMetrics"
 msgstr "Saatavilla olevat metriikat"
 
@@ -1779,6 +1797,9 @@ msgstr "Sanasto"
 
 msgid "API_LearnAboutCommonlyUsedTerms2"
 msgstr "Lue lisää usein käytetyistä termeistä saadaksesi kaiken irti Matomo-analytiikasta."
+
+msgid "API_EvolutionMetricName"
+msgstr "%s Evolution"
 
 msgid "Actions_AvgGenerationTimeTooltip"
 msgstr "Keskiarvo %1$s osumasta %2$s %3$s - %4$s"
@@ -2065,8 +2086,14 @@ msgstr "Tarkastele ja lisää kommentteja %s:lle..."
 msgid "Annotations_YouCannotModifyThisNote"
 msgstr "Et voi muokata tätä kommenttia, koska et ole luonut sitä, eikä sinulla ole admin-oikeuksia tällä verkkosivulla."
 
+msgid "Contents_PluginDescription"
+msgstr "Content and banner tracking lets you measure the performance (views, clicks, CTR) of any piece of content on your pages (Banner ad, image, any item)."
+
 msgid "Contents_Impressions"
 msgstr "Näkymät"
+
+msgid "Contents_ContentImpression"
+msgstr "Content Impression"
 
 msgid "Contents_ContentInteraction"
 msgstr "Sisällön interaktio"
@@ -2086,6 +2113,9 @@ msgstr "Sisällön nimet"
 msgid "Contents_ContentPiece"
 msgstr "Sisällön osa"
 
+msgid "Contents_ContentPieces"
+msgstr "Content Pieces"
+
 msgid "Contents_ContentTarget"
 msgstr "Sisällön kohde"
 
@@ -2094,6 +2124,15 @@ msgstr "Sisällön kohteet"
 
 msgid "Contents_Contents"
 msgstr "Sisällöt"
+
+msgid "Contents_InteractionsMetricDocumentation"
+msgstr "The number of times a content block was interacted with (eg, a 'click' on a banner or ad)."
+
+msgid "Contents_ImpressionsMetricDocumentation"
+msgstr "The number of times a content block, such as a banner or an ad, was displayed on a page."
+
+msgid "Contents_InteractionRateMetricDocumentation"
+msgstr "The ratio of content impressions to interactions."
 
 msgid "CoreAdminHome_AddNewTrustedHost"
 msgstr "Lisää uusi luotettu palvelin"
@@ -2254,6 +2293,9 @@ msgstr "Voit seurata sivustosi kävijöitä moninaisin tavoin. Suositelva tapa o
 msgid "CoreAdminHome_JSTrackingIntro2"
 msgstr "Kun sinulla on sivustollesi JavaScript-seurantakoodi, kopioi ja liitä se kaikille sivuille, joita haluat seurata Matomon avulla."
 
+msgid "CoreAdminHome_JSTrackingIntro3b"
+msgstr "In most websites, blogs, CMS, etc. you can use a pre-made plugin to do the technical work for you. (See our %1$slist of plugins used to integrate Matomo%2$s.) If no plugin exists you can edit your website templates and add the JavaScript tracking code to the &lt;/head&gt; tag   which is often defined in a 'header.php', 'header.tpl' or similar template file."
+
 msgid "CoreAdminHome_JSTrackingIntro4"
 msgstr "Mikäli et halua käyttää JavaScriptiä kävijöiden seuraamiseksi, %1$sluo kuvaseurantalinkki alapuolella%2$s."
 
@@ -2404,11 +2446,35 @@ msgstr "Tee valinta klikkaamalla alla olevaa linkkiä."
 msgid "CoreAdminHome_OptingYouOut"
 msgstr "Seurantasi estetään, hetkinen..."
 
+msgid "CoreAdminHome_ProtocolNotDetectedCorrectly"
+msgstr "You are currently viewing Matomo over a secure SSL connection (using https), but Matomo could only detect a non secure connection on the server. "
+
+msgid "CoreAdminHome_ProtocolNotDetectedCorrectlySolution"
+msgstr "To make sure Matomo securely requests and serves your content over HTTPS, you may edit your %1$s file and either configure your proxy settings, or you may add the line %2$s below the %3$s section. %4$sLearn more%5$s"
+
+msgid "CoreAdminHome_YouMayOptOut2"
+msgstr "You may choose to prevent this website from aggregating and analyzing the actions you take here."
+
+msgid "CoreAdminHome_YouMayOptOut3"
+msgstr "Doing so will protect your privacy, but will also prevent the owner from learning from your actions and creating a better experience for you and other users."
+
+msgid "CoreAdminHome_UncheckToOptOut"
+msgstr "Uncheck this box to opt-out."
+
+msgid "CoreAdminHome_CheckToOptIn"
+msgstr "Check this box to opt-in."
+
 msgid "CoreAdminHome_MissingTrackingCodeEmailSubject"
 msgstr "Sivuston %s osalta ei ole tallennettu liikennettä Matomo-analytiikkaan, aloitetaanpa"
 
 msgid "CoreAdminHome_JsTrackingCodeMissingEmail1"
 msgstr "Lisäsit sivuston '%s' Matomo-analytikkaasi joitain päiviä sitten. Tarkastimme juuri, ettei Matomo vaikuta tallentaneen lainkaan liikennettä tämän sivuston osalta."
+
+msgid "CoreAdminHome_JsTrackingCodeMissingEmail2"
+msgstr "To begin tracking data and getting insights into your users, you'll need to set up tracking in your website or mobile app. For websites simply embed the tracking code right before the %s tag."
+
+msgid "CoreAdminHome_JsTrackingCodeMissingEmail3"
+msgstr "To find and customize your tracking code, %1$sclick here%2$s (or have a look at the %3$sJavaScript Tracking Client guide%4$s)."
 
 msgid "CoreAdminHome_TrackingFailuresIntroduction"
 msgstr "Tällä sivulla näytetään seurantavirheet, jotka ovat sattuneet viimeisen %späivän aikana. Huomaathan, että ainoastaan yleisimmät seurantavirheet tallennetaan, eikä niistäkään kaikkia."
@@ -2505,6 +2571,12 @@ msgstr "Yhdistetyt rivit on piilotettu %s Näytä"
 
 msgid "CoreHome_DataTableHowToSearch"
 msgstr "Hae painamalla enter tai klikkaamalla hakukuvaketta"
+
+msgid "CoreHome_DataTableShowDimensions"
+msgstr "Dimensions are combined %s Show dimensions separately"
+
+msgid "CoreHome_DataTableCombineDimensions"
+msgstr "Dimensions are shown separately %s Show dimensions combined"
 
 msgid "CoreHome_Default"
 msgstr "oletus"
@@ -2956,6 +3028,9 @@ msgstr "Voit asentaa liitännäisiä automaattisesti kaupasta tai %1$slähettä�
 msgid "CorePluginsAdmin_TagManagerNowAvailableTitle"
 msgstr "Matomon tagihallinta on nyt saatavilla"
 
+msgid "CorePluginsAdmin_TagManagerNowAvailableSubtitle"
+msgstr "Manage all your tags easily through one platform to get the insights you want, the opportunities are endless!"
+
 msgid "CorePluginsAdmin_ActivateTagManagerNow"
 msgstr "Aktivoi tagihallinta nyt"
 
@@ -2968,14 +3043,41 @@ msgstr "Älä näytä tätä sivua yhdellekään käyttäjälle"
 msgid "CorePluginsAdmin_TagManagerTeaserHideNonSuperUser"
 msgstr "Ei kiinnosta, älä näytä tätä sivua uudelleen"
 
+msgid "CorePluginsAdmin_TagManagerTeaserEmailSuperUserBody"
+msgstr "Hi,%1$sMatomo Tag Manager is now available within Matomo and I would love to use this new feature. As you have Super User access, could you activate this feature through the Tag Manager page in the top menu?%2$sThe Matomo URL is %3$s.%4$sThanks"
+
 msgid "CorePluginsAdmin_WhatIsTagManager"
 msgstr "Mitä tagihallinta tarkoittaa?"
+
+msgid "CorePluginsAdmin_WhatIsTagManagerDetails1"
+msgstr "Similar to how a Content Management System (CMS) brings you all the flexibility to publish content for your website without having the technical HTML/CSS knowledge, a Tag Management System (TMS) is your go-to for simplifying the process of embedding first and third-party application tracking tags (also known as snippets or pixels) on your website."
+
+msgid "CorePluginsAdmin_WhatIsTagManagerDetails2"
+msgstr "Say you want to see the results of your conversions/goals, newsletter signups, social widgets, exit popups and remarketing campaigns; what was once a highly technical and time-consuming process is now easily done within the TMS and takes only a few clicks to implement."
+
+msgid "CorePluginsAdmin_TagManagerLearnMoreInUserGuide"
+msgstr "Learn more in the Tag Manager User Guide"
 
 msgid "CorePluginsAdmin_WhyUsingATagManager"
 msgstr "Miksi tagihallinta?"
 
+msgid "CorePluginsAdmin_WhyUsingATagManagerDetails1"
+msgstr "A Tag Manager makes your life easier! You no longer need to wait on a developer to modify any first or third-party snippets on your website as the Tag Manager gives you a stress-free experience to make these changes and deploy your website yourself."
+
+msgid "CorePluginsAdmin_WhyUsingATagManagerDetails2"
+msgstr "It couldn't be more convenient and it not only lets you bring changes to the market faster, but also reduces cost."
+
+msgid "CorePluginsAdmin_WhyUsingATagManagerDetails3"
+msgstr "This keeps the marketing teams, digital teams and the IT guys happy... It’s a win-win for everyone!"
+
 msgid "CorePluginsAdmin_AreThereAnyRisks"
 msgstr "Entä riskit?"
+
+msgid "CorePluginsAdmin_AreThereAnyRisksDetails1"
+msgstr "When you activate the Tag Manager, users with admin access will be able to create custom HTML tags, triggers, and variables that may execute JavaScript on your website. These custom templates could be misused to steal, for example, sensitive information from your website visitors (known as %1$sXSS%2$s)."
+
+msgid "CorePluginsAdmin_AreThereAnyRisksDetails2"
+msgstr "You can disable these custom templates under \"Administration => General Settings\" once you have activated the Tag Manager. Alternatively, you can also restrict the usage of these templates to specific users or super users only."
 
 msgid "CorePluginsAdmin_Theme"
 msgstr "Teema"
@@ -3079,6 +3181,9 @@ msgstr "Päivitys valmistui onnistuneesti, mutta prosessin aikana tapahtui virhe
 msgid "CoreUpdater_HighTrafficPiwikServerEnableMaintenance"
 msgstr "Jos Matomo-palvelimellasi on suuria määriä liikennettä, suosittelemme %1$spoistamaan käyttäjäseurannan hetkellisesti käytöstä ja laittamaan Matomon käyttöliittymän huoltotilaan%2$s."
 
+msgid "CoreUpdater_IncompatbilePluginsWillBeDisabledInfo"
+msgstr "Note: some plugins are not compatible with Matomo %s. We will update them if there is an update on the Marketplace, otherwise we will disable them when you upgrade:"
+
 msgid "CoreUpdater_InstallingTheLatestVersion"
 msgstr "Asennetaan uusinta versiota"
 
@@ -3096,6 +3201,9 @@ msgstr "Viimeisin beta 2.X"
 
 msgid "CoreUpdater_LtsSupportVersion"
 msgstr "Pitkään tuettu versio"
+
+msgid "CoreUpdater_ListOfSqlQueriesFYI"
+msgstr "FYI: these are the SQL queries and console commands that will be executed to upgrade your database to Matomo %s"
 
 msgid "CoreUpdater_TheseSqlQueriesWillBeExecuted"
 msgstr "Nämä SQL-kyselyt suoritetaan:"
@@ -3288,6 +3396,9 @@ msgstr "Sallii minkä tahansa liitännäisen laajentaa Matomon JavaScript-seuran
 msgid "CustomPiwikJs_DiagnosticPiwikJsWritable"
 msgstr "Kirjoitettava JavaScript-seurain (%s)"
 
+msgid "CustomPiwikJs_DiagnosticPiwikJsNotWritable"
+msgstr "The Matomo JavaScript tracker file %s is not writable which means other plugins cannot extend the JavaScript tracker. In the future even some core features might not work as expected. "
+
 msgid "CustomPiwikJs_DiagnosticPiwikJsMakeWritable"
 msgstr "Suosittelemme, että %1$s asetetaan kirjoitettavaksi suorittamalla seuraava komento: %2$s"
 
@@ -3303,14 +3414,23 @@ msgstr "Kustomoidut muuttujat"
 msgid "CustomVariables_CustomVariablesReportDocumentation"
 msgstr "Tämä raportti sisältää tietoa kustomoiduista muuttujastasi. Voit tarkastella eri arvojen määrää klikkaamalla muuttujan nimeä. %1$s Saat lisätietoa kustomoiduista muuttujista %2$sCustom Variables%3$s-sivulta matomo.orgista (englanninkielinen)"
 
+msgid "CustomVariables_PluginDescription"
+msgstr "Custom Variables are (name, value) pairs that you can assign using the Javascript API to visitors or any of their action. Matomo will then report how many visits, pages, conversions for each of these custom names and values. View the detailed Custom Variables for each user and action in the Visitor Log. This plugin is required to use Ecommerce Analytics feature!"
+
 msgid "CustomVariables_ScopePage"
 msgstr "alueena sivu"
 
 msgid "CustomVariables_ScopeVisit"
 msgstr "alueena käynti"
 
+msgid "CustomVariables_ScopeConversion"
+msgstr "scope conversion"
+
 msgid "CustomVariables_ManageDescription"
 msgstr "Tämä on yleiskatsaus kaikista kustomoiduista muuttujista ja niiden käytöstä verkkosivulla '%s'. Nimet on järjestetty käyttömäärien mukaan."
+
+msgid "CustomVariables_ScopeX"
+msgstr "Scope %s"
 
 msgid "CustomVariables_Index"
 msgstr "Indeksi"
@@ -3320,6 +3440,30 @@ msgstr "Käytöt"
 
 msgid "CustomVariables_Unused"
 msgstr "Käyttämätön"
+
+msgid "CustomVariables_CreateNewSlot"
+msgstr "Increase the number of available Custom Variables slots"
+
+msgid "CustomVariables_UsageDetails"
+msgstr "%1$s visits and %2$s actions since creation of this website."
+
+msgid "CustomVariables_CreatingCustomVariableTakesTime"
+msgstr "Creating a new custom variable slot can take a long time depending on the size of your database. Therefore, it is only possible to do this via a command which needs to be executed on the command line."
+
+msgid "CustomVariables_CurrentAvailableCustomVariables"
+msgstr "Currently you can use up to %s Custom Variables per site."
+
+msgid "CustomVariables_ToCreateCustomVarExecute"
+msgstr "To create a new custom variable slot execute the following command within your Matomo installation: "
+
+msgid "CustomVariables_SlotsReportIsGeneratedOverTime"
+msgstr "Data for this report will be populated over time. It may take a day or two to see any data and a few weeks until the report is fully accurate."
+
+msgid "CustomVariables_MetricsAreOnlyAvailableForVisitScope"
+msgstr "Note: %1$s metrics are available for Custom Variables of scope %2$s only."
+
+msgid "CustomVariables_MetricsNotAvailableForPageScope"
+msgstr "For Custom Variables of scope %1$s, the column value for these metrics is %2$s"
 
 msgid "DBStats_DatabaseUsage"
 msgstr "Tietokannan käyttö"
@@ -3639,8 +3783,20 @@ msgstr "Asetustiedosto"
 msgid "Diagnostics_MysqlMaxPacketSize"
 msgstr "Paketin enimmäiskoko"
 
+msgid "Diagnostics_MysqlMaxPacketSizeWarning"
+msgstr "It is recommended to configure a 'max_allowed_packet' size in your MySQL database of at least %1$s. Configured is currently %2$s."
+
+msgid "Diagnostics_ConfigFileIntroduction"
+msgstr "Here you can view the Matomo configuration. If you are running Matomo in a load balanced environment, the page might be different depending on from which server this page is loaded. Rows with a different background color are changed config values that are specified for example in the %1$s file."
+
+msgid "Diagnostics_HideUnchanged"
+msgstr "If you want to see only changed values you can %1$shide all unchanged values%2$s."
+
 msgid "Diagnostics_Sections"
 msgstr "Osiot"
+
+msgid "Diagnostics_DatabaseReaderConnection"
+msgstr "Database Reader Connection"
 
 msgid "Diagnostics_CronArchivingLastRunCheck"
 msgstr "Viimeisin onnistunut arkistointi"
@@ -3651,11 +3807,20 @@ msgstr "Arkistointia ei ole vielä suoritettu onnistuneesti."
 msgid "Diagnostics_CronArchivingHasNotRunInAWhile"
 msgstr "Arkistointi suoritettiin onnistuneesti viimeksi %1$s, eli %2$s sitten."
 
+msgid "Diagnostics_CronArchivingRunDetails"
+msgstr "Please check that you have setup a crontab calling the %1$s console command, and that you have configured a %2$s to receive errors by email if archiving fails. You can also try to run the console command to archive your reports manually: %3$s. %4$sLearn more.%5$s"
+
 msgid "Diagnostics_CronArchivingRanSuccessfullyXAgo"
 msgstr "Arkistointiprosessi suoritettiin onnistuneesti %1$s sitten."
 
+msgid "Diagnostics_BrowserTriggeredArchivingEnabled"
+msgstr "For optimal performance and a speedy Matomo, it is highly recommended to set up a crontab to automatically archive your reports, and to disable browser triggering in the Matomo settings. %1$sLearn more.%2$s"
+
 msgid "Diagnostics_NoDataForReportArchivingNotRun"
 msgstr "Raporttiesi arkistointia ei ole suoritettu hetkeen. %1$sLue lisää kuinka luoda raportteja.%2$s"
+
+msgid "Ecommerce_PluginDescription"
+msgstr "Ecommerce lets you track when users add products to carts, and when they convert to an ecommerce sale. Also track products and product categories views and abandoned carts."
 
 msgid "Ecommerce_Sales"
 msgstr "Myynnit"
@@ -3683,6 +3848,9 @@ msgstr "Tilauksen arvo"
 
 msgid "Ecommerce_LifeTimeValue"
 msgstr "Verkkokaupan arvo koko elinkaaren aikana"
+
+msgid "Ecommerce_LifeTimeValueDescription"
+msgstr "Total Ecommerce revenue attributed to this customer across all visits: the sum of revenue of all Ecommerce orders for Visitor ID %s."
 
 msgid "Ecommerce_VisitorProfileLTV"
 msgstr "Tuottanut kaikilla vierailukerroillaan yhteensä %1$s."
@@ -3747,6 +3915,9 @@ msgstr "Tapahtumien määrä, joissa \"Tapahtuma\"-arvo oli asetettuna"
 msgid "Events_EventValue"
 msgstr "Tapahtuman arvo"
 
+msgid "Events_EventValueTooltip"
+msgstr "Total Event value is the sum of %1$s events values %2$s between minimum of %3$s and maximum of %4$s."
+
 msgid "Events_MaxValue"
 msgstr "Suurin tapahtuma-arvo"
 
@@ -3786,6 +3957,9 @@ msgstr "Näytä tapahtumat"
 msgid "Feedback_DoYouHaveBugReportOrFeatureRequest"
 msgstr "Onko sinulle virheraportti tai pyyntö uudesta ominaisuudesta?"
 
+msgid "Feedback_HowToCreateTicket"
+msgstr "Please read the recommendations on writing a good %1$sbug report%2$s or %3$sfeature request%4$s. Then register or login on %5$sour issue tracker%6$s and create a %7$snew issue%8$s."
+
 msgid "Feedback_IWantTo"
 msgstr "Haluan:"
 
@@ -3795,11 +3969,20 @@ msgstr "Katso erilaisia tapoja %1$s osallistua%2$s"
 msgid "Feedback_ManuallySendEmailTo"
 msgstr "Ole hyvä ja lähetä viesti osoitteeseen"
 
+msgid "Feedback_PluginDescription"
+msgstr "Send your Feedback to the Matomo Team. Share your ideas and suggestions to make Matomo the best analytics platform in the world!"
+
+msgid "Feedback_PrivacyClaim"
+msgstr "Matomo respects your %1$sprivacy%2$s and gives you full control over your data."
+
 msgid "Feedback_RateFeatureLeaveMessageDislike"
 msgstr "Harmillista kuulla että et pidä siitä! Voisitko kertoa meille, miten voimme korjata tämän?"
 
 msgid "Feedback_RateFeatureLeaveMessageLike"
 msgstr "Olemme iloisia että pidit siitä! Kerro meille mistä pidit eniten tai jos sinulla on ehdotuksia uusiksi ominaisuuksiksi."
+
+msgid "Feedback_RateFeatureSendFeedbackInformation"
+msgstr "Your Matomo platform will send us (the Matomo team) an email (including your email address) so we can get in contact with you if you have any question."
 
 msgid "Feedback_RateFeatureThankYouTitle"
 msgstr "Kiitos '%s':n arvostelemisesta!"
@@ -3861,6 +4044,18 @@ msgstr "Ota yhteyttä"
 msgid "Feedback_VisitTheForums"
 msgstr "Käy %1$skeskustelupalstalla%2$s ja saa apua Matomo-käyttäjien yhteisöltä"
 
+msgid "Feedback_ReviewMatomoTitle"
+msgstr "Believe in Matomo?"
+
+msgid "Feedback_PleaseLeaveExternalReviewForMatomo"
+msgstr "Share your thoughts on one of these sites and inspire others to join our data revolution."
+
+msgid "Feedback_RemindMeLater"
+msgstr "Remind me later"
+
+msgid "Feedback_NeverAskMeAgain"
+msgstr "Never ask me again"
+
 msgid "GeoIp2_CannotFindGeoIPDatabaseInArchive"
 msgstr "Tar-arkistosta %1$s ei löytynyt kelvollista GeoIP-tietokantaa!"
 
@@ -3870,8 +4065,26 @@ msgstr "GeoIP-tiedoston purkaminen epäonnistui: %1$s: %2$s"
 msgid "GeoIp2_PluginDescription"
 msgstr "Tuottaa GeoIP2-sijaintitarjoajat."
 
+msgid "GeoIp2_LocationProviderDesc_Php"
+msgstr "This location provider is the simplest to install as it does not require server configuration (ideal for shared hosting!). It uses a GeoIP 2 database and MaxMind's PHP API to accurately determine the location of your visitors."
+
+msgid "GeoIp2_LocationProviderDesc_Php_WithExtension"
+msgstr "This location provider is speeded up by the installed %1$smaxminddb%2$s extension."
+
+msgid "GeoIp2_LocationProviderDesc_ServerModule"
+msgstr "This location provider uses the GeoIP 2 module that has been installed in your HTTP server. This provider is fast and accurate, but %1$scan only be used with normal browser tracking.%2$s"
+
+msgid "GeoIp2_LocationProviderDesc_ServerModule2"
+msgstr "If you have to import log files or do something else that requires setting IP addresses, use the %3$sPHP GeoIP 2 implementation%4$s and install %1$smaxminddb extension%2$s."
+
 msgid "GeoIp2_ServerBasedVariablesConfiguration"
 msgstr "Palvelimen muuttujat GeoIP2-palvelinmoduulille"
+
+msgid "GeoIp2_GeoIPVariablesConfigurationHere"
+msgstr "You can configure used server variables %1$shere%2$s."
+
+msgid "GeoIp2_ShowCustomServerVariablesConfig"
+msgstr "I use the Geoip2 server module (Nginx, Apache...) and want to configure server variables"
 
 msgid "GeoIp2_ServerVariableFor"
 msgstr "Palvelimen muuttuja %s:lle"
@@ -3921,6 +4134,9 @@ msgstr "Käyttäjän attribuutti"
 msgid "Goals_CategoryTextDevicesDetection_DevicesDetection"
 msgstr "Laitteet"
 
+msgid "Goals_CategoryTextGeneral_Visit"
+msgstr "engagement"
+
 msgid "Goals_ClickOutlink"
 msgstr "Ulos lähtevän linkin painaminen"
 
@@ -3944,6 +4160,9 @@ msgstr "%s:n saavuttamisaste on niiden tilausten määrä, joissa oli tämä tuo
 
 msgid "Goals_ColumnConversions"
 msgstr "Muutokset"
+
+msgid "Goals_Conversion"
+msgstr "Conversion"
 
 msgid "Goals_ColumnConversionsDocumentation"
 msgstr "Tavoitteen saavuttaminen %s:lle."
@@ -3981,6 +4200,9 @@ msgstr "%s siirtymisaste"
 msgid "Goals_Conversions"
 msgstr "%s siirtymää"
 
+msgid "Goals_ConversionsDescription"
+msgstr "conversions"
+
 msgid "Goals_ConversionsOverview"
 msgstr "Siirtymien yleiskatsaus"
 
@@ -3995,6 +4217,9 @@ msgstr "Tavoitteen tiedot"
 
 msgid "Goals_DefaultGoalConvertedOncePerVisit"
 msgstr "(oletus) tavoitteen voi saavuttaa vain kerran per käynti"
+
+msgid "Goals_DefaultRevenueLabel"
+msgstr "Goal default revenue"
 
 msgid "Goals_DefaultRevenueHelp"
 msgstr "Esimerkiksi lähetetyn \\\"Ota yhteyttä\\\"-lomakkeen arvo voi olla keskimäärin 10€. Matomo auttaa ymmärtämään, miten eri segmentit tuovat rahaa."
@@ -4059,6 +4284,12 @@ msgstr "Tavoitteet"
 msgid "Goals_NGoals"
 msgstr "%s tavoitetta"
 
+msgid "Goals_NRevenue"
+msgstr "%s revenue"
+
+msgid "Goals_NItems"
+msgstr "%s items"
+
 msgid "Goals_ManageGoals"
 msgstr "Hallitse tavoitteita"
 
@@ -4098,8 +4329,26 @@ msgstr "Konversion seuranta on yksi tehokkaimmista tavoista mitata ja kehittää
 msgid "Goals_NewVisitorsConversionRateIs"
 msgstr "Uusien kävijöiden siirtymäaste on %s"
 
+msgid "Goals_NoGoalsNeedAccess2"
+msgstr "Only a Write user, an Administrator or a user with Super User access can manage Goals for a given website. Please ask your Matomo administrator to set up a Goal for your website. <br>Tracking Goals is a great way to help understand and maximize your website performance!"
+
+msgid "Goals_NoConversionsNoReportsMessage"
+msgstr "Reports are not displayed because there is no conversion data for the selected goal and period."
+
+msgid "Goals_NeedAccess"
+msgstr "Only an Administrator or a user with Super User access can manage Goals for a given website."
+
 msgid "Goals_Optional"
 msgstr "(valinnainen)"
+
+msgid "Goals_OverallConversionRate"
+msgstr "overall conversion rate (visits with a completed goal)"
+
+msgid "Goals_ColumnOverallRevenue"
+msgstr "Overall revenue"
+
+msgid "Goals_OverallRevenue"
+msgstr "overall revenue"
 
 msgid "Goals_PageTitle"
 msgstr "Sivun otsikko"
@@ -4131,6 +4380,9 @@ msgstr "Tuotteet"
 msgid "Goals_ProductSKU"
 msgstr "Tuotteen SKU"
 
+msgid "Goals_ProductSKUs"
+msgstr "Product SKUs"
+
 msgid "Goals_ReturningVisitorsConversionRateIs"
 msgstr "Palaavien kävijöiden siirtymäaste on %s"
 
@@ -4149,6 +4401,12 @@ msgstr "URL"
 msgid "Goals_ViewAndEditGoals"
 msgstr "Katso ja muokkaa tavoitteita"
 
+msgid "Goals_GoalsBy"
+msgstr "Goals by %s"
+
+msgid "Goals_GoalsAdjective"
+msgstr "Goals %s"
+
 msgid "Goals_VisitPageTitle"
 msgstr "Käynti sivulla, jonka otsikko on annettu alla"
 
@@ -4158,20 +4416,596 @@ msgstr "Käyntejä tavoitteen saavuttamiseen"
 msgid "Goals_VisitUrl"
 msgstr "Vierailee annetussa osoitteessa (sivu tai ryhmä sivuja)"
 
+msgid "Goals_VisitDurationMatchAttr"
+msgstr "Stay for a certain amount of time"
+
+msgid "Goals_VisitDuration"
+msgstr "visit duration is"
+
 msgid "Goals_WhenVisitors"
 msgstr "kun kävijöitä"
 
 msgid "Goals_WhereThe"
 msgstr "jossa"
 
+msgid "Goals_WhereVisitedPageManuallyCallsJavascriptTrackerLearnMore"
+msgstr "The visited page needs to contain a call to the JavaScript 'trackGoal' method (%1$slearn more%2$s)"
+
 msgid "Goals_YouCanEnableEcommerceReports"
 msgstr "Voit ottaa käyttöön %1$s tälle sivustolle sivulla %2$s."
+
+msgid "Goals_UseEventValueAsRevenue"
+msgstr "Use the event value (if it exists) as the goal conversion revenue."
+
+msgid "Goals_GoalRevenue"
+msgstr "Goal Revenue"
+
+msgid "Goals_EventValueAsRevenueHelp"
+msgstr "If the event you are matching has a revenue, and that revenue is tracked as the event value, you can enable this option to record the event value as the goal conversion's revenue. If your goal revenue will not vary per conversion, you can ignore this option and just set a default revenue above."
+
+msgid "Goals_EventValueAsRevenueHelp2"
+msgstr "Note: If both a default goal revenue and event value are defined, the event value will be used. If this option is enabled and no event value is sent in a request, the default revenue will be used (if defined)."
+
+msgid "Goals_AtLeastMinutes"
+msgstr "at least %1$s minutes. Use decimals to match seconds, for example, %2$s to match 30 seconds."
+
+msgid "Goals_TimeInMinutes"
+msgstr "Time in Minutes"
+
+msgid "HeatmapSessionRecording_Recordings"
+msgstr "Recordings"
+
+msgid "HeatmapSessionRecording_Heatmaps"
+msgstr "Heatmaps"
+
+msgid "HeatmapSessionRecording_Heatmap"
+msgstr "Heatmap"
+
+msgid "HeatmapSessionRecording_HeatmapX"
+msgstr "Heatmap %s"
+
+msgid "HeatmapSessionRecording_NHeatmaps"
+msgstr "%s heatmaps"
+
+msgid "HeatmapSessionRecording_NSessionRecordings"
+msgstr "%s session recordings"
+
+msgid "HeatmapSessionRecording_NoHeatmapsFound"
+msgstr "No heatmaps found"
+
+msgid "HeatmapSessionRecording_NoSessionRecordingsFound"
+msgstr "No session recordings found"
+
+msgid "HeatmapSessionRecording_HeatmapUsageBenefits"
+msgstr "Heatmaps let you record all clicks, mouse moves, and scroll activities of your visitors on a certain page. This helps you to find out where users think something is clickable but is not, whether there are parts of the page that are being barely viewed or interacted with, what your visitors are looking for, how much of the page is visible when users view your page, and more."
+
+msgid "HeatmapSessionRecording_HeatmapXRecordedSamplesSince"
+msgstr "%1$s samples have been recorded since %2$s."
+
+msgid "HeatmapSessionRecording_SessionRecordingsUsageBenefits"
+msgstr "Session recordings let you record all activities of a real visitor during their session (visit) such as clicks, mouse movements, scrolls, window resizes, page changes, and form interactions. You can then replay these interactions to see exactly how a visitor interacted with your website. This way you understand their expectations, problems they may have, usage patterns, and more."
+
+msgid "HeatmapSessionRecording_SessionRecordings"
+msgstr "Session Recordings"
+
+msgid "HeatmapSessionRecording_SessionRecording"
+msgstr "Session Recording"
+
+msgid "HeatmapSessionRecording_AutoPlayNextPageview"
+msgstr "Click to %s autoplay next page view (shortcut %s)"
+
+msgid "HeatmapSessionRecording_ClickToSkipPauses"
+msgstr "Click to %s skip pauses (shortcut %s)"
+
+msgid "HeatmapSessionRecording_ChangeReplaySpeed"
+msgstr "Change replay speed (shortcut %s)"
+
+msgid "HeatmapSessionRecording_PageviewXofY"
+msgstr "Pageview %1$s of %2$s"
+
+msgid "HeatmapSessionRecording_enable"
+msgstr "enable"
+
+msgid "HeatmapSessionRecording_disable"
+msgstr "disable"
+
+msgid "HeatmapSessionRecording_ReplayX"
+msgstr "Replay %s"
+
+msgid "HeatmapSessionRecording_DeleteScreenshot"
+msgstr "Delete Screenshot"
+
+msgid "HeatmapSessionRecording_CreationDate"
+msgstr "Creation Date"
+
+msgid "HeatmapSessionRecording_SessionRecordingX"
+msgstr "Session Recording %s"
+
+msgid "HeatmapSessionRecording_ReplayRecordedSession"
+msgstr "Replay recorded session"
+
+msgid "HeatmapSessionRecording_RecordedSessions"
+msgstr "Recorded Sessions"
+
+msgid "HeatmapSessionRecording_RecordedSessionsDocStatusActive"
+msgstr "This session recording is active. Up to %d sessions will be recorded with a sample rate of %s."
+
+msgid "HeatmapSessionRecording_RecordedSessionsDocStatusEnded"
+msgstr "This session recording has ended and no new sessions will be recorded."
+
+msgid "HeatmapSessionRecording_RecordedHeatmapDocStatusActive"
+msgstr "This heatmap is active. Up to %d page views will be recorded with a sample rate of %s."
+
+msgid "HeatmapSessionRecording_RecordedHeatmapDocStatusEnded"
+msgstr "This heatmap has ended. No new activity will be recorded."
+
+msgid "HeatmapSessionRecording_StatusActive"
+msgstr "Active"
+
+msgid "HeatmapSessionRecording_StatusEnded"
+msgstr "Ended"
+
+msgid "HeatmapSessionRecording_ExcludedElements"
+msgstr "Excluded Elements"
+
+msgid "HeatmapSessionRecording_ExcludedElementsHelp"
+msgstr "You can optionally define CSS selectors to exclude certain elements that should not be visible in the heatmap preview. For example a popup that is shown when the target page is opened. You can separate multiple selectors with a comma."
+
+msgid "HeatmapSessionRecording_Rule"
+msgstr "Rule"
+
+msgid "HeatmapSessionRecording_Manage"
+msgstr "Manage"
+
+msgid "HeatmapSessionRecording_ViewReport"
+msgstr "View report"
+
+msgid "HeatmapSessionRecording_ErrorXNotANumber"
+msgstr "\"%1$s\" has to be a number."
+
+msgid "HeatmapSessionRecording_SampleLimit"
+msgstr "Sample Limit"
+
+msgid "HeatmapSessionRecording_TimeOnSite"
+msgstr "Time on website"
+
+msgid "HeatmapSessionRecording_HeatmapSampleLimit"
+msgstr "Number of page views"
+
+msgid "HeatmapSessionRecording_SessionSampleLimit"
+msgstr "Number of sessions"
+
+msgid "HeatmapSessionRecording_HeatmapSampleLimitHelp"
+msgstr "Defines the amount of page views you want to record in total."
+
+msgid "HeatmapSessionRecording_SessionSampleLimitHelp"
+msgstr "Defines the amount of sessions you want to record in total."
+
+msgid "HeatmapSessionRecording_PageviewsInVisit"
+msgstr "Recorded pageviews in this session"
+
+msgid "HeatmapSessionRecording_PlayRecordedSession"
+msgstr "Play this recorded session"
+
+msgid "HeatmapSessionRecording_DeleteRecordedSession"
+msgstr "Delete this recorded session (no confirmation asked)"
+
+msgid "HeatmapSessionRecording_DeleteRecordedPageview"
+msgstr "Delete this recorded page view (no confirmation asked)"
+
+msgid "HeatmapSessionRecording_ViewportResolution"
+msgstr "Viewport Resolution (width x height)"
+
+msgid "HeatmapSessionRecording_OnePageview"
+msgstr "1 pageview"
+
+msgid "HeatmapSessionRecording_TargetPage"
+msgstr "Target Page"
+
+msgid "HeatmapSessionRecording_TargetPages"
+msgstr "Entry Pages"
+
+msgid "HeatmapSessionRecording_ActivityClick"
+msgstr "Click"
+
+msgid "HeatmapSessionRecording_ActivityMove"
+msgstr "Move"
+
+msgid "HeatmapSessionRecording_ActivityScroll"
+msgstr "Scroll"
+
+msgid "HeatmapSessionRecording_ActivityScrollElement"
+msgstr "Scroll Element"
+
+msgid "HeatmapSessionRecording_ActivityResize"
+msgstr "Resize"
+
+msgid "HeatmapSessionRecording_ActivityFormChange"
+msgstr "Form Change"
+
+msgid "HeatmapSessionRecording_ActivityFormText"
+msgstr "Form Text Change"
+
+msgid "HeatmapSessionRecording_ActivityFormValue"
+msgstr "Form Value Change"
+
+msgid "HeatmapSessionRecording_ActivityInitialDom"
+msgstr "Initial Page"
+
+msgid "HeatmapSessionRecording_ActivityPageChange"
+msgstr "Page Change"
+
+msgid "HeatmapSessionRecording_PlayerRewindFast"
+msgstr "Rewind %s seconds (shortcut %s)"
+
+msgid "HeatmapSessionRecording_PlayerForwardFast"
+msgstr "Skip %s seconds (shortcut %s)"
+
+msgid "HeatmapSessionRecording_PlayerPageViewPrevious"
+msgstr "Play previous pageview of this visitor %s (shortcut %s)"
+
+msgid "HeatmapSessionRecording_PlayerPageViewNext"
+msgstr "Play next pageview of this visitor (%s) (shortcut %s)"
+
+msgid "HeatmapSessionRecording_PlayerPlay"
+msgstr "Play (shortcut %s or space)"
+
+msgid "HeatmapSessionRecording_PlayerPause"
+msgstr "Pause (shortcut %s or space)"
+
+msgid "HeatmapSessionRecording_PlayerReplay"
+msgstr "Replay (shortcut %s or space)"
+
+msgid "HeatmapSessionRecording_PlayerDurationXofY"
+msgstr "%s of %s"
+
+msgid "HeatmapSessionRecording_AdvancedOptions"
+msgstr "Advanced options"
+
+msgid "HeatmapSessionRecording_AvgAboveFoldTitle"
+msgstr "Avg. Above Fold %spx"
+
+msgid "HeatmapSessionRecording_XSamples"
+msgstr "%s samples"
+
+msgid "HeatmapSessionRecording_AvgAboveFoldDescription"
+msgstr "On average visitors see the content above this line without scrolling"
+
+msgid "HeatmapSessionRecording_NoSessionRecordedYet"
+msgstr "No session has been recorded yet. If there are supposed to be recorded sessions by now, maybe the configured entry page does not match any page on your website. It is also recommended to check the \"System Check\" under \"Administration\" (only Super Users) to see if your system is configured to automatically recorded sessions."
+
+msgid "HeatmapSessionRecording_NoHeatmapSamplesRecordedYet"
+msgstr "No page view has been recorded yet for this heatmap. If there are supposed to be recordings by now, maybe the page targets configured for this heatmap do not match any page on your website. It is also recommended to check the \"System Check\" under \"Administration\" (only Super Users) to see if your system is configured to automatically track Heatmaps."
+
+msgid "HeatmapSessionRecording_NoHeatmapScreenshotRecordedYet"
+msgstr "There have been %1$s samples recorded so far. However, no screenshot has been taken yet. If there is a \"%2$s\" for this heatmap, it may take a while for the screenshot to become available as a user first needs to open this screenshot URL. Depending on the sample rate this may take a while."
+
+msgid "HeatmapSessionRecording_ColumnPageviewsDocumentation"
+msgstr "The number of page views that were recorded during this session."
+
+msgid "HeatmapSessionRecording_ColumnBrowserDocumentation"
+msgstr "The browser the visitor was using when this session was recorded."
+
+msgid "HeatmapSessionRecording_ColumnDeviceDocumentation"
+msgstr "The device the visitor was using when this session was recorded."
+
+msgid "HeatmapSessionRecording_ColumnLocationDocumentation"
+msgstr "The location of the visitor when this session was recorded."
+
+msgid "HeatmapSessionRecording_ColumnOperatingSystem"
+msgstr "OS"
+
+msgid "HeatmapSessionRecording_ColumnTime"
+msgstr "Time"
+
+msgid "HeatmapSessionRecording_ColumnLabelRecordedSessions"
+msgstr "Entry URL → Exit URL"
+
+msgid "HeatmapSessionRecording_ColumnOperatingSystemDocumentation"
+msgstr "The operating system the visitor was using when this session was recorded."
+
+msgid "HeatmapSessionRecording_ColumnActionsDocumentation"
+msgstr "Play the recorded session or remove the recording permanently."
+
+msgid "HeatmapSessionRecording_ColumnTimeDocumentation"
+msgstr "The time the recording started in the timezone of the website."
+
+msgid "HeatmapSessionRecording_ColumnTimeOnSiteDocumentation"
+msgstr "How much time the visitor spent in total while the session was recorded"
+
+msgid "HeatmapSessionRecording_ColumnTimeOnPageDocumentation"
+msgstr "How much time the visitor spent on this page while the session was recorded"
+
+msgid "HeatmapSessionRecording_ColumnResolutionDocumentation"
+msgstr "The number of pixels of the visible viewport in the browser window when the user opened this page."
+
+msgid "HeatmapSessionRecording_UrlXDoesNotLookLikeUrl"
+msgstr "The %s does not look like a URL. Make sure it contains a protocol like http:// or that it starts with //"
+
+msgid "HeatmapSessionRecording_ReportRecordedSessionsDocumentation"
+msgstr "A list of all sessions that have been recorded. You can replay any recorded session."
+
+msgid "HeatmapSessionRecording_NoHeatmapsConfiguredInfo"
+msgstr "There are currently no active heatmaps. To view heatmaps, please ask a user with at least admin access to create a new heatmap."
+
+msgid "HeatmapSessionRecording_NoSessionRecordingsConfiguredInfo"
+msgstr "There are currently no active session recordings. To record new sessions, please ask a user with at least admin access to create a new recording."
+
+msgid "HeatmapSessionRecording_NotSupportedBrowser"
+msgstr "This browser is not supported, please use a later version or try a different browser."
+
+msgid "HeatmapSessionRecording_HeatmapWidth"
+msgstr "Heatmap width"
+
+msgid "HeatmapSessionRecording_BreakpointX"
+msgstr "Breakpoint %s"
+
+msgid "HeatmapSessionRecording_BreakpointGeneralHelp"
+msgstr "The device type is automatically detected when a visitor views your website. However, sometimes it might not be possible to detect the device type. If your website is responsive and your layout breaks at a certain point, we will put desktop users with a small resolution into this device type for more accurate heatmaps. Any width lower than this value will be put into this device type. Set it to zero if your website is not responsive."
+
+msgid "HeatmapSessionRecording_BreakpointGeneralHelpManage"
+msgstr "A user with Super User access can change the default values for these breakpoints in Administration => General Settings."
+
+msgid "HeatmapSessionRecording_CaptureKeystrokes"
+msgstr "Capture keystrokes"
+
+msgid "HeatmapSessionRecording_CaptureKeystrokesHelp"
+msgstr "If enabled, any text that is entered into text form fields are recorded. While the text is recorded, any character a user enters is replaced with a star ('*'). You may whitelist certain fields to be recorded in plain text by specifying a 'data-matomo-unmask' attribute on a form field. However, password fields and many other fields which could potentially include personal information (address, email, credit card information, username, phone number, ...) will be always automatically masked if detected by us as such (%slearn more%s). Please note that when you enable this feature, you may record personal data which may affect GDPR."
+
+msgid "HeatmapSessionRecording_PersonalInformationNote"
+msgstr "Please note a %1$s may record personal or sensitive information. If you wish to hide certain content on your website or app, you may tag this content by adding a %2$sdata-matomo-mask%3$s attribute to the HTML markup. %4$sLearn more%5$s"
+
+msgid "HeatmapSessionRecording_RequiresActivity"
+msgstr "Requires activity"
+
+msgid "HeatmapSessionRecording_RequiresActivityHelp"
+msgstr "If enabled, only sessions that have a scroll and a click activity in one page view will be recorded. This prevents the recording of sessions with not much activity."
+
+msgid "HeatmapSessionRecording_SampleRate"
+msgstr "Sample Rate"
+
+msgid "HeatmapSessionRecording_HeatmapSampleRateHelp"
+msgstr "Also known as 'traffic'. When you select 100%, all visitors that visit the selected target page will be recorded. When you select for example 10%, only every 10th visitor will be recorded. The lower the percentage you select, the longer it will take to reach the selected sample limit."
+
+msgid "HeatmapSessionRecording_SessionSampleRateHelp"
+msgstr "Also known as 'traffic'. When you select 100%, all sessions will be recorded as soon as they have reached the target page. When you select for example 10%, only every 10th session will be recorded. The lower the percentage you select, the longer it will take to reach the selected sample limit."
+
+msgid "HeatmapSessionRecording_MinSessionTime"
+msgstr "Min Session Time"
+
+msgid "HeatmapSessionRecording_MinSessionTimeHelp"
+msgstr "A session will be only recorded when a visitor has spent at least the specified time on a page."
+
+msgid "HeatmapSessionRecording_ScreenshotUrl"
+msgstr "Screenshot URL"
+
+msgid "HeatmapSessionRecording_ScreenshotUrlHelp"
+msgstr "By default, a screenshot is taken when the first visitor views the target page. If different page URLs match your target page, you can specify a specific URL that should be used to capture the screenshot. The heatmap visualization will be only available once at least one visitor has visited this URL whose activities are recorded. If defined, the URL has to match exactly. To ignore the protocol, start the URL with two double slashes (//example.com). Please note that this URL cannot be changed as soon as a screenshot has been taken."
+
+msgid "HeatmapSessionRecording_GettingStarted"
+msgstr "Getting Started"
+
+msgid "HeatmapSessionRecording_TargetPageTestTitle"
+msgstr "URL validator"
+
+msgid "HeatmapSessionRecording_TargetPageTestLabel"
+msgstr "Enter a full URL including the protocol to check if activities will be recorded on this URL:"
+
+msgid "HeatmapSessionRecording_TargetPageTestErrorInvalidUrl"
+msgstr "Enter a URL including a protocol."
+
+msgid "HeatmapSessionRecording_TargetPageTestUrlMatches"
+msgstr "Activities will be recorded on this URL"
+
+msgid "HeatmapSessionRecording_TargetPageTestUrlNotMatches"
+msgstr "Activities will not be recorded on this URL"
+
+msgid "HeatmapSessionRecording_UrlParameterValueToMatchPlaceholder"
+msgstr "Value to match for URL parameter name"
+
+msgid "HeatmapSessionRecording_TargetTypeIsAny"
+msgstr "is any"
+
+msgid "HeatmapSessionRecording_TargetTypeIsNot"
+msgstr "not %s"
+
+msgid "HeatmapSessionRecording_TargetTypeEqualsExactly"
+msgstr "equals exactly"
+
+msgid "HeatmapSessionRecording_TargetTypeEqualsExactlyInfo"
+msgstr "The value has to match exactly, including the URL protocol, search query and hash."
+
+msgid "HeatmapSessionRecording_TargetTypeEqualsSimple"
+msgstr "equals simple"
+
+msgid "HeatmapSessionRecording_TargetTypeEqualsSimpleInfo"
+msgstr "The URL will match any protocol (eg http and https) with or without \"www.\" subdomain. Any trailing slash in the path as well as the search query and hash part of the URL will be ignored when matching the URL."
+
+msgid "HeatmapSessionRecording_TargetTypeContains"
+msgstr "contains"
+
+msgid "HeatmapSessionRecording_TargetTypeExists"
+msgstr "exists"
+
+msgid "HeatmapSessionRecording_TargetTypeStartsWith"
+msgstr "starts with"
+
+msgid "HeatmapSessionRecording_TargetTypeRegExp"
+msgstr "matches the regular expression"
+
+msgid "HeatmapSessionRecording_TargetTypeRegExpInfo"
+msgstr "Any regular expression, for example \"^(.*)test(.*)$\"."
+
+msgid "HeatmapSessionRecording_UpdatingData"
+msgstr "Updating data..."
+
+msgid "HeatmapSessionRecording_FieldIncludedTargetsHelp"
+msgstr "Targets allow you to define on which pages the user activities should be recorded. You can define one or more conditions. For example, you can define to record activities whenever the URL or path equals a certain value and only if a certain URL parameter is present in the URL. Activities will be recorded only when all conditions are met, not if only one of them is met. All conditions will be evaluated case-insensitive. When you select 'equals simple', the URL protocol, search parameters and a trailing slash will be ignored."
+
+msgid "HeatmapSessionRecording_FieldIncludedTargetsHelpSessions"
+msgstr "Targets allow you to configure to only start the recording of a session as soon as a visitor has reached a certain page. This lets you for example only record sessions that go through the check out process. You can define one or more conditions. For example, you can define to record a session only when the URL or path equals a certain value and only if a certain URL parameter is present in the URL. Sessions will be only recorded when all conditions are met on a page view, not if only one of them is met. All conditions will be evaluated case-insensitive. When you select 'equals simple', the URL protocol, search parameters and a trailing slash will be ignored."
+
+msgid "HeatmapSessionRecording_DeleteHeatmapScreenshotConfirm"
+msgstr "Are you sure you want to delete this screenshot? It may take a while for the screenshot to be re-taken."
+
+msgid "HeatmapSessionRecording_DeleteHeatmapConfirm"
+msgstr "Are you sure you want to delete this heatmap? Reports previously generated heatmaps will no longer be available in the reporting UI."
+
+msgid "HeatmapSessionRecording_DeleteSessionRecordingConfirm"
+msgstr "Are you sure you want to delete this session recording? Recordings previously generated will no longer be available in the reporting UI."
+
+msgid "HeatmapSessionRecording_EndSessionRecordingConfirm"
+msgstr "Are you sure you want to stop recording any new sessions?"
+
+msgid "HeatmapSessionRecording_EndHeatmapConfirm"
+msgstr "Are you sure you want to stop capturing any activities for this heatmap?"
+
+msgid "HeatmapSessionRecording_ErrorInvalidRegExp"
+msgstr "The regular expression \"%1$s\" does not have a valid format."
+
+msgid "HeatmapSessionRecording_ErrorHeatmapNameDuplicate"
+msgstr "The heatmap name is already in use by another heatmap."
+
+msgid "HeatmapSessionRecording_ErrorHeatmapDoesNotExist"
+msgstr "The requested heatmap does not exist"
+
+msgid "HeatmapSessionRecording_ErrorSessionRecordingDoesNotExist"
+msgstr "The requested session recording does not exist"
+
+msgid "HeatmapSessionRecording_ErrorXNotProvided"
+msgstr "Please provide a value for \"%1$s\"."
+
+msgid "HeatmapSessionRecording_ErrorXTooLow"
+msgstr "\"%1$s\" is too low, minimum allowed value is %2$s."
+
+msgid "HeatmapSessionRecording_ErrorXTooHigh"
+msgstr "\"%1$s\" is too high, maximum allowed value is %2$s."
+
+msgid "HeatmapSessionRecording_ErrorXTooLong"
+msgstr "\"%1$s\" is too long, max %2$s characters are allowed."
+
+msgid "HeatmapSessionRecording_ErrorNotAnArray"
+msgstr "\"%1$s\" has to be an array."
+
+msgid "HeatmapSessionRecording_ErrorInnerIsNotAnArray"
+msgstr "Each \"%1$s\" within \"%2$s\" has to be an array."
+
+msgid "HeatmapSessionRecording_ErrorArrayMissingKey"
+msgstr "Missing array key \"%1$s\" in \"%2$s\" at position \"%3$s\"."
+
+msgid "HeatmapSessionRecording_ErrorArrayMissingValue"
+msgstr "Missing value for array key \"%1$s\" in \"%2$s\" at position \"%3$s\"."
+
+msgid "HeatmapSessionRecording_ErrorXNotWhitelisted"
+msgstr "The value for \"%1$s\" is not allowed, use one of: %2$s."
+
+msgid "HeatmapSessionRecording_ErrorXContainsWhitespace"
+msgstr "The \"%1$s\" is not allowed to contain any white space."
+
+msgid "HeatmapSessionRecording_ErrorPageRuleRequired"
+msgstr "At least one page rule has to be set."
+
+msgid "HeatmapSessionRecording_HeatmapCreated"
+msgstr "The heatmap has been successfully created."
+
+msgid "HeatmapSessionRecording_HeatmapUpdated"
+msgstr "The heatmap has been successfully updated."
+
+msgid "HeatmapSessionRecording_SessionRecordingCreated"
+msgstr "The session recording has been successfully created."
+
+msgid "HeatmapSessionRecording_SessionRecordingUpdated"
+msgstr "The session recording has been successfully updated."
+
+msgid "HeatmapSessionRecording_FieldNamePlaceholder"
+msgstr "eg 'Sign Up Page'"
+
+msgid "HeatmapSessionRecording_PageRule"
+msgstr "Page Rule"
+
+msgid "HeatmapSessionRecording_HeatmapNameHelp"
+msgstr "Defines the name under which the report for this heatmap will be available."
+
+msgid "HeatmapSessionRecording_SessionNameHelp"
+msgstr "Defines the name under which the session recordings will be available."
+
+msgid "HeatmapSessionRecording_CreateNewHeatmap"
+msgstr "Create new heatmap"
+
+msgid "HeatmapSessionRecording_StopX"
+msgstr "Stop recording any new activities for this %s."
+
+msgid "HeatmapSessionRecording_EditX"
+msgstr "Edit %s"
+
+msgid "HeatmapSessionRecording_DeleteX"
+msgstr "Delete %s"
+
+msgid "HeatmapSessionRecording_EditHeatmapX"
+msgstr "Edit Heatmap %s"
+
+msgid "HeatmapSessionRecording_Filter"
+msgstr "Filter"
+
+msgid "HeatmapSessionRecording_EditSessionRecordingX"
+msgstr "Edit Session Recording %s"
+
+msgid "HeatmapSessionRecording_CreateNewSessionRecording"
+msgstr "Create new session recording"
+
+msgid "HeatmapSessionRecording_TargetAttributeUrl"
+msgstr "URL"
+
+msgid "HeatmapSessionRecording_TargetAttributePath"
+msgstr "Path"
+
+msgid "HeatmapSessionRecording_FilesystemDirectory"
+msgstr "directory"
+
+msgid "HeatmapSessionRecording_TargetAttributeUrlParameter"
+msgstr "URL Parameter"
+
+msgid "HeatmapSessionRecording_TargetAttributeUrlParameterExample"
+msgstr "nameOfUrlParameter"
+
+msgid "HeatmapSessionRecording_ManageSessionRecordings"
+msgstr "Manage Session Recordings"
+
+msgid "HeatmapSessionRecording_ManageHeatmaps"
+msgstr "Manage Heatmaps"
+
+msgid "HeatmapSessionRecording_ConfigsPhpSuccess"
+msgstr "'%s' is accessible"
+
+msgid "HeatmapSessionRecording_ConfigsPhpNotAccessible"
+msgstr "The URL '%s' seems to be not accessible from the Internet or Intranet."
+
+msgid "HeatmapSessionRecording_ConfigsPhpErrorResult"
+msgstr "As a result, tracking Heatmaps and Session Recordings may not work. You may need to change your webserver configuration to allow access to this file via the Internet or Intranet."
+
+msgid "HeatmapSessionRecording_ConfigsPhpSelfSignedError"
+msgstr "Requesting '%s' resulted in an SSL error. Maybe you are using a self signed certificate?"
+
+msgid "HeatmapSessionRecording_ConfigsInternetDisabled"
+msgstr "We couldn't check if '%s' is accessible because the internet connection is disabled on this Matomo."
+
+msgid "HeatmapSessionRecording_ConfigsPhpUnknown"
+msgstr "We couldn't check if '%s' is accessible over the Internet or Intranet."
+
+msgid "HeatmapSessionRecording_ConfigsPhpManualCheck"
+msgstr "Please open the URL manually in a browser to see if the response contains 'Piwik.HeatmapSessionRecording'. If not, you might need to modify your server configuration as this file needs to be accessible via a browser from the Internet or Intranet."
+
+msgid "HeatmapSessionRecording_ConfigsPhpUnknownError"
+msgstr "Requesting '%s' resulted in an error: %s."
 
 msgid "ImageGraph_ColumnOrdinateMissing"
 msgstr "Kolumnia '%1$s' ei löydetty tässä raportissa. Kokeile mitä tahansa %2$s"
 
 msgid "ImageGraph_PluginDescription"
 msgstr "Luo kauniita staattisia PNG-kuvaajia mistä tahansa raportista."
+
+msgid "Insights_PluginDescription"
+msgstr "Provides Insights about your traffic. Insights are available as dashboard widgets as well as a new icon in reports, letting you see most important trends in your data."
 
 msgid "Insights_ControlComparedToDescription"
 msgstr "Kasvu verrattuna"
@@ -4221,11 +5055,38 @@ msgstr "edellinen kuukausi"
 msgid "Insights_MonthComparedToPreviousYear"
 msgstr "sama kuukausi edelliseltä vuodelta"
 
+msgid "Insights_MoversAndShakersWidgetTitle"
+msgstr "Movers and Shakers"
+
 msgid "Insights_NoResultMatchesCriteria"
 msgstr "Yksikään rivi ei vastannut valintoja"
 
 msgid "Insights_OverviewWidgetTitle"
 msgstr "Oivallusten yleiskatsaus"
+
+msgid "Insights_TitleConsideredInsightsChanges"
+msgstr "The rows increased or decreased by at least %1$s visits (%2$s%% of %3$s total visits)."
+
+msgid "Insights_TitleConsideredInsightsGrowth"
+msgstr "The following rows have a growth of at least %1$s%% compared to %2$s."
+
+msgid "Insights_TitleConsideredMoversAndShakersChanges"
+msgstr "Considered movers only if they grew by more than %1$s%% visits or shrank by less than %2$s%% visits, new entries only if they increased by more than %3$s%% visits (%4$s), and disappeared rows if they shrank by less than %5$s%% visits (%6$s)."
+
+msgid "Insights_TitleConsideredMoversAndShakersGrowth"
+msgstr "%1$s changed from %2$s to %3$s compared to %4$s. Based on this an evolution of each row of %5$s%% is expected."
+
+msgid "Insights_TitleRowChangeDetails"
+msgstr "'%1$s' changed from %2$s (%3$s) to %4$s (%5$s) %6$s."
+
+msgid "Insights_TitleRowDisappearedDetails"
+msgstr "'%1$s' decreased by %2$s and disappeared in %3$s compared to %4$s."
+
+msgid "Insights_TitleRowMoverAndShaker"
+msgstr "This row had a higher impact than the average."
+
+msgid "Insights_TitleRowNewDetails"
+msgstr "'%1$s' increased by %2$s and is new compared to %3$s."
 
 msgid "Insights_WeekComparedToPreviousWeek"
 msgstr "edellinen viikko"
@@ -4238,6 +5099,9 @@ msgstr "edellinen vuosi"
 
 msgid "Installation_CollaborativeProject"
 msgstr "Matomo on yhteistyöprojekti, jonka parissa ovat työskennelleet ihmiset ympäri maailmaa suurella sydämellä."
+
+msgid "Installation_ConfigurationHelp"
+msgstr "Your Matomo configuration file appears to be misconfigured. You can either remove config/config.ini.php and resume installation, or correct the database connection settings."
 
 msgid "Installation_ConfirmDeleteExistingTables"
 msgstr "Haluatko varmasti poistaa seuraavat taulut tietokannasta: %s? VAROITUS: TAULUJEN TIETOJA EI VOI PALAUTTAA EIKÄ POISTAMISTA VOI KUMOTA!"
@@ -4341,8 +5205,14 @@ msgstr "Tämä tarkoittaa, että Matomo on todella hidas käytettäessä tiedost
 msgid "Installation_NfsFilesystemWarningSuffixInstall"
 msgstr "Tiedostopohjaisten sessioiden käyttäminen NFS:ssä on todella hidasta, joten Matomo käyttää tietokantasessioita. Jos sinulla on monia samanaikaisia ohjauspaneelin käyttäjiä, sinun tarvitsee ehkä lisätä tietokantaserverin käyttäjäyhteyksien maksimimäärää."
 
+msgid "Installation_NoConfigFileFound"
+msgstr "The Matomo configuration file couldn't be found and you are trying to access a Matomo page."
+
 msgid "Installation_YouMayInstallPiwikNow"
 msgstr "Voit %1$sasentaa Matomon nyt%2$s"
+
+msgid "Installation_IfPiwikInstalledBeforeTablesCanBeKept"
+msgstr "If you installed Matomo before and have some tables in your DB, don't worry, you can reuse the same tables and keep your existing data!"
 
 msgid "Installation_Optional"
 msgstr "Valinnainen"
@@ -4388,6 +5258,9 @@ msgstr "Taulujen uudelleenkäyttö"
 
 msgid "Installation_PiwikOrgNewsletter"
 msgstr "lähetä minulle sähköpostia isoista Matomon yhteisön päivityksistä"
+
+msgid "Installation_ProfessionalServicesNewsletter"
+msgstr "send me information on %1$sProfessional services and products%2$s for Matomo"
 
 msgid "Installation_SeeBelowForMoreInfo"
 msgstr "Katso alempaa lisätietoja."
@@ -4443,6 +5316,9 @@ msgstr "Matomo vaatii joko mysqli-lisäosan tai sekä PDO- että pdo_mysql-lisä
 msgid "Installation_SystemCheckDatabaseSSL"
 msgstr "Tietokannan SSL-yhteys"
 
+msgid "Installation_SystemCheckDatabaseSSLCipher"
+msgstr "SSL cipher being used"
+
 msgid "Installation_SystemCheckDatabaseSSLDisabled"
 msgstr "Tietokantapalvelimellasi ei ole SSL-tukea käytössä"
 
@@ -4451,6 +5327,9 @@ msgstr "Tietokantapalvelintasi ei ole käännetty SSL-tuella"
 
 msgid "Installation_SystemCheckDatabaseSSLNotWorking"
 msgstr "%s on asetettu arvoon '1', mutta SSL-yhteys ei toimi"
+
+msgid "Installation_SystemCheckDatabaseSSLOn"
+msgstr "Your database supports SSL connections but SSL connection is not used. Check your database SSL settings in your Matomo config file"
 
 msgid "Installation_SystemCheckDebugBacktraceHelp"
 msgstr "View::factory ei voi luoda näkymää kutsuvalle moduulille."
@@ -4488,6 +5367,9 @@ msgstr "zlib-laajennus ja gzcompress-funktio täytyy olla käytössä."
 msgid "Installation_SystemCheckGzuncompressHelp"
 msgstr "zlib-laajennus ja gzuncompress-funktio täytyy olla käytössä."
 
+msgid "Installation_SystemCheckHashHelp"
+msgstr "You need to configure and rebuild PHP with hash() support enabled by excluding the option --disable-hash."
+
 msgid "Installation_SystemCheckIconvHelp"
 msgstr "PHP pitää olla asennettuna iconv-lisäosan kanssa, --with-iconv"
 
@@ -4499,6 +5381,9 @@ msgstr "Palautetta ja unohtuneiden salasanojen muistutuksia ei voida lähettää
 
 msgid "Installation_SystemCheckMbstring"
 msgstr "mbstring"
+
+msgid "Installation_SystemCheckMbstringHelp"
+msgstr "The mbstring extension is required to handle multibyte characters in the User interface and API responses. Also, please check that mbstring.func_overload is set to \"0\" in php.ini."
 
 msgid "Installation_SystemCheckMemoryLimit"
 msgstr "Muistirajoitus"
@@ -4527,6 +5412,9 @@ msgstr "Muut toiminnot"
 msgid "Installation_SystemCheckPageSpeedDisabled"
 msgstr "PageSpeed poistettu käytöstä"
 
+msgid "Installation_SystemCheckPageSpeedWarning"
+msgstr "We recommend disabling the PageSpeed Module in your web server %s: PageSpeed was reported to cause several issues with Matomo, such as: broken Pages reports, broken Row Evolution, and other issues which are hard to troubleshoot. Please disable mod_pagespeed on this server."
+
 msgid "Installation_SystemCheckPackHelp"
 msgstr "pack()-funktiota tarvitaan käyttäjien seuraamiseen Matomolla."
 
@@ -4545,6 +5433,9 @@ msgstr "Lisätietoa: %1$sPHP PDO%2$s ja %3$sMYSQLI%4$s."
 msgid "Installation_SystemCheckSplHelp"
 msgstr "PHP pitää olla asennettuna \"Standard PHP Library (SPL)\"-asetuksen kanssa."
 
+msgid "Installation_SystemCheckSettings"
+msgstr "Required PHP configuration (php.ini)"
+
 msgid "Installation_SystemCheckSummaryNoProblems"
 msgstr "Hurraa! Matomon asennuksessa ei ole ongelmia. Taputa itseäsi olkapäälle."
 
@@ -4559,6 +5450,9 @@ msgstr "Jos verkkosivuilla on paljon liikennettä, arkistointiprosessi saattaa v
 
 msgid "Installation_SystemCheckTracker"
 msgstr "Seurantapalvelimen tila"
+
+msgid "Installation_SystemCheckTrackerHelp"
+msgstr "GET request to matomo.php failed. Try whitelisting this URL from HTTP Authentication and disable mod_security (you may have to ask your webhost). For more information about the error, check your web server error log file."
 
 msgid "Installation_SystemCheckWarnDomHelp"
 msgstr "Asenna \"dom\"-lisäosa (yleensä php-dom ja/tai php-xml)."
@@ -4598,6 +5492,9 @@ msgstr "Välttyäksesi kriittisiltä ongelmilta, aseta seuraavat php.ini-tiedost
 
 msgid "Installation_SystemCheckUpdateHttps"
 msgstr "Päivitä HTTPS:n yli"
+
+msgid "Installation_SystemCheckUpdateHttpsNotSupported"
+msgstr "Matomo cannot use HTTPS to update, it will fall back to the insecure HTTP update. Check that CURL or allow_url_fopen is supported and that the openssl PHP extension is installed: https://matomo.org/faq/troubleshooting/faq_177/."
 
 msgid "Installation_NotSupported"
 msgstr "ei tuettu"
@@ -7605,9 +8502,6 @@ msgstr "Resolute"
 msgid "Intl_Timezone_America_RioBranco"
 msgstr "Rio Branco"
 
-msgid "Intl_Timezone_America_SantaIsabel"
-msgstr "Santa Isabel"
-
 msgid "Intl_Timezone_America_Santarem"
 msgstr "Santarém"
 
@@ -7941,9 +8835,6 @@ msgstr "Galapagos"
 msgid "Intl_Timezone_Pacific_Gambier"
 msgstr "Gambiersaaret"
 
-msgid "Intl_Timezone_Pacific_Honolulu"
-msgstr "Honolulu"
-
 msgid "Intl_Timezone_Pacific_Johnston"
 msgstr "Johnston"
 
@@ -8181,6 +9072,9 @@ msgstr "Salasanaparametrin kuuluu olla MD5-tiiviste salasanasta."
 msgid "Login_InvalidNonceOrHeadersOrReferrer"
 msgstr "Lomakkeen turvatarkastus epäonnistui. Lataa lomake uudelleen, ja tarkista että evästeet on sallittu. Jos käytät välityspalvelinta, sinun täytyy %1$s säätää Matomo sallimaan välityspalvelimen otsake %2$s joka välittää Host-otsakkeen. Tarkista, että \\\"Referer\\\"-otsake lähetetään oikein."
 
+msgid "Login_InvalidNonceSSLMisconfigured"
+msgstr "Also, you may %1$s force Matomo to use a secure connection%2$s: in your config file %3$s set %4$s below section %5$s"
+
 msgid "Login_InvalidOrExpiredToken"
 msgstr "Virheellinen tai vanhentunut tunnistautuminen"
 
@@ -8199,17 +9093,44 @@ msgstr "Syötä yksi IP-osoite tai IP-osoiteväli riville. Voit käyttää CIDR-
 msgid "Login_SettingBruteForceEnable"
 msgstr "Ota käyttöön toistuvien kirjautumisyritysten seuranta"
 
+msgid "Login_SettingBruteForceEnableHelp"
+msgstr "Brute Force Detection is an important security feature used to protect your data from unauthorized access. Instead of allowing any user to try thousands, or millions of password combinations within a very short time, it will only allow a specific amount of failed logins within a short period of time. If too many failed logins occur in that time range, the user won't be able to log in until some time has passed. Please note that if an IP is blocked, every user that uses that IP will be blocked from logging in as well."
+
 msgid "Login_SettingBruteForceWhitelistIp"
 msgstr "Älä koskaan estä seuraavia IP:itä kirjautumasta sisään"
 
 msgid "Login_SettingBruteForceBlacklistIp"
 msgstr "Estä aina kirjautuminen seuraavista IP:istä"
 
+msgid "Login_SettingBruteForceMaxFailedLogins"
+msgstr "Number of allowed login retries within time range"
+
+msgid "Login_SettingBruteForceMaxFailedLoginsHelp"
+msgstr "If more than this number of failed logins are recorded within the time range configured below, block the IP."
+
+msgid "Login_SettingBruteForceTimeRange"
+msgstr "Count login retries within this time range in minutes"
+
+msgid "Login_SettingBruteForceTimeRangeHelp"
+msgstr "Enter a number in minutes."
+
+msgid "Login_LoginNotAllowedBecauseBlocked"
+msgstr "You are currently not allowed to log in because you had too many failed logins, try again later."
+
 msgid "Login_CurrentlyBlockedIPs"
 msgstr "Parhaillaan estetyt IP:t"
 
 msgid "Login_IPsAlwaysBlocked"
 msgstr "Nämä IP:t on estetty aina"
+
+msgid "Login_UnblockAllIPs"
+msgstr "Unblock all currently blocked IPs"
+
+msgid "Login_CurrentlyBlockedIPsUnblockInfo"
+msgstr "You can unblock IPs that are currently blocked, so they can log in again in case they were falsely flagged and need to be able to log in again."
+
+msgid "Login_CurrentlyBlockedIPsUnblockConfirm"
+msgstr "Are you sure you want to unblock all currently blocked IPs?"
 
 msgid "Login_LoginPasswordNotCorrect"
 msgstr "Käyttäjätunnus tai salasana väärin."
@@ -8250,11 +9171,17 @@ msgstr "Salasana (uudelleen)"
 msgid "Login_PasswordsDoNotMatch"
 msgstr "Salasanat eivät täsmää."
 
+msgid "Login_PasswordResetAlreadySent"
+msgstr "You have requested too many password resets recently. A new request can be made in one hour. If you have problems resetting your password, please contact your administrator for help."
+
 msgid "Login_WrongPasswordEntered"
 msgstr "Kirjoita oikea salasana."
 
 msgid "Login_ConfirmPasswordToContinue"
 msgstr "Varmista salasana jatkaaksesi"
+
+msgid "Login_PluginDescription"
+msgstr "Provides authentication via username and password as well as password reset functionality. Authentication method can be changed by using another Login plugin such as LoginLdap available on the Marketplace."
 
 msgid "Login_RememberMe"
 msgstr "Muista minut"
@@ -8352,11 +9279,26 @@ msgstr "Ylitetty"
 msgid "Marketplace_LicenseMissing"
 msgstr "Lisenssi puuttuu"
 
+msgid "Marketplace_LicenseMissingDeactivatedDescription"
+msgstr "The following plugins have been deactivated because you are using them without a license: %1$s. %2$sTo resolve this issue either update your license key, %3$sget a subscription now%4$s or deactivate the plugin."
+
+msgid "Marketplace_PluginLicenseMissingDescription"
+msgstr "You are not allowed to download this plugin because there is no license for this plugin. To resolve this issue either update your license key, get a subscription or uninstall the plugin."
+
 msgid "Marketplace_LicenseExceeded"
 msgstr "Lisenssi ylitetty"
 
+msgid "Marketplace_LicenseExceededDescription"
+msgstr "The licenses for the following plugins are no longer valid as the number of authorized users for the license is exceeded: %1$s. %2$sYou will not be able to download updates for these plugins. To resolve this issue either delete some users or %3$supgrade the subscription now%4$s."
+
+msgid "Marketplace_PluginLicenseExceededDescription"
+msgstr "You are not allowed to download this plugin. The license for this plugin is no longer valid as the number of authorized users for the license is exceeded. To resolve this issue either delete some users or upgrade your subscription now."
+
 msgid "Marketplace_LicenseExpired"
 msgstr "Lisenssi on vanhentunut"
+
+msgid "Marketplace_LicenseExpiredDescription"
+msgstr "The licenses for the following plugins are expired: %1$s. %2$sYou will no longer receive any updates for these plugins. To resolve this issue either %3$srenew your subscription now%4$s, or deactivate the plugin if you no longer use it."
 
 msgid "Marketplace_LicenseRenewsNextPaymentDate"
 msgstr "Uusiutuu seuraavan maksupäivän yhteydessä"
@@ -8442,6 +9384,9 @@ msgstr "Jos olet ostanut %1$smaksullisen liitännäisen%2$s, syötä saamasi lis
 msgid "Marketplace_PaidPluginsWithLicenseKeyIntro"
 msgstr "Lisenssiavain on nyt määritetty. Turvallisuussyistä emme näytä lisenssiavainta täällä. Jos kadotit lisenssiavaimesi, ole yhteydessä Matomo-tiimiin."
 
+msgid "Marketplace_PaidPluginsNoLicenseKeyIntroNoSuperUserAccess"
+msgstr "In case you have purchased a %1$spremium paid plugin%2$s on the Marketplace please ask a user with Super User access to add the license key."
+
 msgid "Marketplace_PluginDescription"
 msgstr "Laajenna ja lisää Matomon toiminnallisuuksia lataamalla kaupasta liitännäisiä sekä teemoja."
 
@@ -8459,6 +9404,9 @@ msgstr "Liitännäissivu"
 
 msgid "Marketplace_PriceExclTax"
 msgstr "%1$s %2$s poislukien verot"
+
+msgid "Marketplace_PriceFromPerPeriod"
+msgstr "From %1$s / %2$s"
 
 msgid "Marketplace_Reviews"
 msgstr "Arvostelut"
@@ -8556,6 +9504,12 @@ msgstr "Lisenssiavaimesi vanhenee pian, ota yhteys: %1$s."
 msgid "Marketplace_LicenseKeyIsExpired"
 msgstr "Lisenssiavaimesi on vanhentunut, ota yhteys: %1$s."
 
+msgid "Marketplace_MultiServerEnvironmentWarning"
+msgstr "You cannot install or update the plugin directly as you are using Matomo on multiple servers. The plugin would be only installed on one server. Instead, download the plugin and deploy it manually to all your servers."
+
+msgid "Marketplace_AutoUpdateDisabledWarning"
+msgstr "You cannot install or update the plugin directly as automatic updates are disabled in the config. To enable automatic updates set %1$s in %2$s."
+
 msgid "Marketplace_ViewRepositoryChangelog"
 msgstr "Tarkastele muutoksia"
 
@@ -8607,8 +9561,20 @@ msgstr "Ennen kuin voit luoda ja hallinnoida puhelinnumeroita, ota yhteyttä yll
 msgid "MobileMessaging_Settings_CredentialProvided"
 msgstr "%s SMS API -tilisi on konfiguroitu oikein!"
 
+msgid "MobileMessaging_Settings_CredentialInvalid"
+msgstr "Your %1$s SMS API account is configured, but an error occurred while trying to receive the available credits."
+
 msgid "MobileMessaging_Settings_DeleteAccountConfirm"
 msgstr "Haluatko varmasti poistaa tämän SMS-tilin?"
+
+msgid "MobileMessaging_Settings_DelegatedSmsProviderOnlyAppliesToYou"
+msgstr "The configured SMS provider will be only used by you and not by any other users."
+
+msgid "MobileMessaging_Settings_DelegatedPhoneNumbersOnlyUsedByYou"
+msgstr "The configured phone numbers can be only seen and used by you and not by any other users."
+
+msgid "MobileMessaging_Settings_EnterActivationCode"
+msgstr "Enter activation code"
 
 msgid "MobileMessaging_Settings_InvalidActivationCode"
 msgstr "Koodi on väärin. Yritä uudelleen."
@@ -8618,6 +9584,9 @@ msgstr "Salli käyttäjien hallinnoida oma SMS-palveluntarjoajaa"
 
 msgid "MobileMessaging_Settings_LetUsersManageAPICredential_No_Help"
 msgstr "Kaikki käyttäjät voivat vastaanottaa SMS-raportteja ja käyttävät tilisi saldoa."
+
+msgid "MobileMessaging_Settings_LetUsersManageAPICredential_Yes_Help"
+msgstr "Each user will be able to set up their own SMS API Account and will not use your credit."
 
 msgid "MobileMessaging_Settings_ManagePhoneNumbers"
 msgstr "Hallitse puhelinnumeroita"
@@ -8636,6 +9605,9 @@ msgstr "Jos et tiedä maasi suuntakoodia, etsi maata täältä."
 
 msgid "MobileMessaging_Settings_PhoneNumbers_Help"
 msgstr "Ennen kuin voit saada raportteja puhelimeesi SMS-viesteinä (tekstiviesteinä), sinun täytyy antaa puhelinnumerosi alle."
+
+msgid "MobileMessaging_Settings_PhoneNumbers_HelpAdd"
+msgstr "When you click \"Add\", an SMS containing a code will be sent to the phone. The user receiving the code should then login to Matomo, click on Settings, then click on Mobile Messaging. After entering the code, the user will be able to receive text reports on their phone."
 
 msgid "MobileMessaging_Settings_PleaseSignUp"
 msgstr "Luodaksesi SMS-raportteja ja vastaanottaaksesi tekstiviestejä verkkosivusi tilastoista, kirjaudu SMS API:n avulla ja merkitse tiedot alle."
@@ -8736,6 +9708,9 @@ msgstr "Sivun leijuke"
 msgid "Overlay_PluginDescription"
 msgstr "Näe analytiikkatietosi omalla verkkosivullasi. Katso kuinka monta kertaa käyttäjät ovat klikanneet linkkejäsi. Huom.: \"Transitions\"-lisäosan täytyy olla käytössä."
 
+msgid "Overlay_RedirectUrlError"
+msgstr "You are attempting to open Page Overlay for the URL \"%1$s\". %2$s None of the domains from the Matomo settings matches the link."
+
 msgid "Overlay_RedirectUrlErrorAdmin"
 msgstr "Voit lisätä domainin ylimääräisenä URL:nä %1$sasetuksissa%2$s."
 
@@ -8750,6 +9725,9 @@ msgstr "Valitse \"Kyllä\" jos haluat, että Matomo ei seuraa IP-osoitteita koko
 
 msgid "PrivacyManager_AnonymizeIpInlineHelp"
 msgstr "Poistaa viimeisen tavun kävijöiden IP-osoitteista. Tämä voi olla tarpeen paikallisten tietosuojalakien tai -ohjeistuksien noudattamiseksi."
+
+msgid "PrivacyManager_AnonymizeIpExtendedHelp"
+msgstr "When users visit your website, Matomo will not use the full IP address (such as %1$s) but instead Matomo will anonymize it first (to %2$s). IP address anonymisation is one of the requirements set by the privacy laws in some countries such as Germany."
 
 msgid "PrivacyManager_AnonymizeIpMaskLengtDescription"
 msgstr "Valitse, montako tavua kävijöiden IP-osoitteista piilotetaan."
@@ -8769,6 +9747,12 @@ msgstr "Nykyinen tietokannan koko"
 msgid "PrivacyManager_DBPurged"
 msgstr "Tietokannasta poistettiin vanhat tiedot."
 
+msgid "PrivacyManager_DeleteBothConfirm"
+msgstr "You are about to enable both raw data deletion & report data deletion. This will permanently remove your ability to view old analytics data. Are you sure you want to do this?"
+
+msgid "PrivacyManager_DeleteDataDescription"
+msgstr "You can configure Matomo to regularly delete old raw data and/or aggregated reports to keep your database small or to meet privacy regulations such as GDPR."
+
 msgid "PrivacyManager_DeleteDataInterval"
 msgstr "Poista vanhat tiedot joka"
 
@@ -8778,8 +9762,17 @@ msgstr "Poista vanhat kävijälokit"
 msgid "PrivacyManager_DeleteOldRawData"
 msgstr "Poista säännöllisesti vanha raakadata"
 
+msgid "PrivacyManager_DeleteOldAggregatedReports"
+msgstr "Delete old aggregated report data"
+
 msgid "PrivacyManager_DeleteLogDescription2"
 msgstr "Kun lokeja poistetaan automaattisesti, sinun täytyy tarkistaa, että kaikki aikaisemmat päivittäiset raportit on prosessoitu, jotta tietoja ei häviä."
+
+msgid "PrivacyManager_DeleteRawDataInfo"
+msgstr "The raw data contains all details about each individual visit and each action your visitors took. When you delete raw data, the deleted information won't be available anymore in the visitor log. Also if you later decide to create a segment, the segmented reports won't become available for the time frame that has been deleted since all aggregated reports are generated from this raw data."
+
+msgid "PrivacyManager_DeleteLogsConfirm"
+msgstr "You are about to enable raw data deletion. If old raw data is removed, and reports haven't already been created, you will not be able to see historical past analytics data. Are you sure you want to do this?"
 
 msgid "PrivacyManager_DeleteLogsOlderThan"
 msgstr "Poista lokit, jotka ovat vanhempia kuin"
@@ -8792,6 +9785,18 @@ msgstr "ei rajaa"
 
 msgid "PrivacyManager_DeleteReportsConfirm"
 msgstr "Olet ottamassa käyttöön raporttien poistamisen. Jos vanhat raportit poistetaan, sinun täytyy luoda ne uudelleen ennen katsomista. Haluatko varmasti tehdä tämän?"
+
+msgid "PrivacyManager_DeleteAggregateReportsDetailedInfo"
+msgstr "When you enable this setting, all aggregated reports will be deleted. Aggregated reports are generated from the raw data and represent aggregated data from several individual visits. For example, the \"Country\" report lists aggregated numbers to see how many visits you have gotten from each country."
+
+msgid "PrivacyManager_KeepBasicMetricsReportsDetailedInfo"
+msgstr "When you enable this setting, some numeric key performance indicators won't be deleted."
+
+msgid "PrivacyManager_DeleteReportsInfo2"
+msgstr "If you delete old reports, they may be re-processed again from your RAW data when you request them."
+
+msgid "PrivacyManager_DeleteReportsInfo3"
+msgstr "If you have also enabled \"%s\", then the reports data you're deleting will be permanently lost."
 
 msgid "PrivacyManager_DeleteReportsOlderThan"
 msgstr "Poista raportit, jotka ovat vanhempia kuin"
@@ -8819,6 +9824,9 @@ msgstr "Ota \"Älä seuraa minua\" (\"do not track\") -tuki käyttöön"
 
 msgid "PrivacyManager_DoNotTrack_Enabled"
 msgstr "Onneksi olkoon, kunnioitat kävijöidesi yksityisyyttä!"
+
+msgid "PrivacyManager_DoNotTrack_EnabledMoreInfo"
+msgstr "When users have set their web browser to \"I do not want to be tracked\" (DoNotTrack is enabled) then Matomo will not track these visits."
 
 msgid "PrivacyManager_DoNotTrack_SupportDNTPreference"
 msgstr "Ota käyttöön \"Do Not Track\"-tuki"
@@ -8904,6 +9912,18 @@ msgstr "Yksityisyysasetukset"
 msgid "PrivacyManager_UseAnonymizedIpForVisitEnrichment"
 msgstr "Käytä piilotettuja IP-osoitteita myös käyntejä rikastettaessa."
 
+msgid "PrivacyManager_UseAnonymizedIpForVisitEnrichmentNote"
+msgstr "Plugins such as Geo Location via IP and Provider improve visitor's metadata. By default, these plugins use the anonymized IP addresses. If you select 'No', then the non-anonymized full IP address will be used instead, resulting in less privacy but better data accuracy."
+
+msgid "PrivacyManager_PseudonymizeUserIdNote"
+msgstr "When you enable this option, the User ID will be replaced by a pseudonym to avoid directly storing and displaying personally identifiable information such as an email address. In technical terms: given your User ID, Matomo will process the User ID pseudonym using a salted hash function."
+
+msgid "PrivacyManager_PseudonymizeUserIdNote2"
+msgstr "Note: replacing with a pseudonym is not the same as anonymisation. In GDPR terms: the User ID pseudonym still counts as personal data. The original User ID could still be identified if certain additional information is available (which only Matomo and your data processor has access to)."
+
+msgid "PrivacyManager_AnonymizeOrderIdNote"
+msgstr "Because an Order ID can be cross-referenced with another system, typically an ecommerce shop, the Order ID may count as personal information under the GDPR. When you enable this option, an Order ID will be automatically anonymized so no personal information will be tracked."
+
 msgid "PrivacyManager_UseAnonymizeIp"
 msgstr "Anonymisoi kävijöiden IP-osoitteet"
 
@@ -8940,14 +9960,23 @@ msgstr "Käyttöehtojen osoite"
 msgid "PrivacyManager_TermsAndConditionUrlDescription"
 msgstr "Linkki käyttöehdot sisältävälle sivulle."
 
+msgid "PrivacyManager_PrivacyPolicyUrlDescriptionSuffix"
+msgstr "If you set this, it will be displayed at the bottom of the login page and on pages that the '%1$s' user can access."
+
 msgid "PrivacyManager_ShowInEmbeddedWidgets"
 msgstr "Näytä upotetuissa vimpaimissa"
+
+msgid "PrivacyManager_ShowInEmbeddedWidgetsDescription"
+msgstr "If checked, a link to your Privacy Policy and your Terms & Conditions will be displayed at the bottom of embedded widgets."
 
 msgid "PrivacyManager_PrivacyPolicy"
 msgstr "Yksityisyyskäytäntö"
 
 msgid "PrivacyManager_TermsAndConditions"
 msgstr "Käyttöehdot"
+
+msgid "ProfessionalServices_WidgetPremiumServicesForPiwik"
+msgstr "Premium Features & Services for Matomo"
 
 msgid "Provider_ColumnProvider"
 msgstr "Palveluntarjoajat"
@@ -8991,11 +10020,20 @@ msgstr "Voit edelleen jakaa kampanjan useampaan alaryhmään määritämällä h
 msgid "Referrers_CampaignSource"
 msgstr "Kampanjan lähde"
 
+msgid "Referrers_CampaignSourceHelp"
+msgstr "Used to track the source of the campaign such as 'newsletter' for your email marketing, 'affiliate', or the name of the website displaying your ads."
+
 msgid "Referrers_CampaignContent"
 msgstr "Kampanjan sisältö"
 
+msgid "Referrers_CampaignContentHelp"
+msgstr "This parameter is often used when you are testing multiple ads, and would include the name of each ad to see which was most effective for driving traffic."
+
 msgid "Referrers_CampaignMedium"
 msgstr "Kampanjan media"
+
+msgid "Referrers_CampaignMediumHelp"
+msgstr "Used to describe the marketing activity, for example 'PPC' for a pay-per-click campaign, or 'SEM' for a paid search ads, or 'review' to track a product review on an affiliate site."
 
 msgid "Referrers_ColumnSearchEngine"
 msgstr "Hakukone"
@@ -9015,6 +10053,9 @@ msgstr "Suoraan"
 msgid "Referrers_DirectEntryDocumentation"
 msgstr "Kävijä on näppäillyt osoitteen suoraan selaimeensa - hän saapui sivustollesi suoraan."
 
+msgid "Referrers_Distinct"
+msgstr "Distinct Referrers by Channel Type"
+
 msgid "Referrers_DistinctCampaigns"
 msgstr "yksilöllistä kampanjaa"
 
@@ -9032,6 +10073,9 @@ msgstr "yksilöllistä verkkosivua"
 
 msgid "Referrers_EvolutionDocumentation"
 msgstr "Tämä on yleiskatsaus viittauksista, jotka toivat kävijöitä sivustollesi."
+
+msgid "Referrers_EvolutionDocumentationMoreInfo"
+msgstr "For more information about the different channel types, see the documentation of the %s table."
 
 msgid "Referrers_Keywords"
 msgstr "Avainsanat"
@@ -9273,6 +10317,12 @@ msgstr "Sivu %1$s/%2$s"
 msgid "ScheduledReports_PiwikReports"
 msgstr "Matomo-raportit"
 
+msgid "ScheduledReports_PleaseFindAttachedFile"
+msgstr "Please find your %1$s report for %2$s in the attached file."
+
+msgid "ScheduledReports_SentFromX"
+msgstr "Sent from %s."
+
 msgid "ScheduledReports_PleaseFindBelow"
 msgstr "Alla on raporttisi %1$s sivulle %2$s."
 
@@ -9354,8 +10404,29 @@ msgstr "Raportin %1$s tilaus on lopetettu."
 msgid "ScheduledReports_UnsubscribeFooter"
 msgstr "Jos et halua vastaanottaa tätä raporttia enää jatkossa, klikkaa linkkiä: %1$s"
 
+msgid "ScheduledReports_NoTokenProvided"
+msgstr "No token was provided in the URL"
+
 msgid "ScheduledReports_NoSubscriptionFound"
 msgstr "Tilausta ei löytynyt. Kenties raportin tilaus oli jo lopetettu tai se oli poistettu."
+
+msgid "ScheduledReports_EvolutionGraphsShowForEachInPeriod"
+msgstr "Evolution graphs show the evolution for %1$seach day%2$s in the last %3$s"
+
+msgid "ScheduledReports_EvolutionGraphsShowForPreviousN"
+msgstr "Evolution graphs show the evolution over the previous N %s"
+
+msgid "ScheduledReports_ReportPeriod"
+msgstr "Report Period"
+
+msgid "ScheduledReports_ReportPeriodHelp"
+msgstr "The period of data covered by this report. By default this is the same as the email schedule, so if the report is sent weekly, it will contain information regarding the last week."
+
+msgid "ScheduledReports_ReportPeriodHelp2"
+msgstr "You can change this, however, if you want to see different information and still retain the email schedule. For example, if the email schedule is weekly, and the report period is 'day', you will get information for the last day, every week."
+
+msgid "SegmentEditor_PluginDescription"
+msgstr "A segment is a set of criteria used to select only a part of the entire set of visits. Using segments you can inject arbitrary context back into your reports."
 
 msgid "SegmentEditor_AddANDorORCondition"
 msgstr "Lisää %s ehto"
@@ -9371,6 +10442,12 @@ msgstr "Segmentoidut raportit ennakkokäsitellään (nopeampi, archive.php cron 
 
 msgid "SegmentEditor_AutoArchiveRealTime"
 msgstr "segmentoidut raportit prosessoidaan reaaliajassa"
+
+msgid "SegmentEditor_ChangingSegmentDefinitionConfirmationNotProcessedOnRequest"
+msgstr "You're about to change the segment definition. Your analytics reports for this new segment won't be available until the reports are re-processed. It may take a few hours for reports data to show for this segment. Proceed anyway?"
+
+msgid "SegmentEditor_ChangingSegmentDefinitionConfirmationProcessedOnRequest"
+msgstr "You're about to change the segment definition. Your analytics reports for this new segment will be re-processed on demand the next time you request them. Your reports may take a few minutes to appear. Proceed anyway?"
 
 msgid "SegmentEditor_ChooseASegment"
 msgstr "Valitse segmentti"
@@ -9408,8 +10485,14 @@ msgstr "kaikki sivustot"
 msgid "SegmentEditor_SegmentDisplayedThisWebsiteOnly"
 msgstr "vain tällä sivustolla"
 
+msgid "SegmentEditor_SegmentIsDisplayedForWebsite"
+msgstr "and processed for"
+
 msgid "SegmentEditor_SegmentNotApplied"
 msgstr "Segmenttiä '%s' ei sovelleta"
+
+msgid "SegmentEditor_SegmentNotAppliedMessage"
+msgstr "You are requesting data for the Custom Segment '%s', this Matomo's configuration currently prevents real time processing of reports for performance reasons."
 
 msgid "SegmentEditor_SelectSegmentOfVisits"
 msgstr "Valitse segmentit käynnille:"
@@ -9435,8 +10518,14 @@ msgstr "Jaettu kanssasi"
 msgid "SegmentEditor_YouMustBeLoggedInToCreateSegments"
 msgstr "Sinun täytyy olla sisäänkirjautuneena voidaksesi luoda tai muokata kävijäsegmenttejä."
 
+msgid "SegmentEditor_YouDontHaveAccessToCreateSegments"
+msgstr "You don't have the required access level to create and edit segments."
+
 msgid "SegmentEditor_AddingSegmentForAllWebsitesDisabled"
 msgstr "Segmenttien lisääminen kaikille verkkosivuille on poistettu käytöstä."
+
+msgid "SegmentEditor_SegmentXIsAUnionOf"
+msgstr "%s is a union of these segments:"
 
 msgid "SegmentEditor_CustomSegment"
 msgstr "Kustomoidut segmentit"
@@ -9446,6 +10535,51 @@ msgstr "on tyhjä"
 
 msgid "SegmentEditor_SegmentOperatorIsNotNullNorEmpty"
 msgstr "ei ole tyhjä"
+
+msgid "SegmentEditor_UnprocessedSegmentNoData1"
+msgstr "These reports have no data, because the Segment you requested %1$s has not yet been processed by the system."
+
+msgid "SegmentEditor_UnprocessedSegmentNoData2"
+msgstr "Data for this Segment should become available in a few hours when processing completes. (If it does not, there may be a problem.)"
+
+msgid "SegmentEditor_UnprocessedSegmentInVisitorLog1"
+msgstr "%1$sMeanwhile you can use the Visitor Log%2$s to test whether your segment will match your users correctly by applying it there."
+
+msgid "SegmentEditor_UnprocessedSegmentInVisitorLog2"
+msgstr "When applied, you can see immediately which visits and actions were matched by your segment."
+
+msgid "SegmentEditor_UnprocessedSegmentInVisitorLog3"
+msgstr "This can help you confirm your Segment matches the users and actions you expect it to."
+
+msgid "SegmentEditor_UnprocessedSegmentApiError1"
+msgstr "The Segment '%1$s' is set to '%2$s' but Matomo is not currently configured to process segmented reports in API requests."
+
+msgid "SegmentEditor_UnprocessedSegmentApiError2"
+msgstr "To see data for this report in the future, you will need to edit your segment and choose the option labeled '%s'."
+
+msgid "SegmentEditor_UnprocessedSegmentApiError3"
+msgstr "Then after a few hours your segment data should become available through the API. (If it does not, there may be a problem.)"
+
+msgid "SegmentEditor_CustomUnprocessedSegmentApiError1"
+msgstr "The Segment you requested has not yet been created in the Segment Editor and so the report data has not been pre-processed."
+
+msgid "SegmentEditor_CustomUnprocessedSegmentApiError2"
+msgstr "To see data for this segment, you must go to Matomo and create this segment manually in the Segment Editor."
+
+msgid "SegmentEditor_CustomUnprocessedSegmentApiError3"
+msgstr "(Alternatively, you can create a new segment programatically using the SegmentEditor.add API method)."
+
+msgid "SegmentEditor_CustomUnprocessedSegmentApiError4"
+msgstr "Once created the segment in the editor (or via API), this error message will disappear and within a few hours you will see your segmented report data, after the segment data has been pre-processed. (If it does not, there may be a problem.)"
+
+msgid "SegmentEditor_CustomUnprocessedSegmentApiError5"
+msgstr "Please note that you can test whether your segment will work without having to wait for it to be processed by using the Live.getLastVisitsDetails API."
+
+msgid "SegmentEditor_CustomUnprocessedSegmentApiError6"
+msgstr "When using this API method, you will see which users and actions were matched by your &segment= parameter."
+
+msgid "SegmentEditor_CustomUnprocessedSegmentNoData"
+msgstr "To see data for this segment, you must create this segment manually in the Segment Editor, then wait a couple hours for preprocessing to complete."
 
 msgid "SegmentEditor_AddThisToMatomo"
 msgstr "Lisää tämä segmentti Matomoon"
@@ -9470,6 +10604,9 @@ msgstr "Valuutta"
 
 msgid "SitesManager_CurrencySymbolWillBeUsedForGoals"
 msgstr "Valuutan symboli näytetään tavoitteiden tuloissa."
+
+msgid "SitesManager_CustomizeJavaScriptTracker"
+msgstr "Customize JavaScript tracking"
 
 msgid "SitesManager_DefaultCurrencyForNewWebsites"
 msgstr "Oletusvaluutta uusille sivustoille"
@@ -9528,6 +10665,9 @@ msgstr "Seurannasta poistetut parametrit"
 msgid "SitesManager_ExcludedUserAgents"
 msgstr "Poissuljetut käyttäjäagentit"
 
+msgid "SitesManager_Format_Utc"
+msgstr "UTC%s"
+
 msgid "SitesManager_GlobalExcludedUserAgentHelp1"
 msgstr "Ilmoita lista käyttäjäagenteista, jotka suljetaan pois Matomon seurannasta."
 
@@ -9552,6 +10692,9 @@ msgstr "Yleiset asetukset"
 msgid "SitesManager_GlobalWebsitesSettings"
 msgstr "Yleiset sivustojen asetukset"
 
+msgid "SitesManager_HelpExcludedIpAddresses"
+msgstr "Enter the list of IPs, one per line, that you wish to exclude from being tracked by Matomo. You can use CIDR notation eg. %1$s or you can use wildcards, eg. %2$s or %3$s"
+
 msgid "SitesManager_JsTrackingTagHelp"
 msgstr "Lisää tämä JavaScript-seurantakoodi kaikille seurattaville sivuille"
 
@@ -9572,6 +10715,9 @@ msgstr "Alla olevia IP:itä ei seurata millään verkkosivulla."
 
 msgid "SitesManager_ListOfQueryParametersToBeExcludedOnAllWebsites"
 msgstr "Parametrit joita ei seurata millään verkkosivulla."
+
+msgid "SitesManager_ListOfQueryParametersToExclude"
+msgstr "Enter the list of URL Query Parameters, one per line, to exclude from the Page URLs reports. Regular expressions such as %s are suported."
 
 msgid "SitesManager_LogAnalytics"
 msgstr "Lokianalytiikka"
@@ -9693,6 +10839,15 @@ msgstr "Tyyppi"
 msgid "SitesManager_UTCTimeIs"
 msgstr "UTC-aika on %s."
 
+msgid "SitesManager_OnlyMatchedUrlsAllowed"
+msgstr "Only track visits and actions when the action URL starts with one of the above URLs."
+
+msgid "SitesManager_OnlyMatchedUrlsAllowedHelp"
+msgstr "When enabled, Matomo will only track internal actions when the Page URL is one of the known URLs for your website. This prevents people from spamming your analytics with URLs for other websites."
+
+msgid "SitesManager_OnlyMatchedUrlsAllowedHelpExamples"
+msgstr "The domain and the path have to be an exact match and each valid subdomain has to be specified separately. For example when the known URLs are 'http://example.com/path' and 'http://good.example.com', tracking requests for 'http://example.com/otherpath' or 'http://bad.example.com' are ignored."
+
 msgid "SitesManager_WebsitesManagement"
 msgstr "Sivustojen hallinta"
 
@@ -9711,17 +10866,77 @@ msgstr "Nykyinen IP-osoitteesi on %s"
 msgid "SitesManager_DeleteSiteExplanation"
 msgstr "Verkkosivuston poistaminen poistaa kaiken sivustolta kerätyn lokitiedon. Tätä toimenpidettä ei voi perua."
 
+msgid "TagManager_AddThisTagDescription"
+msgstr "Add the AddThis social media buttons and more to your website."
+
+msgid "TagManager_AllElementsClickTriggerDescription"
+msgstr "Triggered when any element is clicked."
+
+msgid "TagManager_AllElementsClickTriggerHelp"
+msgstr "Triggered on any click on any element. To listen to clicks on specific elements, please add conditions based on a \"click\" variable in the advanced settings."
+
+msgid "TagManager_AllElementsClickTriggerName"
+msgstr "All Elements Click"
+
+msgid "TagManager_AllLinksClickTriggerDescription"
+msgstr "Triggered when a link is clicked."
+
+msgid "TagManager_AllLinksClickTriggerHelp"
+msgstr "Triggered on any click on any element. To listen to clicks on specific elements, please add conditions based on a \"click\" variable in the advanced settings."
+
+msgid "TagManager_AllLinksClickTriggerName"
+msgstr "All Links Click"
+
 msgid "TagManager_AutoGenerated"
 msgstr "Luotu automaattisesti"
+
+msgid "TagManager_AutoGeneratedContainerDescription"
+msgstr "This container was auto generated when the website was created."
 
 msgid "TagManager_BackupVersionName"
 msgstr "Varmuuskopion version nimi"
 
+msgid "TagManager_BackupVersionNameHelp"
+msgstr "If you define a version name, a new version with this name will be created to backup the current draft version."
+
+msgid "TagManager_BingUETTagName"
+msgstr "Bing Ads UET Tag"
+
+msgid "TagManager_BingUETTagDescription"
+msgstr "Adds the Bing Ads Universal Event Tracking Tag to your website so you can apply conversion tracking to your Bing ad campaigns."
+
+msgid "TagManager_BingUETTagHelp"
+msgstr "The tag tracks what your customers are doing after they click on your bing ad."
+
+msgid "TagManager_BlockTriggerHelp"
+msgstr "This tag will not be executed as soon as any of these triggers has been triggered. This way you can for example make sure to not execute this tag on certain pages, or when a user has reached a certain scroll position."
+
+msgid "TagManager_BlockTriggerTitle"
+msgstr "Don't execute this tag when any of these triggers have been triggered."
+
+msgid "TagManager_BrowserLanguageVariableDescription"
+msgstr "Gets the preferred language of the user which is usually the language of the browser UI. For example \"en\" or \"en-US\"."
+
 msgid "TagManager_BrowserLanguageVariableName"
 msgstr "Selaimen kieli"
 
+msgid "TagManager_BugsnagTagDescription"
+msgstr "Add error monitoring to your applications with bugsnag."
+
+msgid "TagManager_BugsnagTagHelp"
+msgstr "This tag adds the default bugsnag javascript integration to your website."
+
+msgid "TagManager_CapabilityUseCustomTemplates"
+msgstr "Use Custom Templates"
+
+msgid "TagManager_CapabilityPublishLiveContainer"
+msgstr "Publish Live Container"
+
 msgid "TagManager_CategoryAds"
 msgstr "Mainokset"
+
+msgid "TagManager_CategoryAffiliates"
+msgstr "Affiliates"
 
 msgid "TagManager_CategoryAnalytics"
 msgstr "Analytiikat"
@@ -9731,6 +10946,12 @@ msgstr "Klikkaus"
 
 msgid "TagManager_CategoryClicks"
 msgstr "Klikkaukset"
+
+msgid "TagManager_CategoryContainerInfo"
+msgstr "Container Info"
+
+msgid "TagManager_CategoryCustom"
+msgstr "Custom"
 
 msgid "TagManager_CategoryDate"
 msgstr "Päiväys"
@@ -9765,17 +10986,74 @@ msgstr "Suorituskyky"
 msgid "TagManager_CategoryRemarketing"
 msgstr "Uudelleenmarkkinointi"
 
+msgid "TagManager_CategorySEO"
+msgstr "SEO"
+
+msgid "TagManager_CategoryScrolls"
+msgstr "Scrolls"
+
 msgid "TagManager_CategorySocial"
 msgstr "Sosiaalinen"
+
+msgid "TagManager_CategoryUserEngagement"
+msgstr "User Engagement"
+
+msgid "TagManager_CategoryUtilities"
+msgstr "Utilities"
 
 msgid "TagManager_CategoryVisibility"
 msgstr "Näkyvyys"
 
+msgid "TagManager_CheckWriteDirs"
+msgstr "Directories with write access for %1$s"
+
 msgid "TagManager_ChooseContainer"
 msgstr "Valitse kontti"
 
+msgid "TagManager_ChooseTagToContinue"
+msgstr "Choose a type of tag to continue"
+
+msgid "TagManager_ChooseTriggerToContinue"
+msgstr "Choose a type of trigger to continue"
+
 msgid "TagManager_ChooseVariable"
 msgstr "Valitse muuttuja"
+
+msgid "TagManager_ChooseVariableToContinue"
+msgstr "Choose a type of variable to continue"
+
+msgid "TagManager_ClickClassesVariableDescription"
+msgstr "The value of all CSS class names of an element when a click trigger was triggered."
+
+msgid "TagManager_ClickClassesVariableName"
+msgstr "Click Classes"
+
+msgid "TagManager_ClickDestinationUrlVariableDescription"
+msgstr "The value of the link URL (href) of an element when a click trigger was triggered."
+
+msgid "TagManager_ClickDestinationUrlVariableName"
+msgstr "Click Destination URL"
+
+msgid "TagManager_ClickIdVariableDescription"
+msgstr "The value of the ID attribute of an element when a click trigger was triggered."
+
+msgid "TagManager_ClickIdVariableName"
+msgstr "Click ID"
+
+msgid "TagManager_ClickElementVariableName"
+msgstr "Click Element"
+
+msgid "TagManager_ClickElementVariableDescription"
+msgstr "An instance of the element that was clicked."
+
+msgid "TagManager_ClickNodeNameVariableDescription"
+msgstr "The name of an element when a click trigger was triggered. For example \"P\" or \"DIV\""
+
+msgid "TagManager_ClickNodeNameVariableName"
+msgstr "Click Node Name"
+
+msgid "TagManager_ClickTextVariableDescription"
+msgstr "The value of the text content of an element when a click trigger was triggered."
 
 msgid "TagManager_ClickTextVariableName"
 msgstr "Klikin teksti"
@@ -9798,11 +11076,20 @@ msgstr "on suurempi kuin"
 msgid "TagManager_ComparisonGreaterThanOrEqual"
 msgstr "suurempi tai yhtäsuuri"
 
+msgid "TagManager_ComparisonIgnoreCase"
+msgstr "ignore case"
+
 msgid "TagManager_ComparisonLowerThan"
 msgstr "on vähemmän kuin"
 
 msgid "TagManager_ComparisonLowerThanOrEqual"
 msgstr "on vähemmän tai yhtä paljon"
+
+msgid "TagManager_ComparisonMatchesRegexp"
+msgstr "matches the regular expression"
+
+msgid "TagManager_ComparisonMatchesCssSelector"
+msgstr "matches the CSS selector"
 
 msgid "TagManager_ComparisonNotX"
 msgstr "ei %s"
@@ -9816,11 +11103,26 @@ msgstr "Tila"
 msgid "TagManager_Conditions"
 msgstr "Ehdot"
 
+msgid "TagManager_ConfigureEnvironmentsSuperUser"
+msgstr "Please note that a user with Super User access can configure the available environments by going to \"Administration => General Settings\"."
+
 msgid "TagManager_ConfigureThisTrigger"
 msgstr "Määritä tämän liipaisimen asetukset"
 
 msgid "TagManager_ConfigureThisVariable"
 msgstr "Määritä tämän muuttujan asetukset"
+
+msgid "TagManager_ConfigureWhatTagDoes"
+msgstr "Configure what this tag should do"
+
+msgid "TagManager_ConfigureWhenTagDoes"
+msgstr "Configure when the tag should do this"
+
+msgid "TagManager_ConfigureX"
+msgstr "Configure %s"
+
+msgid "TagManager_ConfirmImportContainerVersion"
+msgstr "Are you sure you want to import this data? The current working draft will be overwritten with this imported version."
 
 msgid "TagManager_ConstantVariableDescription"
 msgstr "Tämä muuttuja on asetettu kiinteään arvoon."
@@ -9828,14 +11130,41 @@ msgstr "Tämä muuttuja on asetettu kiinteään arvoon."
 msgid "TagManager_ConstantVariableName"
 msgstr "Vakio"
 
+msgid "TagManager_Container"
+msgstr "Container"
+
+msgid "TagManager_ContainerContextHelp"
+msgstr "Defines in which context the container will be deployed. Currently, only \"Web\" containers are supported."
+
+msgid "TagManager_ContainerDescriptionHelp"
+msgstr "Optionally, you can describe the purpose of this container. This is especially useful if you have multiple containers per site."
+
 msgid "TagManager_ContainerIdVariableDescription"
 msgstr "Palauttaa kontin ID:n, esim. \"ab2Dk432\"."
 
 msgid "TagManager_ContainerIdVariableName"
 msgstr "Kontin ID"
 
+msgid "TagManager_ContainerMetaInformation"
+msgstr "ID \"%1$s\" in context \"%2$s\" created on %3$s."
+
+msgid "TagManager_ContainerNameHelp"
+msgstr "The container name lets you define a unique name for this container. Please note that this name will be also available as a variable and therefore publicly visible in the source code of the tag."
+
+msgid "TagManager_ContainerRevisionVariableDescription"
+msgstr "Returns the revision of this container, for example \"5\"."
+
+msgid "TagManager_ContainerRevisionVariableName"
+msgstr "Container Revision"
+
+msgid "TagManager_ContainerUsageBenefits"
+msgstr "Each container holds a set of tags that will be added to your site. Once you have created a container, you will receive an HTML snippet that you can embed into your website. Typically, you would have only one container per site. However, you can configure several containers per site for example if one site in Matomo represents multiple sites or if different teams are responsible for different parts of a site."
+
 msgid "TagManager_ContainerVersionVariableDescription"
 msgstr "Palauttaa tämän kontin version."
+
+msgid "TagManager_ContainerVersionVariableName"
+msgstr "Container Version Name"
 
 msgid "TagManager_ContainerX"
 msgstr "Kontti \"%s\""
@@ -9846,8 +11175,26 @@ msgstr "Kontit"
 msgid "TagManager_Context"
 msgstr "Konteksti"
 
+msgid "TagManager_ContextWeb"
+msgstr "Web"
+
+msgid "TagManager_ContextWebInstallInstructions"
+msgstr "To install this container, copy / paste the following code as high as possible into the %1$s part of every page of your site."
+
 msgid "TagManager_CookieVariableDescription"
 msgstr "Lukee arvon evästeestä"
+
+msgid "TagManager_CookieVariableName"
+msgstr "First-Party Cookie"
+
+msgid "TagManager_CapabilityUseCustomTemplateDescription"
+msgstr "Grants the ability to write HTML/JavaScript that will be executed on the website. Grant this capability only to users you trust as custom templates can be misused to steal for example sensitive information."
+
+msgid "TagManager_CapabilityPublishLiveContainerDescription"
+msgstr "Grants the ability to publish a container to the live environment."
+
+msgid "TagManager_CapabilityWriteDescription"
+msgstr "Grants the ability to use the Tag Manager. For example create, delete, and manage containers, tags, triggers, and variables, versions, etc."
 
 msgid "TagManager_CreateNewContainer"
 msgstr "Luo uusi kontti"
@@ -9858,17 +11205,32 @@ msgstr "Luo uusi kontti nyt"
 msgid "TagManager_CreateNewTag"
 msgstr "Luo uusi tagi"
 
+msgid "TagManager_CreateNewTagNow"
+msgstr "Create a new tag now"
+
 msgid "TagManager_CreateNewTrigger"
 msgstr "Luo uusi liipaisin"
 
+msgid "TagManager_CreateNewTriggerNow"
+msgstr "Create a new trigger now"
+
 msgid "TagManager_CreateNewVariable"
 msgstr "Luo uusi muuttuja"
+
+msgid "TagManager_CreateNewVariableNow"
+msgstr "Create a new variable now"
 
 msgid "TagManager_CreateNewVersion"
 msgstr "Luo uusi versio"
 
 msgid "TagManager_CreateNewX"
 msgstr "Luo uusi %s"
+
+msgid "TagManager_CreateVersionAndPublishRelease"
+msgstr "Create new version and publish release"
+
+msgid "TagManager_CreateVersionWithoutPublishing"
+msgstr "Create new version (without publishing)"
 
 msgid "TagManager_Created"
 msgstr "Luotu"
@@ -9885,14 +11247,44 @@ msgstr "Erinomaista! %s on luotu onnistuneesti."
 msgid "TagManager_CurrentTimeInLocalTimezone"
 msgstr "Paikallinen aikasi on %1$s%2$s%3$s."
 
+msgid "TagManager_CustomEventTriggerDescription"
+msgstr "Triggered when a custom event is pushed to the Data-Layer."
+
+msgid "TagManager_CustomEventTriggerHelp"
+msgstr "Allows developers to define manually when this trigger should be triggered by pushing an event to the Data-Layer. This way you can for example execute certain actions when a product is added to the cart, or when a user logs in."
+
+msgid "TagManager_CustomEventTriggerName"
+msgstr "Custom Event"
+
 msgid "TagManager_CustomHtmlTagDescription"
 msgstr "Sallii sinun upottaa mitä tahansa omavalintaista HTML:ää, esimerkiksi JavaScriptiä tai CSS-tyylejä."
+
+msgid "TagManager_CustomHtmlTagHelp"
+msgstr "The Custom HTML tag allows you to embed any tag which is not supported yet. The possibilities with this trigger are pretty much unlimited."
 
 msgid "TagManager_CustomHtmlTagName"
 msgstr "Mukautettu HTML"
 
+msgid "TagManager_LinkedinInsightTagName"
+msgstr "LinkedIn Insight Tag"
+
+msgid "TagManager_LinkedinInsightTagDescription"
+msgstr "Adds the LinkedIn Insight Tag so you can apply conversion tracking to your LinkedIn ad campaigns."
+
+msgid "TagManager_LinkedinInsightTagHelp"
+msgstr "The tag will enable detailed campaign reporting and information about your website visitors in LinkedIn. It allows you to track conversions, retarget website visitors, and gain additional insights about LinkedIn members that interact with your LinkedIn ads."
+
+msgid "TagManager_CustomImageTagDescription"
+msgstr "Allows you to embed any image, for example a tracking pixel."
+
+msgid "TagManager_CustomImageTagHelp"
+msgstr "This tag allows you to add for example a transparent tracking pixel into your website."
+
 msgid "TagManager_CustomImageTagName"
 msgstr "Mukautettu kuva"
+
+msgid "TagManager_CustomJsFunctionVariableDescription"
+msgstr "Executes a custom JavaScript function to retrieve the value."
 
 msgid "TagManager_CustomJsFunctionVariableName"
 msgstr "Mukautettu JavaScript"
@@ -9900,11 +11292,41 @@ msgstr "Mukautettu JavaScript"
 msgid "TagManager_CustomVariables"
 msgstr "Mukautetut muuttujat"
 
+msgid "TagManager_CustomizeTracking"
+msgstr "Customize Tracking"
+
+msgid "TagManager_CustomizeTrackingTeaser"
+msgstr "Want to configure the Matomo tracking for this container? Here is a list of existing Matomo configurations in this container:"
+
+msgid "TagManager_DataLayerVariableDescription"
+msgstr "Reads a custom value from the Data-Layer."
+
+msgid "TagManager_DataLayerVariableHelp"
+msgstr "Using this variable you can access any value that is stored within the dataLayer. You can also push values to the dataLayer yourself and access them this way afterwards."
+
+msgid "TagManager_DataLayerVariableName"
+msgstr "Data-Layer"
+
 msgid "TagManager_DefaultContainer"
 msgstr "Oletuskontti"
 
 msgid "TagManager_DefaultValue"
 msgstr "Oletusarvo"
+
+msgid "TagManager_DefaultValueHelp"
+msgstr "You can configure a default value which will be used if the variable does not return a value. Please note an empty string ('') is considered to be a value and will not fall back to the default value, configure a lookup value for this case if needed. Also note that the default value will be applied before the lookup table is evaluated."
+
+msgid "TagManager_DeleteContainerConfirm"
+msgstr "Are you sure you want to delete this container? You cannot undo the deletion. Please also make sure to remove all embedded code snippets for this container from your website as the container files will no longer be available after you have deleted this container."
+
+msgid "TagManager_DeleteTagConfirm"
+msgstr "Are you sure you want to delete this tag? You cannot undo the deletion."
+
+msgid "TagManager_DeleteTriggerConfirm"
+msgstr "Are you sure you want to delete this trigger? You cannot undo the deletion."
+
+msgid "TagManager_DeleteVariableConfirm"
+msgstr "Are you sure you want to delete this variable? You cannot undo the deletion."
 
 msgid "TagManager_DeleteVersionConfirm"
 msgstr "Haluatko varmasti poistaa tämän version? Poistamista ei voi kumota."
@@ -9927,8 +11349,41 @@ msgstr "Poista esikatselu käytöstä"
 msgid "TagManager_DisablingPreviewPleaseWait"
 msgstr "Poistetaan esikatselutila käytöstä, odota hetki..."
 
+msgid "TagManager_DnsLookupTimeVariableDescription"
+msgstr "The time it took to look up the DNS in milliseconds."
+
+msgid "TagManager_DnsLookupTimeVariableName"
+msgstr "DNS Lookup Time"
+
+msgid "TagManager_DomElementVariableDescription"
+msgstr "Gets the value from a DOM element."
+
 msgid "TagManager_DomElementVariableName"
 msgstr "DOM-elementti"
+
+msgid "TagManager_DomReadyTriggerDescription"
+msgstr "Triggered as soon as all the HTML has been received and parsed."
+
+msgid "TagManager_DomReadyTriggerHelp"
+msgstr "At this stage of loading a web page only the HTML is loaded but not yet all images, StyleSheets, and JavaScript files. If you want to make sure the website is fully loaded, please consider the \"Window Loaded\" trigger."
+
+msgid "TagManager_DomReadyTriggerName"
+msgstr "DOM Ready"
+
+msgid "TagManager_DriftDescription"
+msgstr "Drift allows you to connect with your customers."
+
+msgid "TagManager_DriftHelp"
+msgstr "This tag allows you to add the Drift contact form to your website."
+
+msgid "TagManager_AllDownloadsClickTriggerDescription"
+msgstr "Triggered when a link is clicked which links to a downloadable file."
+
+msgid "TagManager_AllDownloadsClickTriggerHelp"
+msgstr "Triggered when a user clicks on an \"A\" or \"AREA\" element and the link points to a file with a downloadable file extension."
+
+msgid "TagManager_AllDownloadsClickTriggerName"
+msgstr "All Downloads Click"
 
 msgid "TagManager_Draft"
 msgstr "Luonnos"
@@ -9963,8 +11418,20 @@ msgstr "Muokkaa versioita"
 msgid "TagManager_EditX"
 msgstr "Muokkaa %s"
 
+msgid "TagManager_ElementVisibilityTriggerDescription"
+msgstr "Triggered when a specific element becomes visible."
+
 msgid "TagManager_ElementVisibilityTriggerName"
 msgstr "Elementin näkyvyys"
+
+msgid "TagManager_EmarsysTagDescription"
+msgstr "Emarsys is the largest independent marketing platform in the world."
+
+msgid "TagManager_EmarsysTagHelp"
+msgstr "This tag adds the asynchronous Emarsys Code to your website."
+
+msgid "TagManager_EmarsysTagName"
+msgstr "Emarsys"
 
 msgid "TagManager_EnablePreviewDebug"
 msgstr "Esikatselu / vianjäljitys"
@@ -9974,6 +11441,12 @@ msgstr "Otetaan esikatselutila käyttöön, odota hetki..."
 
 msgid "TagManager_EndDate"
 msgstr "Lopetuspäivä"
+
+msgid "TagManager_EntityDateTypeMetaInformation"
+msgstr "Created on \"%1$s\", last updated on \"%2$s\", type: \"%3$s\""
+
+msgid "TagManager_Entry"
+msgstr "Entry"
 
 msgid "TagManager_Environment"
 msgstr "Ympäristö"
@@ -9987,8 +11460,35 @@ msgstr "Ympäristön nimi"
 msgid "TagManager_Environments"
 msgstr "Ympäristöt"
 
+msgid "TagManager_ErrorArrayMissingKey"
+msgstr "Missing array key \"%1$s\" in \"%2$s\" at position \"%3$s\"."
+
+msgid "TagManager_ErrorArrayMissingValue"
+msgstr "Missing value for array key \"%1$s\" in \"%2$s\" at position \"%3$s\"."
+
+msgid "TagManager_ErrorComparisonNotSupported"
+msgstr "The comparison \"%s\" is not supported."
+
 msgid "TagManager_ErrorContainerDoesNotExist"
 msgstr "Pyydettyä konttia \"%s\" ei ole olemassa."
+
+msgid "TagManager_ErrorContainerIdDuplicate"
+msgstr "The Container ID is already in use"
+
+msgid "TagManager_ErrorContainerReleaseDoesNotExist"
+msgstr "The requested container release does not exist."
+
+msgid "TagManager_ErrorContainerTriggerDoesNotExist"
+msgstr "The requested container trigger does not exist."
+
+msgid "TagManager_ErrorContainerVersionDoesNotExist"
+msgstr "The requested container version does not exist."
+
+msgid "TagManager_ErrorContainerVersionImportIncomplete"
+msgstr "Cannot import container. The specified container version is incomplete. Make sure it includes context, tags, triggers, and variables information."
+
+msgid "TagManager_ErrorContainerVersionImportWrongContext"
+msgstr "The context of the current container is \"%1$s\" but the imported content is of context \"%2$s\". Cannot import this version."
 
 msgid "TagManager_ErrorEndDateBeforeStartDate"
 msgstr "Aloituspäivän tulee olla ennen lopetuspäivää."
@@ -9996,8 +11496,26 @@ msgstr "Aloituspäivän tulee olla ennen lopetuspäivää."
 msgid "TagManager_ErrorEnvironmentDoesNotExist"
 msgstr "Ympäristöä \"%s\" ei ole olemassa."
 
+msgid "TagManager_ErrorEnvironmentInvalidLength"
+msgstr "The environment \"%1$s\" does not have a valid length. Please use between %2$s and %3$s characters."
+
+msgid "TagManager_ErrorEnvironmentInvalidName"
+msgstr "The environment \"%s\" is not a valid name. Please use only letters, numbers, and underscores."
+
+msgid "TagManager_ErrorInnerIsNotAnArray"
+msgstr "Each \"%1$s\" within \"%2$s\" has to be an array."
+
+msgid "TagManager_ErrorInvalidContainerImportFormat"
+msgstr "Invalid format for exportedContainerVersion. Value needs to be a valid JSON."
+
+msgid "TagManager_ErrorLineVariableDescription"
+msgstr "Returns the line of an error, when an error was triggered previously."
+
 msgid "TagManager_ErrorLineVariableName"
 msgstr "Virheen rivi"
+
+msgid "TagManager_ErrorMessageVariableDescription"
+msgstr "Returns the message of an error, when an error was triggered previously."
 
 msgid "TagManager_ErrorMessageVariableName"
 msgstr "Virheviesti"
@@ -10005,14 +11523,71 @@ msgstr "Virheviesti"
 msgid "TagManager_ErrorNameDuplicate"
 msgstr "Tämä nimi on jo käytössä."
 
+msgid "TagManager_ErrorNotAnArray"
+msgstr "\"%1$s\" has to be an array."
+
+msgid "TagManager_ErrorPreviewReservedEnvironment"
+msgstr "The preview environment cannot be configured as it is a reserved environment"
+
+msgid "TagManager_ErrorTriggerAtPositionXDoesNotExist"
+msgstr "The trigger \"%1$s\" at position \"%2$s\" does not exist."
+
+msgid "TagManager_ErrorTriggerNotRemovableAsInUse"
+msgstr "This trigger cannot be deleted as it is used in a tag. To remove this trigger, update any referenced tag first."
+
+msgid "TagManager_ErrorUrlVariableDescription"
+msgstr "Returns the url of an error, when an error was triggered previously."
+
 msgid "TagManager_ErrorUrlVariableName"
 msgstr "Virheen osoite"
+
+msgid "TagManager_ErrorVariableInConditionAtPositionNotFound"
+msgstr "The variable \"%1$s\" in the condition at position \"%2$s\" cannot be found."
+
+msgid "TagManager_ErrorVariableInvalidDefaultValue"
+msgstr "The default value needs to be empty, a string, or a number."
+
+msgid "TagManager_ErrorVariableNameInUseByPreconfiguredVariable"
+msgstr "This variable name cannot be used as a preconfigured variable already uses this name."
+
+msgid "TagManager_ErrorVersionCannotBeDeleted"
+msgstr "The \"%1$s\" version of a container cannot be deleted."
+
+msgid "TagManager_ErrorVersionCannotBeDeletedAsPublished"
+msgstr "This version cannot be deleted as it is published to at least one environment."
+
+msgid "TagManager_ErrorXNotProvided"
+msgstr "Please provide a value for \"%1$s\"."
+
+msgid "TagManager_ErrorXNotWhitelisted"
+msgstr "The value for \"%1$s\" is not allowed, use one of: %2$s."
+
+msgid "TagManager_ErrorXTooLong"
+msgstr "\"%1$s\" is too long, max %2$s characters are allowed."
+
+msgid "TagManager_EtrackerTagName"
+msgstr "etracker web analysis"
+
+msgid "TagManager_EtrackerTagDescription"
+msgstr "etracker is a web analytics system, you can choose to send a pageview or an event."
+
+msgid "TagManager_EtrackerTagHelp"
+msgstr ""
 
 msgid "TagManager_Except"
 msgstr "Paitsi"
 
+msgid "TagManager_ExportDraft"
+msgstr "Export draft"
+
 msgid "TagManager_ExportX"
 msgstr "Vie %s"
+
+msgid "TagManager_FacebookPixelTagDescription"
+msgstr "The Facebook Pixel is a web analytics and advertising service offered by Facebook."
+
+msgid "TagManager_FacebookPixelTagHelp"
+msgstr "This tag lets you track website pageviews in your Facebook Ads account. To obtain the Pixel ID please log in to your Facebook Ads account."
 
 msgid "TagManager_FacebookPixelTagName"
 msgstr "Facebook Pixel"
@@ -10020,17 +11595,71 @@ msgstr "Facebook Pixel"
 msgid "TagManager_Filter"
 msgstr "Valikoi"
 
+msgid "TagManager_FireDelay"
+msgstr "Fire delay"
+
+msgid "TagManager_FireDelayHelp"
+msgstr "Lets you delay the execution of this tag. This can be useful for example if you want to allow some time for a blocking trigger to stop the tag from being executed. The value is expected in milliseconds where 1000ms are equal to one second."
+
+msgid "TagManager_FireLimit"
+msgstr "Fire limit"
+
+msgid "TagManager_FireLimitHelp"
+msgstr "The fire limit defines how often this tag will be executed. When set to '%1$s', then the tag will be executed each time any of the assigned fire triggers is triggered. When set to '%2$s', then the tag will be executed max during a single page view. '%3$s' means the tag will not be executed again within the next 24 hours. Opening a new tab or window may cause a new session as well. '%4$s' means the tag will be only executed once. Please note for this to work some information will be stored in the browser based on the name of this tag. This means if you choose '%4$s' and you change the name of this tag, the tag may be executed again for everyone."
+
+msgid "TagManager_FireTriggerHelp"
+msgstr "This tag will be executed every time any of these triggers are triggered. Not all of them have to be triggered in order for the tag to be executed. Want to execute the trigger only once per page view or session? You can limit how often the tag should be executed in the advanced settings by changing the \"%1$s\"."
+
+msgid "TagManager_FireTriggerTitle"
+msgstr "Execute this tag when any of these triggers are triggered."
+
+msgid "TagManager_FirstDirectoryVariableDescription"
+msgstr "Returns the first directory of the current page URL."
+
+msgid "TagManager_FirstDirectoryVariableName"
+msgstr "First URL Directory"
+
 msgid "TagManager_FormElementVariableName"
 msgstr "Lomakkeen elementti"
+
+msgid "TagManager_FormElementVariableDescription"
+msgstr "An instance of the element that was submitted."
+
+msgid "TagManager_FormClassesVariableDescription"
+msgstr "The value of all CSS class names of a submitted form."
 
 msgid "TagManager_FormClassesVariableName"
 msgstr "Lomakkeen luokat"
 
+msgid "TagManager_FormDestionationVariableDescription"
+msgstr "The value of the form action URL of a submitted form."
+
+msgid "TagManager_FormDestionationVariableName"
+msgstr "Form Destination URL"
+
+msgid "TagManager_FormIdVariableDescription"
+msgstr "The value of the ID attribute of a submitted form."
+
+msgid "TagManager_FormIdVariableName"
+msgstr "Form ID"
+
+msgid "TagManager_FormNameVariableDescription"
+msgstr "The value of the name attribute of a submitted form."
+
 msgid "TagManager_FormNameVariableName"
 msgstr "Lomakkeen nimi"
 
+msgid "TagManager_FormSubmitTriggerDescription"
+msgstr "Triggered when any form is submitted."
+
+msgid "TagManager_FormSubmitTriggerHelp"
+msgstr "Triggered when any form on the current page is submitted. To listen only to specific forms, please add conditions based on a \"form\" variable in the advanced settings."
+
 msgid "TagManager_FormSubmitTriggerName"
 msgstr "Lomakkeen lähetys"
+
+msgid "TagManager_FullscreenTriggerDescription"
+msgstr "Triggered when the window goes into or leaves full screen."
 
 msgid "TagManager_FullscreenTriggerName"
 msgstr "Koko näyttö"
@@ -10041,20 +11670,158 @@ msgstr "Alkuun pääsy"
 msgid "TagManager_GettingStartedNotice"
 msgstr "Haluatko tietää mistä tagihallinnassa oikein on kyse? Klikkaa \"Alkuun pääsy\" vasemmalla olevasta valikosta."
 
+msgid "TagManager_GettingStartedWhatIsIntro"
+msgstr "Matomo Tag Manager lets you manage and unify all your tracking and marketing tags. Tags are also known as snippets or pixels. Such tags are typically JavaScript code or HTML and let you integrate various features into your site in just a few clicks, for example:"
+
+msgid "TagManager_GettingStartedAnalyticsTracking"
+msgstr "Tracking analytics data"
+
+msgid "TagManager_GettingStartedConversionTracking"
+msgstr "Conversion tracking"
+
+msgid "TagManager_GettingStartedNewsletterSignups"
+msgstr "Newsletter signups"
+
+msgid "TagManager_GettingStartedExitActions"
+msgstr "Exit popups and surveys"
+
 msgid "TagManager_GettingStartedRemarketing"
 msgstr "Uudelleenmarkkinointi"
+
+msgid "TagManager_GettingStartedSocialWidgets"
+msgstr "Social widgets"
+
+msgid "TagManager_GettingStartedAffiliates"
+msgstr "Affiliates"
 
 msgid "TagManager_GettingStartedAds"
 msgstr "Mainokset"
 
+msgid "TagManager_GettingStartedAndMore"
+msgstr "and more"
+
+msgid "TagManager_GettingStartedMainComponents"
+msgstr "This can be achieved using these main components:"
+
+msgid "TagManager_GettingStartedTagComponent"
+msgstr "Tags - A snippet of code (usually JavaScript or HTML) which will be added to your site."
+
+msgid "TagManager_GettingStartedTriggerComponent"
+msgstr "Triggers - Defines when a tag should be fired."
+
+msgid "TagManager_GettingStartedVariableComponent"
+msgstr "Variables - Lets you retrieve data which can be used by tags and triggers."
+
+msgid "TagManager_GettingStartedWhyDoINeed"
+msgstr "Why or when do I need a Tag Manager?"
+
+msgid "TagManager_GettingStartedWhyMakesLifeEasier"
+msgstr "A Tag Manager makes your life easier when you want to modify any of these snippets on your website as you will no longer need a developer to make the needed changes for you. Instead of waiting for someone to make these changes and to deploy your website, you can now easily make the needed changes yourself. This lets you not only bring changes to the market faster, but also reduces cost."
+
+msgid "TagManager_GettingStartedWhyThirdPartySnippets"
+msgstr "It also comes in handy if you embed many third-party snippets into your website and want to bring in some order to oversee all the snippets that are embedded and have a convenient way to manage them."
+
+msgid "TagManager_GettingStartedWhyAccuracyPerformance"
+msgstr "The Tag Manager also makes sure all that all snippets are implemented correctly and loaded in the right way for faster performance."
+
+msgid "TagManager_GettingStartedHowDoI"
+msgstr "How do I get started?"
+
+msgid "TagManager_GettingStartedHowCreateContainer"
+msgstr "If you haven't created a container yet, %1$screate a container now%2$s."
+
+msgid "TagManager_GettingStartedHowCopyCode"
+msgstr "Next you need to copy/paste the code for the container into your website, this is a simple HTML snippet. From this point, this code will load all other snippets and you usually won't need to make any changes to your website anymore."
+
+msgid "TagManager_GettingStartedHowAddTagsToContainer"
+msgstr "Now you can add one or multiple tags to your container. If you have embedded a tag manually into your site in the past, you should at the same time also remove all previously added snippets from your website as they will be then loaded through the tag manager."
+
+msgid "TagManager_GettingStartedWhatIfUnsupported"
+msgstr "What if a tag, trigger, or variable I need is not supported yet?"
+
+msgid "TagManager_GettingStartedCustomTags"
+msgstr "There are custom tags, triggers, and variables available to let you implement pretty much any use case you need."
+
+msgid "TagManager_GettingStartedContributeTags"
+msgstr "If you use features regularly which are not available yet, or you have a product you want to integrate into the Tag Manager, please check out our %1$sdeveloper documentation%2$s on how to add your own tags, triggers, and variables. It is really easy."
+
 msgid "TagManager_GoogleAnalyticsUniversalTagDescription"
 msgstr "Google Analytics on Googlen tarjoama web-analytiikkapalvelu."
+
+msgid "TagManager_GoogleAnalyticsUniversalTagHelp"
+msgstr "This tag lets you track website pageviews into your Google Analytics. To obtain the Property-ID please log in to your Google Analytics account."
+
+msgid "TagManager_GoogleAnalyticsUniversalTagName"
+msgstr "Google Analytics (Universal)"
 
 msgid "TagManager_HideAdvancedSettings"
 msgstr "Piilota lisäasetukset"
 
+msgid "TagManager_HistoryChangeTriggerDescription"
+msgstr "Triggered when the current URL changes."
+
 msgid "TagManager_HistoryChangeTriggerName"
 msgstr "Historian muutos"
+
+msgid "TagManager_HistoryHashNewPathVariableDescription"
+msgstr ""
+
+msgid "TagManager_HistoryHashNewPathVariableName"
+msgstr "History New Path"
+
+msgid "TagManager_HistoryHashNewSearchVariableDescription"
+msgstr ""
+
+msgid "TagManager_HistoryHashNewSearchVariableName"
+msgstr "History New Search"
+
+msgid "TagManager_HistoryHashNewUrlVariableDescription"
+msgstr ""
+
+msgid "TagManager_HistoryHashNewUrlVariableName"
+msgstr "History New URL"
+
+msgid "TagManager_HistoryHashNewVariableDescription"
+msgstr ""
+
+msgid "TagManager_HistoryHashNewVariableName"
+msgstr "History New Hash"
+
+msgid "TagManager_HistoryHashOldPathVariableDescription"
+msgstr ""
+
+msgid "TagManager_HistoryHashOldPathVariableName"
+msgstr "History Old Path"
+
+msgid "TagManager_HistoryHashOldSearchVariableDescription"
+msgstr ""
+
+msgid "TagManager_HistoryHashOldSearchVariableName"
+msgstr "History Old Search"
+
+msgid "TagManager_HistoryHashOldUrlVariableDescription"
+msgstr ""
+
+msgid "TagManager_HistoryHashOldUrlVariableName"
+msgstr "History Old URL"
+
+msgid "TagManager_HistoryHashOldVariableDescription"
+msgstr ""
+
+msgid "TagManager_HistoryHashOldVariableName"
+msgstr "History Old Hash"
+
+msgid "TagManager_HistorySourceVariableDescription"
+msgstr "For example \"popstate\", \"historychange\", \"pushState\", or \"replaceState\""
+
+msgid "TagManager_HistorySourceVariableName"
+msgstr "History Source"
+
+msgid "TagManager_HoneybadgerTagDescription"
+msgstr "Exception and Uptime Monitoring for Application Developers"
+
+msgid "TagManager_HoneybadgerTagHelp"
+msgstr "This tag adds the official Honeybadger Javascript SDK to your website."
 
 msgid "TagManager_Import"
 msgstr "Tuo"
@@ -10065,11 +11832,23 @@ msgstr "Tuo versio"
 msgid "TagManager_InstallCode"
 msgstr "Asenna koodi"
 
+msgid "TagManager_InstallCodePublishEnvironmentNote"
+msgstr "Please note that in order for a container to be functional for a specific environment, you have to publish a version to that environment. You can find below a list of all environments that have a version published currently. When a \"%s\" is enabled, the preview will be loaded automatically through any of the environments when you access the page."
+
+msgid "TagManager_IsoDateVariableDescription"
+msgstr "The current date and time in ISO format, for example \"2018-03-19T14:00:00.587Z\"."
+
 msgid "TagManager_IsoDateVariableName"
 msgstr "ISO-päiväys"
 
+msgid "TagManager_JavaScriptErrorTriggerDescription"
+msgstr "Triggered when a JavaScript error happens."
+
 msgid "TagManager_JavaScriptErrorTriggerName"
 msgstr "JavaScript-virhe"
+
+msgid "TagManager_JavaScriptVariableDescription"
+msgstr "Reads the value of a global JavaScript variable."
 
 msgid "TagManager_JavaScriptVariableName"
 msgstr "JavaScript-muuttuja"
@@ -10083,14 +11862,44 @@ msgstr "Edelliset versiot"
 msgid "TagManager_LearnMore"
 msgstr "Lisätietoa"
 
+msgid "TagManager_LivezillaDynamicTagName"
+msgstr "Livezilla Chat / Monitoring"
+
+msgid "TagManager_LivezillaDynamicTagDescription"
+msgstr "Livezilla lets you monitor and chat with visitors on your website."
+
+msgid "TagManager_LivezillaDynamicTagHelp"
+msgstr "This tag allows you to add the Dynamic Code integration from Livezilla to Chat with you Customers or just Monitor your website."
+
+msgid "TagManager_LocalDateVariableDescription"
+msgstr "The current user's local date, for example \"Mon Mar 19 2018\"."
+
 msgid "TagManager_LocalDateVariableName"
 msgstr "Paikallinen päiväys"
+
+msgid "TagManager_LocalHourVariableDescription"
+msgstr "The current hour of the local time, for example \"8\" or \"11\"."
 
 msgid "TagManager_LocalHourVariableName"
 msgstr "Paikallinen tunti"
 
+msgid "TagManager_LocalTimeVariableDescription"
+msgstr "The current user's local time, for example \"14:00:00 GMT+1300 (NZDT)\"."
+
 msgid "TagManager_LocalTimeVariableName"
 msgstr "Paikallinen aika"
+
+msgid "TagManager_LookupTable"
+msgstr "Lookup Table"
+
+msgid "TagManager_LookupTableMatchValue"
+msgstr "this value"
+
+msgid "TagManager_LookupTableOutValue"
+msgstr "then convert to this value"
+
+msgid "TagManager_LookupTableTitle"
+msgstr "Convert the value of a variable automatically to another value when the value of this variable ..."
 
 msgid "TagManager_ManageX"
 msgstr "Hallinnoi %s"
@@ -10101,6 +11910,9 @@ msgstr "Vaihda"
 msgid "TagManager_DetectingChanges"
 msgstr "Havaitaan muutoksia..."
 
+msgid "TagManager_ChangesSinceLastVersion"
+msgstr "Changes since the last version"
+
 msgid "TagManager_MatomoConfigurationVariableDescription"
 msgstr "Määrittää Matomo-analytiikan kokoonpanon."
 
@@ -10109,6 +11921,9 @@ msgstr "Matomo-kokoonpano"
 
 msgid "TagManager_MatomoTagDescription"
 msgstr "Matomo, joka aiemmin tunnettiin nimellä Piwk, on johtava avoimen lähdekoodin analytiikka-alusta."
+
+msgid "TagManager_MatomoTagHelp"
+msgstr "This tag lets you track pageviews and events into your Matomo. You can customize the tracking to your needs."
 
 msgid "TagManager_MatomoTagName"
 msgstr "Matomo-analytiikka"
@@ -10131,6 +11946,12 @@ msgstr "Konttia ei löytynyt."
 msgid "TagManager_NoMatomoConfigFoundForContainer"
 msgstr "Matomo-kokoonpanoa ei löytynyt tästä kontista."
 
+msgid "TagManager_NoReleasesFound"
+msgstr "No release found."
+
+msgid "TagManager_NoReleasesFoundForContainer"
+msgstr "No release has been found for this container."
+
 msgid "TagManager_NoTagsFound"
 msgstr "Tagia ei löytynyt."
 
@@ -10146,44 +11967,143 @@ msgstr "Versiota ei löytynyt."
 msgid "TagManager_Once24Hours"
 msgstr "Kerran 24 tunnin aikana"
 
+msgid "TagManager_OnceLifetime"
+msgstr "Once in lifetime"
+
 msgid "TagManager_OncePage"
 msgstr "Kerran per sivunkatselu"
+
+msgid "TagManager_OnlyTriggerWhen"
+msgstr "Only trigger when"
+
+msgid "TagManager_OrCreateAndPublishVersion"
+msgstr "or create version and publish this version"
+
+msgid "TagManager_PageHashVariableDescription"
+msgstr "Returns the hash part of the current URL without the leading hash."
+
+msgid "TagManager_PageHashVariableName"
+msgstr "Page Hash"
+
+msgid "TagManager_PageHostnameVariableDescription"
+msgstr "Returns the hostname of the current URL."
 
 msgid "TagManager_PageHostnameVariableName"
 msgstr "Sivun isäntänimi"
 
+msgid "TagManager_PageLoadTimeTotalVariableDescription"
+msgstr "The total amount of time it took to load the page."
+
+msgid "TagManager_PageLoadTimeTotalVariableName"
+msgstr "Page Load Time Total"
+
+msgid "TagManager_PageOriginVariableDescription"
+msgstr "Returns a domain of the current URL with protocol."
+
 msgid "TagManager_PageOriginVariableName"
 msgstr "Sivun lähde"
+
+msgid "TagManager_PagePathVariableDescription"
+msgstr "Returns the path of the current page URL"
 
 msgid "TagManager_PagePathVariableName"
 msgstr "Sivun osoite"
 
+msgid "TagManager_PageRenderTimeVariableDescription"
+msgstr "The time it took to render the page in the browser in milliseconds."
+
 msgid "TagManager_PageRenderTimeVariableName"
 msgstr "Sivun latausaika"
+
+msgid "TagManager_PageTitleVariableDescription"
+msgstr "Returns the title of the current page."
 
 msgid "TagManager_PageTitleVariableName"
 msgstr "Sivun otsikko"
 
+msgid "TagManager_PageUrlVariableDescription"
+msgstr "Returns the full URL of a page"
+
 msgid "TagManager_PageUrlVariableName"
 msgstr "Sivun URL"
+
+msgid "TagManager_PageViewTriggerDescription"
+msgstr "Triggered as soon as the Tag Manager is executed within the page."
 
 msgid "TagManager_PageViewTriggerName"
 msgstr "Sivun katselu"
 
+msgid "TagManager_PingdomRUMTagDescription"
+msgstr "Pingdom Real User Monitoring (RUM) lets you collect performance data from actual visitors to your site."
+
+msgid "TagManager_PingdomRUMTagHelp"
+msgstr "This tag allows you to add the Pingdom Real User Monitoring (RUM) to your site."
+
+msgid "TagManager_PluginDescription"
+msgstr "Manage and unify all your tracking and marketing snippets in one place."
+
+msgid "TagManager_PreConfiguredInfoTitle"
+msgstr "Pre-configured variables are variables that are ready-to-use and cannot be created, edited, or configured. They work out of the box and you can use them in tags, triggers, and variables if needed."
+
+msgid "TagManager_PreconfiguredVariables"
+msgstr "Pre-configured variables"
+
+msgid "TagManager_PreviewDebugEnabledNotification"
+msgstr "Preview mode is enabled%1$s. Access your website to debug the container now. If you want %2$sshare the preview%3$s with someone else, please append %4$s or %5$s to the URL of your website. While this mode is enabled, the preview container will be automatically updated when you make a change. %6$s"
+
+msgid "TagManager_PreviewModeVariableDescription"
+msgstr "Returns either \"1\" or \"0\" depending on whether the preview mode is currently enabled."
+
 msgid "TagManager_PreviewModeVariableName"
 msgstr "Esikatselutila"
+
+msgid "TagManager_Priority"
+msgstr "Priority"
+
+msgid "TagManager_PriorityHelp"
+msgstr "The lower the priority is, the earlier this tag may be fired when several tags would be otherwise triggered at the same time."
 
 msgid "TagManager_Publish"
 msgstr "Julkaise"
 
+msgid "TagManager_PublishRelease"
+msgstr "Publish release"
+
+msgid "TagManager_PublishVersion"
+msgstr "Publish version \"%s\" to..."
+
+msgid "TagManager_PublishVersionToEnvironmentToViewEmbedCode"
+msgstr " Please publish a version to an environment in order to view the tracking code here."
+
+msgid "TagManager_PublishLiveEnvironmentCapabilityRequired"
+msgstr "Please note that only an \"Admin\" user, or a user with the \"%1$s\" capability can publish to the \"Live\" environment."
+
+msgid "TagManager_RaygunTagDescription"
+msgstr "Error, crash and performance monitoring software."
+
+msgid "TagManager_RaygunTagHelp"
+msgstr "This tag adds the official raygun4js SDK to your website."
+
+msgid "TagManager_RandomNumberVariableDescription"
+msgstr "Returns a random number each time the value of the variable is retrieved."
+
 msgid "TagManager_RandomNumberVariableName"
 msgstr "Satunnaisluku"
+
+msgid "TagManager_ReferrerUrlVariableDescription"
+msgstr "Gets the value of the Referrer URL."
 
 msgid "TagManager_ReferrerUrlVariableName"
 msgstr "Saapumisosoite"
 
+msgid "TagManager_ReferrerVariableDescription"
+msgstr "Returns the full URL of the referrer."
+
 msgid "TagManager_ReferrerVariableName"
 msgstr "Saapumisosoite"
+
+msgid "TagManager_ReleaseInfo"
+msgstr "Released by %1$s on %2$s."
 
 msgid "TagManager_ReleaseVersionInfo"
 msgstr "Version nimi %s."
@@ -10197,26 +12117,122 @@ msgstr "Julkaisija"
 msgid "TagManager_ReleasedOn"
 msgstr "Julkaisuaika"
 
+msgid "TagManager_ReleasesOverview"
+msgstr "Releases overview"
+
+msgid "TagManager_Revision"
+msgstr "Revision"
+
+msgid "TagManager_ScreenHeightAvailableVariableDescription"
+msgstr "The screen height that is available within the browser window (viewport)."
+
+msgid "TagManager_ScreenHeightAvailableVariableName"
+msgstr "Screen Height Available"
+
+msgid "TagManager_ScreenHeightVariableDescription"
+msgstr "The full screen height of the current device."
+
 msgid "TagManager_ScreenHeightVariableName"
 msgstr "Näytön korkeus"
+
+msgid "TagManager_ScreenWidthAvailableVariableDescription"
+msgstr "The screen width that is available within the browser window (viewport)."
+
+msgid "TagManager_ScreenWidthAvailableVariableName"
+msgstr "Screen Width Available"
+
+msgid "TagManager_ScreenWidthVariableDescription"
+msgstr "The full screen width of the current device."
 
 msgid "TagManager_ScreenWidthVariableName"
 msgstr "Näytön leveys"
 
+msgid "TagManager_ScrollHorizontalPercentageVariableDescription"
+msgstr "How far the user has currently scrolled horizontally, for example \"75.59\" for \"75.59%%\"."
+
+msgid "TagManager_ScrollHorizontalPercentageVariableName"
+msgstr "Scroll Horizontal Percentage"
+
+msgid "TagManager_ScrollLeftPixelVariableDescription"
+msgstr "How far the user has currently scrolled horizontally in pixels, for example \"592\"."
+
+msgid "TagManager_ScrollLeftPixelVariableName"
+msgstr "Scroll Left Pixel"
+
+msgid "TagManager_ScrollReachTriggerDescription"
+msgstr "Triggered as soon as the user scrolls to a certain position."
+
+msgid "TagManager_ScrollReachTriggerHelp"
+msgstr "This trigger is triggered when a user either scrolls or resizes the current browser window. The trigger is not triggered when the user scrolls within a certain element."
+
+msgid "TagManager_ScrollReachTriggerName"
+msgstr "Scroll Reach"
+
+msgid "TagManager_ScrollSourceVariableDescription"
+msgstr "Whether the scroll position was originated from a user scroll or a browser resize. Value is either \"scroll\" or \"resize\"."
+
+msgid "TagManager_ScrollSourceVariableName"
+msgstr "Scroll Source"
+
+msgid "TagManager_ScrollTopPixelVariableDescription"
+msgstr "How far the user has currently scrolled vertically in pixels, for example \"592\"."
+
+msgid "TagManager_ScrollTopPixelVariableName"
+msgstr "Scroll Top Pixel"
+
+msgid "TagManager_ScrollVerticalPercentageVariableDescription"
+msgstr "How far the user has currently scrolled vertically, for example \"75.59\" for \"75.59%%\"."
+
+msgid "TagManager_ScrollVerticalPercentageVariableName"
+msgstr "Scroll Vertical Percentage"
+
+msgid "TagManager_SentryRavenTagDescription"
+msgstr "Sentry.io is an Open-Source error tracking tool that allows you to detect errors that happen on your website."
+
+msgid "TagManager_SentryRavenTagHelp"
+msgstr "This tag adds Raven.js, the official Javascript SDK. Get started by signing up on sentry.io or setting up your own tracking instance."
+
+msgid "TagManager_SeoCanonicalUrlVariableDescription"
+msgstr "Returns the canonical URL if any is set."
+
 msgid "TagManager_SeoCanonicalUrlVariableName"
 msgstr "Kanoninen osoite"
+
+msgid "TagManager_SeoNumH1VariableDescription"
+msgstr "The number of H1 elements that are present on the current page. Useful for example for SEO Monitoring."
 
 msgid "TagManager_SeoNumH1VariableName"
 msgstr "H1-elementtien määrä"
 
+msgid "TagManager_SeoNumH2VariableDescription"
+msgstr "The number of H2 elements that are present on the current page. Useful for example for SEO Monitoring."
+
 msgid "TagManager_SeoNumH2VariableName"
 msgstr "H2-elementtien määrä"
+
+msgid "TagManager_SettingCustomTemplatesDescription"
+msgstr "This setting defines who can use custom templates or whether they should be completely disabled. Changing this setting can improve the security on your website. When you configure a trigger, tag, or a variable, some of them may allow a Matomo user to enter HTML or JavaScript which will be executed on your website. Entering custom code cannot only break the container in case there is an error, but also allows them to execute any JavaScript code on your website. This can be misused to steal for example sensitive information on your website. If you do not want to allow your team members to enter any JavaScript code, you may want to disable this setting."
+
+msgid "TagManager_SettingCustomTemplatesTitle"
+msgstr "Restrict usage of custom templates"
+
+msgid "TagManager_SettingEnvironmentDescription"
+msgstr "Define one or multiple additional environments. Please note that if you remove any environment, generated container files that exist for a specific environment will be removed and will be no longer available."
 
 msgid "TagManager_SettingCustomTemplatesDisabled"
 msgstr "Pois käytöstä, kukaan ei voi käyttää niitä"
 
+msgid "TagManager_SettingCustomTemplatesAdmin"
+msgstr "Users with at least admin permission can use them"
+
 msgid "TagManager_SettingCustomTemplatesSuperUser"
 msgstr "Vain pääkäyttäjät voivat käyttää niitä"
+
+msgid "TagManager_ShareaholicTagDescription"
+msgstr "Content Marketing Platform & Website Traffic Tools"
+
+msgid "TagManager_ShareaholicTagHelp"
+msgstr "This tag lets you add Shareaholic social media buttons and more to your website."
 
 msgid "TagManager_ShowAdvancedSettings"
 msgstr "Näytä lisäasetukset"
@@ -10227,17 +12243,56 @@ msgstr "Aloituspäivä"
 msgid "TagManager_Tag"
 msgstr "Tagi"
 
+msgid "TagManager_TagEndDateHelp"
+msgstr "If set, this tag will be fired only up to this end date. The specified date will be assumed to be in %1$syour local timezone%2$s."
+
+msgid "TagManager_TagFireTriggerRequirement"
+msgstr "You need to choose at least one fire trigger."
+
 msgid "TagManager_TagManager"
 msgstr "Tagihallinta"
+
+msgid "TagManager_TagManagerTrackingInfo"
+msgstr "Don't know what a Tag Manager is? Check out our %1$sGetting Started%2$s guide. If you are embedding multiple resources from 3rd party websites into your website, then tracking your website using the %3$sTag Manager%4$s may be a better choice for you compared to using the regular JavaScript tracking."
+
+msgid "TagManager_TagNameHelp"
+msgstr "The tag name lets you define a unique name for this tag to quickly identify it. Please note that this name will be publicly visible in the source code of the tag when you preview/debug this container."
+
+msgid "TagManager_TagStartDateHelp"
+msgstr "If set, this tag will be fired only after this start date. The specified date will be assumed to be in %1$syour local timezone%2$s."
+
+msgid "TagManager_TagUsageBenefits"
+msgstr "A tag is a snippet of code which can be executed on your site. Most of the times a tag may be used to either send data to a third-party (for example tracking data) or to embed content from a third-party into your website (for example social widgets or surveys). You can add as many tags as you like and a tag will be executed as soon as the condition of a connected trigger is met."
 
 msgid "TagManager_Tags"
 msgstr "Tagit"
 
+msgid "TagManager_TawkToTagDescription"
+msgstr "Tawk.to lets you monitor and chat with visitors on your website."
+
+msgid "TagManager_TawkToTagHelp"
+msgstr "This tag allows you to add the Tawk.to contact form to your website."
+
+msgid "TagManager_ThemeColorTagDescription"
+msgstr "Style the UI of supported browsers."
+
+msgid "TagManager_ThemeColorTagHelp"
+msgstr "This tag supports Chrome on Android and other browser that understand 'theme-color'."
+
 msgid "TagManager_ThemeColorTagName"
 msgstr "Teemaväri"
 
+msgid "TagManager_TimeSinceLoadVariableDescription"
+msgstr "Calculates the time that has passed since the page was loaded."
+
 msgid "TagManager_TimeSinceLoadVariableName"
 msgstr "Aika sivunlatauksesta"
+
+msgid "TagManager_TimerTriggerDescription"
+msgstr "Triggered in a specific interval, for example every 3 seconds."
+
+msgid "TagManager_TimerTriggerHelp"
+msgstr "Use this trigger to perform an action periodically."
 
 msgid "TagManager_TimerTriggerName"
 msgstr "Ajastin"
@@ -10248,8 +12303,23 @@ msgstr "Liipaisin"
 msgid "TagManager_TriggerBeingUsedBy"
 msgstr "Tätä liipaisinta käytetään seuraavissa paikoissa:"
 
+msgid "TagManager_TriggerBeingUsedNeedsRemove"
+msgstr "To delete this trigger, please remove the trigger from the referenced places and then try again."
+
 msgid "TagManager_TriggerCannotBeDeleted"
 msgstr "Tätä liipaisinta ei voi poistaa"
+
+msgid "TagManager_TriggerConditionNode"
+msgstr "Note: Some variables may not work as you expect. For example using a click variable in combination with a form variable might only work if you have also added a click trigger to your container. This applies typically to variables within the categories Clicks, Forms, History, Errors, Scrolls, and Visibility which should are typically used in their respecting trigger only."
+
+msgid "TagManager_TriggerConditionsHelp"
+msgstr "You can further restrict when this trigger should be triggered by specifying one or multiple conditions. Only when ALL of these conditions are met, the trigger will be actually triggered (not when only one of them is met). Only trigger when all of these conditions are met:"
+
+msgid "TagManager_TriggerNameHelp"
+msgstr "The trigger name lets you define a unique name for this trigger to quickly identify it. Please note that this name will be publicly visible in the source code of the trigger when you preview/debug this container."
+
+msgid "TagManager_TriggerUsageBenefits"
+msgstr "Triggers let you define on which event a certain tag should be fired or blocked. For example when a specific element was clicked, or when a visitor reached a certain scroll position. Additionally, you can specify a filter to further restrict when a certain trigger should be triggered or not."
 
 msgid "TagManager_Triggers"
 msgstr "Liipaisimet"
@@ -10272,8 +12342,29 @@ msgstr "Erinomaista! %s on päivitetty onnistuneesti."
 msgid "TagManager_UpdatingData"
 msgstr "Päivitetään tietoja..."
 
+msgid "TagManager_UrlParameterVariableDescription"
+msgstr "Gets the value of a specific URL parameter."
+
+msgid "TagManager_UrlParameterVariableName"
+msgstr "URL Parameter"
+
+msgid "TagManager_UrlVariableDescription"
+msgstr "Gets the value of the current page URL."
+
+msgid "TagManager_UrlVariableName"
+msgstr "URL Variable"
+
+msgid "TagManager_UseCustomTemplateCapabilityRequired"
+msgstr "This is a Custom Template which can only be created or edited by an \"Admin\" or a user with the \"%1$s\" capability"
+
+msgid "TagManager_UserAgentVariableDescription"
+msgstr "Gets the value of the user agent which includes the operating system and browser information about the current visitors' device."
+
 msgid "TagManager_UserAgentVariableName"
 msgstr "Käyttäjäagentti"
+
+msgid "TagManager_UtcDateVariableDescription"
+msgstr "The current data in UTC, for example \"Mon, 19 Mar 2018 14:00:00 GMT\"."
 
 msgid "TagManager_UtcDateVariableName"
 msgstr "UTC-päiväys"
@@ -10284,8 +12375,17 @@ msgstr "Muuttuja"
 msgid "TagManager_VariableBeingUsedBy"
 msgstr "Tätä muuttujaa käytetään seuraavissa paikoissa:"
 
+msgid "TagManager_VariableBeingUsedNeedsRemove"
+msgstr "To delete this variable, please remove the variable from the referenced places and then try again."
+
 msgid "TagManager_VariableCannotBeDeleted"
 msgstr "Tätä muuttujaa ei voi poistaa"
+
+msgid "TagManager_VariableNameHelp"
+msgstr "The variable name lets you define a unique name for this variable to quickly identify it. Please note that this name will be publicly visible in the source code of the variable when you preview/debug this container."
+
+msgid "TagManager_VariableUsageBenefits"
+msgstr "Variables let you retrieve data which can be used by tags and triggers. Matomo Tag Manager comes with a set of predefined variables which can be used right away, and some other variables which can be configured to your needs."
 
 msgid "TagManager_Variables"
 msgstr "Muuttujat"
@@ -10296,8 +12396,23 @@ msgstr "Versio"
 msgid "TagManager_VersionX"
 msgstr "versio %s"
 
+msgid "TagManager_VersionAlreadyPublishedToAllEnvironments"
+msgstr "This version cannot be published to any further environment"
+
 msgid "TagManager_VersionDescription"
 msgstr "Version kuvaus"
+
+msgid "TagManager_VersionDescriptionHelp"
+msgstr "Optionally, you can describe this new version in more detail. We recommend to mention what you changed in this version. For example whether you fixed a particular issue or added a new tag. This helps you to better understand each version for example if you have to rollback to a certain version."
+
+msgid "TagManager_VersionEnvironmentHelp"
+msgstr "In order to embed the current version into your site you need to publish it to an environment, typically the \"Live\" environment. If you have a specific review process, or testing environments you may want to first publish a version to a \"staging\" or \"test\" environment before deploying it on to your live production system to make sure everything works as you expect it to. You can also later at any time publish this version to any environment."
+
+msgid "TagManager_VersionImportContentTitle"
+msgstr "Paste the JSON formatted data that you exported previously"
+
+msgid "TagManager_VersionImportInfo"
+msgstr "When you import a container version, the current working draft will be overwritten with this imported version. To export a container version, click on the export next to a version or export the current version draft in the \"Versions\" screen."
 
 msgid "TagManager_VersionImportOverwriteContent"
 msgstr "Korvaa nykyinen luonnos tällä versiolla"
@@ -10308,8 +12423,17 @@ msgstr "Versio tuotu onnistuneesti"
 msgid "TagManager_VersionName"
 msgstr "Version nimi"
 
+msgid "TagManager_VersionNameHelp"
+msgstr "Give this version a name that lets you easily identify this particular version. You can use any naming scheme you want. We recommend using a scheme like \"1.0\" where you increase the last number when you make small changes to it such as fixing a configuration, and the first number when you add for example a new tag. This way you can easily keep track of all your versions. Please note that this name will be also available as a variable and therefore publicly visible in the source code of the tag."
+
 msgid "TagManager_VersionPublishSuccess"
 msgstr "Tämä versio on julkaistu onnistuneesti"
+
+msgid "TagManager_VersionRevision"
+msgstr "Version revision"
+
+msgid "TagManager_VersionUsageBenefits"
+msgstr "Versions let you save a copy of the current configuration of a container so you can go back to a previous version of a container if you need to. This makes it easier to recover from mistakes, and lets you easily find all previously deployed tags, triggers, and variables. Once you are happy with your current configuration, you can publish it to a specific environment. For example, you may want to deploy your tag first to a \"test\" or \"staging\" environment to make sure the current configuration works before making it available to everyone using the live environment."
 
 msgid "TagManager_Versions"
 msgstr "Versiot"
@@ -10320,11 +12444,245 @@ msgstr "Näytä konttityöpöytä"
 msgid "TagManager_ViewX"
 msgstr "Näytä %s"
 
+msgid "TagManager_VisibleElementClassesVariableDescription"
+msgstr "The value of all CSS class names of an element that was matched when the visible element trigger was triggered."
+
+msgid "TagManager_VisibleElementClassesVariableName"
+msgstr "Visible Element Classes"
+
+msgid "TagManager_VisibleElementIdVariableDescription"
+msgstr "The value of the ID attribute of an element that was matched when the visible element trigger was triggered."
+
+msgid "TagManager_VisibleElementIdVariableName"
+msgstr "Visible Element ID"
+
+msgid "TagManager_VisibleElementNodeNameVariableDescription"
+msgstr "The value of element name that was matched when the visible element trigger was triggered. For example \"P\" or \"DIV\"."
+
+msgid "TagManager_VisibleElementNodeNameVariableName"
+msgstr "Visible Element Node Name"
+
+msgid "TagManager_VisibleElementTextVariableDescription"
+msgstr "The value of the text content of an element that was matched when the visible element trigger was triggered."
+
+msgid "TagManager_VisibleElementTextVariableName"
+msgstr "Visible Element Text"
+
+msgid "TagManager_VisibleElementUrlVariableDescription"
+msgstr "The value of the link URL (href) of an element that was matched when the visible element trigger was triggered."
+
+msgid "TagManager_VisibleElementUrlVariableName"
+msgstr "Visible Element Destination URL"
+
+msgid "TagManager_VisualWebsiteOptimizerTagDescription"
+msgstr "Visual Website Optimizer is an all-in-one A/B testing and Conversion Optimization Platform."
+
+msgid "TagManager_VisualWebsiteOptimizerTagHelp"
+msgstr "This tag adds the asynchronous VWO Smart Code to your website."
+
+msgid "TagManager_VisualWebsiteOptimizerTagName"
+msgstr "Visual Website Optimizer"
+
+msgid "TagManager_WantToDeployThisChangeCreateVersion"
+msgstr "Do you want to deploy this change? %1$sPublish a new version now%2$s."
+
+msgid "TagManager_WeekdayVariableDescription"
+msgstr "Returns the local day of the week eg monday, tuesday, wednesday, ..."
+
 msgid "TagManager_WeekdayVariableName"
 msgstr "Viikonpäivä"
 
+msgid "TagManager_WindowLeaveTriggerDescription"
+msgstr "Triggered when the user is about to leave the current page by moving the mouse outside the window."
+
+msgid "TagManager_WindowLeaveTriggerHelp"
+msgstr "This trigger is triggered when the user is possibly about to leave the website and moves her or his mouse outside of the current web page for example towards the browser URL address line or any other buttons. This can be useful to keep your visitor engaged and not lose the visitor, for example by showing an exit popup. You may be also interested in the \"Window Unload\" trigger which is triggered as soon as the user has actually left the current page."
+
+msgid "TagManager_WindowLeaveTriggerName"
+msgstr "Window Leave"
+
+msgid "TagManager_WindowLoadedTriggerDescription"
+msgstr "Triggered when the page is fully loaded including all images etc."
+
+msgid "TagManager_WindowLoadedTriggerHelp"
+msgstr "This stage of loading a web page, is when the page is fully loaded according to the browser. In most cases this means that also all images are loaded, and all styles are applied etc. This trigger is always triggered at some point after the \"DOM Ready\"."
+
 msgid "TagManager_WindowLoadedTriggerName"
 msgstr "Ikkuna ladattu"
+
+msgid "TagManager_WindowUnloadTriggerDescription"
+msgstr "Triggered just before the browser window is closed or when the user navigates to a different page."
+
+msgid "TagManager_WindowUnloadTriggerHelp"
+msgstr "This trigger identifies the event when a user is actually closing the current page compared to the \"Window Leave\" trigger which triggers when the user is about to leave your page. Either by navigating to another page within the current browser tab, or by completely closing the tab."
+
+msgid "TagManager_WindowUnloadTriggerName"
+msgstr "Window Unload"
+
+msgid "TagManager_ZendeskChatTagDescription"
+msgstr "Reach your customers, instantly via web, mobile, and messaging."
+
+msgid "TagManager_ZendeskChatTagHelp"
+msgstr "This tag allows you to add the Zendesk Chat form to your website."
+
+msgid "TagManager_ZendeskChatTagName"
+msgstr "Zendesk Chat (formerly Zopim)"
+
+msgid "Tour_PluginDescription"
+msgstr "Become a Matomo Expert in no time by completing challenges that get you familiar with Matomo."
+
+msgid "Tour_Tour"
+msgstr "Tour"
+
+msgid "Tour_Engagement"
+msgstr "Engagement"
+
+msgid "Tour_UploadLogo"
+msgstr "Upload your logo"
+
+msgid "Tour_AddUser"
+msgstr "Add another user"
+
+msgid "Tour_AddWebsite"
+msgstr "Add another website"
+
+msgid "Tour_AddReport"
+msgstr "Add a scheduled report"
+
+msgid "Tour_AddSegment"
+msgstr "Add a segment"
+
+msgid "Tour_AddAnnotation"
+msgstr "Add an annotation"
+
+msgid "Tour_BrowseMarketplace"
+msgstr "Browse Marketplace"
+
+msgid "Tour_PreviousChallenges"
+msgstr "Previous challenges"
+
+msgid "Tour_NextChallenges"
+msgstr "Next challenges"
+
+msgid "Tour_RowEvolution"
+msgstr "Row evolution"
+
+msgid "Tour_ViewX"
+msgstr "View %s"
+
+msgid "Tour_SetupX"
+msgstr "Setup %s"
+
+msgid "Tour_SelectDateRange"
+msgstr "Select a date range"
+
+msgid "Tour_SelectDateRangeDescription"
+msgstr "Select a date range in the calendar."
+
+msgid "Tour_ChangeVisualisation"
+msgstr "Change a visualisation"
+
+msgid "Tour_ChangeVisualisationDescription"
+msgstr "View a report and select the visualisation icon at the bottom of a report to view the same report in a different visualisation."
+
+msgid "Tour_FlattenActions"
+msgstr "Flatten a page report"
+
+msgid "Tour_FlattenActionsDescription"
+msgstr "Go to Behaviour => Pages and click in the bottom of the report on the cog icon to flatten the report. A flattened report changes the hierarchy from a grouped report to a list."
+
+msgid "Tour_ViewRowEvolutionDescription"
+msgstr "Row evolution shows you the current & past metric data for any row in any report."
+
+msgid "Tour_ViewVisitsLogDescription"
+msgstr "The visits Log shows you all the individual visits and actions each visitor took on your site."
+
+msgid "Tour_ViewVisitorProfileDescription"
+msgstr "The visitor log helps you to understand your visitors’ individual behavior by summarizing and listing your visitors’ visits."
+
+msgid "Tour_ShareAllChallengesCompleted"
+msgstr "Just unlocked the %1$s achievement by completing all Matomo challenges."
+
+msgid "Tour_ChallengeCompleted"
+msgstr "Congratulations, you have completed this challenge."
+
+msgid "Tour_BecomeMatomoExpert"
+msgstr "Become a Matomo Expert"
+
+msgid "Tour_YouCanCallYourselfExpert"
+msgstr "You can now call yourself a true %1$sMatomo Expert%2$s."
+
+msgid "Tour_StatusLevel"
+msgstr "You are currently a %1$s. Complete %2$s more challenges and you become a %3$s."
+
+msgid "Tour_ConfigureGeolocationDescription"
+msgstr "Ensure the location of your visitors is correctly detected."
+
+msgid "Tour_DisableBrowserArchiving"
+msgstr "Disable browser archiving for better performance"
+
+msgid "Tour_SkipThisChallenge"
+msgstr "Skip this challenge"
+
+msgid "Tour_ShareYourAchievementOn"
+msgstr "Share your achievement on %1$s."
+
+msgid "Tour_MatomoSenior"
+msgstr "Matomo Talent"
+
+msgid "Tour_MatomoBeginner"
+msgstr "Matomo Beginner"
+
+msgid "Tour_MatomoIntermediate"
+msgstr "Matomo Intermediate"
+
+msgid "Tour_MatomoTalent"
+msgstr "Matomo Talent"
+
+msgid "Tour_MatomoProfessional"
+msgstr "Matomo Professional"
+
+msgid "Tour_MatomoExpert"
+msgstr "Matomo Expert"
+
+msgid "Tour_ConfigureGeolocation"
+msgstr "Configure geolocation"
+
+msgid "Tour_CustomiseDashboard"
+msgstr "Customise dashboard"
+
+msgid "Tour_CustomiseDashboardDescription"
+msgstr "You can add new widgets to your Dashboard, to ensure it reports on all of your most important metrics."
+
+msgid "Tour_DefineGoal"
+msgstr "Add a goal"
+
+msgid "Tour_DefineGoalDescription"
+msgstr "Conversion tracking is a great way to identify whether you are meeting your current business objectives, identify new objectives, view and analyse your performance, and learn how to increase your conversions, conversion rates, and revenue per visit."
+
+msgid "Tour_EmbedTrackingCode"
+msgstr "Embed tracking code"
+
+msgid "Tour_CompletionTitle"
+msgstr "Well done!"
+
+msgid "Tour_CompletionMessage"
+msgstr "You have completed all the challenges. Give yourself a pat on the back."
+
+msgid "Tour_Part1Title"
+msgstr "Welcome to Matomo %1$s. This widget will help you become a Matomo expert in no time."
+
+msgid "Tour_Part2Title"
+msgstr "Keep it up %1$s! You’re well on your way to becoming a Matomo expert."
+
+msgid "Tour_Part3Title"
+msgstr "Great progress %1$s! If you continue like this, you’ll be an expert in no time!"
+
+msgid "Tour_Part4Title"
+msgstr "Great progress %1$s! Only a few more challenges to complete."
+
+msgid "Tour_OnlyVisibleToSuperUser"
+msgstr "Only you as a %1$sSuper User%2$s can see this widget."
 
 msgid "Transitions_BouncesInline"
 msgstr "%s käväisyä"
@@ -10349,6 +12707,18 @@ msgstr "%s tiedoston latausta"
 
 msgid "Transitions_NumOutlinks"
 msgstr "%s lähtevää linkki"
+
+msgid "Transitions_TopX"
+msgstr "Top %s labels"
+
+msgid "Transitions_FeatureDescription"
+msgstr "Transitions gives you a report that shows the things your visitors did directly before and after viewing a certain page. This page will explain how to access, understand, and use the powerful Transitions report."
+
+msgid "Transitions_AvailableInOtherReports"
+msgstr "Did you know? Transitions are also available as a row action in the following reports:"
+
+msgid "Transitions_AvailableInOtherReports2"
+msgstr "Simply hover a row in any of these reports and click on the transition icon %s to launch it."
 
 msgid "Transitions_FromCampaigns"
 msgstr "Kampanjoista"
@@ -10413,11 +12783,17 @@ msgstr "%s kaikista tämän sivun katseluista"
 msgid "Transitions_XOutOfYVisits"
 msgstr "%1$s (%2$s:stä)"
 
+msgid "Transitions_PageURLTransitions"
+msgstr "Page URL Transitions"
+
 msgid "TwoFactorAuth_TwoFactorAuthentication"
 msgstr "Kaksivaiheinen tunnistautuminen"
 
 msgid "TwoFactorAuth_TwoFAShort"
 msgstr "2FA"
+
+msgid "TwoFactorAuth_TwoFactorAuthenticationIntro"
+msgstr "%1$sTwo-factor authentication%2$s increase your account security by adding an additional layer of verification when you log in. Each time you log in you will not only be asked to provide your login and password, but also an additional authentication token which changes periodically and is generated for example on your mobile device. This means that even when someone knows your username and password, they still won't be able to log in unless they have access to your mobile device for example."
 
 msgid "TwoFactorAuth_TwoFactorAuthenticationIsEnabled"
 msgstr "Kaksivaiheinen tunnistautuminen on parhaillaan käytössä."
@@ -10445,6 +12821,9 @@ msgstr "Vahvista"
 
 msgid "TwoFactorAuth_StepX"
 msgstr "Vaihe %s"
+
+msgid "TwoFactorAuth_MissingAuthCodeAPI"
+msgstr "Please specify two-factor authentication code."
 
 msgid "TwoFactorAuth_InvalidAuthCode"
 msgstr "Kaksivaiheisen tunnistautumisen koodi ei ollut oikein."
@@ -10479,8 +12858,14 @@ msgstr "Olet aikeissa vaihtaa aiemmin kaksivaiheiseen tunnistautumiseen määrit
 msgid "TwoFactorAuth_ShowRecoveryCodes"
 msgstr "Näytä palautuskoodit"
 
+msgid "TwoFactorAuth_ConfirmSetup"
+msgstr "Confirm setup"
+
 msgid "TwoFactorAuth_NotPossibleToLogIn"
 msgstr "Kirjautuminen Matomo-analytiikkaan ei onnistu"
+
+msgid "TwoFactorAuth_LostAuthenticationDevice"
+msgstr "Hi,%1$sI have two-factor authentication enabled and lost my authentication device. Could you please reset two-factor authentication for my username %5$s? You can find the instructions for this here: %6$s.%2$sThe Matomo URL is %3$s.%4$sThanks"
 
 msgid "TwoFactorAuth_WrongAuthCodeTryAgain"
 msgstr "Kirjoitit väärän tunnistautumiskoodin. Yritä uudelleen."
@@ -10494,8 +12879,26 @@ msgstr "Ota kaksivaiheinen tunnistautuminen käyttöön"
 msgid "TwoFactorAuth_ConfirmDisableTwoFA"
 msgstr "Haluatko varmasti poistaa kaksivaiheisen tunnistautumisen tililtäsi? Kaksivaiheisen tunnistautumisen pitäminen käytössä on hyväksi tilisi tietoturvalle."
 
+msgid "TwoFactorAuth_VerifyAuthCodeIntro"
+msgstr "Please enter the six-digit code from your authenticator app below to confirm you have successfully set up on your device."
+
+msgid "TwoFactorAuth_VerifyAuthCodeHelp"
+msgstr "Please enter the six-digit code that has been generated on your mobile device after scanning the bar code."
+
+msgid "TwoFactorAuth_Your2FaAuthSecret"
+msgstr "Your two-factor authentication secret"
+
+msgid "TwoFactorAuth_SetupAuthenticatorOnDevice"
+msgstr "Setup authenticator on your device"
+
 msgid "TwoFactorAuth_SetupAuthenticatorOnDeviceStep1"
 msgstr "Asenna tunnistautumissovellus, esimerkiksi:"
+
+msgid "TwoFactorAuth_SetupAuthenticatorOnDeviceStep2"
+msgstr "Next, open the app and scan the below bar code with the two-factor authentication app on your phone. If you can’t scan the barcode, %1$senter this code%2$s instead."
+
+msgid "TwoFactorAuth_SetupBackupRecoveryCodes"
+msgstr "Please backup your recovery codes using one of the above methods before continuing the two-factor authentication setup."
 
 msgid "TwoFactorAuth_RecoveryCodes"
 msgstr "Palautuskoodit"
@@ -10628,6 +13031,9 @@ msgstr "Tämä sijainnintarjoaja käyttää GeoIP-tietokantaa ja PECL-moduulia k
 
 msgid "UserCountry_GeoIpLocationProviderDesc_Pecl2"
 msgstr "Suosittelemme tätä palvelua, sillä tällä ei ole rajoituksia."
+
+msgid "UserCountry_GeoIpLocationProviderDesc_Php1"
+msgstr "This location provider is the simplest to install as it does not require server configuration (ideal for shared hosting!). It uses a GeoIP database and MaxMind's PHP API to accurately determine the location of your visitors."
 
 msgid "UserCountry_GeoIpLocationProviderDesc_Php2"
 msgstr "Jos verkkosivullasi on paljon liikennettä, tämä palvelu saattaa olla mielestäsi liian hidas. Asenna siinä tapauksessa %1$sPECL-laajennus%2$s tai %3$spalvelinmoduuli%4$s."
@@ -10875,6 +13281,12 @@ msgstr "%s tuntemattomalta alueelta"
 msgid "UserCountryMap_WithUnknownCity"
 msgstr "%s tuntemattomista kaupungeista"
 
+msgid "UserCountryMap_NoVisitsInfo"
+msgstr "There are no visits displayed currently, because no visit for this period has the correct geolocation information (latitude & longitude)."
+
+msgid "UserCountryMap_NoVisitsInfo2"
+msgstr "To resolve this issue, make sure you are using a GeoIP geolocation provider with a GeoIP city database. If this does not resolve your issue, then it is possible (though unlikely) that your visits have IP addresses that just cannot be geolocated."
+
 msgid "UserId_UserId"
 msgstr "Käyttäjän ID"
 
@@ -10905,6 +13317,9 @@ msgstr "Kaksivaiheinen tunnistautuminen"
 msgid "UsersManager_ResetTwoFactorAuthentication"
 msgstr "Nollaa kaksivaiheinen autentikaatio"
 
+msgid "UsersManager_ResetTwoFactorAuthenticationInfo"
+msgstr "If the user can no longer log in due to lost recovery codes or a lost authentication device, you can reset two-factor authentication for the user, so they can log in again."
+
 msgid "UsersManager_AddUser"
 msgstr "Lisää uusi käyttäjä"
 
@@ -10928,6 +13343,9 @@ msgstr "Alias"
 
 msgid "UsersManager_AllWebsites"
 msgstr "Kaikki sivut"
+
+msgid "UsersManager_AnonymousAccessConfirmation"
+msgstr "You are about to grant the anonymous user the 'view' access to this website. This means your analytics reports and your visitors information will be publicly viewable by anyone even without a login. Are you sure you want to proceed?"
 
 msgid "UsersManager_AnonymousUser"
 msgstr "Anonyymi käyttäjä"
@@ -10956,6 +13374,9 @@ msgstr "Haluatko varmasti antaa käyttäjälle '%s' pääkäyttäjäoikeudet? Va
 msgid "UsersManager_ConfirmProhibitMySuperUserAccess"
 msgstr "%s, haluatko varmasti poistaa omat pääkäyttäjäoikeutesi? Menetät kaikki oikeudet ja pääsyn kaikille sivustoille sekä kirjaudut ulos Matomosta."
 
+msgid "UsersManager_ConfirmProhibitOtherUsersSuperUserAccess"
+msgstr "Do you really want to remove Super User access from '%s'? The user will lose all permissions and access to all websites. Make sure to give access to needed websites afterwards if necessary."
+
 msgid "UsersManager_DeleteConfirm"
 msgstr "Haluatko varmasti poistaa käyttäjän %s?"
 
@@ -10967,6 +13388,21 @@ msgstr "%1$sLähetä ylläpitäjällesi sähköpostia ongelmasta%2$s."
 
 msgid "UsersManager_EnterUsernameOrEmail"
 msgstr "Kirjoita käyttäjätunnus tai sähköpostiosoite"
+
+msgid "UsersManager_ExceptionAccessValues"
+msgstr "The parameter access must have one of the following values: [ %1$s ], '%2$s' given."
+
+msgid "UsersManager_ExceptionNoRoleSet"
+msgstr "No role is set but one of these needs to be set: %s"
+
+msgid "UsersManager_ExceptionMultipleRoleSet"
+msgstr "Only one role can be set but multiple have been set. Use only one of: %s"
+
+msgid "UsersManager_ExceptionAnonymousNoCapabilities"
+msgstr "You cannot grant any capability to the 'anonymous' user."
+
+msgid "UsersManager_ExceptionAnonymousAccessNotPossible"
+msgstr "You can only set access %1$s or %2$s access to the 'anonymous' user."
 
 msgid "UsersManager_ExceptionDeleteDoesNotExist"
 msgstr "Käyttäjää '%s' ei ole eikä sitä siksi voida poistaa."
@@ -11004,6 +13440,9 @@ msgstr "Pääkäyttäjäoikeuksien poistaminen käyttäjältä '%s' ei ole mahdo
 msgid "UsersManager_ExceptionSuperUserAccess"
 msgstr "Tällä käyttäjällä on jo pääkäyttäjäoikeudet ja oikeudet muokata kaikkia sivustoja Matomossa. Voit poistaa pääkäyttäjäoikeudet tältä käyttäjältä ja yrittää uudelleen."
 
+msgid "UsersManager_ExceptionUserHasSuperUserAccess"
+msgstr "The user '%s' has Super User access and has already permission to access and modify all websites in Matomo. You may remove the Super User access from this user and try again."
+
 msgid "UsersManager_ExceptionUserDoesNotExist"
 msgstr "Käyttäjää '%s' ei ole olemassa."
 
@@ -11022,11 +13461,20 @@ msgstr "Poista käyntiesi seuraaminen evästeellä"
 msgid "UsersManager_ForAnonymousUsersReportDateToLoadByDefault"
 msgstr "Lataa anonyymeille käyttäjille oletuksena"
 
+msgid "UsersManager_GiveUserAccess"
+msgstr "Give '%1$s' %2$s access for %3$s."
+
 msgid "UsersManager_GiveViewAccess"
 msgstr "Anna katseluoikeus käyttäjälle %1$s"
 
 msgid "UsersManager_GiveViewAccessTitle"
 msgstr "Anna olemassaolevalle käyttäjälle oikeus katsoa %s:n raportteja"
+
+msgid "UsersManager_GiveViewAccessInstructions"
+msgstr "To give an existing user view access for %s enter the username or email address of an existing user"
+
+msgid "UsersManager_IfYouWouldLikeToChangeThePasswordTypeANewOne"
+msgstr "If you would like to change the password type a new one. Otherwise, leave this blank."
 
 msgid "UsersManager_YourCurrentPassword"
 msgstr "Nykyinen salasanasi"
@@ -11076,8 +13524,14 @@ msgstr "Käyttäjähallinta antaa sinun lisätä uusia käyttäjiä, muokata ole
 msgid "UsersManager_PrivAdmin"
 msgstr "Hallinnointioikeus"
 
+msgid "UsersManager_PrivAdminDescription"
+msgstr "Users with this role can manage a website and give other users access to the website. They can also do everything the %s role can do."
+
 msgid "UsersManager_PrivWrite"
 msgstr "Kirjoitus"
+
+msgid "UsersManager_PrivWriteDescription"
+msgstr "Users with this role can view all content plus create, manage and delete entities such as Goals, Funnels, Heatmaps, Session Recordings and Forms for this website."
 
 msgid "UsersManager_PrivNone"
 msgstr "Ei käyttöoikeutta"
@@ -11087,6 +13541,9 @@ msgstr "Näkymä"
 
 msgid "UsersManager_PrivViewDescription"
 msgstr "Tämän roolin omaava käyttäjä voi nähdä kaikki raportit."
+
+msgid "UsersManager_RemoveUserAccess"
+msgstr "Remove access for '%1$s' for %2$s."
 
 msgid "UsersManager_ReportDateToLoadByDefault"
 msgstr "Raportin oletuspäiväys"
@@ -11112,6 +13569,9 @@ msgstr "Matomossa on nyt %s rekisteröitynyttä käyttäjää."
 msgid "UsersManager_TokenAuth"
 msgstr "API:n autentikointiavain"
 
+msgid "UsersManager_TokenRegenerateConfirmSelf"
+msgstr "Changing the API authentication token will invalidate your own token. If the current token is in use, you need to update all API clients with the newly generated token. Do you really want to change your authentication token?"
+
 msgid "UsersManager_TokenRegenerateTitle"
 msgstr "Luo uudelleen"
 
@@ -11121,11 +13581,20 @@ msgstr "Kirjoita uusi salasana uudelleen."
 msgid "UsersManager_User"
 msgstr "Käyttäjä"
 
+msgid "UsersManager_UserHasPermission"
+msgstr "%1$s currently has %2$s access for %3$s."
+
+msgid "UsersManager_UserHasNoPermission"
+msgstr "%1$s currently has %2$s to %3$s"
+
 msgid "UsersManager_UsersManagement"
 msgstr "Käyttäjien hallinta"
 
 msgid "UsersManager_UsersManagementMainDescription"
 msgstr "Lisää uusia käyttäjiä tai päivitä olemassaolevia. Voit asettaa oikeudet alla."
+
+msgid "UsersManager_WhenUsersAreNotLoggedInAndVisitPiwikTheyShouldAccess"
+msgstr "When users are not logged in and visit Matomo, they should initially see"
 
 msgid "UsersManager_YourUsernameCannotBeChanged"
 msgstr "Käyttäjätunnusta ei voi vaihtaa."
@@ -11135,6 +13604,9 @@ msgstr "%1$sMatomo ei seuraa käyntejäsi sivulla %2$s %3$s (Matomon eväste lö
 
 msgid "UsersManager_YourVisitsAreNotIgnored"
 msgstr "%1$sMatomo seuraa käyntejäsi%2$s (Matomon evästettä ei löytynyt selaimestasi)."
+
+msgid "UsersManager_AddUserNoInitialAccessError"
+msgstr "New users must be given access to a website, please set the 'initialIdSite' parameter."
 
 msgid "UsersManager_AtLeastView"
 msgstr "Vähintään näkymä"
@@ -11175,6 +13647,18 @@ msgstr "Kaikki %1$s sivustoa on valittu."
 msgid "UsersManager_ClickToSelectDisplayedWebsites"
 msgstr "Klikkaa valitaksesi %1$s näytettyä sivustoa."
 
+msgid "UsersManager_DeletePermConfirmSingle"
+msgstr "Are you sure you want to remove %1$s's access to %2$s?"
+
+msgid "UsersManager_DeletePermConfirmMultiple"
+msgstr "Are you sure you want to remove %1$s's access the %2$s selected websites?"
+
+msgid "UsersManager_ChangePermToSiteConfirmSingle"
+msgstr "Are you sure you want to change %1$s's role to %2$s to %3$s?"
+
+msgid "UsersManager_ChangePermToSiteConfirmMultiple"
+msgstr "Are you sure you want to change %1$s's role to the %2$s selected websites to %3$s?"
+
 msgid "UsersManager_BasicInformation"
 msgstr "Perustiedot"
 
@@ -11183,6 +13667,9 @@ msgstr "Käyttöoikeudet"
 
 msgid "UsersManager_SuperUserAccess"
 msgstr "Pääkäyttäjän oikeudet"
+
+msgid "UsersManager_FirstSiteInlineHelp"
+msgstr "It is required to give a new user a view role for a website upon creation. If no access is given, the user will see an error when logging in. You can give more permissions after the user is created in the 'Permissions' tab that will appear on the left."
 
 msgid "UsersManager_SuperUsersPermissionsNotice"
 msgstr "Pääkäyttäjillä on ylläpito-oikeus kaikkiin sivustoihin, joten sivustokohtaisten oikeuksien hallinta ei ole tarpeen."
@@ -11198,6 +13685,12 @@ msgstr "Pääkäyttäjäoikeudet"
 
 msgid "UsersManager_AreYouSure"
 msgstr "Oletko varma?"
+
+msgid "UsersManager_RemoveSuperuserAccessConfirm"
+msgstr "Removing superuser access will leave the user with no permissions (you will have to add them afterwards). Enter your password to continue."
+
+msgid "UsersManager_AddSuperuserAccessConfirm"
+msgstr "Giving a user superuser access will allow the user to have full control over Matomo and should be done sparingly. Enter your password to continue."
 
 msgid "UsersManager_DeleteUsers"
 msgstr "Poista käyttäjät"
@@ -11238,17 +13731,41 @@ msgstr "Poistetaanko %1$s?"
 msgid "UsersManager_DeleteUserConfirmMultiple"
 msgstr "Poistetaanko %1$s valittua käyttäjää?"
 
+msgid "UsersManager_DeleteUserPermConfirmSingle"
+msgstr "Are you sure you want to change %1$s's role to %2$s for %3$s?"
+
+msgid "UsersManager_DeleteUserPermConfirmMultiple"
+msgstr "Are you sure you want to change the %1$s selected users' role to %2$s for %3$s?"
+
+msgid "UsersManager_AreYouSureChangeDetails"
+msgstr "Are you sure you want to change the user information for %s?"
+
+msgid "UsersManager_AnonymousUserRoleChangeWarning"
+msgstr "Giving the %1$s user the %2$s role will make this website's data public and available to everyone, even if they do not have a Matomo login."
+
 msgid "UsersManager_GiveAccessToAll"
 msgstr "Anna tälle käyttäjälle pääsy kaikkiin sivustoihin"
 
 msgid "UsersManager_OrManageIndividually"
 msgstr "Vaihtoehtoisesti määritä tämän käyttäjän oikeudet sivustokohtaisesti"
 
+msgid "UsersManager_ChangePermToAllSitesConfirm"
+msgstr "Are you sure you want to give the %1$s user %2$s access to every website you currently have admin access to?"
+
 msgid "UsersManager_ChangePermToAllSitesConfirm2"
 msgstr "Huomio: tämä vaikuttaa vain olemassa oleviin sivustoihin. Mahdollisesti uudet lisättävät sivustot eivät ole tämän käyttäjän käytettävissä."
 
+msgid "UsersManager_CapabilitiesHelp"
+msgstr "Capabilities are individual abilities that users can be granted. Roles may, by default, grant certain capabilities. For example, the Admin role will automatically allow users to edit tags in the Tag Manager. For less powerful users, however, you can explicitly give users capabilities."
+
 msgid "UsersManager_Capabilities"
 msgstr "Kyvykkyydet"
+
+msgid "UsersManager_AreYouSureAddCapability"
+msgstr "Are you sure you want to give %1$s the %2$s capability for %3$s?"
+
+msgid "UsersManager_AreYouSureRemoveCapability"
+msgstr "Are you sure you want to remove the %1$s capability from %2$s for %3$s?"
 
 msgid "UsersManager_IncludedInUsersRole"
 msgstr "Sisältyy tämän käyttäjän rooliin."
@@ -11343,8 +13860,59 @@ msgstr "Yleiskatsaus käynneistä"
 msgid "VisitTime_ColumnLocalTime"
 msgstr "Paikallinen aika"
 
+msgid "VisitTime_ColumnLocalHour"
+msgstr "Local time - hour (Start of visit)"
+
+msgid "VisitTime_ColumnLocalMinute"
+msgstr "Local time - minute (Start of visit)"
+
 msgid "VisitTime_ColumnServerTime"
 msgstr "Palvelimen aika"
+
+msgid "VisitTime_ColumnServerHour"
+msgstr "Server time - hour"
+
+msgid "VisitTime_ColumnVisitEndServerHour"
+msgstr "Server time - hour (End of visit)"
+
+msgid "VisitTime_ColumnVisitEndServerMinute"
+msgstr "Server time - minute (End of visit)"
+
+msgid "VisitTime_ColumnVisitStartServerHour"
+msgstr "Server time - hour (Start of visit)"
+
+msgid "VisitTime_ColumnVisitStartServerMinute"
+msgstr "Server time - minute (Start of visit)"
+
+msgid "VisitTime_ColumnVisitEndServerDate"
+msgstr "Server time - date (End of visit)"
+
+msgid "VisitTime_ColumnVisitEndServerDayOfMonth"
+msgstr "Server time - day of month (End of visit)"
+
+msgid "VisitTime_ColumnVisitEndServerDayOfWeek"
+msgstr "Server time - day of week (End of visit)"
+
+msgid "VisitTime_ColumnVisitEndServerDayOfYear"
+msgstr "Server time - day of year (End of visit)"
+
+msgid "VisitTime_ColumnVisitEndServerQuarter"
+msgstr "Server time - quarter (End of visit)"
+
+msgid "VisitTime_ColumnVisitEndServerSecond"
+msgstr "Server time - second (End of visit)"
+
+msgid "VisitTime_ColumnVisitEndServerWeekOfYear"
+msgstr "Server time - week of year (End of visit)"
+
+msgid "VisitTime_ColumnVisitEndServerMonth"
+msgstr "Server time - month (End of visit)"
+
+msgid "VisitTime_ColumnVisitEndServerYear"
+msgstr "Server time - year (End of visit)"
+
+msgid "VisitTime_ColumnServerMinute"
+msgstr "Server time - minute"
 
 msgid "VisitTime_DayOfWeek"
 msgstr "Viikonpäivä"

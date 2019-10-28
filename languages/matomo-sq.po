@@ -7,8 +7,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2019-10-21T03:38:35+00:00\n"
-"PO-Revision-Date: 2019-10-21T03:38:35+00:00\n"
+"POT-Creation-Date: 2019-10-28T01:23:00+00:00\n"
+"PO-Revision-Date: 2019-10-28T01:23:00+00:00\n"
 "Language: sq\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Domain: matomo\n"
@@ -3795,6 +3795,9 @@ msgstr "Nëse dëshironi të shihni vetëm vlerat e ndryshuara, mund të %1$sfsh
 msgid "Diagnostics_Sections"
 msgstr "Ndarje"
 
+msgid "Diagnostics_DatabaseReaderConnection"
+msgstr "Database Reader Connection"
+
 msgid "Diagnostics_CronArchivingLastRunCheck"
 msgstr "Plotësimi i Fundit i Suksesshëm i Arkivimit"
 
@@ -4079,6 +4082,9 @@ msgstr "Formësim për ndryshore shërbyesi të përdorura nga module GeoIP 2 sh
 
 msgid "GeoIp2_GeoIPVariablesConfigurationHere"
 msgstr "Ndryshoret e shërbyesit që përdoren mund t’i formësoni nga %1$skëtu%2$s."
+
+msgid "GeoIp2_ShowCustomServerVariablesConfig"
+msgstr "I use the Geoip2 server module (Nginx, Apache...) and want to configure server variables"
 
 msgid "GeoIp2_ServerVariableFor"
 msgstr "Ndryshore shërbyesi për %s"
@@ -4410,6 +4416,12 @@ msgstr "Vizita për Shndërrim"
 msgid "Goals_VisitUrl"
 msgstr "Vizitoni një URL të dhënë (faqe ose grup faqesh)"
 
+msgid "Goals_VisitDurationMatchAttr"
+msgstr "Stay for a certain amount of time"
+
+msgid "Goals_VisitDuration"
+msgstr "visit duration is"
+
 msgid "Goals_WhenVisitors"
 msgstr "kur vizitorët"
 
@@ -4434,11 +4446,566 @@ msgstr "Nëse veprimtaria për të cilën keni përputhje ka të ardhura, dhe k�
 msgid "Goals_EventValueAsRevenueHelp2"
 msgstr "Shënim: Nëse janë caktuar si e ardhura parazgjedhje e objektivit, ashtu edhe vlera e veprimtarisë, do të përdoret vlera e veprimtarisë. Nëse kjo mundësi është e aktivizuar dhe në një kërkesë nuk është dërguar vlerë veprimtarie, do të përdoret vlera parazgjedhje (në pastë të caktuar një të tillë)."
 
+msgid "Goals_AtLeastMinutes"
+msgstr "at least %1$s minutes. Use decimals to match seconds, for example, %2$s to match 30 seconds."
+
+msgid "Goals_TimeInMinutes"
+msgstr "Time in Minutes"
+
+msgid "HeatmapSessionRecording_Recordings"
+msgstr "Recordings"
+
+msgid "HeatmapSessionRecording_Heatmaps"
+msgstr "Heatmaps"
+
+msgid "HeatmapSessionRecording_Heatmap"
+msgstr "Heatmap"
+
+msgid "HeatmapSessionRecording_HeatmapX"
+msgstr "Heatmap %s"
+
+msgid "HeatmapSessionRecording_NHeatmaps"
+msgstr "%s heatmaps"
+
+msgid "HeatmapSessionRecording_NSessionRecordings"
+msgstr "%s session recordings"
+
+msgid "HeatmapSessionRecording_NoHeatmapsFound"
+msgstr "No heatmaps found"
+
+msgid "HeatmapSessionRecording_NoSessionRecordingsFound"
+msgstr "No session recordings found"
+
+msgid "HeatmapSessionRecording_HeatmapUsageBenefits"
+msgstr "Heatmaps let you record all clicks, mouse moves, and scroll activities of your visitors on a certain page. This helps you to find out where users think something is clickable but is not, whether there are parts of the page that are being barely viewed or interacted with, what your visitors are looking for, how much of the page is visible when users view your page, and more."
+
+msgid "HeatmapSessionRecording_HeatmapXRecordedSamplesSince"
+msgstr "%1$s samples have been recorded since %2$s."
+
+msgid "HeatmapSessionRecording_SessionRecordingsUsageBenefits"
+msgstr "Session recordings let you record all activities of a real visitor during their session (visit) such as clicks, mouse movements, scrolls, window resizes, page changes, and form interactions. You can then replay these interactions to see exactly how a visitor interacted with your website. This way you understand their expectations, problems they may have, usage patterns, and more."
+
+msgid "HeatmapSessionRecording_SessionRecordings"
+msgstr "Session Recordings"
+
+msgid "HeatmapSessionRecording_SessionRecording"
+msgstr "Session Recording"
+
+msgid "HeatmapSessionRecording_AutoPlayNextPageview"
+msgstr "Click to %s autoplay next page view (shortcut %s)"
+
+msgid "HeatmapSessionRecording_ClickToSkipPauses"
+msgstr "Click to %s skip pauses (shortcut %s)"
+
+msgid "HeatmapSessionRecording_ChangeReplaySpeed"
+msgstr "Change replay speed (shortcut %s)"
+
+msgid "HeatmapSessionRecording_PageviewXofY"
+msgstr "Pageview %1$s of %2$s"
+
+msgid "HeatmapSessionRecording_enable"
+msgstr "enable"
+
+msgid "HeatmapSessionRecording_disable"
+msgstr "disable"
+
+msgid "HeatmapSessionRecording_ReplayX"
+msgstr "Replay %s"
+
+msgid "HeatmapSessionRecording_DeleteScreenshot"
+msgstr "Delete Screenshot"
+
+msgid "HeatmapSessionRecording_CreationDate"
+msgstr "Creation Date"
+
+msgid "HeatmapSessionRecording_SessionRecordingX"
+msgstr "Session Recording %s"
+
+msgid "HeatmapSessionRecording_ReplayRecordedSession"
+msgstr "Replay recorded session"
+
+msgid "HeatmapSessionRecording_RecordedSessions"
+msgstr "Recorded Sessions"
+
+msgid "HeatmapSessionRecording_RecordedSessionsDocStatusActive"
+msgstr "This session recording is active. Up to %d sessions will be recorded with a sample rate of %s."
+
+msgid "HeatmapSessionRecording_RecordedSessionsDocStatusEnded"
+msgstr "This session recording has ended and no new sessions will be recorded."
+
+msgid "HeatmapSessionRecording_RecordedHeatmapDocStatusActive"
+msgstr "This heatmap is active. Up to %d page views will be recorded with a sample rate of %s."
+
+msgid "HeatmapSessionRecording_RecordedHeatmapDocStatusEnded"
+msgstr "This heatmap has ended. No new activity will be recorded."
+
+msgid "HeatmapSessionRecording_StatusActive"
+msgstr "Active"
+
+msgid "HeatmapSessionRecording_StatusEnded"
+msgstr "Ended"
+
+msgid "HeatmapSessionRecording_ExcludedElements"
+msgstr "Excluded Elements"
+
+msgid "HeatmapSessionRecording_ExcludedElementsHelp"
+msgstr "You can optionally define CSS selectors to exclude certain elements that should not be visible in the heatmap preview. For example a popup that is shown when the target page is opened. You can separate multiple selectors with a comma."
+
+msgid "HeatmapSessionRecording_Rule"
+msgstr "Rule"
+
+msgid "HeatmapSessionRecording_Manage"
+msgstr "Manage"
+
+msgid "HeatmapSessionRecording_ViewReport"
+msgstr "View report"
+
+msgid "HeatmapSessionRecording_ErrorXNotANumber"
+msgstr "\"%1$s\" has to be a number."
+
+msgid "HeatmapSessionRecording_SampleLimit"
+msgstr "Sample Limit"
+
+msgid "HeatmapSessionRecording_TimeOnSite"
+msgstr "Time on website"
+
+msgid "HeatmapSessionRecording_HeatmapSampleLimit"
+msgstr "Number of page views"
+
+msgid "HeatmapSessionRecording_SessionSampleLimit"
+msgstr "Number of sessions"
+
+msgid "HeatmapSessionRecording_HeatmapSampleLimitHelp"
+msgstr "Defines the amount of page views you want to record in total."
+
+msgid "HeatmapSessionRecording_SessionSampleLimitHelp"
+msgstr "Defines the amount of sessions you want to record in total."
+
+msgid "HeatmapSessionRecording_PageviewsInVisit"
+msgstr "Recorded pageviews in this session"
+
+msgid "HeatmapSessionRecording_PlayRecordedSession"
+msgstr "Play this recorded session"
+
+msgid "HeatmapSessionRecording_DeleteRecordedSession"
+msgstr "Delete this recorded session (no confirmation asked)"
+
+msgid "HeatmapSessionRecording_DeleteRecordedPageview"
+msgstr "Delete this recorded page view (no confirmation asked)"
+
+msgid "HeatmapSessionRecording_ViewportResolution"
+msgstr "Viewport Resolution (width x height)"
+
+msgid "HeatmapSessionRecording_OnePageview"
+msgstr "1 pageview"
+
+msgid "HeatmapSessionRecording_TargetPage"
+msgstr "Target Page"
+
+msgid "HeatmapSessionRecording_TargetPages"
+msgstr "Entry Pages"
+
+msgid "HeatmapSessionRecording_ActivityClick"
+msgstr "Click"
+
+msgid "HeatmapSessionRecording_ActivityMove"
+msgstr "Move"
+
+msgid "HeatmapSessionRecording_ActivityScroll"
+msgstr "Scroll"
+
+msgid "HeatmapSessionRecording_ActivityScrollElement"
+msgstr "Scroll Element"
+
+msgid "HeatmapSessionRecording_ActivityResize"
+msgstr "Resize"
+
+msgid "HeatmapSessionRecording_ActivityFormChange"
+msgstr "Form Change"
+
+msgid "HeatmapSessionRecording_ActivityFormText"
+msgstr "Form Text Change"
+
+msgid "HeatmapSessionRecording_ActivityFormValue"
+msgstr "Form Value Change"
+
+msgid "HeatmapSessionRecording_ActivityInitialDom"
+msgstr "Initial Page"
+
+msgid "HeatmapSessionRecording_ActivityPageChange"
+msgstr "Page Change"
+
+msgid "HeatmapSessionRecording_PlayerRewindFast"
+msgstr "Rewind %s seconds (shortcut %s)"
+
+msgid "HeatmapSessionRecording_PlayerForwardFast"
+msgstr "Skip %s seconds (shortcut %s)"
+
+msgid "HeatmapSessionRecording_PlayerPageViewPrevious"
+msgstr "Play previous pageview of this visitor %s (shortcut %s)"
+
+msgid "HeatmapSessionRecording_PlayerPageViewNext"
+msgstr "Play next pageview of this visitor (%s) (shortcut %s)"
+
+msgid "HeatmapSessionRecording_PlayerPlay"
+msgstr "Play (shortcut %s or space)"
+
+msgid "HeatmapSessionRecording_PlayerPause"
+msgstr "Pause (shortcut %s or space)"
+
+msgid "HeatmapSessionRecording_PlayerReplay"
+msgstr "Replay (shortcut %s or space)"
+
+msgid "HeatmapSessionRecording_PlayerDurationXofY"
+msgstr "%s of %s"
+
+msgid "HeatmapSessionRecording_AdvancedOptions"
+msgstr "Advanced options"
+
+msgid "HeatmapSessionRecording_AvgAboveFoldTitle"
+msgstr "Avg. Above Fold %spx"
+
+msgid "HeatmapSessionRecording_XSamples"
+msgstr "%s samples"
+
+msgid "HeatmapSessionRecording_AvgAboveFoldDescription"
+msgstr "On average visitors see the content above this line without scrolling"
+
+msgid "HeatmapSessionRecording_NoSessionRecordedYet"
+msgstr "No session has been recorded yet. If there are supposed to be recorded sessions by now, maybe the configured entry page does not match any page on your website. It is also recommended to check the \"System Check\" under \"Administration\" (only Super Users) to see if your system is configured to automatically recorded sessions."
+
+msgid "HeatmapSessionRecording_NoHeatmapSamplesRecordedYet"
+msgstr "No page view has been recorded yet for this heatmap. If there are supposed to be recordings by now, maybe the page targets configured for this heatmap do not match any page on your website. It is also recommended to check the \"System Check\" under \"Administration\" (only Super Users) to see if your system is configured to automatically track Heatmaps."
+
+msgid "HeatmapSessionRecording_NoHeatmapScreenshotRecordedYet"
+msgstr "There have been %1$s samples recorded so far. However, no screenshot has been taken yet. If there is a \"%2$s\" for this heatmap, it may take a while for the screenshot to become available as a user first needs to open this screenshot URL. Depending on the sample rate this may take a while."
+
+msgid "HeatmapSessionRecording_ColumnPageviewsDocumentation"
+msgstr "The number of page views that were recorded during this session."
+
+msgid "HeatmapSessionRecording_ColumnBrowserDocumentation"
+msgstr "The browser the visitor was using when this session was recorded."
+
+msgid "HeatmapSessionRecording_ColumnDeviceDocumentation"
+msgstr "The device the visitor was using when this session was recorded."
+
+msgid "HeatmapSessionRecording_ColumnLocationDocumentation"
+msgstr "The location of the visitor when this session was recorded."
+
+msgid "HeatmapSessionRecording_ColumnOperatingSystem"
+msgstr "OS"
+
+msgid "HeatmapSessionRecording_ColumnTime"
+msgstr "Time"
+
+msgid "HeatmapSessionRecording_ColumnLabelRecordedSessions"
+msgstr "Entry URL → Exit URL"
+
+msgid "HeatmapSessionRecording_ColumnOperatingSystemDocumentation"
+msgstr "The operating system the visitor was using when this session was recorded."
+
+msgid "HeatmapSessionRecording_ColumnActionsDocumentation"
+msgstr "Play the recorded session or remove the recording permanently."
+
+msgid "HeatmapSessionRecording_ColumnTimeDocumentation"
+msgstr "The time the recording started in the timezone of the website."
+
+msgid "HeatmapSessionRecording_ColumnTimeOnSiteDocumentation"
+msgstr "How much time the visitor spent in total while the session was recorded"
+
+msgid "HeatmapSessionRecording_ColumnTimeOnPageDocumentation"
+msgstr "How much time the visitor spent on this page while the session was recorded"
+
+msgid "HeatmapSessionRecording_ColumnResolutionDocumentation"
+msgstr "The number of pixels of the visible viewport in the browser window when the user opened this page."
+
+msgid "HeatmapSessionRecording_UrlXDoesNotLookLikeUrl"
+msgstr "The %s does not look like a URL. Make sure it contains a protocol like http:// or that it starts with //"
+
+msgid "HeatmapSessionRecording_ReportRecordedSessionsDocumentation"
+msgstr "A list of all sessions that have been recorded. You can replay any recorded session."
+
+msgid "HeatmapSessionRecording_NoHeatmapsConfiguredInfo"
+msgstr "There are currently no active heatmaps. To view heatmaps, please ask a user with at least admin access to create a new heatmap."
+
+msgid "HeatmapSessionRecording_NoSessionRecordingsConfiguredInfo"
+msgstr "There are currently no active session recordings. To record new sessions, please ask a user with at least admin access to create a new recording."
+
+msgid "HeatmapSessionRecording_NotSupportedBrowser"
+msgstr "This browser is not supported, please use a later version or try a different browser."
+
+msgid "HeatmapSessionRecording_HeatmapWidth"
+msgstr "Heatmap width"
+
+msgid "HeatmapSessionRecording_BreakpointX"
+msgstr "Breakpoint %s"
+
+msgid "HeatmapSessionRecording_BreakpointGeneralHelp"
+msgstr "The device type is automatically detected when a visitor views your website. However, sometimes it might not be possible to detect the device type. If your website is responsive and your layout breaks at a certain point, we will put desktop users with a small resolution into this device type for more accurate heatmaps. Any width lower than this value will be put into this device type. Set it to zero if your website is not responsive."
+
+msgid "HeatmapSessionRecording_BreakpointGeneralHelpManage"
+msgstr "A user with Super User access can change the default values for these breakpoints in Administration => General Settings."
+
+msgid "HeatmapSessionRecording_CaptureKeystrokes"
+msgstr "Capture keystrokes"
+
+msgid "HeatmapSessionRecording_CaptureKeystrokesHelp"
+msgstr "If enabled, any text that is entered into text form fields are recorded. While the text is recorded, any character a user enters is replaced with a star ('*'). You may whitelist certain fields to be recorded in plain text by specifying a 'data-matomo-unmask' attribute on a form field. However, password fields and many other fields which could potentially include personal information (address, email, credit card information, username, phone number, ...) will be always automatically masked if detected by us as such (%slearn more%s). Please note that when you enable this feature, you may record personal data which may affect GDPR."
+
+msgid "HeatmapSessionRecording_PersonalInformationNote"
+msgstr "Please note a %1$s may record personal or sensitive information. If you wish to hide certain content on your website or app, you may tag this content by adding a %2$sdata-matomo-mask%3$s attribute to the HTML markup. %4$sLearn more%5$s"
+
+msgid "HeatmapSessionRecording_RequiresActivity"
+msgstr "Requires activity"
+
+msgid "HeatmapSessionRecording_RequiresActivityHelp"
+msgstr "If enabled, only sessions that have a scroll and a click activity in one page view will be recorded. This prevents the recording of sessions with not much activity."
+
+msgid "HeatmapSessionRecording_SampleRate"
+msgstr "Sample Rate"
+
+msgid "HeatmapSessionRecording_HeatmapSampleRateHelp"
+msgstr "Also known as 'traffic'. When you select 100%, all visitors that visit the selected target page will be recorded. When you select for example 10%, only every 10th visitor will be recorded. The lower the percentage you select, the longer it will take to reach the selected sample limit."
+
+msgid "HeatmapSessionRecording_SessionSampleRateHelp"
+msgstr "Also known as 'traffic'. When you select 100%, all sessions will be recorded as soon as they have reached the target page. When you select for example 10%, only every 10th session will be recorded. The lower the percentage you select, the longer it will take to reach the selected sample limit."
+
+msgid "HeatmapSessionRecording_MinSessionTime"
+msgstr "Min Session Time"
+
+msgid "HeatmapSessionRecording_MinSessionTimeHelp"
+msgstr "A session will be only recorded when a visitor has spent at least the specified time on a page."
+
+msgid "HeatmapSessionRecording_ScreenshotUrl"
+msgstr "Screenshot URL"
+
+msgid "HeatmapSessionRecording_ScreenshotUrlHelp"
+msgstr "By default, a screenshot is taken when the first visitor views the target page. If different page URLs match your target page, you can specify a specific URL that should be used to capture the screenshot. The heatmap visualization will be only available once at least one visitor has visited this URL whose activities are recorded. If defined, the URL has to match exactly. To ignore the protocol, start the URL with two double slashes (//example.com). Please note that this URL cannot be changed as soon as a screenshot has been taken."
+
+msgid "HeatmapSessionRecording_GettingStarted"
+msgstr "Getting Started"
+
+msgid "HeatmapSessionRecording_TargetPageTestTitle"
+msgstr "URL validator"
+
+msgid "HeatmapSessionRecording_TargetPageTestLabel"
+msgstr "Enter a full URL including the protocol to check if activities will be recorded on this URL:"
+
+msgid "HeatmapSessionRecording_TargetPageTestErrorInvalidUrl"
+msgstr "Enter a URL including a protocol."
+
+msgid "HeatmapSessionRecording_TargetPageTestUrlMatches"
+msgstr "Activities will be recorded on this URL"
+
+msgid "HeatmapSessionRecording_TargetPageTestUrlNotMatches"
+msgstr "Activities will not be recorded on this URL"
+
+msgid "HeatmapSessionRecording_UrlParameterValueToMatchPlaceholder"
+msgstr "Value to match for URL parameter name"
+
+msgid "HeatmapSessionRecording_TargetTypeIsAny"
+msgstr "is any"
+
+msgid "HeatmapSessionRecording_TargetTypeIsNot"
+msgstr "not %s"
+
+msgid "HeatmapSessionRecording_TargetTypeEqualsExactly"
+msgstr "equals exactly"
+
+msgid "HeatmapSessionRecording_TargetTypeEqualsExactlyInfo"
+msgstr "The value has to match exactly, including the URL protocol, search query and hash."
+
+msgid "HeatmapSessionRecording_TargetTypeEqualsSimple"
+msgstr "equals simple"
+
+msgid "HeatmapSessionRecording_TargetTypeEqualsSimpleInfo"
+msgstr "The URL will match any protocol (eg http and https) with or without \"www.\" subdomain. Any trailing slash in the path as well as the search query and hash part of the URL will be ignored when matching the URL."
+
+msgid "HeatmapSessionRecording_TargetTypeContains"
+msgstr "contains"
+
+msgid "HeatmapSessionRecording_TargetTypeExists"
+msgstr "exists"
+
+msgid "HeatmapSessionRecording_TargetTypeStartsWith"
+msgstr "starts with"
+
+msgid "HeatmapSessionRecording_TargetTypeRegExp"
+msgstr "matches the regular expression"
+
+msgid "HeatmapSessionRecording_TargetTypeRegExpInfo"
+msgstr "Any regular expression, for example \"^(.*)test(.*)$\"."
+
+msgid "HeatmapSessionRecording_UpdatingData"
+msgstr "Updating data..."
+
+msgid "HeatmapSessionRecording_FieldIncludedTargetsHelp"
+msgstr "Targets allow you to define on which pages the user activities should be recorded. You can define one or more conditions. For example, you can define to record activities whenever the URL or path equals a certain value and only if a certain URL parameter is present in the URL. Activities will be recorded only when all conditions are met, not if only one of them is met. All conditions will be evaluated case-insensitive. When you select 'equals simple', the URL protocol, search parameters and a trailing slash will be ignored."
+
+msgid "HeatmapSessionRecording_FieldIncludedTargetsHelpSessions"
+msgstr "Targets allow you to configure to only start the recording of a session as soon as a visitor has reached a certain page. This lets you for example only record sessions that go through the check out process. You can define one or more conditions. For example, you can define to record a session only when the URL or path equals a certain value and only if a certain URL parameter is present in the URL. Sessions will be only recorded when all conditions are met on a page view, not if only one of them is met. All conditions will be evaluated case-insensitive. When you select 'equals simple', the URL protocol, search parameters and a trailing slash will be ignored."
+
+msgid "HeatmapSessionRecording_DeleteHeatmapScreenshotConfirm"
+msgstr "Are you sure you want to delete this screenshot? It may take a while for the screenshot to be re-taken."
+
+msgid "HeatmapSessionRecording_DeleteHeatmapConfirm"
+msgstr "Are you sure you want to delete this heatmap? Reports previously generated heatmaps will no longer be available in the reporting UI."
+
+msgid "HeatmapSessionRecording_DeleteSessionRecordingConfirm"
+msgstr "Are you sure you want to delete this session recording? Recordings previously generated will no longer be available in the reporting UI."
+
+msgid "HeatmapSessionRecording_EndSessionRecordingConfirm"
+msgstr "Are you sure you want to stop recording any new sessions?"
+
+msgid "HeatmapSessionRecording_EndHeatmapConfirm"
+msgstr "Are you sure you want to stop capturing any activities for this heatmap?"
+
+msgid "HeatmapSessionRecording_ErrorInvalidRegExp"
+msgstr "The regular expression \"%1$s\" does not have a valid format."
+
+msgid "HeatmapSessionRecording_ErrorHeatmapNameDuplicate"
+msgstr "The heatmap name is already in use by another heatmap."
+
+msgid "HeatmapSessionRecording_ErrorHeatmapDoesNotExist"
+msgstr "The requested heatmap does not exist"
+
+msgid "HeatmapSessionRecording_ErrorSessionRecordingDoesNotExist"
+msgstr "The requested session recording does not exist"
+
+msgid "HeatmapSessionRecording_ErrorXNotProvided"
+msgstr "Please provide a value for \"%1$s\"."
+
+msgid "HeatmapSessionRecording_ErrorXTooLow"
+msgstr "\"%1$s\" is too low, minimum allowed value is %2$s."
+
+msgid "HeatmapSessionRecording_ErrorXTooHigh"
+msgstr "\"%1$s\" is too high, maximum allowed value is %2$s."
+
+msgid "HeatmapSessionRecording_ErrorXTooLong"
+msgstr "\"%1$s\" is too long, max %2$s characters are allowed."
+
+msgid "HeatmapSessionRecording_ErrorNotAnArray"
+msgstr "\"%1$s\" has to be an array."
+
+msgid "HeatmapSessionRecording_ErrorInnerIsNotAnArray"
+msgstr "Each \"%1$s\" within \"%2$s\" has to be an array."
+
+msgid "HeatmapSessionRecording_ErrorArrayMissingKey"
+msgstr "Missing array key \"%1$s\" in \"%2$s\" at position \"%3$s\"."
+
+msgid "HeatmapSessionRecording_ErrorArrayMissingValue"
+msgstr "Missing value for array key \"%1$s\" in \"%2$s\" at position \"%3$s\"."
+
+msgid "HeatmapSessionRecording_ErrorXNotWhitelisted"
+msgstr "The value for \"%1$s\" is not allowed, use one of: %2$s."
+
+msgid "HeatmapSessionRecording_ErrorXContainsWhitespace"
+msgstr "The \"%1$s\" is not allowed to contain any white space."
+
+msgid "HeatmapSessionRecording_ErrorPageRuleRequired"
+msgstr "At least one page rule has to be set."
+
+msgid "HeatmapSessionRecording_HeatmapCreated"
+msgstr "The heatmap has been successfully created."
+
+msgid "HeatmapSessionRecording_HeatmapUpdated"
+msgstr "The heatmap has been successfully updated."
+
+msgid "HeatmapSessionRecording_SessionRecordingCreated"
+msgstr "The session recording has been successfully created."
+
+msgid "HeatmapSessionRecording_SessionRecordingUpdated"
+msgstr "The session recording has been successfully updated."
+
+msgid "HeatmapSessionRecording_FieldNamePlaceholder"
+msgstr "eg 'Sign Up Page'"
+
+msgid "HeatmapSessionRecording_PageRule"
+msgstr "Page Rule"
+
+msgid "HeatmapSessionRecording_HeatmapNameHelp"
+msgstr "Defines the name under which the report for this heatmap will be available."
+
+msgid "HeatmapSessionRecording_SessionNameHelp"
+msgstr "Defines the name under which the session recordings will be available."
+
+msgid "HeatmapSessionRecording_CreateNewHeatmap"
+msgstr "Create new heatmap"
+
+msgid "HeatmapSessionRecording_StopX"
+msgstr "Stop recording any new activities for this %s."
+
+msgid "HeatmapSessionRecording_EditX"
+msgstr "Edit %s"
+
+msgid "HeatmapSessionRecording_DeleteX"
+msgstr "Delete %s"
+
+msgid "HeatmapSessionRecording_EditHeatmapX"
+msgstr "Edit Heatmap %s"
+
+msgid "HeatmapSessionRecording_Filter"
+msgstr "Filter"
+
+msgid "HeatmapSessionRecording_EditSessionRecordingX"
+msgstr "Edit Session Recording %s"
+
+msgid "HeatmapSessionRecording_CreateNewSessionRecording"
+msgstr "Create new session recording"
+
+msgid "HeatmapSessionRecording_TargetAttributeUrl"
+msgstr "URL"
+
+msgid "HeatmapSessionRecording_TargetAttributePath"
+msgstr "Path"
+
+msgid "HeatmapSessionRecording_FilesystemDirectory"
+msgstr "directory"
+
+msgid "HeatmapSessionRecording_TargetAttributeUrlParameter"
+msgstr "URL Parameter"
+
+msgid "HeatmapSessionRecording_TargetAttributeUrlParameterExample"
+msgstr "nameOfUrlParameter"
+
+msgid "HeatmapSessionRecording_ManageSessionRecordings"
+msgstr "Manage Session Recordings"
+
+msgid "HeatmapSessionRecording_ManageHeatmaps"
+msgstr "Manage Heatmaps"
+
+msgid "HeatmapSessionRecording_ConfigsPhpSuccess"
+msgstr "'%s' is accessible"
+
+msgid "HeatmapSessionRecording_ConfigsPhpNotAccessible"
+msgstr "The URL '%s' seems to be not accessible from the Internet or Intranet."
+
+msgid "HeatmapSessionRecording_ConfigsPhpErrorResult"
+msgstr "As a result, tracking Heatmaps and Session Recordings may not work. You may need to change your webserver configuration to allow access to this file via the Internet or Intranet."
+
+msgid "HeatmapSessionRecording_ConfigsPhpSelfSignedError"
+msgstr "Requesting '%s' resulted in an SSL error. Maybe you are using a self signed certificate?"
+
+msgid "HeatmapSessionRecording_ConfigsInternetDisabled"
+msgstr "We couldn't check if '%s' is accessible because the internet connection is disabled on this Matomo."
+
+msgid "HeatmapSessionRecording_ConfigsPhpUnknown"
+msgstr "We couldn't check if '%s' is accessible over the Internet or Intranet."
+
+msgid "HeatmapSessionRecording_ConfigsPhpManualCheck"
+msgstr "Please open the URL manually in a browser to see if the response contains 'Piwik.HeatmapSessionRecording'. If not, you might need to modify your server configuration as this file needs to be accessible via a browser from the Internet or Intranet."
+
+msgid "HeatmapSessionRecording_ConfigsPhpUnknownError"
+msgstr "Requesting '%s' resulted in an error: %s."
+
 msgid "ImageGraph_ColumnOrdinateMissing"
 msgstr "Në këtë raport s’u gjet shtylla '%1$s'. Provoni cilëndo nga %2$s"
 
 msgid "ImageGraph_PluginDescription"
 msgstr "Prodhoni figura të hijshme Grafikësh statikë PNG për çfarëdo të dhënash të raportit tuaj."
+
+msgid "Insights_PluginDescription"
+msgstr "Provides Insights about your traffic. Insights are available as dashboard widgets as well as a new icon in reports, letting you see most important trends in your data."
 
 msgid "Insights_ControlComparedToDescription"
 msgstr "Rritja e krahasuar me"
@@ -4514,6 +5081,9 @@ msgstr "'%1$s' ndryshoi nga %2$s (%3$s) to %4$s (%5$s) %6$s."
 
 msgid "Insights_TitleRowDisappearedDetails"
 msgstr "'%1$s' u pakësua me %2$s dhe u zhduk në %3$s krahasuar me %4$s."
+
+msgid "Insights_TitleRowMoverAndShaker"
+msgstr "This row had a higher impact than the average."
 
 msgid "Insights_TitleRowNewDetails"
 msgstr "'%1$s' u rrit me %2$s dhe është i ri krahasuar me %3$s."
@@ -6882,6 +7452,9 @@ msgstr "Afarisht"
 msgid "Intl_Language_ab"
 msgstr "Abkazisht"
 
+msgid "Intl_Language_ae"
+msgstr "Avestan"
+
 msgid "Intl_Language_af"
 msgstr "Afrikanisht"
 
@@ -6947,6 +7520,9 @@ msgstr "Kamoroisht"
 
 msgid "Intl_Language_co"
 msgstr "Korsikisht"
+
+msgid "Intl_Language_cr"
+msgstr "Cree"
 
 msgid "Intl_Language_cs"
 msgstr "Çekisht"
@@ -7041,6 +7617,9 @@ msgstr "Hebraisht"
 msgid "Intl_Language_hi"
 msgstr "Indisht"
 
+msgid "Intl_Language_ho"
+msgstr "Hiri Motu"
+
 msgid "Intl_Language_hr"
 msgstr "Kroatisht"
 
@@ -7071,6 +7650,9 @@ msgstr "Igboisht"
 msgid "Intl_Language_ii"
 msgstr "Sishuanisht"
 
+msgid "Intl_Language_ik"
+msgstr "Inupiaq"
+
 msgid "Intl_Language_io"
 msgstr "Idoisht"
 
@@ -7091,6 +7673,9 @@ msgstr "Javanisht"
 
 msgid "Intl_Language_ka"
 msgstr "Gjeorgjisht"
+
+msgid "Intl_Language_kg"
+msgstr "Kongo"
 
 msgid "Intl_Language_ki"
 msgstr "Kikujuisht"
@@ -7224,6 +7809,9 @@ msgstr "Nianjisht"
 msgid "Intl_Language_oc"
 msgstr "Oksitanisht"
 
+msgid "Intl_Language_oj"
+msgstr "Ojibwa"
+
 msgid "Intl_Language_om"
 msgstr "Oromoisht"
 
@@ -7235,6 +7823,9 @@ msgstr "Osetisht"
 
 msgid "Intl_Language_pa"
 msgstr "Punxhabisht"
+
+msgid "Intl_Language_pi"
+msgstr "Pali"
 
 msgid "Intl_Language_pl"
 msgstr "Polonisht"
@@ -7335,6 +7926,9 @@ msgstr "Tigrinjaisht"
 msgid "Intl_Language_tk"
 msgstr "Turkmenisht"
 
+msgid "Intl_Language_tl"
+msgstr "Tagalog"
+
 msgid "Intl_Language_tn"
 msgstr "Cuanaisht"
 
@@ -7391,6 +7985,9 @@ msgstr "Jidisht"
 
 msgid "Intl_Language_yo"
 msgstr "Jorubaisht"
+
+msgid "Intl_Language_za"
+msgstr "Zhuang"
 
 msgid "Intl_Language_zh"
 msgstr "Kinezisht"
@@ -7905,9 +8502,6 @@ msgstr "Resolute"
 msgid "Intl_Timezone_America_RioBranco"
 msgstr "Rio-Branko"
 
-msgid "Intl_Timezone_America_SantaIsabel"
-msgstr "Santa-Izabela"
-
 msgid "Intl_Timezone_America_Santarem"
 msgstr "Santarem"
 
@@ -8240,9 +8834,6 @@ msgstr "Galapagos"
 
 msgid "Intl_Timezone_Pacific_Gambier"
 msgstr "Gambier"
-
-msgid "Intl_Timezone_Pacific_Honolulu"
-msgstr "Honolulu"
 
 msgid "Intl_Timezone_Pacific_Johnston"
 msgstr "Xhonston"
@@ -8579,6 +9170,9 @@ msgstr "Fjalëkalim (sërish)"
 
 msgid "Login_PasswordsDoNotMatch"
 msgstr "Fjalëkalimet nuk përputhen."
+
+msgid "Login_PasswordResetAlreadySent"
+msgstr "You have requested too many password resets recently. A new request can be made in one hour. If you have problems resetting your password, please contact your administrator for help."
 
 msgid "Login_WrongPasswordEntered"
 msgstr "Ju lutemi, jepni fjalëkalimin tuaj të saktë."
@@ -9380,6 +9974,9 @@ msgstr "Rregulla Privatësie"
 
 msgid "PrivacyManager_TermsAndConditions"
 msgstr "Terma & Kushte"
+
+msgid "ProfessionalServices_WidgetPremiumServicesForPiwik"
+msgstr "Premium Features & Services for Matomo"
 
 msgid "Provider_ColumnProvider"
 msgstr "Furnizues"
@@ -10974,6 +11571,9 @@ msgstr "analiza web etracker"
 msgid "TagManager_EtrackerTagDescription"
 msgstr "etracker është një sistem analizash web, mund të zgjidhni të dërgoni në të një parje faqeje ose një akt."
 
+msgid "TagManager_EtrackerTagHelp"
+msgstr ""
+
 msgid "TagManager_Except"
 msgstr "Hiq"
 
@@ -11070,14 +11670,80 @@ msgstr "Si T’ia Fillohet"
 msgid "TagManager_GettingStartedNotice"
 msgstr "Doni të mësoni më tepër se ç’është Përgjegjësi i Etiketave? Klikoni mbi 'Si T’ia Fillohet', te menuja majtas."
 
+msgid "TagManager_GettingStartedWhatIsIntro"
+msgstr "Matomo Tag Manager lets you manage and unify all your tracking and marketing tags. Tags are also known as snippets or pixels. Such tags are typically JavaScript code or HTML and let you integrate various features into your site in just a few clicks, for example:"
+
+msgid "TagManager_GettingStartedAnalyticsTracking"
+msgstr "Tracking analytics data"
+
+msgid "TagManager_GettingStartedConversionTracking"
+msgstr "Conversion tracking"
+
+msgid "TagManager_GettingStartedNewsletterSignups"
+msgstr "Newsletter signups"
+
+msgid "TagManager_GettingStartedExitActions"
+msgstr "Exit popups and surveys"
+
 msgid "TagManager_GettingStartedRemarketing"
 msgstr "Rimarketim"
+
+msgid "TagManager_GettingStartedSocialWidgets"
+msgstr "Social widgets"
 
 msgid "TagManager_GettingStartedAffiliates"
 msgstr "Të përshoqëruar"
 
 msgid "TagManager_GettingStartedAds"
 msgstr "Reklama"
+
+msgid "TagManager_GettingStartedAndMore"
+msgstr "and more"
+
+msgid "TagManager_GettingStartedMainComponents"
+msgstr "This can be achieved using these main components:"
+
+msgid "TagManager_GettingStartedTagComponent"
+msgstr "Tags - A snippet of code (usually JavaScript or HTML) which will be added to your site."
+
+msgid "TagManager_GettingStartedTriggerComponent"
+msgstr "Triggers - Defines when a tag should be fired."
+
+msgid "TagManager_GettingStartedVariableComponent"
+msgstr "Variables - Lets you retrieve data which can be used by tags and triggers."
+
+msgid "TagManager_GettingStartedWhyDoINeed"
+msgstr "Why or when do I need a Tag Manager?"
+
+msgid "TagManager_GettingStartedWhyMakesLifeEasier"
+msgstr "A Tag Manager makes your life easier when you want to modify any of these snippets on your website as you will no longer need a developer to make the needed changes for you. Instead of waiting for someone to make these changes and to deploy your website, you can now easily make the needed changes yourself. This lets you not only bring changes to the market faster, but also reduces cost."
+
+msgid "TagManager_GettingStartedWhyThirdPartySnippets"
+msgstr "It also comes in handy if you embed many third-party snippets into your website and want to bring in some order to oversee all the snippets that are embedded and have a convenient way to manage them."
+
+msgid "TagManager_GettingStartedWhyAccuracyPerformance"
+msgstr "The Tag Manager also makes sure all that all snippets are implemented correctly and loaded in the right way for faster performance."
+
+msgid "TagManager_GettingStartedHowDoI"
+msgstr "How do I get started?"
+
+msgid "TagManager_GettingStartedHowCreateContainer"
+msgstr "If you haven't created a container yet, %1$screate a container now%2$s."
+
+msgid "TagManager_GettingStartedHowCopyCode"
+msgstr "Next you need to copy/paste the code for the container into your website, this is a simple HTML snippet. From this point, this code will load all other snippets and you usually won't need to make any changes to your website anymore."
+
+msgid "TagManager_GettingStartedHowAddTagsToContainer"
+msgstr "Now you can add one or multiple tags to your container. If you have embedded a tag manually into your site in the past, you should at the same time also remove all previously added snippets from your website as they will be then loaded through the tag manager."
+
+msgid "TagManager_GettingStartedWhatIfUnsupported"
+msgstr "What if a tag, trigger, or variable I need is not supported yet?"
+
+msgid "TagManager_GettingStartedCustomTags"
+msgstr "There are custom tags, triggers, and variables available to let you implement pretty much any use case you need."
+
+msgid "TagManager_GettingStartedContributeTags"
+msgstr "If you use features regularly which are not available yet, or you have a product you want to integrate into the Tag Manager, please check out our %1$sdeveloper documentation%2$s on how to add your own tags, triggers, and variables. It is really easy."
 
 msgid "TagManager_GoogleAnalyticsUniversalTagDescription"
 msgstr "Google Analytics është një shërbim internetor analizash, i ofruar nga Google."
@@ -11097,26 +11763,50 @@ msgstr "Shkaktuar kur ndryshon URL-ja ekzistuese."
 msgid "TagManager_HistoryChangeTriggerName"
 msgstr "Ndryshim Historiku"
 
+msgid "TagManager_HistoryHashNewPathVariableDescription"
+msgstr ""
+
 msgid "TagManager_HistoryHashNewPathVariableName"
 msgstr "Shteg i Ri Historiku"
+
+msgid "TagManager_HistoryHashNewSearchVariableDescription"
+msgstr ""
 
 msgid "TagManager_HistoryHashNewSearchVariableName"
 msgstr "Kërkim i Ri te Historiku"
 
+msgid "TagManager_HistoryHashNewUrlVariableDescription"
+msgstr ""
+
 msgid "TagManager_HistoryHashNewUrlVariableName"
 msgstr "URL e Re Historiku"
+
+msgid "TagManager_HistoryHashNewVariableDescription"
+msgstr ""
 
 msgid "TagManager_HistoryHashNewVariableName"
 msgstr "Hash i Ri Historiku"
 
+msgid "TagManager_HistoryHashOldPathVariableDescription"
+msgstr ""
+
 msgid "TagManager_HistoryHashOldPathVariableName"
 msgstr "Shteg i Vjetër Historiku"
+
+msgid "TagManager_HistoryHashOldSearchVariableDescription"
+msgstr ""
 
 msgid "TagManager_HistoryHashOldSearchVariableName"
 msgstr "Kërkim i Vjetër te Historiku"
 
+msgid "TagManager_HistoryHashOldUrlVariableDescription"
+msgstr ""
+
 msgid "TagManager_HistoryHashOldUrlVariableName"
 msgstr "URL e Vjetër te Historiku"
+
+msgid "TagManager_HistoryHashOldVariableDescription"
+msgstr ""
 
 msgid "TagManager_HistoryHashOldVariableName"
 msgstr "Hash i Vjetër Historiku"
@@ -11826,6 +12516,9 @@ msgstr "I vënë në punë mu para se dritarja e shfletuesit të mbyllet ose kur
 msgid "TagManager_WindowUnloadTriggerHelp"
 msgstr "Ky shkaktues identifikon aktin kur një përdorues është në fakt duke mbyllur faqen e atëçastme, në kontrast me shkaktuesin \"Braktisje Dritare\" që vihet në punë kur përdoruesi është gati të braktisë faqe. Qoftë përmes kalimit te një faqe tjetër brenda skedës së atëçastme të shfletuesit, qoftë duke e mbyllur plotësisht skedën."
 
+msgid "TagManager_WindowUnloadTriggerName"
+msgstr "Window Unload"
+
 msgid "TagManager_ZendeskChatTagDescription"
 msgstr "Mbërrini aty për aty te klientët tuaj, përmes web-it, celularit dhe shkëmbimit të mesazheve."
 
@@ -11834,6 +12527,162 @@ msgstr "Kjo etiketë ju lejon të shtoni te sajti juaj formularin Zendesk Chat."
 
 msgid "TagManager_ZendeskChatTagName"
 msgstr "Zendesk Chat (dikur Zopim)"
+
+msgid "Tour_PluginDescription"
+msgstr "Become a Matomo Expert in no time by completing challenges that get you familiar with Matomo."
+
+msgid "Tour_Tour"
+msgstr "Tour"
+
+msgid "Tour_Engagement"
+msgstr "Engagement"
+
+msgid "Tour_UploadLogo"
+msgstr "Upload your logo"
+
+msgid "Tour_AddUser"
+msgstr "Add another user"
+
+msgid "Tour_AddWebsite"
+msgstr "Add another website"
+
+msgid "Tour_AddReport"
+msgstr "Add a scheduled report"
+
+msgid "Tour_AddSegment"
+msgstr "Add a segment"
+
+msgid "Tour_AddAnnotation"
+msgstr "Add an annotation"
+
+msgid "Tour_BrowseMarketplace"
+msgstr "Browse Marketplace"
+
+msgid "Tour_PreviousChallenges"
+msgstr "Previous challenges"
+
+msgid "Tour_NextChallenges"
+msgstr "Next challenges"
+
+msgid "Tour_RowEvolution"
+msgstr "Row evolution"
+
+msgid "Tour_ViewX"
+msgstr "View %s"
+
+msgid "Tour_SetupX"
+msgstr "Setup %s"
+
+msgid "Tour_SelectDateRange"
+msgstr "Select a date range"
+
+msgid "Tour_SelectDateRangeDescription"
+msgstr "Select a date range in the calendar."
+
+msgid "Tour_ChangeVisualisation"
+msgstr "Change a visualisation"
+
+msgid "Tour_ChangeVisualisationDescription"
+msgstr "View a report and select the visualisation icon at the bottom of a report to view the same report in a different visualisation."
+
+msgid "Tour_FlattenActions"
+msgstr "Flatten a page report"
+
+msgid "Tour_FlattenActionsDescription"
+msgstr "Go to Behaviour => Pages and click in the bottom of the report on the cog icon to flatten the report. A flattened report changes the hierarchy from a grouped report to a list."
+
+msgid "Tour_ViewRowEvolutionDescription"
+msgstr "Row evolution shows you the current & past metric data for any row in any report."
+
+msgid "Tour_ViewVisitsLogDescription"
+msgstr "The visits Log shows you all the individual visits and actions each visitor took on your site."
+
+msgid "Tour_ViewVisitorProfileDescription"
+msgstr "The visitor log helps you to understand your visitors’ individual behavior by summarizing and listing your visitors’ visits."
+
+msgid "Tour_ShareAllChallengesCompleted"
+msgstr "Just unlocked the %1$s achievement by completing all Matomo challenges."
+
+msgid "Tour_ChallengeCompleted"
+msgstr "Congratulations, you have completed this challenge."
+
+msgid "Tour_BecomeMatomoExpert"
+msgstr "Become a Matomo Expert"
+
+msgid "Tour_YouCanCallYourselfExpert"
+msgstr "You can now call yourself a true %1$sMatomo Expert%2$s."
+
+msgid "Tour_StatusLevel"
+msgstr "You are currently a %1$s. Complete %2$s more challenges and you become a %3$s."
+
+msgid "Tour_ConfigureGeolocationDescription"
+msgstr "Ensure the location of your visitors is correctly detected."
+
+msgid "Tour_DisableBrowserArchiving"
+msgstr "Disable browser archiving for better performance"
+
+msgid "Tour_SkipThisChallenge"
+msgstr "Skip this challenge"
+
+msgid "Tour_ShareYourAchievementOn"
+msgstr "Share your achievement on %1$s."
+
+msgid "Tour_MatomoSenior"
+msgstr "Matomo Talent"
+
+msgid "Tour_MatomoBeginner"
+msgstr "Matomo Beginner"
+
+msgid "Tour_MatomoIntermediate"
+msgstr "Matomo Intermediate"
+
+msgid "Tour_MatomoTalent"
+msgstr "Matomo Talent"
+
+msgid "Tour_MatomoProfessional"
+msgstr "Matomo Professional"
+
+msgid "Tour_MatomoExpert"
+msgstr "Matomo Expert"
+
+msgid "Tour_ConfigureGeolocation"
+msgstr "Configure geolocation"
+
+msgid "Tour_CustomiseDashboard"
+msgstr "Customise dashboard"
+
+msgid "Tour_CustomiseDashboardDescription"
+msgstr "You can add new widgets to your Dashboard, to ensure it reports on all of your most important metrics."
+
+msgid "Tour_DefineGoal"
+msgstr "Add a goal"
+
+msgid "Tour_DefineGoalDescription"
+msgstr "Conversion tracking is a great way to identify whether you are meeting your current business objectives, identify new objectives, view and analyse your performance, and learn how to increase your conversions, conversion rates, and revenue per visit."
+
+msgid "Tour_EmbedTrackingCode"
+msgstr "Embed tracking code"
+
+msgid "Tour_CompletionTitle"
+msgstr "Well done!"
+
+msgid "Tour_CompletionMessage"
+msgstr "You have completed all the challenges. Give yourself a pat on the back."
+
+msgid "Tour_Part1Title"
+msgstr "Welcome to Matomo %1$s. This widget will help you become a Matomo expert in no time."
+
+msgid "Tour_Part2Title"
+msgstr "Keep it up %1$s! You’re well on your way to becoming a Matomo expert."
+
+msgid "Tour_Part3Title"
+msgstr "Great progress %1$s! If you continue like this, you’ll be an expert in no time!"
+
+msgid "Tour_Part4Title"
+msgstr "Great progress %1$s! Only a few more challenges to complete."
+
+msgid "Tour_OnlyVisibleToSuperUser"
+msgstr "Only you as a %1$sSuper User%2$s can see this widget."
 
 msgid "Transitions_BouncesInline"
 msgstr "%s kthime"
