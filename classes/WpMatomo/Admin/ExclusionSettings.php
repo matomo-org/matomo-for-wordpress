@@ -27,6 +27,15 @@ class ExclusionSettings implements AdminSettingsInterface {
 	const NONCE_NAME = 'matomo_exclusion';
 	const FORM_NAME = 'matomo_exclusions';
 
+	/**
+	 * @var Settings
+	 */
+	private $settings;
+
+	public function __construct( Settings $settings ) {
+		$this->settings = $settings;
+	}
+
 	public function get_title() {
 		return 'Exclusions';
 	}
@@ -69,7 +78,12 @@ class ExclusionSettings implements AdminSettingsInterface {
 				$api->setKeepURLFragmentsGlobal( $keep_fragments );
 			}
 
-			Filesystem::deleteAllCacheOnUpdate();
+			$settingValues = array( Settings::OPTION_KEY_STEALTH => array() );
+			if ( ! empty( $post[ Settings::OPTION_KEY_STEALTH ] ) ) {
+				$settingValues[ Settings::OPTION_KEY_STEALTH ] = $post[ Settings::OPTION_KEY_STEALTH ];
+			}
+
+			$this->settings->apply_changes( $settingValues );
 
 			return true;
 		}
@@ -95,6 +109,8 @@ class ExclusionSettings implements AdminSettingsInterface {
 	}
 
 	public function show_settings() {
+		global $wp_roles;
+
 		$was_updated = $this->update_if_submitted();
 
 		Bootstrap::do_bootstrap();
@@ -105,6 +121,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 		$excluded_user_agents  = $this->from_comma_list( $api->getExcludedUserAgentsGlobal() );
 		$keep_url_fragments    = $api->getKeepURLFragmentsGlobal();
 		$current_ip            = $this->get_current_ip();
+		$settings              = $this->settings;
 
 		include_once( dirname( __FILE__ ) . '/views/exclusion_settings.php' );
 	}

@@ -40,7 +40,7 @@ class AdminSettings {
 		$access          = new Access( $this->settings );
 		$access_settings = new AccessSettings( $access, $this->settings );
 		$tracking        = new TrackingSettings( $this->settings );
-		$exclusions      = new ExclusionSettings();
+		$exclusions      = new ExclusionSettings( $this->settings );
 		$privacy         = new PrivacySettings();
 		$setting_tabs    = array(
 			self::TAB_TRACKING   => $tracking,

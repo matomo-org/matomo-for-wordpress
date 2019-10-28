@@ -73,7 +73,6 @@ class TrackingSettings implements AdminSettingsInterface {
 			'set_download_classes',
 			'set_link_classes',
 			'track_admin',
-			Settings::OPTION_KEY_STEALTH,
 			'limit_cookies_referral',
 			'limit_cookies_session',
 			'limit_cookies_visitor',
@@ -96,21 +95,20 @@ class TrackingSettings implements AdminSettingsInterface {
 		$values = array();
 
 		// default value in case no role/ post type is selected to make sure we unset it if no role /post type is selected
-		$values['add_post_annotations']         = array();
-		$values[ Settings::OPTION_KEY_STEALTH ] = array();
+		$values['add_post_annotations'] = array();
 
 		if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_MANUALLY
 		     || ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_DISABLED &&
 		          $this->settings->get_global_option( 'track_mode' ) === self::TRACK_MODE_MANUALLY ) ) {
-			if ( !empty($_POST[ self::FORM_NAME ][ 'tracking_code' ])) {
-				$_POST[ self::FORM_NAME ][ 'tracking_code' ] = stripslashes($_POST[ self::FORM_NAME ][ 'tracking_code' ]);
+			if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
+				$_POST[ self::FORM_NAME ]['tracking_code'] = stripslashes( $_POST[ self::FORM_NAME ]['tracking_code'] );
 			} else {
-				$_POST[ self::FORM_NAME ][ 'tracking_code' ] = '';
+				$_POST[ self::FORM_NAME ]['tracking_code'] = '';
 			}
-			if ( !empty($_POST[ self::FORM_NAME ][ 'noscript_code' ])) {
-				$_POST[ self::FORM_NAME ][ 'noscript_code' ] = stripslashes($_POST[ self::FORM_NAME ][ 'noscript_code' ]);
+			if ( ! empty( $_POST[ self::FORM_NAME ]['noscript_code'] ) ) {
+				$_POST[ self::FORM_NAME ]['noscript_code'] = stripslashes( $_POST[ self::FORM_NAME ]['noscript_code'] );
 			} else {
-				$_POST[ self::FORM_NAME ][ 'noscript_code' ] = '';
+				$_POST[ self::FORM_NAME ]['noscript_code'] = '';
 			}
 		}
 
@@ -126,7 +124,6 @@ class TrackingSettings implements AdminSettingsInterface {
 	}
 
 	public function show_settings() {
-		global $wp_roles;
 
 		$was_updated = $this->update_if_submitted();
 		$settings    = $this->settings;
