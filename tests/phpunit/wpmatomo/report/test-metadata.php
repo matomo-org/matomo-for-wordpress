@@ -48,10 +48,10 @@ class ReportMetadataTest extends MatomoAnalytics_TestCase {
 		$this->assertTrue(is_array($report_pages));
 		$this->assertNotEmpty($report_pages[0]['uniqueId']);
 		$this->assertNotEmpty($report_pages[0]['category']['id']);
-		$this->assertNotEmpty($report_pages[0]['widgets']['id']);
+		$this->assertNotEmpty($report_pages[0]['widgets']);
 		$this->assertNotEmpty($report_pages[1]['uniqueId']);
 		$this->assertNotEmpty($report_pages[1]['category']['id']);
-		$this->assertNotEmpty($report_pages[1]['widgets']['id']);
+		$this->assertNotEmpty($report_pages[1]['widgets']);
 	}
 
 	public function test_find_report_page_params_by_report_metadata() {
@@ -74,7 +74,8 @@ class ReportMetadataTest extends MatomoAnalytics_TestCase {
 	public function test_find_report_page_params_by_report_metadata_when_no_report_found_returns_empty_array() {
 		$report_page = $this->metadata->find_report_page_params_by_report_metadata(array(
 			'module' => 'Foo',
-			'action' => 'bar'
+			'action' => 'bar',
+			'uniqueId' => 'Foo_bar'
 		));
 		$this->assertSame( array(), $report_page );
 	}
