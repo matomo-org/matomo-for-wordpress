@@ -43,16 +43,18 @@ if ( ! defined( 'ABSPATH' ) ) {
             <th width="20%" scope="row"><label
                         for="%2$s"><?php echo __( 'Tracking filter', 'matomo' ) ?></label>:
             </th>
-            <td colspan="2">
+            <td >
                 <?php
                 $trackingCaps = \WpMatomo\Settings::OPTION_KEY_STEALTH;
                 $filter = $settings->get_global_option( $trackingCaps );
                 foreach ( $wp_roles->role_names as $key => $name ) {
-                echo '<input type="checkbox" ' . ( isset ( $filter [ $key ] ) && $filter [ $key ] ? 'checked="checked" ' : '' ) . 'value="1" name="' . ExclusionSettings::FORM_NAME . '[' . $trackingCaps . '][' . $key . ']" /> ' . $name . ' &nbsp; ';
+                    echo '<input type="checkbox" ' . ( isset ( $filter [ $key ] ) && $filter [ $key ] ? 'checked="checked" ' : '' ) . 'value="1" name="' . ExclusionSettings::FORM_NAME . '[' . $trackingCaps . '][' . $key . ']" /> ' . $name . ' &nbsp; <br />';
                 }
-                echo '<span class="dashicons dashicons-editor-help" style="cursor:pointer;" onclick="jQuery(\'#stealthcap-desc\').toggleClass(\'hidden\');"></span> <p class="description hidden" id="stealthcap-desc">' . __( 'Choose users by user role you do <strong>not</strong> want to track.', 'matomo' ) . '</p>';
             ?>
-        </td>
+            </td>
+            <td width="50%">
+		        <?php echo __( 'Choose users by user role you do <strong>not</strong> want to track.', 'matomo' ) ?>
+            </td>
         </tr>
         <tr>
             <th width="20%" scope="row"><label
