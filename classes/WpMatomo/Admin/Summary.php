@@ -41,15 +41,17 @@ class Summary {
 		$reports_to_show = $this->get_reports_to_show();
 		$filter_limit    = apply_filters( 'matomo_report_summary_filter_limit', 10 );
 
-		$report_dates = new Dates();
-		$report_dates = $report_dates->get_supported_dates();
+		$report_dates_obj = new Dates();
+		$report_dates     = $report_dates_obj->get_supported_dates();
 
 		$report_date = Dates::YESTERDAY;
 		if ( isset( $_GET['report_date'] ) && isset( $report_dates[ $_GET['report_date'] ] ) ) {
 			$report_date = $_GET['report_date'];
 		}
 
-		$is_tracking            = $this->settings->is_tracking_enabled();
+		list( $report_period_selected, $report_date_selected ) = $report_dates_obj->detect_period_and_date( $report_date );
+
+		$is_tracking = $this->settings->is_tracking_enabled();
 
 		include_once( dirname( __FILE__ ) . '/views/summary.php' );
 	}
@@ -73,7 +75,6 @@ class Summary {
 			'Referrers_getSocials',
 			'Referrers_getCampaigns',
 			'Goals_get',
-			'Goals_get_idGoal--0',
 			'Goals_get_idGoal--ecommerceOrder',
 			'Goals_getItemsName',
 		);
@@ -84,6 +85,10 @@ class Summary {
 		foreach ( $reports_to_show as $report_unique_id ) {
 			$report = $metadata->find_report_by_unique_id( $report_unique_id );
 			if ( $report ) {
+				$report_page = $metadata->find_report_page_params_by_report_metadata( $report );
+				if ( $report_page ) {
+					$report['page'] = $report_page;
+				}
 				$report_metadata[] = $report;
 			}
 		}

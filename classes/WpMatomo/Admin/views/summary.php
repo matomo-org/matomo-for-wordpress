@@ -9,7 +9,6 @@
 
 use WpMatomo\Admin\Menu;
 use WpMatomo\Report\Dates;
-use WpMatomo\Admin\AdminSettings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,6 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var array $report_dates */
 /** @var array $reports_to_show */
 /** @var string $report_date */
+/** @var string $report_period_selected */
+/** @var string $report_date_selected */
 /** @var bool $is_tracking */
 global $wp;
 ?>
@@ -61,6 +62,9 @@ global $wp;
 						?>
                         <div class="postbox">
 
+                            <?php if (!empty($report_meta['page'])) { ?>
+                                <button type="button" class="handlediv" aria-expanded="true" title="Click to view the report in detail"><a href="<?php echo Menu::make_matomo_reporting_link($report_meta['page']['category'], $report_meta['page']['subcategory'], array('period' => $report_period_selected, 'date' => $report_date_selected)); ?>" style="color: inherit;" target="_blank" rel="noreferrer noopener" class="dashicons-before dashicons-external" aria-hidden="true"></a></button>
+                            <?php } ?>
                             <h2 class="hndle ui-sortable-handle"
                                 style="cursor: help;"
                                 title="<?php echo ! empty( $report_meta['documentation'] ) ? ( wp_strip_all_tags( $report_meta['documentation'] ) . ' ' ) : null ?>You can embed this report on any page using the shortcode: <?php echo esc_attr( $shortcode ); ?>"

@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Metadata {
 	public static $CACHE_ALL_REPORTS = array();
+	public static $CACHE_ALL_REPORT_PAGES = array();
 
 	public function get_all_reports() {
 		if ( ! empty( self::$CACHE_ALL_REPORTS ) ) {
@@ -57,6 +58,70 @@ class Metadata {
 		if ( isset( $all_reports[ $unique_id ] ) ) {
 			return $all_reports[ $unique_id ];
 		}
+	}
+
+	public function get_all_report_pages() {
+		if ( ! empty( self::$CACHE_ALL_REPORT_PAGES ) ) {
+			return self::$CACHE_ALL_REPORT_PAGES;
+		}
+
+		$site   = new Site();
+		$idsite = $site->get_current_matomo_site_id();
+
+		if ( $idsite ) {
+			Bootstrap::do_bootstrap();
+
+			self::$CACHE_ALL_REPORT_PAGES = Request::processRequest( 'API.getReportPagesMetadata', array( 'idSite' => $idsite ) );
+		}
+
+		return self::$CACHE_ALL_REPORT_PAGES;
+	}
+
+	public function find_report_page_params_by_report_metadata( $report_metadata ) {
+		if (empty($report_metadata['module'])
+		    || empty($report_metadata['action'])) {
+			return array();
+		}
+
+		$all_reports = self::get_all_report_pages();
+
+		foreach ($all_reports as $all_report) {
+			foreach ($all_report['widgets'] as $widget) {
+				if (!empty($widget['module']) && $widget['module'] === $report_metadata['module']
+				&& !empty($widget['action']) && $widget['action'] === $report_metadata['action']) {
+					return array(
+						'category' => $all_report['category']['id'],
+						'subcategory' => $all_report['subcategory']['id']
+					);
+				}
+			}
+		}
+
+		// we can't resolve all automatically since reportId != widgetId and the used action may differe etc...
+		// we're hard coding some manually
+
+		if ($report_metadata['uniqueId'] === 'Actions_get') {
+			return array(
+				'category' => 'General_Visitors',
+				'subcategory' => 'General_Overview'
+			);
+		} elseif ($report_metadata['uniqueId'] === 'Goals_get') {
+			return array(
+				'category' => 'Goals_Goals',
+				'subcategory' => 'General_Overview'
+			);
+		} elseif ($report_metadata['uniqueId'] === 'Goals_get_idGoal--ecommerceOrder') {
+			return array(
+				'category' => 'Goals_Ecommerce',
+				'subcategory' => 'General_Overview'
+			);
+		} elseif ($report_metadata['uniqueId'] === 'Goals_getItemsName') {
+			return array(
+				'category' => 'Goals_Ecommerce',
+				'subcategory' => 'Goals_Products'
+			);
+		}
+
 	}
 
 }
