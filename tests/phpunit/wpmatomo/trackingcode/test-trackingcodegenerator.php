@@ -95,5 +95,27 @@ _paq.push([\'trackAllContentImpressions\']);_paq.push([\'trackPageView\']);_paq.
 		$this->assertSame( '<script>foobar</script>', $this->get_tracking_code() );
 	}
 
+	public function test_get_tracking_code_when_using_tagmanager_mode() {
+		$this->settings->apply_tracking_related_changes( array(
+			'track_mode' => TrackingSettings::TRACK_MODE_TAGMANAGER,
+			'tagmanger_container_ids' => array('abcdefgh' => 1, 'cfk3jjw' => 0)
+		) );
+		$this->assertSame( '<!-- Matomo Tag Manager -->
+<script type="text/javascript" >
+var _mtm = _mtm || [];
+_mtm.push({\'mtm.startTime\': (new Date().getTime()), \'event\': \'mtm.Start\'});
+var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
+g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="http://example.org/wp-content/uploads/matomo/container_abcdefgh.js"; s.parentNode.insertBefore(g,s);
+</script><!-- End Matomo Tag Manager -->', $this->get_tracking_code() );
+	}
+
+	public function test_get_tracking_code_when_using_tagmanager_mode_and_no_containers() {
+		$this->settings->apply_tracking_related_changes( array(
+			'track_mode' => TrackingSettings::TRACK_MODE_TAGMANAGER,
+			'tagmanger_container_ids' => array()
+		) );
+		$this->assertSame( '<!-- Matomo Tag Manager --><!-- End Matomo Tag Manager -->', $this->get_tracking_code() );
+	}
+
 
 }

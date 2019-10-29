@@ -49,7 +49,7 @@ $paths = new Paths();
 
 		if (!empty($containers)) {
 		    foreach ($containers as $container) {
-			    echo '<tr class="matomo-track-option matomo-track-option-tagmanager' . ( $isNotTracking ? ' hidden' : '' ) . '">';
+			    echo '<tr class="matomo-track-option matomo-track-option-tagmanager ' . ( $isNotTracking ? ' hidden' : '' ) . '">';
 			    echo '<th scope="row"><label for="add_post_annotations">' . __( 'Add these Tag Manager containers', 'matomo' ) . '</label>:</th><td>';
 			    $selected_container_ids = $settings->get_global_option( 'tagmanger_container_ids' );
 			    foreach ( $containers as $container_id => $container_name ) {
@@ -60,7 +60,7 @@ $paths = new Paths();
 		    }
 		}
 
-		$form->show_textarea( 'tracking_code', __( 'Tracking code', 'matomo' ), 15, 'This is a preview of your current tracking code. If you choose to enter your tracking code manually, you can change it here. Have a look at the system report to get a list of all available JS tracker and tracking API endpoints.', $isNotTracking, 'matomo-track-option matomo-track-option-default   matomo-track-option-manually', true, '', ( $settings->get_global_option( 'track_mode' ) != 'manually' ), false );
+		$form->show_textarea( 'tracking_code', __( 'Tracking code', 'matomo' ), 15, 'This is a preview of your current tracking code. If you choose to enter your tracking code manually, you can change it here. Have a look at the system report to get a list of all available JS tracker and tracking API endpoints.', $isNotTracking, 'matomo-track-option matomo-track-option-default matomo-track-option-tagmanager  matomo-track-option-manually', true, '', ( $settings->get_global_option( 'track_mode' ) != 'manually' ), false );
 
 		$form->show_select( 'track_codeposition', __( 'JavaScript code position', 'matomo' ), array(
 			'footer' => __( 'Footer', 'matomo' ),

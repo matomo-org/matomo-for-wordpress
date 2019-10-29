@@ -120,11 +120,12 @@ class TrackingCodeGenerator {
 
 		$container_ids = $settings->get_global_option('tagmanger_container_ids');
 
+		$code = '<!-- Matomo Tag Manager -->';
+
 		if (!empty($container_ids) && is_array($container_ids)) {
 			$paths = new Paths();
 			$upload_url = $paths->get_upload_base_url();
 
-			$code = '';
 			foreach ($container_ids as $container_id => $enabled) {
 				if ( $enabled
 				     && ctype_alnum($container_id)
@@ -140,17 +141,18 @@ class TrackingCodeGenerator {
 						$container_url = preg_replace( "(^http://)", "https://", $container_url );
 					}
 
-					$code .= '<!-- Matomo Tag Manager -->
+					$code .= '
 <script type="text/javascript" '.$data_cf_async.'>
 var _mtm = _mtm || [];
 _mtm.push({\'mtm.startTime\': (new Date().getTime()), \'event\': \'mtm.Start\'});
 var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
 g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="'.$container_url.'"; s.parentNode.insertBefore(g,s);
-</script>
-<!-- End Matomo Tag Manager -->';
+</script>';
 				}
 			}
 		}
+
+		$code .= '<!-- End Matomo Tag Manager -->';
 
 		return array('script' => $code, 'noscript' => '');
 	}

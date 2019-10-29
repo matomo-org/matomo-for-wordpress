@@ -104,6 +104,12 @@ class TrackingSettings implements AdminSettingsInterface {
 		$values['add_post_annotations'] = array();
 		$values['tagmanger_container_ids'] = array();
 
+		if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_TAGMANAGER ) {
+			// no noscript mode in this case
+			$_POST[ 'track_noscript' ] = '';
+			$_POST[ 'noscript_code' ]  = '';
+		}
+
 		if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_MANUALLY
 		     || ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_DISABLED &&
 		          $this->settings->get_global_option( 'track_mode' ) === self::TRACK_MODE_MANUALLY ) ) {
