@@ -1,3 +1,10 @@
+0.1.4
+- Fix opt out not working anymore
+- Move tracking filter to exclusion settings
+- Link from summary report to actual report in Matomo
+- Add .htaccess files so Matomo works on more instances out of the box
+- Improvements on how to load the core asset files
+
 0.1.3
 - Fix tracking code may have slashes added when switching between manually and disabled tracking code
 - Fix proxy not sending JS when a WP plugin sends a notice

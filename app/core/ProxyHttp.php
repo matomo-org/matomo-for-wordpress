@@ -169,8 +169,11 @@ class ProxyHttp
         if ($compressed) {
             Common::sendHeader('Content-Encoding: ' . $encoding);
         }
-        
-        @ob_get_clean();
+
+	    $levels = ob_get_level();
+	    for ( $i = 0; $i < $levels; $i++ ) {
+		    ob_end_flush();
+	    }
 
         if (!_readfile($file, $byteStart, $byteEnd)) {
             Common::sendResponseCode(500);
