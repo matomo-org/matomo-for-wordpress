@@ -26,4 +26,9 @@ class OptOutTest extends MatomoUnit_TestCase {
 		$this->assertContains( 'width:60px;height:100%', $result );
 	}
 
+	public function test_optOutJs_exists() {
+		// see https://github.com/matomo-org/wp-matomo/issues/46
+		$this->assertFileExists(plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'app/plugins/CoreAdminHome/javascripts/optOut.js');
+	}
+
 }
