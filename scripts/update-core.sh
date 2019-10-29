@@ -30,7 +30,6 @@ find $MATOMO_ROOT/misc/* ! -name 'gpl-3.0.txt' -exec rm -rf {} +
 rm -rf $MATOMO_ROOT/tmp
 rm -rf $MATOMO_ROOT/tests
 rm -rf $MATOMO_ROOT/config/manifest.inc.php
-rm -rf $MATOMO_ROOT/piwik.js
 # important to remove pclzip as it is shipped with WP and would need to use their lib
 rm -rf $MATOMO_ROOT/matomo/app/vendor/piwik/decompress/libs/PclZip
 

@@ -117,14 +117,19 @@ class Forms {
 	 * @param boolean $global set to false if the textarea shows a site-specific option (default: true)
 	 */
 	public function show_select( $id, $name, $options = array(), $description = '', $onChange = '', $isHidden = false, $groupName = '', $hideDescription = true, $global = true ) {
-		$optionList = '';
+		$options_list = '';
 		$default    = $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
 		if ( is_array( $options ) ) {
 			foreach ( $options as $key => $value ) {
-				$optionList .= sprintf( '<option value="%s"' . ( $key == $default ? ' selected="selected"' : '' ) . '>%s</option>', esc_attr($key), esc_html($value) );
+				$options_list .= sprintf( '<option value="%s"' . ( $key == $default ? ' selected="selected"' : '' ) . '>%s</option>', esc_attr($key), esc_html($value) );
 			}
 		}
-		printf( '<tr class="' . $groupName . ( $isHidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s:</label></th><td><select name="' . TrackingSettings::FORM_NAME . '[%s]" id="%2$s" onchange="%s">%s</select> %s</td></tr>', $name, $id, $onChange, $optionList, $this->get_description( $id, $description, $hideDescription ) );
+		$script_change = '';
+		if ($onChange) {
+			// we make sure it will select the right settings by default
+			$script_change .= '<script type="text/javascript">setTimeout(function () { jQuery("#'.$id.'").change(); }, 800);</script>';
+		}
+		printf( '<tr class="' . $groupName . ( $isHidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%3$s">%s:%s</label></th><td><select name="' . TrackingSettings::FORM_NAME . '[%s]" id="%3$s" onchange="%s">%s</select> %s</td></tr>', $name, $script_change, $id, $onChange, $options_list, $this->get_description( $id, $description, $hideDescription ) );
 	}
 
 	/**

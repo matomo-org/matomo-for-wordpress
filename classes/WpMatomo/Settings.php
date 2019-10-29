@@ -66,6 +66,7 @@ class Settings {
 		'track_content'                            => 'disabled',
 		'track_search'                             => false,
 		'track_404'                                => false,
+		'tagmanger_container_ids'                  => array(),
 		'add_post_annotations'                     => array(),
 		'add_customvars_box'                       => false,
 		'js_manually'                              => '',

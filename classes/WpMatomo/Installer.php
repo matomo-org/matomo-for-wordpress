@@ -133,6 +133,8 @@ class Installer {
 
 			}
 
+			DbHelper::recordInstallVersion();
+
 			$this->logger->log( 'Creating some index files' );
 
 			$paths = new Paths();

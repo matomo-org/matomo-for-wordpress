@@ -22,6 +22,7 @@ class TrackingSettings implements AdminSettingsInterface {
 	const TRACK_MODE_DEFAULT = 'default';
 	const TRACK_MODE_DISABLED = 'disabled';
 	const TRACK_MODE_MANUALLY = 'manually';
+	const TRACK_MODE_TAGMANAGER = 'tagmanager';
 
 	/**
 	 * @var Settings
@@ -69,6 +70,7 @@ class TrackingSettings implements AdminSettingsInterface {
 			'track_heartbeat',
 			'track_user_id',
 			'track_datacfasync',
+			'tagmanger_container_ids',
 			'set_download_extensions',
 			'set_download_classes',
 			'set_link_classes',
@@ -92,10 +94,15 @@ class TrackingSettings implements AdminSettingsInterface {
 			'track_api_endpoint',
 		);
 
+		if ( has_matomo_tag_manager() ) {
+			$keys_to_keep[] = 'tagmanger_container_ids';
+		}
+
 		$values = array();
 
 		// default value in case no role/ post type is selected to make sure we unset it if no role /post type is selected
 		$values['add_post_annotations'] = array();
+		$values['tagmanger_container_ids'] = array();
 
 		if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_MANUALLY
 		     || ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_DISABLED &&
@@ -124,11 +131,39 @@ class TrackingSettings implements AdminSettingsInterface {
 	}
 
 	public function show_settings() {
-
 		$was_updated = $this->update_if_submitted();
 		$settings    = $this->settings;
 
+		$containers = $this->get_active_containers();
+
+		$track_modes = array(
+			TrackingSettings::TRACK_MODE_DISABLED => __( 'Disabled', 'matomo' ),
+			TrackingSettings::TRACK_MODE_DEFAULT  => __( 'Default tracking', 'matomo' ),
+			TrackingSettings::TRACK_MODE_MANUALLY => __( 'Enter manually', 'matomo' )
+		);
+
+		if (!empty($containers)) {
+			$track_modes[TrackingSettings::TRACK_MODE_TAGMANAGER] = __('Tag Manager', 'matomo');
+		}
+
 		include_once( dirname( __FILE__ ) . '/views/tracking.php' );
+	}
+
+	private function get_active_containers()
+	{
+		// we don't use Matomo API here to avoid needing to bootstrap Matomo which is slow and could break things
+		$containers = array();
+		if (has_matomo_tag_manager()) {
+			global $wpdb;
+			$dbsettings = new \WpMatomo\Db\Settings();
+			$containerTable = $dbsettings->prefix_table_name('tagmanager_container');
+			$containers = $wpdb->get_results(sprintf('SELECT `idcontainer`, `name` FROM %s where `status` = "active"', $containerTable));
+		}
+		$byId = array();
+		foreach ($containers as $container) {
+			$byId[$container->idcontainer] = $container->name;
+		}
+		return $byId;
 	}
 
 
