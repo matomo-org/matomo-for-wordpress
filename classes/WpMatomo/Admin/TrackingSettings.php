@@ -108,6 +108,8 @@ class TrackingSettings implements AdminSettingsInterface {
 			// no noscript mode in this case
 			$_POST[ 'track_noscript' ] = '';
 			$_POST[ 'noscript_code' ]  = '';
+		} else {
+			unset($_POST[ 'tagmanger_container_ids' ]);
 		}
 
 		if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_MANUALLY
@@ -155,7 +157,7 @@ class TrackingSettings implements AdminSettingsInterface {
 		include_once( dirname( __FILE__ ) . '/views/tracking.php' );
 	}
 
-	private function get_active_containers()
+	public function get_active_containers()
 	{
 		// we don't use Matomo API here to avoid needing to bootstrap Matomo which is slow and could break things
 		$containers = array();

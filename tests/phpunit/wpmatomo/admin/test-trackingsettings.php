@@ -97,5 +97,9 @@ class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
 		$this->assertEquals( array(), $this->settings->get_global_option( Settings::OPTION_KEY_CAPS_ACCESS ) );
 	}
 
+	public function test_get_active_containers_when_no_container_defined() {
+		$containers = $this->tracking_settings->get_active_containers();
+		$this->assertSame(array(), $containers);
+	}
 
 }

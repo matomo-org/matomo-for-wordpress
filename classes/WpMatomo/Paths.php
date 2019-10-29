@@ -109,17 +109,23 @@ class Paths {
 	}
 
 	public function get_relative_dir_to_matomo( $target_dir ) {
-		$matomo_dir         = realpath( __DIR__ . '/../../app' );
+		$matomo_dir         = plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'app';
 		$matomo_dir_parts   = explode( '/', $matomo_dir );
 		$target_dir_parts   = explode( '/', $target_dir );
 		$relative_directory = '';
 		$add_at_the_end     = array();
+		$was_previous_same  = false;
+
 		foreach ( $target_dir_parts as $index => $part ) {
 			if ( isset( $matomo_dir_parts[ $index ] )
 			     && $part !== 'matomo' // not when matomo is same part cause it's the plugin name but eg also the upload folder name and it would generate wrong path
-			     && $matomo_dir_parts[ $index ] === $part ) {
+			     && $matomo_dir_parts[ $index ] === $part
+				&& !$was_previous_same) {
 				continue;
 			}
+
+			$was_previous_same = true;
+
 			if ( isset( $matomo_dir_parts[ $index ] ) ) {
 				$relative_directory .= '../';
 			}

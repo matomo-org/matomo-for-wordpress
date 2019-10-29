@@ -135,6 +135,11 @@ class Installer {
 
 			DbHelper::recordInstallVersion();
 
+			if (!SettingsPiwik::getPiwikUrl()) {
+				// especially needed for tests on cli
+				\Piwik\SettingsPiwik::overwritePiwikUrl(plugins_url( 'app', MATOMO_ANALYTICS_FILE ));
+			}
+
 			$this->logger->log( 'Creating some index files' );
 
 			$paths = new Paths();
