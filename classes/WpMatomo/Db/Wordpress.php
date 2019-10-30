@@ -203,7 +203,7 @@ class Wordpress extends Mysqli {
 	private function throwExceptionIfError($wpdb)
 	{
 		if ($wpdb->last_error) {
-			throw new \Zend_Db_Statement_Exception($wpdb->last_error);
+			throw new \Zend_Db_Statement_Exception('WP DB Error: ' . $wpdb->last_error);
 		}
 	}
 

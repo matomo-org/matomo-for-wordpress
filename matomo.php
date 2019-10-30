@@ -48,7 +48,18 @@ function has_matomo_tag_manager()
 	if (defined('MATOMO_DISABLE_TAG_MANAGER') && MATOMO_DISABLE_TAG_MANAGER) {
 		return false;
 	}
-	return !function_exists('is_multisite') || !is_multisite();
+
+	$is_multisite = function_exists('is_multisite') && is_multisite();
+	if ($is_multisite) {
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+		}
+
+		$network_enabled = is_plugin_active_for_network( 'matomo/matomo.php' );
+		return !$network_enabled;
+	}
+
+	return true;
 }
 
 function add_matomo_plugin( $plugins_directory, $wp_plugin_file ) {
