@@ -11,6 +11,7 @@ namespace WpMatomo;
 
 use Piwik\Filesystem;
 use Piwik\Plugins\CoreUpdater\CoreUpdater;
+use Piwik\Plugins\Installation\ServerFilesGenerator;
 use Piwik\Version;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -79,6 +80,26 @@ class Updater {
 			self::update_components();
 			self::update_components();
 		} );
+
+		$paths = new Paths();
+		$upload_dir = $paths->get_upload_base_dir();
+		if (is_dir($upload_dir) && is_writable($upload_dir)) {
+			@file_put_contents( $upload_dir . '/index.php', '//hello' );
+			@file_put_contents( $upload_dir . '/index.html', '//hello' );
+			@file_put_contents( $upload_dir . '/index.htm', '//hello' );
+			@file_put_contents( $upload_dir . '/.htaccess', '<Files GeoLite2-City.mmdb>
+'.ServerFilesGenerator::getDenyHtaccessContent().'
+</Files>
+<Files ~ "(\.js)$">
+'.ServerFilesGenerator::getAllowHtaccessContent().'
+</Files>' );
+		}
+		$config_dir = $paths->get_config_ini_path();
+		if (is_dir($config_dir) && is_writable($config_dir)) {
+			@file_put_contents($config_dir . '/index.php', '//hello');
+			@file_put_contents($config_dir . '/index.html', '//hello');
+			@file_put_contents($config_dir . '/index.htm', '//hello');
+		}
 	}
 
 	private static function update_components() {

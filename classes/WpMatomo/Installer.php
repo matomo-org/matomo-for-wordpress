@@ -133,25 +133,6 @@ class Installer {
 
 			}
 
-			$this->logger->log( 'Creating some index files' );
-
-			$paths = new Paths();
-			$upload_dir = $paths->get_upload_base_dir();
-			if (is_dir($upload_dir) && is_writable($upload_dir)) {
-				@file_put_contents( $upload_dir . '/index.php', '//hello' );
-				@file_put_contents( $upload_dir . '/index.html', '//hello' );
-				@file_put_contents( $upload_dir . '/index.htm', '//hello' );
-				@file_put_contents( $upload_dir . '/.htaccess', '<Files GeoLite2-City.mmdb>
-+'.ServerFilesGenerator::getDenyHtaccessContent().'
-+</Files>' );
-			}
-			$config_dir = $paths->get_config_ini_path();
-			if (is_dir($config_dir) && is_writable($config_dir)) {
-				@file_put_contents($config_dir . '/index.php', '//hello');
-				@file_put_contents($config_dir . '/index.html', '//hello');
-				@file_put_contents($config_dir . '/index.htm', '//hello');
-			}
-
 			$this->logger->log( 'Emptying some caches' );
 
 			\Piwik\Singleton::clearAll();
