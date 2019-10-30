@@ -52,7 +52,7 @@ $paths = new Paths();
 		    echo '<th scope="row"><label for="tagmanger_container_ids">' . __( 'Add these Tag Manager containers', 'matomo' ) . '</label>:</th><td>';
 		    $selected_container_ids = $settings->get_global_option( 'tagmanger_container_ids' );
 		    foreach ( $containers as $container_id => $container_name ) {
-			    echo '<input type="checkbox" ' . ( isset ( $selected_container_ids [ $container_id ] ) && $selected_container_ids [ $container_id ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[tagmanger_container_ids][' . $container_id . ']" /> ' . $container_name . ' (ID:' . $container_id . ') &nbsp; ';
+			    echo '<input type="checkbox" ' . ( isset ( $selected_container_ids [ $container_id ] ) && $selected_container_ids [ $container_id ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[tagmanger_container_ids][' . $container_id . ']" /> ID:' . $container_id . ' Name: ' . $container_name . ' &nbsp; <br />';
 		    }
 		    echo '<br /><br /><a href="'.menu_page_url(\WpMatomo\Admin\Menu::SLUG_TAGMANAGER, false).'" rel="noreferrer noopener" target="_blank">Edit containers <span class="dashicons-before dashicons-external"></span></a>';
 		    echo '</td></tr>';
@@ -85,7 +85,7 @@ $paths = new Paths();
 			'visible'  => __( 'Track only visible content blocks', 'matomo' )
 		), __( 'Content tracking allows you to track interaction with the content of a web page or application.' ) . ' ' . sprintf( __( 'See %sMatomo documentation%s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/content-tracking" target="_BLANK">', '</a>' ), '', $isNotTracking, $fullGeneratedTrackingGroup );
 
-		$form->show_checkbox( 'track_search', __( 'Track search', 'matomo' ), __( 'Use Matomo\'s advanced Site Search Analytics feature.' ) . ' ' . sprintf( __( 'See %sMatomo documentation%s.', 'matomo' ), '<a href="https://matomo.org/docs/site-search/#track-site-search-using-the-tracking-api-advanced-users-only" target="_BLANK">', '</a>' ), $isNotTracking, $fullGeneratedTrackingGroup . ' matomo-track-option-manually' );
+		$form->show_checkbox( 'track_search', __( 'Track search', 'matomo' ), __( 'Use Matomo\'s advanced Site Search Analytics feature.' ) . ' ' . sprintf( __( 'See %sMatomo documentation%s.', 'matomo' ), '<a href="https://matomo.org/docs/site-search/#track-site-search-using-the-tracking-api-advanced-users-only" target="_BLANK">', '</a>' ), $isNotTracking, $fullGeneratedTrackingGroup . ' matomo-track-option-manually matomo-track-option-tagmanager' );
 
 		$form->show_checkbox( 'track_404', __( 'Track 404', 'matomo' ), __( 'Matomo can automatically add a 404-category to track 404-page-visits.', 'matomo' ) . ' ' . sprintf( __( 'See %sMatomo FAQ%s.', 'matomo' ), '<a href="https://matomo.org/faq/how-to/faq_60/" target="_BLANK">', '</a>' ), $isNotTracking, $fullGeneratedTrackingGroup . ' matomo-track-option-manually' );
 
@@ -131,7 +131,7 @@ $paths = new Paths();
 			'email'       => __( 'Email Address', 'matomo' ),
 			'username'    => __( 'Username', 'matomo' ),
 			'displayname' => __( 'Display Name (Not Recommended!)', 'matomo' )
-		), __( 'When a user is logged in to WordPress, track their &quot;User ID&quot;. You can select which field from the User\'s profile is tracked as the &quot;User ID&quot;. When enabled, Tracking based on Email Address is recommended.', 'matomo' ), '', $isNotTracking, $fullGeneratedTrackingGroup );
+		), __( 'When a user is logged in to WordPress, track their &quot;User ID&quot;. You can select which field from the User\'s profile is tracked as the &quot;User ID&quot;. When enabled, Tracking based on Email Address is recommended.', 'matomo' ), '', $isNotTracking, $fullGeneratedTrackingGroup . ' matomo-track-option-tagmanager' );
 
 		$form->show_checkbox( 'track_datacfasync', __( 'Add data-cfasync=false', 'matomo' ), __( 'Adds data-cfasync=false to the script tag, e.g., to ask Rocket Loader to ignore the script.' . ' ' . sprintf( __( 'See %sCloudFlare Knowledge Base%s.', 'matomo' ), '<a href="https://support.cloudflare.com/hc/en-us/articles/200169436-How-can-I-have-Rocket-Loader-ignore-my-script-s-in-Automatic-Mode-" target="_BLANK">', '</a>' ), 'matomo' ), $isNotTracking, $fullGeneratedTrackingGroup . '  matomo-track-option-tagmanager' );
 
