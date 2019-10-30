@@ -119,11 +119,6 @@ class FormDatabaseSetup extends QuickForm2
         $adapter = $this->getSubmitValue('adapter');
         $port = Adapter::getDefaultPortForAdapter($adapter);
 
-        $hostParts = explode(':', DB_HOST);
-        if (count($hostParts) === 2 && is_numeric($hostParts[1])) {
-            $port = $hostParts[1];
-        }
-
         $host = $this->getSubmitValue('host');
         $tables_prefix = $this->getSubmitValue('tables_prefix');
         

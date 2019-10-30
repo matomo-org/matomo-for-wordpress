@@ -17,17 +17,18 @@ trait PointTrait
      * @param $dotRadius
      * @param $colorHex
      */
-    public function addPoint($index, $dotRadius, $colorHex)
+    public function addPoint($index, $dotRadius, $colorHex, $seriesIndex = 0)
     {
-        $mapping = $this->getPointIndexMapping();
+        $mapping = $this->getPointIndexMapping($seriesIndex);
         if (array_key_exists($index, $mapping)) {
             $index = $mapping[$index];
             if ($index < 0) {
                 return;
             }
         }
-        $this->checkPointIndex($index);
+        $this->checkPointIndex($index, $seriesIndex);
         $this->points[] = [
+            'series' => $seriesIndex,
             'index' => $index,
             'radius' => $dotRadius,
             'color' => $this->colorHexToRGB($colorHex),
@@ -37,10 +38,10 @@ trait PointTrait
     /**
      * @return array
      */
-    protected function getPointIndexMapping()
+    protected function getPointIndexMapping($seriesIndex = 0)
     {
-        $count = $this->getCount();
-        list($minIndex, $min, $maxIndex, $max) = $this->getExtremeValues();
+        $count = $this->getCount($seriesIndex);
+        list($minIndex, $min, $maxIndex, $max) = $this->getExtremeValues($seriesIndex);
 
         $mapping = [];
         $mapping['first'] = $count > 1 ? 0 : -1;
@@ -54,9 +55,9 @@ trait PointTrait
     /**
      * @param $index
      */
-    protected function checkPointIndex($index)
+    protected function checkPointIndex($index, $seriesIndex)
     {
-        $count = $this->getCount();
+        $count = $this->getCount($seriesIndex);
         if (!is_numeric($index)) {
             throw new \InvalidArgumentException('Invalid index : ' . $index);
         }

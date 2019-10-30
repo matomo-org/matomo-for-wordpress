@@ -26,7 +26,7 @@ cp -R matomo/* $MATOMO_ROOT
 rm -r matomo/
 rm matomo-$VERSION.zip
 rm "How to install Matomo.html"
-find $MATOMO_ROOT/misc/* ! -name 'gpl-3.0.txt' -exec rm -rf {} +
+find $MATOMO_ROOT/misc/* -exec rm -rf {} +
 rm -rf $MATOMO_ROOT/tmp
 rm -rf $MATOMO_ROOT/tests
 rm -rf $MATOMO_ROOT/config/manifest.inc.php
@@ -36,4 +36,5 @@ rm -rf $MATOMO_ROOT/matomo/app/vendor/piwik/decompress/libs/PclZip
 echo -e "Done!... "
 echo -e "We now need to hardcode the path to jquery.js in app/plugins/Overlay/client/client.js until we automated / changed things"
 echo -e "Then need to manually generate the core assets js file and put it into the assets directory"
+echo -e "Then execute 'php ../app/console wordpress:generate-core-js-asset'"
 echo -e "Then execute ./remove_not_needed_assets.sh"

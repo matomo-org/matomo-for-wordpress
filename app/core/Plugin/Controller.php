@@ -314,6 +314,10 @@ abstract class Controller
             $view->$key = $value;
         }
 
+        if (isset($view->siteName)) {
+            $view->siteNameDecoded = Common::unsanitizeInputValue($view->siteName);
+        }
+
         return $view->render();
     }
 
@@ -616,7 +620,6 @@ abstract class Controller
         $this->setPeriodVariablesView($view);
 
         $view->siteName = $this->site->getName();
-        $view->siteNameDecoded = Common::unsanitizeInputValue($view->siteName);
         $view->siteMainUrl = $this->site->getMainUrl();
 
         $siteTimezone = $this->site->getTimezone();
@@ -1026,8 +1029,8 @@ abstract class Controller
 
     protected function checkSitePermission()
     {
-        if (!empty($this->idSite) && empty($this->site)) {
-            throw new NoAccessException(Piwik::translate('General_ExceptionPrivilegeAccessWebsite', array("'view'", $this->idSite)));
+        if (!empty($this->idSite)) {
+            Access::getInstance()->checkUserHasViewAccess($this->idSite);
         } elseif (empty($this->site) || empty($this->idSite)) {
             throw new Exception("The requested website idSite is not found in the request, or is invalid.
 				Please check that you are logged in Matomo and have permission to access the specified website.");
@@ -1065,3 +1068,4 @@ abstract class Controller
         }
     }
 }
+

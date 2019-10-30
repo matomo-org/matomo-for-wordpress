@@ -11,6 +11,8 @@ namespace Piwik;
 
 use Exception;
 use Piwik\Application\Kernel\GlobalSettingsProvider;
+use Piwik\Config\Cache;
+use Piwik\Config\IniFileChain;
 use Piwik\Container\StaticContainer;
 use Piwik\Exception\MissingFilePermissionException;
 use Piwik\ProfessionalServices\Advertising;
@@ -139,7 +141,7 @@ class Config
         if (!empty($GLOBALS['CONFIG_INI_PATH_RESOLVER']) && is_callable($GLOBALS['CONFIG_INI_PATH_RESOLVER'])) {
             return call_user_func($GLOBALS['CONFIG_INI_PATH_RESOLVER']);
         }
-
+        
         $path = self::getByDomainConfigPath();
         if ($path) {
             return $path;
@@ -332,7 +334,7 @@ class Config
     public function deleteLocalConfig()
     {
         $configLocal = $this->getLocalPath();
-
+        
         if(file_exists($configLocal)){
             @unlink($configLocal);
         }
@@ -368,7 +370,7 @@ class Config
     {
         return $this->settings->getIniFileChain()->getFrom($this->getCommonPath(), $name);
     }
-
+    
     /**
      * @api
      */
@@ -407,16 +409,9 @@ class Config
     /**
      * Write user configuration file
      *
-     * @param array $configLocal
-     * @param array $configGlobal
-     * @param array $configCommon
-     * @param array $configCache
-     * @param string $pathLocal
-     * @param bool $clear
-     *
      * @throws \Exception if config file not writable
      */
-    protected function writeConfig($clear = true)
+    protected function writeConfig()
     {
         $output = $this->dumpConfig();
         if ($output !== null
@@ -435,16 +430,14 @@ class Config
                 throw $this->getConfigNotWritableException();
             }
 
+            $this->settings->getIniFileChain()->deleteConfigCache();
+
             /**
              * Triggered when a INI config file is changed on disk.
              *
              * @param string $localPath Absolute path to the changed file on the server.
              */
             Piwik::postEvent('Core.configFileChanged', [$localPath]);
-        }
-
-        if ($clear) {
-            //$this->reload();
         }
     }
 

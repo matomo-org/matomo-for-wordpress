@@ -12,6 +12,6 @@ find $MATOMO_ROOT/libs/bower_components -name '*.js' -exec rm -rf {} +
 find $MATOMO_ROOT/libs/bower_components -name '*.map' -exec rm -rf {} +
 find $MATOMO_ROOT/libs/jqplot -name '*.js' -exec rm -rf {} +
 find $MATOMO_ROOT/plugins/*/angularjs -name '*.js' -exec rm -rf {} +
-find $MATOMO_ROOT/plugins/*/javascripts -name '*.js' ! -name 'Piwik_Overlay.js' ! -name 'optOut.js' -exec rm -rf {} +
+find $MATOMO_ROOT/plugins/*/javascripts -name '*.js' ! -name 'Piwik_Overlay.js' ! -name 'optOut.js' ! -name 'previewmode.js' ! -name 'previewmodedetection.js' ! -name 'tagmanager.js' ! -name 'tagmanager.min.js' -exec rm -rf {} +
 
 echo -e "Done!... "

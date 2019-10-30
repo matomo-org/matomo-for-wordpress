@@ -27,7 +27,7 @@ There are two options for obtaining the files for the client library.
 
 You can install the library by adding it as a dependency to your composer.json.
 
-```
+```json
   "require": {
     "davaxi/sparkline": "^1.1"
   }
@@ -37,7 +37,7 @@ You can install the library by adding it as a dependency to your composer.json.
 
 The library is available on [GitHub](https://github.com/davaxi/Sparkline). You can clone it into a local repository with the git clone command.
 
-```
+```sh
 git clone https://github.com/davaxi/Sparkline.git
 ```
 
@@ -45,17 +45,17 @@ git clone https://github.com/davaxi/Sparkline.git
 
 After obtaining the files, ensure they are available to your code. If you're using Composer, this is handled for you automatically. If not, you will need to add the `autoload.php` file inside the client library.
 
-```
+```php
 require '/path/to/sparkline/folder/autoload.php';
 ```
 
 ## Usage
 
-Exemple: 
+Example: 
 
 ![Sparkline](https://raw.githubusercontent.com/davaxi/Sparkline/master/tests/data/testGenerate2-mockup.png)
 
-```
+```php
 <?php
 
 require '/path/to/sparkline/folder/autoload.php';
@@ -69,7 +69,7 @@ $sparkline->display();
 
 ## Documentation
 
-```
+```php
 $sparkline = new Davaxi\Sparkline();
 
 // Change format (Default value 80x20)

@@ -12,8 +12,9 @@ use Piwik\Container\StaticContainer;
 use Piwik\Plugin\Dependency;
 use Piwik\Plugin\Manager;
 use Piwik\Plugin\MetadataLoader;
-if (!class_exists('\Piwik\Plugin')) {
 
+if (!class_exists('Piwik\Plugin')) {
+  
 /**
  * Base class of all Plugin Descriptor classes.
  *
@@ -595,3 +596,4 @@ class Plugin
     }
 }
 }
+    

@@ -87,12 +87,10 @@ class ContainerFactory
             $this->addEnvironmentConfig($builder, $environment);
         }
 
-        $configPhpPath = PIWIK_USER_PATH . '/config/config.php';
-
         // User config
-        if (file_exists($configPhpPath)
+        if (file_exists(PIWIK_USER_PATH . '/config/config.php')
             && !in_array('test', $this->environments, true)) {
-            $builder->addDefinitions($configPhpPath);
+            $builder->addDefinitions(PIWIK_USER_PATH . '/config/config.php');
         }
 
         if (!empty($this->definitions)) {
@@ -114,7 +112,7 @@ class ContainerFactory
             return;
         }
 
-        $file = sprintf('%s/config/environment/%s.php', PIWIK_DOCUMENT_ROOT, $environment);
+        $file = sprintf('%s/config/environment/%s.php', PIWIK_USER_PATH, $environment);
 
         if (file_exists($file)) {
             $builder->addDefinitions($file);

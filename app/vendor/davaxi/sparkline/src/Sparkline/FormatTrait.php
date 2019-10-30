@@ -181,7 +181,7 @@ trait FormatTrait
      */
     protected function getDataForChartElements(array $data, $height)
     {
-        $max = $this->getMaxValue();
+        $max = $this->getMaxValueAcrossSeries();
         $minHeight = 1 * $this->ratioComputing;
         $maxHeight = $height - $minHeight;
         foreach ($data as $i => $value) {
@@ -200,12 +200,11 @@ trait FormatTrait
 
     /**
      * @param array $data
-     *
+     * @param int $count count of steps in sparkline image (does not have to == count($data))
      * @return array
      */
-    protected function getChartElements(array $data)
+    protected function getChartElements(array $data, $count)
     {
-        $count = count($data);
         $step = $this->getStepWidth($count);
         $height = $this->getInnerNormalizedHeight();
         $normalizedPadding = $this->getNormalizedPadding();
@@ -223,7 +222,7 @@ trait FormatTrait
         // First element
         $polygon[] = $pictureX1;
         $polygon[] = $pictureY1;
-        for ($i = 1; $i < $count; ++$i) {
+        for ($i = 1; $i < count($data); ++$i) {
             $pictureX2 = $pictureX1 + $step;
             $pictureY2 = $normalizedPadding['top'] + $height - $data[$i];
 

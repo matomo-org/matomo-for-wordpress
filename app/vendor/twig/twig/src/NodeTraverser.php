@@ -69,7 +69,11 @@ class NodeTraverser
         $node = $visitor->enterNode($node, $this->env);
 
         foreach ($node as $k => $n) {
-            if (false !== $m = $this->traverseForVisitor($visitor, $n)) {
+            if (null === $n) {
+                continue;
+            }
+
+            if (false !== ($m = $this->traverseForVisitor($visitor, $n)) && null !== $m) {
                 if ($m !== $n) {
                     $node->setNode($k, $m);
                 }

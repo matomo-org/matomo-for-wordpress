@@ -136,7 +136,7 @@ class Http
      * @param array $additionalHeaders List of additional headers to set for the request
      *
      * @return string|array  true (or string/array) on success; false on HTTP response error code (1xx or 4xx)
-     * @throws Exception
+     *@throws Exception
      */
     public static function sendHttpRequestBy(
         $method = 'socket',
@@ -244,19 +244,19 @@ class Http
 		     * described below
 		     * @ignore
 		     */
-		    Piwik::postEvent('Http.sendHttpRequest.end', array($aUrl, $httpEventParams, &$response, &$status, &$headers));
-
-		    if ($destinationPath && file_exists($destinationPath)) {
-		    	return true;
-		    }
-		    if ($getExtendedInfo) {
-			    return array(
-				    'status'  => $status,
-				    'headers' => $headers,
-				    'data'    => $response
-			    );
+                    Piwik::postEvent('Http.sendHttpRequest.end', array($aUrl, $httpEventParams, &$response, &$status, &$headers));
+ 
+                    if ($destinationPath && file_exists($destinationPath)) {
+                        return true;
+                    }
+                    if ($getExtendedInfo) {
+                        return array(
+                            'status'  => $status,
+                            'headers' => $headers,
+                            'data'    => $response
+                        );
 		    } else {
-			    return trim($response);
+                        return trim($response);
 		    }
 	    }
 

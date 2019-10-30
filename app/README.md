@@ -1,8 +1,8 @@
 # Matomo (formerly Piwik) - matomo.org
 
-[![Latest Stable Version](https://poser.pugx.org/matomo-org/matomo/v/stable)](https://matomo.org/download/)
-[![Latest Unstable Version](https://poser.pugx.org/matomo-org/matomo/v/unstable)](https://packagist.org/packages/piwik/piwik)
-[![License](https://poser.pugx.org/matomo-org/matomo/license)](https://matomo.org/free-software/)
+[![Latest Stable Version](https://poser.pugx.org/piwik/piwik/v/stable)](https://matomo.org/download/)
+[![Latest Unstable Version](https://poser.pugx.org/piwik/piwik/v/unstable)](https://packagist.org/packages/piwik/piwik)
+[![License](https://poser.pugx.org/piwik/piwik/license)](https://matomo.org/free-software/)
 
 ## Code Status
 
@@ -28,7 +28,7 @@ Or in short:
 
 ## License
 
-Matomo is released under the GPL v3 (or later) license, see [misc/gpl-3.0.txt](misc/gpl-3.0.txt)
+Matomo is released under the GPL v3 (or later) license, see [LICENSE](LICENSE)
 
 ## Requirements
 
@@ -107,7 +107,7 @@ What makes Matomo unique from the competition:
   * Modern, easy to use User Interface: you can fully customize your dashboard, drag and drop widgets and more.
 
   * Matomo features are built inside plugins: you can add new features and remove the ones you don’t need.
-    You can build your own web analytics plugins or hire a consultant to have your custom feature built-in Matomo
+    You can build your own web analytics plugins or hire a consultant to have your custom feature built-in Matomo.
 
   * A vibrant international Open community of more than 200,000 active users (tracking even more websites!)
 
@@ -117,7 +117,3 @@ What makes Matomo unique from the competition:
 Documentation and more info on https://matomo.org
 
 We are together creating the best open analytics platform in the world!
-
-## Known issues
-
-* Untested is DB connection when configuring MYSQL SOCKETS OR PIPES as DB host, eg `define( 'DB_HOST', '127.0.0.1:/var/run/mysqld/mysqld.sock' );`

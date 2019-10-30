@@ -11,6 +11,7 @@
 
 namespace Twig\Extension {
 use Twig\ExpressionParser;
+use Twig\TokenParser\ApplyTokenParser;
 use Twig\TokenParser\BlockTokenParser;
 use Twig\TokenParser\DeprecatedTokenParser;
 use Twig\TokenParser\DoTokenParser;
@@ -139,6 +140,7 @@ class CoreExtension extends AbstractExtension
     public function getTokenParsers()
     {
         return [
+            new ApplyTokenParser(),
             new ForTokenParser(),
             new IfTokenParser(),
             new ExtendsTokenParser(),
@@ -192,6 +194,9 @@ class CoreExtension extends AbstractExtension
             new TwigFilter('sort', 'twig_sort_filter'),
             new TwigFilter('merge', 'twig_array_merge'),
             new TwigFilter('batch', 'twig_array_batch'),
+            new TwigFilter('filter', 'twig_array_filter'),
+            new TwigFilter('map', 'twig_array_map'),
+            new TwigFilter('reduce', 'twig_array_reduce'),
 
             // string/array filters
             new TwigFilter('reverse', 'twig_reverse_filter', ['needs_environment' => true]),
@@ -514,7 +519,9 @@ function twig_replace_filter($str, $from, $to = null)
         @trigger_error('Using "replace" with character by character replacement is deprecated since version 1.22 and will be removed in Twig 2.0', E_USER_DEPRECATED);
 
         return strtr($str, $from, $to);
-    } elseif (!twig_test_iterable($from)) {
+    }
+
+    if (!twig_test_iterable($from)) {
         throw new RuntimeError(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', \is_object($from) ? \get_class($from) : \gettype($from)));
     }
 
@@ -668,7 +675,7 @@ function twig_slice(Environment $env, $item, $start, $length = null, $preserveKe
         if ($start >= 0 && $length >= 0 && $item instanceof \Iterator) {
             try {
                 return iterator_to_array(new \LimitIterator($item, $start, null === $length ? -1 : $length), $preserveKeys);
-            } catch (\OutOfBoundsException $exception) {
+            } catch (\OutOfBoundsException $e) {
                 return [];
             }
         }
@@ -739,9 +746,13 @@ function twig_last(Environment $env, $item)
  */
 function twig_join_filter($value, $glue = '', $and = null)
 {
+    if (!twig_test_iterable($value)) {
+        $value = (array) $value;
+    }
+
     $value = twig_to_array($value, false);
 
-    if (!\is_array($value) || 0 === \count($value)) {
+    if (0 === \count($value)) {
         return '';
     }
 
@@ -779,7 +790,7 @@ function twig_join_filter($value, $glue = '', $and = null)
  */
 function twig_split_filter(Environment $env, $value, $delimiter, $limit = null)
 {
-    if (!empty($delimiter)) {
+    if (\strlen($delimiter) > 0) {
         return null === $limit ? explode($delimiter, $value) : explode($delimiter, $value, $limit);
     }
 
@@ -929,6 +940,13 @@ function twig_sort_filter($array)
  */
 function twig_in_filter($value, $compare)
 {
+    if ($value instanceof Markup) {
+        $value = (string) $value;
+    }
+    if ($compare instanceof Markup) {
+        $compare = (string) $compare;
+    }
+
     if (\is_array($compare)) {
         return \in_array($value, $compare, \is_object($value) || \is_resource($value));
     } elseif (\is_string($compare) && (\is_string($value) || \is_int($value) || \is_float($value))) {
@@ -1301,20 +1319,16 @@ if (\function_exists('mb_get_info')) {
             return mb_strlen($thing, $env->getCharset());
         }
 
-        if ($thing instanceof \SimpleXMLElement) {
+        if ($thing instanceof \Countable || \is_array($thing) || $thing instanceof \SimpleXMLElement) {
             return \count($thing);
         }
 
-        if (\is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
-            return mb_strlen((string) $thing, $env->getCharset());
-        }
-
-        if ($thing instanceof \Countable || \is_array($thing)) {
-            return \count($thing);
-        }
-
-        if ($thing instanceof \IteratorAggregate) {
+        if ($thing instanceof \Traversable) {
             return iterator_count($thing);
+        }
+
+        if (\is_object($thing) && method_exists($thing, '__toString')) {
+            return mb_strlen((string) $thing, $env->getCharset());
         }
 
         return 1;
@@ -1468,15 +1482,11 @@ function twig_to_array($seq, $preserveKeys = true)
         return iterator_to_array($seq, $preserveKeys);
     }
 
-    if (!is_array($seq)) {
-        return (array) $seq;
+    if (!\is_array($seq)) {
+        return $seq;
     }
 
-    if(!$preserveKeys) {
-        return array_values($seq);
-    }
-
-    return $seq;
+    return $preserveKeys ? $seq : array_values($seq);
 }
 
 /**
@@ -1495,6 +1505,10 @@ function twig_test_empty($value)
 {
     if ($value instanceof \Countable) {
         return 0 == \count($value);
+    }
+
+    if ($value instanceof \Traversable) {
+        return !iterator_count($value);
     }
 
     if (\is_object($value) && method_exists($value, '__toString')) {
@@ -1548,9 +1562,9 @@ function twig_include(Environment $env, $context, $template, $variables = [], $w
         }
     }
 
-    $result = '';
+    $loaded = null;
     try {
-        $result = $env->resolveTemplate($template)->render($variables);
+        $loaded = $env->resolveTemplate($template);
     } catch (LoaderError $e) {
         if (!$ignoreMissing) {
             if ($isSandboxed && !$alreadySandboxed) {
@@ -1573,11 +1587,21 @@ function twig_include(Environment $env, $context, $template, $variables = [], $w
         throw $e;
     }
 
+    try {
+        $ret = $loaded ? $loaded->render($variables) : '';
+    } catch (\Exception $e) {
+        if ($isSandboxed && !$alreadySandboxed) {
+            $sandbox->disableSandbox();
+        }
+
+        throw $e;
+    }
+
     if ($isSandboxed && !$alreadySandboxed) {
         $sandbox->disableSandbox();
     }
 
-    return $result;
+    return $ret;
 }
 
 /**
@@ -1649,6 +1673,10 @@ function twig_constant_is_defined($constant, $object = null)
  */
 function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
 {
+    if (!twig_test_iterable($items)) {
+        throw new RuntimeError(sprintf('The "batch" filter expects an array or "Traversable", got "%s".', \is_object($items) ? \get_class($items) : \gettype($items)));
+    }
+
     $size = ceil($size);
 
     $result = array_chunk(twig_to_array($items, $preserveKeys), $size, $preserveKeys);
@@ -1656,12 +1684,45 @@ function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
     if (null !== $fill && $result) {
         $last = \count($result) - 1;
         if ($fillCount = $size - \count($result[$last])) {
-            for ($i = 0; $i < $fillCount; $i++) {
+            for ($i = 0; $i < $fillCount; ++$i) {
                 $result[$last][] = $fill;
             }
         }
     }
 
     return $result;
+}
+
+function twig_array_filter($array, $arrow)
+{
+    if (\is_array($array)) {
+        if (\PHP_VERSION_ID >= 50600) {
+            return array_filter($array, $arrow, \ARRAY_FILTER_USE_BOTH);
+        }
+
+        return array_filter($array, $arrow);
+    }
+
+    // the IteratorIterator wrapping is needed as some internal PHP classes are \Traversable but do not implement \Iterator
+    return new \CallbackFilterIterator(new \IteratorIterator($array), $arrow);
+}
+
+function twig_array_map($array, $arrow)
+{
+    $r = [];
+    foreach ($array as $k => $v) {
+        $r[$k] = $arrow($v, $k);
+    }
+
+    return $r;
+}
+
+function twig_array_reduce($array, $arrow, $initial = null)
+{
+    if (!\is_array($array)) {
+        $array = iterator_to_array($array);
+    }
+
+    return array_reduce($array, $arrow, $initial);
 }
 }
