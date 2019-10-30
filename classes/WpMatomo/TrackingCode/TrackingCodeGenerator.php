@@ -22,6 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TrackingCodeGenerator {
 
 	const TRACKPAGEVIEW = "_paq.push(['trackPageView']);";
+	const MTM_INIT = "var _mtm = _mtm || [];";
 
 	/**
 	 * @var Settings
@@ -52,8 +53,11 @@ class TrackingCodeGenerator {
 
 			return false;
 		}
+
+		$track_mode = $this->settings->get_global_option( 'track_mode' );
+
 		if ( ! $this->settings->is_tracking_enabled()
-		     || $this->settings->get_global_option( 'track_mode' ) == TrackingSettings::TRACK_MODE_MANUALLY ) {
+		     || $track_mode == TrackingSettings::TRACK_MODE_MANUALLY ) {
 			return false;
 		}
 
@@ -66,7 +70,13 @@ class TrackingCodeGenerator {
 			return false;
 		}
 
-		$result = $this->prepare_tracking_code( $idsite, $this->settings, $this->logger );
+		if ( $track_mode == TrackingSettings::TRACK_MODE_DEFAULT ) {
+			$result = $this->prepare_tracking_code( $idsite, $this->settings, $this->logger );
+		} elseif ( $track_mode == TrackingSettings::TRACK_MODE_TAGMANAGER && has_matomo_tag_manager() ) {
+			$result = $this->prepare_tagmanger_code( $this->settings, $this->logger );
+		} else {
+			$result = array( 'script' => '<!-- Matomo: no supported track_mode selected -->', 'noscript' => '' );
+		}
 
 		if ( ! empty( $result['script'] ) ) {
 			$this->settings->set_option( 'tracking_code', $result['script'] );
@@ -98,6 +108,54 @@ class TrackingCodeGenerator {
 		}
 
 		return $tracking_code;
+	}
+
+	/**
+	 * @param Settings $settings
+	 * @param Logger $logger
+	 *
+	 * @return array
+	 */
+	private function prepare_tagmanger_code( $settings, $logger ) {
+		$logger->log( 'Apply tag manager code changes:' );
+
+		$container_ids = $settings->get_global_option( 'tagmanger_container_ids' );
+
+		$code = '<!-- Matomo Tag Manager -->';
+
+		if ( ! empty( $container_ids ) && is_array( $container_ids ) ) {
+			$paths      = new Paths();
+			$upload_url = $paths->get_upload_base_url();
+
+			foreach ( $container_ids as $container_id => $enabled ) {
+				if ( $enabled
+				     && ctype_alnum( $container_id )
+				     && strlen( $container_id ) <= 16 ) {
+					$container_url = $upload_url . '/container_' . urlencode( $container_id ) . '.js';
+
+					$data_cf_async = '';
+					if ( $settings->get_global_option( 'track_datacfasync' ) ) {
+						$data_cf_async = 'data-cfasync="false"';
+					}
+
+					if ( $settings->get_global_option( 'force_protocol' ) == 'https' ) {
+						$container_url = preg_replace( "(^http://)", "https://", $container_url );
+					}
+
+					$code .= '
+<script type="text/javascript" ' . $data_cf_async . '>
+' . self::MTM_INIT . '
+_mtm.push({\'mtm.startTime\': (new Date().getTime()), \'event\': \'mtm.Start\'});
+var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
+g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_url . '"; s.parentNode.insertBefore(g,s);
+</script>';
+				}
+			}
+		}
+
+		$code .= '<!-- End Matomo Tag Manager -->';
+
+		return array( 'script' => $code, 'noscript' => '' );
 	}
 
 	/**
@@ -230,7 +288,10 @@ class TrackingCodeGenerator {
 		$this->logger->log( 'Apply search tracking changes. Blog ID: ' . get_current_blog_id() );
 		$obj_search       = new \WP_Query ( "s=" . get_search_query() . '&showposts=-1' );
 		$int_result_count = $obj_search->post_count;
-		$tracking_code    = str_replace( self::TRACKPAGEVIEW, "_paq.push(['trackSiteSearch','" . get_search_query() . "', false, " . $int_result_count . "]);\n" . self::TRACKPAGEVIEW, $tracking_code );
+
+		$code          = "window._paq = window._paq || []; window._paq.push(['trackSiteSearch','" . get_search_query() . "', false, " . $int_result_count . "]);\n";
+		$tracking_code = str_replace( self::TRACKPAGEVIEW, $code . self::TRACKPAGEVIEW, $tracking_code );
+		$tracking_code = str_replace( self::MTM_INIT, $code . self::MTM_INIT, $tracking_code );
 
 		return $tracking_code;
 	}
@@ -255,7 +316,9 @@ class TrackingCodeGenerator {
 		$user_id_to_track = apply_filters( 'matomo_tracking_user_id', $user_id_to_track );
 		// Check we got a User ID to track, and track it
 		if ( isset( $user_id_to_track ) && ! empty( $user_id_to_track ) ) {
-			$tracking_code = str_replace( self::TRACKPAGEVIEW, "_paq.push(['setUserId', '" . esc_js( $user_id_to_track ) . "']);\n" . self::TRACKPAGEVIEW, $tracking_code );
+			$code          = "window._paq = window._paq || []; window._paq.push(['setUserId', '" . esc_js( $user_id_to_track ) . "']);\n";
+			$tracking_code = str_replace( self::TRACKPAGEVIEW, $code . self::TRACKPAGEVIEW, $tracking_code );
+			$tracking_code = str_replace( self::MTM_INIT, $code . self::MTM_INIT, $tracking_code );
 		}
 
 		return $tracking_code;

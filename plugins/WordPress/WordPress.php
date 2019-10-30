@@ -53,7 +53,17 @@ class WordPress extends Plugin
             'Template.header' => 'onHeader',
             'AssetManager.makeNewAssetManagerObject' => 'makeNewAssetManagerObject',
             'ScheduledTasks.shouldExecuteTask' => 'shouldExecuteTask',
+            'API.TagManager.getContainerInstallInstructions.end' => 'addInstallInstructions',
         );
+    }
+
+    public function addInstallInstructions(&$instructions)
+    {
+	    $instructions[] = array(
+		    'description' => 'Alternatively, simply go to "Tracking Settings" in your WordPress Admin and select "Tag Manager" as tracking mode or choose "Manually" and paste the above code into the tracking code field.',
+		    'embedCode' => '',
+		    'helpUrl' => ''
+	    );
     }
 
 	/**

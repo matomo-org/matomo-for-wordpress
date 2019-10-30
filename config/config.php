@@ -27,12 +27,12 @@ return array(
 	'TagManagerContainerStorageDir' => function () {
 		// the location where we store the generated javascript or json container files
 		$paths = new \WpMatomo\Paths();
-		return '/'. $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir().'/');
+		return rtrim('/'. $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir().'/'), '/');
 	},
 	'TagManagerContainerWebDir' => function () {
 		// the location where we store the generated javascript or json container files
 		$paths = new \WpMatomo\Paths();
-		return '/'. $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir().'/');
+		return rtrim('/'. $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir().'/'), '/');
 	},
 	'Piwik\Auth' => DI\object('Piwik\Plugins\WordPress\Auth'),
 	\Piwik\Config::class => DI\decorate(function ($previous) {

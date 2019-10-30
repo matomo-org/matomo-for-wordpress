@@ -48,3 +48,6 @@ allowedRetriesTimeRange = 60
 
 [PrivacyManager]
 showInEmbeddedWidgets = 0
+
+[TagManager]
+environments[] = 'live'
