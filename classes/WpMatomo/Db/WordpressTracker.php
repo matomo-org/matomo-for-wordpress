@@ -184,7 +184,7 @@ class Wordpress extends Mysqli {
 
 		$results = $wpdb->get_results( $prepare, ARRAY_A );
 
-		$this->throwExceptionIfError($results);
+		$this->throwExceptionIfError($wpdb);
 
 		return $results;
 	}
