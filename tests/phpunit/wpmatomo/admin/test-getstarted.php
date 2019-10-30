@@ -98,8 +98,8 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 	}
 
 	private function fake_request( $track_mode_value, $post_key = 'track_mode' ) {
-		$_POST[ Info::FORM_NAME ] = array( $post_key => $track_mode_value );
-		$_REQUEST['_wpnonce']     = wp_create_nonce( Info::NONCE_NAME );
+		$_POST[ GetStarted::FORM_NAME ] = array( $post_key => $track_mode_value );
+		$_REQUEST['_wpnonce']     = wp_create_nonce( GetStarted::NONCE_NAME );
 		$_SERVER['REQUEST_URI']   = home_url();
 
 	}
