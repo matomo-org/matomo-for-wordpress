@@ -46,17 +46,6 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 		$this->assertContains( '', $output );
 	}
 
-	/**
-	 * @group ms-required
-	 */
-	public function test_show_multisite_renders_ui() {
-		ob_start();
-		$this->get_started->show_multisite();
-		$output = ob_get_clean();
-		$this->assertNotEmpty( $output );
-		$this->assertContains( 'Multi Site mode', $output );
-	}
-
 	public function test_show_does_change_value_if_nonce() {
 		$this->assertSame( TrackingSettings::TRACK_MODE_DISABLED, $this->settings->get_global_option( 'track_mode' ) );
 
