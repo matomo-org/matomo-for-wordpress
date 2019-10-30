@@ -37,4 +37,5 @@ rm -rf $MATOMO_ROOT/matomo/app/vendor/piwik/decompress/libs/PclZip
 echo -e "Done!... "
 echo -e "We now need to hardcode the path to jquery.js in app/plugins/Overlay/client/client.js until we automated / changed things"
 echo -e "Then need to manually generate the core assets js file and put it into the assets directory"
+echo -e "Then execute 'php ../app/console wordpress:generate-language-files'"
 echo -e "Then execute ./remove_not_needed_assets.sh"
