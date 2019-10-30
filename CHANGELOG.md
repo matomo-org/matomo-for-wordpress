@@ -1,3 +1,7 @@
+0.1.5
+- Fix error in htaccess file preventing tracker file to load
+- Easy way to embed tag manager containers into site
+
 0.1.4
 - Fix opt out not working anymore
 - Move tracking filter to exclusion settings
