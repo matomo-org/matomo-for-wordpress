@@ -156,6 +156,8 @@ class Wordpress extends Mysqli {
 		} else {
 			$prepare = $this->prepareWp( $sql, $bind );
 			$result  = $wpdb->query( $prepare );
+
+			$this->throwExceptionIfError($wpdb);
 		}
 
 		return new WordPressDbStatement( $this, $sql, $result );
@@ -175,27 +177,54 @@ class Wordpress extends Mysqli {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 
-		return $wpdb->get_col( $prepare );
+		$col = $wpdb->get_col( $prepare );
+
+		$this->throwExceptionIfError($wpdb);
+
+		return $col;
 	}
 
 	public function fetchAssoc( $sql, $bind = array() ) {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 
-		return $wpdb->get_results( $prepare, ARRAY_A );
+		$assoc = $wpdb->get_results( $prepare, ARRAY_A );
+
+		$this->throwExceptionIfError($wpdb);
+
+		return $assoc;
+	}
+
+	/**
+	 * @param \wpdb $wpdb
+	 *
+	 * @throws \Zend_Db_Statement_Exception
+	 */
+	private function throwExceptionIfError($wpdb)
+	{
+		if ($wpdb->last_error) {
+			throw new \Zend_Db_Statement_Exception($wpdb->last_error);
+		}
 	}
 
 	public function fetchAll( $sql, $bind = array(), $fetchMode = null ) {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 
-		return $wpdb->get_results( $prepare, ARRAY_A );
+		$results = $wpdb->get_results( $prepare, ARRAY_A );
+
+		$this->throwExceptionIfError($wpdb);
+
+		return $results;
 	}
 
 	public function fetchOne( $sql, $bind = array() ) {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 		$value   = $wpdb->get_var( $prepare );
+
+		$this->throwExceptionIfError($wpdb);
+
 		if ( $value === null ) {
 			return false; // make sure to behave same way as matomo
 		}
@@ -207,13 +236,21 @@ class Wordpress extends Mysqli {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 
-		return $wpdb->get_row( $prepare, ARRAY_A );
+		$row = $wpdb->get_row( $prepare, ARRAY_A );
+
+		$this->throwExceptionIfError($wpdb);
+
+		return $row;
 	}
 
 	public function insert( $table, array $bind ) {
 		global $wpdb;
 
-		return $wpdb->insert( $table, $bind );
+		$insert = $wpdb->insert( $table, $bind );
+
+		$this->throwExceptionIfError($wpdb);
+
+		return $insert;
 	}
 
 	public function update( $table, array $bind, $where = '' ) {
@@ -228,6 +265,10 @@ class Wordpress extends Mysqli {
 		$sql      = "UPDATE `$table` SET $fields " . ( ( $where ) ? " WHERE $where" : '' );
 		$prepared = $wpdb->prepare( $sql, $bind );
 
-		return $wpdb->query( $prepared );
+		$update = $wpdb->query( $prepared );
+
+		$this->throwExceptionIfError($wpdb);
+
+		return $update;
 	}
 }
