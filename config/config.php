@@ -41,6 +41,8 @@ return array(
 		 */
 		global $wpdb;
 
+		\Piwik\Plugins\TagManager\TagManager::$enableAutoContainerCreation = false;
+
 		// in case DB credentials change in wordpress, we need to apply these changes here as well on demand
 		$hostParts = explode(':', DB_HOST);
 		$host = $hostParts[0];
