@@ -54,7 +54,18 @@ class WordPress extends Plugin
             'AssetManager.makeNewAssetManagerObject' => 'makeNewAssetManagerObject',
             'ScheduledTasks.shouldExecuteTask' => 'shouldExecuteTask',
             'API.TagManager.getContainerInstallInstructions.end' => 'addInstallInstructions',
+            'API.Tour.getChallenges.end' => 'modifyTourChallenges',
         );
+    }
+
+    public function modifyTourChallenges(&$challenges)
+    {
+    	foreach ($challenges as $index => $challenge) {
+    		if ($challenge['id'] === 'track_data') {
+    			$challenges[$index]['url'] = ''; // we can't generate menu url for tracking settings since we're not showing the menu
+    			$challenges[$index]['description'] = 'In WordPress Admin go to Matomo Analytics => Settings => Tracking to embed the tracking code.';
+		    }
+	    }
     }
 
     public function addInstallInstructions(&$instructions)

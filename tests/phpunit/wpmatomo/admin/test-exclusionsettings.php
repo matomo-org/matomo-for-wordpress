@@ -17,7 +17,8 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->exclusion_settings = new ExclusionSettings();
+		$settings = new \WpMatomo\Settings();
+		$this->exclusion_settings = new ExclusionSettings($settings);
 		$this->create_set_super_admin();
 		$this->assume_admin_page();
 	}
