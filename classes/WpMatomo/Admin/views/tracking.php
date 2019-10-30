@@ -52,7 +52,7 @@ $paths = new Paths();
 		    echo '<th scope="row"><label for="tagmanger_container_ids">' . __( 'Add these Tag Manager containers', 'matomo' ) . '</label>:</th><td>';
 		    $selected_container_ids = $settings->get_global_option( 'tagmanger_container_ids' );
 		    foreach ( $containers as $container_id => $container_name ) {
-			    echo '<input type="checkbox" ' . ( isset ( $selected_container_ids [ $container_id ] ) && $selected_container_ids [ $container_id ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[tagmanger_container_ids][' . $container_id . ']" /> ID:' . $container_id . ' Name: ' . $container_name . ' &nbsp; <br />';
+			    echo '<input type="checkbox" ' . ( isset ( $selected_container_ids [ $container_id ] ) && $selected_container_ids [ $container_id ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[tagmanger_container_ids][' . $container_id . ']" /> ID:' . esc_html($container_id) . ' Name: ' . esc_html($container_name) . ' &nbsp; <br />';
 		    }
 		    echo '<br /><br /><a href="'.menu_page_url(\WpMatomo\Admin\Menu::SLUG_TAGMANAGER, false).'" rel="noreferrer noopener" target="_blank">Edit containers <span class="dashicons-before dashicons-external"></span></a>';
 		    echo '</td></tr>';

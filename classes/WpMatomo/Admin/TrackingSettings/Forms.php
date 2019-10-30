@@ -127,7 +127,7 @@ class Forms {
 		$script_change = '';
 		if ($onChange) {
 			// we make sure it will select the right settings by default
-			$script_change .= '<script type="text/javascript">setTimeout(function () { jQuery("#'.$id.'").change(); }, 800);</script>';
+			$script_change .= '<script type="text/javascript">setTimeout(function () { jQuery("#'.esc_js($id).'").change(); }, 800);</script>';
 		}
 		printf( '<tr class="' . $groupName . ( $isHidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%3$s">%s:%s</label></th><td><select name="' . TrackingSettings::FORM_NAME . '[%s]" id="%3$s" onchange="%s">%s</select> %s</td></tr>', $name, $script_change, $id, $onChange, $options_list, $this->get_description( $id, $description, $hideDescription ) );
 	}
