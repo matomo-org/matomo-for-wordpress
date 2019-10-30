@@ -1,3 +1,10 @@
+0.1.6
+- Handle database errors better and behave same as Matomo DB adapters
+- Fix an issue in managing goals
+- Improve support for PHP 7.2
+- Show MySQL adapter in system report
+- Hide not working link to tracking code in tour widget
+
 0.1.5
 - Fix error in htaccess file preventing tracker file to load
 - Easy way to embed tag manager containers into site
