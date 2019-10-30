@@ -15,7 +15,7 @@ use Piwik\Container\StaticContainer;
 use Piwik\DbHelper;
 use Piwik\Exception\NotYetInstalledException;
 use Piwik\Filesystem;
-use Piwik\Plugin\API;
+use Piwik\Plugin\API as PluginApi;
 use Piwik\Plugins\Installation\FormDatabaseSetup;
 use Piwik\Plugins\Installation\ServerFilesGenerator;
 use Piwik\SettingsPiwik;
@@ -146,7 +146,7 @@ class Installer {
 			$this->logger->log( 'Emptying some caches' );
 
 			\Piwik\Singleton::clearAll();
-			API::unsetAllInstances();
+			PluginApi::unsetAllInstances();
 			\Piwik\Cache::flushAll();
 
 			$this->logger->log( 'Matomo install finished' );

@@ -52,11 +52,13 @@ if ( ! defined( 'ABSPATH' ) ) {
     <h2>Matomo blogs</h2>
     <ul class="matomo-list">
 		<?php
-		foreach ( get_sites() as $site ) {
-			/** @var WP_Site $site */
-			switch_to_blog( $site->blog_id );
-			echo '<li><a href="' . admin_url( 'admin.php?page=matomo-reporting' ) . '">' . $site->blogname . ' (Blog ID: ' . $site->blog_id . ')</a></li>';
-			restore_current_blog();
+		if (function_exists('get_sites')) {
+			foreach ( get_sites() as $site ) {
+				/** @var WP_Site $site */
+				switch_to_blog( $site->blog_id );
+				echo '<li><a href="' . admin_url( 'admin.php?page=matomo-reporting' ) . '">' . $site->blogname . ' (Blog ID: ' . $site->blog_id . ')</a></li>';
+				restore_current_blog();
+			}
 		}
 		?>
     </ul>

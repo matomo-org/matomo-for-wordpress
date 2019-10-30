@@ -27,10 +27,9 @@ class AdminTrackingSettingsBootstrappedTest extends MatomoAnalytics_TestCase {
 
 	public function test_get_active_containers_when_containers_defined() {
 		if (function_exists('is_multisite') && is_multisite()) {
-			$this->markTestSkipped('We do not run this test for multisite');
+			$this->markTestSkipped('Not running for multisite');
 			return;
 		}
-
 		$site = new WpMatomo\Site();
 		$idsite = $site->get_current_matomo_site_id();
 

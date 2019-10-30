@@ -357,6 +357,9 @@ class SystemReport {
 		$rows[] = array( 'name' => 'Memory Limit', 'value' => max( WP_MEMORY_LIMIT, @ini_get( 'memory_limit' ) ) );
 		$rows[] = array( 'name' => 'Time', 'value' => time() );
 
+		$rows[] = array( 'name' => 'Mysqli Connect', 'value' => function_exists( 'mysqli_connect' ) );
+		$rows[] = array( 'name' => 'Force MySQL over Mysqli', 'value' => defined('WP_USE_EXT_MYSQL') && WP_USE_EXT_MYSQL );
+
 		$rows[] = array( 'name' => 'Max Execution Time', 'value' => ini_get( 'max_execution_time' ) );
 		$rows[] = array( 'name' => 'Max Post Size', 'value' => ini_get( 'post_max_size' ) );
 		$rows[] = array( 'name' => 'Max Upload Size', 'value' => wp_max_upload_size() );
