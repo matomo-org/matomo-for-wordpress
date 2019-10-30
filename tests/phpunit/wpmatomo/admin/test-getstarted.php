@@ -43,7 +43,7 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 		$this->get_started->show();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( '', $output );
+		$this->assertContains( 'About', $output );
 	}
 
 	public function test_show_does_change_value_if_nonce() {
@@ -80,7 +80,7 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 	public function test_show_settings_get_started_page() {
 
 		$this->assertNotEmpty( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) );
-		$this->fake_request( Settings::SHOW_GET_STARTED_PAGE, 'no' );
+		$this->fake_request( 'no', Settings::SHOW_GET_STARTED_PAGE );
 
 		$this->get_started->show();
 
@@ -98,8 +98,8 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 	}
 
 	private function fake_request( $track_mode_value, $post_key = 'track_mode' ) {
-		$_POST[ Info::FORM_NAME ] = array( $post_key => $track_mode_value );
-		$_REQUEST['_wpnonce']     = wp_create_nonce( Info::NONCE_NAME );
+		$_POST[ GetStarted::FORM_NAME ] = array( $post_key => $track_mode_value );
+		$_REQUEST['_wpnonce']     = wp_create_nonce( GetStarted::NONCE_NAME );
 		$_SERVER['REQUEST_URI']   = home_url();
 
 	}
