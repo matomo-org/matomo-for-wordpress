@@ -49,7 +49,7 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 		) );
 		$this->assertSame( '<!-- Matomo --><script  type="text/javascript">var _paq = window._paq || [];
 _paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
-    g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/wp-content\/uploads\/matomo\/matomo.js"; s.parentNode.insertBefore(g,s);</script><!-- End Matomo Code -->', $this->get_tracking_code() );
+g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);</script><!-- End Matomo Code -->', $this->get_tracking_code() );
 	}
 
 	public function test_get_tracking_code_when_using_default_tracking_code_using_rest_api_and_other_features() {
@@ -71,9 +71,9 @@ _paq.push([\'addDownloadExtensions\', "zip|waf"]);
 _paq.push([\'setLinkClasses\', "clickme|foo"]);
 _paq.push([\'disableCookies\']);
 _paq.push([\'enableCrossDomainLinking\']);
-  _paq.push(["setCookieDomain", "*.example.org"]);
-_paq.push([\'trackAllContentImpressions\']);_paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/index.php?rest_route=\/ma\/v1\/hit\/"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
-    g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"; s.parentNode.insertBefore(g,s);</script><!-- End Matomo Code -->', $this->get_tracking_code() );
+_paq.push(["setCookieDomain", "*.example.org"]);
+_paq.push([\'trackAllContentImpressions\']);_paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
+g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"; s.parentNode.insertBefore(g,s);</script><!-- End Matomo Code -->', $this->get_tracking_code() );
 	}
 
 	public function test_get_tracking_code_test_user_id() {

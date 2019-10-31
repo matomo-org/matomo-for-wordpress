@@ -111,7 +111,6 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 		$_POST[ GetStarted::FORM_NAME ] = array( $post_key => $track_mode_value );
 		$_REQUEST['_wpnonce']     = wp_create_nonce( GetStarted::NONCE_NAME );
 		$_SERVER['REQUEST_URI']   = home_url();
-
 	}
 
 

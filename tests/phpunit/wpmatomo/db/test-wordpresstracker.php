@@ -28,6 +28,14 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 		$this->insert_many_values();
 	}
 
+	/**
+	 * @expectedException \Zend_Db_Statement_Exception
+	 * @expectedExceptionMessage  foobarbaz' doesn't exist
+	 */
+	public function test_query_triggers_error_when_wrong_sql() {
+		$this->db->query( 'select * from foobarbaz');
+	}
+
 	public function test_query_can_execute_select_queries() {
 		$table  = Common::prefixTable( 'user' );
 		$result = $this->db->query( ' select * from ' . $table );
@@ -67,6 +75,14 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 		$result = $this->insert_access( 'foobar', 'view' );
 		$this->assertEquals( 1, $result->fetch() );
 		$this->assertEquals( 4, $this->db->lastInsertId() );
+	}
+
+	/**
+	 * @expectedException \Zend_Db_Statement_Exception
+	 * @expectedExceptionMessage  foobarbaz' doesn't exist
+	 */
+	public function test_fetch_all_triggers_error_when_wrong_sql() {
+		$this->db->fetchAll( 'select * from foobarbaz');
 	}
 
 	public function test_fetch_all() {

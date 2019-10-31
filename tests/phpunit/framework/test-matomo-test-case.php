@@ -28,24 +28,34 @@ use WpMatomo\User;
 
 class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 
+	/**
+	 * Disable creation of temporary tables. This may be needed when you're writing a test that is
+	 * tracking/archiving data. Problem is with temp tables many queries fail like this
+	 *
+	 * can't really use temporary tables as we otherwise get errors like
+	 * : WP DB Error: Can't reopen table: 'log_action' - in plugin Actions at PluginsArchiver.php:186
+	 * because temp tables cannot be joined
+	 *
+	 * @var bool
+	 */
+	protected $disable_temp_tables = false;
+
 	public function _create_temporary_tables( $query ) {
-		// can't really use temporary tables as we otherwise get errors like
-		// : WP DB Error: Can't reopen table: 'log_action' - in plugin Actions at PluginsArchiver.php:186
-		// because temp tables cannot be joined
+		if (!$this->disable_temp_tables) {
+			$query = parent::_create_temporary_tables($query);
+		}
 		return $query;
 	}
 
 	public function _drop_temporary_tables( $query ) {
-		// can't really use temporary tables as we otherwise get errors like
-		// : WP DB Error: Can't reopen table: 'log_action' - in plugin Actions at PluginsArchiver.php:186
-		// because temp tables cannot be joined
+		if (!$this->disable_temp_tables) {
+			$query = parent::_drop_temporary_tables($query);
+		}
+
 		return $query;
 	}
 
 	public function setUp() {
-
-		remove_filter( 'query', array( $this, '_create_temporary_tables' ) );
-		remove_filter( 'query', array( $this, '_drop_temporary_tables' ) );
 
 		parent::setUp();
 
