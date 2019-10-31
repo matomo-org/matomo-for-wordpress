@@ -71,9 +71,9 @@ class Installer {
 
 	public function install() {
 		try {
-			// prevent session related errors during install
+			// prevent session related errors during install making it more stable
 			if ( ! defined( 'PIWIK_ENABLE_SESSION_START' ) ) {
-				define( 'PIWIK_ENABLE_SESSION_START', false )
+				define( 'PIWIK_ENABLE_SESSION_START', false );
 			}
 			
 			Bootstrap::do_bootstrap();
