@@ -20,6 +20,7 @@ URL="https://builds.matomo.org/matomo-$VERSION.zip"
 echo -e "Downloading $URL..."
 wget $URL -P "$SCRIPTPATH" || die "Got an error while downloading this Matomo version"
 
+rm -rf $MATOMO_ROOT/*
 rm -r matomo/ 2> /dev/null
 unzip -o -q matomo-$VERSION.zip
 cp -R matomo/* $MATOMO_ROOT
