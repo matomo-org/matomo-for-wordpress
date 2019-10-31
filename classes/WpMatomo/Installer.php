@@ -71,6 +71,11 @@ class Installer {
 
 	public function install() {
 		try {
+			// prevent session related errors during install
+			if ( ! defined( 'PIWIK_ENABLE_SESSION_START' ) ) {
+				define( 'PIWIK_ENABLE_SESSION_START', false )
+			}
+			
 			Bootstrap::do_bootstrap();
 
 			if ( ! SettingsPiwik::isPiwikInstalled() || ! $this->looks_like_it_is_installed() ) {
