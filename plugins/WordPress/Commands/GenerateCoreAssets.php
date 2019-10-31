@@ -14,20 +14,23 @@ use Piwik\Filesystem;
 use Piwik\FrontController;
 use Piwik\Piwik;
 use Piwik\Plugin\ConsoleCommand;
+use Piwik\Plugins\Installation\ServerFilesGenerator;
 use Piwik\Plugins\WordPress\WpAssetManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GenerateCoreJsAsset extends ConsoleCommand
+class GenerateCoreAssets extends ConsoleCommand
 {
     protected function configure()
     {
-        $this->setName('wordpress:generate-core-js-asset');
+        $this->setName('wordpress:generate-core-assets');
         $this->setDescription('Generate the core JS asset file');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+	    ServerFilesGenerator::createFilesForSecurity();
+
     	Piwik::addAction('AssetManager.makeNewAssetManagerObject', function (&$assetManager) {
 		    $assetManager = new AssetManager();
 	    });

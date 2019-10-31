@@ -14,7 +14,7 @@ if ( ! defined( 'PIWIK_ENABLE_ERROR_HANDLER' ) ) {
 
 if ( ! defined( 'ABSPATH' ) ) {
 	// prevent from loading twice
-	require_once( dirname( __FILE__ ) . '/../../../wp-load.php' );
+	require_once( dirname( __FILE__ ) . '/../../../../wp-load.php' );
 }
 
 if ( ! defined( 'ABSPATH' ) ) {
