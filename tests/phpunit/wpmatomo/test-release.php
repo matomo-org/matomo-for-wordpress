@@ -3,7 +3,7 @@
  * @package Matomo_Analytics
  */
 
-class ReleaseTest extends MatomoAnalytics_TestCase {
+class ReleaseTest extends MatomoUnit_TestCase {
 
 	/**
 	 * @dataProvider get_needed_files

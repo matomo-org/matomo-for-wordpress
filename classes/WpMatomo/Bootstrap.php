@@ -52,9 +52,7 @@ class Bootstrap {
 			define( 'PIWIK_DOCUMENT_ROOT', dirname( __FILE__ ) == '/' ? '' : dirname( __FILE__ ) . '/../../app' );
 		}
 
-		if ( file_exists( PIWIK_DOCUMENT_ROOT . '/../matomo_bootstrap.php' ) ) {
-			require_once PIWIK_DOCUMENT_ROOT . '/../matomo_bootstrap.php';
-		}
+		require_once PIWIK_DOCUMENT_ROOT . '/bootstrap.php';
 
 		if ( ! defined( 'PIWIK_INCLUDE_PATH' ) ) {
 			define( 'PIWIK_INCLUDE_PATH', PIWIK_DOCUMENT_ROOT );
