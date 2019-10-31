@@ -59,6 +59,18 @@ class Wordpress extends Mysqli {
 		return $queryResult->rowCount();
 	}
 
+	/**
+	 * @param \wpdb $wpdb
+	 *
+	 * @throws \Zend_Db_Statement_Exception
+	 */
+	private function throwExceptionIfError($wpdb)
+	{
+		if ($wpdb->last_error) {
+			throw new \Zend_Db_Statement_Exception($wpdb->last_error);
+		}
+	}
+
 	private function prepareWp( $sql, $bind = array() ) {
 		global $wpdb;
 
@@ -96,6 +108,7 @@ class Wordpress extends Mysqli {
 		} else {
 			$query  = $this->prepareWp( $query, $parameters );
 			$result = $wpdb->query( $query );
+			$this->throwExceptionIfError($wpdb);
 		}
 
 		return new WordPressDbStatement( $this, $query, $result );
@@ -158,14 +171,22 @@ class Wordpress extends Mysqli {
 		global $wpdb;
 		$prepare = $this->prepareWp( $query, $parameters );
 
-		return $wpdb->get_row( $prepare, ARRAY_A );
+		$row = $wpdb->get_row( $prepare, ARRAY_A );
+
+		$this->throwExceptionIfError($wpdb);
+
+		return $row;
 	}
 
 	public function fetchAll( $query, $parameters = array() ) {
 		global $wpdb;
 		$prepare = $this->prepareWp( $query, $parameters );
 
-		return $wpdb->get_results( $prepare, ARRAY_A );
+		$results = $wpdb->get_results( $prepare, ARRAY_A );
+
+		$this->throwExceptionIfError($wpdb);
+
+		return $results;
 	}
 
 

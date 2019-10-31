@@ -8,7 +8,7 @@ use WpMatomo\Capabilities;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
 
-class AccessTest extends MatomoUnit_TestCase {
+class AccessTest extends MatomoAnalytics_TestCase {
 
 	/**
 	 * @var Access
