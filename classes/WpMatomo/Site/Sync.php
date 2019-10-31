@@ -121,7 +121,7 @@ class Sync {
 		$timezone = $this->detect_timezone();
 		$idsite   = null;
 
-		self::set_enable_sites_admin(1);
+		$this->set_enable_sites_admin(1);
 
 		Access::doAsSuperUser( function () use ( $blog_name, $blog_url, $timezone, &$idsite ) {
 			SitesManager\API::unsetInstance();
@@ -140,7 +140,7 @@ class Sync {
 				$timezone
 			);
 		} );
-		self::set_enable_sites_admin(0);
+		$this->set_enable_sites_admin(0);
 
 		$this->logger->log( 'Matomo created site with ID ' . $idsite . ' for blog' );
 
@@ -157,7 +157,7 @@ class Sync {
 		return true;
 	}
 
-	private static function set_enable_sites_admin($enabled)
+	private function set_enable_sites_admin($enabled)
 	{
 		$general = Config::getInstance()->General;
 		$general['enable_sites_admin'] = (int) $enabled;
