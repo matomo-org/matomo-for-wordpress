@@ -9,6 +9,8 @@
 
 namespace Piwik\Db\Adapter;
 
+use WpMatomo\Capabilities;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -17,6 +19,8 @@ require_once 'WordPressDbStatement.php';
 require_once 'WordpressTracker.php';
 
 class Wordpress extends Mysqli {
+
+	private $old_suppress_errors_value = null;
 
 	/**
 	 * Return default port.
@@ -155,9 +159,12 @@ class Wordpress extends Mysqli {
 			$result = $this->fetchAll( $sql, $bind );
 		} else {
 			$prepare = $this->prepareWp( $sql, $bind );
+
+			$this->before_execute_query($wpdb, $sql);
+
 			$result  = $wpdb->query( $prepare );
 
-			$this->throwExceptionIfError($wpdb);
+			$this->after_execute_query($wpdb);
 		}
 
 		return new WordPressDbStatement( $this, $sql, $result );
@@ -166,7 +173,12 @@ class Wordpress extends Mysqli {
 	public function exec( $sqlQuery ) {
 		global $wpdb;
 
-		return $wpdb->query( $sqlQuery );
+		$this->before_execute_query($wpdb, $sqlQuery);
+
+		$exec = $wpdb->query( $sqlQuery );
+		$this->after_execute_query($wpdb);
+
+		return $exec;
 	}
 
 	public function fetch( $query, $parameters = array() ) {
@@ -177,9 +189,11 @@ class Wordpress extends Mysqli {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 
+		$this->before_execute_query($wpdb, $sql);
+
 		$col = $wpdb->get_col( $prepare );
 
-		$this->throwExceptionIfError($wpdb);
+		$this->after_execute_query($wpdb);
 
 		return $col;
 	}
@@ -188,9 +202,11 @@ class Wordpress extends Mysqli {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 
+		$this->before_execute_query($wpdb, $sql);
+
 		$assoc = $wpdb->get_results( $prepare, ARRAY_A );
 
-		$this->throwExceptionIfError($wpdb);
+		$this->after_execute_query($wpdb);
 
 		return $assoc;
 	}
@@ -200,8 +216,49 @@ class Wordpress extends Mysqli {
 	 *
 	 * @throws \Zend_Db_Statement_Exception
 	 */
-	private function throwExceptionIfError($wpdb)
+	private function before_execute_query($wpdb, $sql)
 	{
+		if (!$wpdb->suppress_errors
+		    && defined('WP_DEBUG')
+		    && WP_DEBUG
+		    && defined('WP_DEBUG_DISPLAY')
+		    && WP_DEBUG_DISPLAY) {
+			// we want to prevent showing these notices
+			if (defined('MATOMO_SUPPRESS_DB_ERRORS')) {
+				if (MATOMO_SUPPRESS_DB_ERRORS === true) {
+					$this->old_suppress_errors_value = $wpdb->suppress_errors( true );
+				}
+				// any other value than false and we will not supproess
+				return;
+			}
+
+			if ( !is_admin()
+			     || (stripos($sql, 'SELECT 1 FROM') !== false && stripos($sql, 'matomo_logtmpsegment') !== false)
+			     || stripos($sql, 'SELECT @@TX_ISOLATION') !== false
+			     || stripos($sql, 'SELECT @@transaction_isolation') !== false
+			) {
+				// do not show notices for following queries which fail often and it is expected...
+				//  SELECT 1 FROM wp_matomo_logtmpsegment1cc77bce7a13181081e44ea6ffc0a9fd LIMIT 1 => runs to detect if temp table exists or not and regularly the query fails which is expected
+				//  SELECT @@TX_ISOLATION => not available in all mysql versions
+				//  SELECT @@transaction_isolation => not available in all mysql versions
+				// we show notices only in admin...
+				$this->old_suppress_errors_value = $wpdb->suppress_errors( true );
+			}
+		}
+	}
+
+	/**
+	 * @param \wpdb $wpdb
+	 *
+	 * @throws \Zend_Db_Statement_Exception
+	 */
+	private function after_execute_query($wpdb)
+	{
+		if (isset($this->old_suppress_errors_value)) {
+			$wpdb->suppress_errors($this->old_suppress_errors_value);
+			$this->old_suppress_errors_value = null;
+		}
+
 		if ($wpdb->last_error) {
 			throw new \Zend_Db_Statement_Exception('WP DB Error: ' . $wpdb->last_error);
 		}
@@ -211,9 +268,11 @@ class Wordpress extends Mysqli {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 
+		$this->before_execute_query($wpdb, $sql);
+
 		$results = $wpdb->get_results( $prepare, ARRAY_A );
 
-		$this->throwExceptionIfError($wpdb);
+		$this->after_execute_query($wpdb);
 
 		return $results;
 	}
@@ -221,9 +280,12 @@ class Wordpress extends Mysqli {
 	public function fetchOne( $sql, $bind = array() ) {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
+
+		$this->before_execute_query($wpdb, $sql);
+
 		$value   = $wpdb->get_var( $prepare );
 
-		$this->throwExceptionIfError($wpdb);
+		$this->after_execute_query($wpdb);
 
 		if ( $value === null ) {
 			return false; // make sure to behave same way as matomo
@@ -236,9 +298,11 @@ class Wordpress extends Mysqli {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 
+		$this->before_execute_query($wpdb, $sql);
+
 		$row = $wpdb->get_row( $prepare, ARRAY_A );
 
-		$this->throwExceptionIfError($wpdb);
+		$this->after_execute_query($wpdb);
 
 		return $row;
 	}
@@ -246,9 +310,11 @@ class Wordpress extends Mysqli {
 	public function insert( $table, array $bind ) {
 		global $wpdb;
 
+		$this->before_execute_query($wpdb, '');
+
 		$insert = $wpdb->insert( $table, $bind );
 
-		$this->throwExceptionIfError($wpdb);
+		$this->after_execute_query($wpdb);
 
 		return $insert;
 	}
@@ -265,9 +331,11 @@ class Wordpress extends Mysqli {
 		$sql      = "UPDATE `$table` SET $fields " . ( ( $where ) ? " WHERE $where" : '' );
 		$prepared = $wpdb->prepare( $sql, $bind );
 
+		$this->before_execute_query($wpdb, '');
+
 		$update = $wpdb->query( $prepared );
 
-		$this->throwExceptionIfError($wpdb);
+		$this->after_execute_query($wpdb);
 
 		return $update;
 	}
