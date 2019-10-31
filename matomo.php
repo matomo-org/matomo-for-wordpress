@@ -40,7 +40,7 @@ function has_matomo_compatible_content_dir()
 function is_matomo_app_request()
 {
 	return ! empty( $_SERVER['SCRIPT_NAME'] )
-	&& ( substr( $_SERVER['SCRIPT_NAME'], - 1 * strlen( 'app/index.php' ) ) === 'app/index.php' );
+	&& ( substr( $_SERVER['SCRIPT_NAME'], - 1 * strlen( 'matomo/app/index.php' ) ) === 'matomo/app/index.php' );
 }
 
 function has_matomo_tag_manager()
