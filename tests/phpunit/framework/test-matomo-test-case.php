@@ -28,7 +28,25 @@ use WpMatomo\User;
 
 class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 
+	public function _create_temporary_tables( $query ) {
+		// can't really use temporary tables as we otherwise get errors like
+		// : WP DB Error: Can't reopen table: 'log_action' - in plugin Actions at PluginsArchiver.php:186
+		// because temp tables cannot be joined
+		return $query;
+	}
+
+	public function _drop_temporary_tables( $query ) {
+		// can't really use temporary tables as we otherwise get errors like
+		// : WP DB Error: Can't reopen table: 'log_action' - in plugin Actions at PluginsArchiver.php:186
+		// because temp tables cannot be joined
+		return $query;
+	}
+
 	public function setUp() {
+
+		remove_filter( 'query', array( $this, '_create_temporary_tables' ) );
+		remove_filter( 'query', array( $this, '_drop_temporary_tables' ) );
+
 		parent::setUp();
 
 		$uninstall = new Uninstaller();
