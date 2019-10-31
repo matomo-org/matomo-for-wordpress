@@ -22,13 +22,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php include 'info_help.php'; ?>
 
     <h2>Support the project</h2>
-    <p>Matomo is a collaborative project brought to you by the <a target="_blank" rel="noreferrer noopener"
+    <p>Matomo is a collaborative project brought to you by <a target="_blank" rel="noreferrer noopener"
                                                                   href="https://matomo.org/team/">Matomo team</a>
-        members as well as many other contributors around the globe. If you're a fan of Matomo, you can help: find out
-        <a target="_blank" rel="noreferrer noopener" href="https://matomo.org/get-involved/">How to participate in
-            Matomo</a>!
+        members as well as many other contributors around the globe. If you're a fan of Matomo,
+        <a target="_blank" rel="noreferrer noopener" href="https://matomo.org/get-involved/">here’s how you can participate!</a>
         <br/><br/>
-        You can also help us by <a href="<?php echo Menu::get_matomo_action_url(Menu::REPORTING_GOTO_ADMIN) ?>">donating</a> or by <a href="https://plugins.matomo.org/premium" target="_blank" rel="noreferrer noopener">purchasing premium plugins</a> which funds the
+        You can also help us by <a href="<?php echo Menu::get_matomo_action_url(Menu::REPORTING_GOTO_ADMIN) ?>">donating</a> or by <a href="https://plugins.matomo.org/premium" target="_blank" rel="noreferrer noopener">purchasing premium plugins</a> which fund the
         development of the free Matomo Analytics version.
     </p>
 

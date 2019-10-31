@@ -49,7 +49,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     protect your user’s privacy as it’s on your own server.</p>
 
 <ul class="matomo-list">
-    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_ANONYMIZE_DATA ); ?>">Anonymize data and
+    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_ANONYMIZE_DATA ); ?>">Anonymise data and
             IP addresses</a></li>
     <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_DATA_RETENTION ); ?>">Configure data
             retention</a></li>

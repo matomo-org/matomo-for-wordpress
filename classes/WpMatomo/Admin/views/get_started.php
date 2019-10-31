@@ -53,7 +53,7 @@ if ( empty( $show_this_page ) ) {
     <h2>2. Update your privacy page</h2>
     Give your users the chance to opt-out of tracking by adding the shortcode <code>[matomo_opt_out]</code> to your
     privacy page. You can <a href="<?php echo AdminSettings::make_url( AdminSettings::TAB_PRIVACY ) ?>">tweak the
-        opt-out to your liking see the Privacy Settings</a>.
+        opt-out to your liking - see the Privacy Settings</a>.
     You may also need to mention that you are using Matomo Analytics on your website.
     <h2>3. Done</h2>
     <form method="post">
