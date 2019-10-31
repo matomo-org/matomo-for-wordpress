@@ -9,7 +9,8 @@ git:
 install:
   - git clone https://github.com/$TRAVIS_REPO_SLUG.git matomo-org/matomo
   - cd matomo-org/matomo
-  - git checkout -qf $TRAVIS_COMMIT
+  - echo $TRAVIS_COMMIT
+  - git checkout -f $TRAVIS_COMMIT
 
 notifications:
   email:
