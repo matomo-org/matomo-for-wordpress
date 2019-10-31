@@ -1,8 +1,0 @@
-{
-  "name": "matomo/searchengine-and-social-list",
-  "description": "Search engine and social network definitions used by Matomo (formerly Piwik)",
-  "license": "CC0-1.0",
-  "replace": {
-    "piwik/searchengine-and-social-list":"*"
-  }
-}
