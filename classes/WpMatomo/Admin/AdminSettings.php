@@ -59,7 +59,7 @@ class AdminSettings {
 
 		$content_tab = $setting_tabs[ $active_tab ];
 
-		include_once( dirname( __FILE__ ) . '/views/settings.php' );
+		include( dirname( __FILE__ ) . '/views/settings.php' );
 	}
 
 }

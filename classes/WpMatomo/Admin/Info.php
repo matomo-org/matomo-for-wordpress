@@ -18,11 +18,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Info {
 
 	public function show() {
-		include_once( dirname( __FILE__ ) . '/views/info.php' );
+		include( dirname( __FILE__ ) . '/views/info.php' );
 	}
 
 	public function show_multisite() {
-		include_once( dirname( __FILE__ ) . '/views/info_multisite.php' );
+		include( dirname( __FILE__ ) . '/views/info_multisite.php' );
 	}
 
 

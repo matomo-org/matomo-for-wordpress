@@ -62,7 +62,7 @@ class AccessSettings implements AdminSettingsInterface {
 		$access      = $this->access;
 		$roles       = new Roles( $this->settings );
 		$capabilites = new Capabilities( $this->settings );
-		include_once( dirname( __FILE__ ) . '/views/access.php' );
+		include( dirname( __FILE__ ) . '/views/access.php' );
 	}
 
 }

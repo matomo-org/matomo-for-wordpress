@@ -71,7 +71,7 @@ class Marketplace {
 		}
 		$settings                  = $this->settings;
 		$can_view_subscription_tab = $this->can_user_manage();
-		include_once( dirname( __FILE__ ) . '/views/marketplace.php' );
+		include( dirname( __FILE__ ) . '/views/marketplace.php' );
 	}
 
 }

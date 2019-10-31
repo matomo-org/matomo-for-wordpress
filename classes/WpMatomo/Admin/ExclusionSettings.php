@@ -123,7 +123,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 		$current_ip            = $this->get_current_ip();
 		$settings              = $this->settings;
 
-		include_once( dirname( __FILE__ ) . '/views/exclusion_settings.php' );
+		include( dirname( __FILE__ ) . '/views/exclusion_settings.php' );
 	}
 
 	private function get_current_ip() {

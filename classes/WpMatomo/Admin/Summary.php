@@ -53,7 +53,7 @@ class Summary {
 
 		$is_tracking = $this->settings->is_tracking_enabled();
 
-		include_once( dirname( __FILE__ ) . '/views/summary.php' );
+		include( dirname( __FILE__ ) . '/views/summary.php' );
 	}
 
 	private function get_reports_to_show() {

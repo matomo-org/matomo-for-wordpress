@@ -111,7 +111,7 @@ class SystemReport {
 			);
 		}
 
-		include_once( dirname( __FILE__ ) . '/views/systemreport.php' );
+		include( dirname( __FILE__ ) . '/views/systemreport.php' );
 	}
 
 	private function check_file_exists_and_writable( $rows, $path_to_check, $title ) {

@@ -57,7 +57,9 @@ class AdminAccessSettingsTest extends MatomoAnalytics_TestCase {
 		$_REQUEST['_wpnonce']               = wp_create_nonce( AccessSettings::NONCE_NAME );
 		$_SERVER['REQUEST_URI']             = home_url();
 
+		ob_start();
 		$this->access_settings->show_settings();
+		ob_end_clean();
 
 		$this->assertSame( Capabilities::KEY_VIEW, $this->access->get_permission_for_role( 'editor' ) );
 	}
@@ -69,7 +71,9 @@ class AdminAccessSettingsTest extends MatomoAnalytics_TestCase {
 		$_REQUEST['_wpnonce']               = wp_create_nonce( AccessSettings::NONCE_NAME );
 		$_SERVER['REQUEST_URI']             = home_url();
 
+		ob_start();
 		$this->access_settings->show_settings();
+		ob_end_clean();
 
 		$this->assertEmpty( $this->access->get_permission_for_role( 'editor' ) );
 	}

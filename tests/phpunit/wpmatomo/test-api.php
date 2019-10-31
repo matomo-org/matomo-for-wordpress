@@ -48,7 +48,7 @@ class ApiTest extends MatomoAnalytics_TestCase {
 		$response = rest_get_server()->dispatch( $request );
 		$this->assertEquals( array(
 			'code'    => 'matomo_no_access_exception',
-			'message' => 'You can\'t access this resource as it requires view access for at least one website.',
+			'message' => 'You must be logged in to access this functionality.',
 			'data'    => null
 		), $response->get_data() );
 	}
