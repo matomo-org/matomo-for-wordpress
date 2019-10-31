@@ -1,3 +1,7 @@
+0.1.7
+- Improve install script
+- Tweaked wording in UI
+
 0.1.6
 - Handle database errors better and behave same as Matomo DB adapters
 - Fix an issue in managing goals
