@@ -3,14 +3,19 @@ dist: trusty
 
 language: php
 
+git:
+  clone: false
+  
+install:
+  - git clone https://github.com/$TRAVIS_REPO_SLUG.git matomo-org/matomo
+  - cd matomo-org/matomo
+  - echo $TRAVIS_COMMIT
+  - git checkout -f $TRAVIS_COMMIT
+
 notifications:
   email:
     on_success: never
     on_failure: change
-
-branches:
-  only:
-    - master
 
 cache:
   directories:
