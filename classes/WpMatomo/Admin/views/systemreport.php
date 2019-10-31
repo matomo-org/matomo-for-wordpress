@@ -20,23 +20,26 @@ use WpMatomo\Admin\SystemReport;
 /** @var string $active_tab */
 /** @var \WpMatomo\Settings $settings */
 
-function anonymize_matomo_value($value)
-{
-    if ( is_string($value) && !empty($value) ) {
-        $values_to_anonymize = array(
-            ABSPATH => '$ABSPATH/',
-            str_replace('/', '\/', ABSPATH) => '$ABSPATH\/',
-            WP_CONTENT_DIR => '$WP_CONTENT_DIR/',
-            home_url() => '$home_url',
-            site_url() => '$site_url'
-        );
-        foreach ($values_to_anonymize as $search => $replace) {
-            $value = str_replace($search, $replace, $value);
-        }
-    }
+if (!function_exists('anonymize_matomo_value')) {
+	function anonymize_matomo_value($value)
+	{
+		if ( is_string($value) && !empty($value) ) {
+			$values_to_anonymize = array(
+				ABSPATH => '$ABSPATH/',
+				str_replace('/', '\/', ABSPATH) => '$ABSPATH\/',
+				WP_CONTENT_DIR => '$WP_CONTENT_DIR/',
+				home_url() => '$home_url',
+				site_url() => '$site_url'
+			);
+			foreach ($values_to_anonymize as $search => $replace) {
+				$value = str_replace($search, $replace, $value);
+			}
+		}
 
-    return $value;
+		return $value;
+	}
 }
+
 ?>
 
 <div class="wrap matomo-systemreport">
