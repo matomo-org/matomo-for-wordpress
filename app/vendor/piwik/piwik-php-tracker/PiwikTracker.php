@@ -158,7 +158,7 @@ class PiwikTracker
         $this->sendImageResponse = true;
 
         $this->visitorCustomVar = $this->getCustomVariablesFromCookie();
-        
+
         $this->outgoingTrackerCookies = array();
         $this->incomingTrackerCookies = array();
     }
@@ -516,7 +516,7 @@ class PiwikTracker
         if (strlen($domain) > 0) {
             $dl = strlen($domain) - 1;
             // remove trailing '.'
-            if ($domain{$dl} === '.') {
+	        if ($domain[$dl] === '.') {
                 $domain = substr($domain, 0, $dl);
             }
             // remove leading '*'
@@ -1121,7 +1121,7 @@ class PiwikTracker
      *
      * Allowed only for Admin/Super User, must be used along with setTokenAuth()
      * @see setTokenAuth()
-     * @param string $dateTime Date with the format 'Y-m-d H:i:s', or a UNIX timestamp. 
+     * @param string $dateTime Date with the format 'Y-m-d H:i:s', or a UNIX timestamp.
      *               If the datetime is older than one day (default value for tracking_requests_require_authentication_when_custom_timestamp_newer_than), then you must call setTokenAuth() with a valid Admin/Super user token.
      * @return $this
      */
@@ -1581,7 +1581,7 @@ class PiwikTracker
                 $options[CURLOPT_COOKIE] = http_build_query($this->outgoingTrackerCookies);
                 $this->outgoingTrackerCookies = array();
             }
-            
+
             $ch = curl_init();
             curl_setopt_array($ch, $options);
             ob_start();
@@ -1592,7 +1592,7 @@ class PiwikTracker
             if (!empty($response)) {
                 list($header, $content) = explode("\r\n\r\n", $response, $limitCount = 2);
             }
-            
+
             $this->parseIncomingCookies(explode("\r\n", $header));
 
         } elseif (function_exists('stream_context_create')) {
@@ -1619,11 +1619,11 @@ class PiwikTracker
                 $stream_options['http']['header'] .= 'Cookie: ' . http_build_query($this->outgoingTrackerCookies) . "\r\n";
                 $this->outgoingTrackerCookies = array();
             }
-            
+
             $ctx = stream_context_create($stream_options);
             $response = file_get_contents($url, 0, $ctx);
             $content = $response;
-            
+
             $this->parseIncomingCookies($http_response_header);
         }
 
@@ -1674,9 +1674,13 @@ class PiwikTracker
         if (!empty($this->customParameters)) {
             $customFields = '&' . http_build_query($this->customParameters, '', '&');
         }
-
-        $url = $this->getBaseUrl() .
-            '?idsite=' . $idSite .
+	    $baseUrl = $this->getBaseUrl();
+	    $start = '?';
+	    if (strpos($baseUrl, '?') !== false) {
+		    $start = '&';
+	    }
+	    $url = $baseUrl . $start .
+            'idsite=' . $idSite .
             '&rec=1' .
             '&apiv=' . self::VERSION .
             '&r=' . substr(strval(mt_rand()), 2, 6) .
@@ -1976,7 +1980,7 @@ class PiwikTracker
             $this->outgoingTrackerCookies[$name] = $value;
         }
     }
-  
+
     /**
      * Gets a cookie which was set by the tracking server.
      *
@@ -1989,7 +1993,7 @@ class PiwikTracker
         if (isset($this->incomingTrackerCookies[$name])) {
             return $this->incomingTrackerCookies[$name];
         }
-        
+
         return false;
     }
 
@@ -2001,11 +2005,11 @@ class PiwikTracker
     protected function parseIncomingCookies($headers)
     {
         $this->incomingTrackerCookies = array();
-        
+
         if (!empty($headers)) {
             $headerName = 'set-cookie:';
             $headerNameLength = strlen($headerName);
-            
+
             foreach($headers as $header) {
                 if (strpos(strtolower($header), $headerName) !== 0) {
                     continue;
@@ -2017,7 +2021,7 @@ class PiwikTracker
                 }
                 parse_str($cookies, $this->incomingTrackerCookies);
             }
-        }   
+        }
     }
 }
 
