@@ -17,8 +17,13 @@ class User {
 
 	const USER_MAPPING_PREFIX = 'matomo-user-login-';
 
+	/**
+	 * @api
+	 */
 	public function get_current_matomo_user_login() {
-		return self::get_matomo_user_login( get_current_user_id() );
+		if (get_current_user_id()) {
+			return self::get_matomo_user_login( get_current_user_id() );
+		}
 	}
 
 	public static function get_matomo_user_login( $wpUserId ) {

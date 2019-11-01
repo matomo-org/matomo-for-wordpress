@@ -88,6 +88,9 @@ class Bootstrap {
 		return defined( 'PIWIK_DOCUMENT_ROOT' );
 	}
 
+	/**
+	 * @api
+	 */
 	public static function do_bootstrap() {
 		$bootstrap = new Bootstrap();
 		$bootstrap->bootstrap();

@@ -119,7 +119,10 @@ class API {
 		return implode( '_', $snake_case );
 	}
 
-	public function register_route( $apiModule, $apiMethod ) {
+	/**
+	 * @api
+	 */
+	public function register_route( $api_module, $api_method ) {
 		$methods                 = array(
 			'get'        => 'GET',
 			'edit'       => 'PUT',
@@ -136,11 +139,11 @@ class API {
 		$starts_with_keep_prefix = array( 'anonymize', 'invalidate', 'run', 'send' );
 
 		$method        = 'GET';
-		$wp_api_module = $this->to_snake_case( $apiModule );
-		$wp_api_action = $this->to_snake_case( $apiMethod );
+		$wp_api_module = $this->to_snake_case( $api_module );
+		$wp_api_action = $this->to_snake_case( $api_method );
 
 		foreach ( $methods as $methodStartsWith => $methodToUse ) {
-			if ( strpos( $apiMethod, $methodStartsWith ) === 0 ) {
+			if ( strpos( $api_method, $methodStartsWith ) === 0 ) {
 				$method = $methodToUse;
 				if ( ! in_array( $methodStartsWith, $starts_with_keep_prefix ) ) {
 					$new_action = trim( ltrim( substr( $wp_api_action, strlen( $methodStartsWith ) ), '_' ) );
@@ -155,8 +158,8 @@ class API {
 		register_rest_route( self::VERSION, '/' . $wp_api_module . '/' . $wp_api_action . '/', array(
 			'methods'      => $method,
 			'callback'     => array( $this, 'execute_api_method' ),
-			'matomoModule' => $apiModule,
-			'matomoMethod' => $apiMethod,
+			'matomoModule' => $api_module,
+			'matomoMethod' => $api_method,
 		) );
 	}
 

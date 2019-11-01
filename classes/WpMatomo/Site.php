@@ -17,6 +17,9 @@ class Site {
 
 	const SITE_MAPPING_PREFIX = 'matomo-site-id-';
 
+	/**
+	 * @api
+	 */
 	public function get_current_matomo_site_id() {
 		return self::get_matomo_site_id( get_current_blog_id() );
 	}

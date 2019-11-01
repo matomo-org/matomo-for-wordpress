@@ -151,6 +151,9 @@ class Settings {
 		return function_exists( 'is_multisite' ) && is_multisite();
 	}
 
+	/**
+	 * @api
+	 */
 	public function is_network_enabled() {
 		if ( $this->assume_is_network_enabled_in_tests ) {
 			return true;
@@ -224,6 +227,7 @@ class Settings {
 	 *            option key
 	 *
 	 * @return string option value
+	 * @api
 	 */
 	public function get_global_option( $key ) {
 		if ( isset ( $this->global_settings[ $key ] ) ) {
@@ -241,6 +245,7 @@ class Settings {
 	 * @param string $key option key
 	 *
 	 * @return string|array
+	 * @api
 	 */
 	public function get_option( $key ) {
 		if ( isset( $this->settings[ $key ] ) ) {
@@ -276,6 +281,10 @@ class Settings {
 		$this->settings[ $key ] = $value;
 	}
 
+	/**
+	 * @param $values
+	 * @api
+	 */
 	public function apply_tracking_related_changes( $values ) {
 		$this->set_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE, time() );
 
@@ -294,6 +303,7 @@ class Settings {
 	 *
 	 * @param array $settings
 	 *            new configuration set
+	 * @api
 	 */
 	public function apply_changes( $settings ) {
 		$this->logger->log( 'Apply changed settings:' );

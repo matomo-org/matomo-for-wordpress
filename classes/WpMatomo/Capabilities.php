@@ -18,9 +18,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Capabilities {
 	const KEY_NONE = 'none_matomo';
+
+	/**
+	 * @api
+	 */
 	const KEY_VIEW = 'view_matomo';
+
+	/**
+	 * @api
+	 */
 	const KEY_WRITE = 'write_matomo';
+
+	/**
+	 * @api
+	 */
 	const KEY_ADMIN = 'admin_matomo';
+
+	/**
+	 * @api
+	 */
 	const KEY_SUPERUSER = 'superuser_matomo';
 	const KEY_STEALTH = 'stealth_matomo';
 
