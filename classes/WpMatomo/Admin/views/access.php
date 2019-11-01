@@ -18,7 +18,7 @@ use WpMatomo\Admin\AccessSettings;
 /** @var \WpMatomo\Capabilities $capabilites */
 ?>
 
-<p>Manage which roles can view and manage your reporting data. </p>
+<p><?php _e('Manage which roles can view and manage your reporting data.', 'matomo') ?></p>
 
 <form method="post">
 	<?php wp_nonce_field( AccessSettings::NONCE_NAME ); ?>
@@ -26,8 +26,8 @@ use WpMatomo\Admin\AccessSettings;
     <table class="matomo-form widefat">
         <thead>
         <tr>
-            <th width="30%">WordPress Role</th>
-            <th>Matomo Role</th>
+            <th width="30%"><?php _e('WordPress Role', 'matomo') ?></th>
+            <th><?php _e('Matomo Role', 'matomo') ?></th>
         </tr>
         </thead>
         <tbody>
@@ -53,16 +53,16 @@ use WpMatomo\Admin\AccessSettings;
 </form>
 
 <p>
-    Learn about the differences between these Matomo roles:
-    <a href="https://matomo.org/faq/general/faq_70/" target="_blank" rel="noopener">View</a>,
-    <a href="https://matomo.org/faq/general/faq_26910/" target="_blank" rel="noopener">Write</a>,
-    <a href="https://matomo.org/faq/general/faq_69/" target="_blank" rel="noopener">Admin</a>,
-    <a href="https://matomo.org/faq/general/faq_35/" target="_blank" rel="noopener">Super User</a>
+	<?php _e('Learn about the differences between these Matomo roles:', 'matomo') ?>
+    <a href="https://matomo.org/faq/general/faq_70/" target="_blank" rel="noopener"><?php _e('View', 'matomo') ?></a>,
+    <a href="https://matomo.org/faq/general/faq_26910/" target="_blank" rel="noopener"><?php _e('Write', 'matomo') ?></a>,
+    <a href="https://matomo.org/faq/general/faq_69/" target="_blank" rel="noopener"><?php _e('Admin', 'matomo') ?></a>,
+    <a href="https://matomo.org/faq/general/faq_35/" target="_blank" rel="noopener"><?php _e('Super User', 'matomo') ?></a>
 </p>
 
 <h2><?php echo __( 'Roles', 'matomo' ) ?></h2>
-<p>Want to give individual users access to Matomo? Simply create a user in your WordPress and assign of these roles
-    to the user:</p>
+<p><?php _e('Want to give individual users access to Matomo? Simply create a user in your WordPress and assign of these roles
+    to the user:', 'matomo') ?></p>
 <ul class="matomo-list">
 	<?php foreach ( $roles->get_matomo_roles() as $roleConfig ) { ?>
         <li><?php echo esc_html( $roleConfig['name'] ) ?></li>
@@ -70,8 +70,8 @@ use WpMatomo\Admin\AccessSettings;
 </ul>
 
 <h2><?php echo __( 'Capabilities', 'matomo' ) ?></h2>
-<p>You can also install a WordPress plugin which lets you manage capabilities for each individual users. These are
-    the supported capabilities:</p>
+<p><?php _e('You can also install a WordPress plugin which lets you manage capabilities for each individual users. These are
+    the supported capabilities:', 'matomo') ?></p>
 <ul class="matomo-list">
 	<?php
 	foreach ( $capabilites->get_all_capabilities_sorted_by_highest_permission() as $capName ) { ?>

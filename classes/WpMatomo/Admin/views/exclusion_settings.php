@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <form method="post">
 	<?php wp_nonce_field( ExclusionSettings::NONCE_NAME ); ?>
 
-    <p>Configure exclusions.</p>
+    <p><?php _e('Configure exclusions.', 'matomo') ?></p>
     <table class="matomo-tracking-form widefat">
         <tbody>
 
@@ -53,7 +53,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             ?>
             </td>
             <td width="50%">
-		        <?php echo __( 'Choose users by user role you do <strong>not</strong> want to track.', 'matomo' ) ?>
+		        <?php echo sprintf(__( 'Choose users by user role you do %1$snot%2$s want to track.', 'matomo' ), '<strong>', '</strong>') ?>
             </td>
         </tr>
         <tr>

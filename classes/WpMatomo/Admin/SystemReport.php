@@ -120,18 +120,18 @@ class SystemReport {
 		$file_writable = is_writable( $path_to_check );
 		$comment       = '"' . $path_to_check . '"';
 		if ( ! $file_exists ) {
-			$comment .= ' ' . $title . ' does not exist.';
+			$comment .= sprintf(__('%s does not exist.', 'matomo'), $title);
 		}
 		if ( ! $file_readable ) {
-			$comment .= ' ' . $title . ' is not readable.';
+			$comment .= sprintf(__('%s is not readable.', 'matomo'), $title);
 		}
 		if ( ! $file_writable ) {
-			$comment .= ' ' . $title . ' is not writable.';
+			$comment .= sprintf(__('%s is not writable.', 'matomo'), $title);
 		}
 
 		$rows[] = array(
-			'name'    => $title . ' exists and is writable',
-			'value'   => $file_exists && $file_readable && $file_writable ? 'Yes' : 'No',
+			'name'    => sprintf(__('%s exists and is writable.', 'matomo'), $title),
+			'value'   => $file_exists && $file_readable && $file_writable ? __('Yes') : __('No'),
 			'comment' => $comment
 		);
 
@@ -143,7 +143,7 @@ class SystemReport {
 
 		$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
 
-		$rows[] = array( 'name' => 'Matomo WordPress Version', 'value' => $plugin_data['Version'], 'comment' => '' );
+		$rows[] = array( 'name' => __( 'Matomo Plugin Version', 'matomo' ), 'value' => $plugin_data['Version'], 'comment' => '' );
 
 		$paths            = new Paths();
 		$upload_dir       = $paths->get_upload_base_dir();
@@ -154,7 +154,7 @@ class SystemReport {
 		$rows              = $this->check_file_exists_and_writable( $rows, $path_tracker_file, 'JS Tracker' );
 
 		$rows[] = array(
-			'name'    => 'Plugin directories',
+			'name'    => __( 'Plugin directories', 'matomo' ),
 			'value'   => ! empty( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) ? 'Yes' : 'No',
 			'comment' => ! empty( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) ? json_encode( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) : ''
 		);
@@ -162,7 +162,7 @@ class SystemReport {
 		$tmp_dir = $paths->get_tmp_dir();
 
 		$rows[] = array(
-			'name'    => 'Tmp directory writable',
+			'name'    => __('Tmp directory writable', 'matomo'),
 			'value'   => is_writable( $tmp_dir ),
 			'comment' => $tmp_dir
 		);
@@ -175,7 +175,7 @@ class SystemReport {
 
 		} catch ( \Exception $e ) {
 			$rows[] = array(
-				'name'    => 'Matomo System Check',
+				'name'    => __( 'Matomo System Check', 'matomo' ),
 				'value'   => 'Failed to run, please open the system check in Matomo',
 				'comment' => ''
 			);
@@ -184,7 +184,7 @@ class SystemReport {
 		}
 
 		$rows[] = array(
-			'name'    => 'Matomo Version',
+			'name'    => __( 'Matomo Version', 'matomo' ),
 			'value'   => \Piwik\Version::VERSION,
 			'comment' => ''
 		);
@@ -225,15 +225,15 @@ class SystemReport {
 		$all_events = $scheduled_tasks->get_all_events();
 
 		$rows[] = array(
-			'name'    => 'Server time',
+			'name'    => __( 'Server time', 'matomo' ),
 			'value'   => $this->convert_time_to_date(time(), false),
 			'comment' => ''
 		);
 
 		$rows[] = array(
-			'name'    => 'Blog time',
+			'name'    => __( 'Blog time', 'matomo' ),
 			'value'   => $this->convert_time_to_date(time(), true),
-			'comment' => 'Below dates are shown in blog timezone'
+			'comment' => __( 'Below dates are shown in blog timezone', 'matomo' )
 		);
 
 		foreach ($all_events as $event_name => $event_config) {
@@ -255,13 +255,13 @@ class SystemReport {
 		}
 
 		$rows[] = array(
-			'section' => 'Mandatory checks',
+			'section' => __( 'Mandatory checks', 'matomo' ),
 		);
 
 		$rows = $this->add_diagnostic_results( $rows, $report->getMandatoryDiagnosticResults() );
 
 		$rows[] = array(
-			'section' => 'Optional checks',
+			'section' => __( 'Optional checks', 'matomo' ),
 		);
 		$rows   = $this->add_diagnostic_results( $rows, $report->getOptionalDiagnosticResults() );
 
@@ -279,7 +279,7 @@ class SystemReport {
 	private function convert_time_to_date($time, $in_blog_timezone, $print_diff = false)
 	{
 		if (empty($time)) {
-			return 'Unknown';
+			return __( 'Unknown', 'matomo' );
 		}
 
 		$date = date( 'Y-m-d H:i:s', $time );
