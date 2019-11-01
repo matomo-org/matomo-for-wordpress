@@ -215,7 +215,7 @@ class Menu {
 		exit;
 	}
 
-	public static function make_matomo_reporting_link( $category, $subcategory, $params ) {
+	public static function make_matomo_reporting_link( $category, $subcategory, $params = array() ) {
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
@@ -236,7 +236,33 @@ class Menu {
 		}
 
 		$url = plugins_url( 'app', MATOMO_ANALYTICS_FILE );
-		$url .= '/index.php?module=CoreHome&action=index&idSite=' . (int) $idsite . '&period='.urlencode($params['period']).'&date='.urlencode($params['date']).'#?&' . http_build_query( $params );
+		$url .= '/index.php?module=CoreHome&action=index&idSite=' . (int) $idsite . '&period=' . urlencode( $params['period'] ) . '&date=' . urlencode( $params['date'] ) . '#?&' . http_build_query( $params );
+
+		return $url;
+	}
+
+	public static function make_matomo_action_link( $module, $action, $params = array() ) {
+		$site   = new Site();
+		$idsite = $site->get_current_matomo_site_id();
+
+		if ( ! $idsite ) {
+			return;
+		}
+
+		$idsite           = (int) $idsite;
+		$params['module'] = $module;
+		$params['action'] = $action;
+		$params['idSite'] = $idsite;
+
+		if ( empty( $params['period'] ) ) {
+			$params['period'] = 'day';
+		}
+		if ( empty( $params['date'] ) ) {
+			$params['date'] = 'today';
+		}
+
+		$url = plugins_url( 'app', MATOMO_ANALYTICS_FILE );
+		$url .= '/index.php?' . http_build_query( $params );
 
 		return $url;
 	}
