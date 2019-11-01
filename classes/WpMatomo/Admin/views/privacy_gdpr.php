@@ -29,49 +29,42 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<h2>Matomo ensures the privacy of your users and analytics data! YOU keep control of your data.</h2>
+<h2><?php _e( 'Matomo ensures the privacy of your users and analytics data! YOU keep control of your data.', 'matomo' ); ?></h2>
 
-<blockquote class="matomo-blockquote">One of Matomo's guiding principles: respecting privacy</blockquote>
+<blockquote class="matomo-blockquote"><?php _e('One of Matomo\'s guiding principles: respecting privacy', 'matomo'); ?></blockquote>
 <p>
-    Matomo Analytics is privacy by design. All data collected is stored only within your own MySQL database, no other
-    business (or Matomo team member) can access any of this information, and logs or report data will never be sent to
-    other servers by Matomo.
+	<?php _e( 'Matomo Analytics is privacy by design. All data collected is stored only within your own MySQL database, no other business (or Matomo team member) can access any of this information, and logs or report data will never be sent to other servers by Matomo', 'matomo' ); ?>.
 
-    The source code of the software is open-source so hundreds of people have reviewed it to ensure it is <a
-            href="https://matomo.org/security/" rel="noreferrer noopener">secure</a> and keeps your data private.
+	<?php echo sprintf( __( 'The source code of the software is open-source so hundreds of people have reviewed it to ensure it is %1$ssecure%2$s and keeps your data private.', 'matomo' ),
+        '<a href="https://matomo.org/security/" rel="noreferrer noopener">', '</a>' ); ?>
 </p>
 <h2>
-    Ways Matomo protects the privacy of your users and customers
+	<?php _e( 'Ways Matomo protects the privacy of your users and customers', 'matomo' ); ?>
 </h2>
-<p>Although Matomo Analytics is a web analytics software that has a purpose to track user activity on your website, we
-    take privacy very seriously.</p>
-<p>Privacy is a fundamental right so by using Matomo you can rest assured you have 100% control over that data and can
-    protect your user’s privacy as it’s on your own server.</p>
+<p><?php _e( 'Although Matomo Analytics is a web analytics software that has a purpose to track user activity on your website, we take privacy very seriously.', 'matomo' ); ?></p>
+<p><?php _e( 'Privacy is a fundamental right so by using Matomo you can rest assured you have 100% control over that data and can protect your user\'s privacy as it\'s on your own server.', 'matomo' ); ?></p>
 
 <ul class="matomo-list">
-    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_ANONYMIZE_DATA ); ?>">Anonymise data and
-            IP addresses</a></li>
-    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_DATA_RETENTION ); ?>">Configure data
-            retention</a></li>
-    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_OPTOUT ); ?>">Matomo has an opt-out
-            mechanism which lets users opt-out of web analytics tracking</a> (see below for the shortcode)
+    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_ANONYMIZE_DATA ); ?>"><?php _e( 'Anonymise data and IP addresses', 'matomo' ); ?></a></li>
+    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_DATA_RETENTION ); ?>"><?php _e( 'Configure data retention', 'matomo' ); ?></a></li>
+    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_OPTOUT ); ?>"><?php _e( 'Matomo has an opt-out mechanism which lets users opt-out of web analytics tracking', 'matomo' ); ?></a> (<?php _e( 'see below for the shortcode', 'matomo' ); ?>)
     </li>
-    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_ASK_CONSENT ); ?>">Asking for consent</a>
+    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_ASK_CONSENT ); ?>"><?php _e( 'Asking for consent', 'matomo' ); ?></a>
     </li>
-    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_GDPR_OVERVIEW ); ?>">GDPR overview</a>
+    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_GDPR_OVERVIEW ); ?>"><?php _e( 'GDPR overview', 'matomo' ); ?></a>
     </li>
-    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_GDPR_TOOLS ); ?>">GDPR tools</a></li>
+    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_GDPR_TOOLS ); ?>"><?php _e( 'GDPR tools', 'matomo' ); ?></a></li>
 </ul>
 <h2>
-    Let users opt-out of tracking
+	<?php _e( 'Let users opt-out of tracking', 'matomo' ); ?>
 </h2>
 <p>
-    Use the short code <code><?php echo PrivacySettings::EXAMPLE_MINIMAL ?></code> to embed the opt out iframe into your
-    website.<br/>
-    You can use these short code options:
+	<?php echo sprintf( __( 'Use the short code %1$s to embed the opt out iframe into your website.', 'matomo' ),
+        '<code>' . PrivacySettings::EXAMPLE_MINIMAL . '</code>' ); ?><br/>
+	<?php _e( 'You can use these short code options:', 'matomo' ); ?>
 </p>
 <ul class="matomo-list">
-    <li>language - eg de, en, fr, ... by default the language is detected automatically based on the user's browser</li>
+    <li>language - eg de or en. <?php _e('By default the language is detected automatically based on the user\'s browser', 'matomo'); ?></li>
     <li>background_color - eg black or #000</li>
     <li>font_color - eg black or #000</li>
     <li>font_size - eg 15px</li>
@@ -79,10 +72,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     <li>width - eg 600, 600px or 100%</li>
     <li>height - eg 200, 200px or 20%</li>
 </ul>
-<p>Example: <code><?php echo PrivacySettings::EXAMPLE_FULL ?></code></p>
-<h2>You earned it!</h2>
+<p><?php _e( 'Example', 'matomo' ); ?>: <code><?php echo PrivacySettings::EXAMPLE_FULL ?></code></p>
+<h2><?php _e( 'You earned it!', 'matomo' ); ?></h2>
 <p>
-    Use the shortcode <code>[matomo_privacy_badge size=120]</code> to show that your website respects your visitors'
-    privacy.
+<?php echo sprintf( __( 'Use the shortcode %1$s to show that your website respects your visitors\' privacy.', 'matomo'), '<code>[matomo_privacy_badge size=120]</code>'); ?>
 	<?php echo do_shortcode( '[matomo_privacy_badge size=120 align=left]' ); ?>
 </p>

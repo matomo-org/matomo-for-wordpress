@@ -35,7 +35,8 @@ class PrivacyBadge {
 
 		$url = plugins_url( 'assets/img/privacybadge.png', MATOMO_ANALYTICS_FILE );
 
-		return sprintf( '<img alt="Your privacy protected! This website uses Matomo." src="%s" %s>', esc_attr( $url ), $option );
+		$title = __('Your privacy protected! This website uses Matomo.', 'matomo');
+		return sprintf( '<img alt="%s" src="%s" %s>', $title, esc_attr( $url ), $option );
 	}
 
 }

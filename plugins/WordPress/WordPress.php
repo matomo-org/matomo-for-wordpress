@@ -63,7 +63,7 @@ class WordPress extends Plugin
     	foreach ($challenges as $index => $challenge) {
     		if ($challenge['id'] === 'track_data') {
     			$challenges[$index]['url'] = ''; // we can't generate menu url for tracking settings since we're not showing the menu
-    			$challenges[$index]['description'] = 'In WordPress Admin go to Matomo Analytics => Settings => Tracking to embed the tracking code.';
+    			$challenges[$index]['description'] = __('In WordPress Admin go to Matomo Analytics => Settings => Tracking to embed the tracking code.', 'matomo');
 		    }
 	    }
     }
@@ -71,7 +71,7 @@ class WordPress extends Plugin
     public function addInstallInstructions(&$instructions)
     {
 	    $instructions[] = array(
-		    'description' => 'Alternatively, simply go to "Tracking Settings" in your WordPress Admin and select "Tag Manager" as tracking mode or choose "Manually" and paste the above code into the tracking code field.',
+		    'description' => __('Alternatively, simply go to "Tracking Settings" in your WordPress Admin and select "Tag Manager" as tracking mode or choose "Manually" and paste the above code into the tracking code field.', 'matomo'),
 		    'embedCode' => '',
 		    'helpUrl' => ''
 	    );

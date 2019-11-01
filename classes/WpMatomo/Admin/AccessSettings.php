@@ -38,7 +38,7 @@ class AccessSettings implements AdminSettingsInterface {
 	}
 
 	public function get_title() {
-		return 'Access';
+		return __('Access', 'matomo');
 	}
 
 	private function update_if_submitted() {

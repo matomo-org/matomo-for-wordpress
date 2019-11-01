@@ -26,8 +26,8 @@ $licenseKey = $settings->get_license_key();
 	<?php } ?>
     <div id="icon-plugins" class="icon32"></div>
     <h2 class="nav-tab-wrapper">
-        <a href="?page=matomo-plugins" class="nav-tab <?php echo empty( $active_tab ) ? 'nav-tab-active' : ''; ?>">Browse
-            Marketplace</a>
+        <a href="?page=matomo-plugins" class="nav-tab <?php echo empty( $active_tab ) ? 'nav-tab-active' : ''; ?>"
+        ><?php _e( 'Browse Marketplace', 'matomo' ); ?></a>
 		<?php if ( $can_view_subscription_tab ) { ?>
             <a href="?page=matomo-plugins&tab=subscriptions"
                class="nav-tab <?php echo $active_tab == 'subscriptions' ? 'nav-tab-active' : ''; ?>">Subscriptions</a>
@@ -35,9 +35,7 @@ $licenseKey = $settings->get_license_key();
     </h2>
 	<?php if ( empty( $active_tab ) || ! $can_view_subscription_tab ) { ?>
         <h1><?php echo __( 'Discover new functionality for your Matomo', 'matomo' ) ?></h1>
-        <p>Take your Matomo (formerly Piwik) to the next level and drive your conversions & revenue with these premium
-            features. All features are fully hosted on your WordPress and come with 100% data ownership and no
-            limitations.</p>
+        <p><?php _e( 'Take your Matomo (formerly Piwik) to the next level and drive your conversions & revenue with these premium features. All features are fully hosted on your WordPress and come with 100% data ownership and no limitations.', 'matomo' ); ?></p>
 		<?php
 		$featureSections = array(
 			array(
@@ -197,18 +195,18 @@ $licenseKey = $settings->get_license_key();
             </div>
 		<?php } ?>
 
-        <h1>Premium Feature Subscriptions</h1>
-        <p>If you have purchased Matomo Premium Features, please enter your license key below.</p>
+        <h1><?php _e( 'Premium Feature Subscriptions', 'matomo' ); ?></h1>
+        <p><?php _e( 'If you have purchased Matomo Premium Features, please enter your license key below.', 'matomo' ); ?></p>
         <form method="post">
 			<?php wp_nonce_field( Marketplace::NONCE_LICENSE ); ?>
 
             <p>
-                <label>License key</label>
+                <label><?php _e( 'License key', 'matomo' ); ?></label>
                 <input type="text" maxlength="80" name="<?php echo Marketplace::FORM_NAME; ?>" style="width:300px;">
                 <br/>
                 <br/>
                 <input type="submit" class="button-primary"
-                       value="<?php echo( ! empty( $licenseKey ) ? 'Update License Key' : 'Save License Key' ) ?>">
+                       value="<?php echo( ! empty( $licenseKey ) ? __('Update License Key', 'matomo') : __('Save License Key', 'matomo') ) ?>">
             </p>
         </form>
 
@@ -218,22 +216,20 @@ $licenseKey = $settings->get_license_key();
 			$api      = new \WpMatomo\Marketplace\Api( $settings );
 			$licenses = $api->get_licenses();
 			?>
-            <h2>Your subscriptions</h2>
-            <p>Here's a summary of your subscriptions.
-                You can find all details, download Premium Features and change your subscriptions by <a
-                        rel="noreferrer noopener" target="_blank" href="https://shop.matomo.org/my-account/">logging in
-                    to your account
-                    on
-                    the Matomo Marketplace</a>.
+            <h2><?php _e( 'Your subscriptions', 'matomo' ); ?></h2>
+            <p><?php _e('Here\'s a summary of your subscriptions.', 'matomo'); ?>
+	            <?php echo sprintf( __( 'You can find all details, download Premium Features and change your subscriptions by %1$slogging in to your account on the Matomo Marketplace%2$s.', 'matomo' ),
+                    '<a rel="noreferrer noopener" target="_blank" href="https://shop.matomo.org/my-account/">',
+                    '</a>' ); ?>
             </p>
             <table class="widefat">
                 <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Start date</th>
-                    <th>End date</th>
-                    <th>Next payment date</th>
+                    <th><?php _e( 'Name' ) ?></th>
+                    <th><?php _e( 'Status', 'matomo' ); ?></th>
+                    <th><?php _e( 'Start date', 'matomo' ); ?></th>
+                    <th><?php _e( 'End date', 'matomo' ); ?></th>
+                    <th><?php _e( 'Next payment date', 'matomo' ); ?></th>
                 </tr>
                 </thead>
                 <tbody>

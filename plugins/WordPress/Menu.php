@@ -33,7 +33,7 @@ class Menu extends \Piwik\Plugin\Menu
 
     public function configureTopMenu(MenuTop $menu)
     {
-    	$menu->addItem('WordPress Admin', null, $this->urlForAction('goToWordPress'), '500', 'Go back to WordPress Admin Dashboard', 'icon-close');
+    	$menu->addItem(__('WordPress Admin', 'matomo'), null, $this->urlForAction('goToWordPress'), '500', __('Go back to WordPress Admin Dashboard', 'matomo'), 'icon-close');
 	    $menu->remove('General_Help');
     }
 }

@@ -37,7 +37,7 @@ class TrackingSettings implements AdminSettingsInterface {
 	}
 
 	public function get_title() {
-		return 'Tracking';
+		return __( 'Tracking', 'matomo' );
 	}
 
 	private function update_if_submitted() {
