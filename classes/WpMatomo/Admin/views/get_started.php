@@ -36,7 +36,7 @@ if ( empty( $show_this_page ) ) {
 	} ?>
 
 	<?php if ( $settings->is_tracking_enabled() ) { ?>
-        <h2><?php _e('1. Tracking is enabled', 'matomo') ?> <span class="dashicons dashicons-yes"></span></h2>
+        <h2>1. <?php _e('Tracking is enabled', 'matomo') ?> <span class="dashicons dashicons-yes"></span></h2>
         <p><a href="<?php echo AdminSettings::make_url( AdminSettings::TAB_TRACKING ) ?>">Click here to configure your
                 tracking code.</a></p>
 
@@ -52,8 +52,7 @@ if ( empty( $show_this_page ) ) {
 
     <h2>2. <?php _e( 'Update your privacy page', 'matomo' ); ?></h2>
 
-    <?php echo sprintf( __( 'Give your users the chance to opt-out of tracking by adding the shortcode %1$s to your
-    privacy page. You can %2$stweak the opt-out to your liking - see the Privacy Settings%3$s.', 'matomo' ), '<code>[matomo_opt_out]</code>', '<a href="' . AdminSettings::make_url( AdminSettings::TAB_PRIVACY ) .'">', '</a>' ); ?>
+    <?php echo sprintf( __( 'Give your users the chance to opt-out of tracking by adding the shortcode %1$s to your privacy page. You can %2$stweak the opt-out to your liking - see the Privacy Settings%3$s.', 'matomo' ), '<code>[matomo_opt_out]</code>', '<a href="' . AdminSettings::make_url( AdminSettings::TAB_PRIVACY ) .'">', '</a>' ); ?>
 
     <?php _e( 'You may also need to mention that you are using Matomo Analytics on your website.', 'matomo' ); ?>
 
