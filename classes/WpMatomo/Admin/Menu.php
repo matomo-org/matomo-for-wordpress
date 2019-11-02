@@ -152,7 +152,7 @@ class Menu {
 		}
 	}
 
-	public static function get_matomo_action_url( $goto ) {
+	public static function get_matomo_goto_url( $goto ) {
 		return add_query_arg( array( 'goto' => $goto ), menu_page_url( Menu::SLUG_REPORTING, false ) );
 	}
 
@@ -218,7 +218,7 @@ class Menu {
 	/**
 	 * @api
 	 */
-	public static function make_matomo_reporting_link( $category, $subcategory, $params = array() ) {
+	public static function get_matomo_reporting_url( $category, $subcategory, $params = array() ) {
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
@@ -254,7 +254,7 @@ class Menu {
 	/**
 	 * @api
 	 */
-	public static function make_matomo_action_link( $module, $action, $params = array() ) {
+	public static function get_matomo_action_url( $module, $action, $params = array() ) {
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 

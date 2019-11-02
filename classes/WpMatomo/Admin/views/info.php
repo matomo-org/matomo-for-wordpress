@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         %3$shere\'s how you can participate!%4$s', 'matomo'), '<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/team/">', '</a>', '<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/get-involved/">', '</a>'); ?>
         <br/><br/>
 	    <?php echo sprintf( __( 'You can also help us by %1$sdonating%2$s or by %3$spurchasing premium plugins%4$s which fund the
-        development of the free Matomo Analytics version.', 'matomo' ), '<a href="' . Menu::get_matomo_action_url(Menu::REPORTING_GOTO_ADMIN) .'">', '</a>', '<a href="https://plugins.matomo.org/premium" target="_blank" rel="noreferrer noopener">', '</a>' ); ?>
+        development of the free Matomo Analytics version.', 'matomo' ), '<a href="' . Menu::get_matomo_goto_url(Menu::REPORTING_GOTO_ADMIN) . '">', '</a>', '<a href="https://plugins.matomo.org/premium" target="_blank" rel="noreferrer noopener">', '</a>' ); ?>
     </p>
 
     <h2><?php _e( 'High traffic websites', 'matomo' ); ?></h2>

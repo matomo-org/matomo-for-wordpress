@@ -45,15 +45,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p><?php _e( 'Privacy is a fundamental right so by using Matomo you can rest assured you have 100% control over that data and can protect your user\'s privacy as it\'s on your own server.', 'matomo' ); ?></p>
 
 <ul class="matomo-list">
-    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_ANONYMIZE_DATA ); ?>"><?php _e( 'Anonymise data and IP addresses', 'matomo' ); ?></a></li>
-    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_DATA_RETENTION ); ?>"><?php _e( 'Configure data retention', 'matomo' ); ?></a></li>
-    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_OPTOUT ); ?>"><?php _e( 'Matomo has an opt-out mechanism which lets users opt-out of web analytics tracking', 'matomo' ); ?></a> (<?php _e( 'see below for the shortcode', 'matomo' ); ?>)
+    <li><a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_ANONYMIZE_DATA ); ?>"><?php _e( 'Anonymise data and IP addresses', 'matomo' ); ?></a></li>
+    <li><a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_DATA_RETENTION ); ?>"><?php _e( 'Configure data retention', 'matomo' ); ?></a></li>
+    <li><a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_OPTOUT ); ?>"><?php _e( 'Matomo has an opt-out mechanism which lets users opt-out of web analytics tracking', 'matomo' ); ?></a> (<?php _e( 'see below for the shortcode', 'matomo' ); ?>)
     </li>
-    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_ASK_CONSENT ); ?>"><?php _e( 'Asking for consent', 'matomo' ); ?></a>
+    <li><a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_ASK_CONSENT ); ?>"><?php _e( 'Asking for consent', 'matomo' ); ?></a>
     </li>
-    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_GDPR_OVERVIEW ); ?>"><?php _e( 'GDPR overview', 'matomo' ); ?></a>
+    <li><a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_GDPR_OVERVIEW ); ?>"><?php _e( 'GDPR overview', 'matomo' ); ?></a>
     </li>
-    <li><a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_GDPR_TOOLS ); ?>"><?php _e( 'GDPR tools', 'matomo' ); ?></a></li>
+    <li><a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_GDPR_TOOLS ); ?>"><?php _e( 'GDPR tools', 'matomo' ); ?></a></li>
 </ul>
 <h2>
 	<?php _e( 'Let users opt-out of tracking', 'matomo' ); ?>

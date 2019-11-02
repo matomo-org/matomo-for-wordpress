@@ -174,7 +174,6 @@ class WpMatomo {
 				}
 			}
 		}
-
 		$tracking_code = new TrackingCode( $this->settings );
 		if ( $this->settings->is_tracking_enabled() && ! $tracking_code->is_hidden_user() ) {
 			$tracker = new AjaxTracker( $this->settings );

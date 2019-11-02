@@ -63,7 +63,7 @@ global $wp;
                         <div class="postbox">
 
                             <?php if (!empty($report_meta['page'])) { ?>
-                                <button type="button" class="handlediv" aria-expanded="true" title="<?php _e( 'Click to view the report in detail', 'matomo' ); ?>"><a href="<?php echo Menu::make_matomo_reporting_link($report_meta['page']['category'], $report_meta['page']['subcategory'], array('period' => $report_period_selected, 'date' => $report_date_selected)); ?>" style="color: inherit;" target="_blank" rel="noreferrer noopener" class="dashicons-before dashicons-external" aria-hidden="true"></a></button>
+                                <button type="button" class="handlediv" aria-expanded="true" title="<?php _e( 'Click to view the report in detail', 'matomo' ); ?>"><a href="<?php echo Menu::get_matomo_reporting_url($report_meta['page']['category'], $report_meta['page']['subcategory'], array( 'period' => $report_period_selected, 'date' => $report_date_selected)); ?>" style="color: inherit;" target="_blank" rel="noreferrer noopener" class="dashicons-before dashicons-external" aria-hidden="true"></a></button>
                             <?php } ?>
                             <h2 class="hndle ui-sortable-handle"
                                 style="cursor: help;"
