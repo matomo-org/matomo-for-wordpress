@@ -1,3 +1,7 @@
+0.1.8
+- Disable session when bootstrapping Matomo within WordPress
+- Better system report
+
 0.1.7
 - Improve install script
 - Tweaked wording in UI
