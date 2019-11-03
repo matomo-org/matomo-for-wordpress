@@ -1,3 +1,6 @@
+0.1.9
+- Better session error logging
+
 0.1.8
 - Disable session when bootstrapping Matomo within WordPress
 - Better system report
