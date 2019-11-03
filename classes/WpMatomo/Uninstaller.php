@@ -49,6 +49,8 @@ class Uninstaller {
 		$roles = new Roles( $settings );
 		$roles->uninstall();
 
+		$paths = new Paths();
+
 		if ( $should_remove_all_data ) {
 			$this->logger->log( 'Matomo is forced to remove all data' );
 
@@ -62,8 +64,9 @@ class Uninstaller {
 			$site = new User();
 			$site->uninstall();
 
-			$paths = new Paths();
 			$paths->uninstall();
+		} else {
+			$paths->clear_cache_dir();
 		}
 
 		do_action( 'matomo_uninstall_blog', $should_remove_all_data );
