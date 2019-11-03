@@ -84,7 +84,7 @@ function anonymize_matomo_value($value)
 						$class = 'Warning ';
 					}
 					echo "\n* " . $class . esc_html( $row['name'] ) . ': ' . esc_html( anonymize_matomo_value( $value ) );
-					if ( ! empty( $row['comment'] ) ) {
+					if ( isset( $row['comment'] ) && $row['comment'] !== '' ) {
 						echo " (" . esc_html( anonymize_matomo_value ($row['comment'] ) ) . ")";
 					}
 
@@ -125,7 +125,7 @@ function anonymize_matomo_value($value)
 						'<br />'                                             => '__#BRBACKUP#__',
 						'<br>'                                               => '__#BRBACKUP#__'
 					);
-					$comment          = $row['comment'];
+					$comment          = isset($row['comment']) ? $row['comment'] : '';
 					$replaced         = str_replace( array_keys( $replacedElements ), array_values( $replacedElements ), $comment );
 					$escaped          = esc_html( $replaced );
 					echo "<td width='50%'>" . str_replace( array_values( $replacedElements ), array_keys( $replacedElements ), $escaped ) . "</td>";

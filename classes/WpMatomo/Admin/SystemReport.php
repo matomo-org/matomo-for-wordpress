@@ -22,6 +22,7 @@ use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
 use WpMatomo\Site\Sync as SiteSync;
 use WpMatomo\User\Sync as UserSync;
+use function DI\value;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -106,8 +107,8 @@ class SystemReport {
 			$tables = array(
 				array( 'title' => 'Matomo', 'rows' => $this->get_matomo_info(), 'has_comments' => true ),
 				array( 'title' => 'WordPress', 'rows' => $this->get_wordpress_info() ),
-				array( 'title' => 'WordPress Plugins', 'rows' => $this->get_plugins_info() ),
-				array( 'title' => 'Server', 'rows' => $this->get_server_info() ),
+				array( 'title' => 'WordPress Plugins', 'rows' => $this->get_plugins_info(), 'has_comments' => true ),
+				array( 'title' => 'Server', 'rows' => $this->get_server_info(), 'has_comments' => true ),
 			);
 		}
 
@@ -120,18 +121,18 @@ class SystemReport {
 		$file_writable = is_writable( $path_to_check );
 		$comment       = '"' . $path_to_check . '"';
 		if ( ! $file_exists ) {
-			$comment .= sprintf(__('%s does not exist.', 'matomo'), $title);
+			$comment .= sprintf( __( '%s does not exist.', 'matomo' ), $title );
 		}
 		if ( ! $file_readable ) {
-			$comment .= sprintf(__('%s is not readable.', 'matomo'), $title);
+			$comment .= sprintf( __( '%s is not readable.', 'matomo' ), $title );
 		}
 		if ( ! $file_writable ) {
-			$comment .= sprintf(__('%s is not writable.', 'matomo'), $title);
+			$comment .= sprintf( __( '%s is not writable.', 'matomo' ), $title );
 		}
 
 		$rows[] = array(
-			'name'    => sprintf(__('%s exists and is writable.', 'matomo'), $title),
-			'value'   => $file_exists && $file_readable && $file_writable ? __('Yes') : __('No'),
+			'name'    => sprintf( __( '%s exists and is writable.', 'matomo' ), $title ),
+			'value'   => $file_exists && $file_readable && $file_writable ? __( 'Yes' ) : __( 'No' ),
 			'comment' => $comment
 		);
 
@@ -143,7 +144,11 @@ class SystemReport {
 
 		$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
 
-		$rows[] = array( 'name' => __( 'Matomo Plugin Version', 'matomo' ), 'value' => $plugin_data['Version'], 'comment' => '' );
+		$rows[] = array(
+			'name'    => __( 'Matomo Plugin Version', 'matomo' ),
+			'value'   => $plugin_data['Version'],
+			'comment' => ''
+		);
 
 		$paths            = new Paths();
 		$upload_dir       = $paths->get_upload_base_dir();
@@ -162,7 +167,7 @@ class SystemReport {
 		$tmp_dir = $paths->get_tmp_dir();
 
 		$rows[] = array(
-			'name'    => __('Tmp directory writable', 'matomo'),
+			'name'    => __( 'Tmp directory writable', 'matomo' ),
 			'value'   => is_writable( $tmp_dir ),
 			'comment' => $tmp_dir
 		);
@@ -222,33 +227,33 @@ class SystemReport {
 		);
 
 		$scheduled_tasks = new ScheduledTasks( $this->settings );
-		$all_events = $scheduled_tasks->get_all_events();
+		$all_events      = $scheduled_tasks->get_all_events();
 
 		$rows[] = array(
 			'name'    => __( 'Server time', 'matomo' ),
-			'value'   => $this->convert_time_to_date(time(), false),
+			'value'   => $this->convert_time_to_date( time(), false ),
 			'comment' => ''
 		);
 
 		$rows[] = array(
 			'name'    => __( 'Blog time', 'matomo' ),
-			'value'   => $this->convert_time_to_date(time(), true),
+			'value'   => $this->convert_time_to_date( time(), true ),
 			'comment' => __( 'Below dates are shown in blog timezone', 'matomo' )
 		);
 
-		foreach ($all_events as $event_name => $event_config) {
-			$last_run_before = $scheduled_tasks->get_last_time_before_cron($event_name);
-			$last_run_after = $scheduled_tasks->get_last_time_after_cron($event_name);
+		foreach ( $all_events as $event_name => $event_config ) {
+			$last_run_before = $scheduled_tasks->get_last_time_before_cron( $event_name );
+			$last_run_after  = $scheduled_tasks->get_last_time_after_cron( $event_name );
 
-			$next_scheduled = wp_next_scheduled($event_name);
+			$next_scheduled = wp_next_scheduled( $event_name );
 
-			$comment  = ' Last started: ' . $this->convert_time_to_date($last_run_before, true, true) . '.';
-			$comment .= ' Last ended: ' . $this->convert_time_to_date($last_run_after, true, true) . '.';
+			$comment = ' Last started: ' . $this->convert_time_to_date( $last_run_before, true, true ) . '.';
+			$comment .= ' Last ended: ' . $this->convert_time_to_date( $last_run_after, true, true ) . '.';
 			$comment .= ' Interval: ' . $event_config['interval'];
 
 			$rows[] = array(
 				'name'    => $event_config['name'],
-				'value'   => 'Next run: ' . $this->convert_time_to_date($next_scheduled, true, true),
+				'value'   => 'Next run: ' . $this->convert_time_to_date( $next_scheduled, true, true ),
 				'comment' => $comment
 			);
 
@@ -276,20 +281,19 @@ class SystemReport {
 		return $rows;
 	}
 
-	private function convert_time_to_date($time, $in_blog_timezone, $print_diff = false)
-	{
-		if (empty($time)) {
+	private function convert_time_to_date( $time, $in_blog_timezone, $print_diff = false ) {
+		if ( empty( $time ) ) {
 			return __( 'Unknown', 'matomo' );
 		}
 
 		$date = date( 'Y-m-d H:i:s', $time );
 
-		if ($in_blog_timezone) {
+		if ( $in_blog_timezone ) {
 			$date = get_date_from_gmt( $date, 'Y-m-d H:i:s' );
 		}
 
-		if ($print_diff && class_exists('\Piwik\MetricsFormatter')) {
-			$date .= ' (' . MetricsFormatter::getPrettyTimeFromSeconds($time - time(), true, false, true ) . ')';
+		if ( $print_diff && class_exists( '\Piwik\MetricsFormatter' ) ) {
+			$date .= ' (' . MetricsFormatter::getPrettyTimeFromSeconds( $time - time(), true, false, true ) . ')';
 		}
 
 		return $date;
@@ -354,11 +358,14 @@ class SystemReport {
 		$rows[] = array( 'name' => 'MySQL Version', 'value' => ! empty( $wpdb->is_mysql ) ? $wpdb->db_version() : '' );
 		$rows[] = array( 'name' => 'Timezone', 'value' => date_default_timezone_get() );
 		$rows[] = array( 'name' => 'Locale', 'value' => get_locale() );
-		$rows[] = array( 'name' => 'Memory Limit', 'value' => max( WP_MEMORY_LIMIT, @ini_get( 'memory_limit' ) ) );
+		$rows[] = array( 'name' => 'Memory Limit', 'value' => max( WP_MEMORY_LIMIT, @ini_get( 'memory_limit' ) ), 'comment' => 'At least 128MB recommended. Depending on your traffic 256MB or more may be needed.' );
 		$rows[] = array( 'name' => 'Time', 'value' => time() );
 
 		$rows[] = array( 'name' => 'Mysqli Connect', 'value' => function_exists( 'mysqli_connect' ) );
-		$rows[] = array( 'name' => 'Force MySQL over Mysqli', 'value' => defined('WP_USE_EXT_MYSQL') && WP_USE_EXT_MYSQL );
+		$rows[] = array(
+			'name'  => 'Force MySQL over Mysqli',
+			'value' => defined( 'WP_USE_EXT_MYSQL' ) && WP_USE_EXT_MYSQL
+		);
 
 		$rows[] = array( 'name' => 'Max Execution Time', 'value' => ini_get( 'max_execution_time' ) );
 		$rows[] = array( 'name' => 'Max Post Size', 'value' => ini_get( 'post_max_size' ) );
@@ -385,7 +392,11 @@ class SystemReport {
 			);
 
 			foreach ( $mu_plugins as $mu_pin ) {
-				$rows[] = array( 'name' => $mu_pin['Name'], 'value' => $mu_pin['Version'] );
+				$comment = '';
+				if ( ! empty( $plugin['Network'] ) ) {
+					$comment = 'Network enabled';
+				}
+				$rows[] = array( 'name' => $mu_pin['Name'], 'value' => $mu_pin['Version'], 'comment' => $comment );
 			}
 
 			$rows[] = array(
@@ -396,8 +407,22 @@ class SystemReport {
 		$plugins = get_plugins();
 
 		foreach ( $plugins as $plugin ) {
-			$rows[] = array( 'name' => $plugin['Name'], 'value' => $plugin['Version'] );
+			$comment = '';
+			if ( ! empty( $plugin['Network'] ) ) {
+				$comment = 'Network enabled';
+			}
+			$rows[] = array( 'name' => $plugin['Name'], 'value' => $plugin['Version'], 'comment' => $comment );
 		}
+
+		$active_plugins = get_option( 'active_plugins', array() );
+		if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
+			$rows[] = array(
+				'name'    => 'Active Plugins',
+				'value'   => count( $active_plugins ),
+				'comment' => implode( ', ', $active_plugins )
+			);
+		}
+
 
 		return $rows;
 	}
