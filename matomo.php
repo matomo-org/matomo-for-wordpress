@@ -23,10 +23,6 @@ load_plugin_textdomain( 'matomo', false, basename( dirname( __FILE__ ) ) . '/lan
 
 define( 'MATOMO_ANALYTICS_FILE', __FILE__ );
 
-if ( ! defined( 'MATOMO_LOG_ALL_MESSAGES' ) ) {
-	define( 'MATOMO_LOG_ALL_MESSAGES', false );
-}
-
 $GLOBALS['MATOMO_PLUGINS_ENABLED'] = array();
 
 /** MATOMO_PLUGIN_FILES => used to check for updates etc */

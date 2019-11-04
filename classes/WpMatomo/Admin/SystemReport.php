@@ -20,6 +20,7 @@ use WpMatomo\Capabilities;
 use WpMatomo\Paths;
 use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
+use WpMatomo\Site;
 use WpMatomo\Site\Sync as SiteSync;
 use WpMatomo\User\Sync as UserSync;
 use function DI\value;
@@ -191,6 +192,15 @@ class SystemReport {
 		$rows[] = array(
 			'name'    => __( 'Matomo Version', 'matomo' ),
 			'value'   => \Piwik\Version::VERSION,
+			'comment' => ''
+		);
+
+		$site = new Site();
+		$idsite = $site->get_current_matomo_site_id();
+
+		$rows[] = array(
+			'name'    => __( 'Matomo Blog idSite', 'matomo' ),
+			'value'   => $idsite,
 			'comment' => ''
 		);
 
