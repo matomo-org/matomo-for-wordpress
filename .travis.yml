@@ -10,7 +10,14 @@ install:
   - git clone https://github.com/$TRAVIS_REPO_SLUG.git matomo-org/matomo
   - cd matomo-org/matomo
   - echo $TRAVIS_COMMIT
-  - git checkout -f $TRAVIS_COMMIT
+  - |
+    # Check commit matches expected commit (because of Travis bug)
+    ( set -euo pipefail
+      if [[ "${TRAVIS_COMMIT}" != "$(git rev-parse HEAD)" ]]; then
+        echo "Commit $(git rev-parse HEAD) doesn't match expected commit ${TRAVIS_COMMIT}"
+        git checkout "${TRAVIS_COMMIT}"
+      fi
+    )
 
 notifications:
   email:
