@@ -18,7 +18,7 @@ class OptOutTest extends MatomoUnit_TestCase {
 
 	public function test_matomo_opt_out_all_options() {
 		$result = do_shortcode( PrivacySettings::EXAMPLE_FULL );
-		$this->assertSame( '<iframe style="border: 0; width:500px;height:100px;" src="http://example.org/wp-content/plugins/matomo/app/index.php?module=CoreAdminHome&action=optOut&language=de&background_color=red&font_color=fff&font_size=34&font_family=Arial"></iframe>', $result );
+		$this->assertSame( '<iframe style="border: 0; width:500px;height:100px;" src="http://example.org/wp-content/plugins/matomo/app/index.php?module=CoreAdminHome&action=optOut&language=de&backgroundColor=red&fontColor=fff&fontSize=34&fontFamily=Arial"></iframe>', $result );
 	}
 
 	public function test_matomo_opt_out_size_percent_px_values() {

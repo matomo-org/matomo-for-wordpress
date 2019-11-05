@@ -65,8 +65,10 @@ class AdminMarketplaceTest extends MatomoUnit_TestCase {
 		$license_key = sha1( 1 );
 		$this->fake_request( $license_key );
 
+		ob_start();
 		$marketplace = new Marketplace( $this->settings, new AdminMarketplaceTestValidApiKeyMock( $this->settings ) );
 		$marketplace->show();
+		ob_end_clean();
 
 		$this->assertSame( $license_key, $this->settings->get_license_key() );
 	}

@@ -32,6 +32,6 @@ class PrivacySettings implements AdminSettingsInterface {
 	}
 
 	public function show_settings() {
-		include_once( dirname( __FILE__ ) . '/views/privacy_gdpr.php' );
+		include( dirname( __FILE__ ) . '/views/privacy_gdpr.php' );
 	}
 }

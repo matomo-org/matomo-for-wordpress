@@ -154,7 +154,7 @@ class TrackingSettings implements AdminSettingsInterface {
 			$track_modes[TrackingSettings::TRACK_MODE_TAGMANAGER] = __('Tag Manager', 'matomo');
 		}
 
-		include_once( dirname( __FILE__ ) . '/views/tracking.php' );
+		include( dirname( __FILE__ ) . '/views/tracking.php' );
 	}
 
 	public function get_active_containers()

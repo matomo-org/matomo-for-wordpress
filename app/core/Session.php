@@ -54,9 +54,8 @@ class Session extends Zend_Session
         ) {
             return;
         }
-
         self::$sessionStarted = true;
-
+    
         if (defined('PIWIK_SESSION_NAME')) {
             self::$sessionName = PIWIK_SESSION_NAME;
         }
@@ -149,7 +148,7 @@ class Session extends Zend_Session
             } else {
                 $pathToSessions = Filechecks::getErrorMessageMissingPermissions(self::getSessionsDirectory());
             }
-
+            
             $message = sprintf("Error: %s %s\n<pre>Debug: the original error was \n%s</pre>",
                 Piwik::translate('General_ExceptionUnableToStartSession'),
                 $pathToSessions,
@@ -175,10 +174,11 @@ class Session extends Zend_Session
 
     public static function close()
     {
-    	if (self::isSessionStarted()) {
-    		// only write/close session if the session was actually started by us
-		    parent::writeClose();
-	    }
+        if (self::isSessionStarted()) {
+            // only write/close session if the session was actually started by us
+            // otherwise we will set the session values to base64 encoded and whoever the session started might not expect the values in that way
+            parent::writeClose();
+        }
     }
 
     public static function isSessionStarted()

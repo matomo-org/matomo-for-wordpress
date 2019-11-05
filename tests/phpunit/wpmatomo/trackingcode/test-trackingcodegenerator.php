@@ -48,8 +48,8 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 			'track_mode' => TrackingSettings::TRACK_MODE_DEFAULT
 		) );
 		$this->assertSame( '<!-- Matomo --><script  type="text/javascript">var _paq = window._paq || [];
-_paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/wp-content\/plugins\/wp-matomo\/matomo\/matomo.php"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
-    g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/wp-content\/uploads\/matomo\/matomo.js"; s.parentNode.insertBefore(g,s);</script><!-- End Matomo Code -->', $this->get_tracking_code() );
+_paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
+g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);</script><!-- End Matomo Code -->', $this->get_tracking_code() );
 	}
 
 	public function test_get_tracking_code_when_using_default_tracking_code_using_rest_api_and_other_features() {
@@ -71,9 +71,9 @@ _paq.push([\'addDownloadExtensions\', "zip|waf"]);
 _paq.push([\'setLinkClasses\', "clickme|foo"]);
 _paq.push([\'disableCookies\']);
 _paq.push([\'enableCrossDomainLinking\']);
-  _paq.push(["setCookieDomain", "*.example.org"]);
-_paq.push([\'trackAllContentImpressions\']);_paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/index.php?rest_route=\/ma\/v1\/hit\/"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
-    g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/index.php?rest_route=\/ma\/v1\/hit\/"; s.parentNode.insertBefore(g,s);</script><!-- End Matomo Code -->', $this->get_tracking_code() );
+_paq.push(["setCookieDomain", "*.example.org"]);
+_paq.push([\'trackAllContentImpressions\']);_paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
+g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"; s.parentNode.insertBefore(g,s);</script><!-- End Matomo Code -->', $this->get_tracking_code() );
 	}
 
 	public function test_get_tracking_code_test_user_id() {
@@ -100,13 +100,18 @@ _paq.push([\'trackAllContentImpressions\']);_paq.push([\'trackPageView\']);_paq.
 			'track_mode' => TrackingSettings::TRACK_MODE_TAGMANAGER,
 			'tagmanger_container_ids' => array('abcdefgh' => 1, 'cfk3jjw' => 0)
 		) );
-		$this->assertSame( '<!-- Matomo Tag Manager -->
+
+		if (is_multisite()) {
+			$this->assertSame( '<!-- Matomo: no supported track_mode selected -->', $this->get_tracking_code() );
+		} else {
+			$this->assertSame( '<!-- Matomo Tag Manager -->
 <script type="text/javascript" >
 var _mtm = _mtm || [];
 _mtm.push({\'mtm.startTime\': (new Date().getTime()), \'event\': \'mtm.Start\'});
 var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
 g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="http://example.org/wp-content/uploads/matomo/container_abcdefgh.js"; s.parentNode.insertBefore(g,s);
 </script><!-- End Matomo Tag Manager -->', $this->get_tracking_code() );
+		}
 	}
 
 	public function test_get_tracking_code_when_using_tagmanager_mode_and_no_containers() {
@@ -114,7 +119,12 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="http://example.or
 			'track_mode' => TrackingSettings::TRACK_MODE_TAGMANAGER,
 			'tagmanger_container_ids' => array()
 		) );
-		$this->assertSame( '<!-- Matomo Tag Manager --><!-- End Matomo Tag Manager -->', $this->get_tracking_code() );
+		if (is_multisite()) {
+			$this->assertSame( '<!-- Matomo: no supported track_mode selected -->', $this->get_tracking_code() );
+		} else {
+			$this->assertSame( '<!-- Matomo Tag Manager --><!-- End Matomo Tag Manager -->', $this->get_tracking_code() );
+		}
+
 	}
 
 

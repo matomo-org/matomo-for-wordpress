@@ -3,14 +3,16 @@ dist: trusty
 
 language: php
 
+install:
+  - cd ..
+  - ls
+  - mv wp-matomo matomo
+  - cd matomo
+
 notifications:
   email:
     on_success: never
     on_failure: change
-
-branches:
-  only:
-    - master
 
 cache:
   directories:

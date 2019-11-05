@@ -54,12 +54,10 @@ class Bootstrap {
 		}
 			
 		if ( ! defined( 'PIWIK_DOCUMENT_ROOT' ) ) {
-			define( 'PIWIK_DOCUMENT_ROOT', dirname( __FILE__ ) == '/' ? '' : dirname( __FILE__ ) . '/../../app' );
+			define( 'PIWIK_DOCUMENT_ROOT', plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'app');
 		}
 
-		if ( file_exists( PIWIK_DOCUMENT_ROOT . '/../matomo_bootstrap.php' ) ) {
-			require_once PIWIK_DOCUMENT_ROOT . '/../matomo_bootstrap.php';
-		}
+		require_once PIWIK_DOCUMENT_ROOT . '/bootstrap.php';
 
 		if ( ! defined( 'PIWIK_INCLUDE_PATH' ) ) {
 			define( 'PIWIK_INCLUDE_PATH', PIWIK_DOCUMENT_ROOT );

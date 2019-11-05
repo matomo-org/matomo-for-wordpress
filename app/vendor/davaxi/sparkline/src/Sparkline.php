@@ -110,23 +110,34 @@ class Sparkline
         list($width, $height) = $this->getNormalizedSize();
 
         $count = $this->getCount();
-        list($polygon, $line) = $this->getChartElements($this->data);
 
         $picture = new Picture($width, $height);
         $picture->applyBackground($this->backgroundColor);
         $picture->applyThickness($this->lineThickness * $this->ratioComputing);
-        $picture->applyPolygon($polygon, $this->fillColor, $count);
-        $picture->applyLine($line, $this->lineColor);
 
-        foreach ($this->points as $point) {
-            $isFirst = $point['index'] === 0;
-            $lineIndex = $isFirst ? 0 : $point['index'] - 1;
-            $picture->applyDot(
-                $line[$lineIndex][$isFirst ? 0 : 2],
-                $line[$lineIndex][$isFirst ? 1 : 3],
-                $point['radius'] * $this->ratioComputing,
-                $point['color']
-            );
+        $stepCount = $this->getMaxNumberOfDataPointsAcrossSerieses();
+
+        foreach ($this->data as $seriesIndex => $series) {
+            list($polygon, $line) = $this->getChartElements($series, $stepCount);
+            $picture->applyPolygon($polygon, $this->fillColor, $count);
+
+            $lineColor = isset($this->lineColor[$seriesIndex]) ? $this->lineColor[$seriesIndex] : $this->lineColor[0];
+            $picture->applyLine($line, $lineColor);
+
+            foreach ($this->points as $point) {
+                if ($point['series'] != $seriesIndex) {
+                    continue;
+                }
+
+                $isFirst = $point['index'] === 0;
+                $lineIndex = $isFirst ? 0 : $point['index'] - 1;
+                $picture->applyDot(
+                    $line[$lineIndex][$isFirst ? 0 : 2],
+                    $line[$lineIndex][$isFirst ? 1 : 3],
+                    $point['radius'] * $this->ratioComputing,
+                    $point['color']
+                );
+            }
         }
 
         $this->file = $picture->generate($this->width, $this->height);

@@ -156,18 +156,12 @@
     },
     {
         "name": "davaxi/sparkline",
-        "version": "1.1.2",
-        "version_normalized": "1.1.2.0",
+        "version": "dev-multiple-series",
+        "version_normalized": "dev-multiple-series",
         "source": {
             "type": "git",
-            "url": "https://github.com/davaxi/Sparkline.git",
-            "reference": "d563481f0960bac1acb4e24743ab884f4ce251e2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/davaxi/Sparkline/zipball/d563481f0960bac1acb4e24743ab884f4ce251e2",
-            "reference": "d563481f0960bac1acb4e24743ab884f4ce251e2",
-            "shasum": ""
+            "url": "https://github.com/matomo-org/Sparkline.git",
+            "reference": "d5840d8bd753eab9cadf7589af76b51dfd92e098"
         },
         "require": {
             "ext-gd": "*",
@@ -186,15 +180,14 @@
             "squizlabs/php_codesniffer": "^3.1",
             "wearejust/grumphp-extra-tasks": "^2.1"
         },
-        "time": "2017-12-15T15:45:18+00:00",
+        "time": "2019-08-26T06:43:23+00:00",
         "type": "library",
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-4": {
                 "Davaxi\\": "src/"
             }
         },
-        "notification-url": "https://packagist.org/downloads/",
         "license": [
             "MIT"
         ],
@@ -211,7 +204,11 @@
             "php",
             "picture",
             "sparkline"
-        ]
+        ],
+        "support": {
+            "issues": "https://github.com/davaxi/Sparkline/issues",
+            "source": "https://github.com/davaxi/Sparkline/releases"
+        }
     },
     {
         "name": "doctrine/cache",
@@ -807,18 +804,18 @@
         "authors": [
             {
                 "name": "Greg Beaver",
-                "email": "cellog@php.net",
-                "role": "Helper"
+                "role": "Helper",
+                "email": "cellog@php.net"
             },
             {
                 "name": "Andrei Zmievski",
-                "email": "andrei@php.net",
-                "role": "Lead"
+                "role": "Lead",
+                "email": "andrei@php.net"
             },
             {
                 "name": "Stig Bakken",
-                "email": "stig@php.net",
-                "role": "Developer"
+                "role": "Developer",
+                "email": "stig@php.net"
             }
         ],
         "description": "More info available on: http://pear.php.net/package/Console_Getopt"
@@ -863,8 +860,8 @@
         "authors": [
             {
                 "name": "Christian Weiske",
-                "email": "cweiske@php.net",
-                "role": "Lead"
+                "role": "Lead",
+                "email": "cweiske@php.net"
             }
         ],
         "description": "Minimal set of PEAR core files to be used as composer dependency"
@@ -1663,7 +1660,7 @@
             },
             {
                 "name": "Gert de Pagter",
-                "email": "backendtea@gmail.com"
+                "email": "BackEndTea@gmail.com"
             }
         ],
         "description": "Symfony polyfill for ctype functions",
@@ -1807,33 +1804,33 @@
     },
     {
         "name": "twig/twig",
-        "version": "v1.38.4",
-        "version_normalized": "1.38.4.0",
+        "version": "v1.42.3",
+        "version_normalized": "1.42.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/twigphp/Twig.git",
-            "reference": "7732e9e7017d751313811bd118de61302e9c8b35"
+            "reference": "201baee843e0ffe8b0b956f336dd42b2a92fae4e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/twigphp/Twig/zipball/7732e9e7017d751313811bd118de61302e9c8b35",
-            "reference": "7732e9e7017d751313811bd118de61302e9c8b35",
+            "url": "https://api.github.com/repos/twigphp/Twig/zipball/201baee843e0ffe8b0b956f336dd42b2a92fae4e",
+            "reference": "201baee843e0ffe8b0b956f336dd42b2a92fae4e",
             "shasum": ""
         },
         "require": {
-            "php": ">=5.4.0",
+            "php": ">=5.5.0",
             "symfony/polyfill-ctype": "^1.8"
         },
         "require-dev": {
             "psr/container": "^1.0",
-            "symfony/debug": "^2.7",
-            "symfony/phpunit-bridge": "^3.4.19|^4.1.8"
+            "symfony/debug": "^3.4|^4.2",
+            "symfony/phpunit-bridge": "^4.4@dev|^5.0"
         },
-        "time": "2019-03-23T14:27:19+00:00",
+        "time": "2019-08-24T12:51:03+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.38-dev"
+                "dev-master": "1.42-dev"
             }
         },
         "installation-source": "dist",
@@ -1857,14 +1854,14 @@
                 "role": "Lead Developer"
             },
             {
-                "name": "Armin Ronacher",
-                "email": "armin.ronacher@active-4.com",
-                "role": "Project Founder"
-            },
-            {
                 "name": "Twig Team",
                 "homepage": "https://twig.symfony.com/contributors",
                 "role": "Contributors"
+            },
+            {
+                "name": "Armin Ronacher",
+                "email": "armin.ronacher@active-4.com",
+                "role": "Project Founder"
             }
         ],
         "description": "Twig, the flexible, fast, and secure template language for PHP",

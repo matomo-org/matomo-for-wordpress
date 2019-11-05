@@ -69,7 +69,7 @@ class GetStarted {
 		$can_user_edit  = $this->can_user_manage();
 		$show_this_page = $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE );
 
-		include_once( dirname( __FILE__ ) . '/views/get_started.php' );
+		include( dirname( __FILE__ ) . '/views/get_started.php' );
 	}
 
 

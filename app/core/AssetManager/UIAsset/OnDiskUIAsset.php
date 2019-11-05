@@ -55,7 +55,7 @@ class OnDiskUIAsset extends UIAsset
 
     public function getRelativeLocation()
     {
-        if (!empty($this->relativeRootDir)) {
+        if (isset($this->relativeRootDir)) {
             return $this->relativeRootDir . $this->relativeLocation;
         }
         return $this->relativeLocation;

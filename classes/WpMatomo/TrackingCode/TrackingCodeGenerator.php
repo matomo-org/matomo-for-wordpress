@@ -216,7 +216,7 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 
 		$cookie_domain = $this->settings->get_tracking_cookie_domain();
 		if ( ! empty( $cookie_domain ) ) {
-			$options[] = '  _paq.push(["setCookieDomain", ' . json_encode( $cookie_domain ) . ']);';
+			$options[] = '_paq.push(["setCookieDomain", ' . json_encode( $cookie_domain ) . ']);';
 		}
 
 		$track_across_alias = $settings->get_global_option( 'track_across_alias' );
@@ -229,7 +229,7 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 				return '*.' . $host;
 			}, $hosts );
 			if ( ! empty( $hosts ) ) {
-				$options[] = '  _paq.push(["setDomains", ' . json_encode( $hosts ) . ']);';
+				$options[] = '_paq.push(["setDomains", ' . json_encode( $hosts ) . ']);';
 			}
 		}
 		if ( $settings->get_global_option( 'limit_cookies' ) ) {
@@ -260,7 +260,7 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 		$script .= "_paq.push(['setTrackerUrl', " . json_encode( $tracker_endpoint ) . "]);";
 		$script .= "_paq.push(['setSiteId', '" . intval( $idsite ) . "']);";
 		$script .= "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.type='text/javascript'; g.async=true; g.defer=true; g.src=" . json_encode( $js_endpoint ) . "; s.parentNode.insertBefore(g,s);";
+g.type='text/javascript'; g.async=true; g.defer=true; g.src=" . json_encode( $js_endpoint ) . "; s.parentNode.insertBefore(g,s);";
 		$script .= "</script>";
 		$script .= "<!-- End Matomo Code -->";
 

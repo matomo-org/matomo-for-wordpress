@@ -33,13 +33,13 @@ class Paths {
 		$upload_dir      = wp_upload_dir();
 		$path_upload_url = $upload_dir['baseurl'];
 
-		return $path_upload_url . '/' . MATOMO_UPLOAD_DIR;
+		return rtrim( $path_upload_url, '/' ) . '/' . MATOMO_UPLOAD_DIR;
 	}
 
 	public function get_upload_base_dir() {
 		$upload_dir      = wp_upload_dir();
 		$path_upload_dir = $upload_dir['basedir'];
-		$path_upload_dir = $path_upload_dir . '/' . MATOMO_UPLOAD_DIR;
+		$path_upload_dir = rtrim( $path_upload_dir, '/' ) . '/' . MATOMO_UPLOAD_DIR;
 
 		return $path_upload_dir;
 	}
@@ -109,7 +109,7 @@ class Paths {
 	}
 
 	public function get_relative_dir_to_matomo( $target_dir ) {
-		$matomo_dir         = plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'app';
+		$matomo_dir         = plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app';
 		$matomo_dir_parts   = explode( '/', $matomo_dir );
 		$target_dir_parts   = explode( '/', $target_dir );
 		$relative_directory = '';
@@ -120,7 +120,7 @@ class Paths {
 			if ( isset( $matomo_dir_parts[ $index ] )
 			     && $part !== 'matomo' // not when matomo is same part cause it's the plugin name but eg also the upload folder name and it would generate wrong path
 			     && $matomo_dir_parts[ $index ] === $part
-				&& !$was_previous_same) {
+			     && ! $was_previous_same ) {
 				continue;
 			}
 
@@ -183,21 +183,19 @@ class Paths {
 		return $path_upload_dir;
 	}
 
-	public function clear_assets_dir()
-	{
+	public function clear_assets_dir() {
 		$tmp_dir = $this->get_tmp_dir() . '/assets';
-		if ($tmp_dir && is_dir($tmp_dir)) {
+		if ( $tmp_dir && is_dir( $tmp_dir ) ) {
 			$file_system_direct = $this->get_file_system();
 			$file_system_direct->rmdir( $tmp_dir, true );
 		}
 	}
 
-	public function clear_cache_dir()
-	{
+	public function clear_cache_dir() {
 		$tmp_dir = $this->get_tmp_dir();
-		if ($tmp_dir
-		    && is_dir($tmp_dir)
-		    && is_dir($tmp_dir . '/cache')) {
+		if ( $tmp_dir
+		     && is_dir( $tmp_dir )
+		     && is_dir( $tmp_dir . '/cache' ) ) {
 			// we make sure it's a matomo cache dir to not delete something falsely
 			$file_system_direct = $this->get_file_system();
 			$file_system_direct->rmdir( $tmp_dir, true );

@@ -59,9 +59,9 @@ class MatomoConfigurationVariable extends BaseVariable
             $field->validators[] = new UrlLike();
         });
 
-        $trackerCodeGenerator = new TrackerCodeGenerator();
-        $jsEndpoint = $trackerCodeGenerator->getJsTrackerEndpoint();
-        $phpEndpoint = $trackerCodeGenerator->getPhpTrackerEndpoint();
+	    $trackerCodeGenerator = new TrackerCodeGenerator();
+	    $jsEndpoint = $trackerCodeGenerator->getJsTrackerEndpoint();
+	    $phpEndpoint = $trackerCodeGenerator->getPhpTrackerEndpoint();
 
         return array(
             $matomoUrl,

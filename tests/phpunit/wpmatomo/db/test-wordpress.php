@@ -26,6 +26,14 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		$this->insert_many_values();
 	}
 
+	/**
+	 * @expectedException \Zend_Db_Statement_Exception
+	 * @expectedExceptionMessage  foobarbaz' doesn't exist
+	 */
+	public function test_query_triggers_error_when_wrong_sql() {
+		$this->db->query( 'select * from foobarbaz');
+	}
+
 	public function test_query_can_execute_select_queries() {
 		$table  = Common::prefixTable( 'user' );
 		$result = $this->db->query( ' select * from ' . $table );
@@ -73,6 +81,14 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		$this->assertCount( 3, $result );
 	}
 
+	/**
+	 * @expectedException \Zend_Db_Statement_Exception
+	 * @expectedExceptionMessage  foobarbaz' doesn't exist
+	 */
+	public function test_fetch_all_triggers_error_when_wrong_sql() {
+		$this->db->fetchAll( 'select * from foobarbaz');
+	}
+
 	public function test_fetch_all_works_with_bind_params() {
 		$table  = Common::prefixTable( 'access' );
 		$result = $this->db->fetchAll( 'select * from ' . $table . ' where access = ? and idsite = ?', array(
@@ -82,10 +98,26 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		$this->assertCount( 1, $result );
 	}
 
+	/**
+	 * @expectedException \Zend_Db_Statement_Exception
+	 * @expectedExceptionMessage  foobarbaz' doesn't exist
+	 */
+	public function test_fetch_one_triggers_error_when_wrong_sql() {
+		$this->db->fetchOne( 'select foo from foobarbaz');
+	}
+
 	public function test_fetch_one() {
 		$table  = Common::prefixTable( 'access' );
 		$result = $this->db->fetchOne( 'select access from ' . $table . ' limit 1' );
 		$this->assertEquals( 'view', $result );
+	}
+
+	/**
+	 * @expectedException \Zend_Db_Statement_Exception
+	 * @expectedExceptionMessage  foobarbaz' doesn't exist
+	 */
+	public function test_fetch_row_triggers_error_when_wrong_sql() {
+		$this->db->fetchRow( 'select * from foobarbaz limit 1');
 	}
 
 	public function test_fetch_row() {
@@ -97,6 +129,14 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 			'idsite'   => '1',
 			'access'   => 'view',
 		), $result );
+	}
+
+	/**
+	 * @expectedException \Zend_Db_Statement_Exception
+	 * @expectedExceptionMessage  foobarbaz' doesn't exist
+	 */
+	public function test_exec_triggers_error_when_wrong_sql() {
+		$this->db->exec( 'select * from foobarbaz');
 	}
 
 	public function test_exec() {

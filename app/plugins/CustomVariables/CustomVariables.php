@@ -82,6 +82,7 @@ class CustomVariables extends \Piwik\Plugin
         if (isset($cache[$cacheKey])) {
             return $cache[$cacheKey];
         }
+
         return 0;
     }
 

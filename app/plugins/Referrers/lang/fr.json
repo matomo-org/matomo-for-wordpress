@@ -26,6 +26,7 @@
         "DistinctSearchEngines": "Moteurs de recherche distincts",
         "DistinctSocialNetworks": "réseaux sociaux uniques",
         "DistinctWebsites": "sites web distincts",
+        "DistinctWebsiteUrls": "URL distinctes de sites Internet",
         "EvolutionDocumentation": "Ceci est un aperçu des référents qui ont conduit des visiteurs sur votre site web.",
         "EvolutionDocumentationMoreInfo": "Pour plus d'information à propos des différents types de canaux, consultez la documentation de la table %s.",
         "Keywords": "Mots-clés",
@@ -56,7 +57,7 @@
         "UsingNDistinctUrls": "(utilisant %s urls distinctes)",
         "GenerateUrl": "Générer l'URL",
         "URLCampaignBuilder": "Bâtisseur d'URL de campagne",
-        "URLCampaignBuilderIntro": "L'outil %1$s bâtisseur d'URL%2$s vous permet de générer des URLs prêtes à être utilisées pour suivre des campagnes Matomo. Reportez-vous à la documentation à propos %3$sdu suivit de Campagne%4$s pour plus d'information.",
+        "URLCampaignBuilderIntro": "L'outil %1$s bâtisseur d'URL%2$s vous permet de générer des URLs prêtes à être utilisées pour suivre des campagnes Matomo. Reportez-vous à la documentation à propos %3$sdu suivi de Campagne%4$s pour plus d'information.",
         "URLCampaignBuilderResult": "URL générée que vous pouvez copier\/coller dans vos Campagnes, Info courriel, Publicité Facebook ou Tweets:",
         "ViewAllReferrers": "Afficher tous les référents",
         "ViewReferrersBy": "Afficher les référents par %s",
@@ -68,6 +69,12 @@
         "WidgetSocials": "Liste des réseaux sociaux",
         "WidgetTopKeywordsForPages": "Meilleurs mots-clés pour l'URL",
         "XPercentOfVisits": "%s des visites",
-        "Acquisition": "Acquisition"
+        "Acquisition": "Acquisition",
+        "VisitorsFromSearchEngines": "Visiteurs de moteurs de recherche",
+        "PercentOfX": "Pourcentage de %s",
+        "VisitorsFromSocialNetworks": "Visiteurs de réseaux sociaux",
+        "VisitorsFromDirectEntry": "Visiteurs entrés directement",
+        "VisitorsFromWebsites": "Visiteurs de sites web",
+        "VisitorsFromCampaigns": "Visiteurs de campagnes"
     }
 }

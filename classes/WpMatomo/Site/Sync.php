@@ -10,6 +10,7 @@
 namespace WpMatomo\Site;
 
 use Piwik\Access;
+use Piwik\Config;
 use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\SitesManager;
 use WpMatomo\Bootstrap;
@@ -119,6 +120,9 @@ class Sync {
 		/** @var \WP_Site $site */
 		$timezone = $this->detect_timezone();
 		$idsite   = null;
+
+		$this->set_enable_sites_admin(1);
+
 		Access::doAsSuperUser( function () use ( $blog_name, $blog_url, $timezone, &$idsite ) {
 			SitesManager\API::unsetInstance();
 			// we need to unset the instance to make sure it fetches the
@@ -136,6 +140,7 @@ class Sync {
 				$timezone
 			);
 		} );
+		$this->set_enable_sites_admin(0);
 
 		$this->logger->log( 'Matomo created site with ID ' . $idsite . ' for blog' );
 
@@ -150,6 +155,13 @@ class Sync {
 		do_action( 'matomo_site_synced', $idsite, $blog_id );
 
 		return true;
+	}
+
+	private function set_enable_sites_admin($enabled)
+	{
+		$general = Config::getInstance()->General;
+		$general['enable_sites_admin'] = (int) $enabled;
+		Config::getInstance()->General = $general;
 	}
 
 	private function detect_timezone() {

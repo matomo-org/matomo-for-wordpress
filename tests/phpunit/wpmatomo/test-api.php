@@ -39,7 +39,8 @@ class ApiTest extends MatomoAnalytics_TestCase {
 
 		$request  = new WP_REST_Request( 'GET', '/' . API::VERSION . '/api/matomo_version' );
 		$response = rest_get_server()->dispatch( $request );
-		$this->assertEquals( '3.11.0', $response->get_data() );
+		$this->assertStringStartsWith( '3.', $response->get_data() );
+		$this->assertTrue( strlen($response->get_data()) < 15 );
 	}
 
 	public function test_dispatch_matomo_api_when_not_authenticated() {
@@ -47,7 +48,7 @@ class ApiTest extends MatomoAnalytics_TestCase {
 		$response = rest_get_server()->dispatch( $request );
 		$this->assertEquals( array(
 			'code'    => 'matomo_no_access_exception',
-			'message' => 'You can\'t access this resource as it requires view access for at least one website.',
+			'message' => 'You must be logged in to access this functionality.',
 			'data'    => null
 		), $response->get_data() );
 	}

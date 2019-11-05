@@ -51,7 +51,9 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 
 		$this->fake_request( TrackingSettings::TRACK_MODE_DEFAULT );
 
+		ob_start();
 		$this->get_started->show();
+		ob_end_clean();
 
 		$this->assertSame( TrackingSettings::TRACK_MODE_DEFAULT, $this->settings->get_global_option( 'track_mode' ) );
 		// still show the get started page
@@ -63,7 +65,9 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 
 		$this->fake_request( TrackingSettings::TRACK_MODE_DEFAULT );
 
+		ob_start();
 		$this->get_started->show();
+		ob_end_clean();
 
 		$this->assertSame( TrackingSettings::TRACK_MODE_DISABLED, $this->settings->get_global_option( 'track_mode' ) );
 	}
@@ -72,7 +76,9 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 
 		$this->fake_request( 'manually' );
 
+		ob_start();
 		$this->get_started->show();
+		ob_end_clean();
 
 		$this->assertSame( TrackingSettings::TRACK_MODE_DISABLED, $this->settings->get_global_option( 'track_mode' ) );
 	}
@@ -82,7 +88,9 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 		$this->assertNotEmpty( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) );
 		$this->fake_request( 'no', Settings::SHOW_GET_STARTED_PAGE );
 
+		ob_start();
 		$this->get_started->show();
+		ob_end_clean();
 
 		$this->assertEmpty( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) );
 	}
@@ -92,7 +100,9 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 		$this->assertNotEmpty( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) );
 		$this->fake_request( Settings::SHOW_GET_STARTED_PAGE, '' );
 
+		ob_start();
 		$this->get_started->show();
+		ob_end_clean();
 
 		$this->assertNotEmpty( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) );
 	}
@@ -101,7 +111,6 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 		$_POST[ GetStarted::FORM_NAME ] = array( $post_key => $track_mode_value );
 		$_REQUEST['_wpnonce']     = wp_create_nonce( GetStarted::NONCE_NAME );
 		$_SERVER['REQUEST_URI']   = home_url();
-
 	}
 
 

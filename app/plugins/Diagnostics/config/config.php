@@ -15,6 +15,7 @@ return array(
     ),
     // Diagnostics for recommended features
     'diagnostics.optional' => array(
+        DI\get('Piwik\Plugins\Diagnostics\Diagnostic\FileIntegrityCheck'),
         DI\get('Piwik\Plugins\Diagnostics\Diagnostic\TrackerCheck'),
         DI\get('Piwik\Plugins\Diagnostics\Diagnostic\MemoryLimitCheck'),
         DI\get('Piwik\Plugins\Diagnostics\Diagnostic\TimezoneCheck'),
@@ -26,6 +27,7 @@ return array(
         DI\get('Piwik\Plugins\Diagnostics\Diagnostic\NfsDiskCheck'),
         DI\get('Piwik\Plugins\Diagnostics\Diagnostic\CronArchivingCheck'),
         DI\get(CronArchivingLastRunCheck::class),
+        DI\get('Piwik\Plugins\Diagnostics\Diagnostic\LoadDataInfileCheck'),
         Di\get('Piwik\Plugins\Diagnostics\Diagnostic\DbOverSSLCheck'),
         Di\get('Piwik\Plugins\Diagnostics\Diagnostic\DbMaxPacket'),
         Di\get('Piwik\Plugins\Diagnostics\Diagnostic\ForceSSLCheck'),

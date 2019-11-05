@@ -50,11 +50,14 @@ class AdminSystemReportTest extends MatomoUnit_TestCase {
 	/**
 	 * @dataProvider get_trouble_shooting_data
 	 */
-	public function test_show_does_change_license_key_if_nonce_and_valid( $method ) {
+	public function test_show_executes_troubleshooting_with_no_error( $method ) {
 
 		$this->fake_request( $method );
 
-		$this->assertNull( $this->report->show() );
+		ob_start();
+		$show = $this->report->show();
+		ob_end_clean();
+		$this->assertNull( $show );
 	}
 
 	public function get_trouble_shooting_data() {

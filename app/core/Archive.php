@@ -453,31 +453,6 @@ class Archive implements ArchiveQuery
         return $dataTable;
     }
 
-    private function canUseDbReader()
-    {
-        if (Common::isPhpCliMode() ) {
-            // we are likely archiving or we are in CronArchive class etc. where it is important to detect if a
-            // specific archive already exist or not to possibly prevent triggering an unneeded archive request...
-            // also we only want to read archives from the reader for requests from the web
-            return false;
-        }
-
-        if (SettingsServer::isArchivePhpTriggered()) {
-            // when archiving is triggered, we want to make sure to read archives from master to ensure most recent
-            // archives are read etc
-            return false;
-        }
-
-        if (Rules::isArchivingDisabledFor($this->params->getIdSites(), $this->params->getSegment(), $this->getPeriodLabel())) {
-            // in this case we know we won't be creating any archives and we will only want to read archives in order
-            // to present the data in Matomo. We want to use the reader in this case
-            return true;
-        }
-
-        // archiving could be triggered during this request, better not use the reader
-        return false;
-    }
-
     private function getSiteIdsThatAreRequestedInThisArchiveButWereNotInvalidatedYet()
     {
         if (is_null(self::$cache)) {
@@ -569,7 +544,7 @@ class Archive implements ArchiveQuery
         }
 
         $result = new Archive\DataCollection(
-            $dataNames, $archiveDataType, $this->params->getIdSites(), $this->params->getPeriods(), $defaultRow = null);
+            $dataNames, $archiveDataType, $this->params->getIdSites(), $this->params->getPeriods(), $this->params->getSegment(), $defaultRow = null);
 
         $archiveIds = $this->getArchiveIds($archiveNames);
         if (empty($archiveIds)) {
@@ -581,7 +556,7 @@ class Archive implements ArchiveQuery
             return $result;
         }
 
-        $archiveData = ArchiveSelector::getArchiveData($archiveIds, $archiveNames, $archiveDataType, $idSubtable, $this->canUseDbReader());
+        $archiveData = ArchiveSelector::getArchiveData($archiveIds, $archiveNames, $archiveDataType, $idSubtable);
 
         $isNumeric = $archiveDataType == 'numeric';
 
@@ -674,6 +649,15 @@ class Archive implements ArchiveQuery
             foreach ($this->params->getIdSites() as $idSite) {
                 $site = new Site($idSite);
 
+                 if ($period->getLabel() === 'day'
+                    && !$this->params->getSegment()->isEmpty()
+                    && Common::getRequestVar('skipArchiveSegmentToday', 0, 'int')
+                    && $period->getDateStart()->toString() == Date::factory('now', $site->getTimezone())->toString()) {
+
+                    Log::debug("Skipping archive %s for %s as segment today is disabled", $period->getLabel(), $period->getPrettyString());
+                    continue;
+                }
+
                 // if the END of the period is BEFORE the website creation date
                 // we already know there are no stats for this period
                 // we add one day to make sure we don't miss the day of the website creation
@@ -705,7 +689,7 @@ class Archive implements ArchiveQuery
     private function cacheArchiveIdsWithoutLaunching($plugins)
     {
         $idarchivesByReport = ArchiveSelector::getArchiveIds(
-            $this->params->getIdSites(), $this->params->getPeriods(), $this->params->getSegment(), $plugins, $this->canUseDbReader());
+            $this->params->getIdSites(), $this->params->getPeriods(), $this->params->getSegment(), $plugins);
 
         // initialize archive ID cache for each report
         foreach ($plugins as $plugin) {

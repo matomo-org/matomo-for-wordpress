@@ -36,6 +36,18 @@ class Controller extends \Piwik\Plugin\Controller
             throw new \Exception("Widgetizing API requests is not supported for security reasons. Please change query parameter 'moduleToWidgetize'.");
         }
 
+        if ($controllerName == 'Widgetize') {
+            throw new \Exception("Please set 'moduleToWidgetize' to a valid value.");
+        }
+
+        if ($controllerName == 'CoreHome' && $actionName == 'index') {
+            $message = 'CoreHome cannot be widgetized. '  . 
+                'You can enable it to be embedded directly into an iframe (passing module=CoreHme instead of module=Widgetize) ' .
+                'instead by enabling the \'enable_framed_pages\' setting in your config. ' .
+                'See https://matomo.org/faq/how-to/faq_193/ for more info.';
+            throw new \Exception($message);
+        }
+
         $shouldEmbedEmpty = false;
 
         /**

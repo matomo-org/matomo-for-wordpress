@@ -76,6 +76,29 @@ class AssetManager extends Singleton
     }
 
     /**
+     * @inheritDoc
+     * @return AssetManager
+     */
+    public static function getInstance()
+    {
+        $assetManager = parent::getInstance();
+
+        /**
+         * Triggered when creating an instance of the asset manager. Lets you overwite the
+         * asset manager behavior.
+         *
+         * @param AssetManager &$assetManager
+         *
+         * @ignore
+         * This event is not a public event since we don't want to make the asset manager itself public
+         * API
+         */
+        Piwik::postEvent('AssetManager.makeNewAssetManagerObject', array(&$assetManager));
+
+        return $assetManager;
+    }
+
+    /**
      * @param UIAssetCacheBuster $cacheBuster
      */
     public function setCacheBuster($cacheBuster)
@@ -188,19 +211,6 @@ class AssetManager extends Singleton
         return $this->getMergedJavascript($this->getNonCoreJScriptFetcher(), $this->getMergedNonCoreJSAsset());
     }
 
-	/**
-	 * @inheritDoc
-	 * @return AssetManager
-	 */
-    public static function getInstance()
-    {
-    	$assetManager = parent::getInstance();
-
-    	Piwik::postEvent('AssetManager.makeNewAssetManagerObject', array(&$assetManager));
-
-    	return $assetManager;
-    }
-
     /**
      * @param boolean $core
      * @return string[]
@@ -302,7 +312,7 @@ class AssetManager extends Singleton
      *
      * @return string
      */
-    private function getIndividualCoreAndNonCoreJsIncludes()
+    protected function getIndividualCoreAndNonCoreJsIncludes()
     {
         return
             $this->getIndividualJsIncludesFromAssetFetcher($this->getCoreJScriptFetcher()) .

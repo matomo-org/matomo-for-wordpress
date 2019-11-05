@@ -133,6 +133,7 @@ class Uninstaller {
 			'archive_numeric_2010_01',
 			'brute_force_log',
 			'goal',
+			'locks',
 			'log_action',
 			'log_conversion',
 			'log_conversion_item',

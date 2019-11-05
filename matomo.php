@@ -4,7 +4,7 @@
  * Description: Most powerful web analytics for WordPress giving you 100% data ownership and privacy protection
  * Author: Matomo
  * Author URI: https://matomo.org
- * Version: 0.1.9
+ * Version: 0.2.0
  * Domain Path: /languages
  * WC requires at least: 2.4.0
  * WC tested up to: 3.2.6
@@ -21,37 +21,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 load_plugin_textdomain( 'matomo', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
-define( 'MATOMO_ANALYTICS_FILE', __FILE__ );
+if ( ! defined( 'MATOMO_ANALYTICS_FILE' ) ) {
+	define( 'MATOMO_ANALYTICS_FILE', __FILE__ );
+}
 
 $GLOBALS['MATOMO_PLUGINS_ENABLED'] = array();
 
 /** MATOMO_PLUGIN_FILES => used to check for updates etc */
 $GLOBALS['MATOMO_PLUGIN_FILES'] = array( MATOMO_ANALYTICS_FILE );
 
-function has_matomo_compatible_content_dir()
-{
-	return defined('WP_CONTENT_DIR') && ABSPATH.'wp-content' === rtrim(WP_CONTENT_DIR, '/');
+function has_matomo_compatible_content_dir() {
+	return defined( 'WP_CONTENT_DIR' ) && ABSPATH . 'wp-content' === rtrim( WP_CONTENT_DIR, '/' );
 }
 
-function is_matomo_app_request()
-{
+function is_matomo_app_request() {
 	return ! empty( $_SERVER['SCRIPT_NAME'] )
 	&& ( substr( $_SERVER['SCRIPT_NAME'], - 1 * strlen( 'matomo/app/index.php' ) ) === 'matomo/app/index.php' );
 }
 
-function has_matomo_tag_manager()
-{
-	if (defined('MATOMO_DISABLE_TAG_MANAGER') && MATOMO_DISABLE_TAG_MANAGER) {
+function has_matomo_tag_manager() {
+	if ( defined( 'MATOMO_DISABLE_TAG_MANAGER' ) && MATOMO_DISABLE_TAG_MANAGER ) {
 		return false;
 	}
 
-	$is_multisite = function_exists('is_multisite') && is_multisite();
-	if ($is_multisite) {
+	$is_multisite = function_exists( 'is_multisite' ) && is_multisite();
+	if ( $is_multisite ) {
 		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
 			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 		}
 
 		$network_enabled = is_plugin_active_for_network( 'matomo/matomo.php' );
+
 		return false;
 	}
 

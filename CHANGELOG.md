@@ -1,3 +1,7 @@
+0.2.0
+- Update to Matomo 3.12.0
+- Improve session start success check
+
 0.1.9
 - Better session error logging
 

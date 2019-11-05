@@ -516,7 +516,7 @@ class PiwikTracker
         if (strlen($domain) > 0) {
             $dl = strlen($domain) - 1;
             // remove trailing '.'
-            if ($domain{$dl} === '.') {
+	        if ($domain[$dl] === '.') {
                 $domain = substr($domain, 0, $dl);
             }
             // remove leading '*'
@@ -1674,14 +1674,13 @@ class PiwikTracker
         if (!empty($this->customParameters)) {
             $customFields = '&' . http_build_query($this->customParameters, '', '&');
         }
-        $baseUrl = $this->getBaseUrl();
-        $start = '?';
-        if (strpos($baseUrl, '?') !== false) {
-        	$start = '&';
-        }
-
-        $url = $baseUrl . $start .
-            '&idsite=' . $idSite .
+	    $baseUrl = $this->getBaseUrl();
+	    $start = '?';
+	    if (strpos($baseUrl, '?') !== false) {
+		    $start = '&';
+	    }
+	    $url = $baseUrl . $start .
+            'idsite=' . $idSite .
             '&rec=1' .
             '&apiv=' . self::VERSION .
             '&r=' . substr(strval(mt_rand()), 2, 6) .

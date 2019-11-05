@@ -13,6 +13,7 @@
 namespace Twig\Node;
 
 use Twig\Compiler;
+use Twig\Source;
 
 /**
  * Represents a node in the AST.
@@ -27,13 +28,9 @@ class Node implements \Twig_NodeInterface
     protected $tag;
 
     private $name;
+    private $sourceContext;
 
     /**
-     * Constructor.
-     *
-     * The nodes are automatically made available as properties ($this->node).
-     * The attributes are automatically made available as array items ($this['name']).
-     *
      * @param array  $nodes      An array of named nodes
      * @param array  $attributes An array of attributes (should not be nodes)
      * @param int    $lineno     The line number
@@ -43,7 +40,7 @@ class Node implements \Twig_NodeInterface
     {
         foreach ($nodes as $name => $node) {
             if (!$node instanceof \Twig_NodeInterface) {
-                @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : null === $node ? 'null' : \gettype($node), $name, \get_class($this)), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : (null === $node ? 'null' : \gettype($node)), $name, \get_class($this)), E_USER_DEPRECATED);
             }
         }
         $this->nodes = $nodes;
@@ -199,7 +196,7 @@ class Node implements \Twig_NodeInterface
     public function setNode($name, $node = null)
     {
         if (!$node instanceof \Twig_NodeInterface) {
-            @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : null === $node ? 'null' : \gettype($node), $name, \get_class($this)), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Using "%s" for the value of node "%s" of "%s" is deprecated since version 1.25 and will be removed in 2.0.', \is_object($node) ? \get_class($node) : (null === $node ? 'null' : \gettype($node)), $name, \get_class($this)), E_USER_DEPRECATED);
         }
 
         $this->nodes[$name] = $node;
@@ -233,6 +230,21 @@ class Node implements \Twig_NodeInterface
     public function getTemplateName()
     {
         return $this->name;
+    }
+
+    public function setSourceContext(Source $source)
+    {
+        $this->sourceContext = $source;
+        foreach ($this->nodes as $node) {
+            if ($node instanceof Node) {
+                $node->setSourceContext($source);
+            }
+        }
+    }
+
+    public function getSourceContext()
+    {
+        return $this->sourceContext;
     }
 
     /**

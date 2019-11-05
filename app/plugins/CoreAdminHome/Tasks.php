@@ -23,9 +23,9 @@ use Piwik\Piwik;
 use Piwik\Plugins\CoreAdminHome\Emails\JsTrackingCodeMissingEmail;
 use Piwik\Plugins\CoreAdminHome\Emails\TrackingFailuresEmail;
 use Piwik\Plugins\CoreAdminHome\Tasks\ArchivesToPurgeDistributedList;
+use Piwik\Plugins\SegmentEditor\Model;
 use Piwik\Plugins\SitesManager\SitesManager;
 use Piwik\Scheduler\Schedule\SpecificTime;
-use Piwik\Segment;
 use Piwik\Settings\Storage\Backend\MeasurableSettingsTable;
 use Piwik\Tracker\Failures;
 use Piwik\Site;
@@ -73,6 +73,10 @@ class Tasks extends \Piwik\Plugin\Tasks
 
         $this->daily('cleanupTrackingFailures', null, self::LOWEST_PRIORITY);
         $this->weekly('notifyTrackingFailures', null, self::LOWEST_PRIORITY);
+
+        if(SettingsPiwik::isInternetEnabled() === true){
+            $this->weekly('updateSpammerBlacklist');
+        }
 
         $this->scheduleTrackingCodeReminderChecks();
     }
@@ -244,6 +248,26 @@ class Tasks extends \Piwik\Plugin\Tasks
     }
 
     /**
+     * Update the referrer spam blacklist
+     *
+     * @see https://github.com/matomo-org/referrer-spam-blacklist
+     */
+    public function updateSpammerBlacklist()
+    {
+        $url = 'https://raw.githubusercontent.com/matomo-org/referrer-spam-blacklist/master/spammers.txt';
+        $list = Http::sendHttpRequest($url, 30);
+        $list = preg_split("/\r\n|\n|\r/", $list);
+        if (count($list) < 10) {
+            throw new \Exception(sprintf(
+                'The spammers list downloaded from %s contains less than 10 entries, considering it a fail',
+                $url
+            ));
+        }
+
+        Option::set(ReferrerSpamFilter::OPTION_STORAGE_NAME, serialize($list));
+    }
+
+    /**
      * To test execute the following command:
      * `./console core:run-scheduled-tasks "Piwik\Plugins\CoreAdminHome\Tasks.purgeOrphanedArchives"`
      *
@@ -251,7 +275,10 @@ class Tasks extends \Piwik\Plugin\Tasks
      */
     public function purgeOrphanedArchives()
     {
-        $segmentHashesByIdSite = $this->getSegmentHashesByIdSite();
+        $eightDaysAgo = Date::factory('now')->subDay(8);
+        $model = new Model();
+        $deletedSegments = $model->getSegmentsDeletedSince($eightDaysAgo);
+
         $archiveTables = ArchiveTableCreator::getTablesArchivesInstalled('numeric');
 
         $datesPurged = array();
@@ -262,32 +289,12 @@ class Tasks extends \Piwik\Plugin\Tasks
             $dateObj = Date::factory("$year-$month-15");
 
             $this->archivePurger->purgeDeletedSiteArchives($dateObj);
-            $this->archivePurger->purgeDeletedSegmentArchives($dateObj, $segmentHashesByIdSite);
+            if (count($deletedSegments)) {
+                $this->archivePurger->purgeDeletedSegmentArchives($dateObj, $deletedSegments);
+            }
 
             $datesPurged[$date] = true;
         }
-    }
-
-    /**
-     * Get a list of all segment hashes that currently exist, indexed by idSite.
-     * @return array
-     */
-    public function getSegmentHashesByIdSite()
-    {
-        //Get a list of hashes of all segments that exist now
-        $sql = "SELECT DISTINCT definition, enable_only_idsite FROM " . Common::prefixTable('segment')
-            . " WHERE deleted = 0";
-        $rows = Db::fetchAll($sql);
-        $segmentHashes = array();
-        foreach ($rows as $row) {
-            $idSite = (int)$row['enable_only_idsite'];
-            if (! isset($segmentHashes[$idSite])) {
-                $segmentHashes[$idSite] = array();
-            }
-            $segmentHashes[$idSite][] = Segment::getSegmentHash($row['definition']);
-        }
-
-        return $segmentHashes;
     }
 
     /**

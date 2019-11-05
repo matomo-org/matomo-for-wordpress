@@ -17,7 +17,9 @@ trait StyleTrait
      * @var array (rgb)
      *            Default: #1388db
      */
-    protected $lineColor = [19, 136, 219];
+    protected $lineColor = [
+        [19, 136, 219],
+    ];
 
     /**
      * @var array (rgb)
@@ -61,10 +63,10 @@ trait StyleTrait
     /**
      * @param string $color (hexadecimal)
      */
-    public function setLineColorHex($color)
+    public function setLineColorHex($color, $seriesIndex = 0)
     {
         list($red, $green, $blue) = $this->colorHexToRGB($color);
-        $this->setLineColorRGB($red, $green, $blue);
+        $this->setLineColorRGB($red, $green, $blue, $seriesIndex);
     }
 
     /**
@@ -72,9 +74,9 @@ trait StyleTrait
      * @param int $green
      * @param int $blue
      */
-    public function setLineColorRGB($red, $green, $blue)
+    public function setLineColorRGB($red, $green, $blue, $seriesIndex = 0)
     {
-        $this->lineColor = [$red, $green, $blue];
+        $this->lineColor[$seriesIndex] = [$red, $green, $blue];
     }
 
     /**
