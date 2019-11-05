@@ -30,8 +30,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<?php if ( current_user_can( Capabilities::KEY_SUPERUSER )
 		           && ! is_network_admin() ) { ?>
-            <a href="<?php echo Menu::get_matomo_action_url( Menu::REPORTING_GOTO_ADMIN ); ?>" class="nav-tab"
-            >Matomo Admin <span class="dashicons-before dashicons-external"></span></a>
+            <a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_ADMIN ); ?>" class="nav-tab"
+            ><?php _e( 'Matomo Admin', 'matomo' ); ?> <span class="dashicons-before dashicons-external"></span></a>
 
 		<?php } ?>
     </h2>

@@ -152,7 +152,7 @@ class Menu {
 		}
 	}
 
-	public static function get_matomo_action_url( $goto ) {
+	public static function get_matomo_goto_url( $goto ) {
 		return add_query_arg( array( 'goto' => $goto ), menu_page_url( Menu::SLUG_REPORTING, false ) );
 	}
 
@@ -215,7 +215,10 @@ class Menu {
 		exit;
 	}
 
-	public static function make_matomo_reporting_link( $category, $subcategory, $params ) {
+	/**
+	 * @api
+	 */
+	public static function get_matomo_reporting_url( $category, $subcategory, $params = array() ) {
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
@@ -235,8 +238,43 @@ class Menu {
 			$params['date'] = 'today';
 		}
 
+		$url = self::make_matomo_app_base_url();
+		$url .= '?module=CoreHome&action=index&idSite=' . (int) $idsite . '&period=' . urlencode( $params['period'] ) . '&date=' . urlencode( $params['date'] ) . '#?&' . http_build_query( $params );
+
+		return $url;
+	}
+
+	private static function make_matomo_app_base_url()
+	{
 		$url = plugins_url( 'app', MATOMO_ANALYTICS_FILE );
-		$url .= '/index.php?module=CoreHome&action=index&idSite=' . (int) $idsite . '&period='.urlencode($params['period']).'&date='.urlencode($params['date']).'#?&' . http_build_query( $params );
+
+		return $url . '/index.php';
+	}
+
+	/**
+	 * @api
+	 */
+	public static function get_matomo_action_url( $module, $action, $params = array() ) {
+		$site   = new Site();
+		$idsite = $site->get_current_matomo_site_id();
+
+		if ( ! $idsite ) {
+			return;
+		}
+
+		$idsite           = (int) $idsite;
+		$params['module'] = $module;
+		$params['action'] = $action;
+		$params['idSite'] = $idsite;
+
+		if ( empty( $params['period'] ) ) {
+			$params['period'] = 'day';
+		}
+		if ( empty( $params['date'] ) ) {
+			$params['date'] = 'today';
+		}
+
+		$url = self::make_matomo_app_base_url() . '?' . http_build_query( $params );
 
 		return $url;
 	}
@@ -252,8 +290,8 @@ class Menu {
 		$default_date     = $user_preferences->getDefaultDate();
 		$default_period   = $user_preferences->getDefaultPeriod( false );
 
-		$url = plugins_url( 'app', MATOMO_ANALYTICS_FILE );
-		$url .= '/index.php?idSite=' . (int) $website_id . '&period=' . urlencode( $default_period ) . '&date=' . urlencode( $default_date );
+		$url = self::make_matomo_app_base_url();
+		$url .= '?idSite=' . (int) $website_id . '&period=' . urlencode( $default_period ) . '&date=' . urlencode( $default_date );
 		$url .= '&module=' . urlencode( $module ) . '&action=' . urlencode( $action );
 		wp_redirect( $url );
 		exit;

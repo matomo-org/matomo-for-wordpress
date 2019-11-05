@@ -28,14 +28,14 @@ class Uninstaller {
 		return new Logger();
 	}
 
-	public function uninstall( $shouldRemoveAllData ) {
+	public function uninstall( $should_remove_all_data ) {
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-			$this->uninstall_multisite( $shouldRemoveAllData );
+			$this->uninstall_multisite( $should_remove_all_data );
 		} else {
-			$this->uninstall_blog( $shouldRemoveAllData );
+			$this->uninstall_blog( $should_remove_all_data );
 		}
 
-		do_action( 'matomo_uninstall' );
+		do_action( 'matomo_uninstall', $should_remove_all_data );
 	}
 
 	public function uninstall_blog( $should_remove_all_data ) {
@@ -48,6 +48,8 @@ class Uninstaller {
 
 		$roles = new Roles( $settings );
 		$roles->uninstall();
+
+		$paths = new Paths();
 
 		if ( $should_remove_all_data ) {
 			$this->logger->log( 'Matomo is forced to remove all data' );
@@ -62,11 +64,12 @@ class Uninstaller {
 			$site = new User();
 			$site->uninstall();
 
-			$paths = new Paths();
 			$paths->uninstall();
+		} else {
+			$paths->clear_cache_dir();
 		}
 
-		do_action( 'matomo_uninstall_blog' );
+		do_action( 'matomo_uninstall_blog', $should_remove_all_data );
 
 		$this->logger->log( 'Matomo has finished uninstalling ' . get_current_blog_id() );
 	}

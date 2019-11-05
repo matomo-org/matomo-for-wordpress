@@ -155,7 +155,8 @@ class WpMatomo {
 	}
 
 	public function init_plugin() {
-		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+		if ( (is_admin() || is_matomo_app_request())
+		     && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 			$installer = new Installer( $this->settings );
 			$installer->register_hooks();
 			if ( $installer->looks_like_it_is_installed() ) {
@@ -164,10 +165,15 @@ class WpMatomo {
 					$updater->update_if_needed();
 				}
 			} else {
-				$installer->install();
+				if (is_matomo_app_request()) {
+					// we can't install if matomo is requested... there's some circular reference
+					wp_redirect(admin_url());
+					exit;
+				} else {
+					$installer->install();
+				}
 			}
 		}
-
 		$tracking_code = new TrackingCode( $this->settings );
 		if ( $this->settings->is_tracking_enabled() && ! $tracking_code->is_hidden_user() ) {
 			$tracker = new AjaxTracker( $this->settings );

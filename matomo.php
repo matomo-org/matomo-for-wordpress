@@ -4,7 +4,7 @@
  * Description: Most powerful web analytics for WordPress giving you 100% data ownership and privacy protection
  * Author: Matomo
  * Author URI: https://matomo.org
- * Version: 0.1.6
+ * Version: 0.1.9
  * Domain Path: /languages
  * WC requires at least: 2.4.0
  * WC tested up to: 3.2.6
@@ -25,10 +25,6 @@ if ( ! defined( 'MATOMO_ANALYTICS_FILE' ) ) {
 	define( 'MATOMO_ANALYTICS_FILE', __FILE__ );
 }
 
-if ( ! defined( 'MATOMO_LOG_ALL_MESSAGES' ) ) {
-	define( 'MATOMO_LOG_ALL_MESSAGES', false );
-}
-
 $GLOBALS['MATOMO_PLUGINS_ENABLED'] = array();
 
 /** MATOMO_PLUGIN_FILES => used to check for updates etc */
@@ -40,7 +36,7 @@ function has_matomo_compatible_content_dir() {
 
 function is_matomo_app_request() {
 	return ! empty( $_SERVER['SCRIPT_NAME'] )
-	       && ( substr( $_SERVER['SCRIPT_NAME'], - 1 * strlen( 'app/index.php' ) ) === 'app/index.php' );
+	&& ( substr( $_SERVER['SCRIPT_NAME'], - 1 * strlen( 'matomo/app/index.php' ) ) === 'matomo/app/index.php' );
 }
 
 function has_matomo_tag_manager() {

@@ -33,7 +33,7 @@ $paths = new Paths();
 <form method="post">
 	<?php wp_nonce_field( TrackingSettings::NONCE_NAME ); ?>
 
-    <p>Configure the tracking to your liking.</p>
+    <p><?php _e( 'Configure the tracking to your liking.', 'matomo' ); ?></p>
     <table class="matomo-tracking-form widefat">
         <tbody>
 
@@ -145,7 +145,7 @@ $paths = new Paths();
 
 		$form->show_select( 'force_protocol', __( 'Force Matomo to use a specific protocol', 'matomo' ), array(
 			'disabled' => __( 'Disabled (default)', 'matomo' ),
-			'https'    => __( 'https (SSL) ', 'matomo' )
+			'https'    => __( 'https (SSL)', 'matomo' )
 		), __( 'Choose if you want to explicitly want to force Matomo to use HTTP or HTTPS. Does not work with a CDN URL.', 'matomo' ), '', $isNotTracking, $fullGeneratedTrackingGroup . ' matomo-track-option-tagmanager' );
 
 		echo $submitButton; ?>

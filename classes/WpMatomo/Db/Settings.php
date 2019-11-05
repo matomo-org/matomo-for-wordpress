@@ -21,6 +21,7 @@ class Settings {
 	 * @param string $table_name_to_prefix
 	 *
 	 * @return string
+	 * @api
 	 */
 	public function prefix_table_name( $table_name_to_prefix ) {
 		global $wpdb;

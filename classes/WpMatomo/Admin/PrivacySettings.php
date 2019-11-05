@@ -28,7 +28,7 @@ class PrivacySettings implements AdminSettingsInterface {
 	const EXAMPLE_FULL = '[matomo_opt_out language=de background_color=red font_color=fff font_size=34 font_family=Arial width=500px height=100px]';
 
 	public function get_title() {
-		return 'Privacy & GDPR';
+		return __('Privacy & GDPR', 'matomo');
 	}
 
 	public function show_settings() {

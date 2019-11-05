@@ -55,10 +55,10 @@ class Zend_Session_Exception extends Zend_Exception
      */
     static public function handleSessionStartError($errno, $errstr, $errfile, $errline, $errcontext)
     {
-	    if (!isset(self::$sessionStartError)) {
+    	if (!isset(self::$sessionStartError)) {
 		    self::$sessionStartError = '';
 	    }
-	    self::$sessionStartError .= $errfile . '(Line:' . $errline . '): Error #' . $errno . ' ' . $errstr . ' ';
+        self::$sessionStartError .= $errfile . '(Line:' . $errline . '): Error #' . $errno . ' ' . $errstr;
     }
 
     /**

@@ -28,17 +28,17 @@ global $wp;
 <?php } ?>
 <div class="wrap">
     <div id="icon-plugins" class="icon32"></div>
-    <h1>Summary</h1>
+    <h1><?php _e( 'Summary', 'matomo' ); ?></h1>
 	<?php
 	if ( $report_date === Dates::TODAY ) {
-		echo '<div class="notice notice-info" style="padding:8px;">Reports for today are only refreshed approximately every hour through the WordPress cronjob.</div>';
+		echo '<div class="notice notice-info" style="padding:8px;">' . __('Reports for today are only refreshed approximately every hour through the WordPress cronjob.', 'matomo') . '</div>';
 	}
 	?>
-    <p>Looking for all reports and advanced features like segmentation, real time reports, and more? <a
-                href="<?php echo add_query_arg( array( 'report_date' => $report_date ), menu_page_url( Menu::SLUG_REPORTING, false ) ) ?>">View
-            full reporting</a>
+    <p><?php _e( 'Looking for all reports and advanced features like segmentation, real time reports, and more?', 'matomo' ); ?>
+        <a href="<?php echo add_query_arg( array( 'report_date' => $report_date ), menu_page_url( Menu::SLUG_REPORTING, false ) ) ?>"
+        ><?php _e( 'View full reporting', 'matomo' ); ?></a>
         <br/><br/>
-        Change date:
+	    <?php _e( 'Change date:', 'matomo' ); ?>
 		<?php foreach ( $report_dates as $report_date_key => $report_name ) {
 			$buttonClass = 'button';
 			if ( $report_date === $report_date_key ) {
@@ -63,11 +63,11 @@ global $wp;
                         <div class="postbox">
 
                             <?php if (!empty($report_meta['page'])) { ?>
-                                <button type="button" class="handlediv" aria-expanded="true" title="Click to view the report in detail"><a href="<?php echo Menu::make_matomo_reporting_link($report_meta['page']['category'], $report_meta['page']['subcategory'], array('period' => $report_period_selected, 'date' => $report_date_selected)); ?>" style="color: inherit;" target="_blank" rel="noreferrer noopener" class="dashicons-before dashicons-external" aria-hidden="true"></a></button>
+                                <button type="button" class="handlediv" aria-expanded="true" title="<?php _e( 'Click to view the report in detail', 'matomo' ); ?>"><a href="<?php echo Menu::get_matomo_reporting_url($report_meta['page']['category'], $report_meta['page']['subcategory'], array( 'period' => $report_period_selected, 'date' => $report_date_selected)); ?>" style="color: inherit;" target="_blank" rel="noreferrer noopener" class="dashicons-before dashicons-external" aria-hidden="true"></a></button>
                             <?php } ?>
                             <h2 class="hndle ui-sortable-handle"
                                 style="cursor: help;"
-                                title="<?php echo ! empty( $report_meta['documentation'] ) ? ( wp_strip_all_tags( $report_meta['documentation'] ) . ' ' ) : null ?>You can embed this report on any page using the shortcode: <?php echo esc_attr( $shortcode ); ?>"
+                                title="<?php echo ! empty( $report_meta['documentation'] ) ? ( wp_strip_all_tags( $report_meta['documentation'] ) . ' ' ) : null ?><?php _e( 'You can embed this report on any page using the shortcode:', 'matomo' ); ?> <?php echo esc_attr( $shortcode ); ?>"
                             ><?php echo esc_html( $report_meta['name'] ) ?></h2>
                             <div>
 								<?php echo do_shortcode( $shortcode ); ?>
@@ -79,11 +79,9 @@ global $wp;
 		<?php } ?>
     </div>
 
-    <p style="clear:both;">Did you know? You can embed any report into any page or post using a shortcode. Simply hover
-        the title to find the correct shortcode.
-        Only users with view access will be able to view the content of the report. Note: Embedding report data can be
-        tricky
-        if you are using caching plugins that cache the entire HTML of your page or post. In case you are using such a
-        plugin, we recommend you disable the caching for these pages.
+    <p style="clear:both;">
+	    <?php _e( 'Did you know? You can embed any report into any page or post using a shortcode. Simply hover the title to find the correct shortcode.', 'matomo' ); ?>
+	    <?php _e( 'Only users with view access will be able to view the content of the report.', 'matomo' ); ?>
+	    <?php _e( 'Note: Embedding report data can be tricky if you are using caching plugins that cache the entire HTML of your page or post. In case you are using such a plugin, we recommend you disable the caching for these pages.', 'matomo' ); ?>
     </p>
 </div>

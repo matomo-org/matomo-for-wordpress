@@ -48,6 +48,11 @@ class Bootstrap {
 			define( 'PIWIK_ENABLE_DISPATCH', false );
 		}
 
+		// prevent session related errors during install making it more stable
+		if ( ! defined( 'PIWIK_ENABLE_SESSION_START' ) ) {
+			define( 'PIWIK_ENABLE_SESSION_START', false );
+		}
+			
 		if ( ! defined( 'PIWIK_DOCUMENT_ROOT' ) ) {
 			define( 'PIWIK_DOCUMENT_ROOT', plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'app');
 		}
@@ -86,6 +91,9 @@ class Bootstrap {
 		return defined( 'PIWIK_DOCUMENT_ROOT' );
 	}
 
+	/**
+	 * @api
+	 */
 	public static function do_bootstrap() {
 		$bootstrap = new Bootstrap();
 		$bootstrap->bootstrap();

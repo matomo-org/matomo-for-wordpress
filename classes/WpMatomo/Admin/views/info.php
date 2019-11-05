@@ -21,18 +21,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php include 'info_shared.php'; ?>
 	<?php include 'info_help.php'; ?>
 
-    <h2>Support the project</h2>
-    <p>Matomo is a collaborative project brought to you by the <a target="_blank" rel="noreferrer noopener"
-                                                                  href="https://matomo.org/team/">Matomo team</a>
-        members as well as many other contributors around the globe. If you're a fan of Matomo, you can help: find out
-        <a target="_blank" rel="noreferrer noopener" href="https://matomo.org/get-involved/">How to participate in
-            Matomo</a>!
+    <h2><?php _e( 'Support the project', 'matomo' ); ?></h2>
+    <p><?php echo sprintf(__('Matomo is a collaborative project brought to you by %1$sMatomo team%2$s members as well as many other contributors around the globe. If you\'re a fan of Matomo,
+        %3$shere\'s how you can participate!%4$s', 'matomo'), '<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/team/">', '</a>', '<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/get-involved/">', '</a>'); ?>
         <br/><br/>
-        You can also help us by <a href="<?php echo Menu::get_matomo_action_url(Menu::REPORTING_GOTO_ADMIN) ?>">donating</a> or by <a href="https://plugins.matomo.org/premium" target="_blank" rel="noreferrer noopener">purchasing premium plugins</a> which funds the
-        development of the free Matomo Analytics version.
+	    <?php echo sprintf( __( 'You can also help us by %1$sdonating%2$s or by %3$spurchasing premium plugins%4$s which fund the
+        development of the free Matomo Analytics version.', 'matomo' ), '<a href="' . Menu::get_matomo_goto_url(Menu::REPORTING_GOTO_ADMIN) . '">', '</a>', '<a href="https://plugins.matomo.org/premium" target="_blank" rel="noreferrer noopener">', '</a>' ); ?>
     </p>
 
-    <h2>High traffic websites</h2>
+    <h2><?php _e( 'High traffic websites', 'matomo' ); ?></h2>
 	<?php include 'info_high_traffic.php'; ?>
 
     <?php include 'info_bug_report.php' ?>
@@ -42,7 +39,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             <li>
                 <a target="_blank" rel="noreferrer noopener" href="https://matomo.org/newsletter/"><span
                             class="dashicons-before dashicons-email"></span></a>
-                <a target="_blank" rel="noreferrer noopener" href="https://matomo.org/newsletter/">Newsletter</a>
+                <a target="_blank" rel="noreferrer noopener" href="https://matomo.org/newsletter/"><?php _e( 'Newsletter', 'matomo' ); ?></a>
             </li>
             <li>
                 <a target="_blank" rel="noreferrer noopener" href="https://www.facebook.com/Matomo.org"><span
@@ -62,10 +59,10 @@ if ( ! defined( 'ABSPATH' ) ) {
             </li>
         </ul>
         <ul>
-            <li><a target="_blank" rel="noreferrer noopener" href="https://matomo.org/blog/">Blog</a></li>
-            <li><a target="_blank" rel="noreferrer noopener" href="https://developer.matomo.org">Developers</a></li>
-            <li><a target="_blank" rel="noreferrer noopener" href="https://plugins.matomo.org">Marketplace</a></li>
-            <li><a target="_blank" rel="noreferrer noopener" href="https://matomo.org/thank-you-all/">Credits</a></li>
+            <li><a target="_blank" rel="noreferrer noopener" href="https://matomo.org/blog/"><?php _e( 'Blog', 'matomo' ); ?></a></li>
+            <li><a target="_blank" rel="noreferrer noopener" href="https://developer.matomo.org"><?php _e( 'Developers', 'matomo' ); ?></a></li>
+            <li><a target="_blank" rel="noreferrer noopener" href="https://plugins.matomo.org"><?php _e( 'Marketplace', 'matomo' ); ?></a></li>
+            <li><a target="_blank" rel="noreferrer noopener" href="https://matomo.org/thank-you-all/"><?php _e( 'Credits', 'matomo' ); ?></a></li>
         </ul>
     </div>
 </div>

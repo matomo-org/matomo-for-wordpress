@@ -1,3 +1,14 @@
+0.1.9
+- Better session error logging
+
+0.1.8
+- Disable session when bootstrapping Matomo within WordPress
+- Better system report
+
+0.1.7
+- Improve install script
+- Tweaked wording in UI
+
 0.1.6
 - Handle database errors better and behave same as Matomo DB adapters
 - Fix an issue in managing goals

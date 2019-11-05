@@ -41,7 +41,8 @@ class Forms {
 	 * @return string full description HTML
 	 */
 	public function get_description( $id, $description, $hideDescription = true ) {
-		return sprintf( '<span class="dashicons dashicons-editor-help" title="Click to read help" style="cursor: pointer;" onclick="jQuery(\'#%s-desc\').toggleClass(\'hidden\');"></span> <p class="description' . ( $hideDescription ? ' hidden' : '' ) . '" id="%1$s-desc">%s</p>', $id, $description );
+		$title = __('Click to read help', 'matomo');
+		return sprintf( '<span class="dashicons dashicons-editor-help" title="%1$s" style="cursor: pointer;" onclick="jQuery(\'#%2$s-desc\').toggleClass(\'hidden\');"></span> <p class="description' . ( $hideDescription ? ' hidden' : '' ) . '" id="%2$s-desc">%3$s</p>', $title, $id, $description );
 	}
 
 	/**
