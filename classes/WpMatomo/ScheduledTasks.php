@@ -177,6 +177,7 @@ class ScheduledTasks {
 		$archiver                               = new CronArchive();
 		$archiver->concurrentRequestsPerWebsite = 1;
 		$archiver->maxConcurrentArchivers       = 1;
+		$archiver->dateLastForced               = 2;
 
 		if ( $force ) {
 			$archiver->shouldArchiveAllSites        = true;
