@@ -4,9 +4,10 @@ dist: trusty
 language: php
 
 install:
-  - ls
   - cd ..
   - ls
+  - mv wp-matomo matomo
+  - cd matomo
 
 notifications:
   email:
