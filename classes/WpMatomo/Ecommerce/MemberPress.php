@@ -74,7 +74,7 @@ class MemberPress extends Base {
 
 		$params = array(
 			'setEcommerceView',
-			$sku,
+			'' . $sku,
 			$product->post_title,
 			$categories = [],
 			$product->price
@@ -106,7 +106,7 @@ class MemberPress extends Base {
 				$tracking_code = '';
 				$params        = array(
 					'addEcommerceItem',
-					$product->ID,
+					'' . $product->ID,
 					$product->post_title,
 					[],
 					$txn->amount,
@@ -115,7 +115,7 @@ class MemberPress extends Base {
 				$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 				$params        = array(
 					'trackEcommerceOrder',
-					$order_id_to_track,
+					'' . $order_id_to_track,
 					$txn->total,
 					$txn->amount,
 					$txn->tax_amount,
