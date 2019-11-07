@@ -102,7 +102,7 @@ class EasyDigitalDownloads extends Base {
 			$sku = $download_id;
 		}
 
-		return $sku;
+		return '' . $sku;
 	}
 
 	public function on_product_view() {
@@ -214,7 +214,7 @@ class EasyDigitalDownloads extends Base {
 
 			$params        = array(
 				'trackEcommerceOrder',
-				$order_id_to_track,
+				'' . $order_id_to_track,
 				$grand_total ? $grand_total : 0,
 				edd_payment_subtotal( $payment->ID ),
 				edd_use_taxes() ? edd_get_payment_tax( $payment->ID, $payment_meta ) : '0',

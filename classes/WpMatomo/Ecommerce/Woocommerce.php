@@ -88,7 +88,7 @@ class Woocommerce extends Base {
 			$title         = $product->get_title();
 			$categories    = $this->get_product_categories( $product );
 			$quantity      = isset( $item['quantity'] ) ? $item['quantity'] : 0;
-			$params        = array( 'addEcommerceItem', $sku, $title, $categories, $price, $quantity );
+			$params        = array( 'addEcommerceItem', ''.$sku, $title, $categories, $price, $quantity );
 			$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 		}
 
@@ -143,7 +143,7 @@ class Woocommerce extends Base {
 				if ( ! empty( $product_details ) ) {
 					$params        = array(
 						'addEcommerceItem',
-						$product_details['sku'],
+						'' . $product_details['sku'],
 						$product_details['title'],
 						$product_details['categories'],
 						$product_details['price'],
@@ -157,7 +157,7 @@ class Woocommerce extends Base {
 
 		$params        = array(
 			'trackEcommerceOrder',
-			$order_id_to_track,
+			'' . $order_id_to_track,
 			$order->get_total(),
 			round($order->get_subtotal(), 2),
 			$order->get_cart_tax(),
