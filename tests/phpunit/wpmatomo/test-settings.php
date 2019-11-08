@@ -59,6 +59,20 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->assertEquals( 'manually', $this->make_settings()->get_global_option( 'track_mode' ) );
 	}
 
+	public function test_get_customised_global_settings_nothing_customised() {
+		$this->assertSame( array(), $this->settings->get_customised_global_settings( ) );
+	}
+
+	public function test_get_customised_global_settings_some_customised() {
+		$this->settings->set_global_option( 'track_mode', 'manually' );
+		$this->settings->set_global_option( 'track_ecommerce', '0' );
+
+		$this->assertSame( array(
+			'track_mode' => 'manually',
+			'track_ecommerce' => 0
+		), $this->settings->get_customised_global_settings( ) );
+	}
+
 	public function test_get_option_returns_default_value_when_no_value_is_set() {
 		$this->assertSame( 0, $this->settings->get_option( Settings::OPTION_LAST_TRACKING_CODE_UPDATE ) );
 	}

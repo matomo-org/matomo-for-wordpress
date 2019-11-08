@@ -188,6 +188,8 @@ class WpMatomo {
 
 			$member_press = new MemberPress( $tracker );
 			$member_press->register_hooks();
+
+			do_action( 'matomo_ecommerce_init', $tracker );
 		}
 
 	}
