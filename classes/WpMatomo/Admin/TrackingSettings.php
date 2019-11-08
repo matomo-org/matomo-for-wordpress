@@ -85,6 +85,7 @@ class TrackingSettings implements AdminSettingsInterface {
 			'track_search',
 			'add_post_annotations',
 			'track_content',
+			'track_ecommerce',
 			'track_noscript',
 			'noscript_code',
 			'track_codeposition',

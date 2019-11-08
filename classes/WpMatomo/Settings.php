@@ -64,6 +64,7 @@ class Settings {
 		'track_codeposition'                       => 'footer',
 		'track_noscript'                           => false,
 		'track_content'                            => 'disabled',
+		'track_ecommerce'                          => true,
 		'track_search'                             => false,
 		'track_404'                                => false,
 		'tagmanger_container_ids'                  => array(),

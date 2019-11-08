@@ -101,7 +101,7 @@ class Sync {
 			$params              = array(
 				'name'      => $blog_name,
 				'main_url'  => $blog_url,
-				'ecommerce' => 1,
+				'ecommerce' => (int) $this->settings->get_global_option('track_ecommerce'),
 				'timezone'  => $this->detect_timezone()
 			);
 			$sites_manager_model = new Model();
@@ -123,7 +123,9 @@ class Sync {
 
 		$this->set_enable_sites_admin(1);
 
-		Access::doAsSuperUser( function () use ( $blog_name, $blog_url, $timezone, &$idsite ) {
+		$track_ecommerce = (int) $this->settings->get_global_option('track_ecommerce');
+
+		Access::doAsSuperUser( function () use ( $blog_name, $blog_url, $timezone, $track_ecommerce, &$idsite ) {
 			SitesManager\API::unsetInstance();
 			// we need to unset the instance to make sure it fetches the
 			// up to date dependencies eg current plugin manager etc
@@ -131,7 +133,7 @@ class Sync {
 			$idsite = SitesManager\API::getInstance()->addSite(
 				$blog_name,
 				array( $blog_url ),
-				$ecommerce = 1,
+				$track_ecommerce,
 				$siteSearch = null,
 				$search_keyword_parameters = null,
 				$search_category_parameters = null,

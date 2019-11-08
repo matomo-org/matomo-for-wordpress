@@ -175,7 +175,9 @@ class WpMatomo {
 			}
 		}
 		$tracking_code = new TrackingCode( $this->settings );
-		if ( $this->settings->is_tracking_enabled() && ! $tracking_code->is_hidden_user() ) {
+		if ( $this->settings->is_tracking_enabled()
+		     && $this->settings->get_global_option('track_ecommerce')
+		     && ! $tracking_code->is_hidden_user() ) {
 			$tracker = new AjaxTracker( $this->settings );
 
 			$woocommerce = new Woocommerce( $tracker );
