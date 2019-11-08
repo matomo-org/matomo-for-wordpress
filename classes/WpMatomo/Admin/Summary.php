@@ -75,9 +75,13 @@ class Summary {
 			'Referrers_getSocials',
 			'Referrers_getCampaigns',
 			'Goals_get',
-			'Goals_get_idGoal--ecommerceOrder',
-			'Goals_getItemsName',
 		);
+
+		if ( $this->settings->get_global_option('track_ecommerce') ) {
+			$reports_to_show[] = 'Goals_get_idGoal--ecommerceOrder';
+			$reports_to_show[] = 'Goals_getItemsName';
+		}
+
 		$reports_to_show = apply_filters( 'matomo_report_summary_report_ids', $reports_to_show );
 
 		$report_metadata = array();
