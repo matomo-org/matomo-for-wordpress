@@ -9,6 +9,8 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
+		set_current_screen( 'front' );
+
 		add_filter( 'plugins_url', function ( $url ) {
 			// workaround for https://github.com/wp-cli/wp-cli/issues/1037
 			// WP is installed in tmp dir, but our plugin must be symlinked in actual dir, then plugin_basename

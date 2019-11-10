@@ -37,7 +37,10 @@ class ReportRendererTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_render_report_with_dimension_with_data() {
-
+		if (is_multisite()) {
+			$this->skipWithMultisite();
+			return;
+		}
 		$local_tracker = $this->make_local_tracker( date( 'Y-m-d H:i:s' ) );
 		$this->assert_tracking_response( $local_tracker->doTrackPageView( 'test' ) );
 

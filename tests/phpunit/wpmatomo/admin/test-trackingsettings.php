@@ -72,6 +72,7 @@ class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
 
 	public function test_show_settings_does_not_set_any_random_value_but_only_whitelisted() {
 		$this->fake_request( array(
+			'track_mode'                     => 'disabled',
 			'foobar'                         => 'baz',
 			Settings::OPTION_KEY_CAPS_ACCESS => array( 'editor' => Capabilities::KEY_VIEW )
 		) );
