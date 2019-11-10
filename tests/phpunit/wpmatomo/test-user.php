@@ -23,7 +23,7 @@ class UserTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_current_matomo_user_login_when_not_mapped() {
-		$this->assertFalse( $this->user->get_current_matomo_user_login() );
+		$this->assertNull( $this->user->get_current_matomo_user_login() );
 	}
 
 	public function test_get_current_matomo_user_login_when_mapped() {
