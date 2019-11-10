@@ -13,25 +13,36 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 	/**
 	 * @var TrackingCode
 	 */
-	private $trackingCode;
+	private $tracking_code;
+
 	/**
 	 * @var Settings
 	 */
 	private $settings;
 
+	/**
+	 * @var Capabilities
+	 */
+	private $capabilities;
+
 	public function setUp() {
 		parent::setUp();
 
-		$this->settings     = new Settings();
-		$this->trackingCode = new WpMatomo\TrackingCode( $this->settings );
-		$capabilities       = new Capabilities( $this->settings );
-		$capabilities->register_hooks(); // needed so caps get reset when changing it
+		$this->settings      = new Settings();
+		$this->tracking_code = new WpMatomo\TrackingCode( $this->settings );
+		$this->capabilities  = new Capabilities( $this->settings );
+		$this->capabilities->register_hooks(); // needed so caps get reset when changing it
 
 		Site::map_matomo_site_id( get_current_blog_id(), 23 );
 	}
 
+	public function tearDown() {
+		$this->capabilities->remove_hooks();
+		parent::tearDown();
+	}
+
 	public function test_is_hidden_user_by_default_is_not_hidden() {
-		$this->assertFalse( $this->trackingCode->is_hidden_user() );
+		$this->assertFalse( $this->tracking_code->is_hidden_user() );
 	}
 
 	public function test_is_hidden_user_hidden_when_role_is_hidden() {
@@ -44,17 +55,17 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		wp_set_current_user( $id1 );
 
 		// this editor role is now hidden
-		$this->assertTrue( $this->trackingCode->is_hidden_user() );
+		$this->assertTrue( $this->tracking_code->is_hidden_user() );
 
 		// different role still not hidden
 		$id1 = self::factory()->user->create( array( 'role' => 'author' ) );
 		wp_set_current_user( $id1 );
-		$this->assertFalse( $this->trackingCode->is_hidden_user() );
+		$this->assertFalse( $this->tracking_code->is_hidden_user() );
 
 	}
 
 	public function test_does_not_print_tracking_code_when_not_enabled() {
-		$this->trackingCode->register_hooks();
+		$this->tracking_code->register_hooks();
 		ob_start();
 
 		do_action( 'wp_head' );
@@ -69,7 +80,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		$this->settings->apply_tracking_related_changes( array(
 			'track_mode' => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT
 		) );
-		$this->trackingCode->register_hooks();
+		$this->tracking_code->register_hooks();
 		ob_start();
 		do_action( 'wp_head' );
 		$header = ob_get_clean();
@@ -88,7 +99,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 			'track_mode'         => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
 			'track_codeposition' => 'head'
 		) );
-		$this->trackingCode->register_hooks();
+		$this->tracking_code->register_hooks();
 		ob_start();
 		do_action( 'wp_head' );
 		$header = ob_get_clean();
@@ -107,7 +118,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 			'track_mode'                => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
 			'track_crossdomain_linking' => true
 		) );
-		$this->trackingCode->register_hooks();
+		$this->tracking_code->register_hooks();
 
 		$id             = md5( '1' );
 		$_GET['pk_vid'] = $id;
@@ -121,7 +132,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 			'track_mode'             => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
 			'track_feed_addcampaign' => true
 		) );
-		$this->trackingCode->register_hooks();
+		$this->tracking_code->register_hooks();
 		$this->set_is_feed();
 
 		$url = apply_filters( 'post_link', 'https://www.example.org?foo=test' );
@@ -135,7 +146,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 			'track_feed'         => true,
 			'track_api_endpoint' => 'restapi'
 		) );
-		$this->trackingCode->register_hooks();
+		$this->tracking_code->register_hooks();
 		$this->set_is_feed();
 
 		$url = apply_filters( 'the_excerpt_rss', '<p>foobarbaz</p>' );

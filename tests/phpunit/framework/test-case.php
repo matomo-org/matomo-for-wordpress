@@ -26,4 +26,23 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		set_current_screen( 'edit.php' );
 	}
 
+	protected function create_set_super_admin() {
+		$logger = new \WpMatomo\Logger();
+		$logger->log( 'creating super admin' );
+		$id = self::factory()->user->create();
+
+		wp_set_current_user( $id );
+		$user = wp_get_current_user();
+
+		if ( is_multisite() ) {
+			grant_super_admin( $id );
+			$user->add_cap( \WpMatomo\Capabilities::KEY_SUPERUSER );
+		} else {
+			$user->add_role( 'administrator' );
+			$user->add_role( \WpMatomo\Roles::ROLE_SUPERUSER );
+			$user->add_cap( \WpMatomo\Capabilities::KEY_SUPERUSER );
+		}
+
+		return $id;
+	}
 }

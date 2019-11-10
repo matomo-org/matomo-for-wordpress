@@ -27,8 +27,7 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 		$this->settings    = new Settings();
 		$this->get_started = new GetStarted( $this->settings );
 
-		wp_get_current_user()->add_role( Roles::ROLE_SUPERUSER );
-
+		$this->create_set_super_admin();
 		$this->assume_admin_page();
 	}
 

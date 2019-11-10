@@ -33,16 +33,7 @@ class AdminMarketplaceTest extends MatomoUnit_TestCase {
 		$this->marketplace = new Marketplace( $this->settings, $api );
 
 		$this->assume_admin_page();
-
-		if ( is_multisite() ) {
-			$id = self::factory()->user->create();
-			grant_super_admin( $id );
-			wp_set_current_user( $id );
-		} else {
-			$user = wp_get_current_user();
-			$user->add_role( Roles::ROLE_SUPERUSER );
-		}
-
+		$this->create_set_super_admin();
 	}
 
 	public function tearDown() {

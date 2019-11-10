@@ -55,6 +55,13 @@ class Capabilities {
 		add_filter( 'map_meta_cap', array( $this, 'map_meta_cap' ), 10, 4 );
 	}
 
+	public function remove_hooks()
+	{
+		remove_action( 'wp_roles_init', array( $this, 'add_capabilities_to_roles' ) );
+		remove_filter( 'user_has_cap', array( $this, 'add_capabilities_to_user' ), 10);
+		remove_filter( 'map_meta_cap', array( $this, 'map_meta_cap' ), 10);
+	}
+
 	public function map_meta_cap( $caps, $cap, $user_id, $args ) {
 		if ( $cap === self::KEY_STEALTH ) {
 			// a super admin is usually allowed all actions... unless we add do_not_allow

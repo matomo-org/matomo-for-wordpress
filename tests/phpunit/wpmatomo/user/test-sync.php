@@ -128,8 +128,8 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 	public function test_sync_current_users_creates_users_where_needed() {
 		$this->createManyUsers();
 		$settings = new Settings();
-		$roles    = new Capabilities( $settings );
-		$roles->register_hooks(); // access and capabilities need to share same settings instance otherwise tests won't work correctly
+		$caps    = new Capabilities( $settings );
+		$caps->register_hooks(); // access and capabilities need to share same settings instance otherwise tests won't work correctly
 
 		$access = new Access( $settings );
 		$access->save( array(
@@ -246,6 +246,7 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 			$this->assertEquals( '0', $matomo_user['superuser_access'] );
 		}
 
+		$caps->remove_hooks();
 	}
 
 	private function createManyUsers() {
