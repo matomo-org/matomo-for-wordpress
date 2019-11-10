@@ -33,16 +33,7 @@ class AdminMarketplaceTest extends MatomoUnit_TestCase {
 		$this->marketplace = new Marketplace( $this->settings, $api );
 
 		$this->assume_admin_page();
-
-		if ( is_multisite() ) {
-			$id = self::factory()->user->create();
-			grant_super_admin( $id );
-			wp_set_current_user( $id );
-		} else {
-			$user = wp_get_current_user();
-			$user->add_role( Roles::ROLE_SUPERUSER );
-		}
-
+		$this->create_set_super_admin();
 	}
 
 	public function tearDown() {
@@ -84,23 +75,6 @@ class AdminMarketplaceTest extends MatomoUnit_TestCase {
 
 		$this->assertEmpty( $this->settings->get_license_key() );
 		$this->assertContains( 'License key is not valid', $output );
-	}
-
-	public function test_show_settings_does_not_change_any_values_when_not_superuser() {
-		wp_get_current_user()->remove_role( Roles::ROLE_SUPERUSER );
-
-		if ( is_multisite() ) {
-			revoke_super_admin( wp_get_current_user()->ID );
-		}
-
-		$this->fake_request( sha1( 1 ) );
-
-		ob_start();
-		$this->marketplace->show();
-		$output = ob_get_clean();
-
-		$this->assertEmpty( $this->settings->get_license_key() );
-		$this->assertNotContains( 'License key is not valid', $output ); // doesn't contain the string cause it should not have the permission to execute it
 	}
 
 	public function test_show_settings_does_not_change_any_values_when_not_correct_format() {

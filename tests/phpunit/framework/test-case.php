@@ -2,12 +2,16 @@
 /**
  * @package Matomo_Analytics
  */
-
+use \WpMatomo\Capabilities;
 
 class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();
+
+		set_current_screen( 'front' );
+
+		$this->reset_roles();
 
 		add_filter( 'plugins_url', function ( $url ) {
 			// workaround for https://github.com/wp-cli/wp-cli/issues/1037
@@ -26,4 +30,36 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		set_current_screen( 'edit.php' );
 	}
 
+	protected function create_set_super_admin() {
+		$logger = new \WpMatomo\Logger();
+		$logger->log( 'creating super admin' );
+		$id = self::factory()->user->create();
+
+		wp_set_current_user( $id );
+		$user = wp_get_current_user();
+
+		if ( is_multisite() ) {
+			grant_super_admin( $id );
+			$user->add_cap( \WpMatomo\Capabilities::KEY_SUPERUSER );
+		} else {
+			$user->add_role( 'administrator' );
+			$user->add_role( \WpMatomo\Roles::ROLE_SUPERUSER );
+			$user->add_cap( \WpMatomo\Capabilities::KEY_SUPERUSER );
+		}
+
+		return $id;
+	}
+
+	/**
+	 * Reset roles so they won't be stored across tests...
+	 */
+	protected function reset_roles()
+	{
+		foreach (array('editor', 'author', 'contributor') as $role) {
+			get_role( $role )->remove_cap( Capabilities::KEY_SUPERUSER );
+			get_role( $role )->remove_cap( Capabilities::KEY_WRITE );
+			get_role( $role )->remove_cap( Capabilities::KEY_ADMIN );
+			get_role( $role )->remove_cap( Capabilities::KEY_VIEW );
+		}
+	}
 }

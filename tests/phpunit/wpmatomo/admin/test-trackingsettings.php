@@ -26,8 +26,7 @@ class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
 		$this->settings          = new Settings();
 		$this->tracking_settings = new TrackingSettings( $this->settings );
 
-		wp_get_current_user()->add_role( Roles::ROLE_SUPERUSER );
-
+		$this->create_set_super_admin();
 		$this->assume_admin_page();
 	}
 
@@ -71,25 +70,9 @@ class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
 		$_SERVER['REQUEST_URI']               = home_url();
 	}
 
-	public function test_show_settings_does_not_change_any_values_when_not_superuser() {
-		wp_get_current_user()->remove_role( Roles::ROLE_SUPERUSER );
-		$this->assertSame( TrackingSettings::TRACK_MODE_DISABLED, $this->settings->get_global_option( 'track_mode' ) );
-
-		$this->fake_request( array(
-			'track_mode' => TrackingSettings::TRACK_MODE_MANUALLY,
-		) );
-
-		ob_start();
-		$this->tracking_settings->show_settings();
-		ob_end_clean();
-
-		$this->assertSame( TrackingSettings::TRACK_MODE_DISABLED, $this->settings->get_global_option( 'track_mode' ) );
-	}
-
 	public function test_show_settings_does_not_set_any_random_value_but_only_whitelisted() {
-		wp_get_current_user()->remove_role( Roles::ROLE_SUPERUSER );
-
 		$this->fake_request( array(
+			'track_mode'                     => 'disabled',
 			'foobar'                         => 'baz',
 			Settings::OPTION_KEY_CAPS_ACCESS => array( 'editor' => Capabilities::KEY_VIEW )
 		) );

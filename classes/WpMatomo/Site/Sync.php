@@ -11,6 +11,7 @@ namespace WpMatomo\Site;
 
 use Piwik\Access;
 use Piwik\Config;
+use Piwik\Container\StaticContainer;
 use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\SitesManager;
 use WpMatomo\Bootstrap;
@@ -62,6 +63,15 @@ class Sync {
 					$installer = new Installer( $this->settings );
 					if ( ! $installer->looks_like_it_is_installed() ) {
 						$this->logger->log( sprintf( 'Matomo was not installed yet for blog: %s installing now.', $site->blog_id ) );
+
+						// prevents error that it wouldn't fully install matomo for a different site as it would think it already did install it etc.
+						// and would otherwise think plugins are already activated etc
+						Bootstrap::set_not_bootstrapped();
+						$config = \Piwik\Config::getInstance();
+						$installed = $config->PluginsInstalled;
+						$installed['PluginsInstalled'] = array();
+						$config->PluginsInstalled = $installed;
+
 						$installer->install();
 					}
 					$success = $this->sync_site( $site->blog_id, $site->blogname, $site->siteurl );
@@ -93,7 +103,11 @@ class Sync {
 
 		$idsite = Site::get_matomo_site_id( $blog_id );
 
-		$blog_name = substr( $blog_name, 0, self::MAX_LENGTH_SITE_NAME );
+		if ( empty( $blog_name ) ) {
+			$blog_name = __('Default');
+		} else {
+			$blog_name = substr( $blog_name, 0, self::MAX_LENGTH_SITE_NAME );
+		}
 
 		if ( ! empty( $idsite ) ) {
 			// todo only update site when name or URL (or maybe also when timezone)changes!

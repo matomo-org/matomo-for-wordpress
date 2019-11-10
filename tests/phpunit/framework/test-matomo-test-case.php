@@ -69,6 +69,12 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		$installer = new Installer( $settings );
 		$installer->install();
 
+		// we need to init roles again... seems like WP isn't doing this by themselves...
+		// otherwise if one test adds eg Capability WRITE_MATOMO to a role "editor", in other tests this
+		// capability will still be present
+		global $wp_roles;
+		$wp_roles->init_roles();
+
 		$roles = new Roles( $settings );
 		$roles->add_roles();
 
@@ -76,6 +82,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 			// auth might still be pointing to a different user...
 			Bootstrap::set_not_bootstrapped();
 		} );
+
 
 		add_action( 'matomo_uninstall', function () {
 			Option::clearCache();
@@ -94,6 +101,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 			PluginsArchiver::$archivers = array();
 			$_GET                       = $_REQUEST = array();
 			Translate::reset();
+			\Piwik\Log::unsetInstance();
 		} );
 
 		if ( ! empty( $GLOBALS['wpdb'] ) ) {

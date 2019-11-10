@@ -27,6 +27,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 
 		$settings    = new Settings();
 		$this->tasks = new ScheduledTasks( $settings );
+		$this->tasks->schedule();
 	}
 
 	public function test_schedule_schedules_events() {

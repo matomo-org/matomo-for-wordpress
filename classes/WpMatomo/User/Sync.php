@@ -76,6 +76,8 @@ class Sync {
 
 				restore_current_blog();
 			}
+		} else {
+			$this->sync_current_users();
 		}
 	}
 

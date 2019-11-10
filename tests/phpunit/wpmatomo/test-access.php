@@ -15,18 +15,26 @@ class AccessTest extends MatomoAnalytics_TestCase {
 	 */
 	private $access;
 
+	/**
+	 * @var Capabilities
+	 */
+	private $capabilities;
+
 	public function setUp() {
 		parent::setUp();
 
-		$this->access = $this->make_access();
+		$settings           = new Settings();
+		$this->capabilities = new Capabilities( $settings );
+		$this->capabilities->register_hooks(); // access and capabilities need to share same settings instance otherwise tests won't work correctly
+
+		$this->access = new Access( $settings );
 	}
 
-	private function make_access() {
-		$settings = new Settings();
-		$roles    = new Capabilities( $settings );
-		$roles->register_hooks(); // access and capabilities need to share same settings instance otherwise tests won't work correctly
+	public function tearDown() {
+		$this->capabilities->remove_hooks();
+		$this->reset_roles();
 
-		return new Access( $settings );
+		parent::tearDown();
 	}
 
 	public function test_get_permission_for_role_no_permission_saved_yet() {

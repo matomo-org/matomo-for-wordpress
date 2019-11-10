@@ -16,6 +16,7 @@ class SiteTest extends MatomoUnit_TestCase {
 		parent::setUp();
 
 		$this->site = $this->make_site();
+		$this->site->uninstall();
 	}
 
 	private function make_site() {

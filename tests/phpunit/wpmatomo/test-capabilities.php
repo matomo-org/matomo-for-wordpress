@@ -33,6 +33,11 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 		$this->caps->register_hooks();
 	}
 
+	public function tearDown() {
+		$this->caps->remove_hooks();
+		parent::tearDown(); 
+	}
+
 	private function make_capabilities() {
 		return new TestMatomoCapabilities( $this->settings );
 	}

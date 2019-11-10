@@ -23,7 +23,7 @@ class UserTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_current_matomo_user_login_when_not_mapped() {
-		$this->assertFalse( $this->user->get_current_matomo_user_login() );
+		$this->assertNull( $this->user->get_current_matomo_user_login() );
 	}
 
 	public function test_get_current_matomo_user_login_when_mapped() {
@@ -44,6 +44,8 @@ class UserTest extends MatomoUnit_TestCase {
 	 */
 	public function test_get_current_matomo_user_login_mapping_is_stored_per_blog() {
 		$id1 = self::factory()->blog->create();
+
+		wp_set_current_user($id1);
 
 		User::map_matomo_user_login( get_current_user_id(), 'foo' );
 		$this->assertSame( 'foo', $this->user->get_current_matomo_user_login() );
