@@ -95,6 +95,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 		if ( empty( $value ) ) {
 			return '';
 		}
+		$value = stripslashes($value); // Wordpress adds slashes
 		$value = str_replace( "\r", '', $value );
 
 		return implode( ',', array_filter( explode( "\n", $value ) ) );
