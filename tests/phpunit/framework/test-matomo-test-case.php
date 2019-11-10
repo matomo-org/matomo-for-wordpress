@@ -94,6 +94,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 			PluginsArchiver::$archivers = array();
 			$_GET                       = $_REQUEST = array();
 			Translate::reset();
+			\Piwik\Log::unsetInstance();
 		} );
 
 		if ( ! empty( $GLOBALS['wpdb'] ) ) {

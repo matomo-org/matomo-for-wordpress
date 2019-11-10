@@ -75,7 +75,7 @@ class Installer {
 			if ( ! defined( 'PIWIK_ENABLE_SESSION_START' ) ) {
 				define( 'PIWIK_ENABLE_SESSION_START', false );
 			}
-			
+
 			Bootstrap::do_bootstrap();
 
 			if ( ! SettingsPiwik::isPiwikInstalled() || ! $this->looks_like_it_is_installed() ) {
@@ -137,7 +137,6 @@ class Installer {
 			} catch ( \Exception $e ) {
 
 			}
-      
 
 			$this->logger->log( 'Recording version and url' );
 
@@ -145,7 +144,7 @@ class Installer {
 
 			if ( !SettingsPiwik::getPiwikUrl() ) {
 				// especially needed for tests on cli
-						\Piwik\SettingsPiwik::overwritePiwikUrl(plugins_url( 'app', MATOMO_ANALYTICS_FILE ));
+				\Piwik\SettingsPiwik::overwritePiwikUrl(plugins_url( 'app', MATOMO_ANALYTICS_FILE ));
 			}
 
 			$this->logger->log( 'Emptying some caches' );
