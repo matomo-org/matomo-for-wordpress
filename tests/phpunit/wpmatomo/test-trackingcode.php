@@ -150,7 +150,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		$this->set_is_feed();
 
 		$url = apply_filters( 'the_excerpt_rss', '<p>foobarbaz</p>' );
-		$this->assertSame( '<p>foobarbaz</p><img src="http://example.org/index.php?rest_route=/matomo/v1/hit/?idsite=23&amp;rec=1&amp;url=http%3A%2F%2Fexample.org%2F%3Fp%3D5&amp;action_name=hello-world&amp;urlref=http%3A%2F%2Fexample.org%2F%3Ffeed%3Drss2" style="border:0;width:0;height:0" width="0" height="0" alt="" />', $url );
+		$this->assertSame( '<p>foobarbaz</p><img src="http://example.org/index.php?rest_route=/matomo/v1/hit/?idsite=23&amp;rec=1&amp;url=http%3A%2F%2Fexample.org%2F%3Fp%3D7&amp;action_name=hello-world&amp;urlref=http%3A%2F%2Fexample.org%2F%3Ffeed%3Drss2" style="border:0;width:0;height:0" width="0" height="0" alt="" />', $url );
 	}
 
 	private function set_is_feed() {

@@ -76,7 +76,13 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_relative_dir_to_matomo() {
-		$this->assertSame( '../tests/phpunit/wpmatomo', $this->paths->get_relative_dir_to_matomo( __DIR__ ) );
+		$valid_values = array(
+			'../plugins/WordPress', // locally
+			'../../matomo/tests/phpunit/wpmatomo' // travis
+		);
+
+		$val = $this->paths->get_relative_dir_to_matomo( __DIR__ ) ;
+		$this->assertTrue(in_array($val, $valid_values));
 		// automatically double check that it works
 		$this->assertTrue( is_dir( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app/../tests/phpunit/wpmatomo' ) );
 	}
@@ -95,7 +101,12 @@ class PathsTest extends MatomoUnit_TestCase {
 		$plugin_dir  = plugin_dir_path( MATOMO_ANALYTICS_FILE );
 		$dir_te_test = $plugin_dir . 'plugins/WordPress';
 
-		$this->assertSame( '../plugins/WordPress', $this->paths->get_relative_dir_to_matomo( $dir_te_test ) );
+		$valid_values = array(
+			'../plugins/WordPress', // locally
+			'../../matomo/plugins/WordPress' // travis
+		);
+		$val = $this->paths->get_relative_dir_to_matomo( $dir_te_test );
+		$this->assertTrue(in_array($val, $valid_values));
 		// automatically double check that it works
 		$this->assertTrue( is_dir( $plugin_dir . 'app/../plugins/WordPress' ) );
 	}
