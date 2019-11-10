@@ -12,7 +12,9 @@ if ( ! defined( 'PIWIK_ENABLE_ERROR_HANDLER' ) ) {
 	define( 'PIWIK_ENABLE_ERROR_HANDLER', false );
 }
 
-if ( ! defined( 'ABSPATH' ) ) {
+$was_loaded_directly = ! defined( 'ABSPATH' );
+
+if ( $was_loaded_directly ) {
 	// prevent from loading twice
 	require_once( dirname( __FILE__ ) . '/../../../../wp-load.php' );
 }
@@ -21,27 +23,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-if (!empty($_GET)) {
-	$_GET     = stripslashes_deep( $_GET );
-}
-if (!empty($_POST)) {
-	$_POST    = stripslashes_deep( $_POST );
-}
-if (!empty($_COOKIE)) {
-	$_COOKIE  = stripslashes_deep( $_COOKIE );
-}
-if (!empty($_SERVER)) {
-	$_SERVER  = stripslashes_deep( $_SERVER );
-}
-if (!empty($_REQUEST)) {
-	$_REQUEST = stripslashes_deep( $_REQUEST );
-}
-
 if ( !is_plugin_active('matomo/matomo.php')
      && !defined( 'MATOMO_PHPUNIT_TEST' )
      && !MATOMO_PHPUNIT_TEST ) { // during tests the plugin may temporarily not be active
 	exit;
 }
+
+if ($was_loaded_directly) {
+	// do not strip slashes if we bootstrap matomo within a regular wordpress request
+	if (!empty($_GET)) {
+		$_GET     = stripslashes_deep( $_GET );
+	}
+	if (!empty($_POST)) {
+		$_POST    = stripslashes_deep( $_POST );
+	}
+	if (!empty($_COOKIE)) {
+		$_COOKIE  = stripslashes_deep( $_COOKIE );
+	}
+	if (!empty($_SERVER)) {
+		$_SERVER  = stripslashes_deep( $_SERVER );
+	}
+	if (!empty($_REQUEST)) {
+		$_REQUEST = stripslashes_deep( $_REQUEST );
+	}
+}
+
 
 if ( is_matomo_app_request() ) {
 	// pretend we are in the admin... potentially avoiding caching etc
