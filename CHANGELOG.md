@@ -1,3 +1,6 @@
+0.2.2
+- Fix tag manager custom html tag adds slashes
+
 0.2.1
 - Option to disable ecommerce
 - Show Matomo settings in system report
