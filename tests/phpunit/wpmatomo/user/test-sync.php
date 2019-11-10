@@ -8,15 +8,16 @@ use WpMatomo\Access;
 use WpMatomo\Capabilities;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
+use WpMatomo\Site;
 use WpMatomo\User;
 use WpMatomo\User\Sync;
 
 class MockMatomoUserSync extends Sync {
-	public $mockSync = true;
+	public $mock_sync = true;
 	public $synced_users = array();
 
 	public function sync_users( $users, $idsite ) {
-		if ( $this->mockSync ) {
+		if ( $this->mock_sync ) {
 			$this->synced_users[] = array( 'users' => $users, 'idSite' => $idsite );
 		} else {
 			parent::sync_users( $users, $idsite );
@@ -43,9 +44,9 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->sync           = new MockMatomoUserSync();
-		$this->sync->mockSync = false;
-		$this->mock           = new MockMatomoUserSync();
+		$this->sync            = new MockMatomoUserSync();
+		$this->sync->mock_sync = false;
+		$this->mock            = new MockMatomoUserSync();
 	}
 
 	public function test_sync_all_does_not_fail() {
@@ -55,11 +56,13 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 	public function test_sync_all_passes_correct_values_to_sync_site() {
 		$this->mock->sync_all();
 
+		$idsite = $this->get_current_site_id();
+
 		$this->assertCount( 1, $this->mock->synced_users[0]['users'] );
 		unset( $this->mock->synced_users[0]['users'] );
 		$this->assertEquals( array(
 			array(
-				'idSite' => 1
+				'idSite' => $idsite
 			)
 		), $this->mock->synced_users );
 	}
@@ -76,19 +79,21 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 
 		$this->mock->sync_all();
 
+		$idsite = $this->get_current_site_id();
+
 		$this->assertCount( 1, $this->mock->synced_users[0]['users'] );
 		unset( $this->mock->synced_users[0]['users'] );
 		$this->assertEquals( array(
 			array(
-				'idSite' => 1
+				'idSite' => $idsite
 			),
 			array(
 				'users'  => array(),
-				'idSite' => 1
+				'idSite' => $idsite
 			),
 			array(
 				'users'  => array(),
-				'idSite' => 1
+				'idSite' => $idsite
 			),
 		), $this->mock->synced_users );
 	}
@@ -97,14 +102,21 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 		$this->assertNull( $this->sync->sync_current_users() );
 	}
 
+	private function get_current_site_id()
+	{
+		$site = new WpMatomo\Site();
+		return $site->get_current_matomo_site_id();
+	}
+
 	public function test_sync_current_site_passes_correct_values_to_sync_site() {
 		$this->mock->sync_current_users();
 
 		$this->assertCount( 1, $this->mock->synced_users[0]['users'] );
 		unset( $this->mock->synced_users[0]['users'] );
+
 		$this->assertEquals( array(
 			array(
-				'idSite' => 1
+				'idSite' => $this->get_current_site_id()
 			)
 		), $this->mock->synced_users );
 	}
@@ -151,11 +163,13 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 			'editor2',
 		), $logins );
 
+		$idsite = $this->get_current_site_id();
+
 		$view_access = $model->getUsersSitesFromAccess( 'view' );
-		$this->assertEquals( array( 'author1' => array( 1 ), 'author2' => array( 1 ), ), $view_access );
+		$this->assertEquals( array( 'author1' => array( $idsite ), 'author2' => array( $idsite ), ), $view_access );
 
 		$write_access = $model->getUsersSitesFromAccess( 'write' );
-		$this->assertEquals( array( 'editor1' => array( 1 ), 'editor2' => array( 1 ), ), $write_access );
+		$this->assertEquals( array( 'editor1' => array( $idsite ), 'editor2' => array( $idsite ), ), $write_access );
 
 		$view_access = $model->getUsersSitesFromAccess( 'admin' );
 		$this->assertSame( array(), $view_access );
@@ -192,13 +206,13 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 		), $logins );
 
 		$view_access = $model->getUsersSitesFromAccess( 'view' );
-		$this->assertEquals( array( 'contributor1' => array( 1 ) ), $view_access );
+		$this->assertEquals( array( 'contributor1' => array( $idsite ) ), $view_access );
 
 		$write_access = $model->getUsersSitesFromAccess( 'write' );
 		$this->assertSame( array(), $write_access );
 
 		$view_access = $model->getUsersSitesFromAccess( 'admin' );
-		$this->assertEquals( array( 'editor1' => array( 1 ), 'editor2' => array( 1 ), ), $view_access );
+		$this->assertEquals( array( 'editor1' => array( $idsite ), 'editor2' => array( $idsite ), ), $view_access );
 
 		foreach ( array( 'admin', 'admin1', 'admin4' ) as $user_login ) {
 			$matomo_user = $this->get_matomo_user( $user_login );
@@ -258,7 +272,6 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 		$id6 = self::factory()->user->create( array( 'role' => 'administrator', 'user_login' => 'admin1' ) );
 		$id6 = self::factory()->user->create( array( 'role' => 'administrator', 'user_login' => 'admin2' ) );
 	}
-
 
 	public function test_ensure_user_exists_creates_user_when_not_exists_yet() {
 		$id1  = self::factory()->user->create( array(

@@ -83,6 +83,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 			Bootstrap::set_not_bootstrapped();
 		} );
 
+
 		add_action( 'matomo_uninstall', function () {
 			Option::clearCache();
 			Cache::flushAll();
