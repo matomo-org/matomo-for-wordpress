@@ -4,7 +4,7 @@
  * Description: Most powerful web analytics for WordPress giving you 100% data ownership and privacy protection
  * Author: Matomo
  * Author URI: https://matomo.org
- * Version: 0.2.2
+ * Version: 0.2.3
  * Domain Path: /languages
  * WC requires at least: 2.4.0
  * WC tested up to: 3.2.6

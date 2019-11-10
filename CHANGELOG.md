@@ -1,3 +1,6 @@
+0.2.3
+- Better handling of stripslashes
+
 0.2.2
 - Fix tag manager custom html tag adds slashes
 
