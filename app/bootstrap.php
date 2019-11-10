@@ -21,6 +21,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
+if (!empty($_GET)) {
+	$_GET     = stripslashes_deep( $_GET );
+}
+if (!empty($_POST)) {
+	$_POST    = stripslashes_deep( $_POST );
+}
+if (!empty($_COOKIE)) {
+	$_COOKIE  = stripslashes_deep( $_COOKIE );
+}
+if (!empty($_SERVER)) {
+	$_SERVER  = stripslashes_deep( $_SERVER );
+}
+if (!empty($_REQUEST)) {
+	$_REQUEST = stripslashes_deep( $_REQUEST );
+}
+
 if ( !is_plugin_active('matomo/matomo.php')
      && !defined( 'MATOMO_PHPUNIT_TEST' )
      && !MATOMO_PHPUNIT_TEST ) { // during tests the plugin may temporarily not be active
