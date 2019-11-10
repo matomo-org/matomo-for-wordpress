@@ -64,6 +64,7 @@ class Settings {
 		'track_codeposition'                       => 'footer',
 		'track_noscript'                           => false,
 		'track_content'                            => 'disabled',
+		'track_ecommerce'                          => true,
 		'track_search'                             => false,
 		'track_404'                                => false,
 		'tagmanger_container_ids'                  => array(),
@@ -132,12 +133,26 @@ class Settings {
 				$this->global_settings[ $key ] = get_site_option( self::GLOBAL_OPTION_PREFIX . $key, $default );
 			} else {
 				$this->global_settings[ $key ] = get_option( self::GLOBAL_OPTION_PREFIX . $key, $default );
-
 			}
 		}
 		foreach ( $this->settings as $key => $default ) {
 			$this->settings[ $key ] = get_option( self::OPTION_PREFIX . $key, $default );
 		}
+	}
+
+	public function get_customised_global_settings()
+	{
+		$default_settings = $this->default_settings['globalSettings'];
+		$custom_settings = array();
+
+		foreach ($this->global_settings as $key => $val) {
+			if (isset($default_settings[$key])
+			    && $default_settings[$key] != $val) {
+				$custom_settings[$key] = $val;
+			}
+		}
+
+		return $custom_settings;
 	}
 
 	public function uninstall() {
@@ -293,7 +308,7 @@ class Settings {
 		if (!self::$is_doing_action_tracking_related) {
 			// prevent recurison if any plugin was listening to this event and calling this method again
 			self::$is_doing_action_tracking_related = true;
-			do_action('matomo_tracking_settings_changed', $this);
+			do_action('matomo_tracking_settings_changed', $this, $values);
 			self::$is_doing_action_tracking_related = false;
 		}
 	}

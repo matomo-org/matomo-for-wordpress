@@ -1,3 +1,7 @@
+0.2.1
+- Option to disable ecommerce
+- Show Matomo settings in system report
+
 0.2.0
 - Update to Matomo 3.12.0
 - Improve session start success check

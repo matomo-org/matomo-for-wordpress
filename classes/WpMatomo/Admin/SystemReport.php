@@ -288,6 +288,33 @@ class SystemReport {
 			'comment' => ''
 		);
 
+		$rows[] = array(
+			'section' => 'Matomo Settings',
+		);
+
+		// always show these settings
+		$global_settings_always_show = array('track_mode', 'track_codeposition', 'track_api_endpoint', 'track_js_endpoint');
+		foreach ($global_settings_always_show as $key) {
+			$rows[] = array(
+				'name'    => ucfirst(str_replace('_', ' ', $key)),
+				'value'   => $this->settings->get_global_option($key),
+				'comment' => ''
+			);
+		}
+
+		// otherwise show only few customised settings
+		// mostly only numeric values and booleans to not eg accidentally show anything that would store a token etc
+		// like we don't want to show license key etc
+		foreach ($this->settings->get_customised_global_settings() as $key => $val) {
+			if (is_numeric($val) || is_bool($val) || $key === 'track_content' || $key === 'track_user_id') {
+				$rows[] = array(
+					'name'    => ucfirst(str_replace('_', ' ', $key)),
+					'value'   => $val,
+					'comment' => ''
+				);
+			}
+		}
+
 		return $rows;
 	}
 

@@ -85,6 +85,8 @@ $paths = new Paths();
 			'visible'  => __( 'Track only visible content blocks', 'matomo' )
 		), __( 'Content tracking allows you to track interaction with the content of a web page or application.' ) . ' ' . sprintf( __( 'See %sMatomo documentation%s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/content-tracking" target="_BLANK">', '</a>' ), '', $isNotTracking, $fullGeneratedTrackingGroup );
 
+		$form->show_checkbox( 'track_ecommerce', __( 'Enable ecommerce', 'matomo' ), __( 'Matom can track Ecommerce orders, abandoned carts and product views for WooCommerce, Easy Digital Analytics, MemberPress, and more. Disabling this feature will also remove Ecommerce reports from the Matomo UI.' ), $isNotTracking, $fullGeneratedTrackingGroup . ' matomo-track-option-manually matomo-track-option-tagmanager' );
+
 		$form->show_checkbox( 'track_search', __( 'Track search', 'matomo' ), __( 'Use Matomo\'s advanced Site Search Analytics feature.' ) . ' ' . sprintf( __( 'See %sMatomo documentation%s.', 'matomo' ), '<a href="https://matomo.org/docs/site-search/#track-site-search-using-the-tracking-api-advanced-users-only" target="_BLANK">', '</a>' ), $isNotTracking, $fullGeneratedTrackingGroup . ' matomo-track-option-manually matomo-track-option-tagmanager' );
 
 		$form->show_checkbox( 'track_404', __( 'Track 404', 'matomo' ), __( 'Matomo can automatically add a 404-category to track 404-page-visits.', 'matomo' ) . ' ' . sprintf( __( 'See %sMatomo FAQ%s.', 'matomo' ), '<a href="https://matomo.org/faq/how-to/faq_60/" target="_BLANK">', '</a>' ), $isNotTracking, $fullGeneratedTrackingGroup . ' matomo-track-option-manually' );
