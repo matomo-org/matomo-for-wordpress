@@ -133,7 +133,7 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 		// all admins should also be super users
 		foreach ( $logins as $login ) {
 			$matomo_user = $this->get_matomo_user( $login );
-			$this->assertEquals( '1', $matomo_user['superuser_acccess'] );
+			$this->assertEquals( '1', $matomo_user['superuser_access'] );
 		}
 	}
 
