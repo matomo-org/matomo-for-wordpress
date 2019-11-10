@@ -59,18 +59,6 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 		$this->assertNotEmpty( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) );
 	}
 
-	public function test_show_settings_does_not_change_any_values_when_not_superuser() {
-		wp_get_current_user()->remove_role( Roles::ROLE_SUPERUSER );
-
-		$this->fake_request( TrackingSettings::TRACK_MODE_DEFAULT );
-
-		ob_start();
-		$this->get_started->show();
-		ob_end_clean();
-
-		$this->assertSame( TrackingSettings::TRACK_MODE_DISABLED, $this->settings->get_global_option( 'track_mode' ) );
-	}
-
 	public function test_show_settings_does_not_change_any_values_when_not_correct_value() {
 
 		$this->fake_request( 'manually' );
