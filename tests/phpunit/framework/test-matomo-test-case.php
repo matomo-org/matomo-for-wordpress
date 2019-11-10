@@ -69,6 +69,12 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		$installer = new Installer( $settings );
 		$installer->install();
 
+		// we need to init roles again... seems like WP isn't doing this by themselves...
+		// otherwise if one test adds eg Capability WRITE_MATOMO to a role "editor", in other tests this
+		// capability will still be present
+		global $wp_roles;
+		$wp_roles->init_roles();
+
 		$roles = new Roles( $settings );
 		$roles->add_roles();
 

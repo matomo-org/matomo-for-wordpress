@@ -32,6 +32,8 @@ class AccessTest extends MatomoAnalytics_TestCase {
 
 	public function tearDown() {
 		$this->capabilities->remove_hooks();
+		$this->reset_roles();
+
 		parent::tearDown();
 	}
 

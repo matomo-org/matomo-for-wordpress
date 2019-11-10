@@ -55,6 +55,10 @@ class Capabilities {
 		add_filter( 'map_meta_cap', array( $this, 'map_meta_cap' ), 10, 4 );
 	}
 
+	/**
+	 * Tests only
+	 * @internal
+	 */
 	public function remove_hooks()
 	{
 		remove_action( 'wp_roles_init', array( $this, 'add_capabilities_to_roles' ) );

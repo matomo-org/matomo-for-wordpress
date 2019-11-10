@@ -2,7 +2,7 @@
 /**
  * @package Matomo_Analytics
  */
-
+use \WpMatomo\Capabilities;
 
 class MatomoUnit_TestCase extends WP_UnitTestCase {
 
@@ -10,6 +10,8 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		parent::setUp();
 
 		set_current_screen( 'front' );
+
+		$this->reset_roles();
 
 		add_filter( 'plugins_url', function ( $url ) {
 			// workaround for https://github.com/wp-cli/wp-cli/issues/1037
@@ -46,5 +48,18 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		}
 
 		return $id;
+	}
+
+	/**
+	 * Reset roles so they won't be stored across tests...
+	 */
+	protected function reset_roles()
+	{
+		foreach (array('editor', 'author', 'contributor') as $role) {
+			get_role( $role )->remove_cap( Capabilities::KEY_SUPERUSER );
+			get_role( $role )->remove_cap( Capabilities::KEY_WRITE );
+			get_role( $role )->remove_cap( Capabilities::KEY_ADMIN );
+			get_role( $role )->remove_cap( Capabilities::KEY_VIEW );
+		}
 	}
 }
