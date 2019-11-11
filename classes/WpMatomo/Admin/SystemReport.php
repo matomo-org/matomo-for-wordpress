@@ -269,16 +269,18 @@ class SystemReport {
 
 		}
 
-		$rows[] = array(
-			'section' => __( 'Mandatory checks', 'matomo' ),
-		);
+		if ( ! \WpMatomo::is_safe_mode() ) {
+			$rows[] = array(
+				'section' => __( 'Mandatory checks', 'matomo' ),
+			);
 
-		$rows = $this->add_diagnostic_results( $rows, $report->getMandatoryDiagnosticResults() );
+			$rows = $this->add_diagnostic_results( $rows, $report->getMandatoryDiagnosticResults() );
 
-		$rows[] = array(
-			'section' => __( 'Optional checks', 'matomo' ),
-		);
-		$rows   = $this->add_diagnostic_results( $rows, $report->getOptionalDiagnosticResults() );
+			$rows[] = array(
+				'section' => __( 'Optional checks', 'matomo' ),
+			);
+			$rows   = $this->add_diagnostic_results( $rows, $report->getOptionalDiagnosticResults() );
+		}
 
 		$cliMulti = new CliMulti();
 

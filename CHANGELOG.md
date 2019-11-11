@@ -1,3 +1,6 @@
+0.2.4
+- Add new feature: Safe mode
+
 0.2.3
 - Better handling of stripslashes
 

@@ -48,6 +48,14 @@ class WpMatomo {
 
 		$this->settings = new Settings();
 
+		if ( self::is_safe_mode() ) {
+			if ( is_admin() ) {
+				new \WpMatomo\Admin\SafeModeMenu($this->settings);
+			}
+
+			return;
+		}
+
 		add_action( 'init', array( $this, 'init_plugin' ) );
 
 		$capabilities = new Capabilities( $this->settings );
@@ -139,6 +147,11 @@ class WpMatomo {
 		}
 
 		return is_super_admin();
+	}
+
+	public static function is_safe_mode()
+	{
+		return defined('MATOMO_SAFE_MODE') && MATOMO_SAFE_MODE;
 	}
 
 	public function add_settings_link( $links ) {
