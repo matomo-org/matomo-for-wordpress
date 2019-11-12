@@ -34,9 +34,11 @@ class PathsTest extends MatomoUnit_TestCase {
 	 * @group ms-required
 	 */
 	public function test_get_upload_base_dir_forBlog() {
-		self::factory()->blog->create();
+		$blogid1 = self::factory()->blog->create();
 		switch_to_blog( 2 );
 		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/sites/2/matomo', $this->paths->get_upload_base_dir() );
+
+		wp_delete_site($blogid1);
 	}
 
 	public function test_get_upload_base_url() {
@@ -124,8 +126,9 @@ class PathsTest extends MatomoUnit_TestCase {
 	 * @group ms-required
 	 */
 	public function test_get_gloal_upload_dir_if_possible_forBlog() {
-		self::factory()->blog->create();
+		$blogid1 = self::factory()->blog->create();
 		switch_to_blog( 2 );
+		wp_delete_site($blogid1);
 		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/matomo', $this->paths->get_gloal_upload_dir_if_possible() );
 	}
 

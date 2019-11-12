@@ -106,8 +106,8 @@ class InstallTest extends MatomoAnalytics_TestCase {
 	 * @group ms-required
 	 */
 	public function test_install_also_installs_on_other_blog() {
-		$blogid = self::factory()->blog->create();
-		switch_to_blog( $blogid );
+		$blogid1 = self::factory()->blog->create();
+		switch_to_blog( $blogid1 );
 
 		// we trigger install manually... we could listen to an action like "wp_initialize_site" and then install
 		// automatically... but bit scared of "fatal errors etc" and breaking anything in wordpress... instead
@@ -123,6 +123,8 @@ class InstallTest extends MatomoAnalytics_TestCase {
 
 		$sites_model = new SitesModel();
 		$all_sites   = $sites_model->getAllSites();
+
+		wp_delete_site($blogid1);
 
 		$this->assertCount( 1, $all_sites );
 	}

@@ -81,6 +81,9 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 
 		$idsite = $this->get_current_site_id();
 
+		wp_delete_site($blogid1);// remove the blogs again so they don't break other tests
+		wp_delete_site($blogid2);
+
 		$this->assertCount( 1, $this->mock->synced_users[0]['users'] );
 		unset( $this->mock->synced_users[0]['users'] );
 		$this->assertEquals( array(
