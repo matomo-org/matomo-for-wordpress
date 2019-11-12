@@ -68,7 +68,7 @@ before_script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      composer install
+      composer install --dev
     fi
 
 
