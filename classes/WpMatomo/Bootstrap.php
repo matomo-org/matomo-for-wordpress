@@ -68,7 +68,7 @@ class Bootstrap {
 		require_once PIWIK_INCLUDE_PATH . '/core/bootstrap.php';
 		// we need to install now
 
-		include_once 'Db/Wordpress.php';
+		include_once 'Db/WordPress.php';
 
 		$environment = new \Piwik\Application\Environment( null );
 		$environment->init();

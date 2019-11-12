@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once 'WordPressDbStatement.php';
-require_once 'WordpressTracker.php';
+require_once 'WordPressTracker.php';
 
 class WordPress extends Mysqli {
 
