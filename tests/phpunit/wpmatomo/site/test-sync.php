@@ -66,6 +66,8 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 		) );
 
 		$this->mock->sync_all();
+		wp_delete_site($blogid1);
+		wp_delete_site($blogid2);
 		$this->assertEquals( array(
 			array(
 				'id'   => 1,
@@ -110,6 +112,9 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 		switch_to_blog( $blogid1 );
 
 		$this->mock->sync_current_site();
+
+		wp_delete_site($blogid1);
+
 		$this->assertEquals( array(
 			array(
 				'id'   => $blogid1,

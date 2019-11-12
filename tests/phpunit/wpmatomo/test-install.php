@@ -106,15 +106,25 @@ class InstallTest extends MatomoAnalytics_TestCase {
 	 * @group ms-required
 	 */
 	public function test_install_also_installs_on_other_blog() {
-		$blogid = self::factory()->blog->create();
-		switch_to_blog( $blogid );
+		$blogid1 = self::factory()->blog->create();
+		switch_to_blog( $blogid1 );
+
+		// we trigger install manually... we could listen to an action like "wp_initialize_site" and then install
+		// automatically... but bit scared of "fatal errors etc" and breaking anything in wordpress... instead
+		// the site sync will install it and/or when someone visits that site
+		Bootstrap::set_not_bootstrapped();
+		$this->installer->install();
+
+		$blogid = get_current_blog_id();
 
 		$paths = new Paths();
-		$this->assertContains( 'wp-content/uploads/sites/2/matomo/config/config.ini.php', $paths->get_config_ini_path() );
+		$this->assertContains( 'wp-content/uploads/sites/'.$blogid.'/matomo/config/config.ini.php', $paths->get_config_ini_path() );
 		$this->assertTrue( $this->installer->looks_like_it_is_installed() );
 
 		$sites_model = new SitesModel();
 		$all_sites   = $sites_model->getAllSites();
+
+		wp_delete_site($blogid1);
 
 		$this->assertCount( 1, $all_sites );
 	}

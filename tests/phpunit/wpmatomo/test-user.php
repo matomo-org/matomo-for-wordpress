@@ -43,9 +43,10 @@ class UserTest extends MatomoUnit_TestCase {
 	 * @group ms-required
 	 */
 	public function test_get_current_matomo_user_login_mapping_is_stored_per_blog() {
-		$id1 = self::factory()->blog->create();
+		$user_id = $this->create_set_super_admin();
+		wp_set_current_user($user_id);
 
-		wp_set_current_user($id1);
+		$id1 = self::factory()->blog->create();
 
 		User::map_matomo_user_login( get_current_user_id(), 'foo' );
 		$this->assertSame( 'foo', $this->user->get_current_matomo_user_login() );
@@ -57,6 +58,8 @@ class UserTest extends MatomoUnit_TestCase {
 		// in original blog user has a mapping again
 		restore_current_blog();
 		$this->assertSame( 'foo', $this->user->get_current_matomo_user_login() );
+
+		wp_delete_site($id1);
 	}
 
 	public function test_map_matomo_user_login_get_matomo_user_login() {
