@@ -3,13 +3,16 @@
 	<description>Generally-applicable sniffs for WordPress plugins.</description>
 
 	<!-- What to scan -->
-	<file>.</file>
-	<exclude-pattern>/app/</exclude-pattern>
-	<exclude-pattern>/vendor/</exclude-pattern>
-	<exclude-pattern>/node_modules/</exclude-pattern>
-	<exclude-pattern>/matomo/</exclude-pattern>
-	<exclude-pattern>/plugin-update-checker/</exclude-pattern>
-	<exclude-pattern>/plugins/</exclude-pattern>
+	<file>./classes</file>
+        <file>./tests</file>
+        <file>./matomo.php</file>
+        <file>./uninstall.php</file>
+	<exclude-pattern type="relative">/classes/WpMatomo/Db/</exclude-pattern>
+	<exclude-pattern type="relative">/app/</exclude-pattern>
+	<exclude-pattern type="relative">/vendor/</exclude-pattern>
+	<exclude-pattern type="relative">/node_modules/</exclude-pattern>
+	<exclude-pattern type="relative">/plugin-update-checker/</exclude-pattern>
+	<exclude-pattern type="relative">/plugins/</exclude-pattern>
 
 	<!-- How to scan -->
 	<!-- Usage instructions: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->
@@ -22,14 +25,14 @@
 
 	<!-- Rules: Check PHP version compatibility -->
 	<!-- https://github.com/PHPCompatibility/PHPCompatibility#sniffing-your-code-for-compatibility-with-specific-php-versions -->
-	<config name="testVersion" value="5.3-"/>
+	<config name="testVersion" value="5.5-"/>
 	<!-- https://github.com/PHPCompatibility/PHPCompatibilityWP -->
 	<rule ref="PHPCompatibilityWP"/>
 
 	<!-- Rules: WordPress Coding Standards -->
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards -->
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
-	<config name="minimum_supported_wp_version" value="4.6"/>
+	<config name="minimum_supported_wp_version" value="4.8"/>
 	<rule ref="WordPress">
 		<exclude name="WordPress"/>
 	</rule>
