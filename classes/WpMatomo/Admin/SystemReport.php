@@ -23,7 +23,6 @@ use WpMatomo\Settings;
 use WpMatomo\Site;
 use WpMatomo\Site\Sync as SiteSync;
 use WpMatomo\User\Sync as UserSync;
-use function DI\value;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
