@@ -68,7 +68,10 @@ before_script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      composer install --dev
+      composer require "dealerdirect/phpcodesniffer-composer-installer"
+      composer require "phpcompatibility/phpcompatibility-wp"
+      composer require "squizlabs/php_codesniffer"
+      composer require "wp-coding-standards/wpcs"
     fi
 
 
