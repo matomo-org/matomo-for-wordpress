@@ -57,12 +57,12 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 		$blogid1 = self::factory()->blog->create( array(
 			'domain' => 'foobar.com',
 			'title' => 'Site 22',
-			'path' => 'testpath22'
+			'path' => '/testpath22'
 		) );
 		$blogid2 = self::factory()->blog->create( array(
 			'domain' => 'foobar.baz',
 			'title' => 'Site 23',
-			'path' => 'testpath23'
+			'path' => '/testpath23'
 		) );
 
 		$this->mock->sync_all();
@@ -108,7 +108,7 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 	public function test_sync_current_site_passes_correct_values_to_sync_site_when_we_are_on_different_blog() {
 		$blogid1 = self::factory()->blog->create( array( 'domain' => 'foobar.com',
 		                                                 'title' => 'Site 24',
-		                                                 'path' => 'testpath24' ) );
+		                                                 'path' => '/testpath24' ) );
 		switch_to_blog( $blogid1 );
 
 		$this->mock->sync_current_site();
