@@ -109,6 +109,12 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$blogid = self::factory()->blog->create();
 		switch_to_blog( $blogid );
 
+		// we trigger install manually... we could listen to an action like "wp_initialize_site" and then install
+		// automatically... but bit scared of "fatal errors etc" and breaking anything in wordpress... instead
+		// the site sync will install it and/or when someone visits that site
+		Bootstrap::set_not_bootstrapped();
+		$this->installer->install();
+
 		$blogid = get_current_blog_id();
 
 		$paths = new Paths();
