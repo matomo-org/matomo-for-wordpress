@@ -81,9 +81,6 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 
 		$idsite = $this->get_current_site_id();
 
-		wp_delete_site($blogid1);// remove the blogs again so they don't break other tests
-		wp_delete_site($blogid2);
-
 		$this->assertCount( 1, $this->mock->synced_users[0]['users'] );
 		unset( $this->mock->synced_users[0]['users'] );
 		$this->assertEquals( array(
@@ -99,6 +96,10 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 				'idSite' => $idsite
 			),
 		), $this->mock->synced_users );
+
+		wp_delete_site($blogid1);// remove the blogs again so they don't break other tests
+		wp_delete_site($blogid2);
+
 	}
 
 	public function test_sync_current_site_does_not_fail() {
