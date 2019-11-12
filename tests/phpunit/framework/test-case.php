@@ -9,6 +9,12 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
+		if (!function_exists('wp_delete_site')) {
+			function wp_delete_site ($site_id) {
+				wpmu_delete_blog($site_id, true);
+			}
+		}
+
 		set_current_screen( 'front' );
 
 		$this->reset_roles();
