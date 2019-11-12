@@ -174,27 +174,29 @@ class SystemReport {
 			'comment' => $tmp_dir
 		);
 
-		try {
-			Bootstrap::do_bootstrap();
-			/** @var DiagnosticService $service */
-			$service = StaticContainer::get( \Piwik\Plugins\Diagnostics\DiagnosticService::class );
-			$report  = $service->runDiagnostics();
+		if ( ! \WpMatomo::is_safe_mode() ) {
+			try {
+				Bootstrap::do_bootstrap();
+				/** @var DiagnosticService $service */
+				$service = StaticContainer::get( \Piwik\Plugins\Diagnostics\DiagnosticService::class );
+				$report  = $service->runDiagnostics();
 
-		} catch ( \Exception $e ) {
+			} catch ( \Exception $e ) {
+				$rows[] = array(
+					'name'    => __( 'Matomo System Check', 'matomo' ),
+					'value'   => 'Failed to run, please open the system check in Matomo',
+					'comment' => ''
+				);
+
+				return $rows;
+			}
+
 			$rows[] = array(
-				'name'    => __( 'Matomo System Check', 'matomo' ),
-				'value'   => 'Failed to run, please open the system check in Matomo',
+				'name'    => __( 'Matomo Version', 'matomo' ),
+				'value'   => \Piwik\Version::VERSION,
 				'comment' => ''
 			);
-
-			return $rows;
 		}
-
-		$rows[] = array(
-			'name'    => __( 'Matomo Version', 'matomo' ),
-			'value'   => \Piwik\Version::VERSION,
-			'comment' => ''
-		);
 
 		$site = new Site();
 		$idsite = $site->get_current_matomo_site_id();
@@ -281,15 +283,15 @@ class SystemReport {
 				'section' => __( 'Optional checks', 'matomo' ),
 			);
 			$rows   = $this->add_diagnostic_results( $rows, $report->getOptionalDiagnosticResults() );
+
+			$cliMulti = new CliMulti();
+
+			$rows[] = array(
+				'name'    => 'Supports Async Archiving',
+				'value'   => $cliMulti->supportsAsync(),
+				'comment' => ''
+			);
 		}
-
-		$cliMulti = new CliMulti();
-
-		$rows[] = array(
-			'name'    => 'Supports Async Archiving',
-			'value'   => $cliMulti->supportsAsync(),
-			'comment' => ''
-		);
 
 		$rows[] = array(
 			'section' => 'Matomo Settings',
