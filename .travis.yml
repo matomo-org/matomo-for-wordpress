@@ -80,5 +80,5 @@ script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      vendor/bin/phpcs;
+      vendor/bin/phpcs -v
     fi
