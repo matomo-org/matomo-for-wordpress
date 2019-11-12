@@ -38,7 +38,7 @@ class Updater {
 		$executed_updates = array();
 
 		$plugin_files = $GLOBALS['MATOMO_PLUGIN_FILES'];
-		if ( ! in_array( MATOMO_ANALYTICS_FILE, $plugin_files ) ) {
+		if ( ! in_array( MATOMO_ANALYTICS_FILE, $plugin_files, true ) ) {
 			$plugin_files[] = MATOMO_ANALYTICS_FILE;
 			// making sure this plugin is in the list so when itself gets updated
 			// it will execute the core updates

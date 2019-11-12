@@ -162,7 +162,7 @@ class Sync {
 		$logins_with_some_view_access = array_unique( $logins_with_some_view_access );
 		$all_users                    = $user_model->getUsers( array() );
 		foreach ( $all_users as $all_user ) {
-			if ( ! in_array( $all_user['login'], $logins_with_some_view_access )
+			if ( ! in_array( $all_user['login'], $logins_with_some_view_access, true )
 				 && ! empty( $all_user['login'] ) ) {
 				$user_model->deleteUserOnly( $all_user['login'] );
 			}

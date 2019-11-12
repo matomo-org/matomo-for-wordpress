@@ -149,7 +149,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		Config::getInstance()->Debug      = $debug;
 	}
 
-	protected function make_local_tracker( $dateTime ) {
+	protected function make_local_tracker( $date_time ) {
 		Bootstrap::do_bootstrap();
 
 		include_once 'test-local-tracker.php';
@@ -158,7 +158,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		$endpoint = $paths->get_tracker_api_rest_api_endpoint();
 		$tracker  = new MatomoLocalTracker( $site->get_current_matomo_site_id(), $endpoint );
 
-		$tracker->setForceVisitDateTime( $dateTime );
+		$tracker->setForceVisitDateTime( $date_time );
 		$tracker->setIp( '156.5.3.2' );
 		// Optional tracking
 		$tracker->setUserAgent( 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.2.6) Gecko/20100625 Firefox/3.6.6 (.NET CLR 3.5.30729)' );

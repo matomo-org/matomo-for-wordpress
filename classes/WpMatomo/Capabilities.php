@@ -166,7 +166,7 @@ class Capabilities {
 
 	protected function has_any_higher_permission( $cap_to_find, $allcaps ) {
 		$all_caps = $this->get_all_capabilities_sorted_by_highest_permission();
-		if ( ! in_array( $cap_to_find, $all_caps ) ) {
+		if ( ! in_array( $cap_to_find, $all_caps, true ) ) {
 			return false;
 		}
 

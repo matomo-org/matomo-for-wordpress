@@ -109,7 +109,7 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 	private function make_all_caps( $caps_to_set ) {
 		$caps = array();
 		foreach ( $this->make_capabilities()->get_all_capabilities_sorted_by_highest_permission() as $cap ) {
-			$caps[ $cap ] = in_array( $cap, $caps_to_set );
+			$caps[ $cap ] = in_array( $cap, $caps_to_set, true );
 		}
 
 		return $caps;

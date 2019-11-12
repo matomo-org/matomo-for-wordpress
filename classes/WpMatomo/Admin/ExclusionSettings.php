@@ -77,12 +77,12 @@ class ExclusionSettings implements AdminSettingsInterface {
 				$api->setKeepURLFragmentsGlobal( $keep_fragments );
 			}
 
-			$settingValues = array( Settings::OPTION_KEY_STEALTH => array() );
+			$setting_values = array( Settings::OPTION_KEY_STEALTH => array() );
 			if ( ! empty( $post[ Settings::OPTION_KEY_STEALTH ] ) ) {
-				$settingValues[ Settings::OPTION_KEY_STEALTH ] = $post[ Settings::OPTION_KEY_STEALTH ];
+				$setting_values[ Settings::OPTION_KEY_STEALTH ] = $post[ Settings::OPTION_KEY_STEALTH ];
 			}
 
-			$this->settings->apply_changes( $settingValues );
+			$this->settings->apply_changes( $setting_values );
 
 			return true;
 		}

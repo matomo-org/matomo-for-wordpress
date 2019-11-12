@@ -40,7 +40,7 @@ class Annotations {
 	 * Identify new posts if an annotation is required
 	 * and create Piwik annotation
 	 *
-	 * @param string $new_status  new post status
+	 * @param string $new_status new post status
 	 * @param string $old_status old post status
 	 * @param object $post current post object
 	 */

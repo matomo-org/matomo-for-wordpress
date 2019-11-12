@@ -174,7 +174,7 @@ class Uninstaller {
 
 		foreach ( $table_names_to_look_for as $table_name_to_look_for ) {
 			$table_name_to_test = $wpdb->prefix . MATOMO_DATABASE_PREFIX . $table_name_to_look_for;
-			if ( ! in_array( $table_name_to_test, $tableNames ) ) {
+			if ( ! in_array( $table_name_to_test, $tableNames, true ) ) {
 				$tableNames[] = $table_name_to_test;
 			}
 		}

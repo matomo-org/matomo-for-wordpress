@@ -403,10 +403,10 @@ class Settings {
 	}
 
 	public function is_current_tracking_code() {
-		$lastTrackingCodeUpdate     = $this->get_option( self::OPTION_LAST_TRACKING_CODE_UPDATE );
-		$lastTrackingSettingsUpdate = $this->get_global_option( self::OPTION_LAST_TRACKING_SETTINGS_CHANGE );
+		$last_tracking_code_update     = $this->get_option( self::OPTION_LAST_TRACKING_CODE_UPDATE );
+		$last_tracking_settings_update = $this->get_global_option( self::OPTION_LAST_TRACKING_SETTINGS_CHANGE );
 
-		return $lastTrackingCodeUpdate && $lastTrackingCodeUpdate > $lastTrackingSettingsUpdate;
+		return $last_tracking_code_update && $last_tracking_code_update > $last_tracking_settings_update;
 	}
 
 	/**

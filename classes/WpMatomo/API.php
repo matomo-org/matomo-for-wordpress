@@ -149,7 +149,7 @@ class API {
 		foreach ( $methods as $methodStartsWith => $methodToUse ) {
 			if ( strpos( $api_method, $methodStartsWith ) === 0 ) {
 				$method = $methodToUse;
-				if ( ! in_array( $methodStartsWith, $starts_with_keep_prefix ) ) {
+				if ( ! in_array( $methodStartsWith, $starts_with_keep_prefix, true ) ) {
 					$new_action = trim( ltrim( substr( $wp_api_action, strlen( $methodStartsWith ) ), '_' ) );
 					if ( ! empty( $new_action ) ) {
 						$wp_api_action = $new_action;

@@ -26,7 +26,7 @@ class ApiTest extends MatomoAnalytics_TestCase {
 
 	public function test_adds_namespace() {
 		$namespaces = $this->server->get_namespaces();
-		$this->assertTrue( in_array( API::VERSION, $namespaces ) );
+		$this->assertTrue( in_array( API::VERSION, $namespaces, true ) );
 	}
 
 	public function test_to_snake_case() {
