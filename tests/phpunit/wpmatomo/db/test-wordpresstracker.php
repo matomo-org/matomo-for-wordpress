@@ -4,7 +4,7 @@
  */
 
 use Piwik\Common;
-use Piwik\Tracker\Db\Wordpress;
+use Piwik\Tracker\Db\WordPress;
 
 class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 
@@ -15,7 +15,7 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->db = new Wordpress(
+		$this->db = new WordPress(
 			array(
 				'enable_ssl'     => false,
 				'options'        => array(),

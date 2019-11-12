@@ -4,7 +4,7 @@
  */
 
 use Piwik\Common;
-use Piwik\Db\Adapter\Wordpress;
+use Piwik\Db\Adapter\WordPress;
 
 class DbWordPressTest extends MatomoAnalytics_TestCase {
 
@@ -15,7 +15,7 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->db = new Wordpress(
+		$this->db = new WordPress(
 			array(
 				'enable_ssl'     => false,
 				'options'        => array(),

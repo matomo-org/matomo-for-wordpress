@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once 'WordPressDbStatement.php';
 require_once 'WordpressTracker.php';
 
-class Wordpress extends Mysqli {
+class WordPress extends Mysqli {
 
 	private $old_suppress_errors_value = null;
 

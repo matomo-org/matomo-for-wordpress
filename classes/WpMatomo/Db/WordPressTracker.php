@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Wordpress extends Mysqli {
+class WordPress extends Mysqli {
 
 	private $old_suppress_errors_value = null;
 
