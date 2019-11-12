@@ -81,20 +81,20 @@ class SettingsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_set_option_get_option() {
-		$testValue = 'var foo = "bar";';
-		$this->settings->set_option( 'tracking_code', $testValue );
-		$this->assertSame( $testValue, $this->settings->get_option( 'tracking_code' ) );
+		$test_value = 'var foo = "bar";';
+		$this->settings->set_option( 'tracking_code', $test_value );
+		$this->assertSame( $test_value, $this->settings->get_option( 'tracking_code' ) );
 	}
 
 	public function test_set_option_does_not_persist_change_unless_saved() {
-		$testValue = 'var foo = "bar";';
-		$this->settings->set_option( 'tracking_code', $testValue );
+		$test_value = 'var foo = "bar";';
+		$this->settings->set_option( 'tracking_code', $test_value );
 
 		$this->assertEquals( '', $this->make_settings()->get_option( 'tracking_code' ) );
 
 		$this->settings->save();
 
-		$this->assertEquals( $testValue, $this->make_settings()->get_option( 'tracking_code' ) );
+		$this->assertEquals( $test_value, $this->make_settings()->get_option( 'tracking_code' ) );
 	}
 
 	public function test_apply_tracking_related_changes_updates_last_tracking_setting_change() {

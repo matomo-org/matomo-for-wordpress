@@ -14,6 +14,7 @@
 	<exclude-pattern type="relative">/node_modules/</exclude-pattern>
 	<exclude-pattern type="relative">/plugin-update-checker/</exclude-pattern>
 	<exclude-pattern type="relative">/plugins/</exclude-pattern>
+	<exclude-pattern type="relative">/tests/phpunit/bootstrap.php</exclude-pattern>
 
 	<!-- How to scan -->
 	<!-- Usage instructions: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->
@@ -47,7 +48,10 @@
 		<exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop"/>
 		<exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
 		<exclude name="Squiz.Commenting.FunctionComment.MissingParamName"/>
+		<exclude name="Squiz.Commenting.FileComment.SpacingAfterComment"/>
+		<exclude name="WordPress.WhiteSpace.PrecisionAlignment.Found"/>
 		<exclude name="Generic.Commenting.DocComment.ShortNotCapital"/>
+		<exclude name="Squiz.Commenting.FileComment.Missing"/>
 		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log"/>
 		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r"/>
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
@@ -58,13 +62,12 @@
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<!-- Value: replace the function, class, and variable prefixes used. Separate multiple prefixes with a comma. -->
-			<property name="prefixes" type="array" value="my-plugin"/>
+			<property name="prefixes" type="array" value="matomo,wpmatomo"/>
 		</properties>
 	</rule>
 	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<!-- Value: replace the text domain used. -->
-			<property name="text_domain" type="array" value="my-plugin"/>
+			<property name="text_domain" type="array" value="matomo"/>
 		</properties>
 	</rule>
 	<rule ref="WordPress.WhiteSpace.ControlStructureSpacing">

@@ -15,7 +15,7 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 	/**
 	 * @var TrackingCodeGenerator
 	 */
-	private $trackingCode;
+	private $tracking_code;
 
 	/**
 	 * @var Settings
@@ -30,13 +30,13 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 	}
 
 	private function make_tracking_code() {
-		$this->trackingCode = new TrackingCodeGenerator( $this->settings );
+		$this->tracking_code = new TrackingCodeGenerator( $this->settings );
 	}
 
 	private function get_tracking_code() {
 		$this->make_tracking_code();
 
-		return $this->trackingCode->get_tracking_code();
+		return $this->tracking_code->get_tracking_code();
 	}
 
 	public function test_get_tracking_code_when_tracking_is_disabled() {

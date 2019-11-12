@@ -13,6 +13,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @package matomo
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -59,7 +60,7 @@ function has_matomo_tag_manager() {
 }
 
 function add_matomo_plugin( $plugins_directory, $wp_plugin_file ) {
-	if ( ! in_array( $wp_plugin_file, $GLOBALS['MATOMO_PLUGIN_FILES'] ) ) {
+	if ( ! in_array( $wp_plugin_file, $GLOBALS['MATOMO_PLUGIN_FILES'], true ) ) {
 		$GLOBALS['MATOMO_PLUGIN_FILES'][] = $wp_plugin_file;
 	}
 

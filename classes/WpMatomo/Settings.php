@@ -7,7 +7,6 @@
  * @package matomo
  * Code Based on
  * @author Andr&eacute; Br&auml;kling
- * @package WP_Matomo
  * https://github.com/braekling/matomo
  *
  */
@@ -350,7 +349,7 @@ class Settings {
 
 	private function should_save_tracking_code_across_sites() {
 		return $this->is_network_enabled()
-			   && $this->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
+				&& $this->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
 	}
 
 	public function get_js_tracking_code() {

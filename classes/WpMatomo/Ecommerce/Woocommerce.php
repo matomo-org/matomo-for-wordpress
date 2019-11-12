@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Woocommerce extends Base {
-	private $orderStatusIgnore = array( 'cancelled', 'failed', 'refunded' );
+	private $order_status_ignore = array( 'cancelled', 'failed', 'refunded' );
 
 	public function register_hooks() {
 		if ( is_admin() ) {
@@ -125,7 +125,7 @@ class Woocommerce extends Base {
 
 		$this->logger->log( sprintf( 'Order %s with order number %s has status: %s', $order_id, $order_id_to_track, $order_status ) );
 
-		if ( in_array( $order_status, $this->orderStatusIgnore, $strict = true ) ) {
+		if ( in_array( $order_status, $this->order_status_ignore, $strict = true ) ) {
 			$this->logger->log( 'Ignoring ecommerce order ' . $order_id . ' becauses of status: ' . $order_status );
 
 			return '';
@@ -258,25 +258,25 @@ class Woocommerce extends Base {
 	 * @return array
 	 */
 	private function get_product_categories( $product ) {
-		$productId = $this->get_product_id( $product );
+		$product_id = $this->get_product_id( $product );
 
-		$categoryTerms = get_the_terms( $productId, 'product_cat' );
+		$category_terms = get_the_terms( $product_id, 'product_cat' );
 
 		$categories = array();
 
-		if ( is_wp_error( $categoryTerms ) ) {
+		if ( is_wp_error( $category_terms ) ) {
 			return $categories;
 		}
 
-		if ( ! empty( $categoryTerms ) ) {
-			foreach ( $categoryTerms as $category ) {
+		if ( ! empty( $category_terms ) ) {
+			foreach ( $category_terms as $category ) {
 				$categories[] = $category->name;
 			}
 		}
 
-		$maxNumCategories = 5;
-		$categories       = array_unique( $categories );
-		$categories       = array_slice( $categories, 0, $maxNumCategories );
+		$max_num_categories = 5;
+		$categories         = array_unique( $categories );
+		$categories         = array_slice( $categories, 0, $max_num_categories );
 
 		return $categories;
 	}

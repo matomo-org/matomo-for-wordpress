@@ -49,8 +49,8 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 	/**
 	 * @dataProvider get_any_higher_permission_provider
 	 */
-	public function test_has_any_higher_permission( $expectedResult, $capToFind, $caps ) {
-		$this->assertSame( $expectedResult, $this->caps->has_any_higher_permission( $capToFind, $caps ) );
+	public function test_has_any_higher_permission( $expected_result, $cap_to_find, $caps ) {
+		$this->assertSame( $expected_result, $this->caps->has_any_higher_permission( $cap_to_find, $caps ) );
 	}
 
 	public function get_any_higher_permission_provider() {
