@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 class ReleaseTest extends MatomoUnit_TestCase {

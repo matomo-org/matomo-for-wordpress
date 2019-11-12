@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -22,8 +22,8 @@ class Paths {
 		}
 
 		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
-			require_once( ABSPATH . '/wp-admin/includes/class-wp-filesystem-base.php' );
-			require_once( ABSPATH . '/wp-admin/includes/class-wp-filesystem-direct.php' );
+			require_once ABSPATH . '/wp-admin/includes/class-wp-filesystem-base.php';
+			require_once ABSPATH . '/wp-admin/includes/class-wp-filesystem-direct.php';
 		}
 
 		return new \WP_Filesystem_Direct( new \stdClass() );
@@ -82,8 +82,8 @@ class Paths {
 		$default_cache_dir     = $base_cache_dir . '/' . MATOMO_UPLOAD_DIR;
 
 		if ( ! $is_multi_site &&
-		     ( ( is_writable( WP_CONTENT_DIR ) && ! is_dir( $base_cache_dir ) )
-		       || is_writable( $base_cache_dir ) ) ) {
+			 ( ( is_writable( WP_CONTENT_DIR ) && ! is_dir( $base_cache_dir ) )
+			   || is_writable( $base_cache_dir ) ) ) {
 			// we prefer wp-content/cache
 			$cache_dir = $default_cache_dir;
 
@@ -118,9 +118,9 @@ class Paths {
 
 		foreach ( $target_dir_parts as $index => $part ) {
 			if ( isset( $matomo_dir_parts[ $index ] )
-			     && $part !== 'matomo' // not when matomo is same part cause it's the plugin name but eg also the upload folder name and it would generate wrong path
-			     && $matomo_dir_parts[ $index ] === $part
-			     && ! $was_previous_same ) {
+				 && $part !== 'matomo' // not when matomo is same part cause it's the plugin name but eg also the upload folder name and it would generate wrong path
+				 && $matomo_dir_parts[ $index ] === $part
+				 && ! $was_previous_same ) {
 				continue;
 			}
 
@@ -166,7 +166,7 @@ class Paths {
 		}
 
 		if ( ! empty( $file_to_look_for )
-		     && ! file_exists( $path_upload_dir . $file_to_look_for ) ) {
+			 && ! file_exists( $path_upload_dir . $file_to_look_for ) ) {
 			// seems we haven't auto detected the right one yet... (or it is not yet installed)
 			// we go up the site upload dir step by step to try and find the network upload dir
 			$parent_dir = $path_upload_dir;
@@ -194,8 +194,8 @@ class Paths {
 	public function clear_cache_dir() {
 		$tmp_dir = $this->get_tmp_dir();
 		if ( $tmp_dir
-		     && is_dir( $tmp_dir )
-		     && is_dir( $tmp_dir . '/cache' ) ) {
+			 && is_dir( $tmp_dir )
+			 && is_dir( $tmp_dir . '/cache' ) ) {
 			// we make sure it's a matomo cache dir to not delete something falsely
 			$file_system_direct = $this->get_file_system();
 			$file_system_direct->rmdir( $tmp_dir, true );
@@ -214,6 +214,5 @@ class Paths {
 		if ( $global_dir && $global_dir !== $dir ) {
 			$file_system_direct->rmdir( $dir );
 		}
-
 	}
 }

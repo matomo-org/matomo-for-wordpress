@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  * Code Based on
  * @author Andr&eacute; Br&auml;kling
  * @package WP_Matomo
@@ -37,8 +37,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php _e( 'Matomo Analytics is privacy by design. All data collected is stored only within your own MySQL database, no other business (or Matomo team member) can access any of this information, and logs or report data will never be sent to other servers by Matomo', 'matomo' ); ?>
 	.
 
-	<?php echo sprintf( __( 'The source code of the software is open-source so hundreds of people have reviewed it to ensure it is %1$ssecure%2$s and keeps your data private.', 'matomo' ),
-		'<a href="https://matomo.org/security/" rel="noreferrer noopener">', '</a>' ); ?>
+	<?php
+	echo sprintf(
+		__( 'The source code of the software is open-source so hundreds of people have reviewed it to ensure it is %1$ssecure%2$s and keeps your data private.', 'matomo' ),
+		'<a href="https://matomo.org/security/" rel="noreferrer noopener">',
+		'</a>'
+	);
+	?>
 </p>
 <h2>
 	<?php _e( 'Ways Matomo protects the privacy of your users and customers', 'matomo' ); ?>
@@ -71,8 +76,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php _e( 'Let users opt-out of tracking', 'matomo' ); ?>
 </h2>
 <p>
-	<?php echo sprintf( __( 'Use the short code %1$s to embed the opt out iframe into your website.', 'matomo' ),
-		'<code>' . PrivacySettings::EXAMPLE_MINIMAL . '</code>' ); ?><br/>
+	<?php
+	echo sprintf(
+		__( 'Use the short code %1$s to embed the opt out iframe into your website.', 'matomo' ),
+		'<code>' . PrivacySettings::EXAMPLE_MINIMAL . '</code>'
+	);
+	?>
+		<br/>
 	<?php _e( 'You can use these short code options:', 'matomo' ); ?>
 </p>
 <ul class="matomo-list">
@@ -85,7 +95,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<li>width - eg 600, 600px or 100%</li>
 	<li>height - eg 200, 200px or 20%</li>
 </ul>
-<p><?php _e( 'Example', 'matomo' ); ?>: <code><?php echo PrivacySettings::EXAMPLE_FULL ?></code></p>
+<p><?php _e( 'Example', 'matomo' ); ?>: <code><?php echo PrivacySettings::EXAMPLE_FULL; ?></code></p>
 <h2><?php _e( 'You earned it!', 'matomo' ); ?></h2>
 <p>
 	<?php echo sprintf( __( 'Use the shortcode %1$s to show that your website respects your visitors\' privacy.', 'matomo' ), '<code>[matomo_privacy_badge size=120]</code>' ); ?>

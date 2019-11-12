@@ -24,16 +24,16 @@ if ( ! defined( 'MATOMO_DATABASE_PREFIX' ) ) {
 	define( 'MATOMO_DATABASE_PREFIX', 'matomo_' );
 }
 /**
- * @param string $className
+ * @param string $class_name
  */
-function matomo_plugin_autoloader( $className ) {
-	$rootNamespace      = 'WpMatomo';
-	$rootLen            = strlen( $rootNamespace ) + 1; // +1 for namespace separator
-	$namespaceSeparator = '\\';
+function matomo_plugin_autoloader( $class_name ) {
+	$root_namespace      = 'WpMatomo';
+	$root_len            = strlen( $root_namespace ) + 1; // +1 for namespace separator
+	$namespace_separator = '\\';
 
-	if ( substr( $className, 0, $rootLen ) === $rootNamespace . $namespaceSeparator ) {
-		$className = str_replace( '.', '', str_replace( $namespaceSeparator, DIRECTORY_SEPARATOR, substr( $className, $rootLen ) ) );
-		require_once 'classes' . DIRECTORY_SEPARATOR . $rootNamespace . DIRECTORY_SEPARATOR . $className . '.php';
+	if ( substr( $class_name, 0, $root_len ) === $root_namespace . $namespace_separator ) {
+		$class_name = str_replace( '.', '', str_replace( $namespace_separator, DIRECTORY_SEPARATOR, substr( $class_name, $root_len ) ) );
+		require_once 'classes' . DIRECTORY_SEPARATOR . $root_namespace . DIRECTORY_SEPARATOR . $class_name . '.php';
 	}
 }
 

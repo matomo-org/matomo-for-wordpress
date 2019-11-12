@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Admin\TrackingSettings;
@@ -67,10 +67,13 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->settings->set_global_option( 'track_mode', 'manually' );
 		$this->settings->set_global_option( 'track_ecommerce', '0' );
 
-		$this->assertEquals( array(
-			'track_mode'      => 'manually',
-			'track_ecommerce' => 0
-		), $this->settings->get_customised_global_settings() );
+		$this->assertEquals(
+			array(
+				'track_mode'      => 'manually',
+				'track_ecommerce' => 0,
+			),
+			$this->settings->get_customised_global_settings()
+		);
 	}
 
 	public function test_get_option_returns_default_value_when_no_value_is_set() {
@@ -99,9 +102,11 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->assertSame( 0, $this->settings->get_global_option( 'last_settings_update' ) );
 
 		$test_value = 'var foo = "bar";';
-		$this->settings->apply_tracking_related_changes( array(
-			'tracking_code' => $test_value
-		) );
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'tracking_code' => $test_value,
+			)
+		);
 
 		$this->assertGreaterThanOrEqual( time() - 2, $this->settings->get_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE ) );
 		$this->assertGreaterThanOrEqual( time() - 2, $this->settings->get_global_option( 'last_settings_update' ) );
@@ -111,9 +116,11 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->assertSame( 0, $this->settings->get_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE ) );
 
 		$test_value = 'var foo = "bar";';
-		$this->settings->apply_tracking_related_changes( array(
-			'tracking_code' => $test_value
-		) );
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'tracking_code' => $test_value,
+			)
+		);
 
 		$this->assertGreaterThanOrEqual( time() - 2, $this->make_settings()->get_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE ) );
 		$this->assertEquals( $test_value, $this->make_settings()->get_option( 'tracking_code' ) );
@@ -124,9 +131,11 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->assertSame( 0, $this->settings->get_global_option( 'last_settings_update' ) );
 
 		$test_value = 'var foo = "bar";';
-		$this->settings->apply_changes( array(
-			'tracking_code' => $test_value
-		) );
+		$this->settings->apply_changes(
+			array(
+				'tracking_code' => $test_value,
+			)
+		);
 
 		$this->assertGreaterThanOrEqual( time() - 2, $this->settings->get_global_option( 'last_settings_update' ) );
 		// tracking settings should remain unchanged
@@ -137,9 +146,11 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->assertSame( 0, $this->settings->get_global_option( 'last_settings_update' ) );
 
 		$test_value = 'var foo = "bar";';
-		$this->settings->apply_changes( array(
-			'tracking_code' => $test_value
-		) );
+		$this->settings->apply_changes(
+			array(
+				'tracking_code' => $test_value,
+			)
+		);
 
 		$this->assertEquals( $test_value, $this->make_settings()->get_option( 'tracking_code' ) );
 	}
@@ -148,9 +159,11 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->assertSame( '', $this->settings->get_js_tracking_code() );
 
 		$test_value = 'var foo = "bar";';
-		$this->settings->apply_changes( array(
-			'tracking_code' => $test_value
-		) );
+		$this->settings->apply_changes(
+			array(
+				'tracking_code' => $test_value,
+			)
+		);
 
 		$this->assertSame( $test_value, $this->settings->get_js_tracking_code() );
 	}
@@ -168,9 +181,11 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->assertSame( '', $this->settings->get_noscript_tracking_code() );
 
 		$test_value = 'var foo = "bar";';
-		$this->settings->apply_changes( array(
-			'noscript_code' => $test_value
-		) );
+		$this->settings->apply_changes(
+			array(
+				'noscript_code' => $test_value,
+			)
+		);
 
 		$this->assertSame( $test_value, $this->settings->get_noscript_tracking_code() );
 	}
@@ -181,17 +196,21 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->assertSame( '', $this->settings->get_global_option( 'js_manually' ) );
 
 		$test_value = 'var foo = "bar";';
-		$this->settings->apply_changes( array(
-			'tracking_code' => $test_value
-		) );
+		$this->settings->apply_changes(
+			array(
+				'tracking_code' => $test_value,
+			)
+		);
 
 		// it was not yet set to be manually
 		$this->assertSame( '', $this->settings->get_global_option( 'js_manually' ) );
 		$this->assertSame( $test_value, $this->settings->get_js_tracking_code() );
 
-		$this->settings->apply_changes( array(
-			'track_mode' => TrackingSettings::TRACK_MODE_MANUALLY
-		) );
+		$this->settings->apply_changes(
+			array(
+				'track_mode' => TrackingSettings::TRACK_MODE_MANUALLY,
+			)
+		);
 		$this->assertSame( $test_value, $this->settings->get_global_option( 'js_manually' ) );
 
 		// to be sure we're testing the functionality correctly we're setting different tracking_code
@@ -205,17 +224,21 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->assertSame( '', $this->settings->get_global_option( 'noscript_manually' ) );
 
 		$test_value = 'var foo = "bar";';
-		$this->settings->apply_changes( array(
-			'noscript_code' => $test_value
-		) );
+		$this->settings->apply_changes(
+			array(
+				'noscript_code' => $test_value,
+			)
+		);
 
 		// it was not yet set to be manually
 		$this->assertSame( '', $this->settings->get_global_option( 'noscript_manually' ) );
 		$this->assertSame( $test_value, $this->settings->get_noscript_tracking_code() );
 
-		$this->settings->apply_changes( array(
-			'track_mode' => TrackingSettings::TRACK_MODE_MANUALLY
-		) );
+		$this->settings->apply_changes(
+			array(
+				'track_mode' => TrackingSettings::TRACK_MODE_MANUALLY,
+			)
+		);
 
 		$this->assertSame( $test_value, $this->settings->get_global_option( 'noscript_manually' ) );
 

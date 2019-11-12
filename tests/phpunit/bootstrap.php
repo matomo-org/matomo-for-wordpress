@@ -2,7 +2,7 @@
 /**
  * PHPUnit bootstrap file
  *
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );

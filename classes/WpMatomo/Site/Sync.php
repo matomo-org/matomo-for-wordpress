@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Site;
@@ -47,10 +47,13 @@ class Sync {
 		add_action( 'update_option_home', array( $this, 'sync_current_site' ) );
 		add_action( 'update_option_siteurl', array( $this, 'sync_current_site' ) );
 		add_action( 'update_site_option_matomo-global_track_ecommerce', array( $this, 'sync_current_site' ) );
-		add_action( 'update_option_' . Settings::GLOBAL_OPTION_PREFIX . 'track_ecommerce', array(
-			$this,
-			'sync_current_site'
-		) );
+		add_action(
+			'update_option_' . Settings::GLOBAL_OPTION_PREFIX . 'track_ecommerce',
+			array(
+				$this,
+				'sync_current_site',
+			)
+		);
 	}
 
 	public function sync_all() {
@@ -100,14 +103,13 @@ class Sync {
 	}
 
 	public function sync_site( $blog_id, $blog_name, $blog_url ) {
-
 		Bootstrap::do_bootstrap();
 		$this->logger->log( 'Matomo is now syncing blogId ' . $blog_id );
 
 		$idsite = Site::get_matomo_site_id( $blog_id );
 
 		if ( empty( $blog_name ) ) {
-			$blog_name = __( 'Default' );
+			$blog_name = __( 'Default', 'matomo' );
 		} else {
 			$blog_name = substr( $blog_name, 0, self::MAX_LENGTH_SITE_NAME );
 		}
@@ -121,7 +123,7 @@ class Sync {
 				'name'      => $blog_name,
 				'main_url'  => $blog_url,
 				'ecommerce' => (int) $this->settings->get_global_option( 'track_ecommerce' ),
-				'timezone'  => $this->detect_timezone()
+				'timezone'  => $this->detect_timezone(),
 			);
 			$sites_manager_model = new Model();
 			$sites_manager_model->updateSite( $params, $idsite );
@@ -144,23 +146,25 @@ class Sync {
 
 		$track_ecommerce = (int) $this->settings->get_global_option( 'track_ecommerce' );
 
-		Access::doAsSuperUser( function () use ( $blog_name, $blog_url, $timezone, $track_ecommerce, &$idsite ) {
-			SitesManager\API::unsetInstance();
-			// we need to unset the instance to make sure it fetches the
-			// up to date dependencies eg current plugin manager etc
+		Access::doAsSuperUser(
+			function () use ( $blog_name, $blog_url, $timezone, $track_ecommerce, &$idsite ) {
+					SitesManager\API::unsetInstance();
+					// we need to unset the instance to make sure it fetches the
+					// up to date dependencies eg current plugin manager etc
 
-			$idsite = SitesManager\API::getInstance()->addSite(
-				$blog_name,
-				array( $blog_url ),
-				$track_ecommerce,
-				$siteSearch = null,
-				$search_keyword_parameters = null,
-				$search_category_parameters = null,
-				$excluded_ips = null,
-				$excluded_query_parameters = null,
-				$timezone
-			);
-		} );
+					$idsite                         = SitesManager\API::getInstance()->addSite(
+						$blog_name,
+						array( $blog_url ),
+						$track_ecommerce,
+						$site_search                = null,
+						$search_keyword_parameters  = null,
+						$search_category_parameters = null,
+						$excluded_ips               = null,
+						$excluded_query_parameters  = null,
+						$timezone
+					);
+			}
+		);
 		$this->set_enable_sites_admin( 0 );
 
 		$this->logger->log( 'Matomo created site with ID ' . $idsite . ' for blog' );
@@ -168,7 +172,7 @@ class Sync {
 		Site::map_matomo_site_id( $blog_id, $idsite );
 
 		if ( ! is_numeric( $idsite ) || 0 == $idsite ) {
-			$this->logger->log( sprintf( 'Creating the website failed: %s', json_encode( $blog_id ) ) );
+			$this->logger->log( sprintf( 'Creating the website failed: %s', wp_json_encode( $blog_id ) ) );
 
 			return false;
 		}
@@ -191,7 +195,7 @@ class Sync {
 			return $timezone;
 		}
 
-		// older wordpress
+		// older WordPress
 		$utc_offset = (int) get_option( 'gmt_offset', 0 );
 
 		if ( 0 === $utc_offset ) {
@@ -209,8 +213,8 @@ class Sync {
 		foreach ( timezone_abbreviations_list() as $abbr ) {
 			foreach ( $abbr as $city ) {
 				if ( $dst === (bool) $city['dst']
-				     && $city['timezone_id']
-				     && (int) $city['offset'] === $utc_offset_in_seconds ) {
+					 && $city['timezone_id']
+					 && (int) $city['offset'] === $utc_offset_in_seconds ) {
 					return $city['timezone_id'];
 				}
 			}

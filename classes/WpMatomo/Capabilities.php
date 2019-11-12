@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -38,7 +38,7 @@ class Capabilities {
 	 * @api
 	 */
 	const KEY_SUPERUSER = 'superuser_matomo';
-	const KEY_STEALTH = 'stealth_matomo';
+	const KEY_STEALTH   = 'stealth_matomo';
 
 	/**
 	 * @var Settings
@@ -57,6 +57,7 @@ class Capabilities {
 
 	/**
 	 * Tests only
+	 *
 	 * @internal
 	 */
 	public function remove_hooks() {
@@ -77,8 +78,8 @@ class Capabilities {
 		}
 
 		if ( $cap === Menu::CAP_NOT_EXISTS
-		     && is_multisite()
-		     && is_super_admin() ) {
+			 && is_multisite()
+			 && is_super_admin() ) {
 			$caps[] = 'do_not_allow'; // prevent matomo-analytics submenu to be shown
 		}
 
@@ -90,20 +91,20 @@ class Capabilities {
 			$cap_request = $caps[0];
 			switch ( $cap_request ) {
 				// ensure the Matomo capability inheritcance always works
-				case Capabilities::KEY_SUPERUSER:
+				case self::KEY_SUPERUSER:
 					if ( $this->has_super_user_capability( $allcaps ) ) {
 						$allcaps[ $cap_request ] = true;
 					}
 					break;
 
-				case Capabilities::KEY_VIEW:
-				case Capabilities::KEY_WRITE:
-				case Capabilities::KEY_ADMIN:
+				case self::KEY_VIEW:
+				case self::KEY_WRITE:
+				case self::KEY_ADMIN:
 					if ( empty( $allcaps[ $cap_request ] ) ) {
 						// when user has the above permission we also make sure to add all capabilites below... eg
 						// when user has write... then we ensure the user also has the view capability
 						if ( $this->has_any_higher_permission( $cap_request, $allcaps )
-						     || $this->has_super_user_capability( $allcaps ) ) {
+							 || $this->has_super_user_capability( $allcaps ) ) {
 							$allcaps[ $cap_request ] = true;
 						}
 					}
@@ -148,11 +149,10 @@ class Capabilities {
 			foreach ( $stealth as $role_name => $enabled ) {
 				$role = $roles->get_role( $role_name );
 				if ( $role && $enabled ) {
-					$role->capabilities[ Capabilities::KEY_STEALTH ] = true;
+					$role->capabilities[ self::KEY_STEALTH ] = true;
 				}
 			}
 		}
-
 	}
 
 	public function get_all_capabilities_sorted_by_highest_permission() {

@@ -59,7 +59,7 @@ class MatomoLocalTracker extends PiwikTracker {
 		$_SERVER['HTTP_USER_AGENT'] = $this->userAgent;
 		// set cookie
 		$old_cookie = $_COOKIE;
-//        parse_str(parse_url($this->requestCookie, PHP_URL_QUERY), $_COOKIE);
+		// parse_str(parse_url($this->requestCookie, PHP_URL_QUERY), $_COOKIE);
 		// do tracking and capture output
 		ob_start();
 		$local_tracker = new Tracker();

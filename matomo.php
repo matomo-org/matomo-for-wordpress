@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Plugin Name: Matomo Analytics & Tag Manager
  * Description: Most powerful web analytics for WordPress giving you 100% data ownership and privacy protection
  * Author: Matomo
@@ -68,26 +68,26 @@ function add_matomo_plugin( $plugins_directory, $wp_plugin_file ) {
 	}
 
 	$GLOBALS['MATOMO_PLUGINS_ENABLED'][] = basename( $plugins_directory );
-	$rootDir                             = dirname( $plugins_directory );
+	$root_dir                            = dirname( $plugins_directory );
 	foreach ( $GLOBALS['MATOMO_PLUGIN_DIRS'] as $path ) {
-		if ( $path['pluginsPathAbsolute'] === $rootDir ) {
+		if ( $path['pluginsPathAbsolute'] === $root_dir ) {
 			return; // already added
 		}
 	}
 
-	$matomoDir      = __DIR__ . '/app';
-	$matomoDirParts = explode( '/', $matomoDir );
-	$rootDirParts   = explode( '/', $rootDir );
-	$webrootDir     = '';
-	foreach ( $matomoDirParts as $index => $part ) {
-		if ( isset( $rootDirParts[ $index ] ) && $rootDirParts[ $index ] === $part ) {
+	$matomo_dir       = __DIR__ . '/app';
+	$matomo_dir_parts = explode( '/', $matomo_dir );
+	$root_dir_parts   = explode( '/', $root_dir );
+	$webroot_dir      = '';
+	foreach ( $matomo_dir_parts as $index => $part ) {
+		if ( isset( $root_dir_parts[ $index ] ) && $root_dir_parts[ $index ] === $part ) {
 			continue;
 		}
-		$webrootDir .= '../';
+		$webroot_dir .= '../';
 	}
 	$GLOBALS['MATOMO_PLUGIN_DIRS'][] = array(
-		'pluginsPathAbsolute'        => $rootDir,
-		'webrootDirRelativeToMatomo' => $webrootDir,
+		'pluginsPathAbsolute'        => $root_dir,
+		'webrootDirRelativeToMatomo' => $webroot_dir,
 	);
 }
 

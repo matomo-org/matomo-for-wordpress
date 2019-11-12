@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -56,8 +56,7 @@ class Annotations {
 		}
 
 		if ( $new_status == 'publish'
-		     && $old_status != 'publish' ) {
-
+			 && $old_status != 'publish' ) {
 			$site   = new Site();
 			$idsite = $site->get_current_matomo_site_id();
 
@@ -69,19 +68,19 @@ class Annotations {
 				Bootstrap::do_bootstrap();
 
 				$logger = $this->logger;
-				\Piwik\Access::doAsSuperUser( function () use ( $post, $logger, $idsite ) {
-					$note = __( 'Published:', 'matomo' ) . ' ' . $post->post_title . ' - URL: ' . get_permalink( $post->ID );
-					\Piwik\Plugins\Annotations\API::unsetInstance();// make sure latest instance will be loaded with all up to date dependencies... mainly needed for tests
-					$id = \Piwik\Plugins\Annotations\API::getInstance()->add( $idsite, date( 'Y-m-d' ), $note );
-					$logger->log( 'Add post annotation. ' . $note . ' - ' . serialize( $id ) );
-				} );
-
+				\Piwik\Access::doAsSuperUser(
+					function () use ( $post, $logger, $idsite ) {
+							$note = __( 'Published:', 'matomo' ) . ' ' . $post->post_title . ' - URL: ' . get_permalink( $post->ID );
+							\Piwik\Plugins\Annotations\API::unsetInstance();// make sure latest instance will be loaded with all up to date dependencies... mainly needed for tests
+							$id = \Piwik\Plugins\Annotations\API::getInstance()->add( $idsite, date( 'Y-m-d' ), $note );
+							$logger->log( 'Add post annotation. ' . $note . ' - ' . serialize( $id ) );
+					}
+				);
 			} catch ( \Exception $e ) {
 				$this->logger->log( 'Add post annotation failed: ' . $e->getMessage() );
 
 				return;
 			}
-
 		}
 	}
 }

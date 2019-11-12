@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -32,7 +32,7 @@ class Updater {
 		global $wp_version;
 
 		if ( ! function_exists( 'get_plugin_data' ) ) {
-			require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+			require_once ABSPATH . '/wp-admin/includes/plugin.php';
 		}
 
 		$executed_updates = array();
@@ -76,10 +76,12 @@ class Updater {
 	public function update() {
 		Bootstrap::do_bootstrap();
 
-		\Piwik\Access::doAsSuperUser( function () {
-			self::update_components();
-			self::update_components();
-		} );
+		\Piwik\Access::doAsSuperUser(
+			function () {
+					self::update_components();
+					self::update_components();
+			}
+		);
 
 		$paths      = new Paths();
 		$upload_dir = $paths->get_upload_base_dir();
@@ -87,12 +89,15 @@ class Updater {
 			@file_put_contents( $upload_dir . '/index.php', '//hello' );
 			@file_put_contents( $upload_dir . '/index.html', '//hello' );
 			@file_put_contents( $upload_dir . '/index.htm', '//hello' );
-			@file_put_contents( $upload_dir . '/.htaccess', '<Files GeoLite2-City.mmdb>
+			@file_put_contents(
+				$upload_dir . '/.htaccess',
+				'<Files GeoLite2-City.mmdb>
 ' . ServerFilesGenerator::getDenyHtaccessContent() . '
 </Files>
 <Files ~ "(\.js)$">
 ' . ServerFilesGenerator::getAllowHtaccessContent() . '
-</Files>' );
+</Files>'
+			);
 		}
 		$config_dir = $paths->get_config_ini_path();
 		if ( is_dir( $config_dir ) && is_writable( $config_dir ) ) {

@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\TrackingCode;
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TrackingCodeGenerator {
 
 	const TRACKPAGEVIEW = "_paq.push(['trackPageView']);";
-	const MTM_INIT = "var _mtm = _mtm || [];";
+	const MTM_INIT      = 'var _mtm = _mtm || [];';
 
 	/**
 	 * @var Settings
@@ -49,15 +49,14 @@ class TrackingCodeGenerator {
 
 	public function update_tracking_code() {
 		if ( $this->settings->is_current_tracking_code()
-		     && $this->settings->get_option( 'tracking_code' ) ) {
-
+			 && $this->settings->get_option( 'tracking_code' ) ) {
 			return false;
 		}
 
 		$track_mode = $this->settings->get_global_option( 'track_mode' );
 
 		if ( ! $this->settings->is_tracking_enabled()
-		     || $track_mode == TrackingSettings::TRACK_MODE_MANUALLY ) {
+			 || $track_mode == TrackingSettings::TRACK_MODE_MANUALLY ) {
 			return false;
 		}
 
@@ -75,7 +74,10 @@ class TrackingCodeGenerator {
 		} elseif ( $track_mode == TrackingSettings::TRACK_MODE_TAGMANAGER && has_matomo_tag_manager() ) {
 			$result = $this->prepare_tagmanger_code( $this->settings, $this->logger );
 		} else {
-			$result = array( 'script' => '<!-- Matomo: no supported track_mode selected -->', 'noscript' => '' );
+			$result = array(
+				'script'   => '<!-- Matomo: no supported track_mode selected -->',
+				'noscript' => '',
+			);
 		}
 
 		if ( ! empty( $result['script'] ) ) {
@@ -115,7 +117,7 @@ class TrackingCodeGenerator {
 
 	/**
 	 * @param Settings $settings
-	 * @param Logger $logger
+	 * @param Logger   $logger
 	 *
 	 * @return array
 	 */
@@ -132,8 +134,8 @@ class TrackingCodeGenerator {
 
 			foreach ( $container_ids as $container_id => $enabled ) {
 				if ( $enabled
-				     && ctype_alnum( $container_id )
-				     && strlen( $container_id ) <= 16 ) {
+					 && ctype_alnum( $container_id )
+					 && strlen( $container_id ) <= 16 ) {
 					$container_url = $upload_url . '/container_' . urlencode( $container_id ) . '.js';
 
 					$data_cf_async = '';
@@ -142,7 +144,7 @@ class TrackingCodeGenerator {
 					}
 
 					if ( $settings->get_global_option( 'force_protocol' ) == 'https' ) {
-						$container_url = preg_replace( "(^http://)", "https://", $container_url );
+						$container_url = preg_replace( '(^http://)', 'https://', $container_url );
 					}
 
 					$code .= '
@@ -158,13 +160,16 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 
 		$code .= '<!-- End Matomo Tag Manager -->';
 
-		return array( 'script' => $code, 'noscript' => '' );
+		return array(
+			'script'   => $code,
+			'noscript' => '',
+		);
 	}
 
 	/**
 	 * @param $idsite
 	 * @param Settings $settings
-	 * @param Logger $logger
+	 * @param Logger   $logger
 	 *
 	 * @return array
 	 */
@@ -186,26 +191,26 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 		}
 
 		if ( $settings->get_global_option( 'force_protocol' ) == 'https' ) {
-			$js_endpoint      = preg_replace( "(^http://)", "https://", $js_endpoint );
-			$tracker_endpoint = preg_replace( "(^http://)", "https://", $tracker_endpoint );
+			$js_endpoint      = preg_replace( '(^http://)', 'https://', $js_endpoint );
+			$tracker_endpoint = preg_replace( '(^http://)', 'https://', $tracker_endpoint );
 		} else {
-			$js_endpoint      = preg_replace( "(^https?://)", "//", $js_endpoint );
-			$tracker_endpoint = preg_replace( "(^https?://)", "//", $tracker_endpoint );
+			$js_endpoint      = preg_replace( '(^https?://)', '//', $js_endpoint );
+			$tracker_endpoint = preg_replace( '(^https?://)', '//', $tracker_endpoint );
 		}
 
 		$options = array();
 
 		if ( $settings->get_global_option( 'set_download_extensions' ) ) {
-			$options[] = "_paq.push(['setDownloadExtensions', " . json_encode( $settings->get_global_option( 'set_download_extensions' ) ) . "]);";
+			$options[] = "_paq.push(['setDownloadExtensions', " . json_encode( $settings->get_global_option( 'set_download_extensions' ) ) . ']);';
 		}
 		if ( $settings->get_global_option( 'add_download_extensions' ) ) {
-			$options[] = "_paq.push(['addDownloadExtensions', " . json_encode( $settings->get_global_option( 'add_download_extensions' ) ) . "]);";
+			$options[] = "_paq.push(['addDownloadExtensions', " . json_encode( $settings->get_global_option( 'add_download_extensions' ) ) . ']);';
 		}
 		if ( $settings->get_global_option( 'set_download_classes' ) ) {
-			$options[] = "_paq.push(['setDownloadClasses', " . json_encode( $settings->get_global_option( 'set_download_classes' ) ) . "]);";
+			$options[] = "_paq.push(['setDownloadClasses', " . json_encode( $settings->get_global_option( 'set_download_classes' ) ) . ']);';
 		}
 		if ( $settings->get_global_option( 'set_link_classes' ) ) {
-			$options[] = "_paq.push(['setLinkClasses', " . json_encode( $settings->get_global_option( 'set_link_classes' ) ) . "]);";
+			$options[] = "_paq.push(['setLinkClasses', " . json_encode( $settings->get_global_option( 'set_link_classes' ) ) . ']);';
 		}
 		if ( $settings->get_global_option( 'disable_cookies' ) ) {
 			$options[] = "_paq.push(['disableCookies']);";
@@ -225,17 +230,20 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 			// todo detect more hosts such as when using WPML etc
 			$hosts = array( @parse_url( home_url(), PHP_URL_HOST ) );
 			$hosts = array_filter( $hosts );
-			$hosts = array_map( function ( $host ) {
-				return '*.' . $host;
-			}, $hosts );
+			$hosts = array_map(
+				function ( $host ) {
+						return '*.' . $host;
+				},
+				$hosts
+			);
 			if ( ! empty( $hosts ) ) {
 				$options[] = '_paq.push(["setDomains", ' . json_encode( $hosts ) . ']);';
 			}
 		}
 		if ( $settings->get_global_option( 'limit_cookies' ) ) {
-			$options[] = "_paq.push(['setVisitorCookieTimeout', " . json_encode( $settings->get_global_option( 'limit_cookies_visitor' ) ) . "]);";
-			$options[] = "_paq.push(['setSessionCookieTimeout', " . json_encode( $settings->get_global_option( 'limit_cookies_session' ) ) . "]);";
-			$options[] = "_paq.push(['setReferralCookieTimeout', " . json_encode( $settings->get_global_option( 'limit_cookies_referral' ) ) . "]);";
+			$options[] = "_paq.push(['setVisitorCookieTimeout', " . json_encode( $settings->get_global_option( 'limit_cookies_visitor' ) ) . ']);';
+			$options[] = "_paq.push(['setSessionCookieTimeout', " . json_encode( $settings->get_global_option( 'limit_cookies_session' ) ) . ']);';
+			$options[] = "_paq.push(['setReferralCookieTimeout', " . json_encode( $settings->get_global_option( 'limit_cookies_referral' ) ) . ']);';
 		}
 		if ( $settings->get_global_option( 'track_content' ) == 'all' ) {
 			$options[] = "_paq.push(['trackAllContentImpressions']);";
@@ -243,7 +251,7 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 			$options[] = "_paq.push(['trackVisibleContentImpressions']);";
 		}
 		if ( (int) $settings->get_global_option( 'track_heartbeat' ) > 0 ) {
-			$options[] = "_paq.push(['enableHeartBeatTimer', " . intval( $settings->get_global_option( 'track_heartbeat' ) ) . "]);";
+			$options[] = "_paq.push(['enableHeartBeatTimer', " . intval( $settings->get_global_option( 'track_heartbeat' ) ) . ']);';
 		}
 
 		$data_cf_async = '';
@@ -251,18 +259,18 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 			$data_cf_async = 'data-cfasync="false"';
 		}
 
-		$script = '<!-- Matomo -->';
+		$script  = '<!-- Matomo -->';
 		$script .= '<script ' . $data_cf_async . ' type="text/javascript">';
 		$script .= "var _paq = window._paq || [];\n";
 		$script .= implode( "\n", $options );
 		$script .= self::TRACKPAGEVIEW;
 		$script .= "_paq.push(['enableLinkTracking']);";
-		$script .= "_paq.push(['setTrackerUrl', " . json_encode( $tracker_endpoint ) . "]);";
+		$script .= "_paq.push(['setTrackerUrl', " . json_encode( $tracker_endpoint ) . ']);';
 		$script .= "_paq.push(['setSiteId', '" . intval( $idsite ) . "']);";
 		$script .= "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-g.type='text/javascript'; g.async=true; g.defer=true; g.src=" . json_encode( $js_endpoint ) . "; s.parentNode.insertBefore(g,s);";
-		$script .= "</script>";
-		$script .= "<!-- End Matomo Code -->";
+g.type='text/javascript'; g.async=true; g.defer=true; g.src=" . json_encode( $js_endpoint ) . '; s.parentNode.insertBefore(g,s);';
+		$script .= '</script>';
+		$script .= '<!-- End Matomo Code -->';
 
 		if ( $settings->get_global_option( 'track_noscript' ) ) {
 			$no_script = '<noscript><p><img src="' . esc_url( $tracker_endpoint ) . '?idsite=' . intval( $idsite ) . '&amp;rec=1" style="border:0;" alt="" /></p></noscript>';
@@ -278,7 +286,7 @@ g.type='text/javascript'; g.async=true; g.defer=true; g.src=" . json_encode( $js
 
 		return array(
 			'script'   => $script,
-			'noscript' => $no_script
+			'noscript' => $no_script,
 		);
 	}
 
@@ -294,7 +302,7 @@ g.type='text/javascript'; g.async=true; g.defer=true; g.src=" . json_encode( $js
 
 	private function apply_search_changes( $tracking_code ) {
 		$this->logger->log( 'Apply search tracking changes. Blog ID: ' . get_current_blog_id() );
-		$obj_search       = new \WP_Query ( "s=" . get_search_query() . '&showposts=-1' );
+		$obj_search       = new \WP_Query( 's=' . get_search_query() . '&showposts=-1' );
 		$int_result_count = $obj_search->post_count;
 
 		$code          = "window._paq = window._paq || []; window._paq.push(['trackSiteSearch','" . get_search_query() . "', false, " . $int_result_count . "]);\n";

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Report\Dates;
@@ -26,10 +26,13 @@ class ReportDatesTest extends MatomoUnit_TestCase {
 	 * @dataProvider get_report_dates
 	 */
 	public function test_detect_period_and_date( $report_date, $expected_period, $expected_date ) {
-		$this->assertEquals( array(
-			$expected_period,
-			$expected_date
-		), $this->dates->detect_period_and_date( $report_date ) );
+		$this->assertEquals(
+			array(
+				$expected_period,
+				$expected_date,
+			),
+			$this->dates->detect_period_and_date( $report_date )
+		);
 	}
 
 	public function get_report_dates() {

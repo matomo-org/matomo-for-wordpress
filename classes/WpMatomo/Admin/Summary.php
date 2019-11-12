@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Admin;
@@ -53,7 +53,7 @@ class Summary {
 
 		$is_tracking = $this->settings->is_tracking_enabled();
 
-		include( dirname( __FILE__ ) . '/views/summary.php' );
+		include dirname( __FILE__ ) . '/views/summary.php';
 	}
 
 	private function get_reports_to_show() {

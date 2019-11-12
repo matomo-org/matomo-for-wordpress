@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Ecommerce;
@@ -19,7 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class EasyDigitalDownloads extends Base {
 
 	public function register_hooks() {
-
 		if ( ! is_admin() ) {
 			add_action( 'template_redirect', array( $this, 'on_product_view' ), 99999, 0 );
 		}
@@ -35,7 +34,7 @@ class EasyDigitalDownloads extends Base {
 
 	public function on_cart_update() {
 		if ( ! function_exists( 'EDD' )
-		     || ! class_exists( '\EDD_Download' ) ) {
+			 || ! class_exists( '\EDD_Download' ) ) {
 			return;
 		}
 
@@ -59,14 +58,14 @@ class EasyDigitalDownloads extends Base {
 
 			if ( isset( $price_id ) ) {
 				// variation
-				$name  .= ' - ' . edd_get_price_option_name( $item['id'], $price_id );
+				$name .= ' - ' . edd_get_price_option_name( $item['id'], $price_id );
 				$price = edd_get_price_option_amount( $download->ID, $price_id );
 			}
 			$sku        = $this->get_sku( $download, $item['id'] );
 			$categories = $this->get_product_categories( $download->ID );
 			$quantity   = isset( $item['quantity'] ) ? $item['quantity'] : 0;
 
-			$params        = array( 'addEcommerceItem', $sku, $name, $categories, $price, $quantity );
+			$params         = array( 'addEcommerceItem', $sku, $name, $categories, $price, $quantity );
 			$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 		}
 
@@ -86,7 +85,7 @@ class EasyDigitalDownloads extends Base {
 	}
 
 	private function get_product_categories( $download_id ) {
-		$categories = (array ) get_the_terms( $download_id, 'download_category' );
+		$categories = (array) get_the_terms( $download_id, 'download_category' );
 
 		return array_values( array_filter( wp_list_pluck( $categories, 'name' ) ) );
 	}
@@ -129,18 +128,17 @@ class EasyDigitalDownloads extends Base {
 			$sku,
 			$download->get_name(),
 			$this->get_product_categories( $download_id ),
-			$download->get_price()
+			$download->get_price(),
 		);
 
 		echo $this->wrap_script( $this->make_matomo_js_tracker_call( $params ) );
 	}
 
 	public function on_order( $payment, $edd_receipt_args ) {
-
 		if ( $edd_receipt_args['payment_id'] ) {
 			if ( 'publish' !== $payment->post_status
-			     && 'complete' !== $payment->post_status
-			     && 'edd_subscription' !== $payment->post_status ) {
+				 && 'complete' !== $payment->post_status
+				 && 'edd_subscription' !== $payment->post_status ) {
 				return;
 			}
 			// Use a meta value so we only send the beacon once.
@@ -171,7 +169,6 @@ class EasyDigitalDownloads extends Base {
 				if ( $cart ) {
 					foreach ( $cart as $key => $item ) {
 						if ( empty( $item['in_bundle'] ) ) {
-
 							$price_id = edd_get_cart_item_price_id( $item );
 							$name     = $item['name'];
 							if ( isset( $price_id ) ) {
@@ -187,13 +184,13 @@ class EasyDigitalDownloads extends Base {
 								$price = $item['item_price'];
 							}
 
-							$params        = array(
+							$params         = array(
 								'addEcommerceItem',
 								$sku,
 								$name,
 								$this->get_product_categories( $item['id'] ),
 								$price,
-								$item['quantity']
+								$item['quantity'],
 							);
 							$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 						}
@@ -206,20 +203,20 @@ class EasyDigitalDownloads extends Base {
 			$payment_meta = edd_get_payment_meta( $payment->ID );
 			$discount     = 0;
 			if ( ! empty( $payment_meta['user_info']['discount'] )
-			     && $payment_meta['user_info']['discount'] !== 'none' ) {
+				 && $payment_meta['user_info']['discount'] !== 'none' ) {
 				$discount = $payment_meta['user_info']['discount'];
 				$discount = explode( ',', $discount );
 				$discount = reset( $discount );
 			}
 
-			$params        = array(
+			$params         = array(
 				'trackEcommerceOrder',
 				'' . $order_id_to_track,
 				$grand_total ? $grand_total : 0,
 				edd_payment_subtotal( $payment->ID ),
 				edd_use_taxes() ? edd_get_payment_tax( $payment->ID, $payment_meta ) : '0',
 				$shipping = 0,
-				$discount
+				$discount,
 			);
 			$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 

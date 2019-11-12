@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -50,9 +50,8 @@ class Access {
 		$caps_to_store = array();
 		foreach ( $values as $role => $matomo_permission ) {
 			if ( isset( $available_roles[ $role ] ) &&
-			     $wp_roles->is_role( $role )
-			     && array_key_exists( $matomo_permission, Access::$MATOMO_PERMISSIONS ) ) {
-
+				 $wp_roles->is_role( $role )
+				 && array_key_exists( $matomo_permission, self::$MATOMO_PERMISSIONS ) ) {
 				$caps_to_store[ $role ] = $matomo_permission;
 			}
 		}

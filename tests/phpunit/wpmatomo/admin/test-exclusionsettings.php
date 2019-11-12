@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use Piwik\Plugins\SitesManager\API;
@@ -36,7 +36,7 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_TestCase {
 			'excluded_ips'              => "127.0.0.1\n127.0.0.2",
 			'excluded_query_parameters' => "test\ntest2",
 			'excluded_user_agents'      => "firefox\nsafari",
-			'keep_url_fragments'        => "1",
+			'keep_url_fragments'        => '1',
 		);
 		$_REQUEST['_wpnonce']                  = wp_create_nonce( ExclusionSettings::NONCE_NAME );
 		$_SERVER['REQUEST_URI']                = home_url();
@@ -50,7 +50,6 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_TestCase {
 		$this->assertEquals( 'test,test2', API::getInstance()->getExcludedQueryParametersGlobal() );
 		$this->assertEquals( 'firefox,safari', API::getInstance()->getExcludedUserAgentsGlobal() );
 		$this->assertNotEmpty( API::getInstance()->getKeepURLFragmentsGlobal() );
-
 	}
 
 

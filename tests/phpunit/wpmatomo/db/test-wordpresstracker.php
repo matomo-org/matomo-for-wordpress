@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use Piwik\Common;
@@ -9,22 +9,24 @@ use Piwik\Tracker\Db\Wordpress;
 class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 
 	/**
-	 * @var Wordpress
+	 * @var WordPress
 	 */
 	private $db;
 
 	public function setUp() {
 		parent::setUp();
-		$this->db = new Wordpress( array(
-			'enable_ssl'     => false,
-			'options'        => array(),
-			'driver_options' => array(),
-			'dbname'         => 'foo',
-			'username'       => ' ',
-			'password'       => ' ',
-			'port'           => ' ',
-			'host'           => ' '
-		) );
+		$this->db = new Wordpress(
+			array(
+				'enable_ssl'     => false,
+				'options'        => array(),
+				'driver_options' => array(),
+				'dbname'         => 'foo',
+				'username'       => ' ',
+				'password'       => ' ',
+				'port'           => ' ',
+				'host'           => ' ',
+			)
+		);
 		$this->insert_many_values();
 	}
 
@@ -93,10 +95,13 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 
 	public function test_fetch_all_works_with_bind_params() {
 		$table  = Common::prefixTable( 'access' );
-		$result = $this->db->fetchAll( 'select * from ' . $table . ' where access = ? and idsite = ?', array(
-			'view',
-			1
-		) );
+		$result = $this->db->fetchAll(
+			'select * from ' . $table . ' where access = ? and idsite = ?',
+			array(
+				'view',
+				1,
+			)
+		);
 		$this->assertCount( 1, $result );
 	}
 
@@ -109,34 +114,43 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 	public function test_fetch_row() {
 		$table  = Common::prefixTable( 'access' );
 		$result = $this->db->fetchRow( 'select * from ' . $table . ' limit 1' );
-		$this->assertEquals( array(
-			'idaccess' => '1',
-			'login'    => 'foo',
-			'idsite'   => '1',
-			'access'   => 'view',
-		), $result );
+		$this->assertEquals(
+			array(
+				'idaccess' => '1',
+				'login'    => 'foo',
+				'idsite'   => '1',
+				'access'   => 'view',
+			),
+			$result
+		);
 	}
 
 	public function test_fetch() {
 		$table  = Common::prefixTable( 'access' );
 		$result = $this->db->fetch( 'select * from ' . $table . ' limit 1' );
-		$this->assertEquals( array(
-			'idaccess' => '1',
-			'login'    => 'foo',
-			'idsite'   => '1',
-			'access'   => 'view',
-		), $result );
+		$this->assertEquals(
+			array(
+				'idaccess' => '1',
+				'login'    => 'foo',
+				'idsite'   => '1',
+				'access'   => 'view',
+			),
+			$result
+		);
 	}
 
 	public function test_fetch_with_bind_params() {
 		$table  = Common::prefixTable( 'access' );
 		$result = $this->db->fetch( 'select * from ' . $table . ' where idsite = ? limit 1', array( '1' ) );
-		$this->assertEquals( array(
-			'idaccess' => '1',
-			'login'    => 'foo',
-			'idsite'   => '1',
-			'access'   => 'view',
-		), $result );
+		$this->assertEquals(
+			array(
+				'idaccess' => '1',
+				'login'    => 'foo',
+				'idsite'   => '1',
+				'access'   => 'view',
+			),
+			$result
+		);
 	}
 
 	public function test_exec() {

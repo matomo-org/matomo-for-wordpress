@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Ecommerce;
@@ -85,10 +85,10 @@ class Woocommerce extends Base {
 				$price = round( $total, wc_get_price_decimals() );
 			}
 
-			$title         = $product->get_title();
-			$categories    = $this->get_product_categories( $product );
-			$quantity      = isset( $item['quantity'] ) ? $item['quantity'] : 0;
-			$params        = array( 'addEcommerceItem', '' . $sku, $title, $categories, $price, $quantity );
+			$title          = $product->get_title();
+			$categories     = $this->get_product_categories( $product );
+			$quantity       = isset( $item['quantity'] ) ? $item['quantity'] : 0;
+			$params         = array( 'addEcommerceItem', '' . $sku, $title, $categories, $price, $quantity );
 			$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 		}
 
@@ -141,28 +141,27 @@ class Woocommerce extends Base {
 				$product_details = $this->get_product_details( $order, $item );
 
 				if ( ! empty( $product_details ) ) {
-					$params        = array(
+					$params         = array(
 						'addEcommerceItem',
 						'' . $product_details['sku'],
 						$product_details['title'],
 						$product_details['categories'],
 						$product_details['price'],
-						$product_details['quantity']
+						$product_details['quantity'],
 					);
 					$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 				}
-
 			}
 		}
 
-		$params        = array(
+		$params         = array(
 			'trackEcommerceOrder',
 			'' . $order_id_to_track,
 			$order->get_total(),
 			round( $order->get_subtotal(), 2 ),
 			$order->get_cart_tax(),
 			$this->isWC3() ? $order->get_shipping_total() : $order->get_total_shipping(),
-			$order->get_total_discount()
+			$order->get_total_discount(),
 		);
 		$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 
@@ -214,12 +213,14 @@ class Woocommerce extends Base {
 	 */
 	private function get_product_details( $order, $item ) {
 		$product_or_variation = false;
-		if ( $this->isWC3() && ! empty( $item ) && is_object( $item ) && method_exists( $item, 'get_product' ) && is_callable( array(
+		if ( $this->isWC3() && ! empty( $item ) && is_object( $item ) && method_exists( $item, 'get_product' ) && is_callable(
+			array(
 				$item,
-				'get_product'
-			) ) ) {
+				'get_product',
+			)
+		) ) {
 			$product_or_variation = $item->get_product();
-		} else if ( method_exists( $order, 'get_product_from_item' ) ) {
+		} elseif ( method_exists( $order, 'get_product_from_item' ) ) {
 			// eg woocommerce 2.x
 			$product_or_variation = $order->get_product_from_item( $item );
 		}
@@ -227,7 +228,7 @@ class Woocommerce extends Base {
 		if ( is_object( $item ) && method_exists( $item, 'get_product_id' ) ) {
 			// woocommerce 3
 			$product_id = $item->get_product_id();
-		} else if ( isset( $item['product_id'] ) ) {
+		} elseif ( isset( $item['product_id'] ) ) {
 			// woocommerce 2.x
 			$product_id = $item['product_id'];
 		} else {
@@ -293,7 +294,7 @@ class Woocommerce extends Base {
 			$this->get_sku( $product ),
 			$product->get_title(),
 			$this->get_product_categories( $product ),
-			$product->get_price()
+			$product->get_price(),
 		);
 
 		// we're not using wc_enqueue_js eg to prevent sometimes this code from being minified on some JS minifier plugins

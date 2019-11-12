@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Admin;
@@ -29,13 +29,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class SystemReport {
-	const NONCE_NAME = 'matomo_troubleshooting';
-	const TROUBLESHOOT_SYNC_USERS = 'matomo_troubleshooting_action_site_users';
-	const TROUBLESHOOT_SYNC_ALL_USERS = 'matomo_troubleshooting_action_all_users';
-	const TROUBLESHOOT_SYNC_SITE = 'matomo_troubleshooting_action_site';
-	const TROUBLESHOOT_SYNC_ALL_SITES = 'matomo_troubleshooting_action_all_sites';
+	const NONCE_NAME                      = 'matomo_troubleshooting';
+	const TROUBLESHOOT_SYNC_USERS         = 'matomo_troubleshooting_action_site_users';
+	const TROUBLESHOOT_SYNC_ALL_USERS     = 'matomo_troubleshooting_action_all_users';
+	const TROUBLESHOOT_SYNC_SITE          = 'matomo_troubleshooting_action_site';
+	const TROUBLESHOOT_SYNC_ALL_SITES     = 'matomo_troubleshooting_action_all_sites';
 	const TROUBLESHOOT_CLEAR_MATOMO_CACHE = 'matomo_troubleshooting_action_clear_matomo_cache';
-	const TROUBLESHOOT_ARCHIVE_NOW = 'matomo_troubleshooting_action_archive_now';
+	const TROUBLESHOOT_ARCHIVE_NOW        = 'matomo_troubleshooting_action_archive_now';
 
 	private $validTabs = array( 'troubleshooting' );
 
@@ -50,17 +50,16 @@ class SystemReport {
 
 	private function execute_troubleshoot_if_needed() {
 		if ( ! empty( $_POST )
-		     && is_admin()
-		     && check_admin_referer( self::NONCE_NAME )
-		     && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
-
-			if ( ! empty( $_POST[ SystemReport::TROUBLESHOOT_ARCHIVE_NOW ] ) ) {
+			 && is_admin()
+			 && check_admin_referer( self::NONCE_NAME )
+			 && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			if ( ! empty( $_POST[ self::TROUBLESHOOT_ARCHIVE_NOW ] ) ) {
 				Bootstrap::do_bootstrap();
 				$scheduled_tasks = new ScheduledTasks( $this->settings );
 				$scheduled_tasks->archive( $force = true );
 			}
 
-			if ( ! empty( $_POST[ SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE ] ) ) {
+			if ( ! empty( $_POST[ self::TROUBLESHOOT_CLEAR_MATOMO_CACHE ] ) ) {
 				$paths = new Paths();
 				$paths->clear_cache_dir();
 				// we first delete the cache dir manually just in case there's something
@@ -70,21 +69,21 @@ class SystemReport {
 			}
 
 			if ( ! $this->settings->is_network_enabled() || ! is_network_admin() ) {
-				if ( ! empty( $_POST[ SystemReport::TROUBLESHOOT_SYNC_USERS ] ) ) {
+				if ( ! empty( $_POST[ self::TROUBLESHOOT_SYNC_USERS ] ) ) {
 					$sync = new UserSync();
 					$sync->sync_current_users();
 				}
-				if ( ! empty( $_POST[ SystemReport::TROUBLESHOOT_SYNC_SITE ] ) ) {
+				if ( ! empty( $_POST[ self::TROUBLESHOOT_SYNC_SITE ] ) ) {
 					$sync = new SiteSync( $this->settings );
 					$sync->sync_current_site();
 				}
 			}
 			if ( $this->settings->is_network_enabled() ) {
-				if ( ! empty( $_POST[ SystemReport::TROUBLESHOOT_SYNC_ALL_SITES ] ) ) {
+				if ( ! empty( $_POST[ self::TROUBLESHOOT_SYNC_ALL_SITES ] ) ) {
 					$sync = new SiteSync( $this->settings );
 					$sync->sync_all();
 				}
-				if ( ! empty( $_POST[ SystemReport::TROUBLESHOOT_SYNC_ALL_USERS ] ) ) {
+				if ( ! empty( $_POST[ self::TROUBLESHOOT_SYNC_ALL_USERS ] ) ) {
 					$sync = new UserSync();
 					$sync->sync_all();
 				}
@@ -105,14 +104,29 @@ class SystemReport {
 		$tables = array();
 		if ( empty( $active_tab ) ) {
 			$tables = array(
-				array( 'title' => 'Matomo', 'rows' => $this->get_matomo_info(), 'has_comments' => true ),
-				array( 'title' => 'WordPress', 'rows' => $this->get_wordpress_info() ),
-				array( 'title' => 'WordPress Plugins', 'rows' => $this->get_plugins_info(), 'has_comments' => true ),
-				array( 'title' => 'Server', 'rows' => $this->get_server_info(), 'has_comments' => true ),
+				array(
+					'title'        => 'Matomo',
+					'rows'         => $this->get_matomo_info(),
+					'has_comments' => true,
+				),
+				array(
+					'title' => 'WordPress',
+					'rows'  => $this->get_wordpress_info(),
+				),
+				array(
+					'title'        => 'WordPress Plugins',
+					'rows'         => $this->get_plugins_info(),
+					'has_comments' => true,
+				),
+				array(
+					'title'        => 'Server',
+					'rows'         => $this->get_server_info(),
+					'has_comments' => true,
+				),
 			);
 		}
 
-		include( dirname( __FILE__ ) . '/views/systemreport.php' );
+		include dirname( __FILE__ ) . '/views/systemreport.php';
 	}
 
 	private function check_file_exists_and_writable( $rows, $path_to_check, $title ) {
@@ -133,7 +147,7 @@ class SystemReport {
 		$rows[] = array(
 			'name'    => sprintf( __( '%s exists and is writable.', 'matomo' ), $title ),
 			'value'   => $file_exists && $file_readable && $file_writable ? __( 'Yes' ) : __( 'No' ),
-			'comment' => $comment
+			'comment' => $comment,
 		);
 
 		return $rows;
@@ -147,7 +161,7 @@ class SystemReport {
 		$rows[] = array(
 			'name'    => __( 'Matomo Plugin Version', 'matomo' ),
 			'value'   => $plugin_data['Version'],
-			'comment' => ''
+			'comment' => '',
 		);
 
 		$paths            = new Paths();
@@ -161,7 +175,7 @@ class SystemReport {
 		$rows[] = array(
 			'name'    => __( 'Plugin directories', 'matomo' ),
 			'value'   => ! empty( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) ? 'Yes' : 'No',
-			'comment' => ! empty( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) ? json_encode( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) : ''
+			'comment' => ! empty( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) ? json_encode( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) : '',
 		);
 
 		$tmp_dir = $paths->get_tmp_dir();
@@ -169,7 +183,7 @@ class SystemReport {
 		$rows[] = array(
 			'name'    => __( 'Tmp directory writable', 'matomo' ),
 			'value'   => is_writable( $tmp_dir ),
-			'comment' => $tmp_dir
+			'comment' => $tmp_dir,
 		);
 
 		try {
@@ -177,12 +191,11 @@ class SystemReport {
 			/** @var DiagnosticService $service */
 			$service = StaticContainer::get( \Piwik\Plugins\Diagnostics\DiagnosticService::class );
 			$report  = $service->runDiagnostics();
-
 		} catch ( \Exception $e ) {
 			$rows[] = array(
 				'name'    => __( 'Matomo System Check', 'matomo' ),
 				'value'   => 'Failed to run, please open the system check in Matomo',
-				'comment' => ''
+				'comment' => '',
 			);
 
 			return $rows;
@@ -191,7 +204,7 @@ class SystemReport {
 		$rows[] = array(
 			'name'    => __( 'Matomo Version', 'matomo' ),
 			'value'   => \Piwik\Version::VERSION,
-			'comment' => ''
+			'comment' => '',
 		);
 
 		$site   = new Site();
@@ -200,7 +213,7 @@ class SystemReport {
 		$rows[] = array(
 			'name'    => __( 'Matomo Blog idSite', 'matomo' ),
 			'value'   => $idsite,
-			'comment' => ''
+			'comment' => '',
 		);
 
 		$rows[] = array(
@@ -210,25 +223,25 @@ class SystemReport {
 		$rows[] = array(
 			'name'    => 'Matomo JavaScript Tracker URL',
 			'value'   => '',
-			'comment' => $paths->get_js_tracker_url_in_matomo_dir()
+			'comment' => $paths->get_js_tracker_url_in_matomo_dir(),
 		);
 
 		$rows[] = array(
 			'name'    => 'Matomo JavaScript Tracker - WP Rest API',
 			'value'   => '',
-			'comment' => $paths->get_js_tracker_rest_api_endpoint()
+			'comment' => $paths->get_js_tracker_rest_api_endpoint(),
 		);
 
 		$rows[] = array(
 			'name'    => 'Matomo HTTP Tracking API',
 			'value'   => '',
-			'comment' => $paths->get_tracker_api_url_in_matomo_dir()
+			'comment' => $paths->get_tracker_api_url_in_matomo_dir(),
 		);
 
 		$rows[] = array(
 			'name'    => 'Matomo HTTP Tracking API - WP Rest API',
 			'value'   => '',
-			'comment' => $paths->get_tracker_api_rest_api_endpoint()
+			'comment' => $paths->get_tracker_api_rest_api_endpoint(),
 		);
 
 		$rows[] = array(
@@ -241,13 +254,13 @@ class SystemReport {
 		$rows[] = array(
 			'name'    => __( 'Server time', 'matomo' ),
 			'value'   => $this->convert_time_to_date( time(), false ),
-			'comment' => ''
+			'comment' => '',
 		);
 
 		$rows[] = array(
 			'name'    => __( 'Blog time', 'matomo' ),
 			'value'   => $this->convert_time_to_date( time(), true ),
-			'comment' => __( 'Below dates are shown in blog timezone', 'matomo' )
+			'comment' => __( 'Below dates are shown in blog timezone', 'matomo' ),
 		);
 
 		foreach ( $all_events as $event_name => $event_config ) {
@@ -256,16 +269,15 @@ class SystemReport {
 
 			$next_scheduled = wp_next_scheduled( $event_name );
 
-			$comment = ' Last started: ' . $this->convert_time_to_date( $last_run_before, true, true ) . '.';
+			$comment  = ' Last started: ' . $this->convert_time_to_date( $last_run_before, true, true ) . '.';
 			$comment .= ' Last ended: ' . $this->convert_time_to_date( $last_run_after, true, true ) . '.';
 			$comment .= ' Interval: ' . $event_config['interval'];
 
 			$rows[] = array(
 				'name'    => $event_config['name'],
 				'value'   => 'Next run: ' . $this->convert_time_to_date( $next_scheduled, true, true ),
-				'comment' => $comment
+				'comment' => $comment,
 			);
-
 		}
 
 		if ( ! \WpMatomo::is_safe_mode() ) {
@@ -286,7 +298,7 @@ class SystemReport {
 		$rows[] = array(
 			'name'    => 'Supports Async Archiving',
 			'value'   => $cliMulti->supportsAsync(),
-			'comment' => ''
+			'comment' => '',
 		);
 
 		$rows[] = array(
@@ -298,13 +310,13 @@ class SystemReport {
 			'track_mode',
 			'track_codeposition',
 			'track_api_endpoint',
-			'track_js_endpoint'
+			'track_js_endpoint',
 		);
 		foreach ( $global_settings_always_show as $key ) {
 			$rows[] = array(
 				'name'    => ucfirst( str_replace( '_', ' ', $key ) ),
 				'value'   => $this->settings->get_global_option( $key ),
-				'comment' => ''
+				'comment' => '',
 			);
 		}
 
@@ -316,7 +328,7 @@ class SystemReport {
 				$rows[] = array(
 					'name'    => ucfirst( str_replace( '_', ' ', $key ) ),
 					'value'   => $val,
-					'comment' => ''
+					'comment' => '',
 				);
 			}
 		}
@@ -357,7 +369,7 @@ class SystemReport {
 				'value'      => $result->getStatus() . ' ' . $result->getLongErrorMessage(),
 				'comment'    => $comment,
 				'is_warning' => $result->getStatus() === DiagnosticResult::STATUS_WARNING,
-				'is_error'   => $result->getStatus() === DiagnosticResult::STATUS_ERROR
+				'is_error'   => $result->getStatus() === DiagnosticResult::STATUS_ERROR,
 			);
 		}
 
@@ -379,15 +391,42 @@ class SystemReport {
 		}
 
 		$rows   = array();
-		$rows[] = array( 'name' => 'Home URL', 'value' => home_url() );
-		$rows[] = array( 'name' => 'Site URL', 'value' => site_url() );
-		$rows[] = array( 'name' => 'WordPress Version', 'value' => get_bloginfo( 'version' ) );
-		$rows[] = array( 'name' => 'Number of blogs', 'value' => $num_blogs );
-		$rows[] = array( 'name' => 'Multisite Enabled', 'value' => $is_multi_site );
-		$rows[] = array( 'name' => 'Network Enabled', 'value' => $is_network_enabled );
-		$rows[] = array( 'name' => 'Debug Mode Enabled', 'value' => defined( 'WP_DEBUG' ) && WP_DEBUG );
-		$rows[] = array( 'name' => 'Cron Enabled', 'value' => defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON );
-		$rows[] = array( 'name' => 'DB Prefix', 'value' => $wpdb->prefix );
+		$rows[] = array(
+			'name'  => 'Home URL',
+			'value' => home_url(),
+		);
+		$rows[] = array(
+			'name'  => 'Site URL',
+			'value' => site_url(),
+		);
+		$rows[] = array(
+			'name'  => 'WordPress Version',
+			'value' => get_bloginfo( 'version' ),
+		);
+		$rows[] = array(
+			'name'  => 'Number of blogs',
+			'value' => $num_blogs,
+		);
+		$rows[] = array(
+			'name'  => 'Multisite Enabled',
+			'value' => $is_multi_site,
+		);
+		$rows[] = array(
+			'name'  => 'Network Enabled',
+			'value' => $is_network_enabled,
+		);
+		$rows[] = array(
+			'name'  => 'Debug Mode Enabled',
+			'value' => defined( 'WP_DEBUG' ) && WP_DEBUG,
+		);
+		$rows[] = array(
+			'name'  => 'Cron Enabled',
+			'value' => defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON,
+		);
+		$rows[] = array(
+			'name'  => 'DB Prefix',
+			'value' => $wpdb->prefix,
+		);
 
 		return $rows;
 	}
@@ -396,33 +435,69 @@ class SystemReport {
 		global $wpdb;
 		$rows = array();
 
-		$rows[] = array( 'name' => 'Server Info', 'value' => $_SERVER['SERVER_SOFTWARE'] );
-		$rows[] = array( 'name' => 'PHP Version', 'value' => phpversion() );
-		$rows[] = array( 'name' => 'MySQL Version', 'value' => ! empty( $wpdb->is_mysql ) ? $wpdb->db_version() : '' );
-		$rows[] = array( 'name' => 'Timezone', 'value' => date_default_timezone_get() );
-		$rows[] = array( 'name' => 'Locale', 'value' => get_locale() );
+		$rows[] = array(
+			'name'  => 'Server Info',
+			'value' => $_SERVER['SERVER_SOFTWARE'],
+		);
+		$rows[] = array(
+			'name'  => 'PHP Version',
+			'value' => phpversion(),
+		);
+		$rows[] = array(
+			'name'  => 'MySQL Version',
+			'value' => ! empty( $wpdb->is_mysql ) ? $wpdb->db_version() : '',
+		);
+		$rows[] = array(
+			'name'  => 'Timezone',
+			'value' => date_default_timezone_get(),
+		);
+		$rows[] = array(
+			'name'  => 'Locale',
+			'value' => get_locale(),
+		);
 		$rows[] = array(
 			'name'    => 'Memory Limit',
 			'value'   => max( WP_MEMORY_LIMIT, @ini_get( 'memory_limit' ) ),
-			'comment' => 'At least 128MB recommended. Depending on your traffic 256MB or more may be needed.'
+			'comment' => 'At least 128MB recommended. Depending on your traffic 256MB or more may be needed.',
 		);
-		$rows[] = array( 'name' => 'Time', 'value' => time() );
+		$rows[] = array(
+			'name'  => 'Time',
+			'value' => time(),
+		);
 
-		$rows[] = array( 'name' => 'Mysqli Connect', 'value' => function_exists( 'mysqli_connect' ) );
+		$rows[] = array(
+			'name'  => 'Mysqli Connect',
+			'value' => function_exists( 'mysqli_connect' ),
+		);
 		$rows[] = array(
 			'name'  => 'Force MySQL over Mysqli',
-			'value' => defined( 'WP_USE_EXT_MYSQL' ) && WP_USE_EXT_MYSQL
+			'value' => defined( 'WP_USE_EXT_MYSQL' ) && WP_USE_EXT_MYSQL,
 		);
 
-		$rows[] = array( 'name' => 'Max Execution Time', 'value' => ini_get( 'max_execution_time' ) );
-		$rows[] = array( 'name' => 'Max Post Size', 'value' => ini_get( 'post_max_size' ) );
-		$rows[] = array( 'name' => 'Max Upload Size', 'value' => wp_max_upload_size() );
-		$rows[] = array( 'name' => 'Max Input Vars', 'value' => ini_get( 'max_input_vars' ) );
+		$rows[] = array(
+			'name'  => 'Max Execution Time',
+			'value' => ini_get( 'max_execution_time' ),
+		);
+		$rows[] = array(
+			'name'  => 'Max Post Size',
+			'value' => ini_get( 'post_max_size' ),
+		);
+		$rows[] = array(
+			'name'  => 'Max Upload Size',
+			'value' => wp_max_upload_size(),
+		);
+		$rows[] = array(
+			'name'  => 'Max Input Vars',
+			'value' => ini_get( 'max_input_vars' ),
+		);
 
 		if ( function_exists( 'curl_version' ) ) {
 			$curl_version = curl_version();
 			$curl_version = $curl_version['version'] . ', ' . $curl_version['ssl_version'];
-			$rows[]       = array( 'name' => 'Curl Version', 'value' => $curl_version );
+			$rows[]       = array(
+				'name'  => 'Curl Version',
+				'value' => $curl_version,
+			);
 		}
 
 		return $rows;
@@ -433,7 +508,6 @@ class SystemReport {
 		$mu_plugins = get_mu_plugins();
 
 		if ( ! empty( $mu_plugins ) ) {
-
 			$rows[] = array(
 				'section' => 'MU Plugins',
 			);
@@ -443,7 +517,11 @@ class SystemReport {
 				if ( ! empty( $plugin['Network'] ) ) {
 					$comment = 'Network enabled';
 				}
-				$rows[] = array( 'name' => $mu_pin['Name'], 'value' => $mu_pin['Version'], 'comment' => $comment );
+				$rows[] = array(
+					'name'    => $mu_pin['Name'],
+					'value'   => $mu_pin['Version'],
+					'comment' => $comment,
+				);
 			}
 
 			$rows[] = array(
@@ -458,7 +536,11 @@ class SystemReport {
 			if ( ! empty( $plugin['Network'] ) ) {
 				$comment = 'Network enabled';
 			}
-			$rows[] = array( 'name' => $plugin['Name'], 'value' => $plugin['Version'], 'comment' => $comment );
+			$rows[] = array(
+				'name'    => $plugin['Name'],
+				'value'   => $plugin['Version'],
+				'comment' => $comment,
+			);
 		}
 
 		$active_plugins = get_option( 'active_plugins', array() );
@@ -466,10 +548,9 @@ class SystemReport {
 			$rows[] = array(
 				'name'    => 'Active Plugins',
 				'value'   => count( $active_plugins ),
-				'comment' => implode( ', ', $active_plugins )
+				'comment' => implode( ', ', $active_plugins ),
 			);
 		}
-
 
 		return $rows;
 	}

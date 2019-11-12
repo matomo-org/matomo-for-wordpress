@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Capabilities;
@@ -61,7 +61,6 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		$id1 = self::factory()->user->create( array( 'role' => 'author' ) );
 		wp_set_current_user( $id1 );
 		$this->assertFalse( $this->tracking_code->is_hidden_user() );
-
 	}
 
 	public function test_does_not_print_tracking_code_when_not_enabled() {
@@ -77,9 +76,11 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 
 
 	public function test_tracking_enabled_adds_by_default_to_footer() {
-		$this->settings->apply_tracking_related_changes( array(
-			'track_mode' => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT
-		) );
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode' => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
+			)
+		);
 		$this->tracking_code->register_hooks();
 		ob_start();
 		do_action( 'wp_head' );
@@ -95,10 +96,12 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_tracking_enabled_can_be_added_to_header() {
-		$this->settings->apply_tracking_related_changes( array(
-			'track_mode'         => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
-			'track_codeposition' => 'head'
-		) );
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'         => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
+				'track_codeposition' => 'head',
+			)
+		);
 		$this->tracking_code->register_hooks();
 		ob_start();
 		do_action( 'wp_head' );
@@ -114,10 +117,12 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_forward_cross_domain_visitor_id() {
-		$this->settings->apply_tracking_related_changes( array(
-			'track_mode'                => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
-			'track_crossdomain_linking' => true
-		) );
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'                => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
+				'track_crossdomain_linking' => true,
+			)
+		);
 		$this->tracking_code->register_hooks();
 
 		$id             = md5( '1' );
@@ -128,10 +133,12 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_add_feed_campaign() {
-		$this->settings->apply_tracking_related_changes( array(
-			'track_mode'             => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
-			'track_feed_addcampaign' => true
-		) );
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'             => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
+				'track_feed_addcampaign' => true,
+			)
+		);
 		$this->tracking_code->register_hooks();
 		$this->set_is_feed();
 
@@ -140,11 +147,13 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_add_feed_tracking() {
-		$this->settings->apply_tracking_related_changes( array(
-			'track_mode'         => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
-			'track_feed'         => true,
-			'track_api_endpoint' => 'restapi'
-		) );
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'         => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
+				'track_feed'         => true,
+				'track_api_endpoint' => 'restapi',
+			)
+		);
 		$this->tracking_code->register_hooks();
 		$this->set_is_feed();
 

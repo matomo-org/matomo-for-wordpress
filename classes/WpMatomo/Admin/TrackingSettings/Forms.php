@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  * Code Based on
  * @author Andr&eacute; Br&auml;kling
  * @package WP_Matomo
@@ -34,8 +34,8 @@ class Forms {
 	/**
 	 * Show an option's description
 	 *
-	 * @param string $id option id
-	 * @param string $description option description
+	 * @param string  $id option id
+	 * @param string  $description option description
 	 * @param boolean $hideDescription set to false to show description initially (default: true)
 	 *
 	 * @return string full description HTML
@@ -49,35 +49,41 @@ class Forms {
 	/**
 	 * Show a checkbox option
 	 *
-	 * @param string $id option id
-	 * @param string $name descriptive option name
-	 * @param string $description option description
+	 * @param string  $id option id
+	 * @param string  $name descriptive option name
+	 * @param string  $description option description
 	 * @param boolean $isHidden set to true to initially hide the option (default: false)
-	 * @param string $groupName define a class name to access a group of option rows by javascript (default: empty)
+	 * @param string  $groupName define a class name to access a group of option rows by javascript (default: empty)
 	 * @param boolean $hideDescription $hideDescription set to false to show description initially (default: true)
-	 * @param string $onChange javascript for onchange event (default: empty)
+	 * @param string  $onChange javascript for onchange event (default: empty)
 	 */
 	public function show_checkbox( $id, $name, $description, $isHidden = false, $groupName = '', $hideDescription = true, $onChange = '' ) {
-		printf( '<tr class="' . $groupName . ( $isHidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s</label>:</th><td><input type="checkbox" value="1"' . ( $this->settings->get_global_option( $id ) ? ' checked="checked"' : '' ) . ' onchange="jQuery(\'#%s\').val(this.checked?1:0);%s" /><input id="%2$s" type="hidden" name="' . TrackingSettings::FORM_NAME . '[%2$s]" value="' . ( int ) $this->settings->get_global_option( $id ) . '" /> %s</td></tr>', esc_html( $name ), $id, $onChange, $this->get_description( $id, $description, $hideDescription ) );
+		printf( '<tr class="' . $groupName . ( $isHidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s</label>:</th><td><input type="checkbox" value="1"' . ( $this->settings->get_global_option( $id ) ? ' checked="checked"' : '' ) . ' onchange="jQuery(\'#%s\').val(this.checked?1:0);%s" /><input id="%2$s" type="hidden" name="' . TrackingSettings::FORM_NAME . '[%2$s]" value="' . (int) $this->settings->get_global_option( $id ) . '" /> %s</td></tr>', esc_html( $name ), $id, $onChange, $this->get_description( $id, $description, $hideDescription ) );
 	}
 
 	/**
 	 * Show a textarea option
 	 *
-	 * @param string $id option id
-	 * @param string $name descriptive option name
-	 * @param int $rows number of rows to show
-	 * @param string $description option description
+	 * @param string  $id option id
+	 * @param string  $name descriptive option name
+	 * @param int     $rows number of rows to show
+	 * @param string  $description option description
 	 * @param boolean $isHidden set to true to initially hide the option (default: false)
-	 * @param string $groupName define a class name to access a group of option rows by javascript (default: empty)
+	 * @param string  $groupName define a class name to access a group of option rows by javascript (default: empty)
 	 * @param boolean $hideDescription $hideDescription set to false to show description initially (default: true)
-	 * @param string $onChange javascript for onchange event (default: empty)
+	 * @param string  $onChange javascript for onchange event (default: empty)
 	 * @param boolean $isReadonly set textarea to read only (default: false)
 	 * @param boolean $global set to false if the textarea shows a site-specific option (default: true)
 	 */
 	public function show_textarea( $id, $name, $rows, $description, $isHidden, $groupName, $hideDescription = true, $onChange = '', $isReadonly = false, $global = true ) {
 		printf(
-			'<tr class="' . $groupName . ( $isHidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s</label>:</th><td><textarea cols="80" rows="' . $rows . '" id="%s" name="' . TrackingSettings::FORM_NAME . '[%2$s]" onchange="%s"' . ( $isReadonly ? ' readonly="readonly"' : '' ) . '>%s</textarea> %s</td></tr>', esc_html( $name ), $id, $onChange, ( $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id ) ), $this->get_description( $id, $description, $hideDescription ) );
+			'<tr class="' . $groupName . ( $isHidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s</label>:</th><td><textarea cols="80" rows="' . $rows . '" id="%s" name="' . TrackingSettings::FORM_NAME . '[%2$s]" onchange="%s"' . ( $isReadonly ? ' readonly="readonly"' : '' ) . '>%s</textarea> %s</td></tr>',
+			esc_html( $name ),
+			$id,
+			$onChange,
+			( $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id ) ),
+			$this->get_description( $id, $description, $hideDescription )
+		);
 	}
 
 	/**
@@ -92,12 +98,12 @@ class Forms {
 	/**
 	 * Show an input option
 	 *
-	 * @param string $id option id
-	 * @param string $name descriptive option name
-	 * @param string $description option description
+	 * @param string  $id option id
+	 * @param string  $name descriptive option name
+	 * @param string  $description option description
 	 * @param boolean $isHidden set to true to initially hide the option (default: false)
-	 * @param string $groupName define a class name to access a group of option rows by javascript (default: empty)
-	 * @param string $rowName define a class name to access the specific option row by javascript (default: empty)
+	 * @param string  $groupName define a class name to access a group of option rows by javascript (default: empty)
+	 * @param string  $rowName define a class name to access the specific option row by javascript (default: empty)
 	 * @param boolean $hideDescription $hideDescription set to false to show description initially (default: true)
 	 * @param boolean $wide Create a wide box (default: false)
 	 */
@@ -108,13 +114,13 @@ class Forms {
 	/**
 	 * Show a select box option
 	 *
-	 * @param string $id option id
-	 * @param string $name descriptive option name
-	 * @param array $options list of options to show array[](option id => descriptive name)
-	 * @param string $description option description
-	 * @param string $onChange javascript for onchange event (default: empty)
+	 * @param string  $id option id
+	 * @param string  $name descriptive option name
+	 * @param array   $options list of options to show array[](option id => descriptive name)
+	 * @param string  $description option description
+	 * @param string  $onChange javascript for onchange event (default: empty)
 	 * @param boolean $isHidden set to true to initially hide the option (default: false)
-	 * @param string $groupName define a class name to access a group of option rows by javascript (default: empty)
+	 * @param string  $groupName define a class name to access a group of option rows by javascript (default: empty)
 	 * @param boolean $hideDescription $hideDescription set to false to show description initially (default: true)
 	 * @param boolean $global set to false if the textarea shows a site-specific option (default: true)
 	 */

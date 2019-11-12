@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use Piwik\Archive;
@@ -57,7 +57,6 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	}
 
 	public function setUp() {
-
 		parent::setUp();
 
 		$uninstall = new Uninstaller();
@@ -79,31 +78,36 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		$roles = new Roles( $settings );
 		$roles->add_roles();
 
-		add_action( 'set_current_user', function () {
-			// auth might still be pointing to a different user...
-			Bootstrap::set_not_bootstrapped();
-		} );
+		add_action(
+			'set_current_user',
+			function () {
+				// auth might still be pointing to a different user...
+				Bootstrap::set_not_bootstrapped();
+			}
+		);
 
-
-		add_action( 'matomo_uninstall', function () {
-			Option::clearCache();
-			Cache::flushAll();
-			\Piwik\Singleton::clearAll();
-			API::unsetAllInstances();
-			ArchiveTableCreator::clear();
-			Site::clearCache();
-			Archive::clearStaticCache();
-			FrontController::$requestId = null;
-			Date::$now                  = null;
-			\Piwik\Tracker\Cache::deleteTrackerCache();
-			\Piwik\NumberFormatter::getInstance()->clearCache();
-			\Piwik\Plugins\ScheduledReports\API::$cache = array();
-			Manager::getInstance()->deleteAll();
-			PluginsArchiver::$archivers = array();
-			$_GET                       = $_REQUEST = array();
-			Translate::reset();
-			\Piwik\Log::unsetInstance();
-		} );
+		add_action(
+			'matomo_uninstall',
+			function () {
+				Option::clearCache();
+				Cache::flushAll();
+				\Piwik\Singleton::clearAll();
+				API::unsetAllInstances();
+				ArchiveTableCreator::clear();
+				Site::clearCache();
+				Archive::clearStaticCache();
+				FrontController::$requestId = null;
+				Date::$now                  = null;
+				\Piwik\Tracker\Cache::deleteTrackerCache();
+				\Piwik\NumberFormatter::getInstance()->clearCache();
+				\Piwik\Plugins\ScheduledReports\API::$cache = array();
+				Manager::getInstance()->deleteAll();
+				PluginsArchiver::$archivers = array();
+				$_GET                       = $_REQUEST = array();
+				Translate::reset();
+				\Piwik\Log::unsetInstance();
+			}
+		);
 
 		if ( ! empty( $GLOBALS['wpdb'] ) ) {
 			$GLOBALS['wpdb']->suppress_errors( false );
@@ -111,7 +115,6 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	}
 
 	public function tearDown() {
-
 		if ( ! empty( $GLOBALS['wpdb'] ) ) {
 			$GLOBALS['wpdb']->suppress_errors( true );
 		}
@@ -129,15 +132,15 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	}
 
 	protected function assert_tracking_response( $tracking_response ) {
-		$trans_gif_64      = "R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
+		$trans_gif_64      = 'R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
 		$expected_response = base64_decode( $trans_gif_64 );
 		$this->assertEquals( $expected_response, $tracking_response );
 	}
 
 	protected function enable_browser_archiving() {
-		$_GET['trigger']                                          = 'archivephp';
-		$general                                                  = Config::getInstance()->General;
-		$general['enable_browser_archiving_triggering']           = 1;
+		$_GET['trigger']                                = 'archivephp';
+		$general                                        = Config::getInstance()->General;
+		$general['enable_browser_archiving_triggering'] = 1;
 		$general['time_before_today_archive_considered_outdated'] = 1;
 		Config::getInstance()->General                            = $general;
 
@@ -158,7 +161,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		$tracker->setForceVisitDateTime( $dateTime );
 		$tracker->setIp( '156.5.3.2' );
 		// Optional tracking
-		$tracker->setUserAgent( "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.2.6) Gecko/20100625 Firefox/3.6.6 (.NET CLR 3.5.30729)" );
+		$tracker->setUserAgent( 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.2.6) Gecko/20100625 Firefox/3.6.6 (.NET CLR 3.5.30729)' );
 		$tracker->setBrowserLanguage( 'fr' );
 		$tracker->setLocalTime( '12:34:06' );
 		$tracker->setResolution( 1024, 768 );

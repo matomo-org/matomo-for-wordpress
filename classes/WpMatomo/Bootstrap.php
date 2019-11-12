@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Bootstrap {
 	/**
 	 * Tests only
+	 *
 	 * @var bool|null
 	 */
 	private static $assume_not_bootstrapped;
@@ -24,6 +25,7 @@ class Bootstrap {
 
 	/**
 	 * Tests only
+	 *
 	 * @internal
 	 * @ignore
 	 */
@@ -75,12 +77,15 @@ class Bootstrap {
 		$controller = \Piwik\FrontController::getInstance();
 		$controller->init();
 
-		add_action( 'set_current_user', function () {
-			$access = \Piwik\Access::getInstance();
-			if ( $access ) {
-				$access->reloadAccess();
+		add_action(
+			'set_current_user',
+			function () {
+				$access = \Piwik\Access::getInstance();
+				if ( $access ) {
+					$access->reloadAccess();
+				}
 			}
-		} );
+		);
 	}
 
 	public static function is_bootstrapped() {

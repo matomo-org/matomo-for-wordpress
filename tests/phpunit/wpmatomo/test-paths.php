@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use Piwik\Plugins\SitesManager\Model as SitesModel;
@@ -80,7 +80,7 @@ class PathsTest extends MatomoUnit_TestCase {
 	public function test_get_relative_dir_to_matomo() {
 		$valid_values = array(
 			'../plugins/WordPress', // locally
-			'../../matomo/tests/phpunit/wpmatomo' // travis
+			'../../matomo/tests/phpunit/wpmatomo', // travis
 		);
 
 		$val = $this->paths->get_relative_dir_to_matomo( __DIR__ );
@@ -103,7 +103,7 @@ class PathsTest extends MatomoUnit_TestCase {
 
 		$valid_values = array(
 			'../plugins/WordPress', // locally
-			'../../matomo/plugins/WordPress' // travis
+			'../../matomo/plugins/WordPress', // travis
 		);
 		$val          = $this->paths->get_relative_dir_to_matomo( $dir_te_test );
 		$this->assertTrue( in_array( $val, $valid_values ) );

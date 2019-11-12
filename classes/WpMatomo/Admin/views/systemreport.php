@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -28,7 +28,7 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 				str_replace( '/', '\/', ABSPATH ) => '$ABSPATH\/',
 				WP_CONTENT_DIR                    => '$WP_CONTENT_DIR/',
 				home_url()                        => '$home_url',
-				site_url()                        => '$site_url'
+				site_url()                        => '$site_url',
 			);
 			foreach ( $values_to_anonymize as $search => $replace ) {
 				$value = str_replace( $search, $replace, $value );
@@ -66,37 +66,40 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 
 		</p>
 		<textarea style="width:100%;height: 200px;" readonly
-		          id="matomo_system_report_info"><?php foreach ( $tables as $table ) {
-				echo "# " . esc_html( $table['title'] ) . "\n";
-				foreach ( $table['rows'] as $index => $row ) {
-					if ( ! empty( $row['section'] ) ) {
-						echo "\n\n## " . esc_html( $row['section'] ) . "\n";
-						continue;
+				  id="matomo_system_report_info">
+				  <?php
+					foreach ( $tables as $table ) {
+						echo '# ' . esc_html( $table['title'] ) . "\n";
+						foreach ( $table['rows'] as $index => $row ) {
+							if ( ! empty( $row['section'] ) ) {
+								echo "\n\n## " . esc_html( $row['section'] ) . "\n";
+								continue;
+							}
+							$value = $row['value'];
+							if ( $value === true ) {
+								$value = 'Yes';
+							} elseif ( $value === false ) {
+								$value = 'No';
+							}
+							$class = '';
+							if ( ! empty( $row['is_error'] ) ) {
+								$class = 'Error ';
+							} elseif ( ! empty( $row['is_warning'] ) ) {
+								$class = 'Warning ';
+							}
+							echo "\n* " . $class . esc_html( $row['name'] ) . ': ' . esc_html( anonymize_matomo_value( $value ) );
+							if ( isset( $row['comment'] ) && $row['comment'] !== '' ) {
+								echo ' (' . esc_html( anonymize_matomo_value( $row['comment'] ) ) . ')';
+							}
+						}
+						echo "\n\n";
 					}
-					$value = $row['value'];
-					if ( $value === true ) {
-						$value = 'Yes';
-					} elseif ( $value === false ) {
-						$value = 'No';
-					}
-					$class = '';
-					if ( ! empty( $row['is_error'] ) ) {
-						$class = 'Error ';
-					} elseif ( ! empty( $row['is_warning'] ) ) {
-						$class = 'Warning ';
-					}
-					echo "\n* " . $class . esc_html( $row['name'] ) . ': ' . esc_html( anonymize_matomo_value( $value ) );
-					if ( isset( $row['comment'] ) && $row['comment'] !== '' ) {
-						echo " (" . esc_html( anonymize_matomo_value( $row['comment'] ) ) . ")";
-					}
+					?>
+	</textarea>
 
-				}
-				echo "\n\n";
-			} ?>
-    </textarea>
-
-		<?php foreach ( $tables as $table ) {
-			echo "<h2>" . esc_html( $table['title'] ) . "</h2><table class='widefat'><thead></thead><tbody>";
+		<?php
+		foreach ( $tables as $table ) {
+			echo '<h2>' . esc_html( $table['title'] ) . "</h2><table class='widefat'><thead></thead><tbody>";
 			foreach ( $table['rows'] as $row ) {
 				if ( ! empty( $row['section'] ) ) {
 					echo '</tbody><thead><tr><th colspan="3" class="section">' . esc_html( $row['section'] ) . '</th></tr></thead><tbody>';
@@ -115,28 +118,29 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 					$class = 'warning';
 				}
 				echo "<tr class='$class'>";
-				echo "<td width='30%'>" . esc_html( $row['name'] ) . "</td>";
-				echo "<td width='" . ( ! empty( $table['has_comments'] ) ? 20 : 70 ) . "%'>" . esc_html( $value ) . "</td>";
+				echo "<td width='30%'>" . esc_html( $row['name'] ) . '</td>';
+				echo "<td width='" . ( ! empty( $table['has_comments'] ) ? 20 : 70 ) . "%'>" . esc_html( $value ) . '</td>';
 				if ( ! empty( $table['has_comments'] ) ) {
 					$replacedElements = array(
-						'<code>'                                             => '__#CODEBACKUP#__',
-						'</code>'                                            => '__##CODEBACKUP##__',
+						'<code>'  => '__#CODEBACKUP#__',
+						'</code>' => '__##CODEBACKUP##__',
 						'<pre style="overflow-x: scroll;max-width: 600px;">' => '__#PREBACKUP#__',
-						'</pre>'                                             => '__##PREBACKUP##__',
-						'<br/>'                                              => '__#BRBACKUP#__',
-						'<br />'                                             => '__#BRBACKUP#__',
-						'<br>'                                               => '__#BRBACKUP#__'
+						'</pre>'  => '__##PREBACKUP##__',
+						'<br/>'   => '__#BRBACKUP#__',
+						'<br />'  => '__#BRBACKUP#__',
+						'<br>'    => '__#BRBACKUP#__',
 					);
 					$comment          = isset( $row['comment'] ) ? $row['comment'] : '';
 					$replaced         = str_replace( array_keys( $replacedElements ), array_values( $replacedElements ), $comment );
 					$escaped          = esc_html( $replaced );
-					echo "<td width='50%'>" . str_replace( array_values( $replacedElements ), array_keys( $replacedElements ), $escaped ) . "</td>";
+					echo "<td width='50%'>" . str_replace( array_values( $replacedElements ), array_keys( $replacedElements ), $escaped ) . '</td>';
 				}
 
-				echo "</tr>";
+				echo '</tr>';
 			}
-			echo "</tbody></table>";
-		} ?>
+			echo '</tbody></table>';
+		}
+		?>
 
 	<?php } else { ?>
 		<h1><?php _e( 'Troubleshooting', 'matomo' ); ?></h1>
@@ -146,32 +150,32 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 
 			<?php if ( ! $settings->is_network_enabled() || ! is_network_admin() ) { ?>
 				<input name="<?php echo SystemReport::TROUBLESHOOT_SYNC_USERS; ?>" type="submit" class='button-primary'
-				       value="<?php _e( 'Sync users', 'matomo' ); ?>">
+					   value="<?php _e( 'Sync users', 'matomo' ); ?>">
 				<br/><br/>
 				<input name="<?php echo SystemReport::TROUBLESHOOT_SYNC_SITE; ?>" type="submit" class='button-primary'
-				       value="<?php _e( 'Sync site', 'matomo' ); ?>">
+					   value="<?php _e( 'Sync site', 'matomo' ); ?>">
 			<?php } ?>
 			<?php if ( $settings->is_network_enabled() ) { ?>
 				<input name="<?php echo SystemReport::TROUBLESHOOT_SYNC_ALL_SITES; ?>" type="submit"
-				       class='button-primary'
-				       value="<?php _e( 'Sync all sites', 'matomo' ); ?>">
+					   class='button-primary'
+					   value="<?php _e( 'Sync all sites', 'matomo' ); ?>">
 				<br/><br/>
 				<input name="<?php echo SystemReport::TROUBLESHOOT_SYNC_ALL_USERS; ?>" type="submit"
-				       class='button-primary'
-				       value="<?php _e( 'Sync all users across sites', 'matomo' ); ?>">
+					   class='button-primary'
+					   value="<?php _e( 'Sync all users across sites', 'matomo' ); ?>">
 			<?php } ?>
 			<br/><br/>
 			<input name="<?php echo SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE; ?>" type="submit"
-			       class='button-primary'
-			       value="<?php _e( 'Clear Matomo Cache', 'matomo' ); ?>">
+				   class='button-primary'
+				   value="<?php _e( 'Clear Matomo Cache', 'matomo' ); ?>">
 			<br/><br/>
 			<input name="<?php echo SystemReport::TROUBLESHOOT_ARCHIVE_NOW; ?>" type="submit"
-			       class='button-primary'
-			       value="<?php _e( 'Archive reports', 'matomo' ); ?>">
+				   class='button-primary'
+				   value="<?php _e( 'Archive reports', 'matomo' ); ?>">
 		</form>
 
 		<?php include 'info_help.php'; ?>
-		<?php include 'info_bug_report.php' ?>
+		<?php include 'info_bug_report.php'; ?>
 		<h4><?php _e( 'Before you create an issue', 'matomo' ); ?></h4>
 		<p><?php _e( 'If you experience any issue in Matomo, it is always a good idea to first check your webserver logs (if possible) for any errors.', 'matomo' ); ?>
 			<br/>
@@ -180,13 +184,17 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 
 		</p>
 		<h3><?php _e( 'Having performance issues?', 'matomo' ); ?></h3>
-		<p><?php echo sprintf( __( 'You may want to disable %1$s in your %2$s and set up an actual cronjob and %3$scheck out our recommended server sizing%4$s.', 'matomo' ),
-				'<code>DISABLE_WP_CRON</code>',
-				'<code>wp-config.php</code>',
-				'<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/docs/requirements/#recommended-servers-sizing-cpu-ram-disks">',
-				'</a>'
-			); ?>
+		<p>
+		<?php
+		echo sprintf(
+			__( 'You may want to disable %1$s in your %2$s and set up an actual cronjob and %3$scheck out our recommended server sizing%4$s.', 'matomo' ),
+			'<code>DISABLE_WP_CRON</code>',
+			'<code>wp-config.php</code>',
+			'<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/docs/requirements/#recommended-servers-sizing-cpu-ram-disks">',
+			'</a>'
+		);
+		?>
 		</p>
-		<?php include 'info_high_traffic.php' ?>
+		<?php include 'info_high_traffic.php'; ?>
 	<?php } ?>
 </div>

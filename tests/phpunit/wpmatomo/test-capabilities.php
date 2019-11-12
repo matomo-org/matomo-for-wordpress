@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Access;
@@ -78,11 +78,13 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 		}
 
 		$access = new Access( $this->settings );
-		$access->save( array(
-			'editor'      => Capabilities::KEY_ADMIN,
-			'author'      => Capabilities::KEY_WRITE,
-			'contributor' => Capabilities::KEY_VIEW,
-		) );
+		$access->save(
+			array(
+				'editor'      => Capabilities::KEY_ADMIN,
+				'author'      => Capabilities::KEY_WRITE,
+				'contributor' => Capabilities::KEY_VIEW,
+			)
+		);
 
 		$this->assertTrue( get_role( 'editor' )->has_cap( Capabilities::KEY_ADMIN ) );
 		$this->assertTrue( get_role( 'author' )->has_cap( Capabilities::KEY_WRITE ) );

@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -22,15 +22,18 @@ class OptOut {
 	}
 
 	public function show_opt_out( $atts ) {
-		$a = shortcode_atts( array(
-			'language'         => '',
-			'background_color' => '',
-			'font_color'       => '',
-			'font_size'        => '',
-			'font_family'      => '',
-			'width'            => '600',
-			'height'           => '200',
-		), $atts );
+		$a = shortcode_atts(
+			array(
+				'language'         => '',
+				'background_color' => '',
+				'font_color'       => '',
+				'font_size'        => '',
+				'font_family'      => '',
+				'width'            => '600',
+				'height'           => '200',
+			),
+			$atts
+		);
 
 		$url = plugins_url( 'app', MATOMO_ANALYTICS_FILE ) . '/index.php';
 
@@ -40,7 +43,10 @@ class OptOut {
 			'font_size'        => 'fontSize',
 			'font_family'      => 'fontFamily',
 		);
-		$params = array( 'module' => 'CoreAdminHome', 'action' => 'optOut' );
+		$params = array(
+			'module' => 'CoreAdminHome',
+			'action' => 'optOut',
+		);
 		if ( ! empty( $a['language'] ) ) {
 			$params['language'] = $a['language'];
 		}

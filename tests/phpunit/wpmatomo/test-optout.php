@@ -3,7 +3,7 @@
 use WpMatomo\Admin\PrivacySettings;
 
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 class OptOutTest extends MatomoUnit_TestCase {
 

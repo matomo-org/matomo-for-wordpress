@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -162,7 +162,7 @@ class Uninstaller {
 			'twofactor_recovery_code',
 			'user',
 			'user_dashboard',
-			'user_language'
+			'user_language',
 		);
 		foreach ( range( 2010, date( 'Y' ) ) as $year ) {
 			foreach ( range( 1, 12 ) as $month ) {
@@ -190,7 +190,7 @@ class Uninstaller {
 
 		foreach ( $installed_tables as $table_name ) {
 			// temporary table are used in tests and just making sure they are being removed
-			//$wpdb->query( "DROP TEMPORARY TABLE IF EXISTS `$tableName`" );
+			// $wpdb->query( "DROP TEMPORARY TABLE IF EXISTS `$tableName`" );
 			// two spaces between drop and table so it won't be replaced in WP tests
 			$wpdb->query( "DROP TABLE IF EXISTS `$table_name`" );
 		}

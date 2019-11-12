@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -31,11 +31,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php _e( 'The license code for any possible premium features is applied across blogs and can only be managed by a super admin.', 'matomo' ); ?>
 	</p>
 	<h2><?php _e( 'Managing many sites?', 'matomo' ); ?></h2>
-	<p><?php echo sprintf( __( 'If you are managing quite a few sites or have quite a bit of traffic then we recommend installing %1$sMatomo On-Premise%2$s separately outside WordPress (it\'s free as well) and use it in combination with the %3$sWP-Matomo%4$s WordPress plugin.
-        Your Matomo will then run a lot faster, you can put Matomo on a separate server if needed, and it allows you to make use of additional features such as %5$sRoll-Up Reporting%6$s.', 'matomo' ),
-			'<a href="https://matomo.org/matomo-on-premise/" target="_blank" rel="noreferrer noopener">', '</a>',
-			'<a href="https://wordpress.org/plugins/wp-piwik/" target="_blank" rel="noreferrer noopener">', '</a>',
-			'<a href="https://plugins.matomo.org/RollUpReporting" target="_blank" rel="noreferrer noopener">', '</a>' ); ?>
+	<p>
+	<?php
+	echo sprintf(
+		__(
+			'If you are managing quite a few sites or have quite a bit of traffic then we recommend installing %1$sMatomo On-Premise%2$s separately outside WordPress (it\'s free as well) and use it in combination with the %3$sWP-Matomo%4$s WordPress plugin.
+        Your Matomo will then run a lot faster, you can put Matomo on a separate server if needed, and it allows you to make use of additional features such as %5$sRoll-Up Reporting%6$s.',
+			'matomo'
+		),
+		'<a href="https://matomo.org/matomo-on-premise/" target="_blank" rel="noreferrer noopener">',
+		'</a>',
+		'<a href="https://wordpress.org/plugins/wp-piwik/" target="_blank" rel="noreferrer noopener">',
+		'</a>',
+		'<a href="https://plugins.matomo.org/RollUpReporting" target="_blank" rel="noreferrer noopener">',
+		'</a>'
+	);
+	?>
 
 		<br/><br/><?php _e( 'Don\'t want all the hassle of maintaining a Matomo?', 'matomo' ); ?> <a
 			href="http://matomo.org/start-free-analytics-trial/" rel="noreferrer noopener"

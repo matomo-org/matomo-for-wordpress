@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -22,13 +22,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class ScheduledTasks {
-	const EVENT_SYNC = 'matomo_scheduled_sync';
+	const EVENT_SYNC    = 'matomo_scheduled_sync';
 	const EVENT_ARCHIVE = 'matomo_scheduled_archive';
-	const EVENT_GEOIP = 'matomo_scheduled_geoipdb';
-	const EVENT_UPDATE = 'matomo_update_core';
+	const EVENT_GEOIP   = 'matomo_scheduled_geoipdb';
+	const EVENT_UPDATE  = 'matomo_update_core';
 
 	const KEY_BEFORE_CRON = 'before-cron-';
-	const KEY_AFTER_CRON = 'after-cron-';
+	const KEY_AFTER_CRON  = 'after-cron-';
 
 	/**
 	 * @var Settings
@@ -47,8 +47,8 @@ class ScheduledTasks {
 
 	public function add_weekly_schedule( $schedules ) {
 		$schedules['matomo_weekly'] = array(
-			'interval' => 60 * 60 * 24 * 7, # 604,800, seconds in a week
-			'display'  => __( 'Weekly' )
+			'interval' => 60 * 60 * 24 * 7, // 604,800, seconds in a week
+			'display'  => __( 'Weekly' ),
 		);
 
 		return $schedules;
@@ -67,17 +67,27 @@ class ScheduledTasks {
 			}
 
 			// logging last execution start time
-			add_action( $event_name, function () use ( $self, $event_name ) {
-				$self->set_last_time_before_cron( $event_name, time() );
-			}, $event_priority / 2, $accepted_args = 0 );
+			add_action(
+				$event_name,
+				function () use ( $self, $event_name ) {
+					$self->set_last_time_before_cron( $event_name, time() );
+				},
+				$event_priority / 2,
+				$accepted_args = 0
+			);
 
 			// actual event
 			add_action( $event_name, array( $this, $event_config['method'] ), $event_priority, $accepted_args = 0 );
 
 			// logging last execution end time
-			add_action( $event_name, function () use ( $self, $event_name ) {
-				$self->set_last_time_after_cron( $event_name, time() );
-			}, $event_priority * 2, $accepted_args = 0 );
+			add_action(
+				$event_name,
+				function () use ( $self, $event_name ) {
+					$self->set_last_time_after_cron( $event_name, time() );
+				},
+				$event_priority * 2,
+				$accepted_args = 0
+			);
 		}
 
 		register_deactivation_hook( MATOMO_ANALYTICS_FILE, array( $this, 'uninstall' ) );
@@ -106,18 +116,18 @@ class ScheduledTasks {
 			self::EVENT_SYNC    => array(
 				'name'     => 'Sync users & sites',
 				'interval' => 'daily',
-				'method'   => 'sync'
+				'method'   => 'sync',
 			),
 			self::EVENT_ARCHIVE => array(
 				'name'     => 'Archive',
 				'interval' => 'hourly',
-				'method'   => 'archive'
+				'method'   => 'archive',
 			),
 			self::EVENT_GEOIP   => array(
 				'name'     => 'Update GeoIP DB',
 				'interval' => 'matomo_weekly',
-				'method'   => 'update_geo_ip2_db'
-			)
+				'method'   => 'update_geo_ip2_db',
+			),
 		);
 	}
 

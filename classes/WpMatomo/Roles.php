@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -15,11 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Roles {
 	const OPTION_SETUP_NAME = 'roles-setup';
-	const ROLE_PREFIX = 'matomo_';
-	const ROLE_VIEW = 'matomo_view_role';
-	const ROLE_WRITE = 'matomo_write_role';
-	const ROLE_ADMIN = 'matomo_admin_role';
-	const ROLE_SUPERUSER = 'matomo_superuser_role';
+	const ROLE_PREFIX       = 'matomo_';
+	const ROLE_VIEW         = 'matomo_view_role';
+	const ROLE_WRITE        = 'matomo_write_role';
+	const ROLE_ADMIN        = 'matomo_admin_role';
+	const ROLE_SUPERUSER    = 'matomo_superuser_role';
 
 	/**
 	 * @var Settings
@@ -63,10 +63,22 @@ class Roles {
 
 	public function get_matomo_roles() {
 		return array(
-			self::ROLE_VIEW      => array( 'name' => 'Matomo View', 'defaultCap' => Capabilities::KEY_VIEW ),
-			self::ROLE_WRITE     => array( 'name' => 'Matomo Write', 'defaultCap' => Capabilities::KEY_WRITE ),
-			self::ROLE_ADMIN     => array( 'name' => 'Matomo Admin', 'defaultCap' => Capabilities::KEY_ADMIN ),
-			self::ROLE_SUPERUSER => array( 'name' => 'Matomo Super User', 'defaultCap' => Capabilities::KEY_SUPERUSER ),
+			self::ROLE_VIEW      => array(
+				'name'       => 'Matomo View',
+				'defaultCap' => Capabilities::KEY_VIEW,
+			),
+			self::ROLE_WRITE     => array(
+				'name'       => 'Matomo Write',
+				'defaultCap' => Capabilities::KEY_WRITE,
+			),
+			self::ROLE_ADMIN     => array(
+				'name'       => 'Matomo Admin',
+				'defaultCap' => Capabilities::KEY_ADMIN,
+			),
+			self::ROLE_SUPERUSER => array(
+				'name'       => 'Matomo Super User',
+				'defaultCap' => Capabilities::KEY_SUPERUSER,
+			),
 		);
 	}
 

@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Admin;
@@ -17,11 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class TrackingSettings implements AdminSettingsInterface {
-	const FORM_NAME = 'matomo';
-	const NONCE_NAME = 'matomo_settings';
-	const TRACK_MODE_DEFAULT = 'default';
-	const TRACK_MODE_DISABLED = 'disabled';
-	const TRACK_MODE_MANUALLY = 'manually';
+	const FORM_NAME             = 'matomo';
+	const NONCE_NAME            = 'matomo_settings';
+	const TRACK_MODE_DEFAULT    = 'default';
+	const TRACK_MODE_DISABLED   = 'disabled';
+	const TRACK_MODE_MANUALLY   = 'manually';
 	const TRACK_MODE_TAGMANAGER = 'tagmanager';
 
 	/**
@@ -42,10 +42,10 @@ class TrackingSettings implements AdminSettingsInterface {
 
 	private function update_if_submitted() {
 		if ( isset( $_POST )
-		     && ! empty( $_POST[ self::FORM_NAME ] )
-		     && is_admin()
-		     && check_admin_referer( self::NONCE_NAME )
-		     && $this->can_user_manage() ) {
+			 && ! empty( $_POST[ self::FORM_NAME ] )
+			 && is_admin()
+			 && check_admin_referer( self::NONCE_NAME )
+			 && $this->can_user_manage() ) {
 			$this->apply_settings();
 
 			return true;
@@ -114,8 +114,8 @@ class TrackingSettings implements AdminSettingsInterface {
 		}
 
 		if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_MANUALLY
-		     || ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_DISABLED &&
-		          $this->settings->get_global_option( 'track_mode' ) === self::TRACK_MODE_MANUALLY ) ) {
+			 || ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_DISABLED &&
+				  $this->settings->get_global_option( 'track_mode' ) === self::TRACK_MODE_MANUALLY ) ) {
 			if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
 				$_POST[ self::FORM_NAME ]['tracking_code'] = stripslashes( $_POST[ self::FORM_NAME ]['tracking_code'] );
 			} else {
@@ -146,16 +146,16 @@ class TrackingSettings implements AdminSettingsInterface {
 		$containers = $this->get_active_containers();
 
 		$track_modes = array(
-			TrackingSettings::TRACK_MODE_DISABLED => __( 'Disabled', 'matomo' ),
-			TrackingSettings::TRACK_MODE_DEFAULT  => __( 'Default tracking', 'matomo' ),
-			TrackingSettings::TRACK_MODE_MANUALLY => __( 'Enter manually', 'matomo' )
+			self::TRACK_MODE_DISABLED => __( 'Disabled', 'matomo' ),
+			self::TRACK_MODE_DEFAULT  => __( 'Default tracking', 'matomo' ),
+			self::TRACK_MODE_MANUALLY => __( 'Enter manually', 'matomo' ),
 		);
 
 		if ( ! empty( $containers ) ) {
-			$track_modes[ TrackingSettings::TRACK_MODE_TAGMANAGER ] = __( 'Tag Manager', 'matomo' );
+			$track_modes[ self::TRACK_MODE_TAGMANAGER ] = __( 'Tag Manager', 'matomo' );
 		}
 
-		include( dirname( __FILE__ ) . '/views/tracking.php' );
+		include dirname( __FILE__ ) . '/views/tracking.php';
 	}
 
 	public function get_active_containers() {

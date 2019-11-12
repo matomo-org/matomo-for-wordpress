@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace Piwik\Tracker\Db;
@@ -20,11 +20,11 @@ class Wordpress extends Mysqli {
 	private $old_suppress_errors_value = null;
 
 	public function disconnect() {
-		// we do not want to disconnect wordpress DB ever as it breaks eg the tests where it loses all
-		// temporary tables... also we should leave it up to wordpress whether it wants to close db or not
+		// we do not want to disconnect WordPress DB ever as it breaks eg the tests where it loses all
+		// temporary tables... also we should leave it up to WordPress whether it wants to close db or not
 		// global $wpdb;
 		// $wpdb->close();
-		//if ($this->connection) {
+		// if ($this->connection) {
 		// parent::disconnect();
 		// }
 	}
@@ -61,10 +61,10 @@ class Wordpress extends Mysqli {
 
 	private function before_execute_query( $wpdb ) {
 		if ( ! $wpdb->suppress_errors
-		     && defined( 'WP_DEBUG' )
-		     && WP_DEBUG
-		     && defined( 'WP_DEBUG_DISPLAY' )
-		     && WP_DEBUG_DISPLAY ) {
+			 && defined( 'WP_DEBUG' )
+			 && WP_DEBUG
+			 && defined( 'WP_DEBUG_DISPLAY' )
+			 && WP_DEBUG_DISPLAY ) {
 			// we want to prevent showing these notices
 			if ( defined( 'MATOMO_SUPPRESS_DB_ERRORS' ) ) {
 				if ( MATOMO_SUPPRESS_DB_ERRORS === true ) {
@@ -83,7 +83,7 @@ class Wordpress extends Mysqli {
 	 * Test error number
 	 *
 	 * @param \Exception $e
-	 * @param string $errno
+	 * @param string     $errno
 	 *
 	 * @return bool
 	 */
@@ -128,7 +128,7 @@ class Wordpress extends Mysqli {
 		}
 
 		if ( preg_match( '/^\s*(select)\s/i', $test_query ) ) {
-			// wordpress does not fetch any result when doing a select... it's only supposed to be used for things like
+			// WordPress does not fetch any result when doing a select... it's only supposed to be used for things like
 			// insert / update / drop ...
 			$result = $this->fetchAll( $query, $parameters );
 		} else {

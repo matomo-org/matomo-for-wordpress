@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Ecommerce;
@@ -34,11 +34,12 @@ class Base {
 	 * We can't echo cart updates directly as we wouldn't know where in the template rendering stage we are and whether
 	 * we're supposed to print or not etc. Also there might be multiple cart updates triggered during one page load so
 	 * we want to make sure to print only the most recent tracking code
+	 *
 	 * @var string
 	 */
 	protected $cart_update_queue = '';
 
-	private $ajax_tracker_calls = [];
+	private $ajax_tracker_calls = array();
 
 	public function __construct( AjaxTracker $tracker ) {
 		$this->logger  = new Logger();
@@ -78,7 +79,7 @@ class Base {
 			$this->ajax_tracker_calls[] = $params;
 		}
 
-		return sprintf( "window._paq = window._paq || []; window._paq.push(%s);", json_encode( $params ) );
+		return sprintf( 'window._paq = window._paq || []; window._paq.push(%s);', json_encode( $params ) );
 	}
 
 	protected function wrap_script( $script ) {
@@ -87,7 +88,7 @@ class Base {
 				$methods = array(
 					'addEcommerceItem'         => 'addEcommerceItem',
 					'trackEcommerceOrder'      => 'doTrackEcommerceOrder',
-					'trackEcommerceCartUpdate' => 'doTrackEcommerceCartUpdate'
+					'trackEcommerceCartUpdate' => 'doTrackEcommerceCartUpdate',
 				);
 				if ( ! empty( $call[0] ) && ! empty( $methods[ $call[0] ] ) ) {
 					$tracker_method = $methods[ $call[0] ];

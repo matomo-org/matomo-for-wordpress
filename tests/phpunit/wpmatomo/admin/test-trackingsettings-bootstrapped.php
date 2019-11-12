@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Admin\TrackingSettings;
@@ -34,9 +34,12 @@ class AdminTrackingSettingsBootstrappedTest extends MatomoAnalytics_TestCase {
 		$site   = new WpMatomo\Site();
 		$idsite = $site->get_current_matomo_site_id();
 
-		$id = \Piwik\API\Request::processRequest( 'TagManager.createDefaultContainerForSite', array(
-			'idSite' => $idsite
-		) );
+		$id = \Piwik\API\Request::processRequest(
+			'TagManager.createDefaultContainerForSite',
+			array(
+				'idSite' => $idsite,
+			)
+		);
 
 		$containers = $this->tracking_settings->get_active_containers();
 		$this->assertSame( array( $id => 'Default Container' ), $containers );
