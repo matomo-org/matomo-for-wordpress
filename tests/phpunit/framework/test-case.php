@@ -2,6 +2,7 @@
 /**
  * @package Matomo_Analytics
  */
+
 use \WpMatomo\Capabilities;
 
 class MatomoUnit_TestCase extends WP_UnitTestCase {
@@ -9,9 +10,9 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		if (!function_exists('wp_delete_site')) {
-			function wp_delete_site ($site_id) {
-				wpmu_delete_blog($site_id, true);
+		if ( ! function_exists( 'wp_delete_site' ) ) {
+			function wp_delete_site( $site_id ) {
+				wpmu_delete_blog( $site_id, true );
 			}
 		}
 
@@ -59,9 +60,8 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	/**
 	 * Reset roles so they won't be stored across tests...
 	 */
-	protected function reset_roles()
-	{
-		foreach (array('editor', 'author', 'contributor') as $role) {
+	protected function reset_roles() {
+		foreach ( array( 'editor', 'author', 'contributor' ) as $role ) {
 			get_role( $role )->remove_cap( Capabilities::KEY_SUPERUSER );
 			get_role( $role )->remove_cap( Capabilities::KEY_WRITE );
 			get_role( $role )->remove_cap( Capabilities::KEY_ADMIN );

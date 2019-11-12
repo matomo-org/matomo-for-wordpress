@@ -47,7 +47,7 @@ function has_matomo_tag_manager() {
 	$is_multisite = function_exists( 'is_multisite' ) && is_multisite();
 	if ( $is_multisite ) {
 		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
 		$network_enabled = is_plugin_active_for_network( 'matomo/matomo.php' );
@@ -93,7 +93,7 @@ function add_matomo_plugin( $plugins_directory, $wp_plugin_file ) {
 
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'WpMatomo.php';
-include 'shared.php';
+require 'shared.php';
 add_matomo_plugin( __DIR__ . '/plugins/WordPress', MATOMO_ANALYTICS_FILE );
 new WpMatomo();
 

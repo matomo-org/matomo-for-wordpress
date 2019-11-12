@@ -47,7 +47,10 @@ class Sync {
 		add_action( 'update_option_home', array( $this, 'sync_current_site' ) );
 		add_action( 'update_option_siteurl', array( $this, 'sync_current_site' ) );
 		add_action( 'update_site_option_matomo-global_track_ecommerce', array( $this, 'sync_current_site' ) );
-		add_action( 'update_option_' . Settings::GLOBAL_OPTION_PREFIX .'track_ecommerce', array( $this, 'sync_current_site' ) );
+		add_action( 'update_option_' . Settings::GLOBAL_OPTION_PREFIX . 'track_ecommerce', array(
+			$this,
+			'sync_current_site'
+		) );
 	}
 
 	public function sync_all() {
@@ -67,10 +70,10 @@ class Sync {
 						// prevents error that it wouldn't fully install matomo for a different site as it would think it already did install it etc.
 						// and would otherwise think plugins are already activated etc
 						Bootstrap::set_not_bootstrapped();
-						$config = \Piwik\Config::getInstance();
-						$installed = $config->PluginsInstalled;
+						$config                        = \Piwik\Config::getInstance();
+						$installed                     = $config->PluginsInstalled;
 						$installed['PluginsInstalled'] = array();
-						$config->PluginsInstalled = $installed;
+						$config->PluginsInstalled      = $installed;
 
 						$installer->install();
 					}
@@ -104,7 +107,7 @@ class Sync {
 		$idsite = Site::get_matomo_site_id( $blog_id );
 
 		if ( empty( $blog_name ) ) {
-			$blog_name = __('Default');
+			$blog_name = __( 'Default' );
 		} else {
 			$blog_name = substr( $blog_name, 0, self::MAX_LENGTH_SITE_NAME );
 		}
@@ -117,7 +120,7 @@ class Sync {
 			$params              = array(
 				'name'      => $blog_name,
 				'main_url'  => $blog_url,
-				'ecommerce' => (int) $this->settings->get_global_option('track_ecommerce'),
+				'ecommerce' => (int) $this->settings->get_global_option( 'track_ecommerce' ),
 				'timezone'  => $this->detect_timezone()
 			);
 			$sites_manager_model = new Model();
@@ -137,9 +140,9 @@ class Sync {
 		$timezone = $this->detect_timezone();
 		$idsite   = null;
 
-		$this->set_enable_sites_admin(1);
+		$this->set_enable_sites_admin( 1 );
 
-		$track_ecommerce = (int) $this->settings->get_global_option('track_ecommerce');
+		$track_ecommerce = (int) $this->settings->get_global_option( 'track_ecommerce' );
 
 		Access::doAsSuperUser( function () use ( $blog_name, $blog_url, $timezone, $track_ecommerce, &$idsite ) {
 			SitesManager\API::unsetInstance();
@@ -158,7 +161,7 @@ class Sync {
 				$timezone
 			);
 		} );
-		$this->set_enable_sites_admin(0);
+		$this->set_enable_sites_admin( 0 );
 
 		$this->logger->log( 'Matomo created site with ID ' . $idsite . ' for blog' );
 
@@ -175,9 +178,8 @@ class Sync {
 		return true;
 	}
 
-	private function set_enable_sites_admin($enabled)
-	{
-		$general = Config::getInstance()->General;
+	private function set_enable_sites_admin( $enabled ) {
+		$general                       = Config::getInstance()->General;
 		$general['enable_sites_admin'] = (int) $enabled;
 		Config::getInstance()->General = $general;
 	}

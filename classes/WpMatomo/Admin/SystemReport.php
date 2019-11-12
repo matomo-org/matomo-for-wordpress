@@ -194,7 +194,7 @@ class SystemReport {
 			'comment' => ''
 		);
 
-		$site = new Site();
+		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
 		$rows[] = array(
@@ -294,11 +294,16 @@ class SystemReport {
 		);
 
 		// always show these settings
-		$global_settings_always_show = array('track_mode', 'track_codeposition', 'track_api_endpoint', 'track_js_endpoint');
-		foreach ($global_settings_always_show as $key) {
+		$global_settings_always_show = array(
+			'track_mode',
+			'track_codeposition',
+			'track_api_endpoint',
+			'track_js_endpoint'
+		);
+		foreach ( $global_settings_always_show as $key ) {
 			$rows[] = array(
-				'name'    => ucfirst(str_replace('_', ' ', $key)),
-				'value'   => $this->settings->get_global_option($key),
+				'name'    => ucfirst( str_replace( '_', ' ', $key ) ),
+				'value'   => $this->settings->get_global_option( $key ),
 				'comment' => ''
 			);
 		}
@@ -306,10 +311,10 @@ class SystemReport {
 		// otherwise show only few customised settings
 		// mostly only numeric values and booleans to not eg accidentally show anything that would store a token etc
 		// like we don't want to show license key etc
-		foreach ($this->settings->get_customised_global_settings() as $key => $val) {
-			if (is_numeric($val) || is_bool($val) || $key === 'track_content' || $key === 'track_user_id') {
+		foreach ( $this->settings->get_customised_global_settings() as $key => $val ) {
+			if ( is_numeric( $val ) || is_bool( $val ) || $key === 'track_content' || $key === 'track_user_id' ) {
 				$rows[] = array(
-					'name'    => ucfirst(str_replace('_', ' ', $key)),
+					'name'    => ucfirst( str_replace( '_', ' ', $key ) ),
 					'value'   => $val,
 					'comment' => ''
 				);
@@ -396,7 +401,11 @@ class SystemReport {
 		$rows[] = array( 'name' => 'MySQL Version', 'value' => ! empty( $wpdb->is_mysql ) ? $wpdb->db_version() : '' );
 		$rows[] = array( 'name' => 'Timezone', 'value' => date_default_timezone_get() );
 		$rows[] = array( 'name' => 'Locale', 'value' => get_locale() );
-		$rows[] = array( 'name' => 'Memory Limit', 'value' => max( WP_MEMORY_LIMIT, @ini_get( 'memory_limit' ) ), 'comment' => 'At least 128MB recommended. Depending on your traffic 256MB or more may be needed.' );
+		$rows[] = array(
+			'name'    => 'Memory Limit',
+			'value'   => max( WP_MEMORY_LIMIT, @ini_get( 'memory_limit' ) ),
+			'comment' => 'At least 128MB recommended. Depending on your traffic 256MB or more may be needed.'
+		);
 		$rows[] = array( 'name' => 'Time', 'value' => time() );
 
 		$rows[] = array( 'name' => 'Mysqli Connect', 'value' => function_exists( 'mysqli_connect' ) );

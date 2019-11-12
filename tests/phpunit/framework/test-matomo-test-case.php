@@ -41,15 +41,16 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	protected $disable_temp_tables = false;
 
 	public function _create_temporary_tables( $query ) {
-		if (!$this->disable_temp_tables) {
-			$query = parent::_create_temporary_tables($query);
+		if ( ! $this->disable_temp_tables ) {
+			$query = parent::_create_temporary_tables( $query );
 		}
+
 		return $query;
 	}
 
 	public function _drop_temporary_tables( $query ) {
-		if (!$this->disable_temp_tables) {
-			$query = parent::_drop_temporary_tables($query);
+		if ( ! $this->disable_temp_tables ) {
+			$query = parent::_drop_temporary_tables( $query );
 		}
 
 		return $query;

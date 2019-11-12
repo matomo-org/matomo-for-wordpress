@@ -48,30 +48,29 @@ class Wordpress extends Mysqli {
 	 *
 	 * @throws \Zend_Db_Statement_Exception
 	 */
-	private function after_execute_query($wpdb)
-	{
-		if (isset($this->old_suppress_errors_value)) {
-			$wpdb->suppress_errors($this->old_suppress_errors_value);
+	private function after_execute_query( $wpdb ) {
+		if ( isset( $this->old_suppress_errors_value ) ) {
+			$wpdb->suppress_errors( $this->old_suppress_errors_value );
 			$this->old_suppress_errors_value = null;
 		}
 
-		if ($wpdb->last_error) {
-			throw new \Zend_Db_Statement_Exception($wpdb->last_error);
+		if ( $wpdb->last_error ) {
+			throw new \Zend_Db_Statement_Exception( $wpdb->last_error );
 		}
 	}
 
-	private function before_execute_query($wpdb)
-	{
-		if (!$wpdb->suppress_errors
-		    && defined('WP_DEBUG')
-		    && WP_DEBUG
-		    && defined('WP_DEBUG_DISPLAY')
-		    && WP_DEBUG_DISPLAY) {
+	private function before_execute_query( $wpdb ) {
+		if ( ! $wpdb->suppress_errors
+		     && defined( 'WP_DEBUG' )
+		     && WP_DEBUG
+		     && defined( 'WP_DEBUG_DISPLAY' )
+		     && WP_DEBUG_DISPLAY ) {
 			// we want to prevent showing these notices
-			if (defined('MATOMO_SUPPRESS_DB_ERRORS')) {
-				if (MATOMO_SUPPRESS_DB_ERRORS === true) {
+			if ( defined( 'MATOMO_SUPPRESS_DB_ERRORS' ) ) {
+				if ( MATOMO_SUPPRESS_DB_ERRORS === true ) {
 					$this->old_suppress_errors_value = $wpdb->suppress_errors( true );
 				}
+
 				// any other value than false and we will not supproess
 				return;
 			}
@@ -133,10 +132,10 @@ class Wordpress extends Mysqli {
 			// insert / update / drop ...
 			$result = $this->fetchAll( $query, $parameters );
 		} else {
-			$query  = $this->prepareWp( $query, $parameters );
-			$this->before_execute_query($wpdb);
+			$query = $this->prepareWp( $query, $parameters );
+			$this->before_execute_query( $wpdb );
 			$result = $wpdb->query( $query );
-			$this->after_execute_query($wpdb);
+			$this->after_execute_query( $wpdb );
 		}
 
 		return new WordPressDbStatement( $this, $query, $result );
@@ -199,11 +198,11 @@ class Wordpress extends Mysqli {
 		global $wpdb;
 		$prepare = $this->prepareWp( $query, $parameters );
 
-		$this->before_execute_query($wpdb);
+		$this->before_execute_query( $wpdb );
 
 		$row = $wpdb->get_row( $prepare, ARRAY_A );
 
-		$this->after_execute_query($wpdb);
+		$this->after_execute_query( $wpdb );
 
 		return $row;
 	}
@@ -212,11 +211,11 @@ class Wordpress extends Mysqli {
 		global $wpdb;
 		$prepare = $this->prepareWp( $query, $parameters );
 
-		$this->before_execute_query($wpdb);
+		$this->before_execute_query( $wpdb );
 
 		$results = $wpdb->get_results( $prepare, ARRAY_A );
 
-		$this->after_execute_query($wpdb);
+		$this->after_execute_query( $wpdb );
 
 		return $results;
 	}

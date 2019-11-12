@@ -15,15 +15,15 @@ use Piwik\Piwik;
 /** @var string $first_metric_display_name */
 ?>
 <div class="table">
-    <table class="widefat matomo-table">
-        <thead>
-        <tr>
-            <th width="75%"><?php echo esc_html( $report_meta['dimension'] ) ?></th>
-            <th class="right"><?php echo $first_metric_display_name ?></th>
-        </tr>
-        </thead>
+	<table class="widefat matomo-table">
+		<thead>
+		<tr>
+			<th width="75%"><?php echo esc_html( $report_meta['dimension'] ) ?></th>
+			<th class="right"><?php echo $first_metric_display_name ?></th>
+		</tr>
+		</thead>
 
-        <tbody>
+		<tbody>
 		<?php
 		$report_metadata = $report['reportMetadata'];
 		foreach ( $report['reportData']->getRows() as $reportId => $reportRow ) {
@@ -40,6 +40,6 @@ use Piwik\Piwik;
 				echo '<tr><td width="75%">' . $logo_image . esc_html( $reportRow['label'] ) . '</td><td width="25%">' . esc_html( $reportRow[ $first_metric_name ] ) . '</td></tr>';
 			}
 		} ?>
-        </tbody>
-    </table>
+		</tbody>
+	</table>
 </div>

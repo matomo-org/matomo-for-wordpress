@@ -52,9 +52,9 @@ class Bootstrap {
 		if ( ! defined( 'PIWIK_ENABLE_SESSION_START' ) ) {
 			define( 'PIWIK_ENABLE_SESSION_START', false );
 		}
-			
+
 		if ( ! defined( 'PIWIK_DOCUMENT_ROOT' ) ) {
-			define( 'PIWIK_DOCUMENT_ROOT', plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'app');
+			define( 'PIWIK_DOCUMENT_ROOT', plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app' );
 		}
 
 		require_once PIWIK_DOCUMENT_ROOT . '/bootstrap.php';

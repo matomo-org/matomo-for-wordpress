@@ -142,9 +142,9 @@ class Installer {
 
 			DbHelper::recordInstallVersion();
 
-			if ( !SettingsPiwik::getPiwikUrl() ) {
+			if ( ! SettingsPiwik::getPiwikUrl() ) {
 				// especially needed for tests on cli
-				\Piwik\SettingsPiwik::overwritePiwikUrl(plugins_url( 'app', MATOMO_ANALYTICS_FILE ));
+				\Piwik\SettingsPiwik::overwritePiwikUrl( plugins_url( 'app', MATOMO_ANALYTICS_FILE ) );
 			}
 
 			$this->logger->log( 'Emptying some caches' );

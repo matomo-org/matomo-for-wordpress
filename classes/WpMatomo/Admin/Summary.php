@@ -77,7 +77,7 @@ class Summary {
 			'Goals_get',
 		);
 
-		if ( $this->settings->get_global_option('track_ecommerce') ) {
+		if ( $this->settings->get_global_option( 'track_ecommerce' ) ) {
 			$reports_to_show[] = 'Goals_get_idGoal--ecommerceOrder';
 			$reports_to_show[] = 'Goals_getItemsName';
 		}

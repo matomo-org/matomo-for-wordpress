@@ -31,7 +31,7 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	 * @expectedExceptionMessage  foobarbaz' doesn't exist
 	 */
 	public function test_query_triggers_error_when_wrong_sql() {
-		$this->db->query( 'select * from foobarbaz');
+		$this->db->query( 'select * from foobarbaz' );
 	}
 
 	public function test_query_can_execute_select_queries() {
@@ -86,7 +86,7 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	 * @expectedExceptionMessage  foobarbaz' doesn't exist
 	 */
 	public function test_fetch_all_triggers_error_when_wrong_sql() {
-		$this->db->fetchAll( 'select * from foobarbaz');
+		$this->db->fetchAll( 'select * from foobarbaz' );
 	}
 
 	public function test_fetch_all_works_with_bind_params() {
@@ -103,7 +103,7 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	 * @expectedExceptionMessage  foobarbaz' doesn't exist
 	 */
 	public function test_fetch_one_triggers_error_when_wrong_sql() {
-		$this->db->fetchOne( 'select foo from foobarbaz');
+		$this->db->fetchOne( 'select foo from foobarbaz' );
 	}
 
 	public function test_fetch_one() {
@@ -117,7 +117,7 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	 * @expectedExceptionMessage  foobarbaz' doesn't exist
 	 */
 	public function test_fetch_row_triggers_error_when_wrong_sql() {
-		$this->db->fetchRow( 'select * from foobarbaz limit 1');
+		$this->db->fetchRow( 'select * from foobarbaz limit 1' );
 	}
 
 	public function test_fetch_row() {
@@ -136,7 +136,7 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	 * @expectedExceptionMessage  foobarbaz' doesn't exist
 	 */
 	public function test_exec_triggers_error_when_wrong_sql() {
-		$this->db->exec( 'select * from foobarbaz');
+		$this->db->exec( 'select * from foobarbaz' );
 	}
 
 	public function test_exec() {

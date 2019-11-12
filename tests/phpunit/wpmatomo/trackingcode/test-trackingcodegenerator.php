@@ -97,11 +97,11 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/
 
 	public function test_get_tracking_code_when_using_tagmanager_mode() {
 		$this->settings->apply_tracking_related_changes( array(
-			'track_mode' => TrackingSettings::TRACK_MODE_TAGMANAGER,
-			'tagmanger_container_ids' => array('abcdefgh' => 1, 'cfk3jjw' => 0)
+			'track_mode'              => TrackingSettings::TRACK_MODE_TAGMANAGER,
+			'tagmanger_container_ids' => array( 'abcdefgh' => 1, 'cfk3jjw' => 0 )
 		) );
 
-		if (is_multisite()) {
+		if ( is_multisite() ) {
 			$this->assertSame( '<!-- Matomo: no supported track_mode selected -->', $this->get_tracking_code() );
 		} else {
 			$this->assertSame( '<!-- Matomo Tag Manager -->
@@ -116,10 +116,10 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="http://example.or
 
 	public function test_get_tracking_code_when_using_tagmanager_mode_and_no_containers() {
 		$this->settings->apply_tracking_related_changes( array(
-			'track_mode' => TrackingSettings::TRACK_MODE_TAGMANAGER,
+			'track_mode'              => TrackingSettings::TRACK_MODE_TAGMANAGER,
 			'tagmanger_container_ids' => array()
 		) );
-		if (is_multisite()) {
+		if ( is_multisite() ) {
 			$this->assertSame( '<!-- Matomo: no supported track_mode selected -->', $this->get_tracking_code() );
 		} else {
 			$this->assertSame( '<!-- Matomo Tag Manager --><!-- End Matomo Tag Manager -->', $this->get_tracking_code() );

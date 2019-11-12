@@ -19,8 +19,8 @@ use WpMatomo\Capabilities;
 ?>
 
 <div class="table">
-    <table class="widefat matomo-table">
-        <tbody>
+	<table class="widefat matomo-table">
+		<tbody>
 		<?php
 		$columns = ! empty( $report['columns'] ) ? $report['columns'] : array();
 		foreach ( $report['reportData']->getRows() as $metricName => $row ) {
@@ -30,7 +30,7 @@ use WpMatomo\Capabilities;
 			}
 		}
 		?>
-        </tbody>
+		</tbody>
 
-    </table>
+	</table>
 </div>

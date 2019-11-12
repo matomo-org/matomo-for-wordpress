@@ -49,7 +49,7 @@ class SiteTest extends MatomoUnit_TestCase {
 		restore_current_blog();
 		$this->assertSame( 42, $this->site->get_current_matomo_site_id() );
 
-		wp_delete_site($blogid);
+		wp_delete_site( $blogid );
 	}
 
 	public function test_get_matomo_site_id_when_nothing_mapped() {
@@ -69,7 +69,7 @@ class SiteTest extends MatomoUnit_TestCase {
 		// still returns the same result
 		$this->assertSame( 89, Site::get_matomo_site_id( $blogid ) );
 
-		wp_delete_site($blogid);
+		wp_delete_site( $blogid );
 	}
 
 	public function test_map_matomo_site_id_get_matomo_site_id() {

@@ -114,7 +114,7 @@ class Settings {
 	 *
 	 */
 	public function __construct() {
-		$this->logger = new Logger();
+		$this->logger           = new Logger();
 		$this->default_settings = array(
 			'globalSettings' => $this->global_settings,
 			'settings'       => $this->settings
@@ -140,15 +140,14 @@ class Settings {
 		}
 	}
 
-	public function get_customised_global_settings()
-	{
+	public function get_customised_global_settings() {
 		$default_settings = $this->default_settings['globalSettings'];
-		$custom_settings = array();
+		$custom_settings  = array();
 
-		foreach ($this->global_settings as $key => $val) {
-			if (isset($default_settings[$key])
-			    && $default_settings[$key] != $val) {
-				$custom_settings[$key] = $val;
+		foreach ( $this->global_settings as $key => $val ) {
+			if ( isset( $default_settings[ $key ] )
+			     && $default_settings[ $key ] != $val ) {
+				$custom_settings[ $key ] = $val;
 			}
 		}
 
@@ -298,6 +297,7 @@ class Settings {
 
 	/**
 	 * @param $values
+	 *
 	 * @api
 	 */
 	public function apply_tracking_related_changes( $values ) {
@@ -305,10 +305,10 @@ class Settings {
 
 		$this->apply_changes( $values );
 
-		if (!self::$is_doing_action_tracking_related) {
+		if ( ! self::$is_doing_action_tracking_related ) {
 			// prevent recurison if any plugin was listening to this event and calling this method again
 			self::$is_doing_action_tracking_related = true;
-			do_action('matomo_tracking_settings_changed', $this, $values);
+			do_action( 'matomo_tracking_settings_changed', $this, $values );
 			self::$is_doing_action_tracking_related = false;
 		}
 	}
@@ -318,6 +318,7 @@ class Settings {
 	 *
 	 * @param array $settings
 	 *            new configuration set
+	 *
 	 * @api
 	 */
 	public function apply_changes( $settings ) {

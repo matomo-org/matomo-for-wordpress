@@ -33,7 +33,7 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 	 * @expectedExceptionMessage  foobarbaz' doesn't exist
 	 */
 	public function test_query_triggers_error_when_wrong_sql() {
-		$this->db->query( 'select * from foobarbaz');
+		$this->db->query( 'select * from foobarbaz' );
 	}
 
 	public function test_query_can_execute_select_queries() {
@@ -82,7 +82,7 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 	 * @expectedExceptionMessage  foobarbaz' doesn't exist
 	 */
 	public function test_fetch_all_triggers_error_when_wrong_sql() {
-		$this->db->fetchAll( 'select * from foobarbaz');
+		$this->db->fetchAll( 'select * from foobarbaz' );
 	}
 
 	public function test_fetch_all() {

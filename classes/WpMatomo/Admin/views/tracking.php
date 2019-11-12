@@ -33,9 +33,9 @@ $paths = new Paths();
 <form method="post">
 	<?php wp_nonce_field( TrackingSettings::NONCE_NAME ); ?>
 
-    <p><?php _e( 'Configure the tracking to your liking.', 'matomo' ); ?></p>
-    <table class="matomo-tracking-form widefat">
-        <tbody>
+	<p><?php _e( 'Configure the tracking to your liking.', 'matomo' ); ?></p>
+	<table class="matomo-tracking-form widefat">
+		<tbody>
 
 		<?php
 		// Tracking Configuration
@@ -44,18 +44,18 @@ $paths = new Paths();
 		$isNotGeneratedTracking     = $isNotTracking || $settings->get_global_option( 'track_mode' ) == TrackingSettings::TRACK_MODE_MANUALLY;
 		$fullGeneratedTrackingGroup = 'matomo-track-option matomo-track-option-default  ';
 
-		$description = sprintf( '%s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s', __( 'You can choose between four tracking code modes:', 'matomo' ), __( 'Disabled', 'matomo' ), __( 'matomo will not add the tracking code. Use this, if you want to add the tracking code to your template files or you use another plugin to add the tracking code.', 'matomo' ), __( 'Default tracking', 'matomo' ), __( 'matomo will use Matomo\'s standard tracking code.', 'matomo' ), __( 'Enter manually', 'matomo' ), __( 'Enter your own tracking code manually. You can choose one of the prior options, pre-configure your tracking code and switch to manually editing at last.', 'matomo' ) . ( $settings->is_network_enabled() ? ' ' . __( 'Use the placeholder {ID} to add the Matomo site ID.', 'matomo' ) : '' ) , __( 'Tag Manager', 'matomo' ), __( 'If you have created containers in the Tag Manager, you can select one of them and it will embed the code for the container automatically.', 'matomo' ));
+		$description = sprintf( '%s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s', __( 'You can choose between four tracking code modes:', 'matomo' ), __( 'Disabled', 'matomo' ), __( 'matomo will not add the tracking code. Use this, if you want to add the tracking code to your template files or you use another plugin to add the tracking code.', 'matomo' ), __( 'Default tracking', 'matomo' ), __( 'matomo will use Matomo\'s standard tracking code.', 'matomo' ), __( 'Enter manually', 'matomo' ), __( 'Enter your own tracking code manually. You can choose one of the prior options, pre-configure your tracking code and switch to manually editing at last.', 'matomo' ) . ( $settings->is_network_enabled() ? ' ' . __( 'Use the placeholder {ID} to add the Matomo site ID.', 'matomo' ) : '' ), __( 'Tag Manager', 'matomo' ), __( 'If you have created containers in the Tag Manager, you can select one of them and it will embed the code for the container automatically.', 'matomo' ) );
 		$form->show_select( 'track_mode', __( 'Add tracking code', 'matomo' ), $track_modes, $description, 'jQuery(\'tr.matomo-track-option\').addClass(\'hidden\'); jQuery(\'tr.matomo-track-option-\' + jQuery(\'#track_mode\').val()).removeClass(\'hidden\'); jQuery(\'#tracking_code, #noscript_code\').prop(\'readonly\', jQuery(\'#track_mode\').val() != \'manually\');' );
 
-		if (!empty($containers)) {
-		    echo '<tr class="matomo-track-option matomo-track-option-tagmanager ' . ( $isNotTracking ? ' hidden' : '' ) . '">';
-		    echo '<th scope="row"><label for="tagmanger_container_ids">' . __( 'Add these Tag Manager containers', 'matomo' ) . '</label>:</th><td>';
-		    $selected_container_ids = $settings->get_global_option( 'tagmanger_container_ids' );
-		    foreach ( $containers as $container_id => $container_name ) {
-			    echo '<input type="checkbox" ' . ( isset ( $selected_container_ids [ $container_id ] ) && $selected_container_ids [ $container_id ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[tagmanger_container_ids][' . $container_id . ']" /> ID:' . esc_html($container_id) . ' Name: ' . esc_html($container_name) . ' &nbsp; <br />';
-		    }
-		    echo '<br /><br /><a href="'.menu_page_url(\WpMatomo\Admin\Menu::SLUG_TAGMANAGER, false).'" rel="noreferrer noopener" target="_blank">Edit containers <span class="dashicons-before dashicons-external"></span></a>';
-		    echo '</td></tr>';
+		if ( ! empty( $containers ) ) {
+			echo '<tr class="matomo-track-option matomo-track-option-tagmanager ' . ( $isNotTracking ? ' hidden' : '' ) . '">';
+			echo '<th scope="row"><label for="tagmanger_container_ids">' . __( 'Add these Tag Manager containers', 'matomo' ) . '</label>:</th><td>';
+			$selected_container_ids = $settings->get_global_option( 'tagmanger_container_ids' );
+			foreach ( $containers as $container_id => $container_name ) {
+				echo '<input type="checkbox" ' . ( isset ( $selected_container_ids [ $container_id ] ) && $selected_container_ids [ $container_id ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[tagmanger_container_ids][' . $container_id . ']" /> ID:' . esc_html( $container_id ) . ' Name: ' . esc_html( $container_name ) . ' &nbsp; <br />';
+			}
+			echo '<br /><br /><a href="' . menu_page_url( \WpMatomo\Admin\Menu::SLUG_TAGMANAGER, false ) . '" rel="noreferrer noopener" target="_blank">Edit containers <span class="dashicons-before dashicons-external"></span></a>';
+			echo '</td></tr>';
 		}
 
 		$form->show_textarea( 'tracking_code', __( 'Tracking code', 'matomo' ), 15, 'This is a preview of your current tracking code. If you choose to enter your tracking code manually, you can change it here. Have a look at the system report to get a list of all available JS tracker and tracking API endpoints.', $isNotTracking, 'matomo-track-option matomo-track-option-default matomo-track-option-tagmanager  matomo-track-option-manually', true, '', ( $settings->get_global_option( 'track_mode' ) != 'manually' ), false );
@@ -152,6 +152,6 @@ $paths = new Paths();
 
 		echo $submitButton; ?>
 
-        </tbody>
-    </table>
+		</tbody>
+	</table>
 </form>

@@ -39,7 +39,7 @@ class SafeModeMenu {
 	}
 
 	public function add_menu() {
-		if (!\WpMatomo::is_admin_user()) {
+		if ( ! \WpMatomo::is_admin_user() ) {
 			return;
 		}
 

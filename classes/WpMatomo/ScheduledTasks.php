@@ -103,17 +103,20 @@ class ScheduledTasks {
 
 	public function get_all_events() {
 		return array(
-			self::EVENT_SYNC    => array( 'name' => 'Sync users & sites',
-			                              'interval' => 'daily',
-			                              'method' => 'sync'
+			self::EVENT_SYNC    => array(
+				'name'     => 'Sync users & sites',
+				'interval' => 'daily',
+				'method'   => 'sync'
 			),
-			self::EVENT_ARCHIVE => array( 'name' => 'Archive',
-			                              'interval' => 'hourly',
-			                              'method' => 'archive'
+			self::EVENT_ARCHIVE => array(
+				'name'     => 'Archive',
+				'interval' => 'hourly',
+				'method'   => 'archive'
 			),
-			self::EVENT_GEOIP   => array( 'name'     => 'Update GeoIP DB',
-			                              'interval' => 'matomo_weekly',
-			                              'method'   => 'update_geo_ip2_db'
+			self::EVENT_GEOIP   => array(
+				'name'     => 'Update GeoIP DB',
+				'interval' => 'matomo_weekly',
+				'method'   => 'update_geo_ip2_db'
 			)
 		);
 	}

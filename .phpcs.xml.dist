@@ -4,9 +4,10 @@
 
 	<!-- What to scan -->
 	<file>./classes</file>
-        <file>./tests</file>
-        <file>./matomo.php</file>
-        <file>./uninstall.php</file>
+	<file>./tests</file>
+	<file>./matomo.php</file>
+	<file>./shared.php</file>
+	<file>./uninstall.php</file>
 	<exclude-pattern type="relative">/classes/WpMatomo/Db/</exclude-pattern>
 	<exclude-pattern type="relative">/app/</exclude-pattern>
 	<exclude-pattern type="relative">/vendor/</exclude-pattern>
@@ -34,7 +35,12 @@
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
 	<config name="minimum_supported_wp_version" value="4.8"/>
 	<rule ref="WordPress">
-		<exclude name="WordPress"/>
+		<exclude name="Generic.Commenting.DocComment.SpacingAfter"/>
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
+		<exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
+		<exclude name="Squiz.Commenting.ClassComment.Missing"/>
 	</rule>
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>

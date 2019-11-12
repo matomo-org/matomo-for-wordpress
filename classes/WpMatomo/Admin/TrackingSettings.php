@@ -102,15 +102,15 @@ class TrackingSettings implements AdminSettingsInterface {
 		$values = array();
 
 		// default value in case no role/ post type is selected to make sure we unset it if no role /post type is selected
-		$values['add_post_annotations'] = array();
+		$values['add_post_annotations']    = array();
 		$values['tagmanger_container_ids'] = array();
 
 		if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_TAGMANAGER ) {
 			// no noscript mode in this case
-			$_POST[ 'track_noscript' ] = '';
-			$_POST[ 'noscript_code' ]  = '';
+			$_POST['track_noscript'] = '';
+			$_POST['noscript_code']  = '';
 		} else {
-			unset($_POST[ 'tagmanger_container_ids' ]);
+			unset( $_POST['tagmanger_container_ids'] );
 		}
 
 		if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_MANUALLY
@@ -151,32 +151,32 @@ class TrackingSettings implements AdminSettingsInterface {
 			TrackingSettings::TRACK_MODE_MANUALLY => __( 'Enter manually', 'matomo' )
 		);
 
-		if (!empty($containers)) {
-			$track_modes[TrackingSettings::TRACK_MODE_TAGMANAGER] = __('Tag Manager', 'matomo');
+		if ( ! empty( $containers ) ) {
+			$track_modes[ TrackingSettings::TRACK_MODE_TAGMANAGER ] = __( 'Tag Manager', 'matomo' );
 		}
 
 		include( dirname( __FILE__ ) . '/views/tracking.php' );
 	}
 
-	public function get_active_containers()
-	{
+	public function get_active_containers() {
 		// we don't use Matomo API here to avoid needing to bootstrap Matomo which is slow and could break things
 		$containers = array();
-		if (has_matomo_tag_manager()) {
+		if ( has_matomo_tag_manager() ) {
 			global $wpdb;
-			$dbsettings = new \WpMatomo\Db\Settings();
-			$containerTable = $dbsettings->prefix_table_name('tagmanager_container');
+			$dbsettings     = new \WpMatomo\Db\Settings();
+			$containerTable = $dbsettings->prefix_table_name( 'tagmanager_container' );
 			try {
-				$containers = $wpdb->get_results(sprintf('SELECT `idcontainer`, `name` FROM %s where `status` = "active"', $containerTable));
-			} catch (\Exception $e) {
+				$containers = $wpdb->get_results( sprintf( 'SELECT `idcontainer`, `name` FROM %s where `status` = "active"', $containerTable ) );
+			} catch ( \Exception $e ) {
 				// table may not exist yet etc
 				$containers = array();
 			}
 		}
 		$by_id = array();
-		foreach ($containers as $container) {
-			$by_id[$container->idcontainer] = $container->name;
+		foreach ( $containers as $container ) {
+			$by_id[ $container->idcontainer ] = $container->name;
 		}
+
 		return $by_id;
 	}
 

@@ -103,7 +103,7 @@ class TrackingCodeGenerator {
 		if ( $this->settings->track_user_id_enabled() ) {
 			$tracking_code = $this->apply_user_tracking( $tracking_code );
 		}
-		if ( $this->settings->track_404_enabled() && is_404 () ) {
+		if ( $this->settings->track_404_enabled() && is_404() ) {
 			$tracking_code = $this->apply_404_changes( $tracking_code );
 		}
 		if ( $this->settings->track_search_enabled() ) {
@@ -285,7 +285,7 @@ g.type='text/javascript'; g.async=true; g.defer=true; g.src=" . json_encode( $js
 	private function apply_404_changes( $tracking_code ) {
 		$this->logger->log( 'Apply 404 tracking changes. Blog ID: ' . get_current_blog_id() );
 
-		$code = "_paq.push(['setDocumentTitle', '404/URL = '+String(document.location.pathname+document.location.search).replace(/\//g,'%2f') + '/From = ' + String(document.referrer).replace(/\//g,'%2f')]);";
+		$code          = "_paq.push(['setDocumentTitle', '404/URL = '+String(document.location.pathname+document.location.search).replace(/\//g,'%2f') + '/From = ' + String(document.referrer).replace(/\//g,'%2f')]);";
 		$tracking_code = str_replace( self::TRACKPAGEVIEW, $code . self::TRACKPAGEVIEW, $tracking_code );
 		$tracking_code = str_replace( self::MTM_INIT, $code . self::MTM_INIT, $tracking_code );
 

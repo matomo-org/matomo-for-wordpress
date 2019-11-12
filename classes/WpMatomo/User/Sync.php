@@ -146,11 +146,11 @@ class Sync {
 				$locale = get_user_locale( $user->ID );
 				$parts  = explode( '_', $locale );
 
-				if ( !empty( $parts[0] ) ) {
+				if ( ! empty( $parts[0] ) ) {
 					$lang = $parts[0];
-					if (Plugin\Manager::getInstance()->isPluginActivated('LanguagesManager')
-					    && Plugin\Manager::getInstance()->isPluginInstalled('LanguagesManager')
-					    && API::getInstance()->isLanguageAvailable( $lang ) ) {
+					if ( Plugin\Manager::getInstance()->isPluginActivated( 'LanguagesManager' )
+					     && Plugin\Manager::getInstance()->isPluginInstalled( 'LanguagesManager' )
+					     && API::getInstance()->isLanguageAvailable( $lang ) ) {
 						$user_lang_model = new \Piwik\Plugins\LanguagesManager\Model();
 						$user_lang_model->setLanguageForUser( $matomo_login, $lang );
 					}

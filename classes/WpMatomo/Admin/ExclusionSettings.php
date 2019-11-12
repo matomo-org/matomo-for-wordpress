@@ -37,7 +37,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 	}
 
 	public function get_title() {
-		return __('Exclusions', 'matomo');
+		return __( 'Exclusions', 'matomo' );
 	}
 
 	private function update_if_submitted() {
@@ -95,7 +95,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 		if ( empty( $value ) ) {
 			return '';
 		}
-		$value = stripslashes($value); // Wordpress adds slashes
+		$value = stripslashes( $value ); // Wordpress adds slashes
 		$value = str_replace( "\r", '', $value );
 
 		return implode( ',', array_filter( explode( "\n", $value ) ) );

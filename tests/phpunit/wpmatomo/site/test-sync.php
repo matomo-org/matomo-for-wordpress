@@ -56,18 +56,18 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 	public function test_sync_all_passes_correct_values_to_sync_site_when_there_are_multiple_blogs() {
 		$blogid1 = self::factory()->blog->create( array(
 			'domain' => 'foobar.com',
-			'title' => 'Site 22',
-			'path' => '/testpath22'
+			'title'  => 'Site 22',
+			'path'   => '/testpath22'
 		) );
 		$blogid2 = self::factory()->blog->create( array(
 			'domain' => 'foobar.baz',
-			'title' => 'Site 23',
-			'path' => '/testpath23'
+			'title'  => 'Site 23',
+			'path'   => '/testpath23'
 		) );
 
 		$this->mock->sync_all();
-		wp_delete_site($blogid1);
-		wp_delete_site($blogid2);
+		wp_delete_site( $blogid1 );
+		wp_delete_site( $blogid2 );
 		$this->assertEquals( array(
 			array(
 				'id'   => 1,
@@ -106,14 +106,16 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 	 * @group ms-required
 	 */
 	public function test_sync_current_site_passes_correct_values_to_sync_site_when_we_are_on_different_blog() {
-		$blogid1 = self::factory()->blog->create( array( 'domain' => 'foobar.com',
-		                                                 'title' => 'Site 24',
-		                                                 'path' => '/testpath24' ) );
+		$blogid1 = self::factory()->blog->create( array(
+			'domain' => 'foobar.com',
+			'title'  => 'Site 24',
+			'path'   => '/testpath24'
+		) );
 		switch_to_blog( $blogid1 );
 
 		$this->mock->sync_current_site();
 
-		wp_delete_site($blogid1);
+		wp_delete_site( $blogid1 );
 
 		$this->assertEquals( array(
 			array(

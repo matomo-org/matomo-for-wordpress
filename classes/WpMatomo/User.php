@@ -21,7 +21,7 @@ class User {
 	 * @api
 	 */
 	public function get_current_matomo_user_login() {
-		if (get_current_user_id()) {
+		if ( get_current_user_id() ) {
 			return self::get_matomo_user_login( get_current_user_id() );
 		}
 	}

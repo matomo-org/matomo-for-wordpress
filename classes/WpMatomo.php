@@ -50,7 +50,7 @@ class WpMatomo {
 
 		if ( self::is_safe_mode() ) {
 			if ( is_admin() ) {
-				new \WpMatomo\Admin\SafeModeMenu($this->settings);
+				new \WpMatomo\Admin\SafeModeMenu( $this->settings );
 			}
 
 			return;
@@ -149,9 +149,8 @@ class WpMatomo {
 		return is_super_admin();
 	}
 
-	public static function is_safe_mode()
-	{
-		return defined('MATOMO_SAFE_MODE') && MATOMO_SAFE_MODE;
+	public static function is_safe_mode() {
+		return defined( 'MATOMO_SAFE_MODE' ) && MATOMO_SAFE_MODE;
 	}
 
 	public function add_settings_link( $links ) {
@@ -168,7 +167,7 @@ class WpMatomo {
 	}
 
 	public function init_plugin() {
-		if ( (is_admin() || is_matomo_app_request())
+		if ( ( is_admin() || is_matomo_app_request() )
 		     && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 			$installer = new Installer( $this->settings );
 			$installer->register_hooks();
@@ -178,9 +177,9 @@ class WpMatomo {
 					$updater->update_if_needed();
 				}
 			} else {
-				if (is_matomo_app_request()) {
+				if ( is_matomo_app_request() ) {
 					// we can't install if matomo is requested... there's some circular reference
-					wp_redirect(admin_url());
+					wp_redirect( admin_url() );
 					exit;
 				} else {
 					$installer->install();
@@ -189,7 +188,7 @@ class WpMatomo {
 		}
 		$tracking_code = new TrackingCode( $this->settings );
 		if ( $this->settings->is_tracking_enabled()
-		     && $this->settings->get_global_option('track_ecommerce')
+		     && $this->settings->get_global_option( 'track_ecommerce' )
 		     && ! $tracking_code->is_hidden_user() ) {
 			$tracker = new AjaxTracker( $this->settings );
 

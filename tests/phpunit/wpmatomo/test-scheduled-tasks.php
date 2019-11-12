@@ -52,21 +52,21 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_set_last_time_before_cron() {
-		$this->assertFalse($this->tasks->get_last_time_before_cron('matomo-event'));
+		$this->assertFalse( $this->tasks->get_last_time_before_cron( 'matomo-event' ) );
 
-		$this->tasks->set_last_time_before_cron('matomo-event', '454545454');
-		$this->assertEquals('454545454', $this->tasks->get_last_time_before_cron('matomo-event'));
+		$this->tasks->set_last_time_before_cron( 'matomo-event', '454545454' );
+		$this->assertEquals( '454545454', $this->tasks->get_last_time_before_cron( 'matomo-event' ) );
 
-		$this->assertFalse($this->tasks->get_last_time_before_cron('matomo-event-foo'));
+		$this->assertFalse( $this->tasks->get_last_time_before_cron( 'matomo-event-foo' ) );
 	}
 
 	public function test_set_last_time_after_cron() {
-		$this->assertFalse($this->tasks->get_last_time_after_cron('matomo-event'));
+		$this->assertFalse( $this->tasks->get_last_time_after_cron( 'matomo-event' ) );
 
-		$this->tasks->set_last_time_after_cron('matomo-event', '454545454');
-		$this->assertEquals('454545454', $this->tasks->get_last_time_after_cron('matomo-event'));
+		$this->tasks->set_last_time_after_cron( 'matomo-event', '454545454' );
+		$this->assertEquals( '454545454', $this->tasks->get_last_time_after_cron( 'matomo-event' ) );
 
-		$this->assertFalse($this->tasks->get_last_time_after_cron('matomo-event-foo'));
+		$this->assertFalse( $this->tasks->get_last_time_after_cron( 'matomo-event-foo' ) );
 	}
 
 	/**

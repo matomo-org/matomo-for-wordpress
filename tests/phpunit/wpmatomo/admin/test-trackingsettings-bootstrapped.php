@@ -26,19 +26,20 @@ class AdminTrackingSettingsBootstrappedTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_get_active_containers_when_containers_defined() {
-		if (function_exists('is_multisite') && is_multisite()) {
-			$this->markTestSkipped('Not running for multisite');
+		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+			$this->markTestSkipped( 'Not running for multisite' );
+
 			return;
 		}
-		$site = new WpMatomo\Site();
+		$site   = new WpMatomo\Site();
 		$idsite = $site->get_current_matomo_site_id();
 
-		$id = \Piwik\API\Request::processRequest('TagManager.createDefaultContainerForSite', array(
+		$id = \Piwik\API\Request::processRequest( 'TagManager.createDefaultContainerForSite', array(
 			'idSite' => $idsite
-		));
+		) );
 
 		$containers = $this->tracking_settings->get_active_containers();
-		$this->assertSame(array($id => 'Default Container'), $containers);
+		$this->assertSame( array( $id => 'Default Container' ), $containers );
 	}
 
 }

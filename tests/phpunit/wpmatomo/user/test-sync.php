@@ -96,10 +96,10 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 				'users'  => array(),
 				'idSite' => $idsite
 			),
-		), array_slice($this->mock->synced_users, 0, 3) );
+		), array_slice( $this->mock->synced_users, 0, 3 ) );
 
-		wp_delete_site($blogid1);// remove the blogs again so they don't break other tests
-		wp_delete_site($blogid2);
+		wp_delete_site( $blogid1 );// remove the blogs again so they don't break other tests
+		wp_delete_site( $blogid2 );
 
 	}
 
@@ -107,9 +107,9 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 		$this->assertNull( $this->sync->sync_current_users() );
 	}
 
-	private function get_current_site_id()
-	{
+	private function get_current_site_id() {
 		$site = new WpMatomo\Site();
+
 		return $site->get_current_matomo_site_id();
 	}
 
@@ -145,7 +145,7 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 	public function test_sync_current_users_creates_users_where_needed() {
 		$this->createManyUsers();
 		$settings = new Settings();
-		$caps    = new Capabilities( $settings );
+		$caps     = new Capabilities( $settings );
 		$caps->register_hooks(); // access and capabilities need to share same settings instance otherwise tests won't work correctly
 
 		$access = new Access( $settings );

@@ -60,7 +60,7 @@ class SettingsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_customised_global_settings_nothing_customised() {
-		$this->assertSame( array(), $this->settings->get_customised_global_settings( ) );
+		$this->assertSame( array(), $this->settings->get_customised_global_settings() );
 	}
 
 	public function test_get_customised_global_settings_some_customised() {
@@ -68,9 +68,9 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->settings->set_global_option( 'track_ecommerce', '0' );
 
 		$this->assertEquals( array(
-			'track_mode' => 'manually',
+			'track_mode'      => 'manually',
 			'track_ecommerce' => 0
-		), $this->settings->get_customised_global_settings( ) );
+		), $this->settings->get_customised_global_settings() );
 	}
 
 	public function test_get_option_returns_default_value_when_no_value_is_set() {

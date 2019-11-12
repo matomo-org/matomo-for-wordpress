@@ -34,7 +34,7 @@ class Renderer {
 		if ( ! current_user_can( Capabilities::KEY_VIEW ) ) {
 			// not needed as processRequest checks permission anyway but it's faster this way and double ensures to not
 			// letting users view it when they have no access.
-			return __('Sorry, you are not allowed to view this report.', 'matomo');
+			return __( 'Sorry, you are not allowed to view this report.', 'matomo' );
 		}
 
 		$metadata    = new Metadata();

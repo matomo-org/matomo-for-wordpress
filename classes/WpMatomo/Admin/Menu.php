@@ -244,8 +244,7 @@ class Menu {
 		return $url;
 	}
 
-	private static function make_matomo_app_base_url()
-	{
+	private static function make_matomo_app_base_url() {
 		$url = plugins_url( 'app', MATOMO_ANALYTICS_FILE );
 
 		return $url . '/index.php';
