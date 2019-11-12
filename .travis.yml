@@ -76,5 +76,5 @@ script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      $PHPCS_DIR/bin/phpcs -p "$MATOMO_PLUGIN_DIR_PATH" --standard=WordPress;
+      $PHPCS_DIR/bin/phpcs -p "$MATOMO_PLUGIN_DIR_PATH/classes" --standard=WordPress;
     fi
