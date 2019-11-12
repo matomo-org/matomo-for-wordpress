@@ -75,5 +75,5 @@ script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      $PHPCS_DIR/bin/phpcs -p . --standard=WordPress; fi
+      $PHPCS_DIR/bin/phpcs -p . --standard=WordPress;
     fi
