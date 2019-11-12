@@ -8,6 +8,7 @@ install:
   - ls
   - mv wp-matomo matomo
   - cd matomo
+  - MATOMO_PLUGIN_DIR_PATH=`pwd`
 
 notifications:
   email:
@@ -37,8 +38,20 @@ matrix:
     - php: 5.6
       env: WP_TRAVISCI=phpcs
     - php: 5.5
-      env: WP_VERSION=latest
+      env: WP_VERSION=5.0
       dist: precise
+
+before_install:
+  - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then export PHPCS_DIR=/tmp/phpcs; fi
+  - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then export SNIFFS_DIR=/tmp/sniffs; fi
+  # Install PHP_CodeSniffer.
+  - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then git clone -b master --depth 1 https://github.com/squizlabs/PHP_CodeSniffer.git $PHPCS_DIR; fi
+  # Install WordPress Coding Standards.
+  - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then git clone -b master --depth 1 https://github.com/WordPress/WordPress-Coding-Standards.git $SNIFFS_DIR; fi
+  # Set install path for WordPress Coding Standards.
+  - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then $PHPCS_DIR/bin/phpcs --config-set installed_paths $SNIFFS_DIR; fi
+  # After CodeSniffer install you should refresh your path.
+  - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then phpenv rehash; fi
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
@@ -53,12 +66,7 @@ before_script:
       bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
       composer global require "phpunit/phpunit=4.8.*|5.7.*"
     fi
-  - |
-    if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      composer global require wp-coding-standards/wpcs
-      composer global require phpcompatibility/phpcompatibility-wp:*
-      phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
-    fi
+
 
 script:
   - |
@@ -68,5 +76,5 @@ script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      phpcs
+      $PHPCS_DIR/bin/phpcs -p "$MATOMO_PLUGIN_DIR_PATH" --standard=WordPress;
     fi
