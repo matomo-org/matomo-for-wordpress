@@ -40,6 +40,18 @@ matrix:
       env: WP_VERSION=latest
       dist: precise
 
+before_install:
+  - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then export PHPCS_DIR=/tmp/phpcs; fi
+  - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then export SNIFFS_DIR=/tmp/sniffs; fi
+  # Install PHP_CodeSniffer.
+  - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then git clone -b master --depth 1 https://github.com/squizlabs/PHP_CodeSniffer.git $PHPCS_DIR; fi
+  # Install WordPress Coding Standards.
+  - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then git clone -b master --depth 1 https://github.com/WordPress/WordPress-Coding-Standards.git $SNIFFS_DIR; fi
+  # Set install path for WordPress Coding Standards.
+  - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then $PHPCS_DIR/bin/phpcs --config-set installed_paths $SNIFFS_DIR; fi
+  # After CodeSniffer install you should refresh your path.
+  - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then phpenv rehash; fi
+
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - |
@@ -68,5 +80,5 @@ script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      phpcs
+      $PHPCS_DIR/bin/phpcs -p . --standard=WordPress; fi
     fi
