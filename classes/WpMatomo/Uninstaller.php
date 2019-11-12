@@ -164,7 +164,7 @@ class Uninstaller {
 			'user_dashboard',
 			'user_language',
 		);
-		foreach ( range( 2010, date( 'Y' ) ) as $year ) {
+		foreach ( range( 2010, gmdate( 'Y' ) ) as $year ) {
 			foreach ( range( 1, 12 ) as $month ) {
 				$table_names_to_look_for[] = 'archive_numeric_' . $year . '_' . str_pad( $month, 2, '0' );
 				$table_names_to_look_for[] = 'archive_blob_' . $year . '_' . str_pad( $month, 2, '0' );

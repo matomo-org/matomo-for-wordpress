@@ -251,7 +251,7 @@ class Installer {
 
 		$adapter = $form->getElementsByName( 'adapter' );
 		$adapter = array_shift( $adapter );
-		$adapter->loadOptions( array( 'Wordpress' => 'Wordpress' ) );
+		$adapter->loadOptions( array( 'WordPress' => 'WordPress' ) );
 		$adapter->setValue( 'WordPress' );
 
 		$engine = $form->getElementsByName( 'type' );

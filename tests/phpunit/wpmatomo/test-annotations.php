@@ -80,7 +80,7 @@ class AnnotationsTest extends MatomoAnalytics_TestCase {
 		$this->assertSame(
 			array(
 				array(
-					'date'            => date( 'Y-m-d' ),
+					'date'            => gmdate( 'Y-m-d' ),
 					'note'            => 'Published: hello-world - URL: http://example.org/?p=5',
 					'starred'         => 0,
 					'user'            => 'super user was set',

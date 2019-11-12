@@ -70,12 +70,12 @@ class Base {
 		update_post_meta( $order_id, $this->key_order_tracked, 1 );
 	}
 
-	private function isDoingAjax() {
+	private function is_doing_ajax() {
 		return defined( 'DOING_AJAX' ) && DOING_AJAX;
 	}
 
 	protected function make_matomo_js_tracker_call( $params ) {
-		if ( $this->isDoingAjax() ) {
+		if ( $this->is_doing_ajax() ) {
 			$this->ajax_tracker_calls[] = $params;
 		}
 
@@ -83,7 +83,7 @@ class Base {
 	}
 
 	protected function wrap_script( $script ) {
-		if ( $this->isDoingAjax() ) {
+		if ( $this->is_doing_ajax() ) {
 			foreach ( $this->ajax_tracker_calls as $call ) {
 				$methods = array(
 					'addEcommerceItem'         => 'addEcommerceItem',

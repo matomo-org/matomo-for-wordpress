@@ -27,7 +27,7 @@ class ReportRendererTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_render_report_no_dimension_with_data() {
-		$local_tracker = $this->make_local_tracker( date( 'Y-m-d H:i:s' ) );
+		$local_tracker = $this->make_local_tracker( gmdate( 'Y-m-d H:i:s' ) );
 		$this->assert_tracking_response( $local_tracker->doTrackPageView( 'test' ) );
 
 		$this->enable_browser_archiving();
@@ -37,7 +37,7 @@ class ReportRendererTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_render_report_with_dimension_with_data() {
-		$local_tracker = $this->make_local_tracker( date( 'Y-m-d H:i:s' ) );
+		$local_tracker = $this->make_local_tracker( gmdate( 'Y-m-d H:i:s' ) );
 		$this->assert_tracking_response( $local_tracker->doTrackPageView( 'test' ) );
 
 		$this->enable_browser_archiving();

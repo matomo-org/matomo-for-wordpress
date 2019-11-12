@@ -118,7 +118,7 @@ class Paths {
 
 		foreach ( $target_dir_parts as $index => $part ) {
 			if ( isset( $matomo_dir_parts[ $index ] )
-				 && $part !== 'matomo' // not when matomo is same part cause it's the plugin name but eg also the upload folder name and it would generate wrong path
+				 && 'matomo' !== $part // not when matomo is same part cause it's the plugin name but eg also the upload folder name and it would generate wrong path
 				 && $matomo_dir_parts[ $index ] === $part
 				 && ! $was_previous_same ) {
 				continue;

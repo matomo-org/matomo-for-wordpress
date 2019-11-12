@@ -172,9 +172,9 @@ class WpMatomo {
 		$get_started = new \WpMatomo\Admin\GetStarted( $this->settings );
 
 		if ( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
-			$links[] = '<a href="' . menu_page_url( Menu::SLUG_GET_STARTED, false ) . '">' . __( 'Get Started' ) . '</a>';
+			$links[] = '<a href="' . menu_page_url( Menu::SLUG_GET_STARTED, false ) . '">' . __( 'Get Started', 'matomo' ) . '</a>';
 		} elseif ( current_user_can( Capabilities::KEY_SUPERUSER ) ) {
-			$links[] = '<a href="' . menu_page_url( Menu::SLUG_SETTINGS, false ) . '">' . __( 'Settings' ) . '</a>';
+			$links[] = '<a href="' . menu_page_url( Menu::SLUG_SETTINGS, false ) . '">' . __( 'Settings', 'matomo' ) . '</a>';
 		}
 
 		return $links;
@@ -193,7 +193,7 @@ class WpMatomo {
 			} else {
 				if ( is_matomo_app_request() ) {
 					// we can't install if matomo is requested... there's some circular reference
-					wp_redirect( admin_url() );
+					wp_safe_redirect( admin_url() );
 					exit;
 				} else {
 					$installer->install();

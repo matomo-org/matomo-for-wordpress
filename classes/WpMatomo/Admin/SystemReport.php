@@ -341,7 +341,7 @@ class SystemReport {
 			return __( 'Unknown', 'matomo' );
 		}
 
-		$date = date( 'Y-m-d H:i:s', $time );
+		$date = gmdate( 'Y-m-d H:i:s', $time );
 
 		if ( $in_blog_timezone ) {
 			$date = get_date_from_gmt( $date, 'Y-m-d H:i:s' );

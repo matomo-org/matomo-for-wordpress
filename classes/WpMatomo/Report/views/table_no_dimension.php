@@ -23,9 +23,9 @@ use WpMatomo\Capabilities;
 		<tbody>
 		<?php
 		$columns = ! empty( $report['columns'] ) ? $report['columns'] : array();
-		foreach ( $report['reportData']->getRows() as $metricName => $row ) {
-			foreach ( $row as $metricName => $value ) {
-				$display_name = ! empty( $columns[ $metricName ] ) ? $columns[ $metricName ] : $metricName;
+		foreach ( $report['reportData']->getRows() as $val => $row ) {
+			foreach ( $row as $metric_name => $value ) {
+				$display_name = ! empty( $columns[ $metric_name ] ) ? $columns[ $metric_name ] : $metric_name;
 				echo '<tr><td width="75%">' . esc_html( $display_name ) . '</td><td width="25%">' . esc_html( $value ) . '</td></tr>';
 			}
 		}

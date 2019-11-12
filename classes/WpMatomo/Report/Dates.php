@@ -53,7 +53,7 @@ class Dates {
 				break;
 			case self::LAST_MONTH:
 				$period = 'month';
-				$date   = date( 'Y-m-d', strtotime( '1 month ago' ) );
+				$date   = gmdate( 'Y-m-d', strtotime( '1 month ago' ) );
 				break;
 			case self::THIS_WEEK:
 				$period = 'week';
@@ -61,7 +61,7 @@ class Dates {
 				break;
 			case self::LAST_WEEK:
 				$period = 'week';
-				$date   = date( 'Y-m-d', strtotime( '1 week ago' ) );
+				$date   = gmdate( 'Y-m-d', strtotime( '1 week ago' ) );
 				break;
 			case self::THIS_YEAR:
 				$period = 'year';
