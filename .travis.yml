@@ -8,6 +8,7 @@ install:
   - ls
   - mv wp-matomo matomo
   - cd matomo
+  - MATOMO_PLUGIN_DIR_PATH=`pwd`
 
 notifications:
   email:
@@ -75,5 +76,5 @@ script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      $PHPCS_DIR/bin/phpcs -p . --standard=WordPress;
+      $PHPCS_DIR/bin/phpcs -p "$MATOMO_PLUGIN_DIR_PATH" --standard=WordPress;
     fi
