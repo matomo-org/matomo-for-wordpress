@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Capabilities;
@@ -42,8 +42,8 @@ class RolesTest extends MatomoUnit_TestCase {
 
 	public function test_is_matomo_role() {
 		$roles = $this->roles->get_matomo_roles();
-		foreach ( $roles as $roleName => $options ) {
-			$this->assertTrue( $this->roles->is_matomo_role( $roleName ) );
+		foreach ( $roles as $role_name => $options ) {
+			$this->assertTrue( $this->roles->is_matomo_role( $role_name ) );
 		}
 		$this->assertFalse( $this->roles->is_matomo_role( 'administrator' ) );
 		$this->assertFalse( $this->roles->is_matomo_role( 'editor' ) );
@@ -52,12 +52,15 @@ class RolesTest extends MatomoUnit_TestCase {
 
 	public function test_get_available_roles_for_configuration() {
 		$roles = $this->roles->get_available_roles_for_configuration();
-		$this->assertSame( array(
-			'editor'      => 'Editor',
-			'author'      => 'Author',
-			'contributor' => 'Contributor',
-			'subscriber'  => 'Subscriber'
-		), $roles );
+		$this->assertSame(
+			array(
+				'editor'      => 'Editor',
+				'author'      => 'Author',
+				'contributor' => 'Contributor',
+				'subscriber'  => 'Subscriber',
+			),
+			$roles
+		);
 	}
 
 	public function test_role_capability() {

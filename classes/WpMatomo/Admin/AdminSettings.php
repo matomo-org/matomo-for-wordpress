@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Admin;
@@ -17,10 +17,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class AdminSettings {
-	const TAB_TRACKING = 'tracking';
-	const TAB_ACCESS = 'access';
+	const TAB_TRACKING   = 'tracking';
+	const TAB_ACCESS     = 'access';
 	const TAB_EXCLUSIONS = 'exlusions';
-	const TAB_PRIVACY = 'privacy';
+	const TAB_PRIVACY    = 'privacy';
 
 	/**
 	 * @var Settings
@@ -36,7 +36,6 @@ class AdminSettings {
 	}
 
 	public function show() {
-
 		$access          = new Access( $this->settings );
 		$access_settings = new AccessSettings( $access, $this->settings );
 		$tracking        = new TrackingSettings( $this->settings );
@@ -59,7 +58,7 @@ class AdminSettings {
 
 		$content_tab = $setting_tabs[ $active_tab ];
 
-		include( dirname( __FILE__ ) . '/views/settings.php' );
+		include dirname( __FILE__ ) . '/views/settings.php';
 	}
 
 }

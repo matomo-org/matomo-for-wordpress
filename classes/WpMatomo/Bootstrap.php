@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Bootstrap {
 	/**
 	 * Tests only
+	 *
 	 * @var bool|null
 	 */
 	private static $assume_not_bootstrapped;
@@ -24,6 +25,7 @@ class Bootstrap {
 
 	/**
 	 * Tests only
+	 *
 	 * @internal
 	 * @ignore
 	 */
@@ -52,9 +54,9 @@ class Bootstrap {
 		if ( ! defined( 'PIWIK_ENABLE_SESSION_START' ) ) {
 			define( 'PIWIK_ENABLE_SESSION_START', false );
 		}
-			
+
 		if ( ! defined( 'PIWIK_DOCUMENT_ROOT' ) ) {
-			define( 'PIWIK_DOCUMENT_ROOT', plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'app');
+			define( 'PIWIK_DOCUMENT_ROOT', plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app' );
 		}
 
 		require_once PIWIK_DOCUMENT_ROOT . '/bootstrap.php';
@@ -66,7 +68,7 @@ class Bootstrap {
 		require_once PIWIK_INCLUDE_PATH . '/core/bootstrap.php';
 		// we need to install now
 
-		include_once 'Db/Wordpress.php';
+		include_once 'Db/WordPress.php';
 
 		$environment = new \Piwik\Application\Environment( null );
 		$environment->init();
@@ -75,12 +77,15 @@ class Bootstrap {
 		$controller = \Piwik\FrontController::getInstance();
 		$controller->init();
 
-		add_action( 'set_current_user', function () {
-			$access = \Piwik\Access::getInstance();
-			if ( $access ) {
-				$access->reloadAccess();
+		add_action(
+			'set_current_user',
+			function () {
+				$access = \Piwik\Access::getInstance();
+				if ( $access ) {
+					$access->reloadAccess();
+				}
 			}
-		} );
+		);
 	}
 
 	public static function is_bootstrapped() {

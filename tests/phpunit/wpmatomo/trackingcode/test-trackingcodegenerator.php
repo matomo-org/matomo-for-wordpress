@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Access;
@@ -15,7 +15,7 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 	/**
 	 * @var TrackingCodeGenerator
 	 */
-	private $trackingCode;
+	private $tracking_code;
 
 	/**
 	 * @var Settings
@@ -30,13 +30,13 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 	}
 
 	private function make_tracking_code() {
-		$this->trackingCode = new TrackingCodeGenerator( $this->settings );
+		$this->tracking_code = new TrackingCodeGenerator( $this->settings );
 	}
 
 	private function get_tracking_code() {
 		$this->make_tracking_code();
 
-		return $this->trackingCode->get_tracking_code();
+		return $this->tracking_code->get_tracking_code();
 	}
 
 	public function test_get_tracking_code_when_tracking_is_disabled() {
@@ -44,87 +44,110 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_tracking_code_when_using_default_tracking_code() {
-		$this->settings->apply_tracking_related_changes( array(
-			'track_mode' => TrackingSettings::TRACK_MODE_DEFAULT
-		) );
-		$this->assertSame( '<!-- Matomo --><script  type="text/javascript">var _paq = window._paq || [];
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode' => TrackingSettings::TRACK_MODE_DEFAULT,
+			)
+		);
+		$this->assertSame(
+			'<!-- Matomo --><script  type="text/javascript">var _paq = window._paq || [];
 _paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
-g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);</script><!-- End Matomo Code -->', $this->get_tracking_code() );
+g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);</script><!-- End Matomo Code -->',
+			$this->get_tracking_code()
+		);
 	}
 
 	public function test_get_tracking_code_when_using_default_tracking_code_using_rest_api_and_other_features() {
-		$this->settings->apply_tracking_related_changes( array(
-			'track_mode'                => TrackingSettings::TRACK_MODE_DEFAULT,
-			'track_js_endpoint'         => 'restapi',
-			'track_api_endpoint'        => 'restapi',
-			'track_noscript'            => true,
-			'track_content'             => true,
-			'add_download_extensions'   => 'zip|waf',
-			'set_link_classes'          => 'clickme|foo',
-			'disable_cookies'           => true,
-			'track_across'              => true,
-			'track_crossdomain_linking' => true,
-		) );
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'                => TrackingSettings::TRACK_MODE_DEFAULT,
+				'track_js_endpoint'         => 'restapi',
+				'track_api_endpoint'        => 'restapi',
+				'track_noscript'            => true,
+				'track_content'             => true,
+				'add_download_extensions'   => 'zip|waf',
+				'set_link_classes'          => 'clickme|foo',
+				'disable_cookies'           => true,
+				'track_across'              => true,
+				'track_crossdomain_linking' => true,
+			)
+		);
 
-		$this->assertSame( '<!-- Matomo --><script  type="text/javascript">var _paq = window._paq || [];
+		$this->assertSame(
+			'<!-- Matomo --><script  type="text/javascript">var _paq = window._paq || [];
 _paq.push([\'addDownloadExtensions\', "zip|waf"]);
 _paq.push([\'setLinkClasses\', "clickme|foo"]);
 _paq.push([\'disableCookies\']);
 _paq.push([\'enableCrossDomainLinking\']);
 _paq.push(["setCookieDomain", "*.example.org"]);
 _paq.push([\'trackAllContentImpressions\']);_paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
-g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"; s.parentNode.insertBefore(g,s);</script><!-- End Matomo Code -->', $this->get_tracking_code() );
+g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"; s.parentNode.insertBefore(g,s);</script><!-- End Matomo Code -->',
+			$this->get_tracking_code()
+		);
 	}
 
 	public function test_get_tracking_code_test_user_id() {
 		$id1 = self::factory()->user->create();
 
 		wp_set_current_user( $id1 );
-		$this->settings->apply_tracking_related_changes( array(
-			'track_mode'    => TrackingSettings::TRACK_MODE_DEFAULT,
-			'track_user_id' => 'uid',
-		) );
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'    => TrackingSettings::TRACK_MODE_DEFAULT,
+				'track_user_id' => 'uid',
+			)
+		);
 		$this->assertContains( "_paq.push(['setUserId', '$id1']);", $this->get_tracking_code() );
 	}
 
 	public function test_get_tracking_code_when_using_manually_tracking_code() {
-		$this->settings->apply_tracking_related_changes( array(
-			'track_mode'    => TrackingSettings::TRACK_MODE_MANUALLY,
-			'tracking_code' => '<script>foobar</script>'
-		) );
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'    => TrackingSettings::TRACK_MODE_MANUALLY,
+				'tracking_code' => '<script>foobar</script>',
+			)
+		);
 		$this->assertSame( '<script>foobar</script>', $this->get_tracking_code() );
 	}
 
 	public function test_get_tracking_code_when_using_tagmanager_mode() {
-		$this->settings->apply_tracking_related_changes( array(
-			'track_mode' => TrackingSettings::TRACK_MODE_TAGMANAGER,
-			'tagmanger_container_ids' => array('abcdefgh' => 1, 'cfk3jjw' => 0)
-		) );
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'              => TrackingSettings::TRACK_MODE_TAGMANAGER,
+				'tagmanger_container_ids' => array(
+					'abcdefgh' => 1,
+					'cfk3jjw'  => 0,
+				),
+			)
+		);
 
-		if (is_multisite()) {
+		if ( is_multisite() ) {
 			$this->assertSame( '<!-- Matomo: no supported track_mode selected -->', $this->get_tracking_code() );
 		} else {
-			$this->assertSame( '<!-- Matomo Tag Manager -->
+			$this->assertSame(
+				'<!-- Matomo Tag Manager -->
 <script type="text/javascript" >
 var _mtm = _mtm || [];
 _mtm.push({\'mtm.startTime\': (new Date().getTime()), \'event\': \'mtm.Start\'});
 var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
 g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="http://example.org/wp-content/uploads/matomo/container_abcdefgh.js"; s.parentNode.insertBefore(g,s);
-</script><!-- End Matomo Tag Manager -->', $this->get_tracking_code() );
+</script><!-- End Matomo Tag Manager -->',
+				$this->get_tracking_code()
+			);
 		}
 	}
 
 	public function test_get_tracking_code_when_using_tagmanager_mode_and_no_containers() {
-		$this->settings->apply_tracking_related_changes( array(
-			'track_mode' => TrackingSettings::TRACK_MODE_TAGMANAGER,
-			'tagmanger_container_ids' => array()
-		) );
-		if (is_multisite()) {
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'              => TrackingSettings::TRACK_MODE_TAGMANAGER,
+				'tagmanger_container_ids' => array(),
+			)
+		);
+		if ( is_multisite() ) {
 			$this->assertSame( '<!-- Matomo: no supported track_mode selected -->', $this->get_tracking_code() );
 		} else {
 			$this->assertSame( '<!-- Matomo Tag Manager --><!-- End Matomo Tag Manager -->', $this->get_tracking_code() );
 		}
-
 	}
 
 

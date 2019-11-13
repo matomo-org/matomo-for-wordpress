@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Admin\GetStarted;
@@ -60,7 +60,6 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_show_settings_does_not_change_any_values_when_not_correct_value() {
-
 		$this->fake_request( 'manually' );
 
 		ob_start();
@@ -71,7 +70,6 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_show_settings_get_started_page() {
-
 		$this->assertNotEmpty( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) );
 		$this->fake_request( 'no', Settings::SHOW_GET_STARTED_PAGE );
 
@@ -83,7 +81,6 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_show_settings_get_started_page_when_not_correct_value() {
-
 		$this->assertNotEmpty( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) );
 		$this->fake_request( Settings::SHOW_GET_STARTED_PAGE, '' );
 
@@ -96,8 +93,8 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 
 	private function fake_request( $track_mode_value, $post_key = 'track_mode' ) {
 		$_POST[ GetStarted::FORM_NAME ] = array( $post_key => $track_mode_value );
-		$_REQUEST['_wpnonce']     = wp_create_nonce( GetStarted::NONCE_NAME );
-		$_SERVER['REQUEST_URI']   = home_url();
+		$_REQUEST['_wpnonce']           = wp_create_nonce( GetStarted::NONCE_NAME );
+		$_SERVER['REQUEST_URI']         = home_url();
 	}
 
 

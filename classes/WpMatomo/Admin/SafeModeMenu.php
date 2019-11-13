@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Admin;
@@ -27,7 +27,7 @@ class SafeModeMenu {
 	 */
 	private $settings;
 
-	private $parentSlug = 'matomo';
+	private $parent_slug = 'matomo';
 
 	/**
 	 * @param Settings $settings
@@ -39,7 +39,7 @@ class SafeModeMenu {
 	}
 
 	public function add_menu() {
-		if (!\WpMatomo::is_admin_user()) {
+		if ( ! \WpMatomo::is_admin_user() ) {
 			return;
 		}
 
@@ -47,11 +47,17 @@ class SafeModeMenu {
 
 		add_menu_page( 'Matomo Analytics', 'Matomo Analytics', Menu::CAP_NOT_EXISTS, 'matomo', null, 'dashicons-analytics' );
 
-		add_submenu_page( $this->parentSlug, __( 'System Report', 'matomo' ), __( 'System Report', 'matomo' ), 'administrator', Menu::SLUG_SYSTEM_REPORT, array(
-			$system_report,
-			'show'
-		) );
-
+		add_submenu_page(
+			$this->parent_slug,
+			__( 'System Report', 'matomo' ),
+			__( 'System Report', 'matomo' ),
+			'administrator',
+			Menu::SLUG_SYSTEM_REPORT,
+			array(
+				$system_report,
+				'show',
+			)
+		);
 	}
 
 }

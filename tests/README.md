@@ -6,8 +6,15 @@
 * Run `composer install`
 * Install the test DB `tests/bin/install.sh <db-name> <db-user> <db-password> [db-host]`
   * For example `./bin/install-wp-tests.sh wordpress_test root secure 127.0.0.1 latest`
+  * To run tests against an older WordPress version replace `latest` with for example `5.0`
 
 ## Running tests
 * Run all the tests by executing `vendor/bin/phpunit`
 * Run a specific test by executing `vendor/bin/phpunit tests/phpunit/wpmatomo/test-settings.php`
 * Run tests for multi site prefix the tests with `WP_MULTISITE=1 vendor/bin/phpunit`
+
+## Running PHPCS tests
+* `vendor/bin/phpcs -v`
+
+## Autofix some PHPCS errors/warnings
+* `vendor/bin/phpcbf`

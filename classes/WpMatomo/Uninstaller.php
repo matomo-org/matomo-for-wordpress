@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -21,10 +21,10 @@ class Uninstaller {
 	private $logger;
 
 	public function __construct() {
-		$this->logger = self::makeLogger();
+		$this->logger = self::make_logger();
 	}
 
-	private static function makeLogger() {
+	private static function make_logger() {
 		return new Logger();
 	}
 
@@ -77,7 +77,7 @@ class Uninstaller {
 	public static function uninstall_options( $prefix ) {
 		global $wpdb;
 
-		self::makeLogger()->log( 'Removing options with prefix ' . $prefix );
+		self::make_logger()->log( 'Removing options with prefix ' . $prefix );
 		$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '" . $prefix . "%';" );
 
 		wp_cache_flush();
@@ -88,7 +88,7 @@ class Uninstaller {
 
 		if ( ! empty( $wpdb->sitemeta ) ) {
 			// multisite
-			self::makeLogger()->log( 'Removing sitemeta with prefix ' . $prefix );
+			self::make_logger()->log( 'Removing sitemeta with prefix ' . $prefix );
 			$wpdb->query( "DELETE FROM $wpdb->sitemeta WHERE meta_key LIKE '" . $prefix . "%';" );
 
 			wp_cache_flush();
@@ -119,10 +119,10 @@ class Uninstaller {
 	public function get_installed_matomo_tables() {
 		global $wpdb;
 
-		$tableNames = array();
-		$tables     = $wpdb->get_results( 'SHOW TABLES LIKE "' . $wpdb->prefix . str_replace( '_', '\_', MATOMO_DATABASE_PREFIX ) . '%"', ARRAY_N );
+		$table_names = array();
+		$tables      = $wpdb->get_results( 'SHOW TABLES LIKE "' . $wpdb->prefix . str_replace( '_', '\_', MATOMO_DATABASE_PREFIX ) . '%"', ARRAY_N );
 		foreach ( $tables as $table_name_to_look_for ) {
-			$tableNames[] = array_shift( $table_name_to_look_for );
+			$table_names[] = array_shift( $table_name_to_look_for );
 		}
 
 		// we need to hard code them unfortunately for tests cause there are temporary tables used and we can't find a
@@ -162,9 +162,9 @@ class Uninstaller {
 			'twofactor_recovery_code',
 			'user',
 			'user_dashboard',
-			'user_language'
+			'user_language',
 		);
-		foreach ( range( 2010, date( 'Y' ) ) as $year ) {
+		foreach ( range( 2010, gmdate( 'Y' ) ) as $year ) {
 			foreach ( range( 1, 12 ) as $month ) {
 				$table_names_to_look_for[] = 'archive_numeric_' . $year . '_' . str_pad( $month, 2, '0' );
 				$table_names_to_look_for[] = 'archive_blob_' . $year . '_' . str_pad( $month, 2, '0' );
@@ -174,12 +174,12 @@ class Uninstaller {
 
 		foreach ( $table_names_to_look_for as $table_name_to_look_for ) {
 			$table_name_to_test = $wpdb->prefix . MATOMO_DATABASE_PREFIX . $table_name_to_look_for;
-			if ( ! in_array( $table_name_to_test, $tableNames ) ) {
-				$tableNames[] = $table_name_to_test;
+			if ( ! in_array( $table_name_to_test, $table_names, true ) ) {
+				$table_names[] = $table_name_to_test;
 			}
 		}
 
-		return $tableNames;
+		return $table_names;
 	}
 
 	private function drop_tables() {
@@ -190,7 +190,7 @@ class Uninstaller {
 
 		foreach ( $installed_tables as $table_name ) {
 			// temporary table are used in tests and just making sure they are being removed
-			//$wpdb->query( "DROP TEMPORARY TABLE IF EXISTS `$tableName`" );
+			// $wpdb->query( "DROP TEMPORARY TABLE IF EXISTS `$tableName`" );
 			// two spaces between drop and table so it won't be replaced in WP tests
 			$wpdb->query( "DROP TABLE IF EXISTS `$table_name`" );
 		}

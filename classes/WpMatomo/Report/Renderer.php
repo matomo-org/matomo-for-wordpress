@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Report;
@@ -25,16 +25,19 @@ class Renderer {
 	}
 
 	public function show_report( $atts ) {
-		$a = shortcode_atts( array(
-			'unique_id'   => '',
-			'report_date' => Dates::YESTERDAY,
-			'limit'       => 10,
-		), $atts );
+		$a = shortcode_atts(
+			array(
+				'unique_id'   => '',
+				'report_date' => Dates::YESTERDAY,
+				'limit'       => 10,
+			),
+			$atts
+		);
 
 		if ( ! current_user_can( Capabilities::KEY_VIEW ) ) {
 			// not needed as processRequest checks permission anyway but it's faster this way and double ensures to not
 			// letting users view it when they have no access.
-			return __('Sorry, you are not allowed to view this report.', 'matomo');
+			return __( 'Sorry, you are not allowed to view this report.', 'matomo' );
 		}
 
 		$metadata    = new Metadata();
@@ -48,7 +51,7 @@ class Renderer {
 		$first_metric_name         = reset( $metric_keys );
 		$first_metric_display_name = reset( $report_meta['metrics'] );
 
-		$dates = new Dates();
+		$dates                 = new Dates();
 		list( $period, $date ) = $dates->detect_period_and_date( $a['report_date'] );
 
 		$report_data     = new Data();

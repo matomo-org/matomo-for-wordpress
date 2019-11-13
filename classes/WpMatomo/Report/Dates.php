@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Report;
@@ -14,13 +14,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Dates {
-	CONST TODAY = 'today';
-	CONST YESTERDAY = 'yesterday';
-	CONST THIS_WEEK = 'thisweek';
-	CONST LAST_WEEK = 'lastweek';
-	CONST THIS_MONTH = 'thismonth';
-	CONST LAST_MONTH = 'lastmonth';
-	CONST THIS_YEAR = 'thisyear';
+	const TODAY      = 'today';
+	const YESTERDAY  = 'yesterday';
+	const THIS_WEEK  = 'thisweek';
+	const LAST_WEEK  = 'lastweek';
+	const THIS_MONTH = 'thismonth';
+	const LAST_MONTH = 'lastmonth';
+	const THIS_YEAR  = 'thisyear';
 
 	public function get_supported_dates() {
 		return array(
@@ -53,7 +53,7 @@ class Dates {
 				break;
 			case self::LAST_MONTH:
 				$period = 'month';
-				$date   = date( "Y-m-d", strtotime( "1 month ago" ) );
+				$date   = gmdate( 'Y-m-d', strtotime( '1 month ago' ) );
 				break;
 			case self::THIS_WEEK:
 				$period = 'week';
@@ -61,7 +61,7 @@ class Dates {
 				break;
 			case self::LAST_WEEK:
 				$period = 'week';
-				$date   = date( "Y-m-d", strtotime( "1 week ago" ) );
+				$date   = gmdate( 'Y-m-d', strtotime( '1 week ago' ) );
 				break;
 			case self::THIS_YEAR:
 				$period = 'year';

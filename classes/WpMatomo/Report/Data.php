@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Report;
@@ -31,7 +31,6 @@ class Data {
 	 * @return array  An array containing reportData, metrics, columns, ...
 	 */
 	public function fetch_report( $report_metadata, $period, $date, $sort_by_column, $filter_limit ) {
-
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
@@ -48,7 +47,7 @@ class Data {
 			'filter_sort_column' => $sort_by_column,
 			'period'             => $period,
 			'date'               => $date,
-			'idSite'             => $idsite
+			'idSite'             => $idsite,
 		);
 		if ( ! empty( $report_metadata['parameters'] ) ) {
 			$params = array_merge( $params, $report_metadata['parameters'] );

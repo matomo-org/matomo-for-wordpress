@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace Piwik\Db\Adapter;
@@ -16,9 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once 'WordPressDbStatement.php';
-require_once 'WordpressTracker.php';
+require_once 'WordPressTracker.php';
 
-class Wordpress extends Mysqli {
+class WordPress extends Mysqli {
 
 	private $old_suppress_errors_value = null;
 
@@ -76,13 +76,13 @@ class Wordpress extends Mysqli {
 	}
 
 	public function closeConnection() {
-		// we do not want to disconnect wordpress DB ever as it breaks eg the tests where it loses all
-		// temporary tables... also we should leave it up to wordpress whether it wants to close db or not
+		// we do not want to disconnect WordPress DB ever as it breaks eg the tests where it loses all
+		// temporary tables... also we should leave it up to WordPress whether it wants to close db or not
 		// global $wpdb;
 		// $wpdb->close();
-		//if ($this->_connection) {
-		//parent::closeConnection();
-		//}
+		// if ($this->_connection) {
+		// parent::closeConnection();
+		// }
 	}
 
 	public function lastInsertId( $tableName = null, $primaryKey = null ) {
@@ -111,7 +111,7 @@ class Wordpress extends Mysqli {
 	 * Test error number
 	 *
 	 * @param \Exception $e
-	 * @param string $errno
+	 * @param string     $errno
 	 *
 	 * @return bool
 	 */
@@ -154,7 +154,7 @@ class Wordpress extends Mysqli {
 		}
 
 		if ( preg_match( '/^\s*(select)\s/i', $test_sql ) ) {
-			// wordpress does not fetch any result when doing a select... it's only supposed to be used for things like
+			// WordPress does not fetch any result when doing a select... it's only supposed to be used for things like
 			// insert / update / drop ...
 			$result = $this->fetchAll( $sql, $bind );
 		} else {
@@ -218,7 +218,6 @@ class Wordpress extends Mysqli {
 	 */
 	private function before_execute_query( $wpdb, $sql ) {
 		if ( ! $wpdb->suppress_errors ) {
-
 			if ( defined( 'MATOMO_SUPPRESS_DB_ERRORS' ) ) {
 				// allow users to always suppress or never suppress
 				if ( MATOMO_SUPPRESS_DB_ERRORS === true ) {
@@ -229,10 +228,10 @@ class Wordpress extends Mysqli {
 			}
 
 			if ( defined( 'WP_DEBUG' )
-			     && WP_DEBUG
-			     && defined( 'WP_DEBUG_DISPLAY' )
-			     && WP_DEBUG_DISPLAY
-			     && ! is_admin() ) {
+				 && WP_DEBUG
+				 && defined( 'WP_DEBUG_DISPLAY' )
+				 && WP_DEBUG_DISPLAY
+				 && ! is_admin() ) {
 				// prevent showing some notices in frontend eg if cronjob runs there
 
 				$is_likely_dedicated_cron = defined( 'DOING_CRON' ) && DOING_CRON && defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON;
@@ -245,18 +244,17 @@ class Wordpress extends Mysqli {
 			}
 
 			if ( ( stripos( $sql, 'SELECT 1 FROM' ) !== false && stripos( $sql, 'matomo_logtmpsegment' ) !== false )
-			     || stripos( $sql, 'SELECT @@TX_ISOLATION' ) !== false
-			     || stripos( $sql, 'SELECT @@transaction_isolation' ) !== false ) {
+				 || stripos( $sql, 'SELECT @@TX_ISOLATION' ) !== false
+				 || stripos( $sql, 'SELECT @@transaction_isolation' ) !== false ) {
 				// prevent notices for queries that are expected to fail
-				//  SELECT 1 FROM wp_matomo_logtmpsegment1cc77bce7a13181081e44ea6ffc0a9fd LIMIT 1 => runs to detect if temp table exists or not and regularly the query fails which is expected
-				//  SELECT @@TX_ISOLATION => not available in all mysql versions
-				//  SELECT @@transaction_isolation => not available in all mysql versions
+				// SELECT 1 FROM wp_matomo_logtmpsegment1cc77bce7a13181081e44ea6ffc0a9fd LIMIT 1 => runs to detect if temp table exists or not and regularly the query fails which is expected
+				// SELECT @@TX_ISOLATION => not available in all mysql versions
+				// SELECT @@transaction_isolation => not available in all mysql versions
 				// we show notices only in admin...
 				$this->old_suppress_errors_value = $wpdb->suppress_errors( true );
 
 				return;
 			}
-
 		}
 	}
 

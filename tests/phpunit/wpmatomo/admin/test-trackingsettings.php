@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Admin\TrackingSettings;
@@ -49,11 +49,13 @@ class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
 		$this->assertSame( 'default', $this->settings->get_global_option( 'track_js_endpoint' ) );
 		$this->assertEquals( false, $this->settings->get_global_option( 'track_404' ) );
 
-		$this->fake_request( array(
-			'track_mode'        => TrackingSettings::TRACK_MODE_MANUALLY,
-			'track_js_endpoint' => 'restapi',
-			'track_404'         => true
-		) );
+		$this->fake_request(
+			array(
+				'track_mode'        => TrackingSettings::TRACK_MODE_MANUALLY,
+				'track_js_endpoint' => 'restapi',
+				'track_404'         => true,
+			)
+		);
 
 		ob_start();
 		$this->tracking_settings->show_settings();
@@ -71,11 +73,13 @@ class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_show_settings_does_not_set_any_random_value_but_only_whitelisted() {
-		$this->fake_request( array(
-			'track_mode'                     => 'disabled',
-			'foobar'                         => 'baz',
-			Settings::OPTION_KEY_CAPS_ACCESS => array( 'editor' => Capabilities::KEY_VIEW )
-		) );
+		$this->fake_request(
+			array(
+				'track_mode'                     => 'disabled',
+				'foobar'                         => 'baz',
+				Settings::OPTION_KEY_CAPS_ACCESS => array( 'editor' => Capabilities::KEY_VIEW ),
+			)
+		);
 
 		ob_start();
 		$this->tracking_settings->show_settings();
@@ -87,12 +91,13 @@ class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_active_containers_when_no_container_defined() {
-		if (is_multisite()) {
-			$this->markTestSkipped('skipped in multisite');
+		if ( is_multisite() ) {
+			$this->markTestSkipped( 'skipped in multisite' );
+
 			return;
 		}
 		$containers = $this->tracking_settings->get_active_containers();
-		$this->assertSame(array(), $containers);
+		$this->assertSame( array(), $containers );
 	}
 
 }

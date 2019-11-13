@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Admin;
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class ExclusionSettings implements AdminSettingsInterface {
 	const NONCE_NAME = 'matomo_exclusion';
-	const FORM_NAME = 'matomo_exclusions';
+	const FORM_NAME  = 'matomo_exclusions';
 
 	/**
 	 * @var Settings
@@ -37,16 +37,15 @@ class ExclusionSettings implements AdminSettingsInterface {
 	}
 
 	public function get_title() {
-		return __('Exclusions', 'matomo');
+		return __( 'Exclusions', 'matomo' );
 	}
 
 	private function update_if_submitted() {
 		if ( isset( $_POST )
-		     && ! empty( $_POST[ self::FORM_NAME ] )
-		     && is_admin()
-		     && check_admin_referer( self::NONCE_NAME )
-		     && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
-
+			 && ! empty( $_POST[ self::FORM_NAME ] )
+			 && is_admin()
+			 && check_admin_referer( self::NONCE_NAME )
+			 && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
 			Bootstrap::do_bootstrap();
 
 			$post = $_POST[ self::FORM_NAME ];
@@ -78,12 +77,12 @@ class ExclusionSettings implements AdminSettingsInterface {
 				$api->setKeepURLFragmentsGlobal( $keep_fragments );
 			}
 
-			$settingValues = array( Settings::OPTION_KEY_STEALTH => array() );
+			$setting_values = array( Settings::OPTION_KEY_STEALTH => array() );
 			if ( ! empty( $post[ Settings::OPTION_KEY_STEALTH ] ) ) {
-				$settingValues[ Settings::OPTION_KEY_STEALTH ] = $post[ Settings::OPTION_KEY_STEALTH ];
+				$setting_values[ Settings::OPTION_KEY_STEALTH ] = $post[ Settings::OPTION_KEY_STEALTH ];
 			}
 
-			$this->settings->apply_changes( $settingValues );
+			$this->settings->apply_changes( $setting_values );
 
 			return true;
 		}
@@ -95,7 +94,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 		if ( empty( $value ) ) {
 			return '';
 		}
-		$value = stripslashes($value); // Wordpress adds slashes
+		$value = stripslashes( $value ); // WordPress adds slashes
 		$value = str_replace( "\r", '', $value );
 
 		return implode( ',', array_filter( explode( "\n", $value ) ) );
@@ -106,7 +105,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 			return '';
 		}
 
-		return implode( "\n", array_filter( explode( ",", $value ) ) );
+		return implode( "\n", array_filter( explode( ',', $value ) ) );
 	}
 
 	public function show_settings() {
@@ -124,7 +123,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 		$current_ip            = $this->get_current_ip();
 		$settings              = $this->settings;
 
-		include( dirname( __FILE__ ) . '/views/exclusion_settings.php' );
+		include dirname( __FILE__ ) . '/views/exclusion_settings.php';
 	}
 
 	private function get_current_ip() {

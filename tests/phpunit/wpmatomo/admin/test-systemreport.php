@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Admin\SystemReport;
@@ -51,7 +51,6 @@ class AdminSystemReportTest extends MatomoUnit_TestCase {
 	 * @dataProvider get_trouble_shooting_data
 	 */
 	public function test_show_executes_troubleshooting_with_no_error( $method ) {
-
 		$this->fake_request( $method );
 
 		ob_start();

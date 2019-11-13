@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use Piwik\Plugins\SitesManager\Model as SitesModel;
@@ -47,27 +47,30 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$all_sites   = $sites_model->getAllSites();
 
 		unset( $all_sites[0]['ts_created'] );
-		$this->assertEquals( array(
+		$this->assertEquals(
 			array(
-				'idsite'                         => 1,
-				'name'                           => 'Test Blog',
-				'main_url'                       => '',
-				'ecommerce'                      => 0,
-				'sitesearch'                     => 1,
-				'sitesearch_keyword_parameters'  => '',
-				'sitesearch_category_parameters' => '',
-				'timezone'                       => 'UTC',
-				'currency'                       => 'USD',
-				'exclude_unknown_urls'           => 0,
-				'excluded_ips'                   => '',
-				'excluded_parameters'            => '',
-				'excluded_user_agents'           => '',
-				'group'                          => '',
-				'type'                           => 'website',
-				'keep_url_fragment'              => 0,
-				'creator_login'                  => 'super user was set',
-			)
-		), $all_sites );
+				array(
+					'idsite'                         => 1,
+					'name'                           => 'Test Blog',
+					'main_url'                       => '',
+					'ecommerce'                      => 0,
+					'sitesearch'                     => 1,
+					'sitesearch_keyword_parameters'  => '',
+					'sitesearch_category_parameters' => '',
+					'timezone'                       => 'UTC',
+					'currency'                       => 'USD',
+					'exclude_unknown_urls'           => 0,
+					'excluded_ips'                   => '',
+					'excluded_parameters'            => '',
+					'excluded_user_agents'           => '',
+					'group'                          => '',
+					'type'                           => 'website',
+					'keep_url_fragment'              => 0,
+					'creator_login'                  => 'super user was set',
+				),
+			),
+			$all_sites
+		);
 
 		$users_model = new UsersModel();
 		$all_users   = $users_model->getUsers( array() );
@@ -76,15 +79,18 @@ class InstallTest extends MatomoAnalytics_TestCase {
 			$this->assertNotEmpty( $all_users[0][ $field ] );
 			unset( $all_users[0][ $field ] );
 		}
-		$this->assertEquals( array(
+		$this->assertEquals(
 			array(
-				'login'            => 'admin',
-				'alias'            => 'admin',
-				'email'            => 'admin@example.org',
-				'twofactor_secret' => '',
-				'superuser_access' => 1,
+				array(
+					'login'            => 'admin',
+					'alias'            => 'admin',
+					'email'            => 'admin@example.org',
+					'twofactor_secret' => '',
+					'superuser_access' => 1,
+				),
 			),
-		), $all_users );
+			$all_users
+		);
 	}
 
 	public function test_install_can_run_multiple_times() {
@@ -110,7 +116,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		switch_to_blog( $blogid1 );
 
 		// we trigger install manually... we could listen to an action like "wp_initialize_site" and then install
-		// automatically... but bit scared of "fatal errors etc" and breaking anything in wordpress... instead
+		// automatically... but bit scared of "fatal errors etc" and breaking anything in WordPress... instead
 		// the site sync will install it and/or when someone visits that site
 		Bootstrap::set_not_bootstrapped();
 		$this->installer->install();
@@ -118,13 +124,13 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$blogid = get_current_blog_id();
 
 		$paths = new Paths();
-		$this->assertContains( 'wp-content/uploads/sites/'.$blogid.'/matomo/config/config.ini.php', $paths->get_config_ini_path() );
+		$this->assertContains( 'wp-content/uploads/sites/' . $blogid . '/matomo/config/config.ini.php', $paths->get_config_ini_path() );
 		$this->assertTrue( $this->installer->looks_like_it_is_installed() );
 
 		$sites_model = new SitesModel();
 		$all_sites   = $sites_model->getAllSites();
 
-		wp_delete_site($blogid1);
+		wp_delete_site( $blogid1 );
 
 		$this->assertCount( 1, $all_sites );
 	}

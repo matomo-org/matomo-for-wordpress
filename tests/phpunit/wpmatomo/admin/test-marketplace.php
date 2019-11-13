@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Admin\Marketplace;
@@ -78,7 +78,6 @@ class AdminMarketplaceTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_show_settings_does_not_change_any_values_when_not_correct_format() {
-
 		$this->fake_request( 'foobar' );
 
 		ob_start();
@@ -89,11 +88,10 @@ class AdminMarketplaceTest extends MatomoUnit_TestCase {
 		$this->assertContains( 'License key is not valid', $output );
 	}
 
-	private function fake_request( $licenseKey ) {
-		$_POST[ Marketplace::FORM_NAME ] = $licenseKey;
+	private function fake_request( $license_key ) {
+		$_POST[ Marketplace::FORM_NAME ] = $license_key;
 		$_REQUEST['_wpnonce']            = wp_create_nonce( Marketplace::NONCE_LICENSE );
 		$_SERVER['REQUEST_URI']          = home_url();
-
 	}
 
 

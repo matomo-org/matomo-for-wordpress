@@ -69,7 +69,7 @@ return array(
 			$database['password'] = DB_PASSWORD;
 			$database['dbname'] = DB_NAME;
 			$database['tables_prefix'] = $wpdb->prefix . MATOMO_DATABASE_PREFIX;
-			$database['adapter'] = 'Wordpress';
+			$database['adapter'] = 'WordPress';
 			$previous->database = $database;
 
 			$general = $previous->General;
@@ -156,12 +156,12 @@ return array(
 		array('Db.getDatabaseConfig', function (&$config) {
 			// we don't want to save these and instead detect them on demand.
 			// for security reasons etc we don't want to duplicate these values
-			include_once plugin_dir_path(MATOMO_ANALYTICS_FILE ) . 'classes/WpMatomo/Db/Wordpress.php';
+			include_once plugin_dir_path(MATOMO_ANALYTICS_FILE ) . 'classes/WpMatomo/Db/WordPress.php';
 		}),
 		array('Tracker.getDatabaseConfig', function (&$configDb) {
 			// we don't want to save these and instead detect them on demand.
 			// for security reasons etc we don't want to duplicate these values
-			include_once plugin_dir_path(MATOMO_ANALYTICS_FILE ) . 'classes/WpMatomo/Db/Wordpress.php';
+			include_once plugin_dir_path(MATOMO_ANALYTICS_FILE ) . 'classes/WpMatomo/Db/WordPress.php';
 		}),
 		array('Config.beforeSave', function (&$values) {
 			// we don't want to save these and instead detect them on demand.

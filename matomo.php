@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Plugin Name: Matomo Analytics & Tag Manager
  * Description: Most powerful web analytics for WordPress giving you 100% data ownership and privacy protection
  * Author: Matomo
@@ -13,6 +13,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @package matomo
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -47,7 +48,7 @@ function has_matomo_tag_manager() {
 	$is_multisite = function_exists( 'is_multisite' ) && is_multisite();
 	if ( $is_multisite ) {
 		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
 		$network_enabled = is_plugin_active_for_network( 'matomo/matomo.php' );
@@ -59,7 +60,7 @@ function has_matomo_tag_manager() {
 }
 
 function add_matomo_plugin( $plugins_directory, $wp_plugin_file ) {
-	if ( ! in_array( $wp_plugin_file, $GLOBALS['MATOMO_PLUGIN_FILES'] ) ) {
+	if ( ! in_array( $wp_plugin_file, $GLOBALS['MATOMO_PLUGIN_FILES'], true ) ) {
 		$GLOBALS['MATOMO_PLUGIN_FILES'][] = $wp_plugin_file;
 	}
 
@@ -68,38 +69,38 @@ function add_matomo_plugin( $plugins_directory, $wp_plugin_file ) {
 	}
 
 	$GLOBALS['MATOMO_PLUGINS_ENABLED'][] = basename( $plugins_directory );
-	$rootDir                             = dirname( $plugins_directory );
+	$root_dir                            = dirname( $plugins_directory );
 	foreach ( $GLOBALS['MATOMO_PLUGIN_DIRS'] as $path ) {
-		if ( $path['pluginsPathAbsolute'] === $rootDir ) {
+		if ( $path['pluginsPathAbsolute'] === $root_dir ) {
 			return; // already added
 		}
 	}
 
-	$matomoDir      = __DIR__ . '/app';
-	$matomoDirParts = explode( '/', $matomoDir );
-	$rootDirParts   = explode( '/', $rootDir );
-	$webrootDir     = '';
-	foreach ( $matomoDirParts as $index => $part ) {
-		if ( isset( $rootDirParts[ $index ] ) && $rootDirParts[ $index ] === $part ) {
+	$matomo_dir       = __DIR__ . '/app';
+	$matomo_dir_parts = explode( '/', $matomo_dir );
+	$root_dir_parts   = explode( '/', $root_dir );
+	$webroot_dir      = '';
+	foreach ( $matomo_dir_parts as $index => $part ) {
+		if ( isset( $root_dir_parts[ $index ] ) && $root_dir_parts[ $index ] === $part ) {
 			continue;
 		}
-		$webrootDir .= '../';
+		$webroot_dir .= '../';
 	}
 	$GLOBALS['MATOMO_PLUGIN_DIRS'][] = array(
-		'pluginsPathAbsolute'        => $rootDir,
-		'webrootDirRelativeToMatomo' => $webrootDir,
+		'pluginsPathAbsolute'        => $root_dir,
+		'webrootDirRelativeToMatomo' => $webroot_dir,
 	);
 }
 
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'WpMatomo.php';
-include 'shared.php';
+require 'shared.php';
 add_matomo_plugin( __DIR__ . '/plugins/WordPress', MATOMO_ANALYTICS_FILE );
 new WpMatomo();
 
 // todo remove this before release
 require 'plugin-update-checker/plugin-update-checker.php';
-$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+$matomo_update_checker = Puc_v4_Factory::buildUpdateChecker(
 	'https://builds.matomo.org/wordpress-beta.json',
 	__FILE__,
 	'matomo'

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use Piwik\Plugins\UsersManager\Model;
@@ -13,12 +13,15 @@ use WpMatomo\User;
 use WpMatomo\User\Sync;
 
 class MockMatomoUserSync extends Sync {
-	public $mock_sync = true;
+	public $mock_sync    = true;
 	public $synced_users = array();
 
 	public function sync_users( $users, $idsite ) {
 		if ( $this->mock_sync ) {
-			$this->synced_users[] = array( 'users' => $users, 'idSite' => $idsite );
+			$this->synced_users[] = array(
+				'users'  => $users,
+				'idSite' => $idsite,
+			);
 		} else {
 			parent::sync_users( $users, $idsite );
 		}
@@ -60,11 +63,14 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 
 		$this->assertCount( 1, $this->mock->synced_users[0]['users'] );
 		unset( $this->mock->synced_users[0]['users'] );
-		$this->assertEquals( array(
+		$this->assertEquals(
 			array(
-				'idSite' => $idsite
-			)
-		), $this->mock->synced_users );
+				array(
+					'idSite' => $idsite,
+				),
+			),
+			$this->mock->synced_users
+		);
 	}
 
 	/**
@@ -84,32 +90,34 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 
 		$this->assertCount( 1, $this->mock->synced_users[0]['users'] );
 		unset( $this->mock->synced_users[0]['users'] );
-		$this->assertEquals( array(
+		$this->assertEquals(
 			array(
-				'idSite' => $idsite
+				array(
+					'idSite' => $idsite,
+				),
+				array(
+					'users'  => array(),
+					'idSite' => $idsite,
+				),
+				array(
+					'users'  => array(),
+					'idSite' => $idsite,
+				),
 			),
-			array(
-				'users'  => array(),
-				'idSite' => $idsite
-			),
-			array(
-				'users'  => array(),
-				'idSite' => $idsite
-			),
-		), array_slice($this->mock->synced_users, 0, 3) );
+			array_slice( $this->mock->synced_users, 0, 3 )
+		);
 
-		wp_delete_site($blogid1);// remove the blogs again so they don't break other tests
-		wp_delete_site($blogid2);
-
+		wp_delete_site( $blogid1 );// remove the blogs again so they don't break other tests
+		wp_delete_site( $blogid2 );
 	}
 
 	public function test_sync_current_site_does_not_fail() {
 		$this->assertNull( $this->sync->sync_current_users() );
 	}
 
-	private function get_current_site_id()
-	{
+	private function get_current_site_id() {
 		$site = new WpMatomo\Site();
+
 		return $site->get_current_matomo_site_id();
 	}
 
@@ -119,11 +127,14 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 		$this->assertCount( 1, $this->mock->synced_users[0]['users'] );
 		unset( $this->mock->synced_users[0]['users'] );
 
-		$this->assertEquals( array(
+		$this->assertEquals(
 			array(
-				'idSite' => $this->get_current_site_id()
-			)
-		), $this->mock->synced_users );
+				array(
+					'idSite' => $this->get_current_site_id(),
+				),
+			),
+			$this->mock->synced_users
+		);
 	}
 
 	public function test_sync_current_users_by_default_gives_only_access_to_administrators() {
@@ -145,36 +156,53 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 	public function test_sync_current_users_creates_users_where_needed() {
 		$this->createManyUsers();
 		$settings = new Settings();
-		$caps    = new Capabilities( $settings );
+		$caps     = new Capabilities( $settings );
 		$caps->register_hooks(); // access and capabilities need to share same settings instance otherwise tests won't work correctly
 
 		$access = new Access( $settings );
-		$access->save( array(
-			'editor' => Capabilities::KEY_WRITE,
-			'author' => Capabilities::KEY_VIEW,
-		) );
+		$access->save(
+			array(
+				'editor' => Capabilities::KEY_WRITE,
+				'author' => Capabilities::KEY_VIEW,
+			)
+		);
 
 		$this->sync->sync_current_users();
 
 		$model  = new Model();
 		$logins = $model->getUsersLogin();
-		$this->assertSame( array(
-			'admin',
-			'admin1',
-			'admin2',
-			'author1',
-			'author2',
-			'editor1',
-			'editor2',
-		), $logins );
+		$this->assertSame(
+			array(
+				'admin',
+				'admin1',
+				'admin2',
+				'author1',
+				'author2',
+				'editor1',
+				'editor2',
+			),
+			$logins
+		);
 
 		$idsite = $this->get_current_site_id();
 
 		$view_access = $model->getUsersSitesFromAccess( 'view' );
-		$this->assertEquals( array( 'author1' => array( $idsite ), 'author2' => array( $idsite ), ), $view_access );
+		$this->assertEquals(
+			array(
+				'author1' => array( $idsite ),
+				'author2' => array( $idsite ),
+			),
+			$view_access
+		);
 
 		$write_access = $model->getUsersSitesFromAccess( 'write' );
-		$this->assertEquals( array( 'editor1' => array( $idsite ), 'editor2' => array( $idsite ), ), $write_access );
+		$this->assertEquals(
+			array(
+				'editor1' => array( $idsite ),
+				'editor2' => array( $idsite ),
+			),
+			$write_access
+		);
 
 		$view_access = $model->getUsersSitesFromAccess( 'admin' );
 		$this->assertSame( array(), $view_access );
@@ -187,28 +215,38 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 		// now we change permission and matomo should adjust
 
 		$access = new Access( $settings );
-		$access->save( array(
-			'editor'      => Capabilities::KEY_ADMIN,
-			'contributor' => Capabilities::KEY_VIEW,
-		) );
+		$access->save(
+			array(
+				'editor'      => Capabilities::KEY_ADMIN,
+				'contributor' => Capabilities::KEY_VIEW,
+			)
+		);
 
 		$user = get_user_by( 'login', 'admin2' );
 		wp_delete_user( $user->ID );
-		$id6 = self::factory()->user->create( array( 'role' => 'administrator', 'user_login' => 'admin4' ) );
+		$id6 = self::factory()->user->create(
+			array(
+				'role'       => 'administrator',
+				'user_login' => 'admin4',
+			)
+		);
 
 		// it should now remove all author users... change permission for editor, and add new permission for contributor
 		// we are also creating one more user and deleting another existing user
 		$this->sync->sync_current_users();
 
 		$logins = $model->getUsersLogin();
-		$this->assertSame( array(
-			'admin',
-			'admin1',
-			'admin4',
-			'contributor1',
-			'editor1',
-			'editor2',
-		), $logins );
+		$this->assertSame(
+			array(
+				'admin',
+				'admin1',
+				'admin4',
+				'contributor1',
+				'editor1',
+				'editor2',
+			),
+			$logins
+		);
 
 		$view_access = $model->getUsersSitesFromAccess( 'view' );
 		$this->assertEquals( array( 'contributor1' => array( $idsite ) ), $view_access );
@@ -217,7 +255,13 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 		$this->assertSame( array(), $write_access );
 
 		$view_access = $model->getUsersSitesFromAccess( 'admin' );
-		$this->assertEquals( array( 'editor1' => array( $idsite ), 'editor2' => array( $idsite ), ), $view_access );
+		$this->assertEquals(
+			array(
+				'editor1' => array( $idsite ),
+				'editor2' => array( $idsite ),
+			),
+			$view_access
+		);
 
 		foreach ( array( 'admin', 'admin1', 'admin4' ) as $user_login ) {
 			$matomo_user = $this->get_matomo_user( $user_login );
@@ -231,14 +275,17 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 		$this->sync->sync_current_users();
 
 		$logins = $model->getUsersLogin();
-		$this->assertSame( array(
-			'admin',
-			'admin1',
-			'admin4',
-			'contributor1',
-			'editor1',
-			'editor2',
-		), $logins );
+		$this->assertSame(
+			array(
+				'admin',
+				'admin1',
+				'admin4',
+				'contributor1',
+				'editor1',
+				'editor2',
+			),
+			$logins
+		);
 
 		foreach ( array( 'admin', 'admin1', 'admin4', 'editor1' ) as $user_login ) {
 			$matomo_user = $this->get_matomo_user( $user_login );
@@ -269,21 +316,58 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 	}
 
 	private function createManyUsers() {
-		$id1 = self::factory()->user->create( array( 'role' => 'editor', 'user_login' => 'editor1' ) );
-		$id2 = self::factory()->user->create( array( 'role' => 'editor', 'user_login' => 'editor2' ) );
-		$id3 = self::factory()->user->create( array( 'role' => 'author', 'user_login' => 'author1' ) );
-		$id4 = self::factory()->user->create( array( 'role' => 'author', 'user_login' => 'author2' ) );
-		$id5 = self::factory()->user->create( array( 'role' => 'contributor', 'user_login' => 'contributor1' ) );
-		$id6 = self::factory()->user->create( array( 'role' => 'administrator', 'user_login' => 'admin1' ) );
-		$id6 = self::factory()->user->create( array( 'role' => 'administrator', 'user_login' => 'admin2' ) );
+		$id1 = self::factory()->user->create(
+			array(
+				'role'       => 'editor',
+				'user_login' => 'editor1',
+			)
+		);
+		$id2 = self::factory()->user->create(
+			array(
+				'role'       => 'editor',
+				'user_login' => 'editor2',
+			)
+		);
+		$id3 = self::factory()->user->create(
+			array(
+				'role'       => 'author',
+				'user_login' => 'author1',
+			)
+		);
+		$id4 = self::factory()->user->create(
+			array(
+				'role'       => 'author',
+				'user_login' => 'author2',
+			)
+		);
+		$id5 = self::factory()->user->create(
+			array(
+				'role'       => 'contributor',
+				'user_login' => 'contributor1',
+			)
+		);
+		$id6 = self::factory()->user->create(
+			array(
+				'role'       => 'administrator',
+				'user_login' => 'admin1',
+			)
+		);
+		$id6 = self::factory()->user->create(
+			array(
+				'role'       => 'administrator',
+				'user_login' => 'admin2',
+			)
+		);
 	}
 
 	public function test_ensure_user_exists_creates_user_when_not_exists_yet() {
-		$id1  = self::factory()->user->create( array(
-			'role'       => 'editor',
-			'user_login' => 'foobaz',
-			'user_email' => 'foobaz3@example.org'
-		) );
+		$id1  = self::factory()->user->create(
+			array(
+				'role'       => 'editor',
+				'user_login' => 'foobaz',
+				'user_email' => 'foobaz3@example.org',
+			)
+		);
 		$user = new WP_User( $id1 );
 
 		$login = $this->sync->ensure_user_exists( $user );
@@ -298,7 +382,12 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_ensure_user_exists_when_username_already_exists_uses_different_user() {
-		$id1  = self::factory()->user->create( array( 'role' => 'editor', 'user_login' => 'foobar' ) );
+		$id1  = self::factory()->user->create(
+			array(
+				'role'       => 'editor',
+				'user_login' => 'foobar',
+			)
+		);
 		$user = new WP_User( $id1 );
 
 		$model = new Model();
@@ -312,7 +401,12 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_ensure_user_exists_when_usermapping_exists_but_user_not_exists_in_matomo_will_create_that_user() {
-		$id1  = self::factory()->user->create( array( 'role' => 'editor', 'user_login' => 'foobar' ) );
+		$id1  = self::factory()->user->create(
+			array(
+				'role'       => 'editor',
+				'user_login' => 'foobar',
+			)
+		);
 		$user = new WP_User( $id1 );
 
 		User::map_matomo_user_login( $id1, 'wp_foobar434' );
@@ -323,11 +417,13 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_ensure_user_exists_updates_user_when_email_changes() {
-		$id1  = self::factory()->user->create( array(
-			'role'       => 'editor',
-			'user_login' => 'foobaa',
-			'user_email' => 'foobaz5@example.org'
-		) );
+		$id1  = self::factory()->user->create(
+			array(
+				'role'       => 'editor',
+				'user_login' => 'foobaa',
+				'user_email' => 'foobaz5@example.org',
+			)
+		);
 		$user = new WP_User( $id1 );
 
 		// create user

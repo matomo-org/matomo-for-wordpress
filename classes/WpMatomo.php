@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -50,7 +50,7 @@ class WpMatomo {
 
 		if ( self::is_safe_mode() ) {
 			if ( is_admin() ) {
-				new \WpMatomo\Admin\SafeModeMenu($this->settings);
+				new \WpMatomo\Admin\SafeModeMenu( $this->settings );
 			}
 
 			return;
@@ -97,10 +97,13 @@ class WpMatomo {
 			new UninstallCommand();
 		}
 
-		add_filter( 'plugin_action_links_' . plugin_basename( MATOMO_ANALYTICS_FILE ), array(
-			$this,
-			'add_settings_link'
-		) );
+		add_filter(
+			'plugin_action_links_' . plugin_basename( MATOMO_ANALYTICS_FILE ),
+			array(
+				$this,
+				'add_settings_link',
+			)
+		);
 	}
 
 	private function check_compatibility() {
@@ -115,26 +118,38 @@ class WpMatomo {
 		$upload_path = $paths->get_upload_base_dir();
 
 		if ( $upload_path
-		     && ! is_writable( dirname( $upload_path ) ) ) {
-			add_action( 'init', function () {
-				if ( self::is_admin_user() ) {
-					add_action( 'admin_notices', function () {
-						echo '<div class="error"><p>' . __( 'Matomo Analytics requires the uploads directory to be writable. Please make the directory writable for it to work.', 'matomo' ) . '</p></div>';
-					} );
+			 && ! is_writable( dirname( $upload_path ) ) ) {
+			add_action(
+				'init',
+				function () {
+					if ( self::is_admin_user() ) {
+						add_action(
+							'admin_notices',
+							function () {
+								echo '<div class="error"><p>' . __( 'Matomo Analytics requires the uploads directory to be writable. Please make the directory writable for it to work.', 'matomo' ) . '</p></div>';
+							}
+						);
+					}
 				}
-			} );
+			);
 
 			return false;
 		}
 
 		if ( ! has_matomo_compatible_content_dir() ) {
-			add_action( 'init', function () {
-				if ( self::is_admin_user() ) {
-					add_action( 'admin_notices', function () {
-						echo '<div class="error"><p>' . __( 'It looks like you are maybe using a custom WordPress content directory. The Matomo Analytics plugin likely won\'t fully work.', 'matomo' ) . '</p></div>';
-					} );
+			add_action(
+				'init',
+				function () {
+					if ( self::is_admin_user() ) {
+						add_action(
+							'admin_notices',
+							function () {
+								echo '<div class="error"><p>' . __( 'It looks like you are maybe using a custom WordPress content directory. The Matomo Analytics plugin likely won\'t fully work.', 'matomo' ) . '</p></div>';
+							}
+						);
+					}
 				}
-			} );
+			);
 		}
 
 		return true;
@@ -142,34 +157,32 @@ class WpMatomo {
 
 	public static function is_admin_user() {
 		if ( ! function_exists( 'is_multisite' )
-		     || ! is_multisite() ) {
+			 || ! is_multisite() ) {
 			return current_user_can( 'administrator' );
 		}
 
 		return is_super_admin();
 	}
 
-	public static function is_safe_mode()
-	{
-		return defined('MATOMO_SAFE_MODE') && MATOMO_SAFE_MODE;
+	public static function is_safe_mode() {
+		return defined( 'MATOMO_SAFE_MODE' ) && MATOMO_SAFE_MODE;
 	}
 
 	public function add_settings_link( $links ) {
 		$get_started = new \WpMatomo\Admin\GetStarted( $this->settings );
 
 		if ( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
-			$links[] = '<a href="' . menu_page_url( Menu::SLUG_GET_STARTED, false ) . '">' . __( 'Get Started' ) . '</a>';
+			$links[] = '<a href="' . menu_page_url( Menu::SLUG_GET_STARTED, false ) . '">' . __( 'Get Started', 'matomo' ) . '</a>';
 		} elseif ( current_user_can( Capabilities::KEY_SUPERUSER ) ) {
-			$links[] = '<a href="' . menu_page_url( Menu::SLUG_SETTINGS, false ) . '">' . __( 'Settings' ) . '</a>';
+			$links[] = '<a href="' . menu_page_url( Menu::SLUG_SETTINGS, false ) . '">' . __( 'Settings', 'matomo' ) . '</a>';
 		}
-
 
 		return $links;
 	}
 
 	public function init_plugin() {
-		if ( (is_admin() || is_matomo_app_request())
-		     && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+		if ( ( is_admin() || is_matomo_app_request() )
+			 && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 			$installer = new Installer( $this->settings );
 			$installer->register_hooks();
 			if ( $installer->looks_like_it_is_installed() ) {
@@ -178,9 +191,9 @@ class WpMatomo {
 					$updater->update_if_needed();
 				}
 			} else {
-				if (is_matomo_app_request()) {
+				if ( is_matomo_app_request() ) {
 					// we can't install if matomo is requested... there's some circular reference
-					wp_redirect(admin_url());
+					wp_safe_redirect( admin_url() );
 					exit;
 				} else {
 					$installer->install();
@@ -189,8 +202,8 @@ class WpMatomo {
 		}
 		$tracking_code = new TrackingCode( $this->settings );
 		if ( $this->settings->is_tracking_enabled()
-		     && $this->settings->get_global_option('track_ecommerce')
-		     && ! $tracking_code->is_hidden_user() ) {
+			 && $this->settings->get_global_option( 'track_ecommerce' )
+			 && ! $tracking_code->is_hidden_user() ) {
 			$tracker = new AjaxTracker( $this->settings );
 
 			$woocommerce = new Woocommerce( $tracker );
@@ -204,6 +217,5 @@ class WpMatomo {
 
 			do_action( 'matomo_ecommerce_init', $tracker );
 		}
-
 	}
 }

@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\User;
@@ -56,19 +56,16 @@ class Sync {
 
 	public function sync_all() {
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-
 			foreach ( get_sites() as $site ) {
 				switch_to_blog( $site->blog_id );
 
 				$idsite = Site::get_matomo_site_id( $site->blog_id );
 
 				try {
-
 					if ( $idsite ) {
 						$users = get_users( array( 'blog_id' => $site->blog_id ) );
 						$this->sync_users( $users, $idsite );
 					}
-
 				} catch ( \Exception $e ) {
 					// we don't want to rethrow exception otherwise some other blogs might never sync
 					$this->logger->log( 'Matomo error syncing users: ' . $e->getMessage() );
@@ -146,11 +143,11 @@ class Sync {
 				$locale = get_user_locale( $user->ID );
 				$parts  = explode( '_', $locale );
 
-				if ( !empty( $parts[0] ) ) {
+				if ( ! empty( $parts[0] ) ) {
 					$lang = $parts[0];
-					if (Plugin\Manager::getInstance()->isPluginActivated('LanguagesManager')
-					    && Plugin\Manager::getInstance()->isPluginInstalled('LanguagesManager')
-					    && API::getInstance()->isLanguageAvailable( $lang ) ) {
+					if ( Plugin\Manager::getInstance()->isPluginActivated( 'LanguagesManager' )
+						 && Plugin\Manager::getInstance()->isPluginInstalled( 'LanguagesManager' )
+						 && API::getInstance()->isLanguageAvailable( $lang ) ) {
 						$user_lang_model = new \Piwik\Plugins\LanguagesManager\Model();
 						$user_lang_model->setLanguageForUser( $matomo_login, $lang );
 					}
@@ -165,8 +162,8 @@ class Sync {
 		$logins_with_some_view_access = array_unique( $logins_with_some_view_access );
 		$all_users                    = $user_model->getUsers( array() );
 		foreach ( $all_users as $all_user ) {
-			if ( ! in_array( $all_user['login'], $logins_with_some_view_access )
-			     && ! empty( $all_user['login'] ) ) {
+			if ( ! in_array( $all_user['login'], $logins_with_some_view_access, true )
+				 && ! empty( $all_user['login'] ) ) {
 				$user_model->deleteUserOnly( $all_user['login'] );
 			}
 		}
@@ -203,7 +200,6 @@ class Sync {
 					}
 
 					$index ++;
-
 				} while ( $user_model->getUser( $matomo_user_login ) );
 			}
 		}
@@ -221,7 +217,6 @@ class Sync {
 			$user_model->addUser( $matomo_user_login, $password, $wp_user->user_email, $login, $token, $now );
 
 			User::map_matomo_user_login( $user_id, $matomo_user_login );
-
 		} elseif ( $user_in_matomo['email'] != $wp_user->user_email ) {
 			$this->logger->log( 'Matomo is now updating the email for wpUserID ' . $user_id . ' matomo login ' . $matomo_user_login );
 			$user_model->updateUserFields( $matomo_user_login, array( 'email' => $wp_user->user_email ) );

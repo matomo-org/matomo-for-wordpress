@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use Piwik\Plugins\SitesManager\Model;
@@ -12,7 +12,11 @@ class MockMatomoSiteSync extends Sync {
 	public $synced_sites = array();
 
 	public function sync_site( $blog_id, $blog_name, $blog_url ) {
-		$this->synced_sites[] = array( 'id' => $blog_id, 'name' => $blog_name, 'url' => $blog_url );
+		$this->synced_sites[] = array(
+			'id'   => $blog_id,
+			'name' => $blog_name,
+			'url'  => $blog_url,
+		);
 	}
 }
 
@@ -41,50 +45,60 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 
 	public function test_sync_all_passes_correct_values_to_sync_site() {
 		$this->mock->sync_all();
-		$this->assertEquals( array(
+		$this->assertEquals(
 			array(
-				'id'   => 1,
-				'name' => 'Test Blog',
-				'url'  => 'http://example.org'
-			)
-		), $this->mock->synced_sites );
+				array(
+					'id'   => 1,
+					'name' => 'Test Blog',
+					'url'  => 'http://example.org',
+				),
+			),
+			$this->mock->synced_sites
+		);
 	}
 
 	/**
 	 * @group ms-required
 	 */
 	public function test_sync_all_passes_correct_values_to_sync_site_when_there_are_multiple_blogs() {
-		$blogid1 = self::factory()->blog->create( array(
-			'domain' => 'foobar.com',
-			'title' => 'Site 22',
-			'path' => '/testpath22'
-		) );
-		$blogid2 = self::factory()->blog->create( array(
-			'domain' => 'foobar.baz',
-			'title' => 'Site 23',
-			'path' => '/testpath23'
-		) );
+		$blogid1 = self::factory()->blog->create(
+			array(
+				'domain' => 'foobar.com',
+				'title'  => 'Site 22',
+				'path'   => '/testpath22',
+			)
+		);
+		$blogid2 = self::factory()->blog->create(
+			array(
+				'domain' => 'foobar.baz',
+				'title'  => 'Site 23',
+				'path'   => '/testpath23',
+			)
+		);
 
 		$this->mock->sync_all();
-		wp_delete_site($blogid1);
-		wp_delete_site($blogid2);
-		$this->assertEquals( array(
+		wp_delete_site( $blogid1 );
+		wp_delete_site( $blogid2 );
+		$this->assertEquals(
 			array(
-				'id'   => 1,
-				'name' => 'Test Blog',
-				'url'  => 'http://example.org'
+				array(
+					'id'   => 1,
+					'name' => 'Test Blog',
+					'url'  => 'http://example.org',
+				),
+				array(
+					'id'   => $blogid1,
+					'name' => 'Site 22',
+					'url'  => 'http://foobar.com/testpath22',
+				),
+				array(
+					'id'   => $blogid2,
+					'name' => 'Site 23',
+					'url'  => 'http://foobar.baz/testpath23',
+				),
 			),
-			array(
-				'id'   => $blogid1,
-				'name' => 'Site 22',
-				'url'  => 'http://foobar.com/testpath22'
-			),
-			array(
-				'id'   => $blogid2,
-				'name' => 'Site 23',
-				'url'  => 'http://foobar.baz/testpath23'
-			),
-		), $this->mock->synced_sites );
+			$this->mock->synced_sites
+		);
 	}
 
 	public function test_sync_current_site_does_not_fail() {
@@ -93,35 +107,45 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 
 	public function test_sync_current_site_passes_correct_values_to_sync_site() {
 		$this->mock->sync_current_site();
-		$this->assertEquals( array(
+		$this->assertEquals(
 			array(
-				'id'   => 1,
-				'name' => 'Test Blog',
-				'url'  => 'http://example.org'
-			)
-		), $this->mock->synced_sites );
+				array(
+					'id'   => 1,
+					'name' => 'Test Blog',
+					'url'  => 'http://example.org',
+				),
+			),
+			$this->mock->synced_sites
+		);
 	}
 
 	/**
 	 * @group ms-required
 	 */
 	public function test_sync_current_site_passes_correct_values_to_sync_site_when_we_are_on_different_blog() {
-		$blogid1 = self::factory()->blog->create( array( 'domain' => 'foobar.com',
-		                                                 'title' => 'Site 24',
-		                                                 'path' => '/testpath24' ) );
+		$blogid1 = self::factory()->blog->create(
+			array(
+				'domain' => 'foobar.com',
+				'title'  => 'Site 24',
+				'path'   => '/testpath24',
+			)
+		);
 		switch_to_blog( $blogid1 );
 
 		$this->mock->sync_current_site();
 
-		wp_delete_site($blogid1);
+		wp_delete_site( $blogid1 );
 
-		$this->assertEquals( array(
+		$this->assertEquals(
 			array(
-				'id'   => $blogid1,
-				'name' => 'Site 24',
-				'url'  => 'http://foobar.com/testpath24'
-			)
-		), $this->mock->synced_sites );
+				array(
+					'id'   => $blogid1,
+					'name' => 'Site 24',
+					'url'  => 'http://foobar.com/testpath24',
+				),
+			),
+			$this->mock->synced_sites
+		);
 	}
 
 	public function test_sync_site_creates_new_matomo_site_when_blogid_is_unknown_and_updates_when_needed() {

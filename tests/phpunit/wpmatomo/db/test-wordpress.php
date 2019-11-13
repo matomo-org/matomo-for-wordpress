@@ -1,28 +1,30 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use Piwik\Common;
-use Piwik\Db\Adapter\Wordpress;
+use Piwik\Db\Adapter\WordPress;
 
 class DbWordPressTest extends MatomoAnalytics_TestCase {
 
 	/**
-	 * @var Wordpress
+	 * @var WordPress
 	 */
 	private $db;
 
 	public function setUp() {
 		parent::setUp();
-		$this->db = new Wordpress( array(
-			'enable_ssl'     => false,
-			'options'        => array(),
-			'driver_options' => array(),
-			'dbname'         => 'foo',
-			'username'       => ' ',
-			'password'       => ' ',
-		) );
+		$this->db = new WordPress(
+			array(
+				'enable_ssl'     => false,
+				'options'        => array(),
+				'driver_options' => array(),
+				'dbname'         => 'foo',
+				'username'       => ' ',
+				'password'       => ' ',
+			)
+		);
 		$this->insert_many_values();
 	}
 
@@ -31,7 +33,7 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	 * @expectedExceptionMessage  foobarbaz' doesn't exist
 	 */
 	public function test_query_triggers_error_when_wrong_sql() {
-		$this->db->query( 'select * from foobarbaz');
+		$this->db->query( 'select * from foobarbaz' );
 	}
 
 	public function test_query_can_execute_select_queries() {
@@ -86,15 +88,18 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	 * @expectedExceptionMessage  foobarbaz' doesn't exist
 	 */
 	public function test_fetch_all_triggers_error_when_wrong_sql() {
-		$this->db->fetchAll( 'select * from foobarbaz');
+		$this->db->fetchAll( 'select * from foobarbaz' );
 	}
 
 	public function test_fetch_all_works_with_bind_params() {
 		$table  = Common::prefixTable( 'access' );
-		$result = $this->db->fetchAll( 'select * from ' . $table . ' where access = ? and idsite = ?', array(
-			'view',
-			1
-		) );
+		$result = $this->db->fetchAll(
+			'select * from ' . $table . ' where access = ? and idsite = ?',
+			array(
+				'view',
+				1,
+			)
+		);
 		$this->assertCount( 1, $result );
 	}
 
@@ -103,7 +108,7 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	 * @expectedExceptionMessage  foobarbaz' doesn't exist
 	 */
 	public function test_fetch_one_triggers_error_when_wrong_sql() {
-		$this->db->fetchOne( 'select foo from foobarbaz');
+		$this->db->fetchOne( 'select foo from foobarbaz' );
 	}
 
 	public function test_fetch_one() {
@@ -117,18 +122,21 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	 * @expectedExceptionMessage  foobarbaz' doesn't exist
 	 */
 	public function test_fetch_row_triggers_error_when_wrong_sql() {
-		$this->db->fetchRow( 'select * from foobarbaz limit 1');
+		$this->db->fetchRow( 'select * from foobarbaz limit 1' );
 	}
 
 	public function test_fetch_row() {
 		$table  = Common::prefixTable( 'access' );
 		$result = $this->db->fetchRow( 'select * from ' . $table . ' limit 1' );
-		$this->assertEquals( array(
-			'idaccess' => '1',
-			'login'    => 'foo',
-			'idsite'   => '1',
-			'access'   => 'view',
-		), $result );
+		$this->assertEquals(
+			array(
+				'idaccess' => '1',
+				'login'    => 'foo',
+				'idsite'   => '1',
+				'access'   => 'view',
+			),
+			$result
+		);
 	}
 
 	/**
@@ -136,7 +144,7 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	 * @expectedExceptionMessage  foobarbaz' doesn't exist
 	 */
 	public function test_exec_triggers_error_when_wrong_sql() {
-		$this->db->exec( 'select * from foobarbaz');
+		$this->db->exec( 'select * from foobarbaz' );
 	}
 
 	public function test_exec() {

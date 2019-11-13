@@ -4,10 +4,9 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  * Code Based on
  * @author Andr&eacute; Br&auml;kling
- * @package WP_Matomo
  * https://github.com/braekling/matomo
  *
  */
@@ -22,25 +21,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Settings {
 
-	const OPTION_PREFIX = 'matomo-';
-	const GLOBAL_OPTION_PREFIX = 'matomo_global-';
-	const OPTION_KEY_CAPS_ACCESS = 'caps_access';
-	const OPTION_KEY_STEALTH = 'caps_tracking';
+	const OPTION_PREFIX                        = 'matomo-';
+	const GLOBAL_OPTION_PREFIX                 = 'matomo_global-';
+	const OPTION_KEY_CAPS_ACCESS               = 'caps_access';
+	const OPTION_KEY_STEALTH                   = 'caps_tracking';
 	const OPTION_LAST_TRACKING_SETTINGS_CHANGE = 'last_tracking_settings_update';
-	const OPTION_LAST_TRACKING_CODE_UPDATE = 'last_tracking_code_update';
-	const OPTION_LICENSE_KEY = 'license_key';
-	const SHOW_GET_STARTED_PAGE = 'show_get_started_page';
+	const OPTION_LAST_TRACKING_CODE_UPDATE     = 'last_tracking_code_update';
+	const OPTION_LICENSE_KEY                   = 'license_key';
+	const SHOW_GET_STARTED_PAGE                = 'show_get_started_page';
 
 	public static $is_doing_action_tracking_related = false;
 
 	/**
 	 * Environment variables and default settings container
+	 *
 	 * @var array
 	 */
 	private $default_settings;
 
 	/**
 	 * Tests only
+	 *
 	 * @ignore
 	 * @var bool
 	 */
@@ -48,6 +49,7 @@ class Settings {
 
 	/**
 	 * Register default configuration set
+	 *
 	 * @var array
 	 */
 	private $global_settings = array(
@@ -92,17 +94,18 @@ class Settings {
 		'track_user_id'                            => 'disabled',
 		'track_datacfasync'                        => false,
 		'force_protocol'                           => 'disabled',
-		self::SHOW_GET_STARTED_PAGE                => 1
+		self::SHOW_GET_STARTED_PAGE                => 1,
 	);
 
 	/**
 	 * Settings stored per blog
+	 *
 	 * @var array
 	 */
 	private $settings = array(
 		'noscript_code'                        => '',
 		'tracking_code'                        => '',
-		self::OPTION_LAST_TRACKING_CODE_UPDATE => 0
+		self::OPTION_LAST_TRACKING_CODE_UPDATE => 0,
 	);
 
 	private $settings_changed = false;
@@ -114,10 +117,10 @@ class Settings {
 	 *
 	 */
 	public function __construct() {
-		$this->logger = new Logger();
+		$this->logger           = new Logger();
 		$this->default_settings = array(
 			'globalSettings' => $this->global_settings,
-			'settings'       => $this->settings
+			'settings'       => $this->settings,
 		);
 
 		$this->init_settings();
@@ -140,15 +143,14 @@ class Settings {
 		}
 	}
 
-	public function get_customised_global_settings()
-	{
+	public function get_customised_global_settings() {
 		$default_settings = $this->default_settings['globalSettings'];
-		$custom_settings = array();
+		$custom_settings  = array();
 
-		foreach ($this->global_settings as $key => $val) {
-			if (isset($default_settings[$key])
-			    && $default_settings[$key] != $val) {
-				$custom_settings[$key] = $val;
+		foreach ( $this->global_settings as $key => $val ) {
+			if ( isset( $default_settings[ $key ] )
+				 && $default_settings[ $key ] != $val ) {
+				$custom_settings[ $key ] = $val;
 			}
 		}
 
@@ -175,7 +177,7 @@ class Settings {
 		}
 
 		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
 		return is_plugin_active_for_network( 'matomo/matomo.php' );
@@ -245,11 +247,11 @@ class Settings {
 	 * @api
 	 */
 	public function get_global_option( $key ) {
-		if ( isset ( $this->global_settings[ $key ] ) ) {
+		if ( isset( $this->global_settings[ $key ] ) ) {
 			return $this->global_settings[ $key ];
 		}
 
-		if ( isset ( $this->default_settings['globalSettings'][ $key ] ) ) {
+		if ( isset( $this->default_settings['globalSettings'][ $key ] ) ) {
 			return $this->default_settings['globalSettings'][ $key ];
 		}
 	}
@@ -275,12 +277,12 @@ class Settings {
 	/**
 	 * Set a global option's value
 	 *
-	 * @param string $key option key
+	 * @param string       $key option key
 	 * @param string|array $value new option value
 	 */
 	public function set_global_option( $key, $value ) {
 		$this->settings_changed = true;
-		$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? json_encode( $value ) : $value ) );
+		$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
 		$this->global_settings[ $key ] = $value;
 	}
 
@@ -298,17 +300,18 @@ class Settings {
 
 	/**
 	 * @param $values
+	 *
 	 * @api
 	 */
 	public function apply_tracking_related_changes( $values ) {
-		$this->set_global_option( Settings::OPTION_LAST_TRACKING_SETTINGS_CHANGE, time() );
+		$this->set_global_option( self::OPTION_LAST_TRACKING_SETTINGS_CHANGE, time() );
 
 		$this->apply_changes( $values );
 
-		if (!self::$is_doing_action_tracking_related) {
+		if ( ! self::$is_doing_action_tracking_related ) {
 			// prevent recurison if any plugin was listening to this event and calling this method again
 			self::$is_doing_action_tracking_related = true;
-			do_action('matomo_tracking_settings_changed', $this, $values);
+			do_action( 'matomo_tracking_settings_changed', $this, $values );
 			self::$is_doing_action_tracking_related = false;
 		}
 	}
@@ -318,6 +321,7 @@ class Settings {
 	 *
 	 * @param array $settings
 	 *            new configuration set
+	 *
 	 * @api
 	 */
 	public function apply_changes( $settings ) {
@@ -345,7 +349,7 @@ class Settings {
 
 	private function should_save_tracking_code_across_sites() {
 		return $this->is_network_enabled()
-		       && $this->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
+				&& $this->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
 	}
 
 	public function get_js_tracking_code() {
@@ -369,9 +373,8 @@ class Settings {
 	}
 
 	public function get_tracking_cookie_domain() {
-
 		if ( $this->get_global_option( 'track_across' )
-		     || $this->get_global_option( 'track_crossdomain_linking' ) ) {
+			 || $this->get_global_option( 'track_crossdomain_linking' ) ) {
 			$host = @parse_url( home_url(), PHP_URL_HOST );
 			if ( ! empty( $host ) ) {
 				return '*.' . $host;
@@ -400,10 +403,10 @@ class Settings {
 	}
 
 	public function is_current_tracking_code() {
-		$lastTrackingCodeUpdate     = $this->get_option( self::OPTION_LAST_TRACKING_CODE_UPDATE );
-		$lastTrackingSettingsUpdate = $this->get_global_option( self::OPTION_LAST_TRACKING_SETTINGS_CHANGE );
+		$last_tracking_code_update     = $this->get_option( self::OPTION_LAST_TRACKING_CODE_UPDATE );
+		$last_tracking_settings_update = $this->get_global_option( self::OPTION_LAST_TRACKING_SETTINGS_CHANGE );
 
-		return $lastTrackingCodeUpdate && $lastTrackingCodeUpdate > $lastTrackingSettingsUpdate;
+		return $last_tracking_code_update && $last_tracking_code_update > $last_tracking_settings_update;
 	}
 
 	/**

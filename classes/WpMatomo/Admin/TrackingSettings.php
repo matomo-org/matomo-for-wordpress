@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Admin;
@@ -17,11 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class TrackingSettings implements AdminSettingsInterface {
-	const FORM_NAME = 'matomo';
-	const NONCE_NAME = 'matomo_settings';
-	const TRACK_MODE_DEFAULT = 'default';
-	const TRACK_MODE_DISABLED = 'disabled';
-	const TRACK_MODE_MANUALLY = 'manually';
+	const FORM_NAME             = 'matomo';
+	const NONCE_NAME            = 'matomo_settings';
+	const TRACK_MODE_DEFAULT    = 'default';
+	const TRACK_MODE_DISABLED   = 'disabled';
+	const TRACK_MODE_MANUALLY   = 'manually';
 	const TRACK_MODE_TAGMANAGER = 'tagmanager';
 
 	/**
@@ -42,10 +42,10 @@ class TrackingSettings implements AdminSettingsInterface {
 
 	private function update_if_submitted() {
 		if ( isset( $_POST )
-		     && ! empty( $_POST[ self::FORM_NAME ] )
-		     && is_admin()
-		     && check_admin_referer( self::NONCE_NAME )
-		     && $this->can_user_manage() ) {
+			 && ! empty( $_POST[ self::FORM_NAME ] )
+			 && is_admin()
+			 && check_admin_referer( self::NONCE_NAME )
+			 && $this->can_user_manage() ) {
 			$this->apply_settings();
 
 			return true;
@@ -102,29 +102,32 @@ class TrackingSettings implements AdminSettingsInterface {
 		$values = array();
 
 		// default value in case no role/ post type is selected to make sure we unset it if no role /post type is selected
-		$values['add_post_annotations'] = array();
+		$values['add_post_annotations']    = array();
 		$values['tagmanger_container_ids'] = array();
 
-		if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_TAGMANAGER ) {
-			// no noscript mode in this case
-			$_POST[ 'track_noscript' ] = '';
-			$_POST[ 'noscript_code' ]  = '';
-		} else {
-			unset($_POST[ 'tagmanger_container_ids' ]);
-		}
+		if ( !empty( $_POST[ self::FORM_NAME ][ 'track_mode' ] ) ) {
 
-		if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_MANUALLY
-		     || ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_DISABLED &&
-		          $this->settings->get_global_option( 'track_mode' ) === self::TRACK_MODE_MANUALLY ) ) {
-			if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
-				$_POST[ self::FORM_NAME ]['tracking_code'] = stripslashes( $_POST[ self::FORM_NAME ]['tracking_code'] );
+			if ( self::TRACK_MODE_TAGMANAGER === $_POST[ self::FORM_NAME ]['track_mode'] ) {
+				// no noscript mode in this case
+				$_POST['track_noscript'] = '';
+				$_POST['noscript_code']  = '';
 			} else {
-				$_POST[ self::FORM_NAME ]['tracking_code'] = '';
+				unset( $_POST['tagmanger_container_ids'] );
 			}
-			if ( ! empty( $_POST[ self::FORM_NAME ]['noscript_code'] ) ) {
-				$_POST[ self::FORM_NAME ]['noscript_code'] = stripslashes( $_POST[ self::FORM_NAME ]['noscript_code'] );
-			} else {
-				$_POST[ self::FORM_NAME ]['noscript_code'] = '';
+
+			if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_MANUALLY
+			     || ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_DISABLED &&
+			          $this->settings->get_global_option( 'track_mode' ) === self::TRACK_MODE_MANUALLY ) ) {
+				if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
+					$_POST[ self::FORM_NAME ]['tracking_code'] = stripslashes( $_POST[ self::FORM_NAME ]['tracking_code'] );
+				} else {
+					$_POST[ self::FORM_NAME ]['tracking_code'] = '';
+				}
+				if ( ! empty( $_POST[ self::FORM_NAME ]['noscript_code'] ) ) {
+					$_POST[ self::FORM_NAME ]['noscript_code'] = stripslashes( $_POST[ self::FORM_NAME ]['noscript_code'] );
+				} else {
+					$_POST[ self::FORM_NAME ]['noscript_code'] = '';
+				}
 			}
 		}
 
@@ -146,37 +149,37 @@ class TrackingSettings implements AdminSettingsInterface {
 		$containers = $this->get_active_containers();
 
 		$track_modes = array(
-			TrackingSettings::TRACK_MODE_DISABLED => __( 'Disabled', 'matomo' ),
-			TrackingSettings::TRACK_MODE_DEFAULT  => __( 'Default tracking', 'matomo' ),
-			TrackingSettings::TRACK_MODE_MANUALLY => __( 'Enter manually', 'matomo' )
+			self::TRACK_MODE_DISABLED => __( 'Disabled', 'matomo' ),
+			self::TRACK_MODE_DEFAULT  => __( 'Default tracking', 'matomo' ),
+			self::TRACK_MODE_MANUALLY => __( 'Enter manually', 'matomo' ),
 		);
 
-		if (!empty($containers)) {
-			$track_modes[TrackingSettings::TRACK_MODE_TAGMANAGER] = __('Tag Manager', 'matomo');
+		if ( ! empty( $containers ) ) {
+			$track_modes[ self::TRACK_MODE_TAGMANAGER ] = __( 'Tag Manager', 'matomo' );
 		}
 
-		include( dirname( __FILE__ ) . '/views/tracking.php' );
+		include dirname( __FILE__ ) . '/views/tracking.php';
 	}
 
-	public function get_active_containers()
-	{
+	public function get_active_containers() {
 		// we don't use Matomo API here to avoid needing to bootstrap Matomo which is slow and could break things
 		$containers = array();
-		if (has_matomo_tag_manager()) {
+		if ( has_matomo_tag_manager() ) {
 			global $wpdb;
-			$dbsettings = new \WpMatomo\Db\Settings();
-			$containerTable = $dbsettings->prefix_table_name('tagmanager_container');
+			$dbsettings      = new \WpMatomo\Db\Settings();
+			$container_table = $dbsettings->prefix_table_name( 'tagmanager_container' );
 			try {
-				$containers = $wpdb->get_results(sprintf('SELECT `idcontainer`, `name` FROM %s where `status` = "active"', $containerTable));
-			} catch (\Exception $e) {
+				$containers = $wpdb->get_results( sprintf( 'SELECT `idcontainer`, `name` FROM %s where `status` = "active"', $container_table ) );
+			} catch ( \Exception $e ) {
 				// table may not exist yet etc
 				$containers = array();
 			}
 		}
 		$by_id = array();
-		foreach ($containers as $container) {
-			$by_id[$container->idcontainer] = $container->name;
+		foreach ( $containers as $container ) {
+			$by_id[ $container->idcontainer ] = $container->name;
 		}
+
 		return $by_id;
 	}
 

@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -98,8 +98,7 @@ class TrackingCode {
 		$this->logger->log( 'Add tracking code. Blog ID: ' . get_current_blog_id() );
 
 		if ( $this->settings->is_network_enabled()
-		     && $this->settings->get_global_option( 'track_mode' ) == 'manually' ) {
-
+			 && $this->settings->get_global_option( 'track_mode' ) == 'manually' ) {
 			$site    = new Site();
 			$site_id = $site->get_current_matomo_site_id();
 			if ( $site_id ) {
@@ -107,7 +106,6 @@ class TrackingCode {
 			} else {
 				echo '<!-- Site not yet synced with Matomo, tracking code will be added later -->';
 			}
-
 		} else {
 			echo $tracking_code;
 		}
@@ -145,7 +143,7 @@ class TrackingCode {
 		global $post;
 		if ( is_feed() ) {
 			$this->logger->log( 'Add campaign to feed permalink.' );
-			$sep       = ( strpos( $permalink, '?' ) === false ? '?' : '&' );
+			$sep        = ( strpos( $permalink, '?' ) === false ? '?' : '&' );
 			$permalink .= $sep . 'pk_campaign=' . urlencode( $this->settings->get_global_option( 'track_feed_campaign' ) ) . '&pk_kwd=' . urlencode( $post->post_name );
 		}
 
@@ -168,7 +166,6 @@ class TrackingCode {
 			$site_id = $site->get_current_matomo_site_id();
 			if ( ! $site_id ) {
 				return false;
-
 			}
 			$title   = the_title( null, null, false );
 			$posturl = get_permalink( $post->ID );
@@ -182,7 +179,7 @@ class TrackingCode {
 			}
 
 			$tracking_image = $tracker_endpoint . '?idsite=' . $site_id . '&amp;rec=1&amp;url=' . urlencode( $posturl ) . '&amp;action_name=' . urlencode( $title ) . '&amp;urlref=' . urlencode( $urlref );
-			$content        .= '<img src="' . $tracking_image . '" style="border:0;width:0;height:0" width="0" height="0" alt="" />';
+			$content       .= '<img src="' . $tracking_image . '" style="border:0;width:0;height:0" width="0" height="0" alt="" />';
 		}
 
 		return $content;
@@ -199,9 +196,8 @@ class TrackingCode {
 	 * @return string location extended by pk_vid URL parameter if the URL parameter is set
 	 */
 	public function forward_cross_domain_visitor_id( $location ) {
-
 		if ( ! empty( $_GET['pk_vid'] )
-		     && preg_match( '/^[a-zA-Z0-9]{24,60}$/', $_GET['pk_vid'] ) ) {
+			 && preg_match( '/^[a-zA-Z0-9]{24,60}$/', $_GET['pk_vid'] ) ) {
 			// currently, the pk_vid parameter is 32 characters long, but it may vary over time.
 			$location = add_query_arg( 'pk_vid', $_GET['pk_vid'], $location );
 		}

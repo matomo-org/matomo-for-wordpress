@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -50,9 +50,9 @@ class Installer {
 		$paths       = new Paths();
 		$config_file = $paths->get_config_ini_path();
 
-		$configDir = dirname( $config_file );
-		if ( ! is_dir( $configDir ) ) {
-			wp_mkdir_p( $configDir );
+		$config_dir = dirname( $config_file );
+		if ( ! is_dir( $config_dir ) ) {
+			wp_mkdir_p( $config_dir );
 		}
 
 		return file_exists( $config_file );
@@ -110,7 +110,6 @@ class Installer {
 				$environment = new \Piwik\Application\Environment( null );
 				$environment->init();
 			} catch ( \Exception $e ) {
-
 			}
 
 			try {
@@ -120,7 +119,6 @@ class Installer {
 				$controller = \Piwik\FrontController::getInstance();
 				$controller->init();
 			} catch ( \Exception $e ) {
-
 			}
 
 			try {
@@ -128,23 +126,21 @@ class Installer {
 				// before eg the users_language table would not have been available yet
 				$this->create_user();
 			} catch ( \Exception $e ) {
-
 			}
 
 			try {
 				// update plugins if there are any
 				$this->update_components();
 			} catch ( \Exception $e ) {
-
 			}
 
 			$this->logger->log( 'Recording version and url' );
 
 			DbHelper::recordInstallVersion();
 
-			if ( !SettingsPiwik::getPiwikUrl() ) {
+			if ( ! SettingsPiwik::getPiwikUrl() ) {
 				// especially needed for tests on cli
-				\Piwik\SettingsPiwik::overwritePiwikUrl(plugins_url( 'app', MATOMO_ANALYTICS_FILE ));
+				\Piwik\SettingsPiwik::overwritePiwikUrl( plugins_url( 'app', MATOMO_ANALYTICS_FILE ) );
 			}
 
 			$this->logger->log( 'Emptying some caches' );
@@ -176,7 +172,6 @@ class Installer {
 			\Piwik\Config::getInstance()->database = $db_infos;
 
 			DbHelper::checkDatabaseVersion();
-
 		} catch ( \Exception $e ) {
 			throw new \Exception( sprintf( 'Database creation failed with %s.', $e->getMessage() ) );
 		}
@@ -194,7 +189,7 @@ class Installer {
 		return $db_infos;
 	}
 
-	private function create_config( $dbInfo ) {
+	private function create_config( $db_info ) {
 		$this->logger->log( 'Matomo is now creating the config' );
 		$domain  = home_url();
 		$general = array(
@@ -206,7 +201,7 @@ class Installer {
 		if ( ! is_dir( dirname( $path ) ) ) {
 			wp_mkdir_p( dirname( $path ) );
 		}
-		$config->database = array_merge( $config->database ?: array(), $dbInfo );
+		$config->database = array_merge( $config->database ?: array(), $db_info );
 		$config->General  = array_merge( $config->General ?: array(), $general );
 		$config->forceSave();
 
@@ -256,8 +251,8 @@ class Installer {
 
 		$adapter = $form->getElementsByName( 'adapter' );
 		$adapter = array_shift( $adapter );
-		$adapter->loadOptions( array( 'Wordpress' => 'Wordpress' ) );
-		$adapter->setValue( 'Wordpress' );
+		$adapter->loadOptions( array( 'WordPress' => 'WordPress' ) );
+		$adapter->setValue( 'WordPress' );
 
 		$engine = $form->getElementsByName( 'type' );
 		array_shift( $engine )->setValue( 'InnoDB' );

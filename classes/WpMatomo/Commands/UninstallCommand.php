@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Commands;
@@ -52,6 +52,10 @@ class UninstallCommand extends WP_CLI_Command {
 
 }
 
-WP_CLI::add_command( 'matomo', '\WpMatomo\Commands\UninstallCommand', array(
-	'shortdesc' => 'Manage your Matomo Analytics. Commands are recommended only to be used in development mode'
-) );
+WP_CLI::add_command(
+	'matomo',
+	'\WpMatomo\Commands\UninstallCommand',
+	array(
+		'shortdesc' => 'Manage your Matomo Analytics. Commands are recommended only to be used in development mode',
+	)
+);

@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -32,22 +32,22 @@ class Updater {
 		global $wp_version;
 
 		if ( ! function_exists( 'get_plugin_data' ) ) {
-			require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+			require_once ABSPATH . '/wp-admin/includes/plugin.php';
 		}
 
 		$executed_updates = array();
 
 		$plugin_files = $GLOBALS['MATOMO_PLUGIN_FILES'];
-		if ( ! in_array( MATOMO_ANALYTICS_FILE, $plugin_files ) ) {
+		if ( ! in_array( MATOMO_ANALYTICS_FILE, $plugin_files, true ) ) {
 			$plugin_files[] = MATOMO_ANALYTICS_FILE;
 			// making sure this plugin is in the list so when itself gets updated
 			// it will execute the core updates
 		}
 
-		foreach ( $GLOBALS['MATOMO_PLUGIN_FILES'] as $pluginFile ) {
-			$plugin_data = get_plugin_data( $pluginFile, $markup = false, $translate = false );
+		foreach ( $GLOBALS['MATOMO_PLUGIN_FILES'] as $plugin_file ) {
+			$plugin_data = get_plugin_data( $plugin_file, $markup = false, $translate = false );
 
-			$key           = Settings::OPTION_PREFIX . 'plugin-version-' . basename( str_ireplace( '.php', '', $pluginFile ) );
+			$key           = Settings::OPTION_PREFIX . 'plugin-version-' . basename( str_ireplace( '.php', '', $plugin_file ) );
 			$installed_ver = get_option( $key );
 			if ( ! $installed_ver || $installed_ver !== $plugin_data['Version'] ) {
 				if ( ! Installer::is_intalled() ) {
@@ -76,29 +76,34 @@ class Updater {
 	public function update() {
 		Bootstrap::do_bootstrap();
 
-		\Piwik\Access::doAsSuperUser( function () {
-			self::update_components();
-			self::update_components();
-		} );
+		\Piwik\Access::doAsSuperUser(
+			function () {
+					self::update_components();
+					self::update_components();
+			}
+		);
 
-		$paths = new Paths();
+		$paths      = new Paths();
 		$upload_dir = $paths->get_upload_base_dir();
-		if (is_dir($upload_dir) && is_writable($upload_dir)) {
+		if ( is_dir( $upload_dir ) && is_writable( $upload_dir ) ) {
 			@file_put_contents( $upload_dir . '/index.php', '//hello' );
 			@file_put_contents( $upload_dir . '/index.html', '//hello' );
 			@file_put_contents( $upload_dir . '/index.htm', '//hello' );
-			@file_put_contents( $upload_dir . '/.htaccess', '<Files GeoLite2-City.mmdb>
-'.ServerFilesGenerator::getDenyHtaccessContent().'
+			@file_put_contents(
+				$upload_dir . '/.htaccess',
+				'<Files GeoLite2-City.mmdb>
+' . ServerFilesGenerator::getDenyHtaccessContent() . '
 </Files>
 <Files ~ "(\.js)$">
-'.ServerFilesGenerator::getAllowHtaccessContent().'
-</Files>' );
+' . ServerFilesGenerator::getAllowHtaccessContent() . '
+</Files>'
+			);
 		}
 		$config_dir = $paths->get_config_ini_path();
-		if (is_dir($config_dir) && is_writable($config_dir)) {
-			@file_put_contents($config_dir . '/index.php', '//hello');
-			@file_put_contents($config_dir . '/index.html', '//hello');
-			@file_put_contents($config_dir . '/index.htm', '//hello');
+		if ( is_dir( $config_dir ) && is_writable( $config_dir ) ) {
+			@file_put_contents( $config_dir . '/index.php', '//hello' );
+			@file_put_contents( $config_dir . '/index.html', '//hello' );
+			@file_put_contents( $config_dir . '/index.htm', '//hello' );
 		}
 	}
 

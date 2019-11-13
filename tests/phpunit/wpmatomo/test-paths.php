@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use Piwik\Plugins\SitesManager\Model as SitesModel;
@@ -38,7 +38,7 @@ class PathsTest extends MatomoUnit_TestCase {
 		switch_to_blog( 2 );
 		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/sites/2/matomo', $this->paths->get_upload_base_dir() );
 
-		wp_delete_site($blogid1);
+		wp_delete_site( $blogid1 );
 	}
 
 	public function test_get_upload_base_url() {
@@ -80,22 +80,20 @@ class PathsTest extends MatomoUnit_TestCase {
 	public function test_get_relative_dir_to_matomo() {
 		$valid_values = array(
 			'../plugins/WordPress', // locally
-			'../../matomo/tests/phpunit/wpmatomo' // travis
+			'../../matomo/tests/phpunit/wpmatomo', // travis
 		);
 
-		$val = $this->paths->get_relative_dir_to_matomo( __DIR__ ) ;
-		$this->assertTrue(in_array($val, $valid_values));
+		$val = $this->paths->get_relative_dir_to_matomo( __DIR__ );
+		$this->assertTrue( in_array( $val, $valid_values, true ) );
 		// automatically double check that it works
 		$this->assertTrue( is_dir( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app/../tests/phpunit/wpmatomo' ) );
 	}
 
-	public function test_clear_assets_dir_does_not_fail()
-	{
+	public function test_clear_assets_dir_does_not_fail() {
 		$this->paths->clear_assets_dir();
 	}
 
-	public function test_clear_cache_dir_does_not_fail()
-	{
+	public function test_clear_cache_dir_does_not_fail() {
 		$this->paths->clear_cache_dir();
 	}
 
@@ -105,10 +103,10 @@ class PathsTest extends MatomoUnit_TestCase {
 
 		$valid_values = array(
 			'../plugins/WordPress', // locally
-			'../../matomo/plugins/WordPress' // travis
+			'../../matomo/plugins/WordPress', // travis
 		);
-		$val = $this->paths->get_relative_dir_to_matomo( $dir_te_test );
-		$this->assertTrue(in_array($val, $valid_values));
+		$val          = $this->paths->get_relative_dir_to_matomo( $dir_te_test );
+		$this->assertTrue( in_array( $val, $valid_values, true ) );
 		// automatically double check that it works
 		$this->assertTrue( is_dir( $plugin_dir . 'app/../plugins/WordPress' ) );
 	}
@@ -128,7 +126,7 @@ class PathsTest extends MatomoUnit_TestCase {
 	public function test_get_gloal_upload_dir_if_possible_forBlog() {
 		$blogid1 = self::factory()->blog->create();
 		switch_to_blog( 2 );
-		wp_delete_site($blogid1);
+		wp_delete_site( $blogid1 );
 		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/matomo', $this->paths->get_gloal_upload_dir_if_possible() );
 	}
 

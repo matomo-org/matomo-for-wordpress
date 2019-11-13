@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Access;
@@ -46,9 +46,11 @@ class AccessTest extends MatomoAnalytics_TestCase {
 		$this->assertFalse( get_role( 'editor' )->has_cap( Capabilities::KEY_WRITE ) );
 		$this->assertFalse( get_role( 'author' )->has_cap( Capabilities::KEY_WRITE ) );
 
-		$this->access->save( array(
-			'editor' => Capabilities::KEY_WRITE,
-		) );
+		$this->access->save(
+			array(
+				'editor' => Capabilities::KEY_WRITE,
+			)
+		);
 
 		$this->assertTrue( get_role( 'editor' )->has_cap( Capabilities::KEY_WRITE ) );
 		$this->assertFalse( get_role( 'author' )->has_cap( Capabilities::KEY_WRITE ) );
@@ -65,12 +67,14 @@ class AccessTest extends MatomoAnalytics_TestCase {
 	public function test_save_does_not_set_permissions_for_not_supported_roles() {
 		$this->assertNull( $this->access->get_permission_for_role( 'editor' ) );
 
-		$this->access->save( array(
-			'editor'          => Capabilities::KEY_WRITE,
-			Roles::ROLE_ADMIN => Capabilities::KEY_VIEW,
-			'author'          => Capabilities::KEY_VIEW,
-			'foobar'          => Capabilities::KEY_ADMIN
-		) );
+		$this->access->save(
+			array(
+				'editor'          => Capabilities::KEY_WRITE,
+				Roles::ROLE_ADMIN => Capabilities::KEY_VIEW,
+				'author'          => Capabilities::KEY_VIEW,
+				'foobar'          => Capabilities::KEY_ADMIN,
+			)
+		);
 
 		$this->assertSame( Capabilities::KEY_WRITE, $this->access->get_permission_for_role( 'editor' ) );
 		$this->assertSame( Capabilities::KEY_VIEW, $this->access->get_permission_for_role( 'author' ) );
@@ -80,10 +84,13 @@ class AccessTest extends MatomoAnalytics_TestCase {
 		// double check didn't store it for any other roles
 		$settings = new Settings();
 		$access   = $settings->get_global_option( Settings::OPTION_KEY_CAPS_ACCESS );
-		$this->assertSame( array(
-			'editor' => Capabilities::KEY_WRITE,
-			'author' => Capabilities::KEY_VIEW
-		), $access );
+		$this->assertSame(
+			array(
+				'editor' => Capabilities::KEY_WRITE,
+				'author' => Capabilities::KEY_VIEW,
+			),
+			$access
+		);
 	}
 
 }

@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Admin;
@@ -19,8 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Marketplace {
 	const NONCE_LICENSE = 'matomo_license';
-	const FORM_NAME = 'matomo_license_key';
-	private $validTabs = array( 'subscriptions' );
+	const FORM_NAME     = 'matomo_license_key';
+	private $valid_tabs  = array( 'subscriptions' );
 
 	/**
 	 * @var Settings
@@ -48,11 +48,10 @@ class Marketplace {
 
 	private function update_if_submitted() {
 		if ( isset( $_POST )
-		     && isset( $_POST[ self::FORM_NAME ] )
-		     && is_admin()
-		     && check_admin_referer( self::NONCE_LICENSE )
-		     && $this->can_user_manage() ) {
-
+			 && isset( $_POST[ self::FORM_NAME ] )
+			 && is_admin()
+			 && check_admin_referer( self::NONCE_LICENSE )
+			 && $this->can_user_manage() ) {
 			if ( $this->api->is_valid_api_key( $_POST[ self::FORM_NAME ] ) ) {
 				$this->settings->set_license_key( $_POST[ self::FORM_NAME ] );
 			} else {
@@ -66,12 +65,12 @@ class Marketplace {
 		$this->update_if_submitted();
 
 		$active_tab = '';
-		if ( isset( $_GET['tab'] ) && in_array( $_GET['tab'], $this->validTabs, true ) ) {
+		if ( isset( $_GET['tab'] ) && in_array( $_GET['tab'], $this->valid_tabs, true ) ) {
 			$active_tab = $_GET['tab'];
 		}
 		$settings                  = $this->settings;
 		$can_view_subscription_tab = $this->can_user_manage();
-		include( dirname( __FILE__ ) . '/views/marketplace.php' );
+		include dirname( __FILE__ ) . '/views/marketplace.php';
 	}
 
 }

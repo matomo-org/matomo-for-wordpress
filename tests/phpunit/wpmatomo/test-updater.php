@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Settings;
@@ -28,8 +28,8 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 		$keys = $this->updater->update_if_needed();
 		$this->assertSame( array( 'matomo-plugin-version-matomo' ), $keys );
 
-		$pluginData = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
-		$this->assertSame( $pluginData['Version'], get_option( $keys[0] ) );
+		$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
+		$this->assertSame( $plugin_data['Version'], get_option( $keys[0] ) );
 
 		// does not execute the update again
 		$keys = $this->updater->update_if_needed();

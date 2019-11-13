@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Bootstrap;
@@ -94,7 +94,6 @@ class UninstallTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_uninstall_removes_roles_even_when_not_remove_data() {
-
 		$this->uninstaller->uninstall( false );
 
 		$this->assertEmpty( get_role( Roles::ROLE_WRITE ) );

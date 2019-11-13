@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -22,10 +22,13 @@ class PrivacyBadge {
 	}
 
 	public function show_privacy_page( $atts ) {
-		$a = shortcode_atts( array(
-			'size'  => '120',
-			'align' => ''
-		), $atts );
+		$a = shortcode_atts(
+			array(
+				'size'  => '120',
+				'align' => '',
+			),
+			$atts
+		);
 
 		$option = sprintf( ' width="%s" height="%s"', esc_attr( $a['size'] ), esc_attr( $a['size'] ) );
 
@@ -35,7 +38,8 @@ class PrivacyBadge {
 
 		$url = plugins_url( 'assets/img/privacybadge.png', MATOMO_ANALYTICS_FILE );
 
-		$title = __('Your privacy protected! This website uses Matomo.', 'matomo');
+		$title = __( 'Your privacy protected! This website uses Matomo.', 'matomo' );
+
 		return sprintf( '<img alt="%s" src="%s" %s>', $title, esc_attr( $url ), $option );
 	}
 

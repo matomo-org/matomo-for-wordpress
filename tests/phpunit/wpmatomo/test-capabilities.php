@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\Access;
@@ -35,7 +35,7 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 
 	public function tearDown() {
 		$this->caps->remove_hooks();
-		parent::tearDown(); 
+		parent::tearDown();
 	}
 
 	private function make_capabilities() {
@@ -49,8 +49,8 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 	/**
 	 * @dataProvider get_any_higher_permission_provider
 	 */
-	public function test_has_any_higher_permission( $expectedResult, $capToFind, $caps ) {
-		$this->assertSame( $expectedResult, $this->caps->has_any_higher_permission( $capToFind, $caps ) );
+	public function test_has_any_higher_permission( $expected_result, $cap_to_find, $caps ) {
+		$this->assertSame( $expected_result, $this->caps->has_any_higher_permission( $cap_to_find, $caps ) );
 	}
 
 	public function get_any_higher_permission_provider() {
@@ -71,18 +71,20 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 		$id2 = self::factory()->user->create( array( 'role' => 'author' ) );
 		$id3 = self::factory()->user->create( array( 'role' => 'contributor' ) );
 
-		foreach ( array( $id1, $id2, $id3 ) as $userId ) {
-			$this->assertFalse( user_can( $userId, Capabilities::KEY_ADMIN ) );
-			$this->assertFalse( user_can( $userId, Capabilities::KEY_WRITE ) );
-			$this->assertFalse( user_can( $userId, Capabilities::KEY_VIEW ) );
+		foreach ( array( $id1, $id2, $id3 ) as $user_id ) {
+			$this->assertFalse( user_can( $user_id, Capabilities::KEY_ADMIN ) );
+			$this->assertFalse( user_can( $user_id, Capabilities::KEY_WRITE ) );
+			$this->assertFalse( user_can( $user_id, Capabilities::KEY_VIEW ) );
 		}
 
 		$access = new Access( $this->settings );
-		$access->save( array(
-			'editor'      => Capabilities::KEY_ADMIN,
-			'author'      => Capabilities::KEY_WRITE,
-			'contributor' => Capabilities::KEY_VIEW,
-		) );
+		$access->save(
+			array(
+				'editor'      => Capabilities::KEY_ADMIN,
+				'author'      => Capabilities::KEY_WRITE,
+				'contributor' => Capabilities::KEY_VIEW,
+			)
+		);
 
 		$this->assertTrue( get_role( 'editor' )->has_cap( Capabilities::KEY_ADMIN ) );
 		$this->assertTrue( get_role( 'author' )->has_cap( Capabilities::KEY_WRITE ) );
@@ -107,7 +109,7 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 	private function make_all_caps( $caps_to_set ) {
 		$caps = array();
 		foreach ( $this->make_capabilities()->get_all_capabilities_sorted_by_highest_permission() as $cap ) {
-			$caps[ $cap ] = in_array( $cap, $caps_to_set );
+			$caps[ $cap ] = in_array( $cap, $caps_to_set, true );
 		}
 
 		return $caps;

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Matomo_Analytics
+ * @package matomo
  */
 
 use WpMatomo\User;
@@ -44,7 +44,7 @@ class UserTest extends MatomoUnit_TestCase {
 	 */
 	public function test_get_current_matomo_user_login_mapping_is_stored_per_blog() {
 		$user_id = $this->create_set_super_admin();
-		wp_set_current_user($user_id);
+		wp_set_current_user( $user_id );
 
 		$id1 = self::factory()->blog->create();
 
@@ -59,7 +59,7 @@ class UserTest extends MatomoUnit_TestCase {
 		restore_current_blog();
 		$this->assertSame( 'foo', $this->user->get_current_matomo_user_login() );
 
-		wp_delete_site($id1);
+		wp_delete_site( $id1 );
 	}
 
 	public function test_map_matomo_user_login_get_matomo_user_login() {

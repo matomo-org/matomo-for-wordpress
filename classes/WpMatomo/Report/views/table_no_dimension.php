@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 use Piwik\Piwik;
@@ -19,18 +19,18 @@ use WpMatomo\Capabilities;
 ?>
 
 <div class="table">
-    <table class="widefat matomo-table">
-        <tbody>
+	<table class="widefat matomo-table">
+		<tbody>
 		<?php
 		$columns = ! empty( $report['columns'] ) ? $report['columns'] : array();
-		foreach ( $report['reportData']->getRows() as $metricName => $row ) {
-			foreach ( $row as $metricName => $value ) {
-				$display_name = ! empty( $columns[ $metricName ] ) ? $columns[ $metricName ] : $metricName;
+		foreach ( $report['reportData']->getRows() as $val => $row ) {
+			foreach ( $row as $metric_name => $value ) {
+				$display_name = ! empty( $columns[ $metric_name ] ) ? $columns[ $metric_name ] : $metric_name;
 				echo '<tr><td width="75%">' . esc_html( $display_name ) . '</td><td width="25%">' . esc_html( $value ) . '</td></tr>';
 			}
 		}
 		?>
-        </tbody>
+		</tbody>
 
-    </table>
+	</table>
 </div>

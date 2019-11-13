@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo\Admin;
@@ -27,23 +27,23 @@ class Menu {
 	 */
 	private $settings;
 
-	private $parentSlug = 'matomo';
+	private $parent_slug = 'matomo';
 
-	const REPORTING_GOTO_ADMIN = 'matomo-admin';
-	const REPORTING_GOTO_GDPR_TOOLS = 'matomo-gdpr-tools';
-	const REPORTING_GOTO_GDPR_OVERVIEW = 'matomo-gdpr-overview';
-	const REPORTING_GOTO_ASK_CONSENT = 'matomo-gdpr-consent';
-	const REPORTING_GOTO_OPTOUT = 'matomo-privacy-optout';
+	const REPORTING_GOTO_ADMIN          = 'matomo-admin';
+	const REPORTING_GOTO_GDPR_TOOLS     = 'matomo-gdpr-tools';
+	const REPORTING_GOTO_GDPR_OVERVIEW  = 'matomo-gdpr-overview';
+	const REPORTING_GOTO_ASK_CONSENT    = 'matomo-gdpr-consent';
+	const REPORTING_GOTO_OPTOUT         = 'matomo-privacy-optout';
 	const REPORTING_GOTO_ANONYMIZE_DATA = 'matomo-anonymize-date';
 	const REPORTING_GOTO_DATA_RETENTION = 'matomo-data-retention';
-	const SLUG_SYSTEM_REPORT = 'matomo-systemreport';
-	const SLUG_REPORT_SUMMARY = 'matomo-summary';
-	const SLUG_TAGMANAGER = 'matomo-tagmanager';
-	const SLUG_REPORTING = 'matomo-reporting';
-	const SLUG_SETTINGS = 'matomo-settings';
-	const SLUG_GET_STARTED = 'matomo-get-started';
-	const SLUG_ABOUT = 'matomo-about';
-	const SLUG_MARKETPLACE = 'matomo-plugins';
+	const SLUG_SYSTEM_REPORT            = 'matomo-systemreport';
+	const SLUG_REPORT_SUMMARY           = 'matomo-summary';
+	const SLUG_TAGMANAGER               = 'matomo-tagmanager';
+	const SLUG_REPORTING                = 'matomo-reporting';
+	const SLUG_SETTINGS                 = 'matomo-settings';
+	const SLUG_GET_STARTED              = 'matomo-get-started';
+	const SLUG_ABOUT                    = 'matomo-about';
+	const SLUG_MARKETPLACE              = 'matomo-plugins';
 
 	const CAP_NOT_EXISTS = 'unknownfoobar';
 
@@ -59,9 +59,9 @@ class Menu {
 
 		// as we are redirecting we need to perform the redirect as soon as possible before WP has eg echoed the header
 		add_action( 'load-matomo-analytics_page_' . self::SLUG_REPORTING, array( $this, 'reporting' ) );
-		add_action( 'load-' . $this->parentSlug . '_page_' . self::SLUG_REPORTING, array( $this, 'reporting' ) );
+		add_action( 'load-' . $this->parent_slug . '_page_' . self::SLUG_REPORTING, array( $this, 'reporting' ) );
 		add_action( 'load-matomo-analytics_page_' . self::SLUG_TAGMANAGER, array( $this, 'tagmanager' ) );
-		add_action( 'load-' . $this->parentSlug . '_page_' . self::SLUG_TAGMANAGER, array( $this, 'tagmanager' ) );
+		add_action( 'load-' . $this->parent_slug . '_page_' . self::SLUG_TAGMANAGER, array( $this, 'tagmanager' ) );
 	}
 
 	public function add_menu() {
@@ -82,40 +82,82 @@ class Menu {
 		add_menu_page( 'Matomo Analytics', 'Matomo Analytics', self::CAP_NOT_EXISTS, 'matomo', null, 'dashicons-analytics' );
 
 		if ( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
-			add_submenu_page( $this->parentSlug, __( 'Get Started', 'matomo' ), __( 'Get Started', 'matomo' ), Capabilities::KEY_SUPERUSER, self::SLUG_GET_STARTED, array(
-				$get_started,
-				'show'
-			) );
+			add_submenu_page(
+				$this->parent_slug,
+				__( 'Get Started', 'matomo' ),
+				__( 'Get Started', 'matomo' ),
+				Capabilities::KEY_SUPERUSER,
+				self::SLUG_GET_STARTED,
+				array(
+					$get_started,
+					'show',
+				)
+			);
 		}
 
 		if ( is_network_admin() ) {
-			add_submenu_page( $this->parentSlug, __( 'Multi Site', 'matomo' ), __( 'Multi Site', 'matomo' ), Capabilities::KEY_SUPERUSER, 'matomo-multisite', array(
-				$info,
-				'show_multisite'
-			) );
+			add_submenu_page(
+				$this->parent_slug,
+				__( 'Multi Site', 'matomo' ),
+				__( 'Multi Site', 'matomo' ),
+				Capabilities::KEY_SUPERUSER,
+				'matomo-multisite',
+				array(
+					$info,
+					'show_multisite',
+				)
+			);
 		} else {
-			add_submenu_page( $this->parentSlug, __( 'Summary', 'matomo' ), __( 'Summary', 'matomo' ), Capabilities::KEY_VIEW, self::SLUG_REPORT_SUMMARY, array(
-				$summary,
-				'show'
-			) );
+			add_submenu_page(
+				$this->parent_slug,
+				__( 'Summary', 'matomo' ),
+				__( 'Summary', 'matomo' ),
+				Capabilities::KEY_VIEW,
+				self::SLUG_REPORT_SUMMARY,
+				array(
+					$summary,
+					'show',
+				)
+			);
 
 			// the network itself is not a blog
-			add_submenu_page( $this->parentSlug, __( 'Reporting', 'matomo' ), __( 'Reporting', 'matomo' ), Capabilities::KEY_VIEW, self::SLUG_REPORTING, array(
-				$this,
-				'reporting'
-			) );
+			add_submenu_page(
+				$this->parent_slug,
+				__( 'Reporting', 'matomo' ),
+				__( 'Reporting', 'matomo' ),
+				Capabilities::KEY_VIEW,
+				self::SLUG_REPORTING,
+				array(
+					$this,
+					'reporting',
+				)
+			);
 			// the network itself is not a blog
-			add_submenu_page( $this->parentSlug, __( 'Tag Manager', 'matomo' ), __( 'Tag Manager', 'matomo' ), Capabilities::KEY_WRITE, self::SLUG_TAGMANAGER, array(
-				$this,
-				'tagmanager'
-			) );
+			add_submenu_page(
+				$this->parent_slug,
+				__( 'Tag Manager', 'matomo' ),
+				__( 'Tag Manager', 'matomo' ),
+				Capabilities::KEY_WRITE,
+				self::SLUG_TAGMANAGER,
+				array(
+					$this,
+					'tagmanager',
+				)
+			);
 		}
 
 		if ( $can_matomo_be_managed ) {
-			add_submenu_page( $this->parentSlug, __( 'Settings', 'matomo' ), __( 'Settings', 'matomo' ), Capabilities::KEY_SUPERUSER, self::SLUG_SETTINGS, array(
-				$admin_settings,
-				'show'
-			) );
+			add_submenu_page(
+				$this->parent_slug,
+				__( 'Settings', 'matomo' ),
+				__( 'Settings', 'matomo' ),
+				Capabilities::KEY_SUPERUSER,
+				self::SLUG_SETTINGS,
+				array(
+					$admin_settings,
+					'show',
+				)
+			);
 		}
 
 		/*
@@ -126,34 +168,48 @@ class Menu {
 		*/
 
 		if ( $can_matomo_be_managed ) {
-			add_submenu_page( $this->parentSlug, __( 'System Report', 'matomo' ), __( 'System Report', 'matomo' ), Capabilities::KEY_SUPERUSER, self::SLUG_SYSTEM_REPORT, array(
-				$system_report,
-				'show'
-			) );
+			add_submenu_page(
+				$this->parent_slug,
+				__( 'System Report', 'matomo' ),
+				__( 'System Report', 'matomo' ),
+				Capabilities::KEY_SUPERUSER,
+				self::SLUG_SYSTEM_REPORT,
+				array(
+					$system_report,
+					'show',
+				)
+			);
 		}
 
-		add_submenu_page( $this->parentSlug, __( 'About', 'matomo' ), __( 'About', 'matomo' ), Capabilities::KEY_VIEW, self::SLUG_ABOUT, array(
-			$info,
-			'show'
-		) );
+		add_submenu_page(
+			$this->parent_slug,
+			__( 'About', 'matomo' ),
+			__( 'About', 'matomo' ),
+			Capabilities::KEY_VIEW,
+			self::SLUG_ABOUT,
+			array(
+				$info,
+				'show',
+			)
+		);
 	}
 
 	public function menu_external_icons() {
 		global $submenu;
 
-		if ( isset( $submenu[ $this->parentSlug ] ) ) {
+		if ( isset( $submenu[ $this->parent_slug ] ) ) {
 			$reporting  = __( 'Reporting', 'matomo' );
 			$tagmanager = __( 'Tag Manager', 'matomo' );
-			foreach ( $submenu[ $this->parentSlug ] as $key => $menu_item ) {
+			foreach ( $submenu[ $this->parent_slug ] as $key => $menu_item ) {
 				if ( 0 === strpos( $menu_item[0], $reporting ) || 0 === strpos( $menu_item[0], $tagmanager ) ) {
-					$submenu[ $this->parentSlug ][ $key ][0] .= ' <span class="dashicons-before dashicons-external"></span>';
+					$submenu[ $this->parent_slug ][ $key ][0] .= ' <span class="dashicons-before dashicons-external"></span>';
 				}
 			}
 		}
 	}
 
 	public static function get_matomo_goto_url( $goto ) {
-		return add_query_arg( array( 'goto' => $goto ), menu_page_url( Menu::SLUG_REPORTING, false ) );
+		return add_query_arg( array( 'goto' => $goto ), menu_page_url( self::SLUG_REPORTING, false ) );
 	}
 
 	public static function get_reporting_url() {
@@ -197,7 +253,13 @@ class Menu {
 		$url = self::get_reporting_url();
 
 		if ( ! empty( $_GET['report_date'] ) ) {
-			$url = add_query_arg( array( 'module' => 'CoreHome', 'action' => 'index' ), $url );
+			$url = add_query_arg(
+				array(
+					'module' => 'CoreHome',
+					'action' => 'index',
+				),
+				$url
+			);
 
 			$site   = new Site();
 			$idsite = $site->get_current_matomo_site_id();
@@ -206,9 +268,15 @@ class Menu {
 				$url = add_query_arg( array( 'idSite' => (int) $idsite ), $url );
 			}
 
-			$date = new Dates();
+			$date                  = new Dates();
 			list( $period, $date ) = $date->detect_period_and_date( $_GET['report_date'] );
-			$url = add_query_arg( array( 'period' => $period, 'date' => $date ), $url );
+			$url                   = add_query_arg(
+				array(
+					'period' => $period,
+					'date'   => $date,
+				),
+				$url
+			);
 		}
 
 		wp_redirect( $url );
@@ -238,14 +306,13 @@ class Menu {
 			$params['date'] = 'today';
 		}
 
-		$url = self::make_matomo_app_base_url();
-		$url .= '?module=CoreHome&action=index&idSite=' . (int) $idsite . '&period=' . urlencode( $params['period'] ) . '&date=' . urlencode( $params['date'] ) . '#?&' . http_build_query( $params );
+		$url  = self::make_matomo_app_base_url();
+		$url .= '?module=CoreHome&action=index&idSite=' . (int) $idsite . '&period=' . rawurlencode( $params['period'] ) . '&date=' . rawurlencode( $params['date'] ) . '#?&' . http_build_query( $params );
 
 		return $url;
 	}
 
-	private static function make_matomo_app_base_url()
-	{
+	private static function make_matomo_app_base_url() {
 		$url = plugins_url( 'app', MATOMO_ANALYTICS_FILE );
 
 		return $url . '/index.php';
@@ -290,9 +357,9 @@ class Menu {
 		$default_date     = $user_preferences->getDefaultDate();
 		$default_period   = $user_preferences->getDefaultPeriod( false );
 
-		$url = self::make_matomo_app_base_url();
-		$url .= '?idSite=' . (int) $website_id . '&period=' . urlencode( $default_period ) . '&date=' . urlencode( $default_date );
-		$url .= '&module=' . urlencode( $module ) . '&action=' . urlencode( $action );
+		$url  = self::make_matomo_app_base_url();
+		$url .= '?idSite=' . (int) $website_id . '&period=' . rawurlencode( $default_period ) . '&date=' . rawurlencode( $default_date );
+		$url .= '&module=' . rawurlencode( $module ) . '&action=' . rawurlencode( $action );
 		wp_redirect( $url );
 		exit;
 	}

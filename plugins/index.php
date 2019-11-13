@@ -1,2 +1,6 @@
 <?php
-// Hello
+/**
+ * Hello
+ *
+ * @package matomo
+ */

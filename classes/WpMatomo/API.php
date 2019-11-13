@@ -4,7 +4,7 @@
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @package matomo
  */
 
 namespace WpMatomo;
@@ -25,10 +25,14 @@ class API {
 	}
 
 	public function register_routes() {
-		register_rest_route( self::VERSION, '/' . self::ROUTE_HIT . '/', array(
-			'methods'  => array( 'GET', 'POST' ),
-			'callback' => array( $this, 'hit' ),
-		) );
+		register_rest_route(
+			self::VERSION,
+			'/' . self::ROUTE_HIT . '/',
+			array(
+				'methods'  => array( 'GET', 'POST' ),
+				'callback' => array( $this, 'hit' ),
+			)
+		);
 		$this->register_route( 'API', 'getProcessedReport' );
 		$this->register_route( 'API', 'getReportMetadata' );
 		$this->register_route( 'API', 'getMatomoVersion' );
@@ -82,7 +86,7 @@ class API {
 			// option... then we could also save it compressed
 			$paths = new Paths();
 			$path  = $paths->get_matomo_js_upload_path();
-			header( "Content-Type: application/javascript" );
+			header( 'Content-Type: application/javascript' );
 			header( 'Content-Length: ' . ( filesize( $path ) ) );
 			readfile( $paths->get_upload_base_dir() . '/matomo.js' ); // Reading the file into the output buffer
 			exit;
@@ -134,7 +138,7 @@ class API {
 			'run'        => 'POST',
 			'send'       => 'POST',
 			'delete'     => 'DELETE',
-			'remove'     => 'DELETE'
+			'remove'     => 'DELETE',
 		);
 		$starts_with_keep_prefix = array( 'anonymize', 'invalidate', 'run', 'send' );
 
@@ -142,11 +146,11 @@ class API {
 		$wp_api_module = $this->to_snake_case( $api_module );
 		$wp_api_action = $this->to_snake_case( $api_method );
 
-		foreach ( $methods as $methodStartsWith => $methodToUse ) {
-			if ( strpos( $api_method, $methodStartsWith ) === 0 ) {
-				$method = $methodToUse;
-				if ( ! in_array( $methodStartsWith, $starts_with_keep_prefix ) ) {
-					$new_action = trim( ltrim( substr( $wp_api_action, strlen( $methodStartsWith ) ), '_' ) );
+		foreach ( $methods as $method_starts_with => $method_to_use ) {
+			if ( strpos( $api_method, $method_starts_with ) === 0 ) {
+				$method = $method_to_use;
+				if ( ! in_array( $method_starts_with, $starts_with_keep_prefix, true ) ) {
+					$new_action = trim( ltrim( substr( $wp_api_action, strlen( $method_starts_with ) ), '_' ) );
 					if ( ! empty( $new_action ) ) {
 						$wp_api_action = $new_action;
 					}
@@ -155,12 +159,16 @@ class API {
 			}
 		}
 
-		register_rest_route( self::VERSION, '/' . $wp_api_module . '/' . $wp_api_action . '/', array(
-			'methods'      => $method,
-			'callback'     => array( $this, 'execute_api_method' ),
-			'matomoModule' => $api_module,
-			'matomoMethod' => $api_method,
-		) );
+		register_rest_route(
+			self::VERSION,
+			'/' . $wp_api_module . '/' . $wp_api_action . '/',
+			array(
+				'methods'      => $method,
+				'callback'     => array( $this, 'execute_api_method' ),
+				'matomoModule' => $api_module,
+				'matomoMethod' => $api_method,
+			)
+		);
 	}
 
 	private function execute_request( $api_method, $with_idsite, $params ) {
@@ -178,7 +186,7 @@ class API {
 			$params['idSites'] = $idsite;
 		}
 
-		// ensure user is authenticated through wordpress!
+		// ensure user is authenticated through WordPress!
 		unset( $_GET['token_auth'] );
 		unset( $_POST['token_auth'] );
 
