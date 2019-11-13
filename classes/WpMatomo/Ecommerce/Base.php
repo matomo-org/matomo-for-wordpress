@@ -79,7 +79,7 @@ class Base {
 			$this->ajax_tracker_calls[] = $params;
 		}
 
-		return sprintf( 'window._paq = window._paq || []; window._paq.push(%s);', json_encode( $params ) );
+		return sprintf( 'window._paq = window._paq || []; window._paq.push(%s);', wp_json_encode( $params ) );
 	}
 
 	protected function wrap_script( $script ) {

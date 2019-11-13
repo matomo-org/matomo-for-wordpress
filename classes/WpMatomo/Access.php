@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Access {
-	public static $MATOMO_PERMISSIONS = array(
+	public static $matomo_permissions = array(
 		Capabilities::KEY_NONE  => 'None',
 		Capabilities::KEY_VIEW  => 'View',
 		Capabilities::KEY_WRITE => 'Write',
@@ -51,7 +51,7 @@ class Access {
 		foreach ( $values as $role => $matomo_permission ) {
 			if ( isset( $available_roles[ $role ] ) &&
 				 $wp_roles->is_role( $role )
-				 && array_key_exists( $matomo_permission, self::$MATOMO_PERMISSIONS ) ) {
+				 && array_key_exists( $matomo_permission, self::$matomo_permissions ) ) {
 				$caps_to_store[ $role ] = $matomo_permission;
 			}
 		}

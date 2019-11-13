@@ -27,7 +27,7 @@ class SafeModeMenu {
 	 */
 	private $settings;
 
-	private $parentSlug = 'matomo';
+	private $parent_slug = 'matomo';
 
 	/**
 	 * @param Settings $settings
@@ -48,7 +48,7 @@ class SafeModeMenu {
 		add_menu_page( 'Matomo Analytics', 'Matomo Analytics', Menu::CAP_NOT_EXISTS, 'matomo', null, 'dashicons-analytics' );
 
 		add_submenu_page(
-			$this->parentSlug,
+			$this->parent_slug,
 			__( 'System Report', 'matomo' ),
 			__( 'System Report', 'matomo' ),
 			'administrator',

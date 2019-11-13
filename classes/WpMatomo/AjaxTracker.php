@@ -18,7 +18,7 @@ if ( ! class_exists( '\PiwikTracker' ) ) {
 }
 
 class AjaxTracker extends \PiwikTracker {
-	private $hasCookie = false;
+	private $has_cookie = false;
 
 	public function __construct( Settings $settings ) {
 		$site   = new Site();
@@ -47,14 +47,14 @@ class AjaxTracker extends \PiwikTracker {
 
 		if ( $this->loadVisitorIdCookie() ) {
 			if ( ! empty( $this->cookieVisitorId ) ) {
-				$this->hasCookie = true;
+				$this->has_cookie = true;
 				$this->setVisitorId( $this->cookieVisitorId );
 			}
 		}
 	}
 
 	protected function setCookie( $cookieName, $cookieValue, $cookieTTL ) {
-		if ( ! $this->hasCookie ) {
+		if ( ! $this->has_cookie ) {
 			// we only set / overwrite cookies if it is a visitor that has eg no JS enabled or ad blocker enabled etc.
 			// this way we will track all cart updates and orders into the same visitor on following requests.
 			// If we recognized the visitor before via cookie we want in our case to make sure to not overwrite

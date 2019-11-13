@@ -163,10 +163,10 @@ class TrackingSettings implements AdminSettingsInterface {
 		$containers = array();
 		if ( has_matomo_tag_manager() ) {
 			global $wpdb;
-			$dbsettings     = new \WpMatomo\Db\Settings();
-			$containerTable = $dbsettings->prefix_table_name( 'tagmanager_container' );
+			$dbsettings      = new \WpMatomo\Db\Settings();
+			$container_table = $dbsettings->prefix_table_name( 'tagmanager_container' );
 			try {
-				$containers = $wpdb->get_results( sprintf( 'SELECT `idcontainer`, `name` FROM %s where `status` = "active"', $containerTable ) );
+				$containers = $wpdb->get_results( sprintf( 'SELECT `idcontainer`, `name` FROM %s where `status` = "active"', $container_table ) );
 			} catch ( \Exception $e ) {
 				// table may not exist yet etc
 				$containers = array();

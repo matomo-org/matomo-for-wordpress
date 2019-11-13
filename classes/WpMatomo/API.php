@@ -146,11 +146,11 @@ class API {
 		$wp_api_module = $this->to_snake_case( $api_module );
 		$wp_api_action = $this->to_snake_case( $api_method );
 
-		foreach ( $methods as $methodStartsWith => $methodToUse ) {
-			if ( strpos( $api_method, $methodStartsWith ) === 0 ) {
-				$method = $methodToUse;
-				if ( ! in_array( $methodStartsWith, $starts_with_keep_prefix, true ) ) {
-					$new_action = trim( ltrim( substr( $wp_api_action, strlen( $methodStartsWith ) ), '_' ) );
+		foreach ( $methods as $method_starts_with => $method_to_use ) {
+			if ( strpos( $api_method, $method_starts_with ) === 0 ) {
+				$method = $method_to_use;
+				if ( ! in_array( $method_starts_with, $starts_with_keep_prefix, true ) ) {
+					$new_action = trim( ltrim( substr( $wp_api_action, strlen( $method_starts_with ) ), '_' ) );
 					if ( ! empty( $new_action ) ) {
 						$wp_api_action = $new_action;
 					}

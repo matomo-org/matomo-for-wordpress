@@ -44,10 +44,10 @@ class Updater {
 			// it will execute the core updates
 		}
 
-		foreach ( $GLOBALS['MATOMO_PLUGIN_FILES'] as $pluginFile ) {
-			$plugin_data = get_plugin_data( $pluginFile, $markup = false, $translate = false );
+		foreach ( $GLOBALS['MATOMO_PLUGIN_FILES'] as $plugin_file ) {
+			$plugin_data = get_plugin_data( $plugin_file, $markup = false, $translate = false );
 
-			$key           = Settings::OPTION_PREFIX . 'plugin-version-' . basename( str_ireplace( '.php', '', $pluginFile ) );
+			$key           = Settings::OPTION_PREFIX . 'plugin-version-' . basename( str_ireplace( '.php', '', $plugin_file ) );
 			$installed_ver = get_option( $key );
 			if ( ! $installed_ver || $installed_ver !== $plugin_data['Version'] ) {
 				if ( ! Installer::is_intalled() ) {

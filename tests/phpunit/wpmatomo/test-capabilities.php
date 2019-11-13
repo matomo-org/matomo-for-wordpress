@@ -71,10 +71,10 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 		$id2 = self::factory()->user->create( array( 'role' => 'author' ) );
 		$id3 = self::factory()->user->create( array( 'role' => 'contributor' ) );
 
-		foreach ( array( $id1, $id2, $id3 ) as $userId ) {
-			$this->assertFalse( user_can( $userId, Capabilities::KEY_ADMIN ) );
-			$this->assertFalse( user_can( $userId, Capabilities::KEY_WRITE ) );
-			$this->assertFalse( user_can( $userId, Capabilities::KEY_VIEW ) );
+		foreach ( array( $id1, $id2, $id3 ) as $user_id ) {
+			$this->assertFalse( user_can( $user_id, Capabilities::KEY_ADMIN ) );
+			$this->assertFalse( user_can( $user_id, Capabilities::KEY_WRITE ) );
+			$this->assertFalse( user_can( $user_id, Capabilities::KEY_VIEW ) );
 		}
 
 		$access = new Access( $this->settings );

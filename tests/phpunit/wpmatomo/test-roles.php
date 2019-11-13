@@ -42,8 +42,8 @@ class RolesTest extends MatomoUnit_TestCase {
 
 	public function test_is_matomo_role() {
 		$roles = $this->roles->get_matomo_roles();
-		foreach ( $roles as $roleName => $options ) {
-			$this->assertTrue( $this->roles->is_matomo_role( $roleName ) );
+		foreach ( $roles as $role_name => $options ) {
+			$this->assertTrue( $this->roles->is_matomo_role( $role_name ) );
 		}
 		$this->assertFalse( $this->roles->is_matomo_role( 'administrator' ) );
 		$this->assertFalse( $this->roles->is_matomo_role( 'editor' ) );

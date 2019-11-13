@@ -37,7 +37,7 @@ class SystemReport {
 	const TROUBLESHOOT_CLEAR_MATOMO_CACHE = 'matomo_troubleshooting_action_clear_matomo_cache';
 	const TROUBLESHOOT_ARCHIVE_NOW        = 'matomo_troubleshooting_action_archive_now';
 
-	private $validTabs = array( 'troubleshooting' );
+	private $valid_tabs = array( 'troubleshooting' );
 
 	/**
 	 * @var Settings
@@ -97,7 +97,7 @@ class SystemReport {
 		$settings = $this->settings;
 
 		$active_tab = '';
-		if ( isset( $_GET['tab'] ) && in_array( $_GET['tab'], $this->validTabs, true ) ) {
+		if ( isset( $_GET['tab'] ) && in_array( $_GET['tab'], $this->valid_tabs, true ) ) {
 			$active_tab = $_GET['tab'];
 		}
 
@@ -175,7 +175,7 @@ class SystemReport {
 		$rows[] = array(
 			'name'    => __( 'Plugin directories', 'matomo' ),
 			'value'   => ! empty( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) ? 'Yes' : 'No',
-			'comment' => ! empty( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) ? json_encode( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) : '',
+			'comment' => ! empty( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) ? wp_json_encode( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) : '',
 		);
 
 		$tmp_dir = $paths->get_tmp_dir();
@@ -293,11 +293,11 @@ class SystemReport {
 			$rows   = $this->add_diagnostic_results( $rows, $report->getOptionalDiagnosticResults() );
 		}
 
-		$cliMulti = new CliMulti();
+		$cli_multi = new CliMulti();
 
 		$rows[] = array(
 			'name'    => 'Supports Async Archiving',
-			'value'   => $cliMulti->supportsAsync(),
+			'value'   => $cli_multi->supportsAsync(),
 			'comment' => '',
 		);
 

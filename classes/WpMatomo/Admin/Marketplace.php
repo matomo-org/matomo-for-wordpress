@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Marketplace {
 	const NONCE_LICENSE = 'matomo_license';
 	const FORM_NAME     = 'matomo_license_key';
-	private $validTabs  = array( 'subscriptions' );
+	private $valid_tabs  = array( 'subscriptions' );
 
 	/**
 	 * @var Settings
@@ -65,7 +65,7 @@ class Marketplace {
 		$this->update_if_submitted();
 
 		$active_tab = '';
-		if ( isset( $_GET['tab'] ) && in_array( $_GET['tab'], $this->validTabs, true ) ) {
+		if ( isset( $_GET['tab'] ) && in_array( $_GET['tab'], $this->valid_tabs, true ) ) {
 			$active_tab = $_GET['tab'];
 		}
 		$settings                  = $this->settings;

@@ -27,7 +27,7 @@ class Menu {
 	 */
 	private $settings;
 
-	private $parentSlug = 'matomo';
+	private $parent_slug = 'matomo';
 
 	const REPORTING_GOTO_ADMIN          = 'matomo-admin';
 	const REPORTING_GOTO_GDPR_TOOLS     = 'matomo-gdpr-tools';
@@ -59,9 +59,9 @@ class Menu {
 
 		// as we are redirecting we need to perform the redirect as soon as possible before WP has eg echoed the header
 		add_action( 'load-matomo-analytics_page_' . self::SLUG_REPORTING, array( $this, 'reporting' ) );
-		add_action( 'load-' . $this->parentSlug . '_page_' . self::SLUG_REPORTING, array( $this, 'reporting' ) );
+		add_action( 'load-' . $this->parent_slug . '_page_' . self::SLUG_REPORTING, array( $this, 'reporting' ) );
 		add_action( 'load-matomo-analytics_page_' . self::SLUG_TAGMANAGER, array( $this, 'tagmanager' ) );
-		add_action( 'load-' . $this->parentSlug . '_page_' . self::SLUG_TAGMANAGER, array( $this, 'tagmanager' ) );
+		add_action( 'load-' . $this->parent_slug . '_page_' . self::SLUG_TAGMANAGER, array( $this, 'tagmanager' ) );
 	}
 
 	public function add_menu() {
@@ -83,7 +83,7 @@ class Menu {
 
 		if ( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
 			add_submenu_page(
-				$this->parentSlug,
+				$this->parent_slug,
 				__( 'Get Started', 'matomo' ),
 				__( 'Get Started', 'matomo' ),
 				Capabilities::KEY_SUPERUSER,
@@ -97,7 +97,7 @@ class Menu {
 
 		if ( is_network_admin() ) {
 			add_submenu_page(
-				$this->parentSlug,
+				$this->parent_slug,
 				__( 'Multi Site', 'matomo' ),
 				__( 'Multi Site', 'matomo' ),
 				Capabilities::KEY_SUPERUSER,
@@ -109,7 +109,7 @@ class Menu {
 			);
 		} else {
 			add_submenu_page(
-				$this->parentSlug,
+				$this->parent_slug,
 				__( 'Summary', 'matomo' ),
 				__( 'Summary', 'matomo' ),
 				Capabilities::KEY_VIEW,
@@ -122,7 +122,7 @@ class Menu {
 
 			// the network itself is not a blog
 			add_submenu_page(
-				$this->parentSlug,
+				$this->parent_slug,
 				__( 'Reporting', 'matomo' ),
 				__( 'Reporting', 'matomo' ),
 				Capabilities::KEY_VIEW,
@@ -134,7 +134,7 @@ class Menu {
 			);
 			// the network itself is not a blog
 			add_submenu_page(
-				$this->parentSlug,
+				$this->parent_slug,
 				__( 'Tag Manager', 'matomo' ),
 				__( 'Tag Manager', 'matomo' ),
 				Capabilities::KEY_WRITE,
@@ -148,7 +148,7 @@ class Menu {
 
 		if ( $can_matomo_be_managed ) {
 			add_submenu_page(
-				$this->parentSlug,
+				$this->parent_slug,
 				__( 'Settings', 'matomo' ),
 				__( 'Settings', 'matomo' ),
 				Capabilities::KEY_SUPERUSER,
@@ -169,7 +169,7 @@ class Menu {
 
 		if ( $can_matomo_be_managed ) {
 			add_submenu_page(
-				$this->parentSlug,
+				$this->parent_slug,
 				__( 'System Report', 'matomo' ),
 				__( 'System Report', 'matomo' ),
 				Capabilities::KEY_SUPERUSER,
@@ -182,7 +182,7 @@ class Menu {
 		}
 
 		add_submenu_page(
-			$this->parentSlug,
+			$this->parent_slug,
 			__( 'About', 'matomo' ),
 			__( 'About', 'matomo' ),
 			Capabilities::KEY_VIEW,
@@ -197,12 +197,12 @@ class Menu {
 	public function menu_external_icons() {
 		global $submenu;
 
-		if ( isset( $submenu[ $this->parentSlug ] ) ) {
+		if ( isset( $submenu[ $this->parent_slug ] ) ) {
 			$reporting  = __( 'Reporting', 'matomo' );
 			$tagmanager = __( 'Tag Manager', 'matomo' );
-			foreach ( $submenu[ $this->parentSlug ] as $key => $menu_item ) {
+			foreach ( $submenu[ $this->parent_slug ] as $key => $menu_item ) {
 				if ( 0 === strpos( $menu_item[0], $reporting ) || 0 === strpos( $menu_item[0], $tagmanager ) ) {
-					$submenu[ $this->parentSlug ][ $key ][0] .= ' <span class="dashicons-before dashicons-external"></span>';
+					$submenu[ $this->parent_slug ][ $key ][0] .= ' <span class="dashicons-before dashicons-external"></span>';
 				}
 			}
 		}
@@ -307,7 +307,7 @@ class Menu {
 		}
 
 		$url  = self::make_matomo_app_base_url();
-		$url .= '?module=CoreHome&action=index&idSite=' . (int) $idsite . '&period=' . urlencode( $params['period'] ) . '&date=' . urlencode( $params['date'] ) . '#?&' . http_build_query( $params );
+		$url .= '?module=CoreHome&action=index&idSite=' . (int) $idsite . '&period=' . rawurlencode( $params['period'] ) . '&date=' . rawurlencode( $params['date'] ) . '#?&' . http_build_query( $params );
 
 		return $url;
 	}
@@ -358,8 +358,8 @@ class Menu {
 		$default_period   = $user_preferences->getDefaultPeriod( false );
 
 		$url  = self::make_matomo_app_base_url();
-		$url .= '?idSite=' . (int) $website_id . '&period=' . urlencode( $default_period ) . '&date=' . urlencode( $default_date );
-		$url .= '&module=' . urlencode( $module ) . '&action=' . urlencode( $action );
+		$url .= '?idSite=' . (int) $website_id . '&period=' . rawurlencode( $default_period ) . '&date=' . rawurlencode( $default_date );
+		$url .= '&module=' . rawurlencode( $module ) . '&action=' . rawurlencode( $action );
 		wp_redirect( $url );
 		exit;
 	}

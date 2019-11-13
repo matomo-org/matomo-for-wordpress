@@ -26,15 +26,15 @@ class User {
 		}
 	}
 
-	public static function get_matomo_user_login( $wpUserId ) {
-		return get_option( self::USER_MAPPING_PREFIX . $wpUserId );
+	public static function get_matomo_user_login( $wp_user_id ) {
+		return get_option( self::USER_MAPPING_PREFIX . $wp_user_id );
 	}
 
-	public static function map_matomo_user_login( $wpUserId, $matomoUserLogin ) {
-		if ( empty( $matomoUserLogin ) ) {
-			delete_option( self::USER_MAPPING_PREFIX . $wpUserId );
+	public static function map_matomo_user_login( $wp_user_id, $matomo_user_login ) {
+		if ( empty( $matomo_user_login ) ) {
+			delete_option( self::USER_MAPPING_PREFIX . $wp_user_id );
 		} else {
-			update_option( self::USER_MAPPING_PREFIX . $wpUserId, $matomoUserLogin );
+			update_option( self::USER_MAPPING_PREFIX . $wp_user_id, $matomo_user_login );
 		}
 	}
 

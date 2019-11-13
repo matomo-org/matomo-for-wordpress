@@ -100,7 +100,7 @@ new WpMatomo();
 
 // todo remove this before release
 require 'plugin-update-checker/plugin-update-checker.php';
-$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+$matomo_update_checker = Puc_v4_Factory::buildUpdateChecker(
 	'https://builds.matomo.org/wordpress-beta.json',
 	__FILE__,
 	'matomo'

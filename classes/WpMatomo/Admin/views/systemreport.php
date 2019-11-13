@@ -121,7 +121,7 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 				echo "<td width='30%'>" . esc_html( $row['name'] ) . '</td>';
 				echo "<td width='" . ( ! empty( $table['has_comments'] ) ? 20 : 70 ) . "%'>" . esc_html( $value ) . '</td>';
 				if ( ! empty( $table['has_comments'] ) ) {
-					$replacedElements = array(
+					$replaced_elements = array(
 						'<code>'  => '__#CODEBACKUP#__',
 						'</code>' => '__##CODEBACKUP##__',
 						'<pre style="overflow-x: scroll;max-width: 600px;">' => '__#PREBACKUP#__',
@@ -130,10 +130,10 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 						'<br />'  => '__#BRBACKUP#__',
 						'<br>'    => '__#BRBACKUP#__',
 					);
-					$comment          = isset( $row['comment'] ) ? $row['comment'] : '';
-					$replaced         = str_replace( array_keys( $replacedElements ), array_values( $replacedElements ), $comment );
-					$escaped          = esc_html( $replaced );
-					echo "<td width='50%'>" . str_replace( array_values( $replacedElements ), array_keys( $replacedElements ), $escaped ) . '</td>';
+					$comment           = isset( $row['comment'] ) ? $row['comment'] : '';
+					$replaced          = str_replace( array_keys( $replaced_elements ), array_values( $replaced_elements ), $comment );
+					$escaped           = esc_html( $replaced );
+					echo "<td width='50%'>" . str_replace( array_values( $replaced_elements ), array_keys( $replaced_elements ), $escaped ) . '</td>';
 				}
 
 				echo '</tr>';

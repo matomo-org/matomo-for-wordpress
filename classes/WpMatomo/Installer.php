@@ -50,9 +50,9 @@ class Installer {
 		$paths       = new Paths();
 		$config_file = $paths->get_config_ini_path();
 
-		$configDir = dirname( $config_file );
-		if ( ! is_dir( $configDir ) ) {
-			wp_mkdir_p( $configDir );
+		$config_dir = dirname( $config_file );
+		if ( ! is_dir( $config_dir ) ) {
+			wp_mkdir_p( $config_dir );
 		}
 
 		return file_exists( $config_file );
@@ -189,7 +189,7 @@ class Installer {
 		return $db_infos;
 	}
 
-	private function create_config( $dbInfo ) {
+	private function create_config( $db_info ) {
 		$this->logger->log( 'Matomo is now creating the config' );
 		$domain  = home_url();
 		$general = array(
@@ -201,7 +201,7 @@ class Installer {
 		if ( ! is_dir( dirname( $path ) ) ) {
 			wp_mkdir_p( dirname( $path ) );
 		}
-		$config->database = array_merge( $config->database ?: array(), $dbInfo );
+		$config->database = array_merge( $config->database ?: array(), $db_info );
 		$config->General  = array_merge( $config->General ?: array(), $general );
 		$config->forceSave();
 

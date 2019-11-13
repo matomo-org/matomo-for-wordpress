@@ -282,7 +282,7 @@ class Settings {
 	 */
 	public function set_global_option( $key, $value ) {
 		$this->settings_changed = true;
-		$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? json_encode( $value ) : $value ) );
+		$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
 		$this->global_settings[ $key ] = $value;
 	}
 

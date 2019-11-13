@@ -68,15 +68,15 @@ class Forms {
 	 * @param int     $rows number of rows to show
 	 * @param string  $description option description
 	 * @param boolean $is_hidden set to true to initially hide the option (default: false)
-	 * @param string  $groupName define a class name to access a group of option rows by javascript (default: empty)
+	 * @param string  $group_name define a class name to access a group of option rows by javascript (default: empty)
 	 * @param boolean $hide_description $hideDescription set to false to show description initially (default: true)
 	 * @param string  $on_change javascript for onchange event (default: empty)
 	 * @param boolean $is_readonly set textarea to read only (default: false)
 	 * @param boolean $global set to false if the textarea shows a site-specific option (default: true)
 	 */
-	public function show_textarea( $id, $name, $rows, $description, $is_hidden, $groupName, $hide_description = true, $on_change = '', $is_readonly = false, $global = true ) {
+	public function show_textarea( $id, $name, $rows, $description, $is_hidden, $group_name, $hide_description = true, $on_change = '', $is_readonly = false, $global = true ) {
 		printf(
-			'<tr class="' . $groupName . ( $is_hidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s</label>:</th><td><textarea cols="80" rows="' . $rows . '" id="%s" name="' . TrackingSettings::FORM_NAME . '[%2$s]" onchange="%s"' . ( $is_readonly ? ' readonly="readonly"' : '' ) . '>%s</textarea> %s</td></tr>',
+			'<tr class="' . $group_name . ( $is_hidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s</label>:</th><td><textarea cols="80" rows="' . $rows . '" id="%s" name="' . TrackingSettings::FORM_NAME . '[%2$s]" onchange="%s"' . ( $is_readonly ? ' readonly="readonly"' : '' ) . '>%s</textarea> %s</td></tr>',
 			esc_html( $name ),
 			$id,
 			$on_change,
