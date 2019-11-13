@@ -1,3 +1,16 @@
+<?php
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @package matomo
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // if accessed directly
+}
+?>
 <h2><?php _e( 'Do you have a bug to report or a feature request?', 'matomo' ); ?></h2>
 <p>
 <?php

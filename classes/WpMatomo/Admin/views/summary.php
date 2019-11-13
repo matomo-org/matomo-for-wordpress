@@ -28,17 +28,17 @@ global $wp;
 <?php } ?>
 <div class="wrap">
 	<div id="icon-plugins" class="icon32"></div>
-	<h1><?php _e( 'Summary', 'matomo' ); ?></h1>
+	<h1><?php esc_html_e( 'Summary', 'matomo' ); ?></h1>
 	<?php
 	if ( $report_date === Dates::TODAY ) {
 		echo '<div class="notice notice-info" style="padding:8px;">' . __( 'Reports for today are only refreshed approximately every hour through the WordPress cronjob.', 'matomo' ) . '</div>';
 	}
 	?>
-	<p><?php _e( 'Looking for all reports and advanced features like segmentation, real time reports, and more?', 'matomo' ); ?>
+	<p><?php esc_html_e( 'Looking for all reports and advanced features like segmentation, real time reports, and more?', 'matomo' ); ?>
 		<a href="<?php echo add_query_arg( array( 'report_date' => $report_date ), menu_page_url( Menu::SLUG_REPORTING, false ) ); ?>"
-		><?php _e( 'View full reporting', 'matomo' ); ?></a>
+		><?php esc_html_e( 'View full reporting', 'matomo' ); ?></a>
 		<br/><br/>
-		<?php _e( 'Change date:', 'matomo' ); ?>
+		<?php esc_html_e( 'Change date:', 'matomo' ); ?>
 		<?php
 		foreach ( $report_dates as $report_date_key => $report_name ) {
 			$buttonClass = 'button';
@@ -97,8 +97,8 @@ global $wp;
 	</div>
 
 	<p style="clear:both;">
-		<?php _e( 'Did you know? You can embed any report into any page or post using a shortcode. Simply hover the title to find the correct shortcode.', 'matomo' ); ?>
-		<?php _e( 'Only users with view access will be able to view the content of the report.', 'matomo' ); ?>
-		<?php _e( 'Note: Embedding report data can be tricky if you are using caching plugins that cache the entire HTML of your page or post. In case you are using such a plugin, we recommend you disable the caching for these pages.', 'matomo' ); ?>
+		<?php esc_html_e( 'Did you know? You can embed any report into any page or post using a shortcode. Simply hover the title to find the correct shortcode.', 'matomo' ); ?>
+		<?php esc_html_e( 'Only users with view access will be able to view the content of the report.', 'matomo' ); ?>
+		<?php esc_html_e( 'Note: Embedding report data can be tricky if you are using caching plugins that cache the entire HTML of your page or post. In case you are using such a plugin, we recommend you disable the caching for these pages.', 'matomo' ); ?>
 	</p>
 </div>

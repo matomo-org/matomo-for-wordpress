@@ -33,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				   && ! is_network_admin() ) {
 			?>
 			<a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_ADMIN ); ?>" class="nav-tab"
-			><?php _e( 'Matomo Admin', 'matomo' ); ?> <span class="dashicons-before dashicons-external"></span></a>
+			><?php esc_html_e( 'Matomo Admin', 'matomo' ); ?> <span class="dashicons-before dashicons-external"></span></a>
 
 		<?php } ?>
 	</h2>

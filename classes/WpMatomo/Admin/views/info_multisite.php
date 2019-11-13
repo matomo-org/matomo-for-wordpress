@@ -16,21 +16,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="wrap">
 	<div id="icon-plugins" class="icon32"></div>
-	<h1><?php _e( 'Matomo Analytics in Multi Site mode', 'matomo' ); ?></h1>
-	<p><?php _e( 'You are seeing this page as you are viewing the network admin. Matomo differentiates between two different multi site modes:', 'matomo' ); ?></p>
-	<h2><?php _e( 'Matomo is network enabled', 'matomo' ); ?></h2>
-	<p><?php _e( 'In this mode, the tracking and access settings are managed in the network admin in one place and apply to all blogs.', 'matomo' ); ?>
-		<?php _e( 'An administrator of a blog cannot view or change these settings.', 'matomo' ); ?>
+	<h1><?php esc_html_e( 'Matomo Analytics in Multi Site mode', 'matomo' ); ?></h1>
+	<p><?php esc_html_e( 'You are seeing this page as you are viewing the network admin. Matomo differentiates between two different multi site modes:', 'matomo' ); ?></p>
+	<h2><?php esc_html_e( 'Matomo is network enabled', 'matomo' ); ?></h2>
+	<p><?php esc_html_e( 'In this mode, the tracking and access settings are managed in the network admin in one place and apply to all blogs.', 'matomo' ); ?>
+		<?php esc_html_e( 'An administrator of a blog cannot view or change these settings.', 'matomo' ); ?>
 		<br/><br/>
-		<?php _e( 'The license code for any possible premium features is applied across blogs and can only be managed by a super admin.', 'matomo' ); ?>
+		<?php esc_html_e( 'The license code for any possible premium features is applied across blogs and can only be managed by a super admin.', 'matomo' ); ?>
 	</p>
-	<h2><?php _e( 'Matomo is not network enabled', 'matomo' ); ?></h2>
-	<p><?php _e( 'In this mode, the tracking and access settings are managed by each individual blog. They cannot be managed in one central place for all blogs. An administrator or any user with the "Matomo super user" role can change these settings.', 'matomo' ); ?>
+	<h2><?php esc_html_e( 'Matomo is not network enabled', 'matomo' ); ?></h2>
+	<p><?php esc_html_e( 'In this mode, the tracking and access settings are managed by each individual blog. They cannot be managed in one central place for all blogs. An administrator or any user with the "Matomo super user" role can change these settings.', 'matomo' ); ?>
 		<br/>
 		<br/>
-		<?php _e( 'The license code for any possible premium features is applied across blogs and can only be managed by a super admin.', 'matomo' ); ?>
+		<?php esc_html_e( 'The license code for any possible premium features is applied across blogs and can only be managed by a super admin.', 'matomo' ); ?>
 	</p>
-	<h2><?php _e( 'Managing many sites?', 'matomo' ); ?></h2>
+	<h2><?php esc_html_e( 'Managing many sites?', 'matomo' ); ?></h2>
 	<p>
 	<?php
 	echo sprintf(

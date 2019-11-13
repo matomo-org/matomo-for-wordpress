@@ -1,4 +1,17 @@
-<h1><?php _e( 'About Matomo Analytics', 'matomo' ); ?></h1>
+<?php
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @package matomo
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // if accessed directly
+}
+?>
+<h1><?php esc_html_e( 'About Matomo Analytics', 'matomo' ); ?></h1>
 
 <p>
 	<?php

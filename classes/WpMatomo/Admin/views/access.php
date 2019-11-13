@@ -52,16 +52,16 @@ use WpMatomo\Admin\AccessSettings;
 </form>
 
 <p>
-	<?php _e( 'Learn about the differences between these Matomo roles:', 'matomo' ); ?>
-	<a href="https://matomo.org/faq/general/faq_70/" target="_blank" rel="noopener"><?php _e( 'View', 'matomo' ); ?></a>,
+	<?php esc_html_e( 'Learn about the differences between these Matomo roles:', 'matomo' ); ?>
+	<a href="https://matomo.org/faq/general/faq_70/" target="_blank" rel="noopener"><?php esc_html_e( 'View', 'matomo' ); ?></a>,
 	<a href="https://matomo.org/faq/general/faq_26910/" target="_blank"
-	   rel="noopener"><?php _e( 'Write', 'matomo' ); ?></a>,
-	<a href="https://matomo.org/faq/general/faq_69/" target="_blank" rel="noopener"><?php _e( 'Admin', 'matomo' ); ?></a>,
+	   rel="noopener"><?php esc_html_e( 'Write', 'matomo' ); ?></a>,
+	<a href="https://matomo.org/faq/general/faq_69/" target="_blank" rel="noopener"><?php esc_html_e( 'Admin', 'matomo' ); ?></a>,
 	<a href="https://matomo.org/faq/general/faq_35/" target="_blank"
-	   rel="noopener"><?php _e( 'Super User', 'matomo' ); ?></a>
+	   rel="noopener"><?php esc_html_e( 'Super User', 'matomo' ); ?></a>
 </p>
 
-<h2><?php echo __( 'Roles', 'matomo' ); ?></h2>
+<h2><?php esc_html_e( 'Roles', 'matomo' ); ?></h2>
 <p>
 <?php
 _e(
@@ -77,10 +77,10 @@ _e(
 	<?php } ?>
 </ul>
 
-<h2><?php echo __( 'Capabilities', 'matomo' ); ?></h2>
+<h2><?php esc_html_e( 'Capabilities', 'matomo' ); ?></h2>
 <p>
 <?php
-_e(
+esc_html_e(
 	'You can also install a WordPress plugin which lets you manage capabilities for each individual users. These are
     the supported capabilities:',
 	'matomo'

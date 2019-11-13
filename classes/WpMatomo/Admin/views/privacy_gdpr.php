@@ -29,12 +29,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<h2><?php _e( 'Matomo ensures the privacy of your users and analytics data! YOU keep control of your data.', 'matomo' ); ?></h2>
+<h2><?php esc_html_e( 'Matomo ensures the privacy of your users and analytics data! YOU keep control of your data.', 'matomo' ); ?></h2>
 
 <blockquote
-	class="matomo-blockquote"><?php _e( 'One of Matomo\'s guiding principles: respecting privacy', 'matomo' ); ?></blockquote>
+	class="matomo-blockquote"><?php esc_html_e( 'One of Matomo\'s guiding principles: respecting privacy', 'matomo' ); ?></blockquote>
 <p>
-	<?php _e( 'Matomo Analytics is privacy by design. All data collected is stored only within your own MySQL database, no other business (or Matomo team member) can access any of this information, and logs or report data will never be sent to other servers by Matomo', 'matomo' ); ?>
+	<?php esc_html_e( 'Matomo Analytics is privacy by design. All data collected is stored only within your own MySQL database, no other business (or Matomo team member) can access any of this information, and logs or report data will never be sent to other servers by Matomo', 'matomo' ); ?>
 	.
 
 	<?php
@@ -46,10 +46,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	?>
 </p>
 <h2>
-	<?php _e( 'Ways Matomo protects the privacy of your users and customers', 'matomo' ); ?>
+	<?php esc_html_e( 'Ways Matomo protects the privacy of your users and customers', 'matomo' ); ?>
 </h2>
-<p><?php _e( 'Although Matomo Analytics is a web analytics software that has a purpose to track user activity on your website, we take privacy very seriously.', 'matomo' ); ?></p>
-<p><?php _e( 'Privacy is a fundamental right so by using Matomo you can rest assured you have 100% control over that data and can protect your user\'s privacy as it\'s on your own server.', 'matomo' ); ?></p>
+<p><?php esc_html_e( 'Although Matomo Analytics is a web analytics software that has a purpose to track user activity on your website, we take privacy very seriously.', 'matomo' ); ?></p>
+<p><?php esc_html_e( 'Privacy is a fundamental right so by using Matomo you can rest assured you have 100% control over that data and can protect your user\'s privacy as it\'s on your own server.', 'matomo' ); ?></p>
 
 <ul class="matomo-list">
 	<li>
@@ -73,7 +73,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</li>
 </ul>
 <h2>
-	<?php _e( 'Let users opt-out of tracking', 'matomo' ); ?>
+	<?php esc_html_e( 'Let users opt-out of tracking', 'matomo' ); ?>
 </h2>
 <p>
 	<?php
@@ -83,11 +83,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	);
 	?>
 		<br/>
-	<?php _e( 'You can use these short code options:', 'matomo' ); ?>
+	<?php esc_html_e( 'You can use these short code options:', 'matomo' ); ?>
 </p>
 <ul class="matomo-list">
 	<li>language - eg de or
-		en. <?php _e( 'By default the language is detected automatically based on the user\'s browser', 'matomo' ); ?></li>
+		en. <?php esc_html_e( 'By default the language is detected automatically based on the user\'s browser', 'matomo' ); ?></li>
 	<li>background_color - eg black or #000</li>
 	<li>font_color - eg black or #000</li>
 	<li>font_size - eg 15px</li>
@@ -95,8 +95,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<li>width - eg 600, 600px or 100%</li>
 	<li>height - eg 200, 200px or 20%</li>
 </ul>
-<p><?php _e( 'Example', 'matomo' ); ?>: <code><?php echo PrivacySettings::EXAMPLE_FULL; ?></code></p>
-<h2><?php _e( 'You earned it!', 'matomo' ); ?></h2>
+<p><?php esc_html_e( 'Example', 'matomo' ); ?>: <code><?php echo PrivacySettings::EXAMPLE_FULL; ?></code></p>
+<h2><?php esc_html_e( 'You earned it!', 'matomo' ); ?></h2>
 <p>
 	<?php echo sprintf( __( 'Use the shortcode %1$s to show that your website respects your visitors\' privacy.', 'matomo' ), '<code>[matomo_privacy_badge size=120]</code>' ); ?>
 	<?php echo do_shortcode( '[matomo_privacy_badge size=120 align=left]' ); ?>

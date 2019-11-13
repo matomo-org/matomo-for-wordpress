@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php require 'info_shared.php'; ?>
 	<?php require 'info_help.php'; ?>
 
-	<h2><?php _e( 'Support the project', 'matomo' ); ?></h2>
+	<h2><?php esc_html_e( 'Support the project', 'matomo' ); ?></h2>
 	<p>
 	<?php
 	echo sprintf(
@@ -52,7 +52,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?>
 	</p>
 
-	<h2><?php _e( 'High traffic websites', 'matomo' ); ?></h2>
+	<h2><?php esc_html_e( 'High traffic websites', 'matomo' ); ?></h2>
 	<?php require 'info_high_traffic.php'; ?>
 
 	<?php require 'info_bug_report.php'; ?>
@@ -84,13 +84,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</ul>
 		<ul>
 			<li><a target="_blank" rel="noreferrer noopener"
-				   href="https://matomo.org/blog/"><?php _e( 'Blog', 'matomo' ); ?></a></li>
+				   href="https://matomo.org/blog/"><?php esc_html_e( 'Blog', 'matomo' ); ?></a></li>
 			<li><a target="_blank" rel="noreferrer noopener"
-				   href="https://developer.matomo.org"><?php _e( 'Developers', 'matomo' ); ?></a></li>
+				   href="https://developer.matomo.org"><?php esc_html_e( 'Developers', 'matomo' ); ?></a></li>
 			<li><a target="_blank" rel="noreferrer noopener"
-				   href="https://plugins.matomo.org"><?php _e( 'Marketplace', 'matomo' ); ?></a></li>
+				   href="https://plugins.matomo.org"><?php esc_html_e( 'Marketplace', 'matomo' ); ?></a></li>
 			<li><a target="_blank" rel="noreferrer noopener"
-				   href="https://matomo.org/thank-you-all/"><?php _e( 'Credits', 'matomo' ); ?></a></li>
+				   href="https://matomo.org/thank-you-all/"><?php esc_html_e( 'Credits', 'matomo' ); ?></a></li>
 		</ul>
 	</div>
 </div>
