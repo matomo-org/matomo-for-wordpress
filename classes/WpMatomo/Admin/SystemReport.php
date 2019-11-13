@@ -109,6 +109,7 @@ class SystemReport {
 				array( 'title' => 'WordPress', 'rows' => $this->get_wordpress_info() ),
 				array( 'title' => 'WordPress Plugins', 'rows' => $this->get_plugins_info(), 'has_comments' => true ),
 				array( 'title' => 'Server', 'rows' => $this->get_server_info(), 'has_comments' => true ),
+				array( 'title' => 'Database', 'rows' => $this->get_db_info(), 'has_comments' => true ),
 			);
 		}
 
@@ -172,27 +173,29 @@ class SystemReport {
 			'comment' => $tmp_dir
 		);
 
-		try {
-			Bootstrap::do_bootstrap();
-			/** @var DiagnosticService $service */
-			$service = StaticContainer::get( \Piwik\Plugins\Diagnostics\DiagnosticService::class );
-			$report  = $service->runDiagnostics();
+		if ( ! \WpMatomo::is_safe_mode() ) {
+			try {
+				Bootstrap::do_bootstrap();
+				/** @var DiagnosticService $service */
+				$service = StaticContainer::get( \Piwik\Plugins\Diagnostics\DiagnosticService::class );
+				$report  = $service->runDiagnostics();
 
-		} catch ( \Exception $e ) {
+			} catch ( \Exception $e ) {
+				$rows[] = array(
+					'name'    => __( 'Matomo System Check', 'matomo' ),
+					'value'   => 'Failed to run, please open the system check in Matomo',
+					'comment' => ''
+				);
+
+				return $rows;
+			}
+
 			$rows[] = array(
-				'name'    => __( 'Matomo System Check', 'matomo' ),
-				'value'   => 'Failed to run, please open the system check in Matomo',
+				'name'    => __( 'Matomo Version', 'matomo' ),
+				'value'   => \Piwik\Version::VERSION,
 				'comment' => ''
 			);
-
-			return $rows;
 		}
-
-		$rows[] = array(
-			'name'    => __( 'Matomo Version', 'matomo' ),
-			'value'   => \Piwik\Version::VERSION,
-			'comment' => ''
-		);
 
 		$site = new Site();
 		$idsite = $site->get_current_matomo_site_id();
@@ -279,15 +282,15 @@ class SystemReport {
 				'section' => __( 'Optional checks', 'matomo' ),
 			);
 			$rows   = $this->add_diagnostic_results( $rows, $report->getOptionalDiagnosticResults() );
+
+			$cliMulti = new CliMulti();
+
+			$rows[] = array(
+				'name'    => 'Supports Async Archiving',
+				'value'   => $cliMulti->supportsAsync(),
+				'comment' => ''
+			);
 		}
-
-		$cliMulti = new CliMulti();
-
-		$rows[] = array(
-			'name'    => 'Supports Async Archiving',
-			'value'   => $cliMulti->supportsAsync(),
-			'comment' => ''
-		);
 
 		$rows[] = array(
 			'section' => 'Matomo Settings',
@@ -388,22 +391,14 @@ class SystemReport {
 	}
 
 	private function get_server_info() {
-		global $wpdb;
 		$rows = array();
 
 		$rows[] = array( 'name' => 'Server Info', 'value' => $_SERVER['SERVER_SOFTWARE'] );
 		$rows[] = array( 'name' => 'PHP Version', 'value' => phpversion() );
-		$rows[] = array( 'name' => 'MySQL Version', 'value' => ! empty( $wpdb->is_mysql ) ? $wpdb->db_version() : '' );
 		$rows[] = array( 'name' => 'Timezone', 'value' => date_default_timezone_get() );
 		$rows[] = array( 'name' => 'Locale', 'value' => get_locale() );
 		$rows[] = array( 'name' => 'Memory Limit', 'value' => max( WP_MEMORY_LIMIT, @ini_get( 'memory_limit' ) ), 'comment' => 'At least 128MB recommended. Depending on your traffic 256MB or more may be needed.' );
 		$rows[] = array( 'name' => 'Time', 'value' => time() );
-
-		$rows[] = array( 'name' => 'Mysqli Connect', 'value' => function_exists( 'mysqli_connect' ) );
-		$rows[] = array(
-			'name'  => 'Force MySQL over Mysqli',
-			'value' => defined( 'WP_USE_EXT_MYSQL' ) && WP_USE_EXT_MYSQL
-		);
 
 		$rows[] = array( 'name' => 'Max Execution Time', 'value' => ini_get( 'max_execution_time' ) );
 		$rows[] = array( 'name' => 'Max Post Size', 'value' => ini_get( 'post_max_size' ) );
@@ -417,6 +412,107 @@ class SystemReport {
 		}
 
 		return $rows;
+	}
+
+	private function get_db_info() {
+		global $wpdb;
+		$rows = array();
+
+		$rows[] = array( 'name' => 'MySQL Version',
+		                 'value' => ! empty( $wpdb->is_mysql ) ? $wpdb->db_version() : '',
+						 'comment' => ''
+		);
+		$rows[] = array(
+			'name' => 'Mysqli Connect', 'value' => function_exists( 'mysqli_connect' ), 'comment' => ''
+		);
+		$rows[] = array(
+			'name'  => 'Force MySQL over Mysqli',
+			'value' => defined( 'WP_USE_EXT_MYSQL' ) && WP_USE_EXT_MYSQL,
+			'comment' => ''
+		);
+
+		$grants = $this->get_db_grants();
+
+		// we only show these grants for security reasons as only they are needed and we don't need to know any other ones
+		$needed_grants = array('SELECT', 'INSERT', 'UPDATE', 'INDEX', 'DELETE', 'CREATE', 'DROP', 'ALTER', 'CREATE TEMPORARY TABLES', 'LOCK TABLES');
+
+		if (empty($grants)) {
+			$rows[] = array(
+				'name'  => __('Required permissions', 'matomo'),
+				'value' => __('Failed to detect permissions', 'matomo'),
+				'comment' => __('Please check your MySQL user has these permissions (grants):', 'matomo') . '<br />' . implode(', ', $needed_grants),
+				'is_warning' => false
+			);
+		} else {
+
+			if (in_array('ALL PRIVILEGES', $grants, true)) {
+				// ALL PRIVILEGES may be used pre MySQL 8.0
+				$grants = $needed_grants;
+			}
+
+			$grants_missing = array_diff($needed_grants, $grants);
+
+			if (!empty($grants_missing)) {
+				$rows[] = array(
+					'name'  => __('Required permissions', 'matomo'),
+					'value' => __('Error', 'matomo'),
+					'comment' => __('Missing permissions', 'matomo') . ': ' . implode(', ', $grants_missing) . '. ' . __('Please check if any of these MySQL permission (grants) are missing and add them if needed.', 'matomo') .' ' . __('Learn more', 'matomo') . ': https://matomo.org/faq/how-to-install/faq_23484/',
+					'is_warning' => true
+				);
+			} else {
+				$rows[] = array(
+					'name'  => __('Required permissions', 'matomo'),
+					'value' => __('OK', 'matomo'),
+					'comment' => '',
+					'is_warning' => false
+				);
+			}
+
+		}
+
+		return $rows;
+	}
+
+	private function get_db_grants()
+	{
+		global $wpdb;
+
+		$suppress_errors = $wpdb->suppress_errors;
+		$wpdb->suppress_errors(true);// prevent any of this showing in logs just in case
+
+		try {
+			$values = $wpdb->get_results( 'SHOW GRANTS', ARRAY_N);
+		} catch (\Exception $e) {
+			// We ignore any possible error in case of permission or not supported etc.
+			$values = array();
+		}
+		
+		$wpdb->suppress_errors($suppress_errors);
+		
+		$grants = array();
+		foreach ($values as $index => $value) {
+			if (empty($value[0]) || !is_string($value[0])) {
+				continue;
+			}
+			foreach (array(' ON ', ' TO ', ' IDENTIFIED ', ' BY ') as $keyword) {
+				if (stripos( $values[$index][0], $keyword) !== false) {
+					// make sure to never show by any accident a db user or password by cutting anything after on/to
+					$values[$index][0] = substr( $value[0], 0, stripos( $value[0], $keyword));
+				}
+				if (stripos($values[$index][0], 'GRANT') !== false) {
+					// otherwise we end up having "grant select"... instead of just "select"
+					$values[$index][0] = substr( $value[0], stripos($values[$index][0], 'GRANT') + 5 );
+				}
+			}
+			// make sure to never show by any accident a db user or password
+			$values[$index][0] = str_replace( array(DB_USER, DB_PASSWORD), array('DB_USER', 'DB_PASS'), $values[$index][0]);
+
+			$grants = array_merge($grants, explode(',', $values[$index][0]));
+		}
+		$grants = array_map('trim', $grants);
+		$grants = array_map('strtoupper', $grants);
+		$grants = array_unique($grants);
+		return $grants;
 	}
 
 	private function get_plugins_info() {
