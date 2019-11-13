@@ -17,14 +17,14 @@ class Controller extends \Piwik\Plugin\Controller
     public function index()
     {
         if (!is_user_logged_in()) {
-            wp_redirect(wp_login_url(\WpMatomo\Admin\Menu::get_reporting_url()));
+	        wp_safe_redirect(wp_login_url(\WpMatomo\Admin\Menu::get_reporting_url()));
         }
     }
 
     public function logout()
     {
         if (is_user_logged_in()) {
-	        wp_redirect(wp_logout_url());
+	        wp_safe_redirect(wp_logout_url());
         }
         exit;
     }
@@ -32,7 +32,7 @@ class Controller extends \Piwik\Plugin\Controller
     public function goToWordPress()
     {
         if (is_user_logged_in()) {
-            wp_redirect(admin_url());
+	        wp_safe_redirect(admin_url());
         }
         exit;
     }
