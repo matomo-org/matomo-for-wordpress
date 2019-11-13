@@ -8,12 +8,8 @@
 	<file>./matomo.php</file>
 	<file>./shared.php</file>
 	<file>./uninstall.php</file>
-	<exclude-pattern type="relative">/classes/WpMatomo/Db/</exclude-pattern>
-	<exclude-pattern type="relative">/app/</exclude-pattern>
-	<exclude-pattern type="relative">/vendor/</exclude-pattern>
-	<exclude-pattern type="relative">/node_modules/</exclude-pattern>
-	<exclude-pattern type="relative">/plugin-update-checker/</exclude-pattern>
-	<exclude-pattern type="relative">/plugins/</exclude-pattern>
+	<exclude-pattern>/classes/WpMatomo/Db/*</exclude-pattern>
+	<exclude-pattern>/classes/WpMatomo/Db/AjaxTracker.php</exclude-pattern>
 	<exclude-pattern type="relative">/tests/phpunit/bootstrap.php</exclude-pattern>
 
 	<!-- How to scan -->

@@ -105,26 +105,29 @@ class TrackingSettings implements AdminSettingsInterface {
 		$values['add_post_annotations']    = array();
 		$values['tagmanger_container_ids'] = array();
 
-		if ( self::TRACK_MODE_TAGMANAGER === $_POST[ self::FORM_NAME ]['track_mode'] ) {
-			// no noscript mode in this case
-			$_POST['track_noscript'] = '';
-			$_POST['noscript_code']  = '';
-		} else {
-			unset( $_POST['tagmanger_container_ids'] );
-		}
+		if ( !empty( $_POST[ self::FORM_NAME ][ 'track_mode' ] ) ) {
 
-		if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_MANUALLY
-			 || ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_DISABLED &&
-				  $this->settings->get_global_option( 'track_mode' ) === self::TRACK_MODE_MANUALLY ) ) {
-			if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
-				$_POST[ self::FORM_NAME ]['tracking_code'] = stripslashes( $_POST[ self::FORM_NAME ]['tracking_code'] );
+			if ( self::TRACK_MODE_TAGMANAGER === $_POST[ self::FORM_NAME ]['track_mode'] ) {
+				// no noscript mode in this case
+				$_POST['track_noscript'] = '';
+				$_POST['noscript_code']  = '';
 			} else {
-				$_POST[ self::FORM_NAME ]['tracking_code'] = '';
+				unset( $_POST['tagmanger_container_ids'] );
 			}
-			if ( ! empty( $_POST[ self::FORM_NAME ]['noscript_code'] ) ) {
-				$_POST[ self::FORM_NAME ]['noscript_code'] = stripslashes( $_POST[ self::FORM_NAME ]['noscript_code'] );
-			} else {
-				$_POST[ self::FORM_NAME ]['noscript_code'] = '';
+
+			if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_MANUALLY
+			     || ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_DISABLED &&
+			          $this->settings->get_global_option( 'track_mode' ) === self::TRACK_MODE_MANUALLY ) ) {
+				if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
+					$_POST[ self::FORM_NAME ]['tracking_code'] = stripslashes( $_POST[ self::FORM_NAME ]['tracking_code'] );
+				} else {
+					$_POST[ self::FORM_NAME ]['tracking_code'] = '';
+				}
+				if ( ! empty( $_POST[ self::FORM_NAME ]['noscript_code'] ) ) {
+					$_POST[ self::FORM_NAME ]['noscript_code'] = stripslashes( $_POST[ self::FORM_NAME ]['noscript_code'] );
+				} else {
+					$_POST[ self::FORM_NAME ]['noscript_code'] = '';
+				}
 			}
 		}
 

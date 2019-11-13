@@ -151,7 +151,7 @@ class Paths {
 		} else {
 			// re-implement _wp_upload_dir to find hopefully the upload_dir for the network site
 			$upload_path = trim( get_option( 'upload_path' ) );
-			if ( empty( $upload_path ) || 'wp-content/uploads' == $upload_path ) {
+			if ( empty( $upload_path ) || 'wp-content/uploads' === $upload_path ) {
 				$path_upload_dir = WP_CONTENT_DIR . '/uploads';
 			} elseif ( 0 !== strpos( $upload_path, ABSPATH ) ) {
 				// $dir is absolute, $upload_path is (maybe) relative to ABSPATH

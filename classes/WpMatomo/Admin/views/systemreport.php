@@ -53,7 +53,7 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 		<a href="?page=<?php echo Menu::SLUG_SYSTEM_REPORT; ?>"
 		   class="nav-tab <?php echo empty( $active_tab ) ? 'nav-tab-active' : ''; ?>"> System report</a>
 		<a href="?page=<?php echo Menu::SLUG_SYSTEM_REPORT; ?>&tab=troubleshooting"
-		   class="nav-tab <?php echo $active_tab == 'troubleshooting' ? 'nav-tab-active' : ''; ?>">Troubleshooting</a>
+		   class="nav-tab <?php echo $active_tab === 'troubleshooting' ? 'nav-tab-active' : ''; ?>">Troubleshooting</a>
 	</h2>
 
 	<?php if ( empty( $active_tab ) ) { ?>
