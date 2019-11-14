@@ -22,10 +22,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="wrap">
 	<div id="icon-plugins" class="icon32"></div>
 	<h2 class="nav-tab-wrapper">
-		<?php foreach ( $setting_tabs as $setting_slug => $setting_tab ) { ?>
-			<a href="<?php echo AdminSettings::make_url( $setting_slug ); ?>"
-			   class="nav-tab <?php echo $active_tab === $setting_slug ? 'nav-tab-active' : ''; ?>"
-			><?php echo esc_html( $setting_tab->get_title() ); ?></a>
+		<?php foreach ( $setting_tabs as $matomo_setting_slug => $matomo_setting_tab ) { ?>
+			<a href="<?php echo AdminSettings::make_url( $matomo_setting_slug ); ?>"
+			   class="nav-tab <?php echo $active_tab === $matomo_setting_slug ? 'nav-tab-active' : ''; ?>"
+			><?php echo esc_html( $matomo_setting_tab->get_title() ); ?></a>
 		<?php } ?>
 
 		<?php

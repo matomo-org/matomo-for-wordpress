@@ -57,10 +57,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<ul class="matomo-list">
 		<?php
 		if ( function_exists( 'get_sites' ) ) {
-			foreach ( get_sites() as $site ) {
-				/** @var WP_Site $site */
-				switch_to_blog( $site->blog_id );
-				echo '<li><a href="' . admin_url( 'admin.php?page=matomo-reporting' ) . '">' . $site->blogname . ' (Blog ID: ' . $site->blog_id . ')</a></li>';
+			foreach ( get_sites() as $matomo_site ) {
+				/** @var WP_Site $matomo_site */
+				switch_to_blog( $matomo_site->blog_id );
+				echo '<li><a href="' . admin_url( 'admin.php?page=matomo-reporting' ) . '">' . $matomo_site->blogname . ' (Blog ID: ' . $matomo_site->blog_id . ')</a></li>';
 				restore_current_blog();
 			}
 		}

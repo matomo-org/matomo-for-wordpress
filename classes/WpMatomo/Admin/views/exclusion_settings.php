@@ -47,10 +47,10 @@ if ( $was_updated ) {
 			</th>
 			<td>
 				<?php
-				$tracking_caps = \WpMatomo\Settings::OPTION_KEY_STEALTH;
-				$filter        = $settings->get_global_option( $tracking_caps );
-				foreach ( $wp_roles->role_names as $key => $name ) {
-					echo '<input type="checkbox" ' . ( isset( $filter [ $key ] ) && $filter [ $key ] ? 'checked="checked" ' : '' ) . 'value="1" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[' . esc_attr( $tracking_caps ) . '][' . esc_attr( $key ) . ']" /> ' . esc_html( $name ) . ' &nbsp; <br />';
+				$matomo_tracking_caps = \WpMatomo\Settings::OPTION_KEY_STEALTH;
+				$matomo_filter        = $settings->get_global_option( $matomo_tracking_caps );
+				foreach ( $wp_roles->role_names as $matomo_key => $matomo_name ) {
+					echo '<input type="checkbox" ' . ( isset( $matomo_filter [ $matomo_key ] ) && $matomo_filter [ $matomo_key ] ? 'checked="checked" ' : '' ) . 'value="1" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[' . esc_attr( $matomo_tracking_caps ) . '][' . esc_attr( $matomo_key ) . ']" /> ' . esc_html( $matomo_name ) . ' &nbsp; <br />';
 				}
 				?>
 			</td>

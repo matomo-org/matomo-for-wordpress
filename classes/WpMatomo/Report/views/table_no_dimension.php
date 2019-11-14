@@ -22,11 +22,11 @@ use WpMatomo\Capabilities;
 	<table class="widefat matomo-table">
 		<tbody>
 		<?php
-		$columns = ! empty( $report['columns'] ) ? $report['columns'] : array();
-		foreach ( $report['reportData']->getRows() as $val => $row ) {
-			foreach ( $row as $metric_name => $value ) {
-				$display_name = ! empty( $columns[ $metric_name ] ) ? $columns[ $metric_name ] : $metric_name;
-				echo '<tr><td width="75%">' . esc_html( $display_name ) . '</td><td width="25%">' . esc_html( $value ) . '</td></tr>';
+		$matomo_columns = ! empty( $report['columns'] ) ? $report['columns'] : array();
+		foreach ( $report['reportData']->getRows() as $matomo_val => $matomo_row ) {
+			foreach ( $matomo_row as $matomo_metric_name => $matomo_value ) {
+				$matomo_display_name = ! empty( $matomo_columns[ $matomo_metric_name ] ) ? $matomo_columns[ $matomo_metric_name ] : $matomo_metric_name;
+				echo '<tr><td width="75%">' . esc_html( $matomo_display_name ) . '</td><td width="25%">' . esc_html( $matomo_value ) . '</td></tr>';
 			}
 		}
 		?>

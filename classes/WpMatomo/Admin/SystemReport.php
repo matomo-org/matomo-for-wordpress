@@ -96,14 +96,14 @@ class SystemReport {
 
 		$settings = $this->settings;
 
-		$active_tab = '';
+		$matomo_active_tab = '';
 		if ( isset( $_GET['tab'] ) && in_array( $_GET['tab'], $this->valid_tabs, true ) ) {
-			$active_tab = $_GET['tab'];
+			$matomo_active_tab = $_GET['tab'];
 		}
 
-		$tables = array();
-		if ( empty( $active_tab ) ) {
-			$tables = array(
+		$matomo_tables = array();
+		if ( empty( $matomo_active_tab ) ) {
+			$matomo_tables = array(
 				array(
 					'title'        => 'Matomo',
 					'rows'         => $this->get_matomo_info(),

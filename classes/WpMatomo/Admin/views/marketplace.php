@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var bool $can_view_subscription_tab */
 /** @var string|bool|null $active_tab */
 /** @var \WpMatomo\Settings $settings */
-$license_key = $settings->get_license_key();
+$matomo_license_key = $settings->get_license_key();
 ?>
 <div class="wrap">
 
@@ -37,7 +37,7 @@ $license_key = $settings->get_license_key();
 		<h1><?php esc_html_e( 'Discover new functionality for your Matomo', 'matomo' ); ?></h1>
 		<p><?php esc_html_e( 'Take your Matomo (formerly Piwik) to the next level and drive your conversions & revenue with these premium features. All features are fully hosted on your WordPress and come with 100% data ownership and no limitations.', 'matomo' ); ?></p>
 		<?php
-		$feature_sections = array(
+		$matomo_feature_sections = array(
 			array(
 				'title'    => 'Most popular premium features',
 				'features' =>
@@ -133,68 +133,68 @@ $license_key = $settings->get_license_key();
 					),
 			),
 		);
-		foreach ( $feature_sections as $feature_section ) {
-			echo '<h2>' . esc_html( $feature_section['title'] ) . '</h2>';
+		foreach ( $matomo_feature_sections as $matomo_feature_section ) {
+			echo '<h2>' . esc_html( $matomo_feature_section['title'] ) . '</h2>';
 			echo '<div class="wp-list-table widefat plugin-install"><div id="the-list">';
-			foreach ( $feature_section['features'] as $index => $feature ) {
-				$style        = '';
-				$is_3_columns = count( $feature_section['features'] ) === 3;
-				if ( $is_3_columns ) {
-					$style = 'width: calc(33% - 8px);min-width:282px;max-width:350px;';
-					if ( $index % 3 === 2 ) {
-						$style .= 'clear: inherit;margin-right: 0;margin-left: 16px;';
+			foreach ( $matomo_feature_section['features'] as $matomo_index => $matomo_feature ) {
+				$matomo_style        = '';
+				$matomo_is_3_columns = count( $matomo_feature_section['features'] ) === 3;
+				if ( $matomo_is_3_columns ) {
+					$matomo_style = 'width: calc(33% - 8px);min-width:282px;max-width:350px;';
+					if ( $matomo_index % 3 === 2 ) {
+						$matomo_style .= 'clear: inherit;margin-right: 0;margin-left: 16px;';
 					}
 				}
 				?>
-				<div class="plugin-card" style="<?php echo $style; ?>">
+				<div class="plugin-card" style="<?php echo $matomo_style; ?>">
 					<?php
-					if ( $is_3_columns && ! empty( $feature['image'] ) ) {
+					if ( $matomo_is_3_columns && ! empty( $matomo_feature['image'] ) ) {
 						?>
 						<a
-						href="<?php echo esc_url( $feature['url'] ); ?>"
+						href="<?php echo esc_url( $matomo_feature['url'] ); ?>"
 						rel="noreferrer noopener" target="_blank"
 						class="thickbox open-plugin-details-modal"><img
-							src="<?php echo esc_url( $feature['image'] ); ?>"
+							src="<?php echo esc_url( $matomo_feature['image'] ); ?>"
 							style="height: 80px;width:100%;object-fit: cover;" alt=""></a><?php } ?>
 
 					<div class="plugin-card-top">
 						<div class="
 						<?php
-						if ( ! $is_3_columns ) {
+						if ( ! $matomo_is_3_columns ) {
 							?>
 							name column-name<?php } ?>" style="margin-right: 0">
 							<h3>
-								<a href="<?php echo esc_url( $feature['url'] ); ?>"
+								<a href="<?php echo esc_url( $matomo_feature['url'] ); ?>"
 								   rel="noreferrer noopener" target="_blank"
 								   class="thickbox open-plugin-details-modal">
-									<?php echo esc_html( $feature['name'] ); ?>
+									<?php echo esc_html( $matomo_feature['name'] ); ?>
 								</a>
 								<?php
-								if ( ! $is_3_columns && ! empty( $feature['image'] ) ) {
+								if ( ! $matomo_is_3_columns && ! empty( $matomo_feature['image'] ) ) {
 									?>
 									<a
-									href="<?php echo esc_url( $feature['url'] ); ?>"
+									href="<?php echo esc_url( $matomo_feature['url'] ); ?>"
 									rel="noreferrer noopener" target="_blank"
 									class="thickbox open-plugin-details-modal"><img
-										src="<?php echo esc_url( $feature['image'] ); ?>" class="plugin-icon"
-										style="object-fit: cover;"
-										alt=""></a><?php } ?>
+											src="<?php echo esc_url( $matomo_feature['image'] ); ?>" class="plugin-icon"
+											style="object-fit: cover;"
+											alt=""></a><?php } ?>
 							</h3>
 						</div>
 						<div class="
 						<?php
-						if ( ! $is_3_columns ) {
+						if ( ! $matomo_is_3_columns ) {
 							?>
 							desc column-description<?php } ?>"
 							 style="margin-right: 0">
-							<p><?php echo esc_html( $feature['description'] ); ?></p>
+							<p><?php echo esc_html( $matomo_feature['description'] ); ?></p>
 							<p class="authors"><a class="button-primary"
 												  rel="noreferrer noopener" target="_blank"
-												  href="<?php echo esc_url( $feature['url'] ); ?>">
+												  href="<?php echo esc_url( $matomo_feature['url'] ); ?>">
 																   <?php
-																	if ( ! empty( $feature['price'] ) ) {
+																	if ( ! empty( $matomo_feature['price'] ) ) {
 																		?>
-														From <?php echo esc_html( $feature['price'] ); ?>
+														From <?php echo esc_html( $matomo_feature['price'] ); ?>
 																		<?php
 																	} else {
 																		?>
@@ -229,15 +229,15 @@ $license_key = $settings->get_license_key();
 				<br/>
 				<br/>
 				<input type="submit" class="button-primary"
-					   value="<?php echo( ! empty( $license_key ) ? esc_attr__( 'Update License Key', 'matomo' ) : esc_attr__( 'Save License Key', 'matomo' ) ); ?>">
+					   value="<?php echo( ! empty( $matomo_license_key ) ? esc_attr__( 'Update License Key', 'matomo' ) : esc_attr__( 'Save License Key', 'matomo' ) ); ?>">
 			</p>
 		</form>
 
 		<?php
 
-		if ( ! empty( $license_key ) ) {
-			$api      = new \WpMatomo\Marketplace\Api( $settings );
-			$licenses = $api->get_licenses();
+		if ( ! empty( $matomo_license_key ) ) {
+			$matomo_api      = new \WpMatomo\Marketplace\Api( $settings );
+			$matomo_licenses = $matomo_api->get_licenses();
 			?>
 			<h2><?php esc_html_e( 'Your subscriptions', 'matomo' ); ?></h2>
 			<p><?php esc_html_e( 'Here\'s a summary of your subscriptions.', 'matomo' ); ?>
@@ -260,16 +260,26 @@ $license_key = $settings->get_license_key();
 				</tr>
 				</thead>
 				<tbody>
-				<?php foreach ( $licenses as $license ) { ?>
+				<?php foreach ( $matomo_licenses as $matomo_license ) { ?>
 					<tr>
-						<td><a href="<?php echo esc_url( $license['plugin']['htmlUrl'] ); ?>"
+						<td><a href="
+						<?php
+						if ( ! empty( $matomo_license['plugin']['htmlUrl'] ) ) {
+							echo esc_url( $matomo_license['plugin']['htmlUrl'] ); }
+						?>
+						"
 							   target="_blank"
-							   rel="noreferrer noopener"><?php echo esc_html( $license['plugin']['displayName'] ); ?></a>
+							   rel="noreferrer noopener">
+							   <?php
+								if ( ! empty( $matomo_license['plugin']['displayName'] ) ) {
+									echo esc_html( $matomo_license['plugin']['displayName'] ); }
+								?>
+								</a>
 						</td>
-						<td><?php echo esc_html( $license['status'] ); ?></td>
-						<td><?php echo esc_html( $license['startDate'] ); ?></td>
-						<td><?php echo( ! empty( $license['endDate'] ) ? esc_html( $license['endDate'] ) : '' ); ?></td>
-						<td><?php echo( ! empty( $license['nextPaymentDate'] ) ? esc_html( $license['nextPaymentDate'] ) : '' ); ?></td>
+						<td><?php echo( ! empty( $matomo_license['status'] ) ? esc_html( $matomo_license['status'] ) : '' ); ?></td>
+						<td><?php echo( ! empty( $matomo_license['startDate'] ) ? esc_html( $matomo_license['startDate'] ) : '' ); ?></td>
+						<td><?php echo( ! empty( $matomo_license['endDate'] ) ? esc_html( $matomo_license['endDate'] ) : '' ); ?></td>
+						<td><?php echo( ! empty( $matomo_license['nextPaymentDate'] ) ? esc_html( $matomo_license['nextPaymentDate'] ) : '' ); ?></td>
 					</tr>
 				<?php } ?>
 				</tbody>

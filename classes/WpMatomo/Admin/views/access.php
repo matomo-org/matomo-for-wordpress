@@ -32,13 +32,13 @@ use WpMatomo\Admin\AccessSettings;
 		</thead>
 		<tbody>
 		<?php
-		foreach ( $roles->get_available_roles_for_configuration() as $role_id => $name ) {
+		foreach ( $roles->get_available_roles_for_configuration() as $matomo_role_id => $matomo_role_name ) {
 			echo '<tr><td>';
-			echo esc_html( $name ) . '</td>';
-			echo "<td><select name='" . AccessSettings::FORM_NAME . '[' . esc_attr( $role_id ) . "]'>";
-			$value = $access->get_permission_for_role( $role_id );
-			foreach ( Access::$matomo_permissions as $permission => $display_name ) {
-				echo "<option value='" . esc_attr( $permission ) . "' " . ( $value === $permission ? 'selected' : '' ) . '>' . esc_html( $display_name ) . '</option>';
+			echo esc_html( $matomo_role_name ) . '</td>';
+			echo "<td><select name='" . AccessSettings::FORM_NAME . '[' . esc_attr( $matomo_role_id ) . "]'>";
+			$matomo_value = $access->get_permission_for_role( $matomo_role_id );
+			foreach ( Access::$matomo_permissions as $matomo_permission => $matomo_display_name ) {
+				echo "<option value='" . esc_attr( $matomo_permission ) . "' " . ( $matomo_value === $matomo_permission ? 'selected' : '' ) . '>' . esc_html( $matomo_display_name ) . '</option>';
 			}
 			echo '</td></tr>';
 		}
@@ -72,8 +72,8 @@ esc_html_e(
 ?>
 </p>
 <ul class="matomo-list">
-	<?php foreach ( $roles->get_matomo_roles() as $role_config ) { ?>
-		<li><?php echo esc_html( $role_config['name'] ); ?></li>
+	<?php foreach ( $roles->get_matomo_roles() as $matomo_role_config ) { ?>
+		<li><?php echo esc_html( $matomo_role_config['name'] ); ?></li>
 	<?php } ?>
 </ul>
 
@@ -89,8 +89,8 @@ esc_html_e(
 </p>
 <ul class="matomo-list">
 	<?php
-	foreach ( $capabilites->get_all_capabilities_sorted_by_highest_permission() as $cap_name ) {
+	foreach ( $capabilites->get_all_capabilities_sorted_by_highest_permission() as $matomo_cap_name ) {
 		?>
-		<li><?php echo esc_html( $cap_name ); ?></li>
+		<li><?php echo esc_html( $matomo_cap_name ); ?></li>
 	<?php } ?>
 </ul>

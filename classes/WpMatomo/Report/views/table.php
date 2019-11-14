@@ -25,19 +25,19 @@ use Piwik\Piwik;
 
 		<tbody>
 		<?php
-		$report_metadata = $report['reportMetadata'];
-		foreach ( $report['reportData']->getRows() as $report_id => $report_row ) {
-			if ( ! empty( $report_row[ $first_metric_name ] ) ) {
-				$logo_image = '';
-				$meta_row   = $report_metadata->getRowFromId( $report_id );
-				if ( ! empty( $meta_row ) ) {
-					$logo = $meta_row->getColumn( 'logo' );
-					if ( ! empty( $logo ) ) {
-						$logo_image = '<img height="16" src="' . plugins_url( 'app/' . $logo, MATOMO_ANALYTICS_FILE ) . '"> ';
+		$matomo_report_metadata = $report['reportMetadata'];
+		foreach ( $report['reportData']->getRows() as $matomo_report_id => $matomo_report_row ) {
+			if ( ! empty( $matomo_report_row[ $first_metric_name ] ) ) {
+				$matomo_logo_image = '';
+				$matomo_meta_row   = $matomo_report_metadata->getRowFromId( $matomo_report_id );
+				if ( ! empty( $matomo_meta_row ) ) {
+					$matomo_logo = $matomo_meta_row->getColumn( 'logo' );
+					if ( ! empty( $matomo_logo ) ) {
+						$matomo_logo_image = '<img height="16" src="' . plugins_url( 'app/' . $matomo_logo, MATOMO_ANALYTICS_FILE ) . '"> ';
 					}
 				}
 
-				echo '<tr><td width="75%">' . $logo_image . esc_html( $report_row['label'] ) . '</td><td width="25%">' . esc_html( $report_row[ $first_metric_name ] ) . '</td></tr>';
+				echo '<tr><td width="75%">' . $matomo_logo_image . esc_html( $matomo_report_row['label'] ) . '</td><td width="25%">' . esc_html( $matomo_report_row[ $first_metric_name ] ) . '</td></tr>';
 			}
 		}
 		?>

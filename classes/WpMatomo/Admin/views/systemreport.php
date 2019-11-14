@@ -16,8 +16,8 @@ use WpMatomo\Admin\Menu;
 use WpMatomo\Admin\SystemReport;
 
 /** @var Access $access */
-/** @var array $tables */
-/** @var string $active_tab */
+/** @var array $matomo_tables */
+/** @var string $matomo_active_tab */
 /** @var \WpMatomo\Settings $settings */
 
 if ( ! function_exists( 'matomo_anonymize_value' ) ) {
@@ -51,12 +51,12 @@ if ( ! function_exists( 'matomo_anonymize_value' ) ) {
 	<div id="icon-plugins" class="icon32"></div>
 	<h2 class="nav-tab-wrapper">
 		<a href="?page=<?php echo Menu::SLUG_SYSTEM_REPORT; ?>"
-		   class="nav-tab <?php echo empty( $active_tab ) ? 'nav-tab-active' : ''; ?>"> System report</a>
+		   class="nav-tab <?php echo empty( $matomo_active_tab ) ? 'nav-tab-active' : ''; ?>"> System report</a>
 		<a href="?page=<?php echo Menu::SLUG_SYSTEM_REPORT; ?>&tab=troubleshooting"
-		   class="nav-tab <?php echo 'troubleshooting' === $active_tab ? 'nav-tab-active' : ''; ?>">Troubleshooting</a>
+		   class="nav-tab <?php echo 'troubleshooting' === $matomo_active_tab ? 'nav-tab-active' : ''; ?>">Troubleshooting</a>
 	</h2>
 
-	<?php if ( empty( $active_tab ) ) { ?>
+	<?php if ( empty( $matomo_active_tab ) ) { ?>
 
 		<p><?php esc_html_e( 'Copy the below info in case our support team asks you for this information:', 'matomo' ); ?>
 			<br/> <br/>
@@ -68,28 +68,28 @@ if ( ! function_exists( 'matomo_anonymize_value' ) ) {
 		<textarea style="width:100%;height: 200px;" readonly
 				  id="matomo_system_report_info">
 				  <?php
-					foreach ( $tables as $table ) {
-						echo '# ' . esc_html( $table['title'] ) . "\n";
-						foreach ( $table['rows'] as $index => $row ) {
-							if ( ! empty( $row['section'] ) ) {
-								echo "\n\n## " . esc_html( $row['section'] ) . "\n";
+					foreach ( $matomo_tables as $matomo_table ) {
+						echo '# ' . esc_html( $matomo_table['title'] ) . "\n";
+						foreach ( $matomo_table['rows'] as $index => $matomo_row ) {
+							if ( ! empty( $matomo_row['section'] ) ) {
+								echo "\n\n## " . esc_html( $matomo_row['section'] ) . "\n";
 								continue;
 							}
-							$value = $row['value'];
-							if ( true === $value ) {
-								$value = 'Yes';
-							} elseif ( false === $value ) {
-								$value = 'No';
+							$matomo_value = $matomo_row['value'];
+							if ( true === $matomo_value ) {
+								$matomo_value = 'Yes';
+							} elseif ( false === $matomo_value ) {
+								$matomo_value = 'No';
 							}
-							$class = '';
-							if ( ! empty( $row['is_error'] ) ) {
-								$class = 'Error ';
-							} elseif ( ! empty( $row['is_warning'] ) ) {
-								$class = 'Warning ';
+							$matomo_class = '';
+							if ( ! empty( $matomo_row['is_error'] ) ) {
+								$matomo_class = 'Error ';
+							} elseif ( ! empty( $matomo_row['is_warning'] ) ) {
+								$matomo_class = 'Warning ';
 							}
-							echo "\n* " . esc_html( $class ) . esc_html( $row['name'] ) . ': ' . esc_html( matomo_anonymize_value( $value ) );
-							if ( isset( $row['comment'] ) && '' !== $row['comment'] ) {
-								echo ' (' . esc_html( matomo_anonymize_value( $row['comment'] ) ) . ')';
+							echo "\n* " . esc_html( $matomo_class ) . esc_html( $matomo_row['name'] ) . ': ' . esc_html( matomo_anonymize_value( $matomo_value ) );
+							if ( isset( $matomo_row['comment'] ) && '' !== $matomo_row['comment'] ) {
+								echo ' (' . esc_html( matomo_anonymize_value( $matomo_row['comment'] ) ) . ')';
 							}
 						}
 						echo "\n\n";
@@ -98,30 +98,30 @@ if ( ! function_exists( 'matomo_anonymize_value' ) ) {
 	</textarea>
 
 		<?php
-		foreach ( $tables as $table ) {
-			echo '<h2>' . esc_html( $table['title'] ) . "</h2><table class='widefat'><thead></thead><tbody>";
-			foreach ( $table['rows'] as $row ) {
-				if ( ! empty( $row['section'] ) ) {
-					echo '</tbody><thead><tr><th colspan="3" class="section">' . esc_html( $row['section'] ) . '</th></tr></thead><tbody>';
+		foreach ( $matomo_tables as $matomo_table ) {
+			echo '<h2>' . esc_html( $matomo_table['title'] ) . "</h2><table class='widefat'><thead></thead><tbody>";
+			foreach ( $matomo_table['rows'] as $matomo_row ) {
+				if ( ! empty( $matomo_row['section'] ) ) {
+					echo '</tbody><thead><tr><th colspan="3" class="section">' . esc_html( $matomo_row['section'] ) . '</th></tr></thead><tbody>';
 					continue;
 				}
-				$value = $row['value'];
-				if ( true === $value ) {
-					$value = esc_html__( 'Yes', 'matomo' );
-				} elseif ( false === $value ) {
-					$value = esc_html__( 'No', 'matomo' );
+				$matomo_value = $matomo_row['value'];
+				if ( true === $matomo_value ) {
+					$matomo_value = esc_html__( 'Yes', 'matomo' );
+				} elseif ( false === $matomo_value ) {
+					$matomo_value = esc_html__( 'No', 'matomo' );
 				}
-				$class = '';
-				if ( ! empty( $row['is_error'] ) ) {
-					$class = 'error';
-				} elseif ( ! empty( $row['is_warning'] ) ) {
-					$class = 'warning';
+				$matomo_class = '';
+				if ( ! empty( $matomo_row['is_error'] ) ) {
+					$matomo_class = 'error';
+				} elseif ( ! empty( $matomo_row['is_warning'] ) ) {
+					$matomo_class = 'warning';
 				}
-				echo "<tr class='" . esc_attr( $class ) . "'>";
-				echo "<td width='30%'>" . esc_html( $row['name'] ) . '</td>';
-				echo "<td width='" . ( ! empty( $table['has_comments'] ) ? 20 : 70 ) . "%'>" . esc_html( $value ) . '</td>';
-				if ( ! empty( $table['has_comments'] ) ) {
-					$replaced_elements = array(
+				echo "<tr class='" . esc_attr( $matomo_class ) . "'>";
+				echo "<td width='30%'>" . esc_html( $matomo_row['name'] ) . '</td>';
+				echo "<td width='" . ( ! empty( $matomo_table['has_comments'] ) ? 20 : 70 ) . "%'>" . esc_html( $matomo_value ) . '</td>';
+				if ( ! empty( $matomo_table['has_comments'] ) ) {
+					$matomo_replaced_elements = array(
 						'<code>'  => '__#CODEBACKUP#__',
 						'</code>' => '__##CODEBACKUP##__',
 						'<pre style="overflow-x: scroll;max-width: 600px;">' => '__#PREBACKUP#__',
@@ -130,10 +130,10 @@ if ( ! function_exists( 'matomo_anonymize_value' ) ) {
 						'<br />'  => '__#BRBACKUP#__',
 						'<br>'    => '__#BRBACKUP#__',
 					);
-					$comment           = isset( $row['comment'] ) ? $row['comment'] : '';
-					$replaced          = str_replace( array_keys( $replaced_elements ), array_values( $replaced_elements ), $comment );
-					$escaped           = esc_html( $replaced );
-					echo "<td width='50%'>" . str_replace( array_values( $replaced_elements ), array_keys( $replaced_elements ), $escaped ) . '</td>';
+					$matomo_comment           = isset( $matomo_row['comment'] ) ? $matomo_row['comment'] : '';
+					$matomo_replaced          = str_replace( array_keys( $matomo_replaced_elements ), array_values( $matomo_replaced_elements ), $matomo_comment );
+					$matomo_escaped           = esc_html( $matomo_replaced );
+					echo "<td width='50%'>" . str_replace( array_values( $matomo_replaced_elements ), array_keys( $matomo_replaced_elements ), $matomo_escaped ) . '</td>';
 				}
 
 				echo '</tr>';

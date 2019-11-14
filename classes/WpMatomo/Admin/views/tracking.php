@@ -22,8 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var array $containers */
 /** @var array $track_modes */
 
-$form  = new \WpMatomo\Admin\TrackingSettings\Forms( $settings );
-$paths = new Paths();
+$matomo_form  = new \WpMatomo\Admin\TrackingSettings\Forms( $settings );
+$matomo_paths = new Paths();
 ?>
 
 <?php
@@ -40,16 +40,16 @@ if ( $was_updated ) {
 
 		<?php
 		// Tracking Configuration
-		$is_not_tracking = $settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_DISABLED;
+		$matomo_is_not_tracking = $settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_DISABLED;
 
-		$is_not_generated_tracking     = $is_not_tracking || $settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
-		$full_generated_tracking_group = 'matomo-track-option matomo-track-option-default  ';
+		$matomo_is_not_generated_tracking     = $matomo_is_not_tracking || $settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
+		$matomo_full_generated_tracking_group = 'matomo-track-option matomo-track-option-default  ';
 
-		$description = sprintf( '%s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s', esc_html__( 'You can choose between four tracking code modes:', 'matomo' ), esc_html__( 'Disabled', 'matomo' ), esc_html__( 'matomo will not add the tracking code. Use this, if you want to add the tracking code to your template files or you use another plugin to add the tracking code.', 'matomo' ), esc_html__( 'Default tracking', 'matomo' ), esc_html__( 'matomo will use Matomo\'s standard tracking code.', 'matomo' ), esc_html__( 'Enter manually', 'matomo' ), esc_html__( 'Enter your own tracking code manually. You can choose one of the prior options, pre-configure your tracking code and switch to manually editing at last.', 'matomo' ) . ( $settings->is_network_enabled() ? ' ' . esc_html__( 'Use the placeholder {ID} to add the Matomo site ID.', 'matomo' ) : '' ), esc_html__( 'Tag Manager', 'matomo' ), esc_html__( 'If you have created containers in the Tag Manager, you can select one of them and it will embed the code for the container automatically.', 'matomo' ) );
-		$form->show_select( 'track_mode', esc_html__( 'Add tracking code', 'matomo' ), $track_modes, $description, 'jQuery(\'tr.matomo-track-option\').addClass(\'hidden\'); jQuery(\'tr.matomo-track-option-\' + jQuery(\'#track_mode\').val()).removeClass(\'hidden\'); jQuery(\'#tracking_code, #noscript_code\').prop(\'readonly\', jQuery(\'#track_mode\').val() != \'manually\');' );
+		$matomo_description = sprintf( '%s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s', esc_html__( 'You can choose between four tracking code modes:', 'matomo' ), esc_html__( 'Disabled', 'matomo' ), esc_html__( 'matomo will not add the tracking code. Use this, if you want to add the tracking code to your template files or you use another plugin to add the tracking code.', 'matomo' ), esc_html__( 'Default tracking', 'matomo' ), esc_html__( 'matomo will use Matomo\'s standard tracking code.', 'matomo' ), esc_html__( 'Enter manually', 'matomo' ), esc_html__( 'Enter your own tracking code manually. You can choose one of the prior options, pre-configure your tracking code and switch to manually editing at last.', 'matomo' ) . ( $settings->is_network_enabled() ? ' ' . esc_html__( 'Use the placeholder {ID} to add the Matomo site ID.', 'matomo' ) : '' ), esc_html__( 'Tag Manager', 'matomo' ), esc_html__( 'If you have created containers in the Tag Manager, you can select one of them and it will embed the code for the container automatically.', 'matomo' ) );
+		$matomo_form->show_select( 'track_mode', esc_html__( 'Add tracking code', 'matomo' ), $track_modes, $matomo_description, 'jQuery(\'tr.matomo-track-option\').addClass(\'hidden\'); jQuery(\'tr.matomo-track-option-\' + jQuery(\'#track_mode\').val()).removeClass(\'hidden\'); jQuery(\'#tracking_code, #noscript_code\').prop(\'readonly\', jQuery(\'#track_mode\').val() != \'manually\');' );
 
 		if ( ! empty( $containers ) ) {
-			echo '<tr class="matomo-track-option matomo-track-option-tagmanager ' . ( $is_not_tracking ? ' hidden' : '' ) . '">';
+			echo '<tr class="matomo-track-option matomo-track-option-tagmanager ' . ( $matomo_is_not_tracking ? ' hidden' : '' ) . '">';
 			echo '<th scope="row"><label for="tagmanger_container_ids">' . esc_html__( 'Add these Tag Manager containers', 'matomo' ) . '</label>:</th><td>';
 			$selected_container_ids = $settings->get_global_option( 'tagmanger_container_ids' );
 			foreach ( $containers as $container_id => $container_name ) {
@@ -59,9 +59,9 @@ if ( $was_updated ) {
 			echo '</td></tr>';
 		}
 
-		$form->show_textarea( 'tracking_code', esc_html__( 'Tracking code', 'matomo' ), 15, 'This is a preview of your current tracking code. If you choose to enter your tracking code manually, you can change it here. Have a look at the system report to get a list of all available JS tracker and tracking API endpoints.', $is_not_tracking, 'matomo-track-option matomo-track-option-default matomo-track-option-tagmanager  matomo-track-option-manually', true, '', ( $settings->get_global_option( 'track_mode' ) !== 'manually' ), false );
+		$matomo_form->show_textarea( 'tracking_code', esc_html__( 'Tracking code', 'matomo' ), 15, 'This is a preview of your current tracking code. If you choose to enter your tracking code manually, you can change it here. Have a look at the system report to get a list of all available JS tracker and tracking API endpoints.', $matomo_is_not_tracking, 'matomo-track-option matomo-track-option-default matomo-track-option-tagmanager  matomo-track-option-manually', true, '', ( $settings->get_global_option( 'track_mode' ) !== 'manually' ), false );
 
-		$form->show_select(
+		$matomo_form->show_select(
 			'track_codeposition',
 			__( 'JavaScript code position', 'matomo' ),
 			array(
@@ -70,41 +70,41 @@ if ( $was_updated ) {
 			),
 			__( 'Choose whether the JavaScript code is added to the footer or the header.', 'matomo' ),
 			'',
-			$is_not_tracking,
+			$matomo_is_not_tracking,
 			'matomo-track-option matomo-track-option-default  matomo-track-option-tagmanager matomo-track-option-manually'
 		);
 
-		$form->show_textarea( 'noscript_code', esc_html__( 'Noscript code', 'matomo' ), 2, 'This is a preview of your &lt;noscript&gt; code which is part of your tracking code.', $is_not_tracking, 'matomo-track-option matomo-track-option-default  matomo-track-option-manually', true, '', ( $settings->get_global_option( 'track_mode' ) !== 'manually' ), false );
+		$matomo_form->show_textarea( 'noscript_code', esc_html__( 'Noscript code', 'matomo' ), 2, 'This is a preview of your &lt;noscript&gt; code which is part of your tracking code.', $matomo_is_not_tracking, 'matomo-track-option matomo-track-option-default  matomo-track-option-manually', true, '', ( $settings->get_global_option( 'track_mode' ) !== 'manually' ), false );
 
-		$form->show_checkbox( 'track_noscript', __( 'Add &lt;noscript&gt;', 'matomo' ), __( 'Adds the &lt;noscript&gt; code to your footer.', 'matomo' ), $is_not_tracking, 'matomo-track-option matomo-track-option-default  matomo-track-option-manually' );
+		$matomo_form->show_checkbox( 'track_noscript', __( 'Add &lt;noscript&gt;', 'matomo' ), __( 'Adds the &lt;noscript&gt; code to your footer.', 'matomo' ), $matomo_is_not_tracking, 'matomo-track-option matomo-track-option-default  matomo-track-option-manually' );
 
-		$form->show_select(
+		$matomo_form->show_select(
 			'track_api_endpoint',
 			__( 'Endpoint for HTTP Tracking API', 'matomo' ),
 			array(
 				'default' => esc_html__( 'Default', 'matomo' ),
 				'restapi' => esc_html__( 'Through WordPress Rest API', 'matomo' ),
 			),
-			__( 'By default the HTTP Tracking API points to your Matomo plugin directory "' . esc_html( $paths->get_tracker_api_url_in_matomo_dir() ) . '". You can choose to use the WP Rest API (' . esc_html( $paths->get_tracker_api_rest_api_endpoint() ) . ') instead for example to hide matomo.php or if the other URL doesn\'t work for you. Note: If the tracking mode "Tag Manager" is selected, then this URL currently only applies to the feed tracking.', 'matomo' ),
+			__( 'By default the HTTP Tracking API points to your Matomo plugin directory "' . esc_html( $matomo_paths->get_tracker_api_url_in_matomo_dir() ) . '". You can choose to use the WP Rest API (' . esc_html( $matomo_paths->get_tracker_api_rest_api_endpoint() ) . ') instead for example to hide matomo.php or if the other URL doesn\'t work for you. Note: If the tracking mode "Tag Manager" is selected, then this URL currently only applies to the feed tracking.', 'matomo' ),
 			'',
-			$is_not_tracking,
-			$full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager'
+			$matomo_is_not_tracking,
+			$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager'
 		);
 
-		$form->show_select(
+		$matomo_form->show_select(
 			'track_js_endpoint',
 			__( 'Endpoint for JavaScript tracker', 'matomo' ),
 			array(
 				'default' => esc_html__( 'Default', 'matomo' ),
 				'restapi' => esc_html__( 'Through WordPress Rest API (slower)', 'matomo' ),
 			),
-			__( 'By default the JS tracking code will be loaded from "' . esc_html( $paths->get_js_tracker_url_in_matomo_dir() ) . '". You can choose to serve the JS file through the WP Rest API (' . esc_html( $paths->get_js_tracker_rest_api_endpoint() ) . ') for example to hide matomo.js. Please note that this means every request to the JavaScript file will launch WordPress PHP and therefore will be slower compared to your webserver serving the JS file directly.', 'matomo' ),
+			__( 'By default the JS tracking code will be loaded from "' . esc_html( $matomo_paths->get_js_tracker_url_in_matomo_dir() ) . '". You can choose to serve the JS file through the WP Rest API (' . esc_html( $matomo_paths->get_js_tracker_rest_api_endpoint() ) . ') for example to hide matomo.js. Please note that this means every request to the JavaScript file will launch WordPress PHP and therefore will be slower compared to your webserver serving the JS file directly.', 'matomo' ),
 			'',
-			$is_not_tracking,
-			$full_generated_tracking_group
+			$matomo_is_not_tracking,
+			$matomo_full_generated_tracking_group
 		);
 
-		$form->show_select(
+		$matomo_form->show_select(
 			'track_content',
 			__( 'Enable content tracking', 'matomo' ),
 			array(
@@ -114,53 +114,53 @@ if ( $was_updated ) {
 			),
 			__( 'Content tracking allows you to track interaction with the content of a web page or application.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/content-tracking" target="_BLANK">', '</a>' ),
 			'',
-			$is_not_tracking,
-			$full_generated_tracking_group
+			$matomo_is_not_tracking,
+			$matomo_full_generated_tracking_group
 		);
 
-		$form->show_checkbox( 'track_ecommerce', esc_html__( 'Enable ecommerce', 'matomo' ), esc_html__( 'Matom can track Ecommerce orders, abandoned carts and product views for WooCommerce, Easy Digital Analytics, MemberPress, and more. Disabling this feature will also remove Ecommerce reports from the Matomo UI.', 'matomo' ), $is_not_tracking, $full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
+		$matomo_form->show_checkbox( 'track_ecommerce', esc_html__( 'Enable ecommerce', 'matomo' ), esc_html__( 'Matom can track Ecommerce orders, abandoned carts and product views for WooCommerce, Easy Digital Analytics, MemberPress, and more. Disabling this feature will also remove Ecommerce reports from the Matomo UI.', 'matomo' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
 
-		$form->show_checkbox( 'track_search', esc_html__( 'Track search', 'matomo' ), esc_html__( 'Use Matomo\'s advanced Site Search Analytics feature.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/site-search/#track-site-search-using-the-tracking-api-advanced-users-only" target="_BLANK">', '</a>' ), $is_not_tracking, $full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
+		$matomo_form->show_checkbox( 'track_search', esc_html__( 'Track search', 'matomo' ), esc_html__( 'Use Matomo\'s advanced Site Search Analytics feature.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/site-search/#track-site-search-using-the-tracking-api-advanced-users-only" target="_BLANK">', '</a>' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
 
-		$form->show_checkbox( 'track_404', esc_html__( 'Track 404', 'matomo' ), esc_html__( 'Matomo can automatically add a 404-category to track 404-page-visits.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo FAQ%2$s.', 'matomo' ), '<a href="https://matomo.org/faq/how-to/faq_60/" target="_BLANK">', '</a>' ), $is_not_tracking, $full_generated_tracking_group . ' matomo-track-option-manually' );
+		$matomo_form->show_checkbox( 'track_404', esc_html__( 'Track 404', 'matomo' ), esc_html__( 'Matomo can automatically add a 404-category to track 404-page-visits.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo FAQ%2$s.', 'matomo' ), '<a href="https://matomo.org/faq/how-to/faq_60/" target="_BLANK">', '</a>' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . ' matomo-track-option-manually' );
 
-		echo '<tr class="' . $full_generated_tracking_group . ' matomo-track-option-manually' . ( $is_not_tracking ? ' hidden' : '' ) . '">';
+		echo '<tr class="' . $matomo_full_generated_tracking_group . ' matomo-track-option-manually' . ( $matomo_is_not_tracking ? ' hidden' : '' ) . '">';
 		echo '<th scope="row"><label for="add_post_annotations">' . esc_html__( 'Add annotation on new post of type', 'matomo' ) . '</label>:</th><td>';
-		$filter = $settings->get_global_option( 'add_post_annotations' );
+		$matomo_filter = $settings->get_global_option( 'add_post_annotations' );
 		foreach ( get_post_types( array(), 'objects' ) as $post_type ) {
-			echo '<input type="checkbox" ' . ( isset( $filter [ $post_type->name ] ) && $filter [ $post_type->name ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[add_post_annotations][' . $post_type->name . ']" /> ' . $post_type->label . ' &nbsp; ';
+			echo '<input type="checkbox" ' . ( isset( $matomo_filter [ $post_type->name ] ) && $matomo_filter [ $post_type->name ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[add_post_annotations][' . $post_type->name . ']" /> ' . $post_type->label . ' &nbsp; ';
 		}
 		echo '<span class="dashicons dashicons-editor-help" style="cursor: pointer;" onclick="jQuery(\'#add_post_annotations-desc\').toggleClass(\'hidden\');"></span> <p class="description hidden" id="add_post_annotations-desc">' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/annotations/" target="_BLANK">', '</a>' ) . '</p></td></tr>';
 
-		$form->show_input( 'add_download_extensions', esc_html__( 'Add new file types for download tracking', 'matomo' ), esc_html__( 'Add file extensions for download tracking, divided by a vertical bar (&#124;).', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide#tracking-file-downloads" target="_BLANK">', '</a>' ), $is_not_generated_tracking, $full_generated_tracking_group );
+		$matomo_form->show_input( 'add_download_extensions', esc_html__( 'Add new file types for download tracking', 'matomo' ), esc_html__( 'Add file extensions for download tracking, divided by a vertical bar (&#124;).', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide#tracking-file-downloads" target="_BLANK">', '</a>' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
 
-		$form->show_checkbox( 'disable_cookies', esc_html__( 'Disable cookies', 'matomo' ), esc_html__( 'Disable all tracking cookies for a visitor.', 'matomo' ), $is_not_generated_tracking, $full_generated_tracking_group );
+		$matomo_form->show_checkbox( 'disable_cookies', esc_html__( 'Disable cookies', 'matomo' ), esc_html__( 'Disable all tracking cookies for a visitor.', 'matomo' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
 
-		$form->show_checkbox( 'limit_cookies', esc_html__( 'Limit cookie lifetime', 'matomo' ), esc_html__( 'You can limit the cookie lifetime to avoid tracking your users over a longer period as necessary.', 'matomo' ), $is_not_generated_tracking, $full_generated_tracking_group, true, 'jQuery(\'tr.matomo-cookielifetime-option\').toggleClass(\'matomo-hidden\');' );
+		$matomo_form->show_checkbox( 'limit_cookies', esc_html__( 'Limit cookie lifetime', 'matomo' ), esc_html__( 'You can limit the cookie lifetime to avoid tracking your users over a longer period as necessary.', 'matomo' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group, true, 'jQuery(\'tr.matomo-cookielifetime-option\').toggleClass(\'matomo-hidden\');' );
 
-		$form->show_input( 'limit_cookies_visitor', esc_html__( 'Visitor timeout (seconds)', 'matomo' ), false, $is_not_generated_tracking || ! $settings->get_global_option( 'limit_cookies' ), $full_generated_tracking_group . ' matomo-cookielifetime-option' . ( $settings->get_global_option( 'limit_cookies' ) ? '' : ' matomo-hidden' ) );
+		$matomo_form->show_input( 'limit_cookies_visitor', esc_html__( 'Visitor timeout (seconds)', 'matomo' ), false, $matomo_is_not_generated_tracking || ! $settings->get_global_option( 'limit_cookies' ), $matomo_full_generated_tracking_group . ' matomo-cookielifetime-option' . ( $settings->get_global_option( 'limit_cookies' ) ? '' : ' matomo-hidden' ) );
 
-		$form->show_input( 'limit_cookies_session', esc_html__( 'Session timeout (seconds)', 'matomo' ), false, $is_not_generated_tracking || ! $settings->get_global_option( 'limit_cookies' ), $full_generated_tracking_group . ' matomo-cookielifetime-option' . ( $settings->get_global_option( 'limit_cookies' ) ? '' : ' matomo-hidden' ) );
+		$matomo_form->show_input( 'limit_cookies_session', esc_html__( 'Session timeout (seconds)', 'matomo' ), false, $matomo_is_not_generated_tracking || ! $settings->get_global_option( 'limit_cookies' ), $matomo_full_generated_tracking_group . ' matomo-cookielifetime-option' . ( $settings->get_global_option( 'limit_cookies' ) ? '' : ' matomo-hidden' ) );
 
-		$form->show_input( 'limit_cookies_referral', esc_html__( 'Referral timeout (seconds)', 'matomo' ), false, $is_not_generated_tracking || ! $settings->get_global_option( 'limit_cookies' ), $full_generated_tracking_group . ' matomo-cookielifetime-option' . ( $settings->get_global_option( 'limit_cookies' ) ? '' : ' matomo-hidden' ) );
+		$matomo_form->show_input( 'limit_cookies_referral', esc_html__( 'Referral timeout (seconds)', 'matomo' ), false, $matomo_is_not_generated_tracking || ! $settings->get_global_option( 'limit_cookies' ), $matomo_full_generated_tracking_group . ' matomo-cookielifetime-option' . ( $settings->get_global_option( 'limit_cookies' ) ? '' : ' matomo-hidden' ) );
 
-		$form->show_checkbox( 'track_admin', esc_html__( 'Track admin pages', 'matomo' ), esc_html__( 'Enable to track users on admin pages (remember to configure the tracking filter appropriately).', 'matomo' ), $is_not_tracking, $full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
+		$matomo_form->show_checkbox( 'track_admin', esc_html__( 'Track admin pages', 'matomo' ), esc_html__( 'Enable to track users on admin pages (remember to configure the tracking filter appropriately).', 'matomo' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
 
-		$form->show_checkbox( 'track_across', esc_html__( 'Track subdomains in the same website', 'matomo' ), esc_html__( 'Adds *.-prefix to cookie domain.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide#tracking-subdomains-in-the-same-website" target="_BLANK">', '</a>' ), $is_not_generated_tracking, $full_generated_tracking_group );
+		$matomo_form->show_checkbox( 'track_across', esc_html__( 'Track subdomains in the same website', 'matomo' ), esc_html__( 'Adds *.-prefix to cookie domain.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide#tracking-subdomains-in-the-same-website" target="_BLANK">', '</a>' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
 
-		$form->show_checkbox( 'track_across_alias', esc_html__( 'Do not count subdomains as outlink', 'matomo' ), esc_html__( 'Adds *.-prefix to tracked domain.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide#outlink-tracking-exclusions" target="_BLANK">', '</a>' ), $is_not_generated_tracking, $full_generated_tracking_group );
+		$matomo_form->show_checkbox( 'track_across_alias', esc_html__( 'Do not count subdomains as outlink', 'matomo' ), esc_html__( 'Adds *.-prefix to tracked domain.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide#outlink-tracking-exclusions" target="_BLANK">', '</a>' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
 
-		$form->show_checkbox( 'track_crossdomain_linking', esc_html__( 'Enable cross domain linking', 'matomo' ), esc_html__( 'When enabled, it will make sure to use the same visitor ID for the same visitor across several domains. This works only when this feature is enabled because the visitor ID is stored in a cookie and cannot be read on the other domain by default. When this feature is enabled, it will append a URL parameter "pk_vid" that contains the visitor ID when a user clicks on a URL that belongs to one of your domains. For this feature to work, you also have to configure which domains should be treated as local in your Matomo website settings.', 'matomo' ), $is_not_tracking, $full_generated_tracking_group );
+		$matomo_form->show_checkbox( 'track_crossdomain_linking', esc_html__( 'Enable cross domain linking', 'matomo' ), esc_html__( 'When enabled, it will make sure to use the same visitor ID for the same visitor across several domains. This works only when this feature is enabled because the visitor ID is stored in a cookie and cannot be read on the other domain by default. When this feature is enabled, it will append a URL parameter "pk_vid" that contains the visitor ID when a user clicks on a URL that belongs to one of your domains. For this feature to work, you also have to configure which domains should be treated as local in your Matomo website settings.', 'matomo' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group );
 
-		$form->show_checkbox( 'track_feed', esc_html__( 'Track RSS feeds', 'matomo' ), esc_html__( 'Enable to track posts in feeds via tracking pixel.', 'matomo' ), $is_not_tracking, $full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
+		$matomo_form->show_checkbox( 'track_feed', esc_html__( 'Track RSS feeds', 'matomo' ), esc_html__( 'Enable to track posts in feeds via tracking pixel.', 'matomo' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
 
-		$form->show_checkbox( 'track_feed_addcampaign', esc_html__( 'Track RSS feed links as campaign', 'matomo' ), esc_html__( 'This will add Matomo campaign parameters to the RSS feed links.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/tracking-campaigns/" target="_BLANK">', '</a>' ), $is_not_tracking, $full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager', true, 'jQuery(\'tr.matomo-feed_campaign-option\').toggle(\'hidden\');' );
+		$matomo_form->show_checkbox( 'track_feed_addcampaign', esc_html__( 'Track RSS feed links as campaign', 'matomo' ), esc_html__( 'This will add Matomo campaign parameters to the RSS feed links.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/tracking-campaigns/" target="_BLANK">', '</a>' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager', true, 'jQuery(\'tr.matomo-feed_campaign-option\').toggle(\'hidden\');' );
 
-		$form->show_input( 'track_feed_campaign', esc_html__( 'RSS feed campaign', 'matomo' ), esc_html__( 'Keyword: post name.', 'matomo' ), $is_not_generated_tracking || ! $settings->get_global_option( 'track_feed_addcampaign' ), $full_generated_tracking_group . ' matomo-feed_campaign-option matomo-track-option-tagmanager' );
+		$matomo_form->show_input( 'track_feed_campaign', esc_html__( 'RSS feed campaign', 'matomo' ), esc_html__( 'Keyword: post name.', 'matomo' ), $matomo_is_not_generated_tracking || ! $settings->get_global_option( 'track_feed_addcampaign' ), $matomo_full_generated_tracking_group . ' matomo-feed_campaign-option matomo-track-option-tagmanager' );
 
-		$form->show_input( 'track_heartbeat', esc_html__( 'Enable heartbeat timer', 'matomo' ), __( 'Enable a heartbeat timer to get more accurate visit lengths by sending periodical HTTP ping requests as long as the site is opened. Enter the time between the pings in seconds (Matomo default: 15) to enable or 0 to disable this feature. <strong>Note:</strong> This will cause a lot of additional HTTP requests on your site.', 'matomo' ), $is_not_generated_tracking, $full_generated_tracking_group );
+		$matomo_form->show_input( 'track_heartbeat', esc_html__( 'Enable heartbeat timer', 'matomo' ), __( 'Enable a heartbeat timer to get more accurate visit lengths by sending periodical HTTP ping requests as long as the site is opened. Enter the time between the pings in seconds (Matomo default: 15) to enable or 0 to disable this feature. <strong>Note:</strong> This will cause a lot of additional HTTP requests on your site.', 'matomo' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
 
-		$form->show_select(
+		$matomo_form->show_select(
 			'track_user_id',
 			__( 'User ID Tracking', 'matomo' ),
 			array(
@@ -172,21 +172,21 @@ if ( $was_updated ) {
 			),
 			__( 'When a user is logged in to WordPress, track their &quot;User ID&quot;. You can select which field from the User\'s profile is tracked as the &quot;User ID&quot;. When enabled, Tracking based on Email Address is recommended.', 'matomo' ),
 			'',
-			$is_not_tracking,
-			$full_generated_tracking_group . ' matomo-track-option-tagmanager'
+			$matomo_is_not_tracking,
+			$matomo_full_generated_tracking_group . ' matomo-track-option-tagmanager'
 		);
 
-		$form->show_checkbox( 'track_datacfasync', esc_html__( 'Add data-cfasync=false', 'matomo' ), esc_html__( 'Adds data-cfasync=false to the script tag, e.g., to ask Rocket Loader to ignore the script.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sCloudFlare Knowledge Base%2$s.', 'matomo' ), '<a href="https://support.cloudflare.com/hc/en-us/articles/200169436-How-can-I-have-Rocket-Loader-ignore-my-script-s-in-Automatic-Mode-" target="_BLANK">', '</a>' ), $is_not_tracking, $full_generated_tracking_group . '  matomo-track-option-tagmanager' );
+		$matomo_form->show_checkbox( 'track_datacfasync', esc_html__( 'Add data-cfasync=false', 'matomo' ), esc_html__( 'Adds data-cfasync=false to the script tag, e.g., to ask Rocket Loader to ignore the script.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sCloudFlare Knowledge Base%2$s.', 'matomo' ), '<a href="https://support.cloudflare.com/hc/en-us/articles/200169436-How-can-I-have-Rocket-Loader-ignore-my-script-s-in-Automatic-Mode-" target="_BLANK">', '</a>' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . '  matomo-track-option-tagmanager' );
 
 		$matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Submit" type="submit" class="button-primary" value="' . esc_attr__( 'Save Changes', 'matomo' ) . '" /></p></td></tr>';
 
-		$form->show_input( 'set_download_extensions', esc_html__( 'Define all file types for download tracking', 'matomo' ), esc_html__( 'Replace Matomo\'s default file extensions for download tracking, divided by a vertical bar (&#124;). Leave blank to keep Matomo\'s default settings.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide#file-extensions-for-tracking-downloads" target="_BLANK">', '</a>' ), $is_not_tracking, $full_generated_tracking_group );
+		$matomo_form->show_input( 'set_download_extensions', esc_html__( 'Define all file types for download tracking', 'matomo' ), esc_html__( 'Replace Matomo\'s default file extensions for download tracking, divided by a vertical bar (&#124;). Leave blank to keep Matomo\'s default settings.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide#file-extensions-for-tracking-downloads" target="_BLANK">', '</a>' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group );
 
-		$form->show_input( 'set_download_classes', esc_html__( 'Set classes to be treated as downloads', 'matomo' ), esc_html__( 'Set classes to be treated as downloads (in addition to piwik_download), divided by a vertical bar (&#124;). Leave blank to keep Matomo\'s default settings.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo JavaScript Tracking Client reference%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/api-reference/tracking-javascript" target="_BLANK">', '</a>' ), $is_not_tracking, $full_generated_tracking_group );
+		$matomo_form->show_input( 'set_download_classes', esc_html__( 'Set classes to be treated as downloads', 'matomo' ), esc_html__( 'Set classes to be treated as downloads (in addition to piwik_download), divided by a vertical bar (&#124;). Leave blank to keep Matomo\'s default settings.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo JavaScript Tracking Client reference%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/api-reference/tracking-javascript" target="_BLANK">', '</a>' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group );
 
-		$form->show_input( 'set_link_classes', esc_html__( 'Set classes to be treated as outlinks', 'matomo' ), esc_html__( 'Set classes to be treated as outlinks (in addition to piwik_link), divided by a vertical bar (&#124;). Leave blank to keep Matomo\'s default settings.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo JavaScript Tracking Client reference%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/api-reference/tracking-javascript" target="_BLANK">', '</a>' ), $is_not_tracking, $full_generated_tracking_group );
+		$matomo_form->show_input( 'set_link_classes', esc_html__( 'Set classes to be treated as outlinks', 'matomo' ), esc_html__( 'Set classes to be treated as outlinks (in addition to piwik_link), divided by a vertical bar (&#124;). Leave blank to keep Matomo\'s default settings.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo JavaScript Tracking Client reference%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/api-reference/tracking-javascript" target="_BLANK">', '</a>' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group );
 
-		$form->show_select(
+		$matomo_form->show_select(
 			'force_protocol',
 			__( 'Force Matomo to use a specific protocol', 'matomo' ),
 			array(
@@ -195,8 +195,8 @@ if ( $was_updated ) {
 			),
 			__( 'Choose if you want to explicitly want to force Matomo to use HTTP or HTTPS. Does not work with a CDN URL.', 'matomo' ),
 			'',
-			$is_not_tracking,
-			$full_generated_tracking_group . ' matomo-track-option-tagmanager'
+			$matomo_is_not_tracking,
+			$matomo_full_generated_tracking_group . ' matomo-track-option-tagmanager'
 		);
 
 		echo $matomo_submit_button;
