@@ -18,7 +18,7 @@ use WpMatomo\Admin\AccessSettings;
 /** @var \WpMatomo\Capabilities $capabilites */
 ?>
 
-<p><?php _e( 'Manage which roles can view and manage your reporting data.', 'matomo' ); ?></p>
+<p><?php esc_html_e( 'Manage which roles can view and manage your reporting data.', 'matomo' ); ?></p>
 
 <form method="post">
 	<?php wp_nonce_field( AccessSettings::NONCE_NAME ); ?>
@@ -26,19 +26,19 @@ use WpMatomo\Admin\AccessSettings;
 	<table class="matomo-form widefat">
 		<thead>
 		<tr>
-			<th width="30%"><?php _e( 'WordPress Role', 'matomo' ); ?></th>
-			<th><?php _e( 'Matomo Role', 'matomo' ); ?></th>
+			<th width="30%"><?php esc_html_e( 'WordPress Role', 'matomo' ); ?></th>
+			<th><?php esc_html_e( 'Matomo Role', 'matomo' ); ?></th>
 		</tr>
 		</thead>
 		<tbody>
 		<?php
-		foreach ( $roles->get_available_roles_for_configuration() as $role_id => $name ) {
+		foreach ( $roles->get_available_roles_for_configuration() as $matomo_role_id => $matomo_role_name ) {
 			echo '<tr><td>';
-			echo esc_html( $name ) . '</td>';
-			echo "<td><select name='" . AccessSettings::FORM_NAME . '[' . esc_attr( $role_id ) . "]'>";
-			$value = $access->get_permission_for_role( $role_id );
-			foreach ( Access::$matomo_permissions as $permission => $displayName ) {
-				echo "<option value='" . esc_attr( $permission ) . "' " . ( $value === $permission ? 'selected' : '' ) . '>' . esc_html( $displayName ) . '</option>';
+			echo esc_html( $matomo_role_name ) . '</td>';
+			echo "<td><select name='" . AccessSettings::FORM_NAME . '[' . esc_attr( $matomo_role_id ) . "]'>";
+			$matomo_value = $access->get_permission_for_role( $matomo_role_id );
+			foreach ( Access::$matomo_permissions as $matomo_permission => $matomo_display_name ) {
+				echo "<option value='" . esc_attr( $matomo_permission ) . "' " . ( $matomo_value === $matomo_permission ? 'selected' : '' ) . '>' . esc_html( $matomo_display_name ) . '</option>';
 			}
 			echo '</td></tr>';
 		}
@@ -64,7 +64,7 @@ use WpMatomo\Admin\AccessSettings;
 <h2><?php esc_html_e( 'Roles', 'matomo' ); ?></h2>
 <p>
 <?php
-_e(
+esc_html_e(
 	'Want to give individual users access to Matomo? Simply create a user in your WordPress and assign of these roles
     to the user:',
 	'matomo'
@@ -72,8 +72,8 @@ _e(
 ?>
 </p>
 <ul class="matomo-list">
-	<?php foreach ( $roles->get_matomo_roles() as $role_config ) { ?>
-		<li><?php echo esc_html( $role_config['name'] ); ?></li>
+	<?php foreach ( $roles->get_matomo_roles() as $matomo_role_config ) { ?>
+		<li><?php echo esc_html( $matomo_role_config['name'] ); ?></li>
 	<?php } ?>
 </ul>
 
@@ -89,8 +89,8 @@ esc_html_e(
 </p>
 <ul class="matomo-list">
 	<?php
-	foreach ( $capabilites->get_all_capabilities_sorted_by_highest_permission() as $cap_name ) {
+	foreach ( $capabilites->get_all_capabilities_sorted_by_highest_permission() as $matomo_cap_name ) {
 		?>
-		<li><?php echo esc_html( $cap_name ); ?></li>
+		<li><?php echo esc_html( $matomo_cap_name ); ?></li>
 	<?php } ?>
 </ul>

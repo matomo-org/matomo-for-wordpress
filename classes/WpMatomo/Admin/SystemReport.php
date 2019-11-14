@@ -96,14 +96,14 @@ class SystemReport {
 
 		$settings = $this->settings;
 
-		$active_tab = '';
+		$matomo_active_tab = '';
 		if ( isset( $_GET['tab'] ) && in_array( $_GET['tab'], $this->valid_tabs, true ) ) {
-			$active_tab = $_GET['tab'];
+			$matomo_active_tab = $_GET['tab'];
 		}
 
-		$tables = array();
-		if ( empty( $active_tab ) ) {
-			$tables = array(
+		$matomo_tables = array();
+		if ( empty( $matomo_active_tab ) ) {
+			$matomo_tables = array(
 				array(
 					'title'        => 'Matomo',
 					'rows'         => $this->get_matomo_info(),
@@ -140,18 +140,18 @@ class SystemReport {
 		$file_writable = is_writable( $path_to_check );
 		$comment       = '"' . $path_to_check . '"';
 		if ( ! $file_exists ) {
-			$comment .= sprintf( __( '%s does not exist.', 'matomo' ), $title );
+			$comment .= sprintf( esc_html__( '%s does not exist.', 'matomo' ), $title );
 		}
 		if ( ! $file_readable ) {
-			$comment .= sprintf( __( '%s is not readable.', 'matomo' ), $title );
+			$comment .= sprintf( esc_html__( '%s is not readable.', 'matomo' ), $title );
 		}
 		if ( ! $file_writable ) {
-			$comment .= sprintf( __( '%s is not writable.', 'matomo' ), $title );
+			$comment .= sprintf( esc_html__( '%s is not writable.', 'matomo' ), $title );
 		}
 
 		$rows[] = array(
-			'name'    => sprintf( __( '%s exists and is writable.', 'matomo' ), $title ),
-			'value'   => $file_exists && $file_readable && $file_writable ? __( 'Yes' ) : __( 'No' ),
+			'name'    => sprintf( esc_html__( '%s exists and is writable.', 'matomo' ), $title ),
+			'value'   => $file_exists && $file_readable && $file_writable ? esc_html__( 'Yes', 'matomo' ) : esc_html__( 'No', 'matomo' ),
 			'comment' => $comment,
 		);
 
@@ -164,7 +164,7 @@ class SystemReport {
 		$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
 
 		$rows[] = array(
-			'name'    => __( 'Matomo Plugin Version', 'matomo' ),
+			'name'    => esc_html__( 'Matomo Plugin Version', 'matomo' ),
 			'value'   => $plugin_data['Version'],
 			'comment' => '',
 		);
@@ -178,7 +178,7 @@ class SystemReport {
 		$rows              = $this->check_file_exists_and_writable( $rows, $path_tracker_file, 'JS Tracker' );
 
 		$rows[] = array(
-			'name'    => __( 'Plugin directories', 'matomo' ),
+			'name'    => esc_html__( 'Plugin directories', 'matomo' ),
 			'value'   => ! empty( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) ? 'Yes' : 'No',
 			'comment' => ! empty( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) ? wp_json_encode( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) : '',
 		);
@@ -186,7 +186,7 @@ class SystemReport {
 		$tmp_dir = $paths->get_tmp_dir();
 
 		$rows[] = array(
-			'name'    => __( 'Tmp directory writable', 'matomo' ),
+			'name'    => esc_html__( 'Tmp directory writable', 'matomo' ),
 			'value'   => is_writable( $tmp_dir ),
 			'comment' => $tmp_dir,
 		);
@@ -197,21 +197,20 @@ class SystemReport {
 				/** @var DiagnosticService $service */
 				$service = StaticContainer::get( \Piwik\Plugins\Diagnostics\DiagnosticService::class );
 				$report  = $service->runDiagnostics();
-
 			} catch ( \Exception $e ) {
 				$rows[] = array(
-					'name'    => __( 'Matomo System Check', 'matomo' ),
+					'name'    => esc_html__( 'Matomo System Check', 'matomo' ),
 					'value'   => 'Failed to run, please open the system check in Matomo',
-					'comment' => ''
+					'comment' => '',
 				);
 
 				return $rows;
 			}
 
 			$rows[] = array(
-				'name'    => __( 'Matomo Version', 'matomo' ),
+				'name'    => esc_html__( 'Matomo Version', 'matomo' ),
 				'value'   => \Piwik\Version::VERSION,
-				'comment' => ''
+				'comment' => '',
 			);
 		}
 
@@ -219,7 +218,7 @@ class SystemReport {
 		$idsite = $site->get_current_matomo_site_id();
 
 		$rows[] = array(
-			'name'    => __( 'Matomo Blog idSite', 'matomo' ),
+			'name'    => esc_html__( 'Matomo Blog idSite', 'matomo' ),
 			'value'   => $idsite,
 			'comment' => '',
 		);
@@ -260,15 +259,15 @@ class SystemReport {
 		$all_events      = $scheduled_tasks->get_all_events();
 
 		$rows[] = array(
-			'name'    => __( 'Server time', 'matomo' ),
+			'name'    => esc_html__( 'Server time', 'matomo' ),
 			'value'   => $this->convert_time_to_date( time(), false ),
 			'comment' => '',
 		);
 
 		$rows[] = array(
-			'name'    => __( 'Blog time', 'matomo' ),
+			'name'    => esc_html__( 'Blog time', 'matomo' ),
 			'value'   => $this->convert_time_to_date( time(), true ),
-			'comment' => __( 'Below dates are shown in blog timezone', 'matomo' ),
+			'comment' => esc_html__( 'Below dates are shown in blog timezone', 'matomo' ),
 		);
 
 		foreach ( $all_events as $event_name => $event_config ) {
@@ -290,22 +289,22 @@ class SystemReport {
 
 		if ( ! \WpMatomo::is_safe_mode() ) {
 			$rows[] = array(
-				'section' => __( 'Mandatory checks', 'matomo' ),
+				'section' => esc_html__( 'Mandatory checks', 'matomo' ),
 			);
 
 			$rows = $this->add_diagnostic_results( $rows, $report->getMandatoryDiagnosticResults() );
 
 			$rows[] = array(
-				'section' => __( 'Optional checks', 'matomo' ),
+				'section' => esc_html__( 'Optional checks', 'matomo' ),
 			);
 			$rows   = $this->add_diagnostic_results( $rows, $report->getOptionalDiagnosticResults() );
 
-			$cliMulti = new CliMulti();
+			$cli_multi = new CliMulti();
 
 			$rows[] = array(
 				'name'    => 'Supports Async Archiving',
-				'value'   => $cliMulti->supportsAsync(),
-				'comment' => ''
+				'value'   => $cli_multi->supportsAsync(),
+				'comment' => '',
 			);
 		}
 
@@ -332,7 +331,7 @@ class SystemReport {
 		// mostly only numeric values and booleans to not eg accidentally show anything that would store a token etc
 		// like we don't want to show license key etc
 		foreach ( $this->settings->get_customised_global_settings() as $key => $val ) {
-			if ( is_numeric( $val ) || is_bool( $val ) || $key === 'track_content' || $key === 'track_user_id' ) {
+			if ( is_numeric( $val ) || is_bool( $val ) || 'track_content' === $key || 'track_user_id' === $key ) {
 				$rows[] = array(
 					'name'    => ucfirst( str_replace( '_', ' ', $key ) ),
 					'value'   => $val,
@@ -346,7 +345,7 @@ class SystemReport {
 
 	private function convert_time_to_date( $time, $in_blog_timezone, $print_diff = false ) {
 		if ( empty( $time ) ) {
-			return __( 'Unknown', 'matomo' );
+			return esc_html__( 'Unknown', 'matomo' );
 		}
 
 		$date = gmdate( 'Y-m-d H:i:s', $time );
@@ -501,103 +500,101 @@ class SystemReport {
 		global $wpdb;
 		$rows = array();
 
-		$rows[] = array( 'name' => 'MySQL Version',
-		                 'value' => ! empty( $wpdb->is_mysql ) ? $wpdb->db_version() : '',
-						 'comment' => ''
+		$rows[] = array(
+			'name'    => 'MySQL Version',
+			'value'   => ! empty( $wpdb->is_mysql ) ? $wpdb->db_version() : '',
+			'comment' => '',
 		);
 
 		$rows[] = array(
-			'name'  => 'Mysqli Connect',
-			'value' => function_exists( 'mysqli_connect' ),
+			'name'    => 'Mysqli Connect',
+			'value'   => function_exists( 'mysqli_connect' ),
 			'comment' => '',
 		);
 		$rows[] = array(
-			'name'  => 'Force MySQL over Mysqli',
-			'value' => defined( 'WP_USE_EXT_MYSQL' ) && WP_USE_EXT_MYSQL,
+			'name'    => 'Force MySQL over Mysqli',
+			'value'   => defined( 'WP_USE_EXT_MYSQL' ) && WP_USE_EXT_MYSQL,
 			'comment' => '',
 		);
 
 		$grants = $this->get_db_grants();
 
 		// we only show these grants for security reasons as only they are needed and we don't need to know any other ones
-		$needed_grants = array('SELECT', 'INSERT', 'UPDATE', 'INDEX', 'DELETE', 'CREATE', 'DROP', 'ALTER', 'CREATE TEMPORARY TABLES', 'LOCK TABLES');
+		$needed_grants = array( 'SELECT', 'INSERT', 'UPDATE', 'INDEX', 'DELETE', 'CREATE', 'DROP', 'ALTER', 'CREATE TEMPORARY TABLES', 'LOCK TABLES' );
 
-		if (empty($grants)) {
+		if ( empty( $grants ) ) {
 			$rows[] = array(
-				'name'  => __('Required permissions', 'matomo'),
-				'value' => __('Failed to detect permissions', 'matomo'),
-				'comment' => __('Please check your MySQL user has these permissions (grants):', 'matomo') . '<br />' . implode(', ', $needed_grants),
-				'is_warning' => false
+				'name'       => esc_html__( 'Required permissions', 'matomo' ),
+				'value'      => esc_html__( 'Failed to detect permissions', 'matomo' ),
+				'comment'    => esc_html__( 'Please check your MySQL user has these permissions (grants):', 'matomo' ) . '<br />' . implode( ', ', $needed_grants ),
+				'is_warning' => false,
 			);
 		} else {
-
-			if (in_array('ALL PRIVILEGES', $grants, true)) {
+			if ( in_array( 'ALL PRIVILEGES', $grants, true ) ) {
 				// ALL PRIVILEGES may be used pre MySQL 8.0
 				$grants = $needed_grants;
 			}
 
-			$grants_missing = array_diff($needed_grants, $grants);
+			$grants_missing = array_diff( $needed_grants, $grants );
 
-			if (!empty($grants_missing)) {
+			if ( ! empty( $grants_missing ) ) {
 				$rows[] = array(
-					'name'  => __('Required permissions', 'matomo'),
-					'value' => __('Error', 'matomo'),
-					'comment' => __('Missing permissions', 'matomo') . ': ' . implode(', ', $grants_missing) . '. ' . __('Please check if any of these MySQL permission (grants) are missing and add them if needed.', 'matomo') .' ' . __('Learn more', 'matomo') . ': https://matomo.org/faq/how-to-install/faq_23484/',
-					'is_warning' => true
+					'name'       => esc_html__( 'Required permissions', 'matomo' ),
+					'value'      => esc_html__( 'Error', 'matomo' ),
+					'comment'    => esc_html__( 'Missing permissions', 'matomo' ) . ': ' . implode( ', ', $grants_missing ) . '. ' . __( 'Please check if any of these MySQL permission (grants) are missing and add them if needed.', 'matomo' ) . ' ' . __( 'Learn more', 'matomo' ) . ': https://matomo.org/faq/how-to-install/faq_23484/',
+					'is_warning' => true,
 				);
 			} else {
 				$rows[] = array(
-					'name'  => __('Required permissions', 'matomo'),
-					'value' => __('OK', 'matomo'),
-					'comment' => '',
-					'is_warning' => false
+					'name'       => esc_html__( 'Required permissions', 'matomo' ),
+					'value'      => esc_html__( 'OK', 'matomo' ),
+					'comment'    => '',
+					'is_warning' => false,
 				);
 			}
-
 		}
 
 		return $rows;
 	}
 
-	private function get_db_grants()
-	{
+	private function get_db_grants() {
 		global $wpdb;
 
 		$suppress_errors = $wpdb->suppress_errors;
-		$wpdb->suppress_errors(true);// prevent any of this showing in logs just in case
+		$wpdb->suppress_errors( true );// prevent any of this showing in logs just in case
 
 		try {
-			$values = $wpdb->get_results( 'SHOW GRANTS', ARRAY_N);
-		} catch (\Exception $e) {
+			$values = $wpdb->get_results( 'SHOW GRANTS', ARRAY_N );
+		} catch ( \Exception $e ) {
 			// We ignore any possible error in case of permission or not supported etc.
 			$values = array();
 		}
 
-		$wpdb->suppress_errors($suppress_errors);
+		$wpdb->suppress_errors( $suppress_errors );
 
 		$grants = array();
-		foreach ($values as $index => $value) {
-			if (empty($value[0]) || !is_string($value[0])) {
+		foreach ( $values as $index => $value ) {
+			if ( empty( $value[0] ) || ! is_string( $value[0] ) ) {
 				continue;
 			}
-			foreach (array(' ON ', ' TO ', ' IDENTIFIED ', ' BY ') as $keyword) {
-				if (stripos( $values[$index][0], $keyword) !== false) {
+			foreach ( array( ' ON ', ' TO ', ' IDENTIFIED ', ' BY ' ) as $keyword ) {
+				if ( stripos( $values[ $index ][0], $keyword ) !== false ) {
 					// make sure to never show by any accident a db user or password by cutting anything after on/to
-					$values[$index][0] = substr( $value[0], 0, stripos( $value[0], $keyword));
+					$values[ $index ][0] = substr( $value[0], 0, stripos( $value[0], $keyword ) );
 				}
-				if (stripos($values[$index][0], 'GRANT') !== false) {
+				if ( stripos( $values[ $index ][0], 'GRANT' ) !== false ) {
 					// otherwise we end up having "grant select"... instead of just "select"
-					$values[$index][0] = substr( $value[0], stripos($values[$index][0], 'GRANT') + 5 );
+					$values[ $index ][0] = substr( $value[0], stripos( $values[ $index ][0], 'GRANT' ) + 5 );
 				}
 			}
 			// make sure to never show by any accident a db user or password
-			$values[$index][0] = str_replace( array(DB_USER, DB_PASSWORD), array('DB_USER', 'DB_PASS'), $values[$index][0]);
+			$values[ $index ][0] = str_replace( array( DB_USER, DB_PASSWORD ), array( 'DB_USER', 'DB_PASS' ), $values[ $index ][0] );
 
-			$grants = array_merge($grants, explode(',', $values[$index][0]));
+			$grants = array_merge( $grants, explode( ',', $values[ $index ][0] ) );
 		}
-		$grants = array_map('trim', $grants);
-		$grants = array_map('strtoupper', $grants);
-		$grants = array_unique($grants);
+		$grants = array_map( 'trim', $grants );
+		$grants = array_map( 'strtoupper', $grants );
+		$grants = array_unique( $grants );
 		return $grants;
 	}
 

@@ -98,7 +98,7 @@ class TrackingCode {
 		$this->logger->log( 'Add tracking code. Blog ID: ' . get_current_blog_id() );
 
 		if ( $this->settings->is_network_enabled()
-			 && $this->settings->get_global_option( 'track_mode' ) == 'manually' ) {
+			 && 'manually' === $this->settings->get_global_option( 'track_mode' ) ) {
 			$site    = new Site();
 			$site_id = $site->get_current_matomo_site_id();
 			if ( $site_id ) {
@@ -144,7 +144,7 @@ class TrackingCode {
 		if ( is_feed() ) {
 			$this->logger->log( 'Add campaign to feed permalink.' );
 			$sep        = ( strpos( $permalink, '?' ) === false ? '?' : '&' );
-			$permalink .= $sep . 'pk_campaign=' . urlencode( $this->settings->get_global_option( 'track_feed_campaign' ) ) . '&pk_kwd=' . urlencode( $post->post_name );
+			$permalink .= $sep . 'pk_campaign=' . rawurlencode( $this->settings->get_global_option( 'track_feed_campaign' ) ) . '&pk_kwd=' . rawurlencode( $post->post_name );
 		}
 
 		return $permalink;
@@ -178,7 +178,7 @@ class TrackingCode {
 				$tracker_endpoint = $paths->get_tracker_api_url_in_matomo_dir();
 			}
 
-			$tracking_image = $tracker_endpoint . '?idsite=' . $site_id . '&amp;rec=1&amp;url=' . urlencode( $posturl ) . '&amp;action_name=' . urlencode( $title ) . '&amp;urlref=' . urlencode( $urlref );
+			$tracking_image = $tracker_endpoint . '?idsite=' . $site_id . '&amp;rec=1&amp;url=' . rawurlencode( $posturl ) . '&amp;action_name=' . rawurlencode( $title ) . '&amp;urlref=' . rawurlencode( $urlref );
 			$content       .= '<img src="' . $tracking_image . '" style="border:0;width:0;height:0" width="0" height="0" alt="" />';
 		}
 

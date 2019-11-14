@@ -37,14 +37,14 @@ class Renderer {
 		if ( ! current_user_can( Capabilities::KEY_VIEW ) ) {
 			// not needed as processRequest checks permission anyway but it's faster this way and double ensures to not
 			// letting users view it when they have no access.
-			return __( 'Sorry, you are not allowed to view this report.', 'matomo' );
+			return esc_html__( 'Sorry, you are not allowed to view this report.', 'matomo' );
 		}
 
 		$metadata    = new Metadata();
 		$report_meta = $metadata->find_report_by_unique_id( $a['unique_id'] );
 
 		if ( empty( $report_meta ) ) {
-			return sprintf( __( 'Report %s not found', 'matomo' ), esc_html( $a['unique_id'] ) );
+			return sprintf( esc_html__( 'Report %s not found', 'matomo' ), esc_html( $a['unique_id'] ) );
 		}
 
 		$metric_keys               = array_keys( $report_meta['metrics'] );

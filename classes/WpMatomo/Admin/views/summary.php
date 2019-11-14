@@ -24,14 +24,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 global $wp;
 ?>
 <?php if ( ! $is_tracking ) { ?>
-	<div class="notice notice-warning"><p><?php echo __( 'Matomo Tracking is not enabled.', 'matomo' ); ?></p></div>
+	<div class="notice notice-warning"><p><?php esc_html_e( 'Matomo Tracking is not enabled.', 'matomo' ); ?></p></div>
 <?php } ?>
 <div class="wrap">
 	<div id="icon-plugins" class="icon32"></div>
 	<h1><?php esc_html_e( 'Summary', 'matomo' ); ?></h1>
 	<?php
-	if ( $report_date === Dates::TODAY ) {
-		echo '<div class="notice notice-info" style="padding:8px;">' . __( 'Reports for today are only refreshed approximately every hour through the WordPress cronjob.', 'matomo' ) . '</div>';
+	if ( Dates::TODAY === $report_date ) {
+		echo '<div class="notice notice-info" style="padding:8px;">' . esc_html__( 'Reports for today are only refreshed approximately every hour through the WordPress cronjob.', 'matomo' ) . '</div>';
 	}
 	?>
 	<p><?php esc_html_e( 'Looking for all reports and advanced features like segmentation, real time reports, and more?', 'matomo' ); ?>
@@ -40,39 +40,39 @@ global $wp;
 		<br/><br/>
 		<?php esc_html_e( 'Change date:', 'matomo' ); ?>
 		<?php
-		foreach ( $report_dates as $report_date_key => $report_name ) {
-			$buttonClass = 'button';
-			if ( $report_date === $report_date_key ) {
-				$buttonClass = 'button-primary';
+		foreach ( $report_dates as $matomo_report_date_key => $matomo_report_name ) {
+			$matomo_button_class = 'button';
+			if ( $report_date === $matomo_report_date_key ) {
+				$matomo_button_class = 'button-primary';
 			}
-			echo '<a href="' . esc_url( add_query_arg( array( 'report_date' => $report_date_key ), menu_page_url( Menu::SLUG_REPORT_SUMMARY, false ) ) ) . '" class="' . $buttonClass . '">' . esc_html( $report_name ) . '</a> ';
+			echo '<a href="' . esc_url( add_query_arg( array( 'report_date' => $matomo_report_date_key ), menu_page_url( Menu::SLUG_REPORT_SUMMARY, false ) ) ) . '" class="' . $matomo_button_class . '">' . esc_html( $matomo_report_name ) . '</a> ';
 		}
 		?>
 
 	<div id="dashboard-widgets" class="metabox-holder columns-2 has-right-sidebar">
 		<?php
-		$columns = array( 1, 0 );
-		foreach ( $columns as $columnIndex => $columnModulo ) {
+		$matomo_columns = array( 1, 0 );
+		foreach ( $matomo_columns as $matomo_column_index => $matomo_column_modulo ) {
 			?>
-			<div id="postbox-container-<?php echo( $columnIndex + 1 ); ?>" class="postbox-container">
+			<div id="postbox-container-<?php echo( $matomo_column_index + 1 ); ?>" class="postbox-container">
 				<div id="normal-sortables" class="meta-box-sortables ui-sortable">
 					<?php
-					foreach ( $reports_to_show as $index => $report_meta ) {
-						if ( $index % 2 === $columnModulo ) {
+					foreach ( $reports_to_show as $matomo_index => $matomo_report_meta ) {
+						if ( $matomo_index % 2 === $matomo_column_modulo ) {
 							continue;
 						}
-						$shortcode = sprintf( '[matomo_report unique_id=%s report_date=%s limit=10]', $report_meta['uniqueId'], $report_date );
+						$shortcode = sprintf( '[matomo_report unique_id=%s report_date=%s limit=10]', $matomo_report_meta['uniqueId'], $report_date );
 						?>
 						<div class="postbox">
 
-							<?php if ( ! empty( $report_meta['page'] ) ) { ?>
+							<?php if ( ! empty( $matomo_report_meta['page'] ) ) { ?>
 								<button type="button" class="handlediv" aria-expanded="true"
-										title="<?php _e( 'Click to view the report in detail', 'matomo' ); ?>"><a
+										title="<?php esc_html_e( 'Click to view the report in detail', 'matomo' ); ?>"><a
 										href="
 										<?php
 										echo Menu::get_matomo_reporting_url(
-											$report_meta['page']['category'],
-											$report_meta['page']['subcategory'],
+											$matomo_report_meta['page']['category'],
+											$matomo_report_meta['page']['subcategory'],
 											array(
 												'period' => $report_period_selected,
 												'date'   => $report_date_selected,
@@ -84,8 +84,8 @@ global $wp;
 							<?php } ?>
 							<h2 class="hndle ui-sortable-handle"
 								style="cursor: help;"
-								title="<?php echo ! empty( $report_meta['documentation'] ) ? ( wp_strip_all_tags( $report_meta['documentation'] ) . ' ' ) : null; ?><?php _e( 'You can embed this report on any page using the shortcode:', 'matomo' ); ?> <?php echo esc_attr( $shortcode ); ?>"
-							><?php echo esc_html( $report_meta['name'] ); ?></h2>
+								title="<?php echo ! empty( $matomo_report_meta['documentation'] ) ? ( wp_strip_all_tags( $matomo_report_meta['documentation'] ) . ' ' ) : null; ?><?php esc_html_e( 'You can embed this report on any page using the shortcode:', 'matomo' ); ?> <?php echo esc_attr( $shortcode ); ?>"
+							><?php echo esc_html( $matomo_report_meta['name'] ); ?></h2>
 							<div>
 								<?php echo do_shortcode( $shortcode ); ?>
 							</div>

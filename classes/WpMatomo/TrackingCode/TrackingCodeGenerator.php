@@ -69,9 +69,9 @@ class TrackingCodeGenerator {
 			return false;
 		}
 
-		if ( $track_mode == TrackingSettings::TRACK_MODE_DEFAULT ) {
+		if ( TrackingSettings::TRACK_MODE_DEFAULT === $track_mode ) {
 			$result = $this->prepare_tracking_code( $idsite, $this->settings, $this->logger );
-		} elseif ( $track_mode == TrackingSettings::TRACK_MODE_TAGMANAGER && has_matomo_tag_manager() ) {
+		} elseif ( TrackingSettings::TRACK_MODE_TAGMANAGER === $track_mode && matomo_has_tag_manager() ) {
 			$result = $this->prepare_tagmanger_code( $this->settings, $this->logger );
 		} else {
 			$result = array(
@@ -319,13 +319,13 @@ g.type='text/javascript'; g.async=true; g.defer=true; g.src=" . wp_json_encode( 
 			$uid_from     = $this->settings->get_global_option( 'track_user_id' );
 			$current_user = wp_get_current_user(); // current user
 			// Get the user ID based on the admin setting
-			if ( $uid_from == 'uid' ) {
+			if ( 'uid' === $uid_from ) {
 				$user_id_to_track = $current_user->ID;
-			} elseif ( $uid_from == 'email' ) {
+			} elseif ( 'email' === $uid_from ) {
 				$user_id_to_track = $current_user->user_email;
-			} elseif ( $uid_from == 'username' ) {
+			} elseif ( 'username' === $uid_from ) {
 				$user_id_to_track = $current_user->user_login;
-			} elseif ( $uid_from == 'displayname' ) {
+			} elseif ( 'displayname' === $uid_from ) {
 				$user_id_to_track = $current_user->display_name;
 			}
 		}

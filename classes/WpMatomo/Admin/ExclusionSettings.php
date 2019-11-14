@@ -37,7 +37,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 	}
 
 	public function get_title() {
-		return __( 'Exclusions', 'matomo' );
+		return esc_html__( 'Exclusions', 'matomo' );
 	}
 
 	private function update_if_submitted() {

@@ -55,8 +55,8 @@ class Annotations {
 			return;
 		}
 
-		if ( $new_status == 'publish'
-			 && $old_status != 'publish' ) {
+		if ( 'publish' === $new_status
+			 && 'publish' !== $old_status ) {
 			$site   = new Site();
 			$idsite = $site->get_current_matomo_site_id();
 
@@ -70,7 +70,7 @@ class Annotations {
 				$logger = $this->logger;
 				\Piwik\Access::doAsSuperUser(
 					function () use ( $post, $logger, $idsite ) {
-							$note = __( 'Published:', 'matomo' ) . ' ' . $post->post_title . ' - URL: ' . get_permalink( $post->ID );
+							$note = esc_html__( 'Published:', 'matomo' ) . ' ' . $post->post_title . ' - URL: ' . get_permalink( $post->ID );
 							\Piwik\Plugins\Annotations\API::unsetInstance();// make sure latest instance will be loaded with all up to date dependencies... mainly needed for tests
 							$id = \Piwik\Plugins\Annotations\API::getInstance()->add( $idsite, gmdate( 'Y-m-d' ), $note );
 							$logger->log( 'Add post annotation. ' . $note . ' - ' . wp_json_encode( $id ) );

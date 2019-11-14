@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<p>
 	<?php
 	echo sprintf(
-		__(
+		esc_html__(
 			'Matomo is a collaborative project brought to you by %1$sMatomo team%2$s members as well as many other contributors around the globe. If you\'re a fan of Matomo,
         %3$shere\'s how you can participate!%4$s',
 			'matomo'
@@ -39,7 +39,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<br/><br/>
 		<?php
 		echo sprintf(
-			__(
+			esc_html__(
 				'You can also help us by %1$sdonating%2$s or by %3$spurchasing premium plugins%4$s which fund the
         development of the free Matomo Analytics version.',
 				'matomo'
@@ -63,7 +63,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/newsletter/"><span
 						class="dashicons-before dashicons-email"></span></a>
 				<a target="_blank" rel="noreferrer noopener"
-				   href="https://matomo.org/newsletter/"><?php _e( 'Newsletter', 'matomo' ); ?></a>
+				   href="https://matomo.org/newsletter/"><?php esc_html_e( 'Newsletter', 'matomo' ); ?></a>
 			</li>
 			<li>
 				<a target="_blank" rel="noreferrer noopener" href="https://www.facebook.com/Matomo.org"><span

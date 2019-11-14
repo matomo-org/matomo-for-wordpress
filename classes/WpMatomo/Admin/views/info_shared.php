@@ -31,9 +31,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	?>
 </p>
 <ul class="matomo-list">
-	<li><?php _e( '100% data ownership, no one else can see your data', 'matomo' ); ?></li>
-	<li><?php _e( 'Powerful web analytics for WordPress', 'matomo' ); ?></li>
-	<li><?php _e( 'Superb user privacy protection', 'matomo' ); ?></li>
-	<li><?php _e( 'No data limits or sampling whatsoever', 'matomo' ); ?></li>
-	<li><?php _e( 'Easy installation and configuration', 'matomo' ); ?></li>
+	<li><?php esc_html_e( '100% data ownership, no one else can see your data', 'matomo' ); ?></li>
+	<li><?php esc_html_e( 'Powerful web analytics for WordPress', 'matomo' ); ?></li>
+	<li><?php esc_html_e( 'Superb user privacy protection', 'matomo' ); ?></li>
+	<li><?php esc_html_e( 'No data limits or sampling whatsoever', 'matomo' ); ?></li>
+	<li><?php esc_html_e( 'Easy installation and configuration', 'matomo' ); ?></li>
 </ul>

@@ -109,7 +109,7 @@ class Sync {
 		$idsite = Site::get_matomo_site_id( $blog_id );
 
 		if ( empty( $blog_name ) ) {
-			$blog_name = __( 'Default', 'matomo' );
+			$blog_name = esc_html__( 'Default', 'matomo' );
 		} else {
 			$blog_name = substr( $blog_name, 0, self::MAX_LENGTH_SITE_NAME );
 		}
@@ -171,7 +171,7 @@ class Sync {
 
 		Site::map_matomo_site_id( $blog_id, $idsite );
 
-		if ( ! is_numeric( $idsite ) || 0 == $idsite ) {
+		if ( ! is_numeric( $idsite ) || 0 === $idsite || '0' === $idsite ) {
 			$this->logger->log( sprintf( 'Creating the website failed: %s', wp_json_encode( $blog_id ) ) );
 
 			return false;

@@ -119,7 +119,7 @@ class WordPress extends Plugin
     {
         if (is_multisite()
             || (defined('WP_DEBUG') && WP_DEBUG)
-            || !has_matomo_compatible_content_dir()
+            || !matomo_has_compatible_content_dir()
         ) {
             // console wouldn't really work in multi site mode... therefore we prefer to archive in the same request
             // WP_DEBUG also breaks things since it's logging things to stdout and then safe unserialise doesn't work

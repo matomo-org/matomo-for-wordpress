@@ -117,7 +117,11 @@ class API {
 		$snake_case = $matches[0];
 
 		foreach ( $snake_case as &$match ) {
-			$match = $match == strtoupper( $match ) ? strtolower( $match ) : lcfirst( $match );
+			if ( strtoupper( $match ) === $match ) {
+				$match = strtolower( $match );
+			} else {
+				$match = lcfirst( $match );
+			}
 		}
 
 		return implode( '_', $snake_case );

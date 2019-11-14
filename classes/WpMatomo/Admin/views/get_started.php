@@ -39,8 +39,7 @@ if ( empty( $show_this_page ) ) {
 
 	<?php if ( $settings->is_tracking_enabled() ) { ?>
 		<h2>1. <?php esc_html_e( 'Tracking is enabled', 'matomo' ); ?> <span class="dashicons dashicons-yes"></span></h2>
-		<p><a href="<?php echo AdminSettings::make_url( AdminSettings::TAB_TRACKING ); ?>">Click here to configure your
-				tracking code.</a></p>
+		<p><a href="<?php echo AdminSettings::make_url( AdminSettings::TAB_TRACKING ); ?>"><?php esc_html_e( 'Click here to configure your tracking code.', 'matomo' ); ?></a></p>
 
 	<?php } else { ?>
 		<h2>1. <?php esc_html_e( 'Enable tracking', 'matomo' ); ?></h2>
@@ -55,14 +54,14 @@ if ( empty( $show_this_page ) ) {
 
 	<h2>2. <?php esc_html_e( 'Update your privacy page', 'matomo' ); ?></h2>
 
-	<?php echo sprintf( __( 'Give your users the chance to opt-out of tracking by adding the shortcode %1$s to your privacy page. You can %2$stweak the opt-out to your liking - see the Privacy Settings%3$s.', 'matomo' ), '<code>[matomo_opt_out]</code>', '<a href="' . AdminSettings::make_url( AdminSettings::TAB_PRIVACY ) . '">', '</a>' ); ?>
+	<?php echo sprintf( esc_html__( 'Give your users the chance to opt-out of tracking by adding the shortcode %1$s to your privacy page. You can %2$stweak the opt-out to your liking - see the Privacy Settings%3$s.', 'matomo' ), '<code>[matomo_opt_out]</code>', '<a href="' . AdminSettings::make_url( AdminSettings::TAB_PRIVACY ) . '">', '</a>' ); ?>
 
 	<?php esc_html_e( 'You may also need to mention that you are using Matomo Analytics on your website.', 'matomo' ); ?>
 
 	<h2>3. <?php esc_html_e( 'Done', 'matomo' ); ?></h2>
 	<form method="post">
 		<?php wp_nonce_field( GetStarted::NONCE_NAME ); ?>
-		<input type="hidden" name="<?php echo GetStarted::FORM_NAME; ?>[show_get_started_page]"
+		<input type="hidden" name="<?php echo esc_attr( GetStarted::FORM_NAME ); ?>[show_get_started_page]"
 			   value="no">
 		<input type="submit" class="button-primary" value="<?php esc_html_e( 'Don\'t show this page anymore', 'matomo' ); ?>">
 	</form>

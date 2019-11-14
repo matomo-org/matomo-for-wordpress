@@ -5,15 +5,10 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
- * Code Based on
- * @author Andr&eacute; Br&auml;kling
- * @package WP_Matomo
  * https://github.com/braekling/matomo
  *
  */
 
-use Piwik\Piwik;
-use WpMatomo\Admin\ExclusionSettings;
 use WpMatomo\Admin\Menu;
 use WpMatomo\Admin\PrivacySettings;
 
@@ -53,23 +48,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <ul class="matomo-list">
 	<li>
-		<a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_ANONYMIZE_DATA ); ?>"><?php _e( 'Anonymise data and IP addresses', 'matomo' ); ?></a>
+		<a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_ANONYMIZE_DATA ); ?>"><?php esc_html_e( 'Anonymise data and IP addresses', 'matomo' ); ?></a>
 	</li>
 	<li>
-		<a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_DATA_RETENTION ); ?>"><?php _e( 'Configure data retention', 'matomo' ); ?></a>
+		<a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_DATA_RETENTION ); ?>"><?php esc_html_e( 'Configure data retention', 'matomo' ); ?></a>
 	</li>
 	<li>
-		<a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_OPTOUT ); ?>"><?php _e( 'Matomo has an opt-out mechanism which lets users opt-out of web analytics tracking', 'matomo' ); ?></a>
-		(<?php _e( 'see below for the shortcode', 'matomo' ); ?>)
+		<a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_OPTOUT ); ?>"><?php esc_html_e( 'Matomo has an opt-out mechanism which lets users opt-out of web analytics tracking', 'matomo' ); ?></a>
+		(<?php esc_html_e( 'see below for the shortcode', 'matomo' ); ?>)
 	</li>
 	<li>
-		<a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_ASK_CONSENT ); ?>"><?php _e( 'Asking for consent', 'matomo' ); ?></a>
+		<a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_ASK_CONSENT ); ?>"><?php esc_html_e( 'Asking for consent', 'matomo' ); ?></a>
 	</li>
 	<li>
-		<a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_GDPR_OVERVIEW ); ?>"><?php _e( 'GDPR overview', 'matomo' ); ?></a>
+		<a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_GDPR_OVERVIEW ); ?>"><?php esc_html_e( 'GDPR overview', 'matomo' ); ?></a>
 	</li>
 	<li>
-		<a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_GDPR_TOOLS ); ?>"><?php _e( 'GDPR tools', 'matomo' ); ?></a>
+		<a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_GDPR_TOOLS ); ?>"><?php esc_html_e( 'GDPR tools', 'matomo' ); ?></a>
 	</li>
 </ul>
 <h2>
@@ -79,7 +74,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php
 	echo sprintf(
 		__( 'Use the short code %1$s to embed the opt out iframe into your website.', 'matomo' ),
-		'<code>' . PrivacySettings::EXAMPLE_MINIMAL . '</code>'
+		'<code>' . esc_html( PrivacySettings::EXAMPLE_MINIMAL ) . '</code>'
 	);
 	?>
 		<br/>
@@ -95,9 +90,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<li>width - eg 600, 600px or 100%</li>
 	<li>height - eg 200, 200px or 20%</li>
 </ul>
-<p><?php esc_html_e( 'Example', 'matomo' ); ?>: <code><?php echo PrivacySettings::EXAMPLE_FULL; ?></code></p>
+<p><?php esc_html_e( 'Example', 'matomo' ); ?>: <code><?php echo esc_html( PrivacySettings::EXAMPLE_FULL ); ?></code></p>
 <h2><?php esc_html_e( 'You earned it!', 'matomo' ); ?></h2>
 <p>
-	<?php echo sprintf( __( 'Use the shortcode %1$s to show that your website respects your visitors\' privacy.', 'matomo' ), '<code>[matomo_privacy_badge size=120]</code>' ); ?>
+	<?php echo sprintf( esc_html__( 'Use the shortcode %1$s to show that your website respects your visitors\' privacy.', 'matomo' ), '<code>[matomo_privacy_badge size=120]</code>' ); ?>
 	<?php echo do_shortcode( '[matomo_privacy_badge size=120 align=left]' ); ?>
 </p>

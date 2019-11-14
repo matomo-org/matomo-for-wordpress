@@ -49,7 +49,7 @@ if ($was_loaded_directly) {
 }
 
 
-if ( is_matomo_app_request() ) {
+if ( matomo_is_app_request() ) {
 	// pretend we are in the admin... potentially avoiding caching etc
 	$GLOBALS['hook_suffix'] = '';
 	include_once ABSPATH . '/wp-admin/includes/class-wp-screen.php';
@@ -85,7 +85,7 @@ $GLOBALS['MATOMO_MODIFY_CONFIG_SETTINGS'] = function ($settings) {
 				array_splice($plugins['Plugins'], $pos, 1);
 			}
 		}
-		if (has_matomo_tag_manager()) {
+		if (matomo_has_tag_manager()) {
 			$plugins['Plugins'][] = 'TagManager';
 		}
 	}

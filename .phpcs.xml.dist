@@ -9,8 +9,10 @@
 	<file>./shared.php</file>
 	<file>./uninstall.php</file>
 	<exclude-pattern>/classes/WpMatomo/Db/*</exclude-pattern>
-	<exclude-pattern>/classes/WpMatomo/Db/AjaxTracker.php</exclude-pattern>
-	<exclude-pattern type="relative">/tests/phpunit/bootstrap.php</exclude-pattern>
+	<exclude-pattern>/classes/WpMatomo/AjaxTracker.php</exclude-pattern>
+	<exclude-pattern>/tests/phpunit/bootstrap.php</exclude-pattern>
+	<exclude-pattern>tests/phpunit/framework/test-matomo-test-case.php</exclude-pattern>
+	<exclude-pattern>tests/phpunit/framework/test-local-tracker.php</exclude-pattern>
 
 	<!-- How to scan -->
 	<!-- Usage instructions: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->
@@ -48,6 +50,7 @@
 		<exclude name="WordPress.WhiteSpace.PrecisionAlignment.Found"/>
 		<exclude name="Generic.Commenting.DocComment.ShortNotCapital"/>
 		<exclude name="Squiz.Commenting.FileComment.Missing"/>
+		<exclude name="WordPress.Security.NonceVerification.Recommended"/>
 		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log"/>
 		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r"/>
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>

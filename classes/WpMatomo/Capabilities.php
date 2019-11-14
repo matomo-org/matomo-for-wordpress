@@ -67,7 +67,7 @@ class Capabilities {
 	}
 
 	public function map_meta_cap( $caps, $cap, $user_id, $args ) {
-		if ( $cap === self::KEY_STEALTH ) {
+		if ( self::KEY_STEALTH === $cap ) {
 			// a super admin is usually allowed all actions... unless we add do_not_allow
 			if ( is_multisite() && is_super_admin() ) {
 				$stealth = $this->settings->get_global_option( Settings::OPTION_KEY_STEALTH );
@@ -77,7 +77,7 @@ class Capabilities {
 			}
 		}
 
-		if ( $cap === Menu::CAP_NOT_EXISTS
+		if ( Menu::CAP_NOT_EXISTS === $cap
 			 && is_multisite()
 			 && is_super_admin() ) {
 			$caps[] = 'do_not_allow'; // prevent matomo-analytics submenu to be shown

@@ -1,5 +1,7 @@
 <?php
 /**
+ * Test release.
+ *
  * @package matomo
  */
 

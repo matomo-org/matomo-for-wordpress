@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Marketplace {
 	const NONCE_LICENSE = 'matomo_license';
 	const FORM_NAME     = 'matomo_license_key';
-	private $valid_tabs  = array( 'subscriptions' );
+	private $valid_tabs = array( 'subscriptions' );
 
 	/**
 	 * @var Settings
@@ -56,7 +56,7 @@ class Marketplace {
 				$this->settings->set_license_key( $_POST[ self::FORM_NAME ] );
 			} else {
 				$this->settings->set_license_key( '' );
-				echo '<div class="error"><p>' . __( 'License key is not valid', 'matomo' ) . '</p></div>';
+				echo '<div class="error"><p>' . esc_html__( 'License key is not valid', 'matomo' ) . '</p></div>';
 			}
 		}
 	}

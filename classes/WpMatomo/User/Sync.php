@@ -217,7 +217,7 @@ class Sync {
 			$user_model->addUser( $matomo_user_login, $password, $wp_user->user_email, $login, $token, $now );
 
 			User::map_matomo_user_login( $user_id, $matomo_user_login );
-		} elseif ( $user_in_matomo['email'] != $wp_user->user_email ) {
+		} elseif ( $user_in_matomo['email'] !== $wp_user->user_email ) {
 			$this->logger->log( 'Matomo is now updating the email for wpUserID ' . $user_id . ' matomo login ' . $matomo_user_login );
 			$user_model->updateUserFields( $matomo_user_login, array( 'email' => $wp_user->user_email ) );
 		}

@@ -48,19 +48,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	);
 	?>
 
-		<br/><br/><?php _e( 'Don\'t want all the hassle of maintaining a Matomo?', 'matomo' ); ?> <a
+		<br/><br/><?php esc_html_e( 'Don\'t want all the hassle of maintaining a Matomo?', 'matomo' ); ?> <a
 			href="http://matomo.org/start-free-analytics-trial/" rel="noreferrer noopener"
-			target="_blank"><?php _e( 'Sign up for a free Matomo Cloud trial', 'matomo' ); ?></a>. <?php _e( 'We can migrate all your data onto our Cloud for free. 100% data ownership guaranteed.', 'matomo' ); ?>
+			target="_blank"><?php esc_html_e( 'Sign up for a free Matomo Cloud trial', 'matomo' ); ?></a>. <?php esc_html_e( 'We can migrate all your data onto our Cloud for free. 100% data ownership guaranteed.', 'matomo' ); ?>
 	</p>
 
-	<h2><?php _e( 'Matomo blogs', 'matomo' ); ?></h2>
+	<h2><?php esc_html_e( 'Matomo blogs', 'matomo' ); ?></h2>
 	<ul class="matomo-list">
 		<?php
 		if ( function_exists( 'get_sites' ) ) {
-			foreach ( get_sites() as $site ) {
-				/** @var WP_Site $site */
-				switch_to_blog( $site->blog_id );
-				echo '<li><a href="' . admin_url( 'admin.php?page=matomo-reporting' ) . '">' . $site->blogname . ' (Blog ID: ' . $site->blog_id . ')</a></li>';
+			foreach ( get_sites() as $matomo_site ) {
+				/** @var WP_Site $matomo_site */
+				switch_to_blog( $matomo_site->blog_id );
+				echo '<li><a href="' . admin_url( 'admin.php?page=matomo-reporting' ) . '">' . $matomo_site->blogname . ' (Blog ID: ' . $matomo_site->blog_id . ')</a></li>';
 				restore_current_blog();
 			}
 		}
