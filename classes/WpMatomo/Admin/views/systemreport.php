@@ -20,8 +20,8 @@ use WpMatomo\Admin\SystemReport;
 /** @var string $active_tab */
 /** @var \WpMatomo\Settings $settings */
 
-if ( ! function_exists( 'anonymize_matomo_value' ) ) {
-	function anonymize_matomo_value( $value ) {
+if ( ! function_exists( 'matomo_anonymize_value' ) ) {
+	function matomo_anonymize_value( $value ) {
 		if ( is_string( $value ) && ! empty( $value ) ) {
 			$values_to_anonymize = array(
 				ABSPATH                           => '$ABSPATH/',
@@ -87,9 +87,9 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 							} elseif ( ! empty( $row['is_warning'] ) ) {
 								$class = 'Warning ';
 							}
-							echo "\n* " . esc_html( $class ) . esc_html( $row['name'] ) . ': ' . esc_html( anonymize_matomo_value( $value ) );
+							echo "\n* " . esc_html( $class ) . esc_html( $row['name'] ) . ': ' . esc_html( matomo_anonymize_value( $value ) );
 							if ( isset( $row['comment'] ) && '' !== $row['comment'] ) {
-								echo ' (' . esc_html( anonymize_matomo_value( $row['comment'] ) ) . ')';
+								echo ' (' . esc_html( matomo_anonymize_value( $row['comment'] ) ) . ')';
 							}
 						}
 						echo "\n\n";

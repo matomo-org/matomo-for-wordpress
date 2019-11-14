@@ -95,7 +95,7 @@ class TrackingSettings implements AdminSettingsInterface {
 			'track_api_endpoint',
 		);
 
-		if ( has_matomo_tag_manager() ) {
+		if ( matomo_has_tag_manager() ) {
 			$keys_to_keep[] = 'tagmanger_container_ids';
 		}
 
@@ -163,7 +163,7 @@ class TrackingSettings implements AdminSettingsInterface {
 	public function get_active_containers() {
 		// we don't use Matomo API here to avoid needing to bootstrap Matomo which is slow and could break things
 		$containers = array();
-		if ( has_matomo_tag_manager() ) {
+		if ( matomo_has_tag_manager() ) {
 			global $wpdb;
 			$dbsettings      = new \WpMatomo\Db\Settings();
 			$container_table = $dbsettings->prefix_table_name( 'tagmanager_container' );

@@ -218,7 +218,7 @@ class Menu {
 	}
 
 	public function tagmanager() {
-		if ( has_matomo_tag_manager() ) {
+		if ( matomo_has_tag_manager() ) {
 			$this->go_to_matomo_page( 'TagManager', 'manageContainers', Capabilities::KEY_WRITE );
 		}
 		exit;

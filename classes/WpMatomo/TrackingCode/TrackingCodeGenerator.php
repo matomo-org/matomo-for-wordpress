@@ -71,7 +71,7 @@ class TrackingCodeGenerator {
 
 		if ( TrackingSettings::TRACK_MODE_DEFAULT === $track_mode ) {
 			$result = $this->prepare_tracking_code( $idsite, $this->settings, $this->logger );
-		} elseif ( TrackingSettings::TRACK_MODE_TAGMANAGER === $track_mode && has_matomo_tag_manager() ) {
+		} elseif ( TrackingSettings::TRACK_MODE_TAGMANAGER === $track_mode && matomo_has_tag_manager() ) {
 			$result = $this->prepare_tagmanger_code( $this->settings, $this->logger );
 		} else {
 			$result = array(

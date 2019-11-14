@@ -110,7 +110,7 @@ class WpMatomo {
 		if ( ! is_admin() ) {
 			return true;
 		}
-		if ( is_matomo_app_request() ) {
+		if ( matomo_is_app_request() ) {
 			return true;
 		}
 
@@ -136,7 +136,7 @@ class WpMatomo {
 			return false;
 		}
 
-		if ( ! has_matomo_compatible_content_dir() ) {
+		if ( ! matomo_has_compatible_content_dir() ) {
 			add_action(
 				'init',
 				function () {
@@ -181,7 +181,7 @@ class WpMatomo {
 	}
 
 	public function init_plugin() {
-		if ( ( is_admin() || is_matomo_app_request() )
+		if ( ( is_admin() || matomo_is_app_request() )
 			 && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 			$installer = new Installer( $this->settings );
 			$installer->register_hooks();
@@ -191,7 +191,7 @@ class WpMatomo {
 					$updater->update_if_needed();
 				}
 			} else {
-				if ( is_matomo_app_request() ) {
+				if ( matomo_is_app_request() ) {
 					// we can't install if matomo is requested... there's some circular reference
 					wp_safe_redirect( admin_url() );
 					exit;
