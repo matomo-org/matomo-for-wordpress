@@ -87,7 +87,7 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 							} elseif ( ! empty( $row['is_warning'] ) ) {
 								$class = 'Warning ';
 							}
-							echo "\n* " . $class . esc_html( $row['name'] ) . ': ' . esc_html( anonymize_matomo_value( $value ) );
+							echo "\n* " . esc_html($class) . esc_html( $row['name'] ) . ': ' . esc_html( anonymize_matomo_value( $value ) );
 							if ( isset( $row['comment'] ) && '' !== $row['comment'] ) {
 								echo ' (' . esc_html( anonymize_matomo_value( $row['comment'] ) ) . ')';
 							}
@@ -107,9 +107,9 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 				}
 				$value = $row['value'];
 				if ( true === $value ) {
-					$value = __( 'Yes' );
+					$value = __( 'Yes', 'matomo' );
 				} elseif ( false === $value ) {
-					$value = __( 'No' );
+					$value = __( 'No', 'matomo' );
 				}
 				$class = '';
 				if ( ! empty( $row['is_error'] ) ) {
@@ -117,7 +117,7 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 				} elseif ( ! empty( $row['is_warning'] ) ) {
 					$class = 'warning';
 				}
-				echo "<tr class='$class'>";
+				echo "<tr class='" . esc_html( $class ) . "'>";
 				echo "<td width='30%'>" . esc_html( $row['name'] ) . '</td>';
 				echo "<td width='" . ( ! empty( $table['has_comments'] ) ? 20 : 70 ) . "%'>" . esc_html( $value ) . '</td>';
 				if ( ! empty( $table['has_comments'] ) ) {

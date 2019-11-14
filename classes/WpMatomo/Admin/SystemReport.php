@@ -151,7 +151,7 @@ class SystemReport {
 
 		$rows[] = array(
 			'name'    => sprintf( __( '%s exists and is writable.', 'matomo' ), $title ),
-			'value'   => $file_exists && $file_readable && $file_writable ? __( 'Yes' ) : __( 'No' ),
+			'value'   => $file_exists && $file_readable && $file_writable ? __( 'Yes', 'matomo' ) : __( 'No', 'matomo' ),
 			'comment' => $comment,
 		);
 

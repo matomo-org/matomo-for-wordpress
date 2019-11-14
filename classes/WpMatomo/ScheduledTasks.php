@@ -48,7 +48,7 @@ class ScheduledTasks {
 	public function add_weekly_schedule( $schedules ) {
 		$schedules['matomo_weekly'] = array(
 			'interval' => 60 * 60 * 24 * 7, // 604,800, seconds in a week
-			'display'  => __( 'Weekly' ),
+			'display'  => __( 'Weekly', 'matomo' ),
 		);
 
 		return $schedules;

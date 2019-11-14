@@ -7,7 +7,6 @@
  * @package matomo
  * Code Based on
  * @author Andr&eacute; Br&auml;kling
- * @package WP_Matomo
  * https://github.com/braekling/WP-Matomo
  *
  */
@@ -41,9 +40,9 @@ if ( $was_updated ) {
 
 		<?php
 		// Tracking Configuration
-		$is_not_tracking = $settings->get_global_option( 'track_mode' ) == TrackingSettings::TRACK_MODE_DISABLED;
+		$is_not_tracking = $settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_DISABLED;
 
-		$is_not_generated_tracking     = $is_not_tracking || $settings->get_global_option( 'track_mode' ) == TrackingSettings::TRACK_MODE_MANUALLY;
+		$is_not_generated_tracking     = $is_not_tracking || $settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
 		$full_generated_tracking_group = 'matomo-track-option matomo-track-option-default  ';
 
 		$description = sprintf( '%s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s', __( 'You can choose between four tracking code modes:', 'matomo' ), __( 'Disabled', 'matomo' ), __( 'matomo will not add the tracking code. Use this, if you want to add the tracking code to your template files or you use another plugin to add the tracking code.', 'matomo' ), __( 'Default tracking', 'matomo' ), __( 'matomo will use Matomo\'s standard tracking code.', 'matomo' ), __( 'Enter manually', 'matomo' ), __( 'Enter your own tracking code manually. You can choose one of the prior options, pre-configure your tracking code and switch to manually editing at last.', 'matomo' ) . ( $settings->is_network_enabled() ? ' ' . __( 'Use the placeholder {ID} to add the Matomo site ID.', 'matomo' ) : '' ), __( 'Tag Manager', 'matomo' ), __( 'If you have created containers in the Tag Manager, you can select one of them and it will embed the code for the container automatically.', 'matomo' ) );
@@ -113,15 +112,15 @@ if ( $was_updated ) {
 				'all'      => __( 'Track all content blocks', 'matomo' ),
 				'visible'  => __( 'Track only visible content blocks', 'matomo' ),
 			),
-			__( 'Content tracking allows you to track interaction with the content of a web page or application.' ) . ' ' . sprintf( __( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/content-tracking" target="_BLANK">', '</a>' ),
+			__( 'Content tracking allows you to track interaction with the content of a web page or application.', 'matomo' ) . ' ' . sprintf( __( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/content-tracking" target="_BLANK">', '</a>' ),
 			'',
 			$is_not_tracking,
 			$full_generated_tracking_group
 		);
 
-		$form->show_checkbox( 'track_ecommerce', __( 'Enable ecommerce', 'matomo' ), __( 'Matom can track Ecommerce orders, abandoned carts and product views for WooCommerce, Easy Digital Analytics, MemberPress, and more. Disabling this feature will also remove Ecommerce reports from the Matomo UI.' ), $is_not_tracking, $full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
+		$form->show_checkbox( 'track_ecommerce', __( 'Enable ecommerce', 'matomo' ), __( 'Matom can track Ecommerce orders, abandoned carts and product views for WooCommerce, Easy Digital Analytics, MemberPress, and more. Disabling this feature will also remove Ecommerce reports from the Matomo UI.', 'matomo' ), $is_not_tracking, $full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
 
-		$form->show_checkbox( 'track_search', __( 'Track search', 'matomo' ), __( 'Use Matomo\'s advanced Site Search Analytics feature.' ) . ' ' . sprintf( __( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/site-search/#track-site-search-using-the-tracking-api-advanced-users-only" target="_BLANK">', '</a>' ), $is_not_tracking, $full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
+		$form->show_checkbox( 'track_search', __( 'Track search', 'matomo' ), __( 'Use Matomo\'s advanced Site Search Analytics feature.', 'matomo' ) . ' ' . sprintf( __( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/site-search/#track-site-search-using-the-tracking-api-advanced-users-only" target="_BLANK">', '</a>' ), $is_not_tracking, $full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
 
 		$form->show_checkbox( 'track_404', __( 'Track 404', 'matomo' ), __( 'Matomo can automatically add a 404-category to track 404-page-visits.', 'matomo' ) . ' ' . sprintf( __( 'See %1$sMatomo FAQ%2$s.', 'matomo' ), '<a href="https://matomo.org/faq/how-to/faq_60/" target="_BLANK">', '</a>' ), $is_not_tracking, $full_generated_tracking_group . ' matomo-track-option-manually' );
 
@@ -155,7 +154,7 @@ if ( $was_updated ) {
 
 		$form->show_checkbox( 'track_feed', __( 'Track RSS feeds', 'matomo' ), __( 'Enable to track posts in feeds via tracking pixel.', 'matomo' ), $is_not_tracking, $full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
 
-		$form->show_checkbox( 'track_feed_addcampaign', __( 'Track RSS feed links as campaign', 'matomo' ), __( 'This will add Matomo campaign parameters to the RSS feed links.' . ' ' . sprintf( __( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/tracking-campaigns/" target="_BLANK">', '</a>' ), 'matomo' ), $is_not_tracking, $full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager', true, 'jQuery(\'tr.matomo-feed_campaign-option\').toggle(\'hidden\');' );
+		$form->show_checkbox( 'track_feed_addcampaign', __( 'Track RSS feed links as campaign', 'matomo' ), __( 'This will add Matomo campaign parameters to the RSS feed links.', 'matomo' ) . ' ' . sprintf( __( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/tracking-campaigns/" target="_BLANK">', '</a>' ), $is_not_tracking, $full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager', true, 'jQuery(\'tr.matomo-feed_campaign-option\').toggle(\'hidden\');' );
 
 		$form->show_input( 'track_feed_campaign', __( 'RSS feed campaign', 'matomo' ), __( 'Keyword: post name.', 'matomo' ), $is_not_generated_tracking || ! $settings->get_global_option( 'track_feed_addcampaign' ), $full_generated_tracking_group . ' matomo-feed_campaign-option matomo-track-option-tagmanager' );
 
@@ -177,9 +176,9 @@ if ( $was_updated ) {
 			$full_generated_tracking_group . ' matomo-track-option-tagmanager'
 		);
 
-		$form->show_checkbox( 'track_datacfasync', __( 'Add data-cfasync=false', 'matomo' ), __( 'Adds data-cfasync=false to the script tag, e.g., to ask Rocket Loader to ignore the script.' . ' ' . sprintf( __( 'See %1$sCloudFlare Knowledge Base%2$s.', 'matomo' ), '<a href="https://support.cloudflare.com/hc/en-us/articles/200169436-How-can-I-have-Rocket-Loader-ignore-my-script-s-in-Automatic-Mode-" target="_BLANK">', '</a>' ), 'matomo' ), $is_not_tracking, $full_generated_tracking_group . '  matomo-track-option-tagmanager' );
+		$form->show_checkbox( 'track_datacfasync', __( 'Add data-cfasync=false', 'matomo' ), __( 'Adds data-cfasync=false to the script tag, e.g., to ask Rocket Loader to ignore the script.', 'matomo' ) . ' ' . sprintf( __( 'See %1$sCloudFlare Knowledge Base%2$s.', 'matomo' ), '<a href="https://support.cloudflare.com/hc/en-us/articles/200169436-How-can-I-have-Rocket-Loader-ignore-my-script-s-in-Automatic-Mode-" target="_BLANK">', '</a>' ), $is_not_tracking, $full_generated_tracking_group . '  matomo-track-option-tagmanager' );
 
-		$matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Submit" type="submit" class="button-primary" value="' . esc_attr__( 'Save Changes' ) . '" /></p></td></tr>';
+		$matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Submit" type="submit" class="button-primary" value="' . esc_attr__( 'Save Changes', 'matomo' ) . '" /></p></td></tr>';
 
 		$form->show_input( 'set_download_extensions', __( 'Define all file types for download tracking', 'matomo' ), __( 'Replace Matomo\'s default file extensions for download tracking, divided by a vertical bar (&#124;). Leave blank to keep Matomo\'s default settings.', 'matomo' ) . ' ' . sprintf( __( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide#file-extensions-for-tracking-downloads" target="_BLANK">', '</a>' ), $is_not_tracking, $full_generated_tracking_group );
 

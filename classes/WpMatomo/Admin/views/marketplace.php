@@ -133,12 +133,12 @@ $license_key = $settings->get_license_key();
 					),
 			),
 		);
-		foreach ( $feature_sections as $featureSection ) {
-			echo '<h2>' . esc_html( $featureSection['title'] ) . '</h2>';
+		foreach ( $feature_sections as $feature_section ) {
+			echo '<h2>' . esc_html( $feature_section['title'] ) . '</h2>';
 			echo '<div class="wp-list-table widefat plugin-install"><div id="the-list">';
-			foreach ( $featureSection['features'] as $index => $feature ) {
+			foreach ( $feature_section['features'] as $index => $feature ) {
 				$style        = '';
-				$is_3_columns = count( $featureSection['features'] ) === 3;
+				$is_3_columns = count( $feature_section['features'] ) === 3;
 				if ( $is_3_columns ) {
 					$style = 'width: calc(33% - 8px);min-width:282px;max-width:350px;';
 					if ( $index % 3 === 2 ) {
@@ -252,7 +252,7 @@ $license_key = $settings->get_license_key();
 			<table class="widefat">
 				<thead>
 				<tr>
-					<th><?php esc_html_e( 'Name' ); ?></th>
+					<th><?php esc_html_e( 'Name', 'matomo' ); ?></th>
 					<th><?php esc_html_e( 'Status', 'matomo' ); ?></th>
 					<th><?php esc_html_e( 'Start date', 'matomo' ); ?></th>
 					<th><?php esc_html_e( 'End date', 'matomo' ); ?></th>

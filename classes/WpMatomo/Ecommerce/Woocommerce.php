@@ -125,7 +125,7 @@ class Woocommerce extends Base {
 
 		$this->logger->log( sprintf( 'Order %s with order number %s has status: %s', $order_id, $order_id_to_track, $order_status ) );
 
-		if ( in_array( $order_status, $this->order_status_ignore, $strict = true ) ) {
+		if ( in_array( $order_status, $this->order_status_ignore, true ) ) {
 			$this->logger->log( 'Ignoring ecommerce order ' . $order_id . ' becauses of status: ' . $order_status );
 
 			return '';

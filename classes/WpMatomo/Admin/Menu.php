@@ -161,6 +161,7 @@ class Menu {
 		}
 
 		/*
+		 * Temporarily disabled:
 		add_submenu_page( $this->parentSlug, __( 'Marketplace', 'matomo' ), __( 'Marketplace', 'matomo' ), Capabilities::KEY_VIEW, self::SLUG_MARKETPLACE, array(
 			$marketplace,
 			'show'
@@ -279,7 +280,7 @@ class Menu {
 			);
 		}
 
-		wp_redirect( $url );
+		wp_safe_redirect( $url );
 		exit;
 	}
 
@@ -360,7 +361,7 @@ class Menu {
 		$url  = self::make_matomo_app_base_url();
 		$url .= '?idSite=' . (int) $website_id . '&period=' . rawurlencode( $default_period ) . '&date=' . rawurlencode( $default_date );
 		$url .= '&module=' . rawurlencode( $module ) . '&action=' . rawurlencode( $action );
-		wp_redirect( $url );
+		wp_safe_redirect( $url );
 		exit;
 	}
 

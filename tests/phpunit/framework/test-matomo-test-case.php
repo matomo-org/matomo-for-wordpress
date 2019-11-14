@@ -1,5 +1,7 @@
 <?php
 /**
+ * Matomo test case bootstrapping an entire Matomo.
+ *
  * @package matomo
  */
 
