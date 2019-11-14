@@ -117,7 +117,7 @@ class API {
 		$snake_case = $matches[0];
 
 		foreach ( $snake_case as &$match ) {
-			if (strtoupper( $match ) === $match) {
+			if ( strtoupper( $match ) === $match ) {
 				$match = strtolower( $match );
 			} else {
 				$match = lcfirst( $match );

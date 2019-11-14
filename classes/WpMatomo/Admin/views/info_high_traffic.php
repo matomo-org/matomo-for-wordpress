@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	Your Matomo will then run a lot faster and it allows you to put your Matomo installation on a separate server if
 	needed.
 	<br/><br/>Don't want all the hassle of maintaining a Matomo? <a href="http://matomo.org/start-free-analytics-trial/"
-													    rel="noreferrer noopener" target="_blank">Sign up
+														rel="noreferrer noopener" target="_blank">Sign up
 		for a free Matomo Cloud trial</a>. We can migrate all your data onto our Cloud for free. 100% data ownership
 	guaranteed.
 </p>

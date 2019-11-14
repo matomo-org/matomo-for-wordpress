@@ -207,11 +207,11 @@ class Installer {
 		}
 		$db_default      = array();
 		$general_default = array();
-		if ($config->database) {
-			$db_default  = $config->database;
+		if ( $config->database ) {
+			$db_default = $config->database;
 		}
-		if ($config->General) {
-			$general_default  = $config->General;
+		if ( $config->General ) {
+			$general_default = $config->General;
 		}
 		$config->database = array_merge( $db_default, $db_info );
 		$config->General  = array_merge( $general_default, $general );

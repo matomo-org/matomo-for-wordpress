@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Marketplace {
 	const NONCE_LICENSE = 'matomo_license';
 	const FORM_NAME     = 'matomo_license_key';
-	private $valid_tabs  = array( 'subscriptions' );
+	private $valid_tabs = array( 'subscriptions' );
 
 	/**
 	 * @var Settings
