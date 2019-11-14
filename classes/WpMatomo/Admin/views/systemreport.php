@@ -149,27 +149,27 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 			<?php wp_nonce_field( SystemReport::NONCE_NAME ); ?>
 
 			<?php if ( ! $settings->is_network_enabled() || ! is_network_admin() ) { ?>
-				<input name="<?php echo SystemReport::TROUBLESHOOT_SYNC_USERS; ?>" type="submit" class='button-primary'
+				<input name="<?php echo esc_attr(SystemReport::TROUBLESHOOT_SYNC_USERS); ?>" type="submit" class='button-primary'
 					   value="<?php esc_html_e( 'Sync users', 'matomo' ); ?>">
 				<br/><br/>
-				<input name="<?php echo SystemReport::TROUBLESHOOT_SYNC_SITE; ?>" type="submit" class='button-primary'
+				<input name="<?php echo esc_attr(SystemReport::TROUBLESHOOT_SYNC_SITE); ?>" type="submit" class='button-primary'
 					   value="<?php esc_html_e( 'Sync site', 'matomo' ); ?>">
 			<?php } ?>
 			<?php if ( $settings->is_network_enabled() ) { ?>
-				<input name="<?php echo SystemReport::TROUBLESHOOT_SYNC_ALL_SITES; ?>" type="submit"
+				<input name="<?php echo esc_attr(SystemReport::TROUBLESHOOT_SYNC_ALL_SITES); ?>" type="submit"
 					   class='button-primary'
 					   value="<?php esc_html_e( 'Sync all sites', 'matomo' ); ?>">
 				<br/><br/>
-				<input name="<?php echo SystemReport::TROUBLESHOOT_SYNC_ALL_USERS; ?>" type="submit"
+				<input name="<?php echo esc_attr(SystemReport::TROUBLESHOOT_SYNC_ALL_USERS); ?>" type="submit"
 					   class='button-primary'
 					   value="<?php esc_html_e( 'Sync all users across sites', 'matomo' ); ?>">
 			<?php } ?>
 			<br/><br/>
-			<input name="<?php echo SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE; ?>" type="submit"
+			<input name="<?php echo esc_attr(SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE); ?>" type="submit"
 				   class='button-primary'
 				   value="<?php esc_html_e( 'Clear Matomo Cache', 'matomo' ); ?>">
 			<br/><br/>
-			<input name="<?php echo SystemReport::TROUBLESHOOT_ARCHIVE_NOW; ?>" type="submit"
+			<input name="<?php echo esc_attr(SystemReport::TROUBLESHOOT_ARCHIVE_NOW); ?>" type="submit"
 				   class='button-primary'
 				   value="<?php esc_html_e( 'Archive reports', 'matomo' ); ?>">
 		</form>
@@ -187,7 +187,7 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 		<p>
 		<?php
 		echo sprintf(
-			__( 'You may want to disable %1$s in your %2$s and set up an actual cronjob and %3$scheck out our recommended server sizing%4$s.', 'matomo' ),
+			esc_html__( 'You may want to disable %1$s in your %2$s and set up an actual cronjob and %3$scheck out our recommended server sizing%4$s.', 'matomo' ),
 			'<code>DISABLE_WP_CRON</code>',
 			'<code>wp-config.php</code>',
 			'<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/docs/requirements/#recommended-servers-sizing-cpu-ram-disks">',

@@ -64,6 +64,7 @@ class Installer {
 
 			return SettingsPiwik::isPiwikInstalled();
 		} catch ( NotYetInstalledException $e ) {
+			// not yet installed.... we will need to install it
 		}
 
 		return false;
@@ -110,7 +111,7 @@ class Installer {
 				$environment = new \Piwik\Application\Environment( null );
 				$environment->init();
 			} catch ( \Exception $e ) {
-				// we ignore any error here
+				$this->logger->log( 'Ignoring error environment init' );
 			}
 
 			try {
@@ -120,7 +121,7 @@ class Installer {
 				$controller = \Piwik\FrontController::getInstance();
 				$controller->init();
 			} catch ( \Exception $e ) {
-				// we ignore any error here
+				$this->logger->log( 'Ignoring error frontcontroller init' );
 			}
 
 			try {
@@ -128,14 +129,14 @@ class Installer {
 				// before eg the users_language table would not have been available yet
 				$this->create_user();
 			} catch ( \Exception $e ) {
-				// we ignore any error here
+				$this->logger->log( 'Error create user' . $e->getMessage() );
 			}
 
 			try {
 				// update plugins if there are any
 				$this->update_components();
 			} catch ( \Exception $e ) {
-				// we ignore any error here
+				$this->logger->log( 'Error update components' . $e->getMessage() );
 			}
 
 			$this->logger->log( 'Recording version and url' );

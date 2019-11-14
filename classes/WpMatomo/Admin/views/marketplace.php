@@ -225,7 +225,7 @@ $license_key = $settings->get_license_key();
 
 			<p>
 				<label><?php esc_html_e( 'License key', 'matomo' ); ?></label>
-				<input type="text" maxlength="80" name="<?php echo Marketplace::FORM_NAME; ?>" style="width:300px;">
+				<input type="text" maxlength="80" name="<?php echo esc_attr(Marketplace::FORM_NAME); ?>" style="width:300px;">
 				<br/>
 				<br/>
 				<input type="submit" class="button-primary"
@@ -243,7 +243,7 @@ $license_key = $settings->get_license_key();
 			<p><?php esc_html_e( 'Here\'s a summary of your subscriptions.', 'matomo' ); ?>
 				<?php
 				echo sprintf(
-					__( 'You can find all details, download Premium Features and change your subscriptions by %1$slogging in to your account on the Matomo Marketplace%2$s.', 'matomo' ),
+					esc_html__( 'You can find all details, download Premium Features and change your subscriptions by %1$slogging in to your account on the Matomo Marketplace%2$s.', 'matomo' ),
 					'<a rel="noreferrer noopener" target="_blank" href="https://shop.matomo.org/my-account/">',
 					'</a>'
 				);

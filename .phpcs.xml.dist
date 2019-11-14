@@ -49,6 +49,7 @@
 		<exclude name="WordPress.WhiteSpace.PrecisionAlignment.Found"/>
 		<exclude name="Generic.Commenting.DocComment.ShortNotCapital"/>
 		<exclude name="Squiz.Commenting.FileComment.Missing"/>
+		<exclude name="WordPress.Security.NonceVerification.Recommended"/>
 		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log"/>
 		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r"/>
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
