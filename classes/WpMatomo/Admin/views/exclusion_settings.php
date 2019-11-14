@@ -37,7 +37,7 @@ if ( $was_updated ) {
 <form method="post">
 	<?php wp_nonce_field( ExclusionSettings::NONCE_NAME ); ?>
 
-	<p><?php _e( 'Configure exclusions.', 'matomo' ); ?></p>
+	<p><?php esc_html_e( 'Configure exclusions.', 'matomo' ); ?></p>
 	<table class="matomo-tracking-form widefat">
 		<tbody>
 

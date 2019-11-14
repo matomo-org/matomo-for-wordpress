@@ -45,7 +45,7 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 
 	<?php if ( $settings->is_network_enabled() && ! is_network_admin() && is_super_admin() ) { ?>
 		<div class="updated notice">
-			<p><?php _e( 'Only you are seeing this page as you are the super admin', 'matomo' ); ?></p>
+			<p><?php esc_html_e( 'Only you are seeing this page as you are the super admin', 'matomo' ); ?></p>
 		</div>
 	<?php } ?>
 	<div id="icon-plugins" class="icon32"></div>
@@ -58,11 +58,11 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 
 	<?php if ( empty( $active_tab ) ) { ?>
 
-		<p><?php _e( 'Copy the below info in case our support team asks you for this information:', 'matomo' ); ?>
+		<p><?php esc_html_e( 'Copy the below info in case our support team asks you for this information:', 'matomo' ); ?>
 			<br/> <br/>
 			<a href="javascript:void(0);"
 			   onclick="var textarea = document.getElementById('matomo_system_report_info');textarea.select();document.execCommand('copy');"
-			   class='button-primary'><?php _e( 'Copy system report', 'matomo' ); ?></a>
+			   class='button-primary'><?php esc_html_e( 'Copy system report', 'matomo' ); ?></a>
 
 		</p>
 		<textarea style="width:100%;height: 200px;" readonly
@@ -143,47 +143,47 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 		?>
 
 	<?php } else { ?>
-		<h1><?php _e( 'Troubleshooting', 'matomo' ); ?></h1>
+		<h1><?php esc_html_e( 'Troubleshooting', 'matomo' ); ?></h1>
 
 		<form method="post">
 			<?php wp_nonce_field( SystemReport::NONCE_NAME ); ?>
 
 			<?php if ( ! $settings->is_network_enabled() || ! is_network_admin() ) { ?>
 				<input name="<?php echo SystemReport::TROUBLESHOOT_SYNC_USERS; ?>" type="submit" class='button-primary'
-					   value="<?php _e( 'Sync users', 'matomo' ); ?>">
+					   value="<?php esc_html_e( 'Sync users', 'matomo' ); ?>">
 				<br/><br/>
 				<input name="<?php echo SystemReport::TROUBLESHOOT_SYNC_SITE; ?>" type="submit" class='button-primary'
-					   value="<?php _e( 'Sync site', 'matomo' ); ?>">
+					   value="<?php esc_html_e( 'Sync site', 'matomo' ); ?>">
 			<?php } ?>
 			<?php if ( $settings->is_network_enabled() ) { ?>
 				<input name="<?php echo SystemReport::TROUBLESHOOT_SYNC_ALL_SITES; ?>" type="submit"
 					   class='button-primary'
-					   value="<?php _e( 'Sync all sites', 'matomo' ); ?>">
+					   value="<?php esc_html_e( 'Sync all sites', 'matomo' ); ?>">
 				<br/><br/>
 				<input name="<?php echo SystemReport::TROUBLESHOOT_SYNC_ALL_USERS; ?>" type="submit"
 					   class='button-primary'
-					   value="<?php _e( 'Sync all users across sites', 'matomo' ); ?>">
+					   value="<?php esc_html_e( 'Sync all users across sites', 'matomo' ); ?>">
 			<?php } ?>
 			<br/><br/>
 			<input name="<?php echo SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE; ?>" type="submit"
 				   class='button-primary'
-				   value="<?php _e( 'Clear Matomo Cache', 'matomo' ); ?>">
+				   value="<?php esc_html_e( 'Clear Matomo Cache', 'matomo' ); ?>">
 			<br/><br/>
 			<input name="<?php echo SystemReport::TROUBLESHOOT_ARCHIVE_NOW; ?>" type="submit"
 				   class='button-primary'
-				   value="<?php _e( 'Archive reports', 'matomo' ); ?>">
+				   value="<?php esc_html_e( 'Archive reports', 'matomo' ); ?>">
 		</form>
 
 		<?php include 'info_help.php'; ?>
 		<?php include 'info_bug_report.php'; ?>
-		<h4><?php _e( 'Before you create an issue', 'matomo' ); ?></h4>
-		<p><?php _e( 'If you experience any issue in Matomo, it is always a good idea to first check your webserver logs (if possible) for any errors.', 'matomo' ); ?>
+		<h4><?php esc_html_e( 'Before you create an issue', 'matomo' ); ?></h4>
+		<p><?php esc_html_e( 'If you experience any issue in Matomo, it is always a good idea to first check your webserver logs (if possible) for any errors.', 'matomo' ); ?>
 			<br/>
 			<?php echo sprintf( __( 'You may also want to enable %1$s.', 'matomo' ), '<a href="https://codex.wordpress.org/WP_DEBUG" target="_blank" rel="noreferrer noopener"><code>WP_DEBUG</code></a>' ); ?>
 			<?php echo sprintf( __( 'To debug issues that happen in the background, for example report generation during a cronjob, you might also want to enable %1$s.', 'matomo' ), '<code>WP_DEBUG_LOG</code>' ); ?>
 
 		</p>
-		<h3><?php _e( 'Having performance issues?', 'matomo' ); ?></h3>
+		<h3><?php esc_html_e( 'Having performance issues?', 'matomo' ); ?></h3>
 		<p>
 		<?php
 		echo sprintf(

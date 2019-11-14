@@ -21,13 +21,13 @@ $license_key = $settings->get_license_key();
 
 	<?php if ( $settings->is_network_enabled() && ! is_network_admin() && is_super_admin() ) { ?>
 		<div class="updated notice">
-			<p><?php _e( 'Only super users can see this page', 'matomo' ); ?></p>
+			<p><?php esc_html_e( 'Only super users can see this page', 'matomo' ); ?></p>
 		</div>
 	<?php } ?>
 	<div id="icon-plugins" class="icon32"></div>
 	<h2 class="nav-tab-wrapper">
 		<a href="?page=matomo-plugins" class="nav-tab <?php echo empty( $active_tab ) ? 'nav-tab-active' : ''; ?>"
-		><?php _e( 'Browse Marketplace', 'matomo' ); ?></a>
+		><?php esc_html_e( 'Browse Marketplace', 'matomo' ); ?></a>
 		<?php if ( $can_view_subscription_tab ) { ?>
 			<a href="?page=matomo-plugins&tab=subscriptions"
 			   class="nav-tab <?php echo 'subscriptions' === $active_tab ? 'nav-tab-active' : ''; ?>">Subscriptions</a>
@@ -35,7 +35,7 @@ $license_key = $settings->get_license_key();
 	</h2>
 	<?php if ( empty( $active_tab ) || ! $can_view_subscription_tab ) { ?>
 		<h1><?php echo __( 'Discover new functionality for your Matomo', 'matomo' ); ?></h1>
-		<p><?php _e( 'Take your Matomo (formerly Piwik) to the next level and drive your conversions & revenue with these premium features. All features are fully hosted on your WordPress and come with 100% data ownership and no limitations.', 'matomo' ); ?></p>
+		<p><?php esc_html_e( 'Take your Matomo (formerly Piwik) to the next level and drive your conversions & revenue with these premium features. All features are fully hosted on your WordPress and come with 100% data ownership and no limitations.', 'matomo' ); ?></p>
 		<?php
 		$feature_sections = array(
 			array(
@@ -214,17 +214,17 @@ $license_key = $settings->get_license_key();
 
 		<?php if ( $settings->is_multisite() ) { ?>
 			<div class="updated notice">
-				<p><?php _e( 'Only super users can see this page', 'matomo' ); ?></p>
+				<p><?php esc_html_e( 'Only super users can see this page', 'matomo' ); ?></p>
 			</div>
 		<?php } ?>
 
-		<h1><?php _e( 'Premium Feature Subscriptions', 'matomo' ); ?></h1>
-		<p><?php _e( 'If you have purchased Matomo Premium Features, please enter your license key below.', 'matomo' ); ?></p>
+		<h1><?php esc_html_e( 'Premium Feature Subscriptions', 'matomo' ); ?></h1>
+		<p><?php esc_html_e( 'If you have purchased Matomo Premium Features, please enter your license key below.', 'matomo' ); ?></p>
 		<form method="post">
 			<?php wp_nonce_field( Marketplace::NONCE_LICENSE ); ?>
 
 			<p>
-				<label><?php _e( 'License key', 'matomo' ); ?></label>
+				<label><?php esc_html_e( 'License key', 'matomo' ); ?></label>
 				<input type="text" maxlength="80" name="<?php echo Marketplace::FORM_NAME; ?>" style="width:300px;">
 				<br/>
 				<br/>
@@ -239,8 +239,8 @@ $license_key = $settings->get_license_key();
 			$api      = new \WpMatomo\Marketplace\Api( $settings );
 			$licenses = $api->get_licenses();
 			?>
-			<h2><?php _e( 'Your subscriptions', 'matomo' ); ?></h2>
-			<p><?php _e( 'Here\'s a summary of your subscriptions.', 'matomo' ); ?>
+			<h2><?php esc_html_e( 'Your subscriptions', 'matomo' ); ?></h2>
+			<p><?php esc_html_e( 'Here\'s a summary of your subscriptions.', 'matomo' ); ?>
 				<?php
 				echo sprintf(
 					__( 'You can find all details, download Premium Features and change your subscriptions by %1$slogging in to your account on the Matomo Marketplace%2$s.', 'matomo' ),
@@ -252,11 +252,11 @@ $license_key = $settings->get_license_key();
 			<table class="widefat">
 				<thead>
 				<tr>
-					<th><?php _e( 'Name' ); ?></th>
-					<th><?php _e( 'Status', 'matomo' ); ?></th>
-					<th><?php _e( 'Start date', 'matomo' ); ?></th>
-					<th><?php _e( 'End date', 'matomo' ); ?></th>
-					<th><?php _e( 'Next payment date', 'matomo' ); ?></th>
+					<th><?php esc_html_e( 'Name' ); ?></th>
+					<th><?php esc_html_e( 'Status', 'matomo' ); ?></th>
+					<th><?php esc_html_e( 'Start date', 'matomo' ); ?></th>
+					<th><?php esc_html_e( 'End date', 'matomo' ); ?></th>
+					<th><?php esc_html_e( 'Next payment date', 'matomo' ); ?></th>
 				</tr>
 				</thead>
 				<tbody>

@@ -48,12 +48,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	);
 	?>
 
-		<br/><br/><?php _e( 'Don\'t want all the hassle of maintaining a Matomo?', 'matomo' ); ?> <a
+		<br/><br/><?php esc_html_e( 'Don\'t want all the hassle of maintaining a Matomo?', 'matomo' ); ?> <a
 			href="http://matomo.org/start-free-analytics-trial/" rel="noreferrer noopener"
-			target="_blank"><?php _e( 'Sign up for a free Matomo Cloud trial', 'matomo' ); ?></a>. <?php _e( 'We can migrate all your data onto our Cloud for free. 100% data ownership guaranteed.', 'matomo' ); ?>
+			target="_blank"><?php esc_html_e( 'Sign up for a free Matomo Cloud trial', 'matomo' ); ?></a>. <?php esc_html_e( 'We can migrate all your data onto our Cloud for free. 100% data ownership guaranteed.', 'matomo' ); ?>
 	</p>
 
-	<h2><?php _e( 'Matomo blogs', 'matomo' ); ?></h2>
+	<h2><?php esc_html_e( 'Matomo blogs', 'matomo' ); ?></h2>
 	<ul class="matomo-list">
 		<?php
 		if ( function_exists( 'get_sites' ) ) {

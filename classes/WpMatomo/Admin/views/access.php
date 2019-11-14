@@ -18,7 +18,7 @@ use WpMatomo\Admin\AccessSettings;
 /** @var \WpMatomo\Capabilities $capabilites */
 ?>
 
-<p><?php _e( 'Manage which roles can view and manage your reporting data.', 'matomo' ); ?></p>
+<p><?php esc_html_e( 'Manage which roles can view and manage your reporting data.', 'matomo' ); ?></p>
 
 <form method="post">
 	<?php wp_nonce_field( AccessSettings::NONCE_NAME ); ?>
@@ -26,8 +26,8 @@ use WpMatomo\Admin\AccessSettings;
 	<table class="matomo-form widefat">
 		<thead>
 		<tr>
-			<th width="30%"><?php _e( 'WordPress Role', 'matomo' ); ?></th>
-			<th><?php _e( 'Matomo Role', 'matomo' ); ?></th>
+			<th width="30%"><?php esc_html_e( 'WordPress Role', 'matomo' ); ?></th>
+			<th><?php esc_html_e( 'Matomo Role', 'matomo' ); ?></th>
 		</tr>
 		</thead>
 		<tbody>
@@ -64,7 +64,7 @@ use WpMatomo\Admin\AccessSettings;
 <h2><?php esc_html_e( 'Roles', 'matomo' ); ?></h2>
 <p>
 <?php
-_e(
+esc_html_e(
 	'Want to give individual users access to Matomo? Simply create a user in your WordPress and assign of these roles
     to the user:',
 	'matomo'

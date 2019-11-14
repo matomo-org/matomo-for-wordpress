@@ -67,7 +67,7 @@ global $wp;
 
 							<?php if ( ! empty( $report_meta['page'] ) ) { ?>
 								<button type="button" class="handlediv" aria-expanded="true"
-										title="<?php _e( 'Click to view the report in detail', 'matomo' ); ?>"><a
+										title="<?php esc_html_e( 'Click to view the report in detail', 'matomo' ); ?>"><a
 										href="
 										<?php
 										echo Menu::get_matomo_reporting_url(
@@ -84,7 +84,7 @@ global $wp;
 							<?php } ?>
 							<h2 class="hndle ui-sortable-handle"
 								style="cursor: help;"
-								title="<?php echo ! empty( $report_meta['documentation'] ) ? ( wp_strip_all_tags( $report_meta['documentation'] ) . ' ' ) : null; ?><?php _e( 'You can embed this report on any page using the shortcode:', 'matomo' ); ?> <?php echo esc_attr( $shortcode ); ?>"
+								title="<?php echo ! empty( $report_meta['documentation'] ) ? ( wp_strip_all_tags( $report_meta['documentation'] ) . ' ' ) : null; ?><?php esc_html_e( 'You can embed this report on any page using the shortcode:', 'matomo' ); ?> <?php echo esc_attr( $shortcode ); ?>"
 							><?php echo esc_html( $report_meta['name'] ); ?></h2>
 							<div>
 								<?php echo do_shortcode( $shortcode ); ?>

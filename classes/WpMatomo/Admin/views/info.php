@@ -63,7 +63,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/newsletter/"><span
 						class="dashicons-before dashicons-email"></span></a>
 				<a target="_blank" rel="noreferrer noopener"
-				   href="https://matomo.org/newsletter/"><?php _e( 'Newsletter', 'matomo' ); ?></a>
+				   href="https://matomo.org/newsletter/"><?php esc_html_e( 'Newsletter', 'matomo' ); ?></a>
 			</li>
 			<li>
 				<a target="_blank" rel="noreferrer noopener" href="https://www.facebook.com/Matomo.org"><span
