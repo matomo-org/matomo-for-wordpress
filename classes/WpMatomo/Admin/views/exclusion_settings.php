@@ -50,7 +50,7 @@ if ( $was_updated ) {
 				$tracking_caps = \WpMatomo\Settings::OPTION_KEY_STEALTH;
 				$filter        = $settings->get_global_option( $tracking_caps );
 				foreach ( $wp_roles->role_names as $key => $name ) {
-					echo '<input type="checkbox" ' . ( isset( $filter [ $key ] ) && $filter [ $key ] ? 'checked="checked" ' : '' ) . 'value="1" name="' . esc_attr(ExclusionSettings::FORM_NAME) . '[' . esc_attr($tracking_caps) . '][' . esc_attr($key) . ']" /> ' . esc_html($name) . ' &nbsp; <br />';
+					echo '<input type="checkbox" ' . ( isset( $filter [ $key ] ) && $filter [ $key ] ? 'checked="checked" ' : '' ) . 'value="1" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[' . esc_attr( $tracking_caps ) . '][' . esc_attr( $key ) . ']" /> ' . esc_html( $name ) . ' &nbsp; <br />';
 				}
 				?>
 			</td>
@@ -60,10 +60,10 @@ if ( $was_updated ) {
 		</tr>
 		<tr>
 			<th width="20%" scope="row"><label
-					for="%2$s"><?php echo esc_html(Piwik::translate( 'SitesManager_GlobalListExcludedIps' )); ?></label>:
+					for="%2$s"><?php echo esc_html( Piwik::translate( 'SitesManager_GlobalListExcludedIps' ) ); ?></label>:
 			</th>
 			<td width="30%">
-				<?php echo sprintf( '<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr(ExclusionSettings::FORM_NAME) . '[%1$s]">%2$s</textarea>', 'excluded_ips', esc_html( $excluded_ips ) ); ?>
+				<?php echo sprintf( '<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]">%2$s</textarea>', 'excluded_ips', esc_html( $excluded_ips ) ); ?>
 			</td>
 			<td width="50%">
 				<?php
@@ -82,38 +82,38 @@ if ( $was_updated ) {
 		</tr>
 		<tr>
 			<th scope="row"><label
-					for="%2$s"><?php echo esc_html(Piwik::translate( 'SitesManager_GlobalListExcludedQueryParameters' )); ?></label>:
+					for="%2$s"><?php echo esc_html( Piwik::translate( 'SitesManager_GlobalListExcludedQueryParameters' ) ); ?></label>:
 			</th>
 			<td>
-				<?php echo sprintf( '<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr(ExclusionSettings::FORM_NAME) . '[%1$s]">%2$s</textarea>', 'excluded_query_parameters', esc_html( $excluded_query_params ) ); ?>
+				<?php echo sprintf( '<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]">%2$s</textarea>', 'excluded_query_parameters', esc_html( $excluded_query_params ) ); ?>
 			</td>
 			<td>
-				<?php echo esc_html(Piwik::translate( 'SitesManager_ListOfQueryParametersToExclude', '/^sess.*|.*[dD]ate$/' )); ?>
-				<?php echo esc_html(Piwik::translate( 'SitesManager_PiwikWillAutomaticallyExcludeCommonSessionParameters', 'phpsessid, sessionid, ...' )); ?>
+				<?php echo esc_html( Piwik::translate( 'SitesManager_ListOfQueryParametersToExclude', '/^sess.*|.*[dD]ate$/' ) ); ?>
+				<?php echo esc_html( Piwik::translate( 'SitesManager_PiwikWillAutomaticallyExcludeCommonSessionParameters', 'phpsessid, sessionid, ...' ) ); ?>
 			</td>
 		</tr>
 		<tr>
 			<th scope="row"><label
-					for="%2$s"><?php echo esc_html(Piwik::translate( 'SitesManager_GlobalListExcludedUserAgents' )); ?></label>:
+					for="%2$s"><?php echo esc_html( Piwik::translate( 'SitesManager_GlobalListExcludedUserAgents' ) ); ?></label>:
 			</th>
 			<td>
-				<?php echo sprintf( '<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr(ExclusionSettings::FORM_NAME) . '[%1$s]">%2$s</textarea>', 'excluded_user_agents', esc_html( $excluded_user_agents ) ); ?>
+				<?php echo sprintf( '<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]">%2$s</textarea>', 'excluded_user_agents', esc_html( $excluded_user_agents ) ); ?>
 			</td>
 			<td>
 
-				<?php echo esc_html(Piwik::translate( 'SitesManager_GlobalExcludedUserAgentHelp1' )); ?>
+				<?php echo esc_html( Piwik::translate( 'SitesManager_GlobalExcludedUserAgentHelp1' ) ); ?>
 				<br/>
-				<?php echo esc_html(Piwik::translate( 'SitesManager_GlobalListExcludedUserAgents_Desc' )); ?>
-				<?php echo esc_html(Piwik::translate( 'SitesManager_GlobalExcludedUserAgentHelp2' )); ?>
+				<?php echo esc_html( Piwik::translate( 'SitesManager_GlobalListExcludedUserAgents_Desc' ) ); ?>
+				<?php echo esc_html( Piwik::translate( 'SitesManager_GlobalExcludedUserAgentHelp2' ) ); ?>
 
 			</td>
 		</tr>
 		<tr>
 			<th scope="row"><label
-					for="%2$s"><?php echo esc_html(Piwik::translate( 'SitesManager_KeepURLFragmentsLong' )); ?></label>:
+					for="%2$s"><?php echo esc_html( Piwik::translate( 'SitesManager_KeepURLFragmentsLong' ) ); ?></label>:
 			</th>
 			<td>
-				<?php echo sprintf( '<input type="checkbox" value="1" %2$s name="' . esc_attr(ExclusionSettings::FORM_NAME) . '[%1$s]">', 'keep_url_fragments', $keep_url_fragments ? ' checked="checked"' : '' ); ?>
+				<?php echo sprintf( '<input type="checkbox" value="1" %2$s name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]">', 'keep_url_fragments', $keep_url_fragments ? ' checked="checked"' : '' ); ?>
 			</td>
 			<td>
 
@@ -128,7 +128,7 @@ if ( $was_updated ) {
 				)
 				?>
 				<br/>
-				<?php echo esc_html(Piwik::translate( 'SitesManager_KeepURLFragmentsHelp2' )); ?>
+				<?php echo esc_html( Piwik::translate( 'SitesManager_KeepURLFragmentsHelp2' ) ); ?>
 
 			</td>
 		</tr>

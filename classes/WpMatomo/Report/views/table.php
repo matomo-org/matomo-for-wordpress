@@ -19,7 +19,7 @@ use Piwik\Piwik;
 		<thead>
 		<tr>
 			<th width="75%"><?php echo esc_html( $report_meta['dimension'] ); ?></th>
-			<th class="right"><?php echo esc_html($first_metric_display_name); ?></th>
+			<th class="right"><?php echo esc_html( $first_metric_display_name ); ?></th>
 		</tr>
 		</thead>
 

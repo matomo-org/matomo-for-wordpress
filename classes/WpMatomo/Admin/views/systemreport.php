@@ -87,7 +87,7 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 							} elseif ( ! empty( $row['is_warning'] ) ) {
 								$class = 'Warning ';
 							}
-							echo "\n* " . esc_html($class) . esc_html( $row['name'] ) . ': ' . esc_html( anonymize_matomo_value( $value ) );
+							echo "\n* " . esc_html( $class ) . esc_html( $row['name'] ) . ': ' . esc_html( anonymize_matomo_value( $value ) );
 							if ( isset( $row['comment'] ) && '' !== $row['comment'] ) {
 								echo ' (' . esc_html( anonymize_matomo_value( $row['comment'] ) ) . ')';
 							}
@@ -149,27 +149,27 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 			<?php wp_nonce_field( SystemReport::NONCE_NAME ); ?>
 
 			<?php if ( ! $settings->is_network_enabled() || ! is_network_admin() ) { ?>
-				<input name="<?php echo esc_attr(SystemReport::TROUBLESHOOT_SYNC_USERS); ?>" type="submit" class='button-primary'
+				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_USERS ); ?>" type="submit" class='button-primary'
 					   value="<?php esc_html_e( 'Sync users', 'matomo' ); ?>">
 				<br/><br/>
-				<input name="<?php echo esc_attr(SystemReport::TROUBLESHOOT_SYNC_SITE); ?>" type="submit" class='button-primary'
+				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_SITE ); ?>" type="submit" class='button-primary'
 					   value="<?php esc_html_e( 'Sync site', 'matomo' ); ?>">
 			<?php } ?>
 			<?php if ( $settings->is_network_enabled() ) { ?>
-				<input name="<?php echo esc_attr(SystemReport::TROUBLESHOOT_SYNC_ALL_SITES); ?>" type="submit"
+				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_ALL_SITES ); ?>" type="submit"
 					   class='button-primary'
 					   value="<?php esc_html_e( 'Sync all sites', 'matomo' ); ?>">
 				<br/><br/>
-				<input name="<?php echo esc_attr(SystemReport::TROUBLESHOOT_SYNC_ALL_USERS); ?>" type="submit"
+				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_ALL_USERS ); ?>" type="submit"
 					   class='button-primary'
 					   value="<?php esc_html_e( 'Sync all users across sites', 'matomo' ); ?>">
 			<?php } ?>
 			<br/><br/>
-			<input name="<?php echo esc_attr(SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE); ?>" type="submit"
+			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE ); ?>" type="submit"
 				   class='button-primary'
 				   value="<?php esc_html_e( 'Clear Matomo Cache', 'matomo' ); ?>">
 			<br/><br/>
-			<input name="<?php echo esc_attr(SystemReport::TROUBLESHOOT_ARCHIVE_NOW); ?>" type="submit"
+			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_ARCHIVE_NOW ); ?>" type="submit"
 				   class='button-primary'
 				   value="<?php esc_html_e( 'Archive reports', 'matomo' ); ?>">
 		</form>

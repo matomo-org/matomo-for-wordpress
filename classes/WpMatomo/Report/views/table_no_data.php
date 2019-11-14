@@ -14,7 +14,7 @@ use Piwik\Piwik;
 	<table class="widefat matomo-table">
 		<tbody>
 		<tr>
-			<td><?php echo esc_html(Piwik::translate( 'CoreHome_ThereIsNoDataForThisReport' )); ?></td>
+			<td><?php echo esc_html( Piwik::translate( 'CoreHome_ThereIsNoDataForThisReport' ) ); ?></td>
 		</tr>
 		</tbody>
 	</table>

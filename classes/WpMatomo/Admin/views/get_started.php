@@ -39,7 +39,7 @@ if ( empty( $show_this_page ) ) {
 
 	<?php if ( $settings->is_tracking_enabled() ) { ?>
 		<h2>1. <?php esc_html_e( 'Tracking is enabled', 'matomo' ); ?> <span class="dashicons dashicons-yes"></span></h2>
-		<p><a href="<?php echo AdminSettings::make_url( AdminSettings::TAB_TRACKING ); ?>"><?php esc_html_e('Click here to configure your tracking code.', 'matomo'); ?></a></p>
+		<p><a href="<?php echo AdminSettings::make_url( AdminSettings::TAB_TRACKING ); ?>"><?php esc_html_e( 'Click here to configure your tracking code.', 'matomo' ); ?></a></p>
 
 	<?php } else { ?>
 		<h2>1. <?php esc_html_e( 'Enable tracking', 'matomo' ); ?></h2>
@@ -61,7 +61,7 @@ if ( empty( $show_this_page ) ) {
 	<h2>3. <?php esc_html_e( 'Done', 'matomo' ); ?></h2>
 	<form method="post">
 		<?php wp_nonce_field( GetStarted::NONCE_NAME ); ?>
-		<input type="hidden" name="<?php echo esc_attr(GetStarted::FORM_NAME); ?>[show_get_started_page]"
+		<input type="hidden" name="<?php echo esc_attr( GetStarted::FORM_NAME ); ?>[show_get_started_page]"
 			   value="no">
 		<input type="submit" class="button-primary" value="<?php esc_html_e( 'Don\'t show this page anymore', 'matomo' ); ?>">
 	</form>

@@ -225,7 +225,7 @@ $license_key = $settings->get_license_key();
 
 			<p>
 				<label><?php esc_html_e( 'License key', 'matomo' ); ?></label>
-				<input type="text" maxlength="80" name="<?php echo esc_attr(Marketplace::FORM_NAME); ?>" style="width:300px;">
+				<input type="text" maxlength="80" name="<?php echo esc_attr( Marketplace::FORM_NAME ); ?>" style="width:300px;">
 				<br/>
 				<br/>
 				<input type="submit" class="button-primary"

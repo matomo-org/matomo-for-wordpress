@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php foreach ( $setting_tabs as $setting_slug => $setting_tab ) { ?>
 			<a href="<?php echo AdminSettings::make_url( $setting_slug ); ?>"
 			   class="nav-tab <?php echo $active_tab === $setting_slug ? 'nav-tab-active' : ''; ?>"
-			><?php echo esc_html($setting_tab->get_title()); ?></a>
+			><?php echo esc_html( $setting_tab->get_title() ); ?></a>
 		<?php } ?>
 
 		<?php
