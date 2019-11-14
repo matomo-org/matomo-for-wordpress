@@ -24,14 +24,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 global $wp;
 ?>
 <?php if ( ! $is_tracking ) { ?>
-	<div class="notice notice-warning"><p><?php echo __( 'Matomo Tracking is not enabled.', 'matomo' ); ?></p></div>
+	<div class="notice notice-warning"><p><?php esc_html_e( 'Matomo Tracking is not enabled.', 'matomo' ); ?></p></div>
 <?php } ?>
 <div class="wrap">
 	<div id="icon-plugins" class="icon32"></div>
 	<h1><?php esc_html_e( 'Summary', 'matomo' ); ?></h1>
 	<?php
 	if ( Dates::TODAY === $report_date ) {
-		echo '<div class="notice notice-info" style="padding:8px;">' . __( 'Reports for today are only refreshed approximately every hour through the WordPress cronjob.', 'matomo' ) . '</div>';
+		echo '<div class="notice notice-info" style="padding:8px;">' . esc_html__( 'Reports for today are only refreshed approximately every hour through the WordPress cronjob.', 'matomo' ) . '</div>';
 	}
 	?>
 	<p><?php esc_html_e( 'Looking for all reports and advanced features like segmentation, real time reports, and more?', 'matomo' ); ?>

@@ -54,7 +54,7 @@ if ( empty( $show_this_page ) ) {
 
 	<h2>2. <?php esc_html_e( 'Update your privacy page', 'matomo' ); ?></h2>
 
-	<?php echo sprintf( __( 'Give your users the chance to opt-out of tracking by adding the shortcode %1$s to your privacy page. You can %2$stweak the opt-out to your liking - see the Privacy Settings%3$s.', 'matomo' ), '<code>[matomo_opt_out]</code>', '<a href="' . AdminSettings::make_url( AdminSettings::TAB_PRIVACY ) . '">', '</a>' ); ?>
+	<?php echo sprintf( esc_html__( 'Give your users the chance to opt-out of tracking by adding the shortcode %1$s to your privacy page. You can %2$stweak the opt-out to your liking - see the Privacy Settings%3$s.', 'matomo' ), '<code>[matomo_opt_out]</code>', '<a href="' . AdminSettings::make_url( AdminSettings::TAB_PRIVACY ) . '">', '</a>' ); ?>
 
 	<?php esc_html_e( 'You may also need to mention that you are using Matomo Analytics on your website.', 'matomo' ); ?>
 

@@ -40,7 +40,7 @@ class Forms {
 	 * @return string full description HTML
 	 */
 	public function get_description( $id, $description, $hide_description = true ) {
-		$title = __( 'Click to read help', 'matomo' );
+		$title = esc_html__( 'Click to read help', 'matomo' );
 
 		return sprintf( '<span class="dashicons dashicons-editor-help" title="%1$s" style="cursor: pointer;" onclick="jQuery(\'#%2$s-desc\').toggleClass(\'hidden\');"></span> <p class="description' . ( $hide_description ? ' hidden' : '' ) . '" id="%2$s-desc">%3$s</p>', $title, $id, $description );
 	}

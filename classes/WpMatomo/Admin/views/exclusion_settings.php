@@ -43,7 +43,7 @@ if ( $was_updated ) {
 
 		<tr>
 			<th width="20%" scope="row"><label
-					for="%2$s"><?php echo __( 'Tracking filter', 'matomo' ); ?></label>:
+					for="%2$s"><?php esc_html_e( 'Tracking filter', 'matomo' ); ?></label>:
 			</th>
 			<td>
 				<?php
@@ -55,7 +55,7 @@ if ( $was_updated ) {
 				?>
 			</td>
 			<td width="50%">
-				<?php echo sprintf( __( 'Choose users by user role you do %1$snot%2$s want to track.', 'matomo' ), '<strong>', '</strong>' ); ?>
+				<?php echo sprintf( esc_html__( 'Choose users by user role you do %1$snot%2$s want to track.', 'matomo' ), '<strong>', '</strong>' ); ?>
 			</td>
 		</tr>
 		<tr>

@@ -34,7 +34,7 @@ $license_key = $settings->get_license_key();
 		<?php } ?>
 	</h2>
 	<?php if ( empty( $active_tab ) || ! $can_view_subscription_tab ) { ?>
-		<h1><?php echo __( 'Discover new functionality for your Matomo', 'matomo' ); ?></h1>
+		<h1><?php esc_html_e( 'Discover new functionality for your Matomo', 'matomo' ); ?></h1>
 		<p><?php esc_html_e( 'Take your Matomo (formerly Piwik) to the next level and drive your conversions & revenue with these premium features. All features are fully hosted on your WordPress and come with 100% data ownership and no limitations.', 'matomo' ); ?></p>
 		<?php
 		$feature_sections = array(
@@ -229,7 +229,7 @@ $license_key = $settings->get_license_key();
 				<br/>
 				<br/>
 				<input type="submit" class="button-primary"
-					   value="<?php echo( ! empty( $license_key ) ? __( 'Update License Key', 'matomo' ) : __( 'Save License Key', 'matomo' ) ); ?>">
+					   value="<?php echo( ! empty( $license_key ) ? esc_attr__( 'Update License Key', 'matomo' ) : esc_attr__( 'Save License Key', 'matomo' ) ); ?>">
 			</p>
 		</form>
 

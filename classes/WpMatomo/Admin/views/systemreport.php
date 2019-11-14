@@ -107,9 +107,9 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 				}
 				$value = $row['value'];
 				if ( true === $value ) {
-					$value = __( 'Yes', 'matomo' );
+					$value = esc_html__( 'Yes', 'matomo' );
 				} elseif ( false === $value ) {
-					$value = __( 'No', 'matomo' );
+					$value = esc_html__( 'No', 'matomo' );
 				}
 				$class = '';
 				if ( ! empty( $row['is_error'] ) ) {
@@ -117,7 +117,7 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 				} elseif ( ! empty( $row['is_warning'] ) ) {
 					$class = 'warning';
 				}
-				echo "<tr class='" . esc_html( $class ) . "'>";
+				echo "<tr class='" . esc_attr( $class ) . "'>";
 				echo "<td width='30%'>" . esc_html( $row['name'] ) . '</td>';
 				echo "<td width='" . ( ! empty( $table['has_comments'] ) ? 20 : 70 ) . "%'>" . esc_html( $value ) . '</td>';
 				if ( ! empty( $table['has_comments'] ) ) {
@@ -179,8 +179,8 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 		<h4><?php esc_html_e( 'Before you create an issue', 'matomo' ); ?></h4>
 		<p><?php esc_html_e( 'If you experience any issue in Matomo, it is always a good idea to first check your webserver logs (if possible) for any errors.', 'matomo' ); ?>
 			<br/>
-			<?php echo sprintf( __( 'You may also want to enable %1$s.', 'matomo' ), '<a href="https://codex.wordpress.org/WP_DEBUG" target="_blank" rel="noreferrer noopener"><code>WP_DEBUG</code></a>' ); ?>
-			<?php echo sprintf( __( 'To debug issues that happen in the background, for example report generation during a cronjob, you might also want to enable %1$s.', 'matomo' ), '<code>WP_DEBUG_LOG</code>' ); ?>
+			<?php echo sprintf( esc_html__( 'You may also want to enable %1$s.', 'matomo' ), '<a href="https://codex.wordpress.org/WP_DEBUG" target="_blank" rel="noreferrer noopener"><code>WP_DEBUG</code></a>' ); ?>
+			<?php echo sprintf( esc_html__( 'To debug issues that happen in the background, for example report generation during a cronjob, you might also want to enable %1$s.', 'matomo' ), '<code>WP_DEBUG_LOG</code>' ); ?>
 
 		</p>
 		<h3><?php esc_html_e( 'Having performance issues?', 'matomo' ); ?></h3>
