@@ -53,7 +53,7 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 		<a href="?page=<?php echo Menu::SLUG_SYSTEM_REPORT; ?>"
 		   class="nav-tab <?php echo empty( $active_tab ) ? 'nav-tab-active' : ''; ?>"> System report</a>
 		<a href="?page=<?php echo Menu::SLUG_SYSTEM_REPORT; ?>&tab=troubleshooting"
-		   class="nav-tab <?php echo $active_tab === 'troubleshooting' ? 'nav-tab-active' : ''; ?>">Troubleshooting</a>
+		   class="nav-tab <?php echo 'troubleshooting' === $active_tab ? 'nav-tab-active' : ''; ?>">Troubleshooting</a>
 	</h2>
 
 	<?php if ( empty( $active_tab ) ) { ?>
@@ -76,9 +76,9 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 								continue;
 							}
 							$value = $row['value'];
-							if ( $value === true ) {
+							if ( true === $value ) {
 								$value = 'Yes';
-							} elseif ( $value === false ) {
+							} elseif ( false === $value ) {
 								$value = 'No';
 							}
 							$class = '';
@@ -88,7 +88,7 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 								$class = 'Warning ';
 							}
 							echo "\n* " . $class . esc_html( $row['name'] ) . ': ' . esc_html( anonymize_matomo_value( $value ) );
-							if ( isset( $row['comment'] ) && $row['comment'] !== '' ) {
+							if ( isset( $row['comment'] ) && '' !== $row['comment'] ) {
 								echo ' (' . esc_html( anonymize_matomo_value( $row['comment'] ) ) . ')';
 							}
 						}
@@ -106,9 +106,9 @@ if ( ! function_exists( 'anonymize_matomo_value' ) ) {
 					continue;
 				}
 				$value = $row['value'];
-				if ( $value === true ) {
+				if ( true === $value ) {
 					$value = __( 'Yes' );
-				} elseif ( $value === false ) {
+				} elseif ( false === $value ) {
 					$value = __( 'No' );
 				}
 				$class = '';

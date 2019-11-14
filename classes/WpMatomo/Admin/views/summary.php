@@ -30,7 +30,7 @@ global $wp;
 	<div id="icon-plugins" class="icon32"></div>
 	<h1><?php esc_html_e( 'Summary', 'matomo' ); ?></h1>
 	<?php
-	if ( $report_date === Dates::TODAY ) {
+	if ( Dates::TODAY === $report_date ) {
 		echo '<div class="notice notice-info" style="padding:8px;">' . __( 'Reports for today are only refreshed approximately every hour through the WordPress cronjob.', 'matomo' ) . '</div>';
 	}
 	?>
@@ -41,24 +41,24 @@ global $wp;
 		<?php esc_html_e( 'Change date:', 'matomo' ); ?>
 		<?php
 		foreach ( $report_dates as $report_date_key => $report_name ) {
-			$buttonClass = 'button';
+			$button_class = 'button';
 			if ( $report_date === $report_date_key ) {
-				$buttonClass = 'button-primary';
+				$button_class = 'button-primary';
 			}
-			echo '<a href="' . esc_url( add_query_arg( array( 'report_date' => $report_date_key ), menu_page_url( Menu::SLUG_REPORT_SUMMARY, false ) ) ) . '" class="' . $buttonClass . '">' . esc_html( $report_name ) . '</a> ';
+			echo '<a href="' . esc_url( add_query_arg( array( 'report_date' => $report_date_key ), menu_page_url( Menu::SLUG_REPORT_SUMMARY, false ) ) ) . '" class="' . $button_class . '">' . esc_html( $report_name ) . '</a> ';
 		}
 		?>
 
 	<div id="dashboard-widgets" class="metabox-holder columns-2 has-right-sidebar">
 		<?php
 		$columns = array( 1, 0 );
-		foreach ( $columns as $columnIndex => $columnModulo ) {
+		foreach ( $columns as $column_index => $column_modulo ) {
 			?>
-			<div id="postbox-container-<?php echo( $columnIndex + 1 ); ?>" class="postbox-container">
+			<div id="postbox-container-<?php echo( $column_index + 1 ); ?>" class="postbox-container">
 				<div id="normal-sortables" class="meta-box-sortables ui-sortable">
 					<?php
 					foreach ( $reports_to_show as $index => $report_meta ) {
-						if ( $index % 2 === $columnModulo ) {
+						if ( $index % 2 === $column_modulo ) {
 							continue;
 						}
 						$shortcode = sprintf( '[matomo_report unique_id=%s report_date=%s limit=10]', $report_meta['uniqueId'], $report_date );

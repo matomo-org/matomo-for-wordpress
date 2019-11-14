@@ -26,10 +26,10 @@ use Piwik\Piwik;
 		<tbody>
 		<?php
 		$report_metadata = $report['reportMetadata'];
-		foreach ( $report['reportData']->getRows() as $reportId => $reportRow ) {
-			if ( ! empty( $reportRow[ $first_metric_name ] ) ) {
+		foreach ( $report['reportData']->getRows() as $report_id => $report_row ) {
+			if ( ! empty( $report_row[ $first_metric_name ] ) ) {
 				$logo_image = '';
-				$meta_row   = $report_metadata->getRowFromId( $reportId );
+				$meta_row   = $report_metadata->getRowFromId( $report_id );
 				if ( ! empty( $meta_row ) ) {
 					$logo = $meta_row->getColumn( 'logo' );
 					if ( ! empty( $logo ) ) {
@@ -37,7 +37,7 @@ use Piwik\Piwik;
 					}
 				}
 
-				echo '<tr><td width="75%">' . $logo_image . esc_html( $reportRow['label'] ) . '</td><td width="25%">' . esc_html( $reportRow[ $first_metric_name ] ) . '</td></tr>';
+				echo '<tr><td width="75%">' . $logo_image . esc_html( $report_row['label'] ) . '</td><td width="25%">' . esc_html( $report_row[ $first_metric_name ] ) . '</td></tr>';
 			}
 		}
 		?>

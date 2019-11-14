@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var bool $can_view_subscription_tab */
 /** @var string|bool|null $active_tab */
 /** @var \WpMatomo\Settings $settings */
-$licenseKey = $settings->get_license_key();
+$license_key = $settings->get_license_key();
 ?>
 <div class="wrap">
 
@@ -30,14 +30,14 @@ $licenseKey = $settings->get_license_key();
 		><?php _e( 'Browse Marketplace', 'matomo' ); ?></a>
 		<?php if ( $can_view_subscription_tab ) { ?>
 			<a href="?page=matomo-plugins&tab=subscriptions"
-			   class="nav-tab <?php echo $active_tab == 'subscriptions' ? 'nav-tab-active' : ''; ?>">Subscriptions</a>
+			   class="nav-tab <?php echo 'subscriptions' === $active_tab ? 'nav-tab-active' : ''; ?>">Subscriptions</a>
 		<?php } ?>
 	</h2>
 	<?php if ( empty( $active_tab ) || ! $can_view_subscription_tab ) { ?>
 		<h1><?php echo __( 'Discover new functionality for your Matomo', 'matomo' ); ?></h1>
 		<p><?php _e( 'Take your Matomo (formerly Piwik) to the next level and drive your conversions & revenue with these premium features. All features are fully hosted on your WordPress and come with 100% data ownership and no limitations.', 'matomo' ); ?></p>
 		<?php
-		$featureSections = array(
+		$feature_sections = array(
 			array(
 				'title'    => 'Most popular premium features',
 				'features' =>
@@ -133,13 +133,13 @@ $licenseKey = $settings->get_license_key();
 					),
 			),
 		);
-		foreach ( $featureSections as $featureSection ) {
+		foreach ( $feature_sections as $featureSection ) {
 			echo '<h2>' . esc_html( $featureSection['title'] ) . '</h2>';
 			echo '<div class="wp-list-table widefat plugin-install"><div id="the-list">';
 			foreach ( $featureSection['features'] as $index => $feature ) {
-				$style      = '';
-				$is3Columns = count( $featureSection['features'] ) === 3;
-				if ( $is3Columns ) {
+				$style        = '';
+				$is_3_columns = count( $featureSection['features'] ) === 3;
+				if ( $is_3_columns ) {
 					$style = 'width: calc(33% - 8px);min-width:282px;max-width:350px;';
 					if ( $index % 3 === 2 ) {
 						$style .= 'clear: inherit;margin-right: 0;margin-left: 16px;';
@@ -148,7 +148,7 @@ $licenseKey = $settings->get_license_key();
 				?>
 				<div class="plugin-card" style="<?php echo $style; ?>">
 					<?php
-					if ( $is3Columns && ! empty( $feature['image'] ) ) {
+					if ( $is_3_columns && ! empty( $feature['image'] ) ) {
 						?>
 						<a
 						href="<?php echo esc_url( $feature['url'] ); ?>"
@@ -160,7 +160,7 @@ $licenseKey = $settings->get_license_key();
 					<div class="plugin-card-top">
 						<div class="
 						<?php
-						if ( ! $is3Columns ) {
+						if ( ! $is_3_columns ) {
 							?>
 							name column-name<?php } ?>" style="margin-right: 0">
 							<h3>
@@ -170,7 +170,7 @@ $licenseKey = $settings->get_license_key();
 									<?php echo esc_html( $feature['name'] ); ?>
 								</a>
 								<?php
-								if ( ! $is3Columns && ! empty( $feature['image'] ) ) {
+								if ( ! $is_3_columns && ! empty( $feature['image'] ) ) {
 									?>
 									<a
 									href="<?php echo esc_url( $feature['url'] ); ?>"
@@ -183,7 +183,7 @@ $licenseKey = $settings->get_license_key();
 						</div>
 						<div class="
 						<?php
-						if ( ! $is3Columns ) {
+						if ( ! $is_3_columns ) {
 							?>
 							desc column-description<?php } ?>"
 							 style="margin-right: 0">
@@ -229,13 +229,13 @@ $licenseKey = $settings->get_license_key();
 				<br/>
 				<br/>
 				<input type="submit" class="button-primary"
-					   value="<?php echo( ! empty( $licenseKey ) ? __( 'Update License Key', 'matomo' ) : __( 'Save License Key', 'matomo' ) ); ?>">
+					   value="<?php echo( ! empty( $license_key ) ? __( 'Update License Key', 'matomo' ) : __( 'Save License Key', 'matomo' ) ); ?>">
 			</p>
 		</form>
 
 		<?php
 
-		if ( ! empty( $licenseKey ) ) {
+		if ( ! empty( $license_key ) ) {
 			$api      = new \WpMatomo\Marketplace\Api( $settings );
 			$licenses = $api->get_licenses();
 			?>

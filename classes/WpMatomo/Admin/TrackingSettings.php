@@ -115,9 +115,9 @@ class TrackingSettings implements AdminSettingsInterface {
 				unset( $_POST['tagmanger_container_ids'] );
 			}
 
-			if ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_MANUALLY
-			     || ( $_POST[ self::FORM_NAME ]['track_mode'] === self::TRACK_MODE_DISABLED &&
-			          $this->settings->get_global_option( 'track_mode' ) === self::TRACK_MODE_MANUALLY ) ) {
+			if ( self::TRACK_MODE_MANUALLY === $_POST[ self::FORM_NAME ]['track_mode']
+			     || ( self::TRACK_MODE_DISABLED === $_POST[ self::FORM_NAME ]['track_mode'] &&
+			          self::TRACK_MODE_MANUALLY === $this->settings->get_global_option( 'track_mode' ) ) ) {
 				if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
 					$_POST[ self::FORM_NAME ]['tracking_code'] = stripslashes( $_POST[ self::FORM_NAME ]['tracking_code'] );
 				} else {

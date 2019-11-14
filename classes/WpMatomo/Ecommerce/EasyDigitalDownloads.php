@@ -97,7 +97,7 @@ class EasyDigitalDownloads extends Base {
 	 */
 	private function get_sku( $download, $download_id ) {
 		$sku = $download->get_sku();
-		if ( ! edd_use_skus() || empty( $sku ) || $sku === '-' ) {
+		if ( ! edd_use_skus() || empty( $sku ) || '-' === $sku ) {
 			$sku = $download_id;
 		}
 
@@ -203,7 +203,7 @@ class EasyDigitalDownloads extends Base {
 			$payment_meta = edd_get_payment_meta( $payment->ID );
 			$discount     = 0;
 			if ( ! empty( $payment_meta['user_info']['discount'] )
-				 && $payment_meta['user_info']['discount'] !== 'none' ) {
+				 && 'none' !== $payment_meta['user_info']['discount'] ) {
 				$discount = $payment_meta['user_info']['discount'];
 				$discount = explode( ',', $discount );
 				$discount = reset( $discount );

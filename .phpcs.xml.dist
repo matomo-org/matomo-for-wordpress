@@ -9,7 +9,7 @@
 	<file>./shared.php</file>
 	<file>./uninstall.php</file>
 	<exclude-pattern>/classes/WpMatomo/Db/*</exclude-pattern>
-	<exclude-pattern>/classes/WpMatomo/Db/AjaxTracker.php</exclude-pattern>
+	<exclude-pattern>/classes/WpMatomo/AjaxTracker.php</exclude-pattern>
 	<exclude-pattern type="relative">/tests/phpunit/bootstrap.php</exclude-pattern>
 
 	<!-- How to scan -->

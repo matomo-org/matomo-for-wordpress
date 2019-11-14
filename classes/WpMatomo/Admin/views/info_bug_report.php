@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 ?>
-<h2><?php _e( 'Do you have a bug to report or a feature request?', 'matomo' ); ?></h2>
+<h2><?php esc_html_e( 'Do you have a bug to report or a feature request?', 'matomo' ); ?></h2>
 <p>
 <?php
 echo sprintf(

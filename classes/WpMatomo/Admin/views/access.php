@@ -37,8 +37,8 @@ use WpMatomo\Admin\AccessSettings;
 			echo esc_html( $name ) . '</td>';
 			echo "<td><select name='" . AccessSettings::FORM_NAME . '[' . esc_attr( $role_id ) . "]'>";
 			$value = $access->get_permission_for_role( $role_id );
-			foreach ( Access::$matomo_permissions as $permission => $displayName ) {
-				echo "<option value='" . esc_attr( $permission ) . "' " . ( $value === $permission ? 'selected' : '' ) . '>' . esc_html( $displayName ) . '</option>';
+			foreach ( Access::$matomo_permissions as $permission => $display_name ) {
+				echo "<option value='" . esc_attr( $permission ) . "' " . ( $value === $permission ? 'selected' : '' ) . '>' . esc_html( $display_name ) . '</option>';
 			}
 			echo '</td></tr>';
 		}

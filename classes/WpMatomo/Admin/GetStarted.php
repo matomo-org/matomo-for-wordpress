@@ -38,7 +38,7 @@ class GetStarted {
 			 && check_admin_referer( self::NONCE_NAME )
 			 && $this->can_user_manage() ) {
 			if ( ! empty( $_POST[ self::FORM_NAME ][ Settings::SHOW_GET_STARTED_PAGE ] )
-				 && $_POST[ self::FORM_NAME ][ Settings::SHOW_GET_STARTED_PAGE ] === 'no' ) {
+				 && 'no' === $_POST[ self::FORM_NAME ][ Settings::SHOW_GET_STARTED_PAGE ] ) {
 				$this->settings->apply_changes(
 					array(
 						Settings::SHOW_GET_STARTED_PAGE => 0,
@@ -48,7 +48,7 @@ class GetStarted {
 				return true;
 			}
 			if ( ! empty( $_POST[ self::FORM_NAME ]['track_mode'] )
-				 && $_POST[ self::FORM_NAME ]['track_mode'] === TrackingSettings::TRACK_MODE_DEFAULT ) {
+				 && TrackingSettings::TRACK_MODE_DEFAULT === $_POST[ self::FORM_NAME ]['track_mode'] ) {
 				$this->settings->apply_tracking_related_changes( array( 'track_mode' => TrackingSettings::TRACK_MODE_DEFAULT ) );
 
 				return true;

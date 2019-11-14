@@ -40,7 +40,7 @@ class Roles {
 		$roles              = array();
 
 		foreach ( $wp_roles->role_names as $role_name => $name ) {
-			if ( ! $is_network_enabled && $role_name === 'administrator' ) {
+			if ( ! $is_network_enabled && 'administrator' === $role_name ) {
 				// when multi site, then we consider "administrator" just a regular role and not a super user
 				// when not multi site, administrator is automatically the super user
 				continue;

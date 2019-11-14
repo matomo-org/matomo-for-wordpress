@@ -31,7 +31,7 @@ class Site {
 	public static function map_matomo_site_id( $blog_id, $matomo_id_site ) {
 		$key = self::SITE_MAPPING_PREFIX . $blog_id;
 
-		if ( $matomo_id_site === null || $matomo_id_site === false ) {
+		if ( null === $matomo_id_site || false === $matomo_id_site ) {
 			delete_site_option( $key );
 		} else {
 			update_site_option( $key, $matomo_id_site );

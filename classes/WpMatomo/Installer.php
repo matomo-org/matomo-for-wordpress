@@ -110,6 +110,7 @@ class Installer {
 				$environment = new \Piwik\Application\Environment( null );
 				$environment->init();
 			} catch ( \Exception $e ) {
+				// we ignore any error here
 			}
 
 			try {
@@ -119,6 +120,7 @@ class Installer {
 				$controller = \Piwik\FrontController::getInstance();
 				$controller->init();
 			} catch ( \Exception $e ) {
+				// we ignore any error here
 			}
 
 			try {
@@ -126,12 +128,14 @@ class Installer {
 				// before eg the users_language table would not have been available yet
 				$this->create_user();
 			} catch ( \Exception $e ) {
+				// we ignore any error here
 			}
 
 			try {
 				// update plugins if there are any
 				$this->update_components();
 			} catch ( \Exception $e ) {
+				// we ignore any error here
 			}
 
 			$this->logger->log( 'Recording version and url' );
@@ -201,8 +205,16 @@ class Installer {
 		if ( ! is_dir( dirname( $path ) ) ) {
 			wp_mkdir_p( dirname( $path ) );
 		}
-		$config->database = array_merge( $config->database ?: array(), $db_info );
-		$config->General  = array_merge( $config->General ?: array(), $general );
+		$db_default      = array();
+		$general_default = array();
+		if ($config->database) {
+			$db_default  = $config->database;
+		}
+		if ($config->General) {
+			$general_default  = $config->General;
+		}
+		$config->database = array_merge( $db_default, $db_info );
+		$config->General  = array_merge( $general_default, $general );
 		$config->forceSave();
 
 		$mode = 0664;

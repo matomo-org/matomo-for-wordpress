@@ -27,7 +27,7 @@ class MatomoLocalTracker extends PiwikTracker {
 
 			return true;
 		}
-		if ( $method == 'POST' ) {
+		if ( 'POST' === $method ) {
 			$requests = array();
 			foreach ( $this->storedTrackingActions as $action ) {
 				$requests[] = $this->parseUrl( $action );
@@ -95,7 +95,7 @@ class MatomoLocalTracker extends PiwikTracker {
 	private function parseUrl( $url ) {
 		// parse url
 		$query = parse_url( $url, PHP_URL_QUERY );
-		if ( $query === false ) {
+		if ( false === $query ) {
 			return;
 		}
 		parse_str( $query, $args );

@@ -47,10 +47,10 @@ if ( $was_updated ) {
 			</th>
 			<td>
 				<?php
-				$trackingCaps = \WpMatomo\Settings::OPTION_KEY_STEALTH;
-				$filter       = $settings->get_global_option( $trackingCaps );
+				$tracking_caps = \WpMatomo\Settings::OPTION_KEY_STEALTH;
+				$filter        = $settings->get_global_option( $tracking_caps );
 				foreach ( $wp_roles->role_names as $key => $name ) {
-					echo '<input type="checkbox" ' . ( isset( $filter [ $key ] ) && $filter [ $key ] ? 'checked="checked" ' : '' ) . 'value="1" name="' . ExclusionSettings::FORM_NAME . '[' . $trackingCaps . '][' . $key . ']" /> ' . $name . ' &nbsp; <br />';
+					echo '<input type="checkbox" ' . ( isset( $filter [ $key ] ) && $filter [ $key ] ? 'checked="checked" ' : '' ) . 'value="1" name="' . ExclusionSettings::FORM_NAME . '[' . $tracking_caps . '][' . $key . ']" /> ' . $name . ' &nbsp; <br />';
 				}
 				?>
 			</td>
@@ -135,7 +135,7 @@ if ( $was_updated ) {
 		<tr>
 			<td colspan="3">
 				<p class="submit"><input name="Submit" type="submit" class="button-primary"
-										 value="<?php echo esc_attr__( 'Save Changes' ); ?>"/></p>
+										 value="<?php echo esc_attr__( 'Save Changes', 'matomo' ); ?>"/></p>
 			</td>
 		</tr>
 

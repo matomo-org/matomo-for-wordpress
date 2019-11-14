@@ -115,22 +115,22 @@ class Metadata {
 		// we can't resolve all automatically since reportId != widgetId and the used action may differe etc...
 		// we're hard coding some manually
 
-		if ( $report_metadata['uniqueId'] === 'Actions_get' ) {
+		if ( 'Actions_get' === $report_metadata['uniqueId'] ) {
 			return array(
 				'category'    => 'General_Visitors',
 				'subcategory' => 'General_Overview',
 			);
-		} elseif ( $report_metadata['uniqueId'] === 'Goals_get' ) {
+		} elseif ( 'Goals_get' === $report_metadata['uniqueId'] ) {
 			return array(
 				'category'    => 'Goals_Goals',
 				'subcategory' => 'General_Overview',
 			);
-		} elseif ( $report_metadata['uniqueId'] === 'Goals_get_idGoal--ecommerceOrder' ) {
+		} elseif ( 'Goals_get_idGoal--ecommerceOrder' === $report_metadata['uniqueId'] ) {
 			return array(
 				'category'    => 'Goals_Ecommerce',
 				'subcategory' => 'General_Overview',
 			);
-		} elseif ( $report_metadata['uniqueId'] === 'Goals_getItemsName' ) {
+		} elseif ( 'Goals_getItemsName' === $report_metadata['uniqueId'] ) {
 			return array(
 				'category'    => 'Goals_Ecommerce',
 				'subcategory' => 'Goals_Products',
