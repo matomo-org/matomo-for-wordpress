@@ -66,7 +66,8 @@ if ( ! function_exists( 'matomo_anonymize_value' ) ) {
 
 		</p>
 		<textarea style="width:100%;height: 200px;" readonly
-				  id="matomo_system_report_info"><?php
+				  id="matomo_system_report_info">
+				  <?php
 					foreach ( $matomo_tables as $matomo_table ) {
 						echo '# ' . esc_html( $matomo_table['title'] ) . "\n";
 						foreach ( $matomo_table['rows'] as $index => $matomo_row ) {
