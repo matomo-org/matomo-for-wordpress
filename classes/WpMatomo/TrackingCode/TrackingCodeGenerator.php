@@ -170,6 +170,27 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 		);
 	}
 
+	public function get_tracker_endpoint() {
+		$paths = new Paths();
+		if ( $this->settings->get_global_option( 'track_api_endpoint' ) === 'restapi' ) {
+			$tracker_endpoint = $paths->get_tracker_api_rest_api_endpoint();
+		} else {
+			$tracker_endpoint = $paths->get_tracker_api_url_in_matomo_dir();
+		}
+
+		return $tracker_endpoint;
+	}
+
+	public function get_js_endpoint() {
+		 $paths = new Paths();
+		if ( $this->settings->get_global_option( 'track_js_endpoint' ) === 'restapi' ) {
+			$js_endpoint = $paths->get_js_tracker_rest_api_endpoint();
+		} else {
+			$js_endpoint = $paths->get_js_tracker_url_in_matomo_dir();
+		}
+		return $js_endpoint;
+	}
+
 	/**
 	 * @param $idsite
 	 *
@@ -181,17 +202,8 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 		$settings = $this->settings;
 		$paths    = new Paths();
 
-		if ( $this->settings->get_global_option( 'track_api_endpoint' ) === 'restapi' ) {
-			$tracker_endpoint = $paths->get_tracker_api_rest_api_endpoint();
-		} else {
-			$tracker_endpoint = $paths->get_tracker_api_url_in_matomo_dir();
-		}
-
-		if ( $this->settings->get_global_option( 'track_js_endpoint' ) === 'restapi' ) {
-			$js_endpoint = $paths->get_js_tracker_rest_api_endpoint();
-		} else {
-			$js_endpoint = $paths->get_js_tracker_url_in_matomo_dir();
-		}
+		$tracker_endpoint = $this->get_tracker_endpoint();
+		$js_endpoint      = $this->get_js_endpoint();
 
 		if ( $settings->get_global_option( 'force_protocol' ) == 'https' ) {
 			$js_endpoint      = preg_replace( '(^http://)', 'https://', $js_endpoint );
