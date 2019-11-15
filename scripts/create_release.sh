@@ -8,5 +8,5 @@ zip -r wordpress-matomo-$VERSION.zip matomo
 rm master.zip
 rm -rf matomo
 scp -p wordpress-matomo-$VERSION.zip "piwik-builds@matomo.org:/home/piwik-builds/www/builds.piwik.org/"
-scp -p wordpress-matomo-latest.zip "piwik-builds@matomo.org:/home/piwik-builds/www/builds.piwik.org/"
+scp -p wordpress-matomo-$VERSION.zip "piwik-builds@matomo.org:/home/piwik-builds/www/builds.piwik.org/wordpress-matomo-latest.zip"
 rm wordpress-matomo-$VERSION.zip
