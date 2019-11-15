@@ -70,7 +70,11 @@ class TrackingCodeGenerator {
 		}
 
 		if ( TrackingSettings::TRACK_MODE_DEFAULT === $track_mode ) {
-			$result = $this->prepare_tracking_code( $idsite, $this->settings, $this->logger );
+			$result = $this->prepare_tracking_code( $idsite );
+
+			if ( ! $this->settings->get_global_option( 'track_noscript' ) ) {
+				$result['noscript'] = '';
+			}
 		} elseif ( TrackingSettings::TRACK_MODE_TAGMANAGER === $track_mode && matomo_has_tag_manager() ) {
 			$result = $this->prepare_tagmanger_code( $this->settings, $this->logger );
 		} else {
@@ -166,16 +170,7 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 		);
 	}
 
-	/**
-	 * @param $idsite
-	 * @param Settings $settings
-	 * @param Logger   $logger
-	 *
-	 * @return array
-	 */
-	private function prepare_tracking_code( $idsite, $settings, $logger ) {
-		$logger->log( 'Apply tracking code changes:' );
-
+	public function get_tracker_endpoint() {
 		$paths = new Paths();
 
 		if ( $this->settings->get_global_option( 'track_api_endpoint' ) === 'restapi' ) {
@@ -184,38 +179,61 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 			$tracker_endpoint = $paths->get_tracker_api_url_in_matomo_dir();
 		}
 
+		if ( $this->settings->get_global_option( 'force_protocol' ) === 'https' ) {
+			$tracker_endpoint = preg_replace( '(^http://)', 'https://', $tracker_endpoint );
+		} else {
+			$tracker_endpoint = preg_replace( '(^https?://)', '//', $tracker_endpoint );
+		}
+
+		return $tracker_endpoint;
+	}
+
+	public function get_js_endpoint() {
+		 $paths = new Paths();
 		if ( $this->settings->get_global_option( 'track_js_endpoint' ) === 'restapi' ) {
 			$js_endpoint = $paths->get_js_tracker_rest_api_endpoint();
 		} else {
 			$js_endpoint = $paths->get_js_tracker_url_in_matomo_dir();
 		}
 
-		if ( $settings->get_global_option( 'force_protocol' ) == 'https' ) {
-			$js_endpoint      = preg_replace( '(^http://)', 'https://', $js_endpoint );
-			$tracker_endpoint = preg_replace( '(^http://)', 'https://', $tracker_endpoint );
+		if ( $this->settings->get_global_option( 'force_protocol' ) === 'https' ) {
+			$js_endpoint = preg_replace( '(^http://)', 'https://', $js_endpoint );
 		} else {
-			$js_endpoint      = preg_replace( '(^https?://)', '//', $js_endpoint );
-			$tracker_endpoint = preg_replace( '(^https?://)', '//', $tracker_endpoint );
+			$js_endpoint = preg_replace( '(^https?://)', '//', $js_endpoint );
 		}
+
+		return $js_endpoint;
+	}
+
+	/**
+	 * @param $idsite
+	 *
+	 * @return array
+	 */
+	public function prepare_tracking_code( $idsite ) {
+		$this->logger->log( 'Apply tracking code changes:' );
+
+		$tracker_endpoint = $this->get_tracker_endpoint();
+		$js_endpoint      = $this->get_js_endpoint();
 
 		$options = array();
 
-		if ( $settings->get_global_option( 'set_download_extensions' ) ) {
-			$options[] = "_paq.push(['setDownloadExtensions', " . wp_json_encode( $settings->get_global_option( 'set_download_extensions' ) ) . ']);';
+		if ( $this->settings->get_global_option( 'set_download_extensions' ) ) {
+			$options[] = "_paq.push(['setDownloadExtensions', " . wp_json_encode( $this->settings->get_global_option( 'set_download_extensions' ) ) . ']);';
 		}
-		if ( $settings->get_global_option( 'add_download_extensions' ) ) {
-			$options[] = "_paq.push(['addDownloadExtensions', " . wp_json_encode( $settings->get_global_option( 'add_download_extensions' ) ) . ']);';
+		if ( $this->settings->get_global_option( 'add_download_extensions' ) ) {
+			$options[] = "_paq.push(['addDownloadExtensions', " . wp_json_encode( $this->settings->get_global_option( 'add_download_extensions' ) ) . ']);';
 		}
-		if ( $settings->get_global_option( 'set_download_classes' ) ) {
-			$options[] = "_paq.push(['setDownloadClasses', " . wp_json_encode( $settings->get_global_option( 'set_download_classes' ) ) . ']);';
+		if ( $this->settings->get_global_option( 'set_download_classes' ) ) {
+			$options[] = "_paq.push(['setDownloadClasses', " . wp_json_encode( $this->settings->get_global_option( 'set_download_classes' ) ) . ']);';
 		}
-		if ( $settings->get_global_option( 'set_link_classes' ) ) {
-			$options[] = "_paq.push(['setLinkClasses', " . wp_json_encode( $settings->get_global_option( 'set_link_classes' ) ) . ']);';
+		if ( $this->settings->get_global_option( 'set_link_classes' ) ) {
+			$options[] = "_paq.push(['setLinkClasses', " . wp_json_encode( $this->settings->get_global_option( 'set_link_classes' ) ) . ']);';
 		}
-		if ( $settings->get_global_option( 'disable_cookies' ) ) {
+		if ( $this->settings->get_global_option( 'disable_cookies' ) ) {
 			$options[] = "_paq.push(['disableCookies']);";
 		}
-		if ( $settings->get_global_option( 'track_crossdomain_linking' ) ) {
+		if ( $this->settings->get_global_option( 'track_crossdomain_linking' ) ) {
 			$options[] = "_paq.push(['enableCrossDomainLinking']);";
 		}
 
@@ -224,7 +242,7 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 			$options[] = '_paq.push(["setCookieDomain", ' . wp_json_encode( $cookie_domain ) . ']);';
 		}
 
-		$track_across_alias = $settings->get_global_option( 'track_across_alias' );
+		$track_across_alias = $this->settings->get_global_option( 'track_across_alias' );
 
 		if ( $track_across_alias ) {
 			// todo detect more hosts such as when using WPML etc
@@ -240,22 +258,22 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 				$options[] = '_paq.push(["setDomains", ' . wp_json_encode( $hosts ) . ']);';
 			}
 		}
-		if ( $settings->get_global_option( 'limit_cookies' ) ) {
-			$options[] = "_paq.push(['setVisitorCookieTimeout', " . wp_json_encode( $settings->get_global_option( 'limit_cookies_visitor' ) ) . ']);';
-			$options[] = "_paq.push(['setSessionCookieTimeout', " . wp_json_encode( $settings->get_global_option( 'limit_cookies_session' ) ) . ']);';
-			$options[] = "_paq.push(['setReferralCookieTimeout', " . wp_json_encode( $settings->get_global_option( 'limit_cookies_referral' ) ) . ']);';
+		if ( $this->settings->get_global_option( 'limit_cookies' ) ) {
+			$options[] = "_paq.push(['setVisitorCookieTimeout', " . wp_json_encode( $this->settings->get_global_option( 'limit_cookies_visitor' ) ) . ']);';
+			$options[] = "_paq.push(['setSessionCookieTimeout', " . wp_json_encode( $this->settings->get_global_option( 'limit_cookies_session' ) ) . ']);';
+			$options[] = "_paq.push(['setReferralCookieTimeout', " . wp_json_encode( $this->settings->get_global_option( 'limit_cookies_referral' ) ) . ']);';
 		}
-		if ( $settings->get_global_option( 'track_content' ) == 'all' ) {
+		if ( $this->settings->get_global_option( 'track_content' ) == 'all' ) {
 			$options[] = "_paq.push(['trackAllContentImpressions']);";
-		} elseif ( $settings->get_global_option( 'track_content' ) == 'visible' ) {
+		} elseif ( $this->settings->get_global_option( 'track_content' ) == 'visible' ) {
 			$options[] = "_paq.push(['trackVisibleContentImpressions']);";
 		}
-		if ( (int) $settings->get_global_option( 'track_heartbeat' ) > 0 ) {
-			$options[] = "_paq.push(['enableHeartBeatTimer', " . intval( $settings->get_global_option( 'track_heartbeat' ) ) . ']);';
+		if ( (int) $this->settings->get_global_option( 'track_heartbeat' ) > 0 ) {
+			$options[] = "_paq.push(['enableHeartBeatTimer', " . intval( $this->settings->get_global_option( 'track_heartbeat' ) ) . ']);';
 		}
 
 		$data_cf_async = '';
-		if ( $settings->get_global_option( 'track_datacfasync' ) ) {
+		if ( $this->settings->get_global_option( 'track_datacfasync' ) ) {
 			$data_cf_async = 'data-cfasync="false"';
 		}
 
@@ -272,17 +290,13 @@ g.type='text/javascript'; g.async=true; g.defer=true; g.src=" . wp_json_encode( 
 		$script .= '</script>';
 		$script .= '<!-- End Matomo Code -->';
 
-		if ( $settings->get_global_option( 'track_noscript' ) ) {
-			$no_script = '<noscript><p><img src="' . esc_url( $tracker_endpoint ) . '?idsite=' . intval( $idsite ) . '&amp;rec=1" style="border:0;" alt="" /></p></noscript>';
-		} else {
-			$no_script = '';
-		}
+		$no_script = '<noscript><p><img src="' . esc_url( $tracker_endpoint ) . '?idsite=' . intval( $idsite ) . '&amp;rec=1" style="border:0;" alt="" /></p></noscript>';
 
 		$script = apply_filters( 'matomo_tracking_code_script', $script, $idsite );
 		$script = apply_filters( 'matomo_tracking_code_noscript', $script, $idsite );
 
-		$logger->log( 'Finished tracking code: ' . $script );
-		$logger->log( 'Finished noscript code: ' . $no_script );
+		$this->logger->log( 'Finished tracking code: ' . $script );
+		$this->logger->log( 'Finished noscript code: ' . $no_script );
 
 		return array(
 			'script'   => $script,

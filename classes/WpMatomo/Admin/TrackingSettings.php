@@ -11,6 +11,8 @@ namespace WpMatomo\Admin;
 
 use WpMatomo\Capabilities;
 use WpMatomo\Settings;
+use WpMatomo\Site;
+use WpMatomo\TrackingCode\TrackingCodeGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -106,17 +108,21 @@ class TrackingSettings implements AdminSettingsInterface {
 		$values['tagmanger_container_ids'] = array();
 
 		if ( ! empty( $_POST[ self::FORM_NAME ]['track_mode'] ) ) {
-			if ( self::TRACK_MODE_TAGMANAGER === $_POST[ self::FORM_NAME ]['track_mode'] ) {
+			$track_mode         = $_POST[ self::FORM_NAME ]['track_mode'];
+			$previus_track_mode = $this->settings->get_global_option( 'track_mode' );
+
+			if ( self::TRACK_MODE_TAGMANAGER === $track_mode ) {
 				// no noscript mode in this case
-				$_POST['track_noscript'] = '';
-				$_POST['noscript_code']  = '';
+				$_POST[ self::FORM_NAME ]['track_noscript'] = '';
+				$_POST[ self::FORM_NAME ]['noscript_code']  = '';
 			} else {
 				unset( $_POST['tagmanger_container_ids'] );
 			}
 
-			if ( self::TRACK_MODE_MANUALLY === $_POST[ self::FORM_NAME ]['track_mode']
-				 || ( self::TRACK_MODE_DISABLED === $_POST[ self::FORM_NAME ]['track_mode'] &&
-					  self::TRACK_MODE_MANUALLY === $this->settings->get_global_option( 'track_mode' ) ) ) {
+			if ( self::TRACK_MODE_MANUALLY === $track_mode
+				 || ( self::TRACK_MODE_DISABLED === $track_mode &&
+					  in_array( $previus_track_mode, array( self::TRACK_MODE_DISABLED, self::TRACK_MODE_MANUALLY ) ) ) ) {
+				// We want to keep the tracking code when user switches between disabled and manually or disabled to disabled.
 				if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
 					$_POST[ self::FORM_NAME ]['tracking_code'] = stripslashes( $_POST[ self::FORM_NAME ]['tracking_code'] );
 				} else {
@@ -127,6 +133,9 @@ class TrackingSettings implements AdminSettingsInterface {
 				} else {
 					$_POST[ self::FORM_NAME ]['noscript_code'] = '';
 				}
+			} else {
+				$_POST[ self::FORM_NAME ]['noscript_code'] = '';
+				$_POST[ self::FORM_NAME ]['tracking_code'] = '';
 			}
 		}
 
@@ -156,6 +165,12 @@ class TrackingSettings implements AdminSettingsInterface {
 		if ( ! empty( $containers ) ) {
 			$track_modes[ self::TRACK_MODE_TAGMANAGER ] = esc_html__( 'Tag Manager', 'matomo' );
 		}
+
+		$site   = new Site();
+		$idsite = $site->get_current_matomo_site_id();
+
+		$tracking_code_generator      = new TrackingCodeGenerator( $this->settings );
+		$matomo_default_tracking_code = $tracking_code_generator->prepare_tracking_code( $idsite );
 
 		include dirname( __FILE__ ) . '/views/tracking.php';
 	}

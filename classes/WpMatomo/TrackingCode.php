@@ -102,7 +102,9 @@ class TrackingCode {
 			$site    = new Site();
 			$site_id = $site->get_current_matomo_site_id();
 			if ( $site_id ) {
-				echo str_replace( '{ID}', $site_id, $tracking_code );
+				$tracking_code = str_replace( '{MATOMO_API_ENDPOINT}', wp_json_encode( $this->generator->get_tracker_endpoint() ), $tracking_code );
+				$tracking_code = str_replace( '{MATOMO_JS_ENDPOINT}', wp_json_encode( $this->generator->get_js_endpoint() ), $tracking_code );
+				echo str_replace( '{MATOMO_IDSITE}', $site_id, $tracking_code );
 			} else {
 				echo '<!-- Site not yet synced with Matomo, tracking code will be added later -->';
 			}
@@ -171,12 +173,7 @@ class TrackingCode {
 			$posturl = get_permalink( $post->ID );
 			$urlref  = get_bloginfo( 'rss2_url' );
 
-			$paths = new Paths();
-			if ( $this->settings->get_global_option( 'track_api_endpoint' ) === 'restapi' ) {
-				$tracker_endpoint = $paths->get_tracker_api_rest_api_endpoint();
-			} else {
-				$tracker_endpoint = $paths->get_tracker_api_url_in_matomo_dir();
-			}
+			$tracker_endpoint = $this->generator->get_tracker_endpoint();
 
 			$tracking_image = $tracker_endpoint . '?idsite=' . $site_id . '&amp;rec=1&amp;url=' . rawurlencode( $posturl ) . '&amp;action_name=' . rawurlencode( $title ) . '&amp;urlref=' . rawurlencode( $urlref );
 			$content       .= '<img src="' . $tracking_image . '" style="border:0;width:0;height:0" width="0" height="0" alt="" />';

@@ -86,6 +86,66 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/
 		);
 	}
 
+	public function test_get_tracker_endpoint() {
+		$this->make_tracking_code();
+		$this->assertSame(
+			'//example.org/wp-content/plugins/matomo/app/matomo.php',
+			$this->tracking_code->get_tracker_endpoint()
+		);
+
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_api_endpoint' => 'restapi',
+			)
+		);
+
+		$this->assertSame(
+			'//example.org/index.php?rest_route=/matomo/v1/hit/',
+			$this->tracking_code->get_tracker_endpoint()
+		);
+
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'force_protocol' => 'https',
+			)
+		);
+
+		$this->assertSame(
+			'https://example.org/index.php?rest_route=/matomo/v1/hit/',
+			$this->tracking_code->get_tracker_endpoint()
+		);
+	}
+
+	public function test_get_js_endpoint() {
+		$this->make_tracking_code();
+		$this->assertSame(
+			'//example.org/wp-content/plugins/matomo/app/matomo.js',
+			$this->tracking_code->get_js_endpoint()
+		);
+
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_js_endpoint' => 'restapi',
+			)
+		);
+
+		$this->assertSame(
+			'//example.org/index.php?rest_route=/matomo/v1/hit/',
+			$this->tracking_code->get_js_endpoint()
+		);
+
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'force_protocol' => 'https',
+			)
+		);
+
+		$this->assertSame(
+			'https://example.org/index.php?rest_route=/matomo/v1/hit/',
+			$this->tracking_code->get_js_endpoint()
+		);
+	}
+
 	public function test_get_tracking_code_test_user_id() {
 		$id1 = self::factory()->user->create();
 

@@ -1,3 +1,7 @@
+0.2.6
+- Improvements for multi site tracking in network mode
+- Show default tracking code when tracking is disabled
+
 0.2.5
 - Require at least PHP 7.0 as WP with PHP 5.X is not compatible with Matomo
 - Various improvements
