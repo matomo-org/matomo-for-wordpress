@@ -70,7 +70,12 @@ class TrackingCodeGenerator {
 		}
 
 		if ( TrackingSettings::TRACK_MODE_DEFAULT === $track_mode ) {
-			$result = $this->prepare_tracking_code( $idsite, $this->settings, $this->logger );
+			$result = $this->prepare_tracking_code( $idsite );
+
+			if ( ! $this->settings->get_global_option( 'track_noscript' ) ) {
+				$result['noscript'] = '';
+			}
+
 		} elseif ( TrackingSettings::TRACK_MODE_TAGMANAGER === $track_mode && matomo_has_tag_manager() ) {
 			$result = $this->prepare_tagmanger_code( $this->settings, $this->logger );
 		} else {
@@ -168,15 +173,14 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 
 	/**
 	 * @param $idsite
-	 * @param Settings $settings
-	 * @param Logger   $logger
 	 *
 	 * @return array
 	 */
-	private function prepare_tracking_code( $idsite, $settings, $logger ) {
-		$logger->log( 'Apply tracking code changes:' );
+	public function prepare_tracking_code( $idsite ) {
+		$this->logger->log( 'Apply tracking code changes:' );
 
-		$paths = new Paths();
+		$settings = $this->settings;
+		$paths    = new Paths();
 
 		if ( $this->settings->get_global_option( 'track_api_endpoint' ) === 'restapi' ) {
 			$tracker_endpoint = $paths->get_tracker_api_rest_api_endpoint();
@@ -272,17 +276,13 @@ g.type='text/javascript'; g.async=true; g.defer=true; g.src=" . wp_json_encode( 
 		$script .= '</script>';
 		$script .= '<!-- End Matomo Code -->';
 
-		if ( $settings->get_global_option( 'track_noscript' ) ) {
-			$no_script = '<noscript><p><img src="' . esc_url( $tracker_endpoint ) . '?idsite=' . intval( $idsite ) . '&amp;rec=1" style="border:0;" alt="" /></p></noscript>';
-		} else {
-			$no_script = '';
-		}
+		$no_script = '<noscript><p><img src="' . esc_url( $tracker_endpoint ) . '?idsite=' . intval( $idsite ) . '&amp;rec=1" style="border:0;" alt="" /></p></noscript>';
 
 		$script = apply_filters( 'matomo_tracking_code_script', $script, $idsite );
 		$script = apply_filters( 'matomo_tracking_code_noscript', $script, $idsite );
 
-		$logger->log( 'Finished tracking code: ' . $script );
-		$logger->log( 'Finished noscript code: ' . $no_script );
+		$this->logger->log( 'Finished tracking code: ' . $script );
+		$this->logger->log( 'Finished noscript code: ' . $no_script );
 
 		return array(
 			'script'   => $script,

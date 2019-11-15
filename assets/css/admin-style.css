@@ -52,3 +52,19 @@ ol.matomo-list {
 .matomo-systemreport .widefat .section {
     font-weight: bold;
 }
+
+.postbox .table .widefat.matomo-table {
+    border: 0;
+}
+
+#matomo_default_tracking_code {
+    margin-top: 100px;
+}
+
+#matomo_default_tracking_code textarea {
+    width: 100%;
+    height: 140px;
+}
+#matomo_default_tracking_code textarea.no_script {
+    height: 50px;
+}

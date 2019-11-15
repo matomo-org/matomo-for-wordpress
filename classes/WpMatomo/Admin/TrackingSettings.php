@@ -11,6 +11,8 @@ namespace WpMatomo\Admin;
 
 use WpMatomo\Capabilities;
 use WpMatomo\Settings;
+use WpMatomo\Site;
+use WpMatomo\TrackingCode\TrackingCodeGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -156,6 +158,12 @@ class TrackingSettings implements AdminSettingsInterface {
 		if ( ! empty( $containers ) ) {
 			$track_modes[ self::TRACK_MODE_TAGMANAGER ] = esc_html__( 'Tag Manager', 'matomo' );
 		}
+
+		$site   = new Site();
+		$idsite = $site->get_current_matomo_site_id();
+
+		$tracking_code_generator = new TrackingCodeGenerator( $this->settings );
+		$matomo_default_tracking_code = $tracking_code_generator->prepare_tracking_code( $idsite );
 
 		include dirname( __FILE__ ) . '/views/tracking.php';
 	}
