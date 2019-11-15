@@ -2,7 +2,7 @@
 Contributors: matomoteam
 Tags: matomo,piwik,analytics,statistics,tracking,ecommerce
 Requires at least: 4.8
-Tested up to: 5.2
+Tested up to: 5.3
 Requires PHP: 7.0.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
