@@ -102,7 +102,7 @@ class TrackingCode {
 			$site    = new Site();
 			$site_id = $site->get_current_matomo_site_id();
 			if ( $site_id ) {
-				$tracking_code = str_replace( '{MATOMO_TRACKER_ENDPOINT}', $this->generator->get_tracker_endpoint(), $tracking_code );
+				$tracking_code = str_replace( '{MATOMO_API_ENDPOINT}', $this->generator->get_tracker_endpoint(), $tracking_code );
 				$tracking_code = str_replace( '{MATOMO_JS_ENDPOINT}', $this->generator->get_js_endpoint(), $tracking_code );
 				echo str_replace( '{MATOMO_IDSITE}', $site_id, $tracking_code );
 			} else {
