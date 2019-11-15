@@ -1,3 +1,7 @@
+0.2.5
+- Require at least PHP 7.0 as WP with PHP 5.X is not compatible with Matomo
+- Various improvements
+
 0.2.4
 - Add new feature: Safe mode
 
