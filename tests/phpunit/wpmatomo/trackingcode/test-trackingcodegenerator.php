@@ -119,7 +119,7 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/
 	public function test_get_js_endpoint() {
 		$this->make_tracking_code();
 		$this->assertSame(
-			"//example.org/wp-content/uploads/matomo/matomo.js",
+			"//example.org/wp-content/plugins/matomo/app/matomo.js",
 			$this->tracking_code->get_js_endpoint()
 		);
 
