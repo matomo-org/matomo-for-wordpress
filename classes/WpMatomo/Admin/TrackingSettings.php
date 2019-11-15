@@ -162,7 +162,7 @@ class TrackingSettings implements AdminSettingsInterface {
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
-		$tracking_code_generator = new TrackingCodeGenerator( $this->settings );
+		$tracking_code_generator      = new TrackingCodeGenerator( $this->settings );
 		$matomo_default_tracking_code = $tracking_code_generator->prepare_tracking_code( $idsite );
 
 		include dirname( __FILE__ ) . '/views/tracking.php';

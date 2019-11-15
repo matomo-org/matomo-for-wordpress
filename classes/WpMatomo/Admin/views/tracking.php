@@ -207,14 +207,14 @@ if ( $was_updated ) {
 	</table>
 </form>
 
-<?php if ($matomo_is_not_tracking) { ?>
+<?php if ( $matomo_is_not_tracking && ! $settings->is_network_enabled() ) { // Can't show it for multisite as idsite and url is always different. ?>
 <div id="matomo_default_tracking_code">
-    <h2><?php esc_html_e('JavaScript tracking code', 'matomo')?></h2>
-    <p>
-        <?php echo sprintf(esc_html__('Wanting to embed the tracking code manually into your site or using a different plugin? No problem! Simply copy/paste below tracking code. Want to adjust it? %1$sCheck out our developer documentation.%2$s', 'matomo'), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide" target="_blank" rel="noreferrer noopener">', '</a>') ?>
-    </p>
-    <?php echo '<pre><textarea>' . esc_html(implode(";\n", explode(';', $matomo_default_tracking_code['script']))) . '</textarea></pre>'; ?>
-    <h3><?php esc_html_e('NoScript tracking code', 'matomo')?></h3>
-       <?php echo '<pre><textarea class="no_script">' . esc_html($matomo_default_tracking_code['noscript']) . '</textarea></pre>';?>
+	<h2><?php esc_html_e( 'JavaScript tracking code', 'matomo' ); ?></h2>
+	<p>
+		<?php echo sprintf( esc_html__( 'Wanting to embed the tracking code manually into your site or using a different plugin? No problem! Simply copy/paste below tracking code. Want to adjust it? %1$sCheck out our developer documentation.%2$s', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide" target="_blank" rel="noreferrer noopener">', '</a>' ); ?>
+	</p>
+	<?php echo '<pre><textarea>' . esc_html( implode( ";\n", explode( ';', $matomo_default_tracking_code['script'] ) ) ) . '</textarea></pre>'; ?>
+	<h3><?php esc_html_e( 'NoScript tracking code', 'matomo' ); ?></h3>
+	   <?php echo '<pre><textarea class="no_script">' . esc_html( $matomo_default_tracking_code['noscript'] ) . '</textarea></pre>'; ?>
 </div>
 <?php } ?>

@@ -75,7 +75,6 @@ class TrackingCodeGenerator {
 			if ( ! $this->settings->get_global_option( 'track_noscript' ) ) {
 				$result['noscript'] = '';
 			}
-
 		} elseif ( TrackingSettings::TRACK_MODE_TAGMANAGER === $track_mode && matomo_has_tag_manager() ) {
 			$result = $this->prepare_tagmanger_code( $this->settings, $this->logger );
 		} else {
