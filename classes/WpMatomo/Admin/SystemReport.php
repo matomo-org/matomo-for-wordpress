@@ -392,8 +392,6 @@ class SystemReport {
 	}
 
 	private function get_wordpress_info() {
-		global $wpdb;
-
 		$is_multi_site      = is_multisite();
 		$num_blogs          = 1;
 		$is_network_enabled = false;
@@ -439,8 +437,8 @@ class SystemReport {
 			'value' => defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON,
 		);
 		$rows[] = array(
-			'name'  => 'DB Prefix',
-			'value' => $wpdb->prefix,
+			'name'  => 'Force SSL Admin',
+			'value' => defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN,
 		);
 
 		return $rows;
@@ -449,10 +447,18 @@ class SystemReport {
 	private function get_server_info() {
 		$rows = array();
 
-		$rows[] = array(
-			'name'  => 'Server Info',
-			'value' => $_SERVER['SERVER_SOFTWARE'],
-		);
+		if ( ! empty( $_SERVER['SERVER_SOFTWARE'] ) ) {
+			$rows[] = array(
+				'name'  => 'Server Info',
+				'value' => $_SERVER['SERVER_SOFTWARE'],
+			);
+		}
+		if ( PHP_OS ) {
+			$rows[] = array(
+				'name'  => 'PHP OS',
+				'value' => PHP_OS,
+			);
+		}
 		$rows[] = array(
 			'name'  => 'PHP Version',
 			'value' => phpversion(),
@@ -524,6 +530,27 @@ class SystemReport {
 			'value'   => defined( 'WP_USE_EXT_MYSQL' ) && WP_USE_EXT_MYSQL,
 			'comment' => '',
 		);
+
+		$rows[] = array(
+			'name'  => 'DB Prefix',
+			'value' => $wpdb->prefix,
+		);
+
+		if ( method_exists( $wpdb, 'parse_db_host' ) ) {
+			$host_data = $wpdb->parse_db_host( DB_HOST );
+			if ( $host_data ) {
+				list( $host, $port, $socket, $is_ipv6 ) = $host_data;
+			}
+
+			$rows[] = array(
+				'name'  => 'Uses Socket',
+				'value' => ! empty( $socket ),
+			);
+			$rows[] = array(
+				'name'  => 'Uses IPv6',
+				'value' => ! empty( $is_ipv6 ),
+			);
+		}
 
 		$grants = $this->get_db_grants();
 

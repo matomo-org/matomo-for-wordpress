@@ -164,7 +164,7 @@ class WordPress extends Mysqli {
 
 			$result = $wpdb->query( $prepare );
 
-			$this->after_execute_query( $wpdb );
+			$this->after_execute_query( $wpdb, $sql );
 		}
 
 		return new WordPressDbStatement( $this, $sql, $result );
@@ -176,7 +176,7 @@ class WordPress extends Mysqli {
 		$this->before_execute_query( $wpdb, $sqlQuery );
 
 		$exec = $wpdb->query( $sqlQuery );
-		$this->after_execute_query( $wpdb );
+		$this->after_execute_query( $wpdb, $sqlQuery );
 
 		return $exec;
 	}
@@ -193,7 +193,7 @@ class WordPress extends Mysqli {
 
 		$col = $wpdb->get_col( $prepare );
 
-		$this->after_execute_query( $wpdb );
+		$this->after_execute_query( $wpdb, $sql );
 
 		return $col;
 	}
@@ -206,7 +206,7 @@ class WordPress extends Mysqli {
 
 		$assoc = $wpdb->get_results( $prepare, ARRAY_A );
 
-		$this->after_execute_query( $wpdb );
+		$this->after_execute_query( $wpdb, $sql );
 
 		return $assoc;
 	}
@@ -263,14 +263,18 @@ class WordPress extends Mysqli {
 	 *
 	 * @throws \Zend_Db_Statement_Exception
 	 */
-	private function after_execute_query( $wpdb ) {
+	private function after_execute_query( $wpdb, $sql ) {
 		if ( isset( $this->old_suppress_errors_value ) ) {
 			$wpdb->suppress_errors( $this->old_suppress_errors_value );
 			$this->old_suppress_errors_value = null;
 		}
 
 		if ( $wpdb->last_error ) {
-			throw new \Zend_Db_Statement_Exception( 'WP DB Error: ' . $wpdb->last_error );
+			$message = 'WP DB Error: ' . $wpdb->last_error;
+			if ( $sql ) {
+				$message .= ' SQL: ' . $sql;
+			}
+			throw new \Zend_Db_Statement_Exception( $message );
 		}
 	}
 
@@ -282,7 +286,7 @@ class WordPress extends Mysqli {
 
 		$results = $wpdb->get_results( $prepare, ARRAY_A );
 
-		$this->after_execute_query( $wpdb );
+		$this->after_execute_query( $wpdb, $sql );
 
 		return $results;
 	}
@@ -295,7 +299,7 @@ class WordPress extends Mysqli {
 
 		$value = $wpdb->get_var( $prepare );
 
-		$this->after_execute_query( $wpdb );
+		$this->after_execute_query( $wpdb, $sql );
 
 		if ( $value === null ) {
 			return false; // make sure to behave same way as matomo
@@ -312,7 +316,7 @@ class WordPress extends Mysqli {
 
 		$row = $wpdb->get_row( $prepare, ARRAY_A );
 
-		$this->after_execute_query( $wpdb );
+		$this->after_execute_query( $wpdb, $sql );
 
 		return $row;
 	}
@@ -324,7 +328,7 @@ class WordPress extends Mysqli {
 
 		$insert = $wpdb->insert( $table, $bind );
 
-		$this->after_execute_query( $wpdb );
+		$this->after_execute_query( $wpdb, '' );
 
 		return $insert;
 	}
@@ -345,7 +349,7 @@ class WordPress extends Mysqli {
 
 		$update = $wpdb->query( $prepared );
 
-		$this->after_execute_query( $wpdb );
+		$this->after_execute_query( $wpdb, '' );
 
 		return $update;
 	}
