@@ -43,13 +43,22 @@ return array(
 
 		\Piwik\Plugins\TagManager\TagManager::$enableAutoContainerCreation = false;
 
-		// in case DB credentials change in wordpress, we need to apply these changes here as well on demand
-		$hostParts = explode(':', DB_HOST);
-		$host = $hostParts[0];
-		if (count($hostParts) === 2 && is_numeric($hostParts[1])) {
-			$port = $hostParts[1];
+		if (method_exists($wpdb, 'parse_db_host')) {
+			// WP 4.9+
+			$host_data = $wpdb->parse_db_host( DB_HOST );
+			if ($host_data) {
+				list( $host, $port, $socket, $is_ipv6 ) = $host_data;
+			}
 		} else {
-			$port = 3306;
+			// WP 4.8 and older
+			// in case DB credentials change in wordpress, we need to apply these changes here as well on demand
+			$hostParts = explode(':', DB_HOST);
+			$host = $hostParts[0];
+			if (count($hostParts) === 2 && is_numeric($hostParts[1])) {
+				$port = $hostParts[1];
+			} else {
+				$port = 3306;
+			}
 		}
 
 		if (defined('FORCE_SSL_ADMIN') && FORCE_SSL_ADMIN) {
@@ -60,7 +69,7 @@ return array(
 		}
 
 		$paths = new Paths();
-		if (file_exists( $paths->get_config_ini_path())) {
+		if ( file_exists( $paths->get_config_ini_path() ) ) {
 			// we overwrite DB on demand only once installed... otherwise Matomo may think it is installed already
 			$database = $previous->database;
 			$database['host'] = $host;
