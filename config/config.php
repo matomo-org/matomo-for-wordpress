@@ -43,13 +43,17 @@ return array(
 
 		\Piwik\Plugins\TagManager\TagManager::$enableAutoContainerCreation = false;
 
+		$socket = '';
+		$host_data = null;
 		if (method_exists($wpdb, 'parse_db_host')) {
 			// WP 4.9+
 			$host_data = $wpdb->parse_db_host( DB_HOST );
 			if ($host_data) {
 				list( $host, $port, $socket, $is_ipv6 ) = $host_data;
 			}
-		} else {
+		}
+
+		if (!$host_data) {
 			// WP 4.8 and older
 			// in case DB credentials change in wordpress, we need to apply these changes here as well on demand
 			$hostParts = explode(':', DB_HOST);
@@ -74,6 +78,9 @@ return array(
 			$database = $previous->database;
 			$database['host'] = $host;
 			$database['port'] = $port;
+			if (!empty($socket)) {
+				$database['unix_socket'] = $socket;
+			}
 			$database['username'] = DB_USER;
 			$database['password'] = DB_PASSWORD;
 			$database['dbname'] = DB_NAME;
