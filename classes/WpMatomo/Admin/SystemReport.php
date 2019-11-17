@@ -37,6 +37,10 @@ class SystemReport {
 	const TROUBLESHOOT_CLEAR_MATOMO_CACHE = 'matomo_troubleshooting_action_clear_matomo_cache';
 	const TROUBLESHOOT_ARCHIVE_NOW        = 'matomo_troubleshooting_action_archive_now';
 
+	private $not_compatible_plugins = array(
+		'background-manager/background-manager.php', // Uses an old version of Twig and plugin is no longer maintained.
+	);
+
 	private $valid_tabs = array( 'troubleshooting' );
 
 	/**
@@ -46,6 +50,10 @@ class SystemReport {
 
 	public function __construct( Settings $settings ) {
 		$this->settings = $settings;
+	}
+
+	public function get_not_compatible_plugins() {
+		return $this->not_compatible_plugins;
 	}
 
 	private function execute_troubleshoot_if_needed() {
@@ -639,12 +647,23 @@ class SystemReport {
 		}
 
 		$active_plugins = get_option( 'active_plugins', array() );
+
 		if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
 			$rows[] = array(
 				'name'    => 'Active Plugins',
 				'value'   => count( $active_plugins ),
 				'comment' => implode( ', ', $active_plugins ),
 			);
+
+			$used_not_compatible = array_intersect( $active_plugins, $this->not_compatible_plugins );
+			if ( ! empty( $used_not_compatible ) ) {
+				$rows[] = array(
+					'name'     => __( 'Not compatible plugins', 'matomo' ),
+					'value'    => count( $used_not_compatible ),
+					'comment'  => implode( ', ', $used_not_compatible ),
+					'is_error' => true,
+				);
+			}
 		}
 
 		return $rows;
