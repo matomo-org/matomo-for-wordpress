@@ -75,6 +75,14 @@ class AdminSystemReportTest extends MatomoUnit_TestCase {
 		}
 	}
 
+	public function test_not_compatible_plugins_are_mentioned_in_faq() {
+		$contents = file_get_contents( 'https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/' );
+
+		foreach ( $this->report->get_not_compatible_plugins() as $not_compatible_plugin ) {
+			$this->assertContains( $not_compatible_plugin, $contents );
+		}
+	}
+
 	private function fake_request( $field ) {
 		$_POST[ $field ]        = 1;
 		$_REQUEST['_wpnonce']   = wp_create_nonce( SystemReport::NONCE_NAME );

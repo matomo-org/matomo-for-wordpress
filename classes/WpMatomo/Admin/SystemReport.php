@@ -37,7 +37,7 @@ class SystemReport {
 	const TROUBLESHOOT_CLEAR_MATOMO_CACHE = 'matomo_troubleshooting_action_clear_matomo_cache';
 	const TROUBLESHOOT_ARCHIVE_NOW        = 'matomo_troubleshooting_action_archive_now';
 
-	protected $not_compatible_plugins = array(
+	private $not_compatible_plugins = array(
 		'background-manager/background-manager.php', // Uses an old version of Twig and plugin is no longer maintained.
 	);
 
@@ -50,6 +50,10 @@ class SystemReport {
 
 	public function __construct( Settings $settings ) {
 		$this->settings = $settings;
+	}
+
+	public function get_not_compatible_plugins() {
+		return $this->not_compatible_plugins;
 	}
 
 	private function execute_troubleshoot_if_needed() {
