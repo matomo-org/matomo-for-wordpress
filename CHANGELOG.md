@@ -1,3 +1,8 @@
+0.2.7
+- Improved system report
+- Check for incompatible plugins
+- Log SQL query when error occurs
+
 0.2.6
 - Improvements for multi site tracking in network mode
 - Show default tracking code when tracking is disabled
