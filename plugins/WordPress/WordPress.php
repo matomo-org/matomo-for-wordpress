@@ -229,7 +229,11 @@ class WordPress extends Plugin
     }
 
     public function onDispatchRequest(&$module, &$action, &$parameters)
-    {
+    {  
+        if ($module === 'Proxy' && in_array($action, array('getNonCoreJs', 'getCoreJs', 'getCss'))) {
+            remove_action( 'shutdown', 'wp_ob_end_flush_all', 1 );
+        }
+	    
         $requestedModule = !empty($module) ? strtolower($module) : '';
 
         if ($requestedModule === 'login') {
