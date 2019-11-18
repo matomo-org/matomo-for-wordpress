@@ -39,18 +39,18 @@ class WpMatomo {
 	/**
 	 * @var Settings
 	 */
-	private $settings;
+	public static $settings;
 
 	public function __construct() {
 		if ( ! $this->check_compatibility() ) {
 			return;
 		}
 
-		$this->settings = new Settings();
+		self::$settings = new Settings();
 
 		if ( self::is_safe_mode() ) {
 			if ( is_admin() ) {
-				new \WpMatomo\Admin\SafeModeMenu( $this->settings );
+				new \WpMatomo\Admin\SafeModeMenu( self::$settings );
 			}
 
 			return;
@@ -58,13 +58,13 @@ class WpMatomo {
 
 		add_action( 'init', array( $this, 'init_plugin' ) );
 
-		$capabilities = new Capabilities( $this->settings );
+		$capabilities = new Capabilities( self::$settings );
 		$capabilities->register_hooks();
 
-		$roles = new Roles( $this->settings );
+		$roles = new Roles( self::$settings );
 		$roles->register_hooks();
 
-		$scheduled_tasks = new ScheduledTasks( $this->settings );
+		$scheduled_tasks = new ScheduledTasks( self::$settings );
 		$scheduled_tasks->schedule();
 
 		$privacy_badge = new PrivacyBadge();
@@ -80,17 +80,17 @@ class WpMatomo {
 		$api->register_hooks();
 
 		if ( is_admin() ) {
-			new Admin( $this->settings );
+			new Admin( self::$settings );
 
-			$site_sync = new SiteSync( $this->settings );
+			$site_sync = new SiteSync( self::$settings );
 			$site_sync->register_hooks();
 			$user_sync = new UserSync();
 			$user_sync->register_hooks();
 		}
 
-		$tracking_code = new TrackingCode( $this->settings );
+		$tracking_code = new TrackingCode( self::$settings );
 		$tracking_code->register_hooks();
-		$annotations = new Annotations( $this->settings );
+		$annotations = new Annotations( self::$settings );
 		$annotations->register_hooks();
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
@@ -169,9 +169,9 @@ class WpMatomo {
 	}
 
 	public function add_settings_link( $links ) {
-		$get_started = new \WpMatomo\Admin\GetStarted( $this->settings );
+		$get_started = new \WpMatomo\Admin\GetStarted( self::$settings );
 
-		if ( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
+		if ( self::$settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
 			$links[] = '<a href="' . menu_page_url( Menu::SLUG_GET_STARTED, false ) . '">' . __( 'Get Started', 'matomo' ) . '</a>';
 		} elseif ( current_user_can( Capabilities::KEY_SUPERUSER ) ) {
 			$links[] = '<a href="' . menu_page_url( Menu::SLUG_SETTINGS, false ) . '">' . __( 'Settings', 'matomo' ) . '</a>';
@@ -183,11 +183,11 @@ class WpMatomo {
 	public function init_plugin() {
 		if ( ( is_admin() || matomo_is_app_request() )
 			 && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
-			$installer = new Installer( $this->settings );
+			$installer = new Installer( self::$settings );
 			$installer->register_hooks();
 			if ( $installer->looks_like_it_is_installed() ) {
 				if ( is_admin() ) {
-					$updater = new Updater( $this->settings );
+					$updater = new Updater( self::$settings );
 					$updater->update_if_needed();
 				}
 			} else {
@@ -200,11 +200,11 @@ class WpMatomo {
 				}
 			}
 		}
-		$tracking_code = new TrackingCode( $this->settings );
-		if ( $this->settings->is_tracking_enabled()
-			 && $this->settings->get_global_option( 'track_ecommerce' )
+		$tracking_code = new TrackingCode( self::$settings );
+		if ( self::$settings->is_tracking_enabled()
+			 && self::$settings->get_global_option( 'track_ecommerce' )
 			 && ! $tracking_code->is_hidden_user() ) {
-			$tracker = new AjaxTracker( $this->settings );
+			$tracker = new AjaxTracker( self::$settings );
 
 			$woocommerce = new Woocommerce( $tracker );
 			$woocommerce->register_hooks();

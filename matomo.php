@@ -53,13 +53,19 @@ function matomo_has_tag_manager() {
 	return true;
 }
 
-function matomo_add_plugin( $plugins_directory, $wp_plugin_file ) {
+$GLOBALS['MATOMO_MARKETPLACE_PLUGINS'] = array();
+
+function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace_plugin = false ) {
 	if ( ! in_array( $wp_plugin_file, $GLOBALS['MATOMO_PLUGIN_FILES'], true ) ) {
 		$GLOBALS['MATOMO_PLUGIN_FILES'][] = $wp_plugin_file;
 	}
 
 	if ( empty( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) ) {
 		$GLOBALS['MATOMO_PLUGIN_DIRS'] = array();
+	}
+
+	if ( $is_marketplace_plugin && dirname( $wp_plugin_file ) === $plugins_directory ) {
+		$GLOBALS['MATOMO_MARKETPLACE_PLUGINS'][] = $wp_plugin_file;
 	}
 
 	$GLOBALS['MATOMO_PLUGINS_ENABLED'][] = basename( $plugins_directory );
