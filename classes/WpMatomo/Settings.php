@@ -175,7 +175,7 @@ class Settings {
 
 		foreach ( $this->global_settings as $key => $val ) {
 			if ( isset( $this->default_global_settings[ $key ] )
-				 && $this->default_global_settings[ $key ] !== $val ) {
+				 && $this->default_global_settings[ $key ] != $val ) {
 				$custom_settings[ $key ] = $val;
 			}
 		}
