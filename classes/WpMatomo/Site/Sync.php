@@ -11,7 +11,6 @@ namespace WpMatomo\Site;
 
 use Piwik\Access;
 use Piwik\Config;
-use Piwik\Container\StaticContainer;
 use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\SitesManager;
 use WpMatomo\Bootstrap;
@@ -46,14 +45,7 @@ class Sync {
 		add_action( 'update_option_blogname', array( $this, 'sync_current_site' ) );
 		add_action( 'update_option_home', array( $this, 'sync_current_site' ) );
 		add_action( 'update_option_siteurl', array( $this, 'sync_current_site' ) );
-		add_action( 'update_site_option_matomo-global_track_ecommerce', array( $this, 'sync_current_site' ) );
-		add_action(
-			'update_option_' . Settings::GLOBAL_OPTION_PREFIX . 'track_ecommerce',
-			array(
-				$this,
-				'sync_current_site',
-			)
-		);
+		add_action( 'matomo_setting_change_track_ecommerce', array( $this, 'sync_current_site' ) );
 	}
 
 	public function sync_all() {
