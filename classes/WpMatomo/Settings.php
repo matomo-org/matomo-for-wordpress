@@ -48,8 +48,8 @@ class Settings {
 	 */
 	private $default_global_settings = array(
 		// Plugin settings
-		'last_settings_update'                     => 0,
-		self::OPTION_LAST_TRACKING_SETTINGS_CHANGE => 0,
+		'last_settings_update'                     => '0',
+		self::OPTION_LAST_TRACKING_SETTINGS_CHANGE => '0',
 		self::OPTION_KEY_STEALTH                   => array(),
 		self::OPTION_KEY_CAPS_ACCESS               => array(),
 		// User settings: Stats configuration
@@ -74,9 +74,9 @@ class Settings {
 		'set_download_classes'                     => '',
 		'disable_cookies'                          => false,
 		'limit_cookies'                            => false,
-		'limit_cookies_visitor'                    => '34186669', // Matomo default 13 months
-		'limit_cookies_session'                    => '1800', // Matomo default 30 minutes
-		'limit_cookies_referral'                   => '15778463', // Matomo default 6 months
+		'limit_cookies_visitor'                    => 34186669, // Matomo default 13 months
+		'limit_cookies_session'                    => 1800, // Matomo default 30 minutes
+		'limit_cookies_referral'                   => 15778463, // Matomo default 6 months
 		'track_admin'                              => false,
 		'track_across'                             => false,
 		'track_across_alias'                       => false,
@@ -276,6 +276,11 @@ class Settings {
 	 * @param string|array $value new option value
 	 */
 	public function set_global_option( $key, $value ) {
+		if (isset($this->default_global_settings[$key])) {
+			$type = gettype($this->default_global_settings[$key]);
+			settype($value, $type);
+		}
+
 		$this->settings_changed = true;
 		$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
 		$this->global_settings[ $key ] = $value;
@@ -288,6 +293,11 @@ class Settings {
 	 * @param string $value new option value
 	 */
 	public function set_option( $key, $value ) {
+		if (isset($this->default_blog_settings[$key])) {
+			$type = gettype($this->default_blog_settings[$key]);
+			settype($value, $type);
+		}
+
 		$this->settings_changed = true;
 		$this->logger->log( 'Changed option ' . $key . ': ' . $value );
 		$this->blog_settings[ $key ] = $value;
