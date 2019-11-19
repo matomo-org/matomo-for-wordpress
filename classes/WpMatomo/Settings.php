@@ -135,39 +135,13 @@ class Settings {
 
 		if ( ! empty( $global_settings ) && is_array( $global_settings ) ) {
 			$this->global_settings = $global_settings;
-		} else {
-			// temporarily check if data is still stored the old way
-			// remove this before the final release on the marketplace!
-			foreach ( $this->default_global_settings as $key => $value ) {
-				if ( $this->is_network_enabled() ) {
-					$saved = get_site_option( self::GLOBAL_OPTION_PREFIX . $key );
-				} else {
-					$saved = get_option( self::GLOBAL_OPTION_PREFIX . $key );
-				}
-				if ( $saved !== false ) {
-					$this->global_settings[ $key ] = $value;
-					$this->settings_changed        = true;
-				}
-			}
-			$this->save();
 		}
 
 		$settings = get_option( self::OPTION, array() );
 
 		if ( ! empty( $settings ) && is_array( $settings ) ) {
 			$this->blog_settings = $settings;
-		} else {
-			// temporarily check if data is still stored the old way
-			// remove this before the final release on the marketplace!
-			foreach ( $this->default_blog_settings as $key => $value ) {
-				$saved = get_option( self::OPTION_PREFIX . $key );
-				if ( $saved !== false ) {
-					$this->blog_settings[ $key ] = $saved;
-					$this->settings_changed      = true;
-				}
-			}
-			$this->save();
-		}
+		} 
 	}
 
 	public function get_customised_global_settings() {
