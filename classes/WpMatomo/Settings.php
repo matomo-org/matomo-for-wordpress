@@ -132,9 +132,10 @@ class Settings {
 		} else {
 			$global_settings = get_option( self::OPTION_GLOBAL, array() );
 		}
+
 		if (!empty($global_settings) && is_array($global_settings)) {
-			$this->default_global_settings = $global_settings;
-		}
+			$this->global_settings = $global_settings;
+		} 
 
 		$settings = get_option( self::OPTION, array() );
 
@@ -199,7 +200,6 @@ class Settings {
 		} else {
 			update_option( self::OPTION_GLOBAL, $this->global_settings );
 		}
-
 
 		update_option( self::OPTION, $this->blog_settings );
 
