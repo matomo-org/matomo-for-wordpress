@@ -27,7 +27,6 @@ class Settings {
 	const OPTION_KEY_STEALTH                   = 'caps_tracking';
 	const OPTION_LAST_TRACKING_SETTINGS_CHANGE = 'last_tracking_settings_update';
 	const OPTION_LAST_TRACKING_CODE_UPDATE     = 'last_tracking_code_update';
-	const OPTION_LICENSE_KEY                   = 'license_key';
 	const SHOW_GET_STARTED_PAGE                = 'show_get_started_page';
 
 	public static $is_doing_action_tracking_related = false;
@@ -181,35 +180,6 @@ class Settings {
 		}
 
 		return is_plugin_active_for_network( 'matomo/matomo.php' );
-	}
-
-	public function set_license_key( $license_key ) {
-		$key = self::GLOBAL_OPTION_PREFIX . self::OPTION_LICENSE_KEY;
-
-		if ( $this->is_multisite() ) {
-			update_site_option( $key, $license_key );
-		} else {
-			update_option( $key, $license_key );
-		}
-	}
-
-	/**
-	 * @return string
-	 */
-	public function get_license_key() {
-		$key = self::GLOBAL_OPTION_PREFIX . self::OPTION_LICENSE_KEY;
-
-		if ( $this->is_multisite() ) {
-			$value = get_site_option( $key );
-		} else {
-			$value = get_option( $key );
-		}
-
-		if ( ! $value ) {
-			return '';
-		}
-
-		return $value;
 	}
 
 	/**

@@ -12,7 +12,6 @@ namespace WpMatomo\Admin;
 use Piwik\Plugins\UsersManager\UserPreferences;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
-use WpMatomo\Marketplace\Api as MarketplaceApi;
 use WpMatomo\Report\Dates;
 use WpMatomo\Settings;
 use WpMatomo\Site;
@@ -27,7 +26,7 @@ class Menu {
 	 */
 	private $settings;
 
-	private $parent_slug = 'matomo';
+	public static $parent_slug = 'matomo';
 
 	const REPORTING_GOTO_ADMIN          = 'matomo-admin';
 	const REPORTING_GOTO_GDPR_TOOLS     = 'matomo-gdpr-tools';
@@ -43,7 +42,7 @@ class Menu {
 	const SLUG_SETTINGS                 = 'matomo-settings';
 	const SLUG_GET_STARTED              = 'matomo-get-started';
 	const SLUG_ABOUT                    = 'matomo-about';
-	const SLUG_MARKETPLACE              = 'matomo-plugins';
+	const SLUG_EXTENSIONS               = 'matomo-plugins';
 
 	const CAP_NOT_EXISTS = 'unknownfoobar';
 
@@ -59,16 +58,15 @@ class Menu {
 
 		// as we are redirecting we need to perform the redirect as soon as possible before WP has eg echoed the header
 		add_action( 'load-matomo-analytics_page_' . self::SLUG_REPORTING, array( $this, 'reporting' ) );
-		add_action( 'load-' . $this->parent_slug . '_page_' . self::SLUG_REPORTING, array( $this, 'reporting' ) );
+		add_action( 'load-' . self::$parent_slug . '_page_' . self::SLUG_REPORTING, array( $this, 'reporting' ) );
 		add_action( 'load-matomo-analytics_page_' . self::SLUG_TAGMANAGER, array( $this, 'tagmanager' ) );
-		add_action( 'load-' . $this->parent_slug . '_page_' . self::SLUG_TAGMANAGER, array( $this, 'tagmanager' ) );
+		add_action( 'load-' . self::$parent_slug . '_page_' . self::SLUG_TAGMANAGER, array( $this, 'tagmanager' ) );
 	}
 
 	public function add_menu() {
 		$info          = new Info();
 		$get_started   = new GetStarted( $this->settings );
-		$api           = new MarketplaceApi( $this->settings );
-		$marketplace   = new Marketplace( $this->settings, $api );
+		$marketplace   = new Marketplace( $this->settings );
 		$system_report = new SystemReport( $this->settings );
 		$summary       = new Summary( $this->settings );
 
@@ -83,7 +81,7 @@ class Menu {
 
 		if ( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
 			add_submenu_page(
-				$this->parent_slug,
+				self::$parent_slug,
 				__( 'Get Started', 'matomo' ),
 				__( 'Get Started', 'matomo' ),
 				Capabilities::KEY_SUPERUSER,
@@ -97,7 +95,7 @@ class Menu {
 
 		if ( is_network_admin() ) {
 			add_submenu_page(
-				$this->parent_slug,
+				self::$parent_slug,
 				__( 'Multi Site', 'matomo' ),
 				__( 'Multi Site', 'matomo' ),
 				Capabilities::KEY_SUPERUSER,
@@ -109,7 +107,7 @@ class Menu {
 			);
 		} else {
 			add_submenu_page(
-				$this->parent_slug,
+				self::$parent_slug,
 				__( 'Summary', 'matomo' ),
 				__( 'Summary', 'matomo' ),
 				Capabilities::KEY_VIEW,
@@ -122,7 +120,7 @@ class Menu {
 
 			// the network itself is not a blog
 			add_submenu_page(
-				$this->parent_slug,
+				self::$parent_slug,
 				__( 'Reporting', 'matomo' ),
 				__( 'Reporting', 'matomo' ),
 				Capabilities::KEY_VIEW,
@@ -134,7 +132,7 @@ class Menu {
 			);
 			// the network itself is not a blog
 			add_submenu_page(
-				$this->parent_slug,
+				self::$parent_slug,
 				__( 'Tag Manager', 'matomo' ),
 				__( 'Tag Manager', 'matomo' ),
 				Capabilities::KEY_WRITE,
@@ -148,7 +146,7 @@ class Menu {
 
 		if ( $can_matomo_be_managed ) {
 			add_submenu_page(
-				$this->parent_slug,
+				self::$parent_slug,
 				__( 'Settings', 'matomo' ),
 				__( 'Settings', 'matomo' ),
 				Capabilities::KEY_SUPERUSER,
@@ -160,17 +158,17 @@ class Menu {
 			);
 		}
 
-		/*
-		 * Temporarily disabled:
-		add_submenu_page( $this->parentSlug, __( 'Marketplace', 'matomo' ), __( 'Marketplace', 'matomo' ), Capabilities::KEY_VIEW, self::SLUG_MARKETPLACE, array(
+		/**
+		 *
+		add_submenu_page( self::$parent_slug, __( 'Extensions', 'matomo' ), __( 'Extensions', 'matomo' ), Capabilities::KEY_VIEW, self::SLUG_EXTENSIONS, array(
 			$marketplace,
 			'show'
 		) );
-		*/
+		 */
 
 		if ( $can_matomo_be_managed ) {
 			add_submenu_page(
-				$this->parent_slug,
+				self::$parent_slug,
 				__( 'System Report', 'matomo' ),
 				__( 'System Report', 'matomo' ),
 				Capabilities::KEY_SUPERUSER,
@@ -183,7 +181,7 @@ class Menu {
 		}
 
 		add_submenu_page(
-			$this->parent_slug,
+			self::$parent_slug,
 			__( 'About', 'matomo' ),
 			__( 'About', 'matomo' ),
 			Capabilities::KEY_VIEW,
@@ -198,12 +196,12 @@ class Menu {
 	public function menu_external_icons() {
 		global $submenu;
 
-		if ( isset( $submenu[ $this->parent_slug ] ) ) {
+		if ( isset( $submenu[ self::$parent_slug ] ) ) {
 			$reporting  = __( 'Reporting', 'matomo' );
 			$tagmanager = __( 'Tag Manager', 'matomo' );
-			foreach ( $submenu[ $this->parent_slug ] as $key => $menu_item ) {
+			foreach ( $submenu[ self::$parent_slug ] as $key => $menu_item ) {
 				if ( 0 === strpos( $menu_item[0], $reporting ) || 0 === strpos( $menu_item[0], $tagmanager ) ) {
-					$submenu[ $this->parent_slug ][ $key ][0] .= ' <span class="dashicons-before dashicons-external"></span>';
+					$submenu[ self::$parent_slug ][ $key ][0] .= ' <span class="dashicons-before dashicons-external"></span>';
 				}
 			}
 		}

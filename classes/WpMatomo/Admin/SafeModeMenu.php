@@ -9,13 +9,7 @@
 
 namespace WpMatomo\Admin;
 
-use Piwik\Plugins\UsersManager\UserPreferences;
-use WpMatomo\Bootstrap;
-use WpMatomo\Capabilities;
-use WpMatomo\Marketplace\Api as MarketplaceApi;
-use WpMatomo\Report\Dates;
 use WpMatomo\Settings;
-use WpMatomo\Site;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
