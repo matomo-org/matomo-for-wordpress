@@ -64,7 +64,7 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="\/\/example.org\/
 				'track_js_endpoint'         => 'restapi',
 				'track_api_endpoint'        => 'restapi',
 				'track_noscript'            => true,
-				'track_content'             => true,
+				'track_content'             => 'all',
 				'add_download_extensions'   => 'zip|waf',
 				'set_link_classes'          => 'clickme|foo',
 				'disable_cookies'           => true,

@@ -263,9 +263,9 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 			$options[] = "_paq.push(['setSessionCookieTimeout', " . wp_json_encode( $this->settings->get_global_option( 'limit_cookies_session' ) ) . ']);';
 			$options[] = "_paq.push(['setReferralCookieTimeout', " . wp_json_encode( $this->settings->get_global_option( 'limit_cookies_referral' ) ) . ']);';
 		}
-		if ( $this->settings->get_global_option( 'track_content' ) == 'all' ) {
+		if ( $this->settings->get_global_option( 'track_content' ) === 'all' ) {
 			$options[] = "_paq.push(['trackAllContentImpressions']);";
-		} elseif ( $this->settings->get_global_option( 'track_content' ) == 'visible' ) {
+		} elseif ( $this->settings->get_global_option( 'track_content' ) === 'visible' ) {
 			$options[] = "_paq.push(['trackVisibleContentImpressions']);";
 		}
 		if ( (int) $this->settings->get_global_option( 'track_heartbeat' ) > 0 ) {
