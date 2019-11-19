@@ -31,15 +31,6 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->assertFalse( $this->settings->is_network_enabled() );
 	}
 
-	public function test_get_license_key_no_value_configured_by_default() {
-		$this->assertSame( '', $this->settings->get_license_key() );
-	}
-
-	public function test_set_license_key_get_license_key() {
-		$this->settings->set_license_key( 'foo' );
-		$this->assertSame( 'foo', $this->settings->get_license_key() );
-	}
-
 	public function test_get_global_option_returns_default_value_when_no_value_is_set() {
 		$this->assertSame( 'disabled', $this->settings->get_global_option( 'track_mode' ) );
 	}
