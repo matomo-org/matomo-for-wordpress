@@ -48,8 +48,8 @@ class Settings {
 	 */
 	private $default_global_settings = array(
 		// Plugin settings
-		'last_settings_update'                     => '0',
-		self::OPTION_LAST_TRACKING_SETTINGS_CHANGE => '0',
+		'last_settings_update'                     => 0,
+		self::OPTION_LAST_TRACKING_SETTINGS_CHANGE => 0,
 		self::OPTION_KEY_STEALTH                   => array(),
 		self::OPTION_KEY_CAPS_ACCESS               => array(),
 		// User settings: Stats configuration
@@ -103,7 +103,7 @@ class Settings {
 	);
 
 	private $global_settings = array();
-	private $blog_settings = array();
+	private $blog_settings   = array();
 
 	private $settings_changed = false;
 
@@ -133,20 +133,20 @@ class Settings {
 			$global_settings = get_option( self::OPTION_GLOBAL, array() );
 		}
 
-		if (!empty($global_settings) && is_array($global_settings)) {
+		if ( ! empty( $global_settings ) && is_array( $global_settings ) ) {
 			$this->global_settings = $global_settings;
 		} else {
 			// temporarily check if data is still stored the old way
 			// remove this before the final release on the marketplace!
-			foreach ($this->default_global_settings as $key => $value) {
+			foreach ( $this->default_global_settings as $key => $value ) {
 				if ( $this->is_network_enabled() ) {
 					$saved = get_site_option( self::GLOBAL_OPTION_PREFIX . $key );
 				} else {
 					$saved = get_option( self::GLOBAL_OPTION_PREFIX . $key );
 				}
-				if ($saved !== false) {
+				if ( $saved !== false ) {
 					$this->global_settings[ $key ] = $value;
-					$this->settings_changed = true;
+					$this->settings_changed        = true;
 				}
 			}
 			$this->save();
@@ -154,16 +154,16 @@ class Settings {
 
 		$settings = get_option( self::OPTION, array() );
 
-		if (!empty($settings) && is_array($settings)) {
+		if ( ! empty( $settings ) && is_array( $settings ) ) {
 			$this->blog_settings = $settings;
 		} else {
 			// temporarily check if data is still stored the old way
 			// remove this before the final release on the marketplace!
-			foreach ($this->default_blog_settings as $key => $value) {
+			foreach ( $this->default_blog_settings as $key => $value ) {
 				$saved = get_option( self::OPTION_PREFIX . $key );
 				if ( $saved !== false ) {
 					$this->blog_settings[ $key ] = $saved;
-					$this->settings_changed = true;
+					$this->settings_changed      = true;
 				}
 			}
 			$this->save();
@@ -171,7 +171,7 @@ class Settings {
 	}
 
 	public function get_customised_global_settings() {
-		$custom_settings  = array();
+		$custom_settings = array();
 
 		foreach ( $this->global_settings as $key => $val ) {
 			if ( isset( $this->default_global_settings[ $key ] )
@@ -269,6 +269,15 @@ class Settings {
 		}
 	}
 
+	private function convert_type( $value, $type ) {
+		if ( $type === 'array' && empty( $value ) ) {
+			$value = array(); // prevent eg converting '' to array('')
+		} else {
+			settype( $value, $type );
+		}
+		return $value;
+	}
+
 	/**
 	 * Set a global option's value
 	 *
@@ -276,9 +285,9 @@ class Settings {
 	 * @param string|array $value new option value
 	 */
 	public function set_global_option( $key, $value ) {
-		if (isset($this->default_global_settings[$key])) {
-			$type = gettype($this->default_global_settings[$key]);
-			settype($value, $type);
+		if ( isset( $this->default_global_settings[ $key ] ) ) {
+			$type  = gettype( $this->default_global_settings[ $key ] );
+			$value = $this->convert_type( $value, $type );
 		}
 
 		$this->settings_changed = true;
@@ -293,9 +302,9 @@ class Settings {
 	 * @param string $value new option value
 	 */
 	public function set_option( $key, $value ) {
-		if (isset($this->default_blog_settings[$key])) {
-			$type = gettype($this->default_blog_settings[$key]);
-			settype($value, $type);
+		if ( isset( $this->default_blog_settings[ $key ] ) ) {
+			$type  = gettype( $this->default_blog_settings[ $key ] );
+			$value = $this->convert_type( $value, $type );
 		}
 
 		$this->settings_changed = true;

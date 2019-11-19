@@ -50,6 +50,38 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->assertEquals( 'manually', $this->make_settings()->get_global_option( 'track_mode' ) );
 	}
 
+	public function test_set_global_option_converts_type() {
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_ecommerce'         => '0',
+				'track_search'            => 1,
+				'track_404'               => '',
+				'limit_cookies_visitor'   => '3434343',
+				'tagmanger_container_ids' => '',
+				'add_post_annotations'    => array( 'foo' ),
+			)
+		);
+
+		$this->assertSame( false, $this->settings->get_global_option( 'track_ecommerce' ) );
+		$this->assertSame( true, $this->settings->get_global_option( 'track_search' ) );
+		$this->assertSame( false, $this->settings->get_global_option( 'track_404' ) );
+		$this->assertSame( 3434343, $this->settings->get_global_option( 'limit_cookies_visitor' ) );
+		$this->assertSame( array(), $this->settings->get_global_option( 'tagmanger_container_ids' ) );
+		$this->assertSame( array( 'foo' ), $this->settings->get_global_option( 'add_post_annotations' ) );
+	}
+
+	public function test_set_option_converts_type() {
+		$this->settings->apply_changes(
+			array(
+				'noscript_code'                            => 2392,
+				Settings::OPTION_LAST_TRACKING_CODE_UPDATE => '3493939',
+			)
+		);
+
+		$this->assertSame( '2392', $this->settings->get_option( 'noscript_code' ) );
+		$this->assertSame( 3493939, $this->settings->get_option( Settings::OPTION_LAST_TRACKING_CODE_UPDATE ) );
+	}
+
 	public function test_get_customised_global_settings_nothing_customised() {
 		$this->assertSame( array(), $this->settings->get_customised_global_settings() );
 	}
