@@ -23,6 +23,8 @@ class Settings {
 
 	const OPTION_PREFIX                        = 'matomo-';
 	const GLOBAL_OPTION_PREFIX                 = 'matomo_global-';
+	const OPTION                               = 'matomo-option';
+	const OPTION_GLOBAL                        = 'matomo-global-option';
 	const OPTION_KEY_CAPS_ACCESS               = 'caps_access';
 	const OPTION_KEY_STEALTH                   = 'caps_tracking';
 	const OPTION_LAST_TRACKING_SETTINGS_CHANGE = 'last_tracking_settings_update';
@@ -30,13 +32,6 @@ class Settings {
 	const SHOW_GET_STARTED_PAGE                = 'show_get_started_page';
 
 	public static $is_doing_action_tracking_related = false;
-
-	/**
-	 * Environment variables and default settings container
-	 *
-	 * @var array
-	 */
-	private $default_settings;
 
 	/**
 	 * Tests only
@@ -51,7 +46,7 @@ class Settings {
 	 *
 	 * @var array
 	 */
-	private $global_settings = array(
+	private $default_global_settings = array(
 		// Plugin settings
 		'last_settings_update'                     => 0,
 		self::OPTION_LAST_TRACKING_SETTINGS_CHANGE => 0,
@@ -79,9 +74,9 @@ class Settings {
 		'set_download_classes'                     => '',
 		'disable_cookies'                          => false,
 		'limit_cookies'                            => false,
-		'limit_cookies_visitor'                    => 34186669, // Matomo default 13 months
-		'limit_cookies_session'                    => 1800, // Matomo default 30 minutes
-		'limit_cookies_referral'                   => 15778463, // Matomo default 6 months
+		'limit_cookies_visitor'                    => '34186669', // Matomo default 13 months
+		'limit_cookies_session'                    => '1800', // Matomo default 30 minutes
+		'limit_cookies_referral'                   => '15778463', // Matomo default 6 months
 		'track_admin'                              => false,
 		'track_across'                             => false,
 		'track_across_alias'                       => false,
@@ -101,14 +96,20 @@ class Settings {
 	 *
 	 * @var array
 	 */
-	private $settings = array(
+	private $default_blog_settings = array(
 		'noscript_code'                        => '',
 		'tracking_code'                        => '',
 		self::OPTION_LAST_TRACKING_CODE_UPDATE => 0,
 	);
 
+	private $global_settings = array();
+	private $blog_settings = array();
+
 	private $settings_changed = false;
 
+	/**
+	 * @var Logger
+	 */
 	private $logger;
 
 	/**
@@ -116,39 +117,38 @@ class Settings {
 	 *
 	 */
 	public function __construct() {
-		$this->logger           = new Logger();
-		$this->default_settings = array(
-			'globalSettings' => $this->global_settings,
-			'settings'       => $this->settings,
-		);
+		$this->logger = new Logger();
 
 		$this->init_settings();
 	}
 
 	public function init_settings() {
-		$this->global_settings  = $this->default_settings['globalSettings'];
-		$this->settings         = $this->default_settings['settings'];
 		$this->settings_changed = false;
+		$this->global_settings  = array();
+		$this->blog_settings    = array();
 
-		foreach ( $this->global_settings as $key => $default ) {
-			if ( $this->is_network_enabled() ) {
-				$this->global_settings[ $key ] = get_site_option( self::GLOBAL_OPTION_PREFIX . $key, $default );
-			} else {
-				$this->global_settings[ $key ] = get_option( self::GLOBAL_OPTION_PREFIX . $key, $default );
-			}
+		if ( $this->is_network_enabled() ) {
+			$global_settings = get_site_option( self::OPTION_GLOBAL, array() );
+		} else {
+			$global_settings = get_option( self::OPTION_GLOBAL, array() );
 		}
-		foreach ( $this->settings as $key => $default ) {
-			$this->settings[ $key ] = get_option( self::OPTION_PREFIX . $key, $default );
+		if (!empty($global_settings) && is_array($global_settings)) {
+			$this->default_global_settings = $global_settings;
+		}
+
+		$settings = get_option( self::OPTION, array() );
+
+		if (!empty($settings) && is_array($settings)) {
+			$this->blog_settings = $settings;
 		}
 	}
 
 	public function get_customised_global_settings() {
-		$default_settings = $this->default_settings['globalSettings'];
 		$custom_settings  = array();
 
 		foreach ( $this->global_settings as $key => $val ) {
-			if ( isset( $default_settings[ $key ] )
-				 && $default_settings[ $key ] != $val ) {
+			if ( isset( $this->default_blog_settings[ $key ] )
+				 && $this->default_blog_settings[ $key ] !== $val ) {
 				$custom_settings[ $key ] = $val;
 			}
 		}
@@ -193,16 +193,15 @@ class Settings {
 		}
 
 		$this->logger->log( 'Save settings' );
-		foreach ( $this->global_settings as $key => $value ) {
-			if ( $this->is_network_enabled() ) {
-				update_site_option( self::GLOBAL_OPTION_PREFIX . $key, $value );
-			} else {
-				update_option( self::GLOBAL_OPTION_PREFIX . $key, $value );
-			}
+
+		if ( $this->is_network_enabled() ) {
+			update_site_option( self::OPTION_GLOBAL, $this->global_settings );
+		} else {
+			update_option( self::OPTION_GLOBAL, $this->global_settings );
 		}
-		foreach ( $this->settings as $key => $value ) {
-			update_option( self::OPTION_PREFIX . $key, $value );
-		}
+
+
+		update_option( self::OPTION, $this->blog_settings );
 
 		$this->settings_changed = false;
 	}
@@ -221,8 +220,8 @@ class Settings {
 			return $this->global_settings[ $key ];
 		}
 
-		if ( isset( $this->default_settings['globalSettings'][ $key ] ) ) {
-			return $this->default_settings['globalSettings'][ $key ];
+		if ( isset( $this->default_global_settings[ $key ] ) ) {
+			return $this->default_global_settings[ $key ];
 		}
 	}
 
@@ -235,12 +234,12 @@ class Settings {
 	 * @api
 	 */
 	public function get_option( $key ) {
-		if ( isset( $this->settings[ $key ] ) ) {
-			return $this->settings[ $key ];
+		if ( isset( $this->blog_settings[ $key ] ) ) {
+			return $this->blog_settings[ $key ];
 		}
 
-		if ( isset( $this->default_settings['settings'][ $key ] ) ) {
-			return $this->default_settings['settings'][ $key ];
+		if ( isset( $this->default_blog_settings[ $key ] ) ) {
+			return $this->default_blog_settings[ $key ];
 		}
 	}
 
@@ -265,7 +264,7 @@ class Settings {
 	public function set_option( $key, $value ) {
 		$this->settings_changed = true;
 		$this->logger->log( 'Changed option ' . $key . ': ' . $value );
-		$this->settings[ $key ] = $value;
+		$this->blog_settings[ $key ] = $value;
 	}
 
 	/**
@@ -296,12 +295,12 @@ class Settings {
 	 */
 	public function apply_changes( $settings ) {
 		$this->logger->log( 'Apply changed settings:' );
-		foreach ( $this->global_settings as $key => $val ) {
+		foreach ( $this->default_global_settings as $key => $val ) {
 			if ( isset( $settings[ $key ] ) ) {
 				$this->set_global_option( $key, $settings[ $key ] );
 			}
 		}
-		foreach ( $this->settings as $key => $val ) {
+		foreach ( $this->default_blog_settings as $key => $val ) {
 			if ( isset( $settings[ $key ] ) ) {
 				$this->set_option( $key, $settings[ $key ] );
 			}
