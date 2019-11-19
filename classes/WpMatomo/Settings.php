@@ -229,11 +229,13 @@ class Settings {
 
 		update_option( self::OPTION, $this->blog_settings );
 
-		foreach ( $this->settings_changed as $settings_changed ) {
+		$keys_changed = $this->settings_changed;
+		$this->settings_changed = array();
+
+		foreach ( $keys_changed as $settings_changed ) {
 			do_action('matomo_setting_change_' . $settings_changed);
 		}
 
-		$this->settings_changed = [];
 	}
 
 	/**
