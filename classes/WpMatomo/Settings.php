@@ -213,7 +213,7 @@ class Settings {
 	 * Save all settings as WordPress options
 	 */
 	public function save() {
-		if ( empty($this->settings_changed) ) {
+		if ( empty( $this->settings_changed ) ) {
 			$this->logger->log( 'No settings changed yet' );
 
 			return;
@@ -229,13 +229,12 @@ class Settings {
 
 		update_option( self::OPTION, $this->blog_settings );
 
-		$keys_changed = $this->settings_changed;
+		$keys_changed           = array_values( array_unique( $this->settings_changed ) );
 		$this->settings_changed = array();
 
-		foreach ( $keys_changed as $settings_changed ) {
-			do_action('matomo_setting_change_' . $settings_changed);
+		foreach ( $keys_changed as $key_changed ) {
+			do_action( 'matomo_setting_change_' . $key_changed );
 		}
-
 	}
 
 	/**
@@ -296,9 +295,8 @@ class Settings {
 			$value = $this->convert_type( $value, $type );
 		}
 
-		if (!isset($this->global_settings[$key])
-		    || $this->global_settings[$key] !== $value) {
-
+		if ( ! isset( $this->global_settings[ $key ] )
+			|| $this->global_settings[ $key ] !== $value ) {
 			$this->settings_changed[] = $key;
 			$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
 
@@ -318,8 +316,8 @@ class Settings {
 			$value = $this->convert_type( $value, $type );
 		}
 
-		if (!isset($this->blog_settings[$key])
-		    || $this->blog_settings[$key] !== $value) {
+		if ( ! isset( $this->blog_settings[ $key ] )
+			|| $this->blog_settings[ $key ] !== $value ) {
 			$this->settings_changed[] = $key;
 			$this->logger->log( 'Changed option ' . $key . ': ' . $value );
 			$this->blog_settings[ $key ] = $value;
