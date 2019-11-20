@@ -103,6 +103,52 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->assertSame( 0, $this->settings->get_option( Settings::OPTION_LAST_TRACKING_CODE_UPDATE ) );
 	}
 
+	public function test_save_when_nothing_changed() {
+		$update_option_triggered = false;
+		add_action(
+			'pre_update_option',
+			function () use ( &$update_option_triggered ) {
+				$update_option_triggered = true;
+			}
+		);
+
+		$this->settings->save();
+		$this->assertFalse( $update_option_triggered );
+
+		$this->settings->set_global_option( 'track_ecommerce', false );
+		$this->settings->save();
+		$this->assertTrue( $update_option_triggered );
+	}
+
+	public function test_save_triggers_event_only_for_changed_fields() {
+		$this->settings->set_global_option( 'track_mode', 'disabled' );
+		$this->settings->save();
+
+		$ecommerce_triggered = false;
+		add_action(
+			'matomo_setting_change_track_ecommerce',
+			function () use ( &$ecommerce_triggered ) {
+				$ecommerce_triggered = true;
+			}
+		);
+
+		$track_mode_triggered = false;
+		add_action(
+			'matomo_setting_change_track_mode',
+			function () use ( &$track_mode_triggered ) {
+				$track_mode_triggered = true;
+			}
+		);
+
+		$this->settings->set_global_option( 'track_ecommerce', false );
+		$this->settings->set_global_option( 'track_mode', 'disabled' );
+
+		$this->settings->save();
+
+		$this->assertTrue( $ecommerce_triggered );
+		$this->assertFalse( $track_mode_triggered );
+	}
+
 	public function test_set_option_get_option() {
 		$test_value = 'var foo = "bar";';
 		$this->settings->set_option( 'tracking_code', $test_value );

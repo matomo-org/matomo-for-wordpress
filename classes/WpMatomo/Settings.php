@@ -105,7 +105,7 @@ class Settings {
 	private $global_settings = array();
 	private $blog_settings   = array();
 
-	private $settings_changed = false;
+	private $settings_changed = array();
 
 	/**
 	 * @var Logger
@@ -123,7 +123,7 @@ class Settings {
 	}
 
 	public function init_settings() {
-		$this->settings_changed = false;
+		$this->settings_changed = array();
 		$this->global_settings  = array();
 		$this->blog_settings    = array();
 
@@ -146,7 +146,7 @@ class Settings {
 				}
 				if ( $saved !== false ) {
 					$this->global_settings[ $key ] = $value;
-					$this->settings_changed        = true;
+					$this->settings_changed[]      = $key;
 				}
 			}
 			$this->save();
@@ -163,7 +163,7 @@ class Settings {
 				$saved = get_option( self::OPTION_PREFIX . $key );
 				if ( $saved !== false ) {
 					$this->blog_settings[ $key ] = $saved;
-					$this->settings_changed      = true;
+					$this->settings_changed[]    = $key;
 				}
 			}
 			$this->save();
@@ -213,7 +213,7 @@ class Settings {
 	 * Save all settings as WordPress options
 	 */
 	public function save() {
-		if ( ! $this->settings_changed ) {
+		if ( empty( $this->settings_changed ) ) {
 			$this->logger->log( 'No settings changed yet' );
 
 			return;
@@ -229,7 +229,12 @@ class Settings {
 
 		update_option( self::OPTION, $this->blog_settings );
 
-		$this->settings_changed = false;
+		$keys_changed           = array_values( array_unique( $this->settings_changed ) );
+		$this->settings_changed = array();
+
+		foreach ( $keys_changed as $key_changed ) {
+			do_action( 'matomo_setting_change_' . $key_changed );
+		}
 	}
 
 	/**
@@ -290,9 +295,13 @@ class Settings {
 			$value = $this->convert_type( $value, $type );
 		}
 
-		$this->settings_changed = true;
-		$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
-		$this->global_settings[ $key ] = $value;
+		if ( ! isset( $this->global_settings[ $key ] )
+			|| $this->global_settings[ $key ] !== $value ) {
+			$this->settings_changed[] = $key;
+			$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
+
+			$this->global_settings[ $key ] = $value;
+		}
 	}
 
 	/**
@@ -307,9 +316,12 @@ class Settings {
 			$value = $this->convert_type( $value, $type );
 		}
 
-		$this->settings_changed = true;
-		$this->logger->log( 'Changed option ' . $key . ': ' . $value );
-		$this->blog_settings[ $key ] = $value;
+		if ( ! isset( $this->blog_settings[ $key ] )
+			|| $this->blog_settings[ $key ] !== $value ) {
+			$this->settings_changed[] = $key;
+			$this->logger->log( 'Changed option ' . $key . ': ' . $value );
+			$this->blog_settings[ $key ] = $value;
+		}
 	}
 
 	/**
