@@ -1,3 +1,10 @@
+0.2.8
+- Show Marketplace menu item but no content just yet
+- Fix zlib output compression warning may be shown
+- Better/faster data structure for settings
+- Check for not compatible plugins in system report
+- When tracking mode is disabled, show a tracking code example
+
 0.2.7
 - Improved system report
 - Check for incompatible plugins
