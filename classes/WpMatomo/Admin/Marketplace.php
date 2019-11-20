@@ -27,7 +27,8 @@ class Marketplace {
 	}
 
 	public function show() {
-
+		echo '<h1>Coming soon!</h1>';
+		return;
 		$settings = $this->settings;
 		include dirname( __FILE__ ) . '/views/marketplace.php';
 	}

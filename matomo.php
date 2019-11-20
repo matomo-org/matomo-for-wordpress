@@ -26,6 +26,10 @@ if ( ! defined( 'MATOMO_ANALYTICS_FILE' ) ) {
 	define( 'MATOMO_ANALYTICS_FILE', __FILE__ );
 }
 
+if ( ! defined('MATOMO_MARKETPLACE_PLUGIN_NAME' )) {
+	define( 'MATOMO_MARKETPLACE_PLUGIN_NAME', 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php' );
+}
+
 $GLOBALS['MATOMO_PLUGINS_ENABLED'] = array();
 
 /** MATOMO_PLUGIN_FILES => used to check for updates etc */
