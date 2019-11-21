@@ -10,10 +10,12 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
 /** @var \WpMatomo\Settings $settings */
 $matomo_extra_url_params = '&' . http_build_query(array(
         'php' => PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION . '.' . PHP_RELEASE_VERSION,
-        'matomo' => $settings->get_global_option('core_version')
+        'matomo' => $settings->get_global_option('core_version'),
+        'wp_version' => !empty($GLOBALS['wp_version']) ? $GLOBALS['wp_version'] : ''
     ));
 ?>
 <div class="wrap">

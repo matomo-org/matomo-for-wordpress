@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WpMatomo\Admin\Menu;
-use WpMatomo\Commands\UninstallCommand;
+use WpMatomo\Commands\MatomoCommands;
 use WpMatomo\Ecommerce\EasyDigitalDownloads;
 use WpMatomo\Ecommerce\MemberPress;
 use WpMatomo\OptOut;
@@ -94,7 +94,7 @@ class WpMatomo {
 		$annotations->register_hooks();
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			new UninstallCommand();
+			new MatomoCommands();
 		}
 
 		add_filter(
