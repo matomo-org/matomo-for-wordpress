@@ -38,6 +38,36 @@ if ( ! defined( 'ABSPATH' ) ) {
     <?php
     $matomo_feature_sections = array(
         array(
+            'title'    => 'Top free plugins',
+            'features' =>
+                array(
+                    array(
+                        'name'        => 'Custom Dimensions',
+                        'description' => 'Extend Matomo to your needs by defining and tracking Custom Dimensions in scope Action or Visit',
+                        'price'       => '',
+                        'download_url'    => 'https://plugins.matomo.org/api/2.0/plugins/CustomDimensions/download/latest?wp=1',
+                        'url'         => 'https://plugins.matomo.org/CustomDimensions?wp=1',
+                        'image'       => '',
+                    ),
+                    array(
+                        'name'        => 'Custom Alerts',
+                        'description' => 'Create custom Alerts to be notified of important changes on your website or app!',
+                        'price'       => '',
+                        'download_url'    => 'https://plugins.matomo.org/api/2.0/plugins/CustomAlerts/download/latest?wp=1',
+                        'url'         => 'https://plugins.matomo.org/CustomAlerts?wp=1',
+                        'image'       => '',
+                    ),
+                    array(
+                        'name'        => 'Google Analytics Importer',
+                        'description' => 'Import reports from a Google Analytics account into Matomo.',
+                        'price'       => '',
+                        'download_url'    => 'https://plugins.matomo.org/api/2.0/plugins/GoogleAnalyticsImporter/download/latest?wp=1',
+                        'url'         => 'https://plugins.matomo.org/GoogleAnalyticsImporter?wp=1',
+                        'image'       => '',
+                    ),
+                ),
+        ),
+        array(
             'title'    => 'Most popular premium features',
             'features' =>
                 array(
@@ -187,10 +217,10 @@ if ( ! defined( 'ABSPATH' ) ) {
                         ?>
                         desc column-description<?php } ?>"
                          style="margin-right: 0">
-                        <p><?php echo esc_html( $matomo_feature['description'] ); ?></p>
+                        <p class="matomo-description"><?php echo esc_html( $matomo_feature['description'] ); ?></p>
                         <p class="authors"><a class="button-primary"
                                               rel="noreferrer noopener" target="_blank"
-                                              href="<?php echo esc_url( $matomo_feature['url'] ); ?>">
+                                              href="<?php echo esc_url( !empty($matomo_feature['download_url']) ? $matomo_feature['download_url'] : $matomo_feature['url'] ); ?>">
                                                                <?php
                                                                 if ( ! empty( $matomo_feature['price'] ) ) {
                                                                     ?>
