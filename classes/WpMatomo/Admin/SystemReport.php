@@ -498,6 +498,17 @@ class SystemReport {
 			'value' => ini_get( 'max_input_vars' ),
 		);
 
+		$zlib_compression = ini_get( 'zlib.output_compression' );
+		$row = array(
+			'name'  => 'zlib.output_compression is off',
+			'value' => $zlib_compression !== '1'
+		);
+		if ($zlib_compression === '1') {
+			$row['is_error'] = true;
+			$row['comment'] = 'You need to set "zlib.output_compression" in your php.ini to "Off".';
+		}
+		$rows[] = $row;
+
 		if ( function_exists( 'curl_version' ) ) {
 			$curl_version = curl_version();
 			$curl_version = $curl_version['version'] . ', ' . $curl_version['ssl_version'];

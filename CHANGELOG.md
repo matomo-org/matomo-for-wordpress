@@ -1,3 +1,6 @@
+0.2.9
+- Add zlib output compression to system report
+
 0.2.8
 - Show Marketplace menu item but no content just yet
 - Fix zlib output compression warning may be shown
