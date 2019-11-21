@@ -11,6 +11,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 /** @var \WpMatomo\Settings $settings */
+$matomo_extra_url_params = '&' . http_build_query(array(
+        'php' => PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION . '.' . PHP_RELEASE_VERSION,
+        'matomo' => $settings->get_global_option('core_version')
+    ));
 ?>
 <div class="wrap">
 
@@ -23,15 +27,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div id="icon-plugins" class="icon32"></div>
 
     <h1><?php esc_html_e( 'Discover new functionality for your Matomo', 'matomo' ); ?></h1>
-    <p><?php esc_html_e( 'Take your Matomo (formerly Piwik) to the next level and drive your conversions & revenue with these premium features. All features are fully hosted on your WordPress and come with 100% data ownership and no limitations.', 'matomo' ); ?></p>
+    <p>
+        <?php esc_html_e( 'Take your Matomo (formerly Piwik) to the next level and drive your conversions & revenue with these premium features. All features are fully hosted on your WordPress and come with 100% data ownership and no limitations.', 'matomo' ); ?>
+        <?php if ( is_plugin_active(MATOMO_MARKETPLACE_PLUGIN_NAME )) { ?>
+            <a href="https://plugins.matomo.org/?wp=1" target="_blank" rel="noreferrer noopener"><?php esc_html_e('Browse Marketplace', 'matomo'); ?></a>
+        <?php } ?>
+    </p>
 
     <?php if ( ! is_plugin_active(MATOMO_MARKETPLACE_PLUGIN_NAME )) { ?>
     <div class="matomo-hero">
         <h2>Easily install over 100 free plugins &amp; <span style="white-space: nowrap;">premium features</span> for Matomo with just a click</h2>
-        <a href="https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip" rel="noreferrer noopener" target="_blank" class="button matomo-cta-button"><?php esc_html_e('Download Matomo Marketplace for WordPress', 'matomo'); ?></a>
+        <a href="https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip" rel="noreferrer noopener" class="button matomo-cta-button"><?php esc_html_e('Download Matomo Marketplace for WordPress', 'matomo'); ?></a>
         <br>
-        <a href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><?php esc_html_e('Learn more', 'matomo'); ?></a>
-        <a href="https://plugins.matomo.org/?wp=1" rel="noreferrer noopener" class="matomo-next-link"><?php esc_html_e('Browse Marketplace', 'matomo'); ?></a>
+        <a target="_blank" href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><?php esc_html_e('Learn more', 'matomo'); ?></a>
+        <a target="_blank" href="https://plugins.matomo.org/?wp=1" rel="noreferrer noopener" class="matomo-next-link"><?php esc_html_e('Browse Marketplace', 'matomo'); ?></a>
     </div>
     <?php } ?>
 
@@ -45,7 +54,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                         'name'        => 'Custom Dimensions',
                         'description' => 'Extend Matomo to your needs by defining and tracking Custom Dimensions in scope Action or Visit',
                         'price'       => '',
-                        'download_url'    => 'https://plugins.matomo.org/api/2.0/plugins/CustomDimensions/download/latest?wp=1',
+                        'download_url'    => 'https://plugins.matomo.org/api/2.0/plugins/CustomDimensions/download/latest?wp=1' . $matomo_extra_url_params,
                         'url'         => 'https://plugins.matomo.org/CustomDimensions?wp=1',
                         'image'       => '',
                     ),
@@ -53,7 +62,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                         'name'        => 'Custom Alerts',
                         'description' => 'Create custom Alerts to be notified of important changes on your website or app!',
                         'price'       => '',
-                        'download_url'    => 'https://plugins.matomo.org/api/2.0/plugins/CustomAlerts/download/latest?wp=1',
+                        'download_url'    => 'https://plugins.matomo.org/api/2.0/plugins/CustomAlerts/download/latest?wp=1' . $matomo_extra_url_params,
                         'url'         => 'https://plugins.matomo.org/CustomAlerts?wp=1',
                         'image'       => '',
                     ),
@@ -61,7 +70,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                         'name'        => 'Google Analytics Importer',
                         'description' => 'Import reports from a Google Analytics account into Matomo.',
                         'price'       => '',
-                        'download_url'    => 'https://plugins.matomo.org/api/2.0/plugins/GoogleAnalyticsImporter/download/latest?wp=1',
+                        'download_url' => 'https://plugins.matomo.org/api/2.0/plugins/GoogleAnalyticsImporter/download/latest?wp=1' . $matomo_extra_url_params,
                         'url'         => 'https://plugins.matomo.org/GoogleAnalyticsImporter?wp=1',
                         'image'       => '',
                     ),
