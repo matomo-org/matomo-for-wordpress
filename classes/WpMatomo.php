@@ -186,7 +186,8 @@ class WpMatomo {
 			$installer = new Installer( self::$settings );
 			$installer->register_hooks();
 			if ( $installer->looks_like_it_is_installed() ) {
-				if ( is_admin() ) {
+				if ( is_admin()
+				     && (!defined('MATOMO_ENABLE_AUTO_UPGRADE') || MATOMO_ENABLE_AUTO_UPGRADE)) {
 					$updater = new Updater( self::$settings );
 					$updater->update_if_needed();
 				}
