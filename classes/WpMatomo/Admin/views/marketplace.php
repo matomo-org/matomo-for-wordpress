@@ -105,21 +105,21 @@ $matomo_extra_url_params = '&' . http_build_query(array(
                     array(
                         'name'        => 'Form Analytics',
                         'description' => 'Increase conversions on your online forms and lose less visitors by learning everything about your users behavior and their pain points on your forms.',
-                        'price'       => '69EUR / 79USD',
+                        'price'       => '79EUR / 89USD',
                         'url'         => 'https://plugins.matomo.org/FormAnalytics?wp=1',
                         'image'       => plugins_url( 'assets/img/form_analytics.jpg', MATOMO_ANALYTICS_FILE ),
                     ),
                     array(
                         'name'        => 'Media Analytics',
                         'description' => 'Grow your business with advanced video & audio analytics. Get powerful insights into how your audience watches your videos and listens to your audio.',
-                        'price'       => '69EUR / 79USD',
+                        'price'       => '79EUR / 89USD',
                         'url'         => 'https://plugins.matomo.org/MediaAnalytics?wp=1',
                         'image'       => plugins_url( 'assets/img/media_analytics.jpg', MATOMO_ANALYTICS_FILE ),
                     ),
                     array(
                         'name'        => 'Users Flow',
                         'description' => 'Users Flow is a visual representation of the most popular paths your users take through your website & app which lets you understand your users needs.',
-                        'price'       => '69EUR / 79USD',
+                        'price'       => '39EUR / 39USD',
                         'url'         => 'https://plugins.matomo.org/UsersFlow?wp=1',
                         'image'       => plugins_url( 'assets/img/users_flow.png', MATOMO_ANALYTICS_FILE ),
                     ),
@@ -139,7 +139,7 @@ $matomo_extra_url_params = '&' . http_build_query(array(
 				    array(
 					    'name'        => 'Multi Attribution',
 					    'description' => 'Get a clear understanding of how much credit each of your marketing channel is actually responsible for to shift your marketing efforts wisely.',
-					    'price'       => '49EUR / 59USD',
+					    'price'       => '39EUR / 39USD',
 					    'url'         => 'https://plugins.matomo.org/MultiChannelConversionAttribution?wp=1',
 					    'image'       => plugins_url( 'assets/img/multi_attribution.png', MATOMO_ANALYTICS_FILE ),
 				    ),
