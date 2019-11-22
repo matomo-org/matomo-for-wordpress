@@ -34,6 +34,10 @@ ol.matomo-list {
     margin-left: 20px;
 }
 
+.plugin-card .matomo-description {
+    min-height: 57px;
+}
+
 .matomo-blockquote {
     margin: .5em 10px;
     border-left: 4px solid #ccc;

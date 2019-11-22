@@ -32,6 +32,8 @@ if (!function_exists('spyc_load_file')) {
   }
 }
 
+if (!class_exists('Spyc')) {
+
 /**
    * The Simple PHP YAML Class.
    *
@@ -1043,3 +1045,5 @@ do {
   printf ("Spyc loading file: %s\n", $file);
   print_r (spyc_load_file ($file));
 } while (0);
+
+}

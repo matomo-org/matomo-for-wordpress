@@ -9,9 +9,11 @@
 
 namespace WpMatomo\Commands;
 
+use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
 use WP_CLI;
 use WP_CLI_Command;
+use WpMatomo\Updater;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -20,7 +22,7 @@ if ( ! defined( 'WP_CLI' ) ) {
 	exit;
 }
 
-class UninstallCommand extends WP_CLI_Command {
+class MatomoCommands extends WP_CLI_Command {
 	/**
 	 * Uninstalls Matomo.
 	 *
@@ -49,12 +51,38 @@ class UninstallCommand extends WP_CLI_Command {
 
 		WP_CLI::success( 'Uninstalled Matomo Analytics' );
 	}
+	/**
+	 * Updates Matomo.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--force]
+	 * : To force running the update
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp matomo update --force
+	 *
+	 * @when after_wp_load
+	 */
+	public function update( $args, $assoc_args ) {
 
+		$updater = new Updater(new Settings());
+		if ( ! empty( $assoc_args['force'] ) ) {
+			WP_CLI::log( 'Force running updates' );
+			$updater->update();
+		} else {
+			WP_CLI::log( 'Running update if needed' );
+			$updater->update_if_needed();
+		}
+
+		WP_CLI::success( 'Matomo Analytics Updater finished' );
+	}
 }
 
 WP_CLI::add_command(
 	'matomo',
-	'\WpMatomo\Commands\UninstallCommand',
+	'\WpMatomo\Commands\MatomoCommands',
 	array(
 		'shortdesc' => 'Manage your Matomo Analytics. Commands are recommended only to be used in development mode',
 	)

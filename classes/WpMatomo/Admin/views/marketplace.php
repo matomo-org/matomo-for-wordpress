@@ -10,7 +10,13 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
 /** @var \WpMatomo\Settings $settings */
+$matomo_extra_url_params = '&' . http_build_query(array(
+        'php' => PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION . '.' . PHP_RELEASE_VERSION,
+        'matomo' => $settings->get_global_option('core_version'),
+        'wp_version' => !empty($GLOBALS['wp_version']) ? $GLOBALS['wp_version'] : ''
+    ));
 ?>
 <div class="wrap">
 
@@ -23,20 +29,55 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div id="icon-plugins" class="icon32"></div>
 
     <h1><?php esc_html_e( 'Discover new functionality for your Matomo', 'matomo' ); ?></h1>
-    <p><?php esc_html_e( 'Take your Matomo (formerly Piwik) to the next level and drive your conversions & revenue with these premium features. All features are fully hosted on your WordPress and come with 100% data ownership and no limitations.', 'matomo' ); ?></p>
+    <p>
+        <?php esc_html_e( 'Take your Matomo (formerly Piwik) to the next level and drive your conversions & revenue with these premium features. All features are fully hosted on your WordPress and come with 100% data ownership and no limitations.', 'matomo' ); ?>
+        <?php if ( is_plugin_active(MATOMO_MARKETPLACE_PLUGIN_NAME )) { ?>
+            <a href="https://plugins.matomo.org/?wp=1" target="_blank" rel="noreferrer noopener">&#187; <?php esc_html_e('Browse our Marketplace with over 100 free plugins and premium features', 'matomo'); ?></a>
+        <?php } ?>
+    </p>
 
     <?php if ( ! is_plugin_active(MATOMO_MARKETPLACE_PLUGIN_NAME )) { ?>
     <div class="matomo-hero">
-        <h2>Easily install over 100 free plugins &amp; <span style="white-space: nowrap;">premium features</span> for Matomo with just a click</h2>
-        <a href="https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip" rel="noreferrer noopener" target="_blank" class="button matomo-cta-button"><?php esc_html_e('Download Matomo Marketplace for WordPress', 'matomo'); ?></a>
+        <h2><?php echo sprintf( esc_html__('Easily install over 100 free plugins & %1$spremium features%2$s for Matomo with just a click'), '<span style="white-space: nowrap;">', '</span>') ?></h2>
+        <a href="https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip" rel="noreferrer noopener" class="button matomo-cta-button"><?php esc_html_e('Download Matomo Marketplace for WordPress', 'matomo'); ?></a>
         <br>
-        <a href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><?php esc_html_e('Learn more', 'matomo'); ?></a>
-        <a href="https://plugins.matomo.org/?wp=1" rel="noreferrer noopener" class="matomo-next-link"><?php esc_html_e('Browse Marketplace', 'matomo'); ?></a>
+        <a target="_blank" href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><?php esc_html_e('Learn more', 'matomo'); ?></a>
+        <a target="_blank" href="https://plugins.matomo.org/?wp=1" rel="noreferrer noopener" class="matomo-next-link"><?php esc_html_e('Browse Marketplace', 'matomo'); ?></a>
     </div>
     <?php } ?>
 
     <?php
     $matomo_feature_sections = array(
+        array(
+            'title'    => 'Top free plugins',
+            'features' =>
+                array(
+                    array(
+                        'name'        => 'Custom Dimensions',
+                        'description' => 'Extend Matomo to your needs by defining and tracking Custom Dimensions in scope Action or Visit',
+                        'price'       => '',
+                        'download_url'    => 'https://plugins.matomo.org/api/2.0/plugins/CustomDimensions/download/latest?wp=1' . $matomo_extra_url_params,
+                        'url'         => 'https://plugins.matomo.org/CustomDimensions?wp=1',
+                        'image'       => '',
+                    ),
+                    array(
+                        'name'        => 'Custom Alerts',
+                        'description' => 'Create custom Alerts to be notified of important changes on your website or app!',
+                        'price'       => '',
+                        'download_url'    => 'https://plugins.matomo.org/api/2.0/plugins/CustomAlerts/download/latest?wp=1' . $matomo_extra_url_params,
+                        'url'         => 'https://plugins.matomo.org/CustomAlerts?wp=1',
+                        'image'       => '',
+                    ),
+                    array(
+                        'name'        => 'Google Analytics Importer',
+                        'description' => 'Import reports from a Google Analytics account into Matomo.',
+                        'price'       => '',
+                        'download_url' => 'https://plugins.matomo.org/api/2.0/plugins/GoogleAnalyticsImporter/download/latest?wp=1' . $matomo_extra_url_params,
+                        'url'         => 'https://plugins.matomo.org/GoogleAnalyticsImporter?wp=1',
+                        'image'       => '',
+                    ),
+                ),
+        ),
         array(
             'title'    => 'Most popular premium features',
             'features' =>
@@ -64,21 +105,21 @@ if ( ! defined( 'ABSPATH' ) ) {
                     array(
                         'name'        => 'Form Analytics',
                         'description' => 'Increase conversions on your online forms and lose less visitors by learning everything about your users behavior and their pain points on your forms.',
-                        'price'       => '69EUR / 79USD',
+                        'price'       => '79EUR / 89USD',
                         'url'         => 'https://plugins.matomo.org/FormAnalytics?wp=1',
                         'image'       => plugins_url( 'assets/img/form_analytics.jpg', MATOMO_ANALYTICS_FILE ),
                     ),
                     array(
                         'name'        => 'Media Analytics',
                         'description' => 'Grow your business with advanced video & audio analytics. Get powerful insights into how your audience watches your videos and listens to your audio.',
-                        'price'       => '69EUR / 79USD',
+                        'price'       => '79EUR / 89USD',
                         'url'         => 'https://plugins.matomo.org/MediaAnalytics?wp=1',
                         'image'       => plugins_url( 'assets/img/media_analytics.jpg', MATOMO_ANALYTICS_FILE ),
                     ),
                     array(
                         'name'        => 'Users Flow',
                         'description' => 'Users Flow is a visual representation of the most popular paths your users take through your website & app which lets you understand your users needs.',
-                        'price'       => '69EUR / 79USD',
+                        'price'       => '39EUR / 39USD',
                         'url'         => 'https://plugins.matomo.org/UsersFlow?wp=1',
                         'image'       => plugins_url( 'assets/img/users_flow.png', MATOMO_ANALYTICS_FILE ),
                     ),
@@ -98,7 +139,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				    array(
 					    'name'        => 'Multi Attribution',
 					    'description' => 'Get a clear understanding of how much credit each of your marketing channel is actually responsible for to shift your marketing efforts wisely.',
-					    'price'       => '49EUR / 59USD',
+					    'price'       => '39EUR / 39USD',
 					    'url'         => 'https://plugins.matomo.org/MultiChannelConversionAttribution?wp=1',
 					    'image'       => plugins_url( 'assets/img/multi_attribution.png', MATOMO_ANALYTICS_FILE ),
 				    ),
@@ -187,10 +228,10 @@ if ( ! defined( 'ABSPATH' ) ) {
                         ?>
                         desc column-description<?php } ?>"
                          style="margin-right: 0">
-                        <p><?php echo esc_html( $matomo_feature['description'] ); ?></p>
+                        <p class="matomo-description"><?php echo esc_html( $matomo_feature['description'] ); ?></p>
                         <p class="authors"><a class="button-primary"
                                               rel="noreferrer noopener" target="_blank"
-                                              href="<?php echo esc_url( $matomo_feature['url'] ); ?>">
+                                              href="<?php echo esc_url( !empty($matomo_feature['download_url']) ? $matomo_feature['download_url'] : $matomo_feature['url'] ); ?>">
                                                                <?php
                                                                 if ( ! empty( $matomo_feature['price'] ) ) {
                                                                     ?>

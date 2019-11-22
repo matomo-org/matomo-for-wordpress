@@ -339,7 +339,7 @@ class SystemReport {
 		// mostly only numeric values and booleans to not eg accidentally show anything that would store a token etc
 		// like we don't want to show license key etc
 		foreach ( $this->settings->get_customised_global_settings() as $key => $val ) {
-			if ( is_numeric( $val ) || is_bool( $val ) || 'track_content' === $key || 'track_user_id' === $key ) {
+			if ( is_numeric( $val ) || is_bool( $val ) || 'track_content' === $key || 'track_user_id' === $key || 'core_version' === $key ) {
 				$rows[] = array(
 					'name'    => ucfirst( str_replace( '_', ' ', $key ) ),
 					'value'   => $val,

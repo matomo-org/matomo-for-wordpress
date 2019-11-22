@@ -1,5 +1,7 @@
 0.2.9
 - Add zlib output compression to system report
+- Added new update command
+- Enabled the Marketplace
 
 0.2.8
 - Show Marketplace menu item but no content just yet

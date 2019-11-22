@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WpMatomo\Admin\Menu;
-use WpMatomo\Commands\UninstallCommand;
+use WpMatomo\Commands\MatomoCommands;
 use WpMatomo\Ecommerce\EasyDigitalDownloads;
 use WpMatomo\Ecommerce\MemberPress;
 use WpMatomo\OptOut;
@@ -94,7 +94,7 @@ class WpMatomo {
 		$annotations->register_hooks();
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			new UninstallCommand();
+			new MatomoCommands();
 		}
 
 		add_filter(
@@ -186,7 +186,8 @@ class WpMatomo {
 			$installer = new Installer( self::$settings );
 			$installer->register_hooks();
 			if ( $installer->looks_like_it_is_installed() ) {
-				if ( is_admin() ) {
+				if ( is_admin()
+				     && (!defined('MATOMO_ENABLE_AUTO_UPGRADE') || MATOMO_ENABLE_AUTO_UPGRADE)) {
 					$updater = new Updater( self::$settings );
 					$updater->update_if_needed();
 				}
