@@ -38,7 +38,7 @@ $matomo_extra_url_params = '&' . http_build_query(array(
 
     <?php if ( ! is_plugin_active(MATOMO_MARKETPLACE_PLUGIN_NAME )) { ?>
     <div class="matomo-hero">
-        <h2><?php sprintf( esc_html__('Easily install over 100 free plugins & %1$spremium features%2$s for Matomo with just a click'), '<span style="white-space: nowrap;">', '</span>') ?></h2>
+        <h2><?php echo sprintf( esc_html__('Easily install over 100 free plugins & %1$spremium features%2$s for Matomo with just a click'), '<span style="white-space: nowrap;">', '</span>') ?></h2>
         <a href="https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip" rel="noreferrer noopener" class="button matomo-cta-button"><?php esc_html_e('Download Matomo Marketplace for WordPress', 'matomo'); ?></a>
         <br>
         <a target="_blank" href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><?php esc_html_e('Learn more', 'matomo'); ?></a>
