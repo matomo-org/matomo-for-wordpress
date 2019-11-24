@@ -44,6 +44,8 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 		if ( is_string( $value ) && ! empty( $value ) ) {
 			$matomo_format = array(
 				'<br />' => ' ',
+				'<br/>' => ' ',
+				'<br>' => ' ',
 			);
 			foreach ( $matomo_format as $search => $replace ) {
 				$value = str_replace( $search, $replace, $value );
