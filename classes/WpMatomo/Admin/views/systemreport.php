@@ -17,6 +17,7 @@ use WpMatomo\Admin\SystemReport;
 
 /** @var Access $access */
 /** @var array $matomo_tables */
+/** @var bool $matomo_has_warning_and_no_errors */
 /** @var string $matomo_active_tab */
 /** @var \WpMatomo\Settings $settings */
 
@@ -38,11 +39,33 @@ if ( ! function_exists( 'matomo_anonymize_value' ) ) {
 		return $value;
 	}
 }
+if ( ! function_exists( 'matomo_format_value_text' ) ) {
+	function matomo_format_value_text( $value ) {
+		if ( is_string( $value ) && ! empty( $value ) ) {
+			$matomo_format = array(
+				'<br />' => ' ',
+				'<br/>' => ' ',
+				'<br>' => ' ',
+			);
+			foreach ( $matomo_format as $search => $replace ) {
+				$value = str_replace( $search, $replace, $value );
+			}
+		}
+
+		return $value;
+	}
+}
 
 ?>
 
 <div class="wrap matomo-systemreport">
-
+    <?php
+        if ($matomo_has_warning_and_no_errors) { ?>
+            <div class="notice notice-warning">
+                <p><?php esc_html_e( 'There are some issues with your system. Matomo will run, but you might experience some minor problems. See below for more information.', 'matomo' ); ?></p>
+            </div>
+    <?php    }
+    ?>
 	<?php if ( $settings->is_network_enabled() && ! is_network_admin() && is_super_admin() ) { ?>
 		<div class="updated notice">
 			<p><?php esc_html_e( 'Only you are seeing this page as you are the super admin', 'matomo' ); ?></p>
@@ -87,9 +110,9 @@ if ( ! function_exists( 'matomo_anonymize_value' ) ) {
 							} elseif ( ! empty( $matomo_row['is_warning'] ) ) {
 								$matomo_class = 'Warning ';
 							}
-							echo "\n* " . esc_html( $matomo_class ) . esc_html( $matomo_row['name'] ) . ': ' . esc_html( matomo_anonymize_value( $matomo_value ) );
+							echo "\n* " . esc_html( $matomo_class ) . esc_html( $matomo_row['name'] ) . ': ' . esc_html( matomo_anonymize_value( matomo_format_value_text ( $matomo_value ) ) );
 							if ( isset( $matomo_row['comment'] ) && '' !== $matomo_row['comment'] ) {
-								echo ' (' . esc_html( matomo_anonymize_value( $matomo_row['comment'] ) ) . ')';
+								echo ' (' . esc_html( matomo_anonymize_value( matomo_format_value_text ( $matomo_row['comment'] ) ) ) . ')';
 							}
 						}
 						echo "\n\n";

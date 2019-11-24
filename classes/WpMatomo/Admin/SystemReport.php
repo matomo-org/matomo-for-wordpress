@@ -139,7 +139,46 @@ class SystemReport {
 			);
 		}
 
+		$matomo_tables = $this->add_errors_first( $matomo_tables );
+		$matomo_has_warning_and_no_errors = $this->has_only_warnings_no_error( $matomo_tables );
+
 		include dirname( __FILE__ ) . '/views/systemreport.php';
+	}
+
+	private function has_only_warnings_no_error( $report_tables ) {
+		$has_warning = false;
+		$has_error = false;
+		foreach ($report_tables as $report_table) {
+			foreach ($report_table['rows'] as $row) {
+				if (!empty($row['is_error'])) {
+					$has_error = true;
+				}
+				if (!empty($row['is_warning'])) {
+					$has_warning = true;
+				}
+			}
+		}
+
+		return $has_warning && !$has_error;
+	}
+
+	private function add_errors_first($report_tables) {
+		$errors = array('title' => 'Errors',
+		                'rows' => array(),
+		                'has_comments' => true,);
+		foreach ($report_tables as $report_table) {
+			foreach ($report_table['rows'] as $row) {
+				if (!empty($row['is_error'])) {
+					$errors['rows'][] = $row;
+				}
+			}
+		}
+
+		if (!empty($errors['rows'])) {
+			array_unshift($report_tables, $errors);
+		}
+
+		return $report_tables;
 	}
 
 	private function check_file_exists_and_writable( $rows, $path_to_check, $title ) {
@@ -503,6 +542,7 @@ class SystemReport {
 			'name'  => 'zlib.output_compression is off',
 			'value' => $zlib_compression !== '1'
 		);
+
 		if ($zlib_compression === '1') {
 			$row['is_error'] = true;
 			$row['comment'] = 'You need to set "zlib.output_compression" in your php.ini to "Off".';
@@ -571,7 +611,7 @@ class SystemReport {
 		if ( empty( $grants ) ) {
 			$rows[] = array(
 				'name'       => esc_html__( 'Required permissions', 'matomo' ),
-				'value'      => esc_html__( 'Failed to detect permissions', 'matomo' ),
+				'value'      => esc_html__( 'Failed to detect granted permissions', 'matomo' ),
 				'comment'    => esc_html__( 'Please check your MySQL user has these permissions (grants):', 'matomo' ) . '<br />' . implode( ', ', $needed_grants ),
 				'is_warning' => false,
 			);
