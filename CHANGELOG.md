@@ -1,3 +1,7 @@
+0.2.10
+- Improvements for the system report
+- Apache htaccess change fixing HTML were not loaded on some installs
+
 0.2.9
 - Add zlib output compression to system report
 - Added new update command
