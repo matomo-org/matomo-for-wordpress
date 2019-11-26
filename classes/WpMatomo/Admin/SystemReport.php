@@ -480,6 +480,16 @@ class SystemReport {
 			'value' => defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN,
 		);
 
+		$rows[] = array(
+			'name'  => 'Language',
+			'value' => defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en_US'
+		);
+
+		$rows[] = array(
+			'name'  => 'Permalink Structure',
+			'value' => get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default'
+		);
+
 		return $rows;
 	}
 
@@ -510,6 +520,7 @@ class SystemReport {
 			'name'  => 'Locale',
 			'value' => get_locale(),
 		);
+
 		$rows[] = array(
 			'name'    => 'Memory Limit',
 			'value'   => max( WP_MEMORY_LIMIT, @ini_get( 'memory_limit' ) ),
