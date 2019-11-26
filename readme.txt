@@ -1,6 +1,6 @@
 === Matomo Analytics ===
 Contributors: matomoteam
-Tags: matomo,piwik,analytics,statistics,tracking,ecommerce
+Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
 Requires at least: 4.8
 Tested up to: 5.3
 Requires PHP: 7.0.0
