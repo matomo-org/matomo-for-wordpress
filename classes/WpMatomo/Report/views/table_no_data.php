@@ -9,6 +9,9 @@
 
 use Piwik\Piwik;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // if accessed directly
+}
 ?>
 <div class="table">
 	<table class="widefat matomo-table">

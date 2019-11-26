@@ -9,10 +9,7 @@
 
 namespace WpMatomo\Report;
 
-use Piwik\API\Request;
-use Piwik\SettingsServer;
 use WpMatomo\Capabilities;
-use WpMatomo\Site;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly

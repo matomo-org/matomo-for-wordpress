@@ -139,7 +139,7 @@ class SystemReport {
 			);
 		}
 
-		$matomo_tables = $this->add_errors_first( $matomo_tables );
+		$matomo_tables                    = $this->add_errors_first( $matomo_tables );
 		$matomo_has_warning_and_no_errors = $this->has_only_warnings_no_error( $matomo_tables );
 
 		include dirname( __FILE__ ) . '/views/systemreport.php';
@@ -147,35 +147,37 @@ class SystemReport {
 
 	private function has_only_warnings_no_error( $report_tables ) {
 		$has_warning = false;
-		$has_error = false;
-		foreach ($report_tables as $report_table) {
-			foreach ($report_table['rows'] as $row) {
-				if (!empty($row['is_error'])) {
+		$has_error   = false;
+		foreach ( $report_tables as $report_table ) {
+			foreach ( $report_table['rows'] as $row ) {
+				if ( ! empty( $row['is_error'] ) ) {
 					$has_error = true;
 				}
-				if (!empty($row['is_warning'])) {
+				if ( ! empty( $row['is_warning'] ) ) {
 					$has_warning = true;
 				}
 			}
 		}
 
-		return $has_warning && !$has_error;
+		return $has_warning && ! $has_error;
 	}
 
-	private function add_errors_first($report_tables) {
-		$errors = array('title' => 'Errors',
-		                'rows' => array(),
-		                'has_comments' => true,);
-		foreach ($report_tables as $report_table) {
-			foreach ($report_table['rows'] as $row) {
-				if (!empty($row['is_error'])) {
+	private function add_errors_first( $report_tables ) {
+		$errors = array(
+			'title'        => 'Errors',
+			'rows'         => array(),
+			'has_comments' => true,
+		);
+		foreach ( $report_tables as $report_table ) {
+			foreach ( $report_table['rows'] as $row ) {
+				if ( ! empty( $row['is_error'] ) ) {
 					$errors['rows'][] = $row;
 				}
 			}
 		}
 
-		if (!empty($errors['rows'])) {
-			array_unshift($report_tables, $errors);
+		if ( ! empty( $errors['rows'] ) ) {
+			array_unshift( $report_tables, $errors );
 		}
 
 		return $report_tables;
@@ -242,7 +244,7 @@ class SystemReport {
 			try {
 				Bootstrap::do_bootstrap();
 				/** @var DiagnosticService $service */
-				$service = StaticContainer::get( \Piwik\Plugins\Diagnostics\DiagnosticService::class );
+				$service = StaticContainer::get( DiagnosticService::class );
 				$report  = $service->runDiagnostics();
 			} catch ( \Exception $e ) {
 				$rows[] = array(
@@ -334,7 +336,7 @@ class SystemReport {
 			);
 		}
 
-		if ( ! \WpMatomo::is_safe_mode() ) {
+		if ( ! \WpMatomo::is_safe_mode() && $report ) {
 			$rows[] = array(
 				'section' => esc_html__( 'Mandatory checks', 'matomo' ),
 			);
@@ -482,12 +484,12 @@ class SystemReport {
 
 		$rows[] = array(
 			'name'  => 'Language',
-			'value' => defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en_US'
+			'value' => defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en_US',
 		);
 
 		$rows[] = array(
 			'name'  => 'Permalink Structure',
-			'value' => get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default'
+			'value' => get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default',
 		);
 
 		return $rows;
@@ -549,14 +551,14 @@ class SystemReport {
 		);
 
 		$zlib_compression = ini_get( 'zlib.output_compression' );
-		$row = array(
+		$row              = array(
 			'name'  => 'zlib.output_compression is off',
-			'value' => $zlib_compression !== '1'
+			'value' => $zlib_compression !== '1',
 		);
 
-		if ($zlib_compression === '1') {
+		if ( $zlib_compression === '1' ) {
 			$row['is_error'] = true;
-			$row['comment'] = 'You need to set "zlib.output_compression" in your php.ini to "Off".';
+			$row['comment']  = 'You need to set "zlib.output_compression" in your php.ini to "Off".';
 		}
 		$rows[] = $row;
 

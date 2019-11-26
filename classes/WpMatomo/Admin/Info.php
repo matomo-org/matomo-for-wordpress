@@ -9,8 +9,6 @@
 
 namespace WpMatomo\Admin;
 
-use WpMatomo\Settings;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }

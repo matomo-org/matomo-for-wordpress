@@ -9,8 +9,6 @@
 
 namespace Piwik\Db\Adapter;
 
-use WpMatomo\Capabilities;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }

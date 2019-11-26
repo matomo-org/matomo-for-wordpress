@@ -9,9 +9,6 @@
 
 namespace WpMatomo\Ecommerce;
 
-use WpMatomo\Logger;
-use WpMatomo\Settings;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -237,7 +234,8 @@ class Woocommerce extends Base {
 
 		$product = wc_get_product( $product_id );
 
-		$sku        = $this->get_sku( $product_or_variation ? $product_or_variation : $product );
+		$pr         = $product_or_variation ? $product_or_variation : $product;
+		$sku        = $this->get_sku( $pr );
 		$price      = $order->get_item_total( $item );
 		$title      = $product->get_title();
 		$categories = $this->get_product_categories( $product );

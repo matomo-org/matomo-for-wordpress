@@ -74,7 +74,7 @@ class Updater {
 	public function update() {
 		Bootstrap::do_bootstrap();
 
-		$this->settings->set_global_option('core_version', Version::VERSION);
+		$this->settings->set_global_option( 'core_version', Version::VERSION );
 		$this->settings->save();
 
 		\Piwik\Access::doAsSuperUser(

@@ -9,9 +9,6 @@
 
 namespace WpMatomo\Ecommerce;
 
-use WpMatomo\Logger;
-use WpMatomo\Settings;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }

@@ -244,7 +244,7 @@ class Settings {
 	 * @param string $key
 	 *            option key
 	 *
-	 * @return string option value
+	 * @return string|array option value
 	 * @api
 	 */
 	public function get_global_option( $key ) {

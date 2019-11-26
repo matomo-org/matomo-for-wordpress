@@ -66,8 +66,7 @@ class MatomoCommands extends WP_CLI_Command {
 	 * @when after_wp_load
 	 */
 	public function update( $args, $assoc_args ) {
-
-		$updater = new Updater(new Settings());
+		$updater = new Updater( new Settings() );
 		if ( ! empty( $assoc_args['force'] ) ) {
 			WP_CLI::log( 'Force running updates' );
 			$updater->update();
