@@ -158,11 +158,18 @@ class Menu {
 			);
 		}
 
-		if ( ! is_plugin_active(MATOMO_MARKETPLACE_PLUGIN_NAME ) ) {
-			add_submenu_page( self::$parent_slug, __( 'Marketplace', 'matomo' ), __( 'Marketplace', 'matomo' ), Capabilities::KEY_VIEW, self::SLUG_MARKETPLACE, array(
-				$marketplace,
-				'show'
-			) );
+		if ( ! is_plugin_active( MATOMO_MARKETPLACE_PLUGIN_NAME ) ) {
+			add_submenu_page(
+				self::$parent_slug,
+				__( 'Marketplace', 'matomo' ),
+				__( 'Marketplace', 'matomo' ),
+				Capabilities::KEY_VIEW,
+				self::SLUG_MARKETPLACE,
+				array(
+					$marketplace,
+					'show',
+				)
+			);
 		}
 
 		if ( $can_matomo_be_managed ) {

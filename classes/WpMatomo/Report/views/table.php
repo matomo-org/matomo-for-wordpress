@@ -7,7 +7,9 @@
  * @package matomo
  */
 
-use Piwik\Piwik;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // if accessed directly
+}
 
 /** @var array $report */
 /** @var array $report_meta */

@@ -65,7 +65,7 @@ class Sync {
 						// prevents error that it wouldn't fully install matomo for a different site as it would think it already did install it etc.
 						// and would otherwise think plugins are already activated etc
 						Bootstrap::set_not_bootstrapped();
-						$config                        = \Piwik\Config::getInstance();
+						$config                        = Config::getInstance();
 						$installed                     = $config->PluginsInstalled;
 						$installed['PluginsInstalled'] = array();
 						$config->PluginsInstalled      = $installed;
