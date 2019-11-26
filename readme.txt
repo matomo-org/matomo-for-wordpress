@@ -6,6 +6,7 @@ Tested up to: 5.3
 Requires PHP: 7.0.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5EJ2LHATAKCJ4&source=url
 
 Matomo is the most powerful web analytics for WordPress giving you 100% data ownership and privacy protection.
 
