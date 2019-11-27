@@ -9,8 +9,9 @@
 
 namespace Piwik\Plugins\WordPress;
 
-use Piwik\Common;
-use Piwik\Piwik;
+if (!defined( 'ABSPATH')) {
+	exit; // if accessed directly
+}
 
 class Controller extends \Piwik\Plugin\Controller
 {

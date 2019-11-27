@@ -11,24 +11,14 @@ namespace Piwik\Plugins\WordPress;
 
 use Exception;
 use Piwik\API\Request;
-use Piwik\AuthResult;
 use Piwik\Common;
-use Piwik\Container\StaticContainer;
 use Piwik\FrontController;
-use Piwik\Piwik;
 use Piwik\Plugin;
 use Piwik\Plugins\CoreHome\SystemSummary\Item;
 use Piwik\Scheduler\Task;
 use Piwik\Url;
-use Piwik\View;
 use Piwik\Widget\WidgetsList;
-use WpMatomo\Access;
-use WpMatomo\Admin\TrackingSettings;
-use WpMatomo\API;
 use WpMatomo\Bootstrap;
-use WpMatomo\Settings;
-use WpMatomo\Site;
-use WpMatomo\User;
 
 if (!defined( 'ABSPATH')) {
     exit; // if accessed directly
