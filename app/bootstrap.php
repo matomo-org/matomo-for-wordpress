@@ -19,7 +19,9 @@ if ( $matomo_was_wp_loaded_directly ) {
 	$matomo_wpload_base = '../../../../wp-load.php';
 	$matomo_wpload_full = dirname( __FILE__ ) . '/' . $matomo_wpload_base;
 
-	if ( file_exists($matomo_wpload_full ) ) {
+	if (!empty($_ENV['MATOMO_WP_ROOT_PATH']) && file_exists( rtrim($_ENV['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php')) {
+		require_once rtrim($_ENV['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php';
+	} elseif ( file_exists($matomo_wpload_full ) ) {
 		require_once $matomo_wpload_full;
 	} elseif (file_exists($matomo_wpload_base)) {
 		require_once $matomo_wpload_base;
@@ -34,10 +36,6 @@ if ( $matomo_was_wp_loaded_directly ) {
 			require_once realpath( $matomo_wpload_full );
 		} elseif (file_exists(dirname(dirname(dirname(dirname(dirname( $_SERVER['SCRIPT_FILENAME'] ))))) . '/wp-load.php')) {
 			require_once dirname(dirname(dirname(dirname(dirname( $_SERVER['SCRIPT_FILENAME'] ))))) . '/wp-load.php';
-		}
-	} elseif (!empty($_ENV['MATOMO_WP_ROOT_PATH'])) {
-		if (file_exists( $_ENV['MATOMO_WP_ROOT_PATH'] . '/wp-load.php')) {
-			require_once $_ENV['MATOMO_WP_ROOT_PATH'] . '/wp-load.php';
 		}
 	}
 }

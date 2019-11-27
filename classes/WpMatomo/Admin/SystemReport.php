@@ -240,6 +240,22 @@ class SystemReport {
 			'comment' => $tmp_dir,
 		);
 
+		if ( ! empty( $_ENV['MATOMO_WP_ROOT_PATH'] ) ) {
+			$custom_path = rtrim($_ENV['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php';
+			$path_exists = file_exists($custom_path );
+			$comment = '';
+			if (!$path_exists) {
+				$comment = 'It seems the path does not point to the WP root directory.';
+			}
+
+			$rows[] = array(
+				'name'    => 'Custom MATOMO_WP_ROOT_PATH',
+				'value'   => $path_exists,
+				'is_error' => ! $path_exists,
+				'comment' => $comment,
+			);
+		}
+
 		if ( ! \WpMatomo::is_safe_mode() ) {
 			try {
 				Bootstrap::do_bootstrap();
