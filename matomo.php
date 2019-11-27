@@ -4,7 +4,7 @@
  * Description: Most powerful web analytics for WordPress giving you 100% data ownership and privacy protection
  * Author: Matomo
  * Author URI: https://matomo.org
- * Version: 0.2.10
+ * Version: 0.2.11
  * Domain Path: /languages
  * WC requires at least: 2.4.0
  * WC tested up to: 3.2.6
@@ -36,7 +36,9 @@ $GLOBALS['MATOMO_PLUGINS_ENABLED'] = array();
 $GLOBALS['MATOMO_PLUGIN_FILES'] = array( MATOMO_ANALYTICS_FILE );
 
 function matomo_has_compatible_content_dir() {
-	return defined( 'WP_CONTENT_DIR' ) && ABSPATH . 'wp-content' === rtrim( WP_CONTENT_DIR, '/' );
+	return (defined( 'WP_CONTENT_DIR' )
+	       && ABSPATH . 'wp-content' === rtrim( WP_CONTENT_DIR, '/' ))
+	       || ( !empty( $_ENV['MATOMO_WP_ROOT_PATH'] ) && is_dir( $_ENV['MATOMO_WP_ROOT_PATH'] ) );
 }
 
 function matomo_is_app_request() {

@@ -1,3 +1,6 @@
+0.2.11
+- Better support when a WordPress directory is symlinked
+
 0.2.10
 - Improvements for the system report
 - Apache htaccess change fixing HTML were not loaded on some installs
