@@ -23,8 +23,6 @@ if ( $matomo_was_wp_loaded_directly ) {
 		require_once rtrim($_ENV['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php';
 	} elseif ( file_exists($matomo_wpload_full ) ) {
 		require_once $matomo_wpload_full;
-	} elseif (file_exists($matomo_wpload_base)) {
-		require_once $matomo_wpload_base;
 	} elseif (realpath( $matomo_wpload_full ) && file_exists(realpath( $matomo_wpload_full ))) {
 		require_once realpath( $matomo_wpload_full );
 	} elseif (!empty($_SERVER['SCRIPT_FILENAME']) && file_exists($_SERVER['SCRIPT_FILENAME'])) {
