@@ -45,6 +45,7 @@ class WordPress extends Plugin
             'ScheduledTasks.shouldExecuteTask' => 'shouldExecuteTask',
             'API.TagManager.getContainerInstallInstructions.end' => 'addInstallInstructions',
             'API.Tour.getChallenges.end' => 'modifyTourChallenges',
+	        'API.ScheduledReports.generateReport.end' => 'onGenerateReportEnd'
         );
     }
 
@@ -216,6 +217,24 @@ class WordPress extends Plugin
         $status = wp_remote_retrieve_response_code($wpResponse);
         $headers = wp_remote_retrieve_headers($wpResponse);
         $response = wp_remote_retrieve_body($wpResponse);
+    }
+
+    public function onGenerateReportEnd()
+    {
+    	if (Request::isCurrentApiRequestTheRootApiRequest()) {
+    		// fix https://github.com/matomo-org/wp-matomo/issues/98
+		    // When some plugin does an ob_start before the API is being executed then the following happens:
+		    // * PDF is generated and sent
+		    // * We send the application/pdf content-type header
+		    // * The api call finishes
+		    // * The response builder sends text/xml header and because the headers haven't been send yet, this actually overwrites the application/pdf header
+		    // * An XML error is shown in the UI.
+		    // The workaround is basically to make sure to flush the API call between API call finished and the response builder trying to send the text/xml header
+		    // It seems mostly an issue for the Scheduled Reports renderer as this is basically using an API call, it is basically using the XML renderer, but sending a different content type
+		    if (ob_get_length()) {
+			    ob_end_flush();
+		    }
+	    }
     }
 
     public function onDispatchRequest(&$module, &$action, &$parameters)

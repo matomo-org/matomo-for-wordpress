@@ -756,10 +756,15 @@ class SystemReport {
 		$active_plugins = get_option( 'active_plugins', array() );
 
 		if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
+			$active_plugins = array_map(function ($active_plugin){
+				$parts = explode('/', trim($active_plugin));
+				return trim($parts[0]);
+			}, $active_plugins);
+
 			$rows[] = array(
 				'name'    => 'Active Plugins',
 				'value'   => count( $active_plugins ),
-				'comment' => implode( ', ', $active_plugins ),
+				'comment' => implode( ' ', $active_plugins ),
 			);
 
 			$used_not_compatible = array_intersect( $active_plugins, $this->not_compatible_plugins );
