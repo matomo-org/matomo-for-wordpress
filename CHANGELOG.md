@@ -1,5 +1,6 @@
 0.3.0
 - Update Matomo core to 3.13.0
+- Fix scheduled report in PDF format may not be rendered correctly under circumstances
 
 0.2.11
 - Better support when a WordPress directory is symlinked
