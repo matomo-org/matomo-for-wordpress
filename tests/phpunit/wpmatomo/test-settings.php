@@ -83,20 +83,27 @@ class SettingsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_customised_global_settings_nothing_customised() {
-		$this->assertSame( array( 'core_version' => '3.12.0' ), $this->settings->get_customised_global_settings() );
+		$settings = $this->settings->get_customised_global_settings();
+		$this->assertNotEmpty($settings['core_version']);
+		unset($settings['core_version']); // always changes every time we update core so we dont want to look at exact value
+
+		$this->assertSame( array( ), $settings);
 	}
 
 	public function test_get_customised_global_settings_some_customised() {
 		$this->settings->set_global_option( 'track_mode', 'manually' );
 		$this->settings->set_global_option( 'track_ecommerce', '0' );
 
+		$settings = $this->settings->get_customised_global_settings();
+		$this->assertNotEmpty($settings['core_version']);
+		unset($settings['core_version']); // always changes every time we update core so we dont want to look at exact value
+
 		$this->assertEquals(
 			array(
 				'track_mode'      => 'manually',
 				'track_ecommerce' => 0,
-				'core_version'    => '3.12.0',
 			),
-			$this->settings->get_customised_global_settings()
+			$settings
 		);
 	}
 
