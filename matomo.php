@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Matomo Analytics & Tag Manager
+ * Plugin Name: Matomo Analytics - Ethical Stats. Powerful Insights.
  * Description: Most powerful web analytics for WordPress giving you 100% data ownership and privacy protection
  * Author: Matomo
  * Author URI: https://matomo.org
