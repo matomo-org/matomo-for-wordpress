@@ -177,7 +177,7 @@ if(function_exists('parse_ini_file')) {
 			if (!preg_match('/^[a-zA-Z0-9[]/', $line)) {continue;}
 
 			// Sections
-			if ($line{0} == '[') {
+			if ($line[0] == '[') {
 				$tmp = explode(']', $line);
 				$sections[] = trim(substr($tmp[0], 1));
 				$i++;
@@ -191,15 +191,15 @@ if(function_exists('parse_ini_file')) {
 			if (strstr($value, ";")) {
 				$tmp = explode(';', $value);
 				if (count($tmp) == 2) {
-					if ((($value{0} != '"') && ($value{0} != "'")) ||
+					if ((($value[0] != '"') && ($value[0] != "'")) ||
 							preg_match('/^".*"\s*;/', $value) || preg_match('/^".*;[^"]*$/', $value) ||
 							preg_match("/^'.*'\s*;/", $value) || preg_match("/^'.*;[^']*$/", $value) ){
 						$value = $tmp[0];
 					}
 				} else {
-					if ($value{0} == '"') {
+					if ($value[0] == '"') {
 						$value = preg_replace('/^"(.*)".*/', '$1', $value);
-					} elseif ($value{0} == "'") {
+					} elseif ($value[0] == "'") {
 						$value = preg_replace("/^'(.*)'.*/", '$1', $value);
 					} else {
 						$value = $tmp[0];
