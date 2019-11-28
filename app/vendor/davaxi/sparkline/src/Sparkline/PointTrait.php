@@ -62,7 +62,7 @@ trait PointTrait
             throw new \InvalidArgumentException('Invalid index : ' . $index);
         }
         if ($index < 0 || $index >= $count) {
-            throw new \InvalidArgumentException('Index out of range [0-' . $count - 1 . '] : ' . $index);
+            throw new \InvalidArgumentException('Index out of range [0-' . ($count - 1) . '] : ' . $index);
         }
     }
 }

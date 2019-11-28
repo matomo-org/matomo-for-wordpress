@@ -181,7 +181,7 @@ class API extends \Piwik\Plugin\API
         return $available;
     }
 
-    public function getSegmentsMetadata($idSites = array(), $_hideImplementationData = true)
+    public function getSegmentsMetadata($idSites = array(), $_hideImplementationData = true, $_showAllSegments = false)
     {
         if (empty($idSites)) {
             Piwik::checkUserHasSomeViewAccess();
@@ -194,7 +194,7 @@ class API extends \Piwik\Plugin\API
 
         $sites   = (is_array($idSites) ? implode('.', $idSites) : (int) $idSites);
         $cache   = Cache::getTransientCache();
-        $cacheKey = 'API.getSegmentsMetadata' . $sites . '_' . (int) $_hideImplementationData . '_' . (int) $isNotAnonymous;
+        $cacheKey = 'API.getSegmentsMetadata' . $sites . '_' . (int) $_hideImplementationData . '_' . (int) $isNotAnonymous . '_' . (int) $_showAllSegments;
         $cacheKey = CacheId::pluginAware($cacheKey);
 
         if ($cache->contains($cacheKey)) {
@@ -202,7 +202,7 @@ class API extends \Piwik\Plugin\API
         }
 
         $metadata = new SegmentMetadata();
-        $segments = $metadata->getSegmentsMetadata($idSites, $_hideImplementationData, $isNotAnonymous);
+        $segments = $metadata->getSegmentsMetadata($idSites, $_hideImplementationData, $isNotAnonymous, $_showAllSegments);
 
         $cache->save($cacheKey, $segments);
 
@@ -597,7 +597,7 @@ class API extends \Piwik\Plugin\API
         if (!empty($segment['unionOfSegments'])) {
             $values = array();
             foreach ($segment['unionOfSegments'] as $unionSegmentName) {
-                $unionSegment = $this->findSegment($unionSegmentName, $idSite);
+                $unionSegment = $this->findSegment($unionSegmentName, $idSite, $_showAllSegments = true);
 
                 try {
                     $result = $this->getSuggestedValuesForSegmentName($idSite, $unionSegment, $maxSuggestionsToReturn);
@@ -655,9 +655,9 @@ class API extends \Piwik\Plugin\API
         return $pages;
     }
 
-    private function findSegment($segmentName, $idSite)
+    private function findSegment($segmentName, $idSite, $_showAllSegments = false)
     {
-        $segmentsMetadata = $this->getSegmentsMetadata($idSite, $_hideImplementationData = false);
+        $segmentsMetadata = $this->getSegmentsMetadata($idSite, $_hideImplementationData = false, $_showAllSegments);
 
         $segmentFound = false;
         foreach ($segmentsMetadata as $segmentMetadata) {

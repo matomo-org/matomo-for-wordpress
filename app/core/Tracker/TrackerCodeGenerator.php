@@ -65,7 +65,7 @@ class TrackerCodeGenerator
     ) {
         // changes made to this code should be mirrored in plugins/CoreAdminHome/javascripts/jsTrackingGenerator.js var generateJsCode
 
-        if ('http' !== substr($piwikUrl, 0, 4)) {
+        if (substr($piwikUrl, 0, 4) !== 'http') {
             $piwikUrl = 'http://' . $piwikUrl;
         }
         preg_match('~^(http|https)://(.*)$~D', $piwikUrl, $matches);
@@ -245,17 +245,28 @@ class TrackerCodeGenerator
         $websiteHosts = array();
         $firstHost = null;
         foreach ($websiteUrls as $site_url) {
+            if (empty($site_url)) {
+                continue;
+            }
+            
             $referrerParsed = parse_url($site_url);
 
             if (!isset($firstHost) && isset($referrerParsed['host'])) {
                 $firstHost = $referrerParsed['host'];
             }
 
-            $url = $referrerParsed['host'];
+            if (isset($referrerParsed['host'])) {
+                $url = $referrerParsed['host'];
+            } else {
+                $url = '';
+            }
             if (!empty($referrerParsed['path'])) {
                 $url .= $referrerParsed['path'];
             }
-            $websiteHosts[] = $url;
+            
+            if (!empty($url)) {
+                $websiteHosts[] = $url;
+            }
         }
         $options = '';
         if ($mergeSubdomains && !empty($firstHost)) {

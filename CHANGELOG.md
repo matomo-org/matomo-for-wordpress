@@ -1,3 +1,6 @@
+0.3.0
+- Update Matomo core to 3.13.0
+
 0.2.11
 - Better support when a WordPress directory is symlinked
 

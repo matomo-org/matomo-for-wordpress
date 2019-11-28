@@ -152,35 +152,42 @@ class IPUtils
      */
     public static function getIPRangeBounds($ipRange)
     {
-        if (strpos($ipRange, '/') === false) {
-            $ipRange = self::sanitizeIpRange($ipRange);
+        $ipRange = self::sanitizeIpRange($ipRange);
 
-            if ($ipRange === null) {
-                return null;
-            }
+        if ($ipRange === null ||
+            (($pos = strpos($ipRange, '/')) === false) ||
+            ($pos + 1 === strlen($ipRange))
+        ) {
+            return null;
         }
-        $pos = strpos($ipRange, '/');
 
-        $bits = substr($ipRange, $pos + 1);
         $range = substr($ipRange, 0, $pos);
-        $high = $low = @inet_pton($range);
+        $high  = $low = @inet_pton($range);
+
         if ($low === false) {
             return null;
         }
 
-        $lowLen = strlen($low);
-        $i = $lowLen - 1;
-        $bits = $lowLen * 8 - $bits;
+        $addrLen = strlen($low);
+        $bits   = (int) substr($ipRange, $pos + 1);
 
-        for ($n = (int)($bits / 8); $n > 0; $n--, $i--) {
-            $low[$i] = chr(0);
+        if ($bits < 0 || $bits > $addrLen * 8) {
+            return null;
+        }
+
+        $octet = (int) (($bits + 7) / 8);
+
+        for ($i = $octet; $i < $addrLen; $i++) {
+            $low[$i]  = chr(0);
             $high[$i] = chr(255);
         }
 
-        $n = $bits % 8;
-        if ($n) {
-            $low[$i] = chr(ord($low[$i]) & ~((1 << $n) - 1));
-            $high[$i] = chr(ord($high[$i]) | ((1 << $n) - 1));
+        if (($n = $bits % 8)) {
+            $mask  = (1 << (8 - $n)) - 1;
+            $value = ord($low[--$octet]) & ~$mask;
+
+            $low[$octet]  = chr($value);
+            $high[$octet] = chr($value | $mask);
         }
 
         return array($low, $high);

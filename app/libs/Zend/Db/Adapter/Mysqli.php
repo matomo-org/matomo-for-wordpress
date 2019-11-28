@@ -357,7 +357,7 @@ class Zend_Db_Adapter_Mysqli extends Zend_Db_Adapter_Abstract
             $this->_config['password'],
             $this->_config['dbname'],
             $port,
-	        $socket,
+            $socket,
             $enable_ssl ? $flags : null
         );
 
