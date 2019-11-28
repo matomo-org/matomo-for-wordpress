@@ -508,6 +508,16 @@ class SystemReport {
 			'value' => get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default',
 		);
 
+		$rows[] = array(
+			'name'  => 'Possibly uses symlink',
+			'value' => strpos(__DIR__, ABSPATH) === false && strpos(__DIR__, WP_CONTENT_DIR) === false,
+		);
+
+		$rows[] = array(
+			'name'  => 'WP Cache enabled',
+			'value' => defined('WP_CACHE') && WP_CACHE,
+		);
+
 		return $rows;
 	}
 
@@ -544,6 +554,13 @@ class SystemReport {
 			'value'   => max( WP_MEMORY_LIMIT, @ini_get( 'memory_limit' ) ),
 			'comment' => 'At least 128MB recommended. Depending on your traffic 256MB or more may be needed.',
 		);
+
+		$rows[] = array(
+			'name'    => 'Max Memory Limit',
+			'value'   => defined('WP_MAX_MEMORY_LIMIT') ? WP_MAX_MEMORY_LIMIT : '',
+			'comment' => '',
+		);
+
 		$rows[] = array(
 			'name'  => 'Time',
 			'value' => time(),
