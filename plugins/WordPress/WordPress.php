@@ -221,7 +221,7 @@ class WordPress extends Plugin
 
     public function onGenerateReportEnd()
     {
-    	if (Request::isCurrentApiRequestTheRootApiRequest()) {
+    	if (Request::isCurrentApiRequestTheRootApiRequest() && !headers_sent()) {
     		// fix https://github.com/matomo-org/wp-matomo/issues/98
 		    // When some plugin does an ob_start before the API is being executed then the following happens:
 		    // * PDF is generated and sent
