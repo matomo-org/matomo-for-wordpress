@@ -183,25 +183,27 @@ class SystemReport {
 		return $report_tables;
 	}
 
-	private function check_file_exists_and_writable( $rows, $path_to_check, $title ) {
+	private function check_file_exists_and_writable( $rows, $path_to_check, $title, $required ) {
 		$file_exists   = file_exists( $path_to_check );
 		$file_readable = is_readable( $path_to_check );
 		$file_writable = is_writable( $path_to_check );
-		$comment       = '"' . $path_to_check . '"';
+		$comment       = '"' . $path_to_check . '" ';
 		if ( ! $file_exists ) {
-			$comment .= sprintf( esc_html__( '%s does not exist.', 'matomo' ), $title );
+			$comment .= sprintf( esc_html__( '%s does not exist. ', 'matomo' ), $title );
 		}
 		if ( ! $file_readable ) {
-			$comment .= sprintf( esc_html__( '%s is not readable.', 'matomo' ), $title );
+			$comment .= sprintf( esc_html__( '%s is not readable. ', 'matomo' ), $title );
 		}
 		if ( ! $file_writable ) {
-			$comment .= sprintf( esc_html__( '%s is not writable.', 'matomo' ), $title );
+			$comment .= sprintf( esc_html__( '%s is not writable. ', 'matomo' ), $title );
 		}
 
 		$rows[] = array(
 			'name'    => sprintf( esc_html__( '%s exists and is writable.', 'matomo' ), $title ),
 			'value'   => $file_exists && $file_readable && $file_writable ? esc_html__( 'Yes', 'matomo' ) : esc_html__( 'No', 'matomo' ),
 			'comment' => $comment,
+			'is_error' => $required && (!$file_exists || !$file_readable),
+			'is_warning' => !$required && (!$file_exists || !$file_readable)
 		);
 
 		return $rows;
@@ -221,10 +223,10 @@ class SystemReport {
 		$paths            = new Paths();
 		$upload_dir       = $paths->get_upload_base_dir();
 		$path_config_file = $upload_dir . '/' . MATOMO_CONFIG_PATH;
-		$rows             = $this->check_file_exists_and_writable( $rows, $path_config_file, 'Config' );
+		$rows             = $this->check_file_exists_and_writable( $rows, $path_config_file, 'Config', true );
 
 		$path_tracker_file = $upload_dir . '/matomo.js';
-		$rows              = $this->check_file_exists_and_writable( $rows, $path_tracker_file, 'JS Tracker' );
+		$rows              = $this->check_file_exists_and_writable( $rows, $path_tracker_file, 'JS Tracker', false );
 
 		$rows[] = array(
 			'name'    => esc_html__( 'Plugin directories', 'matomo' ),
