@@ -70,7 +70,11 @@ class Sync {
 						$installed['PluginsInstalled'] = array();
 						$config->PluginsInstalled      = $installed;
 
-						$installer->install();
+						if ($installer->can_be_installed()) {
+							$installer->install();
+						} else {
+							continue;
+						}
 					}
 					$success = $this->sync_site( $site->blog_id, $site->blogname, $site->siteurl );
 				} catch ( \Exception $e ) {

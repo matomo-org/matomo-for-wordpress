@@ -77,6 +77,10 @@ class Installer {
 	}
 
 	public function install() {
+		if (!$this->can_be_installed()) {
+			return false;
+		}
+
 		try {
 			// prevent session related errors during install making it more stable
 			if ( ! defined( 'PIWIK_ENABLE_SESSION_START' ) ) {
