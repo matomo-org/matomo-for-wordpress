@@ -1,3 +1,7 @@
+0.3.1
+- Allow requests to piwik.php
+- Make sure to install only if uploads dir has write permission
+
 0.3.0
 - Update Matomo core to 3.13.0
 - Fix scheduled report in PDF format may not be rendered correctly under circumstances
