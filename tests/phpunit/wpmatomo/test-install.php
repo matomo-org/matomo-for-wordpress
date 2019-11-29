@@ -38,6 +38,10 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$this->assertTrue( Installer::is_intalled() );
 	}
 
+	public function test_can_be_installed() {
+		$this->assertTrue( $this->installer->can_be_installed() );
+	}
+
 	public function test_install_adds_sites_and_users() {
 		Bootstrap::set_not_bootstrapped();
 
