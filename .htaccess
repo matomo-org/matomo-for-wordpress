@@ -21,7 +21,7 @@
 	</IfModule>
 </IfModule>
 </Files>
-<Files ~ "^((index|matomo)\.php)$">
+<Files ~ "^((index|piwik|matomo)\.php)$">
 <IfModule mod_version.c>
 	<IfVersion < 2.4>
         Order allow,deny
