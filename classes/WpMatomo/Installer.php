@@ -68,7 +68,19 @@ class Installer {
 		return false;
 	}
 
+	public function can_be_installed() {
+
+		$paths = new Paths();
+		$upload_dir = $paths->get_upload_base_dir();
+
+		return is_writable($upload_dir) || is_writable(dirname($upload_dir));
+	}
+
 	public function install() {
+		if (!$this->can_be_installed()) {
+			return false;
+		}
+
 		try {
 			// prevent session related errors during install making it more stable
 			if ( ! defined( 'PIWIK_ENABLE_SESSION_START' ) ) {
@@ -83,6 +95,7 @@ class Installer {
 
 			return false;
 		} catch ( NotYetInstalledException $e ) {
+
 			$this->logger->log( 'Matomo is not yet installed... installing now' );
 
 			$db_info = $this->create_db();

@@ -121,12 +121,12 @@ class WpMatomo {
 			 && ! is_writable( dirname( $upload_path ) ) ) {
 			add_action(
 				'init',
-				function () {
+				function () use ($upload_path) {
 					if ( self::is_admin_user() ) {
 						add_action(
 							'admin_notices',
-							function () {
-								echo '<div class="error"><p>' . __( 'Matomo Analytics requires the uploads directory to be writable. Please make the directory writable for it to work.', 'matomo' ) . '</p></div>';
+							function () use ($upload_path) {
+								echo '<div class="error"><p>' . __( 'Matomo Analytics requires the uploads directory ('.esc_html(dirname($upload_path)).') to be writable. Please make the directory writable for it to work.', 'matomo' ) . '</p></div>';
 							}
 						);
 					}
@@ -183,6 +183,7 @@ class WpMatomo {
 	public function init_plugin() {
 		if ( ( is_admin() || matomo_is_app_request() )
 			 && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+
 			$installer = new Installer( self::$settings );
 			$installer->register_hooks();
 			if ( $installer->looks_like_it_is_installed() ) {
@@ -197,7 +198,9 @@ class WpMatomo {
 					wp_safe_redirect( admin_url() );
 					exit;
 				} else {
-					$installer->install();
+					if ($installer->can_be_installed()) {
+						$installer->install();
+					}
 				}
 			}
 		}
