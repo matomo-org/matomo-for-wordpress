@@ -112,3 +112,16 @@ Contact us: [matomo.org/contact/](https://matomo.org/contact/)
 
 * The entire Matomo team and everyone who contributed
 * Andr&eacute; Br&auml;kling who is the Author of WP-Matomo https://github.com/braekling/WP-Matomo
+
+== Screenshots ==
+
+1. Matomo Dashboard. Choose from many widgets and adjust layout.
+2. Visits log. See every action your visitors took.
+3. Behaviour insights.
+4. Acquisition insights.
+5. Ecommerce insights.
+6. Configure tracking code without developer knowledge.
+7. Easily give your co-workers access to your Matomo reports.
+8. Define who and what should not be tracked.
+9. Options to anonymize data so you don't track personal data.
+10. Automatically delete old data you no longer need to be privacy compliant and to free your server from not needed data.
