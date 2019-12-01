@@ -91,8 +91,3 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<li>height - eg 200, 200px or 20%</li>
 </ul>
 <p><?php esc_html_e( 'Example', 'matomo' ); ?>: <code><?php echo esc_html( PrivacySettings::EXAMPLE_FULL ); ?></code></p>
-<h2><?php esc_html_e( 'You earned it!', 'matomo' ); ?></h2>
-<p>
-	<?php echo sprintf( esc_html__( 'Use the shortcode %1$s to show that your website respects your visitors\' privacy.', 'matomo' ), '<code>[matomo_privacy_badge size=120]</code>' ); ?>
-	<?php echo do_shortcode( '[matomo_privacy_badge size=120 align=left]' ); ?>
-</p>
