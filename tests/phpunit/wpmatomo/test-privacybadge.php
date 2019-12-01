@@ -7,6 +7,13 @@ use WpMatomo\PrivacyBadge;
 
 class PrivacyBadgeTest extends MatomoUnit_TestCase {
 
+	public function setUp() {
+		return parent::setUp();
+
+		$badge = new PrivacyBadge();
+		$badge->register_hooks();
+	}
+
 	public function test_privacy_badge_shortcode_no_options() {
 		$this->assertSame( '<img alt="Your privacy protected! This website uses Matomo." src="http://example.org/wp-content/plugins/matomo/assets/img/privacybadge.png"  width="120" height="120">', do_shortcode( '[matomo_privacy_badge]' ) );
 	}
