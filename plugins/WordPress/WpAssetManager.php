@@ -54,6 +54,7 @@ class WpAssetManager extends AssetManager
 		$jsFiles[] = 'jquery/ui/spinner.min.js';
 		$jsFiles[] = 'jquery/ui/tabs.min.js';
 		$jsFiles[] = 'jquery/ui/button.min.js';
+		$jsFiles[] = 'jquery/ui/effect.min.js';
 
 		foreach ($jsFiles as $jsFile) {
 			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../../../../wp-includes/js/' . $jsFile);
