@@ -1,6 +1,5 @@
 0.3.2
 - Add method for plugins to detect the context
-- Add config to disable the Matomo for WordPress REST API
 
 0.3.1
 - Allow requests to piwik.php
