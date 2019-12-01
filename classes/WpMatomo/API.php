@@ -131,6 +131,10 @@ class API {
 	 * @api
 	 */
 	public function register_route( $api_module, $api_method ) {
+		if (defined('MATOMO_DISABLE_REST_API') && MATOMO_DISABLE_REST_API) {
+			return;
+		}
+
 		$methods                 = array(
 			'get'        => 'GET',
 			'edit'       => 'PUT',

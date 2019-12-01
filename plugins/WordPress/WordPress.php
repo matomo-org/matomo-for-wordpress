@@ -13,6 +13,7 @@ use Exception;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\FrontController;
+use Piwik\Piwik;
 use Piwik\Plugin;
 use Piwik\Plugins\CoreHome\SystemSummary\Item;
 use Piwik\Scheduler\Task;
@@ -246,8 +247,18 @@ class WordPress extends Plugin
 		        remove_action( 'shutdown', 'wp_ob_end_flush_all', 1 );
 	        }
         }
-	    
-        $requestedModule = !empty($module) ? strtolower($module) : '';
+
+	    $requestedModule = !empty($module) ? Common::mb_strtolower($module) : '';
+	    $requestedAction = !empty($action) ? Common::mb_strtolower($action) : '';
+
+	    if ($requestedModule === 'api' && (empty($requestedAction) || $requestedAction === 'index')) {
+		    $tokenRequest = Common::getRequestVar('token_auth', false, 'string');
+		    $tokenUser = Piwik::getCurrentUserTokenAuth();
+
+		    if (!$tokenRequest || $tokenRequest !== $tokenUser) {
+			    throw new Exception(Piwik::translate('General_ExceptionInvalidToken'));
+		    }
+	    }
 
         if ($requestedModule === 'login') {
             if ($action === 'ajaxNoAccess' || $action === 'bruteForceLog') {
@@ -274,7 +285,6 @@ class WordPress extends Plugin
             array('diagnostics', 'configfile'),
             array('api', 'listallapi'),
         );
-        $requestedAction = !empty($action) ? strtolower($action) : '';
 
         foreach ($blockedActions as $blockedAction) {
             if ($requestedModule === $blockedAction[0] && $requestedAction == $blockedAction[1]) {
