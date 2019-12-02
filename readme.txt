@@ -67,11 +67,14 @@ Used 3rd party resources:
 * When you enter a URL in the SEO ranking widget, then a request with the entered URL may be sent to Google, Alexa, Bing, and other SEO providers.
 
 == Installation ==
-* Install the plugin
-* Go to Matomo-Analytics
-* Activate tracking on the "Matomo Analytics => Get started" page.
+* Install & activate the plugin.
+* Go to Matomo-Analytics in the WordPress Admin Dashboard.
+* Click on "Activate tracking" in the "Get started" page.
+* That's it! You can further customize the tracking in the settings.
 
 == Frequently Asked Questions ==
+
+We have a lot of FAQs listed on our website. [For more FAQs click here.](https://matomo.org/faq/wordpress/)
 
 = Is there a demo available?
 Yes, check out the online demo for Matomo at https://demo.matomo.org
@@ -87,10 +90,6 @@ and we need your help to make Matomo better… Why not participate in a useful p
 = How do you ensure quality?
 The Matomo project uses an ever-expanding comprehensive set of thousands of unit tests and hundreds of automated integration tests, system tests, JavaScript tests, and screenshot UI tests, running on a continuous integration server as part of its software quality assurance. [Learn more](https://developer.matomo.org/guides/tests)
 
-= Does the Matomo Mobile App work with WordPress?
-No, this doesn't work just yet. It will likely be possible to use Matomo for Android / iOS once Matomo 4 has been released
-as it will have a new feature called [app specific passwords](https://github.com/matomo-org/matomo/issues/6559).
-
 = Can I disable the Tag Manager?
 The Tag Manager can be disabled by placing `define('MATOMO_DISABLE_TAG_MANAGER', true);` in your `wp-config.php`.
 
@@ -100,7 +99,7 @@ The Tag Manager does currently not work in WP Multisite mode.
 Matomo should run on most MySQL versions. However, we only support MySQL 5.1 and newer. It should also work with MariaDB and other MySQL compatible databases.
 
 = Which browsers do you support?
-* Tracking: We support pretty much all browsers even very old browsers when it comes to tracking
+* Tracking: We support pretty much all browsers even very old browsers
 * Admin: The Matomo UI does not support IE9 or older.
 
 = What are your contact details?
