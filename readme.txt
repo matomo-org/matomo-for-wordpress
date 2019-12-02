@@ -115,7 +115,7 @@ Contact us: [matomo.org/contact/](https://matomo.org/contact/)
 
 == Screenshots ==
 
-1. Matomo Dashboard. Choose from many widgets and adjust layout.
+1. Customizable Matomo Dashboard. Choose from many widgets and adjust layout.
 2. Visits log. See every action your visitors took.
 3. Behaviour insights.
 4. Acquisition insights.
@@ -125,3 +125,4 @@ Contact us: [matomo.org/contact/](https://matomo.org/contact/)
 8. Define who and what should not be tracked.
 9. Options to anonymize data so you don't track personal data.
 10. Automatically delete old data you no longer need to be privacy compliant and to free your server from not needed data.
+11. Summary page for getting a quick overview.
