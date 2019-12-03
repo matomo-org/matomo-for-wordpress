@@ -1,6 +1,7 @@
 0.3.3
 - Improve test cookie logic
 - Fix malformed download link in real time widget
+- Improvements to system report & archiving
 
 0.3.2
 - Add method for plugins to detect the context
