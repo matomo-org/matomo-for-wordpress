@@ -251,7 +251,9 @@ class WordPress extends Plugin
 	    $requestedModule = !empty($module) ? Common::mb_strtolower($module) : '';
 	    $requestedAction = !empty($action) ? Common::mb_strtolower($action) : '';
 
-	    if ($requestedModule === 'api' && (empty($requestedAction) || $requestedAction === 'index')) {
+	    if (!Common::isPhpCliMode() &&
+	        $requestedModule === 'api'
+	        && (empty($requestedAction) || $requestedAction === 'index')) {
 		    $tokenRequest = Common::getRequestVar('token_auth', false, 'string');
 		    $tokenUser = Piwik::getCurrentUserTokenAuth();
 
