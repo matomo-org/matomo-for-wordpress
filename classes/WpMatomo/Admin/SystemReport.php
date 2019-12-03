@@ -13,6 +13,7 @@ use Piwik\CliMulti;
 use Piwik\Container\StaticContainer;
 use Piwik\Filesystem;
 use Piwik\MetricsFormatter;
+use Piwik\Piwik;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
 use WpMatomo\Bootstrap;
@@ -258,27 +259,28 @@ class SystemReport {
 			);
 		}
 
+		$report = null;
+
 		if ( ! \WpMatomo::is_safe_mode() ) {
 			try {
 				Bootstrap::do_bootstrap();
 				/** @var DiagnosticService $service */
 				$service = StaticContainer::get( DiagnosticService::class );
 				$report  = $service->runDiagnostics();
+
+				$rows[] = array(
+					'name'    => esc_html__( 'Matomo Version', 'matomo' ),
+					'value'   => \Piwik\Version::VERSION,
+					'comment' => '',
+				);
 			} catch ( \Exception $e ) {
 				$rows[] = array(
 					'name'    => esc_html__( 'Matomo System Check', 'matomo' ),
 					'value'   => 'Failed to run, please open the system check in Matomo',
-					'comment' => '',
+					'comment' => $e->getMessage(),
 				);
-
-				return $rows;
 			}
 
-			$rows[] = array(
-				'name'    => esc_html__( 'Matomo Version', 'matomo' ),
-				'value'   => \Piwik\Version::VERSION,
-				'comment' => '',
-			);
 		}
 
 		$site   = new Site();
@@ -431,13 +433,27 @@ class SystemReport {
 	private function add_diagnostic_results( $rows, $results ) {
 		foreach ( $results as $result ) {
 			$comment = '';
+			/** @var DiagnosticResult $result */
 			if ( $result->getStatus() !== DiagnosticResult::STATUS_OK ) {
 				foreach ( $result->getItems() as $item ) {
-					if ( $item->getComment() ) {
-						$comment .= $item->getComment();
+					$item_comment = $item->getComment();
+					if ( !empty($item_comment) && is_string($item_comment) ) {
+						if (stripos($item_comment, 'core:archive') > 0) {
+							// we only want to keep the first sentence like "	Archiving last ran successfully on Wednesday, January 2, 2019 00:00:00 which is 335 days 20:08:11 ago"
+							// but not anything that asks user to set up a cronjob
+							$item_comment = substr($item_comment, 0, stripos($item_comment, 'core:archive'));
+							if (strpos($item_comment, '.') > 0) {
+								$item_comment = substr($item_comment, 0, strripos($item_comment, '.'));
+							} else {
+								$item_comment = 'Archiving hasn\'t run in a while.';
+							}
+						}
+						$comment .= $item_comment;
 					}
 				}
 			}
+
+
 			$rows[] = array(
 				'name'       => $result->getLabel(),
 				'value'      => $result->getStatus() . ' ' . $result->getLongErrorMessage(),
