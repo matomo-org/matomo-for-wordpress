@@ -1,3 +1,6 @@
+0.3.4
+- Fix issues with CLI archiving
+
 0.3.3
 - Improve test cookie logic
 - Fix malformed download link in real time widget
