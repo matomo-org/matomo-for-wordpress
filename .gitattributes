@@ -18,3 +18,4 @@ package.json export-ignore
 *.map export-ignore
 Gruntfile.js export-ignore
 karma.conf.js export-ignore
+.DS_Store export-ignore
