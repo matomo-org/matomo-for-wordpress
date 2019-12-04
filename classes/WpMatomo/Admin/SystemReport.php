@@ -671,8 +671,16 @@ class SystemReport {
 
 		// we only show these grants for security reasons as only they are needed and we don't need to know any other ones
 		$needed_grants = array( 'SELECT', 'INSERT', 'UPDATE', 'INDEX', 'DELETE', 'CREATE', 'DROP', 'ALTER', 'CREATE TEMPORARY TABLES', 'LOCK TABLES' );
+		if ( in_array( 'ALL PRIVILEGES', $grants, true ) ) {
+			// ALL PRIVILEGES may be used pre MySQL 8.0
+			$grants = $needed_grants;
+		}
 
-		if ( empty( $grants ) ) {
+		$grants_missing = array_diff( $needed_grants, $grants );
+
+		if ( empty( $grants )
+		     || !is_array($grants)
+		     || count($grants_missing) === count($needed_grants) ) {
 			$rows[] = array(
 				'name'       => esc_html__( 'Required permissions', 'matomo' ),
 				'value'      => esc_html__( 'Failed to detect granted permissions', 'matomo' ),
@@ -680,18 +688,11 @@ class SystemReport {
 				'is_warning' => false,
 			);
 		} else {
-			if ( in_array( 'ALL PRIVILEGES', $grants, true ) ) {
-				// ALL PRIVILEGES may be used pre MySQL 8.0
-				$grants = $needed_grants;
-			}
-
-			$grants_missing = array_diff( $needed_grants, $grants );
-
 			if ( ! empty( $grants_missing ) ) {
 				$rows[] = array(
 					'name'       => esc_html__( 'Required permissions', 'matomo' ),
 					'value'      => esc_html__( 'Error', 'matomo' ),
-					'comment'    => esc_html__( 'Missing permissions', 'matomo' ) . ': ' . implode( ', ', $grants_missing ) . '. ' . __( 'Please check if any of these MySQL permission (grants) are missing and add them if needed.', 'matomo' ) . ' ' . __( 'Learn more', 'matomo' ) . ': https://matomo.org/faq/how-to-install/faq_23484/',
+					'comment'    => esc_html__( 'Missing permissions', 'matomo' ) . ': ' . implode( ', ', $grants_missing ) . '. ' . __( 'Please check if any of these MySQL permission (grants) are missing and add them if needed.', 'matomo' ) . ' ' . __( 'Learn more', 'matomo' ) . ': https://matomo.org/faq/troubleshooting/how-do-i-check-if-my-mysql-user-has-all-required-grants/',
 					'is_warning' => true,
 				);
 			} else {
