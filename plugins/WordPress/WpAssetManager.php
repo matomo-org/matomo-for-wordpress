@@ -63,6 +63,9 @@ class WpAssetManager extends AssetManager
 		$result .= "<script type=\"text/javascript\">window.$ = jQuery;</script>";
 		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../assets/js/asset_manager_core_js.js?v=' . Version::VERSION);
 
+		// may need to change or allow to this... but how to make the wp-includes relative?
+		// $result .= sprintf(self::JS_IMPORT_DIRECTIVE, plugins_url( 'assets/js/asset_manager_core_js.js', MATOMO_ANALYTICS_FILE )  . '?v=' . Version::VERSION);
+
 		if ($this->isMergedAssetsDisabled()) {
 			$this->getMergedNonCoreJSAsset()->delete();
 			$result .= $this->getIndividualJsIncludesFromAssetFetcher($this->getNonCoreJScriptFetcher());
