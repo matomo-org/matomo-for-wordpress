@@ -4,6 +4,7 @@
 /bin/ export-ignore
 /README.md
 /.wordpress-org export-ignore
+/.github export-ignore
 .gitignore export-ignore
 .gitattributes export-ignore
 .travis.yml export-ignore
