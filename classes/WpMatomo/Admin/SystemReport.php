@@ -719,7 +719,7 @@ class SystemReport {
 			// We ignore any possible error in case of permission or not supported etc.
 			$values = array();
 		}
-
+		
 		$wpdb->suppress_errors( $suppress_errors );
 
 		$grants = array();
@@ -727,6 +727,11 @@ class SystemReport {
 			if ( empty( $value[0] ) || ! is_string( $value[0] ) ) {
 				continue;
 			}
+
+			if (stripos($value[0], 'ALL PRIVILEGES') !== false) {
+				return array('ALL PRIVILEGES'); // the split on empty string wouldn't work otherwise
+			}
+
 			foreach ( array( ' ON ', ' TO ', ' IDENTIFIED ', ' BY ' ) as $keyword ) {
 				if ( stripos( $values[ $index ][0], $keyword ) !== false ) {
 					// make sure to never show by any accident a db user or password by cutting anything after on/to
