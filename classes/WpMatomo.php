@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WpMatomo\Admin\Menu;
-use WpMatomo\Commands\UninstallCommand;
+use WpMatomo\Commands\MatomoCommands;
 use WpMatomo\Ecommerce\EasyDigitalDownloads;
 use WpMatomo\Ecommerce\MemberPress;
 use WpMatomo\OptOut;
@@ -67,9 +67,6 @@ class WpMatomo {
 		$scheduled_tasks = new ScheduledTasks( self::$settings );
 		$scheduled_tasks->schedule();
 
-		$privacy_badge = new PrivacyBadge();
-		$privacy_badge->register_hooks();
-
 		$privacy_badge = new OptOut();
 		$privacy_badge->register_hooks();
 
@@ -94,7 +91,7 @@ class WpMatomo {
 		$annotations->register_hooks();
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			new UninstallCommand();
+			new MatomoCommands();
 		}
 
 		add_filter(
@@ -121,12 +118,12 @@ class WpMatomo {
 			 && ! is_writable( dirname( $upload_path ) ) ) {
 			add_action(
 				'init',
-				function () {
+				function () use ($upload_path) {
 					if ( self::is_admin_user() ) {
 						add_action(
 							'admin_notices',
-							function () {
-								echo '<div class="error"><p>' . __( 'Matomo Analytics requires the uploads directory to be writable. Please make the directory writable for it to work.', 'matomo' ) . '</p></div>';
+							function () use ($upload_path) {
+								echo '<div class="error"><p>' . __( 'Matomo Analytics requires the uploads directory ('.esc_html(dirname($upload_path)).') to be writable. Please make the directory writable for it to work.', 'matomo' ) . '</p></div>';
 							}
 						);
 					}
@@ -144,7 +141,7 @@ class WpMatomo {
 						add_action(
 							'admin_notices',
 							function () {
-								echo '<div class="error"><p>' . __( 'It looks like you are maybe using a custom WordPress content directory. The Matomo Analytics plugin likely won\'t fully work.', 'matomo' ) . '</p></div>';
+								echo '<div class="error"><p>' . __( 'It looks like you are maybe using a custom WordPress content directory. The Matomo reporting/admin pages might not work. You may be able to workaround this.', 'matomo' ) . ' <a target="_blank" rel="noreferrer noopener" href="https://matomo.org/faq/wordpress/what-are-the-requirements-for-matomo-for-wordpress/">'. esc_html__('Learn more', 'matomo').'</a>.</p></div>';
 							}
 						);
 					}
@@ -183,10 +180,12 @@ class WpMatomo {
 	public function init_plugin() {
 		if ( ( is_admin() || matomo_is_app_request() )
 			 && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+
 			$installer = new Installer( self::$settings );
 			$installer->register_hooks();
 			if ( $installer->looks_like_it_is_installed() ) {
-				if ( is_admin() ) {
+				if ( is_admin()
+					 && ( ! defined( 'MATOMO_ENABLE_AUTO_UPGRADE' ) || MATOMO_ENABLE_AUTO_UPGRADE ) ) {
 					$updater = new Updater( self::$settings );
 					$updater->update_if_needed();
 				}
@@ -196,7 +195,9 @@ class WpMatomo {
 					wp_safe_redirect( admin_url() );
 					exit;
 				} else {
-					$installer->install();
+					if ($installer->can_be_installed()) {
+						$installer->install();
+					}
 				}
 			}
 		}

@@ -9,16 +9,6 @@
 
 namespace WpMatomo\Admin;
 
-use Piwik\Common;
-use Piwik\Filesystem;
-use Piwik\IP;
-use Piwik\Plugins\SitesManager\API;
-use WpMatomo\Access;
-use WpMatomo\Bootstrap;
-use WpMatomo\Capabilities;
-use WpMatomo\Settings;
-use WpMatomo\Roles;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }

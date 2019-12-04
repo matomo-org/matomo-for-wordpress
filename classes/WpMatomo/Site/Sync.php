@@ -11,7 +11,6 @@ namespace WpMatomo\Site;
 
 use Piwik\Access;
 use Piwik\Config;
-use Piwik\Container\StaticContainer;
 use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\SitesManager;
 use WpMatomo\Bootstrap;
@@ -46,14 +45,7 @@ class Sync {
 		add_action( 'update_option_blogname', array( $this, 'sync_current_site' ) );
 		add_action( 'update_option_home', array( $this, 'sync_current_site' ) );
 		add_action( 'update_option_siteurl', array( $this, 'sync_current_site' ) );
-		add_action( 'update_site_option_matomo-global_track_ecommerce', array( $this, 'sync_current_site' ) );
-		add_action(
-			'update_option_' . Settings::GLOBAL_OPTION_PREFIX . 'track_ecommerce',
-			array(
-				$this,
-				'sync_current_site',
-			)
-		);
+		add_action( 'matomo_setting_change_track_ecommerce', array( $this, 'sync_current_site' ) );
 	}
 
 	public function sync_all() {
@@ -73,12 +65,16 @@ class Sync {
 						// prevents error that it wouldn't fully install matomo for a different site as it would think it already did install it etc.
 						// and would otherwise think plugins are already activated etc
 						Bootstrap::set_not_bootstrapped();
-						$config                        = \Piwik\Config::getInstance();
+						$config                        = Config::getInstance();
 						$installed                     = $config->PluginsInstalled;
 						$installed['PluginsInstalled'] = array();
 						$config->PluginsInstalled      = $installed;
 
-						$installer->install();
+						if ($installer->can_be_installed()) {
+							$installer->install();
+						} else {
+							continue;
+						}
 					}
 					$success = $this->sync_site( $site->blog_id, $site->blogname, $site->siteurl );
 				} catch ( \Exception $e ) {

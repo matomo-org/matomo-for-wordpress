@@ -1,81 +1,107 @@
-=== Matomo Analytics ===
+=== Matomo Analytics - Ethical Stats. Powerful Insights. ===
 Contributors: matomoteam
-Tags: matomo,piwik,analytics,statistics,tracking,ecommerce
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5EJ2LHATAKCJ4&source=url
+Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
 Requires at least: 4.8
 Tested up to: 5.3
-Requires PHP: 7.0.0
+Requires PHP: 7.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Matomo is the most powerful web analytics for WordPress giving you 100% data ownership and privacy protection.
+The #1 Google Analytics alternative that gives you full control over your data and protects the privacy for your users. Free, secure and open.
 
 == Description ==
 
-For all you Wordpress website owners wanting an easier way to get customer insights to grow your business; with a tool that is entirely free for you to use and own; this one’s for you.
-Introducing Matomo Analytics for Wordpress. A hassle-free and cost-free web analytics platform which lets you stay in full control with 100% data ownership and user-privacy protection.
+For all you WordPress website owners wanting an easier way to get customer insights to grow your business, you can now get the solution the professionals use, for free!
 
-Already have a [Matomo On-Premise](https://matomo.org/matomo-on-premise/) or [Matomo Cloud](https://matomo.org/pricing/) account? Use the [WP-Matomo integration](https://wordpress.org/plugins/wp-piwik/) instead of this plugin.
+Matomo Analytics is the #1 used Google Analytics alternative that offers a powerful range of features, security and protects the privacy of your users. This enables you to learn how to improve your website, make the right decisions for your business and stand out in the crowd in a safe and trustworthy way.
 
-Here are some reasons why you should consider installing Matomo Analytics for Wordpress right now:
+Matomo’s mission is to give control and data ownership back to the user. By hosting web analytics on your own servers there’s no third-parties taking ownership, no on-selling of data and no-one looking in. This means when you install Matomo in a matter of a few clicks, you’re in full control.
+
+It’s also easier for you to get insights from Matomo Analytics with it’s time-saving interface design and out-of-the-box features, which require less manual configuration than Google Analytics.
+
+Matomo is free, secure and open - your ethical user insights platform.
+
+**How Matomo Analytics for Wordpress solves problems:**
 
 * 100% data ownership, no one else can see your data
-* Super easy to install and it’s free to use for everyone. No technical knowledge needed whatsoever!
-* Matomo tracks things out of the box saving you time and money
-  * No need to set up link tracking, download tracking, or other things. Matomo just works
-  * We even track many Ecommerce stores like WooCommerce, Easy Digital Downloads, and MemberPress out of the box - for free
-* Superb user privacy protection
-  * Heaps of features to anonymize data and IP addresses
-  * WP shortcode to embed an opt-out feature into your website
-  * Features to export and delete data for GDPR
-  * Ability to configure data retention
-  * And more.
-* Matomo Analytics is your one stop plugin for all your analytics needs. Matomo is very much comparable to Google Analytics in terms of features and the most powerful web analytics for WordPress.
-  * Dashboards
-  * Segmentation
-  * Real time reports
-  * Extensive geolocation reports / maps
-  * Many different visualisations
-  * Visitor Log and visitor profiles letting you see which step each visitor took
-  * Row evolution
-  * Report comparisons
-  * Export features
-  * Supports WP Rest API
-  * And thousands of other features
-* Easily give your colleages access to your reports if / when needed
-* Easily exclude certain roles, visitors and pages from being tracked
-* Supports may Ecommerce stores out of the box
-* Lets you learn who your customers are and their needs
-* You’ll understand what content works and how engaged your audience is
-* Identify which marketing channels give you the highest ROI and invest with confidence in channels that convert for your business
-* You’ll also discover blockages and fix pain points for confused visitors to ensure they become satisfied customers
-* Comes with Matomo Tag Manager
-* Supports WordPress Multisite (except Tag Manager)
+* Super easy to install. No technical knowledge needed
+* Free to use forever
+* Designed to save you time as an out-of-box solution (including many Ecommerce stores)
+* Protects the privacy of your users
+* GDPR Manager
+* No data sampling
+* Opportunities to extend with an ever-growing marketplace
 * Supports over 50 languages
+* Comes equipped with Matomo Tag Manager
 
-Unlike with those other guys at Google who have all your sensitive data stored on their servers and make you sign away control of your information. Having Matomo Analytics hosted on your servers means we’re out of the picture and you’re in full control of your data!
+**How Matomo focuses on privacy:**
+* Superb user privacy protection
+* Heaps of features to anonymise data and IP addresses
+* WP shortcode to embed an opt-out feature into your website
+* Features to export and delete data for GDPR
+* Ability to configure data retention
 
-Matomo leads the way in data privacy and even comes well-equipped with its own GDPR Manager. Government agencies; financial and educational institutions; web hosting providers; and other data sensitive businesses and organisations all trust Matomo to deliver to the highest standards when it comes to supporting them to be GDPR compliant.
+**Ultimately, Matomo lets you:** learn who your customers are and their needs; understand what content works and how engaged your audience is; identify which marketing channels give you the highest ROI and invest with confidence in channels that convert for your business; and discover blockages and fix pain points for confused visitors to ensure they become satisfied customers.
 
-If you’re currently using free Google Analytics, this means you’re potentially at risk of being presented with inaccurate data, as Google Analytics caps the amount of accurate data you’re presented with through its data sampling limitations. With Matomo, nothing is sampled and you’re presented with 100% real data meaning you can make smarter data-driven decisions based on the facts.
+**Features include:**
+* Ecommerce features
+* Campaign tracking
+* Visitor profiles
+* Tag Manager
+* Dashboards
+* Segmentation
+* Real time reports
+* Transitions
+* Extensive geolocation reports / maps
+* Many different visualisations
+* Row evolution
+* Report comparisons
+* Export features
+* Movers and Shakers to see the most drastic changes within a given time period
+* Supports WP Rest API
+* And hundreds of other features
+* Easily give your colleagues access to your reports if / when needed
+* Easily exclude certain roles, visitors and pages from being tracked
+* Supports WordPress Multisite. (Note: Tag Manager feature does not work in MultiSite.)
 
-Over 1.4 million websites in over 190 countries are using Matomo already. Join the revolution too! Install Matomo on your Wordpress website completely free and take back full control of your data!
+**[Premium paid features:](https://plugins.matomo.org/premium?wp=1)**
+* Heatmaps & Session Recordings
+* Form Analytics
+* Media Analytics
+* Funnels
+* SEO features - Keyword rankings
+* Custom reporting
+* Cohorts
+* Users flow
 
-Used 3rd party resources:
+**Prerequisites and technical requirements:**
 
-* After activating this plugin, it will download a Geolocation database (GeoLite2-City.tar.gz) from [MaxMind](https://dev.maxmind.com/geoip/geoip2/geolite2/) into your uploads directory. The GeoLite2 database is distributed under the [Creative Commons Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/) license. This database is needed to detect the location of your visitors based on their IP.
+Running Matomo Analytics on your server can use significant resources. Whenever someone visits your WordPress website, your server will need to serve your WordPress pages to the user, as well as tracking the user journey in Matomo, resulting in an additional request for each page view.
+
+* The minimum PHP memory limit is 128Mb but we recommend to use a higher limit (memory_limit = 256M).
+* PHP 7.0 at minimum is required.
+* If you have high traffic website, or manage a lot of websites with WordPress MultiSite, we recommend [installing Matomo On-Premise](https://matomo.org/docs/installation/) or [signup to Matomo Cloud](https://matomo.org/hosting/) and install the [WP-Matomo Integration plugin](https://wordpress.org/plugins/wp-piwik/) instead.
+* Needing to know more before you install? Have a [read through the most popular FAQs to ensure you’re making the right choice for you](https://matomo.org/faq/wordpress/what-are-the-requirements-for-matomo-for-wordpress/).
+
+Over 1 million websites in over 190 countries are using Matomo already. Join the revolution too! Install Matomo on your Wordpress website completely free and take back full control of your data!
+
+**Third party resources we use:**
+* After activating this plugin, it will download a Geolocation database (GeoLite2-City.tar.gz) from [MaxMind](https://dev.maxmind.com/geoip/geoip2/geolite2/) into your uploads directory. The GeoLite2 database is distributed under the [Creative Commons Attribution-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/). This database is needed to detect the location of your visitors based on their IP.
 * When you enter a URL in the SEO ranking widget, then a request with the entered URL may be sent to Google, Alexa, Bing, and other SEO providers.
 
 == Installation ==
-* Install the plugin
-* Go to Matomo-Analytics
-* Activate tracking on the "Matomo Analytics => Get started" page.
+* Install & activate the plugin.
+* Go to "Matomo Analytics" in the WordPress Admin Dashboard.
+* Click on "Activate tracking" in the "Get started" page.
+* That's it! You can further customize the tracking in the settings page.
 
 == Frequently Asked Questions ==
 
 = Is there a demo available?
 Yes, check out the online demo for Matomo at https://demo.matomo.org
 
-= Do you care about security?
+= Does Matomo care about security?
 Security is a top priority at Matomo. As potential issues are discovered, we validate, patch and release fixes as quickly as we can. We have a security bug bounty program in place that rewards researchers for finding security issues and disclosing them to us.
 [Learn more](https://matomo.org/security/) or check out our [HackerOne program](https://hackerone.com/matomo).
 
@@ -86,10 +112,6 @@ and we need your help to make Matomo better… Why not participate in a useful p
 = How do you ensure quality?
 The Matomo project uses an ever-expanding comprehensive set of thousands of unit tests and hundreds of automated integration tests, system tests, JavaScript tests, and screenshot UI tests, running on a continuous integration server as part of its software quality assurance. [Learn more](https://developer.matomo.org/guides/tests)
 
-= Does the Matomo Mobile App work with WordPress?
-No, this doesn't work just yet. It will likely be possible to use Matomo for Android / iOS once Matomo 4 has been released
-as it will have a new feature called [app specific passwords](https://github.com/matomo-org/matomo/issues/6559).
-
 = Can I disable the Tag Manager?
 The Tag Manager can be disabled by placing `define('MATOMO_DISABLE_TAG_MANAGER', true);` in your `wp-config.php`.
 
@@ -99,7 +121,7 @@ The Tag Manager does currently not work in WP Multisite mode.
 Matomo should run on most MySQL versions. However, we only support MySQL 5.1 and newer. It should also work with MariaDB and other MySQL compatible databases.
 
 = Which browsers do you support?
-* Tracking: We support pretty much all browsers even very old browsers when it comes to tracking
+* Tracking: We support pretty much all browsers even very old browsers
 * Admin: The Matomo UI does not support IE9 or older.
 
 = What are your contact details?
@@ -107,7 +129,25 @@ Website: [matomo.org](https://matomo.org)
 About us: [matomo.org/team/](https://matomo.org/team/)
 Contact us: [matomo.org/contact/](https://matomo.org/contact/)
 
+= Where do I find all other available FAQs? =
+
+Needing to know more? [Click here to view all of our FAQs on our website](https://matomo.org/faq/wordpress/)
+
 == Credits ==
 
 * The entire Matomo team and everyone who contributed
-* Andr&eacute; Br&auml;kling who is the Author of WP-Matomo https://github.com/braekling/WP-Matomo
+* Andr&eacute; Br&auml;kling who is the Author of the [WP-Matomo plugin](https://github.com/braekling/WP-Matomo)
+
+== Screenshots ==
+
+1. Customizable Matomo Dashboard. Choose from many widgets and adjust layout.
+2. Visits log. See every action your visitors took.
+3. Behaviour insights.
+4. Acquisition insights.
+5. Ecommerce insights.
+6. Configure tracking code without developer knowledge.
+7. Easily give your co-workers access to your Matomo reports.
+8. Define who and what should not be tracked.
+9. Options to anonymize data so you don't track personal data.
+10. Automatically delete old data you no longer need to be privacy compliant and to free your server from not needed data.
+11. Summary page for getting a quick overview.

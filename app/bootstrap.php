@@ -12,14 +12,34 @@ if ( ! defined( 'PIWIK_ENABLE_ERROR_HANDLER' ) ) {
 	define( 'PIWIK_ENABLE_ERROR_HANDLER', false );
 }
 
-$was_loaded_directly = ! defined( 'ABSPATH' );
+$matomo_was_wp_loaded_directly = ! defined( 'ABSPATH' );
 
-if ( $was_loaded_directly ) {
+if ( $matomo_was_wp_loaded_directly ) {
 	// prevent from loading twice
-	require_once( dirname( __FILE__ ) . '/../../../../wp-load.php' );
+	$matomo_wpload_base = '../../../../wp-load.php';
+	$matomo_wpload_full = dirname( __FILE__ ) . '/' . $matomo_wpload_base;
+
+	if (!empty($_ENV['MATOMO_WP_ROOT_PATH']) && file_exists( rtrim($_ENV['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php')) {
+		require_once rtrim($_ENV['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php';
+	} elseif ( file_exists($matomo_wpload_full ) ) {
+		require_once $matomo_wpload_full;
+	} elseif (realpath( $matomo_wpload_full ) && file_exists(realpath( $matomo_wpload_full ))) {
+		require_once realpath( $matomo_wpload_full );
+	} elseif (!empty($_SERVER['SCRIPT_FILENAME']) && file_exists($_SERVER['SCRIPT_FILENAME'])) {
+		// seems symlinked... eg the wp-content dir or wp-content/plugins dir is symlinked from some very much other place...
+		$matomo_wpload_full = dirname($_SERVER['SCRIPT_FILENAME']) . '/' . $matomo_wpload_base;
+		if ( file_exists($matomo_wpload_full ) ) {
+			require_once $matomo_wpload_full;
+		} elseif (realpath( $matomo_wpload_full ) && file_exists(realpath( $matomo_wpload_full ))) {
+			require_once realpath( $matomo_wpload_full );
+		} elseif (file_exists(dirname(dirname(dirname(dirname(dirname( $_SERVER['SCRIPT_FILENAME'] ))))) . '/wp-load.php')) {
+			require_once dirname(dirname(dirname(dirname(dirname( $_SERVER['SCRIPT_FILENAME'] ))))) . '/wp-load.php';
+		}
+	}
 }
 
 if ( ! defined( 'ABSPATH' ) ) {
+	echo 'Could not find wp-load. If your server uses symlinks or a custom content directory, Matomo may not work for you as we cannot detect the paths correctly. For more information see https://matomo.org/faq/wordpress/what-are-the-requirements-for-matomo-for-wordpress/';
 	exit; // if accessed directly
 }
 
@@ -29,7 +49,7 @@ if ( !is_plugin_active('matomo/matomo.php')
 	exit;
 }
 
-if ($was_loaded_directly) {
+if ($matomo_was_wp_loaded_directly) {
 	// do not strip slashes if we bootstrap matomo within a regular wordpress request
 	if (!empty($_GET)) {
 		$_GET     = stripslashes_deep( $_GET );

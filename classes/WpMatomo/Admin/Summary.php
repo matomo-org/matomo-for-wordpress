@@ -9,13 +9,9 @@
 
 namespace WpMatomo\Admin;
 
-use Piwik\API\Request;
-use WpMatomo\Bootstrap;
-use WpMatomo\Report\Data;
 use WpMatomo\Report\Dates;
 use WpMatomo\Report\Metadata;
 use WpMatomo\Settings;
-use WpMatomo\Site;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly

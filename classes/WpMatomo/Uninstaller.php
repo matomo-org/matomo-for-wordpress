@@ -92,10 +92,10 @@ class Uninstaller {
 			$wpdb->query( "DELETE FROM $wpdb->sitemeta WHERE meta_key LIKE '" . $prefix . "%';" );
 
 			wp_cache_flush();
-		} else {
-			// not multisite
-			self::uninstall_options( $prefix );
 		}
+
+		// not multisite
+		self::uninstall_options( $prefix );
 	}
 
 	public function uninstall_multisite( $should_remove_all_data ) {

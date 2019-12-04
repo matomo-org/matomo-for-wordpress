@@ -42,7 +42,7 @@ class Menu {
 	const SLUG_SETTINGS                 = 'matomo-settings';
 	const SLUG_GET_STARTED              = 'matomo-get-started';
 	const SLUG_ABOUT                    = 'matomo-about';
-	const SLUG_EXTENSIONS               = 'matomo-plugins';
+	const SLUG_MARKETPLACE              = 'matomo-marketplace';
 
 	const CAP_NOT_EXISTS = 'unknownfoobar';
 
@@ -158,13 +158,19 @@ class Menu {
 			);
 		}
 
-		/**
-		 *
-		add_submenu_page( self::$parent_slug, __( 'Extensions', 'matomo' ), __( 'Extensions', 'matomo' ), Capabilities::KEY_VIEW, self::SLUG_EXTENSIONS, array(
-			$marketplace,
-			'show'
-		) );
-		 */
+		if ( ! is_plugin_active( MATOMO_MARKETPLACE_PLUGIN_NAME ) ) {
+			add_submenu_page(
+				self::$parent_slug,
+				__( 'Marketplace', 'matomo' ),
+				__( 'Marketplace', 'matomo' ),
+				Capabilities::KEY_VIEW,
+				self::SLUG_MARKETPLACE,
+				array(
+					$marketplace,
+					'show',
+				)
+			);
+		}
 
 		if ( $can_matomo_be_managed ) {
 			add_submenu_page(

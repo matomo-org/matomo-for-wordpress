@@ -2,9 +2,8 @@
 
 Component providing Network tools.
 
-[![Build Status](https://travis-ci.org/piwik/component-network.svg?branch=master)](https://travis-ci.org/piwik/component-network)
-[![Coverage Status](https://coveralls.io/repos/piwik/component-network/badge.png?branch=master)](https://coveralls.io/r/piwik/component-network?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/piwik/component-network/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/piwik/component-network/?branch=master)
+[![Build Status](https://travis-ci.org/matomo-org/component-network.svg?branch=master)](https://travis-ci.org/matomo-org/component-network)
+[![Coverage Status](https://coveralls.io/repos/matomo-org/component-network/badge.png?branch=master)](https://coveralls.io/r/matomo-org/component-network?branch=master)
 
 ## Installation
 

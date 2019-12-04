@@ -9,8 +9,6 @@
 
 namespace WpMatomo;
 
-use WpMatomo\User\Sync;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }

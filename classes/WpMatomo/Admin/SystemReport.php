@@ -13,6 +13,7 @@ use Piwik\CliMulti;
 use Piwik\Container\StaticContainer;
 use Piwik\Filesystem;
 use Piwik\MetricsFormatter;
+use Piwik\Piwik;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
 use WpMatomo\Bootstrap;
@@ -139,28 +140,71 @@ class SystemReport {
 			);
 		}
 
+		$matomo_tables                    = $this->add_errors_first( $matomo_tables );
+		$matomo_has_warning_and_no_errors = $this->has_only_warnings_no_error( $matomo_tables );
+
 		include dirname( __FILE__ ) . '/views/systemreport.php';
 	}
 
-	private function check_file_exists_and_writable( $rows, $path_to_check, $title ) {
+	private function has_only_warnings_no_error( $report_tables ) {
+		$has_warning = false;
+		$has_error   = false;
+		foreach ( $report_tables as $report_table ) {
+			foreach ( $report_table['rows'] as $row ) {
+				if ( ! empty( $row['is_error'] ) ) {
+					$has_error = true;
+				}
+				if ( ! empty( $row['is_warning'] ) ) {
+					$has_warning = true;
+				}
+			}
+		}
+
+		return $has_warning && ! $has_error;
+	}
+
+	private function add_errors_first( $report_tables ) {
+		$errors = array(
+			'title'        => 'Errors',
+			'rows'         => array(),
+			'has_comments' => true,
+		);
+		foreach ( $report_tables as $report_table ) {
+			foreach ( $report_table['rows'] as $row ) {
+				if ( ! empty( $row['is_error'] ) ) {
+					$errors['rows'][] = $row;
+				}
+			}
+		}
+
+		if ( ! empty( $errors['rows'] ) ) {
+			array_unshift( $report_tables, $errors );
+		}
+
+		return $report_tables;
+	}
+
+	private function check_file_exists_and_writable( $rows, $path_to_check, $title, $required ) {
 		$file_exists   = file_exists( $path_to_check );
 		$file_readable = is_readable( $path_to_check );
 		$file_writable = is_writable( $path_to_check );
-		$comment       = '"' . $path_to_check . '"';
+		$comment       = '"' . $path_to_check . '" ';
 		if ( ! $file_exists ) {
-			$comment .= sprintf( esc_html__( '%s does not exist.', 'matomo' ), $title );
+			$comment .= sprintf( esc_html__( '%s does not exist. ', 'matomo' ), $title );
 		}
 		if ( ! $file_readable ) {
-			$comment .= sprintf( esc_html__( '%s is not readable.', 'matomo' ), $title );
+			$comment .= sprintf( esc_html__( '%s is not readable. ', 'matomo' ), $title );
 		}
 		if ( ! $file_writable ) {
-			$comment .= sprintf( esc_html__( '%s is not writable.', 'matomo' ), $title );
+			$comment .= sprintf( esc_html__( '%s is not writable. ', 'matomo' ), $title );
 		}
 
 		$rows[] = array(
 			'name'    => sprintf( esc_html__( '%s exists and is writable.', 'matomo' ), $title ),
 			'value'   => $file_exists && $file_readable && $file_writable ? esc_html__( 'Yes', 'matomo' ) : esc_html__( 'No', 'matomo' ),
 			'comment' => $comment,
+			'is_error' => $required && (!$file_exists || !$file_readable),
+			'is_warning' => !$required && (!$file_exists || !$file_readable)
 		);
 
 		return $rows;
@@ -180,10 +224,10 @@ class SystemReport {
 		$paths            = new Paths();
 		$upload_dir       = $paths->get_upload_base_dir();
 		$path_config_file = $upload_dir . '/' . MATOMO_CONFIG_PATH;
-		$rows             = $this->check_file_exists_and_writable( $rows, $path_config_file, 'Config' );
+		$rows             = $this->check_file_exists_and_writable( $rows, $path_config_file, 'Config', true );
 
 		$path_tracker_file = $upload_dir . '/matomo.js';
-		$rows              = $this->check_file_exists_and_writable( $rows, $path_tracker_file, 'JS Tracker' );
+		$rows              = $this->check_file_exists_and_writable( $rows, $path_tracker_file, 'JS Tracker', false );
 
 		$rows[] = array(
 			'name'    => esc_html__( 'Plugin directories', 'matomo' ),
@@ -199,27 +243,44 @@ class SystemReport {
 			'comment' => $tmp_dir,
 		);
 
+		if ( ! empty( $_ENV['MATOMO_WP_ROOT_PATH'] ) ) {
+			$custom_path = rtrim($_ENV['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php';
+			$path_exists = file_exists($custom_path );
+			$comment = '';
+			if (!$path_exists) {
+				$comment = 'It seems the path does not point to the WP root directory.';
+			}
+
+			$rows[] = array(
+				'name'    => 'Custom MATOMO_WP_ROOT_PATH',
+				'value'   => $path_exists,
+				'is_error' => ! $path_exists,
+				'comment' => $comment,
+			);
+		}
+
+		$report = null;
+
 		if ( ! \WpMatomo::is_safe_mode() ) {
 			try {
 				Bootstrap::do_bootstrap();
 				/** @var DiagnosticService $service */
-				$service = StaticContainer::get( \Piwik\Plugins\Diagnostics\DiagnosticService::class );
+				$service = StaticContainer::get( DiagnosticService::class );
 				$report  = $service->runDiagnostics();
+
+				$rows[] = array(
+					'name'    => esc_html__( 'Matomo Version', 'matomo' ),
+					'value'   => \Piwik\Version::VERSION,
+					'comment' => '',
+				);
 			} catch ( \Exception $e ) {
 				$rows[] = array(
 					'name'    => esc_html__( 'Matomo System Check', 'matomo' ),
 					'value'   => 'Failed to run, please open the system check in Matomo',
-					'comment' => '',
+					'comment' => $e->getMessage(),
 				);
-
-				return $rows;
 			}
 
-			$rows[] = array(
-				'name'    => esc_html__( 'Matomo Version', 'matomo' ),
-				'value'   => \Piwik\Version::VERSION,
-				'comment' => '',
-			);
 		}
 
 		$site   = new Site();
@@ -295,7 +356,7 @@ class SystemReport {
 			);
 		}
 
-		if ( ! \WpMatomo::is_safe_mode() ) {
+		if ( ! \WpMatomo::is_safe_mode() && $report ) {
 			$rows[] = array(
 				'section' => esc_html__( 'Mandatory checks', 'matomo' ),
 			);
@@ -339,7 +400,7 @@ class SystemReport {
 		// mostly only numeric values and booleans to not eg accidentally show anything that would store a token etc
 		// like we don't want to show license key etc
 		foreach ( $this->settings->get_customised_global_settings() as $key => $val ) {
-			if ( is_numeric( $val ) || is_bool( $val ) || 'track_content' === $key || 'track_user_id' === $key ) {
+			if ( is_numeric( $val ) || is_bool( $val ) || 'track_content' === $key || 'track_user_id' === $key || 'core_version' === $key ) {
 				$rows[] = array(
 					'name'    => ucfirst( str_replace( '_', ' ', $key ) ),
 					'value'   => $val,
@@ -372,13 +433,27 @@ class SystemReport {
 	private function add_diagnostic_results( $rows, $results ) {
 		foreach ( $results as $result ) {
 			$comment = '';
+			/** @var DiagnosticResult $result */
 			if ( $result->getStatus() !== DiagnosticResult::STATUS_OK ) {
 				foreach ( $result->getItems() as $item ) {
-					if ( $item->getComment() ) {
-						$comment .= $item->getComment();
+					$item_comment = $item->getComment();
+					if ( !empty($item_comment) && is_string($item_comment) ) {
+						if (stripos($item_comment, 'core:archive') > 0) {
+							// we only want to keep the first sentence like "	Archiving last ran successfully on Wednesday, January 2, 2019 00:00:00 which is 335 days 20:08:11 ago"
+							// but not anything that asks user to set up a cronjob
+							$item_comment = substr($item_comment, 0, stripos($item_comment, 'core:archive'));
+							if (strpos($item_comment, '.') > 0) {
+								$item_comment = substr($item_comment, 0, strripos($item_comment, '.'));
+							} else {
+								$item_comment = 'Archiving hasn\'t run in a while.';
+							}
+						}
+						$comment .= $item_comment;
 					}
 				}
 			}
+
+
 			$rows[] = array(
 				'name'       => $result->getLabel(),
 				'value'      => $result->getStatus() . ' ' . $result->getLongErrorMessage(),
@@ -441,6 +516,26 @@ class SystemReport {
 			'value' => defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN,
 		);
 
+		$rows[] = array(
+			'name'  => 'Language',
+			'value' => defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en_US',
+		);
+
+		$rows[] = array(
+			'name'  => 'Permalink Structure',
+			'value' => get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default',
+		);
+
+		$rows[] = array(
+			'name'  => 'Possibly uses symlink',
+			'value' => strpos(__DIR__, ABSPATH) === false && strpos(__DIR__, WP_CONTENT_DIR) === false,
+		);
+
+		$rows[] = array(
+			'name'  => 'WP Cache enabled',
+			'value' => defined('WP_CACHE') && WP_CACHE,
+		);
+
 		return $rows;
 	}
 
@@ -471,11 +566,19 @@ class SystemReport {
 			'name'  => 'Locale',
 			'value' => get_locale(),
 		);
+
 		$rows[] = array(
 			'name'    => 'Memory Limit',
 			'value'   => max( WP_MEMORY_LIMIT, @ini_get( 'memory_limit' ) ),
 			'comment' => 'At least 128MB recommended. Depending on your traffic 256MB or more may be needed.',
 		);
+
+		$rows[] = array(
+			'name'    => 'Max Memory Limit',
+			'value'   => defined('WP_MAX_MEMORY_LIMIT') ? WP_MAX_MEMORY_LIMIT : '',
+			'comment' => '',
+		);
+
 		$rows[] = array(
 			'name'  => 'Time',
 			'value' => time(),
@@ -497,6 +600,18 @@ class SystemReport {
 			'name'  => 'Max Input Vars',
 			'value' => ini_get( 'max_input_vars' ),
 		);
+
+		$zlib_compression = ini_get( 'zlib.output_compression' );
+		$row              = array(
+			'name'  => 'zlib.output_compression is off',
+			'value' => $zlib_compression !== '1',
+		);
+
+		if ( $zlib_compression === '1' ) {
+			$row['is_error'] = true;
+			$row['comment']  = 'You need to set "zlib.output_compression" in your php.ini to "Off".';
+		}
+		$rows[] = $row;
 
 		if ( function_exists( 'curl_version' ) ) {
 			$curl_version = curl_version();
@@ -556,27 +671,28 @@ class SystemReport {
 
 		// we only show these grants for security reasons as only they are needed and we don't need to know any other ones
 		$needed_grants = array( 'SELECT', 'INSERT', 'UPDATE', 'INDEX', 'DELETE', 'CREATE', 'DROP', 'ALTER', 'CREATE TEMPORARY TABLES', 'LOCK TABLES' );
+		if ( in_array( 'ALL PRIVILEGES', $grants, true ) ) {
+			// ALL PRIVILEGES may be used pre MySQL 8.0
+			$grants = $needed_grants;
+		}
 
-		if ( empty( $grants ) ) {
+		$grants_missing = array_diff( $needed_grants, $grants );
+
+		if ( empty( $grants )
+		     || !is_array($grants)
+		     || count($grants_missing) === count($needed_grants) ) {
 			$rows[] = array(
 				'name'       => esc_html__( 'Required permissions', 'matomo' ),
-				'value'      => esc_html__( 'Failed to detect permissions', 'matomo' ),
+				'value'      => esc_html__( 'Failed to detect granted permissions', 'matomo' ),
 				'comment'    => esc_html__( 'Please check your MySQL user has these permissions (grants):', 'matomo' ) . '<br />' . implode( ', ', $needed_grants ),
 				'is_warning' => false,
 			);
 		} else {
-			if ( in_array( 'ALL PRIVILEGES', $grants, true ) ) {
-				// ALL PRIVILEGES may be used pre MySQL 8.0
-				$grants = $needed_grants;
-			}
-
-			$grants_missing = array_diff( $needed_grants, $grants );
-
 			if ( ! empty( $grants_missing ) ) {
 				$rows[] = array(
 					'name'       => esc_html__( 'Required permissions', 'matomo' ),
 					'value'      => esc_html__( 'Error', 'matomo' ),
-					'comment'    => esc_html__( 'Missing permissions', 'matomo' ) . ': ' . implode( ', ', $grants_missing ) . '. ' . __( 'Please check if any of these MySQL permission (grants) are missing and add them if needed.', 'matomo' ) . ' ' . __( 'Learn more', 'matomo' ) . ': https://matomo.org/faq/how-to-install/faq_23484/',
+					'comment'    => esc_html__( 'Missing permissions', 'matomo' ) . ': ' . implode( ', ', $grants_missing ) . '. ' . __( 'Please check if any of these MySQL permission (grants) are missing and add them if needed.', 'matomo' ) . ' ' . __( 'Learn more', 'matomo' ) . ': https://matomo.org/faq/troubleshooting/how-do-i-check-if-my-mysql-user-has-all-required-grants/',
 					'is_warning' => true,
 				);
 			} else {
@@ -604,7 +720,7 @@ class SystemReport {
 			// We ignore any possible error in case of permission or not supported etc.
 			$values = array();
 		}
-
+		
 		$wpdb->suppress_errors( $suppress_errors );
 
 		$grants = array();
@@ -612,6 +728,11 @@ class SystemReport {
 			if ( empty( $value[0] ) || ! is_string( $value[0] ) ) {
 				continue;
 			}
+
+			if (stripos($value[0], 'ALL PRIVILEGES') !== false) {
+				return array('ALL PRIVILEGES'); // the split on empty string wouldn't work otherwise
+			}
+
 			foreach ( array( ' ON ', ' TO ', ' IDENTIFIED ', ' BY ' ) as $keyword ) {
 				if ( stripos( $values[ $index ][0], $keyword ) !== false ) {
 					// make sure to never show by any accident a db user or password by cutting anything after on/to
@@ -676,10 +797,15 @@ class SystemReport {
 		$active_plugins = get_option( 'active_plugins', array() );
 
 		if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
+			$active_plugins = array_map(function ($active_plugin){
+				$parts = explode('/', trim($active_plugin));
+				return trim($parts[0]);
+			}, $active_plugins);
+
 			$rows[] = array(
 				'name'    => 'Active Plugins',
 				'value'   => count( $active_plugins ),
-				'comment' => implode( ', ', $active_plugins ),
+				'comment' => implode( ' ', $active_plugins ),
 			);
 
 			$used_not_compatible = array_intersect( $active_plugins, $this->not_compatible_plugins );

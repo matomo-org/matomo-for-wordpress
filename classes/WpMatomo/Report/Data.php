@@ -10,9 +10,7 @@
 namespace WpMatomo\Report;
 
 use Piwik\API\Request;
-use Piwik\DataTable;
 use WpMatomo\Bootstrap;
-use WpMatomo\Settings;
 use WpMatomo\Site;
 
 if ( ! defined( 'ABSPATH' ) ) {

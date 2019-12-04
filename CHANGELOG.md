@@ -1,3 +1,42 @@
+0.3.4
+- Fix issues with CLI archiving
+
+0.3.3
+- Improve test cookie logic
+- Fix malformed download link in real time widget
+- Improvements to system report & archiving
+
+0.3.2
+- Add method for plugins to detect the context
+
+0.3.1
+- Allow requests to piwik.php
+- Make sure to install only if uploads dir has write permission
+
+0.3.0
+- Update Matomo core to 3.13.0
+- Fix scheduled report in PDF format may not be rendered correctly under circumstances
+- Check for symlinks in system report
+
+0.2.11
+- Better support when a WordPress directory is symlinked
+
+0.2.10
+- Improvements for the system report
+- Apache htaccess change fixing HTML were not loaded on some installs
+
+0.2.9
+- Add zlib output compression to system report
+- Added new update command
+- Enabled the Marketplace
+
+0.2.8
+- Show Marketplace menu item but no content just yet
+- Fix zlib output compression warning may be shown
+- Better/faster data structure for settings
+- Check for not compatible plugins in system report
+- When tracking mode is disabled, show a tracking code example
+
 0.2.7
 - Improved system report
 - Check for incompatible plugins

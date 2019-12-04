@@ -12,9 +12,9 @@
  */
 
 /**
- * PiwikTracker implements the Piwik Tracking Web API.
+ * PiwikTracker implements the Matomo Tracking Web API.
  *
- * For more information, see README.md
+ * For more information, see: https://github.com/matomo-org/matomo-php-tracker/
  *
  * @package PiwikTracker
  * @api
@@ -158,7 +158,7 @@ class PiwikTracker
         $this->sendImageResponse = true;
 
         $this->visitorCustomVar = $this->getCustomVariablesFromCookie();
-
+        
         $this->outgoingTrackerCookies = array();
         $this->incomingTrackerCookies = array();
     }
@@ -363,7 +363,6 @@ class PiwikTracker
     public function setNewVisitorId()
     {
         $this->randomVisitorId = substr(md5(uniqid(rand(), true)), 0, self::LENGTH_VISITOR_ID);
-        $this->userId = false;
         $this->forcedVisitorId = false;
         $this->cookieVisitorId = false;
         return $this;
@@ -516,7 +515,7 @@ class PiwikTracker
         if (strlen($domain) > 0) {
             $dl = strlen($domain) - 1;
             // remove trailing '.'
-	        if ($domain[$dl] === '.') {
+            if ($domain[$dl] === '.') {
                 $domain = substr($domain, 0, $dl);
             }
             // remove leading '*'
@@ -680,6 +679,7 @@ class PiwikTracker
      * @param float|int $price (optional) Individual product price (supports integer and decimal prices)
      * @param int $quantity (optional) Product quantity. If not specified, will default to 1 in the Reports
      * @throws Exception
+     * @return $this
      */
     public function addEcommerceItem($sku, $name = '', $category = '', $price = 0.0, $quantity = 1)
     {
@@ -690,6 +690,7 @@ class PiwikTracker
         $price = $this->forceDotAsSeparatorForDecimalPoint($price);
 
         $this->ecommerceItems[] = array($sku, $name, $category, $price, $quantity);
+        return $this;
     }
 
     /**
@@ -1121,7 +1122,7 @@ class PiwikTracker
      *
      * Allowed only for Admin/Super User, must be used along with setTokenAuth()
      * @see setTokenAuth()
-     * @param string $dateTime Date with the format 'Y-m-d H:i:s', or a UNIX timestamp.
+     * @param string $dateTime Date with the format 'Y-m-d H:i:s', or a UNIX timestamp. 
      *               If the datetime is older than one day (default value for tracking_requests_require_authentication_when_custom_timestamp_newer_than), then you must call setTokenAuth() with a valid Admin/Super user token.
      * @return $this
      */
@@ -1169,10 +1170,6 @@ class PiwikTracker
      */
     public function setUserId($userId)
     {
-        if ($userId === false) {
-            $this->setNewVisitorId();
-            return $this;
-        }
         if ($userId === '') {
             throw new Exception("User ID cannot be empty.");
         }
@@ -1195,15 +1192,12 @@ class PiwikTracker
 
     /**
      * Forces the requests to be recorded for the specified Visitor ID.
-     * Note: it is recommended to use ->setUserId($userId); instead.
      *
      * Rather than letting Piwik attribute the user with a heuristic based on IP and other user fingeprinting attributes,
      * force the action to be recorded for a particular visitor.
      *
-     * If you use both setVisitorId and setUserId, setUserId will take precedence.
      * If not set, the visitor ID will be fetched from the 1st party cookie, or will be set to a random UUID.
      *
-     * @deprecated We recommend to use  ->setUserId($userId).
      * @param string $visitorId 16 hexadecimal characters visitor ID, eg. "33c31e01394bdc63"
      * @return $this
      * @throws Exception
@@ -1240,9 +1234,6 @@ class PiwikTracker
      */
     public function getVisitorId()
     {
-        if (!empty($this->userId)) {
-            return $this->getUserIdHashed($this->userId);
-        }
         if (!empty($this->forcedVisitorId)) {
             return $this->forcedVisitorId;
         }
@@ -1554,6 +1545,10 @@ class PiwikTracker
                 ),
             );
 
+            if ($method === 'GET') {
+                $options[CURLOPT_FOLLOWLOCATION] = true;
+            }
+
             if (defined('PATH_TO_CERTIFICATES_FILE')) {
                 $options[CURLOPT_CAINFO] = PATH_TO_CERTIFICATES_FILE;
             }
@@ -1581,7 +1576,7 @@ class PiwikTracker
                 $options[CURLOPT_COOKIE] = http_build_query($this->outgoingTrackerCookies);
                 $this->outgoingTrackerCookies = array();
             }
-
+            
             $ch = curl_init();
             curl_setopt_array($ch, $options);
             ob_start();
@@ -1592,7 +1587,7 @@ class PiwikTracker
             if (!empty($response)) {
                 list($header, $content) = explode("\r\n\r\n", $response, $limitCount = 2);
             }
-
+            
             $this->parseIncomingCookies(explode("\r\n", $header));
 
         } elseif (function_exists('stream_context_create')) {
@@ -1619,11 +1614,11 @@ class PiwikTracker
                 $stream_options['http']['header'] .= 'Cookie: ' . http_build_query($this->outgoingTrackerCookies) . "\r\n";
                 $this->outgoingTrackerCookies = array();
             }
-
+            
             $ctx = stream_context_create($stream_options);
             $response = file_get_contents($url, 0, $ctx);
             $content = $response;
-
+            
             $this->parseIncomingCookies($http_response_header);
         }
 
@@ -1674,12 +1669,14 @@ class PiwikTracker
         if (!empty($this->customParameters)) {
             $customFields = '&' . http_build_query($this->customParameters, '', '&');
         }
-	    $baseUrl = $this->getBaseUrl();
-	    $start = '?';
-	    if (strpos($baseUrl, '?') !== false) {
-		    $start = '&';
-	    }
-	    $url = $baseUrl . $start .
+
+        $baseUrl = $this->getBaseUrl();
+        $start = '?';
+        if (strpos($baseUrl, '?') !== false) {
+            $start = '&';
+        }
+
+        $url = $baseUrl . $start .
             'idsite=' . $idSite .
             '&rec=1' .
             '&apiv=' . self::VERSION .
@@ -1691,7 +1688,7 @@ class PiwikTracker
             (!empty($_GET['KEY']) ? '&KEY=' . @urlencode($_GET['KEY']) : '') .
 
             // Only allowed for Admin/Super User, token_auth required,
-            (!empty($this->ip) ? '&cip=' . $this->ip : '') .
+            ((!empty($this->ip) && !empty($this->token_auth)) ? '&cip=' . $this->ip : '') .
             (!empty($this->userId) ? '&uid=' . urlencode($this->userId) : '') .
             (!empty($this->forcedDatetime) ? '&cdt=' . urlencode($this->forcedDatetime) : '') .
             (!empty($this->forcedNewVisit) ? '&new_visit=1' : '') .
@@ -1980,7 +1977,7 @@ class PiwikTracker
             $this->outgoingTrackerCookies[$name] = $value;
         }
     }
-
+  
     /**
      * Gets a cookie which was set by the tracking server.
      *
@@ -1993,7 +1990,7 @@ class PiwikTracker
         if (isset($this->incomingTrackerCookies[$name])) {
             return $this->incomingTrackerCookies[$name];
         }
-
+        
         return false;
     }
 
@@ -2005,11 +2002,11 @@ class PiwikTracker
     protected function parseIncomingCookies($headers)
     {
         $this->incomingTrackerCookies = array();
-
+        
         if (!empty($headers)) {
             $headerName = 'set-cookie:';
             $headerNameLength = strlen($headerName);
-
+            
             foreach($headers as $header) {
                 if (strpos(strtolower($header), $headerName) !== 0) {
                     continue;
@@ -2021,7 +2018,7 @@ class PiwikTracker
                 }
                 parse_str($cookies, $this->incomingTrackerCookies);
             }
-        }
+        }   
     }
 }
 

@@ -14,10 +14,8 @@ use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\DbHelper;
 use Piwik\Exception\NotYetInstalledException;
-use Piwik\Filesystem;
 use Piwik\Plugin\API as PluginApi;
 use Piwik\Plugins\Installation\FormDatabaseSetup;
-use Piwik\Plugins\Installation\ServerFilesGenerator;
 use Piwik\SettingsPiwik;
 use WpMatomo\Site\Sync;
 
@@ -70,7 +68,19 @@ class Installer {
 		return false;
 	}
 
+	public function can_be_installed() {
+
+		$paths = new Paths();
+		$upload_dir = $paths->get_upload_base_dir();
+
+		return is_writable($upload_dir) || is_writable(dirname($upload_dir));
+	}
+
 	public function install() {
+		if (!$this->can_be_installed()) {
+			return false;
+		}
+
 		try {
 			// prevent session related errors during install making it more stable
 			if ( ! defined( 'PIWIK_ENABLE_SESSION_START' ) ) {
@@ -85,6 +95,7 @@ class Installer {
 
 			return false;
 		} catch ( NotYetInstalledException $e ) {
+
 			$this->logger->log( 'Matomo is not yet installed... installing now' );
 
 			$db_info = $this->create_db();
@@ -145,7 +156,7 @@ class Installer {
 
 			if ( ! SettingsPiwik::getPiwikUrl() ) {
 				// especially needed for tests on cli
-				\Piwik\SettingsPiwik::overwritePiwikUrl( plugins_url( 'app', MATOMO_ANALYTICS_FILE ) );
+				SettingsPiwik::overwritePiwikUrl( plugins_url( 'app', MATOMO_ANALYTICS_FILE ) );
 			}
 
 			$this->logger->log( 'Emptying some caches' );
@@ -173,8 +184,8 @@ class Installer {
 		$form = $this->get_db_form();
 
 		try {
-			$db_infos                              = $form->createDatabaseObject();
-			\Piwik\Config::getInstance()->database = $db_infos;
+			$db_infos                       = $form->createDatabaseObject();
+			Config::getInstance()->database = $db_infos;
 
 			DbHelper::checkDatabaseVersion();
 		} catch ( \Exception $e ) {

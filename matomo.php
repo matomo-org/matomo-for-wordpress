@@ -1,13 +1,13 @@
 <?php
 /**
- * Plugin Name: Matomo Analytics & Tag Manager
- * Description: Most powerful web analytics for WordPress giving you 100% data ownership and privacy protection
+ * Plugin Name: Matomo Analytics - Ethical Stats. Powerful Insights.
+ * Description: The #1 Google Analytics alternative that gives you full control over your data and protects the privacy for your users. Free, secure and open.
  * Author: Matomo
  * Author URI: https://matomo.org
- * Version: 0.2.7
+ * Version: 0.3.4
  * Domain Path: /languages
  * WC requires at least: 2.4.0
- * WC tested up to: 3.2.6
+ * WC tested up to: 3.8
  *
  * Matomo - free/libre analytics platform
  *
@@ -26,13 +26,19 @@ if ( ! defined( 'MATOMO_ANALYTICS_FILE' ) ) {
 	define( 'MATOMO_ANALYTICS_FILE', __FILE__ );
 }
 
+if ( ! defined('MATOMO_MARKETPLACE_PLUGIN_NAME' )) {
+	define( 'MATOMO_MARKETPLACE_PLUGIN_NAME', 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php' );
+}
+
 $GLOBALS['MATOMO_PLUGINS_ENABLED'] = array();
 
 /** MATOMO_PLUGIN_FILES => used to check for updates etc */
 $GLOBALS['MATOMO_PLUGIN_FILES'] = array( MATOMO_ANALYTICS_FILE );
 
 function matomo_has_compatible_content_dir() {
-	return defined( 'WP_CONTENT_DIR' ) && ABSPATH . 'wp-content' === rtrim( WP_CONTENT_DIR, '/' );
+	return (defined( 'WP_CONTENT_DIR' )
+	       && ABSPATH . 'wp-content' === rtrim( WP_CONTENT_DIR, '/' ))
+	       || ( !empty( $_ENV['MATOMO_WP_ROOT_PATH'] ) && is_dir( $_ENV['MATOMO_WP_ROOT_PATH'] ) );
 }
 
 function matomo_is_app_request() {

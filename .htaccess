@@ -21,7 +21,7 @@
 	</IfModule>
 </IfModule>
 </Files>
-<Files ~ "^((index|matomo)\.php)$">
+<Files ~ "^((index|piwik|matomo)\.php)$">
 <IfModule mod_version.c>
 	<IfVersion < 2.4>
         Order allow,deny
@@ -41,3 +41,9 @@
 	</IfModule>
 </IfModule>
 </Files>
+
+# Serve HTML files as text/html mime type - Note: requires mod_mime apache module!
+<IfModule mod_mime.c>
+   AddHandler text/html .html
+   AddHandler text/html .htm
+</IfModule>

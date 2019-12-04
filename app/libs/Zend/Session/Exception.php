@@ -56,12 +56,12 @@ class Zend_Session_Exception extends Zend_Exception
      */
     static public function handleSessionStartError($errno, $errstr, $errfile, $errline, $errcontext)
     {
-    	$message = $errfile . '(Line:' . $errline . '): Error #' . $errno . ' ' . $errstr;
-    	if (E_ERROR === $errno || E_CORE_ERROR === $errno || E_COMPILE_ERROR === $errno) {
-		    self::$sessionStartError .= $message . ' ';
-	    } else {
-		    self::$sessionStartWarning .= $message . ' ';
-	    }
+        $message = $errfile . '(Line:' . $errline . '): Error #' . $errno . ' ' . $errstr;
+        if (E_ERROR === $errno || E_CORE_ERROR === $errno || E_COMPILE_ERROR === $errno) {
+            self::$sessionStartError .= $message . ' ';
+        } else {
+            self::$sessionStartWarning .= $message . ' ';
+        }
     }
 
     /**

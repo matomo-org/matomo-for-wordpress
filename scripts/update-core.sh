@@ -29,15 +29,18 @@ rm -r matomo/
 rm matomo-$VERSION.zip
 rm "How to install Matomo.html"
 find $MATOMO_ROOT/misc/* -exec rm -rf {} +
+rm -rf $MATOMO_ROOT/js/piwik.js
 rm -rf $MATOMO_ROOT/tmp
 rm -rf $MATOMO_ROOT/tests
 rm -rf $MATOMO_ROOT/config/manifest.inc.php
 # important to remove pclzip as it is shipped with WP and would need to use their lib
-rm -rf $MATOMO_ROOT/matomo/app/vendor/piwik/decompress/libs/PclZip
+rm -rf $MATOMO_ROOT/vendor/piwik/decompress/libs/PclZip
 mv bootstrap.php $MATOMO_ROOT/bootstrap.php
 
+sed -i -e 's/libs\/bower_components\/jquery\/dist\/jquery.min.js/..\/..\/..\/..\/..\/..\/..\/wp-includes\/js\/jquery\/jquery.js/' $MATOMO_ROOT/plugins/Overlay/client/client.js
+
 echo -e "Done!... "
-echo -e "We now need to hardcode the path to jquery.js in app/plugins/Overlay/client/client.js until we automated / changed things"
-echo -e "Then need to manually generate the core assets js file and put it into the assets directory"
-echo -e "Then execute 'php ../app/console generate-core-assets'"
-echo -e "Then execute ./remove_not_needed_assets.sh"
+echo -e "Should double check that path to jquery.js was updated in plugins/Overlay/client/client.js"
+echo -e "Then need to manually generate the core assets js file and put it into the assets directory by executing below commands:"
+echo -e "Then execute 'php ../app/console wordpress:generate-core-assets'"
+echo -e "Then execute './remove_not_needed_assets.sh'"

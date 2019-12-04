@@ -19,6 +19,10 @@ use Piwik\Plugins\WordPress\WpAssetManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+if (!defined( 'ABSPATH')) {
+	exit; // if accessed directly
+}
+
 class GenerateCoreAssets extends ConsoleCommand
 {
     protected function configure()

@@ -11,24 +11,15 @@ namespace Piwik\Plugins\WordPress;
 
 use Exception;
 use Piwik\API\Request;
-use Piwik\AuthResult;
 use Piwik\Common;
-use Piwik\Container\StaticContainer;
 use Piwik\FrontController;
 use Piwik\Piwik;
 use Piwik\Plugin;
 use Piwik\Plugins\CoreHome\SystemSummary\Item;
 use Piwik\Scheduler\Task;
 use Piwik\Url;
-use Piwik\View;
 use Piwik\Widget\WidgetsList;
-use WpMatomo\Access;
-use WpMatomo\Admin\TrackingSettings;
-use WpMatomo\API;
 use WpMatomo\Bootstrap;
-use WpMatomo\Settings;
-use WpMatomo\Site;
-use WpMatomo\User;
 
 if (!defined( 'ABSPATH')) {
     exit; // if accessed directly
@@ -36,6 +27,7 @@ if (!defined( 'ABSPATH')) {
 
 class WordPress extends Plugin
 {
+	public static $is_archiving = false;
 
     /**
      * @see \Piwik\Plugin::registerEvents
@@ -55,6 +47,7 @@ class WordPress extends Plugin
             'ScheduledTasks.shouldExecuteTask' => 'shouldExecuteTask',
             'API.TagManager.getContainerInstallInstructions.end' => 'addInstallInstructions',
             'API.Tour.getChallenges.end' => 'modifyTourChallenges',
+	        'API.ScheduledReports.generateReport.end' => 'onGenerateReportEnd'
         );
     }
 
@@ -183,9 +176,12 @@ class WordPress extends Plugin
             // etc.
 
             \Piwik\Access::doAsSuperUser(function () use ($url, &$response) {
+            	WordPress::$is_archiving = true;
+            	// refs #118 because there is no actual user when archiving there is also no token etc
                 $urlQuery = parse_url($url, PHP_URL_QUERY);
                 $request = new Request($urlQuery, array('serialize' => 1));
                 $response = $request->process();
+	            WordPress::$is_archiving = false;
             });
             $status = 200;
             return;
@@ -228,9 +224,48 @@ class WordPress extends Plugin
         $response = wp_remote_retrieve_body($wpResponse);
     }
 
-    public function onDispatchRequest(&$module, &$action, &$parameters)
+    public function onGenerateReportEnd()
     {
-        $requestedModule = !empty($module) ? strtolower($module) : '';
+    	if (Request::isCurrentApiRequestTheRootApiRequest() && !headers_sent()) {
+    		// fix https://github.com/matomo-org/wp-matomo/issues/98
+		    // When some plugin does an ob_start before the API is being executed then the following happens:
+		    // * PDF is generated and sent
+		    // * We send the application/pdf content-type header
+		    // * The api call finishes
+		    // * The response builder sends text/xml header and because the headers haven't been send yet, this actually overwrites the application/pdf header
+		    // * An XML error is shown in the UI.
+		    // The workaround is basically to make sure to flush the API call between API call finished and the response builder trying to send the text/xml header
+		    // It seems mostly an issue for the Scheduled Reports renderer as this is basically using an API call, it is basically using the XML renderer, but sending a different content type
+		    if (ob_get_length()) {
+			    ob_end_flush();
+		    }
+	    }
+    }
+
+    public function onDispatchRequest(&$module, &$action, &$parameters)
+    {  
+        if ($module === 'Proxy' && in_array($action, array('getNonCoreJs', 'getCoreJs', 'getCss'))) {
+            remove_action( 'shutdown', 'wp_ob_end_flush_all', 1 );
+        } else {
+	        if (function_exists('ini_get') && @ini_get('zlib.output_compression') === '1') {
+		        remove_action( 'shutdown', 'wp_ob_end_flush_all', 1 );
+	        }
+        }
+
+	    $requestedModule = !empty($module) ? Common::mb_strtolower($module) : '';
+	    $requestedAction = !empty($action) ? Common::mb_strtolower($action) : '';
+
+	    if (!WordPress::$is_archiving
+	        && !Common::isPhpCliMode()
+	        && $requestedModule === 'api'
+	        && (empty($requestedAction) || $requestedAction === 'index')) {
+		    $tokenRequest = Common::getRequestVar('token_auth', false, 'string');
+		    $tokenUser = Piwik::getCurrentUserTokenAuth();
+
+		    if (!$tokenRequest || $tokenRequest !== $tokenUser) {
+			    throw new Exception(Piwik::translate('General_ExceptionInvalidToken'));
+		    }
+	    }
 
         if ($requestedModule === 'login') {
             if ($action === 'ajaxNoAccess' || $action === 'bruteForceLog') {
@@ -257,7 +292,6 @@ class WordPress extends Plugin
             array('diagnostics', 'configfile'),
             array('api', 'listallapi'),
         );
-        $requestedAction = !empty($action) ? strtolower($action) : '';
 
         foreach ($blockedActions as $blockedAction) {
             if ($requestedModule === $blockedAction[0] && $requestedAction == $blockedAction[1]) {

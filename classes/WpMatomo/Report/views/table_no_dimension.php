@@ -7,10 +7,9 @@
  * @package matomo
  */
 
-use Piwik\Piwik;
-use Piwik\SettingsServer;
-use WpMatomo\Admin\Menu;
-use WpMatomo\Capabilities;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // if accessed directly
+}
 
 /** @var array $report */
 /** @var array $report_meta */

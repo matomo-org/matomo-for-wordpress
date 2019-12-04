@@ -29,8 +29,6 @@ class Updater {
 	}
 
 	public function update_if_needed() {
-		global $wp_version;
-
 		if ( ! function_exists( 'get_plugin_data' ) ) {
 			require_once ABSPATH . '/wp-admin/includes/plugin.php';
 		}
@@ -75,6 +73,9 @@ class Updater {
 
 	public function update() {
 		Bootstrap::do_bootstrap();
+
+		$this->settings->set_global_option( 'core_version', Version::VERSION );
+		$this->settings->save();
 
 		\Piwik\Access::doAsSuperUser(
 			function () {

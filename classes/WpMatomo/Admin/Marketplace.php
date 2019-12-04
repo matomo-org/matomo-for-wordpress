@@ -27,7 +27,6 @@ class Marketplace {
 	}
 
 	public function show() {
-
 		$settings = $this->settings;
 		include dirname( __FILE__ ) . '/views/marketplace.php';
 	}
