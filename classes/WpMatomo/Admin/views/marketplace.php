@@ -104,7 +104,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 						'description' => 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of over 20%!',
 						'price'       => '499EUR / 579USD',
 						'url'         => 'https://plugins.matomo.org/WpPremiumBundle?wp=1',
-						'image'       => plugins_url( 'assets/img/placeholder.png', MATOMO_ANALYTICS_FILE ),
+						'image'       => plugins_url( 'assets/img/premiumbundle.png', MATOMO_ANALYTICS_FILE ),
 					),
 				),
 		),
