@@ -27,6 +27,7 @@ if (!defined( 'ABSPATH')) {
 
 class WordPress extends Plugin
 {
+	public static $is_archiving = false;
 
     /**
      * @see \Piwik\Plugin::registerEvents
@@ -175,9 +176,12 @@ class WordPress extends Plugin
             // etc.
 
             \Piwik\Access::doAsSuperUser(function () use ($url, &$response) {
+            	WordPress::$is_archiving = true;
+            	// refs #118 because there is no actual user when archiving there is also no token etc
                 $urlQuery = parse_url($url, PHP_URL_QUERY);
                 $request = new Request($urlQuery, array('serialize' => 1));
                 $response = $request->process();
+	            WordPress::$is_archiving = false;
             });
             $status = 200;
             return;
@@ -251,7 +255,8 @@ class WordPress extends Plugin
 	    $requestedModule = !empty($module) ? Common::mb_strtolower($module) : '';
 	    $requestedAction = !empty($action) ? Common::mb_strtolower($action) : '';
 
-	    if (!Common::isPhpCliMode()
+	    if (!WordPress::$is_archiving
+	        && !Common::isPhpCliMode()
 	        && $requestedModule === 'api'
 	        && (empty($requestedAction) || $requestedAction === 'index')) {
 		    $tokenRequest = Common::getRequestVar('token_auth', false, 'string');
