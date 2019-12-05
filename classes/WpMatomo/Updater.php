@@ -28,10 +28,14 @@ class Updater {
 		$this->settings = $settings;
 	}
 
-	public function update_if_needed() {
+	private function load_plugin_functions() {
 		if ( ! function_exists( 'get_plugin_data' ) ) {
 			require_once ABSPATH . '/wp-admin/includes/plugin.php';
 		}
+	}
+
+	public function update_if_needed() {
+		$this->load_plugin_functions();
 
 		$executed_updates = array();
 
@@ -74,7 +78,21 @@ class Updater {
 	public function update() {
 		Bootstrap::do_bootstrap();
 
+		$this->load_plugin_functions();
+
+		$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
+
+		if (!empty($plugin_data['Version'])
+		    && $this->settings->get_global_option('current_version') !== $plugin_data['Version']) {
+			// this allows us to see which versions of matomo the user was using before this update so we better understand
+			// which version maybe regressed something
+			$this->settings->set_global_option( 'prev2_version', $this->settings->get_global_option('prev_version') );
+			$this->settings->set_global_option( 'prev_version', $this->settings->get_global_option('current_version') );
+			$this->settings->set_global_option( 'current_version', $plugin_data['Version'] );
+		}
+
 		$this->settings->set_global_option( 'core_version', Version::VERSION );
+
 		$this->settings->save();
 
 		\Piwik\Access::doAsSuperUser(
