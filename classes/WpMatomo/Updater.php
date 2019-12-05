@@ -28,9 +28,17 @@ class Updater {
 		$this->settings = $settings;
 	}
 
-	public function update_if_needed() {
+	private function load_plugin_functions() {
 		if ( ! function_exists( 'get_plugin_data' ) ) {
 			require_once ABSPATH . '/wp-admin/includes/plugin.php';
+		}
+
+		return function_exists( 'get_plugin_data' );
+	}
+
+	public function update_if_needed() {
+		if ( ! $this->load_plugin_functions() ) {
+			return;
 		}
 
 		$executed_updates = array();
@@ -73,6 +81,24 @@ class Updater {
 
 	public function update() {
 		Bootstrap::do_bootstrap();
+
+		if ( $this->load_plugin_functions() ) {
+			$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
+
+			$history = $this->settings->get_global_option( 'version_history' );
+			if ( empty( $history ) || ! is_array( $history ) ) {
+				$history = array();
+			}
+
+			if ( ! empty( $plugin_data['Version'] )
+				&& ! in_array( $plugin_data['Version'], $history, true ) ) {
+				// this allows us to see which versions of matomo the user was using before this update so we better understand
+				// which version maybe regressed something
+				array_unshift( $history, $plugin_data['Version'] );
+				$history = array_slice( $history, 0, 5 ); // lets keep only the last 5 versions
+				$this->settings->set_global_option( 'version_history', $history );
+			}
+		}
 
 		$this->settings->set_global_option( 'core_version', Version::VERSION );
 		$this->settings->save();
