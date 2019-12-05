@@ -1,3 +1,6 @@
+1.0.0
+- First release.
+
 0.3.4
 - Fix issues with CLI archiving
 
