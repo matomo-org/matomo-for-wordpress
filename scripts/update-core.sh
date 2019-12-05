@@ -30,6 +30,7 @@ rm matomo-$VERSION.zip
 rm "How to install Matomo.html"
 find $MATOMO_ROOT/misc/* -exec rm -rf {} +
 rm -rf $MATOMO_ROOT/js/piwik.js
+rm -rf $MATOMO_ROOT/CONTRIBUTING.md
 rm -rf $MATOMO_ROOT/tmp
 rm -rf $MATOMO_ROOT/tests
 rm -rf $MATOMO_ROOT/config/manifest.inc.php
