@@ -2,7 +2,7 @@
 /scripts/ export-ignore
 /vendor/ export-ignore
 /bin/ export-ignore
-/README.md
+/README.md export-ignore
 /.wordpress-org export-ignore
 /.github export-ignore
 .gitignore export-ignore
