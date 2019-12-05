@@ -82,7 +82,7 @@ Running Matomo Analytics on your server can use significant resources. Whenever 
 
 * The minimum PHP memory limit is 128Mb but we recommend to use a higher limit (memory_limit = 256M).
 * PHP 7.0 at minimum is required.
-* If you have high traffic website, or manage a lot of websites with WordPress MultiSite, we recommend [installing Matomo On-Premise](https://matomo.org/docs/installation/) or [signup to Matomo Cloud](https://matomo.org/hosting/) and install the [WP-Matomo Integration plugin](https://wordpress.org/plugins/wp-piwik/) instead.
+* If you have high traffic website, or manage a lot of websites with WordPress MultiSite, we recommend installing [Matomo On-Premise](https://matomo.org/docs/installation/) or signup to [Matomo Cloud](https://matomo.org/hosting/) and install the [WP-Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead.
 * Needing to know more before you install? Have a [read through the most popular FAQs to ensure you’re making the right choice for you](https://matomo.org/faq/wordpress/what-are-the-requirements-for-matomo-for-wordpress/).
 
 Over 1 million websites in over 190 countries are using Matomo already. Join the revolution too! Install Matomo on your Wordpress website completely free and take back full control of your data!
