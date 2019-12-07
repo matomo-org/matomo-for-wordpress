@@ -33,7 +33,6 @@ rm -rf $MATOMO_ROOT/js/piwik.js
 rm -rf $MATOMO_ROOT/CONTRIBUTING.md
 rm -rf $MATOMO_ROOT/CHANGELOG.md
 rm -rf $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
-rm -rf $MATOMO_ROOT/plugins/DBStats
 rm -rf $MATOMO_ROOT/tmp
 rm -rf $MATOMO_ROOT/tests
 rm -rf $MATOMO_ROOT/config/manifest.inc.php
