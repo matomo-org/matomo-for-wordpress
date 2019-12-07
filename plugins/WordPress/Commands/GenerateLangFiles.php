@@ -50,7 +50,7 @@ class GenerateLangFiles extends ConsoleCommand
 			    }
 		    }
 
-		    file_put_contents($corePath, json_encode($base, JSON_PRETTY_PRINT));
+		    file_put_contents($corePath, json_encode($base, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 	    }
 
     }
