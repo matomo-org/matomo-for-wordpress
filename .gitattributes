@@ -16,6 +16,14 @@ phpunit.xml export-ignore
 .phpcs.xml.dist export-ignore
 package.json export-ignore
 *.map export-ignore
+*.sh export-ignore
+CHANGELOG.md export-ignore
+change-log.md export-ignore
+CONTRIBUTING.md export-ignore
+.scrutinizer.yml export-ignore
+codeception.yml export-ignore
 Gruntfile.js export-ignore
+phpbench.json export-ignore
+composer.travis.json export-ignore
 karma.conf.js export-ignore
 .DS_Store export-ignore
