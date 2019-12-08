@@ -33,9 +33,16 @@ rm -rf $MATOMO_ROOT/js/piwik.js
 rm -rf $MATOMO_ROOT/CONTRIBUTING.md
 rm -rf $MATOMO_ROOT/CHANGELOG.md
 rm -rf $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
+rm -rf $MATOMO_ROOT/plugins/matomo/app/lang/README.md
+rm -rf $MATOMO_ROOT/vendor/php-di/invoker/doc/
+rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/doc
+rm -rf $MATOMO_ROOT/vendor/leafo/lessphp/docs
+rm -rf $MATOMO_ROOT/vendor/container-interop/container-interop/docs
+rm -rf $MATOMO_ROOT/vendor/pear/archive_tar/docs
 rm -rf $MATOMO_ROOT/tmp
 rm -rf $MATOMO_ROOT/tests
 rm -rf $MATOMO_ROOT/config/manifest.inc.php
+find $MATOMO_ROOT/core/Updates -name '*.php' ! -name '3.12.0-b1.php' ! -name '3.12.0-b7.php' ! -name '4.*' ! -name '5.*' ! -name '6.*' -exec rm -rf {} +
 # important to remove pclzip as it is shipped with WP and would need to use their lib
 rm -rf $MATOMO_ROOT/vendor/piwik/decompress/libs/PclZip
 mv bootstrap.php $MATOMO_ROOT/bootstrap.php
