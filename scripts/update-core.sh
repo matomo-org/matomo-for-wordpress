@@ -31,6 +31,8 @@ rm "How to install Matomo.html"
 find $MATOMO_ROOT/misc/* -exec rm -rf {} +
 rm -rf $MATOMO_ROOT/js/piwik.js
 rm -rf $MATOMO_ROOT/CONTRIBUTING.md
+rm -rf $MATOMO_ROOT/CHANGELOG.md
+rm -rf $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
 rm -rf $MATOMO_ROOT/tmp
 rm -rf $MATOMO_ROOT/tests
 rm -rf $MATOMO_ROOT/config/manifest.inc.php
@@ -44,4 +46,5 @@ echo -e "Done!... "
 echo -e "Should double check that path to jquery.js was updated in plugins/Overlay/client/client.js"
 echo -e "Then need to manually generate the core assets js file and put it into the assets directory by executing below commands:"
 echo -e "Then execute 'php ../app/console wordpress:generate-core-assets'"
+echo -e "Then execute 'php ../app/console wordpress:generate-lang-files'"
 echo -e "Then execute './remove_not_needed_assets.sh'"
