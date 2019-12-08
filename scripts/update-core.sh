@@ -34,8 +34,6 @@ rm -rf $MATOMO_ROOT/CONTRIBUTING.md
 rm -rf $MATOMO_ROOT/CHANGELOG.md
 rm -rf $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
 rm -rf $MATOMO_ROOT/plugins/matomo/app/lang/README.md
-rm -rf $MATOMO_ROOT/vendor/matomo/referrer-spam-blacklist/CONTRIBUTING.md
-rm -rf $MATOMO_ROOT/vendor/geoip2/geoip2/CHANGELOG.md
 rm -rf $MATOMO_ROOT/vendor/php-di/invoker/doc/parameter-resolvers.md
 rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/doc
 rm -rf $MATOMO_ROOT/vendor/leafo/lessphp/docs
