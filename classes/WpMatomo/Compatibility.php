@@ -28,6 +28,9 @@ class Compatibility {
 	 * then the Matomo backend doesn't work
 	 */
 	private function ithemes_security() {
+		if (defined('MATOMO_COMPATIBIILITY_ITHEMES_SECURITY_DISABLE') && MATOMO_COMPATIBIILITY_ITHEMES_SECURITY_DISABLE) {
+			return;
+		}
 		add_filter('itsec_filter_apache_server_config_modification',  function ($rules)
 		{
 			// otherwise the path below won't be compatible
