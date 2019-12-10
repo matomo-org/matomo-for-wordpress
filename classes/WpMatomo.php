@@ -64,6 +64,9 @@ class WpMatomo {
 		$roles = new Roles( self::$settings );
 		$roles->register_hooks();
 
+		$compatibility = new \WpMatomo\Compatibility();
+		$compatibility->register_hooks();
+
 		$scheduled_tasks = new ScheduledTasks( self::$settings );
 		$scheduled_tasks->schedule();
 
