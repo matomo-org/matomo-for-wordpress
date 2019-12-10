@@ -19,10 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Compatibility {
 
 	public function register_hooks() {
-		add_action( 'init', array( $this, 'init' ) );
-	}
-
-	public function init() {
 		$this->ithemes_security();
 	}
 
