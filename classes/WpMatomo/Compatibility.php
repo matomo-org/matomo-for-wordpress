@@ -34,7 +34,13 @@ class Compatibility {
 	private function ithemes_security() {
 		add_filter('itsec_filter_apache_server_config_modification',  function ($rules)
 		{
+			// otherwise the path below won't be compatible
+			// todo ideally we would make the plugins path relative and match the specific path...
+			// like preg_quote(relative_wp_content_dir)...
+			$is_wp_content_dir_compatible = defined( 'WP_CONTENT_DIR' )
+			                                 && ABSPATH . 'wp-content' === rtrim( WP_CONTENT_DIR, '/' );
 			if ($rules
+			    && $is_wp_content_dir_compatible
 			    && is_string($rules)
 			    && strpos($rules, 'RewriteEngine On') > 0
 			    && strpos($rules, 'content') > 0
@@ -42,8 +48,9 @@ class Compatibility {
 				$rules = '
 	<IfModule mod_rewrite.c>
 		RewriteEngine On
+
 		# Allow Matomo Backend
-		RewriteRule ^wp\-content/plugins/matomo/app/(index|piwik|matomo)\.php$ $0 [NC,L]
+		RewriteRule ^wp\-content/plugins/matomo/app/(index|piwik|matomo)\.php$ \$0 [NC,L]
 	</IfModule>
 ' . $rules;
 			}
