@@ -21,6 +21,7 @@ echo -e "Downloading $URL..."
 wget $URL -P "$SCRIPTPATH" || die "Got an error while downloading this Matomo version"
 
 cp $MATOMO_ROOT/bootstrap.php bootstrap.php
+cp $MATOMO_ROOT/.htaccess .htaccess
 rm -rf $MATOMO_ROOT/*
 rm -r matomo/ 2> /dev/null
 unzip -o -q matomo-$VERSION.zip
@@ -46,6 +47,7 @@ find $MATOMO_ROOT/core/Updates -name '*.php' ! -name '3.12.0-b1.php' ! -name '3.
 # important to remove pclzip as it is shipped with WP and would need to use their lib
 rm -rf $MATOMO_ROOT/vendor/piwik/decompress/libs/PclZip
 mv bootstrap.php $MATOMO_ROOT/bootstrap.php
+mv .htaccess $MATOMO_ROOT/.htaccess
 
 sed -i -e 's/libs\/bower_components\/jquery\/dist\/jquery.min.js/..\/..\/..\/..\/..\/..\/..\/wp-includes\/js\/jquery\/jquery.js/' $MATOMO_ROOT/plugins/Overlay/client/client.js
 

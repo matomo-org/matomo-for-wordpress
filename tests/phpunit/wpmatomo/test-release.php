@@ -33,6 +33,7 @@ class ReleaseTest extends MatomoUnit_TestCase {
 			array( 'app/plugins/TagManager/javascripts/previewmodedetection.js' ),
 			array( 'app/plugins/TagManager/javascripts/tagmanager.js' ),
 			array( 'app/plugins/TagManager/javascripts/tagmanager.min.js' ),
+			array( 'app/.htaccess' ),
 			array( 'app/core/.htaccess' ),
 			array( 'app/js/.htaccess' ),
 			array( 'app/lang/.htaccess' ),
