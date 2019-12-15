@@ -65,7 +65,22 @@ class SystemReport {
 			if ( ! empty( $_POST[ self::TROUBLESHOOT_ARCHIVE_NOW ] ) ) {
 				Bootstrap::do_bootstrap();
 				$scheduled_tasks = new ScheduledTasks( $this->settings );
-				$scheduled_tasks->archive( $force = true );
+
+				try {
+					$errors = $scheduled_tasks->archive( $force = true, $throw_exception = false );
+				} catch (\Exception $e) {
+					echo '<div class="error">' . esc_html_e('Error', 'matomo') . ': '. matomo_anonymize_value($e->getMessage()) . '</div>';
+					throw $e;
+				}
+
+				if ( ! empty( $errors ) ) {
+					echo '<div class="notice notice-warning">';
+					foreach ($errors as $error) {
+						echo nl2br(esc_html(matomo_anonymize_value(var_export($error, 1))));
+						echo '<br/>';
+					}
+					echo '</div>';
+				}
 			}
 
 			if ( ! empty( $_POST[ self::TROUBLESHOOT_CLEAR_MATOMO_CACHE ] ) ) {
