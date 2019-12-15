@@ -1,6 +1,12 @@
 1.0.0
 - First release.
 
+0.3.5
+- Better PHP 7.4 support
+- Improved error handling
+- Improved update logging
+- Fix admin not working when iThemes is used with feature disable plugin php files
+
 0.3.4
 - Fix issues with CLI archiving
 
