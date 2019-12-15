@@ -48,7 +48,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_archive_does_not_fail() {
-		$this->tasks->archive();
+		$this->assertEquals(array(), $this->tasks->archive());
 	}
 
 	public function test_set_last_time_before_cron() {

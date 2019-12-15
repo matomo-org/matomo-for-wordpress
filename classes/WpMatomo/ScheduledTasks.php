@@ -176,7 +176,7 @@ class ScheduledTasks {
 		}
 	}
 
-	public function archive( $force = false ) {
+	public function archive( $force = false, $throw_exception = true ) {
 		if ( defined( 'MATOMO_DISABLE_WP_ARCHIVING' ) && MATOMO_DISABLE_WP_ARCHIVING ) {
 			return;
 		}
@@ -221,8 +221,22 @@ class ScheduledTasks {
 		} catch ( \Exception $e ) {
 			$this->logger->log( 'Failed Matomo Archive: ' . $e->getMessage() );
 			$this->logger->log_exception( 'archive_main' , $e);
-			throw $e;
+
+			if ($archiver->getErrors()) {
+				$message = '';
+				foreach ($archiver->getErrors() as $error) {
+					$message .= var_export($error, 1) . ' ';
+				}
+				$message = new \Exception(trim($message));
+				$this->logger->log_exception('cron_errors', $message);
+			}
+
+			if ($throw_exception) {
+				throw $e;
+			}
 		}
+
+		return $archiver->getErrors();
 	}
 
 	public function uninstall() {

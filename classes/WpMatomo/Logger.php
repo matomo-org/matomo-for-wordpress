@@ -29,7 +29,7 @@ class Logger {
 		$id = $this->make_id();
 		$logs = $this->get_last_logged_entries();
 		$logs[] = array('name' => $key, 'value' => time(), 'comment' => $message);
-		$logs = array_slice($logs, -6);
+		$logs = array_slice($logs, -7);
 		update_option($id, $logs);
 	}
 
