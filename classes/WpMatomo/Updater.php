@@ -24,8 +24,14 @@ class Updater {
 	 */
 	private $settings;
 
+	/**
+	 * @var Logger
+	 */
+	private $logger;
+
 	public function __construct( Settings $settings ) {
 		$this->settings = $settings;
+		$this->logger   = new Logger();
 	}
 
 	private function load_plugin_functions() {
@@ -59,7 +65,14 @@ class Updater {
 				if ( ! Installer::is_intalled() ) {
 					return;
 				}
-				$this->update();
+
+				try {
+					$this->update();
+				} catch ( \Exception $e ) {
+					$this->logger->log( 'Matomo failed to execute update ' . $e->getMessage() );
+					$this->logger->log_exception( 'plugin_update', $e );
+					throw $e;
+				}
 				$executed_updates[] = $key;
 
 				// we're scheduling another update in case there are some dimensions to be updated or anything

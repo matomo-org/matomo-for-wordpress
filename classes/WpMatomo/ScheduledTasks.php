@@ -139,6 +139,7 @@ class ScheduledTasks {
 			$updater->update();
 		} catch ( \Exception $e ) {
 			$this->logger->log( 'Update failed: ' . $e->getMessage() );
+			$this->logger->log_exception( 'cron_update', $e );
 			throw $e;
 		}
 	}
@@ -155,6 +156,7 @@ class ScheduledTasks {
 			}
 		} catch ( \Exception $e ) {
 			$this->logger->log( 'Update GeoIP DB failed' . $e->getMessage() );
+			$this->logger->log_exception( 'update_geoip2', $e );
 			throw $e;
 		}
 	}
@@ -169,6 +171,7 @@ class ScheduledTasks {
 			$user->sync_all();
 		} catch ( \Exception $e ) {
 			$this->logger->log( 'Sync failed' . $e->getMessage() );
+			$this->logger->log_exception( 'cron_sync', $e );
 			throw $e;
 		}
 	}
@@ -184,6 +187,7 @@ class ScheduledTasks {
 			Bootstrap::do_bootstrap();
 		} catch ( \Exception $e ) {
 			$this->logger->log( 'Archive bootstrap failed' . $e->getMessage() );
+			$this->logger->log_exception( 'archive_bootstrap', $e );
 			throw $e;
 		}
 
@@ -216,6 +220,7 @@ class ScheduledTasks {
 			$archiver->main();
 		} catch ( \Exception $e ) {
 			$this->logger->log( 'Failed Matomo Archive: ' . $e->getMessage() );
+			$this->logger->log_exception( 'archive_main', $e );
 			throw $e;
 		}
 	}

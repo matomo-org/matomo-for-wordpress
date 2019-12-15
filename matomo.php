@@ -59,6 +59,26 @@ function matomo_has_tag_manager() {
 	return true;
 }
 
+function matomo_anonymize_value( $value ) {
+	if ( is_string( $value ) && ! empty( $value ) ) {
+		$values_to_anonymize = array(
+			ABSPATH                           => '$ABSPATH/',
+			str_replace( '/', '\/', ABSPATH ) => '$ABSPATH\/',
+			WP_CONTENT_DIR                    => '$WP_CONTENT_DIR/',
+			home_url()                        => '$home_url',
+			site_url()                        => '$site_url',
+			DB_PASSWORD                       => 'DB_PASSWORD',
+			DB_USER                           => 'DB_USER',
+			DB_HOST                           => 'DB_HOST',
+		);
+		foreach ( $values_to_anonymize as $search => $replace ) {
+			$value = str_replace( $search, $replace, $value );
+		}
+	}
+
+	return $value;
+}
+
 $GLOBALS['MATOMO_MARKETPLACE_PLUGINS'] = array();
 
 function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace_plugin = false ) {

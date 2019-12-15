@@ -70,5 +70,7 @@ if ( empty( $show_this_page ) ) {
 	</p>
 
 	<?php require 'info_shared.php'; ?>
-	<?php require 'info_help.php'; ?>
+	<?php
+	$show_troubleshooting_link = false;
+	require 'info_help.php'; ?>
 </div>

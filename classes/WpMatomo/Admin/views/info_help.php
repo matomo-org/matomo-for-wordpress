@@ -37,4 +37,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 		   href="https://matomo.org/support-plans/"><?php esc_html_e( 'Support Plans', 'matomo' ); ?></a>
 		- <?php esc_html_e( 'Let our experienced team assist you online on how to best utilise Matomo', 'matomo' ); ?>
 	</li>
+	<?php if ( ! empty( $show_troubleshooting_link ) ) { ?>
+	<li><a
+		   href="<?php echo esc_url( add_query_arg( array( 'tab' => 'troubleshooting' ), menu_page_url( \WpMatomo\Admin\Menu::SLUG_SYSTEM_REPORT, false ) ) ); ?>"><?php esc_html_e( 'Troubleshooting', 'matomo' ); ?></a>
+		- <?php esc_html_e( 'Click here if you are having Trouble with Matomo', 'matomo' ); ?>
+	</li>
+	<?php } ?>
 </ul>
