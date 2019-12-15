@@ -217,7 +217,6 @@ class ScheduledTasks {
 		}
 
 		try {
-			throw new \Exception('f-00');
 			$archiver->main();
 		} catch ( \Exception $e ) {
 			$this->logger->log( 'Failed Matomo Archive: ' . $e->getMessage() );

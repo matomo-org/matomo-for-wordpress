@@ -95,9 +95,6 @@ class Updater {
 	public function update() {
 		Bootstrap::do_bootstrap();
 
-		$error_handler = new ErrorHandler();
-		$error_handler->set_error_handler('update');
-
 		if ( $this->load_plugin_functions() ) {
 			$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
 
@@ -148,8 +145,6 @@ class Updater {
 			@file_put_contents( $config_dir . '/index.html', '//hello' );
 			@file_put_contents( $config_dir . '/index.htm', '//hello' );
 		}
-
-		$error_handler->restore();
 	}
 
 	private static function update_components() {
