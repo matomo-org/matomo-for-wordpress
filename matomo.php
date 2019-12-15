@@ -4,7 +4,7 @@
  * Description: The #1 Google Analytics alternative that gives you full control over your data and protects the privacy for your users. Free, secure and open.
  * Author: Matomo
  * Author URI: https://matomo.org
- * Version: 1.0.2
+ * Version: 0.3.5
  * Domain Path: /languages
  * WC requires at least: 2.4.0
  * WC tested up to: 3.8
@@ -103,3 +103,11 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . '
 require 'shared.php';
 matomo_add_plugin( __DIR__ . '/plugins/WordPress', MATOMO_ANALYTICS_FILE );
 new WpMatomo();
+
+// todo remove this before release
+require 'plugin-update-checker/plugin-update-checker.php';
+$matomo_update_checker = Puc_v4_Factory::buildUpdateChecker(
+	'https://builds.matomo.org/wordpress-beta.json',
+	__FILE__,
+	'matomo'
+);
