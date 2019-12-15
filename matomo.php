@@ -67,13 +67,27 @@ function matomo_anonymize_value( $value ) {
 			WP_CONTENT_DIR                    => '$WP_CONTENT_DIR/',
 			home_url()                        => '$home_url',
 			site_url()                        => '$site_url',
-			DB_PASSWORD                       => 'DB_PASSWORD',
-			DB_USER                           => 'DB_USER',
-			DB_HOST                           => 'DB_HOST',
+			DB_PASSWORD                       => '$DB_PASSWORD',
+			DB_USER                           => '$DB_USER',
+			DB_HOST                           => '$DB_HOST',
+			DB_NAME                           => '$DB_NAME',
 		);
-		foreach ( $values_to_anonymize as $search => $replace ) {
-			$value = str_replace( $search, $replace, $value );
+		$keys = array('AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'AUTH_SALT', 'NONCE_KEY', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT');
+		foreach ($keys as $key) {
+			if (defined($key)) {
+				$const_value = constant($key);
+				if (!empty($const_value) && is_string($const_value) && strlen($key) > 3) {
+					$values_to_anonymize[$const_value] = '$' . $key;
+				}
+			}
 		}
+		foreach ( $values_to_anonymize as $search => $replace ) {
+			if ($search) {
+				$value = str_replace( $search, $replace, $value );
+			}
+		}
+		// replace anything like token_auth etc or md5 or sha1 ...
+		$value = preg_replace('/[[:xdigit:]]{31,80}/', 'TOKEN_REPLACED', $value);
 	}
 
 	return $value;
