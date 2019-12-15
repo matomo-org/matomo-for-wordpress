@@ -123,6 +123,7 @@ class Installer {
 				$environment->init();
 			} catch ( \Exception $e ) {
 				$this->logger->log( 'Ignoring error environment init' );
+				$this->logger->log_exception( 'install_env_init' , $e);
 			}
 
 			try {
@@ -133,6 +134,7 @@ class Installer {
 				$controller->init();
 			} catch ( \Exception $e ) {
 				$this->logger->log( 'Ignoring error frontcontroller init' );
+				$this->logger->log_exception( 'install_front_init' , $e);
 			}
 
 			try {
@@ -141,6 +143,7 @@ class Installer {
 				$this->create_user();
 			} catch ( \Exception $e ) {
 				$this->logger->log( 'Error create user' . $e->getMessage() );
+				$this->logger->log_exception( 'install_create_user' , $e);
 			}
 
 			try {
@@ -148,6 +151,7 @@ class Installer {
 				$this->update_components();
 			} catch ( \Exception $e ) {
 				$this->logger->log( 'Error update components' . $e->getMessage() );
+				$this->logger->log_exception( 'install_update_comp' , $e);
 			}
 
 			$this->logger->log( 'Recording version and url' );

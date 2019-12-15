@@ -18,6 +18,8 @@ use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
+use WpMatomo\ErrorHandler;
+use WpMatomo\Logger;
 use WpMatomo\Paths;
 use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
@@ -410,6 +412,18 @@ class SystemReport {
 					'value'   => $val,
 					'comment' => '',
 				);
+			}
+		}
+
+		$logs = new Logger();
+		$error_log_entries = $logs->get_last_logged_entries();
+		if (!empty($error_log_entries)) {
+			$rows[] = array(
+				'section' => 'Logs',
+			);
+			foreach ($error_log_entries as $error) {
+				$error['value'] = $this->convert_time_to_date($error['value'], true, false);
+				$rows[] = $error;
 			}
 		}
 

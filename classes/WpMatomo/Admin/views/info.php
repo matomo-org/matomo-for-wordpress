@@ -19,7 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div id="icon-plugins" class="icon32"></div>
 
 	<?php require 'info_shared.php'; ?>
-	<?php require 'info_help.php'; ?>
+	<?php $show_troubleshooting_link = true;
+	require 'info_help.php'; ?>
 
 	<h2><?php esc_html_e( 'Support the project', 'matomo' ); ?></h2>
 	<p>
