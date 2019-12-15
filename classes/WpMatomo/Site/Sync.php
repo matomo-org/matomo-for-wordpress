@@ -70,7 +70,7 @@ class Sync {
 						$installed['PluginsInstalled'] = array();
 						$config->PluginsInstalled      = $installed;
 
-						if ($installer->can_be_installed()) {
+						if ( $installer->can_be_installed() ) {
 							$installer->install();
 						} else {
 							continue;

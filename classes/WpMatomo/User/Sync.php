@@ -69,6 +69,7 @@ class Sync {
 				} catch ( \Exception $e ) {
 					// we don't want to rethrow exception otherwise some other blogs might never sync
 					$this->logger->log( 'Matomo error syncing users: ' . $e->getMessage() );
+					$this->logger->log_exception( 'user_sync ', $e );
 				}
 
 				restore_current_blog();

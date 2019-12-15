@@ -4,7 +4,7 @@
  * Description: The #1 Google Analytics alternative that gives you full control over your data and protects the privacy for your users. Free, secure and open.
  * Author: Matomo
  * Author URI: https://matomo.org
- * Version: 1.0.2
+ * Version: 0.3.5
  * Domain Path: /languages
  * WC requires at least: 2.4.0
  * WC tested up to: 3.8
@@ -59,6 +59,40 @@ function matomo_has_tag_manager() {
 	return true;
 }
 
+function matomo_anonymize_value( $value ) {
+	if ( is_string( $value ) && ! empty( $value ) ) {
+		$values_to_anonymize = array(
+			ABSPATH                           => '$ABSPATH/',
+			str_replace( '/', '\/', ABSPATH ) => '$ABSPATH\/',
+			WP_CONTENT_DIR                    => '$WP_CONTENT_DIR/',
+			home_url()                        => '$home_url',
+			site_url()                        => '$site_url',
+			DB_PASSWORD                       => '$DB_PASSWORD',
+			DB_USER                           => '$DB_USER',
+			DB_HOST                           => '$DB_HOST',
+			DB_NAME                           => '$DB_NAME',
+		);
+		$keys = array('AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'AUTH_SALT', 'NONCE_KEY', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT');
+		foreach ($keys as $key) {
+			if (defined($key)) {
+				$const_value = constant($key);
+				if (!empty($const_value) && is_string($const_value) && strlen($key) > 3) {
+					$values_to_anonymize[$const_value] = '$' . $key;
+				}
+			}
+		}
+		foreach ( $values_to_anonymize as $search => $replace ) {
+			if ($search) {
+				$value = str_replace( $search, $replace, $value );
+			}
+		}
+		// replace anything like token_auth etc or md5 or sha1 ...
+		$value = preg_replace('/[[:xdigit:]]{31,80}/', 'TOKEN_REPLACED', $value);
+	}
+
+	return $value;
+}
+
 $GLOBALS['MATOMO_MARKETPLACE_PLUGINS'] = array();
 
 function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace_plugin = false ) {
@@ -103,3 +137,11 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . '
 require 'shared.php';
 matomo_add_plugin( __DIR__ . '/plugins/WordPress', MATOMO_ANALYTICS_FILE );
 new WpMatomo();
+
+// todo remove this before release
+require 'plugin-update-checker/plugin-update-checker.php';
+$matomo_update_checker = Puc_v4_Factory::buildUpdateChecker(
+	'https://builds.matomo.org/wordpress-beta.json',
+	__FILE__,
+	'matomo'
+);

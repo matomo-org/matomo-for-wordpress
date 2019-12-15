@@ -139,6 +139,7 @@ class ScheduledTasks {
 			$updater->update();
 		} catch ( \Exception $e ) {
 			$this->logger->log( 'Update failed: ' . $e->getMessage() );
+			$this->logger->log_exception( 'cron_update', $e );
 			throw $e;
 		}
 	}
@@ -155,6 +156,7 @@ class ScheduledTasks {
 			}
 		} catch ( \Exception $e ) {
 			$this->logger->log( 'Update GeoIP DB failed' . $e->getMessage() );
+			$this->logger->log_exception( 'update_geoip2', $e );
 			throw $e;
 		}
 	}
@@ -169,11 +171,12 @@ class ScheduledTasks {
 			$user->sync_all();
 		} catch ( \Exception $e ) {
 			$this->logger->log( 'Sync failed' . $e->getMessage() );
+			$this->logger->log_exception( 'cron_sync', $e );
 			throw $e;
 		}
 	}
 
-	public function archive( $force = false ) {
+	public function archive( $force = false, $throw_exception = true ) {
 		if ( defined( 'MATOMO_DISABLE_WP_ARCHIVING' ) && MATOMO_DISABLE_WP_ARCHIVING ) {
 			return;
 		}
@@ -184,6 +187,7 @@ class ScheduledTasks {
 			Bootstrap::do_bootstrap();
 		} catch ( \Exception $e ) {
 			$this->logger->log( 'Archive bootstrap failed' . $e->getMessage() );
+			$this->logger->log_exception( 'archive_bootstrap', $e );
 			throw $e;
 		}
 
@@ -214,10 +218,31 @@ class ScheduledTasks {
 
 		try {
 			$archiver->main();
+
+			$archive_errors = $archiver->getErrors();
+
 		} catch ( \Exception $e ) {
 			$this->logger->log( 'Failed Matomo Archive: ' . $e->getMessage() );
-			throw $e;
+			$this->logger->log_exception( 'archive_main' , $e);
+			$archive_errors = $archiver->getErrors();
+
+			if (!empty($archive_errors)) {
+				$message = '';
+				foreach ($archiver->getErrors() as $error) {
+					$message .= var_export($error, 1) . ' ';
+				}
+				$message = new \Exception(trim($message));
+				$this->logger->log_exception('archive_errors', $message);
+			}
+
+			if ($throw_exception) {
+				throw $e;
+			} else {
+				$archive_errors[] = $e->getMessage();
+			}
 		}
+
+		return $archive_errors;
 	}
 
 	public function uninstall() {

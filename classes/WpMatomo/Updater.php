@@ -24,13 +24,27 @@ class Updater {
 	 */
 	private $settings;
 
+	/**
+	 * @var Logger
+	 */
+	private $logger;
+
 	public function __construct( Settings $settings ) {
 		$this->settings = $settings;
+		$this->logger   = new Logger();
+	}
+
+	private function load_plugin_functions() {
+		if ( ! function_exists( 'get_plugin_data' ) ) {
+			require_once ABSPATH . '/wp-admin/includes/plugin.php';
+		}
+
+		return function_exists( 'get_plugin_data' );
 	}
 
 	public function update_if_needed() {
-		if ( ! function_exists( 'get_plugin_data' ) ) {
-			require_once ABSPATH . '/wp-admin/includes/plugin.php';
+		if ( ! $this->load_plugin_functions() ) {
+			return;
 		}
 
 		$executed_updates = array();
@@ -51,7 +65,14 @@ class Updater {
 				if ( ! Installer::is_intalled() ) {
 					return;
 				}
-				$this->update();
+
+				try {
+					$this->update();
+				} catch ( \Exception $e ) {
+					$this->logger->log( 'Matomo failed to execute update ' . $e->getMessage() );
+					$this->logger->log_exception( 'plugin_update', $e );
+					throw $e;
+				}
 				$executed_updates[] = $key;
 
 				// we're scheduling another update in case there are some dimensions to be updated or anything
@@ -73,6 +94,24 @@ class Updater {
 
 	public function update() {
 		Bootstrap::do_bootstrap();
+
+		if ( $this->load_plugin_functions() ) {
+			$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
+
+			$history = $this->settings->get_global_option( 'version_history' );
+			if ( empty( $history ) || ! is_array( $history ) ) {
+				$history = array();
+			}
+
+			if ( ! empty( $plugin_data['Version'] )
+				&& ! in_array( $plugin_data['Version'], $history, true ) ) {
+				// this allows us to see which versions of matomo the user was using before this update so we better understand
+				// which version maybe regressed something
+				array_unshift( $history, $plugin_data['Version'] );
+				$history = array_slice( $history, 0, 5 ); // lets keep only the last 5 versions
+				$this->settings->set_global_option( 'version_history', $history );
+			}
+		}
 
 		$this->settings->set_global_option( 'core_version', Version::VERSION );
 		$this->settings->save();

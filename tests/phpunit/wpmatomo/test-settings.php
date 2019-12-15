@@ -84,10 +84,12 @@ class SettingsTest extends MatomoUnit_TestCase {
 
 	public function test_get_customised_global_settings_nothing_customised() {
 		$settings = $this->settings->get_customised_global_settings();
-		$this->assertNotEmpty($settings['core_version']);
-		unset($settings['core_version']); // always changes every time we update core so we dont want to look at exact value
+		$this->assertNotEmpty( $settings['core_version'] );
+		$this->assertNotEmpty( $settings['version_history'] );
+		unset( $settings['core_version'] ); // always changes every time we update core so we dont want to look at exact value
+		unset( $settings['version_history'] ); // always changes every time we update core so we dont want to look at exact value
 
-		$this->assertSame( array( ), $settings);
+		$this->assertSame( array(), $settings );
 	}
 
 	public function test_get_customised_global_settings_some_customised() {
@@ -95,8 +97,10 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->settings->set_global_option( 'track_ecommerce', '0' );
 
 		$settings = $this->settings->get_customised_global_settings();
-		$this->assertNotEmpty($settings['core_version']);
-		unset($settings['core_version']); // always changes every time we update core so we dont want to look at exact value
+		$this->assertNotEmpty( $settings['core_version'] );
+		$this->assertNotEmpty( $settings['version_history'] );
+		unset( $settings['core_version'] ); // always changes every time we update core so we dont want to look at exact value
+		unset( $settings['version_history'] ); // always changes every time we update core so we dont want to look at exact value
 
 		$this->assertEquals(
 			array(
