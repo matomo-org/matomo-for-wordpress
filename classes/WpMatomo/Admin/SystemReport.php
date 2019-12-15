@@ -200,11 +200,11 @@ class SystemReport {
 		}
 
 		$rows[] = array(
-			'name'    => sprintf( esc_html__( '%s exists and is writable.', 'matomo' ), $title ),
-			'value'   => $file_exists && $file_readable && $file_writable ? esc_html__( 'Yes', 'matomo' ) : esc_html__( 'No', 'matomo' ),
-			'comment' => $comment,
-			'is_error' => $required && (!$file_exists || !$file_readable),
-			'is_warning' => !$required && (!$file_exists || !$file_readable)
+			'name'       => sprintf( esc_html__( '%s exists and is writable.', 'matomo' ), $title ),
+			'value'      => $file_exists && $file_readable && $file_writable ? esc_html__( 'Yes', 'matomo' ) : esc_html__( 'No', 'matomo' ),
+			'comment'    => $comment,
+			'is_error'   => $required && ( ! $file_exists || ! $file_readable ),
+			'is_warning' => ! $required && ( ! $file_exists || ! $file_readable ),
 		);
 
 		return $rows;
@@ -244,18 +244,18 @@ class SystemReport {
 		);
 
 		if ( ! empty( $_ENV['MATOMO_WP_ROOT_PATH'] ) ) {
-			$custom_path = rtrim($_ENV['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php';
-			$path_exists = file_exists($custom_path );
-			$comment = '';
-			if (!$path_exists) {
+			$custom_path = rtrim( $_ENV['MATOMO_WP_ROOT_PATH'], '/' ) . '/wp-load.php';
+			$path_exists = file_exists( $custom_path );
+			$comment     = '';
+			if ( ! $path_exists ) {
 				$comment = 'It seems the path does not point to the WP root directory.';
 			}
 
 			$rows[] = array(
-				'name'    => 'Custom MATOMO_WP_ROOT_PATH',
-				'value'   => $path_exists,
+				'name'     => 'Custom MATOMO_WP_ROOT_PATH',
+				'value'    => $path_exists,
 				'is_error' => ! $path_exists,
-				'comment' => $comment,
+				'comment'  => $comment,
 			);
 		}
 
@@ -280,7 +280,6 @@ class SystemReport {
 					'comment' => $e->getMessage(),
 				);
 			}
-
 		}
 
 		$site   = new Site();
@@ -401,8 +400,8 @@ class SystemReport {
 		// like we don't want to show license key etc
 		foreach ( $this->settings->get_customised_global_settings() as $key => $val ) {
 			if ( is_numeric( $val ) || is_bool( $val ) || 'track_content' === $key || 'track_user_id' === $key || 'core_version' === $key || 'version_history' === $key ) {
-				if (is_array($val)) {
-					$val = implode(', ', $val);
+				if ( is_array( $val ) ) {
+					$val = implode( ', ', $val );
 				}
 
 				$rows[] = array(
@@ -413,15 +412,15 @@ class SystemReport {
 			}
 		}
 
-		$logs = new Logger();
+		$logs              = new Logger();
 		$error_log_entries = $logs->get_last_logged_entries();
-		if (!empty($error_log_entries)) {
+		if ( ! empty( $error_log_entries ) ) {
 			$rows[] = array(
 				'section' => 'Logs',
 			);
-			foreach ($error_log_entries as $error) {
-				$error['value'] = $this->convert_time_to_date($error['value'], true, false);
-				$rows[] = $error;
+			foreach ( $error_log_entries as $error ) {
+				$error['value'] = $this->convert_time_to_date( $error['value'], true, false );
+				$rows[]         = $error;
 			}
 		}
 
@@ -453,13 +452,13 @@ class SystemReport {
 			if ( $result->getStatus() !== DiagnosticResult::STATUS_OK ) {
 				foreach ( $result->getItems() as $item ) {
 					$item_comment = $item->getComment();
-					if ( !empty($item_comment) && is_string($item_comment) ) {
-						if (stripos($item_comment, 'core:archive') > 0) {
+					if ( ! empty( $item_comment ) && is_string( $item_comment ) ) {
+						if ( stripos( $item_comment, 'core:archive' ) > 0 ) {
 							// we only want to keep the first sentence like "	Archiving last ran successfully on Wednesday, January 2, 2019 00:00:00 which is 335 days 20:08:11 ago"
 							// but not anything that asks user to set up a cronjob
-							$item_comment = substr($item_comment, 0, stripos($item_comment, 'core:archive'));
-							if (strpos($item_comment, '.') > 0) {
-								$item_comment = substr($item_comment, 0, strripos($item_comment, '.'));
+							$item_comment = substr( $item_comment, 0, stripos( $item_comment, 'core:archive' ) );
+							if ( strpos( $item_comment, '.' ) > 0 ) {
+								$item_comment = substr( $item_comment, 0, strripos( $item_comment, '.' ) );
 							} else {
 								$item_comment = 'Archiving hasn\'t run in a while.';
 							}
@@ -468,7 +467,6 @@ class SystemReport {
 					}
 				}
 			}
-
 
 			$rows[] = array(
 				'name'       => $result->getLabel(),
@@ -544,12 +542,12 @@ class SystemReport {
 
 		$rows[] = array(
 			'name'  => 'Possibly uses symlink',
-			'value' => strpos(__DIR__, ABSPATH) === false && strpos(__DIR__, WP_CONTENT_DIR) === false,
+			'value' => strpos( __DIR__, ABSPATH ) === false && strpos( __DIR__, WP_CONTENT_DIR ) === false,
 		);
 
 		$rows[] = array(
 			'name'  => 'WP Cache enabled',
-			'value' => defined('WP_CACHE') && WP_CACHE,
+			'value' => defined( 'WP_CACHE' ) && WP_CACHE,
 		);
 
 		return $rows;
@@ -591,7 +589,7 @@ class SystemReport {
 
 		$rows[] = array(
 			'name'    => 'Max Memory Limit',
-			'value'   => defined('WP_MAX_MEMORY_LIMIT') ? WP_MAX_MEMORY_LIMIT : '',
+			'value'   => defined( 'WP_MAX_MEMORY_LIMIT' ) ? WP_MAX_MEMORY_LIMIT : '',
 			'comment' => '',
 		);
 
@@ -695,8 +693,8 @@ class SystemReport {
 		$grants_missing = array_diff( $needed_grants, $grants );
 
 		if ( empty( $grants )
-		     || !is_array($grants)
-		     || count($grants_missing) === count($needed_grants) ) {
+			 || ! is_array( $grants )
+			 || count( $grants_missing ) === count( $needed_grants ) ) {
 			$rows[] = array(
 				'name'       => esc_html__( 'Required permissions', 'matomo' ),
 				'value'      => esc_html__( 'Failed to detect granted permissions', 'matomo' ),
@@ -736,7 +734,7 @@ class SystemReport {
 			// We ignore any possible error in case of permission or not supported etc.
 			$values = array();
 		}
-		
+
 		$wpdb->suppress_errors( $suppress_errors );
 
 		$grants = array();
@@ -745,8 +743,8 @@ class SystemReport {
 				continue;
 			}
 
-			if (stripos($value[0], 'ALL PRIVILEGES') !== false) {
-				return array('ALL PRIVILEGES'); // the split on empty string wouldn't work otherwise
+			if ( stripos( $value[0], 'ALL PRIVILEGES' ) !== false ) {
+				return array( 'ALL PRIVILEGES' ); // the split on empty string wouldn't work otherwise
 			}
 
 			foreach ( array( ' ON ', ' TO ', ' IDENTIFIED ', ' BY ' ) as $keyword ) {
@@ -813,10 +811,13 @@ class SystemReport {
 		$active_plugins = get_option( 'active_plugins', array() );
 
 		if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
-			$active_plugins = array_map(function ($active_plugin){
-				$parts = explode('/', trim($active_plugin));
-				return trim($parts[0]);
-			}, $active_plugins);
+			$active_plugins = array_map(
+				function ( $active_plugin ) {
+					$parts = explode( '/', trim( $active_plugin ) );
+					return trim( $parts[0] );
+				},
+				$active_plugins
+			);
 
 			$rows[] = array(
 				'name'    => 'Active Plugins',

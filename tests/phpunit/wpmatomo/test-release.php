@@ -14,14 +14,13 @@ class ReleaseTest extends MatomoUnit_TestCase {
 		$this->assertFileExists( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $file );
 	}
 
-	public function test_stabletag_and_matomo_version_matches( ) {
-
+	public function test_stabletag_and_matomo_version_matches() {
 		$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
-		$version = $plugin_data['Version'];
+		$version     = $plugin_data['Version'];
 		echo $version;
 
-		$txt = file_get_contents(plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'readme.txt');
-		$this->assertContains('Stable tag: ' . $version, $txt);
+		$txt = file_get_contents( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'readme.txt' );
+		$this->assertContains( 'Stable tag: ' . $version, $txt );
 	}
 
 	public function get_needed_files() {

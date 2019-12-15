@@ -69,15 +69,14 @@ class Installer {
 	}
 
 	public function can_be_installed() {
-
-		$paths = new Paths();
+		$paths      = new Paths();
 		$upload_dir = $paths->get_upload_base_dir();
 
-		return is_writable($upload_dir) || is_writable(dirname($upload_dir));
+		return is_writable( $upload_dir ) || is_writable( dirname( $upload_dir ) );
 	}
 
 	public function install() {
-		if (!$this->can_be_installed()) {
+		if ( ! $this->can_be_installed() ) {
 			return false;
 		}
 
@@ -95,7 +94,6 @@ class Installer {
 
 			return false;
 		} catch ( NotYetInstalledException $e ) {
-
 			$this->logger->log( 'Matomo is not yet installed... installing now' );
 
 			$db_info = $this->create_db();
@@ -123,7 +121,7 @@ class Installer {
 				$environment->init();
 			} catch ( \Exception $e ) {
 				$this->logger->log( 'Ignoring error environment init' );
-				$this->logger->log_exception( 'install_env_init' , $e);
+				$this->logger->log_exception( 'install_env_init', $e );
 			}
 
 			try {
@@ -134,7 +132,7 @@ class Installer {
 				$controller->init();
 			} catch ( \Exception $e ) {
 				$this->logger->log( 'Ignoring error frontcontroller init' );
-				$this->logger->log_exception( 'install_front_init' , $e);
+				$this->logger->log_exception( 'install_front_init', $e );
 			}
 
 			try {
@@ -143,7 +141,7 @@ class Installer {
 				$this->create_user();
 			} catch ( \Exception $e ) {
 				$this->logger->log( 'Error create user' . $e->getMessage() );
-				$this->logger->log_exception( 'install_create_user' , $e);
+				$this->logger->log_exception( 'install_create_user', $e );
 			}
 
 			try {
@@ -151,7 +149,7 @@ class Installer {
 				$this->update_components();
 			} catch ( \Exception $e ) {
 				$this->logger->log( 'Error update components' . $e->getMessage() );
-				$this->logger->log_exception( 'install_update_comp' , $e);
+				$this->logger->log_exception( 'install_update_comp', $e );
 			}
 
 			$this->logger->log( 'Recording version and url' );

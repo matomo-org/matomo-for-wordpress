@@ -28,23 +28,24 @@ class Compatibility {
 	 * then the Matomo backend doesn't work
 	 */
 	private function ithemes_security() {
-		if (defined('MATOMO_COMPATIBIILITY_ITHEMES_SECURITY_DISABLE') && MATOMO_COMPATIBIILITY_ITHEMES_SECURITY_DISABLE) {
+		if ( defined( 'MATOMO_COMPATIBIILITY_ITHEMES_SECURITY_DISABLE' ) && MATOMO_COMPATIBIILITY_ITHEMES_SECURITY_DISABLE ) {
 			return;
 		}
-		add_filter('itsec_filter_apache_server_config_modification',  function ($rules)
-		{
-			// otherwise the path below won't be compatible
-			// todo ideally we would make the plugins path relative and match the specific path...
-			// like preg_quote(relative_wp_content_dir)...
-			$is_wp_content_dir_compatible = defined( 'WP_CONTENT_DIR' )
-			                                 && ABSPATH . 'wp-content' === rtrim( WP_CONTENT_DIR, '/' );
-			if ($rules
-			    && $is_wp_content_dir_compatible
-			    && is_string($rules)
-			    && strpos($rules, 'RewriteEngine On') > 0
-			    && strpos($rules, 'content') > 0
-			    && strpos($rules, 'plugins') > 0) {
-				$rules = '
+		add_filter(
+			'itsec_filter_apache_server_config_modification',
+			function ( $rules ) {
+				// otherwise the path below won't be compatible
+				// todo ideally we would make the plugins path relative and match the specific path...
+				// like preg_quote(relative_wp_content_dir)...
+				$is_wp_content_dir_compatible = defined( 'WP_CONTENT_DIR' )
+											 && ABSPATH . 'wp-content' === rtrim( WP_CONTENT_DIR, '/' );
+				if ( $rules
+				&& $is_wp_content_dir_compatible
+				&& is_string( $rules )
+				&& strpos( $rules, 'RewriteEngine On' ) > 0
+				&& strpos( $rules, 'content' ) > 0
+				&& strpos( $rules, 'plugins' ) > 0 ) {
+					$rules = '
 	<IfModule mod_rewrite.c>
 		RewriteEngine On
 
@@ -52,9 +53,12 @@ class Compatibility {
 		RewriteRule ^wp\-content/plugins/matomo/app/(index|piwik|matomo)\.php$ \$0 [NC,L]
 	</IfModule>
 ' . $rules;
-			}
-			return $rules;
-		}, 9999999991, $acceptedArgs = 1);
+				}
+				return $rules;
+			},
+			9999999991,
+			$acceptedArgs = 1
+		);
 	}
 
 }
