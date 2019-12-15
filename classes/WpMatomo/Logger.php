@@ -52,9 +52,14 @@ class Logger {
 	}
 
 	public function log_exception( $key, \Exception $e ) {
-		$trace = basename($e->getFile()) . ':' . $e->getLine() . '; ';
+		$trace = '';
+		if ($e->getFile()) {
+			$trace = basename($e->getFile()) . ':' . $e->getLine() . '; ';
+		}
 		foreach ($e->getTrace() as $index => $item) {
-			$trace .= basename($item['file']) . ':' . $item['line'] . '; ';
+			if (!empty($item['file'])) {
+				$trace .= basename($item['file']) . ':' . $item['line'] . '; ';
+			}
 			if ($index > 5) {
 				continue;
 			}
