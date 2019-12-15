@@ -181,16 +181,18 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 				   value="<?php esc_html_e( 'Archive reports', 'matomo' ); ?>">
 		</form>
 
-		<?php $show_troubleshooting_link = false;
-        include 'info_help.php'; ?>
-        <h3><?php esc_html_e( 'Popular Troubleshooting FAQs', 'matomo' ); ?></h3>
-        <ul class="matomo-list">
-            <li><a href="https://matomo.org/faq/wordpress/matomo-for-wordpress-is-not-showing-any-statistics-not-archiving-how-do-i-fix-it/" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Matomo is not showing any statistics / reports, how do I fix it?', 'matomo' ); ?></a></li>
-            <li><a href="https://matomo.org/faq/wordpress/i-cannot-open-backend-page-how-do-i-troubleshoot-it/" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'I cannot open the Matomo Reporting, Admin, or Tag Manager page, how do I troubleshoot it?', 'matomo' ); ?></a></li>
-            <li><a href="https://matomo.org/faq/wordpress/i-have-a-problem-how-do-i-troubleshoot-and-enable-wp_debug/" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'I have an issue with the plugin, how do I troubleshoot and enable debug mode?', 'matomo' ); ?></a></li>
-            <li><a href="https://matomo.org/faq/wordpress/how-do-i-manually-delete-all-matomo-for-wordpress-data/" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'How do I manually delete or reset all Matomo for WordPress data?', 'matomo' ); ?></a></li>
-            <li><a href="https://matomo.org/faq/wordpress/" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'View all FAQs', 'matomo' ); ?></a></li>
-        </ul>
+		<?php
+		$show_troubleshooting_link = false;
+		include 'info_help.php';
+		?>
+		<h3><?php esc_html_e( 'Popular Troubleshooting FAQs', 'matomo' ); ?></h3>
+		<ul class="matomo-list">
+			<li><a href="https://matomo.org/faq/wordpress/matomo-for-wordpress-is-not-showing-any-statistics-not-archiving-how-do-i-fix-it/" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Matomo is not showing any statistics / reports, how do I fix it?', 'matomo' ); ?></a></li>
+			<li><a href="https://matomo.org/faq/wordpress/i-cannot-open-backend-page-how-do-i-troubleshoot-it/" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'I cannot open the Matomo Reporting, Admin, or Tag Manager page, how do I troubleshoot it?', 'matomo' ); ?></a></li>
+			<li><a href="https://matomo.org/faq/wordpress/i-have-a-problem-how-do-i-troubleshoot-and-enable-wp_debug/" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'I have an issue with the plugin, how do I troubleshoot and enable debug mode?', 'matomo' ); ?></a></li>
+			<li><a href="https://matomo.org/faq/wordpress/how-do-i-manually-delete-all-matomo-for-wordpress-data/" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'How do I manually delete or reset all Matomo for WordPress data?', 'matomo' ); ?></a></li>
+			<li><a href="https://matomo.org/faq/wordpress/" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'View all FAQs', 'matomo' ); ?></a></li>
+		</ul>
 		<?php include 'info_bug_report.php'; ?>
 		<h4><?php esc_html_e( 'Before you create an issue', 'matomo' ); ?></h4>
 		<p><?php esc_html_e( 'If you experience any issue in Matomo, it is always a good idea to first check your webserver logs (if possible) for any errors.', 'matomo' ); ?>
