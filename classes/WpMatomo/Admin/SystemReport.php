@@ -69,17 +69,17 @@ class SystemReport {
 				try {
 					$errors = $scheduled_tasks->archive( $force = true, $throw_exception = false );
 				} catch (\Exception $e) {
-					echo '<div class="error">' . esc_html_e('Error', 'matomo') . ': '. matomo_anonymize_value($e->getMessage()) . '</div>';
+					echo '<div class="error"><p>' . esc_html_e('Matomo Archive Error', 'matomo') . ': '. matomo_anonymize_value($e->getMessage()) . '</p></div>';
 					throw $e;
 				}
 
 				if ( ! empty( $errors ) ) {
-					echo '<div class="notice notice-warning">';
+					echo '<div class="notice notice-warning"><p>Matomo Archive Warnings: ';
 					foreach ($errors as $error) {
 						echo nl2br(esc_html(matomo_anonymize_value(var_export($error, 1))));
 						echo '<br/>';
 					}
-					echo '</div>';
+					echo '</p></div>';
 				}
 			}
 
@@ -435,7 +435,8 @@ class SystemReport {
 			);
 			foreach ( $error_log_entries as $error ) {
 				$error['value'] = $this->convert_time_to_date( $error['value'], true, false );
-				$rows[]         = $error;
+				$error['is_warning'] = !empty($error['name']) && stripos($error['name'], 'archiv') !== false;
+				$rows[] = $error;
 			}
 		}
 

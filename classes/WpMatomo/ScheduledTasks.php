@@ -218,11 +218,15 @@ class ScheduledTasks {
 
 		try {
 			$archiver->main();
+
+			$archive_errors = $archiver->getErrors();
+
 		} catch ( \Exception $e ) {
 			$this->logger->log( 'Failed Matomo Archive: ' . $e->getMessage() );
 			$this->logger->log_exception( 'archive_main' , $e);
+			$archive_errors = $archiver->getErrors();
 
-			if ($archiver->getErrors()) {
+			if (!empty($archive_errors)) {
 				$message = '';
 				foreach ($archiver->getErrors() as $error) {
 					$message .= var_export($error, 1) . ' ';
@@ -233,10 +237,12 @@ class ScheduledTasks {
 
 			if ($throw_exception) {
 				throw $e;
+			} else {
+				$archive_errors[] = $e->getMessage();
 			}
 		}
 
-		return $archiver->getErrors();
+		return $archive_errors;
 	}
 
 	public function uninstall() {
