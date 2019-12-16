@@ -1,6 +1,10 @@
 1.0.0
 - First release.
 
+0.3.6
+- Improve formatting of numbers for some languages
+- Improved system report
+
 0.3.5
 - Better PHP 7.4 support
 - Improved error handling

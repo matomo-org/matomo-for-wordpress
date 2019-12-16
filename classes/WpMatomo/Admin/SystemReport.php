@@ -69,7 +69,8 @@ class SystemReport {
 				try {
 					$errors = $scheduled_tasks->archive( $force = true, $throw_exception = false );
 				} catch (\Exception $e) {
-					echo '<div class="error"><p>' . esc_html_e('Matomo Archive Error', 'matomo') . ': '. matomo_anonymize_value($e->getMessage()) . '</p></div>';
+					$logger = new Logger();
+					echo '<div class="error"><p>' . esc_html__('Matomo Archive Error', 'matomo') . ': '. esc_html(matomo_anonymize_value($e->getMessage() . ' =>' . $logger->get_readable_trace($e))) . '</p></div>';
 					throw $e;
 				}
 
