@@ -9,7 +9,11 @@ $GLOBALS['CONFIG_INI_PATH_RESOLVER'] = function () {
 };
 if ( ! defined( 'PIWIK_ENABLE_ERROR_HANDLER' ) ) {
 	// we prefer using WP error handler
-	define( 'PIWIK_ENABLE_ERROR_HANDLER', false );
+	if (empty($_SERVER['argv'])
+	    || !is_array($_SERVER['argv'])
+	    || !in_array('climulti:request', $_SERVER['argv'], true)) {
+		define( 'PIWIK_ENABLE_ERROR_HANDLER', false );
+	}
 }
 
 $matomo_was_wp_loaded_directly = ! defined( 'ABSPATH' );
