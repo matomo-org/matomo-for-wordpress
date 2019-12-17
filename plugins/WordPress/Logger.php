@@ -80,6 +80,10 @@ class Logger extends AbstractLogger implements LoggerInterface
 			if (defined('Piwik\Log::'.strtoupper($level))) {
 				$this->level = Log::getMonologLevel(constant('Piwik\Log::'.strtoupper($level)));
 			}
+			if (Common::isPhpCliMode() && $this->level === \Monolog\Logger::WARNING) {
+				// default level for CLI is supposed to be INFO
+				$this->level = \Monolog\Logger::INFO;
+			}
 		}
 	}
 
@@ -104,6 +108,15 @@ class Logger extends AbstractLogger implements LoggerInterface
 	public function log( $level, $message, array $context = array() ) {
 
 		if ( !defined( 'WP_DEBUG' ) || WP_DEBUG !== true ) {
+
+			if (Common::isPhpCliMode() && in_array('screen', $this->writers, true)) {
+				$level = $this->make_numeric_level($level);
+				if ($level < $this->level) {
+					return;
+				}
+				// in CLI we want to print the message...
+				echo $message;
+			}
 			return;
 		}
 
