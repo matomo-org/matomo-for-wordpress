@@ -1,6 +1,11 @@
 1.0.0
 - First release.
 
+0.3.6
+- Improve formatting of numbers for some languages
+- Fix error while archiving table name could be too long
+- Improved system report
+
 0.3.5
 - Better PHP 7.4 support
 - Improved error handling

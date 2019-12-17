@@ -140,7 +140,6 @@ class Installer {
 				// before eg the users_language table would not have been available yet
 				$this->create_user();
 			} catch ( \Exception $e ) {
-				$this->logger->log( 'Error create user' . $e->getMessage() );
 				$this->logger->log_exception( 'install_create_user', $e );
 			}
 
@@ -148,7 +147,6 @@ class Installer {
 				// update plugins if there are any
 				$this->update_components();
 			} catch ( \Exception $e ) {
-				$this->logger->log( 'Error update components' . $e->getMessage() );
 				$this->logger->log_exception( 'install_update_comp', $e );
 			}
 
