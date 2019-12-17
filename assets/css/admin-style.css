@@ -6,6 +6,10 @@
     width: 30%;
 }
 
+.matomo-systemreport-comment {
+    word-break: break-all;
+}
+
 .matomo-hero {
     text-align: center;background: #3152a0;padding: 30px 20%;
 }

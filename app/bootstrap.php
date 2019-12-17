@@ -1,9 +1,5 @@
 <?php
 
-use Piwik\Common;
-use Piwik\Container\StaticContainer;
-use Piwik\Exception\ErrorException;
-
 $GLOBALS['CONFIG_INI_PATH_RESOLVER'] = function () {
 	if ( defined( 'ABSPATH' )
 	     && defined( 'MATOMO_CONFIG_PATH' ) ) {
@@ -88,8 +84,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( !is_plugin_active('matomo/matomo.php')
-     && !defined( 'MATOMO_PHPUNIT_TEST' )
-     && !MATOMO_PHPUNIT_TEST ) { // during tests the plugin may temporarily not be active
+     && (!defined( 'MATOMO_PHPUNIT_TEST' ) || !MATOMO_PHPUNIT_TEST) ) { // during tests the plugin may temporarily not be active
 	exit;
 }
 
