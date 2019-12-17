@@ -455,6 +455,7 @@ class SystemReport {
 			foreach ( $error_log_entries as $error ) {
 				$error['value'] = $this->convert_time_to_date( $error['value'], true, false );
 				$error['is_warning'] = !empty($error['name']) && stripos($error['name'], 'archiv') !== false;
+				$error['comment'] = matomo_anonymize_value($error['comment']);
 				$rows[] = $error;
 			}
 		}
