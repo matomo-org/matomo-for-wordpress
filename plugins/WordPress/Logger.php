@@ -10,6 +10,7 @@
 namespace Piwik\Plugins\WordPress;
 
 use Monolog\Processor\PsrLogMessageProcessor;
+use Piwik\Application\Environment;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
@@ -80,7 +81,9 @@ class Logger extends AbstractLogger implements LoggerInterface
 			if (defined('Piwik\Log::'.strtoupper($level))) {
 				$this->level = Log::getMonologLevel(constant('Piwik\Log::'.strtoupper($level)));
 			}
-			if (Common::isPhpCliMode() && $this->level === \Monolog\Logger::WARNING) {
+			if (Common::isPhpCliMode()
+			    && $this->level === \Monolog\Logger::WARNING
+			    && StaticContainer::get(Environment::class)->getEnvironment() == 'cli') {
 				// default level for CLI is supposed to be INFO
 				$this->level = \Monolog\Logger::INFO;
 			}
