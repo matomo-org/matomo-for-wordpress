@@ -1,6 +1,9 @@
 1.0.0
 - First release.
 
+0.3.7
+- Fix warning constant matomo unit test not defined
+
 0.3.6
 - Improve formatting of numbers for some languages
 - Fix error while archiving table name could be too long
