@@ -69,7 +69,8 @@ class SystemReport {
 				try {
 					$errors = $scheduled_tasks->archive( $force = true, $throw_exception = false );
 				} catch (\Exception $e) {
-					echo '<div class="error"><p>' . esc_html_e('Matomo Archive Error', 'matomo') . ': '. matomo_anonymize_value($e->getMessage()) . '</p></div>';
+					$logger = new Logger();
+					echo '<div class="error"><p>' . esc_html__('Matomo Archive Error', 'matomo') . ': '. esc_html(matomo_anonymize_value($e->getMessage() . ' =>' . $logger->get_readable_trace($e))) . '</p></div>';
 					throw $e;
 				}
 
@@ -389,6 +390,24 @@ class SystemReport {
 				'value'   => $cli_multi->supportsAsync(),
 				'comment' => '',
 			);
+
+			$num_days_check_visits = 5;
+			$had_visits = $this->had_visits_in_last_days($num_days_check_visits);
+			if ($had_visits === false || $had_visits === true) {
+				// do not show info if we could not detect it (had_visits === null)
+				$comment = '';
+				if (!$had_visits) {
+					$comment = 'It looks like there were no visits in the last ' . $num_days_check_visits . ' days. This may be expected if tracking is disabled, you have not added the tracking code, or your website does not have many visitors in general and you exclude your own visits.';
+				}
+
+				$rows[] = array(
+					'name'    => 'Had visit in last ' . $num_days_check_visits . ' days',
+					'value'   => $had_visits,
+					'is_warning' => !$had_visits && $this->settings->is_tracking_enabled(),
+					'comment' => $comment,
+				);
+			}
+
 		}
 
 		$rows[] = array(
@@ -441,6 +460,41 @@ class SystemReport {
 		}
 
 		return $rows;
+	}
+
+	private function had_visits_in_last_days($numDays)
+	{
+		global $wpdb;
+
+		if (\WpMatomo::is_safe_mode()) {
+			return null;
+		}
+
+		$days_in_seconds = $numDays * 86400;
+		$db = new \WpMatomo\Db\Settings();
+		$prefix_table = $db->prefix_table_name('log_visit');
+
+		$suppress_errors = $wpdb->suppress_errors;
+		$wpdb->suppress_errors( true );// prevent any of this showing in logs just in case
+
+		try {
+			$time = gmdate( 'Y-m-d H:i:s', time() - $days_in_seconds );
+			$sql = $wpdb->prepare('SELECT count(idsite) from ' . $prefix_table . ' where visit_last_action_time > %s LIMIT 1', $time );
+			$row = $wpdb->get_var( $sql );
+		} catch ( \Exception $e ) {
+			$row = null;
+		}
+
+		$wpdb->suppress_errors( $suppress_errors );
+		// we need to differentiate between
+		// 0 === had no visit
+		// 1 === had visit
+		// null === sum error... eg table was not correctly installed
+		if ($row !== null) {
+			$row = !empty($row);
+		}
+
+		return $row;
 	}
 
 	private function convert_time_to_date( $time, $in_blog_timezone, $print_diff = false ) {

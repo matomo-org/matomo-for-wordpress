@@ -42,4 +42,10 @@ class LoggerTest extends MatomoUnit_TestCase {
 		$this->assertStringStartsWith( 'foobar test => test-logger.php:', $entries[0]['comment'] );
 	}
 
+	public function get_readable_trace() {
+		$trace = $this->logger->get_readable_trace( new Exception( 'foobar test' ) );
+
+		$this->assertStringStartsWith( 'test-logger.php:', $trace );
+	}
+
 }

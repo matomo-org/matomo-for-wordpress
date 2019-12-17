@@ -9,6 +9,8 @@
 
 namespace WpMatomo;
 
+use Exception;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -59,7 +61,7 @@ class Logger {
 		return $logs;
 	}
 
-	public function log_exception( $key, \Exception $e ) {
+	public function get_readable_trace( Exception $e ) {
 		$trace = '';
 		if ( $e->getFile() ) {
 			$trace = basename( $e->getFile() ) . ':' . $e->getLine() . '; ';
@@ -72,7 +74,15 @@ class Logger {
 				continue;
 			}
 		}
-		$this->persist( $key, $e->getMessage() . ' => ' . trim( $trace ) );
+
+		return trim( $trace );
+	}
+
+	public function log_exception( $key, Exception $e ) {
+		$trace   = $this->get_readable_trace($e);
+		$message = $e->getMessage() . ' => ' . $trace;
+		$this->log( 'Matomo error: ' . $message );
+		$this->persist( $key, $message );
 	}
 
 }

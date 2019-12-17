@@ -1,4 +1,9 @@
 <?php
+
+use Piwik\Common;
+use Piwik\Container\StaticContainer;
+use Piwik\Exception\ErrorException;
+
 $GLOBALS['CONFIG_INI_PATH_RESOLVER'] = function () {
 	if ( defined( 'ABSPATH' )
 	     && defined( 'MATOMO_CONFIG_PATH' ) ) {
@@ -7,9 +12,18 @@ $GLOBALS['CONFIG_INI_PATH_RESOLVER'] = function () {
 		return $paths->get_config_ini_path();
 	}
 };
+
+$matomo_is_archive_request = !empty($_SERVER['argv'])
+                             && is_array($_SERVER['argv'])
+                             && in_array('climulti:request', $_SERVER['argv'], true);
+
 if ( ! defined( 'PIWIK_ENABLE_ERROR_HANDLER' ) ) {
-	// we prefer using WP error handler
-	define( 'PIWIK_ENABLE_ERROR_HANDLER', false );
+	// we prefer using WP error handler... unless we are archiving where we want to prevent any warnings being printed
+	// as otherwise the archiving would be marked as failed because the cli archive output would contain a warning and
+	// the output would not be possible to do an unserialize anymore
+	if (!$matomo_is_archive_request) {
+		define( 'PIWIK_ENABLE_ERROR_HANDLER', false );
+	}
 }
 
 $matomo_was_wp_loaded_directly = ! defined( 'ABSPATH' );
@@ -18,6 +32,31 @@ if ( $matomo_was_wp_loaded_directly ) {
 	// prevent from loading twice
 	$matomo_wpload_base = '../../../../wp-load.php';
 	$matomo_wpload_full = dirname( __FILE__ ) . '/' . $matomo_wpload_base;
+
+	if ($matomo_is_archive_request) {
+		// the matomo error handler will be only loaded after WordPress has been loaded... here we want to prevent
+		// any warning/notice from being shown while bootstrapping WordPress or otherwise the unserialize of the response
+		// later in climulti will fail
+		set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+			// if the error has been suppressed by the @ we don't handle the error
+			if (error_reporting() == 0) {
+				return;
+			}
+
+			if (in_array($errno, array(E_ERROR, E_PARSE, E_CORE_ERROR, E_CORE_WARNING, E_COMPILE_ERROR, E_COMPILE_WARNING, E_USER_ERROR))) {
+				return false; //force standard behaviour
+			}
+
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG === true ) {
+				if (function_exists('ini_set')) {
+					$value = @ini_set('display_errors', 'Off');
+					if (false !== $value) {
+						error_log( sprintf('Matomo errnumber: %s: %s in %s:%s', $errno, $errstr, $errfile, $errline ));
+					}
+				}
+			}
+		});
+	}
 
 	if (!empty($_ENV['MATOMO_WP_ROOT_PATH']) && file_exists( rtrim($_ENV['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php')) {
 		require_once rtrim($_ENV['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php';
@@ -35,6 +74,11 @@ if ( $matomo_was_wp_loaded_directly ) {
 		} elseif (file_exists(dirname(dirname(dirname(dirname(dirname( $_SERVER['SCRIPT_FILENAME'] ))))) . '/wp-load.php')) {
 			require_once dirname(dirname(dirname(dirname(dirname( $_SERVER['SCRIPT_FILENAME'] ))))) . '/wp-load.php';
 		}
+	}
+
+
+	if ($matomo_is_archive_request) {
+		restore_error_handler();
 	}
 }
 
