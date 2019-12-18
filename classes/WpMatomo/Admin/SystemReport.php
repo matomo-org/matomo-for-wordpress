@@ -10,6 +10,7 @@
 namespace WpMatomo\Admin;
 
 use Piwik\CliMulti;
+use Piwik\Common;
 use Piwik\Container\StaticContainer;
 use Piwik\Filesystem;
 use Piwik\MetricsFormatter;
@@ -334,6 +335,16 @@ class SystemReport {
 			'value'   => '',
 			'comment' => $paths->get_tracker_api_rest_api_endpoint(),
 		);
+
+		$matomo_plugin_dir_name = basename(dirname(MATOMO_ANALYTICS_FILE));
+		if ($matomo_plugin_dir_name !== 'matomo') {
+			$rows[] = array(
+				'name'    => 'Matomo Plugin Name is correct',
+				'value'   => false,
+				'is_error' => true,
+				'comment' => 'The plugin name should be "matomo" but seems to be "' . $matomo_plugin_dir_name . '". As a result, admin pages and other features might not work. You might need to rename the directory name of this plugin and reactive the plugin.',
+			);
+		}
 
 		$rows[] = array(
 			'section' => 'Crons',
