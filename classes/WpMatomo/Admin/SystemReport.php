@@ -665,6 +665,12 @@ class SystemReport {
 			'name'  => 'PHP SAPI',
 			'value' => php_sapi_name(),
 		);
+		if (defined('PHP_BINARY') && PHP_BINARY) {
+			$rows[] = array(
+				'name'  => 'PHP Binary Name',
+				'value' => @basename(PHP_BINARY),
+			);
+		}
 		$rows[] = array(
 			'name'  => 'Timezone',
 			'value' => date_default_timezone_get(),
