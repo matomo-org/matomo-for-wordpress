@@ -96,9 +96,11 @@ if ( $matomo_was_wp_loaded_directly ) {
 
 	if ($matomo_is_archive_request) {
 		restore_error_handler();
-		$matomo_ob_end_clean_msg = ob_get_clean();
-		if (!empty($matomo_ob_end_clean_msg)) {
-			matomo_log_message_no_display( $matomo_ob_end_clean_msg );
+		if (ob_get_level()) {
+			$matomo_ob_end_clean_msg = @ob_get_clean();
+			if (!empty($matomo_ob_end_clean_msg)) {
+				matomo_log_message_no_display( $matomo_ob_end_clean_msg );
+			}
 		}
 	}
 }
