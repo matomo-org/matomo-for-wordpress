@@ -239,8 +239,7 @@ class CliMulti
      */
     public function supportsAsync()
     {
-	    $phpBinary = $this->findPhpBinary();
-        $supportsAsync = Process::isSupported() && !Common::isPhpCgiType() && $phpBinary && strpos($phpBinary, 'cgi') === false;
+        $supportsAsync = Process::isSupported() && !Common::isPhpCgiType() && $this->findPhpBinary();
 
         /**
          * Triggered to allow plugins to force the usage of async cli multi execution or to disable it.
