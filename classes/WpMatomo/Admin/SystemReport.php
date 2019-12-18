@@ -156,7 +156,7 @@ class SystemReport {
 				),
 			);
 		}
-
+		$matomo_tables                    = apply_filters('matomo_systemreport_tables', $matomo_tables);
 		$matomo_tables                    = $this->add_errors_first( $matomo_tables );
 		$matomo_has_warning_and_no_errors = $this->has_only_warnings_no_error( $matomo_tables );
 
