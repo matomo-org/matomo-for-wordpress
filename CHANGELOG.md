@@ -1,6 +1,11 @@
 1.0.0
 - First release.
 
+0.3.8
+- Fix archiving might not work when using lightspeed
+- Improve system report detecting wrong plugin name
+- Let plugins extend system report
+
 0.3.7
 - Fix warning constant matomo unit test not defined
 
