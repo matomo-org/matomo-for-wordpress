@@ -344,6 +344,13 @@ class SystemReport {
 				'is_error' => true,
 				'comment' => 'The plugin name should be "matomo" but seems to be "' . $matomo_plugin_dir_name . '". As a result, admin pages and other features might not work. You might need to rename the directory name of this plugin and reactive the plugin.',
 			);
+		} elseif (!is_plugin_active('matomo/matomo.php')) {
+			$rows[] = array(
+				'name'    => 'Matomo Plugin not active',
+				'value'   => false,
+				'is_error' => true,
+				'comment' => 'It seems WordPress thinks that `matomo/matomo.php` is not active. As a result Matomo reporting and admin pages may not work. You may be able to fix this by deactivating and activating the Matomo Analytics plugin. One of the reasons this could happen is that you used to have Matomo installed in the wrong folder.',
+			);
 		}
 
 		$rows[] = array(
