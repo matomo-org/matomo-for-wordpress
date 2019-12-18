@@ -662,6 +662,10 @@ class SystemReport {
 			'value' => phpversion(),
 		);
 		$rows[] = array(
+			'name'  => 'PHP SAPI',
+			'value' => php_sapi_name(),
+		);
+		$rows[] = array(
 			'name'  => 'Timezone',
 			'value' => date_default_timezone_get(),
 		);
