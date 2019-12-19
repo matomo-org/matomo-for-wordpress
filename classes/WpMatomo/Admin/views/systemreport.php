@@ -17,6 +17,7 @@ use WpMatomo\Admin\SystemReport;
 
 /** @var Access $access */
 /** @var array $matomo_tables */
+/** @var array $matomo_has_exception_logs */
 /** @var bool $matomo_has_warning_and_no_errors */
 /** @var string $matomo_active_tab */
 /** @var \WpMatomo\Settings $settings */
@@ -174,8 +175,15 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 			<br/><br/>
 			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE ); ?>" type="submit"
 				   class='button-primary'
-				   value="<?php esc_html_e( 'Clear Matomo Cache', 'matomo' ); ?>">
+				   value="<?php esc_html_e( 'Clear Matomo cache', 'matomo' ); ?>">
 			<br/><br/>
+            <?php if (!empty($matomo_has_exception_logs)) { ?>
+			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_CLEAR_LOGS ); ?>" type="submit"
+				   class='button-primary'
+                   title="<?php esc_attr_e( 'Removes all stored Matomo logs that are shown in the system report', 'matomo' ) ?>"
+				   value="<?php esc_html_e( 'Clear system report logs', 'matomo' ); ?>">
+			<br/><br/>
+            <?php } ?>
 			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_ARCHIVE_NOW ); ?>" type="submit"
 				   class='button-primary'
 				   value="<?php esc_html_e( 'Archive reports', 'matomo' ); ?>">

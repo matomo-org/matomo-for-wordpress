@@ -10,7 +10,6 @@
 namespace WpMatomo\Admin;
 
 use Piwik\CliMulti;
-use Piwik\Common;
 use Piwik\Container\StaticContainer;
 use Piwik\Filesystem;
 use Piwik\MetricsFormatter;
@@ -38,6 +37,7 @@ class SystemReport {
 	const TROUBLESHOOT_SYNC_ALL_SITES     = 'matomo_troubleshooting_action_all_sites';
 	const TROUBLESHOOT_CLEAR_MATOMO_CACHE = 'matomo_troubleshooting_action_clear_matomo_cache';
 	const TROUBLESHOOT_ARCHIVE_NOW        = 'matomo_troubleshooting_action_archive_now';
+	const TROUBLESHOOT_CLEAR_LOGS         = 'matomo_troubleshooting_action_clear_logs';
 
 	private $not_compatible_plugins = array(
 		'background-manager/background-manager.php', // Uses an old version of Twig and plugin is no longer maintained.
@@ -50,8 +50,14 @@ class SystemReport {
 	 */
 	private $settings;
 
+	/**
+	 * @var Logger
+	 */
+	private $logger;
+
 	public function __construct( Settings $settings ) {
 		$this->settings = $settings;
+		$this->logger = new Logger();
 	}
 
 	public function get_not_compatible_plugins() {
@@ -70,8 +76,7 @@ class SystemReport {
 				try {
 					$errors = $scheduled_tasks->archive( $force = true, $throw_exception = false );
 				} catch (\Exception $e) {
-					$logger = new Logger();
-					echo '<div class="error"><p>' . esc_html__('Matomo Archive Error', 'matomo') . ': '. esc_html(matomo_anonymize_value($e->getMessage() . ' =>' . $logger->get_readable_trace($e))) . '</p></div>';
+					echo '<div class="error"><p>' . esc_html__('Matomo Archive Error', 'matomo') . ': '. esc_html(matomo_anonymize_value($e->getMessage() . ' =>' . $this->logger->get_readable_trace($e))) . '</p></div>';
 					throw $e;
 				}
 
@@ -92,6 +97,10 @@ class SystemReport {
 				// going wrong with matomo and bootstrapping would not even be possible.
 				Bootstrap::do_bootstrap();
 				Filesystem::deleteAllCacheOnUpdate();
+			}
+
+			if ( ! empty( $_POST[ self::TROUBLESHOOT_CLEAR_LOGS ] ) ) {
+				$this->logger->clear_logged_exceptions();
 			}
 
 			if ( ! $this->settings->is_network_enabled() || ! is_network_admin() ) {
@@ -159,6 +168,8 @@ class SystemReport {
 		$matomo_tables                    = apply_filters('matomo_systemreport_tables', $matomo_tables);
 		$matomo_tables                    = $this->add_errors_first( $matomo_tables );
 		$matomo_has_warning_and_no_errors = $this->has_only_warnings_no_error( $matomo_tables );
+
+		$matomo_has_exception_logs = $this->logger->get_last_logged_entries();
 
 		include dirname( __FILE__ ) . '/views/systemreport.php';
 	}
@@ -464,8 +475,7 @@ class SystemReport {
 			}
 		}
 
-		$logs              = new Logger();
-		$error_log_entries = $logs->get_last_logged_entries();
+		$error_log_entries = $this->logger->get_last_logged_entries();
 		if ( ! empty( $error_log_entries ) ) {
 			$rows[] = array(
 				'section' => 'Logs',

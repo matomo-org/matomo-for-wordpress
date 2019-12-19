@@ -1,6 +1,13 @@
 1.0.0
 - First release.
 
+0.3.10
+- Add new feature to clear system report logs
+- Ignore warnings when bootstrapping archiving
+
+0.3.9
+- Fix admin backend might not load some html pages
+
 0.3.8
 - Fix archiving might not work when using lightspeed
 - Improve system report detecting wrong plugin name
