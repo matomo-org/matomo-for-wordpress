@@ -163,6 +163,11 @@ class SystemReport {
 					'rows'         => $this->get_db_info(),
 					'has_comments' => true,
 				),
+				array(
+					'title'        => 'Browser',
+					'rows'         => $this->get_browser_info(),
+					'has_comments' => false,
+				),
 			);
 		}
 		$matomo_tables                    = apply_filters('matomo_systemreport_tables', $matomo_tables);
@@ -742,6 +747,19 @@ class SystemReport {
 			$rows[]       = array(
 				'name'  => 'Curl Version',
 				'value' => $curl_version,
+			);
+		}
+
+		return $rows;
+	}
+
+	private function get_browser_info() {
+		$rows = array();
+
+		if (!empty($_SERVER['HTTP_USER_AGENT'])) {
+			$rows[] = array(
+				'name'    => 'Browser',
+				'value'   => $_SERVER['HTTP_USER_AGENT'],
 			);
 		}
 

@@ -77,6 +77,9 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 				  id="matomo_system_report_info">
 				  <?php
 					foreach ( $matomo_tables as $matomo_table ) {
+						if (empty($matomo_table['rows'])) {
+							continue;
+						}
 						echo '# ' . esc_html( $matomo_table['title'] ) . "\n";
 						foreach ( $matomo_table['rows'] as $index => $matomo_row ) {
 							if ( ! empty( $matomo_row['section'] ) ) {
@@ -107,6 +110,9 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 
 		<?php
 		foreach ( $matomo_tables as $matomo_table ) {
+		    if (empty($matomo_table['rows'])) {
+		        continue;
+            }
 			echo '<h2>' . esc_html( $matomo_table['title'] ) . "</h2><table class='widefat'><thead></thead><tbody>";
 			foreach ( $matomo_table['rows'] as $matomo_row ) {
 				if ( ! empty( $matomo_row['section'] ) ) {
