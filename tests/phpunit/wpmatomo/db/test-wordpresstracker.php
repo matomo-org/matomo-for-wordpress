@@ -38,6 +38,26 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 		$this->db->query( 'select * from foobarbaz' );
 	}
 
+	public function test_query_handles_null_values() {
+		$table  = Common::prefixTable( 'log_action' );
+		$this->db->query(
+			'INSERT INTO '.$table.' (name, hash, type, url_prefix) VALUES (?,CRC32(?),?,?)',
+			array('myname', 'myname', 2, null)
+		);
+
+		$all = $this->db->fetchAll('select * from ' . $table);
+
+		$this->assertSame(array(
+			array(
+				'idaction' => '1',
+				'name' => 'myname',
+				'hash' => '2383257219',
+				'type' => '2',
+				'url_prefix' => null
+			)
+		), $all);
+	}
+
 	public function test_query_can_execute_select_queries() {
 		$table  = Common::prefixTable( 'user' );
 		$result = $this->db->query( ' select * from ' . $table );
