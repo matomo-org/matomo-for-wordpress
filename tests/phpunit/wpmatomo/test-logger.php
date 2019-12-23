@@ -24,6 +24,12 @@ class LoggerTest extends MatomoUnit_TestCase {
 		$this->assertSame( array(), $this->logger->get_last_logged_entries() );
 	}
 
+	public function test_clear_logged_exceptions_when_has_no_exceptions() {
+		$this->logger->clear_logged_exceptions();
+
+		$this->assertSame( array(), $this->logger->get_last_logged_entries() );
+	}
+
 	public function test_log_different_php_types_wont_fail() {
 		$this->logger->log( 'foo' );
 		$this->logger->log( 555 );
@@ -47,5 +53,17 @@ class LoggerTest extends MatomoUnit_TestCase {
 
 		$this->assertStringStartsWith( 'test-logger.php:', $trace );
 	}
+
+	public function test_clear_logged_exceptions() {
+		$this->logger->log_exception( 'mykey', new Exception( 'foobar test' ) );
+
+		$entries = $this->logger->get_last_logged_entries();
+		$this->assertCount( 1, $entries );
+
+		$this->logger->clear_logged_exceptions();
+
+		$this->assertSame( array(), $this->logger->get_last_logged_entries() );
+	}
+
 
 }

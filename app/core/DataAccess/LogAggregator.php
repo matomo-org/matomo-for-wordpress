@@ -196,7 +196,11 @@ class LogAggregator
     {
         $bind = $this->getGeneralQueryBindParams();
         $tableName = self::LOG_TABLE_SEGMENT_TEMPORARY_PREFIX . md5(json_encode($bind) . $this->segment->getString());
-        return Common::mb_substr($tableName, 0, 64);
+
+	    $lengthPrefix = Common::mb_strlen(Common::prefixTable(''));
+	    $maxLength = 64 - $lengthPrefix;
+
+	    return Common::mb_substr($tableName, 0, $maxLength);
     }
 
     public function cleanup()

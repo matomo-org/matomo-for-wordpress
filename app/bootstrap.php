@@ -24,12 +24,41 @@ if ( ! defined( 'PIWIK_ENABLE_ERROR_HANDLER' ) ) {
 
 $matomo_was_wp_loaded_directly = ! defined( 'ABSPATH' );
 
+
+function matomo_log_message_no_display($message)
+{
+	$message = 'Matomo ' . $message;
+
+	if ( defined( 'WP_DEBUG' ) && WP_DEBUG === true ) {
+		if (function_exists('ini_set') && function_exists('ini_get')) {
+			$value_orig = @ini_get('display_errors');
+			$value = @ini_set('display_errors', 'Off');
+			if (false !== $value) {
+				error_log( $message );
+			}
+			@ini_set('display_errors', $value_orig);
+		}
+	}
+
+	if (function_exists('update_option')
+	    && class_exists('\WpMatomo\Logger')) {
+		// only if WordPress was bootstrapped by now... otherwise it will fail
+		try {
+			$logger = new \WpMatomo\Logger();
+			$logger->log_exception('archive_boot', new Exception($message));
+		} catch (Exception $e) {
+
+		}
+	}
+}
+
 if ( $matomo_was_wp_loaded_directly ) {
 	// prevent from loading twice
 	$matomo_wpload_base = '../../../../wp-load.php';
 	$matomo_wpload_full = dirname( __FILE__ ) . '/' . $matomo_wpload_base;
 
 	if ($matomo_is_archive_request) {
+		ob_start();
 		// the matomo error handler will be only loaded after WordPress has been loaded... here we want to prevent
 		// any warning/notice from being shown while bootstrapping WordPress or otherwise the unserialize of the response
 		// later in climulti will fail
@@ -43,14 +72,7 @@ if ( $matomo_was_wp_loaded_directly ) {
 				return false; //force standard behaviour
 			}
 
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG === true ) {
-				if (function_exists('ini_set')) {
-					$value = @ini_set('display_errors', 'Off');
-					if (false !== $value) {
-						error_log( sprintf('Matomo errnumber: %s: %s in %s:%s', $errno, $errstr, $errfile, $errline ));
-					}
-				}
-			}
+			matomo_log_message_no_display( sprintf('error: %s: %s in %s:%s', $errno, $errstr, $errfile, $errline ) );
 		});
 	}
 
@@ -72,9 +94,14 @@ if ( $matomo_was_wp_loaded_directly ) {
 		}
 	}
 
-
 	if ($matomo_is_archive_request) {
 		restore_error_handler();
+		if (ob_get_level()) {
+			$matomo_ob_end_clean_msg = @ob_get_clean();
+			if (!empty($matomo_ob_end_clean_msg)) {
+				matomo_log_message_no_display( $matomo_ob_end_clean_msg );
+			}
+		}
 	}
 }
 
@@ -85,7 +112,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( !is_plugin_active('matomo/matomo.php')
      && (!defined( 'MATOMO_PHPUNIT_TEST' ) || !MATOMO_PHPUNIT_TEST) ) { // during tests the plugin may temporarily not be active
-	exit;
+    exit;
 }
 
 if ($matomo_was_wp_loaded_directly) {

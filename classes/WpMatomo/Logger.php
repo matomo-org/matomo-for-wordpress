@@ -27,6 +27,10 @@ class Logger {
 		}
 	}
 
+	public function clear_logged_exceptions() {
+		delete_option( $this->make_id() );
+	}
+
 	private function persist( $key, $message ) {
 		$id     = $this->make_id();
 		$logs   = $this->get_last_logged_entries();

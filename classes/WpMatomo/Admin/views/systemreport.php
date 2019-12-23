@@ -17,6 +17,7 @@ use WpMatomo\Admin\SystemReport;
 
 /** @var Access $access */
 /** @var array $matomo_tables */
+/** @var array $matomo_has_exception_logs */
 /** @var bool $matomo_has_warning_and_no_errors */
 /** @var string $matomo_active_tab */
 /** @var \WpMatomo\Settings $settings */
@@ -76,6 +77,9 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 				  id="matomo_system_report_info">
 				  <?php
 					foreach ( $matomo_tables as $matomo_table ) {
+						if (empty($matomo_table['rows'])) {
+							continue;
+						}
 						echo '# ' . esc_html( $matomo_table['title'] ) . "\n";
 						foreach ( $matomo_table['rows'] as $index => $matomo_row ) {
 							if ( ! empty( $matomo_row['section'] ) ) {
@@ -106,6 +110,9 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 
 		<?php
 		foreach ( $matomo_tables as $matomo_table ) {
+		    if (empty($matomo_table['rows'])) {
+		        continue;
+            }
 			echo '<h2>' . esc_html( $matomo_table['title'] ) . "</h2><table class='widefat'><thead></thead><tbody>";
 			foreach ( $matomo_table['rows'] as $matomo_row ) {
 				if ( ! empty( $matomo_row['section'] ) ) {
@@ -174,8 +181,15 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 			<br/><br/>
 			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE ); ?>" type="submit"
 				   class='button-primary'
-				   value="<?php esc_html_e( 'Clear Matomo Cache', 'matomo' ); ?>">
+				   value="<?php esc_html_e( 'Clear Matomo cache', 'matomo' ); ?>">
 			<br/><br/>
+            <?php if (!empty($matomo_has_exception_logs)) { ?>
+			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_CLEAR_LOGS ); ?>" type="submit"
+				   class='button-primary'
+                   title="<?php esc_attr_e( 'Removes all stored Matomo logs that are shown in the system report', 'matomo' ) ?>"
+				   value="<?php esc_html_e( 'Clear system report logs', 'matomo' ); ?>">
+			<br/><br/>
+            <?php } ?>
 			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_ARCHIVE_NOW ); ?>" type="submit"
 				   class='button-primary'
 				   value="<?php esc_html_e( 'Archive reports', 'matomo' ); ?>">
