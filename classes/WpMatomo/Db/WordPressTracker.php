@@ -110,13 +110,16 @@ class WordPress extends Mysqli {
 			$bind = array( $bind );
 		}
 
-		$null_placeholder = '___###NULL###__';
 		$has_replaced_null = false;
+		$null_placeholder = '_#__###NULL###_' . rand(1, PHP_INT_MAX) . ' __#_';
+		// random number not really needed but may prevent random issues that someone could somehow inject easily something
 
 		foreach ($bind as $index => $val) {
 			if (is_null($val)) {
 				$bind[$index] = $null_placeholder;
 				$has_replaced_null = true;
+			} elseif (is_string($val) && strpos($val, $null_placeholder) !== false) {
+				throw new \Exception('unexpected bind param'); // preventing random injections or something
 			}
 		}
 
@@ -127,6 +130,7 @@ class WordPress extends Mysqli {
 		if ($has_replaced_null) {
 			$query = str_replace("'$null_placeholder'", 'NULL', $query);
 		}
+
 		return $query;
 	}
 
