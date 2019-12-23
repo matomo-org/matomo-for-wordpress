@@ -135,9 +135,24 @@ class WordPress extends Mysqli {
 			$bind = array( $bind );
 		}
 
+		$null_placeholder = '___###NULL###__';
+		$has_replaced_null = false;
+
+		foreach ($bind as $index => $val) {
+			if (is_null($val)) {
+				$bind[$index] = $null_placeholder;
+				$has_replaced_null = true;
+			}
+		}
+
 		$sql = str_replace( '?', '%s', $sql );
 
-		return $wpdb->prepare( $sql, $bind );
+		$query = $wpdb->prepare( $sql, $bind );
+
+		if ($has_replaced_null) {
+			$query = str_replace("'$null_placeholder'", 'NULL', $query);
+		}
+		return $query;
 	}
 
 	public function query( $sql, $bind = array() ) {
