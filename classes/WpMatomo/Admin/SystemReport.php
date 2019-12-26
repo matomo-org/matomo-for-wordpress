@@ -567,7 +567,7 @@ class SystemReport {
 								$item_comment = 'Archiving hasn\'t run in a while.';
 							}
 						}
-						$comment .= $item_comment;
+						$comment .= $item_comment . '<br/>';
 					}
 				}
 			}
