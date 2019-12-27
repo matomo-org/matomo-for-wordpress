@@ -26,7 +26,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 **How Matomo Analytics for Wordpress solves problems:**
 
 * 100% data ownership, no one else can see your data
-* Super easy to install. No technical knowledge needed
+* Super easy to install. No technical knowledge needed #nocode
 * Free to use forever
 * Designed to save you time as an out-of-box solution (including many Ecommerce stores)
 * Protects the privacy of your users
