@@ -480,17 +480,24 @@ class SystemReport {
 			}
 		}
 
+		$rows[] = array(
+			'section' => 'Logs',
+		);
+
 		$error_log_entries = $this->logger->get_last_logged_entries();
 		if ( ! empty( $error_log_entries ) ) {
-			$rows[] = array(
-				'section' => 'Logs',
-			);
 			foreach ( $error_log_entries as $error ) {
 				$error['value'] = $this->convert_time_to_date( $error['value'], true, false );
 				$error['is_warning'] = !empty($error['name']) && stripos($error['name'], 'archiv') !== false;
 				$error['comment'] = matomo_anonymize_value($error['comment']);
 				$rows[] = $error;
 			}
+		} else {
+			$rows[] = array(
+				'name'    => __('None', 'matomo'),
+				'value'   => '',
+				'comment' => '',
+			);
 		}
 
 		return $rows;
