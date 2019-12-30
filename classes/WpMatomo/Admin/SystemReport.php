@@ -736,6 +736,13 @@ class SystemReport {
 			'value' => ini_get( 'max_input_vars' ),
 		);
 
+		$disabled_functions = ini_get('disable_functions');
+		$rows[] = array(
+			'name'  => 'Disabled PHP functions',
+			'value' => !empty($disabled_functions),
+			'comment' => !empty($disabled_functions) ? $disabled_functions : ''
+		);
+
 		$zlib_compression = ini_get( 'zlib.output_compression' );
 		$row              = array(
 			'name'  => 'zlib.output_compression is off',
