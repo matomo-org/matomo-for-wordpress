@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
 Requires at least: 4.8
 Tested up to: 5.3
-Stable tag: 0.3.10
+Stable tag: 0.3.11
 Requires PHP: 7.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -26,7 +26,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 **How Matomo Analytics for Wordpress solves problems:**
 
 * 100% data ownership, no one else can see your data
-* Super easy to install. No technical knowledge needed
+* Super easy to install. No coding or technical knowledge needed #nocode
 * Free to use forever
 * Designed to save you time as an out-of-box solution (including many Ecommerce stores)
 * Protects the privacy of your users
