@@ -1,6 +1,10 @@
 1.0.0
 - First release.
 
+0.3.11
+- Improve archiving when some PHP functions are disabled
+- Improve system report
+
 0.3.10
 - Add new feature to clear system report logs
 - Ignore warnings when bootstrapping archiving
