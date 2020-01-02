@@ -88,7 +88,7 @@ Running Matomo Analytics on your server can use significant resources. Whenever 
 Over 1 million websites in over 190 countries are using Matomo already. Join the revolution too! Install Matomo on your Wordpress website completely free and take back full control of your data!
 
 **Third party resources we use:**
-* After activating this plugin, it will download a Geolocation database (GeoLite2-City.tar.gz) from [MaxMind](https://dev.maxmind.com/geoip/geoip2/geolite2/) into your uploads directory. The GeoLite2 database is distributed under the [Creative Commons Attribution-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/). This database is needed to detect the location of your visitors based on their IP.
+* After activating this plugin, it will download a Geolocation database (dbip-city-lite.mmdb.gz) from [DB IP](https://db-ip.com/db/download/ip-to-city-lite?refid=mtm) into your uploads directory. The DB-IP database is distributed under the [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/). This database is needed to detect the location of your visitors based on their IP.
 * When you enter a URL in the SEO ranking widget, then a request with the entered URL may be sent to Google, Alexa, Bing, and other SEO providers.
 
 == Installation ==

@@ -147,7 +147,8 @@ class ScheduledTasks {
 		$this->logger->log( 'Scheduled tasks update geoip database' );
 		try {
 			Bootstrap::do_bootstrap();
-			Option::set( GeoIP2AutoUpdater::LOC_URL_OPTION_NAME, 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz' );
+			$date = date('Y-m');
+			Option::set( GeoIP2AutoUpdater::LOC_URL_OPTION_NAME, 'https://download.db-ip.com/free/dbip-city-lite-'.$date.'.mmdb.gz' );
 			$updater = new GeoIP2AutoUpdater();
 			$updater->update();
 			if ( LocationProvider::getCurrentProviderId() !== Php::ID && LocationProvider::getProviderById( Php::ID ) ) {
