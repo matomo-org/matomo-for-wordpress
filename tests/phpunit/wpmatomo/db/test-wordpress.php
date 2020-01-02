@@ -57,17 +57,16 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_query_detects_error_code() {
-		$table  = Common::prefixTable( 'log_action' );
-
 		try {
 			$this->db->query(
-				'CREATE TABLE ' . $table . '(`url_prefix` tinyint(2) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;'
+				'SELECT * from foobarbaz;'
 			);
 			$this->fail('Expected exception not thrown');
 		} catch (Zend_Db_Exception $e) {
-			$this->assertTrue($this->db->isErrNo($e, 1500));
-			$this->assertFalse($this->db->isErrNo($e, 1499));
-			$this->assertFalse($this->db->isErrNo($e, 1501));
+			$this->assertContains('[1146]', $e->getMessage());
+			$this->assertTrue($this->db->isErrNo($e, 1146));
+			$this->assertFalse($this->db->isErrNo($e, 1145));
+			$this->assertFalse($this->db->isErrNo($e, 1147));
 		}
 	}
 
