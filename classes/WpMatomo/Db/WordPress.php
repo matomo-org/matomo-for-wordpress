@@ -105,6 +105,12 @@ class WordPress extends Mysqli {
 		return $wpdb->db_version();
 	}
 
+	private function getErrorNumberFromMessage( $message ) {
+		if ( preg_match( '/(?:\[|\s)([0-9]{4})(?:\]|\s)/', $message, $match ) ) {
+			return $match[1];
+		}
+	}
+
 	/**
 	 * Test error number
 	 *
@@ -114,9 +120,8 @@ class WordPress extends Mysqli {
 	 * @return bool
 	 */
 	public function isErrNo( $e, $errno ) {
-		if ( preg_match( '/(?:\[|\s)([0-9]{4})(?:\]|\s)/', $e->getMessage(), $match ) ) {
-			return $match[1] == $errno;
-		}
+		$errorCode = $this->getErrorNumberFromMessage($e->getMessage());
+		return !empty($errorCode) && $errorCode == $errno;
 	}
 
 	public function rowCount( $queryResult ) {
@@ -282,13 +287,24 @@ class WordPress extends Mysqli {
 	 * @throws \Zend_Db_Statement_Exception
 	 */
 	private function after_execute_query( $wpdb, $sql ) {
+		$lastError = $wpdb->last_error;
+
+		if ( $lastError && !$this->getErrorNumberFromMessage($lastError) ) {
+			// see #174 mysqli message usually doesn't include the error code so we need to add it for isErrNo to work
+			// we want to execute this while errors are suppressed
+			$row = $wpdb->get_row('SHOW ERRORS', ARRAY_A);
+			if (!empty($row['Code'])) {
+				$lastError = '['.$row['Code'].'] ' . $lastError;
+			}
+		}
+
 		if ( isset( $this->old_suppress_errors_value ) ) {
 			$wpdb->suppress_errors( $this->old_suppress_errors_value );
 			$this->old_suppress_errors_value = null;
 		}
 
-		if ( $wpdb->last_error ) {
-			$message = 'WP DB Error: ' . $wpdb->last_error;
+		if ( $lastError ) {
+			$message = 'WP DB Error: ' . $lastError;
 			if ( $sql ) {
 				$message .= ' SQL: ' . $sql;
 			}

@@ -99,6 +99,20 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 		$this->assertEquals( 4, $this->db->lastInsertId() );
 	}
 
+	public function test_query_detects_error_code() {
+		try {
+			$this->db->query(
+				'SELECT * from foobarbaz;'
+			);
+			$this->fail('Expected exception not thrown');
+		} catch (Zend_Db_Exception $e) {
+			$this->assertContains('[1146]', $e->getMessage());
+			$this->assertTrue($this->db->isErrNo($e, 1146));
+			$this->assertFalse($this->db->isErrNo($e, 1145));
+			$this->assertFalse($this->db->isErrNo($e, 1147));
+		}
+	}
+
 	/**
 	 * @expectedException \Zend_Db_Statement_Exception
 	 * @expectedExceptionMessage  foobarbaz' doesn't exist
