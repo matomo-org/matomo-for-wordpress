@@ -1,6 +1,9 @@
 1.0.0
 - First release.
 
+0.3.13
+- Make installer more stable
+
 0.3.12
 - Use DB-IP Geolocation DB instead of MaxMind
 - Improve system report
