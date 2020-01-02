@@ -49,12 +49,14 @@ class WordPress extends Mysqli {
 	 * @throws \Zend_Db_Statement_Exception
 	 */
 	private function after_execute_query( $wpdb ) {
-		if ( $wpdb->last_error && !$this->getErrorNumberFromMessage($wpdb->last_error) ) {
+		$lastError = $wpdb->last_error;
+
+		if ( $lastError && !$this->getErrorNumberFromMessage($lastError) ) {
 			// see #174 mysqli message usually doesn't include the error code so we need to add it for isErrNo to work
 			// we want to execute this while errors are suppressed
 			$row = $wpdb->get_row('SHOW ERRORS', ARRAY_A);
 			if (!empty($row['Code'])) {
-				$wpdb->last_error = '['.$row['Code'].'] ' . $wpdb->last_error;
+				$lastError = '['.$row['Code'].'] ' . $lastError;
 			}
 		}
 
@@ -63,8 +65,8 @@ class WordPress extends Mysqli {
 			$this->old_suppress_errors_value = null;
 		}
 
-		if ( $wpdb->last_error ) {
-			throw new \Zend_Db_Statement_Exception( $wpdb->last_error );
+		if ( $lastError ) {
+			throw new \Zend_Db_Statement_Exception( $lastError );
 		}
 	}
 
