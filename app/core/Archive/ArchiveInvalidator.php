@@ -10,6 +10,8 @@
 namespace Piwik\Archive;
 
 use Piwik\Archive\ArchiveInvalidator\InvalidationResult;
+use Piwik\CliMulti\Process;
+use Piwik\Common;
 use Piwik\CronArchive\SitesToReprocessDistributedList;
 use Piwik\DataAccess\ArchiveTableCreator;
 use Piwik\DataAccess\Model;
@@ -123,7 +125,11 @@ class ArchiveInvalidator
     private function buildRememberArchivedReportIdProcessSafe($idSite, $date)
     {
         $id  = $this->buildRememberArchivedReportIdForSiteAndDate($idSite, $date);
-        $id .= '_' . getmypid();
+        if (Process::isMethodDisabled('getmypid')) {
+	        $id .= '_' . Common::getRandomString();
+        } else {
+	        $id .= '_' . getmypid();
+        }
         return $id;
     }
 

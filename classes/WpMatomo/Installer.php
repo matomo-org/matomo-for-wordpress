@@ -189,7 +189,8 @@ class Installer {
 
 			DbHelper::checkDatabaseVersion();
 		} catch ( \Exception $e ) {
-			throw new \Exception( sprintf( 'Database creation failed with %s.', $e->getMessage() ) );
+			$message = sprintf( 'Database creation failed with %s in %s:%s.', $e->getMessage(), $e->getFile(), $e->getLine() );
+			throw new \Exception( $message, $e->getCode(), $e );
 		}
 
 		$tables_installed = DbHelper::getTablesInstalled();

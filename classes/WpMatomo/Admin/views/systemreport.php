@@ -183,6 +183,11 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 				   class='button-primary'
 				   value="<?php esc_html_e( 'Clear Matomo cache', 'matomo' ); ?>">
 			<br/><br/>
+			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_UPDATE_GEOIP_DB ); ?>" type="submit"
+				   class='button-primary'
+                   title="<?php esc_attr_e( 'Updates the geolocation database which is used to detect the location (city/region/country) of visitors. This task is performed automatically. If the geolocation DB is not loaded or updated, you may need to trigger it manually to find the error which is causing it.', 'matomo' ) ?>"
+				   value="<?php esc_html_e( 'Install/Update Geo-IP DB', 'matomo' ); ?>">
+			<br/><br/>
             <?php if (!empty($matomo_has_exception_logs)) { ?>
 			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_CLEAR_LOGS ); ?>" type="submit"
 				   class='button-primary'
