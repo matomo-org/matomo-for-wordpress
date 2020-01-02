@@ -68,6 +68,19 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 			$this->assertFalse($this->db->isErrNo($e, 1145));
 			$this->assertFalse($this->db->isErrNo($e, 1147));
 		}
+
+
+		// make sure when there are two errors on same connection the correct error code is used...
+		try {
+			$table  = Common::prefixTable( 'user' );
+			$this->db->query(
+				'SELECT bar from ' . $table
+			);
+			$this->fail('Expected exception not thrown 2');
+		} catch (Zend_Db_Exception $e) {
+			$this->assertContains('[1054]', $e->getMessage());
+			$this->assertTrue($this->db->isErrNo($e, 1054));
+		}
 	}
 
 	public function test_query_can_execute_select_queries() {
