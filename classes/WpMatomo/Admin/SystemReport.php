@@ -37,6 +37,7 @@ class SystemReport {
 	const TROUBLESHOOT_SYNC_ALL_SITES     = 'matomo_troubleshooting_action_all_sites';
 	const TROUBLESHOOT_CLEAR_MATOMO_CACHE = 'matomo_troubleshooting_action_clear_matomo_cache';
 	const TROUBLESHOOT_ARCHIVE_NOW        = 'matomo_troubleshooting_action_archive_now';
+	const TROUBLESHOOT_UPDATE_GEOIP_DB    = 'matomo_troubleshooting_action_update_geoipdb';
 	const TROUBLESHOOT_CLEAR_LOGS         = 'matomo_troubleshooting_action_clear_logs';
 
 	private $not_compatible_plugins = array(
@@ -97,6 +98,11 @@ class SystemReport {
 				// going wrong with matomo and bootstrapping would not even be possible.
 				Bootstrap::do_bootstrap();
 				Filesystem::deleteAllCacheOnUpdate();
+			}
+
+			if ( ! empty( $_POST[ self::TROUBLESHOOT_UPDATE_GEOIP_DB ] ) ) {
+				$scheduled_tasks = new ScheduledTasks( $this->settings );
+				$scheduled_tasks->update_geo_ip2_db();
 			}
 
 			if ( ! empty( $_POST[ self::TROUBLESHOOT_CLEAR_LOGS ] ) ) {

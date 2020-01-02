@@ -19,7 +19,7 @@ return array(
 	},
 	'path.geoip2' => function () {
 		$paths = new \WpMatomo\Paths();
-		return $paths->get_gloal_upload_dir_if_possible('GeoLite2-City.mmdb') . '/';
+		return $paths->get_gloal_upload_dir_if_possible('DBIP-City.mmdb') . '/';
 	},
 	// we want to avoid the regular monolog logger as it could interfere with other plugins maybe. for now lets use a
 	// custom logger
