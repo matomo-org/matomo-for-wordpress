@@ -2,7 +2,8 @@
 
 ## Code Status
 
-[![Build Status](https://travis-ci.org/matomo-org/wp-matomo.svg?branch=master)](https://travis-ci.org/matomo-org/wp-matomo/branches)
+[![Build Status Develop](https://travis-ci.org/matomo-org/wp-matomo.svg?branch=develop)](https://travis-ci.org/matomo-org/wp-matomo)
+[![Build Status Master](https://travis-ci.org/matomo-org/wp-matomo.svg?branch=develop)](https://travis-ci.org/matomo-org/wp-matomo)
 
 ## Description
 
