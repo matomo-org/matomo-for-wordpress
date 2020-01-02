@@ -56,6 +56,21 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		), $all);
 	}
 
+	public function test_query_detects_error_code() {
+		$table  = Common::prefixTable( 'log_action' );
+
+		try {
+			$this->db->query(
+				'CREATE TABLE ' . $table . '(`url_prefix` tinyint(2) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;'
+			);
+			$this->fail('Expected exception not thrown');
+		} catch (Zend_Db_Exception $e) {
+			$this->assertTrue($this->db->isErrNo($e, 1500));
+			$this->assertFalse($this->db->isErrNo($e, 1499));
+			$this->assertFalse($this->db->isErrNo($e, 1501));
+		}
+	}
+
 	public function test_query_can_execute_select_queries() {
 		$table  = Common::prefixTable( 'user' );
 		$result = $this->db->query( ' select * from ' . $table );
