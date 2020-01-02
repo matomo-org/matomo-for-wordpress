@@ -366,7 +366,7 @@ class Model
         return $wasInserted;
     }
 
-    public function findVisitor($idSite, $configId, $idVisitor, $fieldsToRead, $shouldMatchOneFieldOnly, $isVisitorIdToLookup, $timeLookBack, $timeLookAhead)
+    public function findVisitor($idSite, $configId, $idVisitor, $userId, $fieldsToRead, $shouldMatchOneFieldOnly, $isVisitorIdToLookup, $timeLookBack, $timeLookAhead)
     {
         $selectCustomVariables = '';
 
@@ -398,12 +398,19 @@ class Model
         } elseif ($shouldMatchOneFieldOnly) {
             $visitRow = $this->findVisitorByConfigId($configId, $select, $from, $configIdWhere, $configIdbindSql);
         } else {
-            $visitRow = $this->findVisitorByVisitorId($idVisitor, $select, $from, $visitorIdWhere, $visitorIdbindSql);
+	        if (!empty($idVisitor)) {
+		        $visitRow = $this->findVisitorByVisitorId($idVisitor, $select, $from, $visitorIdWhere, $visitorIdbindSql);
+	        } else {
+		        $visitRow = false;
+	        }
 
-            if (empty($visitRow)) {
-                $configIdWhere .= ' AND user_id IS NULL ';
-                $visitRow = $this->findVisitorByConfigId($configId, $select, $from, $configIdWhere, $configIdbindSql);
-            }
+	        if (empty($visitRow)) {
+		        if (!empty($userId)) {
+			        $configIdWhere .= 'AND ( user_id IS NULL OR user_id = ? )';
+			        $configIdbindSql[] = $userId;
+		        }
+		        $visitRow = $this->findVisitorByConfigId($configId, $select, $from, $configIdWhere, $configIdbindSql);
+	        }
         }
 
         return $visitRow;

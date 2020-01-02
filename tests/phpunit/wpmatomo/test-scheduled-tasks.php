@@ -75,7 +75,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	public function test_update_geo_ip2_db_does_not_fail() {
 		$this->tasks->update_geo_ip2_db();
 
-		$this->assertFileExists( StaticContainer::get( 'path.geoip2' ) . 'GeoLite2-City.mmdb' );
+		$this->assertFileExists( StaticContainer::get( 'path.geoip2' ) . 'DBIP-City.mmdb' );
 		$this->assertEquals( Php::ID, LocationProvider::getCurrentProviderId() );
 	}
 

@@ -12,6 +12,7 @@ namespace WpMatomo;
 use Piwik\CronArchive;
 use Piwik\Option;
 use Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater;
+use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2\Php;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use WpMatomo\Site\Sync as SiteSync;
@@ -147,7 +148,7 @@ class ScheduledTasks {
 		$this->logger->log( 'Scheduled tasks update geoip database' );
 		try {
 			Bootstrap::do_bootstrap();
-			Option::set( GeoIP2AutoUpdater::LOC_URL_OPTION_NAME, 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz' );
+			Option::set( GeoIP2AutoUpdater::LOC_URL_OPTION_NAME, GeoIp2::getDbIpLiteUrl());
 			$updater = new GeoIP2AutoUpdater();
 			$updater->update();
 			if ( LocationProvider::getCurrentProviderId() !== Php::ID && LocationProvider::getProviderById( Php::ID ) ) {

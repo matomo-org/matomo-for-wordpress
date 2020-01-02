@@ -179,6 +179,13 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
                        value="<?php esc_html_e( 'Clear system report logs', 'matomo' ); ?>">
                 <br/><br/>
 			<?php } ?>
+
+            <input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_UPDATE_GEOIP_DB ); ?>" type="submit"
+                   class='button-primary'
+                   title="<?php esc_attr_e( 'Updates the geolocation database which is used to detect the location (city/region/country) of visitors. This task is performed automatically. If the geolocation DB is not loaded or updated, you may need to trigger it manually to find the error which is causing it.', 'matomo' ) ?>"
+                   value="<?php esc_html_e( 'Install/Update Geo-IP DB', 'matomo' ); ?>">
+            <br/><br/>
+            
 			<?php if ( ! $settings->is_network_enabled() || ! is_network_admin() ) { ?>
                 <input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_USERS ); ?>" type="submit" class='button-primary'
                        title="<?php esc_attr_e( 'Users are synced automatically. If for some reason a user cannot access Matomo pages even though the user has the permission, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ) ?>"
@@ -199,7 +206,6 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 					   class='button-primary'
 					   value="<?php esc_html_e( 'Sync all sites (blogs)', 'matomo' ); ?>">
 			<?php } ?>
-
 		</form>
 
 		<?php
