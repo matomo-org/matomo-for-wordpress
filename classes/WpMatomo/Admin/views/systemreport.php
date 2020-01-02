@@ -162,42 +162,50 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 		<form method="post">
 			<?php wp_nonce_field( SystemReport::NONCE_NAME ); ?>
 
+            <input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_ARCHIVE_NOW ); ?>" type="submit"
+                   class='button-primary'
+                   title="<?php esc_attr_e( 'If reports show no data even though they should, you may try to see if report generation works when manually triggering the report generation.', 'matomo' ) ?>"
+                   value="<?php esc_html_e( 'Archive reports', 'matomo' ); ?>">
+            <br/><br/>
+            <input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE ); ?>" type="submit"
+                   class='button-primary'
+                   title="<?php esc_attr_e( 'Will reset / empty the Matomo cache which can be helpful if something is not working as expected for example after an update.', 'matomo' ) ?>"
+                   value="<?php esc_html_e( 'Clear Matomo cache', 'matomo' ); ?>">
+            <br/><br/>
+			<?php if (!empty($matomo_has_exception_logs)) { ?>
+                <input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_CLEAR_LOGS ); ?>" type="submit"
+                       class='button-primary'
+                       title="<?php esc_attr_e( 'Removes all stored Matomo logs that are shown in the system report', 'matomo' ) ?>"
+                       value="<?php esc_html_e( 'Clear system report logs', 'matomo' ); ?>">
+                <br/><br/>
+			<?php } ?>
+
+            <input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_UPDATE_GEOIP_DB ); ?>" type="submit"
+                   class='button-primary'
+                   title="<?php esc_attr_e( 'Updates the geolocation database which is used to detect the location (city/region/country) of visitors. This task is performed automatically. If the geolocation DB is not loaded or updated, you may need to trigger it manually to find the error which is causing it.', 'matomo' ) ?>"
+                   value="<?php esc_html_e( 'Install/Update Geo-IP DB', 'matomo' ); ?>">
+            <br/><br/>
+            
 			<?php if ( ! $settings->is_network_enabled() || ! is_network_admin() ) { ?>
-				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_USERS ); ?>" type="submit" class='button-primary'
-					   value="<?php esc_html_e( 'Sync users', 'matomo' ); ?>">
-				<br/><br/>
-				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_SITE ); ?>" type="submit" class='button-primary'
-					   value="<?php esc_html_e( 'Sync site', 'matomo' ); ?>">
+                <input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_USERS ); ?>" type="submit" class='button-primary'
+                       title="<?php esc_attr_e( 'Users are synced automatically. If for some reason a user cannot access Matomo pages even though the user has the permission, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ) ?>"
+                       value="<?php esc_html_e( 'Sync users', 'matomo' ); ?>">
+                <br/><br/>
+                <input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_SITE ); ?>" type="submit" class='button-primary'
+                       title="<?php esc_attr_e( 'Sites / blogs are synced automatically. If for some reason Matomo is not showing up for a specific blog, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ) ?>"
+                       value="<?php esc_html_e( 'Sync site (blog)', 'matomo' ); ?>">
 			<?php } ?>
 			<?php if ( $settings->is_network_enabled() ) { ?>
+                <input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_ALL_USERS ); ?>" type="submit"
+                       class='button-primary'
+                       title="<?php esc_attr_e( 'Users are synced automatically. If for some reason a user cannot access Matomo pages even though the user has the permission, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ) ?>"
+                       value="<?php esc_html_e( 'Sync all users across sites / blogs', 'matomo' ); ?>">
+                <br/><br/>
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_ALL_SITES ); ?>" type="submit"
+                       title="<?php esc_attr_e( 'Sites / blogs are synced automatically. If for some reason Matomo is not showing up for a specific blog, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ) ?>"
 					   class='button-primary'
-					   value="<?php esc_html_e( 'Sync all sites', 'matomo' ); ?>">
-				<br/><br/>
-				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_ALL_USERS ); ?>" type="submit"
-					   class='button-primary'
-					   value="<?php esc_html_e( 'Sync all users across sites', 'matomo' ); ?>">
+					   value="<?php esc_html_e( 'Sync all sites (blogs)', 'matomo' ); ?>">
 			<?php } ?>
-			<br/><br/>
-			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_CLEAR_MATOMO_CACHE ); ?>" type="submit"
-				   class='button-primary'
-				   value="<?php esc_html_e( 'Clear Matomo cache', 'matomo' ); ?>">
-			<br/><br/>
-			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_UPDATE_GEOIP_DB ); ?>" type="submit"
-				   class='button-primary'
-                   title="<?php esc_attr_e( 'Updates the geolocation database which is used to detect the location (city/region/country) of visitors. This task is performed automatically. If the geolocation DB is not loaded or updated, you may need to trigger it manually to find the error which is causing it.', 'matomo' ) ?>"
-				   value="<?php esc_html_e( 'Install/Update Geo-IP DB', 'matomo' ); ?>">
-			<br/><br/>
-            <?php if (!empty($matomo_has_exception_logs)) { ?>
-			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_CLEAR_LOGS ); ?>" type="submit"
-				   class='button-primary'
-                   title="<?php esc_attr_e( 'Removes all stored Matomo logs that are shown in the system report', 'matomo' ) ?>"
-				   value="<?php esc_html_e( 'Clear system report logs', 'matomo' ); ?>">
-			<br/><br/>
-            <?php } ?>
-			<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_ARCHIVE_NOW ); ?>" type="submit"
-				   class='button-primary'
-				   value="<?php esc_html_e( 'Archive reports', 'matomo' ); ?>">
 		</form>
 
 		<?php
