@@ -257,12 +257,16 @@ class Installer {
 
 		$socket = '';
 		$host_data = null;
+		$host = null;
 		$port = 3306;
 		if (method_exists($wpdb, 'parse_db_host')) {
 			// WP 4.9+
 			$host_data = $wpdb->parse_db_host( DB_HOST );
 			if ($host_data) {
 				list( $host, $port, $socket, $is_ipv6 ) = $host_data;
+				if (!$port && !$socket) {
+					$port = 3306;
+				}
 			}
 		}
 
