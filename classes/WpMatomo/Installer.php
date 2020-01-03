@@ -181,15 +181,17 @@ class Installer {
 	private function create_db() {
 		$this->logger->log( 'Matomo will now create the database' );
 
-		$form = $this->get_db_form();
-
 		try {
-			$db_infos                       = $form->createDatabaseObject();
-			Config::getInstance()->database = $db_infos;
+			$db_infos = self::get_db_infos();
+			$config = Config::getInstance();
+			if (isset($config)) {
+				$db_infos = array_merge($config->database, $db_infos);
+			}
+			$config->database = $db_infos;
 
 			DbHelper::checkDatabaseVersion();
 		} catch ( \Exception $e ) {
-			$message = sprintf( 'Database creation failed with %s in %s:%s.', $e->getMessage(), $e->getFile(), $e->getLine() );
+			$message = sprintf( 'Database info detection failed with %s in %s:%s.', $e->getMessage(), $e->getFile(), $e->getLine() );
 			throw new \Exception( $message, $e->getCode(), $e );
 		}
 
@@ -247,42 +249,54 @@ class Installer {
 	}
 
 	/**
-	 * @return FormDatabaseSetup
+	 * @param array $default params
+	 * @return array
 	 */
-	private function get_db_form() {
+	public static function get_db_infos( $default = array() ) {
 		global $wpdb;
-		$prefix = $wpdb->prefix . MATOMO_DATABASE_PREFIX;
-		$form   = new FormDatabaseSetup();
 
-		$form->addDataSource( new \HTML_QuickForm2_DataSource_SuperGlobal() );
+		$socket = '';
+		$host_data = null;
+		$host = null;
+		$port = 3306;
+		if (method_exists($wpdb, 'parse_db_host')) {
+			// WP 4.9+
+			$host_data = $wpdb->parse_db_host( DB_HOST );
+			if ($host_data) {
+				list( $host, $port, $socket, $is_ipv6 ) = $host_data;
+				if (!$port && !$socket) {
+					$port = 3306;
+				}
+			}
+		}
 
-		$host_parts = explode( ':', DB_HOST );
-		$host       = $host_parts[0];
+		if (!$host_data || !$host) {
+			// WP 4.8 and older
+			// in case DB credentials change in wordpress, we need to apply these changes here as well on demand
+			$hostParts = explode(':', DB_HOST);
+			$host = $hostParts[0];
+			if (count($hostParts) === 2 && is_numeric($hostParts[1])) {
+				$port = $hostParts[1];
+			} else {
+				$port = 3306;
+			}
+		}
 
-		$hostname = $form->getElementsByName( 'host' );
-		array_shift( $hostname )->setValue( $host );
+		$database = array(
+			'host' => $host,
+			'port' => $port,
+			'username' => DB_USER,
+			'password' => DB_PASSWORD,
+			'dbname' => DB_NAME,
+			'tables_prefix' => $wpdb->prefix . MATOMO_DATABASE_PREFIX,
+			'adapter' => 'WordPress',
+		);
+		if (!empty($socket)) {
+			$database['unix_socket'] = $socket;
+		}
+		$database = array_merge($default, $database);
 
-		$username = $form->getElementsByName( 'username' );
-		array_shift( $username )->setValue( DB_USER );
-
-		$password = $form->getElementsByName( 'password' );
-		array_shift( $password )->setValue( DB_PASSWORD );
-
-		$name = $form->getElementsByName( 'dbname' );
-		array_shift( $name )->setValue( DB_NAME );
-
-		$tables_prefix = $form->getElementsByName( 'tables_prefix' );
-		array_shift( $tables_prefix )->setValue( $prefix );
-
-		$adapter = $form->getElementsByName( 'adapter' );
-		$adapter = array_shift( $adapter );
-		$adapter->loadOptions( array( 'WordPress' => 'WordPress' ) );
-		$adapter->setValue( 'WordPress' );
-
-		$engine = $form->getElementsByName( 'type' );
-		array_shift( $engine )->setValue( 'InnoDB' );
-
-		return $form;
+		return $database;
 	}
 
 	private function update_components() {
