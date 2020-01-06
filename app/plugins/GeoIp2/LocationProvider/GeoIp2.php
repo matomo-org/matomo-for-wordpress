@@ -80,7 +80,6 @@ abstract class GeoIp2 extends LocationProvider
 				}
 
 				if (empty($location[$key])
-				    || $location[$key] != $value
 				) {
 					$isResultCorrect = false;
 				}
@@ -92,13 +91,10 @@ abstract class GeoIp2 extends LocationProvider
 				$location = "'"
 				            . (empty($location[self::CITY_NAME_KEY]) ? $unknown : $location[self::CITY_NAME_KEY])
 				            . ", "
-				            . (empty($location[self::REGION_CODE_KEY]) ? $unknown : $location[self::REGION_CODE_KEY])
-				            . ", "
 				            . (empty($location[self::COUNTRY_CODE_KEY]) ? $unknown : $location[self::COUNTRY_CODE_KEY])
 				            . "'";
 
 				$expectedLocation = "'" . $expectedResult[self::CITY_NAME_KEY] . ", "
-				                    . $expectedResult[self::REGION_CODE_KEY] . ", "
 				                    . $expectedResult[self::COUNTRY_CODE_KEY] . "'";
 
 				$bind = array($testIp, $location, $expectedLocation);
