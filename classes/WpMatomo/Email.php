@@ -116,7 +116,8 @@ class Email extends \Zend_Mail_Transport_Abstract {
 				$message .= ' (type '. $this->wpContentType .')';
 			}
 			$logger = new Logger();
-			$logger->log_exception('matomo_mail', new \Exception($message));
+			$logger->log_exception('mail_error', new \Exception($message));
+			$logger->log('Matomo mail failed with subject '. $subject . ': ' . $message);
 		}
 
 		$this->wpContentType = null;
