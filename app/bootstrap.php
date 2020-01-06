@@ -152,6 +152,16 @@ if ( ! defined( 'PIWIK_USER_PATH' ) ) {
 	define( 'PIWIK_USER_PATH', dirname( MATOMO_ANALYTICS_FILE ) );
 }
 
+if (function_exists('wp_raise_memory_limit') && function_exists('wp_convert_hr_to_bytes')) {
+	$current_limit     = ini_get( 'memory_limit' );
+	$current_limit_int = wp_convert_hr_to_bytes( $current_limit );
+	$memory128MbInt = 134217728;
+	if ($current_limit_int && $current_limit_int > 0 && $current_limit_int < $memory128MbInt) {
+		// we try increase memory if memory is less than 128mb
+		wp_raise_memory_limit('admin');
+	}
+}
+
 $GLOBALS['MATOMO_MODIFY_CONFIG_SETTINGS'] = function ($settings) {
 	$plugins = $settings['Plugins'];
 	if (is_array($settings['Plugins'])) {

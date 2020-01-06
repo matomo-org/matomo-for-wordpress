@@ -710,7 +710,7 @@ class SystemReport {
 
 		$rows[] = array(
 			'name'    => 'Memory Limit',
-			'value'   => max( WP_MEMORY_LIMIT, @ini_get( 'memory_limit' ) ),
+			'value'   => @ini_get( 'memory_limit' ),
 			'comment' => 'At least 128MB recommended. Depending on your traffic 256MB or more may be needed.',
 		);
 
