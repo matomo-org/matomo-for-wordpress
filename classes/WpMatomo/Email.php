@@ -92,12 +92,28 @@ class Email extends \Zend_Mail_Transport_Abstract {
 		$this->sendMailThroughWordPress($this->recipients, $this->_mail->getSubject(), $this->body, $this->header);
 	}
 
+	private function rememberMailSent(){
+
+		$history = \WpMatomo::$settings->get_global_option( 'mail_history' );
+		if ( empty( $history ) || ! is_array( $history ) ) {
+			$history = array();
+		}
+
+		// allows us to see if there is a WP Mail issue or a Matomo issue
+		array_unshift( $history, gmdate( 'Y-m-d H:i:s', time() ) );
+		$history = array_slice( $history, 0, 3 ); // keep only the last 3 versions
+		\WpMatomo::$settings->set_global_option( 'mail_history', $history );
+		\WpMatomo::$settings->save();
+	}
+
 	private function sendMailThroughWordPress($recipients, $subject, $content, $header) {
 
 		$this->wpMailError = null;
 
 		add_action( 'wp_mail_failed' , array($this, 'onError') );
 		add_filter( 'wp_mail_content_type' , array($this, 'setContentType'));
+
+		$this->rememberMailSent();
 
 		$success = wp_mail( $recipients, $subject, $content, $header );
 
