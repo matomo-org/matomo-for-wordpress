@@ -8,6 +8,7 @@
  */
 
 namespace WpMatomo;
+use \Zend_Mail;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -19,36 +20,51 @@ class Email extends \Zend_Mail_Transport_Abstract {
 	 * @var \WP_Error|null
 	 */
 	private $wpMailError;
+	private $wpContentType = null;
 
 	public function onError ($error) {
 		$this->wpMailError = $error;
 	}
 
 	public function setContentType($contentType) {
-		if (!empty($this->_headers['Content-Type'][0])) {
-			$content = trim( $this->_headers['Content-Type'][0] );
-			if ( strpos( $content, ';' ) !== false ) {
-				list( $type, $charset_content ) = explode( ';', $content );
-				$type = trim( $type );
-				if (!empty($type)) {
-					$contentType = $type;
-				}
-
-			} elseif ( !empty($content) ) {
-				$contentType = $content;
-			}
+		if (!empty($this->wpContentType)) {
+			return $this->wpContentType;
 		}
 
 		return $contentType;
 	}
 
-	public function _sendMail() {
+	public function send(Zend_Mail $mail) {
 		$this->wpMailError = null;
+		$this->_mail = $mail;
 
-		add_action( 'wp_mail_failed', array($this, 'onError') );
-		add_filter('wp_mail_content_type', array($this, 'setContentType'));
+		add_action( 'wp_mail_failed' , array($this, 'onError') );
+		add_filter( 'wp_mail_content_type' , array($this, 'setContentType'));
 
-		$success = wp_mail( $this->recipients, $this->_mail->getSubject(), $this->body, $this->header );
+		if ($mail->getBodyHtml(true)) {
+			$content = $mail->getBodyHtml(true);
+			$this->wpContentType = 'text/html';
+		} else {
+			$content = $mail->getBodyText(true);
+			$this->wpContentType = 'text/plain';
+		}
+
+		$headers = $mail->getHeaders();
+		if (isset($headers['Subject'])) {
+			unset($headers['Subject']);
+		}
+		$this->_prepareHeaders($headers);
+
+		$attachments = array();
+		if ($mail->hasAttachments) {
+			for ($i = 0; $i < $mail->getPartCount(); $i++) {
+				$attachments[] = $mail->getPartContent($i);
+			}
+		}
+
+		$success = wp_mail( $mail->getRecipients(), $mail->getSubject(), $content, $this->header );
+
+		$this->wpContentType = null;
 
 		remove_action( 'wp_mail_failed', array($this, 'onError') );
 		remove_filter('wp_mail_content_type', array($this, 'setContentType'));
@@ -63,6 +79,10 @@ class Email extends \Zend_Mail_Transport_Abstract {
 		}
 
 		$this->wpMailError = null;
+	}
+
+	public function _sendMail() {
+		// TODO: Implement _sendMail() method.
 	}
 
 }
