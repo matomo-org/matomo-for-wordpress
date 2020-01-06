@@ -1,6 +1,9 @@
 1.0.0
 - First release.
 
+0.3.16
+- Log everytime we send an email
+
 0.3.15
 - Improve sending emails
 

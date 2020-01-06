@@ -74,6 +74,7 @@ class Settings {
 		'set_download_classes'                     => '',
 		'core_version'                             => '',
 		'version_history'                          => array(),
+		'mail_history'                             => array(),
 		'disable_cookies'                          => false,
 		'limit_cookies'                            => false,
 		'limit_cookies_visitor'                    => 34186669, // Matomo default 13 months
