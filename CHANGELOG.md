@@ -1,6 +1,9 @@
 1.0.0
 - First release.
 
+0.3.14
+- Improve memory management
+
 0.3.13
 - Make installer more stable
 
