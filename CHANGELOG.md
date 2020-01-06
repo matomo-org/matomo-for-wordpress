@@ -1,6 +1,9 @@
 1.0.0
 - First release.
 
+0.3.15
+- Improve sending emails
+
 0.3.14
 - Improve memory management
 
