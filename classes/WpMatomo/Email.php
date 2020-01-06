@@ -60,6 +60,7 @@ class Email extends \Zend_Mail_Transport_Abstract {
 			}
 			$logger = new Logger();
 			$logger->log_exception('matomo_mail', new \Exception($message));
+			$logger->log('Matomo mail failed with subject '. $this->_mail->getSubject() . ': ' . $message);
 		}
 
 		$this->wpMailError = null;
