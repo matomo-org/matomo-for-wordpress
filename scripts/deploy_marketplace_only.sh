@@ -119,7 +119,7 @@ svn add . --force > /dev/null
 
 # SVN delete all deleted files
 # Also suppress stdout here
-svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm % > /dev/null
+svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm %@ > /dev/null
 
 # Now show full SVN status
 svn status
