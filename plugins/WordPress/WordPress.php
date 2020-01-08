@@ -47,9 +47,15 @@ class WordPress extends Plugin
             'ScheduledTasks.shouldExecuteTask' => 'shouldExecuteTask',
             'API.TagManager.getContainerInstallInstructions.end' => 'addInstallInstructions',
             'API.Tour.getChallenges.end' => 'modifyTourChallenges',
-	        'API.ScheduledReports.generateReport.end' => 'onGenerateReportEnd'
+	        'API.ScheduledReports.generateReport.end' => 'onGenerateReportEnd',
+            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
         );
     }
+
+	public function getClientSideTranslationKeys(&$translationKeys)
+	{
+		$translationKeys[] = 'Feedback_SearchOnMatomo';
+	}
 
     public function modifyTourChallenges(&$challenges)
     {
