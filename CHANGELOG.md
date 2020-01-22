@@ -1,6 +1,9 @@
 1.0.0
 - First release.
 
+0.3.17
+- No longer show Tag Manager in menu for multi site installations
+
 0.3.16
 - Log everytime we send an email
 
