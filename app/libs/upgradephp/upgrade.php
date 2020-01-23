@@ -20,13 +20,13 @@
  * script execution on setups where the native functions already exist. It
  * is meant as quick drop-in solution. It spares you from rewriting code or
  * using cumbersome workarounds instead of the more powerful v5 functions.
- * 
+ *
  * It cannot mirror PHP5s extended OO-semantics and functionality into PHP4
  * however. A few features are added here that weren't part of PHP yet. And
  * some other function collections are separated out into the ext/ directory.
  * It doesn't produce many custom error messages (YAGNI), and instead leaves
  * reporting to invoked functions or for native PHP execution.
- * 
+ *
  * And further this is PUBLIC DOMAIN (no copyright, no license, no warranty)
  * so therefore compatible to ALL open source licenses. You could rip this
  * paragraph out to republish this instead only under more restrictive terms
@@ -271,7 +271,7 @@ if(function_exists('glob')) {
 						&& fnmatch($filePattern, $file)
 						&& (!($flags & GLOB_ONLYDIR) || is_dir("$path/$file"))) {
 					$matches[] = "$path/$file" . ($flags & GLOB_MARK ? '/' : '');
-				}	
+				}
 			}
 			closedir($handle);
 			if(!($flags & GLOB_NOSORT)) {
@@ -362,7 +362,7 @@ function _safe_serialize( $value )
 		{
 			$out .= _safe_serialize($k) . _safe_serialize($v);
 		}
-		
+
 		return 'a:'.count($value).':{'.$out.'}';
 	}
 

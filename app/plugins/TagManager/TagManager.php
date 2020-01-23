@@ -250,9 +250,9 @@ class TagManager extends \Piwik\Plugin
                 $containers = $containerModel->getActiveContainersInfo();
                 foreach ($containers as $container) {
                     try {
-	                    Context::changeIdSite($container['idsite'], function () use ($containerModel, $container) {
-		                    $containerModel->generateContainer( $container['idsite'], $container['idcontainer'] );
-	                    });
+                        Context::changeIdSite($container['idsite'], function () use ($containerModel, $container) {
+                            $containerModel->generateContainer($container['idsite'], $container['idcontainer']);
+                        });
                     } catch (UnexpectedWebsiteFoundException $e) {
                         // website was removed, ignore
                     }

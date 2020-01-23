@@ -398,19 +398,19 @@ class Model
         } elseif ($shouldMatchOneFieldOnly) {
             $visitRow = $this->findVisitorByConfigId($configId, $select, $from, $configIdWhere, $configIdbindSql);
         } else {
-	        if (!empty($idVisitor)) {
-		        $visitRow = $this->findVisitorByVisitorId($idVisitor, $select, $from, $visitorIdWhere, $visitorIdbindSql);
-	        } else {
-		        $visitRow = false;
-	        }
+            if (!empty($idVisitor)) {
+                $visitRow = $this->findVisitorByVisitorId($idVisitor, $select, $from, $visitorIdWhere, $visitorIdbindSql);
+            } else {
+                $visitRow = false;
+            }
 
-	        if (empty($visitRow)) {
-		        if (!empty($userId)) {
-			        $configIdWhere .= 'AND ( user_id IS NULL OR user_id = ? )';
-			        $configIdbindSql[] = $userId;
-		        }
-		        $visitRow = $this->findVisitorByConfigId($configId, $select, $from, $configIdWhere, $configIdbindSql);
-	        }
+            if (empty($visitRow)) {
+                if (!empty($userId)) {
+                    $configIdWhere .= ' AND ( user_id IS NULL OR user_id = ? )';
+                    $configIdbindSql[] = $userId;
+                }
+                $visitRow = $this->findVisitorByConfigId($configId, $select, $from, $configIdWhere, $configIdbindSql);
+            }
         }
 
         return $visitRow;

@@ -129,6 +129,13 @@ AllTheWeb:
     params:
       - q
     backlink: 'search?q={k}'
+AlohaFind:
+  -
+    urls:
+      - alohafind.com
+    params:
+      - q
+    backlink: 'search/?q={k}'
 AltaVista:
   - 
     urls:
@@ -335,7 +342,10 @@ Baidu:
     charsets:
       - UTF-8
       - gb2312
-  - 
+    hiddenkeyword:
+      - '/^$/'
+      - '/'
+  -
     urls:
       - web.gougou.com
     params:
@@ -616,6 +626,13 @@ Eniro:
       - q
       - search_word
     backlink: 'query?q={k}'
+Entireweb:
+  -
+    urls:
+      - www.entireweb.com
+    params:
+      - q
+    backlink: 'web?q={k}'
 eo:
   - 
     urls:
@@ -623,6 +640,14 @@ eo:
     params:
       - x_query
     backlink: 'cgi-bin/eolost.cgi?x_query={k}'
+EpicSearch.in:
+  -
+    urls:
+      - epicsearch.in
+      - www.epicsearch.in
+    params:
+      - q
+    backlink: 'search/?q={k}'
 Eurip:
   - 
     urls:
@@ -797,6 +822,17 @@ Geona:
     params:
       - q
     backlink: 'search?q={k}'
+Gibiru:
+  -
+    urls:
+      - gibiru.com
+      - www.gibiru.com
+    params:
+      - q
+    backlink: 'results.html?q={k}'
+    hiddenkeyword:
+      - '/^$/'
+      - '/'
 Gigablast:
   - 
     urls:
@@ -907,10 +943,14 @@ Google:
   - 
     urls:
       - suche.gmx.net
+      - search.gmx.com
     params:
       - q
     backlink: 'web?q={k}'
-  - 
+    hiddenkeyword:
+      - '/^$/'
+      - '/'
+  -
     urls:
       - search.incredibar.com
     params:
@@ -1864,6 +1904,8 @@ sm.cn:
       - m.sm.cn
       - so.m.sm.cn
       - m.sp.sm.cn
+      - yz.m.sm.cn
+      - quark.sm.cn
     params:
       - q
     backlink: 's?q={k}'
@@ -1921,6 +1963,7 @@ Sogou:
   - 
     urls:
       - www.sogou.com
+      - sogou.com
     params:
       - query
     backlink: 'web?query={k}'
@@ -1928,10 +1971,13 @@ Sogou:
       - gb2312
     hiddenkeyword:
       - '/link\?url=.*/'
+      - '/^$/'
+      - '/'
   -
     urls:
       - m.sogou.com
       - wap.sogou.com
+      - english.sogou.com
     params:
       - keyword
 Soso:
@@ -1950,6 +1996,13 @@ Sputnik:
     params:
       - q
     backlink: 'search?q={k}'
+start.fyi:
+  -
+    urls:
+      - search.start.fyi
+    params:
+      - q
+    backlink: '?q={k}'
 StartPage:
   -
     urls:
@@ -2027,6 +2080,9 @@ T-Online:
     params:
       - q
     backlink: 'fast-cgi/tsc?mandant=toi&context=internet-tab&q={k}'
+    hiddenkeyword:
+      - '/^$/'
+      - '/'
   - 
     urls:
       - navigationshilfe.t-online.de
@@ -2226,6 +2282,9 @@ Web.de:
       - su
       - q
     backlink: 'search/web/?su={k}'
+    hiddenkeyword:
+      - '/^$/'
+      - '/'
 Web.nl:
   - 
     urls:
