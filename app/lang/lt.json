@@ -420,6 +420,10 @@
         "HelpMessageIntroductionWhenError": "Aukščiau nurodytas klaidos aprašymas. Jei reikia daugiau pagalbos:",
         "HelpMessageIntroductionWhenWarning": "Matomo atnaujinta, tačiau su išlygomis. Prašome perskaityti aukščiau pateikiamą aprašymą. Jei reikia daugiau pagalbos:",
         "InstallingTheLatestVersion": "Įdiegiama naujausia versija",
+        "LatestBetaRelease": "Paskiausia beta laida",
+        "LatestStableRelease": "Paskiausia stabili laida",
+        "LatestXStableRelease": "Paskiausia stabili %s",
+        "LatestXBetaRelease": "Paskiausia beta %s",
         "MajorUpdateWarning1": "Tai yra didesnis atnaujinimas! Jis užtruks ilgiau nei įprasta.",
         "NeedHelpUpgrading": "Reikia pagalbos naujinant Matomo?",
         "NoteForLargePiwikInstances": "Svarbi pastaba apie didelius Matomo diegimus",
@@ -561,6 +565,9 @@
         "CommunityHelp": "Bendruomenės pagalba",
         "ProfessionalHelp": "Profesionali pagalba",
         "Forums": "Forumai"
+    },
+    "GeoIp2": {
+        "CannotUnzipGeoIPFile": "Nepavyko išpakuoti GeoIP failo ties %1$s: %2$s"
     },
     "Goals": {
         "AddGoal": "Pridėti uždavinį",
@@ -2098,23 +2105,25 @@
         "ToFollowingSiteSearches": "Vidinės paieškos"
     },
     "UserCountry": {
+        "AssumingNonApache": "Nepavyksta rasti apache_get_modules funkcijos, numanoma, kad tai ne Apache saityno serveris.",
         "City": "Miestas",
         "CityAndCountry": "%1$s, %2$s",
         "Continent": "Kontinentas",
         "Continents": "Kontinentai",
         "Country": "Šalis",
+        "CountryCode": "Šalies kodas",
         "country_a1": "Anoniminis įgaliotasis serveris",
         "country_a2": "Palydovinis tiekėjas",
         "country_cat": "Kataloniškai kalbančios bendruomenės",
         "country_o1": "Kita šalis",
         "DistinctCountries": "%s atskirti šalis",
         "DownloadingDb": "Atsiunčiama %s",
+        "FoundApacheModules": "Matomo rado šiuos Apache modulius",
         "GeoIPDatabases": "GeoIP duomenų bazės",
         "GeoIPNoServerVars": "Matomo nepavyko rasti jokių GeoIP %s kintamųjų.",
         "GeoIPServerVarsFound": "Matomo aptinka šiuos GeoIP %s kintamuosius",
         "GeolocationPageDesc": "Šiame puslapyje galite keisti kaip Matomo nustato lankytojų geografines vietas.",
         "HowToInstallApacheModule": "Kaip man įdiegti Apache skirtą GeoIP modulį?",
-        "IWantToDownloadFreeGeoIP": "Aš noriu atsisiųsti nemokamą GeoIP duomenų bazę...",
         "Latitude": "Platuma",
         "Latitudes": "Platumos",
         "Location": "Vietovė",
