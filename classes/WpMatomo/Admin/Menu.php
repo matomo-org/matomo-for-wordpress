@@ -131,17 +131,20 @@ class Menu {
 				)
 			);
 			// the network itself is not a blog
-			add_submenu_page(
-				self::$parent_slug,
-				__( 'Tag Manager', 'matomo' ),
-				__( 'Tag Manager', 'matomo' ),
-				Capabilities::KEY_WRITE,
-				self::SLUG_TAGMANAGER,
-				array(
-					$this,
-					'tagmanager',
-				)
-			);
+            if ( matomo_has_tag_manager() ) {
+                add_submenu_page(
+                    self::$parent_slug,
+                    __( 'Tag Manager', 'matomo' ),
+                    __( 'Tag Manager', 'matomo' ),
+                    Capabilities::KEY_WRITE,
+                    self::SLUG_TAGMANAGER,
+                    array(
+                        $this,
+                        'tagmanager',
+                    )
+                );
+            }
+
 		}
 
 		if ( $can_matomo_be_managed ) {

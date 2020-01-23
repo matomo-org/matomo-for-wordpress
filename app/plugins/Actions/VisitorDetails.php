@@ -138,13 +138,11 @@ class VisitorDetails extends VisitorDetailsAbstract
 
         // Reconstruct url from prefix
         if (array_key_exists('url', $action) && array_key_exists('url_prefix', $action)) {
-        	if (is_string($action['url'])
-	            && stripos($action['url'], 'http://') !== 0
-	            && stripos($action['url'], 'https://') !== 0) {
-		        $url = PageUrl::reconstructNormalizedUrl($action['url'], $action['url_prefix']);
-		        $url = Common::unsanitizeInputValue($url);
-		        $action['url'] = $url;
-	        }
+            if (stripos($action['url'], 'http://') !== 0 && stripos($action['url'], 'https://') !== 0) {
+                $url = PageUrl::reconstructNormalizedUrl($action['url'], $action['url_prefix']);
+                $url = Common::unsanitizeInputValue($url);
+                $action['url'] = $url;
+            }
 
             unset($action['url_prefix']);
         }
