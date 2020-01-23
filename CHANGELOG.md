@@ -1,7 +1,8 @@
 1.0.0
 - First release.
 
-0.3.17
+0.4.0
+- Update core to 3.13.1
 - No longer show Tag Manager in menu for multi site installations
 
 0.3.16
