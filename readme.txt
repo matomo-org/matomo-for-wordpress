@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
 Requires at least: 4.8
 Tested up to: 5.3
-Stable tag: 0.4.0
+Stable tag: 0.4.1
 Requires PHP: 7.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -114,7 +114,7 @@ and we need your help to make Matomo better… Why not participate in a useful p
 The Matomo project uses an ever-expanding comprehensive set of thousands of unit tests and hundreds of automated integration tests, system tests, JavaScript tests, and screenshot UI tests, running on a continuous integration server as part of its software quality assurance. [Learn more](https://developer.matomo.org/guides/tests)
 
 = Can I disable the Tag Manager?
-The Tag Manager can be disabled by placing `define('MATOMO_DISABLE_TAG_MANAGER', true);` in your `wp-config.php`.
+The Tag Manager can be disabled by placing `define('MATOMO_ENABLE_TAG_MANAGER', false);` in your `wp-config.php`.
 
 The Tag Manager does currently not work in WP Multisite mode.
 
