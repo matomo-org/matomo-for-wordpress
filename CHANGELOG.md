@@ -1,6 +1,9 @@
 1.0.0
 - First release.
 
+0.4.1
+- Allow enable tag manager when running in multi site (won't work when network enabled)
+
 0.4.0
 - Update core to 3.13.1
 - No longer show Tag Manager in menu for multi site installations
