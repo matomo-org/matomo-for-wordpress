@@ -22,6 +22,7 @@ class Woocommerce extends Base {
 		}
 
 		add_action( 'wp_head', array( $this, 'maybe_track_order_complete' ), 99999 );
+		add_action( 'woocommerce_order_status_processing', array( $this, 'on_order' ), 99999, 1 );
 		add_action( 'woocommerce_after_single_product', array( $this, 'on_product_view' ), 99999, $args = 0 );
 		add_action( 'woocommerce_add_to_cart', array( $this, 'on_cart_updated' ), 99999, 0 );
 		add_action( 'woocommerce_cart_item_removed', array( $this, 'on_cart_updated' ), 99999, 0 );
