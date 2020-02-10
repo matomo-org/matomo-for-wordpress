@@ -218,26 +218,26 @@ class VisitorLog extends Visualization
                 continue;
             }
 
-	        $action = $group['pageviewAction'];
-	        $actionUrl = !empty($action['url']) ? $action['url'] : '';
-	        $actionTitle = !empty($action['pageTitle']) ? $action['pageTitle'] : '';
-	        $lastActionGroup = $actionGroups[$previousId];
-	        $lastGroupUrl = !empty($lastActionGroup['pageviewAction']['url']) ? $lastActionGroup['pageviewAction']['url'] : '';
-	        $lastGroupTitle = !empty($lastActionGroup['pageviewAction']['pageTitle']) ? $lastActionGroup['pageviewAction']['pageTitle'] : '';
+            $action = $group['pageviewAction'];
+            $actionUrl = !empty($action['url']) ? $action['url'] : '';
+            $actionTitle = !empty($action['pageTitle']) ? $action['pageTitle'] : '';
+            $lastActionGroup = $actionGroups[$previousId];
+            $lastGroupUrl = !empty($lastActionGroup['pageviewAction']['url']) ? $lastActionGroup['pageviewAction']['url'] : '';
+            $lastGroupTitle = !empty($lastActionGroup['pageviewAction']['pageTitle']) ? $lastActionGroup['pageviewAction']['pageTitle'] : '';
 
-	        $isLastGroupEmpty = empty($actionGroups[$previousId]['actionsOnPage']);
-	        $isPageviewActionSame = $lastGroupUrl == $actionUrl && $lastGroupTitle == $actionTitle;
+            $isLastGroupEmpty = empty($actionGroups[$previousId]['actionsOnPage']);
+            $isPageviewActionSame = $lastGroupUrl == $actionUrl && $lastGroupTitle == $actionTitle;
 
-	        // if the current action has the same url/action name as the last, merge w/ the last action group
-	        if ($isLastGroupEmpty
-	            && $isPageviewActionSame
-	        ) {
-		        $actionGroups[$previousId]['refreshActions'][] = $action;
-		        $actionGroups[$previousId]['actionsOnPage'] = array_merge($actionGroups[$previousId]['actionsOnPage'], $actionGroups[$idPageview]['actionsOnPage']);
-		        unset($actionGroups[$idPageview]);
-	        } else {
-		        $previousId = $idPageview;
-	        }
+            // if the current action has the same url/action name as the last, merge w/ the last action group
+            if ($isLastGroupEmpty
+                && $isPageviewActionSame
+            ) {
+                $actionGroups[$previousId]['refreshActions'][] = $action;
+                $actionGroups[$previousId]['actionsOnPage'] = array_merge($actionGroups[$previousId]['actionsOnPage'], $actionGroups[$idPageview]['actionsOnPage']);
+                unset($actionGroups[$idPageview]);
+            } else {
+                $previousId = $idPageview;
+            }
         }
         return $actionGroups;
     }

@@ -1,6 +1,11 @@
 1.0.0
 - First release.
 
+0.5.0
+- Upgrade core to 3.13.2
+- Fix some ecommerce cart updates were not tracked
+- Fix incompatibility with wp-external-links
+
 0.4.1
 - Allow enable tag manager when running in multi site (won't work when network enabled)
 

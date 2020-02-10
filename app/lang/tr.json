@@ -1106,6 +1106,8 @@
         "InstallingTheLatestVersion": "Son sürüm yükleniyor",
         "LatestBetaRelease": "Son Beta sürümü",
         "LatestStableRelease": "Son kararlı sürüm",
+        "LatestXStableRelease": "Son kararlı %s",
+        "LatestXBetaRelease": "Son beta %s",
         "LtsSupportVersion": "Uzun Dönem Desteklenen Sürüm",
         "ListOfSqlQueriesFYI": "BİLGİ: Veritabanınızı Matomo %s sürümüne güncellemek için yürütülecek sorgular ve konsol komutları şunlardır",
         "TheseSqlQueriesWillBeExecuted": "Yürütülecek SQL sorguları:",
@@ -3512,6 +3514,10 @@
         "GlobalListExcludedUserAgents_Desc": "Ziyaretçinin kullandığı uygulama dizgesi belirttiğiniz dizgelerden biri ise ziyaretçi Matomo tarafından izlenmez.",
         "GlobalSettings": "Genel ayarlar",
         "GlobalWebsitesSettings": "Genel web sitesi ayarları",
+        "InstallationGuides": "Kurulum Rehberleri",
+        "InstallationGuidesIntro": "Yaygın kullanılan bazı içerik yönetimi sistemleri ve web sitesi hazırlayıcıları için izleme kodunun adım adım nasıl ekleneceğini anlatan rehberler hazırladık:",
+        "ExtraInformationNeeded": "Sisteminize Matomo kurmak için şu bilgilere gerek duyabilirsiniz:",
+        "Integrations": "Bütünleştirmeler",
         "HelpExcludedIpAddresses": "Matomo tarafından izlenmesini istemediğiniz IP adreslerinin listesini, her satıra bir adres gelecek şekilde yazın. %1$sgibi CIDR biçimi ya da %2$s ve %3$s gibi genel arama karakterleri kullanılabilir.",
         "JsTrackingTagHelp": "Tüm sayfalarınıza eklemeniz gereken JavaScript izleme kodu",
         "KeepURLFragments": "Sayfa adresi bölünmeleri izleme",
@@ -4360,7 +4366,8 @@
         "UpdaterScheduledForNextRun": "core:archive komutunun yürütüleceği zamanlanmış görevin bir sonraki çalışmasında güncellenecek.",
         "UpdaterWasLastRun": "Güncelleyici en son %s zamanında çalıştı.",
         "UpdaterWillRunNext": "Zamanlanmış görev %s zamanında çalışacak.",
-        "WidgetLocation": "Ziyaretçi Konumu"
+        "WidgetLocation": "Ziyaretçi Konumu",
+        "InstallGeoIp2": "Matomo %1$sdbip%2$s veritabanlarının kullanılmasını önerir. Ancak bunun için GeoIp2 uygulama eki gereklidir. Bu uygulama ekini kurup etkinleştirdiyseniz (büyük olasılıkla uzun sürecek bir güncelleme yapılır), %1$sdbip%2$s veritabanlarını kullanmaya başlayabilirsiniz (kendi coğrafi konum özelliğini sunan bir üçüncü taraf uygulama eki kullanıyorsanız bunu yok sayabilirsiniz)."
     },
     "UserCountryMap": {
         "PluginDescription": "Bu uygulama eki Ziyaretçi Haritası ve Gerçek Zamanlı Harita gereçlerini görüntüler. Not: Kullanıcı Ülkesi uygulama ekinin etkinleştirilmiş olması gerekir.",

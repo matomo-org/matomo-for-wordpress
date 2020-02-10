@@ -16,7 +16,7 @@ This page contains information about installing the Library for PHP.
 
 ### Requirements
 
-- PHP version 5.3.0 or greater
+- PHP version 5.4.0 or greater
 - The GD PHP extension
 
 ### Obtaining the client library
@@ -29,7 +29,7 @@ You can install the library by adding it as a dependency to your composer.json.
 
 ```json
   "require": {
-    "davaxi/sparkline": "^1.1"
+    "davaxi/sparkline": "^1.2"
   }
 ```
 
@@ -140,6 +140,36 @@ $sparkline->save('/your/path/to/save/picture');
 $sparkline->destroy(); // Destroy picture after generated / displayed / saved
 ```
 
+### Multiple sparkline series
 
+```php
+$sparkline = new Davaxi\Sparkline();
 
+// For add series
+$sparkline->addSeries([0,1,2,3]);
+$sparkline->addSeries([2,3,5,6]);
 
+// Or 
+
+$sparkline->setData(
+    [0,1,2,3],
+    [2,3,5,6]
+);
+
+// For add point on series
+$sparkline->addPoint('first', 3, '#efefef', 0); // Add point on series 0
+$sparkline->addPoint('last', 3, '#efefef', 1); // add point on series 1
+
+// For fill colors, specify on last argument series index's
+$sparkline->setFillColorHex('#8b1c2b', 0);
+$sparkline->setFillColorHex('#8bdddf', 1);
+// or
+$sparkline->setFillColorRGB(139, 28, 43, 0);
+$sparkline->setFillColorRGB(139, 28, 55, 1);
+
+// For line colors, specify on last argument series index's
+$sparkline->setLineColorHex('#1c628b', 0);
+$sparkline->setLineColorHex('#1c62df', 1);
+// or
+$sparkline->setLineColorRGB(28, 98, 139, 0);
+$sparkline->setLineColorRGB(28, 98, 55, 1);

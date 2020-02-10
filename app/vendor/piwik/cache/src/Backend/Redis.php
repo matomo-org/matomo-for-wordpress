@@ -30,7 +30,7 @@ class Redis extends RedisCache implements Backend
 
     public function doDelete($id)
     {
-        return parent::doDelete($id);
+        return $this->getRedis()->del($id) >= 0;
     }
 
     public function doFlush()
