@@ -8,6 +8,7 @@ rm -rf $MATOMO_ROOT/libs/bower_components/jquery
 rm -rf $MATOMO_ROOT/libs/bower_components/jquery-ui
 rm -rf $MATOMO_ROOT/config/environment
 rm -rf $MATOMO_ROOT/app/vendor/twig/twig/ext
+rm -rf $MATOMO_ROOT/app/vendor/tecnickcom/tcpdf/tools
 
 # lets remove some extra libs that aren't needed
 find $MATOMO_ROOT/libs/bower_components -name '*.js' -exec rm -rf {} +
