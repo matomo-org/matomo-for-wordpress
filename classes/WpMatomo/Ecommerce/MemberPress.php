@@ -17,6 +17,8 @@ class MemberPress extends Base {
 
 	public function register_hooks() {
 		if ( ! is_admin() ) {
+			parent::register_hooks();
+
 			add_action( 'template_redirect', array( $this, 'on_product_view' ), 99999, 0 );
 			add_action( 'wp_footer', array( $this, 'on_order' ), 99999, 2 );
 			add_action( 'mepr-signup', array( $this, 'on_cart_update' ), 99999, 1 );
