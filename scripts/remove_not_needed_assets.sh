@@ -6,7 +6,8 @@ MATOMO_ROOT="$SCRIPTPATH/../app/";
 # we need to remove jquery as it is shipped with wordpress and we use their jquery
 rm -rf $MATOMO_ROOT/libs/bower_components/jquery
 rm -rf $MATOMO_ROOT/libs/bower_components/jquery-ui
-rm -rf $MATOMO_ROOT/config/environment
+rm -rf $MATOMO_ROOT/config/environment/test.php
+rm -rf $MATOMO_ROOT/config/environment/ui-test.php
 rm -rf $MATOMO_ROOT/app/vendor/twig/twig/ext
 rm -rf $MATOMO_ROOT/app/vendor/tecnickcom/tcpdf/tools
 
