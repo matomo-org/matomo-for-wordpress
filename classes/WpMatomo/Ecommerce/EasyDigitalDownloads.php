@@ -20,6 +20,8 @@ class EasyDigitalDownloads extends Base {
 			add_action( 'template_redirect', array( $this, 'on_product_view' ), 99999, 0 );
 		}
 
+		parent::register_hooks();
+
 		// these actions may be triggered in admin when ajax is used
 		add_action( 'edd_payment_receipt_after_table', array( $this, 'on_order' ), 99999, 2 );
 		add_action( 'edd_post_remove_from_cart', array( $this, 'on_cart_update' ), 99999, 0 );
