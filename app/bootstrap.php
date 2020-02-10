@@ -116,6 +116,11 @@ if ( !is_plugin_active('matomo/matomo.php')
 }
 
 if ($matomo_was_wp_loaded_directly) {
+	// see https://github.com/matomo-org/wp-matomo/issues/190
+	// wp-external-links plugin would register an ob_start(function () {...}) and manipulate any of our API output
+	// and in some cases the output would get completely lost causing blank pages.
+	add_filter('wpel_apply_settings', '__return_false', 99999);
+
 	// do not strip slashes if we bootstrap matomo within a regular wordpress request
 	if (!empty($_GET)) {
 		$_GET     = stripslashes_deep( $_GET );
