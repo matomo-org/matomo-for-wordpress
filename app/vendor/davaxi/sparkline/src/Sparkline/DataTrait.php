@@ -86,6 +86,7 @@ trait DataTrait
     }
 
     /**
+     * @param int $seriesIndex
      * @return array
      */
     public function getNormalizedData($seriesIndex = 0)
@@ -99,6 +100,7 @@ trait DataTrait
     }
 
     /**
+     * @param int $seriesIndex
      * @return array
      */
     public function getData($seriesIndex = 0)
@@ -107,6 +109,7 @@ trait DataTrait
     }
 
     /**
+     * @param int $seriesIndex
      * @return int
      */
     public function getCount($seriesIndex = 0)
@@ -115,6 +118,7 @@ trait DataTrait
     }
 
     /**
+     * @param int $seriesIndex
      * @return array
      */
     protected function getMaxValueWithIndex($seriesIndex = 0)
@@ -130,6 +134,7 @@ trait DataTrait
     }
 
     /**
+     * @param int $seriesIndex
      * @return float
      */
     protected function getMaxValue($seriesIndex = 0)
@@ -162,6 +167,7 @@ trait DataTrait
     }
 
     /**
+     * @param int $seriesIndex
      * @return array
      */
     protected function getMinValueWithIndex($seriesIndex = 0)
@@ -174,6 +180,7 @@ trait DataTrait
     }
 
     /**
+     * @param int $seriesIndex
      * @return array
      */
     protected function getExtremeValues($seriesIndex = 0)

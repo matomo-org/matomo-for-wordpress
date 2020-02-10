@@ -1106,6 +1106,8 @@
         "InstallingTheLatestVersion": "Instalando la última versión",
         "LatestBetaRelease": "Último lanzamiento beta",
         "LatestStableRelease": "Último lanzamiento estable",
+        "LatestXStableRelease": "Última versión estable %s",
+        "LatestXBetaRelease": "Última versión beta %s",
         "LtsSupportVersion": "Versión de soporte a largo plazo",
         "ListOfSqlQueriesFYI": "Para tu información: estas son las solicitudes SQL y los comandos de consola que serán ejecutados para actualizar tu base de datos a Matomo %s",
         "TheseSqlQueriesWillBeExecuted": "Serán ejecutadas estas solicitudes SQL:",
@@ -3398,6 +3400,10 @@
         "GlobalListExcludedUserAgents_Desc": "Si la cadena de agente de usuario del visitante contiene alguna de las cadenas que especificaste, el visitante será excluido de Matomo.",
         "GlobalSettings": "Configuración global",
         "GlobalWebsitesSettings": "Configuración global de los sitios web",
+        "InstallationGuides": "Guías de instalación",
+        "InstallationGuidesIntro": "Ofrecemos guías paso a paso explicando cómo insertar el código de seguimiento para algunos constructores populares de sitios web y CMS:",
+        "ExtraInformationNeeded": "Para instalar Matomo en tu sistema, necesitás la siguiente información:",
+        "Integrations": "Integraciones",
         "HelpExcludedIpAddresses": "Introducí la lista de direcciones IP, una por línea, que deseás excluir de ser rastreadas por Matomo. Podés usar notación CIDR (por ejemplo %1$s) o comodines (por ejemplo: %2$s o %3$s).",
         "JsTrackingTagHelp": "Acá está el código de seguimiento JavaScript para incluir en todas tus páginas",
         "KeepURLFragments": "Seguimiento de fragmentos de la dirección web de la página",
@@ -4246,7 +4252,8 @@
         "UpdaterScheduledForNextRun": "Está programado para ejecutarse durante la próxima ejecución de comando cron \"core:archive\".",
         "UpdaterWasLastRun": "El actualizador se ejecutó por última vez: %s.",
         "UpdaterWillRunNext": "Está programado para ejecutarse: %s.",
-        "WidgetLocation": "Ubicación del visitante"
+        "WidgetLocation": "Ubicación del visitante",
+        "InstallGeoIp2": "Matomo recomienda usar las bases de datos de %1$sdbip%2$s, pero requiere usar el plugin GeoIP2. Si lo instalás y activás (el cual probablemente requiera una larga actualización), vas a poder usar las bases de datos de %1$sdbip%2$s (ignorá esto si ya estás usando un plugin de terceros que ofrece su propia función de geolocalización)."
     },
     "UserCountryMap": {
         "PluginDescription": "Este plugin ofrece los widgets Visitor Map y Real-time Map. Nota: requiere que el plugin UserCountry esté habilitado.",

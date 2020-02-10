@@ -16,6 +16,7 @@ trait PointTrait
      * @param $index
      * @param $dotRadius
      * @param $colorHex
+     * @param int $seriesIndex
      */
     public function addPoint($index, $dotRadius, $colorHex, $seriesIndex = 0)
     {
@@ -36,6 +37,7 @@ trait PointTrait
     }
 
     /**
+     * @param int $seriesIndex
      * @return array
      */
     protected function getPointIndexMapping($seriesIndex = 0)
@@ -53,6 +55,7 @@ trait PointTrait
     }
 
     /**
+     * @param int $seriesIndex
      * @param $index
      */
     protected function checkPointIndex($index, $seriesIndex)
