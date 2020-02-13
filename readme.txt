@@ -104,7 +104,7 @@ Over 1 million websites in over 190 countries are using Matomo already. Join the
 == Frequently Asked Questions ==
 
 = Is there a demo available?
-Yes, check out the online demo for Matomo at https://demo.matomo.org
+Yes, check out the online demo for Matomo at [demo.matomo.org](https://demo.matomo.org)
 
 = Does Matomo care about security?
 Security is a top priority at Matomo. As potential issues are discovered, we validate, patch and release fixes as quickly as we can. We have a security bug bounty program in place that rewards researchers for finding security issues and disclosing them to us.
