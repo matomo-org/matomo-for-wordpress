@@ -117,8 +117,8 @@ function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace
 	}
 
 	$matomo_dir       = __DIR__ . '/app';
-	$matomo_dir_parts = explode( '/', $matomo_dir );
-	$root_dir_parts   = explode( '/', $root_dir );
+	$matomo_dir_parts = explode( DIRECTORY_SEPARATOR, $matomo_dir );
+	$root_dir_parts   = explode( DIRECTORY_SEPARATOR, $root_dir );
 	$webroot_dir      = '';
 	foreach ( $matomo_dir_parts as $index => $part ) {
 		if ( isset( $root_dir_parts[ $index ] ) && $root_dir_parts[ $index ] === $part ) {
