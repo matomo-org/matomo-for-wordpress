@@ -110,8 +110,8 @@ class Paths {
 
 	public function get_relative_dir_to_matomo( $target_dir ) {
 		$matomo_dir         = plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app';
-		$matomo_dir_parts   = explode( '/', $matomo_dir );
-		$target_dir_parts   = explode( '/', $target_dir );
+		$matomo_dir_parts   = explode( DIRECTORY_SEPARATOR, $matomo_dir );
+		$target_dir_parts   = explode( DIRECTORY_SEPARATOR, $target_dir );
 		$relative_directory = '';
 		$add_at_the_end     = array();
 		$was_previous_same  = false;
