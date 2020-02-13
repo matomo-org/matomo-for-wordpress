@@ -37,6 +37,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 * Comes equipped with Matomo Tag Manager
 
 **How Matomo focuses on privacy:**
+
 * Superb user privacy protection
 * Heaps of features to anonymise data and IP addresses
 * WP shortcode to embed an opt-out feature into your website
@@ -46,6 +47,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 **Ultimately, Matomo lets you:** learn who your customers are and their needs; understand what content works and how engaged your audience is; identify which marketing channels give you the highest ROI and invest with confidence in channels that convert for your business; and discover blockages and fix pain points for confused visitors to ensure they become satisfied customers.
 
 **Features include:**
+
 * Ecommerce features
 * Campaign tracking
 * Visitor profiles
@@ -67,6 +69,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 * Supports WordPress Multisite. (Note: Tag Manager feature does not work in MultiSite.)
 
 **[Premium paid features:](https://plugins.matomo.org/premium?wp=1)**
+
 * Heatmaps & Session Recordings
 * Form Analytics
 * Media Analytics
@@ -88,6 +91,7 @@ Running Matomo Analytics on your server can use significant resources. Whenever 
 Over 1 million websites in over 190 countries are using Matomo already. Join the revolution too! Install Matomo on your Wordpress website completely free and take back full control of your data!
 
 **Third party resources we use:**
+
 * After activating this plugin, it will download a Geolocation database (DBIP-City.mmdb) from [DB IP](https://db-ip.com/db/download/ip-to-city-lite?refid=mtm) into your uploads directory. The DB-IP database is distributed under the [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/). This database is needed to detect the location of your visitors based on their IP.
 * When you enter a URL in the SEO ranking widget, then a request with the entered URL may be sent to Google, Alexa, Bing, and other SEO providers.
 
