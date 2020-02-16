@@ -123,7 +123,7 @@ The Tag Manager can be disabled by placing `define('MATOMO_ENABLE_TAG_MANAGER', 
 The Tag Manager does currently not work in WP Multisite mode.
 
 = Which MySQL versions are supported?
-Matomo should run on most MySQL versions. However, we only support MySQL 5.1 and newer. It should also work with MariaDB and other MySQL compatible databases.
+Matomo should run on most MySQL versions. However, we only support MySQL 5.5 and newer. It should also work with MariaDB and other MySQL compatible databases.
 
 = Which browsers do you support?
 * Tracking: We support pretty much all browsers even very old browsers
