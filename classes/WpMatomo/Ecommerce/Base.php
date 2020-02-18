@@ -70,7 +70,7 @@ class Base {
 		update_post_meta( $order_id, $this->key_order_tracked, 1 );
 	}
 
-	private function is_doing_ajax() {
+	protected function is_doing_ajax() {
 		return defined( 'DOING_AJAX' ) && DOING_AJAX;
 	}
 
