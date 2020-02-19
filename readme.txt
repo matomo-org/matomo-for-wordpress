@@ -63,7 +63,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 * Row evolution
 * Report comparisons
 * Export features
-* Movers and Shakers to see the most drastic changes within a given time period
+* See the most drastic changes within a given time period
 * Supports WP Rest API
 * And hundreds of other features
 * Easily give your colleagues access to your reports if / when needed
