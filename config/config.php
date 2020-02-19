@@ -46,12 +46,12 @@ return array(
 			$previous->General = $general;
 		}
 
+		// we overwrite DB on demand only once installed... otherwise Matomo may think it is installed already
+		$database = $previous->database;
+		$previous->database = \WpMatomo\Installer::get_db_infos($database);
+
 		$paths = new Paths();
 		if ( file_exists( $paths->get_config_ini_path() ) ) {
-			// we overwrite DB on demand only once installed... otherwise Matomo may think it is installed already
-			$database = $previous->database;
-			$previous->database = \WpMatomo\Installer::get_db_infos($database);
-
 			$general = $previous->General;
 
 			if (defined('MATOMO_TRIGGER_BROWSER_ARCHIVING')) {
