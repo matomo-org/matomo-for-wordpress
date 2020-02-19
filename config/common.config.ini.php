@@ -1,6 +1,9 @@
 ; <?php exit; ?> DO NOT REMOVE THIS LINE
 ; Configuration settings which are applied to all Piwik instances.
 
+[database]
+adapter = WordPress
+
 [General]
 enable_update_communication = 0
 enable_auto_update = 0
