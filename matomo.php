@@ -36,9 +36,23 @@ $GLOBALS['MATOMO_PLUGINS_ENABLED'] = array();
 $GLOBALS['MATOMO_PLUGIN_FILES'] = array( MATOMO_ANALYTICS_FILE );
 
 function matomo_has_compatible_content_dir() {
-	return (defined( 'WP_CONTENT_DIR' )
-	       && ABSPATH . 'wp-content' === rtrim( WP_CONTENT_DIR, '/' ))
-	       || ( !empty( $_ENV['MATOMO_WP_ROOT_PATH'] ) && is_dir( $_ENV['MATOMO_WP_ROOT_PATH'] ) );
+	if ( !empty( $_ENV['MATOMO_WP_ROOT_PATH'] ) && is_dir( $_ENV['MATOMO_WP_ROOT_PATH'] ) ) {
+		return true;
+	}
+
+	if ( ! defined( 'WP_CONTENT_DIR' ) ) {
+		return false;
+	}
+
+	$contentDir = rtrim(rtrim( WP_CONTENT_DIR, '/' ), DIRECTORY_SEPARATOR );
+
+	$absPaths = array(
+		ABSPATH . 'wp-content',
+		ABSPATH . '/wp-content',
+		ABSPATH . DIRECTORY_SEPARATOR . 'wp-content'
+	);
+
+	return in_array($contentDir, $absPaths, true);
 }
 
 function matomo_is_app_request() {
