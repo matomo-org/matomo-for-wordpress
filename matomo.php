@@ -45,11 +45,13 @@ function matomo_has_compatible_content_dir() {
 	}
 
 	$contentDir = rtrim(rtrim( WP_CONTENT_DIR, '/' ), DIRECTORY_SEPARATOR );
+	$contentDir = wp_normalize_path($contentDir);
+	$absPath = wp_normalize_path(ABSPATH);
 
 	$absPaths = array(
-		ABSPATH . 'wp-content',
-		ABSPATH . '/wp-content',
-		ABSPATH . DIRECTORY_SEPARATOR . 'wp-content'
+		$absPath . 'wp-content',
+		$absPath . '/wp-content',
+		$absPath . DIRECTORY_SEPARATOR . 'wp-content'
 	);
 
 	return in_array($contentDir, $absPaths, true);
