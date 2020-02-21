@@ -673,7 +673,7 @@ class SystemReport {
 				'name'  => 'WP-Matomo (WP-Piwik) activated',
 				'value' => true,
 				'is_warning' => true,
-				'comment' => 'It is usually not recommended or needed to run Matomo for WordPress and WP-Matomo at the same time. To learn more about the differences between the two plugins view this URL: https://matomo.org/faq/wordpress/what-are-the-differences-between-matomo-on-premise-and-matomo-for-wordpress/'
+				'comment' => 'It is usually not recommended or needed to run Matomo for WordPress and WP-Matomo at the same time. To learn more about the differences between the two plugins view this URL: https://matomo.org/faq/wordpress/why-are-there-two-different-matomo-for-wordpress-plugins-what-is-the-difference-to-wp-matomo-integration-plugin/'
 			);
 
 			$mode = get_option ( 'wp-piwik_global-piwik_mode' );
