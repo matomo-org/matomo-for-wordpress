@@ -153,6 +153,7 @@ class SystemReport {
 				array(
 					'title' => 'WordPress',
 					'rows'  => $this->get_wordpress_info(),
+					'has_comments' => true,
 				),
 				array(
 					'title'        => 'WordPress Plugins',
@@ -666,6 +667,28 @@ class SystemReport {
 			'name'  => 'WP Cache enabled',
 			'value' => defined( 'WP_CACHE' ) && WP_CACHE,
 		);
+
+		if (is_plugin_active('wp-piwik/wp-piwik.php')) {
+			$rows[] = array(
+				'name'  => 'WP-Matomo (WP-Piwik) activated',
+				'value' => true,
+				'is_warning' => true,
+				'comment' => 'It is usually not recommended or needed to run Matomo for WordPress and WP-Matomo at the same time. To learn more about the differences between the two plugins view this URL: https://matomo.org/faq/wordpress/what-are-the-differences-between-matomo-on-premise-and-matomo-for-wordpress/'
+			);
+
+			$mode = get_option ( 'wp-piwik_global-piwik_mode' );
+			if (function_exists('get_site_option') && is_plugin_active_for_network ( 'wp-piwik/wp-piwik.php' )) {
+				$mode = get_site_option ( 'wp-piwik_global-piwik_mode');
+			}
+			if (!empty($mode)) {
+				$rows[] = array(
+					'name'  => 'WP-Matomo mode',
+					'value' => $mode,
+					'is_warning' => $mode === 'php' || $mode === 'PHP',
+					'comment' => 'WP-Matomo is configured in "PHP mode". This is known to cause issues with Matomo for WordPress. We recommend you either deactivate WP-Matomo or you go "Settings => WP-Matomo" and change the "Matomo Mode" in the "Connect to Matomo" section to "Self-hosted HTTP API".'
+				);
+			}
+		}
 
 		return $rows;
 	}
