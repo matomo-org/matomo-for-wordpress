@@ -51,7 +51,16 @@ class WordPress extends Plugin
 	        'API.ScheduledReports.generateReport.end' => 'onGenerateReportEnd',
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
             'CustomMatomoJs.manipulateJsTracker' => 'updateHeatmapTrackerPath',
+            'Visualization.beforeRender' => 'onBeforeRenderView',
         );
+    }
+
+    public function onBeforeRenderView (Plugin\ViewDataTable $view)
+    {
+    	if ($view->requestConfig->getApiModuleToRequest() === 'UserCountry' && $view->config->show_footer_message && strpos($view->config->show_footer_message, 'href') !== false) {
+    		// dont suggest setting up geoip
+    		$view->config->show_footer_message = '';
+	    }
     }
 
     public function updateHeatmapTrackerPath(&$content)
