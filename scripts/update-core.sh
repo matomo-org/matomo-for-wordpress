@@ -57,3 +57,4 @@ echo -e "Then need to manually generate the core assets js file and put it into 
 echo -e "Then execute 'php ../app/console wordpress:generate-core-assets'"
 echo -e "Then execute 'php ../app/console wordpress:generate-lang-files'"
 echo -e "Then execute './remove_not_needed_assets.sh'"
+echo -e "Then check if we need to increase 'Tested up to:' WordPress version in case there was a new release"
