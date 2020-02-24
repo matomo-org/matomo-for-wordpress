@@ -4,10 +4,10 @@
  * Description: The #1 Google Analytics alternative that gives you full control over your data and protects the privacy for your users. Free, secure and open.
  * Author: Matomo
  * Author URI: https://matomo.org
- * Version: 0.5.0
+ * Version: 1.0.3
  * Domain Path: /languages
  * WC requires at least: 2.4.0
- * WC tested up to: 3.8
+ * WC tested up to: 3.9.2
  *
  * Matomo - free/libre analytics platform
  *
@@ -36,9 +36,25 @@ $GLOBALS['MATOMO_PLUGINS_ENABLED'] = array();
 $GLOBALS['MATOMO_PLUGIN_FILES'] = array( MATOMO_ANALYTICS_FILE );
 
 function matomo_has_compatible_content_dir() {
-	return (defined( 'WP_CONTENT_DIR' )
-	       && ABSPATH . 'wp-content' === rtrim( WP_CONTENT_DIR, '/' ))
-	       || ( !empty( $_ENV['MATOMO_WP_ROOT_PATH'] ) && is_dir( $_ENV['MATOMO_WP_ROOT_PATH'] ) );
+	if ( !empty( $_ENV['MATOMO_WP_ROOT_PATH'] ) && is_dir( $_ENV['MATOMO_WP_ROOT_PATH'] ) ) {
+		return true;
+	}
+
+	if ( ! defined( 'WP_CONTENT_DIR' ) ) {
+		return false;
+	}
+
+	$contentDir = rtrim(rtrim( WP_CONTENT_DIR, '/' ), DIRECTORY_SEPARATOR );
+	$contentDir = wp_normalize_path($contentDir);
+	$absPath = wp_normalize_path(ABSPATH);
+
+	$absPaths = array(
+		$absPath . 'wp-content',
+		$absPath . '/wp-content',
+		$absPath . DIRECTORY_SEPARATOR . 'wp-content'
+	);
+
+	return in_array($contentDir, $absPaths, true);
 }
 
 function matomo_is_app_request() {
@@ -117,8 +133,8 @@ function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace
 	}
 
 	$matomo_dir       = __DIR__ . '/app';
-	$matomo_dir_parts = explode( '/', $matomo_dir );
-	$root_dir_parts   = explode( '/', $root_dir );
+	$matomo_dir_parts = explode( DIRECTORY_SEPARATOR, $matomo_dir );
+	$root_dir_parts   = explode( DIRECTORY_SEPARATOR, $root_dir );
 	$webroot_dir      = '';
 	foreach ( $matomo_dir_parts as $index => $part ) {
 		if ( isset( $root_dir_parts[ $index ] ) && $root_dir_parts[ $index ] === $part ) {
@@ -137,11 +153,3 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . '
 require 'shared.php';
 matomo_add_plugin( __DIR__ . '/plugins/WordPress', MATOMO_ANALYTICS_FILE );
 new WpMatomo();
-
-// todo remove this before release
-require 'plugin-update-checker/plugin-update-checker.php';
-$matomo_update_checker = Puc_v4_Factory::buildUpdateChecker(
-	'https://builds.matomo.org/wordpress-beta.json',
-	__FILE__,
-	'matomo'
-);

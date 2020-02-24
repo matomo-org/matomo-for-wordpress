@@ -15,6 +15,7 @@ use Piwik\Common;
 use Piwik\FrontController;
 use Piwik\Piwik;
 use Piwik\Plugin;
+use Piwik\Plugin\Manager;
 use Piwik\Plugins\CoreHome\SystemSummary\Item;
 use Piwik\Scheduler\Task;
 use Piwik\Url;
@@ -49,7 +50,26 @@ class WordPress extends Plugin
             'API.Tour.getChallenges.end' => 'modifyTourChallenges',
 	        'API.ScheduledReports.generateReport.end' => 'onGenerateReportEnd',
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
+            'CustomMatomoJs.manipulateJsTracker' => 'updateHeatmapTrackerPath',
+            'Visualization.beforeRender' => 'onBeforeRenderView',
         );
+    }
+
+    public function onBeforeRenderView (Plugin\ViewDataTable $view)
+    {
+    	if ($view->requestConfig->getApiModuleToRequest() === 'UserCountry' && $view->config->show_footer_message && strpos($view->config->show_footer_message, 'href') !== false) {
+    		// dont suggest setting up geoip
+    		$view->config->show_footer_message = '';
+	    }
+    }
+
+    public function updateHeatmapTrackerPath(&$content)
+    {
+	    $webRootDirs = Manager::getInstance()->getWebRootDirectoriesForCustomPluginDirs();
+	    if (!empty($webRootDirs['HeatmapSessionRecording'])) {
+		    $baseUrl = trim($webRootDirs['HeatmapSessionRecording'], '/') . '/HeatmapSessionRecording/configs.php';
+    	    $content = str_replace('plugins/HeatmapSessionRecording/configs.php', $baseUrl, $content);
+	    }
     }
 
 	public function getClientSideTranslationKeys(&$translationKeys)

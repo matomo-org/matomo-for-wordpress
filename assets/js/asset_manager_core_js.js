@@ -1,4 +1,4 @@
-/* Matomo Javascript - cb=fbf66b87c80a34a3250f0e95af7bbe49*/
+/* Matomo Javascript - cb=96b12efedc5a20952da305f7fa27e7d0*/
 
 /*! jQuery Browser - v0.1.0 - 3/23/2012
 * https://github.com/jquery/jquery-browser

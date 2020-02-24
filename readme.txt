@@ -4,12 +4,12 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
 Requires at least: 4.8
 Tested up to: 5.3
-Stable tag: 0.5.0
-Requires PHP: 7.0
+Stable tag: 1.0.3
+Requires PHP: 7.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-The #1 Google Analytics alternative that gives you full control over your data and protects the privacy for your users. Free, secure and open.
+Matomo is the #1 Google Analytics alternative that gives you full control over your data and protects user privacy. Free, secure, and open.
 
 == Description ==
 
@@ -22,6 +22,8 @@ Matomo’s mission is to give control and data ownership back to the user. By ho
 It’s also easier for you to get insights from Matomo Analytics with it’s time-saving interface design and out-of-the-box features, which require less manual configuration than Google Analytics.
 
 Matomo is free, secure and open - your ethical user insights platform.
+
+[youtube https://www.youtube.com/watch?v=puxi_Ey0iLc]
 
 **How Matomo Analytics for Wordpress solves problems:**
 
@@ -37,8 +39,9 @@ Matomo is free, secure and open - your ethical user insights platform.
 * Comes equipped with Matomo Tag Manager
 
 **How Matomo focuses on privacy:**
+
 * Superb user privacy protection
-* Heaps of features to anonymise data and IP addresses
+* Heaps of features to anonymize data and IP addresses
 * WP shortcode to embed an opt-out feature into your website
 * Features to export and delete data for GDPR
 * Ability to configure data retention
@@ -46,6 +49,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 **Ultimately, Matomo lets you:** learn who your customers are and their needs; understand what content works and how engaged your audience is; identify which marketing channels give you the highest ROI and invest with confidence in channels that convert for your business; and discover blockages and fix pain points for confused visitors to ensure they become satisfied customers.
 
 **Features include:**
+
 * Ecommerce features
 * Campaign tracking
 * Visitor profiles
@@ -59,7 +63,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 * Row evolution
 * Report comparisons
 * Export features
-* Movers and Shakers to see the most drastic changes within a given time period
+* See the most drastic changes within a given time period
 * Supports WP Rest API
 * And hundreds of other features
 * Easily give your colleagues access to your reports if / when needed
@@ -67,6 +71,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 * Supports WordPress Multisite. (Note: Tag Manager feature does not work in MultiSite.)
 
 **[Premium paid features:](https://plugins.matomo.org/premium?wp=1)**
+
 * Heatmaps & Session Recordings
 * Form Analytics
 * Media Analytics
@@ -80,14 +85,15 @@ Matomo is free, secure and open - your ethical user insights platform.
 
 Running Matomo Analytics on your server can use significant resources. Whenever someone visits your WordPress website, your server will need to serve your WordPress pages to the user, as well as tracking the user journey in Matomo, resulting in an additional request for each page view.
 
-* The minimum PHP memory limit is 128Mb but we recommend to use a higher limit (memory_limit = 256M).
-* PHP 7.0 at minimum is required.
+* The minimum PHP memory limit is 128Mb, but we recommend to use a higher limit (memory_limit = 256M).
+* PHP 7.2 at minimum is required.
 * If you have high traffic website, or manage a lot of websites with WordPress MultiSite, we recommend installing [Matomo On-Premise](https://matomo.org/docs/installation/) or signup to [Matomo Cloud](https://matomo.org/hosting/) and install the [WP-Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead.
 * Needing to know more before you install? Have a [read through the most popular FAQs to ensure you’re making the right choice for you](https://matomo.org/faq/wordpress/what-are-the-requirements-for-matomo-for-wordpress/).
 
 Over 1 million websites in over 190 countries are using Matomo already. Join the revolution too! Install Matomo on your Wordpress website completely free and take back full control of your data!
 
 **Third party resources we use:**
+
 * After activating this plugin, it will download a Geolocation database (DBIP-City.mmdb) from [DB IP](https://db-ip.com/db/download/ip-to-city-lite?refid=mtm) into your uploads directory. The DB-IP database is distributed under the [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/). This database is needed to detect the location of your visitors based on their IP.
 * When you enter a URL in the SEO ranking widget, then a request with the entered URL may be sent to Google, Alexa, Bing, and other SEO providers.
 
@@ -100,7 +106,7 @@ Over 1 million websites in over 190 countries are using Matomo already. Join the
 == Frequently Asked Questions ==
 
 = Is there a demo available?
-Yes, check out the online demo for Matomo at https://demo.matomo.org
+Yes, check out the online demo for Matomo at [demo.matomo.org](https://demo.matomo.org)
 
 = Does Matomo care about security?
 Security is a top priority at Matomo. As potential issues are discovered, we validate, patch and release fixes as quickly as we can. We have a security bug bounty program in place that rewards researchers for finding security issues and disclosing them to us.
@@ -119,7 +125,7 @@ The Tag Manager can be disabled by placing `define('MATOMO_ENABLE_TAG_MANAGER', 
 The Tag Manager does currently not work in WP Multisite mode.
 
 = Which MySQL versions are supported?
-Matomo should run on most MySQL versions. However, we only support MySQL 5.1 and newer. It should also work with MariaDB and other MySQL compatible databases.
+Matomo should run on most MySQL versions. However, we only support MySQL 5.5 and newer. It should also work with MariaDB and other MySQL compatible databases.
 
 = Which browsers do you support?
 * Tracking: We support pretty much all browsers even very old browsers

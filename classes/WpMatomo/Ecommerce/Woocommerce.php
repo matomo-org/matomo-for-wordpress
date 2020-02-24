@@ -28,7 +28,16 @@ class Woocommerce extends Base {
 		add_action( 'woocommerce_add_to_cart', array( $this, 'on_cart_updated' ), 99999, 0 );
 		add_action( 'woocommerce_cart_item_removed', array( $this, 'on_cart_updated' ), 99999, 0 );
 		add_action( 'woocommerce_cart_item_restored', array( $this, 'on_cart_updated' ), 99999, 0 );
-		add_filter( 'woocommerce_update_cart_action_cart_updated', array( $this, 'on_cart_updated' ), 99999, 1 );
+		add_action( 'woocommerce_cart_item_set_quantity', array( $this, 'on_cart_updated' ), 99999, 0 );
+
+		if (!$this->is_doing_ajax()) {
+			// prevent possibly executing same event twice where eg first a PHP Matomo tracker request is created
+			// because of woocommerce_applied_coupon and then also because of woocommerce_update_cart_action_cart_updated itself
+			// causing two tracking requests to be issues from the server. refs #215
+			// when not ajax mode the later event will simply overwrite the first and it should be fine.
+			add_filter( 'woocommerce_update_cart_action_cart_updated', array( $this, 'on_cart_updated' ), 99999, 1 );
+		}
+
 		add_action( 'woocommerce_applied_coupon', array( $this, 'on_cart_updated' ), 99999, 0 );
 		add_action( 'woocommerce_removed_coupon', array( $this, 'on_cart_updated' ), 99999, 0 );
 	}
@@ -44,7 +53,12 @@ class Woocommerce extends Base {
 		}
 	}
 
-	public function on_cart_updated() {
+	/**
+	 * @param null $val needed for woocommerce_update_cart_action_cart_updated filter
+	 *
+	 * @return mixed
+	 */
+	public function on_cart_updated( $val = null ) {
 		global $woocommerce;
 
 		/** @var \WC_Cart $cart */
@@ -102,6 +116,8 @@ class Woocommerce extends Base {
 
 		$this->cart_update_queue = $this->wrap_script( $tracking_code );
 		$this->logger->log( 'Tracked ecommerce cart update: ' . $this->cart_update_queue );
+
+		return $val;
 	}
 
 	public function on_order( $order_id ) {
