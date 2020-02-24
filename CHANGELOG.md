@@ -1,3 +1,11 @@
+1.0.3
+- Update Matomo core to 3.13.3
+- Improve detection of regions
+- Tweak system report to detect an incompatibility with WP-Matomo
+- Improve wp-content path detection
+- Ensure custom trackers are detected correctly
+- Improve WooCommerce tracking
+
 1.0.0
 - First release.
 
