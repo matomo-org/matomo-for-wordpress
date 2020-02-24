@@ -190,7 +190,15 @@ class Session extends Zend_Session
     {
         $config = Config::getInstance();
         $general = $config->General;
-        if (!empty($general['enable_framed_pages']) && ProxyHttp::isHttps()) {
+
+        $module = Piwik::getModule();
+        $action = Piwik::getAction();
+
+        $isOptOutRequest = $module == 'CoreAdminHome' && $action == 'optOut';
+        $isOverlay = $module == 'Overlay';
+        $shouldUseNone = !empty($general['enable_framed_pages']) || $isOptOutRequest || $isOverlay;
+
+        if ($shouldUseNone && ProxyHttp::isHttps()) {
             return 'None';
         }
 
@@ -214,10 +222,10 @@ class Session extends Zend_Session
     {
         $headerStr = 'Set-Cookie: ' . rawurlencode($name) . '=' . rawurlencode($value);
         if ($expires) {
-            $headerStr .= '; expires=' . rawurlencode($expires);
+            $headerStr .= '; expires=' . $expires;
         }
         if ($path) {
-            $headerStr .= '; path=' . rawurlencode($path);
+            $headerStr .= '; path=' . $path;
         }
         if ($domain) {
             $headerStr .= '; domain=' . rawurlencode($domain);
@@ -229,8 +237,10 @@ class Session extends Zend_Session
             $headerStr .= '; httponly';
         }
         if ($sameSite) {
-            $headerStr .= '; SameSite=' . rawurlencode($sameSite);
+            $headerStr .= '; SameSite=' . $sameSite;
         }
+
+        Common::sendHeader($headerStr);
         return $headerStr;
     }
 }

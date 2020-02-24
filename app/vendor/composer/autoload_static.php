@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite02e2beb31e6163bda800886ed643e0c
+class ComposerStaticInite67cb932b779452f67cda37373f10cc8
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -1331,7 +1331,6 @@ class ComposerStaticInite02e2beb31e6163bda800886ed643e0c
         'Piwik\\Plugins\\CustomPiwikJs\\tests\\Framework\\Mock\\PluginTrackerFilesMock' => __DIR__ . '/../..' . '/plugins/CustomPiwikJs/tests/Framework/Mock/PluginTrackerFilesMock.php',
         'Piwik\\Plugins\\CustomPiwikJs\\tests\\Integration\\ApiTest' => __DIR__ . '/../..' . '/plugins/CustomPiwikJs/tests/Integration/ApiTest.php',
         'Piwik\\Plugins\\CustomPiwikJs\\tests\\Integration\\CustomPluginTrackerFiles' => __DIR__ . '/../..' . '/plugins/CustomPiwikJs/tests/Integration/PluginTrackerFilesTest.php',
-        'Piwik\\Plugins\\CustomPiwikJs\\tests\\Integration\\CustomPluginTrackerFiles2' => __DIR__ . '/../..' . '/plugins/CustomPiwikJs/tests/Integration/PluginTrackerFilesTest.php',
         'Piwik\\Plugins\\CustomPiwikJs\\tests\\Integration\\CustomTestFile' => __DIR__ . '/../..' . '/plugins/CustomPiwikJs/tests/Integration/FileTest.php',
         'Piwik\\Plugins\\CustomPiwikJs\\tests\\Integration\\FileTest' => __DIR__ . '/../..' . '/plugins/CustomPiwikJs/tests/Integration/FileTest.php',
         'Piwik\\Plugins\\CustomPiwikJs\\tests\\Integration\\PiwikJsManipulatorTest' => __DIR__ . '/../..' . '/plugins/CustomPiwikJs/tests/Integration/PiwikJsManipulatorTest.php',
@@ -1586,6 +1585,7 @@ class ComposerStaticInite02e2beb31e6163bda800886ed643e0c
         'Piwik\\Plugins\\ExampleTracker\\Columns\\ExampleDimension' => __DIR__ . '/../..' . '/plugins/ExampleTracker/Columns/ExampleDimension.php',
         'Piwik\\Plugins\\ExampleTracker\\Columns\\ExampleVisitDimension' => __DIR__ . '/../..' . '/plugins/ExampleTracker/Columns/ExampleVisitDimension.php',
         'Piwik\\Plugins\\ExampleTracker\\ExampleTracker' => __DIR__ . '/../..' . '/plugins/ExampleTracker/ExampleTracker.php',
+        'Piwik\\Plugins\\ExampleTracker\\VisitorDetails' => __DIR__ . '/../..' . '/plugins/ExampleTracker/VisitorDetails.php',
         'Piwik\\Plugins\\ExampleUI\\API' => __DIR__ . '/../..' . '/plugins/ExampleUI/API.php',
         'Piwik\\Plugins\\ExampleUI\\Categories\\ExampleUiCategory' => __DIR__ . '/../..' . '/plugins/ExampleUI/Categories/ExampleUiCategory.php',
         'Piwik\\Plugins\\ExampleUI\\Controller' => __DIR__ . '/../..' . '/plugins/ExampleUI/Controller.php',
@@ -1618,6 +1618,8 @@ class ComposerStaticInite02e2beb31e6163bda800886ed643e0c
         'Piwik\\Plugins\\GeoIp2\\tests\\Integration\\LocationProviderTest' => __DIR__ . '/../..' . '/plugins/GeoIp2/tests/Integration/LocationProviderTest.php',
         'Piwik\\Plugins\\GeoIp2\\tests\\Integration\\UpdateTest' => __DIR__ . '/../..' . '/plugins/GeoIp2/tests/Integration/UpdateTest.php',
         'Piwik\\Plugins\\GeoIp2\\tests\\System\\ConvertRegionCodesToIsoTest' => __DIR__ . '/../..' . '/plugins/GeoIp2/tests/System/ConvertRegionCodesToIsoTest.php',
+        'Piwik\\Plugins\\GeoIp2\\tests\\Unit\\GeoIP2AutoUpdaterTest' => __DIR__ . '/../..' . '/plugins/GeoIp2/tests/Unit/GeoIP2AutoUpdaterTest.php',
+        'Piwik\\Plugins\\GeoIp2\\tests\\Unit\\public_GeoIP2AutoUpdater' => __DIR__ . '/../..' . '/plugins/GeoIp2/tests/Unit/GeoIP2AutoUpdaterTest.php',
         'Piwik\\Plugins\\Goals\\API' => __DIR__ . '/../..' . '/plugins/Goals/API.php',
         'Piwik\\Plugins\\Goals\\Archiver' => __DIR__ . '/../..' . '/plugins/Goals/Archiver.php',
         'Piwik\\Plugins\\Goals\\Categories\\AddANewGoalSubcategory' => __DIR__ . '/../..' . '/plugins/Goals/Categories/AddANewGoalSubcategory.php',
@@ -3601,11 +3603,11 @@ class ComposerStaticInite02e2beb31e6163bda800886ed643e0c
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite02e2beb31e6163bda800886ed643e0c::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite02e2beb31e6163bda800886ed643e0c::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInite02e2beb31e6163bda800886ed643e0c::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInite02e2beb31e6163bda800886ed643e0c::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInite02e2beb31e6163bda800886ed643e0c::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite67cb932b779452f67cda37373f10cc8::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite67cb932b779452f67cda37373f10cc8::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInite67cb932b779452f67cda37373f10cc8::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInite67cb932b779452f67cda37373f10cc8::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInite67cb932b779452f67cda37373f10cc8::$classMap;
 
         }, null, ClassLoader::class);
     }
