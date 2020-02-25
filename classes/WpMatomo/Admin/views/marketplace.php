@@ -43,7 +43,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 		<h2><?php echo sprintf( esc_html__( 'Easily install over 100 free plugins & %1$spremium features%2$s for Matomo with just a click' ), '<span style="white-space: nowrap;">', '</span>' ); ?></h2>
 		<a href="https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip" rel="noreferrer noopener" class="button matomo-cta-button"><?php esc_html_e( 'Download Matomo Marketplace for WordPress', 'matomo' ); ?></a>
 		<br>
-		<a target="_blank" href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><?php esc_html_e( 'Learn more', 'matomo' ); ?></a>
+		<a target="_blank" href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><?php esc_html_e( 'Install instructions', 'matomo' ); ?></a>
 		<a target="_blank" href="https://plugins.matomo.org/?wp=1" rel="noreferrer noopener" class="matomo-next-link"><?php esc_html_e( 'Browse Marketplace', 'matomo' ); ?></a>
 	</div>
 	<?php } ?>
