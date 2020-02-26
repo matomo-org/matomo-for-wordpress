@@ -13,6 +13,8 @@ Matomo is the #1 Google Analytics alternative that gives you full control over y
 
 == Description ==
 
+If you are already using Matomo On-Premise or Matomo Cloud, please use the [WP-Matomo plugin](https://wordpress.org/plugins/wp-piwik/). 
+
 For all you WordPress website owners wanting an easier way to get customer insights to grow your business, you can now get the solution the professionals use, for free!
 
 Matomo Analytics is the #1 used Google Analytics alternative that offers a powerful range of features, security and protects the privacy of your users. This enables you to learn how to improve your website, make the right decisions for your business and stand out in the crowd in a safe and trustworthy way.
