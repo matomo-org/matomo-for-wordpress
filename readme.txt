@@ -13,7 +13,7 @@ Matomo is the #1 Google Analytics alternative that gives you full control over y
 
 == Description ==
 
-If you are already using Matomo On-Premise or Matomo Cloud, please use the [WP-Matomo plugin](https://wordpress.org/plugins/wp-piwik/). 
+If you are already using Matomo On-Premise (formerly Piwik) or Matomo Cloud, please use the [WP-Matomo plugin](https://wordpress.org/plugins/wp-piwik/). 
 
 For all you WordPress website owners wanting an easier way to get customer insights to grow your business, you can now get the solution the professionals use, for free!
 
