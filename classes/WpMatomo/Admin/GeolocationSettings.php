@@ -9,11 +9,9 @@
 
 namespace WpMatomo\Admin;
 
-use WpMatomo\Access;
 use WpMatomo\Capabilities;
 use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
-use WpMatomo\Roles;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
