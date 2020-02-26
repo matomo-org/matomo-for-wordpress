@@ -58,7 +58,8 @@ use WpMatomo\Admin\AccessSettings;
 	   rel="noopener"><?php esc_html_e( 'Write', 'matomo' ); ?></a>,
 	<a href="https://matomo.org/faq/general/faq_69/" target="_blank" rel="noopener"><?php esc_html_e( 'Admin', 'matomo' ); ?></a>,
 	<a href="https://matomo.org/faq/general/faq_35/" target="_blank"
-	   rel="noopener"><?php esc_html_e( 'Super User', 'matomo' ); ?></a>
+	   rel="noopener"><?php esc_html_e( 'Super User', 'matomo' ); ?></a><br/>
+	<?php esc_html_e( 'Want to redirect to the home page when not logged in?', 'matomo' ); ?> <a href="https://matomo.org/faq/wordpress/how-do-i-hide-my-wordpress-login-url-when-someone-accesses-a-matomo-report-directly/" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Learn more', 'matomo' ); ?></a>
 </p>
 
 <h2><?php esc_html_e( 'Roles', 'matomo' ); ?></h2>

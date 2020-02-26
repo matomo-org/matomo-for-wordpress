@@ -336,7 +336,12 @@ class WordPress extends Plugin
 
     public static function getWpLoginUrl()
     {
-	    if (defined('MATOMO_LOGIN_REDIRECT') && MATOMO_LOGIN_REDIRECT === 'frontpage') {
+    	$forceFrontPage = defined('MATOMO_LOGIN_REDIRECT') && MATOMO_LOGIN_REDIRECT === 'frontpage';
+    	$forceLoginUrl = defined('MATOMO_LOGIN_REDIRECT') && MATOMO_LOGIN_REDIRECT === 'login';
+
+	    if (!$forceLoginUrl &&
+	        ($forceFrontPage
+	            || is_plugin_active('wps-hide-login/wps-hide-login.php'))) {
 		    $redirect_url = home_url();
 	    } else {
 		    $redirect_url = wp_login_url(\WpMatomo\Admin\Menu::get_reporting_url());
