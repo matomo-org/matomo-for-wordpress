@@ -17,10 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class AdminSettings {
-	const TAB_TRACKING   = 'tracking';
-	const TAB_ACCESS     = 'access';
-	const TAB_EXCLUSIONS = 'exlusions';
-	const TAB_PRIVACY    = 'privacy';
+	const TAB_TRACKING    = 'tracking';
+	const TAB_ACCESS      = 'access';
+	const TAB_EXCLUSIONS  = 'exlusions';
+	const TAB_PRIVACY     = 'privacy';
+	const TAB_GEOLOCATION = 'geolocation';
 
 	/**
 	 * @var Settings
@@ -40,12 +41,14 @@ class AdminSettings {
 		$access_settings = new AccessSettings( $access, $this->settings );
 		$tracking        = new TrackingSettings( $this->settings );
 		$exclusions      = new ExclusionSettings( $this->settings );
+		$geolocation     = new GeolocationSettings( $this->settings );
 		$privacy         = new PrivacySettings();
 		$setting_tabs    = array(
 			self::TAB_TRACKING   => $tracking,
 			self::TAB_ACCESS     => $access_settings,
 			self::TAB_PRIVACY    => $privacy,
 			self::TAB_EXCLUSIONS => $exclusions,
+			self::TAB_GEOLOCATION => $geolocation,
 		);
 
 		$setting_tabs = apply_filters( 'matomo_setting_tabs', $setting_tabs, $this->settings );

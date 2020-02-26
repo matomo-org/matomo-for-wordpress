@@ -91,6 +91,7 @@ class Settings {
 		'track_user_id'                            => 'disabled',
 		'track_datacfasync'                        => false,
 		'force_protocol'                           => 'disabled',
+		'maxmind_license_key'                      => '',
 		self::SHOW_GET_STARTED_PAGE                => 1,
 	);
 
