@@ -18,7 +18,8 @@ class Controller extends \Piwik\Plugin\Controller
     public function index()
     {
         if (!is_user_logged_in()) {
-	        wp_safe_redirect(wp_login_url(\WpMatomo\Admin\Menu::get_reporting_url()));
+        	$redirect_url = WordPress::getWpLoginUrl();
+	        wp_safe_redirect($redirect_url);
         }
     }
 
