@@ -91,6 +91,7 @@ class Settings {
 		'track_user_id'                            => 'disabled',
 		'track_datacfasync'                        => false,
 		'force_protocol'                           => 'disabled',
+		'geolocation_url'                          => '',
 		self::SHOW_GET_STARTED_PAGE                => 1,
 	);
 

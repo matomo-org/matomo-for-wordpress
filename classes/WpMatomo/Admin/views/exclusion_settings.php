@@ -42,8 +42,7 @@ if ( $was_updated ) {
 		<tbody>
 
 		<tr>
-			<th width="20%" scope="row"><label
-					for="%2$s"><?php esc_html_e( 'Tracking filter', 'matomo' ); ?></label>:
+			<th width="20%" scope="row"><label><?php esc_html_e( 'Tracking filter', 'matomo' ); ?></label>:
 			</th>
 			<td>
 				<?php
@@ -59,8 +58,7 @@ if ( $was_updated ) {
 			</td>
 		</tr>
 		<tr>
-			<th width="20%" scope="row"><label
-					for="%2$s"><?php echo esc_html( Piwik::translate( 'SitesManager_GlobalListExcludedIps' ) ); ?></label>:
+			<th width="20%" scope="row"><label><?php echo esc_html( Piwik::translate( 'SitesManager_GlobalListExcludedIps' ) ); ?></label>:
 			</th>
 			<td width="30%">
 				<?php echo sprintf( '<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]">%2$s</textarea>', 'excluded_ips', esc_html( $excluded_ips ) ); ?>
@@ -81,8 +79,7 @@ if ( $was_updated ) {
 			</td>
 		</tr>
 		<tr>
-			<th scope="row"><label
-					for="%2$s"><?php echo esc_html( Piwik::translate( 'SitesManager_GlobalListExcludedQueryParameters' ) ); ?></label>:
+			<th scope="row"><label><?php echo esc_html( Piwik::translate( 'SitesManager_GlobalListExcludedQueryParameters' ) ); ?></label>:
 			</th>
 			<td>
 				<?php echo sprintf( '<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]">%2$s</textarea>', 'excluded_query_parameters', esc_html( $excluded_query_params ) ); ?>
@@ -93,8 +90,7 @@ if ( $was_updated ) {
 			</td>
 		</tr>
 		<tr>
-			<th scope="row"><label
-					for="%2$s"><?php echo esc_html( Piwik::translate( 'SitesManager_GlobalListExcludedUserAgents' ) ); ?></label>:
+			<th scope="row"><label><?php echo esc_html( Piwik::translate( 'SitesManager_GlobalListExcludedUserAgents' ) ); ?></label>:
 			</th>
 			<td>
 				<?php echo sprintf( '<textarea cols="40" rows="4" id="%1$s" name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]">%2$s</textarea>', 'excluded_user_agents', esc_html( $excluded_user_agents ) ); ?>
@@ -109,8 +105,7 @@ if ( $was_updated ) {
 			</td>
 		</tr>
 		<tr>
-			<th scope="row"><label
-					for="%2$s"><?php echo esc_html( Piwik::translate( 'SitesManager_KeepURLFragmentsLong' ) ); ?></label>:
+			<th scope="row"><label><?php echo esc_html( Piwik::translate( 'SitesManager_KeepURLFragmentsLong' ) ); ?></label>:
 			</th>
 			<td>
 				<?php echo sprintf( '<input type="checkbox" value="1" %2$s name="' . esc_attr( ExclusionSettings::FORM_NAME ) . '[%1$s]">', 'keep_url_fragments', $keep_url_fragments ? ' checked="checked"' : '' ); ?>

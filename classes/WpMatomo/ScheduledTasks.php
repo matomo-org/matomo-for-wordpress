@@ -148,7 +148,11 @@ class ScheduledTasks {
 		$this->logger->log( 'Scheduled tasks update geoip database' );
 		try {
 			Bootstrap::do_bootstrap();
-			Option::set( GeoIP2AutoUpdater::LOC_URL_OPTION_NAME, GeoIp2::getDbIpLiteUrl());
+			$dbUrl = $this->settings->get_global_option('geolocation_url');
+			if (empty($dbIp)) {
+				$dbUrl = GeoIp2::getDbIpLiteUrl();
+			}
+			Option::set( GeoIP2AutoUpdater::LOC_URL_OPTION_NAME, $dbUrl);
 			$updater = new GeoIP2AutoUpdater();
 			$updater->update();
 			if ( LocationProvider::getCurrentProviderId() !== Php::ID && LocationProvider::getProviderById( Php::ID ) ) {
