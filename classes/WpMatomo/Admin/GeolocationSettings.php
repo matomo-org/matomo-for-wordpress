@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class GeolocationSettings implements AdminSettingsInterface {
 	const NONCE_NAME = 'matomo_geolocation';
-	const FORM_NAME = 'matomo_geoconfig';
+	const FORM_NAME = 'matomo_maxmind_license';
 
 	/**
 	 * @var Settings
@@ -43,22 +43,20 @@ class GeolocationSettings implements AdminSettingsInterface {
 			 && check_admin_referer( self::NONCE_NAME )
 			 && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
 
-			$url = stripslashes($_POST[ self::FORM_NAME ]);
-			if (empty($url)) {
-				$url = '';
+			$maxmind_license = stripslashes($_POST[ self::FORM_NAME ]);
+
+			if (!empty($maxmind_license) && strlen($maxmind_license) > 20) {
+				$maxmind_license = '';
+			} elseif (empty($maxmind_license)) {
+				$maxmind_license = '';
 			}
-			if (strlen($url) > 20) {
-				throw new \Exception('URL is too long');
-			}
-			if ($url && strpos($url, 'https://download.maxmind.com') !== 0
-			 && strpos($url, 'https://db-ip.com/') !== 0) {
-				throw new \WP_Error(1, 'Please enter either a MaxMind Download URL or a DB IP Url.');
-			}
-			$url = 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=' .urlencode($url).'&suffix=tar.gz';
-			$this->settings->set_global_option('geolocation_url', $url);
+
+			$this->settings->apply_changes(array(
+				'maxmind_license_key' => $maxmind_license
+			));
 
 			// update geoip in the backgronud
-			wp_schedule_single_event( time() + 30, ScheduledTasks::EVENT_GEOIP );
+			wp_schedule_single_event( time() + 10, ScheduledTasks::EVENT_GEOIP );
 
 			return true;
 		}
@@ -67,8 +65,9 @@ class GeolocationSettings implements AdminSettingsInterface {
 	}
 
 	public function show_settings() {
-		$was_updated = $this->update_if_submitted();
-		$current_url = $this->settings->get_global_option('geolocation_url');
+		$this->update_if_submitted();
+
+		$current_maxmind_license = $this->settings->get_global_option('maxmind_license_key');
 
 		include dirname( __FILE__ ) . '/views/geolocation_settings.php';
 	}
