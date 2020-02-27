@@ -18,8 +18,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 /** @var bool $was_updated */
+/** @var bool $invalid_format */
 /** @var string $current_maxmind_license */
 
+if ($invalid_format) { ?>
+    <div class="updated notice error">
+        <p><?php esc_html_e( 'It looks like the MaxMind license key has a wrong format.', 'matomo' ); ?></p>
+    </div>
+<?php
+}
 ?>
 
 <form method="post">

@@ -43,10 +43,10 @@ class GeolocationSettings implements AdminSettingsInterface {
 
 			$maxmind_license = stripslashes($_POST[ self::FORM_NAME ]);
 
-			if (!empty($maxmind_license) && strlen($maxmind_license) > 20) {
+			if (empty($maxmind_license)) {
 				$maxmind_license = '';
-			} elseif (empty($maxmind_license)) {
-				$maxmind_license = '';
+			} elseif (strlen($maxmind_license) > 20 || strlen($maxmind_license) < 7 || !ctype_graph($maxmind_license)) {
+				return false;
 			}
 
 			$this->settings->apply_changes(array(
@@ -58,12 +58,10 @@ class GeolocationSettings implements AdminSettingsInterface {
 
 			return true;
 		}
-
-		return false;
 	}
 
 	public function show_settings() {
-		$this->update_if_submitted();
+		$invalid_format = $this->update_if_submitted() === false;
 
 		$current_maxmind_license = $this->settings->get_global_option('maxmind_license_key');
 
