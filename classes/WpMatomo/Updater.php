@@ -130,7 +130,7 @@ class Updater {
 			@file_put_contents( $upload_dir . '/index.htm', '//hello' );
 			@file_put_contents(
 				$upload_dir . '/.htaccess',
-				'<Files GeoLite2-City.mmdb>
+				'<Files ~ "(\.mmdb)$">
 ' . ServerFilesGenerator::getDenyHtaccessContent() . '
 </Files>
 <Files ~ "(\.js)$">
