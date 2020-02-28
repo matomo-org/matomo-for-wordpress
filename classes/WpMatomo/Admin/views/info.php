@@ -8,7 +8,7 @@
  */
 
 use \WpMatomo\Admin\Menu;
-
+use \WpMatomo\Admin\Info;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -54,6 +54,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		);
 		?>
 	</p>
+
+	<?php require 'info_newsletter.php'; ?>
 
 	<h2><?php esc_html_e( 'High traffic websites', 'matomo' ); ?></h2>
 	<?php require 'info_high_traffic.php'; ?>
