@@ -9,12 +9,7 @@
 
 namespace WpMatomo\Admin;
 
-use Piwik\Container\StaticContainer;
-use Piwik\Plugins\UsersManager\NewsletterSignup;
-use Piwik\Url;
-use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
-use WpMatomo\ScheduledTasks;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
