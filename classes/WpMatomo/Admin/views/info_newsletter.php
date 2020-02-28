@@ -18,29 +18,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ($signedup_newsletter) {
 ?>
 <div class="notice notice-success is-dismissible">
-    <p><?php esc_html_e('Thank you for signing up to our newsletter.', 'matomo'); ?></p>
+	<p><?php esc_html_e('Thank you for signing up to our newsletter.', 'matomo'); ?></p>
 </div>
 <?php
-    return;
+	return;
 }
 if (!$show_newsletter) {
-    return;
+	return;
 }
 ?>
 
 <div class="notice notice-success">
-    <h2><?php esc_html_e( 'Newsletter', 'matomo' ); ?></h2>
-    <form method="post">
-        <p>
+	<h2><?php esc_html_e( 'Newsletter', 'matomo' ); ?></h2>
+	<form method="post">
+		<p>
 			<?php wp_nonce_field( Info::NONCE_NAME ); ?>
-            <input type="checkbox" id="<?php echo Info::FORM_NAME ?>" name="<?php echo Info::FORM_NAME ?>" value="1">
-            <label for="<?php echo Info::FORM_NAME ?>">
-	            <?php esc_html_e('Subscribe to our newsletter to receive regular information about Matomo, web analytics, and privacy. You can unsubscribe from it any time.', 'matomo'); ?>
-	            <?php esc_html_e('This service uses MadMimi.', 'matomo'); ?>
-	            <?php echo sprintf(esc_html__('Learn more about it on our %1$sPrivacy Policy page%2$s.', 'matomo'), '<a href="https://matomo.org/privacy-policy/" target="_blank" rel="noreferrer noopener">', '</a>'); ?>
-            </label>
-            <br><br>
-            <input type="submit" class="button-secondary" value="<?php esc_attr_e('Subscribe', 'matomo');?>">
-        </p>
-    </form>
+			<input type="checkbox" id="<?php echo Info::FORM_NAME ?>" name="<?php echo Info::FORM_NAME ?>" value="1">
+			<label for="<?php echo Info::FORM_NAME ?>">
+				<?php esc_html_e('Subscribe to our newsletter to receive regular information about Matomo, web analytics, and privacy. You can unsubscribe from it any time.', 'matomo'); ?>
+				<?php esc_html_e('This service uses MadMimi.', 'matomo'); ?>
+				<?php echo sprintf(esc_html__('Learn more about it on our %1$sPrivacy Policy page%2$s.', 'matomo'), '<a href="https://matomo.org/privacy-policy/" target="_blank" rel="noreferrer noopener">', '</a>'); ?>
+			</label>
+			<br><br>
+			<input type="submit" class="button-secondary" value="<?php esc_attr_e('Subscribe', 'matomo');?>">
+		</p>
+	</form>
 </div>

@@ -8,7 +8,7 @@
  */
 
 use \WpMatomo\Admin\Menu;
-use \WpMatomo\Admin\Info;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
