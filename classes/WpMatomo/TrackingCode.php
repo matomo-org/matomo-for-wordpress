@@ -54,9 +54,11 @@ class TrackingCode {
 				add_filter( 'wp_redirect', array( $this, 'forward_cross_domain_visitor_id' ) );
 			}
 
-			if ( ! is_admin() || $this->settings->is_admin_tracking_enabled() ) {
+			$is_admin = is_admin() || !empty($GLOBALS['MATOMO_LOADED_DIRECTLY']);
+
+			if ( ! $is_admin || $this->settings->is_admin_tracking_enabled() ) {
 				$prefix = 'wp';
-				if ( is_admin() ) {
+				if ( $is_admin ) {
 					$prefix = 'admin';
 				}
 

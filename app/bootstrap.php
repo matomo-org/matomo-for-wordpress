@@ -22,8 +22,7 @@ if ( ! defined( 'PIWIK_ENABLE_ERROR_HANDLER' ) ) {
 	}
 }
 
-$matomo_was_wp_loaded_directly = ! defined( 'ABSPATH' );
-
+$GLOBALS['MATOMO_LOADED_DIRECTLY'] = ! defined( 'ABSPATH' );
 
 function matomo_log_message_no_display($message)
 {
@@ -52,7 +51,8 @@ function matomo_log_message_no_display($message)
 	}
 }
 
-if ( $matomo_was_wp_loaded_directly ) {
+if ( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) {
+
 	// prevent from loading twice
 	$matomo_wpload_base = '../../../../wp-load.php';
 	$matomo_wpload_full = dirname( __FILE__ ) . '/' . $matomo_wpload_base;
@@ -115,7 +115,7 @@ if ( !is_plugin_active('matomo/matomo.php')
     exit;
 }
 
-if ($matomo_was_wp_loaded_directly) {
+if ( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) {
 	// see https://github.com/matomo-org/wp-matomo/issues/190
 	// wp-external-links plugin would register an ob_start(function () {...}) and manipulate any of our API output
 	// and in some cases the output would get completely lost causing blank pages.
