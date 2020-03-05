@@ -29,13 +29,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php
 	echo sprintf(
 		esc_html__(
-			'Matomo is a collaborative project brought to you by %1$sMatomo team%2$s members as well as many other contributors around the globe. If you\'re a fan of Matomo,
-        %3$shere\'s how you can participate!%4$s',
+			'Matomo is a collaborative project brought to you by %1$sMatomo team%2$s members as well as many other contributors around the globe. If you like Matomo,
+        %3$splease give us a review%4$s and spread the word about us.',
 			'matomo'
 		),
 		'<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/team/">',
 		'</a>',
-		'<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/get-involved/">',
+		'<a target="_blank" rel="noreferrer noopener" href="https://wordpress.org/support/plugin/matomo/reviews/#new-post">',
 		'</a>'
 	);
 	?>
