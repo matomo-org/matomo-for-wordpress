@@ -70,7 +70,7 @@ class Model
             $sqlBind[]          = $value;
         }
 
-        $parts = implode($updateParts, ', ');
+        $parts = implode(', ', $updateParts);
         $table = Common::prefixTable('log_conversion');
 
         $sql   = "UPDATE $table SET $parts WHERE " . implode($updateWhereParts, ' AND ');
