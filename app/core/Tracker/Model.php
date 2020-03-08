@@ -285,7 +285,7 @@ class Model
             $sqlBind[]     = $value;
         }
 
-        $parts = implode($updateParts, ', ');
+        $parts = implode(', ', $updateParts);
         $table = Common::prefixTable('log_conversion_item');
 
         $sql = "UPDATE $table SET $parts WHERE idvisit = ? AND idorder = ? AND idaction_sku = ?";
