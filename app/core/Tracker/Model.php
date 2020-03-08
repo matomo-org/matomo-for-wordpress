@@ -73,7 +73,7 @@ class Model
         $parts = implode(', ', $updateParts);
         $table = Common::prefixTable('log_conversion');
 
-        $sql   = "UPDATE $table SET $parts WHERE " . implode($updateWhereParts, ' AND ');
+        $sql   = "UPDATE $table SET $parts WHERE " . implode(' AND ', $updateWhereParts);
 
         try {
             $this->getDb()->query($sql, $sqlBind);
