@@ -52,6 +52,8 @@ $matomo_extra_url_params = '&' . http_build_query(
 	$matomo_feature_sections = array(
 		array(
 			'title'    => 'Top free plugins',
+			'more_url' => 'https://plugins.matomo.org/free?wp=1',
+			'more_text' => 'Browse all free plugins',
 			'features' =>
 				array(
 					array(
@@ -256,7 +258,12 @@ $matomo_extra_url_params = '&' . http_build_query(
 			</div>
 			<?php
 		}
-		echo '<div style="clear:both;"></div></div></div>';
+		echo '<div style="clear:both;"></div>';
+		echo '</div>';
+		if (!empty($matomo_feature_section['more_url'])) {
+			echo '<a target="_blank" rel="noreferrer noopener" href="'.esc_attr($matomo_feature_section['more_url']).'"><span class="dashicons dashicons-list-view"></span> '. esc_html($matomo_feature_section['more_text']).'</a>';
+		}
+		echo '</div>';
 	}
 	?>
 </div>

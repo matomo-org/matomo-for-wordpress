@@ -233,8 +233,11 @@ class Sync {
 
 	private function check_and_try_to_set_default_timezone( $timezone ) {
 		try {
-			SitesManager\API::unsetInstance(); // make sure we're loading the latest instance with all up to date dependencies... mainly needed for tests
-			SitesManager\API::getInstance()->setDefaultTimezone( $timezone );
+			Access::doAsSuperUser(function () use ($timezone) {
+				// make sure we're loading the latest instance with all up to date dependencies... mainly needed for tests
+				SitesManager\API::unsetInstance();
+				SitesManager\API::getInstance()->setDefaultTimezone( $timezone );
+			});
 		} catch ( \Exception $e ) {
 			return false;
 		}
