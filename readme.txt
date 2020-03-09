@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
 Requires at least: 4.8
 Tested up to: 5.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -160,3 +160,15 @@ Needing to know more? [Click here to view all of our FAQs on our website](https:
 9. Options to anonymize data so you don't track personal data.
 10. Automatically delete old data you no longer need to be privacy compliant and to free your server from not needed data.
 11. Summary page for getting a quick overview.
+
+== Changelog ==
+
+= 1.0.4 =
+* Fix the website's timezone may be set to UTC instead of the WP timezone
+* Improve compatibility with PHP 7.4 by fixing more notices
+* Add a review link to the About page
+* Add a newsletter signup possibility to the About page.
+* Support MaxMind geolocation database
+* Better support for hiding login URLs eg with WPS plugin
+
+[See changelog for all versions](https://github.com/matomo-org/wp-matomo/blob/develop/CHANGELOG.md).
