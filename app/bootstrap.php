@@ -76,8 +76,8 @@ if ( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) {
 		});
 	}
 
-	if (!empty($_ENV['MATOMO_WP_ROOT_PATH']) && file_exists( rtrim($_ENV['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php')) {
-		require_once rtrim($_ENV['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php';
+	if (!empty($_SERVER['MATOMO_WP_ROOT_PATH']) && file_exists( rtrim($_SERVER['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php')) {
+		require_once rtrim($_SERVER['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php';
 	} elseif ( file_exists($matomo_wpload_full ) ) {
 		require_once $matomo_wpload_full;
 	} elseif (realpath( $matomo_wpload_full ) && file_exists(realpath( $matomo_wpload_full ))) {
