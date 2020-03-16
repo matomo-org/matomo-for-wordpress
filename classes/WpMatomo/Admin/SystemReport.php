@@ -283,8 +283,8 @@ class SystemReport {
 			'comment' => $tmp_dir,
 		);
 
-		if ( ! empty( $_ENV['MATOMO_WP_ROOT_PATH'] ) ) {
-			$custom_path = rtrim( $_ENV['MATOMO_WP_ROOT_PATH'], '/' ) . '/wp-load.php';
+		if ( ! empty( $_SERVER['MATOMO_WP_ROOT_PATH'] ) ) {
+			$custom_path = rtrim( $_SERVER['MATOMO_WP_ROOT_PATH'], '/' ) . '/wp-load.php';
 			$path_exists = file_exists( $custom_path );
 			$comment     = '';
 			if ( ! $path_exists ) {
