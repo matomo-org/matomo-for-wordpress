@@ -28,7 +28,7 @@ global $wp;
 <?php } ?>
 <div class="wrap">
 	<div id="icon-plugins" class="icon32"></div>
-	<h1><?php esc_html_e( 'Summary', 'matomo' ); ?></h1>
+	<h1><?php matomo_header_icon(); ?> <?php esc_html_e( 'Summary', 'matomo' ); ?></h1>
 	<?php
 	if ( Dates::TODAY === $report_date ) {
 		echo '<div class="notice notice-info" style="padding:8px;">' . esc_html__( 'Reports for today are only refreshed approximately every hour through the WordPress cronjob.', 'matomo' ) . '</div>';
@@ -79,7 +79,7 @@ global $wp;
 											)
 										);
 										?>
-												" style="color: inherit;" target="_blank" rel="noreferrer noopener"
+												" style="color: inherit;text-decoration: none;" target="_blank" rel="noreferrer noopener"
 										class="dashicons-before dashicons-external" aria-hidden="true"></a></button>
 							<?php } ?>
 							<h2 class="hndle ui-sortable-handle"

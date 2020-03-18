@@ -30,7 +30,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 
 	<div id="icon-plugins" class="icon32"></div>
 
-	<h1><?php esc_html_e( 'Discover new functionality for your Matomo', 'matomo' ); ?></h1>
+	<h1><?php matomo_header_icon(); ?> <?php esc_html_e( 'Discover new functionality for your Matomo', 'matomo' ); ?></h1>
 	<p>
 		<?php esc_html_e( 'Take your Matomo (formerly Piwik) to the next level and drive your conversions & revenue with these premium features. All features are fully hosted on your WordPress and come with 100% data ownership and no limitations.', 'matomo' ); ?>
 		<?php if ( is_plugin_active( MATOMO_MARKETPLACE_PLUGIN_NAME ) ) { ?>

@@ -67,6 +67,11 @@ ol.matomo-list {
     margin: 0 20px 10px;
 }
 
+.matomo-header-icon {
+    height: 32px;
+    vertical-align: top;
+}
+
 .matomo-footer ul a {
     color: #37474f;
 }

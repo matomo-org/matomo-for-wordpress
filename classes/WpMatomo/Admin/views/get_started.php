@@ -38,7 +38,7 @@ if ( empty( $show_this_page ) ) {
 	?>
 
 	<?php if ( $settings->is_tracking_enabled() ) { ?>
-		<h2>1. <?php esc_html_e( 'Tracking is enabled', 'matomo' ); ?> <span class="dashicons dashicons-yes"></span></h2>
+		<h2>1. <?php esc_html_e( 'Tracking is enabled', 'matomo' ); ?> <span class="dashicons dashicons-yes" style="color: green;"></span></h2>
 		<p><a href="<?php echo AdminSettings::make_url( AdminSettings::TAB_TRACKING ); ?>"><?php esc_html_e( 'Click here to configure your tracking code.', 'matomo' ); ?></a></p>
 
 	<?php } else { ?>

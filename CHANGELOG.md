@@ -7,6 +7,8 @@
 * Add a newsletter signup possibility to the About page.
 * Support MaxMind geolocation database
 * Better support for hiding login URLs eg with WPS plugin
+* Show header icon images
+* Update GeoIP DB monthly instead of weekly
 
 = 1.0.3 =
 * Update Matomo core to 3.13.3

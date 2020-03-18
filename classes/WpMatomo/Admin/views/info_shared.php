@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 ?>
-<h1><?php esc_html_e( 'About Matomo Analytics', 'matomo' ); ?></h1>
+<h1><?php esc_html_e( 'About', 'matomo' ); ?> <?php matomo_header_icon(true);  ?> </h1>
 
 <p>
 	<?php

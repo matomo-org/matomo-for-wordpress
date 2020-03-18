@@ -47,9 +47,9 @@ class ScheduledTasks {
 	}
 
 	public function add_weekly_schedule( $schedules ) {
-		$schedules['matomo_weekly'] = array(
-			'interval' => 60 * 60 * 24 * 7, // 604,800, seconds in a week
-			'display'  => __( 'Weekly', 'matomo' ),
+		$schedules['matomo_monthly'] = array(
+			'interval' => 60 * 60 * 24 * 30,
+			'display'  => __( 'Monthly', 'matomo' ),
 		);
 
 		return $schedules;
@@ -126,7 +126,7 @@ class ScheduledTasks {
 			),
 			self::EVENT_GEOIP   => array(
 				'name'     => 'Update GeoIP DB',
-				'interval' => 'matomo_weekly',
+				'interval' => 'matomo_monthly',
 				'method'   => 'update_geo_ip2_db',
 			),
 		);

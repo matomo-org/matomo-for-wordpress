@@ -178,8 +178,8 @@ class Menu {
 		if ( $can_matomo_be_managed ) {
 			add_submenu_page(
 				self::$parent_slug,
-				__( 'System Report', 'matomo' ),
-				__( 'System Report', 'matomo' ),
+				__( 'Diagnostics', 'matomo' ),
+				__( 'Diagnostics', 'matomo' ),
 				Capabilities::KEY_SUPERUSER,
 				self::SLUG_SYSTEM_REPORT,
 				array(

@@ -21,6 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div class="wrap">
 	<div id="icon-plugins" class="icon32"></div>
+    <h1><?php matomo_header_icon(); ?> <?php esc_html_e( 'Settings', 'matomo' ); ?></h1>
 	<h2 class="nav-tab-wrapper">
 		<?php foreach ( $setting_tabs as $matomo_setting_slug => $matomo_setting_tab ) { ?>
 			<a href="<?php echo AdminSettings::make_url( $matomo_setting_slug ); ?>"

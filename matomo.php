@@ -57,6 +57,14 @@ function matomo_has_compatible_content_dir() {
 	return in_array($contentDir, $absPaths, true);
 }
 
+function matomo_header_icon( $full = false ) {
+	$file = 'logo';
+	if ($full) {
+		$file = 'logo-full';
+	}
+	echo '<img height="32" src="' . plugins_url( 'assets/img/'.$file.'.png', MATOMO_ANALYTICS_FILE ) . '" class="matomo-header-icon">';
+}
+
 function matomo_is_app_request() {
 	return ! empty( $_SERVER['SCRIPT_NAME'] )
 	&& ( substr( $_SERVER['SCRIPT_NAME'], - 1 * strlen( 'matomo/app/index.php' ) ) === 'matomo/app/index.php' );

@@ -57,6 +57,8 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 		</div>
 	<?php } ?>
 	<div id="icon-plugins" class="icon32"></div>
+    <h1><?php matomo_header_icon(); ?> <?php esc_html_e( 'Diagnostics', 'matomo' ); ?></h1>
+
 	<h2 class="nav-tab-wrapper">
 		<a href="?page=<?php echo Menu::SLUG_SYSTEM_REPORT; ?>"
 		   class="nav-tab <?php echo empty( $matomo_active_tab ) ? 'nav-tab-active' : ''; ?>"> System report</a>
