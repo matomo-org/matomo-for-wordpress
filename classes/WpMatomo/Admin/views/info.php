@@ -35,8 +35,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		),
 		'<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/team/">',
 		'</a>',
-		'<a target="_blank" rel="noreferrer noopener" href="https://wordpress.org/support/plugin/matomo/reviews/#new-post">',
-		'</a>'
+		'<a target="_blank" rel="noreferrer noopener" href="https://wordpress.org/support/plugin/matomo/reviews/?rate=5#new-post">',
+		'<span class="dashicons-before dashicons-star-filled" style="color:gold;"></span><span class="dashicons-before dashicons-star-filled" style="color:gold;"></span><span class="dashicons-before dashicons-star-filled" style="color:gold;"></span><span class="dashicons-before dashicons-star-filled" style="color:gold;"></span><span class="dashicons-before dashicons-star-filled" style="color:gold;"></span></a>'
 	);
 	?>
 		<br/><br/>
