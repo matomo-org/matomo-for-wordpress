@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <h2><?php esc_html_e( 'How can we help?', 'matomo' ); ?></h2>
 
-<form method="get" action="https://matomo.org" target="_blank">
+<form method="get" action="https://matomo.org" target="_blank" rel="noreferrer noopener">
 	<input type="text" name="s" style="width:300px;"><input type="submit" class="button-secondary"
 															value="Search on matomo.org">
 </form>
