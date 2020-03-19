@@ -170,5 +170,8 @@ Needing to know more? [Click here to view all of our FAQs on our website](https:
 * Add a newsletter signup possibility to the About page.
 * Support MaxMind geolocation database
 * Better support for hiding login URLs eg with WPS plugin
+* Show header icon images
+* Update GeoIP DB monthly instead of weekly
+* Possibility to configure proxy client header
 
 [See changelog for all versions](https://github.com/matomo-org/wp-matomo/blob/develop/CHANGELOG.md).

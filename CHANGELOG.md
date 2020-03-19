@@ -9,6 +9,7 @@
 * Better support for hiding login URLs eg with WPS plugin
 * Show header icon images
 * Update GeoIP DB monthly instead of weekly
+* Possibility to configure proxy client header
 
 = 1.0.3 =
 * Update Matomo core to 3.13.3
