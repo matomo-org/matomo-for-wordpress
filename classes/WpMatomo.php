@@ -86,6 +86,11 @@ class WpMatomo {
 			$site_sync->register_hooks();
 			$user_sync = new UserSync();
 			$user_sync->register_hooks();
+
+			$referral = new \WpMatomo\Referral();
+			if ($referral->should_show()) {
+				$referral->register_hooks();
+			}
 		}
 
 		$tracking_code = new TrackingCode( self::$settings );
