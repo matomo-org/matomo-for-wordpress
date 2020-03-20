@@ -22,11 +22,12 @@ class Admin {
 	public function __construct( $settings ) {
 		new Menu( $settings );
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'load_styles' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'load_scripts' ) );
 	}
 
-	public function load_styles() {
+	public function load_scripts() {
 		wp_enqueue_style( 'matomo_admin_css', plugins_url( 'assets/css/admin-style.css', MATOMO_ANALYTICS_FILE ), false, '1.0.0' );
+		wp_enqueue_script( 'matomo_admin_js', plugins_url( 'assets/js/admin.js', MATOMO_ANALYTICS_FILE ), array( 'jquery' ), '1.0', true  );
 	}
 
 }

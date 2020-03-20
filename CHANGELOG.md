@@ -9,6 +9,7 @@
 * Better support for hiding login URLs eg with WPS plugin
 * Show header icon images
 * Update GeoIP DB monthly instead of weekly
+* Ask for a review every 90 days unless dismissed
 * Possibility to configure proxy client header
 
 = 1.0.3 =
