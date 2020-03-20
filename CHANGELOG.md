@@ -10,6 +10,7 @@
 * Show header icon images
 * Update GeoIP DB monthly instead of weekly
 * Ask for a review every 90 days unless dismissed
+* Possibility to configure proxy client header
 
 = 1.0.3 =
 * Update Matomo core to 3.13.3
