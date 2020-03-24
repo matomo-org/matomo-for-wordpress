@@ -2603,6 +2603,7 @@ return array(
     'Piwik\\Updates\\Updates_3_12_0_b1' => $baseDir . '/core/Updates/3.12.0-b1.php',
     'Piwik\\Updates\\Updates_3_12_0_b7' => $baseDir . '/core/Updates/3.12.0-b7.php',
     'Piwik\\Updates\\Updates_3_13_1_b2' => $baseDir . '/core/Updates/3.13.1-b2.php',
+    'Piwik\\Updates\\Updates_3_13_4_b1' => $baseDir . '/core/Updates/3.13.4-b1.php',
     'Piwik\\Updates\\Updates_3_5_0_b2' => $baseDir . '/core/Updates/3.5.0-b2.php',
     'Piwik\\Updates\\Updates_3_5_0_b4' => $baseDir . '/core/Updates/3.5.0-b4.php',
     'Piwik\\Updates\\Updates_3_5_0_rc2' => $baseDir . '/core/Updates/3.5.0-rc2.php',
