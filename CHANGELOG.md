@@ -1,6 +1,7 @@
 == Changelog ==
 
 = 1.0.4 =
+* Update Matomo core to 3.13.4
 * Fix the website's timezone may be set to UTC instead of the WP timezone
 * Improve compatibility with PHP 7.4 by fixing more notices
 * Add a review link to the About page

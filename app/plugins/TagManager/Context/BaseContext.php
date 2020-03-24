@@ -228,7 +228,8 @@ abstract class BaseContext
 		return strrpos($haystack, $needle, $offset);
 	}
 
-    protected function parameterToVariableJs($value, $container)
+
+	protected function parameterToVariableJs($value, $container)
     {
         if (is_scalar($value) && preg_match_all('/{{.+?}}/', $value, $matches)) {
             $multiVars = [];
@@ -236,18 +237,18 @@ abstract class BaseContext
             $pos = 0;
 
             do {
-	            $start = $this->mb_strpos($value, '{{', $pos);
+                $start = $this->mb_strpos($value, '{{', $pos);
 
                 $end = false;
                 if ($start !== false) {
                     // only if string contains a {{ we need to look to see if we find a matching end string
-	                $end = $this->mb_strpos($value, '}}', $start);
+                    $end = $this->mb_strpos($value, '}}', $start);
                 }
 
                 if ($end !== false) {
                     // now this might seem random, but it is basically to detect if there are the brackets two times there
                     // like "foo{{notExisting{{PageUrl}}"  then we still detect "{{PageUrl}}"
-	                $start = $this->mb_strrpos(Common::mb_substr($value, 0, $end), '{{', $pos);
+                    $start = $this->mb_strpos(Common::mb_substr($value, 0, $end), '{{', $pos);
                 }
 
                 if ($start === false || $end === false) {

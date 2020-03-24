@@ -164,6 +164,7 @@ Needing to know more? [Click here to view all of our FAQs on our website](https:
 == Changelog ==
 
 = 1.0.4 =
+* Update Matomo core to 3.13.4
 * Fix the website's timezone may be set to UTC instead of the WP timezone
 * Improve compatibility with PHP 7.4 by fixing more notices
 * Add a review link to the About page
@@ -172,6 +173,7 @@ Needing to know more? [Click here to view all of our FAQs on our website](https:
 * Better support for hiding login URLs eg with WPS plugin
 * Show header icon images
 * Update GeoIP DB monthly instead of weekly
+* Ask for a review every 90 days unless dismissed
 * Possibility to configure proxy client header
 
 [See changelog for all versions](https://github.com/matomo-org/wp-matomo/blob/develop/CHANGELOG.md).

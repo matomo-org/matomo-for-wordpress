@@ -207,12 +207,12 @@ abstract class ControllerAdmin extends Controller
     }
 
     /**
-     * PHP Version required by the next major Piwik version
+     * PHP Version required by the next major Matomo version
      * @return string
      */
     private static function getNextRequiredMinimumPHP()
     {
-        return '7.1';
+        return '7.2';
     }
 
     private static function isUsingPhpVersionCompatibleWithNextPiwik()
@@ -222,25 +222,7 @@ abstract class ControllerAdmin extends Controller
 
     private static function notifyWhenPhpVersionIsNotCompatibleWithNextMajorPiwik()
     {
-        return; // no major version coming
-
-        if (self::isUsingPhpVersionCompatibleWithNextPiwik()) {
-            return;
-        }
-
-        $youMustUpgradePHP = Piwik::translate('General_YouMustUpgradePhpVersionToReceiveLatestPiwik');
-        $message =  Piwik::translate('General_PiwikCannotBeUpgradedBecausePhpIsTooOld')
-            .     ' '
-            .  sprintf(Piwik::translate('General_PleaseUpgradeYourPhpVersionSoYourPiwikDataStaysSecure'), self::getNextRequiredMinimumPHP())
-        ;
-
-        $notification = new Notification($message);
-        $notification->title = $youMustUpgradePHP;
-        $notification->priority = Notification::PRIORITY_LOW;
-        $notification->context = Notification::CONTEXT_WARNING;
-        $notification->type = Notification::TYPE_TRANSIENT;
-        $notification->flags = Notification::FLAG_NO_CLEAR;
-        NotificationManager::notify('PHPVersionTooOldForNewestPiwikCheck', $notification);
+    	return;
     }
 
     private static function notifyWhenPhpVersionIsEOL()
