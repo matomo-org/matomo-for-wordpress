@@ -991,7 +991,7 @@ class CronArchive
         if ($isTodayIncluded
             && !$isLast
         ) {
-            return [false, null];
+            return [false, $date];
         }
 
         $periodsToCheckRanges = array_map(function (Period $p) { return $p->getRangeString(); }, $periodsToCheck);
