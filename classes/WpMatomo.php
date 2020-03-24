@@ -131,7 +131,7 @@ class WpMatomo {
 						add_action(
 							'admin_notices',
 							function () use ( $upload_path ) {
-								echo '<div class="error"><p>' . __( 'Matomo Analytics requires the uploads directory (' . esc_html( dirname( $upload_path ) ) . ') to be writable. Please make the directory writable for it to work.', 'matomo' ) . '</p></div>';
+								echo '<div class="error"><p>' . sprintf(__( 'Matomo Analytics requires the uploads directory %s to be writable. Please make the directory writable for it to work.', 'matomo' ), '(' . esc_html( dirname( $upload_path ) ) . ')') . '</p></div>';
 							}
 						);
 					}
