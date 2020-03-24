@@ -36,7 +36,8 @@ $GLOBALS['MATOMO_PLUGINS_ENABLED'] = array();
 $GLOBALS['MATOMO_PLUGIN_FILES'] = array( MATOMO_ANALYTICS_FILE );
 
 function matomo_has_compatible_content_dir() {
-	if ( !empty( $_SERVER['MATOMO_WP_ROOT_PATH'] ) && is_dir( $_SERVER['MATOMO_WP_ROOT_PATH'] ) ) {
+	if ( !empty( $_SERVER['MATOMO_WP_ROOT_PATH'] )
+	     && file_exists( rtrim($_SERVER['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php' ) ) {
 		return true;
 	}
 
@@ -54,7 +55,29 @@ function matomo_has_compatible_content_dir() {
 		$absPath . DIRECTORY_SEPARATOR . 'wp-content'
 	);
 
-	return in_array($contentDir, $absPaths, true);
+	if (in_array($contentDir, $absPaths, true)) {
+		 return true;
+	}
+
+	$wpload_base = '../../../wp-load.php';
+	$wpload_full = dirname( __FILE__ ) . '/' . $wpload_base;
+	if ( file_exists($wpload_full ) ) {
+		return true;
+	} elseif (realpath( $wpload_full ) && file_exists(realpath( $wpload_full ))) {
+		return true;
+	} elseif (!empty($_SERVER['SCRIPT_FILENAME']) && file_exists($_SERVER['SCRIPT_FILENAME'])) {
+		// seems symlinked... eg the wp-content dir or wp-content/plugins dir is symlinked from some very much other place...
+		$wpload_full = dirname($_SERVER['SCRIPT_FILENAME']) . '/' . $wpload_base;
+		if ( file_exists($wpload_full ) ) {
+			return true;
+		} elseif (realpath( $wpload_full ) && file_exists(realpath( $wpload_full ))) {
+			return true;
+		} elseif (file_exists(dirname( $_SERVER['SCRIPT_FILENAME'] )) . '/wp-load.php') {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 function matomo_header_icon( $full = false ) {

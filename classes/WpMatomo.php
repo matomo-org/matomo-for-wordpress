@@ -141,22 +141,6 @@ class WpMatomo {
 			return false;
 		}
 
-		if ( ! matomo_has_compatible_content_dir() ) {
-			add_action(
-				'init',
-				function () {
-					if ( self::is_admin_user() ) {
-						add_action(
-							'admin_notices',
-							function () {
-								echo '<div class="error"><p>' . __( 'It looks like you are maybe using a custom WordPress content directory. The Matomo reporting/admin pages might not work. You may be able to workaround this.', 'matomo' ) . ' <a target="_blank" rel="noreferrer noopener" href="https://matomo.org/faq/wordpress/what-are-the-requirements-for-matomo-for-wordpress/">' . esc_html__( 'Learn more', 'matomo' ) . '</a>.</p></div>';
-							}
-						);
-					}
-				}
-			);
-		}
-
 		return true;
 	}
 
