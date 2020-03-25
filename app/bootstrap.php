@@ -94,6 +94,25 @@ if ( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) {
 		}
 	}
 
+	if (!defined( 'ABSPATH')) {
+		// still not loaded... look in plugins directory if there is a config file for us.
+		$matomo_wpload_config = dirname(__FILE__) . '/../../matomo.wpload_dir.php';
+		if (file_exists( $matomo_wpload_config) && is_readable($matomo_wpload_config)) {
+			$matomo_wpload_content = @file_get_contents($matomo_wpload_config); // we do not include that file for security reasons
+			if (!empty($matomo_wpload_content)) {
+				$matomo_wpload_content = str_replace(array('<?php', 'exit;', 'wp-load.php'), '', $matomo_wpload_content);
+				$matomo_wpload_content = preg_replace('/\s/', '', $matomo_wpload_content);
+				$matomo_wpload_content = trim(ltrim(trim($matomo_wpload_content), '#')); // the path may be commented out # /abs/path
+				if (strpos($matomo_wpload_content, DIRECTORY_SEPARATOR) === 0) {
+					$matomo_wpload_file = rtrim($matomo_wpload_content, DIRECTORY_SEPARATOR) . '/wp-load.php';
+					if (file_exists($matomo_wpload_file) && is_readable($matomo_wpload_file)) {
+						require_once $matomo_wpload_file;
+					}
+				}
+			}
+		}
+	}
+
 	if ($matomo_is_archive_request) {
 		restore_error_handler();
 		if (ob_get_level()) {
