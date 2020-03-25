@@ -36,7 +36,8 @@ $GLOBALS['MATOMO_PLUGINS_ENABLED'] = array();
 $GLOBALS['MATOMO_PLUGIN_FILES'] = array( MATOMO_ANALYTICS_FILE );
 
 function matomo_has_compatible_content_dir() {
-	if ( !empty( $_SERVER['MATOMO_WP_ROOT_PATH'] ) && is_dir( $_SERVER['MATOMO_WP_ROOT_PATH'] ) ) {
+	if ( !empty( $_SERVER['MATOMO_WP_ROOT_PATH'] )
+	     && file_exists( rtrim($_SERVER['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php' ) ) {
 		return true;
 	}
 
@@ -54,7 +55,44 @@ function matomo_has_compatible_content_dir() {
 		$absPath . DIRECTORY_SEPARATOR . 'wp-content'
 	);
 
-	return in_array($contentDir, $absPaths, true);
+	if (in_array($contentDir, $absPaths, true)) {
+		 return true;
+	}
+
+	$wpload_base = '../../../wp-load.php';
+	$wpload_full = dirname( __FILE__ ) . '/' . $wpload_base;
+	if ( file_exists($wpload_full ) && is_readable( $wpload_full ) ) {
+		return true;
+	} elseif (realpath( $wpload_full ) && file_exists(realpath( $wpload_full )) && is_readable(realpath( $wpload_full ))) {
+		return true;
+	} elseif (!empty($_SERVER['SCRIPT_FILENAME']) && file_exists($_SERVER['SCRIPT_FILENAME'])) {
+		// seems symlinked... eg the wp-content dir or wp-content/plugins dir is symlinked from some very much other place...
+		$wpload_full = dirname($_SERVER['SCRIPT_FILENAME']) . '/' . $wpload_base;
+		if ( file_exists($wpload_full ) ) {
+			return true;
+		} elseif (realpath( $wpload_full ) && file_exists(realpath( $wpload_full ))) {
+			return true;
+		} elseif (file_exists(dirname( $_SERVER['SCRIPT_FILENAME'] )) . '/wp-load.php') {
+			return true;
+		}
+	}
+
+	// look in plugins directory if there is a config file for us
+	$wpload_config = dirname(__FILE__) . '/../matomo.wpload_dir.php';
+	if (file_exists( $wpload_config) && is_readable($wpload_config)) {
+		$content = @file_get_contents($wpload_config); // we do not include that file for security reasons
+		if (!empty($content)) {
+			$content = str_replace(array('<?php', 'exit;'), '', $content);
+			$content = preg_replace('/\s/', '', $content);
+			$content = trim(ltrim(trim($content), '#')); // the path may be commented out # /abs/path
+			if (strpos($content, DIRECTORY_SEPARATOR) === 0) {
+				$wpload_file = rtrim($content, DIRECTORY_SEPARATOR) . '/wp-load.php';
+				return file_exists($wpload_file) && is_readable($wpload_file);
+			}
+		}
+	}
+
+	return false;
 }
 
 function matomo_header_icon( $full = false ) {

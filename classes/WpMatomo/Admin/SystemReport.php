@@ -690,6 +690,21 @@ class SystemReport {
 			}
 		}
 
+		$compatible_content_dir = matomo_has_compatible_content_dir();
+		if ($compatible_content_dir === true) {
+			$rows[] = array(
+				'name'  => 'Compatible content directory',
+				'value' => true,
+			);
+		} else {
+			$rows[] = array(
+				'name'  => 'Compatible content directory',
+				'value' => $compatible_content_dir,
+				'is_warning' => true,
+				'comment' =>  __( 'It looks like you are maybe using a custom WordPress content directory. The Matomo reporting/admin pages might not work. You may be able to workaround this.', 'matomo' ) . ' ' . __( 'Learn more', 'matomo' ) . ': https://matomo.org/faq/wordpress/how-do-i-make-matomo-for-wordpress-work-when-i-have-a-custom-content-directory/'
+			);
+		}
+
 		return $rows;
 	}
 
