@@ -334,6 +334,22 @@ class WordPress extends Plugin
         }
     }
 
+    public static function getWpLoginUrl()
+    {
+    	$forceFrontPage = defined('MATOMO_LOGIN_REDIRECT') && MATOMO_LOGIN_REDIRECT === 'frontpage';
+    	$forceLoginUrl = defined('MATOMO_LOGIN_REDIRECT') && MATOMO_LOGIN_REDIRECT === 'login';
+
+	    if (!$forceLoginUrl &&
+	        ($forceFrontPage
+	            || is_plugin_active('wps-hide-login/wps-hide-login.php'))) {
+		    $redirect_url = home_url();
+	    } else {
+		    $redirect_url = wp_login_url(\WpMatomo\Admin\Menu::get_reporting_url());
+	    }
+
+	    return $redirect_url;
+    }
+
     public function noAccess(Exception $exception)
     {
         if (Common::isXmlHttpRequest()) {
@@ -342,7 +358,8 @@ class WordPress extends Plugin
             return;
         }
 
-        wp_redirect(wp_login_url(\WpMatomo\Admin\Menu::get_reporting_url()));
+	    $redirect_url = WordPress::getWpLoginUrl();
+	    wp_safe_redirect($redirect_url);
         exit;
     }
 

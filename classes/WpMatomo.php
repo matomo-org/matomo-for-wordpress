@@ -86,6 +86,11 @@ class WpMatomo {
 			$site_sync->register_hooks();
 			$user_sync = new UserSync();
 			$user_sync->register_hooks();
+
+			$referral = new \WpMatomo\Referral();
+			if ($referral->should_show()) {
+				$referral->register_hooks();
+			}
 		}
 
 		$tracking_code = new TrackingCode( self::$settings );
@@ -126,7 +131,7 @@ class WpMatomo {
 						add_action(
 							'admin_notices',
 							function () use ( $upload_path ) {
-								echo '<div class="error"><p>' . __( 'Matomo Analytics requires the uploads directory (' . esc_html( dirname( $upload_path ) ) . ') to be writable. Please make the directory writable for it to work.', 'matomo' ) . '</p></div>';
+								echo '<div class="error"><p>' . sprintf(__( 'Matomo Analytics requires the uploads directory %s to be writable. Please make the directory writable for it to work.', 'matomo' ), '(' . esc_html( dirname( $upload_path ) ) . ')') . '</p></div>';
 							}
 						);
 					}
@@ -134,22 +139,6 @@ class WpMatomo {
 			);
 
 			return false;
-		}
-
-		if ( ! matomo_has_compatible_content_dir() ) {
-			add_action(
-				'init',
-				function () {
-					if ( self::is_admin_user() ) {
-						add_action(
-							'admin_notices',
-							function () {
-								echo '<div class="error"><p>' . __( 'It looks like you are maybe using a custom WordPress content directory. The Matomo reporting/admin pages might not work. You may be able to workaround this.', 'matomo' ) . ' <a target="_blank" rel="noreferrer noopener" href="https://matomo.org/faq/wordpress/what-are-the-requirements-for-matomo-for-wordpress/">' . esc_html__( 'Learn more', 'matomo' ) . '</a>.</p></div>';
-							}
-						);
-					}
-				}
-			);
 		}
 
 		return true;

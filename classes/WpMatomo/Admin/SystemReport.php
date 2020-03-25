@@ -283,8 +283,8 @@ class SystemReport {
 			'comment' => $tmp_dir,
 		);
 
-		if ( ! empty( $_ENV['MATOMO_WP_ROOT_PATH'] ) ) {
-			$custom_path = rtrim( $_ENV['MATOMO_WP_ROOT_PATH'], '/' ) . '/wp-load.php';
+		if ( ! empty( $_SERVER['MATOMO_WP_ROOT_PATH'] ) ) {
+			$custom_path = rtrim( $_SERVER['MATOMO_WP_ROOT_PATH'], '/' ) . '/wp-load.php';
 			$path_exists = file_exists( $custom_path );
 			$comment     = '';
 			if ( ! $path_exists ) {
@@ -688,6 +688,21 @@ class SystemReport {
 					'comment' => 'WP-Matomo is configured in "PHP mode". This is known to cause issues with Matomo for WordPress. We recommend you either deactivate WP-Matomo or you go "Settings => WP-Matomo" and change the "Matomo Mode" in the "Connect to Matomo" section to "Self-hosted HTTP API".'
 				);
 			}
+		}
+
+		$compatible_content_dir = matomo_has_compatible_content_dir();
+		if ($compatible_content_dir === true) {
+			$rows[] = array(
+				'name'  => 'Compatible content directory',
+				'value' => true,
+			);
+		} else {
+			$rows[] = array(
+				'name'  => 'Compatible content directory',
+				'value' => $compatible_content_dir,
+				'is_warning' => true,
+				'comment' =>  __( 'It looks like you are maybe using a custom WordPress content directory. The Matomo reporting/admin pages might not work. You may be able to workaround this.', 'matomo' ) . ' ' . __( 'Learn more', 'matomo' ) . ': https://matomo.org/faq/wordpress/how-do-i-make-matomo-for-wordpress-work-when-i-have-a-custom-content-directory/'
+			);
 		}
 
 		return $rows;

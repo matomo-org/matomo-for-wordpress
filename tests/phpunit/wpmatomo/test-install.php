@@ -25,8 +25,8 @@ class InstallTest extends MatomoAnalytics_TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->installer   = $this->make_installer();
-		$this->uninstaller = new Uninstaller();
+        $this->installer   = $this->make_installer();
+        $this->uninstaller = new Uninstaller();
 	}
 
 	private function make_installer() {
@@ -49,6 +49,12 @@ class InstallTest extends MatomoAnalytics_TestCase {
 
 		$sites_model = new SitesModel();
 		$all_sites   = $sites_model->getAllSites();
+
+		$install_date = get_option(Installer::OPTION_NAME_INSTALL_DATE);
+
+		// sets install date
+		$this->assertTrue(time() - 600 < $install_date);
+		$this->assertTrue(time() >= $install_date);
 
 		unset( $all_sites[0]['ts_created'] );
 		$this->assertEquals(
@@ -123,6 +129,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		// automatically... but bit scared of "fatal errors etc" and breaking anything in WordPress... instead
 		// the site sync will install it and/or when someone visits that site
 		Bootstrap::set_not_bootstrapped();
+
 		$this->installer->install();
 
 		$blogid = get_current_blog_id();

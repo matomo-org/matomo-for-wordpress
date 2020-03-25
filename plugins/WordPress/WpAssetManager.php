@@ -57,7 +57,8 @@ class WpAssetManager extends AssetManager
 		$jsFiles[] = 'jquery/ui/effect.min.js';
 
 		foreach ($jsFiles as $jsFile) {
-			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../../../../wp-includes/js/' . $jsFile);
+			$jQueryPath = includes_url('js/' . $jsFile);
+			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, $jQueryPath);
 		}
 
 		$result .= "<script type=\"text/javascript\">window.$ = jQuery;</script>";

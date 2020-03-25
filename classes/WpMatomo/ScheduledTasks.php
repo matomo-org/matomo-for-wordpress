@@ -47,9 +47,9 @@ class ScheduledTasks {
 	}
 
 	public function add_weekly_schedule( $schedules ) {
-		$schedules['matomo_weekly'] = array(
-			'interval' => 60 * 60 * 24 * 7, // 604,800, seconds in a week
-			'display'  => __( 'Weekly', 'matomo' ),
+		$schedules['matomo_monthly'] = array(
+			'interval' => 60 * 60 * 24 * 30,
+			'display'  => __( 'Monthly', 'matomo' ),
 		);
 
 		return $schedules;
@@ -126,7 +126,7 @@ class ScheduledTasks {
 			),
 			self::EVENT_GEOIP   => array(
 				'name'     => 'Update GeoIP DB',
-				'interval' => 'matomo_weekly',
+				'interval' => 'matomo_monthly',
 				'method'   => 'update_geo_ip2_db',
 			),
 		);
@@ -148,7 +148,15 @@ class ScheduledTasks {
 		$this->logger->log( 'Scheduled tasks update geoip database' );
 		try {
 			Bootstrap::do_bootstrap();
-			Option::set( GeoIP2AutoUpdater::LOC_URL_OPTION_NAME, GeoIp2::getDbIpLiteUrl());
+
+			$maxmind_license = $this->settings->get_global_option('maxmind_license_key');
+			if (empty($maxmind_license)) {
+				$db_url = GeoIp2::getDbIpLiteUrl();
+			} else {
+				$db_url = 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&suffix=tar.gz&license_key=' . $maxmind_license;
+			}
+
+			Option::set( GeoIP2AutoUpdater::LOC_URL_OPTION_NAME, $db_url);
 			$updater = new GeoIP2AutoUpdater();
 			$updater->update();
 			if ( LocationProvider::getCurrentProviderId() !== Php::ID && LocationProvider::getProviderById( Php::ID ) ) {

@@ -25,6 +25,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Installer {
 
+	const OPTION_NAME_INSTALL_DATE = 'matomo-install-date';
+
 	/**
 	 * @var Settings
 	 */
@@ -110,6 +112,8 @@ class Installer {
 			// in case something fails with website or user creation
 			// also to set up all the other users
 			wp_schedule_single_event( time() + 35, ScheduledTasks::EVENT_SYNC );
+
+			update_option(self::OPTION_NAME_INSTALL_DATE, time());
 
 			$this->create_website();
 			$this->create_user(); // we sync users as early as possible to make sure things are set up correctly

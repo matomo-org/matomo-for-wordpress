@@ -22,8 +22,7 @@ if ( ! defined( 'PIWIK_ENABLE_ERROR_HANDLER' ) ) {
 	}
 }
 
-$matomo_was_wp_loaded_directly = ! defined( 'ABSPATH' );
-
+$GLOBALS['MATOMO_LOADED_DIRECTLY'] = ! defined( 'ABSPATH' );
 
 function matomo_log_message_no_display($message)
 {
@@ -52,7 +51,8 @@ function matomo_log_message_no_display($message)
 	}
 }
 
-if ( $matomo_was_wp_loaded_directly ) {
+if ( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) {
+
 	// prevent from loading twice
 	$matomo_wpload_base = '../../../../wp-load.php';
 	$matomo_wpload_full = dirname( __FILE__ ) . '/' . $matomo_wpload_base;
@@ -76,8 +76,8 @@ if ( $matomo_was_wp_loaded_directly ) {
 		});
 	}
 
-	if (!empty($_ENV['MATOMO_WP_ROOT_PATH']) && file_exists( rtrim($_ENV['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php')) {
-		require_once rtrim($_ENV['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php';
+	if (!empty($_SERVER['MATOMO_WP_ROOT_PATH']) && file_exists( rtrim($_SERVER['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php')) {
+		require_once rtrim($_SERVER['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php';
 	} elseif ( file_exists($matomo_wpload_full ) ) {
 		require_once $matomo_wpload_full;
 	} elseif (realpath( $matomo_wpload_full ) && file_exists(realpath( $matomo_wpload_full ))) {
@@ -94,6 +94,25 @@ if ( $matomo_was_wp_loaded_directly ) {
 		}
 	}
 
+	if (!defined( 'ABSPATH')) {
+		// still not loaded... look in plugins directory if there is a config file for us.
+		$matomo_wpload_config = dirname(__FILE__) . '/../../matomo.wpload_dir.php';
+		if (file_exists( $matomo_wpload_config) && is_readable($matomo_wpload_config)) {
+			$matomo_wpload_content = @file_get_contents($matomo_wpload_config); // we do not include that file for security reasons
+			if (!empty($matomo_wpload_content)) {
+				$matomo_wpload_content = str_replace(array('<?php', 'exit;', 'wp-load.php'), '', $matomo_wpload_content);
+				$matomo_wpload_content = preg_replace('/\s/', '', $matomo_wpload_content);
+				$matomo_wpload_content = trim(ltrim(trim($matomo_wpload_content), '#')); // the path may be commented out # /abs/path
+				if (strpos($matomo_wpload_content, DIRECTORY_SEPARATOR) === 0) {
+					$matomo_wpload_file = rtrim($matomo_wpload_content, DIRECTORY_SEPARATOR) . '/wp-load.php';
+					if (file_exists($matomo_wpload_file) && is_readable($matomo_wpload_file)) {
+						require_once $matomo_wpload_file;
+					}
+				}
+			}
+		}
+	}
+
 	if ($matomo_is_archive_request) {
 		restore_error_handler();
 		if (ob_get_level()) {
@@ -106,7 +125,7 @@ if ( $matomo_was_wp_loaded_directly ) {
 }
 
 if ( ! defined( 'ABSPATH' ) ) {
-	echo 'Could not find wp-load. If your server uses symlinks or a custom content directory, Matomo may not work for you as we cannot detect the paths correctly. For more information see https://matomo.org/faq/wordpress/what-are-the-requirements-for-matomo-for-wordpress/';
+	echo 'Could not find wp-load. If your server uses symlinks or a custom content directory, Matomo may not work for you as we cannot detect the paths correctly. For more information see https://matomo.org/faq/wordpress/how-do-i-make-matomo-for-wordpress-work-when-i-have-a-custom-content-directory/';
 	exit; // if accessed directly
 }
 
@@ -115,7 +134,7 @@ if ( !is_plugin_active('matomo/matomo.php')
     exit;
 }
 
-if ($matomo_was_wp_loaded_directly) {
+if ( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) {
 	// see https://github.com/matomo-org/wp-matomo/issues/190
 	// wp-external-links plugin would register an ob_start(function () {...}) and manipulate any of our API output
 	// and in some cases the output would get completely lost causing blank pages.

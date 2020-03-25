@@ -3,8 +3,8 @@ Contributors: matomoteam
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5EJ2LHATAKCJ4&source=url
 Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
 Requires at least: 4.8
-Tested up to: 5.3
-Stable tag: 1.0.3
+Tested up to: 5.4
+Stable tag: 1.0.4
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -12,6 +12,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Matomo is the #1 Google Analytics alternative that gives you full control over your data and protects user privacy. Free, secure, and open.
 
 == Description ==
+
+If you are already using Matomo On-Premise (formerly Piwik) or Matomo Cloud, please use the [WP-Matomo plugin](https://wordpress.org/plugins/wp-piwik/). 
 
 For all you WordPress website owners wanting an easier way to get customer insights to grow your business, you can now get the solution the professionals use, for free!
 
@@ -158,3 +160,20 @@ Needing to know more? [Click here to view all of our FAQs on our website](https:
 9. Options to anonymize data so you don't track personal data.
 10. Automatically delete old data you no longer need to be privacy compliant and to free your server from not needed data.
 11. Summary page for getting a quick overview.
+
+== Changelog ==
+
+= 1.0.4 =
+* Update Matomo core to 3.13.4
+* Fix the website's timezone may be set to UTC instead of the WP timezone
+* Improve compatibility with PHP 7.4 by fixing more notices
+* Add a review link to the About page
+* Add a newsletter signup possibility to the About page.
+* Support MaxMind geolocation database
+* Better support for hiding login URLs eg with WPS plugin
+* Show header icon images
+* Update GeoIP DB monthly instead of weekly
+* Ask for a review every 90 days unless dismissed
+* Possibility to configure proxy client header
+
+[See changelog for all versions](https://github.com/matomo-org/wp-matomo/blob/develop/CHANGELOG.md).
