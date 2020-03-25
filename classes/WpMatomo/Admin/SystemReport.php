@@ -701,7 +701,7 @@ class SystemReport {
 				'name'  => 'Compatible content directory',
 				'value' => $compatible_content_dir,
 				'is_warning' => true,
-				'comment' =>  __( 'It looks like you are maybe using a custom WordPress content directory. The Matomo reporting/admin pages might not work. You may be able to workaround this.', 'matomo' ) . ' ' . __( 'Learn more', 'matomo' ) . ': https://matomo.org/faq/wordpress/what-are-the-requirements-for-matomo-for-wordpress/'
+				'comment' =>  __( 'It looks like you are maybe using a custom WordPress content directory. The Matomo reporting/admin pages might not work. You may be able to workaround this.', 'matomo' ) . ' ' . __( 'Learn more', 'matomo' ) . ': https://matomo.org/faq/wordpress/how-do-i-make-matomo-for-wordpress-work-when-i-have-a-custom-content-directory/'
 			);
 		}
 

@@ -125,7 +125,7 @@ if ( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) {
 }
 
 if ( ! defined( 'ABSPATH' ) ) {
-	echo 'Could not find wp-load. If your server uses symlinks or a custom content directory, Matomo may not work for you as we cannot detect the paths correctly. For more information see https://matomo.org/faq/wordpress/what-are-the-requirements-for-matomo-for-wordpress/';
+	echo 'Could not find wp-load. If your server uses symlinks or a custom content directory, Matomo may not work for you as we cannot detect the paths correctly. For more information see https://matomo.org/faq/wordpress/how-do-i-make-matomo-for-wordpress-work-when-i-have-a-custom-content-directory/';
 	exit; // if accessed directly
 }
 
