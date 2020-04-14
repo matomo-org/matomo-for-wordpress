@@ -49,7 +49,7 @@ global $wp;
 		}
 		?>
 
-	<div id="dashboard-widgets" class="metabox-holder columns-2 has-right-sidebar">
+	<div id="dashboard-widgets" class="metabox-holder  has-right-sidebar matomo-dashboard-container">
 		<?php
 		$matomo_columns = array( 1, 0 );
 		foreach ( $matomo_columns as $matomo_column_index => $matomo_column_modulo ) {
