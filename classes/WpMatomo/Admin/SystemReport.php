@@ -15,6 +15,7 @@ use Piwik\Filesystem;
 use Piwik\MetricsFormatter;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
+use Piwik\Plugins\UserCountry\LocationProvider;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Logger;
@@ -431,6 +432,25 @@ class SystemReport {
 				'value'   => $cli_multi->supportsAsync(),
 				'comment' => '',
 			);
+
+			$location_provider = LocationProvider::getCurrentProvider();
+			if ($location_provider) {
+				$rows[] = array(
+					'name'    => 'Location provider ID',
+					'value'   => $location_provider->getId(),
+					'comment' => '',
+				);
+				$rows[] = array(
+					'name'    => 'Location provider available',
+					'value'   => $location_provider->isAvailable(),
+					'comment' => '',
+				);
+				$rows[] = array(
+					'name'    => 'Location provider working',
+					'value'   => $location_provider->isWorking(),
+					'comment' => '',
+				);
+			}
 
 			$num_days_check_visits = 5;
 			$had_visits = $this->had_visits_in_last_days($num_days_check_visits);

@@ -1,5 +1,10 @@
 == Changelog ==
 
+= 1.0.5 =
+* Add location checks to system report
+* Improve summary report layout for large screens
+* Prevent a method in bootstrap may be defined twice
+
 = 1.0.4 =
 * Update Matomo core to 3.13.4
 * Fix the website's timezone may be set to UTC instead of the WP timezone
