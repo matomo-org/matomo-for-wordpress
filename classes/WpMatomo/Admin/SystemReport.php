@@ -10,6 +10,7 @@
 namespace WpMatomo\Admin;
 
 use Piwik\CliMulti;
+use Piwik\Common;
 use Piwik\Container\StaticContainer;
 use Piwik\Filesystem;
 use Piwik\MetricsFormatter;
@@ -840,6 +841,14 @@ class SystemReport {
 				'value'   => $_SERVER['HTTP_USER_AGENT'],
 			);
 		}
+		if (!\WpMatomo::is_safe_mode()) {
+			Bootstrap::do_bootstrap();
+			$rows[] = array(
+				'name'    => 'Language',
+				'value'   => Common::getBrowserLanguage()
+			);
+		}
+
 
 		return $rows;
 	}
