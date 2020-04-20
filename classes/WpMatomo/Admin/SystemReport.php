@@ -264,11 +264,10 @@ class SystemReport {
 		);
 
 		$paths            = new Paths();
-		$upload_dir       = $paths->get_upload_base_dir();
-		$path_config_file = $upload_dir . '/' . MATOMO_CONFIG_PATH;
+		$path_config_file = $paths->get_config_ini_path();
 		$rows             = $this->check_file_exists_and_writable( $rows, $path_config_file, 'Config', true );
 
-		$path_tracker_file = $upload_dir . '/matomo.js';
+		$path_tracker_file = $paths->get_matomo_js_upload_path();
 		$rows              = $this->check_file_exists_and_writable( $rows, $path_tracker_file, 'JS Tracker', false );
 
 		$rows[] = array(
