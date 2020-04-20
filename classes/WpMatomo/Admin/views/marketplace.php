@@ -175,6 +175,13 @@ $matomo_extra_url_params = '&' . http_build_query(
 						'url'         => 'https://plugins.matomo.org/SearchEngineKeywordsPerformance?wp=1',
 						'image'       => '',
 					),
+					array(
+						'name'        => 'Paid Advertising Performance',
+						'description' => 'Analyse the success of your Google Ads campaigns directly in your Matomo. See what keywords and search queries are leading to clicks for your paid ads and bringing your business the highest ROI.',
+						'price'       => '79EUR / 89USD',
+						'url'         => 'https://plugins.matomo.org/PaidAdvertisingPerformance?wp=1',
+						'image'       => '',
+					),
 					/*
 					array(
 						'name'        => 'Activity Log',
