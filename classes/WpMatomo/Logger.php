@@ -74,7 +74,7 @@ class Logger {
 			if ( ! empty( $item['file'] ) ) {
 				$trace .= basename( $item['file'] ) . ':' . $item['line'] . '; ';
 			}
-			if ( $index > 5 ) {
+			if ( $index > 8 ) {
 				continue;
 			}
 		}
