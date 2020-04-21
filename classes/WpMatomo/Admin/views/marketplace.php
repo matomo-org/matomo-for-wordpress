@@ -254,7 +254,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 															   <?php
 																if ( ! empty( $matomo_feature['price'] ) ) {
 																	?>
-													From <?php echo esc_html( $matomo_feature['price'] ); ?>
+													<?php echo esc_html( $matomo_feature['price'] ); ?>
 																	<?php
 																} else {
 																	?>
