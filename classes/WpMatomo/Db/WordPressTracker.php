@@ -180,12 +180,11 @@ class WordPress extends Mysqli {
 		if ( ! $this->activeTransaction === false ) {
 			return;
 		}
-		$wpdb->query( 'START TRANSACTION' );
-		if ( $this->connection->autocommit( false ) ) {
-			$this->activeTransaction = uniqid();
 
-			return $this->activeTransaction;
-		}
+		$wpdb->query( 'START TRANSACTION' );
+		$this->activeTransaction = uniqid();
+
+		return $this->activeTransaction;
 	}
 
 	/**
