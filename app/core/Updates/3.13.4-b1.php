@@ -10,7 +10,6 @@
 namespace Piwik\Updates;
 
 use Piwik\Plugins\Installation\ServerFilesGenerator;
-use Piwik\SettingsServer;
 use Piwik\Updater;
 use Piwik\Updates as PiwikUpdates;
 
@@ -19,8 +18,6 @@ class Updates_3_13_4_b1 extends PiwikUpdates
     public function doUpdate(Updater $updater)
     {
         // Fix issue with HeatmapSessionRecording on IIS (https://github.com/matomo-org/matomo/issues/15651)
-	    if (SettingsServer::isIIS()) {
-		    ServerFilesGenerator::createFilesForSecurity();
-	    }
+        ServerFilesGenerator::createFilesForSecurity();
     }
 }
