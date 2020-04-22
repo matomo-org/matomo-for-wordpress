@@ -76,6 +76,7 @@ class Settings {
 		'version_history'                          => array(),
 		'mail_history'                             => array(),
 		'disable_cookies'                          => false,
+		'force_post'                               => false,
 		'limit_cookies'                            => false,
 		'limit_cookies_visitor'                    => 34186669, // Matomo default 13 months
 		'limit_cookies_session'                    => 1800, // Matomo default 30 minutes
