@@ -6,6 +6,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
  */
+/** @var bool $matomo_show_offer */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -26,6 +27,13 @@ $matomo_extra_url_params = '&' . http_build_query(
 		<div class="updated notice">
 			<p><?php esc_html_e( 'Only super users can see this page', 'matomo' ); ?></p>
 		</div>
+	<?php } ?>
+	<?php if ( $matomo_show_offer ) { ?>
+        <div class="notice notice-info">
+            <p>Limited time only: 300€ Off Matomo Premium Bundle. Now only 199€/year.
+        <a href="https://matomo.org/wp-premium-bundle/" target="_blank" rel="noreferrer noopener" class="button">Learn more</a></p>
+            <div style="clear:both;"></div>
+        </div>
 	<?php } ?>
 
 	<div id="icon-plugins" class="icon32"></div>
@@ -197,7 +205,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 		echo '<h2>' . esc_html( $matomo_feature_section['title'] ) . '</h2>';
 		echo '<div class="wp-list-table widefat plugin-install"><div id="the-list">';
 		foreach ( $matomo_feature_section['features'] as $matomo_index => $matomo_feature ) {
-		    if ($matomo_feature['name'] === 'Premium Bundle') {
+		    if ($matomo_show_offer && $matomo_feature['name'] === 'Premium Bundle') {
 		        ?><div class="plugin-card" style="width: calc(33% - 8px);min-width:282px;max-width:350px;">
                     <div style="border: 6px dashed red;text-align: center">
                         <h2 style="font-size: 24px;">
