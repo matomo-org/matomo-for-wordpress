@@ -222,7 +222,23 @@ abstract class ControllerAdmin extends Controller
 
     private static function notifyWhenPhpVersionIsNotCompatibleWithNextMajorPiwik()
     {
-    	return;
+        if (self::isUsingPhpVersionCompatibleWithNextPiwik()) {
+            return;
+        }
+
+        $youMustUpgradePHP = Piwik::translate('General_YouMustUpgradePhpVersionToReceiveLatestPiwik');
+        $message =  Piwik::translate('General_PiwikCannotBeUpgradedBecausePhpIsTooOld')
+            .     ' '
+            .  sprintf(Piwik::translate('General_PleaseUpgradeYourPhpVersionSoYourPiwikDataStaysSecure'), self::getNextRequiredMinimumPHP())
+        ;
+
+        $notification = new Notification($message);
+        $notification->title = $youMustUpgradePHP;
+        $notification->priority = Notification::PRIORITY_LOW;
+        $notification->context = Notification::CONTEXT_WARNING;
+        $notification->type = Notification::TYPE_TRANSIENT;
+        $notification->flags = Notification::FLAG_NO_CLEAR;
+        NotificationManager::notify('PHPVersionTooOldForNewestPiwikCheck', $notification);
     }
 
     private static function notifyWhenPhpVersionIsEOL()
