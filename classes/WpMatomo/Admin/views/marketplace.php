@@ -200,7 +200,8 @@ $matomo_extra_url_params = '&' . http_build_query(
 		    if ($matomo_feature['name'] === 'Premium Bundle') {
 		        ?><div class="plugin-card" style="width: calc(33% - 8px);min-width:282px;max-width:350px;">
                     <div style="border: 6px dashed red;text-align: center">
-                        <h2 style="color:red;font-size: 24px;"><span style="color: black;">Limited time!</span><br><br>300€ Off Premium Bundle</h2>
+                        <h2 style="font-size: 24px;">
+                            <a href="https://matomo.org/wp-premium-bundle/" target="_blank" rel="noreferrer noopener"><span style="color: black;">Limited time!</span><br><br><span style="color:red">300€ Off Premium Bundle</span></a></h2>
                         <p>All premium features in one bundle.<br>
                             No risk 100% money back guarantee.<br><br>
                             <a class="button-primary" href="https://matomo.org/wp-premium-bundle/" target="_blank" rel="noreferrer noopener">Get it for only 199€/year</a>
