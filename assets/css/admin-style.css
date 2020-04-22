@@ -87,6 +87,10 @@ ol.matomo-list {
     font-weight: bold;
 }
 
+.matomo-dashboard-container .postbox-container {
+    min-width: 40%;
+}
+
 .postbox .table .widefat.matomo-table {
     border: 0;
 }

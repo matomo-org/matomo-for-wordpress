@@ -1,4 +1,4 @@
-/* Matomo Javascript - cb=e4651ae98a7539215063c712af63f642*/
+/* Matomo Javascript - cb=37addcf7ea70a383f0f9ad805a588fe5*/
 
 /*! jQuery Browser - v0.1.0 - 3/23/2012
 * https://github.com/jquery/jquery-browser
@@ -872,7 +872,7 @@ return result;},getValuesFromUrl:function(url){var searchString=this._removeHash
 hashStr=hashStr.split('#')[0];return broadcast.getParamValue(param,hashStr);},getParamValue:function(param,url){var lookFor=param+'=';var startStr=url.indexOf(lookFor);if(startStr>=0){return getSingleValue(startStr,url);}else{url=decodeURIComponent(url);lookFor=param+'[]=';startStr=url.indexOf(lookFor);if(startStr>=0){var result=[getSingleValue(startStr)];while((startStr=url.indexOf(lookFor,startStr+1))!==-1){result.push(getSingleValue(startStr));}
 return result;}else{return'';}}
 function getSingleValue(startPos){var endStr=url.indexOf("&",startPos);if(endStr===-1){endStr=url.length;}
-var value=url.substring(startPos+lookFor.length,endStr);if(param!='segment'){value=value.replace(/[^_%~\*\+\-\<\>!@\$\.()=,;0-9a-zA-Z]/gi,'');}
+var value=url.substring(startPos+lookFor.length,endStr);if(param!='segment'&&param!='popover'&&param!='compareSegments'){value=value.replace(/[^_%~\*\+\-\<\>!@\$\.()=,;0-9a-zA-Z]/gi,'');}
 return value;}},getHash:function(){return broadcast.getHashFromUrl().replace(/^#/,'').split('#')[0];},_removeHashFromUrl:function(url){var searchString='';if(url){var urlParts=url.split('#');searchString=urlParts[0];}else{searchString=window.location.search;}
 return searchString;}};
 /*!
@@ -1791,7 +1791,7 @@ if('toast'==scope.type){addToastEvent();}
 if(!scope.noclear){addCloseEvent();}
 function addToastEvent(){$timeout(function(){element.fadeOut('slow',function(){element.remove();});},scope.toastLength);}
 function addCloseEvent(){element.on('click','.close',function(event){if(event&&event.delegateTarget){angular.element(event.delegateTarget).remove();}});}
-function closeExistingNotificationHavingSameIdIfNeeded(id,notificationElement){var existingNode=angular.element('[notification-id='+id+']').not(notificationElement);if(existingNode&&existingNode.length){existingNode.remove();}}}};}})();
+function closeExistingNotificationHavingSameIdIfNeeded(id,notificationElement){var notificationStillExists=!!notificationElement.parents('body').length;var existingNode=angular.element('[notification-id='+id+']').not(notificationElement);if(notificationStillExists&&existingNode&&existingNode.length){existingNode.remove();}}}};}})();
 /*!
  * Piwik - free/libre analytics platform
  *
@@ -3680,7 +3680,7 @@ return instance;}});})();
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 (function(){angular.module('piwikApp').directive('piwikLiveWidgetRefresh',piwikLiveWidgetRefresh);piwikLiveWidgetRefresh.$inject=['piwik','$timeout'];function piwikLiveWidgetRefresh(piwik,$timeout){return{restrict:'A',scope:{liveRefreshAfterMs:'@'},compile:function(element,attrs){return function(scope,element,attrs){$timeout(function(){var segment=broadcast.getValueFromHash('segment');if(!segment){segment=broadcast.getValueFromUrl('segment');}
-$(element).find('#visitsLive').liveWidget({interval:scope.liveRefreshAfterMs,onUpdate:function(){var ajaxRequest=new ajaxHelper();ajaxRequest.setFormat('html');ajaxRequest.addParams({module:'Live',action:'ajaxTotalVisitors',segment:segment},'GET');ajaxRequest.setCallback(function(r){$(element).find("#visitsTotal").html(r);});ajaxRequest.send();},maxRows:10,fadeInSpeed:600,dataUrlParams:{module:'Live',action:'getLastVisitsStart',segment:segment}});});};}};}})();
+$(element).find('#visitsLive').liveWidget({interval:scope.liveRefreshAfterMs,onUpdate:function(){var ajaxRequest=new ajaxHelper();ajaxRequest.setFormat('html');ajaxRequest.addParams({module:'Live',action:'ajaxTotalVisitors',segment:segment},'GET');ajaxRequest.setCallback(function(r){$(element).find("#visitsTotal").replaceWith(r);});ajaxRequest.send();},maxRows:10,fadeInSpeed:600,dataUrlParams:{module:'Live',action:'getLastVisitsStart',segment:segment}});});};}};}})();
 /*!
  * Piwik - free/libre analytics platform
  *

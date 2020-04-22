@@ -24,29 +24,31 @@ if ( ! defined( 'PIWIK_ENABLE_ERROR_HANDLER' ) ) {
 
 $GLOBALS['MATOMO_LOADED_DIRECTLY'] = ! defined( 'ABSPATH' );
 
-function matomo_log_message_no_display($message)
-{
-	$message = 'Matomo ' . $message;
+if (!function_exists('matomo_log_message_no_display')) {
+	function matomo_log_message_no_display($message)
+	{
+		$message = 'Matomo ' . $message;
 
-	if ( defined( 'WP_DEBUG' ) && WP_DEBUG === true ) {
-		if (function_exists('ini_set') && function_exists('ini_get')) {
-			$value_orig = @ini_get('display_errors');
-			$value = @ini_set('display_errors', 'Off');
-			if (false !== $value) {
-				error_log( $message );
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG === true ) {
+			if (function_exists('ini_set') && function_exists('ini_get')) {
+				$value_orig = @ini_get('display_errors');
+				$value = @ini_set('display_errors', 'Off');
+				if (false !== $value) {
+					error_log( $message );
+				}
+				@ini_set('display_errors', $value_orig);
 			}
-			@ini_set('display_errors', $value_orig);
 		}
-	}
 
-	if (function_exists('update_option')
-	    && class_exists('\WpMatomo\Logger')) {
-		// only if WordPress was bootstrapped by now... otherwise it will fail
-		try {
-			$logger = new \WpMatomo\Logger();
-			$logger->log_exception('archive_boot', new Exception($message));
-		} catch (Exception $e) {
+		if (function_exists('update_option')
+		    && class_exists('\WpMatomo\Logger')) {
+			// only if WordPress was bootstrapped by now... otherwise it will fail
+			try {
+				$logger = new \WpMatomo\Logger();
+				$logger->log_exception('archive_boot', new Exception($message));
+			} catch (Exception $e) {
 
+			}
 		}
 	}
 }

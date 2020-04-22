@@ -258,6 +258,9 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 				$options[] = '_paq.push(["setDomains", ' . wp_json_encode( $hosts ) . ']);';
 			}
 		}
+		if ( $this->settings->get_global_option( 'force_post' ) ) {
+			$options[] = "_paq.push(['setRequestMethod', 'POST']);";
+		}
 		if ( $this->settings->get_global_option( 'limit_cookies' ) ) {
 			$options[] = "_paq.push(['setVisitorCookieTimeout', " . wp_json_encode( $this->settings->get_global_option( 'limit_cookies_visitor' ) ) . ']);';
 			$options[] = "_paq.push(['setSessionCookieTimeout', " . wp_json_encode( $this->settings->get_global_option( 'limit_cookies_session' ) ) . ']);';

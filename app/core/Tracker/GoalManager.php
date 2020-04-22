@@ -665,10 +665,6 @@ class GoalManager
 
     protected function getItemRowEnriched($goal, $item)
     {
-    	if (empty($goal['server_time'])) {
-    		// hack to test #215
-		    $goal['server_time'] = Date::getDatetimeFromTimestamp(time());
-	    }
         $newRow = array(
             'idaction_sku'       => (int)$item[self::INTERNAL_ITEM_SKU],
             'idaction_name'      => (int)$item[self::INTERNAL_ITEM_NAME],
@@ -886,10 +882,14 @@ class GoalManager
 		    $lastVisitTime = $request->getCurrentTimestamp();
 	    }
 
+	    if (!empty($lastVisitTime) && is_numeric($lastVisitTime)) {
+		    $lastVisitTime = Date::getDatetimeFromTimestamp($lastVisitTime);
+	    }
+
         $goal = array(
             'idvisit'     => $visitProperties->getProperty('idvisit'),
             'idvisitor'   => $visitProperties->getProperty('idvisitor'),
-            'server_time' => Date::getDatetimeFromTimestamp($lastVisitTime),
+            'server_time' => $lastVisitTime,
         );
 
         $visitDimensions = VisitDimension::getAllDimensions();

@@ -6,6 +6,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
  */
+/** @var bool $matomo_show_offer */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -26,6 +27,13 @@ $matomo_extra_url_params = '&' . http_build_query(
 		<div class="updated notice">
 			<p><?php esc_html_e( 'Only super users can see this page', 'matomo' ); ?></p>
 		</div>
+	<?php } ?>
+	<?php if ( $matomo_show_offer ) { ?>
+        <div class="notice notice-info">
+            <p>Limited time only: 300€ Off Matomo Premium Bundle. Now only 199€/year.
+        <a href="https://matomo.org/wp-premium-bundle/" target="_blank" rel="noreferrer noopener" class="button">Learn more</a></p>
+            <div style="clear:both;"></div>
+        </div>
 	<?php } ?>
 
 	<div id="icon-plugins" class="icon32"></div>
@@ -87,6 +95,13 @@ $matomo_extra_url_params = '&' . http_build_query(
 			'features' =>
 				array(
 					array(
+						'name'        => 'Premium Bundle',
+						'description' => 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of over 20%!',
+						'price'       => '499EUR / 579USD',
+						'url'         => 'https://plugins.matomo.org/WpPremiumBundle?wp=1',
+						'image'       => '',
+					),
+					array(
 						'name'        => 'Heatmap & Session Recording',
 						'description' => 'Truly understand your visitors by seeing where they click, hover, type and scroll. Replay their actions in a video and ultimately increase conversions.',
 						'price'       => '99EUR / 119USD',
@@ -101,13 +116,6 @@ $matomo_extra_url_params = '&' . http_build_query(
 						'image'       => '',
 					),
 
-					array(
-						'name'        => 'Premium Bundle',
-						'description' => 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of over 20%!',
-						'price'       => '499EUR / 579USD',
-						'url'         => 'https://plugins.matomo.org/WpPremiumBundle?wp=1',
-						'image'       => '',
-					),
 				),
 		),
 		array(
@@ -175,6 +183,13 @@ $matomo_extra_url_params = '&' . http_build_query(
 						'url'         => 'https://plugins.matomo.org/SearchEngineKeywordsPerformance?wp=1',
 						'image'       => '',
 					),
+					array(
+						'name'        => 'Paid Advertising Performance',
+						'description' => 'Analyse the success of your Google Ads campaigns directly in your Matomo. See what keywords and search queries are leading to clicks for your paid ads and bringing your business the highest ROI.',
+						'price'       => '79EUR / 89USD',
+						'url'         => 'https://plugins.matomo.org/PaidAdvertisingPerformance?wp=1',
+						'image'       => '',
+					),
 					/*
 					array(
 						'name'        => 'Activity Log',
@@ -190,6 +205,20 @@ $matomo_extra_url_params = '&' . http_build_query(
 		echo '<h2>' . esc_html( $matomo_feature_section['title'] ) . '</h2>';
 		echo '<div class="wp-list-table widefat plugin-install"><div id="the-list">';
 		foreach ( $matomo_feature_section['features'] as $matomo_index => $matomo_feature ) {
+		    if ($matomo_show_offer && $matomo_feature['name'] === 'Premium Bundle') {
+		        ?><div class="plugin-card" style="width: calc(33% - 8px);min-width:282px;max-width:350px;">
+                    <div style="border: 6px dashed red;text-align: center">
+                        <h2 style="font-size: 24px;">
+                            <a href="https://matomo.org/wp-premium-bundle/" target="_blank" rel="noreferrer noopener"><span style="color: black;">Limited time!</span><br><br><span style="color:red">300€ Off Premium Bundle</span></a></h2>
+                        <p>All premium features in one bundle.<br>
+                            No risk 100% money back guarantee.<br><br>
+                            <a class="button-primary" href="https://matomo.org/wp-premium-bundle/" target="_blank" rel="noreferrer noopener">Get it for only 199€/year</a>
+                            <br>
+                        </p>
+                    </div>
+                </div><?php
+                continue;
+            }
 			$matomo_style        = '';
 			$matomo_is_3_columns = count( $matomo_feature_section['features'] ) === 3;
 			if ( $matomo_is_3_columns ) {
@@ -247,7 +276,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 															   <?php
 																if ( ! empty( $matomo_feature['price'] ) ) {
 																	?>
-													From <?php echo esc_html( $matomo_feature['price'] ); ?>
+													<?php echo esc_html( $matomo_feature['price'] ); ?>
 																	<?php
 																} else {
 																	?>

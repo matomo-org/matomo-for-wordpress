@@ -8,11 +8,9 @@
  */
 namespace Piwik\Plugins\Marketplace\Api;
 
-use Piwik\API\Request;
 use Piwik\Cache;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
-use Piwik\DataTable;
 use Piwik\Filesystem;
 use Piwik\Http;
 use Piwik\Piwik;

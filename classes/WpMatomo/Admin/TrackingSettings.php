@@ -81,6 +81,7 @@ class TrackingSettings implements AdminSettingsInterface {
 			'limit_cookies_session',
 			'limit_cookies_visitor',
 			'limit_cookies',
+			'force_post',
 			'disable_cookies',
 			'add_download_extensions',
 			'track_404',

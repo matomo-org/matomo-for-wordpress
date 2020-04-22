@@ -222,7 +222,6 @@ abstract class ControllerAdmin extends Controller
 
     private static function notifyWhenPhpVersionIsNotCompatibleWithNextMajorPiwik()
     {
-    	return;
     }
 
     private static function notifyWhenPhpVersionIsEOL()
