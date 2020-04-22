@@ -87,6 +87,13 @@ $matomo_extra_url_params = '&' . http_build_query(
 			'features' =>
 				array(
 					array(
+						'name'        => 'Premium Bundle',
+						'description' => 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of over 20%!',
+						'price'       => '499EUR / 579USD',
+						'url'         => 'https://plugins.matomo.org/WpPremiumBundle?wp=1',
+						'image'       => '',
+					),
+					array(
 						'name'        => 'Heatmap & Session Recording',
 						'description' => 'Truly understand your visitors by seeing where they click, hover, type and scroll. Replay their actions in a video and ultimately increase conversions.',
 						'price'       => '99EUR / 119USD',
@@ -101,13 +108,6 @@ $matomo_extra_url_params = '&' . http_build_query(
 						'image'       => '',
 					),
 
-					array(
-						'name'        => 'Premium Bundle',
-						'description' => 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of over 20%!',
-						'price'       => '499EUR / 579USD',
-						'url'         => 'https://plugins.matomo.org/WpPremiumBundle?wp=1',
-						'image'       => '',
-					),
 				),
 		),
 		array(
@@ -197,6 +197,19 @@ $matomo_extra_url_params = '&' . http_build_query(
 		echo '<h2>' . esc_html( $matomo_feature_section['title'] ) . '</h2>';
 		echo '<div class="wp-list-table widefat plugin-install"><div id="the-list">';
 		foreach ( $matomo_feature_section['features'] as $matomo_index => $matomo_feature ) {
+		    if ($matomo_feature['name'] === 'Premium Bundle') {
+		        ?><div class="plugin-card" style="width: calc(33% - 8px);min-width:282px;max-width:350px;">
+                    <div style="border: 6px dashed red;text-align: center">
+                        <h2 style="color:red;font-size: 24px;"><span style="color: black;">Limited time!</span><br><br>300€ Off Premium Bundle</h2>
+                        <p>All premium features in one bundle.<br>
+                            No risk 100% money back guarantee.<br><br>
+                            <a class="button-primary" href="https://matomo.org/wp-premium-bundle/" target="_blank" rel="noreferrer noopener">Get it for only 199€/year</a>
+                            <br>
+                        </p>
+                    </div>
+                </div><?php
+                continue;
+            }
 			$matomo_style        = '';
 			$matomo_is_3_columns = count( $matomo_feature_section['features'] ) === 3;
 			if ( $matomo_is_3_columns ) {
