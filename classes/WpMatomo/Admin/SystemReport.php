@@ -757,6 +757,18 @@ class SystemReport {
 				'value' => @basename(PHP_BINARY),
 			);
 		}
+		if (!\WpMatomo::is_safe_mode()) {
+			Bootstrap::do_bootstrap();
+			$cliPhp = new CliMulti\CliPhp();
+			$binary = $cliPhp->findPhpBinary();
+			if (!empty($binary)) {
+				$binary = basename($binary);
+				$rows[] = array(
+					'name'  => 'PHP Found Binary',
+					'value' => $binary,
+				);
+			}
+		}
 		$rows[] = array(
 			'name'  => 'Timezone',
 			'value' => date_default_timezone_get(),
