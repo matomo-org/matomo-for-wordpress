@@ -76,6 +76,10 @@ class SystemReport {
 				Bootstrap::do_bootstrap();
 				$scheduled_tasks = new ScheduledTasks( $this->settings );
 
+				if (!defined('PIWIK_ARCHIVE_NO_TRUNCATE')) {
+					define('PIWIK_ARCHIVE_NO_TRUNCATE', 1); // when triggering it manually, we prefer the full error message
+				}
+
 				try {
 					$errors = $scheduled_tasks->archive( $force = true, $throw_exception = false );
 				} catch (\Exception $e) {
