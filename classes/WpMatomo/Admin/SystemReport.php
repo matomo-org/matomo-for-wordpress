@@ -659,23 +659,15 @@ class SystemReport {
 			'name'  => 'Network Enabled',
 			'value' => $is_network_enabled,
 		);
-		$rows[] = array(
-			'name'  => 'Debug Mode Enabled',
-			'value' => defined( 'WP_DEBUG' ) && WP_DEBUG,
-		);
-		$rows[] = array(
-			'name'  => 'Cron Enabled',
-			'value' => defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON,
-		);
-		$rows[] = array(
-			'name'  => 'Force SSL Admin',
-			'value' => defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN,
-		);
-
-		$rows[] = array(
-			'name'  => 'Language',
-			'value' => defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en_US',
-		);
+		$consts = array('WP_DEBUG', 'WP_DEBUG_DISPLAY', 'WP_DEBUG_LOG', 'DISABLE_WP_CRON', 'FORCE_SSL_ADMIN', 'WP_CACHE',
+						'CONCATENATE_SCRIPTS', 'COMPRESS_SCRIPTS', 'COMPRESS_CSS', 'ENFORCE_GZIP', 'WP_LOCAL_DEV',
+						'DIEONDBERROR', 'WPLANG');
+		foreach ($consts as $const) {
+			$rows[] = array(
+				'name'  => $const,
+				'value' => defined( $const ) ? constant( $const) : '-',
+			);
+		}
 
 		$rows[] = array(
 			'name'  => 'Permalink Structure',
@@ -685,11 +677,6 @@ class SystemReport {
 		$rows[] = array(
 			'name'  => 'Possibly uses symlink',
 			'value' => strpos( __DIR__, ABSPATH ) === false && strpos( __DIR__, WP_CONTENT_DIR ) === false,
-		);
-
-		$rows[] = array(
-			'name'  => 'WP Cache enabled',
-			'value' => defined( 'WP_CACHE' ) && WP_CACHE,
 		);
 
 		if (is_plugin_active('wp-piwik/wp-piwik.php')) {
@@ -778,8 +765,16 @@ class SystemReport {
 			'value' => date_default_timezone_get(),
 		);
 		$rows[] = array(
+			'name'  => 'WP timezone',
+			'value' => wp_timezone_string(),
+		);
+		$rows[] = array(
 			'name'  => 'Locale',
 			'value' => get_locale(),
+		);
+		$rows[] = array(
+			'name'  => 'User Locale',
+			'value' => get_user_locale(),
 		);
 
 		$rows[] = array(
@@ -844,6 +839,13 @@ class SystemReport {
 			);
 		}
 
+		$suhosin_installed = ( extension_loaded( 'suhosin' ) || ( defined( 'SUHOSIN_PATCH' ) && constant( 'SUHOSIN_PATCH' ) ) );
+		$rows[] = array(
+			'name'  => 'Suhosin installed',
+			'value' => !empty($suhosin_installed),
+			'comment' => ''
+		);
+
 		return $rows;
 	}
 
@@ -892,6 +894,16 @@ class SystemReport {
 		$rows[] = array(
 			'name'  => 'DB Prefix',
 			'value' => $wpdb->prefix,
+		);
+
+		$rows[] = array(
+			'name'  => 'DB CHARSET',
+			'value' => defined('DB_CHARSET') ? DB_CHARSET : '',
+		);
+
+		$rows[] = array(
+			'name'  => 'DB COLLATE',
+			'value' => defined('DB_COLLATE') ? DB_COLLATE : '',
 		);
 
 		if ( method_exists( $wpdb, 'parse_db_host' ) ) {
