@@ -765,18 +765,22 @@ class SystemReport {
 			'name'  => 'Timezone',
 			'value' => date_default_timezone_get(),
 		);
-		$rows[] = array(
-			'name'  => 'WP timezone',
-			'value' => wp_timezone_string(),
-		);
+		if (function_exists('wp_timezone_string')) {
+			$rows[] = array(
+				'name'  => 'WP timezone',
+				'value' => wp_timezone_string(),
+			);
+		}
 		$rows[] = array(
 			'name'  => 'Locale',
 			'value' => get_locale(),
 		);
+		if (function_exists('get_user_locale')) {
 		$rows[] = array(
 			'name'  => 'User Locale',
 			'value' => get_user_locale(),
 		);
+		}
 
 		$rows[] = array(
 			'name'    => 'Memory Limit',
