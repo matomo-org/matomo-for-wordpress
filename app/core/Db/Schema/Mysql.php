@@ -123,7 +123,7 @@ class Mysql implements SchemaInterface
 
             'site_url'    => "CREATE TABLE {$prefixTables}site_url (
                               idsite INTEGER(10) UNSIGNED NOT NULL,
-                              url VARCHAR(255) NOT NULL,
+                              url VARCHAR(190) NOT NULL,
                                 PRIMARY KEY(idsite, url)
                               ) ENGINE=$engine DEFAULT CHARSET=$charset
             ",
