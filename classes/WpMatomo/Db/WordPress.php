@@ -70,7 +70,7 @@ class WordPress extends Mysqli {
 	public function getClientVersion() {
 		$value = $this->fetchOne( 'SELECT @@version;' );
 
-		return ! empty( $value ) && strtolower( $value ) === 'utf8';
+		return $value;
 	}
 
 	public function closeConnection() {
