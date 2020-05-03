@@ -292,6 +292,7 @@ class Installer {
 			'username' => DB_USER,
 			'password' => DB_PASSWORD,
 			'dbname' => DB_NAME,
+			'charset' => $wpdb->charset,
 			'tables_prefix' => $wpdb->prefix . MATOMO_DATABASE_PREFIX,
 			'adapter' => 'WordPress',
 		);
