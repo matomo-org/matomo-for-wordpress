@@ -29,6 +29,11 @@ class Settings
         return $this->getDbSetting('tables_prefix');
     }
 
+    public function getCharset()
+    {
+        return $this->getDbSetting('charset');
+    }
+
     public function getDbName()
     {
         return $this->getDbSetting('dbname');
