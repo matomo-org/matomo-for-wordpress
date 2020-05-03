@@ -31,7 +31,11 @@ class Settings
 
     public function getCharset()
     {
-        return $this->getDbSetting('charset');
+        $charset = $this->getDbSetting('charset');
+        if (empty($charset)) {
+        	$charset = 'utf8';
+        }
+        return $charset;
     }
 
     public function getDbName()

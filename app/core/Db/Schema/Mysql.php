@@ -43,7 +43,7 @@ class Mysql implements SchemaInterface
         $tables = array(
             'user'    => "CREATE TABLE {$prefixTables}user (
                           login VARCHAR(100) NOT NULL,
-                          password VARCHAR(255) NOT NULL,
+                          password VARCHAR(191) NOT NULL,
                           alias VARCHAR(45) NOT NULL,
                           email VARCHAR(100) NOT NULL,
                           twofactor_secret VARCHAR(40) NOT NULL DEFAULT '',
@@ -243,7 +243,7 @@ class Mysql implements SchemaInterface
             ",
 
             'option'        => "CREATE TABLE `{$prefixTables}option` (
-                                option_name VARCHAR( 255 ) NOT NULL,
+                                option_name VARCHAR( 191 ) NOT NULL,
                                 option_value LONGTEXT NOT NULL,
                                 autoload TINYINT NOT NULL DEFAULT '1',
                                   PRIMARY KEY ( option_name ),
@@ -252,7 +252,7 @@ class Mysql implements SchemaInterface
             ",
 
             'session'       => "CREATE TABLE {$prefixTables}session (
-                                id VARCHAR( 255 ) NOT NULL,
+                                id VARCHAR( 191 ) NOT NULL,
                                 modified INTEGER,
                                 lifetime INTEGER,
                                 data TEXT,
@@ -262,7 +262,7 @@ class Mysql implements SchemaInterface
 
             'archive_numeric'     => "CREATE TABLE {$prefixTables}archive_numeric (
                                       idarchive INTEGER UNSIGNED NOT NULL,
-                                      name VARCHAR(255) NOT NULL,
+                                      name VARCHAR(190) NOT NULL,
                                       idsite INTEGER UNSIGNED NULL,
                                       date1 DATE NULL,
                                       date2 DATE NULL,
@@ -277,7 +277,7 @@ class Mysql implements SchemaInterface
 
             'archive_blob'        => "CREATE TABLE {$prefixTables}archive_blob (
                                       idarchive INTEGER UNSIGNED NOT NULL,
-                                      name VARCHAR(255) NOT NULL,
+                                      name VARCHAR(190) NOT NULL,
                                       idsite INTEGER UNSIGNED NULL,
                                       date1 DATE NULL,
                                       date2 DATE NULL,
