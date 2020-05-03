@@ -43,7 +43,8 @@ class SystemReport {
 	const TROUBLESHOOT_CLEAR_LOGS         = 'matomo_troubleshooting_action_clear_logs';
 
 	private $not_compatible_plugins = array(
-		'background-manager/background-manager.php', // Uses an old version of Twig and plugin is no longer maintained.
+		'background-manager', // Uses an old version of Twig and plugin is no longer maintained.
+		'data-tables-generator-by-supsystic', // uses an old version of twig causing some styles to go funny in the reporting and admin
 	);
 
 	private $valid_tabs = array( 'troubleshooting' );
@@ -1071,8 +1072,8 @@ class SystemReport {
 				$rows[] = array(
 					'name'     => __( 'Not compatible plugins', 'matomo' ),
 					'value'    => count( $used_not_compatible ),
-					'comment'  => implode( ', ', $used_not_compatible ),
-					'is_error' => true,
+					'comment'  => implode( ', ', $used_not_compatible ) . '<br><br> Matomo may work fine when using these plugins but there may be some issues. For more information see<br>https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/',
+					'is_warning' => true,
 				);
 			}
 		}
