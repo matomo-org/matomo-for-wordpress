@@ -183,6 +183,8 @@ class Sync {
 		if ( $matomo_user_login ) {
 			$user_in_matomo = $user_model->getUser( $matomo_user_login );
 		} else {
+			// wp usernames may include whitespace etc
+			$login = preg_replace('/[^A-Za-zÄäÖöÜüß0-9_.@+-]+/D', '_', $login);
 			$login = substr( $login, 0, self::MAX_USER_NAME_LENGTH );
 
 			if ( ! $user_model->getUser( $login ) ) {
