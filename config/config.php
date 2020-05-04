@@ -58,10 +58,10 @@ return array(
 			}
 
 			$matomo_salt_key = Settings::OPTION_PREFIX . 'matomo_salt';
-			$matomo_salt = get_option($matomo_salt_key); // needs to per site!
+			$matomo_salt = get_option($matomo_salt_key); // needs to be per site!
 			if (!$matomo_salt) {
 				$matomo_salt = \Piwik\Common::getRandomString(32);
-				update_option($matomo_salt_key, $matomo_salt);
+				update_option($matomo_salt_key, $matomo_salt, true);
 			}
 
 			$general['salt'] = $matomo_salt;
@@ -150,6 +150,7 @@ return array(
 			unset($values['database']['password']);
 			unset($values['database']['dbname']);
 			unset($values['database']['tables_prefix']);
+			unset($values['database']['charset']);
 			unset($values['Plugins']);
 			unset($values['General']['enable_users_admin']);
 			unset($values['General']['enable_sites_admin']);

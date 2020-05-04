@@ -60,7 +60,7 @@ class WordPress extends Mysqli {
 	public function isConnectionUTF8() {
 		$value = $this->fetchOne( 'SELECT @@character_set_client;' );
 
-		return ! empty( $value ) && strtolower( $value ) === 'utf8';
+		return ! empty( $value ) && strpos(strtolower( $value ), 'utf8') === 0;
 	}
 
 	public function checkClientVersion() {
@@ -70,7 +70,7 @@ class WordPress extends Mysqli {
 	public function getClientVersion() {
 		$value = $this->fetchOne( 'SELECT @@version;' );
 
-		return ! empty( $value ) && strtolower( $value ) === 'utf8';
+		return $value;
 	}
 
 	public function closeConnection() {
