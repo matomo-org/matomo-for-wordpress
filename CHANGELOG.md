@@ -1,5 +1,11 @@
 == Changelog ==
 
+= 1.0.6 =
+* Improve compatibility with some other plugins
+* Improve system report by adding more information
+* Ensure to use WordPress DB charset
+
+
 = 1.0.5 =
 * Update Matomo core to 3.13.5
 * Add location checks to system report
