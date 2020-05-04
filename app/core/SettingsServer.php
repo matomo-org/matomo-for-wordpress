@@ -142,6 +142,11 @@ class SettingsServer
      */
     public static function raiseMemoryLimitIfNecessary()
     {
+	    if (self::isArchivePhpTriggered()) {
+		    // core:archive command: no time limit, high memory limit
+		    self::setMaxExecutionTime( 0 );
+	    }
+
         $memoryLimit = self::getMemoryLimitValue();
         if ($memoryLimit === false) {
             return false;
@@ -150,7 +155,6 @@ class SettingsServer
 
         if (self::isArchivePhpTriggered()) {
             // core:archive command: no time limit, high memory limit
-            self::setMaxExecutionTime(0);
             $minimumMemoryLimitWhenArchiving = Config::getInstance()->General['minimum_memory_limit_when_archiving'];
             if ($memoryLimit < $minimumMemoryLimitWhenArchiving) {
                 return self::setMemoryLimit($minimumMemoryLimitWhenArchiving);

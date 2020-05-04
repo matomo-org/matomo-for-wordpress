@@ -30,8 +30,8 @@ $matomo_extra_url_params = '&' . http_build_query(
 	<?php } ?>
 	<?php if ( $matomo_show_offer ) { ?>
         <div class="notice notice-info">
-            <p>Limited time only: 300€ Off Matomo Premium Bundle. Now only 199€/year.
-        <a href="https://matomo.org/wp-premium-bundle/" target="_blank" rel="noreferrer noopener" class="button">Learn more</a></p>
+            <h3>Limited time only</h3><p>300€ Off Matomo Premium Bundle. Now only 199€/year.</p>
+            <p><a href="https://matomo.org/wp-premium-bundle/" target="_blank" rel="noreferrer noopener" class="button-primary">Learn more</a></p>
             <div style="clear:both;"></div>
         </div>
 	<?php } ?>

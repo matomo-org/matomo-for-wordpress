@@ -43,7 +43,8 @@ class SystemReport {
 	const TROUBLESHOOT_CLEAR_LOGS         = 'matomo_troubleshooting_action_clear_logs';
 
 	private $not_compatible_plugins = array(
-		'background-manager/background-manager.php', // Uses an old version of Twig and plugin is no longer maintained.
+		'background-manager', // Uses an old version of Twig and plugin is no longer maintained.
+		'data-tables-generator-by-supsystic', // uses an old version of twig causing some styles to go funny in the reporting and admin
 	);
 
 	private $valid_tabs = array( 'troubleshooting' );
@@ -75,6 +76,10 @@ class SystemReport {
 			if ( ! empty( $_POST[ self::TROUBLESHOOT_ARCHIVE_NOW ] ) ) {
 				Bootstrap::do_bootstrap();
 				$scheduled_tasks = new ScheduledTasks( $this->settings );
+
+				if (!defined('PIWIK_ARCHIVE_NO_TRUNCATE')) {
+					define('PIWIK_ARCHIVE_NO_TRUNCATE', 1); // when triggering it manually, we prefer the full error message
+				}
 
 				try {
 					$errors = $scheduled_tasks->archive( $force = true, $throw_exception = false );
@@ -655,23 +660,15 @@ class SystemReport {
 			'name'  => 'Network Enabled',
 			'value' => $is_network_enabled,
 		);
-		$rows[] = array(
-			'name'  => 'Debug Mode Enabled',
-			'value' => defined( 'WP_DEBUG' ) && WP_DEBUG,
-		);
-		$rows[] = array(
-			'name'  => 'Cron Enabled',
-			'value' => defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON,
-		);
-		$rows[] = array(
-			'name'  => 'Force SSL Admin',
-			'value' => defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN,
-		);
-
-		$rows[] = array(
-			'name'  => 'Language',
-			'value' => defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en_US',
-		);
+		$consts = array('WP_DEBUG', 'WP_DEBUG_DISPLAY', 'WP_DEBUG_LOG', 'DISABLE_WP_CRON', 'FORCE_SSL_ADMIN', 'WP_CACHE',
+						'CONCATENATE_SCRIPTS', 'COMPRESS_SCRIPTS', 'COMPRESS_CSS', 'ENFORCE_GZIP', 'WP_LOCAL_DEV',
+						'DIEONDBERROR', 'WPLANG');
+		foreach ($consts as $const) {
+			$rows[] = array(
+				'name'  => $const,
+				'value' => defined( $const ) ? constant( $const) : '-',
+			);
+		}
 
 		$rows[] = array(
 			'name'  => 'Permalink Structure',
@@ -681,11 +678,6 @@ class SystemReport {
 		$rows[] = array(
 			'name'  => 'Possibly uses symlink',
 			'value' => strpos( __DIR__, ABSPATH ) === false && strpos( __DIR__, WP_CONTENT_DIR ) === false,
-		);
-
-		$rows[] = array(
-			'name'  => 'WP Cache enabled',
-			'value' => defined( 'WP_CACHE' ) && WP_CACHE,
 		);
 
 		if (is_plugin_active('wp-piwik/wp-piwik.php')) {
@@ -757,14 +749,38 @@ class SystemReport {
 				'value' => @basename(PHP_BINARY),
 			);
 		}
+		if (!\WpMatomo::is_safe_mode()) {
+			Bootstrap::do_bootstrap();
+			$cliPhp = new CliMulti\CliPhp();
+			$binary = $cliPhp->findPhpBinary();
+			if (!empty($binary)) {
+				$binary = basename($binary);
+				$rows[] = array(
+					'name'  => 'PHP Found Binary',
+					'value' => $binary,
+				);
+			}
+		}
 		$rows[] = array(
 			'name'  => 'Timezone',
 			'value' => date_default_timezone_get(),
 		);
+		if (function_exists('wp_timezone_string')) {
+			$rows[] = array(
+				'name'  => 'WP timezone',
+				'value' => wp_timezone_string(),
+			);
+		}
 		$rows[] = array(
 			'name'  => 'Locale',
 			'value' => get_locale(),
 		);
+		if (function_exists('get_user_locale')) {
+			$rows[] = array(
+				'name'  => 'User Locale',
+				'value' => get_user_locale(),
+			);
+		}
 
 		$rows[] = array(
 			'name'    => 'Memory Limit',
@@ -828,6 +844,13 @@ class SystemReport {
 			);
 		}
 
+		$suhosin_installed = ( extension_loaded( 'suhosin' ) || ( defined( 'SUHOSIN_PATCH' ) && constant( 'SUHOSIN_PATCH' ) ) );
+		$rows[] = array(
+			'name'  => 'Suhosin installed',
+			'value' => !empty($suhosin_installed),
+			'comment' => ''
+		);
+
 		return $rows;
 	}
 
@@ -876,6 +899,16 @@ class SystemReport {
 		$rows[] = array(
 			'name'  => 'DB Prefix',
 			'value' => $wpdb->prefix,
+		);
+
+		$rows[] = array(
+			'name'  => 'DB CHARSET',
+			'value' => defined('DB_CHARSET') ? DB_CHARSET : '',
+		);
+
+		$rows[] = array(
+			'name'  => 'DB COLLATE',
+			'value' => defined('DB_COLLATE') ? DB_COLLATE : '',
 		);
 
 		if ( method_exists( $wpdb, 'parse_db_host' ) ) {
@@ -1043,8 +1076,8 @@ class SystemReport {
 				$rows[] = array(
 					'name'     => __( 'Not compatible plugins', 'matomo' ),
 					'value'    => count( $used_not_compatible ),
-					'comment'  => implode( ', ', $used_not_compatible ),
-					'is_error' => true,
+					'comment'  => implode( ', ', $used_not_compatible ) . '<br><br> Matomo may work fine when using these plugins but there may be some issues. For more information see<br>https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/',
+					'is_warning' => true,
 				);
 			}
 		}

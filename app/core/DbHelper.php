@@ -61,6 +61,15 @@ class DbHelper
         Schema::getInstance()->createTable($nameWithoutPrefix, $createDefinition);
     }
 
+	public static function getUsedCharset()
+	{
+		if (Config::getInstance()->database['charset']) {
+			return strtolower(Config::getInstance()->database['charset']);
+		}
+
+		return 'utf8';
+	}
+
     /**
      * Returns true if Piwik is installed
      *

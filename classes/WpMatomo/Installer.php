@@ -286,12 +286,15 @@ class Installer {
 			}
 		}
 
+		$charset = $wpdb->charset ? $wpdb->charset : 'utf8';
+
 		$database = array(
 			'host' => $host,
 			'port' => $port,
 			'username' => DB_USER,
 			'password' => DB_PASSWORD,
 			'dbname' => DB_NAME,
+			'charset' => $charset,
 			'tables_prefix' => $wpdb->prefix . MATOMO_DATABASE_PREFIX,
 			'adapter' => 'WordPress',
 		);
