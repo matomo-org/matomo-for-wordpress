@@ -776,10 +776,10 @@ class SystemReport {
 			'value' => get_locale(),
 		);
 		if (function_exists('get_user_locale')) {
-		$rows[] = array(
-			'name'  => 'User Locale',
-			'value' => get_user_locale(),
-		);
+			$rows[] = array(
+				'name'  => 'User Locale',
+				'value' => get_user_locale(),
+			);
 		}
 
 		$rows[] = array(
