@@ -9,6 +9,8 @@
 
 namespace WpMatomo\Admin;
 
+use Piwik\Plugins\UserCountry\LocationProvider;
+use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
@@ -41,7 +43,7 @@ class GeolocationSettings implements AdminSettingsInterface {
 			 && check_admin_referer( self::NONCE_NAME )
 			 && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
 
-			$maxmind_license = stripslashes($_POST[ self::FORM_NAME ]);
+			$maxmind_license = trim(stripslashes($_POST[ self::FORM_NAME ]));
 
 			if (empty($maxmind_license)) {
 				$maxmind_license = '';
