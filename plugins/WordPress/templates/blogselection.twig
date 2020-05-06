@@ -1,0 +1,5 @@
+<div class="languageSelection" ng-cloak menu-title="Blogs" piwik-menudropdown>
+    {% for site in sites %}
+        <a class="item {% if currentId == site.id %}active{% endif %}" href="{{ site.url|e('html_attr') }}"> {{ site.name }} (Blog ID: {{ site.id }})</a>
+    {% endfor %}
+</div>
