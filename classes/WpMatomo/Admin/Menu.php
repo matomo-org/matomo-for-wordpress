@@ -72,11 +72,6 @@ class Menu {
 
 		$admin_settings = new AdminSettings( $this->settings );
 
-		// managing matomo only works when
-		// * Network mode is enabled and then it works only in the network mode
-		// * Network mode is not enabled then it works only for individual blogs as they manage it themselves
-		$can_matomo_be_managed = $this->settings->is_network_enabled() || ! is_network_admin();
-
 		add_menu_page( 'Matomo Analytics', 'Matomo Analytics', self::CAP_NOT_EXISTS, 'matomo', null, 'dashicons-analytics' );
 
 		if ( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
@@ -147,6 +142,12 @@ class Menu {
 
 		}
 
+        // managing matomo only works when
+        // * Network mode is enabled and then it works only in the network mode
+        // * Network mode is not enabled then it works only for individual blogs as they manage it themselves
+        $can_matomo_be_managed = ( $this->settings->is_network_enabled() && is_network_admin() )
+                            || ( ! $this->settings->is_network_enabled() && ! is_network_admin() );
+
 		if ( $can_matomo_be_managed ) {
 			add_submenu_page(
 				self::$parent_slug,
@@ -175,7 +176,7 @@ class Menu {
 			);
 		}
 
-		if ( $can_matomo_be_managed ) {
+		if ( $this->settings->is_network_enabled() || ! is_network_admin() ) {
 			add_submenu_page(
 				self::$parent_slug,
 				__( 'Diagnostics', 'matomo' ),
