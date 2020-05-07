@@ -49,17 +49,16 @@ if ( $was_updated ) {
 		// Tracking Configuration
 		$matomo_is_not_tracking = $settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_DISABLED;
 
-        $matomo_manually_network = '';
-        if ( $settings->is_network_enabled() ) {
-            $matomo_manually_network = ' ' . sprintf( esc_html__( 'You can use these variables: %1$s. %2$sLearn more%3$s', 'matomo' ), '{MATOMO_IDSITE}, {MATOMO_API_ENDPOINT}, {MATOMO_JS_ENDPOINT}', '<a href="https://matomo.org/faq/wordpress/how-can-i-configure-the-tracking-code-manually-when-i-have-wordpress-network-enabled-in-multisite-mode/" target="_blank" rel="noreferrer noopener">', '</a>' );
-        }
-
-		$matomo_tracking_mode_manually        = $settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
-		$matomo_is_not_generated_tracking     = $matomo_is_not_tracking || $matomo_tracking_mode_manually;
+		$matomo_is_not_generated_tracking     = $matomo_is_not_tracking || $settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
 		$matomo_full_generated_tracking_group = 'matomo-track-option matomo-track-option-default  ';
 
 		$matomo_description = sprintf( '%s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s', esc_html__( 'You can choose between four tracking code modes:', 'matomo' ), esc_html__( 'Disabled', 'matomo' ), esc_html__( 'matomo will not add the tracking code. Use this, if you want to add the tracking code to your template files or you use another plugin to add the tracking code.', 'matomo' ), esc_html__( 'Default tracking', 'matomo' ), esc_html__( 'matomo will use Matomo\'s standard tracking code.', 'matomo' ), esc_html__( 'Enter manually', 'matomo' ), esc_html__( 'Enter your own tracking code manually. You can choose one of the prior options, pre-configure your tracking code and switch to manually editing at last.', 'matomo' ) . ( $settings->is_network_enabled() ? ' ' . esc_html__( 'Use the placeholder {ID} to add the Matomo site ID.', 'matomo' ) : '' ), esc_html__( 'Tag Manager', 'matomo' ), esc_html__( 'If you have created containers in the Tag Manager, you can select one of them and it will embed the code for the container automatically.', 'matomo' ) );
 		$matomo_form->show_select( 'track_mode', esc_html__( 'Add tracking code', 'matomo' ), $track_modes, $matomo_description, 'jQuery(\'tr.matomo-track-option\').addClass(\'hidden\'); jQuery(\'tr.matomo-track-option-\' + jQuery(\'#track_mode\').val()).removeClass(\'hidden\'); jQuery(\'#tracking_code, #noscript_code\').prop(\'readonly\', jQuery(\'#track_mode\').val() != \'manually\');' );
+
+        $matomo_manually_network = '';
+        if ( $settings->is_network_enabled() ) {
+            $matomo_manually_network = ' ' . sprintf( esc_html__( 'You can use these variables: %1$s. %2$sLearn more%3$s', 'matomo' ), '{MATOMO_IDSITE}, {MATOMO_API_ENDPOINT}, {MATOMO_JS_ENDPOINT}', '<a href="https://matomo.org/faq/wordpress/how-can-i-configure-the-tracking-code-manually-when-i-have-wordpress-network-enabled-in-multisite-mode/" target="_blank" rel="noreferrer noopener">', '</a>' );
+        }
 
 		if ( ! empty( $containers ) ) {
 			echo '<tr class="matomo-track-option matomo-track-option-tagmanager ' . ( $matomo_is_not_tracking ? ' hidden' : '' ) . '">';
