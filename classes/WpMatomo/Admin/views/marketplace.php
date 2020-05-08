@@ -28,13 +28,6 @@ $matomo_extra_url_params = '&' . http_build_query(
 			<p><?php esc_html_e( 'Only super users can see this page', 'matomo' ); ?></p>
 		</div>
 	<?php } ?>
-	<?php if ( $matomo_show_offer ) { ?>
-        <div class="notice notice-info">
-            <h3>Limited time only</h3><p>300€ Off Matomo Premium Bundle. Now only 199€/year.</p>
-            <p><a href="https://matomo.org/wp-premium-bundle/" target="_blank" rel="noreferrer noopener" class="button-primary">Learn more</a></p>
-            <div style="clear:both;"></div>
-        </div>
-	<?php } ?>
 
 	<div id="icon-plugins" class="icon32"></div>
 
@@ -128,8 +121,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 						desc column-description<?php } ?>"
                              style="margin-right: 0;<?php if ( empty( $matomo_feature['image'] )) { echo 'margin-left: 0;'; } ?>">
                             <p class="matomo-description"><?php echo esc_html( $matomo_feature['description'] ); ?></p>
-                            <p class="authors"><?php
-			    if ( ! empty( $matomo_feature['price'] )) {?><a class="button-primary"
+	                        <?php if ( ! empty( $matomo_feature['price'] )) {?><p class="authors"><a class="button-primary"
                                                   rel="noreferrer noopener" target="_blank"
                                                   href="<?php echo esc_url( ! empty( $matomo_feature['download_url'] ) ? $matomo_feature['download_url'] : $matomo_feature['url'] ); ?>">
 								    <?php
@@ -138,8 +130,8 @@ $matomo_extra_url_params = '&' . http_build_query(
 									    } else {
 										    echo esc_html( $matomo_feature['price'] );
 									    } ?>
-								 </a><?php   } ?>
-                            </p>
+								 </a>
+                            </p><?php   } ?>
                         </div>
                     </div>
                 </div>
