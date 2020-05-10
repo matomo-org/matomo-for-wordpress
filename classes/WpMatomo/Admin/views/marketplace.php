@@ -97,7 +97,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 						    ?>
 						name column-name<?php } ?>" style="margin-right: 0;<?php if ( empty( $matomo_feature['image'] )) { echo 'margin-left: 0;'; } ?>">
                             <h3>
-                                <a href="<?php echo esc_url( $matomo_feature['url'] ); ?>"
+                                <a href="<?php echo esc_url( !empty($matomo_feature['video']) ? $matomo_feature['video'] : $matomo_feature['url'] ); ?>"
                                    rel="noreferrer noopener" target="_blank"
                                    class="thickbox open-plugin-details-modal">
 								    <?php echo esc_html( $matomo_feature['name'] ); ?>
@@ -120,7 +120,12 @@ $matomo_extra_url_params = '&' . http_build_query(
 						    ?>
 						desc column-description<?php } ?>"
                              style="margin-right: 0;<?php if ( empty( $matomo_feature['image'] )) { echo 'margin-left: 0;'; } ?>">
-                            <p class="matomo-description"><?php echo esc_html( $matomo_feature['description'] ); ?></p>
+                            <p class="matomo-description"><?php echo esc_html( $matomo_feature['description'] ); ?>
+                            <?php if (!empty($matomo_feature['video'])) {
+                                echo ' <a target="_blank" rel="noreferrer noopener" href="'. esc_url($matomo_feature['video']).'"><span class="dashicons dashicons-video-alt3"></span></a>';
+                            } elseif (!empty($matomo_feature['url'])) {
+		                            echo ' <a target="_blank" rel="noreferrer noopener" href="'. esc_url($matomo_feature['url']).'">'. esc_html__( 'Learn more', 'matomo' ).'</a>';
+	                            } ?></p>
 	                        <?php if ( ! empty( $matomo_feature['price'] )) {?><p class="authors"><a class="button-primary"
                                                   rel="noreferrer noopener" target="_blank"
                                                   href="<?php echo esc_url( ! empty( $matomo_feature['download_url'] ) ? $matomo_feature['download_url'] : $matomo_feature['url'] ); ?>">
@@ -189,24 +194,27 @@ $matomo_extra_url_params = '&' . http_build_query(
 			'features' =>
 				array(
 					array(
-						'name'        => 'Heatmap & Session Recording',
-						'description' => 'Truly understand your visitors by seeing where they click, hover, type and scroll. Replay their actions in a video and ultimately increase conversions.',
+						'name'        => 'Heatmaps',
+						'description' => 'Truly understand your visitors by seeing where they click, hover, type and scroll. Find confusing elements, discover useless parts and find out what content your users actually engage with.',
 						'price'       => '',
 						'url'         => 'https://matomo.org/heatmaps/',
+						'video'       => 'https://matomo.org/docs/video-matomos-heatmaps-feature/',
 						'image'       => '',
 					),
 					array(
-						'name'        => 'Form Analytics',
-						'description' => 'Increase conversions on your online forms and lose less visitors by learning everything about your users behavior and their pain points on your forms.',
+						'name'        => 'Session Recording',
+						'description' => 'Watch videos of how your real visitors use your website and what experience they have. Find out why they leave and what they are looking for so you can improve the usability of your site.',
 						'price'       => '',
-						'url'         => 'https://matomo.org/form-analytics/',
+						'url'         => 'https://matomo.org/session-recordings/',
+						'video'       => 'https://matomo.org/docs/matomos-session-recordings-feature/',
 						'image'       => '',
 					),
 					array(
-						'name'        => 'Media Analytics',
-						'description' => 'Grow your business with advanced video & audio analytics. Get powerful insights into how your audience watches your videos and listens to your audio.',
+						'name'        => 'Users Flow',
+						'description' => 'A visual representation of the most popular paths your users take through your website & app which lets you understand your users needs and where they leave.',
 						'price'       => '',
-						'url'         => 'https://matomo.org/media-analytics/',
+						'url'         => 'https://matomo.org/docs/users-flow/',
+						'video'       => '',
 						'image'       => '',
 					),
 				),
@@ -216,70 +224,89 @@ $matomo_extra_url_params = '&' . http_build_query(
 			'features' =>
 				array(
 					array(
-						'name'        => 'Users Flow',
-						'description' => 'Users Flow is a visual representation of the most popular paths your users take through your website & app which lets you understand your users needs.',
+						'name'        => 'Form Analytics',
+						'description' => 'Increase conversions on your online forms and lose less visitors by learning everything about your users behavior and their pain points on your forms. No setup needed.',
 						'price'       => '',
-						'url'         => 'https://matomo.org/docs/users-flow/',
+						'url'         => 'https://matomo.org/form-analytics/',
+						'image'       => '',
+						'video'       => 'https://matomo.org/docs/video-matomos-form-analytics-feature/',
+					),
+					array(
+						'name'        => 'Video & Audio Analytics',
+						'description' => 'Get extensive insights into every detail of how your audience watches your videos and listens to your audio. No setup needed.',
+						'price'       => '',
+						'url'         => 'https://matomo.org/media-analytics/',
+						'image'       => '',
+						'video'       => 'https://matomo.org/docs/video-media-analytics/',
+					),
+					array(
+						'name'        => 'Funnels',
+						'description' => 'Identify and understand where your visitors drop off to increase your conversions, sales and revenue with your existing traffic.',
+						'price'       => '',
+						'url'         => 'https://matomo.org/funnels/',
+						'video'       => 'https://matomo.org/docs/video-matomo-analytics-funnels-feature/',
 						'image'       => '',
 					),
+				),
+		),
+		array(
+			'title'    => '',
+			'features' =>
+				array(
+					array(
+						'name'        => 'Search Engine Keywords',
+						'description' => 'All keywords searched by your users on search engines are now visible into your Referrers reports! The ultimate solution to \'Keyword not defined\'.',
+						'price'       => '',
+						'url'         => 'https://matomo.org/docs/search-engine-keywords-performance/',
+						'video'       => '',
+						'image'       => '',
+					),
+					array(
+						'name'        => 'Google Ads Integration',
+						'description' => 'Analyse the success of your Google Ads campaigns and how well they contribute to your goals. See what keywords and search queries are leading to clicks for your paid a   ds and bringing your business the highest ROI.',
+						'price'       => '',
+						'url'         => 'https://matomo.org/docs/paid-advertising-performance/',
+						'video'       => '',
+						'image'       => '',
+					),
+					array(
+						'name'        => 'Multi Attribution',
+						'description' => 'Get a clear understanding of how much credit each of your marketing channel is actually responsible for to shift your marketing efforts wisely.',
+						'price'       => '',
+						'url'         => 'https://matomo.org/multi-attribution/',
+						'video'       => 'https://matomo.org/docs/video-matomo-analytics-attribution-feature/',
+						'image'       => '',
+					),
+				),
+		),
+		array(
+			'title'    => '',
+			'features' =>
+				array(
 					array(
 						'name'        => 'Custom Reports',
 						'description' => 'Pull out the information you need in order to be successful. Develop your custom strategy to meet your individualized goals while saving money & time.',
 						'price'       => '',
 						'url'         => 'https://matomo.org/custom-reports/',
 						'image'       => '',
+						'video'       => 'https://matomo.org/docs/video-matomos-custom-reports-feature/',
 					),
-
 					array(
-						'name'        => 'Funnels',
-						'description' => 'Identify and understand where your visitors drop off to increase your conversions, sales and revenue with your existing traffic.',
+						'name'        => 'Cohorts',
+						'description' => 'Track your retention efforts over time and keep your visitors engaged and coming back for more.',
 						'price'       => '',
-						'url'         => 'https://matomo.org/funnels/',
+						'url'         => 'https://matomo.org/docs/cohorts/',
 						'image'       => '',
+						'video'       => '',
 					),
-				),
-		),
-		array(
-			'title'    => '',
-			'features' =>
-				array(
-					array(
-						'name'        => 'Multi Attribution',
-						'description' => 'Get a clear understanding of how much credit each of your marketing channel is actually responsible for to shift your marketing efforts wisely.',
-						'price'       => '',
-						'url'         => 'https://matomo.org/multi-attribution/',
-						'image'       => '',
-					),
-					array(
-						'name'        => 'Search Engine Keywords Performance',
-						'description' => 'All keywords searched by your users on search engines are now visible into your Referrers reports! The ultimate solution to \'Keyword not defined\'.',
-						'price'       => '',
-						'url'         => 'https://matomo.org/docs/search-engine-keywords-performance/',
-						'image'       => '',
-					),
-					array(
-						'name'        => 'Google Ads Integration',
-						'description' => 'Analyse the success of your Google Ads campaigns directly in your Matomo. See what keywords and search queries are leading to clicks for your paid ads and bringing your business the highest ROI.',
-						'price'       => '',
-						'url'         => 'https://matomo.org/docs/paid-advertising-performance/',
-						'image'       => '',
-					),
-					/*
-					array(
-						'name'        => 'Activity Log',
-						'description' => 'Truly understand your visitors by seeing where they click, hover, type and scroll. Replay their actions in a video and ultimately increase conversions',
-						'price'       => '19EUR / 19USD',
-						'url'         => 'https://plugins.matomo.org/ActivityLog?wp=1',
-						'image'       => '',
-					),*/
 				),
 		),
 	);
 	?>
 
     <div style="border: 6px dashed limegreen;padding: 20px;margin-top: 30px;background: white;text-align: center;max-width: 1100px;">
-    <h1>Limited time offer! Matomo Premium Bundle only 199€/year (300€ off)</h1>
-    <h3>Your marketing efforts are too valuable to focus on the wrong things.<br> Take your Matomo for WordPress to the next level to push out content and changes to your website that make you consistently more successful. 🚀</h3>
+    <h1 style="color: red">Limited time offer! Matomo Premium Bundle only 199€/year (300€ off)</h1>
+    <h3>Your marketing efforts are too valuable to focus on the wrong things.<br> Take your Matomo for WordPress to the next level to push out content and changes to your website that make you consistently more successful for less than 17€/month. 🚀</h3>
     <a href="https://matomo.org/wp-premium-bundle/" class="button button-primary"
        style="background: limegreen;border-color: limegreen;font-size: 18px;"
        target="_blank" rel="noreferrer noopener" role="button">Learn more</a>
@@ -289,8 +316,9 @@ $matomo_extra_url_params = '&' . http_build_query(
 
 	matomo_show_tables($matomo_feature_sections, $matomo_show_offer);
 	?>
-    <p>All features come with no data limits, max privacy protection and are fully hosted within your WordPress. You own 100% of the data. No data is shared with any other party, ever.</p>
-        <p>Matomo is free open source software. <strong>Purchasing this bundle will help fund the future of the Matomo open-source project.</strong> Thank you for your support!</p>
+    <h3>All features come with no data limits, max privacy protection and are fully hosted within your WordPress. You own 100% of the data. No data is shared with any other party, ever.
+     </h3>
+        <h3>Matomo is free open source software. <strong>Purchasing this bundle will help fund the future of the Matomo open-source project.</strong><br>Thank you for your support!</h3>
     <a href="https://matomo.org/wp-premium-bundle/"
        style="background: limegreen;border-color: limegreen;font-size: 18px;" class="button button-primary" target="_blank" rel="noreferrer noopener" role="button">Learn more</a>
     </div>
