@@ -32,21 +32,16 @@ $matomo_extra_url_params = '&' . http_build_query(
 	<div id="icon-plugins" class="icon32"></div>
 
 	<h1><?php matomo_header_icon(); ?> <?php esc_html_e( 'Discover new functionality for your Matomo', 'matomo' ); ?></h1>
-	<p>
-		<?php esc_html_e( 'Take your Matomo (formerly Piwik) to the next level and drive your conversions & revenue with these premium features. All features are fully hosted on your WordPress and come with 100% data ownership and no limitations.', 'matomo' ); ?>
-		<?php if ( is_plugin_active( MATOMO_MARKETPLACE_PLUGIN_NAME ) ) { ?>
-			<a href="https://plugins.matomo.org/?wp=1" target="_blank" rel="noreferrer noopener">&#187; <?php esc_html_e( 'Browse our Marketplace with over 100 free plugins and premium features', 'matomo' ); ?></a>
-		<?php } ?>
-	</p>
 
 	<?php if ( ! is_plugin_active( MATOMO_MARKETPLACE_PLUGIN_NAME ) ) { ?>
-	<div class="matomo-hero">
-		<h2><?php echo sprintf( esc_html__( 'Easily install over 100 free plugins & %1$spremium features%2$s for Matomo with just a click' ), '<span style="white-space: nowrap;">', '</span>' ); ?></h2>
-		<a href="https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip" rel="noreferrer noopener" class="button matomo-cta-button"><?php esc_html_e( 'Download Matomo Marketplace for WordPress', 'matomo' ); ?></a>
-		<br>
-        <a target="_blank" href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><span class="dashicons-before dashicons-video-alt3"></span></a> <a target="_blank" href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><?php esc_html_e( 'Install instructions', 'matomo' ); ?></a>
-		<a target="_blank" href="https://plugins.matomo.org/?wp=1" rel="noreferrer noopener" class="matomo-next-link"><?php esc_html_e( 'Browse Marketplace', 'matomo' ); ?></a>
-	</div>
+        <div class="updated notice matomo-marketplace-notice">
+            <p><?php echo sprintf( esc_html__( 'Easily install over 100 free plugins & %1$spremium features%2$s for Matomo with just a click' ), '<span style="white-space: nowrap;">', '</span>' ); ?>
+            </p>
+            <p><a href="https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip" rel="noreferrer noopener" class="button"><?php esc_html_e( 'Download Matomo Marketplace for WordPress', 'matomo' ); ?></a>
+
+            <a target="_blank" href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><span class="dashicons-before dashicons-video-alt3"></span></a> <a target="_blank" href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><?php esc_html_e( 'Install instructions', 'matomo' ); ?></a>
+           </p>
+        </div>
 	<?php } ?>
 
 	<?php
