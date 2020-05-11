@@ -1,10 +1,15 @@
 == Changelog ==
 
+= 1.0.7 =
+* Improve compatibility with some plugins fixing some archiving issues
+* Improve tracking settings for multi sites
+* Show a blog selector in the reporting page when using multi site
+* Some minor fixes
+
 = 1.0.6 =
 * Improve compatibility with some other plugins
 * Improve system report by adding more information
 * Ensure to use WordPress DB charset
-
 
 = 1.0.5 =
 * Update Matomo core to 3.13.5
