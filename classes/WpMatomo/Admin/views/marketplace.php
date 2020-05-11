@@ -54,10 +54,10 @@ $matomo_extra_url_params = '&' . http_build_query(
 
 	    foreach ( $matomo_feature_sections as $matomo_feature_section ) {
 		    echo '<h2>' . esc_html( $matomo_feature_section['title'] ) . '</h2>';
-		    echo '<div class="wp-list-table widefat plugin-install"><div id="the-list">';
+		    echo '<div class="wp-list-table widefat plugin-install matomo-plugin-list"><div id="the-list">';
 		    foreach ( $matomo_feature_section['features'] as $matomo_index => $matomo_feature ) {
 			    if ($matomo_show_offer && $matomo_feature['name'] === 'Premium Bundle') {
-				    ?><div class="plugin-card" style="width: calc(33% - 8px);min-width:282px;max-width:350px;">
+				    ?><div class="plugin-card" style="">
                         <div style="border: 6px dashed red;text-align: center">
                             <h2 style="font-size: 24px;">
                                 <a href="https://matomo.org/wp-premium-bundle/" target="_blank" rel="noreferrer noopener"><span style="color: black;">Limited time!</span><br><br><span style="color:red">300€ Off Premium Bundle</span></a></h2>
@@ -73,10 +73,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 			    $matomo_style        = '';
 			    $matomo_is_3_columns = count( $matomo_feature_section['features'] ) === 3;
 			    if ( $matomo_is_3_columns ) {
-				    $matomo_style = 'width: calc(33% - 8px);min-width:282px;max-width:350px;';
-				    if ( $matomo_index % 3 === 2 ) {
-					    $matomo_style .= 'clear: inherit;margin-right: 0;margin-left: 16px;';
-				    }
+				    $matomo_style = '';
 			    }
 			    ?>
                 <div class="plugin-card" style="<?php echo $matomo_style; ?>">
@@ -124,7 +121,7 @@ $matomo_extra_url_params = '&' . http_build_query(
                             <?php if (!empty($matomo_feature['video'])) {
                                 echo ' <a target="_blank" rel="noreferrer noopener" href="'. esc_url($matomo_feature['video']).'"><span class="dashicons dashicons-video-alt3"></span></a>';
                             } elseif (!empty($matomo_feature['url'])) {
-		                            echo ' <a target="_blank" rel="noreferrer noopener" href="'. esc_url($matomo_feature['url']).'">'. esc_html__( 'Learn more', 'matomo' ).'</a>';
+		                            echo ' <a target="_blank" rel="noreferrer noopener" style="white-space: nowrap;" href="'. esc_url($matomo_feature['url']).'">'. esc_html__( 'Learn more', 'matomo' ).'</a>';
 	                            } ?></p>
 	                        <?php if ( ! empty( $matomo_feature['price'] )) {?><p class="authors"><a class="button-primary"
                                                   rel="noreferrer noopener" target="_blank"
@@ -142,8 +139,8 @@ $matomo_extra_url_params = '&' . http_build_query(
                 </div>
 			    <?php
 		    }
-		    echo '<div style="clear:both;"></div>';
-		    echo '</div>';
+		    echo '';
+		    echo '</div><div style="clear: both"></div>';
 		    if (!empty($matomo_feature_section['more_url'])) {
 			    echo '<a target="_blank" rel="noreferrer noopener" href="'.esc_attr($matomo_feature_section['more_url']).'"><span class="dashicons dashicons-arrow-right-alt2"></span>'. esc_html($matomo_feature_section['more_text']).'</a>';
 		    }
@@ -160,7 +157,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 				array(
 					array(
 						'name'         => 'Custom Dimensions',
-						'description'  => 'Extend Matomo to your needs by defining and tracking Custom Dimensions in scope Action or Visit',
+						'description'  => 'Extend Matomo to your needs by defining and tracking Custom Dimensions in scope Action or Visit.',
 						'price'        => 'free',
 						'download_url' => 'https://plugins.matomo.org/api/2.0/plugins/CustomDimensions/download/latest?wp=1' . $matomo_extra_url_params,
 						'url'          => 'https://plugins.matomo.org/CustomDimensions?wp=1',
@@ -217,12 +214,6 @@ $matomo_extra_url_params = '&' . http_build_query(
 						'video'       => '',
 						'image'       => '',
 					),
-				),
-		),
-		array(
-			'title'    => '',
-			'features' =>
-				array(
 					array(
 						'name'        => 'Form Analytics',
 						'description' => 'Increase conversions on your online forms and lose less visitors by learning everything about your users behavior and their pain points on your forms. No setup needed.',
@@ -247,12 +238,6 @@ $matomo_extra_url_params = '&' . http_build_query(
 						'video'       => 'https://matomo.org/docs/video-matomo-analytics-funnels-feature/',
 						'image'       => '',
 					),
-				),
-		),
-		array(
-			'title'    => '',
-			'features' =>
-				array(
 					array(
 						'name'        => 'Search Engine Keywords',
 						'description' => 'All keywords searched by your users on search engines are now visible into your Referrers reports! The ultimate solution to \'Keyword not defined\'.',
@@ -277,12 +262,6 @@ $matomo_extra_url_params = '&' . http_build_query(
 						'video'       => 'https://matomo.org/docs/video-matomo-analytics-attribution-feature/',
 						'image'       => '',
 					),
-				),
-		),
-		array(
-			'title'    => '',
-			'features' =>
-				array(
 					array(
 						'name'        => 'Custom Reports',
 						'description' => 'Pull out the information you need in order to be successful. Develop your custom strategy to meet your individualized goals while saving money & time.',
@@ -304,7 +283,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 	);
 	?>
 
-    <div style="border: 6px dashed limegreen;padding: 20px;margin-top: 30px;background: white;text-align: center;max-width: 1100px;">
+    <div style="border: 1px solid #ddd;padding: 20px;margin-top: 30px;background: white;text-align: center;">
     <h1 style="color: red">Limited time offer! Matomo Premium Bundle only 199€/year (300€ off)</h1>
     <h3>Your marketing efforts are too valuable to focus on the wrong things.<br> Take your Matomo for WordPress to the next level to push out content and changes to your website that make you consistently more successful for less than 17€/month. 🚀</h3>
     <a href="https://matomo.org/wp-premium-bundle/" class="button button-primary"
