@@ -1,6 +1,7 @@
 == Changelog ==
 
 = 1.0.7 =
+* Support UTF8MB4 character set in tracking
 * Improve compatibility with some plugins fixing some archiving issues
 * Improve tracking settings for multi sites
 * Show a blog selector in the reporting page when using multi site
