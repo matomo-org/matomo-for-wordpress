@@ -17,6 +17,7 @@ use Piwik\MetricsFormatter;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
 use Piwik\Plugins\UserCountry\LocationProvider;
+use Piwik\SettingsPiwik;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Installer;
@@ -323,7 +324,7 @@ class SystemReport {
 			} catch ( \Exception $e ) {
 				$rows[] = array(
 					'name'    => esc_html__( 'Matomo System Check', 'matomo' ),
-					'value'   => 'Failed to run, please open the system check in Matomo',
+					'value'   => 'Failed to run Matomo system check.',
 					'comment' => $e->getMessage(),
 				);
 			}
@@ -934,6 +935,11 @@ class SystemReport {
 			);
 		}
 
+		$rows[] = array(
+			'name'  => 'Matomo tables found',
+			'value' => $this->get_num_matomo_tables(),
+		);
+
 		$grants = $this->get_db_grants();
 
 		// we only show these grants for security reasons as only they are needed and we don't need to know any other ones
@@ -973,6 +979,26 @@ class SystemReport {
 		}
 
 		return $rows;
+	}
+
+	private function get_num_matomo_tables() {
+		global $wpdb;
+
+		$db_settings = new \WpMatomo\Db\Settings();
+		$prefix = $db_settings->prefix_table_name('');
+
+		$results = null;
+		try {
+			$results = $wpdb->get_results('show tables like "'.$prefix.'%"');
+		} catch (\Exception $e) {
+			$this->logger->log('no show tables: ' . $e->getMessage());
+		}
+
+		if (is_array($results)) {
+			return count($results);
+		}
+
+		return 'show tables not working';
 	}
 
 	private function get_db_grants() {
