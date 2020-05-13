@@ -19,6 +19,7 @@ use Piwik\Plugins\Diagnostics\DiagnosticService;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
+use WpMatomo\Installer;
 use WpMatomo\Logger;
 use WpMatomo\Paths;
 use WpMatomo\ScheduledTasks;
@@ -334,6 +335,12 @@ class SystemReport {
 		$rows[] = array(
 			'name'    => esc_html__( 'Matomo Blog idSite', 'matomo' ),
 			'value'   => $idsite,
+			'comment' => '',
+		);
+
+		$rows[] = array(
+			'name'    => esc_html__( 'Matomo Install Version', 'matomo' ),
+			'value'   => get_option(Installer::OPTION_NAME_INSTALL_VERSION),
 			'comment' => '',
 		);
 
