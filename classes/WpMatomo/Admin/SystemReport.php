@@ -940,6 +940,13 @@ class SystemReport {
 			'value' => $this->get_num_matomo_tables(),
 		);
 
+		foreach (['user', 'site'] as $table) {
+			$rows[] = array(
+				'name'  => 'Matomo '.$table.'s found',
+				'value' => $this->get_num_entries_in_table($table),
+			);
+		}
+
 		$grants = $this->get_db_grants();
 
 		// we only show these grants for security reasons as only they are needed and we don't need to know any other ones
@@ -979,6 +986,25 @@ class SystemReport {
 		}
 
 		return $rows;
+	}
+
+	private function get_num_entries_in_table($table) {
+		global $wpdb;
+
+		$db_settings = new \WpMatomo\Db\Settings();
+		$prefix = $db_settings->prefix_table_name($table);
+
+		$results = null;
+		try {
+			$results = $wpdb->get_var('select count(*) from '.$prefix);
+		} catch (\Exception $e) {
+		}
+
+		if (isset($results) && is_numeric($results)) {
+			return $results;
+		}
+
+		return 'table not exists';
 	}
 
 	private function get_num_matomo_tables() {
