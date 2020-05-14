@@ -121,6 +121,11 @@ svn add . --force > /dev/null
 # Also suppress stdout here
 svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm %@ > /dev/null
 
+# Fix screenshots getting force downloaded when clicking them
+# https://developer.wordpress.org/plugins/wordpress-org/plugin-assets/
+svn propset svn:mime-type image/png assets/*.png || true
+svn propset svn:mime-type image/jpeg assets/*.jpg || true
+
 # Now show full SVN status
 svn status
 
