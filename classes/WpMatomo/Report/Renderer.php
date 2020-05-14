@@ -19,6 +19,41 @@ class Renderer {
 
 	public function register_hooks() {
 		add_shortcode( 'matomo_report', array( $this, 'show_report' ) );
+		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
+	}
+
+	public function add_dashboard_widgets()
+	{
+		if ( defined('MATOMO_SHOW_DASHBOARD_WIDGETS') && MATOMO_SHOW_DASHBOARD_WIDGETS
+			 && current_user_can( Capabilities::KEY_VIEW ) ) {
+			$title = esc_html__('Visits over time', 'matomo') . ' - Matomo';
+			wp_add_dashboard_widget( 'matomo_visits_over_time', $title, array($this, 'show_visits_over_time'));
+		}
+	}
+
+	public function show_visits_over_time()
+	{
+		$cannot_view = $this->check_cannot_view();
+		if ($cannot_view) {
+			echo $cannot_view;
+			return;
+		}
+
+		$report_meta = array('module' => 'VisitsSummary', 'action' => 'get');
+
+		$data = new Data();
+		$report = $data->fetch_report($report_meta, 'day', 'last14', 'label', 14);
+		$first_metric_name = 'nb_visits';
+		include 'views/table_map_no_dimension.php';
+	}
+
+	private function check_cannot_view()
+	{
+		if ( ! current_user_can( Capabilities::KEY_VIEW ) ) {
+			// not needed as processRequest checks permission anyway but it's faster this way and double ensures to not
+			// letting users view it when they have no access.
+			return esc_html__( 'Sorry, you are not allowed to view this report.', 'matomo' );
+		}
 	}
 
 	public function show_report( $atts ) {
@@ -31,10 +66,9 @@ class Renderer {
 			$atts
 		);
 
-		if ( ! current_user_can( Capabilities::KEY_VIEW ) ) {
-			// not needed as processRequest checks permission anyway but it's faster this way and double ensures to not
-			// letting users view it when they have no access.
-			return esc_html__( 'Sorry, you are not allowed to view this report.', 'matomo' );
+		$cannot_view = $this->check_cannot_view();
+		if ($cannot_view) {
+			return $cannot_view;
 		}
 
 		$metadata    = new Metadata();
