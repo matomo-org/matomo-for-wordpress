@@ -88,13 +88,6 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 
 		$idsite = $this->get_current_site_id();
 
-		switch_to_blog($blogid1);
-		$user2 = get_user_by('login', 'admin');
-		restore_current_blog();
-		switch_to_blog($blogid2);
-		$user3 = get_user_by('login', 'admin');
-		restore_current_blog();
-
 		$this->assertCount( 1, $this->mock->synced_users[0]['users'] );
 		unset( $this->mock->synced_users[0]['users'] );
 		$this->assertEquals(
@@ -103,11 +96,11 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 					'idSite' => $idsite,
 				),
 				array(
-					'users'  => array($user2),
+					'users'  => array(),
 					'idSite' => $idsite,
 				),
 				array(
-					'users'  => array($user3),
+					'users'  => array(),
 					'idSite' => $idsite,
 				),
 			),
