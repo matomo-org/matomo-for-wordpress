@@ -50,6 +50,20 @@ if ( $was_updated ) {
                 <?php esc_html_e( 'Should your IP address not match the above value, your WordPress might be behind a proxy and you may need to select a different HTTP header depending on which of the values on the left shows your correct IP address.', 'matomo' ) ?>
             </td>
         </tr>
+        <?php if (!defined('MATOMO_REMOVE_ALL_DATA')) { ?>
+        <tr>
+            <th width="20%" scope="row"><label for="matomo[delete_all_data]"><?php esc_html_e( 'Delete all data on uninstall', 'matomo' ) ?>:</label>
+            </th>
+            <td>
+				<?php
+				echo '<span style="white-space: nowrap;display: inline-block;"><input type="checkbox" ' . ( !empty($matomo_delete_all_data) ? 'checked="checked" ' : '' ) . ' value="1" name="matomo[delete_all_data]" /> '.esc_html__( 'Yes', 'matomo' ).'</span>';
+				?>
+            </td>
+            <td width="50%">
+	            By default, when you uninstall the Matomo plugin, all data is deleted and cannot be restored unless you have backups. When you disable this feature, the tracked data in the database will be kept. This can be useful to prevent accidental deletion of all your historical analytics data when you uninstall the plugin.
+            </td>
+        </tr>
+        <?php } ?>
         <tr>
             <td colspan="3"><p class="submit"><input name="Submit" type="submit" class="button-primary"
                                                      value="<?php esc_attr_e( 'Save Changes', 'matomo' ) ?>"/></p></td>

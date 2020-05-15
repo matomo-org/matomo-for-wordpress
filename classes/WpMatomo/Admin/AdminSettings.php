@@ -44,7 +44,7 @@ class AdminSettings {
 		$exclusions      = new ExclusionSettings( $this->settings );
 		$geolocation     = new GeolocationSettings( $this->settings );
 		$privacy         = new PrivacySettings();
-		$advanced        = new AdvancedSettings();
+		$advanced        = new AdvancedSettings( $this->settings );
 		$setting_tabs    = array(
 			self::TAB_TRACKING   => $tracking,
 			self::TAB_ACCESS     => $access_settings,
