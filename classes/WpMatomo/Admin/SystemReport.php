@@ -467,6 +467,7 @@ class SystemReport {
 			}
 
 			if ( ! \WpMatomo::is_safe_mode() ) {
+				Bootstrap::do_bootstrap();
 				$general = Config::getInstance()->General;
 				if (empty($general['proxy_client_headers'])) {
 					foreach (AdvancedSettings::$valid_host_headers as $header) {
