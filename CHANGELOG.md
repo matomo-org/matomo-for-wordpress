@@ -6,6 +6,7 @@
 * Improve tracking settings for multi sites
 * Show a blog selector in the reporting page when using multi site
 * Fix super admins weren't always synced in multisite mode
+* By default delete all data on plugin uninstallation unless configured differently
 * Improve system report
 * Some minor fixes
 
