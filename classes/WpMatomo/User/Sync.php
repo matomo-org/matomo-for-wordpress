@@ -63,7 +63,7 @@ class Sync {
 
 				try {
 					if ( $idsite ) {
-						$users = get_users( array( 'blog_id' => $site->blog_id ) );
+						$users = $this->get_users( array('blog_id' => $site->blog_id ) );
 						$this->sync_users( $users, $idsite );
 					}
 				} catch ( \Exception $e ) {
@@ -78,10 +78,37 @@ class Sync {
 		}
 	}
 
+	private function get_users($options = array())
+    {
+        /** @var \WP_User[] $users */
+        $users = get_users( $options );
+        if (is_multisite()) {
+            $super_admins = get_super_admins();
+            if (!empty($super_admins)) {
+                foreach ($super_admins as $super_admin) {
+                    $found = false;
+                    foreach ($users as $user) {
+                        if ($user->user_login === $super_admin) {
+                            $found = true;
+                            break;
+                        }
+                    }
+                    if (!$found) {
+                        $user = get_user_by('login', $super_admin);
+                        if (!empty($user)) {
+                            $users[] = $user;
+                        }
+                    }
+                }
+            }
+        }
+        return $users;
+    }
+
 	public function sync_current_users() {
 		$idsite = Site::get_matomo_site_id( get_current_blog_id() );
 		if ( $idsite ) {
-			$users = get_users();
+			$users = $this->get_users();
 			$this->sync_users( $users, $idsite );
 		}
 	}
