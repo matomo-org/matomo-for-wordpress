@@ -11,6 +11,7 @@ namespace WpMatomo\Admin;
 
 use Piwik\CliMulti;
 use Piwik\Common;
+use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Filesystem;
 use Piwik\MetricsFormatter;
@@ -463,6 +464,23 @@ class SystemReport {
 					'value'   => $location_provider->isWorking(),
 					'comment' => '',
 				);
+			}
+
+			if ( ! \WpMatomo::is_safe_mode() ) {
+				$general = Config::getInstance()->General;
+				if (empty($general['proxy_client_headers'])) {
+					foreach (AdvancedSettings::$valid_host_headers as $header) {
+						if (!empty($_SERVER[$header])) {
+							$rows[] = array(
+								'name'    => 'Proxy header',
+								'value'   => $header,
+								'is_warning' => true,
+								'comment' => 'A proxy header is set which means you maybe need to configure a proxy header in the Advanced settings to make location reporting work. If the location in your reports is detected correctly, you can ignore this warning.',
+							);
+						}
+					}
+				}
+
 			}
 
 			$num_days_check_visits = 5;
