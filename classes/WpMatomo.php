@@ -82,6 +82,9 @@ class WpMatomo {
 		if ( is_admin() ) {
 			new Admin( self::$settings );
 
+			$dashboard = new \WpMatomo\Admin\Dashboard();
+			$dashboard->register_hooks();
+
 			$site_sync = new SiteSync( self::$settings );
 			$site_sync->register_hooks();
 			$user_sync = new UserSync();

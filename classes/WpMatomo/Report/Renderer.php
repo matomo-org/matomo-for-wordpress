@@ -16,27 +16,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Renderer {
+	CONST CUSTOM_UNIQUE_ID_VISITS_OVER_TIME = 'visits_over_time';
 
 	public function register_hooks() {
 		add_shortcode( 'matomo_report', array( $this, 'show_report' ) );
-		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
-	}
-
-	public function add_dashboard_widgets()
-	{
-		if ( defined('MATOMO_SHOW_DASHBOARD_WIDGETS') && MATOMO_SHOW_DASHBOARD_WIDGETS
-			 && current_user_can( Capabilities::KEY_VIEW ) ) {
-			$title = esc_html__('Visits over time', 'matomo') . ' - Matomo';
-			wp_add_dashboard_widget( 'matomo_visits_over_time', $title, array($this, 'show_visits_over_time'));
-		}
 	}
 
 	public function show_visits_over_time()
 	{
 		$cannot_view = $this->check_cannot_view();
 		if ($cannot_view) {
-			echo $cannot_view;
-			return;
+			return $cannot_view;
 		}
 
 		$report_meta = array('module' => 'VisitsSummary', 'action' => 'get');
@@ -44,7 +34,12 @@ class Renderer {
 		$data = new Data();
 		$report = $data->fetch_report($report_meta, 'day', 'last14', 'label', 14);
 		$first_metric_name = 'nb_visits';
+
+		ob_start();
+
 		include 'views/table_map_no_dimension.php';
+
+		return ob_get_clean();
 	}
 
 	private function check_cannot_view()
@@ -69,6 +64,10 @@ class Renderer {
 		$cannot_view = $this->check_cannot_view();
 		if ($cannot_view) {
 			return $cannot_view;
+		}
+
+		if ($a['unique_id'] === 'visits_over_time') {
+			return $this->show_visits_over_time();
 		}
 
 		$metadata    = new Metadata();

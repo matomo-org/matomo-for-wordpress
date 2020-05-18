@@ -1,0 +1,116 @@
+<?php
+/**
+ * Matomo - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @package matomo
+ */
+
+namespace WpMatomo\Admin;
+
+use WpMatomo\Capabilities;
+use WpMatomo\Report\Dates;
+use WpMatomo\Report\Metadata;
+use WpMatomo\Report\Renderer;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // if accessed directly
+}
+
+class Dashboard {
+
+	const DASHBOARD_USER_OPTION = 'matomo_dashboard_widgets';
+
+	public function register_hooks() {
+		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
+	}
+
+	public function add_dashboard_widgets()
+	{
+		$widgets = $this->get_widgets();
+		if (!empty($widgets) && is_array($widgets)) {
+			foreach ($widgets as $widget) {
+				$widget_meta = $this->is_valid_widget($widget['unique_id'], $widget['date']);
+				if (!empty($widget_meta)) {
+					$id = 'matomo_dashboard_widget_' . $widget['unique_id'] .  '_' . $widget['date'];
+
+					$title = esc_html($widget_meta['report']['name'] . ' - ' . $widget_meta['date'] . ' - Matomo');
+					wp_add_dashboard_widget( $id, $title, function () use ($widget) {
+						$renderer = new Renderer();
+						echo $renderer->show_report(array(
+							'unique_id'   => $widget['unique_id'],
+							'report_date' => $widget['date'],
+							'limit'       => 10,
+						));
+					});
+				}
+			}
+		}
+	}
+
+	public function is_valid_widget( $unique_id, $date )
+	{
+		if (empty($unique_id) || empty($date)) {
+			return false;
+		}
+		$metadata = new Metadata();
+		$report = $metadata->find_report_by_unique_id( $unique_id );
+		if (empty($report)) {
+			return false;
+		}
+
+		$report_dates_obj = new Dates();
+		$report_dates     = $report_dates_obj->get_supported_dates();
+
+		if (empty($report_dates[$date])) {
+			return false;
+		}
+
+		return array('report' => $report, 'date' => $report_dates[$date]);
+	}
+
+	public function has_widget($report_unique_id, $report_date)
+	{
+		$widgets = $this->get_widgets();
+		foreach ($widgets as $index => $widget) {
+			if ($widget['unique_id'] === $report_unique_id && $widget['date'] === $report_date) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public function toggle_widget($report_unique_id, $report_date)
+	{
+		$widgets = $this->get_widgets();
+		foreach ($widgets as $index => $widget) {
+			if ($widget['unique_id'] === $report_unique_id && $widget['date'] === $report_date) {
+				unset($widgets[$index]);
+				$this->set_widgets($widgets);
+				return;
+			}
+		}
+		$widgets[] = array('unique_id' => $report_unique_id, 'date' => $report_date);
+
+		$this->set_widgets($widgets);
+	}
+
+	public function get_widgets()
+	{
+		$meta = get_user_meta(get_current_user_id(), self::DASHBOARD_USER_OPTION, true);
+		if (empty($meta)) {
+			$meta = array();
+		}
+		return $meta;
+	}
+
+	private function set_widgets($widgets)
+	{
+		update_user_meta(get_current_user_id(),self::DASHBOARD_USER_OPTION, $widgets);
+	}
+
+	public function uninstall() {
+		delete_user_meta(get_current_user_id(), self::DASHBOARD_USER_OPTION);
+	}
+}

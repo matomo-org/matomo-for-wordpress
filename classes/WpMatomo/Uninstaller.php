@@ -9,6 +9,8 @@
 
 namespace WpMatomo;
 
+use WpMatomo\Admin\Dashboard;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -48,6 +50,9 @@ class Uninstaller {
 
 		$roles = new Roles( $settings );
 		$roles->uninstall();
+
+		$dashboard = new Dashboard();
+		$dashboard->uninstall();
 
 		$paths = new Paths();
 
