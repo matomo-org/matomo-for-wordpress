@@ -103,6 +103,17 @@ class Uninstaller {
 		self::uninstall_options( $prefix );
 	}
 
+	public static function uninstall_user_meta( $prefix ) {
+		global $wpdb;
+
+		if ( ! empty( $wpdb->usermeta ) ) {
+			self::make_logger()->log( 'Removing usermeta with prefix ' . $prefix );
+			$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE '" . $prefix . "%';" );
+
+			wp_cache_flush();
+		}
+	}
+
 	public function uninstall_multisite( $should_remove_all_data ) {
 		global $wpdb;
 

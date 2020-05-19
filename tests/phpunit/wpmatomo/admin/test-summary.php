@@ -6,6 +6,8 @@
 use WpMatomo\Admin\Summary;
 use WpMatomo\Admin\TrackingSettings;
 use WpMatomo\Settings;
+use WpMatomo\Report\Dates;
+use WpMatomo\Report\Renderer;
 
 class AdminSummaryTest extends MatomoAnalytics_TestCase {
 
@@ -51,4 +53,49 @@ class AdminSummaryTest extends MatomoAnalytics_TestCase {
 		$this->assertNotContains( 'is not enabled', $output );
 	}
 
+	public function test_show_pin_widget()
+    {
+        $dashboard = new \WpMatomo\Admin\Dashboard();
+        $this->assertSame( [], $dashboard->get_widgets() );
+
+        $_GET = array(
+            'pin' => "1",
+            'report_date' => Dates::YESTERDAY,
+            'report_uniqueid' => Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME,
+        );
+        $_REQUEST['_wpnonce']   = wp_create_nonce( Summary::NONCE_DASHBOARD );
+        $_SERVER['REQUEST_URI'] = home_url();
+
+        ob_start();
+        $this->summary->show();
+        $output = ob_get_clean();
+
+        $this->assertSame( [
+            ['unique_id' => 'visits_over_time','date' => 'yesterday']
+        ], $dashboard->get_widgets() );
+
+        $this->assertContains('Dashboard updated.', $output);
+    }
+
+	public function test_show_wont_pin_widget_when_invalid_report()
+    {
+        $dashboard = new \WpMatomo\Admin\Dashboard();
+        $this->assertSame( [], $dashboard->get_widgets() );
+
+        $_GET = array(
+            'pin' => "1",
+            'report_date' => 'foo',
+            'report_uniqueid' => Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME,
+        );
+        $_REQUEST['_wpnonce']   = wp_create_nonce( Summary::NONCE_DASHBOARD );
+        $_SERVER['REQUEST_URI'] = home_url();
+
+        ob_start();
+        $this->summary->show();
+        $output = ob_get_clean();
+
+        $this->assertSame( [], $dashboard->get_widgets() );
+
+        $this->assertNotContains('Dashboard updated.', $output);
+    }
 }

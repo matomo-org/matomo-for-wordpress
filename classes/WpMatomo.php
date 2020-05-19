@@ -12,12 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WpMatomo\Admin\Menu;
+use WpMatomo\Admin\Dashboard;
 use WpMatomo\Commands\MatomoCommands;
 use WpMatomo\Ecommerce\EasyDigitalDownloads;
 use WpMatomo\Ecommerce\MemberPress;
 use WpMatomo\OptOut;
 use WpMatomo\Paths;
-use WpMatomo\PrivacyBadge;
 use WpMatomo\ScheduledTasks;
 use \WpMatomo\Site\Sync as SiteSync;
 use WpMatomo\AjaxTracker;
@@ -82,7 +82,7 @@ class WpMatomo {
 		if ( is_admin() ) {
 			new Admin( self::$settings );
 
-			$dashboard = new \WpMatomo\Admin\Dashboard();
+			$dashboard = new Dashboard();
 			$dashboard->register_hooks();
 
 			$site_sync = new SiteSync( self::$settings );

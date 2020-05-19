@@ -22,17 +22,23 @@ class Renderer {
 		add_shortcode( 'matomo_report', array( $this, 'show_report' ) );
 	}
 
-	public function show_visits_over_time()
+	public function show_visits_over_time($limit)
 	{
 		$cannot_view = $this->check_cannot_view();
 		if ($cannot_view) {
 			return $cannot_view;
 		}
 
+		if (is_numeric($limit)) {
+		    $limit = (int) $limit;
+        } else {
+            $limit = 14;
+        }
+
 		$report_meta = array('module' => 'VisitsSummary', 'action' => 'get');
 
 		$data = new Data();
-		$report = $data->fetch_report($report_meta, 'day', 'last14', 'label', 14);
+		$report = $data->fetch_report($report_meta, 'day', 'last' . $limit, 'label', $limit);
 		$first_metric_name = 'nb_visits';
 
 		ob_start();
@@ -67,7 +73,11 @@ class Renderer {
 		}
 
 		if ($a['unique_id'] === 'visits_over_time') {
-			return $this->show_visits_over_time();
+		    $is_default_limit = $a['limit'] === 10;
+		    if ($is_default_limit) {
+		        $a['limit'] = 14;
+            }
+			return $this->show_visits_over_time($a['limit']);
 		}
 
 		$metadata    = new Metadata();

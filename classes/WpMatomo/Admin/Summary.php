@@ -50,9 +50,8 @@ class Summary {
 			$dashobard = new Dashboard();
 			if ($dashobard->is_valid_widget($unique_id, $date)) {
 				$dashobard->toggle_widget( $unique_id, $date );
+                return true;
 			}
-
-			return true;
 		}
 
 		return false;
