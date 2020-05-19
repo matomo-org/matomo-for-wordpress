@@ -43,6 +43,7 @@ class Summary {
 			 && ! empty( $_GET[ 'report_date' ] )
 		     && is_admin()
 		     && check_admin_referer( self::NONCE_DASHBOARD )
+             && is_user_logged_in()
 		     && current_user_can( Capabilities::KEY_VIEW ) ) {
 			$unique_id = $_GET[ 'report_uniqueid' ];
 			$date      = $_GET[ 'report_date' ];
