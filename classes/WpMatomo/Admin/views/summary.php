@@ -20,8 +20,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var string $report_date */
 /** @var string $report_period_selected */
 /** @var string $report_date_selected */
+/** @var bool $matomo_pinned */
 /** @var bool $is_tracking */
+/** @var \WpMatomo\Admin\Dashboard $matomo_dashboard */
 global $wp;
+
+$matomo_dashboard_nonce = wp_create_nonce(\WpMatomo\Admin\Summary::NONCE_DASHBOARD);
+?>
+<?php
+    if ($matomo_pinned) {
+        echo '<div class="notice notice-success"><p>' . esc_html__( 'Dashboard updated.', 'matomo' ) . '</p></div>';
+    }
 ?>
 <?php if ( ! $is_tracking ) { ?>
 	<div class="notice notice-warning"><p><?php esc_html_e( 'Matomo Tracking is not enabled.', 'matomo' ); ?></p></div>
@@ -70,6 +79,7 @@ global $wp;
 										title="<?php esc_html_e( 'Click to view the report in detail', 'matomo' ); ?>"><a
 										href="
 										<?php
+
 										echo Menu::get_matomo_reporting_url(
 											$matomo_report_meta['page']['category'],
 											$matomo_report_meta['page']['subcategory'],
@@ -82,7 +92,25 @@ global $wp;
 												" style="color: inherit;text-decoration: none;" target="_blank" rel="noreferrer noopener"
 										class="dashicons-before dashicons-external" aria-hidden="true"></a></button>
 							<?php } ?>
-							<h2 class="hndle ui-sortable-handle"
+
+                            <?php
+                            $matomo_is_dashboard_widget = $matomo_dashboard->has_widget($matomo_report_meta['uniqueId'], $report_date);
+                            ?>
+                            <button type="button" class="handlediv" aria-expanded="true"
+                                    title="<?php if ($matomo_is_dashboard_widget) { esc_html_e( 'Click to remove this report from the WordPress admin dashboard', 'matomo' ); } else { esc_html_e( 'Click to add this report to the WordPress admin dashboard', 'matomo' ); } ?>"><a
+                                        href="
+										<?php
+                                        echo esc_url(add_query_arg(array(
+                                                'pin' => true,
+                                                '_wpnonce' => $matomo_dashboard_nonce,
+                                                'report_uniqueid' => $matomo_report_meta['uniqueId'],
+                                                'report_date' => $report_date,
+                                        ), menu_page_url(Menu::SLUG_REPORT_SUMMARY, false)));
+										?>
+												" style="color: inherit;text-decoration: none;<?php if ($matomo_is_dashboard_widget) {  echo 'opacity: 0.4 !important'; } ?>"
+                                        class="dashicons-before dashicons-admin-post" aria-hidden="true"></a></button>
+
+                            <h2 class="hndle ui-sortable-handle"
 								style="cursor: help;"
 								title="<?php echo ! empty( $matomo_report_meta['documentation'] ) ? ( wp_strip_all_tags( $matomo_report_meta['documentation'] ) . ' ' ) : null; ?><?php esc_html_e( 'You can embed this report on any page using the shortcode:', 'matomo' ); ?> <?php echo esc_attr( $shortcode ); ?>"
 							><?php echo esc_html( $matomo_report_meta['name'] ); ?></h2>

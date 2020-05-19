@@ -9,6 +9,8 @@
 
 namespace WpMatomo;
 
+use WpMatomo\Admin\Dashboard;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -48,6 +50,9 @@ class Uninstaller {
 
 		$roles = new Roles( $settings );
 		$roles->uninstall();
+
+		$dashboard = new Dashboard();
+		$dashboard->uninstall();
 
 		$paths = new Paths();
 
@@ -96,6 +101,17 @@ class Uninstaller {
 
 		// not multisite
 		self::uninstall_options( $prefix );
+	}
+
+	public static function uninstall_user_meta( $prefix ) {
+		global $wpdb;
+
+		if ( ! empty( $wpdb->usermeta ) ) {
+			self::make_logger()->log( 'Removing usermeta with prefix ' . $prefix );
+			$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE '" . $prefix . "%';" );
+
+			wp_cache_flush();
+		}
 	}
 
 	public function uninstall_multisite( $should_remove_all_data ) {
