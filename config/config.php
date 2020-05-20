@@ -17,6 +17,7 @@ return array(
 		$paths = new \WpMatomo\Paths();
 		return $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir()) . '/';
 	},
+	'EnableDbVersionCheck' => false,
 	'path.geoip2' => function () {
 		$paths = new \WpMatomo\Paths();
 		return $paths->get_gloal_upload_dir_if_possible('DBIP-City.mmdb') . '/';
