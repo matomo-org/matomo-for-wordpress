@@ -9,8 +9,6 @@
 
 namespace WpMatomo\Admin;
 
-use Piwik\Plugins\UserCountry\LocationProvider;
-use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;

@@ -9,9 +9,6 @@
 
 namespace WpMatomo;
 
-use WP_Roles;
-use WpMatomo\Admin\Menu;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }

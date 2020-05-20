@@ -14,8 +14,6 @@ use Piwik\IP;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Settings;
-use WpMatomo\Site;
-use WpMatomo\TrackingCode\TrackingCodeGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly

@@ -9,8 +9,6 @@
 
 namespace WpMatomo\Admin;
 
-use Piwik\Plugins\SitesManager\API;
-use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Report\Dates;
 use WpMatomo\Report\Metadata;

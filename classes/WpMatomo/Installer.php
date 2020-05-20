@@ -15,7 +15,6 @@ use Piwik\Container\StaticContainer;
 use Piwik\DbHelper;
 use Piwik\Exception\NotYetInstalledException;
 use Piwik\Plugin\API as PluginApi;
-use Piwik\Plugins\Installation\FormDatabaseSetup;
 use Piwik\SettingsPiwik;
 use WpMatomo\Site\Sync;
 
