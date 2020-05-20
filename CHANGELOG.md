@@ -1,6 +1,6 @@
 == Changelog ==
 
-= 1.0.7 =
+= 1.1.0 =
 * Support UTF8MB4 character set in tracking
 * Improve compatibility with some plugins fixing some archiving issues
 * Improve tracking settings for multi sites
