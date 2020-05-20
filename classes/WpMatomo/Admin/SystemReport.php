@@ -11,6 +11,7 @@ namespace WpMatomo\Admin;
 
 use Piwik\CliMulti;
 use Piwik\Common;
+use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Filesystem;
 use Piwik\MetricsFormatter;
@@ -19,6 +20,7 @@ use Piwik\Plugins\Diagnostics\DiagnosticService;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
+use WpMatomo\Installer;
 use WpMatomo\Logger;
 use WpMatomo\Paths;
 use WpMatomo\ScheduledTasks;
@@ -322,7 +324,7 @@ class SystemReport {
 			} catch ( \Exception $e ) {
 				$rows[] = array(
 					'name'    => esc_html__( 'Matomo System Check', 'matomo' ),
-					'value'   => 'Failed to run, please open the system check in Matomo',
+					'value'   => 'Failed to run Matomo system check.',
 					'comment' => $e->getMessage(),
 				);
 			}
@@ -334,6 +336,12 @@ class SystemReport {
 		$rows[] = array(
 			'name'    => esc_html__( 'Matomo Blog idSite', 'matomo' ),
 			'value'   => $idsite,
+			'comment' => '',
+		);
+
+		$rows[] = array(
+			'name'    => esc_html__( 'Matomo Install Version', 'matomo' ),
+			'value'   => get_option(Installer::OPTION_NAME_INSTALL_VERSION),
 			'comment' => '',
 		);
 
@@ -455,6 +463,24 @@ class SystemReport {
 					'value'   => $location_provider->isWorking(),
 					'comment' => '',
 				);
+			}
+
+			if ( ! \WpMatomo::is_safe_mode() ) {
+				Bootstrap::do_bootstrap();
+				$general = Config::getInstance()->General;
+				if (empty($general['proxy_client_headers'])) {
+					foreach (AdvancedSettings::$valid_host_headers as $header) {
+						if (!empty($_SERVER[$header])) {
+							$rows[] = array(
+								'name'    => 'Proxy header',
+								'value'   => $header,
+								'is_warning' => true,
+								'comment' => 'A proxy header is set which means you maybe need to configure a proxy header in the Advanced settings to make location reporting work. If the location in your reports is detected correctly, you can ignore this warning.',
+							);
+						}
+					}
+				}
+
 			}
 
 			$num_days_check_visits = 5;
@@ -927,6 +953,18 @@ class SystemReport {
 			);
 		}
 
+		$rows[] = array(
+			'name'  => 'Matomo tables found',
+			'value' => $this->get_num_matomo_tables(),
+		);
+
+		foreach (['user', 'site'] as $table) {
+			$rows[] = array(
+				'name'  => 'Matomo '.$table.'s found',
+				'value' => $this->get_num_entries_in_table($table),
+			);
+		}
+
 		$grants = $this->get_db_grants();
 
 		// we only show these grants for security reasons as only they are needed and we don't need to know any other ones
@@ -966,6 +1004,45 @@ class SystemReport {
 		}
 
 		return $rows;
+	}
+
+	private function get_num_entries_in_table($table) {
+		global $wpdb;
+
+		$db_settings = new \WpMatomo\Db\Settings();
+		$prefix = $db_settings->prefix_table_name($table);
+
+		$results = null;
+		try {
+			$results = $wpdb->get_var('select count(*) from '.$prefix);
+		} catch (\Exception $e) {
+		}
+
+		if (isset($results) && is_numeric($results)) {
+			return $results;
+		}
+
+		return 'table not exists';
+	}
+
+	private function get_num_matomo_tables() {
+		global $wpdb;
+
+		$db_settings = new \WpMatomo\Db\Settings();
+		$prefix = $db_settings->prefix_table_name('');
+
+		$results = null;
+		try {
+			$results = $wpdb->get_results('show tables like "'.$prefix.'%"');
+		} catch (\Exception $e) {
+			$this->logger->log('no show tables: ' . $e->getMessage());
+		}
+
+		if (is_array($results)) {
+			return count($results);
+		}
+
+		return 'show tables not working';
 	}
 
 	private function get_db_grants() {

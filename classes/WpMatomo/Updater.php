@@ -115,6 +115,9 @@ class Updater {
 		$this->settings->set_global_option( 'core_version', Version::VERSION );
 		$this->settings->save();
 
+		$paths = new Paths();
+		$paths->clear_cache_dir();
+
 		\Piwik\Access::doAsSuperUser(
 			function () {
 					self::update_components();
@@ -122,7 +125,6 @@ class Updater {
 			}
 		);
 
-		$paths      = new Paths();
 		$upload_dir = $paths->get_upload_base_dir();
 		if ( is_dir( $upload_dir ) && is_writable( $upload_dir ) ) {
 			@file_put_contents( $upload_dir . '/index.php', '//hello' );

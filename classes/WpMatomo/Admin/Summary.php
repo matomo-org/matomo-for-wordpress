@@ -9,8 +9,10 @@
 
 namespace WpMatomo\Admin;
 
+use WpMatomo\Capabilities;
 use WpMatomo\Report\Dates;
 use WpMatomo\Report\Metadata;
+use WpMatomo\Report\Renderer;
 use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,6 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Summary {
+
+	const NONCE_DASHBOARD = 'matomo_pin_dashboard';
 
 	/**
 	 * @var Settings
@@ -31,7 +35,30 @@ class Summary {
 		$this->settings = $settings;
 	}
 
+	private function pin_if_submitted() {
+		if ( ! empty( $_GET[ 'pin' ] )
+			 && ! empty( $_GET[ 'report_uniqueid' ] )
+			 && ! empty( $_GET[ 'report_date' ] )
+		     && is_admin()
+		     && check_admin_referer( self::NONCE_DASHBOARD )
+             && is_user_logged_in()
+		     && current_user_can( Capabilities::KEY_VIEW ) ) {
+			$unique_id = $_GET[ 'report_uniqueid' ];
+			$date      = $_GET[ 'report_date' ];
+
+			$dashobard = new Dashboard();
+			if ($dashobard->is_valid_widget($unique_id, $date)) {
+				$dashobard->toggle_widget( $unique_id, $date );
+                return true;
+			}
+		}
+
+		return false;
+	}
+
 	public function show() {
+		$matomo_pinned = $this->pin_if_submitted();
+
 		$settings = $this->settings;
 
 		$reports_to_show = $this->get_reports_to_show();
@@ -48,6 +75,8 @@ class Summary {
 		list( $report_period_selected, $report_date_selected ) = $report_dates_obj->detect_period_and_date( $report_date );
 
 		$is_tracking = $this->settings->is_tracking_enabled();
+
+		$matomo_dashboard = new Dashboard();
 
 		include dirname( __FILE__ ) . '/views/summary.php';
 	}
@@ -78,6 +107,7 @@ class Summary {
 			$reports_to_show[] = 'Goals_getItemsName';
 		}
 
+		$reports_to_show[] = Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME;
 		$reports_to_show = apply_filters( 'matomo_report_summary_report_ids', $reports_to_show );
 
 		$report_metadata = array();

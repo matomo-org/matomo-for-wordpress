@@ -12,6 +12,7 @@ rm -rf $MATOMO_ROOT/vendor/twig/twig/ext
 rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/tools
 rm -rf $MATOMO_ROOT/plugins/Provider
 rm -rf $MATOMO_ROOT/vendor/doctrine/cache/lib/Doctrine/Common/Cache/RiakCache.php
+rm -rf $MATOMO_ROOT/plugins/GeoIp2/Commands/ConvertRegionCodesToIso.php # cause it creates DB connection too early
 
 # lets remove some extra libs that aren't needed
 find $MATOMO_ROOT/libs/bower_components -name '*.js' -exec rm -rf {} +

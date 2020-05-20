@@ -14,8 +14,6 @@ use Piwik\IP;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Settings;
-use WpMatomo\Site;
-use WpMatomo\TrackingCode\TrackingCodeGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -36,6 +34,18 @@ class AdvancedSettings implements AdminSettingsInterface {
 		'HTTP_TRUE_CLIENT_IP',
 		'HTTP_X_CLUSTER_CLIENT_IP',
 	);
+
+	/**
+	 * @var Settings
+	 */
+	private $settings;
+
+	/**
+	 * @param Settings $settings
+	 */
+	public function __construct( $settings ) {
+		$this->settings = $settings;
+	}
 
 	public function get_title() {
 		return esc_html__( 'Advanced', 'matomo' );
@@ -60,6 +70,12 @@ class AdvancedSettings implements AdminSettingsInterface {
 	}
 
 	private function apply_settings() {
+		if (!defined('MATOMO_REMOVE_ALL_DATA')) {
+			$this->settings->apply_changes(array(
+				Settings::DELETE_ALL_DATA_ON_UNINSTALL => !empty($_POST['matomo']['delete_all_data'])
+			));
+		}
+
 		Bootstrap::do_bootstrap();
 		$config = Config::getInstance();
 		$general = $config->General;
@@ -89,6 +105,7 @@ class AdvancedSettings implements AdminSettingsInterface {
 		}
 
 		$matomo_detected_ip = IP::getIpFromHeader();
+		$matomo_delete_all_data = $this->settings->should_delete_all_data_on_uninstall();
 
 		include dirname( __FILE__ ) . '/views/advanced_settings.php';
 	}

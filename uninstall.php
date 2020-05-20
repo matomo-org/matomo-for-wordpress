@@ -15,7 +15,8 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 require 'shared.php';
 
 $matomo_is_using_multi_site    = function_exists( 'is_multisite' ) && is_multisite();
-$matomo_should_remove_all_data = defined( 'MATOMO_REMOVE_ALL_DATA' ) && MATOMO_REMOVE_ALL_DATA === true;
+$matomo_settings               = new \WpMatomo\Settings();
+$matomo_should_remove_all_data = $matomo_settings->should_delete_all_data_on_uninstall();
 
 $matomo_uninstaller = new \WpMatomo\Uninstaller();
 $matomo_uninstaller->uninstall( $matomo_should_remove_all_data );

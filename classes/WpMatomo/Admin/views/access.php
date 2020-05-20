@@ -52,6 +52,11 @@ use WpMatomo\Admin\AccessSettings;
 </form>
 
 <p>
+    <?php
+        if (!is_multisite()) {
+	        esc_html_e( 'A user with role administrator automatically has the super user role.', 'matomo' );
+        }
+    ?>
 	<?php esc_html_e( 'Learn about the differences between these Matomo roles:', 'matomo' ); ?>
 	<a href="https://matomo.org/faq/general/faq_70/" target="_blank" rel="noopener"><?php esc_html_e( 'View', 'matomo' ); ?></a>,
 	<a href="https://matomo.org/faq/general/faq_26910/" target="_blank"

@@ -15,7 +15,6 @@ use Piwik\Container\StaticContainer;
 use Piwik\DbHelper;
 use Piwik\Exception\NotYetInstalledException;
 use Piwik\Plugin\API as PluginApi;
-use Piwik\Plugins\Installation\FormDatabaseSetup;
 use Piwik\SettingsPiwik;
 use WpMatomo\Site\Sync;
 
@@ -26,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Installer {
 
 	const OPTION_NAME_INSTALL_DATE = 'matomo-install-date';
+	const OPTION_NAME_INSTALL_VERSION = 'matomo-install-version';
 
 	/**
 	 * @var Settings
@@ -114,6 +114,10 @@ class Installer {
 			wp_schedule_single_event( time() + 35, ScheduledTasks::EVENT_SYNC );
 
 			update_option(self::OPTION_NAME_INSTALL_DATE, time());
+			$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
+			if ( ! empty( $plugin_data['Version'] )) {
+				update_option( self::OPTION_NAME_INSTALL_VERSION, $plugin_data['Version'] );
+			}
 
 			$this->create_website();
 			$this->create_user(); // we sync users as early as possible to make sure things are set up correctly

@@ -9,8 +9,6 @@
 
 namespace WpMatomo;
 
-use WP_Roles;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }

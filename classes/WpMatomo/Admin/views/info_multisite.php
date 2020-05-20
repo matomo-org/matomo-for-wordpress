@@ -60,7 +60,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			foreach ( get_sites() as $matomo_site ) {
 				/** @var WP_Site $matomo_site */
 				switch_to_blog( $matomo_site->blog_id );
-				echo '<li><a href="' . admin_url( 'admin.php?page=matomo-reporting' ) . '">' . $matomo_site->blogname . ' (Blog ID: ' . $matomo_site->blog_id . ')</a></li>';
+				if (function_exists('is_plugin_active') && is_plugin_active('matomo/matomo.php')) {
+					echo '<li><a href="' . esc_url(admin_url( 'admin.php?page=matomo-reporting' )) . '">' . esc_html($matomo_site->blogname) . ' (Blog ID: ' . esc_html($matomo_site->blog_id) . ')</a></li>';
+				}
 				restore_current_blog();
 			}
 		}

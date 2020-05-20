@@ -30,6 +30,7 @@ class Settings {
 	const OPTION_LAST_TRACKING_SETTINGS_CHANGE = 'last_tracking_settings_update';
 	const OPTION_LAST_TRACKING_CODE_UPDATE     = 'last_tracking_code_update';
 	const SHOW_GET_STARTED_PAGE                = 'show_get_started_page';
+	const DELETE_ALL_DATA_ON_UNINSTALL         = 'delete_all_data_uninstall';
 
 	public static $is_doing_action_tracking_related = false;
 
@@ -52,6 +53,7 @@ class Settings {
 		self::OPTION_LAST_TRACKING_SETTINGS_CHANGE => 0,
 		self::OPTION_KEY_STEALTH                   => array(),
 		self::OPTION_KEY_CAPS_ACCESS               => array(),
+		self::DELETE_ALL_DATA_ON_UNINSTALL         => true,
 		// User settings: Stats configuration
 		// User settings: Tracking configuration
 		'track_mode'                               => 'disabled',
@@ -387,6 +389,15 @@ class Settings {
 		}
 
 		return '';
+	}
+
+	public function should_delete_all_data_on_uninstall()
+	{
+		if (defined( 'MATOMO_REMOVE_ALL_DATA' )) {
+			return (bool) MATOMO_REMOVE_ALL_DATA;
+		}
+
+		return (bool) $this->get_global_option(self::DELETE_ALL_DATA_ON_UNINSTALL);
 	}
 
 	/**

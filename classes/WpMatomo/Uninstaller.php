@@ -9,6 +9,8 @@
 
 namespace WpMatomo;
 
+use WpMatomo\Admin\Dashboard;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -48,6 +50,9 @@ class Uninstaller {
 
 		$roles = new Roles( $settings );
 		$roles->uninstall();
+
+		$dashboard = new Dashboard();
+		$dashboard->uninstall();
 
 		$paths = new Paths();
 
@@ -98,6 +103,17 @@ class Uninstaller {
 		self::uninstall_options( $prefix );
 	}
 
+	public static function uninstall_user_meta( $prefix ) {
+		global $wpdb;
+
+		if ( ! empty( $wpdb->usermeta ) ) {
+			self::make_logger()->log( 'Removing usermeta with prefix ' . $prefix );
+			$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE '" . $prefix . "%';" );
+
+			wp_cache_flush();
+		}
+	}
+
 	public function uninstall_multisite( $should_remove_all_data ) {
 		global $wpdb;
 
@@ -116,76 +132,11 @@ class Uninstaller {
 		}
 	}
 
-	public function get_installed_matomo_tables() {
-		global $wpdb;
-
-		$table_names = array();
-		$tables      = $wpdb->get_results( 'SHOW TABLES LIKE "' . $wpdb->prefix . str_replace( '_', '\_', MATOMO_DATABASE_PREFIX ) . '%"', ARRAY_N );
-		foreach ( $tables as $table_name_to_look_for ) {
-			$table_names[] = array_shift( $table_name_to_look_for );
-		}
-
-		// we need to hard code them unfortunately for tests cause there are temporary tables used and we can't find a
-		// list of existing temp tables
-		$table_names_to_look_for = array(
-			'access',
-			'archive_blob_2010_01',
-			'archive_numeric_2010_01',
-			'brute_force_log',
-			'goal',
-			'locks',
-			'log_action',
-			'log_conversion',
-			'log_conversion_item',
-			'log_link_visit_action',
-			'log_profiling',
-			'log_visit',
-			'logger_message',
-			'option',
-			'plugin_setting',
-			'privacy_logdata_anonymizations',
-			'report',
-			'report_subscriptions',
-			'segment',
-			'sequence',
-			'session',
-			'site',
-			'site_setting',
-			'site_url',
-			'tagmanager_container',
-			'tagmanager_container_release',
-			'tagmanager_container_version',
-			'tagmanager_tag',
-			'tagmanager_trigger',
-			'tagmanager_variable',
-			'tracking_failure',
-			'twofactor_recovery_code',
-			'user',
-			'user_dashboard',
-			'user_language',
-		);
-		foreach ( range( 2010, gmdate( 'Y' ) + 1 ) as $year ) {
-			foreach ( range( 1, 12 ) as $month ) {
-				$table_names_to_look_for[] = 'archive_numeric_' . $year . '_' . str_pad( $month, 2, '0' );
-				$table_names_to_look_for[] = 'archive_blob_' . $year . '_' . str_pad( $month, 2, '0' );
-			}
-		}
-		$table_names_to_look_for = apply_filters( 'matomo_install_tables', $table_names_to_look_for );
-
-		foreach ( $table_names_to_look_for as $table_name_to_look_for ) {
-			$table_name_to_test = $wpdb->prefix . MATOMO_DATABASE_PREFIX . $table_name_to_look_for;
-			if ( ! in_array( $table_name_to_test, $table_names, true ) ) {
-				$table_names[] = $table_name_to_test;
-			}
-		}
-
-		return $table_names;
-	}
-
 	private function drop_tables() {
 		global $wpdb;
 
-		$installed_tables = $this->get_installed_matomo_tables();
+		$db_settings = new \WpMatomo\Db\Settings();
+		$installed_tables = $db_settings->get_installed_matomo_tables();
 		$this->logger->log( sprintf( 'Matomo will now drop %s matomo tables', count( $installed_tables ) ) );
 
 		foreach ( $installed_tables as $table_name ) {

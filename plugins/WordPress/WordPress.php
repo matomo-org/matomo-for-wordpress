@@ -83,6 +83,8 @@ class WordPress extends Plugin
     		if ($challenge['id'] === 'track_data') {
     			$challenges[$index]['url'] = ''; // we can't generate menu url for tracking settings since we're not showing the menu
     			$challenges[$index]['description'] = __('In WordPress Admin go to Matomo Analytics => Settings => Tracking to embed the tracking code.', 'matomo');
+		    } elseif ($challenge['id'] === 'custom_logo') {
+				unset($challenges[$index]);
 		    }
 	    }
     }

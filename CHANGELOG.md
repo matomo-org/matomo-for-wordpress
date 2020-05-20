@@ -1,10 +1,20 @@
 == Changelog ==
 
+= 1.1.0 =
+* Support UTF8MB4 character set in tracking
+* Improve compatibility with some plugins fixing some archiving issues
+* Improve tracking settings for multi sites
+* Add widgets to dashboard from the summary page
+* Show a blog selector in the reporting page when using multi site
+* Fix super admins weren't always synced in multisite mode
+* By default delete all data on plugin uninstallation unless configured differently
+* Improve system report
+* Some minor fixes
+
 = 1.0.6 =
 * Improve compatibility with some other plugins
 * Improve system report by adding more information
 * Ensure to use WordPress DB charset
-
 
 = 1.0.5 =
 * Update Matomo core to 3.13.5

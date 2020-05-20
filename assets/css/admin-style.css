@@ -10,27 +10,6 @@
     word-break: break-all;
 }
 
-.matomo-hero {
-    text-align: center;background: #3152a0;padding: 30px 20%;
-}
-
-.matomo-hero h2 {
-    color: white;font-size: 26px;line-height: 1.3;margin-top: 0;
-}
-.matomo-hero .matomo-cta-button {
-    background: #f77b00;color: white;padding: 8px 24px;
-    min-height: 28px;
-    height: auto;
-}
-.matomo-hero .matomo-next-link {
-    margin-left: 12px;
-}
-.matomo-hero a:not(.matomo-cta-button) {
-    color: white;
-    margin-top: 10px;
-    display: inline-block;
-}
-
 ul.matomo-list {
     list-style-type: disc;
     margin-left: 20px;
@@ -40,10 +19,13 @@ ol.matomo-list {
     margin-left: 20px;
 }
 
-.plugin-card .matomo-description {
-    min-height: 57px;
+.matomo-plugin-list .plugin-card-top {
+    min-height: auto;
 }
 
+.matomo-marketplace-notice .dashicons-video-alt3 {
+    display: inline-block;
+}
 .matomo-blockquote {
     margin: .5em 10px;
     border-left: 4px solid #ccc;

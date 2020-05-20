@@ -58,8 +58,13 @@ if ($invalid_format) { ?>
                        name="<?php echo esc_attr( GeolocationSettings::FORM_NAME ) ?>" value="<?php echo esc_attr($current_maxmind_license) ?>">
 			</td>
             <td>
-                <?php esc_html_e('Leave the field empty and click on "Save Changes" to configure the default DB-IP database.', 'matomo') ?>
-                <?php esc_html_e('When configured, your WordPress will send an HTTP request to a MaxMind server to download an approx. 60MB database and store it in your "wp-content/uploads/matomo" directory.', 'matomo') ?>
+                <?php if (!empty($current_maxmind_license)) {?>
+                    <p style="color: green;"><span class="dashicons dashicons-yes" ></span> <?php esc_html_e('MaxMind is configured.', 'matomo') ?></p>
+                <?php }?>
+                <p>
+                    <?php esc_html_e('Leave the field empty and click on "Save Changes" to configure the default DB-IP database.', 'matomo') ?>
+                    <?php esc_html_e('When configured, your WordPress will send an HTTP request to a MaxMind server to download an approx. 60MB database and store it in your "wp-content/uploads/matomo" directory.', 'matomo') ?>
+                </p>
             </td>
 		</tr>
 		<tr>
