@@ -114,7 +114,7 @@ $matomo_extra_url_params = '&' . http_build_query(
                              style="margin-right: 0;<?php if ( empty( $matomo_feature['image'] )) { echo 'margin-left: 0;'; } ?>">
                             <p class="matomo-description"><?php echo esc_html( $matomo_feature['description'] ); ?>
                             <?php if (!empty($matomo_feature['video'])) {
-                                echo ' <a target="_blank" rel="noreferrer noopener" href="'. esc_url($matomo_feature['video']).'"><span class="dashicons dashicons-video-alt3"></span></a>';
+                                echo ' <a target="_blank" rel="noreferrer noopener" style="white-space: nowrap;" href="'. esc_url($matomo_feature['video']).'"><span class="dashicons dashicons-video-alt3"></span> '. esc_html__( 'Learn more', 'matomo' ).'</a>';
                             } elseif (!empty($matomo_feature['url'])) {
 		                            echo ' <a target="_blank" rel="noreferrer noopener" style="white-space: nowrap;" href="'. esc_url($matomo_feature['url']).'">'. esc_html__( 'Learn more', 'matomo' ).'</a>';
 	                            } ?></p>
