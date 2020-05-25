@@ -13,8 +13,10 @@ use Piwik\CliMulti;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
+use Piwik\Date;
 use Piwik\Filesystem;
 use Piwik\MetricsFormatter;
+use Piwik\Plugins\CoreAdminHome\API;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
 use Piwik\Plugins\UserCountry\LocationProvider;
@@ -81,6 +83,21 @@ class SystemReport {
 
 				if (!defined('PIWIK_ARCHIVE_NO_TRUNCATE')) {
 					define('PIWIK_ARCHIVE_NO_TRUNCATE', 1); // when triggering it manually, we prefer the full error message
+				}
+
+				try {
+					// force invalidation of archive to ensure it actually will rearchive the data
+					$site = new Site();
+					$idsite = $site->get_current_matomo_site_id();
+					if ($idsite) {
+						$timezone = \Piwik\Site::getTimezoneFor($idsite);
+						$now_string = \Piwik\Date::factory('now', $timezone)->toString();
+						foreach (array('day', 'week', 'month') as $period) {
+							API::getInstance()->invalidateArchivedReports($idsite, $now_string, $period, false, false);
+						}
+					}
+				} catch (\Exception $e) {
+					$this->logger->log_exception('archive_invalidate', $e);
 				}
 
 				try {
