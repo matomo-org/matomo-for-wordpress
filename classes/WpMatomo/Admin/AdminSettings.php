@@ -76,9 +76,15 @@ class AdminSettings {
 			self::TAB_ADVANCED    => $advanced,
 		);
 
-		if (is_multisite() && is_network_admin()) {
+		if ($this->settings->is_network_enabled() && is_network_admin()) {
 		    unset($setting_tabs[self::TAB_PRIVACY]);
 		    unset($setting_tabs[self::TAB_EXCLUSIONS]);
+        } elseif ($this->settings->is_network_enabled() && !is_network_admin()){
+		    $setting_tabs = array(
+                self::TAB_TRACKING   => $tracking,
+                self::TAB_PRIVACY    => $privacy,
+                self::TAB_EXCLUSIONS => $exclusions,
+            );
         }
 
 		$setting_tabs = apply_filters( 'matomo_setting_tabs', $setting_tabs, $this->settings );
@@ -90,6 +96,7 @@ class AdminSettings {
 		}
 
 		$content_tab = $setting_tabs[ $active_tab ];
+		$matomo_settings = $this->settings;
 
 		include dirname( __FILE__ ) . '/views/settings.php';
 	}

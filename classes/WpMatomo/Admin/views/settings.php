@@ -18,10 +18,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var AdminSettingsInterface[] $setting_tabs */
 /** @var AdminSettingsInterface $content_tab */
 /** @var string $active_tab */
+/** @var \WpMatomo\Settings $matomo_settings */
 ?>
 <div class="wrap">
 	<div id="icon-plugins" class="icon32"></div>
     <h1><?php matomo_header_icon(); ?> <?php esc_html_e( 'Settings', 'matomo' ); ?></h1>
+    <?php
+        if ( $matomo_settings->is_network_enabled() && is_network_admin() ) {
+            echo '<p>';
+            esc_html_e( 'These settings will be applied to all blogs in your network.', 'matomo' );
+            echo '</p>';
+        }
+    ?>
 	<h2 class="nav-tab-wrapper">
 		<?php foreach ( $setting_tabs as $matomo_setting_slug => $matomo_setting_tab ) { ?>
 			<a href="<?php echo AdminSettings::make_url( $matomo_setting_slug ); ?>"
