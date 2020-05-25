@@ -34,6 +34,15 @@ if ( $was_updated ) {
 	include 'update_notice_clear_cache.php';
 }
 ?>
+<?php if ($settings->is_network_enabled() && is_network_admin()) { ?>
+    <h2>Exclusion settings</h2>
+    <p>
+        Currently, exclusion settings have to be configured on a per blog basis.
+        Should you wish to change any setting, please go to the Matomo exclusion settings within each blog.
+        We are hoping to improve this in the future.
+    </p>
+<?php } else { ?>
+
 <form method="post">
 	<?php wp_nonce_field( ExclusionSettings::NONCE_NAME ); ?>
 
@@ -137,3 +146,5 @@ if ( $was_updated ) {
 		</tbody>
 	</table>
 </form>
+
+<?php } ?>

@@ -65,7 +65,7 @@ class AdminSettings {
 		$tracking        = new TrackingSettings( $this->settings );
 		$exclusions      = new ExclusionSettings( $this->settings );
 		$geolocation     = new GeolocationSettings( $this->settings );
-		$privacy         = new PrivacySettings();
+		$privacy         = new PrivacySettings( $this->settings );
 		$advanced        = new AdvancedSettings( $this->settings );
 		$setting_tabs    = array(
 			self::TAB_TRACKING   => $tracking,
@@ -76,14 +76,13 @@ class AdminSettings {
 			self::TAB_ADVANCED    => $advanced,
 		);
 
-		if ($this->settings->is_network_enabled() && is_network_admin()) {
-		    unset($setting_tabs[self::TAB_PRIVACY]);
-		    unset($setting_tabs[self::TAB_EXCLUSIONS]);
-        } elseif ($this->settings->is_network_enabled() && !is_network_admin()){
+        $active_tab = self::TAB_TRACKING;
+
+		if ($this->settings->is_network_enabled() && !is_network_admin()){
+            $active_tab = self::TAB_EXCLUSIONS;
 		    $setting_tabs = array(
-                self::TAB_TRACKING   => $tracking,
-                self::TAB_PRIVACY    => $privacy,
                 self::TAB_EXCLUSIONS => $exclusions,
+                self::TAB_PRIVACY    => $privacy,
             );
         }
 
@@ -91,8 +90,6 @@ class AdminSettings {
 
 		if ( ! empty( $_GET['tab'] ) && isset( $setting_tabs[ $_GET['tab'] ] ) ) {
 			$active_tab = $_GET['tab'];
-		} else {
-			$active_tab = self::TAB_TRACKING;
 		}
 
 		$content_tab = $setting_tabs[ $active_tab ];

@@ -144,21 +144,22 @@ class Menu {
 
 		}
 
-        // managing matomo only works when
-        // * Network mode is enabled and then it works only in the network mode
-        // * Network mode is not enabled then it works only for individual blogs as they manage it themselves
+        // we always show settings except when multi site is used, plugin is not network enabled, and we are in network admin
+        $can_matomo_be_managed = ( !is_multisite() || $this->settings->is_network_enabled() || !is_network_admin() );
 
-        add_submenu_page(
-            self::$parent_slug,
-            __( 'Settings', 'matomo' ),
-            __( 'Settings', 'matomo' ),
-            Capabilities::KEY_SUPERUSER,
-            self::SLUG_SETTINGS,
-            array(
-                $admin_settings,
-                'show',
-            )
-        );
+		if ( $can_matomo_be_managed ) {
+			add_submenu_page(
+				self::$parent_slug,
+				__( 'Settings', 'matomo' ),
+				__( 'Settings', 'matomo' ),
+				Capabilities::KEY_SUPERUSER,
+				self::SLUG_SETTINGS,
+				array(
+					$admin_settings,
+					'show',
+				)
+			);
+		}
 
 		if ( ! is_plugin_active( MATOMO_MARKETPLACE_PLUGIN_NAME ) ) {
 			add_submenu_page(
