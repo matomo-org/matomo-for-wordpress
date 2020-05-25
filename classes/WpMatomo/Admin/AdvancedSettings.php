@@ -14,6 +14,7 @@ use Piwik\IP;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Settings;
+use WpMatomo\Site\Sync\SyncConfig as SiteConfigSync;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -41,10 +42,16 @@ class AdvancedSettings implements AdminSettingsInterface {
 	private $settings;
 
 	/**
+	 * @var SiteConfigSync
+	 */
+	private $site_config_sync;
+
+	/**
 	 * @param Settings $settings
 	 */
 	public function __construct( $settings ) {
 		$this->settings = $settings;
+		$this->site_config_sync = new SiteConfigSync( $settings );
 	}
 
 	public function get_title() {
@@ -57,6 +64,7 @@ class AdvancedSettings implements AdminSettingsInterface {
 			 && is_admin()
 			 && check_admin_referer( self::NONCE_NAME )
 			 && $this->can_user_manage() ) {
+
 			$this->apply_settings();
 
 			return true;
@@ -70,25 +78,21 @@ class AdvancedSettings implements AdminSettingsInterface {
 	}
 
 	private function apply_settings() {
-		if (!defined('MATOMO_REMOVE_ALL_DATA')) {
-			$this->settings->apply_changes(array(
-				Settings::DELETE_ALL_DATA_ON_UNINSTALL => !empty($_POST['matomo']['delete_all_data'])
-			));
-		}
+        if (!defined('MATOMO_REMOVE_ALL_DATA')) {
+            $this->settings->apply_changes(array(
+                Settings::DELETE_ALL_DATA_ON_UNINSTALL => !empty($_POST['matomo']['delete_all_data'])
+            ));
+        }
 
-		Bootstrap::do_bootstrap();
-		$config = Config::getInstance();
-		$general = $config->General;
-		$general['proxy_client_headers'] = array();
+        $client_headers = [];
+        if (!empty($_POST[ self::FORM_NAME ]['proxy_client_header'])) {
+            $client_header = $_POST[ self::FORM_NAME ]['proxy_client_header'];
+            if (in_array($client_header, self::$valid_host_headers, true)) {
+                $client_headers[] = $client_header;
+            }
+        }
 
-		if (!empty($_POST[ self::FORM_NAME ]['proxy_client_header'])) {
-			$client_header = $_POST[ self::FORM_NAME ]['proxy_client_header'];
-			if (in_array($client_header, self::$valid_host_headers, true)) {
-				$general['proxy_client_headers'][] = $client_header;
-			}
-		}
-		$config->General = $general;
-		$config->forceSave();
+        $this->site_config_sync->set_config_value('General', 'proxy_client_headers', $client_headers);
 
 		return true;
 	}
@@ -96,14 +100,12 @@ class AdvancedSettings implements AdminSettingsInterface {
 	public function show_settings() {
 		$was_updated = $this->update_if_submitted();
 
-		$matomo_client_headers = array();
-		Bootstrap::do_bootstrap();
-		$config = Config::getInstance();
-		$general = $config->General;
-		if (!empty($general['proxy_client_headers']) && is_array($general['proxy_client_headers'])) {
-			$matomo_client_headers = $general['proxy_client_headers'];
-		}
+        $matomo_client_headers = $this->site_config_sync->get_config_value('General', 'proxy_client_headers');
+        if (empty($matomo_client_headers)) {
+            $matomo_client_headers = array();
+        }
 
+        Bootstrap::do_bootstrap();
 		$matomo_detected_ip = IP::getIpFromHeader();
 		$matomo_delete_all_data = $this->settings->should_delete_all_data_on_uninstall();
 

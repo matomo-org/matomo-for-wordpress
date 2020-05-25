@@ -75,17 +75,19 @@ class Menu {
 		add_menu_page( 'Matomo Analytics', 'Matomo Analytics', self::CAP_NOT_EXISTS, 'matomo', null, 'dashicons-analytics' );
 
 		if ( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
-			add_submenu_page(
-				self::$parent_slug,
-				__( 'Get Started', 'matomo' ),
-				__( 'Get Started', 'matomo' ),
-				Capabilities::KEY_SUPERUSER,
-				self::SLUG_GET_STARTED,
-				array(
-					$get_started,
-					'show',
-				)
-			);
+		    if (!is_multisite() || !is_network_admin()) {
+                add_submenu_page(
+                    self::$parent_slug,
+                    __( 'Get Started', 'matomo' ),
+                    __( 'Get Started', 'matomo' ),
+                    Capabilities::KEY_SUPERUSER,
+                    self::SLUG_GET_STARTED,
+                    array(
+                        $get_started,
+                        'show',
+                    )
+                );
+            }
 		}
 
 		if ( is_network_admin() ) {

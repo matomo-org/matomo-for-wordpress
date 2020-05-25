@@ -18,6 +18,7 @@ use WpMatomo\Installer;
 use WpMatomo\Logger;
 use WpMatomo\Settings;
 use WpMatomo\Site;
+use WpMatomo\Site\Sync\SyncConfig;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -36,9 +37,15 @@ class Sync {
 	 */
 	private $settings;
 
+    /**
+     * @var SyncConfig
+     */
+	private $config_sync;
+
 	public function __construct( Settings $settings ) {
 		$this->logger   = new Logger();
 		$this->settings = $settings;
+		$this->config_sync = new SyncConfig( $settings );
 	}
 
 	public function register_hooks() {
@@ -76,6 +83,7 @@ class Sync {
 							continue;
 						}
 					}
+
 					$success = $this->sync_site( $site->blog_id, $site->blogname, $site->siteurl );
 				} catch ( \Exception $e ) {
 					$success = false;
@@ -110,24 +118,35 @@ class Sync {
 			$blog_name = substr( $blog_name, 0, self::MAX_LENGTH_SITE_NAME );
 		}
 
+        $track_ecommerce = (int) $this->settings->get_global_option( 'track_ecommerce' );
+		$detected_timezone = $this->detect_timezone();
+
 		if ( ! empty( $idsite ) ) {
-			// todo only update site when name or URL (or maybe also when timezone)changes!
 			$this->logger->log( 'Matomo site is known for blog (' . $idsite . ')... will update' );
 
-			/** @var \WP_Site $site */
-			$params              = array(
-				'name'      => $blog_name,
-				'main_url'  => $blog_url,
-				'ecommerce' => (int) $this->settings->get_global_option( 'track_ecommerce' ),
-				'timezone'  => $this->detect_timezone(),
-			);
-			$sites_manager_model = new Model();
-			$sites_manager_model->updateSite( $params, $idsite );
+            $sites_manager_model = new Model();
+            $site = $sites_manager_model->getSiteFromId($idsite);
+            if ($site['name'] != $blog_name
+                || $site['main_url'] != $blog_url
+                || $site['ecommerce'] != $track_ecommerce
+                || $site['timezone'] != $detected_timezone) {
 
-			do_action( 'matomo_site_synced', $idsite, $blog_id );
+                /** @var \WP_Site $site */
+                $params              = array(
+                    'name'      => $blog_name,
+                    'main_url'  => $blog_url,
+                    'ecommerce' => $track_ecommerce,
+                    'timezone'  => $detected_timezone,
+                );
+                $sites_manager_model->updateSite( $params, $idsite );
 
-			// no actual setting changed but we make sure the tracking code will be updated after an update
-			$this->settings->apply_tracking_related_changes( array() );
+                do_action( 'matomo_site_synced', $idsite, $blog_id );
+
+                // no actual setting changed but we make sure the tracking code will be updated after an update
+                $this->settings->apply_tracking_related_changes( array() );
+            }
+
+            $this->config_sync->sync_config_for_current_site();
 
 			return true;
 		}
@@ -135,20 +154,17 @@ class Sync {
 		$this->logger->log( 'Matomo site is not known for blog... will create site' );
 
 		/** @var \WP_Site $site */
-		$timezone = $this->detect_timezone();
 		$idsite   = null;
 
 		$this->set_enable_sites_admin( 1 );
 
-		$track_ecommerce = (int) $this->settings->get_global_option( 'track_ecommerce' );
-
 		Access::doAsSuperUser(
-			function () use ( $blog_name, $blog_url, $timezone, $track_ecommerce, &$idsite ) {
+			function () use ( $blog_name, $blog_url, $detected_timezone, $track_ecommerce, &$idsite ) {
 					SitesManager\API::unsetInstance();
 					// we need to unset the instance to make sure it fetches the
 					// up to date dependencies eg current plugin manager etc
 
-					$idsite                         = SitesManager\API::getInstance()->addSite(
+					$idsite = SitesManager\API::getInstance()->addSite(
 						$blog_name,
 						array( $blog_url ),
 						$track_ecommerce,
@@ -157,7 +173,7 @@ class Sync {
 						$search_category_parameters = null,
 						$excluded_ips               = null,
 						$excluded_query_parameters  = null,
-						$timezone
+                        $detected_timezone
 					);
 			}
 		);
@@ -172,6 +188,8 @@ class Sync {
 
 			return false;
 		}
+
+        $this->config_sync->sync_config_for_current_site();
 
 		do_action( 'matomo_site_synced', $idsite, $blog_id );
 

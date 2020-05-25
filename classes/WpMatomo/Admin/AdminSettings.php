@@ -9,6 +9,9 @@
 
 namespace WpMatomo\Admin;
 
+use Piwik\Cache;
+use Piwik\Option;
+use Piwik\Plugins\SitesManager\API;
 use WpMatomo\Access;
 use WpMatomo\Settings;
 
@@ -34,7 +37,26 @@ class AdminSettings {
 	}
 
 	public static function make_url( $tab ) {
-		return add_query_arg( array( 'tab' => $tab ), menu_page_url( Menu::SLUG_SETTINGS, false ) );
+	    global $_parent_pages;
+        $menu_slug = Menu::SLUG_SETTINGS;
+
+        if (is_multisite() && is_network_admin()) {
+            if ( isset( $_parent_pages[$menu_slug] ) ) {
+                $parent_slug = $_parent_pages[$menu_slug];
+                if ( $parent_slug && ! isset( $_parent_pages[$parent_slug] ) ) {
+                    $url = network_admin_url( add_query_arg( 'page', $menu_slug, $parent_slug ) );
+                } else {
+                    $url = network_admin_url( 'admin.php?page=' . $menu_slug );
+                }
+            } else {
+                $url = '';
+            }
+
+            $url = esc_url( $url );
+        } else {
+            $url = menu_page_url( $menu_slug, false );
+        }
+		return add_query_arg( array( 'tab' => $tab ), $url );
 	}
 
 	public function show() {
@@ -53,6 +75,11 @@ class AdminSettings {
 			self::TAB_GEOLOCATION => $geolocation,
 			self::TAB_ADVANCED    => $advanced,
 		);
+
+		if (is_multisite() && is_network_admin()) {
+		    unset($setting_tabs[self::TAB_PRIVACY]);
+		    unset($setting_tabs[self::TAB_EXCLUSIONS]);
+        }
 
 		$setting_tabs = apply_filters( 'matomo_setting_tabs', $setting_tabs, $this->settings );
 
