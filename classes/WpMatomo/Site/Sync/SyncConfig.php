@@ -70,11 +70,11 @@ class SyncConfig
         }
     }
 
-    public function get_all()
+    private function get_all()
     {
         $options = $this->settings->get_global_option(Settings::NETWORK_CONFIG_OPTIONS);
 
-        if (empty($options)) {
+        if (empty($options) || !is_array($options)) {
             $options = array();
         }
 
