@@ -42,8 +42,6 @@ class Settings {
 		// list of existing temp tables
 		$table_names_to_look_for = array(
 			'access',
-			'archive_blob_2010_01',
-			'archive_numeric_2010_01',
 			'brute_force_log',
 			'goal',
 			'locks',
