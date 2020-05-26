@@ -9,6 +9,8 @@
 
 namespace WpMatomo\Admin;
 
+use WpMatomo\Settings;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -17,11 +19,22 @@ class PrivacySettings implements AdminSettingsInterface {
 	const EXAMPLE_MINIMAL = '[matomo_opt_out]';
 	const EXAMPLE_FULL    = '[matomo_opt_out language=de background_color=red font_color=fff font_size=34 font_family=Arial width=500px height=100px]';
 
+    /**
+     * @var Settings
+     */
+    private $settings;
+
+    public function __construct( Settings $settings ) {
+        $this->settings = $settings;
+    }
+
 	public function get_title() {
 		return esc_html__( 'Privacy & GDPR', 'matomo' );
 	}
 
 	public function show_settings() {
+        $matomo_settings = $this->settings;
+
 		include dirname( __FILE__ ) . '/views/privacy_gdpr.php';
 	}
 }

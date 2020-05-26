@@ -4,6 +4,10 @@ if (!defined( 'ABSPATH')) {
 	exit; // if accessed directly
 }
 
+use Piwik\Cache;
+use Piwik\Container\StaticContainer;
+use Piwik\Option;
+use Piwik\Plugin\API;
 use WpMatomo\Capabilities;
 use WpMatomo\Paths;
 use WpMatomo\Settings;
@@ -75,13 +79,24 @@ return array(
 			}
 			$previous->General = $general;
 
-			add_action('switch_blog', function ($new_blog) {
-				global $wpdb;
-				$config = \Piwik\Config::getInstance();
-				$database = $config->database;
-				$database['tables_prefix'] = $wpdb->prefix . MATOMO_DATABASE_PREFIX;
-				$config->database = $database;
-			});
+			if (empty($GLOBALS['MATOMO_SWITCH_BLOG_SET_UP'])) {
+			    // only execute it once since we might init this several times...
+                $GLOBALS['MATOMO_SWITCH_BLOG_SET_UP'] = true;
+
+                add_action('switch_blog', function ($new_blog, $prev_blog) {
+                    if ($new_blog == $prev_blog) {
+                        return;
+                    }
+                    // ensure correct path to config is set, ensure to update tables_prefix etc.
+                    $container = StaticContainer::getContainer();
+                    $container->set(\Piwik\Application\Kernel\GlobalSettingsProvider::class, $container->make(\Piwik\Application\Kernel\GlobalSettingsProvider::class));
+                    $container->set(\Piwik\Config::class, $container->make(\Piwik\Config::class));
+                    Option::clearCache();
+                    \Piwik\Site::clearCache();
+                    Cache::getTransientCache()->flushAll();
+                    API::unsetAllInstances();
+                }, 10, 2);
+            }
 		}
 
 		return $previous;

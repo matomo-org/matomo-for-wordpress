@@ -35,12 +35,7 @@ if ( $was_updated ) {
 <form method="post">
 	<?php wp_nonce_field( TrackingSettings::NONCE_NAME ); ?>
 	<p>
-        <?php esc_html_e( 'Configure the tracking to your liking.', 'matomo' );
-            if ( $settings->is_network_enabled() ) {
-                echo ' ';
-                esc_html_e( 'These settings will be applied to all blogs in your network.', 'matomo' );
-            }
-        ?>
+        <?php esc_html_e( 'Configure the tracking to your liking.', 'matomo' );?>
     </p>
 	<table class="matomo-tracking-form widefat">
 		<tbody>

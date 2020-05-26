@@ -15,7 +15,8 @@ class AdminPrivacySettingsTest extends MatomoUnit_TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->privacy_settings = new PrivacySettings();
+		$settings               = new \WpMatomo\Settings();
+		$this->privacy_settings = new PrivacySettings( $settings );
 	}
 
 	public function test_show_renders_ui() {

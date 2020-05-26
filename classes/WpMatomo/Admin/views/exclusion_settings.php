@@ -34,6 +34,15 @@ if ( $was_updated ) {
 	include 'update_notice_clear_cache.php';
 }
 ?>
+<?php if ($settings->is_network_enabled() && is_network_admin()) { ?>
+    <h2>Exclusion settings</h2>
+    <p>
+        Exclusion settings have to be configured on a per blog basis.
+        Should you wish to change any setting, please go to the Matomo exclusion settings within each blog.
+        We are hoping to improve this in the future.
+    </p>
+<?php } else { ?>
+
 <form method="post">
 	<?php wp_nonce_field( ExclusionSettings::NONCE_NAME ); ?>
 
@@ -55,6 +64,9 @@ if ( $was_updated ) {
 			</td>
 			<td width="50%">
 				<?php echo sprintf( esc_html__( 'Choose users by user role you do %1$snot%2$s want to track.', 'matomo' ), '<strong>', '</strong>' ); ?>
+                 <?php if ($settings->is_network_enabled()) { ?>
+                     <br><p><strong>This setting will be applied to all blogs. Changing it here also changes it for other blogs.</strong></p>
+                <?php } ?>
 			</td>
 		</tr>
 		<tr>
@@ -137,3 +149,5 @@ if ( $was_updated ) {
 		</tbody>
 	</table>
 </form>
+
+<?php } ?>

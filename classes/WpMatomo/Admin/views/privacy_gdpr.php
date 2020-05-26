@@ -15,12 +15,7 @@ use WpMatomo\Admin\PrivacySettings;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-/** @var bool $was_updated */
-/** @var string $current_ip */
-/** @var string $excluded_ips */
-/** @var string $excluded_user_agents */
-/** @var string $excluded_query_params */
-/** @var bool|string|int $keep_url_fragments */
+/** @var \WpMatomo\Settings $matomo_settings */
 
 ?>
 
@@ -40,6 +35,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	);
 	?>
 </p>
+<?php if ($matomo_settings->is_network_enabled() && is_network_admin()) { ?>
+    <h2>Configure privacy settings</h2>
+    <p>
+        Currently, privacy settings have to be configured on a per blog basis.
+        IP addresses are anonmyised by default. Should you wish to change any privacy setting, please go to the Matomo privacy settings within each blog.
+        We are hoping to improve this in the future.
+    </p>
+<?php } else { ?>
+
 <h2>
 	<?php esc_html_e( 'Ways Matomo protects the privacy of your users and customers', 'matomo' ); ?>
 </h2>
@@ -67,6 +71,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<a href="<?php echo Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_GDPR_TOOLS ); ?>"><?php esc_html_e( 'GDPR tools', 'matomo' ); ?></a>
 	</li>
 </ul>
+<?php } ?>
 <h2>
 	<?php esc_html_e( 'Let users opt-out of tracking', 'matomo' ); ?>
 </h2>
