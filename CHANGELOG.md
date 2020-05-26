@@ -1,7 +1,12 @@
 == Changelog ==
 
+= 1.1.1 =
+* Fix some settings were not accessible in WP Multisite mode when plugin is network enabled
+* Ensure utf8mb4 upgrade works when when large indexes are disabled
+* Fix archive reports button in diagnostics wasn't always triggering an archive
+
 = 1.1.0 =
-* Support UTF8MB4 character set in tracking
+* Support utf8mb4 character set in tracking
 * Improve compatibility with some plugins fixing some archiving issues
 * Improve tracking settings for multi sites
 * Add widgets to dashboard from the summary page
