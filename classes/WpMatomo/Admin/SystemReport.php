@@ -13,6 +13,7 @@ use Piwik\CliMulti;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
+use Piwik\Date;
 use Piwik\Filesystem;
 use Piwik\MetricsFormatter;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;

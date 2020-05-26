@@ -37,7 +37,7 @@ if ( $was_updated ) {
 <?php if ($settings->is_network_enabled() && is_network_admin()) { ?>
     <h2>Exclusion settings</h2>
     <p>
-        Currently, exclusion settings have to be configured on a per blog basis.
+        Exclusion settings have to be configured on a per blog basis.
         Should you wish to change any setting, please go to the Matomo exclusion settings within each blog.
         We are hoping to improve this in the future.
     </p>
@@ -64,6 +64,9 @@ if ( $was_updated ) {
 			</td>
 			<td width="50%">
 				<?php echo sprintf( esc_html__( 'Choose users by user role you do %1$snot%2$s want to track.', 'matomo' ), '<strong>', '</strong>' ); ?>
+                 <?php if ($settings->is_network_enabled()) { ?>
+                     <br><p><strong>This setting will be applied to all blogs. Changing it here also changes it for other blogs.</strong></p>
+                <?php } ?>
 			</td>
 		</tr>
 		<tr>

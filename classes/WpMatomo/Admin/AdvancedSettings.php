@@ -92,7 +92,7 @@ class AdvancedSettings implements AdminSettingsInterface {
             }
         }
 
-        $this->site_config_sync->set_config_value('General', 'proxy_client_headers', $client_headers);
+		$this->site_config_sync->set_config_value('General', 'proxy_client_headers', $client_headers);
 
 		return true;
 	}
@@ -100,12 +100,12 @@ class AdvancedSettings implements AdminSettingsInterface {
 	public function show_settings() {
 		$was_updated = $this->update_if_submitted();
 
-        $matomo_client_headers = $this->site_config_sync->get_config_value('General', 'proxy_client_headers');
-        if (empty($matomo_client_headers)) {
-            $matomo_client_headers = array();
-        }
+		$matomo_client_headers = $this->site_config_sync->get_config_value('General', 'proxy_client_headers');
+		if (empty($matomo_client_headers)) {
+			$matomo_client_headers = array();
+		}
 
-        Bootstrap::do_bootstrap();
+		Bootstrap::do_bootstrap();
 		$matomo_detected_ip = IP::getIpFromHeader();
 		$matomo_delete_all_data = $this->settings->should_delete_all_data_on_uninstall();
 

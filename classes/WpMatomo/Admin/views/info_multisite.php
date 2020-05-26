@@ -26,9 +26,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</p>
 	<h2><?php esc_html_e( 'Matomo is not network enabled', 'matomo' ); ?></h2>
 	<p><?php esc_html_e( 'In this mode, the tracking and access settings are managed by each individual blog. They cannot be managed in one central place for all blogs. An administrator or any user with the "Matomo super user" role can change these settings.', 'matomo' ); ?>
-		<br/>
-		<br/>
-		<?php esc_html_e( 'The license code for any possible premium features is applied across blogs and can only be managed by a super admin.', 'matomo' ); ?>
 	</p>
 	<h2><?php esc_html_e( 'Managing many sites?', 'matomo' ); ?></h2>
 	<p>
