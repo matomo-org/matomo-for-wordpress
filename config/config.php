@@ -87,6 +87,7 @@ return array(
                     if ($new_blog == $prev_blog) {
                         return;
                     }
+                    // ensure correct path to config is set, ensure to update tables_prefix etc.
                     $container = StaticContainer::getContainer();
                     $container->set(\Piwik\Application\Kernel\GlobalSettingsProvider::class, $container->make(\Piwik\Application\Kernel\GlobalSettingsProvider::class));
                     $container->set(\Piwik\Config::class, $container->make(\Piwik\Config::class));

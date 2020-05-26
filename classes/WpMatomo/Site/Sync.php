@@ -118,7 +118,7 @@ class Sync {
 			$blog_name = substr( $blog_name, 0, self::MAX_LENGTH_SITE_NAME );
 		}
 
-        $track_ecommerce = (int) $this->settings->get_global_option( 'track_ecommerce' );
+		$track_ecommerce = (int) $this->settings->get_global_option( 'track_ecommerce' );
 		$detected_timezone = $this->detect_timezone();
 
 		if ( ! empty( $idsite ) ) {
