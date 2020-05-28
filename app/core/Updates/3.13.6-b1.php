@@ -20,6 +20,8 @@ class Updates_3_13_6_b1 extends PiwikUpdates
 	    global $wpdb;
 
 	    if ($wpdb->charset === 'utf8mb4') {
+		    $save = $wpdb->show_errors(false);
+
 		    $db_settings = new \WpMatomo\Db\Settings();
             $wpdb->query(sprintf('ALTER TABLE `%s` CHANGE `%s` `%s` %s',
 		                $db_settings->prefix_table_name('session'),
@@ -54,6 +56,7 @@ class Updates_3_13_6_b1 extends PiwikUpdates
 				    }
 			    }
 		    }
+		    $wpdb->show_errors($save);
 	    }
     }
 
