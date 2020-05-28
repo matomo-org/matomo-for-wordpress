@@ -954,6 +954,16 @@ class SystemReport {
 			'value' => defined('DB_COLLATE') ? DB_COLLATE : '',
 		);
 
+		$rows[] = array(
+			'name'  => 'SHOW ERRORS',
+			'value' => !empty($wpdb->show_errors),
+		);
+
+		$rows[] = array(
+			'name'  => 'SUPPRESS ERRORS',
+			'value' => !empty($wpdb->suppress_errors),
+		);
+
 		if ( method_exists( $wpdb, 'parse_db_host' ) ) {
 			$host_data = $wpdb->parse_db_host( DB_HOST );
 			if ( $host_data ) {
