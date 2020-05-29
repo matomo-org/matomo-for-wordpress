@@ -705,7 +705,7 @@ class SystemReport {
 		);
 		$consts = array('WP_DEBUG', 'WP_DEBUG_DISPLAY', 'WP_DEBUG_LOG', 'DISABLE_WP_CRON', 'FORCE_SSL_ADMIN', 'WP_CACHE',
 						'CONCATENATE_SCRIPTS', 'COMPRESS_SCRIPTS', 'COMPRESS_CSS', 'ENFORCE_GZIP', 'WP_LOCAL_DEV',
-						'DIEONDBERROR', 'WPLANG');
+						'DIEONDBERROR', 'WPLANG', 'ALTERNATE_WP_CRON');
 		foreach ($consts as $const) {
 			$rows[] = array(
 				'name'  => $const,
