@@ -279,12 +279,13 @@ $matomo_extra_url_params = '&' . http_build_query(
 	?>
 
     <div style="border: 1px solid #ddd;padding: 20px;margin-top: 30px;background: white;text-align: center;">
-    <h1 style="color: red">Limited time offer! Matomo Premium Bundle only 199€/year (300€ off)</h1>
-    <h3>Your marketing efforts are too valuable to focus on the wrong things.<br> Take your Matomo for WordPress to the next level to push out content and changes to your website that make you consistently more successful for less than 17€/month. 🚀</h3>
-    <a href="https://matomo.org/wp-premium-bundle/" class="button button-primary"
+    <h3 style="color: red">Limited time offer! Matomo Premium Bundle only 199€/year (300€ off)</h3>
+    <h1>Your marketing efforts are too valuable to focus on the wrong things.<br> Take your Matomo for WordPress to the next level to push out content and changes to your website that make you consistently more successful. 🚀</h1>
+    <p><a href="https://matomo.org/wp-premium-bundle/" class="button button-primary"
        style="background: limegreen;border-color: limegreen;font-size: 18px;"
        target="_blank" rel="noreferrer noopener" role="button">Learn more</a>
-
+    </p>
+        <p><br></p>
     <h2>What's included in this bundle?</h2>
     <?php
 
