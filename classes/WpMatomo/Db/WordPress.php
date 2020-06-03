@@ -18,6 +18,10 @@ require_once 'WordPressTracker.php';
 
 class WordPress extends Mysqli {
 
+	// needed to be compatbile with mysqli class when `getConnection()` is called and we cannot return the
+	// actual connection but return an instance of this.
+	public $error = '';
+
 	private $old_suppress_errors_value = null;
 
 	/**
@@ -50,6 +54,10 @@ class WordPress extends Mysqli {
 
 	public static function isEnabled() {
 		return true;
+	}
+
+	public function getConnection() {
+		return $this;
 	}
 
 	/**
