@@ -102,9 +102,15 @@ class WordPress extends Mysqli {
 	}
 
 	public function listTables() {
+		global $wpdb;
 		$sql = 'SHOW TABLES';
 
-		return $this->fetchAll( $sql );
+		$tables = $wpdb->get_results( $sql, ARRAY_N );
+		$result = [];
+		foreach ($tables as $table) {
+			$result[] = $table[0];
+		}
+		return $result;
 	}
 
 	public function describeTable($tableName, $schemaName = null)
