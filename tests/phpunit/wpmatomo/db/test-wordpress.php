@@ -28,6 +28,22 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		$this->insert_many_values();
 	}
 
+	public function test_listTables()
+	{
+		// we needed to overwrite this method as Zend uses by default getConnection() which we don't support.
+		$tables = $this->db->listTables();
+		$this->assertTrue(is_array($tables));
+	}
+
+	public function test_describeTable()
+	{
+		$tables = $this->db->listTables();
+		// we needed to overwrite this method as Zend uses by default getConnection() which we don't support.
+		$tables = $this->db->describeTable($tables[0]);
+		$this->assertTrue(is_array($tables));
+		$this->assertNotEmpty($tables);
+	}
+
 	/**
 	 * @expectedException \Zend_Db_Statement_Exception
 	 * @expectedExceptionMessage  foobarbaz' doesn't exist

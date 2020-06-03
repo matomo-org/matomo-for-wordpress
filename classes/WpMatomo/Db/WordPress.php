@@ -18,6 +18,10 @@ require_once 'WordPressTracker.php';
 
 class WordPress extends Mysqli {
 
+	// needed to be compatbile with mysqli class when `getConnection()` is called and we cannot return the
+	// actual connection but return an instance of this.
+	public $error = '';
+
 	private $old_suppress_errors_value = null;
 
 	/**
@@ -50,6 +54,10 @@ class WordPress extends Mysqli {
 
 	public static function isEnabled() {
 		return true;
+	}
+
+	public function getConnection() {
+		return $this;
 	}
 
 	/**
@@ -94,9 +102,94 @@ class WordPress extends Mysqli {
 	}
 
 	public function listTables() {
+		global $wpdb;
 		$sql = 'SHOW TABLES';
 
-		return $this->fetchAll( $sql );
+		$tables = $wpdb->get_results( $sql, ARRAY_N );
+		$result = [];
+		foreach ($tables as $table) {
+			$result[] = $table[0];
+		}
+		return $result;
+	}
+
+	public function describeTable($tableName, $schemaName = null)
+	{
+		global $wpdb;
+
+		if ($schemaName) {
+			$sql = 'DESCRIBE ' . $this->quoteIdentifier("$schemaName.$tableName", true);
+		} else {
+			$sql = 'DESCRIBE ' . $this->quoteIdentifier($tableName, true);
+		}
+
+		$result = $wpdb->get_results( $sql, ARRAY_A );
+
+		$desc = array();
+
+		$row_defaults = array(
+			'Length'          => null,
+			'Scale'           => null,
+			'Precision'       => null,
+			'Unsigned'        => null,
+			'Primary'         => false,
+			'PrimaryPosition' => null,
+			'Identity'        => false
+		);
+		$i = 1;
+		$p = 1;
+		foreach ($result as $key => $row) {
+			$row = array_merge($row_defaults, $row);
+			if (preg_match('/unsigned/', $row['Type'])) {
+				$row['Unsigned'] = true;
+			}
+			if (preg_match('/^((?:var)?char)\((\d+)\)/', $row['Type'], $matches)) {
+				$row['Type'] = $matches[1];
+				$row['Length'] = $matches[2];
+			} else if (preg_match('/^decimal\((\d+),(\d+)\)/', $row['Type'], $matches)) {
+				$row['Type'] = 'decimal';
+				$row['Precision'] = $matches[1];
+				$row['Scale'] = $matches[2];
+			} else if (preg_match('/^float\((\d+),(\d+)\)/', $row['Type'], $matches)) {
+				$row['Type'] = 'float';
+				$row['Precision'] = $matches[1];
+				$row['Scale'] = $matches[2];
+			} else if (preg_match('/^((?:big|medium|small|tiny)?int)\((\d+)\)/', $row['Type'], $matches)) {
+				$row['Type'] = $matches[1];
+				/**
+				 * The optional argument of a MySQL int type is not precision
+				 * or length; it is only a hint for display width.
+				 */
+			}
+			if (strtoupper($row['Key']) == 'PRI') {
+				$row['Primary'] = true;
+				$row['PrimaryPosition'] = $p;
+				if ($row['Extra'] == 'auto_increment') {
+					$row['Identity'] = true;
+				} else {
+					$row['Identity'] = false;
+				}
+				++$p;
+			}
+			$desc[$this->foldCase($row['Field'])] = array(
+				'SCHEMA_NAME'      => null, // @todo
+				'TABLE_NAME'       => $this->foldCase($tableName),
+				'COLUMN_NAME'      => $this->foldCase($row['Field']),
+				'COLUMN_POSITION'  => $i,
+				'DATA_TYPE'        => $row['Type'],
+				'DEFAULT'          => $row['Default'],
+				'NULLABLE'         => (bool) ($row['Null'] == 'YES'),
+				'LENGTH'           => $row['Length'],
+				'SCALE'            => $row['Scale'],
+				'PRECISION'        => $row['Precision'],
+				'UNSIGNED'         => $row['Unsigned'],
+				'PRIMARY'          => $row['Primary'],
+				'PRIMARY_POSITION' => $row['PrimaryPosition'],
+				'IDENTITY'         => $row['Identity']
+			);
+			++$i;
+		}
+		return $desc;
 	}
 
 	public function getServerVersion() {
