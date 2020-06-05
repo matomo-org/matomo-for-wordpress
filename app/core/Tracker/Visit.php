@@ -243,7 +243,8 @@ class Visit implements VisitInterface
         foreach ($this->requestProcessors as $processor) {
             $processor->onExistingVisit($valuesToUpdate, $this->visitProperties, $this->request);
         }
-
+	    $visitorRecognizer = StaticContainer::get(VisitorRecognizer::class);
+	    $valuesToUpdate = $visitorRecognizer->removeUnchangedValues($this->visitProperties, $valuesToUpdate);
         $this->updateExistingVisit($valuesToUpdate);
 
         $this->visitProperties->setProperty('visit_last_action_time', $this->request->getCurrentTimestamp());

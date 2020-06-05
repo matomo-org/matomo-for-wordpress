@@ -32,6 +32,7 @@ use Piwik\Scheduler\Schedule\SpecificTime;
 use Piwik\Settings\Storage\Backend\MeasurableSettingsTable;
 use Piwik\Tracker\Failures;
 use Piwik\Site;
+use Piwik\Tracker\FingerprintSalt;
 use Piwik\Tracker\Visit\ReferrerSpamFilter;
 use Psr\Log\LoggerInterface;
 use Piwik\SettingsPiwik;
@@ -80,6 +81,7 @@ class Tasks extends \Piwik\Plugin\Tasks
 
         $this->daily('cleanupTrackingFailures', null, self::LOWEST_PRIORITY);
         $this->weekly('notifyTrackingFailures', null, self::LOWEST_PRIORITY);
+	    $this->daily('deleteOldFingerprintSalts', null, self::HIGH_PRIORITY);
 
         if(SettingsPiwik::isInternetEnabled() === true){
             $this->weekly('updateSpammerBlacklist');
@@ -87,6 +89,13 @@ class Tasks extends \Piwik\Plugin\Tasks
 
         $this->scheduleTrackingCodeReminderChecks();
     }
+
+
+
+	public function deleteOldFingerprintSalts()
+	{
+		StaticContainer::get(FingerprintSalt::class)->deleteOldSalts();
+	}
 
     public function invalidateOutdatedArchives()
     {

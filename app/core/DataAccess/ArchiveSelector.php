@@ -89,11 +89,14 @@ class ArchiveSelector
         ) { // the archive cannot be considered valid for this request (has wrong done flag value)
             return [false, $visits, $visitsConverted, true];
         }
+	    if (!empty($minDatetimeArchiveProcessedUTC) && !is_object($minDatetimeArchiveProcessedUTC)) {
+		    $minDatetimeArchiveProcessedUTC = Date::factory($minDatetimeArchiveProcessedUTC);
+	    }
 
         // the archive is too old
         if ($minDatetimeArchiveProcessedUTC
             && isset($result['idarchive'])
-            && Date::factory($result['ts_archived'])->isEarlier(Date::factory($minDatetimeArchiveProcessedUTC))
+            && Date::factory($result['ts_archived'])->isEarlier($minDatetimeArchiveProcessedUTC)
         ) {
             return [false, $visits, $visitsConverted, true];
         }

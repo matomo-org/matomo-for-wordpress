@@ -1,5 +1,10 @@
 == Changelog ==
 
+= 1.1.2 =
+* Update core to Matomo 3.13.6
+* Improve installation
+* Fix city report cannot be loaded
+
 = 1.1.1 =
 * Fix some settings were not accessible in WP Multisite mode when plugin is network enabled
 * Ensure utf8mb4 upgrade works when when large indexes are disabled
