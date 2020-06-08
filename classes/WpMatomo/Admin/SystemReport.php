@@ -705,7 +705,7 @@ class SystemReport {
 		);
 		$consts = array('WP_DEBUG', 'WP_DEBUG_DISPLAY', 'WP_DEBUG_LOG', 'DISABLE_WP_CRON', 'FORCE_SSL_ADMIN', 'WP_CACHE',
 						'CONCATENATE_SCRIPTS', 'COMPRESS_SCRIPTS', 'COMPRESS_CSS', 'ENFORCE_GZIP', 'WP_LOCAL_DEV',
-						'DIEONDBERROR', 'WPLANG');
+						'DIEONDBERROR', 'WPLANG', 'ALTERNATE_WP_CRON', 'WP_CRON_LOCK_TIMEOUT', 'WP_DISABLE_FATAL_ERROR_HANDLER');
 		foreach ($consts as $const) {
 			$rows[] = array(
 				'name'  => $const,
@@ -832,7 +832,13 @@ class SystemReport {
 		);
 
 		$rows[] = array(
-			'name'    => 'Max Memory Limit',
+			'name'    => 'WP Memory Limit',
+			'value'   => defined( 'WP_MEMORY_LIMIT' ) ? WP_MEMORY_LIMIT : '',
+			'comment' => '',
+		);
+
+		$rows[] = array(
+			'name'    => 'WP Max Memory Limit',
 			'value'   => defined( 'WP_MAX_MEMORY_LIMIT' ) ? WP_MAX_MEMORY_LIMIT : '',
 			'comment' => '',
 		);
@@ -952,6 +958,16 @@ class SystemReport {
 		$rows[] = array(
 			'name'  => 'DB COLLATE',
 			'value' => defined('DB_COLLATE') ? DB_COLLATE : '',
+		);
+
+		$rows[] = array(
+			'name'  => 'SHOW ERRORS',
+			'value' => !empty($wpdb->show_errors),
+		);
+
+		$rows[] = array(
+			'name'  => 'SUPPRESS ERRORS',
+			'value' => !empty($wpdb->suppress_errors),
 		);
 
 		if ( method_exists( $wpdb, 'parse_db_host' ) ) {
