@@ -12,6 +12,7 @@ use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
+use Piwik\DataTable;
 use Piwik\Piwik;
 use Piwik\Plugins\Goals\API as APIGoals;
 use Piwik\Plugins\Live\Visualizations\VisitorLog;
@@ -89,6 +90,7 @@ class Controller extends \Piwik\Plugin\Controller
         $view = new View('@Live/getLastVisitsStart');
         $view->idSite = (int) $this->idSite;
         $error = '';
+	    $visitors = new DataTable();
         try {
             $api = new Request("method=Live.getLastVisitsDetails&idSite={$this->idSite}&filter_limit=10&format=original&serialize=0&disable_generic_filters=1");
             $visitors = $api->process();

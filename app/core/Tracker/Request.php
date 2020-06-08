@@ -195,6 +195,16 @@ class Request
             return false;
         }
 
+	    // Now checking the list of admin token_auth cached in the Tracker config file
+	    if (!empty($idSite) && $idSite > 0) {
+		    $website = Cache::getCacheWebsiteAttributes($idSite);
+		    $hashedToken = UsersManager::hashTrackingToken((string) $tokenAuth, $idSite);
+
+		    if (array_key_exists('tracking_token_auth', $website)
+		        && in_array($hashedToken, $website['tracking_token_auth'], true)) {
+			    return true;
+		    }
+	    }
         Piwik::postEvent('Request.initAuthenticationObject');
 
         /** @var \Piwik\Auth $auth */
@@ -209,16 +219,6 @@ class Request
             return true;
         }
 
-        // Now checking the list of admin token_auth cached in the Tracker config file
-        if (!empty($idSite) && $idSite > 0) {
-            $website = Cache::getCacheWebsiteAttributes($idSite);
-            $hashedToken = UsersManager::hashTrackingToken((string) $tokenAuth, $idSite);
-
-            if (array_key_exists('tracking_token_auth', $website)
-                && in_array($hashedToken, $website['tracking_token_auth'], true)) {
-                return true;
-            }
-        }
 
         Common::printDebug("WARNING! token_auth = $tokenAuth is not valid, Super User / Admin / Write was NOT authenticated");
 

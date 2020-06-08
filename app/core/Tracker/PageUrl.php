@@ -36,14 +36,13 @@ class PageUrl
      * @param $idSite
      * @return bool|string Returned URL is HTML entities decoded
      */
-    public static function excludeQueryParametersFromUrl($originalUrl, $idSite)
+    public static function excludeQueryParametersFromUrl($originalUrl, $idSite, $additionalParametersToExclude = [])
     {
         $originalUrl = self::cleanupUrl($originalUrl);
 
         $parsedUrl = @parse_url($originalUrl);
         $parsedUrl = self::cleanupHostAndHashTag($parsedUrl, $idSite);
-        $parametersToExclude = self::getQueryParametersToExclude($idSite);
-
+	    $parametersToExclude = array_merge(self::getQueryParametersToExclude($idSite), $additionalParametersToExclude);
         if (empty($parsedUrl['query'])) {
             if (empty($parsedUrl['fragment'])) {
                 return UrlHelper::getParseUrlReverse($parsedUrl);
