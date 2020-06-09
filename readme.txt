@@ -70,7 +70,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 * And hundreds of other features
 * Easily give your colleagues access to your reports if / when needed
 * Easily exclude certain roles, visitors and pages from being tracked
-* [Supports WordPress Multisite](https://matomo.org/faq/wordpress/does-it-support-wp-multisite/). (Note: Tag Manager feature does not work in MultiSite.)
+* Supports WordPress Multisite. (Note: Tag Manager feature does not work in MultiSite.)
 
 **[Premium paid features:](https://plugins.matomo.org/premium?wp=1)**
 
@@ -105,6 +105,7 @@ Over 1 million websites in over 190 countries are using Matomo already. Join the
 
 * PHP 7.2 or greater
 * MySQL 5.5 or greater is recommended
+* 128MB memory or greater is recommended
 
 = Automatic installation =
 
@@ -116,7 +117,7 @@ Over 1 million websites in over 190 countries are using Matomo already. Join the
 
 = Manual installation =
 
-* Downloading the plugin above 
+* Downloading the plugin 
 * Upload it to your web server using an FTP application. [Learn more](https://wordpress.org/support/article/managing-plugins/#manual-plugin-installation)
 
 = Once installed = 
@@ -145,6 +146,9 @@ The Matomo project uses an ever-expanding comprehensive set of thousands of unit
 The Tag Manager can be disabled by placing `define('MATOMO_ENABLE_TAG_MANAGER', false);` in your `wp-config.php`.
 
 The Tag Manager does currently not work in WP Multisite mode.
+
+= How do you support WP Multisite?
+[Click here to learn more](https://matomo.org/faq/wordpress/does-it-support-wp-multisite/)
 
 = Which MySQL versions are supported?
 Matomo should run on most MySQL versions. However, we only support MySQL 5.5 and newer. It should also work with MariaDB and other MySQL compatible databases.
