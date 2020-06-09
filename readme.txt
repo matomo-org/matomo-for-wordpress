@@ -70,7 +70,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 * And hundreds of other features
 * Easily give your colleagues access to your reports if / when needed
 * Easily exclude certain roles, visitors and pages from being tracked
-* Supports WordPress Multisite. (Note: Tag Manager feature does not work in MultiSite.)
+* [Supports WordPress Multisite](https://matomo.org/faq/wordpress/does-it-support-wp-multisite/). (Note: Tag Manager feature does not work in MultiSite.)
 
 **[Premium paid features:](https://plugins.matomo.org/premium?wp=1)**
 
@@ -100,7 +100,27 @@ Over 1 million websites in over 190 countries are using Matomo already. Join the
 * When you enter a URL in the SEO ranking widget, then a request with the entered URL may be sent to Google, Alexa, Bing, and other SEO providers.
 
 == Installation ==
-* Install & activate the plugin.
+
+= Minimum Requirements =
+
+* PHP 7.2 or greater
+* MySQL 5.5 or greater is recommended
+
+= Automatic installation =
+
+* Log in to your WordPress Admin Dashboard
+* Navigate to the "Plugins" menu
+* Click "Add New"
+* Search for "Matomo Analytics"
+* Click "Install Now" and then "Activate"
+
+= Manual installation =
+
+* Downloading the plugin above 
+* Upload it to your web server using an FTP application. [Learn more](https://wordpress.org/support/article/managing-plugins/#manual-plugin-installation)
+
+= Once installed = 
+
 * Go to "Matomo Analytics" in the WordPress Admin Dashboard.
 * Click on "Activate tracking" in the "Get started" page.
 * That's it! You can further customize the tracking in the settings page.
