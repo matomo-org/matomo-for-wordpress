@@ -38,6 +38,7 @@ class WordPress extends Plugin
         return array(
             'API.UsersManager.getTokenAuth' => 'disableApiIfNotBootstrapped',
             'Request.dispatch' => 'onDispatchRequest',
+            'Request.dispatch.end' => 'onDispatchRequestEnd',
             'User.isNotAuthorized' => array('before' => true, 'function' => 'noAccess'),
             'Http.sendHttpRequest' => 'onSendHttpRequestBy',
             'Widget.filterWidgets' => 'filterWidgets',
@@ -271,8 +272,15 @@ class WordPress extends Plugin
 	    }
     }
 
+    public function onDispatchRequestEnd(&$result, $module, $action, $parameters) {
+    	if (!empty($result) && is_string($result)) {
+    		// https://wordpress.org/support/topic/bugged-favicon/#post-12995669
+    		$result = str_replace('<link rel="mask-icon"', '<link rel="ignore-mask-icon-ignore"', $result);
+    		$result = str_replace('plugins/CoreHome/images/applePinnedTab.svg', '', $result);
+	    }
+    }
     public function onDispatchRequest(&$module, &$action, &$parameters)
-    {  
+    {
         if ($module === 'Proxy' && in_array($action, array('getNonCoreJs', 'getCoreJs', 'getCss'))) {
             remove_action( 'shutdown', 'wp_ob_end_flush_all', 1 );
         } else {
