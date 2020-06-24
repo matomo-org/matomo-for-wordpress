@@ -108,6 +108,7 @@ class WordPress extends Plugin
 		if ($shouldExecuteTask && $task) {
 			$blockedMethods = array(
 				'updateSpammerBlacklist',
+				'updateSpammerList',
 				'updateSearchEngines',
 				'updateSocials',
 				'Piwik\Plugins\Referrers\Tasks.update', // just in case any of the tasks was renamed...
