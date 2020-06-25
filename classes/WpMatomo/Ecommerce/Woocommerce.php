@@ -29,6 +29,7 @@ class Woocommerce extends Base {
 		add_action( 'woocommerce_cart_item_removed', array( $this, 'on_cart_updated' ), 99999, 0 );
 		add_action( 'woocommerce_cart_item_restored', array( $this, 'on_cart_updated' ), 99999, 0 );
 		add_action( 'woocommerce_cart_item_set_quantity', array( $this, 'on_cart_updated' ), 99999, 0 );
+		add_action('woocommerce_thankyou',  array($this, 'anonymise_orderid_in_url'), 1, 1);
 
 		if (!$this->is_doing_ajax()) {
 			// prevent possibly executing same event twice where eg first a PHP Matomo tracker request is created
@@ -40,6 +41,23 @@ class Woocommerce extends Base {
 
 		add_action( 'woocommerce_applied_coupon', array( $this, 'on_cart_updated' ), 99999, 0 );
 		add_action( 'woocommerce_removed_coupon', array( $this, 'on_cart_updated' ), 99999, 0 );
+	}
+
+	public function anonymise_orderid_in_url($order_id)
+	{
+		if ( !empty($order_id) && is_numeric($order_id)) {
+			$order_id = (int) $order_id;
+			echo "<script>(function () {
+	if (location.href) { 
+		window._paq = window._paq || [];
+	    var url = location.href;
+		if (url.indexOf('?') > 0) { 
+		    url = url.substr(0, url.indexOf('?')); // remove order key
+		}
+		window._paq.push(['setCustomUrl', url.replace('$order_id', 'orderid_anonymised')]);
+	}
+})()</script>";
+		}
 	}
 
 	public function maybe_track_order_complete() {
