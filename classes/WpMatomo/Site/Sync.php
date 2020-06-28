@@ -49,11 +49,21 @@ class Sync {
 	}
 
 	public function register_hooks() {
-		add_action( 'update_option_blogname', array( $this, 'sync_current_site' ) );
-		add_action( 'update_option_home', array( $this, 'sync_current_site' ) );
-		add_action( 'update_option_siteurl', array( $this, 'sync_current_site' ) );
-		add_action( 'update_option_timezone_string', array( $this, 'sync_current_site' ) );
-		add_action( 'matomo_setting_change_track_ecommerce', array( $this, 'sync_current_site' ) );
+		add_action( 'update_option_blogname', array( $this, 'sync_current_site_ignore_error' ) );
+		add_action( 'update_option_home', array( $this, 'sync_current_site_ignore_error' ) );
+		add_action( 'update_option_siteurl', array( $this, 'sync_current_site_ignore_error' ) );
+		add_action( 'update_option_timezone_string', array( $this, 'sync_current_site_ignore_error' ) );
+		add_action( 'matomo_setting_change_track_ecommerce', array( $this, 'sync_current_site_ignore_error' ) );
+	}
+
+	public function sync_current_site_ignore_error()
+	{
+		try {
+			$this->sync_current_site();
+		} catch (\Exception $e) {
+			$this->logger->log( 'Ignoring site sync error: ' . $e->getMessage());
+			$this->logger->log_exception('sync_site_ignore', $e);
+		}
 	}
 
 	public function sync_all() {
