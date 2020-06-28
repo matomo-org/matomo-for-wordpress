@@ -125,6 +125,8 @@ if ( $was_updated ) {
 			$matomo_full_generated_tracking_group
 		);
 
+		$matomo_form->show_checkbox( 'disable_cookies', esc_html__( 'Disable cookies', 'matomo' ), esc_html__( 'Disable all tracking cookies for a visitor.', 'matomo' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
+
 		$matomo_form->show_checkbox( 'track_ecommerce', esc_html__( 'Enable ecommerce', 'matomo' ), esc_html__( 'Matom can track Ecommerce orders, abandoned carts and product views for WooCommerce, Easy Digital Analytics, MemberPress, and more. Disabling this feature will also remove Ecommerce reports from the Matomo UI.', 'matomo' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
 
 		$matomo_form->show_checkbox( 'track_search', esc_html__( 'Track search', 'matomo' ), esc_html__( 'Use Matomo\'s advanced Site Search Analytics feature.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/site-search/#track-site-search-using-the-tracking-api-advanced-users-only" target="_BLANK">', '</a>' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
@@ -140,8 +142,6 @@ if ( $was_updated ) {
 		echo '<span class="dashicons dashicons-editor-help" style="cursor: pointer;" onclick="jQuery(\'#add_post_annotations-desc\').toggleClass(\'hidden\');"></span> <p class="description hidden" id="add_post_annotations-desc">' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/annotations/" target="_BLANK">', '</a>' ) . '</p></td></tr>';
 
 		$matomo_form->show_input( 'add_download_extensions', esc_html__( 'Add new file types for download tracking', 'matomo' ), esc_html__( 'Add file extensions for download tracking, divided by a vertical bar (&#124;).', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide#tracking-file-downloads" target="_BLANK">', '</a>' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
-
-		$matomo_form->show_checkbox( 'disable_cookies', esc_html__( 'Disable cookies', 'matomo' ), esc_html__( 'Disable all tracking cookies for a visitor.', 'matomo' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
 
 		$matomo_form->show_checkbox( 'limit_cookies', esc_html__( 'Limit cookie lifetime', 'matomo' ), esc_html__( 'You can limit the cookie lifetime to avoid tracking your users over a longer period as necessary.', 'matomo' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group, true, 'jQuery(\'tr.matomo-cookielifetime-option\').toggleClass(\'matomo-hidden\');' );
 
