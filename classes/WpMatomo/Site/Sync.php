@@ -52,6 +52,7 @@ class Sync {
 		add_action( 'update_option_blogname', array( $this, 'sync_current_site' ) );
 		add_action( 'update_option_home', array( $this, 'sync_current_site' ) );
 		add_action( 'update_option_siteurl', array( $this, 'sync_current_site' ) );
+		add_action( 'update_option_timezone_string', array( $this, 'sync_current_site' ) );
 		add_action( 'matomo_setting_change_track_ecommerce', array( $this, 'sync_current_site' ) );
 	}
 
