@@ -104,14 +104,14 @@ class Installer {
 			// we're scheduling another update in case there are some dimensions to be updated or anything
 			// it is possible that because the plugins need to be reloaded etc that those updates are not executed right
 			// away but need an actual reload and cache clearance etc
-			wp_schedule_single_event( time() + 25, ScheduledTasks::EVENT_UPDATE );
+			wp_schedule_single_event( time() + 30, ScheduledTasks::EVENT_UPDATE );
 
 			// to set up geoip in the background later... don't want this to influence the install
-			wp_schedule_single_event( time() + 30, ScheduledTasks::EVENT_GEOIP );
+			wp_schedule_single_event( time() + 35, ScheduledTasks::EVENT_GEOIP );
 
 			// in case something fails with website or user creation
 			// also to set up all the other users
-			wp_schedule_single_event( time() + 35, ScheduledTasks::EVENT_SYNC );
+			wp_schedule_single_event( time() + 45, ScheduledTasks::EVENT_SYNC );
 
 			update_option(self::OPTION_NAME_INSTALL_DATE, time());
 			$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );

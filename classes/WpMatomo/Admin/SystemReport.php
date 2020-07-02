@@ -279,7 +279,8 @@ class SystemReport {
 	private function get_matomo_info() {
 		$rows = array();
 
-		$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
+		$plugin_data  = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
+		$install_time = get_option(Installer::OPTION_NAME_INSTALL_DATE);
 
 		$rows[] = array(
 			'name'    => esc_html__( 'Matomo Plugin Version', 'matomo' ),
@@ -356,10 +357,15 @@ class SystemReport {
 			'comment' => '',
 		);
 
+		$install_date = '';
+		if (!empty($install_time)) {
+			$install_date = 'Install date: '.  $this->convert_time_to_date($install_time, true, false);
+		}
+
 		$rows[] = array(
 			'name'    => esc_html__( 'Matomo Install Version', 'matomo' ),
 			'value'   => get_option(Installer::OPTION_NAME_INSTALL_VERSION),
-			'comment' => '',
+			'comment' => $install_date,
 		);
 
 		$rows[] = array(
@@ -443,6 +449,7 @@ class SystemReport {
 			);
 		}
 
+		$suports_async = false;
 		if ( ! \WpMatomo::is_safe_mode() && $report ) {
 			$rows[] = array(
 				'section' => esc_html__( 'Mandatory checks', 'matomo' ),
@@ -456,10 +463,11 @@ class SystemReport {
 			$rows   = $this->add_diagnostic_results( $rows, $report->getOptionalDiagnosticResults() );
 
 			$cli_multi = new CliMulti();
+			$suports_async = $cli_multi->supportsAsync();
 
 			$rows[] = array(
 				'name'    => 'Supports Async Archiving',
-				'value'   => $cli_multi->supportsAsync(),
+				'value'   => $suports_async,
 				'comment' => '',
 			);
 
@@ -560,12 +568,39 @@ class SystemReport {
 		);
 
 		$error_log_entries = $this->logger->get_last_logged_entries();
+		
 		if ( ! empty( $error_log_entries ) ) {
+
 			foreach ( $error_log_entries as $error ) {
+				if (!empty($install_time)
+				    && is_numeric($install_time)
+				    && !empty($error['name'])
+				    && !empty($error['value'])
+				    && is_numeric($error['value'])
+				    && $error['name'] === 'cron_sync'
+					&& $error['value'] < ($install_time + 300)) {
+					// the first sync might right after the installation
+					continue;
+				}
+
 				$error['value'] = $this->convert_time_to_date( $error['value'], true, false );
 				$error['is_warning'] = !empty($error['name']) && stripos($error['name'], 'archiv') !== false && $error['name'] !== 'archive_boot';
 				$error['comment'] = matomo_anonymize_value($error['comment']);
 				$rows[] = $error;
+			}
+
+			foreach ( $error_log_entries as $error ) {
+				if ($suports_async
+				    && !empty($error['value']) && is_string($error['value'])
+					&& strpos($error['value'], __( 'Your PHP installation appears to be missing the MySQL extension which is required by WordPress.' )) > 0) {
+
+					$rows[] = array(
+						'name'    => 'Cli has no MySQL',
+						'value'   => true,
+						'comment' => 'It looks like MySQL is not available on CLI. Please read our FAQ on how to fix this issue: https://matomo.org/faq/wordpress/how-do-i-fix-the-error-your-php-installation-appears-to-be-missing-the-mysql-extension-which-is-required-by-wordpress-in-matomo-system-report/ ',
+						'is_error' => true
+					);
+				}
 			}
 		} else {
 			$rows[] = array(
@@ -618,7 +653,7 @@ class SystemReport {
 			return esc_html__( 'Unknown', 'matomo' );
 		}
 
-		$date = gmdate( 'Y-m-d H:i:s', $time );
+		$date = gmdate( 'Y-m-d H:i:s', (int)$time );
 
 		if ( $in_blog_timezone ) {
 			$date = get_date_from_gmt( $date, 'Y-m-d H:i:s' );

@@ -180,121 +180,123 @@ $matomo_extra_url_params = '&' . http_build_query(
 
     matomo_show_tables($matomo_feature_sections, $matomo_show_offer);
 
+    echo '<br>';
+
 	$matomo_feature_sections = array(
+        array(
+		'title'    => 'Most popular premium features',
+		'features' =>
+			array(
+				array(
+					'name'        => 'Heatmap & Session Recording',
+					'description' => 'Truly understand your visitors by seeing where they click, hover, type and scroll. Replay their actions in a video and ultimately increase conversions.',
+					'price'       => '99EUR / 119USD',
+					'url'         => 'https://plugins.matomo.org/HeatmapSessionRecording?wp=1',
+					'image'       => '',
+				),
+				array(
+					'name'        => 'Custom Reports',
+					'description' => 'Pull out the information you need in order to be successful. Develop your custom strategy to meet your individualized goals while saving money & time.',
+					'price'       => '99EUR / 119USD',
+					'url'         => 'https://plugins.matomo.org/CustomReports?wp=1',
+					'image'       => '',
+				),
+
+				array(
+					'name'        => 'Premium Bundle',
+					'description' => 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of over 20%!',
+					'price'       => '499EUR / 579USD',
+					'url'         => 'https://plugins.matomo.org/WpPremiumBundle?wp=1',
+					'image'       => '',
+				),
+			),
+	    ),
 		array(
-			'title'    => '',
+			'title'    => 'Most popular content engagement',
 			'features' =>
 				array(
 					array(
-						'name'        => 'Heatmaps',
-						'description' => 'Truly understand your visitors by seeing where they click, hover, type and scroll. Find confusing elements, discover useless parts and find out what content your users actually engage with.',
-						'price'       => '',
-						'url'         => 'https://matomo.org/heatmaps/',
-						'video'       => 'https://matomo.org/docs/video-matomos-heatmaps-feature/?pk_campaign=WP&pk_source=Plugin',
+						'name'        => 'Form Analytics',
+						'description' => 'Increase conversions on your online forms and lose less visitors by learning everything about your users behavior and their pain points on your forms.',
+						'price'       => '79EUR / 89USD',
+						'url'         => 'https://plugins.matomo.org/FormAnalytics?wp=1',
 						'image'       => '',
 					),
 					array(
-						'name'        => 'Session Recording',
-						'description' => 'Watch videos of how your real visitors use your website and what experience they have. Find out why they leave and what they are looking for so you can improve the usability of your site.',
-						'price'       => '',
-						'url'         => 'https://matomo.org/session-recordings/',
-						'video'       => 'https://matomo.org/docs/matomos-session-recordings-feature/?pk_campaign=WP&pk_source=Plugin',
+						'name'        => 'Video & Audio Analytics',
+						'description' => 'Grow your business with advanced video & audio analytics. Get powerful insights into how your audience watches your videos and listens to your audio.',
+						'price'       => '79EUR / 89USD',
+						'url'         => 'https://plugins.matomo.org/MediaAnalytics?wp=1',
 						'image'       => '',
 					),
 					array(
 						'name'        => 'Users Flow',
-						'description' => 'A visual representation of the most popular paths your users take through your website & app which lets you understand your users needs and where they leave.',
-						'price'       => '',
-						'url'         => 'https://matomo.org/docs/users-flow/?pk_campaign=WP&pk_source=Plugin',
-						'video'       => '',
+						'description' => 'Users Flow is a visual representation of the most popular paths your users take through your website & app which lets you understand your users needs.',
+						'price'       => '39EUR / 39USD',
+						'url'         => 'https://plugins.matomo.org/UsersFlow?wp=1',
 						'image'       => '',
 					),
+				),
+		),
+		array(
+			'title'    => 'Most popular acquisition & SEO features',
+			'features' =>
+				array(
 					array(
-						'name'        => 'Form Analytics',
-						'description' => 'Increase conversions on your online forms and lose less visitors by learning everything about your users behavior and their pain points on your forms. No setup needed.',
-						'price'       => '',
-						'url'         => 'https://matomo.org/form-analytics/?pk_campaign=WP&pk_source=Plugin',
-						'image'       => '',
-						'video'       => 'https://matomo.org/docs/video-matomos-form-analytics-feature/?pk_campaign=WP&pk_source=Plugin',
-					),
-					array(
-						'name'        => 'Video & Audio Analytics',
-						'description' => 'Get extensive insights into every detail of how your audience watches your videos and listens to your audio. No setup needed.',
-						'price'       => '',
-						'url'         => 'https://matomo.org/media-analytics/?pk_campaign=WP&pk_source=Plugin',
-						'image'       => '',
-						'video'       => 'https://matomo.org/docs/video-media-analytics/?pk_campaign=WP&pk_source=Plugin',
-					),
-					array(
-						'name'        => 'Funnels',
-						'description' => 'Identify and understand where your visitors drop off to increase your conversions, sales and revenue with your existing traffic.',
-						'price'       => '',
-						'url'         => 'https://matomo.org/funnels/?pk_campaign=WP&pk_source=Plugin',
-						'video'       => 'https://matomo.org/docs/video-matomo-analytics-funnels-feature/?pk_campaign=WP&pk_source=Plugin',
-						'image'       => '',
-					),
-					array(
-						'name'        => 'Search Engine Keywords',
+						'name'        => 'Search Engine Keywords Performance',
 						'description' => 'All keywords searched by your users on search engines are now visible into your Referrers reports! The ultimate solution to \'Keyword not defined\'.',
-						'price'       => '',
-						'url'         => 'https://matomo.org/docs/search-engine-keywords-performance/?pk_campaign=WP&pk_source=Plugin',
-						'video'       => '',
+						'price'       => '69EUR / 79USD',
+						'url'         => 'https://plugins.matomo.org/SearchEngineKeywordsPerformance?wp=1',
 						'image'       => '',
 					),
 					array(
-						'name'        => 'Google Ads Integration',
-						'description' => 'Analyse the success of your Google Ads campaigns and how well they contribute to your goals. See what keywords and search queries are leading to clicks for your paid a   ds and bringing your business the highest ROI.',
-						'price'       => '',
-						'url'         => 'https://matomo.org/docs/paid-advertising-performance/?pk_campaign=WP&pk_source=Plugin',
-						'video'       => '',
+						'name'        => 'Paid Advertising Performance',
+						'description' => 'Analyse the success of your Google Ads campaigns directly in your Matomo. See what keywords and search queries are leading to clicks for your paid ads and bringing your business the highest ROI.',
+						'price'       => '79EUR / 89USD',
+						'url'         => 'https://plugins.matomo.org/PaidAdvertisingPerformance?wp=1',
 						'image'       => '',
 					),
 					array(
 						'name'        => 'Multi Attribution',
 						'description' => 'Get a clear understanding of how much credit each of your marketing channel is actually responsible for to shift your marketing efforts wisely.',
-						'price'       => '',
-						'url'         => 'https://matomo.org/multi-attribution/?pk_campaign=WP&pk_source=Plugin',
-						'video'       => 'https://matomo.org/docs/video-matomo-analytics-attribution-feature/?pk_campaign=WP&pk_source=Plugin',
+						'price'       => '39EUR / 39USD',
+						'url'         => 'https://plugins.matomo.org/MultiChannelConversionAttribution?wp=1',
 						'image'       => '',
 					),
+					/*
 					array(
-						'name'        => 'Custom Reports',
-						'description' => 'Pull out the information you need in order to be successful. Develop your custom strategy to meet your individualized goals while saving money & time.',
-						'price'       => '',
-						'url'         => 'https://matomo.org/custom-reports/?pk_campaign=WP&pk_source=Plugin',
+						'name'        => 'Activity Log',
+						'description' => 'Truly understand your visitors by seeing where they click, hover, type and scroll. Replay their actions in a video and ultimately increase conversions',
+						'price'       => '19EUR / 19USD',
+						'url'         => 'https://plugins.matomo.org/ActivityLog?wp=1',
 						'image'       => '',
-						'video'       => 'https://matomo.org/docs/video-matomos-custom-reports-feature/?pk_campaign=WP&pk_source=Plugin',
+					),*/
+				),
+		),
+		array(
+			'title'    => 'Other premium features',
+			'features' =>
+				array(
+					array(
+						'name'        => 'Funnels',
+						'description' => 'Identify and understand where your visitors drop off to increase your conversions, sales and revenue with your existing traffic.',
+						'price'       => '89EUR / 99USD',
+						'url'         => 'https://plugins.matomo.org/Funnels?wp=1',
+						'image'       => '',
 					),
 					array(
 						'name'        => 'Cohorts',
 						'description' => 'Track your retention efforts over time and keep your visitors engaged and coming back for more.',
-						'price'       => '',
-						'url'         => 'https://matomo.org/docs/cohorts/?pk_campaign=WP&pk_source=Plugin',
+						'price'       => '49EUR / 59USD',
+						'url'         => 'https://plugins.matomo.org/Cohorts?wp=1',
 						'image'       => '',
-						'video'       => '',
 					),
 				),
 		),
 	);
+
+		matomo_show_tables($matomo_feature_sections, $matomo_show_offer);
+
 	?>
 
-    <div style="border: 1px solid #ddd;padding: 20px;margin-top: 30px;background: white;text-align: center;">
-    <h3 style="color: red">Limited time offer! Matomo Premium Bundle only 199€/year (300€ off)</h3>
-    <h1>Your marketing efforts are too valuable to focus on the wrong things.<br> Take your Matomo for WordPress to the next level to push out content and changes to your website that make you consistently more successful. 🚀</h1>
-    <p><a href="https://matomo.org/wp-premium-bundle/" class="button button-primary"
-       style="background: limegreen;border-color: limegreen;font-size: 18px;"
-       target="_blank" rel="noreferrer noopener" role="button">Learn more</a>
-    </p>
-        <p><br></p>
-    <h2>What's included in this bundle?</h2>
-    <?php
-
-	matomo_show_tables($matomo_feature_sections, $matomo_show_offer);
-	?>
-    <h3>All features come with no data limits, max privacy protection and are fully hosted within your WordPress. You own 100% of the data. No data is shared with any other party, ever.
-     </h3>
-        <h3>Matomo is free open source software. <strong>Purchasing this bundle will help fund the future of the Matomo open-source project.</strong><br>Thank you for your support!</h3>
-    <a href="https://matomo.org/wp-premium-bundle/"
-       style="background: limegreen;border-color: limegreen;font-size: 18px;" class="button button-primary" target="_blank" rel="noreferrer noopener" role="button">Learn more</a>
-    </div>
 </div>

@@ -1,5 +1,14 @@
 == Changelog ==
 
+= 1.1.3 =
+* Improve compatibility with other plugins
+* Improve system report
+* Sync WP timezone change immediately when possible
+* Keep caches for longer for better performance
+* Automatically anonymise order confirmation url in WooCommerce
+* Remove Apple pinned image
+* Use sendBeacon when tracking to improve load time
+
 = 1.1.2 =
 * Update core to Matomo 3.13.6
 * Improve installation

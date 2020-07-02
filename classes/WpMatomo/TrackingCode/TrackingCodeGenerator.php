@@ -156,7 +156,7 @@ class TrackingCodeGenerator {
 ' . self::MTM_INIT . '
 _mtm.push({\'mtm.startTime\': (new Date().getTime()), \'event\': \'mtm.Start\'});
 var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
-g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_url . '"; s.parentNode.insertBefore(g,s);
+g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.parentNode.insertBefore(g,s);
 </script>';
 				}
 			}
@@ -285,11 +285,11 @@ g.type=\'text/javascript\'; g.async=true; g.defer=true; g.src="' . $container_ur
 		$script .= "var _paq = window._paq || [];\n";
 		$script .= implode( "\n", $options );
 		$script .= self::TRACKPAGEVIEW;
-		$script .= "_paq.push(['enableLinkTracking']);";
+		$script .= "_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);";
 		$script .= "_paq.push(['setTrackerUrl', " . wp_json_encode( $tracker_endpoint ) . ']);';
 		$script .= "_paq.push(['setSiteId', '" . intval( $idsite ) . "']);";
 		$script .= "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-g.type='text/javascript'; g.async=true; g.defer=true; g.src=" . wp_json_encode( $js_endpoint ) . '; s.parentNode.insertBefore(g,s);';
+g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint ) . '; s.parentNode.insertBefore(g,s);';
 		$script .= '</script>';
 		$script .= '<!-- End Matomo Code -->';
 

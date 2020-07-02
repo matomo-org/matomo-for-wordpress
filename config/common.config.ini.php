@@ -4,6 +4,9 @@
 [database]
 adapter = WordPress
 
+[Tracker]
+tracker_cache_file_ttl = 4385
+
 [General]
 enable_update_communication = 0
 enable_auto_update = 0
