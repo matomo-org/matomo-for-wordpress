@@ -24,6 +24,14 @@ if ( ! defined( 'PIWIK_ENABLE_ERROR_HANDLER' ) ) {
 
 $GLOBALS['MATOMO_LOADED_DIRECTLY'] = ! defined( 'ABSPATH' );
 
+if (!function_exists('matomo_ch_dir')) {
+	function matomo_ch_dir($file) {
+		if (function_exists('chdir') && is_dir(dirname($file))) {
+			@chdir(dirname($file));
+		}
+	}
+}
+
 if (!function_exists('matomo_log_message_no_display')) {
 	function matomo_log_message_no_display($message)
 	{
@@ -79,20 +87,31 @@ if ( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) {
 	}
 
 	if (!empty($_SERVER['MATOMO_WP_ROOT_PATH']) && file_exists( rtrim($_SERVER['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php')) {
-		require_once rtrim($_SERVER['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php';
-	} elseif ( file_exists($matomo_wpload_full ) ) {
+		$matomo_wp_root_file = rtrim($_SERVER['MATOMO_WP_ROOT_PATH'], '/') . '/wp-load.php';
+		matomo_ch_dir($matomo_wp_root_file);
+		require_once $matomo_wp_root_file;
+	} elseif (file_exists($matomo_wpload_full ) ) {
+		matomo_ch_dir($matomo_wpload_full);
 		require_once $matomo_wpload_full;
 	} elseif (realpath( $matomo_wpload_full ) && file_exists(realpath( $matomo_wpload_full ))) {
+		matomo_ch_dir(realpath( $matomo_wpload_full ));
+
 		require_once realpath( $matomo_wpload_full );
 	} elseif (!empty($_SERVER['SCRIPT_FILENAME']) && file_exists($_SERVER['SCRIPT_FILENAME'])) {
 		// seems symlinked... eg the wp-content dir or wp-content/plugins dir is symlinked from some very much other place...
 		$matomo_wpload_full = dirname($_SERVER['SCRIPT_FILENAME']) . '/' . $matomo_wpload_base;
 		if ( file_exists($matomo_wpload_full ) ) {
+			matomo_ch_dir($matomo_wpload_full);
+
 			require_once $matomo_wpload_full;
 		} elseif (realpath( $matomo_wpload_full ) && file_exists(realpath( $matomo_wpload_full ))) {
+			matomo_ch_dir(realpath( $matomo_wpload_full ));
 			require_once realpath( $matomo_wpload_full );
 		} elseif (file_exists(dirname(dirname(dirname(dirname(dirname( $_SERVER['SCRIPT_FILENAME'] ))))) . '/wp-load.php')) {
-			require_once dirname(dirname(dirname(dirname(dirname( $_SERVER['SCRIPT_FILENAME'] ))))) . '/wp-load.php';
+			$matomo_relative_path = dirname(dirname(dirname(dirname(dirname( $_SERVER['SCRIPT_FILENAME'] ))))) . '/wp-load.php';
+
+			matomo_ch_dir($matomo_relative_path);
+			require_once $matomo_relative_path;
 		}
 	}
 
@@ -108,6 +127,7 @@ if ( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) {
 				if (strpos($matomo_wpload_content, DIRECTORY_SEPARATOR) === 0) {
 					$matomo_wpload_file = rtrim($matomo_wpload_content, DIRECTORY_SEPARATOR) . '/wp-load.php';
 					if (file_exists($matomo_wpload_file) && is_readable($matomo_wpload_file)) {
+						matomo_ch_dir($matomo_wpload_file);
 						require_once $matomo_wpload_file;
 					}
 				}
