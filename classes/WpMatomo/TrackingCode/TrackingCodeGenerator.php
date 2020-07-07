@@ -282,7 +282,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 
 		$script  = '<!-- Matomo -->';
 		$script .= '<script ' . $data_cf_async . ' type="text/javascript">';
-		$script .= "var _paq = window._paq || [];\n";
+		$script .= "var _paq = window._paq = window._paq || [];\n";
 		$script .= implode( "\n", $options );
 		$script .= self::TRACKPAGEVIEW;
 		$script .= "_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);";
