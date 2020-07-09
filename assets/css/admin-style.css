@@ -23,6 +23,10 @@ ol.matomo-list {
     min-height: auto;
 }
 
+.matomo-plugin-list .plugin-card-top .matomo-description {
+    min-height: 80px;
+}
+
 .matomo-marketplace-notice .dashicons-video-alt3 {
     display: inline-block;
 }
