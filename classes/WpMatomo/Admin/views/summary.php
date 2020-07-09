@@ -22,6 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var string $report_date_selected */
 /** @var bool $matomo_pinned */
 /** @var bool $is_tracking */
+/** @var bool $matomo_is_version_pre55 */
 /** @var \WpMatomo\Admin\Dashboard $matomo_dashboard */
 global $wp;
 
@@ -30,6 +31,9 @@ $matomo_dashboard_nonce = wp_create_nonce(\WpMatomo\Admin\Summary::NONCE_DASHBOA
 <?php
     if ($matomo_pinned) {
         echo '<div class="notice notice-success"><p>' . esc_html__( 'Dashboard updated.', 'matomo' ) . '</p></div>';
+    }
+    if ($matomo_is_version_pre55) {
+        echo '<style type="text/css">.handle-actions { position: absolute; right: 0;top: 0;}</style>';
     }
 ?>
 <?php if ( ! $is_tracking ) { ?>
