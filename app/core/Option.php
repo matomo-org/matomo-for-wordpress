@@ -224,6 +224,8 @@ class Option
 
     protected function deleteNameLike($name, $value = null)
     {
+	    $name = $this->getNameForLike($name);
+
         $sql    = 'DELETE FROM `' . Common::prefixTable('option') . '` WHERE option_name LIKE ?';
         $bind[] = $name;
 
@@ -237,8 +239,18 @@ class Option
         $this->clearCache();
     }
 
+	private function getNameForLike($name)
+	{
+		$name = str_replace('\_', '###NOREPLACE###', $name);
+		$name = str_replace('_', '\_', $name);
+		$name = str_replace( '###NOREPLACE###', '\_', $name);
+		return $name;
+	}
+
     protected function getNameLike($name)
     {
+	    $name = $this->getNameForLike($name);
+
         $sql  = 'SELECT option_name, option_value FROM `' . Common::prefixTable('option') . '` WHERE option_name LIKE ?';
         $bind = array($name);
         $rows = Db::fetchAll($sql, $bind);

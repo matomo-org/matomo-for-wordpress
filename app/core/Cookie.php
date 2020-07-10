@@ -154,7 +154,7 @@ class Cookie
         $header = 'Set-Cookie: ' . rawurlencode($Name) . '=' . rawurlencode($Value)
             . (empty($Expires) ? '' : '; expires=' . gmdate('D, d-M-Y H:i:s', $Expires) . ' GMT')
             . (empty($Path) ? '' : '; path=' . rawurlencode($Path))
-            . (empty($Domain) ? '' : '; domain=' . rawurlencode($Domain))
+            . (empty($Domain) ? '' : '; domain=' . $Domain)
             . (!$Secure ? '' : '; secure')
             . (!$HTTPOnly ? '' : '; HttpOnly')
             . (!$sameSite ? '' : '; SameSite=' . rawurlencode($sameSite));
