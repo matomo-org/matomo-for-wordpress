@@ -22,6 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var string $report_date_selected */
 /** @var bool $matomo_pinned */
 /** @var bool $is_tracking */
+/** @var bool $matomo_is_version_pre55 */
 /** @var \WpMatomo\Admin\Dashboard $matomo_dashboard */
 global $wp;
 
@@ -30,6 +31,9 @@ $matomo_dashboard_nonce = wp_create_nonce(\WpMatomo\Admin\Summary::NONCE_DASHBOA
 <?php
     if ($matomo_pinned) {
         echo '<div class="notice notice-success"><p>' . esc_html__( 'Dashboard updated.', 'matomo' ) . '</p></div>';
+    }
+    if ($matomo_is_version_pre55) {
+        echo '<style type="text/css">.handle-actions { position: absolute; right: 0;top: 0;}</style>';
     }
 ?>
 <?php if ( ! $is_tracking ) { ?>
@@ -72,8 +76,14 @@ $matomo_dashboard_nonce = wp_create_nonce(\WpMatomo\Admin\Summary::NONCE_DASHBOA
 						}
 						$shortcode = sprintf( '[matomo_report unique_id=%s report_date=%s limit=10]', $matomo_report_meta['uniqueId'], $report_date );
 						?>
-						<div class="postbox">
-
+						<div class="postbox ">
+                            <div class="postbox-header">
+                            <h2 class="hndle ui-sortable-handle"
+                                style="cursor: help;"
+                                title="<?php echo ! empty( $matomo_report_meta['documentation'] ) ? ( wp_strip_all_tags( $matomo_report_meta['documentation'] ) . ' ' ) : null; ?><?php esc_html_e( 'You can embed this report on any page using the shortcode:', 'matomo' ); ?> <?php echo esc_attr( $shortcode ); ?>"
+                            >
+	                            <?php echo esc_html( $matomo_report_meta['name'] ); ?></h2>
+                            <div class="handle-actions hide-if-no-js">
 							<?php if ( ! empty( $matomo_report_meta['page'] ) ) { ?>
 								<button type="button" class="handlediv" aria-expanded="true"
 										title="<?php esc_html_e( 'Click to view the report in detail', 'matomo' ); ?>"><a
@@ -110,10 +120,7 @@ $matomo_dashboard_nonce = wp_create_nonce(\WpMatomo\Admin\Summary::NONCE_DASHBOA
 												" style="color: inherit;text-decoration: none;<?php if ($matomo_is_dashboard_widget) {  echo 'opacity: 0.4 !important'; } ?>"
                                         class="dashicons-before dashicons-admin-post" aria-hidden="true"></a></button>
 
-                            <h2 class="hndle ui-sortable-handle"
-								style="cursor: help;"
-								title="<?php echo ! empty( $matomo_report_meta['documentation'] ) ? ( wp_strip_all_tags( $matomo_report_meta['documentation'] ) . ' ' ) : null; ?><?php esc_html_e( 'You can embed this report on any page using the shortcode:', 'matomo' ); ?> <?php echo esc_attr( $shortcode ); ?>"
-							><?php echo esc_html( $matomo_report_meta['name'] ); ?></h2>
+                            </div></div>
 							<div>
 								<?php echo do_shortcode( $shortcode ); ?>
 							</div>
