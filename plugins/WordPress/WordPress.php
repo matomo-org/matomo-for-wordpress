@@ -142,11 +142,14 @@ class WordPress extends Plugin
     {
         if (is_multisite()
             || (defined('WP_DEBUG') && WP_DEBUG)
+            || !empty($_SERVER['MATOMO_WP_ROOT_PATH'])
             || !matomo_has_compatible_content_dir()
 	        || (defined( 'MATOMO_SUPPORT_ASYNC_ARCHIVING') && !MATOMO_SUPPORT_ASYNC_ARCHIVING)
         ) {
             // console wouldn't really work in multi site mode... therefore we prefer to archive in the same request
             // WP_DEBUG also breaks things since it's logging things to stdout and then safe unserialise doesn't work
+            // disabling it also when server environment variable is set as it's likely only set in web requests through web server
+            // but not on the CLI
             $supportsAsync = false;
         }
     }
