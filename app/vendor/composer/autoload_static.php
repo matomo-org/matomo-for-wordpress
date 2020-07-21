@@ -11,6 +11,7 @@ class ComposerStaticInita7390451fa333dcc08d2dd84c32bbfc6
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'bbf73f3db644d3dced353b837903e74c' => __DIR__ . '/..' . '/php-di/php-di/src/DI/functions.php',
         '6dcc7fc6910472564e7b11f0b5d852b5' => __DIR__ . '/..' . '/szymach/c-pchart/src/Resources/data/constants.php',
+        'aa3ddbfac31d504181d81bbbeb5838b9' => __DIR__ . '/../..' . '/LegacyAutoloader.php',
     );
 
     public static $prefixLengthsPsr4 = array (

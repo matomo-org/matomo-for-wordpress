@@ -550,7 +550,11 @@ class Visit implements VisitInterface
             $binIdVisitor = $this->visitProperties->getProperty('idvisitor');
             $valuesToUpdate['idvisitor'] = $binIdVisitor;
         }
-
+	    $visitorId = $this->request->getVisitorId();
+	    if ($visitorId && strlen($visitorId) === Tracker::LENGTH_BINARY_ID) {
+		    // Might update the idvisitor when it was forced or overwritten for this visit
+		    $valuesToUpdate['idvisitor'] = $this->request->getVisitorId();
+	    }
         return $valuesToUpdate;
     }
 
