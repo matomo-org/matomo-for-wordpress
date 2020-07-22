@@ -170,7 +170,7 @@ class API {
 			array(
 				'methods'      => $method,
 				'callback'     => array( $this, 'execute_api_method' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => '__return_true', // permissions are checked in the method itself
 				'matomoModule' => $api_module,
 				'matomoMethod' => $api_method,
 			)
