@@ -22,6 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var array $matomo_default_tracking_code */
 /** @var array $containers */
 /** @var array $track_modes */
+/** @var array $matomo_currencies */
 
 $matomo_form  = new \WpMatomo\Admin\TrackingSettings\Forms( $settings );
 $matomo_paths = new Paths();
@@ -111,19 +112,7 @@ if ( $was_updated ) {
 			$matomo_full_generated_tracking_group
 		);
 
-		$matomo_form->show_select(
-			'track_content',
-			__( 'Enable content tracking', 'matomo' ),
-			array(
-				'disabled' => esc_html__( 'Disabled', 'matomo' ),
-				'all'      => esc_html__( 'Track all content blocks', 'matomo' ),
-				'visible'  => esc_html__( 'Track only visible content blocks', 'matomo' ),
-			),
-			__( 'Content tracking allows you to track interaction with the content of a web page or application.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/content-tracking" target="_BLANK">', '</a>' ),
-			'',
-			$matomo_is_not_tracking,
-			$matomo_full_generated_tracking_group
-		);
+		$matomo_form->show_select( \WpMatomo\Settings::SITE_CURRENCY, esc_html__( 'Currency', 'matomo' ), $matomo_currencies, esc_html__('Choose the currency which will be used in reports.', 'matomo'), '' );
 
 		$matomo_form->show_checkbox( 'disable_cookies', esc_html__( 'Disable cookies', 'matomo' ), esc_html__( 'Disable all tracking cookies for a visitor.', 'matomo' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
 
@@ -140,6 +129,20 @@ if ( $was_updated ) {
 			echo '<input type="checkbox" ' . ( isset( $matomo_filter [ $post_type->name ] ) && $matomo_filter [ $post_type->name ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[add_post_annotations][' . $post_type->name . ']" /> ' . $post_type->label . ' &nbsp; ';
 		}
 		echo '<span class="dashicons dashicons-editor-help" style="cursor: pointer;" onclick="jQuery(\'#add_post_annotations-desc\').toggleClass(\'hidden\');"></span> <p class="description hidden" id="add_post_annotations-desc">' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/annotations/" target="_BLANK">', '</a>' ) . '</p></td></tr>';
+
+		$matomo_form->show_select(
+			'track_content',
+			__( 'Enable content tracking', 'matomo' ),
+			array(
+				'disabled' => esc_html__( 'Disabled', 'matomo' ),
+				'all'      => esc_html__( 'Track all content blocks', 'matomo' ),
+				'visible'  => esc_html__( 'Track only visible content blocks', 'matomo' ),
+			),
+			__( 'Content tracking allows you to track interaction with the content of a web page or application.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/content-tracking" target="_BLANK">', '</a>' ),
+			'',
+			$matomo_is_not_tracking,
+			$matomo_full_generated_tracking_group
+		);
 
 		$matomo_form->show_input( 'add_download_extensions', esc_html__( 'Add new file types for download tracking', 'matomo' ), esc_html__( 'Add file extensions for download tracking, divided by a vertical bar (&#124;).', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide#tracking-file-downloads" target="_BLANK">', '</a>' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
 

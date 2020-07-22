@@ -96,6 +96,7 @@ class TrackingSettings implements AdminSettingsInterface {
 			'force_protocol',
 			'track_js_endpoint',
 			'track_api_endpoint',
+			Settings::SITE_CURRENCY
 		);
 
 		if ( matomo_has_tag_manager() ) {
@@ -107,6 +108,13 @@ class TrackingSettings implements AdminSettingsInterface {
 		// default value in case no role/ post type is selected to make sure we unset it if no role /post type is selected
 		$values['add_post_annotations']    = array();
 		$values['tagmanger_container_ids'] = array();
+
+		$valid_currencies = $this->get_supported_currencies();
+
+		if ( empty( $_POST[ self::FORM_NAME ][Settings::SITE_CURRENCY] )
+		     || !array_key_exists( $_POST[ self::FORM_NAME ][Settings::SITE_CURRENCY], $valid_currencies ) ) {
+			$_POST[ self::FORM_NAME ][Settings::SITE_CURRENCY] = 'USD';
+		}
 
 		if ( ! empty( $_POST[ self::FORM_NAME ]['track_mode'] ) ) {
 			$track_mode         = $_POST[ self::FORM_NAME ]['track_mode'];
@@ -170,10 +178,22 @@ class TrackingSettings implements AdminSettingsInterface {
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
+		$matomo_currencies = $this->get_supported_currencies();
+
 		$tracking_code_generator      = new TrackingCodeGenerator( $this->settings );
 		$matomo_default_tracking_code = $tracking_code_generator->prepare_tracking_code( $idsite );
 
 		include dirname( __FILE__ ) . '/views/tracking.php';
+	}
+
+	private function get_supported_currencies()
+	{
+		$all = include dirname( MATOMO_ANALYTICS_FILE )  . '/app/core/Intl/Data/Resources/currencies.php';
+		$currencies = array();
+		foreach ($all as $key => $single) {
+			$currencies[$key] = $single[0] . ' ' . $single[1];
+		}
+		return $currencies;
 	}
 
 	public function get_active_containers() {
