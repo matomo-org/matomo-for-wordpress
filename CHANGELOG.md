@@ -1,5 +1,11 @@
 == Changelog ==
 
+= 1.2.0 =
+* Update core to Matomo 3.14.0
+* Compatibility with WordPress 5.5.0
+* Support selecting currency in tracking settings
+* Various minor edge case fixes
+
 = 1.1.3 =
 * Improve compatibility with other plugins
 * Improve system report

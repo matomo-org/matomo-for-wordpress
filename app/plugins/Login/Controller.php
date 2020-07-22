@@ -30,6 +30,8 @@ use Piwik\View;
  */
 class Controller extends \Piwik\Plugin\ControllerAdmin
 {
+	const NONCE_CONFIRMRESETPASSWORD = 'loginConfirmResetPassword';
+
     /**
      * @var PasswordResetter
      */
@@ -425,6 +427,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      */
     public function confirmResetPassword()
     {
+    	return;// not supported in WP
         $errorMessage = null;
 
         $login = Common::getRequestVar('login', '');
@@ -453,6 +456,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      */
     public function resetPasswordSuccess()
     {
+    	$_POST = array();
         return $this->login($errorMessage = null, $infoMessage = Piwik::translate('Login_PasswordChanged'));
     }
 

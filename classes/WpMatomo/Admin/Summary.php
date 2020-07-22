@@ -78,6 +78,9 @@ class Summary {
 
 		$matomo_dashboard = new Dashboard();
 
+		$wp_version =  get_bloginfo( 'version' );
+		$matomo_is_version_pre55 = empty($wp_version) || version_compare($wp_version, '5.5.0') === -1;
+
 		include dirname( __FILE__ ) . '/views/summary.php';
 	}
 
