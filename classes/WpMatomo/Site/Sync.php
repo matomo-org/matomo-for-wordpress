@@ -10,6 +10,8 @@
 namespace WpMatomo\Site;
 
 use Piwik\Access;
+use Piwik\API\Request;
+use Piwik\Common;
 use Piwik\Config;
 use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\SitesManager;
@@ -54,6 +56,7 @@ class Sync {
 		add_action( 'update_option_siteurl', array( $this, 'sync_current_site_ignore_error' ) );
 		add_action( 'update_option_timezone_string', array( $this, 'sync_current_site_ignore_error' ) );
 		add_action( 'matomo_setting_change_track_ecommerce', array( $this, 'sync_current_site_ignore_error' ) );
+		add_action( 'matomo_setting_change_site_currency', array( $this, 'sync_current_site_ignore_error' ) );
 	}
 
 	public function sync_current_site_ignore_error()
@@ -130,7 +133,13 @@ class Sync {
 		}
 
 		$track_ecommerce = (int) $this->settings->get_global_option( 'track_ecommerce' );
+		$site_currency   = $this->settings->get_global_option( Settings::SITE_CURRENCY );
 		$detected_timezone = $this->detect_timezone();
+
+		$valid_currencies = \Piwik\Site::getCurrencyList();
+		if (!array_key_exists($site_currency, $valid_currencies)){
+			$site_currency = 'USD';
+		}
 
 		if ( ! empty( $idsite ) ) {
 			$this->logger->log( 'Matomo site is known for blog (' . $idsite . ')... will update' );
@@ -140,6 +149,7 @@ class Sync {
             if ($site['name'] != $blog_name
                 || $site['main_url'] != $blog_url
                 || $site['ecommerce'] != $track_ecommerce
+                || $site['currency'] != $site_currency
                 || $site['timezone'] != $detected_timezone) {
 
                 /** @var \WP_Site $site */
@@ -147,6 +157,7 @@ class Sync {
                     'name'      => $blog_name,
                     'main_url'  => $blog_url,
                     'ecommerce' => $track_ecommerce,
+                    'currency' =>  $site_currency,
                     'timezone'  => $detected_timezone,
                 );
                 $sites_manager_model->updateSite( $params, $idsite );
@@ -170,7 +181,7 @@ class Sync {
 		$this->set_enable_sites_admin( 1 );
 
 		Access::doAsSuperUser(
-			function () use ( $blog_name, $blog_url, $detected_timezone, $track_ecommerce, &$idsite ) {
+			function () use ( $blog_name, $blog_url, $detected_timezone, $track_ecommerce, &$idsite, $site_currency ) {
 					SitesManager\API::unsetInstance();
 					// we need to unset the instance to make sure it fetches the
 					// up to date dependencies eg current plugin manager etc
@@ -184,7 +195,8 @@ class Sync {
 						$search_category_parameters = null,
 						$excluded_ips               = null,
 						$excluded_query_parameters  = null,
-                        $detected_timezone
+                        $detected_timezone,
+						$site_currency
 					);
 			}
 		);
