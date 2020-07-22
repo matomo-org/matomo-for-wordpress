@@ -30,6 +30,7 @@ class API {
 			'/' . self::ROUTE_HIT . '/',
 			array(
 				'methods'  => array( 'GET', 'POST' ),
+				'permission_callback' => '__return_true',
 				'callback' => array( $this, 'hit' ),
 			)
 		);
@@ -169,6 +170,7 @@ class API {
 			array(
 				'methods'      => $method,
 				'callback'     => array( $this, 'execute_api_method' ),
+				'permission_callback' => '__return_true', // permissions are checked in the method itself
 				'matomoModule' => $api_module,
 				'matomoMethod' => $api_method,
 			)
