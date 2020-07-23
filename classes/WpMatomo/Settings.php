@@ -31,6 +31,7 @@ class Settings {
 	const OPTION_LAST_TRACKING_CODE_UPDATE     = 'last_tracking_code_update';
 	const SHOW_GET_STARTED_PAGE                = 'show_get_started_page';
 	const DELETE_ALL_DATA_ON_UNINSTALL         = 'delete_all_data_uninstall';
+	const SITE_CURRENCY                        = 'site_currency';
 	const NETWORK_CONFIG_OPTIONS               = 'config_options';
 
 	public static $is_doing_action_tracking_related = false;
@@ -56,6 +57,7 @@ class Settings {
 		self::OPTION_KEY_CAPS_ACCESS               => array(),
 		self::NETWORK_CONFIG_OPTIONS               => array(),
 		self::DELETE_ALL_DATA_ON_UNINSTALL         => true,
+		self::SITE_CURRENCY                        => 'USD',
 		// User settings: Stats configuration
 		// User settings: Tracking configuration
 		'track_mode'                               => 'disabled',
