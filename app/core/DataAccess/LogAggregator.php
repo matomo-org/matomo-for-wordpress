@@ -294,7 +294,8 @@ class LogAggregator
                 return;
             } elseif ($readerDb->isErrNo($e, 1173)
                       || $readerDb->isErrNo($e, 3750)
-                      || stripos($e->getMessage(), 'requires a primary key') !== false) {
+                      || stripos($e->getMessage(), 'requires a primary key') !== false
+                      || stripos($e->getMessage(), 'table without a primary key') !== false) {
 	            $createTableSql = str_replace($tempTableIdVisitColumn, $tempTableIdVisitColumn . ', PRIMARY KEY (`idvisit`)', $createTableSql);
 
 	            $readerDb->query($createTableSql);
