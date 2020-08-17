@@ -22,7 +22,7 @@ wget $URL -P "$SCRIPTPATH" || die "Got an error while downloading this Matomo ve
 
 cp $MATOMO_ROOT/bootstrap.php bootstrap.php
 cp $MATOMO_ROOT/.htaccess .htaccess
-rm -rf $MATOMO_ROOT/*
+rm -rf "${MATOMO_ROOT:?}/"*
 rm -r matomo/ 2> /dev/null
 unzip -o -q matomo-$VERSION.zip
 cp -R matomo/* $MATOMO_ROOT
