@@ -260,6 +260,13 @@ class Menu {
 
 		$url = self::get_reporting_url();
 
+		$site   = new Site();
+		$idsite = $site->get_current_matomo_site_id();
+
+		if ( $idsite ) {
+			$url = add_query_arg( array( 'idSite' => (int) $idsite ), $url );
+		}
+
 		if ( ! empty( $_GET['report_date'] ) ) {
 			$url = add_query_arg(
 				array(
@@ -269,12 +276,6 @@ class Menu {
 				$url
 			);
 
-			$site   = new Site();
-			$idsite = $site->get_current_matomo_site_id();
-
-			if ( $idsite ) {
-				$url = add_query_arg( array( 'idSite' => (int) $idsite ), $url );
-			}
 
 			$date                  = new Dates();
 			list( $period, $date ) = $date->detect_period_and_date( $_GET['report_date'] );
