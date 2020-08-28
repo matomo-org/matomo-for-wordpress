@@ -53,7 +53,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 
 **Features include:**
 
-* Ecommerce features
+* Ecommerce features (supports WooCommerce, Easy Digital Downloads and MemberPress out of the box)
 * Campaign tracking
 * Visitor profiles
 * Tag Manager
