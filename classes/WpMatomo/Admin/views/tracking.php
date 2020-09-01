@@ -82,37 +82,9 @@ if ( $was_updated ) {
 			'matomo-track-option matomo-track-option-default  matomo-track-option-tagmanager matomo-track-option-manually'
 		);
 
-		$matomo_form->show_textarea( 'noscript_code', esc_html__( 'Noscript code', 'matomo' ), 2, 'This is a preview of your &lt;noscript&gt; code which is part of your tracking code.', $matomo_is_not_tracking, 'matomo-track-option matomo-track-option-default  matomo-track-option-manually', true, '', ( $settings->get_global_option( 'track_mode' ) !== 'manually' ), false );
-
-		$matomo_form->show_checkbox( 'track_noscript', __( 'Add &lt;noscript&gt;', 'matomo' ), __( 'Adds the &lt;noscript&gt; code to your footer.', 'matomo' ), $matomo_is_not_tracking, 'matomo-track-option matomo-track-option-default  matomo-track-option-manually' );
-
-		$matomo_form->show_select(
-			'track_api_endpoint',
-			__( 'Endpoint for HTTP Tracking API', 'matomo' ),
-			array(
-				'default' => esc_html__( 'Default', 'matomo' ),
-				'restapi' => esc_html__( 'Through WordPress Rest API', 'matomo' ),
-			),
-			__( 'By default the HTTP Tracking API points to your Matomo plugin directory "' . esc_html( $matomo_paths->get_tracker_api_url_in_matomo_dir() ) . '". You can choose to use the WP Rest API (' . esc_html( $matomo_paths->get_tracker_api_rest_api_endpoint() ) . ') instead for example to hide matomo.php or if the other URL doesn\'t work for you. Note: If the tracking mode "Tag Manager" is selected, then this URL currently only applies to the feed tracking.', 'matomo' ),
-			'',
-			$matomo_is_not_tracking,
-			$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager'
-		);
-
-		$matomo_form->show_select(
-			'track_js_endpoint',
-			__( 'Endpoint for JavaScript tracker', 'matomo' ),
-			array(
-				'default' => esc_html__( 'Default', 'matomo' ),
-				'restapi' => esc_html__( 'Through WordPress Rest API (slower)', 'matomo' ),
-			),
-			__( 'By default the JS tracking code will be loaded from "' . esc_html( $matomo_paths->get_js_tracker_url_in_matomo_dir() ) . '". You can choose to serve the JS file through the WP Rest API (' . esc_html( $matomo_paths->get_js_tracker_rest_api_endpoint() ) . ') for example to hide matomo.js. Please note that this means every request to the JavaScript file will launch WordPress PHP and therefore will be slower compared to your webserver serving the JS file directly.', 'matomo' ),
-			'',
-			$matomo_is_not_tracking,
-			$matomo_full_generated_tracking_group
-		);
-
 		$matomo_form->show_select( \WpMatomo\Settings::SITE_CURRENCY, esc_html__( 'Currency', 'matomo' ), $matomo_currencies, esc_html__('Choose the currency which will be used in reports.', 'matomo'), '' );
+
+		$matomo_form->show_headline(esc_html__('Customise tracking (optional)', 'matomo'), 'matomo-track-option matomo-track-option-default matomo-track-option-manually matomo-track-option-tagmanager');
 
 		$matomo_form->show_checkbox( 'disable_cookies', esc_html__( 'Disable cookies', 'matomo' ), esc_html__( 'Disable all tracking cookies for a visitor.', 'matomo' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
 
@@ -198,6 +170,10 @@ if ( $was_updated ) {
 
 		$matomo_form->show_input( 'set_link_classes', esc_html__( 'Set classes to be treated as outlinks', 'matomo' ), esc_html__( 'Set classes to be treated as outlinks (in addition to piwik_link), divided by a vertical bar (&#124;). Leave blank to keep Matomo\'s default settings.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo JavaScript Tracking Client reference%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/api-reference/tracking-javascript" target="_BLANK">', '</a>' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group );
 
+		$matomo_form->show_textarea( 'noscript_code', esc_html__( 'Noscript code', 'matomo' ), 2, 'This is a preview of your &lt;noscript&gt; code which is part of your tracking code. Will only show if the noscript feature is enabled.', $matomo_is_not_tracking, 'matomo-track-option matomo-track-option-default  matomo-track-option-manually', true, '', ( $settings->get_global_option( 'track_mode' ) !== 'manually' ), false );
+
+		$matomo_form->show_checkbox( 'track_noscript', __( 'Add &lt;noscript&gt;', 'matomo' ), __( 'Adds the &lt;noscript&gt; code to your footer.', 'matomo' ) . ' This can be useful if you have a lot of visitors that have JavaScript disabled.', $matomo_is_not_tracking, 'matomo-track-option matomo-track-option-default  matomo-track-option-manually' );
+
 		$matomo_form->show_select(
 			'force_protocol',
 			__( 'Force Matomo to use a specific protocol', 'matomo' ),
@@ -209,6 +185,31 @@ if ( $was_updated ) {
 			'',
 			$matomo_is_not_tracking,
 			$matomo_full_generated_tracking_group . ' matomo-track-option-tagmanager'
+		);
+		$matomo_form->show_select(
+			'track_api_endpoint',
+			__( 'Endpoint for HTTP Tracking API', 'matomo' ),
+			array(
+				'default' => esc_html__( 'Default', 'matomo' ),
+				'restapi' => esc_html__( 'Through WordPress Rest API', 'matomo' ),
+			),
+			__( 'By default the HTTP Tracking API points to your Matomo plugin directory "' . esc_html( $matomo_paths->get_tracker_api_url_in_matomo_dir() ) . '". You can choose to use the WP Rest API (' . esc_html( $matomo_paths->get_tracker_api_rest_api_endpoint() ) . ') instead for example to hide matomo.php or if the other URL doesn\'t work for you. Note: If the tracking mode "Tag Manager" is selected, then this URL currently only applies to the feed tracking.', 'matomo' ),
+			'',
+			$matomo_is_not_tracking,
+			$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager'
+		);
+
+		$matomo_form->show_select(
+			'track_js_endpoint',
+			__( 'Endpoint for JavaScript tracker', 'matomo' ),
+			array(
+				'default' => esc_html__( 'Default', 'matomo' ),
+				'restapi' => esc_html__( 'Through WordPress Rest API (slower)', 'matomo' ),
+			),
+			__( 'By default the JS tracking code will be loaded from "' . esc_html( $matomo_paths->get_js_tracker_url_in_matomo_dir() ) . '". You can choose to serve the JS file through the WP Rest API (' . esc_html( $matomo_paths->get_js_tracker_rest_api_endpoint() ) . ') for example to hide matomo.js. Please note that this means every request to the JavaScript file will launch WordPress PHP and therefore will be slower compared to your webserver serving the JS file directly.', 'matomo' ),
+			'',
+			$matomo_is_not_tracking,
+			$matomo_full_generated_tracking_group
 		);
 
 		echo $matomo_submit_button;

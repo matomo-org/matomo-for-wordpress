@@ -90,8 +90,17 @@ class Forms {
 	 *
 	 * @param string $text Text to show
 	 */
-	public function show_text( $text ) {
-		printf( '<tr><td colspan="2"><p>%s</p></td></tr>', esc_html( $text ) );
+	public function show_text( $text , $group_name = '' ) {
+		printf( '<tr class="%s"><td colspan="2"><p>%s</p></td></tr>', $group_name, esc_html( $text ) );
+	}
+
+	/**
+	 * Show a simple text
+	 *
+	 * @param string $text Text to show
+	 */
+	public function show_headline( $text , $group_name = '') {
+		printf( '<tr class="%s"><td colspan="2"><h3>%s</h3></td></tr>', $group_name, esc_html( $text ) );
 	}
 
 	/**
