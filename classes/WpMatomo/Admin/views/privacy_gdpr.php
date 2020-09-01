@@ -86,13 +86,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php esc_html_e( 'You can use these short code options:', 'matomo' ); ?>
 </p>
 <ul class="matomo-list">
-	<li>language - eg de or
-		en. <?php esc_html_e( 'By default the language is detected automatically based on the user\'s browser', 'matomo' ); ?></li>
-	<li>background_color - eg black or #000</li>
-	<li>font_color - eg black or #000</li>
-	<li>font_size - eg 15px</li>
-	<li>font_family - eg Arial or Verdana</li>
-	<li>width - eg 600, 600px or 100%</li>
-	<li>height - eg 200, 200px or 20%</li>
+	<li>language - eg de or en. <?php esc_html_e( 'By default the language is detected automatically based on the user\'s browser', 'matomo' ); ?></li>
 </ul>
 <p><?php esc_html_e( 'Example', 'matomo' ); ?>: <code><?php echo esc_html( PrivacySettings::EXAMPLE_FULL ); ?></code></p>

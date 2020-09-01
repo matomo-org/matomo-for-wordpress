@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class PrivacySettings implements AdminSettingsInterface {
 	const EXAMPLE_MINIMAL = '[matomo_opt_out]';
-	const EXAMPLE_FULL    = '[matomo_opt_out language=de background_color=red font_color=fff font_size=34 font_family=Arial width=500px height=100px]';
+	const EXAMPLE_FULL    = '[matomo_opt_out language=de]';
 
     /**
      * @var Settings

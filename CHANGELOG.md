@@ -1,5 +1,10 @@
 == Changelog ==
 
+= 1.3.0 =
+* Changed opt out shortcode to no longer use an iframe and instead print the content directly
+* Automatically use a primary key for log tmp table when required
+* Various minor edge case fixes
+
 = 1.2.0 =
 * Update core to Matomo 3.14.0
 * Compatibility with WordPress 5.5.0
