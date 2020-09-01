@@ -21,11 +21,7 @@ class OptOut {
 	private $language = null;
 
 	public function register_hooks() {
-		// keeping this one temporarily so people can switch to iframe as a workaround until there's a fix for below solution
-		// just in case...
-		add_shortcode( 'matomo_opt_out_iframe', array( $this, 'show_opt_out_iframe' ) );
-
-		add_shortcode( 'matomo_opt_out', array( $this, 'show_opt_out_embedded' ) );
+		add_shortcode( 'matomo_opt_out', array( $this, 'show_opt_out' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' )  );
 	}
 
@@ -40,7 +36,7 @@ class OptOut {
 		return esc_html(Piwik::translate($id, array(), $this->language));
 	}
 
-	public function show_opt_out_embedded( $atts ) {
+	public function show_opt_out( $atts ) {
 		$a = shortcode_atts(
 			array(
 				'language' => null,
@@ -92,55 +88,6 @@ class OptOut {
 		$content .= '<noscript><p><strong style="color: #ff0000;">This opt out feature requires JavaScript.</strong></p></noscript>';
 		$content .= '<p id="matomo_outout_err_cookies" style="display: none;"><strong>' . $this->translate('CoreAdminHome_OptOutErrorNoCookies') . '</strong></p>';
 		return $content;
-	}
-
-	public function show_opt_out_iframe( $atts ) {
-		$a = shortcode_atts(
-			array(
-				'language'         => '',
-				'background_color' => '',
-				'font_color'       => '',
-				'font_size'        => '',
-				'font_family'      => '',
-				'width'            => '600',
-				'height'           => '200',
-			),
-			$atts
-		);
-
-		$url = plugins_url( 'app', MATOMO_ANALYTICS_FILE ) . '/index.php';
-
-		$map    = array(
-			'background_color' => 'backgroundColor',
-			'font_color'       => 'fontColor',
-			'font_size'        => 'fontSize',
-			'font_family'      => 'fontFamily',
-		);
-		$params = array(
-			'action' => 'matomo_optout',
-		);
-		if ( ! empty( $a['language'] ) ) {
-			$params['language'] = $a['language'];
-		}
-		foreach ( $map as $param => $urlparam ) {
-			if ( ! empty( $a[ $param ] ) ) {
-				$params[ $urlparam ] = rawurlencode( $a[ $param ] );
-			}
-		}
-
-		$url       = $url . '?' . http_build_query( $params );
-		$sizes     = array( 'width', 'height' );
-		$add_style = '';
-		foreach ( $sizes as $size ) {
-			if ( is_numeric( $a[ $size ] ) || preg_match( '/\d+px/', $a[ $size ] ) || preg_match( '/\d+%/', $a[ $size ] ) ) {
-				if ( is_numeric( $a[ $size ] ) ) {
-					$a[ $size ] = $a[ $size ] . 'px';
-				}
-				$add_style .= $size . ':' . $a[ $size ] . ';';
-			}
-		}
-
-		return '<iframe style="border: 0; ' . $add_style . '" src="' . $url . '"></iframe>';
 	}
 
 }

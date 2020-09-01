@@ -1,5 +1,17 @@
 (function () {
     var cookiename = 'mtm_consent_removed';
+
+    function listen_event(e, type, callback) {
+        if (e.addEventListener) {
+            return e.addEventListener(type, callback, false);
+        }
+
+        if (e.attachEvent) {
+            return e.attachEvent('on' + type, callback);
+        }
+
+        e['on' + type] = callback;
+    }
     function by_id(id) {
         return document.getElementById(id);
     }
@@ -60,7 +72,7 @@
             return;
         }
 
-        by_id('matomo_optout_checkbox').addEventListener('change', function () {
+        listen_event(by_id('matomo_optout_checkbox'),'change', function () {
             var trackers = [];
             if ('object' === typeof window.Piwik && 'function' === typeof Piwik.getAsyncTrackers) {
                 trackers = Piwik.getAsyncTrackers();
