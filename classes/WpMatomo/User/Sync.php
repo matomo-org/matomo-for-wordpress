@@ -9,6 +9,7 @@
 
 namespace WpMatomo\User;
 
+use Piwik\Access;
 use Piwik\Access\Role\Admin;
 use Piwik\Access\Role\View;
 use Piwik\Access\Role\Write;
@@ -179,6 +180,30 @@ class Sync {
 						$user_lang_model->setLanguageForUser( $matomo_login, $lang );
 					}
 				}
+			}
+
+			if ($idsite != 1) {
+				// only needed if the actual site is not the default site... makes sure when they click in Matomo
+				// UI on "Dashboard" that the correct site is being opened by default
+				// eg if the linked site is actually idSite=2.
+				Access::doAsSuperUser(
+					function () use ( $matomo_login, &$idsite ) {
+						try {
+							UsersManager\API::unsetInstance();
+							// we need to unset the instance to make sure it fetches the
+							// up to date dependencies eg current plugin manager etc
+
+							UsersManager\API::getInstance()->setUserPreference(
+								$matomo_login,
+								UsersManager\API::PREFERENCE_DEFAULT_REPORT,
+								$idsite
+							);
+						} catch (\Exception $e) {
+							// ignore any error for now
+						}
+
+					}
+				);
 			}
 		}
 

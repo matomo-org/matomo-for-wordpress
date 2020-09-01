@@ -280,7 +280,9 @@ class LogAggregator
         if (defined('PIWIK_TEST_MODE') && PIWIK_TEST_MODE) {
             $engine = 'ENGINE=MEMORY';
         }
-        $createTableSql = 'CREATE TEMPORARY TABLE ' . $table . ' (idvisit  BIGINT(10) UNSIGNED NOT NULL) ' . $engine;
+
+	    $tempTableIdVisitColumn = 'idvisit  BIGINT(10) UNSIGNED NOT NULL';
+	    $createTableSql = 'CREATE TEMPORARY TABLE ' . $table . ' (' . $tempTableIdVisitColumn . ') ' . $engine;
         // we do not insert the data right away using create temporary table ... select ...
         // to avoid metadata lock see eg https://www.percona.com/blog/2018/01/10/why-avoid-create-table-as-select-statement/
 
@@ -290,8 +292,24 @@ class LogAggregator
         } catch (\Exception $e) {
             if ($readerDb->isErrNo($e, \Piwik\Updater\Migration\Db::ERROR_CODE_TABLE_EXISTS)) {
                 return;
+            } elseif ($readerDb->isErrNo($e, 1173)
+                      || $readerDb->isErrNo($e, 3750)
+                      || stripos($e->getMessage(), 'requires a primary key') !== false
+                      || stripos($e->getMessage(), 'table without a primary key') !== false) {
+	            $createTableSql = str_replace($tempTableIdVisitColumn, $tempTableIdVisitColumn . ', PRIMARY KEY (`idvisit`)', $createTableSql);
+
+	            try {
+		            $readerDb->query($createTableSql);
+	            } catch (\Exception $e) {
+		            if ( $readerDb->isErrNo( $e, \Piwik\Updater\Migration\Db::ERROR_CODE_TABLE_EXISTS ) ) {
+			            return;
+		            } else {
+		            	throw $e;
+		            }
+	            }
+            } else {
+	            throw $e;
             }
-            throw $e;
         }
 
         $transactionLevel = new Db\TransactionLevel($readerDb);

@@ -22,7 +22,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 		   href="https://matomo.org/docs/"><?php esc_html_e( 'User guides', 'matomo' ); ?></a>
 		- <?php esc_html_e( 'Learn how to configure Matomo and how to effectively analyse your data', 'matomo' ); ?>
 	</li>
-	<li><a target="_blank" rel="noreferrer noopener" href="https://matomo.org/faq/"><?php esc_html_e( 'FAQs', 'matomo' ); ?></a>
+	<li><a target="_blank" rel="noreferrer noopener" href="https://matomo.org/faq/wordpress/"><?php esc_html_e( 'Matomo for WordPress FAQs', 'matomo' ); ?></a>
+		- <?php esc_html_e( 'Get answers to frequently asked questions', 'matomo' ); ?>
+	</li>
+	<li><a target="_blank" rel="noreferrer noopener" href="https://matomo.org/faq/"><?php esc_html_e( 'General FAQs', 'matomo' ); ?></a>
 		- <?php esc_html_e( 'Get answers to frequently asked questions', 'matomo' ); ?>
 	</li>
 	<li><a target="_blank" rel="noreferrer noopener"
