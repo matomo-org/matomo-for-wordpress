@@ -630,7 +630,7 @@ class SystemReport {
 
 		try {
 			$time = gmdate( 'Y-m-d H:i:s', time() - $days_in_seconds );
-			$sql = $wpdb->prepare('SELECT count(idsite) from ' . $prefix_table . ' where visit_last_action_time > %s LIMIT 1', $time );
+			$sql = $wpdb->prepare('SELECT idsite from ' . $prefix_table . ' where visit_last_action_time > %s LIMIT 1', $time );
 			$row = $wpdb->get_var( $sql );
 		} catch ( \Exception $e ) {
 			$row = null;
