@@ -169,7 +169,12 @@ class Sync {
 
 			if ( $matomo_login ) {
 				$locale = get_user_locale( $user->ID );
-				$parts  = explode( '_', $locale );
+				$locale_dash = Common::mb_strtolower(str_replace('_', '-', $locale));
+				if ($locale && in_array($locale_dash, ['zh-cn', 'zh-tw', 'pt-br', 'es-ar'], true)) {
+					$parts = [$locale_dash];
+				} else {
+					$parts  = explode( '_', $locale );
+				}
 
 				if ( ! empty( $parts[0] ) ) {
 					$lang = $parts[0];
