@@ -40,7 +40,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	);
 	?>
 		<br/><br/>
-		<?php
+        Matomo will always cost you nothing to use, but that doesn't mean it costs us nothing to make.
+        Matomo needs your continued support to grow and thrive.
+        <?php
 		echo sprintf(
 			esc_html__(
 				'You can also help us by %1$sdonating%2$s or by %3$spurchasing premium plugins%4$s which fund the
@@ -53,6 +55,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			'</a>'
 		);
 		?>
+        Every penny will help.
 	</p>
 
 	<?php require 'info_newsletter.php'; ?>

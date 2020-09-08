@@ -126,7 +126,9 @@ function matomo_anonymize_value( $value ) {
 		$values_to_anonymize = array(
 			ABSPATH                           => '$ABSPATH/',
 			str_replace( '/', '\/', ABSPATH ) => '$ABSPATH\/',
+			str_replace( '/', '\\', ABSPATH ) => '$ABSPATH\/',
 			WP_CONTENT_DIR                    => '$WP_CONTENT_DIR/',
+			str_replace( '/', '\\', WP_CONTENT_DIR ) => '$WP_CONTENT_DIR\\',
 			home_url()                        => '$home_url',
 			site_url()                        => '$site_url',
 			DB_PASSWORD                       => '$DB_PASSWORD',
