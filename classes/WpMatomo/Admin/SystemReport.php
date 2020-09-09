@@ -20,6 +20,7 @@ use Piwik\Plugins\CoreAdminHome\API;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
 use Piwik\Plugins\UserCountry\LocationProvider;
+use Piwik\Tracker\Failures;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Installer;
@@ -609,6 +610,32 @@ class SystemReport {
 				'comment' => '',
 			);
 		}
+
+
+		if ( ! \WpMatomo::is_safe_mode() ) {
+			Bootstrap::do_bootstrap();
+
+			$tracking_failures = new Failures();
+			$tracking_failures = $tracking_failures->getAllFailures();
+			if (!empty($tracking_failures)) {
+				$rows[] = array(
+					'section' => 'Tracking failures',
+				);
+				foreach ($tracking_failures as $failure) {
+					$comment = sprintf('Solution: %s<br>More info: %s<br>Date: %s<br>Request URL: %s',
+										$failure['solution'], $failure['solution_url'],
+										$failure['pretty_date_first_occurred'], $failure['request_url']);
+					$rows[] = array(
+						'name'    => $failure['problem'],
+						'is_warning'   => true,
+						'value'   => '',
+						'comment' => $comment,
+					);
+				}
+
+			}
+		}
+
 
 		return $rows;
 	}
