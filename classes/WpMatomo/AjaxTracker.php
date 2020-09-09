@@ -9,6 +9,8 @@
 
 namespace WpMatomo;
 
+use WpMatomo\Logger;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -19,8 +21,11 @@ if ( ! class_exists( '\PiwikTracker' ) ) {
 
 class AjaxTracker extends \PiwikTracker {
 	private $has_cookie = false;
+	private $logger;
 
 	public function __construct( Settings $settings ) {
+		$this->logger = new Logger();
+
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
@@ -65,6 +70,7 @@ class AjaxTracker extends \PiwikTracker {
 
 	protected function sendRequest( $url, $method = 'GET', $data = null, $force = false ) {
 		if ( ! $this->idSite ) {
+			$this->logger->log('ecommerce tracking could not find idSite, cannot send request');
 			return; // not installed or synced yet
 		}
 		$args = array(
@@ -79,7 +85,13 @@ class AjaxTracker extends \PiwikTracker {
 		// 1) Not send any response no matter what happens
 		// 2) Never exit at any point
 
-		return wp_remote_request( $url, $args );
+		$response = wp_remote_request( $url, $args );
+
+		if (is_wp_error($response)) {
+			$this->logger->log_exception('ajax_tracker', new \Exception($response->get_error_message()));
+		}
+
+		return $response;
 	}
 
 }
