@@ -115,6 +115,7 @@ class Email extends \Zend_Mail_Transport_Abstract {
 
 		$this->rememberMailSent();
 
+		$header = trim($header);
 		$success = wp_mail( $recipients, $subject, $content, $header );
 
 		remove_action( 'wp_mail_failed', array($this, 'onError') );
