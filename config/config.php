@@ -40,6 +40,7 @@ return array(
 		$paths = new \WpMatomo\Paths();
 		return rtrim('/'. $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir().'/'), '/');
 	},
+	'Piwik\Session\SessionAuth' => DI\autowire('Piwik\Plugins\WordPress\SessionAuth'),
 	'Piwik\Auth' => DI\autowire('Piwik\Plugins\WordPress\Auth'),
 	\Piwik\Config::class => DI\decorate(function ($previous) {
 
