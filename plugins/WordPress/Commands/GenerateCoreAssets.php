@@ -45,6 +45,7 @@ class GenerateCoreAssets extends ConsoleCommand
 			    $basename = strtolower($basename);
 	    		if ($basename === 'jquery.js'
 			        || $basename === 'jquery.min.js'
+			        || $basename === 'materialize.min.js' // we embed it manually as it needs to be loaded before jquery ui
 			        || $basename === 'jquery-ui.js'
 			        || $basename === 'jquery-ui.min.js') {
 				    // we are not allowed to ship matomo with that

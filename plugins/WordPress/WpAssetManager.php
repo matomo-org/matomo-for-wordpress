@@ -39,6 +39,7 @@ class WpAssetManager extends AssetManager
 
 		$jsFiles = array();
 		$jsFiles[] = "jquery/jquery.js";
+		$jsFiles[] = "node_modules/materialize-css/dist/js/materialize.min.js";
 		$jsFiles[] = 'jquery/ui/widget.min.js';
 		$jsFiles[] = 'jquery/ui/mouse.min.js';
 		$jsFiles[] = 'jquery/ui/selectable.min.js';
@@ -59,7 +60,11 @@ class WpAssetManager extends AssetManager
 		$jsFiles[] = 'jquery/ui/effect.min.js';
 
 		foreach ($jsFiles as $jsFile) {
-			$jQueryPath = includes_url('js/' . $jsFile);
+		    if (strpos($jsFile, 'node_modules') === 0) {
+		        $jQueryPath = $jsFile;
+            } else {
+                $jQueryPath = includes_url('js/' . $jsFile);
+            }
 			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, $jQueryPath);
 		}
 

@@ -15,8 +15,8 @@ rm -rf $MATOMO_ROOT/vendor/doctrine/cache/lib/Doctrine/Common/Cache/RiakCache.ph
 
 # lets remove some extra libs that aren't needed
 find $MATOMO_ROOT/node_modules/jquery-ui-dist -name '*' ! -name 'jquery-ui.min.css' ! -name 'LICENSE.txt' ! -name 'AUTHORS.txt' ! -name 'jquery-ui.theme.min.css' -exec rm -rf {} +
-find $MATOMO_ROOT/libs/bower_components -name '*.js' -exec rm -rf {} +
-find $MATOMO_ROOT/libs/bower_components -name '*.map' -exec rm -rf {} +
+find $MATOMO_ROOT/node_modules -name '*.js' ! -name 'materialize.min.js' -exec rm -rf {} +
+find $MATOMO_ROOT/node_modules -name '*.map' -exec rm -rf {} +
 find $MATOMO_ROOT/libs/jqplot -name '*.js' -exec rm -rf {} +
 find $MATOMO_ROOT/plugins/*/angularjs -name '*.js' -exec rm -rf {} +
 find $MATOMO_ROOT/plugins/*/javascripts -name '*.js' ! -name 'Piwik_Overlay.js' ! -name 'optOut.js' ! -name 'previewmode.js' ! -name 'previewmodedetection.js' ! -name 'tagmanager.js' ! -name 'tagmanager.min.js' -exec rm -rf {} +
