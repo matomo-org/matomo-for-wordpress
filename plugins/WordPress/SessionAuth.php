@@ -32,16 +32,25 @@ class SessionAuth extends \Piwik\Session\SessionAuth
 
             $user = wp_get_current_user();
 
+            $permission = null;
             if ($user && current_user_can(Capabilities::KEY_SUPERUSER)) {
-                $matomo_user = $this->findMatomoUser($user->ID);
-                $token = $this->makeTemporaryToken($matomo_user['login'], $user->user_registered);
-                return new AuthResult(AuthResult::SUCCESS_SUPERUSER_AUTH_CODE, $matomo_user['login'], $token);
+                $permission = AuthResult::SUCCESS_SUPERUSER_AUTH_CODE;
+            } else if ($user && current_user_can(Capabilities::KEY_VIEW)) {
+                $permission = AuthResult::SUCCESS;
             }
 
-            if ($user && current_user_can(Capabilities::KEY_VIEW)) {
+            if (!empty($permission)) {
                 $matomo_user = $this->findMatomoUser($user->ID);
                 $token = $this->makeTemporaryToken($matomo_user['login'], $user->user_registered . '' . $user->ID);
-                return new AuthResult(AuthResult::SUCCESS, $matomo_user['login'], $token);
+
+                if ($this->getTokenAuth() !== false
+                    && $this->getTokenAuth() !== null
+                    && $this->getTokenAuth() !== ''
+                    && $token !== $this->getTokenAuth()) {
+                    return new AuthResult(AuthResult::FAILURE, $matomo_user['login'], null);
+                }
+
+                return new AuthResult($permission, $matomo_user['login'], $token);
             }
         }
 

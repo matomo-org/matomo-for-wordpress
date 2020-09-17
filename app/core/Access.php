@@ -166,7 +166,6 @@ class Access
         if (($forceApiSessionPost && $isApiRequest) || ($forceApiSessionGet && $isApiRequest && $isGetApiRequest)) {
             $request = ($forceApiSessionGet && $isApiRequest && $isGetApiRequest) ? $_GET : $_POST;
             $tokenAuth = Common::getRequestVar('token_auth', '', 'string', $request);
-            if (!empty($tokenAuth)) {
                 Session::start();
                 $auth = StaticContainer::get(SessionAuth::class);
                 $auth->setTokenAuth($tokenAuth);
@@ -181,7 +180,6 @@ class Access
                 }
                 Session::close();
                 // if not successful, we will fallback to regular auth
-            }
         }
 
         // access = array ( idsite => accessIdSite, idsite2 => accessIdSite2)
