@@ -53,7 +53,7 @@ class TagManager extends \Piwik\Plugin
             'TagManager.regenerateContainerReleases' => 'regenerateReleasedContainers',
             'Updater.componentUpdated' => 'regenerateReleasedContainers',
             'Controller.CoreHome.checkForUpdates.end' => 'regenerateReleasedContainers',
-            'CustomPiwikJs.piwikJsChanged' => 'regenerateReleasedContainers', // in case a Matomo tracker is bundled
+            'CustomJsTracker.trackerJsChanged' => 'regenerateReleasedContainers', // in case a Matomo tracker is bundled
             'SitesManager.deleteSite.end' => 'onSiteDeleted',
             'SitesManager.addSite.end' => 'onSiteAdded',
             'System.addSystemSummaryItems' => 'addSystemSummaryItems',
@@ -64,8 +64,24 @@ class TagManager extends \Piwik\Plugin
             'API.addGlossaryItems' => 'addGlossaryItems',
             'Template.bodyClass' => 'addBodyClass',
             'Access.Capability.addCapabilities' => 'addCapabilities',
-            'TwoFactorAuth.requiresTwoFactorAuthentication' => 'requiresTwoFactorAuthentication'
+            'TwoFactorAuth.requiresTwoFactorAuthentication' => 'requiresTwoFactorAuthentication',
+            'Db.getTablesInstalled' => 'getTablesInstalled'
         );
+    }
+
+    /**
+     * Register the new tables, so Matomo knows about them.
+     *
+     * @param array $allTablesInstalled
+     */
+    public function getTablesInstalled(&$allTablesInstalled)
+    {
+        $allTablesInstalled[] = Common::prefixTable('tagmanager_container_release');
+        $allTablesInstalled[] = Common::prefixTable('tagmanager_container');
+        $allTablesInstalled[] = Common::prefixTable('tagmanager_container_version');
+        $allTablesInstalled[] = Common::prefixTable('tagmanager_tag');
+        $allTablesInstalled[] = Common::prefixTable('tagmanager_trigger');
+        $allTablesInstalled[] = Common::prefixTable('tagmanager_variable');
     }
 
     public function requiresTwoFactorAuthentication(&$requiresAuth, $module, $action, $parameters)

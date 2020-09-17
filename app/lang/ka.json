@@ -139,6 +139,7 @@
         "Save": "შენახვა",
         "SaveImageOnYourComputer": "თქვენს კომპიუტერში სურათის შენახვისთვის დააწკაპუნეთ სურათზე მარჯვენა ღილაკით და შეარჩიეთ \"შეინახეთ სურათი როგორც...\"",
         "Search": "ძებნა",
+        "Security": "უსაფრთხოება",
         "SeeTheOfficialDocumentationForMoreInformation": "დამატებითი ინფორმაციისთვის იხილეთ %1$sოფიციალური დოკუმენტაცია%2$s.",
         "SelectYesIfYouWantToSendEmailsViaServer": "შეარჩიეთ \"დიახ\", თუ გსურთ ან გჭირდებათ, ელ.წერილი გააგზავნოთ სახელობითი სერვერიდან და არა ადგილობრივის ფოსტის ფუნქციის გამოყენებით",
         "Settings": "პარამეტრები",
@@ -178,8 +179,7 @@
         "KeepTokenSecret": "ეს token_auth ისევე საიდუმლოა, როგორც თქვენი მომხმარებლის სახელი და პაროლი, %1$s არავის გაუზიაროთ ის%2$s!",
         "LoadedAPIs": "%s API ფუნქციები წარმატებით ჩაიტვირთა",
         "MoreInformation": "Matomo API ფუნქციების შესახებ დამატებითი ინფორმაციისთვის გთხოვთ, გადახედოთ მასალებს %1$s Matomo API ფუნქციბის გამოყენების ინსტრუქცია %2$s და %3$s Matomo API ფუნქციების ცნობარი %4$s.",
-        "UserAuthentication": "მომხმარებლის აუტენთიფიკაცია",
-        "UsingTokenAuth": "თუ გსურთ %1$s გააკეთოთ მონაცემების მოთხოვნა სკრიპტიდან, crontab ფაილიდან და სხვ. %2$s თქვენ უნდა დაამატოთ %3$s პარამეტრი API ფუნქციის გამოძახების URL–ებს, რაც მოითხოვს აუტენთიფიკაციას."
+        "UserAuthentication": "მომხმარებლის აუტენთიფიკაცია"
     },
     "Actions": {
         "ColumnClicks": "დაწკაპუნებები",
@@ -385,7 +385,6 @@
         "SetupWebsiteSetupSuccess": "ვებ საიტი %s შეიქმნა წარმატებით!",
         "SystemCheck": "სისტემის შემოწმება",
         "SystemCheckAutoUpdateHelp": "შენიშვნა: Matomo–ის ერთი დაწკაპუნებით განახლება მოითხოვს ჩაწერის უფლებას Matomo საქაღალდეზე და მის შიგთავსზე.",
-        "SystemCheckCreateFunctionHelp": "Matomo დაბრუნებისთვის იყენებს ანონიმურ ფუნქციებს.",
         "SystemCheckDatabaseHelp": "Matomo მოითხოვს ან mysqli გაფართოებას ან ორივეს, PDO და pdo_mysql გაფართოებებს",
         "SystemCheckError": "მოხდა შეცდომა – უნდა გამოსწორდეს, სანამ გააგრძელებთ",
         "SystemCheckEvalHelp": "მოთხოვნილია HTML QuickForm და Smarty შაბლონირების სისტემის მიერ.",
@@ -583,7 +582,7 @@
         "Country_MF": "სენ-მარტენი",
         "Country_MG": "მადაგასკარი",
         "Country_MH": "მარშალის კუნძულები",
-        "Country_MK": "მაკედონია",
+        "Country_MK": "ჩრდილოეთ მაკედონია",
         "Country_ML": "მალი",
         "Country_MM": "მიანმარი (ბირმა)",
         "Country_MN": "მონღოლეთი",
@@ -1470,6 +1469,7 @@
         "Timezone_Asia_Omsk": "ომსკი",
         "Timezone_Asia_Oral": "ორალი",
         "Timezone_Asia_Pontianak": "პონტიანაკი",
+        "Timezone_Asia_Qostanay": "კოსტანაი",
         "Timezone_Asia_Qyzylorda": "ყიზილორდა",
         "Timezone_Asia_Rangoon": "რანგუნი",
         "Timezone_Asia_Saigon": "ჰოჩიმინი",
@@ -1707,7 +1707,6 @@
     },
     "UsersManager": {
         "AddUser": "ახალი მომხმარებლის დამატება",
-        "Alias": "ალიასი",
         "AllWebsites": "ყველა ვებ საიტი",
         "ApplyToAllWebsites": "ყველა ვებ საიტზე გამოყენება",
         "ClickHereToDeleteTheCookie": "დააწკაპუნეთ აქ, რომ წაშალოთ ქუქი და თქვენი ვიზიტების ტრეკირების საშუალება მისცეთ Matomo–ს",

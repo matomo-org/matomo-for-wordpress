@@ -8,13 +8,15 @@
  */
 
 namespace WpMatomo;
-use \Zend_Mail;
+use PHPMailer\PHPMailer\PHPMailer;
+use Piwik\Common;
+use Piwik\Mail;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Email extends \Zend_Mail_Transport_Abstract {
+class Email {
 
 	/**
 	 * @var \WP_Error|null
@@ -22,6 +24,10 @@ class Email extends \Zend_Mail_Transport_Abstract {
 	private $wpMailError;
 
 	private $wpContentType = null;
+    /**
+     * @var Mail
+     */
+	private $mail;
 
 	public function onError($error) {
 		$this->wpMailError = $error;
@@ -35,61 +41,27 @@ class Email extends \Zend_Mail_Transport_Abstract {
 		return $contentType;
 	}
 
-	public function send(Zend_Mail $mail) {
+    public function send(Mail $mail)
+    {
 		$this->wpContentType = null;
 		$this->wpMailError = null;
 
-		if ($mail->hasAttachments) {
-			// we prefer sending the multipart message through _sendMail()
-			// see #183 the problem is that we can't attach the raw attachment to WP_Mail which is why we need to rely
-			// on the encoded message. This seems to work with built-in wp_mail but other custom implementations may have
-			// issues which is why we are using plain text/body by default below when there are no attachments
-			parent::send($mail);
-			return;
-		}
+		$this->mail = $mail;
 
-		// we prefer sending the plain text or html message
-		$this->_mail = $mail;
-
-		if ($mail->getBodyHtml() && $mail->getBodyHtml()->getRawContent()) {
-			$content = $mail->getBodyHtml()->getRawContent();
+		if ($mail->getBodyHtml()) {
+			$content = $mail->getBodyHtml();
 			$this->wpContentType = 'text/html';
 		} elseif ($mail->getBodyText()) {
-			$content = $mail->getBodyText()->getRawContent();
+			$content = $mail->getBodyText();
 			$this->wpContentType = 'text/plain';
 		} else {
-			// seems no content... lets use _sendMail
-			parent::send($mail);
-			return;
+			// seems no content...
+            $content = '';
 		}
 
-		$headers = $mail->getHeaders();
-		if (isset($headers['Subject'])) {
-			unset($headers['Subject']);
-		}
-		$this->_prepareHeaders($headers);
+        $attachments = $mail->getAttachments();
 
-		$this->sendMailThroughWordPress($mail->getRecipients(), $mail->getSubject(), $content, $this->header);
-	}
-
-	public function _sendMail() {
-
-		if (!empty($this->_headers['Content-Type'][0])) {
-			$content = trim( $this->_headers['Content-Type'][0] );
-			if ( strpos( $content, ';' ) !== false ) {
-				list( $type, $charset_content ) = explode( ';', $content );
-				$type = trim( $type );
-				if (!empty($type)) {
-					$this->wpContentType = $type;
-				}
-
-			} elseif ( !empty($content) ) {
-				$this->wpContentType = $content;
-			}
-		}
-
-		// used when we are dealing with attachment... we send the raw multipart body which includes attachments
-		$this->sendMailThroughWordPress($this->recipients, $this->_mail->getSubject(), $this->body, $this->header);
+		$this->sendMailThroughWordPress($mail->getRecipients(), $mail->getSubject(), $content, $attachments);
 	}
 
 	private function rememberMailSent(){
@@ -106,7 +78,7 @@ class Email extends \Zend_Mail_Transport_Abstract {
 		\WpMatomo::$settings->save();
 	}
 
-	private function sendMailThroughWordPress($recipients, $subject, $content, $header) {
+	private function sendMailThroughWordPress($recipients, $subject, $content, $attachments) {
 
 		$this->wpMailError = null;
 
@@ -115,7 +87,51 @@ class Email extends \Zend_Mail_Transport_Abstract {
 
 		$this->rememberMailSent();
 
-		$header = trim($header);
+		$header = '';
+
+		if (!empty($attachments)) {
+
+            $random_id = Common::generateUniqId();
+            $header = 'X-Matomo: ' . $random_id;
+            $executed_action = false;
+
+            add_action('phpmailer_init', function (\PHPMailer $phpmailer) use ($attachments, $subject, $random_id, &$executed_action) {
+                if ($executed_action) {
+                    return; // already done, do not execute another time
+                }
+                $executed_action = true;
+                $match = false;
+                foreach ($phpmailer->getCustomHeaders() as $header) {
+                    if (isset($header[0]) && isset($header[1]) &&
+                        is_string($header[0]) && is_string($header[1]) &&
+                        Common::mb_strtolower($header[0]) === 'x-matomo' && $random_id === trim($header[1])) {
+                        $match = true;
+                    }
+                }
+                if (!$match) {
+                    return; // attachments aren't for this mail
+                }
+                foreach ($attachments as $attachment) {
+                    if (!empty($attachment['cid'])) {
+                        $phpmailer->addStringEmbeddedImage(
+                            $attachment['content'],
+                            $attachment['cid'],
+                            $attachment['filename'],
+                            PHPMailer::ENCODING_BASE64,
+                            $attachment['mimetype']
+                        );
+                    } else {
+                        $phpmailer->addStringAttachment(
+                            $attachment['content'],
+                            $attachment['filename'],
+                            PHPMailer::ENCODING_BASE64,
+                            $attachment['mimetype']
+                        );
+                    }
+                }
+            });
+        }
+
 		$success = wp_mail( $recipients, $subject, $content, $header );
 
 		remove_action( 'wp_mail_failed', array($this, 'onError') );
@@ -126,7 +142,7 @@ class Email extends \Zend_Mail_Transport_Abstract {
 			if (!empty($this->wpMailError) && is_object($this->wpMailError) && $this->wpMailError instanceof \WP_Error) {
 				$message = $this->wpMailError->get_error_message();
 			}
-			if ($this->_mail && $this->_mail->hasAttachments) {
+			if ($this->mail && $this->mail->getAttachments()) {
 				$message .= ' (has attachments)';
 			}
 			if ($this->wpContentType) {

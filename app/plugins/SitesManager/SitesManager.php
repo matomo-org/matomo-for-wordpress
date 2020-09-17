@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -200,13 +200,15 @@ class SitesManager extends \Piwik\Plugin
         $array['ts_created'] = $website['ts_created'];
         $array['type'] = $website['type'];
 
-	    $datesToGenerateSalt = array(Date::now()->addDay(1), Date::now(), Date::now()->subDay(1), Date::now()->subDay(2));
+        // we make sure to have the fingerprint salts for the last 3 days incl tmrw in the cache so we don't need to
+        // query the DB directly for these days
+        $datesToGenerateSalt = array(Date::now()->addDay(1), Date::now(), Date::now()->subDay(1), Date::now()->subDay(2));
 
-	    $fingerprintSaltKey = new FingerprintSalt();
-	    foreach ($datesToGenerateSalt as $date) {
-		    $dateString = $fingerprintSaltKey->getDateString($date, $array['timezone']);
-		    $array[FingerprintSalt::OPTION_PREFIX . $dateString] = $fingerprintSaltKey->getSalt($dateString, $idSite);
-	    }
+        $fingerprintSaltKey = new FingerprintSalt();
+        foreach ($datesToGenerateSalt as $date) {
+            $dateString = $fingerprintSaltKey->getDateString($date, $array['timezone']);
+            $array[FingerprintSalt::OPTION_PREFIX . $dateString] = $fingerprintSaltKey->getSalt($dateString, $idSite);
+        }
     }
 
     public function setTrackerCacheGeneral(&$cache)

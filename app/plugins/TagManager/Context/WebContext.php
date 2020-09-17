@@ -111,6 +111,8 @@ class WebContext extends BaseContext
                 $tag['parameters'] = $this->addVariableTemplateToParameters($tag['parameters']);
                 if (!$isPreviewRelease) {
                     $tag['name'] = md5($tag['name']);// actual name is needed for session/lifetime feature
+                } else {
+                    $tag['name'] = Common::unsanitizeInputValue($tag['name']);
                 }
             }
 
@@ -125,6 +127,8 @@ class WebContext extends BaseContext
                 }
                 if (!$isPreviewRelease) {
                     $trigger['name'] = $trigger['type'];
+                } else {
+                    $trigger['name'] = Common::unsanitizeInputValue($trigger['name']);
                 }
             }
 
@@ -134,6 +138,8 @@ class WebContext extends BaseContext
 
                 if (!$isPreviewRelease) {
                     $variable['name'] = $variable['type'];
+                } else {
+                    $variable['name'] = Common::unsanitizeInputValue($variable['name']);
                 }
             }
 
@@ -233,10 +239,10 @@ class WebContext extends BaseContext
         $embedCode = <<<INST
 <!-- Matomo Tag Manager -->
 <script type="text/javascript">
-var _mtm = window._mtm = window._mtm || [];
+var _mtm = _mtm || [];
 _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
 var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-g.type='text/javascript'; g.async=true; g.src='$path'; s.parentNode.insertBefore(g,s);
+g.type='text/javascript'; g.async=true; g.defer=true; g.src='$path'; s.parentNode.insertBefore(g,s);
 </script>
 <!-- End Matomo Tag Manager -->
 INST;

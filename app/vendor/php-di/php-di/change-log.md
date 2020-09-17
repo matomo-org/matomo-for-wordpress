@@ -1,5 +1,57 @@
 # Change log
 
+## 6.0.2
+
+- Fix potential regression introduced when fixing [#582](https://github.com/PHP-DI/PHP-DI/issues/582)
+
+## 6.0.1
+
+- Fix [#526](https://github.com/PHP-DI/PHP-DI/issues/526): Support optional parameters in factories
+- [#585](https://github.com/PHP-DI/PHP-DI/issues/585) Add support for PHP-Parser 4.0
+- [#582](https://github.com/PHP-DI/PHP-DI/issues/582) Register `ContainerInterface` to point to the wrapper container if it was defined
+
+## 6.0
+
+This is the complete change log. You can also read the [migration guide](doc/migration/6.0.md) for upgrading or the [blog article](news/22-php-di-6-0-released.md) to see what's new.
+
+Improvements:
+
+- [#494](https://github.com/PHP-DI/PHP-DI/pull/494) The container can now be compiled for optimum performances in production
+- [#294](https://github.com/PHP-DI/PHP-DI/issues/294), [#349](https://github.com/PHP-DI/PHP-DI/issues/349), [#449](https://github.com/PHP-DI/PHP-DI/pull/449): `DI\object()` has been replaced by more specific and less ambiguous helpers:
+    - `DI\create()` creates an object, overrides autowiring and previous definitions
+    - `DI\autowire()` autowires an object and allows to override specific constructor and method parameters
+- The container can now be built without parameters: `new Container()`
+- Definitions can be nested:
+    - [#490](https://github.com/PHP-DI/PHP-DI/issues/490) Definitions can be nested in arrays (by [@yuloh](https://github.com/yuloh))
+    - [#501](https://github.com/PHP-DI/PHP-DI/issues/501) & [#540](https://github.com/PHP-DI/PHP-DI/issues/540) Autowire definitions can be nested in other definitions
+    - [#487](https://github.com/PHP-DI/PHP-DI/issues/487) & [#540](https://github.com/PHP-DI/PHP-DI/issues/540) Closures are now handled as factories when they are nested in other definitions
+- [#487](https://github.com/PHP-DI/PHP-DI/issues/487) Closures in the config are now always interpreted as factories, even when nested inside other definitions
+- [#242](https://github.com/PHP-DI/PHP-DI/issues/242) Error in case a definition is not indexed by a string
+- [#505](https://github.com/PHP-DI/PHP-DI/pull/505) Debug container entries
+- [#564](https://github.com/PHP-DI/PHP-DI/pull/564) Caching was made almost entirely obsolete by the container compilation, however there is still a caching system entirely rebuilt over APCu for covering the last cases that compilation could not address (see [php-di.org/doc/performances.html](https://php-di.org/doc/performances.html))
+
+Fixes:
+
+- [#499](https://github.com/PHP-DI/PHP-DI/issues/499) & [#488](https://github.com/PHP-DI/PHP-DI/issues/488) Standardize resolution of nested definitions everywhere.
+    In PHP-DI 5, definitions could be nested in some places (e.g. use a get() in an object definition, etc.). However it did not behave everywhere the same, for example it didn't work for sub-definitions in arrays.
+    Now in PHP-DI 6 all nested definitions will all be recognized and resolved correctly everywhere. Since #494 (compiled container) performance will not be affected so we can implement a more robust behavior.
+- [#343](https://github.com/PHP-DI/PHP-DI/issues/343) Autowiring and Annotations do not work for `object()` inside arrays: it now works with the new `create()` and `autowire()` helpers
+
+BC breaks:
+
+- PHP 7 or greater is required and HHVM is no longer supported
+- `DI\object()` has been removed, use `DI\create()` or `DI\autowire()` instead
+- [#409](https://github.com/PHP-DI/PHP-DI/issues/409): Scopes are removed, read more in the [scopes](doc/scopes.md) documentation.
+- Caching was replaced by compiling the container: `ContainerBuilder::setDefinitionCache()` was removed, use `ContainerBuilder::enableCompilation()` instead.
+- [#463](https://github.com/PHP-DI/PHP-DI/issues/463) & [#485](https://github.com/PHP-DI/PHP-DI/issues/485): Container-interop support was removed, PSR-11 is used instead (by [@juliangut](https://github.com/juliangut))
+- The deprecated `DI\link()` helper was removed, used `DI\get()` instead
+- [#484](https://github.com/PHP-DI/PHP-DI/pull/484) The deprecated `\DI\Debug` class has been removed. Definitions can be cast to string directly
+- The exception `DI\Definition\Exception\DefinitionException` was renamed to `DI\Definition\Exception\InvalidDefinition`
+- The exception `DI\Definition\Exception\AnnotationException` was renamed to `DI\Definition\Exception\InvalidAnnotation`
+- [#516](https://github.com/PHP-DI/PHP-DI/issues/516) `DI\InvokerInterface` was removed in favor of `Invoker\InvokerInterface`.
+
+Be also aware that internal classes or interfaces may have changed.
+
 ## 5.4.6
 
 - Fix [#554](https://github.com/PHP-DI/PHP-DI/issues/554): `Container::make()` fails when combined with `decorate()`.
@@ -43,7 +95,7 @@ New features:
             ->parameter('host', DI\get('db.host')),
     ];
     ```
-    Read the [factories documentation](http://php-di.org/doc/php-definitions.html#factories) to learn more. Feature implemented by [@predakanga](https://github.com/predakanga).
+    Read the [factories documentation](https://php-di.org/doc/php-definitions.html#factories) to learn more. Feature implemented by [@predakanga](https://github.com/predakanga).
 
 Improvements:
 
@@ -211,7 +263,7 @@ BC-breaks: None.
 * [#138](https://github.com/PHP-DI/PHP-DI/issues/138) [Container-interop](https://github.com/container-interop/container-interop) compliance
 * [#143](https://github.com/PHP-DI/PHP-DI/issues/143) Much more explicit exception messages
 * [#157](https://github.com/PHP-DI/PHP-DI/issues/157) HHVM support
-* [#158](https://github.com/PHP-DI/PHP-DI/issues/158) Improved the documentation for [Symfony 2 integration](http://php-di.org/doc/frameworks/symfony2.html)
+* [#158](https://github.com/PHP-DI/PHP-DI/issues/158) Improved the documentation for [Symfony 2 integration](https://php-di.org/doc/frameworks/symfony2.html)
 
 ## 4.0
 

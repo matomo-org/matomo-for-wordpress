@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -68,6 +68,8 @@ class Tasks extends \Piwik\Plugin\Tasks
         // sure all archives that need to be invalidated get invalidated
         $this->daily('invalidateOutdatedArchives', null, self::HIGH_PRIORITY);
 
+        $this->daily('deleteOldFingerprintSalts', null, self::HIGH_PRIORITY);
+
         // general data purge on older archive tables, executed daily
         $this->daily('purgeOutdatedArchives', null, self::HIGH_PRIORITY);
 
@@ -81,21 +83,19 @@ class Tasks extends \Piwik\Plugin\Tasks
 
         $this->daily('cleanupTrackingFailures', null, self::LOWEST_PRIORITY);
         $this->weekly('notifyTrackingFailures', null, self::LOWEST_PRIORITY);
-	    $this->daily('deleteOldFingerprintSalts', null, self::HIGH_PRIORITY);
 
-        if(SettingsPiwik::isInternetEnabled() === true){
-            $this->weekly('updateSpammerBlacklist');
+        $generalConfig = Config::getInstance()->Tracker;
+        if((SettingsPiwik::isInternetEnabled() === true) && $generalConfig['enable_spam_filter']){
+            $this->weekly('updateSpammerList');
         }
 
         $this->scheduleTrackingCodeReminderChecks();
     }
 
-
-
-	public function deleteOldFingerprintSalts()
-	{
-		StaticContainer::get(FingerprintSalt::class)->deleteOldSalts();
-	}
+    public function deleteOldFingerprintSalts()
+    {
+        StaticContainer::get(FingerprintSalt::class)->deleteOldSalts();
+    }
 
     public function invalidateOutdatedArchives()
     {
@@ -286,11 +286,12 @@ class Tasks extends \Piwik\Plugin\Tasks
         if (empty($purgedDates[$yesterdayStr])) {
             $this->archivePurger->purgeInvalidatedArchivesFrom($yesterday);
         }
-	    // handle year start table
-	    $yearStart = $today->toString('Y-01');
-	    if (empty($purgedDates[$yearStart])) {
-		    $this->archivePurger->purgeInvalidatedArchivesFrom(Date::factory($yearStart . '-01'));
-	    }
+
+        // handle year start table
+        $yearStart = $today->toString('Y-01');
+        if (empty($purgedDates[$yearStart])) {
+            $this->archivePurger->purgeInvalidatedArchivesFrom(Date::factory($yearStart . '-01'));
+        }
     }
 
     public function optimizeArchiveTable()
@@ -302,11 +303,11 @@ class Tasks extends \Piwik\Plugin\Tasks
     /**
      * Update the referrer spam blacklist
      *
-     * @see https://github.com/matomo-org/referrer-spam-blacklist
+     * @see https://github.com/matomo-org/referrer-spam-list
      */
-    public function updateSpammerBlacklist()
+    public function updateSpammerList()
     {
-        $url = 'https://raw.githubusercontent.com/matomo-org/referrer-spam-blacklist/master/spammers.txt';
+        $url = 'https://raw.githubusercontent.com/matomo-org/referrer-spam-list/master/spammers.txt';
         $list = Http::sendHttpRequest($url, 30);
         $list = preg_split("/\r\n|\n|\r/", $list);
         if (count($list) < 10) {

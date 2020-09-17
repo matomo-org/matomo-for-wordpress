@@ -12,7 +12,6 @@ namespace Piwik\Plugins\WordPress;
 use Piwik\Menu\MenuAdmin;
 use Piwik\Menu\MenuTop;
 use Piwik\Piwik;
-use Piwik\Plugins\LanguagesManager\API;
 use Piwik\View;
 use WpMatomo\Capabilities;
 

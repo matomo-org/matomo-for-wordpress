@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -270,6 +270,17 @@ class Profiler
                     $outputDir . DIRECTORY_SEPARATOR . $runId . '.' . $profilerNamespace . '.xhprof',
                     serialize($xhprofData)
                 );
+                $meta = array('time' => time(), 'instance' => SettingsPiwik::getPiwikInstanceId());
+                if (!empty($_GET)) {
+                    $meta['get'] = $_GET;
+                }
+                if (!empty($_POST)) {
+                    $meta['post'] = $_POST;
+                }
+                file_put_contents(
+                    $outputDir . DIRECTORY_SEPARATOR . $runId . '.' . $profilerNamespace . '.meta',
+                    serialize($meta)
+                );
             }
 
             if (empty($runId)) {
@@ -283,9 +294,10 @@ class Profiler
                 Profiler::aggregateXhprofRuns($runs, $profilerNamespace, $saveTo = $runId);
 
                 $baseUrlStored = SettingsPiwik::getPiwikUrl();
+                $host = Url::getHost();
 
                 $out = "\n\n";
-                $baseUrl = "http://" . @$_SERVER['HTTP_HOST'] . "/" . @$_SERVER['REQUEST_URI'];
+                $baseUrl = "http://" . $host . "/" . @$_SERVER['REQUEST_URI'];
                 if (strlen($baseUrlStored) > strlen($baseUrl)) {
                     $baseUrl = $baseUrlStored;
                 }

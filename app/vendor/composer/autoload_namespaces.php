@@ -7,12 +7,10 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Zend_' => array($baseDir . '/libs'),
-    'Twig_' => array($vendorDir . '/twig/twig/lib'),
     'Symfony\\Component\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher'),
     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
     'Symfony\\Bridge\\Monolog\\' => array($vendorDir . '/symfony/monolog-bridge'),
     'PEAR_' => array($baseDir . '/libs'),
-    'PEAR' => array($vendorDir . '/pear/pear_exception'),
     'JShrink' => array($vendorDir . '/matomo-org/jshrink/src'),
     'HTML_' => array($baseDir . '/libs'),
     'Console' => array($vendorDir . '/pear/console_getopt'),

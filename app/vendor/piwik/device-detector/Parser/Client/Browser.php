@@ -2,7 +2,7 @@
 /**
  * Device Detector - The Universal Device Detection library for parsing User Agents
  *
- * @link http://piwik.org
+ * @link https://matomo.org
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
 namespace DeviceDetector\Parser\Client;
@@ -27,6 +27,7 @@ class Browser extends ClientParserAbstract
      * @var array
      */
     protected static $availableBrowsers = array(
+        '1B' => '115 Browser',
         '2B' => '2345 Browser',
         '36' => '360 Phone Browser',
         '3B' => '360 Browser',
@@ -39,10 +40,13 @@ class Browser extends ClientParserAbstract
         'AM' => 'Amaya',
         'AO' => 'Amigo',
         'AN' => 'Android Browser',
+        'AE' => 'AOL Desktop',
         'AD' => 'AOL Shield',
         'AR' => 'Arora',
+        'AX' => 'Arctic Fox',
         'AV' => 'Amiga Voyager',
         'AW' => 'Amiga Aweb',
+        'A0' => 'Atom',
         'AT' => 'Atomic Web Browser',
         'AS' => 'Avast Secure Browser',
         'VG' => 'AVG Secure Browser',
@@ -56,12 +60,15 @@ class Browser extends ClientParserAbstract
         'BH' => 'BlackHawk',
         'BJ' => 'Bunjalloo',
         'BL' => 'B-Line',
+        'BU' => 'Blue Browser',
         'BR' => 'Brave',
         'BK' => 'BriskBard',
         'BX' => 'BrowseX',
         'CA' => 'Camino',
         'CL' => 'CCleaner',
+        'C0' => 'Centaury',
         'CC' => 'Coc Coc',
+        'C2' => 'Colibri',
         'CD' => 'Comodo Dragon',
         'C1' => 'Coast',
         'CX' => 'Charon',
@@ -94,6 +101,7 @@ class Browser extends ClientParserAbstract
         'EI' => 'Epic',
         'EL' => 'Elinks',
         'EB' => 'Element Browser',
+        'EE' => 'Elements Browser',
         'EZ' => 'eZ Browser',
         'EU' => 'EUI Browser',
         'EP' => 'GNOME Web',
@@ -114,6 +122,7 @@ class Browser extends ClientParserAbstract
         'FN' => 'Fireweb Navigator',
         'FU' => 'FreeU',
         'GA' => 'Galeon',
+        'GB' => 'Glass Browser',
         'GE' => 'Google Earth',
         'HA' => 'Hawk Turbo Browser',
         'HO' => 'hola! Browser',
@@ -133,6 +142,7 @@ class Browser extends ClientParserAbstract
         'IR' => 'Iron',
         'JS' => 'Jasmine',
         'JI' => 'Jig Browser',
+        'JP' => 'Jig Browser Plus',
         'JO' => 'Jio Browser',
         'KB' => 'K.Browser',
         'KI' => 'Kindle Browser',
@@ -146,10 +156,13 @@ class Browser extends ClientParserAbstract
         'LB' => 'Cheetah Browser',
         'LF' => 'LieBaoFast',
         'LG' => 'LG Browser',
+        'LH' => 'Light',
         'LI' => 'Links',
         'LO' => 'Lovense Browser',
         'LU' => 'LuaKit',
+        'LL' => 'Lulumi',
         'LS' => 'Lunascape',
+        'LN' => 'Lunascape Lite',
         'LX' => 'Lynx',
         'M1' => 'mCent',
         'MB' => 'MicroB',
@@ -164,6 +177,7 @@ class Browser extends ClientParserAbstract
         'MN' => 'Minimo',
         'MT' => 'Mint Browser',
         'MX' => 'Maxthon',
+        'MY' => 'Mypal',
         'NB' => 'Nokia Browser',
         'NO' => 'Nokia OSS Browser',
         'NV' => 'Nokia Ovi Browser',
@@ -179,6 +193,7 @@ class Browser extends ClientParserAbstract
         'OB' => 'Obigo',
         'OD' => 'Odyssey Web Browser',
         'OF' => 'Off By One',
+        'HH' => 'OhHai Browser',
         'OE' => 'ONE Browser',
         'OX' => 'Opera GX',
         'OG' => 'Opera Neon',
@@ -190,12 +205,14 @@ class Browser extends ClientParserAbstract
         'OO' => 'Opera Touch',
         'OS' => 'Ordissimo',
         'OR' => 'Oregano',
+        'O0' => 'Origin In-Game Overlay',
         'OY' => 'Origyn Web Browser',
         'OV' => 'Openwave Mobile Browser',
         'OW' => 'OmniWeb',
         'OT' => 'Otter Browser',
         'PL' => 'Palm Blazer',
         'PM' => 'Pale Moon',
+        'PY' => 'Polypane',
         'PP' => 'Oppo Browser',
         'PR' => 'Palm Pre',
         'PU' => 'Puffin',
@@ -208,6 +225,7 @@ class Browser extends ClientParserAbstract
         'Q1' => 'QQ Browser Mini',
         'QQ' => 'QQ Browser',
         'QT' => 'Qutebrowser',
+        'QU' => 'Quark',
         'QZ' => 'QupZilla',
         'QM' => 'Qwant Mobile',
         'QW' => 'QtWebEngine',
@@ -219,9 +237,11 @@ class Browser extends ClientParserAbstract
         'SC' => 'SEMC-Browser',
         'SE' => 'Sogou Explorer',
         'SF' => 'Safari',
+        'S5' => 'Safe Exam Browser',
         'SW' => 'SalamWeb',
         'SH' => 'Shiira',
         'S1' => 'SimpleBrowser',
+        'SY' => 'Sizzy',
         'SK' => 'Skyfire',
         'SS' => 'Seraphic Sraf',
         'SL' => 'Sleipnir',
@@ -232,7 +252,9 @@ class Browser extends ClientParserAbstract
         'SR' => 'Sunrise',
         'SP' => 'SuperBird',
         'SU' => 'Super Fast Browser',
+        'S3' => 'surf',
         'S0' => 'START Internet Browser',
+        'S4' => 'Steam In-Game Overlay',
         'ST' => 'Streamy',
         'SX' => 'Swiftfox',
         'SZ' => 'Seznam Browser',
@@ -241,6 +263,8 @@ class Browser extends ClientParserAbstract
         'TF' => 'TenFourFox',
         'TB' => 'Tenta Browser',
         'TZ' => 'Tizen Browser',
+        'TU' => 'Tungsten',
+        'TG' => 'ToGate',
         'TS' => 'TweakStyle',
         'TV' => 'TV Bro',
         'UB' => 'UBrowser',
@@ -251,6 +275,7 @@ class Browser extends ClientParserAbstract
         'VI' => 'Vivaldi',
         'VV' => 'vivo Browser',
         'VB' => 'Vision Mobile Browser',
+        'VM' => 'VMware AirWatch',
         'WI' => 'Wear Internet Browser',
         'WP' => 'Web Explorer',
         'WE' => 'WebPositive',
@@ -258,9 +283,13 @@ class Browser extends ClientParserAbstract
         'WH' => 'Whale Browser',
         'WO' => 'wOSBrowser',
         'WT' => 'WeTab Browser',
+        'YJ' => 'Yahoo! Japan Browser',
         'YA' => 'Yandex Browser',
         'YL' => 'Yandex Browser Lite',
-        'XI' => 'Xiino'
+        'YN' => 'Yaani Browser',
+        'XI' => 'Xiino',
+        'XV' => 'Xvast',
+        'ZV' => 'Zvu',
 
         // detected browsers in older versions
         // 'IA' => 'Iceape',  => pim
@@ -277,8 +306,8 @@ class Browser extends ClientParserAbstract
         'BlackBerry Browser' => array('BB'),
         'Baidu'              => array('BD', 'BS'),
         'Amiga'              => array('AV', 'AW'),
-        'Chrome'             => array('CH', 'BA', 'BR', 'CC', 'CD', 'CM', 'CI', 'CF', 'CN', 'CR', 'CP', 'DD', 'IR', 'RM', 'AO', 'TS', 'VI', 'PT', 'AS', 'TB', 'AD', 'SB', 'WP', 'I3', 'CV', 'WH', 'SZ', 'QW', 'LF', 'KW', '2B', 'CE', 'EC', 'MT', 'MS', 'HA', 'OC', 'MZ', 'BM', 'KN', 'SW', 'M1', 'FA', 'TA', 'AH', 'CL', 'SU', 'EU', 'UB', 'LO', 'VG', 'TV'),
-        'Firefox'            => array('FF', 'FE', 'FM', 'SX', 'FB', 'PX', 'MB', 'EI', 'WF', 'CU', 'TF', 'QM', 'FR', 'I4', 'GZ', 'MO', 'F1', 'BI', 'MN', 'BH', 'TO', 'OS', 'FY'),
+        'Chrome'             => array('CH', 'BA', 'BR', 'CC', 'CD', 'CM', 'CI', 'CF', 'CN', 'CR', 'CP', 'DD', 'IR', 'RM', 'AO', 'TS', 'VI', 'PT', 'AS', 'TB', 'AD', 'SB', 'WP', 'I3', 'CV', 'WH', 'SZ', 'QW', 'LF', 'KW', '2B', 'CE', 'EC', 'MT', 'MS', 'HA', 'OC', 'MZ', 'BM', 'KN', 'SW', 'M1', 'FA', 'TA', 'AH', 'CL', 'SU', 'EU', 'UB', 'LO', 'VG', 'TV', 'A0', '1B', 'S4', 'EE', 'AE', 'VM', 'O0', 'TG', 'GB', 'SY', 'HH', 'YJ', 'LL', 'TU', 'XV', 'C2', 'QU', 'YN'),
+        'Firefox'            => array('FF', 'FE', 'FM', 'SX', 'FB', 'PX', 'MB', 'EI', 'WF', 'CU', 'TF', 'QM', 'FR', 'I4', 'GZ', 'MO', 'F1', 'BI', 'MN', 'BH', 'TO', 'OS', 'MY', 'FY', 'AX', 'C0', 'LH', 'S5', 'ZV'),
         'Internet Explorer'  => array('IE', 'IM', 'PS'),
         'Konqueror'          => array('KO'),
         'NetFront'           => array('NF'),
@@ -295,7 +324,7 @@ class Browser extends ClientParserAbstract
      * @var array
      */
     protected static $mobileOnlyBrowsers = array(
-        '36', 'OC', 'PU', 'SK', 'MF', 'OI', 'OM', 'DD', 'DB', 'ST', 'BL', 'IV', 'FM', 'C1', 'AL', 'SA', 'SB', 'FR', 'WP', 'HA', 'NX', 'HU', 'VV', 'RE', 'CB', 'MZ', 'UM', 'FK', 'FX', 'WI', 'MN', 'M1', 'AH', 'SU', 'EU', 'EZ', 'UT', 'DT', 'S0'
+        '36', 'OC', 'PU', 'SK', 'MF', 'OI', 'OM', 'DD', 'DB', 'ST', 'BL', 'IV', 'FM', 'C1', 'AL', 'SA', 'SB', 'FR', 'WP', 'HA', 'NX', 'HU', 'VV', 'RE', 'CB', 'MZ', 'UM', 'FK', 'FX', 'WI', 'MN', 'M1', 'AH', 'SU', 'EU', 'EZ', 'UT', 'DT', 'S0', 'QU', 'YN'
     );
 
     /**

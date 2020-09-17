@@ -51,7 +51,7 @@ class WordPress extends Plugin
             'API.Tour.getChallenges.end' => 'modifyTourChallenges',
 	        'API.ScheduledReports.generateReport.end' => 'onGenerateReportEnd',
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
-            'CustomMatomoJs.manipulateJsTracker' => 'updateHeatmapTrackerPath',
+            'CustomJsTracker.manipulateJsTracker' => 'updateHeatmapTrackerPath',
             'Visualization.beforeRender' => 'onBeforeRenderView',
         );
     }

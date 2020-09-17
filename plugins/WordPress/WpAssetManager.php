@@ -10,8 +10,9 @@
 namespace Piwik\Plugins\WordPress;
 
 use Piwik\AssetManager;
+use Piwik\Container\StaticContainer;
 use Piwik\Plugins\WordPress\AssetManager\NeverDeleteOnDiskUiAsset;
-use Piwik\Translate;
+use Piwik\Translation\Translator;
 use Piwik\Version;
 
 if (!defined( 'ABSPATH')) {
@@ -33,7 +34,8 @@ class WpAssetManager extends AssetManager
 
 	public function getJsInclusionDirective()
 	{
-		$result = "<script type=\"text/javascript\">\n" . Translate::getJavascriptTranslations() . "\n</script>";
+	    $translator = StaticContainer::get(Translator::class);
+		$result = "<script type=\"text/javascript\">\n" . $translator->getJavascriptTranslations() . "\n</script>";
 
 		$jsFiles = array();
 		$jsFiles[] = "jquery/jquery.js";

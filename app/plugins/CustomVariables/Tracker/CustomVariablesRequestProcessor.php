@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -9,6 +9,7 @@
 namespace Piwik\Plugins\CustomVariables\Tracker;
 
 use Piwik\Common;
+use Piwik\Plugins\CustomVariables\CustomVariables;
 use Piwik\Plugins\CustomVariables\Model;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
@@ -38,7 +39,7 @@ class CustomVariablesRequestProcessor extends RequestProcessor
     public function processRequestParams(VisitProperties $visitProperties, Request $request)
     {
         // TODO: re-add optimization where if custom variables exist in request, don't bother selecting them in Visitor
-        $visitorCustomVariables = $request->getCustomVariables($scope = Model::SCOPE_VISIT);
+        $visitorCustomVariables = self::getCustomVariablesInVisitScope($request);
         if (!empty($visitorCustomVariables)) {
             Common::printDebug("Visit level Custom Variables: ");
             Common::printDebug($visitorCustomVariables);
@@ -73,7 +74,7 @@ class CustomVariablesRequestProcessor extends RequestProcessor
             return;
         }
 
-        $customVariables = $action->getCustomVariables();
+        $customVariables = self::getCustomVariablesInPageScope($request);
 
         if (!empty($customVariables)) {
             Common::printDebug("Page level Custom Variables: ");
@@ -83,6 +84,58 @@ class CustomVariablesRequestProcessor extends RequestProcessor
                 $action->setCustomField($field, $value);
             }
         }
+    }
 
+    public static function getCustomVariablesInVisitScope(Request $request)
+    {
+        return self::getCustomVariables($request, '_cvar');
+    }
+
+    public static function getCustomVariablesInPageScope(Request $request)
+    {
+        return self::getCustomVariables($request, 'cvar');
+    }
+
+    private static function getCustomVariables(Request $request, $parameter)
+    {
+        $cvar      = Common::getRequestVar($parameter, '', 'json', $request->getParams());
+        $customVar = Common::unsanitizeInputValues($cvar);
+
+        if (!is_array($customVar)) {
+            return array();
+        }
+
+        $customVariables = array();
+        $maxCustomVars   = CustomVariables::getNumUsableCustomVariables();
+
+        foreach ($customVar as $id => $keyValue) {
+            $id = (int)$id;
+
+            if ($id < 1
+                || $id > $maxCustomVars
+                || count($keyValue) != 2
+                || (!is_string($keyValue[0]) && !is_numeric($keyValue[0])
+                    || (!is_string($keyValue[1]) && !is_numeric($keyValue[1])))
+            ) {
+                Common::printDebug("Invalid custom variables detected (id=$id)");
+                continue;
+            }
+
+            if (strlen($keyValue[1]) == 0) {
+                $keyValue[1] = "";
+            }
+            // We keep in the URL when Custom Variable have empty names
+            // and values, as it means they can be deleted server side
+
+            $customVariables['custom_var_k' . $id] = self::truncateCustomVariable($keyValue[0]);
+            $customVariables['custom_var_v' . $id] = self::truncateCustomVariable($keyValue[1]);
+        }
+
+        return $customVariables;
+    }
+
+    public static function truncateCustomVariable($input)
+    {
+        return substr(trim($input), 0, CustomVariables::getMaxLengthCustomVariables());
     }
 }

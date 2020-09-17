@@ -40,12 +40,12 @@ class Auth extends \Piwik\Plugins\Login\Auth
 
             if ($user && current_user_can(Capabilities::KEY_SUPERUSER)) {
                 $user = $this->findMatomoUser($user->ID);
-                return new AuthResult(AuthResult::SUCCESS_SUPERUSER_AUTH_CODE, $user['login'], $user['token_auth']);
+                return new AuthResult(AuthResult::SUCCESS_SUPERUSER_AUTH_CODE, $user['login'], null);
             }
 
             if ($user && current_user_can(Capabilities::KEY_VIEW)) {
                 $user = $this->findMatomoUser($user->ID);
-                return new AuthResult(AuthResult::SUCCESS, $user['login'], $user['token_auth']);
+                return new AuthResult(AuthResult::SUCCESS, $user['login'], null);
             }
         }
 
@@ -63,7 +63,7 @@ class Auth extends \Piwik\Plugins\Login\Auth
 		    $user      = $userModel->getUser($login);
 	    }
 
-        if (empty($user['token_auth'])) {
+        if (empty($user['login'])) {
             if ($syncIfNotFound) {
             	$site = new Site\Sync(new Settings());
             	$site->sync_current_site();

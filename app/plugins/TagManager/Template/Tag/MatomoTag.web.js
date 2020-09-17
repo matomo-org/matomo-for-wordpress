@@ -65,7 +65,7 @@
             // installed which another doesn't have.
             libLoaded = true;
             var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.type='text/javascript'; g.async=true; g.src=url+jsEndpoint; s.parentNode.insertBefore(g,s);
+            g.type='text/javascript'; g.async=true; g.defer=true; g.src=url+jsEndpoint; s.parentNode.insertBefore(g,s);
         }
     }
 
@@ -111,9 +111,9 @@
                     lastMatomoUrl = getMatomoUrlFromConfig(matomoConfig);
                     var trackerUrl = lastMatomoUrl + matomoConfig.trackingEndpoint;
                     if (matomoConfig.registerAsDefaultTracker) {
-                        tracker = Piwik.addTracker(trackerUrl);
+                        tracker = Piwik.addTracker(trackerUrl, matomoConfig.idSite);
                     } else {
-                        tracker = Piwik.getTracker(trackerUrl);
+                        tracker = Piwik.getTracker(trackerUrl, matomoConfig.idSite);
                     }
                     configuredTrackers[variableName] = tracker;
 
@@ -155,8 +155,6 @@
                         tracker.setDomains(domains);
                     }
 
-                    tracker.setSiteId(matomoConfig.idSite);
-                    
                     if (matomoConfig.alwaysUseSendBeacon) {
                         tracker.alwaysUseSendBeacon();
                     }

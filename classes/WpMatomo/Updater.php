@@ -10,7 +10,6 @@
 namespace WpMatomo;
 
 use Piwik\Filesystem;
-use Piwik\Plugins\CoreUpdater\CoreUpdater;
 use Piwik\Plugins\Installation\ServerFilesGenerator;
 use Piwik\Version;
 
@@ -150,13 +149,13 @@ class Updater {
 
 	private static function update_components() {
 		$updater                     = new \Piwik\Updater();
-		$components_with_update_file = CoreUpdater::getComponentUpdates( $updater );
+		$components_with_update_file = $updater->getComponentUpdates( );
 
 		if ( empty( $components_with_update_file ) ) {
 			return false;
 		}
 
-		CoreUpdater::updateComponents( $updater, $components_with_update_file );
+        $updater->updateComponents( $components_with_update_file );
 
 		\Piwik\Updater::recordComponentSuccessfullyUpdated( 'core', Version::VERSION );
 		Filesystem::deleteAllCacheOnUpdate();

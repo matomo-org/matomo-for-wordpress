@@ -40,7 +40,7 @@ return array(
 		$paths = new \WpMatomo\Paths();
 		return rtrim('/'. $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir().'/'), '/');
 	},
-	'Piwik\Auth' => DI\object('Piwik\Plugins\WordPress\Auth'),
+	'Piwik\Auth' => DI\autowire('Piwik\Plugins\WordPress\Auth'),
 	\Piwik\Config::class => DI\decorate(function ($previous) {
 
 		\Piwik\Plugins\TagManager\TagManager::$enableAutoContainerCreation = false;
@@ -102,9 +102,9 @@ return array(
 
 		return $previous;
 	}),
-	'Zend_Mail_Transport_Abstract' => DI\object('WpMatomo\Email'),
+	'Piwik\Mail\Transport' => DI\autowire('WpMatomo\Email'),
 	'Piwik\Plugins\CustomPiwikJs\TrackerUpdater' => DI\decorate(function ($previous) {
-		/** @var \Piwik\Plugins\CustomPiwikJs\TrackerUpdater $previous */
+		/** @var \Piwik\Plugins\CustomJsTracker\TrackerUpdater $previous */
 
 		$paths = new Paths();
 		$dir = $paths->get_matomo_js_upload_path();
@@ -127,7 +127,7 @@ return array(
 		return array_values(array_filter($checks));
 	}),
 	'observers.global' => DI\add(array(
-		array('FrontController.modifyErrorPage', function (&$result, $ex) {
+		array('FrontController.modifyErrorPage', DI\value(function (&$result, $ex) {
 			if (!empty($ex) && is_object($ex) && $ex instanceof \Piwik\Exception\NoWebsiteFoundException) {
 				// try to repair itself in case for some reason the site was not yet synced... on next reload it would
 				// then work
@@ -148,18 +148,18 @@ return array(
 					$sync->sync_current_users();
 				}
 			}
-		}),
-		array('Db.getDatabaseConfig', function (&$config) {
+		})),
+		array('Db.getDatabaseConfig', DI\value(function (&$config) {
 			// we don't want to save these and instead detect them on demand.
 			// for security reasons etc we don't want to duplicate these values
 			include_once plugin_dir_path(MATOMO_ANALYTICS_FILE ) . 'classes/WpMatomo/Db/WordPress.php';
-		}),
-		array('Tracker.getDatabaseConfig', function (&$configDb) {
+		})),
+		array('Tracker.getDatabaseConfig', DI\value(function (&$configDb) {
 			// we don't want to save these and instead detect them on demand.
 			// for security reasons etc we don't want to duplicate these values
 			include_once plugin_dir_path(MATOMO_ANALYTICS_FILE ) . 'classes/WpMatomo/Db/WordPress.php';
-		}),
-		array('Config.beforeSave', function (&$values) {
+		})),
+		array('Config.beforeSave', DI\value(function (&$values) {
 			// we don't want to save these and instead detect them on demand.
 			// for security reasons etc we don't want to duplicate these values
 			unset($values['database']['host']);
@@ -172,7 +172,7 @@ return array(
 			unset($values['General']['enable_users_admin']);
 			unset($values['General']['enable_sites_admin']);
 			unset($values['General']['salt']);
-		}),
+		})),
 	)),
 
 );

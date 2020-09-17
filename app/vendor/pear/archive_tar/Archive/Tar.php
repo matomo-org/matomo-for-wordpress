@@ -312,11 +312,12 @@ class Archive_Tar extends PEAR
     /**
      * @param string $p_path
      * @param bool $p_preserve
+     * @param bool $p_symlinks
      * @return bool
      */
-    public function extract($p_path = '', $p_preserve = false)
+    public function extract($p_path = '', $p_preserve = false, $p_symlinks = true)
     {
-        return $this->extractModify($p_path, '', $p_preserve);
+        return $this->extractModify($p_path, '', $p_preserve, $p_symlinks);
     }
 
     /**
@@ -557,11 +558,12 @@ class Archive_Tar extends PEAR
      *                               removed if present at the beginning of
      *                               the file/dir path.
      * @param boolean $p_preserve Preserve user/group ownership of files
+     * @param boolean $p_symlinks Allow symlinks.
      *
      * @return boolean true on success, false on error.
      * @see    extractList()
      */
-    public function extractModify($p_path, $p_remove_path, $p_preserve = false)
+    public function extractModify($p_path, $p_remove_path, $p_preserve = false, $p_symlinks = true)
     {
         $v_result = true;
         $v_list_detail = array();
@@ -573,7 +575,8 @@ class Archive_Tar extends PEAR
                 "complete",
                 0,
                 $p_remove_path,
-                $p_preserve
+                $p_preserve,
+                $p_symlinks
             );
             $this->_close();
         }
@@ -617,11 +620,12 @@ class Archive_Tar extends PEAR
      *                               removed if present at the beginning of
      *                               the file/dir path.
      * @param boolean $p_preserve Preserve user/group ownership of files
+     * @param boolean $p_symlinks Allow symlinks.
      *
      * @return true on success, false on error.
      * @see    extractModify()
      */
-    public function extractList($p_filelist, $p_path = '', $p_remove_path = '', $p_preserve = false)
+    public function extractList($p_filelist, $p_path = '', $p_remove_path = '', $p_preserve = false, $p_symlinks = true)
     {
         $v_result = true;
         $v_list_detail = array();
@@ -642,7 +646,8 @@ class Archive_Tar extends PEAR
                 "partial",
                 $v_list,
                 $p_remove_path,
-                $p_preserve
+                $p_preserve,
+                $p_symlinks
             );
             $this->_close();
         }
@@ -1917,6 +1922,7 @@ class Archive_Tar extends PEAR
      * @param string $p_file_list
      * @param string $p_remove_path
      * @param bool $p_preserve
+     * @param bool $p_symlinks
      * @return bool
      */
     public function _extractList(
@@ -1925,7 +1931,8 @@ class Archive_Tar extends PEAR
         $p_mode,
         $p_file_list,
         $p_remove_path,
-        $p_preserve = false
+        $p_preserve = false,
+        $p_symlinks = true
     )
     {
         $v_result = true;
@@ -2108,6 +2115,13 @@ class Archive_Tar extends PEAR
                             }
                         }
                     } elseif ($v_header['typeflag'] == "2") {
+                        if (!$p_symlinks) {
+                            $this->_warning('Symbolic links are not allowed. '
+                                . 'Unable to extract {'
+                                . $v_header['filename'] . '}'
+                            );
+                            return false;
+                        }
                         if (@file_exists($v_header['filename'])) {
                             @unlink($v_header['filename']);
                         }

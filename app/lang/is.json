@@ -156,8 +156,7 @@
         "KeepTokenSecret": "Þessi tókar auðkenning er eins leynd og þitt notendanafn og lykilorð %1$s deilið því ekki%2$s!",
         "LoadedAPIs": "Tókst að hlaða %s API",
         "MoreInformation": "Fyrir frekari upplýsingar um Matomo API, Vinsamlegast skoðið %1$s Inngangur að Matomo API %2$s og %3$s Matomo API Tilvísunir %4$s.",
-        "UserAuthentication": "Notenda auðkenning",
-        "UsingTokenAuth": "Ef þú vilt að %1$s biðji um gögn inn í skriftu eða crontab færslu osfv. %2$s verður þú að bæta við færibreytu %3$s til API kalls vefslóðir sem krefst auðkenningar."
+        "UserAuthentication": "Notenda auðkenning"
     },
     "Actions": {
         "ColumnClicks": "Músasmellir",
@@ -419,10 +418,10 @@
         "Country_MC": "Mónakó",
         "Country_MD": "Moldóva",
         "Country_ME": "Svartfjallaland",
-        "Country_MF": "St. Martin",
+        "Country_MF": "Saint-Martin",
         "Country_MG": "Madagaskar",
         "Country_MH": "Marshalleyjar",
-        "Country_MK": "Makedónía",
+        "Country_MK": "Norður-Makedónía",
         "Country_ML": "Malí",
         "Country_MM": "Mjanmar (Búrma)",
         "Country_MN": "Mongólía",
@@ -1022,7 +1021,7 @@
         "Language_no": "Norska",
         "Language_nr": "Suðurndebele",
         "Language_nv": "Navahó",
-        "Language_ny": "Njanja; sísjeva; sjeva",
+        "Language_ny": "Nýanja",
         "Language_oc": "Oksítaníska",
         "Language_oj": "Ojibva",
         "Language_om": "Oromo",
@@ -1313,6 +1312,7 @@
         "Timezone_Asia_Omsk": "Omsk",
         "Timezone_Asia_Oral": "Oral",
         "Timezone_Asia_Pontianak": "Pontianak",
+        "Timezone_Asia_Qostanay": "Kostanay",
         "Timezone_Asia_Qyzylorda": "Qyzylorda",
         "Timezone_Asia_Rangoon": "Rangún",
         "Timezone_Asia_Saigon": "Ho Chi Minh-borg",
@@ -1506,7 +1506,6 @@
     },
     "UsersManager": {
         "AddUser": "Bæta nýjum notanda við",
-        "Alias": "Alias",
         "AllWebsites": "Allir vefir",
         "ApplyToAllWebsites": "Virkja fyrir alla vefi",
         "Email": "Netfang",

@@ -414,7 +414,7 @@
         "PluginSettings": "Kromprogramaj agordoj",
         "SettingsSaveSuccess": "Agordoj ĝisdatigitaj"
     },
-    "CustomPiwikJs": {
+    "CustomJsTracker": {
         "DiagnosticPiwikJsWritable": "Skribebla Sekvanta JavaSkripto (%s)",
         "DiagnosticPiwikJsNotWritable": "La JavaSkriptan sekvanta dosiero %sne stas skriblebla. Pro tio aliaj kromprogramoj ne povas etendi la JavaSkriptan sekvanto. Estontece eĉ kelkaj kernaj funkcioj povus ne funkcii kiel atendite.",
         "DiagnosticPiwikJsMakeWritable": "Ni rekomendas fari %1$sskribebla per funkciado de ĉi tiu komando: %2$s"
@@ -560,7 +560,6 @@
         "Country_MD": "Moldavujo",
         "Country_MG": "Madagaskaro",
         "Country_MH": "Marŝaloj",
-        "Country_MK": "Makedonujo",
         "Country_ML": "Malio",
         "Country_MM": "Mjanmao",
         "Country_MN": "Mongolujo",
@@ -1398,6 +1397,7 @@
         "Timezone_Asia_Omsk": "Omsk",
         "Timezone_Asia_Oral": "Oral",
         "Timezone_Asia_Pontianak": "Pontianak",
+        "Timezone_Asia_Qostanay": "Qostanay",
         "Timezone_Asia_Qyzylorda": "Qyzylorda",
         "Timezone_Asia_Rangoon": "Yangon",
         "Timezone_Asia_Saigon": "Ho Chi Minh",

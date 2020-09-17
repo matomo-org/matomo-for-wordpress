@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -136,9 +136,13 @@ abstract class GeneratePluginBase extends ConsoleCommand
 
         $newRequiredVersion = sprintf('>=%s,<%d.0.0-b1', $piwikVersion, $nextMajorVersion);
 
-
         if (!empty($pluginJson['require']['piwik'])) {
-            $requiredVersion = trim($pluginJson['require']['piwik']);
+            $pluginJson['require']['matomo'] = $pluginJson['require']['piwik'];
+            unset($pluginJson['require']['piwik']);
+        }
+
+        if (!empty($pluginJson['require']['matomo'])) {
+            $requiredVersion = trim($pluginJson['require']['matomo']);
 
             if ($requiredVersion === $newRequiredVersion) {
                 // there is nothing to updated
@@ -194,7 +198,7 @@ abstract class GeneratePluginBase extends ConsoleCommand
             $output->writeln(sprintf('<comment>We have updated your "%s" to require the Piwik version "%s".</comment>', $relativePluginJson, $newRequiredVersion));
         }
 
-        $pluginJson['require']['piwik'] = $newRequiredVersion;
+        $pluginJson['require']['matomo'] = $newRequiredVersion;
         file_put_contents($pluginJsonPath, $this->toJson($pluginJson));
     }
 

@@ -1,0 +1,25 @@
+{
+    "name": "CustomVariables",
+    "description": "Categorise your visitors and actions with custom name-value pairs. Segment by these values and get more insights to draw the right conclusions.",
+    "version": "4.0.0",
+    "keywords": ["custom variables"],
+    "license": "GPL v3+",
+    "homepage": "https://matomo.org",
+    "require": {
+        "matomo": ">=4.0.0-b1,<5.0.0-b1"
+    },
+    "support": {
+        "email": "hello@matomo.org",
+        "issues": "https://github.com/matomo-org/plugin-CustomVariables/issues",
+        "forum": "https://forum.matomo.org",
+        "source": "https://github.com/matomo-org/plugin-CustomVariables",
+        "wiki": "https://github.com/matomo-org/plugin-CustomVariables/wiki"
+    },
+    "authors": [
+        {
+            "name": "Matomo",
+            "email": "hello@matomo.org",
+            "homepage": "https://matomo.org"
+        }
+    ]
+}

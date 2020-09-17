@@ -62,7 +62,7 @@ class Installer {
 		try {
 			Bootstrap::do_bootstrap();
 
-			return SettingsPiwik::isPiwikInstalled();
+			return SettingsPiwik::isMatomoInstalled();
 		} catch ( NotYetInstalledException $e ) {
 			// not yet installed.... we will need to install it
 		}

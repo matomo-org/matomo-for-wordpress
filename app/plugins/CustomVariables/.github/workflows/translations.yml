@@ -1,0 +1,17 @@
+name: Translation Updates
+
+on:
+  schedule:
+  - cron: "0 22 * * 0"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: matomo-org/github-action-plugin-translations@master
+      env:
+        TransifexUsername: ${{ secrets.TransifexUsername }}
+        TransifexPassword: ${{ secrets.TransifexPassword }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
