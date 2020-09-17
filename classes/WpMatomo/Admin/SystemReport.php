@@ -16,11 +16,13 @@ use Piwik\Container\StaticContainer;
 use Piwik\Date;
 use Piwik\Filesystem;
 use Piwik\MetricsFormatter;
+use Piwik\Plugin;
 use Piwik\Plugins\CoreAdminHome\API;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Tracker\Failures;
+use Piwik\Version;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Installer;
@@ -506,7 +508,21 @@ class SystemReport {
 						}
 					}
 				}
+                $incompatible_plugins = Plugin\Manager::getInstance()->getIncompatiblePlugins(Version::VERSION);
+				if (!empty($incompatible_plugins)) {
+                    $rows[] = array(
+                        'section' => esc_html__( 'Incompatible Matomo plugins', 'matomo' ),
+                    );
+                    foreach ($incompatible_plugins as $plugin) {
+                        $rows[] = array(
+                            'name'    => 'Plugin has missing dependencies',
+                            'value'   => $plugin->getPluginName(),
+                            'is_error' => true,
+                            'comment' => $plugin->getMissingDependenciesAsString(Version::VERSION) . ' If the plugin requires a different Matomo version you may need to update it. If you no longer use it consider uninstalling it.',
+                        );
+                    }
 
+                }
 			}
 
 			$num_days_check_visits = 5;
