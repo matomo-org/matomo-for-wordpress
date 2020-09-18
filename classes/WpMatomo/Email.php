@@ -61,7 +61,9 @@ class Email {
 
         $attachments = $mail->getAttachments();
 
-		$this->sendMailThroughWordPress($mail->getRecipients(), $mail->getSubject(), $content, $attachments);
+		$recipients = array_keys($mail->getRecipients());
+
+		$this->sendMailThroughWordPress($recipients, $mail->getSubject(), $content, $attachments);
 	}
 
 	private function rememberMailSent(){
