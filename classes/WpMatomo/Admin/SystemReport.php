@@ -494,6 +494,7 @@ class SystemReport {
 			if ( ! \WpMatomo::is_safe_mode() ) {
 				Bootstrap::do_bootstrap();
 				$general = Config::getInstance()->General;
+				
 				if (empty($general['proxy_client_headers'])) {
 					foreach (AdvancedSettings::$valid_host_headers as $header) {
 						if (!empty($_SERVER[$header])) {
@@ -501,7 +502,7 @@ class SystemReport {
 								'name'    => 'Proxy header',
 								'value'   => $header,
 								'is_warning' => true,
-								'comment' => 'A proxy header is set which means you maybe need to configure a proxy header in the Advanced settings to make location reporting work. If the location in your reports is detected correctly, you can ignore this warning.',
+								'comment' => 'A proxy header is set which means you maybe need to configure a proxy header in the Advanced settings to make location reporting work. If the location in your reports is detected correctly, you can ignore this warning. Learn more: https://matomo.org/faq/wordpress/how-do-i-fix-the-proxy-header-warning-in-the-matomo-for-wordpress-system-report/',
 							);
 						}
 					}
