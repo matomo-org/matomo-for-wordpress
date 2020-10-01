@@ -615,19 +615,18 @@ class SystemReport {
 
 		if ( ! \WpMatomo::is_safe_mode() ) {
 			Bootstrap::do_bootstrap();
-
-			$tracking_failures = new Failures();
-
+			$trackfailures = [];
 			try {
-				$tracking_failures = $tracking_failures->getAllFailures();
+				$tracking_failures = new Failures();
+				$trackfailures = $tracking_failures->getAllFailures();
 			} catch (\Exception $e) {
-				$tracking_failures = [];
+				// ignored in case not set up yet etc.
 			}
-			if (!empty($tracking_failures)) {
+			if (!empty($trackfailures)) {
 				$rows[] = array(
 					'section' => 'Tracking failures',
 				);
-				foreach ($tracking_failures as $failure) {
+				foreach ($trackfailures as $failure) {
 					$comment = sprintf('Solution: %s<br>More info: %s<br>Date: %s<br>Request URL: %s',
 										$failure['solution'], $failure['solution_url'],
 										$failure['pretty_date_first_occurred'], $failure['request_url']);
