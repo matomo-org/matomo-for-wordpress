@@ -90,14 +90,14 @@ class TrackingCode {
 	 */
 	public function add_javascript_code() {
 		if ( $this->is_hidden_user() ) {
-			$this->logger->log( 'Do not add tracking code to site (user should not be tracked) Blog ID: ' . get_current_blog_id() );
+			$this->logger->log( 'Do not add tracking code to site (user should not be tracked) Blog ID: ' . get_current_blog_id(), Logger::LEVEL_DEBUG );
 
 			return;
 		}
 
 		$tracking_code = $this->generator->get_tracking_code();
 
-		$this->logger->log( 'Add tracking code. Blog ID: ' . get_current_blog_id() );
+		$this->logger->log( 'Add tracking code. Blog ID: ' . get_current_blog_id(), Logger::LEVEL_DEBUG );
 
 		if ( $this->settings->is_network_enabled()
 			 && 'manually' === $this->settings->get_global_option( 'track_mode' ) ) {
@@ -120,7 +120,7 @@ class TrackingCode {
 	 */
 	public function add_noscript_code() {
 		if ( $this->is_hidden_user() ) {
-			$this->logger->log( 'Do not add noscript code to site (user should not be tracked) Blog ID: ' . get_current_blog_id() );
+			$this->logger->log( 'Do not add noscript code to site (user should not be tracked) Blog ID: ' . get_current_blog_id(), Logger::LEVEL_DEBUG );
 
 			return;
 		}
@@ -128,10 +128,10 @@ class TrackingCode {
 		$code = $this->generator->get_noscript_code();
 
 		if ( ! empty( $code ) ) {
-			$this->logger->log( 'Add noscript code. Blog ID: ' . get_current_blog_id() );
+			$this->logger->log( 'Add noscript code. Blog ID: ' . get_current_blog_id(), Logger::LEVEL_DEBUG );
 			echo $code . "\n";
 		} else {
-			$this->logger->log( 'No noscript code present. Blog ID: ' . get_current_blog_id() );
+			$this->logger->log( 'No noscript code present. Blog ID: ' . get_current_blog_id(), Logger::LEVEL_DEBUG );
 		}
 	}
 

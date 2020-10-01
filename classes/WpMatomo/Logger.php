@@ -16,8 +16,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Logger {
+	const LEVEL_NONE = 99;
+	const LEVEL_DEBUG = 1;
+	const LEVEL_INFO = 3;
 
-	public function log( $message ) {
+	private function get_log_level()
+	{
+		if ( defined('MATOMO_DEBUG')) {
+			if (MATOMO_DEBUG) {
+				return self::LEVEL_DEBUG;
+			}
+			return self::LEVEL_NONE;
+		}
+
+		return self::LEVEL_INFO;
+	}
+
+	public function log( $message , $mode = 3) {
+		$log_level = $this->get_log_level();
+
+		if ($log_level > $mode) {
+			return;
+		}
+
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG === true ) {
 			if ( is_array( $message ) || is_object( $message ) ) {
 				error_log( 'Matomo: ' . print_r( $message, true ) );
