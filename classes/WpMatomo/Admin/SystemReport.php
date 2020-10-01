@@ -617,7 +617,12 @@ class SystemReport {
 			Bootstrap::do_bootstrap();
 
 			$tracking_failures = new Failures();
-			$tracking_failures = $tracking_failures->getAllFailures();
+
+			try {
+				$tracking_failures = $tracking_failures->getAllFailures();
+			} catch (\Exception $e) {
+				$tracking_failures = [];
+			}
 			if (!empty($tracking_failures)) {
 				$rows[] = array(
 					'section' => 'Tracking failures',
