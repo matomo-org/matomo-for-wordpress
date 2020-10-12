@@ -9,11 +9,13 @@
 
 namespace WpMatomo\Admin;
 
+use DeviceDetector\DeviceDetector;
 use Piwik\CliMulti;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Date;
+use Piwik\DeviceDetector\DeviceDetectorFactory;
 use Piwik\Filesystem;
 use Piwik\MetricsFormatter;
 use Piwik\Plugins\CoreAdminHome\API;
@@ -200,7 +202,7 @@ class SystemReport {
 				array(
 					'title'        => 'Browser',
 					'rows'         => $this->get_browser_info(),
-					'has_comments' => false,
+					'has_comments' => true,
 				),
 			);
 		}
@@ -976,14 +978,34 @@ class SystemReport {
 		if (!empty($_SERVER['HTTP_USER_AGENT'])) {
 			$rows[] = array(
 				'name'    => 'Browser',
-				'value'   => $_SERVER['HTTP_USER_AGENT'],
+				'value'   => '',
+				'comment' => $_SERVER['HTTP_USER_AGENT']
 			);
 		}
 		if (!\WpMatomo::is_safe_mode()) {
 			Bootstrap::do_bootstrap();
+			try {
+				if (!empty($_SERVER['HTTP_USER_AGENT'])) {
+					$detector = StaticContainer::get(DeviceDetectorFactory::class)->makeInstance($_SERVER['HTTP_USER_AGENT']);
+					$client = $detector->getClient();
+					if (!empty($client['name']) && $client['name'] === 'Microsoft Edge' && (int) $client['version'] >= 85) {
+						$rows[] = array(
+							'name' => 'Browser Compatibility',
+							'is_warning' => true,
+							'value'   => 'Yes',
+							'comment' => 'Because you are using MS Edge browser, you may see a warning like "This site has been reported as unsafe" from "Microsoft Defender SmartScreen" when you view the Matomo Reporting, Admin or Tag Manager page. This is a false alert and you can safely ignore this warning by clicking on the icon next to the URL (in the address bar) and choosing either "Report as safe" (preferred) or "Show unsafe content". We are hoping to get this false warning removed in the future.'
+						);
+					}
+				}
+
+			} catch (\Exception $e) {
+
+			}
+
 			$rows[] = array(
 				'name'    => 'Language',
-				'value'   => Common::getBrowserLanguage()
+				'value'   => Common::getBrowserLanguage(),
+				'comment' => ''
 			);
 		}
 
