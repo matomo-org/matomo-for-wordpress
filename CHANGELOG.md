@@ -1,5 +1,14 @@
 == Changelog ==
 
+= 1.3.1 =
+* Log less messages by default
+* Add possibility to disable logging and enable logging of all messages through wp-config.php
+* Make sure jQuery URLs use correct protocol
+* Optimise order of tracking settings
+* Show a warning in system report if MS Edge 85+ is used
+* Add more information to system report
+* Other minor fixes
+
 = 1.3.0 =
 * Changed opt out shortcode to no longer use an iframe and instead print the content directly
 * Automatically use a primary key for log tmp table when required

@@ -4,10 +4,10 @@
  * Description: The #1 Google Analytics alternative that gives you full control over your data and protects the privacy for your users. Free, secure and open.
  * Author: Matomo
  * Author URI: https://matomo.org
- * Version: 1.3.0
+ * Version: 1.3.1
  * Domain Path: /languages
  * WC requires at least: 2.4.0
- * WC tested up to: 4.0.0
+ * WC tested up to: 4.6.0
  *
  * Matomo - free/libre analytics platform
  *
@@ -126,7 +126,9 @@ function matomo_anonymize_value( $value ) {
 		$values_to_anonymize = array(
 			ABSPATH                           => '$ABSPATH/',
 			str_replace( '/', '\/', ABSPATH ) => '$ABSPATH\/',
+			str_replace( '/', '\\', ABSPATH ) => '$ABSPATH\/',
 			WP_CONTENT_DIR                    => '$WP_CONTENT_DIR/',
+			str_replace( '/', '\\', WP_CONTENT_DIR ) => '$WP_CONTENT_DIR\\',
 			home_url()                        => '$home_url',
 			site_url()                        => '$site_url',
 			DB_PASSWORD                       => '$DB_PASSWORD',

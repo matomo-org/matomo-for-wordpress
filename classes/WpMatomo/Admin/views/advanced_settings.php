@@ -39,7 +39,7 @@ if ( $was_updated ) {
 				<?php
 				echo '<span style="white-space: nowrap;display: inline-block;"><input type="radio" ' . ( empty($matomo_client_headers) ? 'checked="checked" ' : '' ) . ' value="REMOTE_ADDR" name="matomo[proxy_client_header]" /> <code>REMOTE_ADDR</code> ' . ( ! empty( $_SERVER[ 'REMOTE_ADDR' ] ) ? esc_html( $_SERVER[ 'REMOTE_ADDR' ] ) : esc_html__( 'No value found', 'matomo' ) ) . ' (' . esc_html__( 'Default', 'matomo' ) .')</span>';
 				foreach ( AdvancedSettings::$valid_host_headers as $host_header ) {
-					echo '<span style="white-space: nowrap;display: inline-block;"><input type="radio" ' . ( in_array( $host_header, $matomo_client_headers, true ) ? 'checked="checked" ' : '' ) . 'value="'. esc_attr($host_header).'" name="matomo[proxy_client_header]" /> <code>' . $host_header . '</code> ' . ( ! empty( $_SERVER[ $host_header ] ) ? esc_html( $_SERVER[ $host_header ] ) : esc_html__( 'No value found', 'matomo' ) ) . ' &nbsp; </span>';
+					echo '<span style="white-space: nowrap;display: inline-block;"><input type="radio" ' . ( in_array( $host_header, $matomo_client_headers, true ) ? 'checked="checked" ' : '' ) . 'value="'. esc_attr($host_header).'" name="matomo[proxy_client_header]" /> <code>' . $host_header . '</code> ' . ( ! empty( $_SERVER[ $host_header ] ) ? ('<strong>'. esc_html( $_SERVER[ $host_header ] ) . '</strong>') : esc_html__( 'No value found', 'matomo' ) ) . ' &nbsp; </span>';
 				}
 				?>
             </td>

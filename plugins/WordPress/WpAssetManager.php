@@ -11,6 +11,7 @@ namespace Piwik\Plugins\WordPress;
 
 use Piwik\AssetManager;
 use Piwik\Plugins\WordPress\AssetManager\NeverDeleteOnDiskUiAsset;
+use Piwik\ProxyHttp;
 use Piwik\Translate;
 use Piwik\Version;
 
@@ -58,11 +59,17 @@ class WpAssetManager extends AssetManager
 
 		foreach ($jsFiles as $jsFile) {
 			$jQueryPath = includes_url('js/' . $jsFile);
+			if (ProxyHttp::isHttps()) {
+				$jQueryPath = str_replace('http://', 'https://', $jQueryPath);
+			} else {
+				$jQueryPath = str_replace('http://', '//', $jQueryPath);
+			}
 			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, $jQueryPath);
 		}
 
 		$result .= "<script type=\"text/javascript\">window.$ = jQuery;</script>";
 		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../assets/js/asset_manager_core_js.js?v=' . Version::VERSION);
+		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../assets/js/opt-out-configurator.directive.js?v=' . Version::VERSION);
 
 		// may need to change or allow to this... but how to make the wp-includes relative?
 		// $result .= sprintf(self::JS_IMPORT_DIRECTIVE, plugins_url( 'assets/js/asset_manager_core_js.js', MATOMO_ANALYTICS_FILE )  . '?v=' . Version::VERSION);

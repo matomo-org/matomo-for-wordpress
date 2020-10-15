@@ -9,17 +9,20 @@
 
 namespace WpMatomo\Admin;
 
+use DeviceDetector\DeviceDetector;
 use Piwik\CliMulti;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Date;
+use Piwik\DeviceDetector\DeviceDetectorFactory;
 use Piwik\Filesystem;
 use Piwik\MetricsFormatter;
 use Piwik\Plugins\CoreAdminHome\API;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
 use Piwik\Plugins\UserCountry\LocationProvider;
+use Piwik\Tracker\Failures;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Installer;
@@ -199,7 +202,7 @@ class SystemReport {
 				array(
 					'title'        => 'Browser',
 					'rows'         => $this->get_browser_info(),
-					'has_comments' => false,
+					'has_comments' => true,
 				),
 			);
 		}
@@ -493,6 +496,7 @@ class SystemReport {
 			if ( ! \WpMatomo::is_safe_mode() ) {
 				Bootstrap::do_bootstrap();
 				$general = Config::getInstance()->General;
+				
 				if (empty($general['proxy_client_headers'])) {
 					foreach (AdvancedSettings::$valid_host_headers as $header) {
 						if (!empty($_SERVER[$header])) {
@@ -500,7 +504,7 @@ class SystemReport {
 								'name'    => 'Proxy header',
 								'value'   => $header,
 								'is_warning' => true,
-								'comment' => 'A proxy header is set which means you maybe need to configure a proxy header in the Advanced settings to make location reporting work. If the location in your reports is detected correctly, you can ignore this warning.',
+								'comment' => 'A proxy header is set which means you maybe need to configure a proxy header in the Advanced settings to make location reporting work. If the location in your reports is detected correctly, you can ignore this warning. Learn more: https://matomo.org/faq/wordpress/how-do-i-fix-the-proxy-header-warning-in-the-matomo-for-wordpress-system-report/',
 							);
 						}
 					}
@@ -610,6 +614,36 @@ class SystemReport {
 			);
 		}
 
+
+		if ( ! \WpMatomo::is_safe_mode() ) {
+			Bootstrap::do_bootstrap();
+			$trackfailures = [];
+			try {
+				$tracking_failures = new Failures();
+				$trackfailures = $tracking_failures->getAllFailures();
+			} catch (\Exception $e) {
+				// ignored in case not set up yet etc.
+			}
+			if (!empty($trackfailures)) {
+				$rows[] = array(
+					'section' => 'Tracking failures',
+				);
+				foreach ($trackfailures as $failure) {
+					$comment = sprintf('Solution: %s<br>More info: %s<br>Date: %s<br>Request URL: %s',
+										$failure['solution'], $failure['solution_url'],
+										$failure['pretty_date_first_occurred'], $failure['request_url']);
+					$rows[] = array(
+						'name'    => $failure['problem'],
+						'is_warning'   => true,
+						'value'   => '',
+						'comment' => $comment,
+					);
+				}
+
+			}
+		}
+
+
 		return $rows;
 	}
 
@@ -630,7 +664,7 @@ class SystemReport {
 
 		try {
 			$time = gmdate( 'Y-m-d H:i:s', time() - $days_in_seconds );
-			$sql = $wpdb->prepare('SELECT count(idsite) from ' . $prefix_table . ' where visit_last_action_time > %s LIMIT 1', $time );
+			$sql = $wpdb->prepare('SELECT idsite from ' . $prefix_table . ' where visit_last_action_time > %s LIMIT 1', $time );
 			$row = $wpdb->get_var( $sql );
 		} catch ( \Exception $e ) {
 			$row = null;
@@ -944,14 +978,34 @@ class SystemReport {
 		if (!empty($_SERVER['HTTP_USER_AGENT'])) {
 			$rows[] = array(
 				'name'    => 'Browser',
-				'value'   => $_SERVER['HTTP_USER_AGENT'],
+				'value'   => '',
+				'comment' => $_SERVER['HTTP_USER_AGENT']
 			);
 		}
 		if (!\WpMatomo::is_safe_mode()) {
 			Bootstrap::do_bootstrap();
+			try {
+				if (!empty($_SERVER['HTTP_USER_AGENT'])) {
+					$detector = StaticContainer::get(DeviceDetectorFactory::class)->makeInstance($_SERVER['HTTP_USER_AGENT']);
+					$client = $detector->getClient();
+					if (!empty($client['name']) && $client['name'] === 'Microsoft Edge' && (int) $client['version'] >= 85) {
+						$rows[] = array(
+							'name' => 'Browser Compatibility',
+							'is_warning' => true,
+							'value'   => 'Yes',
+							'comment' => 'Because you are using MS Edge browser, you may see a warning like "This site has been reported as unsafe" from "Microsoft Defender SmartScreen" when you view the Matomo Reporting, Admin or Tag Manager page. This is a false alert and you can safely ignore this warning by clicking on the icon next to the URL (in the address bar) and choosing either "Report as safe" (preferred) or "Show unsafe content". We are hoping to get this false warning removed in the future.'
+						);
+					}
+				}
+
+			} catch (\Exception $e) {
+
+			}
+
 			$rows[] = array(
 				'name'    => 'Language',
-				'value'   => Common::getBrowserLanguage()
+				'value'   => Common::getBrowserLanguage(),
+				'comment' => ''
 			);
 		}
 
