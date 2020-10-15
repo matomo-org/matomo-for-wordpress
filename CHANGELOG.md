@@ -4,7 +4,9 @@
 * Log less messages by default
 * Add possibility to disable logging and enable logging of all messages through wp-config.php
 * Make sure jQuery URLs use correct protocol
+* Optimise order of tracking settings
 * Show a warning in system report if MS Edge 85+ is used
+* Add more information to system report
 * Other minor fixes
 
 = 1.3.0 =
