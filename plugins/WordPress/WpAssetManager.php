@@ -11,6 +11,7 @@ namespace Piwik\Plugins\WordPress;
 
 use Piwik\AssetManager;
 use Piwik\Plugins\WordPress\AssetManager\NeverDeleteOnDiskUiAsset;
+use Piwik\ProxyHttp;
 use Piwik\Translate;
 use Piwik\Version;
 
@@ -58,6 +59,11 @@ class WpAssetManager extends AssetManager
 
 		foreach ($jsFiles as $jsFile) {
 			$jQueryPath = includes_url('js/' . $jsFile);
+			if (ProxyHttp::isHttps()) {
+				$jQueryPath = str_replace('http://', 'https://', $jQueryPath);
+			} else {
+				$jQueryPath = str_replace('http://', '//', $jQueryPath);
+			}
 			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, $jQueryPath);
 		}
 
