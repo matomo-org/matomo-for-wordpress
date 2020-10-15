@@ -211,7 +211,9 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 	 * @return array
 	 */
 	public function prepare_tracking_code( $idsite ) {
-		$this->logger->log( 'Apply tracking code changes:' );
+		$logLevel = is_admin() ? Logger::LEVEL_DEBUG : Logger::LEVEL_INFO;
+
+		$this->logger->log( 'Apply tracking code changes:', $logLevel );
 
 		$tracker_endpoint = $this->get_tracker_endpoint();
 		$js_endpoint      = $this->get_js_endpoint();
@@ -298,8 +300,8 @@ g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint )
 		$script = apply_filters( 'matomo_tracking_code_script', $script, $idsite );
 		$script = apply_filters( 'matomo_tracking_code_noscript', $script, $idsite );
 
-		$this->logger->log( 'Finished tracking code: ' . $script );
-		$this->logger->log( 'Finished noscript code: ' . $no_script );
+		$this->logger->log( 'Finished tracking code: ' . $script, $logLevel );
+		$this->logger->log( 'Finished noscript code: ' . $no_script, $logLevel);
 
 		return array(
 			'script'   => $script,

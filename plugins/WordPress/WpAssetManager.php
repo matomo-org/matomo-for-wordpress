@@ -13,6 +13,7 @@ use Piwik\AssetManager;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugins\WordPress\AssetManager\NeverDeleteOnDiskUiAsset;
 use Piwik\Translation\Translator;
+use Piwik\ProxyHttp;
 use Piwik\Version;
 
 if (!defined( 'ABSPATH')) {
@@ -64,6 +65,11 @@ class WpAssetManager extends AssetManager
 		        $jQueryPath = $jsFile;
             } else {
                 $jQueryPath = includes_url('js/' . $jsFile);
+			    if (ProxyHttp::isHttps()) {
+				    $jQueryPath = str_replace('http://', 'https://', $jQueryPath);
+			    } else {
+				    $jQueryPath = str_replace('http://', '//', $jQueryPath);
+			    }
             }
 			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, $jQueryPath);
 		}
