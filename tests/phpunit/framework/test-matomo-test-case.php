@@ -106,7 +106,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 				Manager::getInstance()->deleteAll();
 				PluginsArchiver::$archivers = array();
 				$_GET                       = $_REQUEST = array();
-				Translate::reset();
+				\Piwik\Container\StaticContainer::get(\Piwik\Translation\Translator::class)->reset();
 				\Piwik\Log::unsetInstance();
 			}
 		);
