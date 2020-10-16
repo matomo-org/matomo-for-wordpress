@@ -203,7 +203,6 @@ class ScheduledTasks {
 		if ( $force ) {
 			$archiver->shouldArchiveAllSites        = true;
 			$archiver->disableScheduledTasks        = true;
-			$archiver->shouldArchiveAllPeriodsSince = true;
 		}
 
 		if ( is_multisite() ) {
