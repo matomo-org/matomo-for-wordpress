@@ -701,18 +701,15 @@
         "Default": "implicit",
         "DonateCall1": "Matomo va fi folosit de dumneavoastra gratuit intotdeauna, dar aceasta nu inseamna ca pe noi nu ne costa nimic sa il facem.",
         "DonateCall2": "Matomo are nevoie de sprijinul dumneavoastra continuu pentru a continua sa se dezvolte si sa progreseze.",
-        "DonateFormInstructions": "Click pe slider pentru a alege o suma, apoi click Subscribe pentru a dona.",
         "ExcludeRowsWithLowPopulation": "Toate randurile sunt afisate %s Exclude popularea putina",
         "ExternalHelp": "Ajutor (se deschide in tab nou)",
         "FlattenDataTable": "Raportul este ierarhic %s Faceti-l uniform",
-        "HowMuchIsPiwikWorth": "Cât valorează Matomo pentru tine?",
         "IncludeRowsWithLowPopulation": "Randurile cu populare putina sunt ascunse %s Afiseaza toate randurile",
         "InjectedHostEmailBody": "Buna, am incercat sa accesez Matomo astazi si am primit o avertizare de hostname necunoscut.",
         "InjectedHostEmailSubject": "Matomo a fost acesat de pe un hostname necunoscut: %s",
         "InjectedHostNonSuperUserWarning": "%1$sApasă aici pentru a accesa Matomo în siguranță%2$s și pentru a șterge acestă atenționare. Ai putea să contactezi un administrator Matomo și să-i atenționezi despre această problemă (%3$strimite email%4$s).",
         "InjectedHostSuperUserWarning": "Matomo poate sa fie configurat greșit (de exemplu, dacă Matomo a fost recent mutat pe un server nou sau la un URL nou). Poți fie să %1$s dai click aici și să adaugi %2$s ca un hostname valid de Matomo (dacă ai încredere)%3$s, sau %4$s să dai click aici și să te duci la %5$s pentru a accesa Matomo în siguranță%6$s.",
         "InjectedHostWarningIntro": "Acum accesati Matomo de la %1$s, dar Matomo a fost configurat sa ruleze la aceasta adresa: %2$s.",
-        "MakeOneTimeDonation": "În schimb, donează o dată (fără subscriere).",
         "NoPrivilegesAskPiwikAdmin": "Sunteti logat ca '%1$s' dar se pare ca nu aveti nici o permisiune setata in Matomo. %2$s Solicitati administratorului dvs al Matomo (click pentru email)%3$s sa va permita accesul tip 'vizualizare' pentru un site.",
         "PeriodRange": "Perioadă",
         "ReportGeneratedOn": "Raport creat la %s",
@@ -826,14 +823,6 @@
         "WeAutomaticallyDeactivatedTheFollowingPlugins": "Au fost dezactivate următoarele pluginuri: %s",
         "YouCanUpgradeAutomaticallyOrDownloadPackage": "Poţi actualiza versiunea %s automat sau o poţi instala manual:",
         "YourDatabaseIsOutOfDate": "Baza ta de date este expirata, si trebuie actualizata inainte de a continua."
-    },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Denumirea variabilei personalizate",
-        "ColumnCustomVariableValue": "Valoarea variabilei personalizate",
-        "CustomVariables": "Variabile personalizate",
-        "CustomVariablesReportDocumentation": "Acest raport conține informații despre Variabilele Personalizate. Faceți clic pe un nume de variabilă pentru a vedea distribuția valorilor. %1$s Pentru mai multe informații despre variabile personalizate, în general, citiți %2$sdocumentatia Variabilelor Personalizate matomo.org%3$s",
-        "ScopePage": "scop pagină",
-        "ScopeVisit": "scop vizită"
     },
     "DBStats": {
         "DatabaseUsage": "Utilizare baza date",
@@ -2540,11 +2529,6 @@
         "UseAnonymizedIpForVisitEnrichment": "De asemenea, utilizeaza adresele IP anonimime, atunci când se cresc vizitele.",
         "UseAnonymizeIp": "Adresele IP ale vizitatorilor anonimi",
         "UseDeleteReports": "Șterge periodic rapoartele vechi din baza de date"
-    },
-    "Provider": {
-        "ColumnProvider": "Operator",
-        "ProviderReportDocumentation": "Acest raport arată care furnizorii de servicii de Internet vizitatorii dvs. au folosit pentru a accesa site-ul. Puteți face clic pe un nume de furnizor pentru mai multe detalii. %s Daca Matomo nu poate determina furnizor un vizitator, acesta este listat ca IP.",
-        "WidgetProviders": "Provideri"
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "Acest raport arată toati referali într-un singur raport unificat, care listează toate site-urile, cuvintele cheie de căutare și campanii utilizate de vizitatorii dvs. pentru a găsi site-ul dumneavoastră.",

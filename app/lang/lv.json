@@ -1821,10 +1821,6 @@
         "TeaserHeadline": "Privātuma iestatījumi",
         "UseAnonymizeIp": "Anonimizēt apmeklētāju IP adreses"
     },
-    "Provider": {
-        "ColumnProvider": "Pakalpojumu sniedzējs",
-        "WidgetProviders": "Pakalpojumu sniedzēji"
-    },
     "Referrers": {
         "Campaigns": "Kampaņas",
         "ColumnCampaign": "Kampaņa",

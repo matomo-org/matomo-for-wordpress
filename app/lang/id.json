@@ -813,17 +813,14 @@
         "Default": "asali",
         "DonateCall1": "Matomo akan selalu tidak membebani Anda biaya, tapi bukan berarti bahwa biaya tidak berarti bagi kami.",
         "DonateCall2": "Matomo membutuhkan bantuan berkelanjutan Anda untuk tumbuh dan berkembang.",
-        "DonateFormInstructions": "Klik pada penggeser untuk memilih jumlah, kemudian klik berlangganan untuk menyumbang.",
         "ExcludeRowsWithLowPopulation": "Seluruh baris telah ditampilkan %s Populasi rendah dikecualikan",
         "FlattenDataTable": "Laporan ditampilkan berurutan %s Buat tetap",
-        "HowMuchIsPiwikWorth": "Seberapa besar nilai Matomo untuk Anda?",
         "IncludeRowsWithLowPopulation": "Baris dengan populasi rendah telah tersembunyi %s Tampilkan seluruh baris",
         "InjectedHostEmailBody": "Halo, saya mencoba mengakses Matomo hari ini dan menemukan peringatan nama inang tidak dikenal.",
         "InjectedHostEmailSubject": "Matomo telah diakses menggunakan nama inang tidak dikenal: %s",
         "InjectedHostNonSuperUserWarning": "%1$sKlik di sini untuk mengkases Matomo secara aman%2$s dan menghapus peringatan ini. Anda juga dapat menghubungi pengelola Matomo Anda dan memberi tahu tentang permasalahan ini (%3$sklik di sini untuk surel%4$s).",
         "InjectedHostSuperUserWarning": "Matomo mungkin salah konfigurasi (sebagai contoh, bila Matomo baru saja dipindah ke peladen atau URL baru). Anda dapat memilih %1$sklik di sini dan menambah%2$s sebagai nama inang Matomo sahih (bila Anda mempercayai ini)%3$s, atau %4$sklik di sini dan menuju %5$s akses Matomo secara aman%6$s.",
         "InjectedHostWarningIntro": "Sekarang Anda mengakses Matomo dari %1$s, tetapi Matomo telah diatur untuk berjalan di alamat ini: %2$s.",
-        "MakeOneTimeDonation": "Buat satu kali sumbangan saja.",
         "Menu": "Menu",
         "NoPrivilegesAskPiwikAdmin": "Anda masuk sebagai '%1$s' tetapi sepertinya Anda tidak memiliki izin apapun di Matomo. %2$s Tanyakan kepada pengelola Matomo Anda (klik untuk kirim surel)%3$s untuk memberikan akses 'Lihat' ke situs.",
         "PeriodRange": "Rentang",
@@ -840,7 +837,8 @@
         "ViewAllPiwikVideoTutorials": "Tampilkan seluruh Video Tutorial Matomo",
         "WebAnalyticsReports": "Laporan Analisis Web",
         "YouAreUsingTheLatestVersion": "Anda menggunakan versi termutakhir Matomo!",
-        "SystemSummaryPhpVersion": "Versi PHP"
+        "SystemSummaryPhpVersion": "Versi PHP",
+        "SearchOnMatomo": "Cari '%1$s' pada Matomo.org"
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Lepaskan",
@@ -919,17 +917,6 @@
     },
     "CustomJsTracker": {
         "DiagnosticPiwikJsWritable": "Pelacak JavaScript yang Dapat Ditulis (\"\/piwik.js\")"
-    },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Nama Variabel Kustom",
-        "ColumnCustomVariableValue": "Nilai Variabel Kustom",
-        "CustomVariables": "Variabel Kustom",
-        "CustomVariablesReportDocumentation": "Laporan ini mengandung informasi tentang Variabel Kustom Anda. Klik di nama variabel untuk melihat distribusi nilai. %1$s Informasi lebih lengkap tentang Vabiabel Kustom, baca %2$sdokumentasi Vabiabel Kustom di matomo.org%3$s",
-        "ScopePage": "cakupan halaman",
-        "ScopeVisit": "cakupan kunjungan",
-        "Index": "Indeks",
-        "Usages": "Penggunaan",
-        "Unused": "Tidak digunakan"
     },
     "DBStats": {
         "DatabaseUsage": "Penggunaan Basisdata",
@@ -1051,8 +1038,7 @@
         "RemindMeLater": "Ingatkan saya nani",
         "NeverAskMeAgain": "Jangan tanyakan saya lagi",
         "HowCanWeHelp": "Bagaimana kami bisa membantu?",
-        "PurgeOldData": "Saya ingin menghapus beberapa data lama",
-        "SearchOnMatomo": "Cari '%1$s' pada Matomo.org"
+        "PurgeOldData": "Saya ingin menghapus beberapa data lama"
     },
     "GeoIp2": {
         "AssumingNonApache": "Tidak dapat menemukan fungsi apache_get_modules, sehingga diduga sebagai peladen non-Apache.",
@@ -2575,11 +2561,6 @@
         "TeaserHeadline": "Pengaturan Privasi",
         "UseAnonymizeIp": "Anonimasi alamat IP Pengunjung",
         "UseDeleteReports": "Hapus laporan lama dari basisdata"
-    },
-    "Provider": {
-        "ColumnProvider": "Penyedia",
-        "ProviderReportDocumentation": "Laporan ini menampilkan Penyedia Layanan Internet yang digunakan oleh pengunjung Anda untuk mengunjungi situs. Anda dapat mengeklik nama penyedia untuk melihat rinciannya. %s Bila Matomo tak dapat menentukan penyedia pengunjung, ini akan ditampikan sebagai IP.",
-        "WidgetProviders": "Penyedia"
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "Laporan ini menampilkan seluruh Pengarah Anda dalam laporan satu kompak, mendaftar seluruh Situs, dan kata kunci Pencarian serta Kampanye yang digunakan pengunjung Anda menemukan situs Anda.",

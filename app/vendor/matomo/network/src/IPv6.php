@@ -42,7 +42,8 @@ class IPv6 extends IP
             'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff',
             'ffff:ffff:ffff:ffff::',
             'ffff:ffff:ffff:0000::',
-            'ffff:ff00:0000:0000::'
+            'ffff:ff00:0000:0000::',
+            '0000::'
         );
 
         $newBinaryIp = $newBinaryIp & pack('a16', inet_pton($masks[$byteCount]));

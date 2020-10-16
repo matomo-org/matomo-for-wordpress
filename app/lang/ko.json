@@ -699,11 +699,9 @@
         "Default": "기본",
         "DonateCall1": "Matomo을 사용하는데 당신의 비용이 들지는 않을 것입니다. 그렇다고 우리가 이것을 만드는데 비용이 들지 않다는 의미는 아닙니다.",
         "DonateCall2": "Matomo은 성장하고 번영하기 위해 당신의 지속적인 지원이 필요합니다.",
-        "DonateFormInstructions": "슬라이더를 클릭하여 금액을 선택하고, 기부에 기명을 클릭합니다.",
         "ExcludeRowsWithLowPopulation": "모든 행을 표시 %s 적은 량의 항목은 제외",
         "ExternalHelp": "도움말 (새로운 탭에 열기)",
         "FlattenDataTable": "이 보고서는 계층형입니다. %s 펼치기",
-        "HowMuchIsPiwikWorth": "당신에게 Matomo의 가치는 얼마인가요?",
         "IncludeRowsWithLowPopulation": "수가 적은 줄 숨기기 %s 모든 행을 표시",
         "InjectedHostEmailBody": "안녕하세요, 오늘 Matomo에 접근 시도했는데 알 수 없는 호스트 경고가 발생했습니다.",
         "InjectedHostEmailSubject": "Matomo에서 알 수 없는 호스트네임을 사용하여 접근함: %s",
@@ -711,7 +709,6 @@
         "InjectedHostSuperUserWarning": "Matomo이 잘못 구성된 것 같습니다 (예를 들어, Matomo이 최근에 새로운 서버 또는 URL로 이동됨). 유효한 Matomo 호스트네임을 (신뢰하는 경우) %1$s이곳을 클릭하여 추가%2$s할 수 있습니다 %3$s, 또는 %4$s이곳을 클릭하여 이동%5$s하는 것으로 Matomo의 안전한 %6$s로 접근할 수 있습니다.",
         "InjectedHostWarningIntro": "당신은 지금 %1$s에서 Matomo에 접근하고 있지만 Matomo은 다음 주소로 실행되도록 구성되어 있습니다: %2$s",
         "MainNavigation": "주요 네비게이션",
-        "MakeOneTimeDonation": "또는, 한 번만 기부합니다.",
         "Menu": "메뉴",
         "NoPrivilegesAskPiwikAdmin": "'%1$s'로 로그인되었지만 권한이 설정되어 있지 않습니다. %2$s Matomo 관리자(클릭 이메일) %3$s에 '보기'권한을 부여 받으세요.",
         "OnlyForSuperUserAccess": "이 위젯은 슈퍼 유저 접근 권한이 있는 유저의 기본 대시보드에만 나타납니다.",
@@ -868,14 +865,6 @@
         "YouCanUpgradeAutomaticallyOrDownloadPackage": "%s 버전으로 자동 업데이트하거나 수동적으로 패키지를 받아서 업데이트 할 수 있습니다:",
         "YourDatabaseIsOutOfDate": "Matomo 데이터베이스가 오래되었으니 계속하기 이전에 먼저 업그레이드가 되어야 합니다.",
         "ViewVersionChangelog": "이 버전에 대한 변화로그를 보세요"
-    },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "맞춤 변수 이름",
-        "ColumnCustomVariableValue": "맞춤 변수 값",
-        "CustomVariables": "맞춤 변수",
-        "CustomVariablesReportDocumentation": "이 보고서는 맞춤 변수에 대한 정보를 포함합니다. 변수 이름을 클릭하여 값의 분포를 확인할 수 있습니다. %1$s 맞춤 변수에 대한 자세한 내용은 %2$smatomo.org의 맞춤 변수 설명서%3$s를 참조하세요.",
-        "ScopePage": "페이지 범위",
-        "ScopeVisit": "방문 범위"
     },
     "DBStats": {
         "DatabaseUsage": "데이터베이스 사용량",
@@ -2572,13 +2561,6 @@
         "UseAnonymizedIpForVisitEnrichment": "또한, 방문이 많을 때 익명화된 IP 주소를 사용합니다.",
         "UseAnonymizeIp": "익명 방문자의 IP 주소",
         "UseDeleteReports": "정기적으로 데이터베이스에서 오래된 보고서를 삭제"
-    },
-    "Provider": {
-        "ColumnProvider": "공급자",
-        "PluginDescription": "방문자의 인터넷 서비스 공급자 확인",
-        "ProviderReportDocumentation": "이 보고서는 웹사이트를 방문하는 방문자가 사용하고있는 인터넷 서비스 공급자를 보여줍니다. 자세한 내용은 공급자 이름을 클릭하세요. %s Matomo가 방문자의 공급자를 확인할 수없는 경우는 IP로 표시됩니다.",
-        "WidgetProviders": "공급자",
-        "ProviderReportFooter": "알 수 없는 공급자는 해당 IP 주소가 검색되지 않았음을 의미합니다."
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "이 보고서는 모든 리퍼러에 대한 보고서를 하나로 통합한 것으로, 방문자가 경유한 웹사이트, 검색어 그리고 캠페인의 목록입니다.",

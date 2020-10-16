@@ -906,11 +906,9 @@
         "DonateCall1": "Matomo kommer alltid vara gratis att använda men det innebär inte att det inte kostar något att skapa den.",
         "DonateCall2": "Matomo behöver ditt fortsatta stöd för att växa och frodas.",
         "DonateCall3": "Om du tycker att Matomo bidragit till din verksamhet är vi tacksamma om du överväger att %1$sdonera%2$s eller %3$sköpa premiumfunktioner%4$s. Varje öre bidrar.",
-        "DonateFormInstructions": "Klicka på slidern för att välja ett värde, klicka sedan på registrera för att donera.",
         "EndShortcut": "Slut",
         "EnterZenMode": "Starta Zen-läge (göm menyerna)",
         "ExitZenMode": "Avsluta Zen-läge (visa menyerna)",
-        "ExceptionNotWhitelistedIP": "Du kan inte använda Matomo eftersom din IP-adress %s inte är vitlistad",
         "ExcludeRowsWithLowPopulation": "Alla rader visas %s Dölj rader med låga värden",
         "ExternalHelp": "Hjälp (öppnas i en ny flik)",
         "FlattenDataTable": "Rapporten är hierarkisk %s Gör den plan",
@@ -918,7 +916,6 @@
         "ShowExportUrl": "Visa exportadress",
         "HideExportUrl": "Dölj exportadress",
         "HomeShortcut": "Hem",
-        "HowMuchIsPiwikWorth": "Hur mycket är Matomo värt för dig?",
         "IncludeRowsWithLowPopulation": "Rader med låga värden är dolda %s Visa alla rader",
         "InjectedHostEmailBody": "Hej, jag försökte komma åt Matomo idag och stötte på varningen det okända värdnamnet.",
         "InjectedHostEmailSubject": "Matomo nåddes genom ett okänt värdnamn: %s",
@@ -931,7 +928,6 @@
         "VisitTypeReturning": "Återkommande",
         "VisitTypeReturningCustomer": "Återkommande kund",
         "MainNavigation": "Huvudmenu",
-        "MakeOneTimeDonation": "Donera en engångssumma istället.",
         "Menu": "Meny",
         "NoPrivilegesAskPiwikAdmin": "Du är inloggad som '%1$s' men det verkar som om du inte har några rättigheter satta i Matomo. %2$s Fråga din Matomo administratör (klicka för att e-posta)%3$s för att få läsrättighet till en webbplats.",
         "OnlyForSuperUserAccess": "Denna widget visas bara för superanvändare i standardkontrollpanelen.",
@@ -994,7 +990,8 @@
         "ReportWithMetadata": "Rapport med metadata",
         "ReadMoreOnlineGuide": "Läs mer om ämnet i onlineguiden.",
         "SeeAvailableVersions": "Se tillgängliga versioner",
-        "QuickLinks": "Snabblänkar"
+        "QuickLinks": "Snabblänkar",
+        "SearchOnMatomo": "Sök efter '%1$s' på Matomo.org"
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Avinstallera",
@@ -1215,29 +1212,6 @@
         "DiagnosticPiwikJsNotWritable": "JavaScript-filen innehållande Matomos spårare (%s) är skrivskyddad, vilket innebär att insticksprogram inte kan utöka JavaScript-spåraren. I framtiden kan även vissa andra grundfunktioner upphöra fungera som väntat.",
         "DiagnosticPiwikJsMakeWritable": "Vi rekommenderar att ta bort skrivskyddet från filen %1$s genom att använda följande kommando: %2$s"
     },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Anpassat variabelnamn",
-        "ColumnCustomVariableValue": "Anpassat variabelvärde",
-        "CustomVariables": "Anpassade variabler",
-        "CustomVariablesReportDocumentation": "Denna rapport innehåller information om din anpassade variabler. Klicka på ett variabelnamn för att se fördelningen av värdena. %1$s För mer information om anpassade variabler i allmänhet, läs %2$sdokumentationen om anpassade variabler på matomo.org%3$s",
-        "PluginDescription": "Anpassade variabler är namn-värde-par som du kan tillskriva genom att använda Javascript API till besökare eller någon av deras handlingar. Matomo kommer då rapportera hur många besök, sidor, omvandlingar för var och en av dessa anpassade namn och värden. Se de detaljerade anpassade variablerna för varje användare och handlingar i besöksloggen. Detta insticksprogram är nödvändigt för att använda funktionen Ecommerce Analytics.",
-        "ScopePage": "omfattning sida",
-        "ScopeVisit": "omfattning besök",
-        "ScopeConversion": "Omfattning av konvertering",
-        "ManageDescription": "Denna översikt visar alla anpassade variabler och dess användande för webbplatsen '%s'. Namnen för varje slot sorteras på hur ofta dom har använts totalt.",
-        "ScopeX": "Omfattning %s",
-        "Index": "Index",
-        "Usages": "Användningar",
-        "Unused": "Oanvänd",
-        "CreateNewSlot": "Öka antalet tillgängliga anpassade variabelspår",
-        "UsageDetails": "%1$s besök och %2$s händelser sedan webbplatsen skapandet av denna webbplats.",
-        "CreatingCustomVariableTakesTime": "Att skapa en plats för ny anpassad variabel kan ta lång tid beroende på storleken på databasen. Därför är det bara möjligt att göra detta via ett kommando som behöver exekveras på kommandoraden.",
-        "CurrentAvailableCustomVariables": "För tillfället kan du använda upp till %s anpassade variabler per webbsida.",
-        "ToCreateCustomVarExecute": "För att skapa en ny anpassad variabel använd följande kommando i din Matomo miljö:",
-        "SlotsReportIsGeneratedOverTime": "Data för den här rapporten kommer att samlas in allt eftersom. Det kan ta en dag eller två innan du ser någon data och ett par veckor innan rapporten är helt tillförlitlig.",
-        "MetricsAreOnlyAvailableForVisitScope": "Notering: %1$s mätvärden finns endast tillgängliga för Anpassade Variabler av omfattningen %2$s.",
-        "MetricsNotAvailableForPageScope": "För Anpassade Variabler av omfattningen %1$s är kolumnvärdet för dessa mätvärden %2$s"
-    },
     "DBStats": {
         "DatabaseUsage": "Databasanvändning",
         "DataSize": "Datastorlek",
@@ -1434,8 +1408,7 @@
         "RemindMeLater": "Påminn mig senare",
         "NeverAskMeAgain": "Fråga mig inte igen",
         "HowCanWeHelp": "Hur kan vi hjälpa?",
-        "NotTrackingVisits": "Matomo spårar inte några besök",
-        "SearchOnMatomo": "Sök efter '%1$s' på Matomo.org"
+        "NotTrackingVisits": "Matomo spårar inte några besök"
     },
     "GeoIp2": {
         "AssumingNonApache": "Kan inte hitta funktionen apache_get_modules, förutsätter att Apache inte används som webbserver.",
@@ -3250,13 +3223,6 @@
         "ShowInEmbeddedWidgetsDescription": "Om denna är markerad visas en länk till din sekretesspolicy och dina användarvillkor längst ner i inbäddade widgets.",
         "PrivacyPolicy": "Integritetspolicy",
         "TermsAndConditions": "Villkor"
-    },
-    "Provider": {
-        "ColumnProvider": "Internetleverantör",
-        "PluginDescription": "Rapporterar besökarnas Internetleverantör.",
-        "ProviderReportDocumentation": "Denna rapport visar vilka Internetleverantörer dina besökare använde för att få åtkomst till webbplatsen. Du kan klicka på en leverantörs namn för mer information. %s Om Matomo inte kan avgöra en besökares leverantör, så listas den som IP.",
-        "WidgetProviders": "Internetleverantör",
-        "ProviderReportFooter": "Okänd internetleverantör betyder att IP-adressen inte kunde slås upp."
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "Den här rapporten visar all din hänvisningstrafik i en sammanslagen rapport, den listar alla webbsidor, nyckelord och kampanjer som dina besökare har använt sig av för att hitta din webbsida.",

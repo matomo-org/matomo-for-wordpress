@@ -647,14 +647,6 @@
         "YouCanUpgradeAutomaticallyOrDownloadPackage": "Podeu actualitzar a la versió %s automàticament o baixar-vos el paquet i instal·lar-lo manualment.",
         "YourDatabaseIsOutOfDate": "La base de dades del Matomo és antiga i cal actualitzar-la abans de continuar."
     },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Nom de la variable personalitzada",
-        "ColumnCustomVariableValue": "Valor de la variable personalitzada",
-        "CustomVariables": "Variables personalitzades",
-        "CustomVariablesReportDocumentation": "Aquest informe conté informació sobre les variables personaltizades. Feu click al nom d'una variable per veure la distribució dels valors. %1$s Per més informació sobre les variables personalitzades, podeu llegir la %2$sdocumentació sobre variables peronalitzades a matomo.org%3$s",
-        "ScopePage": "àmbit de la pàgina",
-        "ScopeVisit": "àmbit de la visita"
-    },
     "DBStats": {
         "DatabaseUsage": "Ús de la base de dades",
         "DataSize": "Grandària de les dades",
@@ -2230,11 +2222,6 @@
         "TeaserHeadline": "Preferències de Privacitat",
         "UseAnonymizeIp": "Convertir la IP dels vostres visitants en anònima",
         "UseDeleteReports": "Esobrreu els informes de la base de dades de forma períodica"
-    },
-    "Provider": {
-        "ColumnProvider": "Proveïdor",
-        "ProviderReportDocumentation": "Aquest informe mostra quin Proveïdor d'Internet han utiltizat els vostres visitants per accedir al lloc. Podeu click al nom del proveïdor per més detalls. %s Si el Matomo no pot determinar el proveïdor del visitant, es mostra la seva adreça IP.",
-        "WidgetProviders": "Proveïdors"
     },
     "Referrers": {
         "Campaigns": "Campanyes",

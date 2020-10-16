@@ -1402,9 +1402,6 @@
         "ActivateLicenseKey": "Activar",
         "PluginKeywords": "Palabras clave"
     },
-    "Provider": {
-        "WidgetProviders": "Provedores"
-    },
     "Referrers": {
         "Campaigns": "Campañas",
         "ColumnWebsite": "Web",

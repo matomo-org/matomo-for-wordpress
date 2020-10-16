@@ -565,18 +565,15 @@
         "Default": "default",
         "DonateCall1": "Ang Matomo ay palaging magdudulot sa iyo ng walang gastos, ngunit hindi ibig sabihin ay magdudulot ito sa amin upang walang gawin.",
         "DonateCall2": "Kailangan ng Matomo ang iyong patuloy na suporta upang lumago at maging maunlad ito.",
-        "DonateFormInstructions": "Mag click sa slider upang pumili ng halaga, pagkatapos ay i-click ang subscribe upang magbigay ng donasyon.",
         "ExcludeRowsWithLowPopulation": "Ang lahat ng mga hilera ay ipinapakita %s Ibukod ang mababang populasyon",
         "ExternalHelp": "Tulong (bubukas sa bagong tab)",
         "FlattenDataTable": "Ang ulat ay naka-herarkiya %s Gawin itong patag",
-        "HowMuchIsPiwikWorth": "Magkano ang halaga ng Matomo sa iyo?",
         "IncludeRowsWithLowPopulation": "Ang mga hilera na may mababang populasyon ay nakatago %s Ipakita ang lahat ng mga hilera",
         "InjectedHostEmailBody": "Hello, sinubukan kong i-access ang Matomo ngayon at nakaranas ako ng hindi kilalang hostname warning.",
         "InjectedHostEmailSubject": "Ang Matomo ay na-access gamit ang isang hindi kilalang hostname: %s",
         "InjectedHostNonSuperUserWarning": "%1$sI-click ito upang ma-access ang Matomo nang ligtas%2$s at alisin ang babalang ito. Baka gusto mo ring makipag-ugnay sa iyong administrator sa Matomo at ipaalam sa kanila ang isyung ito (%3$si-click dito upang mag-email%4$s).",
         "InjectedHostSuperUserWarning": "Ang Matomo ay maaaring na-configure ng mali (halimbawa, kung inilipat kamakailan ang Matomo sa bagong server o URL). Maaari mong %1$s i-click dito at magdagdag ng %2$s bilang wastong Matomo hostname (kung pinagkakatiwalaan mo ito) %3$s, o %4$s i-click dito at pumunta sa %5$s upang ma-access ang Matomo ng ligtas %6$s.",
         "InjectedHostWarningIntro": "Ina-access mo na ngayon Matomo mula sa %1$s, ngunit ang Matomo ay na-configure upang tumakbo sa address na ito: %2$s.",
-        "MakeOneTimeDonation": "Ang widget na ito ay ipinapakita lamang sa mga user na may Super User na access.",
         "NoPrivilegesAskPiwikAdmin": "Ikaw ay naka-log-in bilang '%1$s' ngunit mukhang wala kang anumang pahintulot na naka-set sa Matomo. %2$s Tanungin ang iyong Matomo administrator (i-click upang i-email) %3$s upang bigyan ka ng 'view' access sa website.",
         "PeriodRange": "Pagitan",
         "ReportGeneratedOn": "Ang ulat ay ginawa sa %s",
@@ -694,14 +691,6 @@
         "WeAutomaticallyDeactivatedTheFollowingPlugins": "Awtomatiko naming idineactivate ang mga sumusunod na plugin: %s",
         "YouCanUpgradeAutomaticallyOrDownloadPackage": "Maaari mong awtomatikong i-update sa bersyon %s o i-download ang package at mano-manong i-install ito:",
         "YourDatabaseIsOutOfDate": "Ang iyong Matomo database ay out-of-date at dapat mo na itong e-upgrade bago ka makatuloy sa susunod na proseso."
-    },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Pangalan ng Custom na Variable",
-        "ColumnCustomVariableValue": "Halaga ng Custom na Variable",
-        "CustomVariables": "Mga Custom na Variable",
-        "CustomVariablesReportDocumentation": "Ang ulat na ito ay naglalaman ng mga impormasyon tunkol sa iyong mga Custom Variable. E-click ang pangalan ng variable upang makita ang pagkakabahagi ng mga laman nito. %1$s Upang makita ang pangkalahatang impormasyon tungkol sa Custom Variables basahin ang %2$sCustom Variables documentation sa matomo.org%3$s.",
-        "ScopePage": "saklaw na pahina",
-        "ScopeVisit": "Saklaw ng pagbisita"
     },
     "DBStats": {
         "DatabaseUsage": "Paggamit ng Database",
@@ -2290,12 +2279,6 @@
         "UseAnonymizedIpForVisitEnrichment": "Gamitin rin ang hindi kilalang IP address kapag bumibisita.",
         "UseAnonymizeIp": "I-anonymize ang IP addresses ng mga bisita.",
         "UseDeleteReports": "Palaging tanggalin ang mga lumang report sa database"
-    },
-    "Provider": {
-        "ColumnProvider": "Tagapagtustos",
-        "ProviderReportDocumentation": "Ang ulat na itoy ang nagpapakita kung anong Internet Server Providers ang gamit ng iyung bisita upang ma-access ang website. Maari mong e-click ang pangalan ng provider para sa karagdagang detalye. %s kung ang Matomo ay hindi matukoy ang provider ng bisita. ito ay nakalista bilang IP.",
-        "WidgetProviders": "Mga Tagapagtustos",
-        "ProviderReportFooter": "Ang hindi kilalang provider ay hindi makikita ang IP address."
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "Ang ulat na ito ay nagpapakita ng lahat ng referrers sa pinag-isang ulat ng nakalista ang lahat ng websites Mga keywords at campaigns na ginamit ng iyong bisita upang makita ang iyong website",

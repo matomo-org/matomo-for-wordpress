@@ -912,11 +912,10 @@
         "DonateCall1": "Matomo her zaman ücretsiz kullanılabilecek ancak bu durum geliştirmenin ücretsiz olduğu anlamına gelmiyor.",
         "DonateCall2": "Gelişip ilerleyebilmesi için Matomo projesi sürekli desteğinize gerek duyuyor.",
         "DonateCall3": "Matomo uygulamasının işinize önemli bir katkı sağladığını düşünüyorsanız, %1$slütfen düzenli bağış yapmayı%2$s ya da %3$sbir özellik satın almayı%4$s düşünün. Her kuruşun yardımı olur.",
-        "DonateFormInstructions": "Düzenli bağış tutarını seçmek için kaydırıcıyı kullanın ve Bağış Yap düğmesine tıklayın.",
         "EndShortcut": "Son",
         "EnterZenMode": "Zen kipine gir (menüleri gizle)",
         "ExitZenMode": "Zen kipinden çık (menüleri görüntüle)",
-        "ExceptionNotWhitelistedIP": "%s IP adresiniz beyaz listede bulunmadığından Matomo uygulamasını kullanamazsınız",
+        "ExceptionNotAllowlistedIP": "%s IP adresinize izin verilmediğinden bu Matomo uygulamasını kullanamazsınız.",
         "ExcludeRowsWithLowPopulation": "Tüm satırlar görüntüleniyor %s Düşük dağılımlar katılmasın",
         "ExternalHelp": "Yardım (yeni sekmede açılır)",
         "FlattenDataTable": "Rapor hiyerarşik yapıda %s Düz yap",
@@ -924,7 +923,7 @@
         "ShowExportUrl": "Dışa Aktarma Adresi Görüntülensin",
         "HideExportUrl": "Dışa Aktarma Adresi Gizlensin",
         "HomeShortcut": "Ana Sayfa",
-        "HowMuchIsPiwikWorth": "Matomo sizin için ne kadar değerli?",
+        "SupportUsOn": "Şuradan destek olun",
         "IncludeRowsWithLowPopulation": "Düşük dağılımlı satırlar gizlendi %s Tüm satırları görüntüle",
         "InjectedHostEmailBody": "Merhaba, bugün Matomo uygulamasına erişmeye çalıştım ve sunucu adı bilinmiyor uyarısı ile karşılaştım.",
         "InjectedHostEmailSubject": "Matomo uygulamasına bilinmeyen bir sunucu adından erişildi: %s",
@@ -937,7 +936,8 @@
         "VisitTypeReturning": "Geri Gelen",
         "VisitTypeReturningCustomer": "Geri Gelen Müşteri",
         "MainNavigation": "Ana Gezinme",
-        "MakeOneTimeDonation": "Ya da bir kerelik bir bağış yapın.",
+        "YourDonationWillHelp": "Bağışınız, bu açık kaynaklı istatistik platformu için yeni özellik ve geliştirmelerin doğrudan desteklenmesini sağlar. Böylece topluluk her zaman kişisel gizliliği koruyan ve verilerinizin kontrolünü elinizde tutmanızı sağlayan bir araçtan yararlanabilir.",
+        "ThanksFromAllOfUs": "Matomo topluluğu olarak teşekkür ederiz!",
         "Menu": "Menü",
         "NoPrivilegesAskPiwikAdmin": "'%1$s' olarak oturum açmışsınız ancak kullanıcınıza Matomo üzerinde herhangi bir izin verilmemiş gibi görünüyor. Kullanıcınıza bir web sitesini 'Görüntüleme' izni vermesi için %2$sMatomo yöneticiniz ile görüşün (e-posta göndermek için tıklayın)%3$s.",
         "OnlyForSuperUserAccess": "Varsayılan panodaki bu gereç yalnız Super Kullanıcılara görüntülenir.",
@@ -1002,7 +1002,8 @@
         "ReadMoreOnlineGuide": "Bu konu hakkında ayrıntılı bilgi almak için çevrimiçi rehbere bakabilirsiniz.",
         "SeeAvailableVersions": "Kullanılabilecek Sürümlere Bakın",
         "QuickLinks": "Kestirme Bağlantıları",
-        "Profilable": "Profillenebilir"
+        "Profilable": "Profillenebilir",
+        "SearchOnMatomo": "Matomo.org üzerinde '%1$s' arayın"
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Kaldır",
@@ -1236,29 +1237,6 @@
         "DiagnosticPiwikJsWritable": "Yazılabilir JavaScript İzleyici (%s)",
         "DiagnosticPiwikJsNotWritable": "%s Matomo JavaScript izleyici dosyası yazılabilir olmadığından diğer uygulama ekleri JavaScript İzleyiciyi kullanamaz. İleride bazı temel özellikler de beklendiği gibi çalışmayabilir.",
         "DiagnosticPiwikJsMakeWritable": "Şu komutu kullanarak %1$s dosyasını yazılabilir yapmanız önerilir: %2$s"
-    },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Özel Değişken Adı",
-        "ColumnCustomVariableValue": "Özel Değişken Değeri",
-        "CustomVariables": "Özel Değişkenler",
-        "CustomVariablesReportDocumentation": "Bu rapor özel değişkenler hakkında bilgileri görüntüler. Değerlerinin dağılımını görüntülemek istediğiniz değişken adının üzerine tıklayın. %1$sGenel olarak özel değişkenlar hakkında ayrıntılı bilgi almak için %2$smatomo.org sitesindeki Özel Değişkenler belgesini okuyun%3$s",
-        "PluginDescription": "Özel değişkenler çiftler şeklinde (ad, değer) bulunur ve JavaScript API kullanılarak ziyaretçiler ve ziyaretçi işlemlerine atanabilir. Matomo böylece her bir özel ad ve değer için ziyaret sayısını, tutturulan hedefleri raporlar. Ziyaretçi günlüğünde her kullanıcı ve işlem için özel değişkenlerin ayrıntıları görüntülenir. E-ticaret istatistikleri özelliği için bu uygulama ekinin kullanılması gereklidir!",
-        "ScopePage": "aralık sayfası",
-        "ScopeVisit": "aralık ziyareti",
-        "ScopeConversion": "aralıkta hedef tutturma",
-        "ManageDescription": "Bu özette tüm özel değişken aralıkları ve '%s' web sitesindeki kullanımları görüntülenir. Her bir aralıktaki adlar toplam içinde ne kadar sık kullanıldıklarına göre sıralanır.",
-        "ScopeX": "%s aralığı",
-        "Index": "Dizin",
-        "Usages": "Kullanılan",
-        "Unused": "Kullanılmayan",
-        "CreateNewSlot": "Kullanılabilecek Özel Değişken aralıklarının sayısını arttır",
-        "UsageDetails": "Sitenin kuruluşundan beri %1$s ziyaret ve %2$s işlem.",
-        "CreatingCustomVariableTakesTime": "Yeni bir özel değişken aralığının oluşturulması veritabanınızın boyutuna göre uzun zaman alabilir. Bu nedenle bu işlem yalnız komut satırından yürütülmesi gereken bir komut ile yapılabilir.",
-        "CurrentAvailableCustomVariables": "Şu anda her site için en çok %s Özel Değişken kullanabilirsiniz.",
-        "ToCreateCustomVarExecute": "Yeni bir özel değişken aralığı eklemek için Matomo kopyanız üzerinde şu komutu yürütün:",
-        "SlotsReportIsGeneratedOverTime": "Bu raporun verileri zaman içinde oluşacak. Raporda verilerin görüntülenmesi 1 - 2 gün, bilgilerin tam doğru görüntülenmesi bir kaç hafta sürebilir.",
-        "MetricsAreOnlyAvailableForVisitScope": "Not: %1$s ölçütmleri yalnız %2$s aralığındaki Özel Değişkenler için kullanılabilir.",
-        "MetricsNotAvailableForPageScope": "%1$s aralığındaki Özel Değişkenler için bu ölçümlerin sütun değeri %2$s"
     },
     "DBStats": {
         "DatabaseUsage": "Veritabanı kullanımı",
@@ -1498,8 +1476,7 @@
         "RemoveOtherLabel": "'Diğerleri' ile ilgili bilgilerimi görmek istiyorum",
         "PurgeOldData": "Bazı eski verileri silmek istiyorum",
         "SearchHelpResources": "Matomo.org yardım kaynaklarında arayın",
-        "PopularHelpTopics": "Sık başvurulan yardım konuları",
-        "SearchOnMatomo": "Matomo.org üzerinde '%1$s' arayın"
+        "PopularHelpTopics": "Sık başvurulan yardım konuları"
     },
     "GeoIp2": {
         "AssumingNonApache": "apache_get_modules işlevi bulunamadığı için web sunucusunun Apache olmadığı varsayılıyor.",
@@ -3075,6 +3052,7 @@
         "SettingBruteForceEnableHelp": "Brute Force algılaması verilerinize izinsiz erişilmesini engelleyen önemi bir güvenlik koruması özelliğidir. Herhangi bir kullanıcının kısa bir zaman aralığında binlerce ya da milyonlarca farklı parolayı denemesine izin vermek yerine, belirli bir süre içinde hatalı parola girişi sayısını sınırlar. Belirtilen zaman aralığında çok fazla sayıda hatalı oturum açma girişimi olursa kullanıcı belirtilen sürenin sonuna kadar bir daha oturum açma girişiminde bulunamaz. Bir IP adresi engellendiğinde aynı adresi kullanan diğer kullanıcıların da oturum açamayacağını unutmayın.",
         "SettingBruteForceWhitelistIp": "Her zaman oturum açabilecek IP adresleri",
         "SettingBruteForceBlacklistIp": "Her zaman engellenecek IP adresleri",
+        "NotAllowListTakesPrecendence": "Bir IP adresi hem engellenecek, hem de engellemeyecek adres listeleri ile eşleşirse, engelleme listesinin önceliği olduğundan IP adresi engellenir.",
         "SettingBruteForceMaxFailedLogins": "Zaman aralığında izin verilen oturum açma girişimi sayısı",
         "SettingBruteForceMaxFailedLoginsHelp": "Belirtilen sayıdan daha fazla hatalı oturum açma girişimi yapıldığında, girişimin yapıldığı IP adresi aşağıda belirtilen süreyle engellenir.",
         "SettingBruteForceTimeRange": "Oturum açma girişimlerinin sayılacağı zaman aralığı",
@@ -3302,6 +3280,8 @@
         "AnonymizeIpExtendedHelp": "Bu seçenek etkinleştirildiğinde, Matomo web sitenize gelen ziyaretçilerin IP adresini (%1$s gibi) kullanmaz ve IP adresini anonim kılar (%2$s gibi). IP adresinin anonim kılınması Almanya gibi bazı ülkelerde kişisel verilerin korunması yasalarına göre zorunludur.",
         "AnonymizeIpMaskLengtDescription": "Ziyaretçi IP adreslerinin kaç baytının maskeleneceğini seçin.",
         "AnonymizeIpMaskLength": "%1$s bayt - Örnek: %2$s",
+        "AnonymizeReferrer": "Yönlendiren Anonim Kılınsın",
+        "AnonymizeReferrerNote": "Matomo kullancının hangi adresten geldiğini (yönlendiren) kaydeder. Bazı durumlarda bu adreslerde kişisel sayılabilecek bilgiler bulunur. Bu bilgilerin izlenmesini engellemek isterseniz, sitenize gelen ziyaretçilerin Matomo tarafından kaydedilecek yönlendirme bilgilerini sınırlayabilirsiniz. Yönlendirme bilgilerinden ne kadar çok veri çıkarılırsa kişisel sayılabilecek bilgilerin kaydedilme olasılığı azalır. Ancak yönlendiren bilgileri çıkarıldıkça bir ziyaretçinin web sitenize nasıl geldiği de daha az net olur.",
         "AskingForConsent": "Onay sorma",
         "ConsentExplanation": "Onay sorma, bireylere kendi kişisel verilerinin nasıl işleneceğini seçme ve denetleme olanağı sunar.",
         "ClickHereSettings": "%s ayarlarına erişmek için buraya tıklayın.",
@@ -3313,6 +3293,10 @@
         "AnonymizeSites": "Şu sitelerin verileri anonimleştirilsin",
         "AnonymizeRowDataFrom": "Şu tarihten sonraki tüm ham veriler anonim kılınsın:",
         "AnonymizeRowDataTo": "Şu tarihten önceki tüm ham veriler anonim kılınsın:",
+        "AnonymizeReferrerExcludeNone": "Yönlendiren anonim kılınmasın",
+        "AnonymizeReferrerExcludeQuery": "Sorgu parametreleri yönlendiren adresten çıkarılsın",
+        "AnonymizeReferrerExcludePath": "Yalnız yönlendiren adresin etki alanı tutulsun",
+        "AnonymizeReferrerExcludeAll": "Yönlendiren adres kaydedilmesin ancak yönlendiren türü algılansın",
         "AnonymizeIp": "IP Adresi Anonim Kılınsın",
         "AnonymizeIpHelp": "Bu işlem geri alınamaz. Bu seçenek etkinleştirildiğinde, bu sürede yapılan tüm ziyaretlerin IP adresleri '192.168.xxx.xxx' gibi en az 2 bayt kullanılarak anonim kılınır. Anonim kılmak seçeneğini 3 bayt olarak yapılandırdıysanız, bu ayara uyulur ve tüm IP adresleri 3 bayt kullanılarak anonim kılınır.",
         "AnonymizeLocation": "Konum Anonim Kılınsın",
@@ -3356,6 +3340,7 @@
         "DeleteReportsConfirm": "Rapor verilerini silmeyi seçmek üzeresiniz. Eski raporlar silindiğinde eski istatistik bilgilerini görebilmek için raporların yeniden işlenmesi gerekir. Devam etmek ister misiniz?",
         "DeleteAggregateReportsDetailedInfo": "Bu seçenek etkinleştirildiğinde, tüm işlenmiş raporlar silinir. İşlenmiş raporlar ham verilerden çeşitli bireysel ziyaretlerin ham verilerinin işlenmesi ile üretilir. Örneğin \"Ülke\" raporunda her bir ülkeden yapılmış ziyaretlerin sayısının işlenmesi ile oluşturulur.",
         "KeepBasicMetricsReportsDetailedInfo": "Bu seçenek etkinleştirildiğinde, bazı sayısal Anahtar Performans Göstergeleri silinmez.",
+        "InfoSomeReferrerInfoMayBeAnonymized": "Yönlendireni anonim kılma şu şekilde etkinleştirildiği için bazı yönlendiren bilgileri eksik olabilir: %s",
         "DeleteReportsInfo2": "Silinen eski raporlar, gerekli olduğunda ham verilerden yeniden üretilebilir.",
         "DeleteReportsInfo3": "Ancak \"%s\" seçeneği de etkinleştirilmiş ise, silinen rapor verileri tamamen kaybolur.",
         "DeleteReportsOlderThan": "Şundan eski raporlar silinsin",
@@ -3466,13 +3451,6 @@
         "ShowInEmbeddedWidgetsDescription": "Bu seçenek etkinleştirildiğinde, gömülü gereçlerin altında Gizlilik İlkesi ve Hüküm ve Koşullar sayfalarınıza bağlantılar görüntülenir.",
         "PrivacyPolicy": "Gizlilik İlkesi",
         "TermsAndConditions": "Hüküm ve Koşullar"
-    },
-    "Provider": {
-        "ColumnProvider": "Hizmet Sağlayıcı",
-        "PluginDescription": "Bu raporda ziyaretçilerin İnternet hizmeti aldığı Hizmet Sağlayıcı bilgileri bulunur.",
-        "ProviderReportDocumentation": "Bu raporda ziyaretçilerinizin web sitenize hangi İnternet Hizmeti Sağlayıcıları üzerinden eriştiğini ile ilgili bilgiler bulunur. Bir hizmet sağlayıcının adına tıklayarak ayrıntılı bilgi alabilirsiniz. %s Matomo bir ziyaretçinin hizmet sağlayıcısını belirleyemediğinde IP adresini görüntüler.",
-        "WidgetProviders": "Hizmet Sağlayıcılar",
-        "ProviderReportFooter": "Bilinmeyen sağlayıcılar IP adresine bakılamadığı anlamına gelir."
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "Bu raporda tüm yönlendirenler, web siteleri, aranan anahtar sözcükler ve ziyaretçilerin web sitenize gelmesi için kullanılan kampanyaların listesi toplu olarak görüntülenir.",
@@ -3611,6 +3589,7 @@
         "Segment_Deletion_Error": "Bu dilim %s raporun oluşturulmasında kullanıldığından silinemez ya da gizlenemez. Lütfen bu dilimi bu raporlardan kaldırıp yeniden deneyin.",
         "Segment_Help": "Bu e-posta raporundaki verilere uygulanacak var olan bir özel dilim seçebilirsiniz. Özel dilimleri panonuzdan ekleyip düzenleyebilirsiniz %1$s(açmak için tıklayın)%2$s sonra \"%3$s\" üzerine ve \"%4$s\" üzerine tıklayın.",
         "SegmentAppliedToReports": "Rapora '%s' dilimi uygulandı.",
+        "SegmentDeleted": "Dilim silindi",
         "SendReportNow": "Raporu gönder",
         "SendReportTo": "Raporu şuraya gönder",
         "SentToMe": "Bana gönder",
@@ -4558,7 +4537,9 @@
     "UserLanguage": {
         "BrowserLanguage": "Tarayıcı dili",
         "LanguageCode": "Dil kodu",
-        "PluginDescription": "Ziyaretçilerin web tarayıcılarında kullandıkları dilleri görüntüler."
+        "PluginDescription": "Ziyaretçilerin web tarayıcılarında kullandıkları dilleri görüntüler.",
+        "getLanguageDocumentation": "Bu rapor, ziyaretçilerin kullandığı web tarayıcının dilini içerir. (Örnek: \"Türkçe\")",
+        "getLanguageCodeDocumentation": "Bu rapor, ziyaretçilerin kullandığı web tarayıcının ayarlandığı tam dil kodunu içerir. (Örnek: \"Almanca - Avusturya (de-at)\")"
     },
     "UsersManager": {
         "2FA": "İki Aşamalı Kimlik Doğrulama",

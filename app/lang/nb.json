@@ -756,11 +756,9 @@
         "Default": "standard",
         "DonateCall1": "Det vil aldri koste noe å bruke Matomo, men det betyr ikke at det ikke koster oss noe å lage.",
         "DonateCall2": "Matomo trenger din fortsatte støtte for å vokse og blomstre.",
-        "DonateFormInstructions": "Klikk på glidebryteren for å velge beløp, deretter klikk abonnere for å donere.",
         "ExcludeRowsWithLowPopulation": "All rader vises %s Ekskluder lav populasjon",
         "ExternalHelp": "Hjelp (åpnes i ny fane)",
         "FlattenDataTable": "Rapporten er hierarkisk %s Gjør den flat",
-        "HowMuchIsPiwikWorth": "Hvor mye er Matomo verdt for deg?",
         "IncludeRowsWithLowPopulation": "Rader med lav populasjon er skjult %s Vis alle rader",
         "InjectedHostEmailBody": "Hei, jeg prøvde å få tilgang til Matomo i dag og ble møtt av «ukjent vertsnavn»-advarselen.",
         "InjectedHostEmailSubject": "Matomo ble åpnet med et ukjent vertsnavn: %s",
@@ -768,7 +766,6 @@
         "InjectedHostSuperUserWarning": "Matomo kan være feilkonfigurert (for eksempel hvis Matomo nylig var flyttet til en ny tjener eller ny URL). Du kan enten %1$sklikke her og legge til %2$s som et gyldig Matomo-vertsnavn (hvis du stoler på det)%3$s eller %4$sklikk her og gå til %5$s for sikker tilgang til Matomo%6$s.",
         "InjectedHostWarningIntro": "Du har tilgang til Matomo fra %1$s, men Matomo er konfigurert til å kjøre på adressen: %2$s",
         "MainNavigation": "Hovednavigasjon",
-        "MakeOneTimeDonation": "Bidra med en engangsdonasjon i stedet.",
         "Menu": "Meny",
         "NoPrivilegesAskPiwikAdmin": "Du er logget inn som «%1$s», men det ser ut til at du ikke har noen rettigheter satt i Matomo. %2$s Be din Matomo-administrator (klikk for å sende e-post)%3$s å gi deg «vis»-tilgang til et nettsted.",
         "OnlyForSuperUserAccess": "Denne widgeten vises kun i standardoversikten for brukere som har superbruker-tilgang.",
@@ -974,25 +971,6 @@
     "CustomJsTracker": {
         "DiagnosticPiwikJsWritable": "Skrivbar JavaScript-tracker (\"\/piwik.js\")",
         "DiagnosticPiwikJsMakeWritable": "Vi anbefaler å gjøre piwik.js skrivbar ved å kjøre denne kommandoen: %s"
-    },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Navn på egendefinert variabel",
-        "ColumnCustomVariableValue": "Verdi på egendefinert variabel",
-        "CustomVariables": "Egendefinerte variabler",
-        "CustomVariablesReportDocumentation": "Denne rapporten inneholder informasjon om dine egendefinerte variabler. Klikk på et variabelnavn for å se fordelingen av verdier. %1$sFor mer informasjon om egendefinerte variabler, les %2$sdokumentasjonen om egendefinerte variabler på matomo.org%3$s",
-        "ScopePage": "gjelder side",
-        "ScopeVisit": "gjelder besøk",
-        "ManageDescription": "Dette sammendraget viser alle mulige egendefinerte variabler og deres bruk for nettstedet «%s». Navnene i hver «luke» er sortert etter hvor ofte de blir brukt.",
-        "ScopeX": "Gjelder %s",
-        "Index": "Indeks",
-        "Usages": "Bruk",
-        "Unused": "Ubrukt",
-        "CreateNewSlot": "Øk antallet tilgjengelige egendefinerte variabler",
-        "UsageDetails": "%1$s besøk og %2$s handlinger siden dette nettstedet ble laget.",
-        "CurrentAvailableCustomVariables": "Nå kan du bruke opp til %s egendefinerte variabler per nettsted.",
-        "SlotsReportIsGeneratedOverTime": "Data for denne rapporten vil bli synlige over tid. Det kan ta en dag eller to før du kan se data, og noen uker før rapportene er helt nøyaktige.",
-        "MetricsAreOnlyAvailableForVisitScope": "Merk: %1$s-måltall er kun tilgjengelige for egendefinerte variabler som gjelder %2$s.",
-        "MetricsNotAvailableForPageScope": "For egendefinerte variabler som gjelder %1$s, er kolonneverdien for disse måltallene %2$s"
     },
     "DBStats": {
         "DatabaseUsage": "Databasebruk",
@@ -2696,13 +2674,6 @@
         "RecommendedForPrivacy": "Anbefalt for personvern",
         "ReportsDataSavedEstimate": "Databasestørrelse",
         "TeaserHeadline": "Personverninnstillinger"
-    },
-    "Provider": {
-        "ColumnProvider": "Internett-leverandør",
-        "PluginDescription": "Rapporterer internett-leverandøren (ISP-en) til besøkere.",
-        "ProviderReportDocumentation": "Denne rapporten viser hvilken internett-leverandør (ISP) dine besøkere bruker for å besøke nettstedet. Du kan klikke på et ISP-navn for flere detaljer. %s Hvis Matomo ikke kan finne en besøkers ISP, listes den som IP.",
-        "WidgetProviders": "Internett-leverandører",
-        "ProviderReportFooter": "Ukjent internett-leverandør betyr at IP-adressen ikke kunne slås opp."
     },
     "Referrers": {
         "Campaigns": "Kampanjer",

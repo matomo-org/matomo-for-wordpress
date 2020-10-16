@@ -519,7 +519,8 @@
         "MaximumNumberOfPeriodsComparedIs": "Die maximale Anzahl von Zeiträumen die gleichzeitig verglichen werden können ist %s.",
         "Custom": "Benutzerdefiniert",
         "PreviousPeriod": "Vorheriger Zeitraum",
-        "PreviousYear": "vorheriges Jahr"
+        "PreviousYear": "vorheriges Jahr",
+        "ViewAccessRequired": "Der verwendete token_auth hat zu viele Rechte, um für nicht-API URL Anfragen verwendet zu werden. Bitte verwenden Sie ein programmspezifisches Passwort für einen Benutzer, der ausschließlich über Ansichtszugriff verfügt."
     },
     "Mobile": {
         "AboutPiwikMobile": "Über Matomo Mobile",
@@ -911,11 +912,9 @@
         "DonateCall1": "Die Nutzung von Matomo wird immer kostenlos bleiben, was aber nicht heißt, dass es uns nichts kostet, es zu erstellen.",
         "DonateCall2": "Matomo braucht Ihre dauerhafte Unterstützung um zu wachsen und zu gedeihen.",
         "DonateCall3": "Finden Sie, dass Matomo einen deutlichen Mehrwert für Sie oder Ihr Unternehmen hat? %1$sBitte spenden Sie%2$s oder überlegen Sie sich unsere %3$sPremium Features zu kaufen%4$s. Jeder Cent hilft.",
-        "DonateFormInstructions": "Klicken Sie auf den Slider um den Betrag zu wählen, dann klicken Sie auf 'Subscribe' um zu spenden.",
         "EndShortcut": "Ende",
         "EnterZenMode": "\"Zen mode\" aktivieren (Menü verstecken)",
         "ExitZenMode": "\"Zen mode\" verlassen (Menü zeigen)",
-        "ExceptionNotWhitelistedIP": "Sie können dieses Matomo nicht verwenden, weil Ihre IP %s auf der Whitelist nicht vorhanden ist",
         "ExcludeRowsWithLowPopulation": "Alle Zeilen werden angezeigt %s Niedrige Werte ausschließen",
         "ExternalHelp": "Hilfe (öffnet in neuem Tab)",
         "FlattenDataTable": "Der Bericht ist hierarchisch strukturiert %s Flach anzeigen",
@@ -923,7 +922,7 @@
         "ShowExportUrl": "Export-URL anzeigen",
         "HideExportUrl": "Export-URL verstecken",
         "HomeShortcut": "Pos1",
-        "HowMuchIsPiwikWorth": "Wie viel ist Matomo Ihnen wert?",
+        "SupportUsOn": "Unterstützen Sie uns auf",
         "IncludeRowsWithLowPopulation": "Niedrige Werte sind ausgeschlossen %s Alle Zeilen anzeigen",
         "InjectedHostEmailBody": "Hallo, ich habe gerade versucht Matomo aufzurufen und erhielt eine Warnung, dass der Hostname unbekannt ist.",
         "InjectedHostEmailSubject": "Matomo wurde mit einem unbekannten Hostnamen aufgerufen: %s",
@@ -936,7 +935,8 @@
         "VisitTypeReturning": "Wiederkehrend",
         "VisitTypeReturningCustomer": "Wiederkehrender Kunde",
         "MainNavigation": "Hauptnavigation",
-        "MakeOneTimeDonation": "Stattdessen einmalig spenden.",
+        "YourDonationWillHelp": "Ihre Spende wird direkt dafür eingesetzt, neue Features und Erweiterungen für diese Open-Source Analyse-Plattforn zu finanzieren. Das bedeutet, die Comunity wird immer von einem Tool profitieren, welches Privatsphäre beschützt und Ihnen erlaubt, die Kontrolle Ihrer Daten zu bewahren.",
+        "ThanksFromAllOfUs": "Vielen Dank von uns allen bei Matomo!",
         "Menu": "Menü",
         "NoPrivilegesAskPiwikAdmin": "Sie sind angemeldet als '%1$s', aber es wurden keine Berechtigungen für diesen Benutzer in Matomo gesetzt. %2$s Bitte fragen Sie Ihren Matomo Administrator (klicken für E-Mail)%3$s um Zugriff auf die Webseite zu erhalten.",
         "OnlyForSuperUserAccess": "Dieses Widget wird im Standard-Dashboard nur Benutzern mit Hauptadministrator-Berechtigung angezeigt.",
@@ -1001,7 +1001,8 @@
         "ReadMoreOnlineGuide": "Lesen Sie mehr zu diesem Thema in der Online-Anleitung.",
         "SeeAvailableVersions": "Zeige verfügbare Versionen",
         "QuickLinks": "Schnelllinks",
-        "Profilable": "Profilierbar"
+        "Profilable": "Profilierbar",
+        "SearchOnMatomo": "Suche '%1$s' auf Matomo.org"
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Deinstallieren",
@@ -1098,6 +1099,7 @@
         "DisablingIncompatiblePlugins": "Deaktiviere inkompatible Plugins: %s",
         "DownloadingUpdateFromX": "Aktualisierung wird von %s heruntergeladen",
         "DownloadX": "%s herunterladen",
+        "UpdateLog": "Log aktualisieren",
         "EmptyDatabaseError": "Die Datenbank %s ist leer. Sie müssen die Konfigurationsdatei anpassen oder entfernen.",
         "ErrorDIYHelp": "Wenn Sie ein professioneller Anwender sind und einen unerwarteten Fehler in der Aktualisierung der Datenbank entdecken:",
         "ErrorDIYHelp_1": "identifizieren und korrigieren Sie die Quelle des Problems (z.B. memory_limit oder max_execution_time)",
@@ -1235,29 +1237,6 @@
         "DiagnosticPiwikJsNotWritable": "Für die Matomo JavaScript-Tracker-Datei %s sind keine Schreibrechte vorhanden , das bedeutet, dass andere Plugins den JavaScript-Tracker nicht erweitern können. In Zukunft könnten sogar einige Kernfunktionen nicht wie erwartet funktionieren.",
         "DiagnosticPiwikJsMakeWritable": "Wir empfehlen, %1$sbeschreibbar zu machen, indem Sie folgenden Befehl ausführen: %2$s"
     },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Name der benutzerdefinierten Variable",
-        "ColumnCustomVariableValue": "Wert der benutzerdefinierten Variable",
-        "CustomVariables": "Benutzerdefinierte Variablen",
-        "CustomVariablesReportDocumentation": "Dieser Bericht enthält Informationen über Ihre benutzerdefinierten Variablen. Klicken Sie auf einen Variablennamen, um die Verteilung der Werte zu sehen. %1$s Für mehr Informationen über benutzerdefinierte Variablen, lesen Sie die %2$sDokumentation auf matomo.org%3$s",
-        "PluginDescription": "Benutzerdefinierte Variablen sind (Name, Wert)-Paare, welche Sie mit Hilfe der Javascript API Besuchern oder deren Aktionen zuweisen können. Matomo wird dann Besuche, Seiten, Konversionen für jede dieser benutzerdefinierten Namen und Werte protokollieren. Die detaillierten benutzerdefinierten Variablen lassen sich für jeden Benutzer und jede Aktion im Besucher Log anzeigen. Dieses Plugin wird benötigt für das Ecommerce Analytics Feature!",
-        "ScopePage": "Anwendungsbereich Seite",
-        "ScopeVisit": "Anwendungsbereich Besuch",
-        "ScopeConversion": "Anwendungsbereichkonversion",
-        "ManageDescription": "Diese Übersicht zeigt alle benutzerdefinierten Variablen und deren Gebrauch für Webseite %s. Die Namen auf jeder Position sind danach sortiert, wie oft sie insgesamt benützt wurden.",
-        "ScopeX": "Anwendungsbereich %s",
-        "Index": "Index",
-        "Usages": "Verwendungen",
-        "Unused": "Unbenutzt",
-        "CreateNewSlot": "Die Anzahl verfügbarer benutzerdefinierter Variablen erhöhen",
-        "UsageDetails": "%1$s Besuche und %2$s Aktionen seit der Erstellung dieser Website.",
-        "CreatingCustomVariableTakesTime": "Neue benutzerdefinierte Variablen zu erstellen kann viel Zeit beanspruchen, abhängig von der Größe Ihrer Datenbank. Deshalb ist dieser Vorgang nur über Kommandozeilen verfügbar.",
-        "CurrentAvailableCustomVariables": "Aktuell können Sie bis zu %s benutzerdefinierte Variablen pro Seite einsetzen.",
-        "ToCreateCustomVarExecute": "Um eine neue benutzerdefinierte Variable zu erstellen, führen Sie in Ihrer Matomo Installation folgenden Befehl aus:",
-        "SlotsReportIsGeneratedOverTime": "Daten für diesen Bericht werden periodisch veröffentlicht. Es mag ein oder zwei Tage dauern, bis Daten sichtbar sind und einige Wochen bis der Bericht vollständig aussagekräftig ist.",
-        "MetricsAreOnlyAvailableForVisitScope": "Hinweis: Die Metriken %1$s sind nur für benutzerdefinierte Variablen mit Geltungsbereich %2$s verfügbar.",
-        "MetricsNotAvailableForPageScope": "Für benutzerdefinierte Variablen mit Geltungsbereich %1$s ist der Wert für diese Metriken %2$s."
-    },
     "DBStats": {
         "DatabaseUsage": "Datenbanknutzung",
         "DataSize": "Datenmenge",
@@ -1341,6 +1320,8 @@
         "dataTableLabelModels": "Modell",
         "dataTableLabelSystemVersion": "Betriebssystem-Version",
         "dataTableLabelTypes": "Typ",
+        "ClientType": "Kundentyp",
+        "ClientTypes": "Kundentypen",
         "Device": "Gerät",
         "DeviceBrand": "Gerätemarke",
         "DeviceBrands": "Gerätemarken",
@@ -1494,8 +1475,7 @@
         "RemoveOtherLabel": "Ich möchte meine 'anderen' Daten sehen",
         "PurgeOldData": "Ich möchte einige alte Daten entfernen",
         "SearchHelpResources": "matomo.org Hilfequellen durchsuchen",
-        "PopularHelpTopics": "Beliebte Hilfethemen",
-        "SearchOnMatomo": "Suche '%1$s' auf Matomo.org"
+        "PopularHelpTopics": "Beliebte Hilfethemen"
     },
     "GeoIp2": {
         "AssumingNonApache": "Die apache_get_modules Funktion wurde nicht gefunden. Es wird daher von einem Nicht-Apache Webserver ausgegangen.",
@@ -1738,6 +1718,10 @@
         "GoBackAndDefinePrefix": "Zurückgehen und einen Präfix für die Matomo-Tabellen definieren",
         "HappyAnalysing": "Viel Spaß beim Analysieren!",
         "Installation": "Installation",
+        "InformationalResults": "Informationen",
+        "CopyBelowInfoForSupport": "Kopieren Sie die untenstehende Information oder laden Sie sie herunter für den Fall, dass unser Supportteam Sie danach fragen wird.",
+        "CopySystemCheck": "Systemcheck kopieren",
+        "DownloadSystemCheck": "Systemcheck herunterladen",
         "InstallationStatus": "Status der Installation",
         "InsufficientPrivilegesHelp": "Sie können diese Rechte mit einem Tool wie phpMyAdmin oder den entsprechenden SQL Kommandos hinzufügen. Wenn Sie nicht wissen, was zu tun ist, wenden Sie sich bitte an den System-Administrator, damit er für Sie diese Rechte setzt.",
         "InsufficientPrivilegesMain": "Entweder existiert die Datenbank nicht (und konnte nicht erstellt werden), oder der angegebene Benutzer hat unzureichende Berechtigungen. Der Datenbankbenutzer muss folgende Berechtigungen besitzen: %s",
@@ -3067,6 +3051,7 @@
         "SettingBruteForceEnableHelp": "Brute Force Erkennung ist ein wichtiges Sicherheitsfeature, das Ihre Daten vor nicht autorisiertem Zugriff schützt. In dem einem Benutzer nicht erlaubt wird innerhalb von kurzer Zeit Tausende oder gar Millionen von Passwortkombinationen in kurzer Zeit auszuprobieren, wird stattdessen nur eine bestimmte Anzahl Anmeldeversuche im vorbestimmten Zeitbereich zugelassen. Bei zu vielen fehlgeschlagenen Anmeldungen in diesem Zeitbereich wird dem Benutzer für eine vorgegebene Zeit verwehrt, sich anzumelden. Bitte beachten Sie, dass wenn eine bestimmte IP blockiert ist, dann alle Benutzer welche diese IP verwenden ebenfalls von der Blockierung betroffen sind.",
         "SettingBruteForceWhitelistIp": "Diese IPs nie vom Anmelden abhalten",
         "SettingBruteForceBlacklistIp": "Diese IPs immer vom Anmelden abhalten",
+        "NotAllowListTakesPrecendence": "Wenn eine IP sowohl in der Liste der zu blockierenden als auch in der Liste der nie zu blockierenden IPs aufgeführt ist, dann wird die zu blockierende Liste berücksichtigt und die IP wird nicht zugelassen.",
         "SettingBruteForceMaxFailedLogins": "Anzahl erlaubter Versuche sich anzumelden innerhalb Zeitbereich",
         "SettingBruteForceMaxFailedLoginsHelp": "Wenn im konfigurierten Zeitraum mehr als diese Anzahl fehlgeschlagene Anmeldungen vermerkt werden, die IP blockieren.",
         "SettingBruteForceTimeRange": "Zähle Anmeldeversuche innerhalb dieses Zeitraums in Minuten",
@@ -3458,13 +3443,6 @@
         "ShowInEmbeddedWidgetsDescription": "Wenn angewählt, wird am Ende der eingebetteten Widgets ein Link zu Ihren Datenschutzrichtlinien und zu Ihren Geschäftsbedingungen angezeigt.",
         "PrivacyPolicy": "Datenschutzrichtlinie",
         "TermsAndConditions": "Geschäftsbedingungen"
-    },
-    "Provider": {
-        "ColumnProvider": "Provider",
-        "PluginDescription": "Liefert den Internet Service Provider der Besucher.",
-        "ProviderReportDocumentation": "Dieser Bericht zeigt Ihnen, welche Internetanbieter die Besucher Ihrer Website nutzen. Sie können auf den Namen eines Anbieters klicken, um mehr Informationen dazu zu erhalten. %s Wenn Matomo den Internetanbieter eines Besuchers nicht feststellen kann, wird er unter IP gelistet.",
-        "WidgetProviders": "Provider",
-        "ProviderReportFooter": "Unbekannter Provider bedeutet die IP-Adresse konnte nicht aufgelöst werden."
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "Dieser Bericht zeigt Ihnen all Ihre Verweise in einem einzigen Bericht. Es werden alle Websites, Suchbegriffe und Kampagnen gezeigt, die von Ihren Besuchern benutzt wurden, um ihre Website zu finden.",
@@ -4864,6 +4842,7 @@
     "Widgetize": {
         "OpenInNewWindow": "In neuem Fenster öffnen",
         "PluginDescription": "Zeigt sämtliche Matomo Berichte in Ihrer Website oder App mit einem einfachen Embed HTML tag an.",
+        "ViewAccessRequired": "Dieser Benutzer hat mindestens teilweise Schreibrechte. Nur Token von Benutzern mit ausschliesslich Lesezugriff können verwendet werden.",
         "TopLinkTooltip": "Exportieren Sie Berichte als Widgets und binden Sie das Dashboard in Ihrer Applikation als iframe ein."
     }
 }

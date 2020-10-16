@@ -477,11 +477,6 @@
         "YouCanUpgradeAutomaticallyOrDownloadPackage": "คุณสามารถอัพเดตเป็นเวอร์ชั่น %s ได้อัตโนมัติ หรือ ดาวน์โหลดไฟลล์แล้วติดตั้งภายหลัง",
         "YourDatabaseIsOutOfDate": "ฐานข้อมูล Matomo ของคุณ ล้าสมัย และต้องถูกอัพเกรดก่อนที่คุณสามารถดำเนินการต่อไป"
     },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "ชื่อตัวแปรที่กำหนดเอง",
-        "ColumnCustomVariableValue": "ค่าตัวแปรที่กำหนดเอง",
-        "CustomVariables": "ตัวแปรที่กำหนดเอง"
-    },
     "DBStats": {
         "DatabaseUsage": "การใช้ฐานข้อมูล",
         "DataSize": "ขนาดข้อมูล",
@@ -1861,10 +1856,6 @@
         "ReportsDataSavedEstimate": "ขนาดฐานข้อมูล",
         "TeaserHeadline": "การตั้งค่าความเป็นส่วนตัว",
         "UseAnonymizeIp": "ผู้เข้าชมแบบไม่ระบุที่อยู่ IP"
-    },
-    "Provider": {
-        "ColumnProvider": "ผู้ให้บริการ",
-        "WidgetProviders": "ผู้ให้บริการ"
     },
     "Referrers": {
         "Campaigns": "แคมเปญ",

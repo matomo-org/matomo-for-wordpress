@@ -912,11 +912,10 @@
         "DonateCall1": "Matomo will always cost you nothing to use, but that doesn't mean it costs us nothing to make.",
         "DonateCall2": "Matomo needs your continued support to grow and thrive.",
         "DonateCall3": "If you feel that Matomo has added significant value to your business or endeavour, %1$splease consider donating%2$s or %3$spurchasing a premium feature%4$s. Every penny will help.",
-        "DonateFormInstructions": "Click on the slider to select an amount, then click subscribe to donate.",
         "EndShortcut": "End",
         "EnterZenMode": "Enter Zen mode (hide the menus)",
         "ExitZenMode": "Exit Zen mode (show the menus)",
-        "ExceptionNotWhitelistedIP": "You cannot use this Matomo as your IP %s is not whitelisted",
+        "ExceptionNotAllowlistedIP": "You cannot use this Matomo as your IP %s is not allowed.",
         "ExcludeRowsWithLowPopulation": "All rows are shown %s Exclude low population",
         "ExternalHelp": "Help (opens in new tab)",
         "FlattenDataTable": "The report is hierarchical %s Make it flat",
@@ -924,7 +923,7 @@
         "ShowExportUrl": "Show Export URL",
         "HideExportUrl": "Hide Export URL",
         "HomeShortcut": "Home",
-        "HowMuchIsPiwikWorth": "How much is Matomo worth to you?",
+        "SupportUsOn": "Support us on",
         "IncludeRowsWithLowPopulation": "Rows with low population are hidden %s Show all rows",
         "InjectedHostEmailBody": "Hello, I tried to access Matomo today and encountered the unknown hostname warning.",
         "InjectedHostEmailSubject": "Matomo was accessed with an unknown hostname: %s",
@@ -937,7 +936,8 @@
         "VisitTypeReturning": "Returning",
         "VisitTypeReturningCustomer": "Returning Customer",
         "MainNavigation": "Main navigation",
-        "MakeOneTimeDonation": "Make a one time donation, instead.",
+        "YourDonationWillHelp": "Your donation will directly help fund new features and improvements for this open-source analytics platform. This means the community will always benefit from a tool that protects privacy and lets you stay in control of your data.",
+        "ThanksFromAllOfUs": "Thank you from all of us at Matomo!",
         "Menu": "Menu",
         "NoPrivilegesAskPiwikAdmin": "You are logged in as '%1$s' but it seems you don't have any permission set in Matomo. %2$s Ask your Matomo administrator (click to email)%3$s to give you 'view' access to a website.",
         "OnlyForSuperUserAccess": "This widget is displayed in the default dashboard only to users having Super User access.",
@@ -1002,7 +1002,8 @@
         "ReadMoreOnlineGuide": "Read more about this topic in the online guide.",
         "SeeAvailableVersions": "See Available Versions",
         "QuickLinks": "Quick Links",
-        "Profilable": "Profilable"
+        "Profilable": "Profilable",
+        "SearchOnMatomo": "Search '%1$s' on Matomo.org"
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Uninstall",
@@ -1236,29 +1237,6 @@
         "DiagnosticPiwikJsWritable": "Writable JavaScript Tracker (%s)",
         "DiagnosticPiwikJsNotWritable": "The Matomo JavaScript tracker file %s is not writable which means other plugins cannot extend the JavaScript tracker. In the future even some core features might not work as expected. ",
         "DiagnosticPiwikJsMakeWritable": "We recommend to make %1$s writable by running this command: %2$s"
-    },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Custom Variable name",
-        "ColumnCustomVariableValue": "Custom Variable value",
-        "CustomVariables": "Custom Variables",
-        "CustomVariablesReportDocumentation": "This report contains information about your Custom Variables. Click on a variable name to see the distribution of the values. %1$s For more information about Custom Variables in general, read the %2$sCustom Variables documentation on matomo.org%3$s",
-        "PluginDescription": "Custom Variables are (name, value) pairs that you can assign using the Javascript API to visitors or any of their action. Matomo will then report how many visits, pages, conversions for each of these custom names and values. View the detailed Custom Variables for each user and action in the Visitor Log. This plugin is required to use Ecommerce Analytics feature!",
-        "ScopePage": "scope page",
-        "ScopeVisit": "scope visit",
-        "ScopeConversion": "scope conversion",
-        "ManageDescription": "This overview shows all custom variable slots and their usages for website '%s'. The names within each slot are ordered by how often they were used in total.",
-        "ScopeX": "Scope %s",
-        "Index": "Index",
-        "Usages": "Usages",
-        "Unused": "Unused",
-        "CreateNewSlot": "Increase the number of available Custom Variables slots",
-        "UsageDetails": "%1$s visits and %2$s actions since creation of this website.",
-        "CreatingCustomVariableTakesTime": "Creating a new custom variable slot can take a long time depending on the size of your database. Therefore, it is only possible to do this via a command which needs to be executed on the command line.",
-        "CurrentAvailableCustomVariables": "Currently you can use up to %s Custom Variables per site.",
-        "ToCreateCustomVarExecute": "To create a new custom variable slot execute the following command within your Matomo installation: ",
-        "SlotsReportIsGeneratedOverTime": "Data for this report will be populated over time. It may take a day or two to see any data and a few weeks until the report is fully accurate.",
-        "MetricsAreOnlyAvailableForVisitScope": "Note: %1$s metrics are available for Custom Variables of scope %2$s only.",
-        "MetricsNotAvailableForPageScope": "For Custom Variables of scope %1$s, the column value for these metrics is %2$s"
     },
     "DBStats": {
         "DatabaseUsage": "Database usage",
@@ -1498,8 +1476,7 @@
         "RemoveOtherLabel": "I want to see my 'Others' data",
         "PurgeOldData": "I want to remove some old data",
         "SearchHelpResources": "Search matomo.org help resources",
-        "PopularHelpTopics": "Popular help topics",
-        "SearchOnMatomo": "Search '%1$s' on Matomo.org"
+        "PopularHelpTopics": "Popular help topics"
     },
     "GeoIp2": {
         "AssumingNonApache": "Cannot find apache_get_modules function, assuming non-Apache webserver.",
@@ -1815,7 +1792,7 @@
         "SystemCheckGzuncompressHelp": "You need to enable the zlib extension and gzuncompress function.",
         "SystemCheckHashHelp": "You need to configure and rebuild PHP with hash() support enabled by excluding the option --disable-hash.",
         "SystemCheckIconvHelp": "You need to configure and rebuild PHP with \"iconv\" support enabled, --with-iconv.",
-        "SystemCheckJsonHelp": "The php5-json extension is required for Matomo to read and write JSON data.",
+        "SystemCheckJsonHelp": "The php-json extension is required for Matomo to read and write JSON data.",
         "SystemCheckMailHelp": "Feedback and Lost Password messages will not be sent without mail().",
         "SystemCheckMbstring": "mbstring",
         "SystemCheckMbstringHelp": "The mbstring extension is required to handle multibyte characters in the User interface and API responses. Also, please check that mbstring.func_overload is set to \"0\" in php.ini.",
@@ -3073,6 +3050,7 @@
         "SettingBruteForceEnableHelp": "Brute Force Detection is an important security feature used to protect your data from unauthorized access. Instead of allowing any user to try thousands, or millions of password combinations within a very short time, it will only allow a specific amount of failed logins within a short period of time. If too many failed logins occur in that time range, the user won't be able to log in until some time has passed. Please note that if an IP is blocked, every user that uses that IP will be blocked from logging in as well.",
         "SettingBruteForceWhitelistIp": "Never block these IPs from logging in",
         "SettingBruteForceBlacklistIp": "Always block these IPs from logging in",
+        "NotAllowListTakesPrecendence": "If an IP matches both the block and never block list, then the block list takes precendence and the IP would not be allowed.",
         "SettingBruteForceMaxFailedLogins": "Number of allowed login retries within time range",
         "SettingBruteForceMaxFailedLoginsHelp": "If more than this number of failed logins are recorded within the time range configured below, block the IP.",
         "SettingBruteForceTimeRange": "Count login retries within this time range in minutes",
@@ -3337,6 +3315,9 @@
         "AnonymizeIpExtendedHelp": "When users visit your website, Matomo will not use the full IP address (such as %1$s) but instead Matomo will anonymize it first (to %2$s). IP address anonymisation is one of the requirements set by the privacy laws in some countries such as Germany.",
         "AnonymizeIpMaskLengtDescription": "Select how many bytes of the visitors' IPs should be masked.",
         "AnonymizeIpMaskLength": "%1$s byte(s) - e.g. %2$s",
+        "AnonymizeIpMaskFully": "Fully mask IP address",
+        "AnonymizeReferrer": "Anonymize Referrer",
+        "AnonymizeReferrerNote": "Matomo stores from which URL (referrer) a user comes to your site. In some cases such a URL may contain information that can be considered personal information. If you want to prevent such information to be tracked you can restrict the amount of referrer data that Matomo will store when a visitor enters your website. The more information is removed from the referrer information, the less likely personal information will be recorded. The more information you remove from the referrer, the less clear it will be how a visitor came to your website.",
         "AskingForConsent": "Asking for consent",
         "ConsentExplanation": "Consent means offering individuals choice and control about how their personal data is processed.",
         "ClickHereSettings": "Click here to access the %s settings.",
@@ -3348,6 +3329,10 @@
         "AnonymizeSites": "Anonymize the data of this site(s)",
         "AnonymizeRowDataFrom": "Anonymize all raw data starting from:",
         "AnonymizeRowDataTo": "Anonymize all raw data up to:",
+        "AnonymizeReferrerExcludeNone": "Don't anonymize the referrer",
+        "AnonymizeReferrerExcludeQuery": "Remove query parameters from referrer URL",
+        "AnonymizeReferrerExcludePath": "Keep only the domain of a referrer URL",
+        "AnonymizeReferrerExcludeAll": "Don't record the referrer URL but still detect the type of referrer",
         "AnonymizeIp": "Anonymize IP",
         "AnonymizeIpHelp": "This action cannot be undone. If enabled, for all visits during this duration the IP will be anonymized by at least 2 bytes, for example '192.168.xxx.xxx'. If you have currently configured to anonymize by 3 bytes, then this setting will be respected and all IPs will be anonymized by 3 bytes.",
         "AnonymizeLocation": "Anonymize Location",
@@ -3391,6 +3376,7 @@
         "DeleteReportsConfirm": "You are about to enable report data deletion. If old reports are removed, you will have to re-process them in order view them. Are you sure you want to do this?",
         "DeleteAggregateReportsDetailedInfo": "When you enable this setting, all aggregated reports will be deleted. Aggregated reports are generated from the raw data and represent aggregated data from several individual visits. For example, the \"Country\" report lists aggregated numbers to see how many visits you have gotten from each country.",
         "KeepBasicMetricsReportsDetailedInfo": "When you enable this setting, some numeric key performance indicators won't be deleted.",
+        "InfoSomeReferrerInfoMayBeAnonymized": "Some referrer information may be missing because referrer anonymisation is enabled as following: %s",
         "DeleteReportsInfo2": "If you delete old reports, they may be re-processed again from your RAW data when you request them.",
         "DeleteReportsInfo3": "If you have also enabled \"%s\", then the reports data you're deleting will be permanently lost.",
         "DeleteReportsOlderThan": "Delete reports older than",
@@ -3504,13 +3490,6 @@
     },
     "ProfessionalServices": {
         "WidgetPremiumServicesForPiwik": "Premium Features & Services for Matomo"
-    },
-    "Provider": {
-        "ColumnProvider": "Provider",
-        "PluginDescription": "Reports the Internet Service Provider of the visitors.",
-        "ProviderReportDocumentation": "This report shows which Internet Service Providers your visitors used to access the website. You can click on a provider name for more details. %s If Matomo can't determine a visitor's provider, it is listed as IP.",
-        "WidgetProviders": "Providers",
-        "ProviderReportFooter": "Unknown provider means the IP address could not be looked up."
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "This report shows all your Referrers in one unified report, listing all Websites, Search keywords and Campaigns used by your visitors to find your website.",
@@ -3649,6 +3628,7 @@
         "Segment_Deletion_Error": "This segment cannot be deleted or made invisible to other users because it is used to generate email report(s) %s. Please retry after removing this segment from this report(s).",
         "Segment_Help": "You can select an existing custom segment to apply to data in this email report. You may create and edit custom segments in your dashboard %1$s(click here to open)%2$s, then click on the \"%3$s\" box, then \"%4$s\".",
         "SegmentAppliedToReports": "The segment '%s' is applied to the reports.",
+        "SegmentDeleted": "Segment deleted",
         "SendReportNow": "Send Report now",
         "SendReportTo": "Send report to",
         "SentToMe": "Send to me",
@@ -4268,7 +4248,7 @@
         "ScrollLeftPixelVariableDescription": "How far the user has currently scrolled horizontally in pixels, for example \"592\".",
         "ScrollLeftPixelVariableName": "Scroll Left Pixel",
         "ScrollReachTriggerDescription": "Triggered as soon as the user scrolls to a certain position.",
-        "ScrollReachTriggerHelp": "This trigger is triggered when a user either scrolls or resizes the current browser window. The trigger is not triggered when the user scrolls within a certain element.",
+        "ScrollReachTriggerHelp": "This trigger is triggered when a user either scrolls or resizes the current browser window. The trigger is not triggered when the user scrolls within a certain element. It won't trigger every time a certain scroll position has been reached but only the very first time the configured position has been reached.",
         "ScrollReachTriggerName": "Scroll Reach",
         "ScrollSourceVariableDescription": "Whether the scroll position was originated from a user scroll or a browser resize. Value is either \"scroll\" or \"resize\".",
         "ScrollSourceVariableName": "Scroll Source",
@@ -4605,7 +4585,9 @@
     "UserLanguage": {
         "BrowserLanguage": "Browser language",
         "LanguageCode": "Language code",
-        "PluginDescription": "Reports the language used by your visitors' browsers."
+        "PluginDescription": "Reports the language used by your visitors' browsers.",
+        "getLanguageDocumentation": "This report shows which language the visitor's browsers are using. (e.g. \"English\")",
+        "getLanguageCodeDocumentation": "This report shows which exact language code the visitor's browsers is set to. (e.g. \"German - Austria (de-at)\")"
     },
     "UsersManager": {
         "2FA": "2FA",

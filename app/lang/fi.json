@@ -875,11 +875,9 @@
         "DonateCall1": "Matomo on sinulle aina ilmainen, mutta tämä ei tarkoita sitä, että sen luominen olisi ilmaista meille.",
         "DonateCall2": "Matomo tarvitsee sinun tukeasi kasvaakseen ja menestyäkseen.",
         "DonateCall3": "Jos Matomosta on ollut merkittävää hyötyä liiketoiminnallesi, %1$sharkitse lahjoittamista%2$s tai %3$spremium-toimintojen ostamista%4$s. Jokainen euro auttaa.",
-        "DonateFormInstructions": "Klikkaa vierityspalkkia valitaksesi summa ja rekisteröi sitten lahjoitus.",
         "EndShortcut": "Loppuun",
         "EnterZenMode": "Siirry Zen-tilaan (piilota valikot)",
         "ExitZenMode": "Poistu Zen-tilasta (näytä valikot)",
-        "ExceptionNotWhitelistedIP": "Et voi käyttää Matomoa, sillä IP:si %s ei ole sallittujen osoitteiden listalla",
         "ExcludeRowsWithLowPopulation": "Kaikki rivit näytetään %s Piilota vajaat rivit",
         "ExternalHelp": "Apua (aukeaa uudessa ikkunassa)",
         "FlattenDataTable": "Tämä raportti on hierarkinen %s Muuta tasaiseksi",
@@ -887,7 +885,6 @@
         "ShowExportUrl": "Näytä vienti-URL",
         "HideExportUrl": "Piilota vienti-URL",
         "HomeShortcut": "Alkuun",
-        "HowMuchIsPiwikWorth": "Minkä arvoinen Matomo on sinulle?",
         "IncludeRowsWithLowPopulation": "Vajaat rivit on piilotettu %s Näytä kaikki rivit",
         "InjectedHostEmailBody": "Hei, yritin käyttää tänään Matomoa ja sain varoituksen tuntemattomasta isäntänimestä.",
         "InjectedHostEmailSubject": "Matomoon otettiin yhteyttä tuntemattomalla isäntänimellä: %s",
@@ -900,7 +897,6 @@
         "VisitTypeReturning": "Palaava",
         "VisitTypeReturningCustomer": "Palaava asiakas",
         "MainNavigation": "Päänavigointi",
-        "MakeOneTimeDonation": "Lahjoita kertasumma.",
         "Menu": "Valikko",
         "NoPrivilegesAskPiwikAdmin": "Olet kirjautuneena sisään käyttäjänä '%1$s', mutta sinulla ei ole mitään oikeuksia Matomoon. %2$sPyydä Matomon ylläpitäjää (napsauta avataksesi sähköpostin)%3$s antamaan katseluoikeudet verkkosivustoon.",
         "OnlyForSuperUserAccess": "Tämä vimpain näkyy ainoastaan käyttäjille, joilla on superkäyttäjän oikeudet.",
@@ -963,7 +959,8 @@
         "ReportWithMetadata": "Raportti metadatan kera",
         "ReadMoreOnlineGuide": "Lue lisää tästä aiheesta verkko-oppaasta.",
         "SeeAvailableVersions": "Näytä saatavilla olevat versiot",
-        "QuickLinks": "Pikalinkit"
+        "QuickLinks": "Pikalinkit",
+        "SearchOnMatomo": "Hae '%1$s' Matomo.orgista"
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Poista",
@@ -1183,20 +1180,6 @@
         "DiagnosticPiwikJsNotWritable": "Matomon JavaScript-seuraintiedosto %s ei ole kirjoitettavissa. Se tarkoittaa, etteivät muut liitännäiset pysty laajentamaan JavaScript-seurainta. Jatkossa jotkin keskeisimmät ominaisuudet eivät välttämättä toimi odotetulla tavalla.",
         "DiagnosticPiwikJsMakeWritable": "Suosittelemme, että %1$s asetetaan kirjoitettavaksi suorittamalla seuraava komento: %2$s"
     },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Kustomoidun muuttujan nimi",
-        "ColumnCustomVariableValue": "Kustomoidun muuttujan arvo",
-        "CustomVariables": "Kustomoidut muuttujat",
-        "CustomVariablesReportDocumentation": "Tämä raportti sisältää tietoa kustomoiduista muuttujastasi. Voit tarkastella eri arvojen määrää klikkaamalla muuttujan nimeä. %1$s Saat lisätietoa kustomoiduista muuttujista %2$sCustom Variables%3$s-sivulta matomo.orgista (englanninkielinen)",
-        "ScopePage": "alueena sivu",
-        "ScopeVisit": "alueena käynti",
-        "ManageDescription": "Tämä on yleiskatsaus kaikista kustomoiduista muuttujista ja niiden käytöstä verkkosivulla '%s'. Nimet on järjestetty käyttömäärien mukaan.",
-        "ScopeX": "Alueena %s",
-        "Index": "Indeksi",
-        "Usages": "Käytöt",
-        "Unused": "Käyttämätön",
-        "UsageDetails": "%1$s käyntiä ja %2$s toimintoa tämän sivuston luomisen jälkeen."
-    },
     "DBStats": {
         "DatabaseUsage": "Tietokannan käyttö",
         "DataSize": "Tietojen koko",
@@ -1400,8 +1383,7 @@
         "TrackMultipleSites": "Minun pitää seurata useita sivustoja tai aliverkkotunnuksia",
         "PurgeOldData": "Haluan poistaa vanhoja tietoja",
         "SearchHelpResources": "Hae ohjeita matomo.orgista",
-        "PopularHelpTopics": "Suositut ohjeaiheet",
-        "SearchOnMatomo": "Hae '%1$s' Matomo.orgista"
+        "PopularHelpTopics": "Suositut ohjeaiheet"
     },
     "GeoIp2": {
         "AssumingNonApache": "apache_get_modules-toimintoa ei löydy, oletettavasti verkkopalvelin on muu kuin Apache-ohjelmisto.",
@@ -3205,13 +3187,6 @@
         "ShowInEmbeddedWidgets": "Näytä upotetuissa vimpaimissa",
         "PrivacyPolicy": "Yksityisyyskäytäntö",
         "TermsAndConditions": "Käyttöehdot"
-    },
-    "Provider": {
-        "ColumnProvider": "Palveluntarjoajat",
-        "PluginDescription": "Raportoi kävijöiden internetoperaattorin.",
-        "ProviderReportDocumentation": "Tämä raportti näyttää, mitä internetin palveluntarjoajia kävijäsi käyttivät sivuillasi. Saat lisätietoja klikkaamalla toimittajan nimeä. %s Jos Matomo ei tunnista palveluntarjoajan nimeä, kävijästä näytetään IP-osoite.",
-        "WidgetProviders": "Palveluntarjoajat",
-        "ProviderReportFooter": "Tuntematon palveluntarjoaja tarkoittaa, ettei IP-osoitteen avulla voitu etsiä tietoja."
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "Tämä raportti näyttää kaikki viittaukset yhdessä raportissa, listaten kaikki sivustot, hakusanat ja kampanjat, joita kävijäsi käyttivät löytääkseen sivustosi.",

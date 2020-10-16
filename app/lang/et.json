@@ -579,9 +579,7 @@
         "ExcludeRowsWithLowPopulation": "Kuvatakse kõiki ridu %s Eemalda ebapopulaarsemad",
         "ExternalHelp": "Abi (avaneb uues aknas)",
         "FlattenDataTable": "Antud raport on hierarhiline %s Tee see lamedaks",
-        "HowMuchIsPiwikWorth": "Kui palju on Matomo sulle väärt?",
         "IncludeRowsWithLowPopulation": "Ebapopulaarsed read on peidetud %s Kuva kõik read",
-        "MakeOneTimeDonation": "Või tee hoopis ühekordne annetus.",
         "Menu": "Menüü",
         "PeriodRange": "vahemik",
         "ReportGeneratedOn": "Raport genereeritud %s",
@@ -675,15 +673,6 @@
     },
     "CustomDimensions": {
         "CustomDimensions": "Kohandatud mõõdud"
-    },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Kohandatud muutuja nimi",
-        "ColumnCustomVariableValue": "Kohandatud muutuja väärtus",
-        "CustomVariables": "Kohandatud muutujad",
-        "ScopePage": "skoop: lehekülg",
-        "ScopeVisit": "skoop: külastus",
-        "Index": "Indeks",
-        "Usages": "Kasutamised"
     },
     "DBStats": {
         "DatabaseUsage": "Andmebaasi kasutus",
@@ -2231,10 +2220,6 @@
         "ReportsDataSavedEstimate": "Andmebaasi suurus",
         "TeaserHeadline": "Privaatsusseaded",
         "UseDeleteReports": "Kustuta regulaarselt vanad raportid andmebaasist"
-    },
-    "Provider": {
-        "ColumnProvider": "Teenusepakkuja",
-        "WidgetProviders": "Teenusepakkujad"
     },
     "Referrers": {
         "Campaigns": "Kampaaniad",

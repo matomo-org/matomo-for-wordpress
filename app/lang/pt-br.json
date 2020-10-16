@@ -23,7 +23,7 @@
         "AverageX": "Média %s",
         "BackToPiwik": "Volta ao Matomo",
         "Broken": "Quebrado",
-        "BrokenDownReportDocumentation": "Subdividem-se em vários relatórios, que são exibidos em sparklines na parte inferior da página. Você pode ampliar os gráficos, clicando no relatório que gostaria de ver.",
+        "BrokenDownReportDocumentation": "Subdividem-se em vários relatórios, que são exibidos em minigráficos na parte inferior da página. Você pode ampliar os gráficos, clicando no relatório que gostaria de ver.",
         "Cancel": "Cancelar",
         "CannotUnzipFile": "Não pode descompactar o arquivo %1$s: %2$s",
         "ChangePassword": "Modificar senha",
@@ -519,7 +519,8 @@
         "MaximumNumberOfPeriodsComparedIs": "O número máximo de períodos que podem ser comparados simultaneamente é %s.",
         "Custom": "Personalizado",
         "PreviousPeriod": "Período anterior",
-        "PreviousYear": "Ano anterior"
+        "PreviousYear": "Ano anterior",
+        "ViewAccessRequired": "O token_auth usado tem muito acesso para ser usado em um pedido URL não-API. Por favor use uma senha específica do aplicativo para um usuário que só tenha acesso para visualização."
     },
     "Mobile": {
         "AboutPiwikMobile": "Sobre o Matomo Móvel",
@@ -907,11 +908,9 @@
         "DonateCall1": "Matomo sempre custará nada para usar, mas isso não significa que não nos custa nada para fazê-lo.",
         "DonateCall2": "Matomo precisa do seu apoio continuado para crescer e prosperar.",
         "DonateCall3": "Se você sentir que Matomo tem acrescentado valor significativo para seu negócio ou empreendimento, %1$sconsidere doar para o projeto%2$s ou %3$s comprar um recurso premium%4$s. Cada centavo vai ajudar.",
-        "DonateFormInstructions": "Clique no controle deslizante para selecionar um valor, clique em subscrever para doar.",
         "EndShortcut": "Fim",
         "EnterZenMode": "Entrar no modo Zen (esconder os menus)",
         "ExitZenMode": "Sair do mode Zen (mostrar os menus)",
-        "ExceptionNotWhitelistedIP": "Você não pode usar este Matomo como seu IP %s não está na lista de permissões",
         "ExcludeRowsWithLowPopulation": "Todas as linhas são mostradas %s Excluir população de baixa.",
         "ExternalHelp": "Ajuda (abre em uma nova aba)",
         "FlattenDataTable": "O relatório é hierárquico %s Tornar plano",
@@ -919,7 +918,6 @@
         "ShowExportUrl": "Mostrar a URL de exportação",
         "HideExportUrl": "Esconder a URL de exportação",
         "HomeShortcut": "Início",
-        "HowMuchIsPiwikWorth": "Quanto é que o Matomo vale para você?",
         "IncludeRowsWithLowPopulation": "Linhas com poucos dados estão ocultas %s Mostrar todas as linhas",
         "InjectedHostEmailBody": "Olá, eu tentei acessar Matomo hoje e encontrei um aviso de hostname desconhecido.",
         "InjectedHostEmailSubject": "Matomo foi acessado por um hostname desconhecido : %s",
@@ -932,7 +930,6 @@
         "VisitTypeReturning": "Retorno",
         "VisitTypeReturningCustomer": "Retorno de cliente",
         "MainNavigation": "Navegação principal",
-        "MakeOneTimeDonation": "Em vez disso, faça uma doação.",
         "Menu": "Menu",
         "NoPrivilegesAskPiwikAdmin": "Você está logado como '%1$s', mas parece que você não tem nenhuma permissão definida no Matomo. %2$s Pergunte ao seu administrador Matomo (clique para e-mail) %3$s para lhe dar acesso de 'visão' para um site.",
         "OnlyForSuperUserAccess": "Este widget é exibido no painel padrão somente para usuários com acesso de Super Usuário.",
@@ -996,7 +993,8 @@
         "ReportWithMetadata": "Relatório com metadados",
         "ReadMoreOnlineGuide": "Leia mais sobre este tópico no guia online.",
         "SeeAvailableVersions": "Veja Versões Disponíveis",
-        "QuickLinks": "Links rápidos"
+        "QuickLinks": "Links rápidos",
+        "SearchOnMatomo": "Procurar '%1$s' em Matomo.org"
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Desinstalar",
@@ -1184,29 +1182,6 @@
         "DiagnosticPiwikJsWritable": "Rastreador Javascript gravável (%s)",
         "DiagnosticPiwikJsNotWritable": "O arquivo rastreador JavaScript do Matomo %s não é gravável, o que significa que outros plugins não podem estender o rastreador JavaScript. No futuro até mesmo algumas funcionalidades principais podem não funcionar como esperado.",
         "DiagnosticPiwikJsMakeWritable": "Recomendamos tornar %1$s gravável executando este comando: %2$s"
-    },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Nome da Variável Personalizada",
-        "ColumnCustomVariableValue": "Valor de variável personalizado",
-        "CustomVariables": "Variáveis personalizadas",
-        "CustomVariablesReportDocumentation": "Este relatório contém informações sobre as suas variáveis ​​personalizadas. Clique em um nome de variável para ver a distribuição dos valores. %1$s para mais informações sobre variáveis ​​personalizadas em geral, leia a documentação %2$sCustom Variáveis ​​em matomo.org%3$s",
-        "PluginDescription": "As Variáveis Personalizadas são pares (nome, valor) que você pode atribuir utilizando a API Javascript para visitantes ou qualquer ação deles. Matomo informará quantas visitas, páginas e conversões para cada um desses nomes e valores personalizados. Veja as Variáveis Personalizadas detalhadas para cada usuário e a ação no Registro de Visitante. Este plugin é necessário para usar o características Ecommerce Analytics!",
-        "ScopePage": "página escopo",
-        "ScopeVisit": "visita escopo",
-        "ScopeConversion": "conversão de escopo",
-        "ManageDescription": "Esta visão geral mostra todos os compartimentos personalizados de variáveis ​ e seus usos para o website '%s'. Os nomes dentro de cada compartimento são ordenados por quantas vezes foram utilizados no total.",
-        "ScopeX": "Escopo %s",
-        "Index": "Índice",
-        "Usages": "Utilizações",
-        "Unused": "Não utilizado",
-        "CreateNewSlot": "Aumentar o número de compartimentos de Variáveis ​​Personalizadas disponíveis",
-        "UsageDetails": "%1$s visitas e %2$s ações desde a criação deste website.",
-        "CreatingCustomVariableTakesTime": "Criar um novo compartimento de variável personalizada pode levar um longo tempo, dependendo do tamanho do seu banco de dados. Portanto, só é possível fazer isso por meio de um comando que deve ser executado na linha de comando.",
-        "CurrentAvailableCustomVariables": "Atualmente você pode usar até %s Variáveis Personalizadas por site.",
-        "ToCreateCustomVarExecute": "Para criar uma nova variável personalizada execute o seguinte comando dentro da sua instalação Matomo:",
-        "SlotsReportIsGeneratedOverTime": "Os dados para este relatório serão preenchidos ao longo do tempo. Pode demorar um dia ou dois para ver todos os dados e algumas semanas até que o relatório seja totalmente preciso.",
-        "MetricsAreOnlyAvailableForVisitScope": "Nota: %1$s métricas estão disponíveis apenas para as Variáveis ​​Personalizadas de alcance %2$s.",
-        "MetricsNotAvailableForPageScope": "Para as Variáveis ​​Personalizadas de alcance %1$s, o valor da coluna para essas métricas é %2$s"
     },
     "DBStats": {
         "DatabaseUsage": "Uso do banco de dados",
@@ -1432,8 +1407,7 @@
         "RemoveOtherLabel": "Quero ver os dados de 'Outros'",
         "PurgeOldData": "Quero remover alguns dados antigos",
         "SearchHelpResources": "Procurar recursos de ajuda do matomo.org",
-        "PopularHelpTopics": "Tópicos populares de ajuda",
-        "SearchOnMatomo": "Procurar '%1$s' em Matomo.org"
+        "PopularHelpTopics": "Tópicos populares de ajuda"
     },
     "GeoIp2": {
         "AssumingNonApache": "Não é possível encontrar a função apache_get_modules, assumindo servidor web não-Apache.",
@@ -3306,13 +3280,6 @@
         "ShowInEmbeddedWidgetsDescription": "Se marcado, um link para sua Política de Privacidade e para seus Termos & Condições serão exibidos no rodapé dos widgets embutidos.",
         "PrivacyPolicy": "Política de Privacidade",
         "TermsAndConditions": "Termos & Condições"
-    },
-    "Provider": {
-        "ColumnProvider": "Provedor",
-        "PluginDescription": "Informa o Provedor de Internet dos visitantes.",
-        "ProviderReportDocumentation": "Este relatório mostra quais Provedores de Internet os seus visitantes usaram para acessar o site. Você pode clicar no nome de um provedor para obter mais detalhes. %s Se o Matomo não puder determinar o provedor de um visitante, ele será listado como IP.",
-        "WidgetProviders": "Provedores",
-        "ProviderReportFooter": "Provedor desconhecido significa que o endereço IP não pôde ser ligado a um provedor."
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "Este relatório mostra todos os seus Referenciadores em um relatório unificado, listando todos os Websites, Palavras-Chave de Pesquisa e Campanhas utilizadas ​​por seus visitantes para encontrar seu website.",

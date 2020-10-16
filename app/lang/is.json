@@ -1415,10 +1415,6 @@
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Hylja síðusta bæti gesta IP-tölu til samræðis við persónuverndarlaga þíns lands."
     },
-    "Provider": {
-        "ColumnProvider": "Veitandi",
-        "WidgetProviders": "Veitendur"
-    },
     "Referrers": {
         "Campaigns": "Herferðir",
         "ColumnCampaign": "Herferð",

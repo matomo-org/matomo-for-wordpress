@@ -5,7 +5,7 @@ MATOMO_ROOT="$SCRIPTPATH/../app/";
 
 # we need to remove jquery as it is shipped with wordpress and we use their jquery
 rm -rf $MATOMO_ROOT/node_modules/jquery
-find $MATOMO_ROOT/node_modules/jquery-ui-dist -name '*' ! -name 'jquery-ui.min.css' ! -name 'LICENSE.txt' ! -name 'AUTHORS.txt' ! -name 'jquery-ui.theme.min.css' -exec rm -rf {} +
+find $MATOMO_ROOT/node_modules/jquery-ui-dist -name '*.*' ! -name 'jquery-ui.min.css' ! -name 'LICENSE.txt' ! -name 'AUTHORS.txt' ! -name 'jquery-ui.theme.min.css' -exec rm -rf {} +
 rm -rf $MATOMO_ROOT/config/environment/test.php
 rm -rf $MATOMO_ROOT/config/environment/ui-test.php
 rm -rf $MATOMO_ROOT/vendor/twig/twig/ext

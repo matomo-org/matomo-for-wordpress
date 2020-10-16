@@ -868,11 +868,9 @@
         "DonateCall1": "Korzystanie z Matomo zawsze będzie bezpłatne, ale to nie znaczy, że tworzenie go nic nas nie kosztuje.",
         "DonateCall2": "Matomo potrzebuje Twojego ciągłego wsparcia by rosnąć i kwitnąć.",
         "DonateCall3": "Jeśli uważasz, że Matomo wniósł znaczącą wartość do Twojego przedsięwzięcia lub projektu, %1$srozważ proszę datek %2$s lub %3$s zakup funkcjonalności premium%4$s. Każdy grosik może pomóc.",
-        "DonateFormInstructions": "Kliknij na suwaku aby wybrać ilość, następnie kliknij subskrybuj aby wesprzeć.",
         "EndShortcut": "Koniec",
         "EnterZenMode": "Uruchom tryb Zen (ukryj menu)",
         "ExitZenMode": "Zakończ tryb Zen (pokaż menu)",
-        "ExceptionNotWhitelistedIP": "Nie możesz używać tego Matomo ponieważ Twój adres IP %s nie znajduje się na białej liście",
         "ExcludeRowsWithLowPopulation": "Wyświetlane są wszystkie rzędy %s Ukryj rzędy małej populacji",
         "ExternalHelp": "Pomoc (otworzy się w nowym oknie)",
         "FlattenDataTable": "Raport jest hierarchiczny %s Przełącz na płaski",
@@ -880,7 +878,6 @@
         "ShowExportUrl": "Pokaż adres eksportu",
         "HideExportUrl": "Ukryj adres eksportu",
         "HomeShortcut": "Strona główna",
-        "HowMuchIsPiwikWorth": "Ile Matomo jest dla Ciebie warte?",
         "IncludeRowsWithLowPopulation": "Wiersze z niską populacją zostały ukryte %s Pokaż wszystkie wiersze",
         "InjectedHostEmailBody": "Witaj, próbowałem dostać się dzisiaj do Matomo i napotkałem ostrzeżenie o nieznanym hoście.",
         "InjectedHostEmailSubject": "Matomo został otwarty z nieznaną nazwą hosta: %s",
@@ -893,7 +890,6 @@
         "VisitTypeReturning": "Powracający",
         "VisitTypeReturningCustomer": "Powracający Klient",
         "MainNavigation": "Główna nawigacja",
-        "MakeOneTimeDonation": "Przekaż jednorazową dotację.",
         "Menu": "Menu",
         "NoPrivilegesAskPiwikAdmin": "Jesteś zalogowany jako '%1$s' ale wygląda na to, że nie masz nadanych żadnych uprawnień w Matomo'u. %2$s Poproś swojego administratora Matomo'a (kliknij aby wysłąć email)%3$s aby nadał Ci uprawnienia 'przeglądania' strony.",
         "OnlyForSuperUserAccess": "Ten widżet jest wyświetlany na domyślnym pulpicie jedynie użytkownikom w uprawnieniami Super Użytkownika.",
@@ -1021,12 +1017,14 @@
         "TagManagerTeaserHideSuperUser": "Nie pokazuj tej strony żadnemu użytkownikowi",
         "TagManagerTeaserHideNonSuperUser": "Nie zainteresowany, nie pokazuj tej strony ponownie",
         "TagManagerTeaserEmailSuperUserBody": "Cześć, %1$s Matomo Tag Manager jest już dostępny w Matomo i bardzo chciałbym skorzystać z tej nowej funkcji. Masz dostęp do Super Użytkownika, czy możesz aktywować tę funkcję na stronie Tag Manager w górnym menu? %2$s adres Matomo to %3$s. %4$s Pozdrawiam",
-        "WhatIsTagManager": "Co to jest Tag Manager?",
+        "WhatIsTagManager": "Czym jest Tag Manager?",
         "WhatIsTagManagerDetails1": "Podobnie jak system zarządzania treścią (CMS) zapewnia pełną elastyczność w zakresie publikowania treści na stronie bez wiedzy technicznej na temat HTML \/ CSS, system zarządzania tagami (TMS) ułatwia pracę nad procesem osadzania i znacznikami śledzenia aplikacji innych firm (znane również jako snippets lub pixels) w Twojej witrynie.",
+        "WhatIsTagManagerDetails2": "Powiedzmy, że chcesz zobaczyć wyniki swoich kampanii, osiągane cele, zapisy do newsletter'a, widżety social mediów, popup'y wyjściowe i kampanie remarketingowe; coś co było kiedyś wymagało wysoce technicznej wiedzy i czasu, może teraz zostać szybko i prosto wdrożone dzięki TMS, który umożliwia ich uruchomienie w zaledwie paru kliknięciach.",
         "TagManagerLearnMoreInUserGuide": "Dowiedź się więcej o Tag Manage w przewodniku użytkownika",
         "WhyUsingATagManager": "Dlaczego Tag Manager?",
         "WhyUsingATagManagerDetails1": "Tag Manager uczyni Twoje życie łatwiejsze! Nie potrzebujesz już czekać na programistę, aby zmodyfikował część strony, ponieważ Tag Manager daje ci swobodę modyfikowania tych zmian i wdrażania ich na Twoją stronę.",
         "WhyUsingATagManagerDetails2": "To nie może być wygodniejsze i nie tylko pozwala szybciej wprowadzać zmiany, ale także obniża koszty.",
+        "WhyUsingATagManagerDetails3": "Dzięki temu zespoły marketingowe, cyfrowy i chłopaki z IT będą zadowoleni... To wygrana dla wszystkich!",
         "AreThereAnyRisks": "Czy istnieje jakieś ryzyko?",
         "AreThereAnyRisksDetails1": "Kiedy aktywujesz Tag Manager, użytkownicy z uprawnieniami administratora będą mogli tworzyć niestandardowe znaczniki HTML, wyzwalacze i zmienne, które mogą uruchamiać JavaScript w Twojej witrynie. Te niestandardowe szablony mogą zostać wykorzystane do kradzieży na przykład wrażliwych informacji od odwiedzających witrynę (znany jako %1$s XSS %2$s).",
         "AreThereAnyRisksDetails2": "Możesz wyłączyć niestandardowe szablony pod \"Administration => General Settings\"  po aktywowaniu Tag Manager. Możesz również ograniczyć korzystanie z tych szablonów tylko dla określonych użytkowników lub super użytkowników.",
@@ -1038,7 +1036,8 @@
         "Version": "Wersja",
         "ViewAllMarketplacePlugins": "Przeglądaj dostępne wtyczki Marketplace",
         "WeCouldNotLoadThePluginAsItHasMissingDependencies": "Wtyczka %1$s nie mogła zostać załadowana z powodu brakujących zależności: %2$s",
-        "Websites": "Serwisy internetowe"
+        "Websites": "Serwisy internetowe",
+        "UpdateSelected": "Wybrane aktualizacje"
     },
     "CoreUpdater": {
         "CheckingForPluginUpdates": "Sprawdzanie aktualizacji wtyczek",
@@ -1173,27 +1172,6 @@
     "CustomJsTracker": {
         "DiagnosticPiwikJsWritable": "Zapisywalny Traker JavaScript (%s)",
         "DiagnosticPiwikJsMakeWritable": "Zalecamy nadanie dla %1$s uprawnień do zapisu wykonując tą komendę: %2$s"
-    },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Nazwa Zmiennej Niestandardowej",
-        "ColumnCustomVariableValue": "Wartość Zmiennej Niestandardowej",
-        "CustomVariables": "Zmienne Niestandardowe",
-        "CustomVariablesReportDocumentation": "Raport ten zawiera informacje na temat Zmiennych Niestandardowych. Kliknij na nazwę zmiennej, aby zobaczyć rozkład wartości. %1$sWięcej informacji o Zmiennych Niestandardowych, znajdziesz w dokumentacji %2$sZmienne Niestandardowe na matomo.org%3$s",
-        "ScopePage": "zakres stron",
-        "ScopeVisit": "zakres wizyt",
-        "ScopeConversion": "zakres konwersji",
-        "ManageDescription": "Ten przegląd pokazuje wszystkie pola Zmiennych Niestandardowych i ich wykorzystanie w serwisie '%s'. Każdy przedział zawiera nazwy uporządkowane według częstości ich łącznego wykorzystanie.",
-        "ScopeX": "Zakres %s",
-        "Index": "Indeks",
-        "Usages": "Wykorzystanie",
-        "Unused": "Niewykorzystane",
-        "CreateNewSlot": "Zwiększ liczbę dostępnych pól Zmiennych Niestandardowych",
-        "UsageDetails": "%1$s wizyt i %2$s akcji od utworzenia tego serwisu.",
-        "CurrentAvailableCustomVariables": "Obecnie możesz wykorzystać do %s Zmiennych Niestandardowych per serwis.",
-        "ToCreateCustomVarExecute": "Aby utworzyć nowe pole Zmiennej Niestandardowej wykonaj następujące polecenie w ramach swojej instalacji Matomo:",
-        "SlotsReportIsGeneratedOverTime": "Dane dla tego raportu pojawią się po jakimś czasie. Dzień lub dwa może potrwać zanim zobaczysz jakiekolwiek dane a uzyskanie dokładnego raportu może potrwać nawet parę tygodni.",
-        "MetricsAreOnlyAvailableForVisitScope": "NOTKA: wskaźniki %1$s są dostępne jedynie dla Zmiennych Niestandardowych tylko w zakresie %2$s.",
-        "MetricsNotAvailableForPageScope": "Dla Zmiennych Niestandardowych z zakresu %1$s, kolumna wartość dla tych wskaźników to %2$s"
     },
     "DBStats": {
         "DatabaseUsage": "Stopień wykorzystania bazy danych",
@@ -3179,13 +3157,6 @@
         "UseDeleteLog": "Regularnie kasuj stare nieprzetworzone dane z bazy",
         "UseDeleteReports": "Regularnie usuwaj stare raporty z bazy danych",
         "UsersOptOut": "Rezygnacja ze śledzenia"
-    },
-    "Provider": {
-        "ColumnProvider": "Dostawca",
-        "PluginDescription": "Raport przedstawiający dostawców internetu - ISP - odwiedzających.",
-        "ProviderReportDocumentation": "Ten raport przedstawia Dostawców Internetu, ISP, z których usług korzystają Twoi odwiedzający. Kliknij na nazwie dostawcy po więcej informacji. %s W sytuacji, gdy Matomo nie potrafi określić dostawcy, wyświetla adres IP.",
-        "WidgetProviders": "Dostawcy",
-        "ProviderReportFooter": "Nieznany dostawca oznacza, że nie udało się odczytać danych przypisanych do adresu IP."
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "Raport prezentuje wszystkie Twoje Odnośniki w pojedynczym, zunifikowanym raporcie, zawierającym Wszystkie serwisy, frazy Wyszukiwania i Kampanie wykorzystane przez odwiedzających aby do Ciebie dotrzeć.",

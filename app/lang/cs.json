@@ -519,7 +519,8 @@
         "MaximumNumberOfPeriodsComparedIs": "Maximální počet period, které lze porovnat současně, je %s.",
         "Custom": "Vlastní",
         "PreviousPeriod": "Předchozí období",
-        "PreviousYear": "Předchozí rok"
+        "PreviousYear": "Předchozí rok",
+        "ViewAccessRequired": "Použitý token_auth má příliš mnoho přístupu, aby mohl být použit v URL požadavku bez API. Použijte heslo pro konkrétní aplikaci pro uživatele, který má pouze přístup pro zobrazení."
     },
     "Mobile": {
         "AboutPiwikMobile": "O Matomo Mobile",
@@ -911,11 +912,9 @@
         "DonateCall1": "Matomo lze používat zadarmo, to ale neznamená, že jeho vývoj nic nestojí.",
         "DonateCall2": "Matomo potřebuje Vaši podporu, aby mohl růst a prosperovat.",
         "DonateCall3": "Pokud se domníváte, že vám Matomo významně pomohl při vašem podnikání nebo projektu, %1$sprosím zvažte příspěvek%2$s nebo %3$szakoupení prémiové funkce%4$s. Každý cent pomůže.",
-        "DonateFormInstructions": "Klikněte na posuvník ke zvolení částky, poté klikněte na tlačítko Subscribe.",
         "EndShortcut": "Konec",
         "EnterZenMode": "Vstup do režimu Zen (skrýt nabídky)",
         "ExitZenMode": "Ukončit režim Zen (zobrazit nabídky)",
-        "ExceptionNotWhitelistedIP": "Nemůžete použít Matomo, protože vaše IP adresa %s není na seznamu povolených",
         "ExcludeRowsWithLowPopulation": "Všechny řádky jsou zobrazeny %s Vyloučit nízkou populaci",
         "ExternalHelp": "Nápověda (otevře se v nové záložce)",
         "FlattenDataTable": "Hlášení je hierarchické %s Zploštit",
@@ -923,7 +922,6 @@
         "ShowExportUrl": "Zobrazit URL exportu",
         "HideExportUrl": "Skrýt URL exportu",
         "HomeShortcut": "Domů",
-        "HowMuchIsPiwikWorth": "Jak moc si ceníte Matomou?",
         "IncludeRowsWithLowPopulation": "Řádky s nízkou populací jsou skryty %s Zobrazit všechny řádky",
         "InjectedHostEmailBody": "Ahoj. Dnes jsem se snažil dostat do \\Matomou a dostal jsem varování o neznámém ménu hostitele.",
         "InjectedHostEmailSubject": "K Matomo bylo přistupováno s neznámým jménem hostitele %s",
@@ -936,7 +934,6 @@
         "VisitTypeReturning": "Návraty",
         "VisitTypeReturningCustomer": "Věrný zákazník",
         "MainNavigation": "Hlavní navigace",
-        "MakeOneTimeDonation": "Provést jednorázový dar.",
         "Menu": "Menu",
         "NoPrivilegesAskPiwikAdmin": "Jste přihlášen jako '%1$s' ale zdá se, že nemáte v Matomo žádná práva. %2$s Zeptejte se Vašeho Matomo administrátora (klikem na email)%3$s aby Vám dal 'view' přístup na stránku.",
         "OnlyForSuperUserAccess": "Tento widget je na výchozí nástěnce zobrazen pouze pro uživatele se super uživatelským přístupem",
@@ -1000,7 +997,8 @@
         "ReportWithMetadata": "Report s metadaty",
         "ReadMoreOnlineGuide": "Další informace o tomto tématu naleznete v online příručce.",
         "SeeAvailableVersions": "Prohlédnout dostupné verze",
-        "QuickLinks": "Rychlé odkazy"
+        "QuickLinks": "Rychlé odkazy",
+        "Profilable": "Profilovatelné"
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Odinstalovat",
@@ -1208,26 +1206,6 @@
     },
     "CustomJsTracker": {
         "DiagnosticPiwikJsWritable": "Zapisovatelný JavaScript záznam (%s)"
-    },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Název vlastní proměnné",
-        "ColumnCustomVariableValue": "Hodnota vlastní proměnné",
-        "CustomVariables": "Vlastní proměnné",
-        "CustomVariablesReportDocumentation": "Toto hlášení obsahuje informace o vašich vlastních proměnných. Klikněte na proměnnou pro zobrazení distribuce hodnot. %1$s Pro více informací si přečtěte %2$sdokumentaci o vlastních proměnných na matomo.org%3$s",
-        "ScopePage": "rozsah stránky",
-        "ScopeVisit": "rozsah návštěvy",
-        "ScopeConversion": "rozsah konverze",
-        "ManageDescription": "Tento přehled zobrazuje všechny sloty vlastních proměnných a jejich využití pro stránku '%s'. Jména v každém ze slotů jsou seřazena dle jejich celkového využití.",
-        "ScopeX": "Rozsah %s",
-        "Index": "Index",
-        "Usages": "Využití",
-        "Unused": "Nevyužito",
-        "CreateNewSlot": "Navýšit počet dostupných slotů vlastních proměnných",
-        "UsageDetails": "%1$s návštěv a %2$s akcí od založení tohoto webu.",
-        "CurrentAvailableCustomVariables": "Aktuálně můžete použít až %s vlastních proměnných na stránku.",
-        "SlotsReportIsGeneratedOverTime": "Data pro toto hlášení budou dostupná později. Než budou data vidět, může to den nebo dva trvat a poté několik týdnů než bude hlášení plně vypovídající.",
-        "MetricsAreOnlyAvailableForVisitScope": "Poznámka: Metriky %1$s jsou k dispozici pro vlastní proměnné pouze v rozsahu %2$s.",
-        "MetricsNotAvailableForPageScope": "Pro vlastní proměnné v rozsahu %1$s je hodnota sloupce s těmito metrikami %2$s"
     },
     "DBStats": {
         "DatabaseUsage": "Využití databáze",
@@ -1606,6 +1584,10 @@
         "GoBackAndDefinePrefix": "Jít zpět a nastavit prefix pro tabulky Matomou",
         "HappyAnalysing": "Šťastné analyzování!",
         "Installation": "Instalace",
+        "InformationalResults": "Informační výsledky",
+        "CopyBelowInfoForSupport": "Zkopírujte nebo stáhněte níže uvedené informace v případě, že vás náš tým podpory požádá o tyto informace.",
+        "CopySystemCheck": "Kopírovat kontrolu systému",
+        "DownloadSystemCheck": "Stáhnout kontrolu systému",
         "InstallationStatus": "Stav instalace",
         "InsufficientPrivilegesHelp": "Tato privilegia můžete přidat v nástroji jako je phpMyAdmin, nebo provedením správných SQL dotazů. Pokud nevíte, jak to udělat, požádejte svého systémového administrátora, aby vám tato privilegia udělil.",
         "InsufficientPrivilegesMain": "Databáze buď neexistuje, a nemohla být vytvořena, nebo má databázový uživatel nedostatečná privilegia. Databázový uživatel musí mít následující privilegia: %s",
@@ -3143,13 +3125,6 @@
         "UseAnonymizedIpForVisitEnrichment": "Anonymizované IP adresy použít i při obohacování návštěv.",
         "UseAnonymizeIp": "Anonymizovat IP adresy návštěvníků",
         "UseDeleteReports": "Průběžně mazat stará hlášení z databáze"
-    },
-    "Provider": {
-        "ColumnProvider": "Poskytovatel",
-        "PluginDescription": "Hlásí poskytovatele internetového připojení návštěvníků.",
-        "ProviderReportDocumentation": "Toto hlášení poskytuje informace o tom, jakého poskytovatele internetového připojení vaši návštěvníci při přístupu na stránky použili. Pokud kliknete na jméno poskytovatele, zobrazí se podrobnosti. %s Pokud Matomo nebyl schopen poskytovatele zjistit, je zobrazen jako IP.",
-        "WidgetProviders": "Poskytovatelé",
-        "ProviderReportFooter": "Neznámý poskytovatel znamená, že IP adresu nebylo možné vyhledat."
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "Toto hlášení zobrazuje všechny odkazující stránky v jednom uceleném hlášení s výpisem všech webů, klíčových slov a kampaní použitých návštěvníky k nalezení vašeho webu.",

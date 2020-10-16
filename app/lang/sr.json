@@ -764,11 +764,9 @@
         "DonateCall1": "Matomo vas nikada neće ništa koštati ali to ne znači da nas Matomo ništa ne košta dok ga pravimo.",
         "DonateCall2": "Matomou je potrebna vaša stalna podrška kako bi rastao i napredovao.",
         "DonateCall3": "Ukoliko imate osećaj da je Matomo u znatnoj meri dodao vrednost vašem biznisu, %1$smolimo vas da razmislite o donaciji%2$s ili %3$snaručivanju premium usluga%4$s. Svaki dinar je od pomoći.",
-        "DonateFormInstructions": "Kliknite na klizač kako biste odabrali iznos pa onda kliknite na \"subscribe\"",
         "ExcludeRowsWithLowPopulation": "Svi redovi su prikazani %s Sakrij slabu populaciju",
         "ExternalHelp": "Pomoć (otvara se u novom tabu)",
         "FlattenDataTable": "Izveštaj je u hijerarhiji %s Poravnaj ga",
-        "HowMuchIsPiwikWorth": "Koliko Matomo po vama vredi?",
         "IncludeRowsWithLowPopulation": "Redovi sa slabom populacijom su sakriveni %s Prikaži sve redove",
         "InjectedHostEmailBody": "Pozdrav. Pokušao\\\/la sam da pristupim Matomo-u danas i dobio\\\/la upozorenje o nepoznatom nazivu hosta.",
         "InjectedHostEmailSubject": "Matomo-u je pristupljeno sa nepoznatim nazivom hosta: %s",
@@ -776,7 +774,6 @@
         "InjectedHostSuperUserWarning": "Matomo možda nije podešen kako treba (na primer, premešten je na novi server ili URL). Možete ili da %1$skliknete ovde i dodate %2$s kao validan naziv hosta (ukoliko mu verijete)%3$s, ili da %4$skliknete ovde i %5$s pristupite bezbedno Matomo-u%6$s.",
         "InjectedHostWarningIntro": "Sada pristupate Matomo-u sa %1$s, ali je Matomo podešen da radi sa ove adrese: %2$s.",
         "MainNavigation": "Glavna navigacija",
-        "MakeOneTimeDonation": "Možete izvršiti i jednokratnu donaciju.",
         "Menu": "Meni",
         "NoPrivilegesAskPiwikAdmin": "Prijavljeni ste kao '%1$s' ali izgleda da nemate postavljena nikakva ovlašćenja. %2$s Tražite od Matomo administratora (kliknite za poruku)%3$s da vam dozvoli 'prikaz' na sajtu.",
         "OnlyForSuperUserAccess": "Ovaj vidžet se prikazuje na podrazumevanoj konzoli samo superkorisnicima.",
@@ -994,25 +991,6 @@
         "PluginDescription": "Omogućuje bilo kom Matomo dodatku da proširi Matomo JavaScript datoteku za praćenje (piwik.js) i doda nove funkcionalnosti i mogućnosti za praćenje sajtova.",
         "DiagnosticPiwikJsWritable": "JavaScript treker u koji je moguće pisati (\"\/piwik.js\")",
         "DiagnosticPiwikJsMakeWritable": "Predlažemo da omogućite pisanje u piwik.js sledećom komandom: %s"
-    },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Ime dodatnog parametra",
-        "ColumnCustomVariableValue": "Vrednost dodatnog parametra",
-        "CustomVariables": "Dodatni parametri",
-        "CustomVariablesReportDocumentation": "Ovaj izveštaj sadrži informacije o dodatnim parametrima. Kliknite na ime parametra kako biste videli distribuciju vrednosti. %1$s Za više informacija o dodatnim parametrima pogledajte %2$sCustom Variables na matomo.org%3$s",
-        "ScopePage": "oblast strana",
-        "ScopeVisit": "oblast poseta",
-        "ManageDescription": "Ovaj pregled prikazuje sve dodatne parametre i njihovu upotrebu za sajt '%s'. Nazivi su poređani po tome koliko često je koja upotrebljena.",
-        "ScopeX": "Oblast %s",
-        "Index": "Indeks",
-        "Usages": "Upotrebe",
-        "Unused": "Neiskorišćeno",
-        "CreateNewSlot": "Povećajte broj raspoloživih dodatnih parametara.",
-        "UsageDetails": "%1$s poseta i %2$sakcija od kreiranja ovog sajta.",
-        "CurrentAvailableCustomVariables": "Trenutno možete da koristite do %s dodatnih parametara po sajtu.",
-        "SlotsReportIsGeneratedOverTime": "Podaci za ovaj izveštaj će biti pripremani tokom vremena. Može proći dan ili dva pre nego što budete videli bilo kakve podatke i nekoliko nedelja pre nego što izveštaj bude bio potpuno precizan.",
-        "MetricsAreOnlyAvailableForVisitScope": "Pažnja: samo %1$s metrika je na raspolaganju za dodatne parametre u opsegu %2$s.",
-        "MetricsNotAvailableForPageScope": "Za dodatne parametre iz oblasti %1$s, vrednost kolone za te metrike je %2$s."
     },
     "DBStats": {
         "DatabaseUsage": "Iskorišćenost baze",
@@ -2889,13 +2867,6 @@
         "UseAnonymizedIpForVisitEnrichment": "Takođe koristi anonimne IP adrese kada obogaćuješ podete.",
         "UseAnonymizeIp": "Anonimizacija IP adrese posetilaca",
         "UseDeleteReports": "Periodično briši stare izveštaje iz baze"
-    },
-    "Provider": {
-        "ColumnProvider": "Provajder",
-        "PluginDescription": "Prikazuje Internet provajdere posetilaca.",
-        "ProviderReportDocumentation": "Ovaj izveštaj prikazuje koje Internet provajdere koriste vaši posetioci kako bi pristupili sajtu. Možete kliknuti na naziv provajdera kako biste videli više detalja. %s Ako Matomo ne može da odredi koji provajder je u pitanju, onda prikazuje IP.",
-        "WidgetProviders": "Provajderi",
-        "ProviderReportFooter": "Nepoznat provajder znači da nije moguće razrešiti IP adresu."
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "Ovaj izveštaj prikazuje sve vaše reference na unificiran način preko spiska svih sajtova, traženih ključnih reči i kampanja koje su koristili posetioci kako bi došli do vašeg sajta.",

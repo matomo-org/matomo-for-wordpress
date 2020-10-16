@@ -1576,10 +1576,6 @@
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "გახადეთ ანონიმური ვიზიტორების IP მისამრთის ბოლო ბაიტი, რათა დააკმაყოფილოთ კონფიდენციალურობის ადგილობრივი კანონი\/განაწესი."
     },
-    "Provider": {
-        "ColumnProvider": "პროვაიდერი",
-        "WidgetProviders": "პროვაიდერები"
-    },
     "Referrers": {
         "Campaigns": "კამპანიები",
         "ColumnCampaign": "კამპანია",

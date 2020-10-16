@@ -12,5 +12,5 @@ return array(
     '320cde22f66dd4f5d3fd621d3e88b98f' => $vendorDir . '/symfony/polyfill-ctype/bootstrap.php',
     'b33e3d135e5d9e47d845c576147bda89' => $vendorDir . '/php-di/php-di/src/functions.php',
     '6dcc7fc6910472564e7b11f0b5d852b5' => $vendorDir . '/szymach/c-pchart/src/Resources/data/constants.php',
-    'aa3ddbfac31d504181d81bbbeb5838b9' => $baseDir . '/LegacyAutoloader.php',
+    'c03755bd507301ecda84f959218be302' => $baseDir . '/LegacyAutoloader.php',
 );

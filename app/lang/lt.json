@@ -1951,10 +1951,6 @@
         "PrivacyPolicy": "Privatumo politika",
         "TermsAndConditions": "Nuostatos ir sąlygos"
     },
-    "Provider": {
-        "ColumnProvider": "IP tiekėjas",
-        "WidgetProviders": "IP tiekėjai"
-    },
     "Referrers": {
         "Campaigns": "Kampanijos",
         "ColumnCampaign": "Kampanija",

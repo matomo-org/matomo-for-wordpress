@@ -906,11 +906,9 @@
         "DonateCall1": "Matomo zal altijd gratis zijn om te gebruiken, maar dat wil niet zeggen dat het niks kost om te maken.",
         "DonateCall2": "Matomo heeft uw voortdurende steun nodig om te groeien en te bloeien.",
         "DonateCall3": "Als u het gevoel heeft dat Matomo van toegevoegde waarde is voor uw bedrijf of inspanningen, %1$soverweeg dan te doneren %2$s of %3$skoop een premium-functie%4$s. Elke cent helpt.",
-        "DonateFormInstructions": "Klik op de schuifbalk om een bedrag te selecteren, en klik dan subscribe om te doneren.",
         "EndShortcut": "Einde",
         "EnterZenMode": "Activeer Zen-modus (verberg menu's)",
         "ExitZenMode": "Deactiveer Zen-modus (toon menu's)",
-        "ExceptionNotWhitelistedIP": "Je kunt Matomo niet gebruiken als je IP %s niet op de whitelist staat",
         "ExcludeRowsWithLowPopulation": "Alle rijen worden getoond %s Verberg de rijen met een lage populatie",
         "ExternalHelp": "Help (opent in een nieuw tabblad)",
         "FlattenDataTable": "De rapportweergave is hierarchisch %s Maak het vlak",
@@ -918,7 +916,6 @@
         "ShowExportUrl": "Toon Export URL",
         "HideExportUrl": "Verberg Export URL",
         "HomeShortcut": "Home",
-        "HowMuchIsPiwikWorth": "Hoeveel is Matomo u waard?",
         "IncludeRowsWithLowPopulation": "Rijen met een lage populatie zijn verborgen %s Laat alle rijen zien",
         "InjectedHostEmailBody": "Hallo, ik probeerde Matomo vandaag te benaderen, en kreeg de onbekende hostnaam waarschuwing.",
         "InjectedHostEmailSubject": "Matomo werd bezocht via een onbekende hostnaam: %s",
@@ -930,7 +927,6 @@
         "VisitTypeReturning": "Terugkerend",
         "VisitTypeReturningCustomer": "Terugkerende klant",
         "MainNavigation": "Hoofdnavigatie",
-        "MakeOneTimeDonation": "Doe in plaats daarvan een eenmalige donatie.",
         "Menu": "Menu",
         "NoPrivilegesAskPiwikAdmin": "U bent aangemeld as '%1$s'. Maar het lijkt er op dat u geen rechten hebt op Matomo te bezoeken. %2$sVraag aan uw webmaster (klik hier voor e-mail)%3$s of hij u de juiste rechten wilt geven om de statistieken te bekijken.",
         "OnlyForSuperUserAccess": "Het widget wordt alleen getoond in het standaard dashbord aan gebruikers met Super User toegang.",
@@ -1173,29 +1169,6 @@
     "CustomJsTracker": {
         "DiagnosticPiwikJsWritable": "Schrijfbare JavaScript-tracker (%s)",
         "DiagnosticPiwikJsMakeWritable": "We adviseren %1$s schrijfbaar te maken door het volgende commando uit te voeren: %2$s"
-    },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Naam aangepaste variabele",
-        "ColumnCustomVariableValue": "Waarde aangepaste variabele",
-        "CustomVariables": "Aangepaste variabelen",
-        "CustomVariablesReportDocumentation": "Dit rapport bevat informatie over uw aangepaste variabelen. Klik op de naam van een variabele om de verdeling van de waarden te zien. %1$s voor meer informatie over aangepaste variabelen in het algemeen, lees de %2$sCustom variabelen documentatie over matomo.org%3$s",
-        "PluginDescription": "Aangepaste Variabelen zijn (naam, waarde) paren welke je kan toekennen door de Javascritp API aan bezoekers of aan één van hun acties. Matomo rapporteert dan hoeveel bezoeken, pagina's, conversies voor elk van deze custom namen en waarden. Bekijk de gedetailleerde Aangepaste Variabelen voor elke gebruiker en actie in de Visitor Log. Deze plugin is nodig om de Ecommerce Analytics opties te gebruiken.",
-        "ScopePage": "omvang pagina",
-        "ScopeVisit": "omvang bezoek",
-        "ScopeConversion": "omvang conversie",
-        "ManageDescription": "Dit overzicht toont alle slots van custom variabelen en het gebruik voor websites '%s'. De namen in elk slot zijn gesorteerd op hoe vaak ze in totaal zijn gebruikt.",
-        "ScopeX": "Scope %s",
-        "Index": "Index",
-        "Usages": "Gebruikt",
-        "Unused": "Ongebruikt",
-        "CreateNewSlot": "Verhoog het aantal van beschikbare Custom Variabelen slots",
-        "UsageDetails": "%1$s bezoeken en %2$s acties sinds het maken van deze website.",
-        "CreatingCustomVariableTakesTime": "Het maken van een nieuw custom variabele slot kan lang duren afhankelijk van de grootte van de database. Daarom is het alleen mogelijk om dit te doen via een commando welke uitgevoerd dient te worden op de command line.",
-        "CurrentAvailableCustomVariables": "Op dit moment kan je in totaal %s Custom Variables per website gebruiken.",
-        "ToCreateCustomVarExecute": "Om een nieuw custom variabele slot aan te maken voer het volgende commando uit op je Matomo installatie:",
-        "SlotsReportIsGeneratedOverTime": "De data voor dit verslag wordt na verloop van tijd gegenereerd. Het kan een dag of twee duren voordat je de data ziet en een paar weken tot het rapport helemaal nauwkeurig is.",
-        "MetricsAreOnlyAvailableForVisitScope": "Opmerking: %1$s metrics zijn beeschikbaar voor Custom Variables alleen voor bereik %2$s .",
-        "MetricsNotAvailableForPageScope": "Voor Custom Variabelen met bereik %1$s, de kolom waarde deze metriek is %2$s"
     },
     "DBStats": {
         "DatabaseUsage": "Database gebruik",
@@ -3188,13 +3161,6 @@
         "ShowInEmbeddedWidgetsDescription": "Als je deze optie inschakelt zal er een link naar je privacybeleid en algemene voorwaarden weergegeven worden onder ingesloten widgets.",
         "PrivacyPolicy": "Privacybeleid",
         "TermsAndConditions": "Algemene voorwaarden"
-    },
-    "Provider": {
-        "ColumnProvider": "Provider",
-        "PluginDescription": "Rapporteert de Internet Service Provider van de bezoekers.",
-        "ProviderReportDocumentation": "Dit rapport toont de Internet Service Providers die uw bezoekers gebruiken om de website te bezoeken. Klik op een provider naam voor meer informatie. %s Als Matomo de naam van de provider niet kan achterhalen, dan wordt deze vermeld als IP.",
-        "WidgetProviders": "Providers",
-        "ProviderReportFooter": "Onbekende provider betekent dat het IP-adres niet kon worden opgezocht."
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "Dit samengestelde rapport laat al uw verwijzers zien met weergave van alle websites, zoekwoorden en campagnes waarmee bezoekers uw site hebben gevonden.",

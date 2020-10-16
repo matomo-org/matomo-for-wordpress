@@ -1316,10 +1316,6 @@
         "ActivateLicenseKey": "አግብር",
         "PluginKeywords": "ቁልፍ ቃላት"
     },
-    "Provider": {
-        "ColumnProvider": "አቅራቢ",
-        "WidgetProviders": "አቅራቢዎች"
-    },
     "Referrers": {
         "ColumnSearchEngine": "የመፈለጊያ ሞተሮች",
         "ColumnWebsite": "ድር ጣቢያዎች",

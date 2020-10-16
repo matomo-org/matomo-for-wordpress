@@ -689,18 +689,15 @@
         "Default": "mặc định",
         "DonateCall1": "Matomo sẽ luôn luôn cho bạn thấy không có gì để sử dụng, nhưng điều đó không có nghĩa là nó cho thấy chúng ta không có gì để làm.",
         "DonateCall2": "Matomo cần sự hỗ trợ của bạn để phát triển và phát triển mạnh hơn.",
-        "DonateFormInstructions": "Click vào thanh trượt để chọn một số tiền, sau đó nhấp vào đăng ký để tài trợ",
         "ExcludeRowsWithLowPopulation": "Tất cả các hàng được hiển thị %s Loại trừ dân số thấp",
         "ExternalHelp": "Giúp đỡ (mở trong tab mới)",
         "FlattenDataTable": "Báo cáo này là phân cấp %s Làm cho nó minh bạch",
-        "HowMuchIsPiwikWorth": "Giá trị Matomo đối với bạn là bao nhiêu?",
         "IncludeRowsWithLowPopulation": "Các Hàng với mật độ tập trung thấp đang ẩn %s Hiển thị tất cả các hàng",
         "InjectedHostEmailBody": "Xin chào, hôm nay tôi đã cố gắng để truy cập Matomo và gặp phải cảnh báo tên máy chủ chưa biết",
         "InjectedHostEmailSubject": "Matomo được truy cập với tên máy chủ không rõ ràng :%s",
         "InjectedHostNonSuperUserWarning": "%1$sNhấn vào đây để truy cập Matomo một cách an toàn%2$s và loại bỏ cảnh báo này. Bạn còn có thể liên lạc với người quản trị Matomo và thông báo cho họ về vấn đề này(%3$sNhấn vào đây để gửi email%4$s)",
         "InjectedHostSuperUserWarning": "Matomo có thể bị cấu hình sai (ví dụ, Matomo gần đây được dời sang máy chủ khác hoặc URL khác). Bạn có thể %1$snhấn vào đây và thêm %2$s như là tên máy chủ hợp lệ%3$s, hoặc %4$snhấn vào đây để đi đến %5$s để truy cập Matomo một cách an toàn%6$s",
         "InjectedHostWarningIntro": "Bây giờ bạn đang truy cập Matomo từ %1$s, nhưng Matomo đã được cấu hình để chạy tại địa chỉ này: %2$s",
-        "MakeOneTimeDonation": "Hãy đóng góp",
         "NoPrivilegesAskPiwikAdmin": "Bạn được đăng nhập như '%1$s' nhưng dường như bạn không được phép thiết lập trong Matomo. %2$s Yêu cầu quản trị Matomo của bạn (bấm vào để email) %3$s để cung cấp cho bạn 'xem' truy cập đến một website.",
         "PeriodRange": "Phạm vi",
         "ReportGeneratedOn": "Báo cáo được tạo vào %s",
@@ -802,14 +799,6 @@
         "YouCanUpgradeAutomaticallyOrDownloadPackage": "Bạn có thể cập nhật tự động phiên bản %s hoặc tải về gói cập nhật và tự cài dặt.",
         "YourDatabaseIsOutOfDate": "Cơ sở dữ liệu Matomo của bạn đã lỗi thời, và phải được nâng cấp trước khi bạn có thể tiếp tục.",
         "ViewVersionChangelog": "Xem thay đổi cho phiên bản này:"
-    },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Tên biến tùy chọn",
-        "ColumnCustomVariableValue": "Giá trị của biến tùy chọn",
-        "CustomVariables": "Các biến tùy chọn",
-        "CustomVariablesReportDocumentation": "Báo cáo này chứa thông tin về các biến tùy chỉnh. Vui lòng chọn tên biến để xem phân bố của các giá trị. %1$s Để tìm hiểu thêm thông tin chung về các biến tùy chỉnh, đọc %2$s Tài liệu hướng dẫn về biến tùy chỉnh trên matomo.org %3$s",
-        "ScopePage": "Trang phạm vi",
-        "ScopeVisit": "sự viếng thăm trong phạm vi nào đó"
     },
     "DBStats": {
         "DatabaseUsage": "Cơ sở dữ liệu đang sử dụng",
@@ -2425,11 +2414,6 @@
         "UseAnonymizedIpForVisitEnrichment": "Cũng sử dụng các địa chỉ IP ẩn danh khi làm phong phú thêm các lượt truy cập.",
         "UseAnonymizeIp": "Các địa chỉ IP của khách truy cập ẩn danh",
         "UseDeleteReports": "Thường xuyên xóa báo cáo cũ từ cơ sở dữ liệu"
-    },
-    "Provider": {
-        "ColumnProvider": "Nhà cung cấp",
-        "ProviderReportDocumentation": "Báo cáo này cho thấy Nhà cung cấp dịch vụ Internet mà khách truy cập sử dụng để truy cập website. Bạn có thể ckick trên tên nhà cung cấp để biết thêm chi tiết. %s Nếu Matomo không thể xác định được nhà cung cấp của khách truy cập, nó liệt kê danh sách IP.",
-        "WidgetProviders": "Các nhà cung cấp"
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "Báo cáo này cho thấy tất cả sự chỉ dẫn của bạn trong một báo cáo, liệt kê tất cả các trang web, từ khóa tìm kiếm và Chiến dịch được sử dụng bởi khách truy cập để tìm trang web của bạn.",

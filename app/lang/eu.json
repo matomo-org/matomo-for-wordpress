@@ -1458,10 +1458,6 @@
         "ActivateLicenseKey": "Gaitu",
         "PluginKeywords": "Gako-hitzak"
     },
-    "Provider": {
-        "ColumnProvider": "Hornitzailea",
-        "WidgetProviders": "Hornitzaileak"
-    },
     "Referrers": {
         "Campaigns": "Kanpainak",
         "ColumnCampaign": "Kanpaina",
