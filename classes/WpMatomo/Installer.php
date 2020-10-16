@@ -182,7 +182,7 @@ class Installer {
 	private function install_tracker() {
 		$this->logger->log( 'Matomo is now installing the tracker' );
 		// making sure the tracker will be created in the wp uploads directory
-		$updater = StaticContainer::get( 'Piwik\Plugins\CustomPiwikJs\TrackerUpdater' );
+		$updater = StaticContainer::get( 'Piwik\Plugins\CustomJsTracker\TrackerUpdater' );
 		$updater->update();
 	}
 

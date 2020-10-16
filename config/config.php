@@ -104,7 +104,7 @@ return array(
 		return $previous;
 	}),
 	'Piwik\Mail\Transport' => DI\autowire('WpMatomo\Email'),
-	'Piwik\Plugins\CustomPiwikJs\TrackerUpdater' => DI\decorate(function ($previous) {
+	'Piwik\Plugins\CustomJsTracker\TrackerUpdater' => DI\decorate(function ($previous) {
 		/** @var \Piwik\Plugins\CustomJsTracker\TrackerUpdater $previous */
 
 		$paths = new Paths();
