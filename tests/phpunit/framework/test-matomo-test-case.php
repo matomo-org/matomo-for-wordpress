@@ -16,7 +16,6 @@ use Piwik\FrontController;
 use Piwik\Option;
 use Piwik\Plugin\API;
 use Piwik\Site;
-use Piwik\Translate;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Installer;
