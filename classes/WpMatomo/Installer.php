@@ -90,7 +90,7 @@ class Installer {
 
 			Bootstrap::do_bootstrap();
 
-			if ( ! SettingsPiwik::isPiwikInstalled() || ! $this->looks_like_it_is_installed() ) {
+			if ( ! SettingsPiwik::isMatomoInstalled() || ! $this->looks_like_it_is_installed() ) {
 				throw new NotYetInstalledException( 'Not yet installed' );
 			}
 
