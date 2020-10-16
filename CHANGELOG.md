@@ -1,5 +1,9 @@
 == Changelog ==
 
+= 4.0.0 =
+* Update Matomo core to 4.0
+* Custom Variables is now no longer included but it is available as a marketplace plugin.
+
 = 1.3.1 =
 * Log less messages by default
 * Add possibility to disable logging and enable logging of all messages through wp-config.php

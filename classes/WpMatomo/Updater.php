@@ -9,8 +9,11 @@
 
 namespace WpMatomo;
 
+use Piwik\Cache as PiwikCache;
 use Piwik\Filesystem;
+use Piwik\Option;
 use Piwik\Plugins\Installation\ServerFilesGenerator;
+use Piwik\SettingsServer;
 use Piwik\Version;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -117,6 +120,9 @@ class Updater {
 		$paths = new Paths();
 		$paths->clear_cache_dir();
 
+		Option::clearCache();
+		PiwikCache::flushAll();
+
 		\Piwik\Access::doAsSuperUser(
 			function () {
 					self::update_components();
@@ -153,6 +159,12 @@ class Updater {
 
 		if ( empty( $components_with_update_file ) ) {
 			return false;
+		}
+
+		SettingsServer::setMaxExecutionTime(0);
+
+		if (function_exists('ignore_user_abort')) {
+			@ignore_user_abort(true);
 		}
 
         $updater->updateComponents( $components_with_update_file );

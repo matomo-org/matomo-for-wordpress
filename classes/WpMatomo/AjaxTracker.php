@@ -9,17 +9,15 @@
 
 namespace WpMatomo;
 
-use WpMatomo\Logger;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
 if ( ! class_exists( '\PiwikTracker' ) ) {
-	include_once plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app/vendor/piwik/piwik-php-tracker/PiwikTracker.php';
+	include_once plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app/vendor/matomo/matomo-php-tracker/MatomoTracker.php';
 }
 
-class AjaxTracker extends \PiwikTracker {
+class AjaxTracker extends \MatomoTracker {
 	private $has_cookie = false;
 	private $logger;
 
