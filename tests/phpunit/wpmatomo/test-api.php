@@ -39,7 +39,7 @@ class ApiTest extends MatomoAnalytics_TestCase {
 
 		$request  = new WP_REST_Request( 'GET', '/' . API::VERSION . '/api/matomo_version' );
 		$response = rest_get_server()->dispatch( $request );
-		$this->assertStringStartsWith( '3.', $response->get_data() );
+		$this->assertStringStartsWith( '4.', $response->get_data() );
 		$this->assertTrue( strlen( $response->get_data() ) < 15 );
 	}
 
