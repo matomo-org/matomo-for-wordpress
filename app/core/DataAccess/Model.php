@@ -377,7 +377,7 @@ class Model
 
         $sql = "SELECT idarchive FROM `$numericTable` WHERE idsite = ? AND date1 = ? AND date2 = ? AND period = ? AND name = ? AND ts_archived < ? AND idarchive < ?";
 
-        $idArchives = Db::fetchAll($sql, [$params->getSite()->getId(), $dateStart, $dateEnd, $params->getPeriod()->getId(), $name, $tsArchived, $idArchive]);
+        $idArchives = Db::fetchAll($sql, [$params->getSite()->getId(), $dateStart . '', $dateEnd . '', $params->getPeriod()->getId(), $name, $tsArchived, $idArchive]);
         $idArchives = array_column($idArchives, 'idarchive');
         if (empty($idArchives)) {
             return;
@@ -551,7 +551,7 @@ class Model
     }
 
     /**
-     * Get a list of IDs of archives with segments that no longer exist in the DB. Excludes temporary archives that 
+     * Get a list of IDs of archives with segments that no longer exist in the DB. Excludes temporary archives that
      * may still be in use, as specified by the $oldestToKeep passed in.
      * @param string $archiveTableName
      * @param array $segments  List of segments to match against
@@ -791,7 +791,7 @@ class Model
         $inProgressInvalidation = Db::fetchOne($sql, $bind);
         return $inProgressInvalidation;
     }
-  
+
     /**
      * Returns true if there is an archive that exists that can be used when aggregating an archive for $period.
      *

@@ -21,7 +21,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	 * @var ScheduledTasks
 	 */
 	private $tasks;
-	
+
 	protected $disable_temp_tables = true;
 
 	public function setUp() {
