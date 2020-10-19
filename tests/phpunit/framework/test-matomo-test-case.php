@@ -60,6 +60,9 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	public function setUp() {
 		parent::setUp();
 
+		if (!defined('PIWIK_TEST_MODE')) {
+			define('PIWIK_TEST_MODE', true);
+		}
 		$uninstall = new Uninstaller();
 		$uninstall->uninstall( true );
 		clearstatcache();

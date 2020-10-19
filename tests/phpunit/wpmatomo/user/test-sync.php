@@ -391,7 +391,6 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 		$matomo_user = $this->get_matomo_user( 'foobaz' );
 		$this->assertSame( 'foobaz', $matomo_user['login'] );
 		$this->assertSame( 'foobaz3@example.org', $matomo_user['email'] );
-		$this->assertNotEmpty( $matomo_user['token_auth'] );
 		$this->assertNotEmpty( $matomo_user['password'] );
 	}
 
