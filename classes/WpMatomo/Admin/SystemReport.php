@@ -649,7 +649,7 @@ class SystemReport {
 				$error['is_warning'] = !empty($error['name']) && stripos($error['name'], 'archiv') !== false && $error['name'] !== 'archive_boot';
 				$error['is_error'] = $is_plugin_update_error;
 				if ($is_plugin_update_error) {
-					$error['comment'] = 'Please reach out to us and include the copied system report (see button in the top). For example by email: wordpress@matomo.org<br><br>You can also retry the update manually by clicking in the top on the "Troubleshooting" tab and then clicking on the "Run updater" button.' . $error['comment'];
+					$error['comment'] = 'Please reach out to us and include the copied system report (see https://matomo.org/faq/wordpress/how-do-i-troubleshoot-a-failed-database-upgrade-in-matomo-for-wordpress/ for more info)<br><br>You can also retry the update manually by clicking in the top on the "Troubleshooting" tab and then clicking on the "Run updater" button.' . $error['comment'];
 				} elseif ($skip_plugin_update) {
 					$error['comment'] = 'As there are no outstanding plugin updates it looks like this log can be ignored.<br><br>' . $error['comment'];
 				}
