@@ -85,7 +85,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$users_model = new UsersModel();
 		$all_users   = $users_model->getUsers( array() );
 
-		foreach ( array( 'token_auth', 'password', 'date_registered', 'ts_password_modified' ) as $field ) {
+		foreach ( array( 'password', 'date_registered', 'ts_password_modified' ) as $field ) {
 			$this->assertNotEmpty( $all_users[0][ $field ] );
 			unset( $all_users[0][ $field ] );
 		}
@@ -93,7 +93,6 @@ class InstallTest extends MatomoAnalytics_TestCase {
 			array(
 				array(
 					'login'            => 'admin',
-					'alias'            => 'admin',
 					'email'            => 'admin@example.org',
 					'twofactor_secret' => '',
 					'superuser_access' => 1,

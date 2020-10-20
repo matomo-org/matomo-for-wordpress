@@ -28,7 +28,7 @@ class OptOutTest extends MatomoAnalytics_TestCase {
         <label for="matomo_optout_checkbox"><strong>
         <span id="matomo_opted_in_label" >Ihr Besuch dieser Webseite wird aktuell von der Matomo Webanalyse erfasst. Diese Checkbox abwählen für Opt-Out.</span>
 		<span id="matomo_opted_out_label" style="display:none;">Ihr Besuch dieser Webseite wird aktuell von der Matomo Webanalyse nicht erfasst. Diese Checkbox aktivieren für Opt-In.</span>
-        </strong></label></form><noscript><p><strong style="color: #ff0000;">Die Tracking opt-out Funktion benötigt aktivierte Cookies.</strong></p></noscript><p id="matomo_outout_err_cookies" style="display: none;"><strong>The tracking opt-out feature requires cookies to be enabled.</strong></p>', $result );
+        </strong></label></form><noscript><p><strong style="color: #ff0000;">This opt out feature requires JavaScript.</strong></p></noscript><p id="matomo_outout_err_cookies" style="display: none;"><strong>Die Tracking opt-out Funktion benötigt aktivierte Cookies.</strong></p>', $result );
 	}
 
 	public function test_optOutJs_exists() {
