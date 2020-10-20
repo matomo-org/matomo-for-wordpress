@@ -99,7 +99,7 @@ class SystemReport {
 					if ($idsite) {
 						$timezone = \Piwik\Site::getTimezoneFor($idsite);
 						$now_string = \Piwik\Date::factory('now', $timezone)->toString();
-						foreach (array('day', 'week', 'month') as $period) {
+						foreach (array('day') as $period) {
 							API::getInstance()->invalidateArchivedReports($idsite, $now_string, $period, false, false);
 						}
 					}
@@ -338,32 +338,6 @@ class SystemReport {
 			);
 		}
 
-		$wpmatomo_updater = new \WpMatomo\Updater($this->settings);
-		$outstanding_updates = $wpmatomo_updater->get_plugins_requiring_update();
-		if (!empty($outstanding_updates)) {
-			$rows[] = array(
-				'name'     => 'Outstanding Updates',
-				'value'    => true,
-				'comment'  => json_encode($outstanding_updates),
-			);
-		}
-		if ($upgrade_in_progress = $wpmatomo_updater->is_upgrade_in_progress()) {
-			$rows[] = array(
-				'name'     => 'Upgrade in progress',
-				'value'    => $upgrade_in_progress,
-				'comment'  => '',
-			);
-		}
-		if (!$wpmatomo_updater->load_plugin_functions()) {
-			// this should actually never happen...
-			$rows[] = array(
-				'name'     => 'Matomo Upgrade Plugin Functions',
-				'is_warning'  => true,
-				'value'    => false,
-				'comment'  => 'Function "get_plugin_data" not available. There may be an issue with upgrades not being executed. Please reach out to us.',
-			);
-		}
-
 		$report = null;
 
 		if ( ! \WpMatomo::is_safe_mode() ) {
@@ -406,6 +380,29 @@ class SystemReport {
 			'value'   => get_option(Installer::OPTION_NAME_INSTALL_VERSION),
 			'comment' => $install_date,
 		);
+
+		$wpmatomo_updater = new \WpMatomo\Updater($this->settings);
+		$outstanding_updates = $wpmatomo_updater->get_plugins_requiring_update();
+		$upgrade_in_progress = $wpmatomo_updater->is_upgrade_in_progress();
+		$rows[] = array(
+			'name'     => 'Upgrades outstanding',
+			'value'    => !empty($outstanding_updates),
+			'comment'  => !empty($outstanding_updates) ? json_encode($outstanding_updates) : '',
+		);
+		$rows[] = array(
+			'name'     => 'Upgrade in progress',
+			'value'    => $upgrade_in_progress,
+			'comment'  => '',
+		);
+		if (!$wpmatomo_updater->load_plugin_functions()) {
+			// this should actually never happen...
+			$rows[] = array(
+				'name'     => 'Matomo Upgrade Plugin Functions',
+				'is_warning'  => true,
+				'value'    => false,
+				'comment'  => 'Function "get_plugin_data" not available. There may be an issue with upgrades not being executed. Please reach out to us.',
+			);
+		}
 
 		$rows[] = array(
 			'section' => 'Endpoints',
