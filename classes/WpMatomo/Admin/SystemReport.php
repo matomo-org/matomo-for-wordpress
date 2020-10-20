@@ -34,6 +34,7 @@ use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
 use WpMatomo\Site;
 use WpMatomo\Site\Sync as SiteSync;
+use WpMatomo\Updater;
 use WpMatomo\User\Sync as UserSync;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -50,6 +51,7 @@ class SystemReport {
 	const TROUBLESHOOT_ARCHIVE_NOW        = 'matomo_troubleshooting_action_archive_now';
 	const TROUBLESHOOT_UPDATE_GEOIP_DB    = 'matomo_troubleshooting_action_update_geoipdb';
 	const TROUBLESHOOT_CLEAR_LOGS         = 'matomo_troubleshooting_action_clear_logs';
+	const TROUBLESHOOT_RUN_UPDATER        = 'matomo_troubleshooting_action_run_updater';
 
 	private $not_compatible_plugins = array(
 		'background-manager', // Uses an old version of Twig and plugin is no longer maintained.
@@ -129,6 +131,7 @@ class SystemReport {
 				// going wrong with matomo and bootstrapping would not even be possible.
 				Bootstrap::do_bootstrap();
 				Filesystem::deleteAllCacheOnUpdate();
+				Updater::unlock();
 			}
 
 			if ( ! empty( $_POST[ self::TROUBLESHOOT_UPDATE_GEOIP_DB ] ) ) {
@@ -148,6 +151,11 @@ class SystemReport {
 				if ( ! empty( $_POST[ self::TROUBLESHOOT_SYNC_SITE ] ) ) {
 					$sync = new SiteSync( $this->settings );
 					$sync->sync_current_site();
+				}
+				if ( ! empty( $_POST[ self::TROUBLESHOOT_RUN_UPDATER ] ) ) {
+					Updater::unlock();
+					$sync = new Updater( $this->settings );
+					$sync->update();
 				}
 			}
 			if ( $this->settings->is_network_enabled() ) {
@@ -327,6 +335,32 @@ class SystemReport {
 				'value'    => $path_exists,
 				'is_error' => ! $path_exists,
 				'comment'  => $comment,
+			);
+		}
+
+		$wpmatomo_updater = new \WpMatomo\Updater($this->settings);
+		$outstanding_updates = $wpmatomo_updater->get_plugins_requiring_update();
+		if (!empty($outstanding_updates)) {
+			$rows[] = array(
+				'name'     => 'Outstanding Updates',
+				'value'    => true,
+				'comment'  => json_encode($outstanding_updates),
+			);
+		}
+		if ($upgrade_in_progress = $wpmatomo_updater->is_upgrade_in_progress()) {
+			$rows[] = array(
+				'name'     => 'Upgrade in progress',
+				'value'    => $upgrade_in_progress,
+				'comment'  => '',
+			);
+		}
+		if (!$wpmatomo_updater->load_plugin_functions()) {
+			// this should actually never happen...
+			$rows[] = array(
+				'name'     => 'Matomo Upgrade Plugin Functions',
+				'is_warning'  => true,
+				'value'    => false,
+				'comment'  => 'Function "get_plugin_data" not available. There may be an issue with upgrades not being executed. Please reach out to us.',
 			);
 		}
 
@@ -603,8 +637,25 @@ class SystemReport {
 					continue;
 				}
 
+				// we only consider plugin_updates as errors only if there are still outstanding updates
+				$is_plugin_update_error = !empty($error['name']) && $error['name'] === 'plugin_update'
+				                          && !empty($outstanding_updates);
+
+				$skip_plugin_update = !empty($error['name']) && $error['name'] === 'plugin_update'
+				                          && empty($outstanding_updates);
+
+				if (empty($error['comment']) && $error['comment'] !== '0') {
+					$error['comment'] = '';
+				}
+
 				$error['value'] = $this->convert_time_to_date( $error['value'], true, false );
 				$error['is_warning'] = !empty($error['name']) && stripos($error['name'], 'archiv') !== false && $error['name'] !== 'archive_boot';
+				$error['is_error'] = $is_plugin_update_error;
+				if ($is_plugin_update_error) {
+					$error['comment'] = 'Please reach out to us and include the copied system report (see button in the top). For example by email: wordpress@matomo.org<br><br>You can also retry the update manually by clicking in the top on the "Troubleshooting" tab and then clicking on the "Run updater" button.' . $error['comment'];
+				} elseif ($skip_plugin_update) {
+					$error['comment'] = 'As there are no outstanding plugin updates it looks like this log can be ignored.<br><br>' . $error['comment'];
+				}
 				$error['comment'] = matomo_anonymize_value($error['comment']);
 				$rows[] = $error;
 			}
