@@ -106,6 +106,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 				\Piwik\NumberFormatter::getInstance()->clearCache();
 				\Piwik\Plugins\ScheduledReports\API::$cache = array();
 				Manager::getInstance()->deleteAll();
+				\WpMatomo\Updater::unlock();
 				PluginsArchiver::$archivers = array();
 				$_GET                       = $_REQUEST = array();
 				\Piwik\Container\StaticContainer::get(\Piwik\Translation\Translator::class)->reset();

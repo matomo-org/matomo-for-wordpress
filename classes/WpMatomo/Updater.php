@@ -174,7 +174,7 @@ class Updater {
 			return 'no upgrader';
 		}
 
-		if (self::lock(2)) {
+		if (self::lock()) {
 			// we can get the lock meaning no update is in progress
 			self::unlock();
 			return false;
@@ -190,14 +190,20 @@ class Updater {
 		return class_exists('\WP_Upgrader', false);
 	}
 
-	public static function lock($time)
+	public static function lock()
 	{
-		return self::load_upgrader() && \WP_Upgrader::create_lock(self::LOCK_NAME, $time);
+		// prevent the upgrade from being started several times at once
+		// we lock for 4 minutes. In case of major Matomo upgrades the upgrade may take much longer but it should be
+		// safe in this case to run the upgrade several times
+		// important: we always need to use the same timeout otherwise if something did use `create_lock(2)` then
+		// even though another job locked it for 4 minutes, the other job that locks it only for 2 seconds would release
+		// the lock basically since WP does not remember the initialy set release timeout
+		return self::load_upgrader() && \WP_Upgrader::create_lock(self::LOCK_NAME, 60*4);
 	}
 
 	public static function unlock()
 	{
-		self::load_upgrader() && \WP_Upgrader::release_lock(self::LOCK_NAME);
+		return self::load_upgrader() && \WP_Upgrader::release_lock(self::LOCK_NAME);
 	}
 
 	private static function update_components() {
@@ -208,20 +214,17 @@ class Updater {
 			return false;
 		}
 
-		if (!self::lock(60*4)) {
-			// prevent the upgrade from being started several times at once
-			// we lock for 4 minutes. In case of major Matomo upgrades the upgrade may take much longer but it should be
-			// safe in this case to run the upgrade several times
+		if (!self::lock()) {
 			throw new UpdateInProgressException();
 		}
 
-		SettingsServer::setMaxExecutionTime(0);
-
-		if (function_exists('ignore_user_abort')) {
-			@ignore_user_abort(true);
-		}
-
 		try {
+			SettingsServer::setMaxExecutionTime(0);
+
+			if (function_exists('ignore_user_abort')) {
+				@ignore_user_abort(true);
+			}
+
 			$result = $updater->updateComponents( $components_with_update_file );
 		} catch (\Exception $e) {
 			self::unlock();

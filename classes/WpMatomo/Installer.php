@@ -312,6 +312,7 @@ class Installer {
 
 	private function update_components() {
 		$this->logger->log( 'Matomo will now trigger an update' );
+		Updater::unlock(); // make sure the update can be executed
 		$updater = new Updater( $this->settings );
 		$updater->update();
 	}
