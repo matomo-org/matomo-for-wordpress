@@ -87,6 +87,14 @@ class UserTest extends MatomoUnit_TestCase {
 		$this->assertFalse( User::get_matomo_user_login( 5 ) );
 	}
 
+	public function test_try_find_wp_user_id_from_matomo_login() {
+		$this->assertNull(User::try_find_wp_user_id_from_matomo_login( 'myMatomoLogin' ) );
+
+		User::map_matomo_user_login( 5, 'myMatomoLogin' );
+
+		$this->assertEquals(5, User::try_find_wp_user_id_from_matomo_login( 'myMatomoLogin' ) );
+	}
+
 	public function test_uninstall_removes_all_mappings() {
 		User::map_matomo_user_login( 5, 'myMatomoLogin' );
 		$this->assertNotEmpty( User::get_matomo_user_login( 5 ) );

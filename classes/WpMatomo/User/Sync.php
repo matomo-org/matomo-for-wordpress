@@ -83,6 +83,25 @@ class Sync {
     {
         /** @var \WP_User[] $users */
         $users = get_users( $options );
+
+        $current_user = wp_get_current_user();
+        if (!empty($current_user) && !empty($current_user->user_login)) {
+        	// refs https://github.com/matomo-org/wp-matomo/issues/365
+	        // some other plugins may under circumstances overwrite the get_users query and not return all users
+	        // as a result we would delete some users in the matomo users table. this way we make sure at least the current
+	        // user will be added and not deleted even if the list of users is not complete
+        	$found = false;
+	        foreach ($users as $user) {
+		        if ($user->user_login === $current_user->user_login) {
+			        $found = true;
+			        break;
+		        }
+	        }
+	        if (!$found) {
+	        	$users[] = $current_user;
+	        }
+        }
+
         if (is_multisite()) {
             $super_admins = get_super_admins();
             if (!empty($super_admins)) {
@@ -140,11 +159,6 @@ class Sync {
 			// to prevent UI preventing randomly saying no access between deleting and adding access
 
 			$mapped_matomo_login = User::get_matomo_user_login( $user_id );
-			if ( $mapped_matomo_login ) {
-				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
-			}
-
-			$matomo_login = null;
 
 			if ( user_can( $user, Capabilities::KEY_SUPERUSER ) ) {
 				$matomo_login                   = $this->ensure_user_exists( $user );
@@ -152,19 +166,24 @@ class Sync {
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_ADMIN ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
+				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
 				$user_model->addUserAccess( $matomo_login, Admin::ID, array( $idsite ) );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_WRITE ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
+				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
 				$user_model->addUserAccess( $matomo_login, Write::ID, array( $idsite ) );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_VIEW ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
+				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
 				$user_model->addUserAccess( $matomo_login, View::ID, array( $idsite ) );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
+			} elseif ( $mapped_matomo_login ) {
+				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
 			}
 
 			if ( $matomo_login ) {
@@ -172,7 +191,7 @@ class Sync {
 				$locale_dash = Common::mb_strtolower(str_replace('_', '-', $locale));
 				if ($locale && in_array($locale_dash, ['zh-cn', 'zh-tw', 'pt-br', 'es-ar'], true)) {
 					$parts = [$locale_dash];
-				} else {
+				} elseif (!empty($locale) && is_string($locale)) {
 					$parts  = explode( '_', $locale );
 				}
 
@@ -216,12 +235,23 @@ class Sync {
 			$user_model->setSuperUserAccess( $matomo_login, true );
 		}
 
+		// here we try to only remove deleted users... for existing users we instead remove
+		// the access
 		$logins_with_some_view_access = array_unique( $logins_with_some_view_access );
 		$all_users                    = $user_model->getUsers( array() );
 		foreach ( $all_users as $all_user ) {
 			if ( ! in_array( $all_user['login'], $logins_with_some_view_access, true )
 				 && ! empty( $all_user['login'] ) ) {
-				$user_model->deleteUserOnly( $all_user['login'] );
+				$wp_user_id = User::try_find_wp_user_id_from_matomo_login($all_user['login']);
+				if (!empty($wp_user_id) && get_current_user_id() && $wp_user_id == get_current_user_id()) {
+					continue; // this user cannot be deleted because it is the current user id so the user must exist
+				}
+				// double check user was really deleted...
+				if (empty($wp_user_id) || !get_user_by('id', $wp_user_id)) {
+					$user_model->deleteUserOnly( $all_user['login'] );
+					$user_model->deleteUserOptions( $all_user['login'] );
+					$user_model->deleteUserAccess( $all_user['login'] );
+				}
 			}
 		}
 	}
