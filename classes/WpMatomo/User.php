@@ -30,6 +30,18 @@ class User {
 		return get_option( self::USER_MAPPING_PREFIX . $wp_user_id );
 	}
 
+	public static function try_find_wp_user_id_from_matomo_login( $matomo_user_login ) {
+		global $wpdb;
+		$row = $wpdb->get_row( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '" . self::USER_MAPPING_PREFIX . "%' and option_value = %;", $matomo_user_login );
+
+		if (!empty($row->option_name)){
+			$val = str_replace(self::USER_MAPPING_PREFIX, '', $row->option_name);
+			if (is_numeric($val)) {
+				return $val;
+			}
+		}
+	}
+
 	public static function map_matomo_user_login( $wp_user_id, $matomo_user_login ) {
 		if ( empty( $matomo_user_login ) ) {
 			delete_option( self::USER_MAPPING_PREFIX . $wp_user_id );

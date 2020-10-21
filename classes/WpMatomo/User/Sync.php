@@ -240,12 +240,16 @@ class Sync {
 		foreach ( $all_users as $all_user ) {
 			if ( ! in_array( $all_user['login'], $logins_with_some_view_access, true )
 				 && ! empty( $all_user['login'] ) ) {
-				// technically would also need to delete all related reports etc as otherwise if another WP user signs
-				// up with same login then that user would take over the settings
-				// problem is that users may get deleted by accident because of some other plugins (see get_users below
-				// and see #365 ) meaning we would delete a user here and then create it again later few seconds and user
-				// would have lost all settings.
-				$user_model->deleteUserOnly( $all_user['login'] );
+				$wp_user_id = User::try_find_wp_user_id_from_matomo_login($all_user['login']);
+				if (!empty($wp_user_id) && get_current_user_id() && $wp_user_id == get_current_user_id()) {
+					continue; // this user cannot be deleted because it is the current user id so the user must exist
+				}
+				// double check user was really deleted...
+				if (empty($wp_user_id) || !get_user_by('id', $wp_user_id)) {
+					$user_model->deleteUserOnly( $all_user['login'] );
+					$user_model->deleteUserOptions($all_user['login']);
+					$user_model->deleteUserAccess($all_user['login']);
+				}
 			}
 		}
 	}
