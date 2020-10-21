@@ -74,7 +74,7 @@ class Auth extends \Piwik\Plugins\Login\Auth
 
                 return $this->findMatomoUser($userId, $syncIfNotFound = false);
             }
-            throw new \Exception('User is not syncronized yet, please try again later');
+            throw new \Exception('User is not syncronized yet, please try again later. My user id: ' . get_current_user_id());
         }
         return $user;
     }

@@ -82,6 +82,23 @@ class Sync {
 	private function get_users($options = array())
     {
         /** @var \WP_User[] $users */
+	    $options['matomo_custom'] = '1';
+	    $replace = false;
+	    add_action('pre_user_query', function ($query) use (&$replace) {
+	    	if ($replace) {
+	    		return; // make sure to execute this action only once
+		    }
+	    	$replace = true;
+	    	// ultimate members plugin overwrites pre_user_query when approving a member (see #365)
+		    // and then it returns only one wp user instead of all WP users... causing all users in Matomo to be deleted
+		    // because not all users are returned here and Matomo thinks these WP users were deleted
+		    // this is supposed to make sure that all users are returned
+	    	/** @var \WP_User_Query $query */
+	    	if ($query->get('matomo_custom')) {
+	    		// only append it for our get_users, not when others issue it
+			    $query->query_where = 'WHERE 1=1';
+		    }
+	    }, 999);
         $users = get_users( $options );
         if (is_multisite()) {
             $super_admins = get_super_admins();
@@ -140,9 +157,6 @@ class Sync {
 			// to prevent UI preventing randomly saying no access between deleting and adding access
 
 			$mapped_matomo_login = User::get_matomo_user_login( $user_id );
-			if ( $mapped_matomo_login ) {
-				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
-			}
 
 			$matomo_login = null;
 
@@ -152,19 +166,24 @@ class Sync {
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_ADMIN ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
+				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
 				$user_model->addUserAccess( $matomo_login, Admin::ID, array( $idsite ) );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_WRITE ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
+				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
 				$user_model->addUserAccess( $matomo_login, Write::ID, array( $idsite ) );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_VIEW ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
+				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
 				$user_model->addUserAccess( $matomo_login, View::ID, array( $idsite ) );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
+			} elseif ( $mapped_matomo_login ) {
+				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
 			}
 
 			if ( $matomo_login ) {
