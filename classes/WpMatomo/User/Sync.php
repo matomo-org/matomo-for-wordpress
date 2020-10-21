@@ -98,7 +98,7 @@ class Sync {
 		        }
 	        }
 	        if (!$found) {
-	        	$users[] = $user;
+	        	$users[] = $current_user;
 	        }
         }
 
