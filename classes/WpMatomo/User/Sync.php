@@ -81,25 +81,55 @@ class Sync {
 
 	private function get_users($options = array())
     {
+    	// this might not return all users if other plugins hook into pre_user_query for example
+	    $users = get_users( $options );
+
         /** @var \WP_User[] $users */
 	    $options['matomo_custom'] = '1';
 	    $replace = false;
-	    add_action('pre_user_query', function ($query) use (&$replace) {
-	    	if ($replace) {
-	    		return; // make sure to execute this action only once
+	    $initial_where = '';
+	    add_action('pre_user_query', function ($query) use (&$replace, &$initial_where) {
+		    if ($replace) {
+			    return; // make sure to execute this action only once
 		    }
-	    	$replace = true;
+		    $replace = true;
+		    /** @var \WP_User_Query $query */
+		    if ($query->get('matomo_custom')) {
+			    // only append it for our get_users, not when others issue it
+			    $initial_where = $query->query_where;
+		    }
+	    }, 1);
+	    add_action('pre_user_query', function ($query) use (&$initial_where) {
 	    	// ultimate members plugin overwrites pre_user_query when approving a member (see #365)
 		    // and then it returns only one wp user instead of all WP users... causing all users in Matomo to be deleted
 		    // because not all users are returned here and Matomo thinks these WP users were deleted
 		    // this is supposed to make sure that all users are returned
 	    	/** @var \WP_User_Query $query */
-	    	if ($query->get('matomo_custom')) {
+	    	if ($initial_where) {
 	    		// only append it for our get_users, not when others issue it
-			    $query->query_where = 'WHERE 1=1';
+			    $query->query_where = $initial_where;
 		    }
-	    }, 999);
-        $users = get_users( $options );
+	    }, 999999);
+
+	    // here we now try to query all users see above description
+        $users_custom = get_users( $options );
+
+        // we now need to merge both users queries to make sure we have all users... we can't rely on just one of them
+	    // because if we overwrite the "query_where" then we might overwrite other important where queries that could result
+	    // in errors etc.
+        $user_ids_found = array();
+        foreach ($users as $user) {
+        	$user_ids_found[] = $user->ID;
+        }
+
+        if (!empty($users_custom) && is_array($users_custom)) {
+        	foreach ($users_custom as $user_custom) {
+        		if ($user_custom && $user_custom->ID && !in_array($user_custom->ID, $user_ids_found)) {
+					$users[] = $user_custom;
+		        }
+	        }
+        }
+
         if (is_multisite()) {
             $super_admins = get_super_admins();
             if (!empty($super_admins)) {
