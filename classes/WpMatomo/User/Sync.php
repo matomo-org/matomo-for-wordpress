@@ -83,6 +83,25 @@ class Sync {
     {
         /** @var \WP_User[] $users */
         $users = get_users( $options );
+
+        $current_user = wp_get_current_user();
+        if (!empty($current_user)) {
+        	// refs https://github.com/matomo-org/wp-matomo/issues/365
+	        // some other plugins may under circumstances overwrite the get_users query and not return all users
+	        // as a result we would delete some users in the matomo users table. this way we make sure at least the current
+	        // user will be added and not deleted even if the list of users is not complete
+        	$found = false;
+	        foreach ($users as $user) {
+		        if ($user->user_login === $current_user->user_login) {
+			        $found = true;
+			        break;
+		        }
+	        }
+	        if (!$found) {
+	        	$users[] = $user;
+	        }
+        }
+
         if (is_multisite()) {
             $super_admins = get_super_admins();
             if (!empty($super_admins)) {
@@ -221,6 +240,11 @@ class Sync {
 		foreach ( $all_users as $all_user ) {
 			if ( ! in_array( $all_user['login'], $logins_with_some_view_access, true )
 				 && ! empty( $all_user['login'] ) ) {
+				// technically would also need to delete all related reports etc as otherwise if another WP user signs
+				// up with same login then that user would take over the settings
+				// problem is that users may get deleted by accident because of some other plugins (see get_users below
+				// and see #365 ) meaning we would delete a user here and then create it again later few seconds and user
+				// would have lost all settings.
 				$user_model->deleteUserOnly( $all_user['login'] );
 			}
 		}
