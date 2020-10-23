@@ -23,6 +23,7 @@ use Piwik\Plugins\UsersManager;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Logger;
+use WpMatomo\ScheduledTasks;
 use WpMatomo\Site;
 use WpMatomo\User;
 
@@ -52,7 +53,19 @@ class Sync {
 		add_action( 'add_user_to_blog', array( $this, 'sync_current_users' ), $prio = 10, $args = 0 );
 		add_action( 'remove_user_from_blog', array( $this, 'sync_current_users' ), $prio = 10, $args = 0 );
 		add_action( 'user_register', array( $this, 'sync_current_users' ), $prio = 10, $args = 0 );
-		add_action( 'profile_update', array( $this, 'sync_current_users' ), $prio = 10, $args = 0 );
+		add_action( 'profile_update', array( $this, 'sync_maybe_background' ), $prio = 10, $args = 0 );
+	}
+
+	public function sync_maybe_background()
+	{
+		global $pagenow;
+		if ( is_admin() && $pagenow == 'users.php' ) {
+			// eg for profile update we don't want to sync directly see #365 as it could cause issues with other plugins
+			// if they eg alter `get_users` option
+			wp_schedule_single_event(time() + 5, ScheduledTasks::EVENT_SYNC);
+		} else {
+			$this->sync_current_users();
+		}
 	}
 
 	public function sync_all() {
@@ -84,23 +97,23 @@ class Sync {
         /** @var \WP_User[] $users */
         $users = get_users( $options );
 
-        $current_user = wp_get_current_user();
-        if (!empty($current_user) && !empty($current_user->user_login)) {
-        	// refs https://github.com/matomo-org/wp-matomo/issues/365
-	        // some other plugins may under circumstances overwrite the get_users query and not return all users
-	        // as a result we would delete some users in the matomo users table. this way we make sure at least the current
-	        // user will be added and not deleted even if the list of users is not complete
-        	$found = false;
-	        foreach ($users as $user) {
-		        if ($user->user_login === $current_user->user_login) {
-			        $found = true;
-			        break;
-		        }
-	        }
-	        if (!$found) {
-	        	$users[] = $current_user;
-	        }
-        }
+	    $current_user = wp_get_current_user();
+	    if (!empty($current_user) && !empty($current_user->user_login)) {
+		    // refs https://github.com/matomo-org/wp-matomo/issues/365
+		    // some other plugins may under circumstances overwrite the get_users query and not return all users
+		    // as a result we would delete some users in the matomo users table. this way we make sure at least the current
+		    // user will be added and not deleted even if the list of users is not complete
+		    $found = false;
+		    foreach ($users as $user) {
+			    if ($user->user_login === $current_user->user_login) {
+				    $found = true;
+				    break;
+			    }
+		    }
+		    if (!$found) {
+			    $users[] = $current_user;
+		    }
+	    }
 
         if (is_multisite()) {
             $super_admins = get_super_admins();
@@ -160,6 +173,8 @@ class Sync {
 
 			$mapped_matomo_login = User::get_matomo_user_login( $user_id );
 
+			$matomo_login = null;
+
 			if ( user_can( $user, Capabilities::KEY_SUPERUSER ) ) {
 				$matomo_login                   = $this->ensure_user_exists( $user );
 				$super_users[ $matomo_login ]   = $user;
@@ -182,7 +197,7 @@ class Sync {
 				$user_model->addUserAccess( $matomo_login, View::ID, array( $idsite ) );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
-			} elseif ( $mapped_matomo_login ) {
+			} elseif ($mapped_matomo_login) {
 				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
 			}
 
@@ -235,23 +250,14 @@ class Sync {
 			$user_model->setSuperUserAccess( $matomo_login, true );
 		}
 
-		// here we try to only remove deleted users... for existing users we instead remove
-		// the access
 		$logins_with_some_view_access = array_unique( $logins_with_some_view_access );
 		$all_users                    = $user_model->getUsers( array() );
 		foreach ( $all_users as $all_user ) {
 			if ( ! in_array( $all_user['login'], $logins_with_some_view_access, true )
 				 && ! empty( $all_user['login'] ) ) {
-				$wp_user_id = User::try_find_wp_user_id_from_matomo_login($all_user['login']);
-				if (!empty($wp_user_id) && get_current_user_id() && $wp_user_id == get_current_user_id()) {
-					continue; // this user cannot be deleted because it is the current user id so the user must exist
-				}
-				// double check user was really deleted...
-				if (empty($wp_user_id) || !get_user_by('id', $wp_user_id)) {
-					$user_model->deleteUserOnly( $all_user['login'] );
-					$user_model->deleteUserOptions( $all_user['login'] );
-					$user_model->deleteUserAccess( $all_user['login'] );
-				}
+				$user_model->deleteUserOnly( $all_user['login'] );
+				$user_model->deleteUserOptions( $all_user['login'] );
+				$user_model->deleteUserAccess( $all_user['login'] );
 			}
 		}
 	}

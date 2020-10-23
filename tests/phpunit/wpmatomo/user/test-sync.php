@@ -200,12 +200,6 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 
 		$idsite = $this->get_current_site_id();
 
-		$access = $model->getUsersAccessFromSite($idsite);
-		$this->assertEquals([    'author1' => 'view',
-			'author2' => 'view',
-			'editor1' => 'write',
-			'editor2' => 'write',], $access);
-
 		$view_access = $model->getUsersSitesFromAccess( 'view' );
 		$this->assertEquals(
 			array(
@@ -261,18 +255,12 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 				'admin',
 				'admin1',
 				'admin4',
-				'author1',
-				'author2',
 				'contributor1',
 				'editor1',
 				'editor2',
 			),
 			$logins
 		);
-		$access = $model->getUsersAccessFromSite($idsite);
-		$this->assertEquals([  'contributor1' => 'view',
-			'editor1' => 'admin',
-			'editor2' => 'admin',], $access);
 
 		$view_access = $model->getUsersSitesFromAccess( 'view' );
 		$this->assertEquals( array( 'contributor1' => array( $idsite ) ), $view_access );
@@ -306,27 +294,19 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 				'admin',
 				'admin1',
 				'admin4',
-				'author1',
-				'author2',
 				'contributor1',
 				'editor1',
 				'editor2',
 			),
 			$logins
 		);
-		$access = $model->getUsersAccessFromSite($idsite);
-		$this->assertEquals([      'editor1' => 'admin',
-			'contributor1' => 'view',
-			'editor2' => 'admin',
-		], $access);
-
 
 		foreach ( array( 'admin', 'admin1', 'admin4', 'editor1' ) as $user_login ) {
 			$matomo_user = $this->get_matomo_user( $user_login );
 			$this->assertEquals( '1', $matomo_user['superuser_access'] );
 		}
 
-		foreach ( array( 'contributor1', 'editor2', 'author1', 'author2'  ) as $user_login ) {
+		foreach ( array( 'contributor1', 'editor2' ) as $user_login ) {
 			$matomo_user = $this->get_matomo_user( $user_login );
 			$this->assertEquals( '0', $matomo_user['superuser_access'] );
 		}
@@ -341,33 +321,10 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 			$matomo_user = $this->get_matomo_user( $user_login );
 			$this->assertEquals( '1', $matomo_user['superuser_access'] );
 		}
-		foreach ( array( 'editor1', 'editor2', 'author1', 'author2' ) as $user_login ) {
+		foreach ( array( 'editor1', 'editor2' ) as $user_login ) {
 			$matomo_user = $this->get_matomo_user( $user_login );
 			$this->assertEquals( '0', $matomo_user['superuser_access'] );
 		}
-
-		// now we delete a user and it should remove them from matomo user table
-		self::delete_user(get_user_by('login', 'author1')->ID);
-		self::delete_user(get_user_by('login', 'editor2')->ID);
-		self::delete_user(get_user_by('login', 'admin4')->ID);
-
-		$this->sync->sync_current_users();
-
-		$logins = $model->getUsersLogin();
-		$this->assertSame(
-			array(
-				'admin',
-				'admin1',
-				'author2',
-				'contributor1',
-				'editor1',
-			),
-			$logins
-		);
-		$access = $model->getUsersAccessFromSite($idsite);
-		$this->assertEquals([        'contributor1' => 'view',
-			'editor1' => 'admin',
-		], $access);
 
 		$caps->remove_hooks();
 	}
