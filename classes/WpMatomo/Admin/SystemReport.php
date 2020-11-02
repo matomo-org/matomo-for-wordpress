@@ -52,6 +52,7 @@ class SystemReport {
 	private $not_compatible_plugins = array(
 		'background-manager', // Uses an old version of Twig and plugin is no longer maintained.
 		'data-tables-generator-by-supsystic', // uses an old version of twig causing some styles to go funny in the reporting and admin
+		'tweet-old-post-pro', // uses a newer version of monolog
 	);
 
 	private $valid_tabs = array( 'troubleshooting' );
@@ -1274,10 +1275,16 @@ class SystemReport {
 
 			$used_not_compatible = array_intersect( $active_plugins, $this->not_compatible_plugins );
 			if ( ! empty( $used_not_compatible ) ) {
+
+				$additional_comment = '';
+				if (in_array('tweet-old-post-pro', $used_not_compatible)) {
+					$additional_comment .= '<br><br>A workaround for Revive Old Posts Pro may be to add <br>"define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );"<br> to your "wp-config.php".';
+				}
+
 				$rows[] = array(
 					'name'     => __( 'Not compatible plugins', 'matomo' ),
 					'value'    => count( $used_not_compatible ),
-					'comment'  => implode( ', ', $used_not_compatible ) . '<br><br> Matomo may work fine when using these plugins but there may be some issues. For more information see<br>https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/',
+					'comment'  => implode( ', ', $used_not_compatible ) . '<br><br> Matomo may work fine when using these plugins but there may be some issues. For more information see<br>https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/ ' . $additional_comment,
 					'is_warning' => true,
 				);
 			}
