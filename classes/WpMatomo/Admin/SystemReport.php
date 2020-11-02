@@ -53,6 +53,7 @@ class SystemReport {
 		'background-manager', // Uses an old version of Twig and plugin is no longer maintained.
 		'data-tables-generator-by-supsystic', // uses an old version of twig causing some styles to go funny in the reporting and admin
 		'tweet-old-post-pro', // uses a newer version of monolog
+		'secupress', // see #369 depending on setting might have issues
 	);
 
 	private $valid_tabs = array( 'troubleshooting' );
@@ -1278,7 +1279,10 @@ class SystemReport {
 
 				$additional_comment = '';
 				if (in_array('tweet-old-post-pro', $used_not_compatible)) {
-					$additional_comment .= '<br><br>A workaround for Revive Old Posts Pro may be to add <br>"define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );"<br> to your "wp-config.php".';
+					$additional_comment .= '<br><br>A workaround for Revive Old Posts Pro may be to add the following line to your "wp-config.php". <br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
+				}
+				if (in_array('secupress', $used_not_compatible)) {
+					$additional_comment .= '<br><br>If reports aren\'t being generated then you may need to disable the feature "Firewall -> Block Bad Request Methods" in SecuPress (if it is enabled) or add the following line to your "wp-config.php": <br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
 				}
 
 				$rows[] = array(
