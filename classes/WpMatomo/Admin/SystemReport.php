@@ -915,7 +915,14 @@ class SystemReport {
 			'value'   => defined( 'WP_MAX_MEMORY_LIMIT' ) ? WP_MAX_MEMORY_LIMIT : '',
 			'comment' => '',
 		);
-
+		
+		if (function_exists('timezone_version_get')) {
+			$rows[] = array(
+				'name'  => 'Timezone version',
+				'value' => timezone_version_get(),
+			);
+		}
+		
 		$rows[] = array(
 			'name'  => 'Time',
 			'value' => time(),
