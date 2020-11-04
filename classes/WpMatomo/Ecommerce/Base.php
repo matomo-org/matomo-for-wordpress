@@ -91,9 +91,13 @@ class Base {
 					'trackEcommerceCartUpdate' => 'doTrackEcommerceCartUpdate',
 				);
 				if ( ! empty( $call[0] ) && ! empty( $methods[ $call[0] ] ) ) {
-					$tracker_method = $methods[ $call[0] ];
-					array_shift( $call );
-					call_user_func_array( array( $this->tracker, $tracker_method ), $call );
+					try {
+						$tracker_method = $methods[ $call[0] ];
+						array_shift( $call );
+						call_user_func_array( array( $this->tracker, $tracker_method ), $call );
+					} catch (\Exception $e) {
+						$this->logger->log_exception($call[0], $e);
+					}
 				}
 			}
 			$this->ajax_tracker_calls = array();

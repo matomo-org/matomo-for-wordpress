@@ -25,10 +25,10 @@ class Woocommerce extends Base {
 
 		add_action( 'wp_head', array( $this, 'maybe_track_order_complete' ), 99999 );
 		add_action( 'woocommerce_after_single_product', array( $this, 'on_product_view' ), 99999, $args = 0 );
-		add_action( 'woocommerce_add_to_cart', array( $this, 'on_cart_updated' ), 99999, 0 );
-		add_action( 'woocommerce_cart_item_removed', array( $this, 'on_cart_updated' ), 99999, 0 );
-		add_action( 'woocommerce_cart_item_restored', array( $this, 'on_cart_updated' ), 99999, 0 );
-		add_action( 'woocommerce_cart_item_set_quantity', array( $this, 'on_cart_updated' ), 99999, 0 );
+		add_action( 'woocommerce_add_to_cart', array( $this, 'on_cart_updated_safe' ), 99999, 0 );
+		add_action( 'woocommerce_cart_item_removed', array( $this, 'on_cart_updated_safe' ), 99999, 0 );
+		add_action( 'woocommerce_cart_item_restored', array( $this, 'on_cart_updated_safe' ), 99999, 0 );
+		add_action( 'woocommerce_cart_item_set_quantity', array( $this, 'on_cart_updated_safe' ), 99999, 0 );
 		add_action('woocommerce_thankyou',  array($this, 'anonymise_orderid_in_url'), 1, 1);
 
 		if (!$this->is_doing_ajax()) {
@@ -36,11 +36,11 @@ class Woocommerce extends Base {
 			// because of woocommerce_applied_coupon and then also because of woocommerce_update_cart_action_cart_updated itself
 			// causing two tracking requests to be issues from the server. refs #215
 			// when not ajax mode the later event will simply overwrite the first and it should be fine.
-			add_filter( 'woocommerce_update_cart_action_cart_updated', array( $this, 'on_cart_updated' ), 99999, 1 );
+			add_filter( 'woocommerce_update_cart_action_cart_updated', array( $this, 'on_cart_updated_safe' ), 99999, 1 );
 		}
 
-		add_action( 'woocommerce_applied_coupon', array( $this, 'on_cart_updated' ), 99999, 0 );
-		add_action( 'woocommerce_removed_coupon', array( $this, 'on_cart_updated' ), 99999, 0 );
+		add_action( 'woocommerce_applied_coupon', array( $this, 'on_cart_updated_safe' ), 99999, 0 );
+		add_action( 'woocommerce_removed_coupon', array( $this, 'on_cart_updated_safe' ), 99999, 0 );
 	}
 
 	public function anonymise_orderid_in_url($order_id)
@@ -69,6 +69,17 @@ class Woocommerce extends Base {
 				echo $this->on_order( $order_id );
 			}
 		}
+	}
+
+	public function on_cart_updated_safe( $val = null ) {
+
+		try {
+			$val = $this->on_cart_updated($val);
+		} catch (\Exception $e) {
+			$this->logger->log_exception('woo_on_cart_update', $e);
+		}
+
+		return $val;
 	}
 
 	/**
