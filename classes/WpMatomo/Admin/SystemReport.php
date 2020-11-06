@@ -9,15 +9,12 @@
 
 namespace WpMatomo\Admin;
 
-use DeviceDetector\DeviceDetector;
 use Piwik\CliMulti;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
-use Piwik\Date;
 use Piwik\DeviceDetector\DeviceDetectorFactory;
 use Piwik\Filesystem;
-use Piwik\MetricsFormatter;
 use Piwik\Plugin;
 use Piwik\Plugins\CoreAdminHome\API;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
@@ -757,8 +754,9 @@ class SystemReport {
 			$date = get_date_from_gmt( $date, 'Y-m-d H:i:s' );
 		}
 
-		if ( $print_diff && class_exists( '\Piwik\MetricsFormatter' ) ) {
-			$date .= ' (' . MetricsFormatter::getPrettyTimeFromSeconds( $time - time(), true, false, true ) . ')';
+		if ( $print_diff && class_exists( '\Piwik\Metrics\Formatter' ) ) {
+			$formatter = new \Piwik\Metrics\Formatter();
+			$date .= ' (' . $formatter->getPrettyTimeFromSeconds( $time - time(), true, false ) . ')';
 		}
 
 		return $date;
