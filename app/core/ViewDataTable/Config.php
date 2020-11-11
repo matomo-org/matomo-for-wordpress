@@ -109,6 +109,7 @@ class   Config
         'show_pivot_by_subtable',
         'show_table',
         'show_table_all_columns',
+        'show_table_performance',
         'show_footer',
         'show_footer_icons',
         'show_all_views_icons',
@@ -128,6 +129,7 @@ class   Config
         'show_offset_information',
         'hide_annotations_view',
         'columns_to_display',
+        'rows_to_display',
         'segmented_visitor_log_segment_suffix',
     );
 
@@ -231,6 +233,11 @@ class   Config
      * Controls whether the 'All Columns' footer icon is shown.
      */
     public $show_table_all_columns = true;
+
+    /**
+     * Controls whether the 'Performance columns' footer icon is shown (if available).
+     */
+    public $show_table_performance = true;
 
     /**
      * Controls whether the entire view footer is shown.

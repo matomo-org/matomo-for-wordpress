@@ -27,7 +27,7 @@ return array(
     'Invoker\\' => array($vendorDir . '/php-di/invoker/src'),
     'GeoIp2\\' => array($vendorDir . '/geoip2/geoip2/src'),
     'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache'),
-    'DeviceDetector\\' => array($vendorDir . '/piwik/device-detector'),
+    'DeviceDetector\\' => array($vendorDir . '/matomo/device-detector'),
     'Davaxi\\' => array($vendorDir . '/davaxi/sparkline/src'),
     'DI\\' => array($vendorDir . '/php-di/php-di/src'),
     'CpChart\\' => array($vendorDir . '/szymach/c-pchart/src'),

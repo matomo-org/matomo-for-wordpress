@@ -533,12 +533,16 @@ class Http
                 if (isset($http_response_header) && preg_match('~^HTTP/(\d\.\d)\s+(\d+)(\s*.*)?~', implode("\n", $http_response_header), $m)) {
                     $status = (int)$m[2];
                 }
-
+		    
                 if (!$status && $response === false) {
                     $error = error_get_last();
                     throw new \Exception($error['message']);
                 }
                 $fileLength = strlen($response);
+            }
+
+            foreach ($http_response_header as $line) {
+                self::parseHeaderLine($headers, $line);
             }
 
             // restore the socket_timeout value
@@ -894,7 +898,7 @@ class Http
     {
         return !empty($_SERVER['HTTP_USER_AGENT'])
             ? $_SERVER['HTTP_USER_AGENT']
-            : 'Piwik/' . Version::VERSION;
+            : 'Matomo/' . Version::VERSION;
     }
 
     /**

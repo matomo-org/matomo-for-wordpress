@@ -709,7 +709,8 @@
         "WidgetSearchNoResultKeywords": "Search Keywords with No Results",
         "ActionType": "Action Type",
         "ActionTypes": "Action Types",
-        "Behaviour": "Behaviour"
+        "Behaviour": "Behaviour",
+        "TimeSpentInReferringAction": "Time Spent in Referring Action"
     },
     "Annotations": {
         "AddAnnotationsFor": "Add annotations for %s...",
@@ -974,7 +975,8 @@
         "PivotBySubtable": "This report is not pivoted %1$s Pivot by %2$s",
         "SystemSummaryWidget": "System Summary",
         "SystemSummaryNWebsites": "%d websites",
-        "SystemSummaryNSegments": "%d segments",
+        "SystemSummaryNSegments": "%1$d segments",
+        "SystemSummaryNSegmentsWithBreakdown": "%1$d segments (%2$s pre-processed, %3$s processed in real-time)",
         "SystemSummaryNActivatedPlugins": "%d activated plugins",
         "SystemSummaryPiwikVersion": "Matomo version",
         "SystemSummaryMysqlVersion": "MySQL version",
@@ -1828,7 +1830,8 @@
         "SystemCheckWriteDirs": "Directories with write access",
         "SystemCheckWriteDirsHelp": "To fix this error on your GNU\/Linux system, try typing in the following command(s)",
         "SystemCheckZlibHelp": "You need to configure and rebuild PHP with \"zlib\" support enabled, --with-zlib.",
-        "SystemCheckCronArchiveProcess": "Archive Cron",
+        "SystemCheckCronArchiveProcess": "Setup Cron",
+        "FasterReportLoading": "faster report loading",
         "SystemCheckCronArchiveProcessCLI": "Managing processes via CLI",
         "SystemCheckPhpSetting": "To prevent some critical issue, you must set the following in your php.ini file: %s",
         "SystemCheckUpdateHttps": "Update over HTTPS",
@@ -1850,7 +1853,9 @@
         "WelcomeToCommunity": "Welcome to the Matomo community!",
         "CannotConnectToDb": "Cannot connect to the database",
         "CannotConnectToDbResolvingExplanation": "This may be a temporary issue, try %1$srefreshing the page%2$s. If the problem persists please contact your Matomo administrator.",
-        "EmailPrivacyNotice": "Your email address will be only used to send you the newsletter. For this we have to share your email with a third party provider. This provider is currently Mad Mimi, but this may change in the future. We will not share your email with anyone else or use your email for any other purpose than sending you the newsletter. You can unsubscribe at any time. Please consult our %1$sprivacy policy%2$s for more information."
+        "EmailPrivacyNotice": "Your email address will be only used to send you the newsletter. For this we have to share your email with a third party provider. This provider is currently Mad Mimi, but this may change in the future. We will not share your email with anyone else or use your email for any other purpose than sending you the newsletter. You can unsubscribe at any time. Please consult our %1$sprivacy policy%2$s for more information.",
+        "PerformanceSettingsDesc1": "One final note regarding performance: your Matomo is setup and ready to track and report on your website's traffic, but if you find Matomo slow, you will want to take the extra step of setting up %1$sCLI archiving%2$s. This will generate your reports in the background periodically, rather than on demand.",
+        "PerformanceSettingsDesc2": "This requires adding a Matomo command to cron which can't be done automatically by the installer, but you can %1$sread our FAQ to learn how you can set it up yourself.%2$s"
     },
     "Intl": {
         "Continent_afr": "Africa",
@@ -2988,7 +2993,7 @@
         "LastHours": "Last %s hours",
         "LastMinutes": "Last %s minutes",
         "LastVisit": "Last visit",
-        "LinkVisitorLog": "View detailed visit log",
+        "LinkVisitorLog": "View detailed visits log",
         "LoadMoreVisits": "Load more visits",
         "LimitedSummary": "The information in this profile summarizes the last %1$s visits. This user had more visits in total.",
         "LimitedVisitsShown": "Only the last %1$s visits are shown. This user had more visits in total.",
@@ -3007,11 +3012,15 @@
         "ActionsAndDuration": "%1$s actions in %2$s",
         "SimpleRealTimeWidget_Message": "%1$s and %2$s in the last %3$s",
         "ViewVisitorProfile": "View visitor profile",
+        "DisableVisitorProfile": "Disable visitor profile only",
+        "DisableVisitorProfileDescription": "Here you can disable the visitor profile feature. All visits log related features will remain working.",
         "VisitedPages": "Visited pages",
         "RevisitedPages": "Pages viewed more than once",
         "ToggleActions": "Toggle visibility of all actions",
         "TopVisitedPages": "Top visited pages",
         "VisitsLog": "Visits Log",
+        "DisableVisitsLogAndProfile": "Disable visits log & visitor profile",
+        "DisableVisitsLogAndProfileDescription": "Here you can disable the visits log and visitor profile feature. This will also disable features that depend on such like the ecommerce log, the segmented visits log, the realtime map or the realtime widget. This might be required to comply with your local privacy laws\/guidelines.",
         "QueryMaxExecutionTimeExceeded": "The query took too long to execute.",
         "QueryMaxExecutionTimeExceededReasonDateRange": "This can happen if the selected date range is too large. Please try to select a smaller date range.",
         "QueryMaxExecutionTimeExceededReasonSegment": "This can happen if the selected segment doesn't match any visit. Please try to check your selected segment.",
@@ -3025,10 +3034,10 @@
         "VisitsFrom": "%1$s%2$s visits%3$s from",
         "VisitSummary": "Spent a total of %1$s%2$s on the website%3$s, and viewed %4$s pages%5$s in %6$s visits%7$s.",
         "VisitSummaryWithActionDetails": "Spent a total of %1$s%2$s on the website%3$s, and performed %4$s actions%5$s (%6$s) in %7$s visits%8$s.",
-        "RowActionTooltipDefault": "Show Visit Log segmented by this row",
-        "RowActionTooltipWithDimension": "Show Visit Log segmented by this %s",
-        "RowActionTooltipTitle": "Open segmented Visit Log",
-        "SegmentedVisitorLogTitle": "Visit Log showing visits where %1$s is \"%2$s\"",
+        "RowActionTooltipDefault": "Show Visits Log segmented by this row",
+        "RowActionTooltipWithDimension": "Show Visits Log segmented by this %s",
+        "RowActionTooltipTitle": "Open segmented Visits Log",
+        "SegmentedVisitorLogTitle": "Visits Log showing visits where %1$s is \"%2$s\"",
         "OnClickPause": "%s is started. Click to pause.",
         "OnClickStart": "%s is stopped. Click to start.",
         "ClickToSeeAllContents": "Click to see each content interaction\/impression"
@@ -3303,6 +3312,7 @@
         "PluginDescription": "Adds some page performance reports",
         "PerformanceTable": "Table with performance metrics",
         "Overview": "Performance overview",
+        "Performance": "Performance",
         "HelpNote": "Some of those metrics might not always be available. You can find more information in our %1$sonline guide%2$s.",
         "RowActionTitle": "Open page performance report",
         "RowActionDescription": "Show page performance report for this row",
@@ -3392,6 +3402,10 @@
         "DoNotTrack_SupportDNTPreference": "Support Do Not Track preference",
         "EstimatedDBSizeAfterPurge": "Estimated database size after purge",
         "EstimatedSpaceSaved": "Estimated space saved",
+        "ForceCookielessTracking": "Force tracking without cookies",
+        "ForceCookielessTrackingDescription": "Enabling this option will automatically update %1$s, so it contains some additional code to ensure all trackers won't use cookies. Additionally Matomo will ignore all tracking cookies on server side.",
+        "ForceCookielessTrackingDescription2": "Cookies will be disabled even when using the consent methods in Matomo tracker and calling for example the cookie consent methods won't enable cookies.",
+        "ForceCookielessTrackingDescriptionNotWritable": "The JS tracker file \"%1$s\" is not writable which is required for this feature to fully work. When the JS tracker file is not writable, then the cookies will be only ignored on the server side but cookies might be still set in the browser. To solve this issue you or a system administrator need to change the file permissions so your webserver can change this file.",
         "GeolocationAnonymizeIpNote": "Note: Geolocation will have approximately the same results with 1 byte anonymized. With 2 bytes or more, Geolocation will be inaccurate.",
         "GDPR": "GDPR",
         "GdprManager": "GDPR Manager",
@@ -3506,6 +3520,10 @@
         "CampaignContentHelp": "This parameter is often used when you are testing multiple ads, and would include the name of each ad to see which was most effective for driving traffic.",
         "CampaignMedium": "Campaign Medium",
         "CampaignMediumHelp": "Used to describe the marketing activity, for example 'PPC' for a pay-per-click campaign, or 'SEM' for a paid search ads, or 'review' to track a product review on an affiliate site.",
+        "CampaignGroup": "Campaign Group",
+        "CampaignGroupHelp": "This parameter is used to track a Campaign Group to identify a group or audience. Campaign groups are helpful for tracking the overall performance of multiple campaigns with similar goals.",
+        "CampaignPlacement": "Campaign Placement",
+        "CampaignPlacementHelp": "Used to describe the advertising placement or position, for example an entire website, specific pages from a website, an individual ad unit positioned on a single page, a video, a mobile phone app, and more.",
         "ColumnSearchEngine": "Search Engine",
         "ColumnSocial": "Social network",
         "ColumnWebsite": "Website",
@@ -4550,7 +4568,9 @@
         "ToGeolocateOldVisits": "To get location data for your old visits, use the script described %1$shere%2$s.",
         "WidgetLocation": "Visitor Location",
         "GeoIpDbIpAccuracyNote": "Note: the DBIP databases are free and can be downloaded automatically, but geolocation results (specifically city results) are not as accurate as MaxMind's. MaxMind, however, requires that you create an account even for the free database. If you want to use MaxMind's geolocation database, you can start the process %1$shere%2$s",
-        "MaxMindLinkExplanation": "If you are using MaxMind's geolocation databases and you do not already know how to generate your download URL, %1$sclick here to learn how%2$s."
+        "MaxMindLinkExplanation": "If you are using MaxMind's geolocation databases and you do not already know how to generate your download URL, %1$sclick here to learn how%2$s.",
+        "InternetServiceProvider": "Internet Service Provider",
+        "InternetServiceProviderPlural": "Internet Service Providers"
     },
     "UserCountryMap": {
         "PluginDescription": "This plugin provides the widgets Visitor Map and Real-time Map. Note: Requires the UserCountry plugin enabled.",
@@ -4901,7 +4921,8 @@
     "Widgetize": {
         "OpenInNewWindow": "Open in a new window",
         "PluginDescription": "Display any Matomo report in your website or app with a simple Embed HTML tag.",
-        "ViewAccessRequired": "This user has at least some write access. Only tokens of users who have only view access can be used.",
-        "TopLinkTooltip": "Export Matomo Reports as Widgets and embed the Dashboard in your app as an iframe."
+        "ViewAccessRequired": "This user has at least some write access. Only tokens of users who have only view access can be used. See %1$s for more information.",
+        "TopLinkTooltip": "Export Matomo Reports as Widgets and embed the Dashboard in your app as an iframe.",
+        "TooHighAccessLevel": "This user has super user access. For embedding widgets super user token auths are not allowed. %1$sSee our faq for more information.%2$s"
     }
 }

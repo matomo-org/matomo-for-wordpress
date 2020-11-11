@@ -125,6 +125,16 @@ class Updates_4_0_0_b1 extends PiwikUpdates
             $migrations[] = $this->migration->plugin->activate('CustomJsTracker');
         }
 
+        // Prepare all installed tables for utf8mb4 conversions. e.g. make some indexed fields smaller so they don't exceed the maximum key length
+        $allTables = DbHelper::getTablesInstalled();
+
+        foreach ($allTables as $table) {
+            if (preg_match('/archive_/', $table) == 1) {
+                $tableNameUnprefixed = Common::unprefixTable($table);
+                $migrations[] = $this->migration->db->changeColumnType($tableNameUnprefixed, 'name', 'VARCHAR(190)');
+            }
+        }
+
         // Move the site search fields of log_visit out of custom variables into their own fields
         $columnsToAdd['log_link_visit_action']['search_cat'] = 'VARCHAR(200) NULL';
         $columnsToAdd['log_link_visit_action']['search_count'] = 'INTEGER(10) UNSIGNED NULL';
@@ -190,10 +200,11 @@ class Updates_4_0_0_b1 extends PiwikUpdates
                     visitor_seconds_since_order = visitor_days_since_order * 86400,
                     visitor_seconds_since_last = visitor_days_since_last * 86400");
         }
-	    $logConvColumns = $tableMetadata->getColumns(Common::prefixTable('log_conversion'));
-	    $hasDaysColumnInConv = in_array('visitor_days_since_first', $logConvColumns);
 
-	    if ($hasDaysColumnInConv) {
+        $logConvColumns = $tableMetadata->getColumns(Common::prefixTable('log_conversion'));
+        $hasDaysColumnInConv = in_array('visitor_days_since_first', $logConvColumns);
+
+        if ($hasDaysColumnInConv) {
             $migrations[] = $this->migration->db->sql("UPDATE " . Common::prefixTable('log_conversion')
                 . " SET visitor_seconds_since_first = visitor_days_since_first * 86400, 
                     visitor_seconds_since_order = visitor_days_since_order * 86400");

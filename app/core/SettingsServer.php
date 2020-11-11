@@ -229,7 +229,7 @@ class SettingsServer
         // in the event one or the other is disabled...
         @ini_set('max_execution_time', $executionTime);
         if (function_exists('set_time_limit')) {
-	        @set_time_limit($executionTime);
+            @set_time_limit($executionTime);
         }
     }
 

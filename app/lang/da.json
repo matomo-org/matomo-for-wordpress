@@ -954,7 +954,6 @@
         "PivotBySubtable": "Rapporten er ikke pivoteret %1$s Pivoter med %2$s.",
         "SystemSummaryWidget": "Systemoversigt",
         "SystemSummaryNWebsites": "%d websteder",
-        "SystemSummaryNSegments": "%d segmenter",
         "SystemSummaryNActivatedPlugins": "%d aktiverede programudvidelser",
         "SystemSummaryPiwikVersion": "Matomo-version",
         "SystemSummaryMysqlVersion": "MySQL-version",
@@ -1603,7 +1602,6 @@
         "SystemCheckGzuncompressHelp": "zlib udvidelsen og gzuncompress funktionen skal aktiveres.",
         "SystemCheckHashHelp": "Du mangler at konfigurere og genopbygge PHP med hash() understøttelse aktiveret ved at ekskludere valget --disable-hash.",
         "SystemCheckIconvHelp": "PHP skal konfigureres og genstartes med \"iconv\" støtte aktiveret, --with-iconv.",
-        "SystemCheckJsonHelp": "php5-json udvidelsen er nødvendig for at Matomo kan læse og skrive JSON data.",
         "SystemCheckMailHelp": "Tilbagemelding og Glemt adgangskode vil ikke blive sendt uden mail() funktion",
         "SystemCheckMbstring": "mbstring",
         "SystemCheckMbstringHelp": "Udvidelsen mbstring er krævet for at håndtere multibyte karakterer i brugergrænsefladen og i API responser. Tjek venligst også at mbstring.func_overload er sat til \"0\" i php.ini.",
@@ -1639,7 +1637,6 @@
         "SystemCheckWriteDirs": "Mapper med skriveadgang",
         "SystemCheckWriteDirsHelp": "Prøv at skrive følgende kommandoer for at rette fejlen på et linux-system",
         "SystemCheckZlibHelp": "Konfigurer og genstart PHP med zlib support aktiveret, --with-zlib.",
-        "SystemCheckCronArchiveProcess": "Arkiv Cron",
         "SystemCheckCronArchiveProcessCLI": "Håndtering af processer via kommandolinje",
         "SystemCheckPhpSetting": "For at undgå nogle kritiske punkter, skal følgende indstilles i din php.ini-fil: %s",
         "SystemCheckUpdateHttps": "Opdater over HTTPS",
@@ -2799,7 +2796,6 @@
         "LastHours": "Sidste %s timer",
         "LastMinutes": "Sidste %s minutter",
         "LastVisit": "Seneste besøg",
-        "LinkVisitorLog": "Vis detaljeret besøgslog",
         "LoadMoreVisits": "Indlæs flere besøg",
         "MorePagesNotDisplayed": "yderligere sider vises ikke for denne besøgende",
         "NbVisitor": "1 besøgende",
@@ -2825,8 +2821,7 @@
         "VisitorsLastVisit": "Besøgendes seneste besøg var for %s dage siden.",
         "VisitsFrom": "%1$s%2$s besøg %3$s fra",
         "VisitSummary": "Brugte i alt %1$s%2$s på hjemmesiden %3$s og besøgte %4$s sider%5$s på %6$s besøg%7$s.",
-        "VisitSummaryWithActionDetails": "Brugte i alt %1$s%2$s på hjemmesiden%3$s og udførte %4$s handlinger%5$s (%6$s) på %7$s besøg%8$s.",
-        "SegmentedVisitorLogTitle": "Besøgsloggen viser besøg, hvor %1$s er \"%2$s\""
+        "VisitSummaryWithActionDetails": "Brugte i alt %1$s%2$s på hjemmesiden%3$s og udførte %4$s handlinger%5$s (%6$s) på %7$s besøg%8$s."
     },
     "Login": {
         "ConfirmationLinkSent": "Et bekræftelselink er blevet sendt til din indbakke. Tjek din e-mail og besøg dette link for at godkende ændringen af din adgangskode.",

@@ -31,6 +31,7 @@ use Piwik\SettingsServer;
 use Piwik\Site;
 use Piwik\Tracker\Cache;
 use Piwik\Tracker\Model as TrackerModel;
+use Psr\Log\LoggerInterface;
 
 /**
  * Service that can be used to invalidate archives or add archive references to a list so they will
@@ -451,33 +452,35 @@ class ArchiveInvalidator
      * @param int[]|string $idSites A list of idSites or 'all'
      * @param string $plugin
      * @param string|null $report
+     * @param Date|null $startDate
      * @throws \Exception
      * @api
      */
-    public function reArchiveReport($idSites, string $plugin, string $report = null, int $lastNMonthsToInvalidate = null)
+    public function reArchiveReport($idSites, string $plugin, string $report = null, Date $startDate = null)
     {
-        $lastNMonthsToInvalidate = $lastNMonthsToInvalidate ?: Config::getInstance()->General['rearchive_reports_in_past_last_n_months'];
-        if (empty($lastNMonthsToInvalidate)) {
-            return;
-        }
+        $date2 = Date::yesterday();
 
-        $lastNMonthsToInvalidate = (int) substr($lastNMonthsToInvalidate, 4);
-        if (empty($lastNMonthsToInvalidate)) {
-            return;
+        $earliestDateToRearchive = $this->getEarliestDateToRearchive();
+        if (empty($startDate)) {
+            $startDate = $earliestDateToRearchive;
+        } else if (!empty($earliestDateToRearchive)) {
+            // don't allow archiving further back than the rearchive_reports_in_past_last_n_months date allows
+            $startDate = $startDate->isEarlier($earliestDateToRearchive) ? $earliestDateToRearchive : $startDate;
         }
 
         if ($idSites === 'all') {
             $idSites = $this->getAllSitesId();
         }
 
-        $date2 = Date::yesterday();
-        $date1 = $date2->subMonth($lastNMonthsToInvalidate)->setDay(1);
-
         $dates = [];
-        $date = $date1;
+        $date = $startDate;
         while ($date->isEarlier($date2)) {
             $dates[] = $date;
             $date = $date->addDay(1);
+        }
+
+        if (empty($dates)) {
+            return;
         }
 
         $name = $plugin;
@@ -490,7 +493,7 @@ class ArchiveInvalidator
             $segmentDatesToInvalidate = $this->getSegmentArchiving()->getSegmentArchivesToInvalidate($idSite);
             foreach ($segmentDatesToInvalidate as $info) {
                 $latestDate = Date::factory($info['date']);
-                $latestDate = $latestDate->isEarlier($date1) ? $latestDate : $date1;
+                $latestDate = $latestDate->isEarlier($startDate) ? $startDate : $latestDate;
 
                 $datesToInvalidateForSegment = [];
 
@@ -521,6 +524,40 @@ class ArchiveInvalidator
             $this->model->removeInvalidationsLike($idSite, $plugin);
         } else {
             $this->model->removeInvalidations($idSite, $plugin, $report);
+        }
+    }
+
+    /**
+     * Re-archives reports without propagating exceptions.
+     *
+     * @param int|int[]|'all' $idSites
+     * @param string $pluginName
+     * @param string|null $report
+     * @param Date|null $startDate
+     */
+    public function reArchiveReportSafely($idSites, string $pluginName, string $report = null, Date $startDate = null)
+    {
+        try {
+            $this->reArchiveReport($idSites, $pluginName, $report, $startDate);
+        } catch (\Throwable $ex) {
+            $logger = StaticContainer::get(LoggerInterface::class);
+            $logger->info("Failed to schedule rearchiving of past reports for $pluginName plugin.");
+        }
+    }
+
+    /**
+     * Calls removeInvalidations() without propagating exceptions.
+     *
+     * @param int|int[]|'all' $idSites
+     * @param string $pluginName
+     */
+    public function removeInvalidationsSafely($idSites, $pluginName)
+    {
+        try {
+            $this->removeInvalidations($idSites, $pluginName);
+        } catch (\Throwable $ex) {
+            $logger = StaticContainer::get(LoggerInterface::class);
+            $logger->debug("Failed to remove invalidations the for $pluginName plugin.");
         }
     }
 
@@ -638,5 +675,20 @@ class ArchiveInvalidator
     {
         $model = new \Piwik\Plugins\SitesManager\Model();
         return $model->getSitesId();
+    }
+
+    private function getEarliestDateToRearchive()
+    {
+        $lastNMonthsToInvalidate = Config::getInstance()->General['rearchive_reports_in_past_last_n_months'];
+        if (empty($lastNMonthsToInvalidate)) {
+            return null;
+        }
+
+        $lastNMonthsToInvalidate = (int) substr($lastNMonthsToInvalidate, 4);
+        if (empty($lastNMonthsToInvalidate)) {
+            return null;
+        }
+
+        return Date::yesterday()->subMonth($lastNMonthsToInvalidate)->setDay(1);
     }
 }

@@ -966,7 +966,6 @@
         "PivotBySubtable": "Ce rapport n'a pas été pivoté %1$s Pivoter par %2$s",
         "SystemSummaryWidget": "Résumé",
         "SystemSummaryNWebsites": "%d sites web",
-        "SystemSummaryNSegments": "%d segments",
         "SystemSummaryNActivatedPlugins": "%d plugins activés",
         "SystemSummaryPiwikVersion": "Version de Matomo",
         "SystemSummaryMysqlVersion": "Version de MySQL",
@@ -1745,7 +1744,6 @@
         "SystemCheckGzuncompressHelp": "Vous devez activer l'extension zlib et la fonction gzuncompress",
         "SystemCheckHashHelp": "Vous devez reconfigurer et re-compiler PHP en avec le support de hash() activé en enlevant l'option --disable-hash.",
         "SystemCheckIconvHelp": "Vous devez configurer PHP et le recompiler avec le support \"iconv\" activé, --with-iconv.",
-        "SystemCheckJsonHelp": "L'extension php5-json est nécéssaire pour lire et écrire des données au format JSON.",
         "SystemCheckMailHelp": "Les Feedback (commentaires) et mots de passe perdus ne pourront être envoyés sans la fonciton mail().",
         "SystemCheckMbstring": "mbstring",
         "SystemCheckMbstringHelp": "L'extension mbstring est nécessaire pour gérer les caractères multi-octet dans l'interface utilisateur et les réponses API. Merci également de vérifier que mbstring.func_overload est paramétré à \"0\" dans php.ini.",
@@ -1781,7 +1779,6 @@
         "SystemCheckWriteDirs": "Répertoires avec les droits d'accès en écriture",
         "SystemCheckWriteDirsHelp": "Pour corriger les erreurs sur votre système Linux essayez de taper les commandes suivantes",
         "SystemCheckZlibHelp": "Vous devez reconfigurer et recompiler PHP avec le support zlib, --with-zlib.",
-        "SystemCheckCronArchiveProcess": "Tâche Cron d'archivage",
         "SystemCheckCronArchiveProcessCLI": "Gestion des processus via la ligne de commande",
         "SystemCheckPhpSetting": "Pour éviter certaines erreurs critique, vous devez définir les entrées suivantes dans votre fichier php.ini : %s",
         "SystemCheckUpdateHttps": "Mettre à jour via HTTPS",
@@ -2943,7 +2940,6 @@
         "LastHours": "Dernières %s heures",
         "LastMinutes": "Dernières %s minutes",
         "LastVisit": "Dernière visite",
-        "LinkVisitorLog": "Afficher le journal détaillé des visites",
         "LoadMoreVisits": "Charger plus de visites",
         "LimitedSummary": "Les information de ce profil récapitulent les %1$sdernières visites. Cet utilisateur a effectué plus de visites.",
         "LimitedVisitsShown": "Uniquement les %1$s dernières visites sont affichées. Cet utilisateur a effectué plus de visites.",
@@ -2980,10 +2976,6 @@
         "VisitsFrom": "%1$s%2$s visites%3$s de",
         "VisitSummary": "A passé un total de %1$s%2$s sur le site web%3$s, et affiché %4$s pages%5$s en %6$s visites%7$s.",
         "VisitSummaryWithActionDetails": "A passé un total de %1$s%2$s sur le site web%3$s, et effectué %4$s actions %5$s (%6$s) en %7$s visites%8$s.",
-        "RowActionTooltipDefault": "Afficher le journal des visites segmenté en fonction de cet enregistrement",
-        "RowActionTooltipWithDimension": "Afficher le journal des visites segmenté en fonction de %s",
-        "RowActionTooltipTitle": "Ouvrir le journal segmenté des visites",
-        "SegmentedVisitorLogTitle": "Le journal des visites affiche les visites qui ont %1$s à \"%2$s\"",
         "OnClickPause": "%s est démarré. Cliquer pour mettre en pause.",
         "OnClickStart": "%s est arrêté. Cliquer pour démarrer.",
         "ClickToSeeAllContents": "Cliquez pour voir chaque interaction\/affichage de contenu"
@@ -4714,7 +4706,6 @@
     "Widgetize": {
         "OpenInNewWindow": "Ouvrir dans une nouvelle fenêtre",
         "PluginDescription": "Affichez n'importe quel rapport Matomo sur votre site web avec une simple balise HTML.",
-        "ViewAccessRequired": "Cet utilisateur possède au moins un accès en écriture. Seuls les jetons des utilisateurs qui n'ont qu'un accès de visualisation peuvent être utilisés.",
         "TopLinkTooltip": "Exporter les rapports Matomo en tant que gadget et incorporer le tableau de bord dans votre application en tant qu'iframe."
     }
 }

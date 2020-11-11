@@ -519,7 +519,8 @@
         "MaximumNumberOfPeriodsComparedIs": "Het maximum aantal perioden dat te gelijk vergeleken kan worden is %s.",
         "Custom": "Maatwerk",
         "PreviousPeriod": "Vorige periode",
-        "PreviousYear": "Vorig jaar"
+        "PreviousYear": "Vorig jaar",
+        "ViewAccessRequired": "De gebruikte token_auth heeft te veel toegang om te worden gebruikt in een niet-API verzoek URL. Gebruik een app-specifiek wachtwoord voor een gebruiker die alleen weergavetoegang heeft."
     },
     "Mobile": {
         "AboutPiwikMobile": "Over Matomo Mobile",
@@ -960,7 +961,6 @@
         "PivotBySubtable": "Dit rapport wordt niet als een draaitabel getoond, %1$s maak een draaitabel op basis van %2$s",
         "SystemSummaryWidget": "Systeem samenvatting",
         "SystemSummaryNWebsites": "%d websites",
-        "SystemSummaryNSegments": "%d segmenten",
         "SystemSummaryNActivatedPlugins": "%d geactiveerde plugins",
         "SystemSummaryPiwikVersion": "Matomo-versie",
         "SystemSummaryMysqlVersion": "MySQL-versie",
@@ -1638,7 +1638,6 @@
         "SystemCheckGzuncompressHelp": "U moet de zlib-extensie en gzuncompress-functie inschakelen.",
         "SystemCheckHashHelp": "Je dient PHP opnieuw te configureren en compileren met hash() support, door de optie --disable-hash weg te laten.",
         "SystemCheckIconvHelp": "U moet PHP configureren met iconv support ingeschakeld --with-iconv.",
-        "SystemCheckJsonHelp": "De php5-json-extensie is vereist voor Matomo om JSON-gegevens te lezen en te schrijven.",
         "SystemCheckMailHelp": "Feedback en vergeten wachtwoord berichten zullen niet worden verzonden zonder mail()",
         "SystemCheckMbstring": "mbstring",
         "SystemCheckMemoryLimit": "Geheugenlimiet",
@@ -1671,7 +1670,6 @@
         "SystemCheckWriteDirs": "Mappen met schrijfrechten",
         "SystemCheckWriteDirsHelp": "Om dit probleem te verhelpen op uw linux server, type de volgende commando(s)",
         "SystemCheckZlibHelp": "U moet PHP configureren en herbouwen met \"zlib\"-ondersteuning ingeschakeld, --with-zlib.",
-        "SystemCheckCronArchiveProcess": "Archivatie Cron",
         "SystemCheckCronArchiveProcessCLI": "Processen beheren via CLI",
         "SystemCheckPhpSetting": "Om een kritiek probleem te vermijden moet je de volgende instelling plaatsen in je php.ini bestand: %s",
         "SystemCheckUpdateHttps": "Bijwerken via HTTPS",

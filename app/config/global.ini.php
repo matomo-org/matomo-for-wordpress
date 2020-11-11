@@ -261,7 +261,8 @@ currencies[BTC] = Bitcoin
 ; Notes:
 ;  * any existing Segment set to "processed in Real time", will still be set to Real-time.
 ;    this will only affect custom segments added or modified after this setting is changed.
-;  * when set to 0 then any user with at least 'view' access will be able to create pre-processed segments.
+;  * users with at least 'view' access will still be able to create pre-processed segments, regardless
+;    of what this is set to.
 enable_create_realtime_segments = 1
 
 ; Whether to enable the "Suggest values for segment" in the Segment Editor panel.
@@ -454,6 +455,13 @@ enable_framed_pages = 0
 ; Set to 1 to disable the framebuster on Admin pages (a click-jacking countermeasure).
 ; Default is 0 (i.e., bust frames on the Settings forms).
 enable_framed_settings = 0
+
+; Set to 1 to allow using token_auths with write or admin access in iframes that embed Matomo.
+; Note that the token used will be in the URL in the iframe, and thus will be stored in webserver
+; logs and possibly other places. Using write or admin token_auths can be seen as a security risk,
+; though it can be necessary in some use cases. We do not recommend enabling this setting, for more
+; information view the FAQ: https://matomo.org/faq/troubleshooting/faq_147/
+enable_framed_allow_write_admin_token_auth = 0
 
 ; language cookie name for session
 language_cookie_name = matomo_lang

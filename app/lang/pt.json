@@ -970,7 +970,6 @@
         "PivotBySubtable": "O relatório não está articulado %1$s Articulado por %2$s",
         "SystemSummaryWidget": "Resumo do sistema",
         "SystemSummaryNWebsites": "%d sites",
-        "SystemSummaryNSegments": "%d segmentos",
         "SystemSummaryNActivatedPlugins": "%d extensões ativas",
         "SystemSummaryPiwikVersion": "Versão do Matomo",
         "SystemSummaryMysqlVersion": "Versão do MySQL",
@@ -1738,7 +1737,6 @@
         "SystemCheckGzuncompressHelp": "Precisa ativar a extensão zlib e a função gzuncompress.",
         "SystemCheckHashHelp": "Tem de configurar e reconstruir o PHP com o suporte para a função hash() ativado, removendo a opção --disable-hash.",
         "SystemCheckIconvHelp": "Tem de configurar e reconstruir o PHP com o suporte \"iconv\" ativado, --with-iconv.",
-        "SystemCheckJsonHelp": "A extensão php5-json é necessária para o Matomo ler e escrever dados JSON.",
         "SystemCheckMailHelp": "Mensagens de feedback e de palavras-passe perdida não serão enviadas sem mail().",
         "SystemCheckMbstring": "mbstring",
         "SystemCheckMbstringHelp": "A extensão mbstring é necessária para trabalhar com caracteres multibyte na interface do utilizador e com respostas da API. Confirme ainda que mbstring.func_overload está definido como \"0\" no php.ini.",
@@ -1774,7 +1772,6 @@
         "SystemCheckWriteDirs": "Diretórios com permissão de escrita",
         "SystemCheckWriteDirsHelp": "Para resolver este problema no seu sistema GNU\/Linux, tente introduzir o(s) seguinte(s) comando(s)",
         "SystemCheckZlibHelp": "Tem de configurar e reconstruir o PHP com o suporte \"zlib\" ativado, --with-zlib.",
-        "SystemCheckCronArchiveProcess": "Arquivo cron",
         "SystemCheckCronArchiveProcessCLI": "Gerir processo via linha de comandos",
         "SystemCheckPhpSetting": "Para impedir algum problema crítico, pode definir o seguinte no seu ficheiro php.ini: %s",
         "SystemCheckUpdateHttps": "Atualização sob HTTPS",
@@ -2936,7 +2933,6 @@
         "LastHours": "Últimas %s horas",
         "LastMinutes": "Últimos %s minutos",
         "LastVisit": "Última visita",
-        "LinkVisitorLog": "Ver registo detalhado de visitas",
         "LoadMoreVisits": "Carregar mais visitas",
         "LimitedSummary": "A informação deste perfil resume as últimas %1$s visitas. No total, este utilizador teve mais visitas.",
         "LimitedVisitsShown": "Apenas as últimas %1$s visitas são mostradas. No total, este utilizador teve mais visitas.",
@@ -2973,10 +2969,6 @@
         "VisitsFrom": "%1$s%2$s visitas%3$s de",
         "VisitSummary": "Despendeu um total de %1$s%2$s no site%3$s, e viu %4$s páginas%5$s em %6$s visitas%7$s.",
         "VisitSummaryWithActionDetails": "Despendeu um total de %1$s%2$s no site%3$s, e executou %4$s ações%5$s (%6$s) em %7$s visitas%8$s.",
-        "RowActionTooltipDefault": "Mostrar o registo segmentado de visitas por esta linha",
-        "RowActionTooltipWithDimension": "Mostrar o registo segmentado de visitas por este %s",
-        "RowActionTooltipTitle": "Abrir o registo segmentado de visitas",
-        "SegmentedVisitorLogTitle": "O registo de visitas mostrando as visitas onde %1$s é \"%2$s\"",
         "OnClickPause": "%s está iniciado. Clique para pausar.",
         "OnClickStart": "%s está parado. Clique para iniciar.",
         "ClickToSeeAllContents": "Clique para ver cada interação\/impressão do conteúdo"
@@ -4758,7 +4750,6 @@
     "Widgetize": {
         "OpenInNewWindow": "Abrir numa nova janela",
         "PluginDescription": "Mostra qualquer relatório do Matomo no seu site ou aplicação com uma simples tag HTML incorporável.",
-        "ViewAccessRequired": "Este utilizador tem algum acesso de escrita. Apenas chaves de utilizadores com acesso exclusivamente de visualização podem ser utilizadas.",
         "TopLinkTooltip": "Exporte relatórios do Matomo como Widgets e incorpore o painel da sua aplicação como uma iframe."
     }
 }
