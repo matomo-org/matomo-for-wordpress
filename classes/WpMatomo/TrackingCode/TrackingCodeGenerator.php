@@ -238,6 +238,9 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 		if ( $this->settings->get_global_option( 'track_crossdomain_linking' ) ) {
 			$options[] = "_paq.push(['enableCrossDomainLinking']);";
 		}
+		if ( $this->settings->get_global_option( 'track_jserrors' ) ) {
+			$options[] = "_paq.push(['enableJSErrorTracking']);";
+		}
 
 		$cookie_domain = $this->settings->get_tracking_cookie_domain();
 		if ( ! empty( $cookie_domain ) ) {

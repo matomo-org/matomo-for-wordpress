@@ -95,6 +95,7 @@ class TrackingSettings implements AdminSettingsInterface {
 			'tracking_code',
 			'force_protocol',
 			'track_js_endpoint',
+			'track_jserrors',
 			'track_api_endpoint',
 			Settings::SITE_CURRENCY
 		);

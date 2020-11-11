@@ -61,6 +61,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 * Segmentation
 * Real time reports
 * Transitions
+* JavaScript error tracking
 * Extensive geolocation reports / maps
 * Many different visualisations
 * Row evolution

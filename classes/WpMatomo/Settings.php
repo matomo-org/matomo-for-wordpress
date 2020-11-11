@@ -97,6 +97,7 @@ class Settings {
 		'track_heartbeat'                          => 0,
 		'track_user_id'                            => 'disabled',
 		'track_datacfasync'                        => false,
+		'track_jserrors'                           => false,
 		'force_protocol'                           => 'disabled',
 		'maxmind_license_key'                      => '',
 		self::SHOW_GET_STARTED_PAGE                => 1,
