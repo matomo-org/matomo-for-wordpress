@@ -45,6 +45,7 @@ class SessionAuth extends \Piwik\Session\SessionAuth
 
                 if ($this->getTokenAuth() !== false
                     && $this->getTokenAuth() !== null
+                    && !Common::hashEquals((string) $token, (string) $this->getTokenAuth()) // note both may be converted to empty string in worst case so still the one below needed
                     && $token !== $this->getTokenAuth()) {
                     return new AuthResult(AuthResult::FAILURE, $matomo_user['login'], null);
                 }
