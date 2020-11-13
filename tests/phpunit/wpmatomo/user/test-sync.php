@@ -237,7 +237,7 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 		);
 
 		$user = get_user_by( 'login', 'admin2' );
-		wp_delete_user( $user->ID );
+		self::delete_user( $user->ID );
 		$id6 = self::factory()->user->create(
 			array(
 				'role'       => 'administrator',
