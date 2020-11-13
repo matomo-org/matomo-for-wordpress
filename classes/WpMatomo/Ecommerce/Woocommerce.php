@@ -39,8 +39,8 @@ class Woocommerce extends Base {
 			add_filter( 'woocommerce_update_cart_action_cart_updated', array( $this, 'on_cart_updated_safe' ), 99999, 1 );
 		}
 
-		add_action( 'woocommerce_applied_coupon', array( $this, 'on_cart_updated_safe' ), 99999, 0 );
-		add_action( 'woocommerce_removed_coupon', array( $this, 'on_cart_updated_safe' ), 99999, 0 );
+		add_action( 'woocommerce_applied_coupon', array( $this, 'on_coupon_updated_safe' ), 99999, 0 );
+		add_action( 'woocommerce_removed_coupon', array( $this, 'on_coupon_updated_safe' ), 99999, 0 );
 	}
 
 	public function anonymise_orderid_in_url($order_id)
@@ -71,6 +71,17 @@ class Woocommerce extends Base {
 		}
 	}
 
+	public function on_coupon_updated_safe( ) {
+
+		try {
+			$val = $this->on_cart_updated($val= null, true);
+		} catch (\Exception $e) {
+			$this->logger->log_exception('woo_on_cart_update', $e);
+		}
+
+		return $val;
+	}
+
 	public function on_cart_updated_safe( $val = null ) {
 
 		try {
@@ -84,15 +95,19 @@ class Woocommerce extends Base {
 
 	/**
 	 * @param null $val needed for woocommerce_update_cart_action_cart_updated filter
+	 * @param bool $is_coupon_update set to true if cart was updated because of a coupon
 	 *
 	 * @return mixed
 	 */
-	public function on_cart_updated( $val = null ) {
+	public function on_cart_updated( $val = null, $is_coupon_update = false ) {
 		global $woocommerce;
 
 		/** @var \WC_Cart $cart */
 		$cart = $woocommerce->cart;
-		$cart->calculate_totals();
+		if (!$is_coupon_update) {
+			// can cause cart coupon not to be applied when WooCommerce Subscriptions is used.
+			$cart->calculate_totals();
+		}
 		$cart_content = $cart->get_cart();
 
 		$tracking_code = '';
