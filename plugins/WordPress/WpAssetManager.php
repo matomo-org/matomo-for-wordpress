@@ -39,10 +39,10 @@ class WpAssetManager extends AssetManager
 		$jsFiles = array();
 		$jsFiles[] = "jquery/jquery.js";
 		$jsFiles[] = 'jquery/ui/widget.min.js';
-		$jsFiles[] = 'jquery/ui/mouse.min.js';
 		$jsFiles[] = 'jquery/ui/selectable.min.js';
 		$jsFiles[] = 'jquery/ui/autocomplete.min.js';
 		$jsFiles[] = 'jquery/ui/core.min.js';
+		$jsFiles[] = 'jquery/ui/mouse.min.js';
 		$jsFiles[] = 'jquery/ui/position.min.js';
 		$jsFiles[] = 'jquery/ui/resizable.min.js';
 		$jsFiles[] = 'jquery/ui/datepicker.min.js';
