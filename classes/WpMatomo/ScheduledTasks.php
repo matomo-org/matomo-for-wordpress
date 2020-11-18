@@ -135,7 +135,7 @@ class ScheduledTasks {
 		if ($this->settings->should_disable_addhandler()) {
 			$events[self::EVENT_DISABLE_ADDHANDLER] = array(
 				'name'     => 'Disable AddHandler',
-				'interval' => 'daily',
+				'interval' => 'hourly',
 				'method'   => 'disable_add_handler',
 			);
 		}
