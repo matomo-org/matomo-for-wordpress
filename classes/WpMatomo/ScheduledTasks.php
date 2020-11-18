@@ -132,7 +132,7 @@ class ScheduledTasks {
 				'method'   => 'update_geo_ip2_db',
 			),
 		);
-		if (\WpMatomo::should_disable_addhandler()) {
+		if ($this->settings->should_disable_addhandler()) {
 			$events[self::EVENT_DISABLE_ADDHANDLER] = array(
 				'name'     => 'Disable AddHandler',
 				'interval' => 'daily',
@@ -142,9 +142,10 @@ class ScheduledTasks {
 		return $events;
 	}
 
-	public function disable_add_handler()
+	public function disable_add_handler($forceUndo = false)
 	{
-		if (\WpMatomo::should_disable_addhandler()) {
+		$disable_addhandler = $this->settings->should_disable_addhandler();
+		if ($disable_addhandler) {
 			$this->logger->log( 'Scheduled tasks disabling addhandler' );
 			try {
 				Bootstrap::do_bootstrap();
@@ -155,6 +156,10 @@ class ScheduledTasks {
 						$content = file_get_contents($file);
 						$search = 'AddHandler';
 						$replace = '# AddHandler';
+						if ($forceUndo) {
+							$search = '# AddHandler';
+							$replace = 'AddHandler';
+						}
 						if (strpos($content, $search) !== false && strpos($content,$replace) === false) {
 							if (is_writeable($file)) {
 								$content = str_replace($search, $replace, $content);

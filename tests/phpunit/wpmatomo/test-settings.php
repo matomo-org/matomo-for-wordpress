@@ -23,6 +23,17 @@ class SettingsTest extends MatomoUnit_TestCase {
 		return new Settings();
 	}
 
+	public function test_should_disable_addhandler() {
+		$this->assertFalse( $this->settings->should_disable_addhandler() );
+	}
+
+	public function test_should_disable_addhandler_forced() {
+		$this->settings->force_disable_addhandler = true;
+		$disabled = $this->settings->should_disable_addhandler();
+		$this->settings->force_disable_addhandler = false;
+		$this->assertTrue( $disabled );
+	}
+
 	public function test_is_multi_site() {
 		$this->assertSame( MULTISITE, $this->settings->is_multisite() );
 	}

@@ -35,6 +35,11 @@ class Settings {
 	const NETWORK_CONFIG_OPTIONS               = 'config_options';
 
 	public static $is_doing_action_tracking_related = false;
+	/**
+	 * @internal tests only
+	 * @var bool
+	 */
+	public $force_disable_addhandler = false;
 
 	/**
 	 * Tests only
@@ -326,6 +331,14 @@ class Settings {
 			do_action( 'matomo_tracking_settings_changed', $this, $values );
 			self::$is_doing_action_tracking_related = false;
 		}
+	}
+
+	public function should_disable_addhandler()
+	{
+		if ($this->force_disable_addhandler) {
+			return true;
+		}
+		return defined('MATOMO_DISABLE_ADDHANDLER') && MATOMO_DISABLE_ADDHANDLER;
 	}
 
 	/**

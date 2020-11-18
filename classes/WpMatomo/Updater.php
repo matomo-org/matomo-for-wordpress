@@ -168,7 +168,7 @@ class Updater {
 			@file_put_contents( $config_dir . '/index.htm', '//hello' );
 		}
 
-		if (\WpMatomo::should_disable_addhandler()) {
+		if ($this->settings->should_disable_addhandler()) {
 			wp_schedule_single_event( time() + 10, ScheduledTasks::EVENT_DISABLE_ADDHANDLER );
 		}
 	}
