@@ -42,10 +42,10 @@ class WpAssetManager extends AssetManager
 		$jsFiles[] = "jquery/jquery.js";
 		$jsFiles[] = "node_modules/materialize-css/dist/js/materialize.min.js";
 		$jsFiles[] = 'jquery/ui/widget.min.js';
-		$jsFiles[] = 'jquery/ui/mouse.min.js';
 		$jsFiles[] = 'jquery/ui/selectable.min.js';
 		$jsFiles[] = 'jquery/ui/autocomplete.min.js';
 		$jsFiles[] = 'jquery/ui/core.min.js';
+		$jsFiles[] = 'jquery/ui/mouse.min.js';
 		$jsFiles[] = 'jquery/ui/position.min.js';
 		$jsFiles[] = 'jquery/ui/resizable.min.js';
 		$jsFiles[] = 'jquery/ui/datepicker.min.js';
