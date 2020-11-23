@@ -62,7 +62,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		$this->assertFalse($this->settings->should_disable_addhandler());
 		$this->settings->force_disable_addhandler = true;
 		$this->tasks->disable_add_handler();
-		$filename_to_check = dirname(MATOMO_ANALYTICS_FILE, '/.htaccess');
+		$filename_to_check = dirname(MATOMO_ANALYTICS_FILE) . '/.htaccess';
 		$this->assertContains('# AddHandler', file_get_contents($filename_to_check));
 		$this->tasks->disable_add_handler($undo = true);
 		$this->assertNotContains('# AddHandler', file_get_contents($filename_to_check));

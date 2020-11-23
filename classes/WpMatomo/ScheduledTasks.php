@@ -160,7 +160,7 @@ class ScheduledTasks {
 							$search = '# AddHandler';
 							$replace = 'AddHandler';
 						}
-						if (strpos($content, $search) !== false && strpos($content,$replace) === false) {
+						if (strpos($content, $search) !== false && ($forceUndo || strpos($content,$replace) === false)) {
 							if (is_writeable($file)) {
 								$content = str_replace($search, $replace, $content);
 								@file_put_contents($file, $content);
