@@ -9,6 +9,7 @@
 
 namespace WpMatomo;
 
+use Piwik\Config;
 use Piwik\CronArchive;
 use Piwik\Filesystem;
 use Piwik\Option;
@@ -29,6 +30,7 @@ class ScheduledTasks {
 	const EVENT_ARCHIVE = 'matomo_scheduled_archive';
 	const EVENT_GEOIP   = 'matomo_scheduled_geoipdb';
 	const EVENT_UPDATE  = 'matomo_update_core';
+	const EVENT_UPDATE_IF_NEEDED = 'matomo_updateifneeded_core';
 
 	const KEY_BEFORE_CRON = 'before-cron-';
 	const KEY_AFTER_CRON  = 'after-cron-';
@@ -116,6 +118,11 @@ class ScheduledTasks {
 
 	public function get_all_events() {
 		$events = array(
+			self::EVENT_UPDATE_IF_NEEDED    => array(
+				'name'     => 'Update Matomo DB if needed',
+				'interval' => 'hourly',
+				'method'   => 'update_if_needed',
+			),
 			self::EVENT_SYNC    => array(
 				'name'     => 'Sync users & sites',
 				'interval' => 'daily',
@@ -174,6 +181,34 @@ class ScheduledTasks {
 				$this->logger->log_exception( 'disable_addhandler', $e );
 				throw $e;
 			}
+		}
+	}
+
+	public function update_if_needed() {
+		if ( is_multisite() && function_exists( 'get_sites' ) ) {
+			foreach ( get_sites() as $site ) {
+				/** @var \WP_Site $site */
+				switch_to_blog( $site->blog_id );
+				// this way we make sure all blogs get updated eventually
+				$this->check_try_update();
+				restore_current_blog();
+			}
+		} else {
+			$this->check_try_update();
+		}
+	}
+
+	private function check_try_update()
+	{
+		try {
+			$installer = new Installer( $this->settings );
+			if ( $installer->looks_like_it_is_installed() ) {
+				$updater = new Updater( $this->settings );
+				$updater->update_if_needed();
+			}
+		} catch ( \Exception $e ) {
+			// we don't want to rethrow exception otherwise some other blogs might never sync
+			$this->logger->log( 'Matomo failed update try: ' . $e->getMessage() );
 		}
 	}
 
