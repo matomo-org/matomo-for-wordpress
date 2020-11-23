@@ -112,29 +112,6 @@ class Updates_4_0_0_b1 extends PiwikUpdates
         $migrations[] = $this->migration->db->changeColumnType('log_conversion', 'url', 'VARCHAR(4096)');
         $migrations[] = $this->migration->db->changeColumn('log_link_visit_action', 'interaction_position', 'pageview_position', 'MEDIUMINT UNSIGNED DEFAULT NULL');
 
-        $customTrackerPluginActive = false;
-        if (in_array('CustomPiwikJs', Config::getInstance()->Plugins['Plugins'])) {
-            $customTrackerPluginActive = true;
-        }
-
-        $migrations[] = $this->migration->plugin->activate('BulkTracking');
-        $migrations[] = $this->migration->plugin->deactivate('CustomPiwikJs');
-        $migrations[] = $this->migration->plugin->uninstall('CustomPiwikJs');
-
-        if ($customTrackerPluginActive) {
-            $migrations[] = $this->migration->plugin->activate('CustomJsTracker');
-        }
-
-        // Prepare all installed tables for utf8mb4 conversions. e.g. make some indexed fields smaller so they don't exceed the maximum key length
-        $allTables = DbHelper::getTablesInstalled();
-
-        foreach ($allTables as $table) {
-            if (preg_match('/archive_/', $table) == 1) {
-                $tableNameUnprefixed = Common::unprefixTable($table);
-                $migrations[] = $this->migration->db->changeColumnType($tableNameUnprefixed, 'name', 'VARCHAR(190)');
-            }
-        }
-
         // Move the site search fields of log_visit out of custom variables into their own fields
         $columnsToAdd['log_link_visit_action']['search_cat'] = 'VARCHAR(200) NULL';
         $columnsToAdd['log_link_visit_action']['search_count'] = 'INTEGER(10) UNSIGNED NULL';
@@ -181,14 +158,6 @@ class Updates_4_0_0_b1 extends PiwikUpdates
             $visitActionTable = Common::prefixTable('log_link_visit_action');
             $migrations[]     = $this->migration->db->sql("UPDATE $visitActionTable SET search_cat = if(custom_var_k4 = '_pk_scat', custom_var_v4, search_cat), search_count = if(custom_var_k5 = '_pk_scount', custom_var_v5, search_count) WHERE custom_var_k4 = '_pk_scat' or custom_var_k5 = '_pk_scount'");
         }
-
-        if ($this->usesGeoIpLegacyLocationProvider()) {
-            // activate GeoIp2 plugin for users still using GeoIp2 Legacy (others might have it disabled on purpose)
-            $migrations[] = $this->migration->plugin->activate('GeoIp2');
-        }
-
-        // remove old options
-        $migrations[] = $this->migration->db->sql('DELETE FROM `' . Common::prefixTable('option') . '` WHERE option_name IN ("geoip.updater_period", "geoip.loc_db_url", "geoip.isp_db_url", "geoip.org_db_url")');
 
         // init seconds_to_... columns
         $logVisitColumns = $tableMetadata->getColumns(Common::prefixTable('log_visit'));
