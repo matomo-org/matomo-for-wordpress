@@ -95,6 +95,7 @@ class Updates_4_0_0_b1 extends PiwikUpdates
             'date2' => 'DATE NOT NULL',
             'period' => 'TINYINT UNSIGNED NOT NULL',
             'ts_invalidated' => 'DATETIME NOT NULL',
+            'ts_started' => 'DATETIME NULL',
             'status' => 'TINYINT(1) UNSIGNED DEFAULT 0',
             'report' => 'VARCHAR(255) NULL',
         ], ['idinvalidation']);
@@ -104,12 +105,6 @@ class Updates_4_0_0_b1 extends PiwikUpdates
         $migrations[] = $this->migration->db->dropColumn('user', 'alias');
         $migrations[] = $this->migration->db->dropColumn('user', 'token_auth');
 
-        $migrations[] = $this->migration->db->changeColumnType('session', 'id', 'VARCHAR(191)');
-        $migrations[] = $this->migration->db->changeColumnType('site_url', 'url', 'VARCHAR(190)');
-        $migrations[] = $this->migration->db->changeColumnType('option', 'option_name', 'VARCHAR(191)');
-
-        $migrations[] = $this->migration->db->changeColumnType('log_action', 'name', 'VARCHAR(4096)');
-        $migrations[] = $this->migration->db->changeColumnType('log_conversion', 'url', 'VARCHAR(4096)');
         $migrations[] = $this->migration->db->changeColumn('log_link_visit_action', 'interaction_position', 'pageview_position', 'MEDIUMINT UNSIGNED DEFAULT NULL');
 
         // Move the site search fields of log_visit out of custom variables into their own fields
@@ -216,6 +211,12 @@ class Updates_4_0_0_b1 extends PiwikUpdates
             $migrations[] = $this->migration->config->set('General', 'datatable_archiving_maximum_rows_subtable_custom_dimensions', $configSubTableLimit);
         }
 
+	    $migrations[] = $this->migration->db->changeColumnType('session', 'id', 'VARCHAR(191)');
+	    $migrations[] = $this->migration->db->changeColumnType('site_url', 'url', 'VARCHAR(190)');
+	    $migrations[] = $this->migration->db->changeColumnType('option', 'option_name', 'VARCHAR(191)');
+
+	    $migrations[] = $this->migration->db->changeColumnType('log_action', 'name', 'VARCHAR(4096)');
+	    $migrations[] = $this->migration->db->changeColumnType('log_conversion', 'url', 'VARCHAR(4096)');
         return $migrations;
     }
 
