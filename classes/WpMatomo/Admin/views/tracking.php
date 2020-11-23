@@ -64,6 +64,7 @@ if ( $was_updated ) {
 				echo '<input type="checkbox" ' . ( isset( $selected_container_ids [ $container_id ] ) && $selected_container_ids [ $container_id ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[tagmanger_container_ids][' . $container_id . ']" /> ID:' . esc_html( $container_id ) . ' Name: ' . esc_html( $container_name ) . ' &nbsp; <br />';
 			}
 			echo '<br /><br /><a href="' . menu_page_url( \WpMatomo\Admin\Menu::SLUG_TAGMANAGER, false ) . '" rel="noreferrer noopener" target="_blank">Edit containers <span class="dashicons-before dashicons-external"></span></a>';
+			echo '<br /><span class="dashicons dashicons-info-outline"></span> For Matomo to track you will need to add a Matomo Tag to the container. It otherwise won\'t track automatically.';
 			echo '</td></tr>';
 		}
 

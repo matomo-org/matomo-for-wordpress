@@ -53,6 +53,8 @@ class SystemReport {
 	private $not_compatible_plugins = array(
 		'background-manager', // Uses an old version of Twig and plugin is no longer maintained.
 		'data-tables-generator-by-supsystic', // uses an old version of twig causing some styles to go funny in the reporting and admin
+		'tweet-old-post-pro', // uses a newer version of monolog
+		'secupress', // see #369 depending on setting might have issues
 	);
 
 	private $valid_tabs = array( 'troubleshooting' );
@@ -836,7 +838,9 @@ class SystemReport {
 		);
 		$consts = array('WP_DEBUG', 'WP_DEBUG_DISPLAY', 'WP_DEBUG_LOG', 'DISABLE_WP_CRON', 'FORCE_SSL_ADMIN', 'WP_CACHE',
 						'CONCATENATE_SCRIPTS', 'COMPRESS_SCRIPTS', 'COMPRESS_CSS', 'ENFORCE_GZIP', 'WP_LOCAL_DEV',
-						'DIEONDBERROR', 'WPLANG', 'ALTERNATE_WP_CRON', 'WP_CRON_LOCK_TIMEOUT', 'WP_DISABLE_FATAL_ERROR_HANDLER');
+						'DIEONDBERROR', 'WPLANG', 'ALTERNATE_WP_CRON', 'WP_CRON_LOCK_TIMEOUT', 'WP_DISABLE_FATAL_ERROR_HANDLER',
+			'MATOMO_SUPPORT_ASYNC_ARCHIVING', 'MATOMO_TRIGGER_BROWSER_ARCHIVING', 'MATOMO_ENABLE_TAG_MANAGER', 'MATOMO_SUPPRESS_DB_ERRORS', 'MATOMO_ENABLE_AUTO_UPGRADE',
+			'MATOMO_DEBUG', 'MATOMO_SAFE_MODE', 'MATOMO_GLOBAL_UPLOAD_DIR', 'MATOMO_LOGIN_REDIRECT');
 		foreach ($consts as $const) {
 			$rows[] = array(
 				'name'  => $const,
@@ -973,7 +977,14 @@ class SystemReport {
 			'value'   => defined( 'WP_MAX_MEMORY_LIMIT' ) ? WP_MAX_MEMORY_LIMIT : '',
 			'comment' => '',
 		);
-
+		
+		if (function_exists('timezone_version_get')) {
+			$rows[] = array(
+				'name'  => 'Timezone version',
+				'value' => timezone_version_get(),
+			);
+		}
+		
 		$rows[] = array(
 			'name'  => 'Time',
 			'value' => time(),
@@ -1334,10 +1345,19 @@ class SystemReport {
 
 			$used_not_compatible = array_intersect( $active_plugins, $this->not_compatible_plugins );
 			if ( ! empty( $used_not_compatible ) ) {
+
+				$additional_comment = '';
+				if (in_array('tweet-old-post-pro', $used_not_compatible)) {
+					$additional_comment .= '<br><br>A workaround for Revive Old Posts Pro may be to add the following line to your "wp-config.php". <br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
+				}
+				if (in_array('secupress', $used_not_compatible)) {
+					$additional_comment .= '<br><br>If reports aren\'t being generated then you may need to disable the feature "Firewall -> Block Bad Request Methods" in SecuPress (if it is enabled) or add the following line to your "wp-config.php": <br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
+				}
+
 				$rows[] = array(
 					'name'     => __( 'Not compatible plugins', 'matomo' ),
 					'value'    => count( $used_not_compatible ),
-					'comment'  => implode( ', ', $used_not_compatible ) . '<br><br> Matomo may work fine when using these plugins but there may be some issues. For more information see<br>https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/',
+					'comment'  => implode( ', ', $used_not_compatible ) . '<br><br> Matomo may work fine when using these plugins but there may be some issues. For more information see<br>https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/ ' . $additional_comment,
 					'is_warning' => true,
 				);
 			}

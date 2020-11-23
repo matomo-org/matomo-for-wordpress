@@ -85,7 +85,7 @@ class MemberPress extends Base {
 		if ( isset( $_GET['membership'] )
 			 && isset( $_GET['trans_num'] )
 			 && class_exists( '\MeprTransaction' ) ) {
-			$txn = \MeprTransaction::get_one_by_trans_num( (int) $_GET['trans_num'] );
+			$txn = \MeprTransaction::get_one_by_trans_num($_GET['trans_num'] );
 			if ( isset( $txn->id ) && $txn->id > 0 ) {
 				if ( $this->has_order_been_tracked_already( $txn->id ) ) {
 					return;

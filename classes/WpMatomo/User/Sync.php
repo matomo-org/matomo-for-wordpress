@@ -23,6 +23,7 @@ use Piwik\Plugins\UsersManager;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Logger;
+use WpMatomo\ScheduledTasks;
 use WpMatomo\Site;
 use WpMatomo\User;
 
@@ -52,7 +53,19 @@ class Sync {
 		add_action( 'add_user_to_blog', array( $this, 'sync_current_users' ), $prio = 10, $args = 0 );
 		add_action( 'remove_user_from_blog', array( $this, 'sync_current_users' ), $prio = 10, $args = 0 );
 		add_action( 'user_register', array( $this, 'sync_current_users' ), $prio = 10, $args = 0 );
-		add_action( 'profile_update', array( $this, 'sync_current_users' ), $prio = 10, $args = 0 );
+		add_action( 'profile_update', array( $this, 'sync_maybe_background' ), $prio = 10, $args = 0 );
+	}
+
+	public function sync_maybe_background()
+	{
+		global $pagenow;
+		if ( is_admin() && $pagenow == 'users.php' ) {
+			// eg for profile update we don't want to sync directly see #365 as it could cause issues with other plugins
+			// if they eg alter `get_users` option
+			wp_schedule_single_event(time() + 5, ScheduledTasks::EVENT_SYNC);
+		} else {
+			$this->sync_current_users();
+		}
 	}
 
 	public function sync_all() {
@@ -83,6 +96,25 @@ class Sync {
     {
         /** @var \WP_User[] $users */
         $users = get_users( $options );
+
+	    $current_user = wp_get_current_user();
+	    if (!empty($current_user) && !empty($current_user->user_login)) {
+		    // refs https://github.com/matomo-org/wp-matomo/issues/365
+		    // some other plugins may under circumstances overwrite the get_users query and not return all users
+		    // as a result we would delete some users in the matomo users table. this way we make sure at least the current
+		    // user will be added and not deleted even if the list of users is not complete
+		    $found = false;
+		    foreach ($users as $user) {
+			    if ($user->user_login === $current_user->user_login) {
+				    $found = true;
+				    break;
+			    }
+		    }
+		    if (!$found) {
+			    $users[] = $current_user;
+		    }
+	    }
+
         if (is_multisite()) {
             $super_admins = get_super_admins();
             if (!empty($super_admins)) {
@@ -140,9 +172,6 @@ class Sync {
 			// to prevent UI preventing randomly saying no access between deleting and adding access
 
 			$mapped_matomo_login = User::get_matomo_user_login( $user_id );
-			if ( $mapped_matomo_login ) {
-				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
-			}
 
 			$matomo_login = null;
 
@@ -152,27 +181,33 @@ class Sync {
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_ADMIN ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
+				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
 				$user_model->addUserAccess( $matomo_login, Admin::ID, array( $idsite ) );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_WRITE ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
+				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
 				$user_model->addUserAccess( $matomo_login, Write::ID, array( $idsite ) );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_VIEW ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
+				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
 				$user_model->addUserAccess( $matomo_login, View::ID, array( $idsite ) );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
+			} elseif ($mapped_matomo_login) {
+				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
 			}
 
 			if ( $matomo_login ) {
 				$locale = get_user_locale( $user->ID );
 				$locale_dash = Common::mb_strtolower(str_replace('_', '-', $locale));
+				$parts = [];
 				if ($locale && in_array($locale_dash, ['zh-cn', 'zh-tw', 'pt-br', 'es-ar'], true)) {
 					$parts = [$locale_dash];
-				} else {
+				} elseif (!empty($locale) && is_string($locale)) {
 					$parts  = explode( '_', $locale );
 				}
 
@@ -222,6 +257,8 @@ class Sync {
 			if ( ! in_array( $all_user['login'], $logins_with_some_view_access, true )
 				 && ! empty( $all_user['login'] ) ) {
 				$user_model->deleteUserOnly( $all_user['login'] );
+				$user_model->deleteUserOptions( $all_user['login'] );
+				$user_model->deleteUserAccess( $all_user['login'] );
 			}
 		}
 	}

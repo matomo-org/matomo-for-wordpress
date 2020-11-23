@@ -10,6 +10,7 @@
 namespace WpMatomo;
 
 use Piwik\API\Request;
+use Piwik\Common;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -197,6 +198,18 @@ class API {
 		unset( $_POST['token_auth'] );
 
 		Bootstrap::do_bootstrap();
+
+		// refs https://github.com/matomo-org/wp-matomo/issues/370 ensuring segment will be used from default request when
+		// creating new request object and not the encoded segment
+		if (isset($params['segment'])) {
+			if (isset($_GET['segment']) || isset($_POST['segment'])) {
+				unset($params['segment']); // matomo will read the segment from default request
+			} elseif (!empty($params['segment']) && is_string($params['segment'])) {
+				// manually unsanitize this value
+				$params['segment'] = Common::unsanitizeInputValue($params['segment']);
+			}
+		}
+
 
 		try {
 			$result = Request::processRequest( $api_method, $params );

@@ -4,6 +4,12 @@
 * Update Matomo core to 4.0
 * Custom Variables is now no longer included but it is available as a marketplace plugin.
 
+= 1.3.2 =
+* Fix an issue where some versions of MemberPress were not tracked
+* Fix WooCommerce cart coupons might not be applied when using WooCommerce Subscriptions
+* More error logging for WooCommerce tracking 
+* Fix segment in WP API had to be double encoded to work
+
 = 1.3.1 =
 * Log less messages by default
 * Add possibility to disable logging and enable logging of all messages through wp-config.php
