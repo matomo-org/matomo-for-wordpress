@@ -340,7 +340,7 @@
         "ParameterMustIntegerBetween": "Parameter %1$s must be an integer value between %2$s and %3$s.",
         "Password": "Password",
         "Period": "Period",
-        "Piechart": "Piechart",
+        "Piechart": "Pie chart",
         "Print": "Print",
         "Profiles": "Profiles",
         "MatomoIsACollaborativeProjectYouCanContributeAndDonateNextRelease": "%1$sMatomo%2$s, formerly known as Piwik, is a collaborative project brought to you by the %7$sMatomo team%8$s members as well as many other contributors around the globe. <br\/> If you're a fan of Matomo, you can help: find out %3$sHow to participate in Matomo%4$s, or %5$sdonate now%6$s to help fund the next great Matomo release!",
@@ -1371,6 +1371,8 @@
         "ConfigFileIntroduction": "Here you can view the Matomo configuration. If you are running Matomo in a load balanced environment, the page might be different depending on from which server this page is loaded. Rows with a different background color are changed config values that are specified for example in the %1$s file.",
         "HideUnchanged": "If you want to see only changed values you can %1$shide all unchanged values%2$s.",
         "Sections": "Sections",
+        "BrowserAndAutoArchivingEnabledLabel": "Browser and Auto-archiving enabled",
+        "BrowserAndAutoArchivingEnabledComment": "It looks like both browser and auto archiving are enabled. Auto archiving last started %3$s ago. If %1$sauto archiving%2$s is enabled, you should disable browser archiving in \"General Settings\".",
         "DatabaseReaderConnection": "Database Reader Connection",
         "DatabaseUtf8Requirement": "This is required to be able to store 4-byte UTF8 characters. Unless utf8mb4 is available special characters, such as emojis, less common characters of asian languages, various historic scripts or mathematical symbols will be replaced with %1$s. You can read more details about this topic in %2$sthis FAQ%3$s.",
         "DatabaseUtf8mb4CharsetRecommended": "Your database doesn't support utf8mb4 charset yet.",
@@ -1516,6 +1518,7 @@
         "InvalidGeoIPUpdatePeriod": "Invalid period for the GeoIP updater: %1$s. Valid values are %2$s.",
         "IPurchasedGeoIPDBs": "I purchased more accurate databases from %3$sdbip%4$s or %1$sMaxMind%2$s and want to setup automatic updates.",
         "ISPDatabase": "ISP Database",
+        "ISPRequiresProviderPlugin": "Tracking Internet service providers requires the Provider plugin to be installed and activated.",
         "IWantToDownloadFreeGeoIP": "I want to download the free DBIP database...",
         "PluginDescription": "Provides DBIP \/ GeoIP2 location providers.",
         "LocationDatabase": "Location Database",
@@ -4568,9 +4571,7 @@
         "ToGeolocateOldVisits": "To get location data for your old visits, use the script described %1$shere%2$s.",
         "WidgetLocation": "Visitor Location",
         "GeoIpDbIpAccuracyNote": "Note: the DBIP databases are free and can be downloaded automatically, but geolocation results (specifically city results) are not as accurate as MaxMind's. MaxMind, however, requires that you create an account even for the free database. If you want to use MaxMind's geolocation database, you can start the process %1$shere%2$s",
-        "MaxMindLinkExplanation": "If you are using MaxMind's geolocation databases and you do not already know how to generate your download URL, %1$sclick here to learn how%2$s.",
-        "InternetServiceProvider": "Internet Service Provider",
-        "InternetServiceProviderPlural": "Internet Service Providers"
+        "MaxMindLinkExplanation": "If you are using MaxMind's geolocation databases and you do not already know how to generate your download URL, %1$sclick here to learn how%2$s."
     },
     "UserCountryMap": {
         "PluginDescription": "This plugin provides the widgets Visitor Map and Real-time Map. Note: Requires the UserCountry plugin enabled.",

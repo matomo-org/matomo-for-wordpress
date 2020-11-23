@@ -120,6 +120,7 @@ return array(
 				$class_name = get_class($check);
 				if ($class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\ForceSSLCheck'
 					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\LoadDataInfileCheck'
+					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\CronArchivingCheck'
 					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\FileIntegrityCheck') {
 					$checks[$index] = null;
 				}

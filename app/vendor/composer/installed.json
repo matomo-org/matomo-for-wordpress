@@ -57,6 +57,11 @@
                 "ssl",
                 "tls"
             ],
+            "support": {
+                "irc": "irc://irc.freenode.org/composer",
+                "issues": "https://github.com/composer/ca-bundle/issues",
+                "source": "https://github.com/composer/ca-bundle/tree/1.2.8"
+            },
             "funding": [
                 {
                     "url": "https://packagist.com",
@@ -136,6 +141,11 @@
                 "validation",
                 "versioning"
             ],
+            "support": {
+                "irc": "irc://irc.freenode.org/composer",
+                "issues": "https://github.com/composer/semver/issues",
+                "source": "https://github.com/composer/semver/tree/master"
+            },
             "install-path": "./semver"
         },
         {
@@ -197,6 +207,10 @@
                 "picture",
                 "sparkline"
             ],
+            "support": {
+                "issues": "https://github.com/davaxi/Sparkline/issues",
+                "source": "https://github.com/davaxi/Sparkline/releases"
+            },
             "install-path": "../davaxi/sparkline"
         },
         {
@@ -282,6 +296,24 @@
                 "redis",
                 "xcache"
             ],
+            "support": {
+                "issues": "https://github.com/doctrine/cache/issues",
+                "source": "https://github.com/doctrine/cache/tree/1.10.x"
+            },
+            "funding": [
+                {
+                    "url": "https://www.doctrine-project.org/sponsorship.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/phpdoctrine",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fcache",
+                    "type": "tidelift"
+                }
+            ],
             "install-path": "../doctrine/cache"
         },
         {
@@ -338,6 +370,10 @@
                 "geolocation",
                 "maxmind"
             ],
+            "support": {
+                "issues": "https://github.com/maxmind/GeoIP2-php/issues",
+                "source": "https://github.com/maxmind/GeoIP2-php/tree/v2.11.0"
+            },
             "install-path": "../geoip2/geoip2"
         },
         {
@@ -425,6 +461,10 @@
                 "file",
                 "redis"
             ],
+            "support": {
+                "issues": "https://github.com/matomo-org/component-cache/issues",
+                "source": "https://github.com/matomo-org/component-cache/tree/master"
+            },
             "install-path": "../matomo/cache"
         },
         {
@@ -464,21 +504,25 @@
             "license": [
                 "LGPL-3.0"
             ],
+            "support": {
+                "issues": "https://github.com/matomo-org/component-decompress/issues",
+                "source": "https://github.com/matomo-org/component-decompress/tree/master"
+            },
             "install-path": "../matomo/decompress"
         },
         {
             "name": "matomo/device-detector",
-            "version": "4.0.0",
-            "version_normalized": "4.0.0.0",
+            "version": "4.0.1",
+            "version_normalized": "4.0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matomo-org/device-detector.git",
-                "reference": "7ced8fa471d4d136e31e37c8ae49af3ea4567b5f"
+                "reference": "3799f71f4211346158a1e96f3b0bef615c873923"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/7ced8fa471d4d136e31e37c8ae49af3ea4567b5f",
-                "reference": "7ced8fa471d4d136e31e37c8ae49af3ea4567b5f",
+                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/3799f71f4211346158a1e96f3b0bef615c873923",
+                "reference": "3799f71f4211346158a1e96f3b0bef615c873923",
                 "shasum": ""
             },
             "require": {
@@ -486,7 +530,7 @@
                 "php": ">=7.2"
             },
             "replace": {
-                "piwik/device-detector": "*"
+                "piwik/device-detector": "self.version"
             },
             "require-dev": {
                 "matthiasmullie/scrapbook": "@stable",
@@ -501,7 +545,7 @@
                 "doctrine/cache": "Can directly be used for caching purpose",
                 "ext-yaml": "Necessary for using the Pecl YAML parser"
             },
-            "time": "2020-10-30T14:37:50+00:00",
+            "time": "2020-11-12T17:19:41+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -530,6 +574,12 @@
                 "parser",
                 "useragent"
             ],
+            "support": {
+                "forum": "http://forum.matomo.org/",
+                "issues": "https://github.com/matomo-org/device-detector/issues",
+                "source": "https://github.com/matomo-org/piwik",
+                "wiki": "https://dev.matomo.org/"
+            },
             "install-path": "../matomo/device-detector"
         },
         {
@@ -566,21 +616,25 @@
             "license": [
                 "LGPL-3.0"
             ],
+            "support": {
+                "issues": "https://github.com/matomo-org/component-ini/issues",
+                "source": "https://github.com/matomo-org/component-ini/tree/master"
+            },
             "install-path": "../matomo/ini"
         },
         {
             "name": "matomo/matomo-php-tracker",
-            "version": "dev-4.x-dev",
-            "version_normalized": "dev-4.x-dev",
+            "version": "3.0.0",
+            "version_normalized": "3.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matomo-org/matomo-php-tracker.git",
-                "reference": "a7fd79ddc54be6bb5abcc69d43836302697c71ea"
+                "reference": "31e2b0bdf479c6fc00758228d2c6d7c85c1863a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matomo-org/matomo-php-tracker/zipball/a7fd79ddc54be6bb5abcc69d43836302697c71ea",
-                "reference": "a7fd79ddc54be6bb5abcc69d43836302697c71ea",
+                "url": "https://api.github.com/repos/matomo-org/matomo-php-tracker/zipball/31e2b0bdf479c6fc00758228d2c6d7c85c1863a0",
+                "reference": "31e2b0bdf479c6fc00758228d2c6d7c85c1863a0",
                 "shasum": ""
             },
             "require": {
@@ -593,9 +647,9 @@
             "suggest": {
                 "ext-curl": "Using this extension to issue the HTTPS request to Matomo"
             },
-            "time": "2020-09-07T04:45:54+00:00",
+            "time": "2020-11-21T05:20:05+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "classmap": [
                     "."
@@ -620,6 +674,11 @@
                 "piwik",
                 "tracker"
             ],
+            "support": {
+                "forum": "https://forum.matomo.org/",
+                "issues": "https://github.com/matomo-org/matomo-php-tracker/issues",
+                "source": "https://github.com/matomo-org/matomo-php-tracker"
+            },
             "install-path": "../matomo/matomo-php-tracker"
         },
         {
@@ -655,6 +714,10 @@
             "license": [
                 "LGPL-3.0"
             ],
+            "support": {
+                "issues": "https://github.com/matomo-org/component-network/issues",
+                "source": "https://github.com/matomo-org/component-network/tree/2.0.1"
+            },
             "install-path": "../matomo/network"
         },
         {
@@ -684,6 +747,10 @@
                 "CC0-1.0"
             ],
             "description": "Community-contributed list of referrer spammers",
+            "support": {
+                "issues": "https://github.com/matomo-org/referrer-spam-list/issues",
+                "source": "https://github.com/matomo-org/referrer-spam-list/tree/4.0.0"
+            },
             "install-path": "../matomo/referrer-spam-list"
         },
         {
@@ -712,6 +779,10 @@
                 "CC0-1.0"
             ],
             "description": "Search engine and social network definitions used by Matomo (formerly Piwik)",
+            "support": {
+                "issues": "https://github.com/matomo-org/searchengine-and-social-list/issues",
+                "source": "https://github.com/matomo-org/searchengine-and-social-list/tree/master"
+            },
             "install-path": "../matomo/searchengine-and-social-list"
         },
         {
@@ -775,21 +846,25 @@
                 "geolocation",
                 "maxmind"
             ],
+            "support": {
+                "issues": "https://github.com/maxmind/MaxMind-DB-Reader-php/issues",
+                "source": "https://github.com/maxmind/MaxMind-DB-Reader-php/tree/v1.8.0"
+            },
             "install-path": "../maxmind-db/reader"
         },
         {
             "name": "maxmind/web-service-common",
-            "version": "v0.8.0",
-            "version_normalized": "0.8.0.0",
+            "version": "v0.8.1",
+            "version_normalized": "0.8.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/web-service-common-php.git",
-                "reference": "ba67d9532cfaf499bd71774b8170d05df4f75fb7"
+                "reference": "32f274051c543fc865e5a84d3a2c703913641ea8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/web-service-common-php/zipball/ba67d9532cfaf499bd71774b8170d05df4f75fb7",
-                "reference": "ba67d9532cfaf499bd71774b8170d05df4f75fb7",
+                "url": "https://api.github.com/repos/maxmind/web-service-common-php/zipball/32f274051c543fc865e5a84d3a2c703913641ea8",
+                "reference": "32f274051c543fc865e5a84d3a2c703913641ea8",
                 "shasum": ""
             },
             "require": {
@@ -803,7 +878,7 @@
                 "phpunit/phpunit": "^8.0 || ^9.0",
                 "squizlabs/php_codesniffer": "3.*"
             },
-            "time": "2020-10-01T15:28:36+00:00",
+            "time": "2020-11-02T17:00:53+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -824,6 +899,10 @@
             ],
             "description": "Internal MaxMind Web Service API",
             "homepage": "https://github.com/maxmind/web-service-common-php",
+            "support": {
+                "issues": "https://github.com/maxmind/web-service-common-php/issues",
+                "source": "https://github.com/maxmind/web-service-common-php/tree/v0.8.1"
+            },
             "install-path": "../maxmind/web-service-common"
         },
         {
@@ -904,6 +983,20 @@
                 "logging",
                 "psr-3"
             ],
+            "support": {
+                "issues": "https://github.com/Seldaek/monolog/issues",
+                "source": "https://github.com/Seldaek/monolog/tree/1.25.5"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Seldaek",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/monolog/monolog",
+                    "type": "tidelift"
+                }
+            ],
             "install-path": "../monolog/monolog"
         },
         {
@@ -961,17 +1054,17 @@
         },
         {
             "name": "opis/closure",
-            "version": "3.6.0",
-            "version_normalized": "3.6.0.0",
+            "version": "3.6.1",
+            "version_normalized": "3.6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opis/closure.git",
-                "reference": "c547f8262a5fa9ff507bd06cc394067b83a75085"
+                "reference": "943b5d70cc5ae7483f6aff6ff43d7e34592ca0f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opis/closure/zipball/c547f8262a5fa9ff507bd06cc394067b83a75085",
-                "reference": "c547f8262a5fa9ff507bd06cc394067b83a75085",
+                "url": "https://api.github.com/repos/opis/closure/zipball/943b5d70cc5ae7483f6aff6ff43d7e34592ca0f5",
+                "reference": "943b5d70cc5ae7483f6aff6ff43d7e34592ca0f5",
                 "shasum": ""
             },
             "require": {
@@ -981,7 +1074,7 @@
                 "jeremeamia/superclosure": "^2.0",
                 "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0"
             },
-            "time": "2020-10-11T21:42:15+00:00",
+            "time": "2020-11-07T02:01:34+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1021,6 +1114,10 @@
                 "serialization",
                 "serialize"
             ],
+            "support": {
+                "issues": "https://github.com/opis/closure/issues",
+                "source": "https://github.com/opis/closure/tree/3.6.1"
+            },
             "install-path": "../opis/closure"
         },
         {
@@ -1090,6 +1187,10 @@
                 "archive",
                 "tar"
             ],
+            "support": {
+                "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=Archive_Tar",
+                "source": "https://github.com/pear/Archive_Tar"
+            },
             "install-path": "../pear/archive_tar"
         },
         {
@@ -1140,6 +1241,10 @@
                 }
             ],
             "description": "More info available on: http://pear.php.net/package/Console_Getopt",
+            "support": {
+                "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=Console_Getopt",
+                "source": "https://github.com/pear/Console_Getopt"
+            },
             "install-path": "../pear/console_getopt"
         },
         {
@@ -1187,6 +1292,10 @@
                 }
             ],
             "description": "Minimal set of PEAR core files to be used as composer dependency",
+            "support": {
+                "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=PEAR",
+                "source": "https://github.com/pear/pear-core-minimal"
+            },
             "install-path": "../pear/pear-core-minimal"
         },
         {
@@ -1245,6 +1354,10 @@
             "keywords": [
                 "exception"
             ],
+            "support": {
+                "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=PEAR_Exception",
+                "source": "https://github.com/pear/PEAR_Exception"
+            },
             "install-path": "../pear/pear_exception"
         },
         {
@@ -1291,6 +1404,10 @@
                 "invoke",
                 "invoker"
             ],
+            "support": {
+                "issues": "https://github.com/PHP-DI/Invoker/issues",
+                "source": "https://github.com/PHP-DI/Invoker/tree/master"
+            },
             "install-path": "../php-di/invoker"
         },
         {
@@ -1356,6 +1473,20 @@
                 "ioc",
                 "psr11"
             ],
+            "support": {
+                "issues": "https://github.com/PHP-DI/PHP-DI/issues",
+                "source": "https://github.com/PHP-DI/PHP-DI/tree/6.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/mnapoli",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/php-di/php-di",
+                    "type": "tidelift"
+                }
+            ],
             "install-path": "../php-di/php-di"
         },
         {
@@ -1397,6 +1528,10 @@
                 "phpdoc",
                 "reflection"
             ],
+            "support": {
+                "issues": "https://github.com/PHP-DI/PhpDocReader/issues",
+                "source": "https://github.com/PHP-DI/PhpDocReader/tree/2.2.1"
+            },
             "install-path": "../php-di/phpdoc-reader"
         },
         {
@@ -1463,6 +1598,10 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "support": {
+                "issues": "https://github.com/PHPMailer/PHPMailer/issues",
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.1.8"
+            },
             "funding": [
                 {
                     "url": "https://github.com/synchro",
@@ -1521,6 +1660,10 @@
                 "container-interop",
                 "psr"
             ],
+            "support": {
+                "issues": "https://github.com/php-fig/container/issues",
+                "source": "https://github.com/php-fig/container/tree/master"
+            },
             "install-path": "../psr/container"
         },
         {
@@ -1571,6 +1714,9 @@
                 "psr",
                 "psr-3"
             ],
+            "support": {
+                "source": "https://github.com/php-fig/log/tree/1.1.3"
+            },
             "install-path": "../psr/log"
         },
         {
@@ -1632,6 +1778,9 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/console/tree/v2.6.11"
+            },
             "install-path": "../symfony/console/Symfony/Component/Console"
         },
         {
@@ -1694,6 +1843,9 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/event-dispatcher/tree/v2.6.11"
+            },
             "install-path": "../symfony/event-dispatcher/Symfony/Component/EventDispatcher"
         },
         {
@@ -1756,6 +1908,9 @@
             ],
             "description": "Symfony Monolog Bridge",
             "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/monolog-bridge/tree/v2.6.11"
+            },
             "install-path": "../symfony/monolog-bridge/Symfony/Bridge/Monolog"
         },
         {
@@ -1821,6 +1976,9 @@
                 "polyfill",
                 "portable"
             ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.20.0"
+            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -1901,6 +2059,9 @@
                 "portable",
                 "shim"
             ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.20.0"
+            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -1982,6 +2143,10 @@
                 "pchart",
                 "statistics"
             ],
+            "support": {
+                "issues": "https://github.com/szymach/c-pchart/issues",
+                "source": "https://github.com/szymach/c-pchart/tree/2.0"
+            },
             "install-path": "../szymach/c-pchart"
         },
         {
@@ -2047,21 +2212,25 @@
                 "pdf417",
                 "qrcode"
             ],
+            "support": {
+                "issues": "https://github.com/tecnickcom/TCPDF/issues",
+                "source": "https://github.com/tecnickcom/TCPDF/tree/6.3.5"
+            },
             "install-path": "../tecnickcom/tcpdf"
         },
         {
             "name": "tedivm/jshrink",
-            "version": "v1.3.3",
-            "version_normalized": "1.3.3.0",
+            "version": "dev-master",
+            "version_normalized": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tedious/JShrink.git",
-                "reference": "566e0c731ba4e372be2de429ef7d54f4faf4477a"
+                "reference": "aed09eace9d498e18d48a5b62a7e5a97dfc0e55d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tedious/JShrink/zipball/566e0c731ba4e372be2de429ef7d54f4faf4477a",
-                "reference": "566e0c731ba4e372be2de429ef7d54f4faf4477a",
+                "url": "https://api.github.com/repos/tedious/JShrink/zipball/aed09eace9d498e18d48a5b62a7e5a97dfc0e55d",
+                "reference": "aed09eace9d498e18d48a5b62a7e5a97dfc0e55d",
                 "shasum": ""
             },
             "require": {
@@ -2072,9 +2241,10 @@
                 "php-coveralls/php-coveralls": "^1.1.0",
                 "phpunit/phpunit": "^6"
             },
-            "time": "2019-06-28T18:11:46+00:00",
+            "time": "2019-10-07T21:24:34+00:00",
+            "default-branch": true,
             "type": "library",
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "JShrink": "src/"
@@ -2095,6 +2265,16 @@
             "keywords": [
                 "javascript",
                 "minifier"
+            ],
+            "support": {
+                "issues": "https://github.com/tedious/JShrink/issues",
+                "source": "https://github.com/tedious/JShrink/tree/master"
+            },
+            "funding": [
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/tedivm/jshrink",
+                    "type": "tidelift"
+                }
             ],
             "install-path": "../tedivm/jshrink"
         },
@@ -2161,6 +2341,10 @@
             "keywords": [
                 "templating"
             ],
+            "support": {
+                "issues": "https://github.com/twigphp/Twig/issues",
+                "source": "https://github.com/twigphp/Twig/tree/v3.1.1"
+            },
             "funding": [
                 {
                     "url": "https://github.com/fabpot",

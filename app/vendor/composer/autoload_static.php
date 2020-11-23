@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit488929423d80ab110873f608c8cba14b
+class ComposerStaticInitec4983d49b7d3e0140fb029ae0cf6532
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -801,6 +801,7 @@ class ComposerStaticInit488929423d80ab110873f608c8cba14b
         'Piwik\\CronArchive\\Performance\\Logger' => __DIR__ . '/../..' . '/core/CronArchive/Performance/Logger.php',
         'Piwik\\CronArchive\\Performance\\Measurement' => __DIR__ . '/../..' . '/core/CronArchive/Performance/Measurement.php',
         'Piwik\\CronArchive\\QueueConsumer' => __DIR__ . '/../..' . '/core/CronArchive/QueueConsumer.php',
+        'Piwik\\CronArchive\\ReArchiveList' => __DIR__ . '/../..' . '/core/CronArchive/ReArchiveList.php',
         'Piwik\\CronArchive\\SegmentArchiving' => __DIR__ . '/../..' . '/core/CronArchive/SegmentArchiving.php',
         'Piwik\\CronArchive\\SharedSiteIds' => __DIR__ . '/../..' . '/core/CronArchive/SharedSiteIds.php',
         'Piwik\\CronArchive\\StopArchiverException' => __DIR__ . '/../..' . '/core/CronArchive/StopArchiverException.php',
@@ -3187,11 +3188,11 @@ class ComposerStaticInit488929423d80ab110873f608c8cba14b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit488929423d80ab110873f608c8cba14b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit488929423d80ab110873f608c8cba14b::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit488929423d80ab110873f608c8cba14b::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit488929423d80ab110873f608c8cba14b::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInit488929423d80ab110873f608c8cba14b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitec4983d49b7d3e0140fb029ae0cf6532::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitec4983d49b7d3e0140fb029ae0cf6532::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitec4983d49b7d3e0140fb029ae0cf6532::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInitec4983d49b7d3e0140fb029ae0cf6532::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInitec4983d49b7d3e0140fb029ae0cf6532::$classMap;
 
         }, null, ClassLoader::class);
     }

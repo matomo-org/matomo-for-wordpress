@@ -62,7 +62,7 @@ class DeviceDetector
     /**
      * Current version number of DeviceDetector
      */
-    public const VERSION = '4.0.0';
+    public const VERSION = '4.0.1';
 
     /**
      * Constant used as value for unknown browser / os
@@ -853,7 +853,7 @@ class DeviceDetector
         if (null === $this->device && 'Android' === $osFamily
             && $this->matchUserAgent('Chrome/[\.0-9]*')
         ) {
-            if ($this->matchUserAgent('Chrome/[\.0-9]* Mobile')) {
+            if ($this->matchUserAgent('Chrome/[\.0-9]* (?:Mobile|eliboM)')) {
                 $this->device = AbstractDeviceParser::DEVICE_TYPE_SMARTPHONE;
             } elseif ($this->matchUserAgent('Chrome/[\.0-9]* (?!Mobile)')) {
                 $this->device = AbstractDeviceParser::DEVICE_TYPE_TABLET;

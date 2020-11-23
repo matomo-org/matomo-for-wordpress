@@ -14,12 +14,12 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '4.0.0-rc2',
-    'version' => '4.0.0.0-RC2',
+    'pretty_version' => '4.0.0',
+    'version' => '4.0.0.0',
     'aliases' => 
     array (
     ),
-    'reference' => '744805959c832e77cd12e1b8ee75e09c0ce1d4a7',
+    'reference' => 'fb7c6531c7e95dccea62388abfb275243b894366',
     'name' => 'matomo/matomo',
   ),
   'versions' => 
@@ -98,12 +98,12 @@ private static $installed = array (
     ),
     'matomo/device-detector' => 
     array (
-      'pretty_version' => '4.0.0',
-      'version' => '4.0.0.0',
+      'pretty_version' => '4.0.1',
+      'version' => '4.0.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '7ced8fa471d4d136e31e37c8ae49af3ea4567b5f',
+      'reference' => '3799f71f4211346158a1e96f3b0bef615c873923',
     ),
     'matomo/ini' => 
     array (
@@ -116,21 +116,21 @@ private static $installed = array (
     ),
     'matomo/matomo' => 
     array (
-      'pretty_version' => '4.0.0-rc2',
-      'version' => '4.0.0.0-RC2',
+      'pretty_version' => '4.0.0',
+      'version' => '4.0.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '744805959c832e77cd12e1b8ee75e09c0ce1d4a7',
+      'reference' => 'fb7c6531c7e95dccea62388abfb275243b894366',
     ),
     'matomo/matomo-php-tracker' => 
     array (
-      'pretty_version' => 'dev-4.x-dev',
-      'version' => 'dev-4.x-dev',
+      'pretty_version' => '3.0.0',
+      'version' => '3.0.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'a7fd79ddc54be6bb5abcc69d43836302697c71ea',
+      'reference' => '31e2b0bdf479c6fc00758228d2c6d7c85c1863a0',
     ),
     'matomo/network' => 
     array (
@@ -177,12 +177,12 @@ private static $installed = array (
     ),
     'maxmind/web-service-common' => 
     array (
-      'pretty_version' => 'v0.8.0',
-      'version' => '0.8.0.0',
+      'pretty_version' => 'v0.8.1',
+      'version' => '0.8.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'ba67d9532cfaf499bd71774b8170d05df4f75fb7',
+      'reference' => '32f274051c543fc865e5a84d3a2c703913641ea8',
     ),
     'monolog/monolog' => 
     array (
@@ -204,12 +204,12 @@ private static $installed = array (
     ),
     'opis/closure' => 
     array (
-      'pretty_version' => '3.6.0',
-      'version' => '3.6.0.0',
+      'pretty_version' => '3.6.1',
+      'version' => '3.6.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c547f8262a5fa9ff507bd06cc394067b83a75085',
+      'reference' => '943b5d70cc5ae7483f6aff6ff43d7e34592ca0f5',
     ),
     'pear/archive_tar' => 
     array (
@@ -287,7 +287,7 @@ private static $installed = array (
     array (
       'replaced' => 
       array (
-        0 => '*',
+        0 => '4.0.1',
       ),
     ),
     'piwik/referrer-spam-blacklist' => 
@@ -450,12 +450,13 @@ private static $installed = array (
     ),
     'tedivm/jshrink' => 
     array (
-      'pretty_version' => 'v1.3.3',
-      'version' => '1.3.3.0',
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
       'aliases' => 
       array (
+        0 => '9999999-dev',
       ),
-      'reference' => '566e0c731ba4e372be2de429ef7d54f4faf4477a',
+      'reference' => 'aed09eace9d498e18d48a5b62a7e5a97dfc0e55d',
     ),
     'twig/twig' => 
     array (

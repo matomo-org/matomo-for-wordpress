@@ -554,6 +554,7 @@ return array(
     'Piwik\\CronArchive\\Performance\\Logger' => $baseDir . '/core/CronArchive/Performance/Logger.php',
     'Piwik\\CronArchive\\Performance\\Measurement' => $baseDir . '/core/CronArchive/Performance/Measurement.php',
     'Piwik\\CronArchive\\QueueConsumer' => $baseDir . '/core/CronArchive/QueueConsumer.php',
+    'Piwik\\CronArchive\\ReArchiveList' => $baseDir . '/core/CronArchive/ReArchiveList.php',
     'Piwik\\CronArchive\\SegmentArchiving' => $baseDir . '/core/CronArchive/SegmentArchiving.php',
     'Piwik\\CronArchive\\SharedSiteIds' => $baseDir . '/core/CronArchive/SharedSiteIds.php',
     'Piwik\\CronArchive\\StopArchiverException' => $baseDir . '/core/CronArchive/StopArchiverException.php',

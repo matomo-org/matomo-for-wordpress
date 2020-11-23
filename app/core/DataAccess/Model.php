@@ -373,7 +373,7 @@ class Model
         $dateEnd = $params->getPeriod()->getDateEnd();
 
         $numericTable = ArchiveTableCreator::getNumericTable($dateStart);
-        $blobTable = ArchiveTableCreator::getBlobTable($dateEnd);
+        $blobTable = ArchiveTableCreator::getBlobTable($dateStart);
 
         $sql = "SELECT idarchive FROM `$numericTable` WHERE idsite = ? AND date1 = ? AND date2 = ? AND period = ? AND name = ? AND ts_archived < ? AND idarchive < ?";
 
@@ -632,7 +632,7 @@ class Model
         $table = Common::prefixTable('archive_invalidations');
 
         // set archive value to in progress if not set already
-        $statement = Db::query("UPDATE `$table` SET `status` = ? WHERE idinvalidation = ? AND status = ?", [
+        $statement = Db::query("UPDATE `$table` SET `status` = ?, ts_started = NOW() WHERE idinvalidation = ? AND status = ?", [
             ArchiveInvalidator::INVALIDATION_STATUS_IN_PROGRESS,
             $invalidation['idinvalidation'],
             ArchiveInvalidator::INVALIDATION_STATUS_QUEUED,
@@ -755,7 +755,7 @@ class Model
         $table = Common::prefixTable('archive_invalidations');
         $sql = "DELETE FROM `$table` WHERE $idSitesClause `name` LIKE ?";
 
-        Db::query($sql, ['done.' . str_replace('_', "\\_", $start) . '%']);
+        Db::query($sql, ['done%.' . str_replace('_', "\\_", $start)]);
     }
 
     public function removeInvalidations($idSite, $plugin, $report)
@@ -763,9 +763,9 @@ class Model
         $idSitesClause = $this->getRemoveInvalidationsIdSitesClause($idSite);
 
         $table = Common::prefixTable('archive_invalidations');
-        $sql = "DELETE FROM `$table` WHERE $idSitesClause `name` = ? AND report = ?";
+        $sql = "DELETE FROM `$table` WHERE $idSitesClause `name` LIKE ? AND report = ?";
 
-        Db::query($sql, ['done.' . $plugin, $report]);
+        Db::query($sql, ['done%.' . str_replace('_', "\\_", $plugin), $report]);
     }
 
     public function isArchiveAlreadyInProgress($invalidatedArchive)
@@ -864,7 +864,22 @@ class Model
     public function releaseInProgressInvalidation($idinvalidation)
     {
         $table = Common::prefixTable('archive_invalidations');
-        $sql = "UPDATE $table SET status = " . ArchiveInvalidator::INVALIDATION_STATUS_QUEUED . " WHERE idinvalidation = ?";
+        $sql = "UPDATE $table SET status = " . ArchiveInvalidator::INVALIDATION_STATUS_QUEUED . ", ts_started = NULL WHERE idinvalidation = ?";
         Db::query($sql, [$idinvalidation]);
+    }
+
+    public function resetFailedArchivingJobs()
+    {
+        $table = Common::prefixTable('archive_invalidations');
+        $sql = "UPDATE $table SET status = ? WHERE status = ? AND (ts_started IS NULL OR ts_started < ?)";
+
+        $bind = [
+            ArchiveInvalidator::INVALIDATION_STATUS_QUEUED,
+            ArchiveInvalidator::INVALIDATION_STATUS_IN_PROGRESS,
+            Date::now()->subDay(1)->getDatetime(),
+        ];
+
+        $query = Db::query($sql, $bind);
+        return $query->rowCount();
     }
 }
