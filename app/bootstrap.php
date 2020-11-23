@@ -211,7 +211,7 @@ if (function_exists('wp_raise_memory_limit') && function_exists('wp_convert_hr_t
 $GLOBALS['MATOMO_MODIFY_CONFIG_SETTINGS'] = function ($settings) {
 	$plugins = $settings['Plugins'];
 	if (is_array($settings['Plugins'])) {
-		$pluginsToRemove = array('Marketplace', 'MultiSites', 'TwoFactorAuth', 'Widgetize', 'Monolog', 'Feedback', 'ExamplePlugin', 'ExampleAPI', 'ProfessionalServices', 'MobileAppMeasurable');
+		$pluginsToRemove = array('Marketplace', 'MultiSites', 'TwoFactorAuth', 'Widgetize', 'Monolog', 'Feedback', 'ExamplePlugin', 'ExampleAPI', 'ProfessionalServices', 'MobileAppMeasurable', 'CustomPiwikJs');
 		foreach ($pluginsToRemove as $pluginToRemove) {
 			// Marketplace => this is instead done in wordpress
 			// MultiSites => doesn't really make sense since we have only one website per installation
@@ -229,6 +229,12 @@ $GLOBALS['MATOMO_MODIFY_CONFIG_SETTINGS'] = function ($settings) {
 		}
 		if (matomo_has_tag_manager()) {
 			$plugins['Plugins'][] = 'TagManager';
+		}
+		$mustEnable = ['BulkTracking', 'CustomJsTracker'];
+		foreach ($mustEnable as $enable) {
+			if (!in_array($enable, $plugins['Plugins'])) {
+				$plugins['Plugins'][] = $enable;
+			}
 		}
 	}
 	if (!empty($GLOBALS['MATOMO_PLUGINS_ENABLED'])) {
