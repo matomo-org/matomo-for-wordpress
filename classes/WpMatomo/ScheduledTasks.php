@@ -208,7 +208,7 @@ class ScheduledTasks {
 			}
 		} catch ( \Exception $e ) {
 			// we don't want to rethrow exception otherwise some other blogs might never sync
-			$this->logger->log( 'Matomo failed update try: ' . $e->getMessage() );
+			$this->logger->log_exception( 'check_try_update', $e );
 		}
 	}
 

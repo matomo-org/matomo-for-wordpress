@@ -105,6 +105,9 @@ class Updates_4_0_0_b1 extends PiwikUpdates
         $migrations[] = $this->migration->db->dropColumn('user', 'alias');
         $migrations[] = $this->migration->db->dropColumn('user', 'token_auth');
 
+	    // keep piwik_ignore for existing  installs
+	    $migrations[] = $this->migration->config->set('Tracker', 'ignore_visits_cookie_name', 'piwik_ignore');
+
         $migrations[] = $this->migration->db->changeColumn('log_link_visit_action', 'interaction_position', 'pageview_position', 'MEDIUMINT UNSIGNED DEFAULT NULL');
 
         // Move the site search fields of log_visit out of custom variables into their own fields
@@ -149,11 +152,6 @@ class Updates_4_0_0_b1 extends PiwikUpdates
             }
         }
 
-        if (Manager::getInstance()->isPluginInstalled('CustomVariables')) {
-            $visitActionTable = Common::prefixTable('log_link_visit_action');
-            $migrations[]     = $this->migration->db->sql("UPDATE $visitActionTable SET search_cat = if(custom_var_k4 = '_pk_scat', custom_var_v4, search_cat), search_count = if(custom_var_k5 = '_pk_scount', custom_var_v5, search_count) WHERE custom_var_k4 = '_pk_scat' or custom_var_k5 = '_pk_scount'");
-        }
-
         // init seconds_to_... columns
         $logVisitColumns = $tableMetadata->getColumns(Common::prefixTable('log_visit'));
         $hasDaysColumnInVisit = in_array('visitor_days_since_first', $logVisitColumns);
@@ -174,6 +172,11 @@ class Updates_4_0_0_b1 extends PiwikUpdates
                     visitor_seconds_since_order = visitor_days_since_order * 86400");
         }
 
+	    if (Manager::getInstance()->isPluginInstalled('CustomVariables')) {
+		    $visitActionTable = Common::prefixTable('log_link_visit_action');
+		    $migrations[]     = $this->migration->db->sql("UPDATE $visitActionTable SET search_cat = if(custom_var_k4 = '_pk_scat', custom_var_v4, search_cat), search_count = if(custom_var_k5 = '_pk_scount', custom_var_v5, search_count) WHERE custom_var_k4 = '_pk_scat' or custom_var_k5 = '_pk_scount'");
+	    }
+
         // remove old days_to_... columns
         $migrations[] = $this->migration->db->dropColumns('log_visit', [
             'config_gears',
@@ -192,9 +195,6 @@ class Updates_4_0_0_b1 extends PiwikUpdates
         if (!empty($config->mail['type']) && $config->mail['type'] === 'Crammd5') {
             $migrations[] = $this->migration->config->set('mail', 'type', 'Cram-md5');
         }
-
-        // keep piwik_ignore for existing  installs
-        $migrations[] = $this->migration->config->set('Tracker', 'ignore_visits_cookie_name', 'piwik_ignore');
 
         $migrations[] = $this->migration->plugin->activate('PagePerformance');
         if (!Manager::getInstance()->isPluginActivated('CustomDimensions')) {
