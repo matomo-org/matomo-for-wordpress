@@ -53,10 +53,6 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		$this->tasks->sync();
 	}
 
-	public function test_update_if_needed_does_not_fail() {
-		$this->tasks->update_if_needed();
-	}
-
 	public function test_disable_add_handler_wontfail_when_addhandler_enabled() {
 		$this->assertFalse($this->settings->should_disable_addhandler());
 		$this->tasks->disable_add_handler();
