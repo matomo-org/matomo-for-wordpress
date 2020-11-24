@@ -9,6 +9,7 @@
 
 namespace WpMatomo\Commands;
 
+use WpMatomo\Installer;
 use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
 use WP_CLI;
@@ -86,7 +87,15 @@ class MatomoCommands extends WP_CLI_Command {
 	 * @param $assoc_args
 	 */
 	public function _doUpdate( $force ) {
-		$updater = new Updater( new Settings() );
+		$settings = new Settings();
+
+		$installer = new Installer( $settings );
+		if ( ! $installer->looks_like_it_is_installed() ) {
+			WP_CLI::log( 'Skipping as looks like Matomo is not yet installed' );
+			return;
+		}
+
+		$updater = new Updater( $settings );
 		if ( $force ) {
 			WP_CLI::log( 'Force running updates' );
 			$updater->update();
