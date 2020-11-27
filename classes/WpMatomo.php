@@ -213,4 +213,9 @@ class WpMatomo {
 			do_action( 'matomo_ecommerce_init', $tracker );
 		}
 	}
+
+	public static function should_disable_addhandler()
+	{
+		return defined('MATOMO_DISABLE_ADDHANDLER') && MATOMO_DISABLE_ADDHANDLER;
+	}
 }

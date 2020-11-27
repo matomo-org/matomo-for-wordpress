@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -62,7 +62,7 @@ class OneClickDone
         @Common::stripHeader('Pragma');
         @Common::stripHeader('Expires');
         @Common::sendHeader('Content-Type: text/html; charset=UTF-8');
-        @Common::sendHeader('Cache-Control: must-revalidate');
+        @Common::sendHeader('Cache-Control: no-store');
         @Common::sendHeader('X-Frame-Options: deny');
 
         $error = htmlspecialchars($this->error, ENT_QUOTES, 'UTF-8');

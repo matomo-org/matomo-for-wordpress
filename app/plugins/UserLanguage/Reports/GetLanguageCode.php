@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -19,7 +19,7 @@ class GetLanguageCode extends GetLanguage
         parent::init();
         $this->dimension     = new Language();
         $this->name          = Piwik::translate('UserLanguage_LanguageCode');
-        $this->documentation = '';
+        $this->documentation = Piwik::translate('UserLanguage_getLanguageCodeDocumentation');
         $this->order = 11;
     }
 

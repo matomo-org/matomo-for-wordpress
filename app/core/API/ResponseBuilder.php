@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -174,7 +174,7 @@ class ResponseBuilder
      */
     private function formatExceptionMessage($exception)
     {
-        $message = ExceptionToTextProcessor::getWholeBacktrace($exception, $this->shouldPrintBacktrace);
+        $message = ExceptionToTextProcessor::getMessageAndWholeBacktrace($exception, $this->shouldPrintBacktrace);
 
         if ($exception instanceof \Piwik\Exception\Exception && $exception->isHtmlMessage() && Request::isRootRequestApiRequest()) {
             $message = strip_tags(str_replace('<br />', PHP_EOL, $message));

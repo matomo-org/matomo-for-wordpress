@@ -38,7 +38,6 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 		return $value;
 	}
 }
-
 ?>
 
 <div class="wrap matomo-systemreport">
@@ -196,6 +195,10 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
                 <input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_SITE ); ?>" type="submit" class='button-primary'
                        title="<?php esc_attr_e( 'Sites / blogs are synced automatically. If for some reason Matomo is not showing up for a specific blog, then triggering a manual sync may help to fix this issue immediately or it may show which error prevents the automatic syncing.', 'matomo' ) ?>"
                        value="<?php esc_html_e( 'Sync site (blog)', 'matomo' ); ?>">
+                <br/><br/>
+                <input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_RUN_UPDATER ); ?>" type="submit" class='button-primary'
+                       title="<?php esc_attr_e( 'Force trigger a Matomo update in case it failed error', 'matomo' ) ?>"
+                       value="<?php esc_html_e( 'Run Updater', 'matomo' ); ?>">
 			<?php } ?>
 			<?php if ( $settings->is_network_enabled() ) { ?>
                 <input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_ALL_USERS ); ?>" type="submit"

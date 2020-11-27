@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -132,7 +132,7 @@ abstract class ControllerAdmin extends Controller
     protected function setBasicVariablesViewAs($view, $viewType = 'admin')
     {
         $this->setBasicVariablesNoneAdminView($view);
-        if ($viewType == 'admin') {
+        if ($viewType === 'admin') {
             self::setBasicVariablesAdminView($view);
         }
     }
@@ -222,6 +222,23 @@ abstract class ControllerAdmin extends Controller
 
     private static function notifyWhenPhpVersionIsNotCompatibleWithNextMajorPiwik()
     {
+        if (self::isUsingPhpVersionCompatibleWithNextPiwik()) {
+            return;
+        }
+
+        $youMustUpgradePHP = Piwik::translate('General_YouMustUpgradePhpVersionToReceiveLatestPiwik');
+        $message =  Piwik::translate('General_PiwikCannotBeUpgradedBecausePhpIsTooOld')
+            .     ' '
+            .  sprintf(Piwik::translate('General_PleaseUpgradeYourPhpVersionSoYourPiwikDataStaysSecure'), self::getNextRequiredMinimumPHP())
+        ;
+
+        $notification = new Notification($message);
+        $notification->title = $youMustUpgradePHP;
+        $notification->priority = Notification::PRIORITY_LOW;
+        $notification->context = Notification::CONTEXT_WARNING;
+        $notification->type = Notification::TYPE_TRANSIENT;
+        $notification->flags = Notification::FLAG_NO_CLEAR;
+        NotificationManager::notify('PHPVersionTooOldForNewestPiwikCheck', $notification);
     }
 
     private static function notifyWhenPhpVersionIsEOL()

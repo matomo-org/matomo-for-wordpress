@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -21,15 +21,14 @@ $piwik_errorMessage = '';
 // 2) tests/travis/generator/Generator.php
 // 3) composer.json (in two places)
 // 4) tests/PHPUnit/Integration/ReleaseCheckListTest.php
-$piwik_minimumPHPVersion = '5.5.9';
+$piwik_minimumPHPVersion = '7.2.5';
 $piwik_currentPHPVersion = PHP_VERSION;
 $minimumPhpInvalid = version_compare($piwik_minimumPHPVersion, $piwik_currentPHPVersion) > 0;
 if ($minimumPhpInvalid) {
     $piwik_errorMessage .= "<p><strong>To run Matomo you need at least PHP version $piwik_minimumPHPVersion</strong></p>
 				<p>Unfortunately it seems your webserver is using PHP version $piwik_currentPHPVersion. </p>
 				<p>Please try to update your PHP version, Matomo is really worth it! Nowadays most web hosts
-				support PHP $piwik_minimumPHPVersion.</p>
-				<p>Also see the FAQ: <a href='https://matomo.org/faq/how-to-install/#faq_77'>My Web host supports PHP4 by default. How can I enable PHP5?</a></p>";
+				support PHP $piwik_minimumPHPVersion.</p>";
 } else {
     if (!extension_loaded('session')) {
         $piwik_errorMessage .= "<p><strong>Matomo and Zend_Session require the session extension</strong></p>
@@ -50,9 +49,9 @@ if ($minimumPhpInvalid) {
     }
 
     if (!function_exists('json_encode')) {
-        $piwik_errorMessage .= "<p><strong>Matomo requires the php5-json extension which provides the functions <code>json_encode()</code> and <code>json_decode()</code></strong></p>
-					<p>It appears your PHP has not yet installed the php5-json extension.
-					To use Matomo, please ask your web host to install php5-json or install it yourself, for example on debian system: <code>sudo apt-get install php5-json</code>. <br/>Then restart your webserver and refresh this page.</p>";
+        $piwik_errorMessage .= "<p><strong>Matomo requires the php-json extension which provides the functions <code>json_encode()</code> and <code>json_decode()</code></strong></p>
+					<p>It appears your PHP has not yet installed the php-json extension.
+					To use Matomo, please ask your web host to install php-json or install it yourself, for example on debian system: <code>sudo apt-get install php-json</code>. <br/>Then restart your webserver and refresh this page.</p>";
     }
 
     if (!file_exists(PIWIK_VENDOR_PATH . '/autoload.php')) {
@@ -84,13 +83,16 @@ if (!function_exists('Piwik_GetErrorMessagePage')) {
      */
     function Piwik_ShouldPrintBackTraceWithMessage()
     {
-        if (\Piwik\SettingsServer::isArchivePhpTriggered()
+        if (class_exists('\Piwik\SettingsServer')
+            && class_exists('\Piwik\Common')
+            && \Piwik\SettingsServer::isArchivePhpTriggered()
             && \Piwik\Common::isPhpCliMode()
         ) {
             return true;
         }
 
         $bool = (defined('PIWIK_PRINT_ERROR_BACKTRACE') && PIWIK_PRINT_ERROR_BACKTRACE)
+                || !empty($GLOBALS['PIWIK_PRINT_ERROR_BACKTRACE'])
                 || !empty($GLOBALS['PIWIK_TRACKER_DEBUG']);
 
         return $bool;

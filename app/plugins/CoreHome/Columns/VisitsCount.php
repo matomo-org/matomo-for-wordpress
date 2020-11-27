@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -18,7 +18,7 @@ use Piwik\Tracker\Visitor;
 class VisitsCount extends VisitDimension
 {
     protected $columnName = 'visitor_count_visits';
-    protected $columnType = 'INT(11) UNSIGNED NOT NULL';
+    protected $columnType = 'INT(11) UNSIGNED NOT NULL DEFAULT 0';
     protected $segmentName = 'visitCount';
     protected $nameSingular = 'General_NumberOfVisits';
     protected $type = self::TYPE_NUMBER;
@@ -36,7 +36,12 @@ class VisitsCount extends VisitDimension
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        return $request->getVisitCount();
+        $previousVisitCount = $visitor->getPreviousVisitColumn($this->columnName);
+        if ($previousVisitCount === false || $previousVisitCount === null || $previousVisitCount === '') {
+            return 1;
+        }
+        $result = $previousVisitCount + 1;
+        return $result;
     }
 
     /**

@@ -57,6 +57,7 @@
         "ConfigFileIsNotWritable": "Matomo konfigūracijos failas %1$s negali būti keičiamas, todėl dalis Jūsų nustatymų gali būti neišsaugoti. %2$s Prašome pakeisti šio failo teises, kad galėtumėte įrašyti pakeitimus.",
         "Continue": "Tęsti",
         "ContinueToPiwik": "Grįžti į Matomo",
+        "CreationDate": "Sukūrimo data",
         "CreatedByUser": "sukūrė %s",
         "CurrentMonth": "Šis mėnuo",
         "CurrentWeek": "Ši savaitė",
@@ -227,6 +228,7 @@
         "Search": "Ieškoti",
         "Clear": "Išvalyti",
         "SearchNoResults": "Rezultatų nėra",
+        "Security": "Saugumas",
         "SeeTheOfficialDocumentationForMoreInformation": "%1$sOficialioje dokumentacijoje%2$s rasite daugiau informacijos.",
         "SelectYesIfYouWantToSendEmailsViaServer": "Pažymėkite \"Taip\", jei norite, kad laiškai būtų siunčiami per vardinį serverį vietoj vietinės siuntimo funkcijos.",
         "Settings": "Nustatymai",
@@ -287,7 +289,8 @@
         "Yes": "Taip",
         "YouAreCurrentlyUsing": "Šiuo metu jūs naudojate Matomo %s.",
         "YouMustBeLoggedIn": "Pirmiausia turite prisijungti.",
-        "YourChangesHaveBeenSaved": "Jūsų atlikti pakeitimai išsaugoti."
+        "YourChangesHaveBeenSaved": "Jūsų atlikti pakeitimai išsaugoti.",
+        "PleaseTryAgain": "Bandykite dar kartą"
     },
     "Mobile": {
         "AccessUrlLabel": "Matomo prieigos Url",
@@ -306,6 +309,7 @@
         "NetworkErrorWithStatusCodeShort": "Tinklo klaida %s",
         "NetworkNotReachable": "Tinklas nepasiekiamas",
         "NoDataShort": "Nėra duomenų",
+        "NoPiwikAccount": "Neturite Matomo paskyros?",
         "NoVisitorFound": "Lankytojų nerasta",
         "NoVisitorsShort": "Nėra lankytojų",
         "NoWebsiteFound": "Svetainių nerasta",
@@ -325,8 +329,7 @@
         "KeepTokenSecret": "Šis token_auth yra slaptas kaip ir naudotojo vardas bei slaptažodis, %1$s neviešinkite jo%2$s!",
         "LoadedAPIs": "Sėkmingai įkrautos API sąsajos (%s).",
         "MoreInformation": "Norinčius gauti daugiau informacijos apie Matomo API sąsajas, prašome žvilgtelėti į %1$s Įvadas į Matomo API %2$s ir %3$s Matomo API informacija %4$s.",
-        "UserAuthentication": "Naudotojo autentifikavimas",
-        "UsingTokenAuth": "Jei norite %1$s gauti duomenis scenarijų, crontab ir pan. įrankių pagalba, %2$s turite pridėti parametrus %3$s į API užklausų URLs, kurios reikalauja autentifikacijos."
+        "UserAuthentication": "Naudotojo autentifikavimas"
     },
     "Actions": {
         "ColumnClicks": "Paspaudimai",
@@ -534,7 +537,12 @@
         "Tablet": "Planšetinis kompiuteris",
         "Phablet": "Planšetofonas",
         "TV": "Televizorius",
+        "MobileApp": "Mobilioji programa",
         "WidgetBrowsers": "Lankytojų naršyklės"
+    },
+    "Diagnostics": {
+        "ConfigFileTitle": "Konfigūracijos failas",
+        "Sections": "Sekcijos"
     },
     "Ecommerce": {
         "Sales": "Pardavimai",
@@ -567,7 +575,15 @@
         "Forums": "Forumai"
     },
     "GeoIp2": {
-        "CannotUnzipGeoIPFile": "Nepavyko išpakuoti GeoIP failo ties %1$s: %2$s"
+        "AssumingNonApache": "Nepavyksta rasti apache_get_modules funkcijos, numanoma, kad tai ne Apache saityno serveris.",
+        "CannotUnzipGeoIPFile": "Nepavyko išpakuoti GeoIP failo ties %1$s: %2$s",
+        "DownloadingDb": "Atsiunčiama %s",
+        "FoundApacheModules": "Matomo rado šiuos Apache modulius",
+        "GeoIPDatabases": "GeoIP duomenų bazės",
+        "GeoIPNoServerVars": "Matomo nepavyko rasti jokių GeoIP %s kintamųjų.",
+        "GeoIPServerVarsFound": "Matomo aptinka šiuos GeoIP %s kintamuosius",
+        "HowToInstallApacheModule": "Kaip man įdiegti Apache skirtą GeoIP modulį?",
+        "UnsupportedArchiveType": "Susidurta su nepalaikomu archyvo tipu %1$s."
     },
     "Goals": {
         "AddGoal": "Pridėti uždavinį",
@@ -668,7 +684,6 @@
         "SystemCheckGzcompressHelp": "Jums reikia įjungti zlib plėtinį ir gzcompress funkciją.",
         "SystemCheckGzuncompressHelp": "Jums reikia įjungti zlib plėtinį ir gzuncompress funkciją.",
         "SystemCheckIconvHelp": "Jums reikia sukonfigūruoti ir perdaryti PHP su įjungtu \"iconv\" palaikymu, --with-iconv.",
-        "SystemCheckJsonHelp": "Php5-json plėtinys yra reikalingas Matomo, JSON duomenų skaitymui ir rašymui.",
         "SystemCheckMailHelp": "Atsiliepimų ir prarastų slpatažodžių pranešimai nebus siunčiami be mail() funkcijos.",
         "SystemCheckMbstring": "mbstring",
         "SystemCheckMemoryLimit": "Atminties limitas",
@@ -861,7 +876,7 @@
         "Country_MF": "Sen Martenas",
         "Country_MG": "Madagaskaras",
         "Country_MH": "Maršalo Salos",
-        "Country_MK": "Makedonija",
+        "Country_MK": "Šiaurės Makedonija",
         "Country_ML": "Malis",
         "Country_MM": "Mianmaras (Birma)",
         "Country_MN": "Mongolija",
@@ -1752,6 +1767,7 @@
         "Timezone_Asia_Omsk": "Omskas",
         "Timezone_Asia_Oral": "Uralskas",
         "Timezone_Asia_Pontianak": "Pontianakas",
+        "Timezone_Asia_Qostanay": "Kostanajus",
         "Timezone_Asia_Qyzylorda": "Kzyl-Orda",
         "Timezone_Asia_Rangoon": "Rangūnas",
         "Timezone_Asia_Saigon": "Hošiminas",
@@ -1869,9 +1885,17 @@
     "Marketplace": {
         "ActivateLicenseKey": "Aktyvinti",
         "ActionActivatePlugin": "Aktyvuoti papildinį",
+        "ActionInstall": "Įdiegti",
         "AllowedUploadFormats": "Per šį puslapį galite įkelti papildinį ar temą .zip formatu.",
+        "CannotInstall": "Nepavyksta įdiegti",
+        "CannotUpdate": "Nepavyksta atnaujinti",
         "Developer": "Kūrėjas",
         "InstallingPlugin": "Įdiegiama %s",
+        "License": "Licencija",
+        "LicenseKey": "Licencijos raktas",
+        "LicenseKeyActivatedSuccess": "Licencijos raktas sėkmingai aktyvuotas!",
+        "LicenseKeyDeletedSuccess": "Licencijos raktas sėkmingai ištrintas.",
+        "LicenseMissing": "Trūksta licencijos",
         "NoPluginsFound": "Papildinių nerasta",
         "NoThemesFound": "Temų nerasta",
         "PluginKeywords": "Raktiniai žodžiai",
@@ -1912,6 +1936,7 @@
         "DeleteOldRawData": "Reguliariai ištrinti senus neapdorotus duomenis",
         "DeleteLogsOlderThan": "Ištrinti įrašus senesnius nei",
         "DeleteMaxRows": "Maksimalus vienu metu trinamų eilučių kiekis:",
+        "IndividualsRights": "Asmenų teisės",
         "LastDelete": "Paskutinis išvalymas atliktas",
         "MenuPrivacySettings": "Privatumas",
         "NextDelete": "Kitas suplanuotas ištrynimas po",
@@ -1924,10 +1949,6 @@
         "TermsAndConditionUrlDescription": "Nuoroda į jūsų nuostatų ir sąlygų puslapį.",
         "PrivacyPolicy": "Privatumo politika",
         "TermsAndConditions": "Nuostatos ir sąlygos"
-    },
-    "Provider": {
-        "ColumnProvider": "IP tiekėjas",
-        "WidgetProviders": "IP tiekėjai"
     },
     "Referrers": {
         "Campaigns": "Kampanijos",
@@ -2105,7 +2126,6 @@
         "ToFollowingSiteSearches": "Vidinės paieškos"
     },
     "UserCountry": {
-        "AssumingNonApache": "Nepavyksta rasti apache_get_modules funkcijos, numanoma, kad tai ne Apache saityno serveris.",
         "City": "Miestas",
         "CityAndCountry": "%1$s, %2$s",
         "Continent": "Kontinentas",
@@ -2117,21 +2137,14 @@
         "country_cat": "Kataloniškai kalbančios bendruomenės",
         "country_o1": "Kita šalis",
         "DistinctCountries": "%s atskirti šalis",
-        "DownloadingDb": "Atsiunčiama %s",
-        "FoundApacheModules": "Matomo rado šiuos Apache modulius",
-        "GeoIPDatabases": "GeoIP duomenų bazės",
-        "GeoIPNoServerVars": "Matomo nepavyko rasti jokių GeoIP %s kintamųjų.",
-        "GeoIPServerVarsFound": "Matomo aptinka šiuos GeoIP %s kintamuosius",
         "GeolocationPageDesc": "Šiame puslapyje galite keisti kaip Matomo nustato lankytojų geografines vietas.",
-        "HowToInstallApacheModule": "Kaip man įdiegti Apache skirtą GeoIP modulį?",
         "Latitude": "Platuma",
         "Latitudes": "Platumos",
         "Location": "Vietovė",
         "Longitude": "Ilguma",
         "Longitudes": "Ilgumos",
         "Region": "Regionas",
-        "SubmenuLocations": "Vietovės",
-        "UnsupportedArchiveType": "Susidurta su nepalaikomu archyvo tipu %1$s."
+        "SubmenuLocations": "Vietovės"
     },
     "UserCountryMap": {
         "Countries": "Šalys",
@@ -2155,7 +2168,6 @@
         "AddNewUser": "Pridėti naują naudotoją",
         "EditUser": "Taisyti naudotoją",
         "CreateUser": "Sukurti naudotoją",
-        "Alias": "Alternatyvus vardas",
         "AllWebsites": "Visos svetainės",
         "AnonymousUser": "Anoniminis naudotojas",
         "AnonymousUserHasViewAccess2": "Jūsų analitikos ataskaitos ir jūsų naudotojų informacija yra viešai matoma.",
@@ -2227,19 +2239,8 @@
         "ColumnLocalMinute": "Vietinis laikas - minutė (Apsilankymo pradžia)",
         "ColumnServerTime": "Serverio laikas",
         "ColumnServerHour": "Serverio laikas - valanda",
-        "ColumnVisitEndServerHour": "Serverio laikas - valanda (Apsilankymo pabaiga)",
-        "ColumnVisitEndServerMinute": "Serverio laikas - minutė (Apsilankymo pabaiga)",
         "ColumnVisitStartServerHour": "Serverio laikas - valanda (Apsilankymo pradžia)",
         "ColumnVisitStartServerMinute": "Serverio laikas - minutė (Apsilankymo pradžia)",
-        "ColumnVisitEndServerDate": "Serverio laikas - data (Apsilankymo pabaiga)",
-        "ColumnVisitEndServerDayOfMonth": "Serverio laikas - mėnesio diena (Apsilankymo pabaiga)",
-        "ColumnVisitEndServerDayOfWeek": "Serverio laikas - savaitės diena (Apsilankymo pabaiga)",
-        "ColumnVisitEndServerDayOfYear": "Serverio laikas - metų diena (Apsilankymo pabaiga)",
-        "ColumnVisitEndServerQuarter": "Serverio laikas - ketvirtis (Apsilankymo pabaiga)",
-        "ColumnVisitEndServerSecond": "Serverio laikas - sekundė (Apsilankymo pabaiga)",
-        "ColumnVisitEndServerWeekOfYear": "Serverio laikas - metų savaitė (Apsilankymo pabaiga)",
-        "ColumnVisitEndServerMonth": "Serverio laikas - mėnesis (Apsilankymo pabaiga)",
-        "ColumnVisitEndServerYear": "Serverio laikas - metai (Apsilankymo pabaiga)",
         "ColumnServerMinute": "Serverio laikas - minutė",
         "DayOfWeek": "Savaitės diena",
         "LocalTime": "Apsilankymai vietiniu laiku",

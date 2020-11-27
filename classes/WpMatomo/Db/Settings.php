@@ -42,6 +42,7 @@ class Settings {
 		// list of existing temp tables
 		$table_names_to_look_for = array(
 			'access',
+			'archive_invalidations',
 			'brute_force_log',
 			'goal',
 			'locks',
@@ -74,6 +75,7 @@ class Settings {
 			'user',
 			'user_dashboard',
 			'user_language',
+			'user_token_auth',
 		);
 		foreach ( range( 2010, gmdate( 'Y' ) + 1 ) as $year ) {
 			foreach ( range( 1, 12 ) as $month ) {

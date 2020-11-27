@@ -16,7 +16,6 @@ use Piwik\FrontController;
 use Piwik\Option;
 use Piwik\Plugin\API;
 use Piwik\Site;
-use Piwik\Translate;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Installer;
@@ -61,6 +60,9 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	public function setUp() {
 		parent::setUp();
 
+		if (!defined('PIWIK_TEST_MODE')) {
+			define('PIWIK_TEST_MODE', true);
+		}
 		$uninstall = new Uninstaller();
 		$uninstall->uninstall( true );
 		clearstatcache();
@@ -104,9 +106,10 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 				\Piwik\NumberFormatter::getInstance()->clearCache();
 				\Piwik\Plugins\ScheduledReports\API::$cache = array();
 				Manager::getInstance()->deleteAll();
+				\WpMatomo\Updater::unlock();
 				PluginsArchiver::$archivers = array();
 				$_GET                       = $_REQUEST = array();
-				Translate::reset();
+				\Piwik\Container\StaticContainer::get(\Piwik\Translation\Translator::class)->reset();
 				\Piwik\Log::unsetInstance();
 			}
 		);

@@ -70,6 +70,7 @@
         "ColumnNbUsers": "Kasutajaid",
         "ColumnNbVisits": "Külastused",
         "ColumnPageviews": "Lehevaatamisi",
+        "ColumnPageviewsDocumentation": "Arv, mitu korda seda lehte külastati.",
         "ColumnPercentageVisits": "%% külastust",
         "ColumnRevenue": "Tulu",
         "ColumnSumVisitLength": "Külastajate poolt lehel viibitud aeg kokku (sek)",
@@ -88,6 +89,7 @@
         "ComputedMetricUniqueCount": "Unikaalne %s",
         "Continue": "Jätka",
         "ContinueToPiwik": "Jätka Matomou kasutamist",
+        "CreationDate": "Loomise kuupäev",
         "CreatedByUser": "loonud %s",
         "CurrentMonth": "Praegune kuu",
         "CurrentWeek": "Praegune nädal",
@@ -136,6 +138,8 @@
         "ExceptionNonceMismatch": "Antud vormi turvakoodi verifitseerimine ebaõnnestus.",
         "ExceptionUnableToStartSession": "Sessiooni käivitamine ebaõnnestus.",
         "ExceptionUndeletableFile": "%s kustutamine ebaõnnestus",
+        "ExceptionReportNotFound": "Taotletud aruannet pole olemas.",
+        "ExpandDataTableFooter": "Muuda visualiseeringut või seadista aruannet",
         "Export": "Ekspordi",
         "ExportAsImage": "Ekspordi pildina",
         "ExportThisReport": "Ekspordi andmed teistesse vormingutesse",
@@ -288,6 +292,7 @@
         "Search": "Otsi",
         "Clear": "Tühjenda",
         "SearchNoResults": "Tulemused puuduvad",
+        "Security": "Turvalisus",
         "SeeAll": "näita kõiki",
         "Segment": "Segment",
         "Settings": "Seaded",
@@ -364,10 +369,13 @@
         "YouAreCurrentlyUsing": "Kasutad hetkel Matomo versiooni %s.",
         "YouMustBeLoggedIn": "Antud funktsionaalsusele ligipääsuks pead olema sisselogitud.",
         "YourChangesHaveBeenSaved": "Sinu muudatused on salvestatud.",
+        "ThankYouForUsingMatomo": "Aitäh, Matomo kasutamise eest",
         "TheMatomoTeam": "Matomo meeskond",
         "PleaseTryAgain": "Palun proovi uuesti",
         "Comparisons": "Võrdlused",
-        "ClickToRemoveComp": "Kliki võrdluse eemaldamiseks."
+        "ClickToRemoveComp": "Kliki võrdluse eemaldamiseks.",
+        "PreviousPeriod": "Eelmine periood",
+        "PreviousYear": "Eelmine aasta"
     },
     "Mobile": {
         "AboutPiwikMobile": "Rohkem infot Matomo mobiilis kohta",
@@ -426,6 +434,7 @@
         "Reloading": "Värskendan...",
         "RequestTimedOutShort": "Võrgu aegumise tõrge",
         "RestrictedCompatibility": "Piiratud ühilduvus",
+        "SaveSuccessError": "Matomo veebiaadress või kasutajanimi ja salasõna on vale.",
         "SearchWebsite": "Otsi veebilehti",
         "ShowAll": "Kuva kõik",
         "ShowLess": "Näita vähem",
@@ -434,7 +443,9 @@
         "TryIt": "Proovi seda!",
         "VerifyAccount": "Konto kinnitamine",
         "ValidateSslCertificate": "Kinnita SSL sertifikaat",
-        "YouAreOffline": "Vabandust, aga sul pole hetkel võrguühendust"
+        "VerifyLoginData": "Veenduge, et teie kasutajanimi ja parool on õiged.",
+        "YouAreOffline": "Vabandust, aga sul pole hetkel võrguühendust",
+        "EnterAuthCodeExplanation": "Paistab et te kasutate kaheastmelist autentimist. Oma kontosse sisselogimiseks palun sisesta 6-kohaline kood."
     },
     "RowEvolution": {
         "AvailableMetrics": "Saadaolevad mõõdikud",
@@ -568,9 +579,7 @@
         "ExcludeRowsWithLowPopulation": "Kuvatakse kõiki ridu %s Eemalda ebapopulaarsemad",
         "ExternalHelp": "Abi (avaneb uues aknas)",
         "FlattenDataTable": "Antud raport on hierarhiline %s Tee see lamedaks",
-        "HowMuchIsPiwikWorth": "Kui palju on Matomo sulle väärt?",
         "IncludeRowsWithLowPopulation": "Ebapopulaarsed read on peidetud %s Kuva kõik read",
-        "MakeOneTimeDonation": "Või tee hoopis ühekordne annetus.",
         "Menu": "Menüü",
         "PeriodRange": "vahemik",
         "ReportGeneratedOn": "Raport genereeritud %s",
@@ -662,14 +671,8 @@
         "YouCanUpgradeAutomaticallyOrDownloadPackage": "Sa võid uuendada versioonile %s automaatselt või laadida alla paki ja paigaldada käsitsi:",
         "YourDatabaseIsOutOfDate": "Sinu Matomou andmebaas on vananenud ja tuleb enne jätkamist uuendada."
     },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Kohandatud muutuja nimi",
-        "ColumnCustomVariableValue": "Kohandatud muutuja väärtus",
-        "CustomVariables": "Kohandatud muutujad",
-        "ScopePage": "skoop: lehekülg",
-        "ScopeVisit": "skoop: külastus",
-        "Index": "Indeks",
-        "Usages": "Kasutamised"
+    "CustomDimensions": {
+        "CustomDimensions": "Kohandatud mõõdud"
     },
     "DBStats": {
         "DatabaseUsage": "Andmebaasi kasutus",
@@ -753,6 +756,7 @@
         "Tablet": "Tahvelarvuti",
         "TV": "Televiisor",
         "UserAgent": "Veebisirvija tüüp",
+        "MobileApp": "Mobiilirakendus",
         "WidgetBrowsers": "Külastajate veebisirvijad"
     },
     "Diagnostics": {
@@ -781,6 +785,14 @@
         "ProfessionalHelp": "Proffesionaalne abi",
         "ContactUs": "Võta meiega ühendust",
         "Forums": "Foorumid"
+    },
+    "GeoIp2": {
+        "DownloadingDb": "Laen alla %s",
+        "DownloadNewDatabasesEvery": "Uuenda andmebaasi iga",
+        "GeoIPDatabases": "GeoIP andmebaas",
+        "ISPDatabase": "ISP andmebaas",
+        "LocationDatabase": "Asukoha andmebaas",
+        "UpdaterWasLastRun": "Uuendaja käivitus viimati %s."
     },
     "Goals": {
         "AbandonedCart": "Hüljatud ostukorv",
@@ -907,7 +919,6 @@
         "SuperUserSetupSuccess": "Peakasutaja on edukalt loodud!",
         "SystemCheck": "Süsteemi kontroll",
         "SystemCheckAutoUpdateHelp": "Märge: Matomo automaatne uuendus nõuab kirjutusõigust Matomou juurkataloogi ja selle sisule.",
-        "SystemCheckCreateFunctionHelp": "Matomo kasutab anonüümseid funktsioone süsteemile vastuste saatmiseks.",
         "SystemCheckDatabaseExtensions": "MySQL-i laiendid",
         "SystemCheckDatabaseHelp": "Matomo vajab kas ainult mysqli või nii PDO kui ka pdo_mysql laiendust mõlemat.",
         "SystemCheckError": "Ilmnes viga - Enne jätkamist tuleb see parandada",
@@ -1104,7 +1115,7 @@
         "Country_MF": "Saint-Martin",
         "Country_MG": "Madagaskar",
         "Country_MH": "Marshalli Saared",
-        "Country_MK": "Makedoonia",
+        "Country_MK": "Põhja-Makedoonia",
         "Country_ML": "Mali",
         "Country_MM": "Myanmar (Birma)",
         "Country_MN": "Mongoolia",
@@ -1652,7 +1663,7 @@
         "Language_id": "Indoneesia",
         "Language_ie": "Interlingue",
         "Language_ig": "Ibo",
-        "Language_ii": "Sichuani jii",
+        "Language_ii": "Nuosu",
         "Language_ik": "Injupiaki",
         "Language_io": "Ido",
         "Language_is": "Islandi",
@@ -1682,7 +1693,7 @@
         "Language_ln": "Lingala",
         "Language_lo": "Lao",
         "Language_lt": "Leedu",
-        "Language_lu": "Luba",
+        "Language_lu": "Katanga luba",
         "Language_lv": "Läti",
         "Language_mg": "Malagassi",
         "Language_mh": "Maršalli",
@@ -1995,6 +2006,7 @@
         "Timezone_Asia_Omsk": "Omsk",
         "Timezone_Asia_Oral": "Oral",
         "Timezone_Asia_Pontianak": "Pontianak",
+        "Timezone_Asia_Qostanay": "Kostanaj",
         "Timezone_Asia_Qyzylorda": "Kõzõlorda",
         "Timezone_Asia_Rangoon": "Yangon",
         "Timezone_Asia_Saigon": "Ho Chi Minh",
@@ -2082,7 +2094,6 @@
         "LastHours": "Viimased %s tundi",
         "LastMinutes": "Viimased %s minutit",
         "LastVisit": "Viimane külastus",
-        "LinkVisitorLog": "Vaata üksikasjalikku külastuste logi",
         "LoadMoreVisits": "Ava rohkem külastusi",
         "MorePagesNotDisplayed": "rohkem lehti külastaja kohta ei kuvata",
         "NbVisitor": "1 külastaja",
@@ -2208,10 +2219,6 @@
         "ReportsDataSavedEstimate": "Andmebaasi suurus",
         "TeaserHeadline": "Privaatsusseaded",
         "UseDeleteReports": "Kustuta regulaarselt vanad raportid andmebaasist"
-    },
-    "Provider": {
-        "ColumnProvider": "Teenusepakkuja",
-        "WidgetProviders": "Teenusepakkujad"
     },
     "Referrers": {
         "Campaigns": "Kampaaniad",
@@ -2402,24 +2409,16 @@
         "country_o1": "Muu riik",
         "CurrentLocationIntro": "Antud pakkuja andmete alusel on sinu praegune asukoht",
         "DistinctCountries": "%s eri riigist",
-        "DownloadingDb": "Laen alla %s",
-        "DownloadNewDatabasesEvery": "Uuenda andmebaasi iga",
         "FromDifferentCities": "erinevad linnad",
-        "GeoIPDatabases": "GeoIP andmebaas",
         "Geolocation": "Geolokatsioon",
         "GeolocationPageDesc": "Sellel lehel saad muuta, kuidas Matomo tuvastab külastajate asukoha infot.",
-        "ISPDatabase": "ISP andmebaas",
         "Latitude": "Laiuskraad",
         "Location": "Asukoht",
-        "LocationDatabase": "Asukoha andmebaas",
         "LocationProvider": "Asukohainfo pakkuja",
         "Longitude": "Pikkuskraad",
         "NoDataForGeoIPReport1": "Antud raporti jaoks puuduvad andmed, kuna Matomo asukoha andmebaas on tühi või külastajate IP aadresse ei ole olnud võimalik kaardil tuvastada.",
-        "Organization": "Organisatsioon",
-        "OrgDatabase": "Organisatsiooni andmebaas",
         "Region": "Regioon",
         "SubmenuLocations": "Asukohad",
-        "UpdaterWasLastRun": "Uuendaja käivitus viimati %s.",
         "WidgetLocation": "Külastajate asukohad"
     },
     "UserCountryMap": {
@@ -2451,7 +2450,6 @@
     },
     "UsersManager": {
         "AddUser": "Lisa uus kasutaja",
-        "Alias": "Alias",
         "AllWebsites": "Kõik veebilehed",
         "AnonymousUser": "Anonüümne kasutaja",
         "ApplyToAllWebsites": "Laienda kõigile veebilehtedele",

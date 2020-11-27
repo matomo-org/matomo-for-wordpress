@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -27,6 +27,7 @@ use Piwik\Period;
 use Piwik\Piwik;
 use Piwik\Plugins\API\API as ApiApi;
 use Piwik\Plugins\API\Filter\DataComparisonFilter;
+use Piwik\Plugins\Monolog\Processor\ExceptionToTextProcessor;
 use Piwik\Plugins\PrivacyManager\PrivacyManager;
 use Piwik\SettingsPiwik;
 use Piwik\View;
@@ -205,10 +206,7 @@ class Visualization extends ViewDataTable
                 'ignoreInScreenWriter' => true,
             ]);
 
-            $message = $e->getMessage();
-            if (\Piwik_ShouldPrintBackTraceWithMessage()) {
-                $message .= "\n" . $e->getTraceAsString();
-            }
+            $message = ExceptionToTextProcessor::getMessageAndWholeBacktrace($e);
 
             $loadingError = array('message' => $message);
         }
@@ -453,10 +451,6 @@ class Visualization extends ViewDataTable
             $this->config->setDefaultColumnsToDisplay($columns, $hasNbVisits, $hasNbUniqVisitors);
         }
 
-        if (!empty($this->dataTable)) {
-            $this->removeEmptyColumnsFromDisplay();
-        }
-
         if (empty($this->requestConfig->filter_sort_column)) {
             $this->requestConfig->setDefaultSort($this->config->columns_to_display, $hasNbUniqVisitors, $columns);
         }
@@ -532,6 +526,10 @@ class Visualization extends ViewDataTable
             // queue other filters so they can be applied later if queued filters are disabled
             foreach ($self->config->getPresentationFilters() as $filter) {
                 $dataTable->queueFilter($filter[0], $filter[1]);
+            }
+
+            if (!empty($this->dataTable)) {
+                $self->removeEmptyColumnsFromDisplay();
             }
         });
 

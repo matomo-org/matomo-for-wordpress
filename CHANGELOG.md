@@ -1,5 +1,9 @@
 == Changelog ==
 
+= 4.0.0 =
+* Update Matomo core to 4.0
+* Custom Variables is now no longer included but it is available as a marketplace plugin.
+
 = 1.3.2 =
 * Fix an issue where some versions of MemberPress were not tracked
 * Fix WooCommerce cart coupons might not be applied when using WooCommerce Subscriptions

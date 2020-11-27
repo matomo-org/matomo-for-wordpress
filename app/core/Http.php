@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -139,7 +139,7 @@ class Http
      *@throws Exception
      */
     public static function sendHttpRequestBy(
-        $method = 'socket',
+        $method,
         $aUrl,
         $timeout,
         $userAgent = null,
@@ -154,7 +154,8 @@ class Http
         $httpUsername = null,
         $httpPassword = null,
         $requestBody = null,
-        $additionalHeaders = array()
+        $additionalHeaders = array(),
+        $forcePost = null
     ) {
         if ($followDepth > 5) {
             throw new Exception('Too many redirects (' . $followDepth . ')');
@@ -532,12 +533,16 @@ class Http
                 if (isset($http_response_header) && preg_match('~^HTTP/(\d\.\d)\s+(\d+)(\s*.*)?~', implode("\n", $http_response_header), $m)) {
                     $status = (int)$m[2];
                 }
-
+		    
                 if (!$status && $response === false) {
                     $error = error_get_last();
                     throw new \Exception($error['message']);
                 }
                 $fileLength = strlen($response);
+            }
+
+            foreach ($http_response_header as $line) {
+                self::parseHeaderLine($headers, $line);
             }
 
             // restore the socket_timeout value
@@ -617,6 +622,9 @@ class Http
                     CURLOPT_FOLLOWLOCATION => true,
                     CURLOPT_MAXREDIRS      => 5,
                 );
+                if ($forcePost) {
+                    $curl_options[CURLOPT_POSTREDIR] = CURL_REDIR_POST_ALL;
+                }
                 @curl_setopt_array($ch, $curl_options);
             }
 
@@ -890,7 +898,7 @@ class Http
     {
         return !empty($_SERVER['HTTP_USER_AGENT'])
             ? $_SERVER['HTTP_USER_AGENT']
-            : 'Piwik/' . Version::VERSION;
+            : 'Matomo/' . Version::VERSION;
     }
 
     /**

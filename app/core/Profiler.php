@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -213,7 +213,7 @@ class Profiler
         $hasTidewaysXhprof = function_exists('tideways_xhprof_enable') || function_exists('tideways_enable');
 
         if (!$hasXhprof && !$hasTidewaysXhprof) {
-            $xhProfPath = PIWIK_INCLUDE_PATH . '/vendor/facebook/xhprof/extension/modules/xhprof.so';
+            $xhProfPath = PIWIK_INCLUDE_PATH . '/vendor/lox/xhprof/extension/modules/xhprof.so';
             throw new Exception("Cannot find xhprof_enable, make sure to 1) install xhprof: run 'composer install --dev' and build the extension, and 2) add 'extension=$xhProfPath' to your php.ini.");
         }
 
@@ -270,6 +270,17 @@ class Profiler
                     $outputDir . DIRECTORY_SEPARATOR . $runId . '.' . $profilerNamespace . '.xhprof',
                     serialize($xhprofData)
                 );
+                $meta = array('time' => time(), 'instance' => SettingsPiwik::getPiwikInstanceId());
+                if (!empty($_GET)) {
+                    $meta['get'] = $_GET;
+                }
+                if (!empty($_POST)) {
+                    $meta['post'] = $_POST;
+                }
+                file_put_contents(
+                    $outputDir . DIRECTORY_SEPARATOR . $runId . '.' . $profilerNamespace . '.meta',
+                    serialize($meta)
+                );
             }
 
             if (empty($runId)) {
@@ -283,13 +294,14 @@ class Profiler
                 Profiler::aggregateXhprofRuns($runs, $profilerNamespace, $saveTo = $runId);
 
                 $baseUrlStored = SettingsPiwik::getPiwikUrl();
+                $host = Url::getHost();
 
                 $out = "\n\n";
-                $baseUrl = "http://" . @$_SERVER['HTTP_HOST'] . "/" . @$_SERVER['REQUEST_URI'];
+                $baseUrl = "http://" . $host . "/" . @$_SERVER['REQUEST_URI'];
                 if (strlen($baseUrlStored) > strlen($baseUrl)) {
                     $baseUrl = $baseUrlStored;
                 }
-                $baseUrl = $baseUrlStored . "vendor/facebook/xhprof/xhprof_html/?source=$profilerNamespace&run=$runId";
+                $baseUrl = $baseUrlStored . "vendor/lox/xhprof/xhprof_html/?source=$profilerNamespace&run=$runId";
 
                 $out .= "Profiler report is available at:\n";
                 $out .= "<a href='$baseUrl'>$baseUrl</a>";

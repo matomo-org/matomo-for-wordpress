@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -44,12 +44,14 @@ class GetPlugin extends Base
         $view->config->show_limit_control      = false;
         $view->config->show_all_views_icons    = false;
         $view->config->show_table_all_columns  = false;
+        $view->config->show_totals_row         = false;
         $view->config->columns_to_display  = array('label', 'nb_visits_percentage', 'nb_visits');
         $view->config->show_footer_message = Piwik::translate('DevicePlugins_PluginDetectionDoesNotWorkInIE');
 
         $view->requestConfig->filter_sort_column = 'nb_visits_percentage';
         $view->requestConfig->filter_sort_order  = 'desc';
         $view->requestConfig->filter_limit       = count(DevicePlugins::getAllPluginColumns());
+        $view->requestConfig->totals             = 0;
     }
 
 }

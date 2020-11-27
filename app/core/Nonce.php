@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -126,39 +126,39 @@ class Nonce
      */
     public static function getAcceptableOrigins()
     {
-	    $host = Url::getCurrentHost(null);
+        $host = Url::getCurrentHost(null);
 
-	    if (empty($host)) {
-		    return array();
-	    }
+        if (empty($host)) {
+            return array();
+        }
 
-	    // parse host:port
-	    if (preg_match('/^([^:]+):([0-9]+)$/D', $host, $matches)) {
-		    $host = $matches[1];
-		    $port = $matches[2];
-		    $origins = array(
-			    'http://' . $host,
-			    'https://' . $host,
-		    );
-		    if ($port != 443) {
-			    $origins[] = 'http://' . $host .':' . $port;
-		    }
-		    $origins[] = 'https://' . $host . ':' . $port;
-	    } elseif (Config::getInstance()->General['force_ssl']) {
-		    $origins = array(
-			    'https://' . $host,
-			    'https://' . $host . ':443',
-		    );
-	    } else {
-		    $origins = array(
-			    'http://' . $host,
-			    'https://' . $host,
-			    'http://' . $host . ':80',
-			    'https://' . $host . ':443',
-		    );
-	    }
+        // parse host:port
+        if (preg_match('/^([^:]+):([0-9]+)$/D', $host, $matches)) {
+            $host = $matches[1];
+            $port = $matches[2];
+            $origins = array(
+                'http://' . $host,
+                'https://' . $host,
+            );
+            if ($port != 443) {
+                $origins[] = 'http://' . $host .':' . $port;
+            }
+            $origins[] = 'https://' . $host . ':' . $port;
+        } elseif (Config::getInstance()->General['force_ssl']) {
+            $origins = array(
+                'https://' . $host,
+                'https://' . $host . ':443',
+            );
+        } else {
+            $origins = array(
+                'http://' . $host,
+                'https://' . $host,
+                'http://' . $host . ':80',
+                'https://' . $host . ':443',
+            );
+        }
 
-	    return $origins;
+        return $origins;
     }
 
     /**

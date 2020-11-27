@@ -13,6 +13,8 @@ use Piwik\Access;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Config;
+use Piwik\Container\StaticContainer;
+use Piwik\Intl\Data\Provider\CurrencyDataProvider;
 use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\SitesManager;
 use WpMatomo\Bootstrap;
@@ -136,7 +138,8 @@ class Sync {
 		$site_currency   = $this->settings->get_global_option( Settings::SITE_CURRENCY );
 		$detected_timezone = $this->detect_timezone();
 
-		$valid_currencies = \Piwik\Site::getCurrencyList();
+        $dataProvider = StaticContainer::get(CurrencyDataProvider::class);
+		$valid_currencies = $dataProvider->getCurrencyList();
 		if (!array_key_exists($site_currency, $valid_currencies)){
 			$site_currency = 'USD';
 		}

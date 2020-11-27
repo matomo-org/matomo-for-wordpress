@@ -4,8 +4,8 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
 Requires at least: 4.8
 Tested up to: 5.6
-Stable tag: 1.3.2
-Requires PHP: 7.2
+Stable tag: 4.0.0
+Requires PHP: 7.2.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -61,6 +61,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 * Segmentation
 * Real time reports
 * Transitions
+* JavaScript error tracking
 * Extensive geolocation reports / maps
 * Many different visualisations
 * Row evolution

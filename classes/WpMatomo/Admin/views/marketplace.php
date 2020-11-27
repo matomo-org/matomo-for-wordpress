@@ -48,11 +48,13 @@ $matomo_extra_url_params = '&' . http_build_query(
     function matomo_show_tables($matomo_feature_sections, $matomo_show_offer) {
 
 	    foreach ( $matomo_feature_sections as $matomo_feature_section ) {
+		    $matomo_num_features_in_block = count( $matomo_feature_section['features'] );
+
 		    echo '<h2>' . esc_html( $matomo_feature_section['title'] ) . '</h2>';
-		    echo '<div class="wp-list-table widefat plugin-install matomo-plugin-list"><div id="the-list">';
+		    echo '<div class="wp-list-table widefat plugin-install matomo-plugin-list matomo-plugin-row-' . $matomo_num_features_in_block . '"><div id="the-list">';
 		    foreach ( $matomo_feature_section['features'] as $matomo_index => $matomo_feature ) {
 			    $matomo_style        = '';
-			    $matomo_is_3_columns = count( $matomo_feature_section['features'] ) === 3;
+			    $matomo_is_3_columns = $matomo_num_features_in_block === 3;
 			    if ( $matomo_is_3_columns ) {
 				    $matomo_style = 'width: calc(33% - 8px);min-width:282px;max-width:350px;';
 				    if ( $matomo_index % 3 === 2 ) {
@@ -156,11 +158,11 @@ $matomo_extra_url_params = '&' . http_build_query(
 			'features' =>
 				array(
 					array(
-						'name'         => 'Custom Dimensions',
-						'description'  => 'Extend Matomo to your needs by defining and tracking Custom Dimensions in scope Action or Visit.',
+						'name'         => 'Marketing Campaigns Reporting',
+						'description'  => 'Measure the effectiveness of your marketing campaigns. Track up to five channels instead of two: campaign, source, medium, keyword, content.',
 						'price'        => 'free',
-						'download_url' => 'https://plugins.matomo.org/api/2.0/plugins/CustomDimensions/download/latest?wp=1' . $matomo_extra_url_params,
-						'url'          => 'https://plugins.matomo.org/CustomDimensions?wp=1&pk_campaign=WP&pk_source=Plugin',
+						'download_url' => 'https://plugins.matomo.org/api/2.0/plugins/MarketingCampaignsReporting/download/latest?wp=1' . $matomo_extra_url_params,
+						'url'          => 'https://plugins.matomo.org/MarketingCampaignsReporting?wp=1&pk_campaign=WP&pk_source=Plugin',
 						'image'        => '',
 					),
 					array(
@@ -169,14 +171,6 @@ $matomo_extra_url_params = '&' . http_build_query(
 						'price'        => 'free',
 						'download_url' => 'https://plugins.matomo.org/api/2.0/plugins/CustomAlerts/download/latest?wp=1' . $matomo_extra_url_params,
 						'url'          => 'https://plugins.matomo.org/CustomAlerts?wp=1&pk_campaign=WP&pk_source=Plugin',
-						'image'        => '',
-					),
-					array(
-						'name'         => 'Marketing Campaigns Reporting',
-						'description'  => 'Measure the effectiveness of your marketing campaigns. Track up to five channels instead of two: campaign, source, medium, keyword, content.',
-						'price'        => 'free',
-						'download_url' => 'https://plugins.matomo.org/api/2.0/plugins/MarketingCampaignsReporting/download/latest?wp=1' . $matomo_extra_url_params,
-						'url'          => 'https://plugins.matomo.org/MarketingCampaignsReporting?wp=1&pk_campaign=WP&pk_source=Plugin',
 						'image'        => '',
 					),
 				),

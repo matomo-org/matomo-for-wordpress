@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -11,7 +11,7 @@ namespace Piwik\Plugins\DevicesDetection;
 
 use Piwik\Piwik;
 use DeviceDetector\Parser\OperatingSystem AS OperatingSystemParser;
-use DeviceDetector\Parser\Device\DeviceParserAbstract AS DeviceParser;
+use DeviceDetector\Parser\Device\AbstractDeviceParser AS DeviceParser;
 use DeviceDetector\Parser\Client\Browser AS BrowserParser;
 
 function getBrandLogo($label)
@@ -45,11 +45,14 @@ function getBrowserFamilyLogo($label)
 
 function getBrowserNameWithVersion($label)
 {
-    $short = substr($label, 0, 2);
-    $ver = substr($label, 3, 10);
+    $pos = strrpos($label, ';');
+    $short = substr($label, 0, $pos);
+    $ver = substr($label, $pos+1);
     $browsers = BrowserParser::getAvailableBrowsers();
     if ($short && array_key_exists($short, $browsers)) {
         return trim(ucfirst($browsers[$short]) . ' ' . $ver);
+    } else if (strlen($short) > 2 && $short !== 'UNK') {
+        return trim($short . ' ' . $ver);
     } else {
         return Piwik::translate('General_Unknown');
     }
@@ -61,6 +64,8 @@ function getBrowserName($label)
     $browsers = BrowserParser::getAvailableBrowsers();
     if ($short && array_key_exists($short, $browsers)) {
         return trim(ucfirst($browsers[$short]));
+    } else if (strlen($label) > 2 && strpos($label, 'UNK') === false) {
+        return $label;
     } else {
         return Piwik::translate('General_Unknown');
     }
@@ -120,6 +125,43 @@ function getDeviceBrandLabel($label)
     }
 }
 
+function getClientTypeMapping()
+{
+    return [
+        1 => 'browser',
+        2 => 'library',
+        3 => 'feed reader',
+        4 => 'mediaplayer',
+        5 => 'mobile app',
+        6 => 'pim',
+    ];
+}
+
+function getClientTypeLabel($label)
+{
+    $translations = [
+        'browser' => 'DevicesDetection_ColumnBrowser',
+        'library' => 'DevicesDetection_Library',
+        'feed reader' => 'DevicesDetection_FeedReader',
+        'mediaplayer' => 'DevicesDetection_MediaPlayer',
+        'mobile app' => 'DevicesDetection_MobileApp',
+        'pim' => 'DevicesDetection_Pim',
+    ];
+
+    $clientTypes = getClientTypeMapping();
+
+    if (is_numeric($label) &&
+        array_key_exists($label, $clientTypes) &&
+        isset($translations[$clientTypes[$label]])) {
+
+        return Piwik::translate($translations[$clientTypes[$label]]);
+    } else if (isset($translations[$label])) {
+        return Piwik::translate($translations[$label]);
+    } else {
+        return Piwik::translate('General_Unknown');
+    }
+}
+
 function getDeviceTypeLabel($label)
 {
     $translations = array(
@@ -135,6 +177,7 @@ function getDeviceTypeLabel($label)
         'camera'        => 'DevicesDetection_Camera',
         'portable media player' => 'DevicesDetection_PortableMediaPlayer',
         'smart speaker' => 'DevicesDetection_SmartSpeaker',
+        'wearable'      => 'DevicesDetection_Wearable',
     );
 
     $deviceTypes = DeviceParser::getAvailableDeviceTypes();
@@ -208,7 +251,7 @@ function getOSFamilyFullName($label)
         $label = Piwik::translate('DevicesDetection_Console');
     }
 
-    if ($label !== false) {
+    if ($label !== null) {
         return $label;
     }
     return Piwik::translate('General_Unknown');
@@ -240,7 +283,7 @@ function getOsFullName($label)
     return Piwik::translate('General_Unknown');
 }
 
-function _mapLegacyOsShortCodes($shortCode)
+function _mapLegacyOsShortCodes($shortCode): string
 {
     $legacyShortCodes = array(
         'IPA' => 'IOS', // iPad => iOS
@@ -266,7 +309,7 @@ function _mapLegacyOsShortCodes($shortCode)
         'WXP' => 'WIN',
         //'VMS' => '', // OpenVMS => ??
     );
-    return ($shortCode && array_key_exists($shortCode, $legacyShortCodes)) ? $legacyShortCodes[$shortCode] : $shortCode;
+    return ($shortCode && array_key_exists($shortCode, $legacyShortCodes)) ? $legacyShortCodes[$shortCode] : (string) $shortCode;
 }
 
 /**
@@ -323,7 +366,7 @@ function getOsLogo($short)
  */
 function getBrowserEngineName($engineName) {
     /*
-     * Map leagcy types to engines
+     * Map legacy types to engines
      */
     $oldTypeMapping = array(
         'ie'     => 'Trident',

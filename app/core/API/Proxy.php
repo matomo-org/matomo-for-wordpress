@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -15,9 +15,16 @@ use Piwik\Container\StaticContainer;
 use Piwik\Context;
 use Piwik\Piwik;
 use Piwik\Plugin\Manager;
-use Piwik\Singleton;
 use ReflectionClass;
 use ReflectionMethod;
+
+// prevent upgrade error eg from Matomo 3.x to Matomo 4.x. Refs https://github.com/matomo-org/matomo/pull/16468
+// the `false` is important otherwise it would fail and try to load the proxy.php file again.
+if (!class_exists('Piwik\API\NoDefaultValue', false)) {
+    class NoDefaultValue
+    {
+    }
+}
 
 /**
  * Proxy is a singleton that has the knowledge of every method available, their parameters
@@ -149,7 +156,7 @@ class Proxy
 
             $this->registerClass($className);
 
-            // instanciate the object
+            // instantiate the object
             $object = $className::getInstance();
 
             // check method exists
@@ -571,12 +578,4 @@ class Proxy
             throw new Exception("$className that provide an API must be Singleton and have a 'public static function getInstance()' method.");
         }
     }
-}
-
-/**
- * To differentiate between "no value" and default value of null
- *
- */
-class NoDefaultValue
-{
 }

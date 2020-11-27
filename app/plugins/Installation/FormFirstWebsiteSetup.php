@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -34,8 +34,8 @@ class FormFirstWebsiteSetup extends QuickForm2
     {
         HTML_QuickForm2_Factory::registerRule('checkTimezone', 'Piwik\Plugins\Installation\Rule_isValidTimezone');
 
-        $urlExample = 'http://example.org';
-        $javascriptOnClickUrlExample = "javascript:if (this.value=='$urlExample'){this.value='http://';} this.style.color='black';";
+        $urlExample = 'https://example.org';
+        $javascriptOnClickUrlExample = "javascript:if (this.value=='$urlExample'){this.value='https://';} this.style.color='black';";
 
         $timezones = API::getInstance()->getTimezonesList();
         $timezones = array_merge(array('No timezone' => Piwik::translate('SitesManager_SelectACity')), $timezones);

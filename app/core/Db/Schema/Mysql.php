@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -16,7 +16,9 @@ use Piwik\Db\SchemaInterface;
 use Piwik\Db;
 use Piwik\DbHelper;
 use Piwik\Option;
-use Piwik\Plugins\Installation\Installation;
+use Piwik\Piwik;
+use Piwik\Plugin\Manager;
+use Piwik\Plugins\UsersManager\Model;
 use Piwik\Version;
 
 /**
@@ -38,21 +40,33 @@ class Mysql implements SchemaInterface
     {
         $engine       = $this->getTableEngine();
         $prefixTables = $this->getTablePrefix();
-        $charset      = $this->getCharset();
+        $dbSettings   = new Db\Settings();
+        $charset      = $dbSettings->getUsedCharset();
 
         $tables = array(
             'user'    => "CREATE TABLE {$prefixTables}user (
                           login VARCHAR(100) NOT NULL,
-                          password VARCHAR(191) NOT NULL,
-                          alias VARCHAR(45) NOT NULL,
+                          password VARCHAR(255) NOT NULL,
                           email VARCHAR(100) NOT NULL,
                           twofactor_secret VARCHAR(40) NOT NULL DEFAULT '',
-                          token_auth CHAR(32) NOT NULL,
                           superuser_access TINYINT(2) unsigned NOT NULL DEFAULT '0',
                           date_registered TIMESTAMP NULL,
                           ts_password_modified TIMESTAMP NULL,
-                            PRIMARY KEY(login),
-                            UNIQUE KEY uniq_keytoken(token_auth)
+                            PRIMARY KEY(login)
+                          ) ENGINE=$engine DEFAULT CHARSET=$charset
+            ",
+            'user_token_auth' => "CREATE TABLE {$prefixTables}user_token_auth (
+                          idusertokenauth BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+                          login VARCHAR(100) NOT NULL,
+                          description VARCHAR(".Model::MAX_LENGTH_TOKEN_DESCRIPTION.") NOT NULL,
+                          password VARCHAR(191) NOT NULL,
+                          hash_algo VARCHAR(30) NOT NULL,
+                          system_token TINYINT(1) NOT NULL DEFAULT 0,
+                          last_used DATETIME NULL,
+                          date_created DATETIME NOT NULL,
+                          date_expired DATETIME NULL,
+                            PRIMARY KEY(idusertokenauth),
+                            UNIQUE KEY uniq_password(password)
                           ) ENGINE=$engine DEFAULT CHARSET=$charset
             ",
 
@@ -138,7 +152,7 @@ class Mysql implements SchemaInterface
                               `pattern_type` varchar(25) NOT NULL,
                               `case_sensitive` tinyint(4) NOT NULL,
                               `allow_multiple` tinyint(4) NOT NULL,
-                              `revenue` float NOT NULL,
+                              `revenue` DOUBLE NOT NULL,
                               `deleted` tinyint(4) NOT NULL default '0',
                               `event_value_as_revenue` tinyint(4) NOT NULL default '0',
                                 PRIMARY KEY  (`idsite`,`idgoal`)
@@ -193,7 +207,7 @@ class Mysql implements SchemaInterface
                                         idaction_category3 INTEGER(10) UNSIGNED NOT NULL,
                                         idaction_category4 INTEGER(10) UNSIGNED NOT NULL,
                                         idaction_category5 INTEGER(10) UNSIGNED NOT NULL,
-                                        price FLOAT NOT NULL,
+                                        price DOUBLE NOT NULL,
                                         quantity INTEGER(10) UNSIGNED NOT NULL,
                                         deleted TINYINT(1) UNSIGNED NOT NULL,
                                           PRIMARY KEY(idvisit, idorder, idaction_sku),
@@ -213,6 +227,11 @@ class Mysql implements SchemaInterface
                                       idorder varchar(100) default NULL,
                                       items SMALLINT UNSIGNED DEFAULT NULL,
                                       url VARCHAR(4096) NOT NULL,
+                                      revenue DOUBLE default NULL,
+                                      revenue_shipping DOUBLE default NULL,
+                                      revenue_subtotal DOUBLE default NULL,
+                                      revenue_tax DOUBLE default NULL,
+                                      revenue_discount DOUBLE default NULL,
                                         PRIMARY KEY (idvisit, idgoal, buster),
                                         UNIQUE KEY unique_idsite_idorder (idsite, idorder),
                                         INDEX index_idsite_datetime ( idsite, server_time )
@@ -227,6 +246,7 @@ class Mysql implements SchemaInterface
                                         idaction_url_ref INTEGER(10) UNSIGNED NULL DEFAULT 0,
                                         idaction_name_ref INTEGER(10) UNSIGNED NULL,
                                         custom_float DOUBLE NULL DEFAULT NULL,
+                                        pageview_position MEDIUMINT UNSIGNED DEFAULT NULL,
                                           PRIMARY KEY(idlink_va),
                                           INDEX index_idvisit(idvisit)
                                         ) ENGINE=$engine DEFAULT CHARSET=$charset
@@ -287,6 +307,23 @@ class Mysql implements SchemaInterface
                                         PRIMARY KEY(idarchive, name),
                                         INDEX index_period_archived(period, ts_archived)
                                       ) ENGINE=$engine DEFAULT CHARSET=$charset
+            ",
+
+            'archive_invalidations' => "CREATE TABLE `{$prefixTables}archive_invalidations` (
+                                            idinvalidation BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+                                            idarchive INTEGER UNSIGNED NULL,
+                                            name VARCHAR(255) NOT NULL,
+                                            idsite INTEGER UNSIGNED NOT NULL,
+                                            date1 DATE NOT NULL,
+                                            date2 DATE NOT NULL,
+                                            period TINYINT UNSIGNED NOT NULL,
+                                            ts_invalidated DATETIME NULL,
+                                            ts_started DATETIME NULL,
+                                            status TINYINT(1) UNSIGNED DEFAULT 0,
+                                            `report` VARCHAR(255) NULL,
+                                            PRIMARY KEY(idinvalidation),
+                                            INDEX index_idsite_dates_period_name(idsite, date1, period, name)
+                                        ) ENGINE=$engine DEFAULT CHARSET=$charset
             ",
 
             'sequence'        => "CREATE TABLE {$prefixTables}sequence (
@@ -384,8 +421,8 @@ class Mysql implements SchemaInterface
     }
 
     /**
-     * Get list of tables installed
-     *`
+     * Get list of tables installed (including tables defined by deactivated plugins)
+     *
      * @param bool $forceReload Invalidate cache
      * @return array  installed Tables
      */
@@ -402,6 +439,24 @@ class Mysql implements SchemaInterface
             // all the tables to be installed
             $allMyTables = $this->getTablesNames();
 
+            /**
+             * Triggered when detecting which tables have already been created by Matomo.
+             * This should be used by plugins to define it's database tables. Table names need to be added prefixed.
+             *
+             * **Example**
+             *
+             *     Piwik::addAction('Db.getTablesInstalled', function(&$allTablesInstalled) {
+             *         $allTablesInstalled = 'log_custom';
+             *     });
+             * @param array $result
+             */
+            if (count($allTables)) {
+                Manager::getInstance()->loadPlugins(Manager::getAllPluginsNames());
+                Piwik::postEvent('Db.getTablesInstalled', [&$allMyTables]);
+                Manager::getInstance()->unloadPlugins();
+                Manager::getInstance()->loadActivatedPlugins();
+            }
+
             // we get the intersection between all the tables in the DB and the tables to be installed
             $tablesInstalled = array_intersect($allMyTables, $allTables);
 
@@ -410,6 +465,8 @@ class Mysql implements SchemaInterface
             $allArchiveBlob    = $db->fetchCol("SHOW TABLES LIKE '" . $prefixTables . "archive_blob%'");
 
             $allTablesReallyInstalled = array_merge($tablesInstalled, $allArchiveNumeric, $allArchiveBlob);
+
+            $allTablesReallyInstalled = array_unique($allTablesReallyInstalled);
 
             $this->tablesInstalled = $allTablesReallyInstalled;
         }
@@ -439,8 +496,9 @@ class Mysql implements SchemaInterface
         }
 
         $dbName = str_replace('`', '', $dbName);
+        $charset    = DbHelper::getDefaultCharset();
 
-        Db::exec("CREATE DATABASE IF NOT EXISTS `" . $dbName . "` DEFAULT CHARACTER SET utf8");
+        Db::exec("CREATE DATABASE IF NOT EXISTS `" . $dbName . "` DEFAULT CHARACTER SET ".$charset);
     }
 
     /**
@@ -453,11 +511,14 @@ class Mysql implements SchemaInterface
      */
     public function createTable($nameWithoutPrefix, $createDefinition)
     {
-    	$charset = $this->getCharset();
-        $statement = sprintf("CREATE TABLE IF NOT EXISTS `%s` ( %s ) ENGINE=%s DEFAULT CHARSET=$charset ;",
+        $dbSettings   = new Db\Settings();
+        $charset      = $dbSettings->getUsedCharset();
+
+        $statement = sprintf("CREATE TABLE IF NOT EXISTS `%s` ( %s ) ENGINE=%s DEFAULT CHARSET=%s ;",
                              Common::prefixTable($nameWithoutPrefix),
                              $createDefinition,
-                             $this->getTableEngine());
+                             $this->getTableEngine(),
+                             $charset);
 
         try {
             Db::exec($statement);
@@ -488,7 +549,7 @@ class Mysql implements SchemaInterface
         $db = $this->getDb();
         $prefixTables = $this->getTablePrefix();
 
-        $tablesAlreadyInstalled = $this->getTablesInstalled();
+        $tablesAlreadyInstalled = $this->getAllExistingTables($prefixTables);
         $tablesToCreate = $this->getTablesCreateSql();
         unset($tablesToCreate['archive_blob']);
         unset($tablesToCreate['archive_numeric']);
@@ -507,12 +568,15 @@ class Mysql implements SchemaInterface
     public function createAnonymousUser()
     {
         $now = Date::factory('now')->getDatetime();
-
         // The anonymous user is the user that is assigned by default
         // note that the token_auth value is anonymous, which is assigned by default as well in the Login plugin
         $db = $this->getDb();
         $db->query("INSERT IGNORE INTO " . Common::prefixTable("user") . "
-                    VALUES ( 'anonymous', '', 'anonymous', 'anonymous@example.org', '', 'anonymous', 0, '$now', '$now' );");
+                    (`login`, `password`, `email`, `twofactor_secret`, `superuser_access`, `date_registered`, `ts_password_modified`)
+                    VALUES ( 'anonymous', '', 'anonymous@example.org', '', 0, '$now', '$now' );");
+
+        $model = new Model();
+        $model->addTokenAuth('anonymous', 'anonymous', 'anonymous default token', $now);
     }
 
     /**
@@ -551,11 +615,6 @@ class Mysql implements SchemaInterface
     private function getTablePrefix()
     {
         return $this->getDbSettings()->getTablePrefix();
-    }
-
-    private function getCharset()
-    {
-        return $this->getDbSettings()->getCharset();
     }
 
     private function getTableEngine()

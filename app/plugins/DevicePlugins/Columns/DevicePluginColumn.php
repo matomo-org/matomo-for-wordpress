@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -8,6 +8,9 @@
  */
 namespace Piwik\Plugins\DevicePlugins\Columns;
 
+use Piwik\Columns\DimensionMetricFactory;
+use Piwik\Columns\MetricsList;
+use Piwik\Piwik;
 use Piwik\Plugin\Dimension\VisitDimension;
 
 /**
@@ -22,4 +25,12 @@ abstract class DevicePluginColumn extends VisitDimension
      * set a custom icon not included in Piwik Core
      */
     public $columnIcon = null;
+
+    public function configureMetrics(MetricsList $metricsList, DimensionMetricFactory $dimensionMetricFactory)
+    {
+        $name = Piwik::translate('General_VisitsWith', [$this->getName()]);
+
+        $metric = $dimensionMetricFactory->createCustomMetric('nb_visits_with_'.$this->getMetricId(), $name, 'sum(%s)');
+        $metricsList->addMetric($metric);
+    }
 }

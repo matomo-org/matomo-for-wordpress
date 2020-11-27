@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -13,6 +13,7 @@ use Piwik\DataAccess\LogAggregator;
 use Piwik\DataArray;
 use Piwik\DataTable;
 use Piwik\Metrics;
+use Piwik\Plugin\Manager;
 use Piwik\Tracker\GoalManager;
 use Piwik\Plugins\VisitFrequency\API as VisitFrequencyAPI;
 
@@ -33,7 +34,7 @@ class Archiver extends \Piwik\Plugin\Archiver
     const NO_LABEL = ':';
     const LOG_CONVERSION_TABLE = 'log_conversion';
     const VISITS_COUNT_FIELD = 'visitor_count_visits';
-    const DAYS_SINCE_FIRST_VISIT_FIELD = 'visitor_days_since_first';
+    const SECONDS_SINCE_FIRST_VISIT_FIELD = 'visitor_seconds_since_first';
 
     /**
      * This array stores the ranges to use when displaying the 'visits to conversion' report
@@ -72,22 +73,34 @@ class Archiver extends \Piwik\Plugin\Archiver
         array(121, 364),
         array(364)
     );
-    protected $dimensionRecord = array(
+    protected $dimensionRecord = [
         self::SKU_FIELD      => self::ITEMS_SKU_RECORD_NAME,
         self::NAME_FIELD     => self::ITEMS_NAME_RECORD_NAME,
         self::CATEGORY_FIELD => self::ITEMS_CATEGORY_RECORD_NAME
-    );
+    ];
+    protected $actionMapping = [
+        self::SKU_FIELD      => 'idaction_product_sku',
+        self::NAME_FIELD     => 'idaction_product_name',
+        self::CATEGORY_FIELD => 'idaction_product_cat',
+        self::CATEGORY2_FIELD => 'idaction_product_cat2',
+        self::CATEGORY3_FIELD => 'idaction_product_cat3',
+        self::CATEGORY4_FIELD => 'idaction_product_cat4',
+        self::CATEGORY5_FIELD => 'idaction_product_cat5',
+    ];
 
     /**
      * Array containing one DataArray for each Ecommerce items dimension (name/sku/category abandoned carts and orders)
-     * @var array
+     * @var DataArray[][]
      */
-    protected $itemReports = array();
+    protected $itemReports = [];
 
     public function aggregateDayReport()
     {
         $this->aggregateGeneralGoalMetrics();
-        $this->aggregateEcommerceItems();
+
+        if (Manager::getInstance()->isPluginActivated('Ecommerce')) {
+            $this->aggregateEcommerceItems();
+        }
 
         $this->getProcessor()->processDependentArchive('Goals', VisitFrequencyAPI::NEW_VISITOR_SEGMENT);
         $this->getProcessor()->processDependentArchive('Goals', VisitFrequencyAPI::RETURNING_VISITOR_SEGMENT);
@@ -105,7 +118,7 @@ class Archiver extends \Piwik\Plugin\Archiver
             self::VISITS_COUNT_FIELD, self::$visitCountRanges, self::LOG_CONVERSION_TABLE, $prefixes[self::VISITS_UNTIL_RECORD_NAME]
         ));
         $selects = array_merge($selects, LogAggregator::getSelectsFromRangedColumn(
-            self::DAYS_SINCE_FIRST_VISIT_FIELD, self::$daysToConvRanges, self::LOG_CONVERSION_TABLE, $prefixes[self::DAYS_UNTIL_CONV_RECORD_NAME]
+            'FLOOR(log_conversion.' . self::SECONDS_SINCE_FIRST_VISIT_FIELD . ' / 86400)', self::$daysToConvRanges, self::LOG_CONVERSION_TABLE, $prefixes[self::DAYS_UNTIL_CONV_RECORD_NAME]
         ));
 
         $query = $this->getLogAggregator()->queryConversionsByDimension(array(), false, $selects);
@@ -225,13 +238,32 @@ class Archiver extends \Piwik\Plugin\Archiver
         $this->initItemReports();
         foreach ($this->getItemsDimensions() as $dimension) {
             $query = $this->getLogAggregator()->queryEcommerceItems($dimension);
-            if ($query == false) {
-                continue;
+            if ($query !== false) {
+                $this->aggregateFromEcommerceItems($query, $dimension);
             }
-            $this->aggregateFromEcommerceItems($query, $dimension);
+
+            $query = $this->queryItemViewsForDimension($dimension);
+            if ($query !== false) {
+                $this->aggregateFromEcommerceViews($query, $dimension);
+            }
         }
         $this->insertItemReports();
         return true;
+    }
+
+    protected function queryItemViewsForDimension($dimension)
+    {
+        $column = $this->actionMapping[$dimension];
+        $where  = "log_link_visit_action.$column is not null";
+
+        return $this->getLogAggregator()->queryActionsByDimension(
+            ['label' => 'log_action1.name'],
+            $where,
+            ['AVG(log_link_visit_action.product_price) AS `avg_price_viewed`'],
+            false,
+            null,
+            [$column]
+        );
     }
 
     protected function initItemReports()
@@ -245,7 +277,6 @@ class Archiver extends \Piwik\Plugin\Archiver
 
     protected function insertItemReports()
     {
-        /** @var DataArray $array */
         foreach ($this->itemReports as $dimension => $itemAggregatesByType) {
             foreach ($itemAggregatesByType as $ecommerceType => $itemAggregate) {
                 $recordName = $this->dimensionRecord[$dimension];
@@ -299,23 +330,38 @@ class Archiver extends \Piwik\Plugin\Archiver
         }
     }
 
-    protected function cleanupRowGetLabel(&$row, $currentField)
+    protected function aggregateFromEcommerceViews($query, $dimension)
     {
-        $label = $row['label'];
-        if (empty($label)) {
-            // An empty additional category -> skip this iteration
-            if ($this->isItemExtraCategory($currentField)) {
-                return false;
+        while ($row = $query->fetch()) {
+
+            $label = $this->getRowLabel($row, $dimension);
+            if ($label === false) {
+                continue; // ignore empty additional categories
             }
-            $label = "Value not defined";
-            // Product Name/Category not defined"
-            if (\Piwik\Plugin\Manager::getInstance()->isPluginActivated('CustomVariables')) {
-                $label = \Piwik\Plugins\CustomVariables\Archiver::LABEL_CUSTOM_VALUE_NOT_DEFINED;
+
+            // Aggregate extra categories in the Item categories array
+            if ($this->isItemExtraCategory($dimension)) {
+                $array = $this->itemReports[self::CATEGORY_FIELD];
+            } else {
+                $array = $this->itemReports[$dimension];
+            }
+
+            unset($row['label']);
+            $row['avg_price_viewed'] = round($row['avg_price_viewed'], GoalManager::REVENUE_PRECISION);
+
+            // add views to all types
+            foreach ($array as $ecommerceType => $dataArray) {
+                $dataArray->sumMetrics($label, $row);
             }
         }
+    }
 
-        if ($row['ecommerceType'] == GoalManager::IDGOAL_CART) {
-            // abandoned carts are the numner of visits with an abandoned cart
+    protected function cleanupRowGetLabel(&$row, $currentField)
+    {
+        $label = $this->getRowLabel($row, $currentField);
+
+        if (isset($row['ecommerceType']) && $row['ecommerceType'] == GoalManager::IDGOAL_CART) {
+            // abandoned carts are the number of visits with an abandoned cart
             $row[Metrics::INDEX_ECOMMERCE_ORDERS] = $row[Metrics::INDEX_NB_VISITS];
         }
 
@@ -324,6 +370,19 @@ class Archiver extends \Piwik\Plugin\Archiver
         unset($row['labelIdAction']);
         unset($row['ecommerceType']);
 
+        return $label;
+    }
+
+    protected function getRowLabel(&$row, $currentField)
+    {
+        $label = $row['label'];
+        if (empty($label)) {
+            // An empty additional category -> skip this iteration
+            if ($this->isItemExtraCategory($currentField)) {
+                return false;
+            }
+            $label = "Value not defined";
+        }
         return $label;
     }
 

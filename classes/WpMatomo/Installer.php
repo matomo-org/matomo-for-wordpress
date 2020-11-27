@@ -62,7 +62,7 @@ class Installer {
 		try {
 			Bootstrap::do_bootstrap();
 
-			return SettingsPiwik::isPiwikInstalled();
+			return SettingsPiwik::isMatomoInstalled();
 		} catch ( NotYetInstalledException $e ) {
 			// not yet installed.... we will need to install it
 		}
@@ -90,7 +90,7 @@ class Installer {
 
 			Bootstrap::do_bootstrap();
 
-			if ( ! SettingsPiwik::isPiwikInstalled() || ! $this->looks_like_it_is_installed() ) {
+			if ( ! SettingsPiwik::isMatomoInstalled() || ! $this->looks_like_it_is_installed() ) {
 				throw new NotYetInstalledException( 'Not yet installed' );
 			}
 
@@ -182,7 +182,7 @@ class Installer {
 	private function install_tracker() {
 		$this->logger->log( 'Matomo is now installing the tracker' );
 		// making sure the tracker will be created in the wp uploads directory
-		$updater = StaticContainer::get( 'Piwik\Plugins\CustomPiwikJs\TrackerUpdater' );
+		$updater = StaticContainer::get( 'Piwik\Plugins\CustomJsTracker\TrackerUpdater' );
 		$updater->update();
 	}
 
@@ -312,6 +312,7 @@ class Installer {
 
 	private function update_components() {
 		$this->logger->log( 'Matomo will now trigger an update' );
+		Updater::unlock(); // make sure the update can be executed
 		$updater = new Updater( $this->settings );
 		$updater->update();
 	}

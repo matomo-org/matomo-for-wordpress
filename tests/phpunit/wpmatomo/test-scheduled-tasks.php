@@ -22,11 +22,17 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	 */
 	private $tasks;
 
+	protected $disable_temp_tables = true;
+	/**
+	 * @var Settings
+	 */
+	private $settings;
+
 	public function setUp() {
 		parent::setUp();
 
-		$settings    = new Settings();
-		$this->tasks = new ScheduledTasks( $settings );
+		$this->settings = new Settings();
+		$this->tasks = new ScheduledTasks( $this->settings );
 		$this->tasks->schedule();
 	}
 
@@ -45,6 +51,23 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 
 	public function test_sync_does_not_fail() {
 		$this->tasks->sync();
+	}
+
+	public function test_disable_add_handler_wontfail_when_addhandler_enabled() {
+		$this->assertFalse($this->settings->should_disable_addhandler());
+		$this->tasks->disable_add_handler();
+	}
+
+	public function test_disable_add_handler_wontfail_when_addhandler_disabled() {
+		$this->assertFalse($this->settings->should_disable_addhandler());
+		$this->settings->force_disable_addhandler = true;
+		$this->tasks->disable_add_handler();
+		$filename_to_check = dirname(MATOMO_ANALYTICS_FILE) . '/.htaccess';
+		$this->assertContains('# AddHandler', file_get_contents($filename_to_check));
+		$this->tasks->disable_add_handler($undo = true);
+		$this->assertNotContains('# AddHandler', file_get_contents($filename_to_check));
+		$this->assertContains('AddHandler', file_get_contents($filename_to_check));
+		$this->settings->force_disable_addhandler = false;
 	}
 
 	public function test_archive_does_not_fail() {

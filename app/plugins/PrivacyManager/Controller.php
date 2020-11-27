@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -19,8 +19,10 @@ use Piwik\Nonce;
 use Piwik\Notification;
 use Piwik\Option;
 use Piwik\Piwik;
+use Piwik\Plugins\CustomJsTracker\File;
 use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Piwik\Scheduler\Scheduler;
+use Piwik\Tracker\TrackerCodeGenerator;
 use Piwik\View;
 
 /**
@@ -31,6 +33,17 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     const OPTION_LAST_DELETE_PIWIK_LOGS = "lastDelete_piwik_logs";
     const ACTIVATE_DNT_NONCE = 'PrivacyManager.activateDnt';
     const DEACTIVATE_DNT_NONCE = 'PrivacyManager.deactivateDnt';
+
+    /**
+     * @var ReferrerAnonymizer
+     */
+    private $referrerAnonymizer;
+
+    public function __construct(ReferrerAnonymizer $referrerAnonymizer)
+    {
+        parent::__construct();
+        $this->referrerAnonymizer = $referrerAnonymizer;
+    }
 
     private function checkDataPurgeAdminSettingsIsEnabled()
     {
@@ -59,14 +72,15 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $settings['delete_reports_enable'] = Common::getRequestVar("enableDeleteReports", 0);
         $deleteReportsOlderThan = Common::getRequestVar("deleteReportsOlderThan", 3);
         $settings['delete_reports_older_than'] = $deleteReportsOlderThan < 2 ? 2 : $deleteReportsOlderThan;
-        $settings['delete_reports_keep_basic_metrics']   = Common::getRequestVar("keepBasic", 0);
-        $settings['delete_reports_keep_day_reports']     = Common::getRequestVar("keepDay", 0);
-        $settings['delete_reports_keep_week_reports']    = Common::getRequestVar("keepWeek", 0);
-        $settings['delete_reports_keep_month_reports']   = Common::getRequestVar("keepMonth", 0);
-        $settings['delete_reports_keep_year_reports']    = Common::getRequestVar("keepYear", 0);
-        $settings['delete_reports_keep_range_reports']   = Common::getRequestVar("keepRange", 0);
-        $settings['delete_reports_keep_segment_reports'] = Common::getRequestVar("keepSegments", 0);
-        $settings['delete_logs_max_rows_per_query']      = PiwikConfig::getInstance()->Deletelogs['delete_logs_max_rows_per_query'];
+        $settings['delete_reports_keep_basic_metrics']             = Common::getRequestVar("keepBasic", 0);
+        $settings['delete_reports_keep_day_reports']               = Common::getRequestVar("keepDay", 0);
+        $settings['delete_reports_keep_week_reports']              = Common::getRequestVar("keepWeek", 0);
+        $settings['delete_reports_keep_month_reports']             = Common::getRequestVar("keepMonth", 0);
+        $settings['delete_reports_keep_year_reports']              = Common::getRequestVar("keepYear", 0);
+        $settings['delete_reports_keep_range_reports']             = Common::getRequestVar("keepRange", 0);
+        $settings['delete_reports_keep_segment_reports']           = Common::getRequestVar("keepSegments", 0);
+        $settings['delete_logs_max_rows_per_query']                = PiwikConfig::getInstance()->Deletelogs['delete_logs_max_rows_per_query'];
+        $settings['delete_logs_unused_actions_max_rows_per_query'] = PiwikConfig::getInstance()->Deletelogs['delete_logs_unused_actions_max_rows_per_query'];
 
         return $settings;
     }
@@ -90,12 +104,18 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
 
         $rawDataRetention = '';
 
-        if ($purgeDataSettings['delete_logs_older_than'] > 30) {
-            $months = floor($purgeDataSettings['delete_logs_older_than']/30);
+        if ($purgeDataSettings['delete_logs_older_than'] > 90) {
+            // only show months when it is more than 90 days...
+            $months = floor($purgeDataSettings['delete_logs_older_than']/30.4);
+            $daysLeft = round($purgeDataSettings['delete_logs_older_than'] - ($months * 30.4));
             $rawDataRetention .= $months . ' ' . Piwik::translate($months > 1 ? 'Intl_PeriodMonths' : 'Intl_PeriodMonth') . ' ';
-        }
-        if ($purgeDataSettings['delete_logs_older_than'] % 30 > 0) {
-            $days = floor($purgeDataSettings['delete_logs_older_than']%30);
+
+            if ($daysLeft > 0) {
+                $rawDataRetention .= $daysLeft . ' ' . Piwik::translate($daysLeft > 1 ? 'Intl_PeriodDays' : 'Intl_PeriodDay');
+            }
+
+        } elseif ($purgeDataSettings['delete_logs_older_than'] > 0) {
+            $days = $purgeDataSettings['delete_logs_older_than'];
             $rawDataRetention .= $days . ' ' . Piwik::translate($days > 1 ? 'Intl_PeriodDays' : 'Intl_PeriodDay');
         }
 
@@ -165,6 +185,11 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $view = new View('@PrivacyManager/privacySettings');
 
         if (Piwik::hasUserSuperUserAccess()) {
+            $jsCodeGenerator = new TrackerCodeGenerator();
+            $file = new File(PIWIK_DOCUMENT_ROOT . '/' . $jsCodeGenerator->getJsTrackerEndpoint());
+
+            $view->trackerFileName = $jsCodeGenerator->getJsTrackerEndpoint();
+            $view->trackerWritable = $file->hasWriteAccess();
             $view->deleteData = $this->getDeleteDataInfo();
             $view->anonymizeIP = $this->getAnonymizeIPInfo();
             $view->canDeleteLogActions = Db::isLockPrivilegeGranted();
@@ -181,6 +206,9 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                       'description' => Piwik::translate('General_Recommended')),
                 array('key' => '3',
                       'value' => Piwik::translate('PrivacyManager_AnonymizeIpMaskLength', array("3","192.xxx.xxx.xxx")),
+                      'description' => ''),
+                array('key' => '4',
+                      'value' => Piwik::translate('PrivacyManager_AnonymizeIpMaskFully'),
                       'description' => '')
             );
             $view->useAnonymizedIpForVisitEnrichmentOptions = array(
@@ -201,6 +229,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 array('key' => '30',
                       'value' => Piwik::translate('Intl_PeriodMonth'))
             );
+            $view->referrerAnonymizationOptions = $this->referrerAnonymizer->getAvailableAnonymizationOptions();
         }
         $view->language = LanguagesManager::getLanguageCodeForCurrentUser();
         $this->setBasicVariablesView($view);
@@ -307,9 +336,11 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $privacyConfig = new Config();
         $anonymizeIP["enabled"] = IPAnonymizer::isActive();
         $anonymizeIP["maskLength"] = $privacyConfig->ipAddressMaskLength;
+        $anonymizeIP["forceCookielessTracking"] = $privacyConfig->forceCookielessTracking;
         $anonymizeIP["anonymizeOrderId"] = $privacyConfig->anonymizeOrderId;
         $anonymizeIP["anonymizeUserId"] = $privacyConfig->anonymizeUserId;
         $anonymizeIP["useAnonymizedIpForVisitEnrichment"] = $privacyConfig->useAnonymizedIpForVisitEnrichment;
+        $anonymizeIP["anonymizeReferrer"] = $privacyConfig->anonymizeReferrer;
         if (!$anonymizeIP["useAnonymizedIpForVisitEnrichment"]) {
             $anonymizeIP["useAnonymizedIpForVisitEnrichment"] = '0';
         }

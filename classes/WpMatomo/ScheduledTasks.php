@@ -9,7 +9,9 @@
 
 namespace WpMatomo;
 
+use Piwik\Config;
 use Piwik\CronArchive;
+use Piwik\Filesystem;
 use Piwik\Option;
 use Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
@@ -24,6 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class ScheduledTasks {
 	const EVENT_SYNC    = 'matomo_scheduled_sync';
+	const EVENT_DISABLE_ADDHANDLER    = 'matomo_scheduled_disable_addhandler';
 	const EVENT_ARCHIVE = 'matomo_scheduled_archive';
 	const EVENT_GEOIP   = 'matomo_scheduled_geoipdb';
 	const EVENT_UPDATE  = 'matomo_update_core';
@@ -113,7 +116,7 @@ class ScheduledTasks {
 	}
 
 	public function get_all_events() {
-		return array(
+		$events = array(
 			self::EVENT_SYNC    => array(
 				'name'     => 'Sync users & sites',
 				'interval' => 'daily',
@@ -130,6 +133,63 @@ class ScheduledTasks {
 				'method'   => 'update_geo_ip2_db',
 			),
 		);
+		if ($this->settings->should_disable_addhandler()) {
+			$events[self::EVENT_DISABLE_ADDHANDLER] = array(
+				'name'     => 'Disable AddHandler',
+				'interval' => 'hourly',
+				'method'   => 'disable_add_handler',
+			);
+		}
+		return $events;
+	}
+
+	public function disable_add_handler($forceUndo = false)
+	{
+		$disable_addhandler = $this->settings->should_disable_addhandler();
+		if ($disable_addhandler) {
+			$this->logger->log( 'Scheduled tasks disabling addhandler' );
+			try {
+				Bootstrap::do_bootstrap();
+
+				$files = Filesystem::globr(dirname(MATOMO_ANALYTICS_FILE), '.htaccess');
+				foreach ($files as $file) {
+					if (is_readable($file)) {
+						$content = file_get_contents($file);
+						$search = 'AddHandler';
+						$replace = '# AddHandler';
+						if ($forceUndo) {
+							$search = '# AddHandler';
+							$replace = 'AddHandler';
+						}
+						if (strpos($content, $search) !== false && ($forceUndo || strpos($content,$replace) === false)) {
+							if (is_writeable($file)) {
+								$content = str_replace($search, $replace, $content);
+								@file_put_contents($file, $content);
+							} else {
+								$this->logger->log('Cannot update file as not writable ' . $file);
+							}
+						}
+					}
+				}
+			} catch ( \Exception $e ) {
+				$this->logger->log_exception( 'disable_addhandler', $e );
+				throw $e;
+			}
+		}
+	}
+
+	private function check_try_update()
+	{
+		try {
+			$installer = new Installer( $this->settings );
+			if ( $installer->looks_like_it_is_installed() ) {
+				$updater = new Updater( $this->settings );
+				$updater->update_if_needed();
+			}
+		} catch ( \Exception $e ) {
+			// we don't want to rethrow exception otherwise some other blogs might never sync
+			$this->logger->log_exception( 'check_try_update', $e );
+		}
 	}
 
 	public function perform_update() {
@@ -169,6 +229,8 @@ class ScheduledTasks {
 	}
 
 	public function sync() {
+		$this->check_try_update();
+
 		$this->logger->log( 'Scheduled tasks sync all sites and users' );
 
 		try {
@@ -183,6 +245,8 @@ class ScheduledTasks {
 	}
 
 	public function archive( $force = false, $throw_exception = true ) {
+		$this->check_try_update();
+
 		if ( defined( 'MATOMO_DISABLE_WP_ARCHIVING' ) && MATOMO_DISABLE_WP_ARCHIVING ) {
 			return;
 		}
@@ -203,7 +267,6 @@ class ScheduledTasks {
 		if ( $force ) {
 			$archiver->shouldArchiveAllSites        = true;
 			$archiver->disableScheduledTasks        = true;
-			$archiver->shouldArchiveAllPeriodsSince = true;
 		}
 
 		if ( is_multisite() ) {

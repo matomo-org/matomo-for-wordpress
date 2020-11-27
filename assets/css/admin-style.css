@@ -26,6 +26,12 @@ ol.matomo-list {
 .matomo-plugin-list .plugin-card-top .matomo-description {
     min-height: 80px;
 }
+.matomo-plugin-row-2 {
+    max-width: 1082px;
+}
+.matomo-plugin-row-2 .plugin-card-top .matomo-description {
+    min-height: 50px;
+}
 
 .matomo-marketplace-notice .dashicons-video-alt3 {
     display: inline-block;

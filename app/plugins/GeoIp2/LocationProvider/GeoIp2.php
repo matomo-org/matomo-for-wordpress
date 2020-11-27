@@ -21,8 +21,6 @@ use Piwik\Plugins\UserCountry\LocationProvider;
  */
 abstract class GeoIp2 extends LocationProvider
 {
-    /** @deprecated */
-    const GEO_LITE_URL = 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz';
 
     const TEST_IP = '194.57.91.215';
     const SWITCH_TO_ISO_REGIONS_OPTION_NAME = 'usercountry.switchtoisoregions';
@@ -45,7 +43,8 @@ abstract class GeoIp2 extends LocationProvider
             'dbip-city-lite-\d{4}-\d{2}.mmdb', 'GeoIP2-City-Africa.mmdb', 'GeoIP2-City-Asia-Pacific.mmdb', 'GeoIP2-City-Europe.mmdb',
             'GeoIP2-City-North-America.mmdb', 'GeoIP2-City-South-America.mmdb', 'GeoIP2-Enterprise.mmdb', 'GeoIP2-Country.mmdb',
             'dbip-country-lite-\d{4}-\d{2}.mmdb', 'GeoLite2-City.mmdb', 'GeoLite2-Country.mmdb', 'DBIP-Enterprise.mmdb'),
-        'isp' => array('GeoIP2-ISP.mmdb', 'GeoLite2-ASN.mmdb', 'DBIP-ISP.mmdb', 'GeoIP2-Enterprise.mmdb', 'DBIP-Enterprise.mmdb'),
+        'isp' => array('GeoIP2-ISP.mmdb', 'GeoLite2-ASN.mmdb', 'DBIP-ISP.mmdb', 'GeoIP2-Enterprise.mmdb', 'DBIP-Enterprise.mmdb',
+            'DBIP-ASN.mmdb', 'dbip-asn-lite-\d{4}-\d{2}.mmdb'),
     );
 
     public static function getDbIpLiteUrl($type = 'city')
@@ -111,24 +110,6 @@ abstract class GeoIp2 extends LocationProvider
         }
 
         return StaticContainer::get('path.geoip2') . $filename;
-    }
-
-    /**
-     * Returns test IP used by isWorking and expected result.
-     *
-     * @return array eg. array('1.2.3.4', array(self::COUNTRY_CODE_KEY => ...))
-     * @deprecated
-     */
-    protected function getTestIpAndResult()
-    {
-        static $result = null;
-        if (is_null($result)) {
-            $expected = array(self::COUNTRY_CODE_KEY => 'FR',
-                self::REGION_CODE_KEY => 'BFC',
-                self::CITY_NAME_KEY    => 'Besançon');
-            $result = array(self::TEST_IP, $expected);
-        }
-        return $result;
     }
 
     public function activate()
@@ -245,7 +226,7 @@ abstract class GeoIp2 extends LocationProvider
      */
     protected function getIpFromInfo($info)
     {
-        $ip = \Piwik\Network\IP::fromStringIP($info['ip']);
+        $ip = \Matomo\Network\IP::fromStringIP($info['ip']);
 
         return $ip->toString();
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -12,9 +12,15 @@ use Piwik\API\ApiRenderer;
 use Piwik\Common;
 use Piwik\DataTable;
 use Piwik\DataTable\DataTableInterface;
+use Piwik\Plugins\Monolog\Processor\ExceptionToTextProcessor;
 
 class Original extends ApiRenderer
 {
+    public static function sendPlainTextHeader()
+    {
+        Common::sendHeader('Content-Type: text/plain; charset=utf-8');
+    }
+
     public function renderSuccess($message)
     {
         return true;
@@ -35,7 +41,7 @@ class Original extends ApiRenderer
             ];
 
             if ($this->shouldSendBacktrace()) {
-                $data['backtrace'] = $exception->getTraceAsString();
+                $data['backtrace'] = ExceptionToTextProcessor::getMessageAndWholeBacktrace($exception, true);
             }
 
             return serialize($data);
@@ -72,7 +78,7 @@ class Original extends ApiRenderer
     public function sendHeader()
     {
         if ($this->shouldSerialize()) {
-            Common::sendHeader('Content-Type: text/plain; charset=utf-8');
+            self::sendPlainTextHeader();
         }
     }
 

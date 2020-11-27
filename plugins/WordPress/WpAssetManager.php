@@ -10,9 +10,10 @@
 namespace Piwik\Plugins\WordPress;
 
 use Piwik\AssetManager;
+use Piwik\Container\StaticContainer;
 use Piwik\Plugins\WordPress\AssetManager\NeverDeleteOnDiskUiAsset;
+use Piwik\Translation\Translator;
 use Piwik\ProxyHttp;
-use Piwik\Translate;
 use Piwik\Version;
 
 if (!defined( 'ABSPATH')) {
@@ -34,10 +35,12 @@ class WpAssetManager extends AssetManager
 
 	public function getJsInclusionDirective()
 	{
-		$result = "<script type=\"text/javascript\">\n" . Translate::getJavascriptTranslations() . "\n</script>";
+	    $translator = StaticContainer::get(Translator::class);
+		$result = "<script type=\"text/javascript\">\n" . $translator->getJavascriptTranslations() . "\n</script>";
 
 		$jsFiles = array();
 		$jsFiles[] = "jquery/jquery.js";
+		$jsFiles[] = "node_modules/materialize-css/dist/js/materialize.min.js";
 		$jsFiles[] = 'jquery/ui/widget.min.js';
 		$jsFiles[] = 'jquery/ui/selectable.min.js';
 		$jsFiles[] = 'jquery/ui/autocomplete.min.js';
@@ -58,12 +61,16 @@ class WpAssetManager extends AssetManager
 		$jsFiles[] = 'jquery/ui/effect.min.js';
 
 		foreach ($jsFiles as $jsFile) {
-			$jQueryPath = includes_url('js/' . $jsFile);
-			if (ProxyHttp::isHttps()) {
-				$jQueryPath = str_replace('http://', 'https://', $jQueryPath);
-			} else {
-				$jQueryPath = str_replace('http://', '//', $jQueryPath);
-			}
+		    if (strpos($jsFile, 'node_modules') === 0) {
+		        $jQueryPath = $jsFile;
+            } else {
+                $jQueryPath = includes_url('js/' . $jsFile);
+			    if (ProxyHttp::isHttps()) {
+				    $jQueryPath = str_replace('http://', 'https://', $jQueryPath);
+			    } else {
+				    $jQueryPath = str_replace('http://', '//', $jQueryPath);
+			    }
+            }
 			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, $jQueryPath);
 		}
 

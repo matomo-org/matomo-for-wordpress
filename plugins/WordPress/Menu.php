@@ -12,7 +12,6 @@ namespace Piwik\Plugins\WordPress;
 use Piwik\Menu\MenuAdmin;
 use Piwik\Menu\MenuTop;
 use Piwik\Piwik;
-use Piwik\Plugins\LanguagesManager\API;
 use Piwik\View;
 use WpMatomo\Capabilities;
 
@@ -25,6 +24,7 @@ class Menu extends \Piwik\Plugin\Menu
         $menu->remove('SitesManager_Sites', 'SitesManager_MenuManage');
         $menu->remove('CoreAdminHome_MenuSystem', 'UsersManager_MenuUsers');
         $menu->remove('UsersManager_MenuPersonal', 'General_Settings');
+        $menu->remove('UsersManager_MenuPersonal', 'General_Security');
         $menu->remove('CoreAdminHome_MenuMeasurables', 'CoreAdminHome_TrackingCode');
         $menu->remove('CoreAdminHome_MenuMeasurables', 'General_Settings');
         $menu->remove('CorePluginsAdmin_MenuPlatform', 'General_API');

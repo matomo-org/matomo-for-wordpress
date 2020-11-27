@@ -308,9 +308,7 @@ class Sync {
 			// we generate some random password since log in using matomo won't be happening anyway
 			$password = $password->hash( $login . $now . Common::getRandomString( 200 ) . microtime( true ) . Common::generateUniqId() );
 
-			UsersManager\API::unsetInstance(); // make sure latest instance is loaded with all current dependencies... mainly needed for tests
-			$token = UsersManager\API::getInstance()->createTokenAuth( $login );
-			$user_model->addUser( $matomo_user_login, $password, $wp_user->user_email, $login, $token, $now );
+			$user_model->addUser( $matomo_user_login, $password, $wp_user->user_email, $now );
 
 			User::map_matomo_user_login( $user_id, $matomo_user_login );
 		} elseif ( $user_in_matomo['email'] !== $wp_user->user_email ) {
