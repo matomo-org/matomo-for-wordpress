@@ -14,12 +14,12 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '4.0.0',
-    'version' => '4.0.0.0',
+    'pretty_version' => '4.0.1',
+    'version' => '4.0.1.0',
     'aliases' => 
     array (
     ),
-    'reference' => 'fb7c6531c7e95dccea62388abfb275243b894366',
+    'reference' => 'ad2c670c23666f92debdb59e8bfa9e9ea55c4335',
     'name' => 'matomo/matomo',
   ),
   'versions' => 
@@ -116,12 +116,12 @@ private static $installed = array (
     ),
     'matomo/matomo' => 
     array (
-      'pretty_version' => '4.0.0',
-      'version' => '4.0.0.0',
+      'pretty_version' => '4.0.1',
+      'version' => '4.0.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'fb7c6531c7e95dccea62388abfb275243b894366',
+      'reference' => 'ad2c670c23666f92debdb59e8bfa9e9ea55c4335',
     ),
     'matomo/matomo-php-tracker' => 
     array (
