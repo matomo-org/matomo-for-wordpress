@@ -44,9 +44,12 @@ rm -rf $MATOMO_ROOT/tmp
 rm -rf $MATOMO_ROOT/tests
 rm -rf $MATOMO_ROOT/config/manifest.inc.php
 # remove the plugins also from auto loader so they can be installed through marketplace
+rm -rf $MATOMO_ROOT/plugins/CustomVariables
 rm -rf $MATOMO_ROOT/plugins/Provider
 awk '!/Plugins\\\\Provider/' $MATOMO_ROOT/vendor/composer/autoload_classmap.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_classmap.php
 awk '!/Plugins\\\\Provider/' $MATOMO_ROOT/vendor/composer/autoload_static.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_static.php
+awk '!/Plugins\\\\CustomVariables/' $MATOMO_ROOT/vendor/composer/autoload_classmap.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_classmap.php
+awk '!/Plugins\\\\CustomVariables/' $MATOMO_ROOT/vendor/composer/autoload_static.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_static.php
 find $MATOMO_ROOT/core/Updates -name '*.php' ! -name '3.12.0-b1.php' ! -name '3.12.0-b7.php' ! -name '4.*' ! -name '5.*' ! -name '6.*' ! -name '7.*' -exec rm -rf {} +
 # important to remove pclzip as it is shipped with WP and would need to use their lib
 rm -rf $MATOMO_ROOT/vendor/piwik/decompress/libs/PclZip
