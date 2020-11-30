@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -11,9 +11,9 @@ namespace Piwik\Plugins\LanguagesManager;
 
 use Piwik\Common;
 use Piwik\DbHelper;
+use Piwik\Nonce;
 use Piwik\Piwik;
 use Piwik\Url;
-use Piwik\View;
 
 /**
  */
@@ -26,11 +26,14 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     public function saveLanguage()
     {
         $language = Common::getRequestVar('language');
+        $nonce = Common::getRequestVar('nonce', '');
 
         // Prevent CSRF only when piwik is not installed yet (During install user can change language)
         if (DbHelper::isInstalled()) {
             $this->checkTokenInUrl();
         }
+
+        Nonce::checkNonce(LanguagesManager::LANGUAGE_SELECTION_NONCE, $nonce);
 
         LanguagesManager::setLanguageForSession($language);
         Url::redirectToReferrer();

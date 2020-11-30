@@ -9,6 +9,7 @@
 
 namespace WpMatomo\Commands;
 
+use WpMatomo\Installer;
 use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
 use WP_CLI;
@@ -66,16 +67,42 @@ class MatomoCommands extends WP_CLI_Command {
 	 * @when after_wp_load
 	 */
 	public function update( $args, $assoc_args ) {
-		$updater = new Updater( new Settings() );
-		if ( ! empty( $assoc_args['force'] ) ) {
+		if ( function_exists('is_multisite') && is_multisite() && function_exists( 'get_sites' ) ) {
+			foreach ( get_sites() as $site ) {
+				/** @var \WP_Site $site */
+				switch_to_blog( $site->blog_id );
+				// this way we make sure all blogs get updated eventually
+				WP_CLI::log( 'Blog ID' . $site->blog_id );
+				$this->_doUpdate( ! empty( $assoc_args['force'] )  );
+				restore_current_blog();
+			}
+		} else {
+			$this->_doUpdate( ! empty( $assoc_args['force'] )  );
+		}
+
+		WP_CLI::success( 'Matomo Analytics Updater finished' );
+	}
+
+	/**
+	 * @param $assoc_args
+	 */
+	public function _doUpdate( $force ) {
+		$settings = new Settings();
+
+		$installer = new Installer( $settings );
+		if ( ! $installer->looks_like_it_is_installed() ) {
+			WP_CLI::log( 'Skipping as looks like Matomo is not yet installed' );
+			return;
+		}
+
+		$updater = new Updater( $settings );
+		if ( $force ) {
 			WP_CLI::log( 'Force running updates' );
 			$updater->update();
 		} else {
 			WP_CLI::log( 'Running update if needed' );
 			$updater->update_if_needed();
 		}
-
-		WP_CLI::success( 'Matomo Analytics Updater finished' );
 	}
 }
 

@@ -212,24 +212,23 @@ abstract class BaseContext
         return $vars;
     }
 
-	private function mb_strpos($haystack, $needle, $offset) {
-		if (function_exists('mb_strpos')) {
-			return mb_strpos($haystack, $needle, $offset, 'UTF-8');
-		}
+    private function mb_strpos($haystack, $needle, $offset) {
+        if (function_exists('mb_strpos')) {
+            return mb_strpos($haystack, $needle, $offset, 'UTF-8');
+        }
 
-		return strpos($haystack, $needle, $offset);
-	}
+        return strpos($haystack, $needle, $offset);
+    }
 
-	private function mb_strrpos($haystack, $needle, $offset) {
-		if (function_exists('mb_strpos')) {
-			return mb_strrpos($haystack, $needle, $offset, 'UTF-8');
-		}
+    private function mb_strrpos($haystack, $needle, $offset) {
+        if (function_exists('mb_strpos')) {
+            return mb_strrpos($haystack, $needle, $offset, 'UTF-8');
+        }
 
-		return strrpos($haystack, $needle, $offset);
-	}
+        return strrpos($haystack, $needle, $offset);
+    }
 
-
-	protected function parameterToVariableJs($value, $container)
+    protected function parameterToVariableJs($value, $container)
     {
         if (is_scalar($value) && preg_match_all('/{{.+?}}/', $value, $matches)) {
             $multiVars = [];
@@ -248,7 +247,7 @@ abstract class BaseContext
                 if ($end !== false) {
                     // now this might seem random, but it is basically to detect if there are the brackets two times there
                     // like "foo{{notExisting{{PageUrl}}"  then we still detect "{{PageUrl}}"
-                    $start = $this->mb_strpos(Common::mb_substr($value, 0, $end), '{{', $pos);
+                    $start = $this->mb_strrpos(Common::mb_substr($value, 0, $end), '{{', $pos);
                 }
 
                 if ($start === false || $end === false) {

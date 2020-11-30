@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -9,14 +9,9 @@
 
 namespace Piwik\Archive;
 
-use Piwik\API\Request;
-use Piwik\Cache;
-use Piwik\Cache\Transient;
-use Piwik\CacheId;
 use Piwik\DataTable;
 use Piwik\DataTable\Row;
-use Piwik\Period\Week;
-use Piwik\Piwik;
+use Piwik\Period;
 use Piwik\Segment;
 use Piwik\Site;
 
@@ -120,7 +115,7 @@ class DataTableFactory
      */
     public static function getSiteIdFromMetadata(DataTable $table)
     {
-        $site = $table->getMetadata('site');
+        $site = $table->getMetadata(self::TABLE_METADATA_SITE_INDEX);
         if (empty($site)) {
             return null;
         } else {

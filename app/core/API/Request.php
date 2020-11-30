@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -12,15 +12,15 @@ use Exception;
 use Piwik\Access;
 use Piwik\Cache;
 use Piwik\Common;
+use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Context;
 use Piwik\DataTable;
 use Piwik\Exception\PluginDeactivatedException;
 use Piwik\IP;
-use Piwik\Log;
 use Piwik\Piwik;
 use Piwik\Plugin\Manager as PluginManager;
-use Piwik\Plugins\CoreHome\LoginWhitelist;
+use Piwik\Plugins\CoreHome\LoginAllowlist;
 use Piwik\SettingsServer;
 use Piwik\Url;
 use Piwik\UrlHelper;
@@ -85,7 +85,7 @@ class Request
     private $request = null;
 
     /**
-     * Converts the supplied request string into an array of query paramater name/value
+     * Converts the supplied request string into an array of query parameter name/value
      * mappings. The current query parameters (everything in `$_GET` and `$_POST`) are
      * forwarded to request array before it is returned.
      *
@@ -238,11 +238,11 @@ class Request
 
             // IP check is needed here as we cannot listen to API.Request.authenticate as it would then not return proper API format response.
             // We can also not do it by listening to API.Request.dispatch as by then the user is already authenticated and we want to make sure
-            // to not expose any information in case the IP is not whitelisted.
-            $whitelist = new LoginWhitelist();
-            if ($whitelist->shouldCheckWhitelist() && $whitelist->shouldWhitelistApplyToAPI()) {
+            // to not expose any information in case the IP is not allowed.
+            $list = new LoginAllowlist();
+            if ($list->shouldCheckAllowlist() && $list->shouldAllowlistApplyToAPI()) {
                 $ip = IP::getIpFromHeader();
-                $whitelist->checkIsWhitelisted($ip);
+                $list->checkIsAllowed($ip);
             }
 
             // read parameters
@@ -267,7 +267,7 @@ class Request
 
             // get the response with the request query parameters loaded, since DataTablePost processor will use the Report
             // class instance, which may inspect the query parameters. (eg, it may look for the idCustomReport parameters
-            // which may only exist in $this->request, if the request was called programatically)
+            // which may only exist in $this->request, if the request was called programmatically)
             $toReturn = Context::executeWithQueryParameters($this->request, function () use ($response, $returnedValue, $module, $method) {
                 return $response->getResponse($returnedValue, $module, $method);
             });
@@ -449,7 +449,53 @@ class Request
         SettingsServer::raiseMemoryLimitIfNecessary();
     }
 
-    private static function shouldReloadAuthUsingTokenAuth($request)
+    /**
+     * Needs to be called AFTER the user has been authenticated using a token.
+     *
+     * @internal
+     * @ignore
+     * @param string $module
+     * @param string $action
+     * @throws Exception
+     */
+    public static function checkTokenAuthIsNotLimited($module, $action)
+    {
+        $isApi = ($module === 'API' && (empty($action) || $action === 'index'));
+        if ($isApi
+            || Common::isPhpCliMode()
+        ) {
+            return;
+        }
+
+        if (Access::getInstance()->hasSuperUserAccess()) {
+            $ex = new \Piwik\Exception\Exception(Piwik::translate('Widgetize_TooHighAccessLevel', ['<a href="https://matomo.org/faq/troubleshooting/faq_147/" rel="noreferrer noopener">', '</a>']));
+            $ex->setIsHtmlMessage();
+            throw $ex;
+        }
+
+        $allowWriteAmin = Config::getInstance()->General['enable_framed_allow_write_admin_token_auth'] == 1;
+        if (Piwik::isUserHasSomeWriteAccess()
+            && !$allowWriteAmin
+        ) {
+            // we allow UI authentication/ embedding widgets / reports etc only for users that have only view
+            // access. it's mostly there to get users to use auth tokens of view users when embedding reports
+            // token_auth is fine for API calls since they would be always authenticated later anyway
+            // token_auth is also fine in CLI mode as eg doAsSuperUser might be used etc
+            //
+            // NOTE: this does not apply if the [General] enable_framed_allow_write_admin_token_auth INI
+            // option is set.
+            throw new \Exception(Piwik::translate('Widgetize_ViewAccessRequired', ['https://matomo.org/faq/troubleshooting/faq_147/']));
+        }
+    }
+
+    /**
+     * @internal
+     * @ignore
+     * @param $request
+     * @return bool
+     * @throws Exception
+     */
+    public static function shouldReloadAuthUsingTokenAuth($request)
     {
         if (is_null($request)) {
             $request = self::getDefaultRequest();

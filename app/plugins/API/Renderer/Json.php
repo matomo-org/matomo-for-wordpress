@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -12,14 +12,11 @@ use Piwik\API\ApiRenderer;
 use Piwik\Common;
 use Piwik\DataTable\Renderer;
 use Piwik\Piwik;
+use Piwik\Plugins\Monolog\Processor\ExceptionToTextProcessor;
 use Piwik\ProxyHttp;
 
 /**
  * API output renderer for JSON.
- * NOTE: This is the old JSON format. It includes bugs that are fixed in the JSON2 API output format.
- * Please use json2 format instead of this.
- *
- * @deprecated
  */
 class Json extends ApiRenderer
 {
@@ -31,7 +28,6 @@ class Json extends ApiRenderer
 
     /**
      * @param $message
-     * @param Exception|\Throwable $exception
      * @param \Exception|\Throwable $exception
      * @return string
      */
@@ -42,7 +38,7 @@ class Json extends ApiRenderer
         $data = array('result' => 'error', 'message' => $exceptionMessage);
 
         if ($this->shouldSendBacktrace()) {
-            $data['backtrace'] = $exception->getTraceAsString();
+            $data['backtrace'] = ExceptionToTextProcessor::getMessageAndWholeBacktrace($exception, true);
         }
 
         $result = json_encode($data);
@@ -65,7 +61,18 @@ class Json extends ApiRenderer
             $result = $jsonRenderer->render();
             return $this->applyJsonpIfNeeded($result);
         }
-        return  $this->renderDataTable($array);
+
+        $result = $this->renderDataTable($array);
+
+        // if $array is a simple associative array, remove the JSON root array that is added by renderDataTable
+        if (!empty($array)
+            && Piwik::isAssociativeArray($array)
+            && !Piwik::isMultiDimensionalArray($array)
+        ) {
+            $result = substr($result, 1, strlen($result) - 2);
+        }
+
+        return $result;
     }
 
     public function sendHeader()

@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -35,7 +35,8 @@ class ServerTime extends ActionDimension
 
     public function formatValue($value, $idSite, Formatter $formatter)
     {
-        return \Piwik\Plugins\VisitTime\getTimeLabel($value);
+        $hourInTz = VisitLastActionTime::convertHourToHourInSiteTimezone($value, $idSite);
+        return \Piwik\Plugins\VisitTime\getTimeLabel($hourInTz);
     }
 
     public function install()

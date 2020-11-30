@@ -1,7 +1,7 @@
 {# testing, remove test_ from var names #}
 {% set test_latest_version_available="4.0.0" %}
 {% set test_piwikUrl='https://demo.matomo.org/' %}
-{% set isPiwikDemo %}{{ piwikUrl == 'http://demo.matomo.org/' or piwikUrl == 'https://demo.matomo.org/' }}{% endset %}
+{% set isPiwikDemo %}{{ piwikUrl == 'http://demo.matomo.org/' or piwikUrl == 'https://demo.matomo.org/' or piwikUrl == 'https://demo.matomo.cloud/' or piwikUrl == 'http://demo.matomo.cloud/' }}{% endset %}
 
 {% set updateCheck %}
     <span id="updateCheckLinkContainer">
@@ -17,10 +17,17 @@
         >
 
         {% if latest_version_available and not isPiwikDemo %}
-        <a class="title" href="?module=CoreUpdater&action=newVersionAvailable" style="cursor:pointer;">
-            {{ 'General_NewUpdatePiwikX'|translate(latest_version_available) }}
-            <span class="icon-warning"></span>
-          </a>
+            {% if isMultiServerEnvironment %}
+                <span class="title" style="cursor:pointer;">
+                    {{ 'General_NewUpdatePiwikX'|translate(latest_version_available) }}
+                    <span class="icon-warning"></span>
+                </span>
+            {% else %}
+                <a class="title" href="?module=CoreUpdater&action=newVersionAvailable" style="cursor:pointer;">
+                    {{ 'General_NewUpdatePiwikX'|translate(latest_version_available) }}
+                    <span class="icon-warning"></span>
+                </a>
+            {% endif %}
         {% elseif isSuperUser and isAdminArea is defined and isAdminArea %}
             {% if isInternetEnabled %}
             <a class="title">{{ updateCheck|raw }}</a>

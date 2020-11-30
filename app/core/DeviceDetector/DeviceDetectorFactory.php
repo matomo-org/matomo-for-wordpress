@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -52,7 +52,7 @@ class DeviceDetectorFactory
     {
         $deviceDetector = new DeviceDetector($userAgent);
         $deviceDetector->discardBotInformation();
-	    $deviceDetector->setCache(StaticContainer::get('DeviceDetector\Cache\Cache'));
+        $deviceDetector->setCache(StaticContainer::get('DeviceDetector\Cache\Cache'));
         $deviceDetector->parse();
         return $deviceDetector;
     }

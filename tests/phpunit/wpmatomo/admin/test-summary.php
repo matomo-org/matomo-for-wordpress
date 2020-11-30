@@ -21,6 +21,8 @@ class AdminSummaryTest extends MatomoAnalytics_TestCase {
 	 */
 	private $settings;
 
+	protected $disable_temp_tables = true;
+
 	public function setUp() {
 		parent::setUp();
 

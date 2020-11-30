@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -24,10 +24,7 @@ class Timetable
 
     public function __construct()
     {
-        $optionData = Option::get(self::TIMETABLE_OPTION_STRING);
-        $unserializedTimetable = Common::safe_unserialize($optionData);
-
-        $this->timetable = $unserializedTimetable === false ? array() : $unserializedTimetable;
+        $this->readFromOption();
     }
 
     public function getTimetable()
@@ -142,5 +139,13 @@ class Timetable
     public function taskHasBeenScheduledOnce($taskName)
     {
         return isset($this->timetable[$taskName]);
+    }
+
+    public function readFromOption()
+    {
+        $optionData = Option::get(self::TIMETABLE_OPTION_STRING);
+        $unserializedTimetable = Common::safe_unserialize($optionData);
+
+        $this->timetable = $unserializedTimetable === false ? array() : $unserializedTimetable;
     }
 }

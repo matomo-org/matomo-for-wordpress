@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -12,7 +12,6 @@ use Piwik\API\DataTableManipulator;
 use Piwik\API\DataTablePostProcessor;
 use Piwik\Common;
 use Piwik\DataTable;
-use Piwik\Metrics;
 use Piwik\Period;
 use Piwik\Piwik;
 use Piwik\Plugin\Report;
@@ -126,6 +125,15 @@ class ReportTotalsCalculator extends DataTableManipulator
         $processor = new DataTablePostProcessor($this->apiModule, $this->apiMethod, $this->request);
         $processor->applyComputeProcessedMetrics($clone);
         $clone = $processor->applyQueuedFilters($clone);
+
+        $totalRowUnformatted = null;
+        foreach ($clone->getRows() as $row) {
+            /** * @var DataTable\Row $row */ 
+            if ($row->getColumn('label') === DataTable::LABEL_TOTALS_ROW) {
+                $totalRowUnformatted = $row->getColumns();
+                break;
+            }
+        }
         $clone = $processor->applyMetricsFormatting($clone);
 
         $totalRow = null;
@@ -146,6 +154,10 @@ class ReportTotalsCalculator extends DataTableManipulator
             $totals = $row->getColumns();
             unset($totals['label']);
             $dataTable->setMetadata('totals', $totals);
+            if (isset($totalRowUnformatted)) {
+                unset($totalRowUnformatted['label']);
+                $dataTable->setMetadata('totalsUnformatted', $totalRowUnformatted);
+            }
 
             if (1 === Common::getRequestVar('keep_totals_row', 0, 'integer', $this->request)) {
                 $totalLabel = Common::getRequestVar('keep_totals_row_label', Piwik::translate('General_Totals'), 'string', $this->request);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -66,7 +66,7 @@ class AddSegmentByLabel extends BaseFilter
             foreach ($table->getRowsWithoutSummaryRow() as $key => $row) {
                 $label = $row->getColumn('label');
 
-                if (!empty($label)) {
+                if (!empty($label) || $label === 0 || $label === '0') {
                     $row->setMetadata('segment', $segment . '==' . urlencode($label));
                 }
             }
@@ -76,7 +76,7 @@ class AddSegmentByLabel extends BaseFilter
 
             foreach ($table->getRowsWithoutSummaryRow() as $key => $row) {
                 $label = $row->getColumn('label');
-                if (!empty($label)) {
+                if (!empty($label) || $label === 0 || $label === '0') {
                     $parts = explode($this->delimiter, $label);
 
                     if (count($parts) === $numSegments) {

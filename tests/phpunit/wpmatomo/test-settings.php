@@ -23,6 +23,17 @@ class SettingsTest extends MatomoUnit_TestCase {
 		return new Settings();
 	}
 
+	public function test_should_disable_addhandler() {
+		$this->assertFalse( $this->settings->should_disable_addhandler() );
+	}
+
+	public function test_should_disable_addhandler_forced() {
+		$this->settings->force_disable_addhandler = true;
+		$disabled = $this->settings->should_disable_addhandler();
+		$this->settings->force_disable_addhandler = false;
+		$this->assertTrue( $disabled );
+	}
+
 	public function test_is_multi_site() {
 		$this->assertSame( MULTISITE, $this->settings->is_multisite() );
 	}
@@ -84,8 +95,6 @@ class SettingsTest extends MatomoUnit_TestCase {
 
 	public function test_get_customised_global_settings_nothing_customised() {
 		$settings = $this->settings->get_customised_global_settings();
-		$this->assertNotEmpty( $settings['core_version'] );
-		$this->assertNotEmpty( $settings['version_history'] );
 		unset( $settings['core_version'] ); // always changes every time we update core so we dont want to look at exact value
 		unset( $settings['version_history'] ); // always changes every time we update core so we dont want to look at exact value
 
@@ -97,8 +106,6 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->settings->set_global_option( 'track_ecommerce', '0' );
 
 		$settings = $this->settings->get_customised_global_settings();
-		$this->assertNotEmpty( $settings['core_version'] );
-		$this->assertNotEmpty( $settings['version_history'] );
 		unset( $settings['core_version'] ); // always changes every time we update core so we dont want to look at exact value
 		unset( $settings['version_history'] ); // always changes every time we update core so we dont want to look at exact value
 

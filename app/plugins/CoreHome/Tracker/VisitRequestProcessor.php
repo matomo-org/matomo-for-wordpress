@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -17,6 +17,7 @@ use Piwik\Tracker\Cache;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\RequestProcessor;
 use Piwik\Tracker\Settings;
+use Piwik\Tracker\TrackerConfig;
 use Piwik\Tracker\Visit\VisitProperties;
 use Piwik\Tracker\VisitExcluded;
 use Piwik\Tracker\VisitorRecognizer;
@@ -120,6 +121,8 @@ class VisitRequestProcessor extends RequestProcessor
         $isNewVisit = $this->isVisitNew($visitProperties, $request, $this->visitorRecognizer->getLastKnownVisit());
         $request->setMetadata('CoreHome', 'isNewVisit', $isNewVisit);
 
+        $request->setMetadata('CoreHome', 'lastKnownVisit', $this->visitorRecognizer->getLastKnownVisit());
+
         if (!$isNewVisit) { // only copy over known visitor's information, if this is for an ongoing visit
             $this->visitorRecognizer->updateVisitPropertiesFromLastVisitRow($visitProperties);
         }
@@ -189,7 +192,8 @@ class VisitRequestProcessor extends RequestProcessor
             return true;
         }
 
-        if (!$this->lastUserIdWasSetAndDoesMatch($visitProperties, $request)) {
+        if (!TrackerConfig::getConfigValue('enable_userid_overwrites_visitorid')
+            && !$this->lastUserIdWasSetAndDoesMatch($visitProperties, $request)) {
             Common::printDebug("Visitor detected, but last user_id does not match...");
             return true;
         }

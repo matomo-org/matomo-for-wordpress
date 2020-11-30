@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -9,7 +9,6 @@
 namespace Piwik\Plugins\API;
 
 use Piwik\Container\StaticContainer;
-use Piwik\DeviceDetector\DeviceDetectorCache;
 use Piwik\Menu\MenuAdmin;
 use Piwik\Menu\MenuTop;
 use Piwik\Piwik;
@@ -52,7 +51,7 @@ class Menu extends \Piwik\Plugin\Menu
         }
 
         $ua = new OperatingSystem($_SERVER['HTTP_USER_AGENT']);
-	    $ua->setCache(StaticContainer::get('DeviceDetector\Cache\Cache'));
+        $ua->setCache(StaticContainer::get('DeviceDetector\Cache\Cache'));
         $parsedOS = $ua->parse();
 
         if (!empty($parsedOS['short_name']) && in_array($parsedOS['short_name'], array(self::DD_SHORT_NAME_ANDROID, self::DD_SHORT_NAME_IOS))) {

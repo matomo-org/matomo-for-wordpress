@@ -7,13 +7,6 @@
     </div>
 
     <div class="content">
-        <h2>Piwik is now Matomo</h2>
-        <p>
-            <a target='_blank' rel='noreferrer noopener' href='https://matomo.org/blog/2018/01/piwik-is-now-matomo/'>
-                <img src='https://matomo.org/wp-content/uploads/2018/01/banner_piwik_is_now_matomo.jpg' width='70%'>
-            </a>
-        </p>
-
         <h2>
             {{ 'CoreUpdater_ThankYouUpdatePiwik'|translate }}
         </h2>
@@ -35,6 +28,19 @@
                 <a href="https://matomo.org/hosting/?pk_medium=App_Cloud_button&pk_source=Matomo_App&pk_campaign=App_Updated" class="btn btn-block">{{ 'CoreUpdater_CloudHosting'|translate }}</a>
             </div>
         </div>
+
+        {% if feedbackMessages is defined and feedbackMessages is not empty %}
+        <h2>{{ 'CoreUpdater_UpdateLog'|translate }}</h2>
+        <div class="row">
+            <div class="col s12">
+                <pre style="margin-top: 0;"><code>
+                    {%- for message in feedbackMessages %}
+&#10003; {{ message }}
+{% endfor -%}
+                </code></pre>
+            </div>
+        </div>
+        {% endif %}
 
     </div>
 

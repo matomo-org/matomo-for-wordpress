@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -12,10 +12,8 @@ namespace Piwik\Tracker;
 use Exception;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
-use Piwik\Piwik;
 use Piwik\Plugin\Dimension\ActionDimension;
 use Piwik\Plugin\Manager;
-use Piwik\Tracker;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -112,7 +110,26 @@ abstract class Action
             return $action;
         }
 
+        if (self::isCustomActionRequest($request)) {
+            throw new Exception('Request was meant for a plugin which is no longer activated. Request needs to be ignored.');
+        }
+
         return new ActionPageview($request);
+    }
+
+    /**
+     * Returns true if the tracking request was meant for some action that isn't the page view. See
+     * https://github.com/matomo-org/matomo/pull/16570 for more details. Basically, plugins that implement a tracker
+     * action should send a `ca=1` tracking parameter along the request so it doesn't get executed should the plugin
+     * be disabled but the JS tracker is still cached and keeps on sending these requests.
+     *
+     * @param Request $request
+     * @return bool
+     * @throws Exception
+     */
+    public static function isCustomActionRequest(Request  $request)
+    {
+        return $request->hasParam('ca') && $request->getParam('ca');
     }
 
     private static function getPriority(Action $actionType)
@@ -184,11 +201,6 @@ abstract class Action
     public function getActionType()
     {
         return $this->actionType;
-    }
-
-    public function getCustomVariables()
-    {
-        return $this->request->getCustomVariables($scope = 'page');
     }
 
     // custom_float column

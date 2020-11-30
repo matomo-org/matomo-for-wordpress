@@ -9,6 +9,8 @@ install:
   - mv wp-matomo matomo
   - cd matomo
   - MATOMO_PLUGIN_DIR_PATH=`pwd`
+  - if [[ $TRAVIS_PHP_VERSION > '7.2' ]]; then wget -O ~/.phpenv/versions/$(phpenv version-name)/bin/phpunit https://phar.phpunit.de/phpunit-7.phar; fi
+  - if [[ $TRAVIS_PHP_VERSION > '7.2' ]]; then chmod 755 ~/.phpenv/versions/$(phpenv version-name)/bin/phpunit; fi
 
 notifications:
   email:
@@ -27,15 +29,11 @@ matrix:
       env: WP_VERSION=latest
     - php: 7.2
       env: WP_VERSION=latest
-    - php: 7.1
-      env: WP_VERSION=latest
-    - php: 7.0
-      env: WP_VERSION=latest
-    - php: 7.0
+    - php: 7.2
       env: WP_VERSION=5.0
-    - php: 7.0
+    - php: 7.2
       env: WP_VERSION=trunk
-    - php: 7.0
+    - php: 7.2
       env: WP_TRAVISCI=phpcs
   allow_failures:
     - env: WP_TRAVISCI=phpcs

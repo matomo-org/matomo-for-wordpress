@@ -131,6 +131,10 @@ class WordPress extends Mysqli {
 		// random number not really needed but may prevent random issues that someone could somehow inject easily something
 
 		foreach ($bind as $index => $val) {
+			if (is_object($val) && method_exists($val, '__toString')) {
+				$bind[$index] = $val->__toString();
+			}
+
 			if (is_null($val)) {
 				$bind[$index] = $null_placeholder;
 				$has_replaced_null = true;

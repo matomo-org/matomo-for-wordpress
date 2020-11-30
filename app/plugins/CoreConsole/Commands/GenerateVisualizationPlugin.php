@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -49,7 +49,7 @@ class GenerateVisualizationPlugin extends GeneratePlugin
             'ExampleVisualizationDescription' => $description
         );
 
-        $this->copyTemplateToPlugin($exampleFolder, $pluginName, $replace, $whitelistFiles = array());
+        $this->copyTemplateToPlugin($exampleFolder, $pluginName, $replace, $allowListFiles = array());
 
         $this->writeSuccessMessage($output, array(
              sprintf('Visualization plugin %s %s generated.', $pluginName, $version),

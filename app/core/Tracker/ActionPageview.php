@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -17,8 +17,6 @@ use Piwik\Config;
  */
 class ActionPageview extends Action
 {
-    protected $timeGeneration = false;
-
     public function __construct(Request $request)
     {
         parent::__construct(Action::TYPE_PAGE_URL, $request);
@@ -29,8 +27,6 @@ class ActionPageview extends Action
         $actionName = $request->getParam('action_name');
         $actionName = $this->cleanupActionName($actionName);
         $this->setActionName($actionName);
-
-        $this->timeGeneration = $this->request->getPageGenerationTime();
     }
 
     protected function getActionsToLookup()
@@ -41,14 +37,9 @@ class ActionPageview extends Action
         );
     }
 
-    public function getCustomFloatValue()
-    {
-        return $this->request->getPageGenerationTime();
-    }
-
     public static function shouldHandle(Request $request)
     {
-        return true;
+        return !Action::isCustomActionRequest($request);
     }
 
     public function getIdActionUrlForEntryAndExitIds()

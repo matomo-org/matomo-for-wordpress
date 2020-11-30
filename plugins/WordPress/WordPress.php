@@ -36,7 +36,7 @@ class WordPress extends Plugin
     public function registerEvents()
     {
         return array(
-            'API.UsersManager.getTokenAuth' => 'disableApiIfNotBootstrapped',
+            'API.UsersManager.createAppSpecificTokenAuth' => 'disableApiIfNotBootstrapped',
             'Request.dispatch' => 'onDispatchRequest',
             'Request.dispatch.end' => 'onDispatchRequestEnd',
             'User.isNotAuthorized' => array('before' => true, 'function' => 'noAccess'),
@@ -51,7 +51,7 @@ class WordPress extends Plugin
             'API.Tour.getChallenges.end' => 'modifyTourChallenges',
 	        'API.ScheduledReports.generateReport.end' => 'onGenerateReportEnd',
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
-            'CustomMatomoJs.manipulateJsTracker' => 'updateHeatmapTrackerPath',
+            'CustomJsTracker.manipulateJsTracker' => 'updateHeatmapTrackerPath',
             'Visualization.beforeRender' => 'onBeforeRenderView',
         );
     }
@@ -325,7 +325,10 @@ class WordPress extends Plugin
             array('coreadminhome', 'trackingcodegenerator'),
             array('usersmanager', 'index'),
             array('usersmanager', ''),
+            array('usersmanager', 'addnewtoken'),
             array('usersmanager', 'usersettings'),
+            array('usersmanager', 'deletetoken'),
+            array('usersmanager', 'usersecurity'),
             array('sitesmanager', ''),
             array('sitesmanager', 'globalsettings'),
             array('feedback', ''),

@@ -338,6 +338,7 @@
         "Search": "Hľadanie",
         "Clear": "Vyčisti",
         "SearchNoResults": "Žiadne výsledky",
+        "Security": "Bezpečnosť",
         "SeeAll": "zobraziť všetky",
         "SeeTheOfficialDocumentationForMoreInformation": "Pre viac informácií pozri %1$sofficiálne dokumentácie%2$s.",
         "SeeThisFaq": "Pozrite %1$s často kladné otázky %2$s",
@@ -641,11 +642,9 @@
         "Default": "Prednastavené",
         "DonateCall1": "Používanie projektu Matomo Vás nebude nikdy nič stáť, ale to neznamená, že jeho vývoj nič nestojí.",
         "DonateCall2": "Matomo potrebuje Vašu neustálu podporu aby rástol a prospieval.",
-        "DonateFormInstructions": "Kliknite na bežec a vyberte hodnotu, potom kliknite na subscribe -prispieť- pre finančnú podporu.",
         "ExcludeRowsWithLowPopulation": "Všetky riadky sú zobrazené %s Vylúčiť nízku populáciu",
         "ExternalHelp": "Nápoveda (otvorí sa nová tabuľka)",
         "FlattenDataTable": "Report je hierarchický %s Urobiť ho plochý",
-        "HowMuchIsPiwikWorth": "Ako veľmi je Matomo pre Vás cenný?",
         "IncludeRowsWithLowPopulation": "Riadky s nízkou populáciou sú skryté %s Zobraziť všetky riadky",
         "InjectedHostEmailBody": "Hello, dnes som sa pokúšal vstúpiť do Matomou ale objavilo sa neznáme hostname varovanie.",
         "InjectedHostEmailSubject": "Do Matomou bolo vstúpené s neznámym hostname: %s",
@@ -653,7 +652,6 @@
         "InjectedHostSuperUserWarning": "Matomo môže byť zle nakonfigurovaný (napr., ak bol práve Matomo presunutý na nový server alebo URL). Môžete buďto %1$s kliknúť sem a pridať %2$s ako platné Matomo hostname (ak tomu dôverujete)%3$s, alebo %4$s kliknúť sem a vsúpiť %5$s do Matomou bezpečne%6$s.",
         "InjectedHostWarningIntro": "Práve vstupujete do Matomo z %1$s, ale Matomo bol nakonfigurovaný aby bežal na tejto adrese: %2$s.",
         "MainNavigation": "Hlavná navigácia",
-        "MakeOneTimeDonation": "Jednorázovo finančne podporiť.",
         "Menu": "Menu",
         "NoPrivilegesAskPiwikAdmin": "Ste prihlásený ako '%1$s' ale vyzerá to tak , že nemáte žiadne povolenie do Matomo. %2$s Spýtajte sa Vášho Matomo administrátora (Kliknite pre email)%3$s aby Vám dal 'prezerací' prístup na webstránku.",
         "PeriodRange": "Rozsah",
@@ -801,14 +799,6 @@
         "YourDatabaseIsOutOfDate": "Vaša Matomo databáza je zastaralá a musí byť zaktualizovaná, aby ste mohli pokračovať ďalej.",
         "ViewVersionChangelog": "Prezeranie protokolu zmien pre túto verziu:"
     },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "Názov vlastnej premennej",
-        "ColumnCustomVariableValue": "Hodnota vlastnej premennej",
-        "CustomVariables": "Vlastné premenné",
-        "ScopeX": "Rozsah %s",
-        "Index": "Index",
-        "Unused": "Nepoužité"
-    },
     "DBStats": {
         "DatabaseUsage": "Využitie databázy",
         "DataSize": "Veľkosť dát",
@@ -868,6 +858,7 @@
         "ColumnOperatingSystem": "Operačný systém",
         "dataTableLabelTypes": "Typ",
         "OperatingSystems": "Operačný systém",
+        "MobileApp": "Mobilná aplikácia",
         "WidgetBrowsers": "Prehliadače návštevníkov"
     },
     "Ecommerce": {
@@ -891,6 +882,9 @@
         "IWantTo": "Chcem:",
         "SendFeedback": "Odoslať spätnú väzbu",
         "Forums": "Fóra"
+    },
+    "GeoIp2": {
+        "UpdaterWasLastRun": "Aktualizátor bol naposledy spustený %s."
     },
     "Goals": {
         "AbandonedCart": "Opustený košík",
@@ -1176,7 +1170,7 @@
         "Country_MF": "Svätý Martin (fr.)",
         "Country_MG": "Madagaskar",
         "Country_MH": "Marshallove ostrovy",
-        "Country_MK": "Macedónsko",
+        "Country_MK": "Severné Macedónsko",
         "Country_ML": "Mali",
         "Country_MM": "Mjanmarsko",
         "Country_MN": "Mongolsko",
@@ -1245,7 +1239,7 @@
         "Country_SV": "Salvádor",
         "Country_SX": "Svätý Martin (hol.)",
         "Country_SY": "Sýria",
-        "Country_SZ": "Svazijsko",
+        "Country_SZ": "Eswatini",
         "Country_TC": "Turks a Caicos",
         "Country_TD": "Čad",
         "Country_TF": "Francúzske južné a antarktické územia",
@@ -2067,6 +2061,7 @@
         "Timezone_Asia_Omsk": "Omsk",
         "Timezone_Asia_Oral": "Uraľsk",
         "Timezone_Asia_Pontianak": "Pontianak",
+        "Timezone_Asia_Qostanay": "Kostanaj",
         "Timezone_Asia_Qyzylorda": "Kyzylorda",
         "Timezone_Asia_Rangoon": "Rangún",
         "Timezone_Asia_Saigon": "Hočiminovo Mesto",
@@ -2249,10 +2244,6 @@
         "CurrentDBSize": "Aktuálna veľkosť databázy",
         "DBPurged": "Databáza vyčistená."
     },
-    "Provider": {
-        "ColumnProvider": "Poskytovateľ",
-        "WidgetProviders": "Poskytovatelia"
-    },
     "Referrers": {
         "Campaigns": "Kampane",
         "ColumnCampaign": "Kampaň",
@@ -2358,8 +2349,7 @@
         "Country": "Krajina",
         "DistinctCountries": "Počet rôznych krajín: %s",
         "Location": "Miesto",
-        "SubmenuLocations": "Umiestnenie",
-        "UpdaterWasLastRun": "Aktualizátor bol naposledy spustený %s."
+        "SubmenuLocations": "Umiestnenie"
     },
     "UserCountryMap": {
         "Cities": "Mestá",
@@ -2382,7 +2372,6 @@
     },
     "UsersManager": {
         "AddUser": "Pridať nového používateľa",
-        "Alias": "Alias",
         "AllWebsites": "Všetky webstránky",
         "AnonymousUser": "Anonymný používateľ",
         "ApplyToAllWebsites": "Použiť na všetky webstránky",

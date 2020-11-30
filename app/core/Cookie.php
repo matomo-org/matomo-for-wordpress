@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -153,8 +153,8 @@ class Cookie
 
         $header = 'Set-Cookie: ' . rawurlencode($Name) . '=' . rawurlencode($Value)
             . (empty($Expires) ? '' : '; expires=' . gmdate('D, d-M-Y H:i:s', $Expires) . ' GMT')
-            . (empty($Path) ? '' : '; path=' . rawurlencode($Path))
-            . (empty($Domain) ? '' : '; domain=' . $Domain)
+            . (empty($Path) ? '' : '; path=' . $Path)
+            . (empty($Domain) ? '' : '; domain=' . rawurlencode($Domain))
             . (!$Secure ? '' : '; secure')
             . (!$HTTPOnly ? '' : '; HttpOnly')
             . (!$sameSite ? '' : '; SameSite=' . rawurlencode($sameSite));
@@ -177,6 +177,7 @@ class Cookie
     {
         $this->setP3PHeader();
         $this->setCookie($this->name, 'deleted', time() - 31536001, $this->path, $this->domain);
+        $this->clear();
     }
 
     /**
@@ -203,6 +204,7 @@ class Cookie
 
     /**
      * Extract signed content from string: content VALUE_SEPARATOR '_=' signature
+     * Only needed for BC.
      *
      * @param string $content
      * @return string|bool  Content or false if unsigned
@@ -211,8 +213,8 @@ class Cookie
     {
         $signature = substr($content, -40);
 
-        if (substr($content, -43, 3) == self::VALUE_SEPARATOR . '_=' &&
-            $signature === sha1(substr($content, 0, -40) . SettingsPiwik::getSalt())
+        if (substr($content, -43, 3) === self::VALUE_SEPARATOR . '_=' &&
+            ($signature === sha1(substr($content, 0, -40) . SettingsPiwik::getSalt()))
         ) {
             // strip trailing: VALUE_SEPARATOR '_=' signature"
             return substr($content, 0, -43);
@@ -229,7 +231,17 @@ class Cookie
      */
     protected function loadContentFromCookie()
     {
+        // we keep trying to read signed content for BC ... if it detects a correctly signed cookie then we read
+        // this value
         $cookieStr = $this->extractSignedContent($_COOKIE[$this->name]);
+        $isSigned = !empty($cookieStr);
+
+        if ($cookieStr === false
+            && !empty($_COOKIE[$this->name])
+            && strpos($_COOKIE[$this->name], '=') !== false) {
+            // cookie was set since Matomo 4
+            $cookieStr = $_COOKIE[$this->name];
+        }
 
         if ($cookieStr === false) {
             return;
@@ -241,13 +253,18 @@ class Cookie
             $varName = substr($nameValue, 0, $equalPos);
             $varValue = substr($nameValue, $equalPos + 1);
 
-            // no numeric value are base64 encoded so we need to decode them
             if (!is_numeric($varValue)) {
                 $tmpValue = base64_decode($varValue);
-                $varValue = safe_unserialize($tmpValue);
+                if ($isSigned) {
+                    // only unserialise content if it was signed meaning the cookie was generated pre Matomo 4
+                    $varValue = safe_unserialize($tmpValue);
+                } else {
+                    $varValue = $tmpValue;
+                }
 
                 // discard entire cookie
                 // note: this assumes we never serialize a boolean
+                // can only happen when it was signed pre Matomo 4
                 if ($varValue === false && $tmpValue !== 'b:0;') {
                     $this->value = array();
                     unset($_COOKIE[$this->name]);
@@ -267,25 +284,18 @@ class Cookie
      */
     public function generateContentString()
     {
-        $cookieStr = '';
+        $cookieStrArr = [];
 
         foreach ($this->value as $name => $value) {
-            if (!is_numeric($value)) {
-                $value = base64_encode(safe_serialize($value));
+            if (!is_numeric($value) && !is_string($value))  {
+                throw new \Exception('Only strings and numbers can be used in cookies. Value is of type ' . gettype($value));
+            } elseif (!is_numeric($value)) {
+                $value = base64_encode($value);
             }
-
-            $cookieStr .= "$name=$value" . self::VALUE_SEPARATOR;
+            $cookieStrArr[] = "$name=$value"; 
         }
 
-        if (!empty($cookieStr)) {
-            $cookieStr .= '_=';
-
-            // sign cookie
-            $signature = sha1($cookieStr . SettingsPiwik::getSalt());
-            return $cookieStr . $signature;
-        }
-
-        return '';
+        return implode(self::VALUE_SEPARATOR, $cookieStrArr);
     }
 
     /**
@@ -322,14 +332,11 @@ class Cookie
      * Registers a new name => value association in the cookie.
      *
      * Registering new values is optimal if the value is a numeric value.
-     * If the value is a string, it will be saved as a base64 encoded string.
-     * If the value is an array, it will be saved as a serialized and base64 encoded
-     * string which is not very good in terms of bytes usage.
-     * You should save arrays only when you are sure about their maximum data size.
+     * Only numbers and strings can be saved in the cookie.
      * A cookie has to stay small and its size shouldn't increase over time!
      *
      * @param string $name Name of the value to save; the name will be used to retrieve this value
-     * @param string|array|number $value Value to save. If null, entry will be deleted from cookie.
+     * @param string|number $value Value to save. If null, entry will be deleted from cookie.
      */
     public function set($name, $value)
     {
@@ -440,7 +447,7 @@ class Cookie
     {
         $sameSite = ucfirst(strtolower($default));
 
-        if ($sameSite == 'None') {
+        if ($sameSite === 'None') {
             if ((!ProxyHttp::isHttps())) {
                 $sameSite = 'Lax'; // None can be only used when secure flag will be set
             } else {

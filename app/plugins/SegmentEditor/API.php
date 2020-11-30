@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -9,6 +9,7 @@
 namespace Piwik\Plugins\SegmentEditor;
 
 use Exception;
+use Piwik\ArchiveProcessor\Rules;
 use Piwik\Common;
 use Piwik\Date;
 use Piwik\Db;
@@ -87,36 +88,35 @@ class API extends \Piwik\Plugin\API
     protected function checkAutoArchive($autoArchive, $idSite)
     {
         $autoArchive = (int)$autoArchive;
-        if (!$autoArchive) {
-            return $autoArchive;
-        }
-
-        $exception = new Exception(
-            "Please contact Support to make these changes on your behalf. ".
-            " To modify a pre-processed segment, a user must have admin access or super user access. "
-        );
 
         // Segment 'All websites' and pre-processed requires Super User
-        if (empty($idSite)) {
+        if (empty($idSite) && $autoArchive) {
             if (!Piwik::hasUserSuperUserAccess()) {
-                throw $exception;
+                throw new Exception(
+                    "Please contact Support to make these changes on your behalf. ".
+                    " To modify a pre-processed segment for all websites, a user must have super user access. "
+                );
             }
-            return $autoArchive;
         }
 
         // if real-time segments are disabled, then allow user to create pre-processed report
-        $realTimeSegmentsDisabled = !Config::getInstance()->General['enable_create_realtime_segments'];
-        if($realTimeSegmentsDisabled) {
-            // User is at least view
-            if(!Piwik::isUserHasViewAccess($idSite)) {
-                throw $exception;
-            }
-            return $autoArchive;
+        $realTimeSegmentsEnabled = Config::getInstance()->General['enable_create_realtime_segments'];
+        if (!$realTimeSegmentsEnabled && !$autoArchive) {
+            throw new Exception(
+                "Real time segments are disabled. You need to enable auto archiving."
+            );
         }
 
-        // pre-processed segment for a given website requires admin access
-        if(!Piwik::isUserHasAdminAccess($idSite)) {
-            throw $exception;
+        if ($autoArchive) {
+            if (Rules::isBrowserTriggerEnabled()) {
+                $message = "Pre-processed segments can only be created if browser triggered archiving is disabled.";
+                if (Piwik::hasUserSuperUserAccess()) {
+                    $message .= " To disable browser archiving follow the instructions here: https://matomo.org/docs/setup-auto-archiving/.";
+                }
+                throw new Exception($message);
+            }
+
+            Piwik::checkUserHasViewAccess($idSite);
         }
 
         return $autoArchive;

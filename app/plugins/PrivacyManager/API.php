@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -8,6 +8,7 @@
 
 namespace Piwik\Plugins\PrivacyManager;
 
+use Piwik\API\Request;
 use Piwik\Piwik;
 use Piwik\Config as PiwikConfig;
 use Piwik\Plugins\PrivacyManager\Model\DataSubjects;
@@ -39,11 +40,21 @@ class API extends \Piwik\Plugin\API
      */
     private $logDataAnonymizer;
 
-    public function __construct(DataSubjects $gdpr, LogDataAnonymizations $logDataAnonymizations, LogDataAnonymizer $logDataAnonymizer)
-    {
+    /**
+     * @var ReferrerAnonymizer
+     */
+    private $referrerAnonymizer;
+
+    public function __construct(
+        DataSubjects $gdpr,
+        LogDataAnonymizations $logDataAnonymizations,
+        LogDataAnonymizer $logDataAnonymizer,
+        ReferrerAnonymizer $referrerAnonymizer
+    ) {
         $this->gdpr = $gdpr;
         $this->logDataAnonymizations = $logDataAnonymizations;
         $this->logDataAnonymizer = $logDataAnonymizer;
+        $this->referrerAnonymizer = $referrerAnonymizer;
     }
 
     private function checkDataSubjectVisits($visits)
@@ -75,8 +86,58 @@ class API extends \Piwik\Plugin\API
         return $this->gdpr->exportDataSubjects($visits);
     }
 
-    public function anonymizeSomeRawData($idSites, $date, $anonymizeIp = false, $anonymizeLocation = false, $anonymizeUserId = false, $unsetVisitColumns = [], $unsetLinkVisitActionColumns = [])
+    public function findDataSubjects($idSite, $segment)
     {
+        Piwik::checkUserHasSomeAdminAccess();
+
+        $result = Request::processRequest('Live.getLastVisitsDetails', [
+            'segment' => $segment,
+            'idSite' => $idSite,
+            'period' => 'range',
+            'date' => '1998-01-01,today',
+            'filter_limit' => 401,
+            'doNotFetchActions' => 1
+        ]);
+
+        $columnsToKeep = [
+            'lastActionDateTime',
+            'idVisit',
+            'idSite',
+            'siteName',
+            'visitorId',
+            'visitIp',
+            'userId',
+            'deviceType',
+            'deviceModel',
+            'deviceTypeIcon',
+            'operatingSystem',
+            'operatingSystemIcon',
+            'browser',
+            'browserFamilyDescription',
+            'browserIcon',
+            'country',
+            'region',
+            'countryFlag',
+        ];
+
+        foreach ($result->getColumns() as $column) {
+            if (!in_array($column, $columnsToKeep)) {
+                $result->deleteColumn($column);
+            }
+        }
+
+        return $result;
+    }
+
+    public function anonymizeSomeRawData(
+        $idSites,
+        $date,
+        $anonymizeIp = false,
+        $anonymizeLocation = false,
+        $anonymizeUserId = false,
+        $unsetVisitColumns = [],
+        $unsetLinkVisitActionColumns = []
+    ) {
         Piwik::checkUserHasSuperUserAccess();
 
         if ($idSites === 'all' || empty($idSites)) {
@@ -85,7 +146,16 @@ class API extends \Piwik\Plugin\API
             $idSites = Site::getIdSitesFromIdSitesString($idSites);
         }
         $requester = Piwik::getCurrentUserLogin();
-        $this->logDataAnonymizations->scheduleEntry($requester, $idSites, $date, $anonymizeIp, $anonymizeLocation, $anonymizeUserId, $unsetVisitColumns, $unsetLinkVisitActionColumns);
+        $this->logDataAnonymizations->scheduleEntry(
+            $requester,
+            $idSites,
+            $date,
+            $anonymizeIp,
+            $anonymizeLocation,
+            $anonymizeUserId,
+            $unsetVisitColumns,
+            $unsetLinkVisitActionColumns
+        );
     }
 
     public function getAvailableVisitColumnsToAnonymize()
@@ -93,6 +163,7 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
 
         $columns = $this->logDataAnonymizer->getAvailableVisitColumnsToAnonymize();
+
         return $this->formatAvailableColumnsToAnonymize($columns);
     }
 
@@ -101,6 +172,7 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
 
         $columns = $this->logDataAnonymizer->getAvailableLinkVisitActionColumnsToAnonymize();
+
         return $this->formatAvailableColumnsToAnonymize($columns);
     }
 
@@ -114,13 +186,14 @@ class API extends \Piwik\Plugin\API
                 'default_value' => $default
             );
         }
+
         return $formatted;
     }
 
     /**
      * @internal
      */
-    public function setAnonymizeIpSettings($anonymizeIPEnable, $maskLength, $useAnonymizedIpForVisitEnrichment, $anonymizeUserId = false, $anonymizeOrderId = false)
+    public function setAnonymizeIpSettings($anonymizeIPEnable, $maskLength, $useAnonymizedIpForVisitEnrichment, $anonymizeUserId = false, $anonymizeOrderId = false, $anonymizeReferrer = '', $forceCookielessTracking = false)
     {
         Piwik::checkUserHasSuperUserAccess();
 
@@ -132,9 +205,15 @@ class API extends \Piwik\Plugin\API
             // pass
         }
 
+        if (!empty($anonymizeReferrer)
+            && !array_key_exists($anonymizeReferrer, $this->referrerAnonymizer->getAvailableAnonymizationOptions())) {
+            $anonymizeReferrer = '';
+        }
+
         $privacyConfig = new Config();
         $privacyConfig->ipAddressMaskLength = (int) $maskLength;
         $privacyConfig->useAnonymizedIpForVisitEnrichment = (bool) $useAnonymizedIpForVisitEnrichment;
+        $privacyConfig->anonymizeReferrer = $anonymizeReferrer;
 
         if (false !== $anonymizeUserId) {
             $privacyConfig->anonymizeUserId = (bool) $anonymizeUserId;
@@ -142,6 +221,13 @@ class API extends \Piwik\Plugin\API
 
         if (false !== $anonymizeOrderId) {
             $privacyConfig->anonymizeOrderId = (bool) $anonymizeOrderId;
+        }
+
+        if (false !== $forceCookielessTracking) {
+            $privacyConfig->forceCookielessTracking = (bool) $forceCookielessTracking;
+
+            // update tracker files
+            Piwik::postEvent('CustomJsTracker.updateTracker');
         }
 
         return true;
@@ -218,14 +304,15 @@ class API extends \Piwik\Plugin\API
 
         $settings['delete_reports_older_than'] = $deleteReportsOlderThan;
 
-        $settings['delete_reports_keep_basic_metrics']   = (int) $keepBasic;
-        $settings['delete_reports_keep_day_reports']     = (int) $keepDay;
-        $settings['delete_reports_keep_week_reports']    = (int) $keepWeek;
-        $settings['delete_reports_keep_month_reports']   = (int) $keepMonth;
-        $settings['delete_reports_keep_year_reports']    = (int) $keepYear;
-        $settings['delete_reports_keep_range_reports']   = (int) $keepRange;
-        $settings['delete_reports_keep_segment_reports'] = (int) $keepSegments;
-        $settings['delete_logs_max_rows_per_query']      = PiwikConfig::getInstance()->Deletelogs['delete_logs_max_rows_per_query'];
+        $settings['delete_reports_keep_basic_metrics']             = (int) $keepBasic;
+        $settings['delete_reports_keep_day_reports']               = (int) $keepDay;
+        $settings['delete_reports_keep_week_reports']              = (int) $keepWeek;
+        $settings['delete_reports_keep_month_reports']             = (int) $keepMonth;
+        $settings['delete_reports_keep_year_reports']              = (int) $keepYear;
+        $settings['delete_reports_keep_range_reports']             = (int) $keepRange;
+        $settings['delete_reports_keep_segment_reports']           = (int) $keepSegments;
+        $settings['delete_logs_max_rows_per_query']                = PiwikConfig::getInstance()->Deletelogs['delete_logs_max_rows_per_query'];
+        $settings['delete_logs_unused_actions_max_rows_per_query'] = PiwikConfig::getInstance()->Deletelogs['delete_logs_unused_actions_max_rows_per_query'];
 
         return $this->savePurgeDataSettings($settings);
     }

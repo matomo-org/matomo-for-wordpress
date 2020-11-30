@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -8,6 +8,7 @@
  */
 namespace Piwik;
 
+use Piwik\Archive\ArchiveInvalidator;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugin\Dependency;
 use Piwik\Plugin\Manager;
@@ -108,7 +109,7 @@ class Plugin
      * perfect but efficient. If the cache is used we need to make sure to call setId() before usage as there
      * is maybe a different key set since last usage.
      *
-     * @var \Piwik\Cache\Eager
+     * @var \Matomo\Cache\Eager
      */
     private $cache;
 
@@ -185,7 +186,6 @@ class Plugin
      * - 'theme' => bool                // Whether this plugin is a theme (a theme is a plugin, but a plugin is not necessarily a theme)
      *
      * @return array
-     * @deprecated
      */
     public function getInformation()
     {
@@ -220,16 +220,6 @@ class Plugin
     public function registerEvents()
     {
         return array();
-    }
-
-    /**
-     * @ignore
-     * @deprecated since 2.15.0 use {@link registerEvents()} instead.
-     * @return array
-     */
-    public function getListHooksRegistered()
-    {
-        return $this->registerEvents();
     }
 
     /**
@@ -473,6 +463,42 @@ class Plugin
         ));
     }
 
+    /**
+     * Schedules re-archiving of this plugin's reports from when this plugin was last
+     * deactivated to now. If the last time core:archive was run is earlier than the
+     * plugin's last deactivation time, then we use that time instead.
+     *
+     * Note: this only works for CLI archiving setups.
+     *
+     * Note: the time frame is limited by the `[General] rearchive_reports_in_past_last_n_months`
+     * INI config value.
+     *
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     */
+    public function schedulePluginReArchiving()
+    {
+        $lastDeactivationTime = $this->getPluginLastDeactivationTime();
+
+        $dateTime = null;
+
+        $lastCronArchiveTime = (int) Option::get(CronArchive::OPTION_ARCHIVING_FINISHED_TS);
+        if (empty($lastCronArchiveTime)) {
+            $dateTime = $lastDeactivationTime;
+        } else if (empty($lastDeactivationTime)) {
+            $dateTime = null; // use default earliest time
+        } else {
+            $lastCronArchiveTime = Date::factory($lastCronArchiveTime);
+            $dateTime = $lastDeactivationTime->isEarlier($lastCronArchiveTime) ? $lastDeactivationTime : $lastCronArchiveTime;
+        }
+
+        if (empty($dateTime)) { // sanity check
+            $dateTime = null;
+        }
+
+        $archiveInvalidator = StaticContainer::get(ArchiveInvalidator::class);
+        $archiveInvalidator->scheduleReArchiving('all', $this->getPluginName(), $report = null, $dateTime);
+    }
 
     /**
      * Extracts the plugin name from a backtrace array. Returns `false` if we can't find one.
@@ -523,6 +549,34 @@ class Plugin
     public function isTrackerPlugin()
     {
         return false;
+    }
+
+    /**
+     * @return Date|null
+     * @throws \Exception
+     */
+    public function getPluginLastActivationTime()
+    {
+        $optionName = Manager::LAST_PLUGIN_ACTIVATION_TIME_OPTION_PREFIX . $this->pluginName;
+        $time = Option::get($optionName);
+        if (empty($time)) {
+            return null;
+        }
+        return Date::factory((int) $time);
+    }
+
+    /**
+     * @return Date|null
+     * @throws \Exception
+     */
+    public function getPluginLastDeactivationTime()
+    {
+        $optionName = Manager::LAST_PLUGIN_DEACTIVATION_TIME_OPTION_PREFIX . $this->pluginName;
+        $time = Option::get($optionName);
+        if (empty($time)) {
+            return null;
+        }
+        return Date::factory((int) $time);
     }
 
     /**
@@ -595,5 +649,6 @@ class Plugin
         return $dependency;
     }
 }
+
 }
     

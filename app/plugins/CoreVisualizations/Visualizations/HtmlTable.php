@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -218,7 +218,7 @@ class HtmlTable extends Visualization
         $columnNamesToIndices = Metrics::getMappingFromNameToId();
         $formatter = NumberFormatter::getInstance();
 
-        $totals = $this->dataTable->getMetadata('totals');
+        $totals = $this->dataTable->getMetadata('totalsUnformatted');
 
         $siteSummary = $this->getSiteSummary();
         $siteTotalRow = $siteSummary ? $siteSummary->getFirstRow() : null;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
+ * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
@@ -83,10 +83,10 @@ class AddColumnsProcessedMetricsGoal extends AddColumnsProcessedMetrics
      *                                  If self::GOALS_OVERVIEW, only the main goal metrics will be added.
      *                                  If an int > 0, then will process only metrics for this specific Goal.
      */
-    public function __construct($table, $enable = true, $processOnlyIdGoal, $goalsToProcess = null)
+    public function __construct($table, $enable, $processOnlyIdGoal, $goalsToProcess = null)
     {
         $this->processOnlyIdGoal = $processOnlyIdGoal;
-        $this->isEcommerce = $this->processOnlyIdGoal == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER || $this->processOnlyIdGoal == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART;
+        $this->isEcommerce = $this->processOnlyIdGoal === Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER || $this->processOnlyIdGoal === Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART;
         parent::__construct($table);
         // Ensure that all rows with no visit but conversions will be displayed
         $this->deleteRowsWithNoVisit = false;

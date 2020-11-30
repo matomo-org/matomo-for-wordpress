@@ -237,6 +237,7 @@
         "Save": "บันทึก",
         "SaveImageOnYourComputer": "เพื่อบันทึกรูปภาพลงบนคอมพิวเตอร์ของคุณ, คลิกขวาที่รูปภาพแล้วเลือก \"บันทึกภาพเป็น...\"",
         "Search": "ค้นหา",
+        "Security": "ความปลอดภัย",
         "SeeTheOfficialDocumentationForMoreInformation": "สำหรับข้อมูลเพิ่มเติม ให้ดู %1$s เอกสารอย่างเป็นทางการ %2$s",
         "SelectYesIfYouWantToSendEmailsViaServer": "เมื่อเลือก \"ใช่\" ถ้าหากคุณต้องการหรือมีการส่งอีเมล์ผ่านเนมเซิร์ฟเวอร์ ของฟังก์ชั่นการส่งเมล์ภายใน",
         "Settings": "ตั้งค่า",
@@ -340,8 +341,7 @@
         "KeepTokenSecret": "token_auth นี้จะเป็นความลับในการเข้าสู่ระบบและรหัสผ่านของคุณ %1$s ไม่แชร์ %2$s ได้",
         "LoadedAPIs": "โหลด API %s สำเร็จแล้ว",
         "MoreInformation": "สำหรับข้อมูลเพิ่มเติมเกี่ยวกับ Matomo APIs โปรดให้ดูที่ %1$s บทนำสู่การใช้ Matomo API %2$s และ %3$s แหล่งที่มาของ Matomo API %4$s.",
-        "UserAuthentication": "การรับรองความถูกต้องของผู้ใช้",
-        "UsingTokenAuth": "ถ้าคุณต้องการ ข้อมูลที่ร้องขอ %1$s ภายในสคริปต์ crontab ฯลฯ %2$s คุณต้องการเพิ่มพารามิเตอร์ %3$s API เรียก url ที่ต้องการการรับรองความถูกต้อง"
+        "UserAuthentication": "การรับรองความถูกต้องของผู้ใช้"
     },
     "Actions": {
         "AvgGenerationTimeTooltip": "ค่าเฉลี่ยของจำนวน %1$s ครั้ง %2$s ระหว่าง %3$s และ %4$s",
@@ -477,11 +477,6 @@
         "YouCanUpgradeAutomaticallyOrDownloadPackage": "คุณสามารถอัพเดตเป็นเวอร์ชั่น %s ได้อัตโนมัติ หรือ ดาวน์โหลดไฟลล์แล้วติดตั้งภายหลัง",
         "YourDatabaseIsOutOfDate": "ฐานข้อมูล Matomo ของคุณ ล้าสมัย และต้องถูกอัพเกรดก่อนที่คุณสามารถดำเนินการต่อไป"
     },
-    "CustomVariables": {
-        "ColumnCustomVariableName": "ชื่อตัวแปรที่กำหนดเอง",
-        "ColumnCustomVariableValue": "ค่าตัวแปรที่กำหนดเอง",
-        "CustomVariables": "ตัวแปรที่กำหนดเอง"
-    },
     "DBStats": {
         "DatabaseUsage": "การใช้ฐานข้อมูล",
         "DataSize": "ขนาดข้อมูล",
@@ -540,6 +535,11 @@
         "ManuallySendEmailTo": "กรุณาส่งข้อความของคุณด้วยตนเอง",
         "SendFeedback": "ส่งคำติชม",
         "ThankYou": "ขอบคุณที่ช่วยให้เราสามารถทำให้ Matomo ดีกว่า"
+    },
+    "GeoIp2": {
+        "DownloadingDb": "กำลังดาวน์โหลด %s",
+        "ISPDatabase": "ฐานข้อมูล ISP",
+        "UpdaterWasLastRun": "ตัวปรับปรุงทำงานครั้งล่าสุดเมื่อ %s"
     },
     "Goals": {
         "AddGoal": "เพิ่มเป้าหมาย",
@@ -626,7 +626,6 @@
         "SuperUserSetupSuccess": "Super User สร้างขึ้นเสร็จแล้ว!",
         "SystemCheck": "ตรวจสอบระบบ",
         "SystemCheckAutoUpdateHelp": "หมายเหตุ: โปรแกรมอัพเดตหนึ่งคลิกของ Matomo ต้องใช้สิทธิ์การเขียนไปยังโฟลเดอร์ Matomo และเนื้อหา",
-        "SystemCheckCreateFunctionHelp": "Matomo ใช้ฟังก์ชันแบบไม่ระบุชื่อสำหรับการเรียกกลับ",
         "SystemCheckDatabaseHelp": "Matomo ต้องมีนามสกุล mysqli หรือนามสกุล PDO และ pdo_mysql",
         "SystemCheckDebugBacktraceHelp": "View::factory จะไม่สามารถสร้างมุมมองสำหรับเรียกโมดูล",
         "SystemCheckError": "เกิดข้อผิดพลาดขึ้น - ต้องแก้ไขก่อนดำเนินการต่อไป",
@@ -716,7 +715,7 @@
         "Country_BR": "บราซิล",
         "Country_BS": "บาฮามาส",
         "Country_BT": "ภูฏาน",
-        "Country_BV": "เกาะบูเวต",
+        "Country_BV": "เกาะบูเว",
         "Country_BW": "บอตสวานา",
         "Country_BY": "เบลารุส",
         "Country_BZ": "เบลีซ",
@@ -826,7 +825,7 @@
         "Country_MF": "เซนต์มาร์ติน",
         "Country_MG": "มาดากัสการ์",
         "Country_MH": "หมู่เกาะมาร์แชลล์",
-        "Country_MK": "มาซิโดเนีย",
+        "Country_MK": "มาซิโดเนียเหนือ",
         "Country_ML": "มาลี",
         "Country_MM": "เมียนมาร์ (พม่า)",
         "Country_MN": "มองโกเลีย",
@@ -895,7 +894,7 @@
         "Country_SV": "เอลซัลวาดอร์",
         "Country_SX": "ซินต์มาร์เทน",
         "Country_SY": "ซีเรีย",
-        "Country_SZ": "สวาซิแลนด์",
+        "Country_SZ": "เอสวาตีนี",
         "Country_TC": "หมู่เกาะเติกส์และหมู่เกาะเคคอส",
         "Country_TD": "ชาด",
         "Country_TF": "เฟรนช์เซาเทิร์นเทร์ริทอรีส์",
@@ -1374,7 +1373,7 @@
         "Language_id": "อินโดนีเซีย",
         "Language_ie": "อินเตอร์ลิงกิว",
         "Language_ig": "อิกโบ",
-        "Language_ii": "เสฉวนยิ",
+        "Language_ii": "เสฉวนยี่",
         "Language_ik": "อีนูเปียก",
         "Language_io": "อีโด",
         "Language_is": "ไอซ์แลนด์",
@@ -1717,6 +1716,7 @@
         "Timezone_Asia_Omsk": "โอมสก์",
         "Timezone_Asia_Oral": "ออรัล",
         "Timezone_Asia_Pontianak": "พอนเทียนัก",
+        "Timezone_Asia_Qostanay": "คอสตาเนย์",
         "Timezone_Asia_Qyzylorda": "ไคซีลอร์ดา",
         "Timezone_Asia_Rangoon": "ย่างกุ้ง",
         "Timezone_Asia_Saigon": "นครโฮจิมินห์",
@@ -1857,10 +1857,6 @@
         "TeaserHeadline": "การตั้งค่าความเป็นส่วนตัว",
         "UseAnonymizeIp": "ผู้เข้าชมแบบไม่ระบุที่อยู่ IP"
     },
-    "Provider": {
-        "ColumnProvider": "ผู้ให้บริการ",
-        "WidgetProviders": "ผู้ให้บริการ"
-    },
     "Referrers": {
         "Campaigns": "แคมเปญ",
         "ColumnCampaign": "แคมเปญ",
@@ -1991,14 +1987,11 @@
         "country_a2": "ผู้ให้บริการดาวเทียม",
         "country_o1": "ประเทศอื่นๆ",
         "DistinctCountries": "%s การเข้าชมตามประเทศ",
-        "DownloadingDb": "กำลังดาวน์โหลด %s",
-        "ISPDatabase": "ฐานข้อมูล ISP",
         "Latitude": "ละติจูด",
         "Location": "ตำแหน่งที่ตั้ง",
         "Longitude": "ลองจิจูด",
         "Region": "ภูมิภาค",
-        "SubmenuLocations": "ตำแหน่งที่อยู่",
-        "UpdaterWasLastRun": "ตัวปรับปรุงทำงานครั้งล่าสุดเมื่อ %s"
+        "SubmenuLocations": "ตำแหน่งที่อยู่"
     },
     "UserCountryMap": {
         "map": "แผนที่"
@@ -2011,7 +2004,6 @@
     },
     "UsersManager": {
         "AddUser": "เพิ่มผู้ใช้ใหม่",
-        "Alias": "นามแฝง",
         "AllWebsites": "เว็บไซต์ทั้งหมด",
         "ApplyToAllWebsites": "กระทำกับเว็บไซต์ทั้งหมด",
         "ClickHereToDeleteTheCookie": "คลิกที่นี่เพื่อลบคุกกี้ และมี Matomo ติดตามเข้าชมของคุณ",
