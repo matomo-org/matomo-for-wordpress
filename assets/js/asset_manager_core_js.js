@@ -1,4 +1,4 @@
-/* Matomo Javascript - cb=16ed93058f5f57103eefd3d0d855a1ef*/
+/* Matomo Javascript - cb=7af1ae523e1bfcb0ca4e03470a9b1ecc*/
 
 /*!
  * Matomo - free/libre analytics platform
