@@ -1,5 +1,8 @@
 == Changelog ==
 
+= 4.0.1 =
+* Make sure archiving works when browser archiving is disabled
+
 = 4.0.0 =
 * Update Matomo core to 4.0 see changelog: https://matomo.org/changelog/matomo-4-0-0/
 * Custom Variables is now no longer included but it is available as a marketplace plugin.

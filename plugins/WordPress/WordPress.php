@@ -200,9 +200,14 @@ class WordPress extends Plugin
     		return;
 	    }
 
-        if (strpos($url, 'module=API&method=API.get') !== false
-            && strpos($url, '&trigger=archivephp') !== false
-            && Url::isValidHost(parse_url($url, PHP_URL_HOST))) {
+        if ((strpos($url, 'module=API&method=API.get') !== false
+             && strpos($url, '&trigger=archivephp') !== false
+             && Url::isValidHost(parse_url($url, PHP_URL_HOST)))
+            ||
+            (strpos($url, 'module=API&method=CoreAdminHome.archiveReports') !== false
+             && strpos($url, '&trigger=archivephp') !== false
+             && Url::isValidHost(parse_url($url, PHP_URL_HOST)))
+        ) {
             // archiving query... we avoid issueing an http request for many reasons...
             // eg user might be using self signed certificate and request fails
             // eg http requests may not be allowed
