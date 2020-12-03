@@ -1,5 +1,10 @@
 == Changelog ==
 
+= 4.0.2 =
+* Fix incompatibility with Total Cache plugin
+* Add some new REST API methods
+* Update core to 4.0.4
+
 = 4.0.1 =
 * Make sure archiving works when browser archiving is disabled
 

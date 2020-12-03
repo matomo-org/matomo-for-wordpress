@@ -50,6 +50,8 @@ class API {
 		$this->register_route( 'CoreAdminHome', 'runScheduledTasks' );
 		$this->register_route( 'Dashboard', 'getDashboards' );
 		$this->register_route( 'ImageGraph', 'get' );
+		$this->register_route( 'VisitsSummary', 'getVisits' );
+		$this->register_route( 'VisitsSummary', 'getUniqueVisitors' );
 		$this->register_route( 'LanguagesManager', 'getAvailableLanguages' );
 		$this->register_route( 'LanguagesManager', 'getAvailableLanguagesInfo' );
 		$this->register_route( 'LanguagesManager', 'getAvailableLanguageNames' );

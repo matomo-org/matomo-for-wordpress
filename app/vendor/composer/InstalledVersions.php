@@ -1,5 +1,15 @@
 <?php
 
+
+
+
+
+
+
+
+
+
+
 namespace Composer;
 
 use Composer\Semver\VersionParser;
@@ -14,12 +24,12 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '4.0.3',
-    'version' => '4.0.3.0',
+    'pretty_version' => '4.0.4-b1',
+    'version' => '4.0.4.0-beta1',
     'aliases' => 
     array (
     ),
-    'reference' => 'f4dd5624a1f56602ea449668a40e00b70f0e28f4',
+    'reference' => 'de127131c5f6c4a87e8f751ae4f0e98a0546e074',
     'name' => 'matomo/matomo',
   ),
   'versions' => 
@@ -116,12 +126,12 @@ private static $installed = array (
     ),
     'matomo/matomo' => 
     array (
-      'pretty_version' => '4.0.3',
-      'version' => '4.0.3.0',
+      'pretty_version' => '4.0.4-b1',
+      'version' => '4.0.4.0-beta1',
       'aliases' => 
       array (
       ),
-      'reference' => 'f4dd5624a1f56602ea449668a40e00b70f0e28f4',
+      'reference' => 'de127131c5f6c4a87e8f751ae4f0e98a0546e074',
     ),
     'matomo/matomo-php-tracker' => 
     array (
