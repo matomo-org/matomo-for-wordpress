@@ -189,6 +189,9 @@ if ( $was_updated ) {
 			$matomo_is_not_tracking,
 			$matomo_full_generated_tracking_group . ' matomo-track-option-tagmanager'
 		);
+
+		$matomo_form->show_checkbox( 'enable_offline_tracking', esc_html__( 'Enable Offline Tracking (beta)', 'matomo' ), 'When enabled, will load a service worker to keep tracking users when they are offline. Will only work when using HTTPS. This feature is currently in beta. Please report any issues to us. Before using it in production please test our service worker won\'t break anything. <a href="https://matomo.org/faq/how-to/how-do-i-set-up-matomo-offline-tracking/" target="_blank" rel="noreferrer noopener">Learn more</a>', $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
+
 		$matomo_form->show_select(
 			'track_api_endpoint',
 			__( 'Endpoint for HTTP Tracking API', 'matomo' ),

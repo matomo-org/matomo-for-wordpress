@@ -9,6 +9,7 @@
 
 namespace WpMatomo\Admin;
 
+use Ds\Set;
 use WpMatomo\Capabilities;
 use WpMatomo\Settings;
 use WpMatomo\Site;
@@ -97,7 +98,8 @@ class TrackingSettings implements AdminSettingsInterface {
 			'track_js_endpoint',
 			'track_jserrors',
 			'track_api_endpoint',
-			Settings::SITE_CURRENCY
+			Settings::SITE_CURRENCY,
+			Settings::USE_OFFLINE_TRACKING
 		);
 
 		if ( matomo_has_tag_manager() ) {

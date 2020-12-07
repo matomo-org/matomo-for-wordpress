@@ -300,6 +300,17 @@ g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint )
 
 		$no_script = '<noscript><p><img referrerpolicy="no-referrer-when-downgrade" src="' . esc_url( $tracker_endpoint ) . '?idsite=' . intval( $idsite ) . '&amp;rec=1" style="border:0;" alt="" /></p></noscript>';
 
+		if ($this->settings->get_global_option('enable_offline_tracking')) {
+			$script .= '<script>
+if (\'serviceWorker\' in navigator) {
+// todo need to create that service worker and call init etc
+    window.addEventListener(\'load\', function() {
+        navigator.serviceWorker.register(\'/your-service-worker.js\'); 
+    });
+}
+</script>';
+		}
+
 		$script = apply_filters( 'matomo_tracking_code_script', $script, $idsite );
 		$script = apply_filters( 'matomo_tracking_code_noscript', $script, $idsite );
 

@@ -33,6 +33,7 @@ class Settings {
 	const DELETE_ALL_DATA_ON_UNINSTALL         = 'delete_all_data_uninstall';
 	const SITE_CURRENCY                        = 'site_currency';
 	const NETWORK_CONFIG_OPTIONS               = 'config_options';
+	const USE_OFFLINE_TRACKING                 = 'enable_offline_tracking';
 
 	public static $is_doing_action_tracking_related = false;
 	/**
@@ -96,16 +97,17 @@ class Settings {
 		'track_across'                             => false,
 		'track_across_alias'                       => false,
 		'track_crossdomain_linking'                => false,
-		'track_feed'                               => false,
-		'track_feed_addcampaign'                   => false,
-		'track_feed_campaign'                      => 'feed',
-		'track_heartbeat'                          => 0,
-		'track_user_id'                            => 'disabled',
-		'track_datacfasync'                        => false,
-		'track_jserrors'                           => false,
-		'force_protocol'                           => 'disabled',
-		'maxmind_license_key'                      => '',
-		self::SHOW_GET_STARTED_PAGE                => 1,
+		'track_feed'                => false,
+		'track_feed_addcampaign'    => false,
+		'track_feed_campaign'       => 'feed',
+		'track_heartbeat'           => 0,
+		'track_user_id'             => 'disabled',
+		'track_datacfasync'         => false,
+		'track_jserrors'            => false,
+		'force_protocol'            => 'disabled',
+		'maxmind_license_key'       => '',
+		self::SHOW_GET_STARTED_PAGE => 1,
+		self::USE_OFFLINE_TRACKING  => false,
 	);
 
 	/**
