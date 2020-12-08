@@ -14,10 +14,12 @@ use Piwik\ArchiveProcessor\Loader;
 use Piwik\ArchiveProcessor\Parameters;
 use Piwik\ArchiveProcessor\Rules;
 use Piwik\CliMulti\RequestParser;
+use Piwik\Common;
 use Piwik\CronArchive;
 use Piwik\DataAccess\ArchiveSelector;
 use Piwik\DataAccess\Model;
 use Piwik\Date;
+use Piwik\Db;
 use Piwik\Exception\UnexpectedWebsiteFoundException;
 use Piwik\Period;
 use Piwik\Period\Factory as PeriodFactory;
@@ -351,7 +353,7 @@ class QueueConsumer
             }
 
             $this->logger->debug("Found invalidation for segment that does not have auto archiving enabled, skipping: {$nextArchive['idinvalidation']}");
-            $this->invalidationsToExclude[] = $nextArchive['idinvalidation'];
+            $this->model->deleteInvalidations([$nextArchive]);
 
             ++$iterations;
         }

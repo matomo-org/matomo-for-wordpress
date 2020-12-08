@@ -19,8 +19,10 @@ class Admin {
 	/**
 	 * @param Settings $settings
 	 */
-	public function __construct( $settings ) {
-		new Menu( $settings );
+	public function __construct( $settings, $init_menu = true ) {
+		if ($init_menu) {
+			new Menu( $settings );
+		}
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'load_scripts' ) );
 	}

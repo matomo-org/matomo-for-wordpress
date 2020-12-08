@@ -55,6 +55,8 @@ class SystemReport {
 		'data-tables-generator-by-supsystic', // uses an old version of twig causing some styles to go funny in the reporting and admin
 		'tweet-old-post-pro', // uses a newer version of monolog
 		'secupress', // see #369 depending on setting might have issues
+		'cookiebot', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
+		'wp-rss-aggregator', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
 	);
 
 	private $valid_tabs = array( 'troubleshooting' );
@@ -381,18 +383,22 @@ class SystemReport {
 		);
 
 		$wpmatomo_updater = new \WpMatomo\Updater($this->settings);
-		$outstanding_updates = $wpmatomo_updater->get_plugins_requiring_update();
-		$upgrade_in_progress = $wpmatomo_updater->is_upgrade_in_progress();
-		$rows[] = array(
-			'name'     => 'Upgrades outstanding',
-			'value'    => !empty($outstanding_updates),
-			'comment'  => !empty($outstanding_updates) ? json_encode($outstanding_updates) : '',
-		);
-		$rows[] = array(
-			'name'     => 'Upgrade in progress',
-			'value'    => $upgrade_in_progress,
-			'comment'  => '',
-		);
+		if (!\WpMatomo::is_safe_mode()) {
+
+			$outstanding_updates = $wpmatomo_updater->get_plugins_requiring_update();
+			$upgrade_in_progress = $wpmatomo_updater->is_upgrade_in_progress();
+			$rows[] = array(
+				'name'     => 'Upgrades outstanding',
+				'value'    => !empty($outstanding_updates),
+				'comment'  => !empty($outstanding_updates) ? json_encode($outstanding_updates) : '',
+			);
+			$rows[] = array(
+				'name'     => 'Upgrade in progress',
+				'value'    => $upgrade_in_progress,
+				'comment'  => '',
+			);
+		}
+
 		if (!$wpmatomo_updater->load_plugin_functions()) {
 			// this should actually never happen...
 			$rows[] = array(
@@ -1354,11 +1360,19 @@ class SystemReport {
 					$additional_comment .= '<br><br>If reports aren\'t being generated then you may need to disable the feature "Firewall -> Block Bad Request Methods" in SecuPress (if it is enabled) or add the following line to your "wp-config.php": <br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
 				}
 
+				$is_warning = true;
+				$is_error = false;
+				if (in_array('cookiebot', $used_not_compatible)) {
+					$is_warning = false;
+					$is_error = true;
+				}
+
 				$rows[] = array(
 					'name'     => __( 'Not compatible plugins', 'matomo' ),
 					'value'    => count( $used_not_compatible ),
 					'comment'  => implode( ', ', $used_not_compatible ) . '<br><br> Matomo may work fine when using these plugins but there may be some issues. For more information see<br>https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/ ' . $additional_comment,
-					'is_warning' => true,
+					'is_warning' => $is_warning,
+					'is_error' => $is_error,
 				);
 			}
 		}

@@ -1,5 +1,10 @@
 == Changelog ==
 
+= 4.0.3 =
+* Update core to 4.0.5
+* Marked cookiebot and WP RSS Aggregator as incompatible
+* Fixed an issue with WP Mail SMTP 
+
 = 4.0.2 =
 * Fix incompatibility with Total Cache plugin
 * Add some new REST API methods

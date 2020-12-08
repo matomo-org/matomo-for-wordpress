@@ -97,7 +97,8 @@ class Email {
             $header = 'X-Matomo: ' . $random_id;
             $executed_action = false;
 
-            add_action('phpmailer_init', function (\PHPMailer $phpmailer) use ($attachments, $subject, $random_id, &$executed_action) {
+            add_action('phpmailer_init', function ($phpmailer) use ($attachments, $subject, $random_id, &$executed_action) {
+            	/** @var PHPMailer $phpmailer */
                 if ($executed_action) {
                     return; // already done, do not execute another time
                 }

@@ -50,6 +50,7 @@ class WpMatomo {
 
 		if ( self::is_safe_mode() ) {
 			if ( is_admin() ) {
+				new Admin( self::$settings, false );
 				new \WpMatomo\Admin\SafeModeMenu( self::$settings );
 			}
 
@@ -157,7 +158,14 @@ class WpMatomo {
 	}
 
 	public static function is_safe_mode() {
-		return defined( 'MATOMO_SAFE_MODE' ) && MATOMO_SAFE_MODE;
+		if ( defined( 'MATOMO_SAFE_MODE' ) && MATOMO_SAFE_MODE) {
+			return true;
+		}
+
+		return function_exists('is_plugin_active') &&
+		       (is_plugin_active('cookiebot/cookiebot.php')
+		        || is_plugin_active('wp-rss-aggregator/wp-rss-aggregator.php')
+		       );
 	}
 
 	public function add_settings_link( $links ) {

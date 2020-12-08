@@ -2302,6 +2302,7 @@ return array(
     'Piwik\\Plugins\\UsersManager\\tests\\Fixtures\\ManyUsers' => $baseDir . '/plugins/UsersManager/tests/Fixtures/ManyUsers.php',
     'Piwik\\Plugins\\UsersManager\\tests\\Integration\\ModelTest' => $baseDir . '/plugins/UsersManager/tests/Integration/ModelTest.php',
     'Piwik\\Plugins\\UsersManager\\tests\\Integration\\UserAccessFilterTest' => $baseDir . '/plugins/UsersManager/tests/Integration/UserAccessFilterTest.php',
+    'Piwik\\Plugins\\UsersManager\\tests\\Integration\\UserPreferencesTest' => $baseDir . '/plugins/UsersManager/tests/Integration/UserPreferencesTest.php',
     'Piwik\\Plugins\\UsersManager\\tests\\Integration\\UsersManagerTest' => $baseDir . '/plugins/UsersManager/tests/Integration/UsersManagerTest.php',
     'Piwik\\Plugins\\UsersManager\\tests\\System\\ApiTest' => $baseDir . '/plugins/UsersManager/tests/System/ApiTest.php',
     'Piwik\\Plugins\\VisitFrequency\\API' => $baseDir . '/plugins/VisitFrequency/API.php',
