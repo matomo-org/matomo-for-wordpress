@@ -162,7 +162,10 @@ class WpMatomo {
 			return true;
 		}
 
-		return function_exists('is_plugin_active') && is_plugin_active('cookiebot/cookiebot.php');
+		return function_exists('is_plugin_active') &&
+		       (is_plugin_active('cookiebot/cookiebot.php')
+		        || is_plugin_active('wp-rss-aggregator/wp-rss-aggregator.php')
+		       );
 	}
 
 	public function add_settings_link( $links ) {
