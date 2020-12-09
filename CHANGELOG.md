@@ -1,5 +1,8 @@
 == Changelog ==
 
+= 4.0.4 =
+* Improved upgrade logic from version 1.X. If you are already on version 4.X there basically won't be a change. 
+
 = 4.0.3 =
 * Update core to 4.0.5
 * Marked cookiebot and WP RSS Aggregator as incompatible
