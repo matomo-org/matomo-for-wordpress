@@ -196,6 +196,12 @@ function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace
 	);
 }
 
+if (matomo_is_app_request() || !empty($GLOBALS['MATOMO_LOADED_DIRECTLY'])) {
+	// prevent layout being broken when thegem theme is used. their lazy items class causes the reporting UI to not appear
+	// because it creates a JS error because of escaping " too often. only breaks when " Activate image loading optimization (for desktops)"
+	// is enabled in the general theme settings
+	add_filter('thegem_lazy_items_need_process_content', '__return_false', 99999999, $args = 0);
+}
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'WpMatomo.php';
 require 'shared.php';
