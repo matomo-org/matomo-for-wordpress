@@ -45,8 +45,10 @@ class AjaxTracker extends \MatomoTracker {
 		$this->urlReferrer = false;
 		$this->pageUrl     = ! empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : false;
 
-		$cookie_domain = $settings->get_tracking_cookie_domain();
-		$this->enableCookies( $cookie_domain );
+		if ( ! $settings->get_global_option( 'disable_cookies' ) ) {
+			$cookie_domain = $settings->get_tracking_cookie_domain();
+			$this->enableCookies( $cookie_domain );
+		}
 
 		if ( $this->loadVisitorIdCookie() ) {
 			if ( ! empty( $this->cookieVisitorId ) ) {
