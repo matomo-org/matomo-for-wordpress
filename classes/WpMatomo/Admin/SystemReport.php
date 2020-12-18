@@ -1377,6 +1377,12 @@ class SystemReport {
 			}
 		}
 
+		$rows[] = array(
+			'name' => 'Theme',
+			'value' => function_exists('get_template') ? get_template() : '',
+			'comment' => get_option('stylesheet')
+		);
+
 		return $rows;
 	}
 
