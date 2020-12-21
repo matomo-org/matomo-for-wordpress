@@ -157,15 +157,33 @@ class WpMatomo {
 		return is_super_admin();
 	}
 
+	private static function get_active_plugins()
+	{
+		$plugins = [];
+		if (is_multisite()) {
+			$muplugins = get_site_option( 'active_sitewide_plugins' );
+			$plugins = array_keys($muplugins);
+		}
+		$plugins = array_merge((array) get_option( 'active_plugins', array() ), $plugins);
+
+		return $plugins;
+	}
+
 	public static function is_safe_mode() {
 		if ( defined( 'MATOMO_SAFE_MODE' ) && MATOMO_SAFE_MODE) {
 			return true;
 		}
 
-		return function_exists('is_plugin_active') &&
-		       (is_plugin_active('cookiebot/cookiebot.php')
-		        || is_plugin_active('wp-rss-aggregator/wp-rss-aggregator.php')
-		       );
+		// we are not using is_plugin_active() for performance reasons
+		$active_plugins = self::get_active_plugins();
+
+		if (in_array('cookiebot/cookiebot.php', $active_plugins)
+			|| in_array('wp-rss-aggregator/wp-rss-aggregator.php', $active_plugins)
+			|| in_array('wp-defender/wp-defender.php', $active_plugins)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public function add_settings_link( $links ) {
