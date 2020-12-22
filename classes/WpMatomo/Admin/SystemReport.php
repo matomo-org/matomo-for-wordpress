@@ -57,6 +57,7 @@ class SystemReport {
 		'secupress', // see #369 depending on setting might have issues
 		'cookiebot', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
 		'wp-rss-aggregator', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
+		'wp-defender', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
 	);
 
 	private $valid_tabs = array( 'troubleshooting' );
@@ -1376,6 +1377,12 @@ class SystemReport {
 				);
 			}
 		}
+
+		$rows[] = array(
+			'name' => 'Theme',
+			'value' => function_exists('get_template') ? get_template() : '',
+			'comment' => get_option('stylesheet')
+		);
 
 		return $rows;
 	}

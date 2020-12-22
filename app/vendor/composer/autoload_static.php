@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite73d303dda4e084c9efc3d2e6d883365
+class ComposerStaticInitbca50353402dfe6dd0703749723d31b9
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -212,6 +212,13 @@ class ComposerStaticInite73d303dda4e084c9efc3d2e6d883365
             'PEAR_' => 
             array (
                 0 => __DIR__ . '/../..' . '/libs',
+            ),
+        ),
+        'L' => 
+        array (
+            'Less' => 
+            array (
+                0 => __DIR__ . '/..' . '/wikimedia/less.php/lib',
             ),
         ),
         'J' => 
@@ -524,6 +531,65 @@ class ComposerStaticInite73d303dda4e084c9efc3d2e6d883365
         'Invoker\\ParameterResolver\\TypeHintResolver' => __DIR__ . '/..' . '/php-di/invoker/src/ParameterResolver/TypeHintResolver.php',
         'Invoker\\Reflection\\CallableReflection' => __DIR__ . '/..' . '/php-di/invoker/src/Reflection/CallableReflection.php',
         'JShrink\\Minifier' => __DIR__ . '/..' . '/tedivm/jshrink/src/JShrink/Minifier.php',
+        'Less_Autoloader' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Autoloader.php',
+        'Less_Cache' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Cache.php',
+        'Less_Colors' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Colors.php',
+        'Less_Configurable' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Configurable.php',
+        'Less_Environment' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Environment.php',
+        'Less_Exception_Chunk' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Exception/Chunk.php',
+        'Less_Exception_Compiler' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Exception/Compiler.php',
+        'Less_Exception_Parser' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Exception/Parser.php',
+        'Less_Functions' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Functions.php',
+        'Less_Mime' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Mime.php',
+        'Less_Output' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Output.php',
+        'Less_Output_Mapped' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Output/Mapped.php',
+        'Less_Parser' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Parser.php',
+        'Less_SourceMap_Base64VLQ' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/SourceMap/Base64VLQ.php',
+        'Less_SourceMap_Generator' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/SourceMap/Generator.php',
+        'Less_Tree' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree.php',
+        'Less_Tree_Alpha' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Alpha.php',
+        'Less_Tree_Anonymous' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Anonymous.php',
+        'Less_Tree_Assignment' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Assignment.php',
+        'Less_Tree_Attribute' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Attribute.php',
+        'Less_Tree_Call' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Call.php',
+        'Less_Tree_Color' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Color.php',
+        'Less_Tree_Comment' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Comment.php',
+        'Less_Tree_Condition' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Condition.php',
+        'Less_Tree_DefaultFunc' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/DefaultFunc.php',
+        'Less_Tree_DetachedRuleset' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/DetachedRuleset.php',
+        'Less_Tree_Dimension' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Dimension.php',
+        'Less_Tree_Directive' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Directive.php',
+        'Less_Tree_Element' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Element.php',
+        'Less_Tree_Expression' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Expression.php',
+        'Less_Tree_Extend' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Extend.php',
+        'Less_Tree_Import' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Import.php',
+        'Less_Tree_Javascript' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Javascript.php',
+        'Less_Tree_Keyword' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Keyword.php',
+        'Less_Tree_Media' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Media.php',
+        'Less_Tree_Mixin_Call' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Mixin/Call.php',
+        'Less_Tree_Mixin_Definition' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Mixin/Definition.php',
+        'Less_Tree_NameValue' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/NameValue.php',
+        'Less_Tree_Negative' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Negative.php',
+        'Less_Tree_Operation' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Operation.php',
+        'Less_Tree_Paren' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Paren.php',
+        'Less_Tree_Quoted' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Quoted.php',
+        'Less_Tree_Rule' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Rule.php',
+        'Less_Tree_Ruleset' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Ruleset.php',
+        'Less_Tree_RulesetCall' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/RulesetCall.php',
+        'Less_Tree_Selector' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Selector.php',
+        'Less_Tree_UnicodeDescriptor' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/UnicodeDescriptor.php',
+        'Less_Tree_Unit' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Unit.php',
+        'Less_Tree_UnitConversions' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/UnitConversions.php',
+        'Less_Tree_Url' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Url.php',
+        'Less_Tree_Value' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Value.php',
+        'Less_Tree_Variable' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Tree/Variable.php',
+        'Less_Version' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Version.php',
+        'Less_Visitor' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Visitor.php',
+        'Less_VisitorReplacing' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/VisitorReplacing.php',
+        'Less_Visitor_extendFinder' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Visitor/extendFinder.php',
+        'Less_Visitor_joinSelector' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Visitor/joinSelector.php',
+        'Less_Visitor_processExtends' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Visitor/processExtends.php',
+        'Less_Visitor_toCSS' => __DIR__ . '/..' . '/wikimedia/less.php/lib/Less/Visitor/toCSS.php',
         'MatomoTracker' => __DIR__ . '/..' . '/matomo/matomo-php-tracker/MatomoTracker.php',
         'Matomo\\Cache\\Backend' => __DIR__ . '/..' . '/matomo/cache/src/Backend.php',
         'Matomo\\Cache\\Backend\\ArrayCache' => __DIR__ . '/..' . '/matomo/cache/src/Backend/ArrayCache.php',
@@ -2492,7 +2558,6 @@ class ComposerStaticInite73d303dda4e084c9efc3d2e6d883365
         'Piwik\\Plugins\\UserCountry\\Columns\\Country' => __DIR__ . '/../..' . '/plugins/UserCountry/Columns/Country.php',
         'Piwik\\Plugins\\UserCountry\\Columns\\Latitude' => __DIR__ . '/../..' . '/plugins/UserCountry/Columns/Latitude.php',
         'Piwik\\Plugins\\UserCountry\\Columns\\Longitude' => __DIR__ . '/../..' . '/plugins/UserCountry/Columns/Longitude.php',
-        'Piwik\\Plugins\\UserCountry\\Columns\\Provider' => __DIR__ . '/../..' . '/plugins/UserCountry/Columns/Provider.php',
         'Piwik\\Plugins\\UserCountry\\Columns\\Region' => __DIR__ . '/../..' . '/plugins/UserCountry/Columns/Region.php',
         'Piwik\\Plugins\\UserCountry\\Commands\\AttributeHistoricalDataWithLocations' => __DIR__ . '/../..' . '/plugins/UserCountry/Commands/AttributeHistoricalDataWithLocations.php',
         'Piwik\\Plugins\\UserCountry\\Controller' => __DIR__ . '/../..' . '/plugins/UserCountry/Controller.php',
@@ -3181,21 +3246,17 @@ class ComposerStaticInite73d303dda4e084c9efc3d2e6d883365
         'Zend_Session_Validator_HttpUserAgent' => __DIR__ . '/../..' . '/libs/Zend/Session/Validator/HttpUserAgent.php',
         'Zend_Session_Validator_Interface' => __DIR__ . '/../..' . '/libs/Zend/Session/Validator/Interface.php',
         'Zend_Version' => __DIR__ . '/../..' . '/libs/Zend/Version.php',
-        'lessc' => __DIR__ . '/..' . '/leafo/lessphp/lessc.inc.php',
-        'lessc_formatter_classic' => __DIR__ . '/..' . '/leafo/lessphp/lessc.inc.php',
-        'lessc_formatter_compressed' => __DIR__ . '/..' . '/leafo/lessphp/lessc.inc.php',
-        'lessc_formatter_lessjs' => __DIR__ . '/..' . '/leafo/lessphp/lessc.inc.php',
-        'lessc_parser' => __DIR__ . '/..' . '/leafo/lessphp/lessc.inc.php',
+        'lessc' => __DIR__ . '/..' . '/wikimedia/less.php/lessc.inc.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite73d303dda4e084c9efc3d2e6d883365::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite73d303dda4e084c9efc3d2e6d883365::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInite73d303dda4e084c9efc3d2e6d883365::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInite73d303dda4e084c9efc3d2e6d883365::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInite73d303dda4e084c9efc3d2e6d883365::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitbca50353402dfe6dd0703749723d31b9::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitbca50353402dfe6dd0703749723d31b9::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitbca50353402dfe6dd0703749723d31b9::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInitbca50353402dfe6dd0703749723d31b9::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInitbca50353402dfe6dd0703749723d31b9::$classMap;
 
         }, null, ClassLoader::class);
     }
