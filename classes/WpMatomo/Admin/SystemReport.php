@@ -57,6 +57,7 @@ class SystemReport {
 		'secupress', // see #369 depending on setting might have issues
 		'cookiebot', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
 		'wp-rss-aggregator', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
+		'wp-defender', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
 	);
 
 	private $valid_tabs = array( 'troubleshooting' );
