@@ -11,6 +11,7 @@ return array(
     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
     'Symfony\\Bridge\\Monolog\\' => array($vendorDir . '/symfony/monolog-bridge'),
     'PEAR_' => array($baseDir . '/libs'),
+    'Less' => array($vendorDir . '/wikimedia/less.php/lib'),
     'JShrink' => array($vendorDir . '/tedivm/jshrink/src'),
     'HTML_' => array($baseDir . '/libs'),
     'Console' => array($vendorDir . '/pear/console_getopt'),
