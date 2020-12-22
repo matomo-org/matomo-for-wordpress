@@ -160,7 +160,7 @@ class WpMatomo {
 	private static function get_active_plugins()
 	{
 		$plugins = [];
-		if (is_multisite()) {
+		if (function_exists('is_multisite') && is_multisite()) {
 			$muplugins = get_site_option( 'active_sitewide_plugins' );
 			$plugins = array_keys($muplugins);
 		}

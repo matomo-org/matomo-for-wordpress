@@ -10,11 +10,9 @@
 namespace Piwik\Updates;
 
 use Piwik\DataAccess\TableMetadata;
-use Piwik\Updater\Migration\Custom as CustomMigration;
-use Piwik\Db;
+use Piwik\Date;
 use Piwik\DbHelper;
 use Piwik\Plugin\Manager;
-use Piwik\Plugins\CoreAdminHome\Commands\MigrateTokenAuths;
 use Piwik\Plugins\CoreHome\Columns\Profilable;
 use Piwik\Plugins\CoreHome\Columns\VisitorSecondsSinceFirst;
 use Piwik\Plugins\CoreHome\Columns\VisitorSecondsSinceOrder;
@@ -30,7 +28,6 @@ use Piwik\Common;
 use Piwik\Config;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Plugins\VisitorInterest\Columns\VisitorSecondsSinceLast;
-use Piwik\SettingsPiwik;
 use Piwik\Updater;
 use Piwik\Updates as PiwikUpdates;
 use Piwik\Updater\Migration\Factory as MigrationFactory;
@@ -58,12 +55,35 @@ class Updates_4_0_0_b1 extends PiwikUpdates
 
         $migrations = [];
 
-        $domain = Config::getLocalConfigPath() === Config::getDefaultLocalConfigPath() ? '' : Config::getHostname();
-        $domainArg = !empty($domain) ? "--matomo-domain=". escapeshellarg($domain) . " " : '';
-        $toString = sprintf('./console %score:matomo4-migrate-token-auths', $domainArg);
-        $custom = new CustomMigration(array(MigrateTokenAuths::class, 'migrate'), $toString);
+        /** APP SPECIFIC TOKEN START */
+        $migrations[] = $this->migration->db->createTable('user_token_auth', array(
+            'idusertokenauth' => 'BIGINT UNSIGNED NOT NULL AUTO_INCREMENT',
+            'login' => 'VARCHAR(100) NOT NULL',
+            'description' => 'VARCHAR('.Model::MAX_LENGTH_TOKEN_DESCRIPTION.') NOT NULL',
+            'password' => 'VARCHAR(191) NOT NULL',
+            'system_token' => 'TINYINT(1) NOT NULL DEFAULT 0',
+            'hash_algo' => 'VARCHAR(30) NOT NULL',
+            'last_used' => 'DATETIME NULL',
+            'date_created' => ' DATETIME NOT NULL',
+            'date_expired' => ' DATETIME NULL',
+        ), 'idusertokenauth');
+        $migrations[] = $this->migration->db->addUniqueKey('user_token_auth', 'password', 'uniq_password');
 
-        $migrations[] = $custom;
+        $migrations[] = $this->migration->db->dropIndex('user', 'uniq_keytoken');
+
+        $userModel = new Model();
+        foreach ($userModel->getUsers(array()) as $user) {
+            if (!empty($user['token_auth'])) {
+                $migrations[] = $this->migration->db->insert('user_token_auth', array(
+                    'login' => $user['login'],
+                    'description' => 'Created by Matomo 4 migration',
+                    'password' => $userModel->hashTokenAuth($user['token_auth']),
+                    'date_created' => Date::now()->getDatetime()
+                ));
+            }
+        }
+
+        /** APP SPECIFIC TOKEN END */
 
         // invalidations table
         $migrations[] = $this->migration->db->createTable('archive_invalidations', [
@@ -75,6 +95,7 @@ class Updates_4_0_0_b1 extends PiwikUpdates
             'date2' => 'DATE NOT NULL',
             'period' => 'TINYINT UNSIGNED NOT NULL',
             'ts_invalidated' => 'DATETIME NOT NULL',
+            'ts_started' => 'DATETIME NULL',
             'status' => 'TINYINT(1) UNSIGNED DEFAULT 0',
             'report' => 'VARCHAR(255) NULL',
         ], ['idinvalidation']);
@@ -82,40 +103,12 @@ class Updates_4_0_0_b1 extends PiwikUpdates
         $migrations[] = $this->migration->db->addIndex('archive_invalidations', ['idsite', 'date1', 'period'], 'index_idsite_dates_period_name');
 
         $migrations[] = $this->migration->db->dropColumn('user', 'alias');
+        $migrations[] = $this->migration->db->dropColumn('user', 'token_auth');
 
-        // prevent possible duplicates when shorting session id
-        $migrations[] = $this->migration->db->sql('DELETE FROM `' . Common::prefixTable('session') . '` WHERE length(id) > 190');
+	    // keep piwik_ignore for existing  installs
+	    $migrations[] = $this->migration->config->set('Tracker', 'ignore_visits_cookie_name', 'piwik_ignore');
 
-        $migrations[] = $this->migration->db->changeColumnType('session', 'id', 'VARCHAR(191)');
-        $migrations[] = $this->migration->db->changeColumnType('site_url', 'url', 'VARCHAR(190)');
-        $migrations[] = $this->migration->db->changeColumnType('option', 'option_name', 'VARCHAR(191)');
-
-        $migrations[] = $this->migration->db->changeColumnType('log_action', 'name', 'VARCHAR(4096)');
-        $migrations[] = $this->migration->db->changeColumnType('log_conversion', 'url', 'VARCHAR(4096)');
         $migrations[] = $this->migration->db->changeColumn('log_link_visit_action', 'interaction_position', 'pageview_position', 'MEDIUMINT UNSIGNED DEFAULT NULL');
-
-        $customTrackerPluginActive = false;
-        if (in_array('CustomPiwikJs', Config::getInstance()->Plugins['Plugins'])) {
-            $customTrackerPluginActive = true;
-        }
-
-        $migrations[] = $this->migration->plugin->activate('BulkTracking');
-        $migrations[] = $this->migration->plugin->deactivate('CustomPiwikJs');
-        $migrations[] = $this->migration->plugin->uninstall('CustomPiwikJs');
-
-        if ($customTrackerPluginActive) {
-            $migrations[] = $this->migration->plugin->activate('CustomJsTracker');
-        }
-
-        // Prepare all installed tables for utf8mb4 conversions. e.g. make some indexed fields smaller so they don't exceed the maximum key length
-        $allTables = DbHelper::getTablesInstalled();
-
-        foreach ($allTables as $table) {
-            if (preg_match('/archive_/', $table) == 1) {
-                $tableNameUnprefixed = Common::unprefixTable($table);
-                $migrations[] = $this->migration->db->changeColumnType($tableNameUnprefixed, 'name', 'VARCHAR(190)');
-            }
-        }
 
         // Move the site search fields of log_visit out of custom variables into their own fields
         $columnsToAdd['log_link_visit_action']['search_cat'] = 'VARCHAR(200) NULL';
@@ -159,19 +152,6 @@ class Updates_4_0_0_b1 extends PiwikUpdates
             }
         }
 
-        if (Manager::getInstance()->isPluginInstalled('CustomVariables')) {
-            $visitActionTable = Common::prefixTable('log_link_visit_action');
-            $migrations[]     = $this->migration->db->sql("UPDATE $visitActionTable SET search_cat = if(custom_var_k4 = '_pk_scat', custom_var_v4, search_cat), search_count = if(custom_var_k5 = '_pk_scount', custom_var_v5, search_count) WHERE custom_var_k4 = '_pk_scat' or custom_var_k5 = '_pk_scount'");
-        }
-
-        if ($this->usesGeoIpLegacyLocationProvider()) {
-            // activate GeoIp2 plugin for users still using GeoIp2 Legacy (others might have it disabled on purpose)
-            $migrations[] = $this->migration->plugin->activate('GeoIp2');
-        }
-
-        // remove old options
-        $migrations[] = $this->migration->db->sql('DELETE FROM `' . Common::prefixTable('option') . '` WHERE option_name IN ("geoip.updater_period", "geoip.loc_db_url", "geoip.isp_db_url", "geoip.org_db_url")');
-
         // init seconds_to_... columns
         $logVisitColumns = $tableMetadata->getColumns(Common::prefixTable('log_visit'));
         $hasDaysColumnInVisit = in_array('visitor_days_since_first', $logVisitColumns);
@@ -192,6 +172,11 @@ class Updates_4_0_0_b1 extends PiwikUpdates
                     visitor_seconds_since_order = visitor_days_since_order * 86400");
         }
 
+	    if (Manager::getInstance()->isPluginInstalled('CustomVariables')) {
+		    $visitActionTable = Common::prefixTable('log_link_visit_action');
+		    $migrations[]     = $this->migration->db->sql("UPDATE $visitActionTable SET search_cat = if(custom_var_k4 = '_pk_scat', custom_var_v4, search_cat), search_count = if(custom_var_k5 = '_pk_scount', custom_var_v5, search_count) WHERE custom_var_k4 = '_pk_scat' or custom_var_k5 = '_pk_scount'");
+	    }
+
         // remove old days_to_... columns
         $migrations[] = $this->migration->db->dropColumns('log_visit', [
             'config_gears',
@@ -211,9 +196,6 @@ class Updates_4_0_0_b1 extends PiwikUpdates
             $migrations[] = $this->migration->config->set('mail', 'type', 'Cram-md5');
         }
 
-        // keep piwik_ignore for existing  installs
-        $migrations[] = $this->migration->config->set('Tracker', 'ignore_visits_cookie_name', 'piwik_ignore');
-
         $migrations[] = $this->migration->plugin->activate('PagePerformance');
         if (!Manager::getInstance()->isPluginActivated('CustomDimensions')) {
             $migrations[] = $this->migration->plugin->activate('CustomDimensions');
@@ -229,76 +211,18 @@ class Updates_4_0_0_b1 extends PiwikUpdates
             $migrations[] = $this->migration->config->set('General', 'datatable_archiving_maximum_rows_subtable_custom_dimensions', $configSubTableLimit);
         }
 
+	    $migrations[] = $this->migration->db->changeColumnType('session', 'id', 'VARCHAR(191)');
+	    $migrations[] = $this->migration->db->changeColumnType('site_url', 'url', 'VARCHAR(190)');
+	    $migrations[] = $this->migration->db->changeColumnType('option', 'option_name', 'VARCHAR(191)');
+
+	    $migrations[] = $this->migration->db->changeColumnType('log_action', 'name', 'VARCHAR(4096)');
+	    $migrations[] = $this->migration->db->changeColumnType('log_conversion', 'url', 'VARCHAR(4096)');
         return $migrations;
     }
 
     public function doUpdate(Updater $updater)
     {
-        $salt = SettingsPiwik::getSalt();
-        $sessions = Db::fetchAll('SELECT id from ' . Common::prefixTable('session'));
-
-        foreach ($sessions as $session) {
-            if (!empty($session['id']) && Common::mb_strlen($session['id']) != 128) {
-                $bind = [ hash('sha512', $session['id'] . $salt), $session['id'] ];
-                try {
-                    Db::query(sprintf('UPDATE %s SET id = ? WHERE id = ?', Common::prefixTable('session')), $bind);
-                } catch (\Exception $e) {
-                    // ignore possible duplicate key errors
-                }
-            }
-        }
-
         $updater->executeMigrations(__FILE__, $this->getMigrations($updater));
-
-        if ($this->usesGeoIpLegacyLocationProvider()) {
-            // switch to default provider if GeoIp Legacy was still in use
-            LocationProvider::setCurrentProvider(LocationProvider\DefaultProvider::ID);
-        }
-
-        // eg the case when not updating from most recent Matomo 3.X and when not using the UI updater
-        // afterwards the should receive a notification that the plugins are outdated
-        self::ensureCorePluginsThatWereMovedToMarketplaceCanBeUpdated();
-        ServerFilesGenerator::createFilesForSecurity();
-    }
-
-    public static function ensureCorePluginsThatWereMovedToMarketplaceCanBeUpdated()
-    {
-        $plugins = ['Provider', 'CustomVariables'];
-        $pluginManager = Manager::getInstance();
-        foreach ($plugins as $plugin) {
-            if ($pluginManager->isPluginThirdPartyAndBogus($plugin)) {
-                $pluginDir = Manager::getPluginDirectory($plugin);
-
-                if (is_dir($pluginDir) &&
-                    file_exists($pluginDir . '/' . $plugin . '.php')
-                    && !file_exists($pluginDir . '/plugin.json')
-                    && is_writable($pluginDir)) {
-                    file_put_contents($pluginDir . '/plugin.json', '{
-  "name": "'.$plugin.'",
-  "description": "'.$plugin.'",
-  "version": "3.14.1",
-  "theme": false,
-  "require": {
-    "piwik": ">=3.0.0,<4.0.0-b1"
-  },
-  "authors": [
-    {
-      "name": "Matomo",
-      "email": "hello@matomo.org",
-      "homepage": "https:\/\/matomo.org"
-    }
-  ],
-  "homepage": "https:\/\/matomo.org",
-  "license": "GPL v3+",
-  "keywords": ["'.$plugin.'"]
-}');
-                    // otherwise cached information might be used and it won't be loaded otherwise within same request
-                    $pluginObj = $pluginManager->loadPlugin($plugin);
-                    $pluginObj->reloadPluginInformation();
-                    $pluginManager->unloadPlugin($pluginObj); // prevent any events being posted to it somehow
-                }
-            }
-        }
     }
 
     protected function usesGeoIpLegacyLocationProvider()

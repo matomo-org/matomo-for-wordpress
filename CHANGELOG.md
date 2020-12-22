@@ -1,10 +1,13 @@
 == Changelog ==
 
+= 4.1.1 =
+* Improved upgrade logic from version 1.X. If you are already on version 4.X there won't be a change.
+
 = 4.1.0 =
 * Update core to 4.1.0
 
 = 4.0.4 =
-* Improved upgrade logic from version 1.X. If you are already on version 4.X there basically won't be a change. 
+* Improved upgrade logic from version 1.X. If you are already on version 4.X there won't be a change. 
 
 = 4.0.3 =
 * Update core to 4.0.5
