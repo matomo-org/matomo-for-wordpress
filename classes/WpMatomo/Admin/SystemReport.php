@@ -1384,6 +1384,19 @@ class SystemReport {
 			'comment' => get_option('stylesheet')
 		);
 
+
+		if ( is_plugin_active('better-wp-security/better-wp-security.php')) {
+			if (method_exists('\ITSEC_Modules', 'get_setting')
+			    && \ITSEC_Modules::get_setting( 'system-tweaks', 'long_url_strings' ) ) {
+				$rows[] = array(
+					'name'     => 'iThemes Security Long URLs Enabled',
+					'value'    => true,
+					'comment'  => 'Tracking might not work because it looks like you have Long URLs disabled in iThemes Security. To fix this please go to "Security -> Settings -> System Tweaks" and disable the setting "Long URL Strings".',
+					'is_error' => true,
+				);
+			}
+		}
+
 		return $rows;
 	}
 
