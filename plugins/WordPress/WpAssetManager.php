@@ -26,11 +26,18 @@ class WpAssetManager extends AssetManager
 		parent::__construct();
 	}
 
-	public function getMergedCoreJavaScript()
-	{
-		$path = rtrim(plugin_dir_path( MATOMO_ANALYTICS_FILE ), '/') . '/assets/js';
+	public function getMergedCoreJavaScript() {
+		$path = rtrim( plugin_dir_path( MATOMO_ANALYTICS_FILE ), '/' ) . '/assets/js';
 		$file = 'asset_manager_core_js.js';
-		return new NeverDeleteOnDiskUiAsset($path, $file);
+
+		return new NeverDeleteOnDiskUiAsset( $path, $file );
+	}
+
+	private function isWp55OrOlder()
+	{
+		$wp_version = get_bloginfo( 'version' );
+
+		return $wp_version && 1 === version_compare('5.6.0-rc1', $wp_version);
 	}
 
 	public function getJsInclusionDirective()
@@ -41,12 +48,20 @@ class WpAssetManager extends AssetManager
 		$jsFiles = array();
 		$jsFiles[] = "jquery/jquery.js";
 		$jsFiles[] = "node_modules/materialize-css/dist/js/materialize.min.js";
-		$jsFiles[] = 'jquery/ui/widget.min.js';
+
+		if ($this->isWp55OrOlder()) {
+			$jsFiles[] = 'jquery/ui/widget.min.js';
+		}
+
 		$jsFiles[] = 'jquery/ui/core.min.js';
 		$jsFiles[] = 'jquery/ui/mouse.min.js';
 		$jsFiles[] = 'jquery/ui/selectable.min.js';
 		$jsFiles[] = 'jquery/ui/autocomplete.min.js';
-		$jsFiles[] = 'jquery/ui/position.min.js';
+
+		if ($this->isWp55OrOlder()) {
+			$jsFiles[] = 'jquery/ui/position.min.js';
+		}
+
 		$jsFiles[] = 'jquery/ui/resizable.min.js';
 		$jsFiles[] = 'jquery/ui/datepicker.min.js';
 		$jsFiles[] = 'jquery/ui/dialog.min.js';
