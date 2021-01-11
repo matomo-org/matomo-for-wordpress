@@ -215,6 +215,22 @@ if ( $was_updated ) {
 			$matomo_full_generated_tracking_group
 		);
 
+		$matomo_form->show_headline(esc_html__('For Developers', 'matomo'), 'matomo-track-option matomo-track-option-default matomo-track-option-disabled matomo-track-option-manually matomo-track-option-tagmanager');
+
+		$matomo_form->show_select(
+			'tracker_debug',
+			__( 'Tracker Debug Mode', 'matomo' ),
+			array(
+				'disabled' => esc_html__( 'Disabled (recommended)', 'matomo' ),
+				'always'    => esc_html__( 'Always enabled', 'matomo' ),
+				'on_demand'    => esc_html__( 'Enabled on demand', 'matomo' ),
+			),
+			__( 'For security and privacy reasons you should only enable this setting for as short time of a time as possible.', 'matomo' ),
+			'',
+			$matomo_is_not_tracking,
+			$matomo_full_generated_tracking_group . ' matomo-track-option-disabled matomo-track-option-manually matomo-track-option-tagmanager'
+		);
+
 		echo $matomo_submit_button;
 		?>
 
