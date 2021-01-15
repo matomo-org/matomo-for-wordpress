@@ -1359,7 +1359,7 @@
         "XVisitsFromDevices": "%1$s Besuche von %2$s Geräten",
         "Wearable": "Tragbare Geräte",
         "WidgetBrowsers": "Besucher-Browser",
-        "WidgetBrowsersDocumentation": "Dieser Bericht enthält Informationen über die Browser Ihrer Besucher. Jede Version eines Browsers wird separat aufgelistet."
+        "WidgetBrowserVersionsDocumentation": "Dieser Bericht enthält Informationen über die Browser Ihrer Besucher. Jede Version eines Browsers wird separat aufgelistet."
     },
     "Diagnostics": {
         "ConfigFileTitle": "Konfigurationsdatei",
@@ -3732,7 +3732,6 @@
         "KeepURLFragmentsLong": "URL Fragmente beim Tracking behalten",
         "ListOfIpsToBeExcludedOnAllWebsites": "Die untenstehenden IPs werden auf allen Websites ignoriert.",
         "ListOfQueryParametersToBeExcludedOnAllWebsites": "Die untenstehenden GET-Parameter werden von allen URLs aller Websites ignoriert.",
-        "ListOfQueryParametersToExclude": "Geben Sie die Liste der URL Query Parameter an, einen pro Zeile, um sie von der URL Berichtsseite auszuschließen. Reguläre Ausdrücke so wie %s werden unterstützt.",
         "LogAnalytics": "Log-Analyse",
         "LogAnalyticsDescription": "Wenn das Tracking per Javascript nicht möglich ist, können Sie %1$sServer Log Analytics %2$s als alternative Methode einsetzen, um die Besucher Ihrer Webseite zu analysieren.",
         "MainDescription": "Ihre Webanalyse benötigt Websites! Websites können hinzugefügt, aktualisiert und gelöscht werden. Hier wird auch der JavaScript-Code gezeigt, der in Ihre Websites eingefügt werden muss.",

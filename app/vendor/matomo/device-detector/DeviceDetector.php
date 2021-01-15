@@ -62,7 +62,7 @@ class DeviceDetector
     /**
      * Current version number of DeviceDetector
      */
-    public const VERSION = '4.0.2';
+    public const VERSION = '4.1.0';
 
     /**
      * Constant used as value for unknown browser / os
@@ -839,7 +839,7 @@ class DeviceDetector
         /**
          * Assume all devices running iOS / Mac OS are from Apple
          */
-        if (empty($this->brand) && \in_array($osName, ['Apple TV', 'iOS', 'Mac'])) {
+        if (empty($this->brand) && \in_array($osName, ['Apple TV', 'watchOS', 'iOS', 'Mac'])) {
             $this->brand = 'Apple';
         }
 
