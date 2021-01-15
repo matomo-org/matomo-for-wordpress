@@ -1317,7 +1317,7 @@
         "XVisitsFromDevices": "%1$s visitas de %2$s dispositivos",
         "Wearable": "Dispositivo utilizável",
         "WidgetBrowsers": "Navegador do visitante",
-        "WidgetBrowsersDocumentation": "Este relatório contém informações sobre o tipo de navegadores que os seus visitantes estavam a utilizar. Cada versão do navegador é listada separadamente."
+        "WidgetBrowserVersionsDocumentation": "Este relatório contém informações sobre o tipo de navegadores que os seus visitantes estavam a utilizar. Cada versão do navegador é listada separadamente."
     },
     "Diagnostics": {
         "ConfigFileTitle": "Ficheiro de configuração",
@@ -3638,7 +3638,6 @@
         "KeepURLFragmentsLong": "Manter fragmentos de endereços de páginas no acompanhamento dos endereços das páginas",
         "ListOfIpsToBeExcludedOnAllWebsites": "Os IPs abaixo serão excluídos do acompanhamento em todos os sites.",
         "ListOfQueryParametersToBeExcludedOnAllWebsites": "Os parâmetros de consulta de endereços abaixo serão excluídos dos endereços de todos os sites.",
-        "ListOfQueryParametersToExclude": "Introduza a lista de parâmetros de consulta de endereços, um por linha, para excluir dos relatórios de endereços de páginas. Expressões regulares como %s são suportadas.",
         "LogAnalytics": "Análise de registos",
         "LogAnalyticsDescription": "Se o método de monitorização por JavaScript não for possível, pode %1$sutilizar a analítica de registo do servidor%2$s como um método alternativo para a monitorização dos utilizadores do seu <i>site<\/i> da Web.",
         "MainDescription": "Os seus relatórios de Analíticas Web necessitam de site! Adicione, atualize, elimine site e mostre o JavaScript para inserir nas suas páginas.",

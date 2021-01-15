@@ -909,6 +909,7 @@
         "DataTableHowToSearch": "Arama yapmak için enter tuşuna basın ya da arama simgesine tıklayın",
         "DataTableShowDimensions": "Boyutlar birleştirildi %s Boyutları ayırarak görüntüle",
         "DataTableCombineDimensions": "Boyutlar ayrı görüntüleniyor %s Boyutları birleştirerek görüntüle",
+        "DateInvalid": "Belirtilen tarih ve sıklık kambinasyonu geçersiz. Lütfen tarih seçicisinden geçerli bir tarih seçin.",
         "Default": "varsayılan",
         "DonateCall1": "Matomo her zaman ücretsiz kullanılabilecek ancak bu durum geliştirmenin ücretsiz olduğu anlamına gelmiyor.",
         "DonateCall2": "Gelişip ilerleyebilmesi için Matomo projesi sürekli desteğinize gerek duyuyor.",
@@ -1361,7 +1362,7 @@
         "XVisitsFromDevices": "%2$s aygıttan %1$s ziyaret",
         "Wearable": "Giyilebilir",
         "WidgetBrowsers": "Ziyaretçi Tarayıcısı",
-        "WidgetBrowsersDocumentation": "Bu rapor ziyaretçilerinizin kullandığı tarayıcı türlerini kapsar. Tarayıcı sürümleri ayrı ayrı listelenmiştir."
+        "WidgetBrowserVersionsDocumentation": "Bu rapor ziyaretçilerinizin kullandığı tarayıcı türlerini kapsar. Tarayıcı sürümleri ayrı ayrı listelenmiştir."
     },
     "Diagnostics": {
         "ConfigFileTitle": "Ayar Dosyası",
@@ -3742,7 +3743,6 @@
         "KeepURLFragmentsLong": "Sayfa adresleri izlenirken sayfa adresi bölünmeleri korunsun",
         "ListOfIpsToBeExcludedOnAllWebsites": "Aşağıdaki IP adresi hiç bir web sitesinde izlenmeyecek.",
         "ListOfQueryParametersToBeExcludedOnAllWebsites": "Aşağıdaki sorgu adresi parametreleri hiç bir web sitesinde izlenmeyecek.",
-        "ListOfQueryParametersToExclude": "Sayfa adresi raporlarına katılmayacak sorgu adresi parametrelerini ayrı satırlara yazın. %s gibi kurallı ifadeler desteklenir.",
         "LogAnalytics": "Günlük İstatistikleri",
         "LogAnalyticsDescription": "JavaScript izleme yöntemi kullanılamıyorsa, web sitesine gelen kullanıcıları izlemek için alternatif olarak %1$ssunucu günlüğü istatistiklerini%2$s kullanabilirsiniz.",
         "MainDescription": "Web istatistik raporlarının oluşturulabilmesi için web sitelerinin tanımlanması gerekir. Web sitesi ekleme, güncelleme, kaldırma ve sayfalarınıza eklenecek JavaScript Kodu işlemleri bu bölümden yapılabilir.",
