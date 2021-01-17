@@ -13,7 +13,9 @@
 
 namespace WpMatomo\Admin\TrackingSettings;
 
+use Piwik\Config;
 use WpMatomo\Admin\TrackingSettings;
+use WpMatomo\Bootstrap;
 use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -134,7 +136,19 @@ class Forms {
 	 */
 	public function show_select( $id, $name, $options = array(), $description = '', $on_change = '', $is_hidden = false, $group_name = '', $hide_description = true, $global = true ) {
 		$options_list = '';
-		$default      = $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
+
+		if ($id === 'tracker_debug' && !\WpMatomo::is_safe_mode() && !$this->settings->is_network_enabled()) {
+			Bootstrap::do_bootstrap();
+			if (Config::getInstance()->Tracker['debug']) {
+				$default = 'always';
+			} elseif (Config::getInstance()->Tracker['debug_on_demand']) {
+				$default = 'on_demand';
+			} else {
+				$default = 'disabled';
+			}
+		} else {
+			$default      = $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
+		}
 		if ( is_array( $options ) ) {
 			foreach ( $options as $key => $value ) {
 				$options_list .= sprintf( '<option value="%s"' . ( $key == $default ? ' selected="selected"' : '' ) . '>%s</option>', esc_attr( $key ), esc_html( $value ) );

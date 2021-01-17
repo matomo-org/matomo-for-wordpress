@@ -37,7 +37,7 @@ $matomo_dashboard_nonce = wp_create_nonce(\WpMatomo\Admin\Summary::NONCE_DASHBOA
     }
 ?>
 <?php if ( ! $is_tracking ) { ?>
-	<div class="notice notice-warning"><p><?php esc_html_e( 'Matomo Tracking is not enabled.', 'matomo' ); ?></p></div>
+	<div class="notice notice-warning"><p><?php esc_html_e( 'Matomo Tracking is not enabled. If you have added the Matomo tracking code in a different way, for example using a consent plugin, then you can ignore this message.', 'matomo' ); ?></p></div>
 <?php } ?>
 <div class="wrap">
 	<div id="icon-plugins" class="icon32"></div>

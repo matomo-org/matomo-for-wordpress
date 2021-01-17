@@ -1,12 +1,12 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '4.1.0-rc2',
-    'version' => '4.1.0.0-RC2',
+    'pretty_version' => '4.1.1',
+    'version' => '4.1.1.0',
     'aliases' => 
     array (
     ),
-    'reference' => '2cb0cb8f9202deae21f93ef2368d5fe9f683d380',
+    'reference' => '0a0d7ea3b85264e6b5aff757a6283949217a2ddd',
     'name' => 'matomo/matomo',
   ),
   'versions' => 
@@ -76,12 +76,12 @@
     ),
     'matomo/device-detector' => 
     array (
-      'pretty_version' => '4.0.2',
-      'version' => '4.0.2.0',
+      'pretty_version' => '4.1.0',
+      'version' => '4.1.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '20572bbf8607cfc2f91a11fc75e9a3c6592bdc7a',
+      'reference' => '6b3facc35e7a465bc4223fddfa5fa88c5b327554',
     ),
     'matomo/ini' => 
     array (
@@ -94,12 +94,12 @@
     ),
     'matomo/matomo' => 
     array (
-      'pretty_version' => '4.1.0-rc2',
-      'version' => '4.1.0.0-RC2',
+      'pretty_version' => '4.1.1',
+      'version' => '4.1.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '2cb0cb8f9202deae21f93ef2368d5fe9f683d380',
+      'reference' => '0a0d7ea3b85264e6b5aff757a6283949217a2ddd',
     ),
     'matomo/matomo-php-tracker' => 
     array (
@@ -265,7 +265,7 @@
     array (
       'replaced' => 
       array (
-        0 => '4.0.2',
+        0 => '4.1.0',
       ),
     ),
     'piwik/referrer-spam-blacklist' => 

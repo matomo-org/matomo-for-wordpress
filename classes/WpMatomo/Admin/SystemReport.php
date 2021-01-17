@@ -52,6 +52,7 @@ class SystemReport {
 
 	private $not_compatible_plugins = array(
 		'background-manager', // Uses an old version of Twig and plugin is no longer maintained.
+		'all-in-one-event-calendar', // Uses an old version of Twig
 		'data-tables-generator-by-supsystic', // uses an old version of twig causing some styles to go funny in the reporting and admin
 		'tweet-old-post-pro', // uses a newer version of monolog
 		'secupress', // see #369 depending on setting might have issues
@@ -1383,6 +1384,19 @@ class SystemReport {
 			'value' => function_exists('get_template') ? get_template() : '',
 			'comment' => get_option('stylesheet')
 		);
+
+
+		if ( is_plugin_active('better-wp-security/better-wp-security.php')) {
+			if (method_exists('\ITSEC_Modules', 'get_setting')
+			    && \ITSEC_Modules::get_setting( 'system-tweaks', 'long_url_strings' ) ) {
+				$rows[] = array(
+					'name'     => 'iThemes Security Long URLs Enabled',
+					'value'    => true,
+					'comment'  => 'Tracking might not work because it looks like you have Long URLs disabled in iThemes Security. To fix this please go to "Security -> Settings -> System Tweaks" and disable the setting "Long URL Strings".',
+					'is_error' => true,
+				);
+			}
+		}
 
 		return $rows;
 	}

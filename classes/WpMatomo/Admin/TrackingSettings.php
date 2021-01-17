@@ -12,6 +12,7 @@ namespace WpMatomo\Admin;
 use WpMatomo\Capabilities;
 use WpMatomo\Settings;
 use WpMatomo\Site;
+use WpMatomo\Site\Sync\SyncConfig as SiteConfigSync;
 use WpMatomo\TrackingCode\TrackingCodeGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -111,6 +112,23 @@ class TrackingSettings implements AdminSettingsInterface {
 		$values['tagmanger_container_ids'] = array();
 
 		$valid_currencies = $this->get_supported_currencies();
+
+		if ( !empty( $_POST[ self::FORM_NAME ]['tracker_debug'] ) ) {
+			$site_config_sync = new SiteConfigSync( $this->settings );
+			switch ($_POST[ self::FORM_NAME ]['tracker_debug']) {
+				case 'always':
+					$site_config_sync->set_config_value('Tracker', 'debug', 1);
+					$site_config_sync->set_config_value('Tracker', 'debug_on_demand', 0);
+					break;
+				case 'on_demand':
+					$site_config_sync->set_config_value('Tracker', 'debug', 0);
+					$site_config_sync->set_config_value('Tracker', 'debug_on_demand', 1);
+					break;
+				default:
+					$site_config_sync->set_config_value('Tracker', 'debug', 0);
+					$site_config_sync->set_config_value('Tracker', 'debug_on_demand', 0);
+			}
+		}
 
 		if ( empty( $_POST[ self::FORM_NAME ][Settings::SITE_CURRENCY] )
 		     || !array_key_exists( $_POST[ self::FORM_NAME ][Settings::SITE_CURRENCY], $valid_currencies ) ) {
