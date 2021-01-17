@@ -1,5 +1,9 @@
 == Changelog ==
 
+= 4.1.2 =
+* Update core to 4.1.1
+* Add tracker debug setting
+
 = 4.1.1 =
 * Improved upgrade logic from version 1.X. If you are already on version 4.X there won't be a change.
 
