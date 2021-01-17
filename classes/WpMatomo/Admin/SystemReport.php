@@ -52,6 +52,7 @@ class SystemReport {
 
 	private $not_compatible_plugins = array(
 		'background-manager', // Uses an old version of Twig and plugin is no longer maintained.
+		'all-in-one-event-calendar', // Uses an old version of Twig
 		'data-tables-generator-by-supsystic', // uses an old version of twig causing some styles to go funny in the reporting and admin
 		'tweet-old-post-pro', // uses a newer version of monolog
 		'secupress', // see #369 depending on setting might have issues
