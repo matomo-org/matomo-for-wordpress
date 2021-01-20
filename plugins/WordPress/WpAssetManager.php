@@ -37,7 +37,7 @@ class WpAssetManager extends AssetManager
 	{
 		$wp_version = get_bloginfo( 'version' );
 
-		return $wp_version && 1 === version_compare('5.6.0-rc1', $wp_version);
+		return $wp_version && 1 === version_compare('5.6', $wp_version);
 	}
 
 	public function getJsInclusionDirective()
