@@ -109,6 +109,12 @@ class Logger extends AbstractLogger implements LoggerInterface
 
 		$level = $this->make_numeric_level($level);
 
+		$is_tracker_debug = $this->is_tracker && ((!empty($GLOBALS['PIWIK_TRACKER_DEBUG']) && $GLOBALS['PIWIK_TRACKER_DEBUG'] === true) || StaticContainer::get("ini.Tracker.debug"));
+
+		if ($is_tracker_debug) {
+			$this->level = self::DEBUG;
+		}
+
 		if ($level < $this->level) {
 			return;
 		}
@@ -137,9 +143,8 @@ class Logger extends AbstractLogger implements LoggerInterface
 		    && in_array('screen', $this->writers)
 		    && !empty($message)) {
 			if ($this->is_tracker) {
-				if (StaticContainer::get("ini.Tracker.debug")
-				    || !empty($GLOBALS['PIWIK_TRACKER_DEBUG'])) {
-					echo $message;
+				if ($is_tracker_debug) {
+					echo time() . ': ' . $message . "\n";
 				}
 			} else {
 
