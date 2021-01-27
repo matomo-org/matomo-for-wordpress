@@ -1,5 +1,11 @@
 == Changelog ==
 
+= 4.1.3 =
+* Fix query regarding a logtmpsegment appears falsely in logs
+* Make sure tracker debug can print the output
+* No longer include removed jQuery UI assets in WP 5.6
+* jQuery 3 compatibility tweak
+
 = 4.1.2 =
 * Update core to 4.1.1
 * Add tracker debug setting

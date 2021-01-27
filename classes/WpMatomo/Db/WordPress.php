@@ -362,7 +362,7 @@ class WordPress extends Mysqli {
 				}
 			}
 
-			if ( ( stripos( $sql, 'SELECT 1 FROM' ) !== false && stripos( $sql, 'matomo_logtmpsegment' ) !== false )
+			if ( ( stripos( $sql, '/* WP IGNORE ERROR */' ) !== false  )
 				 || stripos( $sql, 'SELECT @@TX_ISOLATION' ) !== false
 				 || stripos( $sql, 'SELECT @@transaction_isolation' ) !== false ) {
 				// prevent notices for queries that are expected to fail
