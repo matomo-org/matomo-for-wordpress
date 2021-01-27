@@ -89,10 +89,10 @@ class WordPress extends Mysqli {
 			$this->old_suppress_errors_value = $wpdb->suppress_errors( true );
 		}
 
-		if ( stripos( $sql, '/* WP IGNORE ERROR */' ) !== false  ) {
-			// prevent notices for queries that are expected to fail
-			// SELECT 1 FROM wp_matomo_logtmpsegment1cc77bce7a13181081e44ea6ffc0a9fd LIMIT 1 => runs to detect if temp table exists or not and regularly the query fails which is expected
-			// we show notices only in admin...
+		if ( ( stripos( $sql, '/* WP IGNORE ERROR */' ) !== false  )
+		     || stripos( $sql, 'SELECT @@TX_ISOLATION' ) !== false
+		     || stripos( $sql, 'SELECT @@transaction_isolation' ) !== false ) {
+			// see {@link WordPress::before_execute_query() }
 			$this->old_suppress_errors_value = $wpdb->suppress_errors( true );
 
 			return;
