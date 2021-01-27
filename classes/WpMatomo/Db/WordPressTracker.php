@@ -70,7 +70,7 @@ class WordPress extends Mysqli {
 		}
 	}
 
-	private function before_execute_query( $wpdb ) {
+	private function before_execute_query( $wpdb, $sql ) {
 		if ( ! $wpdb->suppress_errors
 			 && defined( 'WP_DEBUG' )
 			 && WP_DEBUG
@@ -87,6 +87,15 @@ class WordPress extends Mysqli {
 			}
 
 			$this->old_suppress_errors_value = $wpdb->suppress_errors( true );
+		}
+
+		if ( stripos( $sql, '/* WP IGNORE ERROR */' ) !== false  ) {
+			// prevent notices for queries that are expected to fail
+			// SELECT 1 FROM wp_matomo_logtmpsegment1cc77bce7a13181081e44ea6ffc0a9fd LIMIT 1 => runs to detect if temp table exists or not and regularly the query fails which is expected
+			// we show notices only in admin...
+			$this->old_suppress_errors_value = $wpdb->suppress_errors( true );
+
+			return;
 		}
 	}
 
@@ -171,7 +180,7 @@ class WordPress extends Mysqli {
 			$result = $this->fetchAll( $query, $parameters );
 		} else {
 			$query = $this->prepareWp( $query, $parameters );
-			$this->before_execute_query( $wpdb );
+			$this->before_execute_query( $wpdb, $query );
 			$result = $wpdb->query( $query );
 			$this->after_execute_query( $wpdb );
 		}
@@ -235,7 +244,7 @@ class WordPress extends Mysqli {
 		global $wpdb;
 		$prepare = $this->prepareWp( $query, $parameters );
 
-		$this->before_execute_query( $wpdb );
+		$this->before_execute_query( $wpdb, $query );
 
 		$row = $wpdb->get_row( $prepare, ARRAY_A );
 
@@ -248,7 +257,7 @@ class WordPress extends Mysqli {
 		global $wpdb;
 		$prepare = $this->prepareWp( $query, $parameters );
 
-		$this->before_execute_query( $wpdb );
+		$this->before_execute_query( $wpdb, $query );
 
 		$results = $wpdb->get_results( $prepare, ARRAY_A );
 
