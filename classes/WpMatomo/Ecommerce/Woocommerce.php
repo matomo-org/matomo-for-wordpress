@@ -31,7 +31,7 @@ class Woocommerce extends Base {
 		add_action( 'woocommerce_cart_item_set_quantity', array( $this, 'on_cart_updated_safe' ), 99999, 0 );
 		add_action('woocommerce_thankyou',  array($this, 'anonymise_orderid_in_url'), 1, 1);
 
-		if (!$this->is_doing_ajax()) {
+		if (!$this->should_track_background()) {
 			// prevent possibly executing same event twice where eg first a PHP Matomo tracker request is created
 			// because of woocommerce_applied_coupon and then also because of woocommerce_update_cart_action_cart_updated itself
 			// causing two tracking requests to be issues from the server. refs #215
