@@ -36,8 +36,8 @@ if ( $was_updated ) {
 <form method="post">
 	<?php wp_nonce_field( TrackingSettings::NONCE_NAME ); ?>
 	<p>
-        <?php esc_html_e( 'Here you can optionally configure the tracking to your liking.', 'matomo' );?>
-        <?php esc_html_e( 'The configured tracking code will be embedded into your website automatically unless you disabled the tracking.', 'matomo' );?>
+        <?php esc_html_e( 'Here you can optionally configure the tracking to your liking if you want.', 'matomo' );?>
+        <?php esc_html_e( 'The configured tracking code will be embedded into your website automatically and you won\'t need to do anything unless you disabled the tracking.', 'matomo' );?>
     </p>
 	<table class="matomo-tracking-form widefat">
 		<tbody>
@@ -69,20 +69,8 @@ if ( $was_updated ) {
 			echo '</td></tr>';
 		}
 
-		$matomo_form->show_textarea( 'tracking_code', esc_html__( 'Tracking code', 'matomo' ), 15, 'This is a preview of your current tracking code. If you choose to enter your tracking code manually, you can change it here. Have a look at the system report to get a list of all available JS tracker and tracking API endpoints.' . $matomo_manually_network, $matomo_is_not_tracking, 'matomo-track-option matomo-track-option-default matomo-track-option-tagmanager  matomo-track-option-manually', ! $settings->is_network_enabled(), '', ( $settings->get_global_option( 'track_mode' ) !== 'manually' ), false );
+		$matomo_form->show_textarea( 'tracking_code', esc_html__( 'Tracking code', 'matomo' ), 15, 'This is a preview of your current tracking code based on your configuration below. You don\'t need to do anything with it and this is purely for your information. If you choose to enter your tracking code manually, you can change it here. The tracking code is a piece of code that will be automatically embedded into your site and it is repsonsible for tracking your visitors. Have a look at the system report to get a list of all available JS tracker and tracking API endpoints. You don\'t need to embed this tracking code into your website, our plugin does this automatically.' . $matomo_manually_network, $matomo_is_not_tracking, 'matomo-track-option matomo-track-option-default matomo-track-option-tagmanager  matomo-track-option-manually', ! $settings->is_network_enabled(), '', ( $settings->get_global_option( 'track_mode' ) !== 'manually' ), false );
 
-		$matomo_form->show_select(
-			'track_codeposition',
-			__( 'JavaScript code position', 'matomo' ),
-			array(
-				'footer' => esc_html__( 'Footer', 'matomo' ),
-				'header' => esc_html__( 'Header', 'matomo' ),
-			),
-			__( 'Choose whether the JavaScript code is added to the footer or the header.', 'matomo' ),
-			'',
-			$matomo_is_not_tracking,
-			'matomo-track-option matomo-track-option-default  matomo-track-option-tagmanager matomo-track-option-manually'
-		);
 
 		$matomo_form->show_select( \WpMatomo\Settings::SITE_CURRENCY, esc_html__( 'Currency', 'matomo' ), $matomo_currencies, esc_html__('Choose the currency which will be used in reports.', 'matomo'), '' );
 
@@ -189,6 +177,18 @@ if ( $was_updated ) {
 			'',
 			$matomo_is_not_tracking,
 			$matomo_full_generated_tracking_group . ' matomo-track-option-tagmanager'
+		);
+		$matomo_form->show_select(
+			'track_codeposition',
+			__( 'JavaScript code position', 'matomo' ),
+			array(
+				'footer' => esc_html__( 'Footer', 'matomo' ),
+				'header' => esc_html__( 'Header', 'matomo' ),
+			),
+			__( 'Choose whether the JavaScript code is added to the footer or the header.', 'matomo' ),
+			'',
+			$matomo_is_not_tracking,
+			'matomo-track-option matomo-track-option-default  matomo-track-option-tagmanager matomo-track-option-manually'
 		);
 		$matomo_form->show_select(
 			'track_api_endpoint',
