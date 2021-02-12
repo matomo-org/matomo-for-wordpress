@@ -36,7 +36,8 @@ if ( $was_updated ) {
 <form method="post">
 	<?php wp_nonce_field( TrackingSettings::NONCE_NAME ); ?>
 	<p>
-        <?php esc_html_e( 'Configure the tracking to your liking.', 'matomo' );?>
+        <?php esc_html_e( 'Here you can optionally configure the tracking to your liking.', 'matomo' );?>
+        <?php esc_html_e( 'The configured tracking code will be embedded into your website automatically unless you disabled the tracking.', 'matomo' );?>
     </p>
 	<table class="matomo-tracking-form widefat">
 		<tbody>
