@@ -38,6 +38,7 @@ if ( $was_updated ) {
 	<p>
         <?php esc_html_e( 'Here you can optionally configure the tracking to your liking if you want.', 'matomo' );?>
         <?php esc_html_e( 'The configured tracking code will be embedded into your website automatically and you won\'t need to do anything unless you disabled the tracking.', 'matomo' );?>
+        <?php esc_html_e( 'If you are seeing a tracking code below, you don\'t have to embed this tracking code into your site. The plugin does this automatically for you.', 'matomo' );?>
     </p>
 	<table class="matomo-tracking-form widefat">
 		<tbody>
@@ -72,7 +73,7 @@ if ( $was_updated ) {
 		$matomo_form->show_textarea( 'tracking_code', esc_html__( 'Tracking code', 'matomo' ), 15, 'This is a preview of your current tracking code based on your configuration below. You don\'t need to do anything with it and this is purely for your information. If you choose to enter your tracking code manually, you can change it here. The tracking code is a piece of code that will be automatically embedded into your site and it is repsonsible for tracking your visitors. Have a look at the system report to get a list of all available JS tracker and tracking API endpoints. You don\'t need to embed this tracking code into your website, our plugin does this automatically.' . $matomo_manually_network, $matomo_is_not_tracking, 'matomo-track-option matomo-track-option-default matomo-track-option-tagmanager  matomo-track-option-manually', ! $settings->is_network_enabled(), '', ( $settings->get_global_option( 'track_mode' ) !== 'manually' ), false );
 
 
-		$matomo_form->show_select( \WpMatomo\Settings::SITE_CURRENCY, esc_html__( 'Currency', 'matomo' ), $matomo_currencies, esc_html__('Choose the currency which will be used in reports.', 'matomo'), '' );
+		$matomo_form->show_select( \WpMatomo\Settings::SITE_CURRENCY, esc_html__( 'Currency', 'matomo' ), $matomo_currencies, esc_html__('Choose the currency which will be used in reports. The currency will be used if you have an ecommerce store or if you are using the Matomo goals feature and assign a monetary value to a goal.', 'matomo'), '' );
 
 		$matomo_form->show_headline(esc_html__('Customise tracking (optional)', 'matomo'), 'matomo-track-option matomo-track-option-default matomo-track-option-manually matomo-track-option-tagmanager');
 
