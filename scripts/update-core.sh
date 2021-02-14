@@ -58,7 +58,7 @@ mv .htaccess $MATOMO_ROOT/.htaccess
 # we overwrite the opt out customer so don't include it
 echo "" > $MATOMO_ROOT/plugins/PrivacyManager/angularjs/opt-out-customizer/opt-out-customizer.directive.js
 
-sed -i -e 's/libs\/bower_components\/jquery\/dist\/jquery.min.js/..\/..\/..\/..\/..\/..\/..\/wp-includes\/js\/jquery\/jquery.js/' $MATOMO_ROOT/plugins/Overlay/client/client.js
+sed -i -e 's/node_modules\/jquery\/dist\/jquery.min.js/..\/..\/..\/..\/..\/..\/..\/wp-includes\/js\/jquery\/jquery.js/' $MATOMO_ROOT/plugins/Overlay/client/client.js
 
 echo -e "Done!... "
 echo -e "Should double check that path to jquery.js was updated in plugins/Overlay/client/client.js"
