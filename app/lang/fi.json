@@ -686,7 +686,8 @@
         "WidgetSearchNoResultKeywords": "Hakusanat ilman tuloksia",
         "ActionType": "Toiminnon tyyppi",
         "ActionTypes": "Toimintotyypit",
-        "Behaviour": "Käyttäytyminen"
+        "Behaviour": "Käyttäytyminen",
+        "PagesSubcategoryHelp3": "Käytä plus- ja miinus-merkkejä vasemmalla."
     },
     "Annotations": {
         "AddAnnotationsFor": "Lisää kommentti %s:lle...",
@@ -3077,6 +3078,10 @@
         "RedirectUrlErrorAdmin": "Voit lisätä domainin ylimääräisenä URL:nä %1$sasetuksissa%2$s.",
         "RedirectUrlErrorUser": "Pyydä ylläpitää lisäämään domain ylimääräisenä verkkosivuna."
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Palvelimen aika",
+        "Performance": "Suorituskyky"
+    },
     "PrivacyManager": {
         "AnonymizeData": "Anonymisoi tietoja",
         "AnonymizeIpDescription": "Valitse \"Kyllä\" jos haluat, että Matomo ei seuraa IP-osoitteita kokonaisvaltaisesti.",
@@ -3743,7 +3748,8 @@
         "ToFollowingSiteSearches": "Sisäisiä hakuja",
         "ToFollowingSiteSearchesInline": "%s sisäistä hakua",
         "XOfAllPageviews": "%s kaikista tämän sivun katseluista",
-        "XOutOfYVisits": "%1$s (%2$s:stä)"
+        "XOutOfYVisits": "%1$s (%2$s:stä)",
+        "TransitionsSubcategoryHelp2": "Lisätietoja"
     },
     "TwoFactorAuth": {
         "TwoFactorAuthentication": "Kaksivaiheinen tunnistautuminen",

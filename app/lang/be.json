@@ -285,7 +285,8 @@
         "PageTitlesReportDocumentation": "Гэтая справаздача змяшчае інфармацыю аб назвах старонак, якія былі наведаны. %1$s Назва старонкі гэта HTML %2$s тэг, які большасць брасзэраў паказваюць у загалоўке акна.",
         "SubmenuPagesEntry": "Старонкі ўваходу",
         "SubmenuPagesExit": "Старонкі выхаду",
-        "SubmenuPageTitles": "Назвы старонак"
+        "SubmenuPageTitles": "Назвы старонак",
+        "PagesSubcategoryHelp3": "Выкарыстоўвайце значкі плюса і мінуса, якія знаходзяцца злева, для навігацыі."
     },
     "CoreAdminHome": {
         "Administration": "Адміністрацыя",
@@ -1718,6 +1719,9 @@
     },
     "Overlay": {
         "Location": "Лакаця"
+    },
+    "PagePerformance": {
+        "ColumnTimeServer": "Серверны час"
     },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Схаваць апошні байт(ы) IP-адрасоў наведвальнікаў, каб выканаць вашы мясцовыя законы кіруючых органаў.",

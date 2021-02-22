@@ -1316,6 +1316,9 @@
         "ActivateLicenseKey": "አግብር",
         "PluginKeywords": "ቁልፍ ቃላት"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "የአገልጋይ ሰዓት"
+    },
     "Referrers": {
         "ColumnSearchEngine": "የመፈለጊያ ሞተሮች",
         "ColumnWebsite": "ድር ጣቢያዎች",

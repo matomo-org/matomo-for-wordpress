@@ -563,7 +563,8 @@
         "WidgetSearchCategories": "فئات البحث",
         "WidgetSearchKeywords": "كلمات البحث الدلالية",
         "WidgetSearchNoResultKeywords": "كلمات البحث الدلالية بلا نتائج",
-        "ActionType": "نوع الأمر"
+        "ActionType": "نوع الأمر",
+        "PagesSubcategoryHelp3": "استخدم أيقونات زائد وناقص على اليمين للتنقل."
     },
     "Annotations": {
         "AddAnnotationsFor": "أضف توضيحات عن %s...",
@@ -2276,6 +2277,9 @@
     "Overlay": {
         "Location": "المكان"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "توقيت الملقم"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "قم بتشفير آخر بايت من عناوين IP للزوار للإلتزام بقوانين\/إرشادات الخصوصية المحلية."
     },
@@ -2416,6 +2420,9 @@
     "Tour": {
         "Engagement": "التفاعل",
         "CompletionTitle": "أحسنت!"
+    },
+    "Transitions": {
+        "TransitionsSubcategoryHelp2": "تفاصيل أكثر"
     },
     "TwoFactorAuth": {
         "TwoFactorAuthentication": "المصادقة الثنائية",

@@ -2235,6 +2235,9 @@
         "RedirectUrlErrorAdmin": "Maaari mong idagdag ang domain na karagdagang URL %1$s sa mga setting ng %2$s.",
         "RedirectUrlErrorUser": "Tanungin ang iyong administrator upang idagdag ang domain bilang isang karagdagang URL."
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Oras ng server"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "E-Anonymize ang huling byte ng IP address ng iyong mga bisita upang sumunod sa iyong mga alituntuning local at privacy.",
         "AnonymizeIpMaskLengtDescription": "Piliin kung gaano karaming byte ng IP ng bisita ang dapat na ikubli.",
@@ -2517,7 +2520,8 @@
         "ToFollowingSiteSearches": "Panloob na paghahanap",
         "ToFollowingSiteSearchesInline": "panloob na paghahanap %s",
         "XOfAllPageviews": "%s ng lahat ng mga tanawin ng pahinang ito",
-        "XOutOfYVisits": "%1$s (mula sa %2$s)"
+        "XOutOfYVisits": "%1$s (mula sa %2$s)",
+        "TransitionsSubcategoryHelp2": "Higit pang mga detalye"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "Ang IP address %s ay isang lokal na address at hindi maaaring i-geolocated.",

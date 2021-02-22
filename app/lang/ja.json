@@ -697,7 +697,8 @@
         "WidgetSearchNoResultKeywords": "検索結果無しの検索キーワード",
         "ActionType": "アクションタイプ",
         "ActionTypes": "アクションタイプ",
-        "Behaviour": "行動"
+        "Behaviour": "行動",
+        "PagesSubcategoryHelp3": "左側のプラス記号とマイナス記号のアイコンをクリックして操作します"
     },
     "Annotations": {
         "AddAnnotationsFor": "%sのアノテーションを追加…",
@@ -3191,6 +3192,10 @@
         "RedirectUrlErrorAdmin": "%1$s 設定で %2$s 追加の URL としてドメインを追加できます。",
         "RedirectUrlErrorUser": "管理者に、任意のドメインを追加 URL として追加するよう管理者に依頼してください。"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "サーバタイム",
+        "Performance": "パフォーマンス"
+    },
     "PrivacyManager": {
         "AnonymizeData": "データの匿名化",
         "AnonymizeIpDescription": "Matomo が完全な IP アドレスを追跡しないようにする場合、有効にしてください。",
@@ -4231,7 +4236,9 @@
         "ToFollowingSiteSearchesInline": "%s 内部検索",
         "XOfAllPageviews": "このページの全ビューの %s",
         "XOutOfYVisits": "(%2$s の内の ) %1$s",
-        "PageURLTransitions": "ページURLのトランジション"
+        "PageURLTransitions": "ページURLのトランジション",
+        "TransitionsSubcategoryHelp1": "トランジションでは、ビジターが特定のページを閲覧する前後に直接行ったことを示すレポートが表示されます。 このページでは、強力な移行レポートにアクセスし、理解し、使用する方法について説明します。",
+        "TransitionsSubcategoryHelp2": "詳細"
     },
     "TwoFactorAuth": {
         "TwoFactorAuthentication": "2ファクター認証",

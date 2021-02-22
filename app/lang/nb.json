@@ -616,7 +616,8 @@
         "WidgetSearchCategories": "Søkekategorier",
         "WidgetSearchKeywords": "Nøkkelord for sidesøk",
         "WidgetSearchNoResultKeywords": "Nøkkelord uten resultater",
-        "ActionType": "Handlingstype"
+        "ActionType": "Handlingstype",
+        "PagesSubcategoryHelp3": "Bruk pluss- og minus-ikonene til venstre for å navigere."
     },
     "Annotations": {
         "AddAnnotationsFor": "Legg til merknader for %s...",
@@ -2650,6 +2651,9 @@
         "Location": "Sted",
         "OneClick": "1 klikk"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Servertid"
+    },
     "PrivacyManager": {
         "AnonymizeIpMaskLength": "%1$s byte(s) – f.eks. %2$s",
         "ClickHereSettings": "Klikk her for å få tilgang til %s-innstillingene.",
@@ -2916,7 +2920,8 @@
         "ToFollowingSiteSearches": "Interne søk",
         "ToFollowingSiteSearchesInline": "%s interne søk",
         "XOfAllPageviews": "%s av alle besøk på denne siden",
-        "XOutOfYVisits": "%1$s (av %2$s)"
+        "XOutOfYVisits": "%1$s (av %2$s)",
+        "TransitionsSubcategoryHelp2": "Flere detaljer"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "IP-adressen %s er en lokal adresse og kan ikke lokaliseres.",

@@ -542,7 +542,8 @@
         "WidgetSearchCategories": "Keresés kategóriák",
         "WidgetSearchKeywords": "Oldal keresés kulcsszavak",
         "WidgetSearchNoResultKeywords": "Kulcsszavak, melyekre nincs találat",
-        "ActionType": "Akció típusa"
+        "ActionType": "Akció típusa",
+        "PagesSubcategoryHelp3": "Használd a baloldali plusz és mínusz ikonokat a navigációhoz."
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Új megbízható host hozzáadása",
@@ -2030,6 +2031,9 @@
     "Overlay": {
         "Location": "Hely"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Szerveridő"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "A látogatók IP címeinek utolsó bájtját törölve megakadályozza a látogatók beazonosítását, hogy megfelelhess a helyi adatvédelmi törvényeknek és ajánlásoknak."
     },
@@ -2147,6 +2151,9 @@
     "Tour": {
         "Engagement": "Érdeklődés foka",
         "CompletionTitle": "Szép munka!"
+    },
+    "Transitions": {
+        "TransitionsSubcategoryHelp2": "több részlet"
     },
     "UserCountry": {
         "Continent": "Kontinens",

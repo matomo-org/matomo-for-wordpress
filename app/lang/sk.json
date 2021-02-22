@@ -553,7 +553,8 @@
         "WidgetPageTitlesFollowingSearch": "Titulky stránok po vyhľadávaní na stránkach",
         "WidgetPageUrlsFollowingSearch": "Stránky po vyhľadávaní na stránkach",
         "WidgetSearchCategories": "Kategórie hľadania",
-        "WidgetSearchKeywords": "Kľúčové slová vyhladávania"
+        "WidgetSearchKeywords": "Kľúčové slová vyhladávania",
+        "PagesSubcategoryHelp3": "Pre navigáciu použite symboly plus a mínus vľavo."
     },
     "Annotations": {
         "AddAnnotationsFor": "Pridať anotáciu pre %s…",
@@ -2236,6 +2237,9 @@
         "OpenFullScreen": "Prejsť na celú obrazovku (bez bočnej lišty)",
         "Overlay": "Prekrytie stránky"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Serverový čas"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Anonymnosť posledný bajt IP adresy návštevníkov v súlade s miestnymi zákonmi na ochranu súkromia.",
         "AnonymizeIpMaskLengtDescription": "Vyberte koľko bajtov IP adresy návštevníkov by malo byť maskovaných.",
@@ -2342,6 +2346,9 @@
     "Tour": {
         "Engagement": "Záujem",
         "CompletionTitle": "Výborne!"
+    },
+    "Transitions": {
+        "TransitionsSubcategoryHelp2": "Viac informácií"
     },
     "UserCountry": {
         "City": "Mesto",

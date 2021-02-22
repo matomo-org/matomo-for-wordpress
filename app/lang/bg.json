@@ -535,7 +535,8 @@
         "WidgetSearchCategories": "Търси категории",
         "WidgetSearchKeywords": "Ключови думи търсени от сайта",
         "WidgetSearchNoResultKeywords": "Търсене по ключови думи без резултати",
-        "Behaviour": "Поведение"
+        "Behaviour": "Поведение",
+        "PagesSubcategoryHelp3": "Използвайте знаците плюс и минус за навигация."
     },
     "Annotations": {
         "AddAnnotationsFor": "Добави анотации за %s...",
@@ -2383,6 +2384,9 @@
         "RedirectUrlErrorAdmin": "Може да добавите домейнът като допълнителен адрес %1$sв настройките%2$s.",
         "RedirectUrlErrorUser": "Попитайте вашият администратор да добави домейна, като допълнителен URL."
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Сървърно време (на сървъра)"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Скрива последните цифри на IP адреса на посетителя, за да бъде спазен закона за поверителност.",
         "AnonymizeIpMaskLengtDescription": "Изберете колко байта от IP на посетителите да е маскирано.",
@@ -2650,7 +2654,8 @@
         "ToFollowingSiteSearches": "Външни търсения",
         "ToFollowingSiteSearchesInline": "%s вътрешни търсения",
         "XOfAllPageviews": "%s на всички показания за тази страница",
-        "XOutOfYVisits": "%1$s (от %2$s)"
+        "XOutOfYVisits": "%1$s (от %2$s)",
+        "TransitionsSubcategoryHelp2": "Детайли"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "IP адрес %s е вътрешен (частен) адрес и не може да бъде определено местоположението му.",

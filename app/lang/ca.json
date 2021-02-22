@@ -500,7 +500,8 @@
         "WidgetPageUrlsFollowingSearch": "Pàgines despes d'una cerca interna",
         "WidgetSearchCategories": "Categoríes de cerca",
         "WidgetSearchKeywords": "Paraules de cerca al lloc",
-        "WidgetSearchNoResultKeywords": "Paraules Clau de cerca sense resultats"
+        "WidgetSearchNoResultKeywords": "Paraules Clau de cerca sense resultats",
+        "PagesSubcategoryHelp3": "Fes servir les icones de més i menys a l'esquerra per navegar."
     },
     "Annotations": {
         "AddAnnotationsFor": "Afegir una anotació per %s",
@@ -2183,6 +2184,9 @@
         "RedirectUrlErrorAdmin": "Podeu afegir una URL addicional per un domini a %1$s les preferències%2$s.",
         "RedirectUrlErrorUser": "Contacteu amb el vostre administrador per afegir el domini com una URL adicional."
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Hora del servidor"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Anonimitzar el(s) últim(s) de la IP de les adreces dels visitants per complir amb la vostra política de privacitat\/llei.",
         "AnonymizeIpMaskLengtDescription": "Seleccioneu quans bytes de l'adreça IP del visitant voleu enmascarar.",
@@ -2426,7 +2430,8 @@
         "ToFollowingSiteSearches": "Cerques internes",
         "ToFollowingSiteSearchesInline": "%s cerques internes",
         "XOfAllPageviews": "%s de totes les visualitzacions d'aquesta pàgina",
-        "XOutOfYVisits": "%1$s (de %2$s)"
+        "XOutOfYVisits": "%1$s (de %2$s)",
+        "TransitionsSubcategoryHelp2": "Més detalls"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "L'adreça IP %s és una adreça local i no pot ser Geolocalitzada.",

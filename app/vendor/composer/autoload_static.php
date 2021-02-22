@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1423767b62a00489251ad7f3403e836a
+class ComposerStaticInitd31bd187fefd1fa64f4abce429657d5b
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -2206,6 +2206,7 @@ class ComposerStaticInit1423767b62a00489251ad7f3403e836a
         'Piwik\\Plugins\\SegmentEditor\\tests\\Integration\\SegmentEditorTest' => __DIR__ . '/../..' . '/plugins/SegmentEditor/tests/Integration/SegmentEditorTest.php',
         'Piwik\\Plugins\\SegmentEditor\\tests\\Integration\\SegmentFormatterTest' => __DIR__ . '/../..' . '/plugins/SegmentEditor/tests/Integration/SegmentFormatterTest.php',
         'Piwik\\Plugins\\SegmentEditor\\tests\\Integration\\SegmentQueryDecoratorTest' => __DIR__ . '/../..' . '/plugins/SegmentEditor/tests/Integration/SegmentQueryDecoratorTest.php',
+        'Piwik\\Plugins\\SegmentEditor\\tests\\System\\ApiTest' => __DIR__ . '/../..' . '/plugins/SegmentEditor/tests/System/ApiTest.php',
         'Piwik\\Plugins\\SegmentEditor\\tests\\System\\UnprocessedSegmentsTest' => __DIR__ . '/../..' . '/plugins/SegmentEditor/tests/System/UnprocessedSegmentsTest.php',
         'Piwik\\Plugins\\SegmentEditor\\tests\\Unit\\SegmentQueryDecoratorTest' => __DIR__ . '/../..' . '/plugins/SegmentEditor/tests/Unit/SegmentQueryDecoratorTest.php',
         'Piwik\\Plugins\\SitesManager\\API' => __DIR__ . '/../..' . '/plugins/SitesManager/API.php',
@@ -2282,6 +2283,7 @@ class ComposerStaticInit1423767b62a00489251ad7f3403e836a
         'Piwik\\Plugins\\TagManager\\Dao\\TriggersDao' => __DIR__ . '/../..' . '/plugins/TagManager/Dao/TriggersDao.php',
         'Piwik\\Plugins\\TagManager\\Dao\\VariablesDao' => __DIR__ . '/../..' . '/plugins/TagManager/Dao/VariablesDao.php',
         'Piwik\\Plugins\\TagManager\\Diagnostic\\ContainerWriteAccess' => __DIR__ . '/../..' . '/plugins/TagManager/Diagnostic/ContainerWriteAccess.php',
+        'Piwik\\Plugins\\TagManager\\Exception\\EntityRecursionException' => __DIR__ . '/../..' . '/plugins/TagManager/Exception/EntityRecursionException.php',
         'Piwik\\Plugins\\TagManager\\Input\\AccessValidator' => __DIR__ . '/../..' . '/plugins/TagManager/Input/AccessValidator.php',
         'Piwik\\Plugins\\TagManager\\Input\\Description' => __DIR__ . '/../..' . '/plugins/TagManager/Input/Description.php',
         'Piwik\\Plugins\\TagManager\\Input\\IdSite' => __DIR__ . '/../..' . '/plugins/TagManager/Input/IdSite.php',
@@ -2301,6 +2303,7 @@ class ComposerStaticInit1423767b62a00489251ad7f3403e836a
         'Piwik\\Plugins\\TagManager\\Model\\Trigger' => __DIR__ . '/../..' . '/plugins/TagManager/Model/Trigger.php',
         'Piwik\\Plugins\\TagManager\\Model\\Variable' => __DIR__ . '/../..' . '/plugins/TagManager/Model/Variable.php',
         'Piwik\\Plugins\\TagManager\\Settings\\Storage\\Backend\\TransientBackend' => __DIR__ . '/../..' . '/plugins/TagManager/Settings/Storage/Backend/TransientBackend.php',
+        'Piwik\\Plugins\\TagManager\\SimulatorContext' => __DIR__ . '/../..' . '/plugins/TagManager/SimulatorContext.php',
         'Piwik\\Plugins\\TagManager\\SystemSettings' => __DIR__ . '/../..' . '/plugins/TagManager/SystemSettings.php',
         'Piwik\\Plugins\\TagManager\\TagManager' => __DIR__ . '/../..' . '/plugins/TagManager/TagManager.php',
         'Piwik\\Plugins\\TagManager\\Tasks' => __DIR__ . '/../..' . '/plugins/TagManager/Tasks.php',
@@ -2438,6 +2441,7 @@ class ComposerStaticInit1423767b62a00489251ad7f3403e836a
         'Piwik\\Plugins\\TagManager\\tests\\Integration\\APITest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Integration/APITest.php',
         'Piwik\\Plugins\\TagManager\\tests\\Integration\\ConfigurationTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Integration/ConfigurationTest.php',
         'Piwik\\Plugins\\TagManager\\tests\\Integration\\Context\\BaseContext\\TemplateLocatorTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Integration/Context/BaseContext/TemplateLocatorTest.php',
+        'Piwik\\Plugins\\TagManager\\tests\\Integration\\Context\\WebContextTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Integration/Context/WebContextTest.php',
         'Piwik\\Plugins\\TagManager\\tests\\Integration\\Dao\\ContainerReleaseDaoTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Integration/Dao/ContainerReleaseDaoTest.php',
         'Piwik\\Plugins\\TagManager\\tests\\Integration\\Dao\\ContainerVersionsDaoTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Integration/Dao/ContainerVersionsDaoTest.php',
         'Piwik\\Plugins\\TagManager\\tests\\Integration\\Dao\\ContainersDaoTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Integration/Dao/ContainersDaoTest.php',
@@ -2618,6 +2622,7 @@ class ComposerStaticInit1423767b62a00489251ad7f3403e836a
         'Piwik\\Plugins\\UsersManager\\tests\\Integration\\UsersManagerTest' => __DIR__ . '/../..' . '/plugins/UsersManager/tests/Integration/UsersManagerTest.php',
         'Piwik\\Plugins\\UsersManager\\tests\\System\\ApiTest' => __DIR__ . '/../..' . '/plugins/UsersManager/tests/System/ApiTest.php',
         'Piwik\\Plugins\\VisitFrequency\\API' => __DIR__ . '/../..' . '/plugins/VisitFrequency/API.php',
+        'Piwik\\Plugins\\VisitFrequency\\Archiver' => __DIR__ . '/../..' . '/plugins/VisitFrequency/Archiver.php',
         'Piwik\\Plugins\\VisitFrequency\\Columns\\Metrics\\ReturningMetric' => __DIR__ . '/../..' . '/plugins/VisitFrequency/Columns/Metrics/ReturningMetric.php',
         'Piwik\\Plugins\\VisitFrequency\\Controller' => __DIR__ . '/../..' . '/plugins/VisitFrequency/Controller.php',
         'Piwik\\Plugins\\VisitFrequency\\Reports\\Get' => __DIR__ . '/../..' . '/plugins/VisitFrequency/Reports/Get.php',
@@ -3252,11 +3257,11 @@ class ComposerStaticInit1423767b62a00489251ad7f3403e836a
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1423767b62a00489251ad7f3403e836a::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1423767b62a00489251ad7f3403e836a::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit1423767b62a00489251ad7f3403e836a::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit1423767b62a00489251ad7f3403e836a::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInit1423767b62a00489251ad7f3403e836a::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd31bd187fefd1fa64f4abce429657d5b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd31bd187fefd1fa64f4abce429657d5b::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitd31bd187fefd1fa64f4abce429657d5b::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInitd31bd187fefd1fa64f4abce429657d5b::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInitd31bd187fefd1fa64f4abce429657d5b::$classMap;
 
         }, null, ClassLoader::class);
     }

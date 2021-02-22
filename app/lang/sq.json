@@ -665,6 +665,7 @@
         "ColumnUniqueOutlinks": "Lidhje për Jashtë Unike",
         "ColumnIdPageview": "ID Parjeje Faqeje",
         "ColumnInteractionPosition": "Pozicion Ndërveprimi",
+        "ColumnPageViewPosition": "Pozicion Sipas Parjesh Faqeje",
         "ActionsInVisit": "Veprime Në Vizitë",
         "DownloadsReportDocumentation": "Në këtë raport, mund të shihni cilat kartela kanë shkarkuar vizitorët tuaj. %s Ato çka Matomo numëron si shkarkim është çdo klikim mbi një lidhje shkarkimi. Por Matomo s’mund ta dijë a u plotësua apo jo shkarkimi.",
         "EntryPagesReportDocumentation": "Ky raport përmban të dhëna rreth faqesh hyrjesh që janë përdorur gjatë një periudhe të caktuar. Faqe hyrjeje është faqja e parë që sheh një vizitor gjatë vizitës së tij. %s URL-të e hyrjeve shfaqen sipas një strukture dosjeje.",
@@ -673,6 +674,7 @@
         "ExitPagesReportDocumentation": "Ky raport përmban të dhëna rreth faqesh daljesh që janë kryer gjatë një periudhe të caktuar. Faqe daljeje është faqja e fundit që sheh një vizitor gjatë vizitës së tij. %s URL-të e daljeve shfaqen sipas një strukture dosjeje.",
         "ExitPageTitles": "Tituj faqesh dalje",
         "ExitPageTitlesReportDocumentation": "Ky raport përmban të dhëna rreth titujve të faqeve dalje që janë përdorur gjatë periudhës së dhënë.",
+        "MainMetricsReportDocumentation": "Ky raport furnizon një përmbledhje shumë elementare rreth çfarë veprimesh bëjnë vizitorët në sajtin tuaj.",
         "OneSearch": "1 kërkim",
         "OutlinkDocumentation": "Një lidhje për jashtë është një lidhje që e shpie përdoruesin diku jashtë sajtit tuaj (te një tjetër përkatësi).",
         "OutlinksReportDocumentation": "Ky raport shfaq një listë hierarkike URL-sh lidhjesh për jashtë që janë klikuar nga vizitorët tuaj.",
@@ -711,7 +713,22 @@
         "ActionType": "Lloj Veprimi",
         "ActionTypes": "Lloje Veprimesh",
         "Behaviour": "Sjellje",
-        "TimeSpentInReferringAction": "Kohë e Harxhuar në Veprim Referimi"
+        "TimeSpentInReferringAction": "Kohë e Harxhuar në Veprim Referimi",
+        "PagesSubcategoryHelp1": "Ky raport përmban të dhëna rreth URL-sh faqesh që janë vizituar.",
+        "PagesSubcategoryHelp2": "Tabela është e sistemuar në mënyrë hierarkike, URL-të tregohen si strukturë dosjeje.",
+        "PagesSubcategoryHelp3": "Për lëvizje përdorni ikonat plus dhe minus majtas.",
+        "EntryPagesSubcategoryHelp1": "Ky raport përmban të dhëna rreth faqesh hyrjesh që janë përdorur gjatë një periudhe të caktuar. Faqe hyrjeje është faqja e parë që sheh një vizitor gjatë vizitës së tij.",
+        "EntryPagesSubcategoryHelp2": "URL-të e hyrjeve tregohen si strukturë dosjeje.",
+        "ExitPagesSubcategoryHelp1": "Ky raport përmban të dhëna rreth faqesh daljesh që janë përdorur gjatë një periudhe të caktuar. Faqe daljeje është faqja e fundit që sheh një vizitor gjatë vizitës së tij.",
+        "ExitPagesSubcategoryHelp2": "URL-të e daljeve tregohen si strukturë dosjeje.",
+        "PageTitlesSubcategoryHelp1": "Ky raport përmban të dhëna rreth titujve të faqeve që janë vizituar.",
+        "PageTitlesSubcategoryHelp2": "Titulli i faqeve është Etiketa HTML &amp;lt;title&amp;gt; që shfaqin në titullin e dritares shumica e faqeve.",
+        "SiteSearchSubcategoryHelp1": "Ndarja Kërkim në Sajt shfaq cilat fjalëkyçe përdorin vizitorët kur kërkojnë në sajtin tuaj. Shfaqet gjithashtu cilat faqe shohin vizitorët pasi bëjnë një kërkim dhe cilat fjalëkyçe në sajt nuk japin asnjë përfundim.",
+        "SiteSearchSubcategoryHelp2": "Këto raporte mund t’ju japin ide rreth lënde që mungon në sajtin tuaj, se çfarë po kërkojnë vizitorët, por s’e gjejnë kollaj, etj.",
+        "SiteSearchSubcategoryHelp3": "Mësoni më tepër, te Udhërrëfyesi i Kërkimit Në Sajt.",
+        "OutlinksSubcategoryHelp1": "Ky raport shfaq një listë hierarkike URL-sh lidhjesh për jashtë që janë klikuar nga vizitorët tuaj. Një lidhje për jashtë është një lidhje që e largon vizitorin nga sajti juaj (drejt një përkatësie tjetër).",
+        "DownloadsSubcategoryHelp1": "Në këtë raport mund të shihni se çilat kartela kanë shkarkuar vizitorët tuaj.",
+        "DownloadsSubcategoryHelp2": "Ato çka Matomo numëron si shkarkim është çdo klikim mbi një lidhje shkarkimi. Por Matomo s’mund ta dijë a u plotësua apo jo shkarkimi."
     },
     "Annotations": {
         "AddAnnotationsFor": "Shtoni shënime për %s…",
@@ -741,15 +758,19 @@
         "ContentInteractions": "Ndërveprime me Lëndën",
         "InteractionRate": "Shkallë Ndërveprimi",
         "ContentName": "Emër Lënde",
+        "ContentNameReportDocumentation": "Ky raport shfaq emrat për lëndën që vizitorët tuaj panë dhe ndërvepruan me të.",
         "ContentNames": "Emra Lënde",
         "ContentPiece": "Copëz Lënde",
+        "ContentPieceReportDocumentation": "Ky raport shfaq pjesë lënde që vizitorët tuaj panë dhe ndërvepruan me të.",
         "ContentPieces": "Copëza Lënde",
         "ContentTarget": "Synim Lënde",
         "ContentTargets": "Synime Lënde",
         "Contents": "Lëndë",
         "InteractionsMetricDocumentation": "Numri i herëve kur për një bllok lënde ka pasur ndërveprime (p.sh., një 'klikim' mbi një banderolë apo reklamë).",
         "ImpressionsMetricDocumentation": "Numri i herëve që një bllok lënde, i tillë si banderolë apo reklamë, është shfaqur në një faqe.",
-        "InteractionRateMetricDocumentation": "Përpjesëtimi i përshtypjeve nga lënda kundrejt ndërveprimeve."
+        "InteractionRateMetricDocumentation": "Përpjesëtimi i përshtypjeve nga lënda kundrejt ndërveprimeve.",
+        "ContentsSubcategoryHelp1": "Ndjekja e lëndës ju ndihmon të përcaktoni popullaritetin e pjesëve specifike të lëndës në çfarëdo faqe të sajtit apo aplikacionit tuaj. Kjo ndarje raporton numrin e përshtypjeve dhe ndërveprimeve që marrin pjesë të ndryshme të lëndës në sajtin tuaj.",
+        "ContentsSubcategoryHelp2": "Mësoni më tepër, te udhërrëfyesi i Ndjekjes së Lëndës."
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Shtoni një strehë të re të besuar",
@@ -763,7 +784,7 @@
         "CorsDomains": "Përkatësi Cross-Origin Resource Sharing (CORS)",
         "CorsDomainsHelp": "Mund të përkufizoni përkatësi ose nënpërkatësi të tilla si http:\/\/shembull.com ose http:\/\/stats.shembull.com. Ose, që të lejoni kërkesa ndërpërkatësore për krejt përkatësitë, thjesht shtoni *",
         "CustomLogoFeedbackInfo": "Nëse e përshtatni logon e Matomo-s, mund t’ju interesonte edhe fshehja lidhjes %1$s te menuja në krye. Për ta bërë këtë, mund të çaktivizoni shtojcën e Përshtypjeve te faqja e %2$sAdministrimit të Shtojcave%3$s.",
-        "CustomLogoHelpText": "Logon e Matomo-s, që do të shfaqet në ndërfaqen e përdoruesit dhe raportet email, mund ta personalizoni.",
+        "CustomLogoHelpText": "Logon e Matomo-s, që do të shfaqet në ndërfaqen e përdoruesit dhe raportet email, mund ta përshtatni si doni.",
         "DevelopmentProcess": "Teksa procesi ynë i zhvillimit përfshin mijëra teste të automatizuara, Testuesit Beta luajnë një rol kyç në plotësimin e \"politikës Pa të Meta\" në Matomo.",
         "EmailServerSettings": "Rregullime shërbyesi email",
         "ForBetaTestersOnly": "Vetëm për testues beta",
@@ -1007,7 +1028,15 @@
         "SeeAvailableVersions": "Shihni Versione të Gatshëm",
         "QuickLinks": "Lidhje të Shpejta",
         "Profilable": "E profilizueshme",
-        "SearchOnMatomo": "Kërkoni për '%1$s' te Matomo.org"
+        "SearchOnMatomo": "Kërkoni për '%1$s' te Matomo.org",
+        "ReportingCategoryHelpPrefix": "Si më ndihmon faqja e raportimeve \"%1$s > %2$s\"?",
+        "VisitorsCategoryHelp1": "Faqet Vizitorë ju tregojnë gjëra rreth se cilët janë vizitorët tuaj. Gjëra të tilla si nga vijnë vizitorët tuaj, çfarë pajisjesh dhe shfletuesish përdorin dhe kur e vizitojnë, përgjithësisht, sajtin tuaj. Të kuptoni, përmbledhtas, cili është publiku juaj, dhe të kërkoni për veçanti, për të parë se si mund të shtohet publiku juaj.",
+        "VisitorsCategoryHelp2": "Përveç informacionit të përgjithshëm rreth vizitorëve tuaj, mund të përdorni edhe %1$sRegjistër Vizitash%2$s, që të shihni ç’ndodhi gjatë çdo vizite individuale.",
+        "VisitorsOverviewHelp": "Përmbledhja mbi Vizitorët ju ndihmon të kuptoni popullaritetin e sajtit tuaj. Kjo bëhet duke dhënë grafikë që shfaqin sa vizita ka sajti juaj gjatë një periudhe të caktuar dhe shkallën mesatare të angazhimit për veçori bazë, bie fjala, kërkime dhe shkarkime.",
+        "DevicesSubcategoryHelp": "Ndarja Pajisje ju ndihmon të njihni teknologjinë që vizitorët tuaj përdorin në sajtin tuaj. Do të shihni raporte mbi llojin e pajisjes dhe modele specifike, që t’ju bëjnë të mundur ta optimizoni sajtin për shumicën e pajisjeve popullore.",
+        "SoftwareSubcategoryHelp": "Ndarja Software ju shfaq sistemet operative, shfletues dhe shtojca që vizitorët tuaj përdorin për sajtin, që të mund ta optimizoni sajtin tuaj për të garantuar se është plotësisht i përputhshëm me formësimet më popullore.",
+        "EngagementSubcategoryHelp1": "Ndarja Angazhim ju furnizon raporte që ndihmojnë të kini një ide mbi sasinë e vizitave të reja dhe të rikthyerish që përfiton sajti juaj. Mund të shqyrtoni edhe raporte që japin kohën mesatare dhe numrin e faqeve sipas vizitash, si dhe numrin e herëve që një vizitor ka qenë në sajtin tuaj dhe numrin më të zakonshëm të ditëve mes vizitash.",
+        "EngagementSubcategoryHelp2": "Kjo mund t’ju ndihmojë të bëni optimizim për shpeshti dhe vizita me shkallë të lartë ndërveprimi, përveç se për të kapur maksimumin e shtrirjes tuaj."
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Çinstalojeni",
@@ -1295,7 +1324,8 @@
         "SetAsDefaultWidgetsConfirmHelp": "Kjo përzgjedhje widget-sh dhe shtyllash për pultin do të përdoret kur cilido përdorues krijon një pult të ri, ose kur përdoret veçoria \"%s\".",
         "TopLinkTooltip": "Shihni raporte Analizash Web për %s.",
         "WidgetNotFound": "S’u gjet widget-i",
-        "WidgetPreview": "Paraparje widget-i"
+        "WidgetPreview": "Paraparje widget-i",
+        "DashboardCategoryHelp": "Kjo është një faqe pulti. Pultet janë një koleksion widget-esh Matomo që mund t’i shtoni ju vetë, sipas nevojave tuaja. Zgjidhni dhe merrni çfarëdo widget-esh të Matomo-s, që të keni me një shikim të dhënat që %1$s*ju*%2$s keni nevojë."
     },
     "DevicePlugins": {
         "BrowserWithNoPluginsEnabled": "%1$s pa shtojca të aktivizuara",
@@ -1411,7 +1441,14 @@
         "LifeTimeValueDescription": "Të ardhura e-tregtie gjithsej atribuar këtij përdoruesi përmes krejt vizitave: shuma e të ardhurave për krejt porositë E-tregti për ID Vizitori %s.",
         "VisitorProfileLTV": "Prodhoi Të ardhura Gjatë Ekzistencës sa %1$s.",
         "VisitorProfileItemsAndOrders": "Bleu %1$s artikuj në %2$s porosi e-tregtie.",
-        "VisitorProfileAbandonedCartSummary": "Braktisi %1$s shporta, përfshi %2$s artikuj me vlerë %3$s gjithsej."
+        "VisitorProfileAbandonedCartSummary": "Braktisi %1$s shporta, përfshi %2$s artikuj me vlerë %3$s gjithsej.",
+        "EcommerceOverviewSubcategoryHelp1": "Ndarja Përmbledhje Etregtie është vendi më i mirë për të pasur një pamje të thelluar të funksionimit të shitores tuaj internetore. Me një vështrim, mund të shihni se sa shitje po bëni, sa të ardhura po prodhoni, dhe nivel shndërrimesh për sajtin tuaj.",
+        "EcommerceOverviewSubcategoryHelp2": "Klikoni mbi një vlerë individuale brenda grafikut që fokusi të kalojë mbi të, brenda grafikut në madhësi të plotë të evolucionit.",
+        "SalesSubcategoryHelp1": "Kjo ndarje përmban një koleksion të zgjeruar raportesh për t’ju ndihmuar të analizoni kushte të ndryshme që në shumicën e rasteve shpien në shitje, të tilla si trafiku dhe burime fushatash, kohë dhe vendndodhje përdoruesi dhe pajisje të përdorura për të hyrë në to.",
+        "SalesSubcategoryHelp2": "Mund të njihni saktësisht edhe se si lidhen të ardhurat me çdo përmasë, bie fjala, lloje specifike trafiku, ose fushata të ndjekura.",
+        "EcommerceLogSubcategoryHelp1": "Regjistri Etregti furnizon të dhëna kapilare në shkallë niveli, që kështu të mund të shihni te sesioni i plotë për çdo përdorues që ose bëri një blerje, ose braktisi shportën e vet. Kjo mund t’ju ndihmojë të kuptoni se ç’bëjnë përdoruesit para dhe pasi blejnë, për të zbuluar mundësi optimizimi.",
+        "EcommerceLogSubcategoryHelp2": "Të dhënat në këtë faqe përditësohen aty për aty.",
+        "ProductSubcategoryHelp": "Pamja Produkte mund t’ju ndihmojë të identifikoni produkte dhe kategori që po ecin shumë mirë ose shumë keq, për të zbuluar prirje dhe mundësi lidhur me përzgjedhjen tuaj të produkteve dhe faqet e shitores."
     },
     "Events": {
         "PluginDescription": "Ndiqni Akte dhe merrni raporte mbi veprimtarinë e vizitorëve tuaj.",
@@ -1422,10 +1459,13 @@
         "Event": "Akt",
         "EventAction": "Veprim Akti",
         "EventActions": "Veprime Akti",
+        "EventActionsReportDocumentation": "Ky raport shfaq numrin e herëve që ka ndodhur çdo veprim. Mund të shihni kategoritë dhe emrat e veprimtarive që janë ndjekur, tok me çdo veprim në to, te rreshti përkatës. Mund të ndryshoni çfarë duket, duke ndryshuar përmasën e dytë me lidhjen në fund të raportit.",
         "EventCategories": "Kategori Aktesh",
+        "EventCategoriesReportDocumentation": "Ky raport shfaq kategoritë e çdo veprimtarie të ndjekur dhe se sa herë ndodh ajo. Mund të shihni veprimet dhe emrat e veprimtarisë që qenë ndjekur, tok me çdo kategori veprimtarie, te nëntabela e çdo rreshti. Se ç’shfaqet, mund ta ndryshoni duke ndryshuar përmasën dytësore me lidhjen te fundi i raportit.",
         "EventCategory": "Kategori Akti",
         "EventName": "Emër Akti",
         "EventNames": "Emra Aktesh",
+        "EventNamesReportDocumentation": "Ky raport shfaq emrat përshoqëruar me çdo veprimtari të ndjekur dhe sa herë ka ndodhur. Mund të shihni veprimet dhe kategoritë e veprimtarive që janë ndjekur, tok me çdo emër veprim në to, te nëntabela e çdo rreshti. Mund të ndryshoni çfarë duket, duke ndryshuar përmasën e dytë me lidhjen në fund të raportit.",
         "EventUrl": "URLAkti",
         "EventUrls": "ULR-ra Aktesh",
         "Events": "Akte",
@@ -1444,7 +1484,9 @@
         "TotalEventsDocumentation": "Numri gjithsej i akteve",
         "TotalValue": "Vlerë akti",
         "TotalValueDocumentation": "Shuma e vlerave të akteve",
-        "ViewEvents": "Shihni Akte"
+        "ViewEvents": "Shihni Akte",
+        "EventsSubcategoryHelp1": "Ndarja Veprimtari ofron raporte mbi veprimtari vetjake përshoqëruar me sajtin tuaj. Veprimtaritë zakonisht lypin formësim vetjak. Pasi të jenë formësuar, mund të shqyrtoni raporte të grupuar sipas kategorish, veprimesh dhe emrash.",
+        "EventsSubcategoryHelp2": "Mësoni më tepër rreth ndjekjes, këtu."
     },
     "Feedback": {
         "DoYouHaveBugReportOrFeatureRequest": "Keni ndonjë të metë për ta njoftuar, apo kërkesë për veçori të reja?",
@@ -1535,6 +1577,8 @@
         "LocationProviderDesc_Php_WithExtension": "Ky furnizues vendndodhjesh përshpejtohet nga zgjerimi %1$smaxminddb%2$s i instaluar.",
         "LocationProviderDesc_ServerModule": "Ky furnizues vendndodhjesh përdor modulin GeoIP 2 që është instaluar te shërbyesi juaj HTTP. Ky furnizues është i shpejtë dhe i përpiktë, por %1$smund të përdoret vetëm me ndjekje të zakonshme të shfletimit.%2$s",
         "LocationProviderDesc_ServerModule2": "Nëse ju duhet të importoni kartela regjistër ose të bëni diçka tjetër që lyp caktim adresash IP, përdorni %3$ssendërtimin PHP GeoIP 2%4$s dhe instaloni %1$szgjerimin maxminddb%2$s.",
+        "MalFormedUpdateUrl": "URL-ja %1$s duket e pavlefshme. Ju lutemi, sigurohuni të jepni një URL të vlefshme që fillon me http:\/\/ ose https:\/\/",
+        "InvalidGeoIPUpdateHost": "Streha e URL-së së përditësimit GeoIP %1$s s’është e besuar. Për të lejuar të shkarkohen përditësime GeoIP prej strehësh të tjera nga %2$s, ju lutemi, përimtoni rregullimin për %3$s te formësimet.",
         "NotManagingGeoIPDBs": "Matomo hëpërhë s’administron ndonjë bazë të dhënash DBIP ose MaxMind.",
         "UnsupportedArchiveType": "U has lloj i pambuluar arkivi %1$s.",
         "UpdaterHasNotBeenRun": "Përditësuesi s’është xhiruar ndonjëherë.",
@@ -1590,6 +1634,7 @@
         "ConversionsOverview": "Përmbledhje Shndërrimesh",
         "ConversionsOverviewBy": "Përmbledhje shndërrimesh sipas llojit të vizitave",
         "DaysToConv": "Ditë për Shndërrim",
+        "DaysToConvReportDocumentation": "Ky raport shfaq sa ditë kalojnë para se vizitorët tuaj të shndërrojnë një objektiv.",
         "Details": "Hollësi objektivi",
         "DefaultGoalConvertedOncePerVisit": "(parazgjedhje) Objektivi mund të shndërrohet një herë për vizitë",
         "DefaultRevenueLabel": "Të ardhura parazgjedhje objektivi",
@@ -1657,6 +1702,7 @@
         "GoalsAdjective": "Objektiva %s",
         "VisitPageTitle": "Vizitoni një Titull Faqeje të dhënë",
         "VisitsUntilConv": "Vizita për Shndërrim",
+        "VisitsUntilConvReportDocumentation": "Ky raport shfaq numrin e vizitave të bëra përpara se një vizitor të shndërrojë një objekti.",
         "VisitUrl": "Vizitoni një URL të dhënë (faqe ose grup faqesh)",
         "VisitDurationMatchAttr": "Qëndro për një kohë të caktuar",
         "VisitDuration": "gjatësia e vizitës është",
@@ -1670,7 +1716,12 @@
         "EventValueAsRevenueHelp2": "Shënim: Nëse janë caktuar si e ardhura parazgjedhje e objektivit, ashtu edhe vlera e veprimtarisë, do të përdoret vlera e veprimtarisë. Nëse kjo mundësi është e aktivizuar dhe në një kërkesë nuk është dërguar vlerë veprimtarie, do të përdoret vlera parazgjedhje (në pastë të caktuar një të tillë).",
         "AtLeastMinutes": "të paktën %1$s minuta. Përdorni shifra dhjetore për sekonda, për shembull, %2$s për përputhje me 30 sekonda.",
         "TimeInMinutes": "Kohë në Minuta",
-        "ClickToViewThisGoal": "Klikoni për të parë këtë objektiv."
+        "ClickToViewThisGoal": "Klikoni për të parë këtë objektiv.",
+        "OverviewReportDocumentation": "Ky raport jep një përmbledhje se sa mirë e shndërrojnë vizitorët tuaj një objektiv të caktuar.",
+        "GoalsOverviewSubcategoryHelp1": "Përmbledhje Objektivash raporton mbi funksionimin e objektivave të përkufizuar për sajtin tuaj. Mund të shihni përqindje shndërrimesh për objektivat tuaj, sasinë e të ardhurave dhe raporte të plotë për secilin.",
+        "GoalsOverviewSubcategoryHelp2": "Klikoni mbi një vlerë individuale brenda grafikut që fokusi të kalojë mbi të, brenda grafikut në madhësi të plotë të evolucionit.",
+        "ManageGoalsSubcategoryHelp1": "Kjo ndarje ju lejon të krijoni dhe përpunoni Objektiva për veprime të caktuara që bëjnë vizitorët në sajtin tuaj, bie fjala, vizita në një faqe të caktuar ose parashtrimi i një formulari të caktuar. Raportet e objektivave janë të larmishëm, por mund t’ju ndihmojnë të ndiqni suksesin e sajtit tuaj sipas objektivash biznesi, të tillë si, “lead generation”, shitje internetore dhe ekspozim më i madh marke.",
+        "ManageGoalsSubcategoryHelp2": "Mësoni më tepër, te udhërrëfyesi unë për Objektiva, këtu."
     },
     "ImageGraph": {
         "ColumnOrdinateMissing": "Në këtë raport s’u gjet shtylla '%1$s'. Provoni cilëndo nga %2$s",
@@ -1811,6 +1862,7 @@
         "SystemCheckMbstringHelp": "Për trajtimin e shenjave shumëbajtshe te ndërfaqja e përdoruesit dhe përgjigjet API lypset zgjerimi mbstring. Shihni gjithashtu që mbstring.func_overload te php.ini i është dhënë vlera \"0\".",
         "SystemCheckMemoryLimit": "Kufi kujtese",
         "SystemCheckMemoryLimitHelp": "Në një sajt me shumë trafik, procesi i arkivimit mund të dojë më tepër kujtesë se sa i është dhënë tani. Në u dashtë, ndryshojeni parametrin memory_limit te kartela juaj php.ini.",
+        "SystemCheckMemoryNoMemoryLimitSet": "S'është caktuar kufi kujtese",
         "SystemCheckNoErrorsOrWarnings": "S’ka gabime apo sinjalizime",
         "SystemCheckViewFullSystemCheck": "Shihni raportin e plotë të kontrollit të sistemit",
         "SystemCheckOpenURL": "Hap URL",
@@ -3044,7 +3096,12 @@
         "SegmentedVisitorLogTitle": "Regjistër Vizitash që shfaq vizita ku %1$s është \"%2$s\"",
         "OnClickPause": "%s është nisur. Klikoni që të ndalet.",
         "OnClickStart": "%s është ndalur. Klikoni që të niset.",
-        "ClickToSeeAllContents": "Klikoni që të shihni çdo ndërveprim\/përshtypje lënde"
+        "ClickToSeeAllContents": "Klikoni që të shihni çdo ndërveprim\/përshtypje lënde",
+        "VisitorLogSubcategoryHelp1": "Regjistri i Vizitave ju shfaq hollësisht çdo vizitë që i vjen sajtit. Mund të shihni ç’veprime ka ndërmarrë çdo vizitor, se erdhën te sajti juaj, diçka rreth se cilët janë, etj (teksa jeni ende në pajtim me rregulloret vendore mbi privatësinë).",
+        "VisitorLogSubcategoryHelp2": "Teksa raporte të tjerë në Matomo tregojnë se si sillen vizitorët, parë si tërësi, Regjistri i Vizitave furnizon hollësi të imta. Mund të përdorni edhe segmente, për ta ngushtuar punën për lloje specifike vizitash, për të kuptuar më mirë vizitorët tuaj.",
+        "VisitorLogSubcategoryHelp3": "Mësoni më tepër, te udhërrëfyesi për Regjistër Vizitash.",
+        "RealTimeHelp1": "Raporti Vizita Aty për Aty shfaq aty për aty rrjedhën e vizitave në sajtin tuaj. Përmban një numërator të atypëratyshëm të vizitave dhe parjeve të faqeve tuaja për 24 orët e fundit dhe për 30 minutat e mëparshme.",
+        "RealTimeHelp2": "Ky raport rifreskohet çdo 5 sekonda dhe shfaq vizita të reja (ose vizitorë ekzistues që shohin një faqe të re) në krye të listës, me një efekt zbehjeje."
     },
     "Login": {
         "BruteForceLog": "Regjistër Hyrjesh Me Zor",
@@ -3284,6 +3341,45 @@
         "RedirectUrlErrorAdmin": "Përkatësinë mund ta shtoni si URL shtesë %1$ste rregullimet%2$s.",
         "RedirectUrlErrorUser": "Kërkojini përgjegjësit tuaj ta shtojë përkatësinë si URL shtesë."
     },
+    "PagePerformance": {
+        "ColumnAveragePageLoadTime": "Kohë mes. ngarkimi faqesh",
+        "ColumnAveragePageLoadTimeDocumentation": "Kohë mesatare (në sekonda) që duhet nga kërkesa për një faqe deri sa faqja është vizatuar plotësisht brenda shfletuesit",
+        "ColumnAverageTimeNetwork": "Kohë mes. rrjeti",
+        "ColumnAverageTimeNetworkDocumentation": "Koha mesatare (në sekonda) që duhet për t’u lidhur me shërbyesin. Këtu përfshihet koha për kërkim te DNS dhe ajo për të vendosur një lidhje TCP. Ko vlerë mund të jetë 0 pas kërkesës së parë te një përkatësi, teksa shfletuesi ruan në fshehtinë të dhëna lidhjeje.",
+        "ColumnAverageTimeServer": "Kohë mes. shërbyesi",
+        "ColumnAverageTimeServerDocumentation": "Koha mesatare (në sekonda) që i duhet shërbyesit të prodhojë faqen. Kjo është koha e rrjedhur mes çastit që shërbyesi merr kërkesën dhe atij të nisjes së përgjigjes nga shërbyesi.",
+        "ColumnAverageTimeTransfer": "Kohë mes. shpërnguljesh",
+        "ColumnAverageTimeTransferDocumentation": "Koha mesatare (në sekonda) që i duhet shfletuesit për të shkarkuar përgjigjen nga shërbyesi. Kjo është koha nga marrja e bajtit të parë deri sa përgjigja është plotë.",
+        "ColumnAverageTimeDomProcessing": "Kohë mes. përpunimi DOM",
+        "ColumnAverageTimeDomProcessingDocumentation": "Kohë mesatare (në sekonda) që shfletuesi shpenzon për ngarkimin e faqes pasi përgjigja u mor tërësisht dhe para se përdoruesi të fillojë të ndërveprojë me të.",
+        "ColumnAverageTimeDomCompletion": "Kohë mes. plotësimi DOM",
+        "ColumnAverageTimeDomCompletionDocumentation": "Kohë mesatare (në sekonda) që i duhet shfletuesit për të ngarkuar media dhe për të ekzekutuar çfarëdo kodi Javascript në përgjim për aktin DOMContentLoaded, pasi faqja qe ngarkuar dhe përdoruesi mund të ndërveprojë tashmë me të.",
+        "ColumnAverageTimeOnLoad": "Kohë mes. ngarkimesh",
+        "ColumnAverageTimeOnLoadDocumentation": "Kohë mesatare (në sekonda) që i duhet shfletuesit për të ekzekutuar kod Javascript në pritje për aktin window.load. Ky akt vihet në punë kur DOM-i ka përfunduar vizatimin.",
+        "ColumnViewsWithTimeNetwork": "Parje faqesh me kohë rrjeti",
+        "ColumnViewsWithTimeServer": "Parje faqesh me kohë shërbyesi",
+        "ColumnViewsWithTimeTransfer": "Parje faqesh me kohë shpërnguljeje",
+        "ColumnViewsWithTimeDomProcessing": "Parje faqesh me kohë përpunimi DOM",
+        "ColumnViewsWithTimeDomCompletion": "Parje faqesh me kohë plotësimi DOM",
+        "ColumnViewsWithTimeOnLoad": "Parje faqesh me kohë pranie në faqe",
+        "ColumnTimeNetwork": "Kohë rrjeti",
+        "ColumnTimeServer": "Kohë shërbyesi",
+        "ColumnTimeTransfer": "Kohë shpërnguljesh",
+        "ColumnTimeDomProcessing": "Kohë përpunimi DOM",
+        "ColumnTimeDomCompletion": "Kohë plotësimi DOM",
+        "ColumnTimeOnLoad": "Kohë pranie në faqe",
+        "PageLoadTime": "Kohë ngarkimi faqeje",
+        "EvolutionOverPeriod": "Evolucion i matjeve të funksionimit të faqes",
+        "PluginDescription": "Shtoni ndonjë raport funksionimi faqesh",
+        "PerformanceTable": "Tabelë me matje funksionimi",
+        "Overview": "Përmbledhje funksionimi",
+        "OverviewDocumentation": "Ky raport ju jep një përmbledhje se sa të shpejta janë bërë faqet tuaj për vizitorët tuaj. Kjo përfshin qoftë sa kohë u duhet shfletuesve të shkarkojnë faqet tuaj, ashtu edhe sa kohë u duhet shfletuesve për t’i shfaqur ato.",
+        "Performance": "Punim",
+        "HelpNote": "Disa nga këto matje mund të mos jenë përherë të pranishme. më tepër informacion mund të gjeni te %1$sudhërrëfyesi ynë internetor%2$s.",
+        "RowActionTitle": "Hap raport funksionimi faqesh",
+        "RowActionDescription": "Shfaq raport funksionimi faqesh për këtë rresht",
+        "PagePerformanceTitle": "Funksionim faqeje për faqe me %1$s \"%2$s\""
+    },
     "PrivacyManager": {
         "AnonymizeData": "Anonimizo të dhënat",
         "AnonymizeIpDescription": "Përzgjidhni \"Po\" nëse doni që Matomo të mos ndjekë adresa IP të përcaktuara qartë.",
@@ -3511,6 +3607,7 @@
         "ReferrerNames": "Emra Referuesish",
         "Referrers": "Sjellës",
         "ReferrersOverview": "Përmbledhje Sjellësish",
+        "ReferrersOverviewDocumentation": "Ky raport shfaq kanale blerjesh që vizitorët përdorën për të ardhur në sajtin tuaj, dhe numrin e vizitave që i përkasin secilit kanal.",
         "ReferrerTypes": "Lloje Kanalesh",
         "ReferrerURLs": "URL Referuesish",
         "SearchEngines": "Motorë Kërkimesh",
@@ -3548,7 +3645,18 @@
         "VisitorsFromSocialNetworks": "Vizitorë prej Rrjetesh Shoqërore",
         "VisitorsFromDirectEntry": "Vizitorë prej Hyrjesh të Drejtpërdrejta",
         "VisitorsFromWebsites": "Vizitorë prej Sajtesh",
-        "VisitorsFromCampaigns": "Vizitorë prej Fushatash"
+        "VisitorsFromCampaigns": "Vizitorë prej Fushatash",
+        "ReferrersOverviewSubcategoryHelp2": "Mund të klikoni edhe në një lloj të caktuar kanali për ta shfaqur brenda grafikut të evolucionit. Kjo mund të ndihmojë të zbulohen se cilët kanale kontribuojnë më shumë trafik në sajtin tuaj, si dhe çfarëdo rregullsie potenciale përgjatë kohës. Për shembull, një kanal i caktuar mund të funksionojë më mirë gjatë fundjavash.",
+        "AllReferrersSubcategory1": "Kjo ndarje shfaq numrin e vizitave që mbërrijnë prej llojesh kanali dhe referuesish të ndryshëm. Që të shihni referuesit brenda çdo lloji, klikoni mbi butonat plus ose minus.",
+        "AllReferrersSubcategory2": "Mundeni gjithashtu të analizoni numrin e veprimeve të kryera nga secili burim i trafikut tuaj, duke aktivizuar tabelën me pamjen për vlera angazhimi Vizitorësh.",
+        "SearchEnginesSubcategoryHelp1": "Kjo ndarje ju ndihmon të analizoni optimizimet dhe funksionimin e motorit tuaj të kërkimeve. Mund të analizoni fjalëkyçet tuaja më popullore, me raportet për ndërthurje fjalëkyçesh ose të shihni se cilat fjalëkyçe punojnë mirë për motorë të dhënë kërkimesh, për një analizim dhe optimizim më të fokusuar.",
+        "SearchEnginesSubcategoryHelp2": "Përdoruesit e shtojcave %1$sRe Matomo%2$s dhe %3$sPunim Fjalëkyçesh Motorësh Kërkimi%4$s do të përfitojnë përfundimet më të mira nga ky raport.",
+        "WebsitesSubcategoryHelp1": "Në këtë tabelë, mund të shihni cilët sajte u referuan sajtin tuaj vizitorëve.",
+        "SocialsSubcategoryHelp": "Në këtë tabelë, mund të shihni cilët sajte u referuan sajtin tuaj vizitorëve.",
+        "CampaignsSubcategoryHelp": "Ndarja Ndjekje Fushatash ju lejon të analizoi vizita përshoqëruar me vlera të ndryshme ndjekjeje që janë lidhur me fushatat tuaja dixhitale. Mund të zbulojnë gjëra të tilla si, sa trafik po sjellin fushatat tuaja, cilat anë punojnë më mirë, sa të angazhuat janë vizitorët e fushatave, dhe nëse po sjell shitje apo jo fushata.",
+        "EcommerceLogSubcategoryHelp1": "Regjistri Etregti furnizon të dhëna kapilare në shkallë niveli, që kështu të mund të shihni te sesioni i plotë për çdo përdorues që ose bëri një blerje, ose braktisi shportën e vet. Kjo mund t’ju ndihmojë të kuptoni se ç’bëjnë përdoruesit para dhe pasi blejnë, për të zbuluar mundësi optimizimi.",
+        "EcommerceLogSubcategoryHelp2": "Të dhënat në këtë faqe përditësohen aty për aty.",
+        "ProductSubcategoryHelp": "Pamja Produkte mund t’ju ndihmojë të identifikoni produkte dhe kategori që po ecin shumë mirë ose shumë keq, për të zbuluar prirje dhe mundësi lidhur me përzgjedhjen tuaj të produkteve dhe faqet e shitores."
     },
     "Resolution": {
         "ColumnConfiguration": "Formësim",
@@ -4431,7 +4539,9 @@
         "ToFollowingSiteSearchesInline": "%s kërkime të brendshme",
         "XOfAllPageviews": "%s e krejt parjeve të kësaj faqeje",
         "XOutOfYVisits": "%1$s (nga %2$s gjithsej)",
-        "PageURLTransitions": "Tranzicione URL-je Faqeje"
+        "PageURLTransitions": "Tranzicione URL-je Faqeje",
+        "TransitionsSubcategoryHelp1": "Tranzicionet ju japin një raport që tregon gjëra që vizitorët tuaj bënë fill para dhe pas parjes së një faqeje të dhënë. Kjo faqe do të shpjegojë si të hyhet, të kuptohet dhe të përdoret raporti i fuqishëm Tranzicione.",
+        "TransitionsSubcategoryHelp2": "Më Tepër Hollësi"
     },
     "TwoFactorAuth": {
         "TwoFactorAuthentication": "Mirëfilltësim dyfaktorësh",
@@ -4525,7 +4635,8 @@
         "ToGeolocateOldVisits": "Që të kini të dhëna vendesh për vizitat tuaja të vjetra, përdorni programthin e përshkruar %1$skëtu%2$s.",
         "WidgetLocation": "Vend Vizitori",
         "GeoIpDbIpAccuracyNote": "Shënim: Bazat e të dhënave DBIP janë falas dhe mund të shkarkohen automatikisht, por përfundimet e gjeovendëzimit (posaçërisht përfundimet për qytete) s’janë aq të përpikta sa të MaxMind-it. MaxMind, nga ana tjetër, lyp të krijoni një llogari madje edhe për bazën falas të të dhënave. Nëse doni të përdorni bazën e të dhënave MaxMind për gjeovendëzime, procesin mund ta filloni %1$skëtu%2$s",
-        "MaxMindLinkExplanation": "Nëse përdorni baza të dhënash MaxMind për gjeovendëzime dhe nuk dini tashmë si si të prodhoni URL-në tuaj të shkarkimit, %1$sklikoni këtu që të mësoni se si%2$s."
+        "MaxMindLinkExplanation": "Nëse përdorni baza të dhënash MaxMind për gjeovendëzime dhe nuk dini tashmë si si të prodhoni URL-në tuaj të shkarkimit, %1$sklikoni këtu që të mësoni se si%2$s.",
+        "LocationsSubcategoryHelp": "Ndarja Vendndodhje është rruga më e mirë për të mësuar se ku gjenden personat, kur vizitojnë sajtin tuaj. Shfaq vendet, kontinentet, rajonet, qytetet prej nga vijnë vizitorët tuaj, në formë tabelash dhe harte. Më tej, mund të shihni se në ç’gjuhë është caktuar shfletuesi i tyre, për t’ju ndihmuar të identifikoni vizitorë ndërkombëtarë në vendndodhje të ndryshme."
     },
     "UserCountryMap": {
         "PluginDescription": "Kjo shtojcë ofron widget-et Hartë Vizitorësh dhe Hartë Në Kohë Reale. Shënim: Lyp shtojcën UserCountry të aktivizuar.",
@@ -4550,13 +4661,15 @@
         "WithUnknownRegion": "%s me rajon të panjohur",
         "WithUnknownCity": "%s me qytet të panjohur",
         "NoVisitsInfo": "Hëpërhë s’ka vizita të shfaqura, ngaqë për këtë periudhë asnjë vizitë nuk ka të dhëna të sakta gjeolokalizimi (gjerësi & gjatësi gjeografike).",
-        "NoVisitsInfo2": "Për ta zgjidhur këtë problem, sigurohuni që po përdorni një shërbim gjeolokalizimi GeoIP me një bazë të dhënash GeoIP qytetesh. Nëse kjo nuk e zgjidh problemin tuaj, atëherë ka mundësi (edhe pse zor) që vizitat tuaja të kenë adresa IP që nuk gjeolokalizohen dot."
+        "NoVisitsInfo2": "Për ta zgjidhur këtë problem, sigurohuni që po përdorni një shërbim gjeolokalizimi GeoIP me një bazë të dhënash GeoIP qytetesh. Nëse kjo nuk e zgjidh problemin tuaj, atëherë ka mundësi (edhe pse zor) që vizitat tuaja të kenë adresa IP që nuk gjeolokalizohen dot.",
+        "RealTimeMapHelp": "Harta Aty Për Aty shfaq vendndodhjen e vizitorëve tuaj në sajt brenda 30 minutave të fundit. Flluskat e mëdha portokalli përfaqësojnë vizitat më të freskëta, ndërsa flluskat më të vogla gri përfaqësojnë vizita më të vjetra. Këto të dhëna rifreskohen çdo pesë sekonda, dhe vizitorët e rinj shfaqen me një efekt xixëllimi."
     },
     "UserId": {
         "UserId": "ID përdoruesi",
         "UserReportTitle": "ID-ra përdoruesish",
         "UserReportDocumentation": "Ky raport shfaq vizita dhe vlera të tjera të përgjithshme për çdo ID individuale Përdoruesi.",
-        "PluginDescription": "Shfaq raporte përdoruesi"
+        "PluginDescription": "Shfaq raporte përdoruesi",
+        "VisitorsUserSubcategoryHelp": "Raporti i ID-ve të Përdoruesve shfaq vizitat e përshoqëruara me krejt përdoruesit tuaj të regjistruar dhe të futur në llogaritë e tyre. Këtë ndarje mund ta përdorni për të kuptuar përdorimin e sajtit sipas përdoruesish të dhënë dhe të identifikoni se cilët janë përdoruesit tuaj më aktivë dhe më pak aktivë."
     },
     "UserLanguage": {
         "BrowserLanguage": "Gjuhë shfletuesi",
@@ -4817,7 +4930,8 @@
         "WidgetLocalTime": "Vizita sipas Kohës Vendore",
         "WidgetLocalTimeDocumentation": "Ky grafik shfaq kohën sipas %1$s zonës kohore të vizitorit %2$s kur ka ndodhur një vizitë.",
         "WidgetServerTime": "Vizita sipas Kohës së Shërbyesit",
-        "WidgetServerTimeDocumentation": "Ky grafik shfaq kohën sipas %1$s zonës kohore të shërbyesit %2$s kur ka ndodhur një vizitë."
+        "WidgetServerTimeDocumentation": "Ky grafik shfaq kohën sipas %1$s zonës kohore të shërbyesit %2$s kur ka ndodhur një vizitë.",
+        "TimesSubcategoryHelp": "Ndarja Kohë ju shfaq kur e vizitojnë sajtin tuaj njerëzit. Mund të shihni kohët vendore më popullore kur e vizitojnë përdoruesit tuaj, që të mund të kuptoni kur futet sajti në jetën e tyre. Më tej, shfaq kohët më popullore të shërbyesit, çka mund të zbulojë kërkesa lidhur me platformën tuaj teknologjike."
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s min",

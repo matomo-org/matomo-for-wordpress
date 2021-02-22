@@ -1730,7 +1730,7 @@ class Archive_Tar extends PEAR
 
         // ----- Extract the properties
         $v_header['filename'] = rtrim($v_data['filename'], "\0");
-        if ($this->_maliciousFilename($v_header['filename'])) {
+        if ($this->_isMaliciousFilename($v_header['filename'])) {
             $this->_error(
                 'Malicious .tar detected, file "' . $v_header['filename'] .
                 '" will not install in desired directory tree'
@@ -1800,9 +1800,9 @@ class Archive_Tar extends PEAR
      *
      * @return bool
      */
-    private function _maliciousFilename($file)
+    private function _isMaliciousFilename($file)
     {
-        if (strpos($file, 'phar://') === 0) {
+        if (strpos($file, '://') !== false) {
             return true;
         }
         if (strpos($file, '../') !== false || strpos($file, '..\\') !== false) {
@@ -1838,7 +1838,7 @@ class Archive_Tar extends PEAR
 
         $v_filename = rtrim(substr($v_filename, 0, $v_filesize), "\0");
         $v_header['filename'] = $v_filename;
-        if ($this->_maliciousFilename($v_filename)) {
+        if ($this->_isMaliciousFilename($v_filename)) {
             $this->_error(
                 'Malicious .tar detected, file "' . $v_filename .
                 '" will not install in desired directory tree'
