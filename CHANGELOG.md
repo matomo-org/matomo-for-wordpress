@@ -1,5 +1,10 @@
 == Changelog ==
 
+= 4.2.0 =
+* Update Matomo core to 4.2.0
+* Improve usability of getting started page and some tracking options
+* Fix ecommerce tracking might not have worked when using Tag Manager embed method
+
 = 4.1.3 =
 * Fix query regarding a logtmpsegment appears falsely in logs
 * Make sure tracker debug can print the output
