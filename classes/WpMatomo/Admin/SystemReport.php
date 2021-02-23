@@ -935,6 +935,10 @@ class SystemReport {
 				'value' => @basename(PHP_BINARY),
 			);
 		}
+		$rows[] = array(
+			'name'  => 'PHP Error Reporting',
+			'value' => @error_reporting(),
+		);
 		if (!\WpMatomo::is_safe_mode()) {
 			Bootstrap::do_bootstrap();
 			$cliPhp = new CliMulti\CliPhp();
