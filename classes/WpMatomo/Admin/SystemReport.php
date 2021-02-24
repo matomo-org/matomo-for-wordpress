@@ -73,6 +73,8 @@ class SystemReport {
 	 */
 	private $logger;
 
+	private $initial_error_reporting = null;
+
 	public function __construct( Settings $settings ) {
 		$this->settings = $settings;
 		$this->logger = new Logger();
@@ -186,6 +188,7 @@ class SystemReport {
 
 		$matomo_tables = array();
 		if ( empty( $matomo_active_tab ) ) {
+			$this->initial_error_reporting = @error_reporting();
 			$matomo_tables = array(
 				array(
 					'title'        => 'Matomo',
@@ -935,9 +938,10 @@ class SystemReport {
 				'value' => @basename(PHP_BINARY),
 			);
 		}
+		// we report error reporting before matomo bootstraped and after to see if Matomo changed it successfully etc
 		$rows[] = array(
 			'name'  => 'PHP Error Reporting',
-			'value' => @error_reporting(),
+			'value' => $this->initial_error_reporting . ' After bootstrap: ' . @error_reporting()
 		);
 		if (!\WpMatomo::is_safe_mode()) {
 			Bootstrap::do_bootstrap();
