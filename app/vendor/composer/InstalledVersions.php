@@ -25,12 +25,12 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '4.2.0',
-    'version' => '4.2.0.0',
+    'pretty_version' => '4.2.1',
+    'version' => '4.2.1.0',
     'aliases' => 
     array (
     ),
-    'reference' => '65e57b9806f7249338ec64775cb550041f798a00',
+    'reference' => '3688fff9947853789ef748ec3e74d814a8214517',
     'name' => 'matomo/matomo',
   ),
   'versions' => 
@@ -100,12 +100,12 @@ private static $installed = array (
     ),
     'matomo/device-detector' => 
     array (
-      'pretty_version' => '4.1.0',
-      'version' => '4.1.0.0',
+      'pretty_version' => '4.2.2',
+      'version' => '4.2.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '6b3facc35e7a465bc4223fddfa5fa88c5b327554',
+      'reference' => 'dc270e7645d286d6f01d516a6634aba8b31ad668',
     ),
     'matomo/ini' => 
     array (
@@ -118,12 +118,12 @@ private static $installed = array (
     ),
     'matomo/matomo' => 
     array (
-      'pretty_version' => '4.2.0',
-      'version' => '4.2.0.0',
+      'pretty_version' => '4.2.1',
+      'version' => '4.2.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '65e57b9806f7249338ec64775cb550041f798a00',
+      'reference' => '3688fff9947853789ef748ec3e74d814a8214517',
     ),
     'matomo/matomo-php-tracker' => 
     array (
@@ -289,7 +289,7 @@ private static $installed = array (
     array (
       'replaced' => 
       array (
-        0 => '4.1.0',
+        0 => '4.2.2',
       ),
     ),
     'piwik/referrer-spam-blacklist' => 
@@ -700,7 +700,6 @@ self::$canGetVendors = method_exists('Composer\Autoload\ClassLoader', 'getRegist
 $installed = array();
 
 if (self::$canGetVendors) {
-
 foreach (ClassLoader::getRegisteredLoaders() as $vendorDir => $loader) {
 if (isset(self::$installedByVendor[$vendorDir])) {
 $installed[] = self::$installedByVendor[$vendorDir];

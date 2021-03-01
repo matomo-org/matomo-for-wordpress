@@ -1,7 +1,7 @@
 == Changelog ==
 
 = 4.2.0 =
-* Update Matomo core to 4.2.0
+* Update Matomo core to 4.2.1
 * Improve usability of getting started page and some tracking options
 * Fix ecommerce tracking might not have worked when using Tag Manager embed method
 

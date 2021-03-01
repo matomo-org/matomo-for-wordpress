@@ -714,7 +714,21 @@
         "ActionTypes": "İşlem Türleri",
         "Behaviour": "Davranış",
         "TimeSpentInReferringAction": "Belirtilen İşleme Harcanan Zaman",
-        "PagesSubcategoryHelp3": "Gezinmek için soldaki artı ve eksi simgelerini kullanın."
+        "PagesSubcategoryHelp1": "Bu rapor, ziyaret edilen sayfa adresleri hakkında bilgi içerir.",
+        "PagesSubcategoryHelp2": "Tablo hiyerarşik olarak düzenlenmiştir, adresler klasör yapısında görüntülenir.",
+        "PagesSubcategoryHelp3": "Gezinmek için soldaki artı ve eksi simgelerini kullanın.",
+        "EntryPagesSubcategoryHelp1": "Bu rapor, belirtilen zaman aralığında kullanılan giriş sayfaları hakkında bilgi içerir. Bir giriş sayfası, kullanıcının ziyaretine başladığı ilk sayfadır.",
+        "EntryPagesSubcategoryHelp2": "Giriş adresleri bir klasör yapısı biçiminde görüntülenir.",
+        "ExitPagesSubcategoryHelp1": "Bu rapor, belirtilen zaman aralığında kullanılan çıkış sayfaları hakkında bilgi içerir. Bir çıkış sayfası, kullanıcının ziyaretini bitirdiği son sayfadır.",
+        "ExitPagesSubcategoryHelp2": "Çıkış adresleri bir klasör yapısı biçiminde görüntülenir.",
+        "PageTitlesSubcategoryHelp1": "Bu rapor, ziyaret edilen sayfa başlıkları hakkında bilgi içerir.",
+        "PageTitlesSubcategoryHelp2": "Sayfa başlığı HTML &amp;lt;title&amp;gt; kod imidir. Çoğu web tarayıcı bu kod iminin içeriğini kendi penceresinin başlığı olarak görüntüler.",
+        "SiteSearchSubcategoryHelp1": "Site Arama bölümünde, ziyaretçilerin web sitesinde arama yaparken kullandığı anahtar sözcükler görüntülenir. Ayrıca, kullanıcıların bir arama yaptıktan sonra açtığı sayfalar ile site içi aramasında hiçbir sonuç döndürmeyen anahtar sözcükler de görüntülenir.",
+        "SiteSearchSubcategoryHelp2": "Bu raporlar, sitede eksik içerikler ile ziyaretçilerin aradığı ancak kolayca bulamadığı şeyler hakkında fikir vermek ve yeni bakış açıları kazanmak için kullanılabilir.",
+        "SiteSearchSubcategoryHelp3": "Ayrıntılı bilgi almak için site arama rehberine bakabilirsiniz.",
+        "OutlinksSubcategoryHelp1": "Bu rapor, ziyaretçilerin tıkladığı dış bağlantıların hiyerarşik listesini içerir. Dış bağlantılar, ziyaretçileri web sitesinden dışarı (başka bir etki alanına) götüren bağlantılardır.",
+        "DownloadsSubcategoryHelp1": "Bu rapor, ziyaretçilerin dosya indirme bilgilerini içerir.",
+        "DownloadsSubcategoryHelp2": "İndirme bağlantısına tıklandığında Matomo indirme sayısını arttırır. İndirmenin tamamlanıp tamamlanmadığı Matomo tarafından bilinmez."
     },
     "Annotations": {
         "AddAnnotationsFor": "%s için notlar ekle...",
@@ -754,7 +768,9 @@
         "Contents": "İçerikler",
         "InteractionsMetricDocumentation": "İçerik bloğu ile kaç kere etkileşime geçildiği (afiş ya da reklama 'tıklanma' gibi).",
         "ImpressionsMetricDocumentation": "Afiş ya da reklam gibi bir içerik bloğunun bir sayfada kaç kere görüntülendiği .",
-        "InteractionRateMetricDocumentation": "İçeriğin görüntülenmesi ile etkileşime geçilme oranı."
+        "InteractionRateMetricDocumentation": "İçeriğin görüntülenmesi ile etkileşime geçilme oranı.",
+        "ContentsSubcategoryHelp1": "İçerik izleme, web sitesi ya da uygulama içeriğinin belirli parçalarının sık kullanılma oranını belirlemeye yardımcı olur. Bu bölüm, sitedeki çeşitli içerik parçalarının gösterim ve etkileşim sayılarını içerir.",
+        "ContentsSubcategoryHelp2": "Ayrıntılı bilgi almak için içerik izleme rehberine bakabilirsiniz."
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Güvenilir sunucu ekle",
@@ -1003,7 +1019,8 @@
         "RowLimit": "Satır sayısı",
         "CustomLimit": "Özel sayı",
         "ExportFormat": "Dışa aktarma biçimi",
-        "ExportTooltip": "Not: Üretilen dışa aktarma adresi yalnız geçerli tarayıcı oturumunda çalışır. Başka bir yerde kullanmak istiyorsanız, uygulamaya özel bir kod kullanmalısınız. Bu kodları Yönetim -> Güvenlik -> Kimlik Doğrulama Kodları bölümünden yapılandırabilirsiniz.",
+        "ExportTooltip": "Not: Üretilen dışa aktarma adresini kullanmak için uygulamaya özel bir kod gereklidir. Bu kodları Yönetim -> Güvenlik -> Kimlik Doğrulama Kodları bölümünden yapılandırabilirsiniz.",
+        "ExportTooltipWithLink": "Not: Üretilen dışa aktarma adresini kullanmak için uygulamaya özel bir kod gereklidir. Bu kodları %1$s[Yönetim -> Güvenlik -> Kimlik Doğrulama Kodları]%2$s bölümünden yapılandırabilirsiniz. Dışa aktarma adresinde %3$s yerine kimlik doğrulama kodunu yazın. Uyarı: Gerçek kodun bulunduğu adresi asla kimse ile paylaşmayın.",
         "ExpandSubtables": "Alt tabloları genişlet",
         "StandardReport": "Standart rapor",
         "FlattenReport": "Düz rapor",
@@ -1427,7 +1444,14 @@
         "LifeTimeValueDescription": "Bu müşterinin tüm ziyaretlerinden elde edilen toplam e-ticaret geliri. %s ziyaretçi kodu için tüm e-ticaret siparişleri gelirlerinin toplamı.",
         "VisitorProfileLTV": "%1$s tarafından ömür boyunca elde edilen gelir.",
         "VisitorProfileItemsAndOrders": "%2$s e-ticaret siparişi ile %1$s öge satın almış.",
-        "VisitorProfileAbandonedCartSummary": "%3$s değerindeki %2$s ögeyi içeren %1$s sepet terk edilmiş."
+        "VisitorProfileAbandonedCartSummary": "%3$s değerindeki %2$s ögeyi içeren %1$s sepet terk edilmiş.",
+        "EcommerceOverviewSubcategoryHelp1": "E-ticaret özeti bölümü, çevrimiçi mağaza başarımını genel olarak görmek için en iyi yerdir. Bir bakışta, kaç satış yapıldığı, ne kadar gelir elde edildiği ve web sitesinin hedef dönüşüm oranı görülebilir.",
+        "EcommerceOverviewSubcategoryHelp2": "Tam boyutlu gelişim çizelgesi içinde odaklamak istediğiniz ölçüt için mini grafik üzerindeki bir ölçüte tıklayın.",
+        "SalesSubcategoryHelp1": "Bu bölümde, trafik ve kampanya kaynakları, kullanıcının zamanı ve konumu, erişim için kullanılan aygıtlar gibi genel olarak satışa yönlendirici farklı koşulların incelenmesini sağlayacak kapsamlı bir rapor derlemesi bulunur.",
+        "SalesSubcategoryHelp2": "Gelirlerin belirli trafik türleri ya da izlenen kampanyalar gibi boyutlara göre tam olarak nasıl dağıldığı görülebilir.",
+        "EcommerceLogSubcategoryHelp1": "E-ticaret günlüğü, bir ödeme yapan ya da sepetini terk eden her bir kullanıcının oturumunun incelenebilmesi için oturum düzeyinde ayrıntılı veriler sağlar. Böylece kullanıcıların ödeme yapmadan önce ve sonra ne yaptığı anlaşılarak iyileştirmeler yapılabilir.",
+        "EcommerceLogSubcategoryHelp2": "Bu sayfadaki veriler gerçek zamanlı olarak güncellenir.",
+        "ProductSubcategoryHelp": "Ürünler görünümü, ürün seçimi ve mağaza sayfaları ile ilgili eğilimleri ve fırsatları ortaya çıkarmak için başarımı aşırı veya düşük olan ürün ve kategorilerin belirlenmesine yardımcı olabilir."
     },
     "Events": {
         "PluginDescription": "Etkinlikleri izler ve ziyaretçilerin yaptığı etkinlikler hakkında raporlar oluşturur.",
@@ -1465,7 +1489,7 @@
         "TotalValueDocumentation": "Etkinlik değerleri toplamı",
         "ViewEvents": "Etkinlikleri Görüntüle",
         "EventsSubcategoryHelp1": "Etkinlikler bölümü, site ile ilişkili özel etkinlikler hakkında raporlar sunar. Etkinlikler için genellikle özel yapılandırma gerekir. Yapılandırma sonrasında raporlar kategoriye, işleme ve ada göre düzenlenmiş olarak incelenebilir.",
-        "EventsSubcategoryHelp2": "Etkinlik izleme hakkında ayrıntılı bilgi almak için buraya bakabilirsiniz."
+        "EventsSubcategoryHelp2": "Ayrıntılı bilgi almak için etkinlik izleme rehberine bakabilirsiniz."
     },
     "Feedback": {
         "DoYouHaveBugReportOrFeatureRequest": "Hata bildirimi ya da bir özellik öneriniz mi var?",
@@ -1696,7 +1720,11 @@
         "AtLeastMinutes": "en az %1$s dakika. Saniye belirtmek için ondalık olarak yazın. Örneğin 30 saniye için %2$s.",
         "TimeInMinutes": "Dakika Cinsinden Süre",
         "ClickToViewThisGoal": "Bu hedefi görüntülemek için tıklayın.",
-        "OverviewReportDocumentation": "Bu rapor, ziyaretçilerin belirli bir hedefi ne kadar tutturduğunun özetini içerir."
+        "OverviewReportDocumentation": "Bu rapor, ziyaretçilerin belirli bir hedefi ne kadar tutturduğunun özetini içerir.",
+        "GoalsOverviewSubcategoryHelp1": "Hedefler Özeti raporu, web sitesi için tanımlanmış hedeflerin başarımını içerir. Hedeflerin dönüşüm yüzdeleri, elde edilen toplam gelir miktarı ve her bir hedef için tam raporlar görülebilir.",
+        "GoalsOverviewSubcategoryHelp2": "Tam boyutlu gelişim çizelgesi içinde odaklamak istediğiniz ölçüt için mini grafik üzerindeki bir ölçüte tıklayın.",
+        "ManageGoalsSubcategoryHelp1": "Bu bölümde, ziyaretçilerin sitede belirli bir sayfayı açmak ya da belirli bir formu göndermek gibi gerçekleştirdiği belirli işlemler için Hedefler oluşturulup düzenlenebilir. Hedef raporları değişkendir ve web sitesinin başarımının, potansiyel oluşturma, çevrimiçi satış ve artan marka görünürlüğü gibi iş hedeflerine göre izlenmesine yardımcı olabilir.",
+        "ManageGoalsSubcategoryHelp2": "Ayrıntılı bilgi almak için hedefler rehberine bakabilirsiniz."
     },
     "ImageGraph": {
         "ColumnOrdinateMissing": "'%1$s' sütunu bu raporda bulunamadı Herhangi bir %2$s deneyin",
@@ -1837,6 +1865,7 @@
         "SystemCheckMbstringHelp": "Kullanıcı arayüzü ve API yanıtlarındaki multibayt karakterlerinin işlenebilmesi için mbstring eklentisi gereklidir. Ayrıca php.ini yapılandırma dosyası içindeki mbstring.func_overload seçeneğini \"0\" olarak ayarlayın.",
         "SystemCheckMemoryLimit": "Bellek sınırı",
         "SystemCheckMemoryLimitHelp": "Trafiği yüksek olan bir web sitesinde arşivleme işlemi normal olarak izin verilen değerden daha fazla bellek kullanımına gerek duyabilir. Gerekiyorsa php.ini yapılandırma dosyasındaki memory_limit seçeneğinin değerini değiştirin.",
+        "SystemCheckMemoryNoMemoryLimitSet": "Herhangi bir bellek sınırı ayarlanmamış",
         "SystemCheckNoErrorsOrWarnings": "Herhangi bir sorun ya da uyarı yok",
         "SystemCheckViewFullSystemCheck": "Tam sistem denetimi raporunu görüntüle",
         "SystemCheckOpenURL": "Açık Adres",
@@ -3079,7 +3108,12 @@
         "SegmentedVisitorLogTitle": "%1$s değerinin \"%2$s\" olduğu ziyaret kayıtları görüntüleniyor",
         "OnClickPause": "%s başlatıldı. Duraklatmak için tıklayın.",
         "OnClickStart": "%s durduruldu. Başlatmak için tıklayın.",
-        "ClickToSeeAllContents": "Her bir içerik etkileşimi ya da gösterimini görüntülemek için tıklayın"
+        "ClickToSeeAllContents": "Her bir içerik etkileşimi ya da gösterimini görüntülemek için tıklayın",
+        "VisitorLogSubcategoryHelp1": "Ziyaret Günlüğü, web sitesine yapılan her ziyareti ayrıntılı olarak görüntüler. Her ziyaretçinin yaptığı işlemler, siteye nasıl ulaştığı, kim olduğu hakkında biraz bilgi ve diğer ayrıntılar (ülkenizdeki kişisel veri gizliliği düzenlemelerine uymalısınız) görülebilir.",
+        "VisitorLogSubcategoryHelp2": "Matomo üzerindeki diğer raporlar ziyaretçilerin toplu olarak nasıl davrandığını gösterirken, Ziyaret Günlüğü ayrıntıya iner. Ayrıca, ziyaretçileri daha iyi anlamak adına belirli ziyaret türlerini gruplamak için parçaları kullanabilirsiniz.",
+        "VisitorLogSubcategoryHelp3": "Ayrıntılı bilgi almak için ziyaret günlüğü rehberine bakabilirsiniz.",
+        "RealTimeHelp1": "Gerçek zamanlı ziyaretler raporu, gerçek zamanlı olarak web sitesine yapılan ziyaret akışını görüntüler. Son 24 saat ve önceki 30 dakika içindeki ziyaret ve sayfa görüntülemelerinin gerçek zamanlı sayacını içerir.",
+        "RealTimeHelp2": "Bu rapor 5 saniyede bir yenilenir ve yeni ziyaretleri (veya yeni bir sayfa görüntüleyen var olan ziyaretçileri) listenin en üstünde bir belirme etkisi ile görüntüler."
     },
     "Login": {
         "BruteForceLog": "Brute Force Günlüğü",
@@ -3358,7 +3392,9 @@
         "HelpNote": "Bu ölçümlerin hepsi her zaman kullanılamayabilir. Ayrıntılı bilgi almak için %1$sçevrimiçi rehbere bakabilirsiniz%2$s.",
         "RowActionTitle": "Sayfa başarımı raporunu aç",
         "RowActionDescription": "Bu satır için sayfa başarımı raporunu görüntüle",
-        "PagePerformanceTitle": "Sayfanın %1$s \"%2$s\" ile sayfa başarımı raporu"
+        "PagePerformanceTitle": "Sayfanın %1$s \"%2$s\" ile sayfa başarımı raporu",
+        "PerformanceSubcategoryHelp1": "Başarım bölümü, web sitesinin ya da uygulamanın genel olarak başarımının ne kadar hızlı olduğunu incelemeye ve ortalama değerlerden önemli ölçüde sapan sayfalar olup olmadığını keşfetmeye yardımcı olabilir.",
+        "PerformanceSubcategoryHelp2": "Ayrıca, web sitesinin her sayfasının tam olarak ne kadar sürede yüklendiği ve yükleme sürelerini neyin etkilediğini gösteren raporlar da kullanılabilir."
     },
     "PrivacyManager": {
         "AnonymizeData": "Verileri Anonim Kılma",
@@ -3630,7 +3666,14 @@
         "VisitorsFromSocialNetworks": "Sosyal Ağlardan Gelen Ziyaretçiler",
         "VisitorsFromDirectEntry": "Doğrudan Giriş Yapan Ziyaretçiler",
         "VisitorsFromWebsites": "Web Sitelerinden Gelen Ziyaretçiler",
-        "VisitorsFromCampaigns": "Kampanyalardan Gelen Ziyaretçiler"
+        "VisitorsFromCampaigns": "Kampanyalardan Gelen Ziyaretçiler",
+        "ReferrersOverviewSubcategoryHelp1": "Veri toplama özeti, belirtilen bir tarih aralığında tüm kaynaklardan gelen trafik yüzdesini içerir.",
+        "ReferrersOverviewSubcategoryHelp2": "Ayrıca gelişim çizelgesinde görüntülenecek belirli bir kanal türüne tıklanabilir. Bu özellik, siteye en fazla trafiği sağlayan kanalların ve zamana göre belirli örüntülerin görülmesini sağlayabilir. Örneğin belirli bir kanalın başarımı hafta sonları daha iyi olabilir.",
+        "AllReferrersSubcategory1": "Bu bölümde farklı kanal türlerinden ve yönlendiricilerden gelen ziyaretlerin sayısı bulunur. Değişik türlerdeki yönlendirmeleri görüntülemek için artı veya eksi düğmeleri kullanılabilir.",
+        "AllReferrersSubcategory2": "Tabloda ziyaretçi bağlılığı ölçütleri görünümünü etkinleştirerek, her bir trafik kaynağı tarafından gerçekleştirilen işlemlerin sayısını inceleyebilirsiniz.",
+        "EcommerceLogSubcategoryHelp1": "E-ticaret günlüğü, bir ödeme yapan ya da sepetini terk eden her bir kullanıcının oturumunun incelenebilmesi için oturum düzeyinde ayrıntılı veriler sağlar. Böylece kullanıcıların ödeme yapmadan önce ve sonra ne yaptığı anlaşılarak iyileştirmeler yapılabilir.",
+        "EcommerceLogSubcategoryHelp2": "Bu sayfadaki veriler gerçek zamanlı olarak güncellenir.",
+        "ProductSubcategoryHelp": "Ürünler görünümü, ürün seçimi ve mağaza sayfaları ile ilgili eğilimleri ve fırsatları ortaya çıkarmak için başarımı aşırı veya düşük olan ürün ve kategorilerin belirlenmesine yardımcı olabilir."
     },
     "Resolution": {
         "ColumnConfiguration": "Yapılandırma",
@@ -4636,7 +4679,8 @@
         "WithUnknownRegion": "%s ziyaretin bölgesi bilinmiyor",
         "WithUnknownCity": "%s ziyaretin ili bilinmiyor",
         "NoVisitsInfo": "Bu aralıkta doğru coğrafi konum bilgilerine (enlem ve boylam) sahip herhangi bir ziyaret olmadığından, şu anda görüntülenecek bir ziyaret yok.",
-        "NoVisitsInfo2": "Bu sorunu çözmek için GeoIP il veritabanı ile bir GeoIP hizmeti sağlayıcısını kullandığınızdan emin olun. Sorun çözülmez ise (pek olası olmamakla birlikte) ziyaretçilerin IP adresleri coğrafi kodlaması yapılamayan adreslerdir."
+        "NoVisitsInfo2": "Bu sorunu çözmek için GeoIP il veritabanı ile bir GeoIP hizmeti sağlayıcısını kullandığınızdan emin olun. Sorun çözülmez ise (pek olası olmamakla birlikte) ziyaretçilerin IP adresleri coğrafi kodlaması yapılamayan adreslerdir.",
+        "RealTimeMapHelp": "Gerçek Zamanlı Harita, son 30 dakika içinde sitedeki ziyaretçilerin konumunu görüntüler. Büyük turuncu noktalar daha yeni ziyaretleri, daha küçük gri noktalar eski ziyaretleri belirtir. Bu veriler her beş saniyede bir yenilenir ve yeni ziyaretçiler yanıp sönen etki ile görüntülenir."
     },
     "UserId": {
         "UserId": "Kullanıcı Kodu",

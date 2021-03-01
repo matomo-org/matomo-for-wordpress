@@ -433,7 +433,7 @@
         "TrackingScopePage": "Seite",
         "TrackingScopeVisit": "Besuch",
         "TransitionsRowActionTooltip": "Die Aktionen vor und nach dieser Seite auswerten",
-        "TransitionsRowActionTooltipTitle": "Transitions öffnen",
+        "TransitionsRowActionTooltipTitle": "Transitionen öffnen",
         "TranslatorName": "Frank Bueltge, Thorsten Taube, Arthur W. Borens, Marco Ziesing, Andreas Just, Fabian Becker, Henry Müller, Pascal Herbert, Christian W. Schneider, Michael Stenz, Itransition, Timo Besenreuther, Stefan Giehl",
         "UniquePurchases": "Eindeutige Käufe",
         "Unknown": "unbekannt",
@@ -714,7 +714,10 @@
         "ActionTypes": "Aktionstypen",
         "Behaviour": "Verhalten",
         "TimeSpentInReferringAction": "Verwendete Zeit für Verweisaktionen",
-        "PagesSubcategoryHelp3": "Benutzen Sie zur Navigation die Symbole Plus und Minus auf der linken Seite."
+        "PagesSubcategoryHelp3": "Benutzen Sie zur Navigation die Symbole Plus und Minus auf der linken Seite.",
+        "SiteSearchSubcategoryHelp3": "Weitere Informationen finden Sie in der Anleitung zur internen Suche.",
+        "DownloadsSubcategoryHelp1": "In diesem Bericht können Sie sehen, welche Dateien Ihre Besucher heruntergeladen haben.",
+        "DownloadsSubcategoryHelp2": "Als Download zählt bei Matomo der Klick auf einen Download-Link. Ob der Download abgeschlossen wurde oder nicht, ist Matomo nicht bekannt."
     },
     "Annotations": {
         "AddAnnotationsFor": "Anmerkung für %s hinzufügen...",
@@ -754,7 +757,8 @@
         "Contents": "Inhalte",
         "InteractionsMetricDocumentation": "Die Anzahl, wie häufig mit einem Inhalt interagiert wurde (z.B. durch einen Klick auf ein Banner oder eine Anzeige).",
         "ImpressionsMetricDocumentation": "Die Anzahl, wie häufig ein Inhalt, z.b. ein Banner oder eine Anzeige, auf der Seite angezeigt wurden.",
-        "InteractionRateMetricDocumentation": "Verhältnis zwischen Impressionen des Inhalts und Interaktionen."
+        "InteractionRateMetricDocumentation": "Verhältnis zwischen Impressionen des Inhalts und Interaktionen.",
+        "ContentsSubcategoryHelp2": "Weitere Informationen finden Sie in der Anleitung zur Erfassung von Inhalten."
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Vetrauten Hostnamen hinzufügen",
@@ -983,7 +987,7 @@
         "SystemSummaryWidget": "Systemzusammenfassung",
         "SystemSummaryNWebsites": "%d Websites",
         "SystemSummaryNSegments": "%1$d Segmente",
-        "SystemSummaryNSegmentsWithBreakdown": "%1$dSegmente (%2$sim Hintergrund verarbeitet, %3$sin Echtzeit verarbeitet)",
+        "SystemSummaryNSegmentsWithBreakdown": "%1$d Segmente (%2$s im Hintergrund verarbeitet, %3$s in Echtzeit verarbeitet)",
         "SystemSummaryNActivatedPlugins": "%d aktivierte Plugins",
         "SystemSummaryPiwikVersion": "Matomo-Version",
         "SystemSummaryMysqlVersion": "MySQL-Version",
@@ -1003,7 +1007,7 @@
         "RowLimit": "Zeilenlimit",
         "CustomLimit": "Eigenes Limit",
         "ExportFormat": "Exportformat",
-        "ExportTooltip": "Hinweis: Die generierte Export URL wird nur in der aktuellen Browser Session funktionieren. Wenn Sie sie andernorts verwenden wollen, müssen Sie einen appspezifischen Token verwenden. Sie können diese Token in Admin -> Security ->Token Auths konfigurieren.",
+        "ExportTooltip": "Hinweis: Um die generierte Export-URL zu verwenden, müssen Sie einen Authentifizierungstoken angeben. Sie können diese Token unter Admin -> Sicherheit -> Authentifizierungstoken konfigurieren.",
         "ExpandSubtables": "Erweitere Untertabellen",
         "StandardReport": "Standard Bericht",
         "FlattenReport": "Flacher Bericht",
@@ -1012,7 +1016,10 @@
         "SeeAvailableVersions": "Zeige verfügbare Versionen",
         "QuickLinks": "Schnelllinks",
         "Profilable": "Profilierbar",
-        "SearchOnMatomo": "Suche '%1$s' auf Matomo.org"
+        "SearchOnMatomo": "Suche '%1$s' auf Matomo.org",
+        "VisitorsOverviewHelp": "Die Besucherübersicht hilft Ihnen, die Popularität Ihrer Website zu verstehen. Dazu stellt sie Diagramme bereit, die zeigen, wie viele Besuche Ihre Website über einen ausgewählten Zeitraum erhält und wie hoch das durchschnittliche Engagement für wichtige Funktionen wie Suchen und Downloads ist.",
+        "EngagementSubcategoryHelp1": "Der Bereich \"Engagement\" bietet Berichte, die dabei helfen, zu quantifizieren, wie viele neue und wiederkehrende Besucher Sie haben. Sie können auch Berichte einsehen, die die durchschnittliche Zeit und Anzahl der Seiten pro Besuch aufschlüsseln, sowie die Anzahl der Besuche eines Besuchers auf Ihrer Website und die übliche Anzahl an Tagen zwischen den Besuchen.",
+        "EngagementSubcategoryHelp2": "Dies kann Ihnen helfen, neben der Maximierung Ihrer Reichweite auch die Häufigkeit und die Interaktionsrate zu optimieren."
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Deinstallieren",
@@ -1418,7 +1425,9 @@
         "LifeTimeValueDescription": "Die gesamten E-Commerce-Umsätze, die diesem Kunden bei allen Besuchen zugeschrieben werden: die Summe der Umsätze aller E-Commerce-Aufträge für Besucher-ID %s.",
         "VisitorProfileLTV": "Generierter Gesamtumsatz von %1$s.",
         "VisitorProfileItemsAndOrders": "%1$s Artikel in %2$s E-Commerce Bestellungen gekauft.",
-        "VisitorProfileAbandonedCartSummary": "%1$s verwaiste Warenkörbe mit %2$s Artikeln und einem Gesamtwert von %3$s."
+        "VisitorProfileAbandonedCartSummary": "%1$s verwaiste Warenkörbe mit %2$s Artikeln und einem Gesamtwert von %3$s.",
+        "EcommerceOverviewSubcategoryHelp2": "Klicken Sie auf eine einzelne Metrik innerhalb des Sparkline-Diagramms, um sie im Entwicklungsdiagramm in voller Größe zu betrachten.",
+        "EcommerceLogSubcategoryHelp2": "Die Daten auf dieser Seite werden in Echtzeit aktualisiert"
     },
     "Events": {
         "PluginDescription": "Speichert Ereignisse und stellt Berichte über die Aktivität der Besucher bereit",
@@ -1454,7 +1463,8 @@
         "TotalEventsDocumentation": "Gesamtanzahl der Ereignisse",
         "TotalValue": "Ereigniswert",
         "TotalValueDocumentation": "Summe der Ereigniswerte",
-        "ViewEvents": "Ereignisse ansehen"
+        "ViewEvents": "Ereignisse ansehen",
+        "EventsSubcategoryHelp2": "Erfahren Sie mehr über die Erfassung von Ereignissen."
     },
     "Feedback": {
         "DoYouHaveBugReportOrFeatureRequest": "Möchten Sie einen Fehler melden oder haben Sie eine Idee für eine neue Funktion?",
@@ -1685,7 +1695,11 @@
         "AtLeastMinutes": "mindestens %1$s Minuten. Verwenden Sie Dezimale um Sekunden anzugeben, zum Beispiel %2$s um 30 Sekunden zu definieren.",
         "TimeInMinutes": "Zeit in Minuten",
         "ClickToViewThisGoal": "Klicken Sie um dieses Ziel zu sehen.",
-        "OverviewReportDocumentation": "Dieser Bericht gibt einen Überblick daüber, wie häufig Ihre Besucher ein spezifisches Ziel erreichen konnten."
+        "OverviewReportDocumentation": "Dieser Bericht gibt einen Überblick daüber, wie häufig Ihre Besucher ein spezifisches Ziel erreichen konnten.",
+        "GoalsOverviewSubcategoryHelp1": "Die Zielübersicht zeigt Berichte über die Leistung der für Ihre Website definierten Ziele. Sie können auf die prozentualen Konversionsraten Ihrer Ziele, die Höhe des generierten Umsatzes und vollständige Berichte für jedes Ziel zugreifen.",
+        "GoalsOverviewSubcategoryHelp2": "Klicken Sie auf eine einzelne Metrik innerhalb des Sparkline-Diagramms, um sie im Entwicklungsdiagramm in voller Größe zu betrachten.",
+        "ManageGoalsSubcategoryHelp1": "In diesem Bereich können Sie Ziele für bestimmte Aktionen erstellen und bearbeiten, die Besucher auf Ihrer Website durchführen, z. B. den Besuch einer bestimmten Seite oder das Absenden eines bestimmten Formulars. Zielberichte variieren, können Ihnen aber dabei helfen, die Leistung Ihrer Website im Hinblick auf Unternehmensziele wie Lead-Generierung, Online-Verkäufe und erhöhte Markenpräsenz zu überwachen.",
+        "ManageGoalsSubcategoryHelp2": "Weitere Informationen finden Sie in der Anleitung zu Zielen."
     },
     "ImageGraph": {
         "ColumnOrdinateMissing": "Die Spalte '%1$s' wurde in diesem Bericht nicht gefunden. Probieren Sie es mit einer hiervon: %2$s",
@@ -1826,6 +1840,7 @@
         "SystemCheckMbstringHelp": "Die mbstring-Erweiterung wird benötigt, um multibyte-Zeichen in der Benutzeroberfläche und in den API-Antworten zu verarbeiten. Bitte überprüfen Sie ebenfalls, ob mbstring.func_overload in der php.ini auf \"0\" gesetzt ist.",
         "SystemCheckMemoryLimit": "Speicherlimit",
         "SystemCheckMemoryLimitHelp": "Auf einer stark frequentierten Website könnte es passieren, dass die Archivierung mehr Speicher erfordert als erlaubt. Falls erforderlich, ändern Sie den memory_limit Wert in ihrer php.ini Datei.",
+        "SystemCheckMemoryNoMemoryLimitSet": "Es ist kein Speicherlimit gesetzt",
         "SystemCheckNoErrorsOrWarnings": "Keine Fehler oder Warnungen",
         "SystemCheckViewFullSystemCheck": "Sehen Sie sich den vollständigen Systemprüfbericht an",
         "SystemCheckOpenURL": "Öffnen einer URL",
@@ -3068,7 +3083,10 @@
         "SegmentedVisitorLogTitle": "Zeigt das Log, welches Besuche auflistet, bei denen %1$s\"%2$s\" ist",
         "OnClickPause": "%s ist gestartet. Klicken Sie um zu pausieren.",
         "OnClickStart": "%s ist gestoppt. Klicken Sie um zu starten.",
-        "ClickToSeeAllContents": "Klicken um sämtliche Inhaltsinteraktionen\/Impressionen zu sehen"
+        "ClickToSeeAllContents": "Klicken um sämtliche Inhaltsinteraktionen\/Impressionen zu sehen",
+        "VisitorLogSubcategoryHelp1": "Das Besuchsprotokoll zeigt Ihnen jeden Besuch, den Ihre Website erhält, im Detail an. Sie können sehen, welche Aktionen jeder Besucher durchgeführt hat, wie er auf Ihre Website gekommen ist, ein bisschen darüber, wer er ist, und mehr (unter Einhaltung Ihrer lokalen Datenschutzbestimmungen).",
+        "VisitorLogSubcategoryHelp2": "Während andere Berichte in Matomo zeigen, wie sich Ihre Besucher auf einer aggregierten Ebene verhalten, bietet das Besuchsprotokoll granulare Details. Sie können auch Segmente verwenden, um es auf bestimmte Arten von Besuchen einzugrenzen, um Ihre Besucher besser zu verstehen.",
+        "RealTimeHelp2": "Dieser Bericht wird alle 5 Sekunden aktualisiert und zeigt neue Besuche (oder vorhandene Besucher, die eine neue Seite aufrufen) am Anfang der Liste mit einem Einblendeffekt an."
     },
     "Login": {
         "BruteForceLog": "Brute Force Log",
@@ -3619,7 +3637,10 @@
         "VisitorsFromSocialNetworks": "Besucher von sozialen Netzwerken",
         "VisitorsFromDirectEntry": "Besucher von Direktzugriffen",
         "VisitorsFromWebsites": "Besucher von Webseiten",
-        "VisitorsFromCampaigns": "Besucher von Kampagnen"
+        "VisitorsFromCampaigns": "Besucher von Kampagnen",
+        "WebsitesSubcategoryHelp1": "In dieser Tabelle können Sie sehen, welche Websites Besucher auf Ihre Website gelenkt haben.",
+        "SocialsSubcategoryHelp": "In dieser Tabelle können Sie sehen, welche Websites Besucher auf Ihre Website gelenkt haben.",
+        "EcommerceLogSubcategoryHelp2": "Die Daten auf dieser Seite werden in Echtzeit aktualisiert"
     },
     "Resolution": {
         "ColumnConfiguration": "Konfiguration",
@@ -4472,15 +4493,15 @@
     "Transitions": {
         "BouncesInline": "%s Absprünge",
         "DirectEntries": "Direkte Eingaben",
-        "Transitions": "Übergänge",
+        "Transitions": "Transitionen",
         "ErrorBack": "Gehe zurück zur letzten Aktion",
         "ExitsInline": "%s Ausstiege",
         "NumPageviews": "%s Seitenansichten",
         "NumDownloads": "%s Downloads",
         "NumOutlinks": "%s ausgehende Verweise",
         "TopX": "Top %s Beschriftungen",
-        "FeatureDescription": "Übergänge zeigen Ihnen auf, was genau Ihre Besucher machten bevor und nachdem sie eine bestimmte Seite aufgerufen haben. Diese Seite erklärt wie man zum Übergangsbericht kommt, wie man ihn versteht und wie man ihn nutzt.",
-        "AvailableInOtherReports": "Schon gewusst? Übergänge sind auch als Zeilenaktionen in folgenden Berichten verfügbar:",
+        "FeatureDescription": "Mit Transitionen erhalten Sie einen Bericht, der zeigt, was Ihre Besucher direkt vor und nach dem Betrachten einer bestimmten Seite getan haben. Auf dieser Seite wird erklärt, wie Sie auf den leistungsstarken Bericht \"Transitionen\" zugreifen, ihn verstehen und verwenden können.",
+        "AvailableInOtherReports": "Schon gewusst? Transitionen sind auch als Zeilenaktionen in folgenden Berichten verfügbar:",
         "AvailableInOtherReports2": "Fahren Sie einfach über eine Zeile einer dieser Berichte und klicken Sie auf das Übergangsicon %s um ihn aufzurufen.",
         "FromCampaigns": "Von Kampagnen",
         "FromPreviousPages": "Von internen Seiten",
@@ -4495,7 +4516,7 @@
         "NoDataForAction": "Es sind keine Daten für %s verfügbar",
         "NoDataForActionDetails": "Entweder hatte diese Aktion während des Zeitraums %s keine Seitenansichten oder sie ist ungültig.",
         "OutgoingTraffic": "Ausgehender Traffic",
-        "PluginDescription": "Berichte über vergangene und zukünftige Aktionen für jede Seiten-URL in einem neuen Transitions-Bericht, aufrufbar im Aktionen-Bericht über ein neues Icon.",
+        "PluginDescription": "Zeigt vorherige und nachfolgende Aktionen für jede Seiten-URL in einem neuen Bericht \"Transitionen\" an, der in den \"Aktionen\"-Berichten über ein neues Icon verfügbar ist.",
         "ShareOfAllPageviews": "Diese Seite wurde %1$s mal angesehen (%2$s aller Seitenansichten)",
         "ToFollowingPages": "Zu internen Seiten",
         "ToFollowingPagesInline": "%s zu internen Seiten",
@@ -4504,7 +4525,7 @@
         "XOfAllPageviews": "%s von allen Seitenansichten",
         "XOutOfYVisits": "%1$s (von insgesamt %2$s)",
         "PageURLTransitions": "Seiten URL Übergänge",
-        "TransitionsSubcategoryHelp1": "Übergänge zeigen Ihnen auf, was genau Ihre Besucher machten bevor und nachdem sie eine bestimmte Seite aufgerufen haben. Diese Seite erklärt wie man zum Übergangsbericht kommt, wie man ihn versteht und wie man ihn nutzt.",
+        "TransitionsSubcategoryHelp1": "Mit Transitionen erhalten Sie einen Bericht, der zeigt, was Ihre Besucher direkt vor und nach dem Betrachten einer bestimmten Seite getan haben. Auf dieser Seite wird erklärt, wie Sie auf den leistungsstarken Bericht \"Transitionen\" zugreifen, ihn verstehen und verwenden können.",
         "TransitionsSubcategoryHelp2": "Mehr Details"
     },
     "TwoFactorAuth": {
