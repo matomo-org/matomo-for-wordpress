@@ -702,7 +702,8 @@
         "WidgetSearchNoResultKeywords": "Søgeord uden nogen resultater",
         "ActionType": "Handlingstype",
         "ActionTypes": "Handlingstyper",
-        "Behaviour": "Adfærd"
+        "Behaviour": "Adfærd",
+        "PagesSubcategoryHelp3": "Brug plus og minus ikonerne til venstre til at navigere."
     },
     "Annotations": {
         "AddAnnotationsFor": "Tilføj annotation for %s...",
@@ -2980,6 +2981,10 @@
         "RedirectUrlErrorAdmin": "Du kan tilføje domænet som en yderligere URL %1$si indstillingerne%2$s.",
         "RedirectUrlErrorUser": "Spørg administratoren om at tilføje domænet som en yderligere URL."
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Servertid",
+        "Performance": "Ydelse"
+    },
     "PrivacyManager": {
         "AnonymizeData": "Anonymiser data",
         "AnonymizeIpInlineHelp": "Anonymiser besøgendes IP-adresser for at efterkomme den lokale lovgivning om privatlivets fred\/retningslinjer.",
@@ -3398,7 +3403,9 @@
         "ToFollowingSiteSearchesInline": "%s interne søgninger",
         "XOfAllPageviews": "%s af alle visninger af denne side",
         "XOutOfYVisits": "%1$s (ud af %2$s)",
-        "PageURLTransitions": "Side-URL-overgange"
+        "PageURLTransitions": "Side-URL-overgange",
+        "TransitionsSubcategoryHelp1": "Overgange giver dig en rapport over, hvad dine besøgende gjorde umiddelbart før og efter at have besøgt en given side. Denne side vil forklare, hvordan du tilgår forstår og anvender denne effektive rapport.",
+        "TransitionsSubcategoryHelp2": "Flere detaljer"
     },
     "TwoFactorAuth": {
         "TwoFactorAuthentication": "Tofaktorgodkendelse",

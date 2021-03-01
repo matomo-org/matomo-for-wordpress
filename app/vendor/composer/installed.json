@@ -475,17 +475,17 @@
         },
         {
             "name": "matomo/device-detector",
-            "version": "4.1.0",
-            "version_normalized": "4.1.0.0",
+            "version": "4.2.2",
+            "version_normalized": "4.2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matomo-org/device-detector.git",
-                "reference": "6b3facc35e7a465bc4223fddfa5fa88c5b327554"
+                "reference": "dc270e7645d286d6f01d516a6634aba8b31ad668"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/6b3facc35e7a465bc4223fddfa5fa88c5b327554",
-                "reference": "6b3facc35e7a465bc4223fddfa5fa88c5b327554",
+                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/dc270e7645d286d6f01d516a6634aba8b31ad668",
+                "reference": "dc270e7645d286d6f01d516a6634aba8b31ad668",
                 "shasum": ""
             },
             "require": {
@@ -508,7 +508,7 @@
                 "doctrine/cache": "Can directly be used for caching purpose",
                 "ext-yaml": "Necessary for using the Pecl YAML parser"
             },
-            "time": "2021-01-08T14:14:55+00:00",
+            "time": "2021-02-26T07:31:42+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -538,9 +538,9 @@
                 "useragent"
             ],
             "support": {
-                "forum": "http://forum.matomo.org/",
+                "forum": "https://forum.matomo.org/",
                 "issues": "https://github.com/matomo-org/device-detector/issues",
-                "source": "https://github.com/matomo-org/piwik",
+                "source": "https://github.com/matomo-org/matomo",
                 "wiki": "https://dev.matomo.org/"
             },
             "install-path": "../matomo/device-detector"
@@ -1085,17 +1085,17 @@
         },
         {
             "name": "pear/archive_tar",
-            "version": "1.4.10",
-            "version_normalized": "1.4.10.0",
+            "version": "1.4.11",
+            "version_normalized": "1.4.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/Archive_Tar.git",
-                "reference": "bbb4f10f71a1da2715ec6d9a683f4f23c507a49b"
+                "reference": "17d355cb7d3c4ff08e5729f29cd7660145208d9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/Archive_Tar/zipball/bbb4f10f71a1da2715ec6d9a683f4f23c507a49b",
-                "reference": "bbb4f10f71a1da2715ec6d9a683f4f23c507a49b",
+                "url": "https://api.github.com/repos/pear/Archive_Tar/zipball/17d355cb7d3c4ff08e5729f29cd7660145208d9d",
+                "reference": "17d355cb7d3c4ff08e5729f29cd7660145208d9d",
                 "shasum": ""
             },
             "require": {
@@ -1110,7 +1110,7 @@
                 "ext-xz": "Lzma2 compression support.",
                 "ext-zlib": "Gzip compression support."
             },
-            "time": "2020-09-15T14:13:23+00:00",
+            "time": "2020-11-19T22:10:24+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -2183,31 +2183,30 @@
         },
         {
             "name": "tedivm/jshrink",
-            "version": "dev-master",
-            "version_normalized": "dev-master",
+            "version": "v1.4.0",
+            "version_normalized": "1.4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tedious/JShrink.git",
-                "reference": "aed09eace9d498e18d48a5b62a7e5a97dfc0e55d"
+                "reference": "0513ba1407b1f235518a939455855e6952a48bbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tedious/JShrink/zipball/aed09eace9d498e18d48a5b62a7e5a97dfc0e55d",
-                "reference": "aed09eace9d498e18d48a5b62a7e5a97dfc0e55d",
+                "url": "https://api.github.com/repos/tedious/JShrink/zipball/0513ba1407b1f235518a939455855e6952a48bbc",
+                "reference": "0513ba1407b1f235518a939455855e6952a48bbc",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.6|^7.0"
+                "php": "^5.6|^7.0|^8.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.8",
                 "php-coveralls/php-coveralls": "^1.1.0",
                 "phpunit/phpunit": "^6"
             },
-            "time": "2019-10-07T21:24:34+00:00",
-            "default-branch": true,
+            "time": "2020-11-30T18:10:21+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "JShrink": "src/"
@@ -2231,7 +2230,7 @@
             ],
             "support": {
                 "issues": "https://github.com/tedious/JShrink/issues",
-                "source": "https://github.com/tedious/JShrink/tree/master"
+                "source": "https://github.com/tedious/JShrink/tree/v1.4.0"
             },
             "funding": [
                 {

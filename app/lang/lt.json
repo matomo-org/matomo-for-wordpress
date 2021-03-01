@@ -345,7 +345,8 @@
         "SubmenuPageTitles": "Puslapių antraštės",
         "WidgetSearchCategories": "Paieškos kategorijos",
         "ActionType": "Veiksmo tipas",
-        "Behaviour": "Elgsena"
+        "Behaviour": "Elgsena",
+        "PagesSubcategoryHelp3": "Naršymui naudokite kairėje esančias pliuso ir minuso piktogramas."
     },
     "CoreAdminHome": {
         "Administration": "Administravimas",
@@ -1927,6 +1928,9 @@
         "Clicks": "%s spustelėjimų",
         "Location": "Vietovė"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Serverio laikas"
+    },
     "PrivacyManager": {
         "AnonymizeData": "Anonimizuoti duomenis",
         "AnonymizeIpInlineHelp": "Paslėpkite savo lankytojų IP adresus, jei to reikalauja Jūsų vidaus taisyklės ar įstatymai.",
@@ -2123,7 +2127,8 @@
     },
     "Transitions": {
         "FromPreviousSiteSearches": "Iš vidinės paieškos",
-        "ToFollowingSiteSearches": "Vidinės paieškos"
+        "ToFollowingSiteSearches": "Vidinės paieškos",
+        "TransitionsSubcategoryHelp2": "Išsamiau"
     },
     "UserCountry": {
         "City": "Miestas",

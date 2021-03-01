@@ -699,7 +699,8 @@
         "WidgetSearchNoResultKeywords": "Palabras clave sin resultados",
         "ActionType": "Tipo de Acción",
         "ActionTypes": "Tipos de acción",
-        "Behaviour": "Comportamiento"
+        "Behaviour": "Comportamiento",
+        "PagesSubcategoryHelp3": "Use los íconos de más y menos en la izquierda para navegar."
     },
     "Annotations": {
         "AddAnnotationsFor": "Agregar anotaciones para %s…",
@@ -3062,6 +3063,10 @@
         "RedirectUrlErrorAdmin": "Podés agregar el dominio como una dirección web %1$sen la configuración%2$s.",
         "RedirectUrlErrorUser": "Pedile a tu administrador que agregue el dominio como una dirección web adicional."
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Hora del servidor",
+        "Performance": "Rendimiento"
+    },
     "PrivacyManager": {
         "AnonymizeData": "Anonimizar datos",
         "AnonymizeIpDescription": "Seleccioná \"Sí\" si querés que Matomo no rastre direcciones IP totalmente calificadas.",
@@ -4106,7 +4111,9 @@
         "ToFollowingSiteSearchesInline": "%s búsquedas internas",
         "XOfAllPageviews": "%s de todas las vistas de esta página",
         "XOutOfYVisits": "%1$s (de %2$s)",
-        "PageURLTransitions": "Dirección web de la página de transiciones"
+        "PageURLTransitions": "Dirección web de la página de transiciones",
+        "TransitionsSubcategoryHelp1": "Las transiciones te dan un informe que muestra las cosas que tus visitantes hicieron directamente antes y después de ver cierta página. Esta página explicará cómo acceder, entender y usar el poderoso informe de Transiciones.",
+        "TransitionsSubcategoryHelp2": "Más detalles"
     },
     "TwoFactorAuth": {
         "TwoFactorAuthentication": "Autenticación de 2 factores",

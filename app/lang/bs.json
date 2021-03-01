@@ -363,7 +363,8 @@
         "WidgetPageUrlsFollowingSearch": "Stranice koje slijede poslije pretrage sajta",
         "WidgetSearchCategories": "Kategorije za pretrage",
         "WidgetSearchKeywords": "Ključne riječi za pretragu na sajtu",
-        "WidgetSearchNoResultKeywords": "Ključne riječi za pretragu bez rezultata"
+        "WidgetSearchNoResultKeywords": "Ključne riječi za pretragu bez rezultata",
+        "PagesSubcategoryHelp3": "Koriste plus i minus ikone za navigaciju."
     },
     "Annotations": {
         "AddAnnotationsFor": "Dodaj bilješku za %s...",

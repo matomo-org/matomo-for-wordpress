@@ -1412,6 +1412,9 @@
     "Overlay": {
         "Location": "Staðsetning"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Tímabelti þjóns"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Hylja síðusta bæti gesta IP-tölu til samræðis við persónuverndarlaga þíns lands."
     },

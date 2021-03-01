@@ -1,12 +1,12 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '4.1.1',
-    'version' => '4.1.1.0',
+    'pretty_version' => '4.2.1',
+    'version' => '4.2.1.0',
     'aliases' => 
     array (
     ),
-    'reference' => '0a0d7ea3b85264e6b5aff757a6283949217a2ddd',
+    'reference' => '3688fff9947853789ef748ec3e74d814a8214517',
     'name' => 'matomo/matomo',
   ),
   'versions' => 
@@ -76,12 +76,12 @@
     ),
     'matomo/device-detector' => 
     array (
-      'pretty_version' => '4.1.0',
-      'version' => '4.1.0.0',
+      'pretty_version' => '4.2.2',
+      'version' => '4.2.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '6b3facc35e7a465bc4223fddfa5fa88c5b327554',
+      'reference' => 'dc270e7645d286d6f01d516a6634aba8b31ad668',
     ),
     'matomo/ini' => 
     array (
@@ -94,12 +94,12 @@
     ),
     'matomo/matomo' => 
     array (
-      'pretty_version' => '4.1.1',
-      'version' => '4.1.1.0',
+      'pretty_version' => '4.2.1',
+      'version' => '4.2.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '0a0d7ea3b85264e6b5aff757a6283949217a2ddd',
+      'reference' => '3688fff9947853789ef748ec3e74d814a8214517',
     ),
     'matomo/matomo-php-tracker' => 
     array (
@@ -191,12 +191,12 @@
     ),
     'pear/archive_tar' => 
     array (
-      'pretty_version' => '1.4.10',
-      'version' => '1.4.10.0',
+      'pretty_version' => '1.4.11',
+      'version' => '1.4.11.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'bbb4f10f71a1da2715ec6d9a683f4f23c507a49b',
+      'reference' => '17d355cb7d3c4ff08e5729f29cd7660145208d9d',
     ),
     'pear/console_getopt' => 
     array (
@@ -265,7 +265,7 @@
     array (
       'replaced' => 
       array (
-        0 => '4.1.0',
+        0 => '4.2.2',
       ),
     ),
     'piwik/referrer-spam-blacklist' => 
@@ -428,13 +428,12 @@
     ),
     'tedivm/jshrink' => 
     array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
+      'pretty_version' => 'v1.4.0',
+      'version' => '1.4.0.0',
       'aliases' => 
       array (
-        0 => '9999999-dev',
       ),
-      'reference' => 'aed09eace9d498e18d48a5b62a7e5a97dfc0e55d',
+      'reference' => '0513ba1407b1f235518a939455855e6952a48bbc',
     ),
     'twig/twig' => 
     array (

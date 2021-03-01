@@ -506,7 +506,8 @@
         "WidgetPageUrlsFollowingSearch": "Peale otsingut külastatud lehed",
         "WidgetSearchCategories": "Otsingu Kategooriad",
         "WidgetSearchKeywords": "Lehe otsingu võtmesõnad",
-        "WidgetSearchNoResultKeywords": "Ilma tulemusteta otsingu võtmesõnad"
+        "WidgetSearchNoResultKeywords": "Ilma tulemusteta otsingu võtmesõnad",
+        "PagesSubcategoryHelp3": "Kasuta pluss ja miinus ikoone vasakul, et navigeerida"
     },
     "Annotations": {
         "AddAnnotationsFor": "%s kommentaari lisamine...",
@@ -2201,6 +2202,9 @@
         "OpenFullScreen": "Ava täisekraani vaade (ilma külgribata)",
         "Overlay": "Lehe statistika kiht"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Serveri aeg"
+    },
     "PrivacyManager": {
         "AnonymizeIpMaskLength": "%1$s bait(i) - nt. %2$s",
         "ClickHereSettings": "Vajuta siia, et minna %s seadete lehele.",
@@ -2396,7 +2400,8 @@
         "ToFollowingSiteSearches": "Sisemised otsingud",
         "ToFollowingSiteSearchesInline": "%s sisemist otsingut",
         "XOfAllPageviews": "%s kõigist antud lehe vaatamistest",
-        "XOutOfYVisits": "%1$s (%2$s kõigist)"
+        "XOutOfYVisits": "%1$s (%2$s kõigist)",
+        "TransitionsSubcategoryHelp2": "Rohkem detaile"
     },
     "UserCountry": {
         "City": "Linn",

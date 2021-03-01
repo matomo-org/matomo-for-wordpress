@@ -520,7 +520,8 @@
         "WidgetPageUrlsFollowingSearch": "एक साइट खोज के बाद पन्ने",
         "WidgetSearchCategories": "खोज श्रेणियां",
         "WidgetSearchKeywords": "साइट खोजशब्द",
-        "WidgetSearchNoResultKeywords": "खोजशब्द जिनका कोई परिणाम नहीं"
+        "WidgetSearchNoResultKeywords": "खोजशब्द जिनका कोई परिणाम नहीं",
+        "PagesSubcategoryHelp3": "नेविगेट करने के लिए बाईं तरफ के प्लस और माइनस आइकॉन का प्रयोग करें."
     },
     "Annotations": {
         "AddAnnotationsFor": "%s एनोटेशन जोड़ें",
@@ -2335,6 +2336,9 @@
         "RedirectUrlErrorAdmin": "आप सेटिंग्स%1$s से एक अतिरिक्त URL%2$s के रूप में डोमेन जोड़ सकते हैं",
         "RedirectUrlErrorUser": "एक अतिरिक्त URL के रूप में डोमेन को जोड़ने के लिए अपने व्यवस्थापक से पूछें."
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "सर्वर समय"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "अपने स्थानीय गोपनीयता कानून \/ दिशा निर्देशों का अनुपालन करने के लिए आगंतुकों आईपी पतों की अज्ञात आखिरी बाइट",
         "AnonymizeIpMaskLengtDescription": "आवृत किया जाना चाहिए कि कितने बाइट्स 'दर्शकों के आईपी का चयन करें.",
@@ -2613,7 +2617,8 @@
         "ToFollowingSiteSearches": "आंतरिक खोजें",
         "ToFollowingSiteSearchesInline": "%s आंतरिक खोजें",
         "XOfAllPageviews": "इस पृष्ठ के सभी दृश्यों का %s",
-        "XOutOfYVisits": "%1$s (बाहर %2$s)"
+        "XOutOfYVisits": "%1$s (बाहर %2$s)",
+        "TransitionsSubcategoryHelp2": "अधिक जानकारी"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "आईपी ​​पते %s में एक स्थानीय पता है और भू स्थित नहीं किया जा सकता.",

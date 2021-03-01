@@ -385,7 +385,8 @@
         "SubmenuPagesEntry": "รายการเพจ",
         "SubmenuPagesExit": "ออกจากหน้าเพจ",
         "SubmenuPageTitles": "ชื่อเพจ",
-        "WidgetPagesExit": "ออกจากเพจ"
+        "WidgetPagesExit": "ออกจากเพจ",
+        "PagesSubcategoryHelp3": "ใช้ไอคอนบวกและลบที่อยู่ด้านซ้ายเพื่อเป็นตัวนำทาง"
     },
     "Annotations": {
         "Annotations": "หมายเหตุประกอบ",
@@ -1838,6 +1839,9 @@
         "Link": "ลิงก์",
         "Location": "ตำแหน่งที่ตั้ง",
         "OneClick": "1 คลิก"
+    },
+    "PagePerformance": {
+        "ColumnTimeServer": "เวลาของเซิร์ฟเวอร์"
     },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Anonymize มีขนาดเป็นไบต์ล่าสุดของที่อยู่ IP ของผู้เข้าชมเพื่อให้สอดคล้องกับนโยบายข้อมูลส่วนบุคคลภายในเครื่องของคุณ",

@@ -213,6 +213,9 @@
         "YouMustBeLoggedIn": "Rhaid i chi fewngofnodi i ddefnyddio'r gweithred hwn.",
         "YourChangesHaveBeenSaved": "Mae eich newidiadau wedi eu cadw."
     },
+    "Actions": {
+        "PagesSubcategoryHelp3": "Defnyddiwch yr eiconau mwy (+) a llai (-) ar y chwith i lywio."
+    },
     "DBStats": {
         "Table": "Tabl"
     },

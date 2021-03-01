@@ -32,6 +32,7 @@
         "ChooseLanguage": "Zvolte jazyk",
         "ChoosePeriod": "Zvolte období",
         "ClickHere": "Klikněte zde pro více informací",
+        "CompareTo": "Porovnat s:",
         "DoubleClickToChangePeriod": "Klikněte dvakrát pro nastavení tohoto období.",
         "Close": "Zavřít",
         "ClickToSearch": "Klikněte pro hledání",
@@ -627,6 +628,7 @@
         "UserAuthentication": "Autentifikace uživatele",
         "UsingTokenAuth": "Pokud chcete %1$s načíst data ze skriptu, cronu, atd. %2$s Potřebujete přidat parametr %3$s k voláním API, které vyžadují přihlášení",
         "Glossary": "Glosář",
+        "MainMetricsReportDocumentation": "Tato sestava poskytuje přehled nejdůležitějších metrik ve všech kategoriích a pluginech.",
         "LearnAboutCommonlyUsedTerms2": "Přečtěte si o běžně používaných výrazech, abyste mohli co nejlépe využít Matomo Analytics.",
         "EvolutionMetricName": "%s Vývoj"
     },
@@ -672,6 +674,7 @@
         "ExitPagesReportDocumentation": "Toto hlášení obsahujje informace o výstupních stránkách, které se za dané časové období vyskytly. Výstupní stránka je poslední stránka, kterou návštěvník během své návštěvy navštíví. %s URL jsou zobrazeny ve složkové struktuře.",
         "ExitPageTitles": "Titulky výstupních stránek",
         "ExitPageTitlesReportDocumentation": "Toto hlášení obsahuje informace o titulcích výstupních stránek za dané období.",
+        "MainMetricsReportDocumentation": "Tento přehled poskytuje velmi základní přehled o tom, jaké akce vaši návštěvníci na vašem webu provádějí.",
         "OneSearch": "1 Vyhledávání",
         "OutlinkDocumentation": "Externí odkaz je odkaz, který vede z vašich stránek na jinou domén.",
         "OutlinksReportDocumentation": "Toto hlášení zobrazuje hyerarchický seznam URL externích odkazů, na které vaši návštěvníci klikli.",
@@ -709,7 +712,9 @@
         "WidgetSearchNoResultKeywords": "Hledaná Klíčová slova bez výsledku hledání",
         "ActionType": "Typ akce",
         "ActionTypes": "Typy akcí",
-        "Behaviour": "Chování"
+        "Behaviour": "Chování",
+        "TimeSpentInReferringAction": "Čas strávený odkazující akci",
+        "PagesSubcategoryHelp3": "Použijte ikonu plus a mínus vlevo od navigace."
     },
     "Annotations": {
         "AddAnnotationsFor": "Přidat anotace k %s...",
@@ -739,8 +744,10 @@
         "ContentInteractions": "Interakce s obsahem",
         "InteractionRate": "Rychlost interakcí",
         "ContentName": "Jméno obsahu",
+        "ContentNameReportDocumentation": "Tento přehled zobrazuje názvy obsahu, který si návštěvníci prohlíželi a se kterým pracovali.",
         "ContentNames": "Názvy obsahu",
         "ContentPiece": "Část obsahu",
+        "ContentPieceReportDocumentation": "Tento přehled zobrazuje části obsahu, které si návštěvníci prohlíželi a se kterými pracovali.",
         "ContentPieces": "Části obsahu",
         "ContentTarget": "Cíl obsahu",
         "ContentTargets": "Cíle obsahu",
@@ -908,6 +915,7 @@
         "DataTableHowToSearch": "Pro hledání stiskněte enter, nebo klikněte na ikonu vyhledávání",
         "DataTableShowDimensions": "Rozměry jsou kombinovány %s Zobrazit rozměry samostatně",
         "DataTableCombineDimensions": "Rozměry jsou zobrazeny samostatně %s Zobrazit rozměry dohromady",
+        "DateInvalid": "Uvedená kombinace data a období je neplatná. Vyberte prosím platné datum.",
         "Default": "výchozí",
         "DonateCall1": "Matomo lze používat zadarmo, to ale neznamená, že jeho vývoj nic nestojí.",
         "DonateCall2": "Matomo potřebuje Vaši podporu, aby mohl růst a prosperovat.",
@@ -915,6 +923,7 @@
         "EndShortcut": "Konec",
         "EnterZenMode": "Vstup do režimu Zen (skrýt nabídky)",
         "ExitZenMode": "Ukončit režim Zen (zobrazit nabídky)",
+        "ExceptionNotAllowlistedIP": "Nemůžete použít toto Matomo, protože vaše IP %s není povolena.",
         "ExcludeRowsWithLowPopulation": "Všechny řádky jsou zobrazeny %s Vyloučit nízkou populaci",
         "ExternalHelp": "Nápověda (otevře se v nové záložce)",
         "FlattenDataTable": "Hlášení je hierarchické %s Zploštit",
@@ -922,6 +931,7 @@
         "ShowExportUrl": "Zobrazit URL exportu",
         "HideExportUrl": "Skrýt URL exportu",
         "HomeShortcut": "Domů",
+        "SupportUsOn": "Podpořte nás na",
         "IncludeRowsWithLowPopulation": "Řádky s nízkou populací jsou skryty %s Zobrazit všechny řádky",
         "InjectedHostEmailBody": "Ahoj. Dnes jsem se snažil dostat do \\Matomou a dostal jsem varování o neznámém ménu hostitele.",
         "InjectedHostEmailSubject": "K Matomo bylo přistupováno s neznámým jménem hostitele %s",
@@ -934,6 +944,8 @@
         "VisitTypeReturning": "Návraty",
         "VisitTypeReturningCustomer": "Věrný zákazník",
         "MainNavigation": "Hlavní navigace",
+        "YourDonationWillHelp": "Váš dar přímo pomůže financovat nové funkce a vylepšení této analytické platformy s otevřeným zdrojovým kódem. To znamená, že komunita bude vždy těžit z nástroje, který chrání soukromí a umožní vám mít kontrolu nad svými daty.",
+        "ThanksFromAllOfUs": "Díky vám od nás všech na Matomo!",
         "Menu": "Menu",
         "NoPrivilegesAskPiwikAdmin": "Jste přihlášen jako '%1$s' ale zdá se, že nemáte v Matomo žádná práva. %2$s Zeptejte se Vašeho Matomo administrátora (klikem na email)%3$s aby Vám dal 'view' přístup na stránku.",
         "OnlyForSuperUserAccess": "Tento widget je na výchozí nástěnce zobrazen pouze pro uživatele se super uživatelským přístupem",
@@ -970,6 +982,8 @@
         "PivotBySubtable": "Toto hlášení není zaměřené %1$s Zaměřit na %2$s",
         "SystemSummaryWidget": "Souhrn systému",
         "SystemSummaryNWebsites": "%d webových stránek",
+        "SystemSummaryNSegments": "%1$dsegmentů",
+        "SystemSummaryNSegmentsWithBreakdown": "%1$d segmentů (%2$s předzpracované, %3$s zpracované v reálném čase)",
         "SystemSummaryNActivatedPlugins": "%d aktivovaných zásuvných modulů",
         "SystemSummaryPiwikVersion": "Verze Matomou",
         "SystemSummaryMysqlVersion": "Verze MySQL",
@@ -989,7 +1003,6 @@
         "RowLimit": "Limit řádků",
         "CustomLimit": "Vlastní limit",
         "ExportFormat": "Formát exportu",
-        "ExportTooltip": "Poznámka: Generovaná adresa URL exportu bude fungovat pouze v aktuální relaci prohlížeče. Pokud ji chcete použít někde jinde, musíte použít token specifický pro aplikaci. Tyto tokeny můžete nakonfigurovat v části Správce -> Zabezpečení -> Autentizace tokenů.",
         "ExpandSubtables": "Rozbalit dílčí tabulky",
         "StandardReport": "Standartní report",
         "FlattenReport": "Srovnat report",
@@ -997,7 +1010,8 @@
         "ReadMoreOnlineGuide": "Další informace o tomto tématu naleznete v online příručce.",
         "SeeAvailableVersions": "Prohlédnout dostupné verze",
         "QuickLinks": "Rychlé odkazy",
-        "Profilable": "Profilovatelné"
+        "Profilable": "Profilovatelné",
+        "SearchOnMatomo": "Vyhledat '%1$s' na Matomo.org"
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Odinstalovat",
@@ -1033,6 +1047,7 @@
         "MissingRequirementsNotice": "Prosím aktualizujte %1$s%2$s na novější verzi, je vyžadována %1$s %3$s.",
         "MissingRequirementsPleaseInstallNotice": "Prosím nainstalujte %1$s %2$s, protože je vyžadován %3$s.",
         "NoZipFileSelected": "Prosím vyberte soubor .zip.",
+        "FileExceedsUploadLimit": "Vybraný soubor překračuje limit nahrávání na vašem serveru.",
         "NumUpdatesAvailable": "%s Dostupné aktualizace",
         "NoPluginSettings": "Žádná nastavení zásuvného modulu, která by bylo možné nastavit",
         "Origin": "Původ",
@@ -1656,6 +1671,7 @@
         "SystemCheckGzuncompressHelp": "Musíte povolit rozšíření zlib a funkci gzuncompress.",
         "SystemCheckHashHelp": "Je nutné, aby jste znovu nakonfigurovali a sestavili PHP s povolenou podporou hash(), vynecháním volby --disable-hash.",
         "SystemCheckIconvHelp": "Musíte nakonfigurovat a překompilovat PHP s podporou pro \"icont\", --with-iconv",
+        "SystemCheckJsonHelp": "Pro čtení a zápis dat JSON je pro Matomo nutné rozšíření php-json.",
         "SystemCheckMailHelp": "Bez funkce mail(), nebudou odeslány zprávy s odezvou, nebo při zapomenutém heslu",
         "SystemCheckMbstring": "mbstring",
         "SystemCheckMbstringHelp": "Rozšíření mbstring je vyžadováno pro zpracování vícebajtových znaků v uživatelském rozhraní a odpovědích API. Zkontrolujte také, zda je parametr mbstring.func_overload je v php.ini nastaven na hodnotu „0“.",
@@ -1691,6 +1707,8 @@
         "SystemCheckWriteDirs": "Adresáře s přístupem k zápisu",
         "SystemCheckWriteDirsHelp": "Pro opravu této chyby v Linuxu zkuste napsat následující příkaz(y)",
         "SystemCheckZlibHelp": "Musíte nakonfigurovat a překompilovat PHP s podporou pro \"zlib\", --with-zlib",
+        "SystemCheckCronArchiveProcess": "Nastavit Cron",
+        "FasterReportLoading": "rychlejší načítání zpráv",
         "SystemCheckCronArchiveProcessCLI": "Správa procesů pomocí CLI",
         "SystemCheckPhpSetting": "Abyste zabránili vážným problémům, ve svém souboru php.ini musíte nastavit %s",
         "SystemCheckUpdateHttps": "Aktualizace přes HTTPS",
@@ -1712,7 +1730,9 @@
         "WelcomeToCommunity": "Vítejte v komunitě Matomou!",
         "CannotConnectToDb": "Nelze se připojit k databázi",
         "CannotConnectToDbResolvingExplanation": "To může být dočasný problém, zkuste %1$sobnovit stránku%2$s. Pokud problém přetrvá, kontaktujte svého administrátora Matomou.",
-        "EmailPrivacyNotice": "Vaše e-mailová adresa bude použita pouze k zasílání novinek. Z tohoto důvodu musíme sdílet váš e-mail s poskytovatelem třetí strany. Tento poskytovatel je v současné době Mad Mimi, ale to se může v budoucnu změnit. Váš e-mail nebudeme sdílet s nikým jiným, ani jej nebudeme používat k žádnému jinému účelu než k zasílání newsletteru. Odběr můžete kdykoli zrušit. Další informace naleznete v našich %1$s zásadách ochrany osobních údajů %2$s."
+        "EmailPrivacyNotice": "Vaše e-mailová adresa bude použita pouze k zasílání novinek. Z tohoto důvodu musíme sdílet váš e-mail s poskytovatelem třetí strany. Tento poskytovatel je v současné době Mad Mimi, ale to se může v budoucnu změnit. Váš e-mail nebudeme sdílet s nikým jiným, ani jej nebudeme používat k žádnému jinému účelu než k zasílání newsletteru. Odběr můžete kdykoli zrušit. Další informace naleznete v našich %1$s zásadách ochrany osobních údajů %2$s.",
+        "PerformanceSettingsDesc1": "Jedna poslední poznámka týkající se výkonu: vaše Matomo je nastaveno a připraveno sledovat a hlásit provoz na vašem webu, ale pokud zjistíte, že je Matomo pomalý, budete chtít provést další krok nastavení %1$s archivace CLI%2$s. To bude generovat vaše zprávy na pozadí pravidelně, namísto na vyžádání.",
+        "PerformanceSettingsDesc2": "To vyžaduje přidání příkazu Matomo do cron, co nemůže být provedeno automaticky instalátorem, ale můžete si %1$spřečíst naše Časté dotazy, kde se dozvíte, jak si jej můžete nastavit sami.%2$s"
     },
     "Intl": {
         "Continent_afr": "Afrika",
@@ -3077,6 +3097,9 @@
         "RedirectUrlErrorAdmin": "Doménu můžete jako další URL přidat v %1$snastavení%2$s.",
         "RedirectUrlErrorUser": "Požádejte svého administrátora o přidání stránky jako další URL:."
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Čas na serveru"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Skryje poslední byte IP adresy návštěvníka, aby souhlasila se zákony vaší země.",
         "AnonymizeIpMaskLengtDescription": "Zvolte, kolik bitů z návštěvníkovy IP adresy má být maskováno.",
@@ -3432,7 +3455,8 @@
         "ToFollowingSiteSearches": "Interní vyhledávání",
         "ToFollowingSiteSearchesInline": "%s interních vyhledávání",
         "XOfAllPageviews": "%s ze všech zobrazení této stránky",
-        "XOutOfYVisits": "%1$s (z %2$s)"
+        "XOutOfYVisits": "%1$s (z %2$s)",
+        "TransitionsSubcategoryHelp2": "Více podrobností"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "IP adresa %s je místní a enemůže být geolokována.",

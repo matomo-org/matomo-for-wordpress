@@ -703,7 +703,8 @@
         "WidgetSearchCategories": "Kategori Pencarian",
         "WidgetSearchKeywords": "Kata Kunci Pencarian Situs",
         "WidgetSearchNoResultKeywords": "Kata Kunci Pencarian dengan Tanpa Hasil",
-        "ActionType": "Jenis Tindakan"
+        "ActionType": "Jenis Tindakan",
+        "PagesSubcategoryHelp3": "Gunakan ikon plus dan minus di kiri untuk bernavigasi."
     },
     "Annotations": {
         "AddAnnotationsFor": "Tambahkan penjelasan untuk %s...",
@@ -2522,6 +2523,9 @@
         "RedirectUrlErrorAdmin": "Anda dapat menambah ranah sebagai URL tambahan di %1$spengaturan%2$s.",
         "RedirectUrlErrorUser": "Silakan bertanya kepada pengelola Anda untuk menambah ranah sebagai URL tambahan."
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Waktu Peladen"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Anonimasi bita terakhir dari alamat IP pengunjung sesuai dengan peraturan privasi\/panduan setempat Anda.",
         "AnonymizeIpMaskLengtDescription": "Pilih berapa banyak bita dari IP pengunjung harus ditutupi.",
@@ -2810,7 +2814,8 @@
         "ToFollowingSiteSearches": "Pencarian Dalam",
         "ToFollowingSiteSearchesInline": "%s pencarian dalam",
         "XOfAllPageviews": "%s dari selruh tanpilan dari halaman ini",
-        "XOutOfYVisits": "%1$s (di luar dari %2$s)"
+        "XOutOfYVisits": "%1$s (di luar dari %2$s)",
+        "TransitionsSubcategoryHelp2": "Selengkapnya"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "Alamat IP %s merupakan alamat lokal dan tidak dapat diperiksa oleh lokasi-geo.",

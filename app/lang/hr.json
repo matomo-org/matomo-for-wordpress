@@ -385,7 +385,8 @@
         "WidgetPageUrlsFollowingSearch": "Stranice kod pretraživanja",
         "WidgetSearchCategories": "Pretraži kategoije",
         "WidgetSearchKeywords": "Ključne riječi pretraživanja",
-        "WidgetSearchNoResultKeywords": "Ključne riječi pretraživanja bez rezultata"
+        "WidgetSearchNoResultKeywords": "Ključne riječi pretraživanja bez rezultata",
+        "PagesSubcategoryHelp3": "Koristite znakove plus i minus sa lijeve strane za navigaciju."
     },
     "Annotations": {
         "AddAnnotationsFor": "Dodaj bilješke za %s...",
@@ -1568,6 +1569,9 @@
     "Overlay": {
         "Location": "Lokacija"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Vrijeme servera"
+    },
     "PrivacyManager": {
         "ClickHereSettings": "Klikni za pristup %s postavkama."
     },
@@ -1596,6 +1600,9 @@
         "ReferrerUrlVariableName": "Referrer URL",
         "ReferrerVariableName": "Referrer URL",
         "Type": "Vrsta"
+    },
+    "Transitions": {
+        "TransitionsSubcategoryHelp2": "Više detalja"
     },
     "UserCountry": {
         "City": "Grad",

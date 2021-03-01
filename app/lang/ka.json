@@ -1573,6 +1573,9 @@
     "Overlay": {
         "Location": "მდებარეობა"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "სერვერის დრო"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "გახადეთ ანონიმური ვიზიტორების IP მისამრთის ბოლო ბაიტი, რათა დააკმაყოფილოთ კონფიდენციალურობის ადგილობრივი კანონი\/განაწესი."
     },

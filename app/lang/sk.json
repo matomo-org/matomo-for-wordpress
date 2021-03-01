@@ -553,7 +553,8 @@
         "WidgetPageTitlesFollowingSearch": "Titulky stránok po vyhľadávaní na stránkach",
         "WidgetPageUrlsFollowingSearch": "Stránky po vyhľadávaní na stránkach",
         "WidgetSearchCategories": "Kategórie hľadania",
-        "WidgetSearchKeywords": "Kľúčové slová vyhladávania"
+        "WidgetSearchKeywords": "Kľúčové slová vyhladávania",
+        "PagesSubcategoryHelp3": "Pre navigáciu použite symboly plus a mínus vľavo."
     },
     "Annotations": {
         "AddAnnotationsFor": "Pridať anotáciu pre %s…",
@@ -623,7 +624,10 @@
         "UseCustomLogo": "Použiť vlastné logo",
         "YouAreOptedOut": "Aktuálne ste odhlásený.",
         "YouMayOptOut": "Zakliknutím v rámčeku nižšie, môžete zakázať uloženie cookie s identifikačným číslom prideleným vášmu počítaču a tým zamedziť prevádzkovateľovi tohto webu zhromažďovať a analyzovať štatistické údaje.",
-        "YouMayOptOutBis": "Ak ste sa rozhodli pre túto možnosť, kliknite prosím na priložený odkaz pre uloženie deaktivačného cookie vo svojom prehliadači."
+        "YouMayOptOutBis": "Ak ste sa rozhodli pre túto možnosť, kliknite prosím na priložený odkaz pre uloženie deaktivačného cookie vo svojom prehliadači.",
+        "YouMayOptOut2": "Máte možnosť zabrániť analyzovaniu a prepájaniu aktivít, ktoré tu vykonáte.",
+        "YouMayOptOut3": "Vďaka tomu síce ochránite vaše súkromie, no zároveň zabránite prevádzkovateľovi v tom, aby sa poučil z vašich aktivít a aby mohol zlepšovať ovládateľnosť pre vás a ďalších používateľov.",
+        "UncheckToOptOut": "Pre deaktiváciu odstráňte označenie tohto zaškrtávacieho políčka."
     },
     "CoreHome": {
         "CategoryNoData": "Pre túto kategóriu nie sú dáta. Skúste použiť „Vrátane celej populácie“.",
@@ -2236,6 +2240,9 @@
         "OpenFullScreen": "Prejsť na celú obrazovku (bez bočnej lišty)",
         "Overlay": "Prekrytie stránky"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Serverový čas"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Anonymnosť posledný bajt IP adresy návštevníkov v súlade s miestnymi zákonmi na ochranu súkromia.",
         "AnonymizeIpMaskLengtDescription": "Vyberte koľko bajtov IP adresy návštevníkov by malo byť maskovaných.",
@@ -2342,6 +2349,9 @@
     "Tour": {
         "Engagement": "Záujem",
         "CompletionTitle": "Výborne!"
+    },
+    "Transitions": {
+        "TransitionsSubcategoryHelp2": "Viac informácií"
     },
     "UserCountry": {
         "City": "Mesto",

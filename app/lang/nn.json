@@ -332,7 +332,8 @@
         "PageUrls": "Side-URLar",
         "SubmenuPagesEntry": "Inngangssider",
         "SubmenuPagesExit": "Utgangssider",
-        "SubmenuPageTitles": "Sidetitlar"
+        "SubmenuPageTitles": "Sidetitlar",
+        "PagesSubcategoryHelp3": "Bruk pluss- og minusikonane til venstre for å navigera."
     },
     "CoreAdminHome": {
         "Administration": "Administrasjon",
@@ -1758,6 +1759,9 @@
     "Overlay": {
         "Location": "Plass"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Tenartid"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Anonymiser siste del av IPen til vitjarane for å overhalda lokale lovar og retningsliner for personvern.",
         "KeepBasicMetrics": "Behald standardverdiar (vitjingar, sidevisningar, hoppfrekvens, målkonverteringar, netthandelkonverteringar, osb)"
@@ -1829,6 +1833,9 @@
     "Tour": {
         "Engagement": "Engasjement",
         "CompletionTitle": "Goed gedaan!"
+    },
+    "Transitions": {
+        "TransitionsSubcategoryHelp2": "Meer details"
     },
     "UserCountry": {
         "Continent": "Kontinent",

@@ -548,7 +548,8 @@
         "WidgetPageUrlsFollowingSearch": "Strani obiskane po iskanju na strani",
         "WidgetSearchCategories": "Kategorije za iskanje",
         "WidgetSearchKeywords": "Ključne besede",
-        "WidgetSearchNoResultKeywords": "Ključne besede brez zadetkov"
+        "WidgetSearchNoResultKeywords": "Ključne besede brez zadetkov",
+        "PagesSubcategoryHelp3": "Za navigacijo uporabite ikoni plus in minus na levi."
     },
     "Annotations": {
         "Annotations": "Beležke",
@@ -1958,6 +1959,9 @@
     "Overlay": {
         "Location": "Lokacija"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Čas na strežniku"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Anonimiziraj zadnji bajt IP naslova obiskovalca, da se s tem izpolnijo zahteve lokalnih zakonov\/smernic o zasebnosti.",
         "ClickHereSettings": "Kliknite tu za dostop do %s nastavitev.",
@@ -2091,7 +2095,8 @@
         "ToFollowingPagesInline": "%s na notranje strani",
         "ToFollowingSiteSearches": "Notranja iskanja",
         "ToFollowingSiteSearchesInline": "%s notranjih iskanj",
-        "XOutOfYVisits": "%1$s (od %2$s)"
+        "XOutOfYVisits": "%1$s (od %2$s)",
+        "TransitionsSubcategoryHelp2": "Več podrobnosti"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "IP naslov %s je lokalen in ne more biti geolociran.",

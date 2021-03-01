@@ -431,7 +431,8 @@
         "ColumnUniqueOutlinks": "Unikālās arējās saites",
         "SubmenuPagesEntry": "Ieejas lapas",
         "SubmenuPagesExit": "Izejas lapas",
-        "SubmenuPageTitles": "Lapas virsraksti"
+        "SubmenuPageTitles": "Lapas virsraksti",
+        "PagesSubcategoryHelp3": "Lai pārvietotos, lietojiet pa kreisi esošās plusa un mīnusa ikonas."
     },
     "CoreAdminHome": {
         "Administration": "Administrācija",
@@ -1809,6 +1810,9 @@
     "Overlay": {
         "Location": "Lokācijas"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Servera laiks"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Anonimizē apmeklētāju IP adrešu pēdējo baitu(s). Nepieciešamību nosaka Jūsu vietējie privātuma likumi\/pavadlīnijas.",
         "ClickHereSettings": "Klikšķiniet šeit lai piekļūtu %s iestatījumiem.",
@@ -1926,6 +1930,9 @@
         "ReferrerVariableName": "Atsauces URL",
         "Type": "Tips",
         "Version": "Versija"
+    },
+    "Transitions": {
+        "TransitionsSubcategoryHelp2": "Vairāk Detaļas"
     },
     "UserCountry": {
         "Continent": "Kontinents",

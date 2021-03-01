@@ -596,7 +596,8 @@
         "WidgetPageUrlsFollowingSearch": "Pagini care urmeaza dupa o Cautare pe site.",
         "WidgetSearchCategories": "Categorii de cautare",
         "WidgetSearchKeywords": "Cuvinte-cheie pentru căutare pe site",
-        "WidgetSearchNoResultKeywords": "CUvinte-cheie de căutare fără rezultat"
+        "WidgetSearchNoResultKeywords": "CUvinte-cheie de căutare fără rezultat",
+        "PagesSubcategoryHelp3": "Folositi semnele de plus si minus din stanga pentru navigare"
     },
     "Annotations": {
         "AddAnnotationsFor": "Adaugă notiţe pentru %s...",
@@ -2486,6 +2487,9 @@
         "RedirectUrlErrorAdmin": "Puteți adăuga domeniul ca o suplimentare de URL-ul %1$s in setarile%2$s.",
         "RedirectUrlErrorUser": "Adresați-vă administratorului pentru a adăuga un domeniu ca un URL suplimentar."
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Ora serverului"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Ascunde ultimele cifre ale IP-ului vizitatorilor pentru a fi în conformitate cu legile privind protecţia datelor personale.",
         "AnonymizeIpMaskLengtDescription": "Selectați cât de multe bytes al IP-urilor de visitatori ar trebui să fie mascate.",
@@ -2771,7 +2775,8 @@
         "ToFollowingSiteSearches": "Cautari interne",
         "ToFollowingSiteSearchesInline": "%s căutări interne",
         "XOfAllPageviews": "%s toate vizualizarile de pe aceasta pagina",
-        "XOutOfYVisits": "%1$s (din %2$s)"
+        "XOutOfYVisits": "%1$s (din %2$s)",
+        "TransitionsSubcategoryHelp2": "Mai multe detalii"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "Adresa IP %s este o adresă locală și nu pot fi localizate geografic.",

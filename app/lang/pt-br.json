@@ -705,7 +705,8 @@
         "WidgetSearchNoResultKeywords": "Palavras-Chave de Pesquisas Sem Resultados",
         "ActionType": "Tipo de Ação",
         "ActionTypes": "Tipo de Ação",
-        "Behaviour": "Comportamento"
+        "Behaviour": "Comportamento",
+        "PagesSubcategoryHelp3": "Use os ícones de mais e menos à esquerda para navegar."
     },
     "Annotations": {
         "AddAnnotationsFor": "Adicione anotações para %s...",
@@ -985,7 +986,6 @@
         "RowLimit": "Limite de linha",
         "CustomLimit": "Limite personalizado",
         "ExportFormat": "Formato de exportação",
-        "ExportTooltip": "Nota: O gerador de exportação de URL somente funcionará na sessão atual do navegador. Se você quiser usar em outro lugar, precisará usar um token específico para o aplicativo. Você pode configurar esses tokens em Admin -> Segurança -> Autenticação de Token.",
         "ExpandSubtables": "Expandir sub tabelas",
         "StandardReport": "Relatório padrão",
         "FlattenReport": "Achatar relatório",
@@ -3184,6 +3184,10 @@
         "RedirectUrlErrorAdmin": "Você pode adicionar um domínio como uma URL adicional %1$sem definições%2$s.",
         "RedirectUrlErrorUser": "Solicite ao seu administrador para adicionar o domínio como uma URL adicional."
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Horário do servidor",
+        "Performance": "Desempenho"
+    },
     "PrivacyManager": {
         "AnonymizeData": "Anonimizar dados",
         "AnonymizeIpDescription": "Selecione \"Sim\" se você quer que o Matomo não rastreie endereços IP totalmente qualificados.",
@@ -4020,7 +4024,9 @@
         "ToFollowingSiteSearchesInline": "%s pesquisas internas",
         "XOfAllPageviews": "%s de todas as visualizações desta página",
         "XOutOfYVisits": "%1$s (de %2$s)",
-        "PageURLTransitions": "Transições de URL da página"
+        "PageURLTransitions": "Transições de URL da página",
+        "TransitionsSubcategoryHelp1": "Transições mostra um relatório de o que seus visitantes fizeram imediatamente antes e depois de visualizarem uma página específica. Esta página explicará como acessar, entender e usar o poderoso relatório Transições.",
+        "TransitionsSubcategoryHelp2": "Mais detalhes"
     },
     "TwoFactorAuth": {
         "TwoFactorAuthentication": "Autenticação de dois fatores",
