@@ -331,7 +331,6 @@ class Updater
         $this->markComponentSuccessfullyUpdated($componentName, $updatedVersion);
 
         $this->executeListenerHook('onComponentUpdateFinished', array($componentName, $updatedVersion, $warningMessages));
-        ServerFilesGenerator::createHtAccessFiles();
         return $warningMessages;
     }
 
