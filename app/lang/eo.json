@@ -388,6 +388,9 @@
         "CompareRows": "Kompari registojn",
         "MetricBetweenText": "De %1$sal%2$s"
     },
+    "Actions": {
+        "PagesSubcategoryHelp3": "Uzi la plus kaj minus ikonoj maldekstre por foliumi."
+    },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Aldoni fidendan gastejon",
         "Administration": "Administrado",
@@ -1481,6 +1484,9 @@
     },
     "Tour": {
         "CompletionTitle": "Bone!"
+    },
+    "Transitions": {
+        "TransitionsSubcategoryHelp2": "Pli detala"
     },
     "UsersManager": {
         "MenuUsers": "Uzantoj",

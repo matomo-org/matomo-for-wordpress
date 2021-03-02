@@ -1458,6 +1458,9 @@
         "ActivateLicenseKey": "Gaitu",
         "PluginKeywords": "Gako-hitzak"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Zerbitzariaren ordua"
+    },
     "Referrers": {
         "Campaigns": "Kanpainak",
         "ColumnCampaign": "Kanpaina",

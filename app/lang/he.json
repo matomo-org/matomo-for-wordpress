@@ -594,7 +594,8 @@
         "WidgetPageTitles": "כותרות עמוד",
         "WidgetSearchCategories": "קטגוריות חיפוש",
         "WidgetSearchKeywords": "מילות חיפוש באתר",
-        "WidgetSearchNoResultKeywords": "מילות חיפוש ללא תוצאות"
+        "WidgetSearchNoResultKeywords": "מילות חיפוש ללא תוצאות",
+        "PagesSubcategoryHelp3": "השתמש בצלמיות הפלוס והמינוס בצד שמאל על מהת לנווט."
     },
     "Annotations": {
         "Annotations": "הערות הסבר",
@@ -1914,6 +1915,9 @@
         "Location": "מיקום",
         "OneClick": "לחיצה 1"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "זמן שרת"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "הסתרת הספרות האחרונות של כתובת הIP של המבקרים בכדי להתיישר עם החוקים \/ תקנות המקומיים."
     },
@@ -1965,6 +1969,9 @@
     "Tour": {
         "Engagement": "מעורבות",
         "CompletionTitle": "כל הכבוד!"
+    },
+    "Transitions": {
+        "TransitionsSubcategoryHelp2": "פרטים נוספים"
     },
     "UserCountry": {
         "City": "עיר",

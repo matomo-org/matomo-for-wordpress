@@ -170,8 +170,8 @@ class WpMatomo {
 	}
 
 	public static function is_safe_mode() {
-		if ( defined( 'MATOMO_SAFE_MODE' ) && MATOMO_SAFE_MODE) {
-			return true;
+		if ( defined( 'MATOMO_SAFE_MODE' ) ) {
+			return MATOMO_SAFE_MODE;
 		}
 
 		// we are not using is_plugin_active() for performance reasons

@@ -9,6 +9,7 @@
 
 namespace WpMatomo\Ecommerce;
 
+use WpMatomo\Admin\TrackingSettings;
 use WpMatomo\Logger;
 use WpMatomo\Settings;
 use WpMatomo\AjaxTracker;
@@ -70,12 +71,13 @@ class Base {
 		update_post_meta( $order_id, $this->key_order_tracked, 1 );
 	}
 
-	protected function is_doing_ajax() {
-		return defined( 'DOING_AJAX' ) && DOING_AJAX;
+	protected function should_track_background() {
+		return (defined( 'DOING_AJAX' ) && DOING_AJAX)
+		     || \WpMatomo::$settings->get_global_option('track_mode') === TrackingSettings::TRACK_MODE_TAGMANAGER;
 	}
 
 	protected function make_matomo_js_tracker_call( $params ) {
-		if ( $this->is_doing_ajax() ) {
+		if ( $this->should_track_background() ) {
 			$this->ajax_tracker_calls[] = $params;
 		}
 
@@ -83,7 +85,7 @@ class Base {
 	}
 
 	protected function wrap_script( $script ) {
-		if ( $this->is_doing_ajax() ) {
+		if ( $this->should_track_background() ) {
 			foreach ( $this->ajax_tracker_calls as $call ) {
 				$methods = array(
 					'addEcommerceItem'         => 'addEcommerceItem',

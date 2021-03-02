@@ -576,7 +576,8 @@
         "WidgetSearchCategories": "Số danh mục tìm kiếm",
         "WidgetSearchKeywords": "Số từ khóa trang tìm kiếm",
         "WidgetSearchNoResultKeywords": "Các từ khóa tìm kiếm không có kết quả",
-        "ActionType": "Loại hành động"
+        "ActionType": "Loại hành động",
+        "PagesSubcategoryHelp3": "Sử dụng các biểu tượng cộng và trừ ở bên trái để di chuyển."
     },
     "Annotations": {
         "AddAnnotationsFor": "Thêm các chú thích cho %s...",
@@ -2374,6 +2375,9 @@
         "RedirectUrlErrorAdmin": "Bạn có thể thêm các tên miền như một URL bổ sung %1$s trong cài đặt %2$s.",
         "RedirectUrlErrorUser": "Yêu cầu quản trị của bạn thêm các tên miền như một URL bổ sung"
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "Giờ máy chủ"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "Làm ẩn danh những byte(s) cuối trên địa chỉ IP của khách để tuân thủ quy định\/luật nội bộ về quyền riêng tư.",
         "AnonymizeIpMaskLengtDescription": "Chọn bao nhiêu byte IPs của khách truy cập nên giấu.",
@@ -2664,7 +2668,8 @@
         "ToFollowingSiteSearches": "Các tìm kiếm nội bộ",
         "ToFollowingSiteSearchesInline": "%s Các tìm kiếm nội bộ",
         "XOfAllPageviews": "%s của tất cả các lượt xem của trang này",
-        "XOutOfYVisits": "%1$s (trong số %2$s)"
+        "XOutOfYVisits": "%1$s (trong số %2$s)",
+        "TransitionsSubcategoryHelp2": "Xem chi tiết hơn"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "Địa chỉ IP %s là một địa chỉ địa phương và không có thể được geolocated.",

@@ -3,8 +3,8 @@ Contributors: matomoteam
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5EJ2LHATAKCJ4&source=url
 Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
 Requires at least: 4.8
-Tested up to: 5.6
-Stable tag: 4.1.3
+Tested up to: 5.7
+Stable tag: 4.2.0
 Requires PHP: 7.2.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -131,7 +131,7 @@ Over 1 million websites in over 190 countries are using Matomo already. Join the
 == Frequently Asked Questions ==
 
 = Is there a demo available?
-Yes, check out the online demo for Matomo at [demo.matomo.org](https://demo.matomo.org)
+Yes, check out the online demo for Matomo at [demo.matomo.cloud](https://demo.matomo.cloud)
 
 = Does Matomo care about security?
 Security is a top priority at Matomo. As potential issues are discovered, we validate, patch and release fixes as quickly as we can. We have a security bug bounty program in place that rewards researchers for finding security issues and disclosing them to us.

@@ -70,6 +70,10 @@ class WordPress extends Mysqli {
 		}
 	}
 
+	/**
+	 * @param \wpdb $wpdb
+	 * @param $sql
+	 */
 	private function before_execute_query( $wpdb, $sql ) {
 		if ( ! $wpdb->suppress_errors
 			 && defined( 'WP_DEBUG' )
@@ -87,15 +91,18 @@ class WordPress extends Mysqli {
 			}
 
 			$this->old_suppress_errors_value = $wpdb->suppress_errors( true );
+			return;
 		}
 
-		if ( ( stripos( $sql, '/* WP IGNORE ERROR */' ) !== false  )
-		     || stripos( $sql, 'SELECT @@TX_ISOLATION' ) !== false
-		     || stripos( $sql, 'SELECT @@transaction_isolation' ) !== false ) {
-			// see {@link WordPress::before_execute_query() }
-			$this->old_suppress_errors_value = $wpdb->suppress_errors( true );
+		if ( ! $wpdb->suppress_errors ) {
+			if ( ( stripos( $sql, '/* WP IGNORE ERROR */' ) !== false  )
+			     || stripos( $sql, 'SELECT @@TX_ISOLATION' ) !== false
+			     || stripos( $sql, 'SELECT @@transaction_isolation' ) !== false ) {
+				// see {@link WordPress::before_execute_query() }
+				$this->old_suppress_errors_value = $wpdb->suppress_errors( true );
 
-			return;
+				return;
+			}
 		}
 	}
 

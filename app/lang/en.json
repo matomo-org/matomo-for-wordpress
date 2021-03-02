@@ -713,7 +713,22 @@
         "ActionType": "Action Type",
         "ActionTypes": "Action Types",
         "Behaviour": "Behaviour",
-        "TimeSpentInReferringAction": "Time Spent in Referring Action"
+        "TimeSpentInReferringAction": "Time Spent in Referring Action",
+        "PagesSubcategoryHelp1": "This report contains information about the page URLs that have been visited.",
+        "PagesSubcategoryHelp2": "The table is organized hierarchically, the URLs are displayed as a folder structure.",
+        "PagesSubcategoryHelp3": "Use the plus and minus icons on the left to navigate.",
+        "EntryPagesSubcategoryHelp1": "This report contains information about the entry pages that were used during the specified period. An entry page is the first page that a user views during their visit.",
+        "EntryPagesSubcategoryHelp2": "The entry URLs are displayed as a folder structure.",
+        "ExitPagesSubcategoryHelp1": "This report contains information about the exit pages that occurred during the specified period. An exit page is the last page that a user views during their visit.",
+        "ExitPagesSubcategoryHelp2": "The exit URLs are displayed as a folder structure.",
+        "PageTitlesSubcategoryHelp1": "This report contains information about the titles of the pages that have been visited.",
+        "PageTitlesSubcategoryHelp2": "The page title is the HTML &amp;lt;title&amp;gt; Tag that most browsers show in their window title.",
+        "SiteSearchSubcategoryHelp1": "The Site Search section shows which keywords visitors use when searching your website. It also displays which pages users view after performing a search and which on-site search keywords return no results at all.",
+        "SiteSearchSubcategoryHelp2": "These reports can give you ideas about missing content on your site, insight into what your visitors are looking for but can’t find easily, and more.",
+        "SiteSearchSubcategoryHelp3": "Learn more in the Site Search guide.",
+        "OutlinksSubcategoryHelp1": "This report shows a hierarchical list of outlink URLs that were clicked by your visitors. An outlink is a link that leads the visitor away from your website (to another domain).",
+        "DownloadsSubcategoryHelp1": "In this report, you can see which files your visitors have downloaded.",
+        "DownloadsSubcategoryHelp2": "What Matomo counts as a download is the click on a download link. Whether the download was completed or not isn't known to Matomo."
     },
     "Annotations": {
         "AddAnnotationsFor": "Add annotations for %s...",
@@ -753,7 +768,9 @@
         "Contents": "Contents",
         "InteractionsMetricDocumentation": "The number of times a content block was interacted with (eg, a 'click' on a banner or ad).",
         "ImpressionsMetricDocumentation": "The number of times a content block, such as a banner or an ad, was displayed on a page.",
-        "InteractionRateMetricDocumentation": "The ratio of content impressions to interactions."
+        "InteractionRateMetricDocumentation": "The ratio of content impressions to interactions.",
+        "ContentsSubcategoryHelp1": "Content tracking helps you determine the popularity of specific pieces of content on any page of your website or app. This section reports the number of impressions and interactions the various pieces of content on your site receive.",
+        "ContentsSubcategoryHelp2": "Learn more in the Content Tracking guide."
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Add a new trusted host",
@@ -1002,7 +1019,8 @@
         "RowLimit": "Row limit",
         "CustomLimit": "Custom limit",
         "ExportFormat": "Export format",
-        "ExportTooltip": "Note: The generated export URL will only work in the current browser session. If you want to use it somewhere else you need to use an app specific token. You can configure these tokens in Admin -> Security -> Token Auths.",
+        "ExportTooltip": "Note: To use the generated export URL, you will need to specify an app token auth. You can configure these tokens in Admin -> Security -> Token Auths.",
+        "ExportTooltipWithLink": "Note: To use the generated export URL, you will need to specify an app token auth. You can configure these tokens in %1$s[Admin -> Security -> Auths Tokens]%2$s. Replace %3$s in the Export URL by your Auth token. Warning: Never share the URL with the real token with anyone else.",
         "ExpandSubtables": "Expand subtables",
         "StandardReport": "Standard report",
         "FlattenReport": "Flatten report",
@@ -1011,7 +1029,15 @@
         "SeeAvailableVersions": "See Available Versions",
         "QuickLinks": "Quick Links",
         "Profilable": "Profilable",
-        "SearchOnMatomo": "Search '%1$s' on Matomo.org"
+        "SearchOnMatomo": "Search '%1$s' on Matomo.org",
+        "ReportingCategoryHelpPrefix": "How does the \"%1$s > %2$s\" reporting page help me?",
+        "VisitorsCategoryHelp1": "The Visitors pages tell you things about who your visitors are. Things like where your visitors came from, what devices and browsers they're using and when they generally visit your website. Understand, in the aggregate, who your audience is, and look for outliers to see how your audience could grow.",
+        "VisitorsCategoryHelp2": "In addition to general information about your visitors, you can also use the %1$sVisits Log%2$s to see what occurred in every individual visit.",
+        "VisitorsOverviewHelp": "The Visitors Overview helps you understand the popularity of your site. It does this by providing charts that show how many visits your site is receiving over a selected period and the average level of engagement for key features, such as searches and downloads.",
+        "DevicesSubcategoryHelp": "The Devices section helps you understand the technology that your visitors are using to access your site. You will see reports on the type of device and specific models to enable you to optimise your site for the most popular devices.",
+        "SoftwareSubcategoryHelp": "The Software section shows the operating systems, browsers and plugins that your visitors are using to access the site so that you can optimise your site to ensure it is fully compatible with the most popular configurations..",
+        "EngagementSubcategoryHelp1": "The Engagement section provides reports that help to quantify how many new and returning visitors you get. You can also review reports that break down the average time and number of pages per visit, as well as the number of times a visitor has been to your site and the most common number of days between visits.",
+        "EngagementSubcategoryHelp2": "This can help you to optimise for frequency and high-interaction visits in addition to maximising your reach."
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Uninstall",
@@ -1299,7 +1325,8 @@
         "SetAsDefaultWidgetsConfirmHelp": "This widgets selection and dashboard columns layout will be used when any user creates a new dashboard, or when \"%s\" feature is used.",
         "TopLinkTooltip": "View Web Analytics reports for %s.",
         "WidgetNotFound": "Widget not found",
-        "WidgetPreview": "Widget preview"
+        "WidgetPreview": "Widget preview",
+        "DashboardCategoryHelp": "This is a dashboard page. Dashboards are a collection of Matomo's widgets that you add yourself to suit your specific needs. Mix and match any of Matomo's widgets to get the data %1$s*you*%2$s need at a glance."
     },
     "DevicePlugins": {
         "BrowserWithNoPluginsEnabled": "%1$s with no plugins enabled",
@@ -1417,7 +1444,14 @@
         "LifeTimeValueDescription": "Total Ecommerce revenue attributed to this customer across all visits: the sum of revenue of all Ecommerce orders for Visitor ID %s.",
         "VisitorProfileLTV": "Generated a Life Time Revenue of %1$s.",
         "VisitorProfileItemsAndOrders": "Purchased %1$s items in %2$s ecommerce orders.",
-        "VisitorProfileAbandonedCartSummary": "Abandoned %1$s carts including %2$s items worth a total of %3$s."
+        "VisitorProfileAbandonedCartSummary": "Abandoned %1$s carts including %2$s items worth a total of %3$s.",
+        "EcommerceOverviewSubcategoryHelp1": "The Ecommerce Overview section is the best place to get a high-level view of your online store’s performance. At a glance, you can see how many sales you’re making, how much revenue you are generating, and your website’s conversion rate.",
+        "EcommerceOverviewSubcategoryHelp2": "Click on an individual metric within the sparkline chart to focus on it within the full-sized evolution graph.",
+        "SalesSubcategoryHelp1": "This section contains an extensive collection of reports to help you analyse the different conditions that most commonly lead to sales, such as the traffic and campaign sources, user time and location and devices used to access them.",
+        "SalesSubcategoryHelp2": "You can also learn exactly how revenue is associated with each dimension, such as specific traffic types or tracked campaigns.",
+        "EcommerceLogSubcategoryHelp1": "The Ecommerce log provides granular session-level data so you can look at the full session for each user that either made a purchase or abandoned their cart. This can help you understand what users do before and after purchasing to reveal optimisation opportunities.",
+        "EcommerceLogSubcategoryHelp2": "Data on this page is updated in real-time.",
+        "ProductSubcategoryHelp": "The Products view can help you identify products and categories that are over-performing or under-performing to reveal trends and opportunities related to your product selection and store pages."
     },
     "Events": {
         "PluginDescription": "Track Events and get reports on your visitors activity.",
@@ -1453,7 +1487,9 @@
         "TotalEventsDocumentation": "Total number of events",
         "TotalValue": "Event value",
         "TotalValueDocumentation": "The sum of event values",
-        "ViewEvents": "View Events"
+        "ViewEvents": "View Events",
+        "EventsSubcategoryHelp1": "The Events section offers reports on the custom events associated with your site. Events typically require custom configuration. Once configured you can review reports broken down by category, action and name.",
+        "EventsSubcategoryHelp2": "Learn more about event tracking here."
     },
     "Feedback": {
         "DoYouHaveBugReportOrFeatureRequest": "Do you have a bug to report or a feature request?",
@@ -1544,6 +1580,8 @@
         "LocationProviderDesc_Php_WithExtension": "This location provider is speeded up by the installed %1$smaxminddb%2$s extension.",
         "LocationProviderDesc_ServerModule": "This location provider uses the GeoIP 2 module that has been installed in your HTTP server. This provider is fast and accurate, but %1$scan only be used with normal browser tracking.%2$s",
         "LocationProviderDesc_ServerModule2": "If you have to import log files or do something else that requires setting IP addresses, use the %3$sPHP GeoIP 2 implementation%4$s and install %1$smaxminddb extension%2$s.",
+        "MalFormedUpdateUrl": "The url %1$s seems invalid. Please ensure to input a valid url starting with http:\/\/ or https:\/\/",
+        "InvalidGeoIPUpdateHost": "The host of the GeoIP update url %1$s is not trusted. To allow downloading GeoIP updates from hosts other than %2$s please adjust the setting for %3$s in config. ",
         "NotManagingGeoIPDBs": "Matomo is currently not managing any DBIP or MaxMind databases.",
         "UnsupportedArchiveType": "Encountered unsupported archive type %1$s.",
         "UpdaterHasNotBeenRun": "The updater has never been run.",
@@ -1682,7 +1720,11 @@
         "AtLeastMinutes": "at least %1$s minutes. Use decimals to match seconds, for example, %2$s to match 30 seconds.",
         "TimeInMinutes": "Time in Minutes",
         "ClickToViewThisGoal": "Click to view this goal.",
-        "OverviewReportDocumentation": "This report gives an overview of how well your visitors convert a specific goal."
+        "OverviewReportDocumentation": "This report gives an overview of how well your visitors convert a specific goal.",
+        "GoalsOverviewSubcategoryHelp1": "The Goals Overview reports on the performance of the goals defined for your website. You can access your goal’s conversion percentages, amount of revenue generated and full reports for each.",
+        "GoalsOverviewSubcategoryHelp2": "Click on an individual metric within the sparkline chart to focus on it within the full-sized evolution graph.",
+        "ManageGoalsSubcategoryHelp1": "This section allows you to create and edit Goals for specific actions which visitors take on your site, such as visiting a certain page or submitting a specific form. Goal reports vary but can help you track your website performance against business objectives such as lead generation, online sales and increased brand exposure.",
+        "ManageGoalsSubcategoryHelp2": "Learn more in our Goals guide here."
     },
     "ImageGraph": {
         "ColumnOrdinateMissing": "The column '%1$s' was not found in this report. Try any of %2$s",
@@ -1823,6 +1865,7 @@
         "SystemCheckMbstringHelp": "The mbstring extension is required to handle multibyte characters in the User interface and API responses. Also, please check that mbstring.func_overload is set to \"0\" in php.ini.",
         "SystemCheckMemoryLimit": "Memory limit",
         "SystemCheckMemoryLimitHelp": "On a high traffic website, the archiving process may require more memory than currently allowed. If necessary, change the memory_limit directive in your php.ini file.",
+        "SystemCheckMemoryNoMemoryLimitSet": "There is no memory limit set",
         "SystemCheckNoErrorsOrWarnings": "There are no errors or warnings",
         "SystemCheckViewFullSystemCheck": "View the full system check report",
         "SystemCheckOpenURL": "Open URL",
@@ -3063,7 +3106,12 @@
         "SegmentedVisitorLogTitle": "Visits Log showing visits where %1$s is \"%2$s\"",
         "OnClickPause": "%s is started. Click to pause.",
         "OnClickStart": "%s is stopped. Click to start.",
-        "ClickToSeeAllContents": "Click to see each content interaction\/impression"
+        "ClickToSeeAllContents": "Click to see each content interaction\/impression",
+        "VisitorLogSubcategoryHelp1": "The Visits Log shows you every visit your website receives in detail. You can see what actions each visitor has taken, how they got to your site, a bit about who they are, and more (while still complying with your local privacy regulations).",
+        "VisitorLogSubcategoryHelp2": "While other reports in Matomo show how your visitors behave at an aggregate level, the Visits Log provides granular detail. You can also use segments to narrow it down to specific types of visits to understand your visitors better.",
+        "VisitorLogSubcategoryHelp3": "Learn more in the Visits Log guide.",
+        "RealTimeHelp1": "The Visits in Real-time report shows the real-time flow of visits to your website. It includes a real-time counter of your visits and page views in the last 24 hours and the previous 30 minutes.",
+        "RealTimeHelp2": "This report refreshes every 5 seconds and displays new visits (or existing visitors that view a new page) at the top of the list with a fade-in effect."
     },
     "Login": {
         "BruteForceLog": "Brute Force Log",
@@ -3342,7 +3390,9 @@
         "HelpNote": "Some of those metrics might not always be available. You can find more information in our %1$sonline guide%2$s.",
         "RowActionTitle": "Open page performance report",
         "RowActionDescription": "Show page performance report for this row",
-        "PagePerformanceTitle": "Page performance for page with %1$s \"%2$s\""
+        "PagePerformanceTitle": "Page performance for page with %1$s \"%2$s\"",
+        "PerformanceSubcategoryHelp1": "The Performance section can help you analyse how fast your website or app is performing on the whole and help discover whether you have specific pages that significantly deviate from your averages.",
+        "PerformanceSubcategoryHelp2": "You can also find reports showing exactly how long each page of your website takes to load and what is contributing to their loading time."
     },
     "PrivacyManager": {
         "AnonymizeData": "Anonymize data",
@@ -3617,7 +3667,20 @@
         "VisitorsFromSocialNetworks": "Visitors from Social Networks",
         "VisitorsFromDirectEntry": "Visitors from Direct Entry",
         "VisitorsFromWebsites": "Visitors from Websites",
-        "VisitorsFromCampaigns": "Visitors from Campaigns"
+        "VisitorsFromCampaigns": "Visitors from Campaigns",
+        "ReferrersOverviewSubcategoryHelp1": "The Acquisition Overview shows you the percentage of your traffic from all sources over a selected date range.",
+        "ReferrersOverviewSubcategoryHelp2": "You can also click on a specific channel type to display it within the evolution graph. This can help you discover which channels contribute the most traffic to your site as well as any potential patterns over time. For example, a certain channel may perform better on weekends.",
+        "AllReferrersSubcategory1": "This section shows you the number of visits that arrive from different channel types and referrers. Click on the plus or minus buttons to view the referrers within each type.",
+        "AllReferrersSubcategory2": "You can also analyse the number of actions performed by each of your traffic sources by enabling the table with Visitor engagement metrics view.",
+        "SearchEnginesSubcategoryHelp1": "This section helps you analyse your search engine optimisation and performance. You can analyse your most popular keywords with the combined keyword reports or see which keywords perform well on specific search engines for more targeted analysis and optimisation.",
+        "SearchEnginesSubcategoryHelp2": "%1$sMatomo Cloud%2$s and %3$sSearch Engine Keywords Performance%4$s plugin users will receive the best results from this report.",
+        "WebsitesSubcategoryHelp1": "In this table, you can see which websites referred visitors to your site.",
+        "WebsitesSubcategoryHelp2": "By clicking on a row in the table, you can see which URLs the links to your website were on.",
+        "SocialsSubcategoryHelp": "In this table, you can see which websites referred visitors to your site.",
+        "CampaignsSubcategoryHelp": "The Campaign Tracking section allows you to analyse the visits associated with the various tracking values that have been linked to your digital campaigns. It can reveal things like, how much traffic your campaigns are bringing in, which creatives are performing best, how engaged campaign visitors are, and whether the campaign is resulting in sales or not.",
+        "EcommerceLogSubcategoryHelp1": "The Ecommerce log provides granular session-level data so you can look at the full session for each user that either made a purchase or abandoned their cart. This can help you understand what users do before and after purchasing to reveal optimisation opportunities.",
+        "EcommerceLogSubcategoryHelp2": "Data on this page is updated in real-time.",
+        "ProductSubcategoryHelp": "The Products view can help you identify products and categories that are over-performing or under-performing to reveal trends and opportunities related to your product selection and store pages."
     },
     "Resolution": {
         "ColumnConfiguration": "Configuration",
@@ -4510,7 +4573,9 @@
         "ToFollowingSiteSearchesInline": "%s internal searches",
         "XOfAllPageviews": "%s of all views of this page",
         "XOutOfYVisits": "%1$s (out of %2$s)",
-        "PageURLTransitions": "Page URL Transitions"
+        "PageURLTransitions": "Page URL Transitions",
+        "TransitionsSubcategoryHelp1": "Transitions gives you a report that shows the things your visitors did directly before and after viewing a certain page. This page will explain how to access, understand, and use the powerful Transitions report.",
+        "TransitionsSubcategoryHelp2": "More Details"
     },
     "TwoFactorAuth": {
         "TwoFactorAuthentication": "Two-factor authentication",
@@ -4604,7 +4669,8 @@
         "ToGeolocateOldVisits": "To get location data for your old visits, use the script described %1$shere%2$s.",
         "WidgetLocation": "Visitor Location",
         "GeoIpDbIpAccuracyNote": "Note: the DBIP databases are free and can be downloaded automatically, but geolocation results (specifically city results) are not as accurate as MaxMind's. MaxMind, however, requires that you create an account even for the free database. If you want to use MaxMind's geolocation database, you can start the process %1$shere%2$s",
-        "MaxMindLinkExplanation": "If you are using MaxMind's geolocation databases and you do not already know how to generate your download URL, %1$sclick here to learn how%2$s."
+        "MaxMindLinkExplanation": "If you are using MaxMind's geolocation databases and you do not already know how to generate your download URL, %1$sclick here to learn how%2$s.",
+        "LocationsSubcategoryHelp": "The Locations section is the best way to find out where people are when they visit your site. It reveals the countries, continents, regions, cities that you visitors come from, in tables and map form. Additionally, you can see what language their browser is set to, helping identify international visitors in alternative locations."
     },
     "UserCountryMap": {
         "PluginDescription": "This plugin provides the widgets Visitor Map and Real-time Map. Note: Requires the UserCountry plugin enabled.",
@@ -4629,13 +4695,15 @@
         "WithUnknownRegion": "%s with unknown region",
         "WithUnknownCity": "%s with unknown city",
         "NoVisitsInfo": "There are no visits displayed currently, because no visit for this period has the correct geolocation information (latitude & longitude).",
-        "NoVisitsInfo2": "To resolve this issue, make sure you are using a GeoIP geolocation provider with a GeoIP city database. If this does not resolve your issue, then it is possible (though unlikely) that your visits have IP addresses that just cannot be geolocated."
+        "NoVisitsInfo2": "To resolve this issue, make sure you are using a GeoIP geolocation provider with a GeoIP city database. If this does not resolve your issue, then it is possible (though unlikely) that your visits have IP addresses that just cannot be geolocated.",
+        "RealTimeMapHelp": "The Real-time Map shows the location of visitors on your site within the last 30 minutes. Large orange bubbles represent more recent visits, while smaller grey bubbles represent older visits. This data refreshes every five seconds, and new visitors appear with a flashing effect."
     },
     "UserId": {
         "UserId": "UserId",
         "UserReportTitle": "User IDs",
         "UserReportDocumentation": "This report shows visits and other general metrics for every individual User ID.",
-        "PluginDescription": "Shows user reports"
+        "PluginDescription": "Shows user reports",
+        "VisitorsUserSubcategoryHelp": "The User IDs report shows visits associated with all of your registered and logged in users. You can use this section to understand website usage by specific users and identify who your most and least active users are."
     },
     "UserLanguage": {
         "BrowserLanguage": "Browser language",
@@ -4898,7 +4966,8 @@
         "WidgetLocalTime": "Visits by Local Time",
         "WidgetLocalTimeDocumentation": "This graph shows what time it was in the %1$s visitors' time zones %2$s during their visits.",
         "WidgetServerTime": "Visits by Server Time",
-        "WidgetServerTimeDocumentation": "This graph shows what time it was in the %1$s server's time zone %2$s during the visits."
+        "WidgetServerTimeDocumentation": "This graph shows what time it was in the %1$s server's time zone %2$s during the visits.",
+        "TimesSubcategoryHelp": "The Times section shows you when people are visiting your site. You can see the most popular local times your users visit at, so you can understand where your site fits into their life. Additionally, it shows the most popular server times, which can reveal demands on your technology stack."
     },
     "VisitorInterest": {
         "BetweenXYMinutes": "%1$s-%2$s min",

@@ -664,7 +664,8 @@
         "WidgetSearchNoResultKeywords": "جستجوی کلیدواژه ها بدون نتیجه بود",
         "ActionType": "نوع فعالیت",
         "ActionTypes": "نوع فعالیت",
-        "Behaviour": "رفتار"
+        "Behaviour": "رفتار",
+        "PagesSubcategoryHelp3": "ازآیکون مثبت و منفی بر روی نوار سمت چپ برای حرکت استفاده کنید."
     },
     "Annotations": {
         "AddAnnotationsFor": "توضیحاتی اضافه کنید برای %s...",
@@ -2561,6 +2562,9 @@
         "RedirectUrlErrorAdmin": "شما توانید آدرس های جدیدی را اضافه نمایید URL %1$sin the settings%2$s.",
         "RedirectUrlErrorUser": "از مدیریت بخواهید که این دامنه را به عنوان دامنه اضافی بیافزاید."
     },
+    "PagePerformance": {
+        "ColumnTimeServer": "زمان سرور"
+    },
     "PrivacyManager": {
         "AnonymizeIpInlineHelp": "گمنام آخرین بایت از آدرس های IP بازدید کنندگان مطابق با قوانین حفظ حریم خصوصی خود را محلی \/ دستورالعمل.",
         "AnonymizeIpMaskLengtDescription": "انتخاب کنید چه تعداد از IP های بازدید کنندهگان باید مخفی باشند.",
@@ -2842,7 +2846,8 @@
         "ToFollowingSiteSearches": "جستجوهای داخلی",
         "ToFollowingSiteSearchesInline": "%s جستجوهای داخلی",
         "XOfAllPageviews": "%s از همه ی بازدیدهای این صفحه",
-        "XOutOfYVisits": "%1$s (از %2$s)"
+        "XOutOfYVisits": "%1$s (از %2$s)",
+        "TransitionsSubcategoryHelp2": "جزئیات بیشتر"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "آدرس آیپی (IP) %s یک آدرس محلی است و قابل به مکان یابی نیست.",

@@ -32,6 +32,7 @@
         "ChooseLanguage": "选择语言",
         "ChoosePeriod": "选择时间段",
         "ClickHere": "点击查看更多信息",
+        "CompareTo": "相较于:",
         "DoubleClickToChangePeriod": "双击应用此时段",
         "Close": "关闭",
         "ClickToSearch": "点击进行搜索",
@@ -627,6 +628,7 @@
         "UserAuthentication": "身份验证",
         "UsingTokenAuth": "如果要在脚本，crontab等%2$s中请求数据%1$s，则需要将URL参数%3$s添加到需要身份验证的API调用URL中。",
         "Glossary": "词汇表",
+        "MainMetricsReportDocumentation": "该报告为您概览了所有类别和插件最重要的指标。",
         "LearnAboutCommonlyUsedTerms2": "了解常用术语以便更好的利用Matomo数据分析。",
         "EvolutionMetricName": "%s演变"
     },
@@ -709,7 +711,8 @@
         "WidgetSearchNoResultKeywords": "查无资料的关键词",
         "ActionType": "活动类型",
         "ActionTypes": "活动类型",
-        "Behaviour": "行为"
+        "Behaviour": "行为",
+        "PagesSubcategoryHelp3": "点击左边的 + 、 - 图标可展开\\\/合并分类。"
     },
     "Annotations": {
         "AddAnnotationsFor": "给%s添加备注……",
@@ -908,6 +911,7 @@
         "DataTableHowToSearch": "按回车或者点击搜索图标进行搜索",
         "DataTableShowDimensions": "尺寸合并%s单独显示尺寸",
         "DataTableCombineDimensions": "尺寸单独显示%s显示组合尺寸",
+        "DateInvalid": "所选的日期和时期组合无效。请在日期选择器中选择一个有效的日期。",
         "Default": "默认",
         "DonateCall1": "Matomo 对您来说可以免费使用，但对我们来说并非零成本。",
         "DonateCall2": "Matomo 的茁壮成长离不开您的支持。",
@@ -995,7 +999,7 @@
         "RowLimit": "行限制",
         "CustomLimit": "自定义限制",
         "ExportFormat": "出口格式",
-        "ExportTooltip": "注意：生成的导出URL只会在当前浏览器窗口有效。如果你想把链接用在其他地方，你需要生成一个密钥。你可以到 管理 -> 安全 -> 密钥管理 中配置。",
+        "ExportTooltip": "注意:要使用导出URL，你将需要指定一个应用程序令牌授权。你可以在管理->安全->令牌认证中配置。",
         "ExpandSubtables": "展开子表",
         "StandardReport": "标准报告",
         "FlattenReport": "展平报告",
@@ -1004,7 +1008,12 @@
         "SeeAvailableVersions": "请参阅可用版本",
         "QuickLinks": "快速链接",
         "Profilable": "可剖析",
-        "SearchOnMatomo": "在Matomo.org上搜索“ %1$s”"
+        "SearchOnMatomo": "在Matomo.org上搜索“ %1$s”",
+        "VisitorsCategoryHelp1": "访客页面会告诉你谁是你的访客。你的访客来自哪里，他们使用什么设备和浏览器，以及他们通常在什么时候访问你的网站。总的来说，了解您的受众是谁，并寻找离群值，以了解您的受众可以如何增长.",
+        "VisitorsCategoryHelp2": "除了您的访问者的一般信息外，您还可以使用%1$s访问日志%2$s来查看每次访问的情况.",
+        "VisitorsOverviewHelp": "访客概览帮助您了解您网站的受欢迎程度,它通过提供图表来显示您的网站在选定的时间段内的访问量,和关键功能(如搜索和下载)的平均参与度。",
+        "DevicesSubcategoryHelp": "设备部分可以帮助您了解您的访问者访问您的网站所使用的技术。您将看到其设备类型和型号,使您能够针对最流行的设备优化您的网站.",
+        "SoftwareSubcategoryHelp": "软件部分展示了您的访问者在访问网站时使用的操作系统、浏览器和插件，以便您可以优化您的网站，以确保它与最流行的配置完全兼容。"
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "卸载",
@@ -1327,18 +1336,23 @@
         "Device": "设备",
         "DeviceBrand": "设备品牌",
         "DeviceBrands": "设备品牌",
+        "DeviceBrandReportDocumentation": "该报告展示了您的访问者所使用设备的品牌\/制造商。在大多数情况下，这些信息只适用于非桌面设备。",
         "DeviceDetection": "设备检测",
         "DeviceModel": "设备型号",
         "DeviceModels": "设备型号",
+        "DeviceModelReportDocumentation": "该报告展示了您的访问者正在使用的设备。由于某些型号的名称被多个品牌使用，所以设备型号与品牌一起显示。",
         "DevicesDetection": "访客设备",
         "DeviceType": "设备类型",
         "DeviceTypes": "设备类型",
+        "DeviceTypeReportDocumentation": "该报告展示了您的访问者所使用的设备类型。该报告将始终显示Matomo能够检测到的所有设备类型，即使没有特定类型的访问。",
         "FeaturePhone": "功能手机",
         "OperatingSystemFamilies": "操作系统家族",
         "OperatingSystemFamily": "操作系统家族",
+        "OperatingSystemFamiliesReportDocumentation": "该报告展示了您的访客正在使用的操作系统,并按操作系统系列进行分类.操作系统系列由不同版本或发行版组成。",
         "OperatingSystemCode": "操作系统代码",
         "OperatingSystems": "操作系统",
         "OperatingSystemVersions": "操作系统版本",
+        "OperatingSystemVersionsReportDocumentation": "该报告展示了您的访问者正在使用的操作系统。每个版本和发行版都会单独显示。",
         "PluginDescription": "提供使用者设备的品牌（制造商）、型号（版本）、类型（电视、手机或电脑等）以及更多扩展信息。",
         "SmartDisplay": "智能显示器",
         "Smartphone": "智能手机",
@@ -1359,6 +1373,7 @@
         "XVisitsFromDevices": "来自%2$s设备的%1$s次访问",
         "Wearable": "适合的",
         "WidgetBrowsers": "访客浏览器",
+        "WidgetBrowsersDocumentation": "该报告包含您的访问者所使用的浏览器类型。",
         "WidgetBrowserVersionsDocumentation": "此报表包含访客所用的浏览器信息，每个浏览器版本单独列出。"
     },
     "Diagnostics": {
@@ -3281,6 +3296,28 @@
         "RedirectUrlErrorAdmin": "您可以在 %1$s管理设置%2$s 中以附加网址添加域名。",
         "RedirectUrlErrorUser": "请管理员以附加网址来添加域名。"
     },
+    "PagePerformance": {
+        "ColumnAveragePageLoadTime": "平均页面加载时间",
+        "ColumnAveragePageLoadTimeDocumentation": "从请求一个页面到页面在浏览器中完全呈现所花费的平均时间(以秒为单位)",
+        "ColumnAverageTimeNetworkDocumentation": "连接到服务器的平均时间(以秒为单位)。这包括查找DNS和建立TCP连接所需的时间。在第一次请求域后，该值可能为0，因为浏览器可能缓存连接。",
+        "ColumnAverageTimeServerDocumentation": "服务器生成页面所需的平均时间(以秒为单位)。这是服务器接收请求到开始服务响应之间的时间。",
+        "ColumnAverageTimeTransfer": "平均传输时间",
+        "ColumnAverageTimeTransferDocumentation": "浏览器从服务器下载响应所需的平均时间(秒)。这是从收到第一个字节到响应完成的时间。",
+        "ColumnAverageTimeDomProcessing": "平均DOM处理时间",
+        "ColumnAverageTimeDomProcessingDocumentation": "浏览器在完全接收到响应后和用户开始与之交互之前加载网页的平均时间（秒）。",
+        "ColumnAverageTimeDomCompletion": "平均DOM完成时间",
+        "ColumnAverageTimeDomCompletionDocumentation": "加载网页并且用户已经可以与其交互后，浏览器加载媒体并执行任何Javascript代码侦听DOMContentLoaded事件所需的平均时间（秒）。",
+        "ColumnAverageTimeOnLoadDocumentation": "浏览器执行Javascript代码等待window.load事件。一旦DOM完全呈现，就会触发此事件。",
+        "ColumnTimeServer": "服务器时间",
+        "ColumnTimeDomProcessing": "DOM处理时间",
+        "ColumnTimeDomCompletion": "DOM完成时间",
+        "ColumnTimeOnLoad": "加载时间",
+        "PageLoadTime": "页面加载时间",
+        "EvolutionOverPeriod": "页面性能指标的演变",
+        "OverviewDocumentation": "此报告概述了访问者看到网页的速度。这既包括浏览器下载网页所需的时间，也包括浏览器显示网页所需的时间。",
+        "Performance": "性能",
+        "RowActionDescription": "显示此行的页面性能报告"
+    },
     "PrivacyManager": {
         "AnonymizeData": "匿名化数据",
         "AnonymizeIpDescription": "如果您不希望Matomo跟踪完全限定的IP地址，请选择“是”。",
@@ -3904,7 +3941,9 @@
         "ToFollowingSiteSearchesInline": "%s 次站内搜索",
         "XOfAllPageviews": "%s 的本页浏览量",
         "XOutOfYVisits": "%1$s (共 %2$s)",
-        "PageURLTransitions": "页面URL转换"
+        "PageURLTransitions": "页面URL转换",
+        "TransitionsSubcategoryHelp1": "转换提供一个报告，显示访问者在查看某个页面之前和之后直接执行的操作。本页将解释如何访问、理解和使用功能强大的转换报表。",
+        "TransitionsSubcategoryHelp2": "详情"
     },
     "TwoFactorAuth": {
         "TwoFactorAuthentication": "二次登陆认证",

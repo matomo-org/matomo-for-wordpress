@@ -103,13 +103,13 @@ class Logger extends AbstractLogger implements LoggerInterface
 	 */
 	public function log( $level, $message, array $context = array() ) {
 
-		if ( !defined( 'WP_DEBUG' ) || WP_DEBUG !== true ) {
+		$is_tracker_debug = $this->is_tracker && ((!empty($GLOBALS['PIWIK_TRACKER_DEBUG']) && $GLOBALS['PIWIK_TRACKER_DEBUG'] === true) || StaticContainer::get("ini.Tracker.debug"));
+
+		if ( !$is_tracker_debug && (!defined( 'WP_DEBUG' ) || WP_DEBUG !== true )) {
 			return;
 		}
 
 		$level = $this->make_numeric_level($level);
-
-		$is_tracker_debug = $this->is_tracker && ((!empty($GLOBALS['PIWIK_TRACKER_DEBUG']) && $GLOBALS['PIWIK_TRACKER_DEBUG'] === true) || StaticContainer::get("ini.Tracker.debug"));
 
 		if ($is_tracker_debug) {
 			$this->level = self::DEBUG;

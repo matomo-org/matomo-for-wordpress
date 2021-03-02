@@ -11,5 +11,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="updated notice">
-	<p><?php esc_html_e( 'Settings have been updated successfully. In case you are using a caching plugin like WP-Rocket, W3 Total Cache, WP Super Cache, ... make sure to invalidate the cache.', 'matomo' ); ?></p>
+	<p><?php esc_html_e( 'Settings have been updated successfully. In case you are using a caching plugin like WP-Rocket, W3 Total Cache, WP Super Cache, ... make sure to invalidate (also known as reset or clear or purge) the cache within this caching plugin for the changes to become effective on your website. Please note not every caching plugin has such a feature.', 'matomo' ); ?></p>
 </div>
