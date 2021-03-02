@@ -514,7 +514,7 @@ class Updater
         }
 
         Filesystem::deleteAllCacheOnUpdate();
-        ServerFilesGenerator::createFilesForSecurity();
+        ServerFilesGenerator::createHtAccessFiles();
 
         $result = array(
             'warnings'  => $warnings,
