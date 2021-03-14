@@ -4,7 +4,7 @@
 * [Install composer](https://getcomposer.org)
 * cd into the matomo plugin directory, eg `cd wp-content/plugins/matomo`
 * Run `composer install`
-* Install the test DB `tests/bin/install.sh <db-name> <db-user> <db-password> [db-host]`
+* Install the test DB `bin/install-wp-tests.sh <db-name> <db-user> <db-password> [db-host] [wp-version] [skip-database-creation]`
   * For example `./bin/install-wp-tests.sh wordpress_test root secure 127.0.0.1 latest`
   * To run tests against an older WordPress version replace `latest` with for example `5.0`
 
