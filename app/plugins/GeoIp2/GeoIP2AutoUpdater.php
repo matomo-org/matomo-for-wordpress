@@ -321,7 +321,7 @@ class GeoIP2AutoUpdater extends Task
             }
 
             // ensure the cached location providers do no longer block any files on windows
-            foreach (LocationProvider::$providers as $provider) {
+            foreach (LocationProvider::getAvailableProviders() as $provider) {
                 if ($provider instanceof Php) {
                     $provider->clearCachedInstances();
                 }
