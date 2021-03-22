@@ -850,6 +850,7 @@ class SystemReport {
 		);
 		$consts = array('WP_DEBUG', 'WP_DEBUG_DISPLAY', 'WP_DEBUG_LOG', 'DISABLE_WP_CRON', 'FORCE_SSL_ADMIN', 'WP_CACHE',
 						'CONCATENATE_SCRIPTS', 'COMPRESS_SCRIPTS', 'COMPRESS_CSS', 'ENFORCE_GZIP', 'WP_LOCAL_DEV',
+						'WP_CONTENT_URL', 'WP_CONTENT_DIR', 'UPLOADS', 'BLOGUPLOADDIR',
 						'DIEONDBERROR', 'WPLANG', 'ALTERNATE_WP_CRON', 'WP_CRON_LOCK_TIMEOUT', 'WP_DISABLE_FATAL_ERROR_HANDLER',
 			'MATOMO_SUPPORT_ASYNC_ARCHIVING', 'MATOMO_TRIGGER_BROWSER_ARCHIVING', 'MATOMO_ENABLE_TAG_MANAGER', 'MATOMO_SUPPRESS_DB_ERRORS', 'MATOMO_ENABLE_AUTO_UPGRADE',
 			'MATOMO_DEBUG', 'MATOMO_SAFE_MODE', 'MATOMO_GLOBAL_UPLOAD_DIR', 'MATOMO_LOGIN_REDIRECT');
@@ -869,6 +870,29 @@ class SystemReport {
 			'name'  => 'Possibly uses symlink',
 			'value' => strpos( __DIR__, ABSPATH ) === false && strpos( __DIR__, WP_CONTENT_DIR ) === false,
 		);
+
+		$upload_dir = wp_upload_dir();
+		$rows[] = array(
+			'name'  => 'Upload base url',
+			'value' => $upload_dir['baseurl'],
+		);
+
+		$rows[] = array(
+			'name'  => 'Upload base dir',
+			'value' => $upload_dir['basedir'],
+		);
+
+		$rows[] = array(
+			'name'  => 'Upload url',
+			'value' => $upload_dir['url'],
+		);
+
+		foreach (['upload_path', 'upload_url_path'] as $option_read) {
+			$rows[] = array(
+				'name'  => 'Custom ' . $option_read,
+				'value' => get_option( $option_read ),
+			);
+		}
 
 		if (is_plugin_active('wp-piwik/wp-piwik.php')) {
 			$rows[] = array(
