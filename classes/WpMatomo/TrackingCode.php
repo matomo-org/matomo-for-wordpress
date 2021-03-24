@@ -145,7 +145,7 @@ class TrackingCode {
 	 */
 	public function add_feed_campaign( $permalink ) {
 		global $post;
-		if ( is_feed() ) {
+		if ( is_feed() && !empty($post) ) {
 			$this->logger->log( 'Add campaign to feed permalink.' );
 			$sep        = ( strpos( $permalink, '?' ) === false ? '?' : '&' );
 			$permalink .= $sep . 'pk_campaign=' . rawurlencode( $this->settings->get_global_option( 'track_feed_campaign' ) ) . '&pk_kwd=' . rawurlencode( $post->post_name );
