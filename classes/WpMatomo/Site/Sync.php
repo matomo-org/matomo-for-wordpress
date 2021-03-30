@@ -210,13 +210,13 @@ class Sync {
 
 		$this->logger->log( 'Matomo created site with ID ' . $idsite . ' for blog' );
 
-		Site::map_matomo_site_id( $blog_id, $idsite );
-
 		if ( ! is_numeric( $idsite ) || 0 === $idsite || '0' === $idsite ) {
 			$this->logger->log( sprintf( 'Creating the website failed: %s', wp_json_encode( $blog_id ) ) );
 
 			return false;
 		}
+
+		Site::map_matomo_site_id( $blog_id, $idsite );
 
         $this->config_sync->sync_config_for_current_site();
 
