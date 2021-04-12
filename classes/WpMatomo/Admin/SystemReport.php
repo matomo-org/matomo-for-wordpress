@@ -59,6 +59,7 @@ class SystemReport {
 		'wp-rss-aggregator', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
 		'wp-defender', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
 		'age-verification-for-woocommerce', // see https://github.com/matomo-org/wp-matomo/issues/428
+		'minify-html-markup', // see https://wordpress.org/support/topic/graphs-are-not-displayed-in-the-visits-overview-widget/#post-14298068
 	);
 
 	private $valid_tabs = array( 'troubleshooting' );
