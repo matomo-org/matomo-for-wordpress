@@ -55,7 +55,6 @@ class SystemReport {
 		'all-in-one-event-calendar', // Uses an old version of Twig
 		'data-tables-generator-by-supsystic', // uses an old version of twig causing some styles to go funny in the reporting and admin
 		'tweet-old-post-pro', // uses a newer version of monolog
-		'secupress', // see #369 depending on setting might have issues
 		'wp-rss-aggregator', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
 		'wp-defender', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
 		'age-verification-for-woocommerce', // see https://github.com/matomo-org/wp-matomo/issues/428
