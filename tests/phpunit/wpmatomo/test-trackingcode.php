@@ -131,6 +131,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 
 		$this->assertContains( '<noscript><p><img referrerpolicy="no-referrer-when-downgrade"', $footer );
 		$this->assertContains( '</noscript>', $footer );
+		$this->assertNotContains( '<noscript><noscript>', $footer );// make sure noscript not present twice
 	}
 
 	public function test_tracking_noscriptenabled_manually_adds_noscript_when_needed() {
@@ -148,6 +149,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		$footer = ob_get_clean();
 
 		$this->assertContains( '<noscript><p>test</p></noscript>', $footer );
+		$this->assertNotContains( '<noscript><noscript>', $footer );// make sure noscript not present twice
 	}
 
 	public function test_forward_cross_domain_visitor_id() {
