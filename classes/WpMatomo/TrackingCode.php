@@ -129,7 +129,14 @@ class TrackingCode {
 
 		if ( ! empty( $code ) ) {
 			$this->logger->log( 'Add noscript code. Blog ID: ' . get_current_blog_id(), Logger::LEVEL_DEBUG );
+			$contains_noscript_tag = stripos($code, '<noscript') !== false;
+			if (!$contains_noscript_tag) {
+				echo '<noscript>';
+			}
 			echo $code . "\n";
+			if (!$contains_noscript_tag) {
+				echo '</noscript>';
+			}
 		} else {
 			$this->logger->log( 'No noscript code present. Blog ID: ' . get_current_blog_id(), Logger::LEVEL_DEBUG );
 		}
