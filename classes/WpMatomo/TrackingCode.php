@@ -133,10 +133,11 @@ class TrackingCode {
 			if (!$contains_noscript_tag) {
 				echo '<noscript>';
 			}
-			echo $code . "\n";
+			echo $code;
 			if (!$contains_noscript_tag) {
 				echo '</noscript>';
 			}
+			echo "\n";
 		} else {
 			$this->logger->log( 'No noscript code present. Blog ID: ' . get_current_blog_id(), Logger::LEVEL_DEBUG );
 		}
