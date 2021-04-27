@@ -116,6 +116,42 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		$this->assertContains( '_paq.push([\'setSiteId\', \'23\'])', $header );
 	}
 
+	public function test_tracking_noscriptenabled_default() {
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'         => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
+				'track_noscript' => true,
+			)
+		);
+		$this->tracking_code->register_hooks();
+
+		ob_start();
+		do_action( 'wp_footer' );
+		$footer = ob_get_clean();
+
+		$this->assertContains( '<noscript><p><img referrerpolicy="no-referrer-when-downgrade"', $footer );
+		$this->assertContains( '</noscript>', $footer );
+		$this->assertNotContains( '<noscript><noscript>', $footer );// make sure noscript not present twice
+	}
+
+	public function test_tracking_noscriptenabled_manually_adds_noscript_when_needed() {
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode' => WpMatomo\Admin\TrackingSettings::TRACK_MODE_MANUALLY,
+				'track_noscript' => true,
+				'noscript_code' => '<p>test</p>',
+			)
+		);
+		$this->tracking_code->register_hooks();
+
+		ob_start();
+		do_action( 'wp_footer' );
+		$footer = ob_get_clean();
+
+		$this->assertContains( '<noscript><p>test</p></noscript>', $footer );
+		$this->assertNotContains( '<noscript><noscript>', $footer );// make sure noscript not present twice
+	}
+
 	public function test_forward_cross_domain_visitor_id() {
 		$this->settings->apply_tracking_related_changes(
 			array(
