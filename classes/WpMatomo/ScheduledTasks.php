@@ -13,6 +13,7 @@ use Piwik\Config;
 use Piwik\CronArchive;
 use Piwik\Filesystem;
 use Piwik\Option;
+use Piwik\Plugin\Manager;
 use Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2\Php;
@@ -212,11 +213,20 @@ class ScheduledTasks {
 			$maxmind_license = $this->settings->get_global_option('maxmind_license_key');
 			if (empty($maxmind_license)) {
 				$db_url = GeoIp2::getDbIpLiteUrl();
+				$asn_url = GeoIp2::getDbIpLiteUrl('asn');
 			} else {
 				$db_url = 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&suffix=tar.gz&license_key=' . $maxmind_license;
+				$asn_url = 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&suffix=tar.gz&license_key=' . $maxmind_license;
 			}
 
 			Option::set( GeoIP2AutoUpdater::LOC_URL_OPTION_NAME, $db_url);
+
+			if (Manager::getInstance()->isPluginActivated('Provider')) {
+				Option::set( GeoIP2AutoUpdater::ISP_URL_OPTION_NAME, $asn_url);
+			} else {
+				Option::delete(GeoIP2AutoUpdater::ISP_URL_OPTION_NAME);
+			}
+
 			$updater = new GeoIP2AutoUpdater();
 			$updater->update();
 			if ( LocationProvider::getCurrentProviderId() !== Php::ID && LocationProvider::getProviderById( Php::ID ) ) {
