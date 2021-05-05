@@ -20,6 +20,7 @@ use Piwik\Plugins\CoreAdminHome\API;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
 use Piwik\Plugins\UserCountry\LocationProvider;
+use Piwik\SettingsPiwik;
 use Piwik\Tracker\Failures;
 use Piwik\Version;
 use WpMatomo\Bootstrap;
@@ -586,6 +587,13 @@ class SystemReport {
 				);
 			}
 
+			$matomo_url = SettingsPiwik::getPiwikUrl();
+			$rows[] = array(
+				'name'    => 'Matomo URL',
+				'comment'   => $matomo_url,
+				'value'   => !empty($matomo_url),
+			);
+
 		}
 
 		$rows[] = array(
@@ -715,6 +723,7 @@ class SystemReport {
 				}
 
 			}
+
 		}
 
 
