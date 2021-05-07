@@ -162,10 +162,7 @@ class Installer {
 
 			DbHelper::recordInstallVersion();
 
-			if ( ! SettingsPiwik::getPiwikUrl() ) {
-				// especially needed for tests on cli
-				SettingsPiwik::overwritePiwikUrl( plugins_url( 'app', MATOMO_ANALYTICS_FILE ) );
-			}
+			$this->set_matomo_url();
 
 			$this->logger->log( 'Emptying some caches' );
 
@@ -177,6 +174,32 @@ class Installer {
 		}
 
 		return true;
+	}
+
+	public function set_matomo_url()
+	{
+		// note that the full url might not be possible to be set if the cron is executed on cli and it maybe doesn't have
+		// the host or if a plugin overwrites the constant of WP_PLUGIN_URL which is used in plugins_url() to not include domain
+		// see https://www.google.com/url?q=https://wordpress.org/support/topic/no-metrics-showing/%23topic-14362043-replies&source=gmail&ust=1620409922890000&usg=AFQjCNHyzG5-9v0A8bjg8aLVVbYSWxkTxg
+
+		$matomo_url = SettingsPiwik::getPiwikUrl();
+		$plugins_url = plugins_url( 'app', MATOMO_ANALYTICS_FILE );
+		// need to make sure to update plugins url if it changes eg if installed somewhere else or domain changes
+
+		if ($matomo_url
+		    && $plugins_url === $matomo_url
+		    && parse_url($matomo_url, PHP_URL_SCHEME)
+		    && parse_url($matomo_url, PHP_URL_HOST)
+		) {
+			return;
+		}
+
+		$has_host = parse_url($plugins_url, PHP_URL_HOST);
+		$has_scheme = parse_url($plugins_url, PHP_URL_SCHEME);
+
+		if ($has_host && $has_scheme) {
+			SettingsPiwik::overwritePiwikUrl( $plugins_url );
+		}
 	}
 
 	private function install_tracker() {
