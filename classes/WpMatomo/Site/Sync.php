@@ -149,31 +149,34 @@ class Sync {
 
             $sites_manager_model = new Model();
             $site = $sites_manager_model->getSiteFromId($idsite);
-            if ($site['name'] != $blog_name
-                || $site['main_url'] != $blog_url
-                || $site['ecommerce'] != $track_ecommerce
-                || $site['currency'] != $site_currency
-                || $site['timezone'] != $detected_timezone) {
+            if (!empty($site)) {
+            	// if site doesn't exist for some reason then we have to create it
+	            if ($site['name'] != $blog_name
+	                || $site['main_url'] != $blog_url
+	                || $site['ecommerce'] != $track_ecommerce
+	                || $site['currency'] != $site_currency
+	                || $site['timezone'] != $detected_timezone) {
 
-                /** @var \WP_Site $site */
-                $params              = array(
-                    'name'      => $blog_name,
-                    'main_url'  => $blog_url,
-                    'ecommerce' => $track_ecommerce,
-                    'currency' =>  $site_currency,
-                    'timezone'  => $detected_timezone,
-                );
-                $sites_manager_model->updateSite( $params, $idsite );
+		            /** @var \WP_Site $site */
+		            $params              = array(
+			            'name'      => $blog_name,
+			            'main_url'  => $blog_url,
+			            'ecommerce' => $track_ecommerce,
+			            'currency' =>  $site_currency,
+			            'timezone'  => $detected_timezone,
+		            );
+		            $sites_manager_model->updateSite( $params, $idsite );
 
-                do_action( 'matomo_site_synced', $idsite, $blog_id );
+		            do_action( 'matomo_site_synced', $idsite, $blog_id );
 
-                // no actual setting changed but we make sure the tracking code will be updated after an update
-                $this->settings->apply_tracking_related_changes( array() );
+		            // no actual setting changed but we make sure the tracking code will be updated after an update
+		            $this->settings->apply_tracking_related_changes( array() );
+	            }
+
+	            $this->config_sync->sync_config_for_current_site();
+
+	            return true;
             }
-
-            $this->config_sync->sync_config_for_current_site();
-
-			return true;
 		}
 
 		$this->logger->log( 'Matomo site is not known for blog... will create site' );
@@ -207,13 +210,13 @@ class Sync {
 
 		$this->logger->log( 'Matomo created site with ID ' . $idsite . ' for blog' );
 
-		Site::map_matomo_site_id( $blog_id, $idsite );
-
 		if ( ! is_numeric( $idsite ) || 0 === $idsite || '0' === $idsite ) {
 			$this->logger->log( sprintf( 'Creating the website failed: %s', wp_json_encode( $blog_id ) ) );
 
 			return false;
 		}
+
+		Site::map_matomo_site_id( $blog_id, $idsite );
 
         $this->config_sync->sync_config_for_current_site();
 
