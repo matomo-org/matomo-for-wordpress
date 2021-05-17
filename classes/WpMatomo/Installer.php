@@ -191,15 +191,27 @@ class Installer {
 		    && parse_url($matomo_url, PHP_URL_SCHEME)
 		    && parse_url($matomo_url, PHP_URL_HOST)
 		) {
+			// if currently no scheme or host is set then we'll make sure to overwrite it
+			return;
+		}
+
+		if (!$plugins_url) {
 			return;
 		}
 
 		$has_host = parse_url($plugins_url, PHP_URL_HOST);
+
+		if (!$has_host) {
+			return;
+		}
+
 		$has_scheme = parse_url($plugins_url, PHP_URL_SCHEME);
 
-		if ($has_host && $has_scheme) {
-			SettingsPiwik::overwritePiwikUrl( $plugins_url );
+		if (!$has_scheme) {
+			return;
 		}
+
+		SettingsPiwik::overwritePiwikUrl( $plugins_url );
 	}
 
 	private function install_tracker() {
