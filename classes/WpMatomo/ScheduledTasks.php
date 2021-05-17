@@ -261,13 +261,20 @@ class ScheduledTasks {
 			return;
 		}
 
+		// we don't want any error triggered when a user vistis the website
+		// that's because cron might be triggered during a regular request from a regular user (unless WP CRON is disabled and triggered manually)
+		$should_rethrow_exception = is_admin() || (defined('DISABLE_WP_CRON') && DISABLE_WP_CRON) || (defined('MATOMO_PHPUNIT_TEST') && MATOMO_PHPUNIT_TEST);
+
 		$this->logger->log( 'Scheduled tasks archive data' );
 
 		try {
 			Bootstrap::do_bootstrap();
 		} catch ( \Exception $e ) {
 			$this->logger->log_exception( 'archive_bootstrap', $e );
-			throw $e;
+			if ($should_rethrow_exception || $force) {
+				// we want to trigger an exception if it was forced from the UI
+				throw $e;
+			}
 		}
 
 		$archiver                               = new CronArchive();
@@ -313,7 +320,10 @@ class ScheduledTasks {
 			}
 
 			if ($throw_exception) {
-				throw $e;
+				if ($should_rethrow_exception) {
+					throw $e;
+				}
+				// we otherwise only log the error but don't throw an exception
 			} else {
 				$archive_errors[] = $e->getMessage();
 			}
