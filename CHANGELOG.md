@@ -2,6 +2,11 @@
 
 = 4.3.0 =
 * Update core to 4.3.0
+* Detect Matomo URL better to prevent possible archiving failure "Unknown scheme"
+* Don't stop the WP cron from executing when there is an archiving error
+* Improve support for the Matomo Provider plugin
+* Improve noscript configuration
+* Other minor improvements
 
 = 4.2.0 =
 * Update Matomo core to 4.2.1
