@@ -20,17 +20,19 @@ use Composer\Semver\VersionParser;
 
 
 
+
+
 class InstalledVersions
 {
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '4.2.1',
-    'version' => '4.2.1.0',
+    'pretty_version' => '4.3.0',
+    'version' => '4.3.0.0',
     'aliases' => 
     array (
     ),
-    'reference' => '3688fff9947853789ef748ec3e74d814a8214517',
+    'reference' => '11925f115bf75457ac5e394f15f6c97ffdbc3da9',
     'name' => 'matomo/matomo',
   ),
   'versions' => 
@@ -100,12 +102,12 @@ private static $installed = array (
     ),
     'matomo/device-detector' => 
     array (
-      'pretty_version' => '4.2.2',
-      'version' => '4.2.2.0',
+      'pretty_version' => '4.2.3',
+      'version' => '4.2.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'dc270e7645d286d6f01d516a6634aba8b31ad668',
+      'reference' => 'd879f07496d6e6ee89cef5bcd925383d9b0c2cc0',
     ),
     'matomo/ini' => 
     array (
@@ -118,12 +120,12 @@ private static $installed = array (
     ),
     'matomo/matomo' => 
     array (
-      'pretty_version' => '4.2.1',
-      'version' => '4.2.1.0',
+      'pretty_version' => '4.3.0',
+      'version' => '4.3.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '3688fff9947853789ef748ec3e74d814a8214517',
+      'reference' => '11925f115bf75457ac5e394f15f6c97ffdbc3da9',
     ),
     'matomo/matomo-php-tracker' => 
     array (
@@ -215,12 +217,12 @@ private static $installed = array (
     ),
     'pear/archive_tar' => 
     array (
-      'pretty_version' => '1.4.11',
-      'version' => '1.4.11.0',
+      'pretty_version' => '1.4.13',
+      'version' => '1.4.13.0',
       'aliases' => 
       array (
       ),
-      'reference' => '17d355cb7d3c4ff08e5729f29cd7660145208d9d',
+      'reference' => '2b87b41178cc6d4ad3cba678a46a1cae49786011',
     ),
     'pear/console_getopt' => 
     array (
@@ -278,18 +280,18 @@ private static $installed = array (
     ),
     'phpmailer/phpmailer' => 
     array (
-      'pretty_version' => 'v6.1.8',
-      'version' => '6.1.8.0',
+      'pretty_version' => 'v6.4.1',
+      'version' => '6.4.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '917ab212fa00dc6eacbb26e8bc387ebe40993bc1',
+      'reference' => '9256f12d8fb0cd0500f93b19e18c356906cbed3d',
     ),
     'piwik/device-detector' => 
     array (
       'replaced' => 
       array (
-        0 => '4.2.2',
+        0 => '4.2.3',
       ),
     ),
     'piwik/referrer-spam-blacklist' => 
@@ -443,12 +445,12 @@ private static $installed = array (
     ),
     'tecnickcom/tcpdf' => 
     array (
-      'pretty_version' => '6.3.5',
-      'version' => '6.3.5.0',
+      'pretty_version' => '6.4.1',
+      'version' => '6.4.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '19a535eaa7fb1c1cac499109deeb1a7a201b4549',
+      'reference' => '5ba838befdb37ef06a16d9f716f35eb03cb1b329',
     ),
     'tedivm/jshrink' => 
     array (
@@ -494,7 +496,6 @@ $packages = array();
 foreach (self::getInstalled() as $installed) {
 $packages[] = array_keys($installed['versions']);
 }
-
 
 if (1 === \count($packages)) {
 return $packages[0];
@@ -687,6 +688,7 @@ public static function reload($data)
 self::$installed = $data;
 self::$installedByVendor = array();
 }
+
 
 
 

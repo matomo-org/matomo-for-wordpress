@@ -23,6 +23,7 @@ use Piwik\Config;
 use Piwik\Segment;
 use Piwik\Site;
 use Psr\Log\LoggerInterface;
+use Piwik\Cache;
 
 /**
  * The SegmentEditor API lets you add, update, delete custom Segments, and list saved segments.
@@ -222,6 +223,8 @@ class API extends \Piwik\Plugin\API
 
         $this->getModel()->deleteSegment($idSegment);
 
+        Cache::getEagerCache()->flushAll();
+
         return true;
     }
 
@@ -274,9 +277,14 @@ class API extends \Piwik\Plugin\API
 
         $this->getModel()->updateSegment($idSegment, $bind);
 
-        if ($autoArchive && !Rules::isBrowserTriggerEnabled()) {
-            $this->segmentArchiving->reArchiveSegment($bind);
+        $segmentDefinitionChanged = $segment['definition'] !== $definition;
+
+        if ($segmentDefinitionChanged && $autoArchive && !Rules::isBrowserTriggerEnabled()) {
+            $updatedSegment = $this->getModel()->getSegment($idSegment);
+            $this->segmentArchiving->reArchiveSegment($updatedSegment);
         }
+
+        Cache::getEagerCache()->flushAll();
 
         return true;
     }
@@ -314,11 +322,14 @@ class API extends \Piwik\Plugin\API
 
         $id = $this->getModel()->createSegment($bind);
 
+        Cache::getEagerCache()->flushAll();
+
         if ($autoArchive
             && !Rules::isBrowserTriggerEnabled()
             && $this->processNewSegmentsFrom != SegmentArchiving::CREATION_TIME
         ) {
-            $this->segmentArchiving->reArchiveSegment($bind);
+            $addedSegment = $this->getModel()->getSegment($id);
+            $this->segmentArchiving->reArchiveSegment($addedSegment);
         }
 
         return $id;
@@ -389,18 +400,6 @@ class API extends \Piwik\Plugin\API
         }
 
         $segments = $this->sortSegmentsCreatedByUserFirst($segments);
-
-        $model = new \Piwik\Plugins\SitesManager\Model();
-        $allIdSites = $model->getSitesId();
-        foreach ($segments as &$segmentInfo) {
-            $idSites = !empty($segmentInfo['enable_only_idsite']) ? [(int) $segmentInfo['enable_only_idsite']] : $allIdSites;
-            try {
-                $segmentObj = new Segment(urlencode($segmentInfo['definition']), $idSites);
-                $segmentInfo['hash'] = $segmentObj->getHash();
-            } catch (\Exception $ex) {
-                $segmentInfo['hash'] = 'INVALID SEGMENT';
-            }
-        }
 
         return $segments;
     }

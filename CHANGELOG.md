@@ -1,5 +1,8 @@
 == Changelog ==
 
+= 4.3.0 =
+* Update core to 4.3.0
+
 = 4.2.0 =
 * Update Matomo core to 4.2.1
 * Improve usability of getting started page and some tracking options

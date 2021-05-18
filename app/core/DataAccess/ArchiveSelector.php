@@ -14,11 +14,14 @@ use Piwik\Archive\Chunk;
 use Piwik\ArchiveProcessor;
 use Piwik\ArchiveProcessor\Rules;
 use Piwik\Common;
+use Piwik\Container\StaticContainer;
 use Piwik\Date;
 use Piwik\Db;
 use Piwik\Period;
 use Piwik\Period\Range;
 use Piwik\Segment;
+use Piwik\SettingsServer;
+use Psr\Log\LoggerInterface;
 
 /**
  * Data Access object used to query archives
@@ -76,11 +79,12 @@ class ArchiveSelector
 
         $requestedPluginDoneFlags = empty($requestedPlugin) ? [] : Rules::getDoneFlags([$requestedPlugin], $segment);
         $allPluginsDoneFlag = Rules::getDoneFlagArchiveContainsAllPlugins($segment);
+
         $doneFlagValues = Rules::getSelectableDoneFlagValues($includeInvalidated === null ? true : $includeInvalidated, $params, $includeInvalidated === null);
 
         $results = self::getModel()->getArchiveIdAndVisits($numericTable, $idSite, $period, $dateStartIso, $dateEndIso, null, $doneFlags);
         if (empty($results)) { // no archive found
-            return [false, false, false, false, false];
+            return [false, false, false, false, false, false];
         }
 
         $result = self::findArchiveDataWithLatestTsArchived($results, $requestedPluginDoneFlags, $allPluginsDoneFlag);
@@ -88,6 +92,7 @@ class ArchiveSelector
         $tsArchived = isset($result['ts_archived']) ? $result['ts_archived'] : false;
         $visits = isset($result['nb_visits']) ? $result['nb_visits'] : false;
         $visitsConverted = isset($result['nb_visits_converted']) ? $result['nb_visits_converted'] : false;
+        $value = isset($result['value']) ? $result['value'] : false;
 
         $result['idarchive'] = empty($result['idarchive']) ? [] : [$result['idarchive']];
         if (isset($result['partial'])) {
@@ -98,7 +103,7 @@ class ArchiveSelector
             || (isset($result['value'])
                 && !in_array($result['value'], $doneFlagValues))
         ) { // the archive cannot be considered valid for this request (has wrong done flag value)
-            return [false, $visits, $visitsConverted, true, $tsArchived];
+            return [false, $visits, $visitsConverted, true, $tsArchived, $value];
         }
 
         if (!empty($minDatetimeArchiveProcessedUTC) && !is_object($minDatetimeArchiveProcessedUTC)) {
@@ -110,12 +115,12 @@ class ArchiveSelector
             && !empty($result['idarchive'])
             && Date::factory($tsArchived)->isEarlier($minDatetimeArchiveProcessedUTC)
         ) {
-            return [false, $visits, $visitsConverted, true, $tsArchived];
+            return [false, $visits, $visitsConverted, true, $tsArchived, $value];
         }
 
         $idArchives = !empty($result['idarchive']) ? $result['idarchive'] : false;
 
-        return [$idArchives, $visits, $visitsConverted, true, $tsArchived];
+        return [$idArchives, $visits, $visitsConverted, true, $tsArchived, $value];
     }
 
     /**
@@ -126,6 +131,7 @@ class ArchiveSelector
      * @param Segment $segment
      * @param string[] $plugins List of plugin names for which data is being requested.
      * @param bool $includeInvalidated true to include archives that are DONE_INVALIDATED, false if only DONE_OK.
+     * @param bool $_skipSetGroupConcatMaxLen for tests
      * @return array Archive IDs are grouped by archive name and period range, ie,
      *               array(
      *                   'VisitsSummary.done' => array(
@@ -134,8 +140,17 @@ class ArchiveSelector
      *               )
      * @throws
      */
-    public static function getArchiveIds($siteIds, $periods, $segment, $plugins, $includeInvalidated = true)
+    public static function getArchiveIds($siteIds, $periods, $segment, $plugins, $includeInvalidated = true, $_skipSetGroupConcatMaxLen = false)
     {
+        $logger = StaticContainer::get(LoggerInterface::class);
+        if (!$_skipSetGroupConcatMaxLen) {
+            try {
+                Db::get()->query('SET SESSION group_concat_max_len=' . (128 * 1024));
+            } catch (\Exception $ex) {
+                $logger->info("Could not set group_concat_max_len MySQL session variable.");
+            }
+        }
+
         if (empty($siteIds)) {
             throw new \Exception("Website IDs could not be read from the request, ie. idSite=");
         }
@@ -145,7 +160,7 @@ class ArchiveSelector
         }
 
         $getArchiveIdsSql = "SELECT idsite, date1, date2,
-                                    GROUP_CONCAT(CONCAT(idarchive,'|',`name`) ORDER BY idarchive DESC SEPARATOR ',') AS archives
+                                    GROUP_CONCAT(CONCAT(idarchive,'|',`name`,'|',`value`) ORDER BY idarchive DESC SEPARATOR ',') AS archives
                                FROM %s
                               WHERE idsite IN (" . implode(',', $siteIds) . ")
                                 AND " . self::getNameCondition($plugins, $segment, $includeInvalidated) . "
@@ -205,10 +220,22 @@ class ArchiveSelector
                 $archives = $row['archives'];
                 $pairs = explode(',', $archives);
                 foreach ($pairs as $pair) {
-                    list($idarchive, $doneFlag) = explode('|', $pair);
+                    $parts = explode('|', $pair);
+                    if (count($parts) != 3) { // GROUP_CONCAT got cut off, have to ignore the rest
+                        // note: in this edge case, we end up not selecting the all plugins archive because it will be older than the partials.
+                        // not ideal, but it avoids an exception.
+                        $logger->info("GROUP_CONCAT got cut off in ArchiveSelector." . __FUNCTION__ . ' for idsite = ' . $row['idsite'] . ', period = ' . $dateStr);
+                        continue;
+                    }
+
+                    list($idarchive, $doneFlag, $value) = $parts;
 
                     $result[$doneFlag][$dateStr][] = $idarchive;
-                    if (strpos($doneFlag, '.') === false) { // all plugins archive
+                    if (strpos($doneFlag, '.') === false // all plugins archive
+                        // sanity check: DONE_PARTIAL shouldn't be used w/ done archives, but in case we see one,
+                        // don't treat it like an all plugins archive
+                        && $value != ArchiveWriter::DONE_PARTIAL
+                    ) {
                         break; // found the all plugins archive, don't need to look in older archives since we have everything here
                     }
                 }
