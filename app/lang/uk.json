@@ -2,7 +2,7 @@
     "General": {
         "12HourClock": "12-годинний формат часу",
         "24HourClock": "24-годинний формат часу",
-        "AbandonedCarts": "Нереалізовані покупки",
+        "AbandonedCarts": "Кинуті кошики",
         "AboutPiwikX": "Про Matomo %s",
         "Action": "Дія",
         "Actions": "Дії",
@@ -32,6 +32,7 @@
         "ChooseLanguage": "Вибрати мову",
         "ChoosePeriod": "вибрати період",
         "ClickHere": "Натисніть тут, щоб дізнатися більше",
+        "CompareTo": "Порівняти з:",
         "DoubleClickToChangePeriod": "Двічі клацніть, щоб застосувати цей період.",
         "Close": "Закрити",
         "ClickToSearch": "Натисніть для пошуку",
@@ -111,6 +112,7 @@
         "ConfigFileIsNotWritable": "файл конфігурації Matomo %1$s закритий для запису, Ваші зміни не будуть збережені. %2$s Будь ласка, поміняйте дозволи конфігураційного файлу і дозвольте запис в нього.",
         "Continue": "Продовжити",
         "ContinueToPiwik": "Перейти до Matomo",
+        "CreationDate": "Дата створення",
         "CreatedByUser": "зроблено %s",
         "CurrentMonth": "Поточний місяць",
         "CurrentWeek": "Поточний тиждень",
@@ -131,7 +133,10 @@
         "DaysHours": "%1$s дн. %2$s год.",
         "DaysSinceFirstVisit": "Днів пройшло з моменту першого відвідування",
         "DaysSinceLastEcommerceOrder": "Днів з моменту останнього електронного замовлення.",
+        "SecondsSinceLastEcommerceOrder": "Секунд з моменту останнього електронного замовлення.",
         "DaysSinceLastVisit": "Днів пройшло з моменту останнього відвідування",
+        "SecondsSinceLastVisit": "Секунд з моменту останнього відвідування",
+        "SecondsSinceFirstVisit": "Секунд з моменту першого відвідування",
         "Default": "За замовчуванням",
         "DefaultAppended": "(за замовчуванням)",
         "Delete": "Видалити",
@@ -1112,10 +1117,9 @@
         "EmptyValue": "порожнє значення"
     },
     "CustomJsTracker": {
-        "PluginDescription": "Дозволяє будь-якому плагіну розширювати Matomo JavaScript код відстеження (piwik.js) і додавати нові можливості функціонування та можливості вимірювання веб-сайту.",
-        "DiagnosticPiwikJsWritable": "Доступний для запису JavaScript трекер (\"\/piwik.js\")",
-        "DiagnosticPiwikJsNotWritable": "Відстеження файлів Matomo через JavaScript \"\/piwik.js\" не підлягає запису, це означає, що інші плагіни не можуть розширити трекер JavaScript. Надалі навіть деякі основні функції можуть не працювати, як очікується.",
-        "DiagnosticPiwikJsMakeWritable": "Ми рекомендуємо piwik.js зробити доступним для запису, виконавши команду: %s"
+        "DiagnosticPiwikJsWritable": "Доступний для запису JavaScript трекер (%s)",
+        "DiagnosticPiwikJsNotWritable": "Файл Matomo JavaScript трекеру %s недоступний для запису, що означає, що інші плагіни не можуть використовувати JavaScript треккер. У майбутньому навіть деякі основні функції можуть не працювати, як очікується.",
+        "DiagnosticPiwikJsMakeWritable": "Ми рекомендуємо %1$s зробити доступним для запису, виконавши команду: %2$s"
     },
     "DBStats": {
         "DatabaseUsage": "Використання БД",
@@ -1552,7 +1556,6 @@
         "SystemCheckTracker": "Статус відслідковувача",
         "SystemCheckWarnDomHelp": "Необхідно увімкнути розширення \"dom\" (наприклад встановити пакунок \"php-dom\" та\/або \"php-xml\")",
         "SystemCheckWarning": "Matomo загалом буде працювати за вийнятком деяких можливостей",
-        "SystemCheckWarnJsonHelp": "Необхідно увімкнути розширення \"json\" (наприклад встановити пакунок \"php-json\") для забезпечення підвищеної швидкодії.",
         "SystemCheckWarnLibXmlHelp": "Необхідно вімкнути розширення \"libxml\" (наприклад встановити пакунок \"php-libxml\") так як він вимагається іншими розширеннями ядра PHP.",
         "SystemCheckWarnSimpleXMLHelp": "Необхідно увімкнути розширення \"SimpleXML\" (наприклад встановити пакунок \"php-simplexml\" та\/або \"php-xml\")",
         "SystemCheckWinPdoAndMysqliHelp": "На Windows-сервері можна додати наступні рядки до php.ini: %s",
@@ -3156,7 +3159,6 @@
         "ShowTrackingTag": "Показати код",
         "Sites": "Сайти",
         "SiteSearchUse": "Ви можете використовувати Matomo для відстеження та відображення аналітики по тому, що шукають відвідувачі на вашому сайті використовуючи функціонал для внутрішнього пошуку по сайту.",
-        "SiteWithoutDataDescription": "Немає даних аналітики що відстежувалися на цьому сайті.",
         "SiteWithoutDataMessageDisappears": "Це повідомлення зникне, як тільки перші дані отримаються на цей сайт.",
         "SuperUserAccessCan": "Користувач з правами суперкористувача може також %1$sвказати загальні налаштування%2$s для нових веб-сайтів.",
         "Timezone": "Часовий пояс",
@@ -3180,6 +3182,7 @@
         "CategoryEmail": "Email",
         "CategoryErrors": "Помилок",
         "CategoryHistory": "Історія",
+        "CreatedDate": "Дата створення",
         "EndDate": "Дата закінчення",
         "Filter": "Фільтр",
         "LastUpdated": "Останнє оновлення",

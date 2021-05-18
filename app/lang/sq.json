@@ -210,6 +210,8 @@
         "ExceptionWidgetNotFound": "Widget-i i kërkuar s’ekziston.",
         "ExceptionReportNotEnabled": "Raporti i kërkuar s’është i aktivizuar. Kjo zakonisht do të thotë se ose shtojca që përcakton raportin është e çaktivizuar, ose se s’keni leje të mjaftueshme të përdorni këtë raport.",
         "ExceptionWidgetNotEnabled": "Widget-i i domosdoshëm s’është i instaluar. Kjo do të thotë zakonisht se ose shtojca përcakton që widget-i të jetë i çaktivizuar, ose që ju s’keni leje të mjaftueshme për të përdorur këtë widget.",
+        "ExceptionNotSupportedBrowserTitle": "Shfletuesi juaj nuk mbulohet.",
+        "ExceptionNotSupportedBrowserText": "Shfletuesi juaj nuk mbulohet, për shkak arsyesh sigurie. Ju lutemi, përmirësojeni me një version të ri.",
         "ExpandDataTableFooter": "Ndryshoni vizualizimin ose formësoni raportin",
         "Export": "Eksporto",
         "ExportAsImage": "Eksportoje si Figurë",
@@ -487,6 +489,7 @@
         "WarningFileIntegrityNoMd5file": "Kontrolli i pacenueshmërisë së kartelës s’u plotësua dot për shkak të mungesës së funksionit md5_file().",
         "WarningPasswordStored": "%1$sKujdes:%2$s Ky fjalëkalim do të depozitohet te kartela e formësimit që është e dukshme karshi kujtdo që mund të mbërrijë deri te ajo.",
         "WarningDebugOnDemandEnabled": "Mënyra ndjekës %1$s është e aktivizuar. Për arsye sigurie, kjo do të duhej të aktivizohej vetëm për një kohë të shkurtër. Që ta çaktivizoni, caktojeni %2$s si %3$s te %4$s.",
+        "WarningDevelopmentModeOnButNotGitInstalled": "Jeni duke përdorur Matomo-n nën mënyrën zhvillim, por s’qe instaluar përmes git-i. Nuk rekomandohet të përdoret Matomo-ja nën mënyrën zhvillim në një mjedis funksionimi faktik.",
         "Website": "Sajt",
         "Weekly": "Përjavë",
         "WeeklyReport": "përjavë",
@@ -1037,7 +1040,8 @@
         "DevicesSubcategoryHelp": "Ndarja Pajisje ju ndihmon të njihni teknologjinë që vizitorët tuaj përdorin në sajtin tuaj. Do të shihni raporte mbi llojin e pajisjes dhe modele specifike, që t’ju bëjnë të mundur ta optimizoni sajtin për shumicën e pajisjeve popullore.",
         "SoftwareSubcategoryHelp": "Ndarja Software ju shfaq sistemet operative, shfletues dhe shtojca që vizitorët tuaj përdorin për sajtin, që të mund ta optimizoni sajtin tuaj për të garantuar se është plotësisht i përputhshëm me formësimet më popullore.",
         "EngagementSubcategoryHelp1": "Ndarja Angazhim ju furnizon raporte që ndihmojnë të kini një ide mbi sasinë e vizitave të reja dhe të rikthyerish që përfiton sajti juaj. Mund të shqyrtoni edhe raporte që japin kohën mesatare dhe numrin e faqeve sipas vizitash, si dhe numrin e herëve që një vizitor ka qenë në sajtin tuaj dhe numrin më të zakonshëm të ditëve mes vizitash.",
-        "EngagementSubcategoryHelp2": "Kjo mund t’ju ndihmojë të bëni optimizim për shpeshti dhe vizita me shkallë të lartë ndërveprimi, përveç se për të kapur maksimumin e shtrirjes tuaj."
+        "EngagementSubcategoryHelp2": "Kjo mund t’ju ndihmojë të bëni optimizim për shpeshti dhe vizita me shkallë të lartë ndërveprimi, përveç se për të kapur maksimumin e shtrirjes tuaj.",
+        "PeriodHasOnlyRawData": "Duket sikur raportet për këtë periudhë s’janë përpunuar ende. Doni të shihni ç’po ndodh tani? Shihni %1$sRegjistër vizitash%2$s ose zgjidhni një periudhë tjetër datash, deri sa të prodhohen raportet."
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Çinstalojeni",
@@ -1422,7 +1426,13 @@
         "CronArchivingRunDetails": "Ju lutemi, shihni të keni ujdisur një akt crontab për vënie në punë të urdhrit %1$s të konsolës, dhe se keni formësuar një %2$s për të marrë me email njoftime gabimesh, nëse arkivimi dështon. Mund të provoni edhe të xhironi urdhër konsole për arkivim dorazi të raporteve tuaja: %3$s. %4$sMësoni më tepër.%5$s",
         "CronArchivingRanSuccessfullyXAgo": "Procesi i arkivimit u plotësua me sukses %1$s më parë.",
         "BrowserTriggeredArchivingEnabled": "Për funksionimin më të mirë dhe një Matomo të shpejtë, këshillohet me forcë të ujdisni një akt crontab për arkivim automatik të raporteve tuaja, dhe të çaktivizoni që nga rregullimet e Matomo-s ngacmimin e shfletuesit. %1$sMësoni më tepër.%2$s",
-        "NoDataForReportArchivingNotRun": "Arkivimi i raporteve tuaja nuk ka ngjarë tani së fundi, %1$smësoni më tepër se si të prodhoni raportet tuaja.%2$s"
+        "NoDataForReportArchivingNotRun": "Arkivimi i raporteve tuaja nuk ka ngjarë tani së fundi, %1$smësoni më tepër se si të prodhoni raportet tuaja.%2$s",
+        "RequiredPrivateDirectories": "Drejtori Private të Domosdoshme",
+        "PrivateDirectoryManualCheck": "Ju lutemi, hapini URL-të dorazi në një shfletues, që të shihni nëse mund t’i përdorni. Nëse mundeni, mund të duhet të ndryshoni formësimin e e shërbyesit tuaj, ngaqë këto kartela\/drejtori s’duhet të jenë të përdorshme që prej një shfletuesi nga Interneti ose Intraneti.",
+        "PrivateDirectoryInternetDisabled": "S’kontrolluam dot nëse URL-të vijuese janë të përdorshme, ngaqë veçoritë internet janë të çaktivizuara në këtë instancë Matomo.",
+        "PrivateDirectoryIsAccessible": "Na doli se URL-të më sipër janë të përdorshme që nga shfletuesi, por NUK ’duhet të jenë. Lënia e tyre të përdorshme mund të përbëjë një rrezik potencial sigurie, ngaqë lënda mund të furnizojë informacion mbi shërbyesin tuaj dhe, potencialisht, përdoruesit tuaj. Ju lutemi, kufizojeni hyrjen në to.",
+        "ConfigIniAccessible": "Pamë gjithashtu se drejtoria e formësimeve të Matomo-s është e përdorshme publikisht. Teksa agresorë s’mund të lexojnë formësimin tani, nëse shërbyesi juaj resht të ekzekutuara kartela PHP për ndonjë arsye, kredencialet tuaja MySQL dhe informacion tjetër do të jetë i passhëm për këdo. Ju lutemi, kontrolloni formësimin e shërbyesit tuaj dhe mos lejoni hyrje në këtë drejtori.",
+        "AllPrivateDirectoriesAreInaccessible": "Krejt drejtoritë private s’mund të hapen që nga interneti."
     },
     "Ecommerce": {
         "PluginDescription": "E-tregtia ju lejon të ndiqni se kur përdoruesit shtojnë produkte në shporta, dhe kur ato shndërrohen në shitje e-tregtie. Ajo ndjek gjithashtu parje produktesh dhe kategorish produktesh apo shporta të braktisura.",
@@ -1887,7 +1897,6 @@
         "SystemCheckTrackerHelp": "Kërkesa GET te matomo.php dështoi. Provoni ta kaloni këtë URL si një të lejuar nga Mirëfilltësimi HTTP dhe çaktivizoni mod_security (mund t’ju duhet t’i kërkoni ndihmë strehuesit tuaj web). Për më tepër të dhëna mbi gabimin, shihni kartelën e regjistrimit të gabimeve të shërbyesit tuaj web.",
         "SystemCheckWarnDomHelp": "Do të duhej të aktivizonit zgjerimin \"dom\" (p.sh., instaloni paketën \"php-dom\" dhe\/ose \"php-xml\").",
         "SystemCheckWarning": "Matomo do të punojë normalisht por mund t’i mungojnë disa veçori",
-        "SystemCheckWarnJsonHelp": "Do të duhej të aktivizonit zgjerimin \"json\" (p.sh., instaloni paketën \"php-json\") për punim më të mirë.",
         "SystemCheckWarnLibXmlHelp": "Do të duhej të aktivizonit zgjerimin \"libxml\" (p.sh., paketën \"install the php-libxml\" ) meqë është e domosdoshme nga zgjerime të tjera bazë të PHP-së.",
         "SystemCheckWarnSimpleXMLHelp": "Do të duhej të aktivizonit zgjerimin \"SimpleXML\" (p.sh., instaloni paketën \"php-simplexml\" dhe\/ose \"php-xml\").",
         "SystemCheckWinPdoAndMysqliHelp": "Në një shërbyes Windows, mund të shtoni rreshtat vijues te php.ini juaj: %s",
@@ -3149,7 +3158,14 @@
         "WrongPasswordEntered": "Ju lutemi, jepni fjalëkalimin tuaj të saktë.",
         "ConfirmPasswordToContinue": "Që të vazhdohet, ripohoni fjalëkalimin tuaj",
         "PluginDescription": "Ofron mirëfilltësim përmes emri përdoruesi dhe fjalëkalimi, si dhe funksionin e ricaktimit të fjalëkalimeve. Metoda e mirëfilltësimit mund të ndryshohet duke përdorur një tjetër shtojcë Hyrjesh, të tillë si LoginLdap, të cilën e gjeni te Marketplace-i.",
-        "RememberMe": "Mbamë Mend"
+        "RememberMe": "Mbamë Mend",
+        "SuspiciousLoginAttemptsInLastHourEmailSubject": "Vumë re disa përpjekje të dyshimta hyrjeje në llogarinë tuaj…",
+        "SuspiciousLoginAttemptsInLastHourEmail1": "Vumë re një numër të madh përpjekjesh të dyshimta për hyjr në llogarinë tuaj Matomo orën e fundit, më hollësisht, %1$s përpjekje për hyrje nga %2$s adresa të ndryshme IP. Dyshojmë se dikush mund të jetë duke u përpjekur të hyjë në llogarinë tuaj.",
+        "SuspiciousLoginAttemptsInLastHourEmail2": "Që të ruhet Matomo-ja juaj, rekomandojmë të merrni masat vijuese:",
+        "SuspiciousLoginAttemptsInLastHourEmail3": "Sigurohuni se fjalëkalimi juaj është i sigurt, kuturu, me gjatësi të përshtatshme (për shembull, të paktën 30 shenja).",
+        "SuspiciousLoginAttemptsInLastHourEmail4": "Ujdisni mirëfilltësim dyfaktorësh, në mënyrë që agresorëve t’u duhet më tepër informacion se sa thjesht fjalëkalimi juaj, për të mundur të bëjnë hyrjen në llogari.",
+        "SuspiciousLoginAttemptsInLastHourEmail5": "Më tej, nëse Matomo-ja juaj ka një grup të kufizuar përdoruesish, ose IP-sh përmes të cilave përdoruesit do të hyjnë në të, mund të jetë me leverdi të ujdiset një listë adresash IP të lejuara. %1$sPër më tepër të dhëna, lexoni dokumentimin tonë.%2$s",
+        "LoginNotAllowedBecauseUserLoginBlocked": "Hyrjet janë çaktivizuar përkohësisht, ngaqë kemi parë një numër të dyshimtë përpjekjesh të dështuara për hyrje gjatë orës së fundit."
     },
     "Marketplace": {
         "ActivateLicenseKey": "Aktivizoje",
@@ -3340,7 +3356,8 @@
         "PluginDescription": "Shihni të dhënat tuaja statistikore si një Përmbledhje te sajti juaj aktual. Shihni sa herë kanë klikuar përdoruesit tuaj në secilën lidhje. Shënim: Lyp të aktivizuar shtojcën Tranzicione.",
         "RedirectUrlError": "Po përpiqeni të hapni Përmbledhje Faqeje për URL-në \\\"%1$s\\\". %2$s Asnjë nga përkatësitë prej rregullimeve të Matomo-s nuk përputhet me këtë lidhje.",
         "RedirectUrlErrorAdmin": "Përkatësinë mund ta shtoni si URL shtesë %1$ste rregullimet%2$s.",
-        "RedirectUrlErrorUser": "Kërkojini përgjegjësit tuaj ta shtojë përkatësinë si URL shtesë."
+        "RedirectUrlErrorUser": "Kërkojini përgjegjësit tuaj ta shtojë përkatësinë si URL shtesë.",
+        "ErrorNoSiteUrls": "KUJDES: Ky sajt s’ka URL-ra Sajti të përkufizuara në Matomo. Kjo mund të prishë funksionimin e Overlay-it dhe veçorish të tjera, ose të prodhojë sjellje të çuditshme. Për ta ndrequr këtë, shtoni një URL te rregullimet për këtë sajt, te ndarja Administrim Matomo-je."
     },
     "PagePerformance": {
         "ColumnAveragePageLoadTime": "Kohë mes. ngarkimi faqesh",
@@ -3877,10 +3894,19 @@
         "Sites": "Sajte",
         "SiteSearchUse": "Mund ta përdorni Matomo-n për të ndjekur dhe raportuar se çfarë kërkojnë vizitorët me motorin e kërkimeve të brendshme në sajtin tuaj .",
         "SiteWithoutDataTitle": "Ende s’ka të dhëna të regjistruara, sistemohuni më poshtë",
-        "SiteWithoutDataDescription": "Për këtë sajt s’janë ndjekur ende të dhëna analitike.",
+        "SiteWithoutDataDescription": "Edhe një hap i vetëm për të ndjekur trafikun tuaj me Matomo-n dhe për të përfituar ide me vlerë. Duhet të shtoni ca kod ekstra te sajti juaj ose aplikacioni juaj për celular, nëse s’e keni bërë tashmë. Shihni mundësinë tuaj më poshtë, ose %1$sdërgojini krejt udhëzimet te dikush në ekip%2$s.",
         "SiteWithoutDataSetupTracking": "Ju lutemi, rregulloni më poshtë %1$skodin e ndjekjes%2$s për sajtin apo aplikacionin tuaj për celular, po qe se s’e keni bërë ende.",
         "SiteWithoutDataMessageDisappears": "Ky mesazh do të zhduket sapo të ketë ndoca të dhëna të ndjekura për këtë sajt.",
         "SiteWithoutDataIgnoreMessage": "Mos e shfaq këtë mesazh për orën pasuese",
+        "SiteWithoutDataChoosePreferredWay": "Zgjidhni mënyrën tuaj të parapëlqyer të ujdisjesh",
+        "SiteWithoutDataOtherWays": "Mënyra të tjera",
+        "SiteWithoutDataOtherIntegrations": "Integrime të tjera",
+        "SiteWithoutDataGoogleTagManager": "Përgjegjës Google Etiketash",
+        "SiteWithoutDataMatomoTagManager": "Përgjegjës Matomo Etiketash",
+        "SiteWithoutDataMatomoTagManagerNotActive": "S’e dini se ç’është Përgjegjësi i Etiketave? Hidhini një sy udhërrëfyesit tonë %1$sPërgjegjës Etiketash%2$s. Nëse po trupëzoni në sajtin tuaj shumë burime nga sajte palësh të treta, ndjekja e sajtit tuaj përmes Përgjegjësit të Etiketave mund të jetë zgjedhje më e mirë krahasuar me ndjekjen e zakonshme përmes JavaScript-it.",
+        "SiteWithoutDataGoogleTagManagerDescription": "Matomo-n mund ta përdorni me Përgjegjësin Google të Etiketa. Për të ujdisur Ndjekjen me Matomo te Përgjegjës Google Etiketash, ndiqni udhëzimet prej këtij %1$sudhërrëfyesi%2$s.",
+        "SiteWithoutDataDetectedSite": "Pikasëm se po përdorni një sajt %1$s. Thjesht ndiqni udhëzimet nga ky %2$sudhërrëfyes%3$s.",
+        "SiteWithoutDataDetectedGtm": "Pikasëm gjithashtu se përdorni një Përgjegjës Google Etiketash. Nëse parapëlqeni ta ujdisni Matomo-n duke përdorur PGE, ju lutemi, ndiqni këtë %2$sudhërrëfyes%3$s.",
         "SuperUserAccessCan": "Një përdorues me hyrje Superpërdoruesi mundet gjithashtu %1$s të caktojë rregullime të përgjithshme%2$s për sajte të rinj.",
         "Timezone": "Zonë kohore",
         "TrackingSiteSearch": "Ndjekje Kërkimesh Brenda Sajti",
@@ -3904,7 +3930,8 @@
         "EmailInstructionsSiteDetailsHeading": "Hollësitë e Sajtit Tuaj",
         "EmailInstructionsSiteDetails": "Këto hollësi do t’ju duhen për të përdorur API-n ose SDK-ra për ndjekje vizitash nga Matomo.",
         "EmailInstructionsYourSiteId": "ID-ja e sajtit tuaj: %1$s",
-        "EmailInstructionsYourTrackingUrl": "URL-ja juaj e gjurmimit: %1$s"
+        "EmailInstructionsYourTrackingUrl": "URL-ja juaj e gjurmimit: %1$s",
+        "DetectingYourSite": "Po pikaset sajti juaj"
     },
     "TagManager": {
         "AddThisTagDescription": "Shtoni te sajti juaj butona AddThis mediash shoqërore dhe të tjera gjëra.",
@@ -4161,8 +4188,8 @@
         "FormElementVariableDescription": "Një instancë e elementit që qe parashtruar.",
         "FormClassesVariableDescription": "Vlera e krejt emrave të klasave CSS të një formulari të parashtruar.",
         "FormClassesVariableName": "Klasa Formularësh",
-        "FormDestionationVariableDescription": "Vlera e URL-së së veprimit në formular të një formulari të parashtruar.",
-        "FormDestionationVariableName": "URL Destinacioni Formulari",
+        "FormDestinationVariableDescription": "Vlera e URL-së së veprimit në formular të një formulari të parashtruar.",
+        "FormDestinationVariableName": "URL Destinacioni Formulari",
         "FormIdVariableDescription": "Vlera e atributit ID të një formulari të parashtruar.",
         "FormIdVariableName": "ID Formulari",
         "FormNameVariableDescription": "Vlera e atributit emër të një formulari të parashtruar.",
@@ -4330,7 +4357,7 @@
         "ScrollLeftPixelVariableDescription": "Deri ku ka rrëshqitur përdoruesi, në piksel, për shembull \"592\".",
         "ScrollLeftPixelVariableName": "Piksel Rrëshqitjesh Majtas",
         "ScrollReachTriggerDescription": "Shkaktuar sapo përdoruesi rrëshqet te një pozicion i caktuar.",
-        "ScrollReachTriggerHelp": "Ky shkaktues vihet në punë kur një përdorues ose rrëshqet nëpër të ose ripërmason dritaren e tanishme të shfletuesit. Shkaktuesi nuk vihet në punë kur përdoruesi rrëshqet brenda një elementi të caktuar.",
+        "ScrollReachTriggerHelp": "Ky shkaktues vihet në punë kur një përdorues ose rrëshqet nëpër të ose ripërmason dritaren e tanishme të shfletuesit. Shkaktuesi nuk vihet në punë kur përdoruesi rrëshqet brenda një elementi të caktuar. S’do të vihet në punë sa herë që arrihet në një pozicion të dhënë rrëshqitjeje, por vetëm herën e parë që mbërrihet në pozicionin e formësuar.",
         "ScrollReachTriggerName": "Mbërritje Rrëshqitjeje",
         "ScrollSourceVariableDescription": "Pozicioni i rrëshqitjes e pat fillesën nga rrëshqitje përdoruesi apo nga ripërmasim shfletuesi. Vlera është ose \"scroll\" ose \"resize\".",
         "ScrollSourceVariableName": "Burim Rrëshqitjeje",
@@ -4589,7 +4616,9 @@
         "RecoveryCodesAllUsed": "Janë përdorur krejt kodet e rimarrjeve. Këshillohet me forcë të riprodhoni kode rimarrjesh.",
         "RecoveryCodesRegenerated": "U riprodhuan kode rimarrjesh. Sigurohuni se i shkarkuat ose i shtypët kodet e rinj të prodhuar.",
         "GenerateNewRecoveryCodes": "Prodhoni kode të rinj rimarrjesh",
-        "GenerateNewRecoveryCodesInfo": "Kur prodhoni kode të rinj rimarrjesh, kodet tuaj të dikurshëm s’do të funksionojnë më. Sigurohuni se i shkarkuat ose i shtypët kodet tuaj të rinj."
+        "GenerateNewRecoveryCodesInfo": "Kur prodhoni kode të rinj rimarrjesh, kodet tuaj të dikurshëm s’do të funksionojnë më. Sigurohuni se i shkarkuat ose i shtypët kodet tuaj të rinj.",
+        "RequireTwoFAForAll": "Kërko doemos mirëfilltësim dyfaktorësh për këdo",
+        "RequireTwoFAForAllInformation": "Në u aktivizoftë, çdo përdoruesi do t’i duhet të aktivizojë mirëfilltësimin dyfaktorësh. Përdorimi i detyrueshëm i 2FA-së do të dojë që krejt përdoruesit të mund të përdorin një pajisje ku mund të instalojnë një aplikacion mirëfilltësues. Këtë mund ta aktivizoni vetëm nëse e keni ujdisur tashmë mirëfilltësimin dyfaktorësh."
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "Adresa IP %s është një adresë vendore dhe s’gjeolokalizohet dot.",

@@ -7,7 +7,7 @@ use WpMatomo\Admin\SystemReport;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
 
-class AdminSystemReportTest extends MatomoUnit_TestCase {
+class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 
 	/**
 	 * @var SystemReport

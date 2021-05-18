@@ -331,6 +331,7 @@ class Updater
         $this->markComponentSuccessfullyUpdated($componentName, $updatedVersion);
 
         $this->executeListenerHook('onComponentUpdateFinished', array($componentName, $updatedVersion, $warningMessages));
+        ServerFilesGenerator::createFilesForSecurity();
         return $warningMessages;
     }
 
@@ -513,7 +514,7 @@ class Updater
         }
 
         Filesystem::deleteAllCacheOnUpdate();
-        ServerFilesGenerator::createHtAccessFiles();
+        ServerFilesGenerator::createFilesForSecurity();
 
         $result = array(
             'warnings'  => $warnings,
