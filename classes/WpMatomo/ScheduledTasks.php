@@ -241,6 +241,8 @@ class ScheduledTasks {
 	public function sync() {
 		$this->check_try_update();
 
+		$this->logger->log( 'Scheduled tasks sync all sites and users' );
+
 		try {
 			// we update the matomo url if needed/when possible. eg an update may be needed when site_url changes
 			$installer = new Installer( $this->settings );
@@ -251,8 +253,6 @@ class ScheduledTasks {
 		} catch (\Exception $e) {
 			$this->logger->log_exception( 'matomo_url_sync', $e );
 		}
-
-		$this->logger->log( 'Scheduled tasks sync all sites and users' );
 
 		try {
 			$site = new SiteSync( $this->settings );

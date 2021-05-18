@@ -587,12 +587,15 @@ class SystemReport {
 				);
 			}
 
-			$matomo_url = SettingsPiwik::getPiwikUrl();
-			$rows[] = array(
-				'name'    => 'Matomo URL',
-				'comment'   => $matomo_url,
-				'value'   => !empty($matomo_url),
-			);
+			if ( ! \WpMatomo::is_safe_mode() ) {
+				Bootstrap::do_bootstrap();
+				$matomo_url = SettingsPiwik::getPiwikUrl();
+				$rows[]     = array(
+					'name'    => 'Matomo URL',
+					'comment' => $matomo_url,
+					'value'   => ! empty( $matomo_url ),
+				);
+			}
 
 		}
 
