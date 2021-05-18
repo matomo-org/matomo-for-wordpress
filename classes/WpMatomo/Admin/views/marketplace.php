@@ -6,7 +6,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
  */
-/** @var bool $matomo_show_offer */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -45,7 +44,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 	<?php } ?>
 
 	<?php
-    function matomo_show_tables($matomo_feature_sections, $matomo_show_offer) {
+    function matomo_show_tables($matomo_feature_sections) {
 
 	    foreach ( $matomo_feature_sections as $matomo_feature_section ) {
 		    $matomo_feature_section['features'] = array_filter($matomo_feature_section['features']);
@@ -163,7 +162,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 		),
 	);
 
-    matomo_show_tables($matomo_feature_sections, $matomo_show_offer);
+    matomo_show_tables($matomo_feature_sections);
 
     echo '<br>';
 
@@ -187,13 +186,13 @@ $matomo_extra_url_params = '&' . http_build_query(
 					'image'       => '',
 				),
 
-				$matomo_show_offer ? array(
+				array(
 					'name'        => 'Premium Bundle',
 					'description' => 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of over 25%!',
 					'price'       => '499EUR / 579USD',
 					'url'         => 'https://plugins.matomo.org/WpPremiumBundle?wp=1',
 					'image'       => '',
-				) : []
+				)
 			),
 	    ),
 		array(
@@ -280,7 +279,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 		),
 	);
 
-		matomo_show_tables($matomo_feature_sections, $matomo_show_offer);
+		matomo_show_tables($matomo_feature_sections);
 
 	?>
 
