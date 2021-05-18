@@ -243,9 +243,11 @@ class ScheduledTasks {
 
 		try {
 			// we update the matomo url if needed/when possible. eg an update may be needed when site_url changes
-			Bootstrap::do_bootstrap();
 			$installer = new Installer( $this->settings );
-			$installer->set_matomo_url();
+			if ($installer->looks_like_it_is_installed()) {
+				Bootstrap::do_bootstrap();
+				$installer->set_matomo_url();
+			}
 		} catch (\Exception $e) {
 			$this->logger->log_exception( 'matomo_url_sync', $e );
 		}
