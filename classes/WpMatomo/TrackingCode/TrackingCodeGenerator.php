@@ -152,7 +152,7 @@ class TrackingCodeGenerator {
 					}
 
 					$code .= '
-<script type="text/javascript" ' . $data_cf_async . '>
+<script ' . $data_cf_async . '>
 ' . self::MTM_INIT . '
 _mtm.push({\'mtm.startTime\': (new Date().getTime()), \'event\': \'mtm.Start\'});
 var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
