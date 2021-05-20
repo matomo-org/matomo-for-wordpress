@@ -288,7 +288,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 		}
 
 		$script  = '<!-- Matomo -->';
-		$script .= '<script ' . $data_cf_async . ' type="text/javascript">';
+		$script .= '<script ' . $data_cf_async . ' >';
 		$script .= "var _paq = window._paq = window._paq || [];\n";
 		$script .= implode( "\n", $options );
 		$script .= self::TRACKPAGEVIEW;
