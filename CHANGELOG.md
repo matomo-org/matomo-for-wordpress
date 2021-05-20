@@ -6,6 +6,8 @@
 * Don't stop the WP cron from executing when there is an archiving error
 * Improve support for the Matomo Provider plugin
 * Improve noscript configuration
+* Add possibility to use JS tracking file from plugins directory if the default JS tracking file from uploads directory is blocked by the webserver
+* Remove type="text/javascript" attribute from tracking code as it is not needed
 * Other minor improvements
 
 = 4.2.0 =
