@@ -210,6 +210,7 @@ if ( $was_updated ) {
 			array(
 				'default' => esc_html__( 'Default', 'matomo' ),
 				'restapi' => esc_html__( 'Through WordPress Rest API (slower)', 'matomo' ),
+				'plugin' => esc_html__( 'Plugin (an alternative JS file if the default is blocked by the webserver)', 'matomo' ),
 			),
 			__( 'By default the JS tracking code will be loaded from "' . esc_html( $matomo_paths->get_js_tracker_url_in_matomo_dir() ) . '". You can choose to serve the JS file through the WP Rest API (' . esc_html( $matomo_paths->get_js_tracker_rest_api_endpoint() ) . ') for example to hide matomo.js. Please note that this means every request to the JavaScript file will launch WordPress PHP and therefore will be slower compared to your webserver serving the JS file directly.', 'matomo' ),
 			'',

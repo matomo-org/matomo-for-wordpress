@@ -192,6 +192,8 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 		 $paths = new Paths();
 		if ( $this->settings->get_global_option( 'track_js_endpoint' ) === 'restapi' ) {
 			$js_endpoint = $paths->get_js_tracker_rest_api_endpoint();
+		} elseif ( $this->settings->get_global_option( 'track_js_endpoint' ) === 'plugin' ) {
+			$js_endpoint = plugins_url( 'app/matomo.js', MATOMO_ANALYTICS_FILE );;
 		} else {
 			$js_endpoint = $paths->get_js_tracker_url_in_matomo_dir();
 		}
