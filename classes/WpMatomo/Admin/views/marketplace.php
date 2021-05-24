@@ -6,7 +6,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
  */
-/** @var bool $matomo_show_offer */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -45,13 +44,15 @@ $matomo_extra_url_params = '&' . http_build_query(
 	<?php } ?>
 
 	<?php
-    function matomo_show_tables($matomo_feature_sections, $matomo_show_offer) {
+    function matomo_show_tables($matomo_feature_sections) {
 
 	    foreach ( $matomo_feature_sections as $matomo_feature_section ) {
+		    $matomo_feature_section['features'] = array_filter($matomo_feature_section['features']);
 		    $matomo_num_features_in_block = count( $matomo_feature_section['features'] );
 
 		    echo '<h2>' . esc_html( $matomo_feature_section['title'] ) . '</h2>';
 		    echo '<div class="wp-list-table widefat plugin-install matomo-plugin-list matomo-plugin-row-' . $matomo_num_features_in_block . '"><div id="the-list">';
+
 		    foreach ( $matomo_feature_section['features'] as $matomo_index => $matomo_feature ) {
 			    $matomo_style        = '';
 			    $matomo_is_3_columns = $matomo_num_features_in_block === 3;
@@ -61,22 +62,6 @@ $matomo_extra_url_params = '&' . http_build_query(
 					    $matomo_style .= 'clear: inherit;margin-right: 0;margin-left: 16px;';
 				    }
 			    }
-
-			    if ($matomo_show_offer && $matomo_feature['name'] === 'Premium Bundle') {
-				    ?><div class="plugin-card" style="<?php echo $matomo_style; ?>">
-                        <div style="border: 6px dashed red;text-align: center">
-                            <h2 style="font-size: 24px;">
-                                <a href="https://matomo.org/wp-premium-bundle/" target="_blank" rel="noreferrer noopener"><span style="color: black;">Limited time!</span><br><br><span style="color:red">300€ Off Premium Bundle</span></a></h2>
-                            <p>All premium features in one bundle.<br>
-                                No risk 100% money back guarantee.<br><br>
-                                <a class="button-primary" href="https://matomo.org/wp-premium-bundle/" target="_blank" rel="noreferrer noopener">Get it for only 199€/year</a>
-                                <br>
-                            </p>
-                        </div>
-                    </div><?php
-				    continue;
-			    }
-
 			    ?>
                 <div class="plugin-card" style="<?php echo $matomo_style; ?>">
 				    <?php
@@ -177,7 +162,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 		),
 	);
 
-    matomo_show_tables($matomo_feature_sections, $matomo_show_offer);
+    matomo_show_tables($matomo_feature_sections);
 
     echo '<br>';
 
@@ -203,11 +188,11 @@ $matomo_extra_url_params = '&' . http_build_query(
 
 				array(
 					'name'        => 'Premium Bundle',
-					'description' => 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of over 20%!',
+					'description' => 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of over 25%!',
 					'price'       => '499EUR / 579USD',
 					'url'         => 'https://plugins.matomo.org/WpPremiumBundle?wp=1',
 					'image'       => '',
-				),
+				)
 			),
 	    ),
 		array(
@@ -249,10 +234,10 @@ $matomo_extra_url_params = '&' . http_build_query(
 						'image'       => '',
 					),
 					array(
-						'name'        => 'Paid Advertising Performance',
-						'description' => 'Analyse the success of your Google Ads campaigns directly in your Matomo. See what keywords and search queries are leading to clicks for your paid ads and bringing your business the highest ROI.',
+						'name'        => 'Advertising Conversion Export',
+						'description' => 'Provides an export of attributed goal conversions for usage in ad networks like Google Ads so you no longer need a conversion pixel.',
 						'price'       => '79EUR / 89USD',
-						'url'         => 'https://plugins.matomo.org/PaidAdvertisingPerformance?wp=1',
+						'url'         => 'https://plugins.matomo.org/AdvertisingConversionExport?wp=1',
 						'image'       => '',
 					),
 					array(
@@ -294,7 +279,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 		),
 	);
 
-		matomo_show_tables($matomo_feature_sections, $matomo_show_offer);
+		matomo_show_tables($matomo_feature_sections);
 
 	?>
 

@@ -76,8 +76,9 @@ return array(
 			if (empty($general['trusted_hosts'])) {
 				$general['trusted_hosts'] = array();
 			}
-			if (!in_array(site_url(), $general['trusted_hosts'])) {
-				$general['trusted_hosts'][] = site_url();
+			$site_url = site_url();
+			if (!in_array($site_url, $general['trusted_hosts'])) {
+				$general['trusted_hosts'][] = $site_url;
 			}
 			$previous->General = $general;
 
@@ -120,6 +121,7 @@ return array(
 				$class_name = get_class($check);
 				if ($class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\ForceSSLCheck'
 					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\LoadDataInfileCheck'
+					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\RequiredPrivateDirectories' // it doesn't resolve config path correctly as it is outside matomo dir etc
 					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\CronArchivingCheck'
 					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\FileIntegrityCheck') {
 					$checks[$index] = null;

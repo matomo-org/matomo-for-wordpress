@@ -20,6 +20,7 @@ use Piwik\Plugins\CoreAdminHome\API;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
 use Piwik\Plugins\UserCountry\LocationProvider;
+use Piwik\SettingsPiwik;
 use Piwik\Tracker\Failures;
 use Piwik\Version;
 use WpMatomo\Bootstrap;
@@ -55,11 +56,10 @@ class SystemReport {
 		'all-in-one-event-calendar', // Uses an old version of Twig
 		'data-tables-generator-by-supsystic', // uses an old version of twig causing some styles to go funny in the reporting and admin
 		'tweet-old-post-pro', // uses a newer version of monolog
-		'secupress', // see #369 depending on setting might have issues
-		'cookiebot', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
 		'wp-rss-aggregator', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
 		'wp-defender', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
 		'age-verification-for-woocommerce', // see https://github.com/matomo-org/wp-matomo/issues/428
+		'minify-html-markup', // see https://wordpress.org/support/topic/graphs-are-not-displayed-in-the-visits-overview-widget/#post-14298068
 	);
 
 	private $valid_tabs = array( 'troubleshooting' );
@@ -587,6 +587,16 @@ class SystemReport {
 				);
 			}
 
+			if ( ! \WpMatomo::is_safe_mode() ) {
+				Bootstrap::do_bootstrap();
+				$matomo_url = SettingsPiwik::getPiwikUrl();
+				$rows[]     = array(
+					'name'    => 'Matomo URL',
+					'comment' => $matomo_url,
+					'value'   => ! empty( $matomo_url ),
+				);
+			}
+
 		}
 
 		$rows[] = array(
@@ -716,6 +726,7 @@ class SystemReport {
 				}
 
 			}
+
 		}
 
 
@@ -850,6 +861,7 @@ class SystemReport {
 		);
 		$consts = array('WP_DEBUG', 'WP_DEBUG_DISPLAY', 'WP_DEBUG_LOG', 'DISABLE_WP_CRON', 'FORCE_SSL_ADMIN', 'WP_CACHE',
 						'CONCATENATE_SCRIPTS', 'COMPRESS_SCRIPTS', 'COMPRESS_CSS', 'ENFORCE_GZIP', 'WP_LOCAL_DEV',
+						'WP_CONTENT_URL', 'WP_CONTENT_DIR', 'UPLOADS', 'BLOGUPLOADDIR',
 						'DIEONDBERROR', 'WPLANG', 'ALTERNATE_WP_CRON', 'WP_CRON_LOCK_TIMEOUT', 'WP_DISABLE_FATAL_ERROR_HANDLER',
 			'MATOMO_SUPPORT_ASYNC_ARCHIVING', 'MATOMO_TRIGGER_BROWSER_ARCHIVING', 'MATOMO_ENABLE_TAG_MANAGER', 'MATOMO_SUPPRESS_DB_ERRORS', 'MATOMO_ENABLE_AUTO_UPGRADE',
 			'MATOMO_DEBUG', 'MATOMO_SAFE_MODE', 'MATOMO_GLOBAL_UPLOAD_DIR', 'MATOMO_LOGIN_REDIRECT');
@@ -869,6 +881,29 @@ class SystemReport {
 			'name'  => 'Possibly uses symlink',
 			'value' => strpos( __DIR__, ABSPATH ) === false && strpos( __DIR__, WP_CONTENT_DIR ) === false,
 		);
+
+		$upload_dir = wp_upload_dir();
+		$rows[] = array(
+			'name'  => 'Upload base url',
+			'value' => $upload_dir['baseurl'],
+		);
+
+		$rows[] = array(
+			'name'  => 'Upload base dir',
+			'value' => $upload_dir['basedir'],
+		);
+
+		$rows[] = array(
+			'name'  => 'Upload url',
+			'value' => $upload_dir['url'],
+		);
+
+		foreach (['upload_path', 'upload_url_path'] as $option_read) {
+			$rows[] = array(
+				'name'  => 'Custom ' . $option_read,
+				'value' => get_option( $option_read ),
+			);
+		}
 
 		if (is_plugin_active('wp-piwik/wp-piwik.php')) {
 			$rows[] = array(

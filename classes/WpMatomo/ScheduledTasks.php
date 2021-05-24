@@ -13,6 +13,7 @@ use Piwik\Config;
 use Piwik\CronArchive;
 use Piwik\Filesystem;
 use Piwik\Option;
+use Piwik\Plugin\Manager;
 use Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2\Php;
@@ -212,11 +213,20 @@ class ScheduledTasks {
 			$maxmind_license = $this->settings->get_global_option('maxmind_license_key');
 			if (empty($maxmind_license)) {
 				$db_url = GeoIp2::getDbIpLiteUrl();
+				$asn_url = GeoIp2::getDbIpLiteUrl('asn');
 			} else {
 				$db_url = 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&suffix=tar.gz&license_key=' . $maxmind_license;
+				$asn_url = 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&suffix=tar.gz&license_key=' . $maxmind_license;
 			}
 
 			Option::set( GeoIP2AutoUpdater::LOC_URL_OPTION_NAME, $db_url);
+
+			if (Manager::getInstance()->isPluginActivated('Provider')) {
+				Option::set( GeoIP2AutoUpdater::ISP_URL_OPTION_NAME, $asn_url);
+			} else {
+				Option::delete(GeoIP2AutoUpdater::ISP_URL_OPTION_NAME);
+			}
+
 			$updater = new GeoIP2AutoUpdater();
 			$updater->update();
 			if ( LocationProvider::getCurrentProviderId() !== Php::ID && LocationProvider::getProviderById( Php::ID ) ) {
@@ -232,6 +242,17 @@ class ScheduledTasks {
 		$this->check_try_update();
 
 		$this->logger->log( 'Scheduled tasks sync all sites and users' );
+
+		try {
+			// we update the matomo url if needed/when possible. eg an update may be needed when site_url changes
+			$installer = new Installer( $this->settings );
+			if ($installer->looks_like_it_is_installed()) {
+				Bootstrap::do_bootstrap();
+				$installer->set_matomo_url();
+			}
+		} catch (\Exception $e) {
+			$this->logger->log_exception( 'matomo_url_sync', $e );
+		}
 
 		try {
 			$site = new SiteSync( $this->settings );
@@ -251,13 +272,20 @@ class ScheduledTasks {
 			return;
 		}
 
+		// we don't want any error triggered when a user vistis the website
+		// that's because cron might be triggered during a regular request from a regular user (unless WP CRON is disabled and triggered manually)
+		$should_rethrow_exception = is_admin() || (defined('DISABLE_WP_CRON') && DISABLE_WP_CRON) || (defined('MATOMO_PHPUNIT_TEST') && MATOMO_PHPUNIT_TEST);
+
 		$this->logger->log( 'Scheduled tasks archive data' );
 
 		try {
 			Bootstrap::do_bootstrap();
 		} catch ( \Exception $e ) {
 			$this->logger->log_exception( 'archive_bootstrap', $e );
-			throw $e;
+			if ($should_rethrow_exception || $force) {
+				// we want to trigger an exception if it was forced from the UI
+				throw $e;
+			}
 		}
 
 		$archiver                               = new CronArchive();
@@ -303,7 +331,10 @@ class ScheduledTasks {
 			}
 
 			if ($throw_exception) {
-				throw $e;
+				if ($should_rethrow_exception) {
+					throw $e;
+				}
+				// we otherwise only log the error but don't throw an exception
 			} else {
 				$archive_errors[] = $e->getMessage();
 			}

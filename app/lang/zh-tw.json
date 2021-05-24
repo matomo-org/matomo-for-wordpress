@@ -425,6 +425,7 @@
         "ToDeleteAllFilesRunThisCommand": "要一次刪除這些檔案，你可以執行這個指令：",
         "Total": "總計",
         "Totals": "總計",
+        "TotalRatioTooltip": "這是 %4$s 全部 %2$s %3$s 之中的 %1$s。",
         "TotalRevenue": "總收益",
         "TotalVisitsPageviewsActionsRevenue": "（總計：%1$s 訪問數、%2$s 瀏覽數、%3$s 活動數、%4$s 收益）",
         "TrackingScopeAction": "操作",
@@ -485,6 +486,7 @@
         "WarningFileIntegrityNoMd5file": "缺少 md5_file() 功能所以檔案完整性檢查無法完成。",
         "WarningPasswordStored": "%1$s警告：%2$s此密碼將被儲存在設定檔中，而且每個能存取它的人都看得到。",
         "WarningDebugOnDemandEnabled": "追蹤模式 %1$s 已啟用。為安全考量這個應該只能短暫啟用。要停用它將 %4$s 中的 %2$s 設定為 %3$s。",
+        "WarningDevelopmentModeOnButNotGitInstalled": "你正在使用 Matomo 的開發模式，但它並非從 git 安裝的。我們不推薦於正式環境使用 Matomo 開發模式。",
         "Website": "網站",
         "Weekly": "每週",
         "WeeklyReport": "每周",
@@ -625,6 +627,7 @@
         "UserAuthentication": "使用者驗證",
         "UsingTokenAuth": "如果你想%1$s經由程式碼或工作排程來請求資料。%2$s你需要增加網址參數 %3$s 至 API 呼叫網址來進行驗證。",
         "Glossary": "詞彙表",
+        "MainMetricsReportDocumentation": "此報表讓你檢視所有分類和外掛中最重要的指標。",
         "LearnAboutCommonlyUsedTerms2": "瞭解更多最常使用的術語，讓 Matomo 分析發揮至極。",
         "EvolutionMetricName": "%s發展趨勢"
     },
@@ -1003,7 +1006,8 @@
         "SeeAvailableVersions": "查看可用版本",
         "QuickLinks": "快速連結",
         "Profilable": "可紀錄的",
-        "SearchOnMatomo": "在 Matomo.org 上搜尋「%1$s」"
+        "SearchOnMatomo": "在 Matomo.org 上搜尋「%1$s」",
+        "ReportingCategoryHelpPrefix": "「%1$s > %2$s 」報告頁如何協助我？"
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "移除",
@@ -1039,6 +1043,7 @@
         "MissingRequirementsNotice": "請將 %1$s %2$s 更新到新版本，必須要 %1$s %3$s。",
         "MissingRequirementsPleaseInstallNotice": "請安裝 %3$s 所需的 %1$s %2$s。",
         "NoZipFileSelected": "請選擇 ZIP 檔案。",
+        "FileExceedsUploadLimit": "選擇的檔案超過了你的伺服器的上傳限制。",
         "NumUpdatesAvailable": "%s 個更新可用",
         "NoPluginSettings": "沒有可以可以變更設定的外掛",
         "Origin": "來源",
@@ -1188,7 +1193,9 @@
         "ReceiveEmailBecauseIsSuperUser": "你會收到這封信件是因為你在 %s 的 Matomo 上是超級使用者。",
         "ConvertToUtf8mb4": "將資料庫轉換為 UTF8mb4 編碼",
         "TriggerDatabaseConversion": "於背景觸發資料庫轉碼作業",
-        "Utf8mb4ConversionHelp": "你的資料庫目前不是使用 utf8mb4 編碼。這使它無法儲存 4 位元字元，例如表情符號、罕用亞洲文字、各式舊字體或是數學符號。這些字元會被取代成 %1$s。<br \/><br \/>你的資料庫支援且能轉換為 utf8mb4 編碼。<br \/><br \/>如果你能執行終端機指令，我們推薦你執行此指令：%2$s<br \/><br \/>或者你可以在此啟動轉換作業，工作會在背景自動排程執行。<br \/><br \/>注意：根據資料庫容量，轉換資料庫的過程可能會耗費數小時，由於這段期間追蹤功能將會暫時無法使用，因此我們不建議在大型網站上這麼做。<br \/><br \/>你可以在 %3$sFAQ%4$s 裡面找到更多相關資訊。"
+        "Utf8mb4ConversionHelp": "你的資料庫目前不是使用 utf8mb4 編碼。這使它無法儲存 4 位元字元，例如表情符號、罕用亞洲文字、各式舊字體或是數學符號。這些字元會被取代成 %1$s。<br \/><br \/>你的資料庫支援且能轉換為 utf8mb4 編碼。<br \/><br \/>如果你能執行終端機指令，我們推薦你執行此指令：%2$s<br \/><br \/>或者你可以在此啟動轉換作業，工作會在背景自動排程執行。<br \/><br \/>注意：根據資料庫容量，轉換資料庫的過程可能會耗費數小時，由於這段期間追蹤功能將會暫時無法使用，因此我們不建議在大型網站上這麼做。<br \/><br \/>你可以在 %3$sFAQ%4$s 裡面找到更多相關資訊。",
+        "SkipCacheClearDesc": "於更新前略過快取清除。僅在你確定此執行個體尚未產生任何快取時有效，因為清除多個 Matomo 帳號的快取會造成瓶頸。",
+        "SkipCacheClear": "略過快取清除。"
     },
     "CustomDimensions": {
         "CustomDimensions": "自訂維度",
@@ -1289,7 +1296,8 @@
         "SetAsDefaultWidgetsConfirmHelp": "這個小工具和展示板版面將於使用者建立的新展示板，或是使用 %s 功能時套用。",
         "TopLinkTooltip": "查看 %s 的網頁分析報表。",
         "WidgetNotFound": "找不到小工具",
-        "WidgetPreview": "小工具預覽"
+        "WidgetPreview": "小工具預覽",
+        "DashboardCategoryHelp": "這裡是展示板網頁。展示板整合了你新增的 Matomo 小工具以符合你的需求。挑選、排列任何 %1$s*你*%2$s 想要的 Matomo 小工具，來快速展示你要的資料。"
     },
     "DevicePlugins": {
         "BrowserWithNoPluginsEnabled": "%1$s 沒有啟用任何外掛",
@@ -1325,18 +1333,23 @@
         "Device": "裝置",
         "DeviceBrand": "裝置品牌",
         "DeviceBrands": "裝置品牌",
+        "DeviceBrandReportDocumentation": "這份報表顯示你的訪客所使用的裝置品牌\/製造商。通常，只有桌上型電腦以外的裝置才會顯示此資訊。",
         "DeviceDetection": "裝置偵測",
         "DeviceModel": "裝置型號",
         "DeviceModels": "裝置型號",
+        "DeviceModelReportDocumentation": "這份報表顯示你的訪客所使用的裝置。每個裝置的型號與品牌會一起顯示，因為有些品牌使用了同名的型號。",
         "DevicesDetection": "訪客裝置",
         "DeviceType": "裝置類型",
         "DeviceTypes": "裝置類型",
+        "DeviceTypeReportDocumentation": "這份報表顯示你的訪客所使用的裝置。此報表會永遠顯示 Matomo 能偵測到的所有裝置類型，即使某些裝置沒有任何訪客使用過。",
         "FeaturePhone": "功能型手機",
         "OperatingSystemFamilies": "作業系統家族",
         "OperatingSystemFamily": "作業系統家族",
+        "OperatingSystemFamiliesReportDocumentation": "這份報表顯示你的訪客所使用的作業系統，以作業系統家族分類。同一作業系統家族包含了不同的版本號碼或是發行版。",
         "OperatingSystemCode": "作業系統代號",
         "OperatingSystems": "作業系統",
         "OperatingSystemVersions": "作業系統版本",
+        "OperatingSystemVersionsReportDocumentation": "這份報表顯示你的訪客所使用的作業系統資訊。每個版本和發行版都會分開顯示。",
         "PluginDescription": "提供使用者裝置的更多資訊，如品牌（製造商）、型號（版本）、類型（電視、手機或電腦等等）及更多。",
         "SmartDisplay": "智慧型電視",
         "Smartphone": "智慧型手機",
@@ -1358,6 +1371,7 @@
         "XVisitsFromDevices": "來自%2$s裝置的%1$s個訪問數",
         "Wearable": "穿戴式裝置",
         "WidgetBrowsers": "訪客瀏覽器",
+        "WidgetBrowsersDocumentation": "這份報表包含訪客所使用的瀏覽器種類。",
         "WidgetBrowserVersionsDocumentation": "這份報表包含訪客所使用的瀏覽器資訊。每個瀏覽器的版本都會分開排列。"
     },
     "Diagnostics": {
@@ -1749,6 +1763,7 @@
         "SystemCheckEvalHelp": "必須為 HTML QuickForm 及 Smarty 模版系統。",
         "SystemCheckExtensions": "其他必要的擴充功能",
         "SystemCheckFileIntegrity": "檔案完整性",
+        "SystemCheckFilterHelp": "你必須開啟「filter」功能並設定及重新建置 PHP (不要使用 --disable-filter)。",
         "SystemCheckFunctions": "必要功能",
         "SystemCheckFunctionHelp": "你必須啟用這個內建功能。",
         "SystemCheckGDFreeType": "GD > 2.x + Freetype（圖形）",
@@ -1764,6 +1779,7 @@
         "SystemCheckMbstringHelp": "處理多字節的使用者介面或 API 回應資料必須使用 mbstring 擴充功能。並請檢查 php.ini 中的 mbstring.func_overload 已將值設定為「0」。",
         "SystemCheckMemoryLimit": "記憶體限制",
         "SystemCheckMemoryLimitHelp": "在一個高流量的網站，資料彙整處理過程可能超過目前所允許使用的記憶體量。<br \/>如果必要，試著變更在你 php.ini 檔案裡的 memory_limit。",
+        "SystemCheckMemoryNoMemoryLimitSet": "尚未設定記憶體限制。",
         "SystemCheckNoErrorsOrWarnings": "沒有錯誤或警告",
         "SystemCheckViewFullSystemCheck": "查看完整的系統檢查報表",
         "SystemCheckOpenURL": "開啟網址",
@@ -1787,8 +1803,9 @@
         "SystemCheckTrackerHelp": "向 matomo.php 發送 GET 請求失敗。試著將這個網址加入 HTTP 認證白名單和停用 mod_security（你可能需要向你的網站管理員請求）。更多關於此錯誤的資訊請查看你的伺服器錯誤紀錄檔。",
         "SystemCheckWarnDomHelp": "你必須啟用「dom」擴充功能（例如安裝「php-dom」和\/或「php-xml」功能）。",
         "SystemCheckWarning": "Matomo 能正常運作，但部份功能可能會失效",
-        "SystemCheckWarnJsonHelp": "你必須啟用「json」擴充功能（例如安裝「json」功能）以獲得最佳體驗。",
+        "SystemCheckWarnJsonHelp": "你必須啟用「json」擴充功能（例如安裝「php-json」套件）。",
         "SystemCheckWarnLibXmlHelp": "你必須啟用「libxml」擴充功能（例如安裝「php-libxml」功能），因為它是其他 PHP 核心擴充功能的必備功能。",
+        "SystemCheckWarnOpensslHelp": "你必須啟用「openssl」擴充功能來允許安全更新。",
         "SystemCheckWarnSimpleXMLHelp": "你必須啟用「SimpleXML」擴充功能（例如安裝「php-simplexml」和\/或「php-xml」功能）。",
         "SystemCheckWinPdoAndMysqliHelp": "在 Windows 伺服器上你可以在你的 php.ini 中新增以下幾行內容：%s",
         "SystemCheckWriteDirs": "具寫入存取權限的資料夾",
@@ -3245,6 +3262,7 @@
         "AnonymizeData": "資料匿名化",
         "AnonymizeIpDescription": "如果你希望 Matomo 不要追蹤完整的訪客 IP 位址請勾選。",
         "AnonymizeIpInlineHelp": "隱藏訪客 IP 地址最後的字節以符合你本地隱私權法規\/政策。",
+        "AnonymizeIpExtendedHelp": "當使用者訪問你的網站時，Matomo 將不會用完整的 IP 位址（例如 %1$s），會先將其匿名化（成為 %2$s）。在部分國家中，IP 位址匿名化是隱私法中的其中一項要求，例如德國。",
         "AnonymizeIpMaskLengtDescription": "選擇要隱藏多少字節的 IP 位址。",
         "AnonymizeIpMaskLength": "%1$s 字節，例如 %2$s",
         "AnonymizeIpMaskFully": "完全隱藏 IP 位址",
@@ -3427,7 +3445,8 @@
         "Resolutions": "解析度",
         "WidgetGlobalVisitors": "訪客裝置配置",
         "WidgetGlobalVisitorsDocumentation": "此報表顯示訪客中最常見的裝置配置。裝置配置包含作業系統、瀏覽器以及螢幕解析度。",
-        "WidgetResolutions": "螢幕解析度"
+        "WidgetResolutions": "螢幕解析度",
+        "WidgetResolutionsDocumentation": "這份報表顯示訪客瀏覽你的網站時使用的螢幕解析度。"
     },
     "SEO": {
         "PluginDescription": "此外掛提取和顯示 SEO 數據：目前網站的 Alexa 排名、Google Pagerank、收錄的頁面數量和反向連結。",
@@ -3546,6 +3565,7 @@
         "ChangingYourTimezoneWillOnlyAffectDataForward": "變更時區僅會影響往後的數據，不會溯及既往。",
         "Currency": "貨幣",
         "CurrencySymbolWillBeUsedForGoals": "貨幣符號將顯示於目標收益旁。",
+        "CustomizeJavaScriptTracker": "客製化 JavaScript 追蹤程式碼",
         "DefaultCurrencyForNewWebsites": "新網站預設貨幣",
         "DefaultTimezoneForNewWebsites": "新網站預設時區",
         "DeleteConfirm": "你確定要刪除網站 %s 嗎？",
@@ -3566,12 +3586,17 @@
         "Format_Utc": "UTC%s",
         "GlobalExcludedUserAgentHelp1": "輸入要被 Matomo 排除追蹤的 User Agent 列表。",
         "GlobalExcludedUserAgentHelp2": "你可以將此功能用來排除一些網路爬蟲。",
+        "GlobalExcludedUserAgentHelp3": "支援正規表示式例如 %s",
         "GlobalListExcludedIps": "全域排除的 IP 列表",
         "GlobalListExcludedQueryParameters": "全域排除的參數列表",
         "GlobalListExcludedUserAgents": "全域 User Agent 排除列表",
         "GlobalListExcludedUserAgents_Desc": "如果訪客的 User Agent 字串中包含任一你指定的字串，該訪客會被 Matomo 排除。",
         "GlobalSettings": "全域設定",
         "GlobalWebsitesSettings": "全域網站設定",
+        "InstallationGuides": "安裝說明",
+        "InstallationGuidesIntro": "我們提供如何在熱門的 CMS 與網站工具上嵌入追蹤程式碼的教學步驟。",
+        "ExtraInformationNeeded": "你可能需要以下資料來在你的系統上架設 Matomo。",
+        "Integrations": "整合",
         "HelpExcludedIpAddresses": "輸入 IP 列表，一行一個，使 Matomo 不追蹤特定 IP 位址。你可以使用 CIDR 表示法如 %1$s，或是萬用字元如 %2$s 或 %3$s",
         "JsTrackingTagHelp": "這是插入所有網頁的 JavaScript 追蹤程式碼",
         "KeepURLFragments": "追蹤網頁網址片段",
@@ -3607,7 +3632,6 @@
         "ShowTrackingTag": "查看追蹤程式碼",
         "Sites": "網站",
         "SiteSearchUse": "你可以使用 Matomo 來追蹤並報告訪客在你網站內的搜尋引擎中搜尋了什麼。",
-        "SiteWithoutDataDescription": "這個網站還沒有追蹤分析資料。",
         "SiteWithoutDataSetupTracking": "請在你的網站或行動應用程式中設定%1$s追蹤程式碼%2$s（如果你還沒完成的話）。",
         "SiteWithoutDataMessageDisappears": "此訊息將會在這個網站開始收集到追蹤資料時隱藏。",
         "SiteWithoutDataIgnoreMessage": "一小時內不顯示此訊息",
@@ -3620,12 +3644,15 @@
         "UTCTimeIs": "UTC 時間是 %s。",
         "OnlyMatchedUrlsAllowed": "只追蹤發生在以上網站網址上的訪問和活動。",
         "OnlyMatchedUrlsAllowedHelp": "當啟用時，Matomo 只會在網站網址為你所設定之一時才追蹤動作。這可以預防其他人在其他網站中濫用你的分析程式碼。",
+        "OnlyMatchedUrlsAllowedHelpExamples": "域名和路徑必須完全相符，不同的子域名必須分別列出。假設網站網址為「http:\/\/example.com\/path」和「http:\/\/good.example.com」，來自「http:\/\/example.com\/otherpath」和「http:\/\/bad.example.com」的追蹤請求將會被忽略。",
         "WebsitesManagement": "網站管理",
         "XManagement": "%s管理",
         "ChooseMeasurableTypeHeadline": "你想要追蹤什麼？",
         "YouCurrentlyHaveAccessToNWebsites": "你目前有權限存取 %s 個網站。",
         "YourCurrentIpAddressIs": "你目前的 IP 位址是 %s",
-        "DeleteSiteExplanation": "刪除網站將刪除該網站所有紀錄到的資料。這個動作將永遠無法復原。"
+        "DeleteSiteExplanation": "刪除網站將刪除該網站所有紀錄到的資料。這個動作將永遠無法復原。",
+        "EmailInstructionsButton": "以 Email 傳送此教學",
+        "EmailInstructionsSubject": "Matomo 分析追蹤程式碼"
     },
     "TagManager": {
         "AllElementsClickTriggerDescription": "當任何元素點擊時觸發。",
@@ -3689,10 +3716,11 @@
         "Containers": "容器",
         "Context": "上下文",
         "ContextWeb": "網頁",
+        "CreatedDate": "建立日期",
         "EndDate": "結束日期",
         "Filter": "過濾",
         "GettingStartedRemarketing": "再行銷",
-        "GettingStartedAffiliates": "關聯",
+        "GettingStartedAffiliates": "聯盟",
         "GettingStartedAds": "廣告",
         "LastUpdated": "最後更新",
         "LearnMore": "了解更多",
@@ -3703,6 +3731,8 @@
         "PageViewTriggerName": "瀏覽量",
         "ReferrerUrlVariableName": "參造連結網址",
         "ReferrerVariableName": "參造連結網址",
+        "ScrollHorizontalPercentageVariableName": "水平捲動百分比",
+        "ScrollVerticalPercentageVariableName": "垂直捲動百分比",
         "StartDate": "開始日期",
         "Tag": "標籤",
         "Type": "類型",
@@ -3830,7 +3860,9 @@
     "UserLanguage": {
         "BrowserLanguage": "瀏覽器語言",
         "LanguageCode": "語言代碼",
-        "PluginDescription": "報告訪客所使用的瀏覽器語言"
+        "PluginDescription": "報告訪客所使用的瀏覽器語言",
+        "getLanguageDocumentation": "這份報表顯示你的訪客使用的瀏覽器語言分類 (例如「英文」)。",
+        "getLanguageCodeDocumentation": "這份報表顯示你的訪客使用的瀏覽器語言代號設定 (例如「德文 - 奧地利 (de-at)」)。"
     },
     "UsersManager": {
         "UsesTwoFactorAuthentication": "使用兩步驟驗證",
@@ -4037,6 +4069,8 @@
     "Widgetize": {
         "OpenInNewWindow": "在新視窗開啟",
         "PluginDescription": "在你的網站或應用程式中以簡單的 HTML 嵌入程式碼顯示任何 Matomo 報表。",
-        "TopLinkTooltip": "將 Matomo 報表以小工具匯出，並於你的應用程式中以 iframe 嵌入展示板。"
+        "ViewAccessRequired": "此使用者擁有一部份的寫入權限。僅限使用只有檢視權限的使用者的權杖。參考 %1$s 瞭解更多資訊。",
+        "TopLinkTooltip": "將 Matomo 報表以小工具匯出，並於你的應用程式中以 iframe 嵌入展示板。",
+        "TooHighAccessLevel": "此使用者擁有超級使用者權限。超級使用者的權杖不允許用來嵌入小工具。%1$s參考 FAQ 瞭解更多資訊。%2$s"
     }
 }

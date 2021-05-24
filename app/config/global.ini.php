@@ -157,6 +157,12 @@ archiving_profile = 0
 ; if set to an absolute path, core:archive profiling information will be logged to specified file
 archive_profiling_log =
 
+; if set to 1, use of a php profiler will be enabled. the profiler will not be activated unless its installation
+; can be detected and the correct query and CLI parameters are supplied to toggle it.
+; Note: this setting is not dependent on development mode, since it is often required to run the profiler with
+; all optimizations and caches enabled.
+enable_php_profiler = 0
+
 [DebugTests]
 ; When set to 1, standalone plugins (those with their own git repositories)
 ; will be loaded when executing tests.
@@ -286,6 +292,7 @@ allow_adding_segments_for_all_websites = 1
 ;                              "segment_last_edit_time" (start date of archiving will be the earliest last edit date found,
 ;                                                        if none is found, the created date is used)
 ;                              "segment_creation_time" (start date of archiving will be the creation date of the segment)
+;                              editLastN where N is an integer (eg "editLast10" to archive for 10 days before the segment last edit date)
 ;                              lastN where N is an integer (eg "last10" to archive for 10 days before the segment creation date)
 process_new_segments_from = "beginning_of_time"
 
@@ -351,7 +358,7 @@ enable_browser_archiving_triggering = 1
 ; or make sure the date ranges users' want to see will be processed somehow.
 archiving_range_force_on_browser_request = 1
 
-; By default Matomo will automatically archive all date ranges any user has chosen in his account settings.
+; By default Matomo will automatically archive all date ranges any user has chosen in their account settings.
 ; This is limited to the available options last7, previous7, last30 and previous30.
 ; If you need any other period, or want to ensure one of those is always archived, you can define them here
 archiving_custom_ranges[] =
@@ -393,6 +400,25 @@ disable_checks_usernames_attributes = 0
 ; Matomo will use the configured hash algorithm where possible.
 ; For legacy data, fallback or non-security scenarios, we use md5.
 hash_algorithm = whirlpool
+
+; set the algorithm used by password_hash()
+; "default" for the algorithm used by the PHP version or one of ["bcrypt", "argon2i", "argon2id"]
+; "argon2id" requires at least PHP 7.3.0
+; for all argon2 algorithms, additional parameters can be changed below
+; any changes are applied to the stored hash on the next login of a user
+; see https://www.php.net/manual/en/function.password-hash.php and https://wiki.php.net/rfc/argon2_password_hash
+; for more information
+password_hash_algorithm = default
+
+; The number of CPU threads used for calculating the hash
+password_hash_argon2_threads = default
+
+; The amount of memory (in KB) used for calculating the hash
+; a minimum of 8 times the number of threads
+password_hash_argon2_memory_cost = default
+
+; The number of iterations for calculating the hash
+password_hash_argon2_time_cost = default
 
 ; If set to 1, Matomo will automatically redirect all http:// requests to https://
 ; If SSL / https is not correctly configured on the server, this will break Matomo
@@ -767,7 +793,10 @@ enable_tracking_failures_notification = 1
 
 ; Controls how many months in the past reports are re-archived for plugins that support
 ; doing this (such as CustomReports). Set to 0 to disable the feature. Default is 6.
-rearchive_reports_in_past_last_n_months = last6
+rearchive_reports_in_past_last_n_months = 6
+
+; If set to 1, when rearchiving reports in the past we do not rearchive segment data with those reports. Default is 0.
+rearchive_reports_in_past_exclude_segments = 0
 
 [Tracker]
 

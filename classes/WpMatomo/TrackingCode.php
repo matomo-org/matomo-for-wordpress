@@ -129,7 +129,15 @@ class TrackingCode {
 
 		if ( ! empty( $code ) ) {
 			$this->logger->log( 'Add noscript code. Blog ID: ' . get_current_blog_id(), Logger::LEVEL_DEBUG );
-			echo $code . "\n";
+			$contains_noscript_tag = stripos($code, '<noscript') !== false;
+			if (!$contains_noscript_tag) {
+				echo '<noscript>';
+			}
+			echo $code;
+			if (!$contains_noscript_tag) {
+				echo '</noscript>';
+			}
+			echo "\n";
 		} else {
 			$this->logger->log( 'No noscript code present. Blog ID: ' . get_current_blog_id(), Logger::LEVEL_DEBUG );
 		}
@@ -145,7 +153,7 @@ class TrackingCode {
 	 */
 	public function add_feed_campaign( $permalink ) {
 		global $post;
-		if ( is_feed() ) {
+		if ( is_feed() && !empty($post) ) {
 			$this->logger->log( 'Add campaign to feed permalink.' );
 			$sep        = ( strpos( $permalink, '?' ) === false ? '?' : '&' );
 			$permalink .= $sep . 'pk_campaign=' . rawurlencode( $this->settings->get_global_option( 'track_feed_campaign' ) ) . '&pk_kwd=' . rawurlencode( $post->post_name );

@@ -1,12 +1,12 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '4.2.1',
-    'version' => '4.2.1.0',
+    'pretty_version' => '4.3.1-rc1',
+    'version' => '4.3.1.0-RC1',
     'aliases' => 
     array (
     ),
-    'reference' => '3688fff9947853789ef748ec3e74d814a8214517',
+    'reference' => '440965f7c0d48e5a5081a33ce30c6f38822e64f1',
     'name' => 'matomo/matomo',
   ),
   'versions' => 
@@ -76,12 +76,12 @@
     ),
     'matomo/device-detector' => 
     array (
-      'pretty_version' => '4.2.2',
-      'version' => '4.2.2.0',
+      'pretty_version' => '4.2.3',
+      'version' => '4.2.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'dc270e7645d286d6f01d516a6634aba8b31ad668',
+      'reference' => 'd879f07496d6e6ee89cef5bcd925383d9b0c2cc0',
     ),
     'matomo/ini' => 
     array (
@@ -94,12 +94,12 @@
     ),
     'matomo/matomo' => 
     array (
-      'pretty_version' => '4.2.1',
-      'version' => '4.2.1.0',
+      'pretty_version' => '4.3.1-rc1',
+      'version' => '4.3.1.0-RC1',
       'aliases' => 
       array (
       ),
-      'reference' => '3688fff9947853789ef748ec3e74d814a8214517',
+      'reference' => '440965f7c0d48e5a5081a33ce30c6f38822e64f1',
     ),
     'matomo/matomo-php-tracker' => 
     array (
@@ -191,12 +191,12 @@
     ),
     'pear/archive_tar' => 
     array (
-      'pretty_version' => '1.4.11',
-      'version' => '1.4.11.0',
+      'pretty_version' => '1.4.13',
+      'version' => '1.4.13.0',
       'aliases' => 
       array (
       ),
-      'reference' => '17d355cb7d3c4ff08e5729f29cd7660145208d9d',
+      'reference' => '2b87b41178cc6d4ad3cba678a46a1cae49786011',
     ),
     'pear/console_getopt' => 
     array (
@@ -254,18 +254,18 @@
     ),
     'phpmailer/phpmailer' => 
     array (
-      'pretty_version' => 'v6.1.8',
-      'version' => '6.1.8.0',
+      'pretty_version' => 'v6.4.1',
+      'version' => '6.4.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '917ab212fa00dc6eacbb26e8bc387ebe40993bc1',
+      'reference' => '9256f12d8fb0cd0500f93b19e18c356906cbed3d',
     ),
     'piwik/device-detector' => 
     array (
       'replaced' => 
       array (
-        0 => '4.2.2',
+        0 => '4.2.3',
       ),
     ),
     'piwik/referrer-spam-blacklist' => 
@@ -419,12 +419,12 @@
     ),
     'tecnickcom/tcpdf' => 
     array (
-      'pretty_version' => '6.3.5',
-      'version' => '6.3.5.0',
+      'pretty_version' => '6.4.1',
+      'version' => '6.4.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '19a535eaa7fb1c1cac499109deeb1a7a201b4549',
+      'reference' => '5ba838befdb37ef06a16d9f716f35eb03cb1b329',
     ),
     'tedivm/jshrink' => 
     array (

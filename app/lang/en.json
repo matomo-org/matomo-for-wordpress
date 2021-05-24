@@ -210,6 +210,8 @@
         "ExceptionWidgetNotFound": "The requested widget does not exist.",
         "ExceptionReportNotEnabled": "The requested report is not enabled. This means usually either the plugin that defines the report is deactivated or you do not have enough permission to access this report.",
         "ExceptionWidgetNotEnabled": "The requested widget is not enabled. This means usually either the plugin that defines the widget is deactivated or you do not have enough permission to access this widget.",
+        "ExceptionNotSupportedBrowserTitle": "Your browser is not supported.",
+        "ExceptionNotSupportedBrowserText": "Due to security issues your browser is not supported. Please upgrade to a newer version.",
         "ExpandDataTableFooter": "Change the visualization or configure the report",
         "Export": "Export",
         "ExportAsImage": "Export as Image",
@@ -487,6 +489,7 @@
         "WarningFileIntegrityNoMd5file": "File integrity check could not be completed due to missing md5_file() function.",
         "WarningPasswordStored": "%1$sWarning:%2$s This password will be stored in the config file visible to everybody who can access it.",
         "WarningDebugOnDemandEnabled": "Tracker %1$s mode is enabled. For security reasons this should be enabled only for a short time frame. To disable it set %2$s to %3$s in %4$s",
+        "WarningDevelopmentModeOnButNotGitInstalled": "You are currently using Matomo in development mode, but it was not installed through git. It's not recommended to use Matomo in development mode in production environment.",
         "Website": "Website",
         "Weekly": "Weekly",
         "WeeklyReport": "weekly",
@@ -1037,7 +1040,8 @@
         "DevicesSubcategoryHelp": "The Devices section helps you understand the technology that your visitors are using to access your site. You will see reports on the type of device and specific models to enable you to optimise your site for the most popular devices.",
         "SoftwareSubcategoryHelp": "The Software section shows the operating systems, browsers and plugins that your visitors are using to access the site so that you can optimise your site to ensure it is fully compatible with the most popular configurations..",
         "EngagementSubcategoryHelp1": "The Engagement section provides reports that help to quantify how many new and returning visitors you get. You can also review reports that break down the average time and number of pages per visit, as well as the number of times a visitor has been to your site and the most common number of days between visits.",
-        "EngagementSubcategoryHelp2": "This can help you to optimise for frequency and high-interaction visits in addition to maximising your reach."
+        "EngagementSubcategoryHelp2": "This can help you to optimise for frequency and high-interaction visits in addition to maximising your reach.",
+        "PeriodHasOnlyRawData": "It looks like reports for this period have not been processed yet. Do you want to see what's happening now? Check out the %1$sVisits log%2$s or choose a different date period until the reports are generated."
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Uninstall",
@@ -1223,7 +1227,9 @@
         "ReceiveEmailBecauseIsSuperUser": "You receive this email because you are a Super User on the Matomo at: %s",
         "ConvertToUtf8mb4": "Convert database to UTF8mb4 charset",
         "TriggerDatabaseConversion": "Trigger database conversion in background",
-        "Utf8mb4ConversionHelp": "Your database is currently not using utf8mb4 charset. This makes it impossible to store 4-byte characters, such as emojis, less common characters of asian languages, various historic scripts or mathematical symbols. Those are currently replaced with %1$s.<br \/><br \/>Your database supports the utf8mb4 charset and it would be possible to convert it.<br \/><br \/>If you are able to run console commands we recommend using this command: %2$s<br \/><br \/>Alternatively you can enable the conversion here. It will then be triggered automatically as a scheduled task in the background.<br \/><br \/>Attention: Converting the database might take up to a couple of hours depending on the database size. As tracking might not work during this process, we do not recommend to use the trigger for bigger instances.<br \/><br \/>You can find more information about this topic in this %3$sFAQ%4$s."
+        "Utf8mb4ConversionHelp": "Your database is currently not using utf8mb4 charset. This makes it impossible to store 4-byte characters, such as emojis, less common characters of asian languages, various historic scripts or mathematical symbols. Those are currently replaced with %1$s.<br \/><br \/>Your database supports the utf8mb4 charset and it would be possible to convert it.<br \/><br \/>If you are able to run console commands we recommend using this command: %2$s<br \/><br \/>Alternatively you can enable the conversion here. It will then be triggered automatically as a scheduled task in the background.<br \/><br \/>Attention: Converting the database might take up to a couple of hours depending on the database size. As tracking might not work during this process, we do not recommend to use the trigger for bigger instances.<br \/><br \/>You can find more information about this topic in this %3$sFAQ%4$s.",
+        "SkipCacheClearDesc": "Skips clearing of caches before updating. This is only useful if you can ensure that instances running this command have not created a cache at all yet, and if clearing the cache for many Matomo accounts can become a bottleneck.",
+        "SkipCacheClear": "Skipping clearing caches."
     },
     "CustomDimensions": {
         "CustomDimensions": "Custom Dimensions",
@@ -1424,7 +1430,13 @@
         "CronArchivingRunDetails": "Please check that you have setup a crontab calling the %1$s console command, and that you have configured a %2$s to receive errors by email if archiving fails. You can also try to run the console command to archive your reports manually: %3$s. %4$sLearn more.%5$s",
         "CronArchivingRanSuccessfullyXAgo": "The archiving process completed successfully %1$s ago.",
         "BrowserTriggeredArchivingEnabled": "For optimal performance and a speedy Matomo, it is highly recommended to set up a crontab to automatically archive your reports, and to disable browser triggering in the Matomo settings. %1$sLearn more.%2$s",
-        "NoDataForReportArchivingNotRun": "The archiving of your reports hasn't been executed recently, %1$slearn more about how to generate your reports.%2$s"
+        "NoDataForReportArchivingNotRun": "The archiving of your reports hasn't been executed recently, %1$slearn more about how to generate your reports.%2$s",
+        "RequiredPrivateDirectories": "Required Private Directories",
+        "PrivateDirectoryManualCheck": "Please open the URLs manually in a browser to see if you can access it. If you can, you might need to modify your server configuration as these files\/directories should not be accessible via a browser from the Internet or Intranet.",
+        "PrivateDirectoryInternetDisabled": "We couldn't check if the following URLs are accessible because internet features are disabled on this Matomo.",
+        "PrivateDirectoryIsAccessible": "We found that the above URLs are accessible via the browser, but they should NOT be. Allowing them to be accessed can pose a potential security risk since the contents can provide information about your server and potentially your users. Please restrict access to them.",
+        "ConfigIniAccessible": "We also found that Matomo's config directory is publicly accessible. While attackers can't read the config now, if your webserver stops executing PHP files for some reason, your MySQL credentials and other information will be available to anyone. Please check your webserver config and deny access to this directory.",
+        "AllPrivateDirectoriesAreInaccessible": "All private directories are inaccessible from the internet."
     },
     "Ecommerce": {
         "PluginDescription": "Ecommerce lets you track when users add products to carts, and when they convert to an ecommerce sale. Also track products and product categories views and abandoned carts.",
@@ -1506,6 +1518,7 @@
         "RateFeatureTitle": "Do you like the '%s' feature? Please rate and leave a comment",
         "SendFeedback": "Send Feedback",
         "ThankYou": "Thank you for helping us to make Matomo better!",
+        "ThankYouForSpreading": "Thank you for spreading the word and creating a safer web",
         "TopLinkTooltip": "Tell us what you think, or request Professional Support.",
         "ViewAnswersToFAQ": "View answers to %1$sFrequently Asked Questions%2$s",
         "FAQs": "FAQs",
@@ -1523,7 +1536,7 @@
         "ContactUs": "Contact us",
         "VisitTheForums": "Visit the %1$s Forums%2$s and get help from the community of Matomo users",
         "Forums": "Forums",
-        "ReviewMatomoTitle": "Believe in Matomo?",
+        "ReviewMatomoTitle": "Like Matomo?",
         "PleaseLeaveExternalReviewForMatomo": "Share your thoughts on one of these sites and inspire others to join our data revolution.",
         "RemindMeLater": "Remind me later",
         "NeverAskMeAgain": "Never ask me again",
@@ -1533,7 +1546,14 @@
         "RemoveOtherLabel": "I want to see my 'Others' data",
         "PurgeOldData": "I want to remove some old data",
         "SearchHelpResources": "Search matomo.org help resources",
-        "PopularHelpTopics": "Popular help topics"
+        "PopularHelpTopics": "Popular help topics",
+        "ReferMatomo": "Refer Matomo",
+        "ReferBannerTitle": "Believe in Matomo?",
+        "ReferBannerLonger": "Please help us spread the word about us so more people get control over their analytics data.",
+        "ReferBannerEmailShareSubject": "Refer them to Matomo Analytics now to take back control!",
+        "ReferBannerEmailShareBody": "I choose Matomo, an ethical alternative to Google Analytics that gives me 100%% data ownership and protects the data of my website visitors.\r\nI’m sharing this message in the hope that you too will take back the power from Google and get complete ownership of your own data.\r\n\r\nCheck out Matomo at https:\/\/matomo.org",
+        "ReferBannerSocialShareText": "If you’re using Google Analytics, stay in control by switching to an ethical alternative like Matomo now!",
+        "WontShowAgain": "We won't show this message again."
     },
     "GeoIp2": {
         "AssumingNonApache": "Cannot find apache_get_modules function, assuming non-Apache webserver.",
@@ -1850,6 +1870,7 @@
         "SystemCheckEvalHelp": "Required by HTML QuickForm and Smarty templating system.",
         "SystemCheckExtensions": "Other required extensions",
         "SystemCheckFileIntegrity": "File integrity",
+        "SystemCheckFilterHelp": "You need to configure and rebuild PHP with \"filter\" support enabled (don't use --disable-filter).",
         "SystemCheckFunctions": "Required functions",
         "SystemCheckFunctionHelp": "You need to enable this built-in function.",
         "SystemCheckGDFreeType": "GD > 2.x + Freetype (graphics)",
@@ -1880,6 +1901,7 @@
         "SystemCheckPhp": "PHP version",
         "SystemCheckPhpPdoAndMysqli": "More information on: %1$sPHP PDO%2$s and %3$sMYSQLI%4$s.",
         "SystemCheckSplHelp": "You need to configure and rebuild PHP with the Standard PHP Library (SPL) enabled (by default).",
+        "SystemCheckSessionHelp": "You need to configure and rebuild PHP with \"session\" support enabled (don't use --disable-session).",
         "SystemCheckSettings": "Required PHP configuration (php.ini)",
         "SystemCheckSummaryNoProblems": "Huzzah! There are no problems with your Matomo setup. Give yourself a pat on the back.",
         "SystemCheckSummaryThereWereErrors": "Uh-oh! Matomo has detected some %1$scritical issues%2$s with your Matomo setup. %3$sThese issues should be fixed immediately.%4$s",
@@ -1889,8 +1911,9 @@
         "SystemCheckTrackerHelp": "GET request to matomo.php failed. Try whitelisting this URL from HTTP Authentication and disable mod_security (you may have to ask your webhost). For more information about the error, check your web server error log file.",
         "SystemCheckWarnDomHelp": "You should enable the \"dom\" extension (e.g., install the \"php-dom\" and\/or \"php-xml\" package).",
         "SystemCheckWarning": "Matomo will work normally but some features may be missing",
-        "SystemCheckWarnJsonHelp": "You should enable \"json\" extension (e.g., install the \"php-json\" package) for better performance.",
+        "SystemCheckWarnJsonHelp": "You should enable \"json\" extension (e.g., install the \"php-json\" package).",
         "SystemCheckWarnLibXmlHelp": "You should enable the \"libxml\" extension (e.g., \"install the php-libxml\" package) as it is required by other core PHP extensions.",
+        "SystemCheckWarnOpensslHelp": "You should enable the \"openssl\" extension to allow secure updates.",
         "SystemCheckWarnSimpleXMLHelp": "You should enable the \"SimpleXML\" extension (e.g., install the \"php-simplexml\" and\/or \"php-xml\" package).",
         "SystemCheckWinPdoAndMysqliHelp": "On a Windows server you can add the following lines to your php.ini: %s",
         "SystemCheckWriteDirs": "Directories with write access",
@@ -3158,7 +3181,14 @@
         "WrongPasswordEntered": "Please enter your correct password.",
         "ConfirmPasswordToContinue": "Confirm your password to continue",
         "PluginDescription": "Provides authentication via username and password as well as password reset functionality. Authentication method can be changed by using another Login plugin such as LoginLdap available on the Marketplace.",
-        "RememberMe": "Remember Me"
+        "RememberMe": "Remember Me",
+        "SuspiciousLoginAttemptsInLastHourEmailSubject": "We've noticed some suspicious login attempts to your account...",
+        "SuspiciousLoginAttemptsInLastHourEmail1": "We've noticed a suspiciously high number of login attempts to your Matomo account in the last hour, specifically %1$s login attempts from %2$s distinct IP addresses. We suspect someone may be trying to break into your account.",
+        "SuspiciousLoginAttemptsInLastHourEmail2": "In order to safeguard your Matomo, we recommend taking the following precautions:",
+        "SuspiciousLoginAttemptsInLastHourEmail3": "Ensure your password is a secure, random password of an appropriate length (for example, at least 30 characters).",
+        "SuspiciousLoginAttemptsInLastHourEmail4": "Setup two-factor auth so attackers will need more information than just your password in order to login.",
+        "SuspiciousLoginAttemptsInLastHourEmail5": "Additionally, if your Matomo has a limited set of users or IPs through which users will access it, it may be beneficial to setup a IP address allowlist. %1$sRead our docs for more information.%2$s",
+        "LoginNotAllowedBecauseUserLoginBlocked": "Login functionality is temporarily disabled since we've a suspicious amount of failed login attempts in the last hour."
     },
     "Marketplace": {
         "ActivateLicenseKey": "Activate",
@@ -3351,7 +3381,8 @@
         "PluginDescription": "See your analytics data as an Overlay on your actual website. View how many times your users have clicked on each link. Note: Requires the Transitions plugin enabled.",
         "RedirectUrlError": "You are attempting to open Page Overlay for the URL \"%1$s\". %2$s None of the domains from the Matomo settings matches the link.",
         "RedirectUrlErrorAdmin": "You can add the domain as an additional URL %1$sin the settings%2$s.",
-        "RedirectUrlErrorUser": "Ask your administrator to add the domain as an additional URL."
+        "RedirectUrlErrorUser": "Ask your administrator to add the domain as an additional URL.",
+        "ErrorNoSiteUrls": "WARNING: This website has no Site URLs defined in Matomo. This might cause Overlay and other features to break or behave strangely. To fix this, add a URL in the settings for this website in the Matomo Administration section."
     },
     "PagePerformance": {
         "ColumnAveragePageLoadTime": "Avg. page load time",
@@ -3901,10 +3932,19 @@
         "Sites": "Websites",
         "SiteSearchUse": "You can use Matomo to track and report what visitors are searching in your website's internal search engine.",
         "SiteWithoutDataTitle": "No data has been recorded yet, get set up below",
-        "SiteWithoutDataDescription": "No analytics data has been tracked for this website yet.",
+        "SiteWithoutDataDescription": "Only one last step to track your web traffic with Matomo and gain valuable insights. You need to add some extra code to your website or mobile app if you haven't done already. Check your option below or %1$ssend all the instructions to a team mate%2$s.",
         "SiteWithoutDataSetupTracking": "Please set up the %1$stracking code%2$s below into your website or mobile app if you haven't done already.",
         "SiteWithoutDataMessageDisappears": "This message will disappear as soon as some data was tracked for this website.",
         "SiteWithoutDataIgnoreMessage": "Don't show this message for the next hour",
+        "SiteWithoutDataChoosePreferredWay": "Choose your preferred way of getting set up",
+        "SiteWithoutDataOtherWays": "Other ways",
+        "SiteWithoutDataOtherIntegrations": "Other integrations",
+        "SiteWithoutDataGoogleTagManager": "Google Tag Manager",
+        "SiteWithoutDataMatomoTagManager": "Matomo Tag Manager",
+        "SiteWithoutDataMatomoTagManagerNotActive": "Don't know what a Tag Manager is? Check out our %1$sTag Manager guide%2$s. If you are embedding multiple resources from 3rd party websites into your website, then tracking your website using the Tag Manager may be a better choice for you compared to using the regular JavaScript tracking.",
+        "SiteWithoutDataGoogleTagManagerDescription": "You can use Matomo with Google Tag Manager. To setup Matomo Tracking in Google Tag Manager, follow the instructions from this %1$sguide%2$s.",
+        "SiteWithoutDataDetectedSite": "We've detected you're using a %1$s site. Simple follow the instructions from this %2$sguide%3$s.",
+        "SiteWithoutDataDetectedGtm": "We've also detected you're using a Google Tag Manager. If you prefer to set up Matomo using GTM please follow this %2$sguide%3$s.",
         "SuperUserAccessCan": "A user with Super User access can also %1$s specify global settings%2$s for new websites.",
         "Timezone": "Time zone",
         "TrackingSiteSearch": "Tracking Internal Site Search",
@@ -3928,7 +3968,8 @@
         "EmailInstructionsSiteDetailsHeading": "Your Site Details",
         "EmailInstructionsSiteDetails": "You will need these details to use the API or SDKs to track Matomo visits.",
         "EmailInstructionsYourSiteId": "Your site ID: %1$s",
-        "EmailInstructionsYourTrackingUrl": "Your tracking URL: %1$s"
+        "EmailInstructionsYourTrackingUrl": "Your tracking URL: %1$s",
+        "DetectingYourSite": "Detecting your site"
     },
     "TagManager": {
         "AddThisTagDescription": "Add the AddThis social media buttons and more to your website.",
@@ -4474,7 +4515,7 @@
         "WeekdayVariableDescription": "Returns the local day of the week eg monday, tuesday, wednesday, ...",
         "WeekdayVariableName": "Weekday",
         "WindowLeaveTriggerDescription": "Triggered when the user is about to leave the current page by moving the mouse outside the window.",
-        "WindowLeaveTriggerHelp": "This trigger is triggered when the user is possibly about to leave the website and moves her or his mouse outside of the current web page for example towards the browser URL address line or any other buttons. This can be useful to keep your visitor engaged and not lose the visitor, for example by showing an exit popup. You may be also interested in the \"Window Unload\" trigger which is triggered as soon as the user has actually left the current page.",
+        "WindowLeaveTriggerHelp": "This trigger is triggered when the user is possibly about to leave the website and moves their mouse outside of the current web page, for example towards the browser URL address line or any other buttons. This can be useful to keep your visitor engaged and not lose the visitor, for example by showing an exit popup. You may be also interested in the \"Window Unload\" trigger which is triggered as soon as the user has actually left the current page.",
         "WindowLeaveTriggerName": "Window Leave",
         "WindowLoadedTriggerDescription": "Triggered when the page is fully loaded including all images etc.",
         "WindowLoadedTriggerHelp": "This stage of loading a web page, is when the page is fully loaded according to the browser. In most cases this means that also all images are loaded, and all styles are applied etc. This trigger is always triggered at some point after the \"DOM Ready\".",
@@ -4622,7 +4663,9 @@
         "RecoveryCodesAllUsed": "All recovery codes have been used, it is highly recommended you regenerate your recovery codes.",
         "RecoveryCodesRegenerated": "Recovery codes have been regenerated. Make sure to download or print the newly generated codes.",
         "GenerateNewRecoveryCodes": "Generate new recovery codes",
-        "GenerateNewRecoveryCodesInfo": "When you generate new recovery codes, your old codes won’t work anymore. Make sure to download or print your new codes."
+        "GenerateNewRecoveryCodesInfo": "When you generate new recovery codes, your old codes won’t work anymore. Make sure to download or print your new codes.",
+        "RequireTwoFAForAll": "Require two-factor authentication for everyone",
+        "RequireTwoFAForAllInformation": "When enabled, every user has to enable two factor authentication. Enforcing 2FA will require all users to have access to a device where they can install an authenticator app. You can only enable this if you already have two factor authentication set up yourself."
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "IP address %s is a local address and cannot be geolocated.",
@@ -4760,6 +4803,8 @@
         "ExceptionDeleteOnlyUserWithSuperUserAccess": "Deleting user '%s' is not possible.",
         "ExceptionEditAnonymous": "The anonymous user cannot be edited or deleted. It is used by Matomo to define a user that has not logged in yet. For example, you can make your statistics public by granting the 'view' access to the 'anonymous' user.",
         "ExceptionEmailExists": "User with email '%s' already exists.",
+        "ExceptionEmailExistsAsLogin": "Email '%s' already used as a username.",
+        "ExceptionLoginExistsAsEmail": "Username '%s' already used as an email.",
         "ExceptionInvalidEmail": "The email doesn't have a valid format.",
         "ExceptionInvalidLoginFormat": "The username must be between %1$s and %2$s characters long and contain only letters, numbers, or the characters '_' or '-' or '.' or '@' or '+'",
         "ExceptionInvalidPassword": "The password length must be greater than %1$s characters.",
@@ -4896,7 +4941,8 @@
         "NewsletterSignupTitle": "Newsletter Signup",
         "NewsletterSignupMessage": "Subscribe to our newsletter to receive regular information about Matomo. You can unsubscribe from it any time. This service uses MadMimi. Learn more about it on our %1$sPrivacy Policy page%2$s.",
         "NewsletterSignupFailureMessage": "Whoops, something went wrong. We weren't able to sign you up for the newsletter.",
-        "NewsletterSignupSuccessMessage": "Super, you're all signed up! We'll be in touch soon."
+        "NewsletterSignupSuccessMessage": "Super, you're all signed up! We'll be in touch soon.",
+        "FirstWebsitePermission": "First website permission"
     },
     "VisitFrequency": {
         "ColumnActionsByNewVisits": "Actions by New Visits",

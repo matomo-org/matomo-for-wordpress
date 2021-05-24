@@ -152,7 +152,7 @@ class TrackingCodeGenerator {
 					}
 
 					$code .= '
-<script type="text/javascript" ' . $data_cf_async . '>
+<script ' . $data_cf_async . '>
 ' . self::MTM_INIT . '
 _mtm.push({\'mtm.startTime\': (new Date().getTime()), \'event\': \'mtm.Start\'});
 var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
@@ -192,6 +192,8 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 		 $paths = new Paths();
 		if ( $this->settings->get_global_option( 'track_js_endpoint' ) === 'restapi' ) {
 			$js_endpoint = $paths->get_js_tracker_rest_api_endpoint();
+		} elseif ( $this->settings->get_global_option( 'track_js_endpoint' ) === 'plugin' ) {
+			$js_endpoint = plugins_url( 'app/matomo.js', MATOMO_ANALYTICS_FILE );;
 		} else {
 			$js_endpoint = $paths->get_js_tracker_url_in_matomo_dir();
 		}
@@ -286,7 +288,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 		}
 
 		$script  = '<!-- Matomo -->';
-		$script .= '<script ' . $data_cf_async . ' type="text/javascript">';
+		$script .= '<script ' . $data_cf_async . ' >';
 		$script .= "var _paq = window._paq = window._paq || [];\n";
 		$script .= implode( "\n", $options );
 		$script .= self::TRACKPAGEVIEW;

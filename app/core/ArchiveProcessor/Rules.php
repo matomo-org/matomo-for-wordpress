@@ -12,6 +12,7 @@ use Exception;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\DataAccess\ArchiveWriter;
+use Piwik\DataAccess\Model;
 use Piwik\Date;
 use Piwik\Log;
 use Piwik\Option;
@@ -61,7 +62,7 @@ class Rules
 
     public static function shouldProcessReportsAllPlugins(array $idSites, Segment $segment, $periodLabel)
     {
-        if (self::isForceArchivingSinglePlugin()) {
+        if (self::isRequestingToAndAbleToForceArchiveSinglePlugin()) {
             return false;
         }
 
@@ -196,6 +197,11 @@ class Rules
         return !$generalConfig['browser_archiving_disabled_enforce'];
     }
 
+    public static function isArchivingEnabledFor(array $idSites, Segment $segment, $periodLabel)
+    {
+        return !self::isArchivingDisabledFor($idSites, $segment, $periodLabel);
+    }
+
     public static function isArchivingDisabledFor(array $idSites, Segment $segment, $periodLabel)
     {
         $generalConfig = Config::getInstance()->General;
@@ -328,14 +334,22 @@ class Rules
         return $possibleValues;
     }
 
-    public static function isForceArchivingSinglePlugin()
+    public static function isRequestingToAndAbleToForceArchiveSinglePlugin()
     {
-        if (!SettingsServer::isArchivePhpTriggered()
-            || Loader::getArchivingDepth() > 1
-        ) {
+        if (!SettingsServer::isArchivePhpTriggered()) {
             return false;
         }
 
         return !empty($_GET['pluginOnly']) || !empty($_POST['pluginOnly']);
+    }
+
+    public static function isActuallyForceArchivingSinglePlugin()
+    {
+        return Loader::getArchivingDepth() <= 1 && self::isRequestingToAndAbleToForceArchiveSinglePlugin();
+    }
+
+    public static function shouldProcessSegmentsWhenReArchivingReports()
+    {
+        return Config::getInstance()->General['rearchive_reports_in_past_exclude_segments'] != 1;
     }
 }

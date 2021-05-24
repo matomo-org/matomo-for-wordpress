@@ -177,8 +177,7 @@ class WpMatomo {
 		// we are not using is_plugin_active() for performance reasons
 		$active_plugins = self::get_active_plugins();
 
-		if (in_array('cookiebot/cookiebot.php', $active_plugins)
-			|| in_array('wp-rss-aggregator/wp-rss-aggregator.php', $active_plugins)
+		if (in_array('wp-rss-aggregator/wp-rss-aggregator.php', $active_plugins)
 			|| in_array('wp-defender/wp-defender.php', $active_plugins)) {
 			return true;
 		}

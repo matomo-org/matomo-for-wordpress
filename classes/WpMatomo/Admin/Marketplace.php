@@ -26,20 +26,8 @@ class Marketplace {
 		$this->settings = $settings;
 	}
 
-	private function show_premium_bundle_offer() {
-		if (get_option('matomo_marketplace_license_key')) {
-			return false; // already has features
-		}
-		if (is_plugin_active('HeatmapSessionRecording/HeatmapSessionRecording.php')) {
-			return false; // already has features
-		}
-		return true;
-	}
-
 	public function show() {
 		$settings = $this->settings;
-
-		$matomo_show_offer = $this->show_premium_bundle_offer();
 
 		include dirname( __FILE__ ) . '/views/marketplace.php';
 	}
