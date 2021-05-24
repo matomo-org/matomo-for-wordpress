@@ -1102,6 +1102,7 @@ return array(
     'Piwik\\Plugins\\CorePluginsAdmin\\tests\\Integration\\TagManagerTeaserTest' => $baseDir . '/plugins/CorePluginsAdmin/tests/Integration/TagManagerTeaserTest.php',
     'Piwik\\Plugins\\CoreUpdater\\ArchiveDownloadException' => $baseDir . '/plugins/CoreUpdater/ArchiveDownloadException.php',
     'Piwik\\Plugins\\CoreUpdater\\Commands\\ConvertToUtf8mb4' => $baseDir . '/plugins/CoreUpdater/Commands/ConvertToUtf8mb4.php',
+    'Piwik\\Plugins\\CoreUpdater\\Commands\\SecurityFiles' => $baseDir . '/plugins/CoreUpdater/Commands/SecurityFiles.php',
     'Piwik\\Plugins\\CoreUpdater\\Commands\\Update' => $baseDir . '/plugins/CoreUpdater/Commands/Update.php',
     'Piwik\\Plugins\\CoreUpdater\\Commands\\Update\\CliUpdateObserver' => $baseDir . '/plugins/CoreUpdater/Commands/Update/CliUpdateObserver.php',
     'Piwik\\Plugins\\CoreUpdater\\Controller' => $baseDir . '/plugins/CoreUpdater/Controller.php',
