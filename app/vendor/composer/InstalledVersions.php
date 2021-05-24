@@ -27,12 +27,12 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '4.3.0',
-    'version' => '4.3.0.0',
+    'pretty_version' => '4.3.1-rc1',
+    'version' => '4.3.1.0-RC1',
     'aliases' => 
     array (
     ),
-    'reference' => '11925f115bf75457ac5e394f15f6c97ffdbc3da9',
+    'reference' => '440965f7c0d48e5a5081a33ce30c6f38822e64f1',
     'name' => 'matomo/matomo',
   ),
   'versions' => 
@@ -120,12 +120,12 @@ private static $installed = array (
     ),
     'matomo/matomo' => 
     array (
-      'pretty_version' => '4.3.0',
-      'version' => '4.3.0.0',
+      'pretty_version' => '4.3.1-rc1',
+      'version' => '4.3.1.0-RC1',
       'aliases' => 
       array (
       ),
-      'reference' => '11925f115bf75457ac5e394f15f6c97ffdbc3da9',
+      'reference' => '440965f7c0d48e5a5081a33ce30c6f38822e64f1',
     ),
     'matomo/matomo-php-tracker' => 
     array (
@@ -660,9 +660,23 @@ return $installed[0]['root'];
 
 
 
+
 public static function getRawData()
 {
+@trigger_error('getRawData only returns the first dataset loaded, which may not be what you expect. Use getAllRawData() instead which returns all datasets for all autoloaders present in the process.', E_USER_DEPRECATED);
+
 return self::$installed;
+}
+
+
+
+
+
+
+
+public static function getAllRawData()
+{
+return self::getInstalled();
 }
 
 

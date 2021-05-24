@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita94e8ce1e79a92c4c3f40df0c9545cb2
+class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -1356,6 +1356,7 @@ class ComposerStaticInita94e8ce1e79a92c4c3f40df0c9545cb2
         'Piwik\\Plugins\\CorePluginsAdmin\\tests\\Integration\\TagManagerTeaserTest' => __DIR__ . '/../..' . '/plugins/CorePluginsAdmin/tests/Integration/TagManagerTeaserTest.php',
         'Piwik\\Plugins\\CoreUpdater\\ArchiveDownloadException' => __DIR__ . '/../..' . '/plugins/CoreUpdater/ArchiveDownloadException.php',
         'Piwik\\Plugins\\CoreUpdater\\Commands\\ConvertToUtf8mb4' => __DIR__ . '/../..' . '/plugins/CoreUpdater/Commands/ConvertToUtf8mb4.php',
+        'Piwik\\Plugins\\CoreUpdater\\Commands\\SecurityFiles' => __DIR__ . '/../..' . '/plugins/CoreUpdater/Commands/SecurityFiles.php',
         'Piwik\\Plugins\\CoreUpdater\\Commands\\Update' => __DIR__ . '/../..' . '/plugins/CoreUpdater/Commands/Update.php',
         'Piwik\\Plugins\\CoreUpdater\\Commands\\Update\\CliUpdateObserver' => __DIR__ . '/../..' . '/plugins/CoreUpdater/Commands/Update/CliUpdateObserver.php',
         'Piwik\\Plugins\\CoreUpdater\\Controller' => __DIR__ . '/../..' . '/plugins/CoreUpdater/Controller.php',
@@ -3278,11 +3279,11 @@ class ComposerStaticInita94e8ce1e79a92c4c3f40df0c9545cb2
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita94e8ce1e79a92c4c3f40df0c9545cb2::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita94e8ce1e79a92c4c3f40df0c9545cb2::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInita94e8ce1e79a92c4c3f40df0c9545cb2::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInita94e8ce1e79a92c4c3f40df0c9545cb2::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInita94e8ce1e79a92c4c3f40df0c9545cb2::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8::$classMap;
 
         }, null, ClassLoader::class);
     }
