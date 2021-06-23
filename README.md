@@ -32,6 +32,14 @@ Make sure the plugin folder in your WordPress is not called `matomo-for-wordpres
 git clone git@github.com:matomo-org/matomo-for-wordpress.git wp-content/plugins/matomo
 ```
 
+#### Install composer
+
+Now run the below command to have phpunit etc available. Requires [Composer](https://getcomposer.org/) to be installed.
+
+```bash
+composer install # or composer.phar install
+```
+
 ## Security
 
 Security is a top priority at Matomo. As potential issues are discovered, we validate, patch and release fixes as quickly as we can. We have a security bug bounty program in place that rewards researchers for finding security issues and disclosing them to us.
