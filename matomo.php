@@ -206,4 +206,21 @@ if (matomo_is_app_request() || !empty($GLOBALS['MATOMO_LOADED_DIRECTLY'])) {
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'WpMatomo.php';
 require 'shared.php';
 matomo_add_plugin( __DIR__ . '/plugins/WordPress', MATOMO_ANALYTICS_FILE );
-new WpMatomo();
+$wpMatomo = new WpMatomo();
+
+/*
+ * @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
+ */
+register_activation_hook(__FILE__, 'matomo_activate');
+add_action('admin_init', 'matomo_plugin_redirect');
+
+function matomo_activate() {
+    add_option('matomo_plugin_do_activation_redirect', true);
+}
+function matomo_plugin_redirect() {
+    if (get_option('matomo_plugin_do_activation_redirect', false)) {
+        delete_option('matomo_plugin_do_activation_redirect');
+            global $wpMatomo;
+            $wpMatomo->redirect_to_getting_started();
+    }
+}
