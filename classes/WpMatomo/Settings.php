@@ -378,18 +378,12 @@ class Settings {
 	}
 
 	public function get_js_tracking_code() {
-		if ( $this->should_save_tracking_code_across_sites() ) {
-			return $this->get_global_option( 'js_manually' );
-		}
-
+	
 		return $this->get_option( 'tracking_code' );
 	}
 
 	public function get_noscript_tracking_code() {
-		if ( $this->should_save_tracking_code_across_sites() ) {
-			return $this->get_global_option( 'noscript_manually' );
-		}
-
+	
 		return $this->get_option( 'noscript_code' );
 	}
 
@@ -482,6 +476,6 @@ class Settings {
 	}
 
 	public function set_assume_is_network_enabled_in_tests( $network_enabled = true ) {
-		$this->assume_is_network_enabled_in_tests = $network_enabled;
+		//$this->assume_is_network_enabled_in_tests = $network_enabled;
 	}
 }
