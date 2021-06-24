@@ -257,7 +257,7 @@ class WpMatomo {
 			if
 			(
 				( self::$settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) === 1 ) &&
-				( self::$settings->get_global_option( 'track_mode' ) !== TrackingSettings::TRACK_MODE_DISABLED )
+				( self::$settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_DISABLED )
 			) {
 				$redirect = true;
 				@wp_redirect( admin_url( 'admin.php?page=matomo-get-started' ) );
