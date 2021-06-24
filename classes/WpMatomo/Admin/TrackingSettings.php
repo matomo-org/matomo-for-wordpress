@@ -137,7 +137,6 @@ class TrackingSettings implements AdminSettingsInterface {
 
 		if ( ! empty( $_POST[ self::FORM_NAME ]['track_mode'] ) ) {
 			$track_mode         = $_POST[ self::FORM_NAME ]['track_mode'];
-			$previus_track_mode = $this->settings->get_global_option( 'track_mode' );
 
 			if ( self::TRACK_MODE_TAGMANAGER === $track_mode ) {
 				// no noscript mode in this case
@@ -146,10 +145,7 @@ class TrackingSettings implements AdminSettingsInterface {
 			} else {
 				unset( $_POST['tagmanger_container_ids'] );
 			}
-
-			if ( self::TRACK_MODE_MANUALLY === $track_mode
-				 || ( self::TRACK_MODE_DISABLED === $track_mode &&
-					  in_array( $previus_track_mode, array( self::TRACK_MODE_DISABLED, self::TRACK_MODE_MANUALLY ) ) ) ) {
+			if ( $this->must_update_tracker() === true ) {
 				// We want to keep the tracking code when user switches between disabled and manually or disabled to disabled.
 				if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
 					$_POST[ self::FORM_NAME ]['tracking_code'] = stripslashes( $_POST[ self::FORM_NAME ]['tracking_code'] );
@@ -178,8 +174,54 @@ class TrackingSettings implements AdminSettingsInterface {
 		return true;
 	}
 
+	/**
+	 * Reauires form to be posted
+	 * @return bool
+	 */
+	private function must_update_tracker () {
+		$track_mode         = $_POST[ self::FORM_NAME ]['track_mode'];
+		$previus_track_mode = $this->settings->get_global_option( 'track_mode' );
+		$must_update        = false;
+		if ( self::TRACK_MODE_MANUALLY === $track_mode
+		     || (self::TRACK_MODE_DISABLED === $track_mode &&
+		         in_array( $previus_track_mode, array( self::TRACK_MODE_DISABLED, self::TRACK_MODE_MANUALLY ) )) ) {
+			// We want to keep the tracking code when user switches between disabled and manually or disabled to disabled.
+			$must_update = true;
+		}
+		return $must_update;
+	}
+
+	private function validate_tracker () {
+		$valid = true;
+		if ( isset( $_POST )
+		     && ! empty( $_POST[ self::FORM_NAME ] ) ) {
+				if ( $this->must_update_tracker() === true ) {
+					if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
+						$valid = $this->validate_html_comments( $_POST[ self::FORM_NAME ]['tracking_code'] );
+					}
+				}
+		}
+		return $valid;
+	}
+	/**
+	 * @param string $html html content to validate
+	 * @retrun boolean
+	 */
+	public function validate_html_comments( $html ) {
+	    $opening = substr_count( $html, '<!--' );
+	    $closing = substr_count( $html, '-->' );
+	    return ( $opening === $closing )  && ( ( $opening % 2 ) === 0 );
+	}
+
 	public function show_settings() {
-		$was_updated = $this->update_if_submitted();
+		$has_updated = false;
+		$errors = [];
+		if ( $this->validate_tracker() === true ) {
+			$has_updated = $this->update_if_submitted();
+		} else {
+			$errors[] = esc_html__( 'Your tracker comments are invalid. Settings have not been saved', ' Matomo' );
+		}
+
 		$settings    = $this->settings;
 
 		$containers = $this->get_active_containers();
