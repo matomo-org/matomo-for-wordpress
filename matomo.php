@@ -15,6 +15,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
  */
+use WpMatomo\RedirectOnActivation;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -211,16 +212,5 @@ $wpMatomo = new WpMatomo();
 /*
  * @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
  */
-register_activation_hook(__FILE__, 'matomo_activate');
-add_action('admin_init', 'matomo_plugin_redirect');
-
-function matomo_activate() {
-    add_option('matomo_plugin_do_activation_redirect', true);
-}
-function matomo_plugin_redirect() {
-    if (get_option('matomo_plugin_do_activation_redirect', false)) {
-        delete_option('matomo_plugin_do_activation_redirect');
-            global $wpMatomo;
-            $wpMatomo->redirect_to_getting_started();
-    }
-}
+$redirect = new RedirectOnActivation($wpMatomo);
+$redirect->register_hooks();

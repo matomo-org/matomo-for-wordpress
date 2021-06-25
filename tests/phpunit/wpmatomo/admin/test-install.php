@@ -9,7 +9,7 @@ use \WpMatomo\Admin\TrackingSettings;
 
 class AdminInstallTest extends MatomoUnit_TestCase {
     /**
-     * @var
+     * @var |WpMatomo
      */
     private $_wpMatomo;
 
@@ -43,11 +43,11 @@ class AdminInstallTest extends MatomoUnit_TestCase {
         $settings->set_global_option(Settings::SHOW_GET_STARTED_PAGE, 1);
         $settings->set_global_option('track_mode', TrackingSettings::TRACK_MODE_DISABLED);
         $settings->save();
-        $this->assertFalse($this->_wpMatomo->redirect_to_getting_started());
+        $this->assertTrue($this->_wpMatomo->redirect_to_getting_started());
         // show getting started and track mode different of disabled
         $settings->set_global_option('track_mode', TrackingSettings::TRACK_MODE_DEFAULT);
         $settings->save();
-        $this->assertTrue($this->_wpMatomo->redirect_to_getting_started());
+        $this->assertFalse($this->_wpMatomo->redirect_to_getting_started());
 	    $_GET['activate-multi'] = true;
 	    $this->assertFalse($this->_wpMatomo->redirect_to_getting_started());
 	    // restore initial configuration
