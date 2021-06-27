@@ -205,7 +205,7 @@ class TrackingSettings implements AdminSettingsInterface {
 	}
 	/**
 	 * @param string $html html content to validate
-	 * @retrun boolean
+	 * @returns boolean
 	 */
 	public function validate_html_comments( $html ) {
 	    $opening = substr_count( $html, '<!--' );
