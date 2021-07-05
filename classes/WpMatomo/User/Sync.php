@@ -64,7 +64,7 @@ class Sync {
 			// if they eg alter `get_users` option
 			wp_schedule_single_event(time() + 5, ScheduledTasks::EVENT_SYNC);
 		} else {
-			$this->sync_current_users();
+			$this->sync_current_users_1000();
 		}
 	}
 
