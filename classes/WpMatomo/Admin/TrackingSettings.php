@@ -44,8 +44,7 @@ class TrackingSettings implements AdminSettingsInterface {
 	}
 
 	private function update_if_submitted() {
-		if ( isset( $_POST )
-			 && ! empty( $_POST[ self::FORM_NAME ] )
+		if ( ( $this->form_submitted() === true )
 			 && is_admin()
 			 && check_admin_referer( self::NONCE_NAME )
 			 && $this->can_user_manage() ) {
@@ -191,15 +190,31 @@ class TrackingSettings implements AdminSettingsInterface {
 		return $must_update;
 	}
 
-	private function validate_tracker () {
+	/**
+	 * @return bool
+	 */
+	private function form_submitted () {
+		return isset( $_POST ) 	&& ! empty( $_POST[ self::FORM_NAME ] );
+	}
+
+	public function validate_tracker () {
 		$valid = true;
-		if ( isset( $_POST )
-		     && ! empty( $_POST[ self::FORM_NAME ] ) ) {
-				if ( $this->must_update_tracker() === true ) {
-					if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
-						$valid = $this->validate_html_comments( $_POST[ self::FORM_NAME ]['tracking_code'] );
-					}
+		if ( $this->form_submitted() === true ) {
+			if ( $this->must_update_tracker() === true ) {
+				if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
+					$valid = $this->validate_html_comments( $_POST[ self::FORM_NAME ]['tracking_code'] );
 				}
+			}
+		}
+		return $valid;
+	}
+
+	public function validate_no_script() {
+		$valid = true;
+		if ( $this->form_submitted() === true ) {
+			if ( ! empty( $_POST[ self::FORM_NAME ]['noscript_code'] ) ) {
+				$valid = $this->validate_html_comments( $_POST[ self::FORM_NAME ]['noscript_code'] );
+			}
 		}
 		return $valid;
 	}
@@ -216,10 +231,14 @@ class TrackingSettings implements AdminSettingsInterface {
 	public function show_settings() {
 		$was_updated = false;
 		$errors = [];
-		if ( $this->validate_tracker() === true ) {
-			$was_updated = $this->update_if_submitted();
-		} else {
+		if ( $this->validate_no_script() !== true ) {
+			$errors[] = 'Your noscript code comments are not well closed. Settings have not been saved';
+		}
+		if ( $this->validate_tracker() !== true ) {
 			$errors[] = 'Your tracker comments are not well closed. Settings have not been saved';
+		}
+		if ( count($errors) === 0 ) {
+			$was_updated = $this->update_if_submitted();
 		}
 
 		$settings    = $this->settings;
