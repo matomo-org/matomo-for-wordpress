@@ -38,6 +38,8 @@ class Auth extends \Piwik\Plugins\Login\Auth
 		        $isPasswordCorrect = wp_check_password($password, $user->user_pass, $user->ID);
 		        if ($isPasswordCorrect) {
 		        	return new AuthResult(AuthResult::SUCCESS, $login, '');
+		        } else {
+			        return new AuthResult(AuthResult::FAILURE, $login, '');
 		        }
 	        }
         }
