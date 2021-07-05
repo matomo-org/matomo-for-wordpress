@@ -185,7 +185,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/index.php?rest
 		} else {
 			$this->assertSame(
 				'<!-- Matomo Tag Manager -->
-<script  >
+<script >
 var _mtm = _mtm || [];
 _mtm.push({\'mtm.startTime\': (new Date().getTime()), \'event\': \'mtm.Start\'});
 var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
