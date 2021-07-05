@@ -27,13 +27,13 @@ use \WpMatomo\Updater;
 use \WpMatomo\Roles;
 use \WpMatomo\Annotations;
 use \WpMatomo\TrackingCode;
-use \WpMatomo\Admin\TrackingSettings;
 use \WpMatomo\Settings;
 use \WpMatomo\Capabilities;
 use \WpMatomo\Ecommerce\Woocommerce;
 use \WpMatomo\Report\Renderer;
 use WpMatomo\API;
 use \WpMatomo\Admin\Admin;
+use WpMatomo\RedirectOnActivation;
 
 class WpMatomo {
 
@@ -96,6 +96,12 @@ class WpMatomo {
 			if ( $referral->should_show() ) {
 				$referral->register_hooks();
 			}
+
+			/*
+			 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
+			 */
+			$redirect = new RedirectOnActivation($this);
+			$redirect->register_hooks();
 		}
 
 		$tracking_code = new TrackingCode( self::$settings );
@@ -241,28 +247,5 @@ class WpMatomo {
 
 	public static function should_disable_addhandler() {
 		return defined( 'MATOMO_DISABLE_ADDHANDLER' ) && MATOMO_DISABLE_ADDHANDLER;
-	}
-
-	/**
-	 * We don't test the result of the wp_redirect method and we silent this method
-	 * as this method will not work during unit tests.
-	 * We just return if yes or no we should redirect
-	 *
-	 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
-	 * @return boolean
-	 */
-	public function redirect_to_getting_started() {
-		$redirect = false;
-		if(!isset($_GET['activate-multi'])) {
-			if
-			(
-				( self::$settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) === 1 ) &&
-				( self::$settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_DISABLED )
-			) {
-				$redirect = true;
-				@wp_redirect( admin_url( 'admin.php?page=matomo-get-started' ) );
-			}
-		}
-		return $redirect;
 	}
 }

@@ -6,17 +6,18 @@
 use WpMatomo\Roles;
 use \WpMatomo\Settings;
 use \WpMatomo\Admin\TrackingSettings;
+use \WpMatomo\RedirectOnActivation;
 
 class AdminInstallTest extends MatomoUnit_TestCase {
-    /**
-     * @var |WpMatomo
-     */
-    private $_wpMatomo;
+	/**
+	 * @var \WpMatomo\RedirectOnActivation
+	 */
+    private $_redirect;
 
     public function setUp() {
         parent::setUp();
 
-        $this->_wpMatomo = new WpMatomo();
+        $this->_redirect = new RedirectOnActivation();
 
         wp_get_current_user()->add_role( Roles::ROLE_SUPERUSER );
 
@@ -30,7 +31,7 @@ class AdminInstallTest extends MatomoUnit_TestCase {
 
     public function test_redirect_to_getting_started() {
         // load the options of the wpmatomo object. otherwise it's another instance and updating configuration will do nothing
-    	$settings = $this->_wpMatomo::$settings;
+    	$settings = $this->_redirect::$settings;
         $original_show_get_started_page = $settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE);
         $original_tracking_mode = $settings->get_global_option('track_mode');
 	    $is_multi = isset($_GET['activate-multi']) ? $_GET['activate-multi'] : false;
@@ -38,18 +39,18 @@ class AdminInstallTest extends MatomoUnit_TestCase {
         // show starting page is disabled
         $settings->set_global_option(Settings::SHOW_GET_STARTED_PAGE, 0);
         $settings->save();
-        $this->assertFalse($this->_wpMatomo->redirect_to_getting_started());
+        $this->assertFalse($this->_redirect->redirect_to_getting_started());
         // show starting page is enabled but track mode is disabled
         $settings->set_global_option(Settings::SHOW_GET_STARTED_PAGE, 1);
         $settings->set_global_option('track_mode', TrackingSettings::TRACK_MODE_DISABLED);
         $settings->save();
-        $this->assertTrue($this->_wpMatomo->redirect_to_getting_started());
+        $this->assertTrue($this->_redirect->redirect_to_getting_started());
         // show getting started and track mode different of disabled
         $settings->set_global_option('track_mode', TrackingSettings::TRACK_MODE_DEFAULT);
         $settings->save();
-        $this->assertFalse($this->_wpMatomo->redirect_to_getting_started());
+        $this->assertFalse($this->_redirect->redirect_to_getting_started());
 	    $_GET['activate-multi'] = true;
-	    $this->assertFalse($this->_wpMatomo->redirect_to_getting_started());
+	    $this->assertFalse($this->_redirect->redirect_to_getting_started());
 	    // restore initial configuration
         $settings->set_global_option('track_mode',  $original_tracking_mode);
         $settings->set_global_option(Settings::SHOW_GET_STARTED_PAGE,  $original_show_get_started_page);

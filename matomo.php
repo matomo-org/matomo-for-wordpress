@@ -15,8 +15,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
  */
-use WpMatomo\RedirectOnActivation;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -207,10 +205,4 @@ if (matomo_is_app_request() || !empty($GLOBALS['MATOMO_LOADED_DIRECTLY'])) {
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'WpMatomo.php';
 require 'shared.php';
 matomo_add_plugin( __DIR__ . '/plugins/WordPress', MATOMO_ANALYTICS_FILE );
-$wpMatomo = new WpMatomo();
-
-/*
- * @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
- */
-$redirect = new RedirectOnActivation($wpMatomo);
-$redirect->register_hooks();
+new WpMatomo();
