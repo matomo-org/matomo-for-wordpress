@@ -13,6 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div class="updated error">
 	<?php foreach ( $errors as $error ) : ?>
-	<p><?php echo $error; ?></p>
+	<p><?php echo esc_html( $error, 'matomo' ); ?></p>
 	<?php endforeach; ?>
 </div>

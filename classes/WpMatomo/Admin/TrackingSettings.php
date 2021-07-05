@@ -219,7 +219,7 @@ class TrackingSettings implements AdminSettingsInterface {
 		if ( $this->validate_tracker() === true ) {
 			$was_updated = $this->update_if_submitted();
 		} else {
-			$errors[] = esc_html__( 'Your tracker comments are not well closed. Settings have not been saved', 'matomo' );
+			$errors[] = 'Your tracker comments are not well closed. Settings have not been saved';
 		}
 
 		$settings    = $this->settings;
