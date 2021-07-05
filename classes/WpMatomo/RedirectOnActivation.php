@@ -22,8 +22,7 @@ class RedirectOnActivation {
 	}
 
 	public function register_hooks() {
-		$file = realpath(dirname(__FILE__).'/../../matomo.php');
-		register_activation_hook($file, [ $this, 'matomo_activate' ] );
+		register_activation_hook(MATOMO_ANALYTICS_FILE, [ $this, 'matomo_activate' ] );
 		add_action( 'admin_init', [ $this, 'matomo_plugin_redirect' ] );
 	}
 
