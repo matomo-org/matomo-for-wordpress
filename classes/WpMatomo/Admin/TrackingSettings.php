@@ -232,10 +232,10 @@ class TrackingSettings implements AdminSettingsInterface {
 		$was_updated = false;
 		$errors = [];
 		if ( $this->validate_no_script() !== true ) {
-			$errors[] = 'Your noscript code comments are not well closed. Settings have not been saved';
+			$errors[] = __( 'Your noscript code comments are not well closed. Settings have not been saved', 'matomo' );
 		}
 		if ( $this->validate_tracker() !== true ) {
-			$errors[] = 'Your tracker comments are not well closed. Settings have not been saved';
+			$errors[] = __( 'Your tracker comments are not well closed. Settings have not been saved', 'matomo' );
 		}
 		if ( count($errors) === 0 ) {
 			$was_updated = $this->update_if_submitted();
