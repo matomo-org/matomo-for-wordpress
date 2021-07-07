@@ -22,6 +22,24 @@ Matomo is released under the GPL v3 (or later) license, see [LICENSE](LICENSE)
 We believe in liberating Web Analytics, providing a free platform for simple and advanced analytics. Matomo was built by dozens of people like you,
 and we need your help to make Matomo better… Why not participate in a useful project today? [Learn how you can contribute to Matomo.](https://matomo.org/get-involved)
 
+You can also find more information on our [developer website](https://developer.matomo.org/).
+
+### Installing Matomo for WordPress for development using git
+
+Make sure the plugin folder in your WordPress is not called `matomo-for-wordpress` but `matomo`. When you clone the repository you may directly want to specify the right path like this:
+
+```bash
+git clone git@github.com:matomo-org/matomo-for-wordpress.git wp-content/plugins/matomo
+```
+
+#### Install composer
+
+Now run the below command to have phpunit etc available. Requires [Composer](https://getcomposer.org/) to be installed.
+
+```bash
+composer install # or composer.phar install
+```
+
 ## Security
 
 Security is a top priority at Matomo. As potential issues are discovered, we validate, patch and release fixes as quickly as we can. We have a security bug bounty program in place that rewards researchers for finding security issues and disclosing them to us.

@@ -33,6 +33,7 @@ use \WpMatomo\Ecommerce\Woocommerce;
 use \WpMatomo\Report\Renderer;
 use WpMatomo\API;
 use \WpMatomo\Admin\Admin;
+use WpMatomo\RedirectOnActivation;
 
 class WpMatomo {
 
@@ -92,9 +93,15 @@ class WpMatomo {
 			$user_sync->register_hooks();
 
 			$referral = new \WpMatomo\Referral();
-			if ($referral->should_show()) {
+			if ( $referral->should_show() ) {
 				$referral->register_hooks();
 			}
+
+			/*
+			 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
+			 */
+			$redirect = new RedirectOnActivation($this);
+			$redirect->register_hooks();
 		}
 
 		$tracking_code = new TrackingCode( self::$settings );
@@ -127,7 +134,7 @@ class WpMatomo {
 		$upload_path = $paths->get_upload_base_dir();
 
 		if ( $upload_path
-			 && ! is_writable( dirname( $upload_path ) ) ) {
+		     && ! is_writable( dirname( $upload_path ) ) ) {
 			add_action(
 				'init',
 				function () use ( $upload_path ) {
@@ -135,7 +142,7 @@ class WpMatomo {
 						add_action(
 							'admin_notices',
 							function () use ( $upload_path ) {
-								echo '<div class="error"><p>' . sprintf(__( 'Matomo Analytics requires the uploads directory %s to be writable. Please make the directory writable for it to work.', 'matomo' ), '(' . esc_html( dirname( $upload_path ) ) . ')') . '</p></div>';
+								echo '<div class="error"><p>' . sprintf( __( 'Matomo Analytics requires the uploads directory %s to be writable. Please make the directory writable for it to work.', 'matomo' ), '(' . esc_html( dirname( $upload_path ) ) . ')' ) . '</p></div>';
 							}
 						);
 					}
@@ -150,21 +157,20 @@ class WpMatomo {
 
 	public static function is_admin_user() {
 		if ( ! function_exists( 'is_multisite' )
-			 || ! is_multisite() ) {
+		     || ! is_multisite() ) {
 			return current_user_can( 'administrator' );
 		}
 
 		return is_super_admin();
 	}
 
-	private static function get_active_plugins()
-	{
+	private static function get_active_plugins() {
 		$plugins = [];
-		if (function_exists('is_multisite') && is_multisite()) {
+		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 			$muplugins = get_site_option( 'active_sitewide_plugins' );
-			$plugins = array_keys($muplugins);
+			$plugins   = array_keys( $muplugins );
 		}
-		$plugins = array_merge((array) get_option( 'active_plugins', array() ), $plugins);
+		$plugins = array_merge( (array) get_option( 'active_plugins', array() ), $plugins );
 
 		return $plugins;
 	}
@@ -177,8 +183,8 @@ class WpMatomo {
 		// we are not using is_plugin_active() for performance reasons
 		$active_plugins = self::get_active_plugins();
 
-		if (in_array('wp-rss-aggregator/wp-rss-aggregator.php', $active_plugins)
-			|| in_array('wp-defender/wp-defender.php', $active_plugins)) {
+		if ( in_array( 'wp-rss-aggregator/wp-rss-aggregator.php', $active_plugins )
+		     || in_array( 'wp-defender/wp-defender.php', $active_plugins ) ) {
 			return true;
 		}
 
@@ -199,12 +205,12 @@ class WpMatomo {
 
 	public function init_plugin() {
 		if ( ( is_admin() || matomo_is_app_request() )
-			 && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+		     && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 			$installer = new Installer( self::$settings );
 			$installer->register_hooks();
 			if ( $installer->looks_like_it_is_installed() ) {
 				if ( is_admin()
-					 && ( ! defined( 'MATOMO_ENABLE_AUTO_UPGRADE' ) || MATOMO_ENABLE_AUTO_UPGRADE ) ) {
+				     && ( ! defined( 'MATOMO_ENABLE_AUTO_UPGRADE' ) || MATOMO_ENABLE_AUTO_UPGRADE ) ) {
 					$updater = new Updater( self::$settings );
 					$updater->update_if_needed();
 				}
@@ -222,8 +228,8 @@ class WpMatomo {
 		}
 		$tracking_code = new TrackingCode( self::$settings );
 		if ( self::$settings->is_tracking_enabled()
-			 && self::$settings->get_global_option( 'track_ecommerce' )
-			 && ! $tracking_code->is_hidden_user() ) {
+		     && self::$settings->get_global_option( 'track_ecommerce' )
+		     && ! $tracking_code->is_hidden_user() ) {
 			$tracker = new AjaxTracker( self::$settings );
 
 			$woocommerce = new Woocommerce( $tracker );
@@ -239,8 +245,7 @@ class WpMatomo {
 		}
 	}
 
-	public static function should_disable_addhandler()
-	{
-		return defined('MATOMO_DISABLE_ADDHANDLER') && MATOMO_DISABLE_ADDHANDLER;
+	public static function should_disable_addhandler() {
+		return defined( 'MATOMO_DISABLE_ADDHANDLER' ) && MATOMO_DISABLE_ADDHANDLER;
 	}
 }
