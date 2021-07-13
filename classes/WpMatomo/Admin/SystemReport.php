@@ -60,6 +60,8 @@ class SystemReport {
 		'wp-defender', // see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
 		'age-verification-for-woocommerce', // see https://github.com/matomo-org/wp-matomo/issues/428
 		'minify-html-markup', // see https://wordpress.org/support/topic/graphs-are-not-displayed-in-the-visits-overview-widget/#post-14298068
+		'bigbuy-wc-dropshipping-connector', // see https://wordpress.org/support/topic/20-total-errors-during-this-script-execution/
+		'google-listings-and-ads' // see https://wordpress.org/support/topic/20-total-errors-during-this-script-execution/
 	);
 
 	private $valid_tabs = array( 'troubleshooting' );
