@@ -197,27 +197,23 @@ class TrackingSettings implements AdminSettingsInterface {
 		return isset( $_POST ) 	&& ! empty( $_POST[ self::FORM_NAME ] );
 	}
 
-	public function validate_tracker () {
+	/**
+	 * @param string $field
+	 *
+	 * @return bool
+	 */
+	public function has_valid_html_comments ($field) {
 		$valid = true;
 		if ( $this->form_submitted() === true ) {
 			if ( $this->must_update_tracker() === true ) {
-				if ( ! empty( $_POST[ self::FORM_NAME ]['tracking_code'] ) ) {
-					$valid = $this->validate_html_comments( $_POST[ self::FORM_NAME ]['tracking_code'] );
+				if ( ! empty( $_POST[ self::FORM_NAME ][$field] ) ) {
+					$valid = $this->validate_html_comments( $_POST[ self::FORM_NAME ][$field] );
 				}
 			}
 		}
 		return $valid;
 	}
 
-	public function validate_no_script() {
-		$valid = true;
-		if ( $this->form_submitted() === true ) {
-			if ( ! empty( $_POST[ self::FORM_NAME ]['noscript_code'] ) ) {
-				$valid = $this->validate_html_comments( $_POST[ self::FORM_NAME ]['noscript_code'] );
-			}
-		}
-		return $valid;
-	}
 	/**
 	 * @param string $html html content to validate
 	 * @returns boolean
@@ -231,10 +227,10 @@ class TrackingSettings implements AdminSettingsInterface {
 	public function show_settings() {
 		$was_updated = false;
 		$errors = [];
-		if ( $this->validate_no_script() !== true ) {
+		if ( $this->has_valid_html_comments( 'tracking_code' ) !== true ) {
 			$errors[] = __( 'Your noscript code comments are not well closed. Settings have not been saved', 'matomo' );
 		}
-		if ( $this->validate_tracker() !== true ) {
+		if ( $this->has_valid_html_comments( 'noscript_code' ) !== true ) {
 			$errors[] = __( 'Your tracker comments are not well closed. Settings have not been saved', 'matomo' );
 		}
 		if ( count($errors) === 0 ) {
