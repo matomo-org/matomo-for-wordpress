@@ -1214,8 +1214,8 @@ class SystemReport {
 		$has_missing_tables = ( count($missing_tables) > 0 );
 		$rows[] = array(
 			'name'          => 'DB tables exist',
-			'value'         => $has_missing_tables ? 'No' : 'Yes' ,
-			'comment'       => $has_missing_tables ? sprintf( esc_html__('Some tables may be missing: %s', 'matomo'), implode(',', $missing_tables ) ) : 'None',
+			'value'         => ( ! $has_missing_tables ) ,
+			'comment'       => $has_missing_tables ? sprintf( __('Some tables may be missing: %s', 'matomo'), implode(',', $missing_tables ) ) : '',
 			'is_error'      => $has_missing_tables
 		);
 
