@@ -97,15 +97,15 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 
 	public function test_get_missing_tables() {
 		global $wpdb;
-		$this->assertEquals( 0, count( $this->report->get_missing_tables() ) );
+		$this->assertCount( 0, $this->report->get_missing_tables() );
 
 		$old_table_name = $this->report->dbSettings->prefix_table_name('site');
 		$new_table_name = $old_table_name . '_bkp';
 		$wpdb->query("ALTER TABLE $old_table_name RENAME $new_table_name" );
 
 		$missing_tables = $this->report->get_missing_tables();
-		$this->assertEquals( 1, count( $missing_tables ) );
-		$this->assertEquals( $old_table_name, $missing_tables[0] );
+		$this->assertCount( 1, $missing_tables );
+		$this->assertSame( [$old_table_name], array_values( $missing_tables ) );
 
 		$wpdb->query("ALTER TABLE $new_table_name RENAME $old_table_name" );
 	}
