@@ -23,7 +23,7 @@ class Settings {
 	 * @return string
 	 * @api
 	 */
-	public function prefix_table_name( $table_name_to_prefix ) {
+	public function prefix_table_name( $table_name_to_prefix = '') {
 		global $wpdb;
 
 		return $wpdb->prefix . MATOMO_DATABASE_PREFIX . $table_name_to_prefix;
@@ -78,7 +78,8 @@ class Settings {
 		global $wpdb;
 
 		$table_names = array();
-		$tables      = $wpdb->get_results( 'SHOW TABLES LIKE "' . $wpdb->prefix . str_replace( '_', '\_', MATOMO_DATABASE_PREFIX ) . '%"', ARRAY_N );
+
+		$tables      = $wpdb->get_results( 'SHOW TABLES LIKE "' . $this->prefix_table_name() . '%"', ARRAY_N );
 		foreach ( $tables as $table_name_to_look_for ) {
 			$table_names[] = array_shift( $table_name_to_look_for );
 		}

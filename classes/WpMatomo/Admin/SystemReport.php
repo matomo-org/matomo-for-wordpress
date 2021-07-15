@@ -77,7 +77,9 @@ class SystemReport {
 	private $logger;
 
 	private $initial_error_reporting = null;
-
+	/**
+	 * @var \WpMatomo\Db\Settings
+	 */
 	public $dbSettings;
 
 	public function __construct( Settings $settings ) {
@@ -1215,7 +1217,7 @@ class SystemReport {
 		$rows[] = array(
 			'name'          => 'DB tables exist',
 			'value'         => ( ! $has_missing_tables ) ,
-			'comment'       => $has_missing_tables ? sprintf( __('Some tables may be missing: %s', 'matomo'), implode(',', $missing_tables ) ) : '',
+			'comment'       => $has_missing_tables ? sprintf( __('Some tables may be missing: %s', 'matomo'), implode(', ', $missing_tables ) ) : '',
 			'is_error'      => $has_missing_tables
 		);
 
@@ -1268,25 +1270,18 @@ class SystemReport {
 	}
 
 	/**
-	 * @param string $table
-	 * @param $key
-	 * @return void
-	 */
-	private function apply_prefix( & $table, $key ) {
-		$table = $this->dbSettings->prefix_table_name( $table );
-	}
-	/**
 	 * @return string[]
 	 */
 	public function get_missing_tables() {
 		global $wpdb;
 
 		$required_matomo_tables = $this->dbSettings->get_matomo_tables();
-		array_walk( $required_matomo_tables, array( $this, 'apply_prefix' ) );
+		$required_matomo_tables = array_map( array( $this->dbSettings, 'prefix_table_name' ), $required_matomo_tables );
 
 		$existing_tables = array();
 		try {
-			$existing_tables = $wpdb->get_col( 'SHOW TABLES LIKE "' . $wpdb->prefix . str_replace( '_', '\_', MATOMO_DATABASE_PREFIX ) . '%"' );
+			$prefix = $this->dbSettings->prefix_table_name('');
+			$existing_tables = $wpdb->get_col( 'SHOW TABLES LIKE "' . $prefix . '%"' );
 		} catch (\Exception $e) {
 			$this->logger->log( 'no show tables: ' . $e->getMessage() );
 		}
