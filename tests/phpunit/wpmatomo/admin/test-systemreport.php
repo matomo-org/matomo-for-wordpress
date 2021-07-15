@@ -18,6 +18,12 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 	 * @var Settings
 	 */
 	private $settings;
+	/**
+	 * Required for test_get_missing_tables
+	 * @see AdminSystemReportTest::test_get_missing_tables()
+	 * @var bool
+	 */
+	protected $disable_temp_tables = true;
 
 	public function setUp() {
 		parent::setUp();
@@ -87,6 +93,26 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 		$_POST[ $field ]        = 1;
 		$_REQUEST['_wpnonce']   = wp_create_nonce( SystemReport::NONCE_NAME );
 		$_SERVER['REQUEST_URI'] = home_url();
+	}
+
+	public function test_get_missing_tables() {
+		global $wpdb;
+		$this->assertEquals( 0, count( $this->report->get_missing_tables() ) );
+		try {
+			$old_table_name = $this->report->dbSettings->prefix_table_name('site');
+			$new_table_name = $old_table_name . '_bkp';
+			$wpdb->query("ALTER TABLE $old_table_name RENAME $new_table_name" );
+
+			$missing_tables = $this->report->get_missing_tables();
+			$this->assertEquals( 1, count( $missing_tables ) );
+			$this->assertEquals( $old_table_name, $missing_tables[0] );
+
+			$wpdb->query("ALTER TABLE $new_table_name RENAME $old_table_name" );
+		} catch ( Exception $e ) {
+			$logger = new \WpMatomo\Logger();
+			$logger->log( 'test_get_missing_tables: an error happened: '.$e->getMessage() );
+		}
+
 	}
 
 }
