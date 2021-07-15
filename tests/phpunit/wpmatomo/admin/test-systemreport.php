@@ -98,21 +98,16 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 	public function test_get_missing_tables() {
 		global $wpdb;
 		$this->assertEquals( 0, count( $this->report->get_missing_tables() ) );
-		try {
-			$old_table_name = $this->report->dbSettings->prefix_table_name('site');
-			$new_table_name = $old_table_name . '_bkp';
-			$wpdb->query("ALTER TABLE $old_table_name RENAME $new_table_name" );
 
-			$missing_tables = $this->report->get_missing_tables();
-			$this->assertEquals( 1, count( $missing_tables ) );
-			$this->assertEquals( $old_table_name, $missing_tables[0] );
+		$old_table_name = $this->report->dbSettings->prefix_table_name('site');
+		$new_table_name = $old_table_name . '_bkp';
+		$wpdb->query("ALTER TABLE $old_table_name RENAME $new_table_name" );
 
-			$wpdb->query("ALTER TABLE $new_table_name RENAME $old_table_name" );
-		} catch ( Exception $e ) {
-			$logger = new \WpMatomo\Logger();
-			$logger->log( 'test_get_missing_tables: an error happened: '.$e->getMessage() );
-		}
+		$missing_tables = $this->report->get_missing_tables();
+		$this->assertEquals( 1, count( $missing_tables ) );
+		$this->assertEquals( $old_table_name, $missing_tables[0] );
 
+		$wpdb->query("ALTER TABLE $new_table_name RENAME $old_table_name" );
 	}
 
 }
