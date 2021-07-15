@@ -77,10 +77,15 @@ class SystemReport {
 	private $logger;
 
 	private $initial_error_reporting = null;
+	/**
+	 * @var \WpMatomo\Db\Settings
+	 */
+	public $dbSettings;
 
 	public function __construct( Settings $settings ) {
 		$this->settings = $settings;
 		$this->logger = new Logger();
+		$this->dbSettings = new \WpMatomo\Db\Settings();
 	}
 
 	public function get_not_compatible_plugins() {
@@ -744,8 +749,8 @@ class SystemReport {
 		}
 
 		$days_in_seconds = $numDays * 86400;
-		$db = new \WpMatomo\Db\Settings();
-		$prefix_table = $db->prefix_table_name('log_visit');
+
+		$prefix_table = $this->dbSettings->prefix_table_name('log_visit');
 
 		$suppress_errors = $wpdb->suppress_errors;
 		$wpdb->suppress_errors( true );// prevent any of this showing in logs just in case
@@ -1207,6 +1212,15 @@ class SystemReport {
 			'value' => $this->get_num_matomo_tables(),
 		);
 
+		$missing_tables = $this->get_missing_tables();
+		$has_missing_tables = ( count($missing_tables) > 0 );
+		$rows[] = array(
+			'name'          => 'DB tables exist',
+			'value'         => ( ! $has_missing_tables ) ,
+			'comment'       => $has_missing_tables ? sprintf( __('Some tables may be missing: %s', 'matomo'), implode(', ', $missing_tables ) ) : '',
+			'is_error'      => $has_missing_tables
+		);
+
 		foreach (['user', 'site'] as $table) {
 			$rows[] = array(
 				'name'  => 'Matomo '.$table.'s found',
@@ -1255,11 +1269,29 @@ class SystemReport {
 		return $rows;
 	}
 
+	/**
+	 * @return string[]
+	 */
+	public function get_missing_tables() {
+		global $wpdb;
+
+		$required_matomo_tables = $this->dbSettings->get_matomo_tables();
+		$required_matomo_tables = array_map( array( $this->dbSettings, 'prefix_table_name' ), $required_matomo_tables );
+
+		$existing_tables = array();
+		try {
+			$prefix = $this->dbSettings->prefix_table_name('');
+			$existing_tables = $wpdb->get_col( 'SHOW TABLES LIKE "' . $prefix . '%"' );
+		} catch (\Exception $e) {
+			$this->logger->log( 'no show tables: ' . $e->getMessage() );
+		}
+		return array_diff( $required_matomo_tables, $existing_tables );
+	}
+
 	private function get_num_entries_in_table($table) {
 		global $wpdb;
 
-		$db_settings = new \WpMatomo\Db\Settings();
-		$prefix = $db_settings->prefix_table_name($table);
+		$prefix = $this->dbSettings->prefix_table_name($table);
 
 		$results = null;
 		try {
@@ -1277,8 +1309,7 @@ class SystemReport {
 	private function get_num_matomo_tables() {
 		global $wpdb;
 
-		$db_settings = new \WpMatomo\Db\Settings();
-		$prefix = $db_settings->prefix_table_name('');
+		$prefix = $this->dbSettings->prefix_table_name('');
 
 		$results = null;
 		try {
