@@ -23,6 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var array $containers */
 /** @var array $track_modes */
 /** @var array $matomo_currencies */
+/** @var array $cookie_consent_modes */
 
 $matomo_form  = new \WpMatomo\Admin\TrackingSettings\Forms( $settings );
 $matomo_paths = new Paths();
@@ -78,6 +79,8 @@ if ( $was_updated ) {
 		$matomo_form->show_headline(esc_html__('Customise tracking (optional)', 'matomo'), 'matomo-track-option matomo-track-option-default matomo-track-option-manually matomo-track-option-tagmanager');
 
 		$matomo_form->show_checkbox( 'disable_cookies', esc_html__( 'Disable cookies', 'matomo' ), esc_html__( 'Disable all tracking cookies for a visitor.', 'matomo' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
+
+		$matomo_form->show_select( 'cookie_consent', esc_html__( 'Cookie consent', 'matomo' ), $cookie_consent_modes, esc_html__( 'The cookie consent mode. For mode information please read this <a href="https://developer.matomo.org/guides/tracking-consent" target="_blank">Faq</a>', 'matomo' ), '' );
 
 		$matomo_form->show_checkbox( 'track_ecommerce', esc_html__( 'Enable ecommerce', 'matomo' ), esc_html__( 'Matom can track Ecommerce orders, abandoned carts and product views for WooCommerce, Easy Digital Analytics, MemberPress, and more. Disabling this feature will also remove Ecommerce reports from the Matomo UI.', 'matomo' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
 
