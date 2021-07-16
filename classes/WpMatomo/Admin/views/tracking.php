@@ -80,8 +80,6 @@ if ( $was_updated ) {
 
 		$matomo_form->show_checkbox( 'disable_cookies', esc_html__( 'Disable cookies', 'matomo' ), esc_html__( 'Disable all tracking cookies for a visitor.', 'matomo' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
 
-		$matomo_form->show_select( 'cookie_consent', esc_html__( 'Cookie consent', 'matomo' ), $cookie_consent_modes, __( 'The cookie consent mode. For mode information please read this <a href="https://developer.matomo.org/guides/tracking-consent" target="_blank">Faq</a>', 'matomo' ), '', $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
-
 		$matomo_form->show_checkbox( 'track_ecommerce', esc_html__( 'Enable ecommerce', 'matomo' ), esc_html__( 'Matom can track Ecommerce orders, abandoned carts and product views for WooCommerce, Easy Digital Analytics, MemberPress, and more. Disabling this feature will also remove Ecommerce reports from the Matomo UI.', 'matomo' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
 
 		$matomo_form->show_checkbox( 'track_search', esc_html__( 'Track search', 'matomo' ), esc_html__( 'Use Matomo\'s advanced Site Search Analytics feature.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/site-search/#track-site-search-using-the-tracking-api-advanced-users-only" rel="noreferrer noopener" target="_BLANK">', '</a>' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
@@ -220,6 +218,8 @@ if ( $was_updated ) {
 			$matomo_is_not_tracking,
 			$matomo_full_generated_tracking_group
 		);
+
+		$matomo_form->show_select( 'cookie_consent', esc_html__( 'Consent mode', 'matomo' ), $cookie_consent_modes, sprintf(esc_html__( 'Activates a specific Matomo consent mode. Only configure a consent mode if you are implementing a consent screen yourself. This requires a custom consent implementation. For more information please read this %1$sFAQ%2$s. By default no consent mode is applied.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-consent" rel="noreferrer noopener" target="_blank">', '</a>'), '', $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
 
 		$matomo_form->show_headline(esc_html__('For Developers', 'matomo'), 'matomo-track-option matomo-track-option-default matomo-track-option-disabled matomo-track-option-manually matomo-track-option-tagmanager');
 

@@ -19,9 +19,9 @@ class CookieConsent {
 	 */
 	public static function getAvailableOptions() {
 		return [
-			self::REQUIRE_NONE,
-			self::REQUIRE_COOKIE_CONSENT,
-			self::REQUIRE_TRACKING_CONSENT
+			self::REQUIRE_NONE => __( 'None', 'matomo' ),
+			self::REQUIRE_COOKIE_CONSENT => __('Require cookie consent', 'matomo'),
+			self::REQUIRE_TRACKING_CONSENT => __('Require tracking consent', 'matomo')
 		];
 
 	}
@@ -33,7 +33,6 @@ class CookieConsent {
 	 * @return string
 	 */
 	public function getTrackingConsentOption( $tracking_mode ) {
-		$tracking_code = '';
 		switch( $tracking_mode ) {
 			case self::REQUIRE_TRACKING_CONSENT:
 				$tracking_code = <<<JAVASCRIPT

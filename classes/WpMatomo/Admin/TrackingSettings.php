@@ -214,8 +214,8 @@ class TrackingSettings implements AdminSettingsInterface {
 	private function get_cookie_consent_modes()
 	{
 		$modes = [];
-		foreach(CookieConsent::getAvailableOptions() as $option) {
-			$modes[$option] = __( $option, 'matomo' );
+		foreach(CookieConsent::getAvailableOptions() as $option => $description) {
+			$modes[$option] = $description;
 		}
 		return $modes;
 	}
