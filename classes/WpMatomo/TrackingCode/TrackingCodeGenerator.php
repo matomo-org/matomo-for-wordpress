@@ -270,10 +270,12 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 			$options[] = "_paq.push(['setRequestMethod', 'POST']);";
 		}
 
-		if ( $this->settings->get_global_option( 'cookie_consent' ) !== CookieConsent::REQUIRE_NONE ) {
-			$cookieConsent = new CookieConsent();
-			$options[] = $cookieConsent->get_tracking_consent_option( $this->settings->get_global_option( 'cookie_consent' ) );
- 		}
+		$cookieConsent = new CookieConsent();
+		$cookie_consent_option = $cookieConsent->get_tracking_consent_option( $this->settings->get_global_option( 'cookie_consent' ) );
+		// for unit test cases
+		if ( ! empty( $cookie_consent_option ) ) {
+			$options[] = $cookie_consent_option;
+		}
 
 		if ( $this->settings->get_global_option( 'limit_cookies' ) ) {
 			$options[] = "_paq.push(['setVisitorCookieTimeout', " . wp_json_encode( $this->settings->get_global_option( 'limit_cookies_visitor' ) ) . ']);';
