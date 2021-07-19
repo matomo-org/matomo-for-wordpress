@@ -218,8 +218,8 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 				'cookie_consent' => CookieConsent::REQUIRE_COOKIE_CONSENT,
 			)
 		);
-		$this->assertNotContains( "_paq.push(['requireCookieConsent']);", $this->get_tracking_code() );
-		$this->assertNotContains( "_paq.push(['requireConsent']);", $this->get_tracking_code() );
+		$this->assertNotContains( "requireCookieConsent", $this->get_tracking_code() );
+		$this->assertNotContains( "requireConsent", $this->get_tracking_code() );
 	}
 
 	public function test_cookie_consent_manually() {
@@ -229,8 +229,8 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 				'cookie_consent' => CookieConsent::REQUIRE_COOKIE_CONSENT,
 			)
 		);
-		$this->assertNotContains( "_paq.push(['requireCookieConsent']);", $this->get_tracking_code() );
-		$this->assertNotContains( "_paq.push(['requireConsent']);", $this->get_tracking_code() );
+		$this->assertNotContains( "requireCookieConsent", $this->get_tracking_code() );
+		$this->assertNotContains( "requireConsent", $this->get_tracking_code() );
 	}
 
 	public function test_cookie_consent_none() {
@@ -240,8 +240,8 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 				'cookie_consent' => CookieConsent::REQUIRE_NONE,
 			)
 		);
-		$this->assertNotContains( "_paq.push(['requireCookieConsent']);", $this->get_tracking_code() );
-		$this->assertNotContains( "_paq.push(['requireConsent']);", $this->get_tracking_code() );
+		$this->assertNotContains( "requireCookieConsent", $this->get_tracking_code() );
+		$this->assertNotContains( "requireConsent", $this->get_tracking_code() );
 	}
 
 	public function test_cookie_consent_cookie() {
