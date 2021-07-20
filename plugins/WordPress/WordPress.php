@@ -239,7 +239,7 @@ class WordPress extends Plugin
             'timeout'             => $params['timeout'],
             'headers'             => $rawHeaders,
             'body'                => $params['body'],
-            'sslverify'           => false,
+            'sslverify'           => true,
         );
         if (!empty($params['userAgent'])) {
             $args['user-agent'] = $params['userAgent'];
@@ -249,7 +249,9 @@ class WordPress extends Plugin
             $args['stream'] = true;
         }
             // by default we want to reuse WP default value unless someone specifically disabled it for Matomo
-            $args['sslverify'] = false;
+	    if (isset($params['verifySsl']) && !$params['verifySsl']) {
+		    $args['sslverify'] = false;
+	    }
         $wpResponse = wp_remote_request($url, $args);
 
         if (is_object($wpResponse) && is_wp_error($wpResponse)) {
