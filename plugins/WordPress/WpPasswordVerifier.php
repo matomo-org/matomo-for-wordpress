@@ -9,19 +9,8 @@
 
 namespace Piwik\Plugins\WordPress;
 
-use Piwik\AuthResult;
-use Piwik\Common;
-use Piwik\FrontController;
 use Piwik\Piwik;
 use Piwik\Plugins\Login\PasswordVerifier;
-use Piwik\Plugins\UsersManager\Model;
-use Piwik\Session;
-use Piwik\SettingsPiwik;
-use Piwik\Url;
-use WpMatomo\Capabilities;
-use WpMatomo\Settings;
-use WpMatomo\Site;
-use WpMatomo\User;
 
 if (!defined( 'ABSPATH')) {
     exit; // if accessed directly
@@ -37,9 +26,7 @@ class WpPasswordVerifier extends PasswordVerifier
 		 */
 		Piwik::postEvent('Login.beforeLoginCheckAllowed');
 
-		if (Url::isValidHost()
-		    && (!Url::getReferrer() || Url::isValidHost(Url::getHostFromUrl(Url::getReferrer())))
-			&& function_exists('is_user_logged_in')
+		if (function_exists('is_user_logged_in')
 			&& is_user_logged_in()
 		) {
 			$user = wp_get_current_user();
