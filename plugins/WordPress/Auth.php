@@ -10,6 +10,7 @@
 namespace Piwik\Plugins\WordPress;
 
 use Piwik\AuthResult;
+use Piwik\Url;
 
 if (!defined( 'ABSPATH')) {
     exit; // if accessed directly
@@ -30,13 +31,18 @@ class Auth extends \Piwik\Plugins\Login\Auth
 		        return parent::authenticate();
 	        }
 	        // @see https://github.com/matomo-org/matomo-for-wordpress/issues/462
-	        if (!empty($_POST['passwordConfirmation'])) {
+	        if (!empty($_POST['passwordConfirmation'])
+	            && Url::getReferrer()
+	            && Url::isValidHost()
+	            && Url::isValidHost(Url::getHostFromUrl(Url::getReferrer()))) {
 	        	$user = wp_get_current_user();
 	        	$login = $user->user_login;
 	        	$password = $_POST['passwordConfirmation'];
 		         // check if this password is the login's password
-		        $isPasswordCorrect = wp_check_password($password, $user->user_pass, $user->ID);
-		        if ($isPasswordCorrect) {
+		        $authenticatedUser = wp_authenticate($user->user_login, $password);
+		        if ($authenticatedUser
+		            && $authenticatedUser instanceof \WP_User
+		            && $authenticatedUser->ID === $user->ID) {
 		        	return new AuthResult(AuthResult::SUCCESS, $login, '');
 		        } else {
 			        return new AuthResult(AuthResult::FAILURE, $login, '');
