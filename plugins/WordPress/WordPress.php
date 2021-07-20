@@ -248,10 +248,10 @@ class WordPress extends Plugin
             $args['filename'] = $params['destinationPath'];
             $args['stream'] = true;
         }
-        if (isset($params['verifySsl']) && !$params['verifySsl']) {
-            // by default we want to reuse WP default value unless someone specifically disabled it for Matomo
-            $args['sslverify'] = false;
-        }
+	    if (isset($params['verifySsl']) && !$params['verifySsl']) {
+		    // by default we want to reuse WP default value unless someone specifically disabled it for Matomo
+		    $args['sslverify'] = false;
+	    }
         $wpResponse = wp_remote_request($url, $args);
 
         if (is_object($wpResponse) && is_wp_error($wpResponse)) {
