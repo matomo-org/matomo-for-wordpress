@@ -31,9 +31,11 @@ class WpPasswordVerifier extends PasswordVerifier
 		) {
 			$user = wp_get_current_user();
 			// check if this password is the login's password
+			// wp_authenticate should make sure that lockout/brute force feature by security plugins are used etc
 			$authenticatedUser = wp_authenticate($user->user_login, $password);
 			if ($authenticatedUser
 			       && $authenticatedUser instanceof \WP_User
+			       && $authenticatedUser->ID
 			       && $authenticatedUser->ID === $user->ID) {
 				return true;
 			};
