@@ -283,12 +283,15 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 		}
 
 		$data_cf_async = '';
+		$data_of_async_option = [];
 		if ( $this->settings->get_global_option( 'track_datacfasync' ) ) {
 			$data_cf_async = 'data-cfasync="false"';
+			$data_of_async_option['data-cfasync'] = "false";
 		}
+		global $wp_version;
+		$method_exists = ( version_compare($wp_version, '5.7' ) >= 0 );
 
-		$script  = '<!-- Matomo -->';
-		$script .= '<script ' . $data_cf_async . ' >';
+		$script =  (! $method_exists) ? '<script ' . $data_cf_async . ' >' : '';
 		$script .= "var _paq = window._paq = window._paq || [];\n";
 		$script .= implode( "\n", $options );
 		$script .= self::TRACKPAGEVIEW;
@@ -297,8 +300,14 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 		$script .= "_paq.push(['setSiteId', '" . intval( $idsite ) . "']);";
 		$script .= "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
 g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint ) . '; s.parentNode.insertBefore(g,s);';
-		$script .= '</script>';
-		$script .= '<!-- End Matomo Code -->';
+		$script .= (! $method_exists) ? '</script>' : '';
+		if ( $method_exists ) {
+			$script = wp_get_inline_script_tag(
+				$script,
+				$data_of_async_option
+			);
+		}
+		$script = '<!-- Matomo -->'.$script.'<!-- End Matomo Code -->';
 
 		$no_script = '<noscript><p><img referrerpolicy="no-referrer-when-downgrade" src="' . esc_url( $tracker_endpoint ) . '?idsite=' . intval( $idsite ) . '&amp;rec=1" style="border:0;" alt="" /></p></noscript>';
 
