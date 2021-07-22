@@ -85,6 +85,13 @@ class TrackingCode {
 		return current_user_can( Capabilities::KEY_STEALTH );
 	}
 
+	public static function get_type_attribute() {
+		$type = '';
+		if (function_exists( "wp_get_inline_script_tag" ) && ! is_admin() && ! current_theme_supports( 'html5', 'script' ) ) {
+			$type = 'type="text/javascript"';
+		}
+		return $type;
+	}
 	/**
 	 * Echo javascript tracking code
 	 */
