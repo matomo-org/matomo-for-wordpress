@@ -24,6 +24,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var array $track_modes */
 /** @var array $matomo_currencies */
 /** @var string[] $errors */
+/** @var array $cookie_consent_modes */
+
 $matomo_form  = new \WpMatomo\Admin\TrackingSettings\Forms( $settings );
 $matomo_paths = new Paths();
 ?>
@@ -221,6 +223,8 @@ if ( count( $errors ) ) {
 			$matomo_is_not_tracking,
 			$matomo_full_generated_tracking_group
 		);
+
+		$matomo_form->show_select( 'cookie_consent', esc_html__( 'Custom consent screen', 'matomo' ), $cookie_consent_modes, sprintf(esc_html__( 'Activates a specific Matomo consent mode. Only configure a consent mode if you are implementing a consent screen yourself. This requires a custom consent implementation. For more information please read this %1$sFAQ%2$s (this option will take care of step 1 for you). By default no consent mode is applied.', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-consent" rel="noreferrer noopener" target="_blank">', '</a>'), '', $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
 
 		$matomo_form->show_headline(esc_html__('For Developers', 'matomo'), 'matomo-track-option matomo-track-option-default matomo-track-option-disabled matomo-track-option-manually matomo-track-option-tagmanager');
 

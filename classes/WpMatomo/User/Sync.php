@@ -48,11 +48,11 @@ class Sync {
 	}
 
 	public function register_hooks() {
-		add_action( 'add_user_role', array( $this, 'sync_current_users' ), $prio = 10, $args = 0 );
-		add_action( 'remove_user_role', array( $this, 'sync_current_users' ), $prio = 10, $args = 0 );
-		add_action( 'add_user_to_blog', array( $this, 'sync_current_users' ), $prio = 10, $args = 0 );
-		add_action( 'remove_user_from_blog', array( $this, 'sync_current_users' ), $prio = 10, $args = 0 );
-		add_action( 'user_register', array( $this, 'sync_current_users' ), $prio = 10, $args = 0 );
+		add_action( 'add_user_role', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
+		add_action( 'remove_user_role', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
+		add_action( 'add_user_to_blog', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
+		add_action( 'remove_user_from_blog', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
+		add_action( 'user_register', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
 		add_action( 'profile_update', array( $this, 'sync_maybe_background' ), $prio = 10, $args = 0 );
 	}
 
@@ -64,7 +64,7 @@ class Sync {
 			// if they eg alter `get_users` option
 			wp_schedule_single_event(time() + 5, ScheduledTasks::EVENT_SYNC);
 		} else {
-			$this->sync_current_users();
+			$this->sync_current_users_1000();
 		}
 	}
 
@@ -146,6 +146,22 @@ class Sync {
 		}
 	}
 
+	/**
+	 * similar method to sync_current_users which synchronise on the fly only if we have less than 1000 users.
+	 * Otherwise it will be done by a background task
+	 * @see Sync::sync_current_users()
+	 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/460
+	 * @return void
+	 */
+	public function sync_current_users_1000() {
+		$idsite = Site::get_matomo_site_id( get_current_blog_id() );
+		if ( $idsite ) {
+			$users = $this->get_users();
+			if ( count( $users ) < 1000 ) {
+				$this->sync_users( $users, $idsite );
+			}
+		}
+	}
 	/**
 	 * Sync all users. Make sure to always pass all sites that exist within a given site... you cannot just sync an individual
 	 * user... we would delete all other users

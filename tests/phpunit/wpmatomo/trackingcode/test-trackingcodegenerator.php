@@ -5,6 +5,7 @@
 
 use WpMatomo\Access;
 use WpMatomo\Admin\TrackingSettings;
+use WpMatomo\Admin\CookieConsent;
 use WpMatomo\Capabilities;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
@@ -185,7 +186,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/index.php?rest
 		} else {
 			$this->assertSame(
 				'<!-- Matomo Tag Manager -->
-<script  >
+<script >
 var _mtm = _mtm || [];
 _mtm.push({\'mtm.startTime\': (new Date().getTime()), \'event\': \'mtm.Start\'});
 var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
@@ -210,5 +211,56 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 		}
 	}
 
+	public function test_cookie_consent_tagmanager() {
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'     => TrackingSettings::TRACK_MODE_TAGMANAGER,
+				'cookie_consent' => CookieConsent::REQUIRE_COOKIE_CONSENT,
+			)
+		);
+		$this->assertNotContains( "requireCookieConsent", $this->get_tracking_code() );
+		$this->assertNotContains( "requireConsent", $this->get_tracking_code() );
+	}
 
+	public function test_cookie_consent_manually() {
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'     => TrackingSettings::TRACK_MODE_MANUALLY,
+				'cookie_consent' => CookieConsent::REQUIRE_COOKIE_CONSENT,
+			)
+		);
+		$this->assertNotContains( "requireCookieConsent", $this->get_tracking_code() );
+		$this->assertNotContains( "requireConsent", $this->get_tracking_code() );
+	}
+
+	public function test_cookie_consent_none() {
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'     => TrackingSettings::TRACK_MODE_DEFAULT,
+				'cookie_consent' => CookieConsent::REQUIRE_NONE,
+			)
+		);
+		$this->assertNotContains( "requireCookieConsent", $this->get_tracking_code() );
+		$this->assertNotContains( "requireConsent", $this->get_tracking_code() );
+	}
+
+	public function test_cookie_consent_cookie() {
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'     => TrackingSettings::TRACK_MODE_DEFAULT,
+				'cookie_consent' => CookieConsent::REQUIRE_COOKIE_CONSENT,
+			)
+		);
+		$this->assertContains( "_paq.push(['requireCookieConsent']);", $this->get_tracking_code() );
+	}
+
+	public function test_cookie_consent_tracking() {
+		$this->settings->apply_tracking_related_changes(
+			array(
+				'track_mode'     => TrackingSettings::TRACK_MODE_DEFAULT,
+				'cookie_consent' => CookieConsent::REQUIRE_TRACKING_CONSENT,
+			)
+		);
+		$this->assertContains( "_paq.push(['requireConsent']);", $this->get_tracking_code() );
+	}
 }

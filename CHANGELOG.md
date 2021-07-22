@@ -1,5 +1,11 @@
 == Changelog ==
 
+= 4.3.1 =
+* Validate HTML tracking code comments when configuring it manually
+* Redirect to getting started page after activating the plugin in some cases
+* Fix synchronising users may fail when there are thousands of users
+* Update compatibility with WordPress and WooCommerce
+
 = 4.3.0 =
 * Update core to 4.3.1
 * Detect Matomo URL better to prevent possible archiving failure "Unknown scheme"

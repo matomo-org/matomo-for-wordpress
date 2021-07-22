@@ -4,10 +4,10 @@
  * Description: The #1 Google Analytics alternative that gives you full control over your data and protects the privacy for your users. Free, secure and open.
  * Author: Matomo
  * Author URI: https://matomo.org
- * Version: 4.3.0
+ * Version: 4.3.1
  * Domain Path: /languages
  * WC requires at least: 2.4.0
- * WC tested up to: 5.2.0
+ * WC tested up to: 5.5.0
  *
  * Matomo - free/libre analytics platform
  *
@@ -15,7 +15,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
  */
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
