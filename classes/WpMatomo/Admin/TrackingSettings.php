@@ -204,8 +204,8 @@ class TrackingSettings implements AdminSettingsInterface {
 	 */
 	public function has_valid_html_comments ($field) {
 		$valid = true;
-		if ( $this->form_submitted() === true ) {
-			if ( $this->must_update_tracker() === true ) {
+		if ( $this->form_submitted() == true ) {
+			if ( $this->must_update_tracker() == true ) {
 				if ( ! empty( $_POST[ self::FORM_NAME ][$field] ) ) {
 					$valid = $this->validate_html_comments( $_POST[ self::FORM_NAME ][$field] );
 				}
@@ -228,10 +228,10 @@ class TrackingSettings implements AdminSettingsInterface {
 		$was_updated = false;
 		$errors = [];
 		if ( $this->has_valid_html_comments( 'tracking_code' ) !== true ) {
-			$errors[] = __( 'Your noscript code comments are not well closed. Settings have not been saved', 'matomo' );
+			$errors[] = __( 'Settings have not been saved. There is an issue with the HTML comments in the field "tracking_code". Make sure all opened comments (<!--) are closed (-->) correctly', 'matomo' );
 		}
 		if ( $this->has_valid_html_comments( 'noscript_code' ) !== true ) {
-			$errors[] = __( 'Your tracker comments are not well closed. Settings have not been saved', 'matomo' );
+			$errors[] = __( 'Settings have not been saved. There is an issue with the HTML comments in the field "noscript_code". Make sure all opened comments (<!--) are closed (-->) correctly', 'matomo' );
 		}
 		if ( count($errors) === 0 ) {
 			$was_updated = $this->update_if_submitted();
