@@ -34,6 +34,7 @@ use \WpMatomo\Report\Renderer;
 use WpMatomo\API;
 use \WpMatomo\Admin\Admin;
 use WpMatomo\RedirectOnActivation;
+use WpMatomo\Admin\Chart;
 
 class WpMatomo {
 
@@ -97,6 +98,8 @@ class WpMatomo {
 				$referral->register_hooks();
 			}
 
+			$chart = new Chart();
+			$chart->register_hooks();
 			/*
 			 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
 			 */

@@ -33,6 +33,7 @@ class Summary {
 	 */
 	public function __construct( $settings ) {
 		$this->settings = $settings;
+		do_action('load_chartjs');
 	}
 
 	private function pin_if_submitted() {

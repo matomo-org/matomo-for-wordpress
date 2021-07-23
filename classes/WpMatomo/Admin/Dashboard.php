@@ -24,6 +24,10 @@ class Dashboard {
 
 	const DASHBOARD_USER_OPTION = 'matomo_dashboard_widgets';
 
+	public function __construct() {
+		do_action('load_chartjs');
+	}
+
 	public function register_hooks() {
 		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
 	}
