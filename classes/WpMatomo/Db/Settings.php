@@ -35,7 +35,7 @@ class Settings {
 	public function get_matomo_tables() {
 		// we need to hard code them unfortunately for tests cause there are temporary tables used and we can't find a
 		// list of existing temp tables
-		return array(
+		$tables = array(
 			'access',
 			'archive_invalidations',
 			'brute_force_log',
@@ -59,12 +59,6 @@ class Settings {
 			'site',
 			'site_setting',
 			'site_url',
-			'tagmanager_container',
-			'tagmanager_container_release',
-			'tagmanager_container_version',
-			'tagmanager_tag',
-			'tagmanager_trigger',
-			'tagmanager_variable',
 			'tracking_failure',
 			'twofactor_recovery_code',
 			'user',
@@ -72,6 +66,15 @@ class Settings {
 			'user_language',
 			'user_token_auth',
 		);
+		if ( !is_multisite() ) {
+			$tables = array_merge($tables, ['tagmanager_container',
+				'tagmanager_container_release',
+				'tagmanager_container_version',
+				'tagmanager_tag',
+				'tagmanager_trigger',
+				'tagmanager_variable'] );
+		}
+		return $tables;
 	}
 
 	public function get_installed_matomo_tables() {
