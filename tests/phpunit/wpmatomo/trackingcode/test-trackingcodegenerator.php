@@ -52,7 +52,7 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 		);
 
 		$this->assertSame(
-			'<!-- Matomo --><script '.$this->get_type().'>
+			'<!-- Matomo --><script '.$this->get_type_attribute().'>
 var _paq = window._paq = window._paq || [];
 _paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'alwaysUseSendBeacon\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
 g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);
@@ -79,7 +79,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/wp-content\/pl
 		);
 
 		$this->assertSame(
-			'<!-- Matomo --><script '.$this->get_type().'>
+			'<!-- Matomo --><script '.$this->get_type_attribute().'>
 var _paq = window._paq = window._paq || [];
 _paq.push([\'addDownloadExtensions\', "zip|waf"]);
 _paq.push([\'setLinkClasses\', "clickme|foo"]);
