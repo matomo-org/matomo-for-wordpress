@@ -61,13 +61,8 @@ class OptOut {
 		if (!empty($dnt_enabled)) {
 			return '<p>'. $this->translate('CoreAdminHome_OptOutDntFound').'</p>';
 		}
-		global $wp_version;
-		if ( version_compare($wp_version, '5.7' ) >= 0 ) {
-			wp_enqueue_script( wp_get_script_tag( array( 'src' => 'matomo_opt_out_js' ) ) );
-		} else {
-			wp_enqueue_script( 'matomo_opt_out_js' );
-		}
 
+		wp_enqueue_script( 'matomo_opt_out_js' );
 
 		$track_visits = empty($_COOKIE['mtm_consent_removed']);
 
