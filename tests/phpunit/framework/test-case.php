@@ -71,4 +71,15 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 			get_role( $role )->remove_cap( Capabilities::KEY_VIEW );
 		}
 	}
+
+	/**
+	 * @return string
+	 */
+	protected function get_type_attribute() {
+		$type = '';
+		if (function_exists( "wp_get_inline_script_tag" ) && ! is_admin() && ! current_theme_supports( 'html5', 'script' ) ) {
+			$type = 'type="text/javascript"';
+		}
+		return $type;
+	}
 }

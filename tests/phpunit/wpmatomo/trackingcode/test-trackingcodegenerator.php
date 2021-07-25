@@ -218,12 +218,6 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 		}
 	}
 
-
-	protected function get_type() {
-		return \WpMatomo\TrackingCode::get_type_attribute();
-	}
-
-
 	public function test_cookie_consent_tagmanager() {
 		$this->settings->apply_tracking_related_changes(
 			array(
