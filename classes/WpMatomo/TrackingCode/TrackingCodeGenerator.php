@@ -298,14 +298,12 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 			$data_of_async_option['data-cfasync'] = "false";
 		}
 
-		global $wp_version;
-		$method_exists = ( version_compare($wp_version, '5.7' ) >= 0 );
-
+		$function_exists =  function_exists( 'wp_get_inline_script_tag' );
 		/*
 		 * method wp_get_inline_script_tag add a line feed.
 		 * to get the unit tests pass, we add a line feed when not using the method
 		 */
-		$script =  (! $method_exists) ? '<script ' . $data_cf_async . " >\n" : '';
+		$script =  (! $function_exists) ? '<script ' . $data_cf_async . " >\n" : '';
 
 		$script .= "var _paq = window._paq = window._paq || [];\n";
 		$script .= implode( "\n", $options );
@@ -315,8 +313,8 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 		$script .= "_paq.push(['setSiteId', '" . intval( $idsite ) . "']);";
 		$script .= "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
 g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint ) . '; s.parentNode.insertBefore(g,s);';
-		$script .= (! $method_exists) ? '</script>' : '';
-		if ( $method_exists ) {
+		$script .= ( ! $function_exists ) ? '</script>' : '';
+		if ( $function_exists ) {
 			$script = wp_get_inline_script_tag(
 				$script,
 				$data_of_async_option
