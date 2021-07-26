@@ -303,7 +303,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 		 * method wp_get_inline_script_tag add a line feed.
 		 * to get the unit tests pass, we add a line feed when not using the method
 		 */
-		$script =  (! $function_exists) ? '<script ' . $data_cf_async . " >\n" : '';
+		$script =  (! $function_exists) ? '<script ' . $data_cf_async . ">\n" : '';
 
 		$script .= "var _paq = window._paq = window._paq || [];\n";
 		$script .= implode( "\n", $options );
