@@ -44,10 +44,8 @@ class TrackingSettings implements AdminSettingsInterface {
 	}
 
 	private function update_if_submitted() {
-		if ( ( $this->form_submitted() === true )
-			 && is_admin()
-			 && check_admin_referer( self::NONCE_NAME )
-			 && $this->can_user_manage() ) {
+		if ( $this->form_submitted() === true
+			 && check_admin_referer( self::NONCE_NAME ) ) {
 			$this->apply_settings();
 
 			return true;
@@ -195,7 +193,9 @@ class TrackingSettings implements AdminSettingsInterface {
 	 * @return bool
 	 */
 	private function form_submitted () {
-		return isset( $_POST ) 	&& ! empty( $_POST[ self::FORM_NAME ] );
+		return isset( $_POST ) 	&& ! empty( $_POST[ self::FORM_NAME ] )
+		       && is_admin()
+			    && $this->can_user_manage();
 	}
 
 	/**
@@ -203,10 +203,10 @@ class TrackingSettings implements AdminSettingsInterface {
 	 *
 	 * @return bool
 	 */
-	public function has_valid_html_comments ($field) {
+	private function has_valid_html_comments ($field) {
 		$valid = true;
-		if ( $this->form_submitted() == true ) {
-			if ( $this->must_update_tracker() == true ) {
+		if ( $this->form_submitted() === true ) {
+			if ( $this->must_update_tracker() === true ) {
 				if ( ! empty( $_POST[ self::FORM_NAME ][$field] ) ) {
 					$valid = $this->validate_html_comments( $_POST[ self::FORM_NAME ][$field] );
 				}
@@ -222,17 +222,17 @@ class TrackingSettings implements AdminSettingsInterface {
 	public function validate_html_comments( $html ) {
 	    $opening = substr_count( $html, '<!--' );
 	    $closing = substr_count( $html, '-->' );
-	    return ( $opening === $closing )  && ( ( $opening % 2 ) === 0 );
+	    return ( $opening === $closing );
 	}
 
 	public function show_settings() {
 		$was_updated = false;
 		$errors = [];
 		if ( $this->has_valid_html_comments( 'tracking_code' ) !== true ) {
-			$errors[] = __( 'Settings have not been saved. There is an issue with the HTML comments in the field "tracking_code". Make sure all opened comments (<!--) are closed (-->) correctly', 'matomo' );
+			$errors[] = __( 'Settings have not been saved. There is an issue with the HTML comments in the field "Tracking code". Make sure all opened comments (<!--) are closed (-->) correctly.', 'matomo' );
 		}
 		if ( $this->has_valid_html_comments( 'noscript_code' ) !== true ) {
-			$errors[] = __( 'Settings have not been saved. There is an issue with the HTML comments in the field "noscript_code". Make sure all opened comments (<!--) are closed (-->) correctly', 'matomo' );
+			$errors[] = __( 'Settings have not been saved. There is an issue with the HTML comments in the field "Noscript code". Make sure all opened comments (<!--) are closed (-->) correctly.', 'matomo' );
 		}
 		if ( count($errors) === 0 ) {
 			$was_updated = $this->update_if_submitted();

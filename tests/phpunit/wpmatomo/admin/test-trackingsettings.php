@@ -108,7 +108,7 @@ class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
 		$html = '<!-- begin comment--><script></script><!-- end comment -->';
 		$this->assertTrue( $this->tracking_settings->validate_html_comments( $html ) );
 		$html = '<!-- begin comment--><script></script>';
-		$this->assertFalse( $this->tracking_settings->validate_html_comments( $html ) );
+		$this->assertTrue( $this->tracking_settings->validate_html_comments( $html ) );
 		$html = '<!-- begin comment--><script></script><!-- end invalid tag ->';
 		$this->assertFalse( $this->tracking_settings->validate_html_comments( $html ) );
 		$html = '<!-- begin comment--><script></script><!-- valid end --><!-- end invalid tag ->';
