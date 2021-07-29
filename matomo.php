@@ -179,7 +179,7 @@ function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace
 		}
 	}
 
-	$matomo_dir       = __DIR__ . '/app';
+	$matomo_dir       = __DIR__ . DIRECTORY_SEPARATOR . 'app';
 	$matomo_dir_parts = explode( DIRECTORY_SEPARATOR, $matomo_dir );
 	$root_dir_parts   = explode( DIRECTORY_SEPARATOR, $root_dir );
 	$webroot_dir      = '';
