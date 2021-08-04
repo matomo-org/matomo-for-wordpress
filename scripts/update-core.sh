@@ -59,11 +59,13 @@ mv .htaccess $MATOMO_ROOT/.htaccess
 echo "" > $MATOMO_ROOT/plugins/PrivacyManager/angularjs/opt-out-customizer/opt-out-customizer.directive.js
 
 sed -i -e 's/node_modules\/jquery\/dist\/jquery.min.js/..\/..\/..\/..\/..\/..\/..\/wp-includes\/js\/jquery\/jquery.js/' $MATOMO_ROOT/plugins/Overlay/client/client.js
-
+if grep -Fq "/wp-includes/js/jquery/jquery.js" $MATOMO_ROOT/plugins/Overlay/client/client.js
+then
+    echo -e "jquery.js replaced correctly"
+else
+    echo -e "WordPress jquery was not replaced. There is an error."
+fi
 echo -e "Done!... "
-echo -e "Should double check that path to jquery.js was updated in plugins/Overlay/client/client.js"
-echo -e "Then need to manually generate the core assets js file and put it into the assets directory by executing below commands:"
-echo -e "Then execute 'php ../app/console wordpress:generate-core-assets'"
+echo -e "Now execute 'php ../app/console wordpress:generate-core-assets'"
 echo -e "Then execute 'php ../app/console wordpress:generate-lang-files'"
 echo -e "Then execute './remove_not_needed_assets.sh'"
-echo -e "Then check if we need to increase 'Tested up to:' WordPress version in case there was a new release"
