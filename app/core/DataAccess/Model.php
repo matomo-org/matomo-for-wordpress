@@ -10,7 +10,6 @@ namespace Piwik\DataAccess;
 
 use Exception;
 use Piwik\Archive\ArchiveInvalidator;
-use Piwik\ArchiveProcessor\ArchivingStatus;
 use Piwik\ArchiveProcessor\Parameters;
 use Piwik\ArchiveProcessor\Rules;
 use Piwik\Common;
@@ -35,15 +34,9 @@ class Model
      */
     private $logger;
 
-    /**
-     * @var ArchivingStatus
-     */
-    private $archivingStatus;
-
     public function __construct(LoggerInterface $logger = null)
     {
         $this->logger = $logger ?: StaticContainer::get('Psr\Log\LoggerInterface');
-        $this->archivingStatus = StaticContainer::get(ArchivingStatus::class);
     }
 
     /**
@@ -204,16 +197,17 @@ class Model
         // except for archives that are DONE_IN_PROGRESS.
         $archivesToCreateInvalidationRowsFor = [];
         foreach ($archivesToInvalidate as $row) {
-            if ($row['name'] != $doneFlag) { // only look at done flags that equal the one we are explicitly adding
-                continue;
-            }
-
-            $archivesToCreateInvalidationRowsFor[$row['idsite']][$row['period']][$row['date1']][$row['date2']] = $row['idarchive'];
+            $archivesToCreateInvalidationRowsFor[$row['idsite']][$row['period']][$row['date1']][$row['date2']][$row['name']] = $row['idarchive'];
         }
 
         $now = Date::now()->getDatetime();
 
         $existingInvalidations = $this->getExistingInvalidations($idSites, $periodCondition, $nameCondition);
+
+        $hashesOfAllSegmentsToArchiveInCoreArchive = Rules::getSegmentsToProcess($idSites);
+        $hashesOfAllSegmentsToArchiveInCoreArchive = array_map(function ($definition) {
+            return Segment::getSegmentHash($definition);
+        }, $hashesOfAllSegmentsToArchiveInCoreArchive);
 
         $dummyArchives = [];
         foreach ($idSites as $idSite) {
@@ -238,23 +232,42 @@ class Model
                 $date1 = $period->getDateStart()->toString();
                 $date2 = $period->getDateEnd()->toString();
 
-                $key = $this->makeExistingInvalidationArrayKey($idSite, $date1, $date2, $period->getId(), $doneFlag, $name);
-                if (!empty($existingInvalidations[$key])) {
-                    continue; // avoid adding duplicates where possible
+                // we insert rows for the doneFlag we want to invalidate + any others we invalidated when doing the LIKE above.
+                // if we invalidated something in the archive tables, we want to make sure it appears in the invalidation queue,
+                // so we'll eventually reprocess it.
+                $doneFlagsFound = $archivesToCreateInvalidationRowsFor[$idSite][$period->getId()][$date1][$date2] ?? [];
+                $doneFlagsFound = array_keys($doneFlagsFound);
+                $doneFlagsToCheck = array_merge([$doneFlag], $doneFlagsFound);
+                $doneFlagsToCheck = array_unique($doneFlagsToCheck);
+
+                foreach ($doneFlagsToCheck as $doneFlagToCheck) {
+                    $key = $this->makeExistingInvalidationArrayKey($idSite, $date1, $date2, $period->getId(), $doneFlagToCheck, $name);
+                    if (!empty($existingInvalidations[$key])) {
+                        continue; // avoid adding duplicates where possible
+                    }
+
+                    $hash = $this->getHashFromDoneFlag($doneFlagToCheck);
+                    if ($doneFlagToCheck != $doneFlag
+                        && (empty($hash)
+                            || !in_array($hash, $hashesOfAllSegmentsToArchiveInCoreArchive)
+                            || strpos($doneFlagToCheck, '.') !== false)
+                    ) {
+                        continue; // the done flag is for a segment that is not auto archive or a plugin specific archive, so we don't want to process it.
+                    }
+
+                    $idArchive = $archivesToCreateInvalidationRowsFor[$idSite][$period->getId()][$date1][$date2][$doneFlagToCheck] ?? null;
+
+                    $dummyArchives[] = [
+                        'idarchive' => $idArchive,
+                        'name' => $doneFlagToCheck,
+                        'report' => $name,
+                        'idsite' => $idSite,
+                        'date1' => $period->getDateStart()->getDatetime(),
+                        'date2' => $period->getDateEnd()->getDatetime(),
+                        'period' => $period->getId(),
+                        'ts_invalidated' => $now,
+                    ];
                 }
-
-                $idArchive = $archivesToCreateInvalidationRowsFor[$idSite][$period->getId()][$date1][$date2] ?? null;
-
-                $dummyArchives[] = [
-                    'idarchive' => $idArchive,
-                    'name' => $doneFlag,
-                    'report' => $name,
-                    'idsite' => $idSite,
-                    'date1' => $period->getDateStart()->getDatetime(),
-                    'date2' => $period->getDateEnd()->getDatetime(),
-                    'period' => $period->getId(),
-                    'ts_invalidated' => $now,
-                ];
             }
         }
 
@@ -314,8 +327,8 @@ class Model
 
                 /** @var Period $period */
                 $dateConditions[] = "(date1 <= ? AND ? <= date2)";
-                $bind[] = $period->getDateStart();
-                $bind[] = $period->getDateEnd();
+                $bind[] = $period->getDateStart()->getDatetime();
+                $bind[] = $period->getDateEnd()->getDatetime();
 
                 $dateConditionsSql = implode(" OR ", $dateConditions);
                 $periodConditions[] = "(period = 5 AND ($dateConditionsSql))";
@@ -676,15 +689,19 @@ class Model
             return true;
         }
 
-        // if we didn't get anything, some process either got there first, OR
-        // the archive was started previously and failed in a way that kept it's done value
-        // set to DONE_IN_PROGRESS. try to acquire the lock and if acquired, archiving isn' in process
-        // so we can claim it.
-        $lock = $this->archivingStatus->acquireArchiveInProgressLock($invalidation['idsite'], $invalidation['date1'],
-            $invalidation['date2'], $invalidation['period'], $invalidation['name']);
-        if (!$lock->isLocked()) {
-            return false; // we couldn't claim the lock, archive is in progress
+        // archive was not originally started or was started within 24 hours, we assume it's ongoing and another process
+        // (on this machine or another) is actively archiving it.
+        if (empty($invalidation['ts_started'])
+            || $invalidation['ts_started'] > Date::now()->subDay(1)->getTimestamp()
+        ) {
+            return false;
         }
+
+        // archive was started over 24 hours ago, we assume it failed and take it over
+        Db::query("UPDATE `$table` SET `status` = ?, ts_started = NOW() WHERE idinvalidation = ?", [
+            ArchiveInvalidator::INVALIDATION_STATUS_IN_PROGRESS,
+            $invalidation['idinvalidation'],
+        ]);
 
         // remove similar invalidations w/ lesser idinvalidation values
         $bind = [
@@ -747,7 +764,7 @@ class Model
     public function getNextInvalidatedArchive($idSite, $archivingStartTime, $idInvalidationsToExclude = null, $useLimit = true)
     {
         $table = Common::prefixTable('archive_invalidations');
-        $sql = "SELECT idinvalidation, idarchive, idsite, date1, date2, period, `name`, report, ts_invalidated
+        $sql = "SELECT *
                   FROM `$table`
                  WHERE idsite = ? AND status != ? AND ts_invalidated <= ?";
         $bind = [
@@ -963,5 +980,11 @@ class Model
     {
         $position = strpos($pair, '.');
         return $position === false || $position === strlen($pair) - 1;
+    }
+
+    private function getHashFromDoneFlag($doneFlag)
+    {
+        preg_match('/^done([a-zA-Z0-9]+)/', $doneFlag, $matches);
+        return $matches[1] ?? '';
     }
 }

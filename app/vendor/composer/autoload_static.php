@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
+class ComposerStaticInit9209fd533b4c3cc6523ff4b3463ad39c
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -12,6 +12,7 @@ class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'b33e3d135e5d9e47d845c576147bda89' => __DIR__ . '/..' . '/php-di/php-di/src/functions.php',
+        'def43f6c87e4f8dfd0c9e1b1bab14fe8' => __DIR__ . '/..' . '/symfony/polyfill-iconv/bootstrap.php',
         '6dcc7fc6910472564e7b11f0b5d852b5' => __DIR__ . '/..' . '/szymach/c-pchart/src/Resources/data/constants.php',
         'c03755bd507301ecda84f959218be302' => __DIR__ . '/../..' . '/LegacyAutoloader.php',
     );
@@ -24,6 +25,7 @@ class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Polyfill\\Iconv\\' => 23,
             'Symfony\\Polyfill\\Ctype\\' => 23,
         ),
         'P' => 
@@ -81,6 +83,10 @@ class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Polyfill\\Iconv\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-iconv',
         ),
         'Symfony\\Polyfill\\Ctype\\' => 
         array (
@@ -156,7 +162,7 @@ class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
         ),
         'Doctrine\\Common\\Cache\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
+            0 => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache',
         ),
         'DeviceDetector\\' => 
         array (
@@ -384,43 +390,44 @@ class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
         'DeviceDetector\\Parser\\Device\\Mobile' => __DIR__ . '/..' . '/matomo/device-detector/Parser/Device/Mobile.php',
         'DeviceDetector\\Parser\\Device\\Notebook' => __DIR__ . '/..' . '/matomo/device-detector/Parser/Device/Notebook.php',
         'DeviceDetector\\Parser\\Device\\PortableMediaPlayer' => __DIR__ . '/..' . '/matomo/device-detector/Parser/Device/PortableMediaPlayer.php',
+        'DeviceDetector\\Parser\\Device\\ShellTv' => __DIR__ . '/..' . '/matomo/device-detector/Parser/Device/ShellTv.php',
         'DeviceDetector\\Parser\\OperatingSystem' => __DIR__ . '/..' . '/matomo/device-detector/Parser/OperatingSystem.php',
         'DeviceDetector\\Parser\\VendorFragment' => __DIR__ . '/..' . '/matomo/device-detector/Parser/VendorFragment.php',
         'DeviceDetector\\Yaml\\ParserInterface' => __DIR__ . '/..' . '/matomo/device-detector/Yaml/ParserInterface.php',
         'DeviceDetector\\Yaml\\Pecl' => __DIR__ . '/..' . '/matomo/device-detector/Yaml/Pecl.php',
         'DeviceDetector\\Yaml\\Spyc' => __DIR__ . '/..' . '/matomo/device-detector/Yaml/Spyc.php',
         'DeviceDetector\\Yaml\\Symfony' => __DIR__ . '/..' . '/matomo/device-detector/Yaml/Symfony.php',
-        'Doctrine\\Common\\Cache\\ApcCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/ApcCache.php',
-        'Doctrine\\Common\\Cache\\ApcuCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/ApcuCache.php',
-        'Doctrine\\Common\\Cache\\ArrayCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/ArrayCache.php',
-        'Doctrine\\Common\\Cache\\Cache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/Cache.php',
-        'Doctrine\\Common\\Cache\\CacheProvider' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/CacheProvider.php',
-        'Doctrine\\Common\\Cache\\ChainCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/ChainCache.php',
-        'Doctrine\\Common\\Cache\\ClearableCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/ClearableCache.php',
-        'Doctrine\\Common\\Cache\\CouchbaseBucketCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/CouchbaseBucketCache.php',
-        'Doctrine\\Common\\Cache\\CouchbaseCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/CouchbaseCache.php',
-        'Doctrine\\Common\\Cache\\ExtMongoDBCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/ExtMongoDBCache.php',
-        'Doctrine\\Common\\Cache\\FileCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/FileCache.php',
-        'Doctrine\\Common\\Cache\\FilesystemCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/FilesystemCache.php',
-        'Doctrine\\Common\\Cache\\FlushableCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/FlushableCache.php',
-        'Doctrine\\Common\\Cache\\InvalidCacheId' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/InvalidCacheId.php',
-        'Doctrine\\Common\\Cache\\LegacyMongoDBCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/LegacyMongoDBCache.php',
-        'Doctrine\\Common\\Cache\\MemcacheCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/MemcacheCache.php',
-        'Doctrine\\Common\\Cache\\MemcachedCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/MemcachedCache.php',
-        'Doctrine\\Common\\Cache\\MongoDBCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/MongoDBCache.php',
-        'Doctrine\\Common\\Cache\\MultiDeleteCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/MultiDeleteCache.php',
-        'Doctrine\\Common\\Cache\\MultiGetCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/MultiGetCache.php',
-        'Doctrine\\Common\\Cache\\MultiOperationCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/MultiOperationCache.php',
-        'Doctrine\\Common\\Cache\\MultiPutCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/MultiPutCache.php',
-        'Doctrine\\Common\\Cache\\PhpFileCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/PhpFileCache.php',
-        'Doctrine\\Common\\Cache\\PredisCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/PredisCache.php',
-        'Doctrine\\Common\\Cache\\RedisCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/RedisCache.php',
-        'Doctrine\\Common\\Cache\\SQLite3Cache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/SQLite3Cache.php',
-        'Doctrine\\Common\\Cache\\Version' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/Version.php',
-        'Doctrine\\Common\\Cache\\VoidCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/VoidCache.php',
-        'Doctrine\\Common\\Cache\\WinCacheCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/WinCacheCache.php',
-        'Doctrine\\Common\\Cache\\XcacheCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/XcacheCache.php',
-        'Doctrine\\Common\\Cache\\ZendDataCache' => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache/ZendDataCache.php',
+        'Doctrine\\Common\\Cache\\ApcCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/ApcCache.php',
+        'Doctrine\\Common\\Cache\\ApcuCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/ApcuCache.php',
+        'Doctrine\\Common\\Cache\\ArrayCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/ArrayCache.php',
+        'Doctrine\\Common\\Cache\\Cache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/Cache.php',
+        'Doctrine\\Common\\Cache\\CacheProvider' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/CacheProvider.php',
+        'Doctrine\\Common\\Cache\\ChainCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/ChainCache.php',
+        'Doctrine\\Common\\Cache\\ClearableCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/ClearableCache.php',
+        'Doctrine\\Common\\Cache\\CouchbaseBucketCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/CouchbaseBucketCache.php',
+        'Doctrine\\Common\\Cache\\CouchbaseCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/CouchbaseCache.php',
+        'Doctrine\\Common\\Cache\\ExtMongoDBCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/ExtMongoDBCache.php',
+        'Doctrine\\Common\\Cache\\FileCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/FileCache.php',
+        'Doctrine\\Common\\Cache\\FilesystemCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/FilesystemCache.php',
+        'Doctrine\\Common\\Cache\\FlushableCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/FlushableCache.php',
+        'Doctrine\\Common\\Cache\\InvalidCacheId' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/InvalidCacheId.php',
+        'Doctrine\\Common\\Cache\\LegacyMongoDBCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/LegacyMongoDBCache.php',
+        'Doctrine\\Common\\Cache\\MemcacheCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/MemcacheCache.php',
+        'Doctrine\\Common\\Cache\\MemcachedCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/MemcachedCache.php',
+        'Doctrine\\Common\\Cache\\MongoDBCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/MongoDBCache.php',
+        'Doctrine\\Common\\Cache\\MultiDeleteCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/MultiDeleteCache.php',
+        'Doctrine\\Common\\Cache\\MultiGetCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/MultiGetCache.php',
+        'Doctrine\\Common\\Cache\\MultiOperationCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/MultiOperationCache.php',
+        'Doctrine\\Common\\Cache\\MultiPutCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/MultiPutCache.php',
+        'Doctrine\\Common\\Cache\\PhpFileCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/PhpFileCache.php',
+        'Doctrine\\Common\\Cache\\PredisCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/PredisCache.php',
+        'Doctrine\\Common\\Cache\\RedisCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/RedisCache.php',
+        'Doctrine\\Common\\Cache\\SQLite3Cache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/SQLite3Cache.php',
+        'Doctrine\\Common\\Cache\\Version' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/Version.php',
+        'Doctrine\\Common\\Cache\\VoidCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/VoidCache.php',
+        'Doctrine\\Common\\Cache\\WinCacheCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/WinCacheCache.php',
+        'Doctrine\\Common\\Cache\\XcacheCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/XcacheCache.php',
+        'Doctrine\\Common\\Cache\\ZendDataCache' => __DIR__ . '/..' . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache/ZendDataCache.php',
         'GeoIp2\\Database\\Reader' => __DIR__ . '/..' . '/geoip2/geoip2/src/Database/Reader.php',
         'GeoIp2\\Exception\\AddressNotFoundException' => __DIR__ . '/..' . '/geoip2/geoip2/src/Exception/AddressNotFoundException.php',
         'GeoIp2\\Exception\\AuthenticationException' => __DIR__ . '/..' . '/geoip2/geoip2/src/Exception/AuthenticationException.php',
@@ -593,10 +600,13 @@ class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
         'MatomoTracker' => __DIR__ . '/..' . '/matomo/matomo-php-tracker/MatomoTracker.php',
         'Matomo\\Cache\\Backend' => __DIR__ . '/..' . '/matomo/cache/src/Backend.php',
         'Matomo\\Cache\\Backend\\ArrayCache' => __DIR__ . '/..' . '/matomo/cache/src/Backend/ArrayCache.php',
+        'Matomo\\Cache\\Backend\\BaseDecorator' => __DIR__ . '/..' . '/matomo/cache/src/Backend/BaseDecorator.php',
         'Matomo\\Cache\\Backend\\Chained' => __DIR__ . '/..' . '/matomo/cache/src/Backend/Chained.php',
+        'Matomo\\Cache\\Backend\\DefaultTimeoutDecorated' => __DIR__ . '/..' . '/matomo/cache/src/Backend/DefaultTimeoutDecorated.php',
         'Matomo\\Cache\\Backend\\Factory' => __DIR__ . '/..' . '/matomo/cache/src/Backend/Factory.php',
         'Matomo\\Cache\\Backend\\Factory\\BackendNotFoundException' => __DIR__ . '/..' . '/matomo/cache/src/Backend/Factory/BackendNotFoundException.php',
         'Matomo\\Cache\\Backend\\File' => __DIR__ . '/..' . '/matomo/cache/src/Backend/File.php',
+        'Matomo\\Cache\\Backend\\KeyPrefixDecorated' => __DIR__ . '/..' . '/matomo/cache/src/Backend/KeyPrefixDecorated.php',
         'Matomo\\Cache\\Backend\\NullCache' => __DIR__ . '/..' . '/matomo/cache/src/Backend/NullCache.php',
         'Matomo\\Cache\\Backend\\Redis' => __DIR__ . '/..' . '/matomo/cache/src/Backend/Redis.php',
         'Matomo\\Cache\\Cache' => __DIR__ . '/..' . '/matomo/cache/src/Cache.php',
@@ -1207,11 +1217,22 @@ class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
         'Piwik\\Plugins\\CoreAdminHome\\Commands\\RunScheduledTasks' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Commands/RunScheduledTasks.php',
         'Piwik\\Plugins\\CoreAdminHome\\Commands\\SetConfig' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Commands/SetConfig.php',
         'Piwik\\Plugins\\CoreAdminHome\\Commands\\SetConfig\\ConfigSettingManipulation' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Commands/SetConfig/ConfigSettingManipulation.php',
+        'Piwik\\Plugins\\CoreAdminHome\\Commands\\VersionInfo' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Commands/VersionInfo.php',
         'Piwik\\Plugins\\CoreAdminHome\\Controller' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Controller.php',
         'Piwik\\Plugins\\CoreAdminHome\\CoreAdminHome' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/CoreAdminHome.php',
         'Piwik\\Plugins\\CoreAdminHome\\CustomLogo' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/CustomLogo.php',
         'Piwik\\Plugins\\CoreAdminHome\\Emails\\JsTrackingCodeMissingEmail' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Emails/JsTrackingCodeMissingEmail.php',
+        'Piwik\\Plugins\\CoreAdminHome\\Emails\\RecoveryCodesRegeneratedEmail' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Emails/RecoveryCodesRegeneratedEmail.php',
+        'Piwik\\Plugins\\CoreAdminHome\\Emails\\RecoveryCodesShowedEmail' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Emails/RecoveryCodesShowedEmail.php',
+        'Piwik\\Plugins\\CoreAdminHome\\Emails\\SecurityNotificationEmail' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Emails/SecurityNotificationEmail.php',
+        'Piwik\\Plugins\\CoreAdminHome\\Emails\\SettingsChangedEmail' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Emails/SettingsChangedEmail.php',
+        'Piwik\\Plugins\\CoreAdminHome\\Emails\\TokenAuthCreatedEmail' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Emails/TokenAuthCreatedEmail.php',
+        'Piwik\\Plugins\\CoreAdminHome\\Emails\\TokenAuthDeletedEmail' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Emails/TokenAuthDeletedEmail.php',
         'Piwik\\Plugins\\CoreAdminHome\\Emails\\TrackingFailuresEmail' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Emails/TrackingFailuresEmail.php',
+        'Piwik\\Plugins\\CoreAdminHome\\Emails\\TwoFactorAuthDisabledEmail' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Emails/TwoFactorAuthDisabledEmail.php',
+        'Piwik\\Plugins\\CoreAdminHome\\Emails\\TwoFactorAuthEnabledEmail' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Emails/TwoFactorAuthEnabledEmail.php',
+        'Piwik\\Plugins\\CoreAdminHome\\Emails\\UserCreatedEmail' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Emails/UserCreatedEmail.php',
+        'Piwik\\Plugins\\CoreAdminHome\\Emails\\UserDeletedEmail' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Emails/UserDeletedEmail.php',
         'Piwik\\Plugins\\CoreAdminHome\\Menu' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Menu.php',
         'Piwik\\Plugins\\CoreAdminHome\\Model\\DuplicateActionRemover' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/Model/DuplicateActionRemover.php',
         'Piwik\\Plugins\\CoreAdminHome\\OptOutManager' => __DIR__ . '/../..' . '/plugins/CoreAdminHome/OptOutManager.php',
@@ -1252,6 +1273,7 @@ class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
         'Piwik\\Plugins\\CoreConsole\\Commands\\GenerateReport' => __DIR__ . '/../..' . '/plugins/CoreConsole/Commands/GenerateReport.php',
         'Piwik\\Plugins\\CoreConsole\\Commands\\GenerateScheduledTask' => __DIR__ . '/../..' . '/plugins/CoreConsole/Commands/GenerateScheduledTask.php',
         'Piwik\\Plugins\\CoreConsole\\Commands\\GenerateSettings' => __DIR__ . '/../..' . '/plugins/CoreConsole/Commands/GenerateSettings.php',
+        'Piwik\\Plugins\\CoreConsole\\Commands\\GenerateSystemCheck' => __DIR__ . '/../..' . '/plugins/CoreConsole/Commands/GenerateSystemCheck.php',
         'Piwik\\Plugins\\CoreConsole\\Commands\\GenerateTest' => __DIR__ . '/../..' . '/plugins/CoreConsole/Commands/GenerateTest.php',
         'Piwik\\Plugins\\CoreConsole\\Commands\\GenerateUpdate' => __DIR__ . '/../..' . '/plugins/CoreConsole/Commands/GenerateUpdate.php',
         'Piwik\\Plugins\\CoreConsole\\Commands\\GenerateVisualizationPlugin' => __DIR__ . '/../..' . '/plugins/CoreConsole/Commands/GenerateVisualizationPlugin.php',
@@ -1685,6 +1707,7 @@ class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
         'Piwik\\Plugins\\ExamplePlugin\\API' => __DIR__ . '/../..' . '/plugins/ExamplePlugin/API.php',
         'Piwik\\Plugins\\ExamplePlugin\\Archiver' => __DIR__ . '/../..' . '/plugins/ExamplePlugin/Archiver.php',
         'Piwik\\Plugins\\ExamplePlugin\\Controller' => __DIR__ . '/../..' . '/plugins/ExamplePlugin/Controller.php',
+        'Piwik\\Plugins\\ExamplePlugin\\Diagnostic\\ExampleCheck' => __DIR__ . '/../..' . '/plugins/ExamplePlugin/Diagnostic/ExampleCheck.php',
         'Piwik\\Plugins\\ExamplePlugin\\ExamplePlugin' => __DIR__ . '/../..' . '/plugins/ExamplePlugin/ExamplePlugin.php',
         'Piwik\\Plugins\\ExamplePlugin\\Menu' => __DIR__ . '/../..' . '/plugins/ExamplePlugin/Menu.php',
         'Piwik\\Plugins\\ExamplePlugin\\Tasks' => __DIR__ . '/../..' . '/plugins/ExamplePlugin/Tasks.php',
@@ -2208,6 +2231,7 @@ class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
         'Piwik\\Plugins\\ScheduledReports\\SubscriptionModel' => __DIR__ . '/../..' . '/plugins/ScheduledReports/SubscriptionModel.php',
         'Piwik\\Plugins\\ScheduledReports\\Tasks' => __DIR__ . '/../..' . '/plugins/ScheduledReports/Tasks.php',
         'Piwik\\Plugins\\ScheduledReports\\tests\\Fixtures\\ReportSubscription' => __DIR__ . '/../..' . '/plugins/ScheduledReports/tests/Fixtures/ReportSubscription.php',
+        'Piwik\\Plugins\\ScheduledReports\\tests\\Integration\\ApiTest' => __DIR__ . '/../..' . '/plugins/ScheduledReports/tests/Integration/ApiTest.php',
         'Piwik\\Plugins\\ScheduledReports\\tests\\Integration\\ReportEmailGeneratorTest' => __DIR__ . '/../..' . '/plugins/ScheduledReports/tests/Integration/ReportEmailGeneratorTest.php',
         'Piwik\\Plugins\\ScheduledReports\\tests\\Integration\\ReportEmailGenerator\\AttachedFileReportEmailGeneratorTest' => __DIR__ . '/../..' . '/plugins/ScheduledReports/tests/Integration/ReportEmailGenerator/AttachedFileReportEmailGeneratorTest.php',
         'Piwik\\Plugins\\ScheduledReports\\tests\\Integration\\ReportEmailGenerator\\HtmlReportEmailGeneratorTest' => __DIR__ . '/../..' . '/plugins/ScheduledReports/tests/Integration/ReportEmailGenerator/HtmlReportEmailGeneratorTest.php',
@@ -2598,7 +2622,10 @@ class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
         'Piwik\\Plugins\\UserCountry\\UserCountry' => __DIR__ . '/../..' . '/plugins/UserCountry/UserCountry.php',
         'Piwik\\Plugins\\UserCountry\\VisitorDetails' => __DIR__ . '/../..' . '/plugins/UserCountry/VisitorDetails.php',
         'Piwik\\Plugins\\UserCountry\\VisitorGeolocator' => __DIR__ . '/../..' . '/plugins/UserCountry/VisitorGeolocator.php',
+        'Piwik\\Plugins\\UserCountry\\tests\\Fixtures\\ManySitesManyVisitsWithGeoIp' => __DIR__ . '/../..' . '/plugins/UserCountry/tests/Fixtures/ManySitesManyVisitsWithGeoIp.php',
+        'Piwik\\Plugins\\UserCountry\\tests\\Integration\\LocationProviderTest' => __DIR__ . '/../..' . '/plugins/UserCountry/tests/Integration/LocationProviderTest.php',
         'Piwik\\Plugins\\UserCountry\\tests\\Integration\\VisitorGeolocatorTest' => __DIR__ . '/../..' . '/plugins/UserCountry/tests/Integration/VisitorGeolocatorTest.php',
+        'Piwik\\Plugins\\UserCountry\\tests\\System\\ApiTest' => __DIR__ . '/../..' . '/plugins/UserCountry/tests/System/ApiTest.php',
         'Piwik\\Plugins\\UserCountry\\tests\\System\\AttributeHistoricalDataWithLocationsTest' => __DIR__ . '/../..' . '/plugins/UserCountry/tests/System/AttributeHistoricalDataWithLocationsTest.php',
         'Piwik\\Plugins\\UserCountry\\tests\\Unit\\UserCountryTest' => __DIR__ . '/../..' . '/plugins/UserCountry/tests/Unit/UserCountryTest.php',
         'Piwik\\Plugins\\UserId\\API' => __DIR__ . '/../..' . '/plugins/UserId/API.php',
@@ -3017,6 +3044,7 @@ class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
         'Symfony\\Component\\EventDispatcher\\Tests\\GenericEventTest' => __DIR__ . '/..' . '/symfony/event-dispatcher/Symfony/Component/EventDispatcher/Tests/GenericEventTest.php',
         'Symfony\\Component\\EventDispatcher\\Tests\\ImmutableEventDispatcherTest' => __DIR__ . '/..' . '/symfony/event-dispatcher/Symfony/Component/EventDispatcher/Tests/ImmutableEventDispatcherTest.php',
         'Symfony\\Polyfill\\Ctype\\Ctype' => __DIR__ . '/..' . '/symfony/polyfill-ctype/Ctype.php',
+        'Symfony\\Polyfill\\Iconv\\Iconv' => __DIR__ . '/..' . '/symfony/polyfill-iconv/Iconv.php',
         'Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/Mbstring.php',
         'System' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/System.php',
         'TCPDF' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf.php',
@@ -3279,11 +3307,11 @@ class ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInite0aec6a19cacb137658cbe05ff4a49c8::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit9209fd533b4c3cc6523ff4b3463ad39c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit9209fd533b4c3cc6523ff4b3463ad39c::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit9209fd533b4c3cc6523ff4b3463ad39c::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInit9209fd533b4c3cc6523ff4b3463ad39c::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInit9209fd533b4c3cc6523ff4b3463ad39c::$classMap;
 
         }, null, ClassLoader::class);
     }

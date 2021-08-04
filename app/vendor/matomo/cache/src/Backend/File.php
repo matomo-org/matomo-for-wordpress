@@ -23,6 +23,7 @@ class File extends PhpFileCache implements Backend
     // opcache in FPM, so we have to invalidate before reading)
     public static $invalidateOpCacheBeforeRead = false;
 
+    private $supportsParseError = false;
     /**
      * Constructor.
      *
@@ -36,6 +37,7 @@ class File extends PhpFileCache implements Backend
         if (!is_dir($directory)) {
             $this->createDirectory($directory);
         }
+        $this->supportsParseError = defined('PHP_MAJOR_VERSION') && PHP_MAJOR_VERSION >= 7 && class_exists('\ParseError');
 
         parent::__construct($directory, $extension);
     }
@@ -44,6 +46,14 @@ class File extends PhpFileCache implements Backend
     {
         if (self::$invalidateOpCacheBeforeRead) {
             $this->invalidateCacheFile($id);
+        }
+
+        if ($this->supportsParseError) {
+            try {
+                return parent::doFetch($id);
+            } catch (\ParseError $e) {
+                return false;
+            }
         }
 
         return parent::doFetch($id);

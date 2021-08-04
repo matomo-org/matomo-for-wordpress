@@ -1484,7 +1484,6 @@
         "ContactUs": "Nous contacter",
         "VisitTheForums": "Visitez les %1$sForums%2$s et obtenez de l'aide de la communauté d'utilisateurs Matomo.",
         "Forums": "Forums",
-        "ReviewMatomoTitle": "Vous croyez en Matomo ?",
         "PleaseLeaveExternalReviewForMatomo": "Partagez votre avis sur un de ces sites web et encouragez les autres à se joindre à notre révolution des données.",
         "RemindMeLater": "Me le rappeler plus tard",
         "NeverAskMeAgain": "Ne plus me demander",
@@ -1494,7 +1493,8 @@
         "RemoveOtherLabel": "Je veux voir mes 'Autres' données",
         "PurgeOldData": "Je veux supprimer d'anciennes données",
         "SearchHelpResources": "Rechercher dans les ressources de matomo.org",
-        "PopularHelpTopics": "Rubriques d'aide les plus populaires"
+        "PopularHelpTopics": "Rubriques d'aide les plus populaires",
+        "ReferBannerTitle": "Vous croyez en Matomo ?"
     },
     "GeoIp2": {
         "AssumingNonApache": "Impossible de trouver la fonction apache_get_modules, nous supposons que le serveur web n'est pas Apache.",
@@ -1796,11 +1796,8 @@
         "SystemCheckGzcompressHelp": "Vous devez activer l'extension zlib et la fonction gzcompress",
         "SystemCheckGzuncompressHelp": "Vous devez activer l'extension zlib et la fonction gzuncompress",
         "SystemCheckHashHelp": "Vous devez reconfigurer et re-compiler PHP en avec le support de hash() activé en enlevant l'option --disable-hash.",
-        "SystemCheckIconvHelp": "Vous devez configurer PHP et le recompiler avec le support \"iconv\" activé, --with-iconv.",
         "SystemCheckJsonHelp": "L'extension php-json est nécessaire pour que Matomo puisse lire et écrire des données au format JSON.",
         "SystemCheckMailHelp": "Les Feedback (commentaires) et mots de passe perdus ne pourront être envoyés sans la fonciton mail().",
-        "SystemCheckMbstring": "mbstring",
-        "SystemCheckMbstringHelp": "L'extension mbstring est nécessaire pour gérer les caractères multi-octet dans l'interface utilisateur et les réponses API. Merci également de vérifier que mbstring.func_overload est paramétré à \"0\" dans php.ini.",
         "SystemCheckMemoryLimit": "Limite mémoire",
         "SystemCheckMemoryLimitHelp": "Sur un site à trafic important, le processus d'archivage peut prendre plus de mémoire que la limite actuelle autorisée.<br \/>Référez-vous à la configuration memory_limit de votre php.ini si nécessaire.",
         "SystemCheckMemoryNoMemoryLimitSet": "Il n'y a pas de limite de mémoire",
@@ -1817,7 +1814,6 @@
         "SystemCheckPdoAndMysqliHelp": "Sur un serveur linux vous pouvez compiler PHP avec les options suivantes : %1$s Dans votre php.ini, ajoutez les lignes suivantes: %2$s",
         "SystemCheckPhp": "Version PHP",
         "SystemCheckPhpPdoAndMysqli": "Plus d'informations sur : %1$sPHP PDO%2$s et %3$sMYSQLI%4$s.",
-        "SystemCheckSplHelp": "Vous devez configurer et recompiler PHP avec la librairie standard (par défaut).",
         "SystemCheckSettings": "Configuration PHP requise (php.ini)",
         "SystemCheckSummaryNoProblems": "Génial ! Il n'y a aucun problème avec votre installation de Matomo. Donnez-vous une tape dans le dos.",
         "SystemCheckSummaryThereWereErrors": "Oh-oh ! Matomo a détecté des %1$sproblèmes critiques%2$s avec votre installation de Matomo. %3$sCes problèmes critiques doivent être fixés immédiatement.%4$s",

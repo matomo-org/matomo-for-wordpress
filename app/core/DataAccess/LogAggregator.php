@@ -8,7 +8,6 @@
  */
 namespace Piwik\DataAccess;
 
-use Piwik\ArchiveProcessor\ArchivingStatus;
 use Piwik\ArchiveProcessor\Parameters;
 use Piwik\Common;
 use Piwik\Config;
@@ -212,10 +211,10 @@ class LogAggregator
         $bind = $this->getGeneralQueryBindParams();
         $tableName = self::LOG_TABLE_SEGMENT_TEMPORARY_PREFIX . md5(json_encode($bind) . $this->segment->getString());
 
-        $lengthPrefix = Common::mb_strlen(Common::prefixTable(''));
+        $lengthPrefix = mb_strlen(Common::prefixTable(''));
         $maxLength = Db\Schema\Mysql::MAX_TABLE_NAME_LENGTH - $lengthPrefix;
 
-        return Common::mb_substr($tableName, 0, $maxLength);
+        return mb_substr($tableName, 0, $maxLength);
     }
 
     public function cleanup()
@@ -1240,9 +1239,6 @@ class LogAggregator
 
     public function getDb()
     {
-        /** @var ArchivingStatus $archivingStatus */
-        $archivingStatus = StaticContainer::get(ArchivingStatus::class);
-        $archivingLock = $archivingStatus->getCurrentArchivingLock();
-        return new ArchivingDbAdapter(Db::getReader(), $archivingLock, $this->logger);
+        return new ArchivingDbAdapter(Db::getReader(), $this->logger);
     }
 }

@@ -1375,7 +1375,6 @@
         "ContactUs": "Ota yhteyttä",
         "VisitTheForums": "Käy %1$skeskustelupalstalla%2$s ja saa apua Matomo-käyttäjien yhteisöltä",
         "Forums": "Foorumit",
-        "ReviewMatomoTitle": "Uskotko Matomoon?",
         "RemindMeLater": "Muistuta myöhemmin",
         "NeverAskMeAgain": "Älä kysy uudestaan",
         "HowCanWeHelp": "Miten voimme auttaa?",
@@ -1383,7 +1382,8 @@
         "TrackMultipleSites": "Minun pitää seurata useita sivustoja tai aliverkkotunnuksia",
         "PurgeOldData": "Haluan poistaa vanhoja tietoja",
         "SearchHelpResources": "Hae ohjeita matomo.orgista",
-        "PopularHelpTopics": "Suositut ohjeaiheet"
+        "PopularHelpTopics": "Suositut ohjeaiheet",
+        "ReferBannerTitle": "Uskotko Matomoon?"
     },
     "GeoIp2": {
         "AssumingNonApache": "apache_get_modules-toimintoa ei löydy, oletettavasti verkkopalvelin on muu kuin Apache-ohjelmisto.",
@@ -1637,9 +1637,7 @@
         "SystemCheckGlobHelp": "Tämä sisäänrakennettu toiminnallisuus on poistettu käytöstä palvelimellasi. Matomo yrittää emuloida toimintoa, mutta saattaa törmätä uusiin turvallisuusrajoituksiin. Suorituskyky heikkenee.",
         "SystemCheckGzcompressHelp": "zlib-laajennus ja gzcompress-funktio täytyy olla käytössä.",
         "SystemCheckGzuncompressHelp": "zlib-laajennus ja gzuncompress-funktio täytyy olla käytössä.",
-        "SystemCheckIconvHelp": "PHP pitää olla asennettuna iconv-lisäosan kanssa, --with-iconv",
         "SystemCheckMailHelp": "Palautetta ja unohtuneiden salasanojen muistutuksia ei voida lähettää ilman funktiota mail().",
-        "SystemCheckMbstring": "mbstring",
         "SystemCheckMemoryLimit": "Muistirajoitus",
         "SystemCheckMemoryLimitHelp": "Jos verkkosivuilla on paljon liikennettä, arkistointiprosessi saattaa vaatia enemmän muistia.<br \/>Muokkaa asetusta memory_limit php.ini-tiedostossa tarvittaessa.",
         "SystemCheckNoErrorsOrWarnings": "Ei virheitä tai varoituksia",
@@ -1654,7 +1652,6 @@
         "SystemCheckPdoAndMysqliHelp": "Linux-palvelimella voit kääntää PHP:n seuraavilla asetuksilla: %1$s Lisää php.ini-tiedostoon seuraavat rivit: %2$s",
         "SystemCheckPhp": "PHP:n versio",
         "SystemCheckPhpPdoAndMysqli": "Lisätietoa: %1$sPHP PDO%2$s ja %3$sMYSQLI%4$s.",
-        "SystemCheckSplHelp": "PHP pitää olla asennettuna \"Standard PHP Library (SPL)\"-asetuksen kanssa.",
         "SystemCheckSettings": "Vaadittu PHP-asetusto (php.ini)",
         "SystemCheckSummaryNoProblems": "Hurraa! Matomon asennuksessa ei ole ongelmia. Taputa itseäsi olkapäälle.",
         "SystemCheckSummaryThereWereErrors": "Oi voi... Matomo on havainnut joitakin %1$skriittisiä ongelmia%2$s asennuksen yhteydessä. %3$sNämä ongelmat tulisi korjata välittömästi.%4$s",

@@ -77,6 +77,27 @@ class Factory
     }
 
     /**
+     * @param string $class
+     * @param array $options
+     *
+     * @return Backend
+     *
+     * @throws Factory\BackendNotFoundException
+     */
+    public function buildDecorated( $class,  $options )
+    {
+        $backendToBuild = $options["backend"];
+        $backendOptions = array();
+        if (array_key_exists($backendToBuild, $options)) {
+            $backendOptions = $options[$backendToBuild];
+        }
+
+        $backend = $this->buildBackend($backendToBuild, $backendOptions);
+
+        return new $class($backend, $options);
+    }
+
+    /**
      * Build a specific backend instance.
      *
      * @param string $type The type of backend you want to create. Eg 'array', 'file', 'chained', 'null', 'redis'.
@@ -106,6 +127,14 @@ class Factory
             case 'redis':
 
                 return $this->buildRedisCache($options);
+
+            case 'defaultTimeout':
+
+                return $this->buildDecorated(DefaultTimeoutDecorated::class, $options);
+
+            case 'keyPrefix':
+
+                return $this->buildDecorated(KeyPrefixDecorated::class, $options);
 
             default:
 

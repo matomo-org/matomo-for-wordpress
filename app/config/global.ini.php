@@ -57,6 +57,11 @@ password =
 dbname =
 port = 3306
 
+; If you are using Amazon Aurora you can enable aurora_read_only_read_committed to prevent purge lag which happens
+; when internal garbage collection is blocked by long-running archiving queries. The setting will be only applied
+; if you are using Amazon Aurora and have configured a reader database.
+aurora_readonly_read_committed =
+
 [database_tests]
 host = localhost
 username = "@USERNAME@"
@@ -87,7 +92,7 @@ port =
 enable_logging = 0
 
 [log]
-; possible values for log: screen, database, file
+; possible values for log: screen, database, file, errorlog, syslog
 log_writers[] = screen
 
 ; log level, everything logged w/ this level or one of greater severity
@@ -100,9 +105,15 @@ log_level = WARN
 ; this allows you to log more information to one backend vs another.
 ; log_level_screen =
 ; log_level_file =
+; log_level_errorlog =
+; log_level_syslog =
 
 ; if configured to log in a file, log entries will be made to this file
 logger_file_path = tmp/logs/matomo.log
+
+; if configured to log to syslog, mark them with this identifier string.
+; This acts as an easy-to-find tag in the syslog.
+logger_syslog_ident = 'matomo'
 
 [Cache]
 ; available backends are 'file', 'array', 'null', 'redis', 'chained'
@@ -482,6 +493,10 @@ login_allowlist_apply_to_reporting_api_requests = 1
 ; Uncomment the next line to set a URL to redirect the user to after they log out of Matomo.
 ; login_logout_url = http://...
 
+; By default the logme functionality to automatically log in users using url params is disabled
+; You can enable that by setting this to "1". See https://matomo.org/faq/how-to/faq_30/ for more details
+login_allow_logme = 0
+
 ; Set to 1 to disable the framebuster on standard Non-widgets pages (a click-jacking countermeasure).
 ; Default is 0 (i.e., bust frames on all non Widget pages such as Login, API, Widgets, Email reports, etc.).
 enable_framed_pages = 0
@@ -631,6 +646,11 @@ multi_server_environment = 0
 ; Set to 1 if you're using a proxy which is rewriting the URI.
 ; By enabling this flag the header HTTP_X_FORWARDED_URI will be considered for the current script name.
 proxy_uri_header = 0
+
+; If set to 1 we use the last IP in the list of proxy IPs when determining the client IP. Using the last IP can be more
+; secure when using proxy headers in combination with a load balancer. By default the first IP is read according to RFC7239
+; which is required when the client sends the IP through a proxy header as well as the load balancer.
+proxy_ip_read_last_in_list = 0
 
 ; Whether to enable trusted host checking. This can be disabled if you're running Matomo
 ; on several URLs and do not wish to constantly edit the trusted host list.
