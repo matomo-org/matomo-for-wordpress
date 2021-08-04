@@ -524,7 +524,8 @@
         "Custom": "Personalizado",
         "PreviousPeriod": "Periodo previo",
         "PreviousYear": "Año previo",
-        "ViewAccessRequired": "El token_auth utilizado tiene demasiado acceso como para ser utilizado en una URL de petición que no es de la API. Utilice una contraseña específica de la aplicación para un usuario que solo tenga acceso de visualización."
+        "ViewAccessRequired": "El token_auth utilizado tiene demasiado acceso como para ser utilizado en una URL de petición que no es de la API. Utilice una contraseña específica de la aplicación para un usuario que solo tenga acceso de visualización.",
+        "Reasons": "Motivos"
     },
     "Mobile": {
         "AboutPiwikMobile": "Acerca de Matomo Mobile",
@@ -759,8 +760,10 @@
         "ContentInteractions": "Interacciones con el contenido",
         "InteractionRate": "Nivel de interacción",
         "ContentName": "Nombre del contenido",
+        "ContentNameReportDocumentation": "Este informe muestra los nombres del contenido que los visitantes vieron e interactuaron.",
         "ContentNames": "Nombres de contenidos",
         "ContentPiece": "Pieza de contenido",
+        "ContentPieceReportDocumentation": "Este informa muestra las piezas de contenido que los visitantes vieron e interactuaron.",
         "ContentPieces": "Piezas de contenido",
         "ContentTarget": "Objetivo del contenido",
         "ContentTargets": "Objetivos de contenido",
@@ -909,7 +912,20 @@
         "TrackingFailuresEmail1": "Esto es solo para hacerle saber que %s se han producido diferentes tipos de fallas de seguimiento en los últimos días.",
         "TrackingFailuresEmail2": "Para ver todas las peticiones de fallas de seguimiento haga %1$s clic aquí%2$s.",
         "ImportFromGoogleAnalytics": "Importar de Google Analytics",
-        "ImportFromGoogleAnalyticsDescription": "Si tiene una propiedad de Google Analytics y está migrando a Matomo, puede importar los datos existentes una el plugin %1$sGoogleAnalyticsImporter%2$s."
+        "ImportFromGoogleAnalyticsDescription": "Si tiene una propiedad de Google Analytics y está migrando a Matomo, puede importar los datos existentes una el plugin %1$sGoogleAnalyticsImporter%2$s.",
+        "SecurityNotificationEmailSubject": "Notificación de seguridad",
+        "SecurityNotificationTwoFactorAuthEnabledBody": "Alguien ha habilitado la autenticación de 2 pasos en tu cuenta.",
+        "SecurityNotificationTwoFactorAuthDisabledBody": "Alguien ha deshabilitado la autenticación de 2 pasos en tu cuenta.",
+        "SecurityNotificationTokenAuthCreatedBody": "Alguien ha creado un token de autenticación (descripción: %s) en su cuenta. Si no fue usted elimine el token.",
+        "SecurityNotificationTokenAuthDeletedBody": "Alguien ha eliminado un token de autenticación (descripción: %s) de su cuenta.",
+        "SecurityNotificationAllTokenAuthDeletedBody": "Alguien ha eliminado todos los tokens de autenticación de su cuenta.",
+        "SecurityNotificationSettingsChangedByUserBody": "Alguien ha modificado la configuración del sistema. Los parámetros afectados son: %s.",
+        "SecurityNotificationSettingsChangedByOtherSuperUserBody": "Otro super-usuario (%1$s) ha modificado la configuración del sistema. Los parámetros afectados son: %2$s. Si reconoce estos cambios ignore esto, si no contacte con el resto de super-usuarios.",
+        "SecurityNotificationUserCreatedBody": "Alguien ha creado un nuevo usuario (login: %s) en su cuenta.",
+        "SecurityNotificationUserDeletedBody": "Alguien ha eliminado un usuario (login: %s) de su cuenta.",
+        "SecurityNotificationIfItWasYou": "Si era usted, ignore este mensaje; de lo contrario, cambie la contraseña.",
+        "BruteForce": "Fuerza Bruta",
+        "TwoFactorAuth": "Autenticación de doble factor"
     },
     "CoreHome": {
         "CategoryNoData": "No hay datos en esta categoría. Intente \"Incluir toda la población\".",
@@ -1016,6 +1032,7 @@
         "RowLimit": "Límite de fila",
         "CustomLimit": "Límite personalizado",
         "ExportFormat": "Formato de exportación",
+        "ExportTooltip": "Nota: para utilizar la URL generada necesitará especificar un token de autenticación de la aplicación. Puede configurar estos tokens yendo a Admin -> Security -> Token Auths",
         "ExpandSubtables": "Expandir subtablas",
         "StandardReport": "Informe estándar",
         "FlattenReport": "Aplanar informe",
@@ -1026,7 +1043,9 @@
         "Profilable": "Perfilable",
         "SearchOnMatomo": "Busca '%1$s' en Matomo.org",
         "ReportingCategoryHelpPrefix": "¿Cómo me ayuda la página de report \"%1$s > %2$s\"?",
-        "VisitorsCategoryHelp2": "Además de la información general respecto a los visitantes, también puede usar %1$s los registros de visitas %2$s para ver que ha ocurrido en cada visita individual."
+        "VisitorsCategoryHelp2": "Además de la información general respecto a los visitantes, también puede usar %1$s los registros de visitas %2$s para ver que ha ocurrido en cada visita individual.",
+        "EngagementSubcategoryHelp2": "Esto le puede ayudar a usted, además de a maximizar su alcance, a optimizar por frecuencia y visitas de gran interacción.",
+        "PeriodHasOnlyRawData": "Parece que los informes para este periodo aún no han sido procesados. ¿Quiere ver lo que está sucediendo ahora? Consulte aquí %1$s, registro de visitas %2$s o elija un periodo distinto hasta que los informes se hayan generado."
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Desinstalar",
@@ -1465,7 +1484,6 @@
         "ContactUs": "Contáctanos",
         "VisitTheForums": "Visite el %1$sForo%2$s y obtenga ayuda de la comunidad de usuarios Matomo",
         "Forums": "Foros",
-        "ReviewMatomoTitle": "¿Crées en Matomo?",
         "PleaseLeaveExternalReviewForMatomo": "Comparte sus pensamientos en uno de estos sitios e inspira a otros a unirse en nuestra revolución de datos.",
         "RemindMeLater": "Recordármelo nuevamente",
         "NeverAskMeAgain": "No volver a preguntármelo",
@@ -1475,7 +1493,8 @@
         "RemoveOtherLabel": "Quiero ver mi información de 'Otros'",
         "PurgeOldData": "Quiero remover información obsoleta",
         "SearchHelpResources": "Buscar recursos de ayuda en matomo.org",
-        "PopularHelpTopics": "Temas de ayuda populares"
+        "PopularHelpTopics": "Temas de ayuda populares",
+        "ReferBannerTitle": "¿Crées en Matomo?"
     },
     "GeoIp2": {
         "AssumingNonApache": "No se puede encontrar la función apache_get_modules, asumiendo que posee un servidor de internet no-Apache.",
@@ -1764,10 +1783,7 @@
         "SystemCheckGzcompressHelp": "Es necesario habilitar la extensión zlib y la función gzcompress.",
         "SystemCheckGzuncompressHelp": "Es necesario habilitar la extensión zlib y la función gzcompress.",
         "SystemCheckHashHelp": "Necesitas configurar y recompilar PHP con soporte habilitado para \"hash()\": quitar la opción --disable-hash.",
-        "SystemCheckIconvHelp": "Necesita configurar y reconstruir PHP con soporte \"iconv\" habilitado, --with-iconv.",
         "SystemCheckMailHelp": "Los mensajes de Feedback y Recuperar Contraseña no se enviarán sin un correo electrónico().",
-        "SystemCheckMbstring": "mbstring",
-        "SystemCheckMbstringHelp": "Se requiere la extensión mbstring para manejar caracteres multibyte en la interface del usuario y también las respuestas de la API. Por favor controle que mbstring.func_overload esté en \"0\" en el archivo php.ini.",
         "SystemCheckMemoryLimit": "Límite de memoria",
         "SystemCheckMemoryLimitHelp": "En un sitio de internet de alto tráfico, el proceso de archivo puede requerir más memoria de la que se permite actualmente. Véase la Directiva memory_limit en su archivo php.ini si es necesario.",
         "SystemCheckNoErrorsOrWarnings": "No hay errores ni advertencias",
@@ -1783,7 +1799,6 @@
         "SystemCheckPdoAndMysqliHelp": "En un servidor Linux puede compilar php con las siguientes opciones: %1$s En su php.ini, añada las siguientes líneas: %2$s",
         "SystemCheckPhp": "Versión PHP",
         "SystemCheckPhpPdoAndMysqli": "Más información en: %1$sPHP PDO%2$s y %3$sMYSQLI%4$s.",
-        "SystemCheckSplHelp": "Necesita configurar y reconstruir PHP con la Librería Estándar de PHP habilitada (por defecto).",
         "SystemCheckSettings": "Configuración PHP solicitada (php.ini)",
         "SystemCheckSummaryNoProblems": "Hurra! No hay problemas con su configuración de Matomo. Dése una palmadita en la espalda.",
         "SystemCheckSummaryThereWereErrors": "Oh! Matomo ha detectado algunos %1$sproblemas críticos%2$s en su configuración Matomo. %3$sEstos deben ser arreglados inmediatamente.%4$s",

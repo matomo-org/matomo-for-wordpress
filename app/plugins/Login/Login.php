@@ -66,7 +66,7 @@ class Login extends \Piwik\Plugin
         $loginPlugin = Piwik::getLoginPluginName();
 
         if ($loginPlugin && $loginPlugin !== 'Login') {
-            $hooks['Controller.'.$loginPlugin.'.logme']           = 'beforeLoginCheckBruteForce';
+            $hooks['Controller.'.$loginPlugin.'.logme']           = 'beforeLoginCheckBruteForceForUserPwdLogin';
             $hooks['Controller.'.$loginPlugin. '.']               = 'beforeLoginCheckBruteForceForUserPwdLogin';
             $hooks['Controller.'.$loginPlugin.'.index']           = 'beforeLoginCheckBruteForceForUserPwdLogin';
             $hooks['Controller.'.$loginPlugin.'.confirmResetPassword'] = 'beforeLoginCheckBruteForceForUserPwdLogin';
@@ -219,11 +219,14 @@ class Login extends \Piwik\Plugin
     private function getUsernameUsedInPasswordLogin()
     {
         $login = StaticContainer::get(\Piwik\Auth::class)->getLogin();
-        if (empty($login)
-            || $login == 'anonymous'
-        ) {
+        if (empty($login) || $login == 'anonymous') {
             $login = Common::getRequestVar('form_login', false);
+            $action = Common::getRequestVar('action', false);
+            if ($action == 'logme') {
+                $login = Common::getRequestVar('login', $login);
+            }
         }
+
         return $login;
     }
 
