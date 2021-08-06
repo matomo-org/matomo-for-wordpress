@@ -33,7 +33,6 @@ class Summary {
 	 */
 	public function __construct( $settings ) {
 		$this->settings = $settings;
-		do_action('load_chartjs');
 	}
 
 	private function pin_if_submitted() {
@@ -58,6 +57,7 @@ class Summary {
 	}
 
 	public function show() {
+		do_action('load_chartjs');
 		$matomo_pinned = $this->pin_if_submitted();
 
 		$settings = $this->settings;
