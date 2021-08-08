@@ -40,7 +40,7 @@ class Renderer {
 		$data = new Data();
 		$report = $data->fetch_report($report_meta, 'day', 'last' . $limit, 'label', $limit);
 		$first_metric_name = 'nb_visits';
-
+		$graph_data = ' data-chart="VisitsSumary"';
 		ob_start();
 
 		include 'views/table_map_no_dimension.php';

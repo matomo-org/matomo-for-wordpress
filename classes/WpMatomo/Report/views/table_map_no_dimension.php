@@ -14,9 +14,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var array $report */
 /** @var array $report_meta */
 /** @var string $first_metric_name */
+/** @var string $graph_data */
+if ( ! isset($graph_data) ):
+	$graph_data = '';
+endif;
 ?>
 <div class="table">
-	<table class="widefat matomo-table">
+	<table class="widefat matomo-table"<?php echo $graph_data;?>>
 
 		<tbody>
 		<?php
