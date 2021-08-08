@@ -1,13 +1,14 @@
 jQuery(document).ready(function(){
     jQuery('*[data-chart]').each(function() {
        let $this = jQuery(this);
-       let $table = $this.parent('div.postbox').find('table');
+       let $postbox = $this.parents('div.postbox');
+       let $table = $postbox.find('table');
        $table.hide();
        let $canvas = jQuery('<canvas/>',{'id':$this.attr('data-chart')});
        $canvas.insertAfter($table);
        let data = [];
        let labels = [];
-       let title = $this.text();
+       let title = $postbox.find('h2').text();
        let $row;
        let value;
        $table.find('tr').each(function() {
@@ -23,13 +24,23 @@ jQuery(document).ready(function(){
         var myChart = new Chart($canvas, {
             type: 'line',
             data: {
-                labels: labels,
+                labels: labels.reverse(),
                 datasets: [{
                     label: title,
-                    data: data
+                    data: data.reverse(),
+                    borderColor: "#55bae7",
+                    pointBackgroundColor: "#55bae7",
+                    pointBorderColor: "#55bae7",
+                    pointHoverBackgroundColor: "#55bae7",
+                    pointHoverBorderColor: "#55bae7",
                 }]
             },
             options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
                 scales: {
                     y: {
                         beginAtZero: true
