@@ -20,6 +20,7 @@ enable_installer = 0
 enable_plugin_upload = 0
 enable_sql_optimize_queries = 0
 enable_general_settings_admin = 0
+browser_archiving_disabled_enforce = 1
 enable_browser_archiving_triggering = 0
 time_before_today_archive_considered_outdated = 1800
 time_before_week_archive_considered_outdated = 3500
