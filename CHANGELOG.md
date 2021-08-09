@@ -1,5 +1,15 @@
 == Changelog ==
 
+= 4.4.1 =
+* Update core to 4.4.1
+* Fix CORS settings could not be saved in the Matomo admin
+* Add consent mode to the tracking code settings
+* Fix the plugin paths which leads to an error on Windows OS
+* Validate the HTML comments when a manual tracking code is configured
+* Better content security policy support for the tracking code by using the "wp_get_inline_script_tag" method
+* Mark few plugins as incompatible
+* Detect if database tables are missing in the system report
+
 = 4.3.1 =
 * Validate HTML tracking code comments when configuring it manually
 * Redirect to getting started page after activating the plugin in some cases

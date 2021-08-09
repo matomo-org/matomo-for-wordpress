@@ -23,24 +23,19 @@ class Settings {
 	 * @return string
 	 * @api
 	 */
-	public function prefix_table_name( $table_name_to_prefix ) {
+	public function prefix_table_name( $table_name_to_prefix = '') {
 		global $wpdb;
 
 		return $wpdb->prefix . MATOMO_DATABASE_PREFIX . $table_name_to_prefix;
 	}
 
-	public function get_installed_matomo_tables() {
-		global $wpdb;
-
-		$table_names = array();
-		$tables      = $wpdb->get_results( 'SHOW TABLES LIKE "' . $wpdb->prefix . str_replace( '_', '\_', MATOMO_DATABASE_PREFIX ) . '%"', ARRAY_N );
-		foreach ( $tables as $table_name_to_look_for ) {
-			$table_names[] = array_shift( $table_name_to_look_for );
-		}
-
+	/**
+	 * @return string[]
+	 */
+	public function get_matomo_tables() {
 		// we need to hard code them unfortunately for tests cause there are temporary tables used and we can't find a
 		// list of existing temp tables
-		$table_names_to_look_for = array(
+		$tables = array(
 			'access',
 			'archive_invalidations',
 			'brute_force_log',
@@ -64,12 +59,6 @@ class Settings {
 			'site',
 			'site_setting',
 			'site_url',
-			'tagmanager_container',
-			'tagmanager_container_release',
-			'tagmanager_container_version',
-			'tagmanager_tag',
-			'tagmanager_trigger',
-			'tagmanager_variable',
 			'tracking_failure',
 			'twofactor_recovery_code',
 			'user',
@@ -77,6 +66,29 @@ class Settings {
 			'user_language',
 			'user_token_auth',
 		);
+		if ( !is_multisite() ) {
+			$tables = array_merge($tables, ['tagmanager_container',
+				'tagmanager_container_release',
+				'tagmanager_container_version',
+				'tagmanager_tag',
+				'tagmanager_trigger',
+				'tagmanager_variable'] );
+		}
+		return $tables;
+	}
+
+	public function get_installed_matomo_tables() {
+		global $wpdb;
+
+		$table_names = array();
+
+		$tables      = $wpdb->get_results( 'SHOW TABLES LIKE "' . $this->prefix_table_name() . '%"', ARRAY_N );
+		foreach ( $tables as $table_name_to_look_for ) {
+			$table_names[] = array_shift( $table_name_to_look_for );
+		}
+
+		$table_names_to_look_for = $this->get_matomo_tables();
+
 		foreach ( range( 2010, gmdate( 'Y' ) + 1 ) as $year ) {
 			foreach ( range( 1, 12 ) as $month ) {
 				$table_names_to_look_for[] = 'archive_numeric_' . $year . '_' . str_pad( $month, 2, '0' );

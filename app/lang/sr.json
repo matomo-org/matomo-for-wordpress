@@ -988,9 +988,10 @@
         "ColumnAvgTimeOnDimension": "Prosečno vreme na dimenziji"
     },
     "CustomJsTracker": {
-        "PluginDescription": "Omogućuje bilo kom Matomo dodatku da proširi Matomo JavaScript datoteku za praćenje (piwik.js) i doda nove funkcionalnosti i mogućnosti za praćenje sajtova.",
-        "DiagnosticPiwikJsWritable": "JavaScript treker u koji je moguće pisati (\"\/piwik.js\")",
-        "DiagnosticPiwikJsMakeWritable": "Predlažemo da omogućite pisanje u piwik.js sledećom komandom: %s"
+        "PluginDescription": "Omogućuje bilo kom Piwik dodatku da proširi Matomo JavaScript datoteku za praćenje (matomo.js) i doda nove funkcionalnosti i mogućnosti za praćenje sajtova.",
+        "DiagnosticPiwikJsWritable": "JavaScript treker u koji je moguće pisati (%s)",
+        "DiagnosticPiwikJsNotWritable": "U Matomo JavaScript treker datoteku %s nije moguće pisati što znači da ostali dodaci ne mogu da prošire JavaScript treker. U budućnosti možda čak ni neke bazične funkcije neće raditi kako se očekuje.",
+        "DiagnosticPiwikJsMakeWritable": "Predlažemo da omogućite pisanje u %1$s sledećom komandom: %2$s"
     },
     "DBStats": {
         "DatabaseUsage": "Iskorišćenost baze",
@@ -1411,9 +1412,7 @@
         "SystemCheckGzcompressHelp": "Potrebno je da uključite zlib proširenje i funkciju gzcompress",
         "SystemCheckGzuncompressHelp": "Potrebno je da uključite zlib proširenje i funkciju gzcompress",
         "SystemCheckHashHelp": "Potrebno je da kompajlirate PHP sa podrškom za hash() tako što ćete isključiti opciju --disable-hash.",
-        "SystemCheckIconvHelp": "Potrebno je da kompajlirate PHP sa \"iconv\" podrškom, --with-iconv.",
         "SystemCheckMailHelp": "Vaši komentari i poruke za izgubljene lozinke neće biti poslate bez mail() funkcije.",
-        "SystemCheckMbstring": "mbstring",
         "SystemCheckMemoryLimit": "Memorijsko ograničenje",
         "SystemCheckMemoryLimitHelp": "Na sajtovima sa visokim saobraćajem proces arhiviranja podataka može zahtevati više memorije nego što je to trenutno dozvoljeno.<br \/>Promenite vrednost parametra memory_limit u php.ini datoteci ukoliko je to neophodno.",
         "SystemCheckNoErrorsOrWarnings": "Nema grešaka i upozorenja",
@@ -1428,7 +1427,6 @@
         "SystemCheckPdoAndMysqliHelp": "Na Linux serveru možete kompajlirati PHP sa sledećim opcijama: %1$s U datoteku php.ini dodajte sledeće linije: %2$s",
         "SystemCheckPhp": "Verzija PHP-a",
         "SystemCheckPhpPdoAndMysqli": "Više informacija na: %1$sPHP PDO%2$s i %3$sMYSQLI%4$s.",
-        "SystemCheckSplHelp": "Potrebno je da kompajlirate PHP sa standardnom PHP bibiotekom (SPL).",
         "SystemCheckSettings": "Potrebna PHP podešavanja (php.ini)",
         "SystemCheckSummaryNoProblems": "Bravo! Nema problema sa vašom instalacijom Matomo-a. Možete biti zadovoljni.",
         "SystemCheckSummaryThereWereErrors": "Matomo je otkrio %1$skritične probleme%2$s sa vašom instalacijom. %3$sPotrebno je da ih odmah rešite.%4$s",

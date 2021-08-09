@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'Twig\\' => array($vendorDir . '/twig/twig/src'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
+    'Symfony\\Polyfill\\Iconv\\' => array($vendorDir . '/symfony/polyfill-iconv'),
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
@@ -26,7 +27,7 @@ return array(
     'Matomo\\Cache\\' => array($vendorDir . '/matomo/cache/src'),
     'Invoker\\' => array($vendorDir . '/php-di/invoker/src'),
     'GeoIp2\\' => array($vendorDir . '/geoip2/geoip2/src'),
-    'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache'),
+    'Doctrine\\Common\\Cache\\' => array($vendorDir . '/matomo/doctrine-cache-fork/lib/Doctrine/Common/Cache'),
     'DeviceDetector\\' => array($vendorDir . '/matomo/device-detector'),
     'Davaxi\\' => array($vendorDir . '/davaxi/sparkline/src'),
     'DI\\' => array($vendorDir . '/php-di/php-di/src'),

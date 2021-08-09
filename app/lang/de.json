@@ -16,6 +16,7 @@
         "Apply": "Anwenden",
         "ArchivingInlineHelp": "Für Websites mit mittlerem bis hohem Verkehrsaufkommen wird empfohlen, die durch den Browser ausgelöste Archivierung zu deaktivieren. Stattdessen wird empfohlen, dass Sie einen Cronjob aufsetzen, der die Berichte einmal pro Stunde abarbeitet.",
         "ArchivingTriggerDescription": "Für größere Matomo-Installationen sollten Sie %1$seinen Cronjob erstellen%2$s, der die Berichte automatisch abarbeitet.",
+        "ArchivingTriggerSegment": "Die Verwendung benutzerspezifischer Segmente wird weiterhin die Aufbereitung der Archive auslösen.",
         "AuthenticationMethodSmtp": "Authentifizierungsmethode für SMTP",
         "AverageOrderValue": "Durchschnittlicher Bestellwert",
         "AveragePrice": "Durchschnittlicher Preis",
@@ -176,6 +177,8 @@
         "ExceptionDatabaseVersion": "Ihre %1$s-Version ist %2$s, aber Matomo benötigt mindestens %3$s",
         "ExceptionDatabaseVersionNewerThanCodebase": "Ihre Matomo Codebase läuft auf der alten Version %1$s und wir haben erkannt, dass Ihre Matomo Datenbank bereits auf die neuere Version %2$s aktualisiert wurde.",
         "ExceptionDatabaseVersionNewerThanCodebaseWait": "Möglicherweise sind die Matomo Administratoren gerade daran, den Aktualisierungsprozess abzuschließen. Bitte versuchen Sie es in ein paar Minuten noch einmal.",
+        "ExceptionDatabaseUnavailable": "Der MySQL Server ist nicht mehr erreichbar",
+        "ExceptionDatabaseAccess": "Datenbankzugriff verweigert",
         "ExceptionFileIntegrity": "Integritätsprüfung fehlgeschlagen: %s",
         "ExceptionFilesizeMismatch": "Unterschiedliche Dateigröße: %1$s (erwartete Größe: %2$s, gefunden: %3$s)",
         "ExceptionIncompatibleClientServerVersions": "Ihre %1$s-Client Version ist %2$s, die aber mit der Server-Version %3$s inkompatibel ist.",
@@ -211,6 +214,7 @@
         "ExceptionReportNotEnabled": "Der gesuchte Bericht ist nicht aktiviert. Das bedeutet normalerweise entweder, dass das Plugin, welches den Bericht definiert, deaktiviert ist oder Sie haben nicht die benötigten Berechtigungen, um diesen Bericht einzusehen.",
         "ExceptionWidgetNotEnabled": "Das gesuchte Widget ist nicht aktiviert. Das bedeutet normalerweise entweder, dass das Plugin, welches das Widget definiert, deaktiviert ist oder Sie haben nicht die benötigten Berechtigungen, um dieses Widget zu einzusehen.",
         "ExceptionNotSupportedBrowserTitle": "Ihr Browser wird nicht unterstützt",
+        "ExceptionNotSupportedBrowserText": "Ihr Browser wird aus Sicherheitsgründen nicht unterstützt. Bitte aktualisieren Sie auf eine neuere Version.",
         "ExpandDataTableFooter": "Ändern Sie die Darstellung oder konfigurieren den Bericht",
         "Export": "Export",
         "ExportAsImage": "Als Bild exportieren",
@@ -488,6 +492,7 @@
         "WarningFileIntegrityNoMd5file": "Durch die fehlende md5_file() Funktion konnte die Integritätsprüfung nicht durchgeführt werden.",
         "WarningPasswordStored": "%1$sWarnung:%2$s Dieses Passwort wird in der Konfigurationsdatei gespeichert und ist so für jeden sichtbar, der auf diese Datei Zugriff hat.",
         "WarningDebugOnDemandEnabled": "Der Tracker befindet sich im %1$s Modus. Aus Sicherheitsgründen sollte dieser nur für einen kurzen Zeitraum aktiv sein. Um Ihn zu deaktivieren setzen Sie %2$s auf %3$s in %4$s",
+        "WarningDevelopmentModeOnButNotGitInstalled": "Sie verwenden Matomo aktuell im Entwicklermodus, aber es wurde nicht über git installiert. Es wird nicht empfohlen, den Entwicklermodus in produktiver Umgebung zu nutzen.",
         "Website": "Website",
         "Weekly": "Wöchentlich",
         "WeeklyReport": "wöchentlich",
@@ -522,7 +527,8 @@
         "Custom": "Benutzerdefiniert",
         "PreviousPeriod": "Vorheriger Zeitraum",
         "PreviousYear": "vorheriges Jahr",
-        "ViewAccessRequired": "Der verwendete token_auth hat zu viele Rechte, um für nicht-API URL Anfragen verwendet zu werden. Bitte verwenden Sie ein programmspezifisches Passwort für einen Benutzer, der ausschließlich über Ansichtszugriff verfügt."
+        "ViewAccessRequired": "Der verwendete token_auth hat zu viele Rechte, um für nicht-API URL Anfragen verwendet zu werden. Bitte verwenden Sie ein programmspezifisches Passwort für einen Benutzer, der ausschließlich über Ansichtszugriff verfügt.",
+        "Reasons": "Gründe"
     },
     "Mobile": {
         "AboutPiwikMobile": "Über Matomo Mobile",
@@ -718,10 +724,16 @@
         "PagesSubcategoryHelp1": "Dieser Bericht enthält Informationen über die Seiten URLs, welche besucht wurden.",
         "PagesSubcategoryHelp2": "Die Tabelle ist hierarchisch organisiert, die URLs werden als Verzeichnisstruktur angezeigt.",
         "PagesSubcategoryHelp3": "Benutzen Sie zur Navigation die Symbole Plus und Minus auf der linken Seite.",
+        "EntryPagesSubcategoryHelp1": "Dieser Bericht enthält Informationen über die Einstiegsseiten im gewählten Zeitraum. Die Einstiegsseite ist die erste Seite, die während eines Besuches aufgerufen wird.",
         "EntryPagesSubcategoryHelp2": "Die Einstiegs-URLs werden als Verzeichnisstruktur angezeigt.",
+        "ExitPagesSubcategoryHelp1": "Dieser Bericht enthält Informationen über die Ausstiegsseiten im gewählten Zeitraum. Die Ausstiegsseite ist die letzte Seite, die während eines Besuches aufgerufen wird.",
         "ExitPagesSubcategoryHelp2": "Die Ausstiegs-URLs werden als Verzeichnisstruktur angezeigt.",
         "PageTitlesSubcategoryHelp1": "Dieser Bericht enthält Informationen über die Titel der Seiten, welche besucht wurden.",
+        "PageTitlesSubcategoryHelp2": "Der Seitentitel ist der HTML <title> Tag, welcher von den meisten Browsern in deren Fenstertitel angezeigt wird.",
+        "SiteSearchSubcategoryHelp1": "Der Bereich \"Interne Suche\" zeigt, welche Suchworte Besucher verwenden, wenn sie auf Ihrer Webseite suchen. Er zeigt auch auf welche Seiten Benutzer gehen, nachdem sie gesucht haben und welche Suchbegriffe gar keine Resultate erzeugt hatten.",
+        "SiteSearchSubcategoryHelp2": "Dieser Bericht kann Ihnen Hinweise darauf geben, welche Inhalte auf Ihrer Seite eventuell fehlen, in dem er aufzeigt, was Ihre Besucher suchen, aber nicht so einfach finden.",
         "SiteSearchSubcategoryHelp3": "Weitere Informationen finden Sie in der Anleitung zur internen Suche.",
+        "OutlinksSubcategoryHelp1": "Dieser Bericht zeigt eine hierarchisch angeordnete Liste von ausgehenden Links, die von ihren Besuchern angeklickt wurden. Ein ausgehender Link ist ein Link, der den Besucher von Ihrer Webseite wegführt (zu einer anderen Domain).",
         "DownloadsSubcategoryHelp1": "In diesem Bericht können Sie sehen, welche Dateien Ihre Besucher heruntergeladen haben.",
         "DownloadsSubcategoryHelp2": "Als Download zählt bei Matomo der Klick auf einen Download-Link. Ob der Download abgeschlossen wurde oder nicht, ist Matomo nicht bekannt."
     },
@@ -907,7 +919,24 @@
         "TrackingFailuresEmail1": "Dies ist nur um Sie wissen zu lassen, dass in den letzten Tagen %s verschiedene Arten von Tracking Fehlschlägen aufgetreten sind.",
         "TrackingFailuresEmail2": "%1$sHier klicken%2$s, um alle Tracking Fehlschläge anzuzeigen.",
         "ImportFromGoogleAnalytics": "Von Google Analytics importieren",
-        "ImportFromGoogleAnalyticsDescription": "Wenn Sie über ein Google Analytics-Konto verfügen und zu Matomo wechseln, können Sie Ihre vorhandenen Daten mithilfe des %1$sGoogleAnalyticsImporter-Plugins%2$s importieren."
+        "ImportFromGoogleAnalyticsDescription": "Wenn Sie über ein Google Analytics-Konto verfügen und zu Matomo wechseln, können Sie Ihre vorhandenen Daten mithilfe des %1$sGoogleAnalyticsImporter-Plugins%2$s importieren.",
+        "SecurityNotificationEmailSubject": "Sicherheitsbenachrichtigung",
+        "SecurityNotificationRecoveryCodesShowedBody": "Jemand hat sich die Wiederherstellungscodes Ihres Benutzerkontos für Zwei-Faktor-Authentifikation angeschaut.",
+        "SecurityNotificationRecoveryCodesRegeneratedBody": "Jemand hat neue Wiederherstellungscodes für Zwei-Faktor-Authentifikation für Ihr Benutzerkonto generiert.",
+        "SecurityNotificationTwoFactorAuthEnabledBody": "Jemand hat die Zwei-Faktor-Authentifikation in Ihrem Benutzerkonto aktiviert.",
+        "SecurityNotificationTwoFactorAuthDisabledBody": "Jemand hat die Zwei-Faktor-Authentifikation in Ihrem Benutzerkonto deaktiviert.",
+        "SecurityNotificationTokenAuthCreatedBody": "Jemand hat einen Authentifizierungs-Token (Beschreibung: %s) in Ihrem Benutzerkonto erstellt. Wenn Sie das nicht waren, löschen Sie den Token.",
+        "SecurityNotificationTokenAuthDeletedBody": "Jemand hat einen Authentifizierungs-Token (Beschreibung: %s) in Ihrem Benutzerkonto gelöscht.",
+        "SecurityNotificationAllTokenAuthDeletedBody": "Jemand hat alle Authentifizierungs-Token Ihres Benutzerkontos gelöscht.",
+        "SecurityNotificationSettingsChangedByUserBody": "Jemand hat die Systemeinstellungen verändert. Betroffene Einstellungen: %s.",
+        "SecurityNotificationSettingsChangedByOtherSuperUserBody": "Ein anderer Hauptadministrator (%1$s) hat die Systemeinstellungen verändert. Betroffene Einstellungen: %2$s. Wenn Sie die Aktivität nachvollziehen können, fahren Sie fort. Wenn nicht, kontaktieren Sie bitte den anderen Hauptadministrator.",
+        "SecurityNotificationUserCreatedBody": "Jemand hat einen neuen Benutzer (Login: %s) in Ihrem Benutzerkonto erstellt.",
+        "SecurityNotificationUserDeletedBody": "Jemand hat einen Benutzer (Login: %s) in Ihrem Benutzerkonto gelöscht.",
+        "SecurityNotificationIfItWasYou": "Wenn Sie das waren, fahren Sie fort. Wenn Sie sich über diese Aktivität nicht sicher sind, setzen Sie bitte Ihr Passwort zurück.",
+        "SecurityNotificationCheckTwoFactor": "Bitte prüfen Sie Ihre App oder Ihr Gerät zur Zwei-Faktor Authentifizierung.",
+        "BruteForce": "Brute Force",
+        "TwoFactorAuth": "Zwei-Faktor Authentifizierung",
+        "Cors": "CORS"
     },
     "CoreHome": {
         "CategoryNoData": "Keine Daten in dieser Kategorie. Probieren Sie \"Gesamte Daten einbeziehen\"",
@@ -1015,6 +1044,7 @@
         "CustomLimit": "Eigenes Limit",
         "ExportFormat": "Exportformat",
         "ExportTooltip": "Hinweis: Um die generierte Export-URL zu verwenden, müssen Sie einen Authentifizierungstoken angeben. Sie können diese Token unter Admin -> Sicherheit -> Authentifizierungstoken konfigurieren.",
+        "ExportTooltipWithLink": "Hinweis: Um die generierte Export URL zu verwenden, müssen Sie einen App Token Auth angeben. Sie können diese Token in %1$s[Admin -> Security -> Auths Tokens]%2$s konfigurieren. Ersetzen Sie %3$s in der Export URL durch Ihren Auth Token. Warnung: Niemals die URL mit dem effektiven Token jemandem weitergeben.",
         "ExpandSubtables": "Erweitere Untertabellen",
         "StandardReport": "Standard Bericht",
         "FlattenReport": "Flacher Bericht",
@@ -1025,10 +1055,14 @@
         "Profilable": "Profilierbar",
         "SearchOnMatomo": "Suche '%1$s' auf Matomo.org",
         "ReportingCategoryHelpPrefix": "Wie kann die \"%1$s > %2$s\" Berichtsseite mir helfen?",
+        "VisitorsCategoryHelp1": "Die Besucherseiten sagen Ihnen Dinge darüber wer Ihre Besucher sind. Dinge wie woher Ihre Besucher kommen, welche Geräte und Browser sie verwenden und wann sie Ihre Webseite generell besuchen. Verstehen Sie, wer Ihr Publikum im Allgemeinen ist, und achten Sie auf Sonderfälle um zu sehen wie Ihr Publikum wachsen könnte.",
         "VisitorsCategoryHelp2": "Zusätzlich zu generellen Informationen über Ihre Besucher können Sie das %1$sBesucher-Log%2$sauch verwenden um zu sehen, was bei jedem individuellen Besuch passiert ist.",
         "VisitorsOverviewHelp": "Die Besucherübersicht hilft Ihnen, die Popularität Ihrer Website zu verstehen. Dazu stellt sie Diagramme bereit, die zeigen, wie viele Besuche Ihre Website über einen ausgewählten Zeitraum erhält und wie hoch das durchschnittliche Engagement für wichtige Funktionen wie Suchen und Downloads ist.",
+        "DevicesSubcategoryHelp": "Der Gerätebereich hilft aufzuzeigen, welche Technologien Ihre Besucher verwenden, wenn Sie Ihre Seite besuchen. Sie werden Berichte der Gerätetypen und spezifische Modelle sehen, was Ihnen ermöglicht, Ihre Seite für die beliebtesten Geräte zu optimieren.",
+        "SoftwareSubcategoryHelp": "Der Softwarebereich zeigt das Betriebssystem, Browser und Plugins welche Ihre Besucher verwenden, um Ihre Seite zu besuchen, sodass Sie Ihre Seite so optimieren können, dass sie mit den meisten Konfigurationen vollständig kompatibel ist.",
         "EngagementSubcategoryHelp1": "Der Bereich \"Engagement\" bietet Berichte, die dabei helfen, zu quantifizieren, wie viele neue und wiederkehrende Besucher Sie haben. Sie können auch Berichte einsehen, die die durchschnittliche Zeit und Anzahl der Seiten pro Besuch aufschlüsseln, sowie die Anzahl der Besuche eines Besuchers auf Ihrer Website und die übliche Anzahl an Tagen zwischen den Besuchen.",
-        "EngagementSubcategoryHelp2": "Dies kann Ihnen helfen, neben der Maximierung Ihrer Reichweite auch die Häufigkeit und die Interaktionsrate zu optimieren."
+        "EngagementSubcategoryHelp2": "Dies kann Ihnen helfen, neben der Maximierung Ihrer Reichweite auch die Häufigkeit und die Interaktionsrate zu optimieren.",
+        "PeriodHasOnlyRawData": "Anscheinend wurden für diesen Zeitbereich noch keine Berichte generiert. Möchten Sie sehen was aktuell passiert? Schauen Sie im %1$sBesucher-Log%2$s oder wählen Sie einen anderen Zeitbereich, bis die Berichte generiert sind."
     },
     "CorePluginsAdmin": {
         "ActionUninstall": "Deinstallieren",
@@ -1214,7 +1248,9 @@
         "ReceiveEmailBecauseIsSuperUser": "Sie erhalten diese E-Mail, weil Sie ein Super User folgender Matomo Installation sind: %s",
         "ConvertToUtf8mb4": "Datenbank in den UTF8mb4 Zeichensatz konvertieren",
         "TriggerDatabaseConversion": "Datenbankkonversion im Hintergrund ausführen",
-        "Utf8mb4ConversionHelp": "Ihre Datenbank verwendet aktuell nicht den utf8mb4 Zeichensatz. Dies verunmöglicht es, 4-Byte-Zeichen wie Emojis, wenig gebräuchliche Zeichen asiatischer Sprachen, diverse historische Schriftzeichen oder mathematische Symbole zu speichern. Diese werden im Moment mit %1$sersetzt. <br \/><br \/>Ihre Datenbank unterstützt den utf8mb4 Zeichensatz und es wäre möglich, sie zu konvertieren.<br \/><br \/>Wenn Sie in der Lage sind, Konsolenkommandos auszuführen, empfehlen wir Ihnen, den folgenden Befehl auszuführen: %2$s<br \/><br \/>Alternativ können Sie die Umwandlung hier aktivieren. Sie wird dann automatisch als planmäßige Aufgabe im Hintergrund durchgeführt. <br \/><br \/>Achtung: Die Datenbankkonvertierung kann einige Stunden dauern, abhängig von der Datenbankgröße. Da während dieser Zeit das Tracking möglicherweise nicht funktionieren wird, empfehlen wir für größere Installationen die Hintergrundkonvertierung nicht.<br \/><br \/>Sie finden mehr Informationen über dieses Thema in diesen %3$sFAQ%4$s."
+        "Utf8mb4ConversionHelp": "Ihre Datenbank verwendet aktuell nicht den utf8mb4 Zeichensatz. Dies verunmöglicht es, 4-Byte-Zeichen wie Emojis, wenig gebräuchliche Zeichen asiatischer Sprachen, diverse historische Schriftzeichen oder mathematische Symbole zu speichern. Diese werden im Moment mit %1$sersetzt. <br \/><br \/>Ihre Datenbank unterstützt den utf8mb4 Zeichensatz und es wäre möglich, sie zu konvertieren.<br \/><br \/>Wenn Sie in der Lage sind, Konsolenkommandos auszuführen, empfehlen wir Ihnen, den folgenden Befehl auszuführen: %2$s<br \/><br \/>Alternativ können Sie die Umwandlung hier aktivieren. Sie wird dann automatisch als planmäßige Aufgabe im Hintergrund durchgeführt. <br \/><br \/>Achtung: Die Datenbankkonvertierung kann einige Stunden dauern, abhängig von der Datenbankgröße. Da während dieser Zeit das Tracking möglicherweise nicht funktionieren wird, empfehlen wir für größere Installationen die Hintergrundkonvertierung nicht.<br \/><br \/>Sie finden mehr Informationen über dieses Thema in diesen %3$sFAQ%4$s.",
+        "SkipCacheClearDesc": "Überspringt das Leeren des Caches vor dem Aktualisieren. Das ist nur hilfreich, wenn Sie sicher sind, dass die Instanzen, welche diesen Befehl ausführen, noch gar keinen Cache erzeugt haben, und wenn das Leeren des Caches für viele Matomo Konten zu einem Ressourcen-Engpass führen kann.",
+        "SkipCacheClear": "Cache leeren überspringen."
     },
     "CustomDimensions": {
         "CustomDimensions": "Benutzerdefinierte Dimensionen",
@@ -1415,7 +1451,13 @@
         "CronArchivingRunDetails": "Bitte überprüfen Sie, ob Sie einen Crontab eingerichtet haben, der den %1$s Konsolenbefehl aufruft, und ob Sie einen %2$s konfiguriert haben, um Fehler per E-Mail zu erhalten, wenn die Archivierung fehlschlägt. Sie können auch versuchen, den Konsolenbefehl auszuführen, um Ihre Berichte manuell zu archivieren: %3$s. %4$s Mehr erfahren.%5$s",
         "CronArchivingRanSuccessfullyXAgo": "Der Archivierungsprozess wurde vor %1$s erfolgreich abgeschlossen.",
         "BrowserTriggeredArchivingEnabled": "Für eine optimale Leistung und ein schnelles Matomo wird dringend empfohlen, einen Crontab einzurichten, um Ihre Berichte automatisch zu archivieren und das Auslösen durch den Browser in den Matomo-Einstellungen zu deaktivieren. %1$sErfahren Sie mehr.%2$s",
-        "NoDataForReportArchivingNotRun": "Die Archivierung Ihrer Berichte wurde in letzter Zeit nicht durchgeführt, %1$serfahren Sie mehr darüber, wie Sie Ihre Berichte erzeugen können.%2$s"
+        "NoDataForReportArchivingNotRun": "Die Archivierung Ihrer Berichte wurde in letzter Zeit nicht durchgeführt, %1$serfahren Sie mehr darüber, wie Sie Ihre Berichte erzeugen können.%2$s",
+        "RequiredPrivateDirectories": "Verzeichnisse, welche privat sein müssen",
+        "PrivateDirectoryManualCheck": "Bitte öffnen Sie die URLs manuell in einem Browser um zu sehen, ob Sie Zugang dazu haben. Wenn Sie können, sollten Sie Ihre Serverkonfiguration so ändern, dass diese Dateien\/Verzeichnisse nicht via Browser aus dem Internet oder Intranet verfügbar sind.",
+        "PrivateDirectoryInternetDisabled": "Wir konnten bei den folgenden URLs nicht prüfen, ob sie erreichbar sind, weil Internet Features aktuell auf dieser Matomo Installation deaktiviert sind.",
+        "PrivateDirectoryIsAccessible": "Wir haben festgestellt, dass auf die oben aufgelisteten URLs über den Browser zugegriffen werden kann, was aber NICHT so sein sollte. Der Zugriff kann ein mögliches Sicherheitsrisiko darstellen, weil der Inhalt Informationen über Ihren Server und potenziell über Ihre Benutzer enthält. Bitte beschränken Sie den Zugriff auf diese URLs.",
+        "ConfigIniAccessible": "Wir haben auch herausgefunden, dass Matomos Konfigurationsverzeichnis öffentlich zugänglich ist. Zwar können Angreifer die Konfigurationsdatei nicht lesen, jedoch sind Ihre MySQL Anmeldeinformationen und andere Informationen für jeden zugänglich, wenn Ihr Webserver aus irgend einem Grund aufhört, PHP Dateien auszuführen. Bitte prüfen Sie Ihre Webserverkonfiguration und verwehren Sie den Zugriff zu diesem Verzeichnis.",
+        "AllPrivateDirectoriesAreInaccessible": "Alle privaten Verzeichnisse sind nicht aus dem Internet zugänglich."
     },
     "Ecommerce": {
         "PluginDescription": "Mit E-Commerce haben Sie die Möglichkeit festzuhalten, dass ein Besucher Produkte in den Warenkorb legt, und wann es zu einem Verkauf kommt. Zusätzlich lassen sich auch Besuche von Produkt- sowie Kategorieseiten und verlassene Warenkörbe erfassen.",
@@ -1436,8 +1478,13 @@
         "VisitorProfileLTV": "Generierter Gesamtumsatz von %1$s.",
         "VisitorProfileItemsAndOrders": "%1$s Artikel in %2$s E-Commerce Bestellungen gekauft.",
         "VisitorProfileAbandonedCartSummary": "%1$s verwaiste Warenkörbe mit %2$s Artikeln und einem Gesamtwert von %3$s.",
+        "EcommerceOverviewSubcategoryHelp1": "Der E-Commerce Übersichtsbereich ist der beste Ort, um eine hochwertige Sicht über die Performance Ihres Shops zu erhalten. Auf einen Blick sehen Sie, wie viele Verkäufe Sie tätigen, wie viel Einnahmen Sie erzielen, und die Umsatzrate Ihrer Webseite.",
         "EcommerceOverviewSubcategoryHelp2": "Klicken Sie auf eine einzelne Metrik innerhalb des Sparkline-Diagramms, um sie im Entwicklungsdiagramm in voller Größe zu betrachten.",
-        "EcommerceLogSubcategoryHelp2": "Die Daten auf dieser Seite werden in Echtzeit aktualisiert"
+        "SalesSubcategoryHelp1": "Dieser Bereich enthält eine umfangreiche Sammlung von Berichten, um Ihnen bei der Analyse der unterschiedlichen Konditionen zu helfen, was am häufigsten zu Verkäufen führt, wie der Verkehr und Kampagnenursprung, Benutzerzeiten und Orte, sowie dafür verwendete Geräte.",
+        "SalesSubcategoryHelp2": "Sie können auch lernen wie genau mit welcher Dimension Einnahmen generiert wurden, wie spezifische Verkehrstypen oder Tracking Kampagnen.",
+        "EcommerceLogSubcategoryHelp1": "Das E-Commerce Log enthält detaillierte sessionbezogene Daten, sodass Sie die komplette Session jedes Benutzers nachverfolgen können, der einen Kauf getätigt oder abgebrochen hat. Dies kann helfen zu verstehen was Benutzer machen, bevor und nachdem Sie etwas kaufen, für die Verkaufsmöglichkeitenoptimierung.",
+        "EcommerceLogSubcategoryHelp2": "Die Daten auf dieser Seite werden in Echtzeit aktualisiert",
+        "ProductSubcategoryHelp": "Die Produkteansicht kann Ihnen dabei helfen Produkte und Kategorien zu identifizieren, die über- oder unterperformen, um Trends und Möglichkeiten im Bezug auf Ihre Produkteselektion und Verkaufsbereiche zu erkennen."
     },
     "Events": {
         "PluginDescription": "Speichert Ereignisse und stellt Berichte über die Aktivität der Besucher bereit",
@@ -1479,7 +1526,7 @@
     },
     "Feedback": {
         "DoYouHaveBugReportOrFeatureRequest": "Möchten Sie einen Fehler melden oder haben Sie eine Idee für eine neue Funktion?",
-        "HowToCreateTicket": "Bitte lesen Sie die Empfehlungen wie man eine gute %1$sFehlermeldung%2$s oder einen %3$sVerbesserungsvorschlag%4$s erstellt. Dann registrieren Sie sich oder loggen Sie sich bei %5$sunserem Fehlermeldesystem%6$s an und erstellen Sie einen %7$sneuen Fall%8$s.",
+        "HowToCreateTicket": "Bitte lesen Sie die Empfehlungen wie man einen guten %1$sProblembericht%2$s oder einen %3$sVerbesserungsvorschlag%4$s erstellt. Dann registrieren Sie sich oder loggen Sie sich bei %5$sunserem Fehlermeldesystem%6$s an und erstellen Sie einen %7$sneuen Fall%8$s.",
         "IWantTo": "Ich möchte:",
         "LearnWaysToParticipate": "Lernen Sie alle Möglichkeiten kennen, wie Sie %1$s uns unterstützen können%2$s",
         "ManuallySendEmailTo": "Senden Sie Ihre Nachricht manuell an",
@@ -1492,6 +1539,7 @@
         "RateFeatureTitle": "Gefällt Ihnen das Feature '%s'? Bitte bewerten Sie es und hinterlassen einen Kommentar!",
         "SendFeedback": "Feedback absenden",
         "ThankYou": "Danke für Ihre Unterstützung, Matomo zu verbessern!",
+        "ThankYouForSpreading": "Danke dafür, dass Sie uns weiterempfehlen und dazu beitragen, das Web sicherer zu machen.",
         "TopLinkTooltip": "Teilen Sie uns Ihre Meinung mit, oder fordern professionelle Unterstützung an.",
         "ViewAnswersToFAQ": "Antworten zu %1$sFrequently Asked Questions%2$s ansehen",
         "FAQs": "FAQs",
@@ -1509,7 +1557,7 @@
         "ContactUs": "Kontaktieren Sie uns",
         "VisitTheForums": "Besuchen Sie die %1$s Foren%2$s und erhalten Sie Hilfe von der Matomo Community",
         "Forums": "Forum",
-        "ReviewMatomoTitle": "Vertrauen Sie Matomo?",
+        "ReviewMatomoTitle": "Mögen Sie Matomo?",
         "PleaseLeaveExternalReviewForMatomo": "Teilen Sie Ihre Überlegungen auf einer dieser Seiten und inspirieren Sie so andere, Ihrer Datenrevolution zu folgen.",
         "RemindMeLater": "Erinnere mich später daran",
         "NeverAskMeAgain": "Nie mehr fragen",
@@ -1520,7 +1568,13 @@
         "PurgeOldData": "Ich möchte einige alte Daten entfernen",
         "SearchHelpResources": "matomo.org Hilfequellen durchsuchen",
         "PopularHelpTopics": "Beliebte Hilfethemen",
-        "ReferMatomo": "Matomo empfehlen"
+        "ReferMatomo": "Matomo empfehlen",
+        "ReferBannerTitle": "Konnte Matomo Sie überzeugen?",
+        "ReferBannerLonger": "Bitte helfen Sie dabei, uns bekannt zu machen, damit mehr Leute Kontrolle über deren Analysedaten bekommen.",
+        "ReferBannerEmailShareSubject": "Verweisen Sie sie jetzt auf Matomo Analytics, damit sie die Kontrolle zurückerhalten!",
+        "ReferBannerEmailShareBody": "Ich verwende Matomo - eine ethische Alternative zu Google Analytics - welche mir 100%%Datenhoheit gibt und die Daten meiner Webseitenbesucher schützt.\nIch teile diese Nachricht in der Hoffnung das du dir die Macht von Google zurückholst und mit deinen eigenen Daten wie mit deinem anderen Eigentum umgehst.\n\nSchau dir Matomo an, auf https:\/\/matomo.org",
+        "ReferBannerSocialShareText": "Wenn Sie Google Analytics verwenden, behalten Sie Kontrolle über Ihre Daten, in dem Sie jetzt auf eine ethische Alternative wie Matomo wechseln!",
+        "WontShowAgain": "Wir werden diese Nachricht nicht mehr anzeigen."
     },
     "GeoIp2": {
         "AssumingNonApache": "Die apache_get_modules Funktion wurde nicht gefunden. Es wird daher von einem Nicht-Apache Webserver ausgegangen.",
@@ -1837,6 +1891,7 @@
         "SystemCheckEvalHelp": "Wird von HTML QuickForm und der Template-Engine Smarty benötigt.",
         "SystemCheckExtensions": "Weitere erforderliche Anforderungen",
         "SystemCheckFileIntegrity": "Dateiintegrität",
+        "SystemCheckFilterHelp": "Sie müssen PHP mit aktiviertem \"filter\" Support (--disable-filter nicht verwenden) konfigurieren und neu starten.",
         "SystemCheckFunctions": "Erforderliche Funktionen",
         "SystemCheckFunctionHelp": "Sie müssen diese eingebaute Funktion aktivieren",
         "SystemCheckGDFreeType": "GD > 2.x + Freetype (graphics)",
@@ -1845,11 +1900,8 @@
         "SystemCheckGzcompressHelp": "Sie müssen die zlib Erweiterung und die gzcompress Funktion aktivieren.",
         "SystemCheckGzuncompressHelp": "Sie müssen die zlib Erweiterung und die gzuncompress Funktion aktivieren.",
         "SystemCheckHashHelp": "Sie müssen PHP mit der hash() Funktionalität kompilieren, indem Sie die Option --disable-hash entfernen.",
-        "SystemCheckIconvHelp": "Sie müssen PHP mit \"iconv\" Unterstützung konfigurieren und neu bauen ( --with-iconv).",
         "SystemCheckJsonHelp": "Die php-json Erweiterung wird von Matomo benötigt, um JSON Daten zu lesen und zu schreiben.",
         "SystemCheckMailHelp": "Feedback und Nachrichten zu verlorenen Passwörtern können nicht ohne mail() versendet werden.",
-        "SystemCheckMbstring": "mbstring",
-        "SystemCheckMbstringHelp": "Die mbstring-Erweiterung wird benötigt, um multibyte-Zeichen in der Benutzeroberfläche und in den API-Antworten zu verarbeiten. Bitte überprüfen Sie ebenfalls, ob mbstring.func_overload in der php.ini auf \"0\" gesetzt ist.",
         "SystemCheckMemoryLimit": "Speicherlimit",
         "SystemCheckMemoryLimitHelp": "Auf einer stark frequentierten Website könnte es passieren, dass die Archivierung mehr Speicher erfordert als erlaubt. Falls erforderlich, ändern Sie den memory_limit Wert in ihrer php.ini Datei.",
         "SystemCheckMemoryNoMemoryLimitSet": "Es ist kein Speicherlimit gesetzt",
@@ -1866,7 +1918,7 @@
         "SystemCheckPdoAndMysqliHelp": "Auf einem Linux-Server können Sie PHP mit den folgenden Optionen kompilieren: %1$s In Ihrer php.ini fügen Sie dann die folgenden Zeilen ein: %2$s",
         "SystemCheckPhp": "PHP-Version",
         "SystemCheckPhpPdoAndMysqli": "Weitere Informationen unter: %1$sPHP PDO%2$s und %3$sMYSQLI%4$s.",
-        "SystemCheckSplHelp": "Sie müssen PHP mit standardmäßig aktivierter Standard PHP Bibliothek (SPL) konfigurieren und neu übersetzen.",
+        "SystemCheckSessionHelp": "Sie müssen PHP mit aktiviertem \"session\" Support (--disable-session nicht verwenden) konfigurieren und neu starten.",
         "SystemCheckSettings": "Benötigte PHP Konfiguration (php.ini)",
         "SystemCheckSummaryNoProblems": "Gratulation! Es gibt keine Probleme mit Ihrer Matomo Installation. Sie können sich selbst auf die Schulter klopfen.",
         "SystemCheckSummaryThereWereErrors": "Ohje! Matomo hat einige %1$skritische Fehler%2$s mit Ihrer Installation festgestellt. %3$sDiese sollten schnellstmöglich behoben werden.%4$s",
@@ -1876,7 +1928,9 @@
         "SystemCheckTrackerHelp": "GET-Request zu matomo.php fehlgeschlagen. Versuchen Sie, diese URL in die Whitelist der HTTP-Authentifizierung aufzunehmen und deaktivieren Sie mod_security (ggf. müssen Sie hierzu Ihren Hoster kontaktieren). Nähere Informationen hierzu entnehmen Sie bitte dem Fehler-Log des Webservers.",
         "SystemCheckWarnDomHelp": "Sie sollten die \"dom\" Erweiterung aktivieren (z.Bsp. installieren Sie das \"php-dom\" und\/oder das \"php-xml\" Paket).",
         "SystemCheckWarning": "Matomo wird funktionieren, aber einige Funktionen werden fehlen",
+        "SystemCheckWarnJsonHelp": "Sie sollten die \"json\" Erweiterung aktivieren (z. B. das \"php-json\" Package installieren).",
         "SystemCheckWarnLibXmlHelp": "Sie müssen die \"libxml\" Erweiterung aktivieren (z.B. installieren Sie das \"php-libxml\" Paket), wie es auch von anderen PHP-Erweiterungen benötigt wird.",
+        "SystemCheckWarnOpensslHelp": "Sie sollten die \"openssl\" Erweiterung aktivieren, um sichere Updates zu ermöglichen.",
         "SystemCheckWarnSimpleXMLHelp": "Sie sollten die \"SimpleXML\" Erweiterung aktivieren (z.Bsp. installieren Sie das \"php-simplexml\" und\/oder \"php-xml\" Paket).",
         "SystemCheckWinPdoAndMysqliHelp": "Auf einem Windows-Server können Sie die folgenden Zeilen in Ihre php.ini einfügen: %s",
         "SystemCheckWriteDirs": "Verzeichnisse mit Schreibzugriff",
@@ -3067,7 +3121,7 @@
         "SimpleRealTimeWidget_Message": "%1$s und %2$s in den letzten %3$s.",
         "ViewVisitorProfile": "Besucherprofil ansehen",
         "DisableVisitorProfile": "Nur Besucherprofil deaktivieren",
-        "DisableVisitorProfileDescription": "Hier können Sie das Besucherprofil-Feature deaktivieren. Alle Besuche-Logs, welche auf dieses Feautre verweisen, werden weiterhin funktionieren.",
+        "DisableVisitorProfileDescription": "Hier können Sie das Besucherprofil-Feature deaktivieren. Alle Besuche-Logs, welche auf dieses Feature verweisen, werden weiterhin funktionieren.",
         "VisitedPages": "Besuchte Seiten",
         "RevisitedPages": "Seiten die mehrmals angesehen wurden",
         "ToggleActions": "Sichtbarkeit aller Aktionen umschalten",
@@ -3097,6 +3151,8 @@
         "ClickToSeeAllContents": "Klicken um sämtliche Inhaltsinteraktionen\/Impressionen zu sehen",
         "VisitorLogSubcategoryHelp1": "Das Besuchsprotokoll zeigt Ihnen jeden Besuch, den Ihre Website erhält, im Detail an. Sie können sehen, welche Aktionen jeder Besucher durchgeführt hat, wie er auf Ihre Website gekommen ist, ein bisschen darüber, wer er ist, und mehr (unter Einhaltung Ihrer lokalen Datenschutzbestimmungen).",
         "VisitorLogSubcategoryHelp2": "Während andere Berichte in Matomo zeigen, wie sich Ihre Besucher auf einer aggregierten Ebene verhalten, bietet das Besuchsprotokoll granulare Details. Sie können auch Segmente verwenden, um es auf bestimmte Arten von Besuchen einzugrenzen, um Ihre Besucher besser zu verstehen.",
+        "VisitorLogSubcategoryHelp3": "Weitere Informationen finden Sie in der Anleitung zum Besucherlog.",
+        "RealTimeHelp1": "Der Echtzeitbesuche-Bericht zeigen die Besucherströme Ihrer Webseite in Echtzeit. Er enthält einen Echtzeitzähler Ihrer Besuche und Seitenansichten in den letzten 24 Stunden und den letzten 30 Minuten.",
         "RealTimeHelp2": "Dieser Bericht wird alle 5 Sekunden aktualisiert und zeigt neue Besuche (oder vorhandene Besucher, die eine neue Seite aufrufen) am Anfang der Liste mit einem Einblendeffekt an."
     },
     "Login": {
@@ -3144,7 +3200,14 @@
         "WrongPasswordEntered": "Bitte geben Sie das korrekte Passwort ein.",
         "ConfirmPasswordToContinue": "Bitte bestätigen Sie Ihr Passwort um fortzufahren",
         "PluginDescription": "Unterstützt Authentifizierung via Benutzername und Passwort sowie Password Reset Funktionalität. Die Authentifizierungsmethode kann durch ein anderes Login Plugin wie LoginLdap (verfügbar im Marketplace) geändert werden.",
-        "RememberMe": "Angemeldet bleiben"
+        "RememberMe": "Angemeldet bleiben",
+        "SuspiciousLoginAttemptsInLastHourEmailSubject": "Wir haben verdächtige Anmeldeversuche bei Ihrem Benutzerkonto festgestellt...",
+        "SuspiciousLoginAttemptsInLastHourEmail1": "Wir haben eine verdächtig hohe Anzahl von Anmeldeversuchen bei Ihrem Matomo Benutzerkonto in der letzten Stunde festgestellt, speziell %1$sAnmeldeversuche von %2$sunterschiedlichen IP-Adressen. Wir vermuten, dass jemand versucht, Ihr Benutzerkonto zu hacken.",
+        "SuspiciousLoginAttemptsInLastHourEmail2": "Um Matomo abzusichern, empfehlen wir, folgende Vorsichtsmaßnahmen vorzunehmen:",
+        "SuspiciousLoginAttemptsInLastHourEmail3": "Stellen Sie sicher, dass Sie ein sicheres Passwort verwenden, zufällig generiert und mit einer angemessenen Länge (zum Beispiel mindestens 30 Zeichen).",
+        "SuspiciousLoginAttemptsInLastHourEmail4": "Installieren und aktivieren Sie Zwei-Faktor-Authentifizierung, sodass Angreifer mehr Informationen als nur Ihr Passwort benötigen um sich einzuloggen.",
+        "SuspiciousLoginAttemptsInLastHourEmail5": "Zusätzlich dazu, wenn Ihr Matomo eine limitierte Anzahl von Benutzern oder IP Adressen verwendet durch die Zugriff nötig ist, kann es sinnvoll sein, eine Liste mit erlaubten IP Adressen zu definieren. %1$sWeitere Informationen dazu in unserer Dokumentation%2$s",
+        "LoginNotAllowedBecauseUserLoginBlocked": "Die Login Funktionalität wurde temporär deaktiviert weil wir eine verdächtige hohe Anzahl fehlgeschlagener Anmeldeversuche in der letzten Stunde registriert haben."
     },
     "Marketplace": {
         "ActivateLicenseKey": "Aktivieren",
@@ -3337,7 +3400,8 @@
         "PluginDescription": "Sehen Sie Ihre Analysedaten als ein Overlay auf Ihrer aktuellen Website an. Lassen Sie sich anzeigen wie oft Ihre Benutzer auf welchen Link geklickt haben. Hinweis: Benötigt das Transitions-Plugin.",
         "RedirectUrlError": "Sie versuchen, eine Seiten Overlay Sitzung für die URL \"%1$s\" zu starten. %2$s Keine der in den Matomo Einstellungen hinterlegten Domains passt zu diesem Link.",
         "RedirectUrlErrorAdmin": "Sie können diese Domain %1$sin den Einstellungen%2$s als zusätzliche URL hinzufügen.",
-        "RedirectUrlErrorUser": "Bitten Sie Ihren Administrator diese Domain als zusätzliche URL hinzuzufügen."
+        "RedirectUrlErrorUser": "Bitten Sie Ihren Administrator diese Domain als zusätzliche URL hinzuzufügen.",
+        "ErrorNoSiteUrls": "WARNUNG: Diese Webseite hat in Matomo keine Seiten URLs definiert. Das kann beim Overlay und anderen Features zu unerwarteten Nebeneffekten führen oder sie unbrauchbar machen. Um das zu korrigieren, fügen Sie für diese Webseite eine URL in den Einstellungen im Matomo Administrationsbereich ein."
     },
     "PagePerformance": {
         "ColumnAveragePageLoadTime": "Durchschn. Seitenladezeit",
@@ -3376,7 +3440,9 @@
         "HelpNote": "Einige dieser Metriken sind möglicherweise nicht immer verfügbar. Sie finden mehr Informationen darüber in unserem %1$sOnline Guide%2$s.",
         "RowActionTitle": "Leistungsbericht für Seite öffnen",
         "RowActionDescription": "Zeigt Seitenleistungsbericht für diese Zeile",
-        "PagePerformanceTitle": "Seitenleistung für Seite mit %1$s \"%2$s\""
+        "PagePerformanceTitle": "Seitenleistung für Seite mit %1$s \"%2$s\"",
+        "PerformanceSubcategoryHelp1": "Der Performance Bereich kann Ihnen helfen herauszufinden, wie schnell Ihre Webseite insgesamt ist und zeigt auf, ob spezifische Seiten signifikant vom Durchschnitt abweichen.",
+        "PerformanceSubcategoryHelp2": "Sie finden auch Berichte, welche exakt zeigen, wie lang welche Seite auf Ihrer Webseite braucht, um zu laden und was zur Ladezeit wie viel beisteuert."
     },
     "PrivacyManager": {
         "AnonymizeData": "Daten anonymisieren",
@@ -3649,9 +3715,19 @@
         "VisitorsFromDirectEntry": "Besucher von Direktzugriffen",
         "VisitorsFromWebsites": "Besucher von Webseiten",
         "VisitorsFromCampaigns": "Besucher von Kampagnen",
+        "ReferrersOverviewSubcategoryHelp1": "Die Aquisitionsübersicht zeigt Ihnen den Prozentsatz Ihres Datenverkehrs von allen Quellen über einen ausgewählten Zeitbereich.",
+        "ReferrersOverviewSubcategoryHelp2": "Sie können auch auf einen spezifischen Kanal klicken um ihn mit dem Evolution Graph anzuzeigen. Das kann helfen zu entdecken welche Kanäle den meisten Datenverkehr auf Ihre Seite erzeugen wie auch potenzielle Muster über die Zeit hinweg aufzeigen. Zum Beispiel, dass ein bestimmter Kanal an Wochenenden besser funktioniert.",
+        "AllReferrersSubcategory1": "Dieser Bereich zeigt die Anzahl der Besuche welche von verschiedenen Kanaltypen und Referrers zu Ihnen kommen. Klicken Sie auf den Plus oder Minus Button um sich die Referrer pro Typ anzeigen zu lassen.",
+        "AllReferrersSubcategory2": "Sie können auch die Anzahl der ausgeführten Aktionen Ihrer Datenverkehrsquellen analysieren, in dem Sie die Tabelle mit der Ansicht der Besucherengagements aktivieren.",
+        "SearchEnginesSubcategoryHelp1": "Dieser Bereich hilft Ihnen beim Analysieren Ihrer Suchmaschinenoptimierung und -performance. Sie können Ihre beliebtesten Suchworte analysieren mit Hilfe des Suchwort-Berichts oder sehen welche Suchworte auf spezifischen Suchmaschinen wie gut funktionieren, um weitere zielgerichtete Analysen und Optimierungen vorzunehmen.",
+        "SearchEnginesSubcategoryHelp2": "%1$sMatomo Cloud%2$s und %3$sSearch Engine Keywords Performance%4$s Benutzer erhalten die besten Resultate mit diesem Bericht.",
         "WebsitesSubcategoryHelp1": "In dieser Tabelle können Sie sehen, welche Websites Besucher auf Ihre Website gelenkt haben.",
+        "WebsitesSubcategoryHelp2": "Wenn Sie auf eine Zeile in der Tabelle klicken, können Sie sehen bei welchen URLs die Links zu Ihrer Webseite aktiv sind.",
         "SocialsSubcategoryHelp": "In dieser Tabelle können Sie sehen, welche Websites Besucher auf Ihre Website gelenkt haben.",
-        "EcommerceLogSubcategoryHelp2": "Die Daten auf dieser Seite werden in Echtzeit aktualisiert"
+        "CampaignsSubcategoryHelp": "Der Kampagnen-Tracking Bereich erlaubt Ihnen zu analysieren, welche Besuche mit welchen unterschiedlichen Tracking Werten verknüpft sind, welche mit Ihren digitalen Kampagnen verlinkt sind. Damit kann man Dinge aufzeigen wie zum Beispiel wie viel Datenverkehr Ihre Kampagnen erzeugen, welche Werbemittel am besten funktionieren, wie engagiert Kampagnenbesucher sind, und ob die Kampagne zu Verkäufen führt oder nicht.",
+        "EcommerceLogSubcategoryHelp1": "Das Ecommerce Log enthält detaillierte sessionbezogene Daten, so dass Sie die komplette Session jedes Benutzers nachverfolgen können, der einen Kauf getätigt oder abgebrochen hat. Dies kann helfen zu verstehen was Benutzer machen, bevor und nachdem Sie etwas kaufen, für die Verkaufsmöglichkeitenoptimierung.",
+        "EcommerceLogSubcategoryHelp2": "Die Daten auf dieser Seite werden in Echtzeit aktualisiert",
+        "ProductSubcategoryHelp": "Die Produkteansicht kann Ihnen dabei helfen Produkte und Kategorien zu identifizieren, die über- oder unterperformen, um Trends und Möglichkeiten im Bezug auf Ihre Produkteselektion und Verkaufsbereiche zu erkennen."
     },
     "Resolution": {
         "ColumnConfiguration": "Konfiguration",
@@ -3779,7 +3855,7 @@
         "UnprocessedSegmentInVisitorLog1": "%1$sEinstweilen können Sie das Visitor Log verwenden%2$s um zu testen ob Ihr Segment Ihre Benutzer korrekt erfasst, in dem Sie es dort anwenden.",
         "UnprocessedSegmentInVisitorLog2": "Wenn angewandt, können Sie sofort sehen welche Besucher und Aktionen von Ihrem Segment betroffen sind.",
         "UnprocessedSegmentInVisitorLog3": "Dies kann Ihnen helfen sicherzustellen, dass Ihr Segment die erwarteten Benutzer und Aktionen registriert.",
-        "UnprocessedSegmentApiError1": "Das Segment '%1$s' ist auf '%2$s' gesetzt, aber Matomo ist aktuell nicht konfiguriert um segmentierte Berichte in API Anfragen auszuführen.",
+        "UnprocessedSegmentApiError1": "Das Segment '%1$s' ist auf '%2$s' gesetzt, aber Matomo ist aktuell nicht konfiguriert, um segmentierte Berichte in API Anfragen auszuführen.",
         "UnprocessedSegmentApiError2": "Um in Zukunft Daten für diesen Bericht zu sehen, werden Sie Ihr Segment ändern müssen und die Option mit Namen '%s' anwählen.",
         "UnprocessedSegmentApiError3": "Dann nach ein paar Stunden werden Ihre Segmentdaten über die API verfügbar sein. (Falls nicht, liegt ein Problem vor.)",
         "CustomUnprocessedSegmentApiError1": "Das gesuchte Segment wurde noch nicht im Segment Editor erstellt und dementsprechend konnten die Berichtdaten nicht aufbereitet werden.",
@@ -3872,11 +3948,19 @@
         "Sites": "Websites",
         "SiteSearchUse": "Matomo kann auswerten, wonach Besucher in der internen Suche der Website suchen.",
         "SiteWithoutDataTitle": "Es wurden bisher noch keine Daten gesammelt, untenstehendes Setup beachten",
+        "SiteWithoutDataDescription": "Ein letzter Schritt um Ihren Web Traffic mit Matomo zu tracken und hilfreiche Einsichten zu gewinnen. Sie müssen zusätzlichen Code in Ihrer Webseite oder mobilen App platzieren, falls Sie das nicht bereits getan haben. Wählen Sie die untenstehende Option oder %1$ssenden Sie alle Instruktionen einem Teammitglied%2$s.",
         "SiteWithoutDataSetupTracking": "Bitte fügen Sie den folgenden %1$sTracking Code%2$s auf ihrer Website ein, insofern Sie dies noch nicht getan haben.",
         "SiteWithoutDataMessageDisappears": "Diese Nachricht wird verschwinden, sobald die ersten Daten für diese Website aufgezeichnet wurden.",
         "SiteWithoutDataIgnoreMessage": "Diese Nachricht für eine Stunde verbergen",
+        "SiteWithoutDataChoosePreferredWay": "Wählen Sie Ihre bevorzugte Art des Setups",
         "SiteWithoutDataOtherWays": "Andere Wege",
         "SiteWithoutDataOtherIntegrations": "Andere Integrationen",
+        "SiteWithoutDataGoogleTagManager": "Google Tag Manager",
+        "SiteWithoutDataMatomoTagManager": "Matomo Tag Manager",
+        "SiteWithoutDataMatomoTagManagerNotActive": "Sie wissen nicht, was ein Tag Manager ist? Informieren Sie sich in unserem %1$sTag Manager Leitfaden%2$s. Wenn Sie mehrere Ressourcen aus 3rd Party Webseiten in Ihre Webseite einbinden, dann ist das Tracking Ihrer Webseite mithilfe eines Tag Managers eventuell eine bessere Lösung als das normale JavaScript tracking.",
+        "SiteWithoutDataGoogleTagManagerDescription": "Sie können Matomo mit dem Google Tag Manager verwenden. Um das Matomo Tracking im Google Tag Manager einzurichten, folgen Sie den Instruktionen dieser %1$sAnleitung%2$s.",
+        "SiteWithoutDataDetectedSite": "Wir haben festgestellt, dass Sie eine %1$s Seite verwenden. Folgen Sie bitte den Instruktionen dieser %2$sAnleitung%3$s.",
+        "SiteWithoutDataDetectedGtm": "Wir haben außerdem entdeckt, dass Sie den Google Tag Manager verwenden. Wenn Sie vorhaben, Matomo unter Verwendung des GTM aufzusetzen, folgen Sie bitte dieser %2$sAnleitung%3$s.",
         "SuperUserAccessCan": "Ein Nutzer mit Hauptadministrator-Berechtigung kann ebenfalls %1$sglobale Einstellungen%2$s für neue Websites vornehmen.",
         "Timezone": "Zeitzone",
         "TrackingSiteSearch": "Die interne Suche auswerten",
@@ -3888,6 +3972,8 @@
         "OnlyMatchedUrlsAllowedHelp": "Wenn aktiviert zeichnet Matomo nur noch interne Aktionen auf bei denen die Seiten-URL eine der bekannten URLs der Website ist. Dies hindert andere daran Ihre Analyse mit URLs von anderen Websites zu verfälschen.",
         "OnlyMatchedUrlsAllowedHelpExamples": "Domain und Pfadangabe müssen exakt übereinstimmen und jede gültige Subdomain muss separat definiert werden. Sind die bekannten URLs beispielsweise 'http:\/\/example.com\/path' und 'http:\/\/good.example.com', werden Tracking-Anfragen von 'http:\/\/example.com\/otherpath' oder 'http:\/\/bad.example.com' ignoriert.",
         "WebsitesManagement": "Websiteverwaltung",
+        "WebsiteUpdated": "Webseite aktualisiert",
+        "WebsiteCreated": "Webseite erstellt",
         "XManagement": "%s verwalten",
         "ChooseMeasurableTypeHeadline": "Was möchten Sie messen?",
         "YouCurrentlyHaveAccessToNWebsites": "Sie haben derzeit Zugriff auf %s Websites.",
@@ -3900,7 +3986,8 @@
         "EmailInstructionsSiteDetailsHeading": "Einzelheiten Ihrer Seite",
         "EmailInstructionsSiteDetails": "Sie benötigen diese Angaben, um die API oder SDKs zum Verfolgen von Matomo-Besuchen zu verwenden.",
         "EmailInstructionsYourSiteId": "Ihre Seiten-ID: %1$s",
-        "EmailInstructionsYourTrackingUrl": "Ihre Tracking-URL: %1$s"
+        "EmailInstructionsYourTrackingUrl": "Ihre Tracking-URL: %1$s",
+        "DetectingYourSite": "Durchsuche Ihre Seite"
     },
     "TagManager": {
         "AddThisTagDescription": "Fügen Sie die AddThis Social Media Buttons und mehr zu Ihrer Website hinzu.",
@@ -4437,6 +4524,7 @@
         "WeekdayVariableDescription": "Liefert den lokalen Wochentag, z. B. Montag, Dienstag, Mittwoch, ...",
         "WeekdayVariableName": "Wochentag",
         "WindowLeaveTriggerDescription": "Wird ausgelöst wenn der Benutzer daran ist die aktuelle Seite zu verlassen, indem die Maus ausserhalb des Fensters positioniert wird.",
+        "WindowLeaveTriggerHelp": "Dieser Trigger wird ausgelöst, wenn der Benutzer möglicherweise vor hat, die Website zu verlassen und den Mauszeiger ausserhalb der Website platziert, zum Beispiel zur Browser URL Adresszeile oder einem anderen Knopf. Das kann hilfreich sein um die Aufmerksamkeit Ihres Besuchers zu behalten und den Besucher nicht zu verlieren, in dem zum Beispiel ein Exit-Popup gezeigt wird. Sie sind möglicherweise auch am \"Fenster Unload\" Trigger interessiert, welcher ausgelöst wird, sobald der Benutzer die aktuelle Seite effektiv verlässt.",
         "WindowLeaveTriggerName": "Fenster verlassen",
         "WindowLoadedTriggerDescription": "Wird ausgelöst wenn die Seite mit allen Bildern usw. geladen wurde.",
         "WindowLoadedTriggerHelp": "Diese Phase des Ladens ist wenn eine Seite für den Browser komplett geladen ist. In den meisten Fällen bedeutet das auch dass alle Bilder geladen sind und dass alle Style angewendet werden usw. Dieser Trigger wird immer irgendwann nach dem \"DOM Ready\" ausgelöst.",
@@ -4584,7 +4672,9 @@
         "RecoveryCodesAllUsed": "Alle Recovery Codes wurden verwendet, es wird wärmstens empfohlen Ihre Recovery Codes zu regenerieren.",
         "RecoveryCodesRegenerated": "Recovery Codes wurden regeneriert. Stellen Sie sicher, dass die neu generierten Codes heruntergeladen oder ausgedruckt werden.",
         "GenerateNewRecoveryCodes": "Einen neuen Wiederherstellungscode generieren",
-        "GenerateNewRecoveryCodesInfo": "Wenn Sie neue Recovery Codes generieren, werden Ihre alten nicht mehr funktionieren. Stellen Sie sicher dass Sie die neuen Codes herunterladen oder ausdrucken."
+        "GenerateNewRecoveryCodesInfo": "Wenn Sie neue Recovery Codes generieren, werden Ihre alten nicht mehr funktionieren. Stellen Sie sicher dass Sie die neuen Codes herunterladen oder ausdrucken.",
+        "RequireTwoFAForAll": "Zwei-Faktor Authentifizierung für alle benötigt",
+        "RequireTwoFAForAllInformation": "Wenn angewählt, muss jeder Benutzer sich per Zwei-Faktor Authentifizierung anmelden. 2FA zu erzwingen hat zur Folge, dass alle Benutzer Zugang zu einem Gerät haben müssen, auf welchem eine Authentifizierungs-App installierbar ist. Sie können diese Funktion nur aktivieren wenn Sie die Zwei-Faktor-Authentifizierung bereits bei sich aktiviert haben."
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "Die IP-Adresse %s ist eine lokale Adresse. Der Standort kann daher nicht ermittelt werden.",
@@ -4631,7 +4721,8 @@
         "ToGeolocateOldVisits": "Für Standortdaten für vergangene Besuche verwenden Sie bitte das %1$shier beschriebene Skript%2$s.",
         "WidgetLocation": "Besucherstandort",
         "GeoIpDbIpAccuracyNote": "Bemerkung: Die DBIP Datenbanken sind frei und können automatisch heruntergeladen werden, aber Geolocation Resultate (insbesondere Städte-Resultate) sind nicht so akkurat wie die von MaxMind. Bei MaxMind hingegen benötigen Sie auch für die freie Geolocation Datenbank ein Benutzerkonto, Sie können den Prozess %1$shier%2$s starten",
-        "MaxMindLinkExplanation": "Wenn Sie die Geolocation Datenbanken von MaxMind verwenden und Sie nicht wissen wie Ihre Download URL zu generieren ist, %1$sklicken Sie hier um zu lernen wie%2$s."
+        "MaxMindLinkExplanation": "Wenn Sie die Geolocation Datenbanken von MaxMind verwenden und Sie nicht wissen wie Ihre Download URL zu generieren ist, %1$sklicken Sie hier um zu lernen wie%2$s.",
+        "LocationsSubcategoryHelp": "Der Orte Abschnitt ist der beste Weg herauszufinden wo Personen sind, wenn Sie Ihre Seite besuchen. Er zeigt Länder, Kontinente, Regionen und Städte auf, von denen Ihre Besucher kommen, in Tabellen- und Kartenform. Zusätzlich dazu können Sie sehen welche Browsersprachen eingestellt sind, was dabei hilft internationale Besucher aus alternativen Standorten zu identifizieren."
     },
     "UserCountryMap": {
         "PluginDescription": "Dieses Plugin stellt die Widgets \"Besucherkarte\" sowie \"Besucherkarte in Echtzeit\" bereit. Hinweis: Hierfür muss das Plugin \"UserCountry\" aktiviert sein.",
@@ -4656,7 +4747,8 @@
         "WithUnknownRegion": "%s mit unbekannter Region",
         "WithUnknownCity": "%s mit unbekannter Stadt",
         "NoVisitsInfo": "Es werden aktuell keine Besuche angezeigt, weil für diesen Zeitraum kein Besuch mit korrekten Geolocation Informationen (Längengrad & Breitengrad) existiert.",
-        "NoVisitsInfo2": "Um das Problem zu lösen, stellen Sie sicher, dass Sie einen GeoIP Geolocation Provider mit einer GeoIP Stadt Datenbank verwenden. Wenn dies Ihr Problem nicht löst, dann ist es möglich (wenn auch unwahrscheinlich) dass Ihre Besuche IP Adressen haben, die nicht geolokalisiert werden können."
+        "NoVisitsInfo2": "Um das Problem zu lösen, stellen Sie sicher, dass Sie einen GeoIP Geolocation Provider mit einer GeoIP Stadt Datenbank verwenden. Wenn dies Ihr Problem nicht löst, dann ist es möglich (wenn auch unwahrscheinlich) dass Ihre Besuche IP Adressen haben, die nicht geolokalisiert werden können.",
+        "RealTimeMapHelp": "Die Echtzeit-Karte zeigt den Ort der Besucher auf Ihrer Seite von den letzten 30 Minuten. Große orange Kreise repräsentieren kürzliche Besuche, während kleinere Kreise die älteren Besuche anzeigen. Diese Daten aktualisieren alle fünf Sekunden, und neue Besucher werden mit einem Flash-Effekt dargestellt."
     },
     "UserId": {
         "UserId": "Benutzer-ID",
@@ -4721,7 +4813,7 @@
         "ExceptionEditAnonymous": "Der anonyme Benutzer kann nicht bearbeitet oder gelöscht werden. Er wird von Matomo benutzt, um einen Benutzer zu definieren, der sich noch nicht angemeldet hat. Zum Beispiel können Sie Ihre Statistiken öffentlich machen, indem Sie dem Benutzer 'anonymous' das Recht 'view' geben.",
         "ExceptionEmailExists": "Ein Benutzer mit der E-Mail-Adresse '%s' existiert bereits.",
         "ExceptionEmailExistsAsLogin": "Die E-Mail-Adresse '%s' wird bereits als Nutzername verwendet.",
-        "ExceptionLoginExistsAsEmail": "Der Nutername '%s' wird bereits als E-Mail-Adresse verwendet.",
+        "ExceptionLoginExistsAsEmail": "Der Nutzername '%s' wird bereits als E-Mail-Adresse verwendet.",
         "ExceptionInvalidEmail": "Die E-Mail-Adresse hat ein ungültiges Format.",
         "ExceptionInvalidLoginFormat": "Der Benutzername muss zwischen %1$s und %2$s Zeichen lang sein und darf nur Buchstaben, Zahlen oder die Zeichen '_', '-', '.', '@' oder '+' enthalten.",
         "ExceptionInvalidPassword": "Das Passwort muss mindestens %1$s Zeichen lang sein.",
@@ -4858,7 +4950,8 @@
         "NewsletterSignupTitle": "Newsletter-Anmeldung",
         "NewsletterSignupMessage": "Abonnieren Sie unseren Newsletter, um regelmäßig Informationen über Matomo zu erhalten. Deabonnieren ist jederzeit möglich. Dieser Dienst verwendet MadMimi. Erfahren Sie mehr in unserer %1$sDatenschutzerklärung%2$s.",
         "NewsletterSignupFailureMessage": "Hoppla, etwas ist schief gelaufen. Wir konnten Sie nicht für unseren Newsletter registrieren.",
-        "NewsletterSignupSuccessMessage": "Super, Sie wurden erfolgreich registriert! Wir werden in Kürze von uns hören lassen."
+        "NewsletterSignupSuccessMessage": "Super, Sie wurden erfolgreich registriert! Wir werden in Kürze von uns hören lassen.",
+        "FirstWebsitePermission": "Berechtigung erste Webseite"
     },
     "VisitFrequency": {
         "ColumnActionsByNewVisits": "Aktionen bei neuen Besuchen",

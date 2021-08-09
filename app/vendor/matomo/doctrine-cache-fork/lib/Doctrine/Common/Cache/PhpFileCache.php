@@ -89,7 +89,7 @@ class PhpFileCache extends FileCache
             $code  = sprintf('<?php return %s;', $value);
         } else {
             $value = var_export(serialize($value), true);
-            $code  = sprintf('<?php return unserialize(%s);', $value);
+            $code  = sprintf('<?php return unserialize(%s, [\'allowed_classes\' => false]);', $value);
         }
 
         return $this->writeFile($filename, $code);

@@ -4,8 +4,7 @@ This is a PHP caching library based on [Doctrine cache](https://github.com/doctr
 At [Matomo](https://matomo.org) we developed this library with the focus on speed as we make heavy use of caching and 
 sometimes fetch hundreds of entries from the cache in one request.
 
-[![Build Status](https://travis-ci.org/matomo-org/component-cache.svg?branch=master)](https://travis-ci.org/matomo-org/component-cache)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/matomo-org/component-cache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/matomo-org/component-cache/?branch=master)
+[![Build Status](https://travis-ci.com/matomo-org/component-cache.svg?branch=master)](https://travis-ci.com/matomo-org/component-cache)
 
 ## Installation
 
@@ -25,6 +24,7 @@ With Composer:
 * File (stores the cache entry on the file system)
 * Redis (stores the cache entry on a Redis server, requires [phpredis](https://github.com/nicolasff/phpredis))
 * Chained (allows to chain multiple backends to make sure it will read from a fast cache if possible)
+* DefaultTimeout and KeyPrefix can be used to wrap other backend with default parameters.
 
 Doctrine cache provides support for many more backends and adding one of those is easy. For example:
 * APC
@@ -112,6 +112,29 @@ the cache entry from the file system. If the cache entry exists on the file syst
 using the array cache so the next read within this request will be fast and won't cause a stat call again. If you delete
  a cache entry it will be removed from all configured backends. You can chain any backends. It is recommended to list 
  faster backends first.
+ 
+### Creating a decorated backend with `DefaultTimeout` or `KeyPrefix`
+
+```php
+$options = array(
+    'backend'   => 'array',
+    'array'     => array(),
+    'keyPrefix' => 'someKeyPrefixStr'
+);
+$factory = new \Matomo\Cache\Backend\Factory();
+$backend = $factory->buildBackend('keyPrefix', $options);
+```
+
+Sometimes its useful to set default a default parameter for the timeout to force prevent infinite lifetimes, or to
+specify a key prefix to prevent different versions of the app from reading and writing the same cache entry.  
+`DefaultTimeout` and `KeyPrefix` are "decorators" that wrap another backend. Currently each takes a single configuration
+ argument with the same name as the backend.
+ 
+ |backend | argument | description |
+ | --- | --- | --- |
+ |DefaultTimeout|`defaultTimeout`| Uses the `integer` value as the default timeout for defining cache entry lifetime. Only comes to effect when no lifetime is specified; Prevents infinite lifetimes.|
+ |KeyPrefix|`keyPrefix`| Prefixes the given value to the keys for any operation. For example `'Key123'` would become `'SomePrefixKey123'` |
+
 
 ### Creating a lazy cache
 

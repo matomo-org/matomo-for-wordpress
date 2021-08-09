@@ -210,6 +210,8 @@
         "ExceptionWidgetNotFound": "請求的小工具不存在。",
         "ExceptionReportNotEnabled": "請求的報表未啟用。這代表定義報表的外掛已停用或是你沒有足夠的權限來存取這個報表。",
         "ExceptionWidgetNotEnabled": "請求的小工具未啟用。這代表定義小工具的外掛已停用或是你沒有足夠的權限來存取這個小工具。",
+        "ExceptionNotSupportedBrowserTitle": "你的瀏覽器已不受支援。",
+        "ExceptionNotSupportedBrowserText": "因為安全性問題，你的瀏覽器已不受支援。請升級至更新的版本。",
         "ExpandDataTableFooter": "變更報表的顯示方式或設定",
         "Export": "匯出",
         "ExportAsImage": "匯出為圖片",
@@ -673,6 +675,7 @@
         "ExitPagesReportDocumentation": "這份報表包含指定期間內之離開網頁的相關資訊。所謂的離開網頁，是訪客離開網頁前最後瀏覽的頁面。%s 離開網頁的網址以資料夾結構顯示。",
         "ExitPageTitles": "離站網頁標題",
         "ExitPageTitlesReportDocumentation": "此報表包含關於指定期間內離站網頁之標題等資訊",
+        "MainMetricsReportDocumentation": "這份報表提供了訪客在你的網站上的基本活動概觀。",
         "OneSearch": "1 搜尋數",
         "OutlinkDocumentation": "離開連結是將訪客帶出網站的連結（到其他域名）。",
         "OutlinksReportDocumentation": "這份報表以分層列表顯示訪客所點擊的離開連結網址。",
@@ -749,7 +752,8 @@
         "Contents": "內容",
         "InteractionsMetricDocumentation": "內容區塊的互動次數（例如「點擊」橫幅或廣告）。",
         "ImpressionsMetricDocumentation": "內容區塊（例如橫幅或廣告）的展示次數。",
-        "InteractionRateMetricDocumentation": "內容曝光及互動的比率。"
+        "InteractionRateMetricDocumentation": "內容曝光及互動的比率。",
+        "ContentsSubcategoryHelp2": "前往內容追蹤說明內了解更多"
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "增加新的信任域名",
@@ -762,7 +766,7 @@
         "ClickHereToOptOut": "點擊這裡退出。",
         "CorsDomains": "跨來源資源共用（CORS）域名",
         "CorsDomainsHelp": "你可以定義像是 http:\/\/example.com 或是 http:\/\/stats.example.com 的域名或子域名。或是直接增加 * 來允許所有域名的跨來源請求。",
-        "CustomLogoFeedbackInfo": "如果你自訂 Matomo 標誌，你應該也對隱藏上方選單中的「%1$s」連結有興趣。要那麼做的話可以在%2$s外掛管理%3$s中停用回饋外掛（Feedback）。",
+        "CustomLogoFeedbackInfo": "如果你自訂 Matomo 標誌，你應該也對隱藏上方選單中的 %1$s 連結有興趣。要那麼做的話可以在%2$s外掛管理%3$s中停用回饋外掛（Feedback）。",
         "CustomLogoHelpText": "你可以自訂要顯示於使用者介面或報表信件中的 Matomo 標誌。",
         "DevelopmentProcess": "雖然我們的開發過程包含了上千種自動化測試，但 Beta 測試員在實現 Matomo「無 Bug 政策」中扮演了關鍵角色。",
         "EmailServerSettings": "設定信件伺服器",
@@ -1474,7 +1478,6 @@
         "ContactUs": "聯絡我們",
         "VisitTheForums": "訪問%1$s論壇%2$s從社區中的 Matomo 使用者中取得協助。",
         "Forums": "論壇",
-        "ReviewMatomoTitle": "信任 Matomo 嗎？",
         "PleaseLeaveExternalReviewForMatomo": "在這些網站上分享你的評價，讓更多人加入我們的資料革命。",
         "RemindMeLater": "稍後提醒我",
         "NeverAskMeAgain": "別再詢問我",
@@ -1484,7 +1487,8 @@
         "RemoveOtherLabel": "我想要看我的「其它」資料",
         "PurgeOldData": "我想要移除一些舊資料",
         "SearchHelpResources": "搜尋 matomo.org 上的幫助文件",
-        "PopularHelpTopics": "熱門幫助文章"
+        "PopularHelpTopics": "熱門幫助文章",
+        "ReferBannerTitle": "信任 Matomo 嗎？"
     },
     "GeoIp2": {
         "AssumingNonApache": "找不到 apache_get_modules 功能，推測是非 Apache 伺服器。",
@@ -1772,11 +1776,8 @@
         "SystemCheckGzcompressHelp": "你必須啟用 zlib 擴充功能和 gzcompress 功能。",
         "SystemCheckGzuncompressHelp": "你必須啟用 zlib 擴充功能和 gzuncompress 功能。",
         "SystemCheckHashHelp": "你必須配置並重建 PHP 經由執行 --disable-hash 選項來啟用 hash() 支援。",
-        "SystemCheckIconvHelp": "你需要設定及重建 PHP，然後啟用 iconv 支援，--with-iconv。",
         "SystemCheckJsonHelp": "Matomo 必須使用 php-json 擴充功能來讀寫 JSON 資料。",
         "SystemCheckMailHelp": "意見回饋及忘記密碼的訊息若沒有 mail() 將無法寄送。",
-        "SystemCheckMbstring": "mbstring",
-        "SystemCheckMbstringHelp": "處理多字節的使用者介面或 API 回應資料必須使用 mbstring 擴充功能。並請檢查 php.ini 中的 mbstring.func_overload 已將值設定為「0」。",
         "SystemCheckMemoryLimit": "記憶體限制",
         "SystemCheckMemoryLimitHelp": "在一個高流量的網站，資料彙整處理過程可能超過目前所允許使用的記憶體量。<br \/>如果必要，試著變更在你 php.ini 檔案裡的 memory_limit。",
         "SystemCheckMemoryNoMemoryLimitSet": "尚未設定記憶體限制。",
@@ -1793,7 +1794,7 @@
         "SystemCheckPdoAndMysqliHelp": "在 GNU\/Linux 伺服器上你可以使用以下選項編譯 PHP：在你的 php.ini 中 %1$s，加入以下幾行內容：%2$s",
         "SystemCheckPhp": "PHP 版本",
         "SystemCheckPhpPdoAndMysqli": "更多資訊：%1$sPHP PDO%2$s 和 %3$sMYSQLI%4$s。",
-        "SystemCheckSplHelp": "你需要設定及重建 PHP，然後啟用 Standard PHP Library (SPL)（預設啟用）。",
+        "SystemCheckSessionHelp": "你必須開啟「session」功能並設定及重新建置 PHP (不要使用 --disable-session)。",
         "SystemCheckSettings": "必要的 PHP 設定（php.ini）",
         "SystemCheckSummaryNoProblems": "好極了！Matomo 安裝過程中沒有問題！給自己掌聲鼓勵吧。",
         "SystemCheckSummaryThereWereErrors": "啊噢！Matomo 在安裝過程中偵測到一些%1$s嚴重問題%2$s。%3$s這些問題必須立即被修正。%4$s",
@@ -3783,8 +3784,12 @@
     },
     "TwoFactorAuth": {
         "TwoFactorAuthentication": "兩步驟驗證",
+        "TwoFAShort": "2FA",
         "TwoFactorAuthenticationIsEnabled": "已啟用兩步驟驗證。",
-        "TwoFactorAuthenticationIsDisabled": "已停用兩步驟驗證。"
+        "TwoFactorAuthenticationIsDisabled": "已停用兩步驟驗證。",
+        "TwoFactorAuthenticationRequired": "所有人都需要開啟兩步驟驗證，你不能關閉。",
+        "ConfigureDifferentDevice": "設定另一台裝置",
+        "SetUpTwoFactorAuthentication": "開始設定兩步驟驗證 (2FA)"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "IP 位址 %s 是本機位址因此無法顯示地理位置。",
@@ -3865,6 +3870,7 @@
         "getLanguageCodeDocumentation": "這份報表顯示你的訪客使用的瀏覽器語言代號設定 (例如「德文 - 奧地利 (de-at)」)。"
     },
     "UsersManager": {
+        "2FA": "2FA",
         "UsesTwoFactorAuthentication": "使用兩步驟驗證",
         "TwoFactorAuthentication": "兩步驟驗證",
         "ResetTwoFactorAuthentication": "重置兩步驟驗證",
