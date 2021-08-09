@@ -41,12 +41,8 @@ class Dashboard {
                     if (!empty($widget_meta['report']['name'])) {
                         $id = 'matomo_dashboard_widget_' . $widget['unique_id'] .  '_' . $widget['date'];
 
-                        if ( 'visits_over_time' === $widget['unique_id'] ) {
-	                        $title = $widget_meta['report']['name'] . ' - Matomo';
-                        } else {
-	                        $title = $widget_meta['report']['name'] . ' - ' . $widget_meta['date'] . ' - Matomo';
-
-                        }
+                        $title = $widget_meta['report']['name'] . ' - ' . $widget_meta['date'] . ' - Matomo';
+                        
                         wp_add_dashboard_widget( $id, esc_html($title), function () use ($widget) {
                             $renderer = new Renderer();
                             echo $renderer->show_report(array(

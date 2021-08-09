@@ -22,7 +22,7 @@ class Renderer {
 		add_shortcode( 'matomo_report', array( $this, 'show_report' ) );
 	}
 
-	public function show_visits_over_time($limit)
+	public function show_visits_over_time($limit, $period)
 	{
 		$cannot_view = $this->check_cannot_view();
 		if ($cannot_view) {
@@ -38,7 +38,7 @@ class Renderer {
 		$report_meta = array('module' => 'VisitsSummary', 'action' => 'get');
 
 		$data = new Data();
-		$report = $data->fetch_report($report_meta, 'day', 'last' . $limit, 'label', $limit);
+		$report = $data->fetch_report($report_meta, $period, 'last' . $limit, 'label', $limit);
 		$first_metric_name = 'nb_visits';
 		$graph_data = ' data-chart="VisitsSumary"';
 		ob_start();
@@ -72,12 +72,15 @@ class Renderer {
 			return $cannot_view;
 		}
 
+		$dates                 = new Dates();
+		list( $period, $date ) = $dates->detect_period_and_date( $a['report_date'] );
+
 		if ($a['unique_id'] === 'visits_over_time') {
 		    $is_default_limit = $a['limit'] === 10;
 		    if ($is_default_limit) {
 		        $a['limit'] = 14;
             }
-			return $this->show_visits_over_time($a['limit']);
+			return $this->show_visits_over_time( $a['limit'], $period );
 		}
 
 		$metadata    = new Metadata();
@@ -90,9 +93,6 @@ class Renderer {
 		$metric_keys               = array_keys( $report_meta['metrics'] );
 		$first_metric_name         = reset( $metric_keys );
 		$first_metric_display_name = reset( $report_meta['metrics'] );
-
-		$dates                 = new Dates();
-		list( $period, $date ) = $dates->detect_period_and_date( $a['report_date'] );
 
 		$report_data     = new Data();
 		$report          = $report_data->fetch_report( $report_meta, $period, $date, $first_metric_name, $a['limit'] );
