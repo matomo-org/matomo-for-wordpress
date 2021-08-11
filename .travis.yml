@@ -52,7 +52,6 @@ before_install:
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - composer self-update --2
   - |
     if [ -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ]; then
       phpenv config-rm xdebug.ini
