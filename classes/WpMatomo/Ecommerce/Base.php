@@ -111,7 +111,16 @@ class Base {
 			return '';
 		}
 
-		return '<script type="text/javascript">' . $script . '</script>';
+		if ( function_exists( 'wp_get_inline_script_tag' ) ) {
+			$script = wp_get_inline_script_tag( $script , array( 'type' => 'text/javascript' ) );
+		} else {
+			// line feed is required to match the wp_get_inline_script_tag output
+			$script = '<script type="text/javascript">
+' . $script . '
+</script>
+';
+		}
+		return $script;
 	}
 
 }
