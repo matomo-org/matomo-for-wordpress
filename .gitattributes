@@ -2,6 +2,13 @@
 /scripts/ export-ignore
 /vendor/ export-ignore
 /bin/ export-ignore
+/node_modules/chart.js/auto export-ignore
+/node_modules/chart.js/helpers export-ignore
+/node_modules/chart.js/types export-ignore
+/node_modules/chart.js/dist/chunks export-ignore
+/node_modules/chart.js/dist/chart.esm.js export-ignore
+/node_modules/chart.js/dist/chart.js export-ignore
+/node_modules/chart.js/dist/helpers.esm.js export-ignore
 /README.md export-ignore
 /.wordpress-org export-ignore
 /.github export-ignore
