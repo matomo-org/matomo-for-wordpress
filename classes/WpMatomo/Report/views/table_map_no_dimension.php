@@ -20,7 +20,7 @@ if ( ! isset($graph_data) ):
 endif;
 ?>
 <div class="table">
-	<table class="widefat matomo-table"<?php echo $graph_data;?>>
+	<table class="widefat matomo-table" <?php echo $graph_data;?>>
 
 		<tbody>
 		<?php
