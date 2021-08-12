@@ -30,9 +30,9 @@ class Dashboard {
 
 	public function add_dashboard_widgets()
 	{
-		do_action('load_chartjs');
 		$widgets = $this->get_widgets();
 		if (!empty($widgets) && is_array($widgets) && current_user_can(Capabilities::KEY_VIEW)) {
+			do_action('load_chartjs');
 			foreach ($widgets as $widget) {
 
 			    try {
