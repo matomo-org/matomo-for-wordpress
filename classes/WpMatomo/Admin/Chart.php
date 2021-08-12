@@ -14,6 +14,6 @@ class Chart {
 
 	public function load_chartjs() {
 		wp_enqueue_script('chart.js', plugin_dir_url(__FILE__). '/../../../../node_modules/chart.js/dist/chart.js' );
-		wp_enqueue_script('matomo_chart.js', plugin_dir_url(__FILE__). '/../../../../app/chart.js' );
+		wp_enqueue_script('matomo_chart.js', plugin_dir_url(__FILE__). '/../../../../assets/chart.js' );
 	}
 }
