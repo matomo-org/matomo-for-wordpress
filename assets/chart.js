@@ -1,5 +1,5 @@
 jQuery(document).ready(function(){
-    jQuery('*[data-chart]').each(function() {
+    jQuery('.matomo-table[data-chart]').each(function() {
        let $this = jQuery(this);
        let $postbox = $this.parents('div.postbox');
        let $table = $postbox.find('table');
