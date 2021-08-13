@@ -32,6 +32,7 @@ class Dashboard {
 	{
 		$widgets = $this->get_widgets();
 		if (!empty($widgets) && is_array($widgets) && current_user_can(Capabilities::KEY_VIEW)) {
+			do_action('load_chartjs');
 			foreach ($widgets as $widget) {
 
 			    try {
@@ -41,6 +42,7 @@ class Dashboard {
                         $id = 'matomo_dashboard_widget_' . $widget['unique_id'] .  '_' . $widget['date'];
 
                         $title = $widget_meta['report']['name'] . ' - ' . $widget_meta['date'] . ' - Matomo';
+                        
                         wp_add_dashboard_widget( $id, esc_html($title), function () use ($widget) {
                             $renderer = new Renderer();
                             echo $renderer->show_report(array(

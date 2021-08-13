@@ -57,6 +57,7 @@ class Summary {
 	}
 
 	public function show() {
+		do_action('load_chartjs');
 		$matomo_pinned = $this->pin_if_submitted();
 
 		$settings = $this->settings;
@@ -86,14 +87,16 @@ class Summary {
 
 	private function get_reports_to_show() {
 		$reports_to_show = array(
+			Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME,
 			'VisitsSummary_get',
 			'UserCountry_getCountry',
+			'Actions_get',
 			'DevicesDetection_getType',
+			'Goals_get',
 			'Resolution_getResolution',
 			'DevicesDetection_getOsFamilies',
 			'DevicesDetection_getBrowsers',
 			'VisitTime_getVisitInformationPerServerTime',
-			'Actions_get',
 			'Actions_getPageTitles',
 			'Actions_getEntryPageTitles',
 			'Actions_getExitPageTitles',
@@ -102,7 +105,6 @@ class Summary {
 			'Referrers_getAll',
 			'Referrers_getSocials',
 			'Referrers_getCampaigns',
-			'Goals_get',
 		);
 
 		if ( $this->settings->get_global_option( 'track_ecommerce' ) ) {
@@ -110,7 +112,7 @@ class Summary {
 			$reports_to_show[] = 'Goals_getItemsName';
 		}
 
-		$reports_to_show[] = Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME;
+
 		$reports_to_show = apply_filters( 'matomo_report_summary_report_ids', $reports_to_show );
 
 		$report_metadata = array();
