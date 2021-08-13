@@ -90,12 +90,13 @@ class Summary {
 			Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME,
 			'VisitsSummary_get',
 			'UserCountry_getCountry',
+			'Actions_get',
 			'DevicesDetection_getType',
+			'Goals_get',
 			'Resolution_getResolution',
 			'DevicesDetection_getOsFamilies',
 			'DevicesDetection_getBrowsers',
 			'VisitTime_getVisitInformationPerServerTime',
-			'Actions_get',
 			'Actions_getPageTitles',
 			'Actions_getEntryPageTitles',
 			'Actions_getExitPageTitles',
@@ -104,7 +105,6 @@ class Summary {
 			'Referrers_getAll',
 			'Referrers_getSocials',
 			'Referrers_getCampaigns',
-			'Goals_get',
 		);
 
 		if ( $this->settings->get_global_option( 'track_ecommerce' ) ) {
