@@ -112,13 +112,10 @@ class Base {
 		}
 
 		if ( function_exists( 'wp_get_inline_script_tag' ) ) {
-			$script = wp_get_inline_script_tag( $script , array( 'type' => 'text/javascript' ) );
+			$script = wp_get_inline_script_tag( $script );
 		} else {
 			// line feed is required to match the wp_get_inline_script_tag output
-			$script = '<script type="text/javascript">
-' . $script . '
-</script>
-';
+			$script = '<script >'.PHP_EOL . $script . PHP_EOL.'</script>'.PHP_EOL;
 		}
 		return $script;
 	}
