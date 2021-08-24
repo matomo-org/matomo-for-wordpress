@@ -53,6 +53,7 @@ class WordPress extends Plugin
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
             'CustomJsTracker.manipulateJsTracker' => 'updateHeatmapTrackerPath',
             'Visualization.beforeRender' => 'onBeforeRenderView',
+            'AssetManager.getStylesheetFiles'  => 'getStylesheetFiles',
         );
     }
 
@@ -331,10 +332,10 @@ class WordPress extends Plugin
             array('usersmanager', 'index'),
             array('usersmanager', ''),
             array('usersmanager', 'addnewtoken'),
-            array('usersmanager', 'usersettings'),
+          //  array('usersmanager', 'usersettings'),
             array('usersmanager', 'deletetoken'),
             array('usersmanager', 'usersecurity'),
-            array('sitesmanager', ''),
+	        array('sitesmanager', ''),
             array('sitesmanager', 'globalsettings'),
             array('feedback', ''),
             array('feedback', 'index'),
@@ -396,5 +397,10 @@ class WordPress extends Plugin
     {
         throw new \Exception('This feature is not available');
     }
+
+	public function getStylesheetFiles(&$files)
+	{
+		$files[] = "../plugins/WordPress/stylesheets/user.css";
+	}
 
 }
