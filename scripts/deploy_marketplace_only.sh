@@ -99,11 +99,10 @@ fi
 
 # Readme also has to be updated in the .org tag
 echo "➤ Preparing stable tag..."
-STABLE_TAG=$(grep -m 1 "^Stable tag:" "$TMP_DIR/$README_NAME" | tr -d '\r\n' | awk -F ' ' '{print $NF}')
+STABLE_TAG=$(grep -m 1 -E "^([*+-]\s+)?Stable tag:" "$TMP_DIR/$README_NAME" | tr -d '\r\n' | awk -F ' ' '{print $NF}')
 
 if [[ -z "$STABLE_TAG" ]]; then
     echo "ℹ︎ Could not get stable tag from $README_NAME";
-	HAS_STABLE=1
 else
 	echo "ℹ︎ STABLE_TAG is $STABLE_TAG"
 
