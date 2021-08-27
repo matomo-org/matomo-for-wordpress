@@ -18,12 +18,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Metadata {
-	public static $CACHE_ALL_REPORTS      = array();
-	public static $CACHE_ALL_REPORT_PAGES = array();
+
+	public static $cache_all_reports      = array();
+	public static $cache_all_report_pages = array();
 
 	public function get_all_reports() {
-		if ( ! empty( self::$CACHE_ALL_REPORTS ) ) {
-			return self::$CACHE_ALL_REPORTS;
+		if ( ! empty( self::$cache_all_reports ) ) {
+			return self::$cache_all_reports;
 		}
 
 		$site   = new Site();
@@ -41,12 +42,12 @@ class Metadata {
 			);
 			foreach ( $all_reports as $single_report ) {
 				if ( isset( $single_report['uniqueId'] ) ) {
-					self::$CACHE_ALL_REPORTS[ $single_report['uniqueId'] ] = $single_report;
+					self::$cache_all_reports[ $single_report['uniqueId'] ] = $single_report;
 				}
 			}
 		}
 
-		return self::$CACHE_ALL_REPORTS;
+		return self::$cache_all_reports;
 	}
 
 	/**
@@ -54,13 +55,16 @@ class Metadata {
 	 * tests only
 	 */
 	public static function clear_cache() {
-		self::$CACHE_ALL_REPORTS      = array();
-		self::$CACHE_ALL_REPORT_PAGES = array();
+		self::$cache_all_reports      = array();
+		self::$cache_all_report_pages = array();
 	}
 
 	public function find_report_by_unique_id( $unique_id ) {
-		if ($unique_id === Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME) {
-			return array('uniqueId' => Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME, 'name' => 'Visits over time');
+		if ( Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME === $unique_id ) {
+			return array(
+				'uniqueId' => Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME,
+				'name'     => 'Visits over time',
+			);
 		}
 		$all_reports = self::get_all_reports();
 
@@ -70,8 +74,8 @@ class Metadata {
 	}
 
 	public function get_all_report_pages() {
-		if ( ! empty( self::$CACHE_ALL_REPORT_PAGES ) ) {
-			return self::$CACHE_ALL_REPORT_PAGES;
+		if ( ! empty( self::$cache_all_report_pages ) ) {
+			return self::$cache_all_report_pages;
 		}
 
 		$site   = new Site();
@@ -80,7 +84,7 @@ class Metadata {
 		if ( $idsite ) {
 			Bootstrap::do_bootstrap();
 
-			self::$CACHE_ALL_REPORT_PAGES = Request::processRequest(
+			self::$cache_all_report_pages = Request::processRequest(
 				'API.getReportPagesMetadata',
 				array(
 					'idSite'       => $idsite,
@@ -89,7 +93,7 @@ class Metadata {
 			);
 		}
 
-		return self::$CACHE_ALL_REPORT_PAGES;
+		return self::$cache_all_report_pages;
 	}
 
 	public function find_report_page_params_by_report_metadata( $report_metadata ) {
@@ -141,5 +145,4 @@ class Metadata {
 
 		return array();
 	}
-
 }

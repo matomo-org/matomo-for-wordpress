@@ -31,6 +31,15 @@ class GetStarted {
 		$this->settings = $settings;
 	}
 
+	public function show() {
+		$was_updated    = $this->update_if_submitted();
+		$settings       = $this->settings;
+		$can_user_edit  = $this->can_user_manage();
+		$show_this_page = $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE );
+
+		include dirname( __FILE__ ) . '/views/get_started.php';
+	}
+
 	private function update_if_submitted() {
 		if ( isset( $_POST )
 			 && ! empty( $_POST[ self::FORM_NAME ] )
@@ -63,15 +72,4 @@ class GetStarted {
 
 		return $tracking_settings->can_user_manage();
 	}
-
-	public function show() {
-		$was_updated    = $this->update_if_submitted();
-		$settings       = $this->settings;
-		$can_user_edit  = $this->can_user_manage();
-		$show_this_page = $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE );
-
-		include dirname( __FILE__ ) . '/views/get_started.php';
-	}
-
-
 }

@@ -12,7 +12,17 @@ namespace WpMatomo\Db;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
-
+/**
+ * We want a real data, not something coming from cache
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+ *
+ * This is a report error, so silent the possible errors
+ * phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
+ *
+ * We cannot use parameters of statements as this is the table names we build
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+ * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+ */
 class Settings {
 
 	/**
@@ -23,7 +33,7 @@ class Settings {
 	 * @return string
 	 * @api
 	 */
-	public function prefix_table_name( $table_name_to_prefix = '') {
+	public function prefix_table_name( $table_name_to_prefix = '' ) {
 		global $wpdb;
 
 		return $wpdb->prefix . MATOMO_DATABASE_PREFIX . $table_name_to_prefix;
@@ -66,14 +76,20 @@ class Settings {
 			'user_language',
 			'user_token_auth',
 		);
-		if ( !is_multisite() ) {
-			$tables = array_merge($tables, ['tagmanager_container',
-				'tagmanager_container_release',
-				'tagmanager_container_version',
-				'tagmanager_tag',
-				'tagmanager_trigger',
-				'tagmanager_variable'] );
+		if ( ! is_multisite() ) {
+			$tables = array_merge(
+				$tables,
+				array(
+					'tagmanager_container',
+					'tagmanager_container_release',
+					'tagmanager_container_version',
+					'tagmanager_tag',
+					'tagmanager_trigger',
+					'tagmanager_variable',
+				)
+			);
 		}
+
 		return $tables;
 	}
 
@@ -82,7 +98,7 @@ class Settings {
 
 		$table_names = array();
 
-		$tables      = $wpdb->get_results( 'SHOW TABLES LIKE "' . $this->prefix_table_name() . '%"', ARRAY_N );
+		$tables = $wpdb->get_results( 'SHOW TABLES LIKE "' . $this->prefix_table_name() . '%"', ARRAY_N );
 		foreach ( $tables as $table_name_to_look_for ) {
 			$table_names[] = array_shift( $table_name_to_look_for );
 		}
@@ -98,7 +114,7 @@ class Settings {
 		$table_names_to_look_for = apply_filters( 'matomo_install_tables', $table_names_to_look_for );
 
 		foreach ( $table_names_to_look_for as $table_name_to_look_for ) {
-			$table_name_to_test = $this->prefix_table_name($table_name_to_look_for);
+			$table_name_to_test = $this->prefix_table_name( $table_name_to_look_for );
 			if ( ! in_array( $table_name_to_test, $table_names, true ) ) {
 				$table_names[] = $table_name_to_test;
 			}
@@ -106,5 +122,4 @@ class Settings {
 
 		return $table_names;
 	}
-
 }

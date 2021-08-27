@@ -9,12 +9,14 @@
 
 namespace WpMatomo\Ecommerce;
 
+use MeprProduct;
+use MeprTransaction;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
 class MemberPress extends Base {
-
 	public function register_hooks() {
 		if ( ! is_admin() ) {
 			parent::register_hooks();
@@ -26,7 +28,7 @@ class MemberPress extends Base {
 	}
 
 	/**
-	 * @param \MeprTransaction $transaction
+	 * @param MeprTransaction $transaction
 	 */
 	public function on_cart_update( $transaction ) {
 		$tracking_code  = '';
@@ -66,7 +68,7 @@ class MemberPress extends Base {
 			return;
 		}
 
-		$product = new \MeprProduct( $product_id );
+		$product = new MeprProduct( $product_id );
 
 		$sku = $product_id;
 
@@ -77,7 +79,7 @@ class MemberPress extends Base {
 			$categories = array(),
 			$product->price,
 		);
-
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $this->wrap_script( $this->make_matomo_js_tracker_call( $params ) );
 	}
 
@@ -85,13 +87,13 @@ class MemberPress extends Base {
 		if ( isset( $_GET['membership'] )
 			 && isset( $_GET['trans_num'] )
 			 && class_exists( '\MeprTransaction' ) ) {
-			$txn = \MeprTransaction::get_one_by_trans_num($_GET['trans_num'] );
+			$txn = MeprTransaction::get_one_by_trans_num( sanitize_text_field( wp_unslash( $_GET['trans_num'] ) ) );
 			if ( isset( $txn->id ) && $txn->id > 0 ) {
 				if ( $this->has_order_been_tracked_already( $txn->id ) ) {
 					return;
 				}
 				$this->set_order_been_tracked( $txn->id );
-				$transaction       = new \MeprTransaction( $txn->id );
+				$transaction       = new MeprTransaction( $txn->id );
 				$order_id_to_track = $txn->trans_num;
 				$product           = $transaction->product();
 
@@ -120,10 +122,9 @@ class MemberPress extends Base {
 					$discount,
 				);
 				$tracking_code .= $this->make_matomo_js_tracker_call( $params );
-
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo $this->wrap_script( $tracking_code );
 			}
 		}
 	}
-
 }

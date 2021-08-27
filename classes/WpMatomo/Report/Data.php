@@ -55,5 +55,4 @@ class Data {
 
 		return $report;
 	}
-
 }

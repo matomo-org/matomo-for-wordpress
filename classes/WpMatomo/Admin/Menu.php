@@ -75,19 +75,19 @@ class Menu {
 		add_menu_page( 'Matomo Analytics', 'Matomo Analytics', self::CAP_NOT_EXISTS, 'matomo', null, 'dashicons-analytics' );
 
 		if ( $this->settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
-		    if (!is_multisite() || !is_network_admin()) {
-                add_submenu_page(
-                    self::$parent_slug,
-                    __( 'Get Started', 'matomo' ),
-                    __( 'Get Started', 'matomo' ),
-                    Capabilities::KEY_SUPERUSER,
-                    self::SLUG_GET_STARTED,
-                    array(
-                        $get_started,
-                        'show',
-                    )
-                );
-            }
+			if ( ! is_multisite() || ! is_network_admin() ) {
+				add_submenu_page(
+					self::$parent_slug,
+					__( 'Get Started', 'matomo' ),
+					__( 'Get Started', 'matomo' ),
+					Capabilities::KEY_SUPERUSER,
+					self::SLUG_GET_STARTED,
+					array(
+						$get_started,
+						'show',
+					)
+				);
+			}
 		}
 
 		if ( is_network_admin() ) {
@@ -128,24 +128,23 @@ class Menu {
 				)
 			);
 			// the network itself is not a blog
-            if ( matomo_has_tag_manager() ) {
-                add_submenu_page(
-                    self::$parent_slug,
-                    __( 'Tag Manager', 'matomo' ),
-                    __( 'Tag Manager', 'matomo' ),
-                    Capabilities::KEY_WRITE,
-                    self::SLUG_TAGMANAGER,
-                    array(
-                        $this,
-                        'tagmanager',
-                    )
-                );
-            }
-
+			if ( matomo_has_tag_manager() ) {
+				add_submenu_page(
+					self::$parent_slug,
+					__( 'Tag Manager', 'matomo' ),
+					__( 'Tag Manager', 'matomo' ),
+					Capabilities::KEY_WRITE,
+					self::SLUG_TAGMANAGER,
+					array(
+						$this,
+						'tagmanager',
+					)
+				);
+			}
 		}
 
-        // we always show settings except when multi site is used, plugin is not network enabled, and we are in network admin
-        $can_matomo_be_managed = ( !is_multisite() || $this->settings->is_network_enabled() || !is_network_admin() );
+		// we always show settings except when multi site is used, plugin is not network enabled, and we are in network admin
+		$can_matomo_be_managed = ( ! is_multisite() || $this->settings->is_network_enabled() || ! is_network_admin() );
 
 		if ( $can_matomo_be_managed ) {
 			add_submenu_page(
@@ -210,6 +209,8 @@ class Menu {
 			$tagmanager = __( 'Tag Manager', 'matomo' );
 			foreach ( $submenu[ self::$parent_slug ] as $key => $menu_item ) {
 				if ( 0 === strpos( $menu_item[0], $reporting ) || 0 === strpos( $menu_item[0], $tagmanager ) ) {
+					 // No other choice
+					 // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 					$submenu[ self::$parent_slug ][ $key ][0] .= ' <span class="dashicons-before dashicons-external"></span>';
 				}
 			}
@@ -233,7 +234,7 @@ class Menu {
 
 	public function reporting() {
 		if ( ! empty( $_GET['goto'] ) ) {
-			switch ( $_GET['goto'] ) {
+			switch ( sanitize_text_field( wp_unslash( $_GET['goto'] ) ) ) {
 				case self::REPORTING_GOTO_ADMIN:
 					$this->go_to_matomo_page( 'CoreAdminHome', 'home', Capabilities::KEY_SUPERUSER );
 					break;
@@ -268,7 +269,8 @@ class Menu {
 		}
 
 		if ( ! empty( $_GET['report_date'] ) ) {
-			$url = add_query_arg(
+			$report_date = sanitize_text_field( wp_unslash( $_GET['report_date'] ) );
+			$url         = add_query_arg(
 				array(
 					'module' => 'CoreHome',
 					'action' => 'index',
@@ -276,9 +278,8 @@ class Menu {
 				$url
 			);
 
-
 			$date                  = new Dates();
-			list( $period, $date ) = $date->detect_period_and_date( $_GET['report_date'] );
+			list( $period, $date ) = $date->detect_period_and_date( $report_date );
 			$url                   = add_query_arg(
 				array(
 					'period' => $period,
@@ -372,5 +373,4 @@ class Menu {
 		wp_safe_redirect( $url );
 		exit;
 	}
-
 }

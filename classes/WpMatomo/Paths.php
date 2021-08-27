@@ -9,12 +9,14 @@
 
 namespace WpMatomo;
 
+use stdClass;
+use WP_Filesystem_Direct;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
 class Paths {
-
 	private function get_file_system() {
 		if ( ! function_exists( 'WP_Filesystem' ) ) {
 			require_once ABSPATH . '/wp-admin/includes/file.php';
@@ -26,7 +28,7 @@ class Paths {
 			require_once ABSPATH . '/wp-admin/includes/class-wp-filesystem-direct.php';
 		}
 
-		return new \WP_Filesystem_Direct( new \stdClass() );
+		return new WP_Filesystem_Direct( new stdClass() );
 	}
 
 	public function get_upload_base_url() {

@@ -9,13 +9,17 @@
 
 namespace WpMatomo\Updater;
 
+use Exception;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class UpdateInProgressException extends \Exception {
-
-	public function __construct( $message = "Matomo upgrade is already in progress", $code = 0, $previous = null ) {
+/**
+ * phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found
+ */
+class UpdateInProgressException extends Exception {
+	public function __construct( $message = 'Matomo upgrade is already in progress', $code = 0, $previous = null ) {
 		parent::__construct( $message, $code, $previous );
 	}
 }

@@ -9,19 +9,21 @@
 
 namespace WpMatomo\TrackingCode;
 
-use WpMatomo\Admin\TrackingSettings;
+use WP_Query;
 use WpMatomo\Admin\CookieConsent;
+use WpMatomo\Admin\TrackingSettings;
 use WpMatomo\Logger;
 use WpMatomo\Paths;
 use WpMatomo\Settings;
 use WpMatomo\Site;
+// phpcs:ignore PHPCompatibility.UseDeclarations.NewUseConstFunction.Found
+use function is_user_logged_in;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
 class TrackingCodeGenerator {
-
 	const TRACKPAGEVIEW = "_paq.push(['trackPageView']);";
 	const MTM_INIT      = 'var _mtm = _mtm || [];';
 
@@ -57,7 +59,7 @@ class TrackingCodeGenerator {
 		$track_mode = $this->settings->get_global_option( 'track_mode' );
 
 		if ( ! $this->settings->is_tracking_enabled()
-			 || $track_mode == TrackingSettings::TRACK_MODE_MANUALLY ) {
+			 || TrackingSettings::TRACK_MODE_MANUALLY === $track_mode ) {
 			return false;
 		}
 
@@ -141,14 +143,14 @@ class TrackingCodeGenerator {
 				if ( $enabled
 					 && ctype_alnum( $container_id )
 					 && strlen( $container_id ) <= 16 ) {
-					$container_url = $upload_url . '/container_' . urlencode( $container_id ) . '.js';
+					$container_url = $upload_url . '/container_' . rawurlencode( $container_id ) . '.js';
 
 					$data_cf_async = '';
 					if ( $settings->get_global_option( 'track_datacfasync' ) ) {
 						$data_cf_async = 'data-cfasync="false"';
 					}
 
-					if ( $settings->get_global_option( 'force_protocol' ) == 'https' ) {
+					if ( $settings->get_global_option( 'force_protocol' ) === 'https' ) {
 						$container_url = preg_replace( '(^http://)', 'https://', $container_url );
 					}
 
@@ -190,11 +192,11 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 	}
 
 	public function get_js_endpoint() {
-		 $paths = new Paths();
+		$paths = new Paths();
 		if ( $this->settings->get_global_option( 'track_js_endpoint' ) === 'restapi' ) {
 			$js_endpoint = $paths->get_js_tracker_rest_api_endpoint();
 		} elseif ( $this->settings->get_global_option( 'track_js_endpoint' ) === 'plugin' ) {
-			$js_endpoint = plugins_url( 'app/matomo.js', MATOMO_ANALYTICS_FILE );;
+			$js_endpoint = plugins_url( 'app/matomo.js', MATOMO_ANALYTICS_FILE );
 		} else {
 			$js_endpoint = $paths->get_js_tracker_url_in_matomo_dir();
 		}
@@ -214,9 +216,9 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 	 * @return array
 	 */
 	public function prepare_tracking_code( $idsite ) {
-		$logLevel = is_admin() ? Logger::LEVEL_DEBUG : Logger::LEVEL_INFO;
+		$log_level = is_admin() ? Logger::LEVEL_DEBUG : Logger::LEVEL_INFO;
 
-		$this->logger->log( 'Apply tracking code changes:', $logLevel );
+		$this->logger->log( 'Apply tracking code changes:', $log_level );
 
 		$tracker_endpoint = $this->get_tracker_endpoint();
 		$js_endpoint      = $this->get_js_endpoint();
@@ -254,11 +256,11 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 
 		if ( $track_across_alias ) {
 			// todo detect more hosts such as when using WPML etc
-			$hosts = array( @parse_url( home_url(), PHP_URL_HOST ) );
+			$hosts = array( wp_parse_url( home_url(), PHP_URL_HOST ) );
 			$hosts = array_filter( $hosts );
 			$hosts = array_map(
 				function ( $host ) {
-						return '*.' . $host;
+					return '*.' . $host;
 				},
 				$hosts
 			);
@@ -270,8 +272,8 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 			$options[] = "_paq.push(['setRequestMethod', 'POST']);";
 		}
 
-		$cookieConsent = new CookieConsent();
-		$cookie_consent_option = $cookieConsent->get_tracking_consent_option( $this->settings->get_global_option( 'cookie_consent' ) );
+		$cookie_consent        = new CookieConsent();
+		$cookie_consent_option = $cookie_consent->get_tracking_consent_option( $this->settings->get_global_option( 'cookie_consent' ) );
 		// for unit test cases
 		if ( ! empty( $cookie_consent_option ) ) {
 			$options[] = $cookie_consent_option;
@@ -291,14 +293,14 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 			$options[] = "_paq.push(['enableHeartBeatTimer', " . intval( $this->settings->get_global_option( 'track_heartbeat' ) ) . ']);';
 		}
 
-		$data_cf_async = '';
-		$data_of_async_option = [];
+		$data_cf_async        = '';
+		$data_of_async_option = array();
 		if ( $this->settings->get_global_option( 'track_datacfasync' ) ) {
-			$data_cf_async = 'data-cfasync="false"';
-			$data_of_async_option['data-cfasync'] = "false";
+			$data_cf_async                        = 'data-cfasync="false"';
+			$data_of_async_option['data-cfasync'] = 'false';
 		}
 
-		$script = "var _paq = window._paq = window._paq || [];\n";
+		$script  = "var _paq = window._paq = window._paq || [];\n";
 		$script .= implode( "\n", $options );
 		$script .= self::TRACKPAGEVIEW;
 		$script .= "_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);";
@@ -320,15 +322,15 @@ g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint )
 			$script = '<script ' . $data_cf_async . ">\n" . $script . "\n</script>\n";
 		}
 
-		$script = '<!-- Matomo -->'.$script.'<!-- End Matomo Code -->';
+		$script = '<!-- Matomo -->' . $script . '<!-- End Matomo Code -->';
 
 		$no_script = '<noscript><p><img referrerpolicy="no-referrer-when-downgrade" src="' . esc_url( $tracker_endpoint ) . '?idsite=' . intval( $idsite ) . '&amp;rec=1" style="border:0;" alt="" /></p></noscript>';
 
 		$script = apply_filters( 'matomo_tracking_code_script', $script, $idsite );
 		$script = apply_filters( 'matomo_tracking_code_noscript', $script, $idsite );
 
-		$this->logger->log( 'Finished tracking code: ' . $script, $logLevel );
-		$this->logger->log( 'Finished noscript code: ' . $no_script, $logLevel);
+		$this->logger->log( 'Finished tracking code: ' . $script, $log_level );
+		$this->logger->log( 'Finished noscript code: ' . $no_script, $log_level );
 
 		return array(
 			'script'   => $script,
@@ -348,7 +350,7 @@ g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint )
 
 	private function apply_search_changes( $tracking_code ) {
 		$this->logger->log( 'Apply search tracking changes. Blog ID: ' . get_current_blog_id() );
-		$obj_search       = new \WP_Query( 's=' . get_search_query() . '&showposts=-1' );
+		$obj_search       = new WP_Query( 's=' . get_search_query() . '&showposts=-1' );
 		$int_result_count = $obj_search->post_count;
 
 		$code          = "window._paq = window._paq || []; window._paq.push(['trackSiteSearch','" . get_search_query() . "', false, " . $int_result_count . "]);\n";
@@ -360,7 +362,7 @@ g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint )
 
 	private function apply_user_tracking( $tracking_code ) {
 		$user_id_to_track = null;
-		if ( \is_user_logged_in() ) {
+		if ( is_user_logged_in() ) {
 			// Get the User ID Admin option, and the current user's data
 			$uid_from     = $this->settings->get_global_option( 'track_user_id' );
 			$current_user = wp_get_current_user(); // current user
@@ -385,5 +387,4 @@ g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint )
 
 		return $tracking_code;
 	}
-
 }

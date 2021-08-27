@@ -61,9 +61,9 @@ class ApiTest extends MatomoAnalytics_TestCase {
 
 		$request  = new WP_REST_Request( 'POST', '/' . API::VERSION . '/api/matomo_version' );
 		$response = rest_get_server()->dispatch( $request );
-		$data = $response->get_data();
+		$data     = $response->get_data();
 		// some newer wp versions have a dot at the end
-		$data['message'] = trim($data['message'], '.');
+		$data['message'] = trim( $data['message'], '.' );
 		$this->assertEquals(
 			array(
 				'code'    => 'rest_no_route',

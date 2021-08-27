@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class PrivacyBadge {
-
 	public function register_hooks() {
 		add_shortcode( 'matomo_privacy_badge', array( $this, 'show_privacy_page' ) );
 	}
@@ -40,5 +39,4 @@ class PrivacyBadge {
 
 		return sprintf( '<img alt="%s" src="%s" %s>', $title, esc_attr( $url ), $option );
 	}
-
 }

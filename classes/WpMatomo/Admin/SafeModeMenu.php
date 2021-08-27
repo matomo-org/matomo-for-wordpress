@@ -9,6 +9,7 @@
 
 namespace WpMatomo\Admin;
 
+use WpMatomo;
 use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,7 +34,7 @@ class SafeModeMenu {
 	}
 
 	public function add_menu() {
-		if ( ! \WpMatomo::is_admin_user() ) {
+		if ( ! WpMatomo::is_admin_user() ) {
 			return;
 		}
 
@@ -53,5 +54,4 @@ class SafeModeMenu {
 			)
 		);
 	}
-
 }

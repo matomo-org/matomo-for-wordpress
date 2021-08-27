@@ -27,13 +27,17 @@ use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
 use WpMatomo\User;
 
+/**
+ * Piwik constants
+ * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
+ */
 class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 
 	/**
 	 * Disable creation of temporary tables. This may be needed when you're writing a test that is
 	 * tracking/archiving data. Problem is with temp tables many queries fail like this
 	 *
-	 * can't really use temporary tables as we otherwise get errors like
+	 * Can't really use temporary tables as we otherwise get errors like
 	 * : WP DB Error: Can't reopen table: 'log_action' - in plugin Actions at PluginsArchiver.php:186
 	 * because temp tables cannot be joined
 	 *
@@ -41,6 +45,12 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	 */
 	protected $disable_temp_tables = false;
 
+	/**
+	 * @param $query
+	 *
+	 * @return mixed
+	 * phpcs:disable PSR2.Methods.MethodDeclaration.Underscore
+	 */
 	public function _create_temporary_tables( $query ) {
 		if ( ! $this->disable_temp_tables ) {
 			$query = parent::_create_temporary_tables( $query );
@@ -49,6 +59,12 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		return $query;
 	}
 
+	/**
+	 * @param $query
+	 *
+	 * @return mixed
+	 * phpcs:disable PSR2.Methods.MethodDeclaration.Underscore
+	 */
 	public function _drop_temporary_tables( $query ) {
 		if ( ! $this->disable_temp_tables ) {
 			$query = parent::_drop_temporary_tables( $query );
@@ -60,8 +76,8 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		if (!defined('PIWIK_TEST_MODE')) {
-			define('PIWIK_TEST_MODE', true);
+		if ( ! defined( 'PIWIK_TEST_MODE' ) ) {
+			define( 'PIWIK_TEST_MODE', true );
 		}
 		$uninstall = new Uninstaller();
 		$uninstall->uninstall( true );
@@ -100,6 +116,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 				ArchiveTableCreator::clear();
 				Site::clearCache();
 				Archive::clearStaticCache();
+				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				FrontController::$requestId = null;
 				Date::$now                  = null;
 				\Piwik\Tracker\Cache::deleteTrackerCache();
@@ -108,8 +125,9 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 				Manager::getInstance()->deleteAll();
 				\WpMatomo\Updater::unlock();
 				PluginsArchiver::$archivers = array();
-				$_GET                       = $_REQUEST = array();
-				\Piwik\Container\StaticContainer::get(\Piwik\Translation\Translator::class)->reset();
+				$_GET                       = array();
+				$_REQUEST                   = array();
+				\Piwik\Container\StaticContainer::get( \Piwik\Translation\Translator::class )->reset();
 				\Piwik\Log::unsetInstance();
 			}
 		);
@@ -137,7 +155,8 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	}
 
 	protected function assert_tracking_response( $tracking_response ) {
-		$trans_gif_64      = 'R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+		$trans_gif_64 = 'R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 		$expected_response = base64_decode( $trans_gif_64 );
 		$this->assertEquals( $expected_response, $tracking_response );
 	}
@@ -171,7 +190,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		$tracker->setLocalTime( '12:34:06' );
 		$tracker->setResolution( 1024, 768 );
 		$tracker->setBrowserHasCookies( true );
-		$tracker->setPlugins( $flash = true, $java = true, $director = false );
+		$tracker->setPlugins( true, true, false );
 
 		return $tracker;
 	}

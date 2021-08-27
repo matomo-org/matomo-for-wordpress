@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Capabilities {
+
 	const KEY_NONE = 'none_matomo';
 
 	/**
@@ -182,5 +183,4 @@ class Capabilities {
 
 		return false;
 	}
-
 }

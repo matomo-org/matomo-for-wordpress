@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Site {
-
 	const SITE_MAPPING_PREFIX = 'matomo-site-id-';
 
 	/**

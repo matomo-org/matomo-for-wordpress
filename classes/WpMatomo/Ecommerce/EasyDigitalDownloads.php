@@ -9,12 +9,13 @@
 
 namespace WpMatomo\Ecommerce;
 
+use EDD_Download;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
 class EasyDigitalDownloads extends Base {
-
 	public function register_hooks() {
 		if ( ! is_admin() ) {
 			add_action( 'template_redirect', array( $this, 'on_product_view' ), 99999, 0 );
@@ -43,7 +44,7 @@ class EasyDigitalDownloads extends Base {
 
 		$tracking_code = '';
 		foreach ( $contents as $key => $item ) {
-			$download = new \EDD_Download( $item['id'] );
+			$download = new EDD_Download( $item['id'] );
 
 			// If the item is not a download or it's status has changed since it was added to the cart.
 			if ( empty( $download->ID ) || ! $download->can_purchase() ) {
@@ -90,7 +91,7 @@ class EasyDigitalDownloads extends Base {
 	}
 
 	/**
-	 * @param \EDD_Download $download
+	 * @param EDD_Download $download
 	 *
 	 * @return mixed
 	 */
@@ -118,7 +119,7 @@ class EasyDigitalDownloads extends Base {
 			return;
 		}
 
-		$download = new \EDD_Download( $download_id );
+		$download = new EDD_Download( $download_id );
 
 		$sku = $this->get_sku( $download, $download_id );
 
@@ -129,7 +130,7 @@ class EasyDigitalDownloads extends Base {
 			$this->get_product_categories( $download_id ),
 			$download->get_price(),
 		);
-
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $this->wrap_script( $this->make_matomo_js_tracker_call( $params ) );
 	}
 
@@ -175,7 +176,7 @@ class EasyDigitalDownloads extends Base {
 								$name .= ' - ' . edd_get_price_option_name( $item['id'], $price_id );
 							}
 
-							$download = new \EDD_Download( $item['id'] );
+							$download = new EDD_Download( $item['id'] );
 							$sku      = $this->get_sku( $download, $item['id'] );
 
 							$price = 0;
@@ -218,9 +219,8 @@ class EasyDigitalDownloads extends Base {
 				$discount,
 			);
 			$tracking_code .= $this->make_matomo_js_tracker_call( $params );
-
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $this->wrap_script( $tracking_code );
 		}
 	}
-
 }

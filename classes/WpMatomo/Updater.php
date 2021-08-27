@@ -9,12 +9,14 @@
 
 namespace WpMatomo;
 
+use Exception;
 use Piwik\Cache as PiwikCache;
 use Piwik\Filesystem;
 use Piwik\Option;
 use Piwik\Plugins\Installation\ServerFilesGenerator;
 use Piwik\SettingsServer;
 use Piwik\Version;
+use WP_Upgrader;
 use WpMatomo\Updater\UpdateInProgressException;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -47,13 +49,12 @@ class Updater {
 		return function_exists( 'get_plugin_data' );
 	}
 
-	public function get_plugins_requiring_update()
-	{
+	public function get_plugins_requiring_update() {
 		if ( ! $this->load_plugin_functions() ) {
-			return [];
+			return array();
 		}
 
-		$keys = [];
+		$keys         = array();
 		$plugin_files = $GLOBALS['MATOMO_PLUGIN_FILES'];
 		if ( ! in_array( MATOMO_ANALYTICS_FILE, $plugin_files, true ) ) {
 			$plugin_files[] = MATOMO_ANALYTICS_FILE;
@@ -68,9 +69,9 @@ class Updater {
 			$installed_ver = get_option( $key );
 			if ( ! $installed_ver || $installed_ver !== $plugin_data['Version'] ) {
 				if ( ! Installer::is_intalled() ) {
-					return [];
+					return array();
 				}
-				$keys[$key] = $plugin_data['Version'];
+				$keys[ $key ] = $plugin_data['Version'];
 			}
 		}
 
@@ -81,13 +82,14 @@ class Updater {
 		$executed_updates = array();
 
 		$plugins_requiring_update = $this->get_plugins_requiring_update();
-		foreach ($plugins_requiring_update as $key => $plugin_version) {
+		foreach ( $plugins_requiring_update as $key => $plugin_version ) {
 			try {
 				$this->update();
 			} catch ( UpdateInProgressException $e ) {
-				$this->logger->log( 'Matomo update is already in progress');
+				$this->logger->log( 'Matomo update is already in progress' );
+
 				return; // we also don't execute any further update as they should be executed in another process
-			}catch ( \Exception $e ) {
+			} catch ( Exception $e ) {
 				$this->logger->log_exception( 'plugin_update', $e );
 				continue;
 			}
@@ -121,7 +123,7 @@ class Updater {
 			}
 
 			if ( ! empty( $plugin_data['Version'] )
-			     && ! in_array( $plugin_data['Version'], $history, true ) ) {
+				 && ! in_array( $plugin_data['Version'], $history, true ) ) {
 				// this allows us to see which versions of matomo the user was using before this update so we better understand
 				// which version maybe regressed something
 				array_unshift( $history, $plugin_data['Version'] );
@@ -147,11 +149,14 @@ class Updater {
 		);
 
 		$upload_dir = $paths->get_upload_base_dir();
+
+		WP_Filesystem();
+		global $wp_filesystem;
 		if ( is_dir( $upload_dir ) && is_writable( $upload_dir ) ) {
-			@file_put_contents( $upload_dir . '/index.php', '//hello' );
-			@file_put_contents( $upload_dir . '/index.html', '//hello' );
-			@file_put_contents( $upload_dir . '/index.htm', '//hello' );
-			@file_put_contents(
+			$wp_filesystem->put_contents( $upload_dir . '/index.php', '//hello' );
+			$wp_filesystem->put_contents( $upload_dir . '/index.html', '//hello' );
+			$wp_filesystem->put_contents( $upload_dir . '/index.htm', '//hello' );
+			$wp_filesystem->put_contents(
 				$upload_dir . '/.htaccess',
 				'<Files ~ "(\.mmdb)$">
 ' . ServerFilesGenerator::getDenyHtaccessContent() . '
@@ -163,12 +168,12 @@ class Updater {
 		}
 		$config_dir = $paths->get_config_ini_path();
 		if ( is_dir( $config_dir ) && is_writable( $config_dir ) ) {
-			@file_put_contents( $config_dir . '/index.php', '//hello' );
-			@file_put_contents( $config_dir . '/index.html', '//hello' );
-			@file_put_contents( $config_dir . '/index.htm', '//hello' );
+			$wp_filesystem->put_contents( $config_dir . '/index.php', '//hello' );
+			$wp_filesystem->put_contents( $config_dir . '/index.html', '//hello' );
+			$wp_filesystem->put_contents( $config_dir . '/index.htm', '//hello' );
 		}
 
-		if ($this->settings->should_disable_addhandler()) {
+		if ( $this->settings->should_disable_addhandler() ) {
 			wp_schedule_single_event( time() + 10, ScheduledTasks::EVENT_DISABLE_ADDHANDLER );
 		}
 	}
@@ -178,9 +183,10 @@ class Updater {
 			return 'no upgrader';
 		}
 
-		if (self::lock()) {
+		if ( self::lock() ) {
 			// we can get the lock meaning no update is in progress
 			self::unlock();
+
 			return false;
 		}
 
@@ -188,56 +194,57 @@ class Updater {
 	}
 
 	private static function load_upgrader() {
-		if (!class_exists('\WP_Upgrader', false)) {
+		if ( ! class_exists( '\WP_Upgrader', false ) ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			@include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 		}
-		return class_exists('\WP_Upgrader', false);
+
+		return class_exists( '\WP_Upgrader', false );
 	}
 
-	public static function lock()
-	{
+	public static function lock() {
 		// prevent the upgrade from being started several times at once
 		// we lock for 4 minutes. In case of major Matomo upgrades the upgrade may take much longer but it should be
 		// safe in this case to run the upgrade several times
 		// important: we always need to use the same timeout otherwise if something did use `create_lock(2)` then
 		// even though another job locked it for 4 minutes, the other job that locks it only for 2 seconds would release
 		// the lock basically since WP does not remember the initialy set release timeout
-		return self::load_upgrader() && \WP_Upgrader::create_lock(self::LOCK_NAME, 60*4);
+		return self::load_upgrader() && WP_Upgrader::create_lock( self::LOCK_NAME, 60 * 4 );
 	}
 
-	public static function unlock()
-	{
-		return self::load_upgrader() && \WP_Upgrader::release_lock(self::LOCK_NAME);
+	public static function unlock() {
+		return self::load_upgrader() && WP_Upgrader::release_lock( self::LOCK_NAME );
 	}
 
 	private static function update_components() {
 		$updater                     = new \Piwik\Updater();
-		$components_with_update_file = $updater->getComponentUpdates( );
+		$components_with_update_file = $updater->getComponentUpdates();
 
 		if ( empty( $components_with_update_file ) ) {
 			return false;
 		}
 
-		if (!self::lock()) {
+		if ( ! self::lock() ) {
 			throw new UpdateInProgressException();
 		}
 
 		try {
-			SettingsServer::setMaxExecutionTime(0);
+			SettingsServer::setMaxExecutionTime( 0 );
 
-			if (function_exists('ignore_user_abort')) {
-				@ignore_user_abort(true);
+			if ( function_exists( 'ignore_user_abort' ) ) {
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				@ignore_user_abort( true );
 			}
 
 			$result = $updater->updateComponents( $components_with_update_file );
-		} catch (\Exception $e) {
+		} catch ( Exception $e ) {
 			self::unlock();
 			throw $e;
 		}
 		self::unlock();
 
-		if (!empty($result['errors'])) {
-			throw new \Exception('Error while updating components: ' . implode(', ' , $result['errors']));
+		if ( ! empty( $result['errors'] ) ) {
+			throw new Exception( 'Error while updating components: ' . implode( ', ', $result['errors'] ) );
 		}
 
 		\Piwik\Updater::recordComponentSuccessfullyUpdated( 'core', Version::VERSION );

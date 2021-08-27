@@ -9,6 +9,9 @@
 
 namespace WpMatomo;
 
+use Exception;
+use MatomoTracker;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -17,7 +20,7 @@ if ( ! class_exists( '\PiwikTracker' ) ) {
 	include_once plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app/vendor/matomo/matomo-php-tracker/MatomoTracker.php';
 }
 
-class AjaxTracker extends \MatomoTracker {
+class AjaxTracker extends MatomoTracker {
 	private $has_cookie = false;
 	private $logger;
 
@@ -42,8 +45,10 @@ class AjaxTracker extends \MatomoTracker {
 		parent::__construct( $idsite, $api_endpoint );
 
 		// we are using the tracker only in ajax so the referer contains the actual url
-		$this->urlReferrer = false;
-		$this->pageUrl     = ! empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : false;
+		// @todo deprecated ?
+		$this->url_referrer = false;
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$this->page_url = ! empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : false;
 
 		if ( ! $settings->get_global_option( 'disable_cookies' ) ) {
 			$cookie_domain = $settings->get_tracking_cookie_domain();
@@ -51,26 +56,27 @@ class AjaxTracker extends \MatomoTracker {
 		}
 
 		if ( $this->loadVisitorIdCookie() ) {
-			if ( ! empty( $this->cookieVisitorId ) ) {
+			if ( ! empty( $this->cookie_visitor_id ) ) {
 				$this->has_cookie = true;
-				$this->setVisitorId( $this->cookieVisitorId );
+				$this->setVisitorId( $this->cookie_visitor_id );
 			}
 		}
 	}
 
-	protected function setCookie( $cookieName, $cookieValue, $cookieTTL ) {
+	protected function setCookie( $cookie_name, $cookie_value, $cookie_ttl ) {
 		if ( ! $this->has_cookie ) {
 			// we only set / overwrite cookies if it is a visitor that has eg no JS enabled or ad blocker enabled etc.
 			// this way we will track all cart updates and orders into the same visitor on following requests.
 			// If we recognized the visitor before via cookie we want in our case to make sure to not overwrite
 			// any cookie
-			parent::setCookie( $cookieName, $cookieValue, $cookieTTL );
+			parent::setCookie( $cookie_name, $cookie_value, $cookie_ttl );
 		}
 	}
 
 	protected function sendRequest( $url, $method = 'GET', $data = null, $force = false ) {
-		if ( ! $this->idSite ) {
-			$this->logger->log('ecommerce tracking could not find idSite, cannot send request');
+		if ( ! $this->id_site ) {
+			$this->logger->log( 'ecommerce tracking could not find idSite, cannot send request' );
+
 			return; // not installed or synced yet
 		}
 		$args = array(
@@ -87,11 +93,10 @@ class AjaxTracker extends \MatomoTracker {
 
 		$response = wp_remote_request( $url, $args );
 
-		if (is_wp_error($response)) {
-			$this->logger->log_exception('ajax_tracker', new \Exception($response->get_error_message()));
+		if ( is_wp_error( $response ) ) {
+			$this->logger->log_exception( 'ajax_tracker', new Exception( $response->get_error_message() ) );
 		}
 
 		return $response;
 	}
-
 }

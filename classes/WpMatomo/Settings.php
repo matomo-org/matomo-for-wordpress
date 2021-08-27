@@ -21,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Settings {
-
 	const OPTION_PREFIX                        = 'matomo-';
 	const GLOBAL_OPTION_PREFIX                 = 'matomo_global-';
 	const OPTION                               = 'matomo-option';
@@ -168,7 +167,7 @@ class Settings {
 
 		foreach ( $this->global_settings as $key => $val ) {
 			if ( isset( $this->default_global_settings[ $key ] )
-				 && $this->default_global_settings[ $key ] != $val ) {
+				 && $this->default_global_settings[ $key ] !== $val ) {
 				$custom_settings[ $key ] = $val;
 			}
 		}
@@ -268,11 +267,12 @@ class Settings {
 	}
 
 	private function convert_type( $value, $type ) {
-		if ( $type === 'array' && empty( $value ) ) {
+		if ( 'array' === $type && empty( $value ) ) {
 			$value = array(); // prevent eg converting '' to array('')
 		} else {
 			settype( $value, $type );
 		}
+
 		return $value;
 	}
 
@@ -289,7 +289,7 @@ class Settings {
 		}
 
 		if ( ! isset( $this->global_settings[ $key ] )
-			|| $this->global_settings[ $key ] !== $value ) {
+			 || $this->global_settings[ $key ] !== $value ) {
 			$this->settings_changed[] = $key;
 			$this->logger->log( 'Changed global option ' . $key . ': ' . ( is_array( $value ) ? wp_json_encode( $value ) : $value ) );
 
@@ -310,7 +310,7 @@ class Settings {
 		}
 
 		if ( ! isset( $this->blog_settings[ $key ] )
-			|| $this->blog_settings[ $key ] !== $value ) {
+			 || $this->blog_settings[ $key ] !== $value ) {
 			$this->settings_changed[] = $key;
 			$this->logger->log( 'Changed option ' . $key . ': ' . $value );
 			$this->blog_settings[ $key ] = $value;
@@ -335,12 +335,12 @@ class Settings {
 		}
 	}
 
-	public function should_disable_addhandler()
-	{
-		if ($this->force_disable_addhandler) {
+	public function should_disable_addhandler() {
+		if ( $this->force_disable_addhandler ) {
 			return true;
 		}
-		return defined('MATOMO_DISABLE_ADDHANDLER') && MATOMO_DISABLE_ADDHANDLER;
+
+		return defined( 'MATOMO_DISABLE_ADDHANDLER' ) && MATOMO_DISABLE_ADDHANDLER;
 	}
 
 	/**
@@ -376,7 +376,7 @@ class Settings {
 
 	private function should_save_tracking_code_across_sites() {
 		return $this->is_network_enabled()
-				&& $this->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
+			   && $this->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
 	}
 
 	public function get_js_tracking_code() {
@@ -402,7 +402,7 @@ class Settings {
 	public function get_tracking_cookie_domain() {
 		if ( $this->get_global_option( 'track_across' )
 			 || $this->get_global_option( 'track_crossdomain_linking' ) ) {
-			$host = @parse_url( home_url(), PHP_URL_HOST );
+			$host = wp_parse_url( home_url(), PHP_URL_HOST );
 			if ( ! empty( $host ) ) {
 				return '*.' . $host;
 			}
@@ -411,13 +411,12 @@ class Settings {
 		return '';
 	}
 
-	public function should_delete_all_data_on_uninstall()
-	{
-		if (defined( 'MATOMO_REMOVE_ALL_DATA' )) {
+	public function should_delete_all_data_on_uninstall() {
+		if ( defined( 'MATOMO_REMOVE_ALL_DATA' ) ) {
 			return (bool) MATOMO_REMOVE_ALL_DATA;
 		}
 
-		return (bool) $this->get_global_option(self::DELETE_ALL_DATA_ON_UNINSTALL);
+		return (bool) $this->get_global_option( self::DELETE_ALL_DATA_ON_UNINSTALL );
 	}
 
 	/**
@@ -455,7 +454,7 @@ class Settings {
 	}
 
 	public function is_tracking_enabled() {
-		return $this->get_global_option( 'track_mode' ) != 'disabled';
+		return $this->get_global_option( 'track_mode' ) !== 'disabled';
 	}
 
 	/**
@@ -476,7 +475,7 @@ class Settings {
 	}
 
 	public function track_user_id_enabled() {
-		return $this->get_global_option( 'track_user_id' ) != 'disabled';
+		return $this->get_global_option( 'track_user_id' ) !== 'disabled';
 	}
 
 	public function track_search_enabled() {

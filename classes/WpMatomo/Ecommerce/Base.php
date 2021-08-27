@@ -9,10 +9,12 @@
 
 namespace WpMatomo\Ecommerce;
 
+use Exception;
+use WpMatomo;
 use WpMatomo\Admin\TrackingSettings;
+use WpMatomo\AjaxTracker;
 use WpMatomo\Logger;
 use WpMatomo\Settings;
-use WpMatomo\AjaxTracker;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -59,12 +61,13 @@ class Base {
 	public function on_print_queues() {
 		// we need to queue in case there are multiple cart updates within one page load
 		if ( ! empty( $this->cart_update_queue ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $this->cart_update_queue;
 		}
 	}
 
 	protected function has_order_been_tracked_already( $order_id ) {
-		return get_post_meta( $order_id, $this->key_order_tracked, true ) == 1;
+		return get_post_meta( $order_id, $this->key_order_tracked, true ) === 1;
 	}
 
 	protected function set_order_been_tracked( $order_id ) {
@@ -72,8 +75,8 @@ class Base {
 	}
 
 	protected function should_track_background() {
-		return (defined( 'DOING_AJAX' ) && DOING_AJAX)
-		     || \WpMatomo::$settings->get_global_option('track_mode') === TrackingSettings::TRACK_MODE_TAGMANAGER;
+		return ( defined( 'DOING_AJAX' ) && DOING_AJAX )
+			   || WpMatomo::$settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_TAGMANAGER;
 	}
 
 	protected function make_matomo_js_tracker_call( $params ) {
@@ -97,8 +100,8 @@ class Base {
 						$tracker_method = $methods[ $call[0] ];
 						array_shift( $call );
 						call_user_func_array( array( $this->tracker, $tracker_method ), $call );
-					} catch (\Exception $e) {
-						$this->logger->log_exception($call[0], $e);
+					} catch ( Exception $e ) {
+						$this->logger->log_exception( $call[0], $e );
 					}
 				}
 			}
@@ -115,9 +118,9 @@ class Base {
 			$script = wp_get_inline_script_tag( $script );
 		} else {
 			// line feed is required to match the wp_get_inline_script_tag output
-			$script = '<script >'.PHP_EOL . $script . PHP_EOL.'</script>'.PHP_EOL;
+			$script = '<script >' . PHP_EOL . $script . PHP_EOL . '</script>' . PHP_EOL;
 		}
+
 		return $script;
 	}
-
 }

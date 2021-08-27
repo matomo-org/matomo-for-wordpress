@@ -70,5 +70,4 @@ class Access {
 			wp_schedule_single_event( time() + 10, ScheduledTasks::EVENT_SYNC );
 		}
 	}
-
 }

@@ -76,6 +76,4 @@ class Dates {
 
 		return array( $period, $date );
 	}
-
-
 }

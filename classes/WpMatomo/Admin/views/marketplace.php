@@ -30,117 +30,156 @@ $matomo_extra_url_params = '&' . http_build_query(
 
 	<div id="icon-plugins" class="icon32"></div>
 
-	<h1><?php matomo_header_icon(); ?> <?php esc_html_e( 'Discover new functionality for your Matomo', 'matomo' ); ?></h1>
+	<h1><?php matomo_header_icon(); ?><?php esc_html_e( 'Discover new functionality for your Matomo', 'matomo' ); ?></h1>
 
 	<?php if ( ! is_plugin_active( MATOMO_MARKETPLACE_PLUGIN_NAME ) ) { ?>
-        <div class="updated notice matomo-marketplace-notice">
-            <p><?php echo sprintf( esc_html__( 'Easily install over 100 free plugins & %1$spremium features%2$s for Matomo with just a click' ), '<span style="white-space: nowrap;">', '</span>' ); ?>
-            </p>
-            <p><a href="https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip" rel="noreferrer noopener" class="button"><?php esc_html_e( 'Download Matomo Marketplace for WordPress', 'matomo' ); ?></a>
+		<div class="updated notice matomo-marketplace-notice">
+			<p><?php echo sprintf( esc_html__( 'Easily install over 100 free plugins & %1$spremium features%2$s for Matomo with just a click', 'matomo' ), '<span style="white-space: nowrap;">', '</span>' ); ?>
+			</p>
+			<p><a href="https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip" rel="noreferrer noopener"
+				  class="button"><?php esc_html_e( 'Download Matomo Marketplace for WordPress', 'matomo' ); ?></a>
 
-            <a target="_blank" href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><span class="dashicons-before dashicons-video-alt3"></span></a> <a target="_blank" href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><?php esc_html_e( 'Install instructions', 'matomo' ); ?></a>
-           </p>
-        </div>
+				<a target="_blank"
+				   href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><span
+							class="dashicons-before dashicons-video-alt3"></span></a> <a target="_blank"
+																						 href="https://matomo.org/faq/wordpress/how-do-i-install-a-matomo-marketplace-plugin-in-matomo-for-wordpress/"><?php esc_html_e( 'Install instructions', 'matomo' ); ?></a>
+			</p>
+		</div>
 	<?php } ?>
 
 	<?php
-    function matomo_show_tables($matomo_feature_sections) {
+	function matomo_show_tables( $matomo_feature_sections ) {
+		foreach ( $matomo_feature_sections as $matomo_feature_section ) {
+			$matomo_feature_section['features'] = array_filter( $matomo_feature_section['features'] );
+			$matomo_num_features_in_block       = count( $matomo_feature_section['features'] );
 
-	    foreach ( $matomo_feature_sections as $matomo_feature_section ) {
-		    $matomo_feature_section['features'] = array_filter($matomo_feature_section['features']);
-		    $matomo_num_features_in_block = count( $matomo_feature_section['features'] );
+			echo '<h2>' . esc_html( $matomo_feature_section['title'] ) . '</h2>';
+			echo '<div class="wp-list-table widefat plugin-install matomo-plugin-list matomo-plugin-row-' . esc_html( $matomo_num_features_in_block ) . '"><div id="the-list">';
 
-		    echo '<h2>' . esc_html( $matomo_feature_section['title'] ) . '</h2>';
-		    echo '<div class="wp-list-table widefat plugin-install matomo-plugin-list matomo-plugin-row-' . $matomo_num_features_in_block . '"><div id="the-list">';
-
-		    foreach ( $matomo_feature_section['features'] as $matomo_index => $matomo_feature ) {
-			    $matomo_style        = '';
-			    $matomo_is_3_columns = $matomo_num_features_in_block === 3;
-			    if ( $matomo_is_3_columns ) {
-				    $matomo_style = 'width: calc(33% - 8px);min-width:282px;max-width:350px;';
-				    if ( $matomo_index % 3 === 2 ) {
-					    $matomo_style .= 'clear: inherit;margin-right: 0;margin-left: 16px;';
-				    }
-			    }
-			    ?>
-                <div class="plugin-card" style="<?php echo $matomo_style; ?>">
-				    <?php
-				    if ( $matomo_is_3_columns && ! empty( $matomo_feature['image'] ) ) {
-					    ?>
-                    <a
-                            href="<?php echo esc_url( $matomo_feature['url'] ); ?>"
-                            rel="noreferrer noopener" target="_blank"
-                            class="thickbox open-plugin-details-modal"><img
-                                src="<?php echo esc_url( $matomo_feature['image'] ); ?>"
-                                style="height: 80px;width:100%;object-fit: cover;" alt=""></a><?php } ?>
-
-                    <div class="plugin-card-top">
-                        <div class="
+			foreach ( $matomo_feature_section['features'] as $matomo_index => $matomo_feature ) {
+				$matomo_style        = '';
+				$matomo_is_3_columns = 3 === $matomo_num_features_in_block;
+				if ( $matomo_is_3_columns ) {
+					$matomo_style = 'width: calc(33% - 8px);min-width:282px;max-width:350px;';
+					if ( 2 === $matomo_index % 3 ) {
+						$matomo_style .= 'clear: inherit;margin-right: 0;margin-left: 16px;';
+					}
+				}
+				?>
+				<div class="plugin-card" style="<?php echo esc_attr( $matomo_style ); ?>">
 					<?php
-					    if ( ! $matomo_is_3_columns ) {
-						    ?>
-						name column-name<?php } ?>" style="margin-right: 0;<?php if ( empty( $matomo_feature['image'] )) { echo 'margin-left: 0;'; } ?>">
-                            <h3>
-                                <a href="<?php echo esc_url( !empty($matomo_feature['video']) ? $matomo_feature['video'] : $matomo_feature['url'] ); ?>"
-                                   rel="noreferrer noopener" target="_blank"
-                                   class="thickbox open-plugin-details-modal">
-								    <?php echo esc_html( $matomo_feature['name'] ); ?>
-                                </a>
-							    <?php
-							    if ( ! $matomo_is_3_columns && ! empty( $matomo_feature['image'] ) ) {
-								    ?>
-                                <a
-                                        href="<?php echo esc_url( $matomo_feature['url'] ); ?>"
-                                        rel="noreferrer noopener" target="_blank"
-                                        class="thickbox open-plugin-details-modal"><img
-                                            src="<?php echo esc_url( $matomo_feature['image'] ); ?>" class="plugin-icon"
-                                            style="object-fit: cover;"
-                                            alt=""></a><?php } ?>
-                            </h3>
-                        </div>
-                        <div class="
+					if ( $matomo_is_3_columns && ! empty( $matomo_feature['image'] ) ) {
+						?>
+					<a
+							href="<?php echo esc_url( $matomo_feature['url'] ); ?>"
+							rel="noreferrer noopener" target="_blank"
+							class="thickbox open-plugin-details-modal"><img
+								src="<?php echo esc_url( $matomo_feature['image'] ); ?>"
+								style="height: 80px;width:100%;object-fit: cover;" alt=""></a>
+								<?php
+					}
+					?>
+
+					<div class="plugin-card-top">
+						<div class="
 					<?php
-					    if ( ! $matomo_is_3_columns ) {
-						    ?>
-						desc column-description<?php } ?>"
-                             style="margin-right: 0;<?php if ( empty( $matomo_feature['image'] )) { echo 'margin-left: 0;'; } ?>">
-                            <p class="matomo-description"><?php echo esc_html( $matomo_feature['description'] ); ?>
-                            <?php if (!empty($matomo_feature['video'])) {
-                                echo ' <a target="_blank" rel="noreferrer noopener" style="white-space: nowrap;" href="'. esc_url($matomo_feature['video']).'"><span class="dashicons dashicons-video-alt3"></span> '. esc_html__( 'Learn more', 'matomo' ).'</a>';
-                            } elseif (!empty($matomo_feature['url'])) {
-		                            echo ' <a target="_blank" rel="noreferrer noopener" style="white-space: nowrap;" href="'. esc_url($matomo_feature['url']).'">'. esc_html__( 'Learn more', 'matomo' ).'</a>';
-	                            } ?></p>
-	                        <?php if ( ! empty( $matomo_feature['price'] )) {?><p class="authors"><a class="button-primary"
-                                                  rel="noreferrer noopener" target="_blank"
-                                                  href="<?php echo esc_url( ! empty( $matomo_feature['download_url'] ) ? $matomo_feature['download_url'] : $matomo_feature['url'] ); ?>">
-								    <?php
-									    if ($matomo_feature['price'] === 'free' ) {
-									        esc_html_e('Download', 'matomo');
-									    } else {
-										    echo esc_html( $matomo_feature['price'] );
-									    } ?>
-								 </a>
-                            </p><?php   } ?>
-                        </div>
-                    </div>
-                </div>
-			    <?php
-		    }
-		    echo '';
-		    echo '</div><div style="clear: both"></div>';
-		    if (!empty($matomo_feature_section['more_url'])) {
-			    echo '<a target="_blank" rel="noreferrer noopener" href="'.esc_attr($matomo_feature_section['more_url']).'"><span class="dashicons dashicons-arrow-right-alt2"></span>'. esc_html($matomo_feature_section['more_text']).'</a>';
-		    }
-		    echo '</div>';
-	    }
-    }
+					if ( ! $matomo_is_3_columns ) {
+						?>
+						name column-name
+						<?php
+					}
+					?>
+						" style="margin-right: 0;
+						<?php
+						if ( empty( $matomo_feature['image'] ) ) {
+							echo 'margin-left: 0;';
+						}
+						?>
+								">
+							<h3>
+								<a href="<?php echo esc_url( ! empty( $matomo_feature['video'] ) ? $matomo_feature['video'] : $matomo_feature['url'] ); ?>"
+								   rel="noreferrer noopener" target="_blank"
+								   class="thickbox open-plugin-details-modal">
+									<?php echo esc_html( $matomo_feature['name'] ); ?>
+								</a>
+								<?php
+								if ( ! $matomo_is_3_columns && ! empty( $matomo_feature['image'] ) ) {
+									?>
+								<a
+										href="<?php echo esc_url( $matomo_feature['url'] ); ?>"
+										rel="noreferrer noopener" target="_blank"
+										class="thickbox open-plugin-details-modal"><img
+											src="<?php echo esc_url( $matomo_feature['image'] ); ?>" class="plugin-icon"
+											style="object-fit: cover;"
+											alt=""></a>
+											<?php
+								}
+								?>
+							</h3>
+						</div>
+						<div class="
+					<?php
+					if ( ! $matomo_is_3_columns ) {
+						?>
+						desc column-description
+						<?php
+					}
+					?>
+						"
+							 style="margin-right: 0;
+							 <?php
+								if ( empty( $matomo_feature['image'] ) ) {
+									echo 'margin-left: 0;';
+								}
+								?>
+									 ">
+							<p class="matomo-description"><?php echo esc_html( $matomo_feature['description'] ); ?>
+								<?php
+								if ( ! empty( $matomo_feature['video'] ) ) {
+									echo ' <a target="_blank" rel="noreferrer noopener" style="white-space: nowrap;" href="' . esc_url( $matomo_feature['video'] ) . '"><span class="dashicons dashicons-video-alt3"></span> ' . esc_html__( 'Learn more', 'matomo' ) . '</a>';
+								} elseif ( ! empty( $matomo_feature['url'] ) ) {
+									echo ' <a target="_blank" rel="noreferrer noopener" style="white-space: nowrap;" href="' . esc_url( $matomo_feature['url'] ) . '">' . esc_html__( 'Learn more', 'matomo' ) . '</a>';
+								}
+								?>
+							</p>
+							<?php
+							if ( ! empty( $matomo_feature['price'] ) ) {
+								?>
+								<p class="authors"><a class="button-primary"
+													  rel="noreferrer noopener" target="_blank"
+													  href="<?php echo esc_url( ! empty( $matomo_feature['download_url'] ) ? $matomo_feature['download_url'] : $matomo_feature['url'] ); ?>">
+									<?php
+									if ( 'free' === $matomo_feature['price'] ) {
+										esc_html_e( 'Download', 'matomo' );
+									} else {
+										echo esc_html( $matomo_feature['price'] );
+									}
+									?>
+								</a>
+								</p>
+								<?php
+							}
+							?>
+						</div>
+					</div>
+				</div>
+				<?php
+			}
+			echo '';
+			echo '</div><div style="clear: both"></div>';
+			if ( ! empty( $matomo_feature_section['more_url'] ) ) {
+				echo '<a target="_blank" rel="noreferrer noopener" href="' . esc_attr( $matomo_feature_section['more_url'] ) . '"><span class="dashicons dashicons-arrow-right-alt2"></span>' . esc_html( $matomo_feature_section['more_text'] ) . '</a>';
+			}
+			echo '</div>';
+		}
+	}
 
 	$matomo_feature_sections = array(
 		array(
-			'title'    => 'Top free plugins',
-			'more_url' => 'https://plugins.matomo.org/free?wp=1',
+			'title'     => 'Top free plugins',
+			'more_url'  => 'https://plugins.matomo.org/free?wp=1',
 			'more_text' => 'Browse all free plugins',
-			'features' =>
+			'features'  =>
 				array(
 					array(
 						'name'         => 'Marketing Campaigns Reporting',
@@ -162,39 +201,39 @@ $matomo_extra_url_params = '&' . http_build_query(
 		),
 	);
 
-    matomo_show_tables($matomo_feature_sections);
+	matomo_show_tables( $matomo_feature_sections );
 
-    echo '<br>';
+	echo '<br>';
 
 	$matomo_feature_sections = array(
-        array(
-		'title'    => 'Most popular premium features',
-		'features' =>
-			array(
+		array(
+			'title'    => 'Most popular premium features',
+			'features' =>
 				array(
-					'name'        => 'Heatmap & Session Recording',
-					'description' => 'Truly understand your visitors by seeing where they click, hover, type and scroll. Replay their actions in a video and ultimately increase conversions.',
-					'price'       => '99EUR / 119USD',
-					'url'         => 'https://plugins.matomo.org/HeatmapSessionRecording?wp=1',
-					'image'       => '',
-				),
-				array(
-					'name'        => 'Custom Reports',
-					'description' => 'Pull out the information you need in order to be successful. Develop your custom strategy to meet your individualized goals while saving money & time.',
-					'price'       => '99EUR / 119USD',
-					'url'         => 'https://plugins.matomo.org/CustomReports?wp=1',
-					'image'       => '',
-				),
+					array(
+						'name'        => 'Heatmap & Session Recording',
+						'description' => 'Truly understand your visitors by seeing where they click, hover, type and scroll. Replay their actions in a video and ultimately increase conversions.',
+						'price'       => '99EUR / 119USD',
+						'url'         => 'https://plugins.matomo.org/HeatmapSessionRecording?wp=1',
+						'image'       => '',
+					),
+					array(
+						'name'        => 'Custom Reports',
+						'description' => 'Pull out the information you need in order to be successful. Develop your custom strategy to meet your individualized goals while saving money & time.',
+						'price'       => '99EUR / 119USD',
+						'url'         => 'https://plugins.matomo.org/CustomReports?wp=1',
+						'image'       => '',
+					),
 
-				array(
-					'name'        => 'Premium Bundle',
-					'description' => 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of over 25%!',
-					'price'       => '499EUR / 579USD',
-					'url'         => 'https://plugins.matomo.org/WpPremiumBundle?wp=1',
-					'image'       => '',
-				)
-			),
-	    ),
+					array(
+						'name'        => 'Premium Bundle',
+						'description' => 'All premium features in one bundle, make the most out of your Matomo for WordPress and enjoy discounts of over 25%!',
+						'price'       => '499EUR / 579USD',
+						'url'         => 'https://plugins.matomo.org/WpPremiumBundle?wp=1',
+						'image'       => '',
+					),
+				),
+		),
 		array(
 			'title'    => 'Most popular content engagement',
 			'features' =>
@@ -247,14 +286,6 @@ $matomo_extra_url_params = '&' . http_build_query(
 						'url'         => 'https://plugins.matomo.org/MultiChannelConversionAttribution?wp=1',
 						'image'       => '',
 					),
-					/*
-					array(
-						'name'        => 'Activity Log',
-						'description' => 'Truly understand your visitors by seeing where they click, hover, type and scroll. Replay their actions in a video and ultimately increase conversions',
-						'price'       => '19EUR / 19USD',
-						'url'         => 'https://plugins.matomo.org/ActivityLog?wp=1',
-						'image'       => '',
-					),*/
 				),
 		),
 		array(
@@ -279,7 +310,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 		),
 	);
 
-		matomo_show_tables($matomo_feature_sections);
+	matomo_show_tables( $matomo_feature_sections );
 
 	?>
 

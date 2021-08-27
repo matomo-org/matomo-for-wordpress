@@ -20,7 +20,7 @@ class Admin {
 	 * @param Settings $settings
 	 */
 	public function __construct( $settings, $init_menu = true ) {
-		if ($init_menu) {
+		if ( $init_menu ) {
 			new Menu( $settings );
 		}
 
@@ -29,6 +29,6 @@ class Admin {
 
 	public function load_scripts() {
 		wp_enqueue_style( 'matomo_admin_css', plugins_url( 'assets/css/admin-style.css', MATOMO_ANALYTICS_FILE ), false, '1.0.0' );
-		wp_enqueue_script( 'matomo_admin_js', plugins_url( 'assets/js/admin.js', MATOMO_ANALYTICS_FILE ), array( 'jquery' ), '1.0', true  );
+		wp_enqueue_script( 'matomo_admin_js', plugins_url( 'assets/js/admin.js', MATOMO_ANALYTICS_FILE ), array( 'jquery' ), '1.0', true );
 	}
 }

@@ -16,31 +16,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Renderer {
-	CONST CUSTOM_UNIQUE_ID_VISITS_OVER_TIME = 'visits_over_time';
+	const CUSTOM_UNIQUE_ID_VISITS_OVER_TIME = 'visits_over_time';
 
 	public function register_hooks() {
 		add_shortcode( 'matomo_report', array( $this, 'show_report' ) );
 	}
 
-	public function show_visits_over_time($limit, $period)
-	{
+	public function show_visits_over_time( $limit, $period ) {
 		$cannot_view = $this->check_cannot_view();
-		if ($cannot_view) {
+		if ( $cannot_view ) {
 			return $cannot_view;
 		}
 
-		if (is_numeric($limit)) {
-		    $limit = (int) $limit;
-        } else {
-            $limit = 14;
-        }
+		if ( is_numeric( $limit ) ) {
+			$limit = (int) $limit;
+		} else {
+			$limit = 14;
+		}
 
-		$report_meta = array('module' => 'VisitsSummary', 'action' => 'get');
+		$report_meta = array(
+			'module' => 'VisitsSummary',
+			'action' => 'get',
+		);
 
-		$data = new Data();
-		$report = $data->fetch_report($report_meta, $period, 'last' . $limit, 'label', $limit);
+		$data              = new Data();
+		$report            = $data->fetch_report( $report_meta, $period, 'last' . $limit, 'label', $limit );
 		$first_metric_name = 'nb_visits';
-		$graph_data = ' data-chart="VisitsSumary"';
+		$matomo_graph_data = ' data-chart="VisitsSumary"';
 		ob_start();
 
 		include 'views/table_map_no_dimension.php';
@@ -48,8 +50,7 @@ class Renderer {
 		return ob_get_clean();
 	}
 
-	private function check_cannot_view()
-	{
+	private function check_cannot_view() {
 		if ( ! current_user_can( Capabilities::KEY_VIEW ) ) {
 			// not needed as processRequest checks permission anyway but it's faster this way and double ensures to not
 			// letting users view it when they have no access.
@@ -68,18 +69,19 @@ class Renderer {
 		);
 
 		$cannot_view = $this->check_cannot_view();
-		if ($cannot_view) {
+		if ( $cannot_view ) {
 			return $cannot_view;
 		}
 
 		$dates                 = new Dates();
 		list( $period, $date ) = $dates->detect_period_and_date( $a['report_date'] );
 
-		if ($a['unique_id'] === 'visits_over_time') {
-		    $is_default_limit = $a['limit'] === 10;
-		    if ($is_default_limit) {
-		        $a['limit'] = 14;
-            }
+		if ( 'visits_over_time' === $a['unique_id'] ) {
+			$is_default_limit = 10 === $a['limit'];
+			if ( $is_default_limit ) {
+				$a['limit'] = 14;
+			}
+
 			return $this->show_visits_over_time( $a['limit'], $period );
 		}
 
@@ -110,5 +112,4 @@ class Renderer {
 
 		return ob_get_clean();
 	}
-
 }

@@ -16,10 +16,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once 'WordPressDbStatement.php';
 require_once 'WordPressTracker.php';
 
+/**
+ * We want a real data, not something coming from cache
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+ *
+ * This is a report error, so silent the possible errors
+ * phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
+ *
+ * We cannot use parameters of statements as this is the table names we build
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+ * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+ */
 class WordPress extends Mysqli {
 
-	// needed to be compatbile with mysqli class when `getConnection()` is called and we cannot return the
-	// actual connection but return an instance of this.
+	/**
+	 * needed to be compatbile with mysqli class when `getConnection()` is called and we cannot return the
+	 * actual connection but return an instance of this.
+	 *
+	 * @var $error string
+	 */
 	public $error = '';
 
 	private $old_suppress_errors_value = null;
@@ -68,7 +83,7 @@ class WordPress extends Mysqli {
 	public function isConnectionUTF8() {
 		$value = $this->fetchOne( 'SELECT @@character_set_client;' );
 
-		return ! empty( $value ) && strpos(strtolower( $value ), 'utf8') === 0;
+		return ! empty( $value ) && strpos( strtolower( $value ), 'utf8' ) === 0;
 	}
 
 	public function checkClientVersion() {
@@ -91,7 +106,7 @@ class WordPress extends Mysqli {
 		// }
 	}
 
-	public function lastInsertId( $tableName = null, $primaryKey = null ) {
+	public function lastInsertId( $table_name = null, $primary_key = null ) {
 		global $wpdb;
 
 		if ( empty( $wpdb->insert_id ) ) {
@@ -106,21 +121,21 @@ class WordPress extends Mysqli {
 		$sql = 'SHOW TABLES';
 
 		$tables = $wpdb->get_results( $sql, ARRAY_N );
-		$result = [];
-		foreach ($tables as $table) {
+		$result = array();
+		foreach ( $tables as $table ) {
 			$result[] = $table[0];
 		}
+
 		return $result;
 	}
 
-	public function describeTable($tableName, $schemaName = null)
-	{
+	public function describeTable( $table_name, $schema_name = null ) {
 		global $wpdb;
 
-		if ($schemaName) {
-			$sql = 'DESCRIBE ' . $this->quoteIdentifier("$schemaName.$tableName", true);
+		if ( $schema_name ) {
+			$sql = 'DESCRIBE ' . $this->quoteIdentifier( "$schema_name.$table_name", true );
 		} else {
-			$sql = 'DESCRIBE ' . $this->quoteIdentifier($tableName, true);
+			$sql = 'DESCRIBE ' . $this->quoteIdentifier( $table_name, true );
 		}
 
 		$result = $wpdb->get_results( $sql, ARRAY_A );
@@ -134,61 +149,62 @@ class WordPress extends Mysqli {
 			'Unsigned'        => null,
 			'Primary'         => false,
 			'PrimaryPosition' => null,
-			'Identity'        => false
+			'Identity'        => false,
 		);
-		$i = 1;
-		$p = 1;
-		foreach ($result as $key => $row) {
-			$row = array_merge($row_defaults, $row);
-			if (preg_match('/unsigned/', $row['Type'])) {
+		$i            = 1;
+		$p            = 1;
+		foreach ( $result as $key => $row ) {
+			$row = array_merge( $row_defaults, $row );
+			if ( preg_match( '/unsigned/', $row['Type'] ) ) {
 				$row['Unsigned'] = true;
 			}
-			if (preg_match('/^((?:var)?char)\((\d+)\)/', $row['Type'], $matches)) {
-				$row['Type'] = $matches[1];
+			if ( preg_match( '/^((?:var)?char)\((\d+)\)/', $row['Type'], $matches ) ) {
+				$row['Type']   = $matches[1];
 				$row['Length'] = $matches[2];
-			} else if (preg_match('/^decimal\((\d+),(\d+)\)/', $row['Type'], $matches)) {
-				$row['Type'] = 'decimal';
+			} elseif ( preg_match( '/^decimal\((\d+),(\d+)\)/', $row['Type'], $matches ) ) {
+				$row['Type']      = 'decimal';
 				$row['Precision'] = $matches[1];
-				$row['Scale'] = $matches[2];
-			} else if (preg_match('/^float\((\d+),(\d+)\)/', $row['Type'], $matches)) {
-				$row['Type'] = 'float';
+				$row['Scale']     = $matches[2];
+			} elseif ( preg_match( '/^float\((\d+),(\d+)\)/', $row['Type'], $matches ) ) {
+				$row['Type']      = 'float';
 				$row['Precision'] = $matches[1];
-				$row['Scale'] = $matches[2];
-			} else if (preg_match('/^((?:big|medium|small|tiny)?int)\((\d+)\)/', $row['Type'], $matches)) {
+				$row['Scale']     = $matches[2];
+			} elseif ( preg_match( '/^((?:big|medium|small|tiny)?int)\((\d+)\)/', $row['Type'], $matches ) ) {
 				$row['Type'] = $matches[1];
 				/**
 				 * The optional argument of a MySQL int type is not precision
 				 * or length; it is only a hint for display width.
 				 */
 			}
-			if (strtoupper($row['Key']) == 'PRI') {
-				$row['Primary'] = true;
+			if ( strtoupper( $row['Key'] ) === 'PRI' ) {
+				$row['Primary']         = true;
 				$row['PrimaryPosition'] = $p;
-				if ($row['Extra'] == 'auto_increment') {
+				if ( 'auto_increment' === $row['Extra'] ) {
 					$row['Identity'] = true;
 				} else {
 					$row['Identity'] = false;
 				}
-				++$p;
+				++ $p;
 			}
-			$desc[$this->foldCase($row['Field'])] = array(
+			$desc[ $this->foldCase( $row['Field'] ) ] = array(
 				'SCHEMA_NAME'      => null, // @todo
-				'TABLE_NAME'       => $this->foldCase($tableName),
-				'COLUMN_NAME'      => $this->foldCase($row['Field']),
+				'TABLE_NAME'       => $this->foldCase( $table_name ),
+				'COLUMN_NAME'      => $this->foldCase( $row['Field'] ),
 				'COLUMN_POSITION'  => $i,
 				'DATA_TYPE'        => $row['Type'],
 				'DEFAULT'          => $row['Default'],
-				'NULLABLE'         => (bool) ($row['Null'] == 'YES'),
+				'NULLABLE'         => (bool) ( 'YES' === $row['Null'] ),
 				'LENGTH'           => $row['Length'],
 				'SCALE'            => $row['Scale'],
 				'PRECISION'        => $row['Precision'],
 				'UNSIGNED'         => $row['Unsigned'],
 				'PRIMARY'          => $row['Primary'],
 				'PRIMARY_POSITION' => $row['PrimaryPosition'],
-				'IDENTITY'         => $row['Identity']
+				'IDENTITY'         => $row['Identity'],
 			);
-			++$i;
+			++ $i;
 		}
+
 		return $desc;
 	}
 
@@ -213,12 +229,13 @@ class WordPress extends Mysqli {
 	 * @return bool
 	 */
 	public function isErrNo( $e, $errno ) {
-		$errorCode = $this->getErrorNumberFromMessage($e->getMessage());
-		return !empty($errorCode) && $errorCode == $errno;
+		$error_code = $this->getErrorNumberFromMessage( $e->getMessage() );
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		return ! empty( $error_code ) && $error_code == $errno;
 	}
 
-	public function rowCount( $queryResult ) {
-		return $queryResult->rowCount();
+	public function rowCount( $query_result ) {
+		return $query_result->rowCount();
 	}
 
 	private function prepareWp( $sql, $bind = array() ) {
@@ -233,20 +250,20 @@ class WordPress extends Mysqli {
 			$bind = array( $bind );
 		}
 
-		$null_placeholder = '_#__###NULL###_' . rand(1, PHP_INT_MAX) . ' __#_';
+		$null_placeholder = '_#__###NULL###_' . wp_rand( 1, PHP_INT_MAX ) . ' __#_';
 		// random number not really needed but may prevent random issues that someone could somehow inject easily something
 
 		$has_replaced_null = false;
 
-		foreach ($bind as $index => $val) {
-			if (is_object($val) && method_exists($val, '__toString')) {
-				$bind[$index] = $val->__toString();
+		foreach ( $bind as $index => $val ) {
+			if ( is_object( $val ) && method_exists( $val, '__toString' ) ) {
+				$bind[ $index ] = $val->__toString();
 			}
-			if (is_null($val)) {
-				$bind[$index] = $null_placeholder;
+			if ( is_null( $val ) ) {
+				$bind[ $index ]    = $null_placeholder;
 				$has_replaced_null = true;
-			} elseif (is_string($val) && strpos($val, $null_placeholder) !== false) {
-				throw new \Exception('unexpected bind param'); // preventing random injections or something
+			} elseif ( is_string( $val ) && strpos( $val, $null_placeholder ) !== false ) {
+				throw new \Exception( 'unexpected bind param' ); // preventing random injections or something
 			}
 		}
 
@@ -254,8 +271,8 @@ class WordPress extends Mysqli {
 
 		$query = $wpdb->prepare( $sql, $bind );
 
-		if ($has_replaced_null) {
-			$query = str_replace("'$null_placeholder'", 'NULL', $query);
+		if ( $has_replaced_null ) {
+			$query = str_replace( "'$null_placeholder'", 'NULL', $query );
 		}
 
 		return $query;
@@ -267,9 +284,9 @@ class WordPress extends Mysqli {
 		$test_sql = trim( $sql );
 		if ( strpos( $test_sql, '/*' ) === 0 ) {
 			// remove eg "/* trigger = CronArchive */"
-			$startPos = strpos( $test_sql, '*/' );
-			$test_sql = substr( $test_sql, $startPos + strlen( '*/' ) );
-			$test_sql = trim( $test_sql );
+			$start_pos = strpos( $test_sql, '*/' );
+			$test_sql  = substr( $test_sql, $start_pos + strlen( '*/' ) );
+			$test_sql  = trim( $test_sql );
 		}
 
 		if ( preg_match( '/^\s*(select)\s/i', $test_sql ) ) {
@@ -289,13 +306,13 @@ class WordPress extends Mysqli {
 		return new WordPressDbStatement( $this, $sql, $result );
 	}
 
-	public function exec( $sqlQuery ) {
+	public function exec( $sql_query ) {
 		global $wpdb;
 
-		$this->before_execute_query( $wpdb, $sqlQuery );
+		$this->before_execute_query( $wpdb, $sql_query );
 
-		$exec = $wpdb->query( $sqlQuery );
-		$this->after_execute_query( $wpdb, $sqlQuery );
+		$exec = $wpdb->query( $sql_query );
+		$this->after_execute_query( $wpdb, $sql_query );
 
 		return $exec;
 	}
@@ -332,8 +349,6 @@ class WordPress extends Mysqli {
 
 	/**
 	 * @param \wpdb $wpdb
-	 *
-	 * @throws \Zend_Db_Statement_Exception
 	 */
 	private function before_execute_query( $wpdb, $sql ) {
 		if ( ! $wpdb->suppress_errors ) {
@@ -362,7 +377,7 @@ class WordPress extends Mysqli {
 				}
 			}
 
-			if ( ( stripos( $sql, '/* WP IGNORE ERROR */' ) !== false  )
+			if ( ( stripos( $sql, '/* WP IGNORE ERROR */' ) !== false )
 				 || stripos( $sql, 'SELECT @@TX_ISOLATION' ) !== false
 				 || stripos( $sql, 'SELECT @@transaction_isolation' ) !== false ) {
 				// prevent notices for queries that are expected to fail
@@ -380,17 +395,17 @@ class WordPress extends Mysqli {
 	/**
 	 * @param \wpdb $wpdb
 	 *
-	 * @throws \Zend_Db_Statement_Exception
+	 * @throws \Zend_Db_Statement_Exception In case of SQL error.
 	 */
 	private function after_execute_query( $wpdb, $sql ) {
-		$lastError = $wpdb->last_error;
+		$last_error = $wpdb->last_error;
 
-		if ( $lastError && !$this->getErrorNumberFromMessage($lastError) ) {
+		if ( $last_error && ! $this->getErrorNumberFromMessage( $last_error ) ) {
 			// see #174 mysqli message usually doesn't include the error code so we need to add it for isErrNo to work
 			// we want to execute this while errors are suppressed
-			$row = $wpdb->get_row('SHOW ERRORS', ARRAY_A);
-			if (!empty($row['Code'])) {
-				$lastError = '['.$row['Code'].'] ' . $lastError;
+			$row = $wpdb->get_row( 'SHOW ERRORS', ARRAY_A );
+			if ( ! empty( $row['Code'] ) ) {
+				$last_error = '[' . $row['Code'] . '] ' . $last_error;
 			}
 		}
 
@@ -399,8 +414,8 @@ class WordPress extends Mysqli {
 			$this->old_suppress_errors_value = null;
 		}
 
-		if ( $lastError ) {
-			$message = 'WP DB Error: ' . $lastError;
+		if ( $last_error ) {
+			$message = 'WP DB Error: ' . $last_error;
 			if ( $sql ) {
 				$message .= ' SQL: ' . $sql;
 			}
@@ -408,7 +423,7 @@ class WordPress extends Mysqli {
 		}
 	}
 
-	public function fetchAll( $sql, $bind = array(), $fetchMode = null ) {
+	public function fetchAll( $sql, $bind = array(), $fetch_mode = null ) {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 
@@ -431,14 +446,14 @@ class WordPress extends Mysqli {
 
 		$this->after_execute_query( $wpdb, $sql );
 
-		if ( $value === null ) {
+		if ( null === $value ) {
 			return false; // make sure to behave same way as matomo
 		}
 
 		return $value;
 	}
 
-	public function fetchRow( $sql, $bind = array(), $fetchMode = null ) {
+	public function fetchRow( $sql, $bind = array(), $fetch_mode = null ) {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 

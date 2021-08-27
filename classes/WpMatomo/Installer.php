@@ -9,6 +9,8 @@
 
 namespace WpMatomo;
 
+use Exception;
+use Piwik\Cache;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
@@ -16,6 +18,7 @@ use Piwik\DbHelper;
 use Piwik\Exception\NotYetInstalledException;
 use Piwik\Plugin\API as PluginApi;
 use Piwik\SettingsPiwik;
+use Piwik\Singleton;
 use WpMatomo\Site\Sync;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -23,8 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Installer {
-
-	const OPTION_NAME_INSTALL_DATE = 'matomo-install-date';
+	const OPTION_NAME_INSTALL_DATE    = 'matomo-install-date';
 	const OPTION_NAME_INSTALL_VERSION = 'matomo-install-version';
 
 	/**
@@ -65,9 +67,8 @@ class Installer {
 			return SettingsPiwik::isMatomoInstalled();
 		} catch ( NotYetInstalledException $e ) {
 			// not yet installed.... we will need to install it
+			return false;
 		}
-
-		return false;
 	}
 
 	public function can_be_installed() {
@@ -85,6 +86,7 @@ class Installer {
 		try {
 			// prevent session related errors during install making it more stable
 			if ( ! defined( 'PIWIK_ENABLE_SESSION_START' ) ) {
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 				define( 'PIWIK_ENABLE_SESSION_START', false );
 			}
 
@@ -113,9 +115,9 @@ class Installer {
 			// also to set up all the other users
 			wp_schedule_single_event( time() + 45, ScheduledTasks::EVENT_SYNC );
 
-			update_option(self::OPTION_NAME_INSTALL_DATE, time());
+			update_option( self::OPTION_NAME_INSTALL_DATE, time() );
 			$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
-			if ( ! empty( $plugin_data['Version'] )) {
+			if ( ! empty( $plugin_data['Version'] ) ) {
 				update_option( self::OPTION_NAME_INSTALL_VERSION, $plugin_data['Version'] );
 			}
 
@@ -127,7 +129,7 @@ class Installer {
 				$this->logger->log( 'Matomo will now init the environment' );
 				$environment = new \Piwik\Application\Environment( null );
 				$environment->init();
-			} catch ( \Exception $e ) {
+			} catch ( Exception $e ) {
 				$this->logger->log( 'Ignoring error environment init' );
 				$this->logger->log_exception( 'install_env_init', $e );
 			}
@@ -138,7 +140,7 @@ class Installer {
 				\Piwik\FrontController::unsetInstance(); // make sure we're loading the latest instance
 				$controller = \Piwik\FrontController::getInstance();
 				$controller->init();
-			} catch ( \Exception $e ) {
+			} catch ( Exception $e ) {
 				$this->logger->log( 'Ignoring error frontcontroller init' );
 				$this->logger->log_exception( 'install_front_init', $e );
 			}
@@ -147,14 +149,14 @@ class Installer {
 				// sync user now again after installing plugins...
 				// before eg the users_language table would not have been available yet
 				$this->create_user();
-			} catch ( \Exception $e ) {
+			} catch ( Exception $e ) {
 				$this->logger->log_exception( 'install_create_user', $e );
 			}
 
 			try {
 				// update plugins if there are any
 				$this->update_components();
-			} catch ( \Exception $e ) {
+			} catch ( Exception $e ) {
 				$this->logger->log_exception( 'install_update_comp', $e );
 			}
 
@@ -166,9 +168,9 @@ class Installer {
 
 			$this->logger->log( 'Emptying some caches' );
 
-			\Piwik\Singleton::clearAll();
+			Singleton::clearAll();
 			PluginApi::unsetAllInstances();
-			\Piwik\Cache::flushAll();
+			Cache::flushAll();
 
 			$this->logger->log( 'Matomo install finished' );
 		}
@@ -176,38 +178,37 @@ class Installer {
 		return true;
 	}
 
-	public function set_matomo_url()
-	{
+	public function set_matomo_url() {
 		// note that the full url might not be possible to be set if the cron is executed on cli and it maybe doesn't have
 		// the host or if a plugin overwrites the constant of WP_PLUGIN_URL which is used in plugins_url() to not include domain
 		// see https://www.google.com/url?q=https://wordpress.org/support/topic/no-metrics-showing/%23topic-14362043-replies&source=gmail&ust=1620409922890000&usg=AFQjCNHyzG5-9v0A8bjg8aLVVbYSWxkTxg
 
-		$matomo_url = SettingsPiwik::getPiwikUrl();
+		$matomo_url  = SettingsPiwik::getPiwikUrl();
 		$plugins_url = plugins_url( 'app', MATOMO_ANALYTICS_FILE );
 		// need to make sure to update plugins url if it changes eg if installed somewhere else or domain changes
 
-		if ($matomo_url
-		    && $plugins_url === $matomo_url
-		    && parse_url($matomo_url, PHP_URL_SCHEME)
-		    && parse_url($matomo_url, PHP_URL_HOST)
+		if ( $matomo_url
+			 && $plugins_url === $matomo_url
+			 && wp_parse_url( $matomo_url, PHP_URL_SCHEME )
+			 && wp_parse_url( $matomo_url, PHP_URL_HOST )
 		) {
 			// if currently no scheme or host is set then we'll make sure to overwrite it
 			return;
 		}
 
-		if (!$plugins_url) {
+		if ( ! $plugins_url ) {
 			return;
 		}
 
-		$has_host = parse_url($plugins_url, PHP_URL_HOST);
+		$has_host = wp_parse_url( $plugins_url, PHP_URL_HOST );
 
-		if (!$has_host) {
+		if ( ! $has_host ) {
 			return;
 		}
 
-		$has_scheme = parse_url($plugins_url, PHP_URL_SCHEME);
+		$has_scheme = wp_parse_url( $plugins_url, PHP_URL_SCHEME );
 
-		if (!$has_scheme) {
+		if ( ! $has_scheme ) {
 			return;
 		}
 
@@ -226,16 +227,16 @@ class Installer {
 
 		try {
 			$db_infos = self::get_db_infos();
-			$config = Config::getInstance();
-			if (isset($config)) {
-				$db_infos = array_merge($config->database, $db_infos);
+			$config   = Config::getInstance();
+			if ( isset( $config ) ) {
+				$db_infos = array_merge( $config->database, $db_infos );
 			}
 			$config->database = $db_infos;
 
 			DbHelper::checkDatabaseVersion();
-		} catch ( \Exception $e ) {
+		} catch ( Exception $e ) {
 			$message = sprintf( 'Database info detection failed with %s in %s:%s.', $e->getMessage(), $e->getFile(), $e->getLine() );
-			throw new \Exception( $message, $e->getCode(), $e );
+			throw new Exception( $message, $e->getCode(), $e );
 		}
 
 		$tables_installed = DbHelper::getTablesInstalled();
@@ -268,15 +269,20 @@ class Installer {
 		if ( $config->database ) {
 			$db_default = $config->database;
 		}
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		if ( $config->General ) {
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$general_default = $config->General;
 		}
 		$config->database = array_merge( $db_default, $db_info );
-		$config->General  = array_merge( $general_default, $general );
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		$config->General = array_merge( $general_default, $general );
 		$config->forceSave();
 
 		$mode = 0664;
-		@chmod( $config->getLocalPath(), $mode );
+		if ( ! chmod( $config->getLocalPath(), $mode ) ) {
+			$this->logger->log( "Can't chmod " . $config->getLocalPath() );
+		}
 	}
 
 	private function create_website() {
@@ -293,33 +299,34 @@ class Installer {
 
 	/**
 	 * @param array $default params
+	 *
 	 * @return array
 	 */
 	public static function get_db_infos( $default = array() ) {
 		global $wpdb;
 
-		$socket = '';
+		$socket    = '';
 		$host_data = null;
-		$host = null;
-		$port = 3306;
-		if (method_exists($wpdb, 'parse_db_host')) {
+		$host      = null;
+		$port      = 3306;
+		if ( method_exists( $wpdb, 'parse_db_host' ) ) {
 			// WP 4.9+
 			$host_data = $wpdb->parse_db_host( DB_HOST );
-			if ($host_data) {
+			if ( $host_data ) {
 				list( $host, $port, $socket, $is_ipv6 ) = $host_data;
-				if (!$port && !$socket) {
+				if ( ! $port && ! $socket ) {
 					$port = 3306;
 				}
 			}
 		}
 
-		if (!$host_data || !$host) {
+		if ( ! $host_data || ! $host ) {
 			// WP 4.8 and older
-			// in case DB credentials change in wordpress, we need to apply these changes here as well on demand
-			$hostParts = explode(':', DB_HOST);
-			$host = $hostParts[0];
-			if (count($hostParts) === 2 && is_numeric($hostParts[1])) {
-				$port = $hostParts[1];
+			// in case DB credentials change in WordPress, we need to apply these changes here as well on demand
+			$host_parts = explode( ':', DB_HOST );
+			$host       = $host_parts[0];
+			if ( count( $host_parts ) === 2 && is_numeric( $host_parts[1] ) ) {
+				$port = $host_parts[1];
 			} else {
 				$port = 3306;
 			}
@@ -328,19 +335,19 @@ class Installer {
 		$charset = $wpdb->charset ? $wpdb->charset : 'utf8';
 
 		$database = array(
-			'host' => $host,
-			'port' => $port,
-			'username' => DB_USER,
-			'password' => DB_PASSWORD,
-			'dbname' => DB_NAME,
-			'charset' => $charset,
+			'host'          => $host,
+			'port'          => $port,
+			'username'      => DB_USER,
+			'password'      => DB_PASSWORD,
+			'dbname'        => DB_NAME,
+			'charset'       => $charset,
 			'tables_prefix' => $wpdb->prefix . MATOMO_DATABASE_PREFIX,
-			'adapter' => 'WordPress',
+			'adapter'       => 'WordPress',
 		);
-		if (!empty($socket)) {
+		if ( ! empty( $socket ) ) {
 			$database['unix_socket'] = $socket;
 		}
-		$database = array_merge($default, $database);
+		$database = array_merge( $default, $database );
 
 		return $database;
 	}
@@ -351,5 +358,4 @@ class Installer {
 		$updater = new Updater( $this->settings );
 		$updater->update();
 	}
-
 }
