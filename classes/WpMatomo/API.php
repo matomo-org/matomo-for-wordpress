@@ -94,13 +94,13 @@ class API {
 		if ( empty( $_GET ) && empty( $_POST ) && empty( $_POST['idsite'] ) && empty( $_GET['idsite'] ) ) {
 			// todo if uploads dir is not writable, we may want to generate the matomo.js here and save it as an
 			// option... then we could also save it compressed
-			$paths = new Paths();
-			$path  = $paths->get_matomo_js_upload_path();
-			WP_Filesystem();
-			global $wp_filesystem;
+			$paths         = new Paths();
+			$path          = $paths->get_matomo_js_upload_path();
+			$wp_filesystem = $paths->get_file_system();
 			header( 'Content-Type: application/javascript' );
 			header( 'Content-Length: ' . ( filesize( $path ) ) );
-			echo esc_html( $wp_filesystem->get_content( $paths->get_upload_base_dir() . '/matomo.js' ) ); // Reading the file into the output buffer
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $wp_filesystem->get_content( $paths->get_upload_base_dir() . '/matomo.js' ); // Reading the file into the output buffer
 			exit;
 		}
 		include_once plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app/piwik.php';

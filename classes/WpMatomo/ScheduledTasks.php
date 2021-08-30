@@ -20,6 +20,7 @@ use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2\Php;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use WpMatomo\Site\Sync as SiteSync;
 use WpMatomo\User\Sync as UserSync;
+use WpMatomo\Paths;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -166,9 +167,9 @@ class ScheduledTasks {
 						}
 						if ( strpos( $content, $search ) !== false && ( $force_undo || strpos( $content, $replace ) === false ) ) {
 							if ( is_writeable( $file ) ) {
-								$content = str_replace( $search, $replace, $content );
-								WP_Filesystem();
-								global $wp_filesystem;
+								$content       = str_replace( $search, $replace, $content );
+								$paths         = new Paths();
+								$wp_filesystem = $paths->get_file_system();
 								$wp_filesystem->put_contents( $file, $content );
 							} else {
 								$this->logger->log( 'Cannot update file as not writable ' . $file );

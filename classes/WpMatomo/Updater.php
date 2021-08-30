@@ -17,6 +17,7 @@ use Piwik\Plugins\Installation\ServerFilesGenerator;
 use Piwik\SettingsServer;
 use Piwik\Version;
 use WP_Upgrader;
+use WpMatomo\Paths;
 use WpMatomo\Updater\UpdateInProgressException;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -150,8 +151,7 @@ class Updater {
 
 		$upload_dir = $paths->get_upload_base_dir();
 
-		WP_Filesystem();
-		global $wp_filesystem;
+		$wp_filesystem = $paths->get_file_system();
 		if ( is_dir( $upload_dir ) && is_writable( $upload_dir ) ) {
 			$wp_filesystem->put_contents( $upload_dir . '/index.php', '//hello' );
 			$wp_filesystem->put_contents( $upload_dir . '/index.html', '//hello' );
