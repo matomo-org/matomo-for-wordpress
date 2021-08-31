@@ -14,6 +14,7 @@ use WpMatomo\Report\Dates;
 use WpMatomo\Report\Metadata;
 use WpMatomo\Report\Renderer;
 use WpMatomo\Settings;
+use Piwik\Plugins\UsersManager\UserPreferences;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -36,20 +37,20 @@ class Summary {
 	}
 
 	private function pin_if_submitted() {
-		if ( ! empty( $_GET[ 'pin' ] )
-			 && ! empty( $_GET[ 'report_uniqueid' ] )
-			 && ! empty( $_GET[ 'report_date' ] )
-		     && is_admin()
-		     && check_admin_referer( self::NONCE_DASHBOARD )
-             && is_user_logged_in()
-		     && current_user_can( Capabilities::KEY_VIEW ) ) {
-			$unique_id = $_GET[ 'report_uniqueid' ];
-			$date      = $_GET[ 'report_date' ];
+		if ( ! empty( $_GET['pin'] )
+			 && ! empty( $_GET['report_uniqueid'] )
+			 && ! empty( $_GET['report_date'] )
+			 && is_admin()
+			 && check_admin_referer( self::NONCE_DASHBOARD )
+			 && is_user_logged_in()
+			 && current_user_can( Capabilities::KEY_VIEW ) ) {
+			$unique_id = $_GET['report_uniqueid'];
+			$date      = $_GET['report_date'];
 
 			$dashobard = new Dashboard();
-			if ($dashobard->is_valid_widget($unique_id, $date)) {
+			if ( $dashobard->is_valid_widget( $unique_id, $date ) ) {
 				$dashobard->toggle_widget( $unique_id, $date );
-                return true;
+				return true;
 			}
 		}
 
@@ -57,7 +58,7 @@ class Summary {
 	}
 
 	public function show() {
-		do_action('load_chartjs');
+		do_action( 'load_chartjs' );
 		$matomo_pinned = $this->pin_if_submitted();
 
 		$settings = $this->settings;
@@ -68,7 +69,40 @@ class Summary {
 		$report_dates_obj = new Dates();
 		$report_dates     = $report_dates_obj->get_supported_dates();
 
-		$report_date = Dates::YESTERDAY;
+		$user_preference = new UserPreferences();
+		$default_date    = $user_preference->getDefaultDate();
+		$report_period   = $user_preference->getDefaultPeriod();
+		switch ( $report_period ) {
+			case 'day':
+				$report_date = $default_date;
+				break;
+			case 'year':
+			case 'month':
+			case 'week':
+				switch ( $default_date ) {
+					case 'yesterday':
+						$report_date = 'last' . $report_period;
+						break;
+					case 'today':
+						$report_date = 'this' . $report_period;
+						break;
+				}
+				break;
+			case 'range':
+				switch ( $default_date ) {
+					case 'previous30':
+						$report_date = 'lastmonth';
+						break;
+					case 'previous7':
+						$report_date = 'lastweek';
+						break;
+					case 'last30':
+						$report_date = 'thismonth';
+						break;
+					case 'last7':
+						$report_date = 'thisweek';
+				}
+		}
 		if ( isset( $_GET['report_date'] ) && isset( $report_dates[ $_GET['report_date'] ] ) ) {
 			$report_date = $_GET['report_date'];
 		}
@@ -79,8 +113,8 @@ class Summary {
 
 		$matomo_dashboard = new Dashboard();
 
-		$wp_version =  get_bloginfo( 'version' );
-		$matomo_is_version_pre55 = empty($wp_version) || version_compare($wp_version, '5.5.0') === -1;
+		$wp_version              = get_bloginfo( 'version' );
+		$matomo_is_version_pre55 = empty( $wp_version ) || version_compare( $wp_version, '5.5.0' ) === -1;
 
 		include dirname( __FILE__ ) . '/views/summary.php';
 	}
@@ -111,7 +145,6 @@ class Summary {
 			$reports_to_show[] = 'Goals_get_idGoal--ecommerceOrder';
 			$reports_to_show[] = 'Goals_getItemsName';
 		}
-
 
 		$reports_to_show = apply_filters( 'matomo_report_summary_report_ids', $reports_to_show );
 
