@@ -62,9 +62,9 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 	<h1><?php matomo_header_icon(); ?><?php esc_html_e( 'Diagnostics', 'matomo' ); ?></h1>
 
 	<h2 class="nav-tab-wrapper">
-		<a href="?page=<?php echo esc_html( Menu::SLUG_SYSTEM_REPORT ); ?>"
+		<a href="?page=<?php echo esc_attr( Menu::SLUG_SYSTEM_REPORT ); ?>"
 		   class="nav-tab <?php echo empty( $matomo_active_tab ) ? 'nav-tab-active' : ''; ?>"> System report</a>
-		<a href="?page=<?php echo esc_html( Menu::SLUG_SYSTEM_REPORT ); ?>&tab=troubleshooting"
+		<a href="?page=<?php echo esc_attr( Menu::SLUG_SYSTEM_REPORT ); ?>&tab=troubleshooting"
 		   class="nav-tab <?php echo 'troubleshooting' === $matomo_active_tab ? 'nav-tab-active' : ''; ?>">Troubleshooting</a>
 	</h2>
 
