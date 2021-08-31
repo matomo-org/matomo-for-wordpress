@@ -79,9 +79,9 @@ class AjaxTracker extends MatomoTracker {
 
 			return; // not installed or synced yet
 		}
-		$args = array(
+		$args = [
 			'method' => $method,
-		);
+		];
 		if ( ! empty( $data ) ) {
 			$args['body'] = $data;
 		}

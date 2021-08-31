@@ -19,14 +19,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 /**
- * @todo validate the nonce
  * phpcs:disable WordPress.Security.NonceVerification.Missing
  */
 class AdvancedSettings implements AdminSettingsInterface {
 	const FORM_NAME  = 'matomo';
 	const NONCE_NAME = 'matomo_advanced';
 
-	public static $valid_host_headers = array(
+	public static $valid_host_headers = [
 		'HTTP_CLIENT_IP',
 		'HTTP_X_REAL_IP',
 		'HTTP_X_FORWARDED_FOR',
@@ -36,7 +35,7 @@ class AdvancedSettings implements AdminSettingsInterface {
 		'HTTP_CF_CONNECTING_IP',
 		'HTTP_TRUE_CLIENT_IP',
 		'HTTP_X_CLUSTER_CLIENT_IP',
-	);
+	];
 
 	/**
 	 * @var Settings
@@ -65,7 +64,7 @@ class AdvancedSettings implements AdminSettingsInterface {
 
 		$matomo_client_headers = $this->site_config_sync->get_config_value( 'General', 'proxy_client_headers' );
 		if ( empty( $matomo_client_headers ) ) {
-			$matomo_client_headers = array();
+			$matomo_client_headers = [];
 		}
 
 		Bootstrap::do_bootstrap();
@@ -96,13 +95,13 @@ class AdvancedSettings implements AdminSettingsInterface {
 	private function apply_settings() {
 		if ( ! defined( 'MATOMO_REMOVE_ALL_DATA' ) ) {
 			$this->settings->apply_changes(
-				array(
+				[
 					Settings::DELETE_ALL_DATA_ON_UNINSTALL => ! empty( $_POST['matomo']['delete_all_data'] ),
-				)
+				]
 			);
 		}
 
-		$client_headers = array();
+		$client_headers = [];
 		if ( ! empty( $_POST[ self::FORM_NAME ]['proxy_client_header'] ) ) {
 			$client_header = sanitize_text_field( wp_unslash( $_POST[ self::FORM_NAME ]['proxy_client_header'] ) );
 			if ( in_array( $client_header, self::$valid_host_headers, true ) ) {

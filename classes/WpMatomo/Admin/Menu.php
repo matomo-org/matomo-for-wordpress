@@ -52,15 +52,15 @@ class Menu {
 	public function __construct( $settings ) {
 		$this->settings = $settings;
 		// Hook for adding admin menus
-		add_action( 'admin_menu', array( $this, 'add_menu' ) );
-		add_action( 'network_admin_menu', array( $this, 'add_menu' ) );
-		add_action( 'admin_head', array( $this, 'menu_external_icons' ) );
+		add_action( 'admin_menu', [ $this, 'add_menu' ] );
+		add_action( 'network_admin_menu', [ $this, 'add_menu' ] );
+		add_action( 'admin_head', [ $this, 'menu_external_icons' ] );
 
 		// as we are redirecting we need to perform the redirect as soon as possible before WP has eg echoed the header
-		add_action( 'load-matomo-analytics_page_' . self::SLUG_REPORTING, array( $this, 'reporting' ) );
-		add_action( 'load-' . self::$parent_slug . '_page_' . self::SLUG_REPORTING, array( $this, 'reporting' ) );
-		add_action( 'load-matomo-analytics_page_' . self::SLUG_TAGMANAGER, array( $this, 'tagmanager' ) );
-		add_action( 'load-' . self::$parent_slug . '_page_' . self::SLUG_TAGMANAGER, array( $this, 'tagmanager' ) );
+		add_action( 'load-matomo-analytics_page_' . self::SLUG_REPORTING, [ $this, 'reporting' ] );
+		add_action( 'load-' . self::$parent_slug . '_page_' . self::SLUG_REPORTING, [ $this, 'reporting' ] );
+		add_action( 'load-matomo-analytics_page_' . self::SLUG_TAGMANAGER, [ $this, 'tagmanager' ] );
+		add_action( 'load-' . self::$parent_slug . '_page_' . self::SLUG_TAGMANAGER, [ $this, 'tagmanager' ] );
 	}
 
 	public function add_menu() {
@@ -82,10 +82,10 @@ class Menu {
 					__( 'Get Started', 'matomo' ),
 					Capabilities::KEY_SUPERUSER,
 					self::SLUG_GET_STARTED,
-					array(
+					[
 						$get_started,
 						'show',
-					)
+					]
 				);
 			}
 		}
@@ -97,10 +97,10 @@ class Menu {
 				__( 'Multi Site', 'matomo' ),
 				Capabilities::KEY_SUPERUSER,
 				'matomo-multisite',
-				array(
+				[
 					$info,
 					'show_multisite',
-				)
+				]
 			);
 		} else {
 			add_submenu_page(
@@ -109,10 +109,10 @@ class Menu {
 				__( 'Summary', 'matomo' ),
 				Capabilities::KEY_VIEW,
 				self::SLUG_REPORT_SUMMARY,
-				array(
+				[
 					$summary,
 					'show',
-				)
+				]
 			);
 
 			// the network itself is not a blog
@@ -122,10 +122,10 @@ class Menu {
 				__( 'Reporting', 'matomo' ),
 				Capabilities::KEY_VIEW,
 				self::SLUG_REPORTING,
-				array(
+				[
 					$this,
 					'reporting',
-				)
+				]
 			);
 			// the network itself is not a blog
 			if ( matomo_has_tag_manager() ) {
@@ -135,10 +135,10 @@ class Menu {
 					__( 'Tag Manager', 'matomo' ),
 					Capabilities::KEY_WRITE,
 					self::SLUG_TAGMANAGER,
-					array(
+					[
 						$this,
 						'tagmanager',
-					)
+					]
 				);
 			}
 		}
@@ -153,10 +153,10 @@ class Menu {
 				__( 'Settings', 'matomo' ),
 				Capabilities::KEY_SUPERUSER,
 				self::SLUG_SETTINGS,
-				array(
+				[
 					$admin_settings,
 					'show',
-				)
+				]
 			);
 		}
 
@@ -167,10 +167,10 @@ class Menu {
 				__( 'Marketplace', 'matomo' ),
 				Capabilities::KEY_VIEW,
 				self::SLUG_MARKETPLACE,
-				array(
+				[
 					$marketplace,
 					'show',
-				)
+				]
 			);
 		}
 
@@ -181,10 +181,10 @@ class Menu {
 				__( 'Diagnostics', 'matomo' ),
 				Capabilities::KEY_SUPERUSER,
 				self::SLUG_SYSTEM_REPORT,
-				array(
+				[
 					$system_report,
 					'show',
-				)
+				]
 			);
 		}
 
@@ -194,10 +194,10 @@ class Menu {
 			__( 'About', 'matomo' ),
 			Capabilities::KEY_VIEW,
 			self::SLUG_ABOUT,
-			array(
+			[
 				$info,
 				'show',
-			)
+			]
 		);
 	}
 
@@ -218,7 +218,7 @@ class Menu {
 	}
 
 	public static function get_matomo_goto_url( $goto ) {
-		return add_query_arg( array( 'goto' => $goto ), menu_page_url( self::SLUG_REPORTING, false ) );
+		return add_query_arg( [ 'goto' => $goto ], menu_page_url( self::SLUG_REPORTING, false ) );
 	}
 
 	public static function get_reporting_url() {
@@ -265,26 +265,26 @@ class Menu {
 		$idsite = $site->get_current_matomo_site_id();
 
 		if ( $idsite ) {
-			$url = add_query_arg( array( 'idSite' => (int) $idsite ), $url );
+			$url = add_query_arg( [ 'idSite' => (int) $idsite ], $url );
 		}
 
 		if ( ! empty( $_GET['report_date'] ) ) {
 			$report_date = sanitize_text_field( wp_unslash( $_GET['report_date'] ) );
 			$url         = add_query_arg(
-				array(
+				[
 					'module' => 'CoreHome',
 					'action' => 'index',
-				),
+				],
 				$url
 			);
 
 			$date                  = new Dates();
 			list( $period, $date ) = $date->detect_period_and_date( $report_date );
 			$url                   = add_query_arg(
-				array(
+				[
 					'period' => $period,
 					'date'   => $date,
-				),
+				],
 				$url
 			);
 		}
@@ -296,7 +296,7 @@ class Menu {
 	/**
 	 * @api
 	 */
-	public static function get_matomo_reporting_url( $category, $subcategory, $params = array() ) {
+	public static function get_matomo_reporting_url( $category, $subcategory, $params = [] ) {
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
@@ -331,7 +331,7 @@ class Menu {
 	/**
 	 * @api
 	 */
-	public static function get_matomo_action_url( $module, $action, $params = array() ) {
+	public static function get_matomo_action_url( $module, $action, $params = [] ) {
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 

@@ -45,7 +45,7 @@ class Settings {
 	public function get_matomo_tables() {
 		// we need to hard code them unfortunately for tests cause there are temporary tables used and we can't find a
 		// list of existing temp tables
-		$tables = array(
+		$tables = [
 			'access',
 			'archive_invalidations',
 			'brute_force_log',
@@ -75,18 +75,18 @@ class Settings {
 			'user_dashboard',
 			'user_language',
 			'user_token_auth',
-		);
+		];
 		if ( ! is_multisite() ) {
 			$tables = array_merge(
 				$tables,
-				array(
+				[
 					'tagmanager_container',
 					'tagmanager_container_release',
 					'tagmanager_container_version',
 					'tagmanager_tag',
 					'tagmanager_trigger',
 					'tagmanager_variable',
-				)
+				]
 			);
 		}
 
@@ -96,7 +96,7 @@ class Settings {
 	public function get_installed_matomo_tables() {
 		global $wpdb;
 
-		$table_names = array();
+		$table_names = [];
 
 		$tables = $wpdb->get_results( 'SHOW TABLES LIKE "' . $this->prefix_table_name() . '%"', ARRAY_N );
 		foreach ( $tables as $table_name_to_look_for ) {

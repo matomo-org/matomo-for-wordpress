@@ -16,12 +16,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Access {
-	public static $matomo_permissions = array(
+	public static $matomo_permissions = [
 		Capabilities::KEY_NONE  => 'None',
 		Capabilities::KEY_VIEW  => 'View',
 		Capabilities::KEY_WRITE => 'Write',
 		Capabilities::KEY_ADMIN => 'Admin',
-	);
+	];
 
 	/**
 	 * @var Settings
@@ -47,7 +47,7 @@ class Access {
 		$roles           = new Roles( $this->settings );
 		$available_roles = $roles->get_available_roles_for_configuration();
 
-		$caps_to_store = array();
+		$caps_to_store = [];
 		foreach ( $values as $role => $matomo_permission ) {
 			if ( isset( $available_roles[ $role ] ) &&
 				 $wp_roles->is_role( $role )
@@ -58,7 +58,7 @@ class Access {
 
 		// we can't add the capabilities to the role directly using say $wp_roles->add_role cause it would not be
 		// synced across sites when the plugin is network activated
-		$this->settings->apply_changes( array( Settings::OPTION_KEY_CAPS_ACCESS => $caps_to_store ) );
+		$this->settings->apply_changes( [ Settings::OPTION_KEY_CAPS_ACCESS => $caps_to_store ] );
 
 		$sync = new Sync();
 		$sync->sync_current_users();

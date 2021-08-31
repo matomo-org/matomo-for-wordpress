@@ -17,11 +17,11 @@ class CookieConsent {
 	 * @return string[]
 	 */
 	public static function get_available_options() {
-		return array(
+		return [
 			self::REQUIRE_NONE             => __( 'None', 'matomo' ),
 			self::REQUIRE_COOKIE_CONSENT   => __( 'Require cookie consent', 'matomo' ),
 			self::REQUIRE_TRACKING_CONSENT => __( 'Require tracking consent', 'matomo' ),
-		);
+		];
 	}
 
 	/**

@@ -21,25 +21,25 @@ class OptOut {
 	private $language = null;
 
 	public function register_hooks() {
-		add_shortcode( 'matomo_opt_out', array( $this, 'show_opt_out' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
+		add_shortcode( 'matomo_opt_out', [ $this, 'show_opt_out' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'load_scripts' ] );
 	}
 
 	public function load_scripts() {
 		if ( ! is_admin() ) {
-			wp_register_script( 'matomo_opt_out_js', plugins_url( 'assets/js/optout.js', MATOMO_ANALYTICS_FILE ), array(), 1, true );
+			wp_register_script( 'matomo_opt_out_js', plugins_url( 'assets/js/optout.js', MATOMO_ANALYTICS_FILE ), [], 1, true );
 		}
 	}
 
 	private function translate( $id ) {
-		return esc_html( Piwik::translate( $id, array(), $this->language ) );
+		return esc_html( Piwik::translate( $id, [], $this->language ) );
 	}
 
 	public function show_opt_out( $atts ) {
 		$a = shortcode_atts(
-			array(
+			[
 				'language' => null,
-			),
+			],
 			$atts
 		);
 		if ( ! empty( $a['language'] ) && strlen( $a['language'] ) < 6 ) {

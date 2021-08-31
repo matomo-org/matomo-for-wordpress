@@ -42,7 +42,7 @@ class Base {
 	 */
 	protected $cart_update_queue = '';
 
-	private $ajax_tracker_calls = array();
+	private $ajax_tracker_calls = [];
 
 	public function __construct( AjaxTracker $tracker ) {
 		$this->logger  = new Logger();
@@ -54,7 +54,7 @@ class Base {
 
 	public function register_hooks() {
 		if ( ! is_admin() ) {
-			add_action( 'wp_footer', array( $this, 'on_print_queues' ), 99999, 0 );
+			add_action( 'wp_footer', [ $this, 'on_print_queues' ], 99999, 0 );
 		}
 	}
 
@@ -90,22 +90,22 @@ class Base {
 	protected function wrap_script( $script ) {
 		if ( $this->should_track_background() ) {
 			foreach ( $this->ajax_tracker_calls as $call ) {
-				$methods = array(
+				$methods = [
 					'addEcommerceItem'         => 'addEcommerceItem',
 					'trackEcommerceOrder'      => 'doTrackEcommerceOrder',
 					'trackEcommerceCartUpdate' => 'doTrackEcommerceCartUpdate',
-				);
+				];
 				if ( ! empty( $call[0] ) && ! empty( $methods[ $call[0] ] ) ) {
 					try {
 						$tracker_method = $methods[ $call[0] ];
 						array_shift( $call );
-						call_user_func_array( array( $this->tracker, $tracker_method ), $call );
+						call_user_func_array( [ $this->tracker, $tracker_method ], $call );
 					} catch ( Exception $e ) {
 						$this->logger->log_exception( $call[0], $e );
 					}
 				}
 			}
-			$this->ajax_tracker_calls = array();
+			$this->ajax_tracker_calls = [];
 
 			return '';
 		}

@@ -112,7 +112,7 @@ class MatomoCommands extends WP_CLI_Command {
 WP_CLI::add_command(
 	'matomo',
 	'\WpMatomo\Commands\MatomoCommands',
-	array(
+	[
 		'shortdesc' => 'Manage your Matomo Analytics. Commands are recommended only to be used in development mode',
-	)
+	]
 );

@@ -54,7 +54,7 @@ class AdminSettings {
 			$url = menu_page_url( $menu_slug, false );
 		}
 
-		return add_query_arg( array( 'tab' => $tab ), $url );
+		return add_query_arg( [ 'tab' => $tab ], $url );
 	}
 
 	public function show() {
@@ -65,23 +65,23 @@ class AdminSettings {
 		$geolocation     = new GeolocationSettings( $this->settings );
 		$privacy         = new PrivacySettings( $this->settings );
 		$advanced        = new AdvancedSettings( $this->settings );
-		$setting_tabs    = array(
+		$setting_tabs    = [
 			self::TAB_TRACKING    => $tracking,
 			self::TAB_ACCESS      => $access_settings,
 			self::TAB_PRIVACY     => $privacy,
 			self::TAB_EXCLUSIONS  => $exclusions,
 			self::TAB_GEOLOCATION => $geolocation,
 			self::TAB_ADVANCED    => $advanced,
-		);
+		];
 
 		$active_tab = self::TAB_TRACKING;
 
 		if ( $this->settings->is_network_enabled() && ! is_network_admin() ) {
 			$active_tab   = self::TAB_EXCLUSIONS;
-			$setting_tabs = array(
+			$setting_tabs = [
 				self::TAB_EXCLUSIONS => $exclusions,
 				self::TAB_PRIVACY    => $privacy,
-			);
+			];
 		}
 
 		$setting_tabs = apply_filters( 'matomo_setting_tabs', $setting_tabs, $this->settings );

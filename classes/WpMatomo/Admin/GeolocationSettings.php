@@ -57,9 +57,9 @@ class GeolocationSettings implements AdminSettingsInterface {
 			}
 
 			$this->settings->apply_changes(
-				array(
+				[
 					'maxmind_license_key' => $maxmind_license,
-				)
+				]
 			);
 
 			// update geoip in the backgronud

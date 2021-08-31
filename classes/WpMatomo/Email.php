@@ -72,7 +72,7 @@ class Email {
 	private function remember_mail_sent() {
 		$history = WpMatomo::$settings->get_global_option( 'mail_history' );
 		if ( empty( $history ) || ! is_array( $history ) ) {
-			$history = array();
+			$history = [];
 		}
 
 		// allows us to see if there is a WP Mail issue or a Matomo issue
@@ -85,8 +85,8 @@ class Email {
 	private function send_mail_through_wordpress( $recipients, $subject, $content, $attachments ) {
 		$this->wp_email_error = null;
 
-		add_action( 'wp_mail_failed', array( $this, 'on_error' ) );
-		add_filter( 'wp_mail_content_type', array( $this, 'set_content_type' ) );
+		add_action( 'wp_mail_failed', [ $this, 'on_error' ] );
+		add_filter( 'wp_mail_content_type', [ $this, 'set_content_type' ] );
 
 		$this->remember_mail_sent();
 
@@ -141,8 +141,8 @@ class Email {
 
 		$success = wp_mail( $recipients, $subject, $content, $header );
 
-		remove_action( 'wp_mail_failed', array( $this, 'on_error' ) );
-		remove_filter( 'wp_mail_content_type', array( $this, 'set_content_type' ) );
+		remove_action( 'wp_mail_failed', [ $this, 'on_error' ] );
+		remove_filter( 'wp_mail_content_type', [ $this, 'set_content_type' ] );
 
 		if ( ! $success ) {
 			$message = 'Error unknown.';

@@ -82,11 +82,11 @@ if ( $was_updated ) {
 					echo esc_html(
 						Piwik::translate(
 							'SitesManager_HelpExcludedIpAddresses',
-							array(
+							[
 								'1.2.3.4/24',
 								'1.2.3.*',
 								'1.2.*.*',
-							)
+							]
 						)
 					)
 					?>
@@ -138,11 +138,11 @@ if ( $was_updated ) {
 					echo esc_html(
 						Piwik::translate(
 							'SitesManager_KeepURLFragmentsHelp',
-							array(
+							[
 								'<em>#</em>',
 								'<em>example.org/index.html#first_section</em>',
 								'<em>example.org/index.html</em>',
-							)
+							]
 						)
 					)
 					?>

@@ -49,16 +49,16 @@ class GetStarted {
 			if ( ! empty( $_POST[ self::FORM_NAME ][ Settings::SHOW_GET_STARTED_PAGE ] )
 				 && 'no' === $_POST[ self::FORM_NAME ][ Settings::SHOW_GET_STARTED_PAGE ] ) {
 				$this->settings->apply_changes(
-					array(
+					[
 						Settings::SHOW_GET_STARTED_PAGE => 0,
-					)
+					]
 				);
 
 				return true;
 			}
 			if ( ! empty( $_POST[ self::FORM_NAME ]['track_mode'] )
 				 && TrackingSettings::TRACK_MODE_DEFAULT === $_POST[ self::FORM_NAME ]['track_mode'] ) {
-				$this->settings->apply_tracking_related_changes( array( 'track_mode' => TrackingSettings::TRACK_MODE_DEFAULT ) );
+				$this->settings->apply_tracking_related_changes( [ 'track_mode' => TrackingSettings::TRACK_MODE_DEFAULT ] );
 
 				return true;
 			}

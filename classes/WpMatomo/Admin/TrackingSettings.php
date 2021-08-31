@@ -63,7 +63,7 @@ class TrackingSettings implements AdminSettingsInterface {
 	}
 
 	private function apply_settings() {
-		$keys_to_keep = array(
+		$keys_to_keep = [
 			'track_mode',
 			'track_across',
 			'track_across_alias',
@@ -101,17 +101,17 @@ class TrackingSettings implements AdminSettingsInterface {
 			'track_jserrors',
 			'track_api_endpoint',
 			Settings::SITE_CURRENCY,
-		);
+		];
 
 		if ( matomo_has_tag_manager() ) {
 			$keys_to_keep[] = 'tagmanger_container_ids';
 		}
 
-		$values = array();
+		$values = [];
 
 		// default value in case no role/ post type is selected to make sure we unset it if no role /post type is selected
-		$values['add_post_annotations']    = array();
-		$values['tagmanger_container_ids'] = array();
+		$values['add_post_annotations']    = [];
+		$values['tagmanger_container_ids'] = [];
 
 		$valid_currencies = $this->get_supported_currencies();
 
@@ -198,7 +198,7 @@ class TrackingSettings implements AdminSettingsInterface {
 		$must_update        = false;
 		if ( self::TRACK_MODE_MANUALLY === $track_mode
 			 || ( self::TRACK_MODE_DISABLED === $track_mode &&
-				  in_array( $previus_track_mode, array( self::TRACK_MODE_DISABLED, self::TRACK_MODE_MANUALLY ), true ) ) ) {
+				  in_array( $previus_track_mode, [ self::TRACK_MODE_DISABLED, self::TRACK_MODE_MANUALLY ], true ) ) ) {
 			// We want to keep the tracking code when user switches between disabled and manually or disabled to disabled.
 			$must_update = true;
 		}
@@ -249,7 +249,7 @@ class TrackingSettings implements AdminSettingsInterface {
 
 	public function show_settings() {
 		$was_updated     = false;
-		$settings_errors = array();
+		$settings_errors = [];
 		if ( $this->has_valid_html_comments( 'tracking_code' ) !== true ) {
 			$settings_errors[] = __( 'Settings have not been saved. There is an issue with the HTML comments in the field "Tracking code". Make sure all opened comments (<!--) are closed (-->) correctly.', 'matomo' );
 		}
@@ -264,11 +264,11 @@ class TrackingSettings implements AdminSettingsInterface {
 
 		$containers = $this->get_active_containers();
 
-		$track_modes = array(
+		$track_modes = [
 			self::TRACK_MODE_DISABLED => esc_html__( 'Disabled', 'matomo' ),
 			self::TRACK_MODE_DEFAULT  => esc_html__( 'Default tracking', 'matomo' ),
 			self::TRACK_MODE_MANUALLY => esc_html__( 'Enter manually', 'matomo' ),
-		);
+		];
 
 		if ( ! empty( $containers ) ) {
 			$track_modes[ self::TRACK_MODE_TAGMANAGER ] = esc_html__( 'Tag Manager', 'matomo' );
@@ -291,7 +291,7 @@ class TrackingSettings implements AdminSettingsInterface {
 	 * @return string[]
 	 */
 	private function get_cookie_consent_modes() {
-		$modes = array();
+		$modes = [];
 		foreach ( CookieConsent::get_available_options() as $option => $description ) {
 			$modes[ $option ] = $description;
 		}
@@ -301,7 +301,7 @@ class TrackingSettings implements AdminSettingsInterface {
 
 	private function get_supported_currencies() {
 		$all        = include dirname( MATOMO_ANALYTICS_FILE ) . '/app/core/Intl/Data/Resources/currencies.php';
-		$currencies = array();
+		$currencies = [];
 		foreach ( $all as $key => $single ) {
 			$currencies[ $key ] = $single[0] . ' ' . $single[1];
 		}
@@ -311,7 +311,7 @@ class TrackingSettings implements AdminSettingsInterface {
 
 	public function get_active_containers() {
 		// we don't use Matomo API here to avoid needing to bootstrap Matomo which is slow and could break things
-		$containers = array();
+		$containers = [];
 		if ( matomo_has_tag_manager() ) {
 			global $wpdb;
 			$db_settings     = new \WpMatomo\Db\Settings();
@@ -322,10 +322,10 @@ class TrackingSettings implements AdminSettingsInterface {
 				// phpcs:enable WordPress.DB
 			} catch ( Exception $e ) {
 				// table may not exist yet etc
-				$containers = array();
+				$containers = [];
 			}
 		}
-		$by_id = array();
+		$by_id = [];
 		foreach ( $containers as $container ) {
 			$by_id[ $container->idcontainer ] = $container->name;
 		}

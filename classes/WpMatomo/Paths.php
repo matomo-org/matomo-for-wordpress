@@ -115,7 +115,7 @@ class Paths {
 		$matomo_dir_parts   = explode( DIRECTORY_SEPARATOR, $matomo_dir );
 		$target_dir_parts   = explode( DIRECTORY_SEPARATOR, $target_dir );
 		$relative_directory = '';
-		$add_at_the_end     = array();
+		$add_at_the_end     = [];
 		$was_previous_same  = false;
 
 		foreach ( $target_dir_parts as $index => $part ) {

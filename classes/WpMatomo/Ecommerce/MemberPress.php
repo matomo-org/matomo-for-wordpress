@@ -21,9 +21,9 @@ class MemberPress extends Base {
 		if ( ! is_admin() ) {
 			parent::register_hooks();
 
-			add_action( 'template_redirect', array( $this, 'on_product_view' ), 99999, 0 );
-			add_action( 'wp_footer', array( $this, 'on_order' ), 99999, 2 );
-			add_action( 'mepr-signup', array( $this, 'on_cart_update' ), 99999, 1 );
+			add_action( 'template_redirect', [ $this, 'on_product_view' ], 99999, 0 );
+			add_action( 'wp_footer', [ $this, 'on_order' ], 99999, 2 );
+			add_action( 'mepr-signup', [ $this, 'on_cart_update' ], 99999, 1 );
 		}
 	}
 
@@ -34,18 +34,18 @@ class MemberPress extends Base {
 		$tracking_code  = '';
 		$sku            = $transaction->id;
 		$product        = $transaction->product();
-		$params         = array(
+		$params         = [
 			'addEcommerceItem',
 			$sku,
 			$product->post_title,
-			$categories = array(),
+			$categories = [],
 			$transaction->amount,
 			1,
-		);
+		];
 		$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 
 		$total          = $transaction->total;
-		$tracking_code .= $this->make_matomo_js_tracker_call( array( 'trackEcommerceCartUpdate', $total ) );
+		$tracking_code .= $this->make_matomo_js_tracker_call( [ 'trackEcommerceCartUpdate', $total ] );
 
 		// we can't echo directly as we wouldn't know where in the template rendering stage we are and whether
 		// we're supposed to print or not etc
@@ -72,13 +72,13 @@ class MemberPress extends Base {
 
 		$sku = $product_id;
 
-		$params = array(
+		$params = [
 			'setEcommerceView',
 			'' . $sku,
 			$product->post_title,
-			$categories = array(),
+			$categories = [],
 			$product->price,
-		);
+		];
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $this->wrap_script( $this->make_matomo_js_tracker_call( $params ) );
 	}
@@ -103,16 +103,16 @@ class MemberPress extends Base {
 					$discount = $product->price - $txn->amount;
 				}
 				$tracking_code  = '';
-				$params         = array(
+				$params         = [
 					'addEcommerceItem',
 					'' . $product->ID,
 					$product->post_title,
-					array(),
+					[],
 					$txn->amount,
 					1,
-				);
+				];
 				$tracking_code .= $this->make_matomo_js_tracker_call( $params );
-				$params         = array(
+				$params         = [
 					'trackEcommerceOrder',
 					'' . $order_id_to_track,
 					$txn->total,
@@ -120,7 +120,7 @@ class MemberPress extends Base {
 					$txn->tax_amount,
 					$shipping = 0,
 					$discount,
-				);
+				];
 				$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo $this->wrap_script( $tracking_code );

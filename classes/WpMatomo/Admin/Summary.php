@@ -86,7 +86,7 @@ class Summary {
 	}
 
 	private function get_reports_to_show() {
-		$reports_to_show = array(
+		$reports_to_show = [
 			Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME,
 			'VisitsSummary_get',
 			'UserCountry_getCountry',
@@ -105,7 +105,7 @@ class Summary {
 			'Referrers_getAll',
 			'Referrers_getSocials',
 			'Referrers_getCampaigns',
-		);
+		];
 
 		if ( $this->settings->get_global_option( 'track_ecommerce' ) ) {
 			$reports_to_show[] = 'Goals_get_idGoal--ecommerceOrder';
@@ -114,7 +114,7 @@ class Summary {
 
 		$reports_to_show = apply_filters( 'matomo_report_summary_report_ids', $reports_to_show );
 
-		$report_metadata = array();
+		$report_metadata = [];
 		$metadata        = new Metadata();
 		foreach ( $reports_to_show as $report_unique_id ) {
 			$report = $metadata->find_report_by_unique_id( $report_unique_id );

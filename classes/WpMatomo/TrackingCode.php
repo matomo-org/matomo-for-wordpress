@@ -45,14 +45,14 @@ class TrackingCode {
 	public function register_hooks() {
 		if ( $this->settings->is_tracking_enabled() ) {
 			if ( $this->settings->is_track_feed() ) {
-				add_filter( 'the_excerpt_rss', array( $this, 'add_feed_tracking' ) );
-				add_filter( 'the_content', array( $this, 'add_feed_tracking' ) );
+				add_filter( 'the_excerpt_rss', [ $this, 'add_feed_tracking' ] );
+				add_filter( 'the_content', [ $this, 'add_feed_tracking' ] );
 			}
 			if ( $this->settings->is_add_feed_campaign() ) {
-				add_filter( 'post_link', array( $this, 'add_feed_campaign' ) );
+				add_filter( 'post_link', [ $this, 'add_feed_campaign' ] );
 			}
 			if ( $this->settings->is_cross_domain_linking_enabled() ) {
-				add_filter( 'wp_redirect', array( $this, 'forward_cross_domain_visitor_id' ) );
+				add_filter( 'wp_redirect', [ $this, 'forward_cross_domain_visitor_id' ] );
 			}
 
 			$is_admin = is_admin() || ! empty( $GLOBALS['MATOMO_LOADED_DIRECTLY'] );
@@ -68,10 +68,10 @@ class TrackingCode {
 					$position = $prefix . '_footer';
 				}
 
-				add_action( $position, array( $this, 'add_javascript_code' ) );
+				add_action( $position, [ $this, 'add_javascript_code' ] );
 
 				if ( $this->settings->is_add_no_script_code() ) {
-					add_action( $prefix . '_footer', array( $this, 'add_noscript_code' ) );
+					add_action( $prefix . '_footer', [ $this, 'add_noscript_code' ] );
 				}
 			}
 		}

@@ -19,7 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 /**
- * @todo validate the nonce
  * phpcs:disable WordPress.Security.NonceVerification.Missing
  */
 class API {
@@ -28,18 +27,18 @@ class API {
 	const ROUTE_HIT = 'hit';
 
 	public function register_hooks() {
-		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
+		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 	}
 
 	public function register_routes() {
 		register_rest_route(
 			self::VERSION,
 			'/' . self::ROUTE_HIT . '/',
-			array(
-				'methods'             => array( 'GET', 'POST' ),
+			[
+				'methods'             => [ 'GET', 'POST' ],
 				'permission_callback' => '__return_true',
-				'callback'            => array( $this, 'hit' ),
-			)
+				'callback'            => [ $this, 'hit' ],
+			]
 		);
 		$this->register_route( 'API', 'getProcessedReport' );
 		$this->register_route( 'API', 'getReportMetadata' );
@@ -143,7 +142,7 @@ class API {
 	 * @api
 	 */
 	public function register_route( $api_module, $api_method ) {
-		$methods                 = array(
+		$methods                 = [
 			'get'        => 'GET',
 			'edit'       => 'PUT',
 			'update'     => 'PUT',
@@ -155,8 +154,8 @@ class API {
 			'send'       => 'POST',
 			'delete'     => 'DELETE',
 			'remove'     => 'DELETE',
-		);
-		$starts_with_keep_prefix = array( 'anonymize', 'invalidate', 'run', 'send' );
+		];
+		$starts_with_keep_prefix = [ 'anonymize', 'invalidate', 'run', 'send' ];
 
 		$method        = 'GET';
 		$wp_api_module = $this->to_snake_case( $api_module );
@@ -178,13 +177,13 @@ class API {
 		register_rest_route(
 			self::VERSION,
 			'/' . $wp_api_module . '/' . $wp_api_action . '/',
-			array(
+			[
 				'methods'             => $method,
-				'callback'            => array( $this, 'execute_api_method' ),
+				'callback'            => [ $this, 'execute_api_method' ],
 				'permission_callback' => '__return_true', // permissions are checked in the method itself
 				'matomoModule'        => $api_module,
 				'matomoMethod'        => $api_method,
-			)
+			]
 		);
 	}
 

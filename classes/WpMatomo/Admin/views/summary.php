@@ -55,7 +55,7 @@ if ( $matomo_is_version_pre55 ) {
 	}
 	?>
 	<p><?php esc_html_e( 'Looking for all reports and advanced features like segmentation, real time reports, and more?', 'matomo' ); ?>
-		<a href="<?php echo esc_url( add_query_arg( array( 'report_date' => $report_date ), menu_page_url( Menu::SLUG_REPORTING, false ) ) ); ?>"
+		<a href="<?php echo esc_url( add_query_arg( [ 'report_date' => $report_date ], menu_page_url( Menu::SLUG_REPORTING, false ) ) ); ?>"
 		><?php esc_html_e( 'View full reporting', 'matomo' ); ?></a>
 		<br/><br/>
 		<?php esc_html_e( 'Change date:', 'matomo' ); ?>
@@ -65,13 +65,13 @@ if ( $matomo_is_version_pre55 ) {
 			if ( $report_date === $matomo_report_date_key ) {
 				$matomo_button_class = 'button-primary';
 			}
-			echo '<a href="' . esc_url( add_query_arg( array( 'report_date' => $matomo_report_date_key ), menu_page_url( Menu::SLUG_REPORT_SUMMARY, false ) ) ) . '" class="' . esc_attr( $matomo_button_class ) . '">' . esc_html( $matomo_report_name ) . '</a> ';
+			echo '<a href="' . esc_url( add_query_arg( [ 'report_date' => $matomo_report_date_key ], menu_page_url( Menu::SLUG_REPORT_SUMMARY, false ) ) ) . '" class="' . esc_attr( $matomo_button_class ) . '">' . esc_html( $matomo_report_name ) . '</a> ';
 		}
 		?>
 
 	<div id="dashboard-widgets" class="metabox-holder  has-right-sidebar matomo-dashboard-container">
 		<?php
-		$matomo_columns = array( 1, 0 );
+		$matomo_columns = [ 1, 0 ];
 		foreach ( $matomo_columns as $matomo_column_index => $matomo_column_modulo ) {
 			?>
 			<div id="postbox-container-<?php echo ( esc_html( $matomo_column_index + 1 ) ); ?>" class="postbox-container">
@@ -102,10 +102,10 @@ if ( $matomo_is_version_pre55 ) {
 														Menu::get_matomo_reporting_url(
 															$matomo_report_meta['page']['category'],
 															$matomo_report_meta['page']['subcategory'],
-															array(
+															[
 																'period' => $report_period_selected,
 																'date'   => $report_date_selected,
-															)
+															]
 														)
 													);
 										?>
@@ -132,12 +132,12 @@ if ( $matomo_is_version_pre55 ) {
 										<?php
 												echo esc_url(
 													add_query_arg(
-														array(
+														[
 															'pin'             => true,
 															'_wpnonce'        => $matomo_dashboard_nonce,
 															'report_uniqueid' => $matomo_report_meta['uniqueId'],
 															'report_date'     => $report_date,
-														),
+														],
 														menu_page_url( Menu::SLUG_REPORT_SUMMARY, false )
 													)
 												);

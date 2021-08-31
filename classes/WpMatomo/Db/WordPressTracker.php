@@ -9,24 +9,14 @@
 
 namespace Piwik\Tracker\Db;
 
-use Exception;
 use Piwik\Db\Adapter\WordPressDbStatement;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
-/**
- * We want a real data, not something coming from cache
- * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
- *
- * This is a report error, so silent the possible errors
- * phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
- *
- * We cannot use parameters of statements as this is the table names we build
- * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
- * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
- */
+
 class WordPress extends Mysqli {
+
 	private $old_suppress_errors_value = null;
 
 	public function disconnect() {
@@ -43,7 +33,7 @@ class WordPress extends Mysqli {
 		// do not connect to DB
 	}
 
-	public function lastInsertId( $table_name = null, $primary_key = null ) {
+	public function lastInsertId( $tableName = null, $primaryKey = null ) {
 		global $wpdb;
 
 		if ( empty( $wpdb->insert_id ) ) {
@@ -56,17 +46,17 @@ class WordPress extends Mysqli {
 	/**
 	 * @param \wpdb $wpdb
 	 *
-	 * @throws \Zend_Db_Statement_Exception In case of errors.
+	 * @throws \Zend_Db_Statement_Exception
 	 */
 	private function after_execute_query( $wpdb ) {
-		$last_error = $wpdb->last_error;
+		$lastError = $wpdb->last_error;
 
-		if ( $last_error && ! $this->getErrorNumberFromMessage( $last_error ) ) {
+		if ( $lastError && !$this->getErrorNumberFromMessage($lastError) ) {
 			// see #174 mysqli message usually doesn't include the error code so we need to add it for isErrNo to work
 			// we want to execute this while errors are suppressed
-			$row = $wpdb->get_row( 'SHOW ERRORS', ARRAY_A );
-			if ( ! empty( $row['Code'] ) ) {
-				$last_error = '[' . $row['Code'] . '] ' . $last_error;
+			$row = $wpdb->get_row('SHOW ERRORS', ARRAY_A);
+			if (!empty($row['Code'])) {
+				$lastError = '['.$row['Code'].'] ' . $lastError;
 			}
 		}
 
@@ -75,8 +65,8 @@ class WordPress extends Mysqli {
 			$this->old_suppress_errors_value = null;
 		}
 
-		if ( $last_error ) {
-			throw new \Zend_Db_Statement_Exception( $last_error );
+		if ( $lastError ) {
+			throw new \Zend_Db_Statement_Exception( $lastError );
 		}
 	}
 
@@ -86,10 +76,10 @@ class WordPress extends Mysqli {
 	 */
 	private function before_execute_query( $wpdb, $sql ) {
 		if ( ! $wpdb->suppress_errors
-			 && defined( 'WP_DEBUG' )
-			 && WP_DEBUG
-			 && defined( 'WP_DEBUG_DISPLAY' )
-			 && WP_DEBUG_DISPLAY ) {
+		     && defined( 'WP_DEBUG' )
+		     && WP_DEBUG
+		     && defined( 'WP_DEBUG_DISPLAY' )
+		     && WP_DEBUG_DISPLAY ) {
 			// we want to prevent showing these notices
 			if ( defined( 'MATOMO_SUPPRESS_DB_ERRORS' ) ) {
 				if ( MATOMO_SUPPRESS_DB_ERRORS === true ) {
@@ -101,16 +91,14 @@ class WordPress extends Mysqli {
 			}
 
 			$this->old_suppress_errors_value = $wpdb->suppress_errors( true );
-
 			return;
 		}
 
 		if ( ! $wpdb->suppress_errors ) {
-			if ( ( stripos( $sql, '/* WP IGNORE ERROR */' ) !== false )
-				 || stripos( $sql, 'SELECT @@TX_ISOLATION' ) !== false
-				 || stripos( $sql, 'SELECT @@transaction_isolation' ) !== false ) {
-				// phpcs:ignore Squiz.PHP.CommentedOutCode.Found
-				// @see WordPress::before_execute_query()
+			if ( ( stripos( $sql, '/* WP IGNORE ERROR */' ) !== false  )
+			     || stripos( $sql, 'SELECT @@TX_ISOLATION' ) !== false
+			     || stripos( $sql, 'SELECT @@transaction_isolation' ) !== false ) {
+				// see {@link WordPress::before_execute_query() }
 				$this->old_suppress_errors_value = $wpdb->suppress_errors( true );
 
 				return;
@@ -127,19 +115,18 @@ class WordPress extends Mysqli {
 	/**
 	 * Test error number
 	 *
-	 * @param Exception $e
-	 * @param string    $errno
+	 * @param \Exception $e
+	 * @param string     $errno
 	 *
 	 * @return bool
 	 */
 	public function isErrNo( $e, $errno ) {
-		$error_code = $this->getErrorNumberFromMessage( $e->getMessage() );
-		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-		return ! empty( $error_code ) && $error_code == $errno;
+		$errorCode = $this->getErrorNumberFromMessage($e->getMessage());
+		return !empty($errorCode) && $errorCode == $errno;
 	}
 
-	public function rowCount( $query_result ) {
-		return $query_result->rowCount();
+	public function rowCount( $queryResult ) {
+		return $queryResult->rowCount();
 	}
 
 	private function prepareWp( $sql, $bind = array() ) {
@@ -156,19 +143,19 @@ class WordPress extends Mysqli {
 		}
 
 		$has_replaced_null = false;
-		$null_placeholder  = '_#__###NULL###_' . wp_rand( 1, PHP_INT_MAX ) . ' __#_';
+		$null_placeholder = '_#__###NULL###_' . rand(1, PHP_INT_MAX) . ' __#_';
 		// random number not really needed but may prevent random issues that someone could somehow inject easily something
 
-		foreach ( $bind as $index => $val ) {
-			if ( is_object( $val ) && method_exists( $val, '__toString' ) ) {
-				$bind[ $index ] = $val->__toString();
+		foreach ($bind as $index => $val) {
+			if (is_object($val) && method_exists($val, '__toString')) {
+				$bind[$index] = $val->__toString();
 			}
 
-			if ( is_null( $val ) ) {
-				$bind[ $index ]    = $null_placeholder;
+			if (is_null($val)) {
+				$bind[$index] = $null_placeholder;
 				$has_replaced_null = true;
-			} elseif ( is_string( $val ) && strpos( $val, $null_placeholder ) !== false ) {
-				throw new Exception( 'unexpected bind param' ); // preventing random injections or something
+			} elseif (is_string($val) && strpos($val, $null_placeholder) !== false) {
+				throw new \Exception('unexpected bind param'); // preventing random injections or something
 			}
 		}
 
@@ -176,8 +163,8 @@ class WordPress extends Mysqli {
 
 		$query = $wpdb->prepare( $sql, $bind );
 
-		if ( $has_replaced_null ) {
-			$query = str_replace( "'$null_placeholder'", 'NULL', $query );
+		if ($has_replaced_null) {
+			$query = str_replace("'$null_placeholder'", 'NULL', $query);
 		}
 
 		return $query;
@@ -189,8 +176,8 @@ class WordPress extends Mysqli {
 		$test_query = trim( $query );
 		if ( strpos( $test_query, '/*' ) === 0 ) {
 			// remove eg "/* trigger = CronArchive */"
-			$start_pos  = strpos( $test_query, '*/' );
-			$test_query = substr( $test_query, $start_pos + strlen( '*/' ) );
+			$startPos   = strpos( $test_query, '*/' );
+			$test_query = substr( $test_query, $startPos + strlen( '*/' ) );
 			$test_query = trim( $test_query );
 		}
 
@@ -210,14 +197,14 @@ class WordPress extends Mysqli {
 
 	public function beginTransaction() {
 		global $wpdb;
-		if ( ! false === $this->active_transaction ) {
+		if ( ! $this->activeTransaction === false ) {
 			return;
 		}
 
 		$wpdb->query( 'START TRANSACTION' );
-		$this->active_transaction = uniqid();
+		$this->activeTransaction = uniqid();
 
-		return $this->active_transaction;
+		return $this->activeTransaction;
 	}
 
 	/**
@@ -225,17 +212,17 @@ class WordPress extends Mysqli {
 	 *
 	 * @param $xid
 	 *
-	 * @throws DbException In case of errors.
+	 * @throws DbException
 	 * @internal param TransactionID $string from beginTransaction
 	 */
 	public function commit( $xid ) {
 		global $wpdb;
 
-		if ( $this->active_transaction !== $xid || false === $this->active_transaction ) {
+		if ( $this->activeTransaction != $xid || $this->activeTransaction === false ) {
 			return;
 		}
 
-		$this->active_transaction = false;
+		$this->activeTransaction = false;
 
 		$wpdb->query( 'COMMIT' );
 	}
@@ -245,17 +232,17 @@ class WordPress extends Mysqli {
 	 *
 	 * @param $xid
 	 *
-	 * @throws DbException In case of SQL errors.
+	 * @throws DbException
 	 * @internal param TransactionID $string from beginTransaction
 	 */
 	public function rollBack( $xid ) {
 		global $wpdb;
 
-		if ( $this->active_transaction !== $xid || false === $this->active_transaction ) {
+		if ( $this->activeTransaction != $xid || $this->activeTransaction === false ) {
 			return;
 		}
 
-		$this->active_transaction = false;
+		$this->activeTransaction = false;
 
 		$wpdb->query( 'ROLLBACK' );
 	}
@@ -285,4 +272,6 @@ class WordPress extends Mysqli {
 
 		return $results;
 	}
+
+
 }

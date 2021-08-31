@@ -98,7 +98,7 @@ if ( count( $settings_errors ) ) {
 		echo '<tr class="' . esc_attr( $matomo_full_generated_tracking_group ) . ' matomo-track-option-manually' . ( $matomo_is_not_tracking ? ' hidden' : '' ) . '">';
 		echo '<th scope="row"><label for="add_post_annotations">' . esc_html__( 'Add annotation on new post of type', 'matomo' ) . '</label>:</th><td>';
 		$matomo_filter = $settings->get_global_option( 'add_post_annotations' );
-		foreach ( get_post_types( array(), 'objects' ) as $object_post_type ) {
+		foreach ( get_post_types( [], 'objects' ) as $object_post_type ) {
 			echo '<input type="checkbox" ' . ( isset( $matomo_filter [ $object_post_type->name ] ) && $matomo_filter [ $object_post_type->name ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[add_post_annotations][' . esc_attr( $object_post_type->name ) . ']" /> ' . esc_html( $object_post_type->label ) . ' &nbsp; ';
 		}
 		echo '<span class="dashicons dashicons-editor-help" style="cursor: pointer;" onclick="jQuery(\'#add_post_annotations-desc\').toggleClass(\'hidden\');"></span> <p class="description hidden" id="add_post_annotations-desc">' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/annotations/" rel="noreferrer noopener" target="_BLANK">', '</a>' ) . '</p></td></tr>';
@@ -106,11 +106,11 @@ if ( count( $settings_errors ) ) {
 		$matomo_form->show_select(
 			'track_content',
 			__( 'Enable content tracking', 'matomo' ),
-			array(
+			[
 				'disabled' => esc_html__( 'Disabled', 'matomo' ),
 				'all'      => esc_html__( 'Track all content blocks', 'matomo' ),
 				'visible'  => esc_html__( 'Track only visible content blocks', 'matomo' ),
-			),
+			],
 			__( 'Content tracking allows you to track interaction with the content of a web page or application.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://developer.matomo.org/guides/content-tracking" rel="noreferrer noopener" target="_BLANK">', '</a>' ),
 			'',
 			$matomo_is_not_tracking,
@@ -148,13 +148,13 @@ if ( count( $settings_errors ) ) {
 		$matomo_form->show_select(
 			'track_user_id',
 			__( 'User ID Tracking', 'matomo' ),
-			array(
+			[
 				'disabled'    => esc_html__( 'Disabled', 'matomo' ),
 				'uid'         => esc_html__( 'WP User ID', 'matomo' ),
 				'email'       => esc_html__( 'Email Address', 'matomo' ),
 				'username'    => esc_html__( 'Username', 'matomo' ),
 				'displayname' => esc_html__( 'Display Name (Not Recommended!)', 'matomo' ),
-			),
+			],
 			__( 'When a user is logged in to WordPress, track their &quot;User ID&quot;. You can select which field from the User\'s profile is tracked as the &quot;User ID&quot;. When enabled, Tracking based on Email Address is recommended.', 'matomo' ),
 			'',
 			$matomo_is_not_tracking,
@@ -178,10 +178,10 @@ if ( count( $settings_errors ) ) {
 		$matomo_form->show_select(
 			'force_protocol',
 			__( 'Force Matomo to use a specific protocol', 'matomo' ),
-			array(
+			[
 				'disabled' => esc_html__( 'Disabled (default)', 'matomo' ),
 				'https'    => esc_html__( 'https (SSL)', 'matomo' ),
-			),
+			],
 			__( 'Choose if you want to explicitly want to force Matomo to use HTTP or HTTPS. Does not work with a CDN URL.', 'matomo' ),
 			'',
 			$matomo_is_not_tracking,
@@ -190,10 +190,10 @@ if ( count( $settings_errors ) ) {
 		$matomo_form->show_select(
 			'track_codeposition',
 			__( 'JavaScript code position', 'matomo' ),
-			array(
+			[
 				'footer' => esc_html__( 'Footer', 'matomo' ),
 				'header' => esc_html__( 'Header', 'matomo' ),
-			),
+			],
 			__( 'Choose whether the JavaScript code is added to the footer or the header.', 'matomo' ),
 			'',
 			$matomo_is_not_tracking,
@@ -202,10 +202,10 @@ if ( count( $settings_errors ) ) {
 		$matomo_form->show_select(
 			'track_api_endpoint',
 			__( 'Endpoint for HTTP Tracking API', 'matomo' ),
-			array(
+			[
 				'default' => esc_html__( 'Default', 'matomo' ),
 				'restapi' => esc_html__( 'Through WordPress Rest API', 'matomo' ),
-			),
+			],
 			sprintf( __( 'By default the HTTP Tracking API points to your Matomo plugin directory "%1$s". You can choose to use the WP Rest API (%2$s) instead for example to hide matomo.php or if the other URL doesn\'t work for you. Note: If the tracking mode "Tag Manager" is selected, then this URL currently only applies to the feed tracking.', 'matomo' ), esc_html( $matomo_paths->get_tracker_api_url_in_matomo_dir() ), esc_html( $matomo_paths->get_tracker_api_rest_api_endpoint() ) ),
 			'',
 			$matomo_is_not_tracking,
@@ -215,11 +215,11 @@ if ( count( $settings_errors ) ) {
 		$matomo_form->show_select(
 			'track_js_endpoint',
 			__( 'Endpoint for JavaScript tracker', 'matomo' ),
-			array(
+			[
 				'default' => esc_html__( 'Default', 'matomo' ),
 				'restapi' => esc_html__( 'Through WordPress Rest API (slower)', 'matomo' ),
 				'plugin'  => esc_html__( 'Plugin (an alternative JS file if the default is blocked by the webserver)', 'matomo' ),
-			),
+			],
 			sprintf( __( 'By default the JS tracking code will be loaded from "%1$s". You can choose to serve the JS file through the WP Rest API (%2$s) for example to hide matomo.js. Please note that this means every request to the JavaScript file will launch WordPress PHP and therefore will be slower compared to your webserver serving the JS file directly. Using the "Plugin" method will cause issues with our paid Heatmap and Session Recording, Form Analytics, and Media Analyics plugin.', 'matomo' ), esc_html( $matomo_paths->get_js_tracker_url_in_matomo_dir() ), esc_html( $matomo_paths->get_js_tracker_rest_api_endpoint() ) ),
 			'',
 			$matomo_is_not_tracking,
@@ -233,11 +233,11 @@ if ( count( $settings_errors ) ) {
 		$matomo_form->show_select(
 			'tracker_debug',
 			__( 'Tracker Debug Mode', 'matomo' ),
-			array(
+			[
 				'disabled'  => esc_html__( 'Disabled (recommended)', 'matomo' ),
 				'always'    => esc_html__( 'Always enabled', 'matomo' ),
 				'on_demand' => esc_html__( 'Enabled on demand', 'matomo' ),
-			),
+			],
 			__( 'For security and privacy reasons you should only enable this setting for as short time of a time as possible.', 'matomo' ),
 			'',
 			$matomo_is_not_tracking,

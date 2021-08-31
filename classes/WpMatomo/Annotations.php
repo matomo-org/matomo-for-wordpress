@@ -35,7 +35,7 @@ class Annotations {
 	}
 
 	public function register_hooks() {
-		add_action( 'transition_post_status', array( $this, 'add_annotation' ), 10, 3 );
+		add_action( 'transition_post_status', [ $this, 'add_annotation' ], 10, 3 );
 	}
 
 	/**

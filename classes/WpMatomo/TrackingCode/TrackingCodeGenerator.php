@@ -46,8 +46,8 @@ class TrackingCodeGenerator {
 	}
 
 	public function register_hooks() {
-		add_action( 'matomo_site_synced', array( $this, 'update_tracking_code' ), $prio = 10, $args = 0 );
-		add_action( 'matomo_tracking_settings_changed', array( $this, 'update_tracking_code' ), $prio = 10, $args = 0 );
+		add_action( 'matomo_site_synced', [ $this, 'update_tracking_code' ], $prio = 10, $args = 0 );
+		add_action( 'matomo_tracking_settings_changed', [ $this, 'update_tracking_code' ], $prio = 10, $args = 0 );
 	}
 
 	public function update_tracking_code() {
@@ -81,10 +81,10 @@ class TrackingCodeGenerator {
 		} elseif ( TrackingSettings::TRACK_MODE_TAGMANAGER === $track_mode && matomo_has_tag_manager() ) {
 			$result = $this->prepare_tagmanger_code( $this->settings, $this->logger );
 		} else {
-			$result = array(
+			$result = [
 				'script'   => '<!-- Matomo: no supported track_mode selected -->',
 				'noscript' => '',
-			);
+			];
 		}
 
 		if ( ! empty( $result['script'] ) ) {
@@ -167,10 +167,10 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 
 		$code .= '<!-- End Matomo Tag Manager -->';
 
-		return array(
+		return [
 			'script'   => $code,
 			'noscript' => '',
-		);
+		];
 	}
 
 	public function get_tracker_endpoint() {
@@ -223,7 +223,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 		$tracker_endpoint = $this->get_tracker_endpoint();
 		$js_endpoint      = $this->get_js_endpoint();
 
-		$options = array();
+		$options = [];
 
 		if ( $this->settings->get_global_option( 'set_download_extensions' ) ) {
 			$options[] = "_paq.push(['setDownloadExtensions', " . wp_json_encode( $this->settings->get_global_option( 'set_download_extensions' ) ) . ']);';
@@ -256,7 +256,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 
 		if ( $track_across_alias ) {
 			// todo detect more hosts such as when using WPML etc
-			$hosts = array( wp_parse_url( home_url(), PHP_URL_HOST ) );
+			$hosts = [ wp_parse_url( home_url(), PHP_URL_HOST ) ];
 			$hosts = array_filter( $hosts );
 			$hosts = array_map(
 				function ( $host ) {
@@ -294,7 +294,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 		}
 
 		$data_cf_async        = '';
-		$data_of_async_option = array();
+		$data_of_async_option = [];
 		if ( $this->settings->get_global_option( 'track_datacfasync' ) ) {
 			$data_cf_async                        = 'data-cfasync="false"';
 			$data_of_async_option['data-cfasync'] = 'false';
@@ -332,10 +332,10 @@ g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint )
 		$this->logger->log( 'Finished tracking code: ' . $script, $log_level );
 		$this->logger->log( 'Finished noscript code: ' . $no_script, $log_level );
 
-		return array(
+		return [
 			'script'   => $script,
 			'noscript' => $no_script,
-		);
+		];
 	}
 
 	private function apply_404_changes( $tracking_code ) {

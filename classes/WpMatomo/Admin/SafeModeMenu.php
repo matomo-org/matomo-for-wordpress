@@ -29,8 +29,8 @@ class SafeModeMenu {
 	 */
 	public function __construct( $settings ) {
 		$this->settings = $settings;
-		add_action( 'admin_menu', array( $this, 'add_menu' ) );
-		add_action( 'network_admin_menu', array( $this, 'add_menu' ) );
+		add_action( 'admin_menu', [ $this, 'add_menu' ] );
+		add_action( 'network_admin_menu', [ $this, 'add_menu' ] );
 	}
 
 	public function add_menu() {
@@ -48,10 +48,10 @@ class SafeModeMenu {
 			__( 'System Report', 'matomo' ),
 			'administrator',
 			Menu::SLUG_SYSTEM_REPORT,
-			array(
+			[
 				$system_report,
 				'show',
-			)
+			]
 		);
 	}
 }

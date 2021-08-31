@@ -138,7 +138,7 @@ class Forms {
 	 * @param boolean $hide_description $hideDescription set to false to show description initially (default: true)
 	 * @param boolean $global set to false if the textarea shows a site-specific option (default: true)
 	 */
-	public function show_select( $id, $name, $options = array(), $description = '', $on_change = '', $is_hidden = false, $group_name = '', $hide_description = true, $global = true ) {
+	public function show_select( $id, $name, $options = [], $description = '', $on_change = '', $is_hidden = false, $group_name = '', $hide_description = true, $global = true ) {
 		$options_list = '';
 
 		if ( 'tracker_debug' === $id && ! WpMatomo::is_safe_mode() && ! $this->settings->is_network_enabled() ) {
@@ -155,7 +155,8 @@ class Forms {
 		}
 		if ( is_array( $options ) ) {
 			foreach ( $options as $key => $value ) {
-				$options_list .= sprintf( '<option value="%s"' . ( $key === $default ? ' selected="selected"' : '' ) . '>%s</option>', esc_attr( $key ), esc_html( $value ) );
+				// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+				$options_list .= sprintf( '<option value="%s"' . ( $key == $default ? ' selected="selected"' : '' ) . '>%s</option>', esc_attr( $key ), esc_html( $value ) );
 			}
 		}
 		$script_change = '';

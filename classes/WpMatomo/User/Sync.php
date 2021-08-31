@@ -51,12 +51,12 @@ class Sync {
 	}
 
 	public function register_hooks() {
-		add_action( 'add_user_role', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
-		add_action( 'remove_user_role', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
-		add_action( 'add_user_to_blog', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
-		add_action( 'remove_user_from_blog', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
-		add_action( 'user_register', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
-		add_action( 'profile_update', array( $this, 'sync_maybe_background' ), $prio = 10, $args = 0 );
+		add_action( 'add_user_role', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
+		add_action( 'remove_user_role', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
+		add_action( 'add_user_to_blog', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
+		add_action( 'remove_user_from_blog', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
+		add_action( 'user_register', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
+		add_action( 'profile_update', [ $this, 'sync_maybe_background' ], $prio = 10, $args = 0 );
 	}
 
 	public function sync_maybe_background() {
@@ -79,7 +79,7 @@ class Sync {
 
 				try {
 					if ( $idsite ) {
-						$users = $this->get_users( array( 'blog_id' => $site->blog_id ) );
+						$users = $this->get_users( [ 'blog_id' => $site->blog_id ] );
 						$this->sync_users( $users, $idsite );
 					}
 				} catch ( Exception $e ) {
@@ -94,7 +94,7 @@ class Sync {
 		}
 	}
 
-	private function get_users( $options = array() ) {
+	private function get_users( $options = [] ) {
 		/** @var WP_User[] $users */
 		$users = get_users( $options );
 
@@ -178,8 +178,8 @@ class Sync {
 
 		$this->logger->log( 'Matomo will now sync ' . count( $users ) . ' users' );
 
-		$super_users                  = array();
-		$logins_with_some_view_access = array( 'anonmyous' ); // may or may not exist... we don't want to delete this user though
+		$super_users                  = [];
+		$logins_with_some_view_access = [ 'anonmyous' ]; // may or may not exist... we don't want to delete this user though
 		$user_model                   = new Model();
 
 		// need to make sure we recreate new instance later with latest dependencies in case they changed
@@ -201,32 +201,32 @@ class Sync {
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_ADMIN ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
-				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
-				$user_model->addUserAccess( $matomo_login, Admin::ID, array( $idsite ) );
+				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
+				$user_model->addUserAccess( $matomo_login, Admin::ID, [ $idsite ] );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_WRITE ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
-				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
-				$user_model->addUserAccess( $matomo_login, Write::ID, array( $idsite ) );
+				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
+				$user_model->addUserAccess( $matomo_login, Write::ID, [ $idsite ] );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_VIEW ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
-				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
-				$user_model->addUserAccess( $matomo_login, View::ID, array( $idsite ) );
+				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
+				$user_model->addUserAccess( $matomo_login, View::ID, [ $idsite ] );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( $mapped_matomo_login ) {
-				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
+				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
 			}
 
 			if ( $matomo_login ) {
 				$locale      = get_user_locale( $user->ID );
 				$locale_dash = Common::mb_strtolower( str_replace( '_', '-', $locale ) );
-				$parts       = array();
-				if ( $locale && in_array( $locale_dash, array( 'zh-cn', 'zh-tw', 'pt-br', 'es-ar' ), true ) ) {
-					$parts = array( $locale_dash );
+				$parts       = [];
+				if ( $locale && in_array( $locale_dash, [ 'zh-cn', 'zh-tw', 'pt-br', 'es-ar' ], true ) ) {
+					$parts = [ $locale_dash ];
 				} elseif ( ! empty( $locale ) && is_string( $locale ) ) {
 					$parts = explode( '_', $locale );
 				}
@@ -272,7 +272,7 @@ class Sync {
 		}
 
 		$logins_with_some_view_access = array_unique( $logins_with_some_view_access );
-		$all_users                    = $user_model->getUsers( array() );
+		$all_users                    = $user_model->getUsers( [] );
 		foreach ( $all_users as $all_user ) {
 			if ( ! in_array( $all_user['login'], $logins_with_some_view_access, true )
 				 && ! empty( $all_user['login'] ) ) {
@@ -337,7 +337,7 @@ class Sync {
 			User::map_matomo_user_login( $user_id, $matomo_user_login );
 		} elseif ( $user_in_matomo['email'] !== $wp_user->user_email ) {
 			$this->logger->log( 'Matomo is now updating the email for wpUserID ' . $user_id . ' matomo login ' . $matomo_user_login );
-			$user_model->updateUserFields( $matomo_user_login, array( 'email' => $wp_user->user_email ) );
+			$user_model->updateUserFields( $matomo_user_login, [ 'email' => $wp_user->user_email ] );
 		}
 
 		return $matomo_user_login;

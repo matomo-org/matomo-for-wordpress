@@ -46,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</li>
 	<?php if ( ! empty( $show_troubleshooting_link ) ) { ?>
 		<li><a
-					href="<?php echo esc_url( add_query_arg( array( 'tab' => 'troubleshooting' ), menu_page_url( Menu::SLUG_SYSTEM_REPORT, false ) ) ); ?>"><?php esc_html_e( 'Troubleshooting', 'matomo' ); ?></a>
+					href="<?php echo esc_url( add_query_arg( [ 'tab' => 'troubleshooting' ], menu_page_url( Menu::SLUG_SYSTEM_REPORT, false ) ) ); ?>"><?php esc_html_e( 'Troubleshooting', 'matomo' ); ?></a>
 			- <?php esc_html_e( 'Click here if you are having Trouble with Matomo', 'matomo' ); ?>
 		</li>
 	<?php } ?>

@@ -52,17 +52,17 @@ class ScheduledTasks {
 	}
 
 	public function add_weekly_schedule( $schedules ) {
-		$schedules['matomo_monthly'] = array(
+		$schedules['matomo_monthly'] = [
 			'interval' => 60 * 60 * 24 * 30,
 			'display'  => __( 'Monthly', 'matomo' ),
-		);
+		];
 
 		return $schedules;
 	}
 
 	public function schedule() {
-		add_action( self::EVENT_UPDATE, array( $this, 'perform_update' ) );
-		add_filter( 'cron_schedules', array( $this, 'add_weekly_schedule' ) );
+		add_action( self::EVENT_UPDATE, [ $this, 'perform_update' ] );
+		add_filter( 'cron_schedules', [ $this, 'add_weekly_schedule' ] );
 
 		$self           = $this;
 		$event_priority = 10;
@@ -83,7 +83,7 @@ class ScheduledTasks {
 			);
 
 			// actual event
-			add_action( $event_name, array( $this, $event_config['method'] ), $event_priority, $accepted_args = 0 );
+			add_action( $event_name, [ $this, $event_config['method'] ], $event_priority, $accepted_args = 0 );
 
 			// logging last execution end time
 			add_action(
@@ -96,7 +96,7 @@ class ScheduledTasks {
 			);
 		}
 
-		register_deactivation_hook( MATOMO_ANALYTICS_FILE, array( $this, 'uninstall' ) );
+		register_deactivation_hook( MATOMO_ANALYTICS_FILE, [ $this, 'uninstall' ] );
 	}
 
 	public function get_last_time_before_cron( $event_name ) {
@@ -118,29 +118,29 @@ class ScheduledTasks {
 	}
 
 	public function get_all_events() {
-		$events = array(
-			self::EVENT_SYNC    => array(
+		$events = [
+			self::EVENT_SYNC    => [
 				'name'     => 'Sync users & sites',
 				'interval' => 'daily',
 				'method'   => 'sync',
-			),
-			self::EVENT_ARCHIVE => array(
+			],
+			self::EVENT_ARCHIVE => [
 				'name'     => 'Archive',
 				'interval' => 'hourly',
 				'method'   => 'archive',
-			),
-			self::EVENT_GEOIP   => array(
+			],
+			self::EVENT_GEOIP   => [
 				'name'     => 'Update GeoIP DB',
 				'interval' => 'matomo_monthly',
 				'method'   => 'update_geo_ip2_db',
-			),
-		);
+			],
+		];
 		if ( $this->settings->should_disable_addhandler() ) {
-			$events[ self::EVENT_DISABLE_ADDHANDLER ] = array(
+			$events[ self::EVENT_DISABLE_ADDHANDLER ] = [
 				'name'     => 'Disable AddHandler',
 				'interval' => 'hourly',
 				'method'   => 'disable_add_handler',
-			);
+			];
 		}
 
 		return $events;
@@ -313,7 +313,7 @@ class ScheduledTasks {
 				$idsite  = Site::get_matomo_site_id( $blog_id );
 				if ( ! empty( $idsite ) ) {
 					// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-					$archiver->shouldArchiveSpecifiedSites = array( $idsite );
+					$archiver->shouldArchiveSpecifiedSites = [ $idsite ];
 				} else {
 					// there is no site mapped to it so there's no point in archiving it
 					return;

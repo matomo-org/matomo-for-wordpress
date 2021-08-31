@@ -57,12 +57,12 @@ class Sync {
 	}
 
 	public function register_hooks() {
-		add_action( 'update_option_blogname', array( $this, 'sync_current_site_ignore_error' ) );
-		add_action( 'update_option_home', array( $this, 'sync_current_site_ignore_error' ) );
-		add_action( 'update_option_siteurl', array( $this, 'sync_current_site_ignore_error' ) );
-		add_action( 'update_option_timezone_string', array( $this, 'sync_current_site_ignore_error' ) );
-		add_action( 'matomo_setting_change_track_ecommerce', array( $this, 'sync_current_site_ignore_error' ) );
-		add_action( 'matomo_setting_change_site_currency', array( $this, 'sync_current_site_ignore_error' ) );
+		add_action( 'update_option_blogname', [ $this, 'sync_current_site_ignore_error' ] );
+		add_action( 'update_option_home', [ $this, 'sync_current_site_ignore_error' ] );
+		add_action( 'update_option_siteurl', [ $this, 'sync_current_site_ignore_error' ] );
+		add_action( 'update_option_timezone_string', [ $this, 'sync_current_site_ignore_error' ] );
+		add_action( 'matomo_setting_change_track_ecommerce', [ $this, 'sync_current_site_ignore_error' ] );
+		add_action( 'matomo_setting_change_site_currency', [ $this, 'sync_current_site_ignore_error' ] );
 	}
 
 	public function sync_current_site_ignore_error() {
@@ -93,7 +93,7 @@ class Sync {
 						Bootstrap::set_not_bootstrapped();
 						$config                        = Config::getInstance();
 						$installed                     = $config->PluginsInstalled;
-						$installed['PluginsInstalled'] = array();
+						$installed['PluginsInstalled'] = [];
 						$config->PluginsInstalled      = $installed;
 
 						if ( $installer->can_be_installed() ) {
@@ -161,19 +161,19 @@ class Sync {
 					 || $site['timezone'] !== $detected_timezone ) {
 
 					/** @var WP_Site $site */
-					$params = array(
+					$params = [
 						'name'      => $blog_name,
 						'main_url'  => $blog_url,
 						'ecommerce' => $track_ecommerce,
 						'currency'  => $site_currency,
 						'timezone'  => $detected_timezone,
-					);
+					];
 					$sites_manager_model->updateSite( $params, $idsite );
 
 					do_action( 'matomo_site_synced', $idsite, $blog_id );
 
 					// no actual setting changed but we make sure the tracking code will be updated after an update
-					$this->settings->apply_tracking_related_changes( array() );
+					$this->settings->apply_tracking_related_changes( [] );
 				}
 
 				$this->config_sync->sync_config_for_current_site();
@@ -197,7 +197,7 @@ class Sync {
 
 				$idsite                         = SitesManager\API::getInstance()->addSite(
 					$blog_name,
-					array( $blog_url ),
+					[ $blog_url ],
 					$track_ecommerce,
 					$site_search                = null,
 					$search_keyword_parameters  = null,

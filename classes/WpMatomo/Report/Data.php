@@ -35,10 +35,10 @@ class Data {
 		Bootstrap::do_bootstrap();
 
 		if ( empty( $idsite ) ) {
-			return array();
+			return [];
 		}
 
-		$params = array(
+		$params = [
 			'apiModule'          => $report_metadata['module'],
 			'apiAction'          => $report_metadata['action'],
 			'filter_limit'       => $filter_limit,
@@ -46,7 +46,7 @@ class Data {
 			'period'             => $period,
 			'date'               => $date,
 			'idSite'             => $idsite,
-		);
+		];
 		if ( ! empty( $report_metadata['parameters'] ) ) {
 			$params = array_merge( $params, $report_metadata['parameters'] );
 		}

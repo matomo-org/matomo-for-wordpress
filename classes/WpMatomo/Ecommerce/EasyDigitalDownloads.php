@@ -18,18 +18,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 class EasyDigitalDownloads extends Base {
 	public function register_hooks() {
 		if ( ! is_admin() ) {
-			add_action( 'template_redirect', array( $this, 'on_product_view' ), 99999, 0 );
+			add_action( 'template_redirect', [ $this, 'on_product_view' ], 99999, 0 );
 		}
 
 		parent::register_hooks();
 
 		// these actions may be triggered in admin when ajax is used
-		add_action( 'edd_payment_receipt_after_table', array( $this, 'on_order' ), 99999, 2 );
-		add_action( 'edd_post_remove_from_cart', array( $this, 'on_cart_update' ), 99999, 0 );
-		add_action( 'edd_post_add_to_cart', array( $this, 'on_cart_update' ), 99999, 0 );
-		add_action( 'edd_cart_discounts_removed', array( $this, 'on_cart_update' ), 99999, 0 );
-		add_action( 'edd_after_set_cart_item_quantity', array( $this, 'on_cart_update' ), 99999, 0 );
-		add_action( 'edd_cart_discount_set', array( $this, 'on_cart_update' ), 99999, 0 );
+		add_action( 'edd_payment_receipt_after_table', [ $this, 'on_order' ], 99999, 2 );
+		add_action( 'edd_post_remove_from_cart', [ $this, 'on_cart_update' ], 99999, 0 );
+		add_action( 'edd_post_add_to_cart', [ $this, 'on_cart_update' ], 99999, 0 );
+		add_action( 'edd_cart_discounts_removed', [ $this, 'on_cart_update' ], 99999, 0 );
+		add_action( 'edd_after_set_cart_item_quantity', [ $this, 'on_cart_update' ], 99999, 0 );
+		add_action( 'edd_cart_discount_set', [ $this, 'on_cart_update' ], 99999, 0 );
 	}
 
 	public function on_cart_update() {
@@ -65,7 +65,7 @@ class EasyDigitalDownloads extends Base {
 			$categories = $this->get_product_categories( $download->ID );
 			$quantity   = isset( $item['quantity'] ) ? $item['quantity'] : 0;
 
-			$params         = array( 'addEcommerceItem', $sku, $name, $categories, $price, $quantity );
+			$params         = [ 'addEcommerceItem', $sku, $name, $categories, $price, $quantity ];
 			$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 		}
 
@@ -76,7 +76,7 @@ class EasyDigitalDownloads extends Base {
 			$total = $cart->get_total();
 		}
 
-		$tracking_code .= $this->make_matomo_js_tracker_call( array( 'trackEcommerceCartUpdate', $total ) );
+		$tracking_code .= $this->make_matomo_js_tracker_call( [ 'trackEcommerceCartUpdate', $total ] );
 
 		// we can't echo directly as we wouldn't know where in the template rendering stage we are and whether
 		// we're supposed to print or not etc
@@ -123,13 +123,13 @@ class EasyDigitalDownloads extends Base {
 
 		$sku = $this->get_sku( $download, $download_id );
 
-		$params = array(
+		$params = [
 			'setEcommerceView',
 			$sku,
 			$download->get_name(),
 			$this->get_product_categories( $download_id ),
 			$download->get_price(),
-		);
+		];
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $this->wrap_script( $this->make_matomo_js_tracker_call( $params ) );
 	}
@@ -184,14 +184,14 @@ class EasyDigitalDownloads extends Base {
 								$price = $item['item_price'];
 							}
 
-							$params         = array(
+							$params         = [
 								'addEcommerceItem',
 								$sku,
 								$name,
 								$this->get_product_categories( $item['id'] ),
 								$price,
 								$item['quantity'],
-							);
+							];
 							$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 						}
 					}
@@ -209,7 +209,7 @@ class EasyDigitalDownloads extends Base {
 				$discount = reset( $discount );
 			}
 
-			$params         = array(
+			$params         = [
 				'trackEcommerceOrder',
 				'' . $order_id_to_track,
 				$grand_total ? $grand_total : 0,
@@ -217,7 +217,7 @@ class EasyDigitalDownloads extends Base {
 				edd_use_taxes() ? edd_get_payment_tax( $payment->ID, $payment_meta ) : '0',
 				$shipping = 0,
 				$discount,
-			);
+			];
 			$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $this->wrap_script( $tracking_code );

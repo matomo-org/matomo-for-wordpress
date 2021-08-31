@@ -44,18 +44,19 @@ class SyncConfig {
 			foreach ( $this->get_all() as $category => $keys ) {
 				$cat = $config->{$category};
 				if ( empty( $cat ) ) {
-					$cat = array();
+					$cat = [];
 				}
 
 				if ( empty( $keys ) && ! empty( $cat ) ) {
 					// need to unset all values
 					$has_change          = true;
-					$config->{$category} = array();
+					$config->{$category} = [];
 				}
 
 				if ( ! empty( $keys ) ) {
 					foreach ( $keys as $key => $value ) {
-						if ( ! isset( $cat[ $key ] ) || $cat[ $key ] !== $value ) {
+						// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+						if ( ! isset( $cat[ $key ] ) || $cat[ $key ] != $value ) {
 							$has_change          = true;
 							$cat[ $key ]         = $value;
 							$config->{$category} = $cat;
@@ -73,7 +74,7 @@ class SyncConfig {
 		$options = $this->settings->get_global_option( Settings::NETWORK_CONFIG_OPTIONS );
 
 		if ( empty( $options ) || ! is_array( $options ) ) {
-			$options = array();
+			$options = [];
 		}
 
 		return $options;
@@ -100,14 +101,14 @@ class SyncConfig {
 			$config = $this->get_all();
 
 			if ( ! isset( $config[ $group ] ) ) {
-				$config[ $group ] = array();
+				$config[ $group ] = [];
 			}
 			$config[ $group ][ $key ] = $value;
 
 			$this->settings->apply_changes(
-				array(
+				[
 					Settings::NETWORK_CONFIG_OPTIONS => $config,
-				)
+				]
 			);
 			// need to update all config files
 			wp_schedule_single_event( time() + 5, ScheduledTasks::EVENT_SYNC );
@@ -116,7 +117,7 @@ class SyncConfig {
 			$config    = PiwikConfig::getInstance();
 			$the_group = $config->{$group};
 			if ( empty( $the_group ) ) {
-				$the_group = array();
+				$the_group = [];
 			}
 			$the_group[ $key ] = $value;
 			$config->{$group}  = $the_group;

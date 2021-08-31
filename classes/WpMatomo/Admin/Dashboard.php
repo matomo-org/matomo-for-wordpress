@@ -25,7 +25,7 @@ class Dashboard {
 	const DASHBOARD_USER_OPTION = 'matomo_dashboard_widgets';
 
 	public function register_hooks() {
-		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
+		add_action( 'wp_dashboard_setup', [ $this, 'add_dashboard_widgets' ] );
 	}
 
 	public function add_dashboard_widgets() {
@@ -48,12 +48,12 @@ class Dashboard {
 								// do not escape the content, we want the HTML
 								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								echo $renderer->show_report(
-									array(
+									[
 										'unique_id'   => $widget['unique_id'],
 										// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 										'report_date' => $widget['date'],
 										'limit'       => 10,
-									)
+									]
 								);
 							}
 						);
@@ -71,7 +71,7 @@ class Dashboard {
 	public function get_widgets() {
 		$meta = get_user_meta( get_current_user_id(), self::DASHBOARD_USER_OPTION, true );
 		if ( empty( $meta ) ) {
-			$meta = array();
+			$meta = [];
 		}
 
 		return $meta;
@@ -96,10 +96,10 @@ class Dashboard {
 			return false;
 		}
 
-		return array(
+		return [
 			'report' => $report,
 			'date'   => $report_dates[ $date ],
-		);
+		];
 	}
 
 	public function has_widget( $report_unique_id, $report_date ) {
@@ -123,10 +123,10 @@ class Dashboard {
 				return;
 			}
 		}
-		$widgets[] = array(
+		$widgets[] = [
 			'unique_id' => $report_unique_id,
 			'date'      => $report_date,
-		);
+		];
 
 		$this->set_widgets( $widgets );
 	}

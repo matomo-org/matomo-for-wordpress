@@ -22,8 +22,8 @@ class RedirectOnActivation {
 	}
 
 	public function register_hooks() {
-		register_activation_hook( MATOMO_ANALYTICS_FILE, array( $this, 'matomo_activate' ) );
-		add_action( 'admin_init', array( $this, 'matomo_plugin_redirect' ) );
+		register_activation_hook( MATOMO_ANALYTICS_FILE, [ $this, 'matomo_activate' ] );
+		add_action( 'admin_init', [ $this, 'matomo_plugin_redirect' ] );
 	}
 
 	public function matomo_activate() {

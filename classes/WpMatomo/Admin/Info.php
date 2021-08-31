@@ -30,11 +30,11 @@ class Info {
 			$locale = explode( '_', get_user_locale( $user->ID ) );
 			wp_remote_get(
 				'https://api.matomo.org/1.0/subscribeNewsletter/?' . http_build_query(
-					array(
+					[
 						'email'     => $user->user_email,
 						'wordpress' => 1,
 						'language'  => $locale[0],
-					)
+					]
 				)
 			);
 			update_user_meta( $user->ID, self::FORM_NAME, '1' );

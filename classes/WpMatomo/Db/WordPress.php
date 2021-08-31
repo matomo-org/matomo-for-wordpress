@@ -121,7 +121,7 @@ class WordPress extends Mysqli {
 		$sql = 'SHOW TABLES';
 
 		$tables = $wpdb->get_results( $sql, ARRAY_N );
-		$result = array();
+		$result = [];
 		foreach ( $tables as $table ) {
 			$result[] = $table[0];
 		}
@@ -140,9 +140,9 @@ class WordPress extends Mysqli {
 
 		$result = $wpdb->get_results( $sql, ARRAY_A );
 
-		$desc = array();
+		$desc = [];
 
-		$row_defaults = array(
+		$row_defaults = [
 			'Length'          => null,
 			'Scale'           => null,
 			'Precision'       => null,
@@ -150,7 +150,7 @@ class WordPress extends Mysqli {
 			'Primary'         => false,
 			'PrimaryPosition' => null,
 			'Identity'        => false,
-		);
+		];
 		$i            = 1;
 		$p            = 1;
 		foreach ( $result as $key => $row ) {
@@ -186,7 +186,7 @@ class WordPress extends Mysqli {
 				}
 				++ $p;
 			}
-			$desc[ $this->foldCase( $row['Field'] ) ] = array(
+			$desc[ $this->foldCase( $row['Field'] ) ] = [
 				'SCHEMA_NAME'      => null, // @todo
 				'TABLE_NAME'       => $this->foldCase( $table_name ),
 				'COLUMN_NAME'      => $this->foldCase( $row['Field'] ),
@@ -201,7 +201,7 @@ class WordPress extends Mysqli {
 				'PRIMARY'          => $row['Primary'],
 				'PRIMARY_POSITION' => $row['PrimaryPosition'],
 				'IDENTITY'         => $row['Identity'],
-			);
+			];
 			++ $i;
 		}
 
@@ -238,7 +238,7 @@ class WordPress extends Mysqli {
 		return $query_result->rowCount();
 	}
 
-	private function prepareWp( $sql, $bind = array() ) {
+	private function prepareWp( $sql, $bind = [] ) {
 		global $wpdb;
 
 		$sql = str_replace( '%', '%%', $sql ); // eg when "value like 'done%'"
@@ -247,7 +247,7 @@ class WordPress extends Mysqli {
 			return $sql;
 		}
 		if ( ! is_array( $bind ) ) {
-			$bind = array( $bind );
+			$bind = [ $bind ];
 		}
 
 		$null_placeholder = '_#__###NULL###_' . wp_rand( 1, PHP_INT_MAX ) . ' __#_';
@@ -278,7 +278,7 @@ class WordPress extends Mysqli {
 		return $query;
 	}
 
-	public function query( $sql, $bind = array() ) {
+	public function query( $sql, $bind = [] ) {
 		global $wpdb;
 
 		$test_sql = trim( $sql );
@@ -317,11 +317,11 @@ class WordPress extends Mysqli {
 		return $exec;
 	}
 
-	public function fetch( $query, $parameters = array() ) {
+	public function fetch( $query, $parameters = [] ) {
 		return $this->fetchRow( $query, $parameters );
 	}
 
-	public function fetchCol( $sql, $bind = array() ) {
+	public function fetchCol( $sql, $bind = [] ) {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 
@@ -334,7 +334,7 @@ class WordPress extends Mysqli {
 		return $col;
 	}
 
-	public function fetchAssoc( $sql, $bind = array() ) {
+	public function fetchAssoc( $sql, $bind = [] ) {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 
@@ -423,7 +423,7 @@ class WordPress extends Mysqli {
 		}
 	}
 
-	public function fetchAll( $sql, $bind = array(), $fetch_mode = null ) {
+	public function fetchAll( $sql, $bind = [], $fetch_mode = null ) {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 
@@ -436,7 +436,7 @@ class WordPress extends Mysqli {
 		return $results;
 	}
 
-	public function fetchOne( $sql, $bind = array() ) {
+	public function fetchOne( $sql, $bind = [] ) {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 
@@ -453,7 +453,7 @@ class WordPress extends Mysqli {
 		return $value;
 	}
 
-	public function fetchRow( $sql, $bind = array(), $fetch_mode = null ) {
+	public function fetchRow( $sql, $bind = [], $fetch_mode = null ) {
 		global $wpdb;
 		$prepare = $this->prepareWp( $sql, $bind );
 
@@ -481,7 +481,7 @@ class WordPress extends Mysqli {
 	public function update( $table, array $bind, $where = '' ) {
 		global $wpdb;
 
-		$fields = array();
+		$fields = [];
 		foreach ( $bind as $field => $val ) {
 			$fields[] = "`$field` = %s";
 		}

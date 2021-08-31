@@ -45,7 +45,7 @@ class Installer {
 	}
 
 	public function register_hooks() {
-		add_action( 'activate_matomo', array( $this, 'install' ) );
+		add_action( 'activate_matomo', [ $this, 'install' ] );
 	}
 
 	public function looks_like_it_is_installed() {
@@ -255,17 +255,17 @@ class Installer {
 	private function create_config( $db_info ) {
 		$this->logger->log( 'Matomo is now creating the config' );
 		$domain  = home_url();
-		$general = array(
-			'trusted_hosts' => array( $domain ),
+		$general = [
+			'trusted_hosts' => [ $domain ],
 			'salt'          => Common::generateUniqId(),
-		);
+		];
 		$config  = Config::getInstance();
 		$path    = $config->getLocalPath();
 		if ( ! is_dir( dirname( $path ) ) ) {
 			wp_mkdir_p( dirname( $path ) );
 		}
-		$db_default      = array();
-		$general_default = array();
+		$db_default      = [];
+		$general_default = [];
 		if ( $config->database ) {
 			$db_default = $config->database;
 		}
@@ -302,7 +302,7 @@ class Installer {
 	 *
 	 * @return array
 	 */
-	public static function get_db_infos( $default = array() ) {
+	public static function get_db_infos( $default = [] ) {
 		global $wpdb;
 
 		$socket    = '';
@@ -334,7 +334,7 @@ class Installer {
 
 		$charset = $wpdb->charset ? $wpdb->charset : 'utf8';
 
-		$database = array(
+		$database = [
 			'host'          => $host,
 			'port'          => $port,
 			'username'      => DB_USER,
@@ -343,7 +343,7 @@ class Installer {
 			'charset'       => $charset,
 			'tables_prefix' => $wpdb->prefix . MATOMO_DATABASE_PREFIX,
 			'adapter'       => 'WordPress',
-		);
+		];
 		if ( ! empty( $socket ) ) {
 			$database['unix_socket'] = $socket;
 		}

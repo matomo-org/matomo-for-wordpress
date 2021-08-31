@@ -19,7 +19,7 @@ class Renderer {
 	const CUSTOM_UNIQUE_ID_VISITS_OVER_TIME = 'visits_over_time';
 
 	public function register_hooks() {
-		add_shortcode( 'matomo_report', array( $this, 'show_report' ) );
+		add_shortcode( 'matomo_report', [ $this, 'show_report' ] );
 	}
 
 	public function show_visits_over_time( $limit, $period ) {
@@ -34,10 +34,10 @@ class Renderer {
 			$limit = 14;
 		}
 
-		$report_meta = array(
+		$report_meta = [
 			'module' => 'VisitsSummary',
 			'action' => 'get',
-		);
+		];
 
 		$data              = new Data();
 		$report            = $data->fetch_report( $report_meta, $period, 'last' . $limit, 'label', $limit );
@@ -60,11 +60,11 @@ class Renderer {
 
 	public function show_report( $atts ) {
 		$a = shortcode_atts(
-			array(
+			[
 				'unique_id'   => '',
 				'report_date' => Dates::YESTERDAY,
 				'limit'       => 10,
-			),
+			],
 			$atts
 		);
 

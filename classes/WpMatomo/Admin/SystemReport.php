@@ -68,7 +68,7 @@ class SystemReport {
 	const TROUBLESHOOT_CLEAR_LOGS         = 'matomo_troubleshooting_action_clear_logs';
 	const TROUBLESHOOT_RUN_UPDATER        = 'matomo_troubleshooting_action_run_updater';
 
-	private $not_compatible_plugins = array(
+	private $not_compatible_plugins = [
 		'background-manager',
 		// Uses an old version of Twig and plugin is no longer maintained.
 		'all-in-one-event-calendar',
@@ -91,9 +91,9 @@ class SystemReport {
 		// see https://wordpress.org/support/topic/20-total-errors-during-this-script-execution/
 		'accelerated-mobile-pages',
 		// see https://wordpress.org/support/topic/receiving-errors-from-my-plesk-server/
-	);
+	];
 
-	private $valid_tabs = array( 'troubleshooting' );
+	private $valid_tabs = [ 'troubleshooting' ];
 
 	/**
 	 * @var Settings
@@ -142,7 +142,7 @@ class SystemReport {
 					if ( $idsite ) {
 						$timezone   = \Piwik\Site::getTimezoneFor( $idsite );
 						$now_string = \Piwik\Date::factory( 'now', $timezone )->toString();
-						foreach ( array( 'day' ) as $period ) {
+						foreach ( [ 'day' ] as $period ) {
 							API::getInstance()->invalidateArchivedReports( $idsite, $now_string, $period, false, false );
 						}
 					}
@@ -229,42 +229,42 @@ class SystemReport {
 			}
 		}
 
-		$matomo_tables = array();
+		$matomo_tables = [];
 		if ( empty( $matomo_active_tab ) ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting
 			$this->initial_error_reporting = @error_reporting();
-			$matomo_tables                 = array(
-				array(
+			$matomo_tables                 = [
+				[
 					'title'        => 'Matomo',
 					'rows'         => $this->get_matomo_info(),
 					'has_comments' => true,
-				),
-				array(
+				],
+				[
 					'title'        => 'WordPress',
 					'rows'         => $this->get_wordpress_info(),
 					'has_comments' => true,
-				),
-				array(
+				],
+				[
 					'title'        => 'WordPress Plugins',
 					'rows'         => $this->get_plugins_info(),
 					'has_comments' => true,
-				),
-				array(
+				],
+				[
 					'title'        => 'Server',
 					'rows'         => $this->get_server_info(),
 					'has_comments' => true,
-				),
-				array(
+				],
+				[
 					'title'        => 'Database',
 					'rows'         => $this->get_db_info(),
 					'has_comments' => true,
-				),
-				array(
+				],
+				[
 					'title'        => 'Browser',
 					'rows'         => $this->get_browser_info(),
 					'has_comments' => true,
-				),
-			);
+				],
+			];
 		}
 		$matomo_tables                    = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
 		$matomo_tables                    = $this->add_errors_first( $matomo_tables );
@@ -293,11 +293,11 @@ class SystemReport {
 	}
 
 	private function add_errors_first( $report_tables ) {
-		$errors = array(
+		$errors = [
 			'title'        => 'Errors',
-			'rows'         => array(),
+			'rows'         => [],
 			'has_comments' => true,
-		);
+		];
 		foreach ( $report_tables as $report_table ) {
 			foreach ( $report_table['rows'] as $row ) {
 				if ( ! empty( $row['is_error'] ) ) {
@@ -328,28 +328,28 @@ class SystemReport {
 			$comment .= sprintf( esc_html__( '%s is not writable. ', 'matomo' ), $title );
 		}
 
-		$rows[] = array(
+		$rows[] = [
 			'name'       => sprintf( esc_html__( '%s exists and is writable.', 'matomo' ), $title ),
 			'value'      => $file_exists && $file_readable && $file_writable ? esc_html__( 'Yes', 'matomo' ) : esc_html__( 'No', 'matomo' ),
 			'comment'    => $comment,
 			'is_error'   => $required && ( ! $file_exists || ! $file_readable ),
 			'is_warning' => ! $required && ( ! $file_exists || ! $file_readable ),
-		);
+		];
 
 		return $rows;
 	}
 
 	private function get_matomo_info() {
-		$rows = array();
+		$rows = [];
 
 		$plugin_data  = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
 		$install_time = get_option( Installer::OPTION_NAME_INSTALL_DATE );
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => esc_html__( 'Matomo Plugin Version', 'matomo' ),
 			'value'   => $plugin_data['Version'],
 			'comment' => '',
-		);
+		];
 
 		$paths            = new Paths();
 		$path_config_file = $paths->get_config_ini_path();
@@ -358,36 +358,36 @@ class SystemReport {
 		$path_tracker_file = $paths->get_matomo_js_upload_path();
 		$rows              = $this->check_file_exists_and_writable( $rows, $path_tracker_file, 'JS Tracker', false );
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => esc_html__( 'Plugin directories', 'matomo' ),
 			'value'   => ! empty( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) ? 'Yes' : 'No',
 			'comment' => ! empty( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) ? wp_json_encode( $GLOBALS['MATOMO_PLUGIN_DIRS'] ) : '',
-		);
+		];
 
 		$tmp_dir = $paths->get_tmp_dir();
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => esc_html__( 'Tmp directory writable', 'matomo' ),
 			'value'   => is_writable( $tmp_dir ),
 			'comment' => $tmp_dir,
-		);
+		];
 
 		if ( ! empty( $_SERVER['MATOMO_WP_ROOT_PATH'] ) ) {
 			// we can have / in this value
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-			$custom_path = rtrim( sanitize_text_field( $_SERVER['MATOMO_WP_ROOT_PATH'] ), '/' ) . '/wp-load.php';
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+			$custom_path = rtrim( $_SERVER['MATOMO_WP_ROOT_PATH'], '/' ) . '/wp-load.php';
 			$path_exists = file_exists( $custom_path );
 			$comment     = '';
 			if ( ! $path_exists ) {
 				$comment = 'It seems the path does not point to the WP root directory.';
 			}
 
-			$rows[] = array(
+			$rows[] = [
 				'name'     => 'Custom MATOMO_WP_ROOT_PATH',
 				'value'    => $path_exists,
 				'is_error' => ! $path_exists,
 				'comment'  => $comment,
-			);
+			];
 		}
 
 		$report = null;
@@ -399,129 +399,129 @@ class SystemReport {
 				$service = StaticContainer::get( DiagnosticService::class );
 				$report  = $service->runDiagnostics();
 
-				$rows[] = array(
+				$rows[] = [
 					'name'    => esc_html__( 'Matomo Version', 'matomo' ),
 					'value'   => \Piwik\Version::VERSION,
 					'comment' => '',
-				);
+				];
 			} catch ( Exception $e ) {
-				$rows[] = array(
+				$rows[] = [
 					'name'    => esc_html__( 'Matomo System Check', 'matomo' ),
 					'value'   => 'Failed to run Matomo system check.',
 					'comment' => $e->getMessage(),
-				);
+				];
 			}
 		}
 
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => esc_html__( 'Matomo Blog idSite', 'matomo' ),
 			'value'   => $idsite,
 			'comment' => '',
-		);
+		];
 
 		$install_date = '';
 		if ( ! empty( $install_time ) ) {
 			$install_date = 'Install date: ' . $this->convert_time_to_date( $install_time, true, false );
 		}
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => esc_html__( 'Matomo Install Version', 'matomo' ),
 			'value'   => get_option( Installer::OPTION_NAME_INSTALL_VERSION ),
 			'comment' => $install_date,
-		);
+		];
 
 		$wpmatomo_updater = new \WpMatomo\Updater( $this->settings );
 		if ( ! WpMatomo::is_safe_mode() ) {
 			$outstanding_updates = $wpmatomo_updater->get_plugins_requiring_update();
 			$upgrade_in_progress = $wpmatomo_updater->is_upgrade_in_progress();
-			$rows[]              = array(
+			$rows[]              = [
 				'name'    => 'Upgrades outstanding',
 				'value'   => ! empty( $outstanding_updates ),
 				'comment' => ! empty( $outstanding_updates ) ? wp_json_encode( $outstanding_updates ) : '',
-			);
-			$rows[]              = array(
+			];
+			$rows[]              = [
 				'name'    => 'Upgrade in progress',
 				'value'   => $upgrade_in_progress,
 				'comment' => '',
-			);
+			];
 		}
 
 		if ( ! $wpmatomo_updater->load_plugin_functions() ) {
 			// this should actually never happen...
-			$rows[] = array(
+			$rows[] = [
 				'name'       => 'Matomo Upgrade Plugin Functions',
 				'is_warning' => true,
 				'value'      => false,
 				'comment'    => 'Function "get_plugin_data" not available. There may be an issue with upgrades not being executed. Please reach out to us.',
-			);
+			];
 		}
 
-		$rows[] = array(
+		$rows[] = [
 			'section' => 'Endpoints',
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => 'Matomo JavaScript Tracker URL',
 			'value'   => '',
 			'comment' => $paths->get_js_tracker_url_in_matomo_dir(),
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => 'Matomo JavaScript Tracker - WP Rest API',
 			'value'   => '',
 			'comment' => $paths->get_js_tracker_rest_api_endpoint(),
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => 'Matomo HTTP Tracking API',
 			'value'   => '',
 			'comment' => $paths->get_tracker_api_url_in_matomo_dir(),
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => 'Matomo HTTP Tracking API - WP Rest API',
 			'value'   => '',
 			'comment' => $paths->get_tracker_api_rest_api_endpoint(),
-		);
+		];
 
 		$matomo_plugin_dir_name = basename( dirname( MATOMO_ANALYTICS_FILE ) );
 		if ( 'matomo' !== $matomo_plugin_dir_name ) {
-			$rows[] = array(
+			$rows[] = [
 				'name'     => 'Matomo Plugin Name is correct',
 				'value'    => false,
 				'is_error' => true,
 				'comment'  => 'The plugin name should be "matomo" but seems to be "' . $matomo_plugin_dir_name . '". As a result, admin pages and other features might not work. You might need to rename the directory name of this plugin and reactive the plugin.',
-			);
+			];
 		} elseif ( ! is_plugin_active( 'matomo/matomo.php' ) ) {
-			$rows[] = array(
+			$rows[] = [
 				'name'     => 'Matomo Plugin not active',
 				'value'    => false,
 				'is_error' => true,
 				'comment'  => 'It seems WordPress thinks that `matomo/matomo.php` is not active. As a result Matomo reporting and admin pages may not work. You may be able to fix this by deactivating and activating the Matomo Analytics plugin. One of the reasons this could happen is that you used to have Matomo installed in the wrong folder.',
-			);
+			];
 		}
 
-		$rows[] = array(
+		$rows[] = [
 			'section' => 'Crons',
-		);
+		];
 
 		$scheduled_tasks = new ScheduledTasks( $this->settings );
 		$all_events      = $scheduled_tasks->get_all_events();
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => esc_html__( 'Server time', 'matomo' ),
 			'value'   => $this->convert_time_to_date( time(), false ),
 			'comment' => '',
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => esc_html__( 'Blog time', 'matomo' ),
 			'value'   => $this->convert_time_to_date( time(), true ),
 			'comment' => esc_html__( 'Below dates are shown in blog timezone', 'matomo' ),
-		);
+		];
 
 		foreach ( $all_events as $event_name => $event_config ) {
 			$last_run_before = $scheduled_tasks->get_last_time_before_cron( $event_name );
@@ -533,52 +533,52 @@ class SystemReport {
 			$comment .= ' Last ended: ' . $this->convert_time_to_date( $last_run_after, true, true ) . '.';
 			$comment .= ' Interval: ' . $event_config['interval'];
 
-			$rows[] = array(
+			$rows[] = [
 				'name'    => $event_config['name'],
 				'value'   => 'Next run: ' . $this->convert_time_to_date( $next_scheduled, true, true ),
 				'comment' => $comment,
-			);
+			];
 		}
 
 		$suports_async = false;
 		if ( ! WpMatomo::is_safe_mode() && $report ) {
-			$rows[] = array(
+			$rows[] = [
 				'section' => esc_html__( 'Mandatory checks', 'matomo' ),
-			);
+			];
 
 			$rows = $this->add_diagnostic_results( $rows, $report->getMandatoryDiagnosticResults() );
 
-			$rows[] = array(
+			$rows[] = [
 				'section' => esc_html__( 'Optional checks', 'matomo' ),
-			);
+			];
 			$rows   = $this->add_diagnostic_results( $rows, $report->getOptionalDiagnosticResults() );
 
 			$cli_multi     = new CliMulti();
 			$suports_async = $cli_multi->supportsAsync();
 
-			$rows[] = array(
+			$rows[] = [
 				'name'    => 'Supports Async Archiving',
 				'value'   => $suports_async,
 				'comment' => '',
-			);
+			];
 
 			$location_provider = LocationProvider::getCurrentProvider();
 			if ( $location_provider ) {
-				$rows[] = array(
+				$rows[] = [
 					'name'    => 'Location provider ID',
 					'value'   => $location_provider->getId(),
 					'comment' => '',
-				);
-				$rows[] = array(
+				];
+				$rows[] = [
 					'name'    => 'Location provider available',
 					'value'   => $location_provider->isAvailable(),
 					'comment' => '',
-				);
-				$rows[] = array(
+				];
+				$rows[] = [
 					'name'    => 'Location provider working',
 					'value'   => $location_provider->isWorking(),
 					'comment' => '',
-				);
+				];
 			}
 
 			if ( ! WpMatomo::is_safe_mode() ) {
@@ -588,27 +588,27 @@ class SystemReport {
 				if ( empty( $general['proxy_client_headers'] ) ) {
 					foreach ( AdvancedSettings::$valid_host_headers as $header ) {
 						if ( ! empty( $_SERVER[ $header ] ) ) {
-							$rows[] = array(
+							$rows[] = [
 								'name'       => 'Proxy header',
 								'value'      => $header,
 								'is_warning' => true,
 								'comment'    => 'A proxy header is set which means you maybe need to configure a proxy header in the Advanced settings to make location reporting work. If the location in your reports is detected correctly, you can ignore this warning. Learn more: https://matomo.org/faq/wordpress/how-do-i-fix-the-proxy-header-warning-in-the-matomo-for-wordpress-system-report/',
-							);
+							];
 						}
 					}
 				}
 				$incompatible_plugins = Plugin\Manager::getInstance()->getIncompatiblePlugins( Version::VERSION );
 				if ( ! empty( $incompatible_plugins ) ) {
-					$rows[] = array(
+					$rows[] = [
 						'section' => esc_html__( 'Incompatible Matomo plugins', 'matomo' ),
-					);
+					];
 					foreach ( $incompatible_plugins as $plugin ) {
-						$rows[] = array(
+						$rows[] = [
 							'name'     => 'Plugin has missing dependencies',
 							'value'    => $plugin->getPluginName(),
 							'is_error' => true,
 							'comment'  => $plugin->getMissingDependenciesAsString( Version::VERSION ) . ' If the plugin requires a different Matomo version you may need to update it. If you no longer use it consider uninstalling it.',
-						);
+						];
 					}
 				}
 			}
@@ -622,42 +622,42 @@ class SystemReport {
 					$comment = 'It looks like there were no visits in the last ' . $num_days_check_visits . ' days. This may be expected if tracking is disabled, you have not added the tracking code, or your website does not have many visitors in general and you exclude your own visits.';
 				}
 
-				$rows[] = array(
+				$rows[] = [
 					'name'       => 'Had visit in last ' . $num_days_check_visits . ' days',
 					'value'      => $had_visits,
 					'is_warning' => ! $had_visits && $this->settings->is_tracking_enabled(),
 					'comment'    => $comment,
-				);
+				];
 			}
 
 			if ( ! WpMatomo::is_safe_mode() ) {
 				Bootstrap::do_bootstrap();
 				$matomo_url = SettingsPiwik::getPiwikUrl();
-				$rows[]     = array(
+				$rows[]     = [
 					'name'    => 'Matomo URL',
 					'comment' => $matomo_url,
 					'value'   => ! empty( $matomo_url ),
-				);
+				];
 			}
 		}
 
-		$rows[] = array(
+		$rows[] = [
 			'section' => 'Matomo Settings',
-		);
+		];
 
 		// always show these settings
-		$global_settings_always_show = array(
+		$global_settings_always_show = [
 			'track_mode',
 			'track_codeposition',
 			'track_api_endpoint',
 			'track_js_endpoint',
-		);
+		];
 		foreach ( $global_settings_always_show as $key ) {
-			$rows[] = array(
+			$rows[] = [
 				'name'    => ucfirst( str_replace( '_', ' ', $key ) ),
 				'value'   => $this->settings->get_global_option( $key ),
 				'comment' => '',
-			);
+			];
 		}
 
 		// otherwise show only few customised settings
@@ -669,17 +669,17 @@ class SystemReport {
 					$val = implode( ', ', $val );
 				}
 
-				$rows[] = array(
+				$rows[] = [
 					'name'    => ucfirst( str_replace( '_', ' ', $key ) ),
 					'value'   => $val,
 					'comment' => '',
-				);
+				];
 			}
 		}
 
-		$rows[] = array(
+		$rows[] = [
 			'section' => 'Logs',
-		);
+		];
 
 		$error_log_entries = $this->logger->get_last_logged_entries();
 
@@ -723,25 +723,25 @@ class SystemReport {
 				if ( $suports_async
 					 && ! empty( $error['value'] ) && is_string( $error['value'] )
 					 && strpos( $error['value'], __( 'Your PHP installation appears to be missing the MySQL extension which is required by WordPress.', 'matomo' ) ) > 0 ) {
-					$rows[] = array(
+					$rows[] = [
 						'name'     => 'Cli has no MySQL',
 						'value'    => true,
 						'comment'  => 'It looks like MySQL is not available on CLI. Please read our FAQ on how to fix this issue: https://matomo.org/faq/wordpress/how-do-i-fix-the-error-your-php-installation-appears-to-be-missing-the-mysql-extension-which-is-required-by-wordpress-in-matomo-system-report/ ',
 						'is_error' => true,
-					);
+					];
 				}
 			}
 		} else {
-			$rows[] = array(
+			$rows[] = [
 				'name'    => __( 'None', 'matomo' ),
 				'value'   => '',
 				'comment' => '',
-			);
+			];
 		}
 
 		if ( ! WpMatomo::is_safe_mode() ) {
 			Bootstrap::do_bootstrap();
-			$trackfailures = array();
+			$trackfailures = [];
 			try {
 				$tracking_failures = new Failures();
 				$trackfailures     = $tracking_failures->getAllFailures();
@@ -750,9 +750,9 @@ class SystemReport {
 				// ignored in case not set up yet etc.
 			}
 			if ( ! empty( $trackfailures ) ) {
-				$rows[] = array(
+				$rows[] = [
 					'section' => 'Tracking failures',
-				);
+				];
 				foreach ( $trackfailures as $failure ) {
 					$comment = sprintf(
 						'Solution: %s<br>More info: %s<br>Date: %s<br>Request URL: %s',
@@ -761,12 +761,12 @@ class SystemReport {
 						$failure['pretty_date_first_occurred'],
 						$failure['request_url']
 					);
-					$rows[]  = array(
+					$rows[]  = [
 						'name'       => $failure['problem'],
 						'is_warning' => true,
 						'value'      => '',
 						'comment'    => $comment,
-					);
+					];
 				}
 			}
 		}
@@ -850,13 +850,13 @@ class SystemReport {
 				}
 			}
 
-			$rows[] = array(
+			$rows[] = [
 				'name'       => $result->getLabel(),
 				'value'      => $result->getStatus() . ' ' . $result->getLongErrorMessage(),
 				'comment'    => $comment,
 				'is_warning' => $result->getStatus() === DiagnosticResult::STATUS_WARNING,
 				'is_error'   => $result->getStatus() === DiagnosticResult::STATUS_ERROR,
-			);
+			];
 		}
 
 		return $rows;
@@ -874,32 +874,32 @@ class SystemReport {
 			$is_network_enabled = $settings->is_network_enabled();
 		}
 
-		$rows   = array();
-		$rows[] = array(
+		$rows   = [];
+		$rows[] = [
 			'name'  => 'Home URL',
 			'value' => home_url(),
-		);
-		$rows[] = array(
+		];
+		$rows[] = [
 			'name'  => 'Site URL',
 			'value' => site_url(),
-		);
-		$rows[] = array(
+		];
+		$rows[] = [
 			'name'  => 'WordPress Version',
 			'value' => get_bloginfo( 'version' ),
-		);
-		$rows[] = array(
+		];
+		$rows[] = [
 			'name'  => 'Number of blogs',
 			'value' => $num_blogs,
-		);
-		$rows[] = array(
+		];
+		$rows[] = [
 			'name'  => 'Multisite Enabled',
 			'value' => $is_multi_site,
-		);
-		$rows[] = array(
+		];
+		$rows[] = [
 			'name'  => 'Network Enabled',
 			'value' => $is_network_enabled,
-		);
-		$consts = array(
+		];
+		$consts = [
 			'WP_DEBUG',
 			'WP_DEBUG_DISPLAY',
 			'WP_DEBUG_LOG',
@@ -929,215 +929,215 @@ class SystemReport {
 			'MATOMO_SAFE_MODE',
 			'MATOMO_GLOBAL_UPLOAD_DIR',
 			'MATOMO_LOGIN_REDIRECT',
-		);
+		];
 		foreach ( $consts as $const ) {
-			$rows[] = array(
+			$rows[] = [
 				'name'  => $const,
 				'value' => defined( $const ) ? constant( $const ) : '-',
-			);
+			];
 		}
 
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'Permalink Structure',
 			'value' => get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default',
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'Possibly uses symlink',
 			'value' => strpos( __DIR__, ABSPATH ) === false && strpos( __DIR__, WP_CONTENT_DIR ) === false,
-		);
+		];
 
 		$upload_dir = wp_upload_dir();
-		$rows[]     = array(
+		$rows[]     = [
 			'name'  => 'Upload base url',
 			'value' => $upload_dir['baseurl'],
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'Upload base dir',
 			'value' => $upload_dir['basedir'],
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'Upload url',
 			'value' => $upload_dir['url'],
-		);
+		];
 
-		foreach ( array( 'upload_path', 'upload_url_path' ) as $option_read ) {
-			$rows[] = array(
+		foreach ( [ 'upload_path', 'upload_url_path' ] as $option_read ) {
+			$rows[] = [
 				'name'  => 'Custom ' . $option_read,
 				'value' => get_option( $option_read ),
-			);
+			];
 		}
 
 		if ( is_plugin_active( 'wp-piwik/wp-piwik.php' ) ) {
-			$rows[] = array(
+			$rows[] = [
 				'name'       => 'WP-Matomo (WP-Piwik) activated',
 				'value'      => true,
 				'is_warning' => true,
 				'comment'    => 'It is usually not recommended or needed to run Matomo for WordPress and WP-Matomo at the same time. To learn more about the differences between the two plugins view this URL: https://matomo.org/faq/wordpress/why-are-there-two-different-matomo-for-wordpress-plugins-what-is-the-difference-to-wp-matomo-integration-plugin/',
-			);
+			];
 
 			$mode = get_option( 'wp-piwik_global-piwik_mode' );
 			if ( function_exists( 'get_site_option' ) && is_plugin_active_for_network( 'wp-piwik/wp-piwik.php' ) ) {
 				$mode = get_site_option( 'wp-piwik_global-piwik_mode' );
 			}
 			if ( ! empty( $mode ) ) {
-				$rows[] = array(
+				$rows[] = [
 					'name'       => 'WP-Matomo mode',
 					'value'      => $mode,
 					'is_warning' => 'php' === $mode || 'PHP' === $mode,
 					'comment'    => 'WP-Matomo is configured in "PHP mode". This is known to cause issues with Matomo for WordPress. We recommend you either deactivate WP-Matomo or you go "Settings => WP-Matomo" and change the "Matomo Mode" in the "Connect to Matomo" section to "Self-hosted HTTP API".',
-				);
+				];
 			}
 		}
 
 		$compatible_content_dir = matomo_has_compatible_content_dir();
 		if ( true === $compatible_content_dir ) {
-			$rows[] = array(
+			$rows[] = [
 				'name'  => 'Compatible content directory',
 				'value' => true,
-			);
+			];
 		} else {
-			$rows[] = array(
+			$rows[] = [
 				'name'       => 'Compatible content directory',
 				'value'      => $compatible_content_dir,
 				'is_warning' => true,
 				'comment'    => __( 'It looks like you are maybe using a custom WordPress content directory. The Matomo reporting/admin pages might not work. You may be able to workaround this.', 'matomo' ) . ' ' . __( 'Learn more', 'matomo' ) . ': https://matomo.org/faq/wordpress/how-do-i-make-matomo-for-wordpress-work-when-i-have-a-custom-content-directory/',
-			);
+			];
 		}
 
 		return $rows;
 	}
 
 	private function get_server_info() {
-		$rows = array();
+		$rows = [];
 
 		if ( ! empty( $_SERVER['SERVER_SOFTWARE'] ) ) {
-			$rows[] = array(
+			$rows[] = [
 				'name'  => 'Server Info',
 				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 				'value' => sanitize_text_field( $_SERVER['SERVER_SOFTWARE'] ),
-			);
+			];
 		}
 		if ( PHP_OS ) {
-			$rows[] = array(
+			$rows[] = [
 				'name'  => 'PHP OS',
 				'value' => PHP_OS,
-			);
+			];
 		}
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'PHP Version',
 			'value' => phpversion(),
-		);
-		$rows[] = array(
+		];
+		$rows[] = [
 			'name'  => 'PHP SAPI',
 			'value' => php_sapi_name(),
-		);
+		];
 		if ( defined( 'PHP_BINARY' ) && PHP_BINARY ) {
-			$rows[] = array(
+			$rows[] = [
 				'name'  => 'PHP Binary Name',
 				'value' => @basename( PHP_BINARY ),
-			);
+			];
 		}
 		// we report error reporting before matomo bootstraped and after to see if Matomo changed it successfully etc
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'PHP Error Reporting',
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting
 			'value' => $this->initial_error_reporting . ' After bootstrap: ' . @error_reporting(),
-		);
+		];
 		if ( ! WpMatomo::is_safe_mode() ) {
 			Bootstrap::do_bootstrap();
 			$cli_php = new CliMulti\CliPhp();
 			$binary  = $cli_php->findPhpBinary();
 			if ( ! empty( $binary ) ) {
 				$binary = basename( $binary );
-				$rows[] = array(
+				$rows[] = [
 					'name'  => 'PHP Found Binary',
 					'value' => $binary,
-				);
+				];
 			}
 		}
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'Timezone',
 			'value' => date_default_timezone_get(),
-		);
+		];
 		if ( function_exists( 'wp_timezone_string' ) ) {
-			$rows[] = array(
+			$rows[] = [
 				'name'  => 'WP timezone',
 				'value' => wp_timezone_string(),
-			);
+			];
 		}
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'Locale',
 			'value' => get_locale(),
-		);
+		];
 		if ( function_exists( 'get_user_locale' ) ) {
-			$rows[] = array(
+			$rows[] = [
 				'name'  => 'User Locale',
 				'value' => get_user_locale(),
-			);
+			];
 		}
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => 'Memory Limit',
 			'value'   => @ini_get( 'memory_limit' ),
 			'comment' => 'At least 128MB recommended. Depending on your traffic 256MB or more may be needed.',
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => 'WP Memory Limit',
 			'value'   => defined( 'WP_MEMORY_LIMIT' ) ? WP_MEMORY_LIMIT : '',
 			'comment' => '',
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => 'WP Max Memory Limit',
 			'value'   => defined( 'WP_MAX_MEMORY_LIMIT' ) ? WP_MAX_MEMORY_LIMIT : '',
 			'comment' => '',
-		);
+		];
 
 		if ( function_exists( 'timezone_version_get' ) ) {
-			$rows[] = array(
+			$rows[] = [
 				'name'  => 'Timezone version',
 				'value' => timezone_version_get(),
-			);
+			];
 		}
 
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'Time',
 			'value' => time(),
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'Max Execution Time',
 			'value' => ini_get( 'max_execution_time' ),
-		);
-		$rows[] = array(
+		];
+		$rows[] = [
 			'name'  => 'Max Post Size',
 			'value' => ini_get( 'post_max_size' ),
-		);
-		$rows[] = array(
+		];
+		$rows[] = [
 			'name'  => 'Max Upload Size',
 			'value' => wp_max_upload_size(),
-		);
-		$rows[] = array(
+		];
+		$rows[] = [
 			'name'  => 'Max Input Vars',
 			'value' => ini_get( 'max_input_vars' ),
-		);
+		];
 
 		$disabled_functions = ini_get( 'disable_functions' );
-		$rows[]             = array(
+		$rows[]             = [
 			'name'    => 'Disabled PHP functions',
 			'value'   => ! empty( $disabled_functions ),
 			'comment' => ! empty( $disabled_functions ) ? $disabled_functions : '',
-		);
+		];
 
 		$zlib_compression = ini_get( 'zlib.output_compression' );
-		$row              = array(
+		$row              = [
 			'name'  => 'zlib.output_compression is off',
 			'value' => '1' !== $zlib_compression,
-		);
+		];
 
 		if ( '1' === $zlib_compression ) {
 			$row['is_error'] = true;
@@ -1148,32 +1148,32 @@ class SystemReport {
 		if ( function_exists( 'curl_version' ) ) {
 			$curl_version = curl_version();
 			$curl_version = $curl_version['version'] . ', ' . $curl_version['ssl_version'];
-			$rows[]       = array(
+			$rows[]       = [
 				'name'  => 'Curl Version',
 				'value' => $curl_version,
-			);
+			];
 		}
 
 		$suhosin_installed = ( extension_loaded( 'suhosin' ) || ( defined( 'SUHOSIN_PATCH' ) && constant( 'SUHOSIN_PATCH' ) ) );
-		$rows[]            = array(
+		$rows[]            = [
 			'name'    => 'Suhosin installed',
 			'value'   => ! empty( $suhosin_installed ),
 			'comment' => '',
-		);
+		];
 
 		return $rows;
 	}
 
 	private function get_browser_info() {
-		$rows = array();
+		$rows = [];
 
 		if ( ! empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
-			$rows[] = array(
+			$rows[] = [
 				'name'    => 'Browser',
 				'value'   => '',
 				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 				'comment' => sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ),
-			);
+			];
 		}
 		if ( ! WpMatomo::is_safe_mode() ) {
 			Bootstrap::do_bootstrap();
@@ -1183,23 +1183,23 @@ class SystemReport {
 					$detector = StaticContainer::get( DeviceDetectorFactory::class )->makeInstance( sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ) );
 					$client   = $detector->getClient();
 					if ( ! empty( $client['name'] ) && 'Microsoft Edge' === $client['name'] && (int) $client['version'] >= 85 ) {
-						$rows[] = array(
+						$rows[] = [
 							'name'       => 'Browser Compatibility',
 							'is_warning' => true,
 							'value'      => 'Yes',
 							'comment'    => 'Because you are using MS Edge browser, you may see a warning like "This site has been reported as unsafe" from "Microsoft Defender SmartScreen" when you view the Matomo Reporting, Admin or Tag Manager page. This is a false alert and you can safely ignore this warning by clicking on the icon next to the URL (in the address bar) and choosing either "Report as safe" (preferred) or "Show unsafe content". We are hoping to get this false warning removed in the future.',
-						);
+						];
 					}
 				}
 			} catch ( Exception $e ) {
 				$this->logger->log( $e->getMessage() );
 			}
 
-			$rows[] = array(
+			$rows[] = [
 				'name'    => 'Language',
 				'value'   => Common::getBrowserLanguage(),
 				'comment' => '',
-			);
+			];
 		}
 
 		return $rows;
@@ -1207,49 +1207,49 @@ class SystemReport {
 
 	private function get_db_info() {
 		global $wpdb;
-		$rows = array();
+		$rows = [];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => 'MySQL Version',
 			'value'   => ! empty( $wpdb->is_mysql ) ? $wpdb->db_version() : '',
 			'comment' => '',
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => 'Mysqli Connect',
 			'value'   => function_exists( 'mysqli_connect' ),
 			'comment' => '',
-		);
-		$rows[] = array(
+		];
+		$rows[] = [
 			'name'    => 'Force MySQL over Mysqli',
 			'value'   => defined( 'WP_USE_EXT_MYSQL' ) && WP_USE_EXT_MYSQL,
 			'comment' => '',
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'DB Prefix',
 			'value' => $wpdb->prefix,
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'DB CHARSET',
 			'value' => defined( 'DB_CHARSET' ) ? DB_CHARSET : '',
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'DB COLLATE',
 			'value' => defined( 'DB_COLLATE' ) ? DB_COLLATE : '',
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'SHOW ERRORS',
 			'value' => ! empty( $wpdb->show_errors ),
-		);
+		];
 
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'SUPPRESS ERRORS',
 			'value' => ! empty( $wpdb->suppress_errors ),
-		);
+		];
 
 		if ( method_exists( $wpdb, 'parse_db_host' ) ) {
 			$host_data = $wpdb->parse_db_host( DB_HOST );
@@ -1257,41 +1257,41 @@ class SystemReport {
 				list( $host, $port, $socket, $is_ipv6 ) = $host_data;
 			}
 
-			$rows[] = array(
+			$rows[] = [
 				'name'  => 'Uses Socket',
 				'value' => ! empty( $socket ),
-			);
-			$rows[] = array(
+			];
+			$rows[] = [
 				'name'  => 'Uses IPv6',
 				'value' => ! empty( $is_ipv6 ),
-			);
+			];
 		}
 
-		$rows[] = array(
+		$rows[] = [
 			'name'  => 'Matomo tables found',
 			'value' => $this->get_num_matomo_tables(),
-		);
+		];
 
 		$missing_tables     = $this->get_missing_tables();
 		$has_missing_tables = ( count( $missing_tables ) > 0 );
-		$rows[]             = array(
+		$rows[]             = [
 			'name'     => 'DB tables exist',
 			'value'    => ( ! $has_missing_tables ),
 			'comment'  => $has_missing_tables ? sprintf( __( 'Some tables may be missing: %s', 'matomo' ), implode( ', ', $missing_tables ) ) : '',
 			'is_error' => $has_missing_tables,
-		);
+		];
 
-		foreach ( array( 'user', 'site' ) as $table ) {
-			$rows[] = array(
+		foreach ( [ 'user', 'site' ] as $table ) {
+			$rows[] = [
 				'name'  => 'Matomo ' . $table . 's found',
 				'value' => $this->get_num_entries_in_table( $table ),
-			);
+			];
 		}
 
 		$grants = $this->get_db_grants();
 
 		// we only show these grants for security reasons as only they are needed and we don't need to know any other ones
-		$needed_grants = array(
+		$needed_grants = [
 			'SELECT',
 			'INSERT',
 			'UPDATE',
@@ -1302,7 +1302,7 @@ class SystemReport {
 			'ALTER',
 			'CREATE TEMPORARY TABLES',
 			'LOCK TABLES',
-		);
+		];
 		if ( in_array( 'ALL PRIVILEGES', $grants, true ) ) {
 			// ALL PRIVILEGES may be used pre MySQL 8.0
 			$grants = $needed_grants;
@@ -1313,27 +1313,27 @@ class SystemReport {
 		if ( empty( $grants )
 			 || ! is_array( $grants )
 			 || count( $grants_missing ) === count( $needed_grants ) ) {
-			$rows[] = array(
+			$rows[] = [
 				'name'       => esc_html__( 'Required permissions', 'matomo' ),
 				'value'      => esc_html__( 'Failed to detect granted permissions', 'matomo' ),
 				'comment'    => esc_html__( 'Please check your MySQL user has these permissions (grants):', 'matomo' ) . '<br />' . implode( ', ', $needed_grants ),
 				'is_warning' => false,
-			);
+			];
 		} else {
 			if ( ! empty( $grants_missing ) ) {
-				$rows[] = array(
+				$rows[] = [
 					'name'       => esc_html__( 'Required permissions', 'matomo' ),
 					'value'      => esc_html__( 'Error', 'matomo' ),
 					'comment'    => esc_html__( 'Missing permissions', 'matomo' ) . ': ' . implode( ', ', $grants_missing ) . '. ' . __( 'Please check if any of these MySQL permission (grants) are missing and add them if needed.', 'matomo' ) . ' ' . __( 'Learn more', 'matomo' ) . ': https://matomo.org/faq/troubleshooting/how-do-i-check-if-my-mysql-user-has-all-required-grants/',
 					'is_warning' => true,
-				);
+				];
 			} else {
-				$rows[] = array(
+				$rows[] = [
 					'name'       => esc_html__( 'Required permissions', 'matomo' ),
 					'value'      => esc_html__( 'OK', 'matomo' ),
 					'comment'    => '',
 					'is_warning' => false,
-				);
+				];
 			}
 		}
 
@@ -1347,9 +1347,9 @@ class SystemReport {
 		global $wpdb;
 
 		$required_matomo_tables = $this->db_settings->get_matomo_tables();
-		$required_matomo_tables = array_map( array( $this->db_settings, 'prefix_table_name' ), $required_matomo_tables );
+		$required_matomo_tables = array_map( [ $this->db_settings, 'prefix_table_name' ], $required_matomo_tables );
 
-		$existing_tables = array();
+		$existing_tables = [];
 		try {
 			$prefix          = $this->db_settings->prefix_table_name( '' );
 			$existing_tables = $wpdb->get_col( 'SHOW TABLES LIKE "' . $prefix . '%"' );
@@ -1408,22 +1408,22 @@ class SystemReport {
 			$values = $wpdb->get_results( 'SHOW GRANTS', ARRAY_N );
 		} catch ( Exception $e ) {
 			// We ignore any possible error in case of permission or not supported etc.
-			$values = array();
+			$values = [];
 		}
 
 		$wpdb->suppress_errors( $suppress_errors );
 
-		$grants = array();
+		$grants = [];
 		foreach ( $values as $index => $value ) {
 			if ( empty( $value[0] ) || ! is_string( $value[0] ) ) {
 				continue;
 			}
 
 			if ( stripos( $value[0], 'ALL PRIVILEGES' ) !== false ) {
-				return array( 'ALL PRIVILEGES' ); // the split on empty string wouldn't work otherwise
+				return [ 'ALL PRIVILEGES' ]; // the split on empty string wouldn't work otherwise
 			}
 
-			foreach ( array( ' ON ', ' TO ', ' IDENTIFIED ', ' BY ' ) as $keyword ) {
+			foreach ( [ ' ON ', ' TO ', ' IDENTIFIED ', ' BY ' ] as $keyword ) {
 				if ( stripos( $values[ $index ][0], $keyword ) !== false ) {
 					// make sure to never show by any accident a db user or password by cutting anything after on/to
 					$values[ $index ][0] = substr( $value[0], 0, stripos( $value[0], $keyword ) );
@@ -1435,11 +1435,11 @@ class SystemReport {
 			}
 			// make sure to never show by any accident a db user or password
 			$values[ $index ][0] = str_replace(
-				array( DB_USER, DB_PASSWORD ),
-				array(
+				[ DB_USER, DB_PASSWORD ],
+				[
 					'DB_USER',
 					'DB_PASS',
-				),
+				],
 				$values[ $index ][0]
 			);
 
@@ -1453,29 +1453,29 @@ class SystemReport {
 	}
 
 	private function get_plugins_info() {
-		$rows       = array();
+		$rows       = [];
 		$mu_plugins = get_mu_plugins();
 
 		if ( ! empty( $mu_plugins ) ) {
-			$rows[] = array(
+			$rows[] = [
 				'section' => 'MU Plugins',
-			);
+			];
 
 			foreach ( $mu_plugins as $mu_pin ) {
 				$comment = '';
 				if ( ! empty( $plugin['Network'] ) ) {
 					$comment = 'Network enabled';
 				}
-				$rows[] = array(
+				$rows[] = [
 					'name'    => $mu_pin['Name'],
 					'value'   => $mu_pin['Version'],
 					'comment' => $comment,
-				);
+				];
 			}
 
-			$rows[] = array(
+			$rows[] = [
 				'section' => 'Plugins',
-			);
+			];
 		}
 
 		$plugins = get_plugins();
@@ -1485,14 +1485,14 @@ class SystemReport {
 			if ( ! empty( $plugin['Network'] ) ) {
 				$comment = 'Network enabled';
 			}
-			$rows[] = array(
+			$rows[] = [
 				'name'    => $plugin['Name'],
 				'value'   => $plugin['Version'],
 				'comment' => $comment,
-			);
+			];
 		}
 
-		$active_plugins = get_option( 'active_plugins', array() );
+		$active_plugins = get_option( 'active_plugins', [] );
 
 		if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
 			$active_plugins = array_map(
@@ -1504,11 +1504,11 @@ class SystemReport {
 				$active_plugins
 			);
 
-			$rows[] = array(
+			$rows[] = [
 				'name'    => 'Active Plugins',
 				'value'   => count( $active_plugins ),
 				'comment' => implode( ' ', $active_plugins ),
-			);
+			];
 
 			$used_not_compatible = array_intersect( $active_plugins, $this->not_compatible_plugins );
 			if ( ! empty( $used_not_compatible ) ) {
@@ -1527,31 +1527,31 @@ class SystemReport {
 					$is_error   = true;
 				}
 
-				$rows[] = array(
+				$rows[] = [
 					'name'       => __( 'Not compatible plugins', 'matomo' ),
 					'value'      => count( $used_not_compatible ),
 					'comment'    => implode( ', ', $used_not_compatible ) . '<br><br> Matomo may work fine when using these plugins but there may be some issues. For more information see<br>https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/ ' . $additional_comment,
 					'is_warning' => $is_warning,
 					'is_error'   => $is_error,
-				);
+				];
 			}
 		}
 
-		$rows[] = array(
+		$rows[] = [
 			'name'    => 'Theme',
 			'value'   => function_exists( 'get_template' ) ? get_template() : '',
 			'comment' => get_option( 'stylesheet' ),
-		);
+		];
 
 		if ( is_plugin_active( 'better-wp-security/better-wp-security.php' ) ) {
 			if ( method_exists( '\ITSEC_Modules', 'get_setting' )
 				 && ITSEC_Modules::get_setting( 'system-tweaks', 'long_url_strings' ) ) {
-				$rows[] = array(
+				$rows[] = [
 					'name'     => 'iThemes Security Long URLs Enabled',
 					'value'    => true,
 					'comment'  => 'Tracking might not work because it looks like you have Long URLs disabled in iThemes Security. To fix this please go to "Security -> Settings -> System Tweaks" and disable the setting "Long URL Strings".',
 					'is_error' => true,
-				);
+				];
 			}
 		}
 

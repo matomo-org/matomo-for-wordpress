@@ -55,11 +55,11 @@ class Logger {
 	private function persist( $key, $message ) {
 		$id     = $this->make_id();
 		$logs   = $this->get_last_logged_entries();
-		$logs[] = array(
+		$logs[] = [
 			'name'    => $key,
 			'value'   => time(),
 			'comment' => $message,
-		);
+		];
 		$logs   = array_slice( $logs, - 6 );
 		update_option( $id, $logs );
 	}
@@ -72,7 +72,7 @@ class Logger {
 		$id   = $this->make_id();
 		$logs = get_option( $id );
 		if ( empty( $logs ) ) {
-			$logs = array();
+			$logs = [];
 		}
 
 		// remove any entry older than 1 week

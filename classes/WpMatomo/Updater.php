@@ -52,10 +52,10 @@ class Updater {
 
 	public function get_plugins_requiring_update() {
 		if ( ! $this->load_plugin_functions() ) {
-			return array();
+			return [];
 		}
 
-		$keys         = array();
+		$keys         = [];
 		$plugin_files = $GLOBALS['MATOMO_PLUGIN_FILES'];
 		if ( ! in_array( MATOMO_ANALYTICS_FILE, $plugin_files, true ) ) {
 			$plugin_files[] = MATOMO_ANALYTICS_FILE;
@@ -70,7 +70,7 @@ class Updater {
 			$installed_ver = get_option( $key );
 			if ( ! $installed_ver || $installed_ver !== $plugin_data['Version'] ) {
 				if ( ! Installer::is_intalled() ) {
-					return array();
+					return [];
 				}
 				$keys[ $key ] = $plugin_data['Version'];
 			}
@@ -80,7 +80,7 @@ class Updater {
 	}
 
 	public function update_if_needed() {
-		$executed_updates = array();
+		$executed_updates = [];
 
 		$plugins_requiring_update = $this->get_plugins_requiring_update();
 		foreach ( $plugins_requiring_update as $key => $plugin_version ) {
@@ -120,7 +120,7 @@ class Updater {
 
 			$history = $this->settings->get_global_option( 'version_history' );
 			if ( empty( $history ) || ! is_array( $history ) ) {
-				$history = array();
+				$history = [];
 			}
 
 			if ( ! empty( $plugin_data['Version'] )

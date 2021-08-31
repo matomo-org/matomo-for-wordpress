@@ -58,7 +58,7 @@ class WpMatomo {
 			return;
 		}
 
-		add_action( 'init', array( $this, 'init_plugin' ) );
+		add_action( 'init', [ $this, 'init_plugin' ] );
 
 		$capabilities = new Capabilities( self::$settings );
 		$capabilities->register_hooks();
@@ -118,10 +118,10 @@ class WpMatomo {
 
 		add_filter(
 			'plugin_action_links_' . plugin_basename( MATOMO_ANALYTICS_FILE ),
-			array(
+			[
 				$this,
 				'add_settings_link',
-			)
+			]
 		);
 	}
 
@@ -184,12 +184,12 @@ class WpMatomo {
 	}
 
 	private static function get_active_plugins() {
-		$plugins = array();
+		$plugins = [];
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 			$muplugins = get_site_option( 'active_sitewide_plugins' );
 			$plugins   = array_keys( $muplugins );
 		}
-		$plugins = array_merge( (array) get_option( 'active_plugins', array() ), $plugins );
+		$plugins = array_merge( (array) get_option( 'active_plugins', [] ), $plugins );
 
 		return $plugins;
 	}
