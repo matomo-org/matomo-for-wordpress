@@ -88,7 +88,7 @@ class MatomoCommands extends WP_CLI_Command {
 	/**
 	 * @param $assoc_args
 	 */
-	public function do_update( $force ) {
+	private function do_update( $force ) {
 		$settings = new Settings();
 
 		$installer = new Installer( $settings );
