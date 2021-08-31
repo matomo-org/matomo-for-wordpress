@@ -53,5 +53,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?>
 	</h2>
 
-	<?php echo esc_html( $content_tab->show_settings() ); ?>
+	<?php $content_tab->show_settings(); ?>
 </div>
