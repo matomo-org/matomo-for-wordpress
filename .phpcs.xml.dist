@@ -8,7 +8,8 @@
 	<file>./matomo.php</file>
 	<file>./shared.php</file>
 	<file>./uninstall.php</file>
-    <exclude-pattern>/classes/WpMatomo/Db/WordPressTracker.php</exclude-pattern>
+    <exclude-pattern>/classes/WpMatomo/Db/*.php</exclude-pattern>
+    <exclude-pattern>/classes/WpMatomo/AjaxTracker.php</exclude-pattern>
 	<!-- How to scan -->
 	<!-- Usage instructions: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->
 	<!-- Annotated ruleset: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml -->
