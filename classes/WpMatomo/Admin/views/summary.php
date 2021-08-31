@@ -87,8 +87,7 @@ if ( $matomo_is_version_pre55 ) {
 							<div class="postbox-header">
 								<h2 class="hndle ui-sortable-handle"
 									style="cursor: help;"
-									title="<?php echo ! empty( $matomo_report_meta['documentation'] ) ? ( esc_html( wp_strip_all_tags( $matomo_report_meta['documentation'] ) . ' ' ) ) : null; ?><?php esc_html_e( 'You can embed this report on any page using the shortcode:', 'matomo' ); ?> <?php echo esc_attr( $shortcode ); ?>"
-								>
+									title="<?php echo ! empty( $matomo_report_meta['documentation'] ) ? ( esc_html( wp_strip_all_tags( $matomo_report_meta['documentation'] ) . ' ' ) ) : null; ?><?php esc_html_e( 'You can embed this report on any page using the shortcode:', 'matomo' ); ?> <?php echo esc_attr( $shortcode ); ?>">
 									<?php echo esc_html( $matomo_report_meta['name'] ); ?></h2>
 								<div class="handle-actions hide-if-no-js">
 									<?php if ( ! empty( $matomo_report_meta['page'] ) ) { ?>
@@ -115,19 +114,16 @@ if ( $matomo_is_version_pre55 ) {
 										</button>
 									<?php } ?>
 
-									<?php
-									$matomo_is_dashboard_widget = $matomo_dashboard->has_widget( $matomo_report_meta['uniqueId'], $report_date );
-									?>
-									<button type="button" class="handlediv" aria-expanded="true"
-											title="
-									<?php
+									<?php $matomo_is_dashboard_widget = $matomo_dashboard->has_widget( $matomo_report_meta['uniqueId'], $report_date ); ?>
+                                    <?php // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen ?>
+									<button type="button" class="handlediv" aria-expanded="true" title="<?php
 									if ( $matomo_is_dashboard_widget ) {
 										esc_html_e( 'Click to remove this report from the WordPress admin dashboard', 'matomo' );
 									} else {
 										esc_html_e( 'Click to add this report to the WordPress admin dashboard', 'matomo' );
 									}
-									?>
-									"><a
+                                    // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentAfterEnd
+									?>"><a
 												href="
 										<?php
 												echo esc_url(
