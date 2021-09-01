@@ -151,7 +151,8 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 					$matomo_comment           = isset( $matomo_row['comment'] ) ? $matomo_row['comment'] : '';
 					$matomo_replaced          = str_replace( array_keys( $matomo_replaced_elements ), array_values( $matomo_replaced_elements ), $matomo_comment );
 					$matomo_escaped           = esc_html( $matomo_replaced );
-					echo "<td width='50%' class='matomo-systemreport-comment'>" . esc_html( str_replace( array_values( $matomo_replaced_elements ), array_keys( $matomo_replaced_elements ), $matomo_escaped ) ) . '</td>';
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo "<td width='50%' class='matomo-systemreport-comment'>" . str_replace( array_values( $matomo_replaced_elements ), array_keys( $matomo_replaced_elements ), $matomo_escaped ) . '</td>';
 				}
 
 				echo '</tr>';
