@@ -68,6 +68,9 @@ class Installer {
 		} catch ( NotYetInstalledException $e ) {
 			// not yet installed.... we will need to install it
 			return false;
+		} catch ( \Zend_Db_Statement_Exception $e ) {
+			// not yet installed.... we will need to install it
+			return false;
 		}
 	}
 
