@@ -64,7 +64,6 @@ class ScheduledTasks {
 		register_deactivation_hook( MATOMO_ANALYTICS_FILE, [ $this, 'uninstall' ] );
 		
 		$installer = new Installer( $this->settings );
-		$installer->register_hooks();
 		if ( ! $installer->looks_like_it_is_installed() ) {
 			return;
 		}
