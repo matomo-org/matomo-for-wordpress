@@ -23,6 +23,7 @@ class OptOut {
 	public function register_hooks() {
 		add_shortcode( 'matomo_opt_out', array( $this, 'show_opt_out' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' )  );
+		add_action( 'enqueue_block_assets', [$this, 'load_block'] );
 	}
 
 	public function load_scripts() {
@@ -90,4 +91,19 @@ class OptOut {
 		return $content;
 	}
 
+	public function load_block() {
+		// automatically load dependencies and version
+		wp_register_script(
+			'matomo_opt_out',
+			plugins_url( '/assets/blocks/matomo_opt_out.js', MATOMO_ANALYTICS_FILE ),
+			array( 'wp-blocks', 'wp-element' )
+		);
+
+		$url = plugins_url( '/assets/blocks/matomo_opt_out.js', MATOMO_ANALYTICS_FILE );
+
+		register_block_type( 'matomo/matomo-opt-out', array(
+			'api_version' => 2,
+			'editor_script' => 'matomo_opt_out'
+		) );
+	}
 }
