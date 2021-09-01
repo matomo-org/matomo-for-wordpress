@@ -99,7 +99,7 @@ class API {
 			header( 'Content-Type: application/javascript' );
 			header( 'Content-Length: ' . ( filesize( $path ) ) );
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo $wp_filesystem->get_content( $paths->get_upload_base_dir() . '/matomo.js' ); // Reading the file into the output buffer
+			echo $wp_filesystem->get_contents( $paths->get_upload_base_dir() . '/matomo.js' ); // Reading the file into the output buffer
 			exit;
 		}
 		include_once plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app/piwik.php';
