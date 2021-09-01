@@ -60,6 +60,15 @@ class ScheduledTasks {
 	}
 
 	public function schedule() {
+
+		register_deactivation_hook( MATOMO_ANALYTICS_FILE, [ $this, 'uninstall' ] );
+		
+		$installer = new Installer( $this->settings );
+		$installer->register_hooks();
+		if ( ! $installer->looks_like_it_is_installed() ) {
+			return;
+		}
+
 		add_action( self::EVENT_UPDATE, array( $this, 'perform_update' ) );
 		add_filter( 'cron_schedules', array( $this, 'add_weekly_schedule' ) );
 
@@ -94,8 +103,6 @@ class ScheduledTasks {
 				$accepted_args = 0
 			);
 		}
-
-		register_deactivation_hook( MATOMO_ANALYTICS_FILE, array( $this, 'uninstall' ) );
 	}
 
 	public function get_last_time_before_cron( $event_name ) {
