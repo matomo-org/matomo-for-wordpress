@@ -48,8 +48,6 @@ class AdminSettings {
 			} else {
 				$url = '';
 			}
-
-			// $url = esc_url( $url ); done in the views instead
 		} else {
 			$url = menu_page_url( $menu_slug, false );
 		}
