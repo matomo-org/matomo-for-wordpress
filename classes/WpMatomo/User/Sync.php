@@ -241,8 +241,8 @@ class Sync {
 					}
 				}
 			}
-
-			if ( 1 !== $idsite ) {
+			// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+			if ( 1 != $idsite ) {
 				// only needed if the actual site is not the default site... makes sure when they click in Matomo
 				// UI on "Dashboard" that the correct site is being opened by default
 				// eg if the linked site is actually idSite=2.
