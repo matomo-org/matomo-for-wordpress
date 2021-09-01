@@ -100,7 +100,7 @@ class ScheduledTasks {
 			);
 		}
 
-		register_deactivation_hook( MATOMO_ANALYTICS_FILE, [ $this, 'uninstall' ] );
+		register_deactivation_hook( MATOMO_ANALYTICS_FILE, array( $this, 'uninstall' ) );
 	}
 
 	public function get_last_time_before_cron( $event_name ) {
