@@ -60,22 +60,19 @@ class ScheduledTasks {
 	}
 
 	public function schedule() {
-
-		register_deactivation_hook( MATOMO_ANALYTICS_FILE, [ $this, 'uninstall' ] );
 		
-		$installer = new Installer( $this->settings );
-		if ( ! $installer->looks_like_it_is_installed() ) {
-			return;
-		}
-
 		add_action( self::EVENT_UPDATE, array( $this, 'perform_update' ) );
 		add_filter( 'cron_schedules', array( $this, 'add_weekly_schedule' ) );
 
 		$self           = $this;
 		$event_priority = 10;
 
+		$installer = new Installer( $this->settings );
+		$looks_installed = $installer->looks_like_it_is_installed(); // we only schedule events when Matomo looks installed but we still listen to the actions in case the app triggers a one time update.
+		
 		foreach ( $this->get_all_events() as $event_name => $event_config ) {
-			if ( ! wp_next_scheduled( $event_name ) ) {
+			
+			if ( $looks_installed && ! wp_next_scheduled( $event_name ) ) {
 				wp_schedule_event( time(), $event_config['interval'], $event_name );
 			}
 
@@ -102,6 +99,8 @@ class ScheduledTasks {
 				$accepted_args = 0
 			);
 		}
+
+		register_deactivation_hook( MATOMO_ANALYTICS_FILE, [ $this, 'uninstall' ] );
 	}
 
 	public function get_last_time_before_cron( $event_name ) {
