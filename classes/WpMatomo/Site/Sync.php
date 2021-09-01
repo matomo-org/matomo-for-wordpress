@@ -156,7 +156,8 @@ class Sync {
 				// if site doesn't exist for some reason then we have to create it
 				if ( $site['name'] !== $blog_name
 					 || $site['main_url'] !== $blog_url
-					 || $site['ecommerce'] !== $track_ecommerce
+				     // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+					 || $site['ecommerce'] != $track_ecommerce
 					 || $site['currency'] !== $site_currency
 					 || $site['timezone'] !== $detected_timezone ) {
 
