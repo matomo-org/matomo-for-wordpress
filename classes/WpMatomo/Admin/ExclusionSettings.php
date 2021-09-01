@@ -87,7 +87,8 @@ class ExclusionSettings implements AdminSettingsInterface {
 			}
 
 			$keep_fragments = ! empty( $post['keep_url_fragments'] );
-			if ( $keep_fragments !== $api->getKeepURLFragmentsGlobal() ) {
+			// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+			if ( $keep_fragments != $api->getKeepURLFragmentsGlobal() ) {
 				$api->setKeepURLFragmentsGlobal( $keep_fragments );
 			}
 
