@@ -17,12 +17,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Paths {
+
+	private static $host_init_filesystem = false;
+
 	public function get_file_system() {
 		if ( ! function_exists( 'WP_Filesystem' ) ) {
 			require_once ABSPATH . '/wp-admin/includes/file.php';
-			WP_Filesystem();
 		}
 
+		if ( ! self::$host_init_filesystem ) {
+			self::$host_init_filesystem = true;
+			WP_Filesystem();
+		}
 		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
 			require_once ABSPATH . '/wp-admin/includes/class-wp-filesystem-base.php';
 			require_once ABSPATH . '/wp-admin/includes/class-wp-filesystem-direct.php';

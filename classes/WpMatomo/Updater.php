@@ -40,10 +40,6 @@ class Updater {
 	public function __construct( Settings $settings ) {
 		$this->settings = $settings;
 		$this->logger   = new Logger();
-		if ( ! defined( 'FS_CHMOD_FILE' ) ) {
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
-			define( 'FS_CHMOD_FILE', 0775 );
-		}
 	}
 
 	public function load_plugin_functions() {
