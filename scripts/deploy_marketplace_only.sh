@@ -77,6 +77,11 @@ rsync -rc "$TMP_DIR/" trunk/ --delete --delete-excluded
 # Copy dotorg assets to /assets
 rsync -rc "$GITHUB_WORKSPACE/$ASSETS_DIR/" assets/ --delete --delete-excluded
 
+# Fix screenshots getting force downloaded when clicking them
+# https://developer.wordpress.org/plugins/wordpress-org/plugin-assets/
+svn propset svn:mime-type image/png assets/*.png || true
+svn propset svn:mime-type image/jpeg assets/*.jpg || true
+
 echo "➤ Preparing files..."
 
 svn status
@@ -94,11 +99,10 @@ fi
 
 # Readme also has to be updated in the .org tag
 echo "➤ Preparing stable tag..."
-STABLE_TAG=$(grep -m 1 "^Stable tag:" "$TMP_DIR/$README_NAME" | tr -d '\r\n' | awk -F ' ' '{print $NF}')
+STABLE_TAG=$(grep -m 1 -E "^([*+-]\s+)?Stable tag:" "$TMP_DIR/$README_NAME" | tr -d '\r\n' | awk -F ' ' '{print $NF}')
 
 if [[ -z "$STABLE_TAG" ]]; then
     echo "ℹ︎ Could not get stable tag from $README_NAME";
-	HAS_STABLE=1
 else
 	echo "ℹ︎ STABLE_TAG is $STABLE_TAG"
 
