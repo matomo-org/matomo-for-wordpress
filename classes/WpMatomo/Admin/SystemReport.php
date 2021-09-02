@@ -115,6 +115,10 @@ class SystemReport {
 		$this->settings    = $settings;
 		$this->logger      = new Logger();
 		$this->db_settings = new \WpMatomo\Db\Settings();
+		if ( ! defined( 'FS_CHMOD_FILE' ) ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
+			define( 'FS_CHMOD_FILE', 0775 );
+		}
 	}
 
 	public function get_not_compatible_plugins() {
