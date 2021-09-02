@@ -100,7 +100,7 @@ class OptOut {
 
 		wp_register_script(
 			'matomo-opt-out',
-			plugins_url( '/assets/blocks/matomo_opt_out.js', MATOMO_ANALYTICS_FILE ),
+			plugins_url( '/assets/js/blocks/matomo_opt_out.js', MATOMO_ANALYTICS_FILE ),
 			array( 'wp-blocks', 'wp-i18n', 'wp-element' ),
 			filemtime( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . '/assets/blocks/matomo_opt_out.js' )
 		);
