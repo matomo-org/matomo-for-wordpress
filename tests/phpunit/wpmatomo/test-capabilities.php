@@ -8,6 +8,13 @@ use WpMatomo\Capabilities;
 use WpMatomo\Settings;
 
 class TestMatomoCapabilities extends Capabilities {
+	/**
+	 * @param $cap_to_find
+	 * @param $allcaps
+	 *
+	 * @return bool
+	 */
+	// phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
 	public function has_any_higher_permission( $cap_to_find, $allcaps ) {
 		return parent::has_any_higher_permission( $cap_to_find, $allcaps );
 	}

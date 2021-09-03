@@ -48,16 +48,16 @@ class ReportRendererTest extends MatomoAnalytics_TestCase {
 		$this->assertContains( '<th class="right">Pageviews</th>', $report );
 	}
 
-    public function test_show_visits_over_time() {
-        $local_tracker = $this->make_local_tracker( gmdate( 'Y-m-d H:i:s' ) );
-        $this->assert_tracking_response( $local_tracker->doTrackPageView( 'test' ) );
+	public function test_show_visits_over_time() {
+		$local_tracker = $this->make_local_tracker( gmdate( 'Y-m-d H:i:s' ) );
+		$this->assert_tracking_response( $local_tracker->doTrackPageView( 'test' ) );
 
-        $this->enable_browser_archiving();
+		$this->enable_browser_archiving();
 
-        $report = do_shortcode( '[matomo_report unique_id='.\WpMatomo\Report\Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME.' limit=18]' );
-        $this->assertContains( '<tr><td width="75%"', $report );
-        $parts = explode('<tr><td width="75%"', $report);
-        $this->assertCount(19, $parts);
-    }
+		$report = do_shortcode( '[matomo_report unique_id=' . \WpMatomo\Report\Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME . ' limit=18]' );
+		$this->assertContains( '<tr><td width="75%"', $report );
+		$parts = explode( '<tr><td width="75%"', $report );
+		$this->assertCount( 19, $parts );
+	}
 
 }

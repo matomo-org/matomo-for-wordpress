@@ -11,8 +11,8 @@ namespace WpMatomo\Admin;
 
 use WpMatomo\Access;
 use WpMatomo\Capabilities;
-use WpMatomo\Settings;
 use WpMatomo\Roles;
+use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
@@ -41,20 +41,6 @@ class AccessSettings implements AdminSettingsInterface {
 		return esc_html__( 'Access', 'matomo' );
 	}
 
-	private function update_if_submitted() {
-		if ( isset( $_POST )
-			 && ! empty( $_POST[ self::FORM_NAME ] )
-			 && is_admin()
-			 && check_admin_referer( self::NONCE_NAME )
-			 && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
-			$this->access->save( $_POST[ self::FORM_NAME ] );
-
-			return true;
-		}
-
-		return false;
-	}
-
 	public function show_settings() {
 		$this->update_if_submitted();
 
@@ -64,4 +50,18 @@ class AccessSettings implements AdminSettingsInterface {
 		include dirname( __FILE__ ) . '/views/access.php';
 	}
 
+	private function update_if_submitted() {
+		if ( isset( $_POST )
+			 && ! empty( $_POST[ self::FORM_NAME ] )
+			 && is_admin()
+			 && check_admin_referer( self::NONCE_NAME )
+			 && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$this->access->save( wp_unslash( $_POST[ self::FORM_NAME ] ) );
+
+			return true;
+		}
+
+		return false;
+	}
 }

@@ -6,8 +6,11 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  * @package matomo
  */
-
-use \WpMatomo\Admin\Menu;
+/**
+ * phpcs considers all of our variables as global and want them prefixed with matomo
+ * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+ */
+use WpMatomo\Admin\Menu;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -26,36 +29,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<h2><?php esc_html_e( 'Support the project', 'matomo' ); ?></h2>
 	<p>
-	<?php
-	echo sprintf(
-		esc_html__(
-			'Matomo is a collaborative project brought to you by %1$sMatomo team%2$s members as well as many other contributors around the globe. If you like Matomo,
+		<?php
+		echo sprintf(
+			esc_html__(
+				'Matomo is a collaborative project brought to you by %1$sMatomo team%2$s members as well as many other contributors around the globe. If you like Matomo,
         %3$splease give us a review%4$s and spread the word about us.',
-			'matomo'
-		),
-		'<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/team/">',
-		'</a>',
-		'<a target="_blank" rel="noreferrer noopener" href="https://wordpress.org/support/plugin/matomo/reviews/?rate=5#new-post">',
-		'<span class="dashicons-before dashicons-star-filled" style="color:gold;"></span><span class="dashicons-before dashicons-star-filled" style="color:gold;"></span><span class="dashicons-before dashicons-star-filled" style="color:gold;"></span><span class="dashicons-before dashicons-star-filled" style="color:gold;"></span><span class="dashicons-before dashicons-star-filled" style="color:gold;"></span></a>'
-	);
-	?>
+				'matomo'
+			),
+			'<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/team/">',
+			'</a>',
+			'<a target="_blank" rel="noreferrer noopener" href="https://wordpress.org/support/plugin/matomo/reviews/?rate=5#new-post">',
+			'<span class="dashicons-before dashicons-star-filled" style="color:gold;"></span><span class="dashicons-before dashicons-star-filled" style="color:gold;"></span><span class="dashicons-before dashicons-star-filled" style="color:gold;"></span><span class="dashicons-before dashicons-star-filled" style="color:gold;"></span><span class="dashicons-before dashicons-star-filled" style="color:gold;"></span></a>'
+		);
+		?>
 		<br/><br/>
-        Matomo will always cost you nothing to use, but that doesn't mean it costs us nothing to make.
-        Matomo needs your continued support to grow and thrive.
-        <?php
+		Matomo will always cost you nothing to use, but that doesn't mean it costs us nothing to make.
+		Matomo needs your continued support to grow and thrive.
+		<?php
 		echo sprintf(
 			esc_html__(
 				'You can also help us by %1$sdonating%2$s or by %3$spurchasing premium plugins%4$s which fund the
         development of the free Matomo Analytics version.',
 				'matomo'
 			),
-			'<a href="' . Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_ADMIN ) . '">',
+			'<a href="' . esc_url( Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_ADMIN ) ) . '">',
 			'</a>',
 			'<a href="https://plugins.matomo.org/premium" target="_blank" rel="noreferrer noopener">',
 			'</a>'
 		);
 		?>
-        Every penny will help.
+		Every penny will help.
 	</p>
 
 	<?php require 'info_newsletter.php'; ?>
@@ -69,18 +72,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<ul>
 			<li>
 				<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/newsletter/"><span
-						class="dashicons-before dashicons-email"></span></a>
+							class="dashicons-before dashicons-email"></span></a>
 				<a target="_blank" rel="noreferrer noopener"
 				   href="https://matomo.org/newsletter/"><?php esc_html_e( 'Newsletter', 'matomo' ); ?></a>
 			</li>
 			<li>
 				<a target="_blank" rel="noreferrer noopener" href="https://www.facebook.com/Matomo.org"><span
-						class="dashicons-before dashicons-facebook"></span></a>
+							class="dashicons-before dashicons-facebook"></span></a>
 				<a target="_blank" rel="noreferrer noopener" href="https://www.facebook.com/Matomo.org">Facebook</a>
 			</li>
 			<li>
 				<a target="_blank" rel="noreferrer noopener" href="https://twitter.com/matomo_org"><span
-						class="dashicons-before dashicons-twitter"></span></a>
+							class="dashicons-before dashicons-twitter"></span></a>
 				<a target="_blank" rel="noreferrer noopener" href="https://twitter.com/matomo_org">Twitter</a>
 			</li>
 			<li>

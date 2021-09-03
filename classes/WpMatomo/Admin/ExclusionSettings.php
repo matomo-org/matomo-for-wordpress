@@ -36,6 +36,24 @@ class ExclusionSettings implements AdminSettingsInterface {
 		return esc_html__( 'Exclusions', 'matomo' );
 	}
 
+	public function show_settings() {
+		global $wp_roles;
+
+		$was_updated = $this->update_if_submitted();
+
+		Bootstrap::do_bootstrap();
+
+		$api                   = API::getInstance();
+		$excluded_ips          = $this->from_comma_list( $api->getExcludedIpsGlobal() );
+		$excluded_query_params = $this->from_comma_list( $api->getExcludedQueryParametersGlobal() );
+		$excluded_user_agents  = $this->from_comma_list( $api->getExcludedUserAgentsGlobal() );
+		$keep_url_fragments    = $api->getKeepURLFragmentsGlobal();
+		$current_ip            = $this->get_current_ip();
+		$settings              = $this->settings;
+
+		include dirname( __FILE__ ) . '/views/exclusion_settings.php';
+	}
+
 	private function update_if_submitted() {
 		if ( isset( $_POST )
 			 && ! empty( $_POST[ self::FORM_NAME ] )
@@ -43,8 +61,8 @@ class ExclusionSettings implements AdminSettingsInterface {
 			 && check_admin_referer( self::NONCE_NAME )
 			 && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
 			Bootstrap::do_bootstrap();
-
-			$post = $_POST[ self::FORM_NAME ];
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$post = wp_unslash( $_POST[ self::FORM_NAME ] );
 
 			$api = API::getInstance();
 			if ( isset( $post['excluded_ips'] ) ) {
@@ -69,11 +87,12 @@ class ExclusionSettings implements AdminSettingsInterface {
 			}
 
 			$keep_fragments = ! empty( $post['keep_url_fragments'] );
+			// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 			if ( $keep_fragments != $api->getKeepURLFragmentsGlobal() ) {
 				$api->setKeepURLFragmentsGlobal( $keep_fragments );
 			}
 
-			$setting_values = array( Settings::OPTION_KEY_STEALTH => array() );
+			$setting_values = [ Settings::OPTION_KEY_STEALTH => [] ];
 			if ( ! empty( $post[ Settings::OPTION_KEY_STEALTH ] ) ) {
 				$setting_values[ Settings::OPTION_KEY_STEALTH ] = $post[ Settings::OPTION_KEY_STEALTH ];
 			}
@@ -104,24 +123,12 @@ class ExclusionSettings implements AdminSettingsInterface {
 		return implode( "\n", array_filter( explode( ',', $value ) ) );
 	}
 
-	public function show_settings() {
-		global $wp_roles;
-
-		$was_updated = $this->update_if_submitted();
-
-		Bootstrap::do_bootstrap();
-
-		$api                   = API::getInstance();
-		$excluded_ips          = $this->from_comma_list( $api->getExcludedIpsGlobal() );
-		$excluded_query_params = $this->from_comma_list( $api->getExcludedQueryParametersGlobal() );
-		$excluded_user_agents  = $this->from_comma_list( $api->getExcludedUserAgentsGlobal() );
-		$keep_url_fragments    = $api->getKeepURLFragmentsGlobal();
-		$current_ip            = $this->get_current_ip();
-		$settings              = $this->settings;
-
-		include dirname( __FILE__ ) . '/views/exclusion_settings.php';
-	}
-
+	/**
+	 * do not sanitize $_SERVER variables
+	 * phpcs:disable WordPress.Security.ValidatedSanitizedInput
+	 *
+	 * @return mixed|string
+	 */
 	private function get_current_ip() {
 		if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 			$ip = $_SERVER['HTTP_CLIENT_IP'];
@@ -133,5 +140,4 @@ class ExclusionSettings implements AdminSettingsInterface {
 
 		return $ip;
 	}
-
 }

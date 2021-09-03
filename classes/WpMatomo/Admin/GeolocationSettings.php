@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class GeolocationSettings implements AdminSettingsInterface {
 	const NONCE_NAME = 'matomo_geolocation';
-	const FORM_NAME = 'matomo_maxmind_license';
+	const FORM_NAME  = 'matomo_maxmind_license';
 
 	/**
 	 * @var Settings
@@ -34,24 +34,33 @@ class GeolocationSettings implements AdminSettingsInterface {
 		return esc_html__( 'Geolocation', 'matomo' );
 	}
 
+	public function show_settings() {
+		$invalid_format = $this->update_if_submitted() === false;
+
+		$current_maxmind_license = $this->settings->get_global_option( 'maxmind_license_key' );
+
+		include dirname( __FILE__ ) . '/views/geolocation_settings.php';
+	}
+
 	private function update_if_submitted() {
 		if ( isset( $_POST )
 			 && isset( $_POST[ self::FORM_NAME ] )
 			 && is_admin()
 			 && check_admin_referer( self::NONCE_NAME )
 			 && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			$maxmind_license = trim( stripslashes( sanitize_text_field( wp_unslash( $_POST[ self::FORM_NAME ] ) ) ) );
 
-			$maxmind_license = trim(stripslashes($_POST[ self::FORM_NAME ]));
-
-			if (empty($maxmind_license)) {
+			if ( empty( $maxmind_license ) ) {
 				$maxmind_license = '';
-			} elseif (strlen($maxmind_license) > 20 || strlen($maxmind_license) < 7 || !ctype_graph($maxmind_license)) {
+			} elseif ( strlen( $maxmind_license ) > 20 || strlen( $maxmind_license ) < 7 || ! ctype_graph( $maxmind_license ) ) {
 				return false;
 			}
 
-			$this->settings->apply_changes(array(
-				'maxmind_license_key' => $maxmind_license
-			));
+			$this->settings->apply_changes(
+				[
+					'maxmind_license_key' => $maxmind_license,
+				]
+			);
 
 			// update geoip in the backgronud
 			wp_schedule_single_event( time() + 10, ScheduledTasks::EVENT_GEOIP );
@@ -59,13 +68,4 @@ class GeolocationSettings implements AdminSettingsInterface {
 			return true;
 		}
 	}
-
-	public function show_settings() {
-		$invalid_format = $this->update_if_submitted() === false;
-
-		$current_maxmind_license = $this->settings->get_global_option('maxmind_license_key');
-
-		include dirname( __FILE__ ) . '/views/geolocation_settings.php';
-	}
-
 }

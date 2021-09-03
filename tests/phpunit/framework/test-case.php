@@ -77,7 +77,7 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	 */
 	protected function get_type_attribute() {
 		$type = '';
-		if (function_exists( "wp_get_inline_script_tag" ) && ! is_admin() && ! current_theme_supports( 'html5', 'script' ) ) {
+		if ( function_exists( 'wp_get_inline_script_tag' ) && ! is_admin() && ! current_theme_supports( 'html5', 'script' ) ) {
 			$type = 'type="text/javascript"';
 		}
 		return $type;

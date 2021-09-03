@@ -31,13 +31,13 @@ class Roles {
 	}
 
 	public function register_hooks() {
-		add_action( 'init', array( $this, 'add_roles' ) );
+		add_action( 'init', [ $this, 'add_roles' ] );
 	}
 
 	public function get_available_roles_for_configuration() {
 		global $wp_roles;
 		$is_network_enabled = $this->settings->is_network_enabled();
-		$roles              = array();
+		$roles              = [];
 
 		foreach ( $wp_roles->role_names as $role_name => $name ) {
 			if ( ! $is_network_enabled && 'administrator' === $role_name ) {
@@ -62,30 +62,30 @@ class Roles {
 	}
 
 	public function get_matomo_roles() {
-		return array(
-			self::ROLE_VIEW      => array(
+		return [
+			self::ROLE_VIEW      => [
 				'name'       => 'Matomo View',
 				'defaultCap' => Capabilities::KEY_VIEW,
-			),
-			self::ROLE_WRITE     => array(
+			],
+			self::ROLE_WRITE     => [
 				'name'       => 'Matomo Write',
 				'defaultCap' => Capabilities::KEY_WRITE,
-			),
-			self::ROLE_ADMIN     => array(
+			],
+			self::ROLE_ADMIN     => [
 				'name'       => 'Matomo Admin',
 				'defaultCap' => Capabilities::KEY_ADMIN,
-			),
-			self::ROLE_SUPERUSER => array(
+			],
+			self::ROLE_SUPERUSER => [
 				'name'       => 'Matomo Super User',
 				'defaultCap' => Capabilities::KEY_SUPERUSER,
-			),
-		);
+			],
+		];
 	}
 
 	public function add_roles() {
 		if ( ! $this->has_set_up_roles() ) {
 			foreach ( $this->get_matomo_roles() as $role_name => $config ) {
-				add_role( $role_name, $config['name'], array( $config['defaultCap'] => true ) );
+				add_role( $role_name, $config['name'], [ $config['defaultCap'] => true ] );
 			}
 			$this->mark_roles_set_up();
 		}

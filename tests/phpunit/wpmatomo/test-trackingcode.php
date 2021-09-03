@@ -8,6 +8,9 @@ use WpMatomo\Settings;
 use WpMatomo\Site;
 use WpMatomo\TrackingCode;
 
+/**
+ * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+ */
 class TrackingCodeTest extends MatomoUnit_TestCase {
 
 	/**
@@ -91,7 +94,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		$footer = ob_get_clean();
 
 		$this->assertNotContains( 'idsite', $header );
-		$this->assertContains( '<!-- Matomo --><script '.$this->get_type_attribute().">\nvar _paq = window._paq = window._paq || [];", $footer );
+		$this->assertContains( '<!-- Matomo --><script ' . $this->get_type_attribute() . ">\nvar _paq = window._paq = window._paq || [];", $footer );
 		$this->assertContains( '_paq.push([\'setSiteId\', \'23\'])', $footer );
 	}
 
@@ -113,14 +116,14 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		$footer = ob_get_clean();
 
 		$this->assertNotContains( 'idsite', $footer );
-		$this->assertContains( '<!-- Matomo --><script '.$this->get_type_attribute().">\nvar _paq = window._paq = window._paq || [];", $header );
+		$this->assertContains( '<!-- Matomo --><script ' . $this->get_type_attribute() . ">\nvar _paq = window._paq = window._paq || [];", $header );
 		$this->assertContains( '_paq.push([\'setSiteId\', \'23\'])', $header );
 	}
 
 	public function test_tracking_noscriptenabled_default() {
 		$this->settings->apply_tracking_related_changes(
 			array(
-				'track_mode'         => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
+				'track_mode'     => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
 				'track_noscript' => true,
 			)
 		);
@@ -138,9 +141,9 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 	public function test_tracking_noscriptenabled_manually_adds_noscript_when_needed() {
 		$this->settings->apply_tracking_related_changes(
 			array(
-				'track_mode' => WpMatomo\Admin\TrackingSettings::TRACK_MODE_MANUALLY,
+				'track_mode'     => WpMatomo\Admin\TrackingSettings::TRACK_MODE_MANUALLY,
 				'track_noscript' => true,
-				'noscript_code' => '<p>test</p>',
+				'noscript_code'  => '<p>test</p>',
 			)
 		);
 		$this->tracking_code->register_hooks();
@@ -195,7 +198,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		$this->set_is_feed();
 
 		$url = apply_filters( 'the_excerpt_rss', '<p>foobarbaz</p>' );
-		
+
 		$this->assertStringStartsWith( '<p>foobarbaz</p><img src="//example.org/index.php?rest_route=/matomo/v1/hit/?idsite=23&amp;rec=1&amp;url=http%3A%2F%2Fexample.org%2F%3Fp%3D7&amp;action_name=hello-world&amp;urlref=http%3A%2F%2Fexample.org', $url );
 		$this->assertStringEndsWith( '" style="border:0;width:0;height:0" width="0" height="0" alt="" />', $url );
 	}

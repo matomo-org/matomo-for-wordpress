@@ -14,7 +14,15 @@ use WpMatomo\Admin\Dashboard;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
-
+/**
+ * We need to access db not cache
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+ *
+ * Table names management
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+ * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+ */
 class Uninstaller {
 
 	/**
@@ -135,7 +143,7 @@ class Uninstaller {
 	private function drop_tables() {
 		global $wpdb;
 
-		$db_settings = new \WpMatomo\Db\Settings();
+		$db_settings      = new \WpMatomo\Db\Settings();
 		$installed_tables = $db_settings->get_installed_matomo_tables();
 		$this->logger->log( sprintf( 'Matomo will now drop %s matomo tables', count( $installed_tables ) ) );
 
@@ -143,6 +151,7 @@ class Uninstaller {
 			// temporary table are used in tests and just making sure they are being removed
 			// $wpdb->query( "DROP TEMPORARY TABLE IF EXISTS `$tableName`" );
 			// two spaces between drop and table so it won't be replaced in WP tests
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
 			$wpdb->query( "DROP TABLE IF EXISTS `$table_name`" );
 		}
 	}

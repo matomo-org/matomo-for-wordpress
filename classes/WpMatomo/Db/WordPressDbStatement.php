@@ -9,12 +9,23 @@
 
 namespace Piwik\Db\Adapter;
 
+use Zend_Db_Statement;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
-
-class WordPressDbStatement extends \Zend_Db_Statement {
-
+/**
+ * We want a real data, not something coming from cache
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+ *
+ * This is a report error, so silent the possible errors
+ * phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
+ *
+ * We cannot use parameters of statements as this is the table names we build
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+ * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+ */
+class WordPressDbStatement extends Zend_Db_Statement {
 	private $result;
 	private $sql;
 

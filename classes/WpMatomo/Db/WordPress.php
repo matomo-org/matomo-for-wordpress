@@ -347,10 +347,10 @@ class WordPress extends Mysqli {
 			}
 
 			if ( defined( 'WP_DEBUG' )
-				 && WP_DEBUG
-				 && defined( 'WP_DEBUG_DISPLAY' )
-				 && WP_DEBUG_DISPLAY
-				 && ! is_admin() ) {
+			     && WP_DEBUG
+			     && defined( 'WP_DEBUG_DISPLAY' )
+			     && WP_DEBUG_DISPLAY
+			     && ! is_admin() ) {
 				// prevent showing some notices in frontend eg if cronjob runs there
 
 				$is_likely_dedicated_cron = defined( 'DOING_CRON' ) && DOING_CRON && defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON;
@@ -363,8 +363,8 @@ class WordPress extends Mysqli {
 			}
 
 			if ( ( stripos( $sql, '/* WP IGNORE ERROR */' ) !== false  )
-				 || stripos( $sql, 'SELECT @@TX_ISOLATION' ) !== false
-				 || stripos( $sql, 'SELECT @@transaction_isolation' ) !== false ) {
+			     || stripos( $sql, 'SELECT @@TX_ISOLATION' ) !== false
+			     || stripos( $sql, 'SELECT @@transaction_isolation' ) !== false ) {
 				// prevent notices for queries that are expected to fail
 				// SELECT 1 FROM wp_matomo_logtmpsegment1cc77bce7a13181081e44ea6ffc0a9fd LIMIT 1 => runs to detect if temp table exists or not and regularly the query fails which is expected
 				// SELECT @@TX_ISOLATION => not available in all mysql versions
