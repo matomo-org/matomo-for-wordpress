@@ -9,31 +9,36 @@
 
 namespace WpMatomo;
 
+use Exception;
 use Piwik\API\Request;
 use Piwik\Common;
+use WP_Error;
+use WP_REST_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
-
+/**
+ * phpcs:disable WordPress.Security.NonceVerification.Missing
+ */
 class API {
 	const VERSION = 'matomo/v1';
 
 	const ROUTE_HIT = 'hit';
 
 	public function register_hooks() {
-		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
+		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 	}
 
 	public function register_routes() {
 		register_rest_route(
 			self::VERSION,
 			'/' . self::ROUTE_HIT . '/',
-			array(
-				'methods'  => array( 'GET', 'POST' ),
+			[
+				'methods'             => [ 'GET', 'POST' ],
 				'permission_callback' => '__return_true',
-				'callback' => array( $this, 'hit' ),
-			)
+				'callback'            => [ $this, 'hit' ],
+			]
 		);
 		$this->register_route( 'API', 'getProcessedReport' );
 		$this->register_route( 'API', 'getReportMetadata' );
@@ -88,18 +93,20 @@ class API {
 		if ( empty( $_GET ) && empty( $_POST ) && empty( $_POST['idsite'] ) && empty( $_GET['idsite'] ) ) {
 			// todo if uploads dir is not writable, we may want to generate the matomo.js here and save it as an
 			// option... then we could also save it compressed
-			$paths = new Paths();
-			$path  = $paths->get_matomo_js_upload_path();
+			$paths         = new Paths();
+			$path          = $paths->get_matomo_js_upload_path();
+			$wp_filesystem = $paths->get_file_system();
 			header( 'Content-Type: application/javascript' );
 			header( 'Content-Length: ' . ( filesize( $path ) ) );
-			readfile( $paths->get_upload_base_dir() . '/matomo.js' ); // Reading the file into the output buffer
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $wp_filesystem->get_contents( $paths->get_upload_base_dir() . '/matomo.js' ); // Reading the file into the output buffer
 			exit;
 		}
 		include_once plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app/piwik.php';
 		exit;
 	}
 
-	public function execute_api_method( \WP_REST_Request $request ) {
+	public function execute_api_method( WP_REST_Request $request ) {
 		$attributes = $request->get_attributes();
 		$method     = $attributes['matomoModule'] . '.' . $attributes['matomoMethod'];
 
@@ -135,7 +142,7 @@ class API {
 	 * @api
 	 */
 	public function register_route( $api_module, $api_method ) {
-		$methods                 = array(
+		$methods                 = [
 			'get'        => 'GET',
 			'edit'       => 'PUT',
 			'update'     => 'PUT',
@@ -147,8 +154,8 @@ class API {
 			'send'       => 'POST',
 			'delete'     => 'DELETE',
 			'remove'     => 'DELETE',
-		);
-		$starts_with_keep_prefix = array( 'anonymize', 'invalidate', 'run', 'send' );
+		];
+		$starts_with_keep_prefix = [ 'anonymize', 'invalidate', 'run', 'send' ];
 
 		$method        = 'GET';
 		$wp_api_module = $this->to_snake_case( $api_module );
@@ -170,13 +177,13 @@ class API {
 		register_rest_route(
 			self::VERSION,
 			'/' . $wp_api_module . '/' . $wp_api_action . '/',
-			array(
-				'methods'      => $method,
-				'callback'     => array( $this, 'execute_api_method' ),
+			[
+				'methods'             => $method,
+				'callback'            => [ $this, 'execute_api_method' ],
 				'permission_callback' => '__return_true', // permissions are checked in the method itself
-				'matomoModule' => $api_module,
-				'matomoMethod' => $api_method,
-			)
+				'matomoModule'        => $api_module,
+				'matomoMethod'        => $api_method,
+			]
 		);
 	}
 
@@ -186,7 +193,7 @@ class API {
 			$idsite = $site->get_current_matomo_site_id();
 
 			if ( ! $idsite ) {
-				return new \WP_Error( 'Site not found. Make sure it is synced' );
+				return new WP_Error( 'Site not found. Make sure it is synced' );
 			}
 
 			$params['idSite']  = $idsite;
@@ -203,19 +210,18 @@ class API {
 
 		// refs https://github.com/matomo-org/wp-matomo/issues/370 ensuring segment will be used from default request when
 		// creating new request object and not the encoded segment
-		if (isset($params['segment'])) {
-			if (isset($_GET['segment']) || isset($_POST['segment'])) {
-				unset($params['segment']); // matomo will read the segment from default request
-			} elseif (!empty($params['segment']) && is_string($params['segment'])) {
+		if ( isset( $params['segment'] ) ) {
+			if ( isset( $_GET['segment'] ) || isset( $_POST['segment'] ) ) {
+				unset( $params['segment'] ); // matomo will read the segment from default request
+			} elseif ( ! empty( $params['segment'] ) && is_string( $params['segment'] ) ) {
 				// manually unsanitize this value
-				$params['segment'] = Common::unsanitizeInputValue($params['segment']);
+				$params['segment'] = Common::unsanitizeInputValue( $params['segment'] );
 			}
 		}
 
-
 		try {
 			$result = Request::processRequest( $api_method, $params );
-		} catch ( \Exception $e ) {
+		} catch ( Exception $e ) {
 			$code = 'matomo_error';
 			if ( $e->getCode() ) {
 				$code .= '_' . $code;
@@ -224,7 +230,7 @@ class API {
 				$code = str_replace( 'piwik', 'matomo', $this->to_snake_case( get_class( $e ) ) );
 			}
 
-			return new \WP_Error( $code, $e->getMessage() );
+			return new WP_Error( $code, $e->getMessage() );
 		}
 
 		return $result;

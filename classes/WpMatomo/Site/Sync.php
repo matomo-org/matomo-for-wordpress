@@ -9,14 +9,14 @@
 
 namespace WpMatomo\Site;
 
+use Exception;
 use Piwik\Access;
-use Piwik\API\Request;
-use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Intl\Data\Provider\CurrencyDataProvider;
-use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\SitesManager;
+use Piwik\Plugins\SitesManager\Model;
+use WP_Site;
 use WpMatomo\Bootstrap;
 use WpMatomo\Installer;
 use WpMatomo\Logger;
@@ -28,6 +28,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
+/**
+ * Properties coming from matomo
+ * phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+ */
 class Sync {
 	const MAX_LENGTH_SITE_NAME = 90;
 
@@ -41,33 +45,32 @@ class Sync {
 	 */
 	private $settings;
 
-    /**
-     * @var SyncConfig
-     */
+	/**
+	 * @var SyncConfig
+	 */
 	private $config_sync;
 
 	public function __construct( Settings $settings ) {
-		$this->logger   = new Logger();
-		$this->settings = $settings;
+		$this->logger      = new Logger();
+		$this->settings    = $settings;
 		$this->config_sync = new SyncConfig( $settings );
 	}
 
 	public function register_hooks() {
-		add_action( 'update_option_blogname', array( $this, 'sync_current_site_ignore_error' ) );
-		add_action( 'update_option_home', array( $this, 'sync_current_site_ignore_error' ) );
-		add_action( 'update_option_siteurl', array( $this, 'sync_current_site_ignore_error' ) );
-		add_action( 'update_option_timezone_string', array( $this, 'sync_current_site_ignore_error' ) );
-		add_action( 'matomo_setting_change_track_ecommerce', array( $this, 'sync_current_site_ignore_error' ) );
-		add_action( 'matomo_setting_change_site_currency', array( $this, 'sync_current_site_ignore_error' ) );
+		add_action( 'update_option_blogname', [ $this, 'sync_current_site_ignore_error' ] );
+		add_action( 'update_option_home', [ $this, 'sync_current_site_ignore_error' ] );
+		add_action( 'update_option_siteurl', [ $this, 'sync_current_site_ignore_error' ] );
+		add_action( 'update_option_timezone_string', [ $this, 'sync_current_site_ignore_error' ] );
+		add_action( 'matomo_setting_change_track_ecommerce', [ $this, 'sync_current_site_ignore_error' ] );
+		add_action( 'matomo_setting_change_site_currency', [ $this, 'sync_current_site_ignore_error' ] );
 	}
 
-	public function sync_current_site_ignore_error()
-	{
+	public function sync_current_site_ignore_error() {
 		try {
 			$this->sync_current_site();
-		} catch (\Exception $e) {
-			$this->logger->log( 'Ignoring site sync error: ' . $e->getMessage());
-			$this->logger->log_exception('sync_site_ignore', $e);
+		} catch ( Exception $e ) {
+			$this->logger->log( 'Ignoring site sync error: ' . $e->getMessage() );
+			$this->logger->log_exception( 'sync_site_ignore', $e );
 		}
 	}
 
@@ -78,7 +81,7 @@ class Sync {
 
 		if ( is_multisite() && function_exists( 'get_sites' ) ) {
 			foreach ( get_sites() as $site ) {
-				/** @var \WP_Site $site */
+				/** @var WP_Site $site */
 				switch_to_blog( $site->blog_id );
 				try {
 					$installer = new Installer( $this->settings );
@@ -90,7 +93,7 @@ class Sync {
 						Bootstrap::set_not_bootstrapped();
 						$config                        = Config::getInstance();
 						$installed                     = $config->PluginsInstalled;
-						$installed['PluginsInstalled'] = array();
+						$installed['PluginsInstalled'] = [];
 						$config->PluginsInstalled      = $installed;
 
 						if ( $installer->can_be_installed() ) {
@@ -101,7 +104,7 @@ class Sync {
 					}
 
 					$success = $this->sync_site( $site->blog_id, $site->blogname, $site->siteurl );
-				} catch ( \Exception $e ) {
+				} catch ( Exception $e ) {
 					$success = false;
 					// we don't want to rethrow exception otherwise some other blogs might never sync
 					$this->logger->log( 'Matomo error syncing site: ' . $e->getMessage() );
@@ -134,76 +137,77 @@ class Sync {
 			$blog_name = substr( $blog_name, 0, self::MAX_LENGTH_SITE_NAME );
 		}
 
-		$track_ecommerce = (int) $this->settings->get_global_option( 'track_ecommerce' );
-		$site_currency   = $this->settings->get_global_option( Settings::SITE_CURRENCY );
+		$track_ecommerce   = (int) $this->settings->get_global_option( 'track_ecommerce' );
+		$site_currency     = $this->settings->get_global_option( Settings::SITE_CURRENCY );
 		$detected_timezone = $this->detect_timezone();
 
-        $dataProvider = StaticContainer::get(CurrencyDataProvider::class);
-		$valid_currencies = $dataProvider->getCurrencyList();
-		if (!array_key_exists($site_currency, $valid_currencies)){
+		$data_provider    = StaticContainer::get( CurrencyDataProvider::class );
+		$valid_currencies = $data_provider->getCurrencyList();
+		if ( ! array_key_exists( $site_currency, $valid_currencies ) ) {
 			$site_currency = 'USD';
 		}
 
 		if ( ! empty( $idsite ) ) {
 			$this->logger->log( 'Matomo site is known for blog (' . $idsite . ')... will update' );
 
-            $sites_manager_model = new Model();
-            $site = $sites_manager_model->getSiteFromId($idsite);
-            if (!empty($site)) {
-            	// if site doesn't exist for some reason then we have to create it
-	            if ($site['name'] != $blog_name
-	                || $site['main_url'] != $blog_url
-	                || $site['ecommerce'] != $track_ecommerce
-	                || $site['currency'] != $site_currency
-	                || $site['timezone'] != $detected_timezone) {
+			$sites_manager_model = new Model();
+			$site                = $sites_manager_model->getSiteFromId( $idsite );
+			if ( ! empty( $site ) ) {
+				// if site doesn't exist for some reason then we have to create it
+				if ( $site['name'] !== $blog_name
+					 || $site['main_url'] !== $blog_url
+				     // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+					 || $site['ecommerce'] != $track_ecommerce
+					 || $site['currency'] !== $site_currency
+					 || $site['timezone'] !== $detected_timezone ) {
 
-		            /** @var \WP_Site $site */
-		            $params              = array(
-			            'name'      => $blog_name,
-			            'main_url'  => $blog_url,
-			            'ecommerce' => $track_ecommerce,
-			            'currency' =>  $site_currency,
-			            'timezone'  => $detected_timezone,
-		            );
-		            $sites_manager_model->updateSite( $params, $idsite );
+					/** @var WP_Site $site */
+					$params = [
+						'name'      => $blog_name,
+						'main_url'  => $blog_url,
+						'ecommerce' => $track_ecommerce,
+						'currency'  => $site_currency,
+						'timezone'  => $detected_timezone,
+					];
+					$sites_manager_model->updateSite( $params, $idsite );
 
-		            do_action( 'matomo_site_synced', $idsite, $blog_id );
+					do_action( 'matomo_site_synced', $idsite, $blog_id );
 
-		            // no actual setting changed but we make sure the tracking code will be updated after an update
-		            $this->settings->apply_tracking_related_changes( array() );
-	            }
+					// no actual setting changed but we make sure the tracking code will be updated after an update
+					$this->settings->apply_tracking_related_changes( [] );
+				}
 
-	            $this->config_sync->sync_config_for_current_site();
+				$this->config_sync->sync_config_for_current_site();
 
-	            return true;
-            }
+				return true;
+			}
 		}
 
 		$this->logger->log( 'Matomo site is not known for blog... will create site' );
 
-		/** @var \WP_Site $site */
-		$idsite   = null;
+		/** @var WP_Site $site */
+		$idsite = null;
 
 		$this->set_enable_sites_admin( 1 );
 
 		Access::doAsSuperUser(
 			function () use ( $blog_name, $blog_url, $detected_timezone, $track_ecommerce, &$idsite, $site_currency ) {
-					SitesManager\API::unsetInstance();
-					// we need to unset the instance to make sure it fetches the
-					// up to date dependencies eg current plugin manager etc
+				SitesManager\API::unsetInstance();
+				// we need to unset the instance to make sure it fetches the
+				// up to date dependencies eg current plugin manager etc
 
-					$idsite = SitesManager\API::getInstance()->addSite(
-						$blog_name,
-						array( $blog_url ),
-						$track_ecommerce,
-						$site_search                = null,
-						$search_keyword_parameters  = null,
-						$search_category_parameters = null,
-						$excluded_ips               = null,
-						$excluded_query_parameters  = null,
-                        $detected_timezone,
-						$site_currency
-					);
+				$idsite                         = SitesManager\API::getInstance()->addSite(
+					$blog_name,
+					[ $blog_url ],
+					$track_ecommerce,
+					$site_search                = null,
+					$search_keyword_parameters  = null,
+					$search_category_parameters = null,
+					$excluded_ips               = null,
+					$excluded_query_parameters  = null,
+					$detected_timezone,
+					$site_currency
+				);
 			}
 		);
 		$this->set_enable_sites_admin( 0 );
@@ -218,7 +222,7 @@ class Sync {
 
 		Site::map_matomo_site_id( $blog_id, $idsite );
 
-        $this->config_sync->sync_config_for_current_site();
+		$this->config_sync->sync_config_for_current_site();
 
 		do_action( 'matomo_site_synced', $idsite, $blog_id );
 
@@ -252,7 +256,7 @@ class Sync {
 			return $timezone;
 		}
 
-		$dst = (bool) date( 'I' );
+		$dst = (bool) gmdate( 'I' );
 		foreach ( timezone_abbreviations_list() as $abbr ) {
 			foreach ( $abbr as $city ) {
 				if ( $dst === (bool) $city['dst']
@@ -280,16 +284,17 @@ class Sync {
 
 	private function check_and_try_to_set_default_timezone( $timezone ) {
 		try {
-			Access::doAsSuperUser(function () use ($timezone) {
-				// make sure we're loading the latest instance with all up to date dependencies... mainly needed for tests
-				SitesManager\API::unsetInstance();
-				SitesManager\API::getInstance()->setDefaultTimezone( $timezone );
-			});
-		} catch ( \Exception $e ) {
+			Access::doAsSuperUser(
+				function () use ( $timezone ) {
+					// make sure we're loading the latest instance with all up to date dependencies... mainly needed for tests
+					SitesManager\API::unsetInstance();
+					SitesManager\API::getInstance()->setDefaultTimezone( $timezone );
+				}
+			);
+		} catch ( Exception $e ) {
 			return false;
 		}
 
 		return true;
 	}
-
 }

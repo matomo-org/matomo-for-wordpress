@@ -16,26 +16,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Logger {
-	const LEVEL_NONE = 99;
+	const LEVEL_NONE  = 99;
 	const LEVEL_DEBUG = 1;
-	const LEVEL_INFO = 3;
+	const LEVEL_INFO  = 3;
 
-	private function get_log_level()
-	{
-		if ( defined('MATOMO_DEBUG')) {
-			if (MATOMO_DEBUG) {
+	private function get_log_level() {
+		if ( defined( 'MATOMO_DEBUG' ) ) {
+			if ( MATOMO_DEBUG ) {
 				return self::LEVEL_DEBUG;
 			}
+
 			return self::LEVEL_NONE;
 		}
 
 		return self::LEVEL_INFO;
 	}
 
-	public function log( $message , $mode = 3) {
+	public function log( $message, $mode = 3 ) {
 		$log_level = $this->get_log_level();
 
-		if ($log_level > $mode) {
+		if ( $log_level > $mode ) {
 			return;
 		}
 
@@ -55,12 +55,12 @@ class Logger {
 	private function persist( $key, $message ) {
 		$id     = $this->make_id();
 		$logs   = $this->get_last_logged_entries();
-		$logs[] = array(
+		$logs[] = [
 			'name'    => $key,
 			'value'   => time(),
 			'comment' => $message,
-		);
-		$logs   = array_slice( $logs, -6 );
+		];
+		$logs   = array_slice( $logs, - 6 );
 		update_option( $id, $logs );
 	}
 
@@ -72,7 +72,7 @@ class Logger {
 		$id   = $this->make_id();
 		$logs = get_option( $id );
 		if ( empty( $logs ) ) {
-			$logs = array();
+			$logs = [];
 		}
 
 		// remove any entry older than 1 week
@@ -80,9 +80,11 @@ class Logger {
 			$logs,
 			function ( $log ) {
 				$one_week_seconds = 604800;
+
 				return ! empty( $log['value'] ) && is_numeric( $log['value'] ) && ( time() - $log['value'] ) <= $one_week_seconds;
 			}
 		);
+
 		return $logs;
 	}
 
@@ -104,10 +106,9 @@ class Logger {
 	}
 
 	public function log_exception( $key, Exception $e ) {
-		$trace   = $this->get_readable_trace($e);
+		$trace   = $this->get_readable_trace( $e );
 		$message = $e->getMessage() . ' => ' . $trace;
 		$this->log( 'Matomo error: ' . $message );
 		$this->persist( $key, $message );
 	}
-
 }

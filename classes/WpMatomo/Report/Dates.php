@@ -23,7 +23,7 @@ class Dates {
 	const THIS_YEAR  = 'thisyear';
 
 	public function get_supported_dates() {
-		return array(
+		return [
 			self::YESTERDAY  => 'Yesterday',
 			self::TODAY      => 'Today',
 			self::THIS_WEEK  => 'This week',
@@ -31,7 +31,7 @@ class Dates {
 			self::THIS_MONTH => 'This month',
 			self::LAST_MONTH => 'Last month',
 			self::THIS_YEAR  => 'This year',
-		);
+		];
 	}
 
 	public function detect_period_and_date( $report_date ) {
@@ -74,8 +74,6 @@ class Dates {
 				}
 		}
 
-		return array( $period, $date );
+		return [ $period, $date ];
 	}
-
-
 }

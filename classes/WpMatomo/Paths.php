@@ -9,24 +9,32 @@
 
 namespace WpMatomo;
 
+use stdClass;
+use WP_Filesystem_Direct;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
 class Paths {
 
-	private function get_file_system() {
+	private static $host_init_filesystem = false;
+
+	public function get_file_system() {
 		if ( ! function_exists( 'WP_Filesystem' ) ) {
 			require_once ABSPATH . '/wp-admin/includes/file.php';
-			WP_Filesystem();
 		}
 
+		if ( ! self::$host_init_filesystem ) {
+			self::$host_init_filesystem = true;
+			WP_Filesystem();
+		}
 		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
 			require_once ABSPATH . '/wp-admin/includes/class-wp-filesystem-base.php';
 			require_once ABSPATH . '/wp-admin/includes/class-wp-filesystem-direct.php';
 		}
 
-		return new \WP_Filesystem_Direct( new \stdClass() );
+		return new WP_Filesystem_Direct( new stdClass() );
 	}
 
 	public function get_upload_base_url() {
@@ -113,7 +121,7 @@ class Paths {
 		$matomo_dir_parts   = explode( DIRECTORY_SEPARATOR, $matomo_dir );
 		$target_dir_parts   = explode( DIRECTORY_SEPARATOR, $target_dir );
 		$relative_directory = '';
-		$add_at_the_end     = array();
+		$add_at_the_end     = [];
 		$was_previous_same  = false;
 
 		foreach ( $target_dir_parts as $index => $part ) {

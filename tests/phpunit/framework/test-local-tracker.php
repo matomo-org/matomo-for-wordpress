@@ -4,12 +4,17 @@ use Piwik\Config;
 use Piwik\Plugin\API;
 use Piwik\Tracker;
 use Piwik\Tracker\Cache;
-
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $GLOBALS['PIWIK_TRACKER_DEBUG'] = false;
 require_once __DIR__ . '/../../../app/libs/PiwikTracker/PiwikTracker.php';
 
 /**
  * Tracker that uses core/Tracker.php directly.
+ * Piwik constants
+ * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
+ * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+ * inherit from Piwik
+ * phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
  */
 class MatomoLocalTracker extends PiwikTracker {
 
@@ -52,14 +57,15 @@ class MatomoLocalTracker extends PiwikTracker {
 		Tracker::$initTrackerMode                = false;
 		Tracker::setTestEnvironment( $test_environment_args, $method );
 		// set language
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 		$old_lang                        = isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $this->acceptLanguage;
 		// set user agent
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 		$old_user_agent             = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
 		$_SERVER['HTTP_USER_AGENT'] = $this->userAgent;
 		// set cookie
 		$old_cookie = $_COOKIE;
-		// parse_str(parse_url($this->requestCookie, PHP_URL_QUERY), $_COOKIE);
 		// do tracking and capture output
 		ob_start();
 		$local_tracker = new Tracker();
@@ -71,6 +77,7 @@ class MatomoLocalTracker extends PiwikTracker {
 		$handler  = Tracker\Handler\Factory::make();
 		$response = $local_tracker->main( $handler, $request );
 		if ( ! is_null( $response ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $response;
 		}
 		$output = ob_get_contents();
@@ -94,7 +101,7 @@ class MatomoLocalTracker extends PiwikTracker {
 
 	private function parseUrl( $url ) {
 		// parse url
-		$query = parse_url( $url, PHP_URL_QUERY );
+		$query = wp_parse_url( $url, PHP_URL_QUERY );
 		if ( false === $query ) {
 			return;
 		}

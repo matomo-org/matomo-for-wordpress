@@ -9,10 +9,16 @@
 
 namespace WpMatomo;
 
+use Piwik\Application\Environment;
+use Piwik\FrontController;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
-
+/**
+ * piwik constants
+ * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
+ */
 class Bootstrap {
 	/**
 	 * Tests only
@@ -70,11 +76,11 @@ class Bootstrap {
 
 		include_once 'Db/WordPress.php';
 
-		$environment = new \Piwik\Application\Environment( null );
+		$environment = new Environment( null );
 		$environment->init();
 
-		\Piwik\FrontController::unsetInstance();
-		$controller = \Piwik\FrontController::getInstance();
+		FrontController::unsetInstance();
+		$controller = FrontController::getInstance();
 		$controller->init();
 
 		add_action(

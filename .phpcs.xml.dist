@@ -8,12 +8,8 @@
 	<file>./matomo.php</file>
 	<file>./shared.php</file>
 	<file>./uninstall.php</file>
-	<exclude-pattern>/classes/WpMatomo/Db/*</exclude-pattern>
-	<exclude-pattern>/classes/WpMatomo/AjaxTracker.php</exclude-pattern>
-	<exclude-pattern>/tests/phpunit/bootstrap.php</exclude-pattern>
-	<exclude-pattern>tests/phpunit/framework/test-matomo-test-case.php</exclude-pattern>
-	<exclude-pattern>tests/phpunit/framework/test-local-tracker.php</exclude-pattern>
-
+    <exclude-pattern>/classes/WpMatomo/Db/*.php</exclude-pattern>
+    <exclude-pattern>/classes/WpMatomo/AjaxTracker.php</exclude-pattern>
 	<!-- How to scan -->
 	<!-- Usage instructions: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->
 	<!-- Annotated ruleset: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml -->
@@ -58,6 +54,7 @@
 		<exclude name="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound"/>
 		<exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
 		<exclude name="WordPress.WP.I18n.MissingTranslatorsComment"/>
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax.Found"/>
 	</rule>
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>

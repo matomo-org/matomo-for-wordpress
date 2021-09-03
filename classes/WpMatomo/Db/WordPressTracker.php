@@ -76,10 +76,10 @@ class WordPress extends Mysqli {
 	 */
 	private function before_execute_query( $wpdb, $sql ) {
 		if ( ! $wpdb->suppress_errors
-			 && defined( 'WP_DEBUG' )
-			 && WP_DEBUG
-			 && defined( 'WP_DEBUG_DISPLAY' )
-			 && WP_DEBUG_DISPLAY ) {
+		     && defined( 'WP_DEBUG' )
+		     && WP_DEBUG
+		     && defined( 'WP_DEBUG_DISPLAY' )
+		     && WP_DEBUG_DISPLAY ) {
 			// we want to prevent showing these notices
 			if ( defined( 'MATOMO_SUPPRESS_DB_ERRORS' ) ) {
 				if ( MATOMO_SUPPRESS_DB_ERRORS === true ) {

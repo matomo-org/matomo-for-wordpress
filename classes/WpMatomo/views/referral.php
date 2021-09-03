@@ -12,11 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="notice notice-info is-dismissible" id="matomo-referral">
-    <p>
-        <?php esc_html_e( 'Like Matomo? We would really appreciate if you took 1 minute to rate us.', 'matomo' ); ?>
+	<p>
+		<?php esc_html_e( 'Like Matomo? We would really appreciate if you took 1 minute to rate us.', 'matomo' ); ?>
 
-        <a href="https://wordpress.org/support/plugin/matomo/reviews/?rate=5#new-post" target="_blank" rel="noreferrer noopener"
-           class="button matomo-dismiss-forever"><?php esc_html_e( 'Rate Matomo', 'matomo' ) ?></a>
-    </p>
-    <div style="clear:both;"></div>
+		<a href="https://wordpress.org/support/plugin/matomo/reviews/?rate=5#new-post" target="_blank"
+		   rel="noreferrer noopener"
+		   class="button matomo-dismiss-forever"><?php esc_html_e( 'Rate Matomo', 'matomo' ); ?></a>
+	</p>
+	<div style="clear:both;"></div>
 </div>

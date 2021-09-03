@@ -20,7 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Summary {
-
 	const NONCE_DASHBOARD = 'matomo_pin_dashboard';
 
 	/**
@@ -36,20 +35,21 @@ class Summary {
 	}
 
 	private function pin_if_submitted() {
-		if ( ! empty( $_GET[ 'pin' ] )
-			 && ! empty( $_GET[ 'report_uniqueid' ] )
-			 && ! empty( $_GET[ 'report_date' ] )
-		     && is_admin()
-		     && check_admin_referer( self::NONCE_DASHBOARD )
-             && is_user_logged_in()
-		     && current_user_can( Capabilities::KEY_VIEW ) ) {
-			$unique_id = $_GET[ 'report_uniqueid' ];
-			$date      = $_GET[ 'report_date' ];
+		if ( ! empty( $_GET['pin'] )
+			 && ! empty( $_GET['report_uniqueid'] )
+			 && ! empty( $_GET['report_date'] )
+			 && is_admin()
+			 && check_admin_referer( self::NONCE_DASHBOARD )
+			 && is_user_logged_in()
+			 && current_user_can( Capabilities::KEY_VIEW ) ) {
+			$unique_id = sanitize_text_field( wp_unslash( $_GET['report_uniqueid'] ) );
+			$date      = sanitize_text_field( wp_unslash( $_GET['report_date'] ) );
 
 			$dashobard = new Dashboard();
-			if ($dashobard->is_valid_widget($unique_id, $date)) {
+			if ( $dashobard->is_valid_widget( $unique_id, $date ) ) {
 				$dashobard->toggle_widget( $unique_id, $date );
-                return true;
+
+				return true;
 			}
 		}
 
@@ -57,7 +57,7 @@ class Summary {
 	}
 
 	public function show() {
-		do_action('load_chartjs');
+		do_action( 'matomo_load_chartjs' );
 		$matomo_pinned = $this->pin_if_submitted();
 
 		$settings = $this->settings;
@@ -70,7 +70,7 @@ class Summary {
 
 		$report_date = Dates::YESTERDAY;
 		if ( isset( $_GET['report_date'] ) && isset( $report_dates[ $_GET['report_date'] ] ) ) {
-			$report_date = $_GET['report_date'];
+			$report_date = sanitize_text_field( wp_unslash( $_GET['report_date'] ) );
 		}
 
 		list( $report_period_selected, $report_date_selected ) = $report_dates_obj->detect_period_and_date( $report_date );
@@ -79,14 +79,14 @@ class Summary {
 
 		$matomo_dashboard = new Dashboard();
 
-		$wp_version =  get_bloginfo( 'version' );
-		$matomo_is_version_pre55 = empty($wp_version) || version_compare($wp_version, '5.5.0') === -1;
+		$wp_version              = get_bloginfo( 'version' );
+		$matomo_is_version_pre55 = empty( $wp_version ) || version_compare( $wp_version, '5.5.0' ) === - 1;
 
 		include dirname( __FILE__ ) . '/views/summary.php';
 	}
 
 	private function get_reports_to_show() {
-		$reports_to_show = array(
+		$reports_to_show = [
 			Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME,
 			'VisitsSummary_get',
 			'UserCountry_getCountry',
@@ -105,17 +105,16 @@ class Summary {
 			'Referrers_getAll',
 			'Referrers_getSocials',
 			'Referrers_getCampaigns',
-		);
+		];
 
 		if ( $this->settings->get_global_option( 'track_ecommerce' ) ) {
 			$reports_to_show[] = 'Goals_get_idGoal--ecommerceOrder';
 			$reports_to_show[] = 'Goals_getItemsName';
 		}
 
-
 		$reports_to_show = apply_filters( 'matomo_report_summary_report_ids', $reports_to_show );
 
-		$report_metadata = array();
+		$report_metadata = [];
 		$metadata        = new Metadata();
 		foreach ( $reports_to_show as $report_unique_id ) {
 			$report = $metadata->find_report_by_unique_id( $report_unique_id );
@@ -130,5 +129,4 @@ class Summary {
 
 		return $report_metadata;
 	}
-
 }

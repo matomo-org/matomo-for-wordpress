@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<table class="widefat matomo-table">
 		<tbody>
 		<?php
-		$matomo_columns = ! empty( $report['columns'] ) ? $report['columns'] : array();
+		$matomo_columns = ! empty( $report['columns'] ) ? $report['columns'] : [];
 		foreach ( $report['reportData']->getRows() as $matomo_val => $matomo_row ) {
 			foreach ( $matomo_row as $matomo_metric_name => $matomo_value ) {
 				$matomo_display_name = ! empty( $matomo_columns[ $matomo_metric_name ] ) ? $matomo_columns[ $matomo_metric_name ] : $matomo_metric_name;

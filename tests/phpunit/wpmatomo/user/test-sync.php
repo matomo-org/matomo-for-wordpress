@@ -26,7 +26,7 @@ class MockMatomoUserSync extends Sync {
 			parent::sync_users( $users, $idsite );
 		}
 	}
-
+	// phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
 	public function ensure_user_exists( $wp_user ) {
 		return parent::ensure_user_exists( $wp_user );
 	}
@@ -88,23 +88,23 @@ class UserSyncTest extends MatomoAnalytics_TestCase {
 
 		$idsite = $this->get_current_site_id();
 
-		switch_to_blog($blogid1);
-		$user2 = get_user_by('login', 'admin');
+		switch_to_blog( $blogid1 );
+		$user2 = get_user_by( 'login', 'admin' );
 		restore_current_blog();
-		switch_to_blog($blogid2);
-		$user3 = get_user_by('login', 'admin');
+		switch_to_blog( $blogid2 );
+		$user3 = get_user_by( 'login', 'admin' );
 		restore_current_blog();
 
 		$this->assertCount( 1, $this->mock->synced_users[0]['users'] );
 		unset( $this->mock->synced_users[0]['users'] );
 
-        $this->assertCount( 1, $this->mock->synced_users[1]['users'] );
-        $this->assertEquals( $user2->ID, $this->mock->synced_users[1]['users'][0]->ID );
-        unset( $this->mock->synced_users[1]['users'] );
+		$this->assertCount( 1, $this->mock->synced_users[1]['users'] );
+		$this->assertEquals( $user2->ID, $this->mock->synced_users[1]['users'][0]->ID );
+		unset( $this->mock->synced_users[1]['users'] );
 
-        $this->assertCount( 1, $this->mock->synced_users[2]['users'] );
-        $this->assertEquals( $user3->ID, $this->mock->synced_users[2]['users'][0]->ID );
-        unset( $this->mock->synced_users[2]['users'] );
+		$this->assertCount( 1, $this->mock->synced_users[2]['users'] );
+		$this->assertEquals( $user3->ID, $this->mock->synced_users[2]['users'][0]->ID );
+		unset( $this->mock->synced_users[2]['users'] );
 
 		$this->assertEquals(
 			array(

@@ -9,12 +9,15 @@
 
 namespace WpMatomo\Ecommerce;
 
+use WC_Order;
+use WC_Product;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
 class Woocommerce extends Base {
-	private $order_status_ignore = array( 'cancelled', 'failed', 'refunded' );
+	private $order_status_ignore = [ 'cancelled', 'failed', 'refunded' ];
 
 	public function register_hooks() {
 		if ( is_admin() ) {
@@ -23,30 +26,38 @@ class Woocommerce extends Base {
 
 		parent::register_hooks();
 
-		add_action( 'wp_head', array( $this, 'maybe_track_order_complete' ), 99999 );
-		add_action( 'woocommerce_after_single_product', array( $this, 'on_product_view' ), 99999, $args = 0 );
-		add_action( 'woocommerce_add_to_cart', array( $this, 'on_cart_updated_safe' ), 99999, 0 );
-		add_action( 'woocommerce_cart_item_removed', array( $this, 'on_cart_updated_safe' ), 99999, 0 );
-		add_action( 'woocommerce_cart_item_restored', array( $this, 'on_cart_updated_safe' ), 99999, 0 );
-		add_action( 'woocommerce_cart_item_set_quantity', array( $this, 'on_cart_updated_safe' ), 99999, 0 );
-		add_action('woocommerce_thankyou',  array($this, 'anonymise_orderid_in_url'), 1, 1);
+		add_action( 'wp_head', [ $this, 'maybe_track_order_complete' ], 99999 );
+		add_action( 'woocommerce_after_single_product', [ $this, 'on_product_view' ], 99999, $args = 0 );
+		add_action( 'woocommerce_add_to_cart', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+		add_action( 'woocommerce_cart_item_removed', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+		add_action( 'woocommerce_cart_item_restored', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+		add_action( 'woocommerce_cart_item_set_quantity', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
+		add_action( 'woocommerce_thankyou', [ $this, 'anonymise_orderid_in_url' ], 1, 1 );
 
-		if (!$this->should_track_background()) {
+		if ( ! $this->should_track_background() ) {
 			// prevent possibly executing same event twice where eg first a PHP Matomo tracker request is created
 			// because of woocommerce_applied_coupon and then also because of woocommerce_update_cart_action_cart_updated itself
 			// causing two tracking requests to be issues from the server. refs #215
 			// when not ajax mode the later event will simply overwrite the first and it should be fine.
-			add_filter( 'woocommerce_update_cart_action_cart_updated', array( $this, 'on_cart_updated_safe' ), 99999, 1 );
+			add_filter(
+				'woocommerce_update_cart_action_cart_updated',
+				[
+					$this,
+					'on_cart_updated_safe',
+				],
+				99999,
+				1
+			);
 		}
 
-		add_action( 'woocommerce_applied_coupon', array( $this, 'on_coupon_updated_safe' ), 99999, 0 );
-		add_action( 'woocommerce_removed_coupon', array( $this, 'on_coupon_updated_safe' ), 99999, 0 );
+		add_action( 'woocommerce_applied_coupon', [ $this, 'on_coupon_updated_safe' ], 99999, 0 );
+		add_action( 'woocommerce_removed_coupon', [ $this, 'on_coupon_updated_safe' ], 99999, 0 );
 	}
 
-	public function anonymise_orderid_in_url($order_id)
-	{
-		if ( !empty($order_id) && is_numeric($order_id)) {
+	public function anonymise_orderid_in_url( $order_id ) {
+		if ( ! empty( $order_id ) && is_numeric( $order_id ) ) {
 			$order_id = (int) $order_id;
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo "<script>(function () {
 	if (location.href) { 
 		window._paq = window._paq || [];
@@ -66,28 +77,28 @@ class Woocommerce extends Base {
 		if ( function_exists( 'is_order_received_page' ) && is_order_received_page() ) {
 			$order_id = isset( $wp->query_vars['order-received'] ) ? $wp->query_vars['order-received'] : 0;
 			if ( ! empty( $order_id ) && $order_id > 0 ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo $this->on_order( $order_id );
 			}
 		}
 	}
 
-	public function on_coupon_updated_safe( ) {
-
+	public function on_coupon_updated_safe() {
 		try {
-			$val = $this->on_cart_updated($val= null, true);
-		} catch (\Exception $e) {
-			$this->logger->log_exception('woo_on_cart_update', $e);
+			$val = null;
+			$val = $this->on_cart_updated( $val, true );
+		} catch ( \Exception $e ) {
+			$this->logger->log_exception( 'woo_on_cart_update', $e );
 		}
 
 		return $val;
 	}
 
 	public function on_cart_updated_safe( $val = null ) {
-
 		try {
-			$val = $this->on_cart_updated($val);
-		} catch (\Exception $e) {
-			$this->logger->log_exception('woo_on_cart_update', $e);
+			$val = $this->on_cart_updated( $val );
+		} catch ( \Exception $e ) {
+			$this->logger->log_exception( 'woo_on_cart_update', $e );
 		}
 
 		return $val;
@@ -104,7 +115,7 @@ class Woocommerce extends Base {
 
 		/** @var \WC_Cart $cart */
 		$cart = $woocommerce->cart;
-		if (!$is_coupon_update) {
+		if ( ! $is_coupon_update ) {
 			// can cause cart coupon not to be applied when WooCommerce Subscriptions is used.
 			$cart->calculate_totals();
 		}
@@ -113,7 +124,7 @@ class Woocommerce extends Base {
 		$tracking_code = '';
 
 		foreach ( $cart_content as $item ) {
-			/** @var \WC_Product $product */
+			/** @var WC_Product $product */
 			$product = wc_get_product( $item['product_id'] );
 
 			if ( $this->isWC3() ) {
@@ -126,7 +137,7 @@ class Woocommerce extends Base {
 					}
 				}
 			} else {
-				$order                = new \WC_Order( null );
+				$order                = new WC_Order( null );
 				$product_or_variation = $order->get_product_from_item( $item );
 			}
 
@@ -145,7 +156,7 @@ class Woocommerce extends Base {
 			$title          = $product->get_title();
 			$categories     = $this->get_product_categories( $product );
 			$quantity       = isset( $item['quantity'] ) ? $item['quantity'] : 0;
-			$params         = array( 'addEcommerceItem', '' . $sku, $title, $categories, $price, $quantity );
+			$params         = [ 'addEcommerceItem', '' . $sku, $title, $categories, $price, $quantity ];
 			$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 		}
 
@@ -156,7 +167,7 @@ class Woocommerce extends Base {
 			$total = $cart->cart_contents_total;
 		}
 
-		$tracking_code .= $this->make_matomo_js_tracker_call( array( 'trackEcommerceCartUpdate', $total ) );
+		$tracking_code .= $this->make_matomo_js_tracker_call( [ 'trackEcommerceCartUpdate', $total ] );
 
 		$this->cart_update_queue = $this->wrap_script( $tracking_code );
 		$this->logger->log( 'Tracked ecommerce cart update: ' . $this->cart_update_queue );
@@ -200,20 +211,20 @@ class Woocommerce extends Base {
 				$product_details = $this->get_product_details( $order, $item );
 
 				if ( ! empty( $product_details ) ) {
-					$params         = array(
+					$params         = [
 						'addEcommerceItem',
 						'' . $product_details['sku'],
 						$product_details['title'],
 						$product_details['categories'],
 						$product_details['price'],
 						$product_details['quantity'],
-					);
+					];
 					$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 				}
 			}
 		}
 
-		$params         = array(
+		$params         = [
 			'trackEcommerceOrder',
 			'' . $order_id_to_track,
 			$order->get_total(),
@@ -221,7 +232,7 @@ class Woocommerce extends Base {
 			$order->get_cart_tax(),
 			$this->isWC3() ? $order->get_shipping_total() : $order->get_total_shipping(),
 			$order->get_total_discount(),
-		);
+		];
 		$tracking_code .= $this->make_matomo_js_tracker_call( $params );
 
 		$this->logger->log( sprintf( 'Tracked ecommerce order %s with number %s', $order_id, $order_id_to_track ) );
@@ -239,7 +250,7 @@ class Woocommerce extends Base {
 	}
 
 	/**
-	 * @param \WC_Product $product
+	 * @param WC_Product $product
 	 */
 	private function get_sku( $product ) {
 		if ( $product && $product->get_sku() ) {
@@ -250,7 +261,7 @@ class Woocommerce extends Base {
 	}
 
 	/**
-	 * @param \WC_Product $product
+	 * @param WC_Product $product
 	 */
 	private function get_product_id( $product ) {
 		if ( ! $product ) {
@@ -265,7 +276,7 @@ class Woocommerce extends Base {
 	}
 
 	/**
-	 * @param \WC_Order $order
+	 * @param WC_Order $order
 	 * @param $item
 	 *
 	 * @return mixed
@@ -273,10 +284,10 @@ class Woocommerce extends Base {
 	private function get_product_details( $order, $item ) {
 		$product_or_variation = false;
 		if ( $this->isWC3() && ! empty( $item ) && is_object( $item ) && method_exists( $item, 'get_product' ) && is_callable(
-			array(
+			[
 				$item,
 				'get_product',
-			)
+			]
 		) ) {
 			$product_or_variation = $item->get_product();
 		} elseif ( method_exists( $order, 'get_product_from_item' ) ) {
@@ -303,17 +314,17 @@ class Woocommerce extends Base {
 		$categories = $this->get_product_categories( $product );
 		$quantity   = $item['qty'];
 
-		return array(
+		return [
 			'sku'        => $sku,
 			'title'      => $title,
 			'categories' => $categories,
 			'quantity'   => $quantity,
 			'price'      => $price,
-		);
+		];
 	}
 
 	/**
-	 * @param \WC_Product $product
+	 * @param WC_Product $product
 	 *
 	 * @return array
 	 */
@@ -322,7 +333,7 @@ class Woocommerce extends Base {
 
 		$category_terms = get_the_terms( $product_id, 'product_cat' );
 
-		$categories = array();
+		$categories = [];
 
 		if ( is_wp_error( $category_terms ) ) {
 			return $categories;
@@ -348,17 +359,17 @@ class Woocommerce extends Base {
 			return;
 		}
 
-		/** @var \WC_Product $product */
-		$params = array(
+		/** @var WC_Product $product */
+		$params = [
 			'setEcommerceView',
 			$this->get_sku( $product ),
 			$product->get_title(),
 			$this->get_product_categories( $product ),
 			$product->get_price(),
-		);
+		];
 
 		// we're not using wc_enqueue_js eg to prevent sometimes this code from being minified on some JS minifier plugins
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $this->wrap_script( $this->make_matomo_js_tracker_call( $params ) );
 	}
-
 }
