@@ -332,7 +332,6 @@ class WordPress extends Plugin
             array('usersmanager', 'index'),
             array('usersmanager', ''),
             array('usersmanager', 'addnewtoken'),
-          //  array('usersmanager', 'usersettings'),
             array('usersmanager', 'deletetoken'),
             array('usersmanager', 'usersecurity'),
 	        array('sitesmanager', ''),

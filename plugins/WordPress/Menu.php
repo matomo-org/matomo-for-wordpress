@@ -23,7 +23,6 @@ class Menu extends \Piwik\Plugin\Menu
         $menu->remove('CoreAdminHome_MenuMeasurables', 'SitesManager_MenuManage');
         $menu->remove('SitesManager_Sites', 'SitesManager_MenuManage');
         $menu->remove('CoreAdminHome_MenuSystem', 'UsersManager_MenuUsers');
-      //  $menu->remove('UsersManager_MenuPersonal', 'General_Settings');
         $menu->remove('UsersManager_MenuPersonal', 'General_Security');
         $menu->remove('CoreAdminHome_MenuMeasurables', 'CoreAdminHome_TrackingCode');
         $menu->remove('CoreAdminHome_MenuMeasurables', 'General_Settings');
