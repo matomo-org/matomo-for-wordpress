@@ -28,20 +28,18 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		$this->insert_many_values();
 	}
 
-	public function test_listTables()
-	{
-		// we needed to overwrite this method as Zend uses by default getConnection() which we don't support.
+	public function test_listTables() {
+		 // we needed to overwrite this method as Zend uses by default getConnection() which we don't support.
 		$tables = $this->db->listTables();
-		$this->assertTrue(is_array($tables));
+		$this->assertTrue( is_array( $tables ) );
 	}
 
-	public function test_describeTable()
-	{
+	public function test_describeTable() {
 		$tables = $this->db->listTables();
 		// we needed to overwrite this method as Zend uses by default getConnection() which we don't support.
-		$tables = $this->db->describeTable($tables[0]);
-		$this->assertTrue(is_array($tables));
-		$this->assertNotEmpty($tables);
+		$tables = $this->db->describeTable( $tables[0] );
+		$this->assertTrue( is_array( $tables ) );
+		$this->assertNotEmpty( $tables );
 	}
 
 	/**
@@ -53,23 +51,26 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_query_handles_null_values() {
-		$table  = Common::prefixTable( 'log_action' );
+		$table = Common::prefixTable( 'log_action' );
 		$this->db->query(
-			'INSERT INTO '.$table.' (name, hash, type, url_prefix) VALUES (?,CRC32(?),?,?)',
-			array('myname', 'myname', 2, null)
+			'INSERT INTO ' . $table . ' (name, hash, type, url_prefix) VALUES (?,CRC32(?),?,?)',
+			array( 'myname', 'myname', 2, null )
 		);
 
-		$all = $this->db->fetchAll('select * from ' . $table);
+		$all = $this->db->fetchAll( 'select * from ' . $table );
 
-		$this->assertSame(array(
+		$this->assertSame(
 			array(
-				'idaction' => '1',
-				'name' => 'myname',
-				'hash' => '2383257219',
-				'type' => '2',
-				'url_prefix' => null
-			)
-		), $all);
+				array(
+					'idaction'   => '1',
+					'name'       => 'myname',
+					'hash'       => '2383257219',
+					'type'       => '2',
+					'url_prefix' => null,
+				),
+			),
+			$all
+		);
 	}
 
 	public function test_query_detects_error_code() {
@@ -77,25 +78,24 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 			$this->db->query(
 				'SELECT * from foobarbaz;'
 			);
-			$this->fail('Expected exception not thrown');
-		} catch (Zend_Db_Exception $e) {
-			$this->assertContains('[1146]', $e->getMessage());
-			$this->assertTrue($this->db->isErrNo($e, 1146));
-			$this->assertFalse($this->db->isErrNo($e, 1145));
-			$this->assertFalse($this->db->isErrNo($e, 1147));
+			$this->fail( 'Expected exception not thrown' );
+		} catch ( Zend_Db_Exception $e ) {
+			$this->assertContains( '[1146]', $e->getMessage() );
+			$this->assertTrue( $this->db->isErrNo( $e, 1146 ) );
+			$this->assertFalse( $this->db->isErrNo( $e, 1145 ) );
+			$this->assertFalse( $this->db->isErrNo( $e, 1147 ) );
 		}
-
 
 		// make sure when there are two errors on same connection the correct error code is used...
 		try {
-			$table  = Common::prefixTable( 'user' );
+			$table = Common::prefixTable( 'user' );
 			$this->db->query(
 				'SELECT bar from ' . $table
 			);
-			$this->fail('Expected exception not thrown 2');
-		} catch (Zend_Db_Exception $e) {
-			$this->assertContains('[1054]', $e->getMessage());
-			$this->assertTrue($this->db->isErrNo($e, 1054));
+			$this->fail( 'Expected exception not thrown 2' );
+		} catch ( Zend_Db_Exception $e ) {
+			$this->assertContains( '[1054]', $e->getMessage() );
+			$this->assertTrue( $this->db->isErrNo( $e, 1054 ) );
 		}
 	}
 

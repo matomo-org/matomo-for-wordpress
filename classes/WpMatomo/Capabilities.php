@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Capabilities {
+
 	const KEY_NONE = 'none_matomo';
 
 	/**
@@ -50,9 +51,9 @@ class Capabilities {
 	}
 
 	public function register_hooks() {
-		add_action( 'wp_roles_init', array( $this, 'add_capabilities_to_roles' ) );
-		add_filter( 'user_has_cap', array( $this, 'add_capabilities_to_user' ), 10, 4 );
-		add_filter( 'map_meta_cap', array( $this, 'map_meta_cap' ), 10, 4 );
+		add_action( 'wp_roles_init', [ $this, 'add_capabilities_to_roles' ] );
+		add_filter( 'user_has_cap', [ $this, 'add_capabilities_to_user' ], 10, 4 );
+		add_filter( 'map_meta_cap', [ $this, 'map_meta_cap' ], 10, 4 );
 	}
 
 	/**
@@ -61,9 +62,9 @@ class Capabilities {
 	 * @internal
 	 */
 	public function remove_hooks() {
-		remove_action( 'wp_roles_init', array( $this, 'add_capabilities_to_roles' ) );
-		remove_filter( 'user_has_cap', array( $this, 'add_capabilities_to_user' ), 10 );
-		remove_filter( 'map_meta_cap', array( $this, 'map_meta_cap' ), 10 );
+		remove_action( 'wp_roles_init', [ $this, 'add_capabilities_to_roles' ] );
+		remove_filter( 'user_has_cap', [ $this, 'add_capabilities_to_user' ], 10 );
+		remove_filter( 'map_meta_cap', [ $this, 'map_meta_cap' ], 10 );
 	}
 
 	public function map_meta_cap( $caps, $cap, $user_id, $args ) {
@@ -156,12 +157,12 @@ class Capabilities {
 	}
 
 	public function get_all_capabilities_sorted_by_highest_permission() {
-		return array(
+		return [
 			self::KEY_SUPERUSER,
 			self::KEY_ADMIN,
 			self::KEY_WRITE,
 			self::KEY_VIEW,
-		);
+		];
 	}
 
 	protected function has_any_higher_permission( $cap_to_find, $allcaps ) {
@@ -182,5 +183,4 @@ class Capabilities {
 
 		return false;
 	}
-
 }

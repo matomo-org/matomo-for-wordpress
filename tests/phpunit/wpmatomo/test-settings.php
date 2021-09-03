@@ -29,7 +29,7 @@ class SettingsTest extends MatomoUnit_TestCase {
 
 	public function test_should_disable_addhandler_forced() {
 		$this->settings->force_disable_addhandler = true;
-		$disabled = $this->settings->should_disable_addhandler();
+		$disabled                                 = $this->settings->should_disable_addhandler();
 		$this->settings->force_disable_addhandler = false;
 		$this->assertTrue( $disabled );
 	}

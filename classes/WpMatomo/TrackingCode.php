@@ -13,9 +13,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-use \WpMatomo\TrackingCode\TrackingCodeGenerator;
+use WpMatomo\TrackingCode\TrackingCodeGenerator;
 
 class TrackingCode {
+
 	/**
 	 * @var Settings
 	 */
@@ -44,17 +45,17 @@ class TrackingCode {
 	public function register_hooks() {
 		if ( $this->settings->is_tracking_enabled() ) {
 			if ( $this->settings->is_track_feed() ) {
-				add_filter( 'the_excerpt_rss', array( $this, 'add_feed_tracking' ) );
-				add_filter( 'the_content', array( $this, 'add_feed_tracking' ) );
+				add_filter( 'the_excerpt_rss', [ $this, 'add_feed_tracking' ] );
+				add_filter( 'the_content', [ $this, 'add_feed_tracking' ] );
 			}
 			if ( $this->settings->is_add_feed_campaign() ) {
-				add_filter( 'post_link', array( $this, 'add_feed_campaign' ) );
+				add_filter( 'post_link', [ $this, 'add_feed_campaign' ] );
 			}
 			if ( $this->settings->is_cross_domain_linking_enabled() ) {
-				add_filter( 'wp_redirect', array( $this, 'forward_cross_domain_visitor_id' ) );
+				add_filter( 'wp_redirect', [ $this, 'forward_cross_domain_visitor_id' ] );
 			}
 
-			$is_admin = is_admin() || !empty($GLOBALS['MATOMO_LOADED_DIRECTLY']);
+			$is_admin = is_admin() || ! empty( $GLOBALS['MATOMO_LOADED_DIRECTLY'] );
 
 			if ( ! $is_admin || $this->settings->is_admin_tracking_enabled() ) {
 				$prefix = 'wp';
@@ -67,10 +68,10 @@ class TrackingCode {
 					$position = $prefix . '_footer';
 				}
 
-				add_action( $position, array( $this, 'add_javascript_code' ) );
+				add_action( $position, [ $this, 'add_javascript_code' ] );
 
 				if ( $this->settings->is_add_no_script_code() ) {
-					add_action( $prefix . '_footer', array( $this, 'add_noscript_code' ) );
+					add_action( $prefix . '_footer', [ $this, 'add_noscript_code' ] );
 				}
 			}
 		}
@@ -106,11 +107,13 @@ class TrackingCode {
 			if ( $site_id ) {
 				$tracking_code = str_replace( '{MATOMO_API_ENDPOINT}', wp_json_encode( $this->generator->get_tracker_endpoint() ), $tracking_code );
 				$tracking_code = str_replace( '{MATOMO_JS_ENDPOINT}', wp_json_encode( $this->generator->get_js_endpoint() ), $tracking_code );
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo str_replace( '{MATOMO_IDSITE}', $site_id, $tracking_code );
 			} else {
 				echo '<!-- Site not yet synced with Matomo, tracking code will be added later -->';
 			}
 		} else {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $tracking_code;
 		}
 	}
@@ -129,12 +132,13 @@ class TrackingCode {
 
 		if ( ! empty( $code ) ) {
 			$this->logger->log( 'Add noscript code. Blog ID: ' . get_current_blog_id(), Logger::LEVEL_DEBUG );
-			$contains_noscript_tag = stripos($code, '<noscript') !== false;
-			if (!$contains_noscript_tag) {
+			$contains_noscript_tag = stripos( $code, '<noscript' ) !== false;
+			if ( ! $contains_noscript_tag ) {
 				echo '<noscript>';
 			}
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $code;
-			if (!$contains_noscript_tag) {
+			if ( ! $contains_noscript_tag ) {
 				echo '</noscript>';
 			}
 			echo "\n";
@@ -153,7 +157,7 @@ class TrackingCode {
 	 */
 	public function add_feed_campaign( $permalink ) {
 		global $post;
-		if ( is_feed() && !empty($post) ) {
+		if ( is_feed() && ! empty( $post ) ) {
 			$this->logger->log( 'Add campaign to feed permalink.' );
 			$sep        = ( strpos( $permalink, '?' ) === false ? '?' : '&' );
 			$permalink .= $sep . 'pk_campaign=' . rawurlencode( $this->settings->get_global_option( 'track_feed_campaign' ) ) . '&pk_kwd=' . rawurlencode( $post->post_name );
@@ -203,10 +207,12 @@ class TrackingCode {
 	 * @return string location extended by pk_vid URL parameter if the URL parameter is set
 	 */
 	public function forward_cross_domain_visitor_id( $location ) {
-		if ( ! empty( $_GET['pk_vid'] )
-			 && preg_match( '/^[a-zA-Z0-9]{24,60}$/', $_GET['pk_vid'] ) ) {
-			// currently, the pk_vid parameter is 32 characters long, but it may vary over time.
-			$location = add_query_arg( 'pk_vid', $_GET['pk_vid'], $location );
+		if ( ! empty( $_GET['pk_vid'] ) ) {
+			$pk_vid = sanitize_text_field( wp_unslash( $_GET['pk_vid'] ) );
+			if ( preg_match( '/^[a-zA-Z0-9]{24,60}$/', $pk_vid ) ) {
+				// currently, the pk_vid parameter is 32 characters long, but it may vary over time.
+				$location = add_query_arg( 'pk_vid', $pk_vid, $location );
+			}
 		}
 
 		return $location;

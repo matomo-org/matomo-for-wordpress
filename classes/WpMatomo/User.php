@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class User {
-
 	const USER_MAPPING_PREFIX = 'matomo-user-login-';
 
 	/**
@@ -41,6 +40,4 @@ class User {
 	public function uninstall() {
 		Uninstaller::uninstall_options( self::USER_MAPPING_PREFIX );
 	}
-
-
 }

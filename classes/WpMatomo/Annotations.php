@@ -9,6 +9,8 @@
 
 namespace WpMatomo;
 
+use Exception;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -33,7 +35,7 @@ class Annotations {
 	}
 
 	public function register_hooks() {
-		add_action( 'transition_post_status', array( $this, 'add_annotation' ), 10, 3 );
+		add_action( 'transition_post_status', [ $this, 'add_annotation' ], 10, 3 );
 	}
 
 	/**
@@ -70,13 +72,13 @@ class Annotations {
 				$logger = $this->logger;
 				\Piwik\Access::doAsSuperUser(
 					function () use ( $post, $logger, $idsite ) {
-							$note = esc_html__( 'Published:', 'matomo' ) . ' ' . $post->post_title . ' - URL: ' . get_permalink( $post->ID );
-							\Piwik\Plugins\Annotations\API::unsetInstance();// make sure latest instance will be loaded with all up to date dependencies... mainly needed for tests
-							$id = \Piwik\Plugins\Annotations\API::getInstance()->add( $idsite, gmdate( 'Y-m-d' ), $note );
-							$logger->log( 'Add post annotation. ' . $note . ' - ' . wp_json_encode( $id ) );
+						$note = esc_html__( 'Published:', 'matomo' ) . ' ' . $post->post_title . ' - URL: ' . get_permalink( $post->ID );
+						\Piwik\Plugins\Annotations\API::unsetInstance();// make sure latest instance will be loaded with all up to date dependencies... mainly needed for tests
+						$id = \Piwik\Plugins\Annotations\API::getInstance()->add( $idsite, gmdate( 'Y-m-d' ), $note );
+						$logger->log( 'Add post annotation. ' . $note . ' - ' . wp_json_encode( $id ) );
 					}
 				);
-			} catch ( \Exception $e ) {
+			} catch ( Exception $e ) {
 				$this->logger->log( 'Add post annotation failed: ' . $e->getMessage() );
 
 				return;
