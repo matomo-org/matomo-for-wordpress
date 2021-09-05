@@ -77,12 +77,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 <h2>
 	<?php esc_html_e( 'Let users opt-out of tracking', 'matomo' ); ?>
 </h2>
-<p><?php esc_html_e( '2 options', 'matomo' ); ?></p>
+<p><?php esc_html_e( 'You have 2 options to embed the opt out iframe into your website:', 'matomo' ); ?></p>
 <ul class="matomo-list">
 	<li>
 	<?php
 	echo sprintf(
-		esc_html__( 'Use the short code %1$s to embed the opt out iframe into your website.', 'matomo' ),
+		esc_html__( 'Use the short code %1$s.', 'matomo' ),
 		'<code>' . esc_html( PrivacySettings::EXAMPLE_MINIMAL ) . '</code>'
 	);
 	?>
