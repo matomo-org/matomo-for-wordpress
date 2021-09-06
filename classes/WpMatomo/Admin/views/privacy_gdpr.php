@@ -77,7 +77,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <h2>
 	<?php esc_html_e( 'Let users opt-out of tracking', 'matomo' ); ?>
 </h2>
-<p><?php esc_html_e( 'You have 2 options to embed the opt out iframe into your website:', 'matomo' ); ?></p>
+<p><?php esc_html_e( 'You have two options to embed the opt out iframe into your website:', 'matomo' ); ?></p>
 <ul class="matomo-list">
 	<li>
 	<?php
@@ -95,5 +95,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <?php esc_html_e( 'Example', 'matomo' ); ?>: <code><?php echo esc_html( PrivacySettings::EXAMPLE_FULL ); ?></code>
 	</li>
-	<li><?php esc_html_e( 'Or you can use the dedicated block directly in your page', 'matomo' ); ?></li>
+	<li><?php esc_html_e( 'Or you can add the "Matomo opt out" block directly to your page.', 'matomo' ); ?></li>
 </ul>
