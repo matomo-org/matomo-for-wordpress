@@ -21,8 +21,9 @@ class OptOut {
 	private $language = null;
 
 	public function register_hooks() {
-		add_shortcode( 'matomo_opt_out', [ $this, 'show_opt_out' ] );
-		add_action( 'wp_enqueue_scripts', [ $this, 'load_scripts' ] );
+		add_shortcode( 'matomo_opt_out', array( $this, 'show_opt_out' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' )  );
+		add_action( 'init', [$this, 'load_block'] );
 	}
 
 	public function load_scripts() {
@@ -89,5 +90,24 @@ class OptOut {
 		$content .= '<p id="matomo_outout_err_cookies" style="display: none;"><strong>' . $this->translate( 'CoreAdminHome_OptOutErrorNoCookies' ) . '</strong></p>';
 
 		return $content;
+	}
+
+	public function load_block() {
+		// before wordpress 5.0
+		if ( ! function_exists( 'register_block_type' ) ) {
+			// Gutenberg is not active.
+			return;
+		}
+
+		wp_register_script(
+			'matomo-opt-out',
+			plugins_url( '/assets/js/blocks/matomo_opt_out.js', MATOMO_ANALYTICS_FILE ),
+			array( 'wp-blocks', 'wp-i18n', 'wp-element' ),
+			filemtime( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . '/assets/js/blocks/matomo_opt_out.js' )
+		);
+
+		register_block_type( 'matomo/matomo-opt-out', array(
+			'editor_script' => 'matomo-opt-out',
+		) );
 	}
 }

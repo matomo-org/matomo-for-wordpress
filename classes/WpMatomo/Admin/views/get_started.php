@@ -61,7 +61,7 @@ if ( empty( $show_this_page ) ) {
 
 	<h2>2. <?php esc_html_e( 'Update your privacy page', 'matomo' ); ?></h2>
 
-	<?php echo sprintf( esc_html__( 'Give your users the chance to opt-out of tracking by adding the shortcode %1$s to your privacy page. You can %2$stweak the opt-out to your liking - see the Privacy Settings%3$s.', 'matomo' ), '<code>[matomo_opt_out]</code>', '<a href="' . esc_url( AdminSettings::make_url( AdminSettings::TAB_PRIVACY ) ) . '">', '</a>' ); ?>
+	<?php echo sprintf( esc_html__( 'Give your users the chance to opt-out of tracking by either adding the shortcode %1$s or by adding the "Matomo opt out" block to your privacy page. You can %2$stweak the opt-out to your liking - see the Privacy Settings%3$s.', 'matomo' ), '<code>[matomo_opt_out]</code>', '<a href="' . esc_url( AdminSettings::make_url( AdminSettings::TAB_PRIVACY ) ) . '">', '</a>' ); ?>
 
 	<?php esc_html_e( 'You may also need to mention that you are using Matomo Analytics on your website.', 'matomo' ); ?>
 	<?php echo sprintf( esc_html__( 'By %1$sdisabling cookies in the tracking settings%2$s, you might not need to ask for any cookie or tracking consent if the GDPR or ePrivacy applies to you %3$s(learn more)%4$s.', 'matomo' ), '<a href="' . esc_url( AdminSettings::make_url( AdminSettings::TAB_TRACKING ) ) . '" target="_blank" rel="noreferrer noopener">', '</a>', '<a href="https://matomo.org/faq/new-to-piwik/how-do-i-use-matomo-analytics-without-consent-or-cookie-banner/" target="_blank" rel="noreferrer noopener">', '</a>' ); ?>
