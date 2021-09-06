@@ -4,7 +4,7 @@
 * Allow users to add opt out using a Gutenberg block
 * Add a visual graph to the summary page
 * Enable feature to select default report date
-* Internal change: Improve coding stly consistency
+* Internal change: Improve coding style consistency
 * Improve installation process
 
 = 4.4.1 =
