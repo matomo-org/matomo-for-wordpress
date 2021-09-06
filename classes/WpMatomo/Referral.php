@@ -17,10 +17,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Every 90 days we show a please review notice until the user dismisses this notice or clicks on rate us.
  * We only show this notice on Matomo screens.
  *
- * @package WpMatomo
+ * @todo validate the nonce
+ * phpcs:disable WordPress.Security.NonceVerification.Missing
  */
 class Referral {
-
 	const OPTION_NAME_REFERRAL_DISMISSED = 'matomo-referral-dismissed';
 
 	/**
@@ -33,8 +33,9 @@ class Referral {
 	}
 
 	/**
-	 * @internal  for tests only
 	 * @param int $time
+	 *
+	 * @internal  for tests only
 	 */
 	public function set_time( $time ) {
 		$this->time = $time;
@@ -75,6 +76,7 @@ class Referral {
 			return false;
 		}
 		$screen = get_current_screen();
+
 		return $screen && $screen->id && strpos( $screen->id, 'matomo-' ) === 0;
 	}
 
@@ -83,8 +85,8 @@ class Referral {
 	}
 
 	public function dismiss_forever() {
-		$tenYears = 60 * 60 * 24 * 365 * 10;
-		update_option( self::OPTION_NAME_REFERRAL_DISMISSED, $this->time + $tenYears );
+		$ten_years = 60 * 60 * 24 * 365 * 10;
+		update_option( self::OPTION_NAME_REFERRAL_DISMISSED, $this->time + $ten_years );
 	}
 
 	public function dismiss() {
@@ -106,17 +108,16 @@ class Referral {
 			// the first time we check... we set it back 30 days cause we want to see first rating after 60 days
 			$this->time = $this->time - $this->get_days_in_seconds( 30 );
 			$this->dismiss();
+
 			return false;
 		}
 
-		$ninetyDaysInSeconds = $this->get_days_in_seconds( 90 );
+		$ninety_days_in_seconds = $this->get_days_in_seconds( 90 );
 
-		if ( $this->time > ( $dismissed + $ninetyDaysInSeconds ) ) {
+		if ( $this->time > ( $dismissed + $ninety_days_in_seconds ) ) {
 			return true;
 		}
 
 		return false;
 	}
-
-
 }

@@ -14,6 +14,7 @@
 namespace WpMatomo\Admin\TrackingSettings;
 
 use Piwik\Config;
+use WpMatomo;
 use WpMatomo\Admin\TrackingSettings;
 use WpMatomo\Bootstrap;
 use WpMatomo\Settings;
@@ -21,7 +22,10 @@ use WpMatomo\Settings;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
-
+/**
+ * we deal with HTML
+ * phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+ */
 class Forms {
 	/**
 	 * @var Settings
@@ -59,7 +63,7 @@ class Forms {
 	 * @param string  $on_change javascript for onchange event (default: empty)
 	 */
 	public function show_checkbox( $id, $name, $description, $is_hidden = false, $group_name = '', $hide_description = true, $on_change = '' ) {
-		printf( '<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s</label>:</th><td><input type="checkbox" value="1"' . ( $this->settings->get_global_option( $id ) ? ' checked="checked"' : '' ) . ' onchange="jQuery(\'#%s\').val(this.checked?1:0);%s" /><input id="%2$s" type="hidden" name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%2$s]" value="' . (int) $this->settings->get_global_option( $id ) . '" /> %s</td></tr>', esc_html( $name ), $id, $on_change, $this->get_description( $id, $description, $hide_description ) );
+		printf( '<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s</label>:</th><td><input type="checkbox" value="1"' . ( $this->settings->get_global_option( $id ) ? ' checked="checked"' : '' ) . ' onchange="jQuery(\'#%s\').val(this.checked?1:0);%s" /><input id="%2$s" type="hidden" name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%2$s]" value="' . (int) $this->settings->get_global_option( $id ) . '" /> %s</td></tr>', esc_html( $name ), esc_attr( $id ), $on_change, $this->get_description( $id, $description, $hide_description ) );
 	}
 
 	/**
@@ -92,8 +96,8 @@ class Forms {
 	 *
 	 * @param string $text Text to show
 	 */
-	public function show_text( $text , $group_name = '' ) {
-		printf( '<tr class="%s"><td colspan="2"><p>%s</p></td></tr>', $group_name, esc_html( $text ) );
+	public function show_text( $text, $group_name = '' ) {
+		printf( '<tr class="%s"><td colspan="2"><p>%s</p></td></tr>', esc_attr( $group_name ), esc_html( $text ) );
 	}
 
 	/**
@@ -101,8 +105,8 @@ class Forms {
 	 *
 	 * @param string $text Text to show
 	 */
-	public function show_headline( $text , $group_name = '') {
-		printf( '<tr class="%s"><td colspan="2"><h3>%s</h3></td></tr>', $group_name, esc_html( $text ) );
+	public function show_headline( $text, $group_name = '' ) {
+		printf( '<tr class="%s"><td colspan="2"><h3>%s</h3></td></tr>', esc_attr( $group_name ), esc_html( $text ) );
 	}
 
 	/**
@@ -134,23 +138,24 @@ class Forms {
 	 * @param boolean $hide_description $hideDescription set to false to show description initially (default: true)
 	 * @param boolean $global set to false if the textarea shows a site-specific option (default: true)
 	 */
-	public function show_select( $id, $name, $options = array(), $description = '', $on_change = '', $is_hidden = false, $group_name = '', $hide_description = true, $global = true ) {
+	public function show_select( $id, $name, $options = [], $description = '', $on_change = '', $is_hidden = false, $group_name = '', $hide_description = true, $global = true ) {
 		$options_list = '';
 
-		if ($id === 'tracker_debug' && !\WpMatomo::is_safe_mode() && !$this->settings->is_network_enabled()) {
+		if ( 'tracker_debug' === $id && ! WpMatomo::is_safe_mode() && ! $this->settings->is_network_enabled() ) {
 			Bootstrap::do_bootstrap();
-			if (Config::getInstance()->Tracker['debug']) {
+			if ( Config::getInstance()->Tracker['debug'] ) {
 				$default = 'always';
-			} elseif (Config::getInstance()->Tracker['debug_on_demand']) {
+			} elseif ( Config::getInstance()->Tracker['debug_on_demand'] ) {
 				$default = 'on_demand';
 			} else {
 				$default = 'disabled';
 			}
 		} else {
-			$default      = $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
+			$default = $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
 		}
 		if ( is_array( $options ) ) {
 			foreach ( $options as $key => $value ) {
+				// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 				$options_list .= sprintf( '<option value="%s"' . ( $key == $default ? ' selected="selected"' : '' ) . '>%s</option>', esc_attr( $key ), esc_html( $value ) );
 			}
 		}
@@ -172,5 +177,4 @@ class Forms {
 	public function show_box( $type, $icon, $content ) {
 		printf( '<tr><td colspan="2"><div class="%s"><p><span class="dashicons dashicons-%s"></span> %s</p></div></td></tr>', esc_attr( $type ), esc_attr( $icon ), esc_html( $content ) );
 	}
-
 }

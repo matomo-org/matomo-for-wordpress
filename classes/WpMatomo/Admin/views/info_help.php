@@ -7,6 +7,8 @@
  * @package matomo
  */
 
+use WpMatomo\Admin\Menu;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -22,10 +24,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 		   href="https://matomo.org/docs/"><?php esc_html_e( 'User guides', 'matomo' ); ?></a>
 		- <?php esc_html_e( 'Learn how to configure Matomo and how to effectively analyse your data', 'matomo' ); ?>
 	</li>
-	<li><a target="_blank" rel="noreferrer noopener" href="https://matomo.org/faq/wordpress/"><?php esc_html_e( 'Matomo for WordPress FAQs', 'matomo' ); ?></a>
+	<li><a target="_blank" rel="noreferrer noopener"
+		   href="https://matomo.org/faq/wordpress/"><?php esc_html_e( 'Matomo for WordPress FAQs', 'matomo' ); ?></a>
 		- <?php esc_html_e( 'Get answers to frequently asked questions', 'matomo' ); ?>
 	</li>
-	<li><a target="_blank" rel="noreferrer noopener" href="https://matomo.org/faq/"><?php esc_html_e( 'General FAQs', 'matomo' ); ?></a>
+	<li><a target="_blank" rel="noreferrer noopener"
+		   href="https://matomo.org/faq/"><?php esc_html_e( 'General FAQs', 'matomo' ); ?></a>
 		- <?php esc_html_e( 'Get answers to frequently asked questions', 'matomo' ); ?>
 	</li>
 	<li><a target="_blank" rel="noreferrer noopener"
@@ -41,9 +45,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 		- <?php esc_html_e( 'Let our experienced team assist you online on how to best utilise Matomo', 'matomo' ); ?>
 	</li>
 	<?php if ( ! empty( $show_troubleshooting_link ) ) { ?>
-	<li><a
-		   href="<?php echo esc_url( add_query_arg( array( 'tab' => 'troubleshooting' ), menu_page_url( \WpMatomo\Admin\Menu::SLUG_SYSTEM_REPORT, false ) ) ); ?>"><?php esc_html_e( 'Troubleshooting', 'matomo' ); ?></a>
-		- <?php esc_html_e( 'Click here if you are having Trouble with Matomo', 'matomo' ); ?>
-	</li>
+		<li><a
+					href="<?php echo esc_url( add_query_arg( [ 'tab' => 'troubleshooting' ], menu_page_url( Menu::SLUG_SYSTEM_REPORT, false ) ) ); ?>"><?php esc_html_e( 'Troubleshooting', 'matomo' ); ?></a>
+			- <?php esc_html_e( 'Click here if you are having Trouble with Matomo', 'matomo' ); ?>
+		</li>
 	<?php } ?>
 </ul>

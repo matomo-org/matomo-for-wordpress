@@ -9,6 +9,7 @@
 
 namespace WpMatomo\User;
 
+use Exception;
 use Piwik\Access;
 use Piwik\Access\Role\Admin;
 use Piwik\Access\Role\View;
@@ -18,8 +19,9 @@ use Piwik\Common;
 use Piwik\Date;
 use Piwik\Plugin;
 use Piwik\Plugins\LanguagesManager\API;
-use Piwik\Plugins\UsersManager\Model;
 use Piwik\Plugins\UsersManager;
+use Piwik\Plugins\UsersManager\Model;
+use WP_User;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
 use WpMatomo\Logger;
@@ -32,6 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Sync {
+
 	/**
 	 * actually allowed is 100 characters...
 	 * but we do -5 to have some room to append `wp_`.$login.XYZ if needed
@@ -48,21 +51,20 @@ class Sync {
 	}
 
 	public function register_hooks() {
-		add_action( 'add_user_role', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
-		add_action( 'remove_user_role', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
-		add_action( 'add_user_to_blog', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
-		add_action( 'remove_user_from_blog', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
-		add_action( 'user_register', array( $this, 'sync_current_users_1000' ), $prio = 10, $args = 0 );
-		add_action( 'profile_update', array( $this, 'sync_maybe_background' ), $prio = 10, $args = 0 );
+		add_action( 'add_user_role', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
+		add_action( 'remove_user_role', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
+		add_action( 'add_user_to_blog', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
+		add_action( 'remove_user_from_blog', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
+		add_action( 'user_register', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
+		add_action( 'profile_update', [ $this, 'sync_maybe_background' ], $prio = 10, $args = 0 );
 	}
 
-	public function sync_maybe_background()
-	{
+	public function sync_maybe_background() {
 		global $pagenow;
-		if ( is_admin() && $pagenow == 'users.php' ) {
+		if ( is_admin() && 'users.php' === $pagenow ) {
 			// eg for profile update we don't want to sync directly see #365 as it could cause issues with other plugins
 			// if they eg alter `get_users` option
-			wp_schedule_single_event(time() + 5, ScheduledTasks::EVENT_SYNC);
+			wp_schedule_single_event( time() + 5, ScheduledTasks::EVENT_SYNC );
 		} else {
 			$this->sync_current_users_1000();
 		}
@@ -77,10 +79,10 @@ class Sync {
 
 				try {
 					if ( $idsite ) {
-						$users = $this->get_users( array('blog_id' => $site->blog_id ) );
+						$users = $this->get_users( [ 'blog_id' => $site->blog_id ] );
 						$this->sync_users( $users, $idsite );
 					}
-				} catch ( \Exception $e ) {
+				} catch ( Exception $e ) {
 					// we don't want to rethrow exception otherwise some other blogs might never sync
 					$this->logger->log_exception( 'user_sync ', $e );
 				}
@@ -92,51 +94,51 @@ class Sync {
 		}
 	}
 
-	private function get_users($options = array())
-    {
-        /** @var \WP_User[] $users */
-        $users = get_users( $options );
+	private function get_users( $options = [] ) {
+		/** @var WP_User[] $users */
+		$users = get_users( $options );
 
-	    $current_user = wp_get_current_user();
-	    if (!empty($current_user) && !empty($current_user->user_login)) {
-		    // refs https://github.com/matomo-org/wp-matomo/issues/365
-		    // some other plugins may under circumstances overwrite the get_users query and not return all users
-		    // as a result we would delete some users in the matomo users table. this way we make sure at least the current
-		    // user will be added and not deleted even if the list of users is not complete
-		    $found = false;
-		    foreach ($users as $user) {
-			    if ($user->user_login === $current_user->user_login) {
-				    $found = true;
-				    break;
-			    }
-		    }
-		    if (!$found) {
-			    $users[] = $current_user;
-		    }
-	    }
+		$current_user = wp_get_current_user();
+		if ( ! empty( $current_user ) && ! empty( $current_user->user_login ) ) {
+			// refs https://github.com/matomo-org/wp-matomo/issues/365
+			// some other plugins may under circumstances overwrite the get_users query and not return all users
+			// as a result we would delete some users in the matomo users table. this way we make sure at least the current
+			// user will be added and not deleted even if the list of users is not complete
+			$found = false;
+			foreach ( $users as $user ) {
+				if ( $user->user_login === $current_user->user_login ) {
+					$found = true;
+					break;
+				}
+			}
+			if ( ! $found ) {
+				$users[] = $current_user;
+			}
+		}
 
-        if (is_multisite()) {
-            $super_admins = get_super_admins();
-            if (!empty($super_admins)) {
-                foreach ($super_admins as $super_admin) {
-                    $found = false;
-                    foreach ($users as $user) {
-                        if ($user->user_login === $super_admin) {
-                            $found = true;
-                            break;
-                        }
-                    }
-                    if (!$found) {
-                        $user = get_user_by('login', $super_admin);
-                        if (!empty($user)) {
-                            $users[] = $user;
-                        }
-                    }
-                }
-            }
-        }
-        return $users;
-    }
+		if ( is_multisite() ) {
+			$super_admins = get_super_admins();
+			if ( ! empty( $super_admins ) ) {
+				foreach ( $super_admins as $super_admin ) {
+					$found = false;
+					foreach ( $users as $user ) {
+						if ( $user->user_login === $super_admin ) {
+							$found = true;
+							break;
+						}
+					}
+					if ( ! $found ) {
+						$user = get_user_by( 'login', $super_admin );
+						if ( ! empty( $user ) ) {
+							$users[] = $user;
+						}
+					}
+				}
+			}
+		}
+
+		return $users;
+	}
 
 	public function sync_current_users() {
 		$idsite = Site::get_matomo_site_id( get_current_blog_id() );
@@ -149,9 +151,10 @@ class Sync {
 	/**
 	 * similar method to sync_current_users which synchronise on the fly only if we have less than 1000 users.
 	 * Otherwise it will be done by a background task
-	 * @see Sync::sync_current_users()
-	 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/460
+	 *
 	 * @return void
+	 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/460
+	 * @see Sync::sync_current_users()
 	 */
 	public function sync_current_users_1000() {
 		$idsite = Site::get_matomo_site_id( get_current_blog_id() );
@@ -162,11 +165,12 @@ class Sync {
 			}
 		}
 	}
+
 	/**
 	 * Sync all users. Make sure to always pass all sites that exist within a given site... you cannot just sync an individual
 	 * user... we would delete all other users
 	 *
-	 * @param \WP_User[] $users
+	 * @param WP_User[] $users
 	 * @param $idsite
 	 */
 	protected function sync_users( $users, $idsite ) {
@@ -174,8 +178,8 @@ class Sync {
 
 		$this->logger->log( 'Matomo will now sync ' . count( $users ) . ' users' );
 
-		$super_users                  = array();
-		$logins_with_some_view_access = array( 'anonmyous' ); // may or may not exist... we don't want to delete this user though
+		$super_users                  = [];
+		$logins_with_some_view_access = [ 'anonmyous' ]; // may or may not exist... we don't want to delete this user though
 		$user_model                   = new Model();
 
 		// need to make sure we recreate new instance later with latest dependencies in case they changed
@@ -197,34 +201,34 @@ class Sync {
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_ADMIN ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
-				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
-				$user_model->addUserAccess( $matomo_login, Admin::ID, array( $idsite ) );
+				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
+				$user_model->addUserAccess( $matomo_login, Admin::ID, [ $idsite ] );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_WRITE ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
-				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
-				$user_model->addUserAccess( $matomo_login, Write::ID, array( $idsite ) );
+				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
+				$user_model->addUserAccess( $matomo_login, Write::ID, [ $idsite ] );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
 			} elseif ( user_can( $user, Capabilities::KEY_VIEW ) ) {
 				$matomo_login = $this->ensure_user_exists( $user );
-				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
-				$user_model->addUserAccess( $matomo_login, View::ID, array( $idsite ) );
+				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
+				$user_model->addUserAccess( $matomo_login, View::ID, [ $idsite ] );
 				$user_model->setSuperUserAccess( $matomo_login, false );
 				$logins_with_some_view_access[] = $matomo_login;
-			} elseif ($mapped_matomo_login) {
-				$user_model->deleteUserAccess( $mapped_matomo_login, array( $idsite ) );
+			} elseif ( $mapped_matomo_login ) {
+				$user_model->deleteUserAccess( $mapped_matomo_login, [ $idsite ] );
 			}
 
 			if ( $matomo_login ) {
-				$locale = get_user_locale( $user->ID );
-				$locale_dash = Common::mb_strtolower(str_replace('_', '-', $locale));
-				$parts = [];
-				if ($locale && in_array($locale_dash, ['zh-cn', 'zh-tw', 'pt-br', 'es-ar'], true)) {
-					$parts = [$locale_dash];
-				} elseif (!empty($locale) && is_string($locale)) {
-					$parts  = explode( '_', $locale );
+				$locale      = get_user_locale( $user->ID );
+				$locale_dash = Common::mb_strtolower( str_replace( '_', '-', $locale ) );
+				$parts       = [];
+				if ( $locale && in_array( $locale_dash, [ 'zh-cn', 'zh-tw', 'pt-br', 'es-ar' ], true ) ) {
+					$parts = [ $locale_dash ];
+				} elseif ( ! empty( $locale ) && is_string( $locale ) ) {
+					$parts = explode( '_', $locale );
 				}
 
 				if ( ! empty( $parts[0] ) ) {
@@ -237,8 +241,8 @@ class Sync {
 					}
 				}
 			}
-
-			if ($idsite != 1) {
+			// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+			if ( 1 != $idsite ) {
 				// only needed if the actual site is not the default site... makes sure when they click in Matomo
 				// UI on "Dashboard" that the correct site is being opened by default
 				// eg if the linked site is actually idSite=2.
@@ -254,10 +258,10 @@ class Sync {
 								UsersManager\API::PREFERENCE_DEFAULT_REPORT,
 								$idsite
 							);
-						} catch (\Exception $e) {
+							//phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+						} catch ( Exception $e ) {
 							// ignore any error for now
 						}
-
 					}
 				);
 			}
@@ -268,11 +272,10 @@ class Sync {
 		}
 
 		$logins_with_some_view_access = array_unique( $logins_with_some_view_access );
-		$all_users                    = $user_model->getUsers( array() );
+		$all_users                    = $user_model->getUsers( [] );
 		foreach ( $all_users as $all_user ) {
 			if ( ! in_array( $all_user['login'], $logins_with_some_view_access, true )
 				 && ! empty( $all_user['login'] ) ) {
-
 				Access::doAsSuperUser(
 					function () use ( $user_model, $all_user ) {
 						$user_model->deleteUserOnly( $all_user['login'] );
@@ -285,7 +288,7 @@ class Sync {
 	}
 
 	/**
-	 * @param \WP_User $wp_user
+	 * @param WP_User $wp_user
 	 */
 	protected function ensure_user_exists( $wp_user ) {
 		$user_model = new Model();
@@ -299,7 +302,7 @@ class Sync {
 			$user_in_matomo = $user_model->getUser( $matomo_user_login );
 		} else {
 			// wp usernames may include whitespace etc
-			$login = preg_replace('/[^A-Za-zÄäÖöÜüß0-9_.@+-]+/D', '_', $login);
+			$login = preg_replace( '/[^A-Za-zÄäÖöÜüß0-9_.@+-]+/D', '_', $login );
 			$login = substr( $login, 0, self::MAX_USER_NAME_LENGTH );
 
 			if ( ! $user_model->getUser( $login ) ) {
@@ -334,7 +337,7 @@ class Sync {
 			User::map_matomo_user_login( $user_id, $matomo_user_login );
 		} elseif ( $user_in_matomo['email'] !== $wp_user->user_email ) {
 			$this->logger->log( 'Matomo is now updating the email for wpUserID ' . $user_id . ' matomo login ' . $matomo_user_login );
-			$user_model->updateUserFields( $matomo_user_login, array( 'email' => $wp_user->user_email ) );
+			$user_model->updateUserFields( $matomo_user_login, [ 'email' => $wp_user->user_email ] );
 		}
 
 		return $matomo_user_login;

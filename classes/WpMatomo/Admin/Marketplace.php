@@ -31,5 +31,4 @@ class Marketplace {
 
 		include dirname( __FILE__ ) . '/views/marketplace.php';
 	}
-
 }

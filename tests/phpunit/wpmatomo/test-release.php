@@ -4,7 +4,6 @@
  *
  * @package matomo
  */
-
 class ReleaseTest extends MatomoUnit_TestCase {
 
 	/**
@@ -17,6 +16,7 @@ class ReleaseTest extends MatomoUnit_TestCase {
 	public function test_stabletag_and_matomo_version_matches() {
 		$plugin_data = get_plugin_data( MATOMO_ANALYTICS_FILE, $markup = false, $translate = false );
 		$version     = $plugin_data['Version'];
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $version;
 
 		$txt = file_get_contents( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'readme.txt' );

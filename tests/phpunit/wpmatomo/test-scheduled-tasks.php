@@ -15,6 +15,10 @@ use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
 
+/**
+ * Don't need remote access
+ * phpcs:disable WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+ */
 class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 
 	/**
@@ -32,7 +36,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		parent::setUp();
 
 		$this->settings = new Settings();
-		$this->tasks = new ScheduledTasks( $this->settings );
+		$this->tasks    = new ScheduledTasks( $this->settings );
 		$this->tasks->schedule();
 	}
 
@@ -54,24 +58,25 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_disable_add_handler_wontfail_when_addhandler_enabled() {
-		$this->assertFalse($this->settings->should_disable_addhandler());
+		$this->assertFalse( $this->settings->should_disable_addhandler() );
 		$this->tasks->disable_add_handler();
 	}
 
 	public function test_disable_add_handler_wontfail_when_addhandler_disabled() {
-		$this->assertFalse($this->settings->should_disable_addhandler());
+		$this->assertFalse( $this->settings->should_disable_addhandler() );
 		$this->settings->force_disable_addhandler = true;
 		$this->tasks->disable_add_handler();
-		$filename_to_check = dirname(MATOMO_ANALYTICS_FILE) . '/.htaccess';
-		$this->assertContains('# AddHandler', file_get_contents($filename_to_check));
-		$this->tasks->disable_add_handler($undo = true);
-		$this->assertNotContains('# AddHandler', file_get_contents($filename_to_check));
-		$this->assertContains('AddHandler', file_get_contents($filename_to_check));
+		$filename_to_check = dirname( MATOMO_ANALYTICS_FILE ) . '/.htaccess';
+		$this->assertContains( '# AddHandler', file_get_contents( $filename_to_check ) );
+		$undo = true;
+		$this->tasks->disable_add_handler( $undo );
+		$this->assertNotContains( '# AddHandler', file_get_contents( $filename_to_check ) );
+		$this->assertContains( 'AddHandler', file_get_contents( $filename_to_check ) );
 		$this->settings->force_disable_addhandler = false;
 	}
 
 	public function test_archive_does_not_fail() {
-		$this->assertEquals(array(), $this->tasks->archive());
+		$this->assertEquals( array(), $this->tasks->archive() );
 	}
 
 	public function test_set_last_time_before_cron() {

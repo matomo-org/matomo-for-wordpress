@@ -14,7 +14,7 @@ class ReferralTest extends MatomoUnit_TestCase {
 
 	private $time;
 
-	private $oneDayInSeconds = 86400;
+	private $one_day_in_seconds = 86400;
 
 	public function setUp() {
 		parent::setUp();
@@ -52,10 +52,10 @@ class ReferralTest extends MatomoUnit_TestCase {
 
 		$this->assertFalse( $this->referral->should_show() );
 
-		$this->referral->set_time( 1584663656 + ( $this->oneDayInSeconds * 89.5 ) );
+		$this->referral->set_time( 1584663656 + ( $this->one_day_in_seconds * 89.5 ) );
 		$this->assertFalse( $this->referral->should_show() );
 
-		$this->referral->set_time( 1584663656 + ( $this->oneDayInSeconds * 90.2 ) );
+		$this->referral->set_time( 1584663656 + ( $this->one_day_in_seconds * 90.2 ) );
 		$this->assertTrue( $this->referral->should_show() );
 
 		$this->referral->dismiss();

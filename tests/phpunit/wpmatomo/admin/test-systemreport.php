@@ -6,7 +6,16 @@
 use WpMatomo\Admin\SystemReport;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
-
+/**
+ * We want a real data, not something coming from cache
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+ *
+ * We cannot use parameters of statements as this is the table names we build
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+ * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
+ */
 class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 
 	/**
@@ -20,6 +29,7 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 	private $settings;
 	/**
 	 * Required for test_get_missing_tables
+	 *
 	 * @see AdminSystemReportTest::test_get_missing_tables()
 	 * @var bool
 	 */
@@ -82,6 +92,7 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_not_compatible_plugins_are_mentioned_in_faq() {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		$contents = file_get_contents( 'https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/' );
 
 		foreach ( $this->report->get_not_compatible_plugins() as $not_compatible_plugin ) {
@@ -96,20 +107,20 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_get_missing_tables_should_return_empty_array_when_all_tables_exist() {
-		$this->assertSame( [], $this->report->get_missing_tables() );
+		$this->assertSame( array(), $this->report->get_missing_tables() );
 	}
 
 	public function test_get_missing_tables_should_return_the_missing_tables() {
 		global $wpdb;
-		$old_table_name = $this->report->dbSettings->prefix_table_name('site');
+		$old_table_name = $this->report->db_settings->prefix_table_name( 'site' );
 		$new_table_name = $old_table_name . '_bkp';
-		$wpdb->query("ALTER TABLE $old_table_name RENAME $new_table_name" );
+		$wpdb->query( "ALTER TABLE $old_table_name RENAME $new_table_name" );
 
 		$missing_tables = $this->report->get_missing_tables();
 		$this->assertCount( 1, $missing_tables );
-		$this->assertSame( [$old_table_name], array_values( $missing_tables ) );
+		$this->assertSame( array( $old_table_name ), array_values( $missing_tables ) );
 
-		$wpdb->query("ALTER TABLE $new_table_name RENAME $old_table_name" );
+		$wpdb->query( "ALTER TABLE $new_table_name RENAME $old_table_name" );
 	}
 
 }
