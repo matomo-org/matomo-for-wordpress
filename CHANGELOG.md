@@ -1,5 +1,12 @@
 == Changelog ==
 
+= 4.4.2 =
+* Allow users to add opt out using a Gutenberg block
+* Add a visual graph to the summary page
+* Enable feature to select default report date
+* Internal change: Improve coding style consistency
+* Improve installation process
+
 = 4.4.1 =
 * Update core to 4.4.1
 * Fix CORS settings could not be saved in the Matomo admin

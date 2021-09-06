@@ -14,13 +14,13 @@ use WpMatomo\Report\Dates;
 use WpMatomo\Report\Metadata;
 use WpMatomo\Report\Renderer;
 use WpMatomo\Settings;
+use Piwik\Plugins\UsersManager\UserPreferences;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
 class Summary {
-
 	const NONCE_DASHBOARD = 'matomo_pin_dashboard';
 
 	/**
@@ -36,20 +36,19 @@ class Summary {
 	}
 
 	private function pin_if_submitted() {
-		if ( ! empty( $_GET[ 'pin' ] )
-			 && ! empty( $_GET[ 'report_uniqueid' ] )
-			 && ! empty( $_GET[ 'report_date' ] )
-		     && is_admin()
-		     && check_admin_referer( self::NONCE_DASHBOARD )
-             && is_user_logged_in()
-		     && current_user_can( Capabilities::KEY_VIEW ) ) {
-			$unique_id = $_GET[ 'report_uniqueid' ];
-			$date      = $_GET[ 'report_date' ];
-
+		if ( ! empty( $_GET['pin'] )
+			 && ! empty( $_GET['report_uniqueid'] )
+			 && ! empty( $_GET['report_date'] )
+			 && is_admin()
+			 && check_admin_referer( self::NONCE_DASHBOARD )
+			 && is_user_logged_in()
+			 && current_user_can( Capabilities::KEY_VIEW ) ) {
+			$unique_id = sanitize_text_field( wp_unslash( $_GET['report_uniqueid'] ) );
+			$date      = sanitize_text_field( wp_unslash( $_GET['report_date'] ) );
 			$dashobard = new Dashboard();
-			if ($dashobard->is_valid_widget($unique_id, $date)) {
+			if ( $dashobard->is_valid_widget( $unique_id, $date ) ) {
 				$dashobard->toggle_widget( $unique_id, $date );
-                return true;
+				return true;
 			}
 		}
 
@@ -57,6 +56,8 @@ class Summary {
 	}
 
 	public function show() {
+		do_action( 'matomo_load_chartjs' );
+    
 		$matomo_pinned = $this->pin_if_submitted();
 
 		$settings = $this->settings;
@@ -67,9 +68,42 @@ class Summary {
 		$report_dates_obj = new Dates();
 		$report_dates     = $report_dates_obj->get_supported_dates();
 
-		$report_date = Dates::YESTERDAY;
+		$user_preference = new UserPreferences();
+		$default_date    = $user_preference->getDefaultDate();
+		$report_period   = $user_preference->getDefaultPeriod();
+		switch ( $report_period ) {
+			case 'day':
+				$report_date = $default_date;
+				break;
+			case 'year':
+			case 'month':
+			case 'week':
+				switch ( $default_date ) {
+					case 'yesterday':
+						$report_date = 'last' . $report_period;
+						break;
+					case 'today':
+						$report_date = 'this' . $report_period;
+						break;
+				}
+				break;
+			case 'range':
+				switch ( $default_date ) {
+					case 'previous30':
+						$report_date = 'lastmonth';
+						break;
+					case 'previous7':
+						$report_date = 'lastweek';
+						break;
+					case 'last30':
+						$report_date = 'thismonth';
+						break;
+					case 'last7':
+						$report_date = 'thisweek';
+				}
+		}
 		if ( isset( $_GET['report_date'] ) && isset( $report_dates[ $_GET['report_date'] ] ) ) {
-			$report_date = $_GET['report_date'];
+			$report_date = sanitize_text_field( wp_unslash( $_GET['report_date'] ) );
 		}
 
 		list( $report_period_selected, $report_date_selected ) = $report_dates_obj->detect_period_and_date( $report_date );
@@ -78,22 +112,24 @@ class Summary {
 
 		$matomo_dashboard = new Dashboard();
 
-		$wp_version =  get_bloginfo( 'version' );
-		$matomo_is_version_pre55 = empty($wp_version) || version_compare($wp_version, '5.5.0') === -1;
+		$wp_version              = get_bloginfo( 'version' );
+		$matomo_is_version_pre55 = empty( $wp_version ) || version_compare( $wp_version, '5.5.0' ) === - 1;
 
 		include dirname( __FILE__ ) . '/views/summary.php';
 	}
 
 	private function get_reports_to_show() {
-		$reports_to_show = array(
+		$reports_to_show = [
+			Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME,
 			'VisitsSummary_get',
 			'UserCountry_getCountry',
+			'Actions_get',
 			'DevicesDetection_getType',
+			'Goals_get',
 			'Resolution_getResolution',
 			'DevicesDetection_getOsFamilies',
 			'DevicesDetection_getBrowsers',
 			'VisitTime_getVisitInformationPerServerTime',
-			'Actions_get',
 			'Actions_getPageTitles',
 			'Actions_getEntryPageTitles',
 			'Actions_getExitPageTitles',
@@ -102,18 +138,16 @@ class Summary {
 			'Referrers_getAll',
 			'Referrers_getSocials',
 			'Referrers_getCampaigns',
-			'Goals_get',
-		);
+		];
 
 		if ( $this->settings->get_global_option( 'track_ecommerce' ) ) {
 			$reports_to_show[] = 'Goals_get_idGoal--ecommerceOrder';
 			$reports_to_show[] = 'Goals_getItemsName';
 		}
 
-		$reports_to_show[] = Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME;
 		$reports_to_show = apply_filters( 'matomo_report_summary_report_ids', $reports_to_show );
 
-		$report_metadata = array();
+		$report_metadata = [];
 		$metadata        = new Metadata();
 		foreach ( $reports_to_show as $report_unique_id ) {
 			$report = $metadata->find_report_by_unique_id( $report_unique_id );
@@ -128,5 +162,4 @@ class Summary {
 
 		return $report_metadata;
 	}
-
 }

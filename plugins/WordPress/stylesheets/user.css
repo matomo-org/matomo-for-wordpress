@@ -1,0 +1,3 @@
+div.siteSelector, #defaultReportSiteSelector, div[name="username"],div[name="language"], div[name="timeformat"],div[name="defaultReport"], #newsletterSignup {
+    display: none;
+}

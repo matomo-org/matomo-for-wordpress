@@ -7,7 +7,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class CookieConsent {
-
 	const REQUIRE_COOKIE_CONSENT = 'cookie';
 
 	const REQUIRE_TRACKING_CONSENT = 'tracking';
@@ -19,26 +18,26 @@ class CookieConsent {
 	 */
 	public static function get_available_options() {
 		return [
-			self::REQUIRE_NONE => __( 'None', 'matomo' ),
-			self::REQUIRE_COOKIE_CONSENT => __('Require cookie consent', 'matomo'),
-			self::REQUIRE_TRACKING_CONSENT => __('Require tracking consent', 'matomo')
+			self::REQUIRE_NONE             => __( 'None', 'matomo' ),
+			self::REQUIRE_COOKIE_CONSENT   => __( 'Require cookie consent', 'matomo' ),
+			self::REQUIRE_TRACKING_CONSENT => __( 'Require tracking consent', 'matomo' ),
 		];
-
 	}
+
 	/**
 	 * @param string $tracking_mode
-	 * @see CookieConsent::REQUIRE_COOKIE_CONSENT
+	 *
+	 * @return string
 	 * @see CookieConsent::REQUIRE_NONE
 	 * @see CookieConsent::REQUIRE_TRACKING_CONSENT
-	 * @return string
+	 * @see CookieConsent::REQUIRE_COOKIE_CONSENT
 	 */
 	public function get_tracking_consent_option( $tracking_mode ) {
-		switch( $tracking_mode ) {
+		switch ( $tracking_mode ) {
 			case self::REQUIRE_TRACKING_CONSENT:
 				$tracking_code = <<<JAVASCRIPT
 _paq.push(['requireConsent']);
 JAVASCRIPT;
-;
 				break;
 			case self::REQUIRE_COOKIE_CONSENT:
 				$tracking_code = <<<JAVASCRIPT
@@ -47,8 +46,9 @@ JAVASCRIPT;
 				break;
 			case self::REQUIRE_NONE:
 			default:
-			$tracking_code = '';
+				$tracking_code = '';
 		}
+
 		return $tracking_code;
 	}
 }

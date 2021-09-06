@@ -9,7 +9,7 @@
 
 namespace WpMatomo;
 
-use \WpMatomo\Admin\TrackingSettings;
+use WpMatomo\Admin\TrackingSettings;
 
 class RedirectOnActivation {
 	/**
@@ -22,7 +22,7 @@ class RedirectOnActivation {
 	}
 
 	public function register_hooks() {
-		register_activation_hook(MATOMO_ANALYTICS_FILE, [ $this, 'matomo_activate' ] );
+		register_activation_hook( MATOMO_ANALYTICS_FILE, [ $this, 'matomo_activate' ] );
 		add_action( 'admin_init', [ $this, 'matomo_plugin_redirect' ] );
 	}
 
@@ -36,6 +36,7 @@ class RedirectOnActivation {
 			$this->redirect_to_getting_started();
 		}
 	}
+
 	/**
 	 * We don't test the result of the wp_redirect method and we silent this method
 	 * as this method will not work during unit tests.
@@ -46,16 +47,17 @@ class RedirectOnActivation {
 	 */
 	public function redirect_to_getting_started() {
 		$redirect = false;
-		if(!isset($_GET['activate-multi'])) {
-			if
-			(
+		if ( ! isset( $_GET['activate-multi'] ) ) {
+			if (
 				( self::$settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) === 1 ) &&
 				( self::$settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_DISABLED )
 			) {
 				$redirect = true;
-				@wp_redirect( admin_url( 'admin.php?page=matomo-get-started' ) );
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				@wp_safe_redirect( admin_url( 'admin.php?page=matomo-get-started' ) );
 			}
 		}
+
 		return $redirect;
 	}
 }

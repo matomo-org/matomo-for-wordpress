@@ -122,6 +122,7 @@ return array(
 				$class_name = get_class($check);
 				if ($class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\ForceSSLCheck'
 					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\LoadDataInfileCheck'
+					|| $class_name === 'Piwik\Plugins\CustomJsTracker\Diagnostic\TrackerJsCheck'
 					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\RequiredPrivateDirectories' // it doesn't resolve config path correctly as it is outside matomo dir etc
 					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\CronArchivingCheck'
 					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\FileIntegrityCheck') {

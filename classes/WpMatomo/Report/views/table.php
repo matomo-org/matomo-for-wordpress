@@ -38,7 +38,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						$matomo_logo_image = '<img height="16" src="' . plugins_url( 'app/' . $matomo_logo, MATOMO_ANALYTICS_FILE ) . '"> ';
 					}
 				}
-
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo '<tr><td width="75%">' . $matomo_logo_image . esc_html( $matomo_report_row['label'] ) . '</td><td width="25%">' . esc_html( $matomo_report_row[ $first_metric_name ] ) . '</td></tr>';
 			}
 		}
