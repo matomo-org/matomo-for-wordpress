@@ -273,6 +273,19 @@ $matomo_extra_url_params = '&' . http_build_query(
 						'image'       => '',
 					],
 					[
+						'name'        => 'SEO Web Vitals',
+						'description' => 'Improve your website performance, rank higher in search results and optimise your visitor experience with SEO Web Vitals.',
+						'price'       => '39EUR / 39USD',
+						'url'         => 'https://plugins.matomo.org/SEOWebVitals?wp=1',
+						'image'       => '',
+					],
+				],
+		],
+		[
+			'title'    => '',
+			'features' =>
+				[
+					[
 						'name'        => 'Advertising Conversion Export',
 						'description' => 'Provides an export of attributed goal conversions for usage in ad networks like Google Ads so you no longer need a conversion pixel.',
 						'price'       => '79EUR / 89USD',
