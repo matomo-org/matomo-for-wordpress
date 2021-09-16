@@ -57,7 +57,7 @@ class Summary {
 
 	public function show() {
 		do_action( 'matomo_load_chartjs' );
-    
+
 		$matomo_pinned = $this->pin_if_submitted();
 
 		$settings = $this->settings;
