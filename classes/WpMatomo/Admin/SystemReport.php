@@ -1521,7 +1521,7 @@ class SystemReport {
 					$additional_comment .= '<br><br>If reports aren\'t being generated then you may need to disable the feature "Firewall -> Block Bad Request Methods" in SecuPress (if it is enabled) or add the following line to your "wp-config.php": <br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
 				}
 				if ( in_array( 'post-smtp', $used_not_compatible, true ) ) {
-					$additional_comment .= '<br><br>The PDF report files from the email reports will be missing.';
+					$additional_comment .= '<br><br>The PDF report files from the email reports will be missing when the PostSMTP mode is selected but it works when the PHPMailer mode is selected.';
 				}
 
 				$is_warning = true;
