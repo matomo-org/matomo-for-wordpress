@@ -185,7 +185,10 @@ class Woocommerce extends Base {
 		$this->logger->log( sprintf( 'Matomo new order %d', $order_id ) );
 
 		$order = wc_get_order( $order_id );
-
+		// @see https://github.com/matomo-org/matomo-for-wordpress/issues/514
+		if ( ! $order ) {
+			return;
+		}
 		$order_id_to_track = $order_id;
 		if ( method_exists( $order, 'get_order_number' ) ) {
 			$order_id_to_track = $order->get_order_number();
