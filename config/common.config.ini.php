@@ -29,6 +29,7 @@ time_before_range_archive_considered_outdated = 3600
 enable_load_data_infile = 0
 enable_tracking_failures_notification = 0
 live_widget_refresh_after_seconds = 30
+enable_referrer_definition_syncs = 0
 
 [GeoIp2]
 geoip2usecustom = 0
