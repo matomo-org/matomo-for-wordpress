@@ -123,8 +123,19 @@ class Paths {
 		$relative_directory = '';
 		$add_at_the_end     = [];
 		$was_previous_same  = false;
-
+		$path               = '';
 		foreach ( $target_dir_parts as $index => $part ) {
+			$path .= $part . '/';
+			if ( isset( $_SERVER ) && isset( $_SERVER['DOCUMENT_ROOT'] ) ) {
+				/*
+				 * exclude the document root which could contains matomo
+				 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/515
+				 */
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+				if ( strpos( $_SERVER['DOCUMENT_ROOT'], $path ) === 0 ) {
+					continue;
+				}
+			}
 			if ( isset( $matomo_dir_parts[ $index ] )
 				 && 'matomo' !== $part // not when matomo is same part cause it's the plugin name but eg also the upload folder name and it would generate wrong path
 				 && $matomo_dir_parts[ $index ] === $part
