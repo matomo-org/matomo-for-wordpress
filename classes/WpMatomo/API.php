@@ -90,7 +90,7 @@ class API {
 	}
 
 	public function hit() {
-		if ( empty( $_GET ) && empty( $_POST ) && empty( $_POST['idsite'] ) && empty( $_GET['idsite'] ) ) {
+		if ( ( empty( $_GET ) || isset( $_GET['rest_route'] ) ) && empty( $_POST ) && empty( $_POST['idsite'] ) && empty( $_GET['idsite'] ) ) {
 			// todo if uploads dir is not writable, we may want to generate the matomo.js here and save it as an
 			// option... then we could also save it compressed
 			$paths         = new Paths();
