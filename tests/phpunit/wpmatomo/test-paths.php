@@ -15,11 +15,35 @@ class PathsTest extends MatomoUnit_TestCase {
 	 * @var Paths
 	 */
 	private $paths;
+	/**
+	 * @var string the current WordPress root path
+	 */
+	private $root_path;
+	/**
+	 * @var string alternate root path containing matomo
+	 */
+	private $root_path_with_matomo;
 
+	public function __construct() {
+		parent::__construct();
+		$this->root_path             = realpath( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . '/../../../' );
+		$this->root_path_with_matomo = dirname( $this->root_path ) . '/matomo';
+	}
 	public function setUp() {
 		parent::setUp();
 
 		$this->paths = $this->make_paths();
+	}
+
+	public function tearDown() {
+		if ( is_dir( $this->root_path_with_matomo ) ) {
+			if ( is_link( $this->root_path ) ) {
+				unlink( $this->root_path );
+			}
+			rename( $this->root_path_with_matomo, $this->root_path );
+			chdir( $this->root_path );
+		}
+		parent::tearDown();
 	}
 
 	private function make_paths() {
@@ -79,14 +103,67 @@ class PathsTest extends MatomoUnit_TestCase {
 
 	public function test_get_relative_dir_to_matomo() {
 		$valid_values = array(
-			'../plugins/WordPress', // locally
 			'../../matomo/tests/phpunit/wpmatomo', // travis
 		);
-
-		$val = $this->paths->get_relative_dir_to_matomo( __DIR__ );
+		$val          = $this->paths->get_relative_dir_to_matomo( __DIR__ );
 		$this->assertTrue( in_array( $val, $valid_values, true ) );
 		// automatically double check that it works
 		$this->assertTrue( is_dir( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app/../tests/phpunit/wpmatomo' ) );
+	}
+
+	/**
+	 * rename part of the document root to add matomo in its path
+	 */
+	private function add_matomo_in_document_root() {
+		// replace the last part of the root path by matomo
+		rename( $this->root_path, $this->root_path_with_matomo );
+		// create a link for the phpunit dependencies
+		symlink( $this->root_path_with_matomo, $this->root_path );
+	}
+
+	/**
+	 * @return string get the matomo.php file in the folder which contains matomo in its path
+	 */
+	private function get_alternate_matomo_analytics_file() {
+		return $this->root_path_with_matomo . '/wp-content/plugins/matomo/matomo.php';
+	}
+
+	public function test_get_relative_dir_to_matomo_with_matomo_in_path_for_tracker_js() {
+		$valid_values = array(
+			'../../matomo/app/matomo.js',
+		);
+		$this->add_matomo_in_document_root();
+		$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
+		$val                             = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js', $temporary_matomo_analytics_file );
+		$this->assertTrue( in_array( $val, $valid_values, true ) );
+		// automatically double check that it works
+		$this->assertTrue( is_file( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js' ) );
+	}
+
+	public function test_get_relative_dir_to_matomo_with_matomo_in_path_for_upload_dir() {
+		$valid_values = array(
+			'../../matomo/../../uploads/matomo',
+		);
+		$this->add_matomo_in_document_root();
+		$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
+		// do not use the path get upload dir method: it returns the path on the test instance
+		$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo', $temporary_matomo_analytics_file );
+		$this->assertTrue( in_array( $val, $valid_values, true ) );
+		// automatically double check that it works
+		$this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo' ) );
+	}
+
+	public function test_get_relative_dir_to_matomo_with_matomo_in_path_for_upload_dir_config() {
+		$valid_values = array(
+			'../../matomo/../../uploads/matomo/config',
+		);
+		$this->add_matomo_in_document_root();
+		$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
+		// do not use the path get upload dir method: it returns the path on the test instance
+		$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config', $temporary_matomo_analytics_file );
+		$this->assertTrue( in_array( $val, $valid_values, true ) );
+		// automatically double check that it works
+		$this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config' ) );
 	}
 
 	public function test_clear_assets_dir_does_not_fail() {
@@ -102,7 +179,6 @@ class PathsTest extends MatomoUnit_TestCase {
 		$dir_te_test = $plugin_dir . 'plugins/WordPress';
 
 		$valid_values = array(
-			'../plugins/WordPress', // locally
 			'../../matomo/plugins/WordPress', // travis
 		);
 		$val          = $this->paths->get_relative_dir_to_matomo( $dir_te_test );
