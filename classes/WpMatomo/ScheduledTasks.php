@@ -306,9 +306,9 @@ class ScheduledTasks {
 			$archiver->shouldArchiveAllSites = true;
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$archiver->disableScheduledTasks = true;
-			
+			// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 			if ( ! defined( 'PIWIK_ARCHIVE_NO_TRUNCATE' ) ) {
-				define( 'PIWIK_ARCHIVE_NO_TRUNCATE', true);
+				define( 'PIWIK_ARCHIVE_NO_TRUNCATE', true );
 			}
 		}
 
