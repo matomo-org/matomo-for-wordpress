@@ -116,15 +116,38 @@ class Paths {
 		return $cache_dir;
 	}
 
-	public function get_relative_dir_to_matomo( $target_dir ) {
-		$matomo_dir         = plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app';
+	/**
+	 * parameter matomo_file is required for the unit test cases (when checking with a path including the string matomo)
+	 *
+	 * @param $target_dir
+	 * @param string     $matomo_file
+	 *
+	 * @return string
+	 */
+	public function get_relative_dir_to_matomo( $target_dir, $matomo_file = MATOMO_ANALYTICS_FILE ) {
+		$matomo_dir         = plugin_dir_path( $matomo_file ) . 'app';
 		$matomo_dir_parts   = explode( DIRECTORY_SEPARATOR, $matomo_dir );
 		$target_dir_parts   = explode( DIRECTORY_SEPARATOR, $target_dir );
 		$relative_directory = '';
 		$add_at_the_end     = [];
 		$was_previous_same  = false;
+		$path               = '';
 
+		/*
+		 * don't use DOCUMENT_ROOT as it does not work for cli access
+		 * don't use ABSPATH as it does not match when running unit test cases
+		 */
+		$root = realpath( plugin_dir_path( $matomo_file ) . '/../../../' ) . '/';
 		foreach ( $target_dir_parts as $index => $part ) {
+			$path .= $part . '/';
+
+			/*
+			 * exclude the document root which could contains matomo
+			 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/515
+			 */
+			if ( strpos( $root, $path ) === 0 ) {
+				continue;
+			}
 			if ( isset( $matomo_dir_parts[ $index ] )
 				 && 'matomo' !== $part // not when matomo is same part cause it's the plugin name but eg also the upload folder name and it would generate wrong path
 				 && $matomo_dir_parts[ $index ] === $part
