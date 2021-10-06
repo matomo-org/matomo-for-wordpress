@@ -39,7 +39,33 @@ class ExclusionSettings implements AdminSettingsInterface {
 	public function show_settings() {
 		global $wp_roles;
 
-		$was_updated = $this->update_if_submitted();
+		$settings_errors = [];
+		if ( isset( $_POST ) && isset( $_POST[ self::FORM_NAME ] ) && check_admin_referer( self::NONCE_NAME ) ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$post    = wp_unslash( $_POST[ self::FORM_NAME ] );
+			$matches = [];
+			if ( isset( $post['excluded_ips'] ) ) {
+				$ips = explode( ',', $this->to_comma_list( $post['excluded_ips'] ) );
+				foreach ( $ips as $ip ) {
+					if ( ! preg_match( '/^[1-2][0-9]{0,2}(\.(([0-9]{1,3})|\*)){3}(\/(2[4-9])|(30))?$/', $ip, $matches ) ) {
+						$settings_errors[] = sprintf( __( '%s is not a valid IP address', 'matomo' ), $ip );
+					}
+				}
+			}
+			if ( isset( $post['excluded_user_agents'] ) ) {
+				$user_agents = explode( ',', $this->to_comma_list( $post['excluded_user_agents'] ) );
+				foreach ( $user_agents as $user_agent ) {
+					if ( ! preg_match( '/.+?[/\s][\d.]+$/', $user_agent, $matches ) ) {
+						$settings_errors[] = sprintf( __( '%s is not a valid User agent', 'matomo' ), $user_agent );
+					}
+				}
+			}
+		}
+
+		$was_updated = false;
+		if ( count( $settings_errors ) === 0 ) {
+			$was_updated = $this->update_if_submitted();
+		}
 
 		Bootstrap::do_bootstrap();
 

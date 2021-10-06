@@ -26,12 +26,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var string $excluded_query_params */
 /** @var bool|string|int $keep_url_fragments */
 /** @var Settings $settings */
-
+/** @var string[] $settings_errors */
 ?>
 
 <?php
 if ( $was_updated ) {
 	include 'update_notice_clear_cache.php';
+}
+if ( count( $settings_errors ) ) {
+	include 'settings_errors.php';
 }
 ?>
 <?php if ( $settings->is_network_enabled() && is_network_admin() ) { ?>
