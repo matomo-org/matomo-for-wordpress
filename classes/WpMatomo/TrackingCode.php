@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WpMatomo\TrackingCode\TrackingCodeGenerator;
+use WpMatomo\Settings;
 
 class TrackingCode {
 
@@ -83,6 +84,11 @@ class TrackingCode {
 	 * @return boolean Do not track user?
 	 */
 	public function is_hidden_user() {
+		if ( is_multisite() && is_super_admin() ) {
+			// by pass the hook in the WP_User::has_cap method which bypass the capabilities management
+			$stealth = $this->settings->get_global_option( Settings::OPTION_KEY_STEALTH );
+			return ( ! empty( $stealth['administrator'] ) );
+		}
 		return current_user_can( Capabilities::KEY_STEALTH );
 	}
 
