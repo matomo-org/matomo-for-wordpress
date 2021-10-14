@@ -275,7 +275,7 @@ class Mysql implements SchemaInterface
                                 id VARCHAR( 191 ) NOT NULL,
                                 modified INTEGER,
                                 lifetime INTEGER,
-                                data TEXT,
+                                data MEDIUMTEXT,
                                   PRIMARY KEY ( id )
                                 ) ENGINE=$engine DEFAULT CHARSET=$charset
             ",
@@ -451,7 +451,7 @@ class Mysql implements SchemaInterface
              *     });
              * @param array $result
              */
-            if (count($allTables)) {
+            if (count($allTables) && empty($GLOBALS['DISABLE_GET_TABLES_INSTALLED_EVENTS_FOR_TEST'])) {
                 Manager::getInstance()->loadPlugins(Manager::getAllPluginsNames());
                 Piwik::postEvent('Db.getTablesInstalled', [&$allMyTables]);
                 Manager::getInstance()->unloadPlugins();
@@ -515,11 +515,12 @@ class Mysql implements SchemaInterface
         $dbSettings   = new Db\Settings();
         $charset      = $dbSettings->getUsedCharset();
 
-        $statement = sprintf("CREATE TABLE IF NOT EXISTS `%s` ( %s ) ENGINE=%s DEFAULT CHARSET=%s ;",
+        $statement = sprintf("CREATE TABLE IF NOT EXISTS `%s` ( %s ) ENGINE=%s DEFAULT CHARSET=%s %s;",
                              Common::prefixTable($nameWithoutPrefix),
                              $createDefinition,
                              $this->getTableEngine(),
-                             $charset);
+                             $charset,
+          $dbSettings->getRowFormat());
 
         try {
             Db::exec($statement);

@@ -14,17 +14,19 @@
         <email>goschwald@maxmind.com</email>
         <active>yes</active>
     </lead>
-    <date>2020-10-01</date>
+    <date>2021-04-14</date>
     <version>
-        <release>1.8.0</release>
-        <api>1.7.0</api>
+        <release>1.10.1</release>
+        <api>1.10.1</api>
     </version>
     <stability>
         <release>stable</release>
         <api>stable</api>
     </stability>
-    <license uri="https://github.com/maxmind/MaxMind-DB-Reader-php/blob/master/LICENSE">Apache License 2.0</license>
-    <notes>* Fixes for PHP 8.0. Pull Request by Remi Collet. GitHub #108.</notes>
+    <license uri="https://github.com/maxmind/MaxMind-DB-Reader-php/blob/main/LICENSE">Apache License 2.0</license>
+    <notes>* Fix a `TypeError` exception in the pure PHP reader when using large
+  databases on 32-bit PHP builds with the `bcmath` extension. Reported
+  by dodo1708. GitHub #124.</notes>
     <contents>
         <dir name="/">
             <file role="doc" name="LICENSE"/>
@@ -33,6 +35,7 @@
 
             <dir name="ext">
                 <file role="src" name="config.m4"/>
+                <file role="src" name="config.w32"/>
 
                 <file role="src" name="maxminddb.c"/>
                 <file role="src" name="php_maxminddb.h"/>

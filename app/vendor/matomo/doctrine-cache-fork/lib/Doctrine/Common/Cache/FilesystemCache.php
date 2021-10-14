@@ -58,7 +58,13 @@ class FilesystemCache extends FileCache
 
         fclose($resource);
 
-        return unserialize($data, ['allowed_classes' => false]);
+        $allowedClasses = false;
+        if (!empty($GLOBALS['MATOMO_CACHE_ALLOWED_CLASSES_UNSERIALIZE'])
+            && is_array($GLOBALS['MATOMO_CACHE_ALLOWED_CLASSES_UNSERIALIZE'])) {
+            $allowedClasses = $GLOBALS['MATOMO_CACHE_ALLOWED_CLASSES_UNSERIALIZE'];
+        }
+
+        return unserialize($data, ['allowed_classes' => $allowedClasses]);
     }
 
     /**
