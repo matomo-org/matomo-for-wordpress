@@ -211,11 +211,15 @@ class Reader
         if ($node === $nodeCount) {
             // Record is empty
             return [0, $i];
-        } elseif ($node > $nodeCount) {
+        }
+        if ($node > $nodeCount) {
             // Record is a data pointer
             return [$node, $i];
         }
-        throw new InvalidDatabaseException('Something bad happened');
+
+        throw new InvalidDatabaseException(
+            'Invalid or corrupt database. Maximum search depth reached without finding a leaf node'
+        );
     }
 
     private function ipV4StartNode(): int
@@ -244,6 +248,7 @@ class Reader
                 [, $node] = unpack('N', "\x00" . $bytes);
 
                 return $node;
+
             case 28:
                 $bytes = Util::read($this->fileHandle, $baseOffset + 3 * $index, 4);
                 if ($index === 0) {
@@ -254,11 +259,13 @@ class Reader
                 [, $node] = unpack('N', \chr($middle) . substr($bytes, $index, 3));
 
                 return $node;
+
             case 32:
                 $bytes = Util::read($this->fileHandle, $baseOffset + $index * 4, 4);
                 [, $node] = unpack('N', $bytes);
 
                 return $node;
+
             default:
                 throw new InvalidDatabaseException(
                     'Unknown record size: '
@@ -310,6 +317,7 @@ class Reader
                 return $offset + $markerLength;
             }
         }
+
         throw new InvalidDatabaseException(
             "Error opening database file ($filename). " .
             'Is this a valid MaxMind DB file?'

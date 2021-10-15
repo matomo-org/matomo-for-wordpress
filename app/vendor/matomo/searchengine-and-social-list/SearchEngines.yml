@@ -1,5 +1,5 @@
 1.cz:
-  - 
+  -
     urls:
       - 1.cz
     params:
@@ -9,7 +9,7 @@
     charsets:
       - iso-8859-2
 118 700:
-  - 
+  -
     urls:
       - www.118700.se
       - foretag.118700.se
@@ -18,7 +18,7 @@
       - q
     backlink: 'sok.aspx?q={k}'
 123people:
-  - 
+  -
     urls:
       - www.123people.com
       - '123people.{}'
@@ -27,7 +27,7 @@
       - search_term
     backlink: 's/{k}'
 360search:
-  - 
+  -
     urls:
       - so.360.cn
     params:
@@ -36,7 +36,7 @@
     charsets:
       - UTF-8
       - gb2312
-  - 
+  -
     urls:
       - www.so.com
       - m.so.com
@@ -47,7 +47,7 @@
       - UTF-8
       - gb2312
 Abacho:
-  - 
+  -
     urls:
       - www.abacho.de
       - www.abacho.com
@@ -63,7 +63,7 @@ Abacho:
       - q
     backlink: 'suche?q={k}'
 ABCsøk:
-  - 
+  -
     urls:
       - abcsok.no
       - verden.abcsok.no
@@ -71,28 +71,28 @@ ABCsøk:
       - q
     backlink: '?q={k}'
 Acoon:
-  - 
+  -
     urls:
       - www.acoon.de
     params:
       - begriff
     backlink: 'cgi-bin/search.exe?begriff={k}'
 Aguea:
-  - 
+  -
     urls:
       - chercherfr.aguea.com
     params:
       - q
     backlink: 's.py?q={k}'
 Allaverksamheter:
-  - 
+  -
     urls:
       - www.allaverksamheter.se
     params:
       - What
     backlink: 'SearchResult.aspx?What={k}'
 Alexa:
-  - 
+  -
     urls:
       - alexa.com
       - search.toolbars.alexa.com
@@ -100,21 +100,21 @@ Alexa:
       - q
     backlink: 'search?q={k}'
 Alice Adsl:
-  - 
+  -
     urls:
       - rechercher.aliceadsl.fr
     params:
       - qs
     backlink: 'google.pl?qs={k}'
 All.by:
-  - 
+  -
     urls:
       - all.by
     params:
       - query
     backlink: 'cgi-bin/search.cgi?mode=by&query={k}'
 Allesklar:
-  - 
+  -
     urls:
       - www.allesklar.de
       - www.allesklar.at
@@ -122,8 +122,15 @@ Allesklar:
     params:
       - words
     backlink: '?words={k}'
+AllTheInternet:
+  -
+    urls:
+      - www.alltheinternet.com
+    params:
+      - q
+    backlink: '?q={k}'
 AllTheWeb:
-  - 
+  -
     urls:
       - www.alltheweb.com
     params:
@@ -137,7 +144,7 @@ AlohaFind:
       - q
     backlink: 'search/?q={k}'
 AltaVista:
-  - 
+  -
     urls:
       - www.altavista.com
       - search.altavista.com
@@ -151,7 +158,7 @@ AltaVista:
       - q
     backlink: 'web/results?q={k}'
 AOL:
-  - 
+  -
     urls:
       - search.aol.com
       - search.aol.it
@@ -183,49 +190,49 @@ AOL:
       - query
       - q
     backlink: 'aol/search?q={k}'
-  - 
+  -
     urls:
       - de.aolsearch.com
     params:
       - q
     backlink: 'search?q={k}'
 Apollo lv:
-  - 
+  -
     urls:
       - apollo.lv/portal/search/
     params:
       - q
     backlink: '?cof=FORID%3A11&q={k}&search_where=www'
 Apollo7:
-  - 
+  -
     urls:
       - apollo7.de
     params:
       - query
     backlink: 'a7db/index.php?query={k}&de_sharelook=true&de_bing=true&de_witch=true&de_google=true&de_yahoo=true&de_lycos=true'
 Aport:
-  - 
+  -
     urls:
       - sm.aport.ru
     params:
       - r
     backlink: 'search?r={k}'
 Arama:
-  - 
+  -
     urls:
       - arama.com
     params:
       - q
     backlink: 'search.php3?q={k}'
 Arcor:
-  - 
+  -
     urls:
       - www.arcor.de
     params:
       - Keywords
     backlink: 'content/searchresult.jsp?Keywords={k}'
 Arianna:
-  - 
+  -
     urls:
       - arianna.libero.it
       - www.arianna.com
@@ -233,7 +240,7 @@ Arianna:
       - query
     backlink: 'search/abin/integrata.cgi?query={k}'
 Ask:
-  - 
+  -
     urls:
       - ask.com
       - web.ask.com
@@ -279,17 +286,18 @@ Avira SafeSearch:
       - '/^$/'
       - '/'
 Atlas:
-  - 
+  -
     urls:
       - searchatlas.centrum.cz
     params:
       - q
     backlink: '?q={k}'
 auone:
-  - 
+  -
     urls:
       - search.auone.jp
       - sp-search.auone.jp
+      - sp-web.search.auone.jp
     params:
       - q
     backlink: '?q={k}'
@@ -298,7 +306,7 @@ auone:
       - euc-jp
       - ms932
 auone Images:
-  - 
+  -
     urls:
       - sp-image.search.auone.jp
     params:
@@ -309,14 +317,14 @@ auone Images:
       - euc-jp
       - ms932
 Austronaut:
-  - 
+  -
     urls:
       - www2.austronaut.at
       - www1.austronaut.at
     params:
       - q
 Babylon:
-  - 
+  -
     urls:
       - search.babylon.com
       - searchassist.babylon.com
@@ -325,10 +333,11 @@ Babylon:
       - '/\/web\/(.*)/'
     backlink: '?q={k}'
 Baidu:
-  - 
+  -
     urls:
       - www.baidu.com
       - www1.baidu.com
+      - baidu.com
       - m.baidu.com
       - www.baidu.co.th
       - zhidao.baidu.com
@@ -352,7 +361,7 @@ Baidu:
       - search
     backlink: 'search?search={k}'
 Biglobe:
-  - 
+  -
     urls:
       - cgi.search.biglobe.ne.jp
     params:
@@ -363,14 +372,14 @@ Biglobe:
       - euc-jp
       - ms932
 Biglobe Images:
-  - 
+  -
     urls:
       - images.search.biglobe.ne.jp
     params:
       - q
     backlink: 'cgi-bin/search-st?q={k}'
 Bing:
-  - 
+  -
     urls:
       - bing.com
       - '{}.bing.com'
@@ -394,7 +403,7 @@ Bing:
       - Q
     backlink: 'search?q={k}'
 Bing Images:
-  - 
+  -
     urls:
       - bing.com/images/search
       - '{}.bing.com/images/search'
@@ -403,7 +412,7 @@ Bing Images:
       - Q
     backlink: '?q={k}'
 blekko:
-  - 
+  -
     urls:
       - blekko.com
     params:
@@ -411,35 +420,42 @@ blekko:
       - '/\/ws\/(.*)/'
     backlink: 'ws/{k}'
 Blogdigger:
-  - 
+  -
     urls:
       - www.blogdigger.com
     params:
       - q
 Blogpulse:
-  - 
+  -
     urls:
       - www.blogpulse.com
     params:
       - query
     backlink: 'search?query={k}'
 Bluewin:
-  - 
+  -
     urls:
       - search.bluewin.ch
     params:
       - searchTerm
       - q
     backlink: 'v2/index.php?q={k}'
+Brave:
+  -
+    urls:
+      - search.brave.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 Canoe.ca:
-  - 
+  -
     urls:
       - web.canoe.ca
     params:
       - q
     backlink: 'search?q={k}'
 Centrum:
-  - 
+  -
     urls:
       - search.centrum.cz
       - morfeo.centrum.cz
@@ -447,21 +463,21 @@ Centrum:
       - q
     backlink: '?q={k}'
 Charter:
-  - 
+  -
     urls:
       - www.charter.net
     params:
       - q
     backlink: 'search/index.php?q={k}'
 Claro Search:
-  - 
+  -
     urls:
       - claro-search.com
     params:
       - q
     backlink: '?q={k}'
 Clix:
-  - 
+  -
     urls:
       - pesquisa.clix.pt
     params:
@@ -475,21 +491,21 @@ Cốc Cốc:
       - query
     backlink: 'search#query={k}'
 Comcast:
-  - 
+  -
     urls:
       - search.comcast.net
     params:
       - q
     backlink: '?q={k}'
 Compuserve.com (Enhanced by Google):
-  - 
+  -
     urls:
       - websearch.cs.com
     params:
       - query
     backlink: 'cs/search?query={k}'
 Conduit.com:
-  - 
+  -
     urls:
       - search.conduit.com
       - images.search.conduit.com
@@ -497,21 +513,21 @@ Conduit.com:
       - q
     backlink: 'Results.aspx?q={k}'
 Crawler:
-  - 
+  -
     urls:
       - www.crawler.com
     params:
       - q
     backlink: 'search/results1.aspx?q={k}'
 Cuil:
-  - 
+  -
     urls:
       - www.cuil.com
     params:
       - q
     backlink: 'search?q={k}'
 Daemon search:
-  - 
+  -
     urls:
       - daemon-search.com
       - my.daemon-search.com
@@ -519,53 +535,53 @@ Daemon search:
       - q
     backlink: 'explore/web?q={k}'
 DasOertliche:
-  - 
+  -
     urls:
       - www.dasoertliche.de
     params:
       - kw
-  - 
+  -
     urls:
       - www2.dasoertliche.de
     params:
       - ph
       - kw
 DasTelefonbuch:
-  - 
+  -
     urls:
       - www1.dastelefonbuch.de
     params:
       - kw
 Daum:
-  - 
+  -
     urls:
       - search.daum.net
     params:
       - q
     backlink: 'search?q={k}'
 Delfi EE:
-  - 
+  -
     urls:
       - otsing.delfi.ee
     params:
       - q
     backlink: 'find?q={k}'
 Delfi lv:
-  - 
+  -
     urls:
       - smart.delfi.lv
     params:
       - q
     backlink: 'find?q={k}'
 Digg:
-  - 
+  -
     urls:
       - digg.com
     params:
       - s
     backlink: 'search?s={k}'
 dir.com:
-  - 
+  -
     urls:
       - fr.dir.com
     params:
@@ -578,14 +594,14 @@ DisconnectSearch:
     hiddenkeyword:
       - '/.*/'
 dmoz:
-  - 
+  -
     urls:
       - dmoz.org
       - editors.dmoz.org
     params:
       - search
 DuckDuckGo:
-  - 
+  -
     urls:
       - duckduckgo.com
       - r.duckduckgo.com
@@ -595,14 +611,14 @@ DuckDuckGo:
       - '/.*/'
     backlink: '?q={k}'
 Earthlink:
-  - 
+  -
     urls:
       - search.earthlink.net
     params:
       - q
     backlink: 'search?q={k}'
 Ecosia:
-  - 
+  -
     urls:
       - ecosia.org
       - www.ecosia.org
@@ -613,13 +629,13 @@ Ecosia:
       - '/^$/'
       - '/'
 El Mundo:
-  - 
+  -
     urls:
       - ariadna.elmundo.es
     params:
       - q
 Eniro:
-  - 
+  -
     urls:
       - www.eniro.se
     params:
@@ -634,7 +650,7 @@ Entireweb:
       - q
     backlink: 'web?q={k}'
 eo:
-  - 
+  -
     urls:
       - eo.st
     params:
@@ -649,27 +665,27 @@ EpicSearch.in:
       - q
     backlink: 'search/?q={k}'
 Eurip:
-  - 
+  -
     urls:
       - www.eurip.com
     params:
       - q
     backlink: 'search/?q={k}'
 Euroseek:
-  - 
+  -
     urls:
       - www.euroseek.com
     params:
       - string
     backlink: 'system/search.cgi?string={k}'
 Everyclick:
-  - 
+  -
     urls:
       - www.everyclick.com
     params:
       - keyword
 Exalead:
-  - 
+  -
     urls:
       - www.exalead.fr
       - www.exalead.com
@@ -677,7 +693,7 @@ Exalead:
       - q
     backlink: 'search/results?q={k}'
 Excite:
-  - 
+  -
     urls:
       - search.excite.it
       - search.excite.fr
@@ -688,13 +704,13 @@ Excite:
     params:
       - q
     backlink: 'web/?q={k}'
-  - 
+  -
     urls:
       - msxml.excite.com
     params:
       - '/\/[^\/]+\/ws\/results\/[^\/]+\/([^\/]+)/'
       - q
-  - 
+  -
     urls:
       - www.excite.co.jp
     params:
@@ -703,60 +719,60 @@ Excite:
     charsets:
       - SHIFT_JIS
 Facebook:
-  - 
+  -
     urls:
       - www.facebook.com
     params:
       - q
     backlink: 'search/?q={k}'
 Fast Browser Search:
-  - 
+  -
     urls:
       - www.fastbrowsersearch.com
     params:
       - q
     backlink: 'results/results.aspx?q={k}'
 Findhurtig:
-  - 
+  -
     urls:
       - www.findhurtig.dk
     params:
       - q
     backlink: 'web?q={k}'
 Fireball:
-  - 
+  -
     urls:
       - www.fireball.de
     params:
       - q
     backlink: 'ajax.asp?q={k}'
 Firstsfind:
-  - 
+  -
     urls:
       - www.firstsfind.com
     params:
       - qry
 Fixsuche:
-  - 
+  -
     urls:
       - www.fixsuche.de
     params:
       - q
 Flix.de:
-  - 
+  -
     urls:
       - www.flix.de
     params:
       - keyword
 Fooooo:
-  - 
+  -
     urls:
       - search.fooooo.com
     params:
       - q
     backlink: 'web/?q={k}'
 Forestle:
-  - 
+  -
     urls:
       - forestle.org
       - '{}.forestle.org'
@@ -765,13 +781,13 @@ Forestle:
       - q
     backlink: 'search.php?q={k}'
 Francite:
-  - 
+  -
     urls:
       - recherche.francite.com
     params:
       - name
 Free:
-  - 
+  -
     urls:
       - search.free.fr
       - search1-2.free.fr
@@ -780,14 +796,14 @@ Free:
       - q
       - qs
 FreeCause:
-  - 
+  -
     urls:
       - search.freecause.com
     params:
       - p
     backlink: '?p={k}'
 Freenet:
-  - 
+  -
     urls:
       - suche.freenet.de
     params:
@@ -795,28 +811,35 @@ Freenet:
       - Keywords
     backlink: 'suche/?query={k}'
 FriendFeed:
-  - 
+  -
     urls:
       - friendfeed.com
     params:
       - q
     backlink: 'search?q={k}'
+Frontier:
+  -
+    urls:
+      - search.frontier.com
+    params:
+      - q
+    backlink: 'search/?q={k}'
 GAIS:
-  - 
+  -
     urls:
       - gais.cs.ccu.edu.tw
     params:
       - q
     backlink: 'search.php?q={k}'
 Genieo:
-  - 
+  -
     urls:
       - search.genieo.com
     params:
       - q
     backlink: '&q={k}'
 Geona:
-  - 
+  -
     urls:
       - geona.net
     params:
@@ -834,26 +857,26 @@ Gibiru:
       - '/^$/'
       - '/'
 Gigablast:
-  - 
+  -
     urls:
       - www.gigablast.com
     params:
       - q
     backlink: 'search?q={k}'
 Gigablast (Directory):
-  - 
+  -
     urls:
       - dir.gigablast.com
     params:
       - q
 Gnadenmeer:
-  - 
+  -
     urls:
       - www.gnadenmeer.de
     params:
       - keyword
 Gomeo:
-  - 
+  -
     urls:
       - www.gomeo.com
     params:
@@ -861,7 +884,7 @@ Gomeo:
       - '/\/search\/([^\/]+)/'
     backlink: '/search/{k}'
 goo:
-  - 
+  -
     urls:
       - search.goo.ne.jp
       - ocnsearch.goo.ne.jp
@@ -869,7 +892,7 @@ goo:
       - MT
     backlink: 'web.jsp?MT={k}'
 Google:
-  - 
+  -
     urls:
       - google.com
       - 'google.{}'
@@ -908,7 +931,7 @@ Google:
       - search.chedot.com
     params:
       - text
-  - 
+  -
     urls:
       - www.cnn.com
       - darkoogle.com
@@ -916,7 +939,7 @@ Google:
       - search.foxtab.com
     params:
       - query
-  - 
+  -
     urls:
       - www.gooofullsearch.com
       - search.hiyo.com
@@ -929,7 +952,7 @@ Google:
       - www.fastweb.it
     params:
       - Keywords
-  - 
+  -
     urls:
       - search.juno.com
       - search.zum.com
@@ -940,7 +963,7 @@ Google:
       - search.alot.com
     params:
       - query
-  - 
+  -
     urls:
       - suche.gmx.net
       - search.gmx.com
@@ -956,26 +979,26 @@ Google:
     params:
       - q
     backlink: 'search.php?q={k}'
-  - 
+  -
     urls:
       - www.delta-search.com
       - www1.delta-search.com
     params:
       - q
-  - 
+  -
     urls:
       - search.1und1.de
     params:
       - q
     backlink: 'web?q={k}'
-  - 
+  -
     urls:
       - suche.1und1.de
       - search.zonealarm.com
     params:
       - q
     backlink: 'web?q={k}'
-  - 
+  -
     urls:
       - start.lenovo.com
       - wow.com
@@ -988,40 +1011,49 @@ Google:
     params:
       - q
     backlink: 'search/index.php?q={k}'
-  - 
+  -
     urls:
       - cgi2.nintendo.co.jp
     params:
       - gsc.q
-  - 
+  -
     urls:
       - search.smt.docomo.ne.jp
       - image.search.smt.docomo.ne.jp
     params:
       - MT
-  - 
+  -
     urls:
       - gfsoso.com
     params:
       - q
-  - 
+  -
     urls:
       - searches.safehomepage.com
     params:
       - q
-  - 
+  -
     urls:
       - searches.f-secure.com
       - search.f-secure.com
     params:
       - query
     backlink: 'search?query={k}'
-  - 
+  -
     urls:
       - webcache.googleusercontent.com
     params:
       - '/\/search\?q=cache:(?:[A-Za-z0-9]+):[^+]+([^&]+)/'
     backlink: 'search?q={k}'
+  -
+    urls:
+      - monumentbrowser.com
+    params:
+      - q
+    backlink: '?q={k}'
+    hiddenkeyword:
+      - '/^$/'
+      - '/'
   -
     urls:
       - search.bt.com
@@ -1034,8 +1066,25 @@ Google:
     params:
       - q
     backlink: 'search/?q={k}'
+  -
+    urls:
+      - search.abv.bg
+    params:
+      - q
+    backlink: 'search.php?q={k}'
+  -
+    urls:
+      - search.xfinity.com
+    params:
+      - searchTerm
+  -
+    urls:
+      - www.kadaza.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 Google Blogsearch:
-  - 
+  -
     urls:
       - blogsearch.google.com
       - 'blogsearch.google.{}'
@@ -1043,7 +1092,7 @@ Google Blogsearch:
       - q
     backlink: 'blogsearch?q={k}'
 Google Custom Search:
-  - 
+  -
     urls:
       - google.com/cse
       - 'google.{}/cse'
@@ -1055,7 +1104,7 @@ Google Custom Search:
       - q
       - query
 Google Images:
-  - 
+  -
     urls:
       - images.google.com
       - 'images.google.{}'
@@ -1067,7 +1116,7 @@ Google Images:
       - '/.*/'
     backlink: 'images?q={k}'
 Google Maps:
-  - 
+  -
     urls:
       - maps.google.com
       - 'maps.google.{}'
@@ -1075,14 +1124,14 @@ Google Maps:
       - q
     backlink: 'maps?q={k}'
 Google News:
-  - 
+  -
     urls:
       - news.google.com
       - 'news.google.{}'
     params:
       - q
 Google Scholar:
-  - 
+  -
     urls:
       - scholar.google.com
       - 'scholar.google.{}'
@@ -1090,7 +1139,7 @@ Google Scholar:
       - q
     backlink: 'scholar?q={k}'
 Google Shopping:
-  - 
+  -
     urls:
       - google.com/products
       - 'google.{}/products'
@@ -1098,52 +1147,52 @@ Google Shopping:
       - q
     backlink: '?q={k}&tbm=shop'
 Google syndicated search:
-  - 
+  -
     urls:
       - googlesyndicatedsearch.com
     params:
       - q
 Google Translations:
-  - 
+  -
     urls:
       - translate.google.com
     params:
       - q
 Google Video:
-  - 
+  -
     urls:
       - video.google.com
     params:
       - q
     backlink: 'search?q={k}&tbm=vid'
 GoYellow.de:
-  - 
+  -
     urls:
       - www.goyellow.de
     params:
       - MDN
 Gule Sider:
-  - 
+  -
     urls:
       - www.gulesider.no
     params:
       - q
 Haosou:
-  - 
+  -
     urls:
       - www.haosou.com
     params:
       - q
     backlink: 's?q={k}'
 HighBeam:
-  - 
+  -
     urls:
       - www.highbeam.com
     params:
       - q
     backlink: 'Search.aspx?q={k}'
 Hit-Parade:
-  - 
+  -
     urls:
       - req.hit-parade.com
       - class.hit-parade.com
@@ -1152,41 +1201,41 @@ Hit-Parade:
       - p7
     backlink: 'general/recherche.asp?p7={k}'
 Holmes:
-  - 
+  -
     urls:
       - holmes.ge
     params:
       - q
     backlink: 'search.htm?q={k}'
 Hooseek:
-  - 
+  -
     urls:
       - www.hooseek.com
     params:
       - recherche
     backlink: 'web?recherche={k}'
 Hotbot:
-  - 
+  -
     urls:
       - www.hotbot.com
     params:
       - query
 I-play:
-  - 
+  -
     urls:
       - start.iplay.com
     params:
       - q
     backlink: 'searchresults.aspx?q={k}'
 Icerocket:
-  - 
+  -
     urls:
       - blogs.icerocket.com
     params:
       - q
     backlink: 'search?q={k}'
 ICQ:
-  - 
+  -
     urls:
       - www.icq.com
       - search.icq.com
@@ -1194,14 +1243,14 @@ ICQ:
       - q
     backlink: 'search/results.php?q={k}'
 Ilse NL:
-  - 
+  -
     urls:
       - www.ilse.nl
     params:
       - search_for
     backlink: '?search_for={k}'
 iMesh:
-  - 
+  -
     urls:
       - search.imesh.com
     params:
@@ -1209,14 +1258,14 @@ iMesh:
       - si
     backlink: 'web?q={k}'
 Inbox:
-  - 
+  -
     urls:
       - www2.inbox.com
     params:
       - q
     backlink: 'search/results1.aspx?q={k}'
 InfoSpace:
-  - 
+  -
     urls:
       - infospace.com
       - dogpile.com
@@ -1232,13 +1281,13 @@ InfoSpace:
     params:
       - q
     backlink: '/search/web?q={k}'
-  - 
+  -
     urls:
       - wsdsold.infospace.com
     params:
       - '/\/[^\/]+\/ws\/results\/[^\/]+\/([^\/]+)/'
     backlink: 'pemonitorhosted/ws/results/Web/{k}/1/417/TopNavigation/Source/'
-  - 
+  -
     urls:
       - search.avast.com
     params:
@@ -1253,88 +1302,88 @@ InfoSpace:
       - start.facemoods.com
     params:
       - s
-  - 
+  -
     urls:
       - start.funmoods.com
     params:
       - q
-  - 
+  -
     urls:
       - search.magentic.com
     params:
       - q
-  - 
+  -
     urls:
       - search.searchcompletion.com
     params:
       - q
-  - 
+  -
     urls:
       - www.searchmobileonline.com
     params:
       - q
-  - 
+  -
     urls:
       - isearch.glarysoft.com
     params:
       - q
-  - 
+  -
     urls:
       - search.chatzum.com
     params:
       - q
-  - 
+  -
     urls:
       - home.speedbit.com
     params:
       - q
-  - 
+  -
     urls:
       - search.b1.org
     params:
       - q
-  - 
+  -
     urls:
       - searchya.com
     params:
       - q
-  - 
+  -
     urls:
       - search.handycafe.com
     params:
       - q
-  - 
+  -
     urls:
       - search.v9.com
     params:
       - q
-  - 
+  -
     urls:
       - search.iminent.com
     params:
       - q
-  - 
+  -
     urls:
       - utorrent.inspsearch.com
       - govome.inspsearch.com
     params:
       - q
 Interia:
-  - 
+  -
     urls:
       - www.google.interia.pl
     params:
       - q
     backlink: 'szukaj?q={k}'
 Isodelen:
-  - 
+  -
     urls:
       - www.isodelen.se
     params:
       - Keywords
     backlink: 'sokresultat?Keywords={k}'
 IxQuick:
-  - 
+  -
     urls:
       - ixquick.com
       - www.eu.ixquick.com
@@ -1357,7 +1406,7 @@ IxQuick:
     hiddenkeyword:
       - '/do/asearch'
 Jungle Key:
-  - 
+  -
     urls:
       - junglekey.com
       - junglekey.fr
@@ -1365,40 +1414,40 @@ Jungle Key:
       - query
     backlink: 'search.php?query={k}&type=web&lang=en'
 Jungle Spider:
-  - 
+  -
     urls:
       - www.jungle-spider.de
     params:
       - q
 Jyxo:
-  - 
+  -
     urls:
       - jyxo.1188.cz
     params:
       - q
     backlink: 's?q={k}'
 K9 Safe Search:
-  - 
+  -
     urls:
       - k9safesearch.com
     params:
       - q
     backlink: 'search.jsp?q={k}'
 Kataweb:
-  - 
+  -
     urls:
       - www.kataweb.it
     params:
       - q
 Kensaq:
-  - 
+  -
     urls:
       - www.kensaq.com
     params:
       - q
     backlink: 'web?q={k}'
 Kvasir:
-  - 
+  -
     urls:
       - kvasir.no
       - www.kvasir.no
@@ -1407,7 +1456,7 @@ Kvasir:
       - search_word
     backlink: 'alle?q={k}'
 La Toile Du Québec (Google):
-  - 
+  -
     urls:
       - www.toile.com
       - web.toile.com
@@ -1415,41 +1464,41 @@ La Toile Du Québec (Google):
       - q
     backlink: 'search?q={k}'
 Laban:
-  - 
+  -
     urls:
       - laban.vn
     params:
       - q
     backlink: 'search.html?q={k}'
 Latne:
-  - 
+  -
     urls:
       - www.latne.lv
     params:
       - q
     backlink: 'siets.php?q={k}'
 Lilo:
-  - 
+  -
     urls:
       - search.lilo.org
     params:
       - q
     backlink: 'results.php?q={k}'
 Lo.st:
-  - 
+  -
     urls:
       - lo.st
     params:
       - x_query
     backlink: 'cgi-bin/eolost.cgi?x_query={k}'
 LookAny:
-  - 
+  -
     urls:
       - www.lookany.com
     params:
       - '/(?:search|images|videos)\/([^\/]+)/'
 Lookseek:
-  - 
+  -
     urls:
       - search.lookseek.com
     params:
@@ -1462,7 +1511,7 @@ Looksmart:
     params:
       - key
 Lycos:
-  - 
+  -
     urls:
       - search.lycos.com
       - 'lycos.{}'
@@ -1470,13 +1519,13 @@ Lycos:
       - query
     backlink: '?query={k}'
 maailm.com:
-  - 
+  -
     urls:
       - www.maailm.com
     params:
       - tekst
 Mailru:
-  - 
+  -
     urls:
       - go.mail.ru
     params:
@@ -1487,8 +1536,10 @@ Mailru:
       - windows-1251
     hiddenkeyword:
       - '/redir\?.*redir=.*/'
+      - '/^$/'
+      - '/'
 Mamma:
-  - 
+  -
     urls:
       - www.mamma.com
       - mamma75.mamma.com
@@ -1496,20 +1547,20 @@ Mamma:
       - query
     backlink: 'result.php?q={k}'
 Meinestadt.de:
-  - 
+  -
     urls:
       - www.meinestadt.de
     params:
       - words
 Meta.ua:
-  - 
+  -
     urls:
       - meta.ua
     params:
       - q
     backlink: 'search.asp?q={k}'
 MetaCrawler DE:
-  - 
+  -
     urls:
       - s1.metacrawler.de
       - s2.metacrawler.de
@@ -1518,7 +1569,7 @@ MetaCrawler DE:
       - qry
     backlink: '?qry={k}'
 Metager:
-  - 
+  -
     urls:
       - meta.rrzn.uni-hannover.de
       - www.metager.de
@@ -1527,28 +1578,35 @@ Metager:
       - eingabe
     backlink: 'meta/cgi-bin/meta.ger1?eingabe={k}'
 Metager2:
-  - 
+  -
     urls:
       - metager2.de
     params:
       - q
     backlink: 'search/index.php?q={k}'
 Mister Wong:
-  - 
+  -
     urls:
       - www.mister-wong.com
       - www.mister-wong.de
     params:
       - keywords
     backlink: 'search/?keywords={k}'
+Mojeek:
+  -
+    urls:
+      - www.mojeek.com
+    params:
+      - q
+    backlink: 'search?q={k}'
 Monstercrawler:
-  - 
+  -
     urls:
       - www.monstercrawler.com
     params:
       - qry
 mozbot:
-  - 
+  -
     urls:
       - www.mozbot.fr
       - www.mozbot.co.uk
@@ -1557,14 +1615,14 @@ mozbot:
       - q
     backlink: 'results.php?q={k}'
 MySpace:
-  - 
+  -
     urls:
       - searchservice.myspace.com
     params:
       - qry
     backlink: 'index.cfm?fuseaction=sitesearch.results&type=Web&qry={k}'
 MyWebSearch:
-  - 
+  -
     urls:
       - www.mysearch.com
       - ms114.mysearch.com
@@ -1578,14 +1636,14 @@ MyWebSearch:
       - searchFor
     backlink: 'search/Ajmain.jhtml?searchfor={k}'
 Najdi.si:
-  - 
+  -
     urls:
       - www.najdi.si
     params:
       - q
     backlink: 'search.jsp?q={k}'
 Nate:
-  - 
+  -
     urls:
       - search.nate.com
     params:
@@ -1594,21 +1652,21 @@ Nate:
     charsets:
       - EUC-KR
 Naver:
-  - 
+  -
     urls:
       - search.naver.com
     params:
       - query
     backlink: 'search.naver?query={k}'
 Needtofind:
-  - 
+  -
     urls:
       - ko.search.need2find.com
     params:
       - searchfor
     backlink: 'search/AJmain.jhtml?searchfor={k}'
 Neti:
-  - 
+  -
     urls:
       - www.neti.ee
     params:
@@ -1617,7 +1675,7 @@ Neti:
     charsets:
       - iso-8859-1
 Nifty:
-  - 
+  -
     urls:
       - search.nifty.com
       - search.azby.fmworld.net
@@ -1626,28 +1684,28 @@ Nifty:
       - Text
     backlink: 'websearch/search?q={k}'
 Nifty Videos:
-  - 
+  -
     urls:
       - videosearch.nifty.com
     params:
       - kw
     backlink: 'search?kw={k}'
 Nigma:
-  - 
+  -
     urls:
       - nigma.ru
     params:
       - s
     backlink: 'index.php?s={k}'
 Onet.pl:
-  - 
+  -
     urls:
       - szukaj.onet.pl
     params:
       - qt
     backlink: 'query.html?qt={k}'
 Online.no:
-  - 
+  -
     urls:
       - online.no
     params:
@@ -1661,20 +1719,20 @@ OnlySearch:
       - q
     backlink: '?q={k}'
 Opplysningen 1881:
-  - 
+  -
     urls:
       - www.1881.no
     params:
       - Query
     backlink: 'Multi/?Query={k}'
 Orange:
-  - 
+  -
     urls:
       - busca.orange.es
     params:
       - q
     backlink: 'search?q={k}'
-  - 
+  -
     urls:
       - lemoteur.ke.voila.fr
       - lemoteur.orange.fr
@@ -1682,48 +1740,48 @@ Orange:
       - kw
     backlink: '?kw={k}'
 Paperball:
-  - 
+  -
     urls:
       - www.paperball.de
     params:
       - q
     backlink: 'suche/s/?q={k}'
 PeopleCheck:
-  - 
+  -
     urls:
       - extern.peoplecheck.de
     params:
       - q
     backlink: 'link.php?q={k}'
 PeoplePC:
-  - 
+  -
     urls:
       - search.peoplepc.com
     params:
       - q
     backlink: 'search?q={k}'
 Picsearch:
-  - 
+  -
     urls:
       - www.picsearch.com
     params:
       - q
     backlink: 'index.cgi?q={k}'
 Plazoo:
-  - 
+  -
     urls:
       - www.plazoo.com
     params:
       - q
 PlusNetwork:
-  - 
+  -
     urls:
       - plusnetwork.com
     params:
       - q
     backlink: '?q={k}'
 Poisk.Ru:
-  - 
+  -
     urls:
       - poisk.ru
     params:
@@ -1732,14 +1790,14 @@ Poisk.Ru:
     charsets:
       - windows-1251
 qip.ru:
-  - 
+  -
     urls:
       - search.qip.ru
     params:
       - query
     backlink: 'search?query={k}'
 Qualigo:
-  - 
+  -
     urls:
       - www.qualigo.at
       - www.qualigo.ch
@@ -1748,7 +1806,7 @@ Qualigo:
     params:
       - q
 Qwant:
-  - 
+  -
     urls:
       - www.qwant.com
       - lite.qwant.com
@@ -1758,14 +1816,14 @@ Qwant:
       - '/^$/'
       - '/'
 Rakuten:
-  - 
+  -
     urls:
       - websearch.rakuten.co.jp
     params:
       - qt
     backlink: 'WebIS?qt={k}'
 Rambler:
-  - 
+  -
     urls:
       - nova.rambler.ru
     params:
@@ -1773,21 +1831,21 @@ Rambler:
       - words
     backlink: 'search?query={k}'
 Riksdelen:
-  - 
+  -
     urls:
       - www.riksdelen.se
     params:
       - What
     backlink: 'SearchResult.aspx?What={k}'
 Road Runner:
-  - 
+  -
     urls:
       - search.rr.com
     params:
       - q
     backlink: '?q={k}'
 rpmfind:
-  - 
+  -
     urls:
       - rpmfind.net
       - fr2.rpmfind.net
@@ -1795,42 +1853,42 @@ rpmfind:
       - query
     backlink: 'linux/rpm2html/search.php?query={k}'
 Sapo:
-  - 
+  -
     urls:
       - pesquisa.sapo.pt
     params:
       - q
     backlink: '?q={k}'
 Scour.com:
-  - 
+  -
     urls:
       - scour.com
     params:
       - '/search\/[^\/]+\/(.*)/'
     backlink: 'search/web/{k}'
 Search.ch:
-  - 
+  -
     urls:
       - www.search.ch
     params:
       - q
     backlink: '?q={k}'
 Search.com:
-  - 
+  -
     urls:
       - www.search.com
     params:
       - q
     backlink: 'search?q={k}'
 Searchalot:
-  - 
+  -
     urls:
       - searchalot.com
     params:
       - q
     backlink: '?q={k}'
 SearchCanvas:
-  - 
+  -
     urls:
       - www.searchcanvas.com
     params:
@@ -1844,23 +1902,23 @@ SearchLock:
     params:
       - q
     hiddenkeyword:
-     - '/.*/'
+      - '/.*/'
 Searchy:
-  - 
+  -
     urls:
       - www.searchy.co.uk
     params:
       - q
     backlink: 'index.html?q={k}'
 SeeSaa:
-  - 
+  -
     urls:
       - search.seesaa.jp
     params:
       - '/\/([^\/]+)\/index\.html/'
     backlink: '{k}/index.html'
 Setooz:
-  - 
+  -
     urls:
       - bg.setooz.com
       - da.setooz.com
@@ -1872,34 +1930,34 @@ Setooz:
       - query
     backlink: 'search?query={k}'
 Seznam:
-  - 
+  -
     urls:
       - search.seznam.cz
     params:
       - q
     backlink: '?q={k}'
 Seznam Videa:
-  - 
+  -
     urls:
       - videa.seznam.cz
     params:
       - q
     backlink: '?q={k}'
 Sharelook:
-  - 
+  -
     urls:
       - www.sharelook.fr
     params:
       - keyword
 Skynet:
-  - 
+  -
     urls:
       - www.skynet.be
     params:
       - q
     backlink: 'services/recherche/google?q={k}'
 sm.cn:
-  - 
+  -
     urls:
       - m.sm.cn
       - so.m.sm.cn
@@ -1910,14 +1968,14 @@ sm.cn:
       - q
     backlink: 's?q={k}'
 sm.de:
-  - 
+  -
     urls:
       - www.sm.de
     params:
       - q
     backlink: '?q={k}'
 SmartAddressbar:
-  - 
+  -
     urls:
       - search.smartaddressbar.com
     params:
@@ -1932,35 +1990,35 @@ SmartShopping:
       - keywords
     backlink: '?kwd={k}'
 Snap.do:
-  - 
+  -
     urls:
       - search.snap.do
     params:
       - q
     backlink: '?q={k}'
 So-net:
-  - 
+  -
     urls:
       - www.so-net.ne.jp
     params:
       - query
     backlink: 'search/web/?query={k}'
 So-net Videos:
-  - 
+  -
     urls:
       - video.so-net.ne.jp
     params:
       - kw
     backlink: 'search/?kw={k}'
 Softonic:
-  - 
+  -
     urls:
       - search.softonic.com
     params:
       - q
     backlink: 'default/default?q={k}'
 Sogou:
-  - 
+  -
     urls:
       - www.sogou.com
       - sogou.com
@@ -1981,7 +2039,7 @@ Sogou:
     params:
       - keyword
 Soso:
-  - 
+  -
     urls:
       - www.soso.com
     params:
@@ -1990,7 +2048,7 @@ Soso:
     charsets:
       - gb2312
 Sputnik:
-  - 
+  -
     urls:
       - www.sputnik.ru
     params:
@@ -2031,8 +2089,12 @@ StartPage:
     backlink: 'do/asearch?query={k}'
     hiddenkeyword:
       - '/do/asearch'
+      - '/do/search'
+      - '/sp/search'
+      - '/^$/'
+      - '/'
 Startpagina (Google):
-  - 
+  -
     urls:
       - startgoogle.startpagina.nl
     params:
@@ -2040,40 +2102,41 @@ Startpagina (Google):
       - query
     backlink: '?q={k}'
 Startsiden:
-  - 
+  -
     urls:
       - www.startsiden.no
+      - startsiden.no
     params:
       - q
     backlink: 'sok/index.html?q={k}'
 Suche.info:
-  - 
+  -
     urls:
       - suche.info
     params:
       - Keywords
     backlink: 'suche.php?Keywords={k}'
 Suchmaschine.com:
-  - 
+  -
     urls:
       - www.suchmaschine.com
     params:
       - suchstr
     backlink: 'cgi-bin/wo.cgi?suchstr={k}'
 Suchnase:
-  - 
+  -
     urls:
       - www.suchnase.de
     params:
       - q
 Surf Canyon:
-  - 
+  -
     urls:
       - surfcanyon.com
     params:
       - q
 T-Online:
-  - 
+  -
     urls:
       - suche.t-online.de
       - brisbane.t-online.de
@@ -2083,21 +2146,21 @@ T-Online:
     hiddenkeyword:
       - '/^$/'
       - '/'
-  - 
+  -
     urls:
       - navigationshilfe.t-online.de
     params:
       - q
     backlink: 'dtag/dns/results?mode=search_top&q={k}'
 talimba:
-  - 
+  -
     urls:
       - www.talimba.com
     params:
       - search
     backlink: 'index.php?page=search/web&search={k}'
 TalkTalk:
-  - 
+  -
     urls:
       - www.talktalk.co.uk
     params:
@@ -2111,21 +2174,21 @@ Tarmot:
       - q
     backlink: 'ara/?q={k}'
 Technorati:
-  - 
+  -
     urls:
       - technorati.com
     params:
       - q
     backlink: 'search?return=sites&authority=all&q={k}'
 Teoma:
-  - 
+  -
     urls:
       - www.teoma.com
     params:
       - q
     backlink: 'web?q={k}'
 Terra:
-  - 
+  -
     urls:
       - buscador.terra.es
       - buscador.terra.cl
@@ -2134,7 +2197,7 @@ Terra:
       - query
     backlink: 'Default.aspx?source=Search&query={k}'
 Tiscali:
-  - 
+  -
     urls:
       - search.tiscali.it
       - search-dyn.tiscali.it
@@ -2142,20 +2205,20 @@ Tiscali:
       - q
       - key
     backlink: '?q={k}'
-  - 
+  -
     urls:
       - hledani.tiscali.cz
     params:
       - query
 Tixuma:
-  - 
+  -
     urls:
       - www.tixuma.de
     params:
       - sc
     backlink: 'index.php?mp=search&stp=&sc={k}&tg=0'
 Toolbarhome:
-  - 
+  -
     urls:
       - www.toolbarhome.com
       - vshare.toolbarhome.com
@@ -2163,7 +2226,7 @@ Toolbarhome:
       - q
     backlink: 'search.aspx?q={k}'
 Toppreise.ch:
-  - 
+  -
     urls:
       - www.toppreise.ch
       - toppreise.ch
@@ -2176,55 +2239,55 @@ Toppreise.ch:
     charsets:
       - ISO-8859-1
 Trouvez.com:
-  - 
+  -
     urls:
       - www.trouvez.com
     params:
       - query
 TrovaRapido:
-  - 
+  -
     urls:
       - www.trovarapido.com
     params:
       - q
     backlink: 'result.php?q={k}'
 Trusted Search:
-  - 
+  -
     urls:
       - www.trusted-search.com
     params:
       - w
     backlink: 'search?w={k}'
 Twingly:
-  - 
+  -
     urls:
       - www.twingly.com
     params:
       - q
     backlink: 'search?q={k}'
 uol.com.br:
-  - 
+  -
     urls:
       - busca.uol.com.br
     params:
       - q
     backlink: '/web/?q={k}'
 URL.ORGanzier:
-  - 
+  -
     urls:
       - www.url.org
     params:
       - q
     backlink: '?l=de&q={k}'
 Vinden:
-  - 
+  -
     urls:
       - www.vinden.nl
     params:
       - q
     backlink: '?q={k}'
 Vindex:
-  - 
+  -
     urls:
       - www.vindex.nl
       - search.vindex.nl
@@ -2232,7 +2295,7 @@ Vindex:
       - search_for
     backlink: '/web?search_for={k}'
 Virgilio:
-  - 
+  -
     urls:
       - ricerca.virgilio.it
       - ricercaimmagini.virgilio.it
@@ -2241,13 +2304,13 @@ Virgilio:
     params:
       - qs
     backlink: 'ricerca?qs={k}'
-  - 
+  -
     urls:
       - mobile.virgilio.it
     params:
       - qrs
 Voila:
-  - 
+  -
     urls:
       - search.ke.voila.fr
       - www.lemoteur.fr
@@ -2255,7 +2318,7 @@ Voila:
       - rdata
     backlink: 'S/voila?rdata={k}'
 Volny:
-  - 
+  -
     urls:
       - web.volny.cz
     params:
@@ -2264,7 +2327,7 @@ Volny:
     charsets:
       - windows-1250
 Walhello:
-  - 
+  -
     urls:
       - www.walhello.info
       - www.walhello.com
@@ -2274,7 +2337,7 @@ Walhello:
       - key
     backlink: 'search?key={k}'
 Web.de:
-  - 
+  -
     urls:
       - suche.web.de
       - m.suche.web.de
@@ -2286,19 +2349,19 @@ Web.de:
       - '/^$/'
       - '/'
 Web.nl:
-  - 
+  -
     urls:
       - www.web.nl
     params:
       - zoekwoord
 weborama:
-  - 
+  -
     urls:
       - www.weborama.fr
     params:
       - QUERY
 WebSearch:
-  - 
+  -
     urls:
       - www.websearch.com
     params:
@@ -2306,7 +2369,7 @@ WebSearch:
       - q
     backlink: 'search/results2.aspx?q={k}'
 Wedoo:
-  - 
+  -
     urls:
       - fr.wedoo.com
       - en.wedoo.com
@@ -2314,48 +2377,48 @@ Wedoo:
     params:
       - keyword
 Winamp:
-  - 
+  -
     urls:
       - search.winamp.com
     params:
       - q
     backlink: 'search/search?q={k}'
 Wirtualna Polska:
-  - 
+  -
     urls:
       - szukaj.wp.pl
     params:
       - szukaj
     backlink: 'http://szukaj.wp.pl/szukaj.html?szukaj={k}'
 Witch:
-  - 
+  -
     urls:
       - www.witch.de
     params:
       - search
     backlink: 'search-result.php?cn=0&search={k}'
 Woopie:
-  - 
+  -
     urls:
       - www.woopie.jp
     params:
       - kw
     backlink: 'search?kw={k}'
 www värav:
-  - 
+  -
     urls:
       - search.www.ee
     params:
       - query
 X-Recherche:
-  - 
+  -
     urls:
       - www.x-recherche.com
     params:
       - MOTS
     backlink: 'cgi-bin/websearch?MOTS={k}'
 Yahoo!:
-  - 
+  -
     urls:
       - search.yahoo.com
       - malaysia.search.yahoo.com
@@ -2383,30 +2446,30 @@ Yahoo!:
       - www.cercato.it
     params:
       - q
-  - 
+  -
     urls:
       - search.offerbox.com
     params:
       - q
-  - 
+  -
     urls:
       - www.benefind.de
     params:
       - q
-  - 
+  -
     urls:
       - ys.mirostart.com
     params:
       - q
 Yahoo! Directory:
-  - 
+  -
     urls:
       - search.yahoo.com/search/dir
     params:
       - p
     backlink: '?p={k}'
 Yahoo! Images:
-  - 
+  -
     urls:
       - images.search.yahoo.com
       - '{}.images.yahoo.com'
@@ -2471,14 +2534,14 @@ Yahoo! Japan Videos:
       - euc-jp
       - ms932
 Yam:
-  - 
+  -
     urls:
       - search.yam.com
     params:
       - k
     backlink: 'Search/Web/?SearchType=web&k={k}'
 Yandex:
-  - 
+  -
     urls:
       - yandex.ru
       - yandex.com
@@ -2498,7 +2561,7 @@ Yandex:
     params:
       - q
 Yandex Images:
-  - 
+  -
     urls:
       - images.yandex.ru
       - images.yandex.com
@@ -2507,7 +2570,7 @@ Yandex Images:
       - text
     backlink: 'yandsearch?text={k}'
 Yasni:
-  - 
+  -
     urls:
       - www.yasni.de
       - www.yasni.com
@@ -2517,7 +2580,7 @@ Yasni:
     params:
       - query
 Yatedo:
-  - 
+  -
     urls:
       - www.yatedo.com
       - www.yatedo.fr
@@ -2525,27 +2588,27 @@ Yatedo:
       - q
     backlink: 'search/profil?q={k}'
 Yellowmap:
-  - 
+  -
     urls:
       - yellowmap.de
     params:
       - ' '
 Yippy:
-  - 
+  -
     urls:
       - search.yippy.com
     params:
       - query
     backlink: 'search?query={k}'
 YouGoo:
-  - 
+  -
     urls:
       - www.yougoo.fr
     params:
       - q
     backlink: '?cx=search&q={k}'
 Zapmeta:
-  - 
+  -
     urls:
       - www.zapmeta.com
       - 'zapmeta.{}'
@@ -2561,27 +2624,27 @@ Zapmeta:
       - query
     backlink: '?q={k}'
 Zhongsou:
-  - 
+  -
     urls:
       - p.zhongsou.com
     params:
       - w
     backlink: 'p?w={k}'
 Zoek:
-  - 
+  -
     urls:
       - www3.zoek.nl
     params:
       - q
 Zoeken:
-  - 
+  -
     urls:
       - www.zoeken.nl
     params:
       - q
     backlink: '?q={k}'
 Zoohoo:
-  - 
+  -
     urls:
       - zoohoo.cz
     params:
@@ -2590,21 +2653,21 @@ Zoohoo:
     charsets:
       - windows-1250
 Zoznam:
-  - 
+  -
     urls:
       - www.zoznam.sk
     params:
       - s
     backlink: 'hladaj.fcgi?s={k}&co=svet'
 Zxuso:
-  - 
+  -
     urls:
       - www.zxuso.com
     params:
       - wd
     backlink: 'ri/?wd={k}'
 묻지마 검색:
-  - 
+  -
     urls:
       - kwzf.net
     params:

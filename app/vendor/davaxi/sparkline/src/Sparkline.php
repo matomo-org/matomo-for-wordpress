@@ -118,7 +118,8 @@ class Sparkline
         $stepCount = $this->getMaxNumberOfDataPointsAcrossSerieses();
 
         foreach ($this->data as $seriesIndex => $series) {
-            list($polygon, $line) = $this->getChartElements($series, $stepCount);
+            $seriesNormalized = $this->getNormalizedData($seriesIndex);
+            list($polygon, $line) = $this->getChartElements($seriesNormalized, $stepCount);
             $picture->applyPolygon($polygon, $this->getFillColor($seriesIndex), $count);
             $picture->applyLine($line, $this->getLineColor($seriesIndex));
 

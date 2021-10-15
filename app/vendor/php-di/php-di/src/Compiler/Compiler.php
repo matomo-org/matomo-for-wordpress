@@ -244,7 +244,7 @@ class Compiler
                 $isOptional = $this->compileValue($definition->isOptional());
                 $defaultValue = $this->compileValue($definition->getDefaultValue());
                 $code = <<<PHP
-        \$value = getenv($variableName);
+        \$value = \$_ENV[$variableName] ?? \$_SERVER[$variableName] ?? getenv($variableName);
         if (false !== \$value) return \$value;
         if (!$isOptional) {
             throw new \DI\Definition\Exception\InvalidDefinition("The environment variable '{$definition->getVariableName()}' has not been defined");
@@ -358,7 +358,7 @@ PHP;
 
     private function createCompilationDirectory(string $directory)
     {
-        if (!is_dir($directory) && !@mkdir($directory, 0777, true)) {
+        if (!is_dir($directory) && !@mkdir($directory, 0777, true) && !is_dir($directory)) {
             throw new InvalidArgumentException(sprintf('Compilation directory does not exist and cannot be created: %s.', $directory));
         }
         if (!is_writable($directory)) {
