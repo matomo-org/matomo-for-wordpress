@@ -55,7 +55,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 			if ( isset( $post['excluded_ips'] ) ) {
 				$ips = explode( ',', $this->to_comma_list( $post['excluded_ips'] ) );
 				foreach ( $ips as $ip ) {
-					if ( ! $this->validate_ip( $ip ) ) {
+					if ( ! empty( $ip ) && ! $this->validate_ip( $ip ) ) {
 						$settings_errors[] = sprintf( __( '%s is not a valid IP address', 'matomo' ), $ip );
 					}
 				}
@@ -63,7 +63,7 @@ class ExclusionSettings implements AdminSettingsInterface {
 			if ( isset( $post['excluded_user_agents'] ) ) {
 				$user_agents = explode( ',', $this->to_comma_list( $post['excluded_user_agents'] ) );
 				foreach ( $user_agents as $user_agent ) {
-					if ( ! $this->validate_user_agent( $user_agent ) ) {
+					if ( ! empty( $user_agent ) && ! $this->validate_user_agent( $user_agent ) ) {
 						$settings_errors[] = sprintf( __( '%s is not a valid User agent', 'matomo' ), $user_agent );
 					}
 				}
