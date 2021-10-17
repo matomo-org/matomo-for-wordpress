@@ -61,15 +61,4 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_TestCase {
 		$this->assertFalse( $this->exclusion_settings->validate_ip( 'not an ip' ) );
 		$this->assertFalse( $this->exclusion_settings->validate_ip( '192.168.0.1/32' ) );
 	}
-
-	public function test_validate_user_agent() {
-		$this->assertTrue( $this->exclusion_settings->validate_user_agent( 'Firefox' ) );
-		$this->assertTrue( $this->exclusion_settings->validate_user_agent( 'Mozilla/5.0' ) );
-		$this->assertFalse( $this->exclusion_settings->validate_user_agent( 'Mozilla/a.a' ) );
-		$this->assertTrue( $this->exclusion_settings->validate_user_agent( 'AdsBot-Google' ) );
-		$this->assertTrue( $this->exclusion_settings->validate_user_agent( 'Goose/3.1.6' ) );
-		$this->assertTrue( $this->exclusion_settings->validate_user_agent( 'PEAR HTTP_Request class' ) );
-		$this->assertTrue( $this->exclusion_settings->validate_user_agent( 'WeSEE:Search/0.1' ) );
-	}
-
 }
