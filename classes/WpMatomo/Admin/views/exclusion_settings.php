@@ -135,15 +135,14 @@ if ( $was_updated ) {
 				<td>
 
 					<?php
-					echo esc_html(
-						Piwik::translate(
-							'SitesManager_KeepURLFragmentsHelp',
-							[
-								'<em>#</em>',
-								'<em>example.org/index.html#first_section</em>',
-								'<em>example.org/index.html</em>',
-							]
-						)
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo Piwik::translate(
+						'SitesManager_KeepURLFragmentsHelp',
+						[
+							'<em>#</em>',
+							'<em>example.org/index.html#first_section</em>',
+							'<em>example.org/index.html</em>',
+						]
 					)
 					?>
 					<br/>
