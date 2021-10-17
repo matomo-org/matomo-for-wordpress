@@ -122,7 +122,7 @@ if ( count( $settings_errors ) ) {
 					<br/>
 					<?php echo esc_html( Piwik::translate( 'SitesManager_GlobalListExcludedUserAgents_Desc' ) ); ?>
 					<?php echo esc_html( Piwik::translate( 'SitesManager_GlobalExcludedUserAgentHelp2' ) ); ?>
-
+					<?php echo esc_html( Piwik::translate( 'SitesManager_GlobalExcludedUserAgentHelp3', '/bot|spider|crawl|scanner/i' ) ); ?>
 				</td>
 			</tr>
 			<tr>
