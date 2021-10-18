@@ -118,7 +118,8 @@ class PathsTest extends MatomoUnit_TestCase {
 		$renamed = false;
 		if ( is_writeable( $this->root_path ) ) {
 			// replace the last part of the root path by matomo
-			$renamed = rename( $this->root_path, $this->root_path_with_matomo );
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			$renamed = @rename( $this->root_path, $this->root_path_with_matomo );
 			if ( $renamed ) {
 				// create a link for the phpunit dependencies
 				symlink( $this->root_path_with_matomo, $this->root_path );
