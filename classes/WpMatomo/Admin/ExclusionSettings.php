@@ -36,31 +36,17 @@ class ExclusionSettings implements AdminSettingsInterface {
 		return esc_html__( 'Exclusions', 'matomo' );
 	}
 
-	public function validate_ip( $ip ) {
-		$matches = [];
-		return ( preg_match( '/^[1-2][0-9]{0,2}(\.(([0-9]{1,3})|\*)){3}(\/(2[4-9])|(30))?$/', $ip, $matches ) === 1 );
-	}
-
-	public function show_settings() {
+	public function show_settings( $throw_exception = false ) {
 		global $wp_roles;
-
 		$settings_errors = [];
-		if ( isset( $_POST ) && isset( $_POST[ self::FORM_NAME ] ) && check_admin_referer( self::NONCE_NAME ) ) {
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$post = wp_unslash( $_POST[ self::FORM_NAME ] );
-			if ( isset( $post['excluded_ips'] ) ) {
-				$ips = explode( ',', $this->to_comma_list( $post['excluded_ips'] ) );
-				foreach ( $ips as $ip ) {
-					if ( ! empty( $ip ) && ! $this->validate_ip( $ip ) ) {
-						$settings_errors[] = sprintf( __( '%s is not a valid IP address', 'matomo' ), $ip );
-					}
-				}
-			}
-		}
-
-		$was_updated = false;
-		if ( count( $settings_errors ) === 0 ) {
+		$was_updated     = false;
+		try {
 			$was_updated = $this->update_if_submitted();
+		} catch ( InvalidIpException $e ) {
+			$settings_errors[] = $e->getMessage();
+			if ( $throw_exception ) {
+				throw $e;
+			}
 		}
 
 		Bootstrap::do_bootstrap();
@@ -90,7 +76,11 @@ class ExclusionSettings implements AdminSettingsInterface {
 			if ( isset( $post['excluded_ips'] ) ) {
 				$ips = $this->to_comma_list( $post['excluded_ips'] );
 				if ( $ips !== $api->getExcludedIpsGlobal() ) {
-					$api->setGlobalExcludedIps( $ips );
+					try {
+						$api->setGlobalExcludedIps( $ips );
+					} catch ( \Exception $e ) {
+						throw new InvalidIpException( $e->getMessage() );
+					}
 				}
 			}
 

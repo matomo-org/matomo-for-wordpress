@@ -6,6 +6,7 @@
 use Piwik\Plugins\SitesManager\API;
 use WpMatomo\Admin\ExclusionSettings;
 use WpMatomo\Capabilities;
+use WpMatomo\Admin\InvalidIpException;
 
 class AdminExclusionSettingsTest extends MatomoAnalytics_TestCase {
 
@@ -53,12 +54,86 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_validate_ip() {
-		$this->assertTrue( $this->exclusion_settings->validate_ip( '127.0.0.1' ) );
-		$this->assertTrue( $this->exclusion_settings->validate_ip( '1.2.3.4/24' ) );
-		$this->assertTrue( $this->exclusion_settings->validate_ip( '1.2.3.*' ) );
-		$this->assertTrue( $this->exclusion_settings->validate_ip( '1.2.*.*' ) );
-		$this->assertFalse( $this->exclusion_settings->validate_ip( '350.17.24.23' ) );
-		$this->assertFalse( $this->exclusion_settings->validate_ip( 'not an ip' ) );
-		$this->assertFalse( $this->exclusion_settings->validate_ip( '192.168.0.1/32' ) );
+		$_POST[ ExclusionSettings::FORM_NAME ] = array(
+			'excluded_ips' => '127.0.0.1',
+		);
+		$_REQUEST['_wpnonce']                  = wp_create_nonce( ExclusionSettings::NONCE_NAME );
+		$_SERVER['REQUEST_URI']                = home_url();
+
+		try {
+			ob_start();
+			$this->exclusion_settings->show_settings( true );
+			ob_get_clean();
+			$this->assertTrue( true );
+		} catch ( InvalidIpException $e ) {
+			$this->assertFalse( true );
+		}
+
+		$_POST[ ExclusionSettings::FORM_NAME ] = array(
+			'excluded_ips' => '1.2.3.4/24',
+		);
+		try {
+			ob_start();
+			$this->exclusion_settings->show_settings( true );
+			ob_get_clean();
+			$this->assertTrue( true );
+		} catch ( InvalidIpException $e ) {
+			$this->assertFalse( true );
+		}
+		$_POST[ ExclusionSettings::FORM_NAME ] = array(
+			'excluded_ips' => '1.2.3.*',
+		);
+		try {
+			ob_start();
+			$this->exclusion_settings->show_settings( true );
+			ob_get_clean();
+			$this->assertTrue( true );
+		} catch ( InvalidIpException $e ) {
+			$this->assertFalse( true );
+		}
+		$_POST[ ExclusionSettings::FORM_NAME ] = array(
+			'excluded_ips' => '1.2.*.*',
+		);
+		try {
+			ob_start();
+			$this->exclusion_settings->show_settings( true );
+			ob_get_clean();
+			$this->assertTrue( true );
+		} catch ( InvalidIpException $e ) {
+			$this->assertFalse( true );
+		}
+		$_POST[ ExclusionSettings::FORM_NAME ] = array(
+			'excluded_ips' => '350.17.24.23',
+		);
+		try {
+			ob_start();
+			$this->exclusion_settings->show_settings( true );
+			ob_get_clean();
+			$this->assertFalse( true );
+		} catch ( InvalidIpException $e ) {
+			$this->assertTrue( true );
+		}
+		$_POST[ ExclusionSettings::FORM_NAME ] = array(
+			'excluded_ips' => 'not an ip',
+		);
+		try {
+			ob_start();
+			$this->exclusion_settings->show_settings( true );
+			ob_get_clean();
+			$this->assertFalse( true );
+		} catch ( InvalidIpException $e ) {
+			$this->assertTrue( true );
+		}
+		$_POST[ ExclusionSettings::FORM_NAME ] = array(
+			'excluded_ips' => '192.168.0.1/32',
+		);
+		try {
+			ob_start();
+			$this->exclusion_settings->show_settings( true );
+			ob_get_clean();
+			$this->assertFalse( true );
+		} catch ( InvalidIpException $e ) {
+			$this->assertTrue( true );
+		}
 	}
 }
