@@ -36,10 +36,18 @@ class ExclusionSettings implements AdminSettingsInterface {
 		return esc_html__( 'Exclusions', 'matomo' );
 	}
 
-	public function show_settings() {
+	public function show_settings( $throw_exception = false ) {
 		global $wp_roles;
-
-		$was_updated = $this->update_if_submitted();
+		$settings_errors = [];
+		$was_updated     = false;
+		try {
+			$was_updated = $this->update_if_submitted();
+		} catch ( InvalidIpException $e ) {
+			$settings_errors[] = $e->getMessage();
+			if ( $throw_exception ) {
+				throw $e;
+			}
+		}
 
 		Bootstrap::do_bootstrap();
 
@@ -68,7 +76,11 @@ class ExclusionSettings implements AdminSettingsInterface {
 			if ( isset( $post['excluded_ips'] ) ) {
 				$ips = $this->to_comma_list( $post['excluded_ips'] );
 				if ( $ips !== $api->getExcludedIpsGlobal() ) {
-					$api->setGlobalExcludedIps( $ips );
+					try {
+						$api->setGlobalExcludedIps( $ips );
+					} catch ( \Exception $e ) {
+						throw new InvalidIpException( $e->getMessage() );
+					}
 				}
 			}
 
