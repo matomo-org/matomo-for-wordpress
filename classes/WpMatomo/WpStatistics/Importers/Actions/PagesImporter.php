@@ -3,19 +3,22 @@
 namespace WpMatomo\WpStatistics\Importers\Actions;
 
 use WP_STATISTICS\MetaBox\pages;
-use WpMatomo\WpStatistics\DateTime;
+use Piwik\Date;
+use WpMatomo\WpStatistics\Config;
 
-class PagesImporter implements ActionsInterface {
+class PagesImporter extends RecordImporter implements ActionsInterface {
 
-	public function import( DateTime $date_time ) {
+	const PLUGIN_NAME = 'PagesImporter';
+
+	public function import( Date $date ) {
 		$limit = 100;
 		$pages = [];
 		$page  = 0;
 		do {
 			$page ++;
 			$pages_found = pages::get( [
-				'from'     => $date_time->beginDay()->toWpsMySQL(),
-				'to'       => $date_time->endDay()->toWpsMySQL(),
+				'from'     => $date->toString(Config::WP_STATISTICS_DATE_FORMAT),
+				'to'       => $date->addDay(1)->toString(Config::WP_STATISTICS_DATE_FORMAT),
 				'per_page' => $limit,
 				'paged'    => $page
 			] );

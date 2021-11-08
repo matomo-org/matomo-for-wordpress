@@ -2,9 +2,9 @@
 
 namespace WpMatomo\WpStatistics\Importers\Actions;
 
-use WpMatomo\WpStatistics\DateTime;
+use Piwik\Date;
 
-Interface ActionsInterface {
+interface ActionsInterface {
 
-	public function import(DateTime $date_time);
+	public function import( Date $date );
 }

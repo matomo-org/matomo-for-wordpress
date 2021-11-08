@@ -8,38 +8,22 @@
 
 namespace WpMatomo\WpStatistics;
 
-use Google_Service_Analytics_Goal;
-use Piwik\API\Request;
 use Piwik\Archive\ArchiveInvalidator;
 use Piwik\ArchiveProcessor\Parameters;
 use Piwik\Common;
 use Piwik\Concurrency\Lock;
-use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\DataAccess\ArchiveWriter;
 use Piwik\Date;
-use Piwik\Db;
 use Piwik\Option;
 use Piwik\Period\Factory;
 use Piwik\Piwik;
 use Piwik\Plugin\Manager;
 use Piwik\Plugin\ReportsProvider;
-use Piwik\Plugins\Goals\API;
 use Piwik\Plugins\GoogleAnalyticsImporter\Google\DailyRateLimitReached;
-use Piwik\Plugins\GoogleAnalyticsImporter\Google\GoogleAnalyticsQueryService;
-use Piwik\Plugins\GoogleAnalyticsImporter\Google\GoogleCustomDimensionMapper;
-use Piwik\Plugins\GoogleAnalyticsImporter\Google\GoogleGoalMapper;
-use Piwik\Plugins\GoogleAnalyticsImporter\Google\GoogleQueryObjectFactory;
 use Piwik\Plugins\GoogleAnalyticsImporter\Input\EndDate;
 use Piwik\Plugins\GoogleAnalyticsImporter\Input\MaxEndDateReached;
-use Piwik\Plugins\SitesManager\API as SitesManagerAPI;
-use Piwik\Plugins\Goals\API as GoalsAPI;
-use Piwik\Plugins\CustomDimensions\API as CustomDimensionsAPI;
-use Piwik\Plugins\TagManager\TagManager;
-use Piwik\Plugins\WebsiteMeasurable\Type;
 use Piwik\Segment;
-use Piwik\SettingsPiwik;
-use Piwik\SettingsServer;
 use Piwik\Site;
 use Psr\Log\LoggerInterface;
 
@@ -120,22 +104,21 @@ class Importer
         $this->isMainImport = $isMainImport;
     }
 
-	protected function set_ending_date() {
+	protected function getEndingDate() {
 		global $wpdb;
 		$db_settings = new \WpMatomo\Db\Settings();
 		$prefix_table = $db_settings->prefix_table_name( 'log_visit' );
 		$sql = <<<SQL
 SELECT min(visit_last_action_time) from $prefix_table
 SQL;
-		$row = $wpdb->get_row($sql);
-
-
+		$row = $wpdb->get_row($sql, ARRAY_N);
+		return Date::factory($row[0]);
 	}
 
-    public function import($id_site)
+    public function import($idSite)
     {
         $date = null;
-		$this->set_ending_date();
+		$end = $this->getEndingDate();
 
         try {
             $this->currentLock = $lock;
@@ -148,17 +131,16 @@ SQL;
                 throw new \InvalidArgumentException("Invalid date range, start date is later than end date: {$start},{$end}");
             }
 
-            $recordImporters = $this->getRecordImporters($idSite, $viewId);
+            $recordImporters = $this->getRecordImporters($idSite);
 
             $site = new Site($idSite);
             for ($date = $start; $date->getTimestamp() < $endPlusOne->getTimestamp(); $date = $date->addDay(1)) {
-                $this->logger->info("Importing data for GA View {viewId} for date {date}...", [
-                    'viewId' => $viewId,
+                $this->logger->info("Importing data for date {date}...", [
                     'date' => $date->toString(),
                 ]);
 
                 try {
-                    $this->importDay($site, $date, $recordImporters, $segment);
+                    $this->importDay($site, $date, $recordImporters);
                 } finally {
                     // force delete all tables in case they aren't all freed
                     \Piwik\DataTable\Manager::getInstance()->deleteAll();
@@ -196,14 +178,14 @@ SQL;
      * For use in RecordImporters that need to archive data for segments.
      * @var RecordImporter[] $recordImporters
      */
-    public function importDay(Site $site, Date $date, $recordImporters, $segment, $plugin = null)
+    public function importDay(Site $site, Date $date, $recordImporters, $plugin = null)
     {
         $maxEndDate = $this->endDate->getMaxEndDate();
         if ($maxEndDate && $maxEndDate->isEarlier($date)) {
             throw new MaxEndDateReached();
         }
 
-        $archiveWriter = $this->makeArchiveWriter($site, $date, $segment, $plugin);
+        $archiveWriter = $this->makeArchiveWriter($site, $date, $plugin);
         $archiveWriter->initNewArchive();
 
         $recordInserter = new RecordInserter($archiveWriter);
@@ -257,7 +239,7 @@ SQL;
      * @return RecordImporter[]
      * @throws \DI\NotFoundException
      */
-    private function getRecordImporters($idSite, $viewId)
+    private function getRecordImporters($idSite)
     {
         if (empty($this->recordImporters)) {
             $recordImporters = StaticContainer::get('GoogleAnalyticsImporter.recordImporters');
@@ -276,19 +258,12 @@ SQL;
                 $this->recordImporters[$pluginName] = $recordImporterClass;
             }
         }
-
-        $quotaUser = defined('PIWIK_TEST_MODE') ? 'test' : SettingsPiwik::getPiwikUrl();
-
+		
         $instances = [];
         foreach ($this->recordImporters as $pluginName => $className) {
-            $instances[$pluginName] = new $className($idSite, $this->logger);
+            $instances[$pluginName] = new $className($this->logger);
         }
         return $instances;
-    }
-
-    private function logNoGoalIdFoundException($goal)
-    {
-        $this->logger->warning("No GA goal ID found mapped for '{$goal['name']}' [idgoal = {$goal['idgoal']}]");
     }
 
     public function getQueryCount()

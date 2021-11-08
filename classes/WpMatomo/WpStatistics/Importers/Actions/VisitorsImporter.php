@@ -3,18 +3,21 @@
 namespace WpMatomo\WpStatistics\Importers\Actions;
 
 use WP_STATISTICS\MetaBox\top_visitors;
-use WpMatomo\WpStatistics\DateTime;
+use Piwik\Date;
+use WpMatomo\WpStatistics\Config;
 
-class VisitorsImporter implements ActionsInterface {
+class VisitorsImporter extends RecordImporter implements ActionsInterface {
 
-	public function import( DateTime $date_time ) {
+	const PLUGIN_NAME = 'VisitorsImporter';
+
+	public function import( Date $date ) {
 		$limit  = 100;
 		$visits  = [];
 		$page   = 0;
 		do {
 			$page ++;
 			$visits_found = top_visitors::get( [
-				'day'      => $date_time->toWpsMySQL(),
+				'day'      => $date->toString(Config::WP_STATISTICS_DATE_FORMAT),
 				'per_page' => $limit,
 				'paged'    => $page
 			] );
