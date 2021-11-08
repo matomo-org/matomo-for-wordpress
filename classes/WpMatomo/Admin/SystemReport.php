@@ -92,6 +92,8 @@ class SystemReport {
 		'accelerated-mobile-pages',
 		// see https://wordpress.org/support/topic/receiving-errors-from-my-plesk-server/
 		'post-smtp',
+		// see https://wordpress.org/support/topic/activation-of-another-plugin-breaks-matomo/#post-15045079
+		'adshares',
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
