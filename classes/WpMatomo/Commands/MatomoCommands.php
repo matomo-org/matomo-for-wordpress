@@ -16,6 +16,8 @@ use WpMatomo\Installer;
 use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
 use WpMatomo\Updater;
+use WpMatomo\WpStatistics\Importer;
+use WpMatomo\WpStatistics\Logger\WpCliLogger;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -52,6 +54,44 @@ class MatomoCommands extends WP_CLI_Command {
 		$uninstaller->uninstall( $delete_all_data );
 
 		WP_CLI::success( 'Uninstalled Matomo Analytics' );
+	}
+
+	/**
+	 * Import wp-statistics data
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--site=<siteId>]
+	 * : the site id to import
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp matomo update --site 1
+	 *
+	 * @when after_wp_load
+	 */
+	public function importWpStatistics( $args, $assoc_args ) {
+		$logger = new WpCliLogger();
+		$importer = new Importer($logger);
+		if ( function_exists( 'is_multisite' ) && is_multisite() && function_exists( 'get_sites' ) ) {
+			$id_site = ! empty( $assoc_args['site'] ) ? $assoc_args['site'] : null;
+			foreach ( get_sites() as $site ) {
+				/** @var WP_Site $site */
+				if ( is_null( $id_site ) || ( $site->blog_id === $id_site ) ) {
+					switch_to_blog( $site->blog_id );
+					// this way we make sure all blogs get updated eventually
+					$logger->info( 'Blog ID' . $site->blog_id );
+					$importer->import( $site->blog_id );
+					restore_current_blog();
+				}
+			}
+		} else {
+			$id_site = ! empty( $assoc_args['site'] ) ? $assoc_args['site'] : 1;
+			switch_to_blog( $id_site );
+			$importer->import( $id_site );
+		}
+
+		$logger->success( 'Matomo Analytics wp-statistics import finished' );
 	}
 
 	/**
