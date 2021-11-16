@@ -2,17 +2,20 @@
 
 namespace WpMatomo\WpStatistics\Importers\Actions;
 
-use WP_STATISTICS\MetaBox\top_visitors;
+use WP_STATISTICS\MetaBox\browsers;
 use Piwik\Date;
+use WP_STATISTICS\MetaBox\top_visitors;
 use WpMatomo\WpStatistics\Config;
+use WpMatomo\WpStatistics\DataConverters\BrowsersConverter;
+use WpMatomo\WpStatistics\DataConverters\PlatformConverter;
 
-class VisitorsImporter extends RecordImporter implements ActionsInterface {
+class PlatformImporter extends RecordImporter implements ActionsInterface {
 
-	const PLUGIN_NAME = 'VisitsSummary';
+	const PLUGIN_NAME = 'DevicesDetection';
 
 	public function importRecords( Date $date ) {
 		$limit  = 100;
-		$visits = [];
+		$plateforms = [];
 		$page   = 0;
 		do {
 			$page ++;
@@ -23,10 +26,10 @@ class VisitorsImporter extends RecordImporter implements ActionsInterface {
 			] );
 			$no_data      = ( ( array_key_exists( 'no_data', $visits_found ) ) && ( $visits_found['no_data'] === 1 ) );
 			if ( ! $no_data ) {
-				$visits = array_merge( $visits, $visits_found );
+				$plateforms = array_merge( $plateforms, $visits_found );
 			}
 		} while ( $no_data !== true );
-
-		return $visits;
+		$plateforms = PlatformConverter::convert($plateforms);
+		return $plateforms;
 	}
 }

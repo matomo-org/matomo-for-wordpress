@@ -8,9 +8,9 @@ use WpMatomo\WpStatistics\Config;
 
 class PagesImporter extends RecordImporter implements ActionsInterface {
 
-	const PLUGIN_NAME = 'PagesImporter';
+	const PLUGIN_NAME = 'Actions';
 
-	public function import( Date $date ) {
+	public function importRecords( Date $date ) {
 		$limit = 100;
 		$pages = [];
 		$page  = 0;

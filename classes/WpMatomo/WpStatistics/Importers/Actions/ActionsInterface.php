@@ -6,5 +6,5 @@ use Piwik\Date;
 
 interface ActionsInterface {
 
-	public function import( Date $date );
+	public function importRecords( Date $date );
 }

@@ -8,10 +8,8 @@
 
 namespace WpMatomo\WpStatistics;
 
-use Piwik\Archive\ArchiveInvalidator;
 use Piwik\ArchiveProcessor\Parameters;
 use Piwik\Common;
-use Piwik\Concurrency\Lock;
 use Piwik\Container\StaticContainer;
 use Piwik\DataAccess\ArchiveWriter;
 use Piwik\Date;
@@ -19,10 +17,6 @@ use Piwik\Option;
 use Piwik\Period\Factory;
 use Piwik\Piwik;
 use Piwik\Plugin\Manager;
-use Piwik\Plugin\ReportsProvider;
-use Piwik\Plugins\GoogleAnalyticsImporter\Google\DailyRateLimitReached;
-use Piwik\Plugins\GoogleAnalyticsImporter\Input\EndDate;
-use Piwik\Plugins\GoogleAnalyticsImporter\Input\MaxEndDateReached;
 use Piwik\Segment;
 use Piwik\Site;
 use Psr\Log\LoggerInterface;
@@ -30,11 +24,6 @@ use Psr\Log\LoggerInterface;
 class Importer
 {
     const IS_IMPORTED_FROM_GA_NUMERIC = 'GoogleAnalyticsImporter_isImportedFromGa';
-
-    /**
-     * @var ReportsProvider
-     */
-    private $reportsProvider;
 
     /**
      * @var LoggerInterface
@@ -47,24 +36,9 @@ class Importer
     private $recordImporters;
 
     /**
-     * @var IdMapper
-     */
-    private $idMapper;
-
-    /**
      * @var int
      */
     private $queryCount = 0;
-
-    /**
-     * @var ImportStatus
-     */
-    private $importStatus;
-
-    /**
-     * @var Lock
-     */
-    private $currentLock = null;
 
     /**
      * @var string
@@ -72,31 +46,17 @@ class Importer
     private $noDataMessageRemoved = false;
 
     /**
-     * @var ArchiveInvalidator
-     */
-    private $invalidator;
-
-    /**
-     * @var EndDate
-     */
-    private $endDate;
-
-    /**
      * Whether this is the main import date range or for a reimport range.
      * @var bool
      */
     private $isMainImport = true;
 
-    public function __construct(ReportsProvider $reportsProvider,
-                                LoggerInterface $logger,
-                                IdMapper $idMapper, ImportStatus $importStatus, ArchiveInvalidator $invalidator, EndDate $endDate)
+	private $endDate = null;
+
+    public function __construct( LoggerInterface $logger)
     {
-        $this->reportsProvider = $reportsProvider;
         $this->logger = $logger;
-        $this->idMapper = $idMapper;
-        $this->importStatus = $importStatus;
-        $this->invalidator = $invalidator;
-        $this->endDate = $endDate;
+		$this->endDate = $this->getEndingDate();
     }
 
     public function setIsMainImport($isMainImport)
@@ -115,13 +75,26 @@ SQL;
 		return Date::factory($row[0]);
 	}
 
+	/**
+	 * @return Piwik\Date
+	 */
+	protected function getStarted() {
+		global $wpdb;
+		$prefix_table = $wpdb->prefix. 'statistics_visit' ;
+		$sql = <<<SQL
+SELECT min(last_visit) from $prefix_table
+SQL;
+		$row = $wpdb->get_row($sql, ARRAY_N);
+		return Date::factory($row[0]);
+	}
+
     public function import($idSite)
     {
         $date = null;
-		$end = $this->getEndingDate();
-
-        try {
-            $this->currentLock = $lock;
+		$end = $this->endDate;
+		$start = $this->getStarted();
+	    $start = Date::factory('2021-01-01');
+		try {
             $this->noDataMessageRemoved = false;
             $this->queryCount = 0;
 
@@ -130,10 +103,8 @@ SQL;
             if ($start->getTimestamp() >= $endPlusOne->getTimestamp()) {
                 throw new \InvalidArgumentException("Invalid date range, start date is later than end date: {$start},{$end}");
             }
-
             $recordImporters = $this->getRecordImporters($idSite);
-
-            $site = new Site($idSite);
+			$site = new Site($idSite);
             for ($date = $start; $date->getTimestamp() < $endPlusOne->getTimestamp(); $date = $date->addDay(1)) {
                 $this->logger->info("Importing data for date {date}...", [
                     'date' => $date->toString(),
@@ -145,28 +116,14 @@ SQL;
                     // force delete all tables in case they aren't all freed
                     \Piwik\DataTable\Manager::getInstance()->deleteAll();
                 }
-
-                $this->importStatus->dayImportFinished($idSite, $date, $this->isMainImport);
             }
-
-            $this->importStatus->finishImportIfNothingLeft($idSite);
-
+			$this->logger->debug('after');
             unset($recordImporters);
-        } catch (DailyRateLimitReached $ex) {
-            $this->importStatus->rateLimitReached($idSite);
-            $this->logger->info($ex->getMessage());
-            return true;
         } catch (MaxEndDateReached $ex) {
-            $this->logger->info('Max end date reached. This occurs in Matomo for Wordpress installs when the importer tries to import days on or after the day Matomo for Wordpress installed.');
-
-            if (!empty($date)) {
-                $this->importStatus->dayImportFinished($idSite, $date, $this->isMainImport);
-            }
-
-            $this->importStatus->finishedImport($idSite);
-
+			$this->logger->info('Max end date reached. This occurs in Matomo for Wordpress installs when the importer tries to import days on or after the day Matomo for Wordpress installed.');
             return true;
         } catch (\Exception $ex) {
+	        $this->logger->debug('exception');
             $this->onError($idSite, $ex, $date);
             return true;
         }
@@ -180,18 +137,17 @@ SQL;
      */
     public function importDay(Site $site, Date $date, $recordImporters, $plugin = null)
     {
-        $maxEndDate = $this->endDate->getMaxEndDate();
+        $maxEndDate = $this->endDate;
         if ($maxEndDate && $maxEndDate->isEarlier($date)) {
-            throw new MaxEndDateReached();
+			throw new MaxEndDateReached();
         }
-
         $archiveWriter = $this->makeArchiveWriter($site, $date, $plugin);
-        $archiveWriter->initNewArchive();
+		$archiveWriter->initNewArchive();
 
         $recordInserter = new RecordInserter($archiveWriter);
 
         foreach ($recordImporters as $plugin => $recordImporter) {
-            if (!$recordImporter->supportsSite()) {
+			if (!$recordImporter->supportsSite()) {
                 continue;
             }
 
@@ -209,14 +165,11 @@ SQL;
                 $this->noDataMessageRemoved = true;
             }
 
-            $this->currentLock->reexpireLock();
+           // $this->currentLock->reexpireLock();
         }
 
         $archiveWriter->insertRecord(self::IS_IMPORTED_FROM_GA_NUMERIC, 1);
         $archiveWriter->finalizeArchive();
-
-        $this->invalidator->markArchivesAsInvalidated([$site->getId()], [$date], 'week', new Segment($segment, [$site->getId()]),
-            false, false, null, $ignorePurgeLogDataDate = true);
 
         Common::destroy($archiveWriter);
     }
@@ -242,7 +195,7 @@ SQL;
     private function getRecordImporters($idSite)
     {
         if (empty($this->recordImporters)) {
-            $recordImporters = StaticContainer::get('GoogleAnalyticsImporter.recordImporters');
+            $recordImporters = Config::getImporters();
 
             $this->recordImporters = [];
             foreach ($recordImporters as $index => $recordImporterClass) {
@@ -250,8 +203,9 @@ SQL;
                     throw new \Exception("The $recordImporterClass record importer is missing the PLUGIN_NAME constant.");
                 }
 
-                $pluginName = $recordImporterClass::PLUGIN_NAME;
-                if ($this->isPluginUnavailable($pluginName)) {
+				$namespace = explode('\\', $recordImporterClass);
+                $pluginName = array_pop($namespace);
+                if ($this->isPluginUnavailable($recordImporterClass::PLUGIN_NAME)) {
                     continue;
                 }
 
@@ -284,31 +238,11 @@ SQL;
             || !Manager::getInstance()->isPluginInFilesystem($pluginName);
     }
 
-   private function isGaAuthroizationError(\Exception $ex)
-    {
-        if ($ex->getCode() != 403) {
-            return false;
-        }
-
-        $messageContent = @json_decode($ex->getMessage(), true);
-        if (isset($messageContent['error']['message'])
-            && stristr($messageContent['error']['message'], 'Request had insufficient authentication scopes')
-        ) {
-            return true;
-        }
-
-        return false;
-    }
-
     private function onError($idSite, \Exception $ex, Date $date = null)
     {
         $this->logger->info("Unexpected Error: {ex}", ['ex' => $ex]);
 
-        if ($this->isGaAuthroizationError($ex)) {
-            $this->importStatus->erroredImport($idSite, Piwik::translate('GoogleAnalyticsImporter_InsufficientScopes'));
-        } else {
-            $dateStr = isset($date) ? $date->toString() : '(unknown)';
-            $this->importStatus->erroredImport($idSite, "Error on day $dateStr, " . $ex->getMessage());
-        }
+		$dateStr = isset($date) ? $date->toString() : '(unknown)';
+		//$this->importStatus->erroredImport($idSite, "Error on day $dateStr, " . $ex->getMessage());
     }
 }

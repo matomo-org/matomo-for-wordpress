@@ -8,9 +8,9 @@ use WpMatomo\WpStatistics\Config;
 
 class HitsImporter extends RecordImporter implements ActionsInterface {
 
-	const PLUGIN_NAME = 'HitsImporter';
+	const PLUGIN_NAME = 'VisitsSummary';
 
-	public function import( Date $date ) {
+	public function importRecords( Date $date ) {
 		$hits = Hits::get( [ 'from' => $date->toString(Config::WP_STATISTICS_DATE_FORMAT), 'to' => $date->addDay(1)->toString(Config::WP_STATISTICS_DATE_FORMAT) ] );
 		if (array_key_exists('no_data', $hits) && ($hits['no_data'] === 1)) {
 			$hits = array();
