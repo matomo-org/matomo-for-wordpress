@@ -8,7 +8,10 @@
  */
 
 namespace WpMatomo\Commands;
+require_once ABSPATH.'/wp-load.php';
+require_once ABSPATH.'/wp-includes/ms-blogs.php';
 
+use Piwik\Access;
 use WP_CLI;
 use WP_CLI_Command;
 use WP_Site;
@@ -18,7 +21,7 @@ use WpMatomo\Uninstaller;
 use WpMatomo\Updater;
 use WpMatomo\WpStatistics\Importer;
 use WpMatomo\WpStatistics\Logger\WpCliLogger;
-
+use WpMatomo\Bootstrap;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -63,7 +66,10 @@ class MatomoCommands extends WP_CLI_Command {
 	 *
 	 * [--site=<siteId>]
 	 * : the site id to import
-	 *
+	 * [--loggin=<logging>]
+	 * : Your log in
+	 * [--password=<password>]
+	 * : Your password
 	 * ## EXAMPLES
 	 *
 	 *     wp matomo update --site 1
@@ -72,26 +78,43 @@ class MatomoCommands extends WP_CLI_Command {
 	 */
 	public function importWpStatistics( $args, $assoc_args ) {
 		$logger = new WpCliLogger();
-		$importer = new Importer($logger);
-		if ( function_exists( 'is_multisite' ) && is_multisite() && function_exists( 'get_sites' ) ) {
-			$id_site = ! empty( $assoc_args['site'] ) ? $assoc_args['site'] : null;
-			foreach ( get_sites() as $site ) {
-				/** @var WP_Site $site */
-				if ( is_null( $id_site ) || ( $site->blog_id === $id_site ) ) {
-					switch_to_blog( $site->blog_id );
-					// this way we make sure all blogs get updated eventually
-					$logger->info( 'Blog ID' . $site->blog_id );
-					$importer->import( $site->blog_id );
-					restore_current_blog();
+		$logger->info( 'Starting wp-statistics import'  );
+		try {
+			Bootstrap::do_bootstrap();
+			Access::getInstance()->setSuperUserAccess(true);
+			$loggin = ! empty( $assoc_args['loggin'] ) ? $assoc_args['loggin'] : null;
+			$password = ! empty( $assoc_args['password'] ) ? $assoc_args['password'] : null;
+			$creds = array();
+			$creds['user_login'] = $loggin;
+			$creds['user_password'] =  $password;
+			$creds['remember'] = true;
+			$user = wp_signon( $creds, false );
+			$importer = new Importer($logger);
+			if ( function_exists( 'is_multisite' ) && is_multisite() && function_exists( 'get_sites' ) ) {
+				$id_site = ! empty( $assoc_args['site'] ) ? $assoc_args['site'] : null;
+				$logger->info( 'Function exists'  );
+				foreach ( get_sites() as $site ) {
+					/** @var WP_Site $site */
+					if ( is_null( $id_site ) || ( $site->blog_id === $id_site ) ) {
+						$logger->info( 'Switch to blog'  );
+						switch_to_blog( $site->blog_id );
+						// this way we make sure all blogs get updated eventually
+						$logger->info( 'Blog ID' . $site->blog_id );
+						$importer->import( $site->blog_id );
+						restore_current_blog();
+					}
 				}
+			} else {
+				$id_site = ! empty( $assoc_args['site'] ) ? $assoc_args['site'] : 1;
+				switch_to_blog( $id_site );
+				$importer->import( $id_site );
 			}
-		} else {
-			$id_site = ! empty( $assoc_args['site'] ) ? $assoc_args['site'] : 1;
-			switch_to_blog( $id_site );
-			$importer->import( $id_site );
+
+			$logger->info( 'Matomo Analytics wp-statistics import finished' );
+		} catch (\Exception $e) {
+			$logger->error($e->getMessage());
 		}
 
-		$logger->success( 'Matomo Analytics wp-statistics import finished' );
 	}
 
 	/**
