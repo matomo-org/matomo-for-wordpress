@@ -5,6 +5,7 @@ namespace WpMatomo\WpStatistics\Importers\Actions;
 use WP_STATISTICS\MetaBox\top_visitors;
 use Piwik\Date;
 use WpMatomo\WpStatistics\Config;
+use WpMatomo\WpStatistics\DataConverters\VisitorsConverter;
 
 class VisitorsImporter extends RecordImporter implements ActionsInterface {
 
@@ -27,6 +28,7 @@ class VisitorsImporter extends RecordImporter implements ActionsInterface {
 			}
 		} while ( $no_data !== true );
 
+		$visits = VisitorsConverter::convert($visits);
 		return $visits;
 	}
 }

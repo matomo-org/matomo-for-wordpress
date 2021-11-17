@@ -59,7 +59,9 @@ class ReferrersImporter extends RecordImporter implements ActionsInterface {
 		$sql = "SELECT SUBSTRING_INDEX(REPLACE( REPLACE( referred, 'http://', '') , 'https://' , '') , '/', 1 ) as `domain`, count(referred) as `number` FROM " . DB::table('visitor') . " WHERE `referred` REGEXP \"^(https?://|www\\.)[\.A-Za-z0-9\-]+\\.[a-zA-Z]{2,4}\" AND referred <> '' AND LENGTH(referred) >=12 " . $where . " AND last_counter = '".$date->toString()."' GROUP BY domain LIMIT " . $limit;
 
 		$referrers = $wpdb->get_results($sql, ARRAY_A);
-		return ReferrersConverter::convert($referrers);
+		$referrers = ReferrersConverter::convert($referrers);
+		$this->insertRecord(Archiver::WEBSITES_RECORD_NAME, $referrers, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable, $this->columnToSortByBeforeTruncation);
+
 
 	}
 }
