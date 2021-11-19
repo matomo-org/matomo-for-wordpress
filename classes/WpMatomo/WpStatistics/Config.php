@@ -11,10 +11,8 @@ class Config {
 			'WpMatomo\WpStatistics\Importers\Actions\HitsImporter',
 			'WpMatomo\WpStatistics\Importers\Actions\PagesImporter',
 			'WpMatomo\WpStatistics\Importers\Actions\ReferrersImporter',
-			'WpMatomo\WpStatistics\Importers\Actions\VisitorsImporter',
 			'WpMatomo\WpStatistics\Importers\Actions\UserCountryImporter',
-			'WpMatomo\WpStatistics\Importers\Actions\BrowsersImporter',
-			'WpMatomo\WpStatistics\Importers\Actions\PlatformImporter',
+			'WpMatomo\WpStatistics\Importers\Actions\DeviceDetectionImporter',
 		];
 	}
 }

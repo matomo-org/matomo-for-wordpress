@@ -2,10 +2,25 @@
 
 namespace WpMatomo\WpStatistics\DataConverters;
 
-class VisitorsConverter implements DataConverterInterface {
+use Piwik\DataTable;
 
-	public static function convert( $wpStatisticData ) {
-		// TODO: Implement convert() method.
-		return $wpStatisticData;
+class VisitorsConverter {
+
+	public static function aggregateByKey( $wpStatisticData, $key ) {
+		$data = [];
+		if ( count( $wpStatisticData ) ) {
+			foreach ( $wpStatisticData as $row ) {
+				if ( ! array_key_exists( $row[$key], $data ) ) {
+					$data[ $row[$key] ] = [ 'label' => $row[$key], 'nb_visits' => 0 ];
+				}
+				$data[ $row[$key] ]['nb_visits'] ++;
+			}
+		}
+		$datatable = new DataTable();
+		foreach ( array_values( $data ) as $row ) {
+			$datatable->addRowFromSimpleArray( $row );
+		}
+
+		return $datatable;
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace WpMatomo\WpStatistics\Logger;
 
-use \WP_CLI;
+use WP_CLI;
 use Psr\Log\LoggerInterface;
 
 class WpCliLogger implements LoggerInterface {

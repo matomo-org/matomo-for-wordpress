@@ -72,6 +72,7 @@ class Importer
 SELECT min(visit_last_action_time) from $prefix_table
 SQL;
 		$row = $wpdb->get_row($sql, ARRAY_N);
+		return Date::factory('2020-11-21');
 		return Date::factory($row[0]);
 	}
 
@@ -88,12 +89,20 @@ SQL;
 		return Date::factory($row[0]);
 	}
 
+	private function adjustMatomoDate($idSite, Date $date)
+	{
+		global $wpdb;
+		$db_settings = new \WpMatomo\Db\Settings();
+		$prefix_table = $db_settings->prefix_table_name( 'site' );
+		$wpdb->update($prefix_table, ["ts_created" => $date->toString('Y-m-d h:i:s')], ['idsite' => $idSite]);
+	}
     public function import($idSite)
     {
         $date = null;
 		$end = $this->endDate;
 		$start = $this->getStarted();
-	    $start = Date::factory('2021-01-01');
+	  //  $start = Date::factory('2021-01-01');
+		$this->adjustMatomoDate($idSite, $start);
 		try {
             $this->noDataMessageRemoved = false;
             $this->queryCount = 0;
@@ -106,7 +115,7 @@ SQL;
             $recordImporters = $this->getRecordImporters($idSite);
 			$site = new Site($idSite);
             for ($date = $start; $date->getTimestamp() < $endPlusOne->getTimestamp(); $date = $date->addDay(1)) {
-                $this->logger->info("Importing data for date {date}...", [
+                $this->logger->notice("Importing data for date {date}...", [
                     'date' => $date->toString(),
                 ]);
 
@@ -117,7 +126,6 @@ SQL;
                     \Piwik\DataTable\Manager::getInstance()->deleteAll();
                 }
             }
-			$this->logger->debug('after');
             unset($recordImporters);
         } catch (MaxEndDateReached $ex) {
 			$this->logger->info('Max end date reached. This occurs in Matomo for Wordpress installs when the importer tries to import days on or after the day Matomo for Wordpress installed.');
@@ -151,7 +159,7 @@ SQL;
                 continue;
             }
 
-            $this->logger->debug("Importing data for the {plugin} plugin.", [
+            $this->logger->info("Importing data for the {plugin} plugin.", [
                 'plugin' => $plugin,
             ]);
 

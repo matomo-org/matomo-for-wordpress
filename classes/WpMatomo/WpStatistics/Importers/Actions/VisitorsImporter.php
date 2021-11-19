@@ -2,6 +2,7 @@
 
 namespace WpMatomo\WpStatistics\Importers\Actions;
 
+use Piwik\Common;
 use WP_STATISTICS\MetaBox\top_visitors;
 use Piwik\Date;
 use WpMatomo\WpStatistics\Config;
@@ -29,6 +30,7 @@ class VisitorsImporter extends RecordImporter implements ActionsInterface {
 		} while ( $no_data !== true );
 
 		$visits = VisitorsConverter::convert($visits);
+		Common::destroy($visits);
 		return $visits;
 	}
 }
