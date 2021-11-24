@@ -18,48 +18,62 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 	const PLUGIN_NAME = 'UserCountry';
 
 	const CITY_PATTERN = '/[a-z ]+,([a-z ]+)/i';
+
+	protected $visitors = null;
+
 	public function importRecords( Date $date ) {
+		$this->visitors = $this->getVisitors($date);
 		$this->importCountries($date);
-		$this->importRegions($date);
-		$this->importCities($date);
+		$this->importRegions();
+		$this->importCities();
 	}
 
 	private function appendCountry($field, & $visitors) {
-		$isoCountries = Country::getList();
 		foreach ($visitors as $id => $visitor) {
-			if (preg_match(self::CITY_PATTERN, $visitor['city'])) {
-				$visitors[$id][$field] .= ', '.$isoCountries[$visitor['country']['location']];
-			}
+			$visitors[$id][$field] .= '|'.strtolower($visitor['country']['location']);
 		}
 	}
-	/**
-	 * @param Date $date
-	 */
-	private function importRegions(Date $date) {
-		$visitors = $this->getVisitors($date);
+
+	private function importRegions() {
+
+		$regionsIsoCodes = include WP_CONTENT_DIR.'/plugins/matomo/app/plugins/GeoIp2/data/isoRegionNames.php';
 		// parse the region from the city field
-		foreach ($visitors as $id => $visitor) {
+		foreach ($this->visitors as $id => $visitor) {
 			$matches = [];
-			$region = 'Unknown';
+			$regionCode = '';
 			if (preg_match(self::CITY_PATTERN, $visitor['city'], $matches)) {
 				$region = trim($matches[1]);
+				$regionCodes = array_flip($regionsIsoCodes[$visitor['country']['location']]);
+				if (array_key_exists($region, $regionCodes)) {
+					$regionCode = $regionCodes[$region];
+				}
 			}
-			$visitors[$id]['region'] = $region;
+			$this->visitors[$id]['region'] = $regionCode;
+			$this->logger->debug($regionCode. ' '.$visitor['country']['location']);
+		}
+		foreach($this->visitors as $visitor) {
+			$this->logger->debug($visitor['region']);
 		}
 		// apply the country name to normalize with the matomo data
-		$this->appendCountry('region', $visitors);
-		$regions = UserRegionConverter::convert($visitors);
+		$this->appendCountry('region', $this->visitors);
+		foreach($this->visitors as $visitor) {
+			$this->logger->debug($visitor['region']);
+		}
+		$regions = UserRegionConverter::convert($this->visitors);
 		$this->logger->debug('Import {nb_regions} regions...', ['nb_regions' => $regions->getRowsCount()]);
 		$this->insertRecord(Archiver::REGION_RECORD_NAME, $regions, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable);
 	}
-	/**
-	 * @param Date $date
-	 */
-	private function importCities(Date $date) {
-		$visitors = $this->getVisitors($date);
+
+	private function importCities() {
 		// apply the country name to normalize with the matomo data
-		$this->appendCountry('city', $visitors);
-		$cities = UserCityConverter::convert($visitors);
+		foreach($this->visitors as $id => $visitor) {
+			$citiesFields = explode(',', $visitor['city']);
+			if ($citiesFields[0] === '(Unknown)') {
+				$citiesFields[0] = '';
+			}
+			$this->visitors[$id]['city'] = $citiesFields[0].'|'.$visitor['region'];
+		}
+		$cities = UserCityConverter::convert($this->visitors);
 		$this->logger->debug('Import {nb_cities} cities...', ['nb_cities' => $cities->getRowsCount()]);
 		$this->insertRecord(Archiver::CITY_RECORD_NAME, $cities, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable);
 	}
