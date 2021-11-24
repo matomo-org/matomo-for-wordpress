@@ -23,7 +23,7 @@ class ReferrersImporter extends RecordImporter implements ActionsInterface {
 		$referrers = $this->getReferrers($date);
 		$referrers = ReferrersConverter::convert($referrers);
 		$this->logger->debug('Import {nb_referrers} referrers...', ['nb_referrers' => $referrers->getRowsCount()]);
-		$this->insertRecord(Archiver::CAMPAIGNS_RECORD_NAME, $referrers, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable);
+		$this->insertRecord(Archiver::WEBSITES_RECORD_NAME, $referrers, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable);
 		Common::destroy($referrers);
 	}
 	/**
