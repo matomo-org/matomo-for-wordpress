@@ -1,17 +1,17 @@
 <?php
-
 namespace WpMatomo\WpStatistics\Importers\Actions;
 
 use Piwik\Common;
 use Piwik\Metrics;
+use Piwik\Plugins\VisitTime\Archiver;
 use WP_STATISTICS\MetaBox\top_visitors;
 use Piwik\Date;
-use WP_STATISTICS\top_visitors_page;
 use WpMatomo\WpStatistics\Config;
+use WpMatomo\WpStatistics\DataConverters\VisitsTimeConverter;
 
-class VisitorsImporter extends RecordImporter implements ActionsInterface {
+class VisitsTimeImporter extends RecordImporter implements ActionsInterface {
 
-	const PLUGIN_NAME = 'VisitsSummary';
+	const PLUGIN_NAME = 'VisitTime';
 
 	public function importRecords( Date $date ) {
 		$limit  = 100;
@@ -30,10 +30,10 @@ class VisitorsImporter extends RecordImporter implements ActionsInterface {
 			}
 		} while ( $no_data !== true );
 
-		$this->insertNumericRecords([Metrics::INDEX_NB_UNIQ_VISITORS => count($visits)]);
-		$this->insertNumericRecords([Metrics::INDEX_NB_VISITS => count($visits)]);
-		$this->logger->debug('Import {nb_visits} visits...', ['nb_visits' => count($visits)]);
-		Common::destroy($visits);
+		$visits = VisitsTimeConverter::convert($visits);
+		$this->insertRecord(Archiver::SERVER_TIME_RECORD_NAME, $visits);
+		Common::destroy( $visits );
+
 		return $visits;
 	}
 }

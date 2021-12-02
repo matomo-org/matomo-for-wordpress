@@ -13,6 +13,8 @@ class Config {
 			'WpMatomo\WpStatistics\Importers\Actions\ReferrersImporter',
 			'WpMatomo\WpStatistics\Importers\Actions\UserCountryImporter',
 			'WpMatomo\WpStatistics\Importers\Actions\DeviceDetectionImporter',
+			'WpMatomo\WpStatistics\Importers\Actions\VisitorsImporter',
+			'WpMatomo\WpStatistics\Importers\Actions\VisitsTimeImporter',
 		];
 	}
 }
