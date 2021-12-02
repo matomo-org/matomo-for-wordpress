@@ -61,8 +61,8 @@ class DeviceDetectionImporter extends RecordImporter implements ActionsInterface
 		$deviceIds = array_keys(Browser::getAvailableBrowsers());
 		$deviceNames = array_values(Browser::getAvailableBrowsers());
 		// we do not have the version with wpstatistics, so set an empty version
-		$deviceIds = array_merge(['IM'], $deviceIds);
-		$deviceNames = array_merge(['Mobile Internet Explorer'], $deviceNames);
+		$deviceIds = array_merge(['','','FM','MS','SB','IM'], $deviceIds);
+		$deviceNames = array_merge(['Microsoft Office','Unknown', 'Firefox Mobile', 'Silk', 'Samsung Internet', 'Mobile Internet Explorer'], $deviceNames);
 		foreach($devices as $id => $device) {
 			if (in_array($device['browser']['name'], $deviceNames)) {
 				$devices[$id]['browser']['name'] = str_replace($deviceNames, $deviceIds, $device['browser']['name']);
