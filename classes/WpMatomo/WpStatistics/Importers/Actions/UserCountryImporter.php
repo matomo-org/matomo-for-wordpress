@@ -45,6 +45,7 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 		$regions = UserRegionConverter::convert($this->visitors);
 		$this->logger->debug('Import {nb_regions} regions...', ['nb_regions' => $regions->getRowsCount()]);
 		$this->insertRecord(Archiver::REGION_RECORD_NAME, $regions, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable);
+		Common::destroy($regions);
 	}
 
 	private function importCities() {
@@ -55,6 +56,7 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 		$cities = UserCityConverter::convert($this->visitors);
 		$this->logger->debug('Import {nb_cities} cities...', ['nb_cities' => $cities->getRowsCount()]);
 		$this->insertRecord(Archiver::CITY_RECORD_NAME, $cities, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable);
+		Common::destroy($cities);
 	}
 
 	/**
