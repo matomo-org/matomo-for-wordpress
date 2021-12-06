@@ -8,45 +8,40 @@
 
 namespace WpMatomo\WpStatistics;
 
-
 use Piwik\DataAccess\ArchiveWriter;
 use Piwik\DataTable;
 use Piwik\Metrics;
 use WpMatomo\WpStatistics\Importers\Actions\RecordImporter;
 
-class RecordInserter
-{
-    /**
-     * @var ArchiveWriter
-     */
-    private $archiveWriter;
+class RecordInserter {
 
-    public function __construct(ArchiveWriter $writer)
-    {
-        $this->archiveWriter = $writer;
-    }
+	/**
+	 * @var ArchiveWriter
+	 */
+	private $archiveWriter;
 
-    public function insertRecord($recordName, DataTable $record, $maximumRowsInDataTable = null,
-                                    $maximumRowsInSubDataTable = null, $columnToSortByBeforeTruncation = null)
-    {
-        $record->setMetadata(RecordImporter::IS_IMPORTED_FROM_WPSTATISTICS_METADATA_NAME, 1);
+	public function __construct( ArchiveWriter $writer ) {
+		$this->archiveWriter = $writer;
+	}
 
-        $blob = $record->getSerialized($maximumRowsInDataTable, $maximumRowsInSubDataTable, $columnToSortByBeforeTruncation);
-        $this->insertBlobRecord($recordName, $blob);
-    }
+	public function insertRecord( $recordName, DataTable $record, $maximumRowsInDataTable = null,
+									$maximumRowsInSubDataTable = null, $columnToSortByBeforeTruncation = null ) {
+		$record->setMetadata( RecordImporter::IS_IMPORTED_FROM_WPSTATISTICS_METADATA_NAME, 1 );
 
-    public function insertBlobRecord($name, $values)
-    {
-        $this->archiveWriter->insertBlobRecord($name, $values);
-    }
+		$blob = $record->getSerialized( $maximumRowsInDataTable, $maximumRowsInSubDataTable, $columnToSortByBeforeTruncation );
+		$this->insertBlobRecord( $recordName, $blob );
+	}
 
-    public function insertNumericRecords(array $values)
-    {
-        foreach ($values as $name => $value) {
-            if (is_numeric($name)) {
-                $name = Metrics::getReadableColumnName($name);
-            }
-            $this->archiveWriter->insertRecord($name, $value);
-        }
-    }
+	public function insertBlobRecord( $name, $values ) {
+		$this->archiveWriter->insertBlobRecord( $name, $values );
+	}
+
+	public function insertNumericRecords( array $values ) {
+		foreach ( $values as $name => $value ) {
+			if ( is_numeric( $name ) ) {
+				$name = Metrics::getReadableColumnName( $name );
+			}
+			$this->archiveWriter->insertRecord( $name, $value );
+		}
+	}
 }

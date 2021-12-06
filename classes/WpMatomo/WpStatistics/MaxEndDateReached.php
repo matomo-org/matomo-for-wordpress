@@ -8,11 +8,9 @@
 
 namespace WpMatomo\WpStatistics;
 
+class MaxEndDateReached extends \RuntimeException {
 
-class MaxEndDateReached extends \RuntimeException
-{
-    public function __construct()
-    {
-        parent::__construct('Max end date reached.');
-    }
+	public function __construct() {
+		parent::__construct( 'Max end date reached.' );
+	}
 }

@@ -9,5 +9,5 @@ interface DataConverterInterface {
 	 *
 	 * @return DataTable
 	 */
-	public static function convert($wpStatisticData);
+	public static function convert( $wpStatisticData);
 }

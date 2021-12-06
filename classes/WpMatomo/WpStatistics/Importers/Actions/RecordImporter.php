@@ -12,7 +12,7 @@ use Piwik\Date;
 class RecordImporter {
 
 	const IS_IMPORTED_FROM_WPSTATISTICS_METADATA_NAME = 'is_imported_from_wpstatistics';
-	protected $logger = null;
+	protected $logger                                 = null;
 
 	protected $maximumRowsInDataTableLevelZero;
 
@@ -22,10 +22,10 @@ class RecordImporter {
 		$this->logger = $logger;
 		// Reading pre 2.0 config file settings
 		$this->maximumRowsInDataTableLevelZero = @Config::getInstance()->General['datatable_archiving_maximum_rows_referers'];
-		$this->maximumRowsInSubDataTable = @Config::getInstance()->General['datatable_archiving_maximum_rows_subtable_referers'];
-		if (empty($this->maximumRowsInDataTableLevelZero)) {
+		$this->maximumRowsInSubDataTable       = @Config::getInstance()->General['datatable_archiving_maximum_rows_subtable_referers'];
+		if ( empty( $this->maximumRowsInDataTableLevelZero ) ) {
 			$this->maximumRowsInDataTableLevelZero = Config::getInstance()->General['datatable_archiving_maximum_rows_referrers'];
-			$this->maximumRowsInSubDataTable = Config::getInstance()->General['datatable_archiving_maximum_rows_subtable_referrers'];
+			$this->maximumRowsInSubDataTable       = Config::getInstance()->General['datatable_archiving_maximum_rows_subtable_referrers'];
 		}
 	}
 
@@ -53,15 +53,15 @@ class RecordImporter {
 	}
 
 	protected function getVisitors( Date $date ) {
-		$page  = 1;
-		$limit = 1000;
+		$page          = 1;
+		$limit         = 1000;
 		$visitorsFound = [];
 		do {
 			$visitors = top_visitors::get(
 				[
 					'day'      => $date->toString(),
 					'per_page' => $limit,
-					'paged'    => $page
+					'paged'    => $page,
 				]
 			);
 			$page ++;
