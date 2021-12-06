@@ -8,7 +8,6 @@ class Config {
 
 	public static function getImporters() {
 		return [
-			'WpMatomo\WpStatistics\Importers\Actions\HitsImporter',
 			'WpMatomo\WpStatistics\Importers\Actions\PagesImporter',
 			'WpMatomo\WpStatistics\Importers\Actions\ReferrersImporter',
 			'WpMatomo\WpStatistics\Importers\Actions\UserCountryImporter',
