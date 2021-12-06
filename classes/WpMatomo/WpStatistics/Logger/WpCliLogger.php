@@ -5,6 +5,9 @@ namespace WpMatomo\WpStatistics\Logger;
 use WP_CLI;
 use Psr\Log\LoggerInterface;
 
+/**
+ * WP_CLi logger
+ */
 class WpCliLogger implements LoggerInterface {
 
 	public function debug( $message, array $context = array() ) {
