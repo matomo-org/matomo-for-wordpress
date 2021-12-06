@@ -20,7 +20,7 @@ use Piwik\Segment;
 use Piwik\Site;
 use Psr\Log\LoggerInterface;
 use Piwik\Archive\ArchiveInvalidator;
-
+use WpMatomo\WpStatistics\Exceptions\MaxEndDateReached;
 class Importer {
 
 	const IS_IMPORTED_FROM_GA_NUMERIC = 'GoogleAnalyticsImporter_isImportedFromGa';
