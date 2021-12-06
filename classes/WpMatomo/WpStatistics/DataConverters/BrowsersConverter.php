@@ -6,7 +6,7 @@ use Piwik\DataTable;
 
 class BrowsersConverter implements DataConverterInterface {
 
-	public static function convert( $wpStatisticData ) {
+	public static function convert( array $wpStatisticData ) {
 		$browsers = new DataTable();
 		$data     = [];
 		foreach ( $wpStatisticData as $visit ) {

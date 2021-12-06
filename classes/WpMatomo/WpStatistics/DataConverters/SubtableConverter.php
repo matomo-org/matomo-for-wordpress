@@ -6,7 +6,7 @@ use Piwik\DataTable;
 
 class SubtableConverter {
 
-	public static function aggregateByKey( $wpStatisticData, $firstKey, $secondKey ) {
+	public static function aggregateByKey( array $wpStatisticData, $firstKey, $secondKey ) {
 		$data = [];
 		if ( count( $wpStatisticData ) ) {
 			foreach ( $wpStatisticData as $row ) {

@@ -5,7 +5,7 @@ use Piwik\DataTable;
 
 class VisitsTimeConverter extends VisitorsConverter implements DataConverterInterface {
 
-	public static function convert( $wpStatisticData ) {
+	public static function convert( array $wpStatisticData ) {
 		$datatable = new DataTable();
 		$datatable->addRowFromSimpleArray(
 			[

@@ -6,7 +6,7 @@ use Piwik\DataTable;
 
 class VisitorsConverter {
 
-	public static function aggregateByKey( $wpStatisticData, $key ) {
+	public static function aggregateByKey( array $wpStatisticData, $key ) {
 		$data = [];
 		if ( count( $wpStatisticData ) ) {
 			foreach ( $wpStatisticData as $row ) {

@@ -5,9 +5,9 @@ use Piwik\DataTable;
 
 interface DataConverterInterface {
 	/**
-	 * @param $wpStatisticData
+	 * @param [] $wpStatisticData
 	 *
 	 * @return DataTable
 	 */
-	public static function convert( $wpStatisticData);
+	public static function convert( array $wpStatisticData);
 }
