@@ -52,35 +52,6 @@ class RecordImporter {
 		$this->recordInserter->insertNumericRecords( $values );
 	}
 
-	protected function addRowToSubtable( DataTable\Row $topLevelRow, DataTable\Row $rowToAdd, $newLabel ) {
-		$subtable = $topLevelRow->getSubtable();
-		if ( ! $subtable ) {
-			$subtable = new DataTable();
-			$topLevelRow->setSubtable( $subtable );
-		}
-
-		return $this->addRowToTable( $subtable, $rowToAdd, $newLabel );
-	}
-
-	protected function addRowToTable( DataTable $record, DataTable\Row $row, $newLabel ) {
-		if ( $newLabel === false || $newLabel === null ) {
-			$recordImporterClass = get_class( $this );
-			throw new \Exception( "Unexpected error: adding row to table with empty label in $recordImporterClass: " . var_export( $newLabel, true ) );
-		}
-
-		$foundRow = $record->getRowFromLabel( $newLabel );
-		if ( empty( $foundRow ) ) {
-			$foundRow = clone $row;
-			$foundRow->deleteMetadata();
-			$foundRow->setColumn( 'label', $newLabel );
-			$record->addRow( $foundRow );
-		} else {
-			$foundRow->sumRow( $row, $copyMetadata = false );
-		}
-
-		return $foundRow;
-	}
-
 	protected function getVisitors( Date $date ) {
 		$page  = 1;
 		$limit = 1000;

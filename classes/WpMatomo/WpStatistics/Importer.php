@@ -15,11 +15,11 @@ use Piwik\DataAccess\ArchiveWriter;
 use Piwik\Date;
 use Piwik\Option;
 use Piwik\Period\Factory;
-use Piwik\Piwik;
 use Piwik\Plugin\Manager;
 use Piwik\Segment;
 use Piwik\Site;
 use Psr\Log\LoggerInterface;
+use Piwik\Archive\ArchiveInvalidator;
 
 class Importer
 {
@@ -178,6 +178,11 @@ SQL;
 
         $archiveWriter->insertRecord(self::IS_IMPORTED_FROM_GA_NUMERIC, 1);
         $archiveWriter->finalizeArchive();
+
+
+	    $invalidator = StaticContainer::get(ArchiveInvalidator::class);
+	    $invalidator->markArchivesAsInvalidated([$site->getId()], [$date], 'week', null,
+		    false, false, null, $ignorePurgeLogDataDate = true);
 
         Common::destroy($archiveWriter);
     }
