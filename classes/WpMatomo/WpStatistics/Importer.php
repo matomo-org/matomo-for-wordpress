@@ -20,7 +20,7 @@ use Piwik\Segment;
 use Piwik\Site;
 use Psr\Log\LoggerInterface;
 use Piwik\Archive\ArchiveInvalidator;
-use WpMatomo\WpStatistics\Exceptions\MaxEndDateReached;
+use WpMatomo\WpStatistics\Exceptions\MaxEndDateReachedException;
 class Importer {
 
 	const IS_IMPORTED_FROM_GA_NUMERIC = 'GoogleAnalyticsImporter_isImportedFromGa';
@@ -143,7 +143,7 @@ SQL;
 				}
 			}
 			unset( $recordImporters );
-		} catch ( MaxEndDateReached $ex ) {
+		} catch ( MaxEndDateReachedException $ex ) {
 			$this->logger->info( 'Max end date reached. This occurs in Matomo for WordPress installs when the importer tries to import days on or after the day Matomo for WordPress installed.' );
 			return true;
 		} catch ( \Exception $ex ) {
@@ -162,7 +162,7 @@ SQL;
 	 */
 	public function importDay( Site $site, Date $date, $recordImporters, $plugin = null ) {
 		if ( $this->endDate && $this->endDate->isEarlier( $date ) ) {
-			throw new MaxEndDateReached();
+			throw new MaxEndDateReachedException();
 		}
 		$archiveWriter = $this->makeArchiveWriter( $site, $date, $plugin );
 		$archiveWriter->initNewArchive();
