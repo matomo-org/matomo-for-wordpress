@@ -32,9 +32,9 @@ class VisitorsImporter extends RecordImporter implements ActionsInterface {
 			}
 		} while ( $no_data !== true );
 
+		$this->logger->debug( 'Import {nb_visits} visits...', [ 'nb_visits' => count( $visits ) ] );
 		$this->insertNumericRecords( [ Metrics::INDEX_NB_UNIQ_VISITORS => count( $visits ) ] );
 		$this->insertNumericRecords( [ Metrics::INDEX_NB_VISITS => count( $visits ) ] );
-		$this->logger->debug( 'Import {nb_visits} visits...', [ 'nb_visits' => count( $visits ) ] );
 		Common::destroy( $visits );
 		return $visits;
 	}

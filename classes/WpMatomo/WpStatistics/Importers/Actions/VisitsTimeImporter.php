@@ -31,9 +31,11 @@ class VisitsTimeImporter extends RecordImporter implements ActionsInterface {
 				$visits = array_merge( $visits, $visits_found );
 			}
 		} while ( $no_data !== true );
-
-		$visits = VisitsTimeConverter::convert( $visits );
-		$this->insertRecord( Archiver::SERVER_TIME_RECORD_NAME, $visits );
+		$this->logger->debug( 'Import {nb_visits} visits...', [ 'nb_visits' => count( $visits ) ] );
+		if ($visits) {
+			$visits = VisitsTimeConverter::convert( $visits );
+			$this->insertRecord( Archiver::SERVER_TIME_RECORD_NAME, $visits );
+		}
 		Common::destroy( $visits );
 
 		return $visits;

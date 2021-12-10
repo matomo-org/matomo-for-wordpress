@@ -10,6 +10,9 @@ use WpMatomo\WpStatistics\DataConverters\UserRegionConverter;
 use WpMatomo\WpStatistics\Geoip2;
 use Piwik\Plugins\UserCountry\Archiver;
 
+/**
+ * reprocess geo localisation data as we can use a different (more complete) database
+ */
 class UserCountryImporter extends RecordImporter implements ActionsInterface {
 
 	const PLUGIN_NAME = 'UserCountry';
@@ -28,7 +31,14 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 		$this->importCities();
 	}
 
-	private function getRegion( $visitor ) {
+	/**
+	 * Extract the region from the wpstatistics label
+	 *
+	 * @param string $visitor the wpstatistics visitor label
+	 *
+	 * @return string
+	 */
+	private function getRegion( array $visitor ) {
 		$matches = [];
 		$region  = '';
 		if ( preg_match( self::CITY_PATTERN, $visitor['city'], $matches ) ) {

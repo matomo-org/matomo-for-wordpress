@@ -6,9 +6,7 @@ use DeviceDetector\Parser\Client\Browser;
 use DeviceDetector\Parser\OperatingSystem;
 use Piwik\Common;
 use Piwik\Plugins\DevicesDetection\Archiver;
-use WP_STATISTICS\MetaBox\browsers;
 use Piwik\Date;
-use WpMatomo\WpStatistics\Config;
 use WpMatomo\WpStatistics\DataConverters\BrowsersConverter;
 use WpMatomo\WpStatistics\DataConverters\PlatformConverter;
 
@@ -59,6 +57,7 @@ class DeviceDetectionImporter extends RecordImporter implements ActionsInterface
 			}
 		}
 	}
+
 	private function convertBrowsersInMatomo( &$devices ) {
 		// convert codification
 		$deviceIds   = array_keys( Browser::getAvailableBrowsers() );

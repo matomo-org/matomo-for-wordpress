@@ -63,6 +63,12 @@ class Importer {
 		$this->isMainImport = $isMainImport;
 	}
 
+	/**
+	 * Returns the first date in the matomo records
+	 *
+	 * @return Date
+	 * @throws \Exception
+	 */
 	protected function getEndingDate() {
 		global $wpdb;
 		$db_settings  = new \WpMatomo\Db\Settings();
@@ -71,11 +77,12 @@ class Importer {
 SELECT min(visit_last_action_time) from $prefix_table
 SQL;
 		$row          = $wpdb->get_row( $sql, ARRAY_N );
-		return Date::factory( '2020-11-21' );
 		return Date::factory( $row[0] );
 	}
 
 	/**
+	 * Returns the first date in the wpStatistics data
+	 *
 	 * @return Piwik\Date
 	 */
 	protected function getStarted() {
@@ -88,6 +95,15 @@ SQL;
 		return Date::factory( $row[0] );
 	}
 
+	/**
+	 * Update the first date in the configuration.
+	 * Otherwise records are here but the date picker does not allow to select these dates
+	 *
+	 * @param int $idSite
+	 * @param Date $date
+	 *
+	 * @return void
+	 */
 	private function adjustMatomoDate( $idSite, Date $date ) {
 		global $wpdb;
 		$db_settings  = new \WpMatomo\Db\Settings();
@@ -98,7 +114,7 @@ SQL;
 		$date  = null;
 		$end   = $this->endDate;
 		$start = $this->getStarted();
-		// $start = Date::factory('2021-01-01');
+
 		$this->adjustMatomoDate( $idSite, $start );
 		try {
 			$this->noDataMessageRemoved = false;
@@ -145,8 +161,7 @@ SQL;
 	 * @var RecordImporter[] $recordImporters
 	 */
 	public function importDay( Site $site, Date $date, $recordImporters, $plugin = null ) {
-		$maxEndDate = $this->endDate;
-		if ( $maxEndDate && $maxEndDate->isEarlier( $date ) ) {
+		if ( $this->endDate && $this->endDate->isEarlier( $date ) ) {
 			throw new MaxEndDateReached();
 		}
 		$archiveWriter = $this->makeArchiveWriter( $site, $date, $plugin );
@@ -219,7 +234,7 @@ SQL;
 			$recordImporters = Config::getImporters();
 
 			$this->recordImporters = [];
-			foreach ( $recordImporters as $index => $recordImporterClass ) {
+			foreach ( $recordImporters as $recordImporterClass ) {
 				if ( ! defined( $recordImporterClass . '::PLUGIN_NAME' ) ) {
 					throw new \Exception( "The $recordImporterClass record importer is missing the PLUGIN_NAME constant." );
 				}
@@ -239,10 +254,6 @@ SQL;
 			$instances[ $pluginName ] = new $className( $this->logger );
 		}
 		return $instances;
-	}
-
-	public function getQueryCount() {
-		return $this->queryCount;
 	}
 
 	private function removeNoDataMessage( $idSite ) {

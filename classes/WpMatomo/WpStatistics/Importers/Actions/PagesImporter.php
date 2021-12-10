@@ -2,6 +2,7 @@
 
 namespace WpMatomo\WpStatistics\Importers\Actions;
 
+use Piwik\Common;
 use Piwik\Plugins\Actions\Archiver;
 use WP_STATISTICS\MetaBox\pages;
 use Piwik\Date;
@@ -42,9 +43,11 @@ class PagesImporter extends RecordImporter implements ActionsInterface {
 		$pagesUrl = PagesUrlConverter::convert( $pages );
 		$this->logger->debug( 'Import {nb_pages} pages...', [ 'nb_pages' => $pagesUrl->getRowsCount() ] );
 		$this->insertRecord( Archiver::PAGE_URLS_RECORD_NAME, $pagesUrl, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable );
+		Common::destroy( $pagesUrl );
 
 		$pagesTitle = PagesTitleConverter::convert( $pages );
 		$this->logger->debug( 'Import {nb_pages} page titles...', [ 'nb_pages' => $pagesTitle->getRowsCount() ] );
 		$this->insertRecord( Archiver::PAGE_TITLES_RECORD_NAME, $pagesTitle, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable );
+		Common::destroy( $pagesTitle );
 	}
 }
