@@ -20,6 +20,11 @@ class ReferrersImporter extends RecordImporter implements ActionsInterface {
 		$this->importSearchEngines( $date );
 	}
 
+	/**
+	 * @param Date $day
+	 *
+	 * @return DataTable[]
+	 */
 	private function getKeywordsAndSearchEngineRecords( Date $day ) {
 		global $wpdb;
 		$sql              = 'select engine, words, count(visitor) AS nb from ' . DB::table( 'search' ) . " where last_counter = '" . $day->toString() . "' group by engine, words order by engine, words;";
@@ -56,12 +61,11 @@ class ReferrersImporter extends RecordImporter implements ActionsInterface {
 	}
 	private function importSearchEngines( Date $date ) {
 		list($keywordBySearchEngine, $searchEngineByKeyword) = $this->getKeywordsAndSearchEngineRecords( $date );
-
-		$this->logger->debug( 'Import {nb_se} search engines...', [ 'nb_se' => $searchEngineByKeyword->getRowsCount() ] );
+		$this->logger->debug( 'Import {nb_sk} search keywords...', [ 'nb_sk' => $keywordBySearchEngine->getRowsCount() ] );
 		$this->insertRecord( Archiver::KEYWORDS_RECORD_NAME, $keywordBySearchEngine, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable );
 		Common::destroy( $keywordBySearchEngine );
 
-		$this->logger->debug( 'Import {nb_k} search keywords...', [ 'nb_k' => $keywordBySearchEngine->getRowsCount() ] );
+		$this->logger->debug( 'Import {nb_se} search engines...', [ 'nb_se' => $searchEngineByKeyword->getRowsCount() ] );
 		$this->insertRecord( Archiver::SEARCH_ENGINES_RECORD_NAME, $searchEngineByKeyword, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable );
 		Common::destroy( $searchEngineByKeyword );
 	}
