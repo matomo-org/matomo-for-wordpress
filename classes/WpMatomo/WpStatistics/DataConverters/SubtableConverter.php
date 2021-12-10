@@ -56,8 +56,6 @@ class SubtableConverter {
 			$foundRow = clone $row;
 			$foundRow->deleteMetadata();
 			$foundRow->setColumn( 'label', $newLabel );
-			// $foundRow->setColumn('nb_visits', $row->getColumn('nb_visits'));
-
 			$record->addRow( $foundRow );
 		} else {
 			$foundRow->sumRow( $row, $copyMetadata = false );
