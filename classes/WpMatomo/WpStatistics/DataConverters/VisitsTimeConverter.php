@@ -9,7 +9,7 @@ class VisitsTimeConverter extends VisitorsConverter implements DataConverterInte
 		$datatable = new DataTable();
 		$datatable->addRowFromSimpleArray(
 			[
-				'label'     => $wpStatisticData['date'],
+				'label'     => $wpStatisticData[0]['date'],
 				'nb_visits' => count( $wpStatisticData ),
 			]
 		);
