@@ -2,36 +2,41 @@
 
 namespace Davaxi\Sparkline;
 
+use InvalidArgumentException;
+
 /**
  * Trait StyleTrait.
  */
 trait StyleTrait
 {
     /**
-     * @var array (rgb)
-     *            Default: #ffffff
+     * RGB
+     * Default: #ffffff
+     * @var int[]
      */
     protected $backgroundColor = [255, 255, 255];
 
     /**
-     * @var array (rgb)
-     *            Default: #1388db
+     * RGB
+     * Default: #1388db
+     * @var int[][]
      */
     protected $lineColor = [
         [19, 136, 219],
     ];
 
     /**
-     * @var array (rgb)
-     *            Default: #e6f2fa
+     * RGB
+     * Default: #e6f2fa
+     * @var int[][]
      */
     protected $fillColor = [
         [230, 242, 250]
     ];
 
     /**
-     * @var float (px)
-     *            Default: 1.75px
+     * Default: 1.75px
+     * @var float
      */
     protected $lineThickness = 1.75;
 
@@ -46,7 +51,7 @@ trait StyleTrait
     /**
      * @param string $color (hexadecimal)
      */
-    public function setBackgroundColorHex($color)
+    public function setBackgroundColorHex(string $color)
     {
         list($red, $green, $blue) = $this->colorHexToRGB($color);
         $this->setBackgroundColorRGB($red, $green, $blue);
@@ -57,7 +62,7 @@ trait StyleTrait
      * @param int $green
      * @param int $blue
      */
-    public function setBackgroundColorRGB($red, $green, $blue)
+    public function setBackgroundColorRGB(int $red, int $green, int $blue)
     {
         $this->backgroundColor = [$red, $green, $blue];
     }
@@ -66,7 +71,7 @@ trait StyleTrait
      * @param string $color (hexadecimal)
      * @param int $seriesIndex
      */
-    public function setLineColorHex($color, $seriesIndex = 0)
+    public function setLineColorHex(string $color, int $seriesIndex = 0)
     {
         list($red, $green, $blue) = $this->colorHexToRGB($color);
         $this->setLineColorRGB($red, $green, $blue, $seriesIndex);
@@ -78,7 +83,7 @@ trait StyleTrait
      * @param int $blue
      * @param int $seriesIndex
      */
-    public function setLineColorRGB($red, $green, $blue, $seriesIndex = 0)
+    public function setLineColorRGB(int $red, int $green, int $blue, int $seriesIndex = 0)
     {
         $this->lineColor[$seriesIndex] = [$red, $green, $blue];
     }
@@ -86,18 +91,18 @@ trait StyleTrait
     /**
      * @param float $thickness (in px)
      */
-    public function setLineThickness($thickness)
+    public function setLineThickness(float $thickness)
     {
-        $this->lineThickness = (float)$thickness;
+        $this->lineThickness = $thickness;
     }
 
     /**
      * @param int $seriesIndex
      * @return array
      */
-    public function getLineColor($seriesIndex = 0)
+    public function getLineColor(int $seriesIndex = 0): array
     {
-        return isset($this->lineColor[$seriesIndex]) ? $this->lineColor[$seriesIndex] : $this->lineColor[0];
+        return $this->lineColor[$seriesIndex] ?? $this->lineColor[0];
     }
 
     /**
@@ -112,7 +117,7 @@ trait StyleTrait
      * @param string $color (hexadecimal)
      * @param int $seriesIndex
      */
-    public function setFillColorHex($color, $seriesIndex = 0)
+    public function setFillColorHex(string $color, int $seriesIndex = 0)
     {
         list($red, $green, $blue) = $this->colorHexToRGB($color);
         $this->setFillColorRGB($red, $green, $blue, $seriesIndex);
@@ -124,7 +129,7 @@ trait StyleTrait
      * @param int $blue
      * @param int $seriesIndex
      */
-    public function setFillColorRGB($red, $green, $blue, $seriesIndex = 0)
+    public function setFillColorRGB(int $red, int $green, int $blue, int $seriesIndex = 0)
     {
         $this->fillColor[$seriesIndex] = [$red, $green, $blue];
     }
@@ -133,13 +138,13 @@ trait StyleTrait
      * @param int $seriesIndex
      * @return array
      */
-    public function getFillColor($seriesIndex = 0)
+    public function getFillColor(int $seriesIndex = 0): array
     {
         if (empty($this->fillColor)) {
             return [];
         }
 
-        return isset($this->fillColor[$seriesIndex]) ? $this->fillColor[$seriesIndex] : $this->fillColor[0];
+        return $this->fillColor[$seriesIndex] ?? $this->fillColor[0];
     }
 
     /**
@@ -148,10 +153,10 @@ trait StyleTrait
      *
      * @return array (r,g,b)
      */
-    protected function colorHexToRGB($color)
+    protected function colorHexToRGB(string $color): array
     {
         if (!$this->checkColorHex($color)) {
-            throw new \InvalidArgumentException('Invalid hexadecimal value ' . $color);
+            throw new InvalidArgumentException('Invalid hexadecimal value ' . $color);
         }
 
         $color = mb_strtolower($color);
@@ -179,7 +184,7 @@ trait StyleTrait
      *
      * @return array
      */
-    protected function paddingStringToArray($padding)
+    protected function paddingStringToArray(string $padding): array
     {
         $parts = explode(' ', $padding);
         switch (count($parts)) {
@@ -187,7 +192,6 @@ trait StyleTrait
                 $value = (float)$parts[0];
 
                 return [$value, $value, $value, $value];
-                break;
             case static::CSS_PADDING_TWO:
                 $verticalValue = (float)$parts[0];
                 $horizontalValue = (float)$parts[1];
@@ -200,7 +204,7 @@ trait StyleTrait
             case static::CSS_PADDING:
                 return $parts;
             default:
-                throw new \InvalidArgumentException('Invalid padding format');
+                throw new InvalidArgumentException('Invalid padding format');
         }
     }
 
@@ -209,7 +213,7 @@ trait StyleTrait
      *
      * @return int
      */
-    protected static function checkColorHex($color)
+    protected static function checkColorHex($color): int
     {
         return preg_match('/^#?+[0-9a-f]{3}(?:[0-9a-f]{3})?$/i', $color);
     }

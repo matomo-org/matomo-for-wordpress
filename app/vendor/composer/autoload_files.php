@@ -10,8 +10,10 @@ return array(
     '538ca81a9a966a6716601ecf48f4eaef' => $vendorDir . '/opis/closure/functions.php',
     '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
     '320cde22f66dd4f5d3fd621d3e88b98f' => $vendorDir . '/symfony/polyfill-ctype/bootstrap.php',
+    '8ac259e46781d60665439a97846a4a66' => $vendorDir . '/lox/xhprof/xhprof_lib/utils/xhprof_lib.php',
+    'e30869f87cf76d235b75bb956c7ba9ed' => $vendorDir . '/lox/xhprof/xhprof_lib/utils/xhprof_runs.php',
     'b33e3d135e5d9e47d845c576147bda89' => $vendorDir . '/php-di/php-di/src/functions.php',
+    '7bb4f001eb5212bde073bf47a4bbedad' => $vendorDir . '/szymach/c-pchart/constants.php',
     'def43f6c87e4f8dfd0c9e1b1bab14fe8' => $vendorDir . '/symfony/polyfill-iconv/bootstrap.php',
-    '6dcc7fc6910472564e7b11f0b5d852b5' => $vendorDir . '/szymach/c-pchart/src/Resources/data/constants.php',
     'c03755bd507301ecda84f959218be302' => $baseDir . '/LegacyAutoloader.php',
 );
