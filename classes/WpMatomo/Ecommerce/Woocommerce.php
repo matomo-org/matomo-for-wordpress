@@ -15,9 +15,13 @@ use WC_Product;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
+if ( ! defined( 'MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS' ) ) {
+	// phpcs:ignore PHPCompatibility.InitialValue.NewConstantArraysUsingDefine.Found
+	define( 'MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS', [ 'cancelled', 'failed', 'refunded' ] );
+}
 
 class Woocommerce extends Base {
-	private $order_status_ignore = [ 'cancelled', 'failed', 'refunded' ];
+	private $order_status_ignore = MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS;
 
 	public function register_hooks() {
 		if ( is_admin() ) {
