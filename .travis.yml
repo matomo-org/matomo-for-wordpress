@@ -40,6 +40,8 @@ matrix:
       env: WP_TRAVISCI=phpcs
 
 before_install:
+  - wget --no-check-certificate https://curl.se/ca/cacert.pem -O /tmp/cacert.pem
+  - echo "openssl.cafile=/tmp/cacert.pem" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then export PHPCS_DIR=/tmp/phpcs; fi
   - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then export SNIFFS_DIR=/tmp/sniffs; fi
   # Install PHP_CodeSniffer.

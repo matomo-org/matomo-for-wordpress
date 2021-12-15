@@ -136,8 +136,11 @@ class Paths {
 		/*
 		 * don't use DOCUMENT_ROOT as it does not work for cli access
 		 * don't use ABSPATH as it does not match when running unit test cases
+		 *
+		 * hide php errors for open_basedir restrictions
 		 */
-		$root = realpath( plugin_dir_path( $matomo_file ) . '/../../../' ) . '/';
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		$root = @realpath( plugin_dir_path( $matomo_file ) . '/../../../' ) . '/';
 		foreach ( $target_dir_parts as $index => $part ) {
 			$path .= $part . '/';
 
@@ -196,6 +199,7 @@ class Paths {
 			$file_to_look_for = MATOMO_UPLOAD_DIR . '/' . ltrim( $file_to_look_for, '/' );
 		}
 
+		$path_upload_dir = rtrim( $path_upload_dir, '/' ) . '/';
 		if ( ! empty( $file_to_look_for )
 			 && ! file_exists( $path_upload_dir . $file_to_look_for ) ) {
 			// seems we haven't auto detected the right one yet... (or it is not yet installed)

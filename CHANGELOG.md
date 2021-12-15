@@ -1,5 +1,12 @@
 == Changelog ==
 
+= 4.5.0 =
+* Update Matomo core to 4.5.0
+* Validate the input of the IP addresses and the user agents in exclusion settings
+* Upgraded WooCommerce tested up to version
+* Fix cannot exclude super admin accounts in multisite mode
+* JS tracker via REST API doesn't work when using URL parameter for route
+
 = 4.4.2 =
 * Allow users to add opt out using a Gutenberg block
 * Add a visual graph to the summary page
