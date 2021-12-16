@@ -49,8 +49,8 @@ before_install:
   - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then $PHPCS_DIR/bin/phpcs --config-set installed_paths $SNIFFS_DIR; fi
   # After CodeSniffer install you should refresh your path.
   - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then phpenv rehash; fi
-
-  -  composer global require "yoast/phpunit-polyfills"
+  # install dependancies
+  - composer global require "yoast/phpunit-polyfills"
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
