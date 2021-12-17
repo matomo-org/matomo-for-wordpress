@@ -52,7 +52,7 @@ before_install:
   # install dependencies
   - composer global require "yoast/phpunit-polyfills"
   # see https://make.wordpress.org/core/2021/09/27/changes-to-the-wordpress-core-php-test-suite/#impact-plugin-theme-integration-tests
-  - composer global require "phpunit/phpunit":"^5.7.21 || ^6.5 || ^7.5" --with-all-dependencies
+  - composer global require "phpunit/phpunit":"^5.7.21 || ^6.5 || ^7.5"
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
@@ -66,7 +66,7 @@ before_script:
     if [[ ! -z "$WP_VERSION" ]] ; then
       bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
       #composer global require "phpunit/phpunit=4.8.*|5.7.*"
-      composer global require "phpunit/phpunit":"^5.7.21 || ^6.5 || ^7.5" --with-all-dependencies
+      composer global require "phpunit/phpunit":"^5.7.21 || ^6.5 || ^7.5"
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
