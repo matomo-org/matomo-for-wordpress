@@ -65,6 +65,7 @@ before_script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
+      echo "phpcs"
       #composer global require "dealerdirect/phpcodesniffer-composer-installer"
       #composer global require "phpcompatibility/phpcompatibility-wp"
       #composer global require "squizlabs/php_codesniffer"
