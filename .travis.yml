@@ -61,15 +61,12 @@ before_script:
   - |
     if [[ ! -z "$WP_VERSION" ]] ; then
       bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
-      #composer global require "phpunit/phpunit=4.8.*|5.7.*"
+      composer install
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
       echo "phpcs"
-      #composer global require "dealerdirect/phpcodesniffer-composer-installer"
-      #composer global require "phpcompatibility/phpcompatibility-wp"
-      #composer global require "squizlabs/php_codesniffer"
-      #composer global require "wp-coding-standards/wpcs"
+      composer install
     fi
 
 

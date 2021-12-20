@@ -9,5 +9,10 @@
     "wp-coding-standards/wpcs": "^2.3.0",
     "friendsofphp/php-cs-fixer": "^3.0",
     "yoast/phpunit-polyfills": "1.*"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }
