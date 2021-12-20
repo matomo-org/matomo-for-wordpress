@@ -9,8 +9,6 @@ install:
   - mv matomo-for-wordpress matomo
   - cd matomo
   - MATOMO_PLUGIN_DIR_PATH=`pwd`
-  - if [[ $TRAVIS_PHP_VERSION > '7.2' ]]; then wget --no-check-certificate -O ~/.phpenv/versions/$(phpenv version-name)/bin/phpunit https://phar.phpunit.de/phpunit-7.phar; fi
-  - if [[ $TRAVIS_PHP_VERSION > '7.2' ]]; then chmod 755 ~/.phpenv/versions/$(phpenv version-name)/bin/phpunit; fi
 
 notifications:
   email:
