@@ -1,5 +1,8 @@
 sudo: false
-dist: trusty
+dist: bionic
+
+services:
+  - mysql
 
 language: php
 
@@ -21,6 +24,8 @@ cache:
 
 matrix:
   include:
+    - php: 8.0
+      env: WP_VERSION=latest
     - php: 7.4
       env: WP_VERSION=latest
     - php: 7.3
@@ -35,7 +40,7 @@ matrix:
       env: WP_TRAVISCI=phpcs
 
 before_install:
-  - wget --no-check-certificate https://curl.se/ca/cacert.pem -O /tmp/cacert.pem
+  - wget  https://curl.se/ca/cacert.pem -O /tmp/cacert.pem
   - echo "openssl.cafile=/tmp/cacert.pem" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then export PHPCS_DIR=/tmp/phpcs; fi
   - if [[ "$WP_TRAVISCI" == "phpcs" ]]; then export SNIFFS_DIR=/tmp/sniffs; fi
