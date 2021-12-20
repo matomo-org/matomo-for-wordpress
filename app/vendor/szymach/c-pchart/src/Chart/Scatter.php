@@ -2,10 +2,12 @@
 
 namespace CpChart\Chart;
 
+use CpChart\Data;
+use CpChart\Image;
 use Exception;
 
 /**
- *  pScatter - class to draw scatter charts
+ *  Scatter - class to draw scatter charts
  *
  *  Version     : 2.1.4
  *  Made by     : Jean-Damien POGOLOTTI
@@ -403,7 +405,7 @@ class Scatter
                         $LabelAlign = TEXT_ALIGN_TOPMIDDLE;
                         $LabelOffset = 5;
                     }
-                    if ($XLabelsRotation > 180 && $SLabelxRotation < 360) {
+                    if ($XLabelsRotation > 180 && $XLabelsRotation < 360) {
                         $LabelAlign = TEXT_ALIGN_MIDDLERIGHT;
                         $LabelOffset = 5;
                     }

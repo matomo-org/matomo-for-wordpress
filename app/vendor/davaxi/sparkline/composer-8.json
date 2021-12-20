@@ -1,0 +1,41 @@
+{
+    "name": "davaxi/sparkline",
+    "description": "PHP Class (using GD) to generate sparklines",
+    "version": "2.0.0",
+    "type": "library",
+    "keywords": [
+        "sparkline",
+        "php",
+        "picture"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Patiashvili",
+            "email": "stratagem.david@gmail.com",
+            "homepage": "https://www.patiashvili.fr/",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/davaxi/Sparkline/issues",
+        "source": "https://github.com/davaxi/Sparkline/releases"
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.0",
+        "ext-gd": "*",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {
+        "ext-xdebug": "*",
+        "phpunit/php-code-coverage": "^9",
+        "phpunit/phpunit": "9.3.5",
+        "codeclimate/php-test-reporter": "^0.4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Davaxi\\": "src/"
+        }
+    }
+}
