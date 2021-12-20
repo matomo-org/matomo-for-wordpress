@@ -72,10 +72,10 @@ before_script:
 script:
   - |
     if [[ ! -z "$WP_VERSION" ]] ; then
-      phpunit
-      WP_MULTISITE=1 phpunit
+      vendor/bin/phpunit
+      WP_MULTISITE=1 vendor/bin/phpunit
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      $HOME/.composer/vendor/bin/phpcs -v
+      vendor/bin/phpcs -v
     fi
