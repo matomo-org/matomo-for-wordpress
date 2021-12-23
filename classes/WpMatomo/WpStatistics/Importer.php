@@ -68,7 +68,7 @@ class Importer {
 SELECT min(visit_last_action_time) from $table
 SQL;
 		$row          = $wpdb->get_row( $sql, ARRAY_N );
-		if ($row) {
+		if ($row[0]) {
 			return Date::factory( $row[0] );
 		} else {
 			return Date::yesterday();
