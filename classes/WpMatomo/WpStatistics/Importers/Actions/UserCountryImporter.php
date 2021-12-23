@@ -26,6 +26,13 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 	public function importRecords( Date $date ) {
 		$this->geoip    = Geoip2::getInstance();
 		$this->visitors = $this->getVisitors( $date );
+		// fix if geoip city is not enabled
+		$nb_visitors = count( $this->visitors );
+		for ( $i = 0; $i < $nb_visitors; $i++ ) {
+			if ( ! array_key_exists( 'city', $this->visitors[ $i ] ) ) {
+				$this->visitors[ $i ]['city'] = '';
+			}
+		}
 		$this->importCountries();
 		$this->importRegions();
 		$this->importCities();
