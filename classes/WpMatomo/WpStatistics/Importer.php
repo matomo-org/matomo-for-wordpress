@@ -20,10 +20,14 @@ use Piwik\Segment;
 use Piwik\Site;
 use Psr\Log\LoggerInterface;
 use Piwik\Archive\ArchiveInvalidator;
+use WP_STATISTICS\DB;
+use WpMatomo\Db\Settings;
 use WpMatomo\WpStatistics\Exceptions\MaxEndDateReachedException;
+use WpMatomo\WpStatistics\Importers\Actions\RecordImporter;
+
 class Importer {
 
-	const IS_IMPORTED_FROM_GA_NUMERIC = 'GoogleAnalyticsImporter_isImportedFromGa';
+	const IS_IMPORTED_FROM_WPS_NUMERIC = 'WpStatisticsImporter_isImportedFromWpStatistics';
 
 	/**
 	 * @var LoggerInterface
@@ -36,31 +40,18 @@ class Importer {
 	private $recordImporters;
 
 	/**
-	 * @var int
-	 */
-	private $queryCount = 0;
-
-	/**
 	 * @var string
 	 */
 	private $noDataMessageRemoved = false;
 
 	/**
-	 * Whether this is the main import date range or for a reimport range.
-	 *
-	 * @var bool
+	 * @var Date
 	 */
-	private $isMainImport = true;
-
 	private $endDate = null;
 
 	public function __construct( LoggerInterface $logger ) {
 		$this->logger  = $logger;
 		$this->endDate = $this->getEndingDate();
-	}
-
-	public function setIsMainImport( $isMainImport ) {
-		$this->isMainImport = $isMainImport;
 	}
 
 	/**
@@ -71,25 +62,30 @@ class Importer {
 	 */
 	protected function getEndingDate() {
 		global $wpdb;
-		$db_settings  = new \WpMatomo\Db\Settings();
-		$prefix_table = $db_settings->prefix_table_name( 'log_visit' );
+		$db_settings  = new Settings();
+		$table = $db_settings->prefix_table_name( 'log_visit' );
 		$sql          = <<<SQL
-SELECT min(visit_last_action_time) from $prefix_table
+SELECT min(visit_last_action_time) from $table
 SQL;
 		$row          = $wpdb->get_row( $sql, ARRAY_N );
-		return Date::factory( $row[0] );
+		if ($row) {
+			return Date::factory( $row[0] );
+		} else {
+			return Date::yesterday();
+		}
+
 	}
 
 	/**
 	 * Returns the first date in the wpStatistics data
 	 *
-	 * @return Piwik\Date
+	 * @return \Piwik\Date
 	 */
 	protected function getStarted() {
 		global $wpdb;
-		$prefix_table = $wpdb->prefix . 'statistics_visit';
+		$table = DB::table('visit' );
 		$sql          = <<<SQL
-SELECT min(last_visit) from $prefix_table
+SELECT min(last_visit) from $table
 SQL;
 		$row          = $wpdb->get_row( $sql, ARRAY_N );
 		return Date::factory( $row[0] );
@@ -106,10 +102,11 @@ SQL;
 	 */
 	private function adjustMatomoDate( $idSite, Date $date ) {
 		global $wpdb;
-		$db_settings  = new \WpMatomo\Db\Settings();
+		$db_settings  = new Settings();
 		$prefix_table = $db_settings->prefix_table_name( 'site' );
 		$wpdb->update( $prefix_table, [ 'ts_created' => $date->toString( 'Y-m-d h:i:s' ) ], [ 'idsite' => $idSite ] );
 	}
+
 	public function import( $idSite ) {
 		$date  = null;
 		$end   = $this->endDate;
@@ -160,11 +157,11 @@ SQL;
 	 *
 	 * @var RecordImporter[] $recordImporters
 	 */
-	public function importDay( Site $site, Date $date, $recordImporters, $plugin = null ) {
+	public function importDay( Site $site, Date $date, $recordImporters ) {
 		if ( $this->endDate && $this->endDate->isEarlier( $date ) ) {
 			throw new MaxEndDateReachedException();
 		}
-		$archiveWriter = $this->makeArchiveWriter( $site, $date, $plugin );
+		$archiveWriter = $this->makeArchiveWriter( $site, $date );
 		$archiveWriter->initNewArchive();
 
 		$recordInserter = new RecordInserter( $archiveWriter );
@@ -194,7 +191,7 @@ SQL;
 			// $this->currentLock->reexpireLock();
 		}
 
-		$archiveWriter->insertRecord( self::IS_IMPORTED_FROM_GA_NUMERIC, 1 );
+		$archiveWriter->insertRecord( self::IS_IMPORTED_FROM_WPS_NUMERIC, 1 );
 		$archiveWriter->finalizeArchive();
 
 		$invalidator                = StaticContainer::get( ArchiveInvalidator::class );
@@ -212,14 +209,11 @@ SQL;
 		Common::destroy( $archiveWriter );
 	}
 
-	private function makeArchiveWriter( Site $site, Date $date, $segment = '', $plugin = null ) {
+	private function makeArchiveWriter( Site $site, Date $date, $segment = '' ) {
 		$period  = Factory::build( 'day', $date );
 		$segment = new Segment( $segment, [ $site->getId() ] );
 
 		$params = new Parameters( $site, $period, $segment );
-		if ( ! empty( $plugin ) ) {
-			$params->setRequestedPlugin( $plugin );
-		}
 		return new ArchiveWriter( $params );
 	}
 
