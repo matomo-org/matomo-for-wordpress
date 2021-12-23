@@ -25,8 +25,8 @@ class NumberConverter {
 						'nb_uniq_visitors' => 0,
 					];
 				}
-				$data[ $row[ $key ] ]['nb_visits']        += $row['number'];
-				$data[ $row[ $key ] ]['nb_uniq_visitors'] += $row['number'];
+				$data[ $row[ $key ] ]['nb_visits']        += intval($row['number']);
+				$data[ $row[ $key ] ]['nb_uniq_visitors'] += intval($row['number']);
 			}
 		}
 

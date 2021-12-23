@@ -10,6 +10,9 @@ class BrowsersConverter implements DataConverterInterface {
 		$browsers = new DataTable();
 		$data     = [];
 		foreach ( $wpStatisticData as $visit ) {
+			if ( ! array_key_exists($visit['browser']['name'], $data ) ) {
+				$data[ $visit['browser']['name'] ] = 0;
+			}
 			$data[ $visit['browser']['name'] ]++;
 		}
 		foreach ( $data as $browser => $hits ) {
