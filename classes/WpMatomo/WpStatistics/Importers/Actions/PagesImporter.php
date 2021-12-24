@@ -9,6 +9,7 @@ use Piwik\Date;
 use WpMatomo\WpStatistics\Config;
 use WpMatomo\WpStatistics\DataConverters\PagesUrlConverter;
 use WpMatomo\WpStatistics\DataConverters\PagesTitleConverter;
+use WpMatomo\WpStatistics\DataConverters\SearchQueryConverter;
 
 class PagesImporter extends RecordImporter implements ActionsInterface {
 
@@ -33,6 +34,11 @@ class PagesImporter extends RecordImporter implements ActionsInterface {
 				$pages = array_merge( $pages, $pages_found );
 			}
 		} while ( $no_data !== true );
+
+		$searchKeywords = SearchQueryConverter::convert( $pages );
+		$this->logger->debug( 'Import {nb_keywords} search keywords...', [ 'nb_keywords' => $searchKeywords->getRowsCount() ] );
+		$this->insertRecord( Archiver::SITE_SEARCH_RECORD_NAME, $searchKeywords, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable );
+		Common::destroy($searchKeywords);
 
 		foreach ( $pages as $id => $page ) {
 			$pos = strpos( $page['str_url'], '?' );
