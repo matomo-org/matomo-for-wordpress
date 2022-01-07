@@ -22,6 +22,7 @@ use WpMatomo\Updater;
 use WpMatomo\WpStatistics\Importer;
 use WpMatomo\WpStatistics\Logger\WpCliLogger;
 use WpMatomo\Bootstrap;
+use WpMatomo\Site;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -64,11 +65,11 @@ class MatomoCommands extends WP_CLI_Command {
 	 *
 	 * ## OPTIONS
 	 *
-	 * [--site=<siteId>]
-	 * : the site id to import
+	 * [--blog=<blogId>]
+	 * : the blog id to import
 	 * ## EXAMPLES
 	 *
-	 *     wp matomo importWpStatistics --site 1
+	 *     wp matomo importWpStatistics --blog=1
 	 *
 	 * @when after_wp_load
 	 */
@@ -84,20 +85,20 @@ class MatomoCommands extends WP_CLI_Command {
 			Access::getInstance()->setSuperUserAccess(true);
 			$importer = new Importer($logger);
 			if ( function_exists( 'is_multisite' ) && is_multisite() && function_exists( 'get_sites' ) ) {
-				$id_site = ! empty( $assoc_args['site'] ) ? $assoc_args['site'] : null;
+				$id_blog = ! empty( $assoc_args['blog'] ) ? $assoc_args['blog'] : null;
 				foreach ( get_sites() as $site ) {
 					/** @var WP_Site $site */
-					if ( is_null( $id_site ) || ( $site->site_id === $id_site ) ) {
+					if ( is_null( $id_blog ) || ( $site->blog_id === $id_blog ) ) {
 						switch_to_blog( $site->blog_id );
 						// this way we make sure all blogs get updated eventually
 						$logger->info( 'Blog ID ' . $site->blog_id );
-						$importer->import( $site->blog_id );
+						$importer->import( $site->site_id );
 						restore_current_blog();
 					}
 				}
 			} else {
-				$id_site = 1;
-				switch_to_blog( 1 );
+				$site = new Site();
+				$id_site = $site->get_current_matomo_site_id();
 				$importer->import( $id_site );
 			}
 
@@ -106,6 +107,7 @@ class MatomoCommands extends WP_CLI_Command {
 			$logger->error($e->getMessage());
 		}
 	}
+
 	/**
 	 * Updates Matomo.
 	 *

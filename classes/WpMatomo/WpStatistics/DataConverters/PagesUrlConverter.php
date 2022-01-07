@@ -18,6 +18,7 @@ class PagesUrlConverter extends NumberConverter implements DataConverterInterfac
 		$data_tables            = [
 			Action::TYPE_PAGE_URL => new DataTable(),
 		];
+		ArchivingHelper::reloadConfig();
 		foreach ( $rows as $row ) {
 			$whole_url = $main_url_without_slash . $row->getColumn( 'label' );
 
