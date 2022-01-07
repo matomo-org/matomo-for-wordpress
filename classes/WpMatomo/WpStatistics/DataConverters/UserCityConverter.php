@@ -2,9 +2,13 @@
 
 namespace WpMatomo\WpStatistics\DataConverters;
 
+/**
+ * @package WpMatomo
+ * @subpackage WpStatisticsImport
+ */
 class UserCityConverter extends VisitorsConverter implements DataConverterInterface {
 
-	public static function convert( array $wpStatisticData ) {
-		return self::aggregateByKey( $wpStatisticData, 'matomo_city' );
+	public static function convert( array $wp_statistics_data ) {
+		return self::aggregate_by_key( $wp_statistics_data, 'matomo_city' );
 	}
 }

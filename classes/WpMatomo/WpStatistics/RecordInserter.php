@@ -1,10 +1,4 @@
 <?php
-/**
- * Piwik - free/libre analytics platform
- *
- * @link http://piwik.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- */
 
 namespace WpMatomo\WpStatistics;
 
@@ -12,36 +6,39 @@ use Piwik\DataAccess\ArchiveWriter;
 use Piwik\DataTable;
 use Piwik\Metrics;
 use WpMatomo\WpStatistics\Importers\Actions\RecordImporter;
-
+/**
+ * @package WpMatomo
+ * @subpackage WpStatisticsImport
+ */
 class RecordInserter {
 
 	/**
 	 * @var ArchiveWriter
 	 */
-	private $archiveWriter;
+	private $archive_writer;
 
 	public function __construct( ArchiveWriter $writer ) {
-		$this->archiveWriter = $writer;
+		$this->archive_writer = $writer;
 	}
 
-	public function insertRecord( $recordName, DataTable $record, $maximumRowsInDataTable = null,
-									$maximumRowsInSubDataTable = null, $columnToSortByBeforeTruncation = null ) {
+	public function insert_record( $record_name, DataTable $record, $maximum_rows_in_data_table = null,
+									$maximum_rows_in_sub_data_table = null, $column_to_sort_by_before_truncation = null ) {
 		$record->setMetadata( RecordImporter::IS_IMPORTED_FROM_WPSTATISTICS_METADATA_NAME, 1 );
 
-		$blob = $record->getSerialized( $maximumRowsInDataTable, $maximumRowsInSubDataTable, $columnToSortByBeforeTruncation );
-		$this->insertBlobRecord( $recordName, $blob );
+		$blob = $record->getSerialized( $maximum_rows_in_data_table, $maximum_rows_in_sub_data_table, $column_to_sort_by_before_truncation );
+		$this->insert_blob_record( $record_name, $blob );
 	}
 
-	public function insertBlobRecord( $name, $values ) {
-		$this->archiveWriter->insertBlobRecord( $name, $values );
+	public function insert_blob_record( $name, $values ) {
+		$this->archive_writer->insertBlobRecord( $name, $values );
 	}
 
-	public function insertNumericRecords( array $values ) {
+	public function insert_numeric_records( array $values ) {
 		foreach ( $values as $name => $value ) {
 			if ( is_numeric( $name ) ) {
 				$name = Metrics::getReadableColumnName( $name );
 			}
-			$this->archiveWriter->insertRecord( $name, $value );
+			$this->archive_writer->insertRecord( $name, $value );
 		}
 	}
 }

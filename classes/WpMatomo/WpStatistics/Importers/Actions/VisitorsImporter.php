@@ -6,14 +6,16 @@ use Piwik\Common;
 use Piwik\Metrics;
 use WP_STATISTICS\MetaBox\top_visitors;
 use Piwik\Date;
-use WP_STATISTICS\top_visitors_page;
 use WpMatomo\WpStatistics\Config;
-
+/**
+ * @package WpMatomo
+ * @subpackage WpStatisticsImport
+ */
 class VisitorsImporter extends RecordImporter implements ActionsInterface {
 
 	const PLUGIN_NAME = 'VisitsSummary';
 
-	public function importRecords( Date $date ) {
+	public function import_records( Date $date ) {
 		$limit  = 100;
 		$visits = [];
 		$page   = 0;
@@ -26,15 +28,15 @@ class VisitorsImporter extends RecordImporter implements ActionsInterface {
 					'paged'    => $page,
 				]
 			);
-			$no_data      = ( ( array_key_exists( 'no_data', $visits_found ) ) && ( $visits_found['no_data'] === 1 ) );
+			$no_data      = ( ( array_key_exists( 'no_data', $visits_found ) ) && ( 1 === $visits_found['no_data'] ) );
 			if ( ! $no_data ) {
 				$visits = array_merge( $visits, $visits_found );
 			}
-		} while ( $no_data !== true );
+		} while ( true !== $no_data );
 
 		$this->logger->debug( 'Import {nb_visits} visits...', [ 'nb_visits' => count( $visits ) ] );
-		$this->insertNumericRecords( [ Metrics::INDEX_NB_UNIQ_VISITORS => count( $visits ) ] );
-		$this->insertNumericRecords( [ Metrics::INDEX_NB_VISITS => count( $visits ) ] );
+		$this->insert_numeric_records( [ Metrics::INDEX_NB_UNIQ_VISITORS => count( $visits ) ] );
+		$this->insert_numeric_records( [ Metrics::INDEX_NB_VISITS => count( $visits ) ] );
 		Common::destroy( $visits );
 		return $visits;
 	}

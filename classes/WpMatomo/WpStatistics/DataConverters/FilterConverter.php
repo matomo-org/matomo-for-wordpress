@@ -4,6 +4,9 @@ namespace WpMatomo\WpStatistics\DataConverters;
 
 /**
  * aggregate data on the number fields
+ *
+ * @package WpMatomo
+ * @subpackage WpStatisticsImport
  */
 class FilterConverter extends NumberConverter {
 

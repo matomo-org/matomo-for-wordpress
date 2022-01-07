@@ -5,31 +5,32 @@ namespace WpMatomo\WpStatistics\DataConverters;
 use Piwik\DataTable;
 use Piwik\Plugins\Actions\ArchivingHelper;
 use Piwik\Tracker\Action;
-
+/**
+ * @package WpMatomo
+ * @subpackage WpStatisticsImport
+ */
 class PagesUrlConverter extends NumberConverter implements DataConverterInterface {
 
-	public static function convert( array $wpStatisticsData ) {
-		$rows = self::aggregateByKey( $wpStatisticsData, 'str_url' );
-		$mainUrlWithoutSlash = site_url();
-		$mainUrlWithoutSlash = rtrim($mainUrlWithoutSlash, '/');
-		$dataTables = [
-			Action::TYPE_PAGE_URL => new DataTable()
+	public static function convert( array $wp_statistics_data ) {
+		$rows                   = self::aggregate_by_key( $wp_statistics_data, 'str_url' );
+		$main_url_without_slash = site_url();
+		$main_url_without_slash = rtrim( $main_url_without_slash, '/' );
+		$data_tables            = [
+			Action::TYPE_PAGE_URL => new DataTable(),
 		];
-		foreach($rows as $row) {
-			$wholeUrl = $mainUrlWithoutSlash . $row->getColumn('label');
-			
-			$actionRow = ArchivingHelper::getActionRow('dummyhost.com' . $row->getColumn('label'), Action::TYPE_PAGE_URL, '', $dataTables);
+		foreach ( $rows as $row ) {
+			$whole_url = $main_url_without_slash . $row->getColumn( 'label' );
 
-			$row->deleteColumn('label');
+			$action_row = ArchivingHelper::getActionRow( 'dummyhost.com' . $row->getColumn( 'label' ), Action::TYPE_PAGE_URL, '', $data_tables );
 
-			$actionRow->sumRow($row, $copyMetadata = false);
+			$row->deleteColumn( 'label' );
 
-			if ($actionRow->getColumn('label') != DataTable::LABEL_SUMMARY_ROW) {
-				$actionRow->setMetadata('url', $wholeUrl);
+			$action_row->sumRow( $row, $copy_metadata = false );
+
+			if ( $action_row->getColumn( 'label' ) !== DataTable::LABEL_SUMMARY_ROW ) {
+				$action_row->setMetadata( 'url', $whole_url );
 			}
-
-			//$this->pageUrlsByPagePath[$wholeUrl] = $actionRow;
 		}
-		return $dataTables[Action::TYPE_PAGE_URL];
+		return $data_tables[ Action::TYPE_PAGE_URL ];
 	}
 }

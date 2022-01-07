@@ -9,12 +9,15 @@ use Piwik\Plugins\DevicesDetection\Archiver;
 use Piwik\Date;
 use WpMatomo\WpStatistics\DataConverters\BrowsersConverter;
 use WpMatomo\WpStatistics\DataConverters\PlatformConverter;
-
+/**
+ * @package WpMatomo
+ * @subpackage WpStatisticsImport
+ */
 class DeviceDetectionImporter extends RecordImporter implements ActionsInterface {
 
 	const PLUGIN_NAME = 'DevicesDetection';
 
-	public function importRecords( Date $date ) {
+	public function import_records( Date $date ) {
 		$this->importBrowsers( $date );
 		$this->importPlateform( $date );
 	}
@@ -22,36 +25,36 @@ class DeviceDetectionImporter extends RecordImporter implements ActionsInterface
 	/**
 	 * @param Date $date
 	 *
-	 * @throws \Exception
+	 * @return void
 	 */
 	private function importBrowsers( Date $date ) {
-		$devices = $this->getVisitors( $date );
+		$devices = $this->get_visitors( $date );
 		if ( array_key_exists( 'no_data', $devices ) && $devices['no_data'] ) {
 			$devices = array();
 		}
 		$this->convertBrowsersInMatomo( $devices );
 		$devices = BrowsersConverter::convert( $devices );
 		$this->logger->debug( 'Import {nb_browsers} browsers...', [ 'nb_browsers' => $devices->getRowsCount() ] );
-		$this->insertRecord( Archiver::BROWSER_RECORD_NAME, $devices );
+		$this->insert_record( Archiver::BROWSER_RECORD_NAME, $devices );
 		Common::destroy( $devices );
 	}
 
 	private function convertPlatformsInMatomo( &$platforms ) {
 		// convert codification
-		$platformIds   = array_keys( OperatingSystem::getAvailableOperatingSystems() );
-		$platformNames = array_values( OperatingSystem::getAvailableOperatingSystems() );
+		$platform_ids   = array_keys( OperatingSystem::getAvailableOperatingSystems() );
+		$platform_names = array_values( OperatingSystem::getAvailableOperatingSystems() );
 		// we do not have the version with wpstatistics, so set an empty version
 		array_walk(
-			$platformIds,
+			$platform_ids,
 			function( &$item1, $key ) {
 				$item1 = $item1 . ';';
 			}
 		);
-		$platformIds   = array_merge( $platformIds, [ 'MAC;OS X' ] );
-		$platformNames = array_merge( $platformNames, [ 'OS X' ] );
+		$platform_ids   = array_merge( $platform_ids, [ 'MAC;OS X' ] );
+		$platform_names = array_merge( $platform_names, [ 'OS X' ] );
 		foreach ( $platforms as $id => $platform ) {
-			if ( in_array( $platform['platform'], $platformNames ) ) {
-				$platforms[ $id ]['platform'] = str_replace( $platformNames, $platformIds, $platform['platform'] );
+			if ( in_array( $platform['platform'], $platform_names, true ) ) {
+				$platforms[ $id ]['platform'] = str_replace( $platform_names, $platform_ids, $platform['platform'] );
 			} else {
 				$platforms[ $id ]['platform'] = 'UNK;UNK';
 			}
@@ -60,14 +63,14 @@ class DeviceDetectionImporter extends RecordImporter implements ActionsInterface
 
 	private function convertBrowsersInMatomo( &$devices ) {
 		// convert codification
-		$deviceIds   = array_keys( Browser::getAvailableBrowsers() );
-		$deviceNames = array_values( Browser::getAvailableBrowsers() );
+		$device_ids   = array_keys( Browser::getAvailableBrowsers() );
+		$device_names = array_values( Browser::getAvailableBrowsers() );
 		// we do not have the version with wpstatistics, so set an empty version
-		$deviceIds   = array_merge( [ '', '', 'FM', 'MS', 'SB', 'IM' ], $deviceIds );
-		$deviceNames = array_merge( [ 'Microsoft Office', 'Unknown', 'Firefox Mobile', 'Silk', 'Samsung Internet', 'Mobile Internet Explorer' ], $deviceNames );
+		$device_ids   = array_merge( [ '', '', 'FM', 'MS', 'SB', 'IM' ], $device_ids );
+		$device_names = array_merge( [ 'Microsoft Office', 'Unknown', 'Firefox Mobile', 'Silk', 'Samsung Internet', 'Mobile Internet Explorer' ], $device_names );
 		foreach ( $devices as $id => $device ) {
-			if ( in_array( $device['browser']['name'], $deviceNames ) ) {
-				$devices[ $id ]['browser']['name'] = str_replace( $deviceNames, $deviceIds, $device['browser']['name'] );
+			if ( in_array( $device['browser']['name'], $device_names, true ) ) {
+				$devices[ $id ]['browser']['name'] = str_replace( $device_names, $device_ids, $device['browser']['name'] );
 			}
 		}
 	}
@@ -75,11 +78,11 @@ class DeviceDetectionImporter extends RecordImporter implements ActionsInterface
 	 * @param Date $date
 	 */
 	private function importPlateform( Date $date ) {
-		$platforms = $this->getVisitors( $date );
+		$platforms = $this->get_visitors( $date );
 		$this->convertPlatformsInMatomo( $platforms );
 		$platforms = PlatformConverter::convert( $platforms );
 		$this->logger->debug( 'Import {nb_platform} platforms...', [ 'nb_platform' => $platforms->getRowsCount() ] );
-		$this->insertRecord( Archiver::OS_VERSION_RECORD_NAME, $platforms );
+		$this->insert_record( Archiver::OS_VERSION_RECORD_NAME, $platforms );
 		Common::destroy( $platforms );
 	}
 }

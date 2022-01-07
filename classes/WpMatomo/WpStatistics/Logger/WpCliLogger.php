@@ -7,6 +7,9 @@ use Psr\Log\LoggerInterface;
 
 /**
  * WP_CLi logger
+ *
+ * @package WpMatomo
+ * @subpackage WpStatisticsImport
  */
 class WpCliLogger implements LoggerInterface {
 

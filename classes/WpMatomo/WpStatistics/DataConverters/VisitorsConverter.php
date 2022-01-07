@@ -3,13 +3,16 @@
 namespace WpMatomo\WpStatistics\DataConverters;
 
 use Piwik\DataTable;
-
+/**
+ * @package WpMatomo
+ * @subpackage WpStatisticsImport
+ */
 class VisitorsConverter {
 
-	public static function aggregateByKey( array $wpStatisticData, $key ) {
+	public static function aggregate_by_key( array $wp_statistics_data, $key ) {
 		$data = [];
-		if ( count( $wpStatisticData ) ) {
-			foreach ( $wpStatisticData as $row ) {
+		if ( count( $wp_statistics_data ) ) {
+			foreach ( $wp_statistics_data as $row ) {
 				if ( ! array_key_exists( $row[ $key ], $data ) ) {
 					$data[ $row[ $key ] ] = [
 						'label'            => $row[ $key ],

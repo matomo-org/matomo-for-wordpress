@@ -6,6 +6,9 @@ use Piwik\DataTable;
 
 /**
  * aggregate data on the number fields
+ *
+ * @package WpMatomo
+ * @subpackage WpStatisticsImport
  */
 class SearchQueryConverter extends FilterConverter implements DataConverterInterface {
 
@@ -18,6 +21,6 @@ class SearchQueryConverter extends FilterConverter implements DataConverterInter
 			}
 		}
 
-		return self::aggregateByKey( $data, 'keyword' );
+		return self::aggregate_by_key( $data, 'keyword' );
 	}
 }

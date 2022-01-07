@@ -13,6 +13,9 @@ use Piwik\Plugins\UserCountry\Archiver;
 
 /**
  * reprocess geo localisation data as we can use a different (more complete) database
+ *
+ * @package WpMatomo
+ * @subpackage WpStatisticsImport
  */
 class UserCountryImporter extends RecordImporter implements ActionsInterface {
 
@@ -24,9 +27,9 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 
 	private $geoip;
 
-	public function importRecords( Date $date ) {
+	public function import_records( Date $date ) {
 		$this->geoip    = Geoip2::getInstance();
-		$this->visitors = $this->getVisitors( $date );
+		$this->visitors = $this->get_visitors( $date );
 		if ( ! GeoIP::active( 'city' ) ) {
 			// fix if geoip city if is not enabled
 			$nb_visitors = count( $this->visitors );
@@ -35,15 +38,15 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 			}
 		}
 
-		$this->importCountries();
-		$this->importRegions();
-		$this->importCities();
+		$this->import_countries();
+		$this->import_regions();
+		$this->import_cities();
 	}
 
 	/**
 	 * Extract the region from the wpstatistics label
 	 *
-	 * @param string $visitor the wpstatistics visitor label
+	 * @param array $visitor the wpstatistics visitor data
 	 *
 	 * @return string
 	 */
@@ -56,38 +59,35 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 		return $region;
 	}
 
-	private function importRegions() {
+	private function import_regions() {
 		foreach ( $this->visitors as $id => $visitor ) {
-			$this->visitors[ $id ]['matomo_region'] = $this->geoip->getMatomoRegionCode( $visitor['ip']['value'], $this->getRegion( $visitor ) );
+			$this->visitors[ $id ]['matomo_region'] = $this->geoip->get_matomo_region_code( $visitor['ip']['value'], $this->getRegion( $visitor ) );
 		}
 		$regions = UserRegionConverter::convert( $this->visitors );
 		$this->logger->debug( 'Import {nb_regions} regions...', [ 'nb_regions' => $regions->getRowsCount() ] );
-		$this->insertRecord( Archiver::REGION_RECORD_NAME, $regions, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable );
+		$this->insert_record( Archiver::REGION_RECORD_NAME, $regions, $this->maximum_rows_in_data_table_level_zero, $this->maximum_rows_in_sub_data_table );
 		Common::destroy( $regions );
 	}
 
-	private function importCities() {
+	private function import_cities() {
 		// apply the country name to normalize with the matomo data
 		foreach ( $this->visitors as $id => $visitor ) {
-			$this->visitors[ $id ]['matomo_city'] = $this->geoip->getMatomoCityCode( $visitor['ip']['value'], $this->getRegion( $visitor ) );
+			$this->visitors[ $id ]['matomo_city'] = $this->geoip->get_matomo_city_code( $visitor['ip']['value'], $this->getRegion( $visitor ) );
 		}
 		$cities = UserCityConverter::convert( $this->visitors );
 		$this->logger->debug( 'Import {nb_cities} cities...', [ 'nb_cities' => $cities->getRowsCount() ] );
-		$this->insertRecord( Archiver::CITY_RECORD_NAME, $cities, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable );
+		$this->insert_record( Archiver::CITY_RECORD_NAME, $cities, $this->maximum_rows_in_data_table_level_zero, $this->maximum_rows_in_sub_data_table );
 		Common::destroy( $cities );
 	}
 
-	/**
-	 * @param Date $date
-	 */
-	private function importCountries() {
+	private function import_countries() {
 		foreach ( $this->visitors as $id => $visitor ) {
-			$this->visitors[ $id ]['matomo_country'] = $this->geoip->getMatomoCountryCode( $visitor['ip']['value'] );
+			$this->visitors[ $id ]['matomo_country'] = $this->geoip->get_matomo_country_code( $visitor['ip']['value'] );
 		}
 		$countries = UserCountryConverter::convert( $this->visitors );
 		$this->logger->debug( 'Import {nb_countries} countries...', [ 'nb_countries' => $countries->getRowsCount() ] );
-		$this->insertRecord( Archiver::COUNTRY_RECORD_NAME, $countries, $this->maximumRowsInDataTableLevelZero, $this->maximumRowsInSubDataTable );
-		$this->insertNumericRecords( [ Archiver::DISTINCT_COUNTRIES_METRIC => $countries->getRowsCount() ] );
+		$this->insert_record( Archiver::COUNTRY_RECORD_NAME, $countries, $this->maximum_rows_in_data_table_level_zero, $this->maximum_rows_in_sub_data_table );
+		$this->insert_numeric_records( [ Archiver::DISTINCT_COUNTRIES_METRIC => $countries->getRowsCount() ] );
 		Common::destroy( $countries );
 	}
 }
