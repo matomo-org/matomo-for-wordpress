@@ -1,12 +1,20 @@
 {
-    "require": {
-        "phpunit/phpunit": "5.*"
-    },
-    "require-dev": {
-        "dealerdirect/phpcodesniffer-composer-installer": "^v0.7.1",
-        "phpcompatibility/phpcompatibility-wp": "^2.1.1",
-        "squizlabs/php_codesniffer": "^3.5.8",
-        "wp-coding-standards/wpcs": "^2.3.0",
-        "friendsofphp/php-cs-fixer": "^3.0"
+  "require": {
+    "phpunit/phpunit": "^5.7.21 || ^6.5 || ^7.5"
+  },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^v0.7.1",
+    "phpcompatibility/phpcompatibility-wp": "^2.1.1",
+    "squizlabs/php_codesniffer": "^3.5.8",
+    "wp-coding-standards/wpcs": "^2.3.0",
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "yoast/phpunit-polyfills": "1.*"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    },   "platform": {
+      "php": "7.2.5"
     }
+  }
 }

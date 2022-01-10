@@ -155,7 +155,7 @@ if ( count( $settings_errors ) ) {
 				'username'    => esc_html__( 'Username', 'matomo' ),
 				'displayname' => esc_html__( 'Display Name (Not Recommended!)', 'matomo' ),
 			],
-			__( 'When a user is logged in to WordPress, track their &quot;User ID&quot;. You can select which field from the User\'s profile is tracked as the &quot;User ID&quot;. When enabled, Tracking based on Email Address is recommended.', 'matomo' ),
+			__( 'When a user is logged in to WordPress, track their &quot;User ID&quot;. You can select which field from the User\'s profile is tracked as the &quot;User ID&quot;.', 'matomo' ),
 			'',
 			$matomo_is_not_tracking,
 			$matomo_full_generated_tracking_group . ' matomo-track-option-tagmanager'

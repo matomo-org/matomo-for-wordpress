@@ -26,12 +26,8 @@ to post them.
 
 Build status:
 =============
-[![Build Status](https://travis-ci.org/szymach/c-pchart.svg?branch=2.0)](https://travis-ci.org/szymach/c-pchart)
-
-Code quality:
-=============
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/szymach/c-pchart/badges/quality-score.png?b=2.0)](https://scrutinizer-ci.com/g/szymach/c-pchart/?branch=2.0)
-[![Code Coverage](https://scrutinizer-ci.com/g/szymach/c-pchart/badges/coverage.png?b=2.0)](https://scrutinizer-ci.com/g/szymach/c-pchart/?branch=2.0)
+- [![Build Status](https://travis-ci.org/szymach/c-pchart.svg?branch=master)](https://travis-ci.org/szymach/c-pchart) master
+- [![Build Status](https://travis-ci.org/szymach/c-pchart.svg?branch=2.0)](https://travis-ci.org/szymach/c-pchart) 2.0
 
 About:
 ======
@@ -41,13 +37,15 @@ and aims to allow the usage of it in modern applications. This was done through
 applying PSR standards to code, introducing namespaces and typehints, along with
 some basic annotations to methods.
 
-This is the `2.x` version, which aims to further update the code, but with the least
-backwards compatibility breaks possible. However if you cannot risk any of these,
-you will need to use the `1.x` branch.
+This is the `3.x` version, which removes the factory service and reorganizes the
+file structure a bit. It does not introduce any new features, but the changes are
+not compatibile with the `2.x` branch. BC compatibility with the original library
+is mostly retained, however you can still use the `1.x` version if you cannot risk
+any of these.
 
 What was done:
 
-- Support for PHP versions from 5.4 to 7.1.
+- Support for PHP versions from 5.4 to 8.0.
 
 - Made a full port of the library's functionality. I have touched very little of
 the actual logic, so most code from the original library should work.
@@ -60,7 +58,7 @@ the actual logic, so most code from the original library should work.
 to methods Also, typehinting was added to methods where possible, so some backwards compatibility breaks
 may occur if you did some weird things.
 
-- Moved all constants to a single file `src/Resources/data/constants.php`. It is loaded automatically
+- Moved all constants to a [single file](constants.php). It is loaded automatically
 through Composer, so no need for manual action.
 
 License:
@@ -86,7 +84,7 @@ For composer installation, add:
 
 ```json
 "require": {
-    "szymach/c-pchart": "^2.0"
+    "szymach/c-pchart": "^3.0"
 },
 ```
 
@@ -108,22 +106,22 @@ so you can compare each version and figure out how to use the current implementa
 Charts created through Image class
 ---------------------------------------
 
-Most of the basic charts are created through methods of the `CpChart\Chart\Image`
+Most of the basic charts are created through methods of the `CpChart\Image`
 class. Below you can find a full list of these charts, alongside example code.
 
-- [area](doc/area.md)
-- [bar](doc/bar.md)
-- [best fit](doc/best_fit.md)
-- [filled spline](doc/filled_spline.md)
-- [filled step](doc/filled_step.md)
-- [line](doc/line.md)
-- [plot](doc/plot.md)
-- [progress](doc/progress.md)
-- [spline](doc/spline.md)
-- [stacked area](doc/stacked_area.md)
-- [stacked bar](doc/stacked_bar.md)
-- [step](doc/step.md)
-- [zone](doc/zone.md)
+- [area](resources/doc/area.md)
+- [bar](resources/doc/bar.md)
+- [best fit](resources/doc/best_fit.md)
+- [filled spline](resources/doc/filled_spline.md)
+- [filled step](resources/doc/filled_step.md)
+- [line](resources/doc/line.md)
+- [plot](resources/doc/plot.md)
+- [progress](resources/doc/progress.md)
+- [spline](resources/doc/spline.md)
+- [stacked area](resources/doc/stacked_area.md)
+- [stacked bar](resources/doc/stacked_bar.md)
+- [step](resources/doc/step.md)
+- [zone](resources/doc/zone.md)
 
 Standalone charts:
 ------------------------------------
@@ -131,24 +129,24 @@ Standalone charts:
 The more advanced charts have their own separate class you need to use in order
 to create them. As before, below is a full list of these, with example code.
 
-- [2D pie](doc/2d_pie.md)
-- [3D pie](doc/3d_pie.md)
-- [2D ring](doc/2d_ring.md)
-- [3D ring](doc/3d_ring.md)
-- [bubble](doc/bubble.md)
-- [contour](doc/contour.md)
-- [polar](doc/polar.md)
-- [radar](doc/radar.md)
-- [scatter best fit](doc/scatter_best_fit.md)
-- [scatter line](doc/scatter_line.md)
-- [scatter plot](doc/scatter_plot.md)
-- [scatter spline](doc/scatter_spline.md)
-- [scatter threshold](doc/scatter_threshold.md)
-- [scatter threshold area](doc/scatter_threshold_area.md)
-- [split path](doc/split_path.md)
-- [spring](doc/spring.md)
-- [stock](doc/stock.md)
-- [surface](doc/surface.md)
+- [2D pie](resources/doc/2d_pie.md)
+- [3D pie](resources/doc/3d_pie.md)
+- [2D ring](resources/doc/2d_ring.md)
+- [3D ring](resources/doc/3d_ring.md)
+- [bubble](resources/doc/bubble.md)
+- [contour](resources/doc/contour.md)
+- [polar](resources/doc/polar.md)
+- [radar](resources/doc/radar.md)
+- [scatter best fit](resources/doc/scatter_best_fit.md)
+- [scatter line](resources/doc/scatter_line.md)
+- [scatter plot](resources/doc/scatter_plot.md)
+- [scatter spline](resources/doc/scatter_spline.md)
+- [scatter threshold](resources/doc/scatter_threshold.md)
+- [scatter threshold area](resources/doc/scatter_threshold_area.md)
+- [split path](resources/doc/split_path.md)
+- [spring](resources/doc/spring.md)
+- [stock](resources/doc/stock.md)
+- [surface](resources/doc/surface.md)
 
 Barcodes
 --------
@@ -156,14 +154,14 @@ Barcodes
 The pChart library also provides a way to render barcodes 39 and 128. Below you
 can find links to doc on creating them:
 
-- [barcode39](doc/barcode_39.md)
-- [barcode128](doc/barcode_128.md)
+- [barcode39](resources/doc/barcode_39.md)
+- [barcode128](resources/doc/barcode_128.md)
 
 Cache
 -----
 
 If you find yourself creating charts out of a set of data more than once, you may
-consider using the cache component of the library. Head on to the [dedicated part](doc/cache.md)
+consider using the cache component of the library. Head on to the [dedicated part](resources/doc/cache.md)
 of the documentation for information on how to do that.
 
 Fonts and palletes

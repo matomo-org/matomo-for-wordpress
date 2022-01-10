@@ -1,5 +1,10 @@
 == Changelog ==
 
+= 4.6.0 =
+* Update Matomo core to 4.6.0
+* WooCommerce: Make excluded order status configurable using a constant
+* Fix an open base dir issue
+
 = 4.5.0 =
 * Update Matomo core to 4.5.0
 * Validate the input of the IP addresses and the user agents in exclusion settings
