@@ -16,6 +16,7 @@ use Psr\Log\LoggerInterface;
 use Piwik\Archive\ArchiveInvalidator;
 use WP_STATISTICS\DB;
 use WpMatomo\Db\Settings;
+use WpMatomo\ScheduledTasks;
 use WpMatomo\WpStatistics\Exceptions\MaxEndDateReachedException;
 use WpMatomo\WpStatistics\Importers\Actions\RecordImporter;
 /**
@@ -138,6 +139,14 @@ SQL;
 			unset( $record_importers );
 		} catch ( MaxEndDateReachedException $ex ) {
 			$this->logger->info( 'Max end date reached. This occurs in Matomo for WordPress installs when the importer tries to import days on or after the day Matomo for WordPress installed.' );
+
+			// by launching the archiver now the weekly, monthly and yearly archives should be generated right away and it won't
+			// take up to an hour. Also by running it on the cli we have less risk that this long running archiving process times out
+			$this->logger->info( 'Matomo Analytics starting the report generation of weekly, monthly and yearly reports. This may take a while.' );
+			$scheduled_tasks = new ScheduledTasks( \WpMatomo::$settings );
+			$scheduled_tasks->archive();
+			$this->logger->info( 'Matomo Analytics report generation finished' );
+			
 			return true;
 		} catch ( \Exception $ex ) {
 			$this->logger->debug( 'exception' );
