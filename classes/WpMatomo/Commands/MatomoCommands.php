@@ -61,12 +61,12 @@ class MatomoCommands extends WP_CLI_Command {
 	}
 
 	/**
-	 * Import wp-statistics data
+	 * Imports wp-statistics data
 	 *
 	 * ## OPTIONS
 	 *
 	 * [--blog=<blogId>]
-	 * : the blog id to import
+	 * : the blog id to import. Only needed if using WP MultiSite and only wanting to import one blog
 	 * ## EXAMPLES
 	 *
 	 *     wp matomo importWpStatistics --blog=1
@@ -92,7 +92,8 @@ class MatomoCommands extends WP_CLI_Command {
 						switch_to_blog( $site->blog_id );
 						// this way we make sure all blogs get updated eventually
 						$logger->info( 'Blog ID ' . $site->blog_id );
-						$importer->import( $site->site_id );
+						$id_site = Site::get_matomo_site_id($site->blog_id);
+						$importer->import( $id_site );
 						restore_current_blog();
 					}
 				}

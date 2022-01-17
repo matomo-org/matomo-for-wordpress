@@ -105,7 +105,6 @@ SQL;
 	}
 
 	public function import( $id_site ) {
-		$date  = null;
 		$end   = $this->end_date;
 		$start = $this->get_started();
 
@@ -118,7 +117,7 @@ SQL;
 			if ( $start->getTimestamp() >= $end_plus_one->getTimestamp() ) {
 				throw new \InvalidArgumentException( "Invalid date range, start date is later than end date: {$start},{$end}" );
 			}
-			$record_importers = $this->get_record_importers( $id_site );
+			$record_importers = $this->get_record_importers();
 			$site             = new Site( $id_site );
 			// phpcs:ignore Generic.CodeAnalysis.ForLoopWithTestFunctionCall.NotAllowed
 			for ( $date = $start; $date->getTimestamp() < $end_plus_one->getTimestamp(); $date = $date->addDay( 1 ) ) {
@@ -214,12 +213,10 @@ SQL;
 	}
 
 	/**
-	 * @param $id_site
-	 * @param $viewId
 	 * @return RecordImporter[]
 	 * @throws \Exception In case importer has no plugin name.
 	 */
-	private function get_record_importers( $id_site ) {
+	private function get_record_importers(  ) {
 		if ( empty( $this->record_importers ) ) {
 			$record_importers = Config::get_importers();
 
