@@ -43,6 +43,7 @@ class Menu {
 	const SLUG_GET_STARTED              = 'matomo-get-started';
 	const SLUG_ABOUT                    = 'matomo-about';
 	const SLUG_MARKETPLACE              = 'matomo-marketplace';
+	const SLUG_IMPORTWPS                = 'matomo-importwps';
 
 	const CAP_NOT_EXISTS = 'unknownfoobar';
 
@@ -69,6 +70,7 @@ class Menu {
 		$marketplace   = new Marketplace( $this->settings );
 		$system_report = new SystemReport( $this->settings );
 		$summary       = new Summary( $this->settings );
+		$import_wp_s   = new ImportWpStatistics();
 
 		$admin_settings = new AdminSettings( $this->settings );
 
@@ -188,6 +190,19 @@ class Menu {
 			);
 		}
 
+		if ( is_plugin_active( 'wp-statistics/wp-statistics.php' ) ) {
+			add_submenu_page(
+				self::$parent_slug,
+				__( 'Import Wp Statistics', 'matomo' ),
+				__( 'Import Wp Statistics', 'matomo' ),
+				Capabilities::KEY_SUPERUSER,
+				self::SLUG_IMPORTWPS,
+				[
+					$import_wp_s,
+					'show',
+				]
+			);
+		}
 		add_submenu_page(
 			self::$parent_slug,
 			__( 'About', 'matomo' ),
