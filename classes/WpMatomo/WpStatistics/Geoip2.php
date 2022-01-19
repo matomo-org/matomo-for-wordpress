@@ -26,8 +26,12 @@ class Geoip2 {
 		if ( file_exists( $wp_statistics_db ) ) {
 			$this->geoip = new Reader( $wp_statistics_db );
 		} else {
-			$paths       = new Paths();
-			$this->geoip = new Reader( $paths->get_upload_base_dir() . '/DBIP-City.mmdb' );
+			$paths     = new Paths();
+			$matomo_db = $paths->get_upload_base_dir() . '/DBIP-City.mmdb';
+			if ( ! file_exists( $matomo_db ) ) {
+				throw new \Exception( 'No city database available' );
+			}
+			$this->geoip = new Reader( $matomo_db );
 		}
 	}
 
