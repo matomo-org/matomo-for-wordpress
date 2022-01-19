@@ -8,7 +8,6 @@
  */
 
 namespace WpMatomo\Commands;
-require_once ABSPATH.'/wp-load.php';
 require_once ABSPATH.'/wp-includes/ms-blogs.php';
 
 use Piwik\Access;
