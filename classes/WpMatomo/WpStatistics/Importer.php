@@ -149,7 +149,6 @@ SQL;
 			
 			return true;
 		} catch ( \Exception $ex ) {
-			$this->logger->debug( 'exception' );
 			$this->on_error( $ex );
 			return true;
 		}
