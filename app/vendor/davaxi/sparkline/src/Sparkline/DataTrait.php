@@ -39,15 +39,15 @@ trait DataTrait
      * @param float $originValue
      *                           Set origin value of chart
      */
-    public function setOriginValue($originValue)
+    public function setOriginValue(float $originValue)
     {
         $this->originValue = $originValue;
     }
 
     /**
-     * @param array $data,...
+     * @param ...$allSeries
      */
-    public function setData()
+    public function setData(...$allSeries)
     {
         $allSeries = func_get_args();
 
@@ -60,7 +60,7 @@ trait DataTrait
     /**
      * @param array $data
      */
-    public function addSeries($data)
+    public function addSeries(array $data)
     {
         $data = array_values($data);
         $count = count($data);
@@ -80,7 +80,7 @@ trait DataTrait
     /**
      * @return int
      */
-    public function getSeriesCount()
+    public function getSeriesCount(): int
     {
         return count($this->data);
     }
@@ -89,7 +89,7 @@ trait DataTrait
      * @param int $seriesIndex
      * @return array
      */
-    public function getNormalizedData($seriesIndex = 0)
+    public function getNormalizedData(int $seriesIndex = 0): array
     {
         $data = $this->data[$seriesIndex];
         foreach ($data as $i => $value) {
@@ -103,7 +103,7 @@ trait DataTrait
      * @param int $seriesIndex
      * @return array
      */
-    public function getData($seriesIndex = 0)
+    public function getData(int $seriesIndex = 0): array
     {
         return $this->data[$seriesIndex];
     }
@@ -112,7 +112,7 @@ trait DataTrait
      * @param int $seriesIndex
      * @return int
      */
-    public function getCount($seriesIndex = 0)
+    public function getCount(int $seriesIndex = 0): int
     {
         return count($this->data[$seriesIndex]);
     }
@@ -121,7 +121,7 @@ trait DataTrait
      * @param int $seriesIndex
      * @return array
      */
-    protected function getMaxValueWithIndex($seriesIndex = 0)
+    protected function getMaxValueWithIndex(int $seriesIndex = 0): array
     {
         $max = max($this->data[$seriesIndex]);
         $maxKeys = array_keys($this->data[$seriesIndex], $max);
@@ -137,7 +137,7 @@ trait DataTrait
      * @param int $seriesIndex
      * @return float
      */
-    protected function getMaxValue($seriesIndex = 0)
+    protected function getMaxValue(int $seriesIndex = 0): float
     {
         if ($this->base) {
             return $this->base;
@@ -150,7 +150,7 @@ trait DataTrait
      * TODO: this could be cached somehow
      * @return float
      */
-    protected function getMaxValueAcrossSeries()
+    protected function getMaxValueAcrossSeries(): float
     {
         if ($this->base) {
             return $this->base;
@@ -170,7 +170,7 @@ trait DataTrait
      * @param int $seriesIndex
      * @return array
      */
-    protected function getMinValueWithIndex($seriesIndex = 0)
+    protected function getMinValueWithIndex(int $seriesIndex = 0): array
     {
         $min = min($this->data[$seriesIndex]);
         $minKey = array_keys($this->data[$seriesIndex], $min);
@@ -183,7 +183,7 @@ trait DataTrait
      * @param int $seriesIndex
      * @return array
      */
-    protected function getExtremeValues($seriesIndex = 0)
+    protected function getExtremeValues(int $seriesIndex = 0): array
     {
         list($minIndex, $min) = $this->getMinValueWithIndex($seriesIndex);
         list($maxIndex, $max) = $this->getMaxValueWithIndex($seriesIndex);

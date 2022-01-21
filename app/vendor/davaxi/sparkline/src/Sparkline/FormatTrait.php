@@ -2,6 +2,8 @@
 
 namespace Davaxi\Sparkline;
 
+use InvalidArgumentException;
+
 /**
  * Trait FormatTrait.
  */
@@ -37,11 +39,11 @@ trait FormatTrait
     /**
      * @param string $format (Width x Height)
      */
-    public function setFormat($format)
+    public function setFormat(string $format)
     {
         $values = explode('x', $format);
         if (count($values) !== static::FORMAT_DIMENSION) {
-            throw new \InvalidArgumentException('Invalid format params. Expected string Width x Height');
+            throw new InvalidArgumentException('Invalid format params. Expected string Width x Height');
         }
         $this->setWidth($values[0]);
         $this->setHeight($values[1]);
@@ -50,17 +52,17 @@ trait FormatTrait
     /**
      * @param int $width
      */
-    public function setWidth($width)
+    public function setWidth(int $width)
     {
-        $this->width = (int)$width;
+        $this->width = $width;
     }
 
     /**
      * @param int $height
      */
-    public function setHeight($height)
+    public function setHeight(int $height)
     {
-        $this->height = (int)$height;
+        $this->height = $height;
     }
 
     /**
@@ -69,7 +71,7 @@ trait FormatTrait
      *
      * @param string $padding
      */
-    public function setPadding($padding)
+    public function setPadding(string $padding)
     {
         list($top, $right, $bottom, $left) = $this->paddingStringToArray($padding);
         $this->padding['top'] = $top;
@@ -81,7 +83,7 @@ trait FormatTrait
     /**
      * @return int
      */
-    protected function getNormalizedHeight()
+    protected function getNormalizedHeight() : int
     {
         return $this->height * $this->ratioComputing;
     }
@@ -89,7 +91,7 @@ trait FormatTrait
     /**
      * @return int
      */
-    protected function getInnerHeight()
+    protected function getInnerHeight(): int
     {
         return $this->height - $this->padding['top'] - $this->padding['bottom'];
     }
@@ -97,11 +99,11 @@ trait FormatTrait
     /**
      * @return array
      */
-    protected function getNormalizedPadding()
+    protected function getNormalizedPadding(): array
     {
         return array_map(
             function ($value) {
-                return $value * $this->ratioComputing;
+                return round($value * $this->ratioComputing);
             },
             $this->padding
         );
@@ -110,7 +112,7 @@ trait FormatTrait
     /**
      * @return int
      */
-    protected function getInnerNormalizedHeight()
+    protected function getInnerNormalizedHeight(): int
     {
         return $this->getInnerHeight() * $this->ratioComputing;
     }
@@ -118,7 +120,7 @@ trait FormatTrait
     /**
      * @return int
      */
-    protected function getNormalizedWidth()
+    protected function getNormalizedWidth(): int
     {
         return $this->width * $this->ratioComputing;
     }
@@ -126,7 +128,7 @@ trait FormatTrait
     /**
      * @return int
      */
-    protected function getInnerWidth()
+    protected function getInnerWidth(): int
     {
         return $this->width - ($this->padding['left'] + $this->padding['right']);
     }
@@ -134,7 +136,7 @@ trait FormatTrait
     /**
      * @return int
      */
-    protected function getInnerNormalizedWidth()
+    protected function getInnerNormalizedWidth(): int
     {
         return $this->getInnerWidth() * $this->ratioComputing;
     }
@@ -142,7 +144,7 @@ trait FormatTrait
     /**
      * @return array
      */
-    protected function getNormalizedSize()
+    protected function getNormalizedSize(): array
     {
         return [
             $this->getNormalizedWidth(),
@@ -153,7 +155,7 @@ trait FormatTrait
     /**
      * @return array
      */
-    protected function getInnerNormalizedSize()
+    protected function getInnerNormalizedSize(): array
     {
         return [
             $this->getInnerNormalizedWidth(),
@@ -162,11 +164,11 @@ trait FormatTrait
     }
 
     /**
-     * @param $count
+     * @param int $count
      *
-     * @return float|int
+     * @return float
      */
-    protected function getStepWidth($count)
+    protected function getStepWidth(int $count): float
     {
         $innerWidth = $this->getInnerNormalizedWidth();
 
@@ -175,11 +177,11 @@ trait FormatTrait
 
     /**
      * @param array $data
-     * @param $height
+     * @param int $height
      *
      * @return array
      */
-    protected function getDataForChartElements(array $data, $height)
+    protected function getDataForChartElements(array $data, int $height): array
     {
         $max = $this->getMaxValueAcrossSeries();
         $minHeight = 1 * $this->ratioComputing;
@@ -203,15 +205,15 @@ trait FormatTrait
      * @param int $count count of steps in sparkline image (does not have to == count($data))
      * @return array
      */
-    protected function getChartElements(array $data, $count)
+    protected function getChartElements(array $data, int $count): array
     {
         $step = $this->getStepWidth($count);
         $height = $this->getInnerNormalizedHeight();
         $normalizedPadding = $this->getNormalizedPadding();
         $data = $this->getDataForChartElements($data, $height);
 
-        $pictureX1 = $pictureX2 = $normalizedPadding['left'];
-        $pictureY1 = $normalizedPadding['top'] + $height - $data[0];
+        $pictureX1 = $pictureX2 = (int)ceil($normalizedPadding['left']);
+        $pictureY1 = (int)ceil($normalizedPadding['top'] + $height - $data[0]);
 
         $polygon = [];
         $line = [];
@@ -223,8 +225,8 @@ trait FormatTrait
         $polygon[] = $pictureX1;
         $polygon[] = $pictureY1;
         for ($i = 1; $i < count($data); ++$i) {
-            $pictureX2 = $pictureX1 + $step;
-            $pictureY2 = $normalizedPadding['top'] + $height - $data[$i];
+            $pictureX2 = (int)ceil($pictureX1 + $step);
+            $pictureY2 = (int)ceil($normalizedPadding['top'] + $height - $data[$i]);
 
             $line[] = [$pictureX1, $pictureY1, $pictureX2, $pictureY2];
 

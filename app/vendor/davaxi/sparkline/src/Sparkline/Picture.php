@@ -10,17 +10,26 @@ class Picture
     const DOT_RADIUS_TO_WIDTH = 2;
 
     /**
-     * @var \resource
+     * @var resource
      */
     protected $resource;
 
     /**
-     * Picture constructor.
-     *
-     * @param $width
-     * @param $height
+     * @var int
      */
-    public function __construct($width, $height)
+    protected $height;
+
+    /**
+     * @var int
+     */
+    protected $width;
+
+    /**
+     * Picture constructor.
+     * @param int $width
+     * @param int $height
+     */
+    public function __construct(int $width, int $height)
     {
         $this->width = $width;
         $this->height = $height;
@@ -32,7 +41,7 @@ class Picture
      *
      * @return int
      */
-    protected function getBackground(array $setColor = [])
+    protected function getBackground(array $setColor = []): int
     {
         if ($setColor) {
             return imagecolorallocate(
@@ -53,11 +62,11 @@ class Picture
     }
 
     /**
-     * @param $lineColor
+     * @param array $lineColor
      *
      * @return int
      */
-    public function getLineColor($lineColor)
+    public function getLineColor(array $lineColor): int
     {
         return imagecolorallocate(
             $this->resource,
@@ -82,9 +91,9 @@ class Picture
     }
 
     /**
-     * @param $lineThickness
+     * @param int $lineThickness
      */
-    public function applyThickness($lineThickness)
+    public function applyThickness(int $lineThickness)
     {
         imagesetthickness($this->resource, $lineThickness);
     }
@@ -92,9 +101,9 @@ class Picture
     /**
      * @param array $polygon
      * @param array $fillColor
-     * @param $count
+     * @param int $count
      */
-    public function applyPolygon(array $polygon, array $fillColor, $count)
+    public function applyPolygon(array $polygon, array $fillColor, int $count)
     {
         if (!$fillColor) {
             return;
@@ -117,12 +126,12 @@ class Picture
     }
 
     /**
-     * @param $positionX
-     * @param $positionY
-     * @param $radius
+     * @param int $positionX
+     * @param int $positionY
+     * @param float $radius
      * @param array $color
      */
-    public function applyDot($positionX, $positionY, $radius, $color)
+    public function applyDot(int $positionX, int $positionY, float $radius, array $color)
     {
         if (!$color || !$radius) {
             return;
@@ -134,23 +143,24 @@ class Picture
             $color[1],
             $color[2]
         );
+        $dotDiameter = (int)round($radius * static::DOT_RADIUS_TO_WIDTH);
         imagefilledellipse(
             $this->resource,
             $positionX,
             $positionY,
-            $radius * static::DOT_RADIUS_TO_WIDTH,
-            $radius * static::DOT_RADIUS_TO_WIDTH,
+            $dotDiameter,
+            $dotDiameter,
             $minimumColor
         );
     }
 
     /**
-     * @param $width
-     * @param $height
+     * @param int $width
+     * @param int $height
      *
      * @return resource
      */
-    public function generate($width, $height)
+    public function generate(int $width, int $height)
     {
         $sparkline = imagecreatetruecolor($width, $height);
         imagealphablending($sparkline, false);

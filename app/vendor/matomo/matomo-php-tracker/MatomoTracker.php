@@ -82,9 +82,9 @@ class MatomoTracker
      */
     public function __construct($idSite, $apiUrl = '')
     {
-        $this->ecommerceItems = array();
+        $this->ecommerceItems = [];
         $this->attributionInfo = false;
-        $this->eventCustomVar = false;
+        $this->eventCustomVar = [];
         $this->forcedDatetime = false;
         $this->forcedNewVisit = false;
         $this->networkTime = false;
@@ -93,10 +93,10 @@ class MatomoTracker
         $this->domProcessingTime = false;
         $this->domCompletionTime = false;
         $this->onLoadTime = false;
-        $this->pageCustomVar = false;
-        $this->ecommerceView = array();
-        $this->customParameters = array();
-        $this->customDimensions = array();
+        $this->pageCustomVar = [];
+        $this->ecommerceView = [];
+        $this->customParameters = [];
+        $this->customDimensions = [];
         $this->customData = false;
         $this->hasCookies = false;
         $this->token_auth = false;
@@ -153,14 +153,14 @@ class MatomoTracker
         // Allow debug while blocking the request
         $this->requestTimeout = 600;
         $this->doBulkRequests = false;
-        $this->storedTrackingActions = array();
+        $this->storedTrackingActions = [];
 
         $this->sendImageResponse = true;
 
         $this->visitorCustomVar = $this->getCustomVariablesFromCookie();
 
-        $this->outgoingTrackerCookies = array();
-        $this->incomingTrackerCookies = array();
+        $this->outgoingTrackerCookies = [];
+        $this->incomingTrackerCookies = [];
     }
 
     /**
@@ -365,9 +365,9 @@ class MatomoTracker
      */
     public function clearCustomVariables()
     {
-        $this->visitorCustomVar = array();
-        $this->pageCustomVar = array();
-        $this->eventCustomVar = array();
+        $this->visitorCustomVar = [];
+        $this->pageCustomVar = [];
+        $this->eventCustomVar = [];
     }
 
     /**
@@ -1620,7 +1620,7 @@ didn't change any existing VisitorId value */
 
         $forcePostUrlEncoded = false;
         if (!$this->doBulkRequests) {
-            if (strtoupper($this->requestMethod) === 'POST') {
+            if (!empty($this->requestMethod) && strtoupper($this->requestMethod) === 'POST') {
                 // POST ALL parameters and have no GET parameters
                 $urlParts = explode('?', $url);
 
@@ -1708,15 +1708,21 @@ didn't change any existing VisitorId value */
             ob_start();
             $response = @curl_exec($ch);
             ob_end_clean();
+            
             $header = '';
             $content = '';
-            
+
             if ($response === false) {
                 throw new \RuntimeException(curl_error($ch));
             }
-            
+
             if (!empty($response)) {
-                list($header, $content) = explode("\r\n\r\n", $response, $limitCount = 2);
+                // extract header
+                $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+                $header = substr($response, 0, $headerSize);
+
+                // extract content
+                $content = substr($response, $headerSize);
             }
 
             $this->parseIncomingCookies(explode("\r\n", $header));
@@ -2099,13 +2105,13 @@ didn't change any existing VisitorId value */
     }
 
     /**
-     * @return bool|mixed
+     * @return array
      */
     protected function getCustomVariablesFromCookie()
     {
         $cookie = $this->getCookieMatchingName('cvar');
         if (!$cookie) {
-            return false;
+            return [];
         }
 
         return json_decode($cookie, $assoc = true);
