@@ -66,13 +66,18 @@ class Importer {
 		$sql         = <<<SQL
 SELECT min(visit_last_action_time) from $table
 SQL;
-		$row         = $wpdb->get_row( $sql, ARRAY_N );
-		if ( ! empty( $row[0] ) ) {
-			return Date::factory( $row[0] );
-		} else {
+		try {
+			$row = $wpdb->get_row( $sql, ARRAY_N );
+			if ( ! empty( $row[0] ) ) {
+				return Date::factory( $row[0] );
+			} else {
+				return Date::yesterday();
+			}
+		} catch ( \Exception $e ) {
 			return Date::yesterday();
 		}
 	}
+
 
 	/**
 	 * Returns the first date in the wpStatistics data
@@ -105,7 +110,7 @@ SQL;
 		$wpdb->update( $prefix_table, [ 'ts_created' => $date->toString( 'Y-m-d h:i:s' ) ], [ 'idsite' => $id_site ] );
 	}
 
-	public function import( $id_site ) {
+	public function import( $id_site, $archive = true ) {
 		$end   = $this->end_date;
 		$start = $this->get_started();
 
@@ -140,13 +145,15 @@ SQL;
 		} catch ( MaxEndDateReachedException $ex ) {
 			$this->logger->info( 'Max end date reached. This occurs in Matomo for WordPress installs when the importer tries to import days on or after the day Matomo for WordPress installed.' );
 
-			// by launching the archiver now the weekly, monthly and yearly archives should be generated right away and it won't
-			// take up to an hour. Also by running it on the cli we have less risk that this long running archiving process times out
-			$this->logger->info( 'Matomo Analytics starting the report generation of weekly, monthly and yearly reports. This may take a while.' );
-			$scheduled_tasks = new ScheduledTasks( \WpMatomo::$settings );
-			$scheduled_tasks->archive();
+			if ( true === $archive ) {
+				// by launching the archiver now the weekly, monthly and yearly archives should be generated right away and it won't
+				// take up to an hour. Also by running it on the cli we have less risk that this long running archiving process times out
+				$this->logger->info( 'Matomo Analytics starting the report generation of weekly, monthly and yearly reports. This may take a while.' );
+				$scheduled_tasks = new ScheduledTasks( \WpMatomo::$settings );
+				$scheduled_tasks->archive();
+			}
 			$this->logger->info( 'Matomo Analytics report generation finished' );
-			
+
 			return true;
 		} catch ( \Exception $ex ) {
 			$this->on_error( $ex );
@@ -224,7 +231,7 @@ SQL;
 	 * @return RecordImporter[]
 	 * @throws \Exception In case importer has no plugin name.
 	 */
-	private function get_record_importers(  ) {
+	private function get_record_importers() {
 		if ( empty( $this->record_importers ) ) {
 			$record_importers = Config::get_importers();
 
