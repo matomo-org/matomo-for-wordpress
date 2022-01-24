@@ -1,17 +1,18 @@
 <?php
 
-use WpMatomo\Db\Settings;
 use WpMatomo\Site;
 use WpMatomo\WpStatistics\Importer;
 use WpMatomo\WpStatistics\Logger\EchoLogger;
 use WpMatomo\Report\Data;
-use Piwik\Plugins\UserCountry\Archiver;
+use WpMatomo\ScheduledTasks;
+use WpMatomo\Settings;
 
 class ImportTest extends MatomoAnalytics_TestCase {
 	/**
+	 * static due to multiple tests instanciations
 	 * @var bool
 	 */
-	protected $imported = false;
+	protected static $imported = false;
 	/**
 	 * @var null|bool
 	 */
@@ -54,67 +55,144 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			// import the dump file
 			global $wpdb;
 			$file         = dirname( __FILE__ ) . '/dump.sql';
-			$db_settings  = new Settings();
-			$prefix_table = $db_settings->prefix_table_name();
-			foreach ( explode( ';', str_replace( 'wp_', $prefix_table, $wp_filesystem->get_contents( $file ) ) ) as $query ) {
+			// wpdb does not allow multiple queries in the query method
+			foreach ( explode( ';', str_replace( 'wp_', $wpdb->prefix, $wp_filesystem->get_contents( $file ) ) ) as $query ) {
 				if ( ! empty( trim( $query ) ) ) {
 					$wpdb->query( $query );
 				}
 			}
 
-			if (!$this->imported) {
-
+			if ( self::$imported !== true ) {
+				// must be set quickly due to the concurrent running tests
+				self::$imported = true;
+				$this->download_geoip();
 				$this->manually_load_plugin();
 			}
 			// run the import
 			$importer = new Importer( new EchoLogger() );
 			$site     = new Site();
 			$id_site  = $site->get_current_matomo_site_id();
-			$importer->import( $id_site );
-			$this->imported = true;
+			// do not run the archiving for performances issues and because we test only daily reports
+			$importer->import( $id_site, false );
 		}
+	}
+
+	/**
+	 * Download the geoip database for the GeoIP2 client
+	 * @return void
+	 * @throws Exception
+	 */
+	private function download_geoip() {
+		$schedule_task = new ScheduledTasks( new Settings() );
+		$schedule_task->update_geo_ip2_db();
 	}
 
 	public function test_countries_found() {
 		if ( ! $this->can_be_tested() ) {
-			$this->markTestSkipped( 'Travis' );
+			$this->markTestSkipped( 'Travis or plugin unavailable' );
 
 			return;
 		}
 
-		$report = $this->fetch_report( Archiver::COUNTRY_RECORD_NAME );
-		$this->assertTrue( $report['reportData']->getRowsCount(), 92 );
-	}
-
-	protected function fetch_report( $report_name ) {
-		$meta = array(
-			'module'     => $report_name,
-			'action'     => 'get',
-			'parameters' => array(),
-		);
-
-		return $this->data->fetch_report( $meta, 'day', '2020-10-17', 'nb_visits', '10' );
+		$report = $this->fetch_report( 'UserCountry', 'getCountry' );
+		$this->assertEquals( $report['reportData']->getRowsCount(), 88 );
 	}
 
 	public function test_regions_found() {
 		if ( ! $this->can_be_tested() ) {
-			$this->markTestSkipped( 'Travis' );
+			$this->markTestSkipped( 'Travis or plugin unavailable' );
 
 			return;
 		}
 
-		$report = $this->fetch_report( Archiver::REGION_RECORD_NAME );
-		$this->assertTrue( $report['reportData']->getRowsCount(), 392 );
+		$report = $this->fetch_report( 'UserCountry', 'getRegion' );
+		$this->assertEquals( $report['reportData']->getRowsCount(), 214 );
 	}
 
 	public function test_cities_found() {
 		if ( ! $this->can_be_tested() ) {
-			$this->markTestSkipped( 'Travis' );
+			$this->markTestSkipped( 'Travis or plugin unavailable' );
 
 			return;
 		}
 
-		$report = $this->fetch_report( Archiver::CITY_RECORD_NAME );
-		$this->assertTrue( $report['reportData']->getRowsCount(), 628 );
+		$report = $this->fetch_report( 'UserCountry', 'getCity' );
+		$this->assertEquals( $report['reportData']->getRowsCount(), 770 );
+	}
+
+	public function test_browsers_found() {
+		if ( ! $this->can_be_tested() ) {
+			$this->markTestSkipped( 'Travis or plugin unavailable' );
+
+			return;
+		}
+
+		$report = $this->fetch_report( 'DevicesDetection', 'getBrowsers' );
+		$this->assertEquals( $report['reportData']->getRowsCount(), 15 );
+	}
+
+	public function test_os_found() {
+		if ( ! $this->can_be_tested() ) {
+			$this->markTestSkipped( 'Travis or plugin unavailable' );
+
+			return;
+		}
+
+		$report = $this->fetch_report( 'DevicesDetection', 'getOsVersions' );
+		$this->assertEquals( $report['reportData']->getRowsCount(), 10 );
+	}
+
+	public function test_referrers_found() {
+		if ( ! $this->can_be_tested() ) {
+			$this->markTestSkipped( 'Travis or plugin unavailable' );
+
+			return;
+		}
+
+		$report = $this->fetch_report( 'Referrers', 'getWebsites' );
+		$this->assertEquals( $report['reportData']->getRowsCount(), 49 );
+	}
+
+	public function test_search_engines_found() {
+		if ( ! $this->can_be_tested() ) {
+			$this->markTestSkipped( 'Travis or plugin unavailable' );
+
+			return;
+		}
+
+		$report = $this->fetch_report( 'Referrers', 'getSearchEngines' );
+		$this->assertEquals( $report['reportData']->getRowsCount(), 6 );
+	}
+
+	public function test_keywords_found() {
+		if ( ! $this->can_be_tested() ) {
+			$this->markTestSkipped( 'Travis or plugin unavailable' );
+
+			return;
+		}
+
+		$report = $this->fetch_report( 'Referrers', 'getKeywords' );
+		$this->assertEquals( $report['reportData']->getRowsCount(), 2 );
+	}
+
+	public function test_visitors_found() {
+		if ( ! $this->can_be_tested() ) {
+			$this->markTestSkipped( 'Travis or plugin unavailable' );
+
+			return;
+		}
+
+		$report = $this->fetch_report( 'VisitsSummary', 'get' );
+		$this->assertEquals( $report['reportData']->getFirstRow()->getColumn( 'nb_visits' ), 1298 );
+	}
+
+	protected function fetch_report( $report_name, $method ) {
+		$meta = array(
+			'module'     => $report_name,
+			'action'     => $method,
+			'parameters' => array(),
+		);
+
+		return $this->data->fetch_report( $meta, 'day', '2020-10-17', 'nb_visits', 10000 );
 	}
 }
