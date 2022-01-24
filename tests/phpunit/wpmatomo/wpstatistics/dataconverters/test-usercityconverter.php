@@ -25,7 +25,7 @@ class UserCityConverterTest extends MatomoAnalytics_TestCase {
 			],
 		];
 		$cities = UserCityConverter::convert( $data );
-		$this->assertEquals( $cities->getRowsCount(), 2 );
+		$this->assertEquals( $cities->getRowsCount(), 3 );
 		$this->assertEquals( $cities->getFirstRow()->getColumn( 'nb_visits' ), 2 );
 	}
 }
