@@ -54,7 +54,12 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_sync_does_not_fail() {
-		$this->tasks->sync();
+		try {
+			$this->tasks->sync();
+			$this->assertTrue(true);
+		} catch (Exception $e) {
+			$this->assertFalse(true);
+		}
 	}
 
 	public function test_disable_add_handler_wontfail_when_addhandler_enabled() {
@@ -109,7 +114,13 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_perform_update_does_not_fail() {
-		$this->tasks->perform_update();
+		try {
+			$this->tasks->perform_update();
+			$this->assertTrue(true);
+		} catch (Exception $e) {
+			$this->assertFalse(true);
+		}
+
 	}
 
 
