@@ -129,6 +129,7 @@ svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm %@ > /dev/null
 # https://developer.wordpress.org/plugins/wordpress-org/plugin-assets/
 svn propset svn:mime-type image/png assets/*.png || true
 svn propset svn:mime-type image/jpeg assets/*.jpg || true
+svn propset svn:mime-type image/gif assets/*.gif || true
 
 # Now show full SVN status
 svn status

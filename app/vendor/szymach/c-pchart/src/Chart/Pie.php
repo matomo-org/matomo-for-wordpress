@@ -2,8 +2,11 @@
 
 namespace CpChart\Chart;
 
+use CpChart\Data;
+use CpChart\Image;
+
 /**
- *  pPie - class to draw pie charts
+ *  Pie - class to draw pie charts
  *
  *  Version     : 2.1.4
  *  Made by     : Jean-Damien POGOLOTTI
@@ -1646,7 +1649,7 @@ class Pie
                 } elseif ($WriteValues == PIE_VALUE_NATURAL) {
                     $Display = $Value . $ValueSuffix;
                 } else {
-                    $Label = "";
+                    $Display = "";
                 }
                 $this->pChartObject->drawText(
                     $Xc,
@@ -2208,7 +2211,7 @@ class Pie
 
                 $Label = "";
                 if ($WriteValues == PIE_VALUE_PERCENTAGE) {
-                    $Label = $Display = round((100 / $SerieSum) * $Value, $Precision) . "%";
+                    $Label = round((100 / $SerieSum) * $Value, $Precision) . "%";
                 } elseif ($WriteValues == PIE_VALUE_NATURAL) {
                     $Label = $Data["Series"][$Data["Abscissa"]]["Data"][$Key];
                 }

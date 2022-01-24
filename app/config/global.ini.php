@@ -63,7 +63,7 @@ port = 3306
 aurora_readonly_read_committed =
 
 [database_tests]
-host = localhost
+host = "127.0.0.1"
 username = "@USERNAME@"
 password =
 dbname = matomo_tests
@@ -294,7 +294,7 @@ enable_segment_suggested_values = 1
 ; By default, any user with a "view" access for a website can create segment assigned to this website.
 ; Set this to "admin" or "superuser" to require that users should have at least this access to create new segments.
 ; Note: anonymous user (even if it has view access) is not allowed to create or edit segment.
-; Possible values are "view", "admin", "superuser"
+; Possible values are "view", "write", "admin", "superuser"
 adding_segment_requires_access = "view"
 
 ; Whether it is allowed for users to add segments that affect all websites or not. If there are many websites
@@ -446,7 +446,7 @@ csp_enabled = 1
 
 ; If set, and csp_enabled is on, Matomo will send a report-uri in the Content-Security-Policy-Report-Only header
 ; instead of a Content-Security-Policy header.
-csp_report_only = 1
+csp_report_only = 0
 
 ; If set to 1 Matomo will prefer using SERVER_NAME variable over HTTP_HOST.
 ; This can add an additional layer of security as SERVER_NAME can not be manipulated by sending custom host headers when configure correctly.
@@ -531,6 +531,10 @@ noreply_email_address = "noreply@{DOMAIN}"
 
 ; standard email name displayed when sending emails. If not set, a default name will be used.
 noreply_email_name = ""
+
+; email address to use when an administrator should be contacted. If not set, email addresses of all super users will be used instead.
+; To use multiple addresses simply concatenate them with a ','
+contact_email_address = ""
 
 ; set to 0 to disable sending of all emails. useful for testing.
 emails_enabled = 1
@@ -832,6 +836,11 @@ rearchive_reports_in_past_last_n_months = 6
 
 ; If set to 1, when rearchiving reports in the past we do not rearchive segment data with those reports. Default is 0.
 rearchive_reports_in_past_exclude_segments = 0
+
+; Enable HTTP checks for required and recommended private directories in the diagnostic system check.
+; Set this to 0 if you need to skip it because your hosting provider makes your site inaccessible.
+; Default is 1.
+enable_required_directories_diagnostic = 1
 
 ; If set to 1, then social and search engine definitions files will be synchronised using the internet if "enable_internet_features" is enabled.
 ; When set to 0, the definitions will be loaded from the local definitions (updated with core).
@@ -1138,6 +1147,7 @@ Languages[] = zh-tw
 
 [Plugins]
 ; list of plugins (in order they will be loaded) that are activated by default in the Matomo platform
+Plugins[] = CoreVue
 Plugins[] = CorePluginsAdmin
 Plugins[] = CoreAdminHome
 Plugins[] = CoreHome
