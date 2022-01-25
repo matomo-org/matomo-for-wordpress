@@ -124,6 +124,7 @@ return array(
 					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\LoadDataInfileCheck'
 					|| $class_name === 'Piwik\Plugins\CustomJsTracker\Diagnostic\TrackerJsCheck'
 					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\RequiredPrivateDirectories' // it doesn't resolve config path correctly as it is outside matomo dir etc
+					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\RecommendedPrivateDirectories' // tmp check doesn't work so far see matomo-org/matomo#18684
 					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\CronArchivingCheck'
 					|| $class_name === 'Piwik\Plugins\Diagnostics\Diagnostic\FileIntegrityCheck') {
 					$checks[$index] = null;
