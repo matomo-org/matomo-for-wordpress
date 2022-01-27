@@ -3,7 +3,9 @@
 namespace WpMatomo\WpStatistics\Importers\Actions;
 
 use Piwik\Common;
+use Piwik\Config as PiwikConfig;
 use Piwik\Date;
+use Psr\Log\LoggerInterface;
 use WP_STATISTICS\GeoIP;
 use WpMatomo\WpStatistics\DataConverters\UserCityConverter;
 use WpMatomo\WpStatistics\DataConverters\UserCountryConverter;
@@ -27,6 +29,13 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 
 	private $geoip;
 
+	public function __construct( LoggerInterface $logger ) {
+		parent::__construct( $logger );
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		$this->maximum_rows_in_data_table_level_zero = @PiwikConfig::getInstance()->General['datatable_archiving_maximum_rows_standard'];
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		$this->maximum_rows_in_sub_data_table = @PiwikConfig::getInstance()->General['datatable_archiving_maximum_rows_subtable_standard'];
+	}
 	public function import_records( Date $date ) {
 		$this->geoip    = Geoip2::getInstance();
 		$this->visitors = $this->get_visitors( $date );
