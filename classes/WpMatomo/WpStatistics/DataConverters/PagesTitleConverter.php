@@ -16,18 +16,18 @@ class PagesTitleConverter extends NumberConverter implements DataConverterInterf
 	public static function convert( array $wp_statistics_data ) {
 		$rows = self::aggregate_by_key( $wp_statistics_data, 'title' );
 
-		$data_tables            = [
+		$data_tables = [
 			Action::TYPE_PAGE_TITLE => new DataTable(),
 		];
 		ArchivingHelper::reloadConfig();
 		foreach ( $rows as $row ) {
 			$title = $row->getColumn( 'label' );
 
-			$row->setColumn(Metrics::INDEX_PAGE_NB_HITS, $row['nb_visits']);
-			$row->setColumn(Metrics::INDEX_NB_VISITS, $row['nb_visits']);
-			$row->setColumn(Metrics::INDEX_NB_UNIQ_VISITORS, $row['nb_visits']);
-			$row->deleteColumn('nb_visits');
-			$row->deleteColumn('nb_uniq_visitors');
+			$row->setColumn( Metrics::INDEX_PAGE_NB_HITS, $row['nb_visits'] );
+			$row->setColumn( Metrics::INDEX_NB_VISITS, $row['nb_visits'] );
+			$row->setColumn( Metrics::INDEX_NB_UNIQ_VISITORS, $row['nb_visits'] );
+			$row->deleteColumn( 'nb_visits' );
+			$row->deleteColumn( 'nb_uniq_visitors' );
 
 			$action_row = ArchivingHelper::getActionRow( $title, Action::TYPE_PAGE_TITLE, null, $data_tables );
 
@@ -37,7 +37,7 @@ class PagesTitleConverter extends NumberConverter implements DataConverterInterf
 			$action_row->setMetadata( 'page_title_path', $title );
 		}
 
-		ArchivingHelper::deleteInvalidSummedColumnsFromDataTable($data_tables[ Action::TYPE_PAGE_TITLE ]);
+		ArchivingHelper::deleteInvalidSummedColumnsFromDataTable( $data_tables[ Action::TYPE_PAGE_TITLE ] );
 		return $data_tables[ Action::TYPE_PAGE_TITLE ];
 	}
 }

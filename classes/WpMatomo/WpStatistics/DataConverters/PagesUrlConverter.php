@@ -24,12 +24,13 @@ class PagesUrlConverter extends NumberConverter implements DataConverterInterfac
 		ArchivingHelper::reloadConfig();
 		foreach ( $rows as $row ) {
 			$whole_url = $main_url_without_slash . $row->getColumn( 'label' );
-			$row_label = str_replace(array_keys(PageUrl::$urlPrefixMap),'', $whole_url);
-			$row->setColumn(Metrics::INDEX_PAGE_NB_HITS, $row['nb_visits']);
-			$row->setColumn(Metrics::INDEX_NB_VISITS, $row['nb_visits']);
-			$row->setColumn(Metrics::INDEX_NB_UNIQ_VISITORS, $row['nb_visits']);
-			$row->deleteColumn('nb_visits');
-			$row->deleteColumn('nb_uniq_visitors');
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$row_label = str_replace( array_keys( PageUrl::$urlPrefixMap ), '', $whole_url );
+			$row->setColumn( Metrics::INDEX_PAGE_NB_HITS, $row['nb_visits'] );
+			$row->setColumn( Metrics::INDEX_NB_VISITS, $row['nb_visits'] );
+			$row->setColumn( Metrics::INDEX_NB_UNIQ_VISITORS, $row['nb_visits'] );
+			$row->deleteColumn( 'nb_visits' );
+			$row->deleteColumn( 'nb_uniq_visitors' );
 
 			$action_row = ArchivingHelper::getActionRow( $row_label, Action::TYPE_PAGE_URL, '', $data_tables );
 
@@ -41,7 +42,7 @@ class PagesUrlConverter extends NumberConverter implements DataConverterInterfac
 				$action_row->setMetadata( 'url', $whole_url );
 			}
 		}
-		ArchivingHelper::deleteInvalidSummedColumnsFromDataTable($data_tables[ Action::TYPE_PAGE_URL ]);
+		ArchivingHelper::deleteInvalidSummedColumnsFromDataTable( $data_tables[ Action::TYPE_PAGE_URL ] );
 		return $data_tables[ Action::TYPE_PAGE_URL ];
 	}
 }
