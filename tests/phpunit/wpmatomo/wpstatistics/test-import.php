@@ -118,7 +118,8 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'UserCountry', 'getCity' );
-		$this->assertEquals( $report['reportData']->getRowsCount(), 770 );
+		// 500 due to the limit in the datatable
+		$this->assertEquals( $report['reportData']->getRowsCount(), 500 );
 	}
 
 	public function test_browsers_found() {
@@ -185,6 +186,17 @@ class ImportTest extends MatomoAnalytics_TestCase {
 
 		$report = $this->fetch_report( 'VisitsSummary', 'get' );
 		$this->assertEquals( $report['reportData']->getFirstRow()->getColumn( 'nb_visits' ), 1298 );
+	}
+
+	public function test_pages_found() {
+		if ( ! $this->can_be_tested() ) {
+			$this->markTestSkipped( 'Travis or plugin unavailable' );
+
+			return;
+		}
+
+		$report = $this->fetch_report( 'Actions', 'getPageUrls' );
+		$this->assertEquals( $report['reportData']->getRowsCount(), 152 );
 	}
 
 	protected function fetch_report( $report_name, $method ) {
