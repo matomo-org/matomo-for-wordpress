@@ -3,7 +3,9 @@
 namespace WpMatomo\WpStatistics\Importers\Actions;
 
 use Piwik\Common;
+use Piwik\Config as PiwikConfig;
 use Piwik\Plugins\Actions\Archiver;
+use Psr\Log\LoggerInterface;
 use WP_STATISTICS\MetaBox\pages;
 use Piwik\Date;
 use WpMatomo\WpStatistics\Config;
@@ -18,6 +20,14 @@ use WpMatomo\WpStatistics\DataConverters\SearchQueryConverter;
 class PagesImporter extends RecordImporter implements ActionsInterface {
 
 	const PLUGIN_NAME = 'Actions';
+
+	public function __construct( LoggerInterface $logger ) {
+		parent::__construct( $logger );
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		$this->maximum_rows_in_data_table_level_zero = @PiwikConfig::getInstance()->General['datatable_archiving_maximum_rows_actions'];
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		$this->maximum_rows_in_sub_data_table = @PiwikConfig::getInstance()->General['datatable_archiving_maximum_rows_subtable_actions'];
+	}
 
 	public function import_records( Date $date ) {
 		$limit = 100;
@@ -50,7 +60,7 @@ class PagesImporter extends RecordImporter implements ActionsInterface {
 			}
 		}
 		$pages_url = PagesUrlConverter::convert( $pages );
-		$this->logger->debug( 'Import {nb_pages} pages...', [ 'nb_pages' => $pages_url->getRowsCount() ] );
+		$this->logger->debug( 'Import {nb_pages} global pages...', [ 'nb_pages' => $pages_url->getRowsCount() ] );
 		$this->insert_record( Archiver::PAGE_URLS_RECORD_NAME, $pages_url, $this->maximum_rows_in_data_table_level_zero, $this->maximum_rows_in_sub_data_table );
 		Common::destroy( $pages_url );
 
