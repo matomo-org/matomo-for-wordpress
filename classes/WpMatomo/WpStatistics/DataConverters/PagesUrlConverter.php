@@ -42,6 +42,7 @@ class PagesUrlConverter extends NumberConverter implements DataConverterInterfac
 				$action_row->setMetadata( 'url', $whole_url );
 			}
 		}
+		// to aggregate the subtable data
 		ArchivingHelper::deleteInvalidSummedColumnsFromDataTable( $data_tables[ Action::TYPE_PAGE_URL ] );
 		return $data_tables[ Action::TYPE_PAGE_URL ];
 	}

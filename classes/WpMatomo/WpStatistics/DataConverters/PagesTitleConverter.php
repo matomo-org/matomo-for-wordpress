@@ -37,6 +37,7 @@ class PagesTitleConverter extends NumberConverter implements DataConverterInterf
 			$action_row->setMetadata( 'page_title_path', $title );
 		}
 
+		// to aggregate the subtable data
 		ArchivingHelper::deleteInvalidSummedColumnsFromDataTable( $data_tables[ Action::TYPE_PAGE_TITLE ] );
 		return $data_tables[ Action::TYPE_PAGE_TITLE ];
 	}
