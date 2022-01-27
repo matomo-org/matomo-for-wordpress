@@ -27,9 +27,9 @@ class RecordImporter {
 		$this->logger = $logger;
 		// Reading pre 2.0 config file settings
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-		$this->maximum_rows_in_data_table_level_zero = @Config::getInstance()->General['datatable_archiving_maximum_rows_referers'];
+		$this->maximum_rows_in_data_table_level_zero = @Config::getInstance()->General['datatable_archiving_maximum_rows_actions'];
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-		$this->maximum_rows_in_sub_data_table = @Config::getInstance()->General['datatable_archiving_maximum_rows_subtable_referers'];
+		$this->maximum_rows_in_sub_data_table = @Config::getInstance()->General['datatable_archiving_maximum_rows_subtable_actions'];
 		if ( empty( $this->maximum_rows_in_data_table_level_zero ) ) {
 			$this->maximum_rows_in_data_table_level_zero = Config::getInstance()->General['datatable_archiving_maximum_rows_referrers'];
 			$this->maximum_rows_in_sub_data_table        = Config::getInstance()->General['datatable_archiving_maximum_rows_subtable_referrers'];
