@@ -34,7 +34,7 @@ class UserCountryImporter extends RecordImporter implements ActionsInterface {
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		$this->maximum_rows_in_data_table_level_zero = @PiwikConfig::getInstance()->General['datatable_archiving_maximum_rows_standard'];
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-		$this->maximum_rows_in_sub_data_table = @PiwikConfig::getInstance()->General['datatable_archiving_maximum_rows_subtable_standard'];
+		$this->maximum_rows_in_sub_data_table = @PiwikConfig::getInstance()->General['datatable_archiving_maximum_rows_standard'];
 	}
 	public function import_records( Date $date ) {
 		$this->geoip    = Geoip2::getInstance();
