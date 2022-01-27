@@ -22,7 +22,7 @@ class RecordInserter {
 	}
 
 	public function insert_record( $record_name, DataTable $record, $maximum_rows_in_data_table = null,
-									$maximum_rows_in_sub_data_table = null, $column_to_sort_by_before_truncation = null ) {
+									$maximum_rows_in_sub_data_table = null, $column_to_sort_by_before_truncation = 'nb_visits' ) {
 		$record->setMetadata( RecordImporter::IS_IMPORTED_FROM_WPSTATISTICS_METADATA_NAME, 1 );
 
 		$blob = $record->getSerialized( $maximum_rows_in_data_table, $maximum_rows_in_sub_data_table, $column_to_sort_by_before_truncation );

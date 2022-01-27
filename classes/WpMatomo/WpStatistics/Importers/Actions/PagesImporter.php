@@ -4,6 +4,7 @@ namespace WpMatomo\WpStatistics\Importers\Actions;
 
 use Piwik\Common;
 use Piwik\Config as PiwikConfig;
+use Piwik\Metrics;
 use Piwik\Plugins\Actions\Archiver;
 use Psr\Log\LoggerInterface;
 use WP_STATISTICS\MetaBox\pages;
@@ -61,12 +62,12 @@ class PagesImporter extends RecordImporter implements ActionsInterface {
 		}
 		$pages_url = PagesUrlConverter::convert( $pages );
 		$this->logger->debug( 'Import {nb_pages} global pages...', [ 'nb_pages' => $pages_url->getRowsCount() ] );
-		$this->insert_record( Archiver::PAGE_URLS_RECORD_NAME, $pages_url, $this->maximum_rows_in_data_table_level_zero, $this->maximum_rows_in_sub_data_table );
+		$this->insert_record( Archiver::PAGE_URLS_RECORD_NAME, $pages_url, $this->maximum_rows_in_data_table_level_zero, $this->maximum_rows_in_sub_data_table, Metrics::INDEX_NB_VISITS );
 		Common::destroy( $pages_url );
 
 		$pages_title = PagesTitleConverter::convert( $pages );
 		$this->logger->debug( 'Import {nb_pages} page titles...', [ 'nb_pages' => $pages_title->getRowsCount() ] );
-		$this->insert_record( Archiver::PAGE_TITLES_RECORD_NAME, $pages_title, $this->maximum_rows_in_data_table_level_zero, $this->maximum_rows_in_sub_data_table );
+		$this->insert_record( Archiver::PAGE_TITLES_RECORD_NAME, $pages_title, $this->maximum_rows_in_data_table_level_zero, $this->maximum_rows_in_sub_data_table, Metrics::INDEX_NB_VISITS );
 		Common::destroy( $pages_title );
 	}
 }
