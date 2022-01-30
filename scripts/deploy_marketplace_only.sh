@@ -123,8 +123,18 @@ rsync -rc "$GITHUB_WORKSPACE/$ASSETS_DIR/" assets/ --delete --delete-excluded
 
 # Fix screenshots getting force downloaded when clicking them
 # https://developer.wordpress.org/plugins/wordpress-org/plugin-assets/
-svn propset svn:mime-type image/png assets/*.png || true
-svn propset svn:mime-type image/jpeg assets/*.jpg || true
+if test -d "$SVN_DIR/assets" && test -n "$(find "$SVN_DIR/assets" -maxdepth 1 -name "*.png" -print -quit)"; then
+    svn propset svn:mime-type "image/png" assets/*.png || true
+fi
+if test -d "$SVN_DIR/assets" && test -n "$(find "$SVN_DIR/assets" -maxdepth 1 -name "*.jpg" -print -quit)"; then
+    svn propset svn:mime-type "image/jpeg" "$SVN_DIR/assets/*.jpg" || true
+fi
+if test -d "$SVN_DIR/assets" && test -n "$(find "$SVN_DIR/assets" -maxdepth 1 -name "*.gif" -print -quit)"; then
+    svn propset svn:mime-type "image/gif" "$SVN_DIR/assets/*.gif" || true
+fi
+if test -d "$SVN_DIR/assets" && test -n "$(find "$SVN_DIR/assets" -maxdepth 1 -name "*.svg" -print -quit)"; then
+    svn propset svn:mime-type "image/svg+xml" "$SVN_DIR/assets/*.svg" || true
+fi
 
 echo "➤ Preparing files..."
 
