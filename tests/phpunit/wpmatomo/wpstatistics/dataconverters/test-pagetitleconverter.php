@@ -26,6 +26,6 @@ class PageTitleConverterTest extends MatomoAnalytics_TestCase {
 		];
 		$pages = PagesTitleConverter::convert( $data );
 		$this->assertEquals( $pages->getRowsCount(), 2 );
-		$this->assertEquals( $pages->getFirstRow()->getColumn( 'nb_visits' ), 3 );
+		$this->assertEquals( $pages->getFirstRow()->getColumn( \Piwik\Metrics::INDEX_NB_VISITS ), 3 );
 	}
 }
