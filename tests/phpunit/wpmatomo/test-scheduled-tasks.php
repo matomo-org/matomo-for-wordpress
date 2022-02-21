@@ -56,9 +56,9 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	public function test_sync_does_not_fail() {
 		try {
 			$this->tasks->sync();
-			$this->assertTrue(true);
-		} catch (Exception $e) {
-			$this->assertFalse(true);
+			$this->assertTrue( true );
+		} catch ( Exception $e ) {
+			$this->assertFalse( true );
 		}
 	}
 
@@ -116,11 +116,10 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	public function test_perform_update_does_not_fail() {
 		try {
 			$this->tasks->perform_update();
-			$this->assertTrue(true);
-		} catch (Exception $e) {
-			$this->assertFalse(true);
+			$this->assertTrue( true );
+		} catch ( Exception $e ) {
+			$this->assertFalse( true );
 		}
-
 	}
 
 

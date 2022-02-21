@@ -84,7 +84,7 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 	public function test_update_does_not_fail() {
 		$this->updater->update();
 		// for the phpunit warning
-		$this->assertTrue(true);
+		$this->assertTrue( true );
 	}
 
 }

@@ -23,7 +23,7 @@ class PagesUrlConverter extends NumberConverter implements DataConverterInterfac
 		];
 		ArchivingHelper::reloadConfig();
 		foreach ( $rows as $row ) {
-			$whole_url = $main_url_without_slash .'/'. ltrim($row->getColumn( 'label' ),'/');
+			$whole_url = $main_url_without_slash . '/' . ltrim( $row->getColumn( 'label' ), '/' );
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$row_label = str_replace( array_keys( PageUrl::$urlPrefixMap ), '', $whole_url );
 			$row->setColumn( Metrics::INDEX_PAGE_NB_HITS, $row['nb_visits'] );
