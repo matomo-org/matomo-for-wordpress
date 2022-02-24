@@ -164,6 +164,10 @@ Website: [matomo.org](https://matomo.org)
 About us: [matomo.org/team/](https://matomo.org/team/)
 Contact us: [matomo.org/contact/](https://matomo.org/contact/)
 
+= Can I import reports from WP Statistics plugin?
+
+Yes, you can [import historical data from WP Statistics](https://matomo.org/faq/wordpress/how-do-i-import-data-from-wp-statistics-plugin-into-matomo-for-wordpress/) so you don't lose any data when migrating to our plugin. 
+
 = Where do I find all other available FAQs? =
 
 Needing to know more? [Click here to view all of our FAQs on our website](https://matomo.org/faq/wordpress/)
