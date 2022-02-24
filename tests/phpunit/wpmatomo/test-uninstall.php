@@ -33,6 +33,8 @@ class UninstallTest extends MatomoAnalytics_TestCase {
 		$this->uninstaller->uninstall( false );
 		$this->uninstaller->uninstall( true );
 		$this->uninstaller->uninstall( false );
+		// for the phpunit warning
+		$this->assertTrue( true );
 	}
 
 	public function test_uninstall_removes_config_file_when_should_remove_all_data() {

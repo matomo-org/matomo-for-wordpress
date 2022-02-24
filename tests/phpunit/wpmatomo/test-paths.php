@@ -183,10 +183,14 @@ class PathsTest extends MatomoUnit_TestCase {
 
 	public function test_clear_assets_dir_does_not_fail() {
 		$this->paths->clear_assets_dir();
+		// for the phpunit warning
+		$this->assertTrue( true );
 	}
 
 	public function test_clear_cache_dir_does_not_fail() {
 		$this->paths->clear_cache_dir();
+		// for the phpunit warning
+		$this->assertTrue( true );
 	}
 
 	public function test_get_relative_dir_to_matomo_differentDirectoryInPlugin() {
