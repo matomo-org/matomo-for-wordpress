@@ -73,6 +73,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 * Easily give your colleagues access to your reports if / when needed
 * Easily exclude certain roles, visitors and pages from being tracked
 * Supports WordPress Multisite. (Note: Tag Manager feature does not work in MultiSite.)
+* Import historical data from Google Analytics or WP Statistics
 
 **[Premium paid features:](https://plugins.matomo.org/premium?wp=1)**
 
