@@ -193,8 +193,8 @@ class Menu {
 		if ( is_plugin_active( 'wp-statistics/wp-statistics.php' ) ) {
 			add_submenu_page(
 				self::$parent_slug,
-				__( 'Import Wp Statistics', 'matomo' ),
-				__( 'Import Wp Statistics', 'matomo' ),
+				__( 'Import WP Statistics', 'matomo' ),
+				__( 'Import WP Statistics', 'matomo' ),
 				Capabilities::KEY_SUPERUSER,
 				self::SLUG_IMPORTWPS,
 				[
