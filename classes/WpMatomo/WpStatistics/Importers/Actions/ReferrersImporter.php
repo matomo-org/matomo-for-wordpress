@@ -97,7 +97,8 @@ class ReferrersImporter extends RecordImporter implements ActionsInterface {
 		// Check Protocol Of domain
 		$domain_name = rtrim( preg_replace( '/^https?:\/\//', '', get_site_url() ), ' / ' );
 		// Return SQL
-		$sql = sprintf( "SELECT SUBSTRING_INDEX(REPLACE( REPLACE( referred, 'http://', '') , 'https://' , '') , '/', 1 ) as `domain`, count(referred) as `number` FROM " . DB::table( 'visitor' ) . ' WHERE `referred` REGEXP "^(https?://|www\\.)[\.A-Za-z0-9\-]+\\.[a-zA-Z]{2,4}" AND referred <> \'\' AND LENGTH(referred) >=12  AND `referred` NOT LIKE \'%s\' AND last_counter = \'%s\' GROUP BY domain LIMIT %d', '%' . $wpdb->_real_escape( $domain_name ) . '%', $date->toString(), $limit );
+		$sql = $wpdb->prepare(
+			"SELECT SUBSTRING_INDEX(REPLACE( REPLACE( referred, 'http://', '') , 'https://' , '') , '/', 1 ) as `domain`, count(referred) as `number` FROM " . DB::table( 'visitor' ) . ' WHERE `referred` REGEXP "^(https?://|www\\.)[\.A-Za-z0-9\-]+\\.[a-zA-Z]{2,4}" AND referred <> \'\' AND LENGTH(referred) >=12  AND `referred` NOT LIKE \'%s\' AND last_counter = \'%s\' GROUP BY domain LIMIT %d',array('%' . $wpdb->_real_escape( $domain_name ) . '%', $date->toString(), $limit) );
 		return $wpdb->get_results( $sql, ARRAY_A );
 	}
 }
