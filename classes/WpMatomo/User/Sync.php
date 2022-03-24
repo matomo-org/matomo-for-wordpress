@@ -159,8 +159,10 @@ class Sync {
 	public function sync_current_users_1000() {
 		$idsite = Site::get_matomo_site_id( get_current_blog_id() );
 		if ( $idsite ) {
-			$users = $this->get_users();
-			if ( count( $users ) < 1000 ) {
+			$num_users = count_users();
+			$num_users = $num_users['total_users'];
+			if ( $num_users < 1000 ) {
+				$users = $this->get_users();
 				$this->sync_users( $users, $idsite );
 			}
 		}
