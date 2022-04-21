@@ -337,7 +337,6 @@
         "PickARow": "เลือกแถวที่ต้องการเปรียบเทียบ"
     },
     "API": {
-        "GenerateVisits": "ถ้าคุณไม่มีข้อมูลสำหรับวันนี้ คุณสามารถสร้างข้อมูลบางอย่างใช้ปลั๊กอินการ %1$s เป็นครั้งแรก คุณสามารถเปิดใช้งานปลั๊กอิน %2$s แล้วคลิกที่เมนู 'ตัวสร้างผู้เข้าชม' ในพื้นที่จัดการ Matomo",
         "KeepTokenSecret": "token_auth นี้จะเป็นความลับในการเข้าสู่ระบบและรหัสผ่านของคุณ %1$s ไม่แชร์ %2$s ได้",
         "LoadedAPIs": "โหลด API %s สำเร็จแล้ว",
         "MoreInformation": "สำหรับข้อมูลเพิ่มเติมเกี่ยวกับ Matomo APIs โปรดให้ดูที่ %1$s บทนำสู่การใช้ Matomo API %2$s และ %3$s แหล่งที่มาของ Matomo API %4$s.",
@@ -528,6 +527,9 @@
         "dataTableLabelTypes": "รูปแบบ",
         "OperatingSystems": "ระบบปฏิบัติการ",
         "WidgetBrowsers": "เบราว์เซอร์ของผู้เข้าชม"
+    },
+    "Events": {
+        "PluginDescription": "ติดตามกิจกรรมและรับรายงานเกี่ยวกับกิจกรรมผู้เยี่ยมชมของคุณ"
     },
     "Feedback": {
         "DoYouHaveBugReportOrFeatureRequest": "คุณมีข้อบกพร่องในการรายงานหรือการร้องขอคุณลักษณะหรือไม่",
@@ -1292,7 +1294,7 @@
         "Format_Hour_24": "HH",
         "Format_Interval_Long_D": "d–d MMMM G y",
         "Format_Interval_Long_M": "d MMMM – d MMMM G y",
-        "Format_Interval_Long_Y": "d MMMM G y – d MMMM y",
+        "Format_Interval_Long_Y": "d MMMM G y – d MMMM G y",
         "Format_Interval_Short_D": "d–d MMM y",
         "Format_Interval_Short_M": "d MMM – d MMM y",
         "Format_Interval_Short_Y": "d MMM y – d MMM y",
@@ -2019,8 +2021,8 @@
         "ForAnonymousUsersReportDateToLoadByDefault": "สำหรับผู้ใช้ที่ไม่ระบุชื่อ รายงานวันที่โหลด โดยค่าเริ่มต้น",
         "ManageAccess": "จัดการการเข้าถึง",
         "MenuAnonymousUserSettings": "การตั้งค่าผู้ใช้ที่ไม่ระบุชื่อ",
-        "MenuUsers": "ผู้ใช้",
         "MenuUserSettings": "ตั้งค่าผู้ใช้",
+        "MenuUsers": "ผู้ใช้",
         "PrivAdmin": "จัดการ",
         "PrivNone": "ไม่เข้าใช้งาน",
         "PrivView": "มุมมอง",
@@ -2029,13 +2031,12 @@
         "TheLoginScreen": "หน้าจอการเข้าสู่ระบบ",
         "TypeYourPasswordAgain": "พิมพ์รหัสผ่านของคุณใหม่อีกครั้ง",
         "User": "ผู้ใช้",
+        "Username": "ชื่อผู้ใช้",
         "UsersManagement": "การจัดการผู้ใช้",
         "UsersManagementMainDescription": "สร้างผู้ใช้ใหม่หรืออัพเดตผู้ใช้ที่มีอยู่ จากนั้นคุณสามารถกำหนดสิทธิ์ของพวกเขาได้",
         "YourUsernameCannotBeChanged": "ชื่อผู้ใช้ของคุณไม่สามารถเปลี่ยนแปลงได้",
         "YourVisitsAreIgnoredOnDomain": "%1$s ผู้เข้าชมของคุณจะถูกละเว้น โดย Matomo บน %2$s %3$s (Matomo ละเว้นการที่พบคุกกี้ในเบราว์เซอร์ของคุณ)",
-        "YourVisitsAreNotIgnored": "%1$s ผู้เข้าชมของคุณจะถูกละเว้นโดย Matomo %2$s (Matomo ละเว้นไม่พบคุกกี้ในเบราว์เซอร์ของคุณ)",
-        "ShowAll": "แสดงทั้งหมด",
-        "Username": "ชื่อผู้ใช้"
+        "YourVisitsAreNotIgnored": "%1$s ผู้เข้าชมของคุณจะถูกละเว้นโดย Matomo %2$s (Matomo ละเว้นไม่พบคุกกี้ในเบราว์เซอร์ของคุณ)"
     },
     "VisitFrequency": {
         "ColumnActionsByReturningVisits": "การดำเนินการโดยผู้เข้าชมที่กลับมา",

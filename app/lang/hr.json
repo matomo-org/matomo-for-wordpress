@@ -333,7 +333,6 @@
         "PickARow": "Odaberi redak za usporedbu"
     },
     "API": {
-        "GenerateVisits": "Ako ne postoje podaci za danas, možete ih kreirati pomoću %1$s plugina. Prvo uključite %2$s plugin, zatim koristite opciju 'Kreiraj posjetitelje' u izborniku Matomo administracije.",
         "LoadedAPIs": "%s API je uspješno učitan"
     },
     "Actions": {
@@ -750,7 +749,7 @@
         "CurrencySymbol_GYD": "GYD",
         "CurrencySymbol_HKD": "HKD",
         "CurrencySymbol_HNL": "HNL",
-        "CurrencySymbol_HRK": "HRK",
+        "CurrencySymbol_HRK": "kn",
         "CurrencySymbol_HTG": "HTG",
         "CurrencySymbol_HUF": "HUF",
         "CurrencySymbol_IDR": "IDR",
@@ -931,7 +930,7 @@
         "Currency_LBP": "Libanonska funta",
         "Currency_LKR": "Šrilankanska rupija",
         "Currency_LRD": "Liberijski dolar",
-        "Currency_LSL": "Lesoto loti",
+        "Currency_LSL": "Lesotski loti",
         "Currency_LYD": "Libijski dinar",
         "Currency_MAD": "Marokanski dirham",
         "Currency_MDL": "Moldavski lej",
@@ -1579,6 +1578,9 @@
     "PrivacyManager": {
         "ClickHereSettings": "Klikni za pristup %s postavkama."
     },
+    "ProfessionalServices": {
+        "WidgetPremiumServicesForPiwik": "Premium funkcije i usluge za Matomo"
+    },
     "Referrers": {
         "ColumnWebsite": "Web stranica"
     },
@@ -1632,12 +1634,11 @@
     "UsersManager": {
         "ExceptionEmailExists": "Korisnik sa istim emailom '%s' već postoji.",
         "ExceptionInvalidEmail": "Nije dobar format emaila.",
-        "MenuUsers": "Korisnici",
         "MenuUserSettings": "Korisničke postavke",
+        "MenuUsers": "Korisnici",
         "TypeYourPasswordAgain": "Ponovi novu lozinku.",
-        "YourUsernameCannotBeChanged": "Korisničko ime se ne može promijeniti",
-        "ShowAll": "Prikaži sve",
-        "Username": "Korisničko ime"
+        "Username": "Korisničko ime",
+        "YourUsernameCannotBeChanged": "Korisničko ime se ne može promijeniti"
     },
     "VisitTime": {
         "ColumnServerTime": "Vrijeme servera",

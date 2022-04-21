@@ -104,6 +104,9 @@ class IniReader
         // We cannot use INI_SCANNER_RAW by default because it is buggy under PHP 5.3.14 and 5.4.4
         // http://3v4l.org/m24cT
         $rawValues = @parse_ini_string($ini, true, INI_SCANNER_RAW);
+        if ($rawValues === false) {
+            return $this->decode($array, $array);
+        }
         $array = $this->decode($array, $rawValues);
 
         return $array;
@@ -391,5 +394,25 @@ class IniReader
     private function noLossWhenCastToInt($value)
     {
         return (string) ($value + 0) === $value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUseNativeFunction()
+    {
+        return $this->useNativeFunction;
+    }
+
+    /**
+     * @param bool $useNativeFunction
+     *
+     * @return IniReader
+     */
+    public function setUseNativeFunction($useNativeFunction)
+    {
+        $this->useNativeFunction = $useNativeFunction;
+
+        return $this;
     }
 }
