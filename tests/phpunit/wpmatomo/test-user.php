@@ -27,6 +27,7 @@ class UserTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_current_matomo_user_login_when_mapped() {
+
 		$id1 = self::factory()->user->create();
 		$id2 = self::factory()->user->create();
 
@@ -43,6 +44,10 @@ class UserTest extends MatomoUnit_TestCase {
 	 * @group ms-required
 	 */
 	public function test_get_current_matomo_user_login_mapping_is_stored_per_blog() {
+		if (!is_multisite()) {
+			$this->markTestSkipped('Not multisite.');
+			return;
+		}
 		$user_id = $this->create_set_super_admin();
 		wp_set_current_user( $user_id );
 

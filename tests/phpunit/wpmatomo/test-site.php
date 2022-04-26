@@ -36,6 +36,10 @@ class SiteTest extends MatomoUnit_TestCase {
 	 * @group ms-required
 	 */
 	public function test_get_current_matomo_site_id_mapping_is_stored_per_blog() {
+		if (!is_multisite()) {
+			$this->markTestSkipped('Not multisite.');
+			return;
+		}
 		$blogid = self::factory()->blog->create();
 		Site::map_matomo_site_id( get_current_blog_id(), 42 );
 		Site::map_matomo_site_id( $blogid, 89 );
@@ -60,6 +64,10 @@ class SiteTest extends MatomoUnit_TestCase {
 	 * @group ms-required
 	 */
 	public function test_map_matomo_site_id_is_stored_across_blogs() {
+		if (!is_multisite()) {
+			$this->markTestSkipped('Not multisite.');
+			return;
+		}
 		$blogid = self::factory()->blog->create();
 		Site::map_matomo_site_id( $blogid, 89 );
 

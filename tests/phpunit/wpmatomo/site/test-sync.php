@@ -61,6 +61,10 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 	 * @group ms-required
 	 */
 	public function test_sync_all_passes_correct_values_to_sync_site_when_there_are_multiple_blogs() {
+		if (!is_multisite()) {
+			$this->markTestSkipped('Not multisite.');
+			return;
+		}
 		$blogid1 = self::factory()->blog->create(
 			array(
 				'domain' => 'foobar.com',
@@ -123,6 +127,10 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 	 * @group ms-required
 	 */
 	public function test_sync_current_site_passes_correct_values_to_sync_site_when_we_are_on_different_blog() {
+		if (!is_multisite()) {
+			$this->markTestSkipped('Not multisite.');
+			return;
+		}
 		$blogid1 = self::factory()->blog->create(
 			array(
 				'domain' => 'foobar.com',
