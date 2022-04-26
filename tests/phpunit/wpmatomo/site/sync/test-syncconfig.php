@@ -67,7 +67,12 @@ class SiteSyncConfigTest extends MatomoAnalytics_TestCase {
 			)
 		);
 		$general = \Piwik\Config::getInstance()->General;
-		$this->assertTrue( ! empty( $general['foo'] ) );
+		if (!is_multisite()) {
+			$this->assertFalse(  empty( $general['foo'] ) );
+		} else {
+			$this->assertTrue(  empty( $general['foo'] ) );
+		}
+
 
 		$this->sync_config->sync_config_for_current_site();
 
@@ -84,9 +89,16 @@ class SiteSyncConfigTest extends MatomoAnalytics_TestCase {
 		$this->sync_config->set_config_value( 'NewCategory', 'hello', 'world' );
 
 		$general = \Piwik\Config::getInstance()->General;
-		$this->assertTrue( ! empty( $general['foo'] ) );
 		$new_category = \Piwik\Config::getInstance()->NewCategory;
-		$this->assertNotEmpty( $new_category );
+		if (!is_multisite()) {
+			$this->assertFalse(  empty( $general['foo'] ) );
+			$this->assertNotEmpty( $new_category );
+		} else {
+			$this->assertTrue(  empty( $general['foo'] ) );
+			$this->assertEmpty( $new_category );
+		}
+
+
 
 		$this->sync_config->sync_config_for_current_site();
 
