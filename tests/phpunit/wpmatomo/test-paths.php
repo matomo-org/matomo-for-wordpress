@@ -58,8 +58,8 @@ class PathsTest extends MatomoUnit_TestCase {
 	 * @group ms-required
 	 */
 	public function test_get_upload_base_dir_forBlog() {
-		if (!is_multisite()) {
-			$this->markTestSkipped('Not multisite.');
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
 			return;
 		}
 		$blogid1 = self::factory()->blog->create();
@@ -223,8 +223,8 @@ class PathsTest extends MatomoUnit_TestCase {
 	 * @group ms-required
 	 */
 	public function test_get_gloal_upload_dir_if_possible_forBlog() {
-		if (!is_multisite()) {
-			$this->markTestSkipped('Not multisite.');
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
 			return;
 		}
 		$blogid1 = self::factory()->blog->create();
