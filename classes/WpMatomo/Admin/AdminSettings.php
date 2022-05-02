@@ -17,12 +17,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class AdminSettings {
-	const TAB_TRACKING    = 'tracking';
-	const TAB_ACCESS      = 'access';
-	const TAB_EXCLUSIONS  = 'exlusions';
-	const TAB_PRIVACY     = 'privacy';
-	const TAB_GEOLOCATION = 'geolocation';
-	const TAB_ADVANCED    = 'advanced';
+	const TAB_TRACKING         = 'tracking';
+	const TAB_ACCESS           = 'access';
+	const TAB_EXCLUSIONS       = 'exlusions';
+	const TAB_PRIVACY          = 'privacy';
+	const TAB_GEOLOCATION      = 'geolocation';
+	const TAB_ITHEMES_SECURITY = 'isec';
+	const TAB_ADVANCED         = 'advanced';
 
 	/**
 	 * @var Settings
@@ -63,14 +64,19 @@ class AdminSettings {
 		$geolocation     = new GeolocationSettings( $this->settings );
 		$privacy         = new PrivacySettings( $this->settings );
 		$advanced        = new AdvancedSettings( $this->settings );
+		$isec            = new IthemesSecuritySettings( $this->settings );
 		$setting_tabs    = [
 			self::TAB_TRACKING    => $tracking,
 			self::TAB_ACCESS      => $access_settings,
 			self::TAB_PRIVACY     => $privacy,
 			self::TAB_EXCLUSIONS  => $exclusions,
 			self::TAB_GEOLOCATION => $geolocation,
-			self::TAB_ADVANCED    => $advanced,
 		];
+		$isec_active     = is_plugin_active( 'better-wp-security/better-wp-security.php' );
+		if ( $isec_active ) {
+			$setting_tabs[ self::TAB_ITHEMES_SECURITY ] = $isec;
+		}
+		$setting_tabs[ self::TAB_ADVANCED ] = $advanced;
 
 		$active_tab = self::TAB_TRACKING;
 
@@ -80,6 +86,9 @@ class AdminSettings {
 				self::TAB_EXCLUSIONS => $exclusions,
 				self::TAB_PRIVACY    => $privacy,
 			];
+			if ( $isec_active ) {
+				$setting_tabs[ self::TAB_ITHEMES_SECURITY ] = $isec;
+			}
 		}
 
 		$setting_tabs = apply_filters( 'matomo_setting_tabs', $setting_tabs, $this->settings );
