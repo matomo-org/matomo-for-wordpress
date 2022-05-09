@@ -157,7 +157,7 @@ class Sync {
 	 * @see Sync::sync_current_users()
 	 */
 	public function sync_current_users_1000() {
-		if (!is_plugin_active('matomo/matomo.php')) {
+		if ( ! is_plugin_active( 'matomo/matomo.php' ) ) {
 			// @see https://github.com/matomo-org/matomo-for-wordpress/issues/577
 			return;
 		}
