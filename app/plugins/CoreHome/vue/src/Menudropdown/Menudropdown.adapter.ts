@@ -6,10 +6,10 @@
  */
 
 import createAngularJsAdapter from '../createAngularJsAdapter';
-import Menudropdown from './Menudropdown.vue';
+import MenuDropdown from './MenuDropdown.vue';
 
 export default createAngularJsAdapter({
-  component: Menudropdown,
+  component: MenuDropdown,
   scope: {
     menuTitle: {
       angularJsBind: '@',
@@ -27,7 +27,7 @@ export default createAngularJsAdapter({
   directiveName: 'piwikMenudropdown',
   transclude: true,
   events: {
-    'after-select': ($event, scope) => {
+    'after-select': ($event, vm, scope) => {
       setTimeout(() => {
         scope.$apply();
       }, 0);

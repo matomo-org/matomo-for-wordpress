@@ -117,36 +117,37 @@
                     }
                     configuredTrackers[variableName] = tracker;
 
+                    if (matomoConfig.requireCookieConsent) {
+                      	tracker.requireCookieConsent();
+                    }
+
+                    if (matomoConfig.disableBrowserFeatureDetection && typeof tracker.disableBrowserFeatureDetection === 'function') {
+                        tracker.disableBrowserFeatureDetection();
+                    }
+
                     if (matomoConfig.disableCookies) {
                         tracker.disableCookies();
-                    }
-
-                    if (matomoConfig.requireCookieConsent) {
-                        tracker.requireCookieConsent();
-                    }
-
-                    if (matomoConfig.requireConsent) {
-                        tracker.requireConsent();
                     }
 
                     if (matomoConfig.enableCrossDomainLinking) {
                         tracker.enableCrossDomainLinking();
                     }
 
-                    if (matomoConfig.setSecureCookie) {
-                        tracker.setSecureCookie(true);
-                    }
-
                     if (matomoConfig.cookieSameSite) {
                         tracker.setCookieSameSite(matomoConfig.cookieSameSite);
                     }
 
-                    if (matomoConfig.cookieDomain) {
-                        tracker.setCookieDomain(matomoConfig.cookieDomain);
+                    if (matomoConfig.setSecureCookie) {
+                        tracker.setSecureCookie(true);
                     }
 
                     if (matomoConfig.cookiePath) {
                         tracker.setCookiePath(matomoConfig.cookiePath);
+                    }
+
+
+                    if (matomoConfig.cookieDomain) {
+                        tracker.setCookieDomain(matomoConfig.cookieDomain);
                     }
 
                     if (matomoConfig.domains
@@ -174,6 +175,11 @@
                     if (matomoConfig.enableLinkTracking) {
                         tracker.enableLinkTracking();
                     }
+
+                    if (matomoConfig.requireConsent) {
+                        tracker.requireConsent();
+                    }
+
                     if (matomoConfig.enableDoNotTrack) {
                         tracker.setDoNotTrack(1);
                     }
@@ -217,7 +223,7 @@
                     var dimIndex;
                     for (dimIndex = 0; dimIndex < matomoConfig.customDimensions.length; dimIndex++) {
                         var dimension = matomoConfig.customDimensions[dimIndex];
-                        if (dimension && TagManager.utils.isObject(dimension) && dimension.index && dimension.value) {
+                        if (dimension && TagManager.utils.isObject(dimension) && dimension.index && dimension.hasOwnProperty('value')) {
                             tracker.setCustomDimension(dimension.index, dimension.value);
                         }
                     }

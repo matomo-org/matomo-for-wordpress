@@ -107,8 +107,18 @@ trait StyleTrait
 
     /**
      * Set fill color to transparent.
+	 * @param int $seriesIndex
      */
-    public function deactivateFillColor()
+    public function deactivateFillColor(int $seriesIndex = 0)
+    {
+        unset($this->fillColor[$seriesIndex]);
+    }
+
+    /**
+     * Set all fill color to transparent.
+     * @return void
+     */
+    public function deactivateAllFillColor()
     {
         $this->fillColor = [];
     }
@@ -140,11 +150,11 @@ trait StyleTrait
      */
     public function getFillColor(int $seriesIndex = 0): array
     {
-        if (empty($this->fillColor)) {
+        if (!isset($this->fillColor[$seriesIndex])) {
             return [];
         }
 
-        return $this->fillColor[$seriesIndex] ?? $this->fillColor[0];
+        return $this->fillColor[$seriesIndex];
     }
 
     /**

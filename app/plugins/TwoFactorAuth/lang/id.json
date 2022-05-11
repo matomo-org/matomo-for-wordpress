@@ -1,0 +1,5 @@
+{
+    "TwoFactorAuth": {
+        "WrongAuthCodeTryAgain": "Kode otentikasi yang dimasukkan salah. Silakan coba lagi."
+    }
+}

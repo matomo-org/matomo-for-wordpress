@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Device Detector - The Universal Device Detection library for parsing User Agents
  *
@@ -9,6 +7,8 @@ declare(strict_types=1);
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
+
+declare(strict_types=1);
 
 namespace DeviceDetector;
 
@@ -68,7 +68,7 @@ class DeviceDetector
     /**
      * Current version number of DeviceDetector
      */
-    public const VERSION = '5.0.0';
+    public const VERSION = '5.0.5';
 
     /**
      * Constant used as value for unknown browser / os
@@ -79,7 +79,7 @@ class DeviceDetector
      * Holds all registered client types
      * @var array
      */
-    public static $clientTypes = [];
+    protected $clientTypes = [];
 
     /**
      * Holds the useragent that should be parsed
@@ -217,7 +217,7 @@ class DeviceDetector
             }
         }
 
-        foreach (self::$clientTypes as $client) {
+        foreach ($this->clientTypes as $client) {
             if (\strtolower($methodName) === 'is' . \strtolower(\str_replace(' ', '', $client))) {
                 return $this->getClient('type') === $client;
             }
@@ -248,7 +248,7 @@ class DeviceDetector
     public function addClientParser(AbstractClientParser $parser): void
     {
         $this->clientParsers[] = $parser;
-        self::$clientTypes[]   = $parser->getName();
+        $this->clientTypes[]   = $parser->getName();
     }
 
     /**
@@ -609,6 +609,7 @@ class DeviceDetector
             ];
         }
 
+        /** @var array $client */
         $client        = $deviceDetector->getClient();
         $browserFamily = 'Unknown';
 
@@ -622,6 +623,7 @@ class DeviceDetector
 
         unset($client['short_name'], $client['family']);
 
+        /** @var array $os */
         $os       = $deviceDetector->getOs();
         $osFamily = $os['family'] ?? 'Unknown';
 
@@ -858,7 +860,7 @@ class DeviceDetector
         /**
          * Assume all devices running iOS / Mac OS are from Apple
          */
-        if (empty($this->brand) && \in_array($osName, ['tvOS', 'watchOS', 'iOS', 'Mac'])) {
+        if (empty($this->brand) && \in_array($osName, ['iPadOS', 'tvOS', 'watchOS', 'iOS', 'Mac'])) {
             $this->brand = 'Apple';
         }
 
@@ -946,7 +948,14 @@ class DeviceDetector
         /**
          * All devices running Opera TV Store are assumed to be a tv
          */
-        if ($this->matchUserAgent('Opera TV Store')) {
+        if ($this->matchUserAgent('Opera TV Store| OMI/')) {
+            $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
+        }
+
+        /**
+         * All devices that contain Andr0id in string are assumed to be a tv
+         */
+        if ($this->matchUserAgent('Andr0id|Android TV')) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
         }
 

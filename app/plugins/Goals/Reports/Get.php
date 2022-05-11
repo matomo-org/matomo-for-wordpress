@@ -11,14 +11,12 @@ namespace Piwik\Plugins\Goals\Reports;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\DataTable;
-use Piwik\Metrics\Formatter;
 use Piwik\NumberFormatter;
 use Piwik\Piwik;
 use Piwik\Plugin;
 use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Evolution;
 use Piwik\Plugins\CoreVisualizations\Visualizations\Sparklines;
-use Piwik\Plugins\Goals\API;
 use Piwik\Plugins\Goals\Goals;
 use Piwik\Plugins\Goals\Pages;
 use Piwik\Report\ReportWidgetFactory;
@@ -66,7 +64,7 @@ class Get extends Base
         if (empty($idSite)) {
             return;
         }
-        
+
         $goals   = $this->getGoals();
         $reports = Goals::getReportsWithGoalMetrics();
 
@@ -113,7 +111,7 @@ class Get extends Base
 
             if ($onlySummary && !empty($idGoal)) {
                 if (is_numeric($idGoal)) {
-                    $view->config->title_attributes = array('piwik-goal-page-link' => $idGoal);
+                    $view->config->title_attributes = array('goal-page-link' => $idGoal);
                 }
 
                 // in Goals overview summary we show proper title for a goal
@@ -193,7 +191,7 @@ class Get extends Base
             } else {
                 $view->config->title = Piwik::translate('General_EvolutionOverPeriod');
             }
-            
+
             if (empty($view->config->columns_to_display)) {
                 $view->config->columns_to_display = array('nb_conversions');
             }

@@ -1,0 +1,14 @@
+{
+    "UsersManager": {
+        "AllWebsites": "כל האתרים",
+        "Email": "אימייל",
+        "ManageAccess": "ניהול הרשאות",
+        "MenuUserSettings": "הגדרות משתמש",
+        "MenuUsers": "משתמשים",
+        "PrivNone": "אין הרשאות",
+        "PrivView": "הצג",
+        "User": "משתמש",
+        "Username": "שם משתמש",
+        "UsersManagement": "ניהול משתמשים"
+    }
+}

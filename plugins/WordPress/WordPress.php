@@ -11,6 +11,7 @@ namespace Piwik\Plugins\WordPress;
 
 use Exception;
 use Piwik\API\Request;
+use Piwik\AssetManager;
 use Piwik\Common;
 use Piwik\FrontController;
 use Piwik\Piwik;
@@ -136,7 +137,7 @@ class WordPress extends Plugin
 
     public function makeNewAssetManagerObject(&$assetManager)
     {
-	    $assetManager = new WpAssetManager();
+	    $assetManager = new AssetManager();
     }
 
     public function supportsAsync(&$supportsAsync)
@@ -347,7 +348,7 @@ class WordPress extends Plugin
                 throw new Exception('This feature is not available');
             }
         }
-        
+
         if ($requestedModule === 'sitesmanager' && $requestedAction === 'sitewithoutdata') {
             // we don't want the no data message to appear as it contains integration instructions which aren't needed
             // and links to not existing sites

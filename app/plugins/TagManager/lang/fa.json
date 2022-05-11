@@ -1,0 +1,26 @@
+{
+    "TagManager": {
+        "CategoryClicks": "کلیک ها",
+        "CategoryCustom": "سفارشی",
+        "CategoryDate": "تاریخ",
+        "CategoryDevice": "وسیله",
+        "CategoryEmail": "ایمیل",
+        "CategoryErrors": "خطاها",
+        "CategoryHistory": "تاریخچه",
+        "ComparisonContains": "شامل",
+        "ComparisonEndsWith": "پایان با",
+        "ComparisonGreaterThan": "بیشتر است از",
+        "ComparisonStartsWith": "شروع شده با",
+        "Condition": "وضعیت",
+        "CreatedDate": "تاریخ ایجاد",
+        "Filter": "فیلتر",
+        "LearnMore": "اطلاعات بیشتر",
+        "PageTitleVariableName": "عنوان صفحه",
+        "PageUrlVariableName": "آدرس صفحه",
+        "ReferrerUrlVariableName": "URL بازگشتی",
+        "ReferrerVariableName": "URL بازگشتی",
+        "Type": "نوع",
+        "Version": "ویرایش",
+        "ViewX": "مشاهده %s"
+    }
+}

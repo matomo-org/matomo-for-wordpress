@@ -1,0 +1,8 @@
+{
+    "VisitsSummary": {
+        "AverageGenerationTime": "vidējais ģenerēšanas ilgums",
+        "NbActionsDescription": "%s darbības",
+        "WidgetLastVisits": "Pēdējo apmeklējumu grafiks",
+        "WidgetVisits": "Apmeklējumu pārskats"
+    }
+}

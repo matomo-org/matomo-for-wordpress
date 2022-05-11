@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Device Detector - The Universal Device Detection library for parsing User Agents
  *
@@ -9,6 +7,8 @@ declare(strict_types=1);
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
+
+declare(strict_types=1);
 
 namespace DeviceDetector\Parser;
 
@@ -40,6 +40,7 @@ class OperatingSystem extends AbstractParser
     protected static $operatingSystems = [
         'AIX' => 'AIX',
         'AND' => 'Android',
+        'ADR' => 'Android TV',
         'AMG' => 'AmigaOS',
         'ATV' => 'tvOS',
         'ARL' => 'Arch Linux',
@@ -51,7 +52,9 @@ class OperatingSystem extends AbstractParser
         'BMP' => 'Brew',
         'CAI' => 'Caixa Mágica',
         'CES' => 'CentOS',
+        'CLR' => 'ClearOS Mobile',
         'COS' => 'Chrome OS',
+        'CHN' => 'China OS',
         'CYN' => 'CyanogenMod',
         'DEB' => 'Debian',
         'DEE' => 'Deepin',
@@ -61,9 +64,11 @@ class OperatingSystem extends AbstractParser
         'FEN' => 'Fenix',
         'FOS' => 'Firefox OS',
         'FIR' => 'Fire OS',
+        'FOR' => 'Foresight Linux',
         'FRE' => 'Freebox',
         'BSD' => 'FreeBSD',
         'FYD' => 'FydeOS',
+        'FUC' => 'Fuchsia',
         'GNT' => 'Gentoo',
         'GRI' => 'GridOS',
         'GTV' => 'Google TV',
@@ -76,9 +81,13 @@ class OperatingSystem extends AbstractParser
         'INF' => 'Inferno',
         'JME' => 'Java ME',
         'KOS' => 'KaiOS',
+        'KAN' => 'Kanotix',
         'KNO' => 'Knoppix',
+        'KTV' => 'KreaTV',
         'KBT' => 'Kubuntu',
         'LIN' => 'GNU/Linux',
+        'LND' => 'LindowsOS',
+        'LNS' => 'Linspire',
         'LBT' => 'Lubuntu',
         'LOS' => 'Lumin OS',
         'VLN' => 'VectorLinux',
@@ -88,6 +97,7 @@ class OperatingSystem extends AbstractParser
         'MDR' => 'Mandriva',
         'SMG' => 'MeeGo',
         'MCD' => 'MocorDroid',
+        'MON' => 'moonOS',
         'MIN' => 'Mint',
         'MLD' => 'MildWild',
         'MOR' => 'MorphOS',
@@ -100,10 +110,14 @@ class OperatingSystem extends AbstractParser
         'T64' => 'OSF1',
         'OBS' => 'OpenBSD',
         'OWR' => 'OpenWrt',
+        'OTV' => 'Opera TV',
         'ORD' => 'Ordissimo',
+        'PAR' => 'Pardus',
         'PCL' => 'PCLinuxOS',
+        'PLA' => 'Plasma Mobile',
         'PSP' => 'PlayStation Portable',
         'PS3' => 'PlayStation',
+        'PUR' => 'PureOS',
         'RHT' => 'Red Hat',
         'ROS' => 'RISC OS',
         'ROK' => 'Roku OS',
@@ -138,7 +152,8 @@ class OperatingSystem extends AbstractParser
         'WRT' => 'Windows RT',
         'XBX' => 'Xbox',
         'XBT' => 'Xubuntu',
-        'YNS' => 'YunOs',
+        'YNS' => 'YunOS',
+        'ZEN' => 'Zenwalk',
         'IOS' => 'iOS',
         'POS' => 'palmOS',
         'WOS' => 'webOS',
@@ -150,7 +165,10 @@ class OperatingSystem extends AbstractParser
      * @var array
      */
     protected static $osFamilies = [
-        'Android'               => ['AND', 'CYN', 'FIR', 'REM', 'RZD', 'MLD', 'MCD', 'YNS', 'GRI', 'HAR'],
+        'Android'               => [
+            'AND', 'CYN', 'FIR', 'REM', 'RZD', 'MLD', 'MCD', 'YNS', 'GRI', 'HAR',
+            'ADR', 'CLR',
+        ],
         'AmigaOS'               => ['AMG', 'MOR'],
         'BlackBerry'            => ['BLB', 'QNX'],
         'Brew'                  => ['BMP'],
@@ -166,7 +184,8 @@ class OperatingSystem extends AbstractParser
             'LIN', 'ARL', 'DEB', 'KNO', 'MIN', 'UBT', 'KBT', 'XBT', 'LBT', 'FED',
             'RHT', 'VLN', 'MDR', 'GNT', 'SAB', 'SLW', 'SSE', 'CES', 'BTR', 'SAF',
             'ORD', 'TOS', 'RSO', 'DEE', 'FRE', 'MAG', 'FEN', 'CAI', 'PCL', 'HAS',
-            'LOS', 'DVK', 'ROK', 'OWR',
+            'LOS', 'DVK', 'ROK', 'OWR', 'OTV', 'KTV', 'PUR', 'PLA', 'FUC', 'PAR',
+            'FOR', 'MON', 'KAN', 'ZEN', 'LND', 'LNS', 'CHN',
         ],
         'Mac'                   => ['MAC'],
         'Mobile Gaming Console' => ['PSP', 'NDS', 'XBX'],
@@ -366,11 +385,11 @@ class OperatingSystem extends AbstractParser
             return 'SuperH';
         }
 
-        if ($this->matchUserAgent('64bit|WOW64|(?:Intel)?x64|win64|amd64|x86_?64')) {
+        if ($this->matchUserAgent('64-?bit|WOW64|(?:Intel)?x64|win64|amd64|x86_?64')) {
             return 'x64';
         }
 
-        if ($this->matchUserAgent('(?:i[0-9]|x)86|i86pc')) {
+        if ($this->matchUserAgent('.+32bit|.+win32|(?:i[0-9]|x)86|i86pc')) {
             return 'x86';
         }
 
