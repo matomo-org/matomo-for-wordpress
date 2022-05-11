@@ -159,7 +159,7 @@ class AssetManager extends Singleton
         return $result;
     }
 
-    private function getPluginUmdChunks()
+    protected function getPluginUmdChunks()
     {
         $fetcher = $this->getPluginUmdJScriptFetcher();
 
