@@ -1,0 +1,13 @@
+{
+    "Login": {
+        "ExceptionPasswordMD5HashExpected": "باراميتر كلمة المرور كان يتوقع أن يكون MD5 hash لكلمة المرور.",
+        "InvalidOrExpiredToken": "الشفرة غير صالحة أو انتهت صلاحيتها",
+        "InvalidUsernameEmail": "اسم المستخدم/البريد الإلكتروني غير صالح",
+        "LogIn": "تسجيل الدخول",
+        "LoginPasswordNotCorrect": "اسم المستخدم أو كلمة المرور غير صحيحة",
+        "LostYourPassword": "فقدت كلمة المرور؟",
+        "PasswordRepeat": "كلمة المرور (تأكيد)",
+        "PasswordsDoNotMatch": "كلمتي المرور غير متطابقتين.",
+        "RememberMe": "تذكرني"
+    }
+}

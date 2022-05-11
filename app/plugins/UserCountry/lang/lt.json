@@ -1,0 +1,23 @@
+{
+    "UserCountry": {
+        "City": "Miestas",
+        "CityAndCountry": "%1$s, %2$s",
+        "Continent": "Kontinentas",
+        "Continents": "Kontinentai",
+        "Country": "Šalis",
+        "CountryCode": "Šalies kodas",
+        "country_a1": "Anoniminis įgaliotasis serveris",
+        "country_a2": "Palydovinis tiekėjas",
+        "country_cat": "Kataloniškai kalbančios bendruomenės",
+        "country_o1": "Kita šalis",
+        "DistinctCountries": "%s atskirti šalis",
+        "GeolocationPageDesc": "Šiame puslapyje galite keisti kaip Matomo nustato lankytojų geografines vietas.",
+        "Latitude": "Platuma",
+        "Latitudes": "Platumos",
+        "Location": "Vietovė",
+        "Longitude": "Ilguma",
+        "Longitudes": "Ilgumos",
+        "Region": "Regionas",
+        "SubmenuLocations": "Vietovės"
+    }
+}

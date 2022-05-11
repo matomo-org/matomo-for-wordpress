@@ -1,0 +1,25 @@
+{
+    "UserCountryMap": {
+        "AndNOthers": "i %s innych",
+        "Cities": "Miasta",
+        "Countries": "Państw",
+        "DaysAgo": "%s dni temu",
+        "GoalConversions": "%s konwersji celów",
+        "HoursAgo": "%s godzin temu",
+        "MinutesAgo": "%s minut temu",
+        "NoVisit": "Brak wizyt",
+        "None": "Brak",
+        "PluginDescription": "Wtyczka dostarcza widżetów Mapa Odwiedzin i Mapa Czasu Rzeczywistego. NOTKA: Wymaga włączenia wtyczki UserCountry.",
+        "RealTimeMap": "Mapa Czasu Rzeczywistego",
+        "Regions": "Regiony",
+        "Searches": "%s wyszukań",
+        "SecondsAgo": "%s sekund temu",
+        "ShowingVisits": "Geolokalizowane wizyty z ostatnich",
+        "Unlocated": "<b>%1$s</b> %2$s wizyt z %3$s nie mogło zostać zlokalizowane.",
+        "VisitorMap": "Mapa Odwiedzin",
+        "WithUnknownCity": "%s z nieznanego miasta",
+        "WithUnknownRegion": "%s z nieznanego regionu",
+        "WorldWide": "World-Wide",
+        "map": "mapa"
+    }
+}

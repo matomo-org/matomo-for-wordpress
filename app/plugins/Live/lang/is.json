@@ -1,0 +1,8 @@
+{
+    "Live": {
+        "GoalType": "Tegund",
+        "LastHours": "Síðustu %s klukkustundir",
+        "LastMinutes": "Síðustu %s mínútur",
+        "Referrer_URL": "URL Sendanda"
+    }
+}

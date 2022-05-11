@@ -1,0 +1,9 @@
+{
+    "UserLanguage": {
+        "BrowserLanguage": "Browsersprache",
+        "LanguageCode": "Sprach-Code",
+        "PluginDescription": "Zeigt die Sprache an, die von den Browsern Ihrer Besucher verwendet wird.",
+        "getLanguageCodeDocumentation": "Dieser Bericht zeigt auf welchen exakten Sprachcode die Browser der Besucher eingestellt sind (z. B. \"Deutsch - Österreich (de-at)\")",
+        "getLanguageDocumentation": "Dieser Bericht zeigt welche Sprache die Browser der Besucher verwenden (z. B. \"Englisch\")"
+    }
+}
