@@ -40,7 +40,8 @@ use WpMatomo\Roles;
 			echo "<td><select name='" . esc_attr( AccessSettings::FORM_NAME ) . '[' . esc_attr( $matomo_role_id ) . "]'>";
 			$matomo_value = $access->get_permission_for_role( $matomo_role_id );
 			foreach ( Access::$matomo_permissions as $matomo_permission => $matomo_display_name ) {
-				echo "<option value='" . esc_attr( $matomo_permission ) . "' " . ( $matomo_value === $matomo_permission ? 'selected' : '' ) . '>' . esc_html__( $matomo_display_name, 'matomo' ) . '</option>';
+				// phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+                echo "<option value='" . esc_attr( $matomo_permission ) . "' " . ( $matomo_value === $matomo_permission ? 'selected' : '' ) . '>' . esc_html__( $matomo_display_name, 'matomo' ) . '</option>';
 			}
 			echo '</td></tr>';
 		}
