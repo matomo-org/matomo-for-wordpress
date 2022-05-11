@@ -92,11 +92,11 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$this->assertEquals(
 			array(
 				array(
-					'login'            => 'admin',
-					'email'            => 'admin@example.org',
-					'twofactor_secret' => '',
-					'superuser_access' => '1',
-					'idchange_last_viewed' => null
+					'login'                => 'admin',
+					'email'                => 'admin@example.org',
+					'twofactor_secret'     => '',
+					'superuser_access'     => '1',
+					'idchange_last_viewed' => null,
 				),
 			),
 			$all_users
