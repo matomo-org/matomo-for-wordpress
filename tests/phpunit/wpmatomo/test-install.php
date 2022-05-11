@@ -95,7 +95,8 @@ class InstallTest extends MatomoAnalytics_TestCase {
 					'login'            => 'admin',
 					'email'            => 'admin@example.org',
 					'twofactor_secret' => '',
-					'superuser_access' => 1,
+					'superuser_access' => '1',
+					'idchange_last_viewed' => null
 				),
 			),
 			$all_users
