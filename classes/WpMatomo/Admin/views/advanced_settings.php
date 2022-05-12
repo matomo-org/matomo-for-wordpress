@@ -68,9 +68,9 @@ if ( $was_updated ) {
 					?>
 				</td>
 				<td width="50%">
-					<?php esc_html_e('By default, when you uninstall the Matomo plugin, all data is deleted and cannot be restored unless you have backups. When you disable this feature, the tracked data in the database will be kept. This can be useful to prevent accidental deletion of all your historical analytics data when you uninstall the plugin.', 'matomo');?> <a
+					<?php esc_html_e( 'By default, when you uninstall the Matomo plugin, all data is deleted and cannot be restored unless you have backups. When you disable this feature, the tracked data in the database will be kept. This can be useful to prevent accidental deletion of all your historical analytics data when you uninstall the plugin.', 'matomo' ); ?> <a
 							href="https://matomo.org/faq/wordpress/how-do-i-delete-or-reset-the-matomo-for-wordpress-data-completely/"
-							target="_blank" rel="noreferrer noopener"><?php esc_html_e('Learn more', 'matomo');?></a>
+							target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'Learn more', 'matomo' ); ?></a>
 				</td>
 			</tr>
 		<?php } ?>

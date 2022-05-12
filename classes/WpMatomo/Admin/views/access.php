@@ -41,7 +41,7 @@ use WpMatomo\Roles;
 			$matomo_value = $access->get_permission_for_role( $matomo_role_id );
 			foreach ( Access::$matomo_permissions as $matomo_permission => $matomo_display_name ) {
 				// phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
-                echo "<option value='" . esc_attr( $matomo_permission ) . "' " . ( $matomo_value === $matomo_permission ? 'selected' : '' ) . '>' . esc_html__( $matomo_display_name, 'matomo' ) . '</option>';
+				echo "<option value='" . esc_attr( $matomo_permission ) . "' " . ( $matomo_value === $matomo_permission ? 'selected' : '' ) . '>' . esc_html__( $matomo_display_name, 'matomo' ) . '</option>';
 			}
 			echo '</td></tr>';
 		}
