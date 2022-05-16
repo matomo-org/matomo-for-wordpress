@@ -56,6 +56,9 @@
       v-show="showInlineHelp"
     >
       <div v-html="$sanitize(actualInlineHelp)"/>
+      <span class="helpDate"
+            v-if="reportGenerated!=''"
+            v-html="$sanitize(reportGenerated)"></span>
       <a
         v-if="helpUrl"
         rel="noreferrer noopener"
@@ -68,28 +71,21 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  defineAsyncComponent,
-} from 'vue';
+import { defineComponent } from 'vue';
 import Matomo from '../Matomo/Matomo';
 import Periods from '../Periods/Periods';
+import useExternalPluginComponent from '../useExternalPluginComponent';
 
 // working around a cycle in dependencies (CoreHome depends on Feedback, Feedback depends on
 // CoreHome)
-// TODO: may need a generic solution at some point, but it's bad practice to have
-// cyclic dependencies like this. it worked before because it was individual files
-// dependening on each other, not whole plugins.
-const RateFeature = defineAsyncComponent(() => new Promise((resolve) => {
-  window.$(document).ready(() => {
-    const { Feedback } = window as any; // eslint-disable-line
-    if (Feedback) {
-      resolve(Feedback.RateFeature);
-    } else { // feedback plugin not loaded
-      resolve(null);
-    }
-  });
-}));
+const RateFeature = useExternalPluginComponent('Feedback', 'RateFeature');
+
+interface EnrichedHeadlineData {
+  showIcons: boolean;
+  showInlineHelp: boolean;
+  actualFeatureName?: string | null;
+  actualInlineHelp?: string | null,
+}
 
 /**
  * Usage:
@@ -139,7 +135,7 @@ export default defineComponent({
   components: {
     RateFeature,
   },
-  data() {
+  data(): EnrichedHeadlineData {
     return {
       showIcons: false,
       showInlineHelp: false,
@@ -156,13 +152,13 @@ export default defineComponent({
     },
   },
   mounted() {
-    const { root } = this.$refs;
+    const root = this.$refs.root as HTMLElement;
 
     // timeout used since angularjs does not fill out the transclude at this point
     setTimeout(() => {
       if (!this.actualInlineHelp) {
         let helpNode = root.querySelector('.title .inlineHelp');
-        if (!helpNode && root.parentElement.nextElementSibling) {
+        if (!helpNode && root.parentElement?.nextElementSibling) {
           // hack for reports :(
           helpNode = (root.parentElement.nextElementSibling as HTMLElement)
             .querySelector('.reportDocumentation');
@@ -172,28 +168,35 @@ export default defineComponent({
           // hackish solution to get binded html of p tag within the help node
           // at this point the ng-bind-html is not yet converted into html when report is not
           // initially loaded. Using $compile doesn't work. So get and set it manually
-          const helpDocs = helpNode.getAttribute('data-content').trim();
-          if (helpDocs.length) {
+          const helpDocs = helpNode.getAttribute('data-content')?.trim();
+          if (helpDocs && helpDocs.length) {
             this.actualInlineHelp = `<p>${helpDocs}</p>`;
-            setTimeout(() => helpNode.remove(), 0);
+            setTimeout(() => helpNode!.remove(), 0);
           }
         }
       }
 
       if (!this.actualFeatureName) {
-        this.actualFeatureName = root.querySelector('.title').textContent;
+        this.actualFeatureName = root.querySelector('.title')?.textContent;
       }
 
-      if (this.reportGenerated
-        && Periods.parse(Matomo.period, Matomo.currentDateString).containsToday()
-      ) {
-        window.$(root.querySelector('.report-generated')).tooltip({
-          track: true,
-          content: this.reportGenerated,
-          items: 'div',
-          show: false,
-          hide: false,
-        });
+      if (Matomo.period && Matomo.currentDateString) {
+        const currentPeriod = Periods.parse(
+          Matomo.period as string,
+          Matomo.currentDateString as string,
+        );
+
+        if (this.reportGenerated
+          && currentPeriod.containsToday()
+        ) {
+          window.$(root.querySelector('.report-generated')!).tooltip({
+            track: true,
+            content: this.reportGenerated,
+            items: 'div',
+            show: false,
+            hide: false,
+          });
+        }
       }
     });
   },

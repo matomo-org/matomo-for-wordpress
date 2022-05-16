@@ -31,6 +31,16 @@ Cowon:
   device: 'portable media player'
   model: '$1'
 
+# FiiO (https://www.fiio.com/)
+FiiO:
+  regex: 'FiiO'
+  device: 'portable media player'
+  models:
+    - regex: 'M11 Plus LTD'
+      model: 'M11 Plus LTD'
+    - regex: 'M(1[57])'
+      model: 'M$1'
+
 Microsoft:
   regex: 'Microsoft ZuneHD'
   device: 'portable media player'
@@ -76,3 +86,11 @@ SONOS:
       model: 'Play:5'
     - regex: 'Sonos;One;'
       model: 'One'
+
+# Shanling
+Shanling:
+  regex: 'Shanling M6'
+  device: 'portable media player'
+  models:
+    - regex: 'Shanling (M6\(21\))'
+      model: '$1'

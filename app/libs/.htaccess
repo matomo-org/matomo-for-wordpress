@@ -29,7 +29,7 @@
 </IfModule>
 
 # Allow to serve static files which are safe
-<Files ~ "\.(gif|ico|jpg|png|svg|js|css|htm|html|mp3|mp4|wav|ogg|avi|ttf|eot|woff|woff2|json)$">
+<Files ~ "\.(gif|ico|jpg|png|svg|js|css|htm|html|mp3|mp4|wav|ogg|avi|ttf|eot|woff|woff2)$">
 <IfModule mod_version.c>
 	<IfVersion < 2.4>
 		Order Allow,Deny

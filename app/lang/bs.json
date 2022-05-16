@@ -304,7 +304,6 @@
         "YourChangesHaveBeenSaved": "Vaše promjene su sačuvane."
     },
     "API": {
-        "GenerateVisits": "Ako nemate podataka za danas onda možete prvo generisati neke podatke sa dodatkom %1$s. Ovo možete uraditi ako uključite dodatak %2$s i zatim kliknete na 'Proizvođač posjetilaca' u meniju koja se nalazi u Matomo adminskom prostoru.",
         "KeepTokenSecret": "Ovaj token_auth je povjerljiv podatak poput vašeg korisničkog imena i lozine. %1$s Nemojte ga dijeliti sa drugima%2$s!",
         "LoadedAPIs": "Uspješno učitani %s API(-ovi)"
     },
@@ -1542,6 +1541,7 @@
         "Timezone_Pacific_Gambier": "Gambier",
         "Timezone_Pacific_Honolulu": "Honolulu",
         "Timezone_Pacific_Johnston": "Johnston",
+        "Timezone_Pacific_Kanton": "Kanton",
         "Timezone_Pacific_Kiritimati": "Kiritimati",
         "Timezone_Pacific_Kosrae": "Kosrae",
         "Timezone_Pacific_Kwajalein": "Kwajalein",

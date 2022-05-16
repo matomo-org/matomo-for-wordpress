@@ -16,10 +16,12 @@ use Piwik\DataTable\Filter\AddColumnsProcessedMetricsGoal;
 use Piwik\FrontController;
 use Piwik\Piwik;
 use Piwik\Plugin\Manager;
+use Piwik\Plugins\CoreVisualizations\Visualizations\Sparklines;
 use Piwik\Plugins\Live\Live;
 use Piwik\Plugins\Referrers\API as APIReferrers;
 use Piwik\Translation\Translator;
 use Piwik\View;
+use Piwik\ViewDataTable\Factory as ViewDataTableFactory;
 
 /**
  *
@@ -76,6 +78,7 @@ class Controller extends \Piwik\Plugin\Controller
         $this->setGeneralVariablesView($view);
         $this->setEditGoalsViewVariables($view);
         $this->setGoalOptions($view);
+        $this->execAndSetResultsForTwigEvents($view);
         return $view->render();
     }
 
@@ -121,6 +124,8 @@ class Controller extends \Piwik\Plugin\Controller
         $this->setGeneralVariablesView($view);
         $this->setGoalOptions($view);
         $view->onlyShowAddNewGoal = true;
+        $view->ecommerceEnabled = $this->site->isEcommerceEnabled();
+        $this->execAndSetResultsForTwigEvents($view);
         return $view->render();
     }
 
@@ -130,7 +135,37 @@ class Controller extends \Piwik\Plugin\Controller
         $this->setGeneralVariablesView($view);
         $this->setEditGoalsViewVariables($view);
         $this->setGoalOptions($view);
+        $this->execAndSetResultsForTwigEvents($view);
         return $view->render();
+    }
+
+    private function execAndSetResultsForTwigEvents(View $view)
+    {
+        if (empty($view->onlyShowAddGoal)) {
+            $beforeGoalListActionsBody = [];
+
+            if ($view->goals) {
+                foreach ($view->goals as $goal) {
+                    $str = '';
+                    Piwik::postEvent('Template.beforeGoalListActionsBody', [&$str, $goal]);
+    
+                    $beforeGoalListActionsBody[$goal['idgoal']] = $str;
+                }
+            }
+
+            $view->beforeGoalListActionsBodyEventResult = $beforeGoalListActionsBody;
+
+            $str = '';
+            Piwik::postEvent('Template.beforeGoalListActionsHead', [&$str]);
+            $view->beforeGoalListActionsHead = $str;
+        }
+
+        if (!empty($view->userCanEditGoals)) {
+            $str = '';
+            Piwik::postEvent('Template.endGoalEditTable', [&$str]);
+
+            $view->endEditTable = $str;
+        }
     }
 
     public function hasConversions()
@@ -217,6 +252,29 @@ class Controller extends \Piwik\Plugin\Controller
         $view->config->documentation = $this->translator->translate($langString, '<br />');
 
         return $this->renderView($view);
+    }
+
+    public function getSparklines()
+    {
+        $content = "";
+        $goals = Request::processRequest('Goals.getGoals', ['idSite' => $this->idSite, 'filter_limit' => '-1'], []);
+
+        foreach ($goals as $goal) {
+            $params = [
+                'idGoal' => $goal['idgoal'],
+                'allow_multiple' => (int) $goal['allow_multiple'],
+                'only_summary' => 1,
+            ];
+
+            \Piwik\Context::executeWithQueryParameters($params, function() use (&$content) {
+                //load Visualisations Sparkline
+                $view = ViewDataTableFactory::build(Sparklines::ID, 'Goals.getMetrics', 'Goals.' . __METHOD__, true);
+                $view->config->show_title = true;
+                $content .= $view->render();
+            });
+        }
+
+        return $content;
     }
 
     private function getColumnTranslation($nameToLabel, $columnName, $idGoal)
@@ -349,6 +407,7 @@ class Controller extends \Piwik\Plugin\Controller
             if (isset($goal['pattern'])) {
                 $goal['pattern'] = Common::unsanitizeInputValue($goal['pattern']);
             }
+            $goal['revenue_pretty'] = \Piwik\piwik_format_money($goal['revenue'], $this->idSite);
         }
 
         $view->goals = $goals;
