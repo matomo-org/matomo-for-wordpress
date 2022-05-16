@@ -102,7 +102,7 @@ class WpAssetManager extends AssetManager
 		} else {
 			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, self::GET_NON_CORE_JS_MODULE_ACTION);
 		}
-
+		$result .= $this->getPluginUmdChunks();
 		return $result;
 	}
 }
