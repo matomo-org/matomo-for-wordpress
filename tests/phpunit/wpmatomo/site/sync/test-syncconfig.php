@@ -74,7 +74,6 @@ class SiteSyncConfigTest extends MatomoAnalytics_TestCase {
 
 		$this->assertTrue( empty( $general['foo'] ) );
 
-
 		$this->sync_config->sync_config_for_current_site();
 
 		$general = \Piwik\Config::getInstance()->General;
