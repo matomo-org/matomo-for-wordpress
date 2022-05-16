@@ -199,7 +199,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 
 		$url = apply_filters( 'the_excerpt_rss', '<p>foobarbaz</p>' );
 
-		$this->assertStringStartsWith( '<p>foobarbaz</p><img src="//example.org/index.php?rest_route=/matomo/v1/hit/?idsite=23&amp;rec=1&amp;url=http%3A%2F%2Fexample.org%2F%3Fp%3D7&amp;action_name=hello-world&amp;urlref=http%3A%2F%2Fexample.org', $url );
+		$this->assertStringStartsWith( '<p>foobarbaz</p><img src="//example.org/index.php?rest_route=/matomo/v1/hit/?idsite=23&amp;rec=1&amp;url=http%3A%2F%2Fexample.org%2F%3Fp%3D6&amp;action_name=hello-world&amp;urlref=http%3A%2F%2Fexample.org', $url );
 		$this->assertStringEndsWith( '" style="border:0;width:0;height:0" width="0" height="0" alt="" />', $url );
 	}
 
