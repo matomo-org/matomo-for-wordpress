@@ -66,6 +66,10 @@ class Sync {
 	}
 
 	public function sync_current_site_ignore_error() {
+		if ( ! is_plugin_active( 'matomo/matomo.php' ) ) {
+			// @see https://github.com/matomo-org/matomo-for-wordpress/issues/577
+			return;
+		}
 		try {
 			$this->sync_current_site();
 		} catch ( Exception $e ) {
