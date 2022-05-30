@@ -84,6 +84,7 @@ class IniWriter
                 throw new IniWritingException(sprintf("Section \"%s\" doesn't contain an array of values", $sectionName));
             }
 
+            $sectionName = $this->encodeSectionName($sectionName);
             $ini .= "[$sectionName]\n";
 
             foreach ($section as $option => $value) {
@@ -93,8 +94,12 @@ class IniWriter
                 }
 
                 if (is_array($value)) {
-                    foreach ($value as $currentValue) {
-                        $ini .= $option . '[] = ' . $this->encodeValue($currentValue) . "\n";
+                    foreach ($value as $key => $currentValue) {
+                        if (is_int($key)) {
+                            $ini .= $this->encodeKey($option) . '[] = ' . $this->encodeValue($currentValue) . "\n";
+                        } else {
+                            $ini .= $this->encodeKey($option) . '[' . $this->encodeKey($key) . '] = ' . $this->encodeValue($currentValue) . "\n";
+                        }
                     }
                 } else {
                     $ini .= $option . ' = ' . $this->encodeValue($value) . "\n";
@@ -107,14 +112,45 @@ class IniWriter
         return $ini;
     }
 
+    /**
+     * @param $value
+     * @return int|string
+     */
     private function encodeValue($value)
     {
         if (is_bool($value)) {
             return (int) $value;
         }
+
         if (is_string($value)) {
-            return "\"$value\"";
+            // remove any quotes w/ newlines after it since INI parsing will consider it the end of the string
+            $value = preg_replace('/\"[\n\r]/', "\n", $value);
+            $value = addslashes($value);
+            return '"' . $value . '"';
         }
+
         return $value;
+    }
+
+    /**
+     * @param $key
+     * @return string
+     */
+    private function encodeKey($key)
+    {
+        $key = preg_replace('/[^A-Za-z0-9\-_]/', '', $key);
+
+        return $key;
+    }
+
+    /**
+     * @param $key
+     * @return string
+     */
+    private function encodeSectionName($key)
+    {
+        $key = preg_replace('/[^A-Za-z0-9_ \-]/', '', $key);
+
+        return $key;
     }
 }

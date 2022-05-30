@@ -152,7 +152,6 @@
         "YourChangesHaveBeenSaved": "Breytingarnarn þínar hafa verið vistaðar."
     },
     "API": {
-        "GenerateVisits": "Ef þú hefur ekki gögn dagsins í dag verður þú fyrst að búa til gögn með að nota %1$s íbótina. Virkjaðu %2$s íbótina og smelltu síðan á valmyndinni 'Gesta framleiðni' í Matomo umsjónarmanns svæðinu.",
         "KeepTokenSecret": "Þessi tókar auðkenning er eins leynd og þitt notendanafn og lykilorð %1$s deilið því ekki%2$s!",
         "LoadedAPIs": "Tókst að hlaða %s API",
         "MoreInformation": "Fyrir frekari upplýsingar um Matomo API, Vinsamlegast skoðið %1$s Inngangur að Matomo API %2$s og %3$s Matomo API Tilvísunir %4$s.",
@@ -765,7 +764,7 @@
         "Currency_LBP": "Líbanskt pund",
         "Currency_LKR": "Srílönsk rúpía",
         "Currency_LRD": "Líberískur dalur",
-        "Currency_LSL": "Lesotho Loti",
+        "Currency_LSL": "Lesótóskur lóti",
         "Currency_LYD": "Líbískur denari",
         "Currency_MAD": "Marokkóskt dírham",
         "Currency_MDL": "Moldavískt lei",
@@ -1369,6 +1368,7 @@
         "Timezone_Pacific_Gambier": "Gambier",
         "Timezone_Pacific_Honolulu": "Honolulu",
         "Timezone_Pacific_Johnston": "Johnston",
+        "Timezone_Pacific_Kanton": "Kanton",
         "Timezone_Pacific_Kiritimati": "Kiritimati",
         "Timezone_Pacific_Kosrae": "Kosrae",
         "Timezone_Pacific_Kwajalein": "Kwajalein",

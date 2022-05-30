@@ -54,8 +54,21 @@ class WordPress extends Plugin
             'CustomJsTracker.manipulateJsTracker' => 'updateHeatmapTrackerPath',
             'Visualization.beforeRender' => 'onBeforeRenderView',
             'AssetManager.getStylesheetFiles'  => 'getStylesheetFiles',
+            'Controller.PrivacyManager.usersOptOut.end' => 'onUserOptOutRender',
         );
     }
+
+	public function onUserOptOutRender(&$result)
+	{
+		$result = preg_replace('/<div.*"PrivacyManager.OptOutCustomizer".*?>/', '<div class="WordPressOptOutCustomizer">
+    <p>
+        Use the short code <code>[matomo_opt_out]</code> to embed the opt out into your website.<br>
+        You can use these short code options:</p>
+    <ul style="margin:20px;">
+        <li style="list-style: disc">language - eg de or en. By default the language is detected automatically based on the user\'s browser</li>
+    </ul>
+    <p>Example: <code>[matomo_opt_out language=de]</code></p>', $result);
+	}
 
     public function onBeforeRenderView (Plugin\ViewDataTable $view)
     {
@@ -400,6 +413,7 @@ class WordPress extends Plugin
 	public function getStylesheetFiles(&$files)
 	{
 		$files[] = "../plugins/WordPress/stylesheets/user.css";
+		$files[] = "../plugins/WordPress/stylesheets/optout.css";
 	}
 
 }

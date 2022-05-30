@@ -319,8 +319,11 @@
         "PullDownToRefresh": "Povuci dolje za aktualiziranje …",
         "RatingDontRemindMe": "Ne podsjećaj me",
         "RatingNotNow": "Ne sada",
-        "RatingNow": "Uredu, glasati ću sada",
+        "RatingNow": "U redu, ocijenit ću ga sada",
         "ReleaseToRefresh": "Otpusti za aktualiziranje …",
+        "Reloading": "Ponovno učitavanje …",
+        "RequestTimedOutShort": "Greška isteka vremena mreže",
+        "RestrictedCompatibility": "Ograničena kompatibilnost",
         "SaveSuccessError": "Greška u Matomo URL-u ili u kombinaciji korisničkog imena i lozinke.",
         "SearchWebsite": "Pretraži web stranice",
         "ShowAll": "Prikaži sve",
@@ -333,27 +336,29 @@
         "PickARow": "Odaberi redak za usporedbu"
     },
     "API": {
-        "GenerateVisits": "Ako ne postoje podaci za danas, možete ih kreirati pomoću %1$s plugina. Prvo uključite %2$s plugin, zatim koristite opciju 'Kreiraj posjetitelje' u izborniku Matomo administracije.",
         "LoadedAPIs": "%s API je uspješno učitan"
     },
     "Actions": {
         "ColumnClicks": "Klikovi",
-        "ColumnClicksDocumentation": "Broj koliko je puta link bio kliknut",
-        "ColumnDownloadURL": "Preuzeti URL",
-        "ColumnEntryPageTitle": "Naziv ulazne stranice",
+        "ColumnClicksDocumentation": "Broj pritiskanja ove poveznice.",
+        "ColumnDownloadURL": "URL za preuzimanje",
+        "ColumnDownloadURLs": "URL-ovi za preuzimanje",
+        "ColumnEntryPageTitle": "Naslov ulazne stranice",
         "ColumnEntryPageURL": "URL ulazne stranice",
+        "ColumnEntryPageURLs": "URL-ovi ulazne stranice",
         "ColumnExitPageTitle": "Naslov izlazne stranice",
         "ColumnExitPageURL": "URL izlazne stranice",
-        "ColumnNoResultKeyword": "Ključna riječ bez rezultata pretraživanja",
-        "ColumnPageName": "Naslov stranice",
-        "ColumnPagesPerSearch": "Stranice sa rezultatima pretrage",
-        "ColumnPagesPerSearchDocumentation": "Posjetitelji će ponekad koristiti opciju \"dalje\" za prikaz dodatnih rezultata pretrage. Ovo je prosječan broj stranica sa rezultatima pretrage za ovu ključnu riječ.",
+        "ColumnExitPageURLs": "URL-ovi izlazne stranice",
+        "ColumnNoResultKeyword": "Pretraga ključne riječ bez rezultata",
+        "ColumnPageName": "Ime stranice",
         "ColumnPageURL": "URL stranice",
+        "ColumnPagesPerSearch": "Stranice s rezultatima pretrage",
+        "ColumnPagesPerSearchDocumentation": "Posjetitelji će ponekad koristiti opciju \"dalje\" za prikaz dodatnih rezultata pretrage. Ovo je prosječan broj stranica sa rezultatima pretrage za ovu ključnu riječ.",
         "ColumnSearchCategory": "Kategorija pretrage",
-        "ColumnSearches": "Pretrage",
-        "ColumnSearchesDocumentation": "Broj posjetitelja koji su tražili ovu ključnu riječ koristeći tražilicu na vašoj stranici.",
         "ColumnSearchExitsDocumentation": "Postotak posjetitelja koji su otišli sa vaše stranice nakon traženja ove ključne riječi korištenjem vaše tražilice.",
         "ColumnSearchResultsCount": "Broj rezultata pretrage",
+        "ColumnSearches": "Pretrage",
+        "ColumnSearchesDocumentation": "Broj posjetitelja koji su tražili ovu ključnu riječ koristeći tražilicu na vašoj stranici.",
         "ColumnSiteSearchKeywords": "Jedinstvene ključne riječi",
         "ColumnUniqueClicks": "Jedinstveni klikovi",
         "ColumnUniqueClicksDocumentation": "Broj posjeta koje su obuhvaćale klik na ovaj link. U slučaju da je link korišten više puta, brojan je samo jednom.",
@@ -367,26 +372,26 @@
         "OneSearch": "1 pretraga",
         "OutlinkDocumentation": "Odlazna poveznica je poveznica koja odvodi vašeg posjetitelja sa vaše stranice (na drugu domenu).",
         "OutlinksReportDocumentation": "Ovo izvješće prikazuje hijerarhijski popis odlaznih URL adresa na koje su kliknuli vaši posjetitelji.",
-        "PagesReportDocumentation": "Ovo izvješće sadrži informacije o linkovima stranica koje su posjećene. %s Tablica je organizirana hijerarhijski, URL-ovi su prikazani kao struktura mapa.",
         "PageUrls": "URL stranica",
-        "SiteSearchCategories1": "Ovo izvješće prikazuje kategorije koje su posjetitelji odabrali kod pretraživanja vaše web-stranice",
+        "PagesReportDocumentation": "Ovo izvješće sadrži informacije o linkovima stranica koje su posjećene. %s Tablica je organizirana hijerarhijski, URL-ovi su prikazani kao struktura mapa.",
+        "PagesSubcategoryHelp3": "Koristite znakove plus i minus sa lijeve strane za navigaciju.",
+        "SiteSearchCategories1": "Ovaj izvještaj prikazuje kategorije koje su posjetitelji odabrali prilikom pretraživanja tvoje web-stranice.",
         "SiteSearchCategories2": "Web-stranice kataloške prodaje najčešće imaju omogućen odabir \"kategorija\" kako bi posjetitelji pretraživali proizvode u željenoj kategoriji.",
         "SiteSearchKeyword": "Ključne riječi",
+        "SubmenuPageTitles": "Naslovi stranica",
         "SubmenuPagesEntry": "Ulazne na stranice",
         "SubmenuPagesExit": "Izlazne stranice",
-        "SubmenuPageTitles": "Naslovi stranica",
         "SubmenuSitesearch": "Pretraga stranice",
         "WidgetEntryPageTitles": "Naslovi ulaznih stranica",
         "WidgetExitPageTitles": "Izlazni naslovi stranica",
-        "WidgetPagesEntry": "Ulazne stranice",
-        "WidgetPagesExit": "Izlazne stranice",
         "WidgetPageTitles": "Naslovi stranica",
         "WidgetPageTitlesFollowingSearch": "Naslovi stranica kod pretraživanja",
         "WidgetPageUrlsFollowingSearch": "Stranice kod pretraživanja",
+        "WidgetPagesEntry": "Ulazne stranice",
+        "WidgetPagesExit": "Izlazne stranice",
         "WidgetSearchCategories": "Pretraži kategoije",
         "WidgetSearchKeywords": "Ključne riječi pretraživanja",
-        "WidgetSearchNoResultKeywords": "Ključne riječi pretraživanja bez rezultata",
-        "PagesSubcategoryHelp3": "Koristite znakove plus i minus sa lijeve strane za navigaciju."
+        "WidgetSearchNoResultKeywords": "Ključne riječi pretraživanja bez rezultata"
     },
     "Annotations": {
         "AddAnnotationsFor": "Dodaj bilješke za %s...",
@@ -394,7 +399,7 @@
         "Annotations": "Interaktivne bilješke",
         "ClickToDelete": "Kliknite izbrisati ovu obavijest.",
         "ClickToEdit": "Klikni za urediti ovu obavijest.",
-        "EnterAnnotationText": "Unesi svoju bilješku",
+        "EnterAnnotationText": "Upiši svoju bilješku …",
         "LoginToAnnotate": "Prijavi se za objaviti obavijest."
     },
     "CoreAdminHome": {
@@ -417,7 +422,7 @@
         "DashboardName": "Naziv kontrolne ploče:",
         "DashboardOf": "Kontrolna ploča %s",
         "LoadingWidget": "Učitavanje widgeta, molimo pričekajte...",
-        "ManageDashboard": "Manage dashboard",
+        "ManageDashboard": "Upravljaj nadzornom pločom",
         "Maximise": "Uvečaj",
         "Minimise": "Smanji",
         "RemoveDashboard": "Ukloni kontrolnu ploču",
@@ -750,7 +755,7 @@
         "CurrencySymbol_GYD": "GYD",
         "CurrencySymbol_HKD": "HKD",
         "CurrencySymbol_HNL": "HNL",
-        "CurrencySymbol_HRK": "HRK",
+        "CurrencySymbol_HRK": "kn",
         "CurrencySymbol_HTG": "HTG",
         "CurrencySymbol_HUF": "HUF",
         "CurrencySymbol_IDR": "IDR",
@@ -931,7 +936,7 @@
         "Currency_LBP": "Libanonska funta",
         "Currency_LKR": "Šrilankanska rupija",
         "Currency_LRD": "Liberijski dolar",
-        "Currency_LSL": "Lesoto loti",
+        "Currency_LSL": "Lesotski loti",
         "Currency_LYD": "Libijski dinar",
         "Currency_MAD": "Marokanski dirham",
         "Currency_MDL": "Moldavski lej",
@@ -1535,6 +1540,7 @@
         "Timezone_Pacific_Gambier": "Gambier",
         "Timezone_Pacific_Honolulu": "Honolulu",
         "Timezone_Pacific_Johnston": "Johnston",
+        "Timezone_Pacific_Kanton": "Kanton",
         "Timezone_Pacific_Kiritimati": "Kiritimati",
         "Timezone_Pacific_Kosrae": "Kosrae",
         "Timezone_Pacific_Kwajalein": "Kwajalein",
@@ -1557,9 +1563,9 @@
     },
     "Live": {
         "GoalType": "Vrsta",
-        "HideMap": "sakrij mapu",
+        "HideMap": "sakrij kartu",
         "LoadMoreVisits": "Učitaj više posjeta",
-        "NbVisitor": "1 visitor",
+        "NbVisitor": "1 posjetilac",
         "NextVisitor": "Slijedeći posjetitelj",
         "PreviousVisitor": "Prijašnji posjetitelj",
         "Referrer_URL": "Referrer URL",
@@ -1579,6 +1585,9 @@
     "PrivacyManager": {
         "ClickHereSettings": "Klikni za pristup %s postavkama."
     },
+    "ProfessionalServices": {
+        "WidgetPremiumServicesForPiwik": "Premium funkcije i usluge za Matomo"
+    },
     "Referrers": {
         "ColumnWebsite": "Web stranica"
     },
@@ -1586,9 +1595,12 @@
         "ColumnConfiguration": "Konfiguracija",
         "ColumnResolution": "Rezolucija",
         "Configurations": "Konfiguracije",
+        "PluginDescription": "Izvještava o rezoluciji ekrana tvojih posjetitelja.",
         "Resolutions": "Rezolucije",
         "WidgetGlobalVisitors": "Konfiguracija posjetitelja",
-        "WidgetResolutions": "Rezolucija zaslona"
+        "WidgetGlobalVisitorsDocumentation": "Ovaj izvještaj prikazuje najčešće konfiguracije tvojih posjetitelja. Konfiguracija je kombinacija operacijskog sustava, vrste preglednika i rezolucije ekrana.",
+        "WidgetResolutions": "Rezolucija zaslona",
+        "WidgetResolutionsDocumentation": "Ovaj izvještaj prikazuje rezolucije ekrana koje su tvoji posjetitelji koristili prilikom pregledavanja tvoje web-stranice."
     },
     "SitesManager": {
         "Currency": "Valuta",
@@ -1619,6 +1631,7 @@
         "SubmenuLocations": "Lokacije"
     },
     "UserCountryMap": {
+        "RealTimeMap": "Karta uživo",
         "VisitorMap": "Mapa posjetitelja"
     },
     "UserId": {
@@ -1630,14 +1643,13 @@
         "PluginDescription": "Bilježi jezik na koji je podešen preglednik posjetitelja."
     },
     "UsersManager": {
-        "ExceptionEmailExists": "Korisnik sa istim emailom '%s' već postoji.",
-        "ExceptionInvalidEmail": "Nije dobar format emaila.",
-        "MenuUsers": "Korisnici",
+        "ExceptionEmailExists": "Korisnik s e-mail adresom „%s” već postoji.",
+        "ExceptionInvalidEmail": "Format e-mail adrese ne valja.",
         "MenuUserSettings": "Korisničke postavke",
-        "TypeYourPasswordAgain": "Ponovi novu lozinku.",
-        "YourUsernameCannotBeChanged": "Korisničko ime se ne može promijeniti",
-        "ShowAll": "Prikaži sve",
-        "Username": "Korisničko ime"
+        "MenuUsers": "Korisnici",
+        "TypeYourPasswordAgain": "Ponovo upiši svoju novu lozinku.",
+        "Username": "Korisničko ime",
+        "YourUsernameCannotBeChanged": "Tvoje se korisničko ime ne može promijeniti."
     },
     "VisitTime": {
         "ColumnServerTime": "Vrijeme servera",
