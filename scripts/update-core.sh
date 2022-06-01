@@ -55,8 +55,6 @@ find $MATOMO_ROOT/core/Updates -name '*.php' ! -name '3.12.0-b1.php' ! -name '3.
 rm -rf $MATOMO_ROOT/vendor/piwik/decompress/libs/PclZip
 mv bootstrap.php $MATOMO_ROOT/bootstrap.php
 mv .htaccess $MATOMO_ROOT/.htaccess
-# we overwrite the opt out customer so don't include it
-echo "" > $MATOMO_ROOT/plugins/PrivacyManager/angularjs/opt-out-customizer/opt-out-customizer.directive.js
 
 sed -i -e 's/node_modules\/jquery\/dist\/jquery.min.js/..\/..\/..\/..\/..\/..\/..\/wp-includes\/js\/jquery\/jquery.js/' $MATOMO_ROOT/plugins/Overlay/client/client.js
 if grep -Fq "/wp-includes/js/jquery/jquery.js" $MATOMO_ROOT/plugins/Overlay/client/client.js

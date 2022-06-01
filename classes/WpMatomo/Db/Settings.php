@@ -49,6 +49,7 @@ class Settings {
 			'access',
 			'archive_invalidations',
 			'brute_force_log',
+			'changes',
 			'goal',
 			'locks',
 			'log_action',

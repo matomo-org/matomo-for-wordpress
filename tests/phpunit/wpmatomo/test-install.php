@@ -92,10 +92,11 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$this->assertEquals(
 			array(
 				array(
-					'login'            => 'admin',
-					'email'            => 'admin@example.org',
-					'twofactor_secret' => '',
-					'superuser_access' => 1,
+					'login'                => 'admin',
+					'email'                => 'admin@example.org',
+					'twofactor_secret'     => '',
+					'superuser_access'     => '1',
+					'idchange_last_viewed' => null,
 				),
 			),
 			$all_users
@@ -121,6 +122,10 @@ class InstallTest extends MatomoAnalytics_TestCase {
 	 * @group ms-required
 	 */
 	public function test_install_also_installs_on_other_blog() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
 		$blogid1 = self::factory()->blog->create();
 		switch_to_blog( $blogid1 );
 

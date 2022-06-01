@@ -58,6 +58,10 @@ class SiteSyncConfigTest extends MatomoAnalytics_TestCase {
 	 * @group ms-required
 	 */
 	public function test_sync_config_for_current_site_when_config_set() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
 		$this->sync_config->set_config_value(
 			'General',
 			'foo',
@@ -67,6 +71,7 @@ class SiteSyncConfigTest extends MatomoAnalytics_TestCase {
 			)
 		);
 		$general = \Piwik\Config::getInstance()->General;
+
 		$this->assertTrue( empty( $general['foo'] ) );
 
 		$this->sync_config->sync_config_for_current_site();
@@ -79,13 +84,18 @@ class SiteSyncConfigTest extends MatomoAnalytics_TestCase {
 	 * @group ms-required
 	 */
 	public function test_sync_config_for_current_site_when_multiple_values() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Not multisite.' );
+			return;
+		}
 		$this->sync_config->set_config_value( 'General', 'foo', array( 'baz', 'bar' ) );
 		$this->sync_config->set_config_value( 'NewCategory', 'bar', 'baz' );
 		$this->sync_config->set_config_value( 'NewCategory', 'hello', 'world' );
 
-		$general = \Piwik\Config::getInstance()->General;
-		$this->assertTrue( empty( $general['foo'] ) );
+		$general      = \Piwik\Config::getInstance()->General;
 		$new_category = \Piwik\Config::getInstance()->NewCategory;
+
+		$this->assertTrue( empty( $general['foo'] ) );
 		$this->assertEmpty( $new_category );
 
 		$this->sync_config->sync_config_for_current_site();

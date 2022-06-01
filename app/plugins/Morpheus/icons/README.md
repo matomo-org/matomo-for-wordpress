@@ -7,7 +7,7 @@ This reposistory provides the source files for the icons in [matomo](https://git
 ## Contributing
 
 An icon is missing or you have a better one? Create a [new issue](https://github.com/matomo-org/matomo-icons/issues/new) or, even better, open a pull request.
-You can find a up-to-date list of all improvable icons on [Travis](https://travis-ci.com/matomo-org/matomo-icons).
+You can find a up-to-date list of all improvable icons on [Travis](https://app.travis-ci.com/github/matomo-org/matomo-icons).
 
 All source files except those in `devices`, `flags`, `searchEngines` and `socials` need to have a second file called `iconname.ext.source` that mentions where the image is from.
 

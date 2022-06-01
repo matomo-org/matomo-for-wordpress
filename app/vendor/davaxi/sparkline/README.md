@@ -32,7 +32,7 @@ or
 
 ```json
   "require": {
-    "davaxi/sparkline": "^2.0"
+    "davaxi/sparkline": "^2.2"
   }
 ```
 
@@ -94,8 +94,10 @@ $sparkline->setLineThickness(2.2);
 $sparkline->setFillColorHex('#8b1c2b');
 // or
 $sparkline->setFillColorRGB(139, 28, 43);
-// or
+// or for specific series
 $sparkline->deactivateFillColor();
+// or for all series
+$sparkline->deactivateAllFillColor();
 
 $sparkline->setData(array(.....)); // Set data set
 $sparkline->getData(); // Get seted data
@@ -134,6 +136,8 @@ $sparkline->destroy(); // Destroy picture after generated / displayed / saved
 ### Multiple sparkline series
 
 ```php
+<?php
+
 $sparkline = new Davaxi\Sparkline();
 
 // For add series
@@ -164,3 +168,4 @@ $sparkline->setLineColorHex('#1c62df', 1);
 // or
 $sparkline->setLineColorRGB(28, 98, 139, 0);
 $sparkline->setLineColorRGB(28, 98, 55, 1);
+```

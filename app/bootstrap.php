@@ -156,7 +156,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( !is_plugin_active('matomo/matomo.php')
      && (!defined( 'MATOMO_PHPUNIT_TEST' ) || !MATOMO_PHPUNIT_TEST) ) { // during tests the plugin may temporarily not be active
-    exit;
+	exit;
 }
 
 if ( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) {

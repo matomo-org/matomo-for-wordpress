@@ -3,8 +3,8 @@ Contributors: matomoteam
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5EJ2LHATAKCJ4&source=url
 Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
 Requires at least: 4.8
-Tested up to: 5.9
-Stable tag: 4.6.0
+Tested up to: 6.0
+Stable tag: 4.10.0
 Requires PHP: 7.2.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -13,7 +13,7 @@ Matomo is the #1 Google Analytics alternative that gives you full control over y
 
 == Description ==
 
-If you are already using Matomo On-Premise (formerly Piwik) or Matomo Cloud, please use the [WP-Matomo plugin](https://wordpress.org/plugins/wp-piwik/). 
+Already Matomo On-Premise or Matomo Cloud user? You need to use the [WP-Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead of this plugin. 
 
 For all you WordPress website owners wanting an easier way to get customer insights to grow your business, you can now get the solution the professionals use, for free!
 
@@ -73,6 +73,7 @@ Matomo is free, secure and open - your ethical user insights platform.
 * Easily give your colleagues access to your reports if / when needed
 * Easily exclude certain roles, visitors and pages from being tracked
 * Supports WordPress Multisite. (Note: Tag Manager feature does not work in MultiSite.)
+* Import historical data from Google Analytics or WP Statistics
 
 **[Premium paid features:](https://plugins.matomo.org/premium?wp=1)**
 
@@ -163,6 +164,10 @@ Matomo should run on most MySQL versions. However, we only support MySQL 5.5 and
 Website: [matomo.org](https://matomo.org)
 About us: [matomo.org/team/](https://matomo.org/team/)
 Contact us: [matomo.org/contact/](https://matomo.org/contact/)
+
+= Can I import reports from WP Statistics plugin?
+
+Yes, you can [import historical data from WP Statistics](https://matomo.org/faq/wordpress/how-do-i-import-data-from-wp-statistics-plugin-into-matomo-for-wordpress/) so you don't lose any data when migrating to our plugin. 
 
 = Where do I find all other available FAQs? =
 

@@ -1,5 +1,10 @@
 == Changelog ==
 
+= 4.10.0 =
+* Update Matomo core to 4.10.0
+* Fix a white screen issue in multisite mode
+* Add wpstatistics import feature
+
 = 4.6.0 =
 * Update Matomo core to 4.6.0
 * WooCommerce: Make excluded order status configurable using a constant
