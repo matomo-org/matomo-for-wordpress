@@ -1,6 +1,8 @@
 {
   "require": {
-    "phpunit/phpunit": "^5.7.21 || ^6.5 || ^7.5"
+    "phpunit/phpunit": "^5.7.21 || ^6.5 || ^7.5",
+    "psr/container": "1.0.0"
+
   },
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "^v0.7.1",
