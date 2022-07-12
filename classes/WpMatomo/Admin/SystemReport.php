@@ -94,6 +94,8 @@ class SystemReport {
 		'post-smtp',
 		// see https://wordpress.org/support/topic/activation-of-another-plugin-breaks-matomo/#post-15045079
 		'adshares',
+		// see https://github.com/matomo-org/matomo-for-wordpress/issues/618
+		'bluehost-wordpress-plugin',
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
