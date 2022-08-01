@@ -45,7 +45,7 @@ jobs:
           script: |
               core.setFailed('Release password didn\'t match.')
       - name: "Check if user is allowed"
-        if: ${{ github.actor != 'mattab' && github.actor != 'tsteur' && github.actor != 'justinvelluppillai' }}
+        if: ${{ github.actor != 'mattab' && github.actor != 'tsteur' && github.actor != 'tsteur' && github.actor != 'justinvelluppillai' }}
         uses: actions/github-script@v3
         with:
           script: |
@@ -77,11 +77,14 @@ jobs:
           fi
           echo "Version to build: '$version'"
 
-          echo "Creating dedicated branch"
+          echo "Fetching develop"
           git checkout develop && git pull
   
-          echo "Fetching develop"
+          echo "Fetching live"
           git checkout live && git pull
+          
+          echo "Merge develop into live"
+          git merge develop
           
           echo "Patch polyfills"
           wget https://github.com/matomo-org/matomo-for-wordpress/commit/bcba547f9c3185467a3f2f26d1853b2cafb62488.diff
@@ -89,40 +92,16 @@ jobs:
           rm bcba547f9c3185467a3f2f26d1853b2cafb62488.diff
           git add app/vendor/symfony/
           git commit -m 'patch polyfills so we can release a new version and it passes WordPress file check'
-          git push origin develop
-  
-          echo "Merge develop into live"
-          git merge develop
-          
-          echo "Create tag"
-          git fetch --tags -q 2>/dev/null
-          tag_exists=$( git tag --list "$version" )
-
-          if [[ -n "$tag_exists" ]]
-          then
-            echo "A tag for $tag_exists already exists."
-            exit 1
-          fi
-
-          echo "Push tag"
-          git commit -m "version $version"
           git push origin live
           
           echo "Creating a tag for $version"
-
           chmod +x ./scripts/*.sh
-          ./scripts/create_tag.sh $version
+          cd scripts
+          ./create_tag.sh $version
           
           echo "Deploy"
-          ./scripts/deploy.sh $version $SVN_USERNAME $SVN_PASSWORD
+          ./deploy.sh $version ${{ secrets.SVN_USERNAME }} ${{ secrets.SVN_PASSWORD }}
+          cd ..
           
           echo ::set-output name=update::false
         shell: bash
-      - uses: ncipollo/release-action@c4bf6c1ab090090498fb7f3ddc9f99ba5ab619b9
-        with:
-          artifacts: "archives/matomo-${{ steps.tag.outputs.version }}.*,archives/piwik-${{ steps.tag.outputs.version }}.*"
-          allowUpdates: ${{ steps.tag.outputs.update }}
-          tag: ${{ steps.tag.outputs.version }}
-          body: ${{ steps.tag.outputs.body }}
-          prerelease: ${{ steps.tag.outputs.prerelease }}
-          token: ${{ secrets.GITHUB_TOKEN }}
