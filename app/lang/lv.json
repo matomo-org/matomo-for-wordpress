@@ -1853,11 +1853,10 @@
         "WidgetResolutions": "Ekrāna izšķirtspējas"
     },
     "SEO": {
-        "AlexaRank": "Alexa ranks",
         "DomainAge": "Domēna vecums",
         "Rank": "ranks",
-        "SeoRankings": "SEO ranks",
-        "SEORankingsFor": "%s SEO ranks"
+        "SEORankingsFor": "%s SEO ranks",
+        "SeoRankings": "SEO ranks"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Attēlojuma uzstādījumi",
@@ -1955,7 +1954,6 @@
         "LanguageCode": "Valodas kods"
     },
     "UsersManager": {
-        "AddUser": "Pievienot jaunu lietotāju",
         "AllWebsites": "Visas vietnes",
         "ApplyToAllWebsites": "Apstipriniet visām vietnēm",
         "ClickHereToDeleteTheCookie": "Klikšķiniet šeit, lai dzēstu sīkdatni un atļautu Matomo izsekot Jūsu pašu apmeklējumus",

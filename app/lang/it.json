@@ -1251,7 +1251,7 @@
         "UpgradePiwik": "Aggiorna Matomo",
         "UsingHttp": "utilizzo della connessione non sicura HTTP",
         "UsingHttps": "utilizzo della connessione sicura HTTPS (raccomandata)",
-        "Utf8mb4ConversionHelp": "Al momento il tuo database non sta utilizzando il charset UTF8mb4. Ciò rende impossibile conservare caratteri di 4-byte, come emoji, caratteri meno comuni delle lingue asiatiche, vari glifi antichi o simboli matematici. Questi al momento vengono sostituiti con %1$s.\n\nIl tuo database supporta il charset UTF8mb4 e sarebbe possibile una conversione.\n\nSe sai come eseguire i comandi da console, noi raccomandiamo di utilizzare questo comando: %2$s\n\nIn alternativa, puoi abilitare qui la conversione. Essa verrà automaticamente attivata come task programmato in background.\n\nAttenzione: La conversione del database potrebbe richiedere fino a due ore, a seconda delle dimensioni del database. Poiché il tracking potrebbe non funzionare durante questo processo, non ne raccomandiamo l'uso per le istanze più grandi.\n\nPuoi trovare altre informazioni su questo argomento in queste %3$sFAQ%4$s.",
+        "Utf8mb4ConversionHelp": "Al momento il tuo database non sta utilizzando il charset UTF8mb4. Ciò rende impossibile conservare caratteri di 4-byte, come emoji, caratteri meno comuni delle lingue asiatiche, vari glifi antichi o simboli matematici. Questi al momento vengono sostituiti con %1$s.<br><br>Il tuo database supporta il charset UTF8mb4 e sarebbe possibile una conversione.<br><br>Se sai come eseguire i comandi da console, noi raccomandiamo di utilizzare questo comando: %2$s<br><br>In alternativa, puoi abilitare qui la conversione. Essa verrà automaticamente attivata come task programmato in background.<br><br>Attenzione: La conversione del database potrebbe richiedere fino a due ore, a seconda delle dimensioni del database. Poiché il tracking potrebbe non funzionare durante questo processo, non ne raccomandiamo l'uso per le istanze più grandi.<br><br>Puoi trovare altre informazioni su questo argomento in queste %3$sFAQ%4$s.",
         "VerifyingUnpackedFiles": "Sto verificando i file scompattati",
         "ViewVersionChangelog": "Guarda il changelog per questa versione:",
         "WarningMessages": "Messaggi di Allerta:",
@@ -3720,14 +3720,13 @@
         "WidgetResolutionsDocumentation": "Questo report mostra le risoluzioni dello schermo utilizzate dai visitatori durante la visualizzazione del tuo sito web."
     },
     "SEO": {
-        "PluginDescription": "Questo plugin estrae e visualizza le metriche SEO: Alexa web ranking, Google Pagerank, numero di pagine indicizzate e i backlink del sito al momento selezionato.",
-        "AlexaRank": "Alexa Rank",
         "Bing_IndexedPages": "Pagine indicizzate da Bing",
         "DomainAge": "Età del dominio",
         "Google_IndexedPages": "Pagine indicizzate da Google",
+        "PluginDescription": "Questo plugin estrae e visualizza le metriche SEO: Alexa web ranking, Google Pagerank, numero di pagine indicizzate e i backlink del sito al momento selezionato.",
         "Rank": "Rank",
-        "SeoRankings": "Ranking SEO",
-        "SEORankingsFor": "SEO Ranking per %s"
+        "SEORankingsFor": "SEO Ranking per %s",
+        "SeoRankings": "Ranking SEO"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Opzioni visualizzazione",
@@ -4745,9 +4744,7 @@
     "UsersManager": {
         "2FA": "2FA",
         "AddExistingUser": "Aggiungi un utente esistente",
-        "AddNewUser": "Aggiungi un nuovo utente",
         "AddSuperuserAccessConfirm": "Concedere un accesso di superuser consentirà all'utente di avere il pieno controllo su Matomo e ciò dovrebbe essere fatto con cautela. Inserisci la tua password per continuare.",
-        "AddUser": "Aggiungi un nuovo utente",
         "AddUserNoInitialAccessError": "Bisogna assegnare a nuovi utenti l'accesso al sito, si prega di impostare il parametro 'initialIdSite'.",
         "AllUsersAreSelected": "Tutti i %1$s utenti sono selezionati.",
         "AllWebsites": "Tutti i siti",
@@ -4786,7 +4783,6 @@
         "ConfirmTokenCopied": "Confermo di aver copiato il token e di avere compreso che non devo condividerlo con nessun altro.",
         "ConfirmWithPassword": "Si prega di inserire la tua password per confermare questo cambio.",
         "CreateNewToken": "Crea un nuovo token",
-        "CreateUser": "Crea utente",
         "CurrentPasswordNotCorrect": "La password attuale inserita non è corretta.",
         "DeleteAllTokens": "Cancella tutti i token",
         "DeleteConfirm": "Sei sicuro di voler cancellare l'utente '%s'?",

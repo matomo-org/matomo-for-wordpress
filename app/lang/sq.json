@@ -3799,14 +3799,13 @@
         "WidgetResolutionsDocumentation": "Ky raport shfaq qartësinë e ekranit që vizitorët tuaj përdorën, kur panë sajtin tuaj."
     },
     "SEO": {
-        "PluginDescription": "Kjo shtojcë përfton dhe shfaq vlera SEO: renditje web Alexa, Google Pagerank, numër faqesh të përfshira në tregues dhe paslidhje të sajtit të përzgjedhur në atë çast.",
-        "AlexaRank": "Renditje Alexa",
         "Bing_IndexedPages": "Faqe të indeksuara nga Bing",
         "DomainAge": "Moshë Përkatësie",
         "Google_IndexedPages": "Faqe të indeksuara nga Google",
+        "PluginDescription": "Kjo shtojcë përfton dhe shfaq vlera SEO: renditje web Alexa, Google Pagerank, numër faqesh të përfshira në tregues dhe paslidhje të sajtit të përzgjedhur në atë çast.",
         "Rank": "Renditje",
-        "SeoRankings": "Renditje SEO",
-        "SEORankingsFor": "Renditje SEO për %s"
+        "SEORankingsFor": "Renditje SEO për %s",
+        "SeoRankings": "Renditje SEO"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Mundësi shfaqjeje",
@@ -4893,9 +4892,7 @@
     "UsersManager": {
         "2FA": "2FA",
         "AddExistingUser": "Shtoni një përdorues ekzistues",
-        "AddNewUser": "Shtoni një përdorues të ri",
         "AddSuperuserAccessConfirm": "Dhënia një përdoruesi e fuqive si superpërdorues do ta lejojë përdoruesin të ketë kontroll të plotë mbi Matomo-n dhe duhet bërë me kursim. Që të vazhdohet, jepni fjalëkalimin tuaj.",
-        "AddUser": "Shtoni përdorues të ri",
         "AddUserNoInitialAccessError": "Përdoruesve të rinj u duhet dhënë hyrje te një sajt, ju lutemi, jepini parametrit 'initialIdSite' një vlerë.",
         "AllUsersAreSelected": "Janë përzgjedhur krejt %1$s përdoruesit.",
         "AllWebsites": "Tërë sajtet",
@@ -4934,7 +4931,6 @@
         "ConfirmTokenCopied": "Ripohoj se e kam kopjuar token-in dhe e kuptoj se s’duhet t’ia jap kujt tjetër këtë token.",
         "ConfirmWithPassword": "Që të ripohoni këtë ndryshim, jepni fjalëkalimin tuaj.",
         "CreateNewToken": "Krijo token të ri",
-        "CreateUser": "Krijoni përdorues",
         "CurrentPasswordNotCorrect": "Fjalëkalimi i tanishëm që dhatë s’është i saktë.",
         "DeleteAllTokens": "Fshiji krejt token-ët",
         "DeleteConfirm": "Jeni i sigurt se doni të fshihet përdoruesi %s?",

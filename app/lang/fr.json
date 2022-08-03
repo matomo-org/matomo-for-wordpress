@@ -879,7 +879,7 @@
         "OptOutErrorNotHttps": "La fonctionnalité de désactivation du suivi pourrait ne pas fonctionner car ce site n'a pas été chargé en HTTPS. Veuillez recharger la page pour vérifier que le statut de ce suivi a bien été changé.",
         "OptOutErrorWindowOpen": "La fonctionnalité de désactivation du suivi pourrait ne pas marcher car il semble que la popup de désactivation a été bloquée. Veuillez recharger la page pour vérifier que le statut a bien été changé.",
         "OptOutExplanation": "Matomo met un point d'honneur à respecter la vie privée sur l'Internet. Pour fournir à vos visiteurs le choix de ne pas apparaître dans les analyses de Matomo, vous pouvez ajouter le code HTML suivant sur une des pages de votre site web, par exemple dans la page « Politique de confidentialité ».",
-        "OptOutExplanationIntro": "Ce code affichera un cadre interne (iFrame) contenant un lien permettant à vos visiteurs de ne pas être suivis par Matomo en plaçant un cookie de désactivation dans leur navigateur web. Voir ci-dessous (ou %1$scliquez icie%2$s) pour visualiser le contenu qui sera affiché par ce cadre.",
+        "OptOutExplanationIntro": "Ce code affichera un cadre interne (iFrame) contenant un lien permettant à vos visiteurs de ne pas être suivis par Matomo en plaçant un cookie de désactivation dans leur navigateur web. Voir ci-dessous (ou %1$scliquez ici%2$s) pour visualiser le contenu qui sera affiché par ce cadre.",
         "OptOutForYourVisitors": "Désactivation de Matomo pour vos visiteurs",
         "OptingYouOut": "Désactivation en cours, veuillez patienter…",
         "PersonalPluginSettings": "Paramètres personnels d'extension",
@@ -3813,14 +3813,13 @@
         "WidgetResolutionsDocumentation": "Ce rapport indique les résolutions d'écran utilisées par vos visiteurs lors de la consultation de votre site web."
     },
     "SEO": {
-        "PluginDescription": "Ce composant extrait et affiche les indicateurs de SEO : Alexa web ranking, Google Pagerank, le nombre de pages indexées et les rétroliens du site actuellement sélectionné.",
-        "AlexaRank": "Notation Alexa",
         "Bing_IndexedPages": "Pages indexées sur Bing",
         "DomainAge": "Âge du domaine",
         "Google_IndexedPages": "Page indexées sur Google",
+        "PluginDescription": "Ce composant extrait et affiche les indicateurs de SEO : Alexa web ranking, Google Pagerank, le nombre de pages indexées et les rétroliens du site actuellement sélectionné.",
         "Rank": "Notation",
-        "SeoRankings": "Notations des SEO",
-        "SEORankingsFor": "Notations SEO pour %s"
+        "SEORankingsFor": "Notations SEO pour %s",
+        "SeoRankings": "Notations des SEO"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Options d'affichage",
@@ -4906,9 +4905,7 @@
     "UsersManager": {
         "2FA": "2FA",
         "AddExistingUser": "Ajouter un utilisateur existant",
-        "AddNewUser": "Ajouter un nouvel utilisateur",
         "AddSuperuserAccessConfirm": "Accorder un accès super utilisateur donnera à l'utilisateur un contrôle total de Matomo et devrait être utilisé avec parcimonie. Saisissez votre mot de passe pour continuer.",
-        "AddUser": "Ajouter un nouvel utilisateur",
         "AddUserNoInitialAccessError": "Les nouveaux utilisateurs doivent recevoir un accès à un site web, veuillez définir le paramètre 'initialIdSite'.",
         "AllUsersAreSelected": "Tous les %1$s utilisateurs sont sélectionnés.",
         "AllWebsites": "Tous les sites Internet",
@@ -4947,7 +4944,6 @@
         "ConfirmTokenCopied": "Je confirme avoir copié le jeton et je comprends que je ne dois partager ce jeton avec personne d'autre.",
         "ConfirmWithPassword": "Veuillez entrer votre mot de passe actuel pour confirmer le changement.",
         "CreateNewToken": "Créer un nouveau jeton",
-        "CreateUser": "Créer l'utilisateur",
         "CurrentPasswordNotCorrect": "Le mot de passe que vous avez saisi est incorrect.",
         "DeleteAllTokens": "Supprimer tous les jetons",
         "DeleteConfirm": "Êtes-vous sûr(e) de vouloir supprimer l'utilisateur %s ?",

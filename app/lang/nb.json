@@ -231,7 +231,7 @@
         "Faq": "FAQ",
         "FileIntegrityWarning": "Kontrollen av filintegritet mislyktes og rapporterte noen feil. Du bør fikse dette problemet og så gjenoppfriske denne siden til den ikke viser feil.",
         "FileIntegrityWarningReupload": "Feilene nedenfor kan delvis være på grunn av mislykket opplasting av Matomo-filer.",
-        "FileIntegrityWarningReuploadBis": "Prøv å laste opp alle Matomo-filene i BINÆR-modus",
+        "FileIntegrityWarningReuploadBis": "Prøv å laste opp alle Matomo-filene i BINÆR-modus.",
         "First": "Først",
         "Flatten": "Gjør flat",
         "ForExampleShort": "f.eks.",
@@ -1026,6 +1026,7 @@
         "QuickAccessTitle": "Søk etter %s. Bruk piltastene for å navigere i søkeresultatene. Snarvei: trykk «f» for å søke.",
         "QuickLinks": "Hurtiglenker",
         "ReadMoreOnlineGuide": "Les mer om dette emnet i den nettbaserte veiledningen.",
+        "Refresh": "Gjenoppfrisk",
         "RemoveTotalsRowDataTable": "Rapporten viser totalt antall rader %s Fjern total",
         "ReportGeneratedOn": "Rapport generert %s",
         "ReportGeneratedXAgo": "Rapport generert for %s siden",
@@ -1041,6 +1042,7 @@
         "ShareThis": "Del dette",
         "ShortcutCalendar": "for å åpne kalenderen (d står for dato)",
         "ShortcutHelp": "for å vise denne hjelpen",
+        "ShortcutRefresh": "for å gjenoppfriske nåværende visning",
         "ShortcutSearch": "for å åpne søket (f står for finn)",
         "ShortcutSegmentSelector": "for å åpne segmentvelger",
         "ShortcutWebsiteSelector": "for å åpne nettsidevelger",
@@ -1711,6 +1713,7 @@
         "CancelAndReturnToGoals": "Avbryt og %1$sreturner til listen over mål%2$s",
         "CaseSensitive": "Skiller mellom store og små bokstaver",
         "CategoryTextDevicesDetection_DevicesDetection": "Enheter",
+        "CategoryTextGeneral_Actions": "Sider",
         "CategoryTextGeneral_Visit": "engasjement",
         "CategoryTextGeneral_Visitors": "Besøkers lokasjon",
         "CategoryTextReferrers_Referrers": "Henvisere",
@@ -1910,6 +1913,7 @@
         "Legend": "Forklaring",
         "LoadDataInfileRecommended": "Hvis din Matomo-tjener sporer nettsider med høy trafikk (f.eks. &gt; 100000 sider per måned), anbefales det at du fikser dette problemet.",
         "LoadDataInfileUnavailableHelp": "Å bruke %1$s vil gjøre arkiveringsprosessen til Matomo mye raskere. For å gjøre det tilgjengelig, prøv å oppdatere PHP og MySQL og forsikre deg om at databasebrukeren har rettigheten %2$s.",
+        "MatomoSslRequestConfigInfo": "«force_matomo_ssl_request» i det generelle oppsettet er avskrudd. Det anbefales sterkt å skru det på.",
         "NfsFilesystemWarning": "Din tjeneren bruker et NFS-filsystem.",
         "NfsFilesystemWarningSuffixAdmin": "Dette betyr Matomo vil være svært treg når du bruker filbaserte økter.",
         "NfsFilesystemWarningSuffixInstall": "Å bruke filbaserte sesjoner på NFS er ekstremt tregt, så Matomo vil bruke databasesesjoner. Hvis det er mange som ser på kontrollpanelene samtidig, kan det tenkes at du må øke maks antall klienttilkoblinger som er tillatt på databaseserveren.",
@@ -3682,7 +3686,7 @@
         "SecurityProceduresDesc1": "Bruk vår %1$ssikkerhetsanbefaling%2$s for å trygge din Matomo-data.",
         "SecurityProceduresDesc2": "Sjekk at du har en skriftlig kontrakt med selskapet som tilbyr deg en Matomo-tjener eller vertstjening som forsikrer at %1$shensiktsmessige beskyttelser tilbys%2$s.",
         "SecurityProceduresDesc3": "Inkluder Matomo i din %1$sdatainntrengningsprosedyre%2$s.",
-        "SecurityProceduresDesc4": "Inkluder Matomo i din %1$svurdering av inngripen i og omfang av datapersonvern (PDIA), om så er tilfelle.",
+        "SecurityProceduresDesc4": "Inkluder Matomo i din %1$svurdering av inngripen i og omfang av datapersonvern (PDIA)%2$s, om så er tilfelle.",
         "SecurityProceduresIntro": "Informer dine brukere tydelig og åpent og forsikre deg om at kollegene dine vet om dataen som samles inn og hvordan den brukes:",
         "SeeAlsoOurOfficialGuidePrivacy": "Sjekk også den offisielle veiledningen: %1$svev-analysepersonvern%2$s",
         "SelectWebsite": "Velg en nettside",
@@ -3827,14 +3831,13 @@
         "WidgetResolutionsDocumentation": "Denne rapporten viser skjermoppløsningene dine besøkende brukte da de besøkte nettsiden din."
     },
     "SEO": {
-        "PluginDescription": "Denne utvidelsen ekstraherer og viser SEO-tall: Alexa web-rangering, Google Pagerank, antall indekserte sider og tilbakelenker til det valgte nettstedet.",
-        "AlexaRank": "Alexa-rangering",
         "Bing_IndexedPages": "Indekserte sider hos Bing",
         "DomainAge": "Domenets alder",
         "Google_IndexedPages": "Indekserte sider hos Google",
+        "PluginDescription": "Denne utvidelsen ekstraherer og viser SEO-tall: Alexa web-rangering, Google Pagerank, antall indekserte sider og tilbakelenker til det valgte nettstedet.",
         "Rank": "Rangering",
-        "SeoRankings": "SEO-rangeringer",
-        "SEORankingsFor": "SEO-rangeringer for %s"
+        "SEORankingsFor": "SEO-rangeringer for %s",
+        "SeoRankings": "SEO-rangeringer"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Visningsalternativer",
@@ -4636,9 +4639,7 @@
     "UsersManager": {
         "2FA": "2FA (to-faktor autentisering)",
         "AddExistingUser": "Legg til en eksisterende bruker",
-        "AddNewUser": "Legg til ny bruker",
         "AddSuperuserAccessConfirm": "Å innvilge en bruker superbrukertilgang tillater den full kontroll over Matomo, så begrens det så langt det er mulig. Skriv inn passordet ditt for å fortsette.",
-        "AddUser": "Legg til ny bruker",
         "AddUserNoInitialAccessError": "Nye brukere må gis tilgang til nettsiden. Sett «initialIdSit»-parameteret.",
         "AllUsersAreSelected": "Alle %1$s brukere er valgt.",
         "AllWebsites": "Alle nettsteder",
@@ -4677,7 +4678,6 @@
         "ConfirmTokenCopied": "Jeg bekrefter at jeg har kopiert symbolet og forstår at jeg ikke skal dele det med andre.",
         "ConfirmWithPassword": "Skriv inn passordet ditt for å bekrefte denne endringen.",
         "CreateNewToken": "Opprett nytt symbol",
-        "CreateUser": "Opprett bruker",
         "CurrentPasswordNotCorrect": "Passordet du skrev inn er ikke riktig.",
         "DeleteAllTokens": "Slett alle symboler",
         "DeleteConfirm": "Er du sikker på at du vil slette brukeren %s?",
@@ -4967,10 +4967,18 @@
         "WebsiteDescription": "Et nettsted består av nettsider som typisk vises fra ett enkelt domene."
     },
     "Widgetize": {
+        "DirectLink": "&rsaquo; Direkte lenke",
+        "DisplayDashboardInIframe": "Du kan også vise hele Matomo-oversikten i programmet eller på nettsiden din med en Iframe (%1$svis eksempel%2$s). Datoparameter kan settes til en gitt kalenderdato, «today», eller «yesterday». Periodeparameteret kan også settes til «day», «week», «month», eller\n «year». Språkparemeteret kan også settes til språkkoden tilhørende en oversettelse, som f.eks language=fr. For idSite=1 og date=yesterday, kan du skrive:",
+        "DisplayDashboardInIframeAllSites": "Du kan også lage miniprogrammer av alle nettsider i oversikten i en Iframe (%1$svis eksempel%2$s)",
+        "EmbedIframe": "&rsaquo; Bygg inn iframe",
+        "Intro": "Med Matomo kan du %1$seksportere dine vev-analyserapporter%2$s til bloggen, nettsiden, eller intranettsoversikten din … med ett klikk.",
         "OpenInNewWindow": "Åpne i nytt vindu",
         "PluginDescription": "Vis alle Matomo-rapporter du vil på ditt nettsted eller i ditt program med en enkel «embed»-HTML-tagg.",
+        "Reports": "Lag miniprogrammer av rapporter",
+        "SelectAReport": "Velg en rapport, kopier og lim inn innbyggingskoden din på siden, under miniprogrammet:",
         "TooHighAccessLevel": "Denne brukeren har superbrukertilgang. Innebygging av miniprogrammer med superbruker-identitetsbekreftelse tillates ikke. %1$sSjekk O-S-S for mer info.%2$s",
         "TopLinkTooltip": "Eksporter Matomo-rapporter som miniprogrammer og bygg dem inn oversikten i programmet ditt som en iframe.",
-        "ViewAccessRequired": "Denne brukeren har ihvertfall litt skrivetilgang. Kun symboler tilhørende brukere som kun har lesetilgang kan brukes. Sjekk %1$s for mer info."
+        "ViewAccessRequired": "Denne brukeren har ihvertfall litt skrivetilgang. Kun symboler tilhørende brukere som kun har lesetilgang kan brukes. Sjekk %1$s for mer info.",
+        "ViewableAnonymously": "Hvis du ønker at miniprogrammene skal være synlige for alle, må du først sette «view»-tilgang for anonyme brukere i %1$sbrukerhåndteringsdelen%2$s.<br>Alternativt, hvis du publiserer miniprogrammer på en passordbeskyttet eller privat side, trenger du ikke å tillate «anonymous» å vise rapportene dine. I sådant fall må du legge til det hemmelige <code>token_auth<\/code>-parameteret i nettadressen til ditt miniprogram. Du kan håndtere dine identitetbekreftelsessymboler på din %3$ssikkerhetsside%4$s."
     }
 }

@@ -481,7 +481,7 @@
         "Contents": "Mga Nilalaman",
         "Impressions": "Mga Impresyon",
         "InteractionRate": "Rate ng Pakikipag-ugnayan",
-        "PluginDescription": "Maaring  sukatin ang pagganap (mga view, pag-click, CTR) ng anumang piraso ng nilalaman sa iyong mga pahina (Banner ad, imahe, anumang item) sa pagsubaybay sa contento at banner."
+        "PluginDescription": "Maaring sukatin ang pagganap (mga view, pag-click, CTR) ng anumang piraso ng nilalaman sa iyong mga pahina (Banner ad, imahe, anumang item) sa pagsubaybay sa contento at banner."
     },
     "CoreAdminHome": {
         "AddNewTrustedHost": "Magdagdag ng bagong pinagkakatiwalaang host",
@@ -518,7 +518,7 @@
         "JSTracking_GroupPageTitlesByDomain": "I-prepend ang site domain sa pamagat ng pahina kapag nagsusubaybay.",
         "JSTracking_GroupPageTitlesByDomainDesc1": "Kung kaya't kapag may bumisita sa pahina na 'About' ng blog.%1$s ito ay itatala bilang 'blog \/ About'. Ito ay ang pinakamadaling paraan upang makakuha ng isang pangkalahatang ideya ng iyong trapiko sa bawat sub-domain.",
         "JSTracking_MergeAliases": "Sa \"Outlinks\" na ulat, itago ang mga pag-click sa mga kilalang alias URL ng",
-        "JSTracking_MergeAliasesDesc": "Kung kaya't ang mga click sa mga link sa Alias ​​na mga URL (hal.%s) ay hindi mabibilang bilang \"Outlink\".",
+        "JSTracking_MergeAliasesDesc": "Kung kaya't ang mga click sa mga link sa Alias na mga URL (hal.%s) ay hindi mabibilang bilang \"Outlink\".",
         "JSTracking_MergeSubdomains": "Subaybayan ang mga bisita sa lahat ng mga subdomain ng",
         "JSTracking_MergeSubdomainsDesc": "Kaya kung ang bisita ay bumisita sa %1$s at %2$s, ang mga ito ay mabibilang bilang isang unique na bisita.",
         "JSTracking_PageCustomVars": "Subaybayan ang isang custom na variable para sa bawat pagtingin sa isang pahina",
@@ -2339,13 +2339,12 @@
         "WidgetResolutions": "Screen Resolution"
     },
     "SEO": {
-        "AlexaRank": "Ranggo sa Alexa",
         "Bing_IndexedPages": "Mga na index na pahina ng bing",
         "DomainAge": "Edad ng Domain",
         "Google_IndexedPages": "Na index ng Google ang mga pahina",
         "Rank": "Ranggo",
-        "SeoRankings": "Ranggo sa SEO",
-        "SEORankingsFor": "Ranggo ng SEO para sa %s"
+        "SEORankingsFor": "Ranggo ng SEO para sa %s",
+        "SeoRankings": "Ranggo sa SEO"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Mga opsyon sa pag-display",
@@ -2404,7 +2403,7 @@
         "LoadingSegmentedDataMayTakeSomeTime": "Maaaring tumagal ng ilang minuto ang pagproseso ng kaputol na datos ng bisita.",
         "OperatorAND": "AT",
         "OperatorOR": "OR",
-        "PluginDescription": "Ang isang segment ay isang set ng mga pamantayan na ginagamit upang pumili lamang ng isang bahagi ng buong hanay ng mga pagbisita.  Maaari mag-inject ng arbitraryo na konteksto pabalik sa iyong mga ulat sa pag-gamit ng segment.",
+        "PluginDescription": "Ang isang segment ay isang set ng mga pamantayan na ginagamit upang pumili lamang ng isang bahagi ng buong hanay ng mga pagbisita. Maaari mag-inject ng arbitraryo na konteksto pabalik sa iyong mga ulat sa pag-gamit ng segment.",
         "SaveAndApply": "I-save at I-apply",
         "SegmentDisplayedThisWebsiteOnly": "ang website na ito lamang",
         "SegmentNotApplied": "Hindi nai-apply ang Segment '%s'",
@@ -2597,7 +2596,6 @@
     },
     "UsersManager": {
         "2FA": "2FA",
-        "AddUser": "Magdagdag ng bagong user",
         "AllWebsites": "Ang lahat ng mga website",
         "AnonymousUserHasViewAccess": "Tandaan: ang %1$s user ay may %2$s na access sa website na ito",
         "AnonymousUserHasViewAccess2": "Ang iyong ulat na pang analytics at ang mga impormasyon ng iyong mga bisita ay makikita ng publiko.",

@@ -1469,7 +1469,6 @@
         "PluginDescription": "Informa sobre o idioma empregado polos navegadores das visitas."
     },
     "UsersManager": {
-        "AddUser": "Engadir un novo usuario",
         "AllWebsites": "Todas as webs",
         "ApplyToAllWebsites": "Aplicar a todos os sitios",
         "DeleteConfirm": "Está seguro de que desexa eliminar ao usuario %s?",

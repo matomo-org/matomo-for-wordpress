@@ -2067,13 +2067,12 @@
         "WidgetResolutions": "Képernyőfelbontások"
     },
     "SEO": {
-        "AlexaRank": "Alexa rangsor",
         "Bing_IndexedPages": "Bing által indexelt oldalak",
         "DomainAge": "Domain életkor",
         "Google_IndexedPages": "Google által indexelt oldalak",
         "Rank": "Rangsor",
-        "SeoRankings": "Keresőoptimalizálási rangsor",
-        "SEORankingsFor": "%s oldalhoz tartozó keresőoptimalizálási adatok"
+        "SEORankingsFor": "%s oldalhoz tartozó keresőoptimalizálási adatok",
+        "SeoRankings": "Keresőoptimalizálási rangsor"
     },
     "ScheduledReports": {
         "AlsoSendReportToTheseEmails": "Továbbítsd a jelentéseket még az alábbi e-mail címekre is (soronként csak egy e-mail cím szerepeljen)",
@@ -2171,7 +2170,6 @@
         "LanguageCode": "Nyelvi kód"
     },
     "UsersManager": {
-        "AddUser": "Új felhasználó hozzáadása",
         "AllWebsites": "Összes weboldal",
         "ApplyToAllWebsites": "Alkalmazás minden weboldalra",
         "ClickHereToDeleteTheCookie": "Kattints ide a szűrés érdekében lementett süti törléséhez, hogy a továbbiakban a Matomo regisztrálja látogatásaid.",

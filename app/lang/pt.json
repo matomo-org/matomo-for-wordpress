@@ -3370,7 +3370,7 @@
         "DeleteDataDescription": "Pode configurar o Matomo para eliminar regularmente dados em bruto e\/ou relatórios agregados, de forma a manter o tamanho da sua base de dados pequeno ou de forma a cumprir normas de privacidade, tais como o RGPD.",
         "DeleteDataInterval": "Eliminar dados antigos todos\/todas",
         "DeleteDataSettings": "Eliminar registos e relatórios de visitantes antigos",
-        "DeleteLogDescription2": "Quando ativa a ​​eliminação automática de registos, deve garantir que todos os relatórios diários anteriores foram processados​​, de modo a que nenhuma informação seja perdida.",
+        "DeleteLogDescription2": "Quando ativa a eliminação automática de registos, deve garantir que todos os relatórios diários anteriores foram processados, de modo a que nenhuma informação seja perdida.",
         "DeleteLogsConfirm": "Está prestes a ativar a eliminação de dados em bruto. Se os dados em bruto forem removidos e se os relatórios ainda não tiverem sido criados, não poderá ver os dados analíticos mais antigos. Tem a certeza que pretende fazer isto?",
         "DeleteLogsOlderThan": "Eliminar registos mais antigos que",
         "DeleteMaxRows": "Número máximo de linhas para eliminar de cada vez:",
@@ -3574,14 +3574,13 @@
         "WidgetResolutionsDocumentation": "Este relatório mostra as resoluções de ecrã que os seus visitantes utilizaram quando visualizaram o seu site da Web."
     },
     "SEO": {
-        "PluginDescription": "Esta extensão extrai e apresenta métricas de SEO: Classificação web da Alexa, Google Pagerank, número de páginas indexadas e de ligações de retorno para o site atualmente selecionado.",
-        "AlexaRank": "Classificação Alexa",
         "Bing_IndexedPages": "Páginas indexadas pelo Bing",
         "DomainAge": "Idade do domínio",
         "Google_IndexedPages": "Páginas indexadas pelo Google",
+        "PluginDescription": "Esta extensão extrai e apresenta métricas de SEO: Classificação web da Alexa, Google Pagerank, número de páginas indexadas e de ligações de retorno para o site atualmente selecionado.",
         "Rank": "Classificação",
-        "SeoRankings": "Classificações SEO",
-        "SEORankingsFor": "Classificações SEO para %s"
+        "SEORankingsFor": "Classificações SEO para %s",
+        "SeoRankings": "Classificações SEO"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Opções de visualização",
@@ -4585,9 +4584,7 @@
     "UsersManager": {
         "2FA": "2FA",
         "AddExistingUser": "Adicionar um utilizador existente",
-        "AddNewUser": "Adicionar um novo utilizador",
         "AddSuperuserAccessConfirm": "Atribuir a um utilizador o acesso de super-utilizador confere-lhe um controlo absoluto do Matomo, algo que deve ser feito com moderação. Introduza a sua palavra-passe para continuar.",
-        "AddUser": "Adicionar um novo utilizador",
         "AddUserNoInitialAccessError": "Deve ser dado acesso a um site aos novos utilizadores. Por favor, defina o parâmetro 'initialIdSite'.",
         "AllUsersAreSelected": "Estão selecionados todos os %1$s utilizadores.",
         "AllWebsites": "Todos os sites",
@@ -4625,7 +4622,6 @@
         "ConfirmProhibitOtherUsersSuperUserAccess": "Quer mesmo remover o acesso de super-utilizador de '%s'? O utilizador irá perder todas as permissões e o acesso a todos os sites. Confirme que depois dá acesso aos sites necessários, caso seja pertinente.",
         "ConfirmWithPassword": "Por favor, introduza a sua palavra-passe para confirmar esta alteração.",
         "CreateNewToken": "Criar novo código",
-        "CreateUser": "Criar utilizador",
         "CurrentPasswordNotCorrect": "A palavra-passe atual que introduziu não está correta.",
         "DeleteAllTokens": "Eliminar todos os códigos",
         "DeleteConfirm": "Tem a certeza que deseja eliminar o utilizador %s?",
