@@ -24,7 +24,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Or specify a tag to build from'
+        description: 'Version'
         required: false
         default: ''
       password:
@@ -45,14 +45,15 @@ jobs:
           script: |
               core.setFailed('Release password didn\'t match.')
       - name: "Check if user is allowed"
-        if: ${{ github.actor != 'mattab' && github.actor != 'tsteur' && github.actor != 'tsteur' && github.actor != 'justinvelluppillai' }}
+        if: ${{ github.actor != 'mattab' && github.actor != 'tsteur' && github.actor != 'mattmary' && github.actor != 'justinvelluppillai' }}
         uses: actions/github-script@v3
         with:
           script: |
             core.setFailed('User is not allowed to release.')
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           lfs: false
+          fetch-depth: '0'
       - name: Import GPG key
         id: import_gpg
         run: |
@@ -66,6 +67,8 @@ jobs:
           gpg-connect-agent "RELOADAGENT" /bye
           gpg-connect-agent "PRESET_PASSPHRASE ${keygrip} -1 ${hexPassphrase}" /bye
           gpg-connect-agent "KEYINFO ${keygrip}" /bye
+      - name: Add git user
+        uses: fregante/setup-git-user@v1
       - name: Check preconditions, create tag, build and publish release
         id: tag
         run: |
@@ -73,18 +76,21 @@ jobs:
           then
             version="${{ github.event.inputs.version }}"
           else
-            version=$(cat readme.txt | grep -oP "Stable tag:\K(.+)")
+            version=$(cat readme.txt | grep -oP "Stable tag: \K(.+)")
           fi
           echo "Version to build: '$version'"
 
+          echo "Check tag does not exist"
+          git fetch --all -q 2>/dev/null
+            tag_exists=$( git tag --list "$version" )
+            if [[ -n "$tag_exists" ]]
+            then
+              echo "A tag for $tag_exists already exists."
+              exit 1
+            fi
+          
           echo "Fetching develop"
           git checkout develop && git pull
-  
-          echo "Fetching live"
-          git checkout live && git pull
-          
-          echo "Merge develop into live"
-          git merge develop
           
           echo "Patch polyfills"
           wget https://github.com/matomo-org/matomo-for-wordpress/commit/bcba547f9c3185467a3f2f26d1853b2cafb62488.diff
@@ -92,14 +98,22 @@ jobs:
           rm bcba547f9c3185467a3f2f26d1853b2cafb62488.diff
           git add app/vendor/symfony/
           git commit -m 'patch polyfills so we can release a new version and it passes WordPress file check'
+          git push origin develop
+          
+          echo "Fetching live"
+          git checkout live && git pull
+          
+          echo "Merge develop into live"
+          git merge develop
           git push origin live
           
           echo "Creating a tag for $version"
-          chmod +x ./scripts/*.sh
-          cd scripts
-          ./create_tag.sh $version
+          git tag -a $version HEAD -m "If you download this release, make sure the directory name within the 'wordpress/wp-content' directory is 'matomo' and not for example 'matomo-for-wordpress'. [View changes](https://github.com/matomo-org/matomo-for-wordpress/blob/develop/CHANGELOG.md)" 
+          git push origin $version
           
           echo "Deploy"
+          chmod +x ./scripts/*.sh
+          cd scripts
           ./deploy.sh $version ${{ secrets.SVN_USERNAME }} ${{ secrets.SVN_PASSWORD }}
           cd ..
           
