@@ -95,9 +95,9 @@ jobs:
           git checkout develop && git pull
           
           echo "Patch polyfills"
-          wget https://github.com/matomo-org/matomo-for-wordpress/commit/bcba547f9c3185467a3f2f26d1853b2cafb62488.diff
-          git apply bcba547f9c3185467a3f2f26d1853b2cafb62488.diff
-          rm bcba547f9c3185467a3f2f26d1853b2cafb62488.diff
+          wget https://github.com/matomo-org/matomo-for-wordpress/commit/33647ad0268556260f1039a3d14e42258c4f0873.diff
+          git apply 33647ad0268556260f1039a3d14e42258c4f0873.diff
+          rm 33647ad0268556260f1039a3d14e42258c4f0873.diff
           git add app/vendor/symfony/
           git commit -m 'patch polyfills so we can release a new version and it passes WordPress file check'
           git push origin develop
