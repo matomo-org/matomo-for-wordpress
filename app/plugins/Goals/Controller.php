@@ -266,10 +266,13 @@ class Controller extends \Piwik\Plugin\Controller
                 'only_summary' => 1,
             ];
 
-            \Piwik\Context::executeWithQueryParameters($params, function() use (&$content) {
+            \Piwik\Context::executeWithQueryParameters($params, function () use (&$content, $goal) {
                 //load Visualisations Sparkline
                 $view = ViewDataTableFactory::build(Sparklines::ID, 'Goals.getMetrics', 'Goals.' . __METHOD__, true);
                 $view->config->show_title = true;
+                $view->config->custom_parameters = [
+                    'idGoal' => $goal['idgoal'],
+                ];
                 $content .= $view->render();
             });
         }
@@ -301,7 +304,6 @@ class Controller extends \Piwik\Plugin\Controller
     protected function getTopDimensions($idGoal)
     {
         $columnNbConversions = 'goal_' . $idGoal . '_nb_conversions';
-        $columnConversionRate = 'goal_' . $idGoal . '_conversion_rate';
 
         $topDimensionsToLoad = array();
 
@@ -319,6 +321,11 @@ class Controller extends \Piwik\Plugin\Controller
                 'website' => 'Referrers.getWebsites',
             );
         }
+
+        $topDimensionsToLoad += array(
+            'entry_page' => 'Actions.getEntryPageUrls',
+        );
+
         $topDimensions = array();
         foreach ($topDimensionsToLoad as $dimensionName => $apiMethod) {
             $request = new Request("method=$apiMethod
@@ -332,6 +339,13 @@ class Controller extends \Piwik\Plugin\Controller
             $datatable = $request->process();
             $topDimension = array();
             $count = 0;
+
+            if ($apiMethod == 'Actions.getEntryPageUrls') {
+                $columnConversionRate = 'goal_' . $idGoal . '_nb_conversions_entry_rate';
+            } else {
+                $columnConversionRate = 'goal_' . $idGoal . '_conversion_rate';
+            }
+
             foreach ($datatable->getRows() as $row) {
                 $conversions = $row->getColumn($columnNbConversions);
                 if ($conversions > 0
@@ -355,11 +369,13 @@ class Controller extends \Piwik\Plugin\Controller
         return $topDimensions;
     }
 
-    protected function getMetricsForGoal($idGoal)
+    protected function getMetricsForGoal($idGoal, $dataRow = null)
     {
-        $request = new Request("method=Goals.get&format=original&idGoal=$idGoal");
-        $datatable = $request->process();
-        $dataRow = $datatable->getFirstRow();
+        if (!$dataRow) {
+            $request = new Request("method=Goals.get&format=original&idGoal=$idGoal");
+            $datatable = $request->process();
+            $dataRow = $datatable->getFirstRow();
+        }
         $nbConversions = $dataRow->getColumn('nb_conversions');
         $nbVisitsConverted = $dataRow->getColumn('nb_visits_converted');
         // Backward compatibility before 1.3, this value was not processed

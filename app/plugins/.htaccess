@@ -49,3 +49,24 @@
 	</IfModule>
 </IfModule>
 </Files>
+# Allow to serve manifest.json
+<Files "manifest.json">
+<IfModule mod_version.c>
+	<IfVersion < 2.4>
+		Order Allow,Deny
+		Allow from All
+	</IfVersion>
+	<IfVersion >= 2.4>
+		Require all granted
+	</IfVersion>
+</IfModule>
+<IfModule !mod_version.c>
+	<IfModule !mod_authz_core.c>
+		Order Allow,Deny
+		Allow from All
+	</IfModule>
+	<IfModule mod_authz_core.c>
+		Require all granted
+	</IfModule>
+</IfModule>
+</Files>

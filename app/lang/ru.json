@@ -3153,9 +3153,11 @@
         "MultiSites_Must_Be_Activated": "Для создания SMS-сообщений с информацией о статистике Вашего веб-сайта, пожалуйста включите плагин MultiSites в Matomo.",
         "PhoneNumbers": "Номера телефонов",
         "PluginDescription": "Позволяет создавать и загружать SMS-отчёты и отправлять их на мобильный телефон каждый день, неделю или месяц.",
+        "SMS_Content_Too_Long": "[слишком длинно]",
+        "SettingsMenu": "СМС сообщения",
         "Settings_APIKey": "API ключ",
         "Settings_CountryCode": "Код страны",
-        "Settings_CredentialNotProvided": "Прежде чем вы сможете создавать и управлять номерами телефонов, подключите Matomo к своему ​​аккаунту SMS выше.",
+        "Settings_CredentialNotProvided": "Прежде чем вы сможете создавать и управлять номерами телефонов, подключите Matomo к своему аккаунту SMS выше.",
         "Settings_CredentialNotProvidedByAdmin": "Прежде чем вы сможете создавать и управлять номерами телефонов, пожалуйста, обратитесь к администратору для подключения Matomo к аккаунту SMS.",
         "Settings_CredentialProvided": "SMS API %s для вашей учетной записи настроено корректно!",
         "Settings_DeleteAccountConfirm": "Вы уверены что хотите удалить этот SMS акаунт?",
@@ -3173,8 +3175,6 @@
         "Settings_SuperAdmin": "Настройки суперпользователя",
         "Settings_UpdateOrDeleteAccount": "Так же вы можете %1$sобновить%2$s или %3$sудалить%4$s этот аккаунт.",
         "Settings_ValidatePhoneNumber": "Проверить",
-        "SettingsMenu": "СМС сообщения",
-        "SMS_Content_Too_Long": "[слишком длинно]",
         "TopMenu": "Email и SMS отчёты",
         "VerificationText": "\\\"Код %1$s. Для проверки номера Вашего телефона и получения SMS-отчетов Matomo, пожалуйста, скопируйте этот код в форму > %2$s > %3$s."
     },
@@ -3398,14 +3398,13 @@
         "WidgetResolutions": "По разрешению мониторов"
     },
     "SEO": {
-        "PluginDescription": "Этот плагин извлекает и отображает метрику SEO: веб-ранг Alexa, Google Pagerank, количество индексированных страниц и обратных ссылок на текущий выбранный веб-сайт.",
-        "AlexaRank": "Рейтинг Alexa",
         "Bing_IndexedPages": "Страниц в индексе Bing",
         "DomainAge": "Возраст домена",
         "Google_IndexedPages": "Страниц в индексе Google",
+        "PluginDescription": "Этот плагин извлекает и отображает метрику SEO: веб-ранг Alexa, Google Pagerank, количество индексированных страниц и обратных ссылок на текущий выбранный веб-сайт.",
         "Rank": "Рейтинг",
-        "SeoRankings": "SEO-Рейтинги",
-        "SEORankingsFor": "SEO Рейтинги для %s"
+        "SEORankingsFor": "SEO Рейтинги для %s",
+        "SeoRankings": "SEO-Рейтинги"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Настройки отображения",
@@ -3944,8 +3943,6 @@
     "UsersManager": {
         "2FA": "2FA",
         "AddExistingUser": "Добавить существующего пользователя",
-        "AddNewUser": "Добавить нового пользователя",
-        "AddUser": "Добавить нового пользователя",
         "AllWebsites": "Все сайты",
         "AnonymousUser": "Анонимный пользователь",
         "AnonymousUserHasViewAccess": "Примечание: пользователь %1$s имеет %2$s доступ к этому сайту.",
@@ -3957,7 +3954,6 @@
         "ClickHereToSetTheCookieOnDomain": "Нажмите здесь, чтобы установить cookie игнорирования Веб-аналитики, после установки которого система Вас будет игнорировать при посещении %s",
         "ConfirmGrantSuperUserAccess": "Вы действительно хотите пользователя «%s» повысить до суперпользователя? Внимание: пользователь будет иметь доступ ко всем веб-сайтам и сможет выполнять административные задачи.",
         "ConfirmProhibitMySuperUserAccess": "%s, Вы действительно хотите удалить у себя права суперпользователя? Вы потеряете все разрешения и доступ ко всем сайтам и будете разлогинены из Matomo.",
-        "CreateUser": "Создать пользователя",
         "DeleteConfirm": "Вы уверены, что хотите удалить пользователя %s?",
         "DeleteUsers": "Удалить пользователей",
         "EditUser": "Редактировать пользователя",

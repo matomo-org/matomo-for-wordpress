@@ -866,7 +866,7 @@
         "WhatIsNewTitle": "Tässä Matomon uutuuksia",
         "WhatIsNewTooltip": "Katso mitä uutta Matomo sisältää",
         "WithOptionalRevenue": "valinnaisten tuottojen kanssa",
-        "YouAreNotOptedOut": "Et ole kieltänyt seurantaa",
+        "YouAreNotOptedOut": "Et ole kieltänyt seurantaa.",
         "YouAreOptedOut": "Et ole mukana seurannassa.",
         "YouMayOptOut": "Jos haluat, voit estää yksilöllisen tunnisteen tallentamisen tietokoneellesi, ja samalla estää tämän sivun analytiikan osaltasi.",
         "YouMayOptOut2": "Voit päättää, ettet halua sinua ja tekemiäsi seurattavan tällä sivustolla.",
@@ -3291,14 +3291,13 @@
         "WidgetResolutionsDocumentation": "Tämä raportti näyttää kävijöiden näytön tarkkuuden, kun kävijä on käynyt verkkosivustollasi."
     },
     "SEO": {
-        "PluginDescription": "Tämä lisäosa hakee ja näyttää SEO-tietoja: Alexan web ranking, Googlen Pagerank, indeksoitujen sivujen lukumäärän, ja takaisin osoittavien linkkien määrän valitulle sivulle.",
-        "AlexaRank": "Alexa-tulos",
         "Bing_IndexedPages": "Bingin indeksoidut sivut",
         "DomainAge": "Verkkotunnuksen ikä",
         "Google_IndexedPages": "Googlen indeksoimat sivut",
+        "PluginDescription": "Tämä lisäosa hakee ja näyttää SEO-tietoja: Alexan web ranking, Googlen Pagerank, indeksoitujen sivujen lukumäärän, ja takaisin osoittavien linkkien määrän valitulle sivulle.",
         "Rank": "Sijoitus",
-        "SeoRankings": "SEO-tulos",
-        "SEORankingsFor": "SEO-sijoitus %s:lle"
+        "SEORankingsFor": "SEO-sijoitus %s:lle",
+        "SeoRankings": "SEO-tulos"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Näyttövalinnat",
@@ -3977,8 +3976,6 @@
     "UsersManager": {
         "2FA": "2FA",
         "AddExistingUser": "Lisää olemassa oleva käyttäjä",
-        "AddNewUser": "Lisää uusi käyttäjä",
-        "AddUser": "Lisää uusi käyttäjä",
         "AllUsersAreSelected": "Kaikki %1$s käyttäjää on valittu.",
         "AllWebsites": "Kaikki sivut",
         "AllWebsitesAreSelected": "Kaikki %1$s sivustoa on valittu.",
@@ -4005,7 +4002,6 @@
         "ConfirmProhibitMySuperUserAccess": "%s, haluatko varmasti poistaa omat pääkäyttäjäoikeutesi? Menetät kaikki oikeudet ja pääsyn kaikille sivustoille sekä kirjaudut ulos Matomosta.",
         "ConfirmWithPassword": "Kirjoita salasanasi vahvistaaksesi muutoksen.",
         "CreateNewToken": "Luo uusi poletti",
-        "CreateUser": "Luo käyttäjä",
         "CurrentPasswordNotCorrect": "Kirjoittamasi nykyinen salasana ei ole oikein.",
         "DeleteAllTokens": "Poista kaikki poletit",
         "DeleteConfirm": "Haluatko varmasti poistaa käyttäjän %s?",

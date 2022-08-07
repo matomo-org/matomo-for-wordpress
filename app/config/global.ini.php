@@ -277,6 +277,9 @@ browser_archiving_disabled_enforce = 0
 ; Add custom currencies to Sites Manager.
 currencies[BTC] = Bitcoin
 
+; default expiry time in days for invite user tokens
+default_invite_user_token_expiry_days = 7
+
 ; By default, users can create Segments which are to be processed in Real-time.
 ; Setting this to 0 will force all newly created Custom Segments to be "Pre-processed (faster, requires archive.php cron)"
 ; This can be useful if you want to prevent users from adding much load on the server.
@@ -800,6 +803,10 @@ enable_update_communication = 1
 ; If you may need to download GeoIP updates or other stuff using other protocols like ftp you may need to extend this list.
 allowed_outgoing_protocols = 'http,https'
 
+; This option forces matomo marketplace and matomo api requests to use HTTP, as default we use HTTPS to improve security
+; If you have a problem loading the marketplace, please enable this config option
+force_matomo_http_request = 0
+
 ; Comma separated list of plugin names for which console commands should be loaded (applies when Matomo is not installed yet)
 always_load_commands_from_plugin=
 
@@ -1095,6 +1102,7 @@ encryption = ; SMTP transport-layer encryption, either 'none', 'ssl', 'tls', or 
 type = BASIC ; proxy type for outbound/outgoing connections; currently, only BASIC is supported
 host = ; Proxy host: the host name of your proxy server (mandatory)
 port = ; Proxy port: the port that the proxy server listens to. There is no standard default, but 80, 1080, 3128, and 8080 are popular
+exclude = ; Comma separated list of hosts to exclude from proxy: optional; localhost is always excluded
 username = ; Proxy username: optional; if specified, password is mandatory
 password = ; Proxy password: optional; if specified, username is mandatory
 
