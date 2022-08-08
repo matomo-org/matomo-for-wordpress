@@ -1,5 +1,9 @@
 == Changelog ==
 
+= 4.11.0 =
+* Update Matomo core to 4.11.0
+* Update plugins compatiblity list
+
 = 4.10.0 =
 * Update Matomo core to 4.10.0
 * Fix a white screen issue in multisite mode

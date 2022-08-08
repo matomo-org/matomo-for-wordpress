@@ -31,7 +31,7 @@ if (!function_exists('iconv_get_encoding')) {
     function iconv_get_encoding(?string $type = 'all') { return p\Iconv::iconv_get_encoding((string) $type); }
 }
 if (!function_exists('iconv_set_encoding')) {
-    function iconv_set_encoding(?string $type, ?string $encoding) { return p\Iconv::iconv_set_encoding((string) $type, (string) $encoding); }
+    function iconv_set_encoding(?string $type, ?string $encoding): bool { return p\Iconv::iconv_set_encoding((string) $type, (string) $encoding); }
 }
 if (!function_exists('iconv_mime_encode')) {
     function iconv_mime_encode(?string $field_name, ?string $field_value, ?array $options = []) { return p\Iconv::iconv_mime_encode((string) $field_name, (string) $field_value, (array) $options); }

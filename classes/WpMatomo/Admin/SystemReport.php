@@ -79,8 +79,6 @@ class SystemReport {
 		// uses a newer version of monolog
 		'wp-rss-aggregator',
 		// see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
-		'wp-defender',
-		// see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
 		'age-verification-for-woocommerce',
 		// see https://github.com/matomo-org/wp-matomo/issues/428
 		'minify-html-markup',
@@ -94,6 +92,8 @@ class SystemReport {
 		'post-smtp',
 		// see https://wordpress.org/support/topic/activation-of-another-plugin-breaks-matomo/#post-15045079
 		'adshares',
+		// see https://github.com/matomo-org/matomo-for-wordpress/issues/618
+		'bluehost-wordpress-plugin',
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
