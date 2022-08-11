@@ -3,8 +3,9 @@
 # Required GitHub secrets:
 # 
 # RELEASE_PASSWORD  |  password that needs to be provided to start the action
-# GPG_CERTIFICATE  |  ASCII armored or Base64 encoded GPG certificate that is used to create the signatures for the archives
-# GPG_CERTIFICATE_PASS  |  Passphrase of the GPG key
+# RELEASE_TOKEN  |  github release token to publish
+# GIT_EMAIL  |  the git email account which will create the tag version
+# GIT_USERNAME  | the git username account which will create the tag version
 # SVN_USERNAME  | the svn username to publish a new plugin release
 # SVN_PASSWORD  | the svn password to publish a new plugin release
 
@@ -56,21 +57,11 @@ jobs:
         with:
           lfs: false
           fetch-depth: '0'
-      - name: Import GPG key
-        id: import_gpg
+          token: ${{ secrets.RELEASE_TOKEN }} # for pushing to protected branch
+      - name: Publish new version
         run: |
-          echo "${{ secrets.GPG_CERTIFICATE }}" > $HOME/private.asc
-          gpg --import --batch --yes $HOME/private.asc
-          echo "default-cache-ttl 7200
-          max-cache-ttl 31536000
-          allow-preset-passphrase" > $HOME/.gnupg/gpg-agent.conf
-          keygrip=$(gpg --import --import-options show-only --with-keygrip $HOME/private.asc | grep "Keygrip" | grep -oP "([A-F0-9]+)" | head -1)
-          hexPassphrase=$( echo -n '${{ secrets.GPG_CERTIFICATE_PASS }}' | od -A n -t x1 -w100 | sed 's/ *//g' )
-          gpg-connect-agent "RELOADAGENT" /bye
-          gpg-connect-agent "PRESET_PASSPHRASE ${keygrip} -1 ${hexPassphrase}" /bye
-          gpg-connect-agent "KEYINFO ${keygrip}" /bye
-      - name: Add git user
-        uses: fregante/setup-git-user@v1
+          git config --global user.email "${{ secrets.GIT_EMAIL }}"
+          git config --global user.name "${{ secrets.GIT_USERNAME }}"
       - name: Check preconditions, create tag, build and publish release
         id: tag
         run: |
