@@ -66,7 +66,7 @@ svn update --set-depth infinity assets
 svn update --set-depth infinity trunk
 
 echo "➤ Checking out git matomo-for-wordpress repository..."
-git clone --single-branch --branch live git@github.com:matomo-org/matomo-for-wordpress.git "$GITHUB_WORKSPACE"
+git clone --single-branch --branch live https://github.com:matomo-org/matomo-for-wordpress.git "$GITHUB_WORKSPACE"
 
 echo "➤ Copying files..."
 
