@@ -60,8 +60,14 @@ jobs:
         run: |
           git config --global user.email "hello@matomo.org"
           git config --global user.name "Matomo Team"
+      - name: Install hub
+        uses: geertvdc/setup-hub@master
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       - name: Check preconditions, create tag, build and publish release
         id: tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [[ -n "${{ github.event.inputs.version }}" ]]
           then
@@ -81,8 +87,7 @@ jobs:
             fi
           
           echo "Creating a tag for $version"
-          git tag -a $version HEAD -m "If you download this release, make sure the directory name within the 'wordpress/wp-content' directory is 'matomo' and not for example 'matomo-for-wordpress'. [View changes](https://github.com/matomo-org/matomo-for-wordpress/blob/develop/CHANGELOG.md)" 
-          git push origin $version
+          hub release create --message $version --message "If you download this release, make sure the directory name within the 'wordpress/wp-content' directory is 'matomo' and not for example 'matomo-for-wordpress'. [View changes](https://github.com/matomo-org/matomo-for-wordpress/blob/develop/CHANGELOG.md)"  -t live  $version
           
           echo "Deploy"
           chmod +x ./scripts/*.sh
