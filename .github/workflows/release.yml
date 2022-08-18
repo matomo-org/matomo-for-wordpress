@@ -4,8 +4,6 @@
 # 
 # RELEASE_PASSWORD  |  password that needs to be provided to start the action
 # RELEASE_TOKEN  |  github release token to publish
-# GIT_EMAIL  |  the git email account which will create the tag version
-# GIT_USERNAME  | the git username account which will create the tag version
 # SVN_USERNAME  | the svn username to publish a new plugin release
 # SVN_PASSWORD  | the svn password to publish a new plugin release
 
@@ -60,8 +58,8 @@ jobs:
           token: ${{ secrets.RELEASE_TOKEN }} # for pushing to protected branch
       - name: Publish new version
         run: |
-          git config --global user.email "${{ secrets.GIT_EMAIL }}"
-          git config --global user.name "${{ secrets.GIT_USERNAME }}"
+          git config --global user.email "hello@matomo.org"
+          git config --global user.name "Matomo Team"
       - name: Check preconditions, create tag, build and publish release
         id: tag
         run: |
