@@ -87,7 +87,7 @@ jobs:
           echo "Deploy"
           chmod +x ./scripts/*.sh
           cd scripts
-          ./deploy.sh $version ${{ secrets.SVN_USERNAME }} ${{ secrets.SVN_PASSWORD }}
+          ./deploy.sh $version ${{ secrets.SVN_USERNAME }} "${{ secrets.SVN_PASSWORD }}"
           cd ..
           
           echo ::set-output name=update::false
