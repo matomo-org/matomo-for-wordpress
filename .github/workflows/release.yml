@@ -56,40 +56,37 @@ jobs:
           lfs: false
           fetch-depth: '0'
           token: ${{ secrets.RELEASE_TOKEN }} # for pushing to protected branch
-      - name: Publish new version
+      - name: "Check tag"
         run: |
-          git config --global user.email "hello@matomo.org"
-          git config --global user.name "Matomo Team"
-      - name: Install hub
-        uses: geertvdc/setup-hub@master
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-      - name: Check preconditions, create tag, build and publish release
-        id: tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [[ -n "${{ github.event.inputs.version }}" ]]
-          then
-            version="${{ github.event.inputs.version }}"
-          else
-            version=$(cat readme.txt | grep -oP "Stable tag: \K(.+)")
-          fi
-          echo "Version to build: '$version'"
-
-          echo "Check tag does not exist"
-          git fetch --all -q 2>/dev/null
-            tag_exists=$( git tag --list "$version" )
-            if [[ -n "$tag_exists" ]]
+            if [[ -n "${{ github.event.inputs.version }}" ]]
             then
-              echo "A tag for $tag_exists already exists."
-              exit 1
+              version="${{ github.event.inputs.version }}"
+            else
+              version=$(cat readme.txt | grep -oP "Stable tag: \K(.+)")
             fi
-          
-          echo "Creating a tag for $version"
-          hub release create --message $version --message "If you download this release, make sure the directory name within the 'wordpress/wp-content' directory is 'matomo' and not for example 'matomo-for-wordpress'. [View changes](https://github.com/matomo-org/matomo-for-wordpress/blob/develop/CHANGELOG.md)"  -t live  $version
-          
-          echo "Deploy"
+            echo "Version to build: '$version'"
+
+            echo "Check tag does not exist"
+            git fetch --all -q 2>/dev/null
+              tag_exists=$( git tag --list "$version" )
+              if [[ -n "$tag_exists" ]]
+              then
+                echo "A tag for $tag_exists already exists."
+                exit 1
+              fi
+            
+              echo "version=$version" >> $GITHUB_ENV
+      - name: "Create release"
+        uses: ncipollo/release-action@c4bf6c1ab090090498fb7f3ddc9f99ba5ab619b9
+        with:
+            artifacts: "archives/matomo-${{ env.version }}.*,archives/piwik-${{ env.version }}.*"
+            allowUpdates: ${{ steps.tag.outputs.update }}
+            tag: ${{ env.version }}
+            body: "If you download this release, make sure the directory name within the 'wordpress/wp-content' directory is 'matomo' and not for example 'matomo-for-wordpress'. [View changes](https://github.com/matomo-org/matomo-for-wordpress/blob/develop/CHANGELOG.md)"
+            prerelease: ${{ steps.tag.outputs.prerelease }}
+            token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Deploy on wordpress"
+        run: |
           chmod +x ./scripts/*.sh
           cd scripts
           ./deploy.sh $version ${{ secrets.SVN_USERNAME }} "${{ secrets.SVN_PASSWORD }}"
