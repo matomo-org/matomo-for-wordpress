@@ -5,7 +5,7 @@
 -->
 
 <template>
-  <div>
+  <div class="manageGoals">
     <!-- v-show required until funnels/multiattribution are using vue and not angularjs -->
     <div v-show="!onlyShowAddNewGoal">
       <div
@@ -319,7 +319,7 @@
             <Field
               uicontrol="radio"
               name="allow_multiple"
-              :model-value="goal.allow_multiple ? 1 : 0"
+              :model-value="!!goal.allow_multiple && goal.allow_multiple !== '0' ? 1 : 0"
               @update:model-value="goal.allow_multiple = $event"
               v-if="goal.match_attribute !== 'visit_duration'"
               :options="allowMultipleOptions"
@@ -403,6 +403,7 @@ import {
 } from 'CorePluginsAdmin';
 import Goal from '../Goal';
 import PiwikApiMock from './PiwikApiMock';
+import ManageGoalsStore from './ManageGoals.store';
 
 interface ManageGoalsState {
   showEditGoal: boolean;
@@ -415,6 +416,10 @@ interface ManageGoalsState {
   submitText: string;
   goalToDelete: Goal|null;
   addEditTableComponent: boolean;
+}
+
+function ambiguousBoolToInt(n: string|number|boolean): 1|0 {
+  return !!n && n !== '0' ? 1 : 0;
 }
 
 export default defineComponent({
@@ -464,6 +469,12 @@ export default defineComponent({
   directives: {
     ContentTable,
     Form,
+  },
+  created() {
+    ManageGoalsStore.setIdGoalShown(this.showGoal);
+  },
+  unmounted() {
+    ManageGoalsStore.setIdGoalShown(undefined);
   },
   mounted() {
     if (this.showAddGoal) {
@@ -639,11 +650,11 @@ export default defineComponent({
 
         parameters.patternType = this.goal.pattern_type;
         parameters.pattern = this.goal.pattern;
-        parameters.caseSensitive = this.goal.case_sensitive ? 1 : 0;
+        parameters.caseSensitive = ambiguousBoolToInt(this.goal.case_sensitive);
       }
       parameters.revenue = this.goal.revenue || 0;
-      parameters.allowMultipleConversionsPerVisit = this.goal.allow_multiple ? 1 : 0;
-      parameters.useEventValueAsRevenue = this.goal.event_value_as_revenue ? 1 : 0;
+      parameters.allowMultipleConversionsPerVisit = ambiguousBoolToInt(this.goal.allow_multiple);
+      parameters.useEventValueAsRevenue = ambiguousBoolToInt(this.goal.event_value_as_revenue);
 
       parameters.idGoal = this.goal.idgoal;
       parameters.method = this.apiMethod;
@@ -701,10 +712,10 @@ export default defineComponent({
       }
     },
     lcfirst(s: string) {
-      return `${s.substr(0, 1).toLowerCase()}${s.substr(1)}`;
+      return `${s.slice(0, 1).toLowerCase()}${s.slice(1)}`;
     },
     ucfirst(s: string) {
-      return `${s.substr(0, 1).toUpperCase()}${s.substr(1)}`;
+      return `${s.slice(0, 1).toUpperCase()}${s.slice(1)}`;
     },
   },
   computed: {
@@ -785,8 +796,13 @@ export default defineComponent({
 
       const componentsByIdGoal: Record<string, unknown> = {};
       Object.values(this.goals as Record<string, Goal>).forEach((g) => {
+        const template = this.beforeGoalListActionsBody![g.idgoal];
+        if (!template) {
+          return;
+        }
+
         componentsByIdGoal[g.idgoal] = {
-          template: this.beforeGoalListActionsBody![g.idgoal],
+          template,
         };
       });
       return markRaw(componentsByIdGoal);
@@ -796,8 +812,15 @@ export default defineComponent({
         return null;
       }
 
+      const endedittable = this.$refs.endedittable as HTMLElement;
       return markRaw({
         template: this.endEditTable,
+        mounted() {
+          Matomo.helper.compileVueEntryComponents(endedittable);
+        },
+        beforeUnmount() {
+          Matomo.helper.destroyVueComponent(endedittable);
+        },
       });
     },
     beforeGoalListActionsHeadComponent() {

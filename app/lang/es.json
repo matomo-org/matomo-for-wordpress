@@ -955,7 +955,7 @@
         "DataTableShowDimensions": "Dimensiones están combinadas %s Mostrarlas separadamente",
         "DateInvalid": "La combinación de fecha y periodo seleccionados es inválido. Por favor escoja una fecha válida en el selector de fechas.",
         "Default": "predeterminado",
-        "DonateCall1": "​Matomo siempre será gratis, pero eso no significa que no nos cueste nada hacerlo.",
+        "DonateCall1": "Matomo siempre será gratis, pero eso no significa que no nos cueste nada hacerlo.",
         "DonateCall2": "Matomo necesita su apoyo para crecer y prosperar.",
         "DonateCall3": "Si sientes que Matomo ha supuesto un valor añadido para tu negocio o emprendimiento, %1$spor favor, considera hacer una donación%2$s o %3$sadquirir una funcionalidad premium%4$s. Cada centavo ayudará.",
         "EndShortcut": "Fin",
@@ -3429,14 +3429,13 @@
         "WidgetResolutions": "Resolución de pantalla"
     },
     "SEO": {
-        "PluginDescription": "Este complemento extrae y visualiza las métricas SEO: ranking de internet Alexa, Google Pagerank, número de páginas indexadas y enlaces de retorno del sitio de internet actualmente seleccionado.",
-        "AlexaRank": "Ranking Alexa",
         "Bing_IndexedPages": "páginas indexadas por Bing",
         "DomainAge": "Edad del dominio",
         "Google_IndexedPages": "Páginas indexadas por Google",
+        "PluginDescription": "Este complemento extrae y visualiza las métricas SEO: ranking de internet Alexa, Google Pagerank, número de páginas indexadas y enlaces de retorno del sitio de internet actualmente seleccionado.",
         "Rank": "Rango",
-        "SeoRankings": "Rankings SEO",
-        "SEORankingsFor": "Rankings SEO de %s"
+        "SEORankingsFor": "Rankings SEO de %s",
+        "SeoRankings": "Rankings SEO"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Opciones de visualización",
@@ -4388,9 +4387,7 @@
     "UsersManager": {
         "2FA": "2FA",
         "AddExistingUser": "Agregar un usuario existente",
-        "AddNewUser": "Agregar nuevo usuario",
         "AddSuperuserAccessConfirm": "Otorgarle acceso a un usuario superusuario le permitirá poseer un control total sobre Matomo y debe hacerse con cautela. Ingrese su contraseña para continuar.",
-        "AddUser": "Añadir un nuevo usuario",
         "AddUserNoInitialAccessError": "Los usuarios nuevos deben suministrar acceso al sitio web, por favor configure el parámetro 'initialIdSite'",
         "AllUsersAreSelected": "Todos los usuarios %1$s están seleccionados.",
         "AllWebsites": "Todos los sitios de internet",
@@ -4425,7 +4422,6 @@
         "ConfirmProhibitMySuperUserAccess": "¿%s, está seguro que desea eliminar su acceso Super Usuario? Perderá todos los permisos y accesos a todos los sitios de internet y será desconectado de Matomo.",
         "ConfirmProhibitOtherUsersSuperUserAccess": "¿Está seguro que desea quitar el acceso Super Usuario de '%s'? Este perderá todos los permisos y accesos a todos los sitios. Asegúrese de dar acceso a los sitios necesarios después si es necesario.",
         "ConfirmWithPassword": "Por favor ingrese su contraseña para confirmar este cambio.",
-        "CreateUser": "Crear usuario",
         "CurrentPasswordNotCorrect": "La actual contraseña que ingresó no es correcta.",
         "DeleteConfirm": "¿Está seguro que desea eliminar al usuario %s?",
         "DeletePermConfirmMultiple": "¿Está seguro que desea quitar a %1$sdel acceso a estos sitios web %2$s?",

@@ -2296,11 +2296,10 @@
         "WidgetResolutions": "Rozlíšenie obrazovky"
     },
     "SEO": {
-        "AlexaRank": "Alexa hodnotenie",
         "DomainAge": "Vek domény",
         "Rank": "Hodnotenie",
-        "SeoRankings": "SEO hodnotenie",
-        "SEORankingsFor": "SEO hodnotenie pre %s"
+        "SEORankingsFor": "SEO hodnotenie pre %s",
+        "SeoRankings": "SEO hodnotenie"
     },
     "ScheduledReports": {
         "AlsoSendReportToTheseEmails": "Tiež poslať správu na tieto e-maily (jeden e-mail na riadok):",
@@ -2391,7 +2390,6 @@
         "PluginDescription": "Informuje o jazyku použitom v prehliadači návštevníka."
     },
     "UsersManager": {
-        "AddUser": "Pridať nového používateľa",
         "AllWebsites": "Všetky webstránky",
         "AnonymousUser": "Anonymný používateľ",
         "ApplyToAllWebsites": "Použiť na všetky webstránky",

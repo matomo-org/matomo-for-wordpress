@@ -97,6 +97,10 @@ class InstallTest extends MatomoAnalytics_TestCase {
 					'twofactor_secret'     => '',
 					'superuser_access'     => '1',
 					'idchange_last_viewed' => null,
+					'invited_by'           => null,
+					'invite_token'         => null,
+					'invite_expired_at'    => null,
+					'invite_accept_at'     => null,
 				),
 			),
 			$all_users

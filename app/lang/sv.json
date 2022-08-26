@@ -3704,14 +3704,13 @@
         "WidgetResolutionsDocumentation": "Denna rapport visar skärmupplösningarna som dina besökare använde när de tittade på din webbplats."
     },
     "SEO": {
-        "PluginDescription": "Detta plugin framställer och visar SEO-värden: Alexa webbranking , Google Pagerank , antalet indexerade sidor och länkar för den valda webbplatsen.",
-        "AlexaRank": "Alexa Rank",
         "Bing_IndexedPages": "Bing indexerade sidor",
         "DomainAge": "Domänålder",
         "Google_IndexedPages": "Google indexerade sidor",
+        "PluginDescription": "Detta plugin framställer och visar SEO-värden: Alexa webbranking , Google Pagerank , antalet indexerade sidor och länkar för den valda webbplatsen.",
         "Rank": "Rank",
-        "SeoRankings": "SEO Ranking",
-        "SEORankingsFor": "SEO Ranking för %s"
+        "SEORankingsFor": "SEO Ranking för %s",
+        "SeoRankings": "SEO Ranking"
     },
     "ScheduledReports": {
         "AggregateReportsFormat": "Visningsalternativ",
@@ -3838,7 +3837,7 @@
         "AddMeasurable": "Lägg till ny mätpunkt",
         "AddSite": "Lägg till en ny webbplats",
         "AdvancedTimezoneSupportNotFound": "Stöd för avancerade tidszoner hittades inte i din PHP (stöds i PHP> = 5,2). Du kan fortfarande välja en manuell UTC kompensation.",
-        "AliasUrlHelp": "Det rekommenderas, men krävs inte, att ange de olika webbadresser, en per rad, som dina besökare använder för att komma åt denna webbplats. Alias ​​webbadresser för en webbplats visas inte i hänvisningsadresserna > Webbplatsernas rapporter. Observera att detta inte är nödvändigt för att ange webbadresser med och utan \\\"www\\\" som Matomo automatiskt anser båda.",
+        "AliasUrlHelp": "Det rekommenderas, men krävs inte, att ange de olika webbadresser, en per rad, som dina besökare använder för att komma åt denna webbplats. Alias webbadresser för en webbplats visas inte i hänvisningsadresserna &gt; Webbplatsernas rapporter. Observera att detta inte är nödvändigt för att ange webbadresser med och utan \\\"www\\\" som Matomo automatiskt anser båda.",
         "ChangingYourTimezoneWillOnlyAffectDataForward": "Ändring av din tidszon kommer endast att påverka informationen i framtiden, och kommer inte att tillämpas retroaktivt.",
         "ChooseMeasurableTypeHeadline": "Vad vill du mäta?",
         "Currency": "Valuta",
@@ -4714,9 +4713,7 @@
     "UsersManager": {
         "2FA": "2FA",
         "AddExistingUser": "Lägg till en befintlig användare",
-        "AddNewUser": "Lägg till en ny användare",
         "AddSuperuserAccessConfirm": "Genom att ge en användare superanvändare-tillgång kommer användaren att ha full kontroll över Matomo och detta bör göras sparsamt. Ange ditt lösenord för att fortsätta.",
-        "AddUser": "Lägg till en ny användare",
         "AddUserNoInitialAccessError": "Nya användare måste få tillgång till en webbplats, vänligen ange parametern 'initialIdSite'.",
         "AllUsersAreSelected": "Alla %1$s användare är markerade.",
         "AllWebsites": "Alla webbplatser",
@@ -4755,7 +4752,6 @@
         "ConfirmTokenCopied": "Jag bekräftar att jag kopierade token och förstår att jag inte ska dela denna token med någon annan.",
         "ConfirmWithPassword": "Vänligen ange ditt lösenord för att godkänna ändringen.",
         "CreateNewToken": "Skapa ny token",
-        "CreateUser": "Skapa användare",
         "CurrentPasswordNotCorrect": "Lösenordet du angav är inte korrekt.",
         "DeleteAllTokens": "Ta bort alla tokens",
         "DeleteConfirm": "Är du säker på att du vill ta bort användaren %s?",

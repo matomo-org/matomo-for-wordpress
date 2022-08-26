@@ -1608,11 +1608,10 @@
         "WidgetResolutions": "ეკრანის რეზოლუვიები"
     },
     "SEO": {
-        "AlexaRank": "Alexa რანგი",
         "DomainAge": "დომენის ასაკი",
         "Rank": "რანგი",
-        "SeoRankings": "SEO რენგები",
-        "SEORankingsFor": "SEO რანგები %s–სთვის"
+        "SEORankingsFor": "SEO რანგები %s–სთვის",
+        "SeoRankings": "SEO რენგები"
     },
     "ScheduledReports": {
         "AlsoSendReportToTheseEmails": "რეპორტი ასევე გააგზავნეთ ელ.ფოსტის ამ მისამართებზე (ერთი მისამართი ერთ ხაზზე):",
@@ -1701,7 +1700,6 @@
         "LanguageCode": "ენის კოდი"
     },
     "UsersManager": {
-        "AddUser": "ახალი მომხმარებლის დამატება",
         "AllWebsites": "ყველა ვებ საიტი",
         "ApplyToAllWebsites": "ყველა ვებ საიტზე გამოყენება",
         "ClickHereToDeleteTheCookie": "დააწკაპუნეთ აქ, რომ წაშალოთ ქუქი და თქვენი ვიზიტების ტრეკირების საშუალება მისცეთ Matomo–ს",
@@ -1718,8 +1716,8 @@
         "ForAnonymousUsersReportDateToLoadByDefault": "ანონიმური მომხმარებლებისთვის, ნაგულისხმევად ჩასატვირთი რეპორტის თარიღი",
         "ManageAccess": "წვდომის მართვა",
         "MenuAnonymousUserSettings": "ანონიმური მომხმარებლის პარამეტრები",
-        "MenuUsers": "მომხმარებლები",
         "MenuUserSettings": "მომხმარებლის პარამეტრები",
+        "MenuUsers": "მომხმარებლები",
         "PrivAdmin": "ადმინისტრატორი",
         "PrivNone": "წვდომის გარეშე",
         "PrivView": "დათვალიერება",
@@ -1728,12 +1726,12 @@
         "TheLoginScreen": "სისტემაში შესვლის ეკრანი",
         "TypeYourPasswordAgain": "აკრიფეთ ახალი პაროლი კიდევ ერთხელ.",
         "User": "მომხმარებელი",
+        "Username": "მომხმარებლის სახელი",
         "UsersManagement": "მომხმარებელთა მენეჯმენტი",
         "UsersManagementMainDescription": "შექმენით ახალი მომხმარებელები ან განაახლეთ არსებული მომხმარებლები. შემდეგ ზემოთ შეგიძლიათ დაუნიშნოთ მათ უფლებები.",
         "YourUsernameCannotBeChanged": "თქვენი მომხმარებლის სახელის შეცვლა არ შეიძლება.",
         "YourVisitsAreIgnoredOnDomain": "%1$s Matomo–ის მიერ იგნორირებულია თქვენი ვიზიტები %2$s %3$s (თქვენს ბრაუზერში ნაპოვნია Matomo იგნორირების ქუქი).",
-        "YourVisitsAreNotIgnored": "%1$sთქვენი ვიზიტები არ არის იგნორირებული Matomo–ის მიერ%2$s (Matomo იგნორირების ქუქი არ იქნა ნაპოვნი თქვენს ბრაუზერში).",
-        "Username": "მომხმარებლის სახელი"
+        "YourVisitsAreNotIgnored": "%1$sთქვენი ვიზიტები არ არის იგნორირებული Matomo–ის მიერ%2$s (Matomo იგნორირების ქუქი არ იქნა ნაპოვნი თქვენს ბრაუზერში)."
     },
     "VisitFrequency": {
         "ColumnActionsByReturningVisits": "ქმედებები დაბრუნებული ვიზიტების მიხედვით",
