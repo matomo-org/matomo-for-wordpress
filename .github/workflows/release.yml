@@ -3,7 +3,7 @@
 # Required GitHub secrets:
 # 
 # RELEASE_PASSWORD  |  password that needs to be provided to start the action
-# RELEASE_TOKEN  |  github release token to publish
+# GITHUB_TOKEN  |  github release token to publish
 # SVN_USERNAME  | the svn username to publish a new plugin release
 # SVN_PASSWORD  | the svn password to publish a new plugin release
 
@@ -55,7 +55,7 @@ jobs:
         with:
           lfs: false
           fetch-depth: '0'
-          token: ${{ secrets.RELEASE_TOKEN }} # for pushing to protected branch
+          token: ${{ secrets.GITHUB_TOKEN }} # for pushing to protected branch
       - name: "Check tag"
         run: |
             if [[ -n "${{ github.event.inputs.version }}" ]]
@@ -84,7 +84,7 @@ jobs:
             tag: ${{ env.version }}
             body: "If you download this release, make sure the directory name within the 'wordpress/wp-content' directory is 'matomo' and not for example 'matomo-for-wordpress'. [View changes](https://github.com/matomo-org/matomo-for-wordpress/blob/develop/CHANGELOG.md)"
             prerelease: ${{ steps.tag.outputs.prerelease }}
-            token: ${{ secrets.RELEASE_TOKEN }}
+            token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Deploy on wordpress"
         run: |
           chmod +x ./scripts/*.sh
