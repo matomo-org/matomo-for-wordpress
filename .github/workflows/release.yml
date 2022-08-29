@@ -79,7 +79,7 @@ jobs:
       - name: "Create release"
         uses: ncipollo/release-action@c4bf6c1ab090090498fb7f3ddc9f99ba5ab619b9
         with:
-            artifacts: "archives/matomo-${{ env.version }}.*,archives/piwik-${{ env.version }}.*"
+            artifacts: "archives/matomo-${{ env.version }}.*"
             allowUpdates: ${{ steps.tag.outputs.update }}
             tag: ${{ env.version }}
             body: "If you download this release, make sure the directory name within the 'wordpress/wp-content' directory is 'matomo' and not for example 'matomo-for-wordpress'. [View changes](https://github.com/matomo-org/matomo-for-wordpress/blob/develop/CHANGELOG.md)"
