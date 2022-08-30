@@ -1,0 +1,96 @@
+# Matomo Release Action
+# 
+# Required GitHub secrets:
+# 
+# RELEASE_PASSWORD  |  password that needs to be provided to start the action
+# GITHUB_TOKEN  |  github release token to publish
+# SVN_USERNAME  | the svn username to publish a new plugin release
+# SVN_PASSWORD  | the svn password to publish a new plugin release
+
+name: Build release
+
+permissions:
+  actions: none
+  checks: none
+  contents: write  # required to create tag and release
+  deployments: none
+  issues: none
+  packages: none
+  pull-requests: none
+  repository-projects: none
+  security-events: none
+  statuses: none
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: false
+        default: ''
+      password:
+        description: 'Release password'
+        required: true
+
+env:
+  RELEASE_PASSWORD: ${{ secrets.RELEASE_PASSWORD }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Check release password"
+        if: ${{ github.event.inputs.password != env.RELEASE_PASSWORD }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+              core.setFailed('Release password didn\'t match.')
+      - name: "Check if user is allowed"
+        if: ${{ github.actor != 'mattab' && github.actor != 'tsteur' && github.actor != 'mattmary' && github.actor != 'justinvelluppillai' }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+            core.setFailed('User is not allowed to release.')
+      - uses: actions/checkout@v3
+        with:
+          lfs: false
+          fetch-depth: '0'
+          token: ${{ secrets.GITHUB_TOKEN }} # for pushing to protected branch
+      - name: "Check tag"
+        run: |
+            if [[ -n "${{ github.event.inputs.version }}" ]]
+            then
+              version="${{ github.event.inputs.version }}"
+            else
+              version=$(cat readme.txt | grep -oP "Stable tag: \K(.+)")
+            fi
+            echo "Version to build: '$version'"
+
+            echo "Check tag does not exist"
+            git fetch --all -q 2>/dev/null
+              tag_exists=$( git tag --list "$version" )
+              if [[ -n "$tag_exists" ]]
+              then
+                echo "A tag for $tag_exists already exists."
+                exit 1
+              fi
+            
+              echo "version=$version" >> $GITHUB_ENV
+      - name: "Create release"
+        uses: ncipollo/release-action@c4bf6c1ab090090498fb7f3ddc9f99ba5ab619b9
+        with:
+            artifacts: "archives/matomo-${{ env.version }}.*"
+            allowUpdates: ${{ steps.tag.outputs.update }}
+            tag: ${{ env.version }}
+            body: "If you download this release, make sure the directory name within the 'wordpress/wp-content' directory is 'matomo' and not for example 'matomo-for-wordpress'. [View changes](https://github.com/matomo-org/matomo-for-wordpress/blob/develop/CHANGELOG.md)"
+            prerelease: ${{ steps.tag.outputs.prerelease }}
+            token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Deploy on wordpress"
+        run: |
+          chmod +x ./scripts/*.sh
+          cd scripts
+          ./deploy.sh $version ${{ secrets.SVN_USERNAME }} "${{ secrets.SVN_PASSWORD }}"
+          cd ..
+          
+          echo ::set-output name=update::false
+        shell: bash
