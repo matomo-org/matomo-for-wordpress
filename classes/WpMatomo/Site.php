@@ -20,11 +20,11 @@ class Site {
 	 * @api
 	 */
 	public function get_current_matomo_site_id() {
-		return (int) self::get_matomo_site_id( get_current_blog_id() );
+		return self::get_matomo_site_id( get_current_blog_id() );
 	}
 
 	public static function get_matomo_site_id( $blog_id ) {
-		return get_site_option( self::SITE_MAPPING_PREFIX . $blog_id );
+		return (int) get_site_option( self::SITE_MAPPING_PREFIX . $blog_id );
 	}
 
 	public static function map_matomo_site_id( $blog_id, $matomo_id_site ) {
