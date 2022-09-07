@@ -7,7 +7,7 @@
  * @package matomo
  */
 
-namespace Wp;Matomo\Admin;
+namespace WpMatomo\Admin;
 
 use Exception;
 use ITSEC_Modules;
