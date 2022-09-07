@@ -85,8 +85,6 @@ class SystemReport {
 		// see https://wordpress.org/support/topic/20-total-errors-during-this-script-execution/
 		'google-listings-and-ads',
 		// see https://wordpress.org/support/topic/20-total-errors-during-this-script-execution/
-		'accelerated-mobile-pages',
-		// see https://wordpress.org/support/topic/receiving-errors-from-my-plesk-server/
 		'post-smtp',
 		// see https://wordpress.org/support/topic/activation-of-another-plugin-breaks-matomo/#post-15045079
 		'adshares',
