@@ -24,7 +24,7 @@ class Site {
 	}
 
 	public static function get_matomo_site_id( $blog_id ) {
-		return get_site_option( self::SITE_MAPPING_PREFIX . $blog_id );
+		return (int) get_site_option( self::SITE_MAPPING_PREFIX . $blog_id );
 	}
 
 	public static function map_matomo_site_id( $blog_id, $matomo_id_site ) {
