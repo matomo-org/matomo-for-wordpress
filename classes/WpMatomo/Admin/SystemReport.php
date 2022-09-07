@@ -7,7 +7,7 @@
  * @package matomo
  */
 
-namespace WpMatomo\Admin;
+namespace Wp;Matomo\Admin;
 
 use Exception;
 use ITSEC_Modules;
@@ -1528,7 +1528,7 @@ class SystemReport {
 					$additional_comment .= '<br><br>The PDF report files from the email reports will be missing when the PostSMTP mode is selected but it works when the PHPMailer mode is selected.';
 				}
 				if ( in_array( 'wp-rocket', $used_not_compatible, true ) ) {
-					$additional_comment .= '<br><br>Wp-rocket is incompatible from version 3.12. Until fixes, please reinstall version 3.11.5 if you have a newer version. For more information please visit https://github.com/matomo-org/matomo-for-wordpress/wiki/Downgrade-wp-rocket-to-a-version-compatible-with-the-Matomo-plugin';
+					$additional_comment .= '<br><br>WP-rocket is incompatible from version 3.12. Until fixes, please reinstall version 3.11.5 if you have a newer version. For more information please visit https://github.com/matomo-org/matomo-for-wordpress/wiki/Downgrade-wp-rocket-to-a-version-compatible-with-the-Matomo-plugin';
 				}
 
 				$is_warning = true;
