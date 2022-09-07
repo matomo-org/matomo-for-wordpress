@@ -76,7 +76,7 @@ class SystemReport {
 		'tweet-old-post-pro',
 		// uses a newer version of monolog
 		'wp-rss-aggregator',
-		// see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
+		// twig conflict
 		'age-verification-for-woocommerce',
 		// see https://github.com/matomo-org/wp-matomo/issues/428
 		'minify-html-markup',
