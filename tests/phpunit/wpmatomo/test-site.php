@@ -24,7 +24,7 @@ class SiteTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_current_matomo_site_id_when_not_mapped() {
-		$this->assertFalse( $this->site->get_current_matomo_site_id() );
+		$this->assertSame( 0, $this->site->get_current_matomo_site_id() );
 	}
 
 	public function test_get_current_matomo_site_id_when_mapped() {

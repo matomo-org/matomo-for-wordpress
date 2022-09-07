@@ -20,7 +20,7 @@ class Site {
 	 * @api
 	 */
 	public function get_current_matomo_site_id() {
-		return self::get_matomo_site_id( get_current_blog_id() );
+		return (int) self::get_matomo_site_id( get_current_blog_id() );
 	}
 
 	public static function get_matomo_site_id( $blog_id ) {
