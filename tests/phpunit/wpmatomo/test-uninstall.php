@@ -59,7 +59,7 @@ class UninstallTest extends MatomoAnalytics_TestCase {
 		$this->uninstaller->uninstall( true );
 
 		$this->assertFalse( $this->installer->looks_like_it_is_installed() );
-		$this->assertFalse( Site::get_matomo_site_id( get_current_blog_id() ) );
+		$this->assertEquals( 0, Site::get_matomo_site_id( get_current_blog_id() ) );
 		$this->assertFalse( User::get_matomo_user_login( get_current_user_id() ) );
 	}
 

@@ -57,7 +57,7 @@ class SiteTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_matomo_site_id_when_nothing_mapped() {
-		$this->assertFalse( Site::get_matomo_site_id( 93 ) );
+		$this->assertEqulals(0, Site::get_matomo_site_id( 93 ) );
 	}
 
 	/**
@@ -103,7 +103,7 @@ class SiteTest extends MatomoUnit_TestCase {
 		$this->assertSame( 81, Site::get_matomo_site_id( 49 ) );
 
 		Site::map_matomo_site_id( 49, false );
-		$this->assertFalse( Site::get_matomo_site_id( 49 ) );
+		$this->assertEquals( 0, Site::get_matomo_site_id( 49 ) );
 	}
 
 	public function test_uninstall_removes_all_mappings() {
