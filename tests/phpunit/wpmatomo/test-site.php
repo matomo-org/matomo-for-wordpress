@@ -57,7 +57,7 @@ class SiteTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_matomo_site_id_when_nothing_mapped() {
-		$this->assertEquals(0, Site::get_matomo_site_id( 93 ) );
+		$this->assertEquals( 0, Site::get_matomo_site_id( 93 ) );
 	}
 
 	/**
