@@ -172,13 +172,6 @@ class WpMatomo {
 			return MATOMO_SAFE_MODE;
 		}
 
-		// we are not using is_plugin_active() for performance reasons
-		$active_plugins = self::get_active_plugins();
-
-		if ( in_array( 'wp-rss-aggregator/wp-rss-aggregator.php', $active_plugins, true ) ) {
-			return true;
-		}
-
 		return false;
 	}
 
