@@ -102,7 +102,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 					'invite_token'         => null,
 					'invite_expired_at'    => null,
 					'invite_accept_at'     => null,
-					'invite_link_token'    => null
+					'invite_link_token'    => null,
 				),
 			),
 			$all_users
