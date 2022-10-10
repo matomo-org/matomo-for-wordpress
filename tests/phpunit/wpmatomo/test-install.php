@@ -72,6 +72,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 					'exclude_unknown_urls'           => 0,
 					'excluded_ips'                   => '',
 					'excluded_parameters'            => '',
+					'excluded_referrers'             => '',
 					'excluded_user_agents'           => '',
 					'group'                          => '',
 					'type'                           => 'website',
@@ -101,6 +102,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 					'invite_token'         => null,
 					'invite_expired_at'    => null,
 					'invite_accept_at'     => null,
+					'invite_link_token'    => null
 				),
 			),
 			$all_users
