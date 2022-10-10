@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit589a8b903359beccb0550a4316260322
+class ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -366,6 +366,7 @@ class ComposerStaticInit589a8b903359beccb0550a4316260322
         'DeviceDetector\\Cache\\PSR16Bridge' => __DIR__ . '/..' . '/matomo/device-detector/Cache/PSR16Bridge.php',
         'DeviceDetector\\Cache\\PSR6Bridge' => __DIR__ . '/..' . '/matomo/device-detector/Cache/PSR6Bridge.php',
         'DeviceDetector\\Cache\\StaticCache' => __DIR__ . '/..' . '/matomo/device-detector/Cache/StaticCache.php',
+        'DeviceDetector\\ClientHints' => __DIR__ . '/..' . '/matomo/device-detector/ClientHints.php',
         'DeviceDetector\\DeviceDetector' => __DIR__ . '/..' . '/matomo/device-detector/DeviceDetector.php',
         'DeviceDetector\\Parser\\AbstractBotParser' => __DIR__ . '/..' . '/matomo/device-detector/Parser/AbstractBotParser.php',
         'DeviceDetector\\Parser\\AbstractParser' => __DIR__ . '/..' . '/matomo/device-detector/Parser/AbstractParser.php',
@@ -375,6 +376,8 @@ class ComposerStaticInit589a8b903359beccb0550a4316260322
         'DeviceDetector\\Parser\\Client\\Browser\\Engine' => __DIR__ . '/..' . '/matomo/device-detector/Parser/Client/Browser/Engine.php',
         'DeviceDetector\\Parser\\Client\\Browser\\Engine\\Version' => __DIR__ . '/..' . '/matomo/device-detector/Parser/Client/Browser/Engine/Version.php',
         'DeviceDetector\\Parser\\Client\\FeedReader' => __DIR__ . '/..' . '/matomo/device-detector/Parser/Client/FeedReader.php',
+        'DeviceDetector\\Parser\\Client\\Hints\\AppHints' => __DIR__ . '/..' . '/matomo/device-detector/Parser/Client/Hints/AppHints.php',
+        'DeviceDetector\\Parser\\Client\\Hints\\BrowserHints' => __DIR__ . '/..' . '/matomo/device-detector/Parser/Client/Hints/BrowserHints.php',
         'DeviceDetector\\Parser\\Client\\Library' => __DIR__ . '/..' . '/matomo/device-detector/Parser/Client/Library.php',
         'DeviceDetector\\Parser\\Client\\MediaPlayer' => __DIR__ . '/..' . '/matomo/device-detector/Parser/Client/MediaPlayer.php',
         'DeviceDetector\\Parser\\Client\\MobileApp' => __DIR__ . '/..' . '/matomo/device-detector/Parser/Client/MobileApp.php',
@@ -2171,7 +2174,6 @@ class ComposerStaticInit589a8b903359beccb0550a4316260322
         'Piwik\\Plugins\\ProfessionalServices\\tests\\Framework\\Mock\\Promo' => __DIR__ . '/../..' . '/plugins/ProfessionalServices/tests/Framework/Mock/Promo.php',
         'Piwik\\Plugins\\Proxy\\Controller' => __DIR__ . '/../..' . '/plugins/Proxy/Controller.php',
         'Piwik\\Plugins\\Proxy\\Proxy' => __DIR__ . '/../..' . '/plugins/Proxy/Proxy.php',
-        'Piwik\\Plugins\\Proxy\\tests\\Unit\\ProxyTest' => __DIR__ . '/../..' . '/plugins/Proxy/tests/Unit/ProxyTest.php',
         'Piwik\\Plugins\\Referrers\\API' => __DIR__ . '/../..' . '/plugins/Referrers/API.php',
         'Piwik\\Plugins\\Referrers\\Archiver' => __DIR__ . '/../..' . '/plugins/Referrers/Archiver.php',
         'Piwik\\Plugins\\Referrers\\Categories\\AllReferrersSubcategory' => __DIR__ . '/../..' . '/plugins/Referrers/Categories/AllReferrersSubcategory.php',
@@ -2225,6 +2227,7 @@ class ComposerStaticInit589a8b903359beccb0550a4316260322
         'Piwik\\Plugins\\Referrers\\tests\\Integration\\Columns\\ReferrerNameTest' => __DIR__ . '/../..' . '/plugins/Referrers/tests/Integration/Columns/ReferrerNameTest.php',
         'Piwik\\Plugins\\Referrers\\tests\\Integration\\Columns\\ReferrerTypeTest' => __DIR__ . '/../..' . '/plugins/Referrers/tests/Integration/Columns/ReferrerTypeTest.php',
         'Piwik\\Plugins\\Referrers\\tests\\Integration\\Columns\\ReferrerUrlTest' => __DIR__ . '/../..' . '/plugins/Referrers/tests/Integration/Columns/ReferrerUrlTest.php',
+        'Piwik\\Plugins\\Referrers\\tests\\Integration\\ReferrerAttributionTest' => __DIR__ . '/../..' . '/plugins/Referrers/tests/Integration/ReferrerAttributionTest.php',
         'Piwik\\Plugins\\Referrers\\tests\\System\\ApiTest' => __DIR__ . '/../..' . '/plugins/Referrers/tests/System/ApiTest.php',
         'Piwik\\Plugins\\Referrers\\tests\\Unit\\DataTable\\Filter\\UrlsFromWebsiteIdTest' => __DIR__ . '/../..' . '/plugins/Referrers/tests/Unit/DataTable/Filter/UrlsFromWebsiteIdTest.php',
         'Piwik\\Plugins\\Resolution\\API' => __DIR__ . '/../..' . '/plugins/Resolution/API.php',
@@ -2300,6 +2303,7 @@ class ComposerStaticInit589a8b903359beccb0550a4316260322
         'Piwik\\Plugins\\SitesManager\\tests\\Integration\\TrackingTest' => __DIR__ . '/../..' . '/plugins/SitesManager/tests/Integration/TrackingTest.php',
         'Piwik\\Plugins\\SitesManager\\tests\\System\\ApiTest' => __DIR__ . '/../..' . '/plugins/SitesManager/tests/System/ApiTest.php',
         'Piwik\\Plugins\\SitesManager\\tests\\Unit\\APITest' => __DIR__ . '/../..' . '/plugins/SitesManager/tests/Unit/APITest.php',
+        'Piwik\\Plugins\\SitesManager\\tests\\Unit\\GuessSiteTypeAndGtmTest' => __DIR__ . '/../..' . '/plugins/SitesManager/tests/Unit/GuessSiteTypeAndGtmTest.php',
         'Piwik\\Plugins\\TagManager\\API' => __DIR__ . '/../..' . '/plugins/TagManager/API.php',
         'Piwik\\Plugins\\TagManager\\API\\BaseReference' => __DIR__ . '/../..' . '/plugins/TagManager/API/BaseReference.php',
         'Piwik\\Plugins\\TagManager\\API\\Export' => __DIR__ . '/../..' . '/plugins/TagManager/API/Export.php',
@@ -3278,7 +3282,6 @@ class ComposerStaticInit589a8b903359beccb0550a4316260322
         'Twig\\TwigTest' => __DIR__ . '/..' . '/twig/twig/src/TwigTest.php',
         'Twig\\Util\\DeprecationCollector' => __DIR__ . '/..' . '/twig/twig/src/Util/DeprecationCollector.php',
         'Twig\\Util\\TemplateDirIterator' => __DIR__ . '/..' . '/twig/twig/src/Util/TemplateDirIterator.php',
-        'Unit\\MatomoTrackerTest' => __DIR__ . '/..' . '/matomo/matomo-php-tracker/tests/Unit/MatomoTrackerTest.php',
         'Zend_Config' => __DIR__ . '/../..' . '/libs/Zend/Config.php',
         'Zend_Db' => __DIR__ . '/../..' . '/libs/Zend/Db.php',
         'Zend_Db_Adapter_Abstract' => __DIR__ . '/../..' . '/libs/Zend/Db/Adapter/Abstract.php',
@@ -3353,11 +3356,11 @@ class ComposerStaticInit589a8b903359beccb0550a4316260322
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit589a8b903359beccb0550a4316260322::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit589a8b903359beccb0550a4316260322::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit589a8b903359beccb0550a4316260322::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit589a8b903359beccb0550a4316260322::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInit589a8b903359beccb0550a4316260322::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3::$classMap;
 
         }, null, ClassLoader::class);
     }

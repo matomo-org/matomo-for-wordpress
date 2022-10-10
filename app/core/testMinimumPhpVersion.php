@@ -22,7 +22,6 @@ $piwik_errorMessage = '';
 // 2) tests/travis/generator/Generator.php
 // 3) composer.json (in two places)
 // 4) tests/PHPUnit/Integration/ReleaseCheckListTest.php
-global $piwik_minimumPHPVersion;
 $piwik_minimumPHPVersion = '7.2.5';
 $piwik_currentPHPVersion = PHP_VERSION;
 $minimumPhpInvalid = version_compare($piwik_minimumPHPVersion, $piwik_currentPHPVersion) > 0;
@@ -128,7 +127,7 @@ if (!function_exists('Piwik_GetErrorMessagePage')) {
         bool $writeErrorLog = true
     ) {
         if ($writeErrorLog) {
-            error_log(sprintf("${errorLogPrefix}Error in Matomo: %s", str_replace("\n", " ", strip_tags($message))));
+            error_log(sprintf("{$errorLogPrefix}Error in Matomo: %s", str_replace("\n", " ", strip_tags($message))));
         }
 
         if (!headers_sent()) {
