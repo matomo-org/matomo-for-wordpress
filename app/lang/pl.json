@@ -645,7 +645,8 @@
         "PluginDescription": "Wszystkie dane w Matomo są dostępne za pośrednictwem prostych interfejsów API. Ta wtyczka jest punktem wejścia do usług internetowych, które możesz wywołać, aby uzyskać dane analityki internetowej w XML, JSON, PHP, CSV itp.",
         "ReportingApiReference": "Referencje API Raportów",
         "TopLinkTooltip": "Dostęp do twoich danych analitycznych programistycznie poprzez proste API w formatach JSON, XML itp.",
-        "UserAuthentication": "Uwierzytelnianie użytkownika"
+        "UserAuthentication": "Uwierzytelnianie użytkownika",
+        "UsingTokenAuth": "Jeśli chcesz %1$szażądać danych w skrypcie, crontabie itp.%2$s musisz dodać parametr URL '%3$s' do wywołań API dla adresów URL wymagających uwierzytelnienia."
     },
     "Actions": {
         "AvgGenerationTimeTooltip": "Średnia podstawa dla %1$s trafień %2$s pomiędzy %3$s i %4$s",
@@ -1439,7 +1440,6 @@
         "NotTrackingVisits": "Matomo nie śledzi żadnych wizyt",
         "PleaseLeaveExternalReviewForMatomo": "Naprawdę doceniamy Twoją opinię. Jeśli masz chwilę czasu, podziel się swoimi przemyśleniami na jednej z tych stron i zainspiruj innych do przyłączenia się do naszej rewolucji w zakresie danych.",
         "PluginDescription": "Wyślij informację zwrotną do Zespołu Matomo. Dziel się pomysłami i sugestiami, które pomogą uczynić Matomo najlepszą platformą analityczną Świata!",
-        "PopularHelpTopics": "Częste tematy pomocy",
         "PrivacyClaim": "Matomo respektuje twoją %1$sprywatność%2$s i oddaje ci pełną kontrolę nad twoimi danymi.",
         "ProfessionalHelp": "Profesjonalna pomoc",
         "ProfessionalServicesDedicatedSupport": "Wsparcie specjalisty z zespołu Matomo na każdym kroku",

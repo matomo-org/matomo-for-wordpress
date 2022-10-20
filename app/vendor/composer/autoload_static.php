@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3
+class ComposerStaticInit1f7251aad6c1dc7bb60ee99e99812b48
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -2513,7 +2513,9 @@ class ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3
         'Piwik\\Plugins\\TagManager\\Template\\Variable\\UrlParameterVariable' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Variable/UrlParameterVariable.php',
         'Piwik\\Plugins\\TagManager\\Template\\Variable\\UrlVariable' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Variable/UrlVariable.php',
         'Piwik\\Plugins\\TagManager\\Template\\Variable\\VariablesProvider' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Variable/VariablesProvider.php',
+        'Piwik\\Plugins\\TagManager\\Updates\\NewTagParameterMigrator' => __DIR__ . '/../..' . '/plugins/TagManager/Updates/NewTagParameterMigrator.php',
         'Piwik\\Plugins\\TagManager\\Validators\\LookupTable' => __DIR__ . '/../..' . '/plugins/TagManager/Validators/LookupTable.php',
+        'Piwik\\Plugins\\TagManager\\Validators\\Numeric' => __DIR__ . '/../..' . '/plugins/TagManager/Validators/Numeric.php',
         'Piwik\\Plugins\\TagManager\\Validators\\TriggerConditions' => __DIR__ . '/../..' . '/plugins/TagManager/Validators/TriggerConditions.php',
         'Piwik\\Plugins\\TagManager\\Validators\\TriggerIds' => __DIR__ . '/../..' . '/plugins/TagManager/Validators/TriggerIds.php',
         'Piwik\\Plugins\\TagManager\\tests\\Fixtures\\TagManagerFixture' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Fixtures/TagManagerFixture.php',
@@ -2556,6 +2558,7 @@ class ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3
         'Piwik\\Plugins\\TagManager\\tests\\Unit\\Input\\NameTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Unit/Input/NameTest.php',
         'Piwik\\Plugins\\TagManager\\tests\\Unit\\Model\\ComparisonsTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Unit/Model/ComparisonsTest.php',
         'Piwik\\Plugins\\TagManager\\tests\\Unit\\Validators\\LookupTableTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Unit/Validators/LookupTableTest.php',
+        'Piwik\\Plugins\\TagManager\\tests\\Unit\\Validators\\NumericTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Unit/Validators/NumericTest.php',
         'Piwik\\Plugins\\TestRunner\\Commands\\CodeCoverage' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/CodeCoverage.php',
         'Piwik\\Plugins\\TestRunner\\Commands\\GenerateTravisYmlFile' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/GenerateTravisYmlFile.php',
         'Piwik\\Plugins\\TestRunner\\Commands\\SyncScreenshots' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/SyncScreenshots.php',
@@ -3356,11 +3359,11 @@ class ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInit7a069157499bee7a119c7c4ef57b4db3::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit1f7251aad6c1dc7bb60ee99e99812b48::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit1f7251aad6c1dc7bb60ee99e99812b48::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit1f7251aad6c1dc7bb60ee99e99812b48::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInit1f7251aad6c1dc7bb60ee99e99812b48::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInit1f7251aad6c1dc7bb60ee99e99812b48::$classMap;
 
         }, null, ClassLoader::class);
     }

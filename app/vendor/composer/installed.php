@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'matomo/matomo',
-        'pretty_version' => '4.12.0',
-        'version' => '4.12.0.0',
-        'reference' => '1f577a56546bce5fa1aef6c06f1c79eed6e2920a',
+        'pretty_version' => '4.12.1',
+        'version' => '4.12.1.0',
+        'reference' => '16e89dd1f34607601b2a8c2c64ea80667ac4cff1',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'composer/ca-bundle' => array(
-            'pretty_version' => '1.3.3',
-            'version' => '1.3.3.0',
-            'reference' => '30897edbfb15e784fe55587b4f73ceefd3c4d98c',
+            'pretty_version' => '1.3.4',
+            'version' => '1.3.4.0',
+            'reference' => '69098eca243998b53eed7a48d82dedd28b447cd5',
             'type' => 'library',
             'install_path' => __DIR__ . '/./ca-bundle',
             'aliases' => array(),
@@ -76,9 +76,9 @@
             'dev_requirement' => false,
         ),
         'matomo/device-detector' => array(
-            'pretty_version' => '6.0.3',
-            'version' => '6.0.3.0',
-            'reference' => '6ba69e1afd24b45d66b6de7b04553213f7ef2151',
+            'pretty_version' => '6.0.4',
+            'version' => '6.0.4.0',
+            'reference' => 'aaed4d27c7a9876756d03ae85386977db306492d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/device-detector',
             'aliases' => array(),
@@ -103,9 +103,9 @@
             'dev_requirement' => false,
         ),
         'matomo/matomo' => array(
-            'pretty_version' => '4.12.0',
-            'version' => '4.12.0.0',
-            'reference' => '1f577a56546bce5fa1aef6c06f1c79eed6e2920a',
+            'pretty_version' => '4.12.1',
+            'version' => '4.12.1.0',
+            'reference' => '16e89dd1f34607601b2a8c2c64ea80667ac4cff1',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -138,7 +138,7 @@
         'matomo/referrer-spam-list' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'd7155f028b2cc87b781ca0950276e139ccbcf15f',
+            'reference' => '5d770c3acca8f4bf2cb1e119f2069f17ff47242e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/referrer-spam-list',
             'aliases' => array(
@@ -264,9 +264,9 @@
             'dev_requirement' => false,
         ),
         'phpmailer/phpmailer' => array(
-            'pretty_version' => 'v6.6.4',
-            'version' => '6.6.4.0',
-            'reference' => 'a94fdebaea6bd17f51be0c2373ab80d3d681269b',
+            'pretty_version' => 'v6.6.5',
+            'version' => '6.6.5.0',
+            'reference' => '8b6386d7417526d1ea4da9edb70b8352f7543627',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpmailer/phpmailer',
             'aliases' => array(),
@@ -275,7 +275,7 @@
         'piwik/device-detector' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => '6.0.3',
+                0 => '6.0.4',
             ),
         ),
         'piwik/referrer-spam-blacklist' => array(
@@ -444,9 +444,9 @@
             'dev_requirement' => false,
         ),
         'twig/twig' => array(
-            'pretty_version' => 'v3.4.2',
-            'version' => '3.4.2.0',
-            'reference' => 'e07cdd3d430cd7e453c31b36eb5ad6c0c5e43077',
+            'pretty_version' => 'v3.4.3',
+            'version' => '3.4.3.0',
+            'reference' => 'c38fd6b0b7f370c198db91ffd02e23b517426b58',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twig/twig',
             'aliases' => array(),

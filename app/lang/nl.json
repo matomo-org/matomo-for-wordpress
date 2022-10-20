@@ -1360,7 +1360,6 @@
         "NeverAskMeAgain": "Vraag het me nooit meer",
         "NotTrackingVisits": "Matomo houdt geen bezoeken bij",
         "PluginDescription": "Stuur je feedback naar het Matomo team. Deel je ideeën en suggesties om van Matomo het beste analytics platform in de wereld te maken!",
-        "PopularHelpTopics": "Populaire help onderwerpen",
         "PrivacyClaim": "Matomo respecteert je %1$sprivacy%2$s en geeft je alle controle over jouw data.",
         "ProfessionalHelp": "Professionele hulp",
         "ProfessionalServicesEmailAlerts": "E-mail waarschuwingen voor beveiligingsreleases voor Matomo",
@@ -3179,6 +3178,9 @@
         "ShowInEmbeddedWidgetsDescription": "Als je deze optie inschakelt zal er een link naar je privacybeleid en algemene voorwaarden weergegeven worden onder ingesloten widgets.",
         "PrivacyPolicy": "Privacybeleid",
         "TermsAndConditions": "Algemene voorwaarden"
+    },
+    "ProfessionalServices": {
+        "WidgetPremiumServicesForPiwik": "Premium-functies &amp; amp; Diensten voor Matomo"
     },
     "Referrers": {
         "AllReferrersReportDocumentation": "Dit samengestelde rapport laat al uw verwijzers zien met weergave van alle websites, zoekwoorden en campagnes waarmee bezoekers uw site hebben gevonden.",
