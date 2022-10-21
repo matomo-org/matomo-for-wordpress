@@ -60,7 +60,7 @@ class WordPress extends Plugin
 
 	public function onUserOptOutRender(&$result)
 	{
-		$result = preg_replace('/<div.*"PrivacyManager.OptOutCustomizer".*>/s', '<div class="WordPressOptOutCustomizer">
+		$result = preg_replace('/<div [a-z-]+="PrivacyManager.OptOutCustomizer".*?>/s', '<div class="WordPressOptOutCustomizer">
     <p>
         Use the short code <code>[matomo_opt_out]</code> to embed the opt out into your website.<br>
         You can use these short code options:</p>
