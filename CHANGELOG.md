@@ -1,4 +1,8 @@
 == Changelog ==
+= 4.12.2 =
+* Update Matomo core to 4.12.2
+* Update WooCommerce compatibility version
+* Update plugins compatiblity list
 
 = 4.11.0 =
 * Update Matomo core to 4.11.0
