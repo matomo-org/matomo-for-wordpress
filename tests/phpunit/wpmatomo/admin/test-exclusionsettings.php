@@ -84,7 +84,6 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_TestCase {
 		$_POST[ ExclusionSettings::FORM_NAME ] = array(
 			'excluded_ips' => '1.2.3.*',
 		);
-
 		ob_start();
 		try {
 			$this->exclusion_settings->show_settings( true );
