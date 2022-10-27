@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit998aea8badffebf864ce7fa17c9daba1
+class ComposerStaticInit6b5e099186f689f25579c55c33892971
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -2514,6 +2514,7 @@ class ComposerStaticInit998aea8badffebf864ce7fa17c9daba1
         'Piwik\\Plugins\\TagManager\\Template\\Variable\\UrlVariable' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Variable/UrlVariable.php',
         'Piwik\\Plugins\\TagManager\\Template\\Variable\\VariablesProvider' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Variable/VariablesProvider.php',
         'Piwik\\Plugins\\TagManager\\Updates\\NewTagParameterMigrator' => __DIR__ . '/../..' . '/plugins/TagManager/Updates/NewTagParameterMigrator.php',
+        'Piwik\\Plugins\\TagManager\\Updates\\NewVariableParameterMigrator' => __DIR__ . '/../..' . '/plugins/TagManager/Updates/NewVariableParameterMigrator.php',
         'Piwik\\Plugins\\TagManager\\Validators\\LookupTable' => __DIR__ . '/../..' . '/plugins/TagManager/Validators/LookupTable.php',
         'Piwik\\Plugins\\TagManager\\Validators\\Numeric' => __DIR__ . '/../..' . '/plugins/TagManager/Validators/Numeric.php',
         'Piwik\\Plugins\\TagManager\\Validators\\TriggerConditions' => __DIR__ . '/../..' . '/plugins/TagManager/Validators/TriggerConditions.php',
@@ -3359,11 +3360,11 @@ class ComposerStaticInit998aea8badffebf864ce7fa17c9daba1
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit998aea8badffebf864ce7fa17c9daba1::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit998aea8badffebf864ce7fa17c9daba1::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit998aea8badffebf864ce7fa17c9daba1::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit998aea8badffebf864ce7fa17c9daba1::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInit998aea8badffebf864ce7fa17c9daba1::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit6b5e099186f689f25579c55c33892971::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit6b5e099186f689f25579c55c33892971::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit6b5e099186f689f25579c55c33892971::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInit6b5e099186f689f25579c55c33892971::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInit6b5e099186f689f25579c55c33892971::$classMap;
 
         }, null, ClassLoader::class);
     }

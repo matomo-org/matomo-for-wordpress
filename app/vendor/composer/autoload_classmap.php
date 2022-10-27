@@ -2252,6 +2252,7 @@ return array(
     'Piwik\\Plugins\\TagManager\\Template\\Variable\\UrlVariable' => $baseDir . '/plugins/TagManager/Template/Variable/UrlVariable.php',
     'Piwik\\Plugins\\TagManager\\Template\\Variable\\VariablesProvider' => $baseDir . '/plugins/TagManager/Template/Variable/VariablesProvider.php',
     'Piwik\\Plugins\\TagManager\\Updates\\NewTagParameterMigrator' => $baseDir . '/plugins/TagManager/Updates/NewTagParameterMigrator.php',
+    'Piwik\\Plugins\\TagManager\\Updates\\NewVariableParameterMigrator' => $baseDir . '/plugins/TagManager/Updates/NewVariableParameterMigrator.php',
     'Piwik\\Plugins\\TagManager\\Validators\\LookupTable' => $baseDir . '/plugins/TagManager/Validators/LookupTable.php',
     'Piwik\\Plugins\\TagManager\\Validators\\Numeric' => $baseDir . '/plugins/TagManager/Validators/Numeric.php',
     'Piwik\\Plugins\\TagManager\\Validators\\TriggerConditions' => $baseDir . '/plugins/TagManager/Validators/TriggerConditions.php',
