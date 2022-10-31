@@ -657,7 +657,7 @@
         "SystemCheckZlibHelp": "Jums jāiestata un jāpārbūvē PHP ar ieslēgtu \"zlib\" atbalstu, --with-zlib.",
         "Tables": "Tiek izveidotas tabulas",
         "TablesCreatedSuccess": "Tabulas veiksmīgi izveidotas!",
-        "Welcome": "Esiet sveicināti!"
+        "Welcome": "Esiet sveicināti"
     },
     "Intl": {
         "Continent_afr": "Āfrika",

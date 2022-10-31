@@ -441,8 +441,9 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         try {
             $passwordHash = $this->passwordResetter->checkValidConfirmPasswordToken($login, $resetToken);
         } catch (Exception $ex) {
-            Log::debug($ex);
+            $this->bruteForceDetection->addFailedAttempt(IP::getIpFromHeader());
 
+            Log::debug($ex);
             $errorMessage = $ex->getMessage();
         }
 
@@ -632,6 +633,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $view->termsAndCondition = $termsAndConditionUrl;
         $view->privacyPolicyUrl = $privacyPolicyUrl;
         $view->token = $token;
+        $view->loginPlugin = Piwik::getLoginPluginName();
         $this->configureView($view);
         self::setHostValidationVariablesView($view);
         return $view->render();
@@ -693,6 +695,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
 
         $view->token = $token;
+        $view->loginPlugin = Piwik::getLoginPluginName();
         $this->configureView($view);
         self::setHostValidationVariablesView($view);
         return $view->render();
