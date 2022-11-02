@@ -633,19 +633,51 @@
     },
     "CoreHome": {
         "CategoryNoData": "אין מידע בקטגוריה זו. נא לנסות \"לכלול את כלל האוכלוסייה\"",
+        "ChangePeriod": "עדכן תקופה",
+        "ChangeVisualization": "ערוך תצוגה",
         "CheckForUpdates": "בדוק עדכונים",
+        "CheckPiwikOut": "בדוק את מטומו!",
+        "ChooseX": "בחר %1$s",
+        "ClickToEditX": "לחץ לעריכה %s",
+        "ClickToSeeFullInformation": "לחץ למידע מלא",
+        "CloseSearch": "סגור חיפוש",
+        "CloseWidgetDirections": "אתה יכול לסגור את הווידג'ט ע\"י לחיצה על ה 'X' בכותרת של הווידג'ט.",
+        "DataForThisReportHasBeenPurged": "המידע בדוח זה הוא בן למעלה מ %s חודשים והוא נגנז.",
+        "DataTableHowToSearch": "לחץ Enter או לחץ על סמלון החיפוש כדי לחפש",
         "Default": "ברירת מחדל",
         "DonateCall1": "תמיד השימוש ב-Matomo לא יעלה לך דבר, אך זה לא אומר שלהכין אותו לא עולה לנו כסף",
+        "DonateCall2": "מאמוטו זקוקה לתמיכה ממושכת כדי לצמוח ולגדול.",
+        "EndShortcut": "סוף",
+        "EnterZenMode": "כניסה למצב זן (להסתיר את התפריטים)",
+        "ExitZenMode": "יציאה ממצב זן (להציג את התפריטים)",
+        "ExternalHelp": "עזרה (נפתח בכרטיסייה חדשה)",
+        "HomeShortcut": "בית",
+        "MainNavigation": "ניווט מרכזי",
+        "Menu": "תפריט",
         "PeriodRange": "טווח",
         "SharePiwikShort": "Matomo! ניתוח רשת חינמי ופתוח. שליטה בנתונים של עצמך.",
+        "ShareThis": "שתף את זה",
+        "ShortcutCalendar": "לפתיחת לוח שנה (d מסמל תאריך (Date))",
+        "ShortcutHelp": "להציג את העזרה הזו",
+        "ShortcutRefresh": "לרענן את התוכן",
+        "ShortcutSearch": "לפתיחת החיפוש (f מסמל למצוא (Find))",
+        "ShortcutZenMode": "למצב זן",
+        "ShortcutsAvailable": "קיצורי דרך זמינים",
         "ShowJSCode": "הצגת הJavaScript להטמעה",
+        "SkipToContent": "לדלג לתוכן",
+        "SubscribeAndBecomePiwikSupporter": "עבור לדף תשלום מאובטח לכרטיס אשראי (PayPal) כדי להפוך לתומך של מאמוטו!",
         "SupportPiwik": "תמיכה ב-Matomo!",
+        "SupportUsOn": "עזרו לנו ב",
+        "SystemSummaryPhpVersion": "גרסת PHP",
+        "ThanksFromAllOfUs": "תודה לך מכולנו במאמוטו!",
         "ThereIsNoDataForThisReport": "אין מידע להצגה עבור הדוח",
         "ViewAllPiwikVideoTutorials": "צפייה בכל סרטי ההדרכה של Matomo",
-        "WebAnalyticsReports": "דוחות פעילות",
-        "SystemSummaryPhpVersion": "גרסת PHP"
+        "VisitTypeReturning": "חוזר",
+        "VisitTypeReturningCustomer": "לקוח חוזר",
+        "WebAnalyticsReports": "דוחות פעילות"
     },
     "CorePluginsAdmin": {
+        "ActionUninstall": "הסר",
         "Activate": "הפעל",
         "Activated": "הופעל",
         "Active": "פעיל",
@@ -654,10 +686,10 @@
         "Deactivate": "כבה",
         "Inactive": "לא פעיל",
         "LicenseHomepage": "אתר רישון השימוש",
-        "PluginsExtendPiwik": "תוספים מרחיבים את היכולות של Matomo.",
-        "OncePluginIsInstalledYouMayActivateHere": "ברגע שתוסף מותקן, ניתן להפעילו או לבטלו כאן.",
         "MenuPlatform": "פלטפורמה",
+        "OncePluginIsInstalledYouMayActivateHere": "ברגע שתוסף מותקן, ניתן להפעילו או לבטלו כאן.",
         "PluginHomepage": "אתר התוסף",
+        "PluginsExtendPiwik": "תוספים מרחיבים את היכולות של Matomo.",
         "PluginsManagement": "ניהול תוספים",
         "Status": "מצב",
         "Theme": "ערכת עיצוב",
@@ -667,10 +699,11 @@
         "Websites": "אתרים"
     },
     "CoreUpdater": {
+        "CheckingForPluginUpdates": "מבצע בדיקה עבור עדכונים חדשים לתוספים",
         "CriticalErrorDuringTheUpgradeProcess": "שגיאה קריטית במהלך תהליך השדרוג:",
         "DatabaseUpgradeRequired": "שדרוג בסיס נתונים נדרש",
-        "DownloadingUpdateFromX": "מוריד עדכון מ%s",
         "DownloadX": "להוריד %s",
+        "DownloadingUpdateFromX": "מוריד עדכון מ%s",
         "EmptyDatabaseError": "מסד התונים %s ריק. צריך לערוך או להסיר את קובץ ההגדרות של Matomo.",
         "ErrorDIYHelp": "במידה והינך משתמש\/ת מתקדמ\/ת ונתקלת בשגיאה בשדרוג מסד הנתונים:",
         "ErrorDIYHelp_1": "זיהוי ותיקון מקור התקלה (לדוגמה memory_limit או max_execution_time)",
@@ -693,14 +726,14 @@
         "PiwikWillBeUpgradedFromVersionXToVersionY": "מסד הנתונים של Matomo ישודרג מגירסה %1$s לגירסה %2$s.",
         "ReadyToGo": "שנתחיל?",
         "TheFollowingPluginsWillBeUpgradedX": "התוספים הבאים ישודרגו: %s.",
-        "ThereIsNewVersionAvailableForUpdate": "ישנה גירסה חדשה של Matomo זמינה עבורך",
         "TheUpgradeProcessMayFailExecuteCommand": "במידה ויש לך מסד נתונים גדול של Matomo, השדרוג עלול לקחת זמן רב מדי עבור הדפדפן. במצב זה, ניתן להריץ את השדרוג דרך שורת הפקודה: %s",
         "TheUpgradeProcessMayTakeAWhilePleaseBePatient": "תהליך שדרוג מסד הנתונים צפוי לארוך זמן-מה, יש להתאזר בסבלנות.",
+        "ThereIsNewVersionAvailableForUpdate": "ישנה גירסה חדשה של Matomo זמינה עבורך",
         "UnpackingTheUpdate": "מחלץ את העדכון",
         "UpdateAutomatically": "שדרוג אוטומטי",
         "UpdateHasBeenCancelledExplanation": "ההתקנה-בקליק-אחד של Matomo בוטלה. במידה ואין ביכלותך לתקן את הודעת השגיאה להעיל, מומלץ לשדרג את Matomo באופן ידני. %1$s יש לעיין ב%2$sהוראות השדרוג%3$s בכדי להתחיל!",
-        "UpdateTitle": "שדרוג",
         "UpdateSuccessTitle": "Matomo שודרגה בהצלחה!",
+        "UpdateTitle": "שדרוג",
         "UpgradeComplete": "השדרוג הושלם!",
         "UpgradePiwik": "שדרוג Matomo",
         "VerifyingUnpackedFiles": "מאמת את הקבצים המחולצים",
@@ -734,6 +767,9 @@
         "WidgetNotFound": "יישומון לא נמצא",
         "WidgetPreview": "הצגת יישומון"
     },
+    "DevicePlugins": {
+        "BrowserWithNoPluginsEnabled": "%1$s ללא תוספים פעילים"
+    },
     "DevicesDetection": {
         "BrowserEngine": "דפדפן",
         "BrowserFamily": "משפחת דפדפן",
@@ -742,9 +778,11 @@
         "ColumnBrowser": "דפדפן"
     },
     "Feedback": {
+        "DoYouHaveBugReportOrFeatureRequest": "האם יש לך דיווח תקלה או בקשת תכונה?",
         "Forums": "פורומים"
     },
     "GeoIp2": {
+        "AssumingNonApache": "לא יכול למצוא את הפונקציה apache_get_modules, מניח שימוש בשרת לא-תוצרת Apache.",
         "GeoIPDatabases": "מסד נתונים GeoIP"
     },
     "Goals": {
@@ -771,7 +809,7 @@
         "SetupWebsite": "הגדרת אתר",
         "SystemCheck": "בדיקת מערכת",
         "SystemCheckPhp": "גרסת PHP",
-        "Welcome": "ברוכים הבאים!"
+        "Welcome": "ברוכים הבאים"
     },
     "Intl": {
         "Continent_afr": "אפריקה",
@@ -1913,9 +1951,11 @@
         "OneClick": "לחיצה 1"
     },
     "PagePerformance": {
+        "ColumnAveragePageLoadTime": "זמן טעינה ממוצע לעמוד",
         "ColumnTimeServer": "זמן שרת"
     },
     "PrivacyManager": {
+        "AnonymizeData": "הפוך מידע לאנונימי",
         "AnonymizeIpInlineHelp": "הסתרת הספרות האחרונות של כתובת הIP של המבקרים בכדי להתיישר עם החוקים \/ תקנות המקומיים."
     },
     "Referrers": {
@@ -1934,6 +1974,7 @@
         "Websites": "אתרים"
     },
     "Resolution": {
+        "ColumnConfiguration": "הגדרה",
         "WidgetResolutions": "רזולוציית מסך"
     },
     "SEO": {
@@ -1947,10 +1988,12 @@
     },
     "SegmentEditor": {
         "DefaultAllVisits": "כל הביקורים",
-        "VisibleToAllUsers": "כל המשתמשים",
-        "Test": "בדיקה"
+        "PluginDescription": "מקטע הוא אוסף של קריטריונים המשמשים לבחירה חלקית מתוך מכלול הביקורים. שימוש במקטעים עשוי להזריק הקשר שרירותי חזרה לתוך הדוחות שלך.",
+        "Test": "בדיקה",
+        "VisibleToAllUsers": "כל המשתמשים"
     },
     "SitesManager": {
+        "AddSite": "הוסף אתר חדש",
         "Currency": "מטבע",
         "Sites": "אתרים",
         "Timezone": "אזור זמן"
@@ -1964,23 +2007,26 @@
         "Version": "גרסה"
     },
     "Tour": {
+        "CompletionTitle": "כל הכבוד!",
         "Engagement": "מעורבות",
-        "CompletionTitle": "כל הכבוד!"
+        "PluginDescription": "הפוך למומחה מטומו בזמן קצר על-ידי השלמת אתגרים שיכירו לך את מטומו."
     },
     "Transitions": {
+        "BouncesInline": "%s קפיצות",
         "TransitionsSubcategoryHelp2": "פרטים נוספים"
     },
     "UserCountry": {
+        "CannotLocalizeLocalIP": "כתובת איי.פי. %s היא כתובת מקומית ולא ניתן לאתרה גיאוגרפית.",
         "City": "עיר",
         "CityAndCountry": "%1$s, %2$s",
         "Continent": "יבשת",
         "Country": "מדינה",
+        "Geolocation": "מיקום גאוגרפי",
+        "Location": "מיקום",
         "country_a1": "מתווך אנונימי",
         "country_a2": "ספק לוויני",
         "country_cat": "קהילות דוברות קטלאנית",
-        "country_o1": "מדינה אחרת",
-        "Geolocation": "מיקום גאוגרפי",
-        "Location": "מיקום"
+        "country_o1": "מדינה אחרת"
     },
     "UserCountryMap": {
         "Cities": "ערים",
@@ -1991,12 +2037,14 @@
         "WorldWide": "כלל-עולמי"
     },
     "UserId": {
+        "UserId": "מזהה משתמש",
         "UserReportTitle": "משתמשים"
     },
     "UserLanguage": {
         "LanguageCode": "קוד שפה"
     },
     "UsersManager": {
+        "2FA": "אימות דו-שלבי",
         "AllWebsites": "כל האתרים",
         "Email": "אימייל",
         "ManageAccess": "ניהול הרשאות",

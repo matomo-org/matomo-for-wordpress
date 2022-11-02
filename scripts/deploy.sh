@@ -66,7 +66,7 @@ svn update --set-depth infinity assets
 svn update --set-depth infinity trunk
 
 echo "➤ Checking out git matomo-for-wordpress repository..."
-git clone --single-branch --branch live git@github.com:matomo-org/matomo-for-wordpress.git "$GITHUB_WORKSPACE"
+git clone --single-branch --branch live https://github.com/matomo-org/matomo-for-wordpress.git "$GITHUB_WORKSPACE"
 
 echo "➤ Copying files..."
 
@@ -98,19 +98,18 @@ svn cp "trunk" "tags/$VERSION"
 
 # Fix screenshots getting force downloaded when clicking them
 # https://developer.wordpress.org/plugins/wordpress-org/plugin-assets/
-if test -d "$SVN_DIR/assets" && test -n "$(find "$SVN_DIR/assets" -maxdepth 1 -name "*.png" -print -quit)"; then
-    svn propset svn:mime-type "image/png" "$SVN_DIR/assets/*.png" || true
+if test -d "assets" && test -n "$(find "assets" -maxdepth 1 -name "*.png" -print -quit)"; then
+    svn propset svn:mime-type image/png assets/*.png || true
 fi
-if test -d "$SVN_DIR/assets" && test -n "$(find "$SVN_DIR/assets" -maxdepth 1 -name "*.jpg" -print -quit)"; then
-    svn propset svn:mime-type "image/jpeg" "$SVN_DIR/assets/*.jpg" || true
+if test -d "assets" && test -n "$(find "assets" -maxdepth 1 -name "*.jpg" -print -quit)"; then
+    svn propset svn:mime-type image/png assets/*.jpg || true
 fi
-if test -d "$SVN_DIR/assets" && test -n "$(find "$SVN_DIR/assets" -maxdepth 1 -name "*.gif" -print -quit)"; then
-    svn propset svn:mime-type "image/gif" "$SVN_DIR/assets/*.gif" || true
+if test -d "assets" && test -n "$(find "assets" -maxdepth 1 -name "*.gif" -print -quit)"; then
+    svn propset svn:mime-type image/png assets/*.gif || true
 fi
-if test -d "$SVN_DIR/assets" && test -n "$(find "$SVN_DIR/assets" -maxdepth 1 -name "*.svg" -print -quit)"; then
-    svn propset svn:mime-type "image/svg+xml" "$SVN_DIR/assets/*.svg" || true
+if test -d "assets" && test -n "$(find "assets" -maxdepth 1 -name "*.svg" -print -quit)"; then
+    svn propset svn:mime-type image/png assets/*.svg || true
 fi
-
 svn status
 
 echo "➤ Committing files..."

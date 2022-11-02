@@ -977,7 +977,7 @@
         "TablesWarningHelp": "O di kaya piliin ang pag-gamit muli ng isang database tables o mag install ng bago upang mabura lahat ng datus sa database.",
         "TablesWithSameNamesFound": "Ang i-iilang %1$s mga table sa iyong database ng %2$s ay may kaparehong pangalan tulad ng mga tables sa Matomo na sinusubukang gawin.",
         "WeHopeYouWillEnjoyPiwik": "Umaasa kaming masiyahan ka sa paggamit ng Matomo kagaya ng aming kasiyahan sa paggawa nito.",
-        "Welcome": "Maligayang Pagdating!",
+        "Welcome": "Maligayang Pagdating",
         "WelcomeToCommunity": "Maligayang pagdating sa komunidad Matomo!"
     },
     "Intl": {
@@ -2520,16 +2520,16 @@
         "IncomingTraffic": "Incoming traffic",
         "LoopsInline": "muling pagload ng pahina %s",
         "NoDataForAction": "Walang data para sa %s",
-        "NoDataForActionDetails": "Maaaring ang aksyon ay walang pageview sa panahon ng %s o ito ay hindi wasto.",
+        "NoDataForActionDetails": "Maaaring ang aksyon ay walang pageview sa panahon ng o ito ay hindi wasto.",
         "OutgoingTraffic": "Mga outgoing na traffic",
         "ShareOfAllPageviews": "Ang pahinang ito ay may %1$s na pageview (%2$s ng lahat ng mga pageview)",
         "ToFollowingPages": "Sa mga panloob na mga pahina",
         "ToFollowingPagesInline": "%s panloob na mga pahina",
         "ToFollowingSiteSearches": "Panloob na paghahanap",
         "ToFollowingSiteSearchesInline": "panloob na paghahanap %s",
+        "TransitionsSubcategoryHelp2": "Higit pang mga detalye",
         "XOfAllPageviews": "%s ng lahat ng mga tanawin ng pahinang ito",
-        "XOutOfYVisits": "%1$s (mula sa %2$s)",
-        "TransitionsSubcategoryHelp2": "Higit pang mga detalye"
+        "XOutOfYVisits": "%1$s (mula sa %2$s)"
     },
     "UserCountry": {
         "CannotLocalizeLocalIP": "Ang IP address %s ay isang lokal na address at hindi maaaring i-geolocated.",

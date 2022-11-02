@@ -173,6 +173,10 @@
     },
     "CoreHome": {
         "CategoryNoData": "Non hai datos nesta categoría. Intente \"Incluir todos os datos\".",
+        "ChangePeriod": "Cambiar período",
+        "ChangeVisualization": "Cambiar visualización",
+        "CheckForUpdates": "Buscar actualizacións",
+        "CheckPiwikOut": "Controla Matomo!",
         "ShowJSCode": "Ver o código javascript para insertar",
         "SystemSummaryPhpVersion": "Versión PHP"
     },
@@ -282,7 +286,7 @@
         "TablesFound": "As seguintes táboas atopáronse na base de datos",
         "TablesReuse": "Reutilizar as táboas xa existentes",
         "TablesWarningHelp": "Ou ben optar pola reutilización de táboas de bases de datos existentes ou seleccionar unha instalación limpa para eliminar todos os datos existentes na base de datos.",
-        "Welcome": "Benvido!"
+        "Welcome": "Benvido"
     },
     "Intl": {
         "Continent_afr": "África",

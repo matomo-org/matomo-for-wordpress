@@ -73,12 +73,10 @@ class SystemReport {
 		// Uses an old version of Twig and plugin is no longer maintained.
 		'all-in-one-event-calendar',
 		// Uses an old version of Twig
-		'data-tables-generator-by-supsystic',
-		// uses an old version of twig causing some styles to go funny in the reporting and admin
 		'tweet-old-post-pro',
 		// uses a newer version of monolog
 		'wp-rss-aggregator',
-		// see https://wordpress.org/support/topic/critical-error-after-upgrade/ conflict re php-di version
+		// twig conflict
 		'age-verification-for-woocommerce',
 		// see https://github.com/matomo-org/wp-matomo/issues/428
 		'minify-html-markup',
@@ -87,13 +85,13 @@ class SystemReport {
 		// see https://wordpress.org/support/topic/20-total-errors-during-this-script-execution/
 		'google-listings-and-ads',
 		// see https://wordpress.org/support/topic/20-total-errors-during-this-script-execution/
-		'accelerated-mobile-pages',
-		// see https://wordpress.org/support/topic/receiving-errors-from-my-plesk-server/
 		'post-smtp',
 		// see https://wordpress.org/support/topic/activation-of-another-plugin-breaks-matomo/#post-15045079
 		'adshares',
 		// see https://github.com/matomo-org/matomo-for-wordpress/issues/618
 		'bluehost-wordpress-plugin',
+		// see https://wordpress.org/support/topic/archive-error-with-wp-rocket/
+		'wp-rocket',
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
@@ -1524,6 +1522,9 @@ class SystemReport {
 				}
 				if ( in_array( 'post-smtp', $used_not_compatible, true ) ) {
 					$additional_comment .= '<br><br>The PDF report files from the email reports will be missing when the PostSMTP mode is selected but it works when the PHPMailer mode is selected.';
+				}
+				if ( in_array( 'wp-rocket', $used_not_compatible, true ) ) {
+					$additional_comment .= '<br><br>WP-Rocket is incompatible from version 3.12. Until fixes, please reinstall version 3.11.5 if you have a newer version. For more information please visit https://github.com/matomo-org/matomo-for-wordpress/wiki/Downgrade-wp-rocket-to-a-version-compatible-with-the-Matomo-plugin';
 				}
 
 				$is_warning = true;
