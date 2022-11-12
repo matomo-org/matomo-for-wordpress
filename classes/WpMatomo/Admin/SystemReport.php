@@ -1427,11 +1427,11 @@ class SystemReport {
 			foreach ( [ ' ON ', ' TO ', ' IDENTIFIED ', ' BY ' ] as $keyword ) {
 				if ( stripos( $values[ $index ][0], $keyword ) !== false ) {
 					// make sure to never show by any accident a db user or password by cutting anything after on/to
-					$values[ $index ][0] = substr( $value[0], 0, stripos( $value[0], $keyword ) );
+					$values[ $index ][0] = substr( $values[ $index ][0], 0, stripos( $values[ $index ][0], $keyword ) );
 				}
 				if ( stripos( $values[ $index ][0], 'GRANT' ) !== false ) {
 					// otherwise we end up having "grant select"... instead of just "select"
-					$values[ $index ][0] = substr( $value[0], stripos( $values[ $index ][0], 'GRANT' ) + 5 );
+					$values[ $index ][0] = substr( $values[ $index ][0], stripos( $values[ $index ][0], 'GRANT' ) + 5 );
 				}
 			}
 			// make sure to never show by any accident a db user or password
