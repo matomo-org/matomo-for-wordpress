@@ -1024,6 +1024,36 @@ class SystemReport {
 				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 				'value' => sanitize_text_field( $_SERVER['SERVER_SOFTWARE'] ),
 			];
+
+			if (strpos($_SERVER['SERVER_SOFTWARE'],'Apache')!==false) {
+				$url = plugins_url( 'app', MATOMO_ANALYTICS_FILE ) . '/index.php';
+				$result = wp_remote_post( $url, array('method'      => 'GET',
+													  'sslverify'   => false,
+				                                      'timeout'     => 2) );
+				if (is_array($result)) {
+					$file_content = file_get_contents( PIWIK_DOCUMENT_ROOT . '/.htaccess' );
+					if ( strpos( $file_content, 'AddHandler' ) && ! strpos( $file_content, '# AddHandler' ) ) {
+						switch ( (int) $result['response']['code'] ) {
+							case 500:
+								$value    = __( 'To be confirmed', 'matomo' );
+								$comment  = __( 'The AddHandler Apache directive maybe disabled. If you get a 500 error code when accessing Matomo, please read this FAQ https://matomo.org/faq/wordpress/how-do-i-fix-the-error-addhandler-not-allowed-here/', 'matomo' );
+								$is_error = true;
+								break;
+							default:
+								$value    = __( 'Supported', 'matomo' );
+								$comment  = '';
+								$is_error = false;
+
+						}
+						$rows[] = [
+							'name'     => 'Apache AddHandler support',
+							'value'    => $value,
+							'comment'  => $comment,
+							'is_error' => $is_error
+						];
+					}
+				}
+			}
 		}
 		if ( PHP_OS ) {
 			$rows[] = [
