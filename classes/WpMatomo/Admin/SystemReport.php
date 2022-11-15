@@ -92,6 +92,8 @@ class SystemReport {
 		'bluehost-wordpress-plugin',
 		// see https://wordpress.org/support/topic/archive-error-with-wp-rocket/
 		'wp-rocket',
+		// see https://github.com/matomo-org/matomo-for-wordpress/issues/668
+		'secupress',
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
@@ -1541,7 +1543,13 @@ class SystemReport {
 					$additional_comment .= '<br><br>A workaround for Revive Old Posts Pro may be to add the following line to your "wp-config.php". <br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
 				}
 				if ( in_array( 'secupress', $used_not_compatible, true ) ) {
-					$additional_comment .= '<br><br>If reports aren\'t being generated then you may need to disable the feature "Firewall -> Block Bad Request Methods" in SecuPress (if it is enabled) or add the following line to your "wp-config.php": <br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
+					if (function_exists('secupress_is_submodule_active')) {
+						$blocked_methods = (int) secupress_is_submodule_active( 'firewall', 'request-methods-header' );
+						if ($blocked_methods) {
+							$additional_comment .= '<br><br>If reports aren\'t being generated then you may need to disable the feature "Firewall -> Block Bad Request Methods" in SecuPress (if it is enabled) or add the following line to your "wp-config.php": <br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
+						}
+					}
+
 				}
 				if ( in_array( 'post-smtp', $used_not_compatible, true ) ) {
 					$additional_comment .= '<br><br>The PDF report files from the email reports will be missing when the PostSMTP mode is selected but it works when the PHPMailer mode is selected.';
