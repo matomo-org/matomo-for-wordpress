@@ -94,6 +94,8 @@ class SystemReport {
 		'wp-rocket',
 		// see https://github.com/matomo-org/matomo-for-wordpress/issues/668
 		'secupress',
+		// see https://github.com/matomo-org/matomo-for-wordpress/issues/645
+		'better-wp-security'
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
@@ -1577,6 +1579,8 @@ class SystemReport {
 						$blocked_methods = (int) secupress_is_submodule_active( 'firewall', 'request-methods-header' );
 						if ($blocked_methods) {
 							$additional_comment .= '<br><br>If reports aren\'t being generated then you may need to disable the feature "Firewall -> Block Bad Request Methods" in SecuPress (if it is enabled) or add the following line to your "wp-config.php": <br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
+						} else {
+							$used_not_compatible = array_diff($used_not_compatible, ['secupress']);
 						}
 					}
 
@@ -1587,21 +1591,34 @@ class SystemReport {
 				if ( in_array( 'wp-rocket', $used_not_compatible, true ) ) {
 					$additional_comment .= '<br><br>WP-Rocket is incompatible from version 3.12. Until fixes, please reinstall version 3.11.5 if you have a newer version. For more information please visit https://github.com/matomo-org/matomo-for-wordpress/wiki/Downgrade-wp-rocket-to-a-version-compatible-with-the-Matomo-plugin';
 				}
-
-				$is_warning = true;
-				$is_error   = false;
-				if ( in_array( 'cookiebot', $used_not_compatible, true ) ) {
-					$is_warning = false;
-					$is_error   = true;
+				if ( in_array('better-wp-security', $used_not_compatible, true ) ) {
+					if (class_exists('ITSEC_Modules')) {
+						$input = ITSEC_Modules::get_settings( 'system-tweaks' );
+						if ( $input['plugins_php'] ) {
+							$additional_comment .= '<br><br>You have disabled the PHP usage in the plugins folder from your ithemes security plugin. Matomo won\'t work in this configuration. You must uncheck the checkbox "Security > Settings > Advanced > System tweaks > Disable PHP in plugins."';
+						} else {
+							$used_not_compatible = array_diff( $used_not_compatible, [ 'better-wp-security' ] );
+						}
+					}
 				}
+				$is_warning = false;
+				$is_error = false;
+				if (count($used_not_compatible)) {
+					$is_warning = true;
+					$is_error   = false;
+					if ( in_array( 'cookiebot', $used_not_compatible, true ) ) {
+						$is_warning = false;
+						$is_error   = true;
+					}
 
-				$rows[] = [
-					'name'       => __( 'Not compatible plugins', 'matomo' ),
-					'value'      => count( $used_not_compatible ),
-					'comment'    => implode( ', ', $used_not_compatible ) . '<br><br> Matomo may work fine when using these plugins but there may be some issues. For more information see<br>https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/ ' . $additional_comment,
-					'is_warning' => $is_warning,
-					'is_error'   => $is_error,
-				];
+					$rows[] = [
+						'name'       => __( 'Not compatible plugins', 'matomo' ),
+						'value'      => count( $used_not_compatible ),
+						'comment'    => implode( ', ', $used_not_compatible ) . '<br><br> Matomo may work fine when using these plugins but there may be some issues. For more information see<br>https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/ ' . $additional_comment,
+						'is_warning' => $is_warning,
+						'is_error'   => $is_error,
+					];
+				}
 			}
 		}
 
