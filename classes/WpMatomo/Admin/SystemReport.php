@@ -107,6 +107,8 @@ class SystemReport {
 	private $logger;
 
 	private $initial_error_reporting = null;
+
+	private $active_plugins = null;
 	/**
 	 * @var \WpMatomo\Db\Settings
 	 */
@@ -1399,6 +1401,13 @@ class SystemReport {
 		return 'show tables not working';
 	}
 
+	/**
+	 * @returns string[]
+	 */
+	private function get_plugins_configurations() {
+
+	}
+
 	private function get_db_grants() {
 		global $wpdb;
 
@@ -1453,6 +1462,28 @@ class SystemReport {
 		return $grants;
 	}
 
+	/**
+	 * @return string[]
+	 */
+	private function get_actives_plugins() {
+		if ($this->active_plugins === null) {
+			$active_plugins = get_option( 'active_plugins', [] );
+			$this->active_plugins = [];
+			if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
+				$this->active_plugins = array_map(
+					function ( $active_plugin ) {
+						$parts = explode( '/', trim( $active_plugin ) );
+
+						return trim( $parts[0] );
+					},
+					$active_plugins
+				);
+			}
+		}
+		return $this->active_plugins;
+
+
+	}
 	private function get_plugins_info() {
 		$rows       = [];
 		$mu_plugins = get_mu_plugins();
@@ -1493,17 +1524,9 @@ class SystemReport {
 			];
 		}
 
-		$active_plugins = get_option( 'active_plugins', [] );
+		$active_plugins = $this->get_actives_plugins();
 
 		if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
-			$active_plugins = array_map(
-				function ( $active_plugin ) {
-					$parts = explode( '/', trim( $active_plugin ) );
-
-					return trim( $parts[0] );
-				},
-				$active_plugins
-			);
 
 			$rows[] = [
 				'name'    => 'Active Plugins',
