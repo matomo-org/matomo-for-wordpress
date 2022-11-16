@@ -6,6 +6,7 @@
 use WpMatomo\Admin\SystemReport;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
+// phpcs:ignore WordPress.NamingConventions
 $piwik_minimumPHPVersion = '7.2.5';
 /**
  * We want a real data, not something coming from cache
