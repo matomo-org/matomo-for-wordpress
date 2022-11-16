@@ -360,6 +360,8 @@ class SystemReport {
 		if ( $this->exec_available ) {
 			$phpcli_version = $this->get_phpcli_output( '-v | cut -d " " -f 2' );
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+			global $piwik_minimumPHPVersion;
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 			if ( version_compare( $phpcli_version, $piwik_minimumPHPVersion ) <= 0 ) {
 				$is_error = true;
 				$comment  = __( 'Your PHP cli version is not compatible with the Matomo requirements https://matomo.org/faq/on-premise/matomo-requirements/. Please upgrade your PHP cli version, otherwise, you might have some archiving errors', 'matomo' );
