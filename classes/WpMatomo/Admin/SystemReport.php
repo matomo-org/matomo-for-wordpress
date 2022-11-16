@@ -1519,12 +1519,6 @@ class SystemReport {
 		return 'show tables not working';
 	}
 
-	/**
-	 * @returns string[]
-	 */
-	private function get_plugins_configurations() {
-	}
-
 	private function get_db_grants() {
 		global $wpdb;
 
