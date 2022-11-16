@@ -92,10 +92,6 @@ class SystemReport {
 		'bluehost-wordpress-plugin',
 		// see https://wordpress.org/support/topic/archive-error-with-wp-rocket/
 		'wp-rocket',
-		// see https://github.com/matomo-org/matomo-for-wordpress/issues/668
-		'secupress',
-		// see https://github.com/matomo-org/matomo-for-wordpress/issues/645
-		'better-wp-security',
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
@@ -363,7 +359,8 @@ class SystemReport {
 
 		if ( $this->exec_available ) {
 			$phpcli_version = $this->get_phpcli_output( '-v | cut -d " " -f 2' );
-			if ( version_compare( $phpcli_version, '7.2.5' ) <= 0 ) {
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+			if ( version_compare( $phpcli_version, $piwik_minimumPHPVersion ) <= 0 ) {
 				$is_error = true;
 				$comment  = __( 'Your PHP cli version is not compatible with the Matomo requirements https://matomo.org/faq/on-premise/matomo-requirements/. Please upgrade your PHP cli version, otherwise, you might have some archiving errors', 'matomo' );
 			} else {
@@ -395,6 +392,8 @@ class SystemReport {
 				'comment'  => $comment,
 				'is_error' => $is_error,
 			];
+
+			$this->add_maxminddb_row( $rows, ( $this->get_phpcli_output( '-m | grep maxminddb' ) === 'maxminddb' ) );
 		}
 
 		return $rows;
@@ -409,6 +408,7 @@ class SystemReport {
 				$output = $cmd_output[0];
 			}
 		}
+
 		return $output;
 	}
 
@@ -1083,6 +1083,14 @@ class SystemReport {
 		return $rows;
 	}
 
+	private function add_maxminddb_row( &$rows, $maxmind_db_loaded ) {
+		$rows[] = [
+			'name'       => esc_html__( 'PHP Maxmind DB extension', 'matomo' ),
+			'value'      => $maxmind_db_loaded ? __( 'Loaded', 'matomo' ) : __( 'Not loaded', 'matomo' ),
+			'comment'    => $maxmind_db_loaded ? sprintf( __( 'You may encounter the following problem %s', 'matomo' ), 'https://matomo.org/faq/troubleshooting/how-do-i-fix-the-error-call-to-undefined-method-maxminddbreadergetwithprefixlen/' ) : '',
+			'is_warning' => $maxmind_db_loaded,
+		];
+	}
 	private function get_server_info() {
 		$rows = [];
 
@@ -1129,6 +1137,7 @@ class SystemReport {
 				}
 			}
 		}
+
 		if ( PHP_OS ) {
 			$rows[] = [
 				'name'  => 'PHP OS',
@@ -1149,6 +1158,9 @@ class SystemReport {
 				'value' => @basename( PHP_BINARY ),
 			];
 		}
+
+		$this->add_maxminddb_row( $rows, extension_loaded( 'maxminddb' ) );
+
 		// we report error reporting before matomo bootstraped and after to see if Matomo changed it successfully etc
 		$rows[] = [
 			'name'  => 'PHP Error Reporting',
@@ -1585,8 +1597,10 @@ class SystemReport {
 				);
 			}
 		}
+
 		return $this->active_plugins;
 	}
+
 	private function get_plugins_info() {
 		$rows       = [];
 		$mu_plugins = get_mu_plugins();
@@ -1642,31 +1656,11 @@ class SystemReport {
 				if ( in_array( 'tweet-old-post-pro', $used_not_compatible, true ) ) {
 					$additional_comment .= '<br><br>A workaround for Revive Old Posts Pro may be to add the following line to your "wp-config.php". <br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
 				}
-				if ( in_array( 'secupress', $used_not_compatible, true ) ) {
-					if ( function_exists( 'secupress_is_submodule_active' ) ) {
-						$blocked_methods = (int) secupress_is_submodule_active( 'firewall', 'request-methods-header' );
-						if ( $blocked_methods ) {
-							$additional_comment .= '<br><br>If reports aren\'t being generated then you may need to disable the feature "Firewall -> Block Bad Request Methods" in SecuPress (if it is enabled) or add the following line to your "wp-config.php": <br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
-						} else {
-							$used_not_compatible = array_diff( $used_not_compatible, [ 'secupress' ] );
-						}
-					}
-				}
 				if ( in_array( 'post-smtp', $used_not_compatible, true ) ) {
 					$additional_comment .= '<br><br>The PDF report files from the email reports will be missing when the PostSMTP mode is selected but it works when the PHPMailer mode is selected.';
 				}
 				if ( in_array( 'wp-rocket', $used_not_compatible, true ) ) {
 					$additional_comment .= '<br><br>WP-Rocket is incompatible from version 3.12. Until fixes, please reinstall version 3.11.5 if you have a newer version. For more information please visit https://github.com/matomo-org/matomo-for-wordpress/wiki/Downgrade-wp-rocket-to-a-version-compatible-with-the-Matomo-plugin';
-				}
-				if ( in_array( 'better-wp-security', $used_not_compatible, true ) ) {
-					if ( class_exists( 'ITSEC_Modules' ) ) {
-						$input = ITSEC_Modules::get_settings( 'system-tweaks' );
-						if ( $input['plugins_php'] ) {
-							$additional_comment .= '<br><br>You have disabled the PHP usage in the plugins folder from your ithemes security plugin. Matomo won\'t work in this configuration. You must uncheck the checkbox "Security > Settings > Advanced > System tweaks > Disable PHP in plugins."';
-						} else {
-							$used_not_compatible = array_diff( $used_not_compatible, [ 'better-wp-security' ] );
-						}
-					}
 				}
 				$is_warning = false;
 				$is_error   = false;
@@ -1696,14 +1690,42 @@ class SystemReport {
 		];
 
 		if ( is_plugin_active( 'better-wp-security/better-wp-security.php' ) ) {
-			if ( method_exists( '\ITSEC_Modules', 'get_setting' )
-				 && ITSEC_Modules::get_setting( 'system-tweaks', 'long_url_strings' ) ) {
-				$rows[] = [
-					'name'     => 'iThemes Security Long URLs Enabled',
-					'value'    => true,
-					'comment'  => 'Tracking might not work because it looks like you have Long URLs disabled in iThemes Security. To fix this please go to "Security -> Settings -> System Tweaks" and disable the setting "Long URL Strings".',
-					'is_error' => true,
-				];
+			if ( class_exists( 'ITSEC_Modules' ) ) {
+				if ( method_exists( '\ITSEC_Modules', 'get_setting' ) ) {
+					$input = ITSEC_Modules::get_settings( 'system-tweaks' );
+					if ( $input['long_url_strings'] ) {
+						$rows[] = [
+							'name'     => "iThemes Security 'Long URLs' Enabled",
+							'value'    => true,
+							'comment'  => 'Tracking might not work because it looks like you have Long URLs disabled in iThemes Security. To fix this please go to "Security -> Settings -> System Tweaks" and disable the setting "Long URL Strings".',
+							'is_error' => true,
+						];
+					}
+					if ( $input['plugins_php'] ) {
+						$rows[] = [
+							'name'     => "iThemes Security 'Disable PHP in plugins' Enabled",
+							'value'    => true,
+							'comment'  => 'You have disabled the PHP usage in the plugins folder from your ithemes security plugin. Matomo won\'t work in this configuration. You must uncheck the checkbox "Security > Settings > Advanced > System tweaks > Disable PHP in plugins."',
+							'is_error' => true,
+						];
+					}
+				}
+			}
+		}
+
+		if ( is_plugin_active( 'secupress/secupress.php' ) ) {
+			if ( function_exists( 'secupress_is_submodule_active' ) ) {
+				$blocked_methods = (int) secupress_is_submodule_active( 'firewall', 'request-methods-header' );
+				if ( $blocked_methods ) {
+					if ( ! defined( 'MATOMO_SUPPORT_ASYNC_ARCHIVING' ) || MATOMO_SUPPORT_ASYNC_ARCHIVING ) {
+						$rows[] = [
+							'name'     => "Secupress 'Block Bad Request Methods' Enabled",
+							'value'    => true,
+							'comment'  => "If reports aren't being generated then you may need to disable the feature \"Firewall -> Block Bad Request Methods\" in SecuPress (if it is enabled) or add the following line to your \"wp-config.php\": <br><code>define( 'MATOMO_SUPPORT_ASYNC_ARCHIVING', false );</code>.",
+							'is_error' => true,
+						];
+					}
+				}
 			}
 		}
 
