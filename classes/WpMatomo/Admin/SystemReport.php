@@ -392,8 +392,6 @@ class SystemReport {
 				'comment'  => $comment,
 				'is_error' => $is_error,
 			];
-
-			$this->add_maxminddb_row( $rows, ( $this->get_phpcli_output( '-m | grep maxminddb' ) === 'maxminddb' ) );
 		}
 
 		return $rows;
