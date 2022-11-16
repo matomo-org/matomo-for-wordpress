@@ -107,12 +107,6 @@ class SystemReport {
 	private $logger;
 
 	private $initial_error_reporting = null;
-	/**
-	 * Formatted active plugin list
-	 *
-	 * @var string[]
-	 */
-	private $active_plugins = null;
 
 	private $exec_available;
 	/**
@@ -1577,22 +1571,19 @@ class SystemReport {
 	 * @return string[]
 	 */
 	private function get_actives_plugins() {
-		if ( null === $this->active_plugins ) {
-			$active_plugins       = get_option( 'active_plugins', [] );
-			$this->active_plugins = [];
-			if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
-				$this->active_plugins = array_map(
-					function ( $active_plugin ) {
-						$parts = explode( '/', trim( $active_plugin ) );
+		$active_plugins = get_option( 'active_plugins', [] );
+		if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
+			$active_plugins = array_map(
+				function ( $active_plugin ) {
+					$parts = explode( '/', trim( $active_plugin ) );
 
-						return trim( $parts[0] );
-					},
-					$active_plugins
-				);
-			}
+					return trim( $parts[0] );
+				},
+				$active_plugins
+			);
 		}
 
-		return $this->active_plugins;
+		return $active_plugins;
 	}
 
 	private function get_plugins_info() {
