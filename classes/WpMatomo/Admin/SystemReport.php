@@ -95,7 +95,7 @@ class SystemReport {
 		// see https://github.com/matomo-org/matomo-for-wordpress/issues/668
 		'secupress',
 		// see https://github.com/matomo-org/matomo-for-wordpress/issues/645
-		'better-wp-security'
+		'better-wp-security',
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
@@ -111,17 +111,24 @@ class SystemReport {
 	private $logger;
 
 	private $initial_error_reporting = null;
-
+	/**
+	 * Formatted active plugin list
+	 *
+	 * @var string[]
+	 */
 	private $active_plugins = null;
+
+	private $exec_available;
 	/**
 	 * @var \WpMatomo\Db\Settings
 	 */
 	public $db_settings;
 
 	public function __construct( Settings $settings ) {
-		$this->settings    = $settings;
-		$this->logger      = new Logger();
-		$this->db_settings = new \WpMatomo\Db\Settings();
+		$this->settings       = $settings;
+		$this->logger         = new Logger();
+		$this->db_settings    = new \WpMatomo\Db\Settings();
+		$this->exec_available = function_exists( 'exec' );
 	}
 
 	public function get_not_compatible_plugins() {
@@ -262,6 +269,11 @@ class SystemReport {
 					'has_comments' => true,
 				],
 				[
+					'title'        => 'PHP cli',
+					'rows'         => $this->get_phpcli_info(),
+					'has_comments' => true,
+				],
+				[
 					'title'        => 'Database',
 					'rows'         => $this->get_db_info(),
 					'has_comments' => true,
@@ -344,6 +356,60 @@ class SystemReport {
 		];
 
 		return $rows;
+	}
+
+	private function get_phpcli_info() {
+		$rows = [];
+
+		if ( $this->exec_available ) {
+			$phpcli_version = $this->get_phpcli_output( '-v | cut -d " " -f 2' );
+			if ( version_compare( $phpcli_version, '7.2.5' ) <= 0 ) {
+				$is_error = true;
+				$comment  = __( 'Your PHP cli version is not compatible with the Matomo requirements https://matomo.org/faq/on-premise/matomo-requirements/. Please upgrade your PHP cli version, otherwise, you might have some archiving errors', 'matomo' );
+			} else {
+				$is_error = false;
+				$comment  = '';
+			}
+			$rows[] = [
+				'name'     => esc_html__( 'PHP cli Version', 'matomo' ),
+				'value'    => $phpcli_version,
+				'comment'  => $comment,
+				'is_error' => $is_error,
+			];
+
+			switch ( $this->get_phpcli_output( '-m | grep mysqli' ) ) {
+				case 'mysqli':
+					$is_error = false;
+					$value    = __( 'ok', 'matomo' );
+					$comment  = '';
+					break;
+				default:
+					$value    = __( 'missing', 'matomo' );
+					$is_error = true;
+					$comment  = __( 'Your PHP cli does not load the MySQLi extension. You might have archiving problems in Matomo but also others problems in your WordPress cron tasks. You should enable this extension', 'matomo' );
+			}
+
+			$rows[] = [
+				'name'     => esc_html__( 'MySQLi support', 'matomo' ),
+				'value'    => $value,
+				'comment'  => $comment,
+				'is_error' => $is_error,
+			];
+		}
+
+		return $rows;
+	}
+
+	private function get_phpcli_output( $phpcli_params ) {
+		$output = '';
+		if ( $this->exec_available ) {
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_exec
+			@exec( 'php ' . $phpcli_params, $cmd_output );
+			if ( count( $cmd_output ) ) {
+				$output = $cmd_output[0];
+			}
+		}
+		return $output;
 	}
 
 	private function get_matomo_info() {
@@ -1021,18 +1087,25 @@ class SystemReport {
 		$rows = [];
 
 		if ( ! empty( $_SERVER['SERVER_SOFTWARE'] ) ) {
-			$rows[] = [
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+			$server_software = sanitize_text_field( $_SERVER['SERVER_SOFTWARE'] );
+			$rows[]          = [
 				'name'  => 'Server Info',
-				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-				'value' => sanitize_text_field( $_SERVER['SERVER_SOFTWARE'] ),
+				'value' => $server_software,
 			];
-
-			if (strpos($_SERVER['SERVER_SOFTWARE'],'Apache')!==false) {
-				$url = plugins_url( 'app', MATOMO_ANALYTICS_FILE ) . '/index.php';
-				$result = wp_remote_post( $url, array('method'      => 'GET',
-													  'sslverify'   => false,
-				                                      'timeout'     => 2) );
-				if (is_array($result)) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			if ( strpos( $server_software, 'Apache' ) !== false ) {
+				$url    = plugins_url( 'app', MATOMO_ANALYTICS_FILE ) . '/index.php';
+				$result = wp_remote_post(
+					$url,
+					array(
+						'method'    => 'GET',
+						'sslverify' => false,
+						'timeout'   => 2,
+					)
+				);
+				if ( is_array( $result ) ) {
+					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 					$file_content = file_get_contents( PIWIK_DOCUMENT_ROOT . '/.htaccess' );
 					if ( strpos( $file_content, 'AddHandler' ) && ! strpos( $file_content, '# AddHandler' ) ) {
 						switch ( (int) $result['response']['code'] ) {
@@ -1045,13 +1118,12 @@ class SystemReport {
 								$value    = __( 'Supported', 'matomo' );
 								$comment  = '';
 								$is_error = false;
-
 						}
 						$rows[] = [
 							'name'     => 'Apache AddHandler support',
 							'value'    => $value,
 							'comment'  => $comment,
-							'is_error' => $is_error
+							'is_error' => $is_error,
 						];
 					}
 				}
@@ -1439,7 +1511,6 @@ class SystemReport {
 	 * @returns string[]
 	 */
 	private function get_plugins_configurations() {
-
 	}
 
 	private function get_db_grants() {
@@ -1500,8 +1571,8 @@ class SystemReport {
 	 * @return string[]
 	 */
 	private function get_actives_plugins() {
-		if ($this->active_plugins === null) {
-			$active_plugins = get_option( 'active_plugins', [] );
+		if ( null === $this->active_plugins ) {
+			$active_plugins       = get_option( 'active_plugins', [] );
 			$this->active_plugins = [];
 			if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
 				$this->active_plugins = array_map(
@@ -1515,8 +1586,6 @@ class SystemReport {
 			}
 		}
 		return $this->active_plugins;
-
-
 	}
 	private function get_plugins_info() {
 		$rows       = [];
@@ -1561,7 +1630,6 @@ class SystemReport {
 		$active_plugins = $this->get_actives_plugins();
 
 		if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
-
 			$rows[] = [
 				'name'    => 'Active Plugins',
 				'value'   => count( $active_plugins ),
@@ -1575,15 +1643,14 @@ class SystemReport {
 					$additional_comment .= '<br><br>A workaround for Revive Old Posts Pro may be to add the following line to your "wp-config.php". <br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
 				}
 				if ( in_array( 'secupress', $used_not_compatible, true ) ) {
-					if (function_exists('secupress_is_submodule_active')) {
+					if ( function_exists( 'secupress_is_submodule_active' ) ) {
 						$blocked_methods = (int) secupress_is_submodule_active( 'firewall', 'request-methods-header' );
-						if ($blocked_methods) {
+						if ( $blocked_methods ) {
 							$additional_comment .= '<br><br>If reports aren\'t being generated then you may need to disable the feature "Firewall -> Block Bad Request Methods" in SecuPress (if it is enabled) or add the following line to your "wp-config.php": <br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
 						} else {
-							$used_not_compatible = array_diff($used_not_compatible, ['secupress']);
+							$used_not_compatible = array_diff( $used_not_compatible, [ 'secupress' ] );
 						}
 					}
-
 				}
 				if ( in_array( 'post-smtp', $used_not_compatible, true ) ) {
 					$additional_comment .= '<br><br>The PDF report files from the email reports will be missing when the PostSMTP mode is selected but it works when the PHPMailer mode is selected.';
@@ -1591,8 +1658,8 @@ class SystemReport {
 				if ( in_array( 'wp-rocket', $used_not_compatible, true ) ) {
 					$additional_comment .= '<br><br>WP-Rocket is incompatible from version 3.12. Until fixes, please reinstall version 3.11.5 if you have a newer version. For more information please visit https://github.com/matomo-org/matomo-for-wordpress/wiki/Downgrade-wp-rocket-to-a-version-compatible-with-the-Matomo-plugin';
 				}
-				if ( in_array('better-wp-security', $used_not_compatible, true ) ) {
-					if (class_exists('ITSEC_Modules')) {
+				if ( in_array( 'better-wp-security', $used_not_compatible, true ) ) {
+					if ( class_exists( 'ITSEC_Modules' ) ) {
 						$input = ITSEC_Modules::get_settings( 'system-tweaks' );
 						if ( $input['plugins_php'] ) {
 							$additional_comment .= '<br><br>You have disabled the PHP usage in the plugins folder from your ithemes security plugin. Matomo won\'t work in this configuration. You must uncheck the checkbox "Security > Settings > Advanced > System tweaks > Disable PHP in plugins."';
@@ -1602,8 +1669,8 @@ class SystemReport {
 					}
 				}
 				$is_warning = false;
-				$is_error = false;
-				if (count($used_not_compatible)) {
+				$is_error   = false;
+				if ( count( $used_not_compatible ) ) {
 					$is_warning = true;
 					$is_error   = false;
 					if ( in_array( 'cookiebot', $used_not_compatible, true ) ) {
