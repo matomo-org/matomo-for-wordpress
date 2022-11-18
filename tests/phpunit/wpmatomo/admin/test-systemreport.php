@@ -6,6 +6,8 @@
 use WpMatomo\Admin\SystemReport;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
+// phpcs:ignore WordPress.NamingConventions
+$piwik_minimumPHPVersion = '7.2.5';
 /**
  * We want a real data, not something coming from cache
  * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -39,7 +41,6 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 		parent::setUp();
 		$this->settings = new Settings();
 		$this->report   = new SystemReport( $this->settings );
-
 		if ( is_multisite() ) {
 			// the main difference in behavior is more like whether it is network enabled or not ...
 			// and not so much if it is multisite or not
