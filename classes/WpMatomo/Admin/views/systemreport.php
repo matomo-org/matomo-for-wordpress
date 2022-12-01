@@ -161,7 +161,7 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 					$matomo_replaced          = str_replace( array_keys( $matomo_replaced_elements ), array_values( $matomo_replaced_elements ), $matomo_comment );
 					// note: the text is not escaped anymore. Instead, the escaping is made when generating the comment. It allows then to add links in the output.
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo "<td width='50%' class='matomo-systemreport-comment'>" . str_replace( array_values( $matomo_replaced_elements ), array_keys( $matomo_replaced_elements ), $matomo_replaced )  . '</td>';
+					echo "<td width='50%' class='matomo-systemreport-comment'>" . str_replace( array_values( $matomo_replaced_elements ), array_keys( $matomo_replaced_elements ), $matomo_replaced ) . '</td>';
 				}
 
 				echo '</tr>';
