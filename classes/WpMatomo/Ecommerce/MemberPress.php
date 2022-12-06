@@ -85,6 +85,7 @@ class MemberPress extends Base {
 
 	public function on_order() {
 		if ( isset( $_GET['membership'] )
+		     && ( isset( $_GET['trans_num'] ) || isset( $_GET['transaction_id'] ) )
 			 && class_exists( '\MeprTransaction' ) ) {
 			$txn = null;
 			if ( isset( $_GET['trans_num'] ) ) {
