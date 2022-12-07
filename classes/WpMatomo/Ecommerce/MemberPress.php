@@ -85,10 +85,18 @@ class MemberPress extends Base {
 
 	public function on_order() {
 		if ( isset( $_GET['membership'] )
-			 && isset( $_GET['trans_num'] )
+			 && ( isset( $_GET['trans_num'] ) || isset( $_GET['transaction_id'] ) )
 			 && class_exists( '\MeprTransaction' ) ) {
-			$txn = MeprTransaction::get_one_by_trans_num( sanitize_text_field( wp_unslash( $_GET['trans_num'] ) ) );
-			if ( isset( $txn->id ) && $txn->id > 0 ) {
+			$txn = null;
+			if ( isset( $_GET['trans_num'] ) ) {
+				$txn = MeprTransaction::get_one_by_trans_num( sanitize_text_field( wp_unslash( $_GET['trans_num'] ) ) );
+			} else {
+				if ( isset( $_GET['transaction_id'] ) ) {
+					$txn = MeprTransaction::get_one( sanitize_text_field( wp_unslash( $_GET['transaction_id'] ) ) );
+				}
+			}
+
+			if ( $txn && isset( $txn->id ) && $txn->id > 0 ) {
 				if ( $this->has_order_been_tracked_already( $txn->id ) ) {
 					return;
 				}
