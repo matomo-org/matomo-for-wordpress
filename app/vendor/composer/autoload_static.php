@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6b5e099186f689f25579c55c33892971
+class ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -2586,6 +2586,7 @@ class ComposerStaticInit6b5e099186f689f25579c55c33892971
         'Piwik\\Plugins\\Tour\\Engagement\\ChallengeFlattenActions' => __DIR__ . '/../..' . '/plugins/Tour/Engagement/ChallengeFlattenActions.php',
         'Piwik\\Plugins\\Tour\\Engagement\\ChallengeScheduledReport' => __DIR__ . '/../..' . '/plugins/Tour/Engagement/ChallengeScheduledReport.php',
         'Piwik\\Plugins\\Tour\\Engagement\\ChallengeSelectDateRange' => __DIR__ . '/../..' . '/plugins/Tour/Engagement/ChallengeSelectDateRange.php',
+        'Piwik\\Plugins\\Tour\\Engagement\\ChallengeSetupConsentManager' => __DIR__ . '/../..' . '/plugins/Tour/Engagement/ChallengeSetupConsentManager.php',
         'Piwik\\Plugins\\Tour\\Engagement\\ChallengeSetupTwoFa' => __DIR__ . '/../..' . '/plugins/Tour/Engagement/ChallengeSetupTwoFa.php',
         'Piwik\\Plugins\\Tour\\Engagement\\ChallengeTrackingCode' => __DIR__ . '/../..' . '/plugins/Tour/Engagement/ChallengeTrackingCode.php',
         'Piwik\\Plugins\\Tour\\Engagement\\ChallengeViewRowEvolution' => __DIR__ . '/../..' . '/plugins/Tour/Engagement/ChallengeViewRowEvolution.php',
@@ -2598,6 +2599,7 @@ class ComposerStaticInit6b5e099186f689f25579c55c33892971
         'Piwik\\Plugins\\Tour\\tests\\Fixtures\\SimpleFixtureTrackFewVisits' => __DIR__ . '/../..' . '/plugins/Tour/tests/Fixtures/SimpleFixtureTrackFewVisits.php',
         'Piwik\\Plugins\\Tour\\tests\\Integration\\ChallengeTest' => __DIR__ . '/../..' . '/plugins/Tour/tests/Integration/ChallengeTest.php',
         'Piwik\\Plugins\\Tour\\tests\\System\\APITest' => __DIR__ . '/../..' . '/plugins/Tour/tests/System/APITest.php',
+        'Piwik\\Plugins\\Tour\\tests\\System\\ConsentManagerDetectionTest' => __DIR__ . '/../..' . '/plugins/Tour/tests/System/ConsentManagerDetectionTest.php',
         'Piwik\\Plugins\\Tour\\tests\\System\\DataFinderTest' => __DIR__ . '/../..' . '/plugins/Tour/tests/System/DataFinderTest.php',
         'Piwik\\Plugins\\Tour\\tests\\System\\TourTest' => __DIR__ . '/../..' . '/plugins/Tour/tests/System/TourTest.php',
         'Piwik\\Plugins\\Transitions\\API' => __DIR__ . '/../..' . '/plugins/Transitions/API.php',
@@ -2833,6 +2835,7 @@ class ComposerStaticInit6b5e099186f689f25579c55c33892971
         'Piwik\\Settings\\Storage\\Storage' => __DIR__ . '/../..' . '/core/Settings/Storage/Storage.php',
         'Piwik\\Singleton' => __DIR__ . '/../..' . '/core/Singleton.php',
         'Piwik\\Site' => __DIR__ . '/../..' . '/core/Site.php',
+        'Piwik\\SiteContentDetector' => __DIR__ . '/../..' . '/core/SiteContentDetector.php',
         'Piwik\\SupportedBrowser' => __DIR__ . '/../..' . '/core/SupportedBrowser.php',
         'Piwik\\TCPDF' => __DIR__ . '/../..' . '/core/TCPDF.php',
         'Piwik\\Theme' => __DIR__ . '/../..' . '/core/Theme.php',
@@ -3360,11 +3363,11 @@ class ComposerStaticInit6b5e099186f689f25579c55c33892971
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6b5e099186f689f25579c55c33892971::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6b5e099186f689f25579c55c33892971::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit6b5e099186f689f25579c55c33892971::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit6b5e099186f689f25579c55c33892971::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInit6b5e099186f689f25579c55c33892971::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14::$classMap;
 
         }, null, ClassLoader::class);
     }

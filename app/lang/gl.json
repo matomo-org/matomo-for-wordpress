@@ -149,8 +149,20 @@
         "ComparingRecords": "A comparar %s filas"
     },
     "API": {
-        "LoadedAPIs": "%s APIs foro cargadas con éxito",
-        "UserAuthentication": "Autenticación do usuario"
+        "ChangeTokenHint": "Se queres cambiar este token, vai á túa %1$spáxina de configuración persoal%2$s.",
+        "EvolutionMetricName": "Evolución de %s",
+        "GenerateVisits": "Se non tes datos para hoxe, podes xerar algúns usando o complemento %1$s indo a 'Desenvolvemento → Xerador de visitantes' na área de administración de Matomo.",
+        "Glossary": "Glosario",
+        "KeepTokenSecret": "Este token_auth é tan secreto como o teu usuario e contrasinal, %1$s non o comparte%2$s!",
+        "LearnAboutCommonlyUsedTerms2": "Obtén información sobre os termos de uso habitual para aproveitar ao máximo as analíticas de Matomo.",
+        "LoadedAPIs": "Cargáronse %s aplicacións",
+        "MainMetricsReportDocumentation": "Este informe ofrece unha visión xeral das métricas máis importantes de todalas categorías e complementos.",
+        "MoreInformation": "Máis información sobre as API de Matomo dispoñibles en %1$sIntrodución á API de Matomo%2$s e a %3$sReferencia da API de Matomo%4$s.",
+        "PluginDescription": "Todolos datos de Matomo están dispoñibles a través de APIs simples. Este complemento é o punto de entrada do servizo web ao que podes chamar para obter os teus datos de análise web en XML, JSON, PHP, CSV, etc.",
+        "ReportingApiReference": "Referencia da API de informes",
+        "TopLinkTooltip": "Acceda aos seus datos de Web Analytics mediante a programación dunha API sinxela en JSON, XML, etc.",
+        "UserAuthentication": "Autenticación do usuario",
+        "UsingTokenAuth": "Se queres %1$ssolicitar datos dentro dun script, un crontab, etc.%2$s, cómpre engadir o parámetro URL '%3$s' ás chamadas da API para URL que requiren autenticación."
     },
     "Actions": {
         "ColumnPageName": "Nome da páxina",
@@ -159,12 +171,23 @@
     },
     "Annotations": {
         "AddAnnotationsFor": "Engadir anotación para %s...",
+        "AnnotationOnDate": "Anotación sobre %1$s: %2$s",
         "Annotations": "Anotacións",
         "ClickToDelete": "Prema para eliminar esta anotación.",
         "ClickToEdit": "Prema para editar esta anotación.",
         "ClickToEditOrAdd": "Prema para editar ou engadir unha anotación nova.",
+        "ClickToStarOrUnstar": "Haga clic para marcar o desmarcar esta anotación.",
         "CreateNewAnnotation": "Crear unha anotación nova...",
-        "EnterAnnotationText": "Introduza a súa nota..."
+        "EnterAnnotationText": "Introduza a súa nota...",
+        "HideAnnotationsFor": "Ocultar anotaciones para %s...",
+        "IconDesc": "Ver notas para este intervalo de fechas.",
+        "IconDescHideNotes": "Ocultar notas para este intervalo de fechas.",
+        "InlineQuickHelp": "Puede crear anotaciones para marcar eventos especiales (como una nueva publicación de blog o el rediseño de un sitio web), para guardar sus análisis de datos o para guardar cualquier otra cosa que considere importante.",
+        "LoginToAnnotate": "Inicie sesión para crear una anotación.",
+        "NoAnnotations": "No hay anotaciones para este intervalo de fechas.",
+        "PluginDescription": "Le permite adjuntar notas a diferentes días para marcar los cambios realizados en su sitio web, guardar los análisis que realiza con respecto a sus datos y compartir sus pensamientos con sus colegas. Al anotar sus datos, se asegurará de recordar por qué sus datos tienen el aspecto que tienen.",
+        "ViewAndAddAnnotations": "Ver y agregar anotaciones para %s...",
+        "YouCannotModifyThisNote": "No puede modificar esta anotación porque no la creó usted ni tiene acceso de administrador para este sitio."
     },
     "Contents": {
         "Impressions": "Impresións",
@@ -221,7 +244,12 @@
         "WidgetNotFound": "Trebello non atopado"
     },
     "DevicePlugins": {
-        "WidgetPlugins": "Lista de plugins"
+        "BrowserWithNoPluginsEnabled": "%1$s sen complementos activos",
+        "BrowserWithPluginsEnabled": "%1$s cos complementos %2$s activos",
+        "PluginDescription": "Informa da lista de complementos compatibles nos navegadores dos visitantes.",
+        "PluginDetectionDoesNotWorkInIE": "Nota: a detección dos complementos non funciona en Internet Explorer antes do 11. Este informe só está baseado en navegadores que non son de IE e en versións máis recentes de IE.",
+        "WidgetPlugins": "Lista de plugins",
+        "WidgetPluginsDocumentation": "Este informe mostra que complementos do navegador activaron os teus visitantes. Esta información pode ser importante para escollela forma correcta de entregalo teu contido."
     },
     "DevicesDetection": {
         "Browsers": "Navegadores",
@@ -251,6 +279,10 @@
         "Download": "Descargar un ficheiro",
         "Ecommerce": "Comercio electrónico",
         "ExternalWebsiteUrl": "URL de sitio web externo"
+    },
+    "ImageGraph": {
+        "ColumnOrdinateMissing": "Non se puido atopar unha columna \"%1$s\" neste informe. Proba calquera de %2$s.",
+        "PluginDescription": "Xera fermosas imaxes de gráficos PNG estáticos para calquera dos teus informes de datos."
     },
     "Insights": {
         "DayComparedToPreviousDay": "día anterior",
@@ -906,18 +938,18 @@
         "Format_Date_Day_Month": "E, d 'de' MMM",
         "Format_Date_Long": "EEEE, d 'de' MMMM 'de' y",
         "Format_Date_Short": "d 'de' MMM 'de' y",
-        "Format_Hour_12": "h a",
+        "Format_Hour_12": "h a",
         "Format_Hour_24": "HH",
         "Format_Interval_Long_D": "d–d 'de' MMMM 'de' y",
-        "Format_Interval_Long_M": "d 'de' MMMM – d 'de' MMMM 'de' y",
-        "Format_Interval_Long_Y": "d 'de' MMMM 'de' y – d 'de' MMMM 'de' y",
-        "Format_Interval_Short_D": "d–d 'de' MMMM 'de' y",
-        "Format_Interval_Short_M": "d 'de' MMM – d 'de' MMM 'de' y",
-        "Format_Interval_Short_Y": "d 'de' MMM 'de' y – d 'de' MMM 'de' y",
+        "Format_Interval_Long_M": "d 'de' MMMM – d 'de' MMMM 'de' y",
+        "Format_Interval_Long_Y": "d 'de' MMMM 'de' y – d 'de' MMMM 'de' y",
+        "Format_Interval_Short_D": "d–d 'de' MMM 'de' y",
+        "Format_Interval_Short_M": "d 'de' MMM – d 'de' MMM 'de' y",
+        "Format_Interval_Short_Y": "d 'de' MMM 'de' y – d 'de' MMM 'de' y",
         "Format_Month_Long": "MMMM 'de' y",
         "Format_Month_Short": "MMM 'de' y",
         "Format_Time": "{time}",
-        "Format_Time_12": "h:mm:ss a",
+        "Format_Time_12": "h:mm:ss a",
         "Format_Time_24": "HH:mm:ss",
         "Format_Year": "y",
         "Hours": "horas",
@@ -1397,6 +1429,10 @@
         "Year_Short": "ano",
         "Yesterday": "Onte"
     },
+    "LanguagesManager": {
+        "AboutPiwikTranslations": "Sobre as traducións de Matomo",
+        "TranslationSearch": "Busca das traducións"
+    },
     "Login": {
         "InvalidUsernameEmail": "O nome do usuario ou o enderezo de correo electrónicoo son incorrectos",
         "LogIn": "Conectar",
@@ -1406,6 +1442,9 @@
     "Marketplace": {
         "ActivateLicenseKey": "Activar",
         "PluginKeywords": "Palabras clave"
+    },
+    "ProfessionalServices": {
+        "WidgetPremiumServicesForPiwik": "Funcións Premium &amp; Servizos para Matomo"
     },
     "Referrers": {
         "Campaigns": "Campañas",
@@ -1430,7 +1469,17 @@
         "Resolutions": "Resolucións",
         "WidgetGlobalVisitors": "Configuración global de visitantes",
         "WidgetGlobalVisitorsDocumentation": "Este informa mostra as configuracións xerais máis frecuentes utilizadas polas visitas. Unha configuración é a combinación de sistema operativo, tipo de navegador e resolución de pantalla.",
-        "WidgetResolutions": "Resolución de pantalla"
+        "WidgetResolutions": "Resolución de pantalla",
+        "WidgetResolutionsDocumentation": "Este informe mostra as resolucións da pantalla que usaron os teus visitantes ao velo teu sitio web."
+    },
+    "SEO": {
+        "Bing_IndexedPages": "Páxinas indexadas de Bing",
+        "DomainAge": "Idade do dominio",
+        "Google_IndexedPages": "Páxinas indexadas de Google",
+        "PluginDescription": "Este complemento extrae e mostra métricas de SEO: Google Pagerank, número de páxinas indexadas e backlinks do sitio web seleccionado actualmente.",
+        "Rank": "Rango",
+        "SEORankingsFor": "Clasificación SEO para %s",
+        "SeoRankings": "Rankings de SEO"
     },
     "SitesManager": {
         "AddSite": "Engadir un sitio",
@@ -1517,6 +1566,7 @@
     },
     "WebsiteMeasurable": {
         "Website": "Web",
+        "WebsiteDescription": "Un sitio web se compone de páginas web, normalmente servidas desde un único dominio en la web.",
         "Websites": "Sitios"
     },
     "Widgetize": {
