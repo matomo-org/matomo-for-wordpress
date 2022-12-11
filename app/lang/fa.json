@@ -2416,7 +2416,7 @@
         "Timezone_Pacific_Gambier": "گامبیر",
         "Timezone_Pacific_Honolulu": "هونولولو",
         "Timezone_Pacific_Johnston": "جانستون",
-        "Timezone_Pacific_Kanton": "Kanton",
+        "Timezone_Pacific_Kanton": "کانتون",
         "Timezone_Pacific_Kiritimati": "کریتیماتی",
         "Timezone_Pacific_Kosrae": "کوسرای",
         "Timezone_Pacific_Kwajalein": "کواجیلین",
@@ -2438,7 +2438,7 @@
         "TranslationSearch": "جستجوی ترجمه"
     },
     "Live": {
-        "AveragePageGenerationTime": "هر صفحه به طور متوسط %1$s زمان می برد تا برای بیننده بارگزاری شود.",
+        "AveragePageGenerationTime": "هر صفحه به طور متوسط %1$s ثانیه زمان می برد تا برای بیننده بارگزاری شود.",
         "CalculatedOverNPageViews": "محاسبه شده بر اسا آخرید بازدیدکنندگان %1$s بازدید.",
         "ClickToViewMoreAboutVisit": "برای مشاهده اطلاعات بیشتر درباره این بازدید کلیک کنید",
         "ConvertedNGoals": "تبدیل %s اهداف",
@@ -2625,7 +2625,7 @@
         "UseDeleteReports": "به طور منظم گزارش های قدیمی را از بانک اطلاعاتی حذف کنید"
     },
     "Referrers": {
-        "Acquisition": "اکتساب",
+        "Acquisition": "دستاوردها",
         "Campaigns": "کمپین",
         "ColumnCampaign": "کمپین بین المللی حقوق بشر",
         "ColumnSearchEngine": "موتور جستجو",
@@ -2876,24 +2876,16 @@
         "TransitionsSubcategoryHelp2": "جزئیات بیشتر"
     },
     "UserCountry": {
-        "CannotLocalizeLocalIP": "آدرس آیپی (IP) %s یک آدرس محلی است و قابل به مکان یابی نیست.",
+        "CannotLocalizeLocalIP": "آدرس آیپی (IP) %s یک آدرس محلی است و قابلیت مکان یابی ندارد.",
         "City": "شهر",
         "Continent": "قاره",
         "Country": "کشور",
-        "country_a1": "پروکسی ناشناس",
-        "country_a2": "ارائه دهنده خدمات ماهواره ای",
-        "country_cat": "جوامع کاتالان زبان",
-        "country_o1": "سایر کشورها",
         "CurrentLocationIntro": "بر اساس این ارائه دهنده خدمات , محل شما اینجاست",
         "DefaultLocationProviderDesc1": "ارائه دهنده خدمات پیشفرض , کشور یک بازدیدکننده را بر اساس زبانی که استفاده میکند , مشخص می کند.",
         "DistinctCountries": "%s کشورهای قابل تشخیص",
         "FromDifferentCities": "شهرهای مختلف",
         "Geolocation": "منطقه جغرافیایی",
         "GeolocationPageDesc": "در این صفحه شما می توانید نحوه تشخیص منطقه بازدیدکنندگان توسط پیویک را تغییر دهید.",
-        "getCityDocumentation": "ن گزارش نشان میدهد که بازدیدکنندگان هنگام ورود به وبسایت شما در کدام شهر بوده اند.",
-        "getContinentDocumentation": "ن گزارش نشان میدهد که بازدیدکنندگان هنگام ورود به وبسایت شما در کدام قاره بوده اند.",
-        "getCountryDocumentation": "این گزارش نشان میدهد که بازدیدکنندگان هنگام ورود به وبسایت شما در کدام کشور بوده اند.",
-        "getRegionDocumentation": "این گزارش نشان میدهد که بازدیدکنندگان هنگام ورود به وبسایت شما در کدام منطقه بوده اند.",
         "Latitude": "عرض جغرافیایی",
         "Location": "موقعیت",
         "LocationProvider": "ارائه دهنده خدمات محلی",
@@ -2902,7 +2894,15 @@
         "Region": "منطقه",
         "SubmenuLocations": "موقعیت ها",
         "ToGeolocateOldVisits": "برای اینکه اطلاعات مکان بازدیدهای پیشین تان را بدست آورید ، اسکریپتی که %1$s اینجا %2$s توضیح داده شده را به کار ببرید.",
-        "WidgetLocation": "مکان بازدیدکننده"
+        "WidgetLocation": "مکان بازدیدکننده",
+        "country_a1": "پروکسی ناشناس",
+        "country_a2": "ارائه دهنده خدمات ماهواره ای",
+        "country_cat": "جوامع کاتالان زبان",
+        "country_o1": "سایر کشورها",
+        "getCityDocumentation": "ن گزارش نشان میدهد که بازدیدکنندگان هنگام ورود به وبسایت شما در کدام شهر بوده اند.",
+        "getContinentDocumentation": "ن گزارش نشان میدهد که بازدیدکنندگان هنگام ورود به وبسایت شما در کدام قاره بوده اند.",
+        "getCountryDocumentation": "این گزارش نشان میدهد که بازدیدکنندگان هنگام ورود به وبسایت شما در کدام کشور بوده اند.",
+        "getRegionDocumentation": "این گزارش نشان میدهد که بازدیدکنندگان هنگام ورود به وبسایت شما در کدام منطقه بوده اند."
     },
     "UserCountryMap": {
         "AndNOthers": "و%s سایر",
@@ -2928,7 +2928,7 @@
         "UserReportTitle": "شناسه های کاربری"
     },
     "UserLanguage": {
-        "BrowserLanguage": "زبان مرورگر",
+        "BrowserLanguage": "زبان مرورگر وب",
         "LanguageCode": "کد زبان"
     },
     "UsersManager": {
@@ -3026,6 +3026,7 @@
         "visitsByVisitCount": "بازدید تعداد بازدید"
     },
     "VisitsSummary": {
+        "AverageGenerationTime": "متوسط زمان تولید",
         "GenerateQueries": "%s پرس و جو های اجرا شده",
         "GenerateTime": "%s ثانیه برای تولید صفحه",
         "NbActionsDescription": "فعالیت ها %s",

@@ -183,7 +183,7 @@ class IniReader
                 continue;
             }
 
-            list($key, $value) = explode('=', $line, 2);
+            [$key, $value] = explode('=', $line, 2);
 
             $key = trim($key);
             if (strpos($key, '[]') === strlen($key) - 2) {
@@ -249,7 +249,7 @@ class IniReader
             }
 
             // Key-value pair
-            list($key, $value) = explode('=', $line, 2);
+            [$key, $value] = explode('=', $line, 2);
             $key = trim($key);
             $value = trim($value);
             if (strstr($value, ";")) {
@@ -284,7 +284,15 @@ class IniReader
             }
 
             if (is_string($value)) {
-                $value = trim($value, "'\"");
+                if (preg_match('/^"(.*)"$/', $value)) {
+                    $value = preg_replace('/^"(.*)"$/', '$1', $value);
+                    $value = str_replace('\"', '"', $value);
+                } elseif (preg_match("/^'(.*)'$/", $value)) {
+                    $value = preg_replace("/^'(.*)'$/", '$1', $value);
+                    $value = str_replace("\'", "'", $value);
+                } else {
+                    $value = trim($value, "'\"");
+                }
             }
 
             if ($i == 0) {
