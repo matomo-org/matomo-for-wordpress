@@ -125,7 +125,7 @@ class IniWriter
         if (is_string($value)) {
             // remove any quotes w/ newlines after it since INI parsing will consider it the end of the string
             $value = preg_replace('/\"[\n\r]/', "\n", $value);
-            $value = addslashes($value);
+            $value = addcslashes($value, '"');
             return '"' . $value . '"';
         }
 

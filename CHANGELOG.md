@@ -1,4 +1,10 @@
-== Changelog ==
+== Changelog ===
+= 4.13.0 =
+* Update Matomo core to 4.13.0
+* Fix a bug in the MemberPress support
+* Enhance the system report
+* Fix a bug when detecting SQL access in the system report
+
 = 4.12.0 =
 * Update Matomo core to 4.12.3
 * Update WordPress compatibility version

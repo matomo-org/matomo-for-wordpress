@@ -13,7 +13,14 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
+?>
+<style type="text/css">
+	.matomo-systemreport a {
+		color: inherit;
+		text-decoration: underline;
+	}
+</style>
+<?php
 use WpMatomo\Access;
 use WpMatomo\Admin\Menu;
 use WpMatomo\Admin\SystemReport;
@@ -104,7 +111,9 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 							}
 							echo "\n* " . esc_html( $matomo_class ) . esc_html( $matomo_row['name'] ) . ': ' . esc_html( matomo_anonymize_value( matomo_format_value_text( $matomo_value ) ) );
 							if ( isset( $matomo_row['comment'] ) && '' !== $matomo_row['comment'] ) {
-								echo ' (' . esc_html( matomo_anonymize_value( matomo_format_value_text( $matomo_row['comment'] ) ) ) . ')';
+								 // We want to add links in the comments
+                                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								echo ' (' . matomo_anonymize_value( matomo_format_value_text( $matomo_row['comment'] ) ) . ')';
 							}
 						}
 						echo "\n\n";
@@ -150,9 +159,9 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 					];
 					$matomo_comment           = isset( $matomo_row['comment'] ) ? $matomo_row['comment'] : '';
 					$matomo_replaced          = str_replace( array_keys( $matomo_replaced_elements ), array_values( $matomo_replaced_elements ), $matomo_comment );
-					$matomo_escaped           = esc_html( $matomo_replaced );
+					// note: the text is not escaped anymore. Instead, the escaping is made when generating the comment. It allows then to add links in the output.
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo "<td width='50%' class='matomo-systemreport-comment'>" . str_replace( array_values( $matomo_replaced_elements ), array_keys( $matomo_replaced_elements ), $matomo_escaped ) . '</td>';
+					echo "<td width='50%' class='matomo-systemreport-comment'>" . str_replace( array_values( $matomo_replaced_elements ), array_keys( $matomo_replaced_elements ), $matomo_replaced ) . '</td>';
 				}
 
 				echo '</tr>';
