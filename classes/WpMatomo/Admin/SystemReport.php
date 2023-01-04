@@ -92,6 +92,8 @@ class SystemReport {
 		'bluehost-wordpress-plugin',
 		// see https://wordpress.org/support/topic/archive-error-with-wp-rocket/
 		'wp-rocket',
+		// see https://github.com/matomo-org/matomo-for-wordpress/issues/697
+		'backwpup'
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
