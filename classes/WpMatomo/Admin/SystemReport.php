@@ -93,7 +93,7 @@ class SystemReport {
 		// see https://wordpress.org/support/topic/archive-error-with-wp-rocket/
 		'wp-rocket',
 		// see https://github.com/matomo-org/matomo-for-wordpress/issues/697
-		'backwpup'
+		'backwpup',
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
