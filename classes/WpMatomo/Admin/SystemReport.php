@@ -777,8 +777,8 @@ class SystemReport {
 					$error['comment'] = '';
 				}
 
-				if (strpos($error['comment'], '<head>')) {
-					$error['comment'] = esc_html($error['comment']);
+				if ( strpos( $error['comment'], '<head>' ) ) {
+					$error['comment'] = esc_html( $error['comment'] );
 					$error['comment'] = $this->replace_hexadecimal_colors( $error['comment'] );
 				}
 
@@ -1729,37 +1729,37 @@ class SystemReport {
 
 	/**
 	 * Convert the hexadecimal colors in the content into their rgb values
+	 *
 	 * @param string $content
 	 *
 	 * @return string
 	 */
-	private function replace_hexadecimal_colors($content) {
+	private function replace_hexadecimal_colors( $content ) {
 		$matches = array();
-		if (preg_match_all('/ (#(([a-f0-9]{8})|([a-f0-9]{4})))[ ;]/i', $content, $matches)) {
-			foreach($matches[1] as $hexadecimal_color) {
-				switch(strlen($hexadecimal_color)) {
+		if ( preg_match_all( '/ (#(([a-f0-9]{8})|([a-f0-9]{4})))[ ;]/i', $content, $matches ) ) {
+			foreach ( $matches[1] as $hexadecimal_color ) {
+				switch ( strlen( $hexadecimal_color ) ) {
 					case 9:
-						list($r, $g, $b, $a) = sscanf($hexadecimal_color, "#%02x%02x%02x%02x");
+						list($r, $g, $b, $a) = sscanf( $hexadecimal_color, '#%02x%02x%02x%02x' );
 						break;
 					case 5:
-						list($r, $g, $b, $a) = sscanf($hexadecimal_color, "#%01x%01x%01x%01x");
+						list($r, $g, $b, $a) = sscanf( $hexadecimal_color, '#%01x%01x%01x%01x' );
 						break;
 				}
-				$content = str_replace($hexadecimal_color, 'rgb('.$r.','.$g.','.$b.','.$a.')', $content);
+				$content = str_replace( $hexadecimal_color, 'rgb(' . $r . ',' . $g . ',' . $b . ',' . $a . ')', $content );
 			}
 		}
-		if (preg_match_all('/ (#(([a-f0-9]{6})|([a-f0-9]{3})))[ ;]/i', $content, $matches)) {
-			foreach($matches[1] as $hexadecimal_color) {
-				switch(strlen($hexadecimal_color)) {
+		if ( preg_match_all( '/ (#(([a-f0-9]{6})|([a-f0-9]{3})))[ ;]/i', $content, $matches ) ) {
+			foreach ( $matches[1] as $hexadecimal_color ) {
+				switch ( strlen( $hexadecimal_color ) ) {
 					case 7:
-						list($r, $g, $b) = sscanf($hexadecimal_color, "#%02x%02x%02x");
+						list($r, $g, $b) = sscanf( $hexadecimal_color, '#%02x%02x%02x' );
 						break;
 					case 4:
-						list($r, $g, $b) = sscanf($hexadecimal_color, "#%01x%01x%01x");
+						list($r, $g, $b) = sscanf( $hexadecimal_color, '#%01x%01x%01x' );
 						break;
-
 				}
-				$content = str_replace($hexadecimal_color, 'rgb('.$r.','.$g.','.$b.')', $content);
+				$content = str_replace( $hexadecimal_color, 'rgb(' . $r . ',' . $g . ',' . $b . ')', $content );
 			}
 		}
 		return $content;
