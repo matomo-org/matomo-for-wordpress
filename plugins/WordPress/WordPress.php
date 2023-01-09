@@ -331,13 +331,13 @@ class WordPress extends Plugin
             if ($action === 'ajaxNoAccess' || $action === 'bruteForceLog') {
                 return; // allowed
             }
-            throw new Exception('This feature is not available');
+	        throw new Exception( 'This feature '.$requestedModule. ' / ' .$requestedAction .' is not available' );
         }
 
         if (($requestedModule === 'corepluginsadmin' && $action !== 'safemode')
             || $requestedModule === 'installation'
             || $requestedModule === 'coreupdater') {
-            throw new Exception('This feature is not available');
+	        throw new Exception( 'This feature '.$requestedModule. ' / ' .$requestedAction .' is not available' );
         }
 
         $blockedActions = array(
@@ -357,7 +357,7 @@ class WordPress extends Plugin
 
         foreach ($blockedActions as $blockedAction) {
             if ($requestedModule === $blockedAction[0] && $requestedAction == $blockedAction[1]) {
-                throw new Exception('This feature is not available');
+	            throw new Exception( 'This feature '.$requestedModule. ' / ' .$requestedAction .' is not available' );
             }
         }
         
