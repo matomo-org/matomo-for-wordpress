@@ -1736,20 +1736,21 @@ class SystemReport {
 	 */
 	private function replace_hexadecimal_colors( $content ) {
 		$matches = array();
-		if ( preg_match_all( '/ (#(([a-f0-9]{8})|([a-f0-9]{4})))[ ;]/i', $content, $matches ) ) {
+		if ( preg_match_all( '/ (#(([a-f0-9]{8})|([a-f0-9]{4}[ ;])))/i', $content, $matches ) ) {
 			foreach ( $matches[1] as $hexadecimal_color ) {
 				switch ( strlen( $hexadecimal_color ) ) {
 					case 9:
 						list($r, $g, $b, $a) = sscanf( $hexadecimal_color, '#%02x%02x%02x%02x' );
 						break;
-					case 5:
+					case 6:
+						$hexadecimal_color = substr($hexadecimal_color, 0, 5);
 						list($r, $g, $b, $a) = sscanf( $hexadecimal_color, '#%01x%01x%01x%01x' );
 						break;
 				}
 				$content = str_replace( $hexadecimal_color, 'rgb(' . $r . ',' . $g . ',' . $b . ',' . $a . ')', $content );
 			}
 		}
-		if ( preg_match_all( '/ (#(([a-f0-9]{6})|([a-f0-9]{3})))[ ;]/i', $content, $matches ) ) {
+		if ( preg_match_all( '/ (#(([a-f0-9]{6})|([a-f0-9]{3})))/i', $content, $matches ) ) {
 			foreach ( $matches[1] as $hexadecimal_color ) {
 				switch ( strlen( $hexadecimal_color ) ) {
 					case 7:
