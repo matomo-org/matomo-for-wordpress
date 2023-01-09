@@ -1743,7 +1743,7 @@ class SystemReport {
 						list($r, $g, $b, $a) = sscanf( $hexadecimal_color, '#%02x%02x%02x%02x' );
 						break;
 					case 6:
-						$hexadecimal_color = substr($hexadecimal_color, 0, 5);
+						$hexadecimal_color   = substr( $hexadecimal_color, 0, 5 );
 						list($r, $g, $b, $a) = sscanf( $hexadecimal_color, '#%01x%01x%01x%01x' );
 						break;
 				}
