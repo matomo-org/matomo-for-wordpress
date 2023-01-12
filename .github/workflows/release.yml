@@ -92,5 +92,5 @@ jobs:
           ./deploy.sh $version ${{ secrets.SVN_USERNAME }} "${{ secrets.SVN_PASSWORD }}"
           cd ..
           
-          echo ::set-output name=update::false
+          echo "update=false" >> $GITHUB_OUTPUT
         shell: bash
