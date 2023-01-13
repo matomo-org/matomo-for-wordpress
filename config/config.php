@@ -133,6 +133,9 @@ return array(
 		}
 		return array_values(array_filter($checks));
 	}),
+	'diagnostics.disabled'  => \DI\add([
+		\DI\get(\Piwik\Plugins\Diagnostics\Diagnostic\PageSpeedCheck::class),
+	]),
 	'observers.global' => DI\add(array(
 		array('FrontController.modifyErrorPage', DI\value(function (&$result, $ex) {
 			if (!empty($ex) && is_object($ex) && $ex instanceof \Piwik\Exception\NoWebsiteFoundException) {
