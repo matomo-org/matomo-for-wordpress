@@ -363,7 +363,7 @@ class SystemReport {
 		$rows = [];
 
 		if ( $this->shell_exec_available ) {
-			$phpcli_version = $this->get_phpcli_output( '-v | cut -d " " -f 2' );
+			$phpcli_version = $this->get_phpcli_output( '-v | grep built | cut -d " " -f 2' );
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 			global $piwik_minimumPHPVersion;
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
