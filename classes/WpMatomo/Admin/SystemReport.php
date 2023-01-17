@@ -407,7 +407,7 @@ class SystemReport {
 	private function get_phpcli_output( $phpcli_params ) {
 		$output = '';
 		if ( $this->shell_exec_available && $this->binary ) {
-			// WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 			$output = trim( @shell_exec( $this->binary . ' ' . $phpcli_params ) );
 		}
 
