@@ -110,17 +110,26 @@ class SystemReport {
 
 	private $initial_error_reporting = null;
 
-	private $exec_available;
+	private $shell_exec_available;
 	/**
 	 * @var \WpMatomo\Db\Settings
 	 */
 	public $db_settings;
+	/**
+	 * @var string the php binary used by Matomo
+	 */
+	private $binary;
 
 	public function __construct( Settings $settings ) {
-		$this->settings       = $settings;
-		$this->logger         = new Logger();
-		$this->db_settings    = new \WpMatomo\Db\Settings();
-		$this->exec_available = function_exists( 'exec' );
+		$this->settings             = $settings;
+		$this->logger               = new Logger();
+		$this->db_settings          = new \WpMatomo\Db\Settings();
+		$this->shell_exec_available = function_exists( 'shell_exec' );
+		if ( ! WpMatomo::is_safe_mode() ) {
+			Bootstrap::do_bootstrap();
+			$cli_php      = new CliMulti\CliPhp();
+			$this->binary = $cli_php->findPhpBinary();
+		}
 	}
 
 	public function get_not_compatible_plugins() {
@@ -353,8 +362,8 @@ class SystemReport {
 	private function get_phpcli_info() {
 		$rows = [];
 
-		if ( $this->exec_available ) {
-			$phpcli_version = $this->get_phpcli_output( '-v | cut -d " " -f 2' );
+		if ( $this->shell_exec_available ) {
+			$phpcli_version = $this->get_phpcli_output( '-v | grep built | cut -d " " -f 2' );
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 			global $piwik_minimumPHPVersion;
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
@@ -397,12 +406,9 @@ class SystemReport {
 
 	private function get_phpcli_output( $phpcli_params ) {
 		$output = '';
-		if ( $this->exec_available ) {
-			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_exec
-			@exec( 'php ' . $phpcli_params, $cmd_output );
-			if ( count( $cmd_output ) ) {
-				$output = $cmd_output[0];
-			}
+		if ( $this->shell_exec_available && $this->binary ) {
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+			$output = trim( @shell_exec( $this->binary . ' ' . $phpcli_params ) );
 		}
 
 		return $output;
@@ -1170,17 +1176,12 @@ class SystemReport {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting
 			'value' => $this->initial_error_reporting . ' After bootstrap: ' . @error_reporting(),
 		];
-		if ( ! WpMatomo::is_safe_mode() ) {
-			Bootstrap::do_bootstrap();
-			$cli_php = new CliMulti\CliPhp();
-			$binary  = $cli_php->findPhpBinary();
-			if ( ! empty( $binary ) ) {
-				$binary = basename( $binary );
-				$rows[] = [
-					'name'  => 'PHP Found Binary',
-					'value' => $binary,
-				];
-			}
+
+		if ( ! empty( $this->binary ) ) {
+			$rows[] = [
+				'name'  => 'PHP Found Binary',
+				'value' => basename( $this->binary ),
+			];
 		}
 		$rows[] = [
 			'name'  => 'Timezone',
