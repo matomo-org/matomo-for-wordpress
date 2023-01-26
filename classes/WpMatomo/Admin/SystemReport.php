@@ -95,7 +95,7 @@ class SystemReport {
 		// see https://github.com/matomo-org/matomo-for-wordpress/issues/697
 		'backwpup',
 		// see https://github.com/matomo-org/matomo-for-wordpress/issues/710
-		'fs-folder',
+		'fs-poster',
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
