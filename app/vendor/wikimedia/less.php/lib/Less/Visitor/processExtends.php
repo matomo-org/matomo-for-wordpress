@@ -52,7 +52,7 @@ class Less_Visitor_processExtends extends Less_Visitor {
 				$extend = $extendsList[$extendIndex];
 				$targetExtend = $extendsListTarget[$targetExtendIndex];
 
-				// Optimisation: Explicit reference, <https://github.com/wikimedia/less.php/pull/14>
+				// Optimisation: Explicit reference, <https://github.com/wikimedia/less.php/pull/14>
 				if ( \array_key_exists( $targetExtend->object_id, $extend->parent_ids ) ) {
 					// ignore circular references
 					continue;
@@ -253,7 +253,7 @@ class Less_Visitor_processExtends extends Less_Visitor {
 				return true;
 			}
 
-			// Optimisation: Explicit reference, <https://github.com/wikimedia/less.php/pull/14>
+			// Optimisation: Explicit reference, <https://github.com/wikimedia/less.php/pull/14>
 			if ( \array_key_exists( $first_el, $hackstackSelector->_oelements_assoc ) ) {
 				return true;
 			}
@@ -292,6 +292,11 @@ class Less_Visitor_processExtends extends Less_Visitor {
 		return $potentialMatch;
 	}
 
+	/**
+	 * @param string|Less_Tree_Attribute|Less_Tree_Dimension|Less_Tree_Keyword $elementValue1
+	 * @param string|Less_Tree_Attribute|Less_Tree_Dimension|Less_Tree_Keyword $elementValue2
+	 * @return bool
+	 */
 	private function isElementValuesEqual( $elementValue1, $elementValue2 ) {
 		if ( $elementValue1 === $elementValue2 ) {
 			return true;
@@ -353,8 +358,8 @@ class Less_Visitor_processExtends extends Less_Visitor {
 			return true;
 		}
 
-		$elementValue1 = ( $elementValue1->value->value ? $elementValue1->value->value : $elementValue1->value );
-		$elementValue2 = ( $elementValue2->value->value ? $elementValue2->value->value : $elementValue2->value );
+		$elementValue1 = ( $elementValue1->value->value ?: $elementValue1->value );
+		$elementValue2 = ( $elementValue2->value->value ?: $elementValue2->value );
 
 		return $elementValue1 === $elementValue2;
 	}

@@ -161,7 +161,7 @@
   version: '$1'
 
 # AFNetworking generic
-- regex: '([^/]+)/(\d+(?:\.\d+)+) \((?:iPhone|iPad); iOS [0-9\.]+; Scale/[0-9\.]+\)'
+- regex: '([^/]+)/(\d+(?:\.\d+)+) \((?:iPhone|iPad); (?:iOS|iPadOS) [0-9\.]+; Scale/[0-9\.]+\)'
   name: '$1'
   version: '$2'
 
@@ -417,9 +417,18 @@
   name: '1Password'
   version: '$1'
 
-- regex: '(?:Microsoft Office )?(Access|Excel|OneDrive for Business|OneNote|PowerPoint|Project|Publisher|Visio|Word)[ /](\d+\.[\d.]*)'
+- regex: '(?:Microsoft Office )?(Access|Excel|OneDrive for Business|OneNote|PowerPoint|Project|Publisher|Visio|Word)(?: 20\d{2})?[ /]\(?(\d+\.[\d.]*)'
   name: 'Microsoft Office $1'
   version: '$2'
+- regex: '^Mozilla/4\.0 \(compatible; ms-office; MSOffice[ /]([\d\.]+)'
+  name: 'Microsoft Office'
+  version: '$1'
+- regex: 'Microsoft Office SyncProc ([\d\.]+)'
+  name: 'Microsoft Office'
+  version: '$1'
+- regex: 'Microsoft Lync ([\d\.]+)'
+  name: 'Microsoft Lync'
+  version: '$1'
 
 # https://play.google.com/store/apps/details?id=cn.wps.moffice_eng
 - regex: 'WpsM?office/([\d\.]+)'
@@ -435,7 +444,7 @@
   name: 'Microsoft Office'
   version: ''
 
-- regex: 'Microsoft Office Mobile/([\d\.]+)'
+- regex: '(?:Microsoft Office Mobile|officemobile)[ /]([\d\.]+)'
   name: 'Microsoft Office Mobile'
   version: '$1'
 
@@ -1378,3 +1387,8 @@
 - regex: '^R/(\d+[\.\d]+)'
   name: 'R'
   version: '$1'
+
+# RadioApp (https://apps.apple.com/us/app/radioapp-a-simple-radio/id720291153)
+- regex: 'RadioAppFree/'
+  name: 'RadioApp'
+  version: ''

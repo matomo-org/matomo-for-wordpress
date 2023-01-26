@@ -40,10 +40,6 @@ class Less_Tree_Comment extends Less_Tree {
 		return $this->silent || $isReference || $isCompressed;
 	}
 
-	public function compile() {
-		return $this;
-	}
-
 	public function markReferenced() {
 		$this->isReferenced = true;
 	}

@@ -5,14 +5,14 @@
  *
  * @package Less
  * @subpackage function
- * @see http://lesscss.org/functions/
+ * @see https://lesscss.org/functions/
  */
 class Less_Functions {
 
 	public $env;
 	public $currentFileInfo;
 
-	function __construct( $env, $currentFileInfo = null ) {
+	function __construct( $env, array $currentFileInfo = null ) {
 		$this->env = $env;
 		$this->currentFileInfo = $currentFileInfo;
 	}
@@ -23,13 +23,13 @@ class Less_Functions {
 	public static function operate( $op, $a, $b ) {
 		switch ( $op ) {
 			case '+':
-return $a + $b;
+				return $a + $b;
 			case '-':
-return $a - $b;
+				return $a - $b;
 			case '*':
-return $a * $b;
+				return $a * $b;
 			case '/':
-return $a / $b;
+				return $a / $b;
 		}
 	}
 
@@ -107,7 +107,15 @@ return $a / $b;
 	 */
 	public function hsla_hue( $h, $m1, $m2 ) {
 		$h = $h < 0 ? $h + 1 : ( $h > 1 ? $h - 1 : $h );
-		if ( $h * 6 < 1 ) return $m1 + ( $m2 - $m1 ) * $h * 6; else if ( $h * 2 < 1 ) return $m2; else if ( $h * 3 < 2 ) return $m1 + ( $m2 - $m1 ) * ( 2 / 3 - $h ) * 6; else return $m1;
+		if ( $h * 6 < 1 ) {
+			return $m1 + ( $m2 - $m1 ) * $h * 6;
+		} else if ( $h * 2 < 1 ) {
+			return $m2;
+		} else if ( $h * 3 < 2 ) {
+			return $m1 + ( $m2 - $m1 ) * ( 2 / 3 - $h ) * 6;
+		} else {
+			return $m1;
+		}
 	}
 
 	public function hsv( $h, $s, $v ) {
@@ -123,7 +131,7 @@ return $a / $b;
 		$v = Less_Functions::number( $v );
 		$a = Less_Functions::number( $a );
 
-		$i = floor( ( $h / 60 ) % 6 );
+		$i = floor( (int)( $h / 60 ) % 6 );
 		$f = ( $h / 60 ) - $i;
 
 		$vs = array( $v,
@@ -385,7 +393,7 @@ return $a / $b;
 
 	//
 	// Copyright (c) 2006-2009 Hampton Catlin, Nathan Weizenbaum, and Chris Eppstein
-	// http://sass-lang.com
+	// https://sass-lang.com/
 	//
 
 	/**
@@ -507,11 +515,11 @@ return $a / $b;
 			switch ( $flag ) {
 				case 'e':
 				case 'g':
-				break;
+					break;
 
 				default:
 				$new_flags .= $flag;
-				break;
+					break;
 			}
 		}
 
@@ -727,7 +735,7 @@ return $a / $b;
 		}
 		$args = array();
 		foreach ( $order as $a ) {
-			$args[] = $a->toCSS( $this->env );
+			$args[] = $a->toCSS();
 		}
 		return new Less_Tree_Anonymous( ( $isMin ? 'min(' : 'max(' ) . implode( Less_Environment::$_outputMap[','], $args ).')' );
 	}
@@ -866,11 +874,12 @@ return $a / $b;
 
 		$filePath = str_replace( '\\', '/', $filePath );
 		if ( Less_Environment::isPathRelative( $filePath ) ) {
-
+			$currentFileInfo = $this->currentFileInfo;
+			'@phan-var array $currentFileInfo';
 			if ( Less_Parser::$options['relativeUrls'] ) {
-				$temp = $this->currentFileInfo['currentDirectory'];
+				$temp = $currentFileInfo['currentDirectory'];
 			} else {
-				$temp = $this->currentFileInfo['entryPath'];
+				$temp = $currentFileInfo['entryPath'];
 			}
 
 			if ( !empty( $temp ) ) {
@@ -914,8 +923,8 @@ return $a / $b;
 		$DATA_URI_MAX_KB = 32;
 		$fileSizeInKB = round( strlen( $buf ) / 1024 );
 		if ( $fileSizeInKB >= $DATA_URI_MAX_KB ) {
-			$url = new Less_Tree_Url( ( $filePathNode ? $filePathNode : $mimetypeNode ), $this->currentFileInfo );
-			return $url->compile( $this );
+			$url = new Less_Tree_Url( ( $filePathNode ?: $mimetypeNode ), $this->currentFileInfo );
+			return $url->compile( $this->env );
 		}
 
 		if ( $buf ) {
@@ -1014,7 +1023,7 @@ return $a / $b;
 	}
 
 	// Color Blending
-	// ref: http://www.w3.org/TR/compositing-1
+	// ref: https://www.w3.org/TR/compositing-1/
 
 	public function colorBlend( $mode, $color1, $color2 ) {
 		$ab = $color1->alpha;	// backdrop

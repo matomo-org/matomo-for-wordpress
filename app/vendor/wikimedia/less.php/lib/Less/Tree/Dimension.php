@@ -28,10 +28,6 @@ class Less_Tree_Dimension extends Less_Tree {
 		$this->unit = $visitor->visitObj( $this->unit );
 	}
 
-	public function compile() {
-		return $this;
-	}
-
 	public function toColor() {
 		return new Less_Tree_Color( array( $this->value, $this->value, $this->value ) );
 	}
@@ -49,7 +45,7 @@ class Less_Tree_Dimension extends Less_Tree {
 
 		if ( $value !== 0 && $value < 0.000001 && $value > -0.000001 ) {
 			// would be output 1e-6 etc.
-			$strValue = number_format( $strValue, 10 );
+			$strValue = number_format( (float)$strValue, 10 );
 			$strValue = preg_replace( '/\.?0+$/', '', $strValue );
 		}
 
@@ -57,7 +53,7 @@ class Less_Tree_Dimension extends Less_Tree {
 			// Zero values doesn't need a unit
 			if ( $value === 0 && $this->unit->isLength() ) {
 				$output->add( $strValue );
-				return $strValue;
+				return;
 			}
 
 			// Float values doesn't need a leading zero

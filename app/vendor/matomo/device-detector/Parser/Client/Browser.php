@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace DeviceDetector\Parser\Client;
 
+use DeviceDetector\Cache\CacheInterface;
 use DeviceDetector\ClientHints;
 use DeviceDetector\Parser\Client\Browser\Engine;
 use DeviceDetector\Parser\Client\Hints\BrowserHints;
@@ -664,6 +665,17 @@ class Browser extends AbstractClientParser
     }
 
     /**
+     * Sets the Cache class
+     *
+     * @param CacheInterface $cache
+     */
+    public function setCache(CacheInterface $cache): void
+    {
+        parent::setCache($cache);
+        $this->browserHints->setCache($cache);
+    }
+
+    /**
      * Returns list of all available browsers
      * @return array
      */
@@ -748,7 +760,7 @@ class Browser extends AbstractClientParser
 
             // If version from client hints report 2022 or 2022.04, then is the Iridium browser
             // https://iridiumbrowser.de/news/2022/05/16/version-2022-04-released
-            if ('2022' === $version || '2022.04' === $version) {
+            if ('2021.12' === $version || '2022' === $version || '2022.04' === $version) {
                 $name          = 'Iridium';
                 $short         = 'I1';
                 $engine        = $browserFromUserAgent['engine'];

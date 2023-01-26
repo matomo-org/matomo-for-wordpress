@@ -31,7 +31,7 @@ class Less_Visitor_joinSelector extends Less_Visitor {
 		if ( !$rulesetNode->root ) {
 			$selectors = array();
 
-			if ( $rulesetNode->selectors && $rulesetNode->selectors ) {
+			if ( $rulesetNode->selectors ) {
 				foreach ( $rulesetNode->selectors as $selector ) {
 					if ( $selector->getIsOutput() ) {
 						$selectors[] = $selector;
