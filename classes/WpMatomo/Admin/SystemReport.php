@@ -92,6 +92,10 @@ class SystemReport {
 		'bluehost-wordpress-plugin',
 		// see https://wordpress.org/support/topic/archive-error-with-wp-rocket/
 		'wp-rocket',
+		// see https://github.com/matomo-org/matomo-for-wordpress/issues/697
+		'backwpup',
+		// see https://github.com/matomo-org/matomo-for-wordpress/issues/710
+		'fs-poster',
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
@@ -108,17 +112,26 @@ class SystemReport {
 
 	private $initial_error_reporting = null;
 
-	private $exec_available;
+	private $shell_exec_available;
 	/**
 	 * @var \WpMatomo\Db\Settings
 	 */
 	public $db_settings;
+	/**
+	 * @var string the php binary used by Matomo
+	 */
+	private $binary;
 
 	public function __construct( Settings $settings ) {
-		$this->settings       = $settings;
-		$this->logger         = new Logger();
-		$this->db_settings    = new \WpMatomo\Db\Settings();
-		$this->exec_available = function_exists( 'exec' );
+		$this->settings             = $settings;
+		$this->logger               = new Logger();
+		$this->db_settings          = new \WpMatomo\Db\Settings();
+		$this->shell_exec_available = function_exists( 'shell_exec' );
+		if ( ! WpMatomo::is_safe_mode() ) {
+			Bootstrap::do_bootstrap();
+			$cli_php      = new CliMulti\CliPhp();
+			$this->binary = $cli_php->findPhpBinary();
+		}
 	}
 
 	public function get_not_compatible_plugins() {
@@ -351,8 +364,8 @@ class SystemReport {
 	private function get_phpcli_info() {
 		$rows = [];
 
-		if ( $this->exec_available ) {
-			$phpcli_version = $this->get_phpcli_output( '-v | cut -d " " -f 2' );
+		if ( $this->shell_exec_available ) {
+			$phpcli_version = $this->get_phpcli_output( '-v | grep built | cut -d " " -f 2' );
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 			global $piwik_minimumPHPVersion;
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
@@ -395,12 +408,9 @@ class SystemReport {
 
 	private function get_phpcli_output( $phpcli_params ) {
 		$output = '';
-		if ( $this->exec_available ) {
-			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_exec
-			@exec( 'php ' . $phpcli_params, $cmd_output );
-			if ( count( $cmd_output ) ) {
-				$output = $cmd_output[0];
-			}
+		if ( $this->shell_exec_available && $this->binary ) {
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+			$output = trim( @shell_exec( $this->binary . ' ' . $phpcli_params ) );
 		}
 
 		return $output;
@@ -773,6 +783,11 @@ class SystemReport {
 
 				if ( empty( $error['comment'] ) && '0' !== $error['comment'] ) {
 					$error['comment'] = '';
+				}
+
+				if ( strpos( $error['comment'], '<head>' ) ) {
+					$error['comment'] = esc_html( $error['comment'] );
+					$error['comment'] = $this->replace_hexadecimal_colors( $error['comment'] );
 				}
 
 				$error['value']      = $this->convert_time_to_date( $error['value'], true, false );
@@ -1163,17 +1178,12 @@ class SystemReport {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting
 			'value' => $this->initial_error_reporting . ' After bootstrap: ' . @error_reporting(),
 		];
-		if ( ! WpMatomo::is_safe_mode() ) {
-			Bootstrap::do_bootstrap();
-			$cli_php = new CliMulti\CliPhp();
-			$binary  = $cli_php->findPhpBinary();
-			if ( ! empty( $binary ) ) {
-				$binary = basename( $binary );
-				$rows[] = [
-					'name'  => 'PHP Found Binary',
-					'value' => $binary,
-				];
-			}
+
+		if ( ! empty( $this->binary ) ) {
+			$rows[] = [
+				'name'  => 'PHP Found Binary',
+				'value' => basename( $this->binary ),
+			];
 		}
 		$rows[] = [
 			'name'  => 'Timezone',
@@ -1718,5 +1728,44 @@ class SystemReport {
 		}
 
 		return $rows;
+	}
+
+	/**
+	 * Convert the hexadecimal colors in the content into their rgb values
+	 *
+	 * @param string $content
+	 *
+	 * @return string
+	 */
+	private function replace_hexadecimal_colors( $content ) {
+		$matches = array();
+		if ( preg_match_all( '/ (#(([a-f0-9]{8})|([a-f0-9]{4}[ ;])))/i', $content, $matches ) ) {
+			foreach ( $matches[1] as $hexadecimal_color ) {
+				switch ( strlen( $hexadecimal_color ) ) {
+					case 9:
+						list($r, $g, $b, $a) = sscanf( $hexadecimal_color, '#%02x%02x%02x%02x' );
+						break;
+					case 6:
+						$hexadecimal_color   = substr( $hexadecimal_color, 0, 5 );
+						list($r, $g, $b, $a) = sscanf( $hexadecimal_color, '#%01x%01x%01x%01x' );
+						break;
+				}
+				$content = str_replace( $hexadecimal_color, 'rgb(' . $r . ',' . $g . ',' . $b . ',' . $a . ')', $content );
+			}
+		}
+		if ( preg_match_all( '/ (#(([a-f0-9]{6})|([a-f0-9]{3})))/i', $content, $matches ) ) {
+			foreach ( $matches[1] as $hexadecimal_color ) {
+				switch ( strlen( $hexadecimal_color ) ) {
+					case 7:
+						list($r, $g, $b) = sscanf( $hexadecimal_color, '#%02x%02x%02x' );
+						break;
+					case 4:
+						list($r, $g, $b) = sscanf( $hexadecimal_color, '#%01x%01x%01x' );
+						break;
+				}
+				$content = str_replace( $hexadecimal_color, 'rgb(' . $r . ',' . $g . ',' . $b . ')', $content );
+			}
+		}
+		return $content;
 	}
 }

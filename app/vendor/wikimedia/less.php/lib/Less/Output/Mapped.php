@@ -52,8 +52,8 @@ class Less_Output_Mapped extends Less_Output {
 	 * The $index for less.php may be different from less.js since less.php does not chunkify inputs
 	 *
 	 * @param string $chunk
-	 * @param string $fileInfo
-	 * @param integer $index
+	 * @param array|null $fileInfo
+	 * @param int $index
 	 * @param mixed $mapLines
 	 */
 	public function add( $chunk, $fileInfo = null, $index = 0, $mapLines = null ) {

@@ -53,7 +53,7 @@ class Less_Tree_Ruleset extends Less_Tree {
 	public function accept( $visitor ) {
 		if ( $this->paths ) {
 			$paths_len = count( $this->paths );
-			for ( $i = 0,$paths_len; $i < $paths_len; $i++ ) {
+			for ( $i = 0; $i < $paths_len; $i++ ) {
 				$this->paths[$i] = $visitor->visitArray( $this->paths[$i] );
 			}
 		} elseif ( $this->selectors ) {
@@ -184,7 +184,6 @@ class Less_Tree_Ruleset extends Less_Tree {
 
 	/**
 	 * Compile the selectors and create a new ruleset object for the compile() method
-	 *
 	 */
 	private function PrepareRuleset( $env ) {
 		$hasOnePassingSelector = false;
@@ -264,7 +263,7 @@ class Less_Tree_Ruleset extends Less_Tree {
 		return new Less_Tree_Ruleset( $this->selectors, $important_rules, $this->strictImports );
 	}
 
-	public function matchArgs( $args ) {
+	public function matchArgs( $args, $env = null ) {
 		return !$args;
 	}
 
@@ -300,7 +299,7 @@ class Less_Tree_Ruleset extends Less_Tree {
 		if ( is_null( $this->_variables ) ) {
 			$this->variables();
 		}
-		return isset( $this->_variables[$name] ) ? $this->_variables[$name] : null;
+		return $this->_variables[$name] ?? null;
 	}
 
 	public function find( $selector, $self = null ) {
@@ -373,16 +372,6 @@ class Less_Tree_Ruleset extends Less_Tree {
 		// If this is the root node, we don't render
 		// a selector, or {}.
 		if ( !$this->root ) {
-
-			/*
-			debugInfo = tree.debugInfo(env, this, tabSetStr);
-
-			if (debugInfo) {
-				output.add(debugInfo);
-				output.add(tabSetStr);
-			}
-			*/
-
 			$paths_len = count( $this->paths );
 			for ( $i = 0; $i < $paths_len; $i++ ) {
 				$path = $this->paths[$i];

@@ -59,7 +59,7 @@ class Factory
         if (empty($options['unix_socket'])) {
             $redis->connect($options['host'], $options['port'], $timeout);
         } else {
-            $redis->connect($options['unix_socket'], null, $timeout);
+            $redis->connect($options['unix_socket'], 0, $timeout);
         }
 
         if (!empty($options['password'])) {

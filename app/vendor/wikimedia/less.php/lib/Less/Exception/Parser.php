@@ -11,7 +11,7 @@ class Less_Exception_Parser extends Exception {
 	/**
 	 * The current file
 	 *
-	 * @var Less_ImportedFile
+	 * @var array
 	 */
 	public $currentFile;
 
@@ -27,21 +27,14 @@ class Less_Exception_Parser extends Exception {
 	protected $details = array();
 
 	/**
-	 * Constructor
-	 *
 	 * @param string $message
-	 * @param Exception $previous Previous exception
-	 * @param integer $index The current parser index
-	 * @param Less_FileInfo|string $currentFile The file
-	 * @param integer $code The exception code
+	 * @param Exception|null $previous Previous exception
+	 * @param int|null $index The current parser index
+	 * @param array|null $currentFile The file
+	 * @param int $code The exception code
 	 */
 	public function __construct( $message = null, Exception $previous = null, $index = null, $currentFile = null, $code = 0 ) {
-		if ( PHP_VERSION_ID < 50300 ) {
-			$this->previous = $previous;
-			parent::__construct( $message, $code );
-		} else {
-			parent::__construct( $message, $code, $previous );
-		}
+		parent::__construct( $message, $code, $previous );
 
 		$this->currentFile = $currentFile;
 		$this->index = $index;
@@ -56,9 +49,7 @@ class Less_Exception_Parser extends Exception {
 	}
 
 	/**
-	 * Converts the exception to string
-	 *
-	 * @return string
+	 * Set a message based on the exception info
 	 */
 	public function genMessage() {
 		if ( $this->currentFile && $this->currentFile['filename'] ) {
@@ -78,7 +69,7 @@ class Less_Exception_Parser extends Exception {
 				$last_line = min( $count, $start_line + 6 );
 				$num_len = strlen( $last_line );
 				for ( $i = $start_line; $i < $last_line; $i++ ) {
-					$this->message .= "\n".str_pad( $i + 1, $num_len, '0', STR_PAD_LEFT ).'| '.$lines[$i];
+					$this->message .= "\n".str_pad( (string)( $i + 1 ), $num_len, '0', STR_PAD_LEFT ).'| '.$lines[$i];
 				}
 			}
 		}

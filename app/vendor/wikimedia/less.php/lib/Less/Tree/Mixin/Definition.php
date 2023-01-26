@@ -201,7 +201,7 @@ class Less_Tree_Mixin_Definition extends Less_Tree_Ruleset {
 		return (bool)$this->condition->compile( $compile_env );
 	}
 
-	public function matchArgs( $args, $env = NULL ) {
+	public function matchArgs( $args, $env = null ) {
 		$argsLength = count( $args );
 
 		if ( !$this->variadic ) {

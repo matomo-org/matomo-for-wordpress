@@ -48,19 +48,19 @@ class Less_Tree_Call extends Less_Tree {
 		switch ( $nameLC ) {
 			case '%':
 			$nameLC = '_percent';
-			break;
+				break;
 
 			case 'get-unit':
 			$nameLC = 'getunit';
-			break;
+				break;
 
 			case 'data-uri':
 			$nameLC = 'datauri';
-			break;
+				break;
 
 			case 'svg-gradient':
 			$nameLC = 'svggradient';
-			break;
+				break;
 		}
 
 		$result = null;

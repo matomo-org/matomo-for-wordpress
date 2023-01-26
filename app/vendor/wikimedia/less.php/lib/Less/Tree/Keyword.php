@@ -18,10 +18,6 @@ class Less_Tree_Keyword extends Less_Tree {
 		$this->value = $value;
 	}
 
-	public function compile() {
-		return $this;
-	}
-
 	/**
 	 * @see Less_Tree::genCSS
 	 */

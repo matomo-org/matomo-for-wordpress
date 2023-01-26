@@ -27,7 +27,7 @@ class Less_Visitor {
 				$node->accept( $this );
 			}
 
-			$funcName = $funcName . "Out";
+			$funcName .= "Out";
 			if ( isset( $this->_visitFnCache[$funcName] ) ) {
 				$this->$funcName( $node );
 			}
