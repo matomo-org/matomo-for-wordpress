@@ -1,4 +1,10 @@
 == Changelog ===
+= 4.13.2 =
+* Update Matomo core to 4.13.2
+* Fixes wrong linked GitHub issues when copy paste the system report in Github
+* Fixes regression in the status report when the log contains HTML
+* Update incompatiblity list
+
 = 4.13.0 =
 * Update Matomo core to 4.13.0
 * Fix a bug in the MemberPress support
