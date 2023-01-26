@@ -94,6 +94,8 @@ class SystemReport {
 		'wp-rocket',
 		// see https://github.com/matomo-org/matomo-for-wordpress/issues/697
 		'backwpup',
+		// see https://github.com/matomo-org/matomo-for-wordpress/issues/710
+		'fs-poster',
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
