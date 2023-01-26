@@ -1,13 +1,10 @@
 <?php
 
-require_once dirname( __FILE__ ).'/Version.php';
-
 /**
  * Utility for handling the generation and caching of css files
  *
  * @package Less
  * @subpackage cache
- *
  */
 class Less_Cache {
 
@@ -31,7 +28,7 @@ class Less_Cache {
 	 * @param array $less_files Array of .less files to compile
 	 * @param array $parser_options Array of compiler options
 	 * @param array $modify_vars Array of variables
-	 * @return string Name of the css file
+	 * @return string|false Name of the css file
 	 */
 	public static function Get( $less_files, $parser_options = array(), $modify_vars = array() ) {
 		// check $cache_dir
@@ -214,7 +211,6 @@ class Less_Cache {
 
 	/**
 	 * Delete unused less.php files
-	 *
 	 */
 	public static function CleanCache() {
 		static $clean = false;
@@ -275,7 +271,6 @@ class Less_Cache {
 
 	/**
 	 * Get the list of less files and generated css file from a list file
-	 *
 	 */
 	static function ListFiles( $list_file, &$list, &$css_file_name ) {
 		$list = explode( "\n", file_get_contents( $list_file ) );

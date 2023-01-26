@@ -5,6 +5,14 @@
 # @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
 ###############
 
+- regex: 'monitoring360bot'
+  name: '360 Monitoring'
+  category: 'Site Monitor'
+  url: 'https://www.360monitoring.io'
+  producer:
+    name: 'Plesk International GmbH'
+    url: 'https://www.plesk.com'
+
 - regex: '360Spider'
   name: '360Spider'
   category: 'Search bot'
@@ -3203,6 +3211,19 @@
   name: '2ip'
   category: 'Crawler'
   url: 'https://2ip.io/'
+
+- regex: 'ReqBin Curl Client/([\d+.]+)'
+  name: 'ReqBin'
+  category: 'Crawler'
+  url: 'https://reqbin.com/curl'
+
+- regex: 'XoviBot/([\d+.]+)'
+  name: 'XoviBot'
+  category: 'Crawler'
+  url: 'https://www.xovibot.net'
+  producer:
+    name: 'Xovi GmbH'
+    url: 'http://www.xovi.de'
 
 # Generic detections
 - regex: '[a-z0-9\-_]*((?<!cu|power[ _]|m[ _])bot(?![ _]TAB|[ _]?5[0-9]|[ _]Senior|[ _]Junior)|crawler|crawl|checker|archiver|transcoder|spider)([^a-z]|$)'

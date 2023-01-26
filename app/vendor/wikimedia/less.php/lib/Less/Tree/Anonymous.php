@@ -25,7 +25,7 @@ class Less_Tree_Anonymous extends Less_Tree {
 		$this->currentFileInfo = $currentFileInfo;
 	}
 
-	public function compile() {
+	public function compile( $env ) {
 		return new Less_Tree_Anonymous( $this->value, $this->index, $this->currentFileInfo, $this->mapLines );
 	}
 

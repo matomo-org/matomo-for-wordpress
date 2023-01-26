@@ -35,11 +35,11 @@ class Less_Tree_Condition extends Less_Tree {
 		switch ( $this->op ) {
 			case 'and':
 				$result = $a && $b;
-			break;
+				break;
 
 			case 'or':
 				$result = $a || $b;
-			break;
+				break;
 
 			default:
 				if ( Less_Parser::is_method( $a, 'compare' ) ) {
@@ -53,17 +53,17 @@ class Less_Tree_Condition extends Less_Tree {
 				switch ( $result ) {
 					case -1:
 					$result = $this->op === '<' || $this->op === '=<' || $this->op === '<=';
-					break;
+						break;
 
-					case  0:
+					case 0:
 					$result = $this->op === '=' || $this->op === '>=' || $this->op === '=<' || $this->op === '<=';
-					break;
+						break;
 
-					case  1:
+					case 1:
 					$result = $this->op === '>' || $this->op === '>=';
-					break;
+						break;
 				}
-			break;
+				break;
 		}
 
 		return $this->negate ? !$result : $result;

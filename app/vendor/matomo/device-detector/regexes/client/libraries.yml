@@ -5,6 +5,16 @@
 # @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
 ###############
 
+# got (https://github.com/sindresorhus/got)
+- regex: '^got '
+  name: 'got'
+  version: ''
+
+# Typhoeus (https://github.com/typhoeus/typhoeus)
+- regex: 'Typhoeus'
+  name: 'Typhoeus'
+  version: ''
+
 # req (https://github.com/imroc/req)
 - regex: 'req/v([\.\d]+)'
   name: 'req'
@@ -164,7 +174,7 @@
   name: 'HTTPie'
   version: '$1'
 
-- regex: 'rest-client/(\d+[\.\d]+).*ruby'
+- regex: 'rest-client/(\d+\.[\.\d]+) .*ruby'
   name: 'REST Client for Ruby'
   version: '$1'
 
@@ -357,3 +367,8 @@
 - regex: 'harbor-registry-client'
   name: 'Harbor registry client'
   version: ''
+
+# axios http (https://axios-http.com/)
+- regex: 'axios(?:/?(\d+[\.\d]+))?'
+  name: Axios
+  version: '$1'

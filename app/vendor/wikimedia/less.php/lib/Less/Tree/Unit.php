@@ -106,14 +106,14 @@ class Less_Tree_Unit extends Less_Tree {
 			if ( !$backup ) {
 				$backup = $atomicUnit;
 			}
-			$counter[$atomicUnit] = ( isset( $counter[$atomicUnit] ) ? $counter[$atomicUnit] : 0 ) + 1;
+			$counter[$atomicUnit] = ( $counter[$atomicUnit] ?? 0 ) + 1;
 		}
 
 		foreach ( $this->denominator as $atomicUnit ) {
 			if ( !$backup ) {
 				$backup = $atomicUnit;
 			}
-			$counter[$atomicUnit] = ( isset( $counter[$atomicUnit] ) ? $counter[$atomicUnit] : 0 ) - 1;
+			$counter[$atomicUnit] = ( $counter[$atomicUnit] ?? 0 ) - 1;
 		}
 
 		$this->numerator = array();

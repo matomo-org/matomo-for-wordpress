@@ -7,10 +7,9 @@
  * @subpackage tree
  */
 class Less_Tree_Expression extends Less_Tree {
-
+	/** @var array */
 	public $value = array();
 	public $parens = false;
-	public $parensInOp = false;
 	public $type = 'Expression';
 
 	public function __construct( $value, $parens = null ) {

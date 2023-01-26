@@ -35,10 +35,6 @@ class Less_Tree_Color extends Less_Tree {
 		$this->alpha = is_numeric( $a ) ? $a : 1;
 	}
 
-	public function compile() {
-		return $this;
-	}
-
 	public function luma() {
 		$r = $this->rgb[0] / 255;
 		$g = $this->rgb[1] / 255;
@@ -136,12 +132,15 @@ class Less_Tree_Color extends Less_Tree {
 			$s = $l > 0.5 ? $d / ( 2 - $max - $min ) : $d / ( $max + $min );
 
 			switch ( $max ) {
-				case $r: $h = ( $g - $b ) / $d + ( $g < $b ? 6 : 0 );
-break;
-				case $g: $h = ( $b - $r ) / $d + 2;
-break;
-				case $b: $h = ( $r - $g ) / $d + 4;
-break;
+				case $r:
+					$h = ( $g - $b ) / $d + ( $g < $b ? 6 : 0 );
+					break;
+				case $g:
+					$h = ( $b - $r ) / $d + 2;
+					break;
+				case $b:
+					$h = ( $r - $g ) / $d + 4;
+					break;
 			}
 			$h /= 6;
 		}
@@ -170,12 +169,15 @@ break;
 		$h = 0;
 		if ( $max !== $min ) {
 			switch ( $max ) {
-				case $r: $h = ( $g - $b ) / $d + ( $g < $b ? 6 : 0 );
-break;
-				case $g: $h = ( $b - $r ) / $d + 2;
-break;
-				case $b: $h = ( $r - $g ) / $d + 4;
-break;
+				case $r:
+					$h = ( $g - $b ) / $d + ( $g < $b ? 6 : 0 );
+					break;
+				case $g:
+					$h = ( $b - $r ) / $d + 2;
+					break;
+				case $b:
+					$h = ( $r - $g ) / $d + 4;
+					break;
 			}
 			$h /= 6;
 		}

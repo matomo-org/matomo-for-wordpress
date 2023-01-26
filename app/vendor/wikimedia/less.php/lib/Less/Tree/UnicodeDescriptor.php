@@ -21,8 +21,4 @@ class Less_Tree_UnicodeDescriptor extends Less_Tree {
 	public function genCSS( $output ) {
 		$output->add( $this->value );
 	}
-
-	public function compile() {
-		return $this;
-	}
 }

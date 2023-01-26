@@ -11,15 +11,15 @@ class Less_Output {
 	/**
 	 * Output holder
 	 *
-	 * @var string
+	 * @var string[]
 	 */
-	protected $strs = array();
+	protected $strs = [];
 
 	/**
 	 * Adds a chunk to the stack
 	 *
 	 * @param string $chunk The chunk to output
-	 * @param Less_FileInfo $fileInfo The file information
+	 * @param array $fileInfo The file information
 	 * @param integer $index The index
 	 * @param mixed $mapLines
 	 */

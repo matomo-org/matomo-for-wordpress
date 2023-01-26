@@ -34,11 +34,11 @@ class Less_Tree_Extend extends Less_Tree {
 			case "all":
 				$this->allowBefore = true;
 				$this->allowAfter = true;
-			break;
+				break;
 			default:
 				$this->allowBefore = false;
 				$this->allowAfter = false;
-			break;
+				break;
 		}
 
 		// This must use a string (instead of int) so that array_merge()

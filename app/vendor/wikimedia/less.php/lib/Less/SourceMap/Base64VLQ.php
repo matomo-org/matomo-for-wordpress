@@ -83,7 +83,7 @@ class Less_SourceMap_Base64VLQ {
 	 *	 2 becomes 4 (100 binary), -2 becomes 5 (101 binary)
 	 * We generate the value for 32 bit machines, hence -2147483648 becomes 1, not 4294967297,
 	 * even on a 64 bit machine.
-	 * @param string $aValue
+	 * @param integer $aValue
 	 */
 	public function toVLQSigned( $aValue ) {
 		return 0xffffffff & ( $aValue < 0 ? ( ( -$aValue ) << 1 ) + 1 : ( $aValue << 1 ) + 0 );
@@ -107,7 +107,7 @@ class Less_SourceMap_Base64VLQ {
 	/**
 	 * Return the base 64 VLQ encoded value.
 	 *
-	 * @param string $aValue The value to encode
+	 * @param integer $aValue The value to encode
 	 * @return string The encoded value
 	 */
 	public function encode( $aValue ) {
@@ -174,7 +174,7 @@ class Less_SourceMap_Base64VLQ {
 	 * Decode single 6-bit digit from base64
 	 *
 	 * @param string $char
-	 * @return number
+	 * @return integer
 	 * @throws Exception If the number is invalid
 	 */
 	public function base64Decode( $char ) {

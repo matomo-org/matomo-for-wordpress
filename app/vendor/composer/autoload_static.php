@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14
+class ComposerStaticInit3d5cf3d88a0ebe1095b197a4d52a9326
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -363,6 +363,7 @@ class ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14
         'Davaxi\\Sparkline\\StyleTrait' => __DIR__ . '/..' . '/davaxi/sparkline/src/Sparkline/StyleTrait.php',
         'DeviceDetector\\Cache\\CacheInterface' => __DIR__ . '/..' . '/matomo/device-detector/Cache/CacheInterface.php',
         'DeviceDetector\\Cache\\DoctrineBridge' => __DIR__ . '/..' . '/matomo/device-detector/Cache/DoctrineBridge.php',
+        'DeviceDetector\\Cache\\LaravelCache' => __DIR__ . '/..' . '/matomo/device-detector/Cache/LaravelCache.php',
         'DeviceDetector\\Cache\\PSR16Bridge' => __DIR__ . '/..' . '/matomo/device-detector/Cache/PSR16Bridge.php',
         'DeviceDetector\\Cache\\PSR6Bridge' => __DIR__ . '/..' . '/matomo/device-detector/Cache/PSR6Bridge.php',
         'DeviceDetector\\Cache\\StaticCache' => __DIR__ . '/..' . '/matomo/device-detector/Cache/StaticCache.php',
@@ -982,6 +983,7 @@ class ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14
         'Piwik\\Exception\\ErrorException' => __DIR__ . '/../..' . '/core/Exception/ErrorException.php',
         'Piwik\\Exception\\Exception' => __DIR__ . '/../..' . '/core/Exception/Exception.php',
         'Piwik\\Exception\\FailedCopyException' => __DIR__ . '/../..' . '/core/Exception/FailedCopyException.php',
+        'Piwik\\Exception\\IRedirectException' => __DIR__ . '/../..' . '/core/Exception/IRedirectException.php',
         'Piwik\\Exception\\InvalidDimensionException' => __DIR__ . '/../..' . '/core/Exception/InvalidDimensionException.php',
         'Piwik\\Exception\\InvalidRequestParameterException' => __DIR__ . '/../..' . '/core/Exception/InvalidRequestParameterException.php',
         'Piwik\\Exception\\MissingFilePermissionException' => __DIR__ . '/../..' . '/core/Exception/MissingFilePermissionException.php',
@@ -992,6 +994,7 @@ class ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14
         'Piwik\\Exception\\NotYetInstalledException' => __DIR__ . '/../..' . '/core/Exception/NotYetInstalledException.php',
         'Piwik\\Exception\\PluginDeactivatedException' => __DIR__ . '/../..' . '/core/Exception/PluginDeactivatedException.php',
         'Piwik\\Exception\\PluginRequiresInternetException' => __DIR__ . '/../..' . '/core/Exception/PluginRequiresInternetException.php',
+        'Piwik\\Exception\\RedirectException' => __DIR__ . '/../..' . '/core/Exception/RedirectException.php',
         'Piwik\\Exception\\StylesheetLessCompileException' => __DIR__ . '/../..' . '/core/Exception/StylesheetLessCompileException.php',
         'Piwik\\Exception\\UnexpectedWebsiteFoundException' => __DIR__ . '/../..' . '/core/Exception/UnexpectedWebsiteFoundException.php',
         'Piwik\\FileIntegrity' => __DIR__ . '/../..' . '/core/FileIntegrity.php',
@@ -1426,6 +1429,7 @@ class ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14
         'Piwik\\Plugins\\CoreVisualizations\\Metrics\\Formatter\\Numeric' => __DIR__ . '/../..' . '/plugins/CoreVisualizations/Metrics/Formatter/Numeric.php',
         'Piwik\\Plugins\\CoreVisualizations\\Visualizations\\Cloud' => __DIR__ . '/../..' . '/plugins/CoreVisualizations/Visualizations/Cloud.php',
         'Piwik\\Plugins\\CoreVisualizations\\Visualizations\\Cloud\\Config' => __DIR__ . '/../..' . '/plugins/CoreVisualizations/Visualizations/Cloud/Config.php',
+        'Piwik\\Plugins\\CoreVisualizations\\Visualizations\\EvolutionPeriodSelector' => __DIR__ . '/../..' . '/plugins/CoreVisualizations/Visualizations/EvolutionPeriodSelector.php',
         'Piwik\\Plugins\\CoreVisualizations\\Visualizations\\Graph' => __DIR__ . '/../..' . '/plugins/CoreVisualizations/Visualizations/Graph.php',
         'Piwik\\Plugins\\CoreVisualizations\\Visualizations\\Graph\\Config' => __DIR__ . '/../..' . '/plugins/CoreVisualizations/Visualizations/Graph/Config.php',
         'Piwik\\Plugins\\CoreVisualizations\\Visualizations\\HtmlTable' => __DIR__ . '/../..' . '/plugins/CoreVisualizations/Visualizations/HtmlTable.php',
@@ -1442,6 +1446,7 @@ class ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14
         'Piwik\\Plugins\\CoreVisualizations\\Visualizations\\Sparklines' => __DIR__ . '/../..' . '/plugins/CoreVisualizations/Visualizations/Sparklines.php',
         'Piwik\\Plugins\\CoreVisualizations\\Visualizations\\Sparklines\\Config' => __DIR__ . '/../..' . '/plugins/CoreVisualizations/Visualizations/Sparklines/Config.php',
         'Piwik\\Plugins\\CoreVisualizations\\Widgets\\SingleMetricView' => __DIR__ . '/../..' . '/plugins/CoreVisualizations/Widgets/SingleMetricView.php',
+        'Piwik\\Plugins\\CoreVisualizations\\tests\\Integration\\EvolutionPeriodSelectorTest' => __DIR__ . '/../..' . '/plugins/CoreVisualizations/tests/Integration/EvolutionPeriodSelectorTest.php',
         'Piwik\\Plugins\\CoreVisualizations\\tests\\Integration\\SparklinesConfigTest' => __DIR__ . '/../..' . '/plugins/CoreVisualizations/tests/Integration/SparklinesConfigTest.php',
         'Piwik\\Plugins\\CoreVisualizations\\tests\\Unit\\GraphTest' => __DIR__ . '/../..' . '/plugins/CoreVisualizations/tests/Unit/GraphTest.php',
         'Piwik\\Plugins\\CoreVisualizations\\tests\\Unit\\SparklinesConfigTest' => __DIR__ . '/../..' . '/plugins/CoreVisualizations/tests/Unit/SparklinesConfigTest.php',
@@ -1845,6 +1850,7 @@ class ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14
         'Piwik\\Plugins\\Goals\\tests\\System\\ProcessDependentArchiveTest' => __DIR__ . '/../..' . '/plugins/Goals/tests/System/ProcessDependentArchiveTest.php',
         'Piwik\\Plugins\\Goals\\tests\\System\\TrackGoalsAllowMultipleConversionsPerVisitTest' => __DIR__ . '/../..' . '/plugins/Goals/tests/System/TrackGoalsAllowMultipleConversionsPerVisitTest.php',
         'Piwik\\Plugins\\Goals\\tests\\System\\TrackGoalsOneConversionPerVisitTest' => __DIR__ . '/../..' . '/plugins/Goals/tests/System/TrackGoalsOneConversionPerVisitTest.php',
+        'Piwik\\Plugins\\Goals\\tests\\System\\TrackGoalsPagesSegmentTest' => __DIR__ . '/../..' . '/plugins/Goals/tests/System/TrackGoalsPagesSegmentTest.php',
         'Piwik\\Plugins\\Goals\\tests\\System\\TrackGoalsPagesTest' => __DIR__ . '/../..' . '/plugins/Goals/tests/System/TrackGoalsPagesTest.php',
         'Piwik\\Plugins\\Goals\\tests\\Unit\\AppendNameToColumnNamesTest' => __DIR__ . '/../..' . '/plugins/Goals/tests/Unit/AppendNameToColumnNamesTest.php',
         'Piwik\\Plugins\\Heartbeat\\Heartbeat' => __DIR__ . '/../..' . '/plugins/Heartbeat/Heartbeat.php',
@@ -2427,6 +2433,7 @@ class ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14
         'Piwik\\Plugins\\TagManager\\Template\\Trigger\\ScrollReachTrigger' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Trigger/ScrollReachTrigger.php',
         'Piwik\\Plugins\\TagManager\\Template\\Trigger\\TimerTrigger' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Trigger/TimerTrigger.php',
         'Piwik\\Plugins\\TagManager\\Template\\Trigger\\TriggersProvider' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Trigger/TriggersProvider.php',
+        'Piwik\\Plugins\\TagManager\\Template\\Trigger\\UserInteractionTrigger' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Trigger/UserInteractionTrigger.php',
         'Piwik\\Plugins\\TagManager\\Template\\Trigger\\WindowLeaveTrigger' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Trigger/WindowLeaveTrigger.php',
         'Piwik\\Plugins\\TagManager\\Template\\Trigger\\WindowLoadedTrigger' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Trigger/WindowLoadedTrigger.php',
         'Piwik\\Plugins\\TagManager\\Template\\Trigger\\WindowUnloadTrigger' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Trigger/WindowUnloadTrigger.php',
@@ -3180,6 +3187,8 @@ class ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14
         'Twig\\Node\\Expression\\Binary\\FloorDivBinary' => __DIR__ . '/..' . '/twig/twig/src/Node/Expression/Binary/FloorDivBinary.php',
         'Twig\\Node\\Expression\\Binary\\GreaterBinary' => __DIR__ . '/..' . '/twig/twig/src/Node/Expression/Binary/GreaterBinary.php',
         'Twig\\Node\\Expression\\Binary\\GreaterEqualBinary' => __DIR__ . '/..' . '/twig/twig/src/Node/Expression/Binary/GreaterEqualBinary.php',
+        'Twig\\Node\\Expression\\Binary\\HasEveryBinary' => __DIR__ . '/..' . '/twig/twig/src/Node/Expression/Binary/HasEveryBinary.php',
+        'Twig\\Node\\Expression\\Binary\\HasSomeBinary' => __DIR__ . '/..' . '/twig/twig/src/Node/Expression/Binary/HasSomeBinary.php',
         'Twig\\Node\\Expression\\Binary\\InBinary' => __DIR__ . '/..' . '/twig/twig/src/Node/Expression/Binary/InBinary.php',
         'Twig\\Node\\Expression\\Binary\\LessBinary' => __DIR__ . '/..' . '/twig/twig/src/Node/Expression/Binary/LessBinary.php',
         'Twig\\Node\\Expression\\Binary\\LessEqualBinary' => __DIR__ . '/..' . '/twig/twig/src/Node/Expression/Binary/LessEqualBinary.php',
@@ -3363,11 +3372,11 @@ class ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInit50ade8048d26fa022ad1d22ad0cb0a14::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3d5cf3d88a0ebe1095b197a4d52a9326::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3d5cf3d88a0ebe1095b197a4d52a9326::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit3d5cf3d88a0ebe1095b197a4d52a9326::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInit3d5cf3d88a0ebe1095b197a4d52a9326::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInit3d5cf3d88a0ebe1095b197a4d52a9326::$classMap;
 
         }, null, ClassLoader::class);
     }

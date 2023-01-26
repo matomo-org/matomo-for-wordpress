@@ -108,9 +108,8 @@ class Less_Environment {
 	/**
 	 * Canonicalize a path by resolving references to '/./', '/../'
 	 * Does not remove leading "../"
-	 * @param string path or url
+	 * @param string $path or url
 	 * @return string Canonicalized path
-	 *
 	 */
 	public static function normalizePath( $path ) {
 		$segments = explode( '/', $path );
@@ -124,7 +123,7 @@ class Less_Environment {
 			switch ( $segment ) {
 
 				case '.':
-				break;
+					break;
 
 				case '..':
 					if ( !$path_len || ( $path[$path_len - 1] === '..' ) ) {
@@ -134,12 +133,12 @@ class Less_Environment {
 						array_pop( $path );
 						$path_len--;
 					}
-				break;
+					break;
 
 				default:
 					$path[] = $segment;
 					$path_len++;
-				break;
+					break;
 			}
 		}
 

@@ -204,7 +204,7 @@
         "ExceptionInvalidRendererFormat": "Renderer format '%1$s' not valid. Try any of the following instead: %2$s.",
         "ExceptionInvalidReportRendererFormat": "Report format '%1$s' not valid. Try any of the following instead: %2$s.",
         "ExceptionInvalidStaticGraphType": "Static graph type '%1$s' not valid. Try any of the following instead: %2$s.",
-        "ExceptionInvalidToken": "Token is not valid.",
+        "ExceptionSecurityCheckFailed": "We're sorry, but the action you were trying to perform failed due to a security check. This is a standard measure to ensure the safety and security of your account. Please try again, and if the issue persists, please contact our support team for further assistance.",
         "ExceptionLanguageFileNotFound": "Language file '%s' not found.",
         "ExceptionMethodNotFound": "The method '%1$s' does not exist or is not available in the module '%2$s'.",
         "ExceptionMissingFile": "Missing file: %s",
@@ -443,6 +443,7 @@
         "StatisticsAreNotRecorded": "Matomo Visitor Tracking is currently disabled! Re-enable tracking by setting record_statistics = 1 in your config\/config.ini.php file.",
         "Subtotal": "Subtotal",
         "Summary": "Summary",
+        "SparklineTooltipUsedPeriod": "Each data point in the sparkline represents a %s.",
         "Table": "Table",
         "TagCloud": "Tag Cloud",
         "Tax": "Tax",
@@ -3279,6 +3280,7 @@
         "InvalidNonceOrigin": "The form security failed because of invalid origin. If you previously connected using HTTPS, please ensure you are connecting over a secure (SSL\/TLS) connection and try again.",
         "InvalidNonceSSLMisconfigured": "Also, you may %1$sforce Matomo to use a secure connection%2$s: in your config file%3$s set %4$s below section %5$s",
         "InvalidOrExpiredToken": "The token is invalid or has expired.",
+        "InvalidOrExpiredTokenV2": "The password has already been set or the link has expired.",
         "InvalidUsernameEmail": "Invalid username or e-mail address.",
         "LogIn": "Sign in",
         "LoginOrEmail": "Username or e-mail",
@@ -5054,7 +5056,10 @@
         "TimeSinceLoadVariableUnitTitle": "Unit",
         "TimeSinceLoadVariableUnitDescription": "Select in which unit you want to retrieve the time.",
         "UrlParameterVariableNameTitle": "URL Parameter Name",
-        "UrlParameterVariableNameDescription": "For example when your page has URL parameters such as \"?lang=NZ\" and you want to get the value \"NZ\", then you need to enter \"lang\"."
+        "UrlParameterVariableNameDescription": "For example when your page has URL parameters such as \"?lang=NZ\" and you want to get the value \"NZ\", then you need to enter \"lang\".",
+        "UserInteractionTriggerName": "User Interaction",
+        "UserInteractionTriggerDescription": "Triggered when user interacts with the site, i. e. touch, move, scroll or mouse click event is executed by the user on site.",
+        "UserInteractionTriggerHelp": "This trigger is triggered when the user interacts with the page (touch, mousemove, scroll, mouse click). Loading and processing JS on a website usually blocks page rendering and impacts performance. Defering JS via this trigger until after the page was rendered and user interacts with the page can be useful to avoid negative impacts on Page Speed and Core Web Vitals scores. Note: User interaction is triggered only once when the user interacts with the page for the first time after page load."
     },
     "Tour": {
         "PluginDescription": "Become an expert by completing challenges to get to know Matomo.",

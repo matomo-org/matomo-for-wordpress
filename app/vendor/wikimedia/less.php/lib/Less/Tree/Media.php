@@ -106,14 +106,20 @@ class Less_Tree_Media extends Less_Tree {
 		return $result;
 	}
 
+	/**
+	 * @param Less_Environment $env
+	 * @return Less_Tree_Ruleset
+	 */
 	public function compileNested( $env ) {
 		$path = array_merge( $env->mediaPath, array( $this ) );
+		'@phan-var array<Less_Tree_Media> $path';
 
 		// Extract the media-query conditions separated with `,` (OR).
 		foreach ( $path as $key => $p ) {
 			$value = $p->features instanceof Less_Tree_Value ? $p->features->value : $p->features;
 			$path[$key] = is_array( $value ) ? $value : array( $value );
 		}
+		'@phan-var array<array<Less_Tree>> $path';
 
 		// Trace all permutations to generate the resulting media-query.
 		//
@@ -144,11 +150,13 @@ class Less_Tree_Media extends Less_Tree {
 	}
 
 	public function permute( $arr ) {
-		if ( !$arr )
+		if ( !$arr ) {
 			return array();
+		}
 
-		if ( count( $arr ) == 1 )
+		if ( count( $arr ) == 1 ) {
 			return $arr[0];
+		}
 
 		$result = array();
 		$rest = $this->permute( array_slice( $arr, 1 ) );
@@ -165,7 +173,9 @@ class Less_Tree_Media extends Less_Tree {
 	}
 
 	public function bubbleSelectors( $selectors ) {
-		if ( !$selectors ) return;
+		if ( !$selectors ) {
+			return;
+		}
 
 		$this->rules = array( new Less_Tree_Ruleset( $selectors, array( $this->rules[0] ) ) );
 	}

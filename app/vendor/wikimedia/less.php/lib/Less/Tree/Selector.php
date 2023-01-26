@@ -58,8 +58,15 @@ class Less_Tree_Selector extends Less_Tree {
 	}
 
 	public function createDerived( $elements, $extendList = null, $evaldCondition = null ) {
-		$newSelector = new Less_Tree_Selector( $elements, ( $extendList ? $extendList : $this->extendList ), null, $this->index, $this->currentFileInfo, $this->isReferenced );
-		$newSelector->evaldCondition = $evaldCondition ? $evaldCondition : $this->evaldCondition;
+		$newSelector = new Less_Tree_Selector(
+			$elements,
+			( $extendList ?: $this->extendList ),
+			null,
+			$this->index,
+			$this->currentFileInfo,
+			$this->isReferenced
+		);
+		$newSelector->evaldCondition = $evaldCondition ?: $this->evaldCondition;
 		return $newSelector;
 	}
 
