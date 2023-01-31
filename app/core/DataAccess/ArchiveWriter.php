@@ -85,7 +85,7 @@ class ArchiveWriter
     /**
      * @var int|false
      */
-    private $idArchive;
+    public $idArchive;
 
     /**
      * @var int|null
@@ -111,6 +111,16 @@ class ArchiveWriter
      * @var string
      */
     private $earliestNow;
+
+    /**
+     * @var string
+     */
+    private $doneFlag;
+
+    /**
+     * @var Date|null
+     */
+    private $dateStart;
 
     /**
      * ArchiveWriter constructor.

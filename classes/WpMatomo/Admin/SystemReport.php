@@ -12,6 +12,7 @@ namespace WpMatomo\Admin;
 use Exception;
 use ITSEC_Modules;
 use Piwik\CliMulti;
+use Piwik\CliMulti\CliPhp;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
@@ -129,7 +130,7 @@ class SystemReport {
 		$this->shell_exec_available = function_exists( 'shell_exec' );
 		if ( ! WpMatomo::is_safe_mode() ) {
 			Bootstrap::do_bootstrap();
-			$cli_php      = new CliMulti\CliPhp();
+			$cli_php      = new CliPhp();
 			$this->binary = $cli_php->findPhpBinary();
 		}
 	}
@@ -1125,7 +1126,7 @@ class SystemReport {
 				);
 				if ( is_array( $result ) ) {
 					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-					$file_content = file_get_contents( PIWIK_DOCUMENT_ROOT . '/.htaccess' );
+					$file_content = file_get_contents( dirname( MATOMO_ANALYTICS_FILE ) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . '.htaccess' );
 					if ( strpos( $file_content, 'AddHandler' ) && ! strpos( $file_content, '# AddHandler' ) ) {
 						switch ( (int) $result['response']['code'] ) {
 							case 500:
