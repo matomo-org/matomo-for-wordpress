@@ -123,6 +123,8 @@ class SystemReport {
 	 */
 	private $binary;
 
+    private static $matomo_tables;
+
 	public function __construct( Settings $settings ) {
 		$this->settings             = $settings;
 		$this->logger               = new Logger();
@@ -233,6 +235,71 @@ class SystemReport {
 		}
 	}
 
+    private function getErrorTables()
+    {
+        $matomo_tables = self::$matomo_tables;
+
+        if (!$matomo_tables) {
+            $matomo_tables = [
+                [
+                    'title' => 'Matomo',
+                    'rows' => $this->get_matomo_info(),
+                    'has_comments' => true,
+                ],
+                [
+                    'title' => 'WordPress',
+                    'rows' => $this->get_wordpress_info(),
+                    'has_comments' => true,
+                ],
+                [
+                    'title' => 'WordPress Plugins',
+                    'rows' => $this->get_plugins_info(),
+                    'has_comments' => true,
+                ],
+                [
+                    'title' => 'Server',
+                    'rows' => $this->get_server_info(),
+                    'has_comments' => true,
+                ],
+                [
+                    'title' => 'PHP cli',
+                    'rows' => $this->get_phpcli_info(),
+                    'has_comments' => true,
+                ],
+                [
+                    'title' => 'Database',
+                    'rows' => $this->get_db_info(),
+                    'has_comments' => true,
+                ],
+                [
+                    'title' => 'Browser',
+                    'rows' => $this->get_browser_info(),
+                    'has_comments' => true,
+                ],
+            ];
+            self::$matomo_tables = $matomo_tables;
+        }
+        return $matomo_tables;
+    }
+
+    public function errorsPresent()
+    {
+        $matomo_tables = $this->getErrorTables();
+
+        $matomo_tables = apply_filters('matomo_systemreport_tables', $matomo_tables);
+        $matomo_tables = $this->add_errors_first($matomo_tables);
+
+        foreach ( $matomo_tables as $report_table ) {
+            foreach ( $report_table['rows'] as $row ) {
+                if ( ! empty( $row['is_error'] ) ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 	public function show() {
 		$this->execute_troubleshoot_if_needed();
 
@@ -251,43 +318,7 @@ class SystemReport {
 		if ( empty( $matomo_active_tab ) ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting
 			$this->initial_error_reporting = @error_reporting();
-			$matomo_tables                 = [
-				[
-					'title'        => 'Matomo',
-					'rows'         => $this->get_matomo_info(),
-					'has_comments' => true,
-				],
-				[
-					'title'        => 'WordPress',
-					'rows'         => $this->get_wordpress_info(),
-					'has_comments' => true,
-				],
-				[
-					'title'        => 'WordPress Plugins',
-					'rows'         => $this->get_plugins_info(),
-					'has_comments' => true,
-				],
-				[
-					'title'        => 'Server',
-					'rows'         => $this->get_server_info(),
-					'has_comments' => true,
-				],
-				[
-					'title'        => 'PHP cli',
-					'rows'         => $this->get_phpcli_info(),
-					'has_comments' => true,
-				],
-				[
-					'title'        => 'Database',
-					'rows'         => $this->get_db_info(),
-					'has_comments' => true,
-				],
-				[
-					'title'        => 'Browser',
-					'rows'         => $this->get_browser_info(),
-					'has_comments' => true,
-				],
-			];
+            $matomo_tables = $this->getErrorTables();
 		}
 		$matomo_tables                    = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
 		$matomo_tables                    = $this->add_errors_first( $matomo_tables );

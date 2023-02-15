@@ -177,10 +177,18 @@ class Menu {
 		}
 
 		if ( $this->settings->is_network_enabled() || ! is_network_admin() ) {
+            $warning = '';
+            if (isset($_GET['page']) && str_starts_with( $_GET['page'], 'matomo-' )) {
+                $systemReport = new \WpMatomo\Admin\SystemReport($this->settings);
+                if ($systemReport->errorsPresent()) {
+                    $warning = '<span class="awaiting-mod">!</span>';
+                }
+            }
+
 			add_submenu_page(
 				self::$parent_slug,
 				__( 'Diagnostics', 'matomo' ),
-				__( 'Diagnostics', 'matomo' ),
+				__( 'Diagnostics', 'matomo' ) . $warning,
 				Capabilities::KEY_SUPERUSER,
 				self::SLUG_SYSTEM_REPORT,
 				[

@@ -97,7 +97,23 @@ class WpMatomo {
 				$referral->register_hooks();
 			}
 
-			$chart = new Chart();
+
+
+
+            add_action('admin_notices', function () {
+                if (isset($_GET['page']) && str_starts_with( $_GET['page'], 'matomo-' )) {
+                    $systemReport = new \WpMatomo\Admin\SystemReport(self::$settings);
+                    if ($systemReport->errorsPresent()) {
+                        echo '<div class="notice notice-warning  is-dismissible">
+                          <p>' . __('There are some errors in the', 'matomo') .
+                            ' <a href="/wp-admin/admin.php?page=matomo-systemreport">' . __('Matomo Diagnostics System report', 'matomo') . '</a> ' .
+                            __('that may prevent the plugin for working normally.', 'matomo') . '</p></div>';
+                    }
+                }
+            });
+
+
+            $chart = new Chart();
 			$chart->register_hooks();
 
 			/*
@@ -123,6 +139,7 @@ class WpMatomo {
 				'add_settings_link',
 			]
 		);
+
 	}
 
 	private function check_compatibility() {
