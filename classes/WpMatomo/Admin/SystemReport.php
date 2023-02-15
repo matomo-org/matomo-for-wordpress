@@ -58,16 +58,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
  */
 class SystemReport {
-	const NONCE_NAME = 'matomo_troubleshooting';
-	const TROUBLESHOOT_SYNC_USERS = 'matomo_troubleshooting_action_site_users';
-	const TROUBLESHOOT_SYNC_ALL_USERS = 'matomo_troubleshooting_action_all_users';
-	const TROUBLESHOOT_SYNC_SITE = 'matomo_troubleshooting_action_site';
-	const TROUBLESHOOT_SYNC_ALL_SITES = 'matomo_troubleshooting_action_all_sites';
+	const NONCE_NAME                      = 'matomo_troubleshooting';
+	const TROUBLESHOOT_SYNC_USERS         = 'matomo_troubleshooting_action_site_users';
+	const TROUBLESHOOT_SYNC_ALL_USERS     = 'matomo_troubleshooting_action_all_users';
+	const TROUBLESHOOT_SYNC_SITE          = 'matomo_troubleshooting_action_site';
+	const TROUBLESHOOT_SYNC_ALL_SITES     = 'matomo_troubleshooting_action_all_sites';
 	const TROUBLESHOOT_CLEAR_MATOMO_CACHE = 'matomo_troubleshooting_action_clear_matomo_cache';
-	const TROUBLESHOOT_ARCHIVE_NOW = 'matomo_troubleshooting_action_archive_now';
-	const TROUBLESHOOT_UPDATE_GEOIP_DB = 'matomo_troubleshooting_action_update_geoipdb';
-	const TROUBLESHOOT_CLEAR_LOGS = 'matomo_troubleshooting_action_clear_logs';
-	const TROUBLESHOOT_RUN_UPDATER = 'matomo_troubleshooting_action_run_updater';
+	const TROUBLESHOOT_ARCHIVE_NOW        = 'matomo_troubleshooting_action_archive_now';
+	const TROUBLESHOOT_UPDATE_GEOIP_DB    = 'matomo_troubleshooting_action_update_geoipdb';
+	const TROUBLESHOOT_CLEAR_LOGS         = 'matomo_troubleshooting_action_clear_logs';
+	const TROUBLESHOOT_RUN_UPDATER        = 'matomo_troubleshooting_action_run_updater';
 
 	private $not_compatible_plugins = [
 		'background-manager',
@@ -143,9 +143,10 @@ class SystemReport {
 
 	private function execute_troubleshoot_if_needed() {
 		if ( ! empty( $_POST )
-		     && is_admin()
-		     && check_admin_referer( self::NONCE_NAME )
-		     && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			&& is_admin()
+			&& check_admin_referer( self::NONCE_NAME )
+			&& current_user_can( Capabilities::KEY_SUPERUSER )
+		) {
 			if ( ! empty( $_POST[ self::TROUBLESHOOT_ARCHIVE_NOW ] ) ) {
 				Bootstrap::do_bootstrap();
 				$scheduled_tasks = new ScheduledTasks( $this->settings );
@@ -795,22 +796,23 @@ class SystemReport {
 		if ( ! empty( $error_log_entries ) ) {
 			foreach ( $error_log_entries as $error ) {
 				if ( ! empty( $install_time )
-				     && is_numeric( $install_time )
-				     && ! empty( $error['name'] )
-				     && ! empty( $error['value'] )
-				     && is_numeric( $error['value'] )
-				     && 'cron_sync' === $error['name']
-				     && $error['value'] < ( $install_time + 300 ) ) {
+					&& is_numeric( $install_time )
+					&& ! empty( $error['name'] )
+					&& ! empty( $error['value'] )
+					&& is_numeric( $error['value'] )
+					&& 'cron_sync' === $error['name']
+					&& $error['value'] < ( $install_time + 300 )
+				) {
 					// the first sync might right after the installation
 					continue;
 				}
 
 				// we only consider plugin_updates as errors only if there are still outstanding updates
 				$is_plugin_update_error = ! empty( $error['name'] ) && 'plugin_update' === $error['name']
-				                          && ! empty( $outstanding_updates );
+					&& ! empty( $outstanding_updates );
 
 				$skip_plugin_update = ! empty( $error['name'] ) && 'plugin_update' === $error['name']
-				                      && empty( $outstanding_updates );
+					&& empty( $outstanding_updates );
 
 				if ( empty( $error['comment'] ) && '0' !== $error['comment'] ) {
 					$error['comment'] = '';
@@ -835,8 +837,10 @@ class SystemReport {
 
 			foreach ( $error_log_entries as $error ) {
 				if ( $suports_async
-				     && ! empty( $error['value'] ) && is_string( $error['value'] )
-				     && strpos( $error['value'], __( 'Your PHP installation appears to be missing the MySQL extension which is required by WordPress.', 'matomo' ) ) > 0 ) {
+					&& ! empty( $error['value'] )
+					&& is_string( $error['value'] )
+					&& strpos( $error['value'], __( 'Your PHP installation appears to be missing the MySQL extension which is required by WordPress.', 'matomo' ) ) > 0
+				) {
 					$rows[] = [
 						'name'     => 'Cli has no MySQL',
 						'value'    => true,
@@ -928,7 +932,7 @@ class SystemReport {
 			return esc_html__( 'Unknown', 'matomo' );
 		}
 
-		$date = gmdate( 'Y-m-d H:i:s', (int) $time );
+		$date = gmdate( 'Y-m-d H:i:s', (int)$time );
 
 		if ( $in_blog_timezone ) {
 			$date = get_date_from_gmt( $date, 'Y-m-d H:i:s' );
@@ -1159,7 +1163,7 @@ class SystemReport {
 					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 					$file_content = file_get_contents( dirname( MATOMO_ANALYTICS_FILE ) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . '.htaccess' );
 					if ( strpos( $file_content, 'AddHandler' ) && ! strpos( $file_content, '# AddHandler' ) ) {
-						switch ( (int) $result['response']['code'] ) {
+						switch ( (int)$result['response']['code'] ) {
 							case 500:
 								$value    = __( 'To be confirmed', 'matomo' );
 								$comment  = sprintf( esc_html__( 'The AddHandler Apache directive maybe disabled. If you get a 500 error code when accessing Matomo, please read this %s', 'matomo' ), sprintf( '<a href="%s" target="_blank">%s<a/>', 'https://matomo.org/faq/wordpress/how-do-i-fix-the-error-addhandler-not-allowed-here/', esc_html__( 'FAQ', 'matomo' ) ) );
@@ -1341,7 +1345,7 @@ class SystemReport {
 					// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 					$detector = StaticContainer::get( DeviceDetectorFactory::class )->makeInstance( sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ) );
 					$client   = $detector->getClient();
-					if ( ! empty( $client['name'] ) && 'Microsoft Edge' === $client['name'] && (int) $client['version'] >= 85 ) {
+					if ( ! empty( $client['name'] ) && 'Microsoft Edge' === $client['name'] && (int)$client['version'] >= 85 ) {
 						$rows[] = [
 							'name'       => 'Browser Compatibility',
 							'is_warning' => true,
@@ -1470,8 +1474,9 @@ class SystemReport {
 		$grants_missing = array_diff( $needed_grants, $grants );
 
 		if ( empty( $grants )
-		     || ! is_array( $grants )
-		     || count( $grants_missing ) === count( $needed_grants ) ) {
+			|| ! is_array( $grants )
+			|| count( $grants_missing ) === count( $needed_grants )
+		) {
 			$rows[] = [
 				'name'       => esc_html__( 'Required permissions', 'matomo' ),
 				'value'      => esc_html__( 'Failed to detect granted permissions', 'matomo' ),
@@ -1745,7 +1750,7 @@ class SystemReport {
 
 		if ( is_plugin_active( 'secupress/secupress.php' ) ) {
 			if ( function_exists( 'secupress_is_submodule_active' ) ) {
-				$blocked_methods = (int) secupress_is_submodule_active( 'firewall', 'request-methods-header' );
+				$blocked_methods = (int)secupress_is_submodule_active( 'firewall', 'request-methods-header' );
 				if ( $blocked_methods ) {
 					if ( ! defined( 'MATOMO_SUPPORT_ASYNC_ARCHIVING' ) || MATOMO_SUPPORT_ASYNC_ARCHIVING ) {
 						$rows[] = [

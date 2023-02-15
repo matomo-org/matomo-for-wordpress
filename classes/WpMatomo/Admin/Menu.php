@@ -28,22 +28,22 @@ class Menu {
 
 	public static $parent_slug = 'matomo';
 
-	const REPORTING_GOTO_ADMIN = 'matomo-admin';
-	const REPORTING_GOTO_GDPR_TOOLS = 'matomo-gdpr-tools';
-	const REPORTING_GOTO_GDPR_OVERVIEW = 'matomo-gdpr-overview';
-	const REPORTING_GOTO_ASK_CONSENT = 'matomo-gdpr-consent';
-	const REPORTING_GOTO_OPTOUT = 'matomo-privacy-optout';
+	const REPORTING_GOTO_ADMIN          = 'matomo-admin';
+	const REPORTING_GOTO_GDPR_TOOLS     = 'matomo-gdpr-tools';
+	const REPORTING_GOTO_GDPR_OVERVIEW  = 'matomo-gdpr-overview';
+	const REPORTING_GOTO_ASK_CONSENT    = 'matomo-gdpr-consent';
+	const REPORTING_GOTO_OPTOUT         = 'matomo-privacy-optout';
 	const REPORTING_GOTO_ANONYMIZE_DATA = 'matomo-anonymize-date';
 	const REPORTING_GOTO_DATA_RETENTION = 'matomo-data-retention';
-	const SLUG_SYSTEM_REPORT = 'matomo-systemreport';
-	const SLUG_REPORT_SUMMARY = 'matomo-summary';
-	const SLUG_TAGMANAGER = 'matomo-tagmanager';
-	const SLUG_REPORTING = 'matomo-reporting';
-	const SLUG_SETTINGS = 'matomo-settings';
-	const SLUG_GET_STARTED = 'matomo-get-started';
-	const SLUG_ABOUT = 'matomo-about';
-	const SLUG_MARKETPLACE = 'matomo-marketplace';
-	const SLUG_IMPORTWPS = 'matomo-importwps';
+	const SLUG_SYSTEM_REPORT            = 'matomo-systemreport';
+	const SLUG_REPORT_SUMMARY           = 'matomo-summary';
+	const SLUG_TAGMANAGER               = 'matomo-tagmanager';
+	const SLUG_REPORTING                = 'matomo-reporting';
+	const SLUG_SETTINGS                 = 'matomo-settings';
+	const SLUG_GET_STARTED              = 'matomo-get-started';
+	const SLUG_ABOUT                    = 'matomo-about';
+	const SLUG_MARKETPLACE              = 'matomo-marketplace';
+	const SLUG_IMPORTWPS                = 'matomo-importwps';
 
 	const CAP_NOT_EXISTS = 'unknownfoobar';
 

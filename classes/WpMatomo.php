@@ -133,8 +133,8 @@ class WpMatomo {
 			if ( $systemReport->errorsPresent() ) {
 				echo '<div class="notice notice-warning  is-dismissible">
                       <p>' . __( 'There are some errors in the', 'matomo' ) .
-				     ' <a href="/wp-admin/admin.php?page=matomo-systemreport">' . __( 'Matomo Diagnostics System report', 'matomo' ) . '</a> ' .
-				     __( 'that may prevent the plugin for working normally.', 'matomo' ) . '</p></div>';
+					' <a href="/wp-admin/admin.php?page=matomo-systemreport">' . __( 'Matomo Diagnostics System report', 'matomo' ) . '</a> ' .
+					__( 'that may prevent the plugin for working normally.', 'matomo' ) . '</p></div>';
 			}
 		}
 	}
@@ -151,7 +151,7 @@ class WpMatomo {
 		$upload_path = $paths->get_upload_base_dir();
 
 		if ( $upload_path
-		     && ! is_writable( dirname( $upload_path ) ) ) {
+			&& ! is_writable( dirname( $upload_path ) ) ) {
 			add_action(
 				'init',
 				function () use ( $upload_path ) {
@@ -174,7 +174,7 @@ class WpMatomo {
 
 	public static function is_admin_user() {
 		if ( ! function_exists( 'is_multisite' )
-		     || ! is_multisite() ) {
+			|| ! is_multisite() ) {
 			return current_user_can( 'administrator' );
 		}
 
@@ -239,8 +239,8 @@ class WpMatomo {
 		}
 		$tracking_code = new TrackingCode( self::$settings );
 		if ( self::$settings->is_tracking_enabled()
-		     && self::$settings->get_global_option( 'track_ecommerce' )
-		     && ! $tracking_code->is_hidden_user() ) {
+			&& self::$settings->get_global_option( 'track_ecommerce' )
+			&& ! $tracking_code->is_hidden_user() ) {
 			$tracker = new AjaxTracker( self::$settings );
 
 			$woocommerce = new Woocommerce( $tracker );
