@@ -178,9 +178,10 @@ class Menu {
 
 		if ( $this->settings->is_network_enabled() || ! is_network_admin() ) {
 			$warning = '';
-			if ( isset( $_GET['page'] ) && str_starts_with( $_GET['page'], 'matomo-' ) ) {
-				$systemReport = new \WpMatomo\Admin\SystemReport( $this->settings );
-				if ( $systemReport->errorsPresent() ) {
+			if ( isset( $_GET['page'] )
+				&& str_starts_with( wp_unslash( $_GET['page'] ), 'matomo-' ) ) {
+				$system_report = new \WpMatomo\Admin\SystemReport( $this->settings );
+				if ( $system_report->errors_present() ) {
 					$warning = '<span class="awaiting-mod">!</span>';
 				}
 			}
@@ -301,9 +302,9 @@ class Menu {
 				$url
 			);
 
-			$date = new Dates();
+			$date                  = new Dates();
 			list( $period, $date ) = $date->detect_period_and_date( $report_date );
-			$url = add_query_arg(
+			$url                   = add_query_arg(
 				[
 					'period' => $period,
 					'date'   => $date,
@@ -339,7 +340,7 @@ class Menu {
 			$params['date'] = 'today';
 		}
 
-		$url = self::make_matomo_app_base_url();
+		$url  = self::make_matomo_app_base_url();
 		$url .= '?module=CoreHome&action=index&idSite=' . (int) $idsite . '&period=' . rawurlencode( $params['period'] ) . '&date=' . rawurlencode( $params['date'] ) . '#?&' . http_build_query( $params );
 
 		return $url;
@@ -390,7 +391,7 @@ class Menu {
 		$default_date     = $user_preferences->getDefaultDate();
 		$default_period   = $user_preferences->getDefaultPeriod( false );
 
-		$url = self::make_matomo_app_base_url();
+		$url  = self::make_matomo_app_base_url();
 		$url .= '?idSite=' . (int) $website_id . '&period=' . rawurlencode( $default_period ) . '&date=' . rawurlencode( $default_date );
 		$url .= '&module=' . rawurlencode( $module ) . '&action=' . rawurlencode( $action );
 		wp_safe_redirect( $url );

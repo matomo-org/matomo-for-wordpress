@@ -236,7 +236,7 @@ class SystemReport {
 		}
 	}
 
-	private function getErrorTables() {
+	private function get_error_tables() {
 		$matomo_tables = self::$matomo_tables;
 
 		if ( ! $matomo_tables ) {
@@ -283,8 +283,8 @@ class SystemReport {
 		return $matomo_tables;
 	}
 
-	public function errorsPresent() {
-		$matomo_tables = $this->getErrorTables();
+	public function errors_present() {
+		$matomo_tables = $this->get_error_tables();
 
 		$matomo_tables = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
 		$matomo_tables = $this->add_errors_first( $matomo_tables );
@@ -318,7 +318,7 @@ class SystemReport {
 		if ( empty( $matomo_active_tab ) ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting
 			$this->initial_error_reporting = @error_reporting();
-			$matomo_tables                 = $this->getErrorTables();
+			$matomo_tables                 = $this->get_error_tables();
 		}
 		$matomo_tables                    = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
 		$matomo_tables                    = $this->add_errors_first( $matomo_tables );
@@ -638,7 +638,7 @@ class SystemReport {
 
 			$next_scheduled = wp_next_scheduled( $event_name );
 
-			$comment = ' Last started: ' . $this->convert_time_to_date( $last_run_before, true, true ) . '.';
+			$comment  = ' Last started: ' . $this->convert_time_to_date( $last_run_before, true, true ) . '.';
 			$comment .= ' Last ended: ' . $this->convert_time_to_date( $last_run_after, true, true ) . '.';
 			$comment .= ' Interval: ' . $event_config['interval'];
 
@@ -932,7 +932,7 @@ class SystemReport {
 			return esc_html__( 'Unknown', 'matomo' );
 		}
 
-		$date = gmdate( 'Y-m-d H:i:s', (int)$time );
+		$date = gmdate( 'Y-m-d H:i:s', (int) $time );
 
 		if ( $in_blog_timezone ) {
 			$date = get_date_from_gmt( $date, 'Y-m-d H:i:s' );
@@ -940,7 +940,7 @@ class SystemReport {
 
 		if ( $print_diff && class_exists( '\Piwik\Metrics\Formatter' ) ) {
 			$formatter = new \Piwik\Metrics\Formatter();
-			$date      .= ' (' . $formatter->getPrettyTimeFromSeconds( $time - time(), true, false ) . ')';
+			$date     .= ' (' . $formatter->getPrettyTimeFromSeconds( $time - time(), true, false ) . ')';
 		}
 
 		return $date;
@@ -1163,7 +1163,7 @@ class SystemReport {
 					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 					$file_content = file_get_contents( dirname( MATOMO_ANALYTICS_FILE ) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . '.htaccess' );
 					if ( strpos( $file_content, 'AddHandler' ) && ! strpos( $file_content, '# AddHandler' ) ) {
-						switch ( (int)$result['response']['code'] ) {
+						switch ( (int) $result['response']['code'] ) {
 							case 500:
 								$value    = __( 'To be confirmed', 'matomo' );
 								$comment  = sprintf( esc_html__( 'The AddHandler Apache directive maybe disabled. If you get a 500 error code when accessing Matomo, please read this %s', 'matomo' ), sprintf( '<a href="%s" target="_blank">%s<a/>', 'https://matomo.org/faq/wordpress/how-do-i-fix-the-error-addhandler-not-allowed-here/', esc_html__( 'FAQ', 'matomo' ) ) );
@@ -1345,7 +1345,7 @@ class SystemReport {
 					// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 					$detector = StaticContainer::get( DeviceDetectorFactory::class )->makeInstance( sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ) );
 					$client   = $detector->getClient();
-					if ( ! empty( $client['name'] ) && 'Microsoft Edge' === $client['name'] && (int)$client['version'] >= 85 ) {
+					if ( ! empty( $client['name'] ) && 'Microsoft Edge' === $client['name'] && (int) $client['version'] >= 85 ) {
 						$rows[] = [
 							'name'       => 'Browser Compatibility',
 							'is_warning' => true,
@@ -1750,7 +1750,7 @@ class SystemReport {
 
 		if ( is_plugin_active( 'secupress/secupress.php' ) ) {
 			if ( function_exists( 'secupress_is_submodule_active' ) ) {
-				$blocked_methods = (int)secupress_is_submodule_active( 'firewall', 'request-methods-header' );
+				$blocked_methods = (int) secupress_is_submodule_active( 'firewall', 'request-methods-header' );
 				if ( $blocked_methods ) {
 					if ( ! defined( 'MATOMO_SUPPORT_ASYNC_ARCHIVING' ) || MATOMO_SUPPORT_ASYNC_ARCHIVING ) {
 						$rows[] = [
@@ -1783,7 +1783,7 @@ class SystemReport {
 						list( $r, $g, $b, $a ) = sscanf( $hexadecimal_color, '#%02x%02x%02x%02x' );
 						break;
 					case 6:
-						$hexadecimal_color = substr( $hexadecimal_color, 0, 5 );
+						$hexadecimal_color     = substr( $hexadecimal_color, 0, 5 );
 						list( $r, $g, $b, $a ) = sscanf( $hexadecimal_color, '#%01x%01x%01x%01x' );
 						break;
 				}
