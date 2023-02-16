@@ -415,6 +415,13 @@ class SystemReport {
 				'is_error' => $is_error,
 			];
 
+			$rows[] = [
+				'name'     => esc_html__( 'PHP cli Path', 'matomo' ),
+				'value'    => $this->binary ? str_replace( ' -q', '', $this->binary ) : '',
+				'comment'  => '',
+				'is_error' => false,
+			];
+
 			switch ( $this->get_phpcli_output( '-m | grep mysqli' ) ) {
 				case 'mysqli':
 					$is_error = false;
