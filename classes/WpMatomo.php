@@ -133,7 +133,7 @@ class WpMatomo {
 			if ( $system_report->errors_present() ) {
 				echo '<div class="notice notice-warning  is-dismissible">
                       <p>' . esc_html__( 'There are some errors in the', 'matomo' ) .
-					' <a href="/wp-admin/admin.php?page=matomo-systemreport">' . esc_html__( 'Matomo Diagnostics System report', 'matomo' ) . '</a> ' .
+					' <a href="' . admin_url( 'admin.php?page=matomo-systemreport' ) . '">' . esc_html__( 'Matomo Diagnostics System report', 'matomo' ) . '</a> ' .
 					esc_html__( 'that may prevent the plugin for working normally.', 'matomo' ) . '</p></div>';
 			}
 		}
