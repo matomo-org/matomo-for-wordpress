@@ -123,6 +123,8 @@ class SystemReport {
 	 */
 	private $binary;
 
+	private static $matomo_tables;
+
 	public function __construct( Settings $settings ) {
 		$this->settings             = $settings;
 		$this->logger               = new Logger();
@@ -141,9 +143,10 @@ class SystemReport {
 
 	private function execute_troubleshoot_if_needed() {
 		if ( ! empty( $_POST )
-			 && is_admin()
-			 && check_admin_referer( self::NONCE_NAME )
-			 && current_user_can( Capabilities::KEY_SUPERUSER ) ) {
+			&& is_admin()
+			&& check_admin_referer( self::NONCE_NAME )
+			&& current_user_can( Capabilities::KEY_SUPERUSER )
+		) {
 			if ( ! empty( $_POST[ self::TROUBLESHOOT_ARCHIVE_NOW ] ) ) {
 				Bootstrap::do_bootstrap();
 				$scheduled_tasks = new ScheduledTasks( $this->settings );
@@ -233,25 +236,11 @@ class SystemReport {
 		}
 	}
 
-	public function show() {
-		$this->execute_troubleshoot_if_needed();
+	private function get_error_tables() {
+		$matomo_tables = self::$matomo_tables;
 
-		$settings = $this->settings;
-
-		$matomo_active_tab = '';
-
-		if ( isset( $_GET['tab'] ) ) {
-			$tab = sanitize_text_field( wp_unslash( $_GET['tab'] ) );
-			if ( in_array( $tab, $this->valid_tabs, true ) ) {
-				$matomo_active_tab = $tab;
-			}
-		}
-
-		$matomo_tables = [];
-		if ( empty( $matomo_active_tab ) ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting
-			$this->initial_error_reporting = @error_reporting();
-			$matomo_tables                 = [
+		if ( ! $matomo_tables ) {
+			$matomo_tables       = [
 				[
 					'title'        => 'Matomo',
 					'rows'         => $this->get_matomo_info(),
@@ -288,6 +277,48 @@ class SystemReport {
 					'has_comments' => true,
 				],
 			];
+			self::$matomo_tables = $matomo_tables;
+		}
+
+		return $matomo_tables;
+	}
+
+	public function errors_present() {
+		$matomo_tables = $this->get_error_tables();
+
+		$matomo_tables = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
+		$matomo_tables = $this->add_errors_first( $matomo_tables );
+
+		foreach ( $matomo_tables as $report_table ) {
+			foreach ( $report_table['rows'] as $row ) {
+				if ( ! empty( $row['is_error'] ) || ! empty( $row['is_warning'] ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public function show() {
+		$this->execute_troubleshoot_if_needed();
+
+		$settings = $this->settings;
+
+		$matomo_active_tab = '';
+
+		if ( isset( $_GET['tab'] ) ) {
+			$tab = sanitize_text_field( wp_unslash( $_GET['tab'] ) );
+			if ( in_array( $tab, $this->valid_tabs, true ) ) {
+				$matomo_active_tab = $tab;
+			}
+		}
+
+		$matomo_tables = [];
+		if ( empty( $matomo_active_tab ) ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting
+			$this->initial_error_reporting = @error_reporting();
+			$matomo_tables                 = $this->get_error_tables();
 		}
 		$matomo_tables                    = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
 		$matomo_tables                    = $this->add_errors_first( $matomo_tables );
@@ -765,22 +796,23 @@ class SystemReport {
 		if ( ! empty( $error_log_entries ) ) {
 			foreach ( $error_log_entries as $error ) {
 				if ( ! empty( $install_time )
-					 && is_numeric( $install_time )
-					 && ! empty( $error['name'] )
-					 && ! empty( $error['value'] )
-					 && is_numeric( $error['value'] )
-					 && 'cron_sync' === $error['name']
-					 && $error['value'] < ( $install_time + 300 ) ) {
+					&& is_numeric( $install_time )
+					&& ! empty( $error['name'] )
+					&& ! empty( $error['value'] )
+					&& is_numeric( $error['value'] )
+					&& 'cron_sync' === $error['name']
+					&& $error['value'] < ( $install_time + 300 )
+				) {
 					// the first sync might right after the installation
 					continue;
 				}
 
 				// we only consider plugin_updates as errors only if there are still outstanding updates
 				$is_plugin_update_error = ! empty( $error['name'] ) && 'plugin_update' === $error['name']
-										  && ! empty( $outstanding_updates );
+					&& ! empty( $outstanding_updates );
 
 				$skip_plugin_update = ! empty( $error['name'] ) && 'plugin_update' === $error['name']
-									  && empty( $outstanding_updates );
+					&& empty( $outstanding_updates );
 
 				if ( empty( $error['comment'] ) && '0' !== $error['comment'] ) {
 					$error['comment'] = '';
@@ -805,8 +837,10 @@ class SystemReport {
 
 			foreach ( $error_log_entries as $error ) {
 				if ( $suports_async
-					 && ! empty( $error['value'] ) && is_string( $error['value'] )
-					 && strpos( $error['value'], __( 'Your PHP installation appears to be missing the MySQL extension which is required by WordPress.', 'matomo' ) ) > 0 ) {
+					&& ! empty( $error['value'] )
+					&& is_string( $error['value'] )
+					&& strpos( $error['value'], __( 'Your PHP installation appears to be missing the MySQL extension which is required by WordPress.', 'matomo' ) ) > 0
+				) {
 					$rows[] = [
 						'name'     => 'Cli has no MySQL',
 						'value'    => true,
@@ -1103,6 +1137,7 @@ class SystemReport {
 			'is_warning' => $maxmind_db_loaded,
 		];
 	}
+
 	private function get_server_info() {
 		$rows = [];
 
@@ -1439,8 +1474,9 @@ class SystemReport {
 		$grants_missing = array_diff( $needed_grants, $grants );
 
 		if ( empty( $grants )
-			 || ! is_array( $grants )
-			 || count( $grants_missing ) === count( $needed_grants ) ) {
+			|| ! is_array( $grants )
+			|| count( $grants_missing ) === count( $needed_grants )
+		) {
 			$rows[] = [
 				'name'       => esc_html__( 'Required permissions', 'matomo' ),
 				'value'      => esc_html__( 'Failed to detect granted permissions', 'matomo' ),
@@ -1744,11 +1780,11 @@ class SystemReport {
 			foreach ( $matches[1] as $hexadecimal_color ) {
 				switch ( strlen( $hexadecimal_color ) ) {
 					case 9:
-						list($r, $g, $b, $a) = sscanf( $hexadecimal_color, '#%02x%02x%02x%02x' );
+						list( $r, $g, $b, $a ) = sscanf( $hexadecimal_color, '#%02x%02x%02x%02x' );
 						break;
 					case 6:
-						$hexadecimal_color   = substr( $hexadecimal_color, 0, 5 );
-						list($r, $g, $b, $a) = sscanf( $hexadecimal_color, '#%01x%01x%01x%01x' );
+						$hexadecimal_color     = substr( $hexadecimal_color, 0, 5 );
+						list( $r, $g, $b, $a ) = sscanf( $hexadecimal_color, '#%01x%01x%01x%01x' );
 						break;
 				}
 				$content = str_replace( $hexadecimal_color, 'rgb(' . $r . ',' . $g . ',' . $b . ',' . $a . ')', $content );
@@ -1758,15 +1794,16 @@ class SystemReport {
 			foreach ( $matches[1] as $hexadecimal_color ) {
 				switch ( strlen( $hexadecimal_color ) ) {
 					case 7:
-						list($r, $g, $b) = sscanf( $hexadecimal_color, '#%02x%02x%02x' );
+						list( $r, $g, $b ) = sscanf( $hexadecimal_color, '#%02x%02x%02x' );
 						break;
 					case 4:
-						list($r, $g, $b) = sscanf( $hexadecimal_color, '#%01x%01x%01x' );
+						list( $r, $g, $b ) = sscanf( $hexadecimal_color, '#%01x%01x%01x' );
 						break;
 				}
 				$content = str_replace( $hexadecimal_color, 'rgb(' . $r . ',' . $g . ',' . $b . ')', $content );
 			}
 		}
+
 		return $content;
 	}
 }
