@@ -415,13 +415,6 @@ class SystemReport {
 				'is_error' => $is_error,
 			];
 
-			$rows[] = [
-				'name'     => esc_html__( 'PHP cli Path', 'matomo' ),
-				'value'    => $this->binary ? str_replace( ' -q', '', $this->binary ) : '',
-				'comment'  => '',
-				'is_error' => false,
-			];
-
 			switch ( $this->get_phpcli_output( '-m | grep mysqli' ) ) {
 				case 'mysqli':
 					$is_error = false;
@@ -1209,7 +1202,7 @@ class SystemReport {
 		if ( defined( 'PHP_BINARY' ) && PHP_BINARY ) {
 			$rows[] = [
 				'name'  => 'PHP Binary Name',
-				'value' => @basename( PHP_BINARY ),
+				'value' => PHP_BINARY,
 			];
 		}
 
@@ -1225,7 +1218,7 @@ class SystemReport {
 		if ( ! empty( $this->binary ) ) {
 			$rows[] = [
 				'name'  => 'PHP Found Binary',
-				'value' => basename( $this->binary ),
+				'value' => $this->binary,
 			];
 		}
 		$rows[] = [
