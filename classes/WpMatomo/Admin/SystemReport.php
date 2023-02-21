@@ -1202,7 +1202,7 @@ class SystemReport {
 		if ( defined( 'PHP_BINARY' ) && PHP_BINARY ) {
 			$rows[] = [
 				'name'  => 'PHP Binary Name',
-				'value' => @basename( PHP_BINARY ),
+				'value' => PHP_BINARY,
 			];
 		}
 
@@ -1218,7 +1218,7 @@ class SystemReport {
 		if ( ! empty( $this->binary ) ) {
 			$rows[] = [
 				'name'  => 'PHP Found Binary',
-				'value' => basename( $this->binary ),
+				'value' => $this->binary,
 			];
 		}
 		$rows[] = [
