@@ -97,6 +97,8 @@ class WpMatomo {
 				$referral->register_hooks();
 			}
 
+			add_action( 'admin_notices', [ $this, 'check_errors' ] );
+
 			$chart = new Chart();
 			$chart->register_hooks();
 
@@ -125,6 +127,18 @@ class WpMatomo {
 		);
 	}
 
+	public function check_errors() {
+		if ( isset( $_GET['page'] ) && str_starts_with( sanitize_text_field( wp_unslash( $_GET['page'] ) ), 'matomo-' ) ) {
+			$system_report = new \WpMatomo\Admin\SystemReport( self::$settings );
+			if ( $system_report->errors_present() ) {
+				echo '<div class="notice notice-warning  is-dismissible">
+                      <p>' . esc_html__( 'There are some errors in the', 'matomo' ) .
+					' <a href="' . esc_url( admin_url( 'admin.php?page=matomo-systemreport' ) ) . '">' . esc_html__( 'Matomo Diagnostics System report', 'matomo' ) . '</a> ' .
+					esc_html__( 'that may prevent the plugin for working normally.', 'matomo' ) . '</p></div>';
+			}
+		}
+	}
+
 	private function check_compatibility() {
 		if ( ! is_admin() ) {
 			return true;
@@ -137,7 +151,7 @@ class WpMatomo {
 		$upload_path = $paths->get_upload_base_dir();
 
 		if ( $upload_path
-			 && ! is_writable( dirname( $upload_path ) ) ) {
+			&& ! is_writable( dirname( $upload_path ) ) ) {
 			add_action(
 				'init',
 				function () use ( $upload_path ) {
@@ -160,7 +174,7 @@ class WpMatomo {
 
 	public static function is_admin_user() {
 		if ( ! function_exists( 'is_multisite' )
-			 || ! is_multisite() ) {
+			|| ! is_multisite() ) {
 			return current_user_can( 'administrator' );
 		}
 
@@ -225,8 +239,8 @@ class WpMatomo {
 		}
 		$tracking_code = new TrackingCode( self::$settings );
 		if ( self::$settings->is_tracking_enabled()
-			 && self::$settings->get_global_option( 'track_ecommerce' )
-			 && ! $tracking_code->is_hidden_user() ) {
+			&& self::$settings->get_global_option( 'track_ecommerce' )
+			&& ! $tracking_code->is_hidden_user() ) {
 			$tracker = new AjaxTracker( self::$settings );
 
 			$woocommerce = new Woocommerce( $tracker );

@@ -33,7 +33,7 @@ function matomo_plugin_autoloader( $class_name ) {
 
 	if ( substr( $class_name, 0, $root_len ) === $root_namespace . $namespace_separator ) {
 		$class_name = str_replace( '.', '', str_replace( $namespace_separator, DIRECTORY_SEPARATOR, substr( $class_name, $root_len ) ) );
-		require_once 'classes' . DIRECTORY_SEPARATOR . $root_namespace . DIRECTORY_SEPARATOR . $class_name . '.php';
+		require_once __DIR__ . '/classes' . DIRECTORY_SEPARATOR . $root_namespace . DIRECTORY_SEPARATOR . $class_name . '.php';
 	}
 }
 

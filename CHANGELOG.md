@@ -1,4 +1,9 @@
 == Changelog ===
+= 4.13.4 =
+* Fix an autoloader bug in PHP 8.2
+* Added notifications when there are issues in the system report
+
+== Changelog ===
 = 4.13.3 =
 * Update Matomo core to 4.13.3
 * Fix a bug for an undefined constant

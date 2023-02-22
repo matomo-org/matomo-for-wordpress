@@ -177,10 +177,18 @@ class Menu {
 		}
 
 		if ( $this->settings->is_network_enabled() || ! is_network_admin() ) {
+			$warning = '';
+			if ( isset( $_GET['page'] ) && str_starts_with( sanitize_text_field( wp_unslash( $_GET['page'] ) ), 'matomo-' ) ) {
+				$system_report = new \WpMatomo\Admin\SystemReport( $this->settings );
+				if ( $system_report->errors_present() ) {
+					$warning = '<span class="awaiting-mod">!</span>';
+				}
+			}
+
 			add_submenu_page(
 				self::$parent_slug,
 				__( 'Diagnostics', 'matomo' ),
-				__( 'Diagnostics', 'matomo' ),
+				__( 'Diagnostics', 'matomo' ) . $warning,
 				Capabilities::KEY_SUPERUSER,
 				self::SLUG_SYSTEM_REPORT,
 				[
@@ -224,8 +232,8 @@ class Menu {
 			$tagmanager = __( 'Tag Manager', 'matomo' );
 			foreach ( $submenu[ self::$parent_slug ] as $key => $menu_item ) {
 				if ( 0 === strpos( $menu_item[0], $reporting ) || 0 === strpos( $menu_item[0], $tagmanager ) ) {
-					 // No other choice
-					 // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+					// No other choice
+					// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 					$submenu[ self::$parent_slug ][ $key ][0] .= ' <span class="dashicons-before dashicons-external"></span>';
 				}
 			}
