@@ -128,7 +128,7 @@ class WpMatomo {
 	}
 
 	public function check_errors() {
-		if ( isset( $_GET['page'] ) && str_starts_with( sanitize_text_field( wp_unslash( $_GET['page'] ) ), 'matomo-' ) ) {
+		if ( isset( $_GET['page'] ) && substr( sanitize_text_field( wp_unslash( $_GET['page'] ) ), 0, 7 ) === 'matomo-' ) {
 			$system_report = new \WpMatomo\Admin\SystemReport( self::$settings );
 			if ( $system_report->errors_present() ) {
 				echo '<div class="notice notice-warning  is-dismissible">
