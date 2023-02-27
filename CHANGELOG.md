@@ -1,4 +1,8 @@
 == Changelog ===
+= 4.13.5 =
+* Removed php 8 function use
+
+== Changelog ===
 = 4.13.4 =
 * Fix an autoloader bug in PHP 8.2
 * Added notifications when there are issues in the system report
