@@ -138,9 +138,9 @@ class Sync {
 		$sites_manager_model = new Model();
 
 		if ( ! is_multisite() ) {
-			$id_sites = $sites_manager_model->getSitesId();
-			if ( count( $id_sites ) === 1 ) {
-				$matomo_id_site = (int) $id_sites[0];
+			$matomo_id_sites = $sites_manager_model->getSitesId();
+			if ( count( $matomo_id_sites ) === 1 ) {
+				$matomo_id_site = (int) $matomo_id_sites[0];
 				if ( empty( $idsite ) ) {
 					$idsite = $matomo_id_site;
 					$this->logger->log( "Can't find the id site in the mapping, but there is already an existing site. Use its ID " . $idsite . ' for blog' );
