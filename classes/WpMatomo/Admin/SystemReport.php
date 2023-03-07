@@ -22,6 +22,7 @@ use Piwik\Plugin;
 use Piwik\Plugins\CoreAdminHome\API;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
+use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\SettingsPiwik;
 use Piwik\Tracker\Failures;
@@ -982,15 +983,19 @@ class SystemReport {
 	}
 
 	private function get_wordpress_info() {
-		$is_multi_site      = is_multisite();
-		$num_blogs          = 1;
-		$is_network_enabled = false;
+		$is_multi_site          = is_multisite();
+		$num_blogs              = 1;
+		$is_network_enabled     = false;
+		$matomo_id_sites_number = 1;
 		if ( $is_multi_site ) {
 			if ( function_exists( 'get_blog_count' ) ) {
 				$num_blogs = get_blog_count();
 			}
 			$settings           = new Settings();
 			$is_network_enabled = $settings->is_network_enabled();
+		} else {
+			$sites_manager_model    = new Model();
+			$matomo_id_sites_number = count( $sites_manager_model->getSitesId() );
 		}
 
 		$rows   = [];
@@ -1014,6 +1019,16 @@ class SystemReport {
 			'name'  => 'Multisite Enabled',
 			'value' => $is_multi_site,
 		];
+		if ( ! $is_multi_site ) {
+			if ( $matomo_id_sites_number > 1 ) {
+				$rows[] = [
+					'name'       => 'Matomo sites',
+					'value'      => $matomo_id_sites_number,
+					'is_warning' => true,
+					'comment'    => esc_html__( 'There is an error in your Matomo records. Please contact wordpress@matomo.org', 'matomo' ),
+				];
+			}
+		}
 		$rows[] = [
 			'name'  => 'Network Enabled',
 			'value' => $is_network_enabled,
