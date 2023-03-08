@@ -1685,6 +1685,11 @@ class SystemReport {
 			];
 
 			$used_not_compatible = array_intersect( $active_plugins, $this->not_compatible_plugins );
+			if ( in_array( 'wp-rocket', $used_not_compatible, true ) ) {
+				if ( defined( 'WP_ROCKET_VERSION' ) && ( version_compare( WP_ROCKET_VERSION, '3.11.5' ) <= 0 ) ) {
+					unset( $used_not_compatible[ array_search( 'wp-rocket', $used_not_compatible, true ) ] );
+				}
+			}
 
 			if ( ! empty( $used_not_compatible ) ) {
 				$additional_comment = '';
