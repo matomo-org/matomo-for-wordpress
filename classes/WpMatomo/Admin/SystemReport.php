@@ -1019,16 +1019,6 @@ class SystemReport {
 			'name'  => 'Multisite Enabled',
 			'value' => $is_multi_site,
 		];
-		if ( ! $is_multi_site ) {
-			if ( $matomo_id_sites_number > 1 ) {
-				$rows[] = [
-					'name'       => 'Matomo sites',
-					'value'      => $matomo_id_sites_number,
-					'is_warning' => true,
-					'comment'    => esc_html__( 'There is an error in your Matomo records. Please contact wordpress@matomo.org', 'matomo' ),
-				];
-			}
-		}
 		$rows[] = [
 			'name'  => 'Network Enabled',
 			'value' => $is_network_enabled,
@@ -1460,10 +1450,17 @@ class SystemReport {
 		];
 
 		foreach ( [ 'user', 'site' ] as $table ) {
-			$rows[] = [
+			$row = [
 				'name'  => 'Matomo ' . $table . 's found',
 				'value' => $this->get_num_entries_in_table( $table ),
 			];
+			if ( 'site' === $table ) {
+				if ( ( ! is_multisite() ) && ( $row['value'] > 1 ) ) {
+					$row['is_warning'] = true;
+					$row['comment']    = esc_html__( 'There is an error in your Matomo records. Please contact wordpress@matomo.org', 'matomo' );
+				}
+			}
+			$rows[] = $row;
 		}
 
 		$grants = $this->get_db_grants();
