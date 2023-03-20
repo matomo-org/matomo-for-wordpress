@@ -22,6 +22,7 @@ use Piwik\Plugin;
 use Piwik\Plugins\CoreAdminHome\API;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
+use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\SettingsPiwik;
 use Piwik\Tracker\Failures;
@@ -982,15 +983,19 @@ class SystemReport {
 	}
 
 	private function get_wordpress_info() {
-		$is_multi_site      = is_multisite();
-		$num_blogs          = 1;
-		$is_network_enabled = false;
+		$is_multi_site          = is_multisite();
+		$num_blogs              = 1;
+		$is_network_enabled     = false;
+		$matomo_id_sites_number = 1;
 		if ( $is_multi_site ) {
 			if ( function_exists( 'get_blog_count' ) ) {
 				$num_blogs = get_blog_count();
 			}
 			$settings           = new Settings();
 			$is_network_enabled = $settings->is_network_enabled();
+		} else {
+			$sites_manager_model    = new Model();
+			$matomo_id_sites_number = count( $sites_manager_model->getSitesId() );
 		}
 
 		$rows   = [];
@@ -1445,10 +1450,17 @@ class SystemReport {
 		];
 
 		foreach ( [ 'user', 'site' ] as $table ) {
-			$rows[] = [
+			$row = [
 				'name'  => 'Matomo ' . $table . 's found',
 				'value' => $this->get_num_entries_in_table( $table ),
 			];
+			if ( 'site' === $table ) {
+				if ( ( ! is_multisite() ) && ( $row['value'] > 1 ) ) {
+					$row['is_warning'] = true;
+					$row['comment']    = esc_html__( 'There is an error in your Matomo records. Please contact wordpress@matomo.org', 'matomo' );
+				}
+			}
+			$rows[] = $row;
 		}
 
 		$grants = $this->get_db_grants();
