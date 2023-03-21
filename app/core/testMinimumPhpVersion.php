@@ -11,7 +11,7 @@
 /**
  * This file is executed before anything else.
  * It checks the minimum PHP version required to run Matomo.
- * This file must be compatible PHP4.
+ * This file must be compatible with PHP 5.3.
  */
 
 $piwik_errorMessage = '';
@@ -125,9 +125,9 @@ if (!function_exists('Piwik_GetErrorMessagePage')) {
         $faviconUrl = false,
         $isCli = null,
         $errorLogPrefix = '',
-        bool $writeErrorLog = true,
-        string $redirectUrl = null,
-        int $countdown = null
+        $writeErrorLog = true,
+        $redirectUrl = null,
+        $countdown = null
     ) {
         $hasCountdownRedirect = !empty($redirectUrl) && !empty($countdown);
 
@@ -199,10 +199,12 @@ if (!function_exists('Piwik_GetErrorMessagePage')) {
         if ($hasCountdownRedirect) {
             $redirectSection = '<p>
                                 Please click below if you are not redirected in ' . $countdown . ' seconds</br></br>
-                                Go to <a href="' . $redirectUrl . '">' . $redirectUrl . '</a> 
+                                Go to <a href="' . $redirectUrl . '">' . htmlspecialchars($redirectUrl) . '</a> 
                                 </p>
+                                <style>.header,.footer { display:none;}</style>
                                 <script>setTimeout(function(){window.location.href="' . $redirectUrl . '"}, ' . ($countdown * 1000) . ');</script>';
             $backLinks = '';
+            $optionalLinks = '';
         }
 
         $content = '<h2>' . $message . '</h2>'
@@ -212,7 +214,7 @@ if (!function_exists('Piwik_GetErrorMessagePage')) {
             . ' ' . $optionalLinks;
 
 
-        $message = str_replace(["<br />", "<br>", "<br/>", "</p>"], "\n", $message);
+        $message = str_replace(array("<br />", "<br>", "<br/>", "</p>"), "\n", $message);
         $message = str_replace("\t", "", $message);
         $message = strip_tags($message);
 

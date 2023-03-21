@@ -1,10 +1,6 @@
 <?php
-
 /**
- * Color
- *
- * @package Less
- * @subpackage tree
+ * @private
  */
 class Less_Tree_Color extends Less_Tree {
 	public $rgb;
@@ -20,16 +16,16 @@ class Less_Tree_Color extends Less_Tree {
 			return;
 		}
 
-		$this->rgb = array();
+		$this->rgb = [];
 		if ( is_array( $rgb ) ) {
 			$this->rgb = $rgb;
-		} else if ( strlen( $rgb ) == 6 ) {
+		} elseif ( strlen( $rgb ) == 6 ) {
 			foreach ( str_split( $rgb, 2 ) as $c ) {
 				$this->rgb[] = hexdec( $c );
 			}
 		} else {
 			foreach ( str_split( $rgb, 1 ) as $c ) {
-				$this->rgb[] = hexdec( $c.$c );
+				$this->rgb[] = hexdec( $c . $c );
 			}
 		}
 		$this->alpha = is_numeric( $a ) ? $a : 1;
@@ -69,7 +65,7 @@ class Less_Tree_Color extends Less_Tree {
 				return 'transparent';
 			}
 
-			$values = array();
+			$values = [];
 			foreach ( $this->rgb as $c ) {
 				$values[] = Less_Functions::clamp( round( $c ), 255 );
 			}
@@ -85,7 +81,7 @@ class Less_Tree_Color extends Less_Tree {
 
 				// Convert color to short format
 				if ( $color[1] === $color[2] && $color[3] === $color[4] && $color[5] === $color[6] ) {
-					$color = '#'.$color[1] . $color[3] . $color[5];
+					$color = '#' . $color[1] . $color[3] . $color[5];
 				}
 			}
 
@@ -104,7 +100,7 @@ class Less_Tree_Color extends Less_Tree {
 	 * @param string $op
 	 */
 	public function operate( $op, $other ) {
-		$rgb = array();
+		$rgb = [];
 		$alpha = $this->alpha * ( 1 - $other->alpha ) + $other->alpha;
 		for ( $c = 0; $c < 3; $c++ ) {
 			$rgb[$c] = Less_Functions::operate( $op, $this->rgb[$c], $other->rgb[$c] );
@@ -144,7 +140,7 @@ class Less_Tree_Color extends Less_Tree {
 			}
 			$h /= 6;
 		}
-		return array( 'h' => $h * 360, 's' => $s, 'l' => $l, 'a' => $a );
+		return [ 'h' => $h * 360, 's' => $s, 'l' => $l, 'a' => $a ];
 	}
 
 	// Adapted from http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
@@ -181,7 +177,7 @@ class Less_Tree_Color extends Less_Tree {
 			}
 			$h /= 6;
 		}
-		return array( 'h' => $h * 360, 's' => $s, 'v' => $v, 'a' => $a );
+		return [ 'h' => $h * 360, 's' => $s, 'v' => $v, 'a' => $a ];
 	}
 
 	public function toARGB() {
@@ -225,7 +221,7 @@ class Less_Tree_Color extends Less_Tree {
 		}
 
 		if ( $keyword === 'transparent' ) {
-			return new Less_Tree_Color( array( 0, 0, 0 ), 0, true );
+			return new Less_Tree_Color( [ 0, 0, 0 ], 0, true );
 		}
 	}
 

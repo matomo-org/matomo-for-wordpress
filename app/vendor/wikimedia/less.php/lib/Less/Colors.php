@@ -1,10 +1,8 @@
 <?php
-
 /**
  * Utility for css colors
  *
- * @package Less
- * @subpackage color
+ * @private
  */
 class Less_Colors {
 

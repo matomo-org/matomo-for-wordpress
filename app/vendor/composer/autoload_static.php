@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita8589bba0fef171abd252f715538f151
+class ComposerStaticInite229a3be07b6acc46ee656926bd1be80
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -757,6 +757,7 @@ class ComposerStaticInita8589bba0fef171abd252f715538f151
         'PEAR' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
         'PEAR_ErrorStack' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR/ErrorStack.php',
         'PEAR_Exception' => __DIR__ . '/..' . '/pear/pear_exception/PEAR/Exception.php',
+        'PHPMailer\\PHPMailer\\DSNConfigurator' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/DSNConfigurator.php',
         'PHPMailer\\PHPMailer\\Exception' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/Exception.php',
         'PHPMailer\\PHPMailer\\OAuth' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/OAuth.php',
         'PHPMailer\\PHPMailer\\OAuthTokenProvider' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/OAuthTokenProvider.php',
@@ -1596,6 +1597,7 @@ class ComposerStaticInita8589bba0fef171abd252f715538f151
         'Piwik\\Plugins\\DevicesDetection\\tests\\System\\GoalReportForDevicesTest' => __DIR__ . '/../..' . '/plugins/DevicesDetection/tests/System/GoalReportForDevicesTest.php',
         'Piwik\\Plugins\\Diagnostics\\Commands\\AnalyzeArchiveTable' => __DIR__ . '/../..' . '/plugins/Diagnostics/Commands/AnalyzeArchiveTable.php',
         'Piwik\\Plugins\\Diagnostics\\Commands\\Run' => __DIR__ . '/../..' . '/plugins/Diagnostics/Commands/Run.php',
+        'Piwik\\Plugins\\Diagnostics\\Commands\\UnexpectedFiles' => __DIR__ . '/../..' . '/plugins/Diagnostics/Commands/UnexpectedFiles.php',
         'Piwik\\Plugins\\Diagnostics\\ConfigReader' => __DIR__ . '/../..' . '/plugins/Diagnostics/ConfigReader.php',
         'Piwik\\Plugins\\Diagnostics\\Controller' => __DIR__ . '/../..' . '/plugins/Diagnostics/Controller.php',
         'Piwik\\Plugins\\Diagnostics\\DiagnosticReport' => __DIR__ . '/../..' . '/plugins/Diagnostics/DiagnosticReport.php',
@@ -2568,7 +2570,7 @@ class ComposerStaticInita8589bba0fef171abd252f715538f151
         'Piwik\\Plugins\\TagManager\\tests\\Unit\\Validators\\LookupTableTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Unit/Validators/LookupTableTest.php',
         'Piwik\\Plugins\\TagManager\\tests\\Unit\\Validators\\NumericTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Unit/Validators/NumericTest.php',
         'Piwik\\Plugins\\TestRunner\\Commands\\CodeCoverage' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/CodeCoverage.php',
-        'Piwik\\Plugins\\TestRunner\\Commands\\GenerateTravisYmlFile' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/GenerateTravisYmlFile.php',
+        'Piwik\\Plugins\\TestRunner\\Commands\\GenerateGitHubTestActionFile' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/GenerateGitHubTestActionFile.php',
         'Piwik\\Plugins\\TestRunner\\Commands\\SyncScreenshots' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/SyncScreenshots.php',
         'Piwik\\Plugins\\TestRunner\\Commands\\TestsRun' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/TestsRun.php',
         'Piwik\\Plugins\\TestRunner\\Commands\\TestsRunJS' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/TestsRunJS.php',
@@ -3372,11 +3374,11 @@ class ComposerStaticInita8589bba0fef171abd252f715538f151
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita8589bba0fef171abd252f715538f151::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita8589bba0fef171abd252f715538f151::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInita8589bba0fef171abd252f715538f151::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInita8589bba0fef171abd252f715538f151::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInita8589bba0fef171abd252f715538f151::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite229a3be07b6acc46ee656926bd1be80::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite229a3be07b6acc46ee656926bd1be80::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInite229a3be07b6acc46ee656926bd1be80::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInite229a3be07b6acc46ee656926bd1be80::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInite229a3be07b6acc46ee656926bd1be80::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -1,10 +1,6 @@
 <?php
-
 /**
- * Call
- *
- * @package Less
- * @subpackage tree
+ * @private
  */
 class Less_Tree_Call extends Less_Tree {
 	public $value;
@@ -39,7 +35,7 @@ class Less_Tree_Call extends Less_Tree {
 	// The function should receive the value, not the variable.
 	//
 	public function compile( $env = null ) {
-		$args = array();
+		$args = [];
 		foreach ( $this->args as $a ) {
 			$args[] = $a->compile( $env );
 		}
@@ -66,23 +62,26 @@ class Less_Tree_Call extends Less_Tree {
 		$result = null;
 		if ( $nameLC === 'default' ) {
 			$result = Less_Tree_DefaultFunc::compile();
-
 		} else {
-
-			if ( method_exists( 'Less_Functions', $nameLC ) ) { // 1.
-				try {
-
-					$func = new Less_Functions( $env, $this->currentFileInfo );
-					$result = call_user_func_array( array( $func,$nameLC ), $args );
-
-				} catch ( Exception $e ) {
-					throw new Less_Exception_Compiler( 'error evaluating function `' . $this->name . '` '.$e->getMessage().' index: '. $this->index );
-				}
+			$func = null;
+			if ( method_exists( 'Less_Functions', $nameLC ) ) {
+				$functions = new Less_Functions( $env, $this->currentFileInfo );
+				$func = [ $functions, $nameLC ];
 			} elseif ( isset( $env->functions[$nameLC] ) && is_callable( $env->functions[$nameLC] ) ) {
+				$func = $env->functions[$nameLC];
+			}
+			// If the function name isn't known to LESS, output it unchanged as CSS.
+			if ( $func ) {
 				try {
-					$result = call_user_func_array( $env->functions[$nameLC], $args );
+					$result = call_user_func_array( $func, $args );
 				} catch ( Exception $e ) {
-					throw new Less_Exception_Compiler( 'error evaluating function `' . $this->name . '` '.$e->getMessage().' index: '. $this->index );
+					// Preserve original trace, especially from custom functions.
+					// https://github.com/wikimedia/less.php/issues/38
+					throw new Less_Exception_Compiler(
+						'error evaluating function `' . $this->name . '` ' . $e->getMessage()
+							. ' index: ' . $this->index,
+						$e
+					);
 				}
 			}
 		}

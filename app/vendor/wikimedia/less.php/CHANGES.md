@@ -1,3 +1,13 @@
+# Changelog
+
+## 3.2.1
+
+* [All changes](https://gerrit.wikimedia.org/g/mediawiki/libs/less.php/+log/v3.2.1)
+* Tree_Ruleset: Fix support for nested parent selectors (Timo Tijhof) [T204816](https://phabricator.wikimedia.org/T204816)
+* Fix ParseError when interpolating variable after colon in selector (Timo Tijhof) [T327163](https://phabricator.wikimedia.org/T327163)
+* Functions: Fix "Undefined property" warning on bad minmax arg
+* Tree_Call: Include previous exception when catching functions (Robert Frunzke)
+
 ## 3.2.0
 
 * [All changes](https://github.com/wikimedia/less.php/compare/v3.1.0...v3.2.0)
@@ -68,7 +78,7 @@ Library forked by Wikimedia, from [oyejorge/less.php](https://github.com/oyejorg
 
 * [All changes](https://github.com/wikimedia/less.php/compare/v1.7.0.9...v1.7.10)
 * Add indentation option
-* Add `optional` modifier for @import
+* Add `optional` modifier for `@import`
 * Fix $color in Exception messages
 * take relative-url into account when building the cache filename
 * urlArgs should be string no array()

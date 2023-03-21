@@ -16,6 +16,7 @@ use DeviceDetector\Cache\CacheInterface;
 use DeviceDetector\ClientHints;
 use DeviceDetector\Parser\Client\Browser\Engine;
 use DeviceDetector\Parser\Client\Hints\BrowserHints;
+use DeviceDetector\Yaml\ParserInterface as YamlParser;
 
 /**
  * Class Browser
@@ -520,6 +521,7 @@ class Browser extends AbstractClientParser
         'WH' => 'Whale Browser',
         'WO' => 'wOSBrowser',
         'WT' => 'WeTab Browser',
+        'WL' => 'Wolvic',
         'YG' => 'YAGI',
         'YJ' => 'Yahoo! Japan Browser',
         'YA' => 'Yandex Browser',
@@ -587,7 +589,7 @@ class Browser extends AbstractClientParser
             'FB', 'FE', 'FF', 'FM', 'FR', 'FY', 'GZ', 'I4', 'IF',
             'IW', 'LH', 'LY', 'MB', 'MN', 'MO', 'MY', 'OA', 'OS',
             'PI', 'PX', 'QA', 'QM', 'S5', 'SX', 'TF', 'TO', 'WF',
-            'ZV', 'FP', 'AD',
+            'ZV', 'FP', 'AD', 'WL',
         ],
         'Internet Explorer'  => ['BZ', 'CZ', 'IE', 'IM', 'PS'],
         'Konqueror'          => ['KO'],
@@ -740,6 +742,17 @@ class Browser extends AbstractClientParser
     {
         return \in_array($browser, self::$mobileOnlyBrowsers) || (\in_array($browser, self::$availableBrowsers)
                 && \in_array(\array_search($browser, self::$availableBrowsers), self::$mobileOnlyBrowsers));
+    }
+
+    /**
+     * Sets the YamlParser class
+     *
+     * @param YamlParser $yamlParser
+     */
+    public function setYamlParser(YamlParser $yamlParser): void
+    {
+        parent::setYamlParser($yamlParser);
+        $this->browserHints->setYamlParser($this->getYamlParser());
     }
 
     /**

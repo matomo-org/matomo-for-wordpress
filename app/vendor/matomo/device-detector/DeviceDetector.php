@@ -68,7 +68,7 @@ class DeviceDetector
     /**
      * Current version number of DeviceDetector
      */
-    public const VERSION = '6.0.6';
+    public const VERSION = '6.1.1';
 
     /**
      * Constant used as value for unknown browser / os
@@ -934,6 +934,13 @@ class DeviceDetector
         }
 
         /**
+         * Some UA contain the fragment 'Pad/APad', so we assume those devices as tablets
+         */
+        if (AbstractDeviceParser::DEVICE_TYPE_SMARTPHONE === $this->device && $this->matchUserAgent('Pad/APad')) {
+            $this->device = AbstractDeviceParser::DEVICE_TYPE_TABLET;
+        }
+
+        /**
          * Some UA contain the fragment 'Android; Tablet;' or 'Opera Tablet', so we assume those devices as tablets
          */
         if (null === $this->device && ($this->hasAndroidTableFragment()
@@ -1007,7 +1014,7 @@ class DeviceDetector
         /**
          * All devices that contain Andr0id in string are assumed to be a tv
          */
-        if ($this->matchUserAgent('Andr0id|Android TV')) {
+        if ($this->matchUserAgent('Andr0id|Android TV|\(lite\) TV')) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
         }
 

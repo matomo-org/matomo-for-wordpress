@@ -418,6 +418,10 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     {
         $loginMail = $form->getSubmitValue('form_login');
         $password = $form->getSubmitValue('form_password');
+        
+        if (!empty($loginMail)) {
+            $loginMail = trim($loginMail);
+        }
 
         try {
             $this->passwordResetter->initiatePasswordResetProcess($loginMail, $password);
@@ -553,11 +557,11 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         // if no user matches the invite token
         if (!$user) {
             $this->bruteForceDetection->addFailedAttempt(IP::getIpFromHeader());
-            throw new RedirectException(Piwik::translate('Login_InvalidOrExpiredTokenV2'), SettingsPiwik::getPiwikUrl(), 5);
+            throw new RedirectException(Piwik::translate('Login_InvalidOrExpiredTokenV2'), SettingsPiwik::getPiwikUrl(), 3);
         }
 
         if (!empty($user['invite_expired_at']) && Date::factory($user['invite_expired_at'])->isEarlier(Date::now())) {
-            throw new RedirectException(Piwik::translate('Login_InvalidOrExpiredTokenV2'), SettingsPiwik::getPiwikUrl(), 5);
+            throw new RedirectException(Piwik::translate('Login_InvalidOrExpiredTokenV2'), SettingsPiwik::getPiwikUrl(), 3);
         }
 
         // if form was sent
@@ -604,6 +608,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                     [
                         'password'          => $password,
                         'invite_token'      => null,
+                        'invite_link_token' => null,
                         'invite_accept_at'  => Date::now()->getDatetime(),
                         'invite_expired_at' => null,
                     ]

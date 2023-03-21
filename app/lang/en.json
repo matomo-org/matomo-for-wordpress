@@ -4165,8 +4165,8 @@
         "EmailInstructionsYourSiteId": "Your site ID: %1$s",
         "EmailInstructionsYourTrackingUrl": "Your tracking URL: %1$s",
         "DetectingYourSite": "Detecting your site",
-        "GADetected": "%1$s was detected on your website. Did you know can easily migrate your historical analytics data and settings from %2$s to Matomo? %3$s%4$s%5$sLearn more in this guide%6$s",
-        "GADetectedEmail": "%1$s was detected on your website. Did you know can easily migrate your historical analytics data and settings from %2$s to Matomo? Learn more here: %3$s"
+        "GADetected": "%1$s was detected on your website. Did you know you can easily migrate your historical analytics data and settings from %2$s to Matomo? %3$s%4$s%5$sLearn more in this guide%6$s",
+        "GADetectedEmail": "%1$s was detected on your website. Did you know you can easily migrate your historical analytics data and settings from %2$s to Matomo? Learn more here: %3$s"
     },
     "TagManager": {
         "AddThisTagDescription": "Add the AddThis social media buttons and more to your website.",
@@ -4484,6 +4484,8 @@
         "DomReadyTriggerDescription": "Triggered as soon as all the HTML has been received and parsed.",
         "DomReadyTriggerHelp": "At this stage of loading a web page only the HTML is loaded but not yet all images, StyleSheets, and JavaScript files. If you want to make sure the website is fully loaded, please consider the \"Window Loaded\" trigger.",
         "DomReadyTriggerName": "DOM Ready",
+        "DriftTagName": "Drift",
+        "DriftTagDescription": "Discover more efficient placement of your bots with Drift JavaScript tags.",
         "DriftDescription": "Drift allows you to connect with your customers.",
         "DriftHelp": "This tag allows you to add the Drift contact form to your website.",
         "AllDownloadsClickTriggerDescription": "Triggered when a link is clicked which links to a downloadable file. It will be triggered on left, middle and right click.",

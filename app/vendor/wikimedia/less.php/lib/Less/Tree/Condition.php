@@ -1,10 +1,6 @@
 <?php
-
 /**
- * Condition
- *
- * @package Less
- * @subpackage tree
+ * @private
  */
 class Less_Tree_Condition extends Less_Tree {
 
