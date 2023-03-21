@@ -3,6 +3,7 @@
 * Update Matomo core to 4.14.0
 * Fix site sync problem in a non multistore mode
 * Minor tweaks in the system report
+* Fix notice in the system report with ithemes security above 8
 * Update supported versions
 
 = 4.13.5 =
