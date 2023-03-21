@@ -1745,11 +1745,19 @@ class SystemReport {
 			if ( class_exists( 'ITSEC_Modules' ) ) {
 				if ( method_exists( '\ITSEC_Modules', 'get_setting' ) ) {
 					$input = ITSEC_Modules::get_settings( 'system-tweaks' );
-					if ( $input['long_url_strings'] ) {
+					// old plugin versions
+					$long_url_strings_options = [ 'long_url_strings', 'st_longurl' ];
+					$long_url_strings_enabled = false;
+					foreach ( $long_url_strings_options as $option ) {
+						if ( isset( $input[ $option ] ) && $input[ $option ] ) {
+							$long_url_strings_enabled = true;
+						}
+					}
+					if ( $long_url_strings_enabled ) {
 						$rows[] = [
 							'name'     => "iThemes Security 'Long URLs' Enabled",
 							'value'    => true,
-							'comment'  => esc_html__( 'Tracking might not work because it looks like you have Long URLs disabled in iThemes Security. To fix this please go to "Security -> Settings -> System Tweaks" and disable the setting "Long URL Strings".', 'matomo' ),
+							'comment'  => esc_html__( 'Tracking might not work because it looks like you have Long URLs disabled in iThemes Security. To fix this please contact ithemes security support.', 'matomo' ),
 							'is_error' => true,
 						];
 					}
