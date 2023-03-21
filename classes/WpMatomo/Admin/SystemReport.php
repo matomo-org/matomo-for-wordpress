@@ -22,6 +22,7 @@ use Piwik\Plugin;
 use Piwik\Plugins\CoreAdminHome\API;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
+use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\SettingsPiwik;
 use Piwik\Tracker\Failures;
@@ -442,7 +443,7 @@ class SystemReport {
 		$output = '';
 		if ( $this->shell_exec_available && $this->binary ) {
 			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
-			$output = trim( @shell_exec( $this->binary . ' ' . $phpcli_params ) );
+			$output = trim( '' . @shell_exec( $this->binary . ' ' . $phpcli_params ) );
 		}
 
 		return $output;
@@ -982,15 +983,19 @@ class SystemReport {
 	}
 
 	private function get_wordpress_info() {
-		$is_multi_site      = is_multisite();
-		$num_blogs          = 1;
-		$is_network_enabled = false;
+		$is_multi_site          = is_multisite();
+		$num_blogs              = 1;
+		$is_network_enabled     = false;
+		$matomo_id_sites_number = 1;
 		if ( $is_multi_site ) {
 			if ( function_exists( 'get_blog_count' ) ) {
 				$num_blogs = get_blog_count();
 			}
 			$settings           = new Settings();
 			$is_network_enabled = $settings->is_network_enabled();
+		} else {
+			$sites_manager_model    = new Model();
+			$matomo_id_sites_number = count( $sites_manager_model->getSitesId() );
 		}
 
 		$rows   = [];
@@ -1445,10 +1450,17 @@ class SystemReport {
 		];
 
 		foreach ( [ 'user', 'site' ] as $table ) {
-			$rows[] = [
+			$row = [
 				'name'  => 'Matomo ' . $table . 's found',
 				'value' => $this->get_num_entries_in_table( $table ),
 			];
+			if ( 'site' === $table ) {
+				if ( ( ! is_multisite() ) && ( $row['value'] > 1 ) ) {
+					$row['is_warning'] = true;
+					$row['comment']    = esc_html__( 'There is an error in your Matomo records. Please contact wordpress@matomo.org', 'matomo' );
+				}
+			}
+			$rows[] = $row;
 		}
 
 		$grants = $this->get_db_grants();
@@ -1685,6 +1697,11 @@ class SystemReport {
 			];
 
 			$used_not_compatible = array_intersect( $active_plugins, $this->not_compatible_plugins );
+			if ( in_array( 'wp-rocket', $used_not_compatible, true ) ) {
+				if ( defined( 'WP_ROCKET_VERSION' ) && ( version_compare( WP_ROCKET_VERSION, '3.11.5' ) <= 0 ) ) {
+					unset( $used_not_compatible[ array_search( 'wp-rocket', $used_not_compatible, true ) ] );
+				}
+			}
 
 			if ( ! empty( $used_not_compatible ) ) {
 				$additional_comment = '';
@@ -1728,11 +1745,19 @@ class SystemReport {
 			if ( class_exists( 'ITSEC_Modules' ) ) {
 				if ( method_exists( '\ITSEC_Modules', 'get_setting' ) ) {
 					$input = ITSEC_Modules::get_settings( 'system-tweaks' );
-					if ( $input['long_url_strings'] ) {
+					// old plugin versions
+					$long_url_strings_options = [ 'long_url_strings', 'st_longurl' ];
+					$long_url_strings_enabled = false;
+					foreach ( $long_url_strings_options as $option ) {
+						if ( isset( $input[ $option ] ) && $input[ $option ] ) {
+							$long_url_strings_enabled = true;
+						}
+					}
+					if ( $long_url_strings_enabled ) {
 						$rows[] = [
 							'name'     => "iThemes Security 'Long URLs' Enabled",
 							'value'    => true,
-							'comment'  => esc_html__( 'Tracking might not work because it looks like you have Long URLs disabled in iThemes Security. To fix this please go to "Security -> Settings -> System Tweaks" and disable the setting "Long URL Strings".', 'matomo' ),
+							'comment'  => esc_html__( 'Tracking might not work because it looks like you have Long URLs disabled in iThemes Security. To fix this please contact ithemes security support.', 'matomo' ),
 							'is_error' => true,
 						];
 					}

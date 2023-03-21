@@ -1,10 +1,6 @@
 <?php
-
 /**
- * Comment
- *
- * @package Less
- * @subpackage tree
+ * @private
  */
 class Less_Tree_Comment extends Less_Tree {
 
@@ -16,7 +12,7 @@ class Less_Tree_Comment extends Less_Tree {
 
 	public function __construct( $value, $silent, $index = null, $currentFileInfo = null ) {
 		$this->value = $value;
-		$this->silent = !!$silent;
+		$this->silent = (bool)$silent;
 		$this->currentFileInfo = $currentFileInfo;
 	}
 

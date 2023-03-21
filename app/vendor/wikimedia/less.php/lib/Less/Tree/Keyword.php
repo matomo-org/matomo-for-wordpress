@@ -1,10 +1,6 @@
 <?php
-
 /**
- * Keyword
- *
- * @package Less
- * @subpackage tree
+ * @private
  */
 class Less_Tree_Keyword extends Less_Tree {
 

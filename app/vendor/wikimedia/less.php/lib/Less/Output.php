@@ -1,10 +1,8 @@
 <?php
-
 /**
  * Parser output
  *
- * @package Less
- * @subpackage output
+ * @private
  */
 class Less_Output {
 
@@ -19,8 +17,8 @@ class Less_Output {
 	 * Adds a chunk to the stack
 	 *
 	 * @param string $chunk The chunk to output
-	 * @param array $fileInfo The file information
-	 * @param integer $index The index
+	 * @param array|null $fileInfo The file information
+	 * @param int $index The index
 	 * @param mixed $mapLines
 	 */
 	public function add( $chunk, $fileInfo = null, $index = 0, $mapLines = null ) {
@@ -30,7 +28,7 @@ class Less_Output {
 	/**
 	 * Is the output empty?
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isEmpty() {
 		return count( $this->strs ) === 0;
