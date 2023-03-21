@@ -146,17 +146,22 @@ class Sync {
 					// we have one record in the matomo_site table but the mapping does not exist. Force usage of the ID found.
 					$idsite = $matomo_id_site;
 					$this->logger->log( "Can't find the id site in the mapping, but there is already an existing site. Use its ID " . $idsite . ' for blog' );
+					wp_cache_flush();
+					add_site_option( Site::SITE_MAPPING_PREFIX . $blog_id, $idsite );
 				} else {
 					if ( (int) $idsite !== $matomo_id_site ) {
 						// the mapped id in the WP config is different from the id in the matomo_site table: we force usage of the matomo table site ID
 						$idsite = $matomo_id_site;
 						$this->logger->log( 'The id site in the mapping is different from the id site in the matomo table. Force usage of Matomo ID ' . $idsite . ' for blog' );
+						Site::map_matomo_site_id( $blog_id, $idsite );
 					}
 				}
 			} else {
-				// there are more than one record: we'll have to identify which one has data and which one must be removed from the matomo_site table
-				$this->logger->log( 'There is a problem in your configuration. Please contact support at wordpress@matomo.org' );
-				return false;
+				if ( count( $matomo_id_sites ) > 1 ) {
+					// there are more than one record: we'll have to identify which one has data and which one must be removed from the matomo_site table
+					$this->logger->log( 'There is a problem in your configuration. Please contact support at wordpress@matomo.org' );
+					return false;
+				}
 			}
 		}
 
