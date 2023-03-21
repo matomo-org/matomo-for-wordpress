@@ -1,4 +1,8 @@
 == Changelog ===
+= 4.14.0 =
+* Update Matomo core to 4.14.0
+* Fix site sync problem in a non multistore mode
+* 
 = 4.13.5 =
 * Removed php 8 function use
 

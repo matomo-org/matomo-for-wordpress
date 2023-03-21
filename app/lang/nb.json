@@ -1883,7 +1883,7 @@
     },
     "ImageGraph": {
         "ColumnOrdinateMissing": "Fant ikke en «%1$s» kolonne i denne rapporten. Prøv %2$s.",
-        "PluginDescription": "Generer statiske PNG-grafebilder for alle dine datarapporter."
+        "PluginDescription": "Generer flotte statiske PNG-grafbilder for dine datarapporter."
     },
     "Insights": {
         "ControlComparedToDescription": "Vekst sammenlignet med",
@@ -4044,8 +4044,8 @@
     "SitesManager": {
         "AddMeasurable": "Legg til nytt område",
         "AddSite": "Legg til et nytt nettsted",
-        "AdvancedTimezoneSupportNotFound": "Avansert støtte for tidssoner ble ikke funnet i din PHP (støttet i PHP>=5.2). Du kan fortsatt velge et manuelt UTC-offset.",
-        "AliasUrlHelp": "Det er anbefalt, men ikke påkrevd, å spesifisere ulike URL-er, en per linje, som dine besøkere vil bruke for å nå dette nettstedet. Alias-URLer for et nettsted vil ikke vises i Henvisere > Nettsteder-rapporten. Merk at det ikke er nødvendig å spesifisere URLer med og uten «www», siden Matomo automatisk tar med begge.",
+        "AdvancedTimezoneSupportNotFound": "Avansert støtte for tidssoner ble ikke funnet i din PHP (støttet i PHP&gt;=5.2). Du kan fortsatt velge manuell UTC-forskyvelse.",
+        "AliasUrlHelp": "Det er anbefalt, men ikke påkrevd, å spesifisere ulike nettadresser, en per linje, som dine besøkere vil bruke for å nå dette nettstedet. Alias-nettadresser for et nettsted vil ikke vises i Henvisere → Nettsteder-rapporten. Merk at det ikke er nødvendig å spesifisere nettadresserer med og uten «www», siden Matomo automatisk tar med begge.",
         "ChangingYourTimezoneWillOnlyAffectDataForward": "Å endre din tidssone vil kun påvirke data fremover, ikke bakover.",
         "ChooseMeasurableTypeHeadline": "Hva vil du måle?",
         "Currency": "Valuta",
@@ -4393,6 +4393,7 @@
         "ElementVisibilityTriggerDescription": "Utløst når et spesifikt element blir synlig.",
         "ElementVisibilityTriggerName": "Elementsynlighet",
         "EmarsysTagCommandCategoryTitle": "kategori",
+        "EmarsysTagCommandViewTitle": "vis",
         "EmarsysTagDescription": "Emarsys er den største uavhengige markedsføringsplattformen i verden.",
         "EmarsysTagHelp": "Denne taggen legger til den asynkrone Emarsys-koden på nettsiden din.",
         "EmarsysTagName": "Emarsys",
@@ -4450,6 +4451,7 @@
         "EtrackerTagDescription": "etracker er et vevanalysesystem. Du kan velge å sende en sidevisning eller en begivenhet.",
         "EtrackerTagHelp": " ",
         "EtrackerTagName": "etracker-vevanalyse",
+        "EtrackerTagTrackingTypeTitle": "Sporingstype",
         "EtrackerTagTransactionBasketTitle": "Handlekurv",
         "EtrackerTagTransactionCurrencyDescription": "Valuta for bestillingen, i henhold til ISO 4217, altså EUR or USD",
         "EtrackerTagTransactionDeliveryConditionsTitle": "Leveringsbetingelser",
@@ -5498,7 +5500,7 @@
         "DirectLink": "&rsaquo; Direkte lenke",
         "DisplayDashboardInIframe": "Du kan også vise hele Matomo-oversikten i programmet eller på nettsiden din med en Iframe (%1$svis eksempel%2$s). Datoparameter kan settes til en gitt kalenderdato, «today», eller «yesterday». Periodeparameteret kan også settes til «day», «week», «month», eller\n «year». Språkparemeteret kan også settes til språkkoden tilhørende en oversettelse, som f.eks language=fr. For idSite=1 og date=yesterday, kan du skrive:",
         "DisplayDashboardInIframeAllSites": "Du kan også lage miniprogrammer av alle nettsider i oversikten i en Iframe (%1$svis eksempel%2$s)",
-        "EmbedIframe": "&rsaquo; Bygg inn iframe",
+        "EmbedIframe": "› Bygg inn iframe",
         "Intro": "Med Matomo kan du %1$seksportere dine vev-analyserapporter%2$s til bloggen, nettsiden, eller intranettsoversikten din … med ett klikk.",
         "OpenInNewWindow": "Åpne i nytt vindu",
         "PluginDescription": "Vis alle Matomo-rapporter du vil på ditt nettsted eller i ditt program med en enkel «embed»-HTML-tagg.",

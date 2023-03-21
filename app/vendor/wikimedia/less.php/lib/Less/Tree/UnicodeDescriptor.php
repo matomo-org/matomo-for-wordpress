@@ -1,10 +1,6 @@
 <?php
-
 /**
- * UnicodeDescriptor
- *
- * @package Less
- * @subpackage tree
+ * @private
  */
 class Less_Tree_UnicodeDescriptor extends Less_Tree {
 

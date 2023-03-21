@@ -1,10 +1,6 @@
 <?php
-
 /**
- * Url
- *
- * @package Less
- * @subpackage tree
+ * @private
  */
 class Less_Tree_Url extends Less_Tree {
 

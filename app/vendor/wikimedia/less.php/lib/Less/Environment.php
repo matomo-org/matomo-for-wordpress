@@ -1,39 +1,35 @@
 <?php
-
 /**
- * Environment
- *
- * @package Less
- * @subpackage environment
+ * @private
  */
 class Less_Environment {
 
-	// public $paths = array();              // option - unmodified - paths to search for imports on
-	//public static $files = array();		// list of files that have been imported, used for import-once
-	//public $rootpath;						// option - rootpath to append to URL's
-	//public static $strictImports = null;	// option -
-	//public $insecure;						// option - whether to allow imports from insecure ssl hosts
-	//public $processImports;				// option - whether to process imports. if false then imports will not be imported
-	//public $javascriptEnabled;			// option - whether JavaScript is enabled. if undefined, defaults to true
-	//public $useFileCache;					// browser only - whether to use the per file session cache
-	public $currentFileInfo;				// information about the current file - for error reporting and importing and making urls relative etc.
+	/**
+	 * Information about the current file - for error reporting and importing and making urls relative etc.
+	 *
+	 * - rootpath: rootpath to append to URLs
+	 *
+	 * @var array|null $currentFileInfo;
+	 */
+	public $currentFileInfo;
 
-	public $importMultiple = false; 		// whether we are currently importing multiple copies
+	/* Whether we are currently importing multiple copies */
+	public $importMultiple = false;
 
 	/**
 	 * @var array
 	 */
-	public $frames = array();
+	public $frames = [];
 
 	/**
 	 * @var array
 	 */
-	public $mediaBlocks = array();
+	public $mediaBlocks = [];
 
 	/**
 	 * @var array
 	 */
-	public $mediaPath = array();
+	public $mediaPath = [];
 
 	public static $parensStack = 0;
 
@@ -48,7 +44,7 @@ class Less_Environment {
 	/**
 	 * @var array
 	 */
-	public $functions = array();
+	public $functions = [];
 
 	public function Init() {
 		self::$parensStack = 0;
@@ -58,7 +54,7 @@ class Less_Environment {
 
 		if ( Less_Parser::$options['compress'] ) {
 
-			Less_Environment::$_outputMap = array(
+			self::$_outputMap = [
 				','	=> ',',
 				': ' => ':',
 				''  => '',
@@ -70,11 +66,11 @@ class Less_Environment {
 				'|' => '|',
 				'^' => '^',
 				'^^' => '^^'
-			);
+			];
 
 		} else {
 
-			Less_Environment::$_outputMap = array(
+			self::$_outputMap = [
 				','	=> ', ',
 				': ' => ': ',
 				''  => '',
@@ -86,19 +82,19 @@ class Less_Environment {
 				'|' => '|',
 				'^' => ' ^ ',
 				'^^' => ' ^^ '
-			);
+			];
 
 		}
 	}
 
-	public function copyEvalEnv( $frames = array() ) {
+	public function copyEvalEnv( $frames = [] ) {
 		$new_env = new Less_Environment();
 		$new_env->frames = $frames;
 		return $new_env;
 	}
 
 	public static function isMathOn() {
-		return !Less_Parser::$options['strictMath'] || Less_Environment::$parensStack;
+		return !Less_Parser::$options['strictMath'] || self::$parensStack;
 	}
 
 	public static function isPathRelative( $path ) {
@@ -115,7 +111,7 @@ class Less_Environment {
 		$segments = explode( '/', $path );
 		$segments = array_reverse( $segments );
 
-		$path = array();
+		$path = [];
 		$path_len = 0;
 
 		while ( $segments ) {
@@ -126,6 +122,7 @@ class Less_Environment {
 					break;
 
 				case '..':
+					// @phan-suppress-next-line PhanTypeInvalidDimOffset False positive
 					if ( !$path_len || ( $path[$path_len - 1] === '..' ) ) {
 						$path[] = $segment;
 						$path_len++;
