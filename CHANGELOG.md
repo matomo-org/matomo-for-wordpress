@@ -1,4 +1,7 @@
 == Changelog ===
+= 4.14.1 =
+* Update Matomo core to 4.14.1
+
 = 4.14.0 =
 * Update Matomo core to 4.14.0
 * Fix site sync problem in a non multistore mode
