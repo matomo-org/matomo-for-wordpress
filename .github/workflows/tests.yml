@@ -1,0 +1,59 @@
+#
+# GitHub action executed when a PR is opened, asked for a review
+# For debugging purposes, also when the assignment is modified.
+#
+# For now, runs only the UI tests.
+#
+# This action requires a secret called ARTIFACTS_PASS which is the key to upload on build-artifacts.
+# This value can be found in the development keepass database.
+#
+
+name: Matomo for WordPress Tests
+
+on:
+  pull_request:
+    types: [ opened, review_requested, assigned, unassigned ]
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  checks: none
+  contents: read
+  deployments: none
+  issues: read
+  packages: none
+  pull-requests: read
+  repository-projects: none
+  security-events: none
+  statuses: none
+
+concurrency:
+  group: php-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit_tests:
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: read  # <--- allows to read repo
+    steps:
+      - name: Checkout plugin project
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: true
+          path: ${{ github.workspace }}
+          token: ${{ secrets.TOKEN_GITHUB }}
+
+      - name: Install test environment
+        shell: bash
+        run:  ${{ github.workspace }}/bin/install-wp-tests.sh wp_matomo_tests root '' localhost latest false
+
+      - name: Install dependencies
+        uses: php-actions/composer@v6
+        with:
+          dev: yes
+
+      - name: Run tests
+        shell: bash
+        run: ${{ github.workspace }}/vendor/bin/phpunit
+
