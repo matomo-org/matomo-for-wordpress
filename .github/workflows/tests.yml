@@ -35,11 +35,10 @@ env:
   MYSQL_DOCKER_IMG: 'bitnami/mariadb:latest'
   DB_NAME: 'wp_matomo_tests'
   PHP_VERSION: '8.0'
-  HOST_RELEASE: 'ubuntu-20.04'
 
 jobs:
   unit_tests:
-    runs-on: ${{ env.HOST_RELEASE }}
+    runs-on: 'ubuntu-20.04'
     strategy:
       fail-fast: false
       matrix:
@@ -103,3 +102,43 @@ jobs:
       - name: Run unit tests in multisite context
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && WP_MULTISITE=1 ./vendor/bin/phpunit
+
+  checkstyle:
+    runs-on: 'ubuntu-20.04'
+    steps:
+      - name: Checkout plugin project
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: true
+          path: wp-content/plugins/matomo
+
+      - name: Setup PHP for checkstyle
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: curl, dom, exif, fileinfo, hash, imagick, json, mbstring, mysqli, openssl, pcre, sodium, xml, zip
+          ini-values: |
+            post_max_size=8M,
+            memory_limit=256M,
+            max_execution_time=30,
+            always_populate_raw_post_data=-1,
+            error_reporting=E_ALL,
+            log_errors=on,
+            display_errors=on,
+            allow_url_fopen=on,
+            zend.exception_ignore_args=Off
+          tools: composer:v2
+          coverage: none
+
+      - name: Check PHP Version
+        run: php -v
+
+      - name: Install dependencies
+        shell: bash
+        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
+
+      - name: Run checkstyle
+        shell: bash
+        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./vendor/bin/phpcs
+
+
