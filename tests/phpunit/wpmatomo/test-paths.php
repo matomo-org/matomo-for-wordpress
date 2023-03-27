@@ -126,7 +126,7 @@ class PathsTest extends MatomoUnit_TestCase {
 			$renamed = @rename( $this->root_path, $this->root_path_with_matomo );
 			if ( $renamed ) {
 				// create a link for the phpunit dependencies
-                $renamed = symlink( $this->root_path_with_matomo, $this->root_path );
+				$renamed = symlink( $this->root_path_with_matomo, $this->root_path );
 			}
 		}
 		return $renamed;
@@ -147,12 +147,12 @@ class PathsTest extends MatomoUnit_TestCase {
 			);
 			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
 			$val                             = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js', $temporary_matomo_analytics_file );
-            $this->assertTrue( in_array( $val, $valid_values, true ) );
+			$this->assertTrue( in_array( $val, $valid_values, true ) );
 			// automatically double check that it works
 			$this->assertTrue( is_file( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js' ) );
 		} else {
-            $this->markTestSkipped( 'Can t rename.' );
-        }
+			$this->markTestSkipped( 'Can t rename.' );
+		}
 	}
 
 	public function test_get_relative_dir_to_matomo_with_matomo_in_path_for_upload_dir() {
@@ -169,8 +169,8 @@ class PathsTest extends MatomoUnit_TestCase {
 			// automatically double check that it works
 			$this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo' ) );
 		} else {
-            $this->markTestSkipped( 'Can t rename.' );
-        }
+			$this->markTestSkipped( 'Can t rename.' );
+		}
 	}
 
 	public function test_get_relative_dir_to_matomo_with_matomo_in_path_for_upload_dir_config() {
@@ -187,8 +187,8 @@ class PathsTest extends MatomoUnit_TestCase {
 			// automatically double check that it works
 			$this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config' ) );
 		} else {
-            $this->markTestSkipped( 'Can t rename.' );
-        }
+			$this->markTestSkipped( 'Can t rename.' );
+		}
 	}
 
 	public function test_clear_assets_dir_does_not_fail() {
