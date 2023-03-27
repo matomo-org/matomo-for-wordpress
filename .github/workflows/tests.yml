@@ -95,7 +95,10 @@ jobs:
         shell: bash
         run: ${{ github.workspace }}/matomo/bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' 127.0.0.1 ${{ matrix.wp-versions }} true
 
-      - name: Run tests
+      - name: Run unit tests in non multisite context
         shell: bash
         run: cd ${{ github.workspace }}/matomo && ./vendor/bin/phpunit
 
+      - name: Run unit tests in multisite context
+        shell: bash
+        run: cd ${{ github.workspace }}/matomo && WP_MULTISITE=1 ./vendor/bin/phpunit
