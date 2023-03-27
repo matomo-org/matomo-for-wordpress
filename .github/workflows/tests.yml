@@ -78,7 +78,7 @@ jobs:
 
       - name: Install test environment
         shell: bash
-        run: ${{ github.workspace }}/bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' localhost latest false
+        run: ${{ github.workspace }}/bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' localhost latest true
 
       - name: Run tests
         shell: bash
