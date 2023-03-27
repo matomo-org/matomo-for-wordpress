@@ -96,6 +96,10 @@ jobs:
         with:
             version: ${{ matrix.wp-versions }}
             dir: ${{ github.workspace }}
+            db_user: root
+            db_password: ''
+            db_name: ${{ env.DB_NAME }}
+            db_host: '127.0.0.1'
 
       - name: Run unit tests in non multisite context
         shell: bash
