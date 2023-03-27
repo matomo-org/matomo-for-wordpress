@@ -93,7 +93,7 @@ jobs:
 
       - name: Install test environment
         shell: bash
-        run: ${{ github.workspace }}/bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' localhost ${{ matrix.wp-versions }} true
+        run: ${{ github.workspace }}/bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' 127.0.0.1 ${{ matrix.wp-versions }} true
 
       - name: Run tests
         shell: bash
