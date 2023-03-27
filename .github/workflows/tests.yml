@@ -87,10 +87,6 @@ jobs:
       - name: Check PHP Version
         run: php -v
 
-      - name: Install dependencies
-        shell: bash
-        run: cd ${{ github.workspace }}/matomo && composer install
-
       - name: Set up WordPress and WordPress Test Library
         uses: sjinks/setup-wordpress-test-library@master
         with:
@@ -100,6 +96,10 @@ jobs:
             db_password: ''
             db_name: ${{ env.DB_NAME }}
             db_host: '127.0.0.1'
+
+      - name: Install dependencies
+        shell: bash
+        run: cd ${{ github.workspace }}/matomo && composer install
 
       - name: Run unit tests in non multisite context
         shell: bash
