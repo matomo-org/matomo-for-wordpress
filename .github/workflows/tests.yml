@@ -40,9 +40,13 @@ jobs:
   unit_tests:
     runs-on: ubuntu-20.04
     strategy:
+      fail-fast: false
       matrix:
         wp-versions: [ 'latest', 'trunk' ]
         php-versions: [ '7.2', '8.0', '8.1', '8.2' ]
+        include:
+          - wp-versions: '5.2'
+            php-versions: '7.2'
     permissions:
       contents: read  # <--- allows to read repo
     steps:
@@ -79,7 +83,7 @@ jobs:
             zend.exception_ignore_args=Off
           tools: composer:v2
           coverage: none
-          
+
       - name: Check PHP Version
         run: php -v
 
