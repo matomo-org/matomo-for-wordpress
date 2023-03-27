@@ -43,7 +43,7 @@ jobs:
       fail-fast: false
       matrix:
         wp-versions: [ 'latest', 'trunk' ]
-        php-versions: [ '7.2', '8.0', '8.1', '8.2' ]
+        php-versions: [ '7.2', '7.3', '7.4', '8.0' ]
         include:
           - wp-versions: '5.2'
             php-versions: '7.2'
@@ -89,13 +89,13 @@ jobs:
 
       - name: Install dependencies
         shell: bash
-        run: composer install
+        run: cd matono && composer install
 
       - name: Install test environment
         shell: bash
-        run: ${{ github.workspace }}/bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' 127.0.0.1 ${{ matrix.wp-versions }} true
+        run: cd matomo && ./bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' 127.0.0.1 ${{ matrix.wp-versions }} true
 
       - name: Run tests
         shell: bash
-        run: ${{ github.workspace }}/vendor/bin/phpunit
+        run: cd matomo && ./vendor/bin/phpunit
 
