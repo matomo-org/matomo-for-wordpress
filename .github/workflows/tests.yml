@@ -42,7 +42,6 @@ jobs:
         with:
           persist-credentials: true
           path: ${{ github.workspace }}
-          token: ${{ secrets.TOKEN_GITHUB }}
 
       - name: Install test environment
         shell: bash
