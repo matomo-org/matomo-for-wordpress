@@ -91,9 +91,11 @@ jobs:
         shell: bash
         run: cd ${{ github.workspace }}/matomo && composer install
 
-      - name: Install test environment
-        shell: bash
-        run: ${{ github.workspace }}/matomo/bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' 127.0.0.1 ${{ matrix.wp-versions }} true
+      - name: Set up WordPress and WordPress Test Library
+        uses: sjinks/setup-wordpress-test-library@master
+        with:
+            version: ${{ matrix.wp-versions }}
+            dir: ${{ github.workspace }}
 
       - name: Run unit tests in non multisite context
         shell: bash
