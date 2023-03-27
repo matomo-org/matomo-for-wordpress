@@ -89,13 +89,13 @@ jobs:
 
       - name: Install dependencies
         shell: bash
-        run: cd matono && composer install
+        run: cd ${{ github.workspace }}/matomo && composer install
 
       - name: Install test environment
         shell: bash
-        run: cd matomo && ./bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' 127.0.0.1 ${{ matrix.wp-versions }} true
+        run: ${{ github.workspace }}/matomo/bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' 127.0.0.1 ${{ matrix.wp-versions }} true
 
       - name: Run tests
         shell: bash
-        run: cd matomo && ./vendor/bin/phpunit
+        run: ${{ github.workspace }}/matomo/vendor/bin/phpunit
 
