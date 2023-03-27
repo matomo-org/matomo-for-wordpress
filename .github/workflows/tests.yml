@@ -39,6 +39,10 @@ env:
 jobs:
   unit_tests:
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        wp-versions: [ 'latest', 'trunk' ]
+        php-versions: [ '7.2', '8.0', '8.1', '8.2' ]
     permissions:
       contents: read  # <--- allows to read repo
     steps:
@@ -58,10 +62,10 @@ jobs:
           sleep 10
           mysql -h127.0.0.1 -uroot -e "CREATE DATABASE ${{ env.DB_NAME }}";
 
-      - name: Setup PHP
+      - name: Setup PHP ${{ matrix.php-versions }}
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ env.PHP_VERSION }}
+          php-version:  ${{ matrix.php-versions }}
           extensions: curl, dom, exif, fileinfo, hash, imagick, json, mbstring, mysqli, openssl, pcre, sodium, xml, zip
           ini-values: |
             post_max_size=8M,
@@ -75,10 +79,17 @@ jobs:
             zend.exception_ignore_args=Off
           tools: composer:v2
           coverage: none
+          
+      - name: Check PHP Version
+        run: php -v
+
+      - name: Install dependencies
+        shell: bash
+        run: composer install
 
       - name: Install test environment
         shell: bash
-        run: ${{ github.workspace }}/bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' localhost latest true
+        run: ${{ github.workspace }}/bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' localhost ${{ matrix.wp-versions }} true
 
       - name: Run tests
         shell: bash
