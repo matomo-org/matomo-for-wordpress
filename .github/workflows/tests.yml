@@ -31,6 +31,11 @@ concurrency:
   group: php-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  MYSQL_DOCKER_IMG: 'bitnami/mariadb:latest'
+  DB_NAME: 'wp_matomo_tests'
+  PHP_VERSION: '8.0'
+
 jobs:
   unit_tests:
     runs-on: ubuntu-20.04
@@ -43,14 +48,37 @@ jobs:
           persist-credentials: true
           path: ${{ github.workspace }}
 
+      - name: Shutdown Ubuntu MySQL
+        run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
+
+      - name: Start MariaDB service
+        shell: bash
+        run: |
+          docker run -d --name mariadb --tmpfs /var/lib/mariadb:rw --tmpfs /bitnami/mariadb/data:rw -v /bitnami/mariadb -p 3306:3306 -e ALLOW_EMPTY_PASSWORD=yes ${{ env.MYSQL_DOCKER_IMG }} > /dev/null
+          sleep 10
+          mysql -h127.0.0.1 -uroot -e "CREATE DATABASE ${{ env.DB_NAME }}";
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: curl, dom, exif, fileinfo, hash, imagick, json, mbstring, mysqli, openssl, pcre, sodium, xml, zip
+          ini-values: |
+            post_max_size=8M,
+            memory_limit=256M,
+            max_execution_time=30,
+            always_populate_raw_post_data=-1,
+            error_reporting=E_ALL,
+            log_errors=on,
+            display_errors=on,
+            allow_url_fopen=on,
+            zend.exception_ignore_args=Off
+          tools: composer:v2
+          coverage: none
+
       - name: Install test environment
         shell: bash
-        run:  ${{ github.workspace }}/bin/install-wp-tests.sh wp_matomo_tests root '' localhost latest false
-
-      - name: Install dependencies
-        uses: php-actions/composer@v6
-        with:
-          dev: yes
+        run: ${{ github.workspace }}/bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' localhost latest false
 
       - name: Run tests
         shell: bash
