@@ -97,5 +97,5 @@ jobs:
 
       - name: Run tests
         shell: bash
-        run: ${{ github.workspace }}/matomo/vendor/bin/phpunit
+        run: cd ${{ github.workspace }}/matomo && ./vendor/bin/phpunit
 
