@@ -145,12 +145,7 @@ class PathsTest extends MatomoUnit_TestCase {
 			$valid_values                    = array(
 				'../../matomo/app/matomo.js',
 			);
-            echo '___________________________________'.PHP_EOL;
-            echo $valid_values[0].PHP_EOL;
-            echo realpath($valid_values[0]).PHP_EOL;
 			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
-            echo $temporary_matomo_analytics_file.PHP_EOL;
-            echo realpath($temporary_matomo_analytics_file).PHP_EOL;
 			$val                             = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js', $temporary_matomo_analytics_file );
 			$this->assertTrue( in_array( $val, $valid_values, true ) );
 			// automatically double check that it works
@@ -167,9 +162,17 @@ class PathsTest extends MatomoUnit_TestCase {
 				'../../matomo/../../uploads/matomo',
 			);
 
+			echo '___________________________________' . PHP_EOL;
+			echo $valid_values[0] . PHP_EOL;
+			echo realpath( $valid_values[0] ) . PHP_EOL;
+			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
+			echo $temporary_matomo_analytics_file . PHP_EOL;
+			echo realpath( $temporary_matomo_analytics_file ) . PHP_EOL;
+
 			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
 			// do not use the path get upload dir method: it returns the path on the test instance
 			$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo', $temporary_matomo_analytics_file );
+			echo $val . PHP_EOL;
 			$this->assertTrue( in_array( $val, $valid_values, true ) );
 			// automatically double check that it works
 			$this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo' ) );
@@ -185,9 +188,17 @@ class PathsTest extends MatomoUnit_TestCase {
 				'../../matomo/../../uploads/matomo/config',
 			);
 
+			echo '___________________________________' . PHP_EOL;
+			echo $valid_values[0] . PHP_EOL;
+			echo realpath( $valid_values[0] ) . PHP_EOL;
+			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
+			echo $temporary_matomo_analytics_file . PHP_EOL;
+			echo realpath( $temporary_matomo_analytics_file ) . PHP_EOL;
+
 			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
 			// do not use the path get upload dir method: it returns the path on the test instance
 			$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config', $temporary_matomo_analytics_file );
+			echo $val . PHP_EOL;
 			$this->assertTrue( in_array( $val, $valid_values, true ) );
 			// automatically double check that it works
 			$this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config' ) );
