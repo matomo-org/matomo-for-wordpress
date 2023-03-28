@@ -97,7 +97,7 @@ jobs:
 
       - name: Run unit tests in non multisite context
         shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./vendor/bin/phpunit tests/phpunit/wpmatomo/test-paths.php
+        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./vendor/bin/phpunit
 
       - name: Run unit tests in multisite context
         shell: bash
