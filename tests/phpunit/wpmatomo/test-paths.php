@@ -126,7 +126,7 @@ class PathsTest extends MatomoUnit_TestCase {
 			$renamed = @rename( $this->root_path, $this->root_path_with_matomo );
 			if ( $renamed ) {
 				// create a link for the phpunit dependencies
-				symlink( $this->root_path_with_matomo, $this->root_path );
+				$renamed = symlink( $this->root_path_with_matomo, $this->root_path );
 			}
 		}
 		return $renamed;
@@ -150,6 +150,8 @@ class PathsTest extends MatomoUnit_TestCase {
 			$this->assertTrue( in_array( $val, $valid_values, true ) );
 			// automatically double check that it works
 			$this->assertTrue( is_file( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js' ) );
+		} else {
+			$this->markTestSkipped( 'Can t rename.' );
 		}
 	}
 
@@ -164,8 +166,10 @@ class PathsTest extends MatomoUnit_TestCase {
 			// do not use the path get upload dir method: it returns the path on the test instance
 			$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo', $temporary_matomo_analytics_file );
 			$this->assertTrue( in_array( $val, $valid_values, true ) );
-			// automatically double check that it works
-			$this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo' ) );
+			// do not check like the others test if the folder exist: in unit tests outside a WordPress context, uploads folder does not ezist
+			// $this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo' ) );
+		} else {
+			$this->markTestSkipped( 'Can t rename.' );
 		}
 	}
 
@@ -180,8 +184,10 @@ class PathsTest extends MatomoUnit_TestCase {
 			// do not use the path get upload dir method: it returns the path on the test instance
 			$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config', $temporary_matomo_analytics_file );
 			$this->assertTrue( in_array( $val, $valid_values, true ) );
-			// automatically double check that it works
-			$this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config' ) );
+			// do not check like the others test if the folder exist: in unit tests outside a WordPress context, uploads folder does not ezist
+			// $this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config' ) );
+		} else {
+			$this->markTestSkipped( 'Can t rename.' );
 		}
 	}
 
