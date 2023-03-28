@@ -174,6 +174,10 @@ class PathsTest extends MatomoUnit_TestCase {
 			$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo', $temporary_matomo_analytics_file );
 			echo $val . PHP_EOL;
 			$this->assertTrue( in_array( $val, $valid_values, true ) );
+            echo plugin_dir_path( $temporary_matomo_analytics_file ).PHP_EOL;
+            echo realpath(plugin_dir_path( $temporary_matomo_analytics_file )).PHP_EOL;
+            echo plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo'.PHP_EOL;
+            echo realpath(plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo').PHP_EOL;
 			// automatically double check that it works
 			$this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo' ) );
 		} else {
