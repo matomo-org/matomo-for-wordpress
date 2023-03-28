@@ -12,7 +12,7 @@ name: Matomo for WordPress Tests
 
 on:
   pull_request:
-    types: [ opened, review_requested ]
+    types: [ opened, review_requested, assigned ]
   workflow_dispatch:
 
 permissions:
