@@ -145,7 +145,12 @@ class PathsTest extends MatomoUnit_TestCase {
 			$valid_values                    = array(
 				'../../matomo/app/matomo.js',
 			);
+            echo '___________________________________'.PHP_EOL;
+            echo $valid_values[0].PHP_EOL;
+            echo realpath($valid_values[0]).PHP_EOL;
 			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
+            echo $temporary_matomo_analytics_file.PHP_EOL;
+            echo realpath($temporary_matomo_analytics_file).PHP_EOL;
 			$val                             = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js', $temporary_matomo_analytics_file );
 			$this->assertTrue( in_array( $val, $valid_values, true ) );
 			// automatically double check that it works
