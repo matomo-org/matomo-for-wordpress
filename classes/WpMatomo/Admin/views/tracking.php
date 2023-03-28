@@ -87,7 +87,7 @@ if ( count( $settings_errors ) ) {
 
 		$matomo_form->show_checkbox( 'disable_cookies', esc_html__( 'Disable cookies', 'matomo' ), esc_html__( 'Disable all tracking cookies for a visitor.', 'matomo' ), $matomo_is_not_generated_tracking, $matomo_full_generated_tracking_group );
 
-		$matomo_form->show_checkbox( 'track_ecommerce', esc_html__( 'Enable ecommerce', 'matomo' ), esc_html__( 'Matom can track Ecommerce orders, abandoned carts and product views for WooCommerce, Easy Digital Analytics, MemberPress, and more. Disabling this feature will also remove Ecommerce reports from the Matomo UI.', 'matomo' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
+		$matomo_form->show_checkbox( 'track_ecommerce', esc_html__( 'Enable ecommerce', 'matomo' ), esc_html__( 'Matom can track Ecommerce orders, abandoned carts and product views for WooCommerce, Easy Digital Downloads, MemberPress, and more. Disabling this feature will also remove Ecommerce reports from the Matomo UI.', 'matomo' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
 
 		$matomo_form->show_checkbox( 'track_search', esc_html__( 'Track search', 'matomo' ), esc_html__( 'Use Matomo\'s advanced Site Search Analytics feature.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/faq/reports/tracking-site-search-keywords/#track-site-search-using-the-tracking-api-advanced-users-only" rel="noreferrer noopener" target="_BLANK">', '</a>' ), $matomo_is_not_tracking, $matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager' );
 
