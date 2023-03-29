@@ -92,7 +92,7 @@ jobs:
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
 
       - name: Update dependencies
-        if: [ ${{ matrix.php-versions }} =~ "^8\.[1-2]" ]
+        if: ${{ matrix.php-versions }} =~ "^8\.[1-2]"
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update
 
