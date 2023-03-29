@@ -88,13 +88,9 @@ jobs:
         run: php -v
 
       - name: Install dependencies
-        shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
-
-      - name: Update dependencies
-        shell: bash
-        if: ${{ matrix.php-versions }} == '8.1' || ${{ matrix.php-versions }} == '8.2'
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer require "phpunit/phpunit" "^8.5.23" -W
+        uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: "lowest"
 
       - name: Install test environment
         shell: bash
