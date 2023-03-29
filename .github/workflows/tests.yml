@@ -91,6 +91,11 @@ jobs:
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
 
+      - name: Update dependencies
+        if: [ ${{ matrix.php-versions }} =~ "^8\.[1-2]" ]
+        shell: bash
+        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update
+
       - name: Install test environment
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' 127.0.0.1 ${{ matrix.wp-versions }} true
