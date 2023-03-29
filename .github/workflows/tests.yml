@@ -94,7 +94,7 @@ jobs:
       - name: Update dependencies
         shell: bash
         run: |
-          if [[ "${{ matrix.php-versions }}" =~ "^8\.[1-2]" ]]; then
+          if [[ "${{ matrix.php-versions }}" =~ "8\.[1-2]" ]]; then
             cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update
           else
             echo "No composer update";
