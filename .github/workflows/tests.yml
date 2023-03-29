@@ -87,14 +87,14 @@ jobs:
       - name: Check PHP Version
         run: php -v
 
-      - name: Install dependencies
-        shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
-
       - name: Update dependencies
         shell: bash
         if: ${{ matrix.php-versions }} == '8.1' || ${{ matrix.php-versions }} == '8.2'
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update
+        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer require "phpunit/phpunit" "^8.5.23"
+
+      - name: Install dependencies
+        shell: bash
+        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
 
       - name: Install test environment
         shell: bash
