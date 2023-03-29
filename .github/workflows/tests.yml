@@ -47,6 +47,8 @@ jobs:
         include:
           - wp-versions: '5.2'
             php-versions: '7.2'
+        dependency-versions: [ "lowest", "highest" ]
+
     permissions:
       contents: read  # <--- allows to read repo
     steps:
@@ -90,7 +92,7 @@ jobs:
       - name: Install dependencies
         uses: "ramsey/composer-install@v2"
         with:
-          dependency-versions: "lowest"
+          dependency-versions: ${{ matrix.dependency-versions }}
           working-directory: ${{ github.workspace }}/wp-content/plugins/matomo
 
       - name: Install test environment
