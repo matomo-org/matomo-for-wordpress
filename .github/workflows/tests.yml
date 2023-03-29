@@ -93,7 +93,7 @@ jobs:
 
       - name: Update dependencies
         shell: bash
-        if: ${{ ${{ matrix.php-versions }} =~ "8.[1-2]" }}
+        if: ${{ matrix.php-versions }} == '8.1' || ${{ matrix.php-versions }} == '8.2'
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update
 
       - name: Install test environment
