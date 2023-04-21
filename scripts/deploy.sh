@@ -64,6 +64,12 @@ svn checkout --depth immediates "$SVN_URL" "$SVN_DIR"
 cd "$SVN_DIR"
 svn update --set-depth infinity assets
 svn update --set-depth infinity trunk
+svn update --set-depth immediates tags
+
+if [[ -d "tags/$VERSION" ]]; then
+	echo "ℹ︎ Version $VERSION of plugin $SLUG was already published";
+	exit
+fi
 
 echo "➤ Checking out git matomo-for-wordpress repository..."
 git clone --single-branch --branch live https://github.com/matomo-org/matomo-for-wordpress.git "$GITHUB_WORKSPACE"
