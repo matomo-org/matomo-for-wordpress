@@ -1,0 +1,18 @@
+{
+    "UsersManager": {
+        "AllWebsites": "Allir vefir",
+        "ApplyToAllWebsites": "Virkja fyrir alla vefi",
+        "Email": "Netfang",
+        "ExcludeVisitsViaCookie": "Útiloka þínar heimsóknir með því að nota smáköku",
+        "ForAnonymousUsersReportDateToLoadByDefault": "Sjálfgefið að sýna skýrslu fyrir notendur sem ekki eru auðkenndir",
+        "MenuUserSettings": "Stillingar notenda",
+        "MenuUsers": "Notendur",
+        "PrivNone": "Engin aðgangur",
+        "PrivView": "Sýn",
+        "ReportToLoadByDefault": "Skýrsla sem sjálfgefið er að sækja",
+        "TheLoginScreen": "Skjár fyrir auðkenningu",
+        "User": "Notandi",
+        "Username": "Notandanafn",
+        "UsersManagement": "Notendastjórnun"
+    }
+}

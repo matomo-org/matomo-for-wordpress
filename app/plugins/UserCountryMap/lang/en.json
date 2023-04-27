@@ -1,0 +1,28 @@
+{
+    "UserCountryMap": {
+        "AndNOthers": "and %s others",
+        "Cities": "Cities",
+        "Countries": "Countries",
+        "DaysAgo": "%s days ago",
+        "GoalConversions": "%s goal conversions",
+        "HoursAgo": "%s hours ago",
+        "MinutesAgo": "%s minutes ago",
+        "NoVisit": "No visit",
+        "NoVisitsInfo": "No visits displayed, as no visits for this period has correct (latitude and longitude) geolocation info.",
+        "NoVisitsInfo2": "Resolve this issue by using a GeoIP geolocation provider with a GeoIP city database. (Though unlikely) IP addresses could still be impossible to geolocate.",
+        "None": "None",
+        "PluginDescription": "Provides the \"Visitor Map\" and \"Real-time Map\" widgets. Requires the \"UserCountry\" plugin.",
+        "RealTimeMap": "Real-time Map",
+        "RealTimeMapHelp": "Shows the location of website visitors the last 30 minutes, and flashes for new ones. Recent visits are shown as large orange bubbles, and older ones as smaller gray ones. It refreshes every five seconds.",
+        "Regions": "Regions",
+        "Searches": "%s searches",
+        "SecondsAgo": "%s seconds ago",
+        "ShowingVisits": "Geolocated visits of the last",
+        "Unlocated": "<b>%1$s</b> %2$s of the visits from %3$s couldn't be geolocated.",
+        "VisitorMap": "Visitor Map",
+        "WithUnknownCity": "%s from unknown cities",
+        "WithUnknownRegion": "%s from unknown regions",
+        "WorldWide": "Worldwide",
+        "map": "map"
+    }
+}

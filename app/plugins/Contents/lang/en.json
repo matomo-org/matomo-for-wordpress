@@ -1,0 +1,24 @@
+{
+    "Contents": {
+        "PluginDescription": "Content and banner tracking lets you measure the performance (views, clicks, CTR) of any piece of content on your pages (Banner ad, image, any item).",
+        "Impressions": "Impressions",
+        "ContentImpression": "Content Impression",
+        "ContentInteraction": "Content Interaction",
+        "ContentInteractions": "Content Interactions",
+        "InteractionRate": "Interaction Rate",
+        "ContentName": "Content Name",
+        "ContentNameReportDocumentation": "This report shows the names of the content your visitors viewed and interacted with.",
+        "ContentNames": "Content Names",
+        "ContentPiece": "Content Piece",
+        "ContentPieceReportDocumentation": "This report shows the pieces of content your visitors viewed and interacted with.",
+        "ContentPieces": "Content Pieces",
+        "ContentTarget": "Content Target",
+        "ContentTargets": "Content Targets",
+        "Contents": "Contents",
+        "InteractionsMetricDocumentation": "The number of times a content block was interacted with (eg, a 'click' on a banner or ad).",
+        "ImpressionsMetricDocumentation": "The number of times a content block, such as a banner or an ad, was displayed on a page.",
+        "InteractionRateMetricDocumentation": "The ratio of content impressions to interactions.",
+        "ContentsSubcategoryHelp1": "Content tracking helps you determine the popularity of specific pieces of content on any page of your website or app. This section reports the number of impressions and interactions the various pieces of content on your site receive.",
+        "ContentsSubcategoryHelp2": "Learn more in the Content Tracking guide."
+    }
+}

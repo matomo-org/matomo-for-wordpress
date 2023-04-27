@@ -1,0 +1,24 @@
+{
+    "VisitorInterest": {
+        "BetweenXYMinutes": "%1$s-%2$s 分",
+        "BetweenXYSeconds": "%1$s-%2$s 秒",
+        "ColumnPagesPerVisit": "ビジット単位のページ数",
+        "ColumnVisitDuration": "ビジットの継続時間",
+        "Engagement": "利用状況",
+        "NPages": "%s ページ",
+        "OnePage": "1 ページ",
+        "PluginDescription": "ビジターの関心: 表示されたページ数、Web サイトで費やされた時間、最後のビジットからの日数など。",
+        "VisitNum": "訪問回数",
+        "VisitsByDaysSinceLast": "最後の訪問からの日数別のビジット",
+        "VisitsPerDuration": "ビジット継続時間単位のビジット",
+        "VisitsPerNbOfPages": "ページ数単位のビジット",
+        "WidgetLengths": "ビジットの長さ",
+        "WidgetLengthsDocumentation": "特定の合計期間のビジット数。 最初に、レポートはタグ クラウドとして表示されます。より一般的な期間ほどフォントが大きくなります。",
+        "WidgetPages": "ビジット単位のページ数",
+        "WidgetPagesDocumentation": "特定の数のページビューを含むビジット数。 最初に、レポートはタグ クラウドとして表示され、より一般的なページ数ほどフォントが大きくなります。",
+        "WidgetVisitsByDaysSinceLast": "前回の訪問からの日数別のビジット",
+        "WidgetVisitsByDaysSinceLastDocumentation": "最後の訪問が特定の日数前であるリピーターからのビジット数。",
+        "WidgetVisitsByNumDocumentation": "N 回目の訪問に達したビジターの数。 つまり Web サイトに一定回数以上アクセスしたビジターの総数。",
+        "visitsByVisitCount": "訪問数別のビジット"
+    }
+}
