@@ -1,0 +1,18 @@
+{
+    "API": {
+        "ChangeTokenHint": "Se quiser alterar este código, por favor, aceda à sua %1$spágina de definições pessoais%2$s.",
+        "EvolutionMetricName": "Evolução de %s",
+        "GenerateVisits": "Se você não tem dados para hoje, você pode gerar alguns usando o plug-in %1$s indo em 'Desenvolvimento → Gerador de Visitantes' na área de administração do Matomo.",
+        "Glossary": "Glossário",
+        "KeepTokenSecret": "Este token_auth é tão secreto como o seu nome de utilizador e a palavra-passe. %1$s não o partilhe%2$s!",
+        "LearnAboutCommonlyUsedTerms2": "Saber mais sobre os termos mais utilizados para obter o máximo do Matomo Analytics.",
+        "LoadedAPIs": "%s APIs carregadas",
+        "MainMetricsReportDocumentation": "Este relatório fornece uma visão geral das métricas mais importantes em todas as categorias e plugins.",
+        "MoreInformation": "Mais informações sobre as APIs do Matomo disponíveis em %1$sIntrodução à API Matomo%2$s e %3$sReferência da API Matomo%4$s.",
+        "PluginDescription": "Todos os dados no Matomo estão disponíveis por meio de APIs simples. Este plug-in é o ponto de entrada do serviço da web, que você pode chamar para obter seus dados de análise da web em XML, JSON, PHP, CSV, etc.",
+        "ReportingApiReference": "Referência da API de relatórios",
+        "TopLinkTooltip": "Acesse seus dados do Web Analytics de forma programática por meio de uma API simples em JSON, XML etc.",
+        "UserAuthentication": "Autenticação do utilizador",
+        "UsingTokenAuth": "Se você deseja %1$srequisitar dados dentro de um script, um crontab, etc.%2$s você precisa adicionar o parâmetro de URL '%3$s' às chamadas de API para URLs que requerem autenticação."
+    }
+}

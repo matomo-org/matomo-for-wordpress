@@ -1,0 +1,9 @@
+{
+    "UserLanguage": {
+        "BrowserLanguage": "Språk för webbläsare",
+        "LanguageCode": "Språkkod",
+        "PluginDescription": "Rapporterar det primära webbläsarspråket som används av dina besökare.",
+        "getLanguageCodeDocumentation": "Visar vilken exakt språkkod besökarens webbläsare är inställd på. (t.ex. \"tyska — Österrike (de-at)\")",
+        "getLanguageDocumentation": "Visar vilket språk besökarens webbläsare använder. (t.ex. \"Franska\")"
+    }
+}

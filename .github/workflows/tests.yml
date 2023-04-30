@@ -1,0 +1,144 @@
+#
+# GitHub action executed when a PR is opened, asked for a review
+# For debugging purposes, also when the assignment is modified.
+#
+# For now, runs only the UI tests.
+#
+# This action requires a secret called ARTIFACTS_PASS which is the key to upload on build-artifacts.
+# This value can be found in the development keepass database.
+#
+
+name: Matomo for WordPress Tests
+
+on:
+  pull_request:
+    types: [ opened, review_requested ]
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  checks: none
+  contents: read
+  deployments: none
+  issues: read
+  packages: none
+  pull-requests: read
+  repository-projects: none
+  security-events: none
+  statuses: none
+
+concurrency:
+  group: php-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  MYSQL_DOCKER_IMG: 'bitnami/mariadb:latest'
+  DB_NAME: 'wp_matomo_tests'
+  PHP_VERSION: '8.0'
+
+jobs:
+  unit_tests:
+    runs-on: 'ubuntu-20.04'
+    strategy:
+      fail-fast: false
+      matrix:
+        wp-versions: [ 'latest', 'trunk' ]
+        php-versions: [ '7.2', '7.3', '7.4', '8.0' ]
+        include:
+          - wp-versions: '5.2'
+            php-versions: '7.2'
+    permissions:
+      contents: read  # <--- allows to read repo
+    steps:
+      - name: Checkout plugin project
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: true
+          path: wp-content/plugins/matomo
+
+      - name: Shutdown Ubuntu MySQL
+        run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
+
+      - name: Start MariaDB service
+        shell: bash
+        run: |
+          docker run -d --name mariadb --tmpfs /var/lib/mariadb:rw --tmpfs /bitnami/mariadb/data:rw -v /bitnami/mariadb -p 3306:3306 -e ALLOW_EMPTY_PASSWORD=yes ${{ env.MYSQL_DOCKER_IMG }} > /dev/null
+          sleep 10
+          mysql -h127.0.0.1 -uroot -e "CREATE DATABASE ${{ env.DB_NAME }}";
+
+      - name: Setup PHP ${{ matrix.php-versions }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version:  ${{ matrix.php-versions }}
+          extensions: curl, dom, exif, fileinfo, hash, imagick, json, mbstring, mysqli, openssl, pcre, sodium, xml, zip
+          ini-values: |
+            post_max_size=8M,
+            memory_limit=256M,
+            max_execution_time=30,
+            always_populate_raw_post_data=-1,
+            error_reporting=E_ALL,
+            log_errors=on,
+            display_errors=on,
+            allow_url_fopen=on,
+            zend.exception_ignore_args=Off
+          tools: composer:v2
+          coverage: none
+
+      - name: Check PHP Version
+        run: php -v
+
+      - name: Install dependencies
+        shell: bash
+        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
+
+      - name: Install test environment
+        shell: bash
+        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' 127.0.0.1 ${{ matrix.wp-versions }} true
+
+      - name: Run unit tests in non multisite context
+        shell: bash
+        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./vendor/bin/phpunit
+
+      - name: Run unit tests in multisite context
+        shell: bash
+        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && WP_MULTISITE=1 ./vendor/bin/phpunit
+
+  checkstyle:
+    runs-on: 'ubuntu-20.04'
+    steps:
+      - name: Checkout plugin project
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: true
+          path: wp-content/plugins/matomo
+
+      - name: Setup PHP for checkstyle
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: curl, dom, exif, fileinfo, hash, imagick, json, mbstring, mysqli, openssl, pcre, sodium, xml, zip
+          ini-values: |
+            post_max_size=8M,
+            memory_limit=256M,
+            max_execution_time=30,
+            always_populate_raw_post_data=-1,
+            error_reporting=E_ALL,
+            log_errors=on,
+            display_errors=on,
+            allow_url_fopen=on,
+            zend.exception_ignore_args=Off
+          tools: composer:v2
+          coverage: none
+
+      - name: Check PHP Version
+        run: php -v
+
+      - name: Install dependencies
+        shell: bash
+        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
+
+      - name: Run checkstyle
+        shell: bash
+        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./vendor/bin/phpcs
+
+

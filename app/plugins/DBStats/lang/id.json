@@ -1,0 +1,21 @@
+{
+    "DBStats": {
+        "DBSize": "Ukuran basis data",
+        "DataSize": "Ukuran Data",
+        "DatabaseUsage": "Penggunaan basis data",
+        "EstimatedSize": "Perkiraan ukuran",
+        "IndexSize": "Ukuran indeks",
+        "LearnMore": "Untuk mempelajari lebih lanjut tentang bagaimana Matomo mengolah data dan bagaimana membuat Matomo bekerja dengan baik di situs web dengan lalu lintas sedang dan tinggi, lihat dokumentasi ini: %s.",
+        "MainDescription": "Matomo menyimpan semua data analisis web Anda dalam basis data MySQL. Saat ini, tabel Matomo memakan ruang sebesar %s.",
+        "MetricDataByYear": "Tabel Metrik Berdasarkan Tahun",
+        "MetricTables": "Tabel Metrik",
+        "OtherTables": "Tabel Lain",
+        "PluginDescription": "Menyediakan laporan penggunaan basis data MySQL yang terperinci. Tersedia untuk Pengguna Super di bawah Diagnostik.",
+        "ReportDataByYear": "Tabel Laporan Berdasarkan Tahun",
+        "ReportTables": "Tabel Laporan",
+        "RowCount": "Jumlah Baris",
+        "Table": "Tabel",
+        "TotalSize": "Ukuran Total",
+        "TrackerTables": "Tabel Pelacak"
+    }
+}

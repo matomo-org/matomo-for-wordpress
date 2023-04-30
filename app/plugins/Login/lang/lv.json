@@ -1,0 +1,13 @@
+{
+    "Login": {
+        "ExceptionPasswordMD5HashExpected": "Paroles parametram ir jābūt paroles MD5 summai.",
+        "InvalidOrExpiredToken": "Kods ir nepareizs vai tam ir beidzies termiņš.",
+        "InvalidUsernameEmail": "Nepareizs lietotājvārds un/vai e-pasta adrese",
+        "LogIn": "Pieteikties",
+        "LoginPasswordNotCorrect": "Lietotājvārds un parole nav korekti",
+        "LostYourPassword": "Pazaudēji savu paroli?",
+        "PasswordRepeat": "Parole (atkārtoti)",
+        "PasswordsDoNotMatch": "Paroles nesakrīt.",
+        "RememberMe": "Atcerēties mani"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "VisitorInterest": {
+        "BetweenXYMinutes": "%1$s–%2$s min",
+        "BetweenXYSeconds": "%1$s–%2$ss",
+        "ColumnPagesPerVisit": "Faqe për vizitë",
+        "ColumnVisitDuration": "Kohëzgjatje vizite",
+        "Engagement": "Angazhim",
+        "NPages": "%s faqe",
+        "OnePage": "1 faqe",
+        "PluginDescription": "Interesa të vizitorëve: numër faqesh të para, kohë e shpenzuar në sajt, ditë që nga vizita e fundit, etj.",
+        "VisitNum": "Numër vizitash",
+        "VisitsByDaysSinceLast": "Vizita sipas ditësh që pas vizitës së fundit",
+        "VisitsPerDuration": "Vizita sipas kohëzgjatjes së vizitës",
+        "VisitsPerNbOfPages": "Vizita sipas numrit të faqeve",
+        "WidgetLengths": "Gjatësi vizitash",
+        "WidgetLengthsDocumentation": "Sa vizita patën një kohëzgjatje të caktuar. Fillimisht, ky raport shfaqet si re etiketash, me kohëzgjatjet më të shpeshta të treguara me shkronja më të mëdha.",
+        "WidgetPages": "Faqe për vizitë",
+        "WidgetPagesDocumentation": "Sa vizita përfshinë një numër të dhënë faqesh. Fillimisht, ky raport shfaqet si re etiketash, me numrat më të shpeshtë të faqeve të treguar me shkronja më të mëdha.",
+        "WidgetVisitsByDaysSinceLast": "Vizita sipas ditës që nga vizita e fundit",
+        "WidgetVisitsByDaysSinceLastDocumentation": "Sa vizita kanë qenë prej vizitorësh të rikthyer vizita e fundit e të cilëve ka ndodhur një numër ditësh më parë.",
+        "WidgetVisitsByNumDocumentation": "Numër vizitash që kanë qenë vizita e N-të, domethënë, numri gjithsej i vizitorëve që e kanë vizituar sajtin tuaj një sasi herësh ose më tepër.",
+        "visitsByVisitCount": "Vizita sipas numrit të vizitave"
+    }
+}

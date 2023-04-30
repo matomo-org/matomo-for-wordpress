@@ -1,0 +1,24 @@
+{
+    "VisitorInterest": {
+        "BetweenXYMinutes": "%1$s–%2$s min",
+        "BetweenXYSeconds": "%1$s–%2$ss",
+        "ColumnPagesPerVisit": "Pages per visit",
+        "ColumnVisitDuration": "Visit duration",
+        "Engagement": "Engagement",
+        "NPages": "%s pages",
+        "OnePage": "1 page",
+        "PluginDescription": "Visitor interest: number of pages viewed, time spent on the website, days since last visit, and more.",
+        "VisitNum": "Visit number",
+        "VisitsByDaysSinceLast": "Visits by days since last visit",
+        "visitsByVisitCount": "Visits by visit number",
+        "VisitsPerDuration": "Visits per visit duration",
+        "VisitsPerNbOfPages": "Visits per number of pages",
+        "WidgetLengths": "Length of visits",
+        "WidgetLengthsDocumentation": "How many visits had a certain total duration. Initially, the report is shown as a tag cloud, wherein more common durations have a larger font.",
+        "WidgetPages": "Pages per visit",
+        "WidgetPagesDocumentation": "How many visits involved a certain number of pageviews. Initially, the report is shown as a tag cloud, wherein more common numbers of pages have a larger font.",
+        "WidgetVisitsByDaysSinceLast": "Visits by days since last visit",
+        "WidgetVisitsByDaysSinceLastDocumentation": "How many visits were from returning visitors whose last visit was a certain number of days ago.",
+        "WidgetVisitsByNumDocumentation": "The number of visitors reaching their Nth visit. I.e. the total amount of visitors visiting your website a given amount of times or more."
+    }
+}
