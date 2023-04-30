@@ -1,0 +1,6 @@
+{
+    "ImageGraph": {
+        "ColumnOrdinateMissing": "Nie można znaleźć kolumny \"%1$s\" w tym raporcie. Spróbuj któregoś z %2$s.",
+        "PluginDescription": "Generuj piękne statyczne wykresy obrazkowe w formacie PNG dla dowolnych danych raportu."
+    }
+}

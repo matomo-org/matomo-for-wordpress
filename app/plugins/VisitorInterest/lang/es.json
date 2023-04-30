@@ -1,0 +1,24 @@
+{
+    "VisitorInterest": {
+        "BetweenXYMinutes": "%1$s–%2$s mínimo",
+        "BetweenXYSeconds": "%1$s-%2$s segundos",
+        "ColumnPagesPerVisit": "Páginas por visita",
+        "ColumnVisitDuration": "Duración de las visitas",
+        "Engagement": "Compromiso",
+        "NPages": "%s páginas",
+        "OnePage": "1 página",
+        "PluginDescription": "Interés de los visitantes: número de páginas vistas, tiempo de permanencia en el sitio web, días desde la última visita, etc.",
+        "VisitNum": "Número de visita",
+        "VisitsByDaysSinceLast": "Visitas por días desde la última visita",
+        "VisitsPerDuration": "Visitas por duración de visita",
+        "VisitsPerNbOfPages": "Visitas por número de páginas",
+        "WidgetLengths": "Duración de las visitas",
+        "WidgetLengthsDocumentation": "Cuántas visitas tuvieron una determinada duración total. Inicialmente, el informe se muestra como una nube de etiquetas, en la que las duraciones más comunes tienen una fuente más grande.",
+        "WidgetPages": "Paginas por visita",
+        "WidgetPagesDocumentation": "Cuántas visitas supusieron un determinado número de páginas vistas. Inicialmente, el informe se muestra como una nube de etiquetas, en la que los números más comunes de páginas tienen una fuente más grande.",
+        "WidgetVisitsByDaysSinceLast": "Visitas por días desde la última visita",
+        "WidgetVisitsByDaysSinceLastDocumentation": "Cuántas visitas fueron de visitantes recurrentes cuya última visita fue hace un cierto número de días.",
+        "WidgetVisitsByNumDocumentation": "El número de visitantes que llegan a su enésima visita. Es decir, la cantidad total de visitantes que visitan su sitio web una cantidad determinada de veces o más.",
+        "visitsByVisitCount": "Visitas por número de visita"
+    }
+}
