@@ -1,0 +1,6 @@
+{
+    "ImageGraph": {
+        "ColumnOrdinateMissing": "Tidak dapat menemukan kolom \"%1$s\" dalam laporan ini. Cobalah salah satu dari %2$s.",
+        "PluginDescription": "Buat gambar grafik PNG statis yang indah untuk semua laporan data Anda."
+    }
+}

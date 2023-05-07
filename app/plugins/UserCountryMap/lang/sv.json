@@ -1,0 +1,28 @@
+{
+    "UserCountryMap": {
+        "AndNOthers": "och %s andra",
+        "Cities": "Städer",
+        "Countries": "Länder",
+        "DaysAgo": "%s dagar sedan",
+        "GoalConversions": "%s målomvandlingar",
+        "HoursAgo": "%s timmar sedan",
+        "MinutesAgo": "%s minuter sedan",
+        "NoVisit": "Inga besök",
+        "NoVisitsInfo": "Inga besök visas, eftersom inga besök under den här perioden har korrekt information om geolokalisering (latitud och longitud).",
+        "NoVisitsInfo2": "Lös det här problemet genom att använda en GeoIP-leverantör för geolokalisering med en GeoIP-stadsdatabas. (Även om det är osannolikt) kan IP-adresser fortfarande vara omöjliga att geolokalisera.",
+        "None": "Ingen",
+        "PluginDescription": "Tillhandahåller widgetarna \"Besökarkarta\" och \"Realtidskarta\". Kräver plugin-programmet \"UserCountry\".",
+        "RealTimeMap": "Realtidskarta",
+        "RealTimeMapHelp": "Visar var besökarna på webbplatsen har befunnit sig de senaste 30 minuterna och blinkar när nya besökare kommer. Nya besök visas som stora orange bubblor och äldre besök som mindre grå bubblor. Den uppdateras var femte sekund.",
+        "Regions": "Regioner",
+        "Searches": "%s sökningar",
+        "SecondsAgo": "%s sekunder sedan",
+        "ShowingVisits": "Geolokaliserade besök av de senaste",
+        "Unlocated": "<b>%1$s</b> %2$s av besöken från %3$s kunde inte geolokaliseras.",
+        "VisitorMap": "Besökskarta",
+        "WithUnknownCity": "%s från okända städer",
+        "WithUnknownRegion": "%s från okända regioner",
+        "WorldWide": "Världen över",
+        "map": "karta"
+    }
+}
