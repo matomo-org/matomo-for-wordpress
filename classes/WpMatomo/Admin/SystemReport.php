@@ -98,8 +98,8 @@ class SystemReport {
 		'backwpup',
 		// see https://github.com/matomo-org/matomo-for-wordpress/issues/710
 		'fs-poster',
-        // see https://github.com/matomo-org/matomo-for-wordpress/issues/790
-        'advanced-gutenberg',
+		// see https://github.com/matomo-org/matomo-for-wordpress/issues/790
+		'advanced-gutenberg',
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
