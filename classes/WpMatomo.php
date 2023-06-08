@@ -131,10 +131,15 @@ class WpMatomo {
 		if ( isset( $_GET['page'] ) && substr( sanitize_text_field( wp_unslash( $_GET['page'] ) ), 0, 7 ) === 'matomo-' ) {
 			$system_report = new \WpMatomo\Admin\SystemReport( self::$settings );
 			if ( $system_report->errors_present() ) {
-				echo '<div class="notice notice-warning  is-dismissible">
+				add_action(
+					'admin_notices',
+					function () {
+						echo '<div class="notice notice-warning is-dismissible" id="matomo-systemreporterrors">
                       <p>' . esc_html__( 'There are some errors in the', 'matomo' ) .
-					' <a href="' . esc_url( admin_url( 'admin.php?page=matomo-systemreport' ) ) . '">' . esc_html__( 'Matomo Diagnostics System report', 'matomo' ) . '</a> ' .
-					esc_html__( 'that may prevent the plugin for working normally.', 'matomo' ) . '</p></div>';
+							' <a href="' . esc_url( admin_url( 'admin.php?page=matomo-systemreport' ) ) . '">' . esc_html__( 'Matomo Diagnostics System report', 'matomo' ) . '</a> ' .
+							esc_html__( 'that may prevent the plugin for working normally.', 'matomo' ) . '</p></div>';
+					}
+				);
 			}
 		}
 	}
