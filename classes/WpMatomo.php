@@ -37,6 +37,8 @@ use WpMatomo\Updater;
 use WpMatomo\User\Sync as UserSync;
 
 class WpMatomo {
+
+	const OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED = 'matomo_system_report_errors_dismissed';
 	/**
 	 * @var Settings
 	 */
@@ -140,7 +142,16 @@ class WpMatomo {
 							esc_html__( 'that may prevent the plugin for working normally.', 'matomo' ) . '</p></div>';
 					}
 				);
+				add_action(
+					'wp_ajax_matomo_system_report_error_dismissed',
+					function () {
+						if ( is_admin() ) {
+							update_option( self::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED, true, true );
+						}
+					}
+				);
 			}
+
 		}
 	}
 
