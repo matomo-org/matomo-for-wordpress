@@ -180,7 +180,7 @@ class Menu {
 			$warning = '';
 			if ( isset( $_GET['page'] ) && substr( sanitize_text_field( wp_unslash( $_GET['page'] ) ), 0, 7 ) === 'matomo-' ) {
 				$system_report = new \WpMatomo\Admin\SystemReport( $this->settings );
-				if ( $system_report->errors_present() && ! get_option( \WpMatomo::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED, false ) ) {
+				if ( $system_report->errors_present() && ! get_user_meta( get_current_user_id(), \WpMatomo::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED ) ) {
 					$warning = '<span class="awaiting-mod">!</span>';
 				}
 			}

@@ -146,7 +146,7 @@ class WpMatomo {
 					'wp_ajax_matomo_system_report_error_dismissed',
 					function () {
 						if ( is_admin() ) {
-							update_option( self::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED, true, true );
+							update_user_meta( get_current_user_id(), self::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED, true );
 						}
 					}
 				);
