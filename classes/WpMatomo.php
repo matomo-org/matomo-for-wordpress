@@ -98,8 +98,8 @@ class WpMatomo {
 				$referral->register_hooks();
 			}
 
-			$errorNotice = new \WpMatomo\ErrorNotice( self::$settings );
-			$errorNotice->register_hooks();
+			$error_notice = new \WpMatomo\ErrorNotice( self::$settings );
+			$error_notice->register_hooks();
 
 			$chart = new Chart();
 			$chart->register_hooks();
