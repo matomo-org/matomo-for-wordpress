@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 class ErrorNotice {
 
-	const OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED = 'matomo_system_report_errors_dismissed2';
+	const OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED = 'matomo_system_report_errors_dismissed';
 
 	private $settings;
 
