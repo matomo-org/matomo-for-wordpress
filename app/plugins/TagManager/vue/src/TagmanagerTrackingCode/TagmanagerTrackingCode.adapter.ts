@@ -11,4 +11,12 @@ import TagmanagerTrackingCode from './TagmanagerTrackingCode.vue';
 export default createAngularJsAdapter({
   component: TagmanagerTrackingCode,
   directiveName: 'matomoTagmanagerTrackingCode',
+  scope: {
+    showContainerRow: {
+      angularJsBind: '=',
+    },
+    currentAction: {
+      angularJsBind: '=',
+    },
+  },
 });
