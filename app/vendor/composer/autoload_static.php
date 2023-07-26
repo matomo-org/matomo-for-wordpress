@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitca75a0cfb79790e35919c1218012ba07
+class ComposerStaticInit95f02f2add702f88c89b0846fc0f343c
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -2195,6 +2195,7 @@ class ComposerStaticInitca75a0cfb79790e35919c1218012ba07
         'Piwik\\Plugins\\Referrers\\Columns\\Base' => __DIR__ . '/../..' . '/plugins/Referrers/Columns/Base.php',
         'Piwik\\Plugins\\Referrers\\Columns\\Campaign' => __DIR__ . '/../..' . '/plugins/Referrers/Columns/Campaign.php',
         'Piwik\\Plugins\\Referrers\\Columns\\Keyword' => __DIR__ . '/../..' . '/plugins/Referrers/Columns/Keyword.php',
+        'Piwik\\Plugins\\Referrers\\Columns\\Metrics\\VisitorsFromReferrerPercent' => __DIR__ . '/../..' . '/plugins/Referrers/Columns/Metrics/VisitorsFromReferrerPercent.php',
         'Piwik\\Plugins\\Referrers\\Columns\\Referrer' => __DIR__ . '/../..' . '/plugins/Referrers/Columns/Referrer.php',
         'Piwik\\Plugins\\Referrers\\Columns\\ReferrerName' => __DIR__ . '/../..' . '/plugins/Referrers/Columns/ReferrerName.php',
         'Piwik\\Plugins\\Referrers\\Columns\\ReferrerType' => __DIR__ . '/../..' . '/plugins/Referrers/Columns/ReferrerType.php',
@@ -2522,8 +2523,8 @@ class ComposerStaticInitca75a0cfb79790e35919c1218012ba07
         'Piwik\\Plugins\\TagManager\\Template\\Variable\\UrlParameterVariable' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Variable/UrlParameterVariable.php',
         'Piwik\\Plugins\\TagManager\\Template\\Variable\\UrlVariable' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Variable/UrlVariable.php',
         'Piwik\\Plugins\\TagManager\\Template\\Variable\\VariablesProvider' => __DIR__ . '/../..' . '/plugins/TagManager/Template/Variable/VariablesProvider.php',
-        'Piwik\\Plugins\\TagManager\\Updates\\NewTagParameterMigrator' => __DIR__ . '/../..' . '/plugins/TagManager/Updates/NewTagParameterMigrator.php',
-        'Piwik\\Plugins\\TagManager\\Updates\\NewVariableParameterMigrator' => __DIR__ . '/../..' . '/plugins/TagManager/Updates/NewVariableParameterMigrator.php',
+        'Piwik\\Plugins\\TagManager\\UpdateHelper\\NewTagParameterMigrator' => __DIR__ . '/../..' . '/plugins/TagManager/UpdateHelper/NewTagParameterMigrator.php',
+        'Piwik\\Plugins\\TagManager\\UpdateHelper\\NewVariableParameterMigrator' => __DIR__ . '/../..' . '/plugins/TagManager/UpdateHelper/NewVariableParameterMigrator.php',
         'Piwik\\Plugins\\TagManager\\Validators\\LookupTable' => __DIR__ . '/../..' . '/plugins/TagManager/Validators/LookupTable.php',
         'Piwik\\Plugins\\TagManager\\Validators\\Numeric' => __DIR__ . '/../..' . '/plugins/TagManager/Validators/Numeric.php',
         'Piwik\\Plugins\\TagManager\\Validators\\TriggerConditions' => __DIR__ . '/../..' . '/plugins/TagManager/Validators/TriggerConditions.php',
@@ -3374,11 +3375,11 @@ class ComposerStaticInitca75a0cfb79790e35919c1218012ba07
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitca75a0cfb79790e35919c1218012ba07::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitca75a0cfb79790e35919c1218012ba07::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitca75a0cfb79790e35919c1218012ba07::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInitca75a0cfb79790e35919c1218012ba07::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInitca75a0cfb79790e35919c1218012ba07::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit95f02f2add702f88c89b0846fc0f343c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit95f02f2add702f88c89b0846fc0f343c::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit95f02f2add702f88c89b0846fc0f343c::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInit95f02f2add702f88c89b0846fc0f343c::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInit95f02f2add702f88c89b0846fc0f343c::$classMap;
 
         }, null, ClassLoader::class);
     }

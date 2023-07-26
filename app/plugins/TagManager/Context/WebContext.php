@@ -12,15 +12,19 @@ use Piwik\Common;
 use Piwik\Container\StaticContainer;
 use Piwik\Development;
 use Piwik\Piwik;
+use Piwik\Url;
 use Piwik\Plugins\TagManager\Context\Storage\StorageInterface;
 use Piwik\Plugins\TagManager\Context\WebContext\JavaScriptTagManagerLoader;
 use Piwik\Plugins\TagManager\Context\BaseContext\TemplateLocator;
+use Piwik\Plugins\TagManager\Input\AccessValidator;
 use Piwik\Plugins\TagManager\Model\Container;
 use Piwik\Plugins\TagManager\Model\Environment;
 use Piwik\Plugins\TagManager\Model\Salt;
 use Piwik\Plugins\TagManager\Model\Tag;
 use Piwik\Plugins\TagManager\Model\Trigger;
 use Piwik\Plugins\TagManager\Model\Variable;
+use Piwik\Plugins\TagManager\SystemSettings;
+use Piwik\Plugins\TagManager\Template\Trigger\PageViewTrigger;
 use Piwik\Plugins\TagManager\Template\Variable\VariablesProvider;
 use Piwik\SettingsPiwik;
 
@@ -244,19 +248,80 @@ class WebContext extends BaseContext
         $embedCode = <<<INST
 <!-- Matomo Tag Manager -->
 <script>
-var _mtm = window._mtm = window._mtm || [];
-_mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
-var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-g.async=true; g.src='$path'; s.parentNode.insertBefore(g,s);
+  var _mtm = window._mtm = window._mtm || [];
+  _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
+  (function() {
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src='$path'; s.parentNode.insertBefore(g,s);
+  })();
 </script>
 <!-- End Matomo Tag Manager -->
 INST;
 
         return [[
-            'description' => Piwik::translate('TagManager_ContextWebInstallInstructions', array('"<head>"')),
+            'description' => Piwik::translate('TagManager_ContextWebInstallInstructions', array('<head>')),
             'embedCode' => $embedCode,
             'helpUrl' => 'https://developer.matomo.org/guides/tagmanager/embedding'
         ]];
+    }
+
+    public function getInstallInstructionsReact($container, $environment)
+    {
+        $path = $this->getWebPathForRelease($container['idsite'], $container['idcontainer'], $environment, $container['created_date']);
+
+        $embedCode = <<<INST
+import React from 'react';
+
+export default function App () {
+React.useEffect(() => {
+        var _mtm = window._mtm = window._mtm || [];
+        _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src='$path'; s.parentNode.insertBefore(g,s);
+}, [])
+
+ return (
+     <div>
+         <h1>Hello World</h1>
+     </div>
+ )
+}
+INST;
+
+        return [[
+            'description' => Piwik::translate('TagManager_ContextWebInstallInstructions', array('<head>')),
+            'embedCode' => $embedCode,
+            'helpUrl' => 'https://developer.matomo.org/guides/tagmanager/embedding',
+            'pageViewTriggerEditUrl' => $this->getPageViewTriggerEditUrl($container['idsite'], $container['idcontainer'])
+        ]];
+    }
+
+    private function getPageViewTriggerEditUrl($idSite, $idContainer)
+    {
+        $url = '';
+        $settings = new SystemSettings();
+        $validator = new AccessValidator($settings);
+        if (!$validator->hasWriteCapability($idSite)) {
+            return $url;
+        }
+        $container = Request::processRequest('TagManager.getContainer', ['idSite' => $idSite, 'idContainer' => $idContainer]);
+        if (!empty($container['draft']['idcontainerversion'])) {
+            $triggers = Request::processRequest('TagManager.getContainerTriggers', ['idSite' => $idSite, 'idContainer' => $idContainer, 'idContainerVersion' => $container['draft']['idcontainerversion']]);
+            if (!empty($triggers)) {
+                foreach ($triggers as $trigger) {
+                    if (!empty($trigger['type']) && $trigger['type'] == PageViewTrigger::ID) {
+                        $url =  SettingsPiwik::getPiwikUrl() . 'index.php?' . Url::getQueryStringFromParameters([
+                                'module' => 'TagManager',
+                                'action' => 'manageTriggers',
+                                'idSite' => $idSite,
+                                'idContainer' => $idContainer,
+                            ]) . '#idTrigger=' . $trigger['idtrigger'];
+                        break;
+                    }
+                }
+            }
+        }
+        return $url;
     }
 
 }

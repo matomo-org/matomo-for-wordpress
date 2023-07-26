@@ -98,6 +98,8 @@ class SystemReport {
 		'backwpup',
 		// see https://github.com/matomo-org/matomo-for-wordpress/issues/710
 		'fs-poster',
+		// see https://github.com/matomo-org/matomo-for-wordpress/issues/790
+		'advanced-gutenberg',
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
@@ -398,8 +400,8 @@ class SystemReport {
 		$rows = [];
 
 		if ( $this->shell_exec_available ) {
-			$phpcli_version = $this->get_phpcli_output( '-v | grep built | cut -d " " -f 2' );
-			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+			$phpcli_version = $this->get_phpcli_output( '-r "echo phpversion();"' );
+            // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 			global $piwik_minimumPHPVersion;
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 			if ( version_compare( $phpcli_version, $piwik_minimumPHPVersion ) <= 0 ) {
@@ -416,13 +418,10 @@ class SystemReport {
 				'is_error' => $is_error,
 			];
 
-			switch ( $this->get_phpcli_output( '-m | grep mysqli' ) ) {
-				case 'mysqli':
-					$is_error = false;
-					$value    = __( 'ok', 'matomo' );
-					$comment  = '';
-					break;
-				default:
+			$is_error = false;
+			$value    = __( 'ok', 'matomo' );
+			$comment  = '';
+			if ( ! intval( $this->get_phpcli_output( '-r "echo extension_loaded(\'mysqli\');"' ) ) ) {
 					$value    = __( 'missing', 'matomo' );
 					$is_error = true;
 					$comment  = esc_html__( 'Your PHP cli does not load the MySQLi extension. You might have archiving problems in Matomo but also others problems in your WordPress cron tasks. You should enable this extension', 'matomo' );
