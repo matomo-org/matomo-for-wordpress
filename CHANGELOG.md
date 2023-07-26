@@ -1,4 +1,7 @@
 == Changelog ===
+= 4.15.0 =
+* Update Matomo core to 4.15.0
+
 = 4.14.2 =
 * Update Matomo core to 4.14.2
 
