@@ -52,7 +52,7 @@ if ( $invalid_format ) { ?>
 				<label for="<?php echo esc_attr( GeolocationSettings::FORM_NAME ); ?>"><?php esc_html_e( 'MaxMind License Key', 'matomo' ); ?></label>:
 			</th>
 			<td>
-				<input size="20" type="text" maxlength="20"
+				<input size="40" type="text" maxlength="50"
 					   id="<?php echo esc_attr( GeolocationSettings::FORM_NAME ); ?>"
 					   name="<?php echo esc_attr( GeolocationSettings::FORM_NAME ); ?>"
 					   value="<?php echo esc_attr( $current_maxmind_license ); ?>">
