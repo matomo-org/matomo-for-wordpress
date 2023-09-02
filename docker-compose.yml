@@ -1,0 +1,131 @@
+# to override the environment, you can configure environment variables in a .env file saved in this directory.
+# the following environment variables are supported:
+#   - PHP_VERSION (defaults to 8.1, must be a version that has an official docker container available)
+#   - BACKEND ('mariadb' or 'mysql', defaults to 'mariadb')
+#   - WORDPRESS_VERSION (defaults to )
+#   - PORT (the port to expose wordpress on, defaults to 3000)
+
+services:
+  wordpress:
+    image: "php:${PHP_VERSION:-8.1}-apache"
+    volumes:
+      - ./docker/wordpress:/var/www/html
+      - ./docker/wordpress_php:/usr/src/php
+      - ./docker/wordpress_php_extensions:/usr/local/lib/php/extensions
+      - ./docker/wordpress_php_conf:/usr/local/etc/php/conf.d
+      - .:/var/www/html/matomo-for-wordpress
+    ports:
+      - "${PORT:-3000}:80"
+    environment:
+      WP_DB_USER: root
+      WP_DB_PASSWORD: pass
+      WP_DB_HOST: "${BACKEND:-mariadb}"
+    entrypoint:
+      - bash
+      - -c
+      - |
+        set -e
+
+        cd /var/www/html
+        
+        LATEST_WORDPRESS_VERSION=6.3.1 # can't use the github API, too easy to get rate limited
+
+        # install PHP extensions needed
+        for extension in mysqli pdo pdo_mysql; do
+          if [ ! -f /usr/local/lib/php/extensions/*/$$extension.so ]; then
+            docker-php-ext-install $$extension
+          fi
+        done
+
+        # install wordpress if not present
+        WORDPRESS_VERSION=$${WORDPRESS_VERSION:-$$LATEST_WORDPRESS_VERSION}
+        if [ ! -d "/var/www/html/$$WORDPRESS_VERSION" ]; then
+          WORDPRESS_URL="https://wordpress.org/wordpress-$$WORDPRESS_VERSION.tar.gz"
+          echo "installing wordpress $$WORDPRESS_VERSION from $$WORDPRESS_URL..."
+
+          curl -O "$$WORDPRESS_URL"
+          tar -xvf "wordpress-$$WORDPRESS_VERSION.tar.gz"
+          mv wordpress "$$WORDPRESS_VERSION"
+
+          echo "wordpress installed!"
+        else
+          echo "wordpress $$WORDPRESS_VERSION already installed."
+        fi
+
+        # create database if it does not already exist
+        export WP_DB_NAME="wp_matomo_$$WORDPRESS_VERSION"
+        php -r "\$$pdo = new PDO('mysql:host=$$WP_DB_HOST', '$$WP_DB_USER', '$$WP_DB_PASSWORD'); \$$pdo->exec('CREATE DATABASE IF NOT EXISTS \`$$WP_DB_NAME\`');"
+
+        # setup wordpress config if not done so
+        if [ ! -f "/var/www/html/$$WORDPRESS_VERSION/wp-config.php" ]; then
+          cat > "/var/www/html/$$WORDPRESS_VERSION/wp-config.php" <<EOF
+        <?php
+        define('DB_NAME', getenv('WP_DB_NAME'));
+        define('DB_USER', getenv('WP_DB_USER'));
+        define('DB_PASSWORD', getenv('WP_DB_PASSWORD'));
+        define('DB_HOST', getenv('WP_DB_HOST'));
+        define('DB_CHARSET', 'utf8');
+        define('DB_COLLATE', '');
+        define( 'WP_DEBUG', (bool)getenv('WP_DEBUG') );
+      
+        define( 'AUTH_KEY',         'put your unique phrase here' );
+        define( 'SECURE_AUTH_KEY',  'put your unique phrase here' );
+        define( 'LOGGED_IN_KEY',    'put your unique phrase here' );
+        define( 'NONCE_KEY',        'put your unique phrase here' );
+        define( 'AUTH_SALT',        'put your unique phrase here' );
+        define( 'SECURE_AUTH_SALT', 'put your unique phrase here' );
+        define( 'LOGGED_IN_SALT',   'put your unique phrase here' );
+        define( 'NONCE_SALT',       'put your unique phrase here' );
+      
+        $$table_prefix = 'wp_';
+
+        /* That's all, stop editing! Happy publishing. */
+        
+        /** Absolute path to the WordPress directory. */
+        if ( ! defined( 'ABSPATH' ) ) {
+          define( 'ABSPATH', __DIR__ . '/' );
+        }
+        
+        /** Sets up WordPress vars and included files. */
+        require_once ABSPATH . 'wp-settings.php';
+        EOF
+
+          echo "setup wp-config.php!"
+        fi
+
+        # link matomo for wordpress volume as wordpress plugin
+        if [ ! -d "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo" ]; then
+          ln -s /var/www/html/matomo-for-wordpress "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo"
+        fi
+
+        # make sure the files can be edited outside of docker (for easier debugging)
+        chown -R "${UID:-1000}:${GID:-1000}" /var/www/html
+
+        # ordinarily the command is passed to the entrypoint as an argument, but this doesn't seem to work when overriding the entrypoint
+        # through docker-compose
+        apache2-foreground
+    depends_on:
+      - "${BACKEND:-mariadb}"
+    deploy:
+      restart_policy:
+        condition: on-failure
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+    volumes:
+      - ./docker/mariadb:/var/lib/mysql:delegated
+      - ./docker/maria_custom_my.cnf:/etc/mysql/conf.d/mycustom.cnf
+    deploy:
+      restart_policy:
+        condition: on-failure
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+    volumes:
+      - ./docker/mysql:/var/lib/mysql:delegated
+      - ./docker/container-files/mysql_custom_my.cnf:/etc/mysql/conf.d/mycustom.cnf
+    deploy:
+      restart_policy:
+        condition: on-failure

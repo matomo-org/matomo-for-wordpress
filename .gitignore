@@ -3,3 +3,8 @@
 .php-cs-fixer.cache
 .*~
 *~
+.idea/
+
+# for local docker dev
+docker
+.env
