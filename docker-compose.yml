@@ -2,7 +2,7 @@
 # the following environment variables are supported:
 #   - PHP_VERSION (defaults to 8.1, must be a version that has an official docker container available)
 #   - BACKEND ('mariadb' or 'mysql', defaults to 'mariadb')
-#   - WORDPRESS_VERSION (defaults to )
+#   - WORDPRESS_VERSION (defaults to latest (defined below))
 #   - PORT (the port to expose wordpress on, defaults to 3000)
 
 services:
@@ -52,9 +52,13 @@ services:
           echo "wordpress $$WORDPRESS_VERSION already installed."
         fi
 
+        sleep 5 # wait for database
+
         # create database if it does not already exist
-        export WP_DB_NAME="wp_matomo_$$WORDPRESS_VERSION"
-        php -r "\$$pdo = new PDO('mysql:host=$$WP_DB_HOST', '$$WP_DB_USER', '$$WP_DB_PASSWORD'); \$$pdo->exec('CREATE DATABASE IF NOT EXISTS \`$$WP_DB_NAME\`');"
+        export WP_DB_NAME=$$(echo "wp_matomo_$$WORDPRESS_VERSION" | sed 's/\./_/g')
+        php -r "\$$pdo = new PDO('mysql:host=$$WP_DB_HOST', '$$WP_DB_USER', '$$WP_DB_PASSWORD');
+        \$$pdo->exec('CREATE DATABASE IF NOT EXISTS \`$$WP_DB_NAME\`');\
+        \$$pdo->exec('GRANT ALL PRIVILEGES ON $$WP_DB_NAME.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
 
         # setup wordpress config if not done so
         if [ ! -f "/var/www/html/$$WORDPRESS_VERSION/wp-config.php" ]; then
@@ -99,7 +103,7 @@ services:
         fi
 
         # make sure the files can be edited outside of docker (for easier debugging)
-        chown -R "${UID:-1000}:${GID:-1000}" /var/www/html
+        find "/var/www/html/$$WORDPRESS_VERSION" -path "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo" -prune -o -exec chown "${UID:-1000}:${GID:-1000}" {} +
 
         # ordinarily the command is passed to the entrypoint as an argument, but this doesn't seem to work when overriding the entrypoint
         # through docker-compose
