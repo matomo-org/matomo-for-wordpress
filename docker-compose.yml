@@ -14,6 +14,7 @@ services:
       - ./docker/wordpress_php_extensions:/usr/local/lib/php/extensions
       - ./docker/wordpress_php_conf:/usr/local/etc/php/conf.d
       - .:/var/www/html/matomo-for-wordpress
+      - /var/www/html/matomo-for-wordpress/app/tmp
     ports:
       - "${PORT:-3000}:80"
     environment:
@@ -52,7 +53,9 @@ services:
           echo "wordpress $$WORDPRESS_VERSION already installed."
         fi
 
+        echo "waiting for database..."
         sleep 5 # wait for database
+        echo "done."
 
         # create database if it does not already exist
         export WP_DB_NAME=$$(echo "wp_matomo_$$WORDPRESS_VERSION" | sed 's/\./_/g')
@@ -80,7 +83,10 @@ services:
         define( 'SECURE_AUTH_SALT', 'put your unique phrase here' );
         define( 'LOGGED_IN_SALT',   'put your unique phrase here' );
         define( 'NONCE_SALT',       'put your unique phrase here' );
-      
+
+        define( 'FS_CHMOD_DIR', ( 0777 & ~ umask() ) );
+        define( 'FS_CHMOD_FILE', ( 0644 & ~ umask() ) );
+
         $$table_prefix = 'wp_';
 
         /* That's all, stop editing! Happy publishing. */
@@ -103,7 +109,10 @@ services:
         fi
 
         # make sure the files can be edited outside of docker (for easier debugging)
+        # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
         find "/var/www/html/$$WORDPRESS_VERSION" -path "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo" -prune -o -exec chown "${UID:-1000}:${GID:-1000}" {} +
+        find "/var/www/html/$$WORDPRESS_VERSION" -path "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
+        chmod -R 0777 "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo/app/tmp"
 
         # ordinarily the command is passed to the entrypoint as an argument, but this doesn't seem to work when overriding the entrypoint
         # through docker-compose
