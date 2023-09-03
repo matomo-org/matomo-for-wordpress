@@ -87,6 +87,8 @@ services:
         define( 'FS_CHMOD_DIR', ( 0777 & ~ umask() ) );
         define( 'FS_CHMOD_FILE', ( 0644 & ~ umask() ) );
 
+        define( 'MATOMO_ANALYTICS_FILE', __DIR__ . '/wp-content/plugins/matomo/matomo.php' );
+
         $$table_prefix = 'wp_';
 
         /* That's all, stop editing! Happy publishing. */
