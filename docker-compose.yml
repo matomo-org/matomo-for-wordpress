@@ -86,6 +86,7 @@ services:
 
         define( 'FS_CHMOD_DIR', ( 0777 & ~ umask() ) );
         define( 'FS_CHMOD_FILE', ( 0644 & ~ umask() ) );
+        define( 'FS_METHOD', 'direct' );
 
         define( 'MATOMO_ANALYTICS_FILE', __DIR__ . '/wp-content/plugins/matomo/matomo.php' );
 
