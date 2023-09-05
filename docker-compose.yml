@@ -111,11 +111,43 @@ services:
           ln -s /var/www/html/matomo-for-wordpress "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo"
         fi
 
+        # add index.php file listing available installs to root /var/www/html
+        if [ ! -f "/var/www/html/index.php" ]; then
+          cat > "/var/www/html/index.php" <<EOF
+        <html lang="en">
+        <head>
+        <style>
+          body { padding: 0; margin: 0; font-family: sans-serif; background-color: #f8f8f8; height: calc(100%); display: flex; flex-direction: column; }
+          header { background-color: lightskyblue; padding: 10px 0; }
+          h1 { text-align: center; margin: 0; color: #fafafa; }
+          .content { width: 800px; margin: 20px auto; background-color: white; padding: 20px; flex: 1; overflow-y: auto; }
+        </style>
+        </head>
+        <body>
+        <header><h1>Available Wordpress Installs</h1></header>
+        <div class="content">
+        <ul>
+        <?php
+          foreach (scandir(__DIR__) as \$$folder) {
+            if (preg_match('/^\d+\.\d+\.\d+\$$/', \$$folder) && is_dir(\$$folder)) {
+        ?>
+        <li><a href="<?php echo \$$folder; ?>/"><?php echo \$$folder; ?></a></li>
+        <?php
+            }
+          }
+        ?>
+        </ul>
+        </div>
+        </body>
+        </html>
+        EOF
+        fi
+
         # make sure the files can be edited outside of docker (for easier debugging)
         # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
         find "/var/www/html/$$WORDPRESS_VERSION" -path "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo" -prune -o -exec chown "${UID:-1000}:${GID:-1000}" {} +
         find "/var/www/html/$$WORDPRESS_VERSION" -path "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
-        chmod -R 0777 "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo/app/tmp"
+        chmod -R 0777 "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php"
 
         # ordinarily the command is passed to the entrypoint as an argument, but this doesn't seem to work when overriding the entrypoint
         # through docker-compose
