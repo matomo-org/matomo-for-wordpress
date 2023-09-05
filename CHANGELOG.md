@@ -1,4 +1,8 @@
 == Changelog ===
+= 4.15.1 =
+* Update Matomo core to 4.15.1
+* Fix MaxMind license key input
+
 = 4.15.0 =
 * Update Matomo core to 4.15.0
 
