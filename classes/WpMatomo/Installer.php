@@ -257,8 +257,9 @@ class Installer {
 
 	private function create_config( $db_info ) {
 		$this->logger->log( 'Matomo is now creating the config' );
-		$domain  = home_url();
-		$domain = parse_url($domain, PHP_URL_HOST) ?: $domain;
+		$homeUrl = home_url();
+		$domain = wp_parse_url($homeUrl, PHP_URL_HOST);
+		$domain = $domain ? $homeUrl : $domain;
 		$general = [
 			'trusted_hosts' => [ $domain ],
 			'salt'          => Common::generateUniqId(),
