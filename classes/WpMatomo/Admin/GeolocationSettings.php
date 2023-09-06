@@ -52,7 +52,7 @@ class GeolocationSettings implements AdminSettingsInterface {
 
 			if ( empty( $maxmind_license ) ) {
 				$maxmind_license = '';
-			} elseif ( strlen( $maxmind_license ) > 20 || strlen( $maxmind_license ) < 7 || ! ctype_graph( $maxmind_license ) ) {
+			} elseif ( strlen( $maxmind_license ) > 50 || strlen( $maxmind_license ) < 7 || ! ctype_graph( $maxmind_license ) ) {
 				return false;
 			}
 
