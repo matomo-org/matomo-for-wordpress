@@ -147,7 +147,7 @@ services:
         # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
         find "/var/www/html/$$WORDPRESS_VERSION" -path "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo" -prune -o -exec chown "${UID:-1000}:${GID:-1000}" {} +
         find "/var/www/html/$$WORDPRESS_VERSION" -path "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
-        chmod -R 0777 "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php"
+        chmod -R 0777 "/var/www/html/$$WORDPRESS_VERSION/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d"
 
         # ordinarily the command is passed to the entrypoint as an argument, but this doesn't seem to work when overriding the entrypoint
         # through docker-compose
