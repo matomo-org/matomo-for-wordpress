@@ -90,7 +90,7 @@ services:
 
         define( 'MATOMO_ANALYTICS_FILE', __DIR__ . '/wp-content/plugins/matomo/matomo.php' );
 
-        $$table_prefix = 'wp_';
+        \$$table_prefix = 'wp_';
 
         /* That's all, stop editing! Happy publishing. */
         
