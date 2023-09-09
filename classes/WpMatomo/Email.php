@@ -136,7 +136,7 @@ class Email {
 						}
 					}
 
-                    $phpmailer = WpMatomo\Workarounds\FluentSmtp::make_php_mailer_proxy($phpmailer);
+					$phpmailer = WpMatomo\Workarounds\FluentSmtp::make_php_mailer_proxy( $phpmailer );
 				}
 			);
 		}
@@ -146,7 +146,7 @@ class Email {
 		remove_action( 'wp_mail_failed', [ $this, 'on_error' ] );
 		remove_filter( 'wp_mail_content_type', [ $this, 'set_content_type' ] );
 
-        WpMatomo\Workarounds\FluentSmtp::unset_phpmailer();
+		WpMatomo\Workarounds\FluentSmtp::unset_phpmailer();
 
 		if ( ! $success ) {
 			$message = 'Error unknown.';
