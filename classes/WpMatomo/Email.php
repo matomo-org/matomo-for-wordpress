@@ -99,7 +99,7 @@ class Email {
 
 			add_action(
 				'phpmailer_init',
-				function ( $phpmailer ) use ( $attachments, $subject, $random_id, &$executed_action ) {
+				function ( &$phpmailer ) use ( $attachments, $subject, $random_id, &$executed_action ) {
 					/** @var PHPMailer $phpmailer */
 					if ( $executed_action ) {
 						return; // already done, do not execute another time
@@ -135,6 +135,8 @@ class Email {
 							);
 						}
 					}
+
+                    $phpmailer = WpMatomo\Workarounds\FluentSmtp::make_php_mailer_proxy($phpmailer);
 				}
 			);
 		}
@@ -143,6 +145,8 @@ class Email {
 
 		remove_action( 'wp_mail_failed', [ $this, 'on_error' ] );
 		remove_filter( 'wp_mail_content_type', [ $this, 'set_content_type' ] );
+
+        WpMatomo\Workarounds\FluentSmtp::unset_phpmailer();
 
 		if ( ! $success ) {
 			$message = 'Error unknown.';
