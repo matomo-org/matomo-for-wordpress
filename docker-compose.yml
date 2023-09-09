@@ -10,9 +10,9 @@ services:
     image: "php:${PHP_VERSION:-8.1}-apache"
     volumes:
       - ./docker/wordpress:/var/www/html
-      - ./docker/wordpress_php:/usr/src/php
-      - ./docker/wordpress_php_extensions:/usr/local/lib/php/extensions
-      - ./docker/wordpress_php_conf:/usr/local/etc/php/conf.d
+      - "./docker/php-${PHP_VERSION:-8.1}/php:/usr/src/php"
+      - "./docker/php-${PHP_VERSION:-8.1}/extensions:/usr/local/lib/php/extensions"
+      - "./docker/php-${PHP_VERSION:-8.1}/conf:/usr/local/etc/php/conf.d"
       - .:/var/www/html/matomo-for-wordpress
       - /var/www/html/matomo-for-wordpress/app/tmp
     ports:
