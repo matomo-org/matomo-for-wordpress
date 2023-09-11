@@ -33,7 +33,7 @@ class FluentSmtp {
 		}
 
 		$this->was_phpmailer_replaced = true;
-		$this->original_phpmailer = $phpmailer;
+		$this->original_phpmailer     = $phpmailer;
 
 		return new PHPMailerProxy( $phpmailer );
 	}
