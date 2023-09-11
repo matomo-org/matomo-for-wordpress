@@ -15,6 +15,11 @@ use WpMatomo\Workarounds\FluentSmtp\PHPMailerProxy;
  * Workarounds for bugs in the Fluent SMTP WordPress plugin.
  */
 class FluentSmtp {
+
+	private $original_phpmailer = null;
+
+	private $was_phpmailer_replaced = false;
+
 	/**
 	 * Worksaround this bug in Fluent SMTP: https://github.com/WPManageNinja/fluent-smtp/issues/180
 	 * by creating a proxy to the global PHPMailer object that disables the addAttachment() method.
@@ -22,10 +27,12 @@ class FluentSmtp {
 	 * Should be used in a phpmailer_init action after manually adding attachments to the original
 	 * PHPMailer instance.
 	 */
-	public static function make_php_mailer_proxy( $phpmailer ) {
+	public function make_php_mailer_proxy( $phpmailer ) {
 		if ( ! is_plugin_active( 'fluent-smtp/fluent-smtp.php' ) ) {
 			return $phpmailer;
 		}
+
+		$this->was_phpmailer_replaced = true;
 
 		return new PHPMailerProxy( $phpmailer );
 	}
@@ -34,15 +41,19 @@ class FluentSmtp {
 	 * FluentSMTP will check if the global phpmailer object's class is actually PHPMailer, and if not, abort
 	 * so we need to make sure it doesn't see our wrapped proxy again.
 	 */
-	public static function unset_phpmailer() {
+	public function reset_phpmailer() {
 		global $phpmailer;
+
+		if ( ! $this->was_phpmailer_replaced ) {
+			return;
+		}
 
 		if ( ! is_plugin_active( 'fluent-smtp/fluent-smtp.php' ) ) {
 			return;
 		}
 
 		// @codingStandardsIgnoreStart
-		$phpmailer = null;
+		$phpmailer = $this->original_phpmailer;
 		// @codingStandardsIgnoreEnd
 	}
 }
