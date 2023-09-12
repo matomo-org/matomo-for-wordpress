@@ -69,6 +69,19 @@ variables are supported:
 - `WORDPRESS_VERSION` - (defaults to 6.3.1)
 - `PORT` - (the port to expose wordpress on, defaults to 3000)
 
+**Accessing MariaDB/MySQL**
+
+First ensure the database you want to inspect (mariadb or mysql) is the one that's currently being used by your local
+environment. Then, while the local environment is running in one shell, open another and run the command:
+
+```bash
+docker-compose run mariadb mariadb -h mariadb -u root -p
+```
+
+Enter `pass` for the password.
+
+(For mysql, replace instances of "mariadb" in the command with "mysql".)
+
 ## Security
 
 Security is a top priority at Matomo. As potential issues are discovered, we validate, patch and release fixes as quickly as we can. We have a security bug bounty program in place that rewards researchers for finding security issues and disclosing them to us.
