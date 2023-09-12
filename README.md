@@ -64,10 +64,13 @@ as you are using this local dev environment, you should not delete this folder.
 You can customize your local environment by setting environment variables in a `.env` file. Currently, the following
 variables are supported:
 
-- `PHP_VERSION` - (defaults to 8.1, must be a version that has an official docker container available)
-- `BACKEND` - ('mariadb' or 'mysql', defaults to 'mariadb')
-- `WORDPRESS_VERSION` - (defaults to 6.3.1)
-- `PORT` - (the port to expose wordpress on, defaults to 3000)
+- `PHP_VERSION` - defaults to 8.1, must be a version that has an official docker container available
+- `BACKEND` - 'mariadb' or 'mysql', defaults to 'mariadb'
+- `WORDPRESS_VERSION` - defaults to 6.3.1
+- `PORT` - the port to expose wordpress on, defaults to 3000
+- `WP_PLUGINS` - a list of plugin/version pairs like "my-plugin my-other-plugin:1.2.3". for each item, wp-cli will attempt to download and activate the plugin.
+  This is the same format as the Active Plugins entry in the System Report, so you could copy that value to this environment variable to quickly (or more quickly)
+  replicate a user's setup.
 
 ## Security
 
