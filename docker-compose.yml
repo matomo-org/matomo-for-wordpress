@@ -28,7 +28,7 @@ services:
         set -e
 
         cd /var/www/html
-        
+
         LATEST_WORDPRESS_VERSION=6.3.1 # can't use the github API, too easy to get rate limited
 
         # install PHP extensions needed
@@ -142,6 +142,31 @@ services:
         </html>
         EOF
         fi
+
+        # download WP_PLUGINS plugins if not present
+        if [ ! -f "/var/www/html/wp-cli.phar" ]; then
+          curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o /var/www/html/wp-cli.phar
+        fi
+        chmod +x /var/www/html/wp-cli.phar
+
+        for PLUGIN_VERSION in $WP_PLUGINS
+        do
+          PLUGIN_VERSION_ARRAY=($${PLUGIN_VERSION//:/ })
+          PLUGIN=$${PLUGIN_VERSION_ARRAY[0]}
+          VERSION=$${PLUGIN_VERSION_ARRAY[1]}
+
+          if [ "$$PLUGIN" = "matomo" ]; then
+            echo "skipping matomo plugin install"
+            continue
+          fi
+
+          if [[ ! -z "$$VERSION" ]]; then
+            VERSION_ARGUMENT="--version=$$VERSION"
+          fi
+
+          echo "installing plugin $$PLUGIN $$VERSION_ARGUMENT"
+          /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$$WORDPRESS_VERSION plugin install --activate $$VERSION_ARGUMENT $$PLUGIN || true
+        done
 
         # make sure the files can be edited outside of docker (for easier debugging)
         # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
