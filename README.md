@@ -68,7 +68,7 @@ variables are supported:
 - `BACKEND` - 'mariadb' or 'mysql', defaults to 'mariadb'
 - `WORDPRESS_VERSION` - defaults to 6.3.1
 - `PORT` - the port to expose wordpress on, defaults to 3000
-- `WP_PLUGINS` - a list of plugin/version pairs like "my-plugin my-other-plugin:1.2.3". for each item, wp-cli will attempt to download and activate the plugin.
+- `WP_PLUGINS` - a list of plugin/version pairs like "my-plugin my-other-plugin:1.2.3". For each item, wp-cli will attempt to download and activate the plugin.
   This is the same format as the Active Plugins entry in the System Report, so you could copy that value to this environment variable to quickly (or more quickly)
   replicate a user's setup.
 
