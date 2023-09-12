@@ -1636,11 +1636,9 @@ class SystemReport {
 			$plugins        = get_plugins();
 			$active_plugins = array_map(
 				function ( $active_plugin ) use ( $plugins ) {
-					$plugin_version = isset($plugins[$active_plugin]['Version']) ? $plugins[$active_plugin]['Version'] : null;
-					$result_suffix = $plugin_version ? (':' . $plugin_version) : '';
-
+					$plugin_version = isset( $plugins[ $active_plugin ]['Version'] ) ? $plugins[ $active_plugin ]['Version'] : null;
+					$result_suffix  = $plugin_version ? ( ':' . $plugin_version ) : '';
 					$parts          = explode( '/', trim( $active_plugin ) );
-
 					return trim( $parts[0] ) . $result_suffix;
 				},
 				$active_plugins
