@@ -72,6 +72,19 @@ variables are supported:
   This is the same format as the Active Plugins entry in the System Report, so you could copy that value to this environment variable to quickly (or more quickly)
   replicate a user's setup.
 
+**Accessing MariaDB/MySQL**
+
+First ensure the database you want to inspect (mariadb or mysql) is the one that's currently being used by your local
+environment. Then, while the local environment is running in one shell, open another and run the command:
+
+```bash
+docker-compose run mariadb mariadb -h mariadb -u root -p
+```
+
+Enter `pass` for the password.
+
+(For mysql, replace instances of "mariadb" in the command with "mysql".)
+
 ## Security
 
 Security is a top priority at Matomo. As potential issues are discovered, we validate, patch and release fixes as quickly as we can. We have a security bug bounty program in place that rewards researchers for finding security issues and disclosing them to us.
