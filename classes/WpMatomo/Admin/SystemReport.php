@@ -758,6 +758,7 @@ class SystemReport {
 		// always show these settings
 		$global_settings_always_show = [
 			'track_mode',
+			'track_ecommerce',
 			'track_codeposition',
 			'track_api_endpoint',
 			'track_js_endpoint',
