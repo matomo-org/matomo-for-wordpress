@@ -85,7 +85,7 @@ class AjaxTracker extends \MatomoTracker {
 		// 1) Not send any response no matter what happens
 		// 2) Never exit at any point
 
-		$response = wp_remote_request( $url, $args );
+		$response = wp_remote_request( $url . '&bots=1', $args );
 
 		if (is_wp_error($response)) {
 			$this->logger->log_exception('ajax_tracker', new \Exception($response->get_error_message()));
