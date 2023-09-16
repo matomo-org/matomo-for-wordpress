@@ -87,8 +87,9 @@ class AjaxTracker extends \MatomoTracker {
 
 		$response = wp_remote_request( $url, $args );
 
-		if (is_wp_error($response)) {
-			$this->logger->log_exception('ajax_tracker', new \Exception($response->get_error_message()));
+		if ( is_wp_error($response) ) {
+			$message = method_exists($response, 'get_error_message') ? $response->get_error_message() : print_r($response, true);
+			$this->logger->log_exception('ajax_tracker', new \Exception($message));
 		}
 
 		return $response;
