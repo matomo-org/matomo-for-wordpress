@@ -24,10 +24,6 @@ class Woocommerce extends Base {
 	private $order_status_ignore = MATOMO_WOOCOMMERCE_IGNORED_ORDER_STATUS;
 
 	public function register_hooks() {
-		if ( is_admin() ) {
-			return;
-		}
-
 		parent::register_hooks();
 
 		add_action( 'wp_head', [ $this, 'maybe_track_order_complete' ], 99999 );
@@ -63,10 +59,10 @@ class Woocommerce extends Base {
 			$order_id = (int) $order_id;
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo "<script>(function () {
-	if (location.href) { 
+	if (location.href) {
 		window._paq = window._paq || [];
 	    var url = location.href;
-		if (url.indexOf('?') > 0) { 
+		if (url.indexOf('?') > 0) {
 		    url = url.substr(0, url.indexOf('?')); // remove order key
 		}
 		window._paq.push(['setCustomUrl', url.replace('$order_id', 'orderid_anonymised')]);
