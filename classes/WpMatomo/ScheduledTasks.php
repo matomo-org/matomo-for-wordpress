@@ -301,6 +301,12 @@ class ScheduledTasks {
 		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$archiver->maxConcurrentArchivers = 1;
 
+		// see https://github.com/matomo-org/matomo/pull/21216
+		if ( ! CronArchive\SharedSiteIds::isSupported() ) {
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$archiver->shouldArchiveAllSites = true;
+		}
+
 		if ( $force ) {
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$archiver->shouldArchiveAllSites = true;
