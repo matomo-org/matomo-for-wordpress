@@ -1431,7 +1431,12 @@ class SystemReport {
 					}
 				}
 			} catch ( Exception $e ) {
-				$this->logger->log( $e->getMessage() );
+				$rows[] = [
+					'name'     => 'Browser Compatibility',
+					'is_error' => true,
+					'value'    => 'Failed to use Device Detector.',
+					'comment'  => $e->getMessage(),
+				];
 			}
 
 			$rows[] = [
