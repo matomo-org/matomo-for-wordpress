@@ -1689,14 +1689,19 @@ class SystemReport {
 			];
 		}
 
-		$active_plugins = $this->get_actives_plugins();
+		$active_plugins_with_version = $this->get_actives_plugins();
 
-		if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
+		if ( ! empty( $active_plugins_with_version ) && is_array( $active_plugins_with_version ) ) {
 			$rows[] = [
 				'name'    => 'Active Plugins',
-				'value'   => count( $active_plugins ),
-				'comment' => implode( ' ', $active_plugins ),
+				'value'   => count( $active_plugins_with_version ),
+				'comment' => implode( ' ', $active_plugins_with_version ),
 			];
+
+			$active_plugins = array_map(function ( $plugin_with_version ) {
+				$parts = explode( ':', $plugin_with_version );
+				return $parts[0];
+			}, $active_plugins_with_version);
 
 			$used_not_compatible = array_intersect( $active_plugins, $this->not_compatible_plugins );
 			if ( in_array( 'wp-rocket', $used_not_compatible, true ) ) {
@@ -1734,6 +1739,17 @@ class SystemReport {
 						'is_error'   => $is_error,
 					];
 				}
+			}
+
+			if ( in_array( 'ninjafirewall', $active_plugins, true ) ) {
+				$warning = <<<EOF
+<div class="notice notice-warning">
+	<p><strong>We noticed you are using Matomo with Ninja Firewall.</strong> This can result in Matomo cache file changes showing up in Ninja Firewall which likely undesired.
+	<a href="https://matomo.org/faq/wordpress/how-do-i-prevent-matomo-cache-file-changes-to-show-up-in-ninja-firewall/" rel="noreferrer noopener" target="_blank">Read our FAQ to learn how to prevent these entries.</a>
+	</p>
+</div>
+EOF;
+				echo $warning;
 			}
 		}
 
