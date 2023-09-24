@@ -1698,10 +1698,13 @@ class SystemReport {
 				'comment' => implode( ' ', $active_plugins_with_version ),
 			];
 
-			$active_plugins = array_map(function ( $plugin_with_version ) {
-				$parts = explode( ':', $plugin_with_version );
-				return $parts[0];
-			}, $active_plugins_with_version);
+			$active_plugins = array_map(
+				function ( $plugin_with_version ) {
+					$parts = explode( ':', $plugin_with_version );
+					return $parts[0];
+				},
+				$active_plugins_with_version
+			);
 
 			$used_not_compatible = array_intersect( $active_plugins, $this->not_compatible_plugins );
 			if ( in_array( 'wp-rocket', $used_not_compatible, true ) ) {
@@ -1742,14 +1745,11 @@ class SystemReport {
 			}
 
 			if ( in_array( 'ninjafirewall', $active_plugins, true ) ) {
-				$warning = <<<EOF
-<div class="notice notice-warning">
-	<p><strong>We noticed you are using Matomo with Ninja Firewall.</strong> This can result in Matomo cache file changes showing up in Ninja Firewall which likely undesired.
-	<a href="https://matomo.org/faq/wordpress/how-do-i-prevent-matomo-cache-file-changes-to-show-up-in-ninja-firewall/" rel="noreferrer noopener" target="_blank">Read our FAQ to learn how to prevent these entries.</a>
+				echo '<div class="notice notice-warning">
+	<p><strong>' . esc_html__( 'We noticed you are using Matomo with Ninja Firewall.', 'matomo' ) . '</strong> ' . esc_html__( 'This can result in Matomo cache file changes showing up in Ninja Firewall which likely undesired.', 'matomo' ) . '
+	<a href="https://matomo.org/faq/wordpress/how-do-i-prevent-matomo-cache-file-changes-to-show-up-in-ninja-firewall/" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Read our FAQ to learn how to prevent these entries.', 'matomo' ) . '</a>
 	</p>
-</div>
-EOF;
-				echo $warning;
+</div>';
 			}
 		}
 
