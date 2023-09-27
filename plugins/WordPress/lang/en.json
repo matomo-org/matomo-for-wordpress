@@ -1,0 +1,6 @@
+{
+  "Wordpress": {
+    "TokenAuthMissing": "Missing token_auth in the request.",
+    "ExceptionInvalidToken": "Invalid token_auth in the request."
+  }
+}
