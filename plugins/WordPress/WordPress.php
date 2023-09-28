@@ -312,20 +312,25 @@ class WordPress extends Plugin
 	        }
         }
 
-	    $requestedModule = !empty($module) ? Common::mb_strtolower($module) : '';
-	    $requestedAction = !empty($action) ? Common::mb_strtolower($action) : '';
+        $requestedModule = !empty($module) ? Common::mb_strtolower($module) : '';
+        $requestedAction = !empty($action) ? Common::mb_strtolower($action) : '';
 
-	    if (!WordPress::$is_archiving
-	        && !Common::isPhpCliMode()
-	        && $requestedModule === 'api'
-	        && (empty($requestedAction) || $requestedAction === 'index')) {
-		    $tokenRequest = Common::getRequestVar('token_auth', false, 'string');
-		    $tokenUser = Piwik::getCurrentUserTokenAuth();
+        if (!WordPress::$is_archiving
+            && !Common::isPhpCliMode()
+            && $requestedModule === 'api'
+            && (empty($requestedAction) || $requestedAction === 'index')
+        ) {
+            $tokenRequest = Common::getRequestVar('token_auth', false, 'string');
+            $tokenUser = Piwik::getCurrentUserTokenAuth();
 
-		    if (!$tokenRequest || $tokenRequest !== $tokenUser) {
-			    throw new Exception(Piwik::translate('General_ExceptionInvalidToken'));
-		    }
-	    }
+            if (!$tokenRequest) {
+                throw new Exception(Piwik::translate('Wordpress_TokenAuthMissing'));
+            }
+
+            if ($tokenRequest !== $tokenUser) {
+                throw new Exception(Piwik::translate('Wordpress_ExceptionInvalidToken'));
+            }
+        }
 
         if ($requestedModule === 'login') {
             if ($action === 'ajaxNoAccess' || $action === 'bruteForceLog') {
@@ -360,7 +365,7 @@ class WordPress extends Plugin
 	            throw new Exception( 'This feature '.$requestedModule. ' / ' .$requestedAction .' is not available' );
             }
         }
-        
+
         if ($requestedModule === 'sitesmanager' && $requestedAction === 'sitewithoutdata') {
             // we don't want the no data message to appear as it contains integration instructions which aren't needed
             // and links to not existing sites
