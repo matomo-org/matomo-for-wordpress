@@ -9,6 +9,7 @@
 * Fix ecommerce tracking when the shared hosting server is detected as a bot by Matomo
 * Fix ecommerce tracking when a wordpress plugin performs ecommerce AJAX via admin-ajax.php
 * Add ecommerce tracking setting to system report
+* Workaround FluentSMTP bug in sending emails with attachments (for email reports)
 
 = 4.15.1 =
 * Update Matomo core to 4.15.1
