@@ -1,4 +1,15 @@
 == Changelog ===
+
+= 4.15.2 =
+* Fix ecommerce reports not archiving if no goal conversions or order for the site
+* Provide more context when an API request fails token authentication
+* Add notification if Ninja Firewall plugin is detected to direct users to relevant FAQ
+* Make sure user syncing does not fail if users are deleted outside of wordpress
+* Fix archiving failures when getmypid() is disabled on a hosting provider
+* Fix ecommerce tracking when the shared hosting server is detected as a bot by Matomo
+* Fix ecommerce tracking when a wordpress plugin performs ecommerce AJAX via admin-ajax.php
+* Add ecommerce tracking setting to system report
+
 = 4.15.1 =
 * Update Matomo core to 4.15.1
 * Fix MaxMind license key input
@@ -126,12 +137,12 @@
 * Update core to 4.1.0
 
 = 4.0.4 =
-* Improved upgrade logic from version 1.X. If you are already on version 4.X there won't be a change. 
+* Improved upgrade logic from version 1.X. If you are already on version 4.X there won't be a change.
 
 = 4.0.3 =
 * Update core to 4.0.5
 * Marked cookiebot and WP RSS Aggregator as incompatible
-* Fixed an issue with WP Mail SMTP 
+* Fixed an issue with WP Mail SMTP
 
 = 4.0.2 =
 * Fix incompatibility with Total Cache plugin
@@ -145,13 +156,13 @@
 * Update Matomo core to 4.0 see changelog: https://matomo.org/changelog/matomo-4-0-0/
 * Custom Variables is now no longer included but it is available as a marketplace plugin.
 * Possibility to disable Apache AddHandler in .htaccess
-* Better compatibility with PHP 8 
+* Better compatibility with PHP 8
 * Compatibility with WordPress 5.6
 
 = 1.3.2 =
 * Fix an issue where some versions of MemberPress were not tracked
 * Fix WooCommerce cart coupons might not be applied when using WooCommerce Subscriptions
-* More error logging for WooCommerce tracking 
+* More error logging for WooCommerce tracking
 * Fix segment in WP API had to be double encoded to work
 
 = 1.3.1 =
