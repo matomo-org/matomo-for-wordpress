@@ -3,7 +3,7 @@ Contributors: matomoteam
 Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
 Requires at least: 4.8
 Tested up to: 6.2.2
-Stable tag: 4.15.1
+Stable tag: 4.15.2
 Requires PHP: 7.2.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -12,7 +12,7 @@ Matomo is the #1 Google Analytics alternative that gives you full control over y
 
 == Description ==
 
-Already Matomo On-Premise or Matomo Cloud user? You need to use the [WP-Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead of this plugin. 
+Already Matomo On-Premise or Matomo Cloud user? You need to use the [WP-Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead of this plugin.
 
 For all you WordPress website owners wanting an easier way to get customer insights to grow your business, you can now get the solution the professionals use, for free!
 
@@ -119,10 +119,10 @@ Over 1 million websites in over 190 countries are using Matomo already. Join the
 
 = Manual installation =
 
-* Downloading the plugin 
+* Downloading the plugin
 * Upload it to your web server using an FTP application. [Learn more](https://wordpress.org/support/article/managing-plugins/#manual-plugin-installation)
 
-= Once installed = 
+= Once installed =
 
 * Go to "Matomo Analytics" in the WordPress Admin Dashboard.
 * Click on "Activate tracking" in the "Get started" page.
@@ -166,7 +166,7 @@ Contact us: [matomo.org/contact/](https://matomo.org/contact/)
 
 = Can I import reports from WP Statistics plugin?
 
-Yes, you can [import historical data from WP Statistics](https://matomo.org/faq/wordpress/how-do-i-import-data-from-wp-statistics-plugin-into-matomo-for-wordpress/) so you don't lose any data when migrating to our plugin. 
+Yes, you can [import historical data from WP Statistics](https://matomo.org/faq/wordpress/how-do-i-import-data-from-wp-statistics-plugin-into-matomo-for-wordpress/) so you don't lose any data when migrating to our plugin.
 
 = Where do I find all other available FAQs? =
 
