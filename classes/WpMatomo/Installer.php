@@ -257,13 +257,15 @@ class Installer {
 
 	private function create_config( $db_info ) {
 		$this->logger->log( 'Matomo is now creating the config' );
-		$domain  = home_url();
-		$general = [
+		$home_url = home_url();
+		$domain   = wp_parse_url( $home_url, PHP_URL_HOST );
+		$domain   = $domain ? $home_url : $domain;
+		$general  = [
 			'trusted_hosts' => [ $domain ],
 			'salt'          => Common::generateUniqId(),
 		];
-		$config  = Config::getInstance();
-		$path    = $config->getLocalPath();
+		$config   = Config::getInstance();
+		$path     = $config->getLocalPath();
 		if ( ! is_dir( dirname( $path ) ) ) {
 			wp_mkdir_p( dirname( $path ) );
 		}

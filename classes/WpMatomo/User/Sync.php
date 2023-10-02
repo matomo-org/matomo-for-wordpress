@@ -307,6 +307,17 @@ class Sync {
 		if ( $matomo_user_login ) {
 			$user_in_matomo = $user_model->getUser( $matomo_user_login );
 		} else {
+			$user_by_email = $user_model->getUserByEmail( $wp_user->user_email );
+
+			// the user was deleted without matomo being notified. delete user so we can recreate it
+			// below.
+			//
+			// note: it's also possible there are multiple users with the same email address,
+			// but this is currently unsupported in matomo so we don't take that into consideration.
+			if ( $user_by_email ) {
+				$user_model->deleteUser( $user_by_email['login'] );
+			}
+
 			// wp usernames may include whitespace etc
 			$login = preg_replace( '/[^A-Za-zÄäÖöÜüß0-9_.@+-]+/D', '_', $login );
 			$login = substr( $login, 0, self::MAX_USER_NAME_LENGTH );

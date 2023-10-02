@@ -758,6 +758,7 @@ class SystemReport {
 		// always show these settings
 		$global_settings_always_show = [
 			'track_mode',
+			'track_ecommerce',
 			'track_codeposition',
 			'track_api_endpoint',
 			'track_js_endpoint',
@@ -1633,11 +1634,13 @@ class SystemReport {
 	private function get_actives_plugins() {
 		$active_plugins = get_option( 'active_plugins', [] );
 		if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
+			$plugins        = get_plugins();
 			$active_plugins = array_map(
-				function ( $active_plugin ) {
-					$parts = explode( '/', trim( $active_plugin ) );
-
-					return trim( $parts[0] );
+				function ( $active_plugin ) use ( $plugins ) {
+					$plugin_version = isset( $plugins[ $active_plugin ]['Version'] ) ? $plugins[ $active_plugin ]['Version'] : null;
+					$result_suffix  = $plugin_version ? ( ':' . $plugin_version ) : '';
+					$parts          = explode( '/', trim( $active_plugin ) );
+					return trim( $parts[0] ) . $result_suffix;
 				},
 				$active_plugins
 			);
@@ -1686,14 +1689,22 @@ class SystemReport {
 			];
 		}
 
-		$active_plugins = $this->get_actives_plugins();
+		$active_plugins_with_version = $this->get_actives_plugins();
 
-		if ( ! empty( $active_plugins ) && is_array( $active_plugins ) ) {
+		if ( ! empty( $active_plugins_with_version ) && is_array( $active_plugins_with_version ) ) {
 			$rows[] = [
 				'name'    => 'Active Plugins',
-				'value'   => count( $active_plugins ),
-				'comment' => implode( ' ', $active_plugins ),
+				'value'   => count( $active_plugins_with_version ),
+				'comment' => implode( ' ', $active_plugins_with_version ),
 			];
+
+			$active_plugins = array_map(
+				function ( $plugin_with_version ) {
+					$parts = explode( ':', $plugin_with_version );
+					return $parts[0];
+				},
+				$active_plugins_with_version
+			);
 
 			$used_not_compatible = array_intersect( $active_plugins, $this->not_compatible_plugins );
 			if ( in_array( 'wp-rocket', $used_not_compatible, true ) ) {
@@ -1731,6 +1742,14 @@ class SystemReport {
 						'is_error'   => $is_error,
 					];
 				}
+			}
+
+			if ( in_array( 'ninjafirewall', $active_plugins, true ) ) {
+				echo '<div class="notice notice-warning">
+	<p><strong>' . esc_html__( 'We noticed you are using Matomo with Ninja Firewall.', 'matomo' ) . '</strong> ' . esc_html__( 'This can result in Matomo cache file changes showing up in Ninja Firewall which likely undesired.', 'matomo' ) . '
+	<a href="https://matomo.org/faq/wordpress/how-do-i-prevent-matomo-cache-file-changes-to-show-up-in-ninja-firewall/" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Read our FAQ to learn how to prevent these entries.', 'matomo' ) . '</a>
+	</p>
+</div>';
 			}
 		}
 

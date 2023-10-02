@@ -39,3 +39,5 @@ phpbench.json export-ignore
 composer.travis.json export-ignore
 karma.conf.js export-ignore
 .DS_Store export-ignore
+.editorconfig export-ignore
+docker-compose.yml export-ignore
