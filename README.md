@@ -72,6 +72,14 @@ variables are supported:
   This is the same format as the Active Plugins entry in the System Report, so you could copy that value to this environment variable to quickly (or more quickly)
   replicate a user's setup.
 
+**Running wp-cli**
+
+Make sure the wordpress service is running in one terminal, then in another terminal run:
+
+```bash
+docker-compose run wp <... rest of command ...>
+```
+
 **Accessing MariaDB/MySQL**
 
 First ensure the database you want to inspect (mariadb or mysql) is the one that's currently being used by your local
