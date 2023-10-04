@@ -51,7 +51,7 @@ docker-compose up wordpress; docker-compose stop
 The first time the container starts it will compile php extensions within the container it needs, download wordpress
 and set it up.
 
-After starting the container, visit `https://localhost:3000/` to see the list of available wordpress versions.
+After starting the container, visit `http://localhost:3000/` to see the list of available wordpress versions.
 Pick one, and it will take you to the Wordpress installer.
 
 After installing Wordpress, go to the plugins page and activate Matomo for Wordpress.
@@ -79,6 +79,18 @@ Make sure the wordpress service is running in one terminal, then in another term
 ```bash
 docker-compose run wp <... rest of command ...>
 ```
+
+**Testing on nginx**
+
+To run the local dev environment with nginx instead of apache, run the following command:
+
+```bash
+docker-compose run nginx fpm; docker-compose stop
+```
+
+Then visit `http://localhost:3000/`.
+
+Note: you cannot have both the apache and nginx services running simultaneously as they will try to use the same port.
 
 **Accessing MariaDB/MySQL**
 
