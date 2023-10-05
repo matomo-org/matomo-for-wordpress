@@ -82,13 +82,15 @@ docker-compose run wp <... rest of command ...>
 
 **Testing on nginx**
 
-To run the local dev environment with nginx instead of apache, run the following command:
+To run the local dev environment with nginx instead of apache, first make sure there is a `127.0.0.1 nginx` entry in your `/etc/hosts` file.
+
+Then run the following command:
 
 ```bash
 docker-compose run nginx fpm; docker-compose stop
 ```
 
-Then visit `http://localhost:3000/`.
+Finally visit `http://nginx:3000/`.
 
 Note: you cannot have both the apache and nginx services running simultaneously as they will try to use the same port.
 
@@ -106,7 +108,6 @@ Enter `pass` for the password.
 (For mysql, replace instances of "mariadb" in the command with "mysql".)
 
 ## Security
-
 Security is a top priority at Matomo. As potential issues are discovered, we validate, patch and release fixes as quickly as we can. We have a security bug bounty program in place that rewards researchers for finding security issues and disclosing them to us.
 
 [Learn more](https://matomo.org/security/) or check out our [HackerOne program](https://hackerone.com/matomo).
