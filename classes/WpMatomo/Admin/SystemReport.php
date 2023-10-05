@@ -189,6 +189,8 @@ class SystemReport {
 						echo '<br/>';
 					}
 					echo '</p></div>';
+				} else {
+					echo '<div class="notice notice-success"><p>' . esc_html__( 'Matomo Archiving completed successfully!', 'matomo' ) . '</p></div>';
 				}
 			}
 
