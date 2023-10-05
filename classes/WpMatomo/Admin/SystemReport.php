@@ -758,15 +758,15 @@ class SystemReport {
 					'method'    => 'GET',
 					'sslverify' => false,
 					'timeout'   => 2,
-				),
+				)
 			);
 			if ( is_array( $result ) ) {
 				$response_code = (int) $result['response']['code'];
 				if ( $response_code >= 200 && $response_code < 300 ) {
 					$rows[] = [
-						'name' => __( 'YML files should not be accessible', 'matomo' ),
-						'value' => 'warning',
-						'comment' => 'The .yml files in the wp-content/plugins/matomo/app/vendor directory are accessible from the internet. This can cause some web security tools to flag your website as suspicious. If you are using Apache, it is probably due to your server configuration disabling the use of .htaccess files. If you are instead using nginx, it is due to your nginx configuration allowing .yml files. You may need to contact your hosting provider to fix this.',
+						'name'       => __( 'YML files should not be accessible', 'matomo' ),
+						'value'      => 'warning',
+						'comment'    => __( 'The .yml files in the wp-content/plugins/matomo/app/vendor directory are accessible from the internet. This can cause some web security tools to flag your website as suspicious. If you are using Apache, it is probably due to your server configuration disabling the use of .htaccess files. If you are instead using nginx, it is due to your nginx configuration allowing .yml files. You may need to contact your hosting provider to fix this.', 'matomo' ),
 						'is_warning' => true,
 					];
 				}
