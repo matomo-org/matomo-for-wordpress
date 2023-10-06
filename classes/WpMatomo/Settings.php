@@ -13,6 +13,7 @@
 
 namespace WpMatomo;
 
+use Piwik\CliMulti\Process;
 use WpMatomo\Admin\CookieConsent;
 use WpMatomo\Admin\TrackingSettings;
 
@@ -33,6 +34,7 @@ class Settings {
 	const DELETE_ALL_DATA_ON_UNINSTALL         = 'delete_all_data_uninstall';
 	const SITE_CURRENCY                        = 'site_currency';
 	const NETWORK_CONFIG_OPTIONS               = 'config_options';
+	const DISABLE_ASYNC_ARCHIVING_OPTION_NAME  = 'matomo_disable_async_archiving';
 
 	public static $is_doing_action_tracking_related = false;
 	/**
@@ -107,6 +109,7 @@ class Settings {
 		'force_protocol'                           => 'disabled',
 		'maxmind_license_key'                      => '',
 		self::SHOW_GET_STARTED_PAGE                => 1,
+		self::DISABLE_ASYNC_ARCHIVING_OPTION_NAME  => false,
 	];
 
 	/**
@@ -485,5 +488,13 @@ class Settings {
 
 	public function set_assume_is_network_enabled_in_tests( $network_enabled = true ) {
 		$this->assume_is_network_enabled_in_tests = $network_enabled;
+	}
+
+	public function is_async_archiving_supported() {
+		return Process::isSupported() && ( ! defined( 'MATOMO_SUPPORT_ASYNC_ARCHIVING' ) || MATOMO_SUPPORT_ASYNC_ARCHIVING );
+	}
+
+	public function is_async_archiving_disabled_by_option() {
+		return (bool) $this->get_global_option( self::DISABLE_ASYNC_ARCHIVING_OPTION_NAME );
 	}
 }
