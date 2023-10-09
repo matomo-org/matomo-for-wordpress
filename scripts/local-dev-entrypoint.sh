@@ -145,14 +145,21 @@ done
 
 # make sure the files can be edited outside of docker (for easier debugging)
 # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
-find "/var/www/html/$WORDPRESS_VERSION" -path "/var/www/html/$WORDPRESS_VERSION" -prune -o -exec chown "${UID:-1000}:${GID:-1000}" {} +
-find "/var/www/html/$WORDPRESS_VERSION" -path "/var/www/html/$WORDPRESS_VERSION" -prune -o -exec chmod 0777 {} +
+mkdir -p /var/www/html/$WORDPRESS_VERSION/wp-content/uploads
+find "/var/www/html/$WORDPRESS_VERSION" -path "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/matomo" -prune -o -exec chown "${UID:-1000}:${GID:-1000}" {} +
+find "/var/www/html/$WORDPRESS_VERSION" -path "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
 chmod -R 0777 "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d"
 
-echo "$@"
-
 if ! which apache2-foreground &> /dev/null; then
+  # make sure home url points to 'nginx' service
+  php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
+  \$pdo->exec('UPDATE \`$WP_DB_NAME\`.wp_options SET option_value = REPLACE(option_value, \'localhost\', \'nginx\') WHERE option_name IN (\'home\', \'siteurl\')');" || true
+
   php-fpm "$@"
 else
+  # make sure home url points to 'localhost'
+  php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
+  \$pdo->exec('UPDATE \`$WP_DB_NAME\`.wp_options SET option_value = REPLACE(option_value, \'nginx\', \'localhost\') WHERE option_name IN (\'home\', \'siteurl\')');" || true
+
   apache2-foreground "$@"
 fi
