@@ -52,9 +52,9 @@ The first time the container starts it will compile php extensions within the co
 and set it up.
 
 After starting the container, visit `http://localhost:3000/` to see the list of available wordpress versions.
-Pick one, and it will take you to the Wordpress installer.
+Pick one, and it will take you to Wordpress.
 
-After installing Wordpress, go to the plugins page and activate Matomo for Wordpress.
+Go to wp-login.php, then enter `root` for the user name and `pass` for the password and login.
 
 Note: docker related files, such as the downloaded wordpress and database files, will be stored in a new folder named `./docker`. As long
 as you are using this local dev environment, you should not delete this folder.
@@ -71,6 +71,11 @@ variables are supported:
 - `WP_PLUGINS` - a list of plugin/version pairs like "my-plugin my-other-plugin:1.2.3". For each item, wp-cli will attempt to download and activate the plugin.
   This is the same format as the Active Plugins entry in the System Report, so you could copy that value to this environment variable to quickly (or more quickly)
   replicate a user's setup.
+- WP_ADMIN_USER - the admin wordpress username, defaults to 'root'. This variable is only used when installing wordpress. It shouldn't be changed afterwards, unless doing a fresh install.
+- WP_ADMIN_EMAIL - the admin user's email, defaults to 'nobody@nowhere.local'. This variable is only used when installing wordpress. It shouldn't be changed afterwards, unless doing a fresh install.
+- WOOCOMMERCE - if set, installs and sets up woocommerce. This includes setting up a payment gateway with stripe and adding some test products.
+- STRIPE_PUBLISHABLE_KEY - the test publishable key from your Stripe account to use with a woocommerce install. Required for a woocommerce install.
+- STRIPE_SECRET_KEY - the test secret key from your Stripe account use with a woocommerce install. Required for a woocommerce install.
 
 **Running wp-cli**
 
