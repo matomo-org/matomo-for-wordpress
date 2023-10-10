@@ -6,13 +6,13 @@ cd /var/www/html
 
 LATEST_WORDPRESS_VERSION=6.3.1 # can't use the github API, too easy to get rate limited
 
-# install PHP extensions needed
-for extension in mysqli pdo pdo_mysql; do
-  if [ ! -f /usr/local/lib/php/extensions/*/$extension.so ]; then
-    docker-php-ext-install $extension
-  fi
-done
+# install wp-cli.phar
+if [ ! -f "/var/www/html/wp-cli.phar" ]; then
+  curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o /var/www/html/wp-cli.phar
+fi
+chmod +x /var/www/html/wp-cli.phar
 
+# TODO: switch download to use wp-cli instead of just curling (also can use wp db create instead of raw php)
 # install wordpress if not present
 WORDPRESS_VERSION=${WORDPRESS_VERSION:-$LATEST_WORDPRESS_VERSION}
 if [ ! -d "/var/www/html/$WORDPRESS_VERSION" ]; then
@@ -63,6 +63,9 @@ define( 'FS_CHMOD_DIR', ( 0777 & ~ umask() ) );
 define( 'FS_CHMOD_FILE', ( 0644 & ~ umask() ) );
 define( 'FS_METHOD', 'direct' );
 
+define('FORCE_SSL', false);
+define('FORCE_SSL_ADMIN', false);
+
 define( 'MATOMO_ANALYTICS_FILE', __DIR__ . '/wp-content/plugins/matomo/matomo.php' );
 
 \$table_prefix = 'wp_';
@@ -81,10 +84,17 @@ EOF
   echo "setup wp-config.php!"
 fi
 
+# install wordpress
+/var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_VERSION core install --url=localhost:3000 --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
+/var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_VERSION option set siteurl "http://localhost:3000/$WORDPRESS_VERSION"
+/var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_VERSION option set home "http://localhost:3000/$WORDPRESS_VERSION"
+
 # link matomo for wordpress volume as wordpress plugin
 if [ ! -d "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/matomo" ]; then
   ln -s /var/www/html/matomo-for-wordpress "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/matomo"
 fi
+
+/var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_VERSION plugin activate matomo
 
 # add index.php file listing available installs to root /var/www/html
 if [ ! -f "/var/www/html/index.php" ]; then
@@ -119,11 +129,6 @@ EOF
 fi
 
 # download WP_PLUGINS plugins if not present
-if [ ! -f "/var/www/html/wp-cli.phar" ]; then
-  curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o /var/www/html/wp-cli.phar
-fi
-chmod +x /var/www/html/wp-cli.phar
-
 for PLUGIN_VERSION in $WP_PLUGINS
 do
   PLUGIN_VERSION_ARRAY=(${PLUGIN_VERSION//:/ })
@@ -143,6 +148,31 @@ do
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_VERSION plugin install --activate $VERSION_ARGUMENT $PLUGIN || true
 done
 
+# setup woocommerce if requested
+if [[ ! -z "$WOOCOMMERCE" && ! -d "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/woocommerce" ]]; then
+  # install woocommerce and stripe payment gateway
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root plugin install woocommerce woocommerce-gateway-stripe --activate
+
+  # install oceanwp
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root theme install oceanwp --activate
+
+  # add 5 test products
+  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/ceiling_fan.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Ceiling Fan" --short_description="Pink butterfly ceiling fan" --description="Pink butterfly ceiling fan" --slug="ceiling-fan-pink" --regular_price="309.99" --sku="PROD_1" --images="[{\"id\":$IMAGE_ID}]" || true
+
+  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/film_projector.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Film Projector Lens" --short_description="A film projector lens" --description="A film projector lens" --slug="film-projector-lens" --regular_price="439.89" --sku="PROD_2" --images="[{\"id\":$IMAGE_ID}]" || true
+
+  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/monitors.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Folding monitors" --short_description="Folding monitors, three monitors combined" --description="Folding monitors, three monitors combined" --slug="folding-monitors" --regular_price="286.00" --sku="PROD_3" --images="[{\"id\":$IMAGE_ID}]" || true
+
+  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/spotlight.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Spotlight" --short_description="Single hanging spotlight" --description="Single hanging spotlight, fixed, not portable" --slug="spotlight" --regular_price="279.99" --sku="PROD_4" --images="[{\"id\":$IMAGE_ID}]" || true
+
+  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/tripod.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Small camera tripod in red" --short_description="Small camera tripod in red" --description="Small portable tripod for your camera. Available colors: red." --slug="camera-tripod-small" --regular_price="13.99" --sku="PROD_5" --images="[{\"id\":$IMAGE_ID}]" || true
+fi
+
 # make sure the files can be edited outside of docker (for easier debugging)
 # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
 mkdir -p /var/www/html/$WORDPRESS_VERSION/wp-content/uploads
@@ -151,6 +181,7 @@ find "/var/www/html/$WORDPRESS_VERSION" -path "/var/www/html/$WORDPRESS_VERSION/
 chmod -R 0777 "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d"
 
 if ! which apache2-foreground &> /dev/null; then
+  # TODO: is it possible to use wp-cli for this?
   # make sure home url points to 'nginx' service
   php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
   \$pdo->exec('UPDATE \`$WP_DB_NAME\`.wp_options SET option_value = REPLACE(option_value, \'localhost\', \'nginx\') WHERE option_name IN (\'home\', \'siteurl\')');" || true
