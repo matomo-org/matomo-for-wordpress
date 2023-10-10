@@ -150,36 +150,27 @@ done
 
 # setup woocommerce if requested
 if [[ ! -z "$WOOCOMMERCE" && ! -d "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/woocommerce" ]]; then
-  if [[ -z "$STRIPE_PUBLISHABLE_KEY" || -z "$STRIPE_SECRET_KEY" ]]; then
-    echo "to use the automated woocommerce setup, you must create a stripe account, enable test mode and set the"
-    echo "STRIPE_PUBLISHABLE_KEY and STRIPE_SECRET_KEY environment variables to their respective values in your account."
-    exit 1;
-  fi
-
   # install woocommerce and stripe payment gateway
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root plugin install woocommerce woocommerce-gateway-stripe --activate
 
   # install oceanwp
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root theme install oceanwp --activate
 
-  # configure payment gateway
-  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER --exec="\$_SERVER['HTTP_REFERER'] = 'http://localhost:3000/6.3.1/wp-admin/?page=wc-admin&task=payments';" wc payment_gateway update stripe --settings="{\"testmode\":\"yes\",\"test_publishable_key\":\"$STRIPE_PUBLISHABLE_KEY\",\"test_secret_key\":\"$STRIPE_SECRET_KEY\"}"
-
   # add 5 test products
   IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/ceiling_fan.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
-  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Ceiling Fan" --short_description="Pink butterfly ceiling fan" --description="Pink butterfly ceiling fan" --slug="ceiling-fan-pink" --regular_price="309.99" --sku="PROD_1" --images="[{\"id\":$IMAGE_ID}]"
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Ceiling Fan" --short_description="Pink butterfly ceiling fan" --description="Pink butterfly ceiling fan" --slug="ceiling-fan-pink" --regular_price="309.99" --sku="PROD_1" --images="[{\"id\":$IMAGE_ID}]" || true
 
   IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/film_projector.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
-  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Film Projector Lens" --short_description="A film projector lens" --description="A film projector lens" --slug="film-projector-lens" --regular_price="439.89" --sku="PROD_2" --images="[{\"id\":$IMAGE_ID}]"
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Film Projector Lens" --short_description="A film projector lens" --description="A film projector lens" --slug="film-projector-lens" --regular_price="439.89" --sku="PROD_2" --images="[{\"id\":$IMAGE_ID}]" || true
 
   IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/monitors.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
-  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Folding monitors" --short_description="Folding monitors, three monitors combined" --description="Folding monitors, three monitors combined" --slug="folding-monitors" --regular_price="286.00" --sku="PROD_3" --images="[{\"id\":$IMAGE_ID}]"
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Folding monitors" --short_description="Folding monitors, three monitors combined" --description="Folding monitors, three monitors combined" --slug="folding-monitors" --regular_price="286.00" --sku="PROD_3" --images="[{\"id\":$IMAGE_ID}]" || true
 
   IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/spotlight.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
-  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Spotlight" --short_description="Single hanging spotlight" --description="Single hanging spotlight, fixed, not portable" --slug="spotlight" --regular_price="279.99" --sku="PROD_4" --images="[{\"id\":$IMAGE_ID}]"
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Spotlight" --short_description="Single hanging spotlight" --description="Single hanging spotlight, fixed, not portable" --slug="spotlight" --regular_price="279.99" --sku="PROD_4" --images="[{\"id\":$IMAGE_ID}]" || true
 
   IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/tripod.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
-  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Small camera tripod in red" --short_description="Small camera tripod in red" --description="Small portable tripod for your camera. Available colors: red." --slug="camera-tripod-small" --regular_price="13.99" --sku="PROD_5" --images="[{\"id\":$IMAGE_ID}]"
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Small camera tripod in red" --short_description="Small camera tripod in red" --description="Small portable tripod for your camera. Available colors: red." --slug="camera-tripod-small" --regular_price="13.99" --sku="PROD_5" --images="[{\"id\":$IMAGE_ID}]" || true
 fi
 
 # make sure the files can be edited outside of docker (for easier debugging)
