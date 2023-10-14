@@ -173,7 +173,7 @@ class WordPress extends Plugin
 
     private function isAsyncArchivingDisabledBySetting()
     {
-        $settings = new Settings();
+        $settings = \WpMatomo::$settings;
         return $settings->is_async_archiving_disabled_by_option();
     }
 
