@@ -1,14 +1,15 @@
 # to override the environment, you can configure environment variables in a .env file saved in this directory.
 # the following environment variables are supported:
-#   - PHP_VERSION (defaults to 8.1, must be a version that has an official docker container available)
-#   - BACKEND ('mariadb' or 'mysql', defaults to 'mariadb')
-#   - WORDPRESS_VERSION (defaults to latest (defined below))
-#   - PORT (the port to expose wordpress on, defaults to 3000)
-#   - WP_ADMIN_USER (the admin wordpress username, defaults to 'root')
-#   - WP_ADMIN_EMAIL (the admin user's email, defaults to 'nobody@nowhere.local')
-#   - WOOCOMMERCE (if set, installs and sets up woocommerce)
-#   - STRIPE_PUBLISHABLE_KEY (the test publishable key to use with a woocommerce install)
-#   - STRIPE_SECRET_KEY (the test secret key to use with a woocommerce install)
+#   - PHP_VERSION - defaults to 8.1, must be a version that has an official docker container available
+#   - BACKEND - 'mariadb' or 'mysql', defaults to 'mariadb'
+#   - WORDPRESS_VERSION - defaults to latest (defined below)
+#   - PORT - the port to expose wordpress on, defaults to 3000
+#   - WP_ADMIN_USER - the admin wordpress username, defaults to 'root'
+#   - WP_ADMIN_EMAIL - the admin user's email, defaults to 'nobody@nowhere.local'
+#   - WOOCOMMERCE - if set, installs and sets up woocommerce
+#   - STRIPE_PUBLISHABLE_KEY - the test publishable key to use with a woocommerce install
+#   - STRIPE_SECRET_KEY - the test secret key to use with a woocommerce install
+#   - WOOCOMMERCE_PIWIK_ANALYTICS - path to woocommerce-piwik-analytics repo clone to link to in wordpress
 
 services:
   # basic apache service
@@ -25,6 +26,7 @@ services:
       - /var/www/html/matomo-for-wordpress/app/tmp
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
+      - "${WOOCOMMERCE_PIWIK_ANALYTICS:-/dev/null}:/var/www/html/woocommerce-piwik-analytics"
     ports:
       - "${PORT:-3000}:80"
     environment:
@@ -55,6 +57,7 @@ services:
       - /var/www/html/matomo-for-wordpress/app/tmp
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
+      - "${WOOCOMMERCE_PIWIK_ANALYTICS:-/dev/null}:/var/www/html/woocommerce-piwik-analytics"
     environment:
       WP_DB_HOST: "${BACKEND:-mariadb}"
       WOOCOMMERCE: "$WOOCOMMERCE"
@@ -96,6 +99,7 @@ services:
       - .:/var/www/html/matomo-for-wordpress
       - /var/www/html/matomo-for-wordpress/app/tmp
       - ./docker/wp-cli:/.wp-cli
+      - "${WOOCOMMERCE_PIWIK_ANALYTICS:-/dev/null}:/var/www/html/woocommerce-piwik-analytics"
     ports:
       - "${PORT:-3000}:80"
     environment:

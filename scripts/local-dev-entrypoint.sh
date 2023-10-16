@@ -94,6 +94,10 @@ if [ ! -d "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/matomo" ]; then
   ln -s /var/www/html/matomo-for-wordpress "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/matomo"
 fi
 
+if [[ -d "/var/www/html/woocommerce-piwik-analytics" && ! -d "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/woocommerce-piwik-analytics" ]]; then
+  ln -s /var/www/html/woocommerce-piwik-analytics /var/www/html/$WORDPRESS_VERSION/wp-content/plugins/woocommerce-piwik-analytics
+fi
+
 /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_VERSION plugin activate matomo
 
 # add index.php file listing available installs to root /var/www/html
