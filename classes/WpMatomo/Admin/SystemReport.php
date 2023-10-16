@@ -673,6 +673,12 @@ class SystemReport {
 				'comment' => '',
 			];
 
+			$rows[] = [
+				'name'    => 'Async Archiving Disabled in Setting',
+				'value'   => $this->settings->is_async_archiving_disabled_by_option(),
+				'comment' => '',
+			];
+
 			$location_provider = LocationProvider::getCurrentProvider();
 			if ( $location_provider ) {
 				$rows[] = [
@@ -1069,7 +1075,6 @@ class SystemReport {
 			'WP_CRON_LOCK_TIMEOUT',
 			'WP_DISABLE_FATAL_ERROR_HANDLER',
 			'MATOMO_SUPPORT_ASYNC_ARCHIVING',
-			'MATOMO_TRIGGER_BROWSER_ARCHIVING',
 			'MATOMO_ENABLE_TAG_MANAGER',
 			'MATOMO_SUPPRESS_DB_ERRORS',
 			'MATOMO_ENABLE_AUTO_UPGRADE',
