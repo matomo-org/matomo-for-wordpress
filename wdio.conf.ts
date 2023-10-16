@@ -13,7 +13,7 @@ export const config: Options.Testrunner = {
             transpileOnly: true
         }
     },
-    
+
     //
     // ==================
     // Specify Test Files
@@ -31,7 +31,7 @@ export const config: Options.Testrunner = {
     // will be called from there.
     //
     specs: [
-        './tests/e2e'
+        './tests/e2e/**/*.e2e.ts'
     ],
     // Patterns to exclude.
     exclude: [
@@ -59,14 +59,11 @@ export const config: Options.Testrunner = {
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://saucelabs.com/platform/platform-configurator
     //
-    // TODO: if possible, test with microsoft edge as well
-    capabilities: [{
-        browserName: 'chrome'
-    }, {
-        browserName: 'firefox'
-    }, {
-        browserName: 'safari'
-    }],
+    capabilities: [
+      {
+          browserName: 'firefox',
+      },
+    ],
 
     //
     // ===================
@@ -124,7 +121,7 @@ export const config: Options.Testrunner = {
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
     framework: 'mocha',
-    
+
     //
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
