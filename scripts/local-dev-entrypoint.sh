@@ -4,7 +4,12 @@ set -e
 
 cd /var/www/html
 
-LATEST_WORDPRESS_VERSION=6.3.1 # can't use the github API, too easy to get rate limited
+# http serves a single offer, whereas https serves multiple. we only want one
+LATEST_WORDPRESS_VERSION=$( php -r 'echo @json_decode(file_get_contents("http://api.wordpress.org/core/version-check/1.7/"), true)["offers"][0]["version"];' );
+if [[ -z "$LATEST_WORDPRESS_VERSION" ]]; then
+  echo "Latest WordPress version could not be found"
+  exit 1
+fi
 
 # install wp-cli.phar
 if [ ! -f "/var/www/html/wp-cli.phar" ]; then
@@ -161,19 +166,19 @@ if [[ ! -z "$WOOCOMMERCE" && ! -d "/var/www/html/$WORDPRESS_VERSION/wp-content/p
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root theme install oceanwp --activate
 
   # add 5 test products
-  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/ceiling_fan.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/matomo/tests/resources/products/ceiling_fan.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Ceiling Fan" --short_description="Pink butterfly ceiling fan" --description="Pink butterfly ceiling fan" --slug="ceiling-fan-pink" --regular_price="309.99" --sku="PROD_1" --images="[{\"id\":$IMAGE_ID}]" || true
 
-  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/film_projector.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/matomo/tests/resources/products/film_projector.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Film Projector Lens" --short_description="A film projector lens" --description="A film projector lens" --slug="film-projector-lens" --regular_price="439.89" --sku="PROD_2" --images="[{\"id\":$IMAGE_ID}]" || true
 
-  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/monitors.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/matomo/tests/resources/products/monitors.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Folding monitors" --short_description="Folding monitors, three monitors combined" --description="Folding monitors, three monitors combined" --slug="folding-monitors" --regular_price="286.00" --sku="PROD_3" --images="[{\"id\":$IMAGE_ID}]" || true
 
-  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/spotlight.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/matomo/tests/resources/products/spotlight.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Spotlight" --short_description="Single hanging spotlight" --description="Single hanging spotlight, fixed, not portable" --slug="spotlight" --regular_price="279.99" --sku="PROD_4" --images="[{\"id\":$IMAGE_ID}]" || true
 
-  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/6.3.1/wp-content/plugins/matomo/tests/resources/products/tripod.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
+  IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/$WORDPRESS_VERSION/wp-content/plugins/matomo/tests/resources/products/tripod.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_VERSION --allow-root --user=$WP_ADMIN_USER wc product create --name="Small camera tripod in red" --short_description="Small camera tripod in red" --description="Small portable tripod for your camera. Available colors: red." --slug="camera-tripod-small" --regular_price="13.99" --sku="PROD_5" --images="[{\"id\":$IMAGE_ID}]" || true
 fi
 

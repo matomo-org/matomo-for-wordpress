@@ -1,15 +1,34 @@
-import { browser } from '@wdio/globals'
-
 /**
-* main page object containing all methods, selectors and functionality
-* that is shared across all page objects
-*/
+ * Matomo - free/libre analytics platform
+ *
+ * @link https://matomo.org
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ *
+ */
+
+import { browser } from '@wdio/globals';
+import Website from '../website';
+
 export default class Page {
-    /**
-    * Opens a sub page of the page
-    * @param path path of the sub page (e.g. /path/to/page.html)
-    */
-    public open (path: string) {
-        return browser.url(`https://the-internet.herokuapp.com/${path}`)
-    }
+  async open(path: string) {
+    const baseUrl = await Website.baseUrl();
+    return browser.url(`${baseUrl}${path}`);
+  }
+
+  waitForTrackingRequest() {
+    return browser.waitUntil(async function() {
+      const requests = await browser.getRequests({ includePending: true });
+      const trackingRequests = requests.filter((r) => /\/matomo\.php/.test(r.url));
+      if (!trackingRequests.length) {
+        return false;
+      }
+
+      const incompleteTrackingRequests = trackingRequests.filter((r) => r.pending);
+      if (incompleteTrackingRequests.length) {
+        return false;
+      }
+
+      return true;
+    });
+  }
 }
