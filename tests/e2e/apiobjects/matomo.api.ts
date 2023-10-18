@@ -16,14 +16,16 @@ function toSnakeCase(s: string) {
 class MatomoApi {
   async call(restMethod: string, apiMethod: string, params: URLSearchParams) {
     const [module, action] = apiMethod.split('.');
-    const wordpressUrl = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/${toSnakeCase(module)}/${toSnakeCase(action)}`;
+    const wordpressUrl = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/${toSnakeCase(module)}/${toSnakeCase(action.replace(/^get/, ''))}`;
 
     const fullUrl = `${wordpressUrl}&${params}`;
 
+    const nonce = await Website.getWpNonce();
+    const userPass = `root:${nonce}`;
     const response = await fetch(fullUrl, {
       method: restMethod,
       headers: {
-        'X-WP-Nonce': await Website.getWpNonce(),
+        'Authorization': `Basic ${Buffer.from(userPass).toString('base64')}`,
       },
     });
 

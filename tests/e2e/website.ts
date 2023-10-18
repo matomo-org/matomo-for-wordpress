@@ -7,6 +7,8 @@
  */
 
 import fetch from 'node-fetch';
+import * as path from 'path';
+import * as fs from 'fs';
 
 let latestWordpressVersion: string|undefined;
 
@@ -50,12 +52,18 @@ class Website {
   }
 
   async getWpNonce() {
-    if (!this.wpNonce) {
-      await this.login();
+    if (process.env.WP_APP_PASSWORD) { // TODO: documentation
+      return process.env.WP_APP_PASSWORD;
+    }
 
-      this.wpNonce = await browser.execute(function () {
-        return window.wpApiSettings.nonce;
-      });
+    // assuming local docker-compose environment
+    if (!this.wpNonce) {
+      const wordpressVersion = process.env.WORDPRESS_VERSION || (await getLatestWordpressVersion());
+      const wordpressFolder = process.env.WORDPRESS_FOLDER || wordpressVersion;
+
+      // using process.cwd() as __dirname is not available in wdio for some reason (except probably the conf.ts file)
+      const pathToLocalAppPassword = path.join(process.cwd(), 'docker', 'wordpress', wordpressFolder, 'apppassword');
+      this.wpNonce = fs.readFileSync(pathToLocalAppPassword).toString('utf-8').trim();
     }
 
     return this.wpNonce!;

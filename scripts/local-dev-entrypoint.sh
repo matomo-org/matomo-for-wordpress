@@ -39,14 +39,17 @@ echo "waiting for database..."
 sleep 5 # wait for database
 echo "done."
 
+WP_DB_NAME=$(echo "wp_matomo_$WORDPRESS_FOLDER" | sed 's/\./_/g')
+
 # if requested, drop the database for a clean install (used mainly for automated tests)
 if [[ ! -z "$RESET_DATABASE" ]]; then
+  echo "dropping existing database..."
+
   php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
   \$pdo->exec('DROP DATABASE IF EXISTS \`$WP_DB_NAME\`');"
 fi
 
 # create database if it does not already exist
-WP_DB_NAME=$(echo "wp_matomo_$WORDPRESS_FOLDER" | sed 's/\./_/g')
 php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
 \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`$WP_DB_NAME\`');\
 \$pdo->exec('GRANT ALL PRIVILEGES ON $WP_DB_NAME.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
@@ -62,6 +65,7 @@ define('DB_HOST', getenv('WP_DB_HOST'));
 define('DB_CHARSET', 'utf8');
 define('DB_COLLATE', '');
 define( 'WP_DEBUG', false );
+define('WP_ENVIRONMENT_TYPE', 'local');
 
 define( 'AUTH_KEY',         'put your unique phrase here' );
 define( 'SECURE_AUTH_KEY',  'put your unique phrase here' );
@@ -188,6 +192,14 @@ if [[ ! -z "$WOOCOMMERCE" && ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/pl
 
   IMAGE_ID=$( /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER media import "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/tests/resources/products/tripod.jpg" | grep -o 'attachment ID [0-9][0-9]*' | awk '{print $3}' )
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Small camera tripod in red" --short_description="Small camera tripod in red" --description="Small portable tripod for your camera. Available colors: red." --slug="camera-tripod-small" --regular_price="13.99" --sku="PROD_5" --images="[{\"id\":$IMAGE_ID}]" || true
+fi
+
+# create app password for matomo API
+if ! /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password exists root wp_rest; then
+  echo "creating app password..."
+
+  APP_PASSWORD=$(/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password create --porcelain root wp_rest)
+  echo $APP_PASSWORD > /var/www/html/$WORDPRESS_FOLDER/apppassword
 fi
 
 # make sure the files can be edited outside of docker (for easier debugging)
