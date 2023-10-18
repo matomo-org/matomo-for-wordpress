@@ -1,5 +1,5 @@
 {
-  "name": "my-new-project",
+  "name": "matomo-for-wordpress",
   "type": "module",
   "devDependencies": {
     "@wdio/cli": "^8.18.2",
