@@ -118,7 +118,12 @@ if [[ -d "/var/www/html/woocommerce-piwik-analytics" && ! -d "/var/www/html/$WOR
 fi
 
 /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin activate matomo
-/var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo globalSetting set track_mode default
+/var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo install
+
+# extra actions required during tests
+if [ "$WORDPRESS_FOLDER" = "test" ]; then
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo globalSetting set track_mode default
+fi
 
 # add index.php file listing available installs to root /var/www/html
 if [ ! -f "/var/www/html/index.php" ]; then
