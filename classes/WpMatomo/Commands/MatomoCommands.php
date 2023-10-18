@@ -23,6 +23,8 @@ use WpMatomo\WpStatistics\Importer;
 use WpMatomo\WpStatistics\Logger\WpCliLogger;
 use WpMatomo\Bootstrap;
 use WpMatomo\Site;
+use WpMatomo\User;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -31,6 +33,29 @@ if ( ! defined( 'WP_CLI' ) ) {
 }
 
 class MatomoCommands extends WP_CLI_Command {
+
+	/**
+	 * Installs Matomo if not already installed.
+	 *
+	 * @when after_wp_load
+	 */
+	public function install() {
+		$installer = new Installer( \WpMatomo::$settings );
+		$installer->register_hooks();
+		if ( $installer->looks_like_it_is_installed() ) {
+			WP_CLI::success( 'Already installed.' );
+			return;
+		}
+
+		if ( !$installer->can_be_installed() ) {
+			WP_CLI::error( 'Unable to install.' );
+			return;
+		}
+
+		$installer->install();
+		WP_CLI::success( 'Finished installing Matomo.' );
+	}
+
 	/**
 	 * Gets or sets a Matomo for Wordpress global setting.
 	 *
@@ -50,17 +75,46 @@ class MatomoCommands extends WP_CLI_Command {
 	public function globalSetting( $args, $assoc_args ) {
 		[ $mode, $key ] = $args;
 
-		if ($mode === 'set') {
+		if ( $mode === 'set' ) {
 			$value = $args[2];
 			\WpMatomo::$settings->set_global_option( $key, $value );
 			\WpMatomo::$settings->save();
-			WP_CLI::log( sprintf( 'Modified Matomo setting %s.', $key ) );
-		} else if ($mode === 'get') {
+			WP_CLI::success( sprintf( 'Modified Matomo setting %s.', $key ) );
+		} else if ( $mode === 'get' ) {
 			$value = \WpMatomo::$settings->get_global_option( $key );
-			WP_CLI::log( $value );
+			WP_CLI::success( $value );
 		} else {
 			WP_CLI::error( sprintf( 'Invalid mode "%s".', $mode ) );
 		}
+	}
+
+	/**
+	 * Perform a site or user sync manually.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <mode>
+ 	 * : Either 'sites' or 'users'.
+	 *
+	 * @when after_wp_load
+	 */
+	public function sync( $args, $assoc_args ) {
+		$mode = $args[0];
+
+		if ( $mode === 'sites' ) {
+			$sync = new Site\Sync( \WpMatomo::$settings );
+			$success = $sync->sync_all();
+			if ( !$success ) {
+				WP_CLI::error( sprintf( 'Failed to execute site sync, enable logging for more info.') );
+			}
+		} else if ( $mode === 'users' ) {
+			$sync = new User\Sync();
+			$sync->sync_all();
+		} else {
+			WP_CLI::error( sprintf( 'Invalid mode "%s".', $mode ) );
+		}
+
+		WP_CLI::success( sprintf( 'Done syncing %s.', $mode ) );
 	}
 
 	/**
