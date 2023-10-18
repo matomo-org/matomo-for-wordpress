@@ -37,10 +37,10 @@ describe('Tracking', () => {
     }));
 
     expect(counters).toEqual([{
-      visits: 1,
-      actions: 2,
-      visitors: 1,
-      visitsConverted: 0,
+      visits: '1',
+      actions: '2',
+      visitors: '1',
+      visitsConverted: '0',
     }]);
   });
 });
