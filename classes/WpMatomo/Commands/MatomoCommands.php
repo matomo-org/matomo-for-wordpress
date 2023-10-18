@@ -47,7 +47,7 @@ class MatomoCommands extends WP_CLI_Command {
 			return;
 		}
 
-		if ( !$installer->can_be_installed() ) {
+		if ( ! $installer->can_be_installed() ) {
 			WP_CLI::error( 'Unable to install.' );
 			return;
 		}
@@ -57,7 +57,7 @@ class MatomoCommands extends WP_CLI_Command {
 	}
 
 	/**
-	 * Gets or sets a Matomo for Wordpress global setting.
+	 * Gets or sets a Matomo for WordPress global setting.
 	 *
 	 * ## OPTIONS
 	 *
@@ -73,14 +73,15 @@ class MatomoCommands extends WP_CLI_Command {
 	 * @when after_wp_load
 	 */
 	public function globalSetting( $args, $assoc_args ) {
-		[ $mode, $key ] = $args;
+		$mode = $args[0];
+		$key  = $args[1];
 
-		if ( $mode === 'set' ) {
+		if ( 'set' === $mode ) {
 			$value = $args[2];
 			\WpMatomo::$settings->set_global_option( $key, $value );
 			\WpMatomo::$settings->save();
 			WP_CLI::success( sprintf( 'Modified Matomo setting %s.', $key ) );
-		} else if ( $mode === 'get' ) {
+		} elseif ( 'get' === $mode ) {
 			$value = \WpMatomo::$settings->get_global_option( $key );
 			WP_CLI::success( $value );
 		} else {
@@ -94,20 +95,20 @@ class MatomoCommands extends WP_CLI_Command {
 	 * ## OPTIONS
 	 *
 	 * <mode>
- 	 * : Either 'sites' or 'users'.
+	 * : Either 'sites' or 'users'.
 	 *
 	 * @when after_wp_load
 	 */
 	public function sync( $args, $assoc_args ) {
 		$mode = $args[0];
 
-		if ( $mode === 'sites' ) {
-			$sync = new Site\Sync( \WpMatomo::$settings );
+		if ( 'sites' === $mode ) {
+			$sync    = new Site\Sync( \WpMatomo::$settings );
 			$success = $sync->sync_all();
-			if ( !$success ) {
-				WP_CLI::error( sprintf( 'Failed to execute site sync, enable logging for more info.') );
+			if ( ! $success ) {
+				WP_CLI::error( sprintf( 'Failed to execute site sync, enable logging for more info.' ) );
 			}
-		} else if ( $mode === 'users' ) {
+		} elseif ( 'users' === $mode ) {
 			$sync = new User\Sync();
 			$sync->sync_all();
 		} else {
