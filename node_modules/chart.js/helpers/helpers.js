@@ -1,1 +1,1 @@
-export * from '../dist/helpers.js';
+module.exports = require('..').helpers;

@@ -16,6 +16,6 @@
     "wdio": "wdio run ./wdio.conf.ts"
   },
   "dependencies": {
-    "chart.js": "^4.4.0"
+    "chart.js": "^3.9.1"
   }
 }
