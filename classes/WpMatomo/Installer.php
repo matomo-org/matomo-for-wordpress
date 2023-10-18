@@ -45,7 +45,8 @@ class Installer {
 	}
 
 	public function register_hooks() {
-		add_action( 'activate_matomo', [ $this, 'install' ] );
+		add_action( 'activate_matomo/matomo.php', [ $this, 'install' ] ); // if activate_plugin is invoked with the path to the plugin entrypoint
+		add_action( 'activate_matomo', [ $this, 'install' ] ); // if activate_plugin is invoked with the plugin slug
 	}
 
 	public function looks_like_it_is_installed() {
