@@ -7,9 +7,9 @@
  */
 
 import { expect } from '@wdio/globals'
-import BlogHomepage from './pageobjects/blog-homepage.page';
-import BlogPostPage from './pageobjects/blog-post.page';
-import MatomoApi from './apiobjects/matomo.api';
+import BlogHomepage from './pageobjects/blog-homepage.page.js';
+import BlogPostPage from './pageobjects/blog-post.page.js';
+import MatomoApi from './apiobjects/matomo.api.js';
 
 describe('Tracking', () => {
   it('should track pageviews using the JS client', async () => {

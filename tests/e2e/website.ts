@@ -26,7 +26,8 @@ class Website {
 
   async baseUrl() {
     const wordpressVersion = process.env.WORDPRESS_VERSION || (await getLatestWordpressVersion());
-    const wordpressVersionUrlPart = wordpressVersion ? `/${wordpressVersion}` : '';
+    const wordpressFolder = process.env.WORDPRESS_FOLDER || wordpressVersion;
+    const wordpressVersionUrlPart = wordpressFolder ? `/${wordpressFolder}` : '';
 
     return `${process.env.WORDPRESS_URL || 'http://localhost:3000'}${wordpressVersionUrlPart}`
   }

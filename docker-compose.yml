@@ -31,6 +31,7 @@ services:
       - "${PORT:-3000}:80"
     environment:
       WORDPRESS_VERSION: "$WORDPRESS_VERSION"
+      WORDPRESS_FOLDER: "$WORDPRESS_FOLDER"
       WP_DB_HOST: "${BACKEND:-mariadb}"
       WOOCOMMERCE: "${WOOCOMMERCE:-}"
       STRIPE_PUBLISHABLE_KEY: "$STRIPE_PUBLISHABLE_KEY"
@@ -61,6 +62,7 @@ services:
       - "${WOOCOMMERCE_PIWIK_ANALYTICS:-/dev/null}:/var/www/html/woocommerce-piwik-analytics"
     environment:
       WORDPRESS_VERSION: "$WORDPRESS_VERSION"
+      WORDPRESS_FOLDER: "$WORDPRESS_FOLDER"
       WP_DB_HOST: "${BACKEND:-mariadb}"
       WOOCOMMERCE: "$WOOCOMMERCE"
       STRIPE_PUBLISHABLE_KEY: "$STRIPE_PUBLISHABLE_KEY"
@@ -106,6 +108,7 @@ services:
       - "${PORT:-3000}:80"
     environment:
       WORDPRESS_VERSION: "$WORDPRESS_VERSION"
+      WORDPRESS_FOLDER: "$WORDPRESS_FOLDER"
       WP_DB_HOST: "${BACKEND:-mariadb}"
       WOOCOMMERCE: "$WOOCOMMERCE"
       STRIPE_PUBLISHABLE_KEY: "$STRIPE_PUBLISHABLE_KEY"

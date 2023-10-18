@@ -7,7 +7,7 @@
  */
 
 import fetch from 'node-fetch';
-import Website from '../website';
+import Website from '../website.js';
 
 function toSnakeCase(s: string) {
   return s.replace(/([A-Z])/g, '_$1').replace(/^_/, '').toLowerCase();
