@@ -47,6 +47,8 @@ if [[ ! -z "$RESET_DATABASE" ]]; then
 
   php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
   \$pdo->exec('DROP DATABASE IF EXISTS \`$WP_DB_NAME\`');"
+
+  rm /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo/config/config.ini.php || true
 fi
 
 # create database if it does not already exist
@@ -116,6 +118,7 @@ if [[ -d "/var/www/html/woocommerce-piwik-analytics" && ! -d "/var/www/html/$WOR
 fi
 
 /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin activate matomo
+/var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo globalSetting set track_mode default
 
 # add index.php file listing available installs to root /var/www/html
 if [ ! -f "/var/www/html/index.php" ]; then
@@ -204,10 +207,11 @@ fi
 
 # make sure the files can be edited outside of docker (for easier debugging)
 # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
+touch /var/www/html/$WORDPRESS_FOLDER/debug.log
 mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads
 find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chown "${UID:-1000}:${GID:-1000}" {} +
 find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
-chmod -R 0777 "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d"
+chmod -R 0777 "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d" "/var/www/html/$WORDPRESS_FOLDER/debug.log"
 
 if ! which apache2-foreground &> /dev/null; then
   # TODO: is it possible to use wp-cli for this?

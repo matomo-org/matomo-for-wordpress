@@ -32,6 +32,38 @@ if ( ! defined( 'WP_CLI' ) ) {
 
 class MatomoCommands extends WP_CLI_Command {
 	/**
+	 * Gets or sets a Matomo for Wordpress global setting.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <mode>
+	 * : Either 'get' or 'set'.
+	 *
+	 * <name>
+	 * : The name of the setting.
+	 *
+	 * [<value>]
+	 * : Required if 'set' is used. The value to set the setting to.
+	 *
+	 * @when after_wp_load
+	 */
+	public function globalSetting( $args, $assoc_args ) {
+		[ $mode, $key ] = $args;
+
+		if ($mode === 'set') {
+			$value = $args[2];
+			\WpMatomo::$settings->set_global_option( $key, $value );
+			\WpMatomo::$settings->save();
+			WP_CLI::log( sprintf( 'Modified Matomo setting %s.', $key ) );
+		} else if ($mode === 'get') {
+			$value = \WpMatomo::$settings->get_global_option( $key );
+			WP_CLI::log( $value );
+		} else {
+			WP_CLI::error( sprintf( 'Invalid mode "%s".', $mode ) );
+		}
+	}
+
+	/**
 	 * Uninstalls Matomo.
 	 *
 	 * ## OPTIONS

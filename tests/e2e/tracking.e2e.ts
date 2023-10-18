@@ -18,12 +18,12 @@ describe('Tracking', () => {
       lastMinutes: '60',
     }));
 
-    expect(countersBefore).toEqual({
-      visits: 0,
+    expect(countersBefore).toEqual([{
+      visits: '0',
       actions: 0,
       visitors: 0,
       visitsConverted: 0,
-    });
+    }]);
 
     await BlogHomepage.open();
     await BlogHomepage.waitForTrackingRequest();
@@ -36,11 +36,11 @@ describe('Tracking', () => {
       lastMinutes: '60',
     }));
 
-    expect(counters).toEqual({
+    expect(counters).toEqual([{
       visits: 1,
       actions: 2,
       visitors: 1,
       visitsConverted: 0,
-    });
+    }]);
   });
 });
