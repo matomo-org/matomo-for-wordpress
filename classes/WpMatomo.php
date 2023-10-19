@@ -44,6 +44,8 @@ class WpMatomo {
 	public static $settings;
 
 	public function __construct() {
+		$this->declare_woocommerce_hpos_compatible();
+
 		if ( ! $this->check_compatibility() ) {
 			return;
 		}
@@ -244,5 +246,17 @@ class WpMatomo {
 
 			do_action( 'matomo_ecommerce_init', $tracker );
 		}
+	}
+
+	private function declare_woocommerce_hpos_compatible()
+	{
+		add_action(
+			'before_woocommerce_init',
+			function() {
+				if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+					\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', 'matomo/matomo.php', true );
+				}
+			},
+		);
 	}
 }
