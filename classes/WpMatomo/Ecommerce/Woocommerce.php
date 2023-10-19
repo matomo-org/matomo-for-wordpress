@@ -182,6 +182,7 @@ class Woocommerce extends Base {
 			return;
 		}
 
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 		if ( $order->get_meta( $this->key_order_tracked ) == 1 ) {
 			$this->logger->log( sprintf( 'Ignoring already tracked order %d', $order_id ) );
 
@@ -379,10 +380,10 @@ class Woocommerce extends Base {
 	}
 
 	protected function has_order_been_tracked_already( $order_id ) {
-		throw new \Exception('has_order_been_tracked_already() should not be used in Woocommerce, use wc_get_order()->get_meta() instead');
+		throw new \Exception( 'has_order_been_tracked_already() should not be used in Woocommerce, use wc_get_order()->get_meta() instead' );
 	}
 
 	protected function set_order_been_tracked( $order_id ) {
-		throw new \Exception('set_order_been_tracked() should not be used in Woocommerce, use wc_get_order()->update_meta_data() instead');
+		throw new \Exception( 'set_order_been_tracked() should not be used in Woocommerce, use wc_get_order()->update_meta_data() instead' );
 	}
 }

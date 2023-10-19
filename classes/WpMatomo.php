@@ -248,8 +248,7 @@ class WpMatomo {
 		}
 	}
 
-	private function declare_woocommerce_hpos_compatible()
-	{
+	private function declare_woocommerce_hpos_compatible() {
 		add_action(
 			'before_woocommerce_init',
 			function() {
