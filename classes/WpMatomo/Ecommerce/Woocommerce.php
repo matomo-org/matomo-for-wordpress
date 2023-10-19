@@ -176,7 +176,13 @@ class Woocommerce extends Base {
 	}
 
 	public function on_order( $order_id ) {
-		if ( $this->has_order_been_tracked_already( $order_id ) ) {
+		$order = wc_get_order( $order_id );
+		// @see https://github.com/matomo-org/matomo-for-wordpress/issues/514
+		if ( ! $order ) {
+			return;
+		}
+
+		if ( $order->get_meta( $this->key_order_tracked ) == 1 ) {
 			$this->logger->log( sprintf( 'Ignoring already tracked order %d', $order_id ) );
 
 			return '';
@@ -184,11 +190,6 @@ class Woocommerce extends Base {
 
 		$this->logger->log( sprintf( 'Matomo new order %d', $order_id ) );
 
-		$order = wc_get_order( $order_id );
-		// @see https://github.com/matomo-org/matomo-for-wordpress/issues/514
-		if ( ! $order ) {
-			return;
-		}
 		$order_id_to_track = $order_id;
 		if ( method_exists( $order, 'get_order_number' ) ) {
 			$order_id_to_track = $order->get_order_number();
@@ -240,7 +241,8 @@ class Woocommerce extends Base {
 
 		$this->logger->log( sprintf( 'Tracked ecommerce order %s with number %s', $order_id, $order_id_to_track ) );
 
-		$this->set_order_been_tracked( $order_id );
+		$order->update_meta_data( $this->key_order_tracked, 1 );
+		$order->save();
 
 		return $this->wrap_script( $tracking_code );
 	}
@@ -374,5 +376,13 @@ class Woocommerce extends Base {
 		// we're not using wc_enqueue_js eg to prevent sometimes this code from being minified on some JS minifier plugins
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $this->wrap_script( $this->make_matomo_js_tracker_call( $params ) );
+	}
+
+	protected function has_order_been_tracked_already( $order_id ) {
+		throw new \Exception('has_order_been_tracked_already() should not be used in Woocommerce, use wc_get_order()->get_meta() instead');
+	}
+
+	protected function set_order_been_tracked( $order_id ) {
+		throw new \Exception('set_order_been_tracked() should not be used in Woocommerce, use wc_get_order()->update_meta_data() instead');
 	}
 }
