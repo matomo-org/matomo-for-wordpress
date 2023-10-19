@@ -256,7 +256,7 @@ class WpMatomo {
 				if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
 					\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', 'matomo/matomo.php', true );
 				}
-			},
+			}
 		);
 	}
 }
