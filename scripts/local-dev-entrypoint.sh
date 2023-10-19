@@ -48,7 +48,8 @@ define('DB_PASSWORD', 'pass');
 define('DB_HOST', getenv('WP_DB_HOST'));
 define('DB_CHARSET', 'utf8');
 define('DB_COLLATE', '');
-define( 'WP_DEBUG', false );
+define('WP_DEBUG', true);
+define('WP_DEBUG_LOG', true);
 
 define( 'AUTH_KEY',         'put your unique phrase here' );
 define( 'SECURE_AUTH_KEY',  'put your unique phrase here' );
