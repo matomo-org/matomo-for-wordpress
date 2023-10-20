@@ -664,14 +664,22 @@ class SystemReport {
 			];
 			$rows   = $this->add_diagnostic_results( $rows, $report->getOptionalDiagnosticResults() );
 
-			$cli_multi     = new CliMulti();
-			$suports_async = $cli_multi->supportsAsync();
+			try {
+				$cli_multi = new CliMulti();
+				$suports_async = $cli_multi->supportsAsync();
 
-			$rows[] = [
-				'name'    => 'Supports Async Archiving',
-				'value'   => $suports_async,
-				'comment' => '',
-			];
+				$rows[] = [
+					'name' => esc_html__( 'Supports Async Archiving', 'matomo' ),
+					'value' => $suports_async,
+					'comment' => '',
+				];
+			} catch (\Exception $e) {
+				$rows[] = [
+					'name' => esc_html__( 'Supports Async Archiving', 'matomo' ),
+					'value' => 'Failed to check if async archiving is supported.',
+					'comment' => $e->getMessage(),
+				];
+			}
 
 			$rows[] = [
 				'name'    => 'Async Archiving Disabled in Setting',
@@ -681,21 +689,32 @@ class SystemReport {
 
 			$location_provider = LocationProvider::getCurrentProvider();
 			if ( $location_provider ) {
-				$rows[] = [
-					'name'    => 'Location provider ID',
-					'value'   => $location_provider->getId(),
-					'comment' => '',
-				];
-				$rows[] = [
-					'name'    => 'Location provider available',
-					'value'   => $location_provider->isAvailable(),
-					'comment' => '',
-				];
-				$rows[] = [
-					'name'    => 'Location provider working',
-					'value'   => $location_provider->isWorking(),
-					'comment' => '',
-				];
+				try {
+					$location_provider = LocationProvider::getCurrentProvider();
+					if ( $location_provider ) {
+						$rows[] = [
+							'name'    => 'Location provider ID',
+							'value'   => $location_provider->getId(),
+							'comment' => '',
+						];
+						$rows[] = [
+							'name'    => 'Location provider available',
+							'value'   => $location_provider->isAvailable(),
+							'comment' => '',
+						];
+						$rows[] = [
+							'name'    => 'Location provider working',
+							'value'   => $location_provider->isWorking(),
+							'comment' => '',
+						];
+					}
+				} catch (\Exception $e) {
+					$rows[] = [
+						'name'    => 'Location provider ID',
+						'value'   => 'Failed to get the configured Location Provider.',
+						'comment' => $e->getMessage(),
+					];
+				}
 			}
 
 			if ( ! WpMatomo::is_safe_mode() ) {
@@ -714,19 +733,32 @@ class SystemReport {
 						}
 					}
 				}
-				$incompatible_plugins = Plugin\Manager::getInstance()->getIncompatiblePlugins( Version::VERSION );
-				if ( ! empty( $incompatible_plugins ) ) {
-					$rows[] = [
-						'section' => esc_html__( 'Incompatible Matomo plugins', 'matomo' ),
-					];
-					foreach ( $incompatible_plugins as $plugin ) {
+
+				try {
+					$incompatible_plugins = Plugin\Manager::getInstance()->getIncompatiblePlugins(Version::VERSION);
+					if (!empty($incompatible_plugins)) {
 						$rows[] = [
-							'name'     => 'Plugin has missing dependencies',
-							'value'    => $plugin->getPluginName(),
-							'is_error' => true,
-							'comment'  => sprintf( esc_html__( '%s If the plugin requires a different Matomo version you may need to update it. If you no longer use it consider uninstalling it.', 'matomo' ), $plugin->getMissingDependenciesAsString( Version::VERSION ) ),
+							'section' => esc_html__('Incompatible Matomo plugins', 'matomo'),
 						];
+						foreach ($incompatible_plugins as $plugin) {
+							$rows[] = [
+								'name' => 'Plugin has missing dependencies',
+								'value' => $plugin->getPluginName(),
+								'is_error' => true,
+								'comment' => sprintf(esc_html__('%s If the plugin requires a different Matomo version you may need to update it. If you no longer use it consider uninstalling it.', 'matomo'), $plugin->getMissingDependenciesAsString(Version::VERSION)),
+							];
+						}
 					}
+				} catch (\Exception $e) {
+					$rows[] = [
+						'section' => esc_html__('Incompatible Matomo plugins', 'matomo'),
+					];
+					$rows[] = [
+						'name' => 'Incompatible Matomo plugin check',
+						'value' => 'Failed to check for incompatible Matomo plugins.',
+						'is_error' => true, // TODO: use this everywhere there is an exception
+						'comment' => $e->getMessage(),
+					];
 				}
 			}
 
@@ -750,12 +782,22 @@ class SystemReport {
 
 			if ( ! WpMatomo::is_safe_mode() ) {
 				Bootstrap::do_bootstrap();
-				$matomo_url = SettingsPiwik::getPiwikUrl();
-				$rows[]     = [
-					'name'    => 'Matomo URL',
-					'comment' => $matomo_url,
-					'value'   => ! empty( $matomo_url ),
-				];
+
+				try {
+					$matomo_url = SettingsPiwik::getPiwikUrl();
+					$rows[] = [
+						'name' => 'Matomo URL',
+						'comment' => $matomo_url,
+						'value' => !empty($matomo_url),
+					];
+				} catch (\Exception $e) {
+					$rows[] = [
+						'name' => 'Matomo URL',
+						'comment' => $e->getMessage(),
+						'value' => 'Failed to fetch the Matomo URL.',
+						'is_error' => true,
+					];
+				}
 			}
 
 			// check that yml files are not accessible
@@ -970,8 +1012,12 @@ class SystemReport {
 		}
 
 		if ( $print_diff && class_exists( '\Piwik\Metrics\Formatter' ) ) {
-			$formatter = new \Piwik\Metrics\Formatter();
-			$date     .= ' (' . $formatter->getPrettyTimeFromSeconds( $time - time(), true, false ) . ')';
+			try {
+				$formatter = new \Piwik\Metrics\Formatter();
+				$date .= ' (' . $formatter->getPrettyTimeFromSeconds($time - time(), true, false) . ')';
+			} catch (\Exception $e) {
+				// ignore
+			}
 		}
 
 		return $date;
@@ -1016,16 +1062,12 @@ class SystemReport {
 		$is_multi_site          = is_multisite();
 		$num_blogs              = 1;
 		$is_network_enabled     = false;
-		$matomo_id_sites_number = 1;
 		if ( $is_multi_site ) {
 			if ( function_exists( 'get_blog_count' ) ) {
 				$num_blogs = get_blog_count();
 			}
 			$settings           = new Settings();
 			$is_network_enabled = $settings->is_network_enabled();
-		} else {
-			$sites_manager_model    = new Model();
-			$matomo_id_sites_number = count( $sites_manager_model->getSitesId() );
 		}
 
 		$rows   = [];
