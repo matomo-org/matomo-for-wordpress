@@ -183,7 +183,7 @@ class Woocommerce extends Base {
 		}
 
 		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-		if ( $order->get_meta( $this->key_order_tracked ) == 1 ) {
+		if ( $this->get_order_meta( $order, $this->key_order_tracked ) == 1 ) {
 			$this->logger->log( sprintf( 'Ignoring already tracked order %d', $order_id ) );
 
 			return '';
@@ -242,8 +242,9 @@ class Woocommerce extends Base {
 
 		$this->logger->log( sprintf( 'Tracked ecommerce order %s with number %s', $order_id, $order_id_to_track ) );
 
-		$order->update_meta_data( $this->key_order_tracked, 1 );
-		$order->save();
+		$this->save_order_metadata( $order, [
+			$this->key_order_tracked => 1,
+		] );
 
 		return $this->wrap_script( $tracking_code );
 	}
@@ -385,5 +386,40 @@ class Woocommerce extends Base {
 
 	protected function set_order_been_tracked( $order_id ) {
 		throw new \Exception( 'set_order_been_tracked() should not be used in Woocommerce, use wc_get_order()->update_meta_data() instead' );
+	}
+
+	/**
+	 * @param \WC_Order $order
+	 * @param $name
+	 * @return mixed
+	 */
+	private function get_order_meta( $order, $name ) {
+		if ( method_exists( $order, 'get_meta' ) ) {
+			return $order->get_meta( $name );
+		} else {
+			$id = method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
+			return get_post_meta( $id, $name, true );
+		}
+	}
+
+	/**
+	 * @param \WC_Order $order
+	 * @param array $metadata
+	 * @return void
+	 */
+	private function save_order_metadata( $order, $metadata )
+	{
+		foreach ($metadata as $name => $value) {
+			if ( method_exists( $order, 'update_meta_data' ) ) {
+				$order->update_meta_data( $name, $value );
+			} else {
+				$id = method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
+				update_post_meta( $id, $name, $value );
+			}
+		}
+
+		if ( method_exists( $order, 'save' ) ) {
+			$order->save();
+		}
 	}
 }
