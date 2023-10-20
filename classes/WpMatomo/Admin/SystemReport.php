@@ -517,9 +517,10 @@ class SystemReport {
 				];
 			} catch ( Exception $e ) {
 				$rows[] = [
-					'name'    => esc_html__( 'Matomo System Check', 'matomo' ),
-					'value'   => 'Failed to run Matomo system check.',
-					'comment' => $e->getMessage(),
+					'name'     => esc_html__( 'Matomo System Check', 'matomo' ),
+					'value'    => 'Failed to run Matomo system check.',
+					'comment'  => $e->getMessage(),
+					'is_error' => true,
 				];
 			}
 		}
@@ -676,8 +677,9 @@ class SystemReport {
 			} catch (\Exception $e) {
 				$rows[] = [
 					'name' => esc_html__( 'Supports Async Archiving', 'matomo' ),
-					'value' => 'Failed to check if async archiving is supported.',
+					'value' => 'Could not check if async archiving is supported.',
 					'comment' => $e->getMessage(),
+					'is_error' => true,
 				];
 			}
 
@@ -713,6 +715,7 @@ class SystemReport {
 						'name'    => 'Location provider ID',
 						'value'   => 'Failed to get the configured Location Provider.',
 						'comment' => $e->getMessage(),
+						'is_error' => true,
 					];
 				}
 			}
@@ -756,7 +759,7 @@ class SystemReport {
 					$rows[] = [
 						'name' => 'Incompatible Matomo plugin check',
 						'value' => 'Failed to check for incompatible Matomo plugins.',
-						'is_error' => true, // TODO: use this everywhere there is an exception
+						'is_error' => true,
 						'comment' => $e->getMessage(),
 					];
 				}
