@@ -51,7 +51,7 @@ class ReleaseTest extends MatomoUnit_TestCase {
 		$api_response = json_decode( $api_response, true );
 
 		$last_updated = strtotime( $api_response['last_updated'] );
-		$six_months_ago = strtotime( date( '-6 months' ) );
+		$six_months_ago = (new DateTime('-6 months ago'))->getTimestamp();
 
 		$this->assertLessThan($six_months_ago, $last_updated, "The last release of this plugins was over 6 months ago, another release is needed to show the plugin is not abandoned.");
 	}
