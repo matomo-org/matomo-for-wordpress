@@ -4,6 +4,7 @@
 .*~
 *~
 .idea/
+/empty/
 
 # for local docker dev
 docker
