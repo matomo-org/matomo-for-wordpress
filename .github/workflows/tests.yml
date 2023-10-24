@@ -125,6 +125,7 @@ jobs:
           node-version: 16
           cache: npm
           cache-dependency-path: '**/package-lock.json'
+      - run: ls node_modules
 
       # docker-compose up
       - uses: isbang/compose-action@v1.5.1
