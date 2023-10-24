@@ -22,12 +22,19 @@ chmod +x /var/www/html/wp-cli.phar
 WORDPRESS_VERSION=${WORDPRESS_VERSION:-$LATEST_WORDPRESS_VERSION}
 WORDPRESS_FOLDER=${WORDPRESS_FOLDER:-$WORDPRESS_VERSION}
 
+# TODO: handle trunk ()
+
 if [ ! -d "/var/www/html/$WORDPRESS_FOLDER" ]; then
-  WORDPRESS_URL="https://wordpress.org/wordpress-$WORDPRESS_VERSION.tar.gz"
+  WORDPRESS_URL="https://wordpress.org/wordpress-$WORDPRESS_VERSION.zip"
+  if [ "$WORDPRESS_FOLDER" = "trunk" ]; then
+    WORDPRESS_URL="https://wordpress.org/nightly-builds/wordpress-latest.zip"
+  fi
+
   echo "installing wordpress $WORDPRESS_VERSION from $WORDPRESS_URL to /var/www/html/$WORDPRESS_FOLDER/..."
 
   curl -O "$WORDPRESS_URL"
-  tar -xvf "wordpress-$WORDPRESS_VERSION.tar.gz"
+
+  unzip -q "wordpress-$WORDPRESS_VERSION.tar.gz"
   mv wordpress "$WORDPRESS_FOLDER"
 
   echo "wordpress installed!"

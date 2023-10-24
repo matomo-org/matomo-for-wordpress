@@ -100,6 +100,29 @@ jobs:
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && WP_MULTISITE=1 ./vendor/bin/phpunit
 
+  e2e_tests:
+    runs-on: 'ubuntu-22.04'
+    strategy:
+      fail-fast: false
+      matrix:
+        wp-versions: [ 'latest', 'trunk' ] # TODO
+        php-versions: [ '7.2', '8.1' ]
+    permissions:
+      contents: read  # <--- allows to read repo
+    steps:
+      # setup firefox
+      - uses: browser-actions/setup-firefox@v1
+      - run: firefox --version
+
+      # create .env file
+      # TODO
+
+      # start local environment via docker-compose
+      # TODO
+
+      # run tests
+      # TODO
+
   checkstyle:
     runs-on: 'ubuntu-20.04'
     steps:
@@ -137,5 +160,3 @@ jobs:
       - name: Run checkstyle
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./vendor/bin/phpcs
-
-
