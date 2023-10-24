@@ -188,10 +188,13 @@ done
 
 # setup woocommerce if requested
 if [[ ! -z "$WOOCOMMERCE" && ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/woocommerce" ]]; then
+  echo "setting up woocommerce..."
+
   # install woocommerce and stripe payment gateway
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root plugin install woocommerce woocommerce-gateway-stripe --activate
 
   # install oceanwp
+  echo "installing oceanwp..."
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root theme install oceanwp --activate
 
   # add 5 test products
