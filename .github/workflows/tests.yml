@@ -135,7 +135,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ hashFiles(scripts/Dockerfile.local) }}
+          key: ${{ runner.os }}-buildx-${{ hashFiles('scripts/Dockerfile.local') }}
       - run: docker-compose up -d wordpress
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
