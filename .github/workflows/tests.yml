@@ -39,7 +39,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        wp-versions: [ 'latest', 'trunk' ]
+        wp-versions: [ 'latest' ]
         php-versions: [ '7.2', '7.3', '7.4', '8.0' ]
         include:
           - wp-versions: '5.2'
