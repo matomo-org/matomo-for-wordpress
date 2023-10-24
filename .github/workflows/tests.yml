@@ -150,14 +150,14 @@ jobs:
           WORDPRESS_FOLDER: test
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-      - run: docker-compose up wordpress
+      - run: docker-compose up -d wordpress
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 1
           WORDPRESS_FOLDER: test
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-      - run: sleep 15 # wait for docker-compose launch to finish
+      - run: sleep 60 # wait for docker-compose launch to finish
 
       # run tests
       - run: xvfb-run --auto-servernum npm run wdio
