@@ -132,11 +132,6 @@ jobs:
       - run: npm install
 
       # docker-compose up
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ hashFiles('scripts/Dockerfile.local') }}
       - run: ls ${{ github.workspace }}/scripts
       - run: pwd
       - run: |
@@ -150,7 +145,7 @@ jobs:
           WORDPRESS_FOLDER: test
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-      - run: docker-compose up -d wordpress
+      - run: docker-compose up wordpress
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 1
