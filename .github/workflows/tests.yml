@@ -136,7 +136,9 @@ jobs:
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ hashFiles('scripts/Dockerfile.local') }}
-      - run: docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} ./scripts/Dockerfile.local
+      - run: ls ${{ github.workspace }}
+      - run: pwd
+      - run: docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context="${{ github.workspace }}/scripts" Dockerfile.local
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 1
