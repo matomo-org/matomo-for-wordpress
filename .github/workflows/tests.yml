@@ -116,7 +116,7 @@ jobs:
           persist-credentials: false
 
       # setup xvfb
-      - run: sudo apt-get update && sudo apt-get install -y xvfb x11-xserver-utils xauth unzip
+      - run: sudo apt-get update && sudo apt-get install -y xvfb x11-xserver-utils xauth
 
       # setup firefox
       - uses: browser-actions/setup-firefox@v1
