@@ -115,6 +115,9 @@ jobs:
           lfs: true
           persist-credentials: false
 
+      # setup xvfb
+      - run: sudo apt-get update && sudo apt-get install -y xvfb x11-xserver-utils xauth
+
       # setup firefox
       - uses: browser-actions/setup-firefox@v1
       - run: firefox --version
@@ -146,7 +149,7 @@ jobs:
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
 
       # run tests
-      - run: npm run wdio
+      - run: xvfb-run --auto-servernum npm run wdio
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 1
