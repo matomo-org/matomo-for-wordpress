@@ -125,9 +125,16 @@ jobs:
           node-version: 16
           cache: npm
           cache-dependency-path: '**/package-lock.json'
-      - run: ls node_modules
+      - run: npm install
 
       # docker-compose up
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-step1-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
       - uses: isbang/compose-action@v1.5.1
         with:
           services: wordpress
