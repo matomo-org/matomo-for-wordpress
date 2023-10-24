@@ -34,9 +34,9 @@ if [ ! -d "/var/www/html/$WORDPRESS_FOLDER" ]; then
 
   echo "installing wordpress $WORDPRESS_VERSION from $WORDPRESS_URL to /var/www/html/$WORDPRESS_FOLDER/..."
 
-  curl -O "$WORDPRESS_URL"
+  curl "$WORDPRESS_URL" > "wordpress-$WORDPRESS_VERSION.zip"
 
-  unzip -q "wordpress-$WORDPRESS_VERSION.tar.gz"
+  unzip -q "wordpress-$WORDPRESS_VERSION.zip"
   mv wordpress "$WORDPRESS_FOLDER"
 
   echo "wordpress installed!"
