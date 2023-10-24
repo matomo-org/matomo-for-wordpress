@@ -116,7 +116,7 @@ jobs:
           persist-credentials: false
 
       # setup xvfb
-      - run: sudo apt-get update && sudo apt-get install -y xvfb x11-xserver-utils xauth
+      - run: sudo apt-get update && sudo apt-get install -y xvfb x11-xserver-utils xauth unzip
 
       # setup firefox
       - uses: browser-actions/setup-firefox@v1
@@ -136,6 +136,13 @@ jobs:
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ hashFiles('scripts/Dockerfile.local') }}
+      - run: docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-arg ./scripts/Dockerfile.local
+        env:
+          PHP_VERSION: ${{ matrix.php-versions }}
+          WOOCOMMERCE: 1
+          WORDPRESS_FOLDER: test
+          RESET_DATABASE: 1
+          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
       - run: docker-compose up wordpress
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
