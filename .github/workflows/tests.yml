@@ -136,7 +136,7 @@ jobs:
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ hashFiles('scripts/Dockerfile.local') }}
-      - run: docker-compose up -d wordpress
+      - run: docker-compose up wordpress
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 1
