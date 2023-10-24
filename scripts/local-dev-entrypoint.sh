@@ -19,14 +19,16 @@ chmod +x /var/www/html/wp-cli.phar
 
 # TODO: switch download to use wp-cli instead of just curling (also can use wp db create instead of raw php)
 # install wordpress if not present
-WORDPRESS_VERSION=${WORDPRESS_VERSION:-$LATEST_WORDPRESS_VERSION}
+if [[ "$WORDPRESS_VERSION" = "latest" || -z "$WORDPRESS_VERSION" ]]; then
+  WORDPRESS_VERSION="$LATEST_WORDPRESS_VERSION"
+fi
 WORDPRESS_FOLDER=${WORDPRESS_FOLDER:-$WORDPRESS_VERSION}
 
 # TODO: handle trunk ()
 
 if [ ! -d "/var/www/html/$WORDPRESS_FOLDER" ]; then
   WORDPRESS_URL="https://wordpress.org/wordpress-$WORDPRESS_VERSION.zip"
-  if [ "$WORDPRESS_FOLDER" = "trunk" ]; then
+  if [ "$WORDPRESS_VERSION" = "trunk" ]; then
     WORDPRESS_URL="https://wordpress.org/nightly-builds/wordpress-latest.zip"
   fi
 

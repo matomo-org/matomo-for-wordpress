@@ -105,23 +105,46 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        wp-versions: [ 'latest', 'trunk' ] # TODO
+        wp-versions: [ 'latest', 'trunk' ]
         php-versions: [ '7.2', '8.1' ]
     permissions:
       contents: read  # <--- allows to read repo
     steps:
+      - uses: actions/checkout@v3
+        with:
+          lfs: true
+          persist-credentials: false
+
       # setup firefox
       - uses: browser-actions/setup-firefox@v1
       - run: firefox --version
 
-      # create .env file
-      # TODO
+      # setup node
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+          cache-dependency-path: '**/package-lock.json'
 
-      # start local environment via docker-compose
-      # TODO
+      # docker-compose up
+      - uses: isbang/compose-action@v1.5.1
+        with:
+          services: wordpress
+        env:
+          PHP_VERSION: ${{ matrix.php-versions }}
+          WOOCOMMERCE: 1
+          WORDPRESS_FOLDER: test
+          RESET_DATABASE: 1
+          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
 
       # run tests
-      # TODO
+      - run: npm run wdio
+        env:
+          PHP_VERSION: ${{ matrix.php-versions }}
+          WOOCOMMERCE: 1
+          WORDPRESS_FOLDER: test
+          RESET_DATABASE: 1
+          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
 
   checkstyle:
     runs-on: 'ubuntu-20.04'
