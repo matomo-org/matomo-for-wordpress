@@ -7,8 +7,6 @@
 #   - WP_ADMIN_USER - the admin wordpress username, defaults to 'root'
 #   - WP_ADMIN_EMAIL - the admin user's email, defaults to 'nobody@nowhere.local'
 #   - WOOCOMMERCE - if set, installs and sets up woocommerce
-#   - STRIPE_PUBLISHABLE_KEY - the test publishable key to use with a woocommerce install
-#   - STRIPE_SECRET_KEY - the test secret key to use with a woocommerce install
 #   - WOOCOMMERCE_PIWIK_ANALYTICS - path to woocommerce-piwik-analytics repo clone to link to in wordpress
 
 services:
@@ -32,8 +30,6 @@ services:
     environment:
       WP_DB_HOST: "${BACKEND:-mariadb}"
       WOOCOMMERCE: "${WOOCOMMERCE:-}"
-      STRIPE_PUBLISHABLE_KEY: "$STRIPE_PUBLISHABLE_KEY"
-      STRIPE_SECRET_KEY: "$STRIPE_SECRET_KEY"
       WP_ADMIN_USER: "${WP_ADMIN_USER:-root}"
       WP_ADMIN_EMAIL: "${WP_ADMIN_EMAIL:-nobody@nowhere.local}"
     entrypoint: /usr/src/entrypoint.sh
@@ -61,8 +57,6 @@ services:
     environment:
       WP_DB_HOST: "${BACKEND:-mariadb}"
       WOOCOMMERCE: "$WOOCOMMERCE"
-      STRIPE_PUBLISHABLE_KEY: "$STRIPE_PUBLISHABLE_KEY"
-      STRIPE_SECRET_KEY: "$STRIPE_SECRET_KEY"
       WP_ADMIN_USER: "${WP_ADMIN_USER:-root}"
       WP_ADMIN_EMAIL: "${WP_ADMIN_EMAIL:-nobody@nowhere.local}"
     entrypoint: /usr/src/entrypoint.sh
@@ -105,13 +99,34 @@ services:
     environment:
       WP_DB_HOST: "${BACKEND:-mariadb}"
       WOOCOMMERCE: "$WOOCOMMERCE"
-      STRIPE_PUBLISHABLE_KEY: "$STRIPE_PUBLISHABLE_KEY"
-      STRIPE_SECRET_KEY: "$STRIPE_SECRET_KEY"
       WP_ADMIN_USER: "${WP_ADMIN_USER:-root}"
       WP_ADMIN_EMAIL: "${WP_ADMIN_EMAIL:-nobody@nowhere.local}"
       PAGER: 'more'
     user: "${UID:-1000}:${GID:-1000}"
     entrypoint: "/var/www/html/wp-cli.phar --path=/var/www/html/${WORDPRESS_VERSION:-6.3.1}"
+    depends_on:
+      - "${BACKEND:-mariadb}"
+  console:
+    build:
+      context: ./scripts
+      dockerfile: ./Dockerfile.local
+      args:
+        PHP_VERSION: "$PHP_VERSION"
+        PHP_TYPE: apache
+    volumes:
+      - ./docker/wordpress:/var/www/html
+      - .:/var/www/html/matomo-for-wordpress
+      - /var/www/html/matomo-for-wordpress/app/tmp
+      - "${WOOCOMMERCE_PIWIK_ANALYTICS:-/dev/null}:/var/www/html/woocommerce-piwik-analytics"
+    ports:
+      - "${PORT:-3000}:80"
+    environment:
+      WP_DB_HOST: "${BACKEND:-mariadb}"
+      WOOCOMMERCE: "$WOOCOMMERCE"
+      WP_ADMIN_USER: "${WP_ADMIN_USER:-root}"
+      WP_ADMIN_EMAIL: "${WP_ADMIN_EMAIL:-nobody@nowhere.local}"
+    user: "${UID:-1000}:${GID:-1000}"
+    entrypoint: "/var/www/html/${WORDPRESS_VERSION:-6.3.1}/wp-content/plugins/matomo/app/console"
     depends_on:
       - "${BACKEND:-mariadb}"
 
