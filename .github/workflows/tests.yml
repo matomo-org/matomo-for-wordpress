@@ -135,12 +135,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx
-          restore-keys: |
-            ${{ runner.os }}-buildx
-      - uses: isbang/compose-action@v1.5.1
-        with:
-          services: wordpress
+          key: ${{ runner.os }}-buildx-${{ hashFiles(scripts/Dockerfile.local) }}
+      - run: docker-compose up -d wordpress
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 1
@@ -160,6 +156,7 @@ jobs:
 
       # output docker-compose logs
       - run: docker-compose logs --no-color
+      - run: docker-compose stop
 
   checkstyle:
     runs-on: 'ubuntu-20.04'
