@@ -242,9 +242,12 @@ class Woocommerce extends Base {
 
 		$this->logger->log( sprintf( 'Tracked ecommerce order %s with number %s', $order_id, $order_id_to_track ) );
 
-		$this->save_order_metadata( $order, [
-			$this->key_order_tracked => 1,
-		] );
+		$this->save_order_metadata(
+			$order,
+			[
+				$this->key_order_tracked => 1,
+			]
+		);
 
 		return $this->wrap_script( $tracking_code );
 	}
@@ -390,7 +393,7 @@ class Woocommerce extends Base {
 
 	/**
 	 * @param \WC_Order $order
-	 * @param $name
+	 * @param string    $name
 	 * @return mixed
 	 */
 	private function get_order_meta( $order, $name ) {
@@ -404,12 +407,11 @@ class Woocommerce extends Base {
 
 	/**
 	 * @param \WC_Order $order
-	 * @param array $metadata
+	 * @param array     $metadata
 	 * @return void
 	 */
-	private function save_order_metadata( $order, $metadata )
-	{
-		foreach ($metadata as $name => $value) {
+	private function save_order_metadata( $order, $metadata ) {
+		foreach ( $metadata as $name => $value ) {
 			if ( method_exists( $order, 'update_meta_data' ) ) {
 				$order->update_meta_data( $name, $value );
 			} else {
