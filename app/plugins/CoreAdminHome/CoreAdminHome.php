@@ -68,7 +68,6 @@ class CoreAdminHome extends \Piwik\Plugin
     {
         $jsFiles[] = "node_modules/jquery/dist/jquery.min.js";
         $jsFiles[] = "node_modules/jquery-ui-dist/jquery-ui.min.js";
-        $jsFiles[] = "node_modules/jquery.browser/dist/jquery.browser.min.js";
         $jsFiles[] = "node_modules/sprintf-js/dist/sprintf.min.js";
         $jsFiles[] = "plugins/Morpheus/javascripts/piwikHelper.js";
         $jsFiles[] = "plugins/CoreHome/javascripts/broadcast.js";
@@ -121,7 +120,6 @@ class CoreAdminHome extends \Piwik\Plugin
         $translationKeys[] = 'CoreAdminHome_ArchivingSettings';
         $translationKeys[] = 'General_AllowPiwikArchivingToTriggerBrowser';
         $translationKeys[] = 'General_ReportsContainingTodayWillBeProcessedAtMostEvery';
-        $translationKeys[] = 'General_SmallTrafficYouCanLeaveDefault';
         $translationKeys[] = 'General_ArchivingTriggerDescription';
         $translationKeys[] = 'General_ArchivingTriggerSegment';
         $translationKeys[] = 'General_SeeTheOfficialDocumentationForMoreInformation';
@@ -153,6 +151,7 @@ class CoreAdminHome extends \Piwik\Plugin
         $translationKeys[] = 'General_OnlyUsedIfUserPwdIsSet';
         $translationKeys[] = 'General_SmtpUsername';
         $translationKeys[] = 'General_OnlyEnterIfRequired';
+        $translationKeys[] = 'General_Plugins';
         $translationKeys[] = 'General_SmtpPassword';
         $translationKeys[] = 'General_SmtpFromAddress';
         $translationKeys[] = 'General_SmtpFromEmailHelp';
@@ -197,7 +196,6 @@ class CoreAdminHome extends \Piwik\Plugin
         $translationKeys[] = 'CoreAdminHome_JSTracking_CampaignKwdParam';
         $translationKeys[] = 'SitesManager_EmailInstructionsSubject';
         $translationKeys[] = 'SitesManager_JsTrackingTagHelp';
-        $translationKeys[] = 'CoreAdminHome_JSTracking_CodeNoteBeforeClosingHeadEmail';
         $translationKeys[] = 'CoreAdminHome_JSTrackingIntro3a';
         $translationKeys[] = 'CoreAdminHome_JSTrackingIntro4';
         $translationKeys[] = 'CoreAdminHome_JSTrackingIntro5';
@@ -219,5 +217,6 @@ class CoreAdminHome extends \Piwik\Plugin
         $translationKeys[] = 'CoreAdminHome_HideAdvancedOptions';
         $translationKeys[] = 'CoreAdminHome_JSTrackingDocumentationHelp';
         $translationKeys[] = 'CoreAdminHome_ReactDescription';
+        $translationKeys[] = 'CoreAdminHome_JsTrackingCodeAdvancedOptionsStep';
     }
 }

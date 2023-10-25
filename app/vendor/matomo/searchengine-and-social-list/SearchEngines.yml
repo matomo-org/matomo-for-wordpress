@@ -2054,13 +2054,6 @@ Sputnik:
     params:
       - q
     backlink: 'search?q={k}'
-start.fyi:
-  -
-    urls:
-      - search.start.fyi
-    params:
-      - q
-    backlink: '?q={k}'
 StartPage:
   -
     urls:

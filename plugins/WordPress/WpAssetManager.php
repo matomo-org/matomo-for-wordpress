@@ -40,8 +40,10 @@ class WpAssetManager extends AssetManager
 		return $wp_version && 1 === version_compare('5.6', $wp_version);
 	}
 
-	public function getJsInclusionDirective()
-	{
+	public function getJsInclusionDirective(bool $deferJS = false): string
+    {
+        $importDirective = $deferJS ? self::JS_DEFER_IMPORT_DIRECTIVE : self::JS_IMPORT_DIRECTIVE;
+
 	    $translator = StaticContainer::get(Translator::class);
 		$result = "<script type=\"text/javascript\">\n" . $translator->getJavascriptTranslations() . "\n</script>";
 
@@ -86,12 +88,12 @@ class WpAssetManager extends AssetManager
 				    $jQueryPath = str_replace('http://', '//', $jQueryPath);
 			    }
             }
-			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, $jQueryPath);
+			$result .= sprintf($importDirective, $jQueryPath);
 		}
 
 		$result .= "<script type=\"text/javascript\">window.$ = jQuery;</script>";
-		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../assets/js/asset_manager_core_js.js?v=' . Version::VERSION);
-		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../assets/js/opt-out-configurator.directive.js?v=' . Version::VERSION);
+		$result .= sprintf($importDirective, '../assets/js/asset_manager_core_js.js?v=' . Version::VERSION);
+		$result .= sprintf($importDirective, '../assets/js/opt-out-configurator.directive.js?v=' . Version::VERSION);
 
 		// may need to change or allow to this... but how to make the wp-includes relative?
 		// $result .= sprintf(self::JS_IMPORT_DIRECTIVE, plugins_url( 'assets/js/asset_manager_core_js.js', MATOMO_ANALYTICS_FILE )  . '?v=' . Version::VERSION);
@@ -100,7 +102,7 @@ class WpAssetManager extends AssetManager
 			$this->getMergedNonCoreJSAsset()->delete();
 			$result .= $this->getIndividualJsIncludesFromAssetFetcher($this->getNonCoreJScriptFetcher());
 		} else {
-			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, self::GET_NON_CORE_JS_MODULE_ACTION);
+			$result .= sprintf($importDirective, self::GET_NON_CORE_JS_MODULE_ACTION);
 		}
 		$result .= $this->getPluginUmdChunks();
 		return $result;

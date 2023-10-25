@@ -97,7 +97,7 @@
   &:before {
     padding: 4.5px;
     content: "\e60a";
-    background-color: @color-red-piwik;
+    background-color: @color-red-matomo;
     color: #fff;
     border-radius: 3px;
     font-size: 9px;
@@ -181,6 +181,7 @@
 .visitor-profile-visits-info {
   margin: 28px 0 0 -1px;
   border-left: 1px solid #d1cec8;
+  position: relative;
 }
 
 .visitor-profile-header {
@@ -289,6 +290,7 @@
         white-space: nowrap;
         position: absolute;
         left: 26px;
+        right: 0;
       }
     }
 
@@ -402,10 +404,6 @@
   .visitorTypeIcon {
     display: none;
   }
-}
-
-.visitor-profile-visits-info {
-  position: relative;
 }
 
 .visitor-profile-show-actions {

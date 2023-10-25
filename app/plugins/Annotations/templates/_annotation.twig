@@ -12,7 +12,7 @@
       <div class="annotation-period {% if annotation.canEditOrDelete %}annotation-enter-edit-mode{% endif %}">{{ annotation.date }}</div>
         {% if annotation.canEditOrDelete %}
             <div class="annotation-period-edit" style="display:none;">
-                <a href="#" class= "font">{{ annotation.date }}</a>
+                <a href="#">{{ annotation.date }}</a>
                 <div class="datepicker" style="display:none;"/>
             </div>
         {% endif %}
@@ -51,7 +51,7 @@
     <span class="icon-edit"></span>
   </span>
 
-  <a class="delete-annotation" title="Delete">
+  <a class="delete-annotation" title="{{ 'Annotations_ClickToDelete'|translate }}">
       <span class="icon-delete"></span>
   </a>
 

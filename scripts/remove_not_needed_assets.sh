@@ -16,10 +16,10 @@ rm -rf $MATOMO_ROOT/vendor/doctrine/cache/lib/Doctrine/Common/Cache/RiakCache.ph
 find $MATOMO_ROOT/node_modules -name '*.js' ! -name 'materialize.min.js' -exec rm -rf {} +
 find $MATOMO_ROOT/node_modules -name '*.map' -exec rm -rf {} +
 find $MATOMO_ROOT/libs/jqplot -name '*.js' -exec rm -rf {} +
-find $MATOMO_ROOT/plugins/*/angularjs -name '*.js' -exec rm -rf {} +
+find $MATOMO_ROOT/plugins/*/vue/src -name '*' -exec rm -rf {} +
 find $MATOMO_ROOT/plugins/*/javascripts -name '*.js' ! -name 'Piwik_Overlay.js' ! -name 'optOut.js' ! -name 'previewmode.js' ! -name 'previewmodedetection.js' ! -name 'tagmanager.js' ! -name 'tagmanager.min.js' -exec rm -rf {} +
 
 # delete some empty directories like config, angularjs, javascripts, lang, ...
-find $MATOMO_ROOT/plugins/ -d  -empty -delete
+find $MATOMO_ROOT/plugins/ -depth  -empty -delete
 
 echo -e "Done!... "

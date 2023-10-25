@@ -16,8 +16,6 @@ use Piwik\Piwik;
 use Piwik\Plugin\ConsoleCommand;
 use Piwik\Plugins\Installation\ServerFilesGenerator;
 use Piwik\Plugins\WordPress\WpAssetManager;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 if (!defined( 'ABSPATH')) {
 	exit; // if accessed directly
@@ -31,7 +29,7 @@ class GenerateCoreAssets extends ConsoleCommand
         $this->setDescription('Generate the core JS asset file');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
 	    ServerFilesGenerator::createFilesForSecurity();
 
@@ -66,6 +64,7 @@ class GenerateCoreAssets extends ConsoleCommand
         $content = $assetManager->getMergedCoreJavaScript()->getContent();
 
         file_put_contents(plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'assets/js/asset_manager_core_js.js', $content);
-    }
 
+        return 0;
+    }
 }

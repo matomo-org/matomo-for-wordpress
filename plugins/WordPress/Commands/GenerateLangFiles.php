@@ -9,17 +9,10 @@
 
 namespace Piwik\Plugins\WordPress\Commands;
 
-use Piwik\AssetManager;
 use Piwik\Filesystem;
-use Piwik\FrontController;
-use Piwik\Piwik;
 use Piwik\Plugin;
 use Piwik\Plugin\ConsoleCommand;
-use Piwik\Plugins\Installation\ServerFilesGenerator;
 use Piwik\Plugins\LanguagesManager\API;
-use Piwik\Plugins\WordPress\WpAssetManager;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 if (!defined( 'ABSPATH')) {
 	exit; // if accessed directly
@@ -33,7 +26,7 @@ class GenerateLangFiles extends ConsoleCommand
         $this->setDescription('Generate the core JS asset file');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
 	    $languages = API::getInstance()->getAvailableLanguages();
 	    $plugins = Plugin\Manager::getInstance()->loadAllPluginsAndGetTheirInfo();
@@ -53,6 +46,6 @@ class GenerateLangFiles extends ConsoleCommand
 		    file_put_contents($corePath, json_encode($base, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 	    }
 
+        return 0;
     }
-
 }

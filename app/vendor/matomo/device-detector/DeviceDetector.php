@@ -68,7 +68,7 @@ class DeviceDetector
     /**
      * Current version number of DeviceDetector
      */
-    public const VERSION = '6.1.1';
+    public const VERSION = '6.1.6';
 
     /**
      * Constant used as value for unknown browser / os
@@ -345,9 +345,10 @@ class DeviceDetector
     /**
      * Returns if the parsed UA was identified as a Bot
      *
+     * @return bool
+     *
      * @see bots.yml for a list of detected bots
      *
-     * @return bool
      */
     public function isBot(): bool
     {
@@ -421,9 +422,10 @@ class DeviceDetector
      * Returns if the parsed UA was identified as desktop device
      * Desktop devices are all devices with an unknown type that are running a desktop os
      *
+     * @return bool
+     *
      * @see OperatingSystem::$desktopOsArray
      *
-     * @return bool
      */
     public function isDesktop(): bool
     {
@@ -480,9 +482,10 @@ class DeviceDetector
     /**
      * Returns the device type extracted from the parsed UA
      *
+     * @return int|null
+     *
      * @see AbstractDeviceParser::$deviceTypes for available device types
      *
-     * @return int|null
      */
     public function getDevice(): ?int
     {
@@ -492,9 +495,10 @@ class DeviceDetector
     /**
      * Returns the device type extracted from the parsed UA
      *
+     * @return string
+     *
      * @see AbstractDeviceParser::$deviceTypes for available device types
      *
-     * @return string
      */
     public function getDeviceName(): string
     {
@@ -508,9 +512,9 @@ class DeviceDetector
     /**
      * Returns the device brand extracted from the parsed UA
      *
-     * @see self::$deviceBrand for available device brands
-     *
      * @return string
+     *
+     * @see self::$deviceBrand for available device brands
      *
      * @deprecated since 4.0 - short codes might be removed in next major release
      */
@@ -522,9 +526,10 @@ class DeviceDetector
     /**
      * Returns the full device brand name extracted from the parsed UA
      *
+     * @return string
+     *
      * @see self::$deviceBrand for available device brands
      *
-     * @return string
      */
     public function getBrandName(): string
     {
@@ -624,14 +629,15 @@ class DeviceDetector
      * To get fast results from DeviceDetector you need to make your own implementation,
      * that should use one of the caching mechanisms. See README.md for more information.
      *
-     * @internal
-     *
-     * @deprecated
-     *
      * @param string       $ua          UserAgent to parse
      * @param ?ClientHints $clientHints Client Hints to parse
      *
      * @return array
+     *
+     * @deprecated
+     *
+     * @internal
+     *
      */
     public static function getInfoFromUserAgent(string $ua, ?ClientHints $clientHints = null): array
     {
@@ -910,10 +916,26 @@ class DeviceDetector
         $clientName = $this->getClientAttribute('name');
 
         /**
+         * if it's fake UA then it's best not to identify it as Apple running Android OS
+         */
+        if ('Android' === $osName && 'Apple' === $this->brand) {
+            $this->device = null;
+            $this->brand  = '';
+            $this->model  = '';
+        }
+
+        /**
          * Assume all devices running iOS / Mac OS are from Apple
          */
         if (empty($this->brand) && \in_array($osName, ['iPadOS', 'tvOS', 'watchOS', 'iOS', 'Mac'])) {
             $this->brand = 'Apple';
+        }
+
+        /**
+         * All devices containing VR fragment are assumed to be a wearable
+         */
+        if (null === $this->device && $this->matchUserAgent(' VR ')) {
+            $this->device = AbstractDeviceParser::DEVICE_TYPE_WEARABLE;
         }
 
         /**
@@ -1014,7 +1036,7 @@ class DeviceDetector
         /**
          * All devices that contain Andr0id in string are assumed to be a tv
          */
-        if ($this->matchUserAgent('Andr0id|Android TV|\(lite\) TV')) {
+        if ($this->matchUserAgent('Andr0id|Android TV|\(lite\) TV|BRAVIA')) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
         }
 
@@ -1026,9 +1048,12 @@ class DeviceDetector
         }
 
         /**
-         * Devices running Kylo or Espital TV Browsers are assumed to be a TV
+         * Devices running Kylo or Espial TV Browsers are assumed to be a TV
          */
-        if (null === $this->device && \in_array($clientName, ['Kylo', 'Espial TV Browser'])) {
+        if (\in_array($clientName, [
+            'Kylo', 'Espial TV Browser', 'LUJO TV Browser', 'LogicUI TV Browser', 'Open TV Browser',
+        ])
+        ) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
         }
 

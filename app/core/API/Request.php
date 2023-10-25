@@ -24,7 +24,7 @@ use Piwik\Plugins\CoreHome\LoginAllowlist;
 use Piwik\SettingsServer;
 use Piwik\Url;
 use Piwik\UrlHelper;
-use Psr\Log\LoggerInterface;
+use Piwik\Log\LoggerInterface;
 
 /**
  * Dispatches API requests to the appropriate API method.
@@ -228,6 +228,11 @@ class Request
 
             // create the response
             $response = new ResponseBuilder($outputFormat, $this->request);
+            // do not send any header when processing a nested API request,
+            // as the headers might remain for to the original response
+            if (!self::isCurrentApiRequestTheRootApiRequest()) {
+                $response->disableSendHeader();
+            }
             if ($disablePostProcessing) {
                 $response->disableDataTablePostProcessor();
             }
@@ -249,8 +254,8 @@ class Request
             // read parameters
             $moduleMethod = Common::getRequestVar('method', null, 'string', $this->request);
 
-            list($module, $method) = $this->extractModuleAndMethod($moduleMethod);
-            list($module, $method) = self::getRenamedModuleAndAction($module, $method);
+            [$module, $method] = $this->extractModuleAndMethod($moduleMethod);
+            [$module, $method] = self::getRenamedModuleAndAction($module, $method);
 
             PluginManager::getInstance()->checkIsPluginActivated($module);
 
@@ -469,7 +474,8 @@ class Request
         }
 
         if (Access::getInstance()->hasSuperUserAccess()) {
-            $ex = new \Piwik\Exception\Exception(Piwik::translate('Widgetize_TooHighAccessLevel', ['<a href="https://matomo.org/faq/troubleshooting/faq_147/" rel="noreferrer noopener">', '</a>']));
+            $ex = new \Piwik\Exception\Exception(Piwik::translate('Widgetize_TooHighAccessLevel',
+                ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/troubleshooting/faq_147/') . '" rel="noreferrer noopener">', '</a>']));
             $ex->setIsHtmlMessage();
             throw $ex;
         }
@@ -485,7 +491,8 @@ class Request
             //
             // NOTE: this does not apply if the [General] enable_framed_allow_write_admin_token_auth INI
             // option is set.
-            throw new \Exception(Piwik::translate('Widgetize_ViewAccessRequired', ['https://matomo.org/faq/troubleshooting/faq_147/']));
+            throw new \Exception(Piwik::translate('Widgetize_ViewAccessRequired',
+                [Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/troubleshooting/faq_147/')]));
         }
     }
 
@@ -514,6 +521,19 @@ class Request
         // we do not need to reload.
 
         return $tokenAuth != Access::getInstance()->getTokenAuth();
+    }
+
+    /**
+     * Returns true if a token_auth parameter was supplied via a secure mechanism and is not present as a URL parameter
+     * At the moment POST requests are checked, but in future other mechanism such as Authorisation HTTP header
+     * and bearer tokens might be used as well.
+     *
+     * @return bool True if token was supplied in a secure way
+     */
+    public static function isTokenAuthProvidedSecurely(): bool
+    {
+        return (\Piwik\Request::fromGet()->getStringParameter('token_auth', '') === '' &&
+                \Piwik\Request::fromPost()->getStringParameter('token_auth', '') !== '');
     }
 
     /**
@@ -667,7 +687,7 @@ class Request
         if (empty($this->request['apiAction'])) {
             $this->request['apiAction'] = null;
         }
-        list($this->request['apiModule'], $this->request['apiAction']) = $this->getRenamedModuleAndAction($this->request['apiModule'], $this->request['apiAction']);
+        [$this->request['apiModule'], $this->request['apiAction']] = $this->getRenamedModuleAndAction($this->request['apiModule'], $this->request['apiAction']);
     }
 
     /**

@@ -35,7 +35,7 @@ use Piwik\Plugins\Monolog\Processor\ExceptionToTextProcessor;
 use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\Plugins\UsersManager\API as APIUsersManager;
 use Piwik\Plugins\UsersManager\UserPreferences;
-use Psr\Log\LoggerInterface;
+use Piwik\Log\LoggerInterface;
 
 /**
  * ./console core:archive runs as a cron and is a useful tool for general maintenance,
@@ -154,7 +154,7 @@ class CronArchive
     public $concurrentRequestsPerWebsite = false;
 
     /**
-     * The number of concurrent archivers to run at once max.
+     * The number of concurrent archivers to run at once max. Default 3
      *
      * @var int|false
      */
@@ -237,7 +237,7 @@ class CronArchive
      */
     public function __construct(LoggerInterface $logger = null)
     {
-        $this->logger = $logger ?: StaticContainer::get('Psr\Log\LoggerInterface');
+        $this->logger = $logger ?: StaticContainer::get(LoggerInterface::class);
         $this->formatter = new Formatter();
 
         $this->invalidator = StaticContainer::get('Piwik\Archive\ArchiveInvalidator');
@@ -1023,7 +1023,9 @@ class CronArchive
             Date::now()->subSeconds(Rules::getPeriodArchiveTimeToLiveDefault($params->getPeriod()->getLabel()));
 
         // empty plugins param since we only check for an 'all' archive
-        list($idArchive, $visits, $visitsConverted, $ignore, $tsArchived) = ArchiveSelector::getArchiveIdAndVisits($params, $minArchiveProcessedTime, $includeInvalidated = $isPeriodIncludesToday);
+        $archiveInfo = ArchiveSelector::getArchiveIdAndVisits($params, $minArchiveProcessedTime, $includeInvalidated = $isPeriodIncludesToday);
+        $idArchive = $archiveInfo['idArchives'];
+        $tsArchived = $archiveInfo['tsArchived'];
 
         // day has changed since the archive was created, we need to reprocess it
         if ($isYesterday
@@ -1391,6 +1393,11 @@ class CronArchive
     private function hasReachedMaxConcurrentArchivers()
     {
         $cliMulti = $this->makeCliMulti();
+
+        if ($this->maxConcurrentArchivers == "-1") {
+            return false;
+        }
+
         if ($this->maxConcurrentArchivers && $cliMulti->supportsAsync()) {
             $numRunning = 0;
             $processes = Process::getListOfRunningProcesses();
@@ -1450,7 +1457,7 @@ class CronArchive
             return new FixedSiteIds($websitesIds);
         }
 
-        if (!empty($this->shouldArchiveSpecifiedSites)) {
+        if (!empty($this->shouldArchiveSpecifiedSites) || !SharedSiteIds::isSupported()) {
             $this->logger->info("- Will process specified sites: " . implode(', ', $websitesIds));
             return new FixedSiteIds($websitesIds);
         }

@@ -14,8 +14,8 @@ use Piwik\CliMulti\OutputInterface;
 use Piwik\CliMulti\Process;
 use Piwik\CliMulti\StaticOutput;
 use Piwik\Container\StaticContainer;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
+use Piwik\Log\LoggerInterface;
+use Piwik\Log\NullLogger;
 
 /**
  * Class CliMulti.
@@ -359,7 +359,7 @@ class CliMulti
         $this->processes[] = new Process($cmdId);
 
         $url = $this->appendTestmodeParamToUrlIfNeeded($url);
-        $query = UrlHelper::getQueryFromUrl($url, array('pid' => $cmdId, 'runid' => getmypid()));
+        $query = UrlHelper::getQueryFromUrl($url, ['pid' => $cmdId, 'runid' => Common::getProcessId()]);
         $hostname = Url::getHost($checkIfTrusted = false);
         $command = $this->buildCommand($hostname, $query, $output->getPathToFile());
 
