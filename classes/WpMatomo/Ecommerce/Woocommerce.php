@@ -176,7 +176,14 @@ class Woocommerce extends Base {
 	}
 
 	public function on_order( $order_id ) {
-		if ( $this->has_order_been_tracked_already( $order_id ) ) {
+		$order = wc_get_order( $order_id );
+		// @see https://github.com/matomo-org/matomo-for-wordpress/issues/514
+		if ( ! $order ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		if ( $this->get_order_meta( $order, $this->key_order_tracked ) == 1 ) {
 			$this->logger->log( sprintf( 'Ignoring already tracked order %d', $order_id ) );
 
 			return '';
@@ -184,11 +191,6 @@ class Woocommerce extends Base {
 
 		$this->logger->log( sprintf( 'Matomo new order %d', $order_id ) );
 
-		$order = wc_get_order( $order_id );
-		// @see https://github.com/matomo-org/matomo-for-wordpress/issues/514
-		if ( ! $order ) {
-			return;
-		}
 		$order_id_to_track = $order_id;
 		if ( method_exists( $order, 'get_order_number' ) ) {
 			$order_id_to_track = $order->get_order_number();
@@ -240,7 +242,12 @@ class Woocommerce extends Base {
 
 		$this->logger->log( sprintf( 'Tracked ecommerce order %s with number %s', $order_id, $order_id_to_track ) );
 
-		$this->set_order_been_tracked( $order_id );
+		$this->save_order_metadata(
+			$order,
+			[
+				$this->key_order_tracked => 1,
+			]
+		);
 
 		return $this->wrap_script( $tracking_code );
 	}
@@ -374,5 +381,47 @@ class Woocommerce extends Base {
 		// we're not using wc_enqueue_js eg to prevent sometimes this code from being minified on some JS minifier plugins
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $this->wrap_script( $this->make_matomo_js_tracker_call( $params ) );
+	}
+
+	protected function has_order_been_tracked_already( $order_id ) {
+		throw new \Exception( 'has_order_been_tracked_already() should not be used in Woocommerce, use wc_get_order()->get_meta() instead' );
+	}
+
+	protected function set_order_been_tracked( $order_id ) {
+		throw new \Exception( 'set_order_been_tracked() should not be used in Woocommerce, use wc_get_order()->update_meta_data() instead' );
+	}
+
+	/**
+	 * @param \WC_Order $order
+	 * @param string    $name
+	 * @return mixed
+	 */
+	private function get_order_meta( $order, $name ) {
+		if ( method_exists( $order, 'get_meta' ) ) {
+			return $order->get_meta( $name );
+		} else {
+			$id = method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
+			return get_post_meta( $id, $name, true );
+		}
+	}
+
+	/**
+	 * @param \WC_Order $order
+	 * @param array     $metadata
+	 * @return void
+	 */
+	private function save_order_metadata( $order, $metadata ) {
+		foreach ( $metadata as $name => $value ) {
+			if ( method_exists( $order, 'update_meta_data' ) ) {
+				$order->update_meta_data( $name, $value );
+			} else {
+				$id = method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
+				update_post_meta( $id, $name, $value );
+			}
+		}
+
+		if ( method_exists( $order, 'save' ) ) {
+			$order->save();
+		}
 	}
 }
