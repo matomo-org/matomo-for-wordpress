@@ -191,7 +191,7 @@ if [[ ! -z "$WOOCOMMERCE" && ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/pl
   echo "setting up woocommerce..."
 
   if php -r 'exit(version_compare(PHP_VERSION, "7.4", "<") ? 0 : 1);'; then
-    WOOCOMMERCE_VERSION="--version=8.1"
+    WOOCOMMERCE_VERSION="--version=8.1.1"
   fi
 
   # install woocommerce and stripe payment gateway
