@@ -134,6 +134,7 @@ jobs:
       # docker-compose up
       - run: ls ${{ github.workspace }}/scripts
       - run: pwd
+      # TODO: i can't seem to get docker layer caching to work.
       - run: |
           export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed 's/pipelines/artifactcache/')
           export ACTIONS_RUNTIME_TOKEN=$ACTIONS_ID_TOKEN_REQUEST_TOKEN
@@ -145,7 +146,7 @@ jobs:
           WORDPRESS_FOLDER: test
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-      - run: docker-compose -d up wordpress
+      - run: docker-compose up -d wordpress
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 1
