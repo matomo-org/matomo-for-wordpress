@@ -5,7 +5,10 @@
 *~
 .idea/
 /empty/
+/node_modules/*
+!/node_modules/chart.js
 
 # for local docker dev
 docker
 .env
+

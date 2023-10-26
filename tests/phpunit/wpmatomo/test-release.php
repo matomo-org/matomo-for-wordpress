@@ -45,4 +45,16 @@ class ReleaseTest extends MatomoUnit_TestCase {
 		);
 	}
 
+	public function test_latest_release_is_not_too_old() {
+		$url = 'https://api.wordpress.org/plugins/info/1.0/matomo.json';
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$api_response = file_get_contents( $url );
+		$api_response = json_decode( $api_response, true );
+
+		$last_updated   = strtotime( $api_response['last_updated'] );
+		$six_months_ago = ( new DateTime( '-6 months ago' ) )->getTimestamp();
+
+		$this->assertLessThan( $six_months_ago, $last_updated, 'The last release of this plugin was over 6 months ago, another release is needed to show the plugin is not abandoned.' );
+	}
 }

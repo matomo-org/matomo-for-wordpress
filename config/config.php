@@ -31,11 +31,19 @@ return array(
 	// custom logger
 	'Psr\Log\LoggerInterface' => DI\get('\Piwik\Plugins\WordPress\Logger'),
 	'TagManagerContainerStorageDir' => function () {
+		if (defined('MATOMO_TAG_MANAGER_STORAGE_DIR')) {
+			return MATOMO_TAG_MANAGER_STORAGE_DIR;
+		}
+
 		// the location where we store the generated javascript or json container files
 		$paths = new \WpMatomo\Paths();
 		return rtrim('/'. $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir().'/'), '/');
 	},
 	'TagManagerContainerWebDir' => function () {
+		if (defined('MATOMO_TAG_MANAGER_STORAGE_DIR')) {
+			return MATOMO_TAG_MANAGER_STORAGE_DIR;
+		}
+
 		// the location where we store the generated javascript or json container files
 		$paths = new \WpMatomo\Paths();
 		return rtrim('/'. $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir().'/'), '/');
