@@ -24,7 +24,7 @@ services:
       - /var/www/html/matomo-for-wordpress/app/tmp
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
-      - "${WOOCOMMERCE_PIWIK_ANALYTICS:-/dev/null}:/var/www/html/woocommerce-piwik-analytics"
+      - "${WOOCOMMERCE_PIWIK_ANALYTICS:-./empty}:/var/www/html/woocommerce-piwik-analytics"
     ports:
       - "${PORT:-3000}:80"
     environment:
@@ -56,7 +56,7 @@ services:
       - /var/www/html/matomo-for-wordpress/app/tmp
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
-      - "${WOOCOMMERCE_PIWIK_ANALYTICS:-/dev/null}:/var/www/html/woocommerce-piwik-analytics"
+      - "${WOOCOMMERCE_PIWIK_ANALYTICS:-./empty}:/var/www/html/woocommerce-piwik-analytics"
     environment:
       WORDPRESS_VERSION: "$WORDPRESS_VERSION"
       WORDPRESS_FOLDER: "$WORDPRESS_FOLDER"
@@ -99,7 +99,7 @@ services:
       - .:/var/www/html/matomo-for-wordpress
       - /var/www/html/matomo-for-wordpress/app/tmp
       - ./docker/wp-cli:/.wp-cli
-      - "${WOOCOMMERCE_PIWIK_ANALYTICS:-/dev/null}:/var/www/html/woocommerce-piwik-analytics"
+      - "${WOOCOMMERCE_PIWIK_ANALYTICS:-./empty}:/var/www/html/woocommerce-piwik-analytics"
     ports:
       - "${PORT:-3000}:80"
     environment:
