@@ -182,6 +182,10 @@ class Woocommerce extends Base {
 			return;
 		}
 
+		if ( $this->isOrderFromBackOffice( $order ) ) {
+			return;
+		}
+
 		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 		if ( $this->get_order_meta( $order, $this->key_order_tracked ) == 1 ) {
 			$this->logger->log( sprintf( 'Ignoring already tracked order %d', $order_id ) );
@@ -381,6 +385,16 @@ class Woocommerce extends Base {
 		// we're not using wc_enqueue_js eg to prevent sometimes this code from being minified on some JS minifier plugins
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $this->wrap_script( $this->make_matomo_js_tracker_call( $params ) );
+	}
+
+	/**
+	 * @param \WC_Order|\WC_Order_Refund $order
+	 * @return bool
+	 */
+	private function isOrderFromBackOffice( $order ) {
+		// for recent versions of woocommerce (4.0+) use is_created_via(), otherwise default to is_admin() (which will provide false positives
+		// when using a theme that uses admin-ajax.php to add orders)
+		return method_exists( $order, 'is_created_via' ) ? $order->is_created_via( 'admin' ) : is_admin();
 	}
 
 	protected function has_order_been_tracked_already( $order_id ) {
