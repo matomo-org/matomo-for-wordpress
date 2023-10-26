@@ -397,7 +397,7 @@ class Woocommerce extends Base {
 		return method_exists( $order, 'is_created_via' ) ? $order->is_created_via( 'admin' ) : is_admin();
 	}
 
-  protected function has_order_been_tracked_already( $order_id ) {
+	protected function has_order_been_tracked_already( $order_id ) {
 		throw new \Exception( 'has_order_been_tracked_already() should not be used in Woocommerce, use wc_get_order()->get_meta() instead' );
 	}
 
