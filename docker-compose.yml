@@ -28,6 +28,9 @@ services:
     ports:
       - "${PORT:-3000}:80"
     environment:
+      WORDPRESS_VERSION: "$WORDPRESS_VERSION"
+      WORDPRESS_FOLDER: "$WORDPRESS_FOLDER"
+      RESET_DATABASE: "$RESET_DATABASE"
       WP_DB_HOST: "${BACKEND:-mariadb}"
       WOOCOMMERCE: "${WOOCOMMERCE:-}"
       WP_ADMIN_USER: "${WP_ADMIN_USER:-root}"
@@ -55,6 +58,9 @@ services:
       - ./docker/wp-cli:/.wp-cli
       - "${WOOCOMMERCE_PIWIK_ANALYTICS:-/dev/null}:/var/www/html/woocommerce-piwik-analytics"
     environment:
+      WORDPRESS_VERSION: "$WORDPRESS_VERSION"
+      WORDPRESS_FOLDER: "$WORDPRESS_FOLDER"
+      RESET_DATABASE: "$RESET_DATABASE"
       WP_DB_HOST: "${BACKEND:-mariadb}"
       WOOCOMMERCE: "$WOOCOMMERCE"
       WP_ADMIN_USER: "${WP_ADMIN_USER:-root}"
@@ -97,13 +103,16 @@ services:
     ports:
       - "${PORT:-3000}:80"
     environment:
+      WORDPRESS_VERSION: "$WORDPRESS_VERSION"
+      WORDPRESS_FOLDER: "$WORDPRESS_FOLDER"
+      RESET_DATABASE: "$RESET_DATABASE"
       WP_DB_HOST: "${BACKEND:-mariadb}"
       WOOCOMMERCE: "$WOOCOMMERCE"
       WP_ADMIN_USER: "${WP_ADMIN_USER:-root}"
       WP_ADMIN_EMAIL: "${WP_ADMIN_EMAIL:-nobody@nowhere.local}"
       PAGER: 'more'
     user: "${UID:-1000}:${GID:-1000}"
-    entrypoint: "/var/www/html/wp-cli.phar --path=/var/www/html/${WORDPRESS_VERSION:-6.3.1}"
+    entrypoint: "/var/www/html/wp-cli.phar --path=/var/www/html/${WORDPRESS_VERSION}"
     depends_on:
       - "${BACKEND:-mariadb}"
   console:

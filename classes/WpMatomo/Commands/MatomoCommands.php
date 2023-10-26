@@ -23,6 +23,8 @@ use WpMatomo\WpStatistics\Importer;
 use WpMatomo\WpStatistics\Logger\WpCliLogger;
 use WpMatomo\Bootstrap;
 use WpMatomo\Site;
+use WpMatomo\User;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -31,6 +33,91 @@ if ( ! defined( 'WP_CLI' ) ) {
 }
 
 class MatomoCommands extends WP_CLI_Command {
+
+	/**
+	 * Installs Matomo if not already installed.
+	 *
+	 * @when after_wp_load
+	 */
+	public function install() {
+		$installer = new Installer( \WpMatomo::$settings );
+		$installer->register_hooks();
+		if ( $installer->looks_like_it_is_installed() ) {
+			WP_CLI::success( 'Already installed.' );
+			return;
+		}
+
+		if ( ! $installer->can_be_installed() ) {
+			WP_CLI::error( 'Unable to install.' );
+			return;
+		}
+
+		$installer->install();
+		WP_CLI::success( 'Finished installing Matomo.' );
+	}
+
+	/**
+	 * Gets or sets a Matomo for WordPress global setting.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <mode>
+	 * : Either 'get' or 'set'.
+	 *
+	 * <name>
+	 * : The name of the setting.
+	 *
+	 * [<value>]
+	 * : Required if 'set' is used. The value to set the setting to.
+	 *
+	 * @when after_wp_load
+	 */
+	public function globalSetting( $args, $assoc_args ) {
+		$mode = $args[0];
+		$key  = $args[1];
+
+		if ( 'set' === $mode ) {
+			$value = $args[2];
+			\WpMatomo::$settings->set_global_option( $key, $value );
+			\WpMatomo::$settings->save();
+			WP_CLI::success( sprintf( 'Modified Matomo setting %s.', $key ) );
+		} elseif ( 'get' === $mode ) {
+			$value = \WpMatomo::$settings->get_global_option( $key );
+			WP_CLI::success( $value );
+		} else {
+			WP_CLI::error( sprintf( 'Invalid mode "%s".', $mode ) );
+		}
+	}
+
+	/**
+	 * Perform a site or user sync manually.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <mode>
+	 * : Either 'sites' or 'users'.
+	 *
+	 * @when after_wp_load
+	 */
+	public function sync( $args, $assoc_args ) {
+		$mode = $args[0];
+
+		if ( 'sites' === $mode ) {
+			$sync    = new Site\Sync( \WpMatomo::$settings );
+			$success = $sync->sync_all();
+			if ( ! $success ) {
+				WP_CLI::error( sprintf( 'Failed to execute site sync, enable logging for more info.' ) );
+			}
+		} elseif ( 'users' === $mode ) {
+			$sync = new User\Sync();
+			$sync->sync_all();
+		} else {
+			WP_CLI::error( sprintf( 'Invalid mode "%s".', $mode ) );
+		}
+
+		WP_CLI::success( sprintf( 'Done syncing %s.', $mode ) );
+	}
+
 	/**
 	 * Uninstalls Matomo.
 	 *
