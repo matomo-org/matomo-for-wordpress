@@ -451,16 +451,17 @@ class SystemReport {
 
 	private function check_wp_can_be_loaded_in_php_cli( &$rows ) {
 		$path_to_script = $this->path_to_plugin . '/check-cli-configuration.php';
-		$output = $this->get_phpcli_output( $path_to_script );
+		$output         = $this->get_phpcli_output( $path_to_script );
 		if ( empty( $output ) ) {
 			$rows[] = [
-				'name'     => esc_html__( 'PHP CLI configuration', 'matomo' ),
-				'value'    => esc_html__( 'Configured correctly', 'matomo' ),
+				'name'  => esc_html__( 'PHP CLI configuration', 'matomo' ),
+				'value' => esc_html__( 'Configured correctly', 'matomo' ),
 			];
 		} else {
-			$error_message = esc_html__( 'Wordpress cannot be loaded via PHP CLI. Please ensure both are correctly configured. '
-				. 'Note: If you are using get_cfg_var() in your wp-config.php, you will need to make sure the php.ini file for PHP CLI has the correct '
-				. 'values. You may need to contact your hosting provider for the changes to be made.', 'matomo' );
+			$error_message = esc_html__(
+				'WordPress cannot be loaded via PHP CLI. Please ensure both are correctly configured. Note: If you are using get_cfg_var() in your wp-config.php, you will need to make sure the php.ini file for PHP CLI has the correct values. You may need to contact your hosting provider for the changes to be made.',
+				'matomo'
+			);
 
 			$rows[] = [
 				'name'     => esc_html__( 'Database configuration', 'matomo' ),
@@ -1964,7 +1965,7 @@ class SystemReport {
 	private function get_abs_path_to_plugin() {
 		if ( is_dir( ABSPATH . '/wp-content/plugins/matomo' ) ) {
 			return ABSPATH . '/wp-content/plugins/matomo';
-		} else if ( is_dir( ABSPATH . '/wp-content/mu-plugins/matomo' ) ) {
+		} elseif ( is_dir( ABSPATH . '/wp-content/mu-plugins/matomo' ) ) {
 			return ABSPATH . '/wp-content/mu-plugins/matomo';
 		} else {
 			return __DIR__ . '/../../..';
