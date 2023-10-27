@@ -126,6 +126,11 @@ class SystemReport {
 	 */
 	private $binary;
 
+	/**
+	 * @var string
+	 */
+	private $path_to_plugin;
+
 	private static $matomo_tables;
 
 	public function __construct( Settings $settings ) {
@@ -133,6 +138,8 @@ class SystemReport {
 		$this->logger               = new Logger();
 		$this->db_settings          = new \WpMatomo\Db\Settings();
 		$this->shell_exec_available = function_exists( 'shell_exec' );
+		$this->path_to_plugin       = $this->get_abs_path_to_plugin();
+
 		if ( ! WpMatomo::is_safe_mode() ) {
 			Bootstrap::do_bootstrap();
 			$cli_php      = new CliPhp();
@@ -435,9 +442,33 @@ class SystemReport {
 				'comment'  => $comment,
 				'is_error' => $is_error,
 			];
+
+			$this->check_wp_can_be_loaded_in_php_cli( $rows );
 		}
 
 		return $rows;
+	}
+
+	private function check_wp_can_be_loaded_in_php_cli( &$rows ) {
+		$path_to_script = $this->path_to_plugin . '/check-cli-configuration.php';
+		$output = $this->get_phpcli_output( $path_to_script );
+		if ( empty( $output ) ) {
+			$rows[] = [
+				'name'     => esc_html__( 'PHP CLI configuration', 'matomo' ),
+				'value'    => esc_html__( 'Configured correctly', 'matomo' ),
+			];
+		} else {
+			$error_message = esc_html__( 'Wordpress cannot be loaded via PHP CLI. Please ensure both are correctly configured. '
+				. 'Note: If you are using get_cfg_var() in your wp-config.php, you will need to make sure the php.ini file for PHP CLI has the correct '
+				. 'values. You may need to contact your hosting provider for the changes to be made.', 'matomo' );
+
+			$rows[] = [
+				'name'     => esc_html__( 'Database configuration', 'matomo' ),
+				'value'    => esc_html__( 'error', 'matomo' ),
+				'comment'  => $error_message,
+				'is_error' => true,
+			];
+		}
 	}
 
 	private function get_phpcli_output( $phpcli_params ) {
@@ -1928,5 +1959,15 @@ class SystemReport {
 		}
 
 		return $content;
+	}
+
+	private function get_abs_path_to_plugin() {
+		if ( is_dir( ABSPATH . '/wp-content/plugins/matomo' ) ) {
+			return ABSPATH . '/wp-content/plugins/matomo';
+		} else if ( is_dir( ABSPATH . '/wp-content/mu-plugins/matomo' ) ) {
+			return ABSPATH . '/wp-content/mu-plugins/matomo';
+		} else {
+			return __DIR__ . '/../../..';
+		}
 	}
 }
