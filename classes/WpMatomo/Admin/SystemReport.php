@@ -450,8 +450,9 @@ class SystemReport {
 	}
 
 	private function check_wp_can_be_loaded_in_php_cli( &$rows ) {
-		$path_to_script = $this->path_to_plugin . '/check-cli-configuration.php';
-		$output         = $this->get_phpcli_output( $path_to_script );
+		$abs_path = ABSPATH;
+		$command  = "-r 'require_once( \"$abs_path/wp-config.php\" );'";
+		$output   = $this->get_phpcli_output( $command );
 		if ( empty( $output ) ) {
 			$rows[] = [
 				'name'  => esc_html__( 'PHP CLI configuration', 'matomo' ),
