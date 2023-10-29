@@ -197,6 +197,10 @@ if ( matomo_is_app_request() ) {
 	unset($_POST['callback']);
 }
 
+if ( ! defined( 'PIWIK_INCLUDE_PATH' ) ) {
+	define( 'PIWIK_INCLUDE_PATH', dirname( MATOMO_ANALYTICS_FILE ) . '/app' );
+}
+
 if ( ! defined( 'PIWIK_USER_PATH' ) ) {
 	define( 'PIWIK_USER_PATH', dirname( MATOMO_ANALYTICS_FILE ) );
 }
