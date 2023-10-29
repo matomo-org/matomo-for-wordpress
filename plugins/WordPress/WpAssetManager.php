@@ -10,6 +10,7 @@
 namespace Piwik\Plugins\WordPress;
 
 use Piwik\AssetManager;
+use Piwik\AssetManager\UIAssetFetcher;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugins\WordPress\AssetManager\NeverDeleteOnDiskUiAsset;
 use Piwik\Translation\Translator;
@@ -90,6 +91,7 @@ class WpAssetManager extends AssetManager
 		}
 
 		$result .= "<script type=\"text/javascript\">window.$ = jQuery;</script>";
+
 		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../assets/js/asset_manager_core_js.js?v=' . Version::VERSION);
 		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../assets/js/opt-out-configurator.directive.js?v=' . Version::VERSION);
 
@@ -99,10 +101,52 @@ class WpAssetManager extends AssetManager
 		if ($this->isMergedAssetsDisabled()) {
 			$this->getMergedNonCoreJSAsset()->delete();
 			$result .= $this->getIndividualJsIncludesFromAssetFetcher($this->getNonCoreJScriptFetcher());
+			$result .= $this->getIndividualJsIncludesFromAssetFetcher($this->getPluginUmdJScriptFetcher());
 		} else {
 			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, self::GET_NON_CORE_JS_MODULE_ACTION);
+			$result .= $this->getPluginUmdChunks();
 		}
-		$result .= $this->getPluginUmdChunks();
 		return $result;
 	}
+
+    /**
+     * @param UIAssetFetcher $assetFetcher
+     * @return string
+     */
+    protected function getIndividualJsIncludesFromAssetFetcher($assetFetcher)
+    {
+        // TODO: clean this code up
+        $jsIncludeString = '';
+
+        $assets = $assetFetcher->getCatalog()->getAssets();
+
+        foreach ($assets as $jsFile) {
+            $relativeFilePath = $jsFile->getRelativeLocation();
+
+            $actualPath = PIWIK_INCLUDE_PATH . '/' . $relativeFilePath;
+            $assetUrlPath = $relativeFilePath;
+
+            if (!is_file($actualPath)) { // third party plugin file (stored outside of Matomo for WordPress)
+                $relativeFilePathParts = explode('/', $relativeFilePath);
+
+                $pluginName = $relativeFilePathParts[1];
+                $wpPluginsDir = dirname(dirname(PIWIK_INCLUDE_PATH));
+
+                if (is_file($wpPluginsDir . '/' . $pluginName . '/' . $pluginName . '.php')) {
+                    $pathRelativeToPlugin = implode('/', array_slice($relativeFilePathParts, 2));
+
+                    $actualPath = $wpPluginsDir . '/' . $pluginName . '/' . $pathRelativeToPlugin;
+                    $assetUrlPath = plugins_url($pathRelativeToPlugin, $pluginName . '/' . $pluginName . '.php');
+                }
+            }
+
+            if (!is_readable($actualPath)) {
+                throw new \Exception("The ui asset with 'href' = " . (PIWIK_INCLUDE_PATH . '/' . $actualPath) . " is not readable");
+            }
+
+            $jsIncludeString = $jsIncludeString . sprintf(self::JS_IMPORT_DIRECTIVE, $assetUrlPath);
+        }
+
+        return $jsIncludeString;
+    }
 }
