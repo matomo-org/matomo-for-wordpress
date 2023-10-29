@@ -167,6 +167,11 @@ if [ ! -f "/var/www/html/index.php" ]; then
 EOF
 fi
 
+if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress" ]; then
+  echo "installing matomo marketplace"
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip
+fi
+
 # download WP_PLUGINS plugins if not present
 for PLUGIN_VERSION in $WP_PLUGINS
 do
