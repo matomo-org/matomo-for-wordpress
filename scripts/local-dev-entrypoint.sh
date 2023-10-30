@@ -11,6 +11,19 @@ if [[ -z "$LATEST_WORDPRESS_VERSION" ]]; then
   exit 1
 fi
 
+if [[ "$WORDPRESS_VERSION" = "latest" || -z "$WORDPRESS_VERSION" ]]; then
+  WORDPRESS_VERSION="$LATEST_WORDPRESS_VERSION"
+fi
+WORDPRESS_FOLDER=${WORDPRESS_FOLDER:-$WORDPRESS_VERSION}
+
+if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
+  exit $?
+elif [[ "$EXECUTE_CONSOLE" = "1" ]]; then
+  /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/console "$@"
+  exit $?
+fi
+
 # install wp-cli.phar
 if [ ! -f "/var/www/html/wp-cli.phar" ]; then
   curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o /var/www/html/wp-cli.phar
@@ -19,13 +32,6 @@ chmod +x /var/www/html/wp-cli.phar
 
 # TODO: switch download to use wp-cli instead of just curling (also can use wp db create instead of raw php)
 # install wordpress if not present
-if [[ "$WORDPRESS_VERSION" = "latest" || -z "$WORDPRESS_VERSION" ]]; then
-  WORDPRESS_VERSION="$LATEST_WORDPRESS_VERSION"
-fi
-WORDPRESS_FOLDER=${WORDPRESS_FOLDER:-$WORDPRESS_VERSION}
-
-# TODO: handle trunk ()
-
 if [ ! -d "/var/www/html/$WORDPRESS_FOLDER" ]; then
   WORDPRESS_URL="https://wordpress.org/wordpress-$WORDPRESS_VERSION.zip"
   if [ "$WORDPRESS_VERSION" = "trunk" ]; then

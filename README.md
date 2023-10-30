@@ -42,10 +42,10 @@ composer install # or composer.phar install
 
 #### Local environment through docker
 
-If you have docker and docker-compose installed, you can setup a local development environment with a single command:
+If you have docker and docker compose installed, you can setup a local development environment with a single command:
 
 ```bash
-docker-compose up wordpress; docker-compose stop
+npm run compose up wordpress; docker compose stop
 ```
 
 The first time the container starts it will compile php extensions within the container it needs, download wordpress
@@ -81,7 +81,15 @@ variables are supported:
 Make sure the wordpress service is running in one terminal, then in another terminal run:
 
 ```bash
-docker-compose run wp <... rest of command ...>
+npm run compose run wp -- <... rest of command ...>
+```
+
+**Running matomo console**
+
+Make sure the wordpress service is running in one terminal, then in another terminal run:
+
+```bash
+npm run compose run console -- <... rest of command ...>
 ```
 
 **Testing on nginx**
@@ -91,7 +99,7 @@ To run the local dev environment with nginx instead of apache, first make sure t
 Then run the following command:
 
 ```bash
-docker-compose run nginx fpm; docker-compose stop
+npm run compose up nginx fpm; docker compose stop
 ```
 
 Finally visit `http://nginx:3000/`.
@@ -104,7 +112,7 @@ First ensure the database you want to inspect (mariadb or mysql) is the one that
 environment. Then, while the local environment is running in one shell, open another and run the command:
 
 ```bash
-docker-compose run mariadb mariadb -h mariadb -u root -p
+npm run compose run mariadb mariadb -h mariadb -u root -p
 ```
 
 Enter `pass` for the password.
