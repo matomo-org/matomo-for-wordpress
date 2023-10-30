@@ -147,7 +147,7 @@ jobs:
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
       - run: touch .env
-      - run: docker compose --env-file .env.default up -d wordpress
+      - run: docker compose --env-file .env.default up wordpress
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 1
@@ -166,8 +166,8 @@ jobs:
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
 
       # output docker-compose logs
-      - run: docker-compose logs --no-color
-      - run: docker-compose stop
+      - run: docker compose logs --no-color
+      - run: docker compose stop
 
   checkstyle:
     runs-on: 'ubuntu-20.04'
