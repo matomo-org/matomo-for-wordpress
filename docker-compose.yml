@@ -8,6 +8,7 @@
 #   - WP_ADMIN_EMAIL - the admin user's email, defaults to 'nobody@nowhere.local'
 #   - WOOCOMMERCE - if set, installs and sets up woocommerce
 #   - WOOCOMMERCE_PIWIK_ANALYTICS - path to woocommerce-piwik-analytics repo clone to link to in wordpress
+#   - MULTISITE - if set to '1', creates a multisite wordpress install. the folder will be suffixed with '-multi'
 
 services:
   # basic apache service

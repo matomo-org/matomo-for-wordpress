@@ -45,7 +45,7 @@ composer install # or composer.phar install
 If you have docker and docker compose installed, you can setup a local development environment with a single command:
 
 ```bash
-npm run compose up wordpress; docker compose stop
+npm run compose up wordpress; npm run compose stop
 ```
 
 The first time the container starts it will compile php extensions within the container it needs, download wordpress
@@ -99,7 +99,7 @@ To run the local dev environment with nginx instead of apache, first make sure t
 Then run the following command:
 
 ```bash
-npm run compose up nginx fpm; docker compose stop
+npm run compose up nginx fpm; npm run compose stop
 ```
 
 Finally visit `http://nginx:3000/`.
