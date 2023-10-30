@@ -13,7 +13,8 @@
     "wdio-wait-for": "^3.0.7"
   },
   "scripts": {
-    "wdio": "wdio run ./wdio.conf.ts"
+    "wdio": "wdio run ./wdio.conf.ts",
+    "compose": "docker compose --env-file .env.default --env-file .env"
   },
   "dependencies": {
     "chart.js": "^3.4.1"
