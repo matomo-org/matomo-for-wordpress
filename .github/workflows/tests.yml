@@ -157,7 +157,7 @@ jobs:
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-      - run: docker compose --env-file .env.default up -d wordpress
+      - run: docker compose --env-file .env.default --env-file .env up -d wordpress
       - run: sleep 60 # wait for docker-compose launch to finish
 
       # run tests
@@ -170,8 +170,8 @@ jobs:
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
 
       # output docker-compose logs
-      - run: docker compose logs --no-color
-      - run: docker compose stop
+      - run: npm run compose logs wordpress --no-color
+      - run: npm run compose stop
 
   checkstyle:
     runs-on: 'ubuntu-20.04'
