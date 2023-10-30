@@ -146,6 +146,7 @@ jobs:
           WORDPRESS_FOLDER: test
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: touch .env
       - run: npm run compose up -d wordpress
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
