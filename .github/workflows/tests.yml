@@ -146,7 +146,7 @@ jobs:
           WORDPRESS_FOLDER: test
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-      - run: docker-compose up -d wordpress
+      - run: npm run compose up -d wordpress
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 1
