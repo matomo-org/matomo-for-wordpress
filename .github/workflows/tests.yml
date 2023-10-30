@@ -146,16 +146,19 @@ jobs:
           WORDPRESS_FOLDER: test
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-      - run: touch .env
-      - run: docker compose --env-file .env.default up -d wordpress
+      - run: |
+          cat > .env <<EOF
+          PHP_VERSION=$PHP_VERSION
+          WOOCOMMERCE=1
+          WORDPRESS_FOLDER=test
+          RESET_DATABASE=1
+          WORDPRESS_VERSION=$WORDPRESS_VERSION
+          EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
-          WOOCOMMERCE: 1
-          WORDPRESS_FOLDER: test
-          RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: docker compose --env-file .env.default up -d wordpress
       - run: sleep 60 # wait for docker-compose launch to finish
-      - run: ls docker/wordpress
 
       # run tests
       - run: xvfb-run --auto-servernum npm run wdio
