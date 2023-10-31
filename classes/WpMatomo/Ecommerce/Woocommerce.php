@@ -457,8 +457,4 @@ class Woocommerce extends Base {
 			$order->save();
 		}
 	}
-
-	private function get_order_id( $order ) {
-		return method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
-	}
 }
