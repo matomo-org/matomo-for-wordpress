@@ -122,7 +122,7 @@ class SystemReport {
 	 */
 	public $db_settings;
 	/**
-	 * @var string the php binary used by Matomo
+	 * @var string the php binary used by Matomo (use get_php_binary() to access)
 	 */
 	private $binary;
 
@@ -133,11 +133,6 @@ class SystemReport {
 		$this->logger               = new Logger();
 		$this->db_settings          = new \WpMatomo\Db\Settings();
 		$this->shell_exec_available = function_exists( 'shell_exec' );
-		if ( ! WpMatomo::is_safe_mode() ) {
-			Bootstrap::do_bootstrap();
-			$cli_php      = new CliPhp();
-			$this->binary = $cli_php->findPhpBinary();
-		}
 	}
 
 	public function get_not_compatible_plugins() {
@@ -289,6 +284,8 @@ class SystemReport {
 	}
 
 	public function errors_present() {
+		// TODO: cache this (use Matomo cache)
+
 		$matomo_tables = $this->get_error_tables();
 
 		$matomo_tables = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
@@ -442,9 +439,9 @@ class SystemReport {
 
 	private function get_phpcli_output( $phpcli_params ) {
 		$output = '';
-		if ( $this->shell_exec_available && $this->binary ) {
+		if ( $this->shell_exec_available && $this->get_php_cli_binary() ) {
 			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
-			$output = trim( '' . @shell_exec( $this->binary . ' ' . $phpcli_params ) );
+			$output = trim( '' . @shell_exec( $this->get_php_cli_binary() . ' ' . $phpcli_params ) );
 		}
 
 		return $output;
@@ -1295,10 +1292,10 @@ class SystemReport {
 			'value' => $this->initial_error_reporting . ' After bootstrap: ' . @error_reporting(),
 		];
 
-		if ( ! empty( $this->binary ) ) {
+		if ( ! empty( $this->get_php_cli_binary() ) ) {
 			$rows[] = [
 				'name'  => 'PHP Found Binary',
-				'value' => $this->binary,
+				'value' => $this->get_php_cli_binary(),
 			];
 		}
 		$rows[] = [
@@ -1928,5 +1925,15 @@ class SystemReport {
 		}
 
 		return $content;
+	}
+
+	private function get_php_cli_binary() {
+		if ( ! $this->binary && ! WpMatomo::is_safe_mode() ) {
+			Bootstrap::do_bootstrap();
+			$cli_php      = new CliPhp();
+			$this->binary = $cli_php->findPhpBinary();
+		}
+
+		return $this->binary;
 	}
 }
