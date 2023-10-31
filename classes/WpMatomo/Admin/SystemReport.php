@@ -284,13 +284,13 @@ class SystemReport {
 	}
 
 	public function errors_present() {
-		$secondsInADay = 86400;
+		$secondsInAWeek = 86400 * 7;
 
 		$cache_key   = 'matomo_system_report_has_errors';
 		$cache_value = get_option( $cache_key );
 
 		if ( empty( $cache_value['last_updated'] )
-			|| $cache_value['last_updated'] + $secondsInADay < time()
+			|| $cache_value['last_updated'] + $secondsInAWeek < time()
 			|| ! isset( $cache_value['errors_found'] )
 		) {
 			// pre-record that there were no errors found. in case the system report fails to execute, this will
