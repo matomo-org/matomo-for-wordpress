@@ -8,10 +8,14 @@
 #   - WP_ADMIN_EMAIL - the admin user's email, defaults to 'nobody@nowhere.local'
 #   - WOOCOMMERCE - if set, installs and sets up woocommerce
 #   - WOOCOMMERCE_PIWIK_ANALYTICS - path to woocommerce-piwik-analytics repo clone to link to in wordpress
+#   - MULTISITE - if set to '1', creates a multisite wordpress install. the folder will be suffixed with '-multi'
 
 services:
   # basic apache service
   wordpress:
+    env_file:
+      - .env.default
+      - .env
     build:
       context: ./scripts
       dockerfile: ./Dockerfile.local
@@ -24,27 +28,22 @@ services:
       - /var/www/html/matomo-for-wordpress/app/tmp
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
-      - "${WOOCOMMERCE_PIWIK_ANALYTICS:-./empty}:/var/www/html/woocommerce-piwik-analytics"
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
     ports:
-      - "${PORT:-3000}:80"
-    environment:
-      WORDPRESS_VERSION: "$WORDPRESS_VERSION"
-      WORDPRESS_FOLDER: "$WORDPRESS_FOLDER"
-      RESET_DATABASE: "$RESET_DATABASE"
-      WP_DB_HOST: "${BACKEND:-mariadb}"
-      WOOCOMMERCE: "${WOOCOMMERCE:-}"
-      WP_ADMIN_USER: "${WP_ADMIN_USER:-root}"
-      WP_ADMIN_EMAIL: "${WP_ADMIN_EMAIL:-nobody@nowhere.local}"
+      - "$PORT:80"
     entrypoint: /usr/src/entrypoint.sh
     depends_on:
-      - "${BACKEND:-mariadb}"
+      - $BACKEND
     deploy:
       restart_policy:
         condition: on-failure
 
   # nginx service
   fpm:
+    env_file:
+      - .env.default
+      - .env
     build:
       context: .
       dockerfile: ./scripts/Dockerfile.local
@@ -57,19 +56,11 @@ services:
       - /var/www/html/matomo-for-wordpress/app/tmp
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
-      - "${WOOCOMMERCE_PIWIK_ANALYTICS:-./empty}:/var/www/html/woocommerce-piwik-analytics"
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
-    environment:
-      WORDPRESS_VERSION: "$WORDPRESS_VERSION"
-      WORDPRESS_FOLDER: "$WORDPRESS_FOLDER"
-      RESET_DATABASE: "$RESET_DATABASE"
-      WP_DB_HOST: "${BACKEND:-mariadb}"
-      WOOCOMMERCE: "$WOOCOMMERCE"
-      WP_ADMIN_USER: "${WP_ADMIN_USER:-root}"
-      WP_ADMIN_EMAIL: "${WP_ADMIN_EMAIL:-nobody@nowhere.local}"
+      - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
     entrypoint: /usr/src/entrypoint.sh
     depends_on:
-      - "${BACKEND:-mariadb}"
+      - "$BACKEND"
     deploy:
       restart_policy:
         condition: on-failure
@@ -83,13 +74,16 @@ services:
     depends_on:
       - fpm
     ports:
-      - "${PORT:-3000}:80"
+      - "$PORT:80"
     deploy:
       restart_policy:
         condition: on-failure
 
   # service for running wp-cli
   wp:
+    env_file:
+      - .env.default
+      - .env
     build:
       context: ./scripts
       dockerfile: ./Dockerfile.local
@@ -101,24 +95,20 @@ services:
       - .:/var/www/html/matomo-for-wordpress
       - /var/www/html/matomo-for-wordpress/app/tmp
       - ./docker/wp-cli:/.wp-cli
-      - "${WOOCOMMERCE_PIWIK_ANALYTICS:-./empty}:/var/www/html/woocommerce-piwik-analytics"
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
     ports:
-      - "${PORT:-3000}:80"
-    environment:
-      WORDPRESS_VERSION: "$WORDPRESS_VERSION"
-      WORDPRESS_FOLDER: "$WORDPRESS_FOLDER"
-      RESET_DATABASE: "$RESET_DATABASE"
-      WP_DB_HOST: "${BACKEND:-mariadb}"
-      WOOCOMMERCE: "$WOOCOMMERCE"
-      WP_ADMIN_USER: "${WP_ADMIN_USER:-root}"
-      WP_ADMIN_EMAIL: "${WP_ADMIN_EMAIL:-nobody@nowhere.local}"
-      PAGER: 'more'
+      - "$PORT:80"
     user: "${UID:-1000}:${GID:-1000}"
-    entrypoint: "/var/www/html/wp-cli.phar --path=/var/www/html/${WORDPRESS_VERSION}"
+    entrypoint: /usr/src/entrypoint.sh
+    environment:
+      EXECUTE_WP_CLI: 1
     depends_on:
-      - "${BACKEND:-mariadb}"
+      - "$BACKEND"
   console:
+    env_file:
+      - .env.default
+      - .env
     build:
       context: ./scripts
       dockerfile: ./Dockerfile.local
@@ -129,17 +119,15 @@ services:
       - ./docker/wordpress:/var/www/html
       - .:/var/www/html/matomo-for-wordpress
       - /var/www/html/matomo-for-wordpress/app/tmp
-      - "${WOOCOMMERCE_PIWIK_ANALYTICS:-/dev/null}:/var/www/html/woocommerce-piwik-analytics"
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
+      - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
     ports:
-      - "${PORT:-3000}:80"
-    environment:
-      WP_DB_HOST: "${BACKEND:-mariadb}"
-      WOOCOMMERCE: "$WOOCOMMERCE"
-      WP_ADMIN_USER: "${WP_ADMIN_USER:-root}"
-      WP_ADMIN_EMAIL: "${WP_ADMIN_EMAIL:-nobody@nowhere.local}"
+      - "$PORT:80"
     user: "${UID:-1000}:${GID:-1000}"
-    entrypoint: "/var/www/html/${WORDPRESS_VERSION:-6.3.1}/wp-content/plugins/matomo/app/console"
+    entrypoint: /usr/src/entrypoint.sh
+    environment:
+      EXECUTE_CONSOLE: 1
     depends_on:
       - "${BACKEND:-mariadb}"
 

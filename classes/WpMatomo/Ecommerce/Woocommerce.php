@@ -33,6 +33,7 @@ class Woocommerce extends Base {
 		add_action( 'woocommerce_cart_item_restored', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
 		add_action( 'woocommerce_cart_item_set_quantity', [ $this, 'on_cart_updated_safe' ], 99999, 0 );
 		add_action( 'woocommerce_thankyou', [ $this, 'anonymise_orderid_in_url' ], 1, 1 );
+		add_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10, 3 );
 
 		if ( ! $this->should_track_background() ) {
 			// prevent possibly executing same event twice where eg first a PHP Matomo tracker request is created
@@ -52,6 +53,24 @@ class Woocommerce extends Base {
 
 		add_action( 'woocommerce_applied_coupon', [ $this, 'on_coupon_updated_safe' ], 99999, 0 );
 		add_action( 'woocommerce_removed_coupon', [ $this, 'on_coupon_updated_safe' ], 99999, 0 );
+	}
+
+	public function on_order_status_change( $order_id, $old_status, $new_status ) {
+		$order = wc_get_order( $order_id );
+		if ( empty( $order ) ) {
+			return;
+		}
+
+		if ( $this->isOrderFromBackOffice( $order ) ) {
+			return;
+		}
+
+		if ( 'pending' === $old_status && 'processing' === $new_status ) {
+			$this->logger->log( sprintf( 'Order ID = %s status changed from pending to processing, attempting to track it', $order_id ) );
+
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $this->on_order( $order_id );
+		}
 	}
 
 	public function anonymise_orderid_in_url( $order_id ) {
