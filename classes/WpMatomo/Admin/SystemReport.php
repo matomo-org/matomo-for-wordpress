@@ -1825,11 +1825,12 @@ class SystemReport {
 			}
 
 			if ( in_array( 'ninjafirewall', $active_plugins, true ) ) {
-				echo '<div class="notice notice-warning">
-	<p><strong>' . esc_html__( 'We noticed you are using Matomo with Ninja Firewall.', 'matomo' ) . '</strong> ' . esc_html__( 'This can result in Matomo cache file changes showing up in Ninja Firewall which likely undesired.', 'matomo' ) . '
-	<a href="https://matomo.org/faq/wordpress/how-do-i-prevent-matomo-cache-file-changes-to-show-up-in-ninja-firewall/" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Read our FAQ to learn how to prevent these entries.', 'matomo' ) . '</a>
-	</p>
-</div>';
+				$rows[] = [
+					'name'    => 'Ninja Firewall',
+					'value'   => '',
+					'comment' => esc_html__( 'We noticed you are using Matomo with Ninja Firewall. This can result in Matomo cache file changes showing up in Ninja Firewall which likely undesired.', 'matomo' ) . '
+	<a href="https://matomo.org/faq/wordpress/how-do-i-prevent-matomo-cache-file-changes-to-show-up-in-ninja-firewall/" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Read our FAQ to learn how to prevent these entries.', 'matomo' ) . '</a>',
+				];
 			}
 		}
 
