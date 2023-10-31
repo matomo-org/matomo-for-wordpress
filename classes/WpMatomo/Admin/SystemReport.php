@@ -431,9 +431,9 @@ class SystemReport {
 			$value    = __( 'ok', 'matomo' );
 			$comment  = '';
 			if ( ! intval( $this->get_phpcli_output( '-r "echo extension_loaded(\'mysqli\');"' ) ) ) {
-					$value    = __( 'missing', 'matomo' );
-					$is_error = true;
-					$comment  = esc_html__( 'Your PHP cli does not load the MySQLi extension. You might have archiving problems in Matomo but also others problems in your WordPress cron tasks. You should enable this extension', 'matomo' );
+				$value    = __( 'missing', 'matomo' );
+				$is_error = true;
+				$comment  = esc_html__( 'Your PHP cli does not load the MySQLi extension. You might have archiving problems in Matomo but also others problems in your WordPress cron tasks. You should enable this extension', 'matomo' );
 			}
 
 			$rows[] = [
@@ -450,9 +450,17 @@ class SystemReport {
 	}
 
 	private function check_wp_can_be_loaded_in_php_cli( &$rows ) {
-		$abs_path = ABSPATH;
-		$command  = "-r 'require_once( \"$abs_path/wp-config.php\" );'";
-		$output   = $this->get_phpcli_output( $command );
+		if ( ! $this->binary ) {
+			return;
+		}
+
+		$wp_load_path = $this->find_wp_load_path();
+		if ( ! $wp_load_path ) {
+			return;
+		}
+
+		$command = "-r 'require_once( \"$wp_load_path\" );'";
+		$output  = $this->get_phpcli_output( $command );
 		if ( empty( $output ) ) {
 			$rows[] = [
 				'name'  => esc_html__( 'PHP CLI configuration', 'matomo' ),
@@ -460,15 +468,14 @@ class SystemReport {
 			];
 		} else {
 			$error_message = esc_html__(
-				'WordPress cannot be loaded via PHP CLI. Please ensure both are correctly configured. Note: If you are using get_cfg_var() in your wp-config.php, you will need to make sure the php.ini file for PHP CLI has the correct values. You may need to contact your hosting provider for the changes to be made.',
+				'WordPress cannot be loaded via PHP CLI. Please ensure both WordPress and PHP CLI are correctly configured. Note: If you are using get_cfg_var() in your wp-config.php, you will need to make sure the php.ini file for PHP CLI has the correct values. You may need to contact your hosting provider for these changes to be made.',
 				'matomo'
 			);
 
 			$rows[] = [
-				'name'     => esc_html__( 'Database configuration', 'matomo' ),
-				'value'    => esc_html__( 'error', 'matomo' ),
-				'comment'  => $error_message,
-				'is_error' => true,
+				'name'    => esc_html__( 'PHP CLI configuration', 'matomo' ),
+				'value'   => esc_html__( 'warning', 'matomo' ),
+				'comment' => $error_message,
 			];
 		}
 	}
@@ -1971,5 +1978,20 @@ class SystemReport {
 		} else {
 			return __DIR__ . '/../../..';
 		}
+	}
+
+	private function find_wp_load_path() {
+		$abs_path   = rtrim( ABSPATH, '/' );
+		$search_dir = dirname( MATOMO_ANALYTICS_FILE );
+
+		while ( ! is_file( $search_dir . '/wp-load.php' ) && strpos( $search_dir, $abs_path ) === 0 ) {
+			$search_dir = dirname( $search_dir );
+		}
+
+		if ( strpos( $search_dir, $abs_path ) !== 0 ) {
+			return null;
+		}
+
+		return $search_dir . '/wp-load.php';
 	}
 }
