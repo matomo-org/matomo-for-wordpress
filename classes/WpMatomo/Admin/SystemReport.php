@@ -1757,11 +1757,17 @@ class SystemReport {
 
 		$plugins = get_plugins();
 
-		foreach ( $plugins as $plugin ) {
+		foreach ( $plugins as $plugin_file => $plugin ) {
 			$comment = '';
 			if ( ! empty( $plugin['Network'] ) ) {
 				$comment = esc_html__( 'Network enabled', 'matomo' );
 			}
+
+			if ( strpos( $plugin_file, 'ninjafirewall/' ) === 0 ) {
+				$comment .= '<br/><br/>' . esc_html__( 'We noticed you are using Matomo with Ninja Firewall. This can result in Matomo cache file changes showing up in Ninja Firewall which likely undesired.', 'matomo' ) . '
+	<a href="https://matomo.org/faq/wordpress/how-do-i-prevent-matomo-cache-file-changes-to-show-up-in-ninja-firewall/" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Read our FAQ to learn how to prevent these entries.', 'matomo' ) . '</a>';
+			}
+
 			$rows[] = [
 				'name'    => $plugin['Name'],
 				'value'   => $plugin['Version'],
@@ -1822,14 +1828,6 @@ class SystemReport {
 						'is_error'   => $is_error,
 					];
 				}
-			}
-
-			if ( in_array( 'ninjafirewall', $active_plugins, true ) ) {
-				echo '<div class="notice notice-warning">
-	<p><strong>' . esc_html__( 'We noticed you are using Matomo with Ninja Firewall.', 'matomo' ) . '</strong> ' . esc_html__( 'This can result in Matomo cache file changes showing up in Ninja Firewall which likely undesired.', 'matomo' ) . '
-	<a href="https://matomo.org/faq/wordpress/how-do-i-prevent-matomo-cache-file-changes-to-show-up-in-ninja-firewall/" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Read our FAQ to learn how to prevent these entries.', 'matomo' ) . '</a>
-	</p>
-</div>';
 			}
 		}
 
