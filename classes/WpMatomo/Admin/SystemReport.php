@@ -284,24 +284,14 @@ class SystemReport {
 	}
 
 	public function errors_present() {
-		$seconds_in_a_week = 86400 * 7;
-
 		$cache_key   = 'matomo_system_report_has_errors';
-		$cache_value = get_option( $cache_key );
+		$cache_value = get_transient( $cache_key );
 
-		if ( empty( $cache_value['last_updated'] )
-			|| $cache_value['last_updated'] + $seconds_in_a_week < time()
-			|| ! isset( $cache_value['errors_found'] )
-		) {
+		if ( $cache_value === false ) {
 			// pre-record that there were no errors found. in case the system report fails to execute, this will
 			// allow the rest of Matomo for WordPress to continue to still be usable.
-			$cache_value = [
-				'last_updated' => time(),
-				'errors_found' => 0,
-			];
-			update_option( $cache_key, $cache_value );
+			set_transient( $cache_key, 0, WEEK_IN_SECONDS );
 
-			$errors_found  = false;
 			$matomo_tables = $this->get_error_tables();
 
 			$matomo_tables = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
@@ -310,19 +300,15 @@ class SystemReport {
 			foreach ( $matomo_tables as $report_table ) {
 				foreach ( $report_table['rows'] as $row ) {
 					if ( ! empty( $row['is_error'] ) || ! empty( $row['is_warning'] ) ) {
-						$errors_found = true;
+						$cache_value = true;
 					}
 				}
 			}
 
-			$cache_value = [
-				'last_updated' => time(),
-				'errors_found' => (int) $errors_found,
-			];
-			update_option( $cache_key, $cache_value );
+			set_transient( $cache_key, (int) $cache_value, WEEK_IN_SECONDS );
 		}
 
-		return 1 === $cache_value['errors_found'];
+		return 1 === (int) $cache_value;
 	}
 
 	public function show() {
