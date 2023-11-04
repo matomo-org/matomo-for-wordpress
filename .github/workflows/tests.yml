@@ -146,13 +146,18 @@ jobs:
           WORDPRESS_FOLDER: test
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-      - run: docker-compose up -d wordpress
+      - run: |
+          cat > .env <<EOF
+          PHP_VERSION=$PHP_VERSION
+          WOOCOMMERCE=1
+          WORDPRESS_FOLDER=test
+          RESET_DATABASE=1
+          WORDPRESS_VERSION=$WORDPRESS_VERSION
+          EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
-          WOOCOMMERCE: 1
-          WORDPRESS_FOLDER: test
-          RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: docker compose --env-file .env.default --env-file .env up -d wordpress
       - run: sleep 60 # wait for docker-compose launch to finish
 
       # run tests
@@ -165,8 +170,8 @@ jobs:
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
 
       # output docker-compose logs
-      - run: docker-compose logs --no-color
-      - run: docker-compose stop
+      - run: npm run compose logs wordpress --no-color
+      - run: npm run compose stop
 
   checkstyle:
     runs-on: 'ubuntu-20.04'
