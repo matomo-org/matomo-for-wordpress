@@ -429,8 +429,5 @@ class WordPress extends Plugin
 		$files[] = "../plugins/WordPress/stylesheets/user.css";
 		$files[] = "../plugins/WordPress/stylesheets/optout.css";
 		$files[] = "../plugins/WordPress/stylesheets/export.css";
-
-        //WpAssetManager::detectNonCoreUmdCssFiles($files);
-        //WpAssetManager::correctAssetLocations($files);
 	}
 }
