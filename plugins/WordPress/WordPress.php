@@ -55,7 +55,7 @@ class WordPress extends Plugin
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
             'CustomJsTracker.manipulateJsTracker' => 'updateHeatmapTrackerPath',
             'Visualization.beforeRender' => 'onBeforeRenderView',
-            'AssetManager.getStylesheetFiles'  => 'getStylesheetFiles',
+            'AssetManager.getStylesheetFiles'  => ['function' => 'getStylesheetFiles', 'after' => true],
             'Controller.PrivacyManager.usersOptOut.end' => 'onUserOptOutRender',
         );
     }
@@ -429,6 +429,8 @@ class WordPress extends Plugin
 		$files[] = "../plugins/WordPress/stylesheets/user.css";
 		$files[] = "../plugins/WordPress/stylesheets/optout.css";
 		$files[] = "../plugins/WordPress/stylesheets/export.css";
-	}
 
+        //WpAssetManager::detectNonCoreUmdCssFiles($files);
+        //WpAssetManager::correctAssetLocations($files);
+	}
 }

@@ -27,7 +27,12 @@ class WpAssetManager extends AssetManager
 		parent::__construct();
 	}
 
-	public function getMergedCoreJavaScript() {
+    public static function detectNonCoreUmdCssFiles($files)
+    {
+        // TODO
+    }
+
+    public function getMergedCoreJavaScript() {
 		$path = rtrim( plugin_dir_path( MATOMO_ANALYTICS_FILE ), '/' ) . '/assets/js';
 		$file = 'asset_manager_core_js.js';
 
@@ -115,33 +120,28 @@ class WpAssetManager extends AssetManager
      */
     protected function getIndividualJsIncludesFromAssetFetcher($assetFetcher)
     {
-        // TODO: clean this code up
+        // TODO: clean up/comment
+        $wpPluginsDir = rtrim(ABSPATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'wp-content' . DIRECTORY_SEPARATOR . 'plugins';
+
         $jsIncludeString = '';
 
         $assets = $assetFetcher->getCatalog()->getAssets();
 
         foreach ($assets as $jsFile) {
-            $relativeFilePath = $jsFile->getRelativeLocation();
+            $jsFile->validateFile();
 
-            $actualPath = PIWIK_INCLUDE_PATH . '/' . $relativeFilePath;
-            $assetUrlPath = $relativeFilePath;
+            $assetUrlPath = $jsFile->getRelativeLocation();
 
-            if (!is_file($actualPath)) { // third party plugin file (stored outside of Matomo for WordPress)
-                $relativeFilePathParts = explode('/', $relativeFilePath);
+            $absoluteFileLocation = realpath($jsFile->getAbsoluteLocation());
+            if (strpos($absoluteFileLocation, $wpPluginsDir) === 0) {
+                $relativeFilePathParts = explode('/', substr($absoluteFileLocation, strlen($wpPluginsDir)));
+                $relativeFilePathParts = array_values(array_filter($relativeFilePathParts));
 
-                $pluginName = $relativeFilePathParts[1];
-                $wpPluginsDir = dirname(dirname(PIWIK_INCLUDE_PATH));
+                $pluginName = $relativeFilePathParts[0];
 
-                if (is_file($wpPluginsDir . '/' . $pluginName . '/' . $pluginName . '.php')) {
-                    $pathRelativeToPlugin = implode('/', array_slice($relativeFilePathParts, 2));
+                $pathRelativeToPlugin = implode('/', array_slice($relativeFilePathParts, 1));
 
-                    $actualPath = $wpPluginsDir . '/' . $pluginName . '/' . $pathRelativeToPlugin;
-                    $assetUrlPath = plugins_url($pathRelativeToPlugin, $pluginName . '/' . $pluginName . '.php');
-                }
-            }
-
-            if (!is_readable($actualPath)) {
-                throw new \Exception("The ui asset with 'href' = " . (PIWIK_INCLUDE_PATH . '/' . $actualPath) . " is not readable");
+                $assetUrlPath = plugins_url($pathRelativeToPlugin, $pluginName . '/' . $pluginName . '.php');
             }
 
             $jsIncludeString = $jsIncludeString . sprintf(self::JS_IMPORT_DIRECTIVE, $assetUrlPath);
