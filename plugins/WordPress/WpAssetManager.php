@@ -27,11 +27,6 @@ class WpAssetManager extends AssetManager
 		parent::__construct();
 	}
 
-    public static function detectNonCoreUmdCssFiles($files)
-    {
-        // TODO
-    }
-
     public function getMergedCoreJavaScript() {
 		$path = rtrim( plugin_dir_path( MATOMO_ANALYTICS_FILE ), '/' ) . '/assets/js';
 		$file = 'asset_manager_core_js.js';
@@ -115,18 +110,20 @@ class WpAssetManager extends AssetManager
 	}
 
     /**
+     * Performs the same functionality as AssetManager::getIndividualJsIncludesFromAssetFetcher(),
+     * except when an asset to a non-core plugin is found, it's correctly mapped to it's location
+     * within a Matomo for WordPress install (using the plugins_url() function).
+     *
      * @param UIAssetFetcher $assetFetcher
      * @return string
      */
     protected function getIndividualJsIncludesFromAssetFetcher($assetFetcher)
     {
-        // TODO: clean up/comment
         $wpPluginsDir = rtrim(ABSPATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'wp-content' . DIRECTORY_SEPARATOR . 'plugins';
 
         $jsIncludeString = '';
 
         $assets = $assetFetcher->getCatalog()->getAssets();
-
         foreach ($assets as $jsFile) {
             $jsFile->validateFile();
 
@@ -139,7 +136,8 @@ class WpAssetManager extends AssetManager
 
                 $pluginName = $relativeFilePathParts[0];
 
-                $pathRelativeToPlugin = implode('/', array_slice($relativeFilePathParts, 1));
+                $pathRelativeToPlugin = array_slice($relativeFilePathParts, 1);
+                $pathRelativeToPlugin = implode('/', $pathRelativeToPlugin);
 
                 $assetUrlPath = plugins_url($pathRelativeToPlugin, $pluginName . '/' . $pluginName . '.php');
             }

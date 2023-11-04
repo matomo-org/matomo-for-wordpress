@@ -55,7 +55,7 @@ class WordPress extends Plugin
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
             'CustomJsTracker.manipulateJsTracker' => 'updateHeatmapTrackerPath',
             'Visualization.beforeRender' => 'onBeforeRenderView',
-            'AssetManager.getStylesheetFiles'  => ['function' => 'getStylesheetFiles', 'after' => true],
+            'AssetManager.getStylesheetFiles'  => 'getStylesheetFiles',
             'Controller.PrivacyManager.usersOptOut.end' => 'onUserOptOutRender',
         );
     }
