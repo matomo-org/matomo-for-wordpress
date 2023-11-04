@@ -169,18 +169,19 @@ function matomo_rel_path( $to_dir, $from_dir ) {
 	$to_index   = 0;
 	$from_index = 0;
 
+	$to_dir_segment_count   = count( $to_dir_parts );
+	$from_dir_segment_count = count( $from_dir_parts );
+
 	// skip over common parts of $to_dir and $from_dir
-	for (; $to_index < count( $to_dir_parts ) && $from_index < count( $from_dir_parts ) && $to_dir_parts[$to_index] === $from_dir_parts[$from_index]; ++$to_index, ++$from_index) {
-		// empty
-	}
+	for ( ; $to_index < $to_dir_segment_count && $from_index < $from_dir_segment_count && $to_dir_parts[ $to_index ] === $from_dir_parts[ $from_index ]; ++$to_index, ++$from_index );
 
 	// ascend from $to_dir to common root it has with $from_dir
-	$relative_path = str_repeat('..' . DIRECTORY_SEPARATOR, count( $from_dir_parts ) - $from_index );
+	$relative_path = str_repeat( '..' . DIRECTORY_SEPARATOR, count( $from_dir_parts ) - $from_index );
 
 	// descend from common root to target in rest of $to_dir
 	$rest = array_slice( $to_dir_parts, $to_index );
-	if ( ! empty($rest) ) {
-		$relative_path = $relative_path . implode(DIRECTORY_SEPARATOR, $rest);
+	if ( ! empty( $rest ) ) {
+		$relative_path = $relative_path . implode( DIRECTORY_SEPARATOR, $rest );
 	}
 
 	return $relative_path;
@@ -207,7 +208,7 @@ function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace
 		}
 	}
 
-	$matomo_dir       = __DIR__ . DIRECTORY_SEPARATOR . 'app';
+	$matomo_dir  = __DIR__ . DIRECTORY_SEPARATOR . 'app';
 	$webroot_dir = matomo_rel_path( $root_dir, $matomo_dir );
 
 	$GLOBALS['MATOMO_PLUGIN_DIRS'][] = array(
