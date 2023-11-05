@@ -1,5 +1,17 @@
 == Changelog ===
 
+= 4.15.3 =
+* Compatibility with WooCommerce's HPOS feature
+* Avoid executing System Report on every Matomo WordPress admin page view
+* Show Ninja Firewall notification as a row in the system report as opposed to a warning that cannot be dismissed
+* Use new name for related WordPress plugin Connect Matomo
+* Attempt to track WooCommerce orders on order status change in case customers never visit the order confirmation page
+* Better detection of WooCommerce orders that were created manually through the WordPress back office
+* Fix Tag Manager errors caused by missing file in 4.15.1 release
+* Add a new advanced setting for disabling async archiving without having to modify wp-config.php
+* Add success notification when manual archive triggering succeeds
+* Add new system report check that checks that the bots.yml file is not accessible
+
 = 4.15.2 =
 * Fix ecommerce reports not archiving if no goal conversions or order for the site
 * Provide more context when an API request fails token authentication
