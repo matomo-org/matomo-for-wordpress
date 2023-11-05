@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		On-Premise</a>
 	separately (it's free as well) in combination with the <a href="https://wordpress.org/plugins/wp-piwik/"
 															  target="_blank"
-															  rel="noreferrer noopener">WP-Matomo</a> WordPress
+															  rel="noreferrer noopener">Connect Matomo</a> WordPress
 	plugin.
 	It's free to install and has the same requirements as WordPress.
 	Your Matomo will then run a lot faster and it allows you to put your Matomo installation on a separate server if

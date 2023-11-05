@@ -208,7 +208,7 @@ class API {
 
 		Bootstrap::do_bootstrap();
 
-		// refs https://github.com/matomo-org/wp-matomo/issues/370 ensuring segment will be used from default request when
+		// refs https://github.com/matomo-org/matomo-for-wordpress/issues/370 ensuring segment will be used from default request when
 		// creating new request object and not the encoded segment
 		if ( isset( $params['segment'] ) ) {
 			if ( isset( $_GET['segment'] ) || isset( $_POST['segment'] ) ) {
