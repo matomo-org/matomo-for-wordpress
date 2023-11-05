@@ -4,7 +4,7 @@ set -e
 
 cd /var/www/html
 
-a2enmod rewrite
+a2enmod rewrite || true
 
 # http serves a single offer, whereas https serves multiple. we only want one
 LATEST_WORDPRESS_VERSION=$( php -r 'echo @json_decode(file_get_contents("http://api.wordpress.org/core/version-check/1.7/"), true)["offers"][0]["version"];' );
@@ -21,6 +21,9 @@ WORDPRESS_FOLDER=${WORDPRESS_FOLDER:-$WORDPRESS_VERSION}
 if [[ "$MULTISITE" = "1" ]]; then
   WORDPRESS_FOLDER="$WORDPRESS_FOLDER-multi"
 fi
+
+echo "Using WordPress install $WORDPRESS_FOLDER."
+echo
 
 if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
