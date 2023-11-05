@@ -9,7 +9,7 @@
 
 A hassle-free and cost-free web analytics platform for your WordPress which lets you stay in full control with 100% data ownership and user-privacy protection.
 
-This plugin installs a fully functional [Matomo](https://matomo.org) within your WordPress. If you already have a working Matomo (either [On-Premise](https://matomo.org/matomo-on-premise/) or [Matomo Cloud](https://matomo.org/hosting/)), use the [WP-Matomo Integration plugin](https://wordpress.org/plugins/wp-piwik/) instead. If you have a high traffic website, we recommend using On-Premise or the Cloud-hosted solution for better performance.
+This plugin installs a fully functional [Matomo](https://matomo.org) within your WordPress. If you already have a working Matomo (either [On-Premise](https://matomo.org/matomo-on-premise/) or [Matomo Cloud](https://matomo.org/hosting/)), use the [Connect Matomo Integration plugin](https://wordpress.org/plugins/wp-piwik/) instead. If you have a high traffic website, we recommend using On-Premise or the Cloud-hosted solution for better performance.
 
 Learn more about this plugin in the [readme.txt](readme.txt).
 

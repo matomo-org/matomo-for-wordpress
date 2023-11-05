@@ -100,7 +100,7 @@ class Sync {
 
 		$current_user = wp_get_current_user();
 		if ( ! empty( $current_user ) && ! empty( $current_user->user_login ) ) {
-			// refs https://github.com/matomo-org/wp-matomo/issues/365
+			// refs https://github.com/matomo-org/matomo-for-wordpress/issues/365
 			// some other plugins may under circumstances overwrite the get_users query and not return all users
 			// as a result we would delete some users in the matomo users table. this way we make sure at least the current
 			// user will be added and not deleted even if the list of users is not complete

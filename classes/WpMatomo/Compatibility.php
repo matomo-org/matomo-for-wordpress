@@ -19,7 +19,7 @@ class Compatibility {
 	}
 
 	/**
-	 * refs https://github.com/matomo-org/wp-matomo/issues/131
+	 * refs https://github.com/matomo-org/matomo-for-wordpress/issues/131
 	 * When user disables feature "Disable PHP in plugins" in system tweaks
 	 * then the Matomo backend doesn't work
 	 */

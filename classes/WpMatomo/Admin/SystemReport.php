@@ -80,7 +80,7 @@ class SystemReport {
 		'wp-rss-aggregator',
 		// twig conflict
 		'age-verification-for-woocommerce',
-		// see https://github.com/matomo-org/wp-matomo/issues/428
+		// see https://github.com/matomo-org/matomo-for-wordpress/issues/428
 		'minify-html-markup',
 		// see https://wordpress.org/support/topic/graphs-are-not-displayed-in-the-visits-overview-widget/#post-14298068
 		'bigbuy-wc-dropshipping-connector',
@@ -1177,10 +1177,10 @@ class SystemReport {
 
 		if ( is_plugin_active( 'wp-piwik/wp-piwik.php' ) ) {
 			$rows[] = [
-				'name'       => 'WP-Matomo (WP-Piwik) activated',
+				'name'       => 'Connect Matomo (WP-Matomo) activated',
 				'value'      => true,
 				'is_warning' => true,
-				'comment'    => sprintf( esc_html__( 'It is usually not recommended or needed to run Matomo for WordPress and WP-Matomo at the same time. To learn more about the differences between the two plugins view this %s', 'matomo' ), sprintf( '<a href="%s" target="_blank">%s</a>', 'https://matomo.org/faq/wordpress/why-are-there-two-different-matomo-for-wordpress-plugins-what-is-the-difference-to-wp-matomo-integration-plugin/', esc_html__( 'URL', 'matomo' ) ) ),
+				'comment'    => sprintf( esc_html__( 'It is usually not recommended or needed to run Matomo for WordPress and Connect Matomo at the same time. To learn more about the differences between the two plugins view this %s', 'matomo' ), sprintf( '<a href="%s" target="_blank">%s</a>', 'https://matomo.org/faq/wordpress/why-are-there-two-different-matomo-for-wordpress-plugins-what-is-the-difference-to-wp-matomo-integration-plugin/', esc_html__( 'URL', 'matomo' ) ) ),
 			];
 
 			$mode = get_option( 'wp-piwik_global-piwik_mode' );
@@ -1189,10 +1189,10 @@ class SystemReport {
 			}
 			if ( ! empty( $mode ) ) {
 				$rows[] = [
-					'name'       => 'WP-Matomo mode',
+					'name'       => 'Connect Matomo mode',
 					'value'      => $mode,
 					'is_warning' => 'php' === $mode || 'PHP' === $mode,
-					'comment'    => esc_html__( 'WP-Matomo is configured in "PHP mode". This is known to cause issues with Matomo for WordPress. We recommend you either deactivate WP-Matomo or you go "Settings => WP-Matomo" and change the "Matomo Mode" in the "Connect to Matomo" section to "Self-hosted HTTP API".', 'matomo' ),
+					'comment'    => esc_html__( 'Connect Matomo is configured in "PHP mode". This is known to cause issues with Matomo for WordPress. We recommend you either deactivate Connect Matomo or you go "Settings => Connect Matomo" and change the "Matomo Mode" in the "Connect to Matomo" section to "Self-hosted HTTP API".', 'matomo' ),
 				];
 			}
 		}

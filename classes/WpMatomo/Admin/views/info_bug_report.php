@@ -20,9 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 		'</a>',
 		'<a target="_blank" rel="noreferrer noopener" href="https://developer.matomo.org/guides/core-team-workflow#submitting-a-feature-request">',
 		'</a>',
-		'<a target="_blank" rel="noreferrer noopener" href="https://github.com/matomo-org/wp-matomo/issues">',
+		'<a target="_blank" rel="noreferrer noopener" href="https://github.com/matomo-org/matomo-for-wordpress/issues">',
 		'</a>',
-		'<a target="_blank" rel="noreferrer noopener" href="https://github.com/matomo-org/wp-matomo/issues/new">',
+		'<a target="_blank" rel="noreferrer noopener" href="https://github.com/matomo-org/matomo-for-wordpress/issues/new">',
 		'</a>'
 	);
 	?>
