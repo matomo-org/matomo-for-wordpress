@@ -319,6 +319,13 @@ $matomo_extra_url_params = '&' . http_build_query(
 						'url'         => 'https://plugins.matomo.org/Cohorts?wp=1&pk_campaign=WP&pk_source=Plugin',
 						'image'       => '',
 					],
+					[
+						'name'        => 'Crash Analytics',
+						'description' => 'Detect crashes to improve the user experience, increase conversions and recover revenue. Resolve them with insights to minimise developer hours.',
+						'price'       => '69EUR / 79USD',
+						'url'         => 'https://plugins.matomo.org/CrashAnalytics?wp=1&pk_campaign=WP&pk_source=Plugin',
+						'image'       => '',
+					],
 				],
 		],
 	];

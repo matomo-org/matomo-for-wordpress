@@ -23,6 +23,7 @@ permissions:
   repository-projects: none
   security-events: none
   statuses: none
+  id-token: write # for docker gha cache
 
 concurrency:
   group: php-${{ github.ref }}
@@ -39,7 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        wp-versions: [ 'latest', 'trunk' ]
+        wp-versions: [ 'latest' ]
         php-versions: [ '7.2', '7.3', '7.4', '8.0' ]
         include:
           - wp-versions: '5.2'
@@ -100,6 +101,78 @@ jobs:
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && WP_MULTISITE=1 ./vendor/bin/phpunit
 
+  e2e_tests:
+    runs-on: 'ubuntu-22.04'
+    strategy:
+      fail-fast: false
+      matrix:
+        wp-versions: [ 'latest', 'trunk' ]
+        php-versions: [ '7.2', '8.1' ]
+    permissions:
+      contents: read  # <--- allows to read repo
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          lfs: true
+          persist-credentials: false
+
+      # setup xvfb
+      - run: sudo apt-get update && sudo apt-get install -y xvfb x11-xserver-utils xauth
+
+      # setup firefox
+      - uses: browser-actions/setup-firefox@v1
+      - run: firefox --version
+
+      # setup node
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+          cache-dependency-path: '**/package-lock.json'
+      - run: npm install
+
+      # docker-compose up
+      - run: ls ${{ github.workspace }}/scripts
+      - run: pwd
+      # TODO: i can't seem to get docker layer caching to work.
+      - run: |
+          export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed 's/pipelines/artifactcache/')
+          export ACTIONS_RUNTIME_TOKEN=$ACTIONS_ID_TOKEN_REQUEST_TOKEN
+
+          docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
+        env:
+          PHP_VERSION: ${{ matrix.php-versions }}
+          WOOCOMMERCE: 1
+          WORDPRESS_FOLDER: test
+          RESET_DATABASE: 1
+          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: |
+          cat > .env <<EOF
+          PHP_VERSION=$PHP_VERSION
+          WOOCOMMERCE=1
+          WORDPRESS_FOLDER=test
+          RESET_DATABASE=1
+          WORDPRESS_VERSION=$WORDPRESS_VERSION
+          EOF
+        env:
+          PHP_VERSION: ${{ matrix.php-versions }}
+          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: docker compose --env-file .env.default --env-file .env up -d wordpress
+      - run: sleep 60 # wait for docker-compose launch to finish
+
+      # run tests
+      - run: xvfb-run --auto-servernum npm run wdio
+        env:
+          PHP_VERSION: ${{ matrix.php-versions }}
+          WOOCOMMERCE: 1
+          WORDPRESS_FOLDER: test
+          RESET_DATABASE: 1
+          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+
+      # output docker-compose logs
+      - run: npm run compose logs wordpress --no-color
+      - run: npm run compose stop
+
   checkstyle:
     runs-on: 'ubuntu-20.04'
     steps:
@@ -137,5 +210,3 @@ jobs:
       - name: Run checkstyle
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./vendor/bin/phpcs
-
-

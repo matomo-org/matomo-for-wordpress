@@ -41,3 +41,5 @@ karma.conf.js export-ignore
 .DS_Store export-ignore
 .editorconfig export-ignore
 docker-compose.yml export-ignore
+tsconfig.json export-ignore
+wdio.conf.ts export-ignore

@@ -9,6 +9,7 @@
 
 namespace WpMatomo\Admin;
 
+use Piwik\CliMulti\Process;
 use Piwik\IP;
 use WpMatomo\Bootstrap;
 use WpMatomo\Capabilities;
@@ -68,8 +69,10 @@ class AdvancedSettings implements AdminSettingsInterface {
 		}
 
 		Bootstrap::do_bootstrap();
-		$matomo_detected_ip     = IP::getIpFromHeader();
-		$matomo_delete_all_data = $this->settings->should_delete_all_data_on_uninstall();
+		$matomo_detected_ip               = IP::getIpFromHeader();
+		$matomo_delete_all_data           = $this->settings->should_delete_all_data_on_uninstall();
+		$matomo_disable_async_archiving   = $this->settings->is_async_archiving_disabled_by_option();
+		$matomo_async_archiving_supported = $this->settings->is_async_archiving_supported();
 
 		include dirname( __FILE__ ) . '/views/advanced_settings.php';
 	}
@@ -93,13 +96,15 @@ class AdvancedSettings implements AdminSettingsInterface {
 	}
 
 	private function apply_settings() {
+		$changes = [
+			Settings::DISABLE_ASYNC_ARCHIVING_OPTION_NAME => ! empty( $_POST['matomo']['disable_async_archiving'] ),
+		];
+
 		if ( ! defined( 'MATOMO_REMOVE_ALL_DATA' ) ) {
-			$this->settings->apply_changes(
-				[
-					Settings::DELETE_ALL_DATA_ON_UNINSTALL => ! empty( $_POST['matomo']['delete_all_data'] ),
-				]
-			);
+			$changes[ Settings::DELETE_ALL_DATA_ON_UNINSTALL ] = ! empty( $_POST['matomo']['delete_all_data'] );
 		}
+
+		$this->settings->apply_changes( $changes );
 
 		$client_headers = [];
 		if ( ! empty( $_POST[ self::FORM_NAME ]['proxy_client_header'] ) ) {

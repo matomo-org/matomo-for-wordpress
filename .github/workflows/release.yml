@@ -1,7 +1,7 @@
 # Matomo Release Action
-# 
+#
 # Required GitHub secrets:
-# 
+#
 # RELEASE_PASSWORD  |  password that needs to be provided to start the action
 # GITHUB_TOKEN  |  github release token to publish
 # SVN_USERNAME  | the svn username to publish a new plugin release
@@ -46,7 +46,7 @@ jobs:
           script: |
               core.setFailed('Release password didn\'t match.')
       - name: "Check if user is allowed"
-        if: ${{ github.actor != 'mattab' && github.actor != 'tsteur' && github.actor != 'mattmary' && github.actor != 'justinvelluppillai' && github.actor != 'lance-matomo' }}
+        if: ${{ github.actor != 'mattab' && github.actor != 'tsteur' && github.actor != 'mattmary' && github.actor != 'justinvelluppillai' && github.actor != 'lance-matomo' && github.actor != 'diosmosis' }}
         uses: actions/github-script@v3
         with:
           script: |
@@ -74,7 +74,7 @@ jobs:
                 echo "A tag for $tag_exists already exists."
                 exit 1
               fi
-            
+
               echo "version=$version" >> $GITHUB_ENV
       - name: "Create release"
         uses: ncipollo/release-action@c4bf6c1ab090090498fb7f3ddc9f99ba5ab619b9
@@ -91,6 +91,6 @@ jobs:
           cd scripts
           ./deploy.sh $version ${{ secrets.SVN_USERNAME }} "${{ secrets.SVN_PASSWORD }}"
           cd ..
-          
+
           echo "update=false" >> $GITHUB_OUTPUT
         shell: bash

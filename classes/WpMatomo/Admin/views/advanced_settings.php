@@ -75,6 +75,25 @@ if ( $was_updated ) {
 			</tr>
 		<?php } ?>
 		<tr>
+			<th width="20%" scope="row">
+				<label for="matomo[disable_async_archiving]"><?php esc_html_e( 'Enable archiving via HTTP requests', 'matomo' ); ?>:</label>
+			</th>
+			<td>
+				<span style="white-space:nowrap;display: inline-block;">
+					<input type="checkbox" <?php echo ! empty( $matomo_disable_async_archiving ) || empty( $matomo_async_archiving_supported ) ? 'checked="checked" ' : ''; ?> value="1" name="matomo[disable_async_archiving]"
+						   id="matomo[disable_async_archiving]" <?php echo ! empty( $matomo_async_archiving_supported ) ? '' : 'disabled="disabled"'; ?>
+					/>
+				</span>
+			</td>
+			<td width="50%">
+				<?php
+				echo ! empty( $matomo_async_archiving_supported )
+					? esc_html_e( 'If you are experiencing trouble with archiving (as in, report generation), enabling this option may solve the issue.', 'matomo' )
+					: esc_html_e( 'CLI archiving (aka async archiving) is not supported for your server, so archiving via HTTP requests is always enabled.', 'matomo' );
+				?>
+			</td>
+		</tr>
+		<tr>
 			<td colspan="3"><p class="submit"><input name="Submit" type="submit" class="button-primary"
 													 value="<?php esc_attr_e( 'Save Changes', 'matomo' ); ?>"/></p></td>
 		</tr>

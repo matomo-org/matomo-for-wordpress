@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php
 		echo sprintf(
 			esc_html__(
-				'If you are managing quite a few sites or have quite a bit of traffic then we recommend installing %1$sMatomo On-Premise%2$s separately outside WordPress (it\'s free as well) and use it in combination with the %3$sWP-Matomo%4$s WordPress plugin.
+				'If you are managing quite a few sites or have quite a bit of traffic then we recommend installing %1$sMatomo On-Premise%2$s separately outside WordPress (it\'s free as well) and use it in combination with the %3$sConnect Matomo%4$s WordPress plugin.
         Your Matomo will then run a lot faster, you can put Matomo on a separate server if needed, and it allows you to make use of additional features such as %5$sRoll-Up Reporting%6$s.',
 				'matomo'
 			),

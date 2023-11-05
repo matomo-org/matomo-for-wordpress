@@ -2,8 +2,8 @@
 Contributors: matomoteam
 Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
 Requires at least: 4.8
-Tested up to: 6.2.2
-Stable tag: 4.15.2
+Tested up to: 6.3.2
+Stable tag: 4.15.3
 Requires PHP: 7.2.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -12,7 +12,7 @@ Matomo is the #1 Google Analytics alternative that gives you full control over y
 
 == Description ==
 
-Already Matomo On-Premise or Matomo Cloud user? You need to use the [WP-Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead of this plugin.
+Already Matomo On-Premise or Matomo Cloud user? You need to use the [Connect Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead of this plugin.
 
 For all you WordPress website owners wanting an easier way to get customer insights to grow your business, you can now get the solution the professionals use, for free!
 
@@ -91,7 +91,7 @@ Running Matomo Analytics on your server can use significant resources. Whenever 
 
 * The minimum PHP memory limit is 128Mb, but we recommend to use a higher limit (memory_limit = 256M).
 * PHP 7.2 at minimum is required.
-* If you have high traffic website, or manage a lot of websites with WordPress MultiSite, we recommend installing [Matomo On-Premise](https://matomo.org/docs/installation/) or signup to [Matomo Cloud](https://matomo.org/hosting/) and install the [WP-Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead.
+* If you have high traffic website, or manage a lot of websites with WordPress MultiSite, we recommend installing [Matomo On-Premise](https://matomo.org/docs/installation/) or signup to [Matomo Cloud](https://matomo.org/hosting/) and install the [Connect Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead.
 * Needing to know more before you install? Have a [read through the most popular FAQs to ensure you’re making the right choice for you](https://matomo.org/faq/wordpress/what-are-the-requirements-for-matomo-for-wordpress/).
 
 Over 1 million websites in over 190 countries are using Matomo already. Join the revolution too! Install Matomo on your Wordpress website completely free and take back full control of your data!
@@ -175,7 +175,7 @@ Needing to know more? [Click here to view all of our FAQs on our website](https:
 == Credits ==
 
 * The entire Matomo team and everyone who contributed
-* Andr&eacute; Br&auml;kling who is the Author of the [WP-Matomo plugin](https://github.com/braekling/WP-Matomo)
+* Andr&eacute; Br&auml;kling who is the Author of the [Connect Matomo plugin](https://github.com/braekling/WP-Matomo)
 
 == Screenshots ==
 
@@ -193,4 +193,4 @@ Needing to know more? [Click here to view all of our FAQs on our website](https:
 
 == Changelog ==
 
-[See changelog for all versions](https://github.com/matomo-org/wp-matomo/blob/develop/CHANGELOG.md).
+[See changelog for all versions](https://github.com/matomo-org/matomo-for-wordpress/blob/develop/CHANGELOG.md).
