@@ -464,6 +464,24 @@ class SystemReport {
 			return;
 		}
 
+		try {
+			$cli_multi = new CliMulti();
+
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$supports_async = $cli_multi->supportsAsync;
+		} catch ( \Exception $ex ) {
+			$rows[] = [
+				'name'       => esc_html__( 'PHP CLI configuration', 'matomo' ),
+				'value'      => esc_html__( 'Unexpected error', 'matomo' ),
+				'is_warning' => true,
+				'comment'    => sprintf( esc_html__( 'Could not detect whether async archiving is enabled: %s', 'matomo' ), $ex->getMessage() ),
+			];
+		}
+
+		if ( ! $supports_async ) {
+			return;
+		}
+
 		$command = "-r 'require_once( \"$wp_load_path\" );'";
 		$output  = $this->get_phpcli_output( $command );
 		if ( empty( $output ) ) {
