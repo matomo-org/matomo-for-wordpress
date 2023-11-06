@@ -80,7 +80,7 @@ class SystemReport {
 		'wp-rss-aggregator',
 		// twig conflict
 		'age-verification-for-woocommerce',
-		// see https://github.com/matomo-org/wp-matomo/issues/428
+		// see https://github.com/matomo-org/matomo-for-wordpress/issues/428
 		'minify-html-markup',
 		// see https://wordpress.org/support/topic/graphs-are-not-displayed-in-the-visits-overview-widget/#post-14298068
 		'bigbuy-wc-dropshipping-connector',
@@ -122,7 +122,7 @@ class SystemReport {
 	 */
 	public $db_settings;
 	/**
-	 * @var string the php binary used by Matomo
+	 * @var string the php binary used by Matomo (use get_php_binary() to access)
 	 */
 	private $binary;
 
@@ -139,12 +139,6 @@ class SystemReport {
 		$this->db_settings          = new \WpMatomo\Db\Settings();
 		$this->shell_exec_available = function_exists( 'shell_exec' );
 		$this->path_to_plugin       = $this->get_abs_path_to_plugin();
-
-		if ( ! WpMatomo::is_safe_mode() ) {
-			Bootstrap::do_bootstrap();
-			$cli_php      = new CliPhp();
-			$this->binary = $cli_php->findPhpBinary();
-		}
 	}
 
 	public function get_not_compatible_plugins() {
@@ -296,20 +290,31 @@ class SystemReport {
 	}
 
 	public function errors_present() {
-		$matomo_tables = $this->get_error_tables();
+		$cache_key   = 'matomo_system_report_has_errors';
+		$cache_value = get_transient( $cache_key );
 
-		$matomo_tables = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
-		$matomo_tables = $this->add_errors_first( $matomo_tables );
+		if ( false === $cache_value ) {
+			// pre-record that there were no errors found. in case the system report fails to execute, this will
+			// allow the rest of Matomo for WordPress to continue to still be usable.
+			set_transient( $cache_key, 0, WEEK_IN_SECONDS );
 
-		foreach ( $matomo_tables as $report_table ) {
-			foreach ( $report_table['rows'] as $row ) {
-				if ( ! empty( $row['is_error'] ) || ! empty( $row['is_warning'] ) ) {
-					return true;
+			$matomo_tables = $this->get_error_tables();
+
+			$matomo_tables = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
+			$matomo_tables = $this->add_errors_first( $matomo_tables );
+
+			foreach ( $matomo_tables as $report_table ) {
+				foreach ( $report_table['rows'] as $row ) {
+					if ( ! empty( $row['is_error'] ) || ! empty( $row['is_warning'] ) ) {
+						$cache_value = true;
+					}
 				}
 			}
+
+			set_transient( $cache_key, (int) $cache_value, WEEK_IN_SECONDS );
 		}
 
-		return false;
+		return 1 === (int) $cache_value;
 	}
 
 	public function show() {
@@ -482,9 +487,9 @@ class SystemReport {
 
 	private function get_phpcli_output( $phpcli_params ) {
 		$output = '';
-		if ( $this->shell_exec_available && $this->binary ) {
+		if ( $this->shell_exec_available && $this->get_php_cli_binary() ) {
 			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
-			$output = trim( '' . @shell_exec( $this->binary . ' ' . $phpcli_params ) );
+			$output = trim( '' . @shell_exec( $this->get_php_cli_binary() . ' ' . $phpcli_params ) );
 		}
 
 		return $output;
@@ -1211,10 +1216,10 @@ class SystemReport {
 
 		if ( is_plugin_active( 'wp-piwik/wp-piwik.php' ) ) {
 			$rows[] = [
-				'name'       => 'WP-Matomo (WP-Piwik) activated',
+				'name'       => 'Connect Matomo (WP-Matomo) activated',
 				'value'      => true,
 				'is_warning' => true,
-				'comment'    => sprintf( esc_html__( 'It is usually not recommended or needed to run Matomo for WordPress and WP-Matomo at the same time. To learn more about the differences between the two plugins view this %s', 'matomo' ), sprintf( '<a href="%s" target="_blank">%s</a>', 'https://matomo.org/faq/wordpress/why-are-there-two-different-matomo-for-wordpress-plugins-what-is-the-difference-to-wp-matomo-integration-plugin/', esc_html__( 'URL', 'matomo' ) ) ),
+				'comment'    => sprintf( esc_html__( 'It is usually not recommended or needed to run Matomo for WordPress and Connect Matomo at the same time. To learn more about the differences between the two plugins view this %s', 'matomo' ), sprintf( '<a href="%s" target="_blank">%s</a>', 'https://matomo.org/faq/wordpress/why-are-there-two-different-matomo-for-wordpress-plugins-what-is-the-difference-to-wp-matomo-integration-plugin/', esc_html__( 'URL', 'matomo' ) ) ),
 			];
 
 			$mode = get_option( 'wp-piwik_global-piwik_mode' );
@@ -1223,10 +1228,10 @@ class SystemReport {
 			}
 			if ( ! empty( $mode ) ) {
 				$rows[] = [
-					'name'       => 'WP-Matomo mode',
+					'name'       => 'Connect Matomo mode',
 					'value'      => $mode,
 					'is_warning' => 'php' === $mode || 'PHP' === $mode,
-					'comment'    => esc_html__( 'WP-Matomo is configured in "PHP mode". This is known to cause issues with Matomo for WordPress. We recommend you either deactivate WP-Matomo or you go "Settings => WP-Matomo" and change the "Matomo Mode" in the "Connect to Matomo" section to "Self-hosted HTTP API".', 'matomo' ),
+					'comment'    => esc_html__( 'Connect Matomo is configured in "PHP mode". This is known to cause issues with Matomo for WordPress. We recommend you either deactivate Connect Matomo or you go "Settings => Connect Matomo" and change the "Matomo Mode" in the "Connect to Matomo" section to "Self-hosted HTTP API".', 'matomo' ),
 				];
 			}
 		}
@@ -1335,10 +1340,10 @@ class SystemReport {
 			'value' => $this->initial_error_reporting . ' After bootstrap: ' . @error_reporting(),
 		];
 
-		if ( ! empty( $this->binary ) ) {
+		if ( ! empty( $this->get_php_cli_binary() ) ) {
 			$rows[] = [
 				'name'  => 'PHP Found Binary',
-				'value' => $this->binary,
+				'value' => $this->get_php_cli_binary(),
 			];
 		}
 		$rows[] = [
@@ -1797,11 +1802,17 @@ class SystemReport {
 
 		$plugins = get_plugins();
 
-		foreach ( $plugins as $plugin ) {
+		foreach ( $plugins as $plugin_file => $plugin ) {
 			$comment = '';
 			if ( ! empty( $plugin['Network'] ) ) {
 				$comment = esc_html__( 'Network enabled', 'matomo' );
 			}
+
+			if ( strpos( $plugin_file, 'ninjafirewall/' ) === 0 ) {
+				$comment .= '<br/><br/>' . esc_html__( 'We noticed you are using Matomo with Ninja Firewall. This can result in Matomo cache file changes showing up in Ninja Firewall which likely undesired.', 'matomo' ) . '
+	<a href="https://matomo.org/faq/wordpress/how-do-i-prevent-matomo-cache-file-changes-to-show-up-in-ninja-firewall/" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Read our FAQ to learn how to prevent these entries.', 'matomo' ) . '</a>';
+			}
+
 			$rows[] = [
 				'name'    => $plugin['Name'],
 				'value'   => $plugin['Version'],
@@ -1862,14 +1873,6 @@ class SystemReport {
 						'is_error'   => $is_error,
 					];
 				}
-			}
-
-			if ( in_array( 'ninjafirewall', $active_plugins, true ) ) {
-				echo '<div class="notice notice-warning">
-	<p><strong>' . esc_html__( 'We noticed you are using Matomo with Ninja Firewall.', 'matomo' ) . '</strong> ' . esc_html__( 'This can result in Matomo cache file changes showing up in Ninja Firewall which likely undesired.', 'matomo' ) . '
-	<a href="https://matomo.org/faq/wordpress/how-do-i-prevent-matomo-cache-file-changes-to-show-up-in-ninja-firewall/" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Read our FAQ to learn how to prevent these entries.', 'matomo' ) . '</a>
-	</p>
-</div>';
 			}
 		}
 
@@ -1993,5 +1996,15 @@ class SystemReport {
 		}
 
 		return $search_dir . '/wp-load.php';
+	}
+
+	private function get_php_cli_binary() {
+		if ( ! $this->binary && ! WpMatomo::is_safe_mode() ) {
+			Bootstrap::do_bootstrap();
+			$cli_php      = new CliPhp();
+			$this->binary = $cli_php->findPhpBinary();
+		}
+
+		return $this->binary;
 	}
 }

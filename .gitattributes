@@ -16,7 +16,7 @@
 .gitignore export-ignore
 .gitattributes export-ignore
 .travis.yml export-ignore
-package-lock.json
+package-lock.json export-ignore
 bower.json export-ignore
 composer.json export-ignore
 composer.lock export-ignore
@@ -41,3 +41,7 @@ karma.conf.js export-ignore
 .DS_Store export-ignore
 .editorconfig export-ignore
 docker-compose.yml export-ignore
+tsconfig.json export-ignore
+wdio.conf.ts export-ignore
+.env.default export-ignore
+.env export-ignore

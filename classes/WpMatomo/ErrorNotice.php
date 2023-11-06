@@ -31,10 +31,13 @@ class ErrorNotice {
 		if ( isset( $_GET['page'] ) && substr( sanitize_text_field( wp_unslash( $_GET['page'] ) ), 0, 7 ) === 'matomo-' ) {
 			$system_report = new \WpMatomo\Admin\SystemReport( $this->settings );
 			if ( ! get_user_meta( get_current_user_id(), self::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED ) && $system_report->errors_present() ) {
-				echo '<div class="notice notice-warning is-dismissible" id="matomo-systemreporterrors">
-					<p>' . esc_html__( 'There are some errors in the', 'matomo' ) .
-					' <a href="' . esc_url( admin_url( 'admin.php?page=matomo-systemreport' ) ) . '">' . esc_html__( 'Matomo Diagnostics System report', 'matomo' ) . '</a> ' .
-					esc_html__( 'that may prevent the plugin for working normally.', 'matomo' ) . '</p></div>';
+				echo '<div class="notice notice-warning is-dismissible" id="matomo-systemreporterrors"><p>'
+					. sprintf(
+						esc_html__( 'There are some errors in the %1$sMatomo Diagnostics System report%2$s that may prevent the plugin for working normally.', 'matomo' ),
+						'<a href="' . esc_url( admin_url( 'admin.php?page=matomo-systemreport' ) ) . '">',
+						'</a>'
+					)
+					. '</p></div>';
 			}
 		}
 	}
