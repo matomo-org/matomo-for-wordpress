@@ -28,6 +28,7 @@ services:
       - /var/www/html/matomo-for-wordpress/app/tmp
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
+      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
     ports:
       - "$PORT:80"
@@ -55,6 +56,7 @@ services:
       - /var/www/html/matomo-for-wordpress/app/tmp
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
+      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
     entrypoint: /usr/src/entrypoint.sh
     depends_on:
@@ -93,8 +95,8 @@ services:
       - .:/var/www/html/matomo-for-wordpress
       - /var/www/html/matomo-for-wordpress/app/tmp
       - ./docker/wp-cli:/.wp-cli
+      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
-      - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
     ports:
       - "$PORT:80"
     user: "${UID:-1000}:${GID:-1000}"
@@ -117,6 +119,7 @@ services:
       - ./docker/wordpress:/var/www/html
       - .:/var/www/html/matomo-for-wordpress
       - /var/www/html/matomo-for-wordpress/app/tmp
+      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
     ports:
