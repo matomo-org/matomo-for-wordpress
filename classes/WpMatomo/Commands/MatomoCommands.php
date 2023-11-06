@@ -9,8 +9,6 @@
 
 namespace WpMatomo\Commands;
 
-require_once ABSPATH . '/wp-includes/ms-blogs.php';
-
 use Piwik\Access;
 use WP_CLI;
 use WP_CLI_Command;
@@ -30,6 +28,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 if ( ! defined( 'WP_CLI' ) ) {
 	exit;
+}
+
+if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+	require_once ABSPATH . '/wp-includes/ms-blogs.php';
 }
 
 class MatomoCommands extends WP_CLI_Command {
