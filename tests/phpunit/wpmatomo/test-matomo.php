@@ -23,8 +23,8 @@ class MatomoTest extends MatomoUnit_TestCase {
 			['/var/www/html/wordpress', '/var/www/html/wordpress/matomo/path', '../../'],
 			['/var/www/html/wordpress/matomo/path', '/var/www/html/wordpress', 'matomo/path'],
 			['/var/www/html/wordpress', '/var/www/html/wordpress', ''],
-			['/var/www/html/wordpress', '/var/www/matomo/for/wordpress', '../../matomo/for/wordpress'],
-			['/var/www/matomo/for/wordpress', '/var/www/html/wordpress', '../../../html/wordpress'],
+			['/var/www/html/wordpress', '/var/www/matomo/for/wordpress', '../../../html/wordpress'],
+			['/var/www/matomo/for/wordpress', '/var/www/html/wordpress', '../../matomo/for/wordpress'],
 		];
 	}
 }
