@@ -46,7 +46,7 @@ class GenerateLangFiles extends ConsoleCommand
 		    file_put_contents($corePath, json_encode($base, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 	    }
 
-        $this->getOutput()->writeln("<success>Finished generating lang files.</success>");
+        $this->getOutput()->writeln("<info>Finished generating lang files.</info>");
 
         return 0;
     }

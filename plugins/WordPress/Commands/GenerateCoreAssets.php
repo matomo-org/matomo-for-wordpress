@@ -65,7 +65,7 @@ class GenerateCoreAssets extends ConsoleCommand
 
         file_put_contents(plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'assets/js/asset_manager_core_js.js', $content);
 
-        $this->getOutput()->writeln("<success>Finished building assets.</success>");
+        $this->getOutput()->writeln("<info>Finished building assets.</info>");
 
         return 0;
     }
