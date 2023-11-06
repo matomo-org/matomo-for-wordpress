@@ -28,8 +28,8 @@ CREDITS
 
 	For detailed contribution history, refer to the source, tickets,
 	patches, and Git revision history, available at
-	https://github.com/matomo-org/wp-matomo/issues
-	https://github.com/matomo-org/wp-matomo
+	https://github.com/matomo-org/matomo-for-wordpress/issues
+	https://github.com/matomo-org/matomo-for-wordpress
 
 
 SEPARATELY LICENSED COMPONENTS AND LIBRARIES
@@ -47,4 +47,3 @@ THIRD-PARTY CONTENT
 	License:  The MIT License (MIT) see node_modules/chart.js/LICENSE.md
 
     For more third party content see the list in `app/LEGALNOTICE`.
-

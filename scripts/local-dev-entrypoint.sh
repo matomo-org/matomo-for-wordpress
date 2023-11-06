@@ -4,11 +4,30 @@ set -e
 
 cd /var/www/html
 
+a2enmod rewrite
+
 # http serves a single offer, whereas https serves multiple. we only want one
 LATEST_WORDPRESS_VERSION=$( php -r 'echo @json_decode(file_get_contents("http://api.wordpress.org/core/version-check/1.7/"), true)["offers"][0]["version"];' );
 if [[ -z "$LATEST_WORDPRESS_VERSION" ]]; then
   echo "Latest WordPress version could not be found"
   exit 1
+fi
+
+if [[ "$WORDPRESS_VERSION" = "latest" || -z "$WORDPRESS_VERSION" ]]; then
+  WORDPRESS_VERSION="$LATEST_WORDPRESS_VERSION"
+fi
+WORDPRESS_FOLDER=${WORDPRESS_FOLDER:-$WORDPRESS_VERSION}
+
+if [[ "$MULTISITE" = "1" ]]; then
+  WORDPRESS_FOLDER="$WORDPRESS_FOLDER-multi"
+fi
+
+if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
+  exit $?
+elif [[ "$EXECUTE_CONSOLE" = "1" ]]; then
+  /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/console "$@"
+  exit $?
 fi
 
 # install wp-cli.phar
@@ -19,13 +38,6 @@ chmod +x /var/www/html/wp-cli.phar
 
 # TODO: switch download to use wp-cli instead of just curling (also can use wp db create instead of raw php)
 # install wordpress if not present
-if [[ "$WORDPRESS_VERSION" = "latest" || -z "$WORDPRESS_VERSION" ]]; then
-  WORDPRESS_VERSION="$LATEST_WORDPRESS_VERSION"
-fi
-WORDPRESS_FOLDER=${WORDPRESS_FOLDER:-$WORDPRESS_VERSION}
-
-# TODO: handle trunk ()
-
 if [ ! -d "/var/www/html/$WORDPRESS_FOLDER" ]; then
   WORDPRESS_URL="https://wordpress.org/wordpress-$WORDPRESS_VERSION.zip"
   if [ "$WORDPRESS_VERSION" = "trunk" ]; then
@@ -48,7 +60,7 @@ echo "waiting for database..."
 sleep 5 # wait for database
 echo "done."
 
-WP_DB_NAME=$(echo "wp_matomo_$WORDPRESS_FOLDER" | sed 's/\./_/g')
+WP_DB_NAME=$(echo "wp_matomo_$WORDPRESS_FOLDER" | sed 's/\./_/g' | sed 's/-/_/g')
 
 # if requested, drop the database for a clean install (used mainly for automated tests)
 if [[ ! -z "$RESET_DATABASE" ]]; then
@@ -67,16 +79,29 @@ php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
 
 # setup wordpress config if not done so
 if [ ! -f "/var/www/html/$WORDPRESS_FOLDER/wp-config.php" ]; then
+  if [[ "$MULTISITE" = "1" ]]; then
+    MULTISITE_CONFIG="
+define( 'WP_ALLOW_MULTISITE', true );
+define( 'MULTISITE', true );
+define( 'SUBDOMAIN_INSTALL', false );
+define( 'DOMAIN_CURRENT_SITE', 'localhost:3000' );
+define( 'PATH_CURRENT_SITE', '/6.3.2-multi/' );
+define( 'SITE_ID_CURRENT_SITE', 1 );
+define( 'BLOG_ID_CURRENT_SITE', 1 );
+"
+  fi
+
   cat > "/var/www/html/$WORDPRESS_FOLDER/wp-config.php" <<EOF
 <?php
-define('DB_NAME', '$WP_DB_NAME');
-define('DB_USER', 'root');
-define('DB_PASSWORD', 'pass');
-define('DB_HOST', getenv('WP_DB_HOST'));
-define('DB_CHARSET', 'utf8');
-define('DB_COLLATE', '');
+define( 'DB_NAME', '$WP_DB_NAME' );
+define( 'DB_USER', 'root' );
+define( 'DB_PASSWORD', 'pass' );
+define( 'DB_HOST', getenv('WP_DB_HOST') );
+define( 'DB_CHARSET', 'utf8' );
+define( 'DB_COLLATE', '' );
 define( 'WP_DEBUG', false );
-define('WP_ENVIRONMENT_TYPE', 'local');
+define( 'WP_ENVIRONMENT_TYPE', 'local' );
+$MULTISITE_CONFIG
 
 define( 'AUTH_KEY',         'put your unique phrase here' );
 define( 'SECURE_AUTH_KEY',  'put your unique phrase here' );
@@ -114,9 +139,34 @@ EOF
 fi
 
 # install wordpress
-/var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER core install --url=localhost:3000 --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
-/var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set siteurl "http://localhost:3000/$WORDPRESS_FOLDER"
-/var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set home "http://localhost:3000/$WORDPRESS_FOLDER"
+if [[ "$MULTISITE" = "1" ]]; then
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER core multisite-install --url=localhost:3000 --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
+
+  cat > "/var/www/html/$WORDPRESS_FOLDER/.htaccess" <<EOF
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /6.3.2-multi/
+RewriteRule ^index\.php$ - [L]
+
+# add a trailing slash to /wp-admin
+RewriteRule ^([_0-9a-zA-Z-]+/)?wp-admin$ $1wp-admin/ [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?(wp-(content|admin|includes).*) $2 [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?(.*\.php)$ $2 [L]
+RewriteRule . index.php [L]
+EOF
+
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set siteurl "http://localhost:3000/$WORDPRESS_FOLDER"
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set home "http://localhost:3000/$WORDPRESS_FOLDER/main"
+else
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER core install --url=localhost:3000 --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
+
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set siteurl "http://localhost:3000/$WORDPRESS_FOLDER"
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set home "http://localhost:3000/$WORDPRESS_FOLDER"
+fi
 
 # link matomo for wordpress volume as wordpress plugin
 if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]; then
@@ -165,6 +215,11 @@ if [ ! -f "/var/www/html/index.php" ]; then
 </body>
 </html>
 EOF
+fi
+
+if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress" ]; then
+  echo "installing matomo marketplace"
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip
 fi
 
 # download WP_PLUGINS plugins if not present

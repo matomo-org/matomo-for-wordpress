@@ -160,7 +160,7 @@ if ( !is_plugin_active('matomo/matomo.php')
 }
 
 if ( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) {
-	// see https://github.com/matomo-org/wp-matomo/issues/190
+	// see https://github.com/matomo-org/matomo-for-wordpress/issues/190
 	// wp-external-links plugin would register an ob_start(function () {...}) and manipulate any of our API output
 	// and in some cases the output would get completely lost causing blank pages.
 	add_filter('wpel_apply_settings', '__return_false', 99999);
