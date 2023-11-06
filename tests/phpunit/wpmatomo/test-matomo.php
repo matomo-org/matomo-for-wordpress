@@ -20,11 +20,11 @@ class MatomoTest extends MatomoUnit_TestCase {
 
 	public function get_test_data_for_matomo_rel_path() {
 		return [
-			['/var/www/html/wordpress', '/var/www/html/wordpress/matomo/path', '../../'],
-			['/var/www/html/wordpress/matomo/path', '/var/www/html/wordpress', 'matomo/path'],
-			['/var/www/html/wordpress', '/var/www/html/wordpress', ''],
-			['/var/www/html/wordpress', '/var/www/matomo/for/wordpress', '../../../html/wordpress'],
-			['/var/www/matomo/for/wordpress', '/var/www/html/wordpress', '../../matomo/for/wordpress'],
+			[ '/var/www/html/wordpress', '/var/www/html/wordpress/matomo/path', '../../' ],
+			[ '/var/www/html/wordpress/matomo/path', '/var/www/html/wordpress', 'matomo/path' ],
+			[ '/var/www/html/wordpress', '/var/www/html/wordpress', '' ],
+			[ '/var/www/html/wordpress', '/var/www/matomo/for/wordpress', '../../../html/wordpress' ],
+			[ '/var/www/matomo/for/wordpress', '/var/www/html/wordpress', '../../matomo/for/wordpress' ],
 		];
 	}
 }
