@@ -2003,7 +2003,7 @@ class SystemReport {
 
 	private function find_wp_load_path() {
 		$abs_path   = rtrim( ABSPATH, '/' );
-		$search_dir = dirname( MATOMO_ANALYTICS_FILE );
+		$search_dir = $this->get_abs_path_to_plugin();
 
 		while ( ! is_file( $search_dir . '/wp-load.php' ) && strpos( $search_dir, $abs_path ) === 0 ) {
 			$search_dir = dirname( $search_dir );
