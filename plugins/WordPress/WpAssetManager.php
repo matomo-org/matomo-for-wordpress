@@ -10,6 +10,7 @@
 namespace Piwik\Plugins\WordPress;
 
 use Piwik\AssetManager;
+use Piwik\AssetManager\UIAssetFetcher;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugins\WordPress\AssetManager\NeverDeleteOnDiskUiAsset;
 use Piwik\Translation\Translator;
@@ -26,7 +27,7 @@ class WpAssetManager extends AssetManager
 		parent::__construct();
 	}
 
-	public function getMergedCoreJavaScript() {
+    public function getMergedCoreJavaScript() {
 		$path = rtrim( plugin_dir_path( MATOMO_ANALYTICS_FILE ), '/' ) . '/assets/js';
 		$file = 'asset_manager_core_js.js';
 
@@ -90,6 +91,7 @@ class WpAssetManager extends AssetManager
 		}
 
 		$result .= "<script type=\"text/javascript\">window.$ = jQuery;</script>";
+
 		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../assets/js/asset_manager_core_js.js?v=' . Version::VERSION);
 		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../assets/js/opt-out-configurator.directive.js?v=' . Version::VERSION);
 
@@ -99,10 +101,50 @@ class WpAssetManager extends AssetManager
 		if ($this->isMergedAssetsDisabled()) {
 			$this->getMergedNonCoreJSAsset()->delete();
 			$result .= $this->getIndividualJsIncludesFromAssetFetcher($this->getNonCoreJScriptFetcher());
+			$result .= $this->getIndividualJsIncludesFromAssetFetcher($this->getPluginUmdJScriptFetcher());
 		} else {
 			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, self::GET_NON_CORE_JS_MODULE_ACTION);
+			$result .= $this->getPluginUmdChunks();
 		}
-		$result .= $this->getPluginUmdChunks();
 		return $result;
 	}
+
+    /**
+     * Performs the same functionality as AssetManager::getIndividualJsIncludesFromAssetFetcher(),
+     * except when an asset to a non-core plugin is found, it's correctly mapped to it's location
+     * within a Matomo for WordPress install (using the plugins_url() function).
+     *
+     * @param UIAssetFetcher $assetFetcher
+     * @return string
+     */
+    protected function getIndividualJsIncludesFromAssetFetcher($assetFetcher)
+    {
+        $wpPluginsDir = rtrim(ABSPATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'wp-content' . DIRECTORY_SEPARATOR . 'plugins';
+
+        $jsIncludeString = '';
+
+        $assets = $assetFetcher->getCatalog()->getAssets();
+        foreach ($assets as $jsFile) {
+            $jsFile->validateFile();
+
+            $assetUrlPath = $jsFile->getRelativeLocation();
+
+            $absoluteFileLocation = realpath($jsFile->getAbsoluteLocation());
+            if (strpos($absoluteFileLocation, $wpPluginsDir) === 0) {
+                $relativeFilePathParts = explode('/', substr($absoluteFileLocation, strlen($wpPluginsDir)));
+                $relativeFilePathParts = array_values(array_filter($relativeFilePathParts));
+
+                $pluginName = $relativeFilePathParts[0];
+
+                $pathRelativeToPlugin = array_slice($relativeFilePathParts, 1);
+                $pathRelativeToPlugin = implode('/', $pathRelativeToPlugin);
+
+                $assetUrlPath = plugins_url($pathRelativeToPlugin, $pluginName . '/' . $pluginName . '.php');
+            }
+
+            $jsIncludeString = $jsIncludeString . sprintf(self::JS_IMPORT_DIRECTIVE, $assetUrlPath);
+        }
+
+        return $jsIncludeString;
+    }
 }

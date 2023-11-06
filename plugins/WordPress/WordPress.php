@@ -430,5 +430,4 @@ class WordPress extends Plugin
 		$files[] = "../plugins/WordPress/stylesheets/optout.css";
 		$files[] = "../plugins/WordPress/stylesheets/export.css";
 	}
-
 }

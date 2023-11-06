@@ -93,7 +93,6 @@ abstract class UIAssetFetcher
         $pluginBaseDir = Manager::getPluginsDirectory();
         $pluginWebDirectories = Manager::getAlternativeWebRootDirectories();
         $matomoRootDir = $this->getBaseDirectory();
-
         foreach ($this->fileLocations as $fileLocation) {
             $fileAbsolute = $matomoRootDir . '/' . $fileLocation;
 
@@ -104,7 +103,6 @@ abstract class UIAssetFetcher
             }
 
             $found = false;
-
             if (strpos($fileAbsolute, $pluginBaseDir) === 0) {
                 // we iterate over all custom plugin directories only for plugin files, not libs files (not needed there)
                 foreach ($pluginWebDirectories as $pluginDirectory => $relative) {
