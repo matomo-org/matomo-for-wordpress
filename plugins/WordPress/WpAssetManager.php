@@ -22,22 +22,19 @@ if (!defined( 'ABSPATH')) {
 
 class WpAssetManager extends AssetManager
 {
-	public function __construct() {
-		parent::__construct();
-	}
+    public function getMergedCoreJavaScript()
+    {
+        $path = rtrim( plugin_dir_path( MATOMO_ANALYTICS_FILE ), '/' ) . '/assets/js';
+        $file = 'asset_manager_core_js.js';
 
-	public function getMergedCoreJavaScript() {
-		$path = rtrim( plugin_dir_path( MATOMO_ANALYTICS_FILE ), '/' ) . '/assets/js';
-		$file = 'asset_manager_core_js.js';
-
-		return new NeverDeleteOnDiskUiAsset( $path, $file );
+        return new NeverDeleteOnDiskUiAsset( $path, $file );
 	}
 
 	private function isWp55OrOlder()
 	{
-		$wp_version = get_bloginfo( 'version' );
+        $wp_version = get_bloginfo( 'version' );
 
-		return $wp_version && 1 === version_compare('5.6', $wp_version);
+        return $wp_version && 1 === version_compare('5.6', $wp_version);
 	}
 
 	public function getJsInclusionDirective(bool $deferJS = false): string
@@ -49,7 +46,7 @@ class WpAssetManager extends AssetManager
 
 		$jsFiles = array();
 		$jsFiles[] = "jquery/jquery.js";
-		$jsFiles[] = "node_modules/materialize-css/dist/js/materialize.min.js";
+		$jsFiles[] = "node_modules/@materializecss/materialize/dist/js/materialize.min.js";
 
 		if ($this->isWp55OrOlder()) {
 			$jsFiles[] = 'jquery/ui/widget.min.js';
