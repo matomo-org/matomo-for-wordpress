@@ -54,11 +54,6 @@ rm -r $MATOMO_ROOT/CONTRIBUTING.md
 rm -r $MATOMO_ROOT/CHANGELOG.md
 rm -r $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
 rm -r $MATOMO_ROOT/lang/README.md
-rm -r $MATOMO_ROOT/vendor/php-di/invoker/doc/
-rm -r $MATOMO_ROOT/vendor/szymach/c-pchart/doc
-rm -r $MATOMO_ROOT/vendor/leafo/lessphp/docs
-rm -r $MATOMO_ROOT/vendor/container-interop/container-interop/docs
-rm -r $MATOMO_ROOT/vendor/pear/archive_tar/docs
 rm -r $MATOMO_ROOT/tmp
 rm -r $MATOMO_ROOT/tests
 rm -r $MATOMO_ROOT/config/manifest.inc.php
