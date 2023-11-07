@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
+
+set -e
+
 VERSION="$1"
+
+function catch_error() {
+    status=$? bc="$BASH_COMMAND" ln="$BASH_LINENO"
+    echo ">> Command '$bc' failed on line $ln and status is $status <<" >&2
+    exit $status
+}
+
+trap catch_error ERR
 
 # report error and exit
 function die() {
@@ -22,34 +33,53 @@ wget $URL -P "$SCRIPTPATH" || die "Got an error while downloading this Matomo ve
 
 cp $MATOMO_ROOT/bootstrap.php bootstrap.php
 cp $MATOMO_ROOT/.htaccess .htaccess
-rm -rf "${MATOMO_ROOT:?}/"*
-rm -r matomo/ 2> /dev/null
+rm -r "${MATOMO_ROOT:?}/"*
+rm -rf matomo/ 2> /dev/null
 unzip -o -q matomo-$VERSION.zip
 cp -R matomo/* $MATOMO_ROOT
 rm -r matomo/
 rm matomo-$VERSION.zip
 rm "How to install Matomo.html"
+
+# TODO: force the use of matomo-scoper after we're sure everything works
+if [ ! -z "$MATOMO_SCOPER_PATH" ]; then
+  echo "Running matomo-scoper..."
+
+  # download manifest and lock file from github since it's not available in the built package
+  wget "https://raw.githubusercontent.com/matomo-org/matomo/$VERSION/composer.json" -O "$MATOMO_ROOT/composer.json"
+  wget "https://raw.githubusercontent.com/matomo-org/matomo/$VERSION/composer.lock" -O "$MATOMO_ROOT/composer.lock"
+
+  php "$MATOMO_SCOPER_PATH/bin/matomo-scoper" scope -y  --rename-references "$MATOMO_ROOT"
+
+  rm "$MATOMO_ROOT"/composer.json
+  rm "$MATOMO_ROOT"/composer.lock
+else
+  echo "MATOMO_SCOPER_PATH not defined, skipping scoping."
+fi
+
 find $MATOMO_ROOT/misc/* -exec rm -rf {} +
-rm -rf $MATOMO_ROOT/js/piwik.js
-rm -rf $MATOMO_ROOT/CONTRIBUTING.md
-rm -rf $MATOMO_ROOT/CHANGELOG.md
-rm -rf $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
-rm -rf $MATOMO_ROOT/lang/README.md
-rm -rf $MATOMO_ROOT/vendor/php-di/invoker/doc/
-rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/doc
-rm -rf $MATOMO_ROOT/vendor/leafo/lessphp/docs
-rm -rf $MATOMO_ROOT/vendor/container-interop/container-interop/docs
-rm -rf $MATOMO_ROOT/vendor/pear/archive_tar/docs
+rm -r $MATOMO_ROOT/js/piwik.js
+rm -r $MATOMO_ROOT/CONTRIBUTING.md
+rm -r $MATOMO_ROOT/CHANGELOG.md
+rm -r $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
+rm -r $MATOMO_ROOT/lang/README.md
 rm -rf $MATOMO_ROOT/tmp
-rm -rf $MATOMO_ROOT/tests
-rm -rf $MATOMO_ROOT/config/manifest.inc.php
+rm -r $MATOMO_ROOT/tests
+rm -r $MATOMO_ROOT/config/manifest.inc.php
+
 # remove the plugins also from auto loader so they can be installed through marketplace
-rm -rf $MATOMO_ROOT/plugins/CustomVariables
-rm -rf $MATOMO_ROOT/plugins/Provider
-awk '!/Plugins\\\\Provider/' $MATOMO_ROOT/vendor/composer/autoload_classmap.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_classmap.php
-awk '!/Plugins\\\\Provider/' $MATOMO_ROOT/vendor/composer/autoload_static.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_static.php
-awk '!/Plugins\\\\CustomVariables/' $MATOMO_ROOT/vendor/composer/autoload_classmap.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_classmap.php
-awk '!/Plugins\\\\CustomVariables/' $MATOMO_ROOT/vendor/composer/autoload_static.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_static.php
+if [ -d "$MATOMO_ROOT/plugins/Provider" ]; then
+  rm -rf $MATOMO_ROOT/plugins/Provider
+  awk '!/Plugins\\\\Provider/' $MATOMO_ROOT/vendor/composer/autoload_classmap.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_classmap.php
+  awk '!/Plugins\\\\Provider/' $MATOMO_ROOT/vendor/composer/autoload_static.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_static.php
+fi
+
+if [ -d "$MATOMO_ROOT/plugins/CustomVariables" ]; then
+  rm -rf $MATOMO_ROOT/plugins/CustomVariables
+  awk '!/Plugins\\\\CustomVariables/' $MATOMO_ROOT/vendor/composer/autoload_classmap.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_classmap.php
+  awk '!/Plugins\\\\CustomVariables/' $MATOMO_ROOT/vendor/composer/autoload_static.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_static.php
+fi
+
 find $MATOMO_ROOT/core/Updates -name '*.php' ! -name '3.12.0-b1.php' ! -name '3.12.0-b7.php' ! -name '4.*' ! -name '5.*' ! -name '6.*' ! -name '7.*' -exec rm -rf {} +
 # important to remove pclzip as it is shipped with WP and would need to use their lib
 rm -rf $MATOMO_ROOT/vendor/piwik/decompress/libs/PclZip
@@ -64,6 +94,6 @@ else
     echo -e "WordPress jquery was not replaced. There is an error."
 fi
 echo -e "Done!... "
-echo -e "Now execute 'php ../app/console wordpress:generate-core-assets'"
-echo -e "Then execute 'php ../app/console wordpress:generate-lang-files'"
+echo -e "Now execute 'php ../app/console wordpress:generate-core-assets' or 'npm run compose run console wordpress:generate-core-assets'"
+echo -e "Then execute 'php ../app/console wordpress:generate-lang-files' or 'npm run compose run console wordpress:generate-lang-files'"
 echo -e "Then execute './remove_not_needed_assets.sh'"
