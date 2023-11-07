@@ -59,7 +59,7 @@ rm -r $MATOMO_ROOT/tests
 rm -r $MATOMO_ROOT/config/manifest.inc.php
 # remove the plugins also from auto loader so they can be installed through marketplace
 rm -rf $MATOMO_ROOT/plugins/CustomVariables
-rm -r $MATOMO_ROOT/plugins/Provider
+rm -rf $MATOMO_ROOT/plugins/Provider
 awk '!/Plugins\\\\Provider/' $MATOMO_ROOT/vendor/composer/autoload_classmap.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_classmap.php
 awk '!/Plugins\\\\Provider/' $MATOMO_ROOT/vendor/composer/autoload_static.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_static.php
 awk '!/Plugins\\\\CustomVariables/' $MATOMO_ROOT/vendor/composer/autoload_classmap.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_classmap.php
