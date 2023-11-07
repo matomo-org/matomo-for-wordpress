@@ -34,14 +34,14 @@ wget $URL -P "$SCRIPTPATH" || die "Got an error while downloading this Matomo ve
 cp $MATOMO_ROOT/bootstrap.php bootstrap.php
 cp $MATOMO_ROOT/.htaccess .htaccess
 rm -r "${MATOMO_ROOT:?}/"*
-rm -r matomo/ 2> /dev/null
+rm -rf matomo/ 2> /dev/null
 unzip -o -q matomo-$VERSION.zip
 cp -R matomo/* $MATOMO_ROOT
 rm -r matomo/
 rm matomo-$VERSION.zip
 rm "How to install Matomo.html"
 
-if [ -z "$MATOMO_SCOPER_PATH" ]; then
+if [ ! -z "$MATOMO_SCOPER_PATH" ]; then
   echo "Running matomo-scoper..."
   php "$MATOMO_SCOPER_PATH/bin/matomo-scoper" scope "$MATOMO_ROOT" --rename-references
 else
