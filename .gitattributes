@@ -45,3 +45,4 @@ tsconfig.json export-ignore
 wdio.conf.ts export-ignore
 .env.default export-ignore
 .env export-ignore
+/app/tmp/ export-ignore

@@ -41,9 +41,10 @@ rm -r matomo/
 rm matomo-$VERSION.zip
 rm "How to install Matomo.html"
 
+# TODO: force the use of matomo-scoper after we're sure everything works
 if [ ! -z "$MATOMO_SCOPER_PATH" ]; then
   echo "Running matomo-scoper..."
-  php "$MATOMO_SCOPER_PATH/bin/matomo-scoper" scope "$MATOMO_ROOT" --rename-references
+  php "$MATOMO_SCOPER_PATH/bin/matomo-scoper" scope -y  --rename-references "$MATOMO_ROOT"
 else
   echo "MATOMO_SCOPER_PATH not defined, skipping scoping."
 fi
