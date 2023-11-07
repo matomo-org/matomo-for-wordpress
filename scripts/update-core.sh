@@ -4,6 +4,14 @@ set -e
 
 VERSION="$1"
 
+function catch_error() {
+    status=$? bc="$BASH_COMMAND" ln="$BASH_LINENO"
+    echo ">> Command '$bc' failed on line $ln and status is $status <<" >&2
+    exit $status
+}
+
+trap catch_error ERR
+
 # report error and exit
 function die() {
         echo -e "$0: $1"
