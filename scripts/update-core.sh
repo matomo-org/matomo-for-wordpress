@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+set -e
+
 VERSION="$1"
 
 # report error and exit
@@ -22,30 +25,38 @@ wget $URL -P "$SCRIPTPATH" || die "Got an error while downloading this Matomo ve
 
 cp $MATOMO_ROOT/bootstrap.php bootstrap.php
 cp $MATOMO_ROOT/.htaccess .htaccess
-rm -rf "${MATOMO_ROOT:?}/"*
+rm -r "${MATOMO_ROOT:?}/"*
 rm -r matomo/ 2> /dev/null
 unzip -o -q matomo-$VERSION.zip
 cp -R matomo/* $MATOMO_ROOT
 rm -r matomo/
 rm matomo-$VERSION.zip
 rm "How to install Matomo.html"
+
+if [ -z "$MATOMO_SCOPER_PATH" ]; then
+  echo "Running matomo-scoper..."
+  php "$MATOMO_SCOPER_PATH/bin/matomo-scoper" scope "$MATOMO_ROOT" --rename-references
+else
+  echo "MATOMO_SCOPER_PATH not defined, skipping scoping."
+fi
+
 find $MATOMO_ROOT/misc/* -exec rm -rf {} +
-rm -rf $MATOMO_ROOT/js/piwik.js
-rm -rf $MATOMO_ROOT/CONTRIBUTING.md
-rm -rf $MATOMO_ROOT/CHANGELOG.md
-rm -rf $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
-rm -rf $MATOMO_ROOT/lang/README.md
-rm -rf $MATOMO_ROOT/vendor/php-di/invoker/doc/
-rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/doc
-rm -rf $MATOMO_ROOT/vendor/leafo/lessphp/docs
-rm -rf $MATOMO_ROOT/vendor/container-interop/container-interop/docs
-rm -rf $MATOMO_ROOT/vendor/pear/archive_tar/docs
-rm -rf $MATOMO_ROOT/tmp
-rm -rf $MATOMO_ROOT/tests
-rm -rf $MATOMO_ROOT/config/manifest.inc.php
+rm -r $MATOMO_ROOT/js/piwik.js
+rm -r $MATOMO_ROOT/CONTRIBUTING.md
+rm -r $MATOMO_ROOT/CHANGELOG.md
+rm -r $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
+rm -r $MATOMO_ROOT/lang/README.md
+rm -r $MATOMO_ROOT/vendor/php-di/invoker/doc/
+rm -r $MATOMO_ROOT/vendor/szymach/c-pchart/doc
+rm -r $MATOMO_ROOT/vendor/leafo/lessphp/docs
+rm -r $MATOMO_ROOT/vendor/container-interop/container-interop/docs
+rm -r $MATOMO_ROOT/vendor/pear/archive_tar/docs
+rm -r $MATOMO_ROOT/tmp
+rm -r $MATOMO_ROOT/tests
+rm -r $MATOMO_ROOT/config/manifest.inc.php
 # remove the plugins also from auto loader so they can be installed through marketplace
-rm -rf $MATOMO_ROOT/plugins/CustomVariables
-rm -rf $MATOMO_ROOT/plugins/Provider
+rm -r $MATOMO_ROOT/plugins/CustomVariables
+rm -r $MATOMO_ROOT/plugins/Provider
 awk '!/Plugins\\\\Provider/' $MATOMO_ROOT/vendor/composer/autoload_classmap.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_classmap.php
 awk '!/Plugins\\\\Provider/' $MATOMO_ROOT/vendor/composer/autoload_static.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_static.php
 awk '!/Plugins\\\\CustomVariables/' $MATOMO_ROOT/vendor/composer/autoload_classmap.php > temp && mv temp $MATOMO_ROOT/vendor/composer/autoload_classmap.php
