@@ -54,7 +54,7 @@ rm -r $MATOMO_ROOT/CONTRIBUTING.md
 rm -r $MATOMO_ROOT/CHANGELOG.md
 rm -r $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
 rm -r $MATOMO_ROOT/lang/README.md
-rm -r $MATOMO_ROOT/tmp
+rm -rf $MATOMO_ROOT/tmp
 rm -r $MATOMO_ROOT/tests
 rm -r $MATOMO_ROOT/config/manifest.inc.php
 # remove the plugins also from auto loader so they can be installed through marketplace
