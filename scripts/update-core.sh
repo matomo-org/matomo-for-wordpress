@@ -63,7 +63,6 @@ rm -r $MATOMO_ROOT/CONTRIBUTING.md
 rm -r $MATOMO_ROOT/CHANGELOG.md
 rm -r $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
 rm -r $MATOMO_ROOT/lang/README.md
-rm -rf $MATOMO_ROOT/tmp
 rm -r $MATOMO_ROOT/tests
 rm -r $MATOMO_ROOT/config/manifest.inc.php
 
