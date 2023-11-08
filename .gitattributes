@@ -164,7 +164,7 @@ wdio.conf.ts export-ignore
 /app/plugins/Tour/javascripts export-ignore
 /app/plugins/ExamplePlugin/javascripts export-ignore
 /app/plugins/Transitions/javascripts export-ignore
-/app/plugins/CoreHome/javascripts export-ignore
+/app/plugins/CoreHome/javascripts/*.js export-ignore
 /app/plugins/Insights/javascripts export-ignore
 /app/plugins/PagePerformance/javascripts export-ignore
 /app/plugins/TreemapVisualization/javascripts export-ignore
