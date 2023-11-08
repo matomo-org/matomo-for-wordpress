@@ -96,4 +96,3 @@ fi
 echo -e "Done!... "
 echo -e "Now execute 'php ../app/console wordpress:generate-core-assets' or 'npm run compose run console wordpress:generate-core-assets'"
 echo -e "Then execute 'php ../app/console wordpress:generate-lang-files' or 'npm run compose run console wordpress:generate-lang-files'"
-echo -e "Then execute './remove_not_needed_assets.sh'"

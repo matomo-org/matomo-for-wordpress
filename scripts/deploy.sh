@@ -72,7 +72,7 @@ if [[ -d "tags/$VERSION" ]]; then
 fi
 
 echo "➤ Checking out git matomo-for-wordpress repository..."
-git clone --single-branch --branch live https://github.com/matomo-org/matomo-for-wordpress.git "$GITHUB_WORKSPACE"
+git clone --recurse-submodules --single-branch --branch live https://github.com/matomo-org/matomo-for-wordpress.git "$GITHUB_WORKSPACE"
 
 echo "➤ Copying files..."
 
