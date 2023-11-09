@@ -30,7 +30,7 @@ class GenerateLangFiles extends ConsoleCommand
     protected function configure()
     {
         $this->setName('wordpress:generate-lang-files');
-        $this->setDescription('Generate the core JS asset file');
+        $this->setDescription('Generate the core JS language file');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -45,14 +45,10 @@ class GenerateLangFiles extends ConsoleCommand
 			    if (file_exists($file)) {
 				    $mixin = json_decode(file_get_contents($file), true);
 				    $base = array_merge($base, $mixin);
-
-				    Filesystem::deleteFileIfExists($file);
 			    }
 		    }
 
 		    file_put_contents($corePath, json_encode($base, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 	    }
-
     }
-
 }
