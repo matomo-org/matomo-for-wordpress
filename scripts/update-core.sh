@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# TODO: instructions on running this file
+
 set -e
 
 VERSION="$1"
@@ -10,8 +12,6 @@ function catch_error() {
     exit $status
 }
 
-trap catch_error ERR
-
 # report error and exit
 function die() {
         echo -e "$0: $1"
@@ -19,6 +19,10 @@ function die() {
 }
 
 [ ! -z "$VERSION" ] || die "Expected a Matomo version number as a parameter"
+which git &> /dev/null || die "git is required for this script"
+which composer &> /dev/null || die "composer is required for this script"
+
+trap catch_error ERR
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 MATOMO_ROOT="$SCRIPTPATH/../app/";
@@ -26,20 +30,27 @@ MATOMO_ROOT="$SCRIPTPATH/../app/";
 cd $SCRIPTPATH
 echo -e "Upgrading to $VERSION"
 
-URL="https://builds.matomo.org/matomo-$VERSION.zip"
+echo -e "Downloading $VERSION from git..."
 
-echo -e "Downloading $URL..."
-wget $URL -P "$SCRIPTPATH" || die "Got an error while downloading this Matomo version"
-
+rm -rf matomo/ 2> /dev/null
+git clone --recurse-submodules --depth 1 --branch "$VERSION" https://github.com/matomo-org/matomo.git matomo || die "Got an error while downloading this Matomo version"
 cp $MATOMO_ROOT/bootstrap.php bootstrap.php
 cp $MATOMO_ROOT/.htaccess .htaccess
+rm -rf matomo/.git
+
+if [ ! -f "$MATOMO_ROOT/.github/scripts/clean-build.sh" ]; then
+  mkdir -p $MATOMO_ROOT/.github/scripts
+  wget -O "$MATOMO_ROOT/.github/scripts/clean-build.sh" 'https://raw.githubusercontent.com/matomo-org/matomo/5.x-dev/.github/scripts/clean-build.sh'
+  chmod +x $MATOMO_ROOT/.github/scripts/clean-build.sh
+fi
+
+cd matomo/
+composer install --no-dev -o -q --ignore-platform-reqs
+cd ..
+
 rm -r "${MATOMO_ROOT:?}/"*
-rm -rf matomo/ 2> /dev/null
-unzip -o -q matomo-$VERSION.zip
 cp -R matomo/* $MATOMO_ROOT
 rm -r matomo/
-rm matomo-$VERSION.zip
-rm "How to install Matomo.html"
 
 # TODO: force the use of matomo-scoper after we're sure everything works
 if [ ! -z "$MATOMO_SCOPER_PATH" ]; then
@@ -64,7 +75,10 @@ rm -r $MATOMO_ROOT/CHANGELOG.md
 rm -r $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
 rm -r $MATOMO_ROOT/lang/README.md
 rm -r $MATOMO_ROOT/tests
-rm -r $MATOMO_ROOT/config/manifest.inc.php
+
+cd $MATOMO_ROOT
+./.github/scripts/clean-build.sh
+cd $SCRIPTPATH
 
 # remove the plugins also from auto loader so they can be installed through marketplace
 if [ -d "$MATOMO_ROOT/plugins/Provider" ]; then
@@ -92,6 +106,7 @@ then
 else
     echo -e "WordPress jquery was not replaced. There is an error."
 fi
+
+npm run compose -- run console wordpress:generate-lang-files
+
 echo -e "Done!... "
-echo -e "Now execute 'php ../app/console wordpress:generate-core-assets' or 'npm run compose run console wordpress:generate-core-assets'"
-echo -e "Then execute 'php ../app/console wordpress:generate-lang-files' or 'npm run compose run console wordpress:generate-lang-files'"

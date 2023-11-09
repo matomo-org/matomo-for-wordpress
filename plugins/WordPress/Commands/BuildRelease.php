@@ -37,7 +37,6 @@ class BuildRelease extends ConsoleCommand
         }
 
         $this->generateCoreAssets($output);
-        $this->generateLangFiles($output);
 
         $stashHash = $this->addGeneratedFilesToGit();
         if ($zip) {
@@ -82,18 +81,6 @@ class BuildRelease extends ConsoleCommand
         }
     }
 
-    private function generateLangFiles(OutputInterface $output)
-    {
-        $input = new ArrayInput([
-            'command' => 'wordpress:generate-lang-files',
-        ]);
-
-        $returnCode = $this->getApplication()->doRun($input, $output);
-        if ($returnCode) {
-            throw new \Exception('wordpress:generate-lang-files failed!');
-        }
-    }
-
     // TODO: unit test that checks generated files are up to date
     private function generateArchive($format, $version, $stashHash, OutputInterface $output)
     {
@@ -111,8 +98,7 @@ class BuildRelease extends ConsoleCommand
     {
         $pathToRepo = $this->getPathToGitRepo();
 
-        $command = 'git -C ' . $pathToRepo . ' add ' . PIWIK_INCLUDE_PATH . '/lang/*.json '
-            . plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'assets/js/asset_manager_core_js.js';
+        $command = 'git -C ' . $pathToRepo . ' add ' . plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'assets/js/asset_manager_core_js.js';
         $this->executeShellCommand($command, "Could not git add generated files.");
 
         $command = 'git -C ' . $pathToRepo . ' stash create';

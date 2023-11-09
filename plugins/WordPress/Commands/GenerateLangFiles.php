@@ -45,6 +45,8 @@ class GenerateLangFiles extends ConsoleCommand
 			    if (file_exists($file)) {
 				    $mixin = json_decode(file_get_contents($file), true);
 				    $base = array_merge($base, $mixin);
+
+                    Filesystem::deleteFileIfExists($file);
 			    }
 		    }
 
