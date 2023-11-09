@@ -46,6 +46,13 @@ fi
 
 cd matomo/
 composer install --no-dev -o -q --ignore-platform-reqs
+# delete most submodules (copied from https://github.com/matomo-org/matomo/blob/5.x-dev/.github/scripts/build-package.sh)
+SUBMODULES_PACKAGED_WITH_CORE='log-analytics|plugins/Morpheus/icons|plugins/TagManager'
+for P in $(git submodule status | egrep -v $SUBMODULES_PACKAGED_WITH_CORE | awk '{print $2}')
+do
+    echo "removing $P"
+    rm -Rf ./$P
+done
 cd ..
 
 rm -r "${MATOMO_ROOT:?}/"*
