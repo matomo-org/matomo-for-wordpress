@@ -153,12 +153,19 @@ jobs:
           WORDPRESS_FOLDER=test
           RESET_DATABASE=1
           WORDPRESS_VERSION=$WORDPRESS_VERSION
+          INSTALLING_FROM_ZIP=1
           EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
       - run: docker compose --env-file .env.default --env-file .env up -d wordpress
       - run: sleep 60 # wait for docker-compose launch to finish
+
+      # build release from current code
+      - run: npm run compose -- run console wordpress:build-release --name=test --zip
+
+      # install release from plugin
+      - run: npm run compose -- run wp plugin install --activate /var/www/html/matomo-test.zip
 
       # run tests
       - run: xvfb-run --auto-servernum npm run wdio

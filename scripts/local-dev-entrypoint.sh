@@ -31,7 +31,7 @@ if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
 elif [[ "$EXECUTE_CONSOLE" = "1" ]]; then
   echo "<?php # /var/www/html/$WORDPRESS_FOLDER/wp-load.php" > /var/www/html/matomo.wpload_dir.php
 
-  cd /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app
+  cd /var/www/html/matomo-for-wordpress/app
   ./console "$@"
   exit $?
 fi
@@ -175,7 +175,7 @@ else
 fi
 
 # link matomo for wordpress volume as wordpress plugin
-if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]; then
+if [[ "INSTALLING_FROM_ZIP" != "1" && ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]]; then
   ln -s /var/www/html/matomo-for-wordpress "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo"
 fi
 
