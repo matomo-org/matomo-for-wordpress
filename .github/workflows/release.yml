@@ -76,6 +76,9 @@ jobs:
               fi
 
               echo "version=$version" >> $GITHUB_ENV
+      # start local environment so we can run the wordpress:build-release command
+      - run: docker compose --env-file .env.default --env-file .env up -d wordpress
+      - run: sleep 60 # wait for docker-compose launch to finish
       - name: "Build releases"
         run: npm run compose run console wordpress:build-release --version=${{ env.version }} --zip --tgz
       - name: "Create release"

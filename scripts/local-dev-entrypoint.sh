@@ -25,6 +25,14 @@ fi
 echo "Using WordPress install $WORDPRESS_FOLDER."
 echo
 
+if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
+  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
+  exit $?
+elif [[ "$EXECUTE_CONSOLE" = "1" ]]; then
+  /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/console "$@"
+  exit $?
+fi
+
 # install wp-cli.phar
 if [ ! -f "/var/www/html/wp-cli.phar" ]; then
   curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o /var/www/html/wp-cli.phar
@@ -285,14 +293,6 @@ mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads
 find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chown "${UID:-1000}:${GID:-1000}" {} +
 find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
 chmod -R 0777 "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d" "/var/www/html/$WORDPRESS_FOLDER/debug.log"
-
-if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
-  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
-  exit $?
-elif [[ "$EXECUTE_CONSOLE" = "1" ]]; then
-  /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/console "$@"
-  exit $?
-fi
 
 if ! which apache2-foreground &> /dev/null; then
   # TODO: is it possible to use wp-cli for this?
