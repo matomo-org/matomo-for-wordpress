@@ -22,13 +22,12 @@ class BuildRelease extends ConsoleCommand
         $this->setDescription('Builds a release, either to a .zip or .tar.gz archive.');
         $this->addOption('zip', null, InputOption::VALUE_NONE, 'If supplied, a .zip archive will be created.');
         $this->addOption('tgz', null, InputOption::VALUE_NONE, 'If supplied, a .tgz archive will be created.');
-        $this->addOption('version', null, InputOption::VALUE_REQUIRED, 'The version of this release. If not supplied, the latest value from CHANGELOG.md is used.');
+        $this->addOption('name', null, InputOption::VALUE_REQUIRED,
+            'The name of this release, should be set to a semantic version number. If not supplied, the latest value from CHANGELOG.md is used.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        parent::execute($input, $output);
-
         $version = $this->getReleaseVersion($input, $output);
 
         $zip = $input->getOption('zip');
@@ -49,12 +48,12 @@ class BuildRelease extends ConsoleCommand
             $this->generateArchive('tgz', $version, $stashHash, $output);
         }
 
-        return self::SUCCESS;
+        return 0;
     }
 
     private function getReleaseVersion(InputInterface $input, OutputInterface $output)
     {
-        $version = $input->getOption('version');
+        $version = $input->getOption('name');
         if (!empty($version)) {
             return $version;
         }
@@ -78,7 +77,7 @@ class BuildRelease extends ConsoleCommand
         ]);
 
         $returnCode = $this->getApplication()->doRun($input, $output);
-        if ($returnCode !== self::SUCCESS) {
+        if ($returnCode) {
             throw new \Exception('wordpress:generate-core-assets failed!');
         }
     }
@@ -90,7 +89,7 @@ class BuildRelease extends ConsoleCommand
         ]);
 
         $returnCode = $this->getApplication()->doRun($input, $output);
-        if ($returnCode !== self::SUCCESS) {
+        if ($returnCode) {
             throw new \Exception('wordpress:generate-lang-files failed!');
         }
     }
@@ -100,7 +99,9 @@ class BuildRelease extends ConsoleCommand
     {
         $output->writeln("Generating $format archive...");
 
-        $command = "git archive --format=$format $stashHash > matomo-$version.$format";
+        $pathToRepo = $this->getPathToGitRepo();
+
+        $command = "git -C " . $pathToRepo . " archive --format=$format $stashHash > " . $pathToRepo . "/matomo-$version.$format";
         $this->executeShellCommand($command, "Failed to generate $format archive!");
 
         $output->writeln("<info>Created archive matomo-$version.$format.</info>");
@@ -108,20 +109,24 @@ class BuildRelease extends ConsoleCommand
 
     private function addGeneratedFilesToGit()
     {
-        $command = 'git add ' . PIWIK_INCLUDE_PATH . '/lang/*.json ' . plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'assets/js/asset_manager_core_js.js';
+        $pathToRepo = $this->getPathToGitRepo();
+
+        $command = 'git -C ' . $pathToRepo . ' add ' . PIWIK_INCLUDE_PATH . '/lang/*.json '
+            . plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'assets/js/asset_manager_core_js.js';
         $this->executeShellCommand($command, "Could not git add generated files.");
 
-        $command = 'git stash create';
+        $command = 'git -C ' . $pathToRepo . ' stash create';
         $output = $this->executeShellCommand($command, "Could not create git stash.");
+        $output = array_map('trim', $output);
         $output = array_filter($output);
 
         foreach ($output as $line) {
-            if (preg_match('/^[a-fA-F0-9]+%/', $line)) {
+            if (preg_match('/^[a-fA-F0-9]+$/', $line)) {
                 return $line;
             }
         }
 
-        throw new \Exception('Could not get hash from output of git stash create command.');
+        throw new \Exception('Could not get hash from output of git stash create command. Output: ' . implode("\n", $output));
     }
 
     private function executeShellCommand($command, $onFailureMessage)
@@ -133,5 +138,10 @@ class BuildRelease extends ConsoleCommand
         }
 
         return $output;
+    }
+
+    private function getPathToGitRepo()
+    {
+        return dirname( dirname( dirname( __DIR__ ) ) );
     }
 }
