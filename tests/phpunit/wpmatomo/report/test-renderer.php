@@ -9,7 +9,7 @@ class ReportRendererTest extends MatomoAnalytics_TestCase {
 
 	protected $disable_temp_tables = true;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->create_set_super_admin();

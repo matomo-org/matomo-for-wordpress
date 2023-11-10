@@ -37,7 +37,7 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 	 */
 	protected $disable_temp_tables = true;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->settings = new Settings();
 		$this->report   = new SystemReport( $this->settings );
@@ -50,7 +50,7 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 		$this->assume_admin_page();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$_REQUEST = array();
 		$_POST    = array();
 		parent::tearDown();

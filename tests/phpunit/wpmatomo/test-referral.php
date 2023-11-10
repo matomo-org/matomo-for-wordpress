@@ -16,7 +16,7 @@ class ReferralTest extends MatomoUnit_TestCase {
 
 	private $one_day_in_seconds = 86400;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->time     = 1584663656;

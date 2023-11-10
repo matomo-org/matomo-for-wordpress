@@ -22,7 +22,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 	 */
 	private $uninstaller;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->installer   = $this->make_installer();

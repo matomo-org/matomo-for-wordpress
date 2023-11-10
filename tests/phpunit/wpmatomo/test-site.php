@@ -12,7 +12,7 @@ class SiteTest extends MatomoUnit_TestCase {
 	 */
 	private $site;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->site = $this->make_site();

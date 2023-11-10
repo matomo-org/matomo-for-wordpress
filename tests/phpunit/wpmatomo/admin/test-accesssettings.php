@@ -26,7 +26,7 @@ class AdminAccessSettingsTest extends MatomoAnalytics_TestCase {
 	 */
 	private $access;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->settings        = new Settings();
@@ -38,7 +38,7 @@ class AdminAccessSettingsTest extends MatomoAnalytics_TestCase {
 		$this->assume_admin_page();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$_REQUEST = array();
 		$_POST    = array();
 		parent::tearDown();

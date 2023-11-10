@@ -12,7 +12,7 @@ class AdminPrivacySettingsTest extends MatomoUnit_TestCase {
 	 */
 	private $privacy_settings;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$settings               = new \WpMatomo\Settings();

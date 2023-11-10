@@ -13,7 +13,7 @@ class AdminInfoTest extends MatomoUnit_TestCase {
 	 */
 	private $info;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->info = new Info();
@@ -23,7 +23,7 @@ class AdminInfoTest extends MatomoUnit_TestCase {
 		$this->assume_admin_page();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$_REQUEST = array();
 		$_POST    = array();
 		parent::tearDown();

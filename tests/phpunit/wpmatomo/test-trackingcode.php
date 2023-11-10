@@ -28,7 +28,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 	 */
 	private $capabilities;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->settings      = new Settings();
@@ -39,7 +39,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		Site::map_matomo_site_id( get_current_blog_id(), 23 );
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->capabilities->remove_hooks();
 		parent::tearDown();
 	}

@@ -13,7 +13,7 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	 */
 	private $db;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->db = new WordPress(
 			array(

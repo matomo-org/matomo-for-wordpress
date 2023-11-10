@@ -29,13 +29,13 @@ class PathsTest extends MatomoUnit_TestCase {
 		$this->root_path             = realpath( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . '/../../../' );
 		$this->root_path_with_matomo = dirname( $this->root_path ) . '/matomo';
 	}
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->paths = $this->make_paths();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		if ( is_dir( $this->root_path_with_matomo ) ) {
 			if ( is_link( $this->root_path ) ) {
 				unlink( $this->root_path );

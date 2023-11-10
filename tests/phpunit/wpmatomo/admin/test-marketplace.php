@@ -18,7 +18,7 @@ class AdminMarketplaceTest extends MatomoUnit_TestCase {
 	 */
 	private $settings;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->settings    = new Settings();
@@ -28,7 +28,7 @@ class AdminMarketplaceTest extends MatomoUnit_TestCase {
 		$this->create_set_super_admin();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$_REQUEST = array();
 		$_POST    = array();
 		parent::tearDown();

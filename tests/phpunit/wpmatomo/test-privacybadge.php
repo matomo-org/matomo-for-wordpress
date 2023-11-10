@@ -7,7 +7,7 @@ use WpMatomo\PrivacyBadge;
 
 class PrivacyBadgeTest extends MatomoUnit_TestCase {
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$badge = new PrivacyBadge();

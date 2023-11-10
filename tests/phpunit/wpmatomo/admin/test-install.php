@@ -14,7 +14,7 @@ class AdminInstallTest extends MatomoUnit_TestCase {
 	 */
 	private $redirect;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->redirect = new RedirectOnActivation();
@@ -24,7 +24,7 @@ class AdminInstallTest extends MatomoUnit_TestCase {
 		$this->assume_admin_page();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->reset_roles();
 		parent::tearDown();
 	}

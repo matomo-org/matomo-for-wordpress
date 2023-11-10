@@ -14,7 +14,7 @@ class LoggerTest extends MatomoUnit_TestCase {
 	 */
 	private $logger;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->logger = new Logger();

@@ -13,7 +13,7 @@ class AdminSettingsTest extends MatomoUnit_TestCase {
 	 */
 	private $admin_settings;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$settings             = new Settings();

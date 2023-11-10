@@ -79,7 +79,7 @@ services:
       restart_policy:
         condition: on-failure
 
-  # service for running wp-cli
+  # service for running CLI utilities including wp-cli, the matomo console and phpunit
   wp:
     env_file:
       - .env.default
@@ -128,6 +128,30 @@ services:
     entrypoint: /usr/src/entrypoint.sh
     environment:
       EXECUTE_CONSOLE: 1
+    depends_on:
+      - "${BACKEND:-mariadb}"
+  phpunit: # TODO
+    env_file:
+      - .env.default
+      - .env
+    build:
+      context: ./scripts
+      dockerfile: ./Dockerfile.local
+      args:
+        PHP_VERSION: "$PHP_VERSION"
+        PHP_TYPE: apache
+    volumes:
+      - ./docker/wordpress:/var/www/html
+      - .:/var/www/html/matomo-for-wordpress
+      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
+      - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
+    environment:
+      EXECUTE_PHPUNIT: 1
+    ports:
+      - "$PORT:80"
+    user: "${UID:-1000}:${GID:-1000}"
+    entrypoint: /usr/src/entrypoint.sh
     depends_on:
       - "${BACKEND:-mariadb}"
 
