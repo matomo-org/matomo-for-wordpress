@@ -36,7 +36,6 @@ rm -rf matomo/ 2> /dev/null
 git clone --recurse-submodules --depth 1 --branch "$VERSION" https://github.com/matomo-org/matomo.git matomo || die "Got an error while downloading this Matomo version"
 cp $MATOMO_ROOT/bootstrap.php bootstrap.php
 cp $MATOMO_ROOT/.htaccess .htaccess
-rm -rf matomo/.git
 
 if [ ! -f "$MATOMO_ROOT/.github/scripts/clean-build.sh" ]; then
   mkdir -p $MATOMO_ROOT/.github/scripts
@@ -46,6 +45,7 @@ fi
 
 cd matomo/
 composer install --no-dev -o -q --ignore-platform-reqs
+
 # delete most submodules (copied from https://github.com/matomo-org/matomo/blob/5.x-dev/.github/scripts/build-package.sh)
 SUBMODULES_PACKAGED_WITH_CORE='log-analytics|plugins/Morpheus/icons|plugins/TagManager'
 for P in $(git submodule status | egrep -v $SUBMODULES_PACKAGED_WITH_CORE | awk '{print $2}')
@@ -53,6 +53,11 @@ do
     echo "removing $P"
     rm -Rf ./$P
 done
+# Remove and deactivate the TestRunner plugin in production build
+sed -i '/Plugins\[\] = TestRunner/d' config/global.ini.php
+rm -rf plugins/TestRunner
+
+rm -rf .git
 cd ..
 
 rm -r "${MATOMO_ROOT:?}/"*
@@ -86,6 +91,16 @@ rm -r $MATOMO_ROOT/tests
 cd $MATOMO_ROOT
 ./.github/scripts/clean-build.sh
 cd $SCRIPTPATH
+
+# we need to remove jquery as it is shipped with wordpress and we use their jquery
+# TODO: remove the following from .gitattributes
+rm -rf $MATOMO_ROOT/node_modules/jquery
+find $MATOMO_ROOT/node_modules/jquery-ui-dist -name '*.*' ! -name 'jquery-ui.min.css' ! -name 'LICENSE.txt' ! -name 'AUTHORS.txt' ! -name 'jquery-ui.theme.min.css' -exec rm -rf {} +
+rm -rf $MATOMO_ROOT/config/environment/test.php
+rm -rf $MATOMO_ROOT/config/environment/ui-test.php
+rm -rf $MATOMO_ROOT/vendor/twig/twig/ext
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/tools
+rm -rf $MATOMO_ROOT/vendor/doctrine/cache/lib/Doctrine/Common/Cache/RiakCache.php
 
 # remove the plugins also from auto loader so they can be installed through marketplace
 if [ -d "$MATOMO_ROOT/plugins/Provider" ]; then
