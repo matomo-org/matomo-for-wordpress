@@ -49,24 +49,7 @@ wdio.conf.ts export-ignore
 
 # export-ignore rules for embedded matomo follow
 
-# we need to remove jquery as it is shipped with wordpress and we use their jquery
-/app/node_modules/jquery export-ignore
-/app/node_modules/jquery-ui-dist/external export-ignore
-/app/node_modules/jquery-ui-dist/images export-ignore
-/app/node_modules/jquery-ui-dist/*.md export-ignore
-/app/node_modules/jquery-ui-dist/*.html export-ignore
-/app/node_modules/jquery-ui-dist/*.js export-ignore
-/app/node_modules/jquery-ui-dist/jquery-ui.css export-ignore
-/app/node_modules/jquery-ui-dist/jquery-ui.structure.* export-ignore
-/app/node_modules/jquery-ui-dist/jquery-ui.theme.css export-ignore
-/app/node_modules/jquery-ui-dist/*.json export-ignore
-
 # lets remove some extra libs that aren't needed
-/app/config/environment/test.php export-ignore
-/app/config/environment/ui-test.php export-ignore
-/app/vendor/twig/twig/ext export-ignore
-/app/vendor/tecnickcom/tcpdf/tools export-ignore
-/app/vendor/doctrine/cache/lib/Doctrine/Common/Cache/RiakCache.php export-ignore
 /app/node_modules/angular/*.js export-ignore
 /app/node_modules/angular/*.map export-ignore
 /app/node_modules/angular/*.json export-ignore
