@@ -24,8 +24,6 @@ echo "Using WordPress install $WORDPRESS_FOLDER."
 echo
 
 if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
-  echo "mwp dir:"
-  ls /var/www/html/matomo-for-wordpress/
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
 
   exit $?
