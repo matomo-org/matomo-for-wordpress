@@ -123,6 +123,8 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_tracking_noscriptenabled_default() {
+		add_action( 'wp_enqueue_scripts', 'wp_enqueue_block_template_skip_link' ); // removes a deprecated function from a hook in core WordPress
+
 		$this->settings->apply_tracking_related_changes(
 			array(
 				'track_mode'     => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
@@ -141,6 +143,8 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_tracking_noscriptenabled_manually_adds_noscript_when_needed() {
+		add_action( 'wp_enqueue_scripts', 'wp_enqueue_block_template_skip_link' ); // removes a deprecated function from a hook in core WordPress
+
 		$this->settings->apply_tracking_related_changes(
 			array(
 				'track_mode'     => WpMatomo\Admin\TrackingSettings::TRACK_MODE_MANUALLY,
