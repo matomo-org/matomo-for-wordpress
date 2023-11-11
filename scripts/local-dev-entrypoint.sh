@@ -25,14 +25,21 @@ echo
 
 if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
+  RETURN_CODE=$?
 
-  exit $?
+  chmod -R 777 /var/www/html # in case the command modified files
+
+  exit $RETURN_CODE
 elif [[ "$EXECUTE_CONSOLE" = "1" ]]; then
   echo "<?php # /var/www/html/$WORDPRESS_FOLDER/wp-load.php" > /var/www/html/matomo.wpload_dir.php
 
   cd /var/www/html/matomo-for-wordpress/app
   ./console "$@"
-  exit $?
+  RETURN_CODE=$?
+
+  chmod -R 777 /var/www/html # in case the command modified files
+
+  exit $RETURN_CODE
 fi
 
 a2enmod rewrite || true

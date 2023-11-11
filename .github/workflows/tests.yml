@@ -185,7 +185,6 @@ jobs:
           mv matomo-test.zip matomo.zip
           rm -rf ./docker/wordpress/test/wp-content/plugins/matomo
           npm run compose -- run wp plugin install --activate /var/www/html/matomo-for-wordpress/matomo.zip
-          chmod -R 777 ./docker/wordpress/test/wp-content/plugins/matomo
 
       # run tests
       - run: xvfb-run --auto-servernum npm run wdio
