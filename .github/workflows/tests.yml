@@ -173,7 +173,7 @@ jobs:
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-      - run: chmod -R 777 .
+      - run: chmod -R 777 . # required to build the release
       - run: docker compose --env-file .env.default --env-file .env up -d wordpress
       - run: sleep 60 # wait for docker-compose launch to finish
 
@@ -184,7 +184,10 @@ jobs:
       - run: |
           mv matomo-test.zip matomo.zip
           rm -rf ./docker/wordpress/test/wp-content/plugins/matomo
-          npm run compose -- run wp plugin install --activate /var/www/html/matomo-for-wordpress/matomo.zip
+          npm run compose -- run wp --allow-root plugin install --activate /var/www/html/matomo-for-wordpress/matomo.zip
+          npm run compose -- run wp --allow-root matomo install
+
+          sudo chmod -R 777 ./docker/wordpress/test/wp-content/cache/matomo
 
       # run tests
       - run: xvfb-run --auto-servernum npm run wdio
