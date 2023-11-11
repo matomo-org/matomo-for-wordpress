@@ -91,7 +91,7 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ matrix.wp-versions }}" = "5.2" ]]; then
-            cd ${{ github.workspace }}/wp-content/plugins/matomo && composer config platform.php 5.6
+            cd ${{ github.workspace }}/wp-content/plugins/matomo && composer require --dev yoast/phpunit-polyfills:^1.1
           fi
 
           cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update

@@ -24,8 +24,8 @@ echo "Using WordPress install $WORDPRESS_FOLDER."
 echo
 
 if [ -d /var/www/html/matomo-for-wordpress/.git ]; then
-  echo "HOME: $HOME"
-  echo "USER: $USER"
+  touch /.gitconfig
+  chmod 777 /.gitconfig
 
   git config --global --add safe.directory /var/www/html/matomo-for-wordpress
 fi
