@@ -140,6 +140,7 @@ jobs:
       # docker-compose up
       - run: ls ${{ github.workspace }}/scripts
       - run: pwd
+      - run: echo "UID = $UID, GID = $GID"
       # TODO: i can't seem to get docker layer caching to work.
       - run: |
           export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed 's/pipelines/artifactcache/')

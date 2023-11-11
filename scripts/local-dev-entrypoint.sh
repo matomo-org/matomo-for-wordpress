@@ -297,6 +297,10 @@ find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp
 find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
 chmod -R 0777 "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d" "/var/www/html/$WORDPRESS_FOLDER/debug.log" /var/www/html/matomo.wpload_dir.php
 
+if [ -d /var/www/html/matomo-for-wordpress/.git ]; then
+  git config --global --add safe.directory /var/www/html/matomo-for-wordpress
+fi
+
 if ! which apache2-foreground &> /dev/null; then
   # TODO: is it possible to use wp-cli for this?
   # make sure home url points to 'nginx' service
