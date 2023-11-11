@@ -69,7 +69,6 @@ class TrackingCode {
 					$position = $prefix . '_footer';
 				}
 
-				print "adding javascript code to head\n";
 				add_action( $position, [ $this, 'add_javascript_code' ] );
 
 				if ( $this->settings->is_add_no_script_code() ) {
