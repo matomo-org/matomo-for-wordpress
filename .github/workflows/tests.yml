@@ -107,6 +107,8 @@ jobs:
       - name: Run unit tests in non multisite context
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./vendor/bin/phpunit
+        env:
+          WP_VERSION: ${{ matrix.wp-versions }}
 
       - name: Run unit tests in multisite context
         shell: bash
@@ -147,7 +149,6 @@ jobs:
       # docker-compose up
       - run: ls ${{ github.workspace }}/scripts
       - run: pwd
-      - run: echo "UID = $UID, GID = $GID"
       # TODO: i can't seem to get docker layer caching to work.
       - run: |
           export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed 's/pipelines/artifactcache/')
@@ -172,6 +173,7 @@ jobs:
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: chmod -R +rw .
       - run: docker compose --env-file .env.default --env-file .env up -d wordpress
       - run: sleep 60 # wait for docker-compose launch to finish
 
