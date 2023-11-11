@@ -119,6 +119,7 @@ wdio.conf.ts export-ignore
 /app/node_modules/visibilityjs/*.js export-ignore
 /app/node_modules/visibilityjs/*.json export-ignore
 /app/node_modules/visibilityjs/*.md export-ignore
+/app/node_modules/vue/ export-ignore
 /app/libs/jqplot/plugins export-ignore
 /app/libs/jqplot/*.sh export-ignore
 /app/libs/jqplot/*.js export-ignore

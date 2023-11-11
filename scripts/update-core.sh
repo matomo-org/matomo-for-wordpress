@@ -44,8 +44,7 @@ if [ ! -f "$MATOMO_ROOT/.github/scripts/clean-build.sh" ]; then
 fi
 
 cd matomo/
-composer install --no-dev -o -q --ignore-platform-reqs
-
+rm -r ./tests
 # delete most submodules (copied from https://github.com/matomo-org/matomo/blob/5.x-dev/.github/scripts/build-package.sh)
 SUBMODULES_PACKAGED_WITH_CORE='log-analytics|plugins/Morpheus/icons|plugins/TagManager'
 for P in $(git submodule status | egrep -v $SUBMODULES_PACKAGED_WITH_CORE | awk '{print $2}')
@@ -56,6 +55,8 @@ done
 # Remove and deactivate the TestRunner plugin in production build
 sed -i '/Plugins\[\] = TestRunner/d' config/global.ini.php
 rm -rf plugins/TestRunner
+
+composer install --no-dev -o -q --ignore-platform-reqs
 
 rm -rf .git
 cd ..
@@ -86,7 +87,6 @@ rm -r $MATOMO_ROOT/CONTRIBUTING.md
 rm -r $MATOMO_ROOT/CHANGELOG.md
 rm -r $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
 rm -r $MATOMO_ROOT/lang/README.md
-rm -r $MATOMO_ROOT/tests
 
 cd $MATOMO_ROOT
 ./.github/scripts/clean-build.sh
@@ -101,6 +101,10 @@ rm -rf $MATOMO_ROOT/config/environment/ui-test.php
 rm -rf $MATOMO_ROOT/vendor/twig/twig/ext
 rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/tools
 rm -rf $MATOMO_ROOT/vendor/doctrine/cache/lib/Doctrine/Common/Cache/RiakCache.php
+rm -rf $MATOMO_ROOT/node_modules/angular-mocks
+rm -rf $MATOMO_ROOT/node_modules/materialize-css/extras $MATOMO_ROOT/node_modules/materialize-css/js $MATOMO_ROOT/node_modules/materialize-css/sass
+
+touch $MATOMO_ROOT/tmp/.gitkeep # we keep this folder to avoid permissions issues in the local docker environment
 
 # remove the plugins also from auto loader so they can be installed through marketplace
 if [ -d "$MATOMO_ROOT/plugins/Provider" ]; then
