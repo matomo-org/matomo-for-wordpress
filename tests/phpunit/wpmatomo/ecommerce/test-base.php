@@ -42,9 +42,9 @@ class BaseTest extends MatomoAnalytics_TestCase {
 		);
 
 		$this->assertSame(
-			'<script ' . $this->get_type_attribute() . '>' . PHP_EOL .
+			'<script ' . $this->get_type_attribute() . ">\n/* <![CDATA[ */" . PHP_EOL .
 			'window._paq = window._paq || []; window._paq.push(["setEcommerceView","sku","product-title",[],50]);' . PHP_EOL .
-			'</script>' . PHP_EOL,
+			"/* ]]> */\n</script>" . PHP_EOL,
 			$this->base->wrap_script( $this->base->make_matomo_js_tracker_call( $params ) )
 		);
 	}
