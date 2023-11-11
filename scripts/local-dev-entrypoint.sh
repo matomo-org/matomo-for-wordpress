@@ -23,13 +23,6 @@ fi
 echo "Using WordPress install $WORDPRESS_FOLDER."
 echo
 
-if [ -d /var/www/html/matomo-for-wordpress/.git ]; then
-  touch /.gitconfig
-  chmod 777 /.gitconfig
-
-  git config --global --add safe.directory /var/www/html/matomo-for-wordpress
-fi
-
 if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
   exit $?

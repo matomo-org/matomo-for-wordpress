@@ -29,6 +29,7 @@ services:
       - ./docker/wp-cli:/.wp-cli
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
+      - ./scripts/local-gitconfig:/.gitconfig
     ports:
       - "$PORT:80"
     entrypoint: /usr/src/entrypoint.sh
@@ -56,6 +57,7 @@ services:
       - ./docker/wp-cli:/.wp-cli
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
+      - ./scripts/local-gitconfig:/.gitconfig
     entrypoint: /usr/src/entrypoint.sh
     depends_on:
       - "$BACKEND"
@@ -93,6 +95,7 @@ services:
       - ./docker/wp-cli:/.wp-cli
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
+      - ./scripts/local-gitconfig:/.gitconfig
     ports:
       - "$PORT:80"
     user: "${UID:-1000}:${GID:-1000}"
@@ -118,6 +121,7 @@ services:
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
+      - ./scripts/local-gitconfig:/.gitconfig
     ports:
       - "$PORT:80"
     user: "${UID:-1000}:${GID:-1000}"

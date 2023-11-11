@@ -51,10 +51,17 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 			)
 		);
 
+		$cdata_start = "/* <![CDATA[ */\n";
+		$cdata_end   = "/* ]]> */\n";
+		if (getenv('WP_VERSION') && version_compare(getenv('WP_VERSION'), '6.4', '<')) {
+			$cdata_start = '';
+			$cdata_end   = '';
+		}
+
 		$this->assertSame(
-			'<!-- Matomo --><script ' . $this->get_type_attribute() . ">\n/* <![CDATA[ */\n" . 'var _paq = window._paq = window._paq || [];
+			'<!-- Matomo --><script ' . $this->get_type_attribute() . ">\n$cdata_start" . 'var _paq = window._paq = window._paq || [];
 _paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'alwaysUseSendBeacon\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
-g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);' . "\n/* ]]> */\n</script>\n<!-- End Matomo Code -->",
+g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);' . "\n$cdata_end</script>\n<!-- End Matomo Code -->",
 			$this->get_tracking_code()
 		);
 	}
@@ -75,15 +82,22 @@ g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/wp-content\/pl
 			)
 		);
 
+		$cdata_start = "/* <![CDATA[ */\n";
+		$cdata_end   = "/* ]]> */\n";
+		if (getenv('WP_VERSION') && version_compare(getenv('WP_VERSION'), '6.4', '<')) {
+			$cdata_start = '';
+			$cdata_end   = '';
+		}
+
 		$this->assertSame(
-			'<!-- Matomo --><script ' . $this->get_type_attribute() . '>' . "\n/* <![CDATA[ */\n" . 'var _paq = window._paq = window._paq || [];
+			'<!-- Matomo --><script ' . $this->get_type_attribute() . '>' . "\n$cdata_start" . 'var _paq = window._paq = window._paq || [];
 _paq.push([\'addDownloadExtensions\', "zip|waf"]);
 _paq.push([\'setLinkClasses\', "clickme|foo"]);
 _paq.push([\'disableCookies\']);
 _paq.push([\'enableCrossDomainLinking\']);
 _paq.push(["setCookieDomain", "*.example.org"]);
 _paq.push([\'trackAllContentImpressions\']);_paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'alwaysUseSendBeacon\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
-g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"; s.parentNode.insertBefore(g,s);' . "\n/* ]]> */\n</script>\n<!-- End Matomo Code -->",
+g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"; s.parentNode.insertBefore(g,s);' . "\n$cdata_end\n</script>\n<!-- End Matomo Code -->",
 			$this->get_tracking_code()
 		);
 	}
