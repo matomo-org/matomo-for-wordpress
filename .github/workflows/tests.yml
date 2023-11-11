@@ -158,6 +158,7 @@ jobs:
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: mkdir -p ./docker/wordpress # mkdir before running docker so the dir has the correct permissions
       - run: docker compose --env-file .env.default --env-file .env up -d wordpress
       - run: sleep 60 # wait for docker-compose launch to finish
 
