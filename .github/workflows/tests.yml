@@ -183,7 +183,7 @@ jobs:
       # install release from plugin
       - run: |
           mv matomo-test.zip matomo.zip
-          npm run compose -- run wp plugin install --activate /var/www/html/matomo-for-wordpress/matomo-test.zip
+          npm run compose -- run wp plugin install --activate /var/www/html/matomo-for-wordpress/matomo.zip
 
       # run tests
       - run: xvfb-run --auto-servernum npm run wdio
