@@ -183,7 +183,6 @@ jobs:
       # install release from plugin
       - run: |
           mv matomo-test.zip matomo.zip
-          ls
           npm run compose -- run wp plugin install --activate /var/www/html/matomo-for-wordpress/matomo.zip
 
       # run tests
