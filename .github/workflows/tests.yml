@@ -89,7 +89,12 @@ jobs:
       # versions of phpunit/etc. for different PHP versions
       - name: Update test dependencies
         shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update
+        run: |
+          if [[ "${{ matrix.wp-versions }}" = "5.2" ]]; then
+            composer config platform.php 5.6
+          fi
+
+          cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update
 
       - name: Install dependencies
         shell: bash
