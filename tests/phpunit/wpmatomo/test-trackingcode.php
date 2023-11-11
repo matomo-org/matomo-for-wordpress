@@ -117,14 +117,12 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		$footer = ob_get_clean();
 
 		$this->assertNotContains( 'idsite', $footer );
-		$this->assertContains( '<!-- Matomo --><script ' . $this->get_type_attribute() . ">\n", $footer );
+		$this->assertContains( '<!-- Matomo --><script ' . $this->get_type_attribute() . ">\n", $header );
 		$this->assertContains( 'var _paq = window._paq = window._paq || [];', $header );
 		$this->assertContains( '_paq.push([\'setSiteId\', \'23\'])', $header );
 	}
 
 	public function test_tracking_noscriptenabled_default() {
-		add_action( 'wp_enqueue_scripts', 'wp_enqueue_block_template_skip_link' ); // removes a deprecated function from a hook in core WordPress
-
 		$this->settings->apply_tracking_related_changes(
 			array(
 				'track_mode'     => WpMatomo\Admin\TrackingSettings::TRACK_MODE_DEFAULT,
@@ -132,6 +130,10 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 			)
 		);
 		$this->tracking_code->register_hooks();
+
+		ob_start();
+		do_action( 'wp_head' );
+		ob_get_clean();
 
 		ob_start();
 		do_action( 'wp_footer' );
@@ -143,8 +145,6 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_tracking_noscriptenabled_manually_adds_noscript_when_needed() {
-		add_action( 'wp_enqueue_scripts', 'wp_enqueue_block_template_skip_link' ); // removes a deprecated function from a hook in core WordPress
-
 		$this->settings->apply_tracking_related_changes(
 			array(
 				'track_mode'     => WpMatomo\Admin\TrackingSettings::TRACK_MODE_MANUALLY,
@@ -153,6 +153,9 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 			)
 		);
 		$this->tracking_code->register_hooks();
+		ob_start();
+		do_action( 'wp_head' );
+		ob_get_clean();
 
 		ob_start();
 		do_action( 'wp_footer' );
