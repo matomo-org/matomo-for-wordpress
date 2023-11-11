@@ -43,7 +43,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 
 		$cdata_start = "/* <![CDATA[ */\n";
 		$cdata_end   = "/* ]]> */\n";
-		if ( getenv( 'WP_VERSION' ) && version_compare( getenv( 'WP_VERSION' ), '6.4', '<' ) ) {
+		if ( getenv( 'WP_VERSION' ) && ( getenv( 'WP_VERSION' ) == 'latest' || version_compare( getenv( 'WP_VERSION' ), '6.4', '<' ) ) ) {
 			$cdata_start = '';
 			$cdata_end   = '';
 		}
