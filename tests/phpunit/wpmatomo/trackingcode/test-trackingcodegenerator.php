@@ -53,7 +53,7 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 
 		$cdata_start = "/* <![CDATA[ */\n";
 		$cdata_end   = "/* ]]> */\n";
-		if (getenv('WP_VERSION') && version_compare(getenv('WP_VERSION'), '6.4', '<')) {
+		if ( getenv( 'WP_VERSION' ) && version_compare( getenv( 'WP_VERSION' ), '6.4', '<' ) ) {
 			$cdata_start = '';
 			$cdata_end   = '';
 		}
@@ -84,7 +84,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/wp-content\/pl
 
 		$cdata_start = "/* <![CDATA[ */\n";
 		$cdata_end   = "/* ]]> */\n";
-		if (getenv('WP_VERSION') && version_compare(getenv('WP_VERSION'), '6.4', '<')) {
+		if ( getenv( 'WP_VERSION' ) && version_compare( getenv( 'WP_VERSION' ), '6.4', '<' ) ) {
 			$cdata_start = '';
 			$cdata_end   = '';
 		}
