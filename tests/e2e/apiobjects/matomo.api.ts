@@ -29,10 +29,11 @@ class MatomoApi {
       },
     });
 
+    const text = await response.text();
+
     try {
-      return await response.json();
+      return JSON.parse(text);
     } catch (e) {
-      const text = await response.text();
       throw new Error(`Failed to parse JSON response: ${text}`)
     }
   }
