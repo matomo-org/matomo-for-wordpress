@@ -160,3 +160,6 @@ wdio.conf.ts export-ignore
 /app/plugins/CoreAdminHome/javascripts/protocolCheck.js export-ignore
 /app/plugins/Overlay/javascripts/rowaction.js export-ignore
 /app/plugins/Overlay/javascripts/Overlay_Helper.js export-ignore
+
+/app/package.json export-ignore
+/app/package-lock.json export-ignore
