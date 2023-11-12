@@ -49,6 +49,9 @@ wdio.conf.ts export-ignore
 
 # export-ignore rules for embedded matomo follow
 
+# we need to remove jquery as it is shipped with wordpress and we use their jquery
+/app/node_modules/jquery export-ignore
+
 # lets remove some extra libs that aren't needed
 /app/node_modules/angular/*.js export-ignore
 /app/node_modules/angular/*.map export-ignore

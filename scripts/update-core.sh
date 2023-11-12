@@ -103,8 +103,6 @@ mv .gitignore.keep .gitignore
 rm -rf node_modules && mv node_modules.keep node_modules
 cd $SCRIPTPATH
 
-# we need to remove jquery as it is shipped with wordpress and we use their jquery
-rm -rf $MATOMO_ROOT/node_modules/jquery
 # TODO: move following to .gitattributes
 # find $MATOMO_ROOT/node_modules/jquery-ui-dist -name '*.*' ! -name 'jquery-ui.min.css' ! -name 'LICENSE.txt' ! -name 'AUTHORS.txt' ! -name 'jquery-ui.theme.min.css' -exec rm -rf {} +
 rm -rf $MATOMO_ROOT/config/environment/test.php
