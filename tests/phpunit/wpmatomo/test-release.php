@@ -62,6 +62,8 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 		$generated_asset = 'assets/js/asset_manager_core_js.js';
 		$current_hash    = md5_file( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $generated_asset );
 
+		$before = file_get_contents( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $generated_asset );
+
 		$application = new \Piwik\Console();
 		$application->setAutoExit( false );
 
@@ -77,7 +79,9 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 
 		$hash_after_generate = md5_file( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $generated_asset );
 
+		$after = file_get_contents( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $generated_asset );
+
 		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
-		$this->assertEquals( $current_hash, $hash_after_generate, 'Core assets need to be regenerated, run "npm run compose run console wordpress:generate-core-assets".' );
+		$this->assertEquals( $before, $after, 'Core assets need to be regenerated, run "npm run compose run console wordpress:generate-core-assets".' );
 	}
 }
