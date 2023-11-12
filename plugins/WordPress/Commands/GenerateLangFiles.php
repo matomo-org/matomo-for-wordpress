@@ -35,6 +35,8 @@ class GenerateLangFiles extends ConsoleCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        ServerFilesGenerator::createFilesForSecurity();
+
 	    $languages = API::getInstance()->getAvailableLanguages();
 	    $plugins = Plugin\Manager::getInstance()->loadAllPluginsAndGetTheirInfo();
 	    foreach ($languages as $language) {

@@ -102,7 +102,11 @@ class BuildRelease extends ConsoleCommand
         $this->executeShellCommand($command, "Could not git add generated files.");
 
         $command = 'git -C ' . $pathToRepo . ' stash create';
-        $output = $this->executeShellCommand($command, "Could not create git stash.");
+        $output = $this->executeShellCommand($command, null); // ignore error
+        if (empty($output)) { // nothing different in repo
+            return 'HEAD';
+        }
+
         $output = array_map('trim', $output);
         $output = array_filter($output);
 
@@ -119,7 +123,7 @@ class BuildRelease extends ConsoleCommand
     {
         exec($command, $output, $result);
 
-        if ($result) {
+        if ($onFailureMessage && $result) {
             throw new \Exception($onFailureMessage . ' Output: ' . implode("\n", $output));
         }
 

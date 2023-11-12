@@ -101,7 +101,6 @@ rm -rf $MATOMO_ROOT/config/environment/ui-test.php
 rm -rf $MATOMO_ROOT/vendor/twig/twig/ext
 rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/tools
 rm -rf $MATOMO_ROOT/vendor/doctrine/cache/lib/Doctrine/Common/Cache/RiakCache.php
-rm -rf $MATOMO_ROOT/node_modules/angular-mocks
 rm -rf $MATOMO_ROOT/node_modules/materialize-css/extras $MATOMO_ROOT/node_modules/materialize-css/js $MATOMO_ROOT/node_modules/materialize-css/sass
 
 touch $MATOMO_ROOT/tmp/.gitkeep # we keep this folder to avoid permissions issues in the local docker environment
