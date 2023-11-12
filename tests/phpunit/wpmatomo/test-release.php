@@ -60,9 +60,9 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 
 	public function test_generated_assets_are_up_to_date() {
 		$generated_asset = 'assets/js/asset_manager_core_js.js';
-		$contents        = file_get_contents( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $generated_asset );
-		$contents        = substr( $contents, strpos( $contents, "\n" ) );
-		$current_hash    = md5( $contents );
+		$before_contents        = file_get_contents( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $generated_asset );
+		$before_contents        = substr( $before_contents, strpos( $before_contents, "\n" ) );
+		$current_hash    = md5( $before_contents );
 
 		$application = new \Piwik\Console();
 		$application->setAutoExit( false );
@@ -77,11 +77,11 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 		$return_code = $application->run( $input, $output );
 		$this->assertEquals( 0, $return_code, 'Generate command failed: ' . $output->fetch() );
 
-		$contents            = file_get_contents( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $generated_asset );
-		$contents            = substr( $contents, strpos( $contents, "\n" ) );
-		$hash_after_generate = md5( $contents );
+		$after_contents            = file_get_contents( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $generated_asset );
+		$after_contents            = substr( $after_contents, strpos( $after_contents, "\n" ) );
+		$hash_after_generate = md5( $after_contents );
 
 		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
-		$this->assertEquals( $current_hash, $hash_after_generate, 'Core assets need to be regenerated, run "npm run compose run console wordpress:generate-core-assets".' );
+		$this->assertEquals( $before_contents, $after_contents, 'Core assets need to be regenerated, run "npm run compose run console wordpress:generate-core-assets".' );
 	}
 }
