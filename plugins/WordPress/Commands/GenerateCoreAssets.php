@@ -66,6 +66,8 @@ class GenerateCoreAssets extends ConsoleCommand
         $content = $assetManager->getMergedCoreJavaScript()->getContent();
 
         file_put_contents(plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'assets/js/asset_manager_core_js.js', $content);
+
+        return 0;
     }
 
 }

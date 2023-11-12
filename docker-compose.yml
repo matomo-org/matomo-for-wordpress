@@ -102,7 +102,6 @@ services:
     entrypoint: /usr/src/entrypoint.sh
     environment:
       EXECUTE_WP_CLI: 1
-      USER: "${USER:-root}"
     depends_on:
       - "$BACKEND"
   console:
@@ -128,7 +127,6 @@ services:
     entrypoint: /usr/src/entrypoint.sh
     environment:
       EXECUTE_CONSOLE: 1
-      USER: "${USER:-root}"
     depends_on:
       - "${BACKEND:-mariadb}"
 

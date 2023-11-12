@@ -4,7 +4,7 @@
  *
  * @package matomo
  */
-class ReleaseTest extends MatomoUnit_TestCase {
+class ReleaseTest extends MatomoAnalytics_TestCase {
 
 	/**
 	 * @dataProvider get_needed_files
@@ -56,5 +56,28 @@ class ReleaseTest extends MatomoUnit_TestCase {
 		$six_months_ago = ( new DateTime( '-6 months ago' ) )->getTimestamp();
 
 		$this->assertLessThan( $six_months_ago, $last_updated, 'The last release of this plugin was over 6 months ago, another release is needed to show the plugin is not abandoned.' );
+	}
+
+	public function test_generated_assets_are_up_to_date() {
+		$generated_asset = 'assets/js/asset_manager_core_js.js';
+		$current_hash    = md5_file( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $generated_asset );
+
+		$application = new \Piwik\Console();
+		$application->setAutoExit( false );
+
+		$input  = new \Symfony\Component\Console\Input\ArrayInput(
+			[
+				'command' => 'wordpress:generate-core-assets',
+			]
+		);
+		$output = new \Symfony\Component\Console\Output\BufferedOutput();
+
+		$return_code = $application->run( $input, $output );
+		$this->assertEquals( 0, $return_code, 'Generate command failed: ' . $output->fetch() );
+
+		$hash_after_generate = md5_file( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $generated_asset );
+
+		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
+		$this->assertEquals( $current_hash, $hash_after_generate, 'Core assets need to be regenerated, run "npm run compose run wordpress:generate-core-assets".' );
 	}
 }

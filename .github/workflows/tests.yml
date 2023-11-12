@@ -104,6 +104,8 @@ jobs:
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' 127.0.0.1 ${{ matrix.wp-versions }} true
 
+      - run: chmod -R 777 . # for building generated assets
+
       - name: Run unit tests in non multisite context
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./vendor/bin/phpunit
