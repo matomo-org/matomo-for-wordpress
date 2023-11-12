@@ -38,8 +38,6 @@ class BuildRelease extends ConsoleCommand
 
         $this->generateCoreAssets($output);
 
-        $this->removeDevelopmentNpmPackages();
-
         $stashHash = $this->addGeneratedFilesToGit();
 
         if ($zip) {
@@ -51,12 +49,6 @@ class BuildRelease extends ConsoleCommand
         }
 
         return 0;
-    }
-
-    private function removeDevelopmentNpmPackages()
-    {
-        $command = 'cd ' . __DIR__ . '/../../../app && npm prune --production';
-        $this->executeShellCommand($command, 'failed to run npm prune');
     }
 
     private function getReleaseVersion(InputInterface $input, OutputInterface $output)

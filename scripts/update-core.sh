@@ -92,6 +92,7 @@ cd $MATOMO_ROOT
 cp package.json package.json.keep # we want to keep these files
 cp package-lock.json package-lock.json.keep
 cp .gitignore .gitignore.keep
+cp -R node_modules node_modules.keep
 
 chmod +x ./.github/scripts/clean-build.sh
 ./.github/scripts/clean-build.sh
@@ -99,12 +100,13 @@ chmod +x ./.github/scripts/clean-build.sh
 mv package.json.keep package.json
 mv package-lock.json.keep package-lock.json
 mv .gitignore.keep .gitignore
+rm -rf node_modules && mv node_modules.keep node_modules
 cd $SCRIPTPATH
 
 # we need to remove jquery as it is shipped with wordpress and we use their jquery
-# TODO: remove the following from .gitattributes
 rm -rf $MATOMO_ROOT/node_modules/jquery
-find $MATOMO_ROOT/node_modules/jquery-ui-dist -name '*.*' ! -name 'jquery-ui.min.css' ! -name 'LICENSE.txt' ! -name 'AUTHORS.txt' ! -name 'jquery-ui.theme.min.css' -exec rm -rf {} +
+# TODO: move following to .gitattributes
+# find $MATOMO_ROOT/node_modules/jquery-ui-dist -name '*.*' ! -name 'jquery-ui.min.css' ! -name 'LICENSE.txt' ! -name 'AUTHORS.txt' ! -name 'jquery-ui.theme.min.css' -exec rm -rf {} +
 rm -rf $MATOMO_ROOT/config/environment/test.php
 rm -rf $MATOMO_ROOT/config/environment/ui-test.php
 rm -rf $MATOMO_ROOT/vendor/twig/twig/ext
