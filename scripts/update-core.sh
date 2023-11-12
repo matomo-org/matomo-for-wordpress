@@ -40,7 +40,6 @@ cp $MATOMO_ROOT/.htaccess .htaccess
 if [ ! -f "$MATOMO_ROOT/.github/scripts/clean-build.sh" ]; then
   mkdir -p $MATOMO_ROOT/.github/scripts
   wget -O "$MATOMO_ROOT/.github/scripts/clean-build.sh" 'https://raw.githubusercontent.com/matomo-org/matomo/5.x-dev/.github/scripts/clean-build.sh'
-  chmod +x $MATOMO_ROOT/.github/scripts/clean-build.sh
 fi
 
 cd matomo/
@@ -61,8 +60,9 @@ composer install --no-dev -o -q --ignore-platform-reqs
 rm -rf .git
 cd ..
 
-rm -r "${MATOMO_ROOT:?}/"*
+rm -r "${MATOMO_ROOT:?}/"* "${MATOMO_ROOT:?}/".*
 cp -R matomo/* $MATOMO_ROOT
+cp -R matomo/.* $MATOMO_ROOT
 rm -r matomo/
 
 # TODO: force the use of matomo-scoper after we're sure everything works
@@ -92,7 +92,10 @@ cd $MATOMO_ROOT
 cp package.json package.json.keep # we want to keep these files
 cp package-lock.json package-lock.json.keep
 cp .gitignore .gitignore.keep
+
+chmod +x ./.github/scripts/clean-build.sh
 ./.github/scripts/clean-build.sh
+
 mv package.json.keep package.json
 mv package-lock.json.keep package-lock.json
 mv .gitignore.keep .gitignore
