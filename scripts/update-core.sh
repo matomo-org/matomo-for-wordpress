@@ -92,6 +92,7 @@ cd $MATOMO_ROOT
 cp package.json package.json.keep # we want to keep these files
 cp package-lock.json package-lock.json.keep
 cp .gitignore .gitignore.keep
+cp .gitattributes .gitattributes.keep
 cp -R node_modules node_modules.keep
 
 chmod +x ./.github/scripts/clean-build.sh
@@ -101,6 +102,7 @@ mv package.json.keep package.json
 mv package-lock.json.keep package-lock.json
 mv .gitignore.keep .gitignore
 rm -rf node_modules && mv node_modules.keep node_modules
+mv .gitattributes.keep .gitattributes
 cd $SCRIPTPATH
 
 # TODO: move following to .gitattributes
