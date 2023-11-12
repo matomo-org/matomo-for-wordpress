@@ -91,9 +91,11 @@ rm -r $MATOMO_ROOT/lang/README.md
 cd $MATOMO_ROOT
 cp package.json package.json.keep # we want to keep these files
 cp package-lock.json package-lock.json.keep
+cp .gitignore .gitignore.keep
 ./.github/scripts/clean-build.sh
 mv package.json.keep package.json
 mv package-lock.json.keep package-lock.json
+mv .gitignore.keep .gitignore
 cd $SCRIPTPATH
 
 # we need to remove jquery as it is shipped with wordpress and we use their jquery
