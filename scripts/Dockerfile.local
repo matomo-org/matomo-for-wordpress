@@ -5,3 +5,18 @@ FROM "php:$PHP_VERSION-$PHP_TYPE" AS base
 RUN apt-get update && apt-get install -y --no-install-recommends libfreetype6 zlib1g-dev libjpeg-dev libpng-dev unzip git
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql gd
+
+# install node
+ENV NVM_DIR="/home/user/.nvm" \
+    NODE_VERSION="16.19.1" \
+    NVM_VERSION="0.39.3"
+
+RUN mkdir -p "$NVM_DIR" \
+  && curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v$NVM_VERSION/install.sh" | bash \
+  && . $NVM_DIR/nvm.sh \
+  && nvm install $NODE_VERSION \
+  && nvm alias default $NODE_VERSION \
+  && nvm use default
+
+ENV NODE_PATH="$NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules"
+ENV PATH="$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
