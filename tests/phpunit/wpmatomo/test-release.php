@@ -78,6 +78,6 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 		$hash_after_generate = md5_file( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $generated_asset );
 
 		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
-		$this->assertEquals( $current_hash, $hash_after_generate, 'Core assets need to be regenerated, run "npm run compose run wordpress:generate-core-assets".' );
+		$this->assertEquals( $current_hash, $hash_after_generate, 'Core assets need to be regenerated, run "npm run compose run console wordpress:generate-core-assets".' );
 	}
 }
