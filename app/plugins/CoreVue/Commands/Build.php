@@ -53,13 +53,12 @@ class Build extends ConsoleCommand
         $printBuildCommand = $input->getOption('print-build-command');
         $watch = $input->getOption('watch');
 
-		$allPluginPaths = $this->getAllPlugins();
-		$allPluginPaths = $this->filterPluginsWithoutVueLibrary($allPluginPaths);
-		$allPluginNames = array_map('basename', $allPluginPaths);
+		$allPluginNames = $this->getAllPlugins();
+		$allPluginNames = $this->filterPluginsWithoutVueLibrary($allPluginNames);
 
         $plugins = $input->getArgument('plugins');
         if (empty($plugins)) {
-            $plugins = $allPluginPaths;
+            $plugins = $allPluginNames;
         } else {
 			$plugins = $this->filterPluginsWithoutVueLibrary($plugins);
 		}
@@ -125,7 +124,7 @@ class Build extends ConsoleCommand
 
         $command = '';
         foreach ($plugins as $plugin) {
-			$pluginDirPath = Manager::getPluginDirectory($plugin);
+			$pluginDirPath = PluginUmdAssetFetcher::getRelativePluginDirectory($plugin);
             $command .= sprintf($commandSingle, $plugin, $pluginDirPath) . ' ';
         }
 
@@ -139,7 +138,7 @@ class Build extends ConsoleCommand
 
     private function buildFiles(OutputInterface $output, $plugin, $printBuildCommand, $allPluginNames)
     {
-		$pluginDirPath = Manager::getPluginDirectory($plugin);
+		$pluginDirPath = PluginUmdAssetFetcher::getRelativePluginDirectory($plugin);
 
         $command = 'cd ' . PIWIK_INCLUDE_PATH . ' && '
 			. "BROWSERSLIST_IGNORE_OLD_DATA=1 FORCE_COLOR=1 MATOMO_CURRENT_PLUGIN=$pluginDirPath "
