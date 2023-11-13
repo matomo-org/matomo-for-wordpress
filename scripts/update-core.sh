@@ -86,7 +86,9 @@ rm -r $MATOMO_ROOT/plugins/*/tests
 rm -r $MATOMO_ROOT/plugins/*/.github
 rm -r $MATOMO_ROOT/plugins/*/config/test.php
 rm -r $MATOMO_ROOT/plugins/*/config/ui-test.php
+rm -r $MATOMO_ROOT/plugins/*/screenshots
 rm -r $MATOMO_ROOT/tmp/CACHEDIR.TAG
+find $MATOMO_ROOT/plugins/Morpheus/icons -type f -not -path "$MATOMO_ROOT/plugins/Morpheus/icons/dist/*" -exec rm -rf {} +
 
 cd $SCRIPTPATH
 
