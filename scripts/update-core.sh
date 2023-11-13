@@ -52,7 +52,7 @@ rm -rf plugins/TestRunner
 
 composer install --no-dev -o -q --ignore-platform-reqs
 
-rm -rf .git
+find . -name .git -exec rm -rf {} +
 cd ..
 
 rm -r "${MATOMO_ROOT:?}/"* "${MATOMO_ROOT:?}/".*
