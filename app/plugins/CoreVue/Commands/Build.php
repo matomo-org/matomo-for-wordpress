@@ -53,12 +53,17 @@ class Build extends ConsoleCommand
         $printBuildCommand = $input->getOption('print-build-command');
         $watch = $input->getOption('watch');
 
+		$allPluginPaths = $this->getAllPlugins();
+		$allPluginPaths = $this->filterPluginsWithoutVueLibrary($allPluginPaths);
+		$allPluginNames = array_map('basename', $allPluginPaths);
+
         $plugins = $input->getArgument('plugins');
         if (empty($plugins)) {
-            $plugins = $this->getAllPlugins();
-        }
+            $plugins = $allPluginPaths;
+        } else {
+			$plugins = $this->filterPluginsWithoutVueLibrary($plugins);
+		}
 
-		$plugins = $this->filterPluginsWithoutVueLibrary($plugins);
 		if (empty($plugins)) {
 			$output->writeln("<error>No plugins to build!</error>");
 			return 1;
@@ -70,7 +75,7 @@ class Build extends ConsoleCommand
         // remove webpack cache since it can result in strange builds if present
         Filesystem::unlinkRecursive(PIWIK_INCLUDE_PATH . '/node_modules/.cache', true);
 
-        $failed = $this->build($output, $plugins, $printBuildCommand, $watch);
+        $failed = $this->build($output, $plugins, $printBuildCommand, $allPluginNames, $watch);
         return $failed;
     }
 
@@ -94,25 +99,27 @@ class Build extends ConsoleCommand
         return is_file($typeDirectory);
     }
 
-    private function build(OutputInterface $output, $plugins, $printBuildCommand, $watch = false)
+    private function build(OutputInterface $output, $plugins, $printBuildCommand, $allPluginNames, $watch = false)
     {
         if ($watch) {
-            $this->watch($plugins, $printBuildCommand, $output);
+            $this->watch($plugins, $printBuildCommand, $output, $allPluginNames);
             return;
         }
 
         $failed = 0;
 
         foreach ($plugins as $plugin) {
-            $failed += (int) $this->buildFiles($output, $plugin, $printBuildCommand);
+            $failed += (int) $this->buildFiles($output, $plugin, $printBuildCommand, $allPluginNames);
         }
 
         return $failed;
     }
 
-    private function watch($plugins, $printBuildCommand, OutputInterface $output)
+    private function watch($plugins, $printBuildCommand, $allPluginNames, OutputInterface $output)
     {
-        $commandSingle = "BROWSERSLIST_IGNORE_OLD_DATA=1 FORCE_COLOR=1 MATOMO_CURRENT_PLUGIN=%1\$s "
+        $commandSingle = 'cd ' . PIWIK_INCLUDE_PATH . ' && '
+			. "BROWSERSLIST_IGNORE_OLD_DATA=1 FORCE_COLOR=1 MATOMO_CURRENT_PLUGIN=%2\$s "
+			. 'MATOMO_ALL_PLUGINS=' . implode(',', $allPluginNames) . ' '
             . 'node ' . self::getVueCliServiceProxyBin() . ' build --mode=development --target lib --name '
             . "%1\$s --filename=%1\$s.development --no-clean %2\$s/vue/src/index.ts --dest %2\$s/vue/dist --watch &";
 
@@ -130,11 +137,13 @@ class Build extends ConsoleCommand
         passthru($command);
     }
 
-    private function buildFiles(OutputInterface $output, $plugin, $printBuildCommand)
+    private function buildFiles(OutputInterface $output, $plugin, $printBuildCommand, $allPluginNames)
     {
 		$pluginDirPath = Manager::getPluginDirectory($plugin);
 
-        $command = "BROWSERSLIST_IGNORE_OLD_DATA=1 FORCE_COLOR=1 MATOMO_CURRENT_PLUGIN=$plugin "
+        $command = 'cd ' . PIWIK_INCLUDE_PATH . ' && '
+			. "BROWSERSLIST_IGNORE_OLD_DATA=1 FORCE_COLOR=1 MATOMO_CURRENT_PLUGIN=$pluginDirPath "
+			. 'MATOMO_ALL_PLUGINS=' . implode(',', $allPluginNames) . ' '
             . 'node ' . self::getVueCliServiceProxyBin() . ' build --target lib --name ' . $plugin
             . " $pluginDirPath/vue/src/index.ts --dest $pluginDirPath/vue/dist";
 
