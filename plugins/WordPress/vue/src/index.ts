@@ -5,4 +5,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
-exports.value = 2324;
+import { translate } from 'CoreHome';
+
+exports.value = translate('WordPress_Whatever');
