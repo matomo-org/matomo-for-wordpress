@@ -84,17 +84,16 @@ rm -r $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
 rm -r $MATOMO_ROOT/lang/README.md
 rm -r $MATOMO_ROOT/plugins/Example*
 rm -r $MATOMO_ROOT/plugins/*/tests
-rm -r $MATOMO_ROOT/plugins/*/.github
+find $MATOMO_ROOT -name .github -exec rm -rf {} +
 rm -r $MATOMO_ROOT/plugins/*/config/test.php
 rm -r $MATOMO_ROOT/plugins/*/config/ui-test.php
 rm -r $MATOMO_ROOT/plugins/*/screenshots
 rm -r $MATOMO_ROOT/tmp/CACHEDIR.TAG
-find $MATOMO_ROOT/plugins/Morpheus/icons -type f -not -path "$MATOMO_ROOT/plugins/Morpheus/icons/dist/*" -exec rm -rf {} +
+find $MATOMO_ROOT/plugins/Morpheus/icons \( -type f -o -type l \) -not -path "$MATOMO_ROOT/plugins/Morpheus/icons/dist/*" -exec rm -rf {} +
+find $MATOMO_ROOT -name "*.spec.js" -exec rm -rf {} +
 
 cd $SCRIPTPATH
 
-# TODO: move following to .gitattributes
-# find $MATOMO_ROOT/node_modules/jquery-ui-dist -name '*.*' ! -name 'jquery-ui.min.css' ! -name 'LICENSE.txt' ! -name 'AUTHORS.txt' ! -name 'jquery-ui.theme.min.css' -exec rm -rf {} +
 rm -rf $MATOMO_ROOT/config/environment/test.php
 rm -rf $MATOMO_ROOT/config/environment/ui-test.php
 rm -rf $MATOMO_ROOT/vendor/twig/twig/ext
