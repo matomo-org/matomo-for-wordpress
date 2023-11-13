@@ -37,11 +37,6 @@ git clone --recurse-submodules --depth 1 --branch "$VERSION" https://github.com/
 cp $MATOMO_ROOT/bootstrap.php bootstrap.php
 cp $MATOMO_ROOT/.htaccess .htaccess
 
-if [ ! -f "$MATOMO_ROOT/.github/scripts/clean-build.sh" ]; then
-  mkdir -p $MATOMO_ROOT/.github/scripts
-  wget -O "$MATOMO_ROOT/.github/scripts/clean-build.sh" 'https://raw.githubusercontent.com/matomo-org/matomo/5.x-dev/.github/scripts/clean-build.sh'
-fi
-
 cd matomo/
 rm -r ./tests
 # delete most submodules (copied from https://github.com/matomo-org/matomo/blob/5.x-dev/.github/scripts/build-package.sh)
@@ -88,21 +83,6 @@ rm -r $MATOMO_ROOT/CHANGELOG.md
 rm -r $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
 rm -r $MATOMO_ROOT/lang/README.md
 
-cd $MATOMO_ROOT
-cp package.json package.json.keep # we want to keep these files
-cp package-lock.json package-lock.json.keep
-cp .gitignore .gitignore.keep
-cp .gitattributes .gitattributes.keep
-cp -R node_modules ../node_modules.keep
-
-chmod +x ./.github/scripts/clean-build.sh
-./.github/scripts/clean-build.sh
-
-mv package.json.keep package.json
-mv package-lock.json.keep package-lock.json
-mv .gitignore.keep .gitignore
-rm -rf node_modules && mv ../node_modules.keep node_modules
-mv .gitattributes.keep .gitattributes
 cd $SCRIPTPATH
 
 # TODO: move following to .gitattributes
