@@ -82,6 +82,11 @@ rm -r $MATOMO_ROOT/CONTRIBUTING.md
 rm -r $MATOMO_ROOT/CHANGELOG.md
 rm -r $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
 rm -r $MATOMO_ROOT/lang/README.md
+rm -r $MATOMO_ROOT/plugins/*/tests
+rm -r $MATOMO_ROOT/plugins/*/.github
+rm -r $MATOMO_ROOT/plugins/*/config/test.php
+rm -r $MATOMO_ROOT/plugins/*/config/ui-test.php
+rm -r $MATOMO_ROOT/tmp/CACHEDIR.TAG
 
 cd $SCRIPTPATH
 
