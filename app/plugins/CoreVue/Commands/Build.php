@@ -286,12 +286,15 @@ class Build extends ConsoleCommand
 
 	private function getAllPlugins()
 	{
-		$pluginDirectories = $GLOBALS['MATOMO_PLUGIN_DIRS'] ?? [
+		$pluginDirectories = array_merge(
+			$GLOBALS['MATOMO_PLUGIN_DIRS'],
 			[
-				'pluginsPathAbsolute'        => PIWIK_INCLUDE_PATH . '/plugins',
-				'webrootDirRelativeToMatomo' => '.',
-			],
-		];
+				[
+					'pluginsPathAbsolute'        => PIWIK_INCLUDE_PATH . '/plugins',
+					'webrootDirRelativeToMatomo' => '.',
+				],
+			]
+		);
 
 		$allPlugins = [];
 

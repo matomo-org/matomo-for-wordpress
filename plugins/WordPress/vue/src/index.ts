@@ -7,4 +7,6 @@
 
 import { translate } from 'CoreHome';
 
-exports.value = translate('WordPress_Whatever');
+const value = translate('WordPress_Whatever');
+
+export { value };
