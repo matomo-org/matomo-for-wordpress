@@ -64,14 +64,7 @@ rm -r matomo/
 if [ ! -z "$MATOMO_SCOPER_PATH" ]; then
   echo "Running matomo-scoper..."
 
-  # download manifest and lock file from github since it's not available in the built package
-  wget "https://raw.githubusercontent.com/matomo-org/matomo/$VERSION/composer.json" -O "$MATOMO_ROOT/composer.json"
-  wget "https://raw.githubusercontent.com/matomo-org/matomo/$VERSION/composer.lock" -O "$MATOMO_ROOT/composer.lock"
-
   php "$MATOMO_SCOPER_PATH/bin/matomo-scoper" scope -y  --rename-references "$MATOMO_ROOT"
-
-  rm "$MATOMO_ROOT"/composer.json
-  rm "$MATOMO_ROOT"/composer.lock
 else
   echo "MATOMO_SCOPER_PATH not defined, skipping scoping."
 fi
@@ -91,6 +84,11 @@ rm -r $MATOMO_ROOT/plugins/*/screenshots
 rm -r $MATOMO_ROOT/tmp/CACHEDIR.TAG
 find $MATOMO_ROOT/plugins/Morpheus/icons \( -type f -o -type l \) -not -path "$MATOMO_ROOT/plugins/Morpheus/icons/dist/*" -exec rm -rf {} +
 find $MATOMO_ROOT -name "*.spec.js" -exec rm -rf {} +
+rm $MATOMO_ROOT/HIRING.md
+rm $MATOMO_ROOT/.travis.yml
+rm $MATOMO_ROOT/.scrutinizer.yml
+rm $MATOMO_ROOT/.coveralls.yml
+rm $MATOMO_ROOT/.gitmodules
 
 cd $SCRIPTPATH
 

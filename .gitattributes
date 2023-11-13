@@ -47,6 +47,13 @@ vue.config.js export-ignore
 .env.default export-ignore
 .env export-ignore
 /app/tmp/ export-ignore
+.lfsconfig export-ignore
+babel.config.js export-ignore
+.phpstorm.meta.php export-ignore
+.browserslistrc export-ignore
+.eslintignore export-ignore
+.eslintrc.js export-ignore
+jest.config.js export-ignore
 
 # export-ignore rules for embedded matomo follow
 
