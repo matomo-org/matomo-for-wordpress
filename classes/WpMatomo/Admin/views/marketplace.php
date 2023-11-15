@@ -48,7 +48,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 	<?php } ?>
 
 	<?php
-	function matomo_show_tables( $matomo_feature_sections ) {
+	function matomo_show_tables( $matomo_feature_sections, $matomo_version ) {
 		foreach ( $matomo_feature_sections as $matomo_feature_section ) {
 			$matomo_feature_section['features'] = array_filter( $matomo_feature_section['features'] );
 			$matomo_num_features_in_block       = count( $matomo_feature_section['features'] );
@@ -65,13 +65,14 @@ $matomo_extra_url_params = '&' . http_build_query(
 						$matomo_style .= 'clear: inherit;margin-right: 0;margin-left: 16px;';
 					}
 				}
+				$plugin_url = empty($matomo_feature['url']) ? null : $matomo_feature['url'] . '&matomoversion=' . $matomo_version;
 				?>
 				<div class="plugin-card" style="<?php echo esc_attr( $matomo_style ); ?>">
 					<?php
 					if ( $matomo_is_3_columns && ! empty( $matomo_feature['image'] ) ) {
 						?>
 					<a
-							href="<?php echo esc_url( $matomo_feature['url'] ); ?>"
+							href="<?php echo esc_url( $plugin_url ); ?>"
 							rel="noreferrer noopener" target="_blank"
 							class="thickbox open-plugin-details-modal"><img
 								src="<?php echo esc_url( $matomo_feature['image'] ); ?>"
@@ -97,7 +98,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 						?>
 								">
 							<h3>
-								<a href="<?php echo esc_url( ! empty( $matomo_feature['video'] ) ? $matomo_feature['video'] : $matomo_feature['url'] ); ?>"
+								<a href="<?php echo esc_url( ! empty( $matomo_feature['video'] ) ? $matomo_feature['video'] : $plugin_url ); ?>"
 								   rel="noreferrer noopener" target="_blank"
 								   class="thickbox open-plugin-details-modal">
 									<?php echo esc_html( $matomo_feature['name'] ); ?>
@@ -106,7 +107,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 								if ( ! $matomo_is_3_columns && ! empty( $matomo_feature['image'] ) ) {
 									?>
 								<a
-										href="<?php echo esc_url( $matomo_feature['url'] ); ?>"
+										href="<?php echo esc_url( $plugin_url ); ?>"
 										rel="noreferrer noopener" target="_blank"
 										class="thickbox open-plugin-details-modal"><img
 											src="<?php echo esc_url( $matomo_feature['image'] ); ?>" class="plugin-icon"
@@ -138,7 +139,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 								if ( ! empty( $matomo_feature['video'] ) ) {
 									echo ' <a target="_blank" rel="noreferrer noopener" style="white-space: nowrap;" href="' . esc_url( $matomo_feature['video'] ) . '"><span class="dashicons dashicons-video-alt3"></span> ' . esc_html__( 'Learn more', 'matomo' ) . '</a>';
 								} elseif ( ! empty( $matomo_feature['url'] ) ) {
-									echo ' <a target="_blank" rel="noreferrer noopener" style="white-space: nowrap;" href="' . esc_url( $matomo_feature['url'] ) . '">' . esc_html__( 'Learn more', 'matomo' ) . '</a>';
+									echo ' <a target="_blank" rel="noreferrer noopener" style="white-space: nowrap;" href="' . esc_url( $plugin_url ) . '">' . esc_html__( 'Learn more', 'matomo' ) . '</a>';
 								}
 								?>
 							</p>
@@ -147,7 +148,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 								?>
 								<p class="authors"><a class="button-primary"
 													  rel="noreferrer noopener" target="_blank"
-													  href="<?php echo esc_url( ! empty( $matomo_feature['download_url'] ) ? $matomo_feature['download_url'] : $matomo_feature['url'] ); ?>">
+													  href="<?php echo esc_url( ! empty( $matomo_feature['download_url'] ) ? $matomo_feature['download_url'] : $plugin_url ); ?>">
 									<?php
 									if ( 'free' === $matomo_feature['price'] ) {
 										esc_html_e( 'Download', 'matomo' );
@@ -201,7 +202,11 @@ $matomo_extra_url_params = '&' . http_build_query(
 		],
 	];
 
-	matomo_show_tables( $matomo_feature_sections );
+	/** @var \WpMatomo\Settings $settings */
+	$core_version   = $settings->get_global_option( 'core_version' );
+	$matomo_version = explode('.', $core_version)[0];
+
+	matomo_show_tables( $matomo_feature_sections, $matomo_version );
 
 	echo '<br>';
 
@@ -330,7 +335,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 		],
 	];
 
-	matomo_show_tables( $matomo_feature_sections );
+	matomo_show_tables( $matomo_feature_sections, $matomo_version );
 
 	?>
 
