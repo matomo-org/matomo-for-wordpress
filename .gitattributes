@@ -54,6 +54,9 @@ babel.config.js export-ignore
 .eslintignore export-ignore
 .eslintrc.js export-ignore
 jest.config.js export-ignore
+/plugins/WordPress/vue/src export-ignore
+/plugins/WordPress/vue/dist/*.umd.js export-ignore
+*.gzip export-ignore
 
 # export-ignore rules for embedded matomo follow
 
@@ -61,6 +64,15 @@ jest.config.js export-ignore
 /app/node_modules/jquery export-ignore
 
 # lets remove some extra libs that aren't needed
+/app/node_modules/jquery-ui-dist/images export-ignore
+/app/node_modules/jquery-ui-dist/jquery-ui.theme.css export-ignore
+/app/node_modules/jquery-ui-dist/external export-ignore
+/app/node_modules/jquery-ui-dist/jquery-ui.structure.min.css export-ignore
+/app/node_modules/jquery-ui-dist/*.js export-ignore
+/app/node_modules/jquery-ui-dist/jquery-ui.structure.css export-ignore
+/app/node_modules/jquery-ui-dist/jquery-ui.css export-ignore
+/app/node_modules/jquery-ui-dist/index.html export-ignore
+/app/node_modules/jquery-ui-dist/README.md export-ignore
 /app/node_modules/angular/*.js export-ignore
 /app/node_modules/angular/*.map export-ignore
 /app/node_modules/angular/*.json export-ignore
@@ -81,6 +93,7 @@ jest.config.js export-ignore
 /app/node_modules/chroma-js/Makefile export-ignore
 /app/node_modules/chroma-js/*.json export-ignore
 /app/node_modules/chroma-js/*.js export-ignore
+/app/node_modules/chroma-js/readme.md export-ignore
 /app/node_modules/iframe-resizer/js export-ignore
 /app/node_modules/iframe-resizer/.* export-ignore
 /app/node_modules/iframe-resizer/*.js export-ignore
@@ -127,6 +140,7 @@ jest.config.js export-ignore
 /app/node_modules/sprintf-js/dist export-ignore
 /app/node_modules/sprintf-js/src export-ignore
 /app/node_modules/sprintf-js/*.json export-ignore
+/app/node_modules/sprintf-js/README.md export-ignore
 /app/node_modules/visibilityjs/lib export-ignore
 /app/node_modules/visibilityjs/*.ts export-ignore
 /app/node_modules/visibilityjs/*.js export-ignore
@@ -141,6 +155,9 @@ jest.config.js export-ignore
 # - we keep: Piwik_Overlay.js optOut.js previewmode.js previewmodedetection.js tagmanager.js tagmanager.min.js
 /app/plugins/*/angularjs/*.js export-ignore
 /app/plugins/*/angularjs/**/*.js export-ignore
+/app/plugins/*/vue/src/**/*.ts export-ignore
+/app/plugins/*/vue/src/**/*.vue export-ignore
+/app/plugins/*/vue/dist/*.umd.js export-ignore
 /app/plugins/Actions/javascripts export-ignore
 /app/plugins/CoreUpdater/javascripts export-ignore
 /app/plugins/Installation/javascripts export-ignore
