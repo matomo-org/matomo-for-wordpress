@@ -8,6 +8,7 @@
 
 namespace Piwik\Plugins\WordPress\Commands;
 
+use Piwik\Development;
 use Symfony\Component\Console\Input\ArrayInput;
 use Piwik\Plugin\ConsoleCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,6 +29,10 @@ class BuildRelease extends ConsoleCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (Development::isEnabled()) {
+            throw new \Exception('This command should not be run with development mode enabled.');
+        }
+
         $version = $this->getReleaseVersion($input, $output);
 
         $zip = $input->getOption('zip');
