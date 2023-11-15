@@ -65,7 +65,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 						$matomo_style .= 'clear: inherit;margin-right: 0;margin-left: 16px;';
 					}
 				}
-				$plugin_url = empty($matomo_feature['url']) ? null : $matomo_feature['url'] . '&matomoversion=' . $matomo_version;
+				$plugin_url = empty( $matomo_feature['url'] ) ? null : $matomo_feature['url'] . '&matomoversion=' . $matomo_version;
 				?>
 				<div class="plugin-card" style="<?php echo esc_attr( $matomo_style ); ?>">
 					<?php
@@ -203,8 +203,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 	];
 
 	/** @var \WpMatomo\Settings $settings */
-	$core_version   = $settings->get_global_option( 'core_version' );
-	$matomo_version = explode('.', $core_version)[0];
+	$matomo_version = explode( '.', $settings->get_global_option( 'core_version' ) )[0];
 
 	matomo_show_tables( $matomo_feature_sections, $matomo_version );
 
