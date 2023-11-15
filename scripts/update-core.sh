@@ -124,6 +124,6 @@ else
     echo -e "WordPress jquery was not replaced. There is an error."
 fi
 
-npm run compose -- run console wordpress:generate-lang-files
+npm run compose -- run console wordpress:generate-lang-files || echo ">>> Failed to run wordpress:generate-lang-files!!! Make sure to run this manually once you fix the issue."
 
 echo -e "Done!... "
