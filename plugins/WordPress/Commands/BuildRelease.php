@@ -21,17 +21,20 @@ class BuildRelease extends ConsoleCommand
     {
         $this->setName('wordpress:build-release');
         $this->setDescription('Builds a release, either to a .zip or .tar.gz archive.');
-        $this->addOption('zip', null, InputOption::VALUE_NONE, 'If supplied, a .zip archive will be created.');
-        $this->addOption('tgz', null, InputOption::VALUE_NONE, 'If supplied, a .tgz archive will be created.');
-        $this->addOption('name', null, InputOption::VALUE_REQUIRED,
+        $this->addNoValueOption('zip', null, 'If supplied, a .zip archive will be created.');
+        $this->addNoValueOption('tgz', null, 'If supplied, a .tgz archive will be created.');
+        $this->addRequiredValueOption('name', null,
             'The name of this release, should be set to a semantic version number. If not supplied, the latest value from CHANGELOG.md is used.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
         if (Development::isEnabled()) {
             throw new \Exception('This command should not be run with development mode enabled.');
         }
+
+        $input = $this->getInput();
+        $output = $this->getOutput();
 
         $version = $this->getReleaseVersion($input, $output);
 
@@ -87,7 +90,6 @@ class BuildRelease extends ConsoleCommand
         }
     }
 
-    // TODO: unit test that checks generated files are up to date
     private function generateArchive($format, $version, $stashHash, OutputInterface $output)
     {
         $output->writeln("Generating $format archive...");
