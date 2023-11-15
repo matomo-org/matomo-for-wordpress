@@ -182,12 +182,12 @@ class Build extends ConsoleCommand
             }
         }
 
-        @unlink(PIWIK_INCLUDE_PATH . "/plugins/$plugin/vue/dist/$plugin.common.js");
-        @unlink(PIWIK_INCLUDE_PATH . "/plugins/$plugin/vue/dist/$plugin.common.js.map");
-        @unlink(PIWIK_INCLUDE_PATH . "/plugins/$plugin/vue/dist/demo.html");
+        @unlink("$pluginDirPath/vue/dist/$plugin.common.js");
+        @unlink("$pluginDirPath/vue/dist/$plugin.common.js.map");
+        @unlink("$pluginDirPath/vue/dist/demo.html");
 
         // delete cjs webpack chunks
-        shell_exec("rm " . PIWIK_INCLUDE_PATH . "/plugins/$plugin/vue/dist/$plugin.common.*.js* 2> /dev/null");
+        shell_exec("rm " . "$pluginDirPath/vue/dist/$plugin.common.*.js* 2> /dev/null");
 
         return $returnCode != 0;
     }
