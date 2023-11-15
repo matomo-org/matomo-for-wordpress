@@ -178,7 +178,10 @@ DataTable_RowAction.prototype.trigger = function (tr, e, subTableLabel, original
     }
 
     // ascend in action reports
-    if (subtable.closest('div.dataTableActions').length) {
+    var $dataTable = subtable.closest('div.dataTable');
+    if ($dataTable.hasClass('dataTableActions')
+      || $dataTable.data('table-type') === 'ActionsDataTable'
+    ) {
         var allClasses = tr.attr('class');
         var matches = allClasses.match(/level[0-9]+/);
         var level = parseInt(matches[0].substring(5, matches[0].length), 10);
@@ -301,21 +304,20 @@ DataTable_RowActions_RowEvolution.prototype.performAction = function (label, tr,
         extraParams = {};
     }
 
-    var labelPretty;
     if (this.multiEvolutionRows.length > 1) {
         extraParams.action = 'getMultiRowEvolutionPopover';
         label = this.multiEvolutionRows.join(',');
 
         labelPretty = this.multiEvolutionRowsPretty.join(',');
         if (label != labelPretty) {
-          extraParams.labelPretty = labelPretty;
+            extraParams.labelPretty = labelPretty;
         }
 
         if (this.multiEvolutionRowsSeries.length > 1) { // when comparison is active
-            var piwikUrl = piwikHelper.getAngularDependency('piwikUrl');
-            extraParams.compareDates = piwikUrl.getSearchParam('compareDates');
-            extraParams.comparePeriods = piwikUrl.getSearchParam('comparePeriods');
-            extraParams.compareSegments = piwikUrl.getSearchParam('compareSegments');
+            var MatomoUrl = window.CoreHome.MatomoUrl;
+            extraParams.compareDates = MatomoUrl.parsed.value.compareDates;
+            extraParams.comparePeriods = MatomoUrl.parsed.value.comparePeriods;
+            extraParams.compareSegments = MatomoUrl.parsed.value.compareSegments;
             extraParams.labelSeries = this.multiEvolutionRowsSeries.join(',');
 
             // remove override period/date/segment since we are sending compare params so we can have the whole set of comparison
@@ -325,8 +327,8 @@ DataTable_RowActions_RowEvolution.prototype.performAction = function (label, tr,
             delete extraParams.segment;
         }
     } else {
-      labelPretty = this.getPrettyLabel(originalRow || tr);
-      if (labelPretty != label) {
+      var labelPretty = this.getPrettyLabel(originalRow || tr);
+      if (labelPretty && labelPretty != label) {
         extraParams['labelPretty'] = labelPretty;
       }
     }
@@ -370,6 +372,10 @@ DataTable_RowActions_RowEvolution.prototype.performAction = function (label, tr,
 };
 
 DataTable_RowActions_RowEvolution.prototype.getPrettyLabel = function getPrettyLabel(tr) {
+  if (!this.dataTable.props.row_identifier || this.dataTable.props.row_identifier === 'label') {
+    return null; // only necessary if a custom row identifier is provided for the report
+  }
+
   var prettyLabel = [];
 
   var row = $(tr);
@@ -408,7 +414,7 @@ DataTable_RowActions_RowEvolution.prototype.addMultiEvolutionRow = function (lab
         }
     } else if ($.inArray(label, this.multiEvolutionRows) === -1) {
         this.multiEvolutionRows.push(label);
-        this.multiEvolutionRowsPretty.push(this.getPrettyLabel(tr));
+        this.multiEvolutionRowsPretty.push(this.getPrettyLabel(tr))
 
         this.multiEvolutionRowsSeries = []; // for safety, make sure state is consistent
     }

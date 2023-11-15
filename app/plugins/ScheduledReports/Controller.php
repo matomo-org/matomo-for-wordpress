@@ -12,6 +12,7 @@ use Piwik\Access;
 use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Nonce;
+use Piwik\Period\PeriodValidator;
 use Piwik\Piwik;
 use Piwik\Plugins\ImageGraph\ImageGraph;
 use Piwik\Plugins\LanguagesManager\LanguagesManager;
@@ -46,7 +47,11 @@ class Controller extends \Piwik\Plugin\Controller
         $view->displayFormats = ScheduledReports::getDisplayFormats();
 
         $view->paramPeriods = [];
-        foreach (Piwik::$idPeriods as $label => $id) {
+
+        $periodValidator = new PeriodValidator();
+        $allowedPeriods = $periodValidator->getPeriodsAllowedForAPI();
+
+        foreach ($allowedPeriods as $label) {
             if ($label === 'range') {
                 continue;
             }
@@ -138,17 +143,17 @@ class Controller extends \Piwik\Plugin\Controller
         $subscriptionModel = new SubscriptionModel();
         $subscription      = $subscriptionModel->getSubscription($token);
 
-        $report = Access::doAsSuperUser(function() use ($subscription) {
-            $reports = Request::processRequest('ScheduledReports.getReports', array(
-                'idReport'    => $subscription['idreport'],
-            ));
-            return reset($reports);
-        });
-
         if (empty($subscription)) {
             $view->error = Piwik::translate('ScheduledReports_NoSubscriptionFound');
             return $view->render();
         }
+
+        $report = Access::doAsSuperUser(function() use ($subscription) {
+            $reports = Request::processRequest('ScheduledReports.getReports', [
+                'idReport'    => $subscription['idreport'],
+            ]);
+            return reset($reports);
+        });
 
         $confirm = Common::getRequestVar('confirm', '', 'string');
 

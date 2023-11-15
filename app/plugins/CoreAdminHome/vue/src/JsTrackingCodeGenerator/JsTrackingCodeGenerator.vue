@@ -22,19 +22,19 @@
         <span v-html="$sanitize(jsTrackingIntro5)"></span>
         <br><br/>
         {{ translate('SitesManager_InstallationGuides') }} :
-        <a href="https://matomo.org/faq/new-to-piwik/how-do-i-install-the-matomo-tracking-code-on-wordpress/"
+        <a href="{{ externalRawLink('https://matomo.org/faq/new-to-piwik/how-do-i-install-the-matomo-tracking-code-on-wordpress/') }}"
            target="_blank" rel="noopener">WordPress</a> |
-        <a href="https://matomo.org/faq/new-to-piwik/how-do-i-integrate-matomo-with-squarespace-website/"
+        <a href="{{ externalRawLink('https://matomo.org/faq/new-to-piwik/how-do-i-integrate-matomo-with-squarespace-website/') }}"
            target="_blank" rel="noopener">Squarespace</a> |
-        <a href="https://matomo.org/faq/new-to-piwik/how-do-i-install-the-matomo-analytics-tracking-code-on-wix/"
+        <a href="{{ externalRawLink('https://matomo.org/faq/new-to-piwik/how-do-i-install-the-matomo-analytics-tracking-code-on-wix/') }}"
            target="_blank" rel="noopener">Wix</a> |
-        <a href="https://matomo.org/faq/how-to-install/faq_19424/"
+        <a href="{{ externalRawLink('https://matomo.org/faq/how-to-install/faq_19424/') }}"
            target="_blank" rel="noopener">SharePoint</a> |
-        <a href="https://matomo.org/faq/new-to-piwik/how-do-i-install-the-matomo-analytics-tracking-code-on-joomla/"
+        <a href="{{ externalRawLink('https://matomo.org/faq/new-to-piwik/how-do-i-install-the-matomo-analytics-tracking-code-on-joomla/') }}"
            target="_blank" rel="noopener">Joomla</a> |
-        <a href="https://matomo.org/faq/new-to-piwik/how-do-i-install-the-matomo-tracking-code-on-my-shopify-store/"
+        <a href="{{ externalRawLink('https://matomo.org/faq/new-to-piwik/how-do-i-install-the-matomo-tracking-code-on-my-shopify-store/') }}"
            target="_blank" rel="noopener">Shopify</a> |
-        <a href="https://matomo.org/faq/new-to-piwik/how-do-i-use-matomo-analytics-within-gtm-google-tag-manager/"
+        <a href="{{ externalRawLink('https://matomo.org/faq/new-to-piwik/how-do-i-use-matomo-analytics-within-gtm-google-tag-manager/') }}"
            target="_blank" rel="noopener">Google Tag Manager</a>
       </p>
 
@@ -74,8 +74,7 @@
       :site="site"
       :max-custom-variables="maxCustomVariables"
       :server-side-do-not-track-enabled="serverSideDoNotTrackEnabled"
-      @updateTrackingCode="updateTrackingCode"
-      ref="jsTrackingCodeAdvanceOption"/>
+      @updateTrackingCode="updateTrackingCode"/>
 
   </ContentBlock>
 </template>
@@ -88,6 +87,7 @@ import {
   AjaxHelper,
   SiteRef,
   CopyToClipboard,
+  externalLink,
 } from 'CoreHome';
 import { Field } from 'CorePluginsAdmin';
 import JsTrackingCodeAdvancedOptions from './JsTrackingCodeAdvancedOptions.vue';
@@ -159,7 +159,7 @@ export default defineComponent({
         {
           module: 'API',
           format: 'json',
-          method: 'Tour.detectConsentManager',
+          method: 'SitesManager.detectConsentManager',
           idSite,
           filter_limit: '-1',
         },
@@ -202,7 +202,7 @@ export default defineComponent({
     jsTrackingIntro3a() {
       return translate(
         'CoreAdminHome_JSTrackingIntro3a',
-        '<a href="https://matomo.org/integrate/" rel="noreferrer noopener" target="_blank">',
+        externalLink('https://matomo.org/integrate/'),
         '</a>',
       );
     },
@@ -219,8 +219,7 @@ export default defineComponent({
     jsTrackingIntro5() {
       return translate(
         'CoreAdminHome_JSTrackingIntro5',
-        '<a rel="noreferrer noopener" target="_blank" '
-        + 'href="https://developer.matomo.org/guides/tracking-javascript-guide">',
+        externalLink('https://developer.matomo.org/guides/tracking-javascript-guide'),
         '</a>',
       );
     },

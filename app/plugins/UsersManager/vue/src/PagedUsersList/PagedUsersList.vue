@@ -441,6 +441,7 @@ import {
   translate,
   SiteRef,
   Matomo,
+  externalLink,
 } from 'CoreHome';
 import { Field, PasswordConfirmation } from 'CorePluginsAdmin';
 import User from '../User';
@@ -580,12 +581,9 @@ export default defineComponent({
       });
     },
     onRowSelected() {
-      // (angularjs comment): use a timeout since the method is called after the model is updated
-      setTimeout(() => {
-        const selectedRowKeyCount = this.selectedCount;
-        this.isBulkActionsDisabled = selectedRowKeyCount === 0;
-        this.isAllCheckboxSelected = selectedRowKeyCount === this.users.length;
-      });
+      const selectedRowKeyCount = this.selectedCount;
+      this.isBulkActionsDisabled = selectedRowKeyCount === 0;
+      this.isAllCheckboxSelected = selectedRowKeyCount === this.users.length;
     },
     deleteRequestedUsers(password: string) {
       this.$emit('deleteUser', {
@@ -688,13 +686,11 @@ export default defineComponent({
       return result;
     },
     rolesHelpText() {
-      const faq70 = 'https://matomo.org/faq/general/faq_70/';
-      const faq69 = 'https://matomo.org/faq/general/faq_69/';
       return translate(
         'UsersManager_RolesHelp',
-        `<a href="${faq70}" target="_blank" rel="noreferrer noopener">`,
+        externalLink('https://matomo.org/faq/general/faq_70/'),
         '</a>',
-        `<a href="${faq69}" target="_blank" rel="noreferrer noopener">`,
+        externalLink('https://matomo.org/faq/general/faq_69/'),
         '</a>',
       );
     },

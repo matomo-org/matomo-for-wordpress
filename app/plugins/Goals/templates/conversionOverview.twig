@@ -1,5 +1,5 @@
-<div piwik-content-block
-     content-title="{{ 'Goals_ConversionsOverview'|translate|e('html_attr') }}">
+<div vue-entry="CoreHome.ContentBlock"
+     content-title="{{ 'Goals_ConversionsOverview'|translate }}">
     <ul class="ulGoalTopElements">
         {% if topDimensions.country is defined %}
             <li>{{ 'Goals_BestCountries'|translate }} {% include '@Goals/_listTopDimension.twig' with {'topDimension':topDimensions.country} %}</li>
@@ -20,7 +20,7 @@
     </ul>
 {% if visitorLogEnabled %}
 <a href="javascript:;" class="segmentedlog" onclick="SegmentedVisitorLog.show('Goals.getMetrics', 'visitConvertedGoalId=={{ idGoal }}', {})">
-    <span class="icon-visitor-profile rowActionIcon"></span> {{ 'Live_RowActionTooltipWithDimension'|translate('General_Goal'|translate) }}
+    <span class="icon-visitor-profile rowActionIcon">&nbsp;</span>{{ 'Live_RowActionTooltipWithDimension'|translate('General_Goal'|translate) }}
 </a>
 {% endif %}
 {{ postEvent("Template.afterGoalConversionOverviewReport") }}

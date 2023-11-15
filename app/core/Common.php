@@ -13,6 +13,7 @@ use Piwik\CliMulti\Process;
 use Piwik\Container\StaticContainer;
 use Piwik\Intl\Data\Provider\LanguageDataProvider;
 use Piwik\Intl\Data\Provider\RegionDataProvider;
+use Piwik\Log\LoggerInterface;
 use Piwik\Tracker\Cache as TrackerCache;
 
 /**
@@ -69,13 +70,13 @@ class Common
     /**
      * Returns an array containing the prefixed table names of every passed argument.
      *
-     * @param string ... The table names to prefix, ie "log_visit"
+     * @param string ...$tables The table names to prefix, ie "log_visit"
      * @return array The prefixed names in an array.
      */
-    public static function prefixTables()
+    public static function prefixTables(...$tables)
     {
         $result = array();
-        foreach (func_get_args() as $table) {
+        foreach ($tables as $table) {
             $result[] = self::prefixTable($table);
         }
         return $result;
@@ -187,7 +188,7 @@ class Common
      * @return string
      * @deprecated since 4.4 - directly use mb_substr instead
      */
-    public static function mb_substr($string, $start, $length = null)
+    public static function mb_substr($string, $start, $length = null) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return mb_substr($string, $start, $length, 'UTF-8');
     }
@@ -210,7 +211,7 @@ class Common
             if (Process::isMethodDisabled('getmypid')) {
                 $pid = Common::getRandomInt(12);
             } else {
-                $pid = getmypid();
+                $pid = \getmypid();
             }
         }
 
@@ -226,7 +227,7 @@ class Common
      * @return int
      * @deprecated since 4.4 - directly use mb_strlen instead
      */
-    public static function mb_strlen($string)
+    public static function mb_strlen($string) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return mb_strlen($string, 'UTF-8');
     }
@@ -240,7 +241,7 @@ class Common
      * @return string
      * @deprecated since 4.4 - directly use mb_strtolower instead
      */
-    public static function mb_strtolower($string)
+    public static function mb_strtolower($string) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return mb_strtolower($string, 'UTF-8');
     }
@@ -254,7 +255,7 @@ class Common
      * @return string
      * @deprecated since 4.4 - directly use mb_strtoupper instead
      */
-    public static function mb_strtoupper($string)
+    public static function mb_strtoupper($string) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return mb_strtoupper($string, 'UTF-8');
     }
@@ -293,7 +294,7 @@ class Common
      * @param bool $rethrow Whether to rethrow exceptions or not.
      * @return mixed
      */
-    public static function safe_unserialize($string, $allowedClasses = [], $rethrow = false)
+    public static function safe_unserialize($string, $allowedClasses = [], $rethrow = false)  // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         try {
             // phpcs:ignore Generic.PHP.ForbiddenFunctions
@@ -303,7 +304,7 @@ class Common
                 throw $e;
             }
 
-            $logger = StaticContainer::get('Psr\Log\LoggerInterface');
+            $logger = StaticContainer::get(LoggerInterface::class);
             $logger->debug('Unable to unserialize a string: {exception} (string = {string})', [
                 'exception' => $e,
                 'string' => $string,
@@ -487,6 +488,8 @@ class Common
      * @throws Exception If the request parameter doesn't exist and there is no default value, or if the request parameter
      *                   exists but has an incorrect type.
      * @return mixed The sanitized request parameter.
+     * @see Request::getParameter()
+     * @deprecated Use Request class instead, which will return raw values instead.
      * @api
      */
     public static function getRequestVar($varName, $varDefault = null, $varType = null, $requestArrayToUse = null)
@@ -496,6 +499,7 @@ class Common
         }
 
         $varDefault = self::sanitizeInputValues($varDefault);
+
         if ($varType === 'int') {
             // settype accepts only integer
             // 'int' is simply a shortcut for 'integer'
@@ -526,11 +530,14 @@ class Common
         // we deal w/ json differently
         if ($varType === 'json') {
             $value = $requestArrayToUse[$varName];
-            $value = json_decode($value, $assoc = true);
-            return self::sanitizeInputValues($value, $alreadyStripslashed = true);
+            if (is_string($value)) {
+                $value = json_decode($value, $assoc = true);
+            }
+            return self::sanitizeInputValues($value, true);
         }
 
         $value = self::sanitizeInputValues($requestArrayToUse[$varName]);
+
         if (isset($varType)) {
             $ok = false;
 
@@ -574,38 +581,6 @@ class Common
         }
 
         return $value;
-    }
-
-    /**
-     * Replaces lbrace with an encoded entity to prevent angular from parsing the content
-     *
-     * @deprecated Will be removed, once the vue js migration is done
-     *
-     * @param $string
-     * @return array|string|string[]|null
-     */
-    public static function fixLbrace($string)
-    {
-        $chars = array('{', '&#x7B;', '&#123;', '&lcub;', '&lbrace;', '&#x0007B;');
-
-        static $search;
-        static $replace;
-
-        if (!isset($search)) {
-            $search = array_map(function ($val) { return $val . $val; }, $chars);
-        }
-        if (!isset($replace)) {
-            $replace = array_map(function ($val) { return $val . '&#8291;' . $val; }, $chars);
-        }
-
-        $replacedString = is_null($string) ? $string : str_replace($search, $replace, $string);
-
-        // try to replace characters until there are no changes
-        if ($string !== $replacedString) {
-            return self::fixLbrace($replacedString);
-        }
-
-        return $string;
     }
 
     /*
@@ -1202,7 +1177,7 @@ class Common
             $info = var_export($info, true);
         }
 
-        $logger = StaticContainer::get('Psr\Log\LoggerInterface');
+        $logger = StaticContainer::get(LoggerInterface::class);
         if (is_array($info) || is_object($info)) {
             $out = var_export($info, true);
             $logger->debug($out);

@@ -1,26 +1,30 @@
 const fs = require('fs');
 const path = require('path');
 
-const pluginExternals = getPluginExternals();
+const pluginExternals = scanPluginExternals();
 
-function getPluginExternals() {
-  if (!process.env.MATOMO_ALL_PLUGINS) {
-    throw new Error('The MATOMO_ALL_PLUGINS environment variable must be set to all available plugins with vue sources.');
+function scanPluginExternals() {
+  const pluginExternals = {};
+
+  const pluginsDir = path.join(__dirname, 'plugins');
+  for (let pluginName of fs.readdirSync(pluginsDir)) {
+    const vuePackageFolder = path.join(pluginsDir, pluginName, 'vue', 'src');
+    if (!fs.existsSync(vuePackageFolder)) {
+      continue;
+    }
+
+    pluginExternals[pluginName] = pluginName;
   }
 
-  const allPluginsWithVueFolder = process.env.MATOMO_ALL_PLUGINS.split(',');
-  return Object.fromEntries(allPluginsWithVueFolder.map((name) => [name, name]));
+  return pluginExternals;
 }
 
 if (!process.env.MATOMO_CURRENT_PLUGIN) {
   console.log("The MATOMO_CURRENT_PLUGIN environment variable is not set!");
 }
 
-const pluginPath = process.env.MATOMO_CURRENT_PLUGIN;
-const pluginName = path.basename(pluginPath);
-
-const srcPath = `${pluginPath}/vue/src/`;
-const publicPath = `${pluginPath}/vue/dist/`;
+const srcPath = `plugins/${process.env.MATOMO_CURRENT_PLUGIN}/vue/src/`;
+const publicPath = `plugins/${process.env.MATOMO_CURRENT_PLUGIN}/vue/dist/`;
 
 // hack to get publicPath working for lib build target (see https://github.com/vuejs/vue-cli/issues/4896#issuecomment-569001811)
 function PublicPathWebpackPlugin() {}
@@ -47,11 +51,11 @@ const detectedDependentPlugins = [];
 function OutputDetectedDependentPluginsPlugin() {}
 OutputDetectedDependentPluginsPlugin.prototype.apply = function (compiler) {
   compiler.hooks.afterCompile.tap('OutputDetectedDependentPluginsPlugin', (context, entry) => {
-    const metadataPath = path.join(publicPath, 'umd.metadata.json');
+    const metadataPath = path.join(__dirname, publicPath, 'umd.metadata.json');
     const metadata = {
       dependsOn: detectedDependentPlugins,
     };
-    if (fs.existsSync(srcPath)) {
+    if (fs.existsSync(path.join(srcPath))) {
       fs.mkdirSync(path.dirname(metadataPath), {recursive: true});
       fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
     }
@@ -71,7 +75,7 @@ module.exports = {
 
       if (pluginExternals[request]) {
         if (detectedDependentPlugins.indexOf(request) === -1
-          && request !== pluginName
+          && request !== process.env.MATOMO_CURRENT_PLUGIN
         ) {
           detectedDependentPlugins.push(request);
         }
@@ -106,7 +110,7 @@ module.exports = {
           options.compilerOptions = {
             declaration: true,
             noEmit: false,
-            outDir: `${__dirname}/@types/${pluginName}`,
+            outDir: `${__dirname}/@types/${process.env.MATOMO_CURRENT_PLUGIN}`,
           };
           return options;
         });

@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'matomo';
   src:
-          url('plugins/Morpheus/fonts/matomo.woff2?kb4q1p') format('woff2'),
-          url('plugins/Morpheus/fonts/matomo.woff?kb4q1p') format('woff'),
-          url('plugins/Morpheus/fonts/matomo.ttf?kb4q1p') format('truetype'),
-          url('plugins/Morpheus/fonts/matomo.svg?kb4q1p#matomo') format('svg');
+          url('plugins/Morpheus/fonts/matomo.woff2?alz7inm') format('woff2'),
+          url('plugins/Morpheus/fonts/matomo.woff?alz7inm') format('woff'),
+          url('plugins/Morpheus/fonts/matomo.ttf?alz7inm') format('truetype'),
+          url('plugins/Morpheus/fonts/matomo.svg?alz7inm#matomo') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-merge:before {
+  content: "\e904";
+}
 .icon-outlink:before {
   content: "\f08e";
 }
@@ -152,7 +155,7 @@
   content: "\e623";
 }
 .icon-info:before {
-  content: "\e624";
+  content: "\e88f";
 }
 .icon-insights:before {
   content: "\e625";
@@ -182,7 +185,7 @@
   content: "\e62d";
 }
 .icon-ok:before {
-  content: "\e62e";
+  content: "\e906";
 }
 .icon-open-source:before {
   content: "\e62f";
@@ -314,7 +317,7 @@
   content: "\e658";
 }
 .icon-user-platform:before {
-  content: "\e659";
+  content: "\e64f";
 }
 .icon-form:before {
   content: "\e85d";
@@ -409,6 +412,9 @@
 .icon-arrow-right-2:before {
   content: "\ea3c";
 }
+.icon-content-copy:before {
+  content: "\e905";
+}
 .icon-chevron-left:before {
   content: "\e907";
 }
@@ -421,12 +427,9 @@
 .icon-chevron-up:before {
   content: "\e90a";
 }
-.icon-content-copy:before {
-  content: "\e905";
-}
-.icon-chevron-left:before {
-  content: "\e907";
-}
 .icon-done:before {
   content: "\e906";
+}
+.icon-drop-crossed:before {
+  content: "\e90b";
 }

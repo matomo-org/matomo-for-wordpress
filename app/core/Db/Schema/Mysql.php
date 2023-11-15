@@ -58,6 +58,7 @@ class Mysql implements SchemaInterface
                           invite_link_token VARCHAR(191) NULL,
                           invite_expired_at TIMESTAMP NULL,
                           invite_accept_at TIMESTAMP NULL,
+                          ts_changes_shown TIMESTAMP NULL,
                             PRIMARY KEY(login),
                             UNIQUE INDEX `uniq_email` (`email`)
                           ) ENGINE=$engine DEFAULT CHARSET=$charset
@@ -72,6 +73,7 @@ class Mysql implements SchemaInterface
                           last_used DATETIME NULL,
                           date_created DATETIME NOT NULL,
                           date_expired DATETIME NULL,
+                          secure_only TINYINT(2) unsigned NOT NULL DEFAULT '0',
                             PRIMARY KEY(idusertokenauth),
                             UNIQUE KEY uniq_password(password)
                           ) ENGINE=$engine DEFAULT CHARSET=$charset
@@ -198,7 +200,7 @@ class Mysql implements SchemaInterface
                                 PRIMARY KEY(idvisit),
                                 INDEX index_idsite_config_datetime (idsite, config_id, visit_last_action_time),
                                 INDEX index_idsite_datetime (idsite, visit_last_action_time),
-                                INDEX index_idsite_idvisitor (idsite, idvisitor, visit_last_action_time DESC)
+                                INDEX index_idsite_idvisitor_time (idsite, idvisitor, visit_last_action_time DESC)
                               ) ENGINE=$engine DEFAULT CHARSET=$charset
             ",
 
@@ -299,7 +301,7 @@ class Mysql implements SchemaInterface
                                       ts_archived DATETIME NULL,
                                       value DOUBLE NULL,
                                         PRIMARY KEY(idarchive, name),
-                                        INDEX index_idsite_dates_period(idsite, date1, date2, period, ts_archived),
+                                        INDEX index_idsite_dates_period(idsite, date1, date2, period, name(6)),
                                         INDEX index_period_archived(period, ts_archived)
                                       ) ENGINE=$engine DEFAULT CHARSET=$charset
             ",

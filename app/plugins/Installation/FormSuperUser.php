@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,6 +7,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
+
 namespace Piwik\Plugins\Installation;
 
 use HTML_QuickForm2_DataSource_Array;
@@ -14,9 +16,10 @@ use HTML_QuickForm2_Rule;
 use Piwik\Piwik;
 use Piwik\Plugins\UsersManager\UsersManager;
 use Piwik\QuickForm2;
+use Piwik\Url;
 
 /**
- *
+ * phpcs:ignoreFile PSR1.Classes.ClassDeclaration.MultipleClasses
  */
 class FormSuperUser extends QuickForm2
 {
@@ -27,8 +30,8 @@ class FormSuperUser extends QuickForm2
 
     function init()
     {
-        HTML_QuickForm2_Factory::registerRule('checkLogin', 'Piwik\Plugins\Installation\Rule_isValidLoginString');
-        HTML_QuickForm2_Factory::registerRule('checkEmail', 'Piwik\Plugins\Installation\Rule_isValidEmailString');
+        HTML_QuickForm2_Factory::registerRule('checkLogin', 'Piwik\Plugins\Installation\RuleIsValidLoginString');
+        HTML_QuickForm2_Factory::registerRule('checkEmail', 'Piwik\Plugins\Installation\RuleIsValidEmailString');
 
         $login = $this->addElement('text', 'login')
             ->setLabel(Piwik::translate('Installation_SuperUserLogin'));
@@ -58,10 +61,11 @@ class FormSuperUser extends QuickForm2
             ));
 
         $professionalServicesNewsletter = Piwik::translate('Installation_ProfessionalServicesNewsletter',
-            array("<a href='https://matomo.org/support/?pk_medium=App_Newsletter_link&pk_source=Matomo_App&pk_campaign=App_Installation' style='color:#444;' rel='noreferrer noopener' target='_blank'>", "</a>")
+            ["<a href='" . Url::addCampaignParametersToMatomoLink('https://matomo.org/support/') . "' style='color:#444;' rel='noreferrer noopener' target='_blank'>", "</a>"]
+
         );
 
-        $privacyNoticeLink = '<a href="https://matomo.org/privacy-policy/" target="_blank" rel="noreferrer noopener">';
+        $privacyNoticeLink = '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/privacy-policy/') . '" target="_blank" rel="noreferrer noopener">';
         $privacyNotice = '<div class="form-help email-privacy-notice">' . Piwik::translate('Installation_EmailPrivacyNotice', [$privacyNoticeLink, '</a>'])
             . '</div>';
 
@@ -84,7 +88,7 @@ class FormSuperUser extends QuickForm2
  * Login id validation rule
  *
  */
-class Rule_isValidLoginString extends HTML_QuickForm2_Rule
+class RuleIsValidLoginString extends HTML_QuickForm2_Rule
 {
     function validateOwner()
     {
@@ -105,7 +109,7 @@ class Rule_isValidLoginString extends HTML_QuickForm2_Rule
  * Email address validation rule
  *
  */
-class Rule_isValidEmailString extends HTML_QuickForm2_Rule
+class RuleIsValidEmailString extends HTML_QuickForm2_Rule
 {
     function validateOwner()
     {

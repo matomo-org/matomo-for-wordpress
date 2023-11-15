@@ -25,7 +25,9 @@
           @click.prevent="loadCategory(category)"
         >
           <span
-            :class="`menu-icon ${category.icon ? category.icon : 'icon-arrow-right'}`"
+            :class="`menu-icon ${category.icon ? category.icon :
+              (category.subcategories && category.id === activeCategory ?
+                'icon-chevron-down' : 'icon-chevron-right')}`"
           />{{ category.name }}
           <span class="hidden">
             {{ translate('CoreHome_Menu') }}
@@ -104,12 +106,12 @@
         >
           <li>
             <a class="collapsible-header">
-              <i :class="category.icon ? category.icon : 'icon-arrow-bottom'" />{{ category.name }}
+              <i :class="category.icon ? category.icon : 'icon-chevron-down'" />{{ category.name }}
             </a>
             <div class="collapsible-body">
               <ul>
                 <li v-for="subcategory in category.subcategories" :key="subcategory.id">
-                  <span v-if="subcategory.isGroup">
+                  <template v-if="subcategory.isGroup">
                     <a
                       @click="loadSubcategory(category, subcat)"
                       :href="`#?${makeUrl(category, subcat)}`"
@@ -118,15 +120,15 @@
                     >
                       {{ subcat.name }}
                     </a>
-                  </span>
-                  <span v-if="!subcategory.isGroup">
+                  </template>
+                  <template v-if="!subcategory.isGroup">
                     <a
                       @click="loadSubcategory(category, subcategory)"
                       :href="`#?${makeUrl(category, subcategory)}`"
                     >
                       {{ subcategory.name }}
                     </a>
-                  </span>
+                  </template>
                 </li>
               </ul>
             </div>
@@ -221,7 +223,7 @@ export default defineComponent({
       );
     });
 
-    Matomo.on('piwikPageChange', () => {
+    Matomo.on('matomoPageChange', () => {
       if (!this.initialLoad) {
         window.globalAjaxQueue.abort();
       }
@@ -300,7 +302,10 @@ export default defineComponent({
 
       NotificationsStore.remove(REPORTING_HELP_NOTIFICATION_ID);
 
-      if (subcategory && subcategory.id === this.activeSubcategory) {
+      if (subcategory
+        && subcategory.id === MatomoUrl.parsed.value.subcategory
+        && category.id === MatomoUrl.parsed.value.category
+      ) {
         this.helpShownCategory = null;
 
         // this menu item is already active, a location change success would not be triggered,

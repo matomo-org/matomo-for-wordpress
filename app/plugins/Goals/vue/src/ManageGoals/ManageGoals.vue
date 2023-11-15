@@ -6,7 +6,6 @@
 
 <template>
   <div class="manageGoals">
-    <!-- v-show required until funnels/multiattribution are using vue and not angularjs -->
     <div v-show="!onlyShowAddNewGoal">
       <div
         id='entityEditContainer'
@@ -122,7 +121,6 @@
       </div>
     </div>
 
-    <!-- v-show required until funnels/multiattribution are using vue and not angularjs -->
     <div v-show="userCanEditGoals">
       <div class="addEditGoal" v-show="showEditGoal">
         <ContentBlock
@@ -352,7 +350,7 @@
           </div>
 
           <div ref="endedittable">
-            <component :is="endEditTableComponent" v-if="endEditTableComponent"/>
+            <VueEntryContainer :html="endEditTable" v-if="endEditTable"/>
           </div>
 
           <input type="hidden" name="goalIdUpdate" value=""/>
@@ -382,8 +380,7 @@
 </template>
 
 <script lang="ts">
-import { IScope } from 'angular';
-import { defineComponent, markRaw, nextTick } from 'vue';
+import { defineComponent, markRaw } from 'vue';
 import {
   Matomo,
   AjaxHelper,
@@ -395,6 +392,8 @@ import {
   ContentTable,
   Alert,
   ReportingMenuStore,
+  VueEntryContainer,
+  externalLink,
 } from 'CoreHome';
 import {
   Form,
@@ -402,7 +401,6 @@ import {
   SaveButton,
 } from 'CorePluginsAdmin';
 import Goal from '../Goal';
-import PiwikApiMock from './PiwikApiMock';
 import ManageGoalsStore from './ManageGoals.store';
 
 interface ManageGoalsState {
@@ -465,6 +463,7 @@ export default defineComponent({
     ActivityIndicator,
     Field,
     Alert,
+    VueEntryContainer,
   },
   directives: {
     ContentTable,
@@ -484,25 +483,6 @@ export default defineComponent({
     } else {
       this.showListOfReports();
     }
-
-    // this component can be used in multiple places, one where
-    // Matomo.helper.compileAngularComponents() is already called, one where it's not.
-    // to make sure this function is only applied once to the slot data, we explicitly do not
-    // add it to vue, then on the next update, add it and call compileAngularComponents()
-    nextTick(() => {
-      this.addEditTableComponent = true;
-
-      nextTick(() => {
-        const el = this.$refs.endedittable as HTMLElement;
-        const scope = Matomo.helper.getAngularDependency('$rootScope').$new(true);
-        $(el).data('scope', scope);
-        Matomo.helper.compileAngularComponents(el, { scope });
-      });
-    });
-  },
-  beforeUnmount() {
-    const el = this.$refs.endedittable as HTMLElement;
-    ($(el).data('scope') as IScope).$destroy();
   },
   methods: {
     scrollToTop() {
@@ -646,6 +626,7 @@ export default defineComponent({
 
         if (parameters.matchAttribute === 'event') {
           parameters.matchAttribute = this.eventType;
+          parameters.useEventValueAsRevenue = ambiguousBoolToInt(this.goal.event_value_as_revenue);
         }
 
         parameters.patternType = this.goal.pattern_type;
@@ -654,7 +635,6 @@ export default defineComponent({
       }
       parameters.revenue = this.goal.revenue || 0;
       parameters.allowMultipleConversionsPerVisit = ambiguousBoolToInt(this.goal.allow_multiple);
-      parameters.useEventValueAsRevenue = ambiguousBoolToInt(this.goal.event_value_as_revenue);
 
       parameters.idGoal = this.goal.idgoal;
       parameters.method = this.apiMethod;
@@ -664,11 +644,10 @@ export default defineComponent({
 
       const options: AjaxOptions = {};
 
-      const piwikApiMock = new PiwikApiMock(parameters, options);
       if (isUpdate) {
-        Matomo.postEvent('Goals.beforeUpdateGoal', parameters, piwikApiMock);
+        Matomo.postEvent('Goals.beforeUpdateGoal', { parameters, options });
       } else if (isCreate) {
-        Matomo.postEvent('Goals.beforeAddGoal', parameters, piwikApiMock);
+        Matomo.postEvent('Goals.beforeAddGoal', { parameters, options });
       }
 
       if (parameters?.cancelRequest) {
@@ -680,7 +659,7 @@ export default defineComponent({
       AjaxHelper.fetch(parameters, options).then(() => {
         const subcategory = MatomoUrl.parsed.value.subcategory as string;
         if (subcategory === 'Goals_AddNewGoal'
-          && Matomo.helper.isAngularRenderingThePage()
+          && Matomo.helper.isReportingPage()
         ) {
           // when adding a goal for the first time we need to load manage goals page afterwards
           ReportingMenuStore.reloadMenuItems().then(() => {
@@ -722,8 +701,7 @@ export default defineComponent({
     learnMoreAboutGoalTracking() {
       return translate(
         'Goals_LearnMoreAboutGoalTrackingDocumentation',
-        '<a target="_blank" rel="noreferrer noopener" '
-        + 'href="https://matomo.org/docs/tracking-goals-web-analytics/">',
+        externalLink('https://matomo.org/docs/tracking-goals-web-analytics/'),
         '</a>',
       );
     },
@@ -733,9 +711,10 @@ export default defineComponent({
         module: 'SitesManager',
         action: 'index',
       });
-
-      const ecommerceReportsText = '<a href="https://matomo.org/docs/ecommerce-analytics/" '
-        + `rel="noreferrer noopener" target="_blank">${translate('Goals_EcommerceReports')}</a>`;
+      /* eslint-disable prefer-template */
+      const ecommerceReportsText = externalLink('https://matomo.org/docs/ecommerce-analytics/')
+        + translate('Goals_EcommerceReports')
+        + '</a>';
       const websiteManageText = `<a href='${link}'>${translate('SitesManager_WebsitesManagement')}</a>`;
 
       return translate(
@@ -748,10 +727,9 @@ export default defineComponent({
       return Matomo.helper.htmlDecode(Matomo.siteName);
     },
     whereVisitedPageManuallyCallsJsTrackerText() {
-      const link = 'https://developer.matomo.org/guides/tracking-javascript-guide#manually-trigger-goal-conversions';
       return translate(
         'Goals_WhereVisitedPageManuallyCallsJavascriptTrackerLearnMore',
-        `<a target="_blank" rel="noreferrer noopener" href="${link}">`,
+        externalLink('https://developer.matomo.org/guides/tracking-javascript-guide#manually-trigger-goal-conversions'),
         '</a>',
       );
     },
@@ -806,22 +784,6 @@ export default defineComponent({
         };
       });
       return markRaw(componentsByIdGoal);
-    },
-    endEditTableComponent() {
-      if (!this.endEditTable || !this.addEditTableComponent) {
-        return null;
-      }
-
-      const endedittable = this.$refs.endedittable as HTMLElement;
-      return markRaw({
-        template: this.endEditTable,
-        mounted() {
-          Matomo.helper.compileVueEntryComponents(endedittable);
-        },
-        beforeUnmount() {
-          Matomo.helper.destroyVueComponent(endedittable);
-        },
-      });
     },
     beforeGoalListActionsHeadComponent() {
       if (!this.beforeGoalListActionsHead) {
