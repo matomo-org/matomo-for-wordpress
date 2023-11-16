@@ -203,7 +203,7 @@ $matomo_extra_url_params = '&' . http_build_query(
 	];
 
 	/** @var \WpMatomo\Settings $settings */
-	$matomo_version = explode( '.', $settings->get_global_option( 'core_version' ) )[0];
+	$matomo_version = (int) explode( '.', $settings->get_global_option( 'core_version' ) )[0];
 
 	matomo_show_tables( $matomo_feature_sections, $matomo_version );
 
