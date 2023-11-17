@@ -4,8 +4,6 @@ set -e
 
 cd /var/www/html
 
-a2enmod rewrite || true
-
 # http serves a single offer, whereas https serves multiple. we only want one
 LATEST_WORDPRESS_VERSION=$( php -r 'echo @json_decode(file_get_contents("http://api.wordpress.org/core/version-check/1.7/"), true)["offers"][0]["version"];' );
 if [[ -z "$LATEST_WORDPRESS_VERSION" ]]; then
@@ -29,9 +27,14 @@ if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
   exit $?
 elif [[ "$EXECUTE_CONSOLE" = "1" ]]; then
-  /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/console "$@"
+  echo "<?php # /var/www/html/$WORDPRESS_FOLDER/wp-load.php" > /var/www/html/matomo.wpload_dir.php
+
+  cd /var/www/html/matomo-for-wordpress/app
+  ./console "$@"
   exit $?
 fi
+
+a2enmod rewrite || true
 
 # install wp-cli.phar
 if [ ! -f "/var/www/html/wp-cli.phar" ]; then
@@ -172,7 +175,7 @@ else
 fi
 
 # link matomo for wordpress volume as wordpress plugin
-if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]; then
+if [[ "INSTALLING_FROM_ZIP" != "1" && ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]]; then
   ln -s /var/www/html/matomo-for-wordpress "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo"
 fi
 
@@ -288,11 +291,11 @@ fi
 
 # make sure the files can be edited outside of docker (for easier debugging)
 # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
-touch /var/www/html/$WORDPRESS_FOLDER/debug.log
+touch /var/www/html/$WORDPRESS_FOLDER/debug.log /var/www/html/matomo.wpload_dir.php
 mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads
 find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chown "${UID:-1000}:${GID:-1000}" {} +
 find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
-chmod -R 0777 "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d" "/var/www/html/$WORDPRESS_FOLDER/debug.log"
+chmod -R 0777 "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d" "/var/www/html/$WORDPRESS_FOLDER/debug.log" /var/www/html/matomo.wpload_dir.php
 
 if ! which apache2-foreground &> /dev/null; then
   # TODO: is it possible to use wp-cli for this?

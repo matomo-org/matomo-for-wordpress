@@ -8,12 +8,13 @@
     "squizlabs/php_codesniffer": "^3.5.8",
     "wp-coding-standards/wpcs": "^2.3.0",
     "friendsofphp/php-cs-fixer": "^3.0",
-    "yoast/phpunit-polyfills": "1.1.*"
+    "yoast/phpunit-polyfills": "^1.0 || ^2.0"
   },
   "config": {
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
-    },   "platform": {
+    },
+    "platform": {
       "php": "7.2.5"
     }
   }

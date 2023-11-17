@@ -119,6 +119,20 @@ Enter `pass` for the password.
 
 (For mysql, replace instances of "mariadb" in the command with "mysql".)
 
+#### Updating the Matomo core version
+
+Matomo for WordPress embeds the self-hosted Matomo in the `app/` subdirectory. To update the version that is used,
+run:
+
+```
+$ cd scripts
+$ ./update-core.sh <matomo version number>
+```
+
+Note: this script will try to run a Matomo console command through docker, so you must have docker installed.
+
+After it finishes, you can see what's changed via `git status`.
+
 ## Security
 Security is a top priority at Matomo. As potential issues are discovered, we validate, patch and release fixes as quickly as we can. We have a security bug bounty program in place that rewards researchers for finding security issues and disclosing them to us.
 
