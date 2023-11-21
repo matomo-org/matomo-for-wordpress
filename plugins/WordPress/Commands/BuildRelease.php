@@ -87,14 +87,14 @@ class BuildRelease extends ConsoleCommand
         }
     }
 
-    // TODO: unit test that checks generated files are up to date
     private function generateArchive($format, $version, $stashHash, OutputInterface $output)
     {
-        $output->writeln("Generating $format archive...");
-
         $pathToRepo = $this->getPathToGitRepo();
+        $outputFile = $pathToRepo . "/matomo-$version.$format";
 
-        $command = "git -C " . $pathToRepo . " archive --format=$format $stashHash > " . $pathToRepo . "/matomo-$version.$format";
+        $output->writeln("Generating $format archive at $outputFile...");
+
+        $command = "git -C " . $pathToRepo . " archive --format=$format $stashHash > " . $outputFile;
         $this->executeShellCommand($command, "Failed to generate $format archive!");
 
         $output->writeln("<info>Created archive matomo-$version.$format.</info>");

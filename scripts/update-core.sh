@@ -128,6 +128,9 @@ else
     echo -e "WordPress jquery was not replaced. There is an error."
 fi
 
-npm run compose -- run console wordpress:generate-lang-files
+RED='\033[0;31m'
+NO_COLOR='\033[0m'
+
+npm run compose -- run console wordpress:generate-lang-files || echo "${RED}Failed to generate lang files! Make sure to run 'npm run compose -- run console wordpress:generate-lang-files' after fixing the issue!${NO_COLOR}"
 
 echo -e "Done!... "
