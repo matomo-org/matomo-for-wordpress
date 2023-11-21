@@ -1,0 +1,104 @@
+{
+    "name": "matomo/matomo",
+    "type": "project",
+    "description": "Matomo is the leading Free/Libre open analytics platform",
+    "keywords": [
+        "piwik",
+        "matomo",
+        "web",
+        "analytics"
+    ],
+    "homepage": "https://matomo.org",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "The Matomo Team",
+            "email": "hello@matomo.org",
+            "homepage": "https://matomo.org/team/"
+        }
+    ],
+    "support": {
+        "forum": "https://forum.matomo.org/",
+        "issues": "https://github.com/matomo-org/matomo/issues",
+        "wiki": "https://github.com/matomo-org/matomo/wiki",
+        "source": "https://github.com/matomo-org/matomo"
+    },
+    "config": {
+        "platform": {
+            "php": "7.2.9"
+        },
+        "prepend-autoloader": false,
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "require": {
+        "php": ">=7.2.5",
+        "composer/ca-bundle": "^1.2",
+        "composer/semver": "^1.3.0",
+        "davaxi/sparkline": "~2.0",
+        "geoip2/geoip2": "^2.8",
+        "lox/xhprof": "dev-master",
+        "matomo/cache": "~2.0",
+        "matomo/decompress": "~2.0",
+        "matomo/device-detector": "~6.0",
+        "matomo/ini": "~3.0",
+        "matomo/matomo-php-tracker": "~3.0",
+        "matomo/network": "~2.0",
+        "matomo/referrer-spam-list": "dev-master",
+        "matomo/searchengine-and-social-list": "~3.0",
+        "monolog/monolog": "~1.11",
+        "mustangostang/spyc": "^0.6.0",
+        "pear/pear_exception": "~1.0.0",
+        "php-di/php-di": "^6.0.0",
+        "phpmailer/phpmailer": "^6.1",
+        "psr/log": "~1.0",
+        "symfony/console": "~2.6.0",
+        "symfony/event-dispatcher": "~2.6.0",
+        "symfony/monolog-bridge": "~2.6.0",
+        "symfony/polyfill-iconv": "^1.20",
+        "symfony/polyfill-mbstring": "^1.20",
+        "szymach/c-pchart": "~3.0.13",
+        "tecnickcom/tcpdf": "~6.0",
+        "tedivm/jshrink": "~v1.4.0",
+        "twig/twig": "^3.0",
+        "wikimedia/less.php": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~8.5",
+        "slevomat/coding-standard": "~7.2.0",
+        "squizlabs/php_codesniffer": "~3.6",
+        "phpstan/phpdoc-parser": "~1.5.0",
+        "symfony/var-dumper": "~2.6.0",
+        "symfony/yaml": "~2.6.0"
+    },
+    "replace": {
+        "symfony/polyfill-php54": "*",
+        "symfony/polyfill-php55": "*",
+        "symfony/polyfill-php56": "*",
+        "symfony/polyfill-php70": "*",
+        "symfony/polyfill-php71": "*",
+        "symfony/polyfill-php72": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Piwik\\Plugins\\": "plugins/",
+            "Piwik\\": "core/"
+        },
+        "psr-0": {
+            "Zend_": "libs/",
+            "HTML_": "libs/",
+            "PEAR_": "libs/",
+            "Archive_": "libs/"
+        },
+        "files": [
+            "LegacyAutoloader.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Piwik\\Tests\\": "tests/PHPUnit/"
+        }
+    }
+}

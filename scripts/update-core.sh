@@ -37,12 +37,6 @@ git clone --recurse-submodules --depth 1 --branch "$VERSION" https://github.com/
 cp $MATOMO_ROOT/bootstrap.php bootstrap.php
 cp $MATOMO_ROOT/.htaccess .htaccess
 
-if [ ! -f "$MATOMO_ROOT/.github/scripts/clean-build.sh" ]; then
-  mkdir -p $MATOMO_ROOT/.github/scripts
-  wget -O "$MATOMO_ROOT/.github/scripts/clean-build.sh" 'https://raw.githubusercontent.com/matomo-org/matomo/5.x-dev/.github/scripts/clean-build.sh'
-  chmod +x $MATOMO_ROOT/.github/scripts/clean-build.sh
-fi
-
 cd matomo/
 rm -r ./tests
 # delete most submodules (copied from https://github.com/matomo-org/matomo/blob/5.x-dev/.github/scripts/build-package.sh)
@@ -58,25 +52,19 @@ rm -rf plugins/TestRunner
 
 composer install --no-dev -o -q --ignore-platform-reqs
 
-rm -rf .git
+find . -name .git -exec rm -rf {} +
 cd ..
 
-rm -r "${MATOMO_ROOT:?}/"*
+rm -r "${MATOMO_ROOT:?}/"* "${MATOMO_ROOT:?}/".*
 cp -R matomo/* $MATOMO_ROOT
+cp -R matomo/.* $MATOMO_ROOT
 rm -r matomo/
 
 # TODO: force the use of matomo-scoper after we're sure everything works
 if [ ! -z "$MATOMO_SCOPER_PATH" ]; then
   echo "Running matomo-scoper..."
 
-  # download manifest and lock file from github since it's not available in the built package
-  wget "https://raw.githubusercontent.com/matomo-org/matomo/$VERSION/composer.json" -O "$MATOMO_ROOT/composer.json"
-  wget "https://raw.githubusercontent.com/matomo-org/matomo/$VERSION/composer.lock" -O "$MATOMO_ROOT/composer.lock"
-
   php "$MATOMO_SCOPER_PATH/bin/matomo-scoper" scope -y  --rename-references "$MATOMO_ROOT"
-
-  rm "$MATOMO_ROOT"/composer.json
-  rm "$MATOMO_ROOT"/composer.lock
 else
   echo "MATOMO_SCOPER_PATH not defined, skipping scoping."
 fi
@@ -87,15 +75,23 @@ rm -r $MATOMO_ROOT/CONTRIBUTING.md
 rm -r $MATOMO_ROOT/CHANGELOG.md
 rm -r $MATOMO_ROOT/plugins/Morpheus/fonts/selection.json
 rm -r $MATOMO_ROOT/lang/README.md
+rm -r $MATOMO_ROOT/plugins/Example*
+rm -r $MATOMO_ROOT/plugins/*/tests
+find $MATOMO_ROOT -name .github -exec rm -rf {} +
+rm -r $MATOMO_ROOT/plugins/*/config/test.php
+rm -r $MATOMO_ROOT/plugins/*/config/ui-test.php
+rm -r $MATOMO_ROOT/plugins/*/screenshots
+rm -r $MATOMO_ROOT/tmp/CACHEDIR.TAG
+find $MATOMO_ROOT/plugins/Morpheus/icons \( -type f -o -type l \) -not -path "$MATOMO_ROOT/plugins/Morpheus/icons/dist/*" -exec rm -rf {} +
+find $MATOMO_ROOT -name "*.spec.js" -exec rm -rf {} +
+rm $MATOMO_ROOT/HIRING.md
+rm $MATOMO_ROOT/.travis.yml
+rm $MATOMO_ROOT/.scrutinizer.yml
+rm $MATOMO_ROOT/.coveralls.yml
+rm $MATOMO_ROOT/.gitmodules
 
-cd $MATOMO_ROOT
-./.github/scripts/clean-build.sh
 cd $SCRIPTPATH
 
-# we need to remove jquery as it is shipped with wordpress and we use their jquery
-# TODO: remove the following from .gitattributes
-rm -rf $MATOMO_ROOT/node_modules/jquery
-find $MATOMO_ROOT/node_modules/jquery-ui-dist -name '*.*' ! -name 'jquery-ui.min.css' ! -name 'LICENSE.txt' ! -name 'AUTHORS.txt' ! -name 'jquery-ui.theme.min.css' -exec rm -rf {} +
 rm -rf $MATOMO_ROOT/config/environment/test.php
 rm -rf $MATOMO_ROOT/config/environment/ui-test.php
 rm -rf $MATOMO_ROOT/vendor/twig/twig/ext
@@ -132,6 +128,9 @@ else
     echo -e "WordPress jquery was not replaced. There is an error."
 fi
 
-npm run compose -- run console wordpress:generate-lang-files
+RED='\033[0;31m'
+NO_COLOR='\033[0m'
+
+npm run compose -- run console wordpress:generate-lang-files || echo "${RED}Failed to generate lang files! Make sure to run 'npm run compose -- run console wordpress:generate-lang-files' after fixing the issue!${NO_COLOR}"
 
 echo -e "Done!... "

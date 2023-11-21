@@ -92,7 +92,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_built_release_has_all_needed_matomo_contents_and_is_not_too_big() {
-		$ignored_files = [
+		$ignored_core_files = [
 			'matomo/CHANGELOG.md',
 			'matomo/lang/README.md',
 			'matomo/config/manifest.inc.php',
@@ -114,6 +114,20 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			'matomo/node_modules/vue/dist/vue.global.js',
 			'matomo/node_modules/qrcodejs2/qrcode.min.js',
 			'matomo/node_modules/jquery.scrollto/jquery.scrollTo.min.js',
+			'matomo/plugins/Morpheus/icons/README.md',
+		];
+
+		$ignored_mwp_files = [
+			'app/bootstrap.php',
+			'app/favicon.ico',
+			'app/.htaccess',
+			'app/core/.htaccess',
+			'app/js/.htaccess',
+			'app/lang/.htaccess',
+			'app/libs/.htaccess',
+			'app/node_modules/.htaccess',
+			'app/plugins/.htaccess',
+			'app/vendor/.htaccess',
 		];
 
 		try {
@@ -158,18 +172,35 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 					|| preg_match( '%^matomo/libs/jqplot/.*?jqplot\..*?\.js$%', $path )
 					|| preg_match( '%^matomo/core/Updates/[012]\..*?\.php$%', $path )
 					|| preg_match( '%^matomo/node_modules/jquery/%', $path )
-					|| in_array( $path, $ignored_files, true )
+					|| preg_match( '%^matomo/plugins/.*?/vue/src%', $path )
+					|| preg_match( '%^matomo/plugins/.*?/vue/dist/*.*?\.umd\.js$%', $path )
+					|| in_array( $path, $ignored_core_files, true )
 				) {
 					continue;
 				}
 
 				$path_in_mwp_release = preg_replace( '%^matomo/%', 'app/', $path );
 				if ( empty( $mwp_release_contents[ $path_in_mwp_release ] ) ) {
-					$missing_files[] = $path_in_mwp_release;
+					$missing_files[] = $path;
 				}
 			}
-
 			$this->assertEmpty( $missing_files, 'MWP release is missing possibly required files found in core release: ' . print_r( $missing_files, true ) );
+
+			// check that mwp release does not contain any extraneous files not in core release
+			$extraneous_files = [];
+			foreach ( $mwp_release_contents as $path => $ignore ) {
+				if ( ! preg_match( '%^app/%', $path )
+					|| in_array( $path, $ignored_mwp_files, true )
+				) {
+					continue;
+				}
+
+				$path_in_core_release = preg_replace( '%^app/%', 'matomo/', $path );
+				if ( empty( $matomo_core_contents[ $path_in_core_release ] ) ) {
+					$extraneous_files[] = $path;
+				}
+			}
+			$this->assertEmpty( $extraneous_files, 'MWP release has some app/ files that are not in the core release, check if they are necessary: ' . print_r( $extraneous_files, true ) );
 
 			// check release size is not too large
 			$release_size = filesize( $path_to_zip );
@@ -177,13 +208,20 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 
 			// check that ignored file list is still relevant
 			$irrelevant_ignored_files = [];
-			foreach ( $ignored_files as $ignored_file ) {
+			foreach ( $ignored_core_files as $ignored_file ) {
 				if ( empty( $matomo_core_contents[ $ignored_file ] ) ) {
 					$irrelevant_ignored_files[] = $ignored_file;
 				}
 			}
+			$this->assertEmpty( $irrelevant_ignored_files, 'The \$ignored_core_files variable has some out of date entries: ' . print_r( $irrelevant_ignored_files, true ) );
 
-			$this->assertEmpty( $irrelevant_ignored_files, 'The \$ignored_files variable has some out of date entries: ' . print_r( $irrelevant_ignored_files, true ) );
+			$irrelevant_mwp_ignored_files = [];
+			foreach ( $ignored_mwp_files as $ignored_file ) {
+				if ( empty( $mwp_release_contents[ $ignored_file ] ) ) {
+					$irrelevant_mwp_ignored_files[] = $ignored_file;
+				}
+			}
+			$this->assertEmpty( $irrelevant_mwp_ignored_files, 'The \$ignored_mwp_files variable has some out of date entries: ' . print_r( $irrelevant_mwp_ignored_files, true ) );
 		} finally {
 			if ( isset( $core_release_zip ) && is_file( $core_release_zip ) ) {
 				unlink( $core_release_zip );
