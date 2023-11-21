@@ -273,7 +273,7 @@ class PluginUmdAssetFetcher extends UIAssetFetcher
         return [];
     }
 
-    private static function getRelativePluginDirectory($plugin)
+    public static function getRelativePluginDirectory($plugin)
     {
         $result = self::getPluginDirectory($plugin);
 
