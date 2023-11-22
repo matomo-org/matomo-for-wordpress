@@ -298,17 +298,23 @@ if ! /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-ro
 fi
 
 # setup everything required for unit tests
+if [ "$WORDPRESS_VERSION" = "trunk" ]; then
+  WORDPRESS_SVN_FOLDER="trunk"
+else
+  WORDPRESS_SVN_FOLDER="tags/$WORDPRESS_VERSION"
+fi
+
 if [[ ! -d "$WP_TESTS_DIR/includes" || ! -d "$WP_TESTS_DIR/data" ]];
 then
 		mkdir -p $WP_TESTS_DIR
 		if [[ ! -d "$WP_TESTS_DIR/includes" ]]; then
 		  echo "checking out phpunit includes..."
-  		svn co --quiet https://develop.svn.wordpress.org/tags/$WORDPRESS_VERSION/tests/phpunit/includes/ $WP_TESTS_DIR/includes
+  		svn co --quiet https://develop.svn.wordpress.org/$WORDPRESS_SVN_FOLDER/tests/phpunit/includes/ $WP_TESTS_DIR/includes
     fi
 
 		if [[ ! -d "$WP_TESTS_DIR/data" ]]; then
 		  echo "checking out phpunit data..."
-  		svn co --quiet https://develop.svn.wordpress.org/tags/$WORDPRESS_VERSION/tests/phpunit/data/ $WP_TESTS_DIR/data
+  		svn co --quiet https://develop.svn.wordpress.org/$WORDPRESS_SVN_FOLDER/tests/phpunit/data/ $WP_TESTS_DIR/data
     fi
 fi
 

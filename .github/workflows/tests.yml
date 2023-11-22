@@ -237,7 +237,9 @@ jobs:
 
       - name: Install dependencies
         shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
+        run: |
+          cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update --with-all-dependencies
+          cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
 
       - name: Run checkstyle
         shell: bash
