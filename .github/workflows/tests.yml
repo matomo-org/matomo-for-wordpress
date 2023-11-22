@@ -91,10 +91,10 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ matrix.wp-versions }}" = "5.2" ]]; then
-            cd ${{ github.workspace }}/wp-content/plugins/matomo && composer require --dev yoast/phpunit-polyfills:^1.1
+            sed -i 's%"yoast/phpunit-polyfills": ".*"%"yoast/phpunit-polyfills": "^1.1"%g' ${{ github.workspace }}/wp-content/plugins/matomo/composer.json
           fi
 
-          cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update
+          cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update --with-all-dependencies
 
       - name: Install dependencies
         shell: bash
