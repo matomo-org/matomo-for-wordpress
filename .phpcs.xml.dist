@@ -72,4 +72,8 @@
 			<property name="blank_line_check" value="true"/>
 		</properties>
 	</rule>
+
+    <rule ref="PHPCompatibility.FunctionDeclarations.NewReturnTypeDeclarations.voidFound">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
 </ruleset>
