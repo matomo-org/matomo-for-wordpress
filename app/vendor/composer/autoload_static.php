@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8b70f2274c6cda895dd051907a88dd6d
+class ComposerStaticInit02ec09266eeca45f9fbddb70192ddeff
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
@@ -2570,15 +2570,6 @@ class ComposerStaticInit8b70f2274c6cda895dd051907a88dd6d
         'Piwik\\Plugins\\TagManager\\tests\\Unit\\Model\\ComparisonsTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Unit/Model/ComparisonsTest.php',
         'Piwik\\Plugins\\TagManager\\tests\\Unit\\Validators\\LookupTableTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Unit/Validators/LookupTableTest.php',
         'Piwik\\Plugins\\TagManager\\tests\\Unit\\Validators\\NumericTest' => __DIR__ . '/../..' . '/plugins/TagManager/tests/Unit/Validators/NumericTest.php',
-        'Piwik\\Plugins\\TestRunner\\Commands\\CodeCoverage' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/CodeCoverage.php',
-        'Piwik\\Plugins\\TestRunner\\Commands\\GenerateGitHubTestActionFile' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/GenerateGitHubTestActionFile.php',
-        'Piwik\\Plugins\\TestRunner\\Commands\\SyncScreenshots' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/SyncScreenshots.php',
-        'Piwik\\Plugins\\TestRunner\\Commands\\TestsRun' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/TestsRun.php',
-        'Piwik\\Plugins\\TestRunner\\Commands\\TestsRunJS' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/TestsRunJS.php',
-        'Piwik\\Plugins\\TestRunner\\Commands\\TestsRunUI' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/TestsRunUI.php',
-        'Piwik\\Plugins\\TestRunner\\Commands\\TestsSetupFixture' => __DIR__ . '/../..' . '/plugins/TestRunner/Commands/TestsSetupFixture.php',
-        'Piwik\\Plugins\\TestRunner\\Controller' => __DIR__ . '/../..' . '/plugins/TestRunner/Controller.php',
-        'Piwik\\Plugins\\TestRunner\\TestRunner' => __DIR__ . '/../..' . '/plugins/TestRunner/TestRunner.php',
         'Piwik\\Plugins\\Tour\\API' => __DIR__ . '/../..' . '/plugins/Tour/API.php',
         'Piwik\\Plugins\\Tour\\Dao\\DataFinder' => __DIR__ . '/../..' . '/plugins/Tour/Dao/DataFinder.php',
         'Piwik\\Plugins\\Tour\\Engagement\\Challenge' => __DIR__ . '/../..' . '/plugins/Tour/Engagement/Challenge.php',
@@ -3375,11 +3366,11 @@ class ComposerStaticInit8b70f2274c6cda895dd051907a88dd6d
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8b70f2274c6cda895dd051907a88dd6d::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8b70f2274c6cda895dd051907a88dd6d::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit8b70f2274c6cda895dd051907a88dd6d::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit8b70f2274c6cda895dd051907a88dd6d::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInit8b70f2274c6cda895dd051907a88dd6d::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit02ec09266eeca45f9fbddb70192ddeff::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit02ec09266eeca45f9fbddb70192ddeff::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit02ec09266eeca45f9fbddb70192ddeff::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInit02ec09266eeca45f9fbddb70192ddeff::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInit02ec09266eeca45f9fbddb70192ddeff::$classMap;
 
         }, null, ClassLoader::class);
     }

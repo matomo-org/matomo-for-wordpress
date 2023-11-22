@@ -1704,5 +1704,4 @@ class Manager
             // we ignore any error while Matomo is not installed yet. refs #16741
         }
     }
-
 }

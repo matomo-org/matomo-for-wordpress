@@ -85,6 +85,17 @@ jobs:
       - name: Check PHP Version
         run: php -v
 
+      # note: we update the dependencies since they only exist for the unit tests, and we need to use different
+      # versions of phpunit/etc. for different PHP versions
+      - name: Update test dependencies
+        shell: bash
+        run: |
+          if [[ "${{ matrix.wp-versions }}" = "5.2" ]]; then
+            cd ${{ github.workspace }}/wp-content/plugins/matomo && composer require --dev yoast/phpunit-polyfills:^1.1
+          fi
+
+          cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update
+
       - name: Install dependencies
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
@@ -93,13 +104,19 @@ jobs:
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' 127.0.0.1 ${{ matrix.wp-versions }} true
 
+      - run: chmod -R 777 . # for building generated assets
+
       - name: Run unit tests in non multisite context
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./vendor/bin/phpunit
+        env:
+          WP_VERSION: ${{ matrix.wp-versions }}
 
       - name: Run unit tests in multisite context
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && WP_MULTISITE=1 ./vendor/bin/phpunit
+        env:
+          WP_VERSION: ${{ matrix.wp-versions }}
 
   e2e_tests:
     runs-on: 'ubuntu-22.04'
@@ -153,12 +170,26 @@ jobs:
           WORDPRESS_FOLDER=test
           RESET_DATABASE=1
           WORDPRESS_VERSION=$WORDPRESS_VERSION
+          INSTALLING_FROM_ZIP=1
           EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: chmod -R 777 . # required to build the release
       - run: docker compose --env-file .env.default --env-file .env up -d wordpress
       - run: sleep 60 # wait for docker-compose launch to finish
+
+      # build release from current code
+      - run: npm run compose -- run console wordpress:build-release --name=test --zip
+
+      # install release from plugin
+      - run: |
+          mv matomo-test.zip matomo.zip
+          rm -rf ./docker/wordpress/test/wp-content/plugins/matomo
+          npm run compose -- run wp --allow-root plugin install --activate /var/www/html/matomo-for-wordpress/matomo.zip
+          npm run compose -- run wp --allow-root matomo install
+
+          sudo chmod -R 777 ./docker/wordpress/test/wp-content/cache/matomo
 
       # run tests
       - run: xvfb-run --auto-servernum npm run wdio

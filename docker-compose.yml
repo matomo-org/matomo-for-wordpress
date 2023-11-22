@@ -25,11 +25,11 @@ services:
     volumes:
       - ./docker/wordpress:/var/www/html
       - .:/var/www/html/matomo-for-wordpress
-      - /var/www/html/matomo-for-wordpress/app/tmp
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
+      - ./scripts/local-gitconfig:/root/.gitconfig
     ports:
       - "$PORT:80"
     entrypoint: /usr/src/entrypoint.sh
@@ -53,11 +53,11 @@ services:
     volumes:
       - ./docker/wordpress:/var/www/html
       - .:/var/www/html/matomo-for-wordpress
-      - /var/www/html/matomo-for-wordpress/app/tmp
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
+      - ./scripts/local-gitconfig:/.gitconfig
     entrypoint: /usr/src/entrypoint.sh
     depends_on:
       - "$BACKEND"
@@ -70,7 +70,6 @@ services:
       - ./scripts/local-dev-nginx.conf:/etc/nginx/conf.d/default.conf
       - ./docker/wordpress:/var/www/html
       - .:/var/www/html/matomo-for-wordpress
-      - /var/www/html/matomo-for-wordpress/app/tmp
     depends_on:
       - fpm
     ports:
@@ -93,10 +92,10 @@ services:
     volumes:
       - ./docker/wordpress:/var/www/html
       - .:/var/www/html/matomo-for-wordpress
-      - /var/www/html/matomo-for-wordpress/app/tmp
       - ./docker/wp-cli:/.wp-cli
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
+      - ./scripts/local-gitconfig:/.gitconfig
     ports:
       - "$PORT:80"
     user: "${UID:-1000}:${GID:-1000}"
@@ -118,10 +117,10 @@ services:
     volumes:
       - ./docker/wordpress:/var/www/html
       - .:/var/www/html/matomo-for-wordpress
-      - /var/www/html/matomo-for-wordpress/app/tmp
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
+      - ./scripts/local-gitconfig:/.gitconfig
     ports:
       - "$PORT:80"
     user: "${UID:-1000}:${GID:-1000}"
@@ -130,7 +129,7 @@ services:
       EXECUTE_CONSOLE: 1
     depends_on:
       - "${BACKEND:-mariadb}"
-  phpunit: # TODO
+  phpunit:
     env_file:
       - .env.default
       - .env

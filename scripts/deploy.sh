@@ -72,12 +72,15 @@ if [[ -d "tags/$VERSION" ]]; then
 fi
 
 echo "➤ Checking out git matomo-for-wordpress repository..."
-git clone --single-branch --branch live https://github.com/matomo-org/matomo-for-wordpress.git "$GITHUB_WORKSPACE"
-
-echo "➤ Copying files..."
+git clone --recurse-submodules --single-branch --branch live https://github.com/matomo-org/matomo-for-wordpress.git "$GITHUB_WORKSPACE"
 
 cd "$GITHUB_WORKSPACE"
-git archive HEAD | tar x --directory="$TMP_DIR"
+
+echo "➤ Building release..."
+npm run compose -- run console wordpress:build-release --name=$VERSION --tgz
+
+echo "➤ Copying files..."
+tar -xf "matomo-$VERSION.tgz" --directory="$TMP_DIR" # the archive is created via the wordpress:build-release command
 
 cd "$SVN_DIR"
 
