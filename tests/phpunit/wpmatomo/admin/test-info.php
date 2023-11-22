@@ -34,7 +34,7 @@ class AdminInfoTest extends MatomoUnit_TestCase {
 		$this->info->show();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( '100% data ownership', $output );
+		$this->assertStringContainsString( '100% data ownership', $output );
 	}
 
 	/**
@@ -45,7 +45,7 @@ class AdminInfoTest extends MatomoUnit_TestCase {
 		$this->info->show_multisite();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( 'Multi Site mode', $output );
+		$this->assertStringContainsString( 'Multi Site mode', $output );
 	}
 
 }

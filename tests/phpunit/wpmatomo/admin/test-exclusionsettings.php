@@ -29,7 +29,7 @@ class AdminExclusionSettingsTest extends MatomoAnalytics_TestCase {
 		$this->exclusion_settings->show_settings();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( 'Save Changes', $output );
+		$this->assertStringContainsString( 'Save Changes', $output );
 	}
 
 	public function test_show_settings_does_change_any_values_if_nonce() {

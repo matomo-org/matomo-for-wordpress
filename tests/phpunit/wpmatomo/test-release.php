@@ -22,7 +22,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 		echo $version;
 
 		$txt = file_get_contents( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'readme.txt' );
-		$this->assertContains( 'Stable tag: ' . $version, $txt );
+		$this->assertStringContainsString( 'Stable tag: ' . $version, $txt );
 	}
 
 	public function get_needed_files() {

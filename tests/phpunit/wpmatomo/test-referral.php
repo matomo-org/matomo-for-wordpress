@@ -75,7 +75,7 @@ class ReferralTest extends MatomoUnit_TestCase {
 		$this->referral->render();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( 'Rate Matomo', $output );
+		$this->assertStringContainsString( 'Rate Matomo', $output );
 	}
 
 }

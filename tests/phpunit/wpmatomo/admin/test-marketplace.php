@@ -39,7 +39,7 @@ class AdminMarketplaceTest extends MatomoUnit_TestCase {
 		$this->marketplace->show();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( 'Discover new functionality for your Matomo', $output );
+		$this->assertStringContainsString( 'Discover new functionality for your Matomo', $output );
 	}
 
 

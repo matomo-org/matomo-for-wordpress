@@ -38,9 +38,9 @@ class AdminSummaryTest extends MatomoAnalytics_TestCase {
 		$this->summary->show();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( 'Summary', $output );
-		$this->assertContains( 'Change date', $output );
-		$this->assertContains( 'is not enabled', $output );
+		$this->assertStringContainsString( 'Summary', $output );
+		$this->assertStringContainsString( 'Change date', $output );
+		$this->assertStringContainsString( 'is not enabled', $output );
 	}
 
 	public function test_show_renders_ui_when_tracking_enabled() {
@@ -50,8 +50,8 @@ class AdminSummaryTest extends MatomoAnalytics_TestCase {
 		$this->summary->show();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( 'Summary', $output );
-		$this->assertContains( 'Change date', $output );
+		$this->assertStringContainsString( 'Summary', $output );
+		$this->assertStringContainsString( 'Change date', $output );
 		$this->assertNotContains( 'is not enabled', $output );
 	}
 
@@ -81,7 +81,7 @@ class AdminSummaryTest extends MatomoAnalytics_TestCase {
 			$dashboard->get_widgets()
 		);
 
-		$this->assertContains( 'Dashboard updated.', $output );
+		$this->assertStringContainsString( 'Dashboard updated.', $output );
 	}
 
 	public function test_show_wont_pin_widget_when_invalid_report() {
@@ -102,6 +102,6 @@ class AdminSummaryTest extends MatomoAnalytics_TestCase {
 
 		$this->assertSame( array(), $dashboard->get_widgets() );
 
-		$this->assertNotContains( 'Dashboard updated.', $output );
+		$this->assertStringNotContainsString( 'Dashboard updated.', $output );
 	}
 }

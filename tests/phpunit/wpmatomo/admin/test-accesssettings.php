@@ -49,7 +49,7 @@ class AdminAccessSettingsTest extends MatomoAnalytics_TestCase {
 		$this->access_settings->show_settings();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( 'WordPress Role', $output );
+		$this->assertStringContainsString( 'WordPress Role', $output );
 	}
 
 	public function test_show_settings_does_change_any_values_if_nonce() {
