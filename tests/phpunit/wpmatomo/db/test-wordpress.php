@@ -42,11 +42,9 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		$this->assertNotEmpty( $tables );
 	}
 
-	/**
-	 * @expectedException \Zend_Db_Statement_Exception
-	 * @expectedExceptionMessage  foobarbaz' doesn't exist
-	 */
 	public function test_query_triggers_error_when_wrong_sql() {
+		$this->expectException('\Zend_Db_Statement_Exception');
+		$this->expectExceptionMessage("foobarbaz' doesn't exist");
 		$this->db->query( 'select * from foobarbaz' );
 	}
 
@@ -146,11 +144,9 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		$this->assertCount( 3, $result );
 	}
 
-	/**
-	 * @expectedException \Zend_Db_Statement_Exception
-	 * @expectedExceptionMessage  foobarbaz' doesn't exist
-	 */
 	public function test_fetch_all_triggers_error_when_wrong_sql() {
+		$this->expectException('\Zend_Db_Statement_Exception');
+		$this->expectExceptionMessage("foobarbaz' doesn't exist");
 		$this->db->fetchAll( 'select * from foobarbaz' );
 	}
 
@@ -166,11 +162,9 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		$this->assertCount( 1, $result );
 	}
 
-	/**
-	 * @expectedException \Zend_Db_Statement_Exception
-	 * @expectedExceptionMessage  foobarbaz' doesn't exist
-	 */
 	public function test_fetch_one_triggers_error_when_wrong_sql() {
+		$this->expectException('\Zend_Db_Statement_Exception');
+		$this->expectExceptionMessage("foobarbaz' doesn't exist");
 		$this->db->fetchOne( 'select foo from foobarbaz' );
 	}
 
@@ -180,11 +174,9 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		$this->assertEquals( 'view', $result );
 	}
 
-	/**
-	 * @expectedException \Zend_Db_Statement_Exception
-	 * @expectedExceptionMessage  foobarbaz' doesn't exist
-	 */
 	public function test_fetch_row_triggers_error_when_wrong_sql() {
+		$this->expectException('\Zend_Db_Statement_Exception');
+		$this->expectExceptionMessage("foobarbaz' doesn't exist");
 		$this->db->fetchRow( 'select * from foobarbaz limit 1' );
 	}
 
@@ -202,11 +194,9 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		);
 	}
 
-	/**
-	 * @expectedException \Zend_Db_Statement_Exception
-	 * @expectedExceptionMessage  foobarbaz' doesn't exist
-	 */
 	public function test_exec_triggers_error_when_wrong_sql() {
+		$this->expectException('\Zend_Db_Statement_Exception');
+		$this->expectExceptionMessage("foobarbaz' doesn't exist");
 		$this->db->exec( 'select * from foobarbaz' );
 	}
 

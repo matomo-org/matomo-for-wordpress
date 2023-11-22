@@ -52,7 +52,7 @@ class AdminSummaryTest extends MatomoAnalytics_TestCase {
 		$this->assertNotEmpty( $output );
 		$this->assertStringContainsString( 'Summary', $output );
 		$this->assertStringContainsString( 'Change date', $output );
-		$this->assertNotContains( 'is not enabled', $output );
+		$this->assertStringNotContainsString( 'is not enabled', $output );
 	}
 
 	public function test_show_pin_widget() {

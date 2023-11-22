@@ -30,11 +30,9 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 		$this->insert_many_values();
 	}
 
-	/**
-	 * @expectedException \Zend_Db_Statement_Exception
-	 * @expectedExceptionMessage  foobarbaz' doesn't exist
-	 */
 	public function test_query_triggers_error_when_wrong_sql() {
+		$this->expectException('\Zend_Db_Statement_Exception');
+		$this->expectExceptionMessage("foobarbaz' doesn't exist");
 		$this->db->query( 'select * from foobarbaz' );
 	}
 
@@ -109,7 +107,7 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 			);
 			$this->fail( 'Expected exception not thrown' );
 		} catch ( Zend_Db_Exception $e ) {
-			$this->assertContains( '[1146]', $e->getMessage() );
+			$this->assertStringContainsString( '[1146]', $e->getMessage() );
 			$this->assertTrue( $this->db->isErrNo( $e, 1146 ) );
 			$this->assertFalse( $this->db->isErrNo( $e, 1145 ) );
 			$this->assertFalse( $this->db->isErrNo( $e, 1147 ) );
@@ -123,16 +121,14 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 			);
 			$this->fail( 'Expected exception not thrown 2' );
 		} catch ( Zend_Db_Exception $e ) {
-			$this->assertContains( '[1054]', $e->getMessage() );
+			$this->assertStringContainsString( '[1054]', $e->getMessage() );
 			$this->assertTrue( $this->db->isErrNo( $e, 1054 ) );
 		}
 	}
 
-	/**
-	 * @expectedException \Zend_Db_Statement_Exception
-	 * @expectedExceptionMessage  foobarbaz' doesn't exist
-	 */
 	public function test_fetch_all_triggers_error_when_wrong_sql() {
+		$this->expectException('\Zend_Db_Statement_Exception');
+		$this->expectExceptionMessage("foobarbaz' doesn't exist");
 		$this->db->fetchAll( 'select * from foobarbaz' );
 	}
 

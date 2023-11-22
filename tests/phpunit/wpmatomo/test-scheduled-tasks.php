@@ -75,7 +75,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		$this->assertStringContainsString( '# AddHandler', file_get_contents( $filename_to_check ) );
 		$undo = true;
 		$this->tasks->disable_add_handler( $undo );
-		$this->assertNotContains( '# AddHandler', file_get_contents( $filename_to_check ) );
+		$this->assertStringNotContainsString( '# AddHandler', file_get_contents( $filename_to_check ) );
 		$this->assertStringContainsString( 'AddHandler', file_get_contents( $filename_to_check ) );
 		$this->settings->force_disable_addhandler = false;
 	}

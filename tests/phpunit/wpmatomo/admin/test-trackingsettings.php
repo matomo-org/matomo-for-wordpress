@@ -41,7 +41,7 @@ class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
 		$this->tracking_settings->show_settings();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( 'Tracking code', $output );
+		$this->assertStringContainsString( 'Tracking code', $output );
 	}
 
 	public function test_show_settings_does_change_any_values_if_nonce() {
