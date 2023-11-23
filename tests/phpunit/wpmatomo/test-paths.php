@@ -51,7 +51,7 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_upload_base_dir() {
-		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/matomo', $this->paths->get_upload_base_dir() );
+		$this->assertSame( ABSPATH . 'wp-content/uploads/matomo', $this->paths->get_upload_base_dir() );
 	}
 
 	/**
@@ -64,7 +64,7 @@ class PathsTest extends MatomoUnit_TestCase {
 		}
 		$blogid1 = self::factory()->blog->create();
 		switch_to_blog( 2 );
-		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/sites/2/matomo', $this->paths->get_upload_base_dir() );
+		$this->assertSame( ABSPATH . 'wp-content/uploads/sites/2/matomo', $this->paths->get_upload_base_dir() );
 
 		wp_delete_site( $blogid1 );
 	}
@@ -74,7 +74,7 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_matomo_js_upload_path() {
-		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/matomo/matomo.js', $this->paths->get_matomo_js_upload_path() );
+		$this->assertSame( ABSPATH . 'wp-content/uploads/matomo/matomo.js', $this->paths->get_matomo_js_upload_path() );
 	}
 
 	public function test_get_tracker_api_rest_api_endpoint() {
@@ -94,22 +94,22 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_config_ini_path() {
-		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/matomo/config/config.ini.php', $this->paths->get_config_ini_path() );
+		$this->assertSame( ABSPATH . 'wp-content/uploads/matomo/config/config.ini.php', $this->paths->get_config_ini_path() );
 	}
 
 	public function test_get_tmp_dir() {
 		if ( is_multisite() ) {
-			$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/matomo/tmp', $this->paths->get_tmp_dir() );
+			$this->assertSame( ABSPATH . 'wp-content/uploads/matomo/tmp', $this->paths->get_tmp_dir() );
 		} else {
-			$this->assertSame( get_temp_dir() . 'wordpress/wp-content/cache/matomo', $this->paths->get_tmp_dir() );
+			$this->assertSame( ABSPATH . 'wp-content/cache/matomo', $this->paths->get_tmp_dir() );
 		}
 	}
 
 	public function test_get_relative_dir_to_matomo() {
 		$valid_values = array(
-			'../../matomo/tests/phpunit/wpmatomo', // travis
+			'../../matomo/tests/phpunit/wpmatomo',
 		);
-		$val          = $this->paths->get_relative_dir_to_matomo( __DIR__ );
+		$val          = $this->paths->get_relative_dir_to_matomo( ABSPATH . '/wp-content/plugins/matomo/tests/phpunit/wpmatomo' );
 		$this->assertTrue( in_array( $val, $valid_values, true ) );
 		// automatically double check that it works
 		$this->assertTrue( is_dir( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app/../tests/phpunit/wpmatomo' ) );
@@ -236,7 +236,7 @@ class PathsTest extends MatomoUnit_TestCase {
 		$blogid1 = self::factory()->blog->create();
 		switch_to_blog( 2 );
 		wp_delete_site( $blogid1 );
-		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/matomo', $this->paths->get_gloal_upload_dir_if_possible() );
+		$this->assertSame( ABSPATH . 'wp-content/uploads/matomo', $this->paths->get_gloal_upload_dir_if_possible() );
 	}
 
 }
