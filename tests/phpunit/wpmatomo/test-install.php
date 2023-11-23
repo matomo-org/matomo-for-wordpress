@@ -145,7 +145,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$blogid = get_current_blog_id();
 
 		$paths = new Paths();
-		$this->assertContains( 'wp-content/uploads/sites/' . $blogid . '/matomo/config/config.ini.php', $paths->get_config_ini_path() );
+		$this->assertStringContainsString( 'wp-content/uploads/sites/' . $blogid . '/matomo/config/config.ini.php', $paths->get_config_ini_path() );
 		$this->assertTrue( $this->installer->looks_like_it_is_installed() );
 
 		$sites_model = new SitesModel();

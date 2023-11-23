@@ -222,7 +222,7 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_gloal_upload_dir_if_possible() {
-		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/matomo', $this->paths->get_gloal_upload_dir_if_possible() );
+		$this->assertSame( ABSPATH . 'wp-content/uploads/matomo', $this->paths->get_gloal_upload_dir_if_possible() );
 	}
 
 	/**
