@@ -54,6 +54,7 @@ if [ ! -d "/var/www/html/$WORDPRESS_FOLDER" ]; then
 
   curl "$WORDPRESS_URL" > "wordpress-$WORDPRESS_VERSION.zip"
 
+  rm -rf wordpress
   unzip -q "wordpress-$WORDPRESS_VERSION.zip"
   mv wordpress "$WORDPRESS_FOLDER"
 
