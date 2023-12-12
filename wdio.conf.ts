@@ -1,4 +1,8 @@
+import * as path from 'path';
+import * as url from 'url';
 import type { Options } from '@wdio/types'
+
+const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 export const config: Options.Testrunner = {
   //
@@ -113,7 +117,34 @@ export const config: Options.Testrunner = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: ['intercept'],
+  services: [
+    'intercept',
+
+    [
+      'image-comparison',
+      {
+        baselineFolder: path.join(dirname, 'tests/e2e/baseline/'),
+        formatImageName: '{tag}',
+        screenshotPath: path.join(dirname, 'tests/e2e/actual/'),
+        savePerInstance: true,
+        autoSaveBaseline: false,
+        blockOutStatusBar: true,
+        blockOutToolBar: true,
+        // Options for the tabbing image
+        tabbableOptions: {
+          circle: {
+            size: 18,
+            fontSize: 18,
+            // ...
+          },
+          line: {
+            color: '#ff221a', // hex-code or for example words like `red|black|green`
+            width: 3,
+          },
+        },
+      },
+    ],
+  ],
   //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber

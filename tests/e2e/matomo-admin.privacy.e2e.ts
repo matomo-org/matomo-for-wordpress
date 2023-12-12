@@ -6,14 +6,19 @@
  *
  */
 
-import { expect, browser } from '@wdio/globals'
-import AnonymizeDataPage from './pageobjects/matomo-admin/privacy/anonymize-data.page';
-import UsersOptOutPage from "./pageobjects/matomo-admin/privacy/users-opt-out.page";
-import AskingForConsentPage from './pageobjects/matomo-admin/privacy/asking-for-consent.page';
-import GdprOverviewPage from './pageobjects/matomo-admin/privacy/gdpr-overview.page';
-import GdprToolsPage from './pageobjects/matomo-admin/privacy/gdpr-tools.page';
+import { expect, browser } from '@wdio/globals';
+import AnonymizeDataPage from './pageobjects/matomo-admin/privacy/anonymize-data.page.js';
+import UsersOptOutPage from './pageobjects/matomo-admin/privacy/users-opt-out.page.js';
+import AskingForConsentPage from './pageobjects/matomo-admin/privacy/asking-for-consent.page.js';
+import GdprOverviewPage from './pageobjects/matomo-admin/privacy/gdpr-overview.page.js';
+import GdprToolsPage from './pageobjects/matomo-admin/privacy/gdpr-tools.page.js';
+import Website from './website.js';
 
 describe('Matomo Admin > Privacy', () => {
+  before(async () => {
+    await Website.login();
+  });
+
   it('should load the anonymize data page correctly', async () => {
     await AnonymizeDataPage.open();
 
