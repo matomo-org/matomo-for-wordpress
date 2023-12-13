@@ -23,7 +23,7 @@ describe('Matomo Admin > Privacy', () => {
     await AnonymizeDataPage.open();
 
     await expect(
-      await browser.checkScreen('matomo-admin.privacy.anonymize-data')
+      await browser.checkFullPageScreen('matomo-admin.privacy.anonymize-data')
     ).toEqual(0)
   });
 
@@ -31,7 +31,7 @@ describe('Matomo Admin > Privacy', () => {
     await UsersOptOutPage.open();
 
     await expect(
-      await browser.checkScreen('matomo-admin.privacy.users-opt-out')
+      await browser.checkFullPageScreen('matomo-admin.privacy.users-opt-out')
     ).toEqual(0)
   });
 
@@ -39,7 +39,7 @@ describe('Matomo Admin > Privacy', () => {
     await AskingForConsentPage.open();
 
     await expect(
-      await browser.checkScreen('matomo-admin.privacy.asking-for-consent')
+      await browser.checkFullPageScreen('matomo-admin.privacy.asking-for-consent')
     ).toEqual(0)
   });
 
@@ -47,7 +47,7 @@ describe('Matomo Admin > Privacy', () => {
     await GdprOverviewPage.open();
 
     await expect(
-      await browser.checkScreen('matomo-admin.privacy.gdpr-overview')
+      await browser.checkFullPageScreen('matomo-admin.privacy.gdpr-overview')
     ).toEqual(0);
   });
 
@@ -55,7 +55,7 @@ describe('Matomo Admin > Privacy', () => {
     await GdprToolsPage.open();
 
     await expect(
-      await browser.checkScreen('matomo-admin.privacy.gdpr-tools')
+      await browser.checkFullPageScreen('matomo-admin.privacy.gdpr-tools')
     ).toEqual(0);
   });
 });

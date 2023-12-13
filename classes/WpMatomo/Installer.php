@@ -260,7 +260,11 @@ class Installer {
 		$this->logger->log( 'Matomo is now creating the config' );
 		$home_url = home_url();
 		$domain   = wp_parse_url( $home_url, PHP_URL_HOST );
-		$domain   = $domain ? $home_url : $domain;
+		$domain   = $domain ? $domain : $home_url;
+		$port     = wp_parse_url( $home_url, PHP_URL_PORT );
+		if ( $port ) {
+			$domain .= ':' . $port;
+		}
 		$general  = [
 			'trusted_hosts' => [ $domain ],
 			'salt'          => Common::generateUniqId(),
