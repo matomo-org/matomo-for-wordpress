@@ -265,12 +265,12 @@ class Installer {
 		if ( $port ) {
 			$domain .= ':' . $port;
 		}
-		$general  = [
+		$general = [
 			'trusted_hosts' => [ $domain ],
 			'salt'          => Common::generateUniqId(),
 		];
-		$config   = Config::getInstance();
-		$path     = $config->getLocalPath();
+		$config  = Config::getInstance();
+		$path    = $config->getLocalPath();
 		if ( ! is_dir( dirname( $path ) ) ) {
 			wp_mkdir_p( dirname( $path ) );
 		}

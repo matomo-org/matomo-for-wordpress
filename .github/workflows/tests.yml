@@ -48,13 +48,13 @@ jobs:
     permissions:
       contents: read  # <--- allows to read repo
     steps:
-      - name: Checkout plugin project
+      - name: Checkout project
         uses: actions/checkout@v3
         with:
           persist-credentials: true
           path: wp-content/plugins/matomo
           lfs: true
-      - run: git lfs pull
+      - run: cd wp-content/plugins/matomo && git lfs pull && cd ../../..
 
       - name: Shutdown Ubuntu MySQL
         run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
@@ -210,7 +210,7 @@ jobs:
   checkstyle:
     runs-on: 'ubuntu-20.04'
     steps:
-      - name: Checkout plugin project
+      - name: Checkout project
         uses: actions/checkout@v3
         with:
           persist-credentials: true
