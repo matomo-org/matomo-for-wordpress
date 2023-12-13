@@ -125,7 +125,7 @@ export const config: Options.Testrunner = {
       {
         baselineFolder: path.join(dirname, 'tests/e2e/baseline/'),
         formatImageName: '{tag}',
-        screenshotPath: path.join(dirname, 'tests/e2e/actual/'),
+        screenshotPath: path.join(dirname, 'tests/e2e/'),
         savePerInstance: true,
         autoSaveBaseline: false,
         blockOutStatusBar: true,
