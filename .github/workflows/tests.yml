@@ -207,7 +207,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: actual-screenshots
+          name: actual-screenshots-${{ matrix.php-versions }}-${{ matrix.wp-versions }}
           path: tests/e2e/actual
 
       # output docker-compose logs

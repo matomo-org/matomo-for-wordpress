@@ -6,11 +6,12 @@
  *
  */
 
+import { browser } from '@wdio/globals';
 import * as querystring from 'querystring';
 import Page from '../page.js';
 
 export default class MatomoAdminPage extends Page{
-  open(method: string, params: Record<string, string> = {}) {
+  async open(method: string, params: Record<string, string> = {}) {
     const [module, action] = method.split('.');
 
     const query = querystring.stringify({
@@ -22,6 +23,20 @@ export default class MatomoAdminPage extends Page{
       action,
     });
 
-    return super.open(`/wp-content/plugins/matomo/app/index.php?${query}`);
+    const result = await super.open(`/wp-content/plugins/matomo/app/index.php?${query}`);
+
+    await this.removePhpEolWarning();
+
+    return result;
+  }
+
+  async removePhpEolWarning() {
+    await browser.execute(function () {
+      jQuery('.notification').each(function () {
+        if ($(this).text().includes('You must upgrade your PHP version')) {
+          $(this).hide();
+        }
+      });
+    });
   }
 }
