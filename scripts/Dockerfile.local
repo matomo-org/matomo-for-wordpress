@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends libfreetype6 zl
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql gd
 
+RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
+
 # install node
 ENV NVM_DIR="/home/user/.nvm" \
     NODE_VERSION="16.19.1" \
