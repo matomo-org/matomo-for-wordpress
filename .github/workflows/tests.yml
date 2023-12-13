@@ -53,6 +53,8 @@ jobs:
         with:
           persist-credentials: true
           path: wp-content/plugins/matomo
+          lfs: true
+      - run: git lfs pull
 
       - name: Shutdown Ubuntu MySQL
         run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
@@ -130,8 +132,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          lfs: true
           persist-credentials: false
+          lfs: true
+      - run: git lfs pull
 
       # setup xvfb
       - run: sudo apt-get update && sudo apt-get install -y xvfb x11-xserver-utils xauth
