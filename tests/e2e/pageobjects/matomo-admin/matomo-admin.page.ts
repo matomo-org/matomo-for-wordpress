@@ -32,15 +32,12 @@ export default class MatomoAdminPage extends Page{
 
   async removePhpEolWarning() {
     await browser.execute(function () {
-      console.log('ntoficiations:');
-      console.log(window.CoreHome.NotificationsStore.state.notifications);
-      window.CoreHome.NotificationsStore.state.notifications.forEach((n) => {
-        const shouldRemove= !n.message.toLowerCase().includes('you must upgrade your php version')
-          && !n.message.toLowerCase().includes('has reached its end of life');
-
-        if (shouldRemove) {
-          console.log('should remove ' + n.id);
-          window.CoreHome.NotificationsStore.remove(n.id);
+      jQuery('.notification').each(function () {
+        if ($(this).text().toLowerCase().includes('you must upgrade your php version')
+          || $(this).text().toLowerCase().includes('has reached its end of life')
+        ) {
+          console.log('removing: ' + $(this).text());
+          $(this).remove();
         }
       });
     });
