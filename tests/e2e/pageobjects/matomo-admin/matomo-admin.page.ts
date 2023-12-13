@@ -31,6 +31,7 @@ export default class MatomoAdminPage extends Page{
   }
 
   async removePhpEolWarning() {
+    console.log(await $('html').getHTML());
     await browser.execute(function () {
       jQuery('.notification').each(function () {
         if ($(this).text().toLowerCase().includes('you must upgrade your php version')
