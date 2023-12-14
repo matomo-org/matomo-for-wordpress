@@ -53,9 +53,10 @@ jobs:
             core.setFailed('User is not allowed to release.')
       - uses: actions/checkout@v3
         with:
-          lfs: false
+          lfs: true
           fetch-depth: '0'
           token: ${{ secrets.GITHUB_TOKEN }} # for pushing to protected branch
+      - run: git lfs pull
       - name: "Check tag"
         run: |
             if [[ -n "${{ github.event.inputs.version }}" ]]
