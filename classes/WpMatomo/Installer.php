@@ -260,10 +260,13 @@ class Installer {
 		$this->logger->log( 'Matomo is now creating the config' );
 		$home_url = home_url();
 		$domain   = wp_parse_url( $home_url, PHP_URL_HOST );
-		$domain   = $domain ? $domain : $home_url;
-		$port     = wp_parse_url( $home_url, PHP_URL_PORT );
-		if ( $port ) {
-			$domain .= ':' . $port;
+		if ( $domain ) {
+			$port = wp_parse_url( $home_url, PHP_URL_PORT );
+			if ( $port ) {
+				$domain .= ':' . $port;
+			}
+		} else {
+			$domain = $home_url;
 		}
 		$general = [
 			'trusted_hosts' => [ $domain ],
