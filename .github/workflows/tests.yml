@@ -203,12 +203,18 @@ jobs:
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
 
-      - name: Archive production artifacts
+      - name: Archive production artifacts (actual)
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: actual-screenshots-${{ matrix.php-versions }}-${{ matrix.wp-versions }}
           path: tests/e2e/actual
+      - name: Archive production artifacts (diffs)
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: diff-screenshots-${{ matrix.php-versions }}-${{ matrix.wp-versions }}
+          path: tests/e2e/diff
 
       # output docker-compose logs
       - run: npm run compose logs wordpress --no-color

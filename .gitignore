@@ -8,6 +8,7 @@
 /node_modules/*
 !/node_modules/chart.js
 /tests/e2e/actual/
+/tests/e2e/diff/
 
 # for local docker dev
 docker
