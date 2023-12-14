@@ -30,9 +30,8 @@ class GetConfiguration extends Base
     {
         $this->getBasicResolutionDisplayProperties($view);
 
-        $view->config->addTranslation('label', $this->dimension->getName());
-
         $view->requestConfig->filter_limit = 3;
+        $view->config->show_search = true;
     }
 
     public function getRelatedReports()

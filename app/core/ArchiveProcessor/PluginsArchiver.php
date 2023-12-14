@@ -137,7 +137,19 @@ class PluginsArchiver
 
         $archivers = static::getPluginArchivers();
 
+        $archiveOnlyPlugin = $this->params->getRequestedPlugin();
+        $archiveOnlyReports = $this->params->getArchiveOnlyReport();
+
         foreach ($archivers as $pluginName => $archiverClass) {
+            // if we are archiving specific reports for a single plugin then we don't need or want to create
+            // Archiver instances, since they will set the archive to partial even if the requested reports aren't
+            // handled by the Archiver
+            if (!empty($archiveOnlyReports)
+                && $archiveOnlyPlugin != $pluginName
+            ) {
+                continue;
+            }
+
             // We clean up below all tables created during this function call (and recursive calls)
             $latestUsedTableId = Manager::getInstance()->getMostRecentTableId();
 
@@ -243,14 +255,18 @@ class PluginsArchiver
         return static::$archivers;
     }
 
-    private static function getPluginArchiverClass($pluginName)
+    private static function getPluginArchiverClass(string $pluginName): ?string
     {
         $klassName = 'Piwik\\Plugins\\' . $pluginName . '\\Archiver';
         if (class_exists($klassName)
-            && is_subclass_of($klassName, 'Piwik\\Plugin\\Archiver')) {
+            && is_subclass_of($klassName, 'Piwik\\Plugin\\Archiver')
+        ) {
             return $klassName;
         }
-        return false;
+        if (Archiver::doesPluginHaveRecordBuilders($pluginName)) {
+            return Archiver::class;
+        }
+        return null;
     }
 
     /**
@@ -319,7 +335,11 @@ class PluginsArchiver
      */
     private function makeNewArchiverObject($archiverClass, $pluginName)
     {
-        $archiver = new $archiverClass($this->archiveProcessor);
+        if ($archiverClass === Archiver::class) {
+            $archiver = new Archiver($this->archiveProcessor, $pluginName);
+        } else {
+            $archiver = new $archiverClass($this->archiveProcessor);
+        }
 
         /**
          * Triggered right after a new **plugin archiver instance** is created.

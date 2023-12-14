@@ -15,7 +15,7 @@ use Piwik\Config\ConfigNotFoundException;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugin\Manager as PluginManager;
 use Piwik\Plugins\Monolog\Handler\FailureLogMessageDetector;
-use Psr\Log\LoggerInterface;
+use Piwik\Log\LoggerInterface;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -60,7 +60,7 @@ class Console extends Application
         $this->getDefinition()->addOption($option);
     }
 
-    public function renderException($e, $output)
+    public function renderThrowable(\Throwable $e, OutputInterface $output): void
     {
         $logHandlers = StaticContainer::get('log.handlers');
 
@@ -68,17 +68,15 @@ class Console extends Application
         foreach ($logHandlers as $handler) {
             if ($handler instanceof FingersCrossedHandler) {
                 $hasFingersCrossed = true;
-                continue;
+                break;
             }
         }
 
-        if ($hasFingersCrossed
-            && $output->getVerbosity() < OutputInterface::VERBOSITY_VERBOSE
-        ) {
+        if ($hasFingersCrossed && !$output->isVerbose()) {
             $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
         }
 
-        parent::renderException($e, $output);
+        parent::renderThrowable($e, $output);
     }
 
     public function doRun(InputInterface $input, OutputInterface $output)

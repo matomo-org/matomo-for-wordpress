@@ -20,6 +20,7 @@ use Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\SettingsPiwik;
+use Piwik\Url;
 use Piwik\View;
 
 /**
@@ -284,19 +285,41 @@ class Php extends GeoIp2
      */
     protected function determineRegionIsoCodeByNameAndCountryCode($regionName, $countryCode)
     {
-        $regionNames = self::getRegionNames();
+        $regionNames = self::getRegions();
 
         if (empty($regionNames[$countryCode])) {
             return '';
         }
 
-        foreach ($regionNames[$countryCode] as $isoCode => $name) {
-            if (mb_strtolower($name) === mb_strtolower($regionName)) {
+        foreach ($regionNames[$countryCode] as $isoCode => $regionData) {
+            if ($this->fuzzyMatch($regionData['name'], $regionName)) {
                 return $isoCode;
+            }
+            if (isset($regionData['altNames']) && count($regionData['altNames'])) {
+                foreach ($regionData['altNames'] as $altName) {
+                    if ($this->fuzzyMatch($altName, $regionName)) {
+                        return $isoCode;
+                    }
+                }
             }
         }
 
         return '';
+    }
+
+    private function fuzzyMatch(string $str1, string $str2): bool
+    {
+        if (strtolower($str1) === strtolower($str2)) {
+            return true;
+        }
+
+        // try converting umlauts to closted ascii char if iconv is available
+        if (function_exists('iconv')) {
+            $str1 = iconv('UTF-8', 'ASCII//TRANSLIT', $str1);
+            $str2 = iconv('UTF-8', 'ASCII//TRANSLIT', $str2);
+        }
+
+        return strtolower($str1) === strtolower($str2);
     }
 
     protected function determinSubdivision($subdivisions, $countryCode)
@@ -355,7 +378,6 @@ class Php extends GeoIp2
             switch ($reader->metadata()->databaseType) {
                 case 'GeoIP2-Enterprise':
                 case 'GeoLite2-City':
-                case 'DBIP-City-Lite':
                 case 'DBIP-City':
                 case 'GeoIP2-City':
                 case 'GeoIP2-City-Africa':
@@ -371,6 +393,14 @@ class Php extends GeoIp2
                     $result[self::REGION_NAME_KEY] = true;
                     $result[self::CITY_NAME_KEY] = true;
                     $result[self::POSTAL_CODE_KEY] = true;
+                    $result[self::LATITUDE_KEY] = true;
+                    $result[self::LONGITUDE_KEY] = true;
+                    break;
+                case 'DBIP-City-Lite':
+                    $result[self::REGION_CODE_KEY] = false;
+                    $result[self::REGION_NAME_KEY] = true;
+                    $result[self::CITY_NAME_KEY] = true;
+                    $result[self::POSTAL_CODE_KEY] = false;
                     $result[self::LATITUDE_KEY] = true;
                     $result[self::LONGITUDE_KEY] = true;
                     break;
@@ -406,7 +436,7 @@ class Php extends GeoIp2
                 array('<strong>', '</strong>'));
         }
 
-        $installDocs = '<a rel="noreferrer"  target="_blank" href="https://matomo.org/faq/how-to/faq_163">'
+        $installDocs = '<a rel="noreferrer"  target="_blank" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to/faq_163') . '">'
             . Piwik::translate('UserCountry_HowToInstallGeoIPDatabases')
             . '</a>';
 

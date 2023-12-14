@@ -21,19 +21,21 @@ class BuildRelease extends ConsoleCommand
     {
         $this->setName('wordpress:build-release');
         $this->setDescription('Builds a release, either to a .zip or .tar.gz archive.');
-        $this->addOption('zip', null, InputOption::VALUE_NONE, 'If supplied, a .zip archive will be created.');
-        $this->addOption('tgz', null, InputOption::VALUE_NONE, 'If supplied, a .tgz archive will be created.');
-        $this->addOption('name', null, InputOption::VALUE_REQUIRED,
+        $this->addNoValueOption('zip', null, 'If supplied, a .zip archive will be created.');
+        $this->addNoValueOption('tgz', null, 'If supplied, a .tgz archive will be created.');
+        $this->addRequiredValueOption('name', null, InputOption::VALUE_REQUIRED,
             'The name of this release, should be set to a semantic version number. If not supplied, the latest value from CHANGELOG.md is used.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
         if (Development::isEnabled()) {
             throw new \Exception('This command should not be run with development mode enabled.');
         }
 
-        $version = $this->getReleaseVersion($input, $output);
+        $input = $this->getInput();
+
+        $version = $this->getReleaseVersion();
 
         $zip = $input->getOption('zip');
         $tgz = $input->getOption('tgz');
@@ -41,24 +43,24 @@ class BuildRelease extends ConsoleCommand
             throw new \Exception('At least one output format is required, please supply --zip OR --tgz OR both (to build both archives).');
         }
 
-        $this->generateCoreAssets($output);
+        $this->generateCoreAssets();
 
         $stashHash = $this->addGeneratedFilesToGit();
 
         if ($zip) {
-            $this->generateArchive('zip', $version, $stashHash, $output);
+            $this->generateArchive('zip', $version, $stashHash);
         }
 
         if ($tgz) {
-            $this->generateArchive('tgz', $version, $stashHash, $output);
+            $this->generateArchive('tgz', $version, $stashHash);
         }
 
         return 0;
     }
 
-    private function getReleaseVersion(InputInterface $input, OutputInterface $output)
+    private function getReleaseVersion()
     {
-        $version = $input->getOption('name');
+        $version = $this->getInput()->getOption('name');
         if (!empty($version)) {
             return $version;
         }
@@ -67,7 +69,7 @@ class BuildRelease extends ConsoleCommand
         $changelog = explode("\n", $changelog);
         foreach ($changelog as $line) {
             if (preg_match('/=+\s*(\d+\.\d+\.\d+)\s*=+/', $line, $matches)) {
-                $output->writeln("<comment>Creating a release named '{$matches[1]}'</comment>");
+                $this->getOutput()->writeln("<comment>Creating a release named '{$matches[1]}'</comment>");
                 return $matches[1];
             }
         }
@@ -75,29 +77,29 @@ class BuildRelease extends ConsoleCommand
         throw new \Exception('Failed to extract version from CHANGELOG.md');
     }
 
-    private function generateCoreAssets(OutputInterface $output)
+    private function generateCoreAssets()
     {
         $input = new ArrayInput([
             'command' => 'wordpress:generate-core-assets',
         ]);
 
-        $returnCode = $this->getApplication()->doRun($input, $output);
+        $returnCode = $this->getApplication()->doRun($input, $this->getOutput());
         if ($returnCode) {
             throw new \Exception('wordpress:generate-core-assets failed!');
         }
     }
 
-    private function generateArchive($format, $version, $stashHash, OutputInterface $output)
+    private function generateArchive($format, $version, $stashHash)
     {
         $pathToRepo = $this->getPathToGitRepo();
         $outputFile = $pathToRepo . "/matomo-$version.$format";
 
-        $output->writeln("Generating $format archive at $outputFile...");
+        $this->getOutput()->writeln("Generating $format archive at $outputFile...");
 
         $command = "git -C " . $pathToRepo . " archive --format=$format $stashHash > " . $outputFile;
         $this->executeShellCommand($command, "Failed to generate $format archive!");
 
-        $output->writeln("<info>Created archive matomo-$version.$format.</info>");
+        $this->getOutput()->writeln("<info>Created archive matomo-$version.$format.</info>");
     }
 
     private function addGeneratedFilesToGit()

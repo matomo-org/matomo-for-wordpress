@@ -42,8 +42,7 @@ class Config extends \Piwik\ViewDataTable\Config
     private $evolutionGraphLinkable = true;
 
     /**
-     * Adds possibility to set html attributes on the sparklines title / headline. For example can be used
-     * to set an angular directive
+     * Adds possibility to set html attributes on the sparklines title / headline.
      * @var string
      */
     public $title_attributes = array();
@@ -313,6 +312,7 @@ class Config extends \Piwik\ViewDataTable\Config
             if ($evolutionPercent != 0 || $evolution['currentValue'] != 0) {
                 $sparkline['evolution'] = array(
                     'percent' => $evolutionPercent,
+                    'isLowerValueBetter' => !empty($evolution['isLowerValueBetter']) ? $evolution['isLowerValueBetter'] : false,
                     'tooltip' => !empty($evolution['tooltip']) ? $evolution['tooltip'] : null,
                     'trend' => $evolution['currentValue'] - $evolution['pastValue'],
                 );

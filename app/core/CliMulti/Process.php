@@ -122,7 +122,7 @@ class Process
 
     public function startProcess()
     {
-        $this->writePidFileContent(getmypid());
+        $this->writePidFileContent(Common::getProcessId());
     }
 
     public function isRunning()
@@ -235,7 +235,7 @@ class Process
         if (!self::psExistsAndRunsCorrectly()) {
             $reasons[] = 'shell_exec(' . self::PS_COMMAND . '" 2> /dev/null") did not return a success code';
         } else if (!$getMyPidDisabled) {
-            $pid = @getmypid();
+            $pid = @\getmypid();
             if (empty($pid) || !in_array($pid, self::getRunningProcesses())) {
                 $reasons[] = 'could not find our pid (from getmypid()) in the output of `' . self::PS_COMMAND . '`';
             }
@@ -256,7 +256,7 @@ class Process
     private static function awkExistsAndRunsCorrectly()
     {
         $testResult = @shell_exec('echo " 537 s000 Ss 0:00.05 login -pfl theuser /bin/bash -c exec -la bash /bin/bash" | ' . self::AWK_COMMAND . ' 2>/dev/null');
-        return trim($testResult) == '537';
+        return trim($testResult ?? '') == '537';
     }
 
     private static function isSystemNotSupported()

@@ -8,9 +8,9 @@
 
 namespace Piwik;
 
-use Monolog\Logger;
+use Piwik\Log\Logger;
 use Piwik\Container\StaticContainer;
-use Psr\Log\LoggerInterface;
+use Piwik\Log\LoggerInterface;
 
 /**
  * Logging utility class.
@@ -54,8 +54,8 @@ use Psr\Log\LoggerInterface;
  *                          the syslog.
  *
  *
- * @deprecated Inject and use Psr\Log\LoggerInterface instead of this class.
- * @see \Psr\Log\LoggerInterface
+ * @deprecated Inject and use Piwik\Log\LoggerInterface instead of this class.
+ * @see \Piwik\Log\LoggerInterface
  */
 class Log extends Singleton
 {
@@ -120,90 +120,75 @@ class Log extends Singleton
      * Logs a message using the ERROR log level.
      *
      * @param string $message The log message. This can be a sprintf format string.
-     * @param ... mixed Optional sprintf params.
+     * @param mixed ...$printFparams Optional sprintf params.
      * @api
      *
-     * @deprecated Inject and call Psr\Log\LoggerInterface::error() instead.
-     * @see \Psr\Log\LoggerInterface::error()
+     * @deprecated Inject and call Piwik\Log\LoggerInterface::error() instead.
+     * @see \Piwik\Log\LoggerInterface::error()
      */
-    public static function error($message /* ... */)
+    public static function error($message, ...$printFparams)
     {
-        self::logMessage(Logger::ERROR, $message, array_slice(func_get_args(), 1));
+        self::logMessage(Logger::ERROR, $message, $printFparams);
     }
 
     /**
      * Logs a message using the WARNING log level.
      *
      * @param string $message The log message. This can be a sprintf format string.
-     * @param ... mixed Optional sprintf params.
+     * @param mixed ...$printFparams Optional sprintf params.
      * @api
      *
-     * @deprecated Inject and call Psr\Log\LoggerInterface::warning() instead.
-     * @see \Psr\Log\LoggerInterface::warning()
+     * @deprecated Inject and call Piwik\Log\LoggerInterface::warning() instead.
+     * @see \Piwik\Log\LoggerInterface::warning()
      */
-    public static function warning($message /* ... */)
+    public static function warning($message, ...$printFparams)
     {
-        self::logMessage(Logger::WARNING, $message, array_slice(func_get_args(), 1));
+        self::logMessage(Logger::WARNING, $message, $printFparams);
     }
 
     /**
      * Logs a message using the INFO log level.
      *
      * @param string $message The log message. This can be a sprintf format string.
-     * @param ... mixed Optional sprintf params.
+     * @param mixed ...$printFparams Optional sprintf params.
      * @api
      *
-     * @deprecated Inject and call Psr\Log\LoggerInterface::info() instead.
-     * @see \Psr\Log\LoggerInterface::info()
+     * @deprecated Inject and call Piwik\Log\LoggerInterface::info() instead.
+     * @see \Piwik\Log\LoggerInterface::info()
      */
-    public static function info($message /* ... */)
+    public static function info($message, ...$printFparams)
     {
-        self::logMessage(Logger::INFO, $message, array_slice(func_get_args(), 1));
+        self::logMessage(Logger::INFO, $message, $printFparams);
     }
 
     /**
      * Logs a message using the DEBUG log level.
      *
      * @param string $message The log message. This can be a sprintf format string.
-     * @param ... mixed Optional sprintf params.
+     * @param mixed ...$printFparams Optional sprintf params.
      * @api
      *
-     * @deprecated Inject and call Psr\Log\LoggerInterface::debug() instead.
-     * @see \Psr\Log\LoggerInterface::debug()
+     * @deprecated Inject and call Piwik\Log\LoggerInterface::debug() instead.
+     * @see \Piwik\Log\LoggerInterface::debug()
      */
-    public static function debug($message /* ... */)
+    public static function debug($message, ...$printFparams)
     {
-        self::logMessage(Logger::DEBUG, $message, array_slice(func_get_args(), 1));
+        self::logMessage(Logger::DEBUG, $message, $printFparams);
     }
 
     /**
      * Logs a message using the VERBOSE log level.
      *
      * @param string $message The log message. This can be a sprintf format string.
-     * @param ... mixed Optional sprintf params.
+     * @param mixed ...$printFparams Optional sprintf params.
      * @api
      *
-     * @deprecated Inject and call Psr\Log\LoggerInterface::debug() instead (the verbose level doesn't exist in the PSR standard).
-     * @see \Psr\Log\LoggerInterface::debug()
+     * @deprecated Inject and call Piwik\Log\LoggerInterface::debug() instead (the verbose level doesn't exist in the PSR standard).
+     * @see \Piwik\Log\LoggerInterface::debug()
      */
-    public static function verbose($message /* ... */)
+    public static function verbose($message, ...$printFparams)
     {
-        self::logMessage(Logger::DEBUG, $message, array_slice(func_get_args(), 1));
-    }
-
-    /**
-     * @param int $logLevel
-     * @deprecated Will be removed, log levels are now applied on each Monolog handler.
-     */
-    public function setLogLevel($logLevel)
-    {
-    }
-
-    /**
-     * @deprecated Will be removed, log levels are now applied on each Monolog handler.
-     */
-    public function getLogLevel()
-    {
+        self::logMessage(Logger::DEBUG, $message, $printFparams);
     }
 
     private function doLog($level, $message, $parameters = array())
@@ -224,7 +209,7 @@ class Log extends Singleton
         $this->logger->log($level, $message, $parameters);
     }
 
-    private static function logMessage($level, $message, $parameters)
+    private static function logMessage($level, $message, array $parameters)
     {
         self::getInstance()->doLog($level, $message, $parameters);
     }

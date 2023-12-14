@@ -12,12 +12,15 @@ use Exception;
 use Piwik\API\DataTablePostProcessor;
 use Piwik\API\Request;
 use Piwik\Common;
+use Piwik\DataTable\DataTableInterface;
 use Piwik\Date;
 use Piwik\Metrics;
 use Piwik\NumberFormatter;
 use Piwik\Period\Factory as PeriodFactory;
 use Piwik\Piwik;
 use Piwik\Plugins\API\Filter\DataComparisonFilter;
+use Piwik\Plugins\CoreVisualizations\Visualizations\Graph\Config As GraphConfig;
+use Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Config As JqplotGraphConfig;
 use Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Evolution as EvolutionViz;
 use Piwik\Url;
 use Piwik\ViewDataTable\Factory;
@@ -117,7 +120,7 @@ class RowEvolution
               'CoreHome.getRowEvolutionGraph');
             $lastDay = (isset($cache['evolution_' . $this->period . '_last_n']) ? $cache['evolution_' . $this->period . '_last_n'] : null);
             $end = $date->toString();
-            list($this->date, $lastN) = EvolutionViz::getDateRangeAndLastN($this->period, $end, $lastDay);
+            [$this->date, $lastN] = EvolutionViz::getDateRangeAndLastN($this->period, $end, $lastDay);
         }
         $this->segment = \Piwik\API\Request::getRawSegmentFromRequest();
 
@@ -144,9 +147,9 @@ class RowEvolution
         $popoverTitle = '';
         if ($this->rowLabel) {
             $icon = $this->rowIcon ? '<img height="16px" src="' . $this->rowIcon . '" alt="">' : '';
-            $rowLabel = str_replace('/', '<wbr>/', str_replace('&', '<wbr>&', Common::fixLbrace($this->rowLabel) ));
+            $rowLabel = str_replace('/', '<wbr>/', str_replace('&', '<wbr>&', $this->rowLabel ));
             $metricsText = sprintf(Piwik::translate('RowEvolution_MetricsFor'), $this->dimension . ': ' . $icon . ' ' . $rowLabel);
-            $popoverTitle = $icon . ' ' . Common::fixLbrace($this->rowLabel);
+            $popoverTitle = $icon . ' ' . $this->rowLabel;
         }
 
         $view->availableMetricsText = $metricsText;
@@ -157,7 +160,7 @@ class RowEvolution
 
     protected function loadEvolutionReport($column = false)
     {
-        list($apiModule, $apiAction) = explode('.', $this->apiMethod);
+        [$apiModule, $apiAction] = explode('.', $this->apiMethod);
 
         // getQueryStringFromParameters expects sanitised query parameter values
         $parameters = array(
@@ -201,7 +204,7 @@ class RowEvolution
                 if ($period == 'range') {
                     $comparePeriods[$index] = 'day';
                 } else {
-                    list($newDate, $lastN) = EvolutionViz::getDateRangeAndLastN($period, $date);
+                    [$newDate, $lastN] = EvolutionViz::getDateRangeAndLastN($period, $date);
                     $compareDates[$index] = $newDate;
                 }
             }
@@ -218,7 +221,8 @@ class RowEvolution
         // at this point the report data will reference the comparison series labels for the changed compare periods/dates. We don't
         // want to show this to users because they will not recognize the changed periods, so we have to replace them.
         if ($isComparing) {
-            $modifiedSeriesLabels = reset($report['reportData']->getDataTables())->getMetadata('comparisonSeries');
+            $dataTables = $report['reportData']->getDataTables();
+            $modifiedSeriesLabels = reset($dataTables)->getMetadata('comparisonSeries');
             $seriesMap = array_combine($modifiedSeriesLabels, $unmodifiedSeriesLabels);
 
             foreach ($report['metadata']['metrics'] as $key => $metricInfo) {
@@ -263,15 +267,20 @@ class RowEvolution
         $view->config->show_search = false;
         $view->config->show_all_views_icons = false;
         $view->config->show_related_reports  = false;
-        $view->config->show_series_picker    = false;
         $view->config->show_footer_message   = false;
 
         foreach ($this->availableMetrics as $metric => $metadata) {
             $view->config->translations[$metric] = $metadata['name'];
         }
 
-        $view->config->external_series_toggle = 'RowEvolutionSeriesToggle';
-        $view->config->external_series_toggle_show_all = $this->initiallyShowAllMetrics;
+        if ($view->config instanceof GraphConfig) {
+            $view->config->show_series_picker = false;
+        }
+
+        if ($view->config instanceof JqplotGraphConfig) {
+            $view->config->external_series_toggle          = 'RowEvolutionSeriesToggle';
+            $view->config->external_series_toggle_show_all = $this->initiallyShowAllMetrics;
+        }
 
         return $view;
     }
@@ -288,7 +297,7 @@ class RowEvolution
             $unit = Metrics::getUnit($metric, $this->idSite);
             $change = isset($metricData['change']) ? $metricData['change'] : false;
 
-            list($first, $last) = $this->getFirstAndLastDataPointsForMetric($metric);
+            [$first, $last] = $this->getFirstAndLastDataPointsForMetric($metric);
             $fractionDigits = max($this->getFractionDigits($first), $this->getFractionDigits($last));
 
             $details = Piwik::translate('RowEvolution_MetricBetweenText', array(
@@ -408,16 +417,17 @@ class RowEvolution
         // By default, use the specified label
         $rowLabel = Common::sanitizeInputValue($report['label']);
 
-        // If the dataTable specifies a label_html, use this instead
         /** @var $dataTableMap \Piwik\DataTable\Map */
         $dataTableMap = $report['reportData'];
 
         // If the dataTable specifies a label_html, use this instead
-        $labelPretty = $dataTableMap->getColumn('label_html');
-        $labelPretty = array_filter($labelPretty, 'strlen');
-        $labelPretty = current($labelPretty);
-        if (!empty($labelPretty)) {
-            return $labelPretty;
+        if ($dataTableMap instanceof DataTableInterface) {
+            $labelPretty = $dataTableMap->getColumn('label_html');
+            $labelPretty = array_filter($labelPretty, 'strlen');
+            $labelPretty = current($labelPretty);
+            if (!empty($labelPretty)) {
+                return $labelPretty;
+            }
         }
         return $rowLabel;
     }

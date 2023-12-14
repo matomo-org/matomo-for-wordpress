@@ -33,8 +33,10 @@ class GenerateLangFiles extends ConsoleCommand
         $this->setDescription('Generate the core JS language file');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $output = $this->getOutput();
+
         ServerFilesGenerator::createFilesForSecurity();
 
 	    $languages = API::getInstance()->getAvailableLanguages();
@@ -54,5 +56,9 @@ class GenerateLangFiles extends ConsoleCommand
 
 		    file_put_contents($corePath, json_encode($base, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 	    }
+
+        $output->writeln("<info>Finished generating lang files.</info>");
+
+        return self::SUCCESS;
     }
 }

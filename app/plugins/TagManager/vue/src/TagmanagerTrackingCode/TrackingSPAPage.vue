@@ -5,15 +5,16 @@
 -->
 <template>
   <ol class="list-style-decimal">
-    <li v-html="$sanitize(setupStep1)" v-if="showContainerRow"></li>
-    <TrackingCodeCommon
-      :show-container-row="showContainerRow"
-      :current-action="currentAction"
-      :showBottom="false"
-      :showDescription="false"
-      @fetchInstallInstructions="fetchInstallInstructionsSPA"
-      ref="trackingCodeCommon"
-    />
+    <li ref="step1" v-show="step1HasContent">
+      <span v-html="$sanitize(setupStep1)" v-if="showContainerRow"></span>
+      <TrackingCodeCommon
+        :show-container-row="showContainerRow"
+        :showBottom="false"
+        :showDescription="false"
+        @fetchInstallInstructions="fetchInstallInstructionsSPA"
+        ref="trackingCodeCommon"
+      />
+    </li>
     <li v-html="$sanitize(setupStep2)"></li>
     <li v-html="$sanitize(fetchFollowStep3)"></li>
     <li v-text="fetchClickX('TagManager_CreateNewTrigger')"></li>
@@ -25,7 +26,7 @@
     <li v-html="$sanitize(fetchFollowStep9)"></li>
     <li>
       <span v-text="fetchFollowStep10"></span>
-      <ol style="list-style: lower-alpha; list-style-position: inside; text-indent: 1.2rem;">
+      <ol style="list-style: lower-alpha; list-style-position: inside;">
         <li v-html="$sanitize(fetchFollowStep10a)"></li>
         <li v-html="$sanitize(fetchFollowStep10b)"></li>
       </ol>
@@ -35,27 +36,28 @@
     <li v-text="fetchFollowStep13"></li>
     <li v-html="$sanitize(fetchFollowStep14)"></li>
     <li v-text="fetchFollowStep15"></li>
-    <li v-if="jsFramework === 'react'" v-html="$sanitize(fetchFollowStep16React)"></li>
-    <li v-else v-html="$sanitize(fetchFollowStep16SPA)"></li>
-    <div
-      v-for="(installInstruction, index) in installInstructions"
-      :key="index"
-    >
-      <pre
-        class="codeblock"
-        v-text="installInstruction.embedCode"
-        v-select-on-focus="{}"
-        ref="codeblock"
-      />
-    </div>
+    <li>
+      <span v-if="jsFramework === 'react'" v-html="$sanitize(fetchFollowStep16React)"></span>
+      <span v-else v-html="$sanitize(fetchFollowStep16SPA)"></span>
+      <div
+        v-for="(installInstruction, index) in installInstructions"
+        :key="index"
+      >
+        <pre
+          class="codeblock"
+          v-text="installInstruction.embedCode"
+          v-copy-to-clipboard="{}"
+          ref="codeblock"
+        />
+      </div>
+    </li>
   </ol>
 </template>
 
 <script lang="ts">
 import { defineComponent, nextTick } from 'vue';
 import {
-  AjaxHelper, MatomoUrl,
-  SelectOnFocus, translate,
+  AjaxHelper, CopyToClipboard, MatomoUrl, translate, externalLink,
 } from 'CoreHome';
 import TrackingCodeCommon from './TrackingCodeCommon.vue';
 import {
@@ -68,17 +70,17 @@ interface TagmanagerTrackingSPAPageState {
   setupStep7: string,
   installInstructions: InstallInstructions[];
 }
+
 export default defineComponent({
   props: {
     showContainerRow: Boolean,
-    currentAction: String,
     jsFramework: String,
   },
   components: {
     TrackingCodeCommon,
   },
   directives: {
-    SelectOnFocus,
+    CopyToClipboard,
   },
   data(): TagmanagerTrackingSPAPageState {
     return {
@@ -93,6 +95,7 @@ export default defineComponent({
       // eslint-disable-next-line
       const refs = (this.$refs.trackingCodeCommon as any);
       this.installInstructions = [];
+
       if (
         !refs?.idContainer
         || !refs?.environment
@@ -100,6 +103,7 @@ export default defineComponent({
       ) {
         return;
       }
+
       const manageContainerURL = this.linkTo('manageContainers', refs.site.id, refs.idContainer);
       this.setupStep1 = translate(
         'TagManager_SPAFollowStep1',
@@ -114,12 +118,14 @@ export default defineComponent({
         `<a href="${triggersUrl}" target="_blank" rel="noreferrer noopener">`,
         '</a>',
       );
+
       const tagsURL = this.linkTo('manageTags', refs.site.id, refs.idContainer);
       this.setupStep7 = translate(
         'TagManager_SPAFollowStep7',
         `<a href="${tagsURL}" target="_blank" rel="noreferrer noopener">`,
         '</a>',
       );
+
       refs.isLoading = true;
       AjaxHelper.fetch<InstallInstructions[]>({
         method: 'TagManager.getContainerInstallInstructions',
@@ -150,9 +156,11 @@ export default defineComponent({
         idSite,
         idContainer,
       });
+
       if (hash) {
         url += `#?${MatomoUrl.stringify(hash)}`;
       }
+
       return `?${url}`;
     },
     fetchClickX(clickTarget: string) {
@@ -163,12 +171,16 @@ export default defineComponent({
     },
   },
   computed: {
+    step1HasContent() {
+      const elem = this.$refs.step1 as HTMLElement;
+      return elem && elem.textContent !== '';
+    },
     fetchFollowStep3() {
       return translate(
         'TagManager_SPAFollowStep3',
         `<strong>${translate('TagManager_PageViewTriggerName')}</strong>`,
         translate('TagManager_PageViewTriggerName'),
-        '<a href="https://matomo.org/faq/tag-manager/how-do-i-track-pageviews-of-my-website-using-matomo-tag-manager/#create-pageview-trigger" target="_blank" rel="noreferrer noopener">',
+        externalLink('https://matomo.org/faq/tag-manager/how-do-i-track-pageviews-of-my-website-using-matomo-tag-manager/#create-pageview-trigger'),
         '</a>',
       );
     },
@@ -185,7 +197,7 @@ export default defineComponent({
         `<strong>${translate('TagManager_PageViewTriggerName')}</strong>`,
         `<strong>${translate('TagManager_MatomoTagName')}</strong>`,
         translate('TagManager_PageViewTriggerName'),
-        '<a href="https://matomo.org/faq/tag-manager/how-do-i-track-pageviews-of-my-website-using-matomo-tag-manager/#create-pageview-tag" target="_blank" rel="noreferrer noopener">',
+        externalLink('https://matomo.org/faq/tag-manager/how-do-i-track-pageviews-of-my-website-using-matomo-tag-manager/#create-pageview-tag'),
         '</a>',
       );
     },
@@ -253,7 +265,7 @@ export default defineComponent({
       return translate(
         'TagManager_SPAFollowStep16',
         '&lt;/head&gt;',
-        '<a href="https://developer.matomo.org/guides/tagmanager/embedding" target="_blank" rel="noreferrer noopener">',
+        externalLink('https://developer.matomo.org/guides/tagmanager/embedding'),
         '</a>',
       );
     },

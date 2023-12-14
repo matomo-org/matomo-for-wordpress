@@ -1,7 +1,7 @@
 {% if userCanEditGoals %}
     {% set addNewGoalIntro %}
         <p>{{ 'Goals_NewGoalIntro'|translate }}</p>
-        <p>{{ 'Goals_LearnMoreAboutGoalTrackingDocumentation'|translate("<a target='_blank' rel='noreferrer noopener' href='https://matomo.org/docs/tracking-goals-web-analytics/'>","</a>")|raw }}</p>
+        <p>{{ 'Goals_LearnMoreAboutGoalTrackingDocumentation'|translate(externallink("https://matomo.org/docs/tracking-goals-web-analytics/"),"</a>")|raw }}</p>
     {% endset %}
 
     {% include "@Goals/_addEditGoal.twig" %}
@@ -9,12 +9,12 @@
     <br/><br/>
 
 {% else %}
-    <div piwik-content-block content-title="{{ 'Goals_AddNewGoal'|translate|e('html_attr') }}">
+    <div vue-entry="CoreHome.ContentBlock" content-title="{{ 'Goals_AddNewGoal'|translate }}">
         <p>
             {{ 'Goals_NoGoalsNeedAccess2'|translate|raw }}
         </p>
         <p>
-            {{ 'Goals_LearnMoreAboutGoalTrackingDocumentation'|translate("<a target='_blank' rel='noreferrer noopener' href='https://matomo.org/docs/tracking-goals-web-analytics/'>","</a>")|raw }}
+            {{ 'Goals_LearnMoreAboutGoalTrackingDocumentation'|translate(externallink("https://matomo.org/docs/tracking-goals-web-analytics/"),"</a>")|raw }}
         </p>
     </div>
     {{ postEvent("Template.afterGoalCannotAddNewGoal") }}

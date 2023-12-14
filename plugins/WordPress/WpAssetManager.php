@@ -41,14 +41,14 @@ class WpAssetManager extends AssetManager
 		return $wp_version && 1 === version_compare('5.6', $wp_version);
 	}
 
-	public function getJsInclusionDirective()
+	public function getJsInclusionDirective(bool $deferJS = false): string
 	{
-	    $translator = StaticContainer::get(Translator::class);
+		$translator = StaticContainer::get(Translator::class);
 		$result = "<script type=\"text/javascript\">\n" . $translator->getJavascriptTranslations() . "\n</script>";
 
 		$jsFiles = array();
 		$jsFiles[] = "jquery/jquery.js";
-		$jsFiles[] = "node_modules/materialize-css/dist/js/materialize.min.js";
+		$jsFiles[] = "node_modules/@materializecss/materialize/dist/js/materialize.min.js";
 
 		if ($this->isWp55OrOlder()) {
 			$jsFiles[] = 'jquery/ui/widget.min.js';
@@ -93,7 +93,6 @@ class WpAssetManager extends AssetManager
 		$result .= "<script type=\"text/javascript\">window.$ = jQuery;</script>";
 
 		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../assets/js/asset_manager_core_js.js?v=' . Version::VERSION);
-		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../assets/js/opt-out-configurator.directive.js?v=' . Version::VERSION);
 
 		// may need to change or allow to this... but how to make the wp-includes relative?
 		// $result .= sprintf(self::JS_IMPORT_DIRECTIVE, plugins_url( 'assets/js/asset_manager_core_js.js', MATOMO_ANALYTICS_FILE )  . '?v=' . Version::VERSION);
@@ -117,7 +116,7 @@ class WpAssetManager extends AssetManager
      * @param UIAssetFetcher $assetFetcher
      * @return string
      */
-    protected function getIndividualJsIncludesFromAssetFetcher($assetFetcher)
+    protected function getIndividualJsIncludesFromAssetFetcher($assetFetcher): string
     {
         $wpPluginsDir = rtrim(ABSPATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'wp-content' . DIRECTORY_SEPARATOR . 'plugins';
 

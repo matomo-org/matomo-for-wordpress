@@ -30,7 +30,7 @@ use Piwik\Scheduler\Schedule\Monthly;
 use Piwik\Scheduler\Schedule\Weekly;
 use Piwik\SettingsPiwik;
 use Piwik\Unzip;
-use Psr\Log\LoggerInterface;
+use Piwik\Log\LoggerInterface;
 
 /**
  * Used to automatically update installed GeoIP 2 databases, and manages the updater's
@@ -81,7 +81,7 @@ class GeoIP2AutoUpdater extends Task
             case self::SCHEDULE_PERIOD_MONTHLY:
             default:
                 $schedulePeriod = new Monthly();
-                $schedulePeriod->setDayOfWeek(3, 0);
+                $schedulePeriod->setDay(3);
                 break;
         }
 

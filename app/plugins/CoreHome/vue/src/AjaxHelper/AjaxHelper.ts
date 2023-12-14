@@ -7,7 +7,6 @@
 
 /* eslint-disable max-classes-per-file */
 
-import { ITimeoutService } from 'angular';
 import jqXHR = JQuery.jqXHR;
 import MatomoUrl from '../MatomoUrl/MatomoUrl';
 import Matomo from '../Matomo/Matomo';
@@ -20,7 +19,7 @@ export interface AjaxOptions {
   createErrorNotification?: boolean;
   abortController?: AbortController;
   returnResponseObject?: boolean;
-  errorElement?: HTMLElement|JQuery|JQLite|string;
+  errorElement?: HTMLElement|JQuery|string;
   redirectOnSuccess?: QueryParameters|boolean;
 }
 
@@ -28,6 +27,8 @@ interface ErrorResponse {
   result: string;
   message: string;
 }
+
+const { $ } = window;
 
 window.globalAjaxQueue = [] as unknown as GlobalAjaxQueue;
 window.globalAjaxQueue.active = 0;
@@ -67,7 +68,7 @@ type AnyFunction = (...params:any[]) => any; // eslint-disable-line
  */
 function defaultErrorCallback(deferred: XMLHttpRequest, status: string): void {
   // do not display error message if request was aborted
-  if (status === 'abort') {
+  if (status === 'abort' || !deferred || deferred.status === 0) {
     return;
   }
 
@@ -76,13 +77,10 @@ function defaultErrorCallback(deferred: XMLHttpRequest, status: string): void {
     return;
   }
 
-  const loadingError = $('#loadingError');
   if (Piwik_Popover.isOpen() && deferred && deferred.status === 500) {
-    if (deferred && deferred.status === 500) {
-      $(document.body).html(piwikHelper.escape(deferred.responseText));
-    }
+    $(document.body).html(piwikHelper.escape(deferred.responseText));
   } else {
-    loadingError.show();
+    $('#loadingError').show();
   }
 }
 
@@ -155,12 +153,12 @@ export default class AjaxHelper<T = any> { // eslint-disable-line
   /**
    * Element to be displayed while loading
    */
-  loadingElement: HTMLElement|null|JQuery|JQLite|string = null;
+  loadingElement: HTMLElement|null|JQuery|string = null;
 
   /**
    * Element to be displayed on error
    */
-  errorElement: HTMLElement|JQuery|JQLite|string = '#ajaxError';
+  errorElement: HTMLElement|JQuery|string = '#ajaxError';
 
   /**
    * Extra headers to add to the request.
@@ -508,13 +506,6 @@ export default class AjaxHelper<T = any> { // eslint-disable-line
     this.requestHandle = this.buildAjaxCall();
     window.globalAjaxQueue.push(this.requestHandle);
 
-    let $timeout: ITimeoutService|null = null;
-    try {
-      $timeout = Matomo.helper.getAngularDependency('$timeout');
-    } catch (e) {
-      // ignore
-    }
-
     if (this.abortController) {
       this.abortController.signal.addEventListener('abort', () => {
         if (this.requestHandle) {
@@ -539,17 +530,13 @@ export default class AjaxHelper<T = any> { // eslint-disable-line
           return;
         }
 
-        if (xhr.statusText === 'abort') {
+        if (xhr.statusText === 'abort' || xhr.status === 0) {
           return;
         }
 
         console.log(`Warning: the ${$.param(this.getParams)} request failed!`);
 
         reject(xhr);
-      }).done(() => {
-        if ($timeout) {
-          $timeout(); // trigger digest
-        }
       });
     });
 

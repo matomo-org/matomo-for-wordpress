@@ -59,8 +59,12 @@ jest.config.js export-ignore
 /plugins/WordPress/vue/src export-ignore
 /plugins/WordPress/vue/dist/*.umd.js export-ignore
 *.gzip export-ignore
+.stylelintrc.json export-ignore
+.git-blame-ignore-revs export-ignore
 
 # export-ignore rules for embedded matomo follow
+
+/app/plugins/*/lang export-ignore
 
 # we need to remove jquery as it is shipped with wordpress and we use their jquery
 /app/node_modules/jquery export-ignore
@@ -193,4 +197,3 @@ jest.config.js export-ignore
 
 /app/package.json export-ignore
 /app/package-lock.json export-ignore
-

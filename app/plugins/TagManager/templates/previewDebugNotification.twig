@@ -12,7 +12,7 @@
 >{{ 'TagManager_DisablePreview'|translate }}</a>
 <br>
 <div class="preview-debug-url-div">
-    <div piwik-alert="danger" id="debug-notification-alert" style="display: none">
+    <div vue-entry="CoreHome.Alert" severity="danger" id="debug-notification-alert" style="display: none">
         <strong>{{ 'TagManager_InvalidDebugUrlError'|translate }}!</strong> <span id="debug-notification-alert-message"></span>
     </div>
     <input type="url" id="previewDebugUrl" class="browser-default" placeholder="https://example.org"
@@ -26,4 +26,4 @@
 <br>
 {{ 'TagManager_PreviewDebugEnabledNotificationLine2'|translate('<strong>','</strong>',mtmPreviewIdUrlStart ~ '?' ~ mtmPreviewId ~ mtmPreviewIdUrlEnd, mtmPreviewIdUrlStart ~ '&' ~ mtmPreviewId ~ mtmPreviewIdUrlEnd, '<br>')|raw }}
 <br>
-{{ 'TagManager_PreviewDebugEnabledNotificationLine3'|translate('<a href="https://matomo.org/faq/tag-manager/why-is-debug-console-not-loading-for-me/" target="_blank" rel="noreferrer noopener">','</a>')|raw }}
+{{ 'TagManager_PreviewDebugEnabledNotificationLine3'|translate(externallink('https://matomo.org/faq/tag-manager/why-is-debug-console-not-loading-for-me/'),'</a>')|raw }}

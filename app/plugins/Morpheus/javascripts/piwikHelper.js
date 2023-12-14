@@ -23,6 +23,51 @@ function _pk_translate(translationStringId, values) {
     return "The string "+translationStringId+" was not loaded in javascript. Make sure it is added in the Translate.getClientSideTranslationKeys hook.";
 }
 
+function _pk_externalRawLink(url, values) {
+
+  if (!url) {
+    return '';
+  }
+
+  const campaignOverride = (typeof values != 'undefined' && values.length > 0 && values[0] ? values[0] : null);
+  const sourceOverride = (typeof values != 'undefined' && values.length > 1 && values[1] ? values[1] : null);
+  const mediumOverride = (typeof values != 'undefined' && values.length > 2 && values[2] ? values[2] : null);
+
+  let returnURL = null;
+  try {
+      returnURL = new URL(url);
+  } catch(error) {
+      console.log('Error parsing URL: ' + url);
+  }
+  if (!returnURL) {
+    return '';
+  }
+
+  const validDomain = returnURL.host === 'matomo.org' || returnURL.host.endsWith('.matomo.org');
+  const urlParams = new URLSearchParams(window.location.search);
+  const module = urlParams.get('module');
+  const action = urlParams.get('action');
+
+  // Apply campaign parameters if domain is ok, config is not disabled and a value for medium exists
+  if (validDomain && !window.piwik.disableTrackingMatomoAppLinks
+    && ((module && action) || mediumOverride)) {
+    const campaign = (campaignOverride === null ? 'Matomo_App' : campaignOverride);
+    let source = (window.Cloud === undefined ? 'Matomo_App_OnPremise' : 'Matomo_App_Cloud');
+    if (sourceOverride !== null) {
+      source = sourceOverride;
+    }
+
+    const medium = (mediumOverride === null ? 'App.' + module + '.' + action : mediumOverride);
+
+    returnURL.searchParams.set('mtm_campaign', campaign);
+    returnURL.searchParams.set('mtm_source', source);
+    returnURL.searchParams.set('mtm_medium', medium);
+  }
+
+  return returnURL.toString();
+}
+
+
 window.piwikHelper = {
 
     htmlDecode: function(value)
@@ -116,9 +161,7 @@ window.piwikHelper = {
      */
     escape: function (value)
     {
-        var escape = angular.element(document).injector().get('$sanitize');
-
-        return escape(value);
+        return window.vueSanitize(value);
     },
 
 	/**
@@ -147,10 +190,6 @@ window.piwikHelper = {
 		url = url.replace(/\|\|\|/g, '<wbr />&#8203;'); // &#8203; is for internet explorer
 		return url;
 	},
-
-    getAngularDependency: function (dependency) {
-        return angular.element(document).injector().get(dependency);
-    },
 
     // initial call for 'body' later in this file
     compileVueEntryComponents: function (selector, extraProps) {
@@ -182,27 +221,33 @@ window.piwikHelper = {
 
         var useExternalPluginComponent = CoreHome.useExternalPluginComponent;
         var createVueApp = CoreHome.createVueApp;
-        var plugin = window[parts[0]];
-        if (!plugin) {
-          throw new Error('Unknown plugin in vue-entry: ' + entry);
-        }
+        var component;
 
-        var component = plugin[parts[1]];
-        if (!component) {
-          throw new Error('Unknown component in vue-entry: ' + entry);
-        }
+        var shouldLoadOnDemand = (piwik.pluginsToLoadOnDemand || []).indexOf(parts[0]) !== -1;
+        if (!shouldLoadOnDemand) {
+          var plugin = window[parts[0]];
+          if (!plugin) {
+            // plugin may not be activated
+            return;
+          }
 
-        $(this).attr('ng-non-bindable', '');
+          component = plugin[parts[1]];
+          if (!component) {
+            throw new Error('Unknown component in vue-entry: ' + entry);
+          }
+        } else {
+          component = useExternalPluginComponent(parts[0], parts[1]);
+        }
 
         var paramsStr = '';
         var componentParams = {};
 
         function handleProperty(name, value) {
-          if (name === 'vue-entry' || name === 'class' || name === 'style') {
+          if (name === 'vue-entry' || name === 'class' || name === 'style' || name === 'id') {
             return;
           }
 
-          // append with underscore so reserved javascripy keywords aren't accidentally used
+          // append '_' to avoid accidentally using javascript keywords
           var camelName = toCamelCase(name) + '_';
           paramsStr += ':' + name + '=' + JSON.stringify(camelName) + ' ';
 
@@ -222,6 +267,8 @@ window.piwikHelper = {
           handleProperty(name, value);
         });
 
+        var element = this;
+
         // NOTE: we could just do createVueApp(component, componentParams), but Vue will not allow
         // slots to be in the vue-entry element this way. So instead, we create a quick
         // template that references the root component and wraps the vue-entry component's html.
@@ -230,7 +277,7 @@ window.piwikHelper = {
           template: '<root ' + paramsStr + '>' + this.innerHTML + '</root>',
           data: function () {
             return componentParams;
-          }
+          },
         });
         app.component('root', component);
 
@@ -246,15 +293,24 @@ window.piwikHelper = {
           app.component(toKebabCase(componentName), component);
         });
 
-        app.mount(this);
+        var appInstance = app.mount(this);
+        $(this).data('vueAppInstance', appInstance);
 
+        var self = this;
         this.addEventListener('matomoVueDestroy', function () {
+          $(self).data('vueAppInstance', null);
           app.unmount();
         });
       });
 
       // process vue-directive attributes (only uses .mounted/.unmounted hooks)
       piwikHelper.compileVueDirectives(selector);
+
+      if (window.Vue) {
+        window.Vue.nextTick(function () {
+          piwikHelper.processDynamicHtml($(selector).parent());
+        });
+      }
     },
 
     compileVueDirectives: function (selector) {
@@ -309,85 +365,18 @@ window.piwikHelper = {
       });
     },
 
-    /**
-     * As we still have a lot of old jQuery code and copy html from node to node we sometimes have to trigger the
-     * compiling of angular components manually.
-     *
-     * @param selector
-     * @param {object} options
-     * @param {object} options.scope if supplied, the given scope will be used when compiling the template. Shouldn't
-     *                               be a plain object but an actual angular scope.
-     * @param {object} options.params if supplied, the properties in this object are
-     *                               added to the new scope.
-     */
-    compileAngularComponents: function (selector, options) {
-        options = options || {};
-
-        var $element = $(selector);
-
-        if (!$element.length) {
-            return;
-        }
-
-        angular.element(document).injector().invoke(function($compile, $rootScope) {
-            var scope = null;
-            if (options.scope) {
-                scope = options.scope;
-            } else if (!options.forceNewScope) { // TODO: docs
-                scope = angular.element($element).scope();
-            }
-            if (!scope) {
-                scope = $rootScope.$new(true);
-            }
-
-            if (options.params) {
-                $.extend(scope, options.params);
-            }
-
-            $compile($element)(scope);
-
-            setTimeout(function () {
-                piwikHelper.processDynamicHtml($element);
-            });
-        });
-    },
-
     processDynamicHtml: function ($element) {
         piwik.postEvent('Matomo.processDynamicHtml', $element);
     },
 
     /**
-     * Detection works currently only for directives defining an isolated scope. Functionality might need to be
-     * extended if needed. Under circumstances you might call this method before calling compileAngularComponents()
-     * to avoid compiling the same element twice.
-     * @param selector
-     */
-    isAlreadyCompiledAngularComponent: function (selector) {
-        var $element = $(selector);
-
-        return ($element.length && $element.hasClass('ng-isolate-scope'));
-    },
-
-    /**
-     * Detects whether angular is rendering the page. If so, the page will be reloaded automatically
-     * via angular as soon as it detects a $locationChange
-     *
-     * @returns {number|jQuery}
-     * @deprecated use isReportingPage() instead
-     */
-    isAngularRenderingThePage: function ()
-    {
-        return this.isReportingPage();
-    },
-
-    /**
      * Detects whether the current page is a reporting page or not.
      *
-     * @returns {number|jQuery|*}
+     * @returns {number}
      */
     isReportingPage: function ()
     {
-      return $('.reporting-page').length;
+        return $('.reporting-page').length;
     },
 
     /**
@@ -449,7 +438,7 @@ window.piwikHelper = {
         var $content = $(content).hide();
         var $footer = $content.find('.modal-footer');
 
-        $('[role]', domElem).each(function(){
+        $('[role]', domElem).not('li').each(function(){
             var $button = $(this);
 
             // skip this button if it's part of another modal, the current modal can launch
@@ -799,39 +788,38 @@ function isEscapeKey(e)
 }
 
 // workarounds
-(function($){
-try {
-    // this code is not vital, so we make sure any errors are ignored
+document.addEventListener('DOMContentLoaded', function () {
+  (function($){
+    try {
+      // this code is not vital, so we make sure any errors are ignored
 
-    //--------------------------------------
-    //
-    // monkey patch that works around bug in arc function of some browsers where
-    // nothing gets drawn if angles are 2 * PI apart and in counter-clockwise direction.
-    // affects some versions of chrome & IE 8
-    //
-    //--------------------------------------
-    var oldArc = CanvasRenderingContext2D.prototype.arc;
-    CanvasRenderingContext2D.prototype.arc = function(x, y, r, sAngle, eAngle, clockwise) {
+      //--------------------------------------
+      //
+      // monkey patch that works around bug in arc function of some browsers where
+      // nothing gets drawn if angles are 2 * PI apart and in counter-clockwise direction.
+      // affects some versions of chrome & IE 8
+      //
+      //--------------------------------------
+      var oldArc = CanvasRenderingContext2D.prototype.arc;
+      CanvasRenderingContext2D.prototype.arc = function(x, y, r, sAngle, eAngle, clockwise) {
         if (Math.abs(eAngle - sAngle - Math.PI * 2) < 0.000001 && !clockwise)
-            eAngle -= 0.000001;
+          eAngle -= 0.000001;
         oldArc.call(this, x, y, r, sAngle, eAngle, clockwise);
-    };
+      };
 
-    // Fix jQuery UI dialogs scrolling when click on links with tooltips
-    jQuery.ui.dialog.prototype._focusTabbable = $.noop;
+      // Fix jQuery UI dialogs scrolling when click on links with tooltips
+      jQuery.ui.dialog.prototype._focusTabbable = $.noop;
 
-    // Fix jQuery UI tooltip displaying when dialog is closed by Esc key
-    jQuery(document).keyup(function(e) {
-      if (e.keyCode == 27) {
+      // Fix jQuery UI tooltip displaying when dialog is closed by Esc key
+      jQuery(document).keyup(function(e) {
+        if (e.keyCode == 27) {
           $('.ui-tooltip').hide();
-      }
-    });
+        }
+      });
 
-} catch (e) {}
-}(jQuery));
+    } catch (e) {}
 
-(function ($) {
-  $(function () {
     piwikHelper.compileVueEntryComponents('body');
-  });
-}(jQuery))
+
+  }(jQuery));
+}, false);

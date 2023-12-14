@@ -36,12 +36,12 @@ use Piwik\Tracker\TableLogAction;
  */
 class API extends \Piwik\Plugin\API
 {
-    public function getTransitionsForPageTitle($pageTitle, $idSite, $period, $date, $segment = false, $limitBeforeGrouping = 0)
+    public function getTransitionsForPageTitle(string $pageTitle, $idSite, $period, $date, $segment = false, $limitBeforeGrouping = 0)
     {
         return $this->getTransitionsForAction($pageTitle, 'title', $idSite, $period, $date, $segment, $limitBeforeGrouping);
     }
 
-    public function getTransitionsForPageUrl($pageUrl, $idSite, $period, $date, $segment = false, $limitBeforeGrouping = 0)
+    public function getTransitionsForPageUrl(string $pageUrl, $idSite, $period, $date, $segment = false, $limitBeforeGrouping = 0)
     {
         return $this->getTransitionsForAction($pageUrl, 'url', $idSite, $period, $date, $segment, $limitBeforeGrouping);
     }
@@ -49,8 +49,8 @@ class API extends \Piwik\Plugin\API
     /**
      * General method to get transitions for an action
      *
-     * @param $actionName
-     * @param $actionType "url"|"title"
+     * @param string $actionName
+     * @param string $actionType "url"|"title"
      * @param $idSite
      * @param $period
      * @param $date
@@ -60,7 +60,7 @@ class API extends \Piwik\Plugin\API
      * @return array
      * @throws Exception
      */
-    public function getTransitionsForAction($actionName, $actionType, $idSite, $period, $date,
+    public function getTransitionsForAction(string $actionName, string $actionType, $idSite, $period, $date,
                                             $segment = false, $limitBeforeGrouping = 0, $parts = 'all')
     {
         Piwik::checkUserHasViewAccess($idSite);
@@ -156,13 +156,19 @@ class API extends \Piwik\Plugin\API
 
     /**
      * Derive the action ID from the request action name and type.
+     *
+     * @param string $actionName
+     * @param string $actionType
+     *
+     * @return array|int|string
      */
-    private function deriveIdAction($actionName, $actionType)
+    private function deriveIdAction(string $actionName, string $actionType)
     {
         switch ($actionType) {
             case 'url':
                 $originalActionName = $actionName;
                 $actionName = Common::unsanitizeInputValue($actionName);
+
                 $id = TableLogAction::getIdActionFromSegment($actionName, 'idaction_url', SegmentExpression::MATCH_EQUAL, 'pageUrl');
 
                 if ($id < 0) {
@@ -345,7 +351,7 @@ class API extends \Piwik\Plugin\API
     protected function queryExternalReferrers($idaction, $actionType, $logAggregator, $limitBeforeGrouping = 0)
     {
 
-        $rankingQuery = new RankingQuery($limitBeforeGrouping ? $limitBeforeGrouping: $this->limitBeforeGrouping);
+        $rankingQuery = new RankingQuery($limitBeforeGrouping ?: $this->limitBeforeGrouping);
         $rankingQuery->setOthersLabel('Others');
 
         // we generate a single column that contains the interesting data for each referrer.
@@ -354,16 +360,14 @@ class API extends \Piwik\Plugin\API
         // group by. when we group by both, we don't get a single column for the keyword but instead
         // one column per keyword + search engine url. this way, we could not get the top keywords using
         // the ranking query.
-        $dimensions = array('referrer_data', 'referer_type');
-        $rankingQuery->addLabelColumn('referrer_data');
-        $selects = array(
-            'CASE log_visit.referer_type
+        $dimensions = array('referrer_data' => 'CASE log_visit.referer_type
 				WHEN ' . Common::REFERRER_TYPE_DIRECT_ENTRY . ' THEN \'\'
 				WHEN ' . Common::REFERRER_TYPE_SEARCH_ENGINE . ' THEN log_visit.referer_keyword
 				WHEN ' . Common::REFERRER_TYPE_SOCIAL_NETWORK . ' THEN log_visit.referer_name
 				WHEN ' . Common::REFERRER_TYPE_WEBSITE . ' THEN log_visit.referer_url
 				WHEN ' . Common::REFERRER_TYPE_CAMPAIGN . ' THEN CONCAT(log_visit.referer_name, \' \', log_visit.referer_keyword)
-			END AS `referrer_data`');
+			END', 'referer_type');
+        $rankingQuery->addLabelColumn('referrer_data');
 
         // get one limited group per referrer type
         $rankingQuery->partitionResultIntoMultipleGroups('referer_type', array(
@@ -378,7 +382,7 @@ class API extends \Piwik\Plugin\API
         $where = 'visit_entry_idaction_' . $type . ' = ' . intval($idaction);
 
         $metrics = array(Metrics::INDEX_NB_VISITS);
-        $data = $logAggregator->queryVisitsByDimension($dimensions, $where, $selects, $metrics, $rankingQuery, false, Config::getInstance()->General['live_query_max_execution_time']);
+        $data = $logAggregator->queryVisitsByDimension($dimensions, $where, [], $metrics, $rankingQuery, false, Config::getInstance()->General['live_query_max_execution_time']);
 
         $referrerData = array();
         $referrerSubData = array();

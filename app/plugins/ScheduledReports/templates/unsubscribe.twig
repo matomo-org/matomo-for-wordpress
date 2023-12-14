@@ -30,9 +30,9 @@
                 {% embed 'contentBlock.twig' with {'title': 'ScheduledReports_ReportUnsubscribe'|translate} %}
                 {% block content %}
                     {% if error is defined %}
-                        <div piwik-notification
+                        <div vue-entry="CoreHome.Notification"
                              noclear="true"
-                             context="error">
+                             context="&quot;error&quot;">
                             <strong>{{ 'General_Error'|translate }}</strong>: {{ error|raw }}<br/>
                         </div>
                     {% elseif success is defined %}
@@ -53,7 +53,7 @@
                     {% endif %}
                     {% if isCustomLogo %}
                         <p id="piwik">
-                            <i><a href="https://matomo.org/" rel="noreferrer noopener" target="_blank">{{ linkTitle }}</a></i>
+                            <i><a href="{{ 'https://matomo.org/'|trackmatomolink }}" rel="noreferrer noopener" target="_blank">{{ linkTitle }}</a></i>
                         </p>
                     {% endif %}
                 {% endblock %}

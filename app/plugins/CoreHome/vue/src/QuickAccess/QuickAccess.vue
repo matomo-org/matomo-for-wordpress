@@ -105,6 +105,8 @@ import Site from '../SiteSelector/Site';
 import Matomo from '../Matomo/Matomo';
 import debounce from '../debounce';
 
+const { ListingFormatter } = window;
+
 interface SubMenuItem {
   name: string;
   index: number;
@@ -171,8 +173,7 @@ export default defineComponent({
   mounted() {
     const root = this.$refs.root as HTMLElement;
 
-    // TODO: temporary, remove after angularjs is removed.
-    // this is currently needed since angularjs will render a div, then vue will render a div
+    // this is currently needed since vue-entry code will render a div, then vue will render a div
     // within it, but the top controls and CSS expect to have certain CSS classes in the root
     // element.
     // same applies to above watch for searchActive()
@@ -219,10 +220,11 @@ export default defineComponent({
   },
   computed: {
     hasSitesSelector() {
-      return !!document.querySelector('.top_controls [piwik-siteselector]');
+      return !!document.querySelector(
+        '.top_controls .siteSelector,.top_controls [vue-entry="CoreHome.SiteSelector"]',
+      );
     },
     quickAccessTitle() {
-      let searchAreasTitle = '';
       const searchAreas = [translate('CoreHome_MenuEntries')];
 
       if (this.hasSegmentSelector) {
@@ -233,16 +235,7 @@ export default defineComponent({
         searchAreas.push(translate('SitesManager_Sites'));
       }
 
-      while (searchAreas.length) {
-        searchAreasTitle += searchAreas.shift();
-        if (searchAreas.length >= 2) {
-          searchAreasTitle += ', ';
-        } else if (searchAreas.length === 1) {
-          searchAreasTitle += ` ${translate('General_And')} `;
-        }
-      }
-
-      return translate('CoreHome_QuickAccessTitle', searchAreasTitle);
+      return translate('CoreHome_QuickAccessTitle', ListingFormatter.formatAnd(searchAreas));
     },
   },
   emits: ['itemSelected', 'blur'],
@@ -419,10 +412,11 @@ export default defineComponent({
       const category = translate('CoreHome_Menu');
 
       const topMenuItems: SubMenuItem[] = [];
-      document.querySelectorAll('nav .sidenav li > a').forEach((element) => {
+      document.querySelectorAll('nav .sidenav li > a, nav .sidenav li > div > a').forEach((element) => {
         let text = element.textContent?.trim();
 
-        if (!text) {
+        if (!text || (element.parentElement != null && element.parentElement.tagName != null
+          && element.parentElement.tagName === 'DIV')) {
           text = element.getAttribute('title')?.trim(); // possibly a icon, use title instead
         }
 

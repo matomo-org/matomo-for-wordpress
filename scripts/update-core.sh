@@ -84,10 +84,6 @@ rm -r $MATOMO_ROOT/plugins/*/screenshots
 rm -r $MATOMO_ROOT/tmp/CACHEDIR.TAG
 find $MATOMO_ROOT/plugins/Morpheus/icons \( -type f -o -type l \) -not -path "$MATOMO_ROOT/plugins/Morpheus/icons/dist/*" -exec rm -rf {} +
 find $MATOMO_ROOT -name "*.spec.js" -exec rm -rf {} +
-rm $MATOMO_ROOT/HIRING.md
-rm $MATOMO_ROOT/.travis.yml
-rm $MATOMO_ROOT/.scrutinizer.yml
-rm $MATOMO_ROOT/.coveralls.yml
 rm $MATOMO_ROOT/.gitmodules
 
 cd $SCRIPTPATH
@@ -131,6 +127,6 @@ fi
 RED='\033[0;31m'
 NO_COLOR='\033[0m'
 
-npm run compose -- run console wordpress:generate-lang-files || echo "${RED}Failed to generate lang files! Make sure to run 'npm run compose -- run console wordpress:generate-lang-files' after fixing the issue!${NO_COLOR}"
+npm run compose -- run console wordpress:generate-lang-files || echo -e "${RED}Failed to generate lang files! Make sure to run 'npm run compose -- run console wordpress:generate-lang-files' after fixing the issue!${NO_COLOR}"
 
 echo -e "Done!... "

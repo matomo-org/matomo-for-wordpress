@@ -5,9 +5,9 @@
 -->
 
 <template>
-  <div>
+  <div class="widgetLoader">
     <ActivityIndicator
-      :loading-message="loadingMessage"
+      :loading-message="finalLoadingMessage"
       :loading="loading"
     />
     <div v-show="loadingFailed">
@@ -17,7 +17,7 @@
         <a
           rel="noreferrer noopener"
           target="_blank"
-          href="https://matomo.org/faq/troubleshooting/faq_19489/"
+          :href="externalRawLink('https://matomo.org/faq/troubleshooting/faq_19489/')"
           v-if="hasErrorFaqLink"
         >
           {{ translate('General_ErrorRequestFaqLink') }}
@@ -32,7 +32,6 @@
 </template>
 
 <script lang="ts">
-import { IRootScopeService, IScope } from 'angular';
 import { defineComponent } from 'vue';
 import ActivityIndicator from '../ActivityIndicator/ActivityIndicator.vue';
 import { translate } from '../translate';
@@ -47,7 +46,6 @@ interface WidgetLoaderState {
   loadingFailed: boolean;
   loadingFailedRateLimit: boolean;
   changeCounter: number;
-  currentScope: null|IScope;
   lastWidgetAbortController: null|AbortController;
 }
 
@@ -67,6 +65,7 @@ export default defineComponent({
   props: {
     widgetParams: Object,
     widgetName: String,
+    loadingMessage: String,
   },
   components: {
     ActivityIndicator,
@@ -77,7 +76,6 @@ export default defineComponent({
       loadingFailed: false,
       loadingFailedRateLimit: false,
       changeCounter: 0,
-      currentScope: null,
       lastWidgetAbortController: null,
     };
   },
@@ -89,7 +87,11 @@ export default defineComponent({
     },
   },
   computed: {
-    loadingMessage() {
+    finalLoadingMessage() {
+      if (this.loadingMessage) {
+        return this.loadingMessage;
+      }
+
       if (!this.widgetName) {
         return translate('General_LoadingData');
       }
@@ -123,9 +125,6 @@ export default defineComponent({
     cleanupLastWidgetContent() {
       const widgetContent = this.$refs.widgetContent as HTMLElement;
       Matomo.helper.destroyVueComponent(widgetContent);
-      if (this.currentScope) {
-        this.currentScope.$destroy();
-      }
       if (widgetContent) {
         widgetContent.innerHTML = '';
       }
@@ -218,13 +217,6 @@ export default defineComponent({
           }
         }
 
-        const $rootScope: IRootScopeService = Matomo.helper.getAngularDependency('$rootScope');
-        const scope = $rootScope.$new();
-        this.currentScope = scope;
-
-        // compile angularjs first since it will modify all dom nodes, breaking vue bindings
-        // if they are present
-        Matomo.helper.compileAngularComponents($content, { scope });
         Matomo.helper.compileVueEntryComponents($content);
 
         NotificationsStore.parseNotificationDivs();
