@@ -6,7 +6,7 @@
  *
  */
 
-import { browser } from '@wdio/globals';
+import { browser, $ } from '@wdio/globals';
 import * as querystring from 'querystring';
 import Page from '../page.js';
 
@@ -31,12 +31,14 @@ export default class MatomoAdminPage extends Page{
   }
 
   async removePhpEolWarning() {
+    const notificationContainer = await $('#notificationContainer');
+    await notificationContainer.waitForExist({ timeout: 2000 });
+
     await browser.execute(function () {
       jQuery('.notification').each(function () {
         if ($(this).text().toLowerCase().includes('you must upgrade your php version')
           || $(this).text().toLowerCase().includes('has reached its end of life')
         ) {
-          console.log('removing: ' + $(this).text());
           $(this).remove();
         }
       });
