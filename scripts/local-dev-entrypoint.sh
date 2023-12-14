@@ -306,5 +306,6 @@ else
   php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
   \$pdo->exec('UPDATE \`$WP_DB_NAME\`.wp_options SET option_value = REPLACE(option_value, \'nginx\', \'localhost\') WHERE option_name IN (\'home\', \'siteurl\')');" || true
 
+  usermod -u 1000 www-data
   apache2-foreground "$@"
 fi
