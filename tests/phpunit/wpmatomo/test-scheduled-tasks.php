@@ -32,7 +32,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	 */
 	private $settings;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->settings = new Settings();
@@ -72,11 +72,11 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		$this->settings->force_disable_addhandler = true;
 		$this->tasks->disable_add_handler();
 		$filename_to_check = dirname( MATOMO_ANALYTICS_FILE ) . '/.htaccess';
-		$this->assertContains( '# AddHandler', file_get_contents( $filename_to_check ) );
+		$this->assertStringContainsString( '# AddHandler', file_get_contents( $filename_to_check ) );
 		$undo = true;
 		$this->tasks->disable_add_handler( $undo );
-		$this->assertNotContains( '# AddHandler', file_get_contents( $filename_to_check ) );
-		$this->assertContains( 'AddHandler', file_get_contents( $filename_to_check ) );
+		$this->assertStringNotContainsString( '# AddHandler', file_get_contents( $filename_to_check ) );
+		$this->assertStringContainsString( 'AddHandler', file_get_contents( $filename_to_check ) );
 		$this->settings->force_disable_addhandler = false;
 	}
 

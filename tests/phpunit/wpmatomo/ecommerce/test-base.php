@@ -15,7 +15,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 	 */
 	protected $base;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->settings = new Settings();
 

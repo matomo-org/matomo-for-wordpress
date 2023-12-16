@@ -23,7 +23,7 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 	 */
 	private $settings;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->settings = new Settings();
@@ -172,7 +172,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/index.php?rest
 				'track_user_id' => 'uid',
 			)
 		);
-		$this->assertContains( "_paq.push(['setUserId', '$id1']);", $this->get_tracking_code() );
+		$this->assertStringContainsString( "_paq.push(['setUserId', '$id1']);", $this->get_tracking_code() );
 	}
 
 	public function test_get_tracking_code_when_using_manually_tracking_code() {
@@ -233,8 +233,8 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 				'cookie_consent' => CookieConsent::REQUIRE_COOKIE_CONSENT,
 			)
 		);
-		$this->assertNotContains( 'requireCookieConsent', $this->get_tracking_code() );
-		$this->assertNotContains( 'requireConsent', $this->get_tracking_code() );
+		$this->assertStringNotContainsString( 'requireCookieConsent', $this->get_tracking_code() );
+		$this->assertStringNotContainsString( 'requireConsent', $this->get_tracking_code() );
 	}
 
 	public function test_cookie_consent_manually() {
@@ -244,8 +244,8 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 				'cookie_consent' => CookieConsent::REQUIRE_COOKIE_CONSENT,
 			)
 		);
-		$this->assertNotContains( 'requireCookieConsent', $this->get_tracking_code() );
-		$this->assertNotContains( 'requireConsent', $this->get_tracking_code() );
+		$this->assertStringNotContainsString( 'requireCookieConsent', $this->get_tracking_code() );
+		$this->assertStringNotContainsString( 'requireConsent', $this->get_tracking_code() );
 	}
 
 	public function test_cookie_consent_none() {
@@ -255,8 +255,8 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 				'cookie_consent' => CookieConsent::REQUIRE_NONE,
 			)
 		);
-		$this->assertNotContains( 'requireCookieConsent', $this->get_tracking_code() );
-		$this->assertNotContains( 'requireConsent', $this->get_tracking_code() );
+		$this->assertStringNotContainsString( 'requireCookieConsent', $this->get_tracking_code() );
+		$this->assertStringNotContainsString( 'requireConsent', $this->get_tracking_code() );
 	}
 
 	public function test_cookie_consent_cookie() {
@@ -266,7 +266,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 				'cookie_consent' => CookieConsent::REQUIRE_COOKIE_CONSENT,
 			)
 		);
-		$this->assertContains( "_paq.push(['requireCookieConsent']);", $this->get_tracking_code() );
+		$this->assertStringContainsString( "_paq.push(['requireCookieConsent']);", $this->get_tracking_code() );
 	}
 
 	public function test_cookie_consent_tracking() {
@@ -276,6 +276,6 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 				'cookie_consent' => CookieConsent::REQUIRE_TRACKING_CONSENT,
 			)
 		);
-		$this->assertContains( "_paq.push(['requireConsent']);", $this->get_tracking_code() );
+		$this->assertStringContainsString( "_paq.push(['requireConsent']);", $this->get_tracking_code() );
 	}
 }

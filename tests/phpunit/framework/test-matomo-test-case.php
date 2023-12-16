@@ -73,7 +73,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		return $query;
 	}
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		if ( ! defined( 'PIWIK_TEST_MODE' ) ) {
@@ -137,7 +137,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		}
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		if ( ! empty( $GLOBALS['wpdb'] ) ) {
 			$GLOBALS['wpdb']->suppress_errors( true );
 		}

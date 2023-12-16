@@ -7,10 +7,10 @@
 /empty/
 /node_modules/*
 !/node_modules/chart.js
+.phpunit.result.cache
 /tests/e2e/actual/
 /tests/e2e/diff/
 
 # for local docker dev
 docker
 .env
-

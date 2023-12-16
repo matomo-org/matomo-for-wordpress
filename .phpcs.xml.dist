@@ -30,6 +30,7 @@
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
 	<config name="minimum_supported_wp_version" value="4.8"/>
 	<rule ref="WordPress">
+		<exclude name="Generic.Commenting.DocComment.SpacingAfterTagGroup"/>
 		<exclude name="Generic.Commenting.DocComment.SpacingAfter"/>
 		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
 		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
@@ -72,4 +73,8 @@
 			<property name="blank_line_check" value="true"/>
 		</properties>
 	</rule>
+
+    <rule ref="PHPCompatibility.FunctionDeclarations.NewReturnTypeDeclarations.voidFound">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
 </ruleset>

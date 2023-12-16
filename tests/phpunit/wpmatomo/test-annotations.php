@@ -22,7 +22,7 @@ class AnnotationsTest extends MatomoAnalytics_TestCase {
 	 */
 	private $settings;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->settings = new Settings();

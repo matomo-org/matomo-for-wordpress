@@ -17,7 +17,7 @@ class ApiTest extends MatomoAnalytics_TestCase {
 	 */
 	private $server;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->api    = new API();

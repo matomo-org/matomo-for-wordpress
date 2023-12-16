@@ -33,6 +33,10 @@ require_once $tests_dir . '/includes/functions.php';
  * Manually load the plugin being tested.
  */
 function manually_load_plugin() {
+	if ( is_file( ABSPATH . '/wp-content/plugins/matomo/matomo.php' ) ) { // when the plugin is symlinked into WordPress
+		define( 'MATOMO_ANALYTICS_FILE', ABSPATH . '/wp-content/plugins/matomo/matomo.php' );
+	}
+
 	require dirname( dirname( dirname( __FILE__ ) ) ) . '/matomo.php';
 }
 

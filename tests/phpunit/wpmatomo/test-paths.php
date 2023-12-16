@@ -9,6 +9,9 @@ use WpMatomo\Bootstrap;
 use WpMatomo\Installer;
 use WpMatomo\Paths;
 
+/**
+ * @group only
+ */
 class PathsTest extends MatomoUnit_TestCase {
 
 	/**
@@ -29,13 +32,13 @@ class PathsTest extends MatomoUnit_TestCase {
 		$this->root_path             = realpath( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . '/../../../' );
 		$this->root_path_with_matomo = dirname( $this->root_path ) . '/matomo';
 	}
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->paths = $this->make_paths();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		if ( is_dir( $this->root_path_with_matomo ) ) {
 			if ( is_link( $this->root_path ) ) {
 				unlink( $this->root_path );
@@ -51,7 +54,7 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_upload_base_dir() {
-		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/matomo', $this->paths->get_upload_base_dir() );
+		$this->assertSame( ABSPATH . 'wp-content/uploads/matomo', $this->paths->get_upload_base_dir() );
 	}
 
 	/**
@@ -64,7 +67,7 @@ class PathsTest extends MatomoUnit_TestCase {
 		}
 		$blogid1 = self::factory()->blog->create();
 		switch_to_blog( 2 );
-		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/sites/2/matomo', $this->paths->get_upload_base_dir() );
+		$this->assertSame( ABSPATH . 'wp-content/uploads/sites/2/matomo', $this->paths->get_upload_base_dir() );
 
 		wp_delete_site( $blogid1 );
 	}
@@ -74,7 +77,7 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_matomo_js_upload_path() {
-		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/matomo/matomo.js', $this->paths->get_matomo_js_upload_path() );
+		$this->assertSame( ABSPATH . 'wp-content/uploads/matomo/matomo.js', $this->paths->get_matomo_js_upload_path() );
 	}
 
 	public function test_get_tracker_api_rest_api_endpoint() {
@@ -94,23 +97,23 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_config_ini_path() {
-		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/matomo/config/config.ini.php', $this->paths->get_config_ini_path() );
+		$this->assertSame( ABSPATH . 'wp-content/uploads/matomo/config/config.ini.php', $this->paths->get_config_ini_path() );
 	}
 
 	public function test_get_tmp_dir() {
 		if ( is_multisite() ) {
-			$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/matomo/tmp', $this->paths->get_tmp_dir() );
+			$this->assertSame( ABSPATH . 'wp-content/uploads/matomo/tmp', $this->paths->get_tmp_dir() );
 		} else {
-			$this->assertSame( get_temp_dir() . 'wordpress/wp-content/cache/matomo', $this->paths->get_tmp_dir() );
+			$this->assertSame( ABSPATH . 'wp-content/cache/matomo', $this->paths->get_tmp_dir() );
 		}
 	}
 
 	public function test_get_relative_dir_to_matomo() {
 		$valid_values = array(
-			'../../matomo/tests/phpunit/wpmatomo', // travis
+			'../tests/phpunit/wpmatomo', // travis
 		);
 		$val          = $this->paths->get_relative_dir_to_matomo( __DIR__ );
-		$this->assertTrue( in_array( $val, $valid_values, true ) );
+		$this->assertContains( $val, $valid_values );
 		// automatically double check that it works
 		$this->assertTrue( is_dir( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app/../tests/phpunit/wpmatomo' ) );
 	}
@@ -143,11 +146,11 @@ class PathsTest extends MatomoUnit_TestCase {
 		// run the test only if we have been able to rename the path
 		if ( $this->add_matomo_in_document_root() ) {
 			$valid_values                    = array(
-				'../../matomo/app/matomo.js',
+				'matomo.js',
 			);
 			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
 			$val                             = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js', $temporary_matomo_analytics_file );
-			$this->assertTrue( in_array( $val, $valid_values, true ) );
+			$this->assertContains( $val, $valid_values );
 			// automatically double check that it works
 			$this->assertTrue( is_file( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js' ) );
 		} else {
@@ -159,13 +162,13 @@ class PathsTest extends MatomoUnit_TestCase {
 		// run the test only if we have been able to rename the path
 		if ( $this->add_matomo_in_document_root() ) {
 			$valid_values = array(
-				'../../matomo/../../uploads/matomo',
+				'../../../uploads/matomo',
 			);
 
 			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
 			// do not use the path get upload dir method: it returns the path on the test instance
 			$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo', $temporary_matomo_analytics_file );
-			$this->assertTrue( in_array( $val, $valid_values, true ) );
+			$this->assertContains( $val, $valid_values );
 			// do not check like the others test if the folder exist: in unit tests outside a WordPress context, uploads folder does not ezist
 			// $this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo' ) );
 		} else {
@@ -177,13 +180,13 @@ class PathsTest extends MatomoUnit_TestCase {
 		// run the test only if we have been able to rename the path
 		if ( $this->add_matomo_in_document_root() ) {
 			$valid_values = array(
-				'../../matomo/../../uploads/matomo/config',
+				'../../../uploads/matomo/config',
 			);
 
 			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
 			// do not use the path get upload dir method: it returns the path on the test instance
 			$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config', $temporary_matomo_analytics_file );
-			$this->assertTrue( in_array( $val, $valid_values, true ) );
+			$this->assertContains( $val, $valid_values );
 			// do not check like the others test if the folder exist: in unit tests outside a WordPress context, uploads folder does not ezist
 			// $this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config' ) );
 		} else {
@@ -208,10 +211,10 @@ class PathsTest extends MatomoUnit_TestCase {
 		$dir_te_test = $plugin_dir . 'plugins/WordPress';
 
 		$valid_values = array(
-			'../../matomo/plugins/WordPress', // travis
+			'../plugins/WordPress', // travis
 		);
 		$val          = $this->paths->get_relative_dir_to_matomo( $dir_te_test );
-		$this->assertTrue( in_array( $val, $valid_values, true ) );
+		$this->assertContains( $val, $valid_values );
 		// automatically double check that it works
 		$this->assertTrue( is_dir( $plugin_dir . 'app/../plugins/WordPress' ) );
 	}
@@ -222,7 +225,7 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_gloal_upload_dir_if_possible() {
-		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/matomo', $this->paths->get_gloal_upload_dir_if_possible() );
+		$this->assertSame( ABSPATH . 'wp-content/uploads/matomo', $this->paths->get_gloal_upload_dir_if_possible() );
 	}
 
 	/**
@@ -236,7 +239,7 @@ class PathsTest extends MatomoUnit_TestCase {
 		$blogid1 = self::factory()->blog->create();
 		switch_to_blog( 2 );
 		wp_delete_site( $blogid1 );
-		$this->assertSame( get_temp_dir() . 'wordpress/wp-content/uploads/matomo', $this->paths->get_gloal_upload_dir_if_possible() );
+		$this->assertSame( ABSPATH . 'wp-content/uploads/matomo', $this->paths->get_gloal_upload_dir_if_possible() );
 	}
 
 }

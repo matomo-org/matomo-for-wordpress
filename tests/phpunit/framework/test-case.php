@@ -7,7 +7,7 @@ use \WpMatomo\Capabilities;
 
 class MatomoUnit_TestCase extends WP_UnitTestCase {
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		if ( ! function_exists( 'wp_delete_site' ) ) {

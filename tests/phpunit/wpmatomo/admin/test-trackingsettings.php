@@ -20,7 +20,7 @@ class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
 	 */
 	private $settings;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->settings          = new Settings();
@@ -30,7 +30,7 @@ class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
 		$this->assume_admin_page();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$_REQUEST = array();
 		$_POST    = array();
 		parent::tearDown();
@@ -41,7 +41,7 @@ class AdminTrackingSettingsTest extends MatomoUnit_TestCase {
 		$this->tracking_settings->show_settings();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( 'Tracking code', $output );
+		$this->assertStringContainsString( 'Tracking code', $output );
 	}
 
 	public function test_show_settings_does_change_any_values_if_nonce() {

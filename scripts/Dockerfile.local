@@ -2,7 +2,7 @@ ARG PHP_VERSION=8.1
 ARG PHP_TYPE=apache
 FROM "php:$PHP_VERSION-$PHP_TYPE" AS base
 
-RUN apt-get update && apt-get install -y --no-install-recommends libfreetype6 zlib1g-dev libjpeg-dev libpng-dev unzip git
+RUN apt-get update && apt-get install -y --no-install-recommends libfreetype6 zlib1g-dev libjpeg-dev libpng-dev unzip git subversion
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql gd
 

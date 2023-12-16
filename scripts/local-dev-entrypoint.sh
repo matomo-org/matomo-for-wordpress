@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# TODO: this script could probably be cleaned up. very low priority task though.
+
 set -e
 
 cd /var/www/html
@@ -20,6 +22,8 @@ if [[ "$MULTISITE" = "1" ]]; then
   WORDPRESS_FOLDER="$WORDPRESS_FOLDER-multi"
 fi
 
+export WP_TESTS_DIR=/var/www/html/$WORDPRESS_FOLDER/wp-test # used for setting up for tests and running phpunit
+
 echo "Using WordPress install $WORDPRESS_FOLDER."
 echo
 
@@ -31,6 +35,10 @@ elif [[ "$EXECUTE_CONSOLE" = "1" ]]; then
 
   cd /var/www/html/matomo-for-wordpress/app
   ./console "$@"
+  exit $?
+elif [[ "$EXECUTE_PHPUNIT" = "1" ]]; then
+  cd /var/www/html/matomo-for-wordpress
+  ./vendor/bin/phpunit "$@"
   exit $?
 fi
 
@@ -225,6 +233,12 @@ if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate https://builds.matomo.org/matomo-marketplace-for-wordpress-latest.zip
 fi
 
+# other plugins used during tests
+if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/wp-statistics" ]; then
+  echo "installing wp-statistics"
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate wp-statistics
+fi
+
 # download WP_PLUGINS plugins if not present
 for PLUGIN_VERSION in $WP_PLUGINS
 do
@@ -285,6 +299,42 @@ if ! /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-ro
   APP_PASSWORD=$(/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password create --porcelain root wp_rest)
   echo $APP_PASSWORD > /var/www/html/$WORDPRESS_FOLDER/apppassword
 fi
+
+# setup everything required for unit tests
+if [ "$WORDPRESS_VERSION" = "trunk" ]; then
+  WORDPRESS_SVN_FOLDER="trunk"
+else
+  WORDPRESS_SVN_FOLDER="tags/$WORDPRESS_VERSION"
+fi
+
+if [[ ! -d "$WP_TESTS_DIR/includes" || ! -d "$WP_TESTS_DIR/data" ]];
+then
+		mkdir -p $WP_TESTS_DIR
+		if [[ ! -d "$WP_TESTS_DIR/includes" ]]; then
+		  echo "checking out phpunit includes..."
+  		svn co --quiet https://develop.svn.wordpress.org/$WORDPRESS_SVN_FOLDER/tests/phpunit/includes/ $WP_TESTS_DIR/includes
+    fi
+
+		if [[ ! -d "$WP_TESTS_DIR/data" ]]; then
+		  echo "checking out phpunit data..."
+  		svn co --quiet https://develop.svn.wordpress.org/$WORDPRESS_SVN_FOLDER/tests/phpunit/data/ $WP_TESTS_DIR/data
+    fi
+fi
+
+if [ ! -f $WP_TESTS_DIR/wp-tests-config.php ]; then
+  curl https://develop.svn.wordpress.org/tags/$WORDPRESS_VERSION/wp-tests-config-sample.php > "$WP_TESTS_DIR"/wp-tests-config.php
+  # remove all forward slashes in the end
+  sed -i "s:dirname( __FILE__ ) . '/src/':'/var/www/html/$WORDPRESS_FOLDER/':" "$WP_TESTS_DIR"/wp-tests-config.php
+  sed -i "s/youremptytestdbnamehere/${WP_DB_NAME}_test/" "$WP_TESTS_DIR"/wp-tests-config.php
+  sed -i "s/yourusernamehere/root/" "$WP_TESTS_DIR"/wp-tests-config.php
+  sed -i "s/yourpasswordhere/pass/" "$WP_TESTS_DIR"/wp-tests-config.php
+  sed -i "s|'localhost'|getenv('WP_DB_HOST')|" "$WP_TESTS_DIR"/wp-tests-config.php
+fi
+
+# create unit test database if it does not already exist
+php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
+\$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
+\$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
 
 # make sure the files can be edited outside of docker (for easier debugging)
 # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.

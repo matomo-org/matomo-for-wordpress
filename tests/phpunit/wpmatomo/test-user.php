@@ -12,7 +12,7 @@ class UserTest extends MatomoUnit_TestCase {
 	 */
 	private $user;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->user = $this->make_user();

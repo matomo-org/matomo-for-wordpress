@@ -14,7 +14,7 @@ class RolesTest extends MatomoUnit_TestCase {
 	 */
 	private $roles;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->roles = $this->make_roles();
