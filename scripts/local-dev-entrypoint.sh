@@ -62,6 +62,7 @@ if [ ! -d "/var/www/html/$WORDPRESS_FOLDER" ]; then
 
   curl "$WORDPRESS_URL" > "wordpress-$WORDPRESS_VERSION.zip"
 
+  rm -rf wordpress
   unzip -q "wordpress-$WORDPRESS_VERSION.zip"
   mv wordpress "$WORDPRESS_FOLDER"
 
@@ -125,10 +126,6 @@ define( 'AUTH_SALT',        'put your unique phrase here' );
 define( 'SECURE_AUTH_SALT', 'put your unique phrase here' );
 define( 'LOGGED_IN_SALT',   'put your unique phrase here' );
 define( 'NONCE_SALT',       'put your unique phrase here' );
-
-define( 'FS_CHMOD_DIR', ( 0777 & ~ umask() ) );
-define( 'FS_CHMOD_FILE', ( 0644 & ~ umask() ) );
-define( 'FS_METHOD', 'direct' );
 
 define('FORCE_SSL', false);
 define('FORCE_SSL_ADMIN', false);
@@ -359,5 +356,6 @@ else
   php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
   \$pdo->exec('UPDATE \`$WP_DB_NAME\`.wp_options SET option_value = REPLACE(option_value, \'nginx\', \'localhost\') WHERE option_name IN (\'home\', \'siteurl\')');" || true
 
+  usermod -u 1000 www-data
   apache2-foreground "$@"
 fi

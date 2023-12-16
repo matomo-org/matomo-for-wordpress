@@ -260,13 +260,20 @@ class Installer {
 		$this->logger->log( 'Matomo is now creating the config' );
 		$home_url = home_url();
 		$domain   = wp_parse_url( $home_url, PHP_URL_HOST );
-		$domain   = $domain ? $home_url : $domain;
-		$general  = [
+		if ( $domain ) {
+			$port = wp_parse_url( $home_url, PHP_URL_PORT );
+			if ( $port ) {
+				$domain .= ':' . $port;
+			}
+		} else {
+			$domain = $home_url;
+		}
+		$general = [
 			'trusted_hosts' => [ $domain ],
 			'salt'          => Common::generateUniqId(),
 		];
-		$config   = Config::getInstance();
-		$path     = $config->getLocalPath();
+		$config  = Config::getInstance();
+		$path    = $config->getLocalPath();
 		if ( ! is_dir( dirname( $path ) ) ) {
 			wp_mkdir_p( dirname( $path ) );
 		}

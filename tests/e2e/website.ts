@@ -47,7 +47,9 @@ class Website {
     await $('#wp-submit').click();
 
     await browser.waitUntil(async function () {
-      return !!(await browser.execute(function () { return window.wpApiSettings?.nonce; }));
+      return !!(await browser.execute(function () {
+        return window.wpApiSettings?.nonce;
+      }));
     });
   }
 

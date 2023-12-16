@@ -1,3 +1,5 @@
+*.png filter=lfs diff=lfs merge=lfs -text
+
 /tests/ export-ignore
 /scripts/ export-ignore
 /vendor/ export-ignore
@@ -191,3 +193,4 @@ jest.config.js export-ignore
 
 /app/package.json export-ignore
 /app/package-lock.json export-ignore
+
