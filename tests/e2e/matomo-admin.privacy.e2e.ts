@@ -22,6 +22,15 @@ describe('Matomo Admin > Privacy', () => {
   it('should load the anonymize data page correctly', async () => {
     await AnonymizeDataPage.open();
 
+    await $('#anonymizeStartDate').waitForExist({ timeout: 2000 });
+
+    await browser.pause(1000); // wait for controls to be initialized to today's date
+
+    await browser.execute(function () {
+      $('#anonymizeStartDate').val('2023-12-05');
+      $('#anonymizeEndDate').val('2023-12-05');
+    });
+
     await expect(
       await browser.checkFullPageScreen('matomo-admin.privacy.anonymize-data')
     ).toEqual(0)

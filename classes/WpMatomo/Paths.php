@@ -125,48 +125,8 @@ class Paths {
 	 * @return string
 	 */
 	public function get_relative_dir_to_matomo( $target_dir, $matomo_file = MATOMO_ANALYTICS_FILE ) {
-		$matomo_dir         = plugin_dir_path( $matomo_file ) . 'app';
-		$matomo_dir_parts   = explode( DIRECTORY_SEPARATOR, $matomo_dir );
-		$target_dir_parts   = explode( DIRECTORY_SEPARATOR, $target_dir );
-		$relative_directory = '';
-		$add_at_the_end     = [];
-		$was_previous_same  = false;
-		$path               = '';
-
-		/*
-		 * don't use DOCUMENT_ROOT as it does not work for cli access
-		 * don't use ABSPATH as it does not match when running unit test cases
-		 *
-		 * hide php errors for open_basedir restrictions
-		 */
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-		$root = @realpath( plugin_dir_path( $matomo_file ) . '/../../../' ) . '/';
-		foreach ( $target_dir_parts as $index => $part ) {
-			$path .= $part . '/';
-
-			/*
-			 * exclude the document root which could contains matomo
-			 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/515
-			 */
-			if ( strpos( $root, $path ) === 0 ) {
-				continue;
-			}
-			if ( isset( $matomo_dir_parts[ $index ] )
-				 && 'matomo' !== $part // not when matomo is same part cause it's the plugin name but eg also the upload folder name and it would generate wrong path
-				 && $matomo_dir_parts[ $index ] === $part
-				 && ! $was_previous_same ) {
-				continue;
-			}
-
-			$was_previous_same = true;
-
-			if ( isset( $matomo_dir_parts[ $index ] ) ) {
-				$relative_directory .= '../';
-			}
-			$add_at_the_end[] = $part;
-		}
-
-		return $relative_directory . implode( '/', $add_at_the_end );
+		return matomo_rel_path( $target_dir, @realpath( plugin_dir_path( $matomo_file ) . 'app' ) );
 	}
 
 	public function get_gloal_upload_dir_if_possible( $file_to_look_for = '' ) {
