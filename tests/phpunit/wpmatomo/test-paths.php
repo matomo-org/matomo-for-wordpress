@@ -110,7 +110,7 @@ class PathsTest extends MatomoUnit_TestCase {
 			'../../matomo/tests/phpunit/wpmatomo', // travis
 		);
 		$val          = $this->paths->get_relative_dir_to_matomo( __DIR__ );
-		$this->assertTrue( in_array( $val, $valid_values, true ) );
+		$this->assertContains( $val, $valid_values );
 		// automatically double check that it works
 		$this->assertTrue( is_dir( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app/../tests/phpunit/wpmatomo' ) );
 	}
@@ -147,7 +147,7 @@ class PathsTest extends MatomoUnit_TestCase {
 			);
 			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
 			$val                             = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js', $temporary_matomo_analytics_file );
-			$this->assertTrue( in_array( $val, $valid_values, true ) );
+			$this->assertContains( $val, $valid_values );
 			// automatically double check that it works
 			$this->assertTrue( is_file( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js' ) );
 		} else {
@@ -165,7 +165,7 @@ class PathsTest extends MatomoUnit_TestCase {
 			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
 			// do not use the path get upload dir method: it returns the path on the test instance
 			$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo', $temporary_matomo_analytics_file );
-			$this->assertTrue( in_array( $val, $valid_values, true ) );
+			$this->assertContains( $val, $valid_values );
 			// do not check like the others test if the folder exist: in unit tests outside a WordPress context, uploads folder does not ezist
 			// $this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo' ) );
 		} else {
@@ -183,7 +183,7 @@ class PathsTest extends MatomoUnit_TestCase {
 			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
 			// do not use the path get upload dir method: it returns the path on the test instance
 			$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config', $temporary_matomo_analytics_file );
-			$this->assertTrue( in_array( $val, $valid_values, true ) );
+			$this->assertContains( $val, $valid_values );
 			// do not check like the others test if the folder exist: in unit tests outside a WordPress context, uploads folder does not ezist
 			// $this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config' ) );
 		} else {
@@ -211,7 +211,7 @@ class PathsTest extends MatomoUnit_TestCase {
 			'../../matomo/plugins/WordPress', // travis
 		);
 		$val          = $this->paths->get_relative_dir_to_matomo( $dir_te_test );
-		$this->assertTrue( in_array( $val, $valid_values, true ) );
+		$this->assertContains( $val, $valid_values );
 		// automatically double check that it works
 		$this->assertTrue( is_dir( $plugin_dir . 'app/../plugins/WordPress' ) );
 	}
