@@ -107,7 +107,7 @@ class PathsTest extends MatomoUnit_TestCase {
 
 	public function test_get_relative_dir_to_matomo() {
 		$valid_values = array(
-			'../../matomo/tests/phpunit/wpmatomo', // travis
+			'../tests/phpunit/wpmatomo', // travis
 		);
 		$val          = $this->paths->get_relative_dir_to_matomo( __DIR__ );
 		$this->assertContains( $val, $valid_values );
@@ -143,7 +143,7 @@ class PathsTest extends MatomoUnit_TestCase {
 		// run the test only if we have been able to rename the path
 		if ( $this->add_matomo_in_document_root() ) {
 			$valid_values                    = array(
-				'../../matomo/app/matomo.js',
+				'matomo.js',
 			);
 			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
 			$val                             = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js', $temporary_matomo_analytics_file );
@@ -159,7 +159,7 @@ class PathsTest extends MatomoUnit_TestCase {
 		// run the test only if we have been able to rename the path
 		if ( $this->add_matomo_in_document_root() ) {
 			$valid_values = array(
-				'../../matomo/../../uploads/matomo',
+				'../../../uploads/matomo',
 			);
 
 			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
@@ -177,7 +177,7 @@ class PathsTest extends MatomoUnit_TestCase {
 		// run the test only if we have been able to rename the path
 		if ( $this->add_matomo_in_document_root() ) {
 			$valid_values = array(
-				'../../matomo/../../uploads/matomo/config',
+				'../../../uploads/matomo/config',
 			);
 
 			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
@@ -208,7 +208,7 @@ class PathsTest extends MatomoUnit_TestCase {
 		$dir_te_test = $plugin_dir . 'plugins/WordPress';
 
 		$valid_values = array(
-			'../../matomo/plugins/WordPress', // travis
+			'../plugins/WordPress', // travis
 		);
 		$val          = $this->paths->get_relative_dir_to_matomo( $dir_te_test );
 		$this->assertContains( $val, $valid_values );
