@@ -24,7 +24,7 @@ describe('Matomo Admin > Privacy', () => {
 
     await $('#anonymizeStartDate').waitForExist({ timeout: 2000 });
 
-    await browser.pause(500); // wait for controls to be initialized to today's date
+    await browser.pause(1000); // wait for controls to be initialized to today's date
 
     await browser.execute(function () {
       $('#anonymizeStartDate').val('2023-12-05');
