@@ -43,8 +43,8 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_query_triggers_error_when_wrong_sql() {
-		$this->expectException('\Zend_Db_Statement_Exception');
-		$this->expectExceptionMessage("foobarbaz' doesn't exist");
+		$this->expectException( '\Zend_Db_Statement_Exception' );
+		$this->expectExceptionMessage( "foobarbaz' doesn't exist" );
 		$this->db->query( 'select * from foobarbaz' );
 	}
 
@@ -145,8 +145,8 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_fetch_all_triggers_error_when_wrong_sql() {
-		$this->expectException('\Zend_Db_Statement_Exception');
-		$this->expectExceptionMessage("foobarbaz' doesn't exist");
+		$this->expectException( '\Zend_Db_Statement_Exception' );
+		$this->expectExceptionMessage( "foobarbaz' doesn't exist" );
 		$this->db->fetchAll( 'select * from foobarbaz' );
 	}
 
@@ -163,8 +163,8 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_fetch_one_triggers_error_when_wrong_sql() {
-		$this->expectException('\Zend_Db_Statement_Exception');
-		$this->expectExceptionMessage("foobarbaz' doesn't exist");
+		$this->expectException( '\Zend_Db_Statement_Exception' );
+		$this->expectExceptionMessage( "foobarbaz' doesn't exist" );
 		$this->db->fetchOne( 'select foo from foobarbaz' );
 	}
 
@@ -175,8 +175,8 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_fetch_row_triggers_error_when_wrong_sql() {
-		$this->expectException('\Zend_Db_Statement_Exception');
-		$this->expectExceptionMessage("foobarbaz' doesn't exist");
+		$this->expectException( '\Zend_Db_Statement_Exception' );
+		$this->expectExceptionMessage( "foobarbaz' doesn't exist" );
 		$this->db->fetchRow( 'select * from foobarbaz limit 1' );
 	}
 
@@ -195,8 +195,8 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_exec_triggers_error_when_wrong_sql() {
-		$this->expectException('\Zend_Db_Statement_Exception');
-		$this->expectExceptionMessage("foobarbaz' doesn't exist");
+		$this->expectException( '\Zend_Db_Statement_Exception' );
+		$this->expectExceptionMessage( "foobarbaz' doesn't exist" );
 		$this->db->exec( 'select * from foobarbaz' );
 	}
 
@@ -222,7 +222,7 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 	private function insert_access( $login, $permission ) {
 		$table = Common::prefixTable( 'access' );
 
-		return $this->db->query( sprintf( "insert into %s (login, idsite, access) values('%s', '1', '%s')", $table, $login, $permission ) );
+		return $this->db->query( sprintf( "insert into %s (login, idsite, access) values('%s', '1', '%s' )", $table, $login, $permission ) );
 	}
 
 

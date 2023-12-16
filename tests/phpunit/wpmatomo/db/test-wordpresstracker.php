@@ -31,8 +31,8 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_query_triggers_error_when_wrong_sql() {
-		$this->expectException('\Zend_Db_Statement_Exception');
-		$this->expectExceptionMessage("foobarbaz' doesn't exist");
+		$this->expectException( '\Zend_Db_Statement_Exception' );
+		$this->expectExceptionMessage( "foobarbaz' doesn't exist" );
 		$this->db->query( 'select * from foobarbaz' );
 	}
 
@@ -127,8 +127,8 @@ class DbWordPressTrackerTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_fetch_all_triggers_error_when_wrong_sql() {
-		$this->expectException('\Zend_Db_Statement_Exception');
-		$this->expectExceptionMessage("foobarbaz' doesn't exist");
+		$this->expectException( '\Zend_Db_Statement_Exception' );
+		$this->expectExceptionMessage( "foobarbaz' doesn't exist" );
 		$this->db->fetchAll( 'select * from foobarbaz' );
 	}
 
