@@ -125,6 +125,10 @@ class Paths {
 	 * @return string
 	 */
 	public function get_relative_dir_to_matomo( $target_dir, $matomo_file = MATOMO_ANALYTICS_FILE ) {
+		print "target_dir: $target_dir\n";
+		print "matomo_file: $matomo_file\n";
+		print "MATOMO_ANALYTICS_FILE: " . MATOMO_ANALYTICS_FILE . "\n";
+		print "base_dir: " . plugin_dir_path( $matomo_file ) . 'app' . "\n";
 		return matomo_rel_path( $target_dir, @realpath( plugin_dir_path( $matomo_file ) . 'app' ) );
 	}
 
