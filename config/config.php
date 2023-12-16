@@ -29,7 +29,7 @@ return array(
 	},
 	// we want to avoid the regular monolog logger as it could interfere with other plugins maybe. for now lets use a
 	// custom logger
-	'Psr\Log\LoggerInterface' => DI\get('\Piwik\Plugins\WordPress\Logger'),
+	'Psr\Log\LoggerInterface' => \Piwik\DI::get('\Piwik\Plugins\WordPress\Logger'),
 	'TagManagerContainerStorageDir' => function () {
 		if (defined('MATOMO_TAG_MANAGER_STORAGE_DIR')) {
 			return MATOMO_TAG_MANAGER_STORAGE_DIR;
