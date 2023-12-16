@@ -42,7 +42,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 	}
 
-	public function setUp(): void {
+	public function setUp() {
 		parent::setUp();
 		$this->create_set_super_admin();
 		if ( $this->can_be_tested() ) {
