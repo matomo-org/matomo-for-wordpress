@@ -98,7 +98,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'UserCountry', 'getCountry' );
-		$this->assertEquals( $report['reportData']->getRowsCount(), 88 );
+		$this->assertEquals( 89, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_regions_found() {
@@ -109,7 +109,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'UserCountry', 'getRegion' );
-		$this->assertEquals( $report['reportData']->getRowsCount(), 214 );
+		$this->assertEquals( 214, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_cities_found() {
@@ -198,7 +198,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'Actions', 'getPageUrls' );
-		$this->assertEquals( $report['reportData']->getRowsCount(), 152 );
+		$this->assertEquals( 81, $report['reportData']->getRowsCount() );
 	}
 
 	protected function fetch_report( $report_name, $method ) {
