@@ -106,11 +106,8 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_relative_dir_to_matomo() {
-		$valid_values = array(
-			'../../matomo/tests/phpunit/wpmatomo',
-		);
 		$val          = $this->paths->get_relative_dir_to_matomo( ABSPATH . '/wp-content/plugins/matomo/tests/phpunit/wpmatomo' );
-		$this->assertTrue( in_array( $val, $valid_values, true ) );
+		$this->assertEquals( '../../matomo/tests/phpunit/wpmatomo', $val );
 		// automatically double check that it works
 		$this->assertTrue( is_dir( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . 'app/../tests/phpunit/wpmatomo' ) );
 	}
