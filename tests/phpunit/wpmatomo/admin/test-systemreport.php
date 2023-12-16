@@ -37,7 +37,7 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 	 */
 	protected $disable_temp_tables = true;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->settings = new Settings();
 		$this->report   = new SystemReport( $this->settings );
@@ -50,7 +50,7 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 		$this->assume_admin_page();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$_REQUEST = array();
 		$_POST    = array();
 		parent::tearDown();
@@ -61,7 +61,7 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 		$this->report->show();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( 'WordPress Plugins', $output );
+		$this->assertStringContainsString( 'WordPress Plugins', $output );
 	}
 
 	/**
@@ -97,7 +97,7 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 		$contents = file_get_contents( 'https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/' );
 
 		foreach ( $this->report->get_not_compatible_plugins() as $not_compatible_plugin ) {
-			$this->assertContains( $not_compatible_plugin, $contents );
+			$this->assertStringContainsString( $not_compatible_plugin, $contents );
 		}
 	}
 

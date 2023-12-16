@@ -34,7 +34,7 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 	 * @var Site
 	 */
 	private $site;
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$settings   = new Settings();

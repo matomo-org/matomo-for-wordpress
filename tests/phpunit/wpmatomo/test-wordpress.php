@@ -12,7 +12,7 @@ class WordPressTest extends MatomoAnalytics_TestCase {
 		$plugin  = $manager->getLoadedPlugin( 'WordPress' );
 
 		$plugin->onUserOptOutRender( $content );
-		$this->assertContains( 'Use the short code <code>[matomo_opt_out]</code> to embed', $content );
+		$this->assertStringContainsString( 'Use the short code <code>[matomo_opt_out]</code> to embed', $content );
 	}
 
 }

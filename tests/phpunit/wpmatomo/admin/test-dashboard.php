@@ -16,7 +16,7 @@ class AdminDashboardTest extends MatomoAnalytics_TestCase {
 	 */
 	private $dashboard;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->dashboard = new Dashboard();
@@ -25,7 +25,7 @@ class AdminDashboardTest extends MatomoAnalytics_TestCase {
 		$this->create_set_super_admin();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$_REQUEST = array();
 		$_POST    = array();
 		parent::tearDown();

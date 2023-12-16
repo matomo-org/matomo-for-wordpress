@@ -93,10 +93,10 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ matrix.wp-versions }}" = "5.2" ]]; then
-            cd ${{ github.workspace }}/wp-content/plugins/matomo && composer require --dev yoast/phpunit-polyfills:^1.1
+            sed -i 's%"yoast/phpunit-polyfills": ".*"%"yoast/phpunit-polyfills": "^1.1"%g' ${{ github.workspace }}/wp-content/plugins/matomo/composer.json
           fi
 
-          cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update
+          cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update --with-all-dependencies
 
       - name: Install dependencies
         shell: bash
@@ -181,6 +181,7 @@ jobs:
       - run: chmod -R 777 . # required to build the release
       - run: docker compose --env-file .env.default --env-file .env up -d wordpress
       - run: sleep 60 # wait for docker-compose launch to finish
+      - run: npm run compose logs wordpress --no-color # for debugging failures to start
 
       # build release from current code
       - run: npm run compose -- run console wordpress:build-release --name=test --zip
@@ -253,7 +254,9 @@ jobs:
 
       - name: Install dependencies
         shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
+        run: |
+          cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update --with-all-dependencies
+          cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
 
       - name: Run checkstyle
         shell: bash

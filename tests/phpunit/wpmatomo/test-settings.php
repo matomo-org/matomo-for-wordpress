@@ -13,7 +13,7 @@ class SettingsTest extends MatomoUnit_TestCase {
 	 */
 	private $settings;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->settings = $this->make_settings();

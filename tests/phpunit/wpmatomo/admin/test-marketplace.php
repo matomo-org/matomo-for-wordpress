@@ -18,7 +18,7 @@ class AdminMarketplaceTest extends MatomoUnit_TestCase {
 	 */
 	private $settings;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->settings    = new Settings();
@@ -28,7 +28,7 @@ class AdminMarketplaceTest extends MatomoUnit_TestCase {
 		$this->create_set_super_admin();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$_REQUEST = array();
 		$_POST    = array();
 		parent::tearDown();
@@ -39,7 +39,7 @@ class AdminMarketplaceTest extends MatomoUnit_TestCase {
 		$this->marketplace->show();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( 'Discover new functionality for your Matomo', $output );
+		$this->assertStringContainsString( 'Discover new functionality for your Matomo', $output );
 	}
 
 

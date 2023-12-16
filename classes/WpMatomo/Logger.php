@@ -19,6 +19,7 @@ class Logger {
 	const LEVEL_NONE  = 99;
 	const LEVEL_DEBUG = 1;
 	const LEVEL_INFO  = 3;
+	const LEVEL_WARN  = 5;
 
 	private function get_log_level() {
 		if ( defined( 'MATOMO_DEBUG' ) ) {
@@ -27,6 +28,10 @@ class Logger {
 			}
 
 			return self::LEVEL_NONE;
+		}
+
+		if ( defined( 'PIWIK_TEST_MODE' ) && PIWIK_TEST_MODE ) {
+			return self::LEVEL_WARN;
 		}
 
 		return self::LEVEL_INFO;

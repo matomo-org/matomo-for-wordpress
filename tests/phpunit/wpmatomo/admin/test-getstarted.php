@@ -21,7 +21,7 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 	 */
 	private $settings;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->settings    = new Settings();
@@ -31,7 +31,7 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 		$this->assume_admin_page();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$_REQUEST = array();
 		$_POST    = array();
 		parent::tearDown();
@@ -42,7 +42,7 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 		$this->get_started->show();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( 'About', $output );
+		$this->assertStringContainsString( 'About', $output );
 	}
 
 	public function test_show_does_change_value_if_nonce() {

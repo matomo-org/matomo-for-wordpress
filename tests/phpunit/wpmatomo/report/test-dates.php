@@ -12,7 +12,7 @@ class ReportDatesTest extends MatomoUnit_TestCase {
 	 */
 	private $dates;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->dates = new Dates();

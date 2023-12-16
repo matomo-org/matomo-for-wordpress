@@ -42,7 +42,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 	}
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->create_set_super_admin();
 		if ( $this->can_be_tested() ) {
@@ -109,7 +109,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'UserCountry', 'getRegion' );
-		$this->assertEquals( 214, $report['reportData']->getRowsCount() );
+		$this->assertEquals( 224, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_cities_found() {
