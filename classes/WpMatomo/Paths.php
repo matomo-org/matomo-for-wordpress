@@ -125,6 +125,7 @@ class Paths {
 	 * @return string
 	 */
 	public function get_relative_dir_to_matomo( $target_dir, $matomo_file = MATOMO_ANALYTICS_FILE ) {
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		return matomo_rel_path( $target_dir, @realpath( plugin_dir_path( $matomo_file ) . 'app' ) );
 	}
 
