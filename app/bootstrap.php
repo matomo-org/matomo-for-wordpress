@@ -65,7 +65,7 @@ if ( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) {
 
 	// prevent from loading twice
 	$matomo_wpload_base = '../../../../wp-load.php';
-	$matomo_wpload_full = dirname( __FILE__ ) . '/' . $matomo_wpload_base;
+	$matomo_wpload_full = dirname( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) ) . '/wp-load.php';
 
 	if ($matomo_is_archive_request) {
 		ob_start();
