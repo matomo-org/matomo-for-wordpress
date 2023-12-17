@@ -176,7 +176,7 @@ class ScheduledTasks {
 								try {
 									$wp_filesystem->put_contents($file, $content);
 								} catch (\Exception $ex) {
-									throw new \Exception("failed to put: $file, " . $ex->getMessage());
+									throw new \Exception("failed to put: $file, " . $ex->getMessage() . " " . `ls -l $file`);
 								}
 							} else {
 								$this->logger->log( 'Cannot update file as not writable ' . $file );

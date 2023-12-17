@@ -29,11 +29,6 @@ concurrency:
   group: php-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  MYSQL_DOCKER_IMG: 'bitnami/mariadb:latest'
-  DB_NAME: 'wp_matomo_tests'
-  PHP_VERSION: '8.0'
-
 jobs:
   unit_tests:
     runs-on: 'ubuntu-20.04'
