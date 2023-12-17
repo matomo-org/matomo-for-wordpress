@@ -71,6 +71,8 @@ jobs:
       - name: Check PHP Version
         run: php -v
 
+      - run: echo "$UID"
+      - run: id -u
       # note: we update the dependencies since they only exist for the unit tests, and we need to use different
       # versions of phpunit/etc. for different PHP versions
       - name: Update test dependencies
@@ -244,7 +246,7 @@ jobs:
       - name: Setup PHP for checkstyle
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ env.PHP_VERSION }}
+          php-version: 8.0
           extensions: curl, dom, exif, fileinfo, hash, imagick, json, mbstring, mysqli, openssl, pcre, sodium, xml, zip
           ini-values: |
             post_max_size=8M,

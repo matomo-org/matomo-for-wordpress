@@ -22,6 +22,8 @@ services:
       args:
         PHP_VERSION: "$PHP_VERSION"
         PHP_TYPE: apache
+    environment:
+      RUN_AS_USER: "${UID:-1000}"
     volumes:
       - ./docker/wordpress:/var/www/html
       - .:/var/www/html/matomo-for-wordpress

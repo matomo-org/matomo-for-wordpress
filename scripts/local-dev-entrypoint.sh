@@ -4,7 +4,7 @@
 
 set -e
 
-echo "current user ID is $(id -u)"
+echo "current user ID is $(id -u) (UID = $UID, GID = $GID)"
 
 cd /var/www/html
 
