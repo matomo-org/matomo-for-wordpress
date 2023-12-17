@@ -59,6 +59,7 @@ tests/ export-ignore
 .travis.yml export-ignore
 .stylelintrc.json export-ignore
 PULL_REQUEST_TEMPLATE export-ignore
+umd.metadata.json export-ignore
 
 # Linguist: language statistics
 # + test resources: exclude

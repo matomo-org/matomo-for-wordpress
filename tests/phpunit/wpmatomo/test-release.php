@@ -3,6 +3,7 @@
  * Test release.
  *
  * @package matomo
+ * @group only
  *
  */
 class ReleaseTest extends MatomoAnalytics_TestCase {
@@ -156,6 +157,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 					|| preg_match( '%^matomo/node_modules/jquery/%', $path )
 					|| preg_match( '%^matomo/plugins/.*?/vue/src%', $path )
 					|| preg_match( '%^matomo/plugins/.*?/vue/dist/*.*?\.umd\.js$%', $path )
+					|| preg_match( '%^matomo/plugins/.*?/vue/dist/umd.metadata.json$%', $path )
 					|| in_array( $path, $ignored_core_files, true )
 				) {
 					continue;
