@@ -127,7 +127,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			[$return_code, $output] = $this->execute_command( 'wordpress:build-release --name=test-release --zip' );
 			$this->assertEquals( 0, $return_code, 'Generate command failed: ' . $output );
 
-			$path_to_zip = dirname( PIWIK_INCLUDE_PATH ) . '/matomo-test-release.zip';
+			$path_to_zip = 'matomo-test-release.zip';
 			$this->assertFileExists( $path_to_zip, 'release zip not created: ' . $output );
 
 			// download core release
