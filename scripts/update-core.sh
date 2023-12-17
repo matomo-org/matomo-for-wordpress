@@ -88,12 +88,74 @@ rm $MATOMO_ROOT/.gitmodules
 
 cd $SCRIPTPATH
 
+rm -rf $MATOMO_ROOT/vendor/bin
 rm -rf $MATOMO_ROOT/config/environment/test.php
 rm -rf $MATOMO_ROOT/config/environment/ui-test.php
 rm -rf $MATOMO_ROOT/vendor/twig/twig/ext
-rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/tools
 rm -rf $MATOMO_ROOT/vendor/doctrine/cache/lib/Doctrine/Common/Cache/RiakCache.php
 rm -rf $MATOMO_ROOT/node_modules/materialize-css/extras $MATOMO_ROOT/node_modules/materialize-css/js $MATOMO_ROOT/node_modules/materialize-css/sass
+rm -rf $MATOMO_ROOT/vendor/container-interop/container-interop/docs
+rm -rf $MATOMO_ROOT/vendor/davaxi/sparkline/composer-8.json
+rm -rf $MATOMO_ROOT/vendor/davaxi/sparkline/docker-compose.yml
+rm -rf $MATOMO_ROOT/vendor/davaxi/sparkline/Dockerfile
+rm -rf $MATOMO_ROOT/vendor/geoip2/geoip2/examples/
+rm -rf $MATOMO_ROOT/vendor/lox/xhprof/bin
+rm -rf $MATOMO_ROOT/vendor/lox/xhprof/examples
+rm -rf $MATOMO_ROOT/vendor/lox/xhprof/scripts
+rm -rf $MATOMO_ROOT/vendor/lox/xhprof/extension
+rm -rf $MATOMO_ROOT/vendor/lox/xhprof/xhprof_html
+rm -rf $MATOMO_ROOT/vendor/maxmind-db/reader/ext/
+rm -rf $MATOMO_ROOT/vendor/maxmind-db/reader/autoload.php
+rm -rf $MATOMO_ROOT/vendor/maxmind-db/reader/CHANGELOG.md
+rm -rf $MATOMO_ROOT/vendor/maxmind/web-service-common/dev-bin/
+rm -rf $MATOMO_ROOT/vendor/maxmind/web-service-common/CHANGELOG.md
+rm -rf $MATOMO_ROOT/vendor/pear/archive_tar/docs
+rm -rf $MATOMO_ROOT/vendor/php-di/invoker/doc/
+rm -rf $MATOMO_ROOT/vendor/php-di/php-di/benchmarks/
+rm -rf $MATOMO_ROOT/vendor/symfony/console/Symfony/Component/Console/Resources/bin
+rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/resources/doc
+rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/coverage.sh
+rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/codeception.yml
+rm $MATOMO_ROOT/vendor/monolog/monolog/phpstan.neon.dist
+rm $MATOMO_ROOT/vendor/composer/installed.json
+rm $MATOMO_ROOT/vendor/lox/xhprof/package.xml
+rm $MATOMO_ROOT/vendor/pear/archive_tar/package.xml
+rm $MATOMO_ROOT/vendor/pear/console_getopt/package.xml
+
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/tools
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/examples
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/CHANGELOG.TXT
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/ae_fonts_2.0
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/dejavu-fonts-ttf-2.33
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/dejavu-fonts-ttf-2.34
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/freefont-20100919
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/freefont-20120503
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/freemon*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/cid*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/courier*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/aefurat*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/dejavusansb*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/dejavusansi*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/dejavusansmono*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/dejavusanscondensed*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/dejavusansextralight*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/dejavuserif*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/freesansi*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/freesansb*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/freeserifb*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/freeserifi*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/pdf*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/times*
+rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/fonts/uni2cid*
+
+rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/resources/fonts/advent_light*
+rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/resources/fonts/Bedizen*
+rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/resources/fonts/calibri*
+rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/resources/fonts/Forgotte*
+rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/resources/fonts/MankSans*
+rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/resources/fonts/pf_arma_five*
+rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/resources/fonts/Silkscreen*
+rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/resources/fonts/verdana*
 
 touch $MATOMO_ROOT/tmp/.gitkeep # we keep this folder to avoid permissions issues in the local docker environment
 
