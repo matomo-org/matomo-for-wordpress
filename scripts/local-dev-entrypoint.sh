@@ -260,7 +260,7 @@ do
 done
 
 # setup woocommerce if requested
-if [[ ! -z "$WOOCOMMERCE" && ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/woocommerce" ]]; then
+if [[ "$WOOCOMMERCE" == "1" && ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/woocommerce" ]]; then
   echo "setting up woocommerce..."
 
   if php -r 'exit(version_compare(PHP_VERSION, "7.3", "<") ? 0 : 1);'; then

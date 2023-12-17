@@ -96,14 +96,14 @@ jobs:
           docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
-          WOOCOMMERCE: 1
+          WOOCOMMERCE: 0
           WORDPRESS_FOLDER: test
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
       - run: |
           cat > .env <<EOF
           PHP_VERSION=$PHP_VERSION
-          WOOCOMMERCE=1
+          WOOCOMMERCE=0
           WORDPRESS_FOLDER=test
           RESET_DATABASE=1
           WORDPRESS_VERSION=$WORDPRESS_VERSION
