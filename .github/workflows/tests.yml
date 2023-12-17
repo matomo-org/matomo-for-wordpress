@@ -85,11 +85,11 @@ jobs:
             sed -i 's%"yoast/phpunit-polyfills": ".*"%"yoast/phpunit-polyfills": "^1.1"%g' ${{ github.workspace }}/wp-content/plugins/matomo/composer.json
           fi
 
-          cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update --with-all-dependencies
+          composer update --with-all-dependencies
 
       - name: Install dependencies
         shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
+        run: composer install
 
       # TODO: redundancy w/ e2e_tests, could be moved to a script
       # docker-compose up
