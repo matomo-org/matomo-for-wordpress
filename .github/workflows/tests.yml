@@ -82,7 +82,7 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ matrix.wp-versions }}" = "5.2" ]]; then
-            sed -i 's%"yoast/phpunit-polyfills": ".*"%"yoast/phpunit-polyfills": "^1.1"%g' ${{ github.workspace }}/wp-content/plugins/matomo/composer.json
+            sed -i 's%"yoast/phpunit-polyfills": ".*"%"yoast/phpunit-polyfills": "^1.1"%g' composer.json
           fi
 
           composer update --with-all-dependencies

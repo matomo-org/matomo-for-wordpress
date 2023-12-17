@@ -6,6 +6,9 @@ set -e
 
 cd /var/www/html
 
+# make sure git is ok with this repo inside the docker container
+git config --global --add safe.directory /var/www/html/matomo-for-wordpress
+
 # http serves a single offer, whereas https serves multiple. we only want one
 LATEST_WORDPRESS_VERSION=$( php -r 'echo @json_decode(file_get_contents("http://api.wordpress.org/core/version-check/1.7/"), true)["offers"][0]["version"];' );
 if [[ -z "$LATEST_WORDPRESS_VERSION" ]]; then

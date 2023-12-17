@@ -173,7 +173,11 @@ class ScheduledTasks {
 								$content       = str_replace( $search, $replace, $content );
 								$paths         = new Paths();
 								$wp_filesystem = $paths->get_file_system();
-								$wp_filesystem->put_contents( $file, $content );
+								try {
+									$wp_filesystem->put_contents($file, $content);
+								} catch (\Exception $ex) {
+									throw new \Exception("failed to put: $file, " . $ex->getMessage());
+								}
 							} else {
 								$this->logger->log( 'Cannot update file as not writable ' . $file );
 							}
