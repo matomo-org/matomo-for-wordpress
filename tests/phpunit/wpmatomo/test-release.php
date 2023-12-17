@@ -3,7 +3,6 @@
  * Test release.
  *
  * @package matomo
- * @group only
  *
  */
 class ReleaseTest extends MatomoAnalytics_TestCase {
@@ -93,14 +92,10 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			'matomo/libs/jqplot/excanvas.min.js',
 			'matomo/libs/jqplot/build_minified_script.sh',
 			'matomo/plugins/Morpheus/fonts/selection.json',
-			'matomo/plugins/Morpheus/stylesheets/base/font.css',
-			'matomo/node_modules/angular/angular.min.js',
-			'matomo/node_modules/angular/index.js',
 			'matomo/node_modules/visibilityjs/lib/visibility.js',
 			'matomo/node_modules/visibilityjs/lib/visibility.fallback.js',
 			'matomo/node_modules/visibilityjs/lib/visibility.core.js',
 			'matomo/node_modules/visibilityjs/lib/visibility.timers.js',
-			'matomo/node_modules/jquery.browser/dist/jquery.browser.min.js',
 			'matomo/node_modules/mousetrap/mousetrap.min.js',
 			'matomo/node_modules/jquery.dotdotdot/dist/jquery.dotdotdot.js',
 			'matomo/node_modules/vue/dist/vue.global.prod.js',
