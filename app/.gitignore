@@ -36,7 +36,7 @@ php_errors.log
 /tmp/*
 !/tmp/.gitkeep
 !/tmp/CACHEDIR.TAG
-/vendor/
+
 /.cache
 /.externalToolBuilders
 /.idea/*

@@ -124,6 +124,8 @@ else
     echo -e "WordPress jquery was not replaced. There is an error."
 fi
 
+sed -i -e 's/\/vendor\///' $MATOMO_ROOT/.gitignore
+
 RED='\033[0;31m'
 NO_COLOR='\033[0m'
 
