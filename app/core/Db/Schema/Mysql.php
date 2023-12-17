@@ -371,13 +371,13 @@ class Mysql implements SchemaInterface
                                       `idchange` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
                                       `created_time` DATETIME NOT NULL,
                                       `plugin_name` VARCHAR(60) NOT NULL,
-                                      `version` VARCHAR(20) NOT NULL, 
-                                      `title` VARCHAR(255) NOT NULL,                                      
+                                      `version` VARCHAR(20) NOT NULL,
+                                      `title` VARCHAR(255) NOT NULL,
                                       `description` TEXT NULL,
                                       `link_name` VARCHAR(255) NULL,
-                                      `link` VARCHAR(255) NULL,       
+                                      `link` VARCHAR(255) NULL,
                                       PRIMARY KEY(`idchange`),
-                                      UNIQUE KEY unique_plugin_version_title (`plugin_name`, `version`, `title`(100))                            
+                                      UNIQUE KEY unique_plugin_version_title (`plugin_name`, `version`, `title`(100))
                                   ) ENGINE=$engine DEFAULT CHARSET=$charset
             ",
         );
@@ -451,16 +451,31 @@ class Mysql implements SchemaInterface
      */
     public function getTablesInstalled($forceReload = true)
     {
+		if (@$GLOBALS['check']) {
+			print "get tables installed 1\n";
+		}
         if (is_null($this->tablesInstalled)
             || $forceReload === true
         ) {
+			if (@$GLOBALS['check']) {
+				print "get tables installed 2\n";
+			}
             $db = $this->getDb();
             $prefixTables = $this->getTablePrefixEscaped();
+			if (@$GLOBALS['check']) {
+				print "table prefix: $prefixTables\n";
+			}
 
             $allTables = $this->getAllExistingTables($prefixTables);
+			if (@$GLOBALS['check']) {
+				print "allTables: ".print_r($allTables, true)."\n";
+			}
 
             // all the tables to be installed
             $allMyTables = $this->getTablesNames();
+			if (@$GLOBALS['check']) {
+				print "allMyTables: ".print_r($allMyTables, true)."\n";
+			}
 
             /**
              * Triggered when detecting which tables have already been created by Matomo.
@@ -572,6 +587,9 @@ class Mysql implements SchemaInterface
     {
         $db = $this->getDb();
         $prefixTables = $this->getTablePrefix();
+		if (@$GLOBALS['check']) {
+			print "PREFIX: $prefixTables\n";
+		}
 
         $tablesAlreadyInstalled = $this->getAllExistingTables($prefixTables);
         $tablesToCreate = $this->getTablesCreateSql();
