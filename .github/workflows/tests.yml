@@ -111,7 +111,9 @@ jobs:
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: echo "$UID - $GID"
       - run: chmod -R 777 . # required to build the release
+      - run: sudo chown -R 1000:1000 . # required for wordpress' filesystem direct implementation
       - run: docker compose --env-file .env.default --env-file .env up -d wordpress
       - run: sleep 60 # wait for docker-compose launch to finish
       - run: npm run compose logs wordpress --no-color # for debugging failures to start
