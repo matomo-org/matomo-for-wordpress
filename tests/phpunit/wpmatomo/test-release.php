@@ -3,10 +3,11 @@
  * Test release.
  *
  * @package matomo
+ *
  */
 class ReleaseTest extends MatomoAnalytics_TestCase {
 
-	const MAX_RELEASE_SIZE = 20971520;
+	const MAX_RELEASE_SIZE = 20971520; // 20mb
 
 	/**
 	 * @dataProvider get_needed_files
