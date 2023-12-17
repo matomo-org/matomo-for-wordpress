@@ -331,6 +331,8 @@ if [ ! -f $WP_TESTS_DIR/wp-tests-config.php ]; then
   sed -i "s|'localhost'|getenv('WP_DB_HOST')|" "$WP_TESTS_DIR"/wp-tests-config.php
 fi
 
+export WP_VERSION=$WORDPRESS_VERSION # used in unit tests
+
 # create unit test database if it does not already exist
 php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
 \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\

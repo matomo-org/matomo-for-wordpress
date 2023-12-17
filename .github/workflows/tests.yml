@@ -52,19 +52,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           persist-credentials: true
-          path: wp-content/plugins/matomo
           lfs: true
-      - run: cd wp-content/plugins/matomo && git lfs pull && cd ../../..
-
-      - name: Shutdown Ubuntu MySQL
-        run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
-
-      - name: Start MariaDB service
-        shell: bash
-        run: |
-          docker run -d --name mariadb --tmpfs /var/lib/mariadb:rw --tmpfs /bitnami/mariadb/data:rw -v /bitnami/mariadb -p 3306:3306 -e ALLOW_EMPTY_PASSWORD=yes ${{ env.MYSQL_DOCKER_IMG }} > /dev/null
-          sleep 10
-          mysql -h127.0.0.1 -uroot -e "CREATE DATABASE ${{ env.DB_NAME }}";
+      - run: git lfs pull
 
       - name: Setup PHP ${{ matrix.php-versions }}
         uses: shivammathur/setup-php@v2
@@ -102,23 +91,50 @@ jobs:
         shell: bash
         run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
 
-      - name: Install test environment
-        shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' 127.0.0.1 ${{ matrix.wp-versions }} true
+      # TODO: redundancy w/ e2e_tests, could be moved to a script
+      # docker-compose up
+      # TODO: i can't seem to get docker layer caching to work.
+      - run: |
+          export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed 's/pipelines/artifactcache/')
+          export ACTIONS_RUNTIME_TOKEN=$ACTIONS_ID_TOKEN_REQUEST_TOKEN
 
-      - run: chmod -R 777 . # for building generated assets
+          docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
+        env:
+          PHP_VERSION: ${{ matrix.php-versions }}
+          WOOCOMMERCE: 1
+          WORDPRESS_FOLDER: test
+          RESET_DATABASE: 1
+          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: |
+          cat > .env <<EOF
+          PHP_VERSION=$PHP_VERSION
+          WOOCOMMERCE=1
+          WORDPRESS_FOLDER=test
+          RESET_DATABASE=1
+          WORDPRESS_VERSION=$WORDPRESS_VERSION
+          EOF
+        env:
+          PHP_VERSION: ${{ matrix.php-versions }}
+          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: chmod -R 777 . # required to build the release
+      - run: docker compose --env-file .env.default --env-file .env up -d wordpress
+      - run: sleep 60 # wait for docker-compose launch to finish
+      - run: npm run compose logs wordpress --no-color # for debugging failures to start
 
       - name: Run unit tests in non multisite context
         shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./vendor/bin/phpunit
-        env:
-          WP_VERSION: ${{ matrix.wp-versions }}
+        run: npm run compose run phpunit
 
       - name: Run unit tests in multisite context
         shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && WP_MULTISITE=1 ./vendor/bin/phpunit
-        env:
-          WP_VERSION: ${{ matrix.wp-versions }}
+        run: |
+          cat >> .env <<EOF
+            WP_MULTISITE=1
+          EOF
+
+          cat .env
+
+          npm run compose run phpunit
 
   e2e_tests:
     runs-on: 'ubuntu-22.04'
@@ -152,8 +168,6 @@ jobs:
       - run: npm install
 
       # docker-compose up
-      - run: ls ${{ github.workspace }}/scripts
-      - run: pwd
       # TODO: i can't seem to get docker layer caching to work.
       - run: |
           export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed 's/pipelines/artifactcache/')
