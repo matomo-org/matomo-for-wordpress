@@ -243,12 +243,14 @@ class Installer {
 			throw new Exception( $message, $e->getCode(), $e );
 		}
 
+		print "before creating tables\n";
 		$tables_installed = DbHelper::getTablesInstalled();
 		if ( count( $tables_installed ) > 0 ) {
 			// todo define behaviour... might need to ask user how to proceed... but ideally we add check to
 			// see if all tables are there and if so, reuse them...
 			return $db_infos;
 		}
+		print "creating tables\n";
 		DbHelper::createTables();
 		DbHelper::createAnonymousUser();
 		$this->update_components();

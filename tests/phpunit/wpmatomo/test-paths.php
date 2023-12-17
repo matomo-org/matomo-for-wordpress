@@ -9,9 +9,6 @@ use WpMatomo\Bootstrap;
 use WpMatomo\Installer;
 use WpMatomo\Paths;
 
-/**
- * @group only
- */
 class PathsTest extends MatomoUnit_TestCase {
 
 	/**

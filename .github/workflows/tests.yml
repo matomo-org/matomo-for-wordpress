@@ -71,8 +71,6 @@ jobs:
       - name: Check PHP Version
         run: php -v
 
-      - run: echo "$UID"
-      - run: id -u
       # note: we update the dependencies since they only exist for the unit tests, and we need to use different
       # versions of phpunit/etc. for different PHP versions
       - name: Update test dependencies
@@ -109,6 +107,7 @@ jobs:
           WORDPRESS_FOLDER=test
           RESET_DATABASE=1
           WORDPRESS_VERSION=$WORDPRESS_VERSION
+          UID=$UID
           EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
@@ -127,7 +126,7 @@ jobs:
         shell: bash
         run: |
           cat >> .env <<EOF
-            WP_MULTISITE=1
+          WP_MULTISITE=1
           EOF
 
           cat .env
@@ -186,6 +185,7 @@ jobs:
           RESET_DATABASE=1
           WORDPRESS_VERSION=$WORDPRESS_VERSION
           INSTALLING_FROM_ZIP=1
+          UID=$UID
           EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
