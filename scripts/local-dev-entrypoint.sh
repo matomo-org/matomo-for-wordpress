@@ -236,7 +236,13 @@ fi
 # other plugins used during tests
 if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/wp-statistics" ]; then
   echo "installing wp-statistics"
-  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate wp-statistics
+
+  WP_STATS_VERSION=""
+  if php -r "exit(version_compare('$WORDPRESS_VERSION', '5.3', '<') ? 0 : 1);"; then
+    WP_STATS_VERSION="--version=13.2.16"
+  fi
+
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate wp-statistics $WP_STATS_VERSION
 fi
 
 # download WP_PLUGINS plugins if not present
