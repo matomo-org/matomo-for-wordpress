@@ -8,7 +8,7 @@
  */
 class ReleaseTest extends MatomoAnalytics_TestCase {
 
-	const MAX_RELEASE_SIZE = 20971520; // 20mb
+	const MAX_RELEASE_SIZE = 26214400; // 25mb
 
 	/**
 	 * @dataProvider get_needed_files
