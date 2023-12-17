@@ -124,7 +124,11 @@ else
     echo -e "WordPress jquery was not replaced. There is an error."
 fi
 
+# we want to include vendor in git
 sed -i -e 's/\/vendor\///' $MATOMO_ROOT/.gitignore
+
+# unignoring @materializecss/materialize doesn't seem to work as expected
+sed -i -e 's/!\/node_modules\/@materializecss\/materialize/!\/node_modules\/@materializecss/' $MATOMO_ROOT/.gitignore
 
 RED='\033[0;31m'
 NO_COLOR='\033[0m'
