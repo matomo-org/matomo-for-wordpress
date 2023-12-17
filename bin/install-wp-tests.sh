@@ -93,6 +93,8 @@ install_wp() {
 	fi
 
 	download https://raw.github.com/markoheijnen/wp-mysqli/master/db.php $WP_CORE_DIR/wp-content/db.php
+
+  echo "<?php # $WP_CORE_DIR/wp-load.php" > ../matomo.wpload_dir.php
 }
 
 install_test_suite() {
