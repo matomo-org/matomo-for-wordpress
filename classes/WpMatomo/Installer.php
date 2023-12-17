@@ -243,27 +243,24 @@ class Installer {
 			throw new Exception( $message, $e->getCode(), $e );
 		}
 
-		if (@$GLOBALS['check']) {
-			print "before creating tables\n";
-		}
 		$tables_installed = DbHelper::getTablesInstalled();
-		if (@$GLOBALS['check']) {
-			print "tables installed: " . print_r($tables_installed, true) . "\n";
-		}
+		$tables_installed = array_filter(
+			$tables_installed,
+			function ( $table_name ) use ( $db_infos ) {
+				return strpos( $table_name, $db_infos['tables_prefix'] ) === 0;
+			}
+		);
 		if ( count( $tables_installed ) > 0 ) {
 			// todo define behaviour... might need to ask user how to proceed... but ideally we add check to
 			// see if all tables are there and if so, reuse them...
 			return $db_infos;
 		}
-		if (@$GLOBALS['check']) {
-			print "creating tables\n";
-		}
 		DbHelper::createTables();
-		if (@$GLOBALS['check']) {
-			print "after creating tables\n";
-		}
 		DbHelper::createAnonymousUser();
 		$this->update_components();
+		if (@$GLOBALS['check']) {
+			print "after update components\n";
+		}
 
 		return $db_infos;
 	}

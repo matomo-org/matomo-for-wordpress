@@ -451,31 +451,16 @@ class Mysql implements SchemaInterface
      */
     public function getTablesInstalled($forceReload = true)
     {
-		if (@$GLOBALS['check']) {
-			print "get tables installed 1\n";
-		}
         if (is_null($this->tablesInstalled)
             || $forceReload === true
         ) {
-			if (@$GLOBALS['check']) {
-				print "get tables installed 2\n";
-			}
             $db = $this->getDb();
             $prefixTables = $this->getTablePrefixEscaped();
-			if (@$GLOBALS['check']) {
-				print "table prefix: $prefixTables\n";
-			}
 
             $allTables = $this->getAllExistingTables($prefixTables);
-			if (@$GLOBALS['check']) {
-				print "allTables: ".print_r($allTables, true)."\n";
-			}
 
             // all the tables to be installed
             $allMyTables = $this->getTablesNames();
-			if (@$GLOBALS['check']) {
-				print "allMyTables: ".print_r($allMyTables, true)."\n";
-			}
 
             /**
              * Triggered when detecting which tables have already been created by Matomo.
