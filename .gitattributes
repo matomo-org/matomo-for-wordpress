@@ -127,8 +127,6 @@ jest.config.js export-ignore
 /app/node_modules/mousetrap/*.js export-ignore
 /app/node_modules/mousetrap/*.json export-ignore
 /app/node_modules/mousetrap/*.sublime-project export-ignore
-/app/node_modules/materialize-css/dist/css/materialize.css export-ignore
-/app/node_modules/materialize-css/dist/js/materialize.js export-ignore
 /app/node_modules/ng-dialog/.github export-ignore
 /app/node_modules/ng-dialog/css export-ignore
 /app/node_modules/ng-dialog/example export-ignore
