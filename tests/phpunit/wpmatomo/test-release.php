@@ -123,6 +123,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			$application->setAutoExit( false );
 
 			// generate release
+			// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
 			[$return_code, $output] = $this->execute_command( 'wordpress:build-release --name=test-release --zip' );
 			$this->assertEquals( 0, $return_code, 'Generate command failed: ' . $output );
 
