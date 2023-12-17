@@ -53,7 +53,7 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 
 		$cdata_start = "/* <![CDATA[ */\n";
 		$cdata_end   = "/* ]]> */\n";
-		if ( getenv( 'WP_VERSION' ) && ( getenv( 'WP_VERSION' ) !== 'latest' && version_compare( getenv( 'WP_VERSION' ), '6.4', '<' ) ) ) {
+		if ( getenv( 'WORDPRESS_VERSION' ) && ( getenv( 'WORDPRESS_VERSION' ) !== 'latest' && version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' ) ) ) {
 			$cdata_start = '';
 			$cdata_end   = '';
 		}

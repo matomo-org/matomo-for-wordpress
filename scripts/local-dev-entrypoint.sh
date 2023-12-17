@@ -4,6 +4,8 @@
 
 set -e
 
+echo "current user ID is $(id -u)"
+
 cd /var/www/html
 
 # http serves a single offer, whereas https serves multiple. we only want one
@@ -337,8 +339,6 @@ if [ ! -f $WP_TESTS_DIR/wp-tests-config.php ]; then
   sed -i "s|'localhost'|getenv('WP_DB_HOST')|" "$WP_TESTS_DIR"/wp-tests-config.php
 fi
 
-export WP_VERSION=$WORDPRESS_VERSION # used in unit tests
-
 # create unit test database if it does not already exist
 php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
 \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
@@ -364,6 +364,6 @@ else
   php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
   \$pdo->exec('UPDATE \`$WP_DB_NAME\`.wp_options SET option_value = REPLACE(option_value, \'nginx\', \'localhost\') WHERE option_name IN (\'home\', \'siteurl\')');" || true
 
-  usermod -u 1000 www-data
+  usermod -u "${UID:-1000}" www-data
   apache2-foreground "$@"
 fi
