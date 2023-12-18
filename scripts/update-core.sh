@@ -85,6 +85,7 @@ rm -r $MATOMO_ROOT/tmp/CACHEDIR.TAG
 find $MATOMO_ROOT/plugins/Morpheus/icons \( -type f -o -type l \) -not -path "$MATOMO_ROOT/plugins/Morpheus/icons/dist/*" -exec rm -rf {} +
 find $MATOMO_ROOT -name "*.spec.js" -exec rm -rf {} +
 rm $MATOMO_ROOT/.gitmodules
+rm $MATOMO_ROOT/.gitattributes # rely on root .gitattributes only
 
 cd $SCRIPTPATH
 
