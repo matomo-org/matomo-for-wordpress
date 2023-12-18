@@ -22,6 +22,8 @@ services:
       args:
         PHP_VERSION: "$PHP_VERSION"
         PHP_TYPE: apache
+    environment:
+      RUN_AS_USER: "${UID:-1000}"
     volumes:
       - ./docker/wordpress:/var/www/html
       - .:/var/www/html/matomo-for-wordpress
@@ -145,6 +147,7 @@ services:
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
+      - ./scripts/local-gitconfig:/.gitconfig
     environment:
       EXECUTE_PHPUNIT: 1
     ports:
@@ -156,7 +159,7 @@ services:
 
   # database service definitions
   mariadb:
-    image: mariadb
+    image: mariadb:lts
     environment:
       MYSQL_ROOT_PASSWORD: pass
     volumes:

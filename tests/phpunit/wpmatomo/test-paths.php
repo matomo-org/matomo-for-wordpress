@@ -205,12 +205,13 @@ class PathsTest extends MatomoUnit_TestCase {
 
 	public function test_get_relative_dir_to_matomo_differentDirectoryInPlugin() {
 		$plugin_dir  = plugin_dir_path( MATOMO_ANALYTICS_FILE );
-		$dir_te_test = $plugin_dir . 'plugins/WordPress';
+		$dir_to_test = $plugin_dir . 'plugins/WordPress';
 
 		$valid_values = array(
-			'../plugins/WordPress', // travis
+			// local docker in github action where we symlink into wordpress
+			'../../test/wp-content/plugins/matomo/plugins/WordPress',
 		);
-		$val          = $this->paths->get_relative_dir_to_matomo( $dir_te_test );
+		$val          = $this->paths->get_relative_dir_to_matomo( $dir_to_test );
 		$this->assertContains( $val, $valid_values );
 		// automatically double check that it works
 		$this->assertTrue( is_dir( $plugin_dir . 'app/../plugins/WordPress' ) );

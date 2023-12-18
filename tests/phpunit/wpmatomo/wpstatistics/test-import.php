@@ -197,8 +197,10 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			return;
 		}
 
+		$expected = version_compare( getenv( 'WORDPRESS_VERSION' ), '5.3', '<' ) ? 156 : 81;
+
 		$report = $this->fetch_report( 'Actions', 'getPageUrls' );
-		$this->assertEquals( 81, $report['reportData']->getRowsCount() );
+		$this->assertEquals( $expected, $report['reportData']->getRowsCount() );
 	}
 
 	protected function fetch_report( $report_name, $method ) {
