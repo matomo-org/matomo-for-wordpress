@@ -44,11 +44,15 @@ class PagesImporter extends RecordImporter implements ActionsInterface {
 					'paged'    => $page,
 				]
 			);
-			$no_data     = ( ( array_key_exists( 'no_data', $pages_found ) ) && ( 1 === $pages_found['no_data'] ) ) || empty( $pages_found['pages'] );
+			var_export($pages_found);
+			// TODO: clean this up a bit
+			$no_data     = ( ( array_key_exists( 'no_data', $pages_found ) ) && ( 1 === $pages_found['no_data'] ) ) || ( array_key_exists( 'pages', $pages_found ) && empty( $pages_found['pages'] ) );
 			if ( ! $no_data ) {
-				$pages = array_merge( $pages, $pages_found['pages'] );
+				$pages = array_merge( $pages, array_key_exists( 'pages', $pages_found ) ? $pages_found['pages'] : $pages_found );
 			}
 		} while ( true !== $no_data );
+		var_export($pages);
+		print "DONE\n";
 		$search_keywords = SearchQueryConverter::convert( $pages );
 		$this->logger->debug( 'Import {nb_keywords} search keywords...', [ 'nb_keywords' => $search_keywords->getRowsCount() ] );
 		$this->insert_record( Archiver::SITE_SEARCH_RECORD_NAME, $search_keywords, $this->maximum_rows_in_data_table_level_zero, $this->maximum_rows_in_sub_data_table );
