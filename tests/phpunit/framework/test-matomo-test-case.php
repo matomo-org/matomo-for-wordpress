@@ -79,8 +79,14 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		if ( ! defined( 'PIWIK_TEST_MODE' ) ) {
 			define( 'PIWIK_TEST_MODE', true );
 		}
+
 		$uninstall = new Uninstaller();
 		$uninstall->uninstall( true );
+
+		if ( is_multisite() ) {
+			$this->delete_extraneous_blogs();
+		}
+
 		clearstatcache();
 
 		Bootstrap::set_not_bootstrapped();
@@ -147,6 +153,11 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 
 		unset( $_GET['trigger'] );
 		Metadata::clear_cache();
+
+		if ( is_multisite() ) {
+			$this->delete_extraneous_blogs();
+		}
+
 		parent::tearDown();
 	}
 
@@ -219,5 +230,20 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		$sync->sync_current_users();
 
 		return $id;
+	}
+
+	private function delete_extraneous_blogs() {
+		global $wpdb;
+
+		switch_to_blog( 1 );
+
+		$blogs = $wpdb->get_results( 'SELECT blog_id, deleted FROM ' . $wpdb->blogs . ' ORDER BY blog_id', ARRAY_A );
+		foreach ( $blogs as $blog ) {
+			if ( $blog['deleted'] || $blog['blog_id'] == 1 ) {
+				continue;
+			}
+
+			wpmu_delete_blog( $blog['blog_id'] );
+		}
 	}
 }

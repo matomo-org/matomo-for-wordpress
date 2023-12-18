@@ -132,6 +132,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'Not multisite.' );
 			return;
 		}
+
 		$blogid1 = self::factory()->blog->create();
 		switch_to_blog( $blogid1 );
 
