@@ -24,7 +24,7 @@ describe('Matomo Admin > Privacy', () => {
 
     await $('#anonymizeStartDate').waitForExist({ timeout: 2000 });
 
-    // TODO: should wait until whatever JS changes this completes
+    // TODO: should wait until whatever JS changes the initial dates for the date selector, completes
     await browser.pause(3000); // wait for controls to be initialized to today's date
 
     await browser.execute(function () {

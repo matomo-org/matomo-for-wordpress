@@ -129,8 +129,6 @@ jobs:
           WP_MULTISITE=1
           EOF
 
-          cat .env
-
           npm run compose run phpunit
 
   e2e_tests:
