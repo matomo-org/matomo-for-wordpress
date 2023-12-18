@@ -89,6 +89,8 @@ rm $MATOMO_ROOT/.gitattributes # rely on root .gitattributes only
 
 cd $SCRIPTPATH
 
+find $MATOMO_ROOT/ -iname 'tests' -type d -prune -exec rm -rf {} \;
+
 rm -rf $MATOMO_ROOT/vendor/bin
 rm -rf $MATOMO_ROOT/config/environment/test.php
 rm -rf $MATOMO_ROOT/config/environment/ui-test.php

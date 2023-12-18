@@ -1,6 +1,0 @@
-actor: UnitTester
-modules:
-    enabled:
-        - Asserts
-        - Filesystem
-        - Test\CpChart\Helper\Unit
