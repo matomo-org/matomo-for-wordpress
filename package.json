@@ -7,6 +7,7 @@
     "@wdio/mocha-framework": "^8.18.2",
     "@wdio/spec-reporter": "^8.18.1",
     "node-fetch": "^3.3.2",
+    "pre-commit": "^1.2.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
     "wdio-image-comparison-service": "^5.0.3",
@@ -15,9 +16,13 @@
   },
   "scripts": {
     "wdio": "wdio run ./wdio.conf.ts",
-    "compose": "docker compose --env-file .env.default --env-file .env"
+    "compose": "docker compose --env-file .env.default --env-file .env",
+    "phpcs": "./vendor/bin/phpcs"
   },
   "dependencies": {
     "chart.js": "^3.4.1"
-  }
+  },
+  "pre-commit": [
+    "phpcs"
+  ]
 }

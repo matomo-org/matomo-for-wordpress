@@ -113,6 +113,7 @@ rm -rf $MATOMO_ROOT/vendor/pear/archive_tar/docs
 rm -rf $MATOMO_ROOT/vendor/php-di/invoker/doc/
 rm -rf $MATOMO_ROOT/vendor/php-di/php-di/benchmarks/
 rm -rf $MATOMO_ROOT/vendor/symfony/console/Symfony/Component/Console/Resources/bin
+rm -rf $MATOMO_ROOT/vendor/symfony/console/Resources/bin
 rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/resources/doc
 rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/coverage.sh
 rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/codeception.yml

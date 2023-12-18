@@ -112,7 +112,7 @@ First ensure the database you want to inspect (mariadb or mysql) is the one that
 environment. Then, while the local environment is running in one shell, open another and run the command:
 
 ```bash
-npm run compose run mariadb mariadb -h mariadb -u root -p
+npm run compose -- run mariadb mariadb -h mariadb -u root -p
 ```
 
 Enter `pass` for the password.
