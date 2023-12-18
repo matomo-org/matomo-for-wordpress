@@ -49,7 +49,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 
 	public function test_latest_release_is_not_too_old() {
 		if ( is_multisite() ) { // only need to run this test once
-			$this->markTestSkipped('only need to run this test once');
+			$this->markTestSkipped( 'only need to run this test once' );
 			return;
 		}
 
@@ -67,7 +67,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 
 	public function test_generated_assets_are_up_to_date() {
 		if ( is_multisite() ) { // only need to run this test once
-			$this->markTestSkipped('only need to run this test once');
+			$this->markTestSkipped( 'only need to run this test once' );
 			return;
 		}
 
@@ -99,7 +99,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 
 	public function test_built_release_has_all_needed_matomo_contents_and_is_not_too_big() {
 		if ( is_multisite() ) { // only need to run this test once
-			$this->markTestSkipped('only need to run this test once');
+			$this->markTestSkipped( 'only need to run this test once' );
 			return;
 		}
 
