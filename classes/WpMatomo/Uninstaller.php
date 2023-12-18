@@ -127,10 +127,14 @@ class Uninstaller {
 
 		$this->logger->log( 'Matomo is now uninstalling all blogs: ' . (int) $should_remove_all_data );
 
-		$blogs = $wpdb->get_results( 'SELECT blog_id FROM ' . $wpdb->blogs . ' ORDER BY blog_id', ARRAY_A );
+		$blogs = $wpdb->get_results( 'SELECT blog_id, deleted FROM ' . $wpdb->blogs . ' ORDER BY blog_id', ARRAY_A );
 
 		if ( is_array( $blogs ) ) {
 			foreach ( $blogs as $blog ) {
+				if ( 1 === (int) $blog['deleted'] ) {
+					continue;
+				}
+
 				switch_to_blog( $blog['blog_id'] );
 
 				$this->uninstall_blog( $should_remove_all_data );

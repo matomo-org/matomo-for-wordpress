@@ -48,6 +48,11 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_latest_release_is_not_too_old() {
+		if ( is_multisite() ) { // only need to run this test once
+			$this->markTestSkipped( 'only need to run this test once' );
+			return;
+		}
+
 		$url = 'https://api.wordpress.org/plugins/info/1.0/matomo.json';
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
@@ -61,7 +66,8 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_generated_assets_are_up_to_date() {
-		if ( getenv( 'WP_MULTISITE' ) ) { // only need to run this test once
+		if ( is_multisite() ) { // only need to run this test once
+			$this->markTestSkipped( 'only need to run this test once' );
 			return;
 		}
 
@@ -92,6 +98,11 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_built_release_has_all_needed_matomo_contents_and_is_not_too_big() {
+		if ( is_multisite() ) { // only need to run this test once
+			$this->markTestSkipped( 'only need to run this test once' );
+			return;
+		}
+
 		$ignored_core_files = [
 			'matomo/CHANGELOG.md',
 			'matomo/lang/README.md',
