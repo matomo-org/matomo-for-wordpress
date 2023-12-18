@@ -252,9 +252,6 @@ class Installer {
 		DbHelper::createTables();
 		DbHelper::createAnonymousUser();
 		$this->update_components();
-		if (@$GLOBALS['check']) {
-			print "after update components\n";
-		}
 
 		return $db_infos;
 	}

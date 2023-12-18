@@ -159,7 +159,7 @@ services:
 
   # database service definitions
   mariadb:
-    image: mariadb
+    image: mariadb:lts
     environment:
       MYSQL_ROOT_PASSWORD: pass
     volumes:

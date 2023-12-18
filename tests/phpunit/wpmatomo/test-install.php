@@ -141,12 +141,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		// the site sync will install it and/or when someone visits that site
 		Bootstrap::set_not_bootstrapped();
 
-		$GLOBALS['check'] = 1;
-		try {
-			$this->installer->install();
-		} finally {
-			unset($GLOBALS['check']);
-		}
+		$this->installer->install();
 
 		$blogid = get_current_blog_id();
 
