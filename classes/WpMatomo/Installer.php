@@ -244,12 +244,6 @@ class Installer {
 		}
 
 		$tables_installed = DbHelper::getTablesInstalled();
-		$tables_installed = array_filter(
-			$tables_installed,
-			function ( $table_name ) use ( $db_infos ) {
-				return strpos( $table_name, $db_infos['tables_prefix'] ) === 0;
-			}
-		);
 		if ( count( $tables_installed ) > 0 ) {
 			// todo define behaviour... might need to ask user how to proceed... but ideally we add check to
 			// see if all tables are there and if so, reuse them...
