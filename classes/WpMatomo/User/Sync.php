@@ -73,7 +73,7 @@ class Sync {
 	public function sync_all() {
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 			foreach ( get_sites() as $site ) {
-				if ( $site->deleted == 1 ) {
+				if ( 1 === (int) $site->deleted ) {
 					continue;
 				}
 

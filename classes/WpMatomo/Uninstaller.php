@@ -131,7 +131,7 @@ class Uninstaller {
 
 		if ( is_array( $blogs ) ) {
 			foreach ( $blogs as $blog ) {
-				if ( $blog['deleted'] == 1 ) {
+				if ( 1 === (int) $blog['deleted'] ) {
 					continue;
 				}
 
