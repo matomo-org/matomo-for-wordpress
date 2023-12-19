@@ -56,21 +56,8 @@ class WordPress extends Plugin
             'CustomJsTracker.manipulateJsTracker' => 'updateHeatmapTrackerPath',
             'Visualization.beforeRender' => 'onBeforeRenderView',
             'AssetManager.getStylesheetFiles'  => 'getStylesheetFiles',
-            'Controller.PrivacyManager.usersOptOut.end' => 'onUserOptOutRender',
         );
     }
-
-	public function onUserOptOutRender(&$result)
-	{
-		$result = preg_replace('/<div [a-z-]+="PrivacyManager.OptOutCustomizer".*?>/s', '<div class="WordPressOptOutCustomizer">
-    <p>
-        Use the short code <code>[matomo_opt_out]</code> to embed the opt out into your website.<br>
-        You can use these short code options:</p>
-    <ul style="margin:20px;">
-        <li style="list-style: disc">language - eg de or en. By default the language is detected automatically based on the user\'s browser</li>
-    </ul>
-    <p>Example: <code>[matomo_opt_out language=de]</code></p>', $result);
-	}
 
     public function onBeforeRenderView (Plugin\ViewDataTable $view)
     {
@@ -92,6 +79,11 @@ class WordPress extends Plugin
 	public function getClientSideTranslationKeys(&$translationKeys)
 	{
 		$translationKeys[] = 'Feedback_SearchOnMatomo';
+        $translationKeys[] = 'WordPress_UseShortCode';
+        $translationKeys[] = 'WordPress_UseShortCodeDesc1';
+        $translationKeys[] = 'WordPress_UseShortCodeDesc2';
+        $translationKeys[] = 'WordPress_UseShortCodeOptionLanguage';
+        $translationKeys[] = 'WordPress_Example';
 	}
 
     public function modifyTourChallenges(&$challenges)
