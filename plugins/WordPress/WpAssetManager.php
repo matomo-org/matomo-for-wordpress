@@ -75,6 +75,7 @@ class WpAssetManager extends AssetManager
 		$jsFiles[] = 'jquery/ui/tabs.min.js';
 		$jsFiles[] = 'jquery/ui/button.min.js';
 		$jsFiles[] = 'jquery/ui/effect.min.js';
+		$jsFiles[] = 'jquery/ui/effect-highlight.min.js';
 
 		foreach ($jsFiles as $jsFile) {
 		    if (strpos($jsFile, 'node_modules') === 0) {
