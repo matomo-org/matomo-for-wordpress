@@ -8,11 +8,9 @@
 
 namespace Piwik\Plugins\WordPress\Commands;
 
-use Automattic\WooCommerce\Blocks\Package;
 use Piwik\Container\StaticContainer;
 use Piwik\Development;
 use Piwik\Http;
-use Symfony\Component\Console\Input\ArrayInput;
 use Piwik\Plugin\ConsoleCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
