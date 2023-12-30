@@ -13,7 +13,7 @@ class TrackingFailuresPage extends MatomoAdminPage {
   async open() {
     const result = await super.open('CoreAdminHome.trackingFailures');
 
-    await $('.matomoTrackingFailures table').waitForDisplayed();
+    await $('.matomoTrackingFailures table td').waitForDisplayed();
 
     return result;
   }
