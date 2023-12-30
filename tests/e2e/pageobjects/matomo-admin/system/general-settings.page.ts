@@ -18,3 +18,5 @@ class GeneralSettingsPage extends MatomoAdminPage {
     return result;
   }
 }
+
+export default new GeneralSettingsPage();

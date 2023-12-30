@@ -18,3 +18,5 @@ class MobileMessagingPage extends MatomoAdminPage {
     return result;
   }
 }
+
+export default new MobileMessagingPage();
