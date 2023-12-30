@@ -13,8 +13,8 @@ class AdminHomePage extends MatomoAdminPage {
   async open() {
     const result = await super.open('CoreAdminHome.home');
 
-    await $('.widget').waitForDisplayed();
-    await browser.pause(500);
+    await $('.widget p').waitForDisplayed();
+    await browser.pause(1000);
 
     return result;
   }
