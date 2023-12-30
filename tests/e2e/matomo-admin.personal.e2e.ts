@@ -42,7 +42,7 @@ describe('Matomo Admin > Personal', () => {
   });
 
   it('should load the created email report successfully', async () => {
-    await EmailReportsPage.downloadReport(5);
+    await EmailReportsPage.downloadReport(1);
 
     try {
       await expect(
