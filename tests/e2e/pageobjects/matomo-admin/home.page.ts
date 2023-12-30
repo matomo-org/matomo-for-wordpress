@@ -6,11 +6,17 @@
  *
  */
 
+import { $ } from '@wdio/globals';
 import MatomoAdminPage from './matomo-admin.page.js';
 
 class AdminHomePage extends MatomoAdminPage {
-  open() {
-    return super.open('CoreAdminHome.home');
+  async open() {
+    const result = await super.open('CoreAdminHome.home');
+
+    await $('.widget').waitForDisplayed();
+    await browser.pause(500);
+
+    return result;
   }
 }
 
