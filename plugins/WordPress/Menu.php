@@ -29,6 +29,7 @@ class Menu extends \Piwik\Plugin\Menu
         $menu->remove('CorePluginsAdmin_MenuPlatform', 'General_API');
         $menu->remove('CoreAdminHome_MenuSystem', Piwik::translate('General_Plugins'));
         $menu->remove('CoreAdminHome_MenuSystem', 'General_Plugins');
+        $menu->remove('General_Plugins');
         $menu->remove('CoreAdminHome_MenuDiagnostic', 'Diagnostics_ConfigFileTitle');
         $menu->remove('CoreAdminHome_MenuDiagnostic', 'Installation_SystemCheck');
     }
