@@ -50,7 +50,7 @@ class Website {
       return !!(await browser.execute(function () {
         return window.wpApiSettings?.nonce;
       }));
-    });
+    }, { timeout: 30000 });
   }
 
   async getWpNonce() {
