@@ -8,9 +8,9 @@
 
 import { browser, $ } from '@wdio/globals';
 import * as querystring from 'querystring';
-import Page from '../page.js';
+import MatomoPage from './matomo.page.js';
 
-export default class MatomoAdminPage extends Page{
+export default class MatomoAdminPage extends MatomoPage {
   async open(method: string, params: Record<string, string> = {}) {
     const [module, action] = method.split('.');
 
