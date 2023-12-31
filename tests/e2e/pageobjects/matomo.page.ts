@@ -8,6 +8,7 @@
 
 import { browser, $ } from '@wdio/globals';
 import Page from './page.js';
+import querystring from "querystring";
 
 export default class MatomoPage extends Page {
   async hideDateSelectorDate() {

@@ -17,17 +17,19 @@ export default class MatomoAdminPage extends MatomoPage {
     const query = querystring.stringify({
       idSite: 1,
       period: 'day',
-      date: 'yesterday',
+      date: this.getDefaultDate(),
       ...params,
       module,
       action,
     });
 
-    const result = await super.open(`/wp-content/plugins/matomo/app/index.php?${query}`);
-
     await this.removePhpEolWarning();
 
-    return result;
+    return await super.open(`/wp-content/plugins/matomo/app/index.php?${query}`);
+  }
+
+  getDefaultDate() {
+    return '2023-12-20'; // use a fixed date instead of today/yesterday
   }
 
   async removePhpEolWarning() {
