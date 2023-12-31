@@ -41,10 +41,10 @@ jobs:
         include:
           - wp-versions: '5.2'
             php-versions: '7.2'
-            multisite: "singlesite"
-          - wp-versions: '5.2',
+            multisite: 'singlesite'
+          - wp-versions: '5.2'
             php-versions: '7.2'
-            multisite: "multisite"
+            multisite: 'multisite'
     permissions:
       contents: read  # <--- allows to read repo
     steps:
