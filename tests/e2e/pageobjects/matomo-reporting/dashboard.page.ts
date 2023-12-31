@@ -24,6 +24,8 @@ class DashboardPage extends MatomoReportingPage {
         }
       }
 
+      console.log('elements', elements.length, 'visibleElements', visibleElements.length);
+
       return visibleElements.length === 0;
     });
 

@@ -33,6 +33,7 @@ describe('Matomo Admin > Privacy', () => {
       const date = await browser.execute(function () {
         return $('#anonymizeStartDate').val();
       });
+      console.log('date is:', date);
 
       const now = new Date();
       return date === `${now.getFullYear()}-${sub(now.getMonth() + 1)}-${sub(now.getDay() + 1)}`;
@@ -43,6 +44,11 @@ describe('Matomo Admin > Privacy', () => {
       $('#anonymizeStartDate').val('2023-12-05');
       $('#anonymizeEndDate').val('2023-12-05');
     });
+
+    const date = await browser.execute(function () {
+      return $('#anonymizeStartDate').val();
+    });
+    console.log('afterwards date is:', date);
 
     await expect(
       await browser.checkFullPageScreen('matomo-admin.privacy.anonymize-data')
