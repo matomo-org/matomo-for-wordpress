@@ -12,7 +12,12 @@ import Website from '../website.js';
 export default class Page {
   async open(path: string) {
     const baseUrl = await Website.baseUrl();
-    return browser.url(`${baseUrl}${path}`);
+    const result = await browser.url(`${baseUrl}${path}`);
+
+    // move mouse away from screen
+    await $('body').moveTo({ xOffset: 0, yOffset: 0 });
+
+    return result;
   }
 
   async waitForTrackingRequest() {
