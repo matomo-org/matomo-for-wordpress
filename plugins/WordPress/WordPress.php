@@ -52,6 +52,7 @@ class WordPress extends Plugin
             'API.TagManager.getContainerInstallInstructions.end' => 'addInstallInstructions',
             'API.Tour.getChallenges.end' => 'modifyTourChallenges',
 	        'API.ScheduledReports.generateReport.end' => 'onGenerateReportEnd',
+            'API.CorePluginsAdmin.getSystemSettings.end' => 'onGetSystemSettingsEnd',
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
             'CustomJsTracker.manipulateJsTracker' => 'updateHeatmapTrackerPath',
             'Visualization.beforeRender' => 'onBeforeRenderView',
@@ -294,6 +295,14 @@ class WordPress extends Plugin
 			    ob_end_flush();
 		    }
 	    }
+    }
+
+    public function onGetSystemSettingsEnd(&$settings)
+    {
+        // users are synced from wordpress, so we don't display matomo user settings anywhere
+        $settings = array_filter($settings, function ($pluginSettings) {
+            return $pluginSettings['pluginName'] !== 'UsersManager';
+        });
     }
 
     public function onDispatchRequestEnd(&$result, $module, $action, $parameters) {
