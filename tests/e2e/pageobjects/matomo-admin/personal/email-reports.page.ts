@@ -47,7 +47,7 @@ class EmailReportsPage extends MatomoAdminPage {
       document.querySelectorAll('p').forEach(function (node) {
         const text = node.innerHTML;
         if (/Date range:.*?<br>/s.test(text)) {
-          node.innerHTML = text.replace(/Date range:.*?<br>/sg, 'Date range: <removed>');
+          node.innerHTML = text.replace(/Date range:.*?<br>/sg, 'Date range: <removed><br>');
         }
       });
     });
