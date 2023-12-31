@@ -15,6 +15,8 @@ class DashboardPage extends MatomoReportingPage {
 
     await $('#dashboardWidgetsArea .widgetContent div').waitForDisplayed();
     await browser.waitUntil(async () => {
+      await browser.pause(500);
+
       const elements = (await $$('.loadingPiwik'));
 
       const visibleElements = [];

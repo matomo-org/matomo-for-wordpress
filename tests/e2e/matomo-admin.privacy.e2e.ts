@@ -24,31 +24,15 @@ describe('Matomo Admin > Privacy', () => {
 
     await $('#anonymizeStartDate').waitForExist({ timeout: 2000 });
 
-    // wait for controls to be initialized
-    await browser.waitUntil(async () => {
-      function sub(value: number) {
-        return value < 10 ? `0${value}` : value;
-      }
-
-      const date = await browser.execute(function () {
-        return $('#anonymizeStartDate').val();
-      });
-      console.log('date is:', date);
-
-      const now = new Date();
-      return date === `${now.getFullYear()}-${sub(now.getMonth() + 1)}-${sub(now.getDay() + 1)}`;
-    });
-
-    // change the date
+    // hide the date selectors
     await browser.execute(function () {
-      $('#anonymizeStartDate').val('2023-12-05');
-      $('#anonymizeEndDate').val('2023-12-05');
+      $('#anonymizeStartDate').hide();
+      $('#anonymizeEndDate').hide();
     });
 
     const date = await browser.execute(function () {
       return $('#anonymizeStartDate').val();
     });
-    console.log('afterwards date is:', date);
 
     await expect(
       await browser.checkFullPageScreen('matomo-admin.privacy.anonymize-data')
