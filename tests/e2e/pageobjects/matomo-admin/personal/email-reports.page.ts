@@ -6,11 +6,13 @@
  *
  */
 
-import MatomoAdminPage from '../matomo-admin.page.js';
+import MatomoAdminPage from '../../matomo-admin.page';
 
 class EmailReportsPage extends MatomoAdminPage {
-  open() {
-    return super.open('ScheduledReports.index');
+  async open() {
+    const result = await super.open('ScheduledReports.index');
+    await this.hideDateSelectorDate();
+    return result;
   }
 
   async startAddReport() {
@@ -31,6 +33,7 @@ class EmailReportsPage extends MatomoAdminPage {
     });
     await $('.matomo-save-button > input').click();
     await $('#entityEditContainer tr').waitForDisplayed();
+    await this.hideDateSelectorDate();
   }
 
   async downloadReport(id: string|number) {
@@ -38,6 +41,16 @@ class EmailReportsPage extends MatomoAdminPage {
     await browser.pause(1000);
     await browser.switchWindow(/ScheduledReports\.generateReport/);
     await $('h2#UserCountry_getContinent').waitForDisplayed();
+
+    // remove date
+    await browser.execute(function () {
+      document.querySelectorAll('p').forEach(function (node) {
+        const text = node.innerHTML;
+        if (/Date range:.*?<br>/s.test(text)) {
+          node.innerHTML = text.replace(/Date range:.*?<br>/sg, 'Date range: <removed>');
+        }
+      });
+    });
   }
 }
 
