@@ -24,9 +24,21 @@ describe('Matomo Admin > Privacy', () => {
 
     await $('#anonymizeStartDate').waitForExist({ timeout: 2000 });
 
-    // TODO: should wait until whatever JS changes the initial dates for the date selector, completes
-    await browser.pause(4000); // wait for controls to be initialized to today's date
+    // wait for controls to be initialized
+    await browser.waitUntil(async () => {
+      function sub(value: number) {
+        return value < 10 ? `0${value}` : value;
+      }
 
+      const date = await browser.execute(function () {
+        return $('#anonymizeStartDate').val();
+      });
+
+      const now = new Date();
+      return date === `${now.getFullYear()}-${sub(now.getMonth() + 1)}-${sub(now.getDay() + 1)}`;
+    });
+
+    // change the date
     await browser.execute(function () {
       $('#anonymizeStartDate').val('2023-12-05');
       $('#anonymizeEndDate').val('2023-12-05');

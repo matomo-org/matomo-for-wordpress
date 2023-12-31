@@ -6,7 +6,7 @@
  *
  */
 
-import { $ } from '@wdio/globals';
+import { $, $$ } from '@wdio/globals';
 import MatomoReportingPage from '../matomo-reporting.page.js';
 
 class DashboardPage extends MatomoReportingPage {
@@ -14,6 +14,18 @@ class DashboardPage extends MatomoReportingPage {
     const result = await super.open('Dashboard_Dashboard.1');
 
     await $('#dashboardWidgetsArea .widgetContent div').waitForDisplayed();
+    await browser.waitUntil(async () => {
+      const elements = (await $$('.loadingPiwik'));
+
+      const visibleElements = [];
+      for (let e of elements) {
+        if (await e.isDisplayed()) {
+          visibleElements.push(e);
+        }
+      }
+
+      return visibleElements.length === 0;
+    });
 
     return result;
   }
