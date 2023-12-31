@@ -37,11 +37,14 @@ jobs:
       matrix:
         wp-versions: [ 'latest' ]
         php-versions: [ '7.2', '7.3', '7.4', '8.0' ]
-        multisite: [ 0, 1 ]
+        multisite: [ "singlesite", "multisite" ]
         include:
           - wp-versions: '5.2'
             php-versions: '7.2'
-            multisite: [ 0, 1 ]
+            multisite: "singlesite"
+          - wp-versions: '5.2',
+            php-versions: '7.2'
+            multisite: "multisite"
     permissions:
       contents: read  # <--- allows to read repo
     steps:
@@ -123,14 +126,14 @@ jobs:
       - name: Run unit tests
         shell: bash
         run: |
-          if [[ "${{ matrix.multisite }}" == "0" ]]; then
+          if [[ "${{ matrix.multisite }}" == "singlesite" ]]; then
             echo "Running in single site context"
           else
             echo "Running in multisite context"
 
             cat >> .env <<EOF
-            WP_MULTISITE=1
-            EOF
+          WP_MULTISITE=1
+          EOF
           fi
 
           npm run compose run phpunit
