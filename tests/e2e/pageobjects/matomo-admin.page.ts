@@ -23,9 +23,11 @@ export default class MatomoAdminPage extends MatomoPage {
       action,
     });
 
+    const result = await super.open(`/wp-content/plugins/matomo/app/index.php?${query}`);
+
     await this.removePhpEolWarning();
 
-    return await super.open(`/wp-content/plugins/matomo/app/index.php?${query}`);
+    return result;
   }
 
   getDefaultDate() {
