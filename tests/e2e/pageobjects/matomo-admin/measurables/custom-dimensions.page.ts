@@ -7,7 +7,7 @@
  */
 
 import { $ } from '@wdio/globals';
-import MatomoAdminPage from '../../matomo-admin.page';
+import MatomoAdminPage from '../../matomo-admin.page.js';
 
 class CustomDimensionsPage extends MatomoAdminPage {
   async open() {
