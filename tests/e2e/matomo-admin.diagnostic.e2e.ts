@@ -27,7 +27,7 @@ describe('Matomo Admin > Diagnostic', () => {
   it('should load the device detection page correctly', async () => {
     await DeviceDetectionPage.open();
 
-    await $('body').moveTo({ xOffset: 0, yOffset: 0 });
+    await $('body').moveTo({ xOffset: 1, yOffset: 1 });
 
     await expect(
       await browser.checkFullPageScreen('matomo-admin.diagnostic.device-detection')
