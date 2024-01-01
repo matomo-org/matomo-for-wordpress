@@ -15,20 +15,12 @@ class DashboardPage extends MatomoReportingPage {
 
     await $('#dashboardWidgetsArea .widgetContent div').waitForDisplayed();
     await browser.waitUntil(async () => {
-      const elements = (await $$('.loadingPiwik'));
-
-      const visibleElements = [];
-      for (let e of elements) {
-        if (await e.isDisplayed()) {
-          visibleElements.push(e);
-        }
-      }
-
       const widgetsCount = (await $$('#dashboardWidgetsArea .widget')).length;
+      const loadedWidgetCount = (await $$('#dashboardWidgetsArea .theWidgetContent > *')).length;
 
-      console.log('elements', elements.length, 'visibleElements', visibleElements.length);
+      console.log('widgetsCount', widgetsCount, 'loadedWidgetCOunt', loadedWidgetCount);
 
-      return visibleElements.length === 0 && elements.length >= widgetsCount.length;
+      return loadedWidgetCount >= widgetsCount;
     });
 
     return result;
