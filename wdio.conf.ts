@@ -186,11 +186,9 @@ export const config: Options.Testrunner = {
   // resolved to continue.
   async afterTest(test, context, { error }) {
     if (error) {
-      console.log(test);
-      const failureScreenshotName = test.fullName.replace(/\s+/g, '_') + '_failure';
+      const failureScreenshotName = test.title.replace(/\s+/g, '_') + '_failure';
       try {
         const r = await browser.saveFullPageScreen(failureScreenshotName);
-        console.log(`saved failure screenshot to: ${r.path}`);
       } catch (e) {
         console.log(`could not save failure screenshot ${failureScreenshotName}`);
       }
