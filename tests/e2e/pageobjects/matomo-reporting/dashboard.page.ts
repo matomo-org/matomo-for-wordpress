@@ -25,7 +25,6 @@ class DashboardPage extends MatomoReportingPage {
       $('#visitsLive .realTimeWidget_datetime').hide();
     });
     await browser.pause(500);
-    await $('#dashboardWidgetsArea .metricEvolution').waitForDisplayed();
 
     return result;
   }
