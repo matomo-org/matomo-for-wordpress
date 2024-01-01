@@ -9,6 +9,7 @@
 import { browser, $ } from '@wdio/globals';
 import * as querystring from 'querystring';
 import MatomoPage from './matomo.page.js';
+import GlobalSetup from '../global-setup.js';
 
 export default class MatomoReportingPage extends MatomoPage {
   async open(categorySubcategory: string, params: Record<string, string> = {}) {
@@ -34,6 +35,6 @@ export default class MatomoReportingPage extends MatomoPage {
   }
 
   getDefaultDate() {
-    return '2023-12-20'; // use a fixed date instead of today/yesterday
+    return GlobalSetup.getDateOfVisitTrackedInPast(); // use a fixed date instead of today/yesterday
   }
 }

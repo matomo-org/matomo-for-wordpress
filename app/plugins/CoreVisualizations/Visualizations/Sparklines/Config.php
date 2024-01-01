@@ -308,8 +308,6 @@ class Config extends \Piwik\ViewDataTable\Config
             }
 
             $evolutionPercent = CalculateEvolutionFilter::calculate($evolution['currentValue'], $evolution['pastValue'], $precision = 1);
-			print "compute evolution: ".var_export($evolution, true)."<br>";
-			print "evolution percent: $evolutionPercent - ".var_export($evolutionPercent != 0, true)."<br>";
 
             // do not display evolution if evolution percent is 0 and current value is 0
             if ($evolutionPercent != 0 || $evolution['currentValue'] != 0) {

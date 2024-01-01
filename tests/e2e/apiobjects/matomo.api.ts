@@ -14,6 +14,26 @@ function toSnakeCase(s: string) {
 }
 
 class MatomoApi {
+  async track(idsite: string, params: URLSearchParams) {
+    const trackingEndpoint = `${await Website.baseUrl()}/wp-content/plugins/matomo/app/matomo.php`;
+
+    params.set('idsite', idsite);
+    params.set('rec', '1');
+
+    const fullUrl = `${trackingEndpoint}?${params}`;
+
+    const response = await fetch(fullUrl, {
+      method: 'GET',
+    });
+
+    const blob = Buffer.from(await response.arrayBuffer());
+
+    const expectedGif = 'R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+    if (expectedGif !== blob.toString('base64')) {
+      throw new Error(`tracking request failed: ${blob.toString('utf-8')}`);
+    }
+  }
+
   async call(restMethod: string, apiMethod: string, params: URLSearchParams) {
     const [module, action] = apiMethod.split('.');
     const wordpressUrl = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/${toSnakeCase(module)}/${toSnakeCase(action.replace(/^get/, ''))}`;

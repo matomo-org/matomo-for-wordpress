@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as url from 'url';
 import type { Options } from '@wdio/types'
+import GlobalSetup from './tests/e2e/global-setup.ts';
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -238,8 +239,9 @@ export const config: Options.Testrunner = {
    * @param {Array.<String>} specs        List of spec file paths that are to be run
    * @param {object}         browser      instance of created browser/device session
    */
-  // before: function (capabilities, specs) {
-  // },
+  before: async function (capabilities, specs) {
+    await GlobalSetup.setUp();
+  },
   /**
    * Runs before a WebdriverIO command gets executed.
    * @param {string} commandName hook command name
