@@ -22,7 +22,7 @@ class DashboardPage extends MatomoReportingPage {
     });
     await browser.execute(function () {
       $('.widget ul.rss').hide();
-      $('#visitsLive .serverTimestamp').hide();
+      $('#visitsLive .realTimeWidget_datetime').hide();
     });
 
     return result;
