@@ -16,9 +16,9 @@ class DashboardPage extends MatomoReportingPage {
     await $('#dashboardWidgetsArea .widgetContent div').waitForDisplayed();
     await browser.waitUntil(async () => {
       const widgetsCount = (await $$('#dashboardWidgetsArea .widget')).length;
-      const loadedWidgetCount = (await $$('#dashboardWidgetsArea .theWidgetContent > *')).length;
+      const loadedWidgetCount = (await $$('#dashboardWidgetsArea .widgetContent > *:first-child')).length;
 
-      console.log('widgetsCount', widgetsCount, 'loadedWidgetCOunt', loadedWidgetCount);
+      console.log('widgetsCount', widgetsCount, 'loadedWidgetCount', loadedWidgetCount);
 
       return loadedWidgetCount >= widgetsCount;
     });
