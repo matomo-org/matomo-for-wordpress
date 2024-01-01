@@ -185,8 +185,7 @@ export const config: Options.Testrunner = {
   // methods to it. If one of them returns with a promise, WebdriverIO will wait until that promise got
   // resolved to continue.
   async afterTest(test, context, { error }) {
-    if (error) {
-      console.log(error);
+    if (error && !error.matcherResult) {
       const failureScreenshotName = test.title.replace(/\s+/g, '_') + '_failure';
       try {
         await browser.saveFullPageScreen(failureScreenshotName);
