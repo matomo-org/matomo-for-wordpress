@@ -184,6 +184,17 @@ export const config: Options.Testrunner = {
   // it and to build services around it. You can either apply a single function or an array of
   // methods to it. If one of them returns with a promise, WebdriverIO will wait until that promise got
   // resolved to continue.
+  async afterTest(test, context, { error }) {
+    if (error) {
+      const failureScreenshotName = test.fullName.replace(/\s+/g, '_') + '_failure';
+      try {
+        const r = await browser.saveFullPageScreen(failureScreenshotName);
+        console.log(`saved failure screenshot to: ${r.path}`);
+      } catch (e) {
+        console.log(`could not save failure screenshot ${failureScreenshotName}`);
+      }
+    }
+  },
   /**
    * Gets executed once before all workers get launched.
    * @param {object} config wdio configuration object
