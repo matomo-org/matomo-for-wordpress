@@ -47,6 +47,7 @@
                 {% endif %}
             {% endfor %}
         {% endfor %}
+        {{ sparkline.evolution|default('nothing')|json_encode }}
         {% if sparkline.evolution is defined %}
             {{ _self.sparklineEvolution(sparkline.evolution) }}
         {% endif %}
