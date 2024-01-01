@@ -40,4 +40,10 @@ export default class Page {
 
     await browser.pause(500); // wait for matomo to process the tracking requests
   }
+
+  async addStylesToPage(css: string) {
+    await browser.execute(function (c) {
+      document.head.insertAdjacentHTML('beforeend', `<style>${c}</style>`);
+    } as any, css);
+  }
 }
