@@ -10,6 +10,7 @@ namespace Piwik\Plugins\WordPress\Commands;
 
 use Piwik\Container\StaticContainer;
 use Piwik\Development;
+use Piwik\Filesystem;
 use Piwik\Http;
 use Piwik\Plugin\ConsoleCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -83,7 +84,10 @@ class DownloadTestScreenshots extends ConsoleCommand
 
     private function extractArtifacts($archivePath)
     {
-        $command = "unzip -o $archivePath -d " . PIWIK_INCLUDE_PATH . '/../tests/e2e/actual';
+        $actualFolderPath = PIWIK_INCLUDE_PATH . '/../tests/e2e/actual';
+        Filesystem::unlinkRecursive($actualFolderPath, false);
+
+        $command = "unzip -o $archivePath -d " . $actualFolderPath;
         exec($command, $output, $returnCode);
         if ($returnCode) {
             throw new \Exception('unzip failed: ' . implode("\n", $output));

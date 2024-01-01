@@ -12,7 +12,7 @@ class GdprToolsPage extends MatomoAdminPage {
   async open() {
     const result = super.open('PrivacyManager.gdprTools');
 
-    await browser.pause(500);
+    await browser.pause(1000);
 
     return result;
   }
