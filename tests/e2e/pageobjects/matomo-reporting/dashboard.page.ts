@@ -15,8 +15,6 @@ class DashboardPage extends MatomoReportingPage {
 
     await $('#dashboardWidgetsArea .widgetContent div').waitForDisplayed();
     await browser.waitUntil(async () => {
-      await browser.pause(500);
-
       const elements = (await $$('.loadingPiwik'));
 
       const visibleElements = [];
@@ -26,9 +24,11 @@ class DashboardPage extends MatomoReportingPage {
         }
       }
 
+      const widgetsCount = (await $$('#dashboardWidgetsArea .widget')).length;
+
       console.log('elements', elements.length, 'visibleElements', visibleElements.length);
 
-      return visibleElements.length === 0;
+      return visibleElements.length === 0 && elements.length >= widgetsCount.length;
     });
 
     return result;

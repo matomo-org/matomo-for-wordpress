@@ -9,8 +9,12 @@
 import MatomoAdminPage from '../../matomo-admin.page.js';
 
 class GdprToolsPage extends MatomoAdminPage {
-  open() {
-    return super.open('PrivacyManager.gdprTools');
+  async open() {
+    const result = super.open('PrivacyManager.gdprTools');
+
+    await browser.pause(500);
+
+    return result;
   }
 }
 
