@@ -200,8 +200,15 @@ export const config: Options.Testrunner = {
    * @param {object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  // onPrepare: function (config, capabilities) {
-  // },
+  onPrepare: async function (config, capabilities) {
+    try {
+      await GlobalSetup.setUp();
+    } catch (e) {
+      console.log(`Failed to finish global setup: ${e.message}, aborting.`);
+      await browser.closeWindow();
+      process.exit(1);
+    }
+  },
   /**
    * Gets executed before a worker process is spawned and can be used to initialise specific service
    * for that worker as well as modify runtime environments in an async fashion.
@@ -230,15 +237,8 @@ export const config: Options.Testrunner = {
    * @param {Array.<String>} specs List of spec file paths that are to be run
    * @param {string} cid worker id (e.g. 0-0)
    */
-  beforeSession: async function (config, capabilities, specs, cid) {
-    try {
-      await GlobalSetup.setUp();
-    } catch (e) {
-      console.log(`Failed to finish global setup: ${e.message}, aborting.`);
-      await browser.closeWindow();
-      process.exit(1);
-    }
-  },
+  // beforeSession: async function (config, capabilities, specs, cid) {
+  // },
   /**
    * Gets executed before test execution begins. At this point you can access to all global
    * variables like `browser`. It is the perfect place to define custom commands.
