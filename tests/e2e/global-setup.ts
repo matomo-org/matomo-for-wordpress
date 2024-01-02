@@ -17,9 +17,11 @@ class GlobalSetup {
   }
 
   async runArchiving() {
+    console.log('running archiving');
     try {
       await MatomoApi.call('POST', 'CoreAdminHome.runCronArchiving');
     } catch (e) {
+      console.log(e.message);
       // TODO: create an issue for the following
       // this API method currently prints out some PHP warnings due to a flush() that's
       // in CronArchive.php. WordPress adds headers after dispatching a REST API method,
