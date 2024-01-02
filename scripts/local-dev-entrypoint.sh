@@ -313,7 +313,7 @@ if [[ ! -f /var/www/html/$WORDPRESS_FOLDER/apppassword ]]; then
   fi
 
   echo "creating new app password..."
-  APP_PASSWORD=$(/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password create --porcelain root wp_rest)
+  APP_PASSWORD=$(/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password create --porcelain root wp_rest || true) # can fail on older WordPress versions
   echo $APP_PASSWORD > /var/www/html/$WORDPRESS_FOLDER/apppassword
 fi
 
