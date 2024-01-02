@@ -223,7 +223,7 @@ class API {
 
 		try {
 			$result = Request::processRequest( $api_method, $params );
-			if ( 'json' === $params['format'] ) {
+			if ( isset( $params['format'] ) && 'json' === $params['format'] ) {
 				// WordPress always responds with json, so sending format=json to Matomo results in double JSON encoding
 				// the result. decode it here to undo WordPress' json_encoding.
 				$result = json_decode( $result, true );
