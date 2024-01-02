@@ -85,6 +85,7 @@ if [[ ! -z "$RESET_DATABASE" ]]; then
   \$pdo->exec('DROP DATABASE IF EXISTS \`$WP_DB_NAME\`');"
 
   rm /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo/config/config.ini.php || true
+  rm /var/www/html/$WORDPRESS_FOLDER/apppassword || true
 fi
 
 # create database if it does not already exist

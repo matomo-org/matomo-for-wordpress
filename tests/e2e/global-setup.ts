@@ -61,15 +61,12 @@ class GlobalSetup {
       cdt: `${this.getDateOfVisitTrackedInPast()} 14:03:00`,
     }));
 
-    const visitInDay = await MatomoApi.call('GET', 'Live.getLastVisitsDetails', new URLSearchParams({
-      idSite: '1',
-      date: this.getDateOfVisitTrackedInPast(),
-      period: 'week',
-      filter_limit: '1',
-      format: 'json',
+    // another visit that bounces
+    await MatomoApi.track('1', new URLSearchParams({
+      action_name: 'Test page',
+      url: `${baseUrl}/test/page`,
+      cdt: `${this.getDateOfVisitTrackedInPast()} 17:00:00`,
     }));
-    console.log('after tracking');
-    console.log(visitInDay);
   }
 
   private async isVisitAlreadyTracked() {
@@ -81,7 +78,7 @@ class GlobalSetup {
       format: 'json',
     }));
 
-    return visitInDay.length > 0;
+    return visitInDay instanceof Array && visitInDay.length > 0;
   }
 
   getDateOfVisitTrackedInPast() {
