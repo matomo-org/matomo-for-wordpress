@@ -19,6 +19,7 @@ class MatomoApi {
 
     params.set('idsite', idsite);
     params.set('rec', '1');
+    params.set('token_auth', await Website.getWpNonce());
 
     const fullUrl = `${trackingEndpoint}?${params}`;
 

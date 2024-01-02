@@ -47,6 +47,7 @@ class GlobalSetup {
       m: '16',
       s: '49',
       url: `${baseUrl}/test/page`,
+      cdt: `${this.getDateOfVisitTrackedInPast()} 14:00:00`,
     }));
   }
 
