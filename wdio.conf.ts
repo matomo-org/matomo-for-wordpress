@@ -240,7 +240,13 @@ export const config: Options.Testrunner = {
    * @param {object}         browser      instance of created browser/device session
    */
   before: async function (capabilities, specs) {
-    await GlobalSetup.setUp();
+    try {
+      await GlobalSetup.setUp();
+    } catch (e) {
+      console.log(`Failed to finish global setup: ${e.message}, aborting.`);
+      await browser.closeWindow();
+      process.exit(1);
+    }
   },
   /**
    * Runs before a WebdriverIO command gets executed.

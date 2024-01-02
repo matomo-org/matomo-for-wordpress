@@ -302,11 +302,17 @@ if [[ "$WOOCOMMERCE" == "1" && ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Small camera tripod in red" --short_description="Small camera tripod in red" --description="Small portable tripod for your camera. Available colors: red." --slug="camera-tripod-small" --regular_price="13.99" --sku="PROD_5" --images="[{\"id\":$IMAGE_ID}]" || true
 fi
 
-# create app password for matomo API
-if ! /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password exists root wp_rest; then
-  echo "creating app password..."
+# create WordPress app password for matomo API
+if [[ ! -f /var/www/html/$WORDPRESS_FOLDER/apppassword ]]; then
+  if /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password exists root wp_rest; then
+    echo "removing existing app password..."
 
-  APP_PASSWORD=$(/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password create --porcelain root wp_rest || true)
+    APP_PASSWORD_UUID=$(/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password list root --fields=name,uuid --format=csv | grep wp_rest | awk -F ',' '{ print $2 }')
+    /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password delete root $APP_PASSWORD_UUID
+  fi
+
+  echo "creating new app password..."
+  APP_PASSWORD=$(/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password create --porcelain root wp_rest)
   echo $APP_PASSWORD > /var/www/html/$WORDPRESS_FOLDER/apppassword
 fi
 

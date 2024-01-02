@@ -19,12 +19,18 @@ class MatomoApi {
 
     params.set('idsite', idsite);
     params.set('rec', '1');
-    params.set('token_auth', await Website.getWpNonce());
+    params.set('token_auth', 'ignore'); // set to trigger authentication in the tracker, not actually used
 
     const fullUrl = `${trackingEndpoint}?${params}`;
 
+    const nonce = await Website.getWpNonce();
+    const userPass = `root:${nonce}`;
+
     const response = await fetch(fullUrl, {
       method: 'GET',
+      headers: {
+        'Authorization': `Basic ${Buffer.from(userPass).toString('base64')}`,
+      },
     });
 
     const blob = Buffer.from(await response.arrayBuffer());
@@ -35,7 +41,7 @@ class MatomoApi {
     }
   }
 
-  async call(restMethod: string, apiMethod: string, params: URLSearchParams) {
+  async call(restMethod: string, apiMethod: string, params: URLSearchParams = new URLSearchParams()) {
     const [module, action] = apiMethod.split('.');
     const wordpressUrl = `${await Website.baseUrl()}/index.php?rest_route=/matomo/v1/${toSnakeCase(module)}/${toSnakeCase(action.replace(/^get/, ''))}`;
 
@@ -52,11 +58,22 @@ class MatomoApi {
 
     const text = await response.text();
 
+    let result;
     try {
-      return JSON.parse(text);
+      result = JSON.parse(text);
     } catch (e) {
       throw new Error(`Failed to parse JSON response: ${text}`)
     }
+
+    if (result.result === 'error') {
+      throw new Error(result.message);
+    }
+
+    if (result.code && result.message) {
+      throw new Error(`${result.code}: ${result.message}`);
+    }
+
+    return result;
   }
 }
 

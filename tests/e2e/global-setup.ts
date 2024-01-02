@@ -6,7 +6,6 @@
  *
  */
 
-import fetch from 'node-fetch';
 import MatomoApi from './apiobjects/matomo.api.js';
 import Website from './website.js';
 
@@ -18,19 +17,15 @@ class GlobalSetup {
   }
 
   async runArchiving() {
-    const url = `${await Website.baseUrl()}/wp-admin/admin.php?page=matomo-systemreport&tab=troubleshooting`;
+    try {
+      await MatomoApi.call('POST', 'CoreAdminHome.runCronArchiving');
+    } catch (e) {
+      // TODO: create an issue for the following
+      // this API method currently prints out some PHP warnings due to a flush() that's
+      // in CronArchive.php. WordPress adds headers after dispatching a REST API method,
+      // causing an error.
 
-    const response = await fetch(url, {
-      method: 'POST',
-      body: new URLSearchParams({
-        _wpnonce: await Website.getWpNonce(),
-        _wp_http_referer: url,
-        matomo_troubleshooting_action_archive_now: 'Archive reports',
-      }),
-    });
-
-    if (response.status < 200 || response.status >= 300) {
-      throw new Error(`archiving failed: ${await response.text()}`);
+      // ignore
     }
   }
 
@@ -41,13 +36,29 @@ class GlobalSetup {
 
     const baseUrl = await Website.baseUrl();
 
+    // track first action
     await MatomoApi.track('1', new URLSearchParams({
       action_name: 'Test page',
-      h: '15',
-      m: '16',
-      s: '49',
       url: `${baseUrl}/test/page`,
       cdt: `${this.getDateOfVisitTrackedInPast()} 14:00:00`,
+    }));
+
+    // track download
+    await MatomoApi.track('1', new URLSearchParams({
+      download: `${baseUrl}/test/page/download.pdf`,
+      cdt: `${this.getDateOfVisitTrackedInPast()} 14:01:00`,
+    }));
+
+    // track outlink
+    await MatomoApi.track('1', new URLSearchParams({
+      link: 'http://anothersite.com/site',
+      cdt: `${this.getDateOfVisitTrackedInPast()} 14:02:00`,
+    }));
+
+    // track site search
+    await MatomoApi.track('1', new URLSearchParams({
+      search: 'asearch',
+      cdt: `${this.getDateOfVisitTrackedInPast()} 14:03:00`,
     }));
   }
 
@@ -55,8 +66,9 @@ class GlobalSetup {
     const visitInDay = await MatomoApi.call('GET', 'Live.getLastVisitsDetails', new URLSearchParams({
       idSite: '1',
       date: this.getDateOfVisitTrackedInPast(),
-      period: 'day',
+      period: 'week',
       filter_limit: '1',
+      format: 'json',
     }));
 
     return visitInDay.length > 0;

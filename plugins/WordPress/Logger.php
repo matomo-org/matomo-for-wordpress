@@ -9,6 +9,7 @@
 
 namespace Piwik\Plugins\WordPress;
 
+use Monolog\Handler\HandlerInterface;
 use Monolog\Processor\PsrLogMessageProcessor;
 use Piwik\Common;
 use Piwik\Config;
@@ -63,6 +64,11 @@ class Logger extends AbstractLogger implements LoggerInterface
 	 */
 	private $logger;
 
+    /**
+     * @var HandlerInterface[]
+     */
+    private $handlers = [];
+
 	public function __construct() {
 		$this->logger = new \WpMatomo\Logger();
 		$logConfig = Config::getInstance()->log;
@@ -82,6 +88,11 @@ class Logger extends AbstractLogger implements LoggerInterface
 			}
 		}
 	}
+
+    public function pushHandler(HandlerInterface $handler)
+    {
+        $this->handlers[] = $handler;
+    }
 
 	private function make_numeric_level($level)
 	{
@@ -131,6 +142,7 @@ class Logger extends AbstractLogger implements LoggerInterface
 	{
 		$this->log(self::INFO, $message, $context);
 	}
+
 
 	/**
 	 * Logs with an arbitrary level.
@@ -217,5 +229,9 @@ class Logger extends AbstractLogger implements LoggerInterface
 		}
 
 		$this->logger->log($message);
+
+        foreach ($this->handlers as $handler) {
+            $handler->handle($record);
+        }
 	}
 }

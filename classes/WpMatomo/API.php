@@ -12,6 +12,7 @@ namespace WpMatomo;
 use Exception;
 use Piwik\API\Request;
 use Piwik\Common;
+use Piwik\Container\StaticContainer;
 use WP_Error;
 use WP_REST_Request;
 
@@ -53,6 +54,7 @@ class API {
 		$this->register_route( 'Annotations', 'getAll' );
 		$this->register_route( 'CoreAdminHome', 'invalidateArchivedReports' );
 		$this->register_route( 'CoreAdminHome', 'runScheduledTasks' );
+		$this->register_route( 'CoreAdminHome', 'runCronArchiving' );
 		$this->register_route( 'Dashboard', 'getDashboards' );
 		$this->register_route( 'ImageGraph', 'get' );
 		$this->register_route( 'VisitsSummary', 'getVisits' );
