@@ -17,11 +17,9 @@ class GlobalSetup {
   }
 
   async runArchiving() {
-    console.log('running archiving');
     try {
       await MatomoApi.call('POST', 'CoreAdminHome.runCronArchiving');
     } catch (e) {
-      console.log(e.message);
       // TODO: create an issue for the following
       // this API method currently prints out some PHP warnings due to a flush() that's
       // in CronArchive.php. WordPress adds headers after dispatching a REST API method,
@@ -62,6 +60,16 @@ class GlobalSetup {
       search: 'asearch',
       cdt: `${this.getDateOfVisitTrackedInPast()} 14:03:00`,
     }));
+
+    const visitInDay = await MatomoApi.call('GET', 'Live.getLastVisitsDetails', new URLSearchParams({
+      idSite: '1',
+      date: this.getDateOfVisitTrackedInPast(),
+      period: 'week',
+      filter_limit: '1',
+      format: 'json',
+    }));
+    console.log('after tracking');
+    console.log(visitInDay);
   }
 
   private async isVisitAlreadyTracked() {
