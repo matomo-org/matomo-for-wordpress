@@ -221,6 +221,14 @@ class API {
 
 		try {
 			$result = Request::processRequest( $api_method, $params );
+
+			if ( isset( $params['format'] ) && 'json' === $params['format'] ) {
+				// WordPress always JSON encodes the result of REST API methods, so sending format=json to Matomo
+				// results in double JSON encoding the result. so we decode it here to avoid this.
+				// NOTE: if the array/php API renderer was still around in core, we could use that, but it was
+				// deprecated a while ago.
+				$result = json_decode( $result, true );
+			}
 		} catch ( Exception $e ) {
 			$code = 'matomo_error';
 			if ( $e->getCode() ) {
