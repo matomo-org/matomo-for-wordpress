@@ -21,7 +21,7 @@ class DashboardPage extends MatomoReportingPage {
       return loadedWidgetCount >= widgetsCount;
     });
     await browser.waitUntil(async () => {
-      return !(await $('#widgetRealTimeMapliveMap .loadingPiwik').isDisplayed());
+      return await $('.UserCountryMap_map.kartograph').isDisplayed();
     });
     await browser.execute(function () {
       $('.widget ul.rss').hide();
