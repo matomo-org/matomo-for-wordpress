@@ -18,6 +18,10 @@ describe('Matomo Reporting > Dashboard', () => {
   it('should load the dashboard page correctly', async () => {
     await MatomoDashboardPage.open();
 
+    await browser.execute(function () {
+      $('.tourChallenge .icon-ok,.tourChallenge .icon-hide').hide();
+    });
+
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.dashboard')
     ).toEqual(0);

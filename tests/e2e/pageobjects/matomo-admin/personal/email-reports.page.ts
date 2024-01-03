@@ -12,6 +12,7 @@ class EmailReportsPage extends MatomoAdminPage {
   async open() {
     const result = await super.open('ScheduledReports.index');
     await this.hideDateSelectorDate();
+    await $('#add-report').waitForDisplayed();
     return result;
   }
 
