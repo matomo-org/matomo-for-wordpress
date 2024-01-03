@@ -219,6 +219,13 @@ class API {
 			}
 		}
 
+		if ( isset( $params['format'] ) && 'json' === $params['format'] ) {
+			// WordPress always JSON encodes the result of REST API methods, so sending format=json to Matomo
+			// results in double JSON encoding the result. so if format=json is detected, we override the format
+			// to 'original', to ensure it's only JSON encoded once.
+			$params['format'] = 'original';
+		}
+
 		try {
 			$result = Request::processRequest( $api_method, $params );
 		} catch ( Exception $e ) {
