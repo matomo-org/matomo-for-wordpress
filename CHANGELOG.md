@@ -1,5 +1,8 @@
 == Changelog ===
 
+= 5.0.0 =
+* Fix double encoded JSON response from REST API when `format=json` is used in Matomo API requests. If you use the Matomo API through WordPress REST requests, you may need to adjust your code that processes API responses.
+
 = 4.15.3 =
 * Compatibility with WooCommerce's HPOS feature
 * Avoid executing System Report on every Matomo for WordPress admin page view
