@@ -21,7 +21,9 @@ describe('Matomo Reporting > Dashboard', () => {
     await browser.execute(function () {
       $('.tourChallenge .icon-ok,.tourChallenge .icon-hide').hide();
       $('.tourEngagement p').each((i, e) => {
-        $(e).text($(e).text().replace(/Complete \d+/g, 'Complete '));
+        if (/Complete \d+/.test($(e).text())) {
+          $(e).text($(e).text().replace(/Complete \d+/g, 'Complete '));
+        }
       });
     });
 
