@@ -14,6 +14,14 @@ export default class Page {
     const baseUrl = await Website.baseUrl();
     const result = await browser.url(`${baseUrl}${path}`);
 
+    await this.addStylesToPage(`* {
+      scrollbar-width: none !important;
+    }
+
+    *::-webkit-scrollbar {
+      display: none;
+    }`);
+
     // move mouse away from screen
     await $('body').moveTo({ xOffset: 0, yOffset: 0 });
 

@@ -18,6 +18,10 @@ describe('Matomo Admin > Home', () => {
   it('should load the home page correctly', async () => {
     await MatomoHomePage.open();
 
+    await browser.execute(function () {
+      $('ul.rss').hide();
+    });
+
     await expect(
       await browser.checkFullPageScreen('matomo-admin.home')
     ).toEqual(0);
