@@ -46,11 +46,22 @@ class ApiTest extends MatomoAnalytics_TestCase {
 	public function test_dispatch_matomo_api_with_json_response() {
 		$this->create_set_super_admin();
 
-		$request  = new WP_REST_Request( 'GET', '/' . API::VERSION . '/api/matomo_version?format=json' );
+		$request = new WP_REST_Request( 'GET', '/' . API::VERSION . '/api/matomo_version' );
+		$request->set_param( 'format', 'json' );
+
 		$response = rest_get_server()->dispatch( $request );
 		$this->assertStringStartsWith( '4.', $response->get_data() );
 		// check that the string is not serialized json
 		$this->assertNull( json_decode( $response->get_data() ) );
+	}
+
+	public function test_dispatch_matomo_api_with_json_response_when_datatable() {
+		$this->create_set_super_admin();
+
+		$request = new WP_REST_Request( 'GET', '/' . API::VERSION . '/api/widget_metadata' );
+		$request->set_param( 'format', 'json' );
+		$response = rest_get_server()->dispatch( $request );
+		$this->assertIsArray( $response->get_data() );
 	}
 
 	public function test_dispatch_matomo_api_when_not_authenticated() {
