@@ -20,6 +20,9 @@ class DashboardPage extends MatomoReportingPage {
 
       return loadedWidgetCount >= widgetsCount;
     });
+    await browser.waitUntil(async () => {
+      return !(await $('#widgetRealTimeMapliveMap .loadingPiwik').isDisplayed());
+    });
     await browser.execute(function () {
       $('.widget ul.rss').hide();
       $('#visitsLive .realTimeWidget_datetime').hide();
