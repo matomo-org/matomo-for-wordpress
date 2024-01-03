@@ -9,6 +9,9 @@
 import MatomoApi from './apiobjects/matomo.api.js';
 import Website from './website.js';
 
+// TODO: need to document how to write an e2e test. eg, individual tests
+// should ideally not add data, data should be added beforehand in global
+// setup, etc.
 class GlobalSetup {
   async setUp() {
     await this.trackVisitInPast();

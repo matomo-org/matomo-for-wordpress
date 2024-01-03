@@ -5,6 +5,10 @@ import GlobalSetup from './tests/e2e/global-setup.ts';
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
+// TODO: temporary fix since gecko-driver tries to download 0.34 which
+// hasn't been released yet
+process.env.GECKODRIVER_VERSION = '0.33.0';
+
 export const config: Options.Testrunner = {
   //
   // ====================
