@@ -2,6 +2,7 @@
 
 use Piwik\Config;
 use Piwik\Plugin\API;
+use Piwik\SettingsServer;
 use Piwik\Tracker;
 use Piwik\Tracker\Cache;
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
@@ -15,14 +16,25 @@ require_once __DIR__ . '/../../../app/libs/PiwikTracker/PiwikTracker.php';
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
  * inherit from Piwik
  * phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+ * phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+ * phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
  */
 class MatomoLocalTracker extends PiwikTracker {
+
+	private $extra_server_vars = [];
+
+	public function setExtraServerVar( $name, $value ) {
+		$this->extra_server_vars[ $name ] = $value;
+	}
 
 	protected function getBaseUrl() {
 		return self::$URL; // avoid adding another query string
 	}
 
 	protected function sendRequest( $url, $method = 'GET', $data = null, $force = false ) {
+		if ( ! empty( $this->token_auth ) ) {
+			$url .= '&token_auth=' . rawurlencode( $this->token_auth );
+		}
 		if ( $this->DEBUG_APPEND_URL ) {
 			$url .= $this->DEBUG_APPEND_URL;
 		}
@@ -66,35 +78,49 @@ class MatomoLocalTracker extends PiwikTracker {
 		$_SERVER['HTTP_USER_AGENT'] = $this->userAgent;
 		// set cookie
 		$old_cookie = $_COOKIE;
+		// set extra server vars
+		$old_server_vars = [];
+		foreach ( $this->extra_server_vars as $name => $value ) {
+			$old_server_vars[ $name ] = isset( $_SERVER[ $name ] ) ? $_SERVER[ $name ] : null;
+			$_SERVER[ $name ]         = $value;
+		}
+		Tracker::loadTrackerEnvironment();
 		// do tracking and capture output
 		ob_start();
-		$local_tracker = new Tracker();
-		$request       = new Tracker\RequestSet();
-		$request->setRequests( $requests );
+		try {
+			$local_tracker = new Tracker();
+			$request       = new Tracker\RequestSet();
+			$request->setRequests( $requests );
 
-		\Piwik\Plugin\Manager::getInstance()->loadTrackerPlugins();
-
-		$handler  = Tracker\Handler\Factory::make();
-		$response = $local_tracker->main( $handler, $request );
-		if ( ! is_null( $response ) ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo $response;
+			$handler  = Tracker\Handler\Factory::make();
+			$response = $local_tracker->main( $handler, $request );
+			if ( ! is_null( $response ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $response;
+			}
+			$output = ob_get_contents();
+			ob_end_clean();
+		} catch ( \Exception $ex ) {
+			ob_end_flush();
+		} finally {
+			// restore vars
+			Config::getInstance()->Tracker           = $old_tracker_config;
+			$_SERVER['HTTP_ACCEPT_LANGUAGE']         = $old_lang;
+			$_SERVER['HTTP_USER_AGENT']              = $old_user_agent;
+			$_COOKIE                                 = $old_cookie;
+			$GLOBALS['PIWIK_TRACKER_LOCAL_TRACKING'] = false;
+			\Piwik\SettingsServer::setIsNotTrackerApiRequest();
+			unset( $_GET['bots'] );
+			foreach ( $old_server_vars as $name => $value ) {
+				$_SERVER[ $name ] = $value;
+			}
+			\Piwik\SettingsServer::setIsNotTrackerApiRequest();
+			// reload plugins
+			\Piwik\Plugin\Manager::getInstance()->loadPlugins( $plugins );
+			\Piwik\Singleton::clearAll();
+			API::unsetAllInstances();
+			\Piwik\Cache::flushAll();
 		}
-		$output = ob_get_contents();
-		ob_end_clean();
-		// restore vars
-		Config::getInstance()->Tracker           = $old_tracker_config;
-		$_SERVER['HTTP_ACCEPT_LANGUAGE']         = $old_lang;
-		$_SERVER['HTTP_USER_AGENT']              = $old_user_agent;
-		$_COOKIE                                 = $old_cookie;
-		$GLOBALS['PIWIK_TRACKER_LOCAL_TRACKING'] = false;
-		\Piwik\SettingsServer::setIsNotTrackerApiRequest();
-		unset( $_GET['bots'] );
-		// reload plugins
-		\Piwik\Plugin\Manager::getInstance()->loadPlugins( $plugins );
-		\Piwik\Singleton::clearAll();
-		API::unsetAllInstances();
-		\Piwik\Cache::flushAll();
 
 		return $output;
 	}

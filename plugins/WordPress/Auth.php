@@ -12,6 +12,7 @@ namespace Piwik\Plugins\WordPress;
 use Piwik\AuthResult;
 use Piwik\Plugins\UsersManager\Model;
 use Piwik\SettingsServer;
+use WpMatomo\User;
 
 if (!defined( 'ABSPATH')) {
     exit; // if accessed directly
@@ -43,13 +44,13 @@ class Auth extends \Piwik\Plugins\Login\Auth
             }
 
             if ($isUserLoggedIn) {
-                $user = get_user_by('id', $loggedInUserId);
+                $login = User::get_matomo_user_login($loggedInUserId);
 
                 $userModel = new Model();
-                $matomoUser = $userModel->getUser($user->user_login);
+                $matomoUser = $userModel->getUser($login);
                 if (!empty($matomoUser)) {
                     $code = ((int) $matomoUser['superuser_access']) ? AuthResult::SUCCESS_SUPERUSER_AUTH_CODE : AuthResult::SUCCESS;
-                    return new AuthResult($code, $user->user_login, $this->token_auth);
+                    return new AuthResult($code, $login, $this->token_auth);
                 }
             }
         }

@@ -168,10 +168,18 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	}
 
 	protected function assert_tracking_response( $tracking_response ) {
+		$this->assertEquals( $this->get_expected_tracking_response(), $tracking_response );
+	}
+
+	protected function assert_not_tracking_response( $tracking_response ) {
+		$this->assertNotEquals( $this->get_expected_tracking_response(), $tracking_response );
+	}
+
+	private function get_expected_tracking_response() {
 		$trans_gif_64 = 'R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 		$expected_response = base64_decode( $trans_gif_64 );
-		$this->assertEquals( $expected_response, $tracking_response );
+		return $expected_response;
 	}
 
 	protected function enable_browser_archiving() {
