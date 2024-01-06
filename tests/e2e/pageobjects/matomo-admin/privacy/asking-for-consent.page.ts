@@ -6,7 +6,7 @@
  *
  */
 
-import MatomoAdminPage from '../matomo-admin.page.js';
+import MatomoAdminPage from '../../matomo-admin.page.js';
 
 class AskingForConsentPage extends MatomoAdminPage {
   open() {

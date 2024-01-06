@@ -27,12 +27,12 @@ export WP_TESTS_DIR=/var/www/html/$WORDPRESS_FOLDER/wp-test # used for setting u
 echo "Using WordPress install $WORDPRESS_FOLDER."
 echo
 
+echo "<?php # /var/www/html/$WORDPRESS_FOLDER/wp-load.php" > /var/www/html/matomo.wpload_dir.php
+
 if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
   exit $?
 elif [[ "$EXECUTE_CONSOLE" = "1" ]]; then
-  echo "<?php # /var/www/html/$WORDPRESS_FOLDER/wp-load.php" > /var/www/html/matomo.wpload_dir.php
-
   cd /var/www/html/matomo-for-wordpress/app
   ./console "$@"
   exit $?
@@ -85,6 +85,7 @@ if [[ ! -z "$RESET_DATABASE" ]]; then
   \$pdo->exec('DROP DATABASE IF EXISTS \`$WP_DB_NAME\`');"
 
   rm /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo/config/config.ini.php || true
+  rm /var/www/html/$WORDPRESS_FOLDER/apppassword || true
 fi
 
 # create database if it does not already exist
@@ -190,6 +191,10 @@ fi
 
 /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin activate matomo
 /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo install
+
+# update site created date for e2e tests
+php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
+\$pdo->exec('UPDATE \`${WP_DB_NAME}\`.wp_matomo_site SET ts_created = \"2023-01-01 00:00:00\"');"
 
 # extra actions required during tests
 if [ "$WORDPRESS_FOLDER" = "test" ]; then
@@ -298,11 +303,17 @@ if [[ "$WOOCOMMERCE" == "1" && ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Small camera tripod in red" --short_description="Small camera tripod in red" --description="Small portable tripod for your camera. Available colors: red." --slug="camera-tripod-small" --regular_price="13.99" --sku="PROD_5" --images="[{\"id\":$IMAGE_ID}]" || true
 fi
 
-# create app password for matomo API
-if ! /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password exists root wp_rest; then
-  echo "creating app password..."
+# create WordPress app password for matomo API
+if [[ ! -f /var/www/html/$WORDPRESS_FOLDER/apppassword ]]; then
+  if /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password exists root wp_rest; then
+    echo "removing existing app password..."
 
-  APP_PASSWORD=$(/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password create --porcelain root wp_rest || true)
+    APP_PASSWORD_UUID=$(/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password list root --fields=name,uuid --format=csv | grep wp_rest | awk -F ',' '{ print $2 }')
+    /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password delete root $APP_PASSWORD_UUID
+  fi
+
+  echo "creating new app password..."
+  APP_PASSWORD=$(/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password create --porcelain root wp_rest || true) # can fail on older WordPress versions
   echo $APP_PASSWORD > /var/www/html/$WORDPRESS_FOLDER/apppassword
 fi
 
@@ -338,9 +349,14 @@ if [ ! -f $WP_TESTS_DIR/wp-tests-config.php ]; then
 fi
 
 # create unit test database if it does not already exist
+echo "creating test database..."
 php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
 \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
 \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
+
+# set allow_wp_app_password_auth tracker config, used in tests
+echo "set allow_wp_app_password_auth config..."
+php /var/www/html/matomo-for-wordpress/app/console config:set --section=Tracker --key=allow_wp_app_password_auth --value=1
 
 FIlE_OWNER_USERID=$UID
 if [[ -z "$FIlE_OWNER_USERID" || "$FIlE_OWNER_USERID" == "0" ]]; then

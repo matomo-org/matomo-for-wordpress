@@ -8,16 +8,16 @@
 
 import { browser, $ } from '@wdio/globals';
 import * as querystring from 'querystring';
-import Page from '../page.js';
+import MatomoPage from './matomo.page.js';
 
-export default class MatomoAdminPage extends Page{
+export default class MatomoAdminPage extends MatomoPage {
   async open(method: string, params: Record<string, string> = {}) {
     const [module, action] = method.split('.');
 
     const query = querystring.stringify({
       idSite: 1,
       period: 'day',
-      date: 'yesterday',
+      date: this.getDefaultDate(),
       ...params,
       module,
       action,
@@ -28,6 +28,10 @@ export default class MatomoAdminPage extends Page{
     await this.removePhpEolWarning();
 
     return result;
+  }
+
+  getDefaultDate() {
+    return '2023-12-20'; // use a fixed date instead of today/yesterday
   }
 
   async removePhpEolWarning() {

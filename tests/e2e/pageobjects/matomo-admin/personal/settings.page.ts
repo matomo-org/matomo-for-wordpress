@@ -6,11 +6,14 @@
  *
  */
 
-import MatomoAdminPage from '../matomo-admin.page.js';
+import MatomoAdminPage from '../../matomo-admin.page.js';
 
 class PersonalSettingsPage extends MatomoAdminPage {
-  open() {
-    return super.open('UsersManager.userSettings');
+  async open() {
+    const result = await super.open('UsersManager.userSettings');
+    await $('#userSettingsTable').waitForDisplayed();
+    await browser.pause(1000);
+    return result;
   }
 }
 

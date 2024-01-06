@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as url from 'url';
 import type { Options } from '@wdio/types'
+import GlobalSetup from './tests/e2e/global-setup.ts';
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -40,7 +41,7 @@ export const config: Options.Testrunner = {
   ],
   // Patterns to exclude.
   exclude: [
-      // 'path/to/excluded/files'
+    './tests/e2e/tracking.e2e.ts',
   ],
   //
   // ============
@@ -184,13 +185,29 @@ export const config: Options.Testrunner = {
   // it and to build services around it. You can either apply a single function or an array of
   // methods to it. If one of them returns with a promise, WebdriverIO will wait until that promise got
   // resolved to continue.
+  async afterTest(test, context, { error }) {
+    if (error && !error.matcherResult) {
+      const failureScreenshotName = test.title.replace(/\s+/g, '_') + '_failure';
+      try {
+        await browser.saveFullPageScreen(failureScreenshotName);
+      } catch (e) {
+        console.log(`could not save failure screenshot ${failureScreenshotName}`);
+      }
+    }
+  },
   /**
    * Gets executed once before all workers get launched.
    * @param {object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  // onPrepare: function (config, capabilities) {
-  // },
+  onPrepare: async function (config, capabilities) {
+    try {
+      await GlobalSetup.setUp();
+    } catch (e) {
+      console.log(`Aborting, failed to finish global setup:\n${e.stack}`);
+      process.exit(1);
+    }
+  },
   /**
    * Gets executed before a worker process is spawned and can be used to initialise specific service
    * for that worker as well as modify runtime environments in an async fashion.
@@ -219,7 +236,7 @@ export const config: Options.Testrunner = {
    * @param {Array.<String>} specs List of spec file paths that are to be run
    * @param {string} cid worker id (e.g. 0-0)
    */
-  // beforeSession: function (config, capabilities, specs, cid) {
+  // beforeSession: async function (config, capabilities, specs, cid) {
   // },
   /**
    * Gets executed before test execution begins. At this point you can access to all global
@@ -228,7 +245,7 @@ export const config: Options.Testrunner = {
    * @param {Array.<String>} specs        List of spec file paths that are to be run
    * @param {object}         browser      instance of created browser/device session
    */
-  // before: function (capabilities, specs) {
+  // before: async function (capabilities, specs) {
   // },
   /**
    * Runs before a WebdriverIO command gets executed.

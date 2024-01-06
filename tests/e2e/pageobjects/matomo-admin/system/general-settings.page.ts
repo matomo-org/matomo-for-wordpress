@@ -7,7 +7,7 @@
  */
 
 import { $ } from '@wdio/globals';
-import MatomoAdminPage from '../matomo-admin.page.js';
+import MatomoAdminPage from '../../matomo-admin.page.js';
 
 class GeneralSettingsPage extends MatomoAdminPage {
   async open() {

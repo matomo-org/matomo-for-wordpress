@@ -53,6 +53,7 @@ class API {
 		$this->register_route( 'Annotations', 'getAll' );
 		$this->register_route( 'CoreAdminHome', 'invalidateArchivedReports' );
 		$this->register_route( 'CoreAdminHome', 'runScheduledTasks' );
+		$this->register_route( 'CoreAdminHome', 'runCronArchiving' );
 		$this->register_route( 'Dashboard', 'getDashboards' );
 		$this->register_route( 'ImageGraph', 'get' );
 		$this->register_route( 'VisitsSummary', 'getVisits' );
@@ -217,6 +218,13 @@ class API {
 				// manually unsanitize this value
 				$params['segment'] = Common::unsanitizeInputValue( $params['segment'] );
 			}
+		}
+
+		if ( isset( $params['format'] ) && 'json' === $params['format'] ) {
+			// WordPress always JSON encodes the result of REST API methods, so sending format=json to Matomo
+			// results in double JSON encoding the result. so if format=json is detected, we override the format
+			// to 'original', to ensure it's only JSON encoded once.
+			$params['format'] = 'original';
 		}
 
 		try {

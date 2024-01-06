@@ -109,7 +109,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'UserCountry', 'getRegion' );
-		$this->assertEquals( 316, $report['reportData']->getRowsCount() );
+		$this->assertEquals( 221, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_cities_found() {

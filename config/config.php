@@ -30,6 +30,10 @@ return array(
 	// we want to avoid the regular monolog logger as it could interfere with other plugins maybe. for now lets use a
 	// custom logger
 	'Psr\Log\LoggerInterface' => \Piwik\DI::get('\Piwik\Plugins\WordPress\Logger'),
+	// following two entries used by CoreAdminHome.runCronArchiving
+	'log.short.format' => '%level% %tag%[%datetime%] %message%',
+	'Piwik\Plugins\Monolog\Formatter\LineMessageFormatter' => DI\create('Piwik\Plugins\Monolog\Formatter\LineMessageFormatter')
+		->constructor(DI\get('log.short.format')),
 	'TagManagerContainerStorageDir' => function () {
 		if (defined('MATOMO_TAG_MANAGER_STORAGE_DIR')) {
 			return MATOMO_TAG_MANAGER_STORAGE_DIR;

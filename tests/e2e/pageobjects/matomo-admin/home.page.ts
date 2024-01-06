@@ -7,13 +7,14 @@
  */
 
 import { $ } from '@wdio/globals';
-import MatomoAdminPage from './matomo-admin.page.js';
+import MatomoAdminPage from '../matomo-admin.page.js';
 
 class AdminHomePage extends MatomoAdminPage {
   async open() {
     const result = await super.open('CoreAdminHome.home');
 
     await $('.theWidgetContent').waitForDisplayed();
+    await $('ul.rss').waitForDisplayed();
     await browser.pause(1000);
 
     return result;
