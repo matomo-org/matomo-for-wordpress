@@ -17,7 +17,7 @@ export default class MatomoAdminPage extends MatomoPage {
     const query = querystring.stringify({
       idSite: 1,
       period: 'day',
-      date: 'yesterday',
+      date: this.getDefaultDate(),
       ...params,
       module,
       action,
@@ -28,6 +28,10 @@ export default class MatomoAdminPage extends MatomoPage {
     await this.removePhpEolWarning();
 
     return result;
+  }
+
+  getDefaultDate() {
+    return '2023-12-20'; // use a fixed date instead of today/yesterday
   }
 
   async removePhpEolWarning() {

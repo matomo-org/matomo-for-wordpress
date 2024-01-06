@@ -14,6 +14,7 @@ class MobileMessagingPage extends MatomoAdminPage {
     const result = await super.open('MobileMessaging.index');
 
     await $('.manageMobileMessagingSettings').waitForDisplayed();
+    await browser.pause(2000);
 
     return result;
   }

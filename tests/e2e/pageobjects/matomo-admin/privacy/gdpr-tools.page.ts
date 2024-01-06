@@ -9,8 +9,15 @@
 import MatomoAdminPage from '../../matomo-admin.page.js';
 
 class GdprToolsPage extends MatomoAdminPage {
-  open() {
-    return super.open('PrivacyManager.gdprTools');
+  async open() {
+    const result = super.open('PrivacyManager.gdprTools');
+
+    await $('.segment-generator').waitForDisplayed();
+    await browser.waitUntil(async () => {
+      return !(await $('.segment-generator > .loadingPiwik').isDisplayed());
+    });
+
+    return result;
   }
 }
 

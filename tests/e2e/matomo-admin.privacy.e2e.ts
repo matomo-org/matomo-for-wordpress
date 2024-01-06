@@ -22,14 +22,16 @@ describe('Matomo Admin > Privacy', () => {
   it('should load the anonymize data page correctly', async () => {
     await AnonymizeDataPage.open();
 
-    await $('#anonymizeStartDate').waitForExist({ timeout: 2000 });
+    await $('#anonymizeStartDate').waitForExist();
 
-    // TODO: should wait until whatever JS changes the initial dates for the date selector, completes
-    await browser.pause(4000); // wait for controls to be initialized to today's date
-
+    // hide the date selectors
     await browser.execute(function () {
-      $('#anonymizeStartDate').val('2023-12-05');
-      $('#anonymizeEndDate').val('2023-12-05');
+      $('#anonymizeStartDate').hide();
+      $('#anonymizeEndDate').hide();
+    });
+
+    const date = await browser.execute(function () {
+      return $('#anonymizeStartDate').val();
     });
 
     await expect(

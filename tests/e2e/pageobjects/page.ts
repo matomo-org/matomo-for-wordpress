@@ -14,6 +14,14 @@ export default class Page {
     const baseUrl = await Website.baseUrl();
     const result = await browser.url(`${baseUrl}${path}`);
 
+    await this.addStylesToPage(`* {
+      scrollbar-width: none !important;
+    }
+
+    *::-webkit-scrollbar {
+      display: none;
+    }`);
+
     // move mouse away from screen
     await $('body').moveTo({ xOffset: 0, yOffset: 0 });
 
@@ -39,5 +47,11 @@ export default class Page {
     });
 
     await browser.pause(500); // wait for matomo to process the tracking requests
+  }
+
+  async addStylesToPage(css: string) {
+    await browser.execute(function (c) {
+      document.head.insertAdjacentHTML('beforeend', `<style>${c}</style>`);
+    } as any, css);
   }
 }

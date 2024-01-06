@@ -14,6 +14,7 @@ class AdminHomePage extends MatomoAdminPage {
     const result = await super.open('CoreAdminHome.home');
 
     await $('.theWidgetContent').waitForDisplayed();
+    await $('ul.rss').waitForDisplayed();
     await browser.pause(1000);
 
     return result;
