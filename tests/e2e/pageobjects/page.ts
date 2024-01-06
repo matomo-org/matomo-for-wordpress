@@ -22,9 +22,6 @@ export default class Page {
       display: none;
     }`);
 
-    // move mouse away from screen
-    await $('nav #logo').moveTo();
-
     return result;
   }
 

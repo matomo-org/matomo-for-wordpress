@@ -11,11 +11,7 @@ import MatomoReportingPage from '../../matomo-reporting.page.js';
 
 class VisitsLogPage extends MatomoReportingPage {
   async open() {
-    const result = await super.open('CoreAdminHome.home');
-
-    await $('').waitForDisplayed(); // TODO
-
-    return result;
+    return await super.open('CoreAdminHome.home');
   }
 }
 
