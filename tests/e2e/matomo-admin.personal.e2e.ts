@@ -51,7 +51,6 @@ describe('Matomo Admin > Personal', () => {
 
     await EmailReportsPage.downloadReport(1);
 
-    await EmailReportsPage.disableHoverStyles();
     try {
       await expect(
         await browser.checkFullPageScreen('matomo-admin.personal.email-reports.download')
