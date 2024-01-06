@@ -208,8 +208,7 @@ export const config: Options.Testrunner = {
     try {
       await GlobalSetup.setUp();
     } catch (e) {
-      console.log(`Failed to finish global setup: ${e.message}, aborting.`);
-      await browser.closeWindow();
+      console.log(`Aborting, failed to finish global setup:\n${e.stack}`);
       process.exit(1);
     }
   },

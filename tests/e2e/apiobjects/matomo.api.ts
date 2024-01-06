@@ -48,6 +48,10 @@ class MatomoApi {
     const fullUrl = `${wordpressUrl}&${params}`;
 
     const nonce = await Website.getWpNonce();
+    if (!nonce) {
+      throw new Error('No application password found!');
+    }
+
     const userPass = `root:${nonce}`;
     const response = await fetch(fullUrl, {
       method: restMethod,
