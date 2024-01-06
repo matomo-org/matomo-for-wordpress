@@ -24,7 +24,7 @@ use Piwik\Plugins\Monolog\Processor\SprintfProcessor;
 use Piwik\Plugins\Monolog\Processor\TokenProcessor;
 use Piwik\SettingsServer;
 use Psr\Log\AbstractLogger;
-use Psr\Log\LoggerInterface;
+use Piwik\Log\LoggerInterface;
 use WpMatomo\Bootstrap;
 
 if (!defined( 'ABSPATH')) {
