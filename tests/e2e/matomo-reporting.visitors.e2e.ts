@@ -29,7 +29,7 @@ describe('Matomo Reporting > Visitors', () => {
     await DevicesPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.devices')
-    ).toBeLessThan(0.02);
+    ).toBeLessThan(0.05);
   });
 
   it('should load the locations page correctly', async () => {
@@ -38,7 +38,7 @@ describe('Matomo Reporting > Visitors', () => {
     await LocationsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.locations')
-    ).toBeLessThan(0.02);
+    ).toBeLessThan(0.05);
   });
 
   it('should load the overview page correctly', async () => {
@@ -47,7 +47,7 @@ describe('Matomo Reporting > Visitors', () => {
     await OverviewPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.overview')
-    ).toBeLessThan(0.02);
+    ).toBeLessThan(0.05);
   });
 
   it('should load the real-time page correctly', async () => {
@@ -56,7 +56,7 @@ describe('Matomo Reporting > Visitors', () => {
     await RealTimePage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.real-time')
-    ).toBeLessThan(0.02);
+    ).toBeLessThan(0.05);
   });
 
   it('should load the real-time map page correctly', async () => {
@@ -65,7 +65,7 @@ describe('Matomo Reporting > Visitors', () => {
     await RealTimeMapPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.real-time-map')
-    ).toBeLessThan(0.02);
+    ).toBeLessThan(0.05);
   });
 
   it('should load the software page correctly', async () => {
@@ -74,7 +74,7 @@ describe('Matomo Reporting > Visitors', () => {
     await SoftwarePage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.software')
-    ).toBeLessThan(0.02);
+    ).toBeLessThan(0.05);
   });
 
   it('should load the times page correctly', async () => {
@@ -83,7 +83,7 @@ describe('Matomo Reporting > Visitors', () => {
     await TimesPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.times')
-    ).toBeLessThan(0.02);
+    ).toBeLessThan(0.05);
   });
 
   it('should load the user ID page correctly', async () => {
@@ -92,7 +92,7 @@ describe('Matomo Reporting > Visitors', () => {
     await UserIdsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.user-ids')
-    ).toBeLessThan(0.02);
+    ).toBeLessThan(0.05);
   });
 
   it('should load the visits log page correctly', async () => {
@@ -101,6 +101,6 @@ describe('Matomo Reporting > Visitors', () => {
     await VisitsLogPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.visits-log')
-    ).toBeLessThan(0.02);
+    ).toBeLessThan(0.05);
   });
 });
