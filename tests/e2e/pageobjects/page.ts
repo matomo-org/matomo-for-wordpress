@@ -6,7 +6,7 @@
  *
  */
 
-import { browser } from '@wdio/globals';
+import {$, browser} from '@wdio/globals';
 import Website from '../website.js';
 
 export default class Page {
@@ -23,7 +23,7 @@ export default class Page {
     }`);
 
     // move mouse away from screen
-    await $('body').moveTo({ xOffset: 0, yOffset: 0 });
+    await $('nav #logo').moveTo();
 
     return result;
   }
