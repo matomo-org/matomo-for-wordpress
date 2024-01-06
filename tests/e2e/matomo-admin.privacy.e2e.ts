@@ -30,10 +30,7 @@ describe('Matomo Admin > Privacy', () => {
       $('#anonymizeEndDate').hide();
     });
 
-    const date = await browser.execute(function () {
-      return $('#anonymizeStartDate').val();
-    });
-
+    await AnonymizeDataPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.privacy.anonymize-data')
     ).toEqual(0)
@@ -42,6 +39,7 @@ describe('Matomo Admin > Privacy', () => {
   it('should load the users opt-out page correctly', async () => {
     await UsersOptOutPage.open();
 
+    await UsersOptOutPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.privacy.users-opt-out')
     ).toEqual(0)
@@ -50,6 +48,7 @@ describe('Matomo Admin > Privacy', () => {
   it('should load the asking for consent page correctly', async () => {
     await AskingForConsentPage.open();
 
+    await AskingForConsentPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.privacy.asking-for-consent')
     ).toEqual(0)
@@ -58,6 +57,7 @@ describe('Matomo Admin > Privacy', () => {
   it('should load the gdpr overview page correctly', async () => {
     await GdprOverviewPage.open();
 
+    await GdprOverviewPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.privacy.gdpr-overview')
     ).toEqual(0);
@@ -66,6 +66,7 @@ describe('Matomo Admin > Privacy', () => {
   it('should load the gdpr tools page correctly', async () => {
     await GdprToolsPage.open();
 
+    await GdprToolsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.privacy.gdpr-tools')
     ).toEqual(0);

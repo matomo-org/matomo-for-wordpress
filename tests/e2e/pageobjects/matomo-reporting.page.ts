@@ -35,21 +35,6 @@ export default class MatomoReportingPage extends MatomoPage {
 
     await this.waitForPageWidgets();
 
-    // move mouse away from screen
-    await browser.waitUntil(async () => {
-      try {
-        await $('nav #logo').moveTo();
-        return true;
-      } catch (e) {
-        // this can fail sometimes, webdriver tries to move the mouse to a negative location
-
-        await browser.pause(250);
-        return false;
-      }
-    });
-
-    await browser.pause(500);
-
     return result;
   }
 
