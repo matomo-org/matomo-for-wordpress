@@ -34,9 +34,9 @@ describe('Tracking', () => {
     }));
 
     expect(counters).toEqual([{
-      visits: parseInt(countersBefore[0].visits, 10) + 1,
-      actions: parseInt(countersBefore[0].actions, 10) + 2,
-      visitors: parseInt(countersBefore[0].visitors, 10) + 1,
+      visits: `${parseInt(countersBefore[0].visits, 10) + 1}`,
+      actions: `${parseInt(countersBefore[0].actions, 10) + 2}`,
+      visitors: `${parseInt(countersBefore[0].visitors, 10) + 1}`,
       visitsConverted: '0',
     }]);
   });
