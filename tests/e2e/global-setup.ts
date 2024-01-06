@@ -15,7 +15,7 @@ import Website from './website.js';
 class GlobalSetup {
   async setUp() {
     await this.trackVisitInPast();
-
+    await this.trackRealtimeVisitWithLocation();
     await this.runArchiving();
   }
 
@@ -29,6 +29,24 @@ class GlobalSetup {
 
       // ignore
     }
+  }
+
+  async trackRealtimeVisitWithLocation() {
+    if (await this.isRealtimeVisitAlreadyTracked()) {
+      return;
+    }
+
+    const baseUrl = await Website.baseUrl();
+
+    // track an action
+    await MatomoApi.track('1', new URLSearchParams({
+      action_name: 'Test page',
+      url: `${baseUrl}/test/page`,
+      cip: '123.45.0.0',
+      country: 'kr',
+      lat: '35.904232',
+      long: '127.391840',
+    }));
   }
 
   async trackVisitInPast() {
@@ -69,6 +87,18 @@ class GlobalSetup {
       url: `${baseUrl}/test/page`,
       cdt: `${this.getDateOfVisitTrackedInPast()} 17:00:00`,
     }));
+  }
+
+  private async isRealtimeVisitAlreadyTracked() {
+    const realTimeVisit = await MatomoApi.call('GET', 'Live.getLastVisitsDetails', new URLSearchParams({
+      idSite: '1',
+      date: 'today',
+      period: 'week',
+      filter_limit: '1',
+      format: 'json',
+    }));
+
+    return realTimeVisit instanceof Array && realTimeVisit.length > 0;
   }
 
   private async isVisitAlreadyTracked() {

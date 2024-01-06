@@ -6,7 +6,7 @@
  *
  */
 
-import { browser } from '@wdio/globals';
+import {$, browser} from '@wdio/globals';
 import Website from '../website.js';
 
 export default class Page {
@@ -14,18 +14,29 @@ export default class Page {
     const baseUrl = await Website.baseUrl();
     const result = await browser.url(`${baseUrl}${path}`);
 
-    await this.addStylesToPage(`* {
+    await this.addStylesToPage(`
+    * {
       scrollbar-width: none !important;
     }
 
     *::-webkit-scrollbar {
       display: none;
-    }`);
-
-    // move mouse away from screen
-    await $('body').moveTo({ xOffset: 0, yOffset: 0 });
+    }
+    `);
 
     return result;
+  }
+
+  async enableHoverStyles() {
+    await browser.execute(() => {
+      $('html').css('pointer-events', '');
+    });
+  }
+
+  async disableHoverStyles() {
+    await browser.execute(() => {
+      $('html').css('pointer-events', 'none !important');
+    });
   }
 
   async waitForTrackingRequest() {
