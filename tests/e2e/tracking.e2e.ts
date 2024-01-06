@@ -16,6 +16,7 @@ describe('Tracking', () => {
     const countersBefore = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
       idSite: '1',
       lastMinutes: '60',
+      cip: '123.45.0.0',
     }));
 
     expect(countersBefore).toEqual([{
