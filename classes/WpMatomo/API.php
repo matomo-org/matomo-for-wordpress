@@ -12,7 +12,6 @@ namespace WpMatomo;
 use Exception;
 use Piwik\API\Request;
 use Piwik\Common;
-use Piwik\Container\StaticContainer;
 use WP_Error;
 use WP_REST_Request;
 
