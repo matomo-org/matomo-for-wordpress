@@ -17,6 +17,7 @@ class RealTimeMapPage extends MatomoReportingPage {
     await browser.execute(() => {
       $('.realTimeMap_datetime').hide();
     });
+    await browser.pause(1000);
 
     return result;
   }
