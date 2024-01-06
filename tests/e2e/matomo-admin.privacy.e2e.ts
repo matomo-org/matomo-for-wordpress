@@ -22,7 +22,7 @@ describe('Matomo Admin > Privacy', () => {
   it('should load the anonymize data page correctly', async () => {
     await AnonymizeDataPage.open();
 
-    await $('#anonymizeStartDate').waitForExist({ timeout: 2000 });
+    await $('#anonymizeStartDate').waitForExist();
 
     // hide the date selectors
     await browser.execute(function () {
