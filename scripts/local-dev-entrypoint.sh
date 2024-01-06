@@ -27,12 +27,12 @@ export WP_TESTS_DIR=/var/www/html/$WORDPRESS_FOLDER/wp-test # used for setting u
 echo "Using WordPress install $WORDPRESS_FOLDER."
 echo
 
+echo "<?php # /var/www/html/$WORDPRESS_FOLDER/wp-load.php" > /var/www/html/matomo.wpload_dir.php
+
 if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
   exit $?
 elif [[ "$EXECUTE_CONSOLE" = "1" ]]; then
-  echo "<?php # /var/www/html/$WORDPRESS_FOLDER/wp-load.php" > /var/www/html/matomo.wpload_dir.php
-
   cd /var/www/html/matomo-for-wordpress/app
   ./console "$@"
   exit $?
@@ -349,11 +349,13 @@ if [ ! -f $WP_TESTS_DIR/wp-tests-config.php ]; then
 fi
 
 # create unit test database if it does not already exist
+echo "creating test database..."
 php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
 \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
 \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
 
 # set allow_wp_app_password_auth tracker config, used in tests
+echo "set allow_wp_app_password_auth config..."
 php /var/www/html/matomo-for-wordpress/app/console config:set --section=Tracker --key=allow_wp_app_password_auth --value=1
 
 FIlE_OWNER_USERID=$UID
