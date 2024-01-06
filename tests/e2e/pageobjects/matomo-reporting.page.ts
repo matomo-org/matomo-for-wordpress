@@ -35,6 +35,8 @@ export default class MatomoReportingPage extends MatomoPage {
 
     await this.waitForPageWidgets();
 
+    await browser.pause(500);
+
     return result;
   }
 
