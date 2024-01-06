@@ -23,7 +23,6 @@ class GlobalSetup {
     try {
       await MatomoApi.call('POST', 'CoreAdminHome.runCronArchiving');
     } catch (e) {
-      console.log('archiving failed: ', e.message);
       // this API method currently prints out some PHP warnings due to a flush() that's
       // in CronArchive.php. WordPress adds headers after dispatching a REST API method,
       // causing the warnings to emit.
