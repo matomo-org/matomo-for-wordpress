@@ -36,7 +36,11 @@ export default class MatomoReportingPage extends MatomoPage {
     await this.waitForPageWidgets();
 
     // move mouse away from screen
-    await $('nav #logo').moveTo();
+    try {
+      await $('nav #logo').moveTo();
+    } catch (e) {
+      // ignore (this can fail sometimes, webdriver tries to move the mouse to a negative location)
+    }
 
     await browser.pause(500);
 
@@ -51,7 +55,9 @@ export default class MatomoReportingPage extends MatomoPage {
 
       let numWidgetsLoaded = 0;
       for (const loading of loadings) {
-        if (!(await loading.isDisplayed())) {
+        if (!(await loading.isDisplayed())
+          && (await loading.isExisting())
+        ) {
           numWidgetsLoaded += 1;
         }
       }
