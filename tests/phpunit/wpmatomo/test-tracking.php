@@ -30,6 +30,8 @@ class TrackingTest extends MatomoAnalytics_TestCase {
 		$user_model = new \Piwik\Plugins\UsersManager\Model();
 		$this->assertNotEmpty( $user_model->getUser( \WpMatomo\User::get_matomo_user_login( $user_id ) ) );
 
+		\Piwik\Tracker\TrackerConfig::setConfigValue( 'allow_wp_app_password_auth', 1 );
+
 		// add application password
 		// NOTE: we don't skip all the tests here to make sure the auth code
 		// works when application password functions do not exist
@@ -124,6 +126,29 @@ class TrackingTest extends MatomoAnalytics_TestCase {
 
 		$visit_date = $this->get_latest_action_date();
 		$this->assertEquals( $date_time_in_past, $visit_date );
+	}
+
+	public function test_cdt_ignored_when_config_value_is_not_set() {
+		\Piwik\Tracker\TrackerConfig::setConfigValue( 'allow_wp_app_password_auth', 0 );
+
+		$date_time_in_past = '2023-02-02 01:00:00';
+
+		$tracker = $this->make_local_tracker( $date_time_in_past );
+		$tracker->setUrl( 'http://test.com/page' );
+		$tracker->setTokenAuth( 'testtesttest' ); // ignored
+		$tracker->setExtraServerVar( 'PHP_AUTH_USER', $this->user_login );
+		$tracker->setExtraServerVar( 'PHP_AUTH_PW', $this->application_password );
+
+		$error_log_before = ini_get( 'error_log' );
+		ini_set( 'error_log', 'syslog' );
+		try {
+			self::assert_not_tracking_response( $tracker->doTrackPageView( 'page title' ) );
+		} finally {
+			ini_set( 'error_log', $error_log_before );
+		}
+
+		$visit_date = $this->get_latest_action_date();
+		$this->assertEmpty( $visit_date );
 	}
 
 	private function get_latest_action_date() {
