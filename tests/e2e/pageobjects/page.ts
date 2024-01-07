@@ -69,7 +69,7 @@ export default class Page {
   async waitForImages() {
     await browser.waitUntil(async () => {
       return browser.execute(function () {
-        let isAllComplete = false;
+        let isAllComplete = true;
         $('img').each((i, e) => {
           isAllComplete = isAllComplete && e.complete;
         });
