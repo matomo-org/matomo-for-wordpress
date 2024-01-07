@@ -51,8 +51,8 @@ describe('Matomo Reporting > Behaviour', () => {
     // has the samevalue for each row. so we change tag clouds to simple tables
     // before taking a screenshot.
     const widgetsToChange = [
-      'widgetVisitorInterestgetNumberOfVisitsPerVisitDuration',
-      'widgetVisitorInterestgetNumberOfVisitsPerPage',
+      //'widgetVisitorInterestgetNumberOfVisitsPerVisitDuration',
+      //'widgetVisitorInterestgetNumberOfVisitsPerPage',
     ];
 
     for (const w of widgetsToChange) {
