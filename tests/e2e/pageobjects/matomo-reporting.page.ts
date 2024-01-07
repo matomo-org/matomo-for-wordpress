@@ -42,7 +42,7 @@ export default class MatomoReportingPage extends MatomoPage {
 
   async waitForPageWidgets() {
     await browser.waitUntil(async () => {
-      const loadings = await $$('.matomo-widget > div > .loadingPiwik');
+      const loadings = await $$('.matomo-widget > div > .loadingPiwik,.matomo-widget .dimensionReport > .loadingPiwik');
 
       const isThereWidgets = loadings.length > 0;
 
