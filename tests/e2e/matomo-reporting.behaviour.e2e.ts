@@ -47,13 +47,24 @@ describe('Matomo Reporting > Behaviour', () => {
   it('should load the engagement page correctly', async () => {
     await EngagementPage.open();
 
-    await browser.execute(() => {
-      $('#widgetVisitorInterestgetNumberOfVisitsPerVisitDuration .activateVisualizationSelection')[0].click();
-    });
-    await browser.pause(250);
-    await browser.execute(() => {
-      $('#widgetVisitorInterestgetNumberOfVisitsPerVisitDuration .tableAllColumnsSwitch')[0].click();
-    })
+    // row positions in tag clouds can change randomly when the primary metric
+    // has the samevalue for each row. so we change tag clouds to simple tables
+    // before taking a screenshot.
+    const widgetsToChange = [
+      'widgetVisitorInterestgetNumberOfVisitsPerVisitDuration',
+      'widgetVisitorInterestgetNumberOfVisitsPerPage',
+    ];
+
+    for (const widget of widgetsToChange) {
+      await browser.execute(() => {
+        $(`#${widget} .activateVisualizationSelection`)[0].click();
+      });
+      await browser.pause(250);
+      await browser.execute(() => {
+        $(`#${widget} .tableAllColumnsSwitch`)[0].click();
+      });
+    }
+
     await browser.pause(2000);
 
     await EngagementPage.disableHoverStyles();
