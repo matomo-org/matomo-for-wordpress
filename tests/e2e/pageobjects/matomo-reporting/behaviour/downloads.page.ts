@@ -11,7 +11,11 @@ import MatomoReportingPage from '../../matomo-reporting.page.js';
 
 class DownloadsPage extends MatomoReportingPage {
   async open() {
-    return await super.open('General_Actions.General_Downloads');
+    const result = await super.open('General_Actions.General_Downloads');
+
+    await this.waitForActionsTables();
+
+    return result;
   }
 }
 

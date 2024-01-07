@@ -73,7 +73,6 @@ export default class MatomoReportingPage extends MatomoPage {
       await browser.pause(500);
 
       const rowLoadings = await $$('td .loadingPiwik');
-      console.log('row loadings', rowLoadings.length);
       if (rowLoadings.length === 0) {
         return true;
       }
@@ -83,7 +82,6 @@ export default class MatomoReportingPage extends MatomoPage {
         isAnyDisplayed = isAnyDisplayed || (await loading.isDisplayed());
       }
 
-      console.log('isAnyDisplayed', isAnyDisplayed);
       if (!isAnyDisplayed) {
         return true;
       }
