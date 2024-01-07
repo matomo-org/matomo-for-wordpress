@@ -19,6 +19,7 @@ describe('Matomo Admin > System', () => {
   it('should load the general settings page correctly', async () => {
     await GeneralSettingsPage.open();
 
+    await GeneralSettingsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.system.general-settings')
     ).toEqual(0);
@@ -27,6 +28,7 @@ describe('Matomo Admin > System', () => {
   it('should load the mobile messaging page correctly', async () => {
     await MobileMessagingPage.open();
 
+    await MobileMessagingPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.system.mobile-messaging')
     ).toEqual(0);

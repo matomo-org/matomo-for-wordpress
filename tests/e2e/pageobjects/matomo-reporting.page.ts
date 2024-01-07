@@ -31,7 +31,32 @@ export default class MatomoReportingPage extends MatomoPage {
       ...params,
     });
 
-    return await super.open(`/wp-content/plugins/matomo/app/index.php?${query}#?${hashQuery}`);
+    const result = await super.open(`/wp-content/plugins/matomo/app/index.php?${query}#?${hashQuery}`);
+
+    await this.waitForPageWidgets();
+
+    await browser.pause(500);
+
+    return result;
+  }
+
+  async waitForPageWidgets() {
+    await browser.waitUntil(async () => {
+      const loadings = await $$('.matomo-widget > div > .loadingPiwik');
+
+      const isThereWidgets = loadings.length > 0;
+
+      let numWidgetsLoaded = 0;
+      for (const loading of loadings) {
+        if (!(await loading.isDisplayed())
+          && (await loading.isExisting())
+        ) {
+          numWidgetsLoaded += 1;
+        }
+      }
+
+      return isThereWidgets && loadings.length === numWidgetsLoaded;
+    });
   }
 
   getDefaultDate() {

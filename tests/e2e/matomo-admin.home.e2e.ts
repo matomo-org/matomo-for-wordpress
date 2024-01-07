@@ -22,6 +22,7 @@ describe('Matomo Admin > Home', () => {
       $('ul.rss').hide();
     });
 
+    await MatomoHomePage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.home')
     ).toEqual(0);
