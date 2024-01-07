@@ -70,6 +70,8 @@ export default class MatomoReportingPage extends MatomoPage {
 
   async waitForActionsTables() {
     await browser.waitUntil(async () => {
+      await browser.pause(500);
+
       const rowLoadings = await $$('td .loadingPiwik');
       if (rowLoadings.length === 0) {
         return true;
@@ -84,7 +86,7 @@ export default class MatomoReportingPage extends MatomoPage {
         return true;
       }
 
-      await browser.pause(500);
+      return false;
     });
   }
 

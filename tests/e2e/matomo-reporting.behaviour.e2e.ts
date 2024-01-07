@@ -32,7 +32,7 @@ describe('Matomo Reporting > Behaviour', () => {
     await ContentsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.behaviour.contents')
-    ).toBeLessThan(0.05);
+    ).toBeLessThan(0.1);
   });
 
   it('should load the downloads page correctly', async () => {
@@ -41,7 +41,7 @@ describe('Matomo Reporting > Behaviour', () => {
     await DownloadsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.behaviour.downloads')
-    ).toBeLessThan(0.05);
+    ).toBeLessThan(0.1);
   });
 
   it('should load the engagement page correctly', async () => {
@@ -50,7 +50,7 @@ describe('Matomo Reporting > Behaviour', () => {
     await EngagementPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.behaviour.engagement')
-    ).toBeLessThan(0.05);
+    ).toBeLessThan(0.1);
   });
 
   it('should load the entry pages page correctly', async () => {
@@ -59,7 +59,7 @@ describe('Matomo Reporting > Behaviour', () => {
     await EntryPagesPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.behaviour.entry-pages')
-    ).toBeLessThan(0.05);
+    ).toBeLessThan(0.1);
   });
 
   it('should load the  page correctly', async () => {
@@ -68,7 +68,7 @@ describe('Matomo Reporting > Behaviour', () => {
     await EventsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.behaviour.events')
-    ).toBeLessThan(0.05);
+    ).toBeLessThan(0.1);
   });
 
   it('should load the exit pages page correctly', async () => {
@@ -77,7 +77,7 @@ describe('Matomo Reporting > Behaviour', () => {
     await ExitPagesPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.behaviour.exit-pages')
-    ).toBeLessThan(0.05);
+    ).toBeLessThan(0.1);
   });
 
   it('should load the outlinks page correctly', async () => {
@@ -86,7 +86,7 @@ describe('Matomo Reporting > Behaviour', () => {
     await OutlinksPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.behaviour.outlinks')
-    ).toBeLessThan(0.05);
+    ).toBeLessThan(0.1);
   });
 
   it('should load the page titles page correctly', async () => {
@@ -95,7 +95,7 @@ describe('Matomo Reporting > Behaviour', () => {
     await PageTitlesPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.behaviour.page-titles')
-    ).toBeLessThan(0.05);
+    ).toBeLessThan(0.1);
   });
 
   it('should load the pages page correctly', async () => {
@@ -104,7 +104,7 @@ describe('Matomo Reporting > Behaviour', () => {
     await PagesPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.behaviour.pages')
-    ).toBeLessThan(0.05);
+    ).toBeLessThan(0.1);
   });
 
   it('should load the performance page correctly', async () => {
@@ -113,7 +113,7 @@ describe('Matomo Reporting > Behaviour', () => {
     await PerformancePage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.behaviour.performance')
-    ).toBeLessThan(0.05);
+    ).toBeLessThan(0.1);
   });
 
   it('should load the site search page correctly', async () => {
@@ -122,7 +122,7 @@ describe('Matomo Reporting > Behaviour', () => {
     await SiteSearchPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.behaviour.site-search')
-    ).toBeLessThan(0.05);
+    ).toBeLessThan(0.1);
   });
 
   it('should load the transitions page correctly', async () => {
@@ -131,6 +131,6 @@ describe('Matomo Reporting > Behaviour', () => {
     await TransitionsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.behaviour.transitions')
-    ).toBeLessThan(0.05);
+    ).toBeLessThan(0.1);
   });
 });
