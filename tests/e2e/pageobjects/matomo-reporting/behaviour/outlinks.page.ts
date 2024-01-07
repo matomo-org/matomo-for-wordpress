@@ -6,12 +6,13 @@
  *
  */
 
+import { $ } from '@wdio/globals';
 import MatomoReportingPage from '../../matomo-reporting.page.js';
 
-class UserIdsPage extends MatomoReportingPage {
+class OutlinksPage extends MatomoReportingPage {
   async open() {
-    return await super.open('General_Visitors.UserId_UserReportTitle');
+    return await super.open('General_Actions.General_Outlinks');
   }
 }
 
-export default new UserIdsPage();
+export default new OutlinksPage();
