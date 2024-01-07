@@ -55,14 +55,14 @@ describe('Matomo Reporting > Behaviour', () => {
       'widgetVisitorInterestgetNumberOfVisitsPerPage',
     ];
 
-    for (const widget of widgetsToChange) {
-      await browser.execute(() => {
+    for (const w of widgetsToChange) {
+      await browser.execute((widget) => {
         $(`#${widget} .activateVisualizationSelection`)[0].click();
-      });
+      }, w);
       await browser.pause(250);
-      await browser.execute(() => {
+      await browser.execute((widget) => {
         $(`#${widget} .tableAllColumnsSwitch`)[0].click();
-      });
+      }, w);
     }
 
     await browser.pause(2000);
