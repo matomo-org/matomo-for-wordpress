@@ -36,17 +36,7 @@ export default class MatomoReportingPage extends MatomoPage {
     await this.waitForPageWidgets();
     await this.waitForImages();
 
-    // try to move mouse to another element to trigger mouseleave events
-    // for code with hover effects
-    try {
-      await browser.execute(() => {
-        $('#logo')[0].focus();
-      });
-    } catch (e) {
-      // ignore
-    }
-
-    await browser.pause(500);
+    await this.unfocus();
 
     return result;
   }

@@ -26,6 +26,7 @@ export default class MatomoAdminPage extends MatomoPage {
     const result = await super.open(`/wp-content/plugins/matomo/app/index.php?${query}`);
 
     await this.removePhpEolWarning();
+    await this.unfocus();
 
     return result;
   }
