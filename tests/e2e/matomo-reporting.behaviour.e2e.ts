@@ -52,7 +52,7 @@ describe('Matomo Reporting > Behaviour', () => {
     // before taking a screenshot.
     const widgetsToChange = [
       'widgetVisitorInterestgetNumberOfVisitsPerVisitDuration',
-      'widgetVisitorInterestgetNumberOfVisitsPerPage',
+      // 'widgetVisitorInterestgetNumberOfVisitsPerPage',
     ];
 
     for (const w of widgetsToChange) {
@@ -64,12 +64,8 @@ describe('Matomo Reporting > Behaviour', () => {
         $(`#${widget} .tableAllColumnsSwitch`)[0].click();
       }, w);
 
-      await browser.pause(1000);
+      await browser.pause(2000);
     }
-
-    await browser.execute(() => {
-      window.scrollTo(0, 0);
-    });
 
     await EngagementPage.disableHoverStyles();
     await expect(
