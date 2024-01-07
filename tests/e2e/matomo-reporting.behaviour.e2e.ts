@@ -47,6 +47,11 @@ describe('Matomo Reporting > Behaviour', () => {
   it('should load the engagement page correctly', async () => {
     await EngagementPage.open();
 
+    await $('#widgetVisitorInterestgetNumberOfVisitsPerVisitDuration .activateVisualizationSelection').moveTo();
+    await $('#widgetVisitorInterestgetNumberOfVisitsPerVisitDuration .activateVisualizationSelection').click();
+    await $('#widgetVisitorInterestgetNumberOfVisitsPerVisitDuration .tableAllColumnsSwitch').click();
+    await browser.pause(2000);
+
     await EngagementPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.behaviour.engagement')
