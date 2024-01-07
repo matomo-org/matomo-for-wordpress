@@ -11,7 +11,11 @@ import MatomoReportingPage from '../../matomo-reporting.page.js';
 
 class ExitPagesPage extends MatomoReportingPage {
   async open() {
-    return await super.open('General_Actions.Actions_SubmenuPagesExit');
+    const result = await super.open('General_Actions.Actions_SubmenuPagesExit');
+
+    await this.waitForActionsTables();
+
+    return result;
   }
 }
 

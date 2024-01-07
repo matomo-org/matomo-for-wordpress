@@ -34,6 +34,15 @@ export default class MatomoReportingPage extends MatomoPage {
     const result = await super.open(`/wp-content/plugins/matomo/app/index.php?${query}#?${hashQuery}`);
 
     await this.waitForPageWidgets();
+    await this.waitForImages();
+
+    // try to move mouse to another element to trigger mouseleave events
+    // for code with hover effects
+    try {
+      await $('#logo').moveTo();
+    } catch (e) {
+      // ignore
+    }
 
     await browser.pause(500);
 
@@ -56,6 +65,26 @@ export default class MatomoReportingPage extends MatomoPage {
       }
 
       return isThereWidgets && loadings.length === numWidgetsLoaded;
+    });
+  }
+
+  async waitForActionsTables() {
+    await browser.waitUntil(async () => {
+      const rowLoadings = await $('td .loadingPiwik');
+      if (rowLoadings.length === 0) {
+        return true;
+      }
+
+      let isAnyDisplayed = false;
+      for (const loading of rowLoadings) {
+        isAnyDisplayed = isAnyDisplayed || (await loading.isDisplayed());
+      }
+
+      if (!isAnyDisplayed) {
+        return true;
+      }
+
+      await browser.pause(500);
     });
   }
 
