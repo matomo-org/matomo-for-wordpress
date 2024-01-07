@@ -52,7 +52,7 @@ describe('Matomo Reporting > Behaviour', () => {
     // before taking a screenshot.
     const widgetsToChange = [
       'widgetVisitorInterestgetNumberOfVisitsPerVisitDuration',
-      // 'widgetVisitorInterestgetNumberOfVisitsPerPage',
+      'widgetVisitorInterestgetNumberOfVisitsPerPage',
     ];
 
     for (const w of widgetsToChange) {
@@ -66,6 +66,8 @@ describe('Matomo Reporting > Behaviour', () => {
 
       await browser.pause(2000);
     }
+
+    await browser.pause(2000);
 
     await EngagementPage.disableHoverStyles();
     await expect(
