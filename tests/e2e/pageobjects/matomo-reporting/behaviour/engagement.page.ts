@@ -11,7 +11,9 @@ import MatomoReportingPage from '../../matomo-reporting.page.js';
 
 class EngagementPage extends MatomoReportingPage {
   async open() {
-    return await super.open('General_Actions.VisitorInterest_Engagement');
+    const result = await super.open('General_Actions.VisitorInterest_Engagement');
+    await browser.pause(500);
+    return result;
   }
 }
 
