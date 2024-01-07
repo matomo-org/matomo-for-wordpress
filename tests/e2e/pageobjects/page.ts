@@ -65,4 +65,16 @@ export default class Page {
       document.head.insertAdjacentHTML('beforeend', `<style>${c}</style>`);
     } as any, css);
   }
+
+  async waitForImages() {
+    await browser.waitUntil(async () => {
+      return browser.execute(function () {
+        let isAllComplete = true;
+        $('img').each((i, e) => {
+          isAllComplete = isAllComplete && e.complete;
+        });
+        return isAllComplete;
+      });
+    });
+  }
 }

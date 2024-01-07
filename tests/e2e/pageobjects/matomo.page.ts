@@ -19,6 +19,20 @@ export default class MatomoPage extends Page {
     return result;
   }
 
+  async unfocus() {
+    // try to move mouse to another element to trigger mouseleave events
+    // for code with hover effects
+    try {
+      await browser.execute(() => {
+        $('#logo')[0].focus();
+      });
+    } catch (e) {
+      // ignore
+    }
+
+    await browser.pause(250);
+  }
+
   async hideDateSelectorDate() {
     await browser.execute(function () {
       $('#periodString a#date').text('');
