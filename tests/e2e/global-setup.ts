@@ -104,6 +104,13 @@ class GlobalSetup {
       cdt: `${this.getDateOfVisitTrackedInPast()} 19:00:00`,
       urlref: `http://google.com/search?q=${encodeURIComponent('search term')}`,
     }));
+
+    // fourth visit, direct entry
+    await MatomoApi.track('1', new URLSearchParams({
+      action_name: 'Test page',
+      url: `${baseUrl}/test/page`,
+      cdt: `${this.getDateOfVisitTrackedInPast()} 20:00:00`,
+    }));
   }
 
   private async isRealtimeVisitAlreadyTracked() {
