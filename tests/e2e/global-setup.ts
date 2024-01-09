@@ -14,7 +14,7 @@ import Website from './website.js';
 // setup, etc.
 class GlobalSetup {
   async setUp() {
-    await this.trackVisitInPast();
+    await this.trackVisitsInPast();
     await this.trackRealtimeVisitWithLocation();
     await this.runArchiving();
   }
@@ -49,18 +49,19 @@ class GlobalSetup {
     }));
   }
 
-  async trackVisitInPast() {
+  async trackVisitsInPast() {
     if (await this.isVisitAlreadyTracked()) {
       return;
     }
 
     const baseUrl = await Website.baseUrl();
 
-    // track first action
+    // track first visit
     await MatomoApi.track('1', new URLSearchParams({
       action_name: 'Test page',
       url: `${baseUrl}/test/page`,
       cdt: `${this.getDateOfVisitTrackedInPast()} 14:00:00`,
+      urlref: 'http://someotherwebsite.com/page.html',
     }));
 
     // track download
@@ -86,6 +87,29 @@ class GlobalSetup {
       action_name: 'Test page',
       url: `${baseUrl}/test/page`,
       cdt: `${this.getDateOfVisitTrackedInPast()} 17:00:00`,
+      urlref: 'http://facebook.com/some/fbookpage',
+    }));
+
+    // third visit with campaign referrer
+    await MatomoApi.track('1', new URLSearchParams({
+      action_name: 'Test page',
+      url: `${baseUrl}/test/page?mtm_campaign=test`,
+      cdt: `${this.getDateOfVisitTrackedInPast()} 18:00:00`,
+    }));
+
+    // fourth visit with search engine referrer
+    await MatomoApi.track('1', new URLSearchParams({
+      action_name: 'Test page',
+      url: `${baseUrl}/test/page`,
+      cdt: `${this.getDateOfVisitTrackedInPast()} 19:00:00`,
+      urlref: `http://google.com/search?q=${encodeURIComponent('search term')}`,
+    }));
+
+    // fourth visit, direct entry
+    await MatomoApi.track('1', new URLSearchParams({
+      action_name: 'Test page',
+      url: `${baseUrl}/test/page`,
+      cdt: `${this.getDateOfVisitTrackedInPast()} 20:00:00`,
     }));
   }
 

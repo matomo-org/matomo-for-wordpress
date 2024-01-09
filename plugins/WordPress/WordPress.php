@@ -150,7 +150,6 @@ class WordPress extends Plugin
     public function supportsAsync(&$supportsAsync)
     {
         if (is_multisite()
-            || (defined('WP_DEBUG') && WP_DEBUG)
             || !empty($_SERVER['MATOMO_WP_ROOT_PATH'])
             || !matomo_has_compatible_content_dir()
             || (defined( 'MATOMO_SUPPORT_ASYNC_ARCHIVING') && !MATOMO_SUPPORT_ASYNC_ARCHIVING)

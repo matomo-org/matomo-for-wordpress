@@ -63,6 +63,8 @@ describe('Matomo Reporting > Behaviour', () => {
       await browser.execute((widget) => {
         $(`#${widget} .tableAllColumnsSwitch`)[0].click();
       }, w);
+
+      await browser.pause(2000);
     }
 
     await browser.pause(2000);
