@@ -75,6 +75,6 @@ export default class Page {
         });
         return isAllComplete;
       });
-    });
+    }, { timeout: 20000 });
   }
 }

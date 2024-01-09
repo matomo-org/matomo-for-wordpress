@@ -39,8 +39,17 @@ class EmailReportsPage extends MatomoAdminPage {
 
   async downloadReport(id: string|number) {
     await $(`a[name="linkDownloadReport"][id="${id}"]`).click();
-    await browser.pause(2000);
-    await browser.switchWindow(/ScheduledReports\.generateReport/);
+
+    await browser.waitUntil(async () => {
+      await browser.pause(2000);
+      try {
+        await browser.switchWindow(/ScheduledReports\.generateReport/);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }, { timeout: 15000 });
+
     await $('h2#UserCountry_getContinent').waitForDisplayed();
 
     // remove date

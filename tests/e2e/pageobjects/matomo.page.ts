@@ -20,15 +20,21 @@ export default class MatomoPage extends Page {
   }
 
   async unfocus() {
+    await browser.execute(() => {
+      $('#logo')[0].scrollIntoView();
+    });
+
     // try to move mouse to another element to trigger mouseleave events
     // for code with hover effects
     try {
-      await browser.execute(() => {
-        $('#logo')[0].focus();
-      });
+      await $('#logo').moveTo();
     } catch (e) {
       // ignore
     }
+
+    await browser.execute(() => {
+      $('#logo')[0].focus();
+    });
 
     await browser.pause(250);
   }

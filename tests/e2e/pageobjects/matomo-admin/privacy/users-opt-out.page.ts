@@ -9,8 +9,10 @@
 import MatomoAdminPage from '../../matomo-admin.page.js';
 
 class UsersOptOutPage extends MatomoAdminPage {
-  open() {
-    return super.open('PrivacyManager.usersOptOut');
+  async open() {
+    const result = await super.open('PrivacyManager.usersOptOut');
+    await $('.matomo-save-button').waitForDisplayed();
+    return result;
   }
 }
 

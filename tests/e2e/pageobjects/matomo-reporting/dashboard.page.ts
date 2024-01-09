@@ -27,6 +27,7 @@ class DashboardPage extends MatomoReportingPage {
       $('.widget ul.rss').hide();
       $('#visitsLive .realTimeWidget_datetime').hide();
     });
+    await this.waitForImages();
 
     return result;
   }
