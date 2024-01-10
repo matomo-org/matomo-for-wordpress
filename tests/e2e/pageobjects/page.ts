@@ -22,6 +22,10 @@ export default class Page {
     *::-webkit-scrollbar {
       display: none;
     }
+
+    html[disable-over="true"] * {
+      pointer-events: none !important;
+    }
     `);
 
     return result;
@@ -29,13 +33,13 @@ export default class Page {
 
   async enableHoverStyles() {
     await browser.execute(() => {
-      $('html').css('pointer-events', '');
+      $('html').removeAttr('disable-hover');
     });
   }
 
   async disableHoverStyles() {
     await browser.execute(() => {
-      $('html').css('pointer-events', 'none !important');
+      $('html').attr('disable-hover', 'true');
     });
   }
 
