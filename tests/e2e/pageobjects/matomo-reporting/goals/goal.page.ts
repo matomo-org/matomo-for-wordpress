@@ -8,7 +8,7 @@
 
 import { $ } from '@wdio/globals';
 import MatomoReportingPage from '../../matomo-reporting.page.js';
-import GlobalSetup from '../../../global-setup';
+import GlobalSetup from '../../../global-setup.js';
 
 class GoalPage extends MatomoReportingPage {
   async open() {
