@@ -67,7 +67,7 @@ describe('Matomo Reporting > Behaviour', () => {
       await browser.pause(2000);
     }
 
-    await browser.pause(2000);
+    await browser.pause(3000);
 
     await EngagementPage.disableHoverStyles();
     await expect(
