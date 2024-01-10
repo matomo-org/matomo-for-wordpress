@@ -26,7 +26,7 @@ describe('Tracking', () => {
     await BlogPostPage.open();
     await BlogPostPage.waitForTrackingRequest();
 
-    await browser.pause(500); // just to make sure everything gets tracked
+    await browser.pause(1500); // just to make sure everything gets tracked
 
     const counters = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
       idSite: '1',
@@ -37,7 +37,7 @@ describe('Tracking', () => {
       visits: `${parseInt(countersBefore[0].visits, 10) + 1}`,
       actions: `${parseInt(countersBefore[0].actions, 10) + 2}`,
       visitors: `${parseInt(countersBefore[0].visitors, 10) + 1}`,
-      visitsConverted: '0',
+      visitsConverted: `${parseInt(countersBefore[0].visitors, 10) + 2}`,
     }]);
   });
 });

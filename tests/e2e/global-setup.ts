@@ -13,7 +13,14 @@ import Website from './website.js';
 // should ideally not add data, data should be added beforehand in global
 // setup, etc.
 class GlobalSetup {
+  private _testIdGoal: number|null = null;
+
+  get testIdGoal(): number|null {
+    return this._testIdGoal;
+  }
+
   async setUp() {
+    await this.createTestGoal();
     await this.trackVisitsInPast();
     await this.trackRealtimeVisitWithLocation();
     await this.runArchiving();
@@ -135,6 +142,27 @@ class GlobalSetup {
     }));
 
     return visitInDay instanceof Array && visitInDay.length > 0;
+  }
+
+  private async createTestGoal() {
+    const goal = await MatomoApi.call('GET', 'Goals.getGoal', new URLSearchParams({
+      idSite: '1',
+      idGoal: '1',
+    }));
+
+    if (goal.idgoal) { // already created
+      return;
+    }
+
+    const response = await MatomoApi.call('POST', 'Goals.addGoal', new URLSearchParams({
+      idSite: '1',
+      name: 'test goal',
+      matchAttribute: 'url',
+      pattern: 'test',
+      patternType: 'contains',
+    }));
+
+    this._testIdGoal = parseInt(response.value, 10);
   }
 
   getDateOfVisitTrackedInPast() {
