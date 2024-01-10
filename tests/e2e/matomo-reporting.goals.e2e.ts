@@ -11,7 +11,6 @@ import ManageGoalsPage from './pageobjects/matomo-reporting/goals/manage-goals.p
 import GoalOverviewPage from './pageobjects/matomo-reporting/goals/overview.page.js';
 import GoalPage from './pageobjects/matomo-reporting/goals/goal.page.js';
 import Website from './website.js';
-import MatomoDashboardPage from "./pageobjects/matomo-reporting/dashboard.page";
 
 describe('Matomo Reporting > Goals', () => {
   before(async () => {
@@ -21,7 +20,7 @@ describe('Matomo Reporting > Goals', () => {
   it('should load the manage goals page correctly', async () => {
     await ManageGoalsPage.open();
 
-    await MatomoDashboardPage.disableHoverStyles();
+    await ManageGoalsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.goals.manage-goals')
     ).toEqual(0);
@@ -30,7 +29,7 @@ describe('Matomo Reporting > Goals', () => {
   it('should load a single goal page correctly', async () => {
     await GoalPage.open();
 
-    await MatomoDashboardPage.disableHoverStyles();
+    await GoalPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.goals.single-goal')
     ).toEqual(0);
@@ -39,7 +38,7 @@ describe('Matomo Reporting > Goals', () => {
   it('should load the goals overview page correctly', async () => {
     await GoalOverviewPage.open();
 
-    await MatomoDashboardPage.disableHoverStyles();
+    await GoalOverviewPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.goals.overview')
     ).toEqual(0);

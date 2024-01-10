@@ -145,6 +145,15 @@ class GlobalSetup {
   }
 
   private async createTestGoal() {
+    const goal = await MatomoApi.call('GET', 'Goals.getGoal', new URLSearchParams({
+      idSite: '1',
+      idGoal: '1',
+    }));
+
+    if (goal.idgoal) { // already created
+      return;
+    }
+
     const response = await MatomoApi.call('POST', 'Goals.addGoal', new URLSearchParams({
       idSite: '1',
       name: 'test goal',
