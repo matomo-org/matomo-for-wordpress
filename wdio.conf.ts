@@ -42,6 +42,7 @@ export const config: Options.Testrunner = {
   // Patterns to exclude.
   exclude: [
     './tests/e2e/tracking.e2e.ts',
+    './tests/e2e/tracking.ecommerce.e2e.ts',
   ],
   //
   // ============

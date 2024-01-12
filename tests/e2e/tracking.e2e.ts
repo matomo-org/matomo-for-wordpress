@@ -10,7 +10,7 @@ import { expect, browser } from '@wdio/globals'
 import BlogHomepage from './pageobjects/blog-homepage.page.js';
 import BlogPostPage from './pageobjects/blog-post.page.js';
 import MatomoApi from './apiobjects/matomo.api.js';
-import Website from "./website";
+import Website from './website.js';
 
 describe('Tracking', () => {
   before(async () => {
