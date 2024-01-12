@@ -29,6 +29,7 @@ class BlogCheckoutPage extends Page {
       await $('li.woocommerce-order-overview__order').waitForDisplayed();
     } catch (e) {
       console.log(await browser.execute(() => document.body.innerHTML));
+      throw e;
     }
   }
 }
