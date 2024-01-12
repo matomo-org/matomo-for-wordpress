@@ -36,14 +36,12 @@ class BlogProductPage extends Page {
         return window.jQuery('.checkout-button,.wc-block-cart__submit-button').length > 0;
       });
     });
-
-    await browser.execute(() => {
-      window.jQuery('.checkout-button,.wc-block-cart__submit-button')[0].click();
-    });
   }
 
   async checkout() {
-    await $('.wc-block-cart__submit-button').click();
+    await browser.execute(() => {
+      window.jQuery('.checkout-button,.wc-block-cart__submit-button')[0].click();
+    });
   }
 }
 
