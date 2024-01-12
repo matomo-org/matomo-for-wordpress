@@ -10,6 +10,7 @@ import Page from './page.js';
 
 class BlogCheckoutPage extends Page {
   async order() {
+    console.log(await browser.execute(() => document.body.innerHTML));
     await $('input#email').setValue('testemail@example.com');
     await $('input#billing-first_name').setValue('FirstName');
     await $('input#billing-last_name').setValue('McLastNamington');
