@@ -99,7 +99,10 @@ class Website {
     }
 
     // get through guided config
-    await skipSetupLink.click();
+    await browser.execute(() => {
+      window.jQuery('.woocommerce-profiler-navigation-skip-link,.woocommerce-profile-wizard__footer-link')[0].click();
+    })
+    await browser.pause(500);
 
     let isWooCommerce7 = false;
 
