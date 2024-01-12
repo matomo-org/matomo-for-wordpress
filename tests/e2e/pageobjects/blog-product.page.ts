@@ -24,7 +24,7 @@ class BlogProductPage extends Page {
       });
       return exists;
     });
-    await browser.pause(500);
+    await browser.pause(1500);
     await browser.execute(() => {
       window.jQuery('a:contains("View cart")')[0].click();
     });

@@ -19,7 +19,7 @@ class BlogCheckoutPage extends Page {
       window.jQuery('#billing-state input').val('California');
     });
     await $('input#billing-postcode').setValue('90401');
-    await browser.pause(500);
+    await browser.pause(1500);
 
     await browser.execute(() => {
       window.jQuery('.wc-block-components-checkout-place-order-button')[0].click();
