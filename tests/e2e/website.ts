@@ -128,6 +128,12 @@ class Website {
 
     // enable cash on delivery
     if (isWooCommerce7) {
+      await browser.waitUntil(async () => {
+        return await browser.execute(() => {
+          return window.jQuery('span:contains(Set up payments)').length;
+        }) > 0;
+      });
+
       await browser.execute(() => {
         window.jQuery('span:contains(Set up payments)').closest('li')[0].click();
       });
