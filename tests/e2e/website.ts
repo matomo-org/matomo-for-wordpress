@@ -85,6 +85,11 @@ class Website {
     await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-admin`);
 
     const skipSetupLink = $('.woocommerce-profiler-navigation-skip-link');
+    try {
+      await skipSetupLink.waitForDisplayed();
+    } catch (e) {
+      // ignore
+    }
 
     const alreadyConfigured = !(await skipSetupLink.isExisting());
     if (alreadyConfigured) {
