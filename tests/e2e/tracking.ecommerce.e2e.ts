@@ -15,10 +15,11 @@ import Website from './website.js';
 describe('Tracking (Ecommerce)', () => {
   before(async () => {
     await Website.deleteAllCookies();
-    await Website.setUpWooCommerce();
   });
 
   it('should track ecommerce events and orders using the JS client', async () => {
+    await Website.setUpWooCommerce();
+
     const countersBefore = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
       idSite: '1',
       lastMinutes: '60',
