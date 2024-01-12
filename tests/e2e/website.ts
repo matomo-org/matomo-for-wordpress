@@ -84,7 +84,7 @@ class Website {
 
     await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-admin`);
 
-    const skipSetupLink = $('.woocommerce-profiler-navigation-skip-link');
+    const skipSetupLink = $('.woocommerce-profiler-navigation-skip-link,.woocommerce-profile-wizard__footer-link');
     try {
       await skipSetupLink.waitForDisplayed();
     } catch (e) {
@@ -101,33 +101,41 @@ class Website {
     // get through guided config
     await skipSetupLink.click();
 
-    await $('#woocommerce-select-control-0__help').click();
+    let isWooCommerce7 = false;
 
-    await browser.execute(() => {
-      window.jQuery('.woocommerce-select-control__option[id="woocommerce-select-control__option-0-US:CA"]').click();
-    });
+    const possibleModalButton = $('.woocommerce-usage-modal__actions.is-secondary');
+    if (await possibleModalButton.isExisting()) { // woocommerce version that works with php 7.2
+      isWooCommerce7 = true;
 
-    await $('.woocommerce-profiler-go-to-mystore__button-container > button').click();
+      await possibleModalButton.click();
+    } else { // latest woocommerce
+      await $('#woocommerce-select-control-0__help').click();
+
+      await browser.execute(() => {
+        window.jQuery('.woocommerce-select-control__option[id="woocommerce-select-control__option-0-US:CA"]').click();
+      });
+
+      await $('.woocommerce-profiler-go-to-mystore__button-container > button').click();
+    }
 
     await browser.waitUntil(async () => {
       const url = await browser.getUrl()
       return /page=wc-admin/.test(url);
     });
 
-    // set up stripe payment
-    /*
-    would need to use: STRIPE_PUBLISHABLE_KEY & STRIPE_SECRET_KEY
-    await $('.woocommerce-task-list__item-title').waitForDisplayed();
-
-    await browser.execute(async () => {
-      jQuery('.woocommerce-task-list__item-title:contains("Set up payments")').closest('li').click();
-    })
-
-    await $('.woocommerce-task-payment-stripe button.woocommerce-task-payment__action').click();
-    */
-
     // enable cash on delivery
-    await $('.woocommerce-task-payment-cod .woocommerce-task-payment__action').click();
+    if (isWooCommerce7) {
+      await browser.execute(() => {
+        window.jQuery('span:contains(Set up payments)').closest('li').click();
+      });
+      await $('.woocommerce-task-payment-cod').waitForExist();
+    }
+
+    await browser.execute(() => {
+      window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action')[0].click();
+    });
+
+    await browser.pause(500);
 
     this.isWooCommerceSetup = true;
   }
