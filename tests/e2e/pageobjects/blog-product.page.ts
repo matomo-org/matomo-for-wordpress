@@ -24,10 +24,12 @@ class BlogProductPage extends Page {
       });
       return exists;
     });
-    await browser.pause(1500);
-    await browser.execute(() => {
-      window.jQuery('a:contains("View cart")')[0].click();
+
+    const checkoutPage = await browser.execute(() => {
+      return window.jQuery('a:contains("View cart")').attr('href');
     });
+    await super.open(checkoutPage);
+
     await $('.wc-block-cart__submit-button').waitForExist();
   }
 
