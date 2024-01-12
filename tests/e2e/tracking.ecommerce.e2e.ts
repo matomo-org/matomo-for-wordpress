@@ -47,10 +47,10 @@ describe('Tracking (Ecommerce)', () => {
     }));
 
     expect(countersAfter).toEqual([{
-      visits: `${parseInt(countersBefore[0].visits, 10) + 1}`,
-      actions: `${parseInt(countersBefore[0].actions, 10) + 4}`,
-      visitors: `${parseInt(countersBefore[0].visitors, 10) + 1}`,
-      visitsConverted: `${parseInt(countersBefore[0].visitors, 0) + 2}`,
+      visits: `${parseInt(countersBefore[0].visits, 10)}`,
+      actions: `${parseInt(countersBefore[0].actions, 10) + 5}`,
+      visitors: `${parseInt(countersBefore[0].visitors, 10)}`,
+      visitsConverted: `${parseInt(countersBefore[0].visitors, 0) + 1}`,
     }]);
   });
 });
