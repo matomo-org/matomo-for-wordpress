@@ -28,7 +28,7 @@ class BlogProductPage extends Page {
     const checkoutPage = await browser.execute(() => {
       return window.jQuery('a:contains("View cart")').attr('href');
     });
-    await super.open(checkoutPage);
+    await browser.url(checkoutPage);
 
     await $('.wc-block-cart__submit-button').waitForExist();
   }
