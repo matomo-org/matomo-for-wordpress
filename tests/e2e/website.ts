@@ -129,7 +129,7 @@ class Website {
     // enable cash on delivery
     if (isWooCommerce7) {
       await browser.execute(() => {
-        window.jQuery('span:contains(Set up payments)').closest('li').click();
+        window.jQuery('span:contains(Set up payments)').closest('li')[0].click();
       });
       await $('.woocommerce-task-payment-cod').waitForExist();
     }
