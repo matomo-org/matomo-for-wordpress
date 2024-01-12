@@ -81,7 +81,6 @@ class Website {
     }
 
     const baseUrl = await this.baseUrl();
-    await browser.url(`${baseUrl}/wp-login.php`);
 
     await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-admin`);
 
@@ -89,6 +88,8 @@ class Website {
 
     const alreadyConfigured = !(await skipSetupLink.isExisting());
     if (alreadyConfigured) {
+      console.log(await browser.execute(() => document.body.innerHTML));
+      throw new Error('should not happen in CI');
       return;
     }
 

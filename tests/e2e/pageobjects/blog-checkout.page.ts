@@ -16,9 +16,15 @@ class BlogCheckoutPage extends Page {
     await $('input#billing-address_1,#billing_address_1').setValue('200 Santa Monica Pier');
     await $('input#billing-city,#billing_city').setValue('Santa Monica');
     await browser.execute(() => {
-      window.jQuery('#billing-state input,#billing_state').val('California');
+      window.jQuery('#billing-state input').val('California'); // local
+      window.jQuery('#billing_state').val('CA'); // CI
     });
     await $('input#billing-postcode,#billing_postcode').setValue('90401');
+    try {
+      await $('#billing_phone').setValue('555-123-4567');
+    } catch (e) {
+      // ignore
+    }
     await browser.pause(1500);
 
     await browser.execute(() => {
