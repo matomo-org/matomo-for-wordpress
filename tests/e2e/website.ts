@@ -106,7 +106,7 @@ class Website {
 
     let isWooCommerce7 = false;
 
-    const possibleModalButton = $('.woocommerce-usage-modal__actions.is-secondary');
+    const possibleModalButton = $('.woocommerce-usage-modal__actions .is-secondary');
     if (await possibleModalButton.isExisting()) { // woocommerce version that works with php 7.2
       isWooCommerce7 = true;
 
