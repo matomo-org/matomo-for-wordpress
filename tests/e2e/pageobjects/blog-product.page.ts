@@ -12,6 +12,34 @@ class BlogProductPage extends Page {
   open() {
     return super.open('/?product=folding-monitors');
   }
+
+  async addToCart() {
+    await $('button[name="add-to-cart"]').click();
+    await browser.waitUntil(() => {
+      return jQuery('a:contains("View cart")');
+    });
+    await browser.execute(() => {
+      jQuery('a:contains("View cart")').click();
+    });
+    await $('.wc-block-cart__submit-button').isDisplayed();
+  }
+
+  async checkout() {
+    await $('.wc-block-cart__submit-button').click();
+
+    await $('input#email').setValue('testemail@example.com');
+    await $('input#billing-first_name').setValue('FirstName');
+    await $('input#billing-last_name').setValue('McLastNamington');
+    await $('input#billing-address_1').setValue('200 Santa Monica Pier');
+    await $('input#billing-city').setValue('Santa Monica');
+    await browser.execute(() => {
+      $('#billing-state input').val('California');
+    });
+    await $('input#billing-postcode').setValue('90401');
+    await $('.wc-block-components-checkout-place-order-button').click();
+
+    await $('li.woocommerce-order-overview__order').waitForDisplayed();
+  }
 }
 
 export default new BlogProductPage();

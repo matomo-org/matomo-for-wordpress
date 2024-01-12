@@ -39,7 +39,7 @@ export default class Page {
     });
   }
 
-  async waitForTrackingRequest() {
+  async waitForTrackingRequest(expectedTrackingRequestCount = 1) {
     await browser.waitUntil(async function() {
       const trackedPageviews = await browser.execute(function () {
         if (!window.Piwik) {
@@ -54,7 +54,7 @@ export default class Page {
         return tracker.getNumTrackedPageViews();
       });
 
-      return trackedPageviews > 0;
+      return trackedPageviews >= expectedTrackingRequestCount;
     });
 
     await browser.pause(500); // wait for matomo to process the tracking requests

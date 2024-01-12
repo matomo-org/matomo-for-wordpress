@@ -20,6 +20,8 @@ class GlobalSetup {
   }
 
   async setUp() {
+    await Website.setUpWooCommerce();
+
     await this.createTestGoal();
     await this.trackVisitsInPast();
     await this.trackRealtimeVisitWithLocation();

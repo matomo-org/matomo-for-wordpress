@@ -8,16 +8,23 @@
 
 import { expect, browser } from '@wdio/globals'
 import BlogProductPage from './pageobjects/blog-product.page.js';
+import BlogCheckoutPage from './pageobjects/blog-checkout.page.js';
 import MatomoApi from './apiobjects/matomo.api.js';
 
 describe('Tracking (Ecommerce)', () => {
   it('should track ecommerce events and orders using the JS client', async () => {
-    // TODO
     await BlogProductPage.open();
+    await BlogProductPage.waitForTrackingRequest(1); // pageview + product view in one request
 
-    await BlogProductPage.disableHoverStyles();
-    await expect(
-      await browser.checkFullPageScreen('matomo-tracking.ecommerce.product')
-    ).toBeLessThan(0.1);
+    await BlogProductPage.addToCart(); // tracked server side
+    await BlogCheckoutPage.waitForTrackingRequest(1); // pageview refresh + product update
+
+    await BlogProductPage.checkout(); // redirects to checkout
+    await BlogCheckoutPage.waitForTrackingRequest(1); // pageview
+
+    await BlogCheckoutPage.order(); // redirects to order received
+    await BlogCheckoutPage.waitForTrackingRequest(1); // pageview
+
+    // TODO: check tracked
   });
 });

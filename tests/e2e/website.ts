@@ -25,6 +25,7 @@ async function getLatestWordpressVersion() {
 class Website {
   private wpNonce: string|undefined;
   private loggedIn: boolean = false;
+  private isWooCommerceSetup: boolean = false;
 
   async baseUrl() {
     const wordpressVersion = process.env.WORDPRESS_VERSION || (await getLatestWordpressVersion());
@@ -69,6 +70,59 @@ class Website {
     }
 
     return this.wpNonce!;
+  }
+
+  async setUpWooCommerce() {
+    await this.login();
+
+    if (this.isWooCommerceSetup) {
+      return;
+    }
+
+    const baseUrl = await this.baseUrl();
+    await browser.url(`${baseUrl}/wp-login.php`);
+
+    await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-admin`);
+
+    const skipSetupLink = $('.woocommerce-profiler-navigation-skip-link');
+
+    const alreadyConfigured = !(await skipSetupLink.isExisting());
+    if (alreadyConfigured) {
+      return;
+    }
+
+    // get through guided config
+    await skipSetupLink.click();
+
+    await $('#woocommerce-select-control-0__help').click();
+
+    await browser.execute(() => {
+      jQuery('.woocommerce-select-control__option[id="woocommerce-select-control__option-0-US:CA"]').click();
+    });
+
+    await $('.woocommerce-profiler-go-to-mystore__button-container > button').click();
+
+    await browser.waitUntil(async () => {
+      const url = await browser.getUrl()
+      return /page=wc-admin/.test(url);
+    });
+
+    // set up stripe payment
+    /*
+    would need to use: STRIPE_PUBLISHABLE_KEY & STRIPE_SECRET_KEY
+    await $('.woocommerce-task-list__item-title').waitForDisplayed();
+
+    await browser.execute(async () => {
+      jQuery('.woocommerce-task-list__item-title:contains("Set up payments")').closest('li').click();
+    })
+
+    await $('.woocommerce-task-payment-stripe button.woocommerce-task-payment__action').click();
+    */
+
+    // enable cash on delivery
+    await $('.woocommerce-task-payment-cod .woocommerce-task-payment__action').click();
+
+    this.isWooCommerceSetup = true;
   }
 }
 
