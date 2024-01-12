@@ -10,8 +10,13 @@ import { expect, browser } from '@wdio/globals'
 import BlogHomepage from './pageobjects/blog-homepage.page.js';
 import BlogPostPage from './pageobjects/blog-post.page.js';
 import MatomoApi from './apiobjects/matomo.api.js';
+import Website from "./website";
 
 describe('Tracking', () => {
+  before(async () => {
+    await Website.deleteAllCookies();
+  });
+
   it('should track pageviews using the JS client', async () => {
     const countersBefore = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
       idSite: '1',

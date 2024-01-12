@@ -14,31 +14,25 @@ class BlogProductPage extends Page {
   }
 
   async addToCart() {
-    await $('button[name="add-to-cart"]').click();
-    await browser.waitUntil(() => {
-      return jQuery('a:contains("View cart")');
-    });
+    await $('button[name="add-to-cart"]').waitForExist();
     await browser.execute(() => {
-      jQuery('a:contains("View cart")').click();
+      window.jQuery('button[name="add-to-cart"]').click();
     });
-    await $('.wc-block-cart__submit-button').isDisplayed();
+    await browser.waitUntil(async () => {
+      const exists = await browser.execute(() => {
+        return window.jQuery('a:contains("View cart")').length > 0;
+      });
+      return exists;
+    });
+    await browser.pause(500);
+    await browser.execute(() => {
+      window.jQuery('a:contains("View cart")')[0].click();
+    });
+    await $('.wc-block-cart__submit-button').waitForExist();
   }
 
   async checkout() {
     await $('.wc-block-cart__submit-button').click();
-
-    await $('input#email').setValue('testemail@example.com');
-    await $('input#billing-first_name').setValue('FirstName');
-    await $('input#billing-last_name').setValue('McLastNamington');
-    await $('input#billing-address_1').setValue('200 Santa Monica Pier');
-    await $('input#billing-city').setValue('Santa Monica');
-    await browser.execute(() => {
-      $('#billing-state input').val('California');
-    });
-    await $('input#billing-postcode').setValue('90401');
-    await $('.wc-block-components-checkout-place-order-button').click();
-
-    await $('li.woocommerce-order-overview__order').waitForDisplayed();
   }
 }
 

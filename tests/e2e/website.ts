@@ -9,6 +9,7 @@
 import fetch from 'node-fetch';
 import * as path from 'path';
 import * as fs from 'fs';
+import {browser} from "@wdio/globals";
 
 let latestWordpressVersion: string|undefined;
 
@@ -97,7 +98,7 @@ class Website {
     await $('#woocommerce-select-control-0__help').click();
 
     await browser.execute(() => {
-      jQuery('.woocommerce-select-control__option[id="woocommerce-select-control__option-0-US:CA"]').click();
+      window.jQuery('.woocommerce-select-control__option[id="woocommerce-select-control__option-0-US:CA"]').click();
     });
 
     await $('.woocommerce-profiler-go-to-mystore__button-container > button').click();
@@ -123,6 +124,11 @@ class Website {
     await $('.woocommerce-task-payment-cod .woocommerce-task-payment__action').click();
 
     this.isWooCommerceSetup = true;
+  }
+
+  async deleteAllCookies() {
+    await browser.deleteAllCookies();
+    this.loggedIn = false;
   }
 }
 
