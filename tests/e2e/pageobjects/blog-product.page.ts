@@ -30,13 +30,16 @@ class BlogProductPage extends Page {
     });
     await browser.url(checkoutPage);
 
-    try {
-      await $('.wc-block-cart__submit-button').waitForExist({ timeout: 20000 });
-    } catch (e) {
-      const html = await browser.execute(() => document.body.innerHTML);
-      console.log(html);
-      throw e;
-    }
+    await browser.waitUntil(() => {
+      return browser.execute(() => {
+        // the checkout button can have different classes when run locally vs. CI
+        return window.jQuery('.checkout-button,.wc-block-cart__submit-button').length > 0;
+      });
+    });
+
+    await browser.execute(() => {
+      window.jQuery('.checkout-button,.wc-block-cart__submit-button')[0].click();
+    });
   }
 
   async checkout() {
