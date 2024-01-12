@@ -77,6 +77,7 @@ class Base {
 
 	protected function should_track_background() {
 		return ( defined( 'DOING_AJAX' ) && DOING_AJAX )
+			   || ( defined( 'REST_REQUEST' ) && REST_REQUEST )
 			   || WpMatomo::$settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_TAGMANAGER;
 	}
 
