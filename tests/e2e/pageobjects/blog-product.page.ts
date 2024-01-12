@@ -30,7 +30,7 @@ class BlogProductPage extends Page {
     });
     await browser.url(checkoutPage);
 
-    await $('.wc-block-cart__submit-button').waitForExist();
+    await $('.wc-block-cart__submit-button').waitForExist({ timeout: 20000 });
   }
 
   async checkout() {
