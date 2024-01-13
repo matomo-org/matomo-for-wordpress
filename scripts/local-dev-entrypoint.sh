@@ -199,6 +199,7 @@ php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
 # extra actions required during tests
 if [ "$WORDPRESS_FOLDER" = "test" ]; then
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo globalSetting set track_mode default
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo sync sites
 fi
 
 # add index.php file listing available installs to root /var/www/html

@@ -39,7 +39,7 @@ describe('Tracking (Ecommerce)', () => {
     await BlogCheckoutPage.order(); // redirects to order received
     await BlogCheckoutPage.waitForTrackingRequest(1); // pageview
 
-    await browser.pause(2500); // just to make sure everything gets tracked
+    await browser.pause(3000); // just to make sure everything gets tracked
 
     const countersAfter = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
       idSite: '1',

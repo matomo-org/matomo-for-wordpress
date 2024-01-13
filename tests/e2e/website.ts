@@ -137,8 +137,9 @@ class Website {
       await browser.execute(() => {
         window.jQuery('span:contains(Set up payments)').closest('li')[0].click();
       });
-      await $('.woocommerce-task-payment-cod').waitForExist();
     }
+
+    await $('.woocommerce-task-payment-cod').waitForExist();
 
     await browser.execute(() => {
       window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action')[0].click();
