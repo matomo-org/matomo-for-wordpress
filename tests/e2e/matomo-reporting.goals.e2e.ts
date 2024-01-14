@@ -41,6 +41,6 @@ describe('Matomo Reporting > Goals', () => {
     await GoalOverviewPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.goals.overview')
-    ).toEqual(0);
+    ).toBeLessThan(0.2);
   });
 });

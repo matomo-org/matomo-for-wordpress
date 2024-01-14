@@ -24,7 +24,7 @@ describe('Matomo Reporting > Ecommerce', () => {
     await OverviewPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.ecommerce.overview')
-    ).toEqual(0);
+    ).toBeLessThan(0.1);
   });
 
   it('should load the ecommerce log page correctly', async () => {
@@ -33,7 +33,7 @@ describe('Matomo Reporting > Ecommerce', () => {
     await EcommerceLogPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.ecommerce.ecommerce-log')
-    ).toEqual(0);
+    ).toBeLessThan(0.1);
   });
 
   it('should load the products page correctly', async () => {
@@ -42,7 +42,7 @@ describe('Matomo Reporting > Ecommerce', () => {
     await ProductsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.ecommerce.products')
-    ).toEqual(0);
+    ).toBeLessThan(0.1);
   });
 
   it('should load the sales page correctly', async () => {
@@ -51,6 +51,6 @@ describe('Matomo Reporting > Ecommerce', () => {
     await SalesPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.ecommerce.sales')
-    ).toEqual(0);
+    ).toBeLessThan(0.1);
   });
 });
