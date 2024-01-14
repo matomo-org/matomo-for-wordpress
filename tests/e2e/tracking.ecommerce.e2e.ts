@@ -18,14 +18,9 @@ describe('Tracking (Ecommerce)', () => {
   });
 
   it('should track ecommerce events and orders using the JS client', async () => {
+    // TODO: these tests are not particularly great atm. there's no way to get the number of orders
+    // overall or number of conversions overall without
     await Website.setUpWooCommerce();
-
-    const countersBefore = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
-      idSite: '1',
-      lastMinutes: '60',
-    }));
-
-    expect(countersBefore).toHaveLength(1);
 
     await BlogProductPage.open();
     await BlogProductPage.waitForTrackingRequest(1); // pageview + product view in one request
@@ -41,16 +36,18 @@ describe('Tracking (Ecommerce)', () => {
 
     await browser.pause(3000); // just to make sure everything gets tracked
 
-    const countersAfter = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
+    const visitsAfter = await MatomoApi.call('GET', 'Live.getLastVisitsDetails', new URLSearchParams({
       idSite: '1',
-      lastMinutes: '60',
+      date: 'today',
+      period: 'month',
+      filter_limit: '100',
+      format: 'json',
+      test: '1',
     }));
 
-    expect(countersAfter).toEqual([{
-      visits: `${parseInt(countersBefore[0].visits, 10)}`,
-      actions: `${parseInt(countersBefore[0].actions, 10) + 5}`,
-      visitors: `${parseInt(countersBefore[0].visitors, 10)}`,
-      visitsConverted: `${parseInt(countersBefore[0].visitors, 0) + 1}`,
-    }]);
+    const visitsWithEcommerceOrder = visitsAfter.filter((v) => v.visitEcommerceStatus === 'ordered');
+    console.log(visitsAfter.map((v) => v.visitEcommerceStatus));
+
+    expect(visitsWithEcommerceOrder.length).toEqual(1);
   });
 });

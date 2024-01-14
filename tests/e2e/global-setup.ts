@@ -170,7 +170,7 @@ class GlobalSetup {
     const realTimeVisit = await MatomoApi.call('GET', 'Live.getLastVisitsDetails', new URLSearchParams({
       idSite: '1',
       date: 'today',
-      period: 'week',
+      period: 'month',
       filter_limit: '1',
       format: 'json',
     }));

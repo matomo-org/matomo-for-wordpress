@@ -31,12 +31,7 @@ class BlogCheckoutPage extends Page {
       window.jQuery('.wc-block-components-checkout-place-order-button,#place_order')[0].click();
     });
 
-    try {
-      await $('li.woocommerce-order-overview__order').waitForDisplayed();
-    } catch (e) {
-      console.log(await browser.execute(() => document.body.innerHTML));
-      throw e;
-    }
+    await $('li.woocommerce-order-overview__order').waitForDisplayed();
   }
 }
 

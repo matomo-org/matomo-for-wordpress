@@ -20,7 +20,7 @@ class BlogProductPage extends Page {
     });
     await browser.waitUntil(async () => {
       const exists = await browser.execute(() => {
-        return window.jQuery('a:contains("View cart")').length > 0;
+        return window.jQuery && window.jQuery('a:contains("View cart")').length > 0;
       });
       return exists;
     });

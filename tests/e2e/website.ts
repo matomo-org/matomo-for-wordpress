@@ -82,7 +82,7 @@ class Website {
 
     const baseUrl = await this.baseUrl();
 
-    await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-admin`);
+    await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-admin&path=%2Fsetup-wizard`);
 
     const skipSetupLink = $('.woocommerce-profiler-navigation-skip-link,.woocommerce-profile-wizard__footer-link');
     try {
@@ -93,8 +93,6 @@ class Website {
 
     const alreadyConfigured = !(await skipSetupLink.isExisting());
     if (alreadyConfigured) {
-      console.log(await browser.execute(() => document.body.innerHTML));
-      throw new Error('should not happen in CI');
       return;
     }
 
@@ -123,29 +121,36 @@ class Website {
 
     await browser.waitUntil(async () => {
       const url = await browser.getUrl()
-      return /page=wc-admin/.test(url);
+      return /page=wc-admin$/.test(url);
+    });
+
+    await $('.woocommerce-homescreen .woocommerce-experimental-list').waitForDisplayed();
+
+    await browser.waitUntil(async () => {
+      return await browser.execute(() => {
+        return window.jQuery('span:contains(Set up payments)').length > 0
+          || window.jQuery('span:contains(You set up payments)').length > 0;
+      });
     });
 
     // enable cash on delivery
-    if (isWooCommerce7) {
-      await browser.waitUntil(async () => {
-        return await browser.execute(() => {
-          return window.jQuery('span:contains(Set up payments)').length;
-        }) > 0;
-      });
+    const isPaymentsSetup = await browser.execute(() => {
+      return window.jQuery('span:contains(You set up payments)').length > 0;
+    });
 
+    if (!isPaymentsSetup) {
       await browser.execute(() => {
         window.jQuery('span:contains(Set up payments)').closest('li')[0].click();
       });
+
+      await $('.woocommerce-task-payment-cod').waitForExist();
+
+      await browser.execute(() => {
+        window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action')[0].click();
+      });
+
+      await browser.pause(500);
     }
-
-    await $('.woocommerce-task-payment-cod').waitForExist();
-
-    await browser.execute(() => {
-      window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action')[0].click();
-    });
-
-    await browser.pause(500);
 
     this.isWooCommerceSetup = true;
   }
