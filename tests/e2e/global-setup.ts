@@ -222,7 +222,6 @@ class GlobalSetup {
     const goal = await MatomoApi.call('GET', 'Goals.getGoal', new URLSearchParams({
       idSite: '1',
       idGoal: '1',
-      revenue: '2',
     }));
 
     if (goal.idgoal) { // already created
@@ -235,6 +234,7 @@ class GlobalSetup {
       matchAttribute: 'url',
       pattern: 'test',
       patternType: 'contains',
+      revenue: '2',
     }));
 
     this._testIdGoal = parseInt(response.value, 10);
