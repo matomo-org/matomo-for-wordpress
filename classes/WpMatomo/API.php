@@ -11,6 +11,7 @@ namespace WpMatomo;
 
 use Exception;
 use Piwik\API\Request;
+use Piwik\API\ResponseBuilder;
 use Piwik\Common;
 use WP_Error;
 use WP_REST_Request;
@@ -220,14 +221,18 @@ class API {
 			}
 		}
 
-		if ( empty( $params['format'] ) ) {
-			$params['format'] = 'json';
-		}
+		$output_format    = empty( $params['format'] ) ? 'json' : $params['format'];
+		$params['format'] = 'original';
 
 		try {
 			$result = Request::processRequest( $api_method, $params );
 
-			if ( 'json' === $params['format'] ) {
+			$response_builder = new ResponseBuilder( $output_format, $params );
+			$response_builder->disableDataTablePostProcessor(); // done within Request, we don't need to use it again
+
+			$result = $response_builder->getResponse( $result );
+
+			if ( 'json' === $output_format ) {
 				// WordPress always JSON encodes the result of REST API methods, so sending format=json to Matomo
 				// results in double JSON encoding the result. so if format=json is detected, we have to parse the
 				// the JSON before handing it over to WordPress.
