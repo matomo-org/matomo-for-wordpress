@@ -150,7 +150,7 @@ class GlobalSetup {
       _pks: 'PROD_3',
       _pkn: 'Folding monitors',
       _id,
-      cdt: `${this.getDateOfVisitTrackedInPast()} 08:30:00`,
+      cdt: `${this.getDateOfVisitTrackedInPast()} 08:10:00`,
     }));
 
     // next a visit with an order
