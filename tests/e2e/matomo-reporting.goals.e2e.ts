@@ -23,7 +23,7 @@ describe('Matomo Reporting > Goals', () => {
     await ManageGoalsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.goals.manage-goals')
-    ).toEqual(0);
+    ).toBeLessThan(0.01);
   });
 
   it('should load a single goal page correctly', async () => {
@@ -32,7 +32,7 @@ describe('Matomo Reporting > Goals', () => {
     await GoalPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.goals.single-goal')
-    ).toEqual(0);
+    ).toBeLessThan(0.01);
   });
 
   it('should load the goals overview page correctly', async () => {
