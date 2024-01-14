@@ -126,6 +126,34 @@ class GlobalSetup {
 
     const _id = 'f494b8a6861e71f0';
 
+    // first a visit with an abandoned cart
+    await MatomoApi.track('1', new URLSearchParams({
+      action_name: 'Folding monitors – Matomo for WordPress Test',
+      url: `${baseUrl}/?product=folding-monitors`,
+      _pkc: '["Uncategorized"]',
+      _pkp: '286.00',
+      _pks: 'PROD_3',
+      _pkn: 'Folding monitors',
+      _id,
+      cdt: `${this.getDateOfVisitTrackedInPast()} 08:00:00`,
+    }));
+
+    // add to cart
+    await MatomoApi.track('1', new URLSearchParams({
+      idgoal: '0',
+      revenue: '286.00',
+      ec_items: '[["PROD_3","Folding monitors",["Uncategorized"],286,1]]',
+      url: `${baseUrl}/?product=folding-monitors`,
+      urlref: `${baseUrl}/?product=folding-monitors`,
+      _pkc: '["Uncategorized"]',
+      _pkp: '286.00',
+      _pks: 'PROD_3',
+      _pkn: 'Folding monitors',
+      _id,
+      cdt: `${this.getDateOfVisitTrackedInPast()} 08:30:00`,
+    }));
+
+    // next a visit with an order
     // product page view
     await MatomoApi.track('1', new URLSearchParams({
       action_name: 'Folding monitors – Matomo for WordPress Test',
