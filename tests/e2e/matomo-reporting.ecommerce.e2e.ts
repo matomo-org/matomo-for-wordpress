@@ -23,7 +23,7 @@ describe('Matomo Reporting > Ecommerce', () => {
 
     await OverviewPage.disableHoverStyles();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.ecommerce.overview')
+      await browser.checkFullPageScreen('matomo-reporting.ecommerce.overview')
     ).toEqual(0);
   });
 
@@ -32,7 +32,7 @@ describe('Matomo Reporting > Ecommerce', () => {
 
     await EcommerceLogPage.disableHoverStyles();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.ecommerce.ecommerce-log')
+      await browser.checkFullPageScreen('matomo-reporting.ecommerce.ecommerce-log')
     ).toEqual(0);
   });
 
@@ -41,7 +41,7 @@ describe('Matomo Reporting > Ecommerce', () => {
 
     await ProductsPage.disableHoverStyles();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.ecommerce.products')
+      await browser.checkFullPageScreen('matomo-reporting.ecommerce.products')
     ).toEqual(0);
   });
 
@@ -50,7 +50,7 @@ describe('Matomo Reporting > Ecommerce', () => {
 
     await SalesPage.disableHoverStyles();
     await expect(
-      await browser.checkFullPageScreen('matomo-admin.ecommerce.sales')
+      await browser.checkFullPageScreen('matomo-reporting.ecommerce.sales')
     ).toEqual(0);
   });
 });
