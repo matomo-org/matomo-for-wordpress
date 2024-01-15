@@ -5,6 +5,17 @@ import GlobalSetup from './tests/e2e/global-setup.ts';
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
+async function saveScreenshotIfError(test, error) {
+  if (error && !error.matcherResult) {
+    const failureScreenshotName = test.title.replace(/\s+/g, '_') + '_failure';
+    try {
+      await browser.saveFullPageScreen(failureScreenshotName);
+    } catch (e) {
+      console.log(`could not save failure screenshot ${failureScreenshotName}`);
+    }
+  }
+}
+
 export const config: Options.Testrunner = {
   //
   // ====================
@@ -187,15 +198,13 @@ export const config: Options.Testrunner = {
   // methods to it. If one of them returns with a promise, WebdriverIO will wait until that promise got
   // resolved to continue.
   async afterTest(test, context, { error }) {
-    if (error && !error.matcherResult) {
-      const failureScreenshotName = test.title.replace(/\s+/g, '_') + '_failure';
-      try {
-        await browser.saveFullPageScreen(failureScreenshotName);
-      } catch (e) {
-        console.log(`could not save failure screenshot ${failureScreenshotName}`);
-      }
-    }
+    await saveScreenshotIfError(test, error);
   },
+
+  async afterHook(test, context, { error }) {
+    await saveScreenshotIfError(test, error);
+  },
+
   /**
    * Gets executed once before all workers get launched.
    * @param {object} config wdio configuration object
