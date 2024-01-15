@@ -12,7 +12,8 @@ import BlogCheckoutPage from './pageobjects/blog-checkout.page.js';
 import MatomoApi from './apiobjects/matomo.api.js';
 import Website from './website.js';
 
-describe('Tracking (Ecommerce)', () => {
+
+describe('Tracking (Ecommerce)', function() {
   this.timeout(300000);
 
   before(async () => {
