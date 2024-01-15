@@ -232,7 +232,6 @@ class API {
 
 			$result = $response_builder->getResponse( $result );
 
-			// TODO: add DataTable test in new PR
 			if ( 'json' === $output_format ) {
 				// WordPress always JSON encodes the result of REST API methods, so sending format=json to Matomo
 				// results in double JSON encoding the result. so if format=json is detected, we have to parse the
