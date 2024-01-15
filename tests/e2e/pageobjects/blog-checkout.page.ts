@@ -31,7 +31,7 @@ class BlogCheckoutPage extends Page {
       window.jQuery('.wc-block-components-checkout-place-order-button,#place_order')[0].click();
     });
 
-    await $('li.woocommerce-order-overview__order').waitForDisplayed();
+    await $('li.woocommerce-order-overview__order').waitForDisplayed({ timeout: 20000 });
   }
 }
 

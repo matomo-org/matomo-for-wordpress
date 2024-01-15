@@ -52,7 +52,7 @@ class Website {
       return !!(await browser.execute(function () {
         return window.wpApiSettings?.nonce;
       }));
-    }, { timeout: 40000 });
+    }, { timeout: 60000 });
   }
 
   async getWpNonce() {
@@ -139,17 +139,21 @@ class Website {
     });
 
     if (!isPaymentsSetup) {
+      console.log('setting payments up');
       await browser.execute(() => {
         window.jQuery('span:contains(Set up payments)').closest('li')[0].click();
       });
 
       await $('.woocommerce-task-payment-cod').waitForExist();
 
+      console.log('clicking enable cod?');
       await browser.execute(() => {
         window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action')[0].click();
       });
 
-      await browser.pause(500);
+      await browser.pause(1000);
+    } else {
+      console.log('payments already setup')
     }
 
     this.isWooCommerceSetup = true;

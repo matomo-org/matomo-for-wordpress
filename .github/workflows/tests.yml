@@ -91,6 +91,13 @@ jobs:
         shell: bash
         run: composer install
 
+      # disable deprecation notices in e2e tests. we can't control much of the code being
+      # tested (ie, WordPress, other WordPress plugins), and it's very easy for one of them
+      # to trigger a deprecation notice
+      - name: Disable deprecation notices
+        shell: bash
+        run: mkdir docker && echo 'error_reporting = E_ALL & ~E_DEPRECATED' > docker/php-custom.ini
+
       # TODO: redundancy w/ e2e_tests, could be moved to a script
       # docker-compose up
       # TODO: i can't seem to get docker layer caching to work.
