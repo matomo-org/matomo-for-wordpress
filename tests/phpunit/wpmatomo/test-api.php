@@ -55,13 +55,31 @@ class ApiTest extends MatomoAnalytics_TestCase {
 		$this->assertNull( json_decode( $response->get_data() ) );
 	}
 
-	public function test_dispatch_matomo_api_with_json_response_when_datatable() {
+	public function test_dispatch_matomo_api_with_json_response_when_array() {
 		$this->create_set_super_admin();
 
 		$request = new WP_REST_Request( 'GET', '/' . API::VERSION . '/api/widget_metadata' );
 		$request->set_param( 'format', 'json' );
 		$response = rest_get_server()->dispatch( $request );
 		$this->assertIsArray( $response->get_data() );
+	}
+
+	public function test_dispatch_matomo_api_response_when_datatable() {
+		$this->create_set_super_admin();
+
+		$tracker = $this->make_local_tracker( null );
+		$tracker->setUrl( 'http://whatever.com/a/page' );
+		$this->assert_tracking_response( $tracker->doTrackPageView( 'a page view' ) );
+
+		$request = new WP_REST_Request( 'GET', '/' . API::VERSION . '/live/last_visits_details' );
+		$request->set_param( 'format', 'json' );
+		$request->set_param( 'period', 'month' );
+		$request->set_param( 'date', 'today' );
+		$request->set_param( 'idSite', '1' );
+
+		$response = rest_get_server()->dispatch( $request );
+		$this->assertIsArray( $response->get_data() );
+		$this->assertCount( 1, $response->get_data() );
 	}
 
 	public function test_dispatch_matomo_api_when_not_authenticated() {
