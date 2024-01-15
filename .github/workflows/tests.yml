@@ -175,7 +175,10 @@ jobs:
       # to trigger a deprecation notice
       - name: Disable deprecation notices
         shell: bash
-        run: mkdir docker && echo 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_NOTICE' > docker/php-custom.ini
+        run: |
+          mkdir docker
+          echo '[PHP]' > docker/php-custom.ini
+          echo 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_NOTICE' >> docker/php-custom.ini
 
       # docker-compose up
       # TODO: i can't seem to get docker layer caching to work.

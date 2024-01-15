@@ -28,6 +28,14 @@ if (!defined( 'ABSPATH')) {
     exit; // if accessed directly
 }
 
+// undo the error_reporting(E_ALL) in app/core/bootstrap.php
+// since we're not running Matomo in isolation, we don't want to
+// override the user's configured error_reporting value, which
+// may be set to hide errors from other WordPress plugins
+if (isset($GLOBALS['MATOMO_WP_ORIGINAL_ERROR_REPORTING'])) {
+    error_reporting($GLOBALS['MATOMO_WP_ORIGINAL_ERROR_REPORTING']);
+}
+
 class WordPress extends Plugin
 {
 	public static $is_archiving = false;

@@ -14,8 +14,6 @@ import Website from './website.js';
 
 
 describe('Tracking (Ecommerce)', function() {
-  this.timeout(300000);
-
   before(async () => {
     await Website.deleteAllCookies();
   });

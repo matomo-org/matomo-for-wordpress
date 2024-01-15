@@ -32,7 +32,7 @@ describe('Matomo Reporting > Goals', () => {
     await GoalPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.goals.single-goal')
-    ).toBeLessThan(0.01);
+    ).toBeLessThan(0.2); // by dimension reports' width can be random
   });
 
   it('should load the goals overview page correctly', async () => {
@@ -41,6 +41,6 @@ describe('Matomo Reporting > Goals', () => {
     await GoalOverviewPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.goals.overview')
-    ).toBeLessThan(0.2);
+    ).toBeLessThan(0.2); // by dimension reports' width can be random
   });
 });
