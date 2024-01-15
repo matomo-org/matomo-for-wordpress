@@ -13,9 +13,12 @@ import GlobalSetup from '../../../global-setup.js';
 class GoalPage extends MatomoReportingPage {
   async open() {
     const result = await super.open(`Goals_Goals.${GlobalSetup.testIdGoal}`);
-    // sometimes the column widths are just a little different in the by dimension report
-    // maybe a pause will fix it
-    await browser.pause(1000);
+    // enforce uniform column size in by dimension report
+    await this.addStylesToPage(`
+    .dimensionReport .dataTable td, .dimensionReport .dataTable th {
+      width: 105px !important;
+    }
+    `);
     return result;
   }
 }

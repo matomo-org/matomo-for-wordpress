@@ -22,6 +22,7 @@ class GlobalSetup {
   async setUp() {
     await this.createTestGoal();
     await this.trackVisitsInPast();
+    await this.trackOrderInPast();
     await this.trackRealtimeVisitWithLocation();
     await this.runArchiving();
   }
@@ -120,11 +121,84 @@ class GlobalSetup {
     }));
   }
 
+  async trackOrderInPast() {
+    const baseUrl = await Website.baseUrl();
+
+    const _id = 'f494b8a6861e71f0';
+
+    // first a visit with an abandoned cart
+    await MatomoApi.track('1', new URLSearchParams({
+      action_name: 'Folding monitors – Matomo for WordPress Test',
+      url: `${baseUrl}/?product=folding-monitors`,
+      _pkc: '["Uncategorized"]',
+      _pkp: '286.00',
+      _pks: 'PROD_3',
+      _pkn: 'Folding monitors',
+      _id,
+      cdt: `${this.getDateOfVisitTrackedInPast()} 08:00:00`,
+    }));
+
+    // add to cart
+    await MatomoApi.track('1', new URLSearchParams({
+      idgoal: '0',
+      revenue: '286.00',
+      ec_items: '[["PROD_3","Folding monitors",["Uncategorized"],286,1]]',
+      url: `${baseUrl}/?product=folding-monitors`,
+      urlref: `${baseUrl}/?product=folding-monitors`,
+      _pkc: '["Uncategorized"]',
+      _pkp: '286.00',
+      _pks: 'PROD_3',
+      _pkn: 'Folding monitors',
+      _id,
+      cdt: `${this.getDateOfVisitTrackedInPast()} 08:10:00`,
+    }));
+
+    // next a visit with an order
+    // product page view
+    await MatomoApi.track('1', new URLSearchParams({
+      action_name: 'Folding monitors – Matomo for WordPress Test',
+      url: `${baseUrl}/?product=folding-monitors`,
+      _pkc: '["Uncategorized"]',
+      _pkp: '286.00',
+      _pks: 'PROD_3',
+      _pkn: 'Folding monitors',
+      _id,
+      cdt: `${this.getDateOfVisitTrackedInPast()} 11:00:00`,
+    }));
+
+    // add to cart
+    await MatomoApi.track('1', new URLSearchParams({
+      idgoal: '0',
+      revenue: '286.00',
+      ec_items: '[["PROD_3","Folding monitors",["Uncategorized"],286,1]]',
+      url: `${baseUrl}/?product=folding-monitors`,
+      urlref: `${baseUrl}/?product=folding-monitors`,
+      _pkc: '["Uncategorized"]',
+      _pkp: '286.00',
+      _pks: 'PROD_3',
+      _pkn: 'Folding monitors',
+      _id,
+      cdt: `${this.getDateOfVisitTrackedInPast()} 11:05:00`,
+    }));
+
+    // order
+    await MatomoApi.track('1', new URLSearchParams({
+      idgoal: '0',
+      revenue: '286.00',
+      ec_items: '[["PROD_3","Folding monitors",["Uncategorized"],286,1]]',
+      url: `${baseUrl}/?page_id=6`,
+      urlref: `${baseUrl}/?product=folding-monitors`,
+      _id,
+      ec_id: '10000', // sufficiently high enough number to avoid conflicts with other order IDs
+      cdt: `${this.getDateOfVisitTrackedInPast()} 11:06:00`,
+    }));
+  }
+
   private async isRealtimeVisitAlreadyTracked() {
     const realTimeVisit = await MatomoApi.call('GET', 'Live.getLastVisitsDetails', new URLSearchParams({
       idSite: '1',
       date: 'today',
-      period: 'week',
+      period: 'month',
       filter_limit: '1',
       format: 'json',
     }));
@@ -160,6 +234,7 @@ class GlobalSetup {
       matchAttribute: 'url',
       pattern: 'test',
       patternType: 'contains',
+      revenue: '2',
     }));
 
     this._testIdGoal = parseInt(response.value, 10);

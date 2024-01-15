@@ -199,6 +199,7 @@ php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
 # extra actions required during tests
 if [ "$WORDPRESS_FOLDER" = "test" ]; then
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo globalSetting set track_mode default
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo sync sites
 fi
 
 # add index.php file listing available installs to root /var/www/html
@@ -379,6 +380,9 @@ if ! which apache2-foreground &> /dev/null; then
 
   php-fpm "$@"
 else
+  # set port to exposed port so we can make server side requests to localhost
+  sed -i "s/Listen 80\\>/Listen $PORT/" /etc/apache2/ports.conf
+
   # make sure home url points to 'localhost'
   php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
   \$pdo->exec('UPDATE \`$WP_DB_NAME\`.wp_options SET option_value = REPLACE(option_value, \'nginx\', \'localhost\') WHERE option_name IN (\'home\', \'siteurl\')');" || true

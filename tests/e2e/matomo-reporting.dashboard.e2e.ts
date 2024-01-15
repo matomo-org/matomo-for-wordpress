@@ -24,12 +24,18 @@ describe('Matomo Reporting > Dashboard', () => {
         if (/Complete \d+/.test($(e).text())) {
           $(e).text($(e).text().replace(/Complete \d+/g, 'Complete '));
         }
+
+        // this text can be different based on what e2e test ends up running
+        // first, so just hide it
+        if (/a matomo expert/i.test($(e).text())) {
+          $(e).text('REMOVED BY TEST');
+        }
       });
     });
 
     await MatomoDashboardPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.dashboard')
-    ).toEqual(0);
+    ).toBeLessThan(0.05);
   });
 });

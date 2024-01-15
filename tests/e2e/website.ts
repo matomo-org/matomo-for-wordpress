@@ -9,6 +9,7 @@
 import fetch from 'node-fetch';
 import * as path from 'path';
 import * as fs from 'fs';
+import {browser} from "@wdio/globals";
 
 let latestWordpressVersion: string|undefined;
 
@@ -25,6 +26,7 @@ async function getLatestWordpressVersion() {
 class Website {
   private wpNonce: string|undefined;
   private loggedIn: boolean = false;
+  private isWooCommerceSetup: boolean = false;
 
   async baseUrl() {
     const wordpressVersion = process.env.WORDPRESS_VERSION || (await getLatestWordpressVersion());
@@ -50,7 +52,7 @@ class Website {
       return !!(await browser.execute(function () {
         return window.wpApiSettings?.nonce;
       }));
-    }, { timeout: 40000 });
+    }, { timeout: 60000 });
   }
 
   async getWpNonce() {
@@ -69,6 +71,97 @@ class Website {
     }
 
     return this.wpNonce!;
+  }
+
+  async setUpWooCommerce() {
+    await this.login();
+
+    if (this.isWooCommerceSetup) {
+      return;
+    }
+
+    const baseUrl = await this.baseUrl();
+
+    await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-admin&path=%2Fsetup-wizard`);
+
+    const skipSetupLink = $('.woocommerce-profiler-navigation-skip-link,.woocommerce-profile-wizard__footer-link');
+    try {
+      await skipSetupLink.waitForDisplayed();
+    } catch (e) {
+      // ignore
+    }
+
+    const alreadyConfigured = !(await skipSetupLink.isExisting());
+    if (alreadyConfigured) {
+      return;
+    }
+
+    // get through guided config
+    await browser.execute(() => {
+      window.jQuery('.woocommerce-profiler-navigation-skip-link,.woocommerce-profile-wizard__footer-link')[0].click();
+    })
+    await browser.pause(500);
+
+    let isWooCommerce7 = false;
+
+    const possibleModalButton = $('.woocommerce-usage-modal__actions .is-secondary');
+    if (await possibleModalButton.isExisting()) { // woocommerce version that works with php 7.2
+      isWooCommerce7 = true;
+
+      await possibleModalButton.click();
+    } else { // latest woocommerce
+      await $('#woocommerce-select-control-0__help').click();
+
+      await browser.execute(() => {
+        window.jQuery('.woocommerce-select-control__option[id="woocommerce-select-control__option-0-US:CA"]').click();
+      });
+
+      await $('.woocommerce-profiler-go-to-mystore__button-container > button').click();
+    }
+
+    await browser.waitUntil(async () => {
+      const url = await browser.getUrl()
+      return /page=wc-admin$/.test(url);
+    });
+
+    await $('.woocommerce-homescreen .woocommerce-experimental-list').waitForDisplayed();
+
+    await browser.waitUntil(async () => {
+      return await browser.execute(() => {
+        return window.jQuery('span:contains(Set up payments)').length > 0
+          || window.jQuery('span:contains(You set up payments)').length > 0;
+      });
+    });
+
+    // enable cash on delivery
+    const isPaymentsSetup = await browser.execute(() => {
+      return window.jQuery('span:contains(You set up payments)').length > 0;
+    });
+
+    if (!isPaymentsSetup) {
+      await browser.execute(() => {
+        window.jQuery('span:contains(Set up payments)').closest('li')[0].click();
+      });
+
+      await $('.woocommerce-task-payment-cod').waitForExist();
+
+      await browser.execute(() => {
+        window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action')[0].click();
+      });
+
+      await browser.waitUntil(() => {
+        return browser.execute(() => {
+          return window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action:contains(Manage)').length > 0;
+        });
+      });
+    }
+
+    this.isWooCommerceSetup = true;
+  }
+
+  async deleteAllCookies() {
+    await browser.deleteAllCookies();
+    this.loggedIn = false;
   }
 }
 

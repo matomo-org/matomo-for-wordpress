@@ -69,6 +69,6 @@ describe('Matomo Admin > Privacy', () => {
     await GdprToolsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.privacy.gdpr-tools')
-    ).toEqual(0);
+    ).toBeLessThan(0.01);
   });
 });

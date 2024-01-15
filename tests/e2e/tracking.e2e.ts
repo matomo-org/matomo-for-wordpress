@@ -10,8 +10,13 @@ import { expect, browser } from '@wdio/globals'
 import BlogHomepage from './pageobjects/blog-homepage.page.js';
 import BlogPostPage from './pageobjects/blog-post.page.js';
 import MatomoApi from './apiobjects/matomo.api.js';
+import Website from './website.js';
 
 describe('Tracking', () => {
+  before(async () => {
+    await Website.deleteAllCookies();
+  });
+
   it('should track pageviews using the JS client', async () => {
     const countersBefore = await MatomoApi.call('GET', 'Live.getCounters', new URLSearchParams({
       idSite: '1',
@@ -37,7 +42,7 @@ describe('Tracking', () => {
       visits: `${parseInt(countersBefore[0].visits, 10) + 1}`,
       actions: `${parseInt(countersBefore[0].actions, 10) + 2}`,
       visitors: `${parseInt(countersBefore[0].visitors, 10) + 1}`,
-      visitsConverted: `${parseInt(countersBefore[0].visitors, 10) + 2}`,
+      visitsConverted: `${parseInt(countersBefore[0].visitors, 10) + 1}`,
     }]);
   });
 });

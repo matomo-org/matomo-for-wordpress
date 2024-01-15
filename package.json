@@ -15,7 +15,7 @@
     "wdio-wait-for": "^3.0.7"
   },
   "scripts": {
-    "wdio": "wdio run ./wdio.conf.tracking.ts; wdio run ./wdio.conf.ts",
+    "wdio": "wdio run ./wdio.conf.tracking.ts && wdio run ./wdio.conf.ts",
     "compose": "docker compose --env-file .env.default --env-file .env",
     "phpcs": "./vendor/bin/phpcs",
     "matomo:console": "docker compose --env-file .env.default --env-file .env run --rm console"

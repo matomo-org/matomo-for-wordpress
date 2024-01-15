@@ -33,7 +33,7 @@ services:
       - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
       - ./scripts/local-gitconfig:/root/.gitconfig
     ports:
-      - "$PORT:80"
+      - "$PORT:$PORT"
     entrypoint: /usr/src/entrypoint.sh
     depends_on:
       - $BACKEND
