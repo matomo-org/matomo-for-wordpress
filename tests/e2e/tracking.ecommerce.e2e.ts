@@ -46,7 +46,6 @@ describe('Tracking (Ecommerce)', () => {
     }));
 
     const visitsWithEcommerceOrder = visitsAfter.filter((v) => v.visitEcommerceStatus === 'ordered');
-    console.log(visitsAfter.map((v) => v.visitEcommerceStatus));
 
     expect(visitsWithEcommerceOrder.length).toEqual(1);
   });
