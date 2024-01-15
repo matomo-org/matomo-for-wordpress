@@ -11,7 +11,14 @@ import MatomoReportingPage from '../../matomo-reporting.page.js';
 
 class GoalsOverviewPage extends MatomoReportingPage {
   async open() {
-    return await super.open('Goals_Goals.General_Overview');
+    const result = await super.open('Goals_Goals.General_Overview');
+    // enforce uniform column size in by dimension report
+    await this.addStylesToPage(`
+    .dimensionReport .dataTable td, .dimensionReport .dataTable th {
+      width: 105px !important;
+    }
+    `);
+    return result;
   }
 }
 
