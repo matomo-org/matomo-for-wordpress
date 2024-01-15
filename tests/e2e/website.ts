@@ -139,21 +139,21 @@ class Website {
     });
 
     if (!isPaymentsSetup) {
-      console.log('setting payments up');
       await browser.execute(() => {
         window.jQuery('span:contains(Set up payments)').closest('li')[0].click();
       });
 
       await $('.woocommerce-task-payment-cod').waitForExist();
 
-      console.log('clicking enable cod?');
       await browser.execute(() => {
         window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action')[0].click();
       });
 
-      await browser.pause(1000);
-    } else {
-      console.log('payments already setup')
+      await browser.waitUntil(() => {
+        return browser.execute(() => {
+          return window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action:contains(Manage)').length > 0;
+        });
+      });
     }
 
     this.isWooCommerceSetup = true;

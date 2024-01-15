@@ -18,12 +18,12 @@ describe('Tracking (Ecommerce)', function() {
 
   before(async () => {
     await Website.deleteAllCookies();
-    await Website.setUpWooCommerce();
   });
 
   it('should track ecommerce events and orders using the JS client', async () => {
     // TODO: these tests are not particularly great atm. there's no way to get the number of orders
     // overall or number of conversions overall without
+    await Website.setUpWooCommerce();
 
     await BlogProductPage.open();
     await BlogProductPage.waitForTrackingRequest(1); // pageview + product view in one request
