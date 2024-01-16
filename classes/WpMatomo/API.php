@@ -89,6 +89,19 @@ class API {
 		$this->register_route( 'Goals', 'addGoal' );
 		$this->register_route( 'Goals', 'updateGoal' );
 		$this->register_route( 'Goals', 'deleteGoal' );
+
+		$this->register_route( 'TagManager', 'getContainerTags' );
+		$this->register_route( 'TagManager', 'addContainerTag' );
+		$this->register_route( 'TagManager', 'getContainerTriggers' );
+		$this->register_route( 'TagManager', 'addContainerTrigger' );
+		$this->register_route( 'TagManager', 'getContainerVariables' );
+		$this->register_route( 'TagManager', 'addContainerVariable' );
+		$this->register_route( 'TagManager', 'addContainer' );
+		$this->register_route( 'TagManager', 'getContainer' );
+		$this->register_route( 'TagManager', 'getContainers' );
+		$this->register_route( 'TagManager', 'getContainerVersions' );
+		$this->register_route( 'TagManager', 'createContainerVersion' );
+		$this->register_route( 'TagManager', 'publishContainerVersion' );
 	}
 
 	public function hit() {
@@ -154,10 +167,11 @@ class API {
 			'invalidate' => 'POST',
 			'run'        => 'POST',
 			'send'       => 'POST',
+			'publish'    => 'POST',
 			'delete'     => 'DELETE',
 			'remove'     => 'DELETE',
 		];
-		$starts_with_keep_prefix = [ 'anonymize', 'invalidate', 'run', 'send' ];
+		$starts_with_keep_prefix = [ 'anonymize', 'invalidate', 'run', 'send', 'publish' ];
 
 		$method        = 'GET';
 		$wp_api_module = $this->to_snake_case( $api_module );

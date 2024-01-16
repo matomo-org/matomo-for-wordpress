@@ -25,6 +25,7 @@ class GlobalSetup {
     await this.trackOrderInPast();
     await this.trackRealtimeVisitWithLocation();
     await this.runArchiving();
+    await this.addTagManagerEntities();
   }
 
   async runArchiving() {
@@ -238,6 +239,116 @@ class GlobalSetup {
     }));
 
     this._testIdGoal = parseInt(response.value, 10);
+  }
+
+  private async addTagManagerEntities() {
+    const existingContainers = await MatomoApi.call('GET', 'TagManager.getContainers')
+
+    let existingContainer = existingContainers.find((c) => c.name === 'test');
+    if (existingContainer) {
+      return;
+    }
+
+    // create container
+    const idContainer = await MatomoApi.call('POST', 'TagManager.addContainer', new URLSearchParams({
+      idSite: '1',
+      context: 'web',
+      name: 'test',
+      description: 'container for e2e tests',
+    }));
+
+    const container = (await MatomoApi.call('GET', 'TagManager.getContainer', new URLSearchParams({
+      idSite: '1',
+      idContainer,
+    })));
+
+    const draftVersionId = container.draft.idcontainerversion;
+
+    // create trigger
+    const triggers = await MatomoApi.call('GET', 'TagManager.getContainerTriggers', new URLSearchParams({
+      idSite: '1',
+      idContainer,
+      idContainerVersion: draftVersionId,
+    }));
+
+    let triggerId;
+    if (!triggers.length) {
+      triggerId = await MatomoApi.call('POST', 'TagManager.addContainerTrigger', new URLSearchParams({
+        idSite: '1',
+        idContainer,
+        idContainerVersion: draftVersionId,
+        type: 'AllElementsClick',
+        name: 'All Elements Click',
+        description: 'test trigger',
+        'conditions[0][comparison]': 'equals',
+        'conditions[0][actual]': 'ClickId',
+        'conditions[0][expected]': 'tagmanager-test-element',
+      }));
+    } else {
+      triggerId = triggers[0].idtrigger;
+    }
+
+    // create variable
+    const variables = await MatomoApi.call('GET', 'TagManager.getContainerVariables', new URLSearchParams({
+      idSite: '1',
+      idContainer,
+      idContainerVersion: draftVersionId,
+    }));
+
+    if (!variables.length) {
+      await MatomoApi.call('POST', 'TagManager.addContainerVariable', new URLSearchParams({
+        idSite: '1',
+        idContainer,
+        idContainerVersion: draftVersionId,
+        type: 'CustomJsFunction',
+        name: 'test variable',
+        description: 'test variable',
+        'parameters[jsFunction]': 'function () { return "test value"; }',
+      }));
+    }
+
+    // create tag
+    const tags = await MatomoApi.call('GET', 'TagManager.getContainerTags', new URLSearchParams({
+      idSite: '1',
+      idContainer,
+      idContainerVersion: draftVersionId,
+    }));
+
+    if (!tags.length) {
+      await MatomoApi.call('POST', 'TagManager.addContainerTag', new URLSearchParams({
+        idSite: '1',
+        idContainer,
+        idContainerVersion: draftVersionId,
+        type: 'CustomHtml',
+        name: 'test Custom HTML',
+        description: 'test tag',
+        fireLimit: 'unlimited',
+        fireDelay: '0',
+        priority: '999',
+        'parameters[customHtml]': `<div
+  id="test-tagmanager-added-div"
+  var-value="{{test variable}}"
+>
+</div>`,
+        'parameters[htmlPosition]': 'bodyEnd',
+        'fireTriggerIds[]': `${triggerId}`,
+      }));
+    }
+
+    // create container version
+    const publishVersionId = await MatomoApi.call('POST', 'TagManager.createContainerVersion', new URLSearchParams({
+      idSite: '1',
+      idContainer,
+      name: '1.0',
+      description: 'test version',
+    }));
+
+    await MatomoApi.call('POST', 'TagManager.publishContainerVersion', new URLSearchParams({
+      idSite: '1',
+      idContainer,
+      idContainerVersion: publishVersionId,
+      environment: 'live',
+    }));
   }
 
   getDateOfVisitTrackedInPast() {
