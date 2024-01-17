@@ -39,11 +39,14 @@ class GlobalSetup {
     }
 
     await this.createTestGoal();
-    await this.trackVisitsInPast();
-    await this.trackOrderInPast();
-    await this.trackRealtimeVisitWithLocation();
-    await this.runArchiving();
     await this.addTagManagerEntities();
+
+    if (!(await this.isVisitAlreadyTracked())) {
+      await this.trackVisitsInPast();
+      await this.trackOrderInPast();
+      await this.trackRealtimeVisitWithLocation();
+      await this.runArchiving();
+    }
 
     this.isSetUp = true;
   }
@@ -79,10 +82,6 @@ class GlobalSetup {
   }
 
   async trackVisitsInPast() {
-    if (await this.isVisitAlreadyTracked()) {
-      return;
-    }
-
     const baseUrl = await Website.baseUrl();
 
     // track first visit
