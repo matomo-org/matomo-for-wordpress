@@ -18,6 +18,8 @@ class ContainerDashboardPage extends TagManagerPage {
 
     await $('.containerDashboard .card-content').waitForDisplayed();
 
+    await this.normalizeContainerSelector();
+
     await browser.execute(() => {
       $('p.dashboardCreationDate').html(
         $('p.dashboardCreationDate').html()
