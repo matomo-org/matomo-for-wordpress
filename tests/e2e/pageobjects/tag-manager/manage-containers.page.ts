@@ -15,6 +15,9 @@ class ManageContainersPage extends TagManagerPage {
 
     await $('.tagManagerContainerList td.description').waitForDisplayed();
 
+    $('.tagManagerContainerList td.index').each((i, e) => $(e).html('REMOVED'));
+    $('.tagManagerContainerList td.created').each((i, e) => $(e).html('REMOVED'));
+
     return result;
   }
 }

@@ -18,6 +18,14 @@ class ContainerDashboardPage extends TagManagerPage {
 
     await $('.containerDashboard .card-content').waitForDisplayed();
 
+    await browser.execute(() => {
+      $('p.dashboardCreationDate').html(
+        $('p.dashboardCreationDate').html()
+          .replace(/"[a-zA-Z0-9]+"/g, '')
+          .replace(/created\s+on\s+.*?\./g, '')
+      );
+    });
+
     return result;
   }
 }

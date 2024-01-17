@@ -10,6 +10,18 @@ import { $ } from '@wdio/globals';
 import MatomoAdminPage from '../matomo-admin.page.js';
 
 export default class TagManagerPage extends MatomoAdminPage {
+  async open(method, params = {}) {
+    const result = super.open(method, params);
+
+    await browser.execute(() => {
+      $('.tagContainerSelector a.title').html(
+        $('.tagContainerSelector a.title').html().replace(/\([A-Za-z0-9]+\)/g, '')
+      );
+    });
+
+    return result;
+  }
+
   async openPublishModal() {
     await browser.execute(() => {
       $('li[role=menuitem] a.item:contains(Publish)')[0].click();
@@ -32,5 +44,13 @@ export default class TagManagerPage extends MatomoAdminPage {
     });
 
     await $('input#previewDebugUrl').waitForExist();
+
+    await browser.execute(() => {
+      $('.notification-body').each((i, e) => {
+        $(e).html(
+          $(e).html().replace(/mtmPreviewMode=([a-zA-Z0-9]+)/g, 'mtmPreviewMode=REMOVED'),
+        );
+      })
+    })
   }
 }

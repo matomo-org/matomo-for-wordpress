@@ -29,7 +29,7 @@ export default class Page {
     }
 
     html.disable-modal-scroll .modal {
-      overflow-y: none !important;
+      overflow-y: visible !important;
     }
     `);
 
