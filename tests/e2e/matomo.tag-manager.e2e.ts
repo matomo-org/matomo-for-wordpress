@@ -96,7 +96,7 @@ describe('Matomo > Tag Manager', () => {
     ).toEqual(0);
   });
 
-  it.only('should load the install code popup page correctly', async () => {
+  it('should load the install code popup page correctly', async () => {
     await ContainerTriggersPage.open();
 
     await ContainerTriggersPage.openInstallCodeModal();

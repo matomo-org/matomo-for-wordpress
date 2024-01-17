@@ -17,7 +17,9 @@ class EmailReportsPage extends MatomoAdminPage {
   }
 
   async startAddReport() {
-    await $('#add-report').click();
+    await browser.execute(() => {
+      $('#add-report').click();
+    });
     await $('#addEditReport').waitForDisplayed();
   }
 
