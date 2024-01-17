@@ -23,6 +23,14 @@ export default class Page {
     *::-webkit-scrollbar {
       display: none;
     }
+
+    html.disable-hover * {
+      pointer-events: none !important;
+    }
+
+    html.disable-modal-scroll .modal {
+      overflow-y: none !important;
+    }
     `);
 
     return result;
@@ -30,13 +38,25 @@ export default class Page {
 
   async enableHoverStyles() {
     await browser.execute(() => {
-      $('html').css('pointer-events', '');
+      $('html').addClass('disable-hover');
     });
   }
 
   async disableHoverStyles() {
     await browser.execute(() => {
-      $('html').css('pointer-events', 'none !important');
+      $('html').removeClass('disable-hover');
+    });
+  }
+
+  async disableModalScroll() {
+    await browser.execute(() => {
+      $('html').addClass('disable-modal-scroll');
+    });
+  }
+
+  async enableModalScroll() {
+    await browser.execute(() => {
+      $('html').removeClass('disable-modal-scroll');
     });
   }
 

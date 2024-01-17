@@ -89,6 +89,7 @@ describe('Matomo > Tag Manager', () => {
 
     await ContainerTriggersPage.openPublishModal();
 
+    await ContainerTriggersPage.disableModalScroll();
     await ContainerTriggersPage.disableHoverStyles();
 
     await expect(
@@ -101,6 +102,7 @@ describe('Matomo > Tag Manager', () => {
 
     await ContainerTriggersPage.openInstallCodeModal();
 
+    await ContainerTriggersPage.disableModalScroll();
     await ContainerTriggersPage.disableHoverStyles();
     await expect(
       await browser.checkElement(await $('.modal'), 'matomo.tag-manager.install-code-modal')
