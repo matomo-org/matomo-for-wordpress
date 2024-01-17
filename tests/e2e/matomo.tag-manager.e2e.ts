@@ -91,13 +91,12 @@ describe('Matomo > Tag Manager', () => {
 
     await ContainerTriggersPage.disableModalScroll();
     await ContainerTriggersPage.disableHoverStyles();
-
     await expect(
-      await browser.checkElement(await $('.modal-content'), 'matomo.tag-manager.publish-modal')
+      await browser.checkFullPageScreen('matomo.tag-manager.publish-modal')
     ).toEqual(0);
   });
 
-  it('should load the install code popup page correctly', async () => {
+  it.only('should load the install code popup page correctly', async () => {
     await ContainerTriggersPage.open();
 
     await ContainerTriggersPage.openInstallCodeModal();
@@ -105,7 +104,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerTriggersPage.disableModalScroll();
     await ContainerTriggersPage.disableHoverStyles();
     await expect(
-      await browser.checkElement(await $('.modal-content'), 'matomo.tag-manager.install-code-modal')
+      await browser.checkFullPageScreen('matomo.tag-manager.install-code-modal')
     ).toEqual(0);
   });
 

@@ -30,6 +30,12 @@ export default class Page {
 
     html.disable-modal-scroll .modal {
       overflow-y: visible !important;
+      position: static !important;
+    }
+
+    html.disable-modal-scroll body > *:not(.modal) {
+      display: none !important;
+      visibility: hidden !important;
     }
     `);
 
@@ -48,6 +54,9 @@ export default class Page {
     });
   }
 
+  // webdriverio can't seem to take screenshots of scrolling elements
+  // properly. so for modals, we need to disable the modal styles and
+  // take a picture of the full page, with everything but the modal hidden.
   async disableModalScroll() {
     await browser.execute(() => {
       $('html').addClass('disable-modal-scroll');
