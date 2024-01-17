@@ -8,6 +8,7 @@
 
 import {$, browser} from '@wdio/globals';
 import Website from '../website.js';
+import GlobalSetup from '../global-setup.js';
 
 export default class Page {
   async open(path: string) {

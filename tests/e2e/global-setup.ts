@@ -13,19 +13,39 @@ import Website from './website.js';
 // should ideally not add data, data should be added beforehand in global
 // setup, etc.
 class GlobalSetup {
+  private isSetUp = false;
   private _testIdGoal: number|null = null;
+  private _testIdContainer: string|null = null;
 
-  get testIdGoal(): number|null {
+  get testIdGoal(): number {
+    if (!this._testIdGoal) {
+      throw new Error('testIdGoal has not been set yet');
+    }
+
     return this._testIdGoal;
   }
 
+  get testIdContainer(): string {
+    if (!this._testIdContainer) {
+      throw new Error('testIdContainer has not been set yet');
+    }
+
+    return this._testIdContainer;
+  }
+
   async setUp() {
+    if (this.isSetUp) {
+      return;
+    }
+
     await this.createTestGoal();
     await this.trackVisitsInPast();
     await this.trackOrderInPast();
     await this.trackRealtimeVisitWithLocation();
     await this.runArchiving();
     await this.addTagManagerEntities();
+
+    this.isSetUp = true;
   }
 
   async runArchiving() {
@@ -246,6 +266,7 @@ class GlobalSetup {
 
     let existingContainer = existingContainers.find((c) => c.name === 'test');
     if (existingContainer) {
+      this._testIdContainer = existingContainer.idcontainer;
       return;
     }
 
@@ -349,6 +370,8 @@ class GlobalSetup {
       idContainerVersion: publishVersionId,
       environment: 'live',
     }));
+
+    this._testIdContainer = idContainer;
   }
 
   getDateOfVisitTrackedInPast() {
