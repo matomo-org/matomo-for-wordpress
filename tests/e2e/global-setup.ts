@@ -245,6 +245,7 @@ class GlobalSetup {
     }));
 
     if (goal.idgoal) { // already created
+      this._testIdGoal = goal.idgoal;
       return;
     }
 
