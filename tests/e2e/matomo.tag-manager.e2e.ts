@@ -93,7 +93,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerTriggersPage.disableHoverStyles();
 
     await expect(
-      await browser.checkElement(await $('.modal'), 'matomo.tag-manager.publish-modal')
+      await browser.checkElement(await $('.modal-content'), 'matomo.tag-manager.publish-modal')
     ).toEqual(0);
   });
 
@@ -105,7 +105,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerTriggersPage.disableModalScroll();
     await ContainerTriggersPage.disableHoverStyles();
     await expect(
-      await browser.checkElement(await $('.modal'), 'matomo.tag-manager.install-code-modal')
+      await browser.checkElement(await $('.modal-content'), 'matomo.tag-manager.install-code-modal')
     ).toEqual(0);
   });
 

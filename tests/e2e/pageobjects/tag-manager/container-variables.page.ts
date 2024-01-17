@@ -18,6 +18,10 @@ class ContainerVariablesPage extends TagManagerPage {
 
     await $('.tagManagerCustomVariablesList td.description').waitForDisplayed();
 
+    await browser.execute(() => {
+      $('td.lastUpdated').each((i, e) => $(e).html('REMOVED'));
+    });
+
     return result;
   }
 }
