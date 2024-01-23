@@ -11,7 +11,11 @@ import MatomoReportingPage from '../../matomo-reporting.page.js';
 
 class OutlinksPage extends MatomoReportingPage {
   async open() {
-    return await super.open('General_Actions.General_Outlinks');
+    const result = await super.open('General_Actions.General_Outlinks');
+
+    await this.waitForActionsTables();
+
+    return result;
   }
 }
 

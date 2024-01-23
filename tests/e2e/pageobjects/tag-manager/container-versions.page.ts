@@ -21,7 +21,7 @@ class ContainerVersionsPage extends TagManagerPage {
     await this.normalizeContainerSelector();
 
     await browser.execute(() => {
-      $('td.lastUpdated').each((i, e) => $(e).html('REMOVED'));
+      $('td.created').each((i, e) => $(e).html('REMOVED'));
     });
 
     return result;
