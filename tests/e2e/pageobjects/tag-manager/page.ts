@@ -34,12 +34,12 @@ export default class TagManagerPage extends MatomoAdminPage {
     await $('.modal .manageInstallTagCode pre').waitForExist();
 
     await browser.execute(() => {
-      $('td.released_on').each((i, e) => $(e).html('REMOVED'));
+      $('td.lastUpdated').each((i, e) => $(e).html('REMOVED'));
     });
 
     await browser.execute(() => {
       $('.modal .manageInstallTagCode pre').html(
-        $('.modal .manageInstallTagCode pre').html().replace(/container_[a-zA-Z0-9_]+\.js/g, '')
+        $('.modal .manageInstallTagCode pre').html().replace(/container_[a-zA-Z0-9_]+\.js/g, 'container_REMOVED.js')
       );
     });
   }
