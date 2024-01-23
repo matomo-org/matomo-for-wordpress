@@ -36,6 +36,12 @@ export default class TagManagerPage extends MatomoAdminPage {
     await browser.execute(() => {
       $('td.released_on').each((i, e) => $(e).html('REMOVED'));
     });
+
+    await browser.execute(() => {
+      $('.modal .manageInstallTagCode pre').html(
+        $('.modal .manageInstallTagCode pre').html().replace(/container_[a-zA-Z0-9_]+\.js/g, '')
+      );
+    });
   }
 
   async enablePreviewMode() {
@@ -51,6 +57,10 @@ export default class TagManagerPage extends MatomoAdminPage {
           $(e).html().replace(/mtmPreviewMode=([a-zA-Z0-9]+)/g, 'mtmPreviewMode=REMOVED'),
         );
       })
+    });
+
+    await browser.execute(() => {
+      $('td.lastUpdated').each((i, e) => $(e).html('REMOVED'));
     });
 
     await this.normalizeContainerSelector();
