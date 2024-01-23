@@ -51,6 +51,8 @@ export default class TagManagerPage extends MatomoAdminPage {
           $(e).html().replace(/mtmPreviewMode=([a-zA-Z0-9]+)/g, 'mtmPreviewMode=REMOVED'),
         );
       })
-    })
+    });
+
+    await this.normalizeContainerSelector();
   }
 }
