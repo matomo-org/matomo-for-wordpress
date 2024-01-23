@@ -10,6 +10,7 @@ import Page from './page.js';
 
 class BlogCheckoutPage extends Page {
   async order() {
+    await $('input#email,#billing_email').waitForExist();
     await browser.execute(() => {
       window.jQuery('input#email,#billing_email').val('testemail@example.com');
       window.jQuery('input#billing-first_name,#billing_first_name').val('FirstName');
