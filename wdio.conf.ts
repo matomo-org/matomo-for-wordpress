@@ -255,8 +255,12 @@ export const config: Options.Testrunner = {
    * @param {Array.<String>} specs        List of spec file paths that are to be run
    * @param {object}         browser      instance of created browser/device session
    */
-  // before: async function (capabilities, specs) {
-  // },
+  before: async function (capabilities, specs) {
+    // must be run per wdio instance to have the correct test entity IDs
+    // the setUp itself should only add entities the first time it's called
+    // which happens before any e2e test is run via a wdio.conf.ts hook.
+    await GlobalSetup.setUp();
+  },
   /**
    * Runs before a WebdriverIO command gets executed.
    * @param {string} commandName hook command name

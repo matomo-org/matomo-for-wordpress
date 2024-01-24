@@ -8,6 +8,7 @@
 
 import {$, browser} from '@wdio/globals';
 import Website from '../website.js';
+import GlobalSetup from '../global-setup.js';
 
 export default class Page {
   async open(path: string) {
@@ -22,6 +23,20 @@ export default class Page {
     *::-webkit-scrollbar {
       display: none;
     }
+
+    html.disable-hover * {
+      pointer-events: none !important;
+    }
+
+    html.disable-modal-scroll .modal {
+      overflow-y: visible !important;
+      position: static !important;
+    }
+
+    html.disable-modal-scroll body > *:not(.modal) {
+      display: none !important;
+      visibility: hidden !important;
+    }
     `);
 
     return result;
@@ -29,13 +44,28 @@ export default class Page {
 
   async enableHoverStyles() {
     await browser.execute(() => {
-      $('html').css('pointer-events', '');
+      $('html').addClass('disable-hover');
     });
   }
 
   async disableHoverStyles() {
     await browser.execute(() => {
-      $('html').css('pointer-events', 'none !important');
+      $('html').removeClass('disable-hover');
+    });
+  }
+
+  // webdriverio can't seem to take screenshots of scrolling elements
+  // properly. so for modals, we need to disable the modal styles and
+  // take a picture of the full page, with everything but the modal hidden.
+  async disableModalScroll() {
+    await browser.execute(() => {
+      $('html').addClass('disable-modal-scroll');
+    });
+  }
+
+  async enableModalScroll() {
+    await browser.execute(() => {
+      $('html').removeClass('disable-modal-scroll');
     });
   }
 
@@ -76,5 +106,27 @@ export default class Page {
         return isAllComplete;
       });
     }, { timeout: 20000 });
+  }
+
+  // for wp themes/plugins that use react
+  // see https://github.com/facebook/react/issues/10135#issuecomment-314441175 for details on method
+  async setReactInputValue(selector, value) {
+    await browser.execute((s, v) => {
+      const element = window.jQuery(s)[0];
+      const prototype = Object.getPrototypeOf(element);
+
+      const valueSetter = Object.getOwnPropertyDescriptor(element, 'value')?.set;
+      const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value')?.set;
+
+      if (prototypeValueSetter && valueSetter !== prototypeValueSetter) {
+        prototypeValueSetter.call(element, v);
+      } else if (valueSetter) {
+        valueSetter.call(element, v);
+      } else {
+        element.value = value;
+      }
+
+      element.dispatchEvent(new Event('input', { bubbles: true }));
+    }, selector, value);
   }
 }

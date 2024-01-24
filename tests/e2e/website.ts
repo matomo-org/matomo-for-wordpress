@@ -145,15 +145,26 @@ class Website {
 
       await $('.woocommerce-task-payment-cod').waitForExist();
 
-      await browser.execute(() => {
-        window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action')[0].click();
-      });
-
-      await browser.waitUntil(() => {
-        return browser.execute(() => {
-          return window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action:contains(Manage)').length > 0;
+      const numAttempts = 3;
+      for (let i = 0; i < numAttempts; ++i) {
+        await browser.execute(() => {
+          window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action')[0].click();
         });
-      });
+
+        try {
+          await browser.waitUntil(() => {
+            return browser.execute(() => {
+              return window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action:contains(Manage)').length > 0;
+            });
+          });
+
+          break;
+        } catch (e) {
+          if (i + 1 >= numAttempts) {
+            throw e;
+          }
+        }
+      }
     }
 
     this.isWooCommerceSetup = true;

@@ -17,12 +17,16 @@ class EmailReportsPage extends MatomoAdminPage {
   }
 
   async startAddReport() {
-    await $('#add-report').click();
+    await browser.execute(() => {
+      $('#add-report').click();
+    });
     await $('#addEditReport').waitForDisplayed();
   }
 
   async createNewReport() {
-    await $('#report_description').setValue('test report');
+    await browser.execute(function () {
+      $('#report_description').val('test report').trigger('change');
+    });
     await browser.execute(function () {
       $('#emailUserCountry_getContinent').click();
     });
@@ -32,7 +36,10 @@ class EmailReportsPage extends MatomoAdminPage {
     await browser.execute(function () {
       $('#emailDevicesDetection_getModel').click();
     });
-    await $('.matomo-save-button > input').click();
+    await browser.pause(1000);
+    await browser.execute(function () {
+      $('.matomo-save-button > input')[0].click();
+    });
     await $('#entityEditContainer tr').waitForDisplayed();
     await this.hideDateSelectorDate();
   }
