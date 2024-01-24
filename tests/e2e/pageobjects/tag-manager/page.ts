@@ -50,19 +50,26 @@ export default class TagManagerPage extends MatomoAdminPage {
       $('li[role=menuitem] a.item:contains(Preview)')[0].click();
     });
 
-    await $('input#previewDebugUrl').waitForExist();
-    await browser.execute(() => {
-      $('.notification-body').each((i, e) => {
-        $(e).html(
-          $(e).html().replace(/mtmPreviewMode=([a-zA-Z0-9]+)/g, 'mtmPreviewMode=REMOVED'),
-        );
-      })
-    });
-
     await $('td.lastUpdated').waitForExist();
     await browser.execute(() => {
       $('td.lastUpdated').each((i, e) => $(e).html('REMOVED'));
     });
+
+    await $('input#previewDebugUrl').waitForExist();
+    const notificationsModified = await browser.execute(() => {
+      let notificationsModified = 0;
+      $('.notification-body').each((i, e) => {
+        $(e).html(
+          $(e).html().replace(/mtmPreviewMode=([a-zA-Z0-9]+)/g, 'mtmPreviewMode=REMOVED'),
+        );
+
+        notificationsModified += 1;
+      })
+    });
+
+    if (!notificationsModified) {
+      throw new Error('did not modify preview notification');
+    }
 
     await this.normalizeContainerSelector();
   }
