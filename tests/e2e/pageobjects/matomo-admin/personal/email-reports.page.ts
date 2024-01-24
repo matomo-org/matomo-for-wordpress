@@ -36,7 +36,9 @@ class EmailReportsPage extends MatomoAdminPage {
     await browser.execute(function () {
       $('#emailDevicesDetection_getModel').click();
     });
-    await $('.matomo-save-button > input').click();
+    await browser.execute(function () {
+      $('.matomo-save-button > input')[0].click();
+    });
     await $('#entityEditContainer tr').waitForDisplayed();
     await this.hideDateSelectorDate();
   }

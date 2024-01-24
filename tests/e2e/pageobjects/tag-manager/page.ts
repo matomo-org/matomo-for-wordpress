@@ -50,7 +50,6 @@ export default class TagManagerPage extends MatomoAdminPage {
     });
 
     await $('input#previewDebugUrl').waitForExist();
-
     await browser.execute(() => {
       $('.notification-body').each((i, e) => {
         $(e).html(
@@ -59,6 +58,7 @@ export default class TagManagerPage extends MatomoAdminPage {
       })
     });
 
+    await $('td.lastUpdated').waitForExist();
     await browser.execute(() => {
       $('td.lastUpdated').each((i, e) => $(e).html('REMOVED'));
     });
