@@ -50,12 +50,9 @@ export default class TagManagerPage extends MatomoAdminPage {
       $('li[role=menuitem] a.item:contains(Preview)')[0].click();
     });
 
-    await $('td.lastUpdated').waitForExist();
-    await browser.execute(() => {
-      $('td.lastUpdated').each((i, e) => $(e).html('REMOVED'));
-    });
-
     await $('input#previewDebugUrl').waitForExist();
+    await $('td.lastUpdated').waitForExist();
+
     const notificationsModified = await browser.execute(() => {
       let notificationsModified = 0;
       $('.notification-body').each((i, e) => {
@@ -73,5 +70,9 @@ export default class TagManagerPage extends MatomoAdminPage {
     }
 
     await this.normalizeContainerSelector();
+
+    await browser.execute(() => {
+      $('td.lastUpdated').each((i, e) => $(e).html('REMOVED'));
+    });
   }
 }
