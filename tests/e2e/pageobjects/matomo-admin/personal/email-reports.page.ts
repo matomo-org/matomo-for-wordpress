@@ -25,7 +25,7 @@ class EmailReportsPage extends MatomoAdminPage {
 
   async createNewReport() {
     await browser.execute(function () {
-      $('#report_description').text('test report');
+      $('#report_description').val('test report').trigger('change');
     });
     await browser.execute(function () {
       $('#emailUserCountry_getContinent').click();
