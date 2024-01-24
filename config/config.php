@@ -44,13 +44,13 @@ return array(
 		return rtrim('/'. $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir().'/'), '/');
 	},
 	'TagManagerContainerWebDir' => function () {
-		if (defined('MATOMO_TAG_MANAGER_STORAGE_DIR')) {
-			return MATOMO_TAG_MANAGER_STORAGE_DIR;
+		if (defined('MATOMO_TAG_MANAGER_WEB_DIR')) {
+			return MATOMO_TAG_MANAGER_WEB_DIR;
 		}
 
 		// the location where we store the generated javascript or json container files
 		$paths = new \WpMatomo\Paths();
-		return rtrim('/'. $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir().'/'), '/');
+		return rtrim('/'. matomo_rel_path($paths->get_upload_base_dir() . '/', WP_PLUGIN_DIR . '/matomo/app'), '/');
 	},
 	'Piwik\Plugins\Login\PasswordVerifier' => DI\autowire('Piwik\Plugins\WordPress\WpPasswordVerifier'),
 	'Piwik\Session\SessionAuth' => DI\autowire('Piwik\Plugins\WordPress\SessionAuth'),
