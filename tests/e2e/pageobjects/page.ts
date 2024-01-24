@@ -107,4 +107,26 @@ export default class Page {
       });
     }, { timeout: 20000 });
   }
+
+  // for wp themes/plugins that use react
+  // see https://github.com/facebook/react/issues/10135#issuecomment-314441175 for details on method
+  async setReactInputValue(selector, value) {
+    await browser.execute((s, v) => {
+      const element = window.jQuery(s)[0];
+      const prototype = Object.getPrototypeOf(element);
+
+      const valueSetter = Object.getOwnPropertyDescriptor(element, 'value')?.set;
+      const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value')?.set;
+
+      if (prototypeValueSetter && valueSetter !== prototypeValueSetter) {
+        prototypeValueSetter.call(element, v);
+      } else if (valueSetter) {
+        valueSetter.call(element, v);
+      } else {
+        element.value = value;
+      }
+
+      element.dispatchEvent(new Event('input', { bubbles: true }));
+    }, selector, value);
+  }
 }
