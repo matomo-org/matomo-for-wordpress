@@ -16,14 +16,14 @@ class BlogCheckoutPage extends Page {
     await browser.pause(500); // just in case
 
     await browser.execute(() => {
-      window.jQuery('input#email,#billing_email').val('testemail@example.com');
-      window.jQuery('input#billing-first_name,#billing_first_name').val('FirstName');
-      window.jQuery('input#billing-last_name,#billing_last_name').val('McLastNamington');
-      window.jQuery('input#billing-address_1,#billing_address_1').val('200 Santa Monica Pier');
-      window.jQuery('input#billing-city,#billing_city').val('Santa Monica');
+      window.jQuery('input#email,#billing_email')[0].value = 'testemail@example.com';
+      window.jQuery('input#billing-first_name,#billing_first_name')[0].value = 'FirstName';
+      window.jQuery('input#billing-last_name,#billing_last_name')[0].value = 'McLastNamington';
+      window.jQuery('input#billing-address_1,#billing_address_1')[0].value = '200 Santa Monica Pier';
+      window.jQuery('input#billing-city,#billing_city')[0].value = 'Santa Monica';
       window.jQuery('#billing-state input').val('California'); // local
       window.jQuery('#billing_state').val('CA'); // CI
-      window.jQuery('input#billing-postcode,#billing_postcode').val('90401');
+      window.jQuery('input#billing-postcode,#billing_postcode')[0].value = '90401';
       try {
         window.jQuery('#billing_phone').val('555-123-4567');
       } catch (e) {

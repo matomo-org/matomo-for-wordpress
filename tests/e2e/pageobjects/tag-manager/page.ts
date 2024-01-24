@@ -64,7 +64,8 @@ export default class TagManagerPage extends MatomoAdminPage {
         );
 
         notificationsModified += 1;
-      })
+      });
+      return notificationsModified;
     });
 
     if (!notificationsModified) {
