@@ -24,6 +24,7 @@ describe('Tracking - Tag Manager', () => {
 
   before(async () => {
     await Website.deleteAllCookies();
+    await Website.login();
     await enableTagManagerTracking();
   });
 
@@ -36,18 +37,18 @@ describe('Tracking - Tag Manager', () => {
 
     // add the trigger element
     await browser.execute(() => {
-      document.body.append('<button id="tagmanager-test-element">TEST</button>')
+      document.body.innerHTML += '<button id="tagmanager-test-element">TEST</button>';
     });
 
     // trigger the element
     await browser.execute(() => {
-      window.jQuery('#tagmanager-test-element').click();
+      document.querySelector('#tagmanager-test-element').click();
     });
 
     // check the tag was fired
     await $('#test-tagmanager-added-div').waitForExist();
     const attributeValue = await browser.execute(
-      () => window.jQuery('#test-tagmanager-added-div').attr('var-value'),
+      () => document.querySelector('#test-tagmanager-added-div').getAttribute('var-value'),
     );
     expect(attributeValue).toEqual('test value');
   });
