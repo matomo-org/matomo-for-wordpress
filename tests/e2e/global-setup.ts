@@ -364,7 +364,6 @@ class GlobalSetup {
       name: '1.0',
       description: 'test version',
     }));
-    console.log('adding version', publishVersionId);
 
     const response = await MatomoApi.call('POST', 'TagManager.publishContainerVersion', new URLSearchParams({
       idSite: '1',
@@ -373,7 +372,6 @@ class GlobalSetup {
       environment: 'live',
       debug: '1',
     }));
-    console.log('publish response', response);
 
     this._testIdContainer = idContainer;
   }

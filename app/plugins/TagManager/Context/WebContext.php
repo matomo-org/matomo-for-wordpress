@@ -172,10 +172,6 @@ class WebContext extends BaseContext
             $this->storage->save(PIWIK_DOCUMENT_ROOT . $path, $js);
         }
 
-		if (@$_GET['debug']) {
-			echo json_encode($filesCreated);
-			exit;
-		}
         return $filesCreated;
     }
 
