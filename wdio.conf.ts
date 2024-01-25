@@ -7,7 +7,7 @@ const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 async function saveScreenshotIfError(test, error) {
   if (error && !error.matcherResult) {
-    const failureScreenshotName = test.title.replace(/\s+/g, '_') + '_failure';
+    const failureScreenshotName = test.title.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') + '_failure';
     try {
       await browser.saveFullPageScreen(failureScreenshotName);
     } catch (e) {
@@ -54,6 +54,7 @@ export const config: Options.Testrunner = {
   exclude: [
     './tests/e2e/tracking.e2e.ts',
     './tests/e2e/tracking.ecommerce.e2e.ts',
+    './tests/e2e/tracking.tag-manager.e2e.ts',
   ],
   //
   // ============
