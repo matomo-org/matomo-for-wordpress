@@ -25,7 +25,6 @@ describe('Tracking - Tag Manager', () => {
   before(async () => {
     await Website.deleteAllCookies();
     await Website.login();
-    await enableTagManagerTracking();
   });
 
   after(async () => {
@@ -33,6 +32,8 @@ describe('Tracking - Tag Manager', () => {
   });
 
   it('should correctly inject tag manager tags into blog pages', async () => {
+    await enableTagManagerTracking();
+
     await BlogHomepage.open();
 
     // add the trigger element
@@ -44,6 +45,9 @@ describe('Tracking - Tag Manager', () => {
     await browser.execute(() => {
       document.querySelector('#tagmanager-test-element').click();
     });
+
+    await browser.pause(1000);
+    console.log(await browser.execute(() => document.body.innerHTML));
 
     // check the tag was fired
     await $('#test-tagmanager-added-div').waitForExist();

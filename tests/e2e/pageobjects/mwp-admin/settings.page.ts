@@ -22,10 +22,8 @@ class MwpSettingsPage extends Page {
       window.jQuery('tr.matomo-track-option-tagmanager input[type="checkbox"]').first().prop('checked', true);
     });
 
-    throw new Error('force failure');
-
     await browser.execute(() => {
-      window.jQuery('.matomo-tracking-form .submit > input').click();
+      window.jQuery('.matomo-tracking-form .submit > input')[0].click();
     });
 
     await browser.pause(1000);
