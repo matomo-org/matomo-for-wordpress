@@ -262,6 +262,7 @@ class GlobalSetup {
   }
 
   private async addTagManagerEntities() {
+    console.log('adding tag manager entities');
     const existingContainers = await MatomoApi.call('GET', 'TagManager.getContainers')
 
     let existingContainer = existingContainers.find((c) => c.name === 'test');
@@ -363,13 +364,16 @@ class GlobalSetup {
       name: '1.0',
       description: 'test version',
     }));
+    console.log('adding version', publishVersionId);
 
-    await MatomoApi.call('POST', 'TagManager.publishContainerVersion', new URLSearchParams({
+    const response = await MatomoApi.call('POST', 'TagManager.publishContainerVersion', new URLSearchParams({
       idSite: '1',
       idContainer,
       idContainerVersion: publishVersionId,
       environment: 'live',
+      debug: '1',
     }));
+    console.log('publish response', response);
 
     this._testIdContainer = idContainer;
   }
