@@ -36,15 +36,9 @@ describe('Tracking - Tag Manager', () => {
   it('should correctly inject tag manager tags into blog pages', async () => {
     await enableTagManagerTracking();
 
-    const uploadsFolder = path.join(process.cwd(), 'docker', 'wordpress', 'test', 'wp-content', 'uploads', 'matomo');
-    const uploads = fs.readdirSync(uploadsFolder);
-    console.log(uploads);
-    const containerFileName = uploads.find((f) => /^container_.*\.js$/.test(f));
-    console.log(fs.readFileSync(path.join(uploadsFolder, containerFileName)).toString('utf-8'));
-
     await BlogHomepage.open();
 
-    await browser.pause(25000);
+    await browser.pause(2000);
 
     // add the trigger element
     await browser.execute(() => {
@@ -55,17 +49,6 @@ describe('Tracking - Tag Manager', () => {
     await browser.execute(() => {
       document.querySelector('#tagmanager-test-element').click();
     });
-
-    const debugValues = await browser.execute(() => {
-      return {
-        A: window.TAG_MANAGER_DEBUG_A,
-        B: window.TAG_MANAGER_DEBUG_B,
-        C: window.TAG_MANAGER_DEBUG_C,
-        D: window.TAG_MANAGER_DEBUG_D,
-        E: window.TAG_MANAGER_DEBUG_E,
-      };
-    });
-    console.log(debugValues);
 
     // check the tag was fired
     await $('#test-tagmanager-added-div').waitForExist({ timeout: 30000 });

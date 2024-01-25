@@ -279,7 +279,7 @@ export default function App () {
    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
    g.async=true; g.src='$path'; s.parentNode.insertBefore(g,s);
   }, [])
-
+    
   return (
     <div>
       <h1>Hello World</h1>

@@ -43,5 +43,3 @@ class MwpSettingsPage extends Page {
 }
 
 export default new MwpSettingsPage();
-
-// /wp-admin/admin.php?page=matomo-settings
