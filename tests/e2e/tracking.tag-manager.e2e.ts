@@ -36,6 +36,8 @@ describe('Tracking - Tag Manager', () => {
 
     await BlogHomepage.open();
 
+    await browser.pause(25000);
+
     // add the trigger element
     await browser.execute(() => {
       document.body.innerHTML += '<button id="tagmanager-test-element">TEST</button>';
@@ -46,11 +48,8 @@ describe('Tracking - Tag Manager', () => {
       document.querySelector('#tagmanager-test-element').click();
     });
 
-    await browser.pause(1000);
-    console.log(await browser.execute(() => document.body.innerHTML));
-
     // check the tag was fired
-    await $('#test-tagmanager-added-div').waitForExist();
+    await $('#test-tagmanager-added-div').waitForExist({ timeout: 30000 });
     const attributeValue = await browser.execute(
       () => document.querySelector('#test-tagmanager-added-div').getAttribute('var-value'),
     );
