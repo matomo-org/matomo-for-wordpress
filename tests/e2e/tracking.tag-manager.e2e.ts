@@ -36,7 +36,7 @@ describe('Tracking - Tag Manager', () => {
 
     // add the trigger element
     await browser.execute(() => {
-      document.append('<button id="tagmanager-test-element">TEST</button>')
+      document.body.append('<button id="tagmanager-test-element">TEST</button>')
     });
 
     // trigger the element
