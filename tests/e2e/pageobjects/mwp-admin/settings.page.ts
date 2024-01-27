@@ -40,6 +40,26 @@ class MwpSettingsPage extends Page {
 
     await browser.pause(1000);
   }
+
+  async openAccessTab() {
+    await $('a.nav-tab=Access').click();
+  }
+
+  async openPrivacyTab() {
+    await $('a.nav-tab*=Privacy').click();
+  }
+
+  async openExclusionsTab() {
+    await $('a.nav-tab=Exclusions').click();
+  }
+
+  async openGeolocationTab() {
+    await $('a.nav-tab=Geolocation').click();
+  }
+
+  async openAdvancedTab() {
+    await $('a.nav-tab=Advanced').click();
+  }
 }
 
 export default new MwpSettingsPage();
