@@ -132,6 +132,7 @@ define('FORCE_SSL', false);
 define('FORCE_SSL_ADMIN', false);
 
 define( 'MATOMO_ANALYTICS_FILE', __DIR__ . '/wp-content/plugins/matomo/matomo.php' );
+define( 'MATOMO_LOCAL_ENVIRONMENT', 1 );
 
 \$table_prefix = 'wp_';
 

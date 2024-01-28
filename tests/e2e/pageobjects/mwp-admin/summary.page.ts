@@ -11,7 +11,7 @@ import Page from '../page.js';
 
 class MwpSummaryPage extends Page {
   async open() {
-    return await super.open('/wp-admin/admin.php?page=matomo-summary');
+    return await super.open('/wp-admin/admin.php?page=matomo-summary&force-past-date=1');
   }
 
   async changePeriod(periodDescriptor: string) {
