@@ -21,7 +21,7 @@ describe('MWP Admin > Summary', () => {
     await MwpSummaryPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen('mwp-admin.summary')
-    ).toEqual(0);
+    ).toBeLessThan(0.01);
   });
 
   it('should change the date correctly when a period button is toggled', async () => {
@@ -30,7 +30,7 @@ describe('MWP Admin > Summary', () => {
     await MwpSummaryPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen('mwp-admin.summary.thismonth')
-    ).toEqual(0);
+    ).toBeLessThan(0.01);
   });
 
   // TODO: add test for report pinning

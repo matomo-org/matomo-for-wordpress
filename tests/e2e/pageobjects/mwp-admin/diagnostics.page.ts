@@ -11,7 +11,7 @@ import MwpPage from './page.js';
 
 class MwpDiagnosticsPage extends MwpPage {
   async open() {
-    return await super.open('/wp-admin/admin.php?page=matomo-diagnostics');
+    return await super.open('/wp-admin/admin.php?page=matomo-systemreport');
   }
 
   async openTroubleshootingTab() {
