@@ -282,7 +282,7 @@ class WordPress extends Plugin
         }
 
         $status = wp_remote_retrieve_response_code($wpResponse);
-        $headers = wp_remote_retrieve_headers($wpResponse);
+        $headers = wp_remote_retrieve_headers($wpResponse)->getAll();
         $response = wp_remote_retrieve_body($wpResponse);
     }
 
