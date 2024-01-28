@@ -34,6 +34,7 @@ export default class MatomoReportingPage extends MatomoPage {
     const result = await super.open(`/wp-content/plugins/matomo/app/index.php?${query}#?${hashQuery}`);
 
     await this.waitForPageWidgets();
+    await browser.pause(500);
     await this.waitForImages();
 
     await this.unfocus();

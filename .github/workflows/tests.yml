@@ -169,6 +169,17 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
       - run: npm install
 
+      # TODO: try to remove this after prefixing
+      # disable deprecation notices in e2e tests. we can't control much of the code being
+      # tested (ie, WordPress, other WordPress plugins), and it's very easy for one of them
+      # to trigger a deprecation notice
+      - name: Disable deprecation notices
+        shell: bash
+        run: |
+          mkdir docker
+          echo '[PHP]' > docker/php-custom.ini
+          echo 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_NOTICE' >> docker/php-custom.ini
+
       # docker-compose up
       # TODO: i can't seem to get docker layer caching to work.
       - run: |
@@ -221,13 +232,13 @@ jobs:
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
 
-      - name: Archive production artifacts (actual)
+      - name: Archive test artifacts (actual)
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: actual-screenshots-${{ matrix.php-versions }}-${{ matrix.wp-versions }}
           path: tests/e2e/actual
-      - name: Archive production artifacts (diffs)
+      - name: Archive test artifacts (diffs)
         uses: actions/upload-artifact@v3
         if: always()
         with:

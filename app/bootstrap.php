@@ -1,5 +1,8 @@
 <?php
 
+// see plugins/WordPress/WordPress.php for more info
+$GLOBALS['MATOMO_WP_ORIGINAL_ERROR_REPORTING'] = error_reporting();
+
 $GLOBALS['CONFIG_INI_PATH_RESOLVER'] = function () {
 	if ( defined( 'ABSPATH' )
 	     && defined( 'MATOMO_CONFIG_PATH' ) ) {

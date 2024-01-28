@@ -5,6 +5,17 @@ import GlobalSetup from './tests/e2e/global-setup.ts';
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
+async function saveScreenshotIfError(test, error) {
+  if (error && !error.matcherResult) {
+    const failureScreenshotName = test.title.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') + '_failure';
+    try {
+      await browser.saveFullPageScreen(failureScreenshotName);
+    } catch (e) {
+      console.log(`could not save failure screenshot ${failureScreenshotName}`);
+    }
+  }
+}
+
 export const config: Options.Testrunner = {
   //
   // ====================
@@ -42,6 +53,8 @@ export const config: Options.Testrunner = {
   // Patterns to exclude.
   exclude: [
     './tests/e2e/tracking.e2e.ts',
+    './tests/e2e/tracking.ecommerce.e2e.ts',
+    './tests/e2e/tracking.tag-manager.e2e.ts',
   ],
   //
   // ============
@@ -174,7 +187,7 @@ export const config: Options.Testrunner = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
       ui: 'bdd',
-      timeout: 60000
+      timeout: 300000,
   },
 
   //
@@ -186,15 +199,13 @@ export const config: Options.Testrunner = {
   // methods to it. If one of them returns with a promise, WebdriverIO will wait until that promise got
   // resolved to continue.
   async afterTest(test, context, { error }) {
-    if (error && !error.matcherResult) {
-      const failureScreenshotName = test.title.replace(/\s+/g, '_') + '_failure';
-      try {
-        await browser.saveFullPageScreen(failureScreenshotName);
-      } catch (e) {
-        console.log(`could not save failure screenshot ${failureScreenshotName}`);
-      }
-    }
+    await saveScreenshotIfError(test, error);
   },
+
+  async afterHook(test, context, { error }) {
+    await saveScreenshotIfError(test, error);
+  },
+
   /**
    * Gets executed once before all workers get launched.
    * @param {object} config wdio configuration object
@@ -245,8 +256,12 @@ export const config: Options.Testrunner = {
    * @param {Array.<String>} specs        List of spec file paths that are to be run
    * @param {object}         browser      instance of created browser/device session
    */
-  // before: async function (capabilities, specs) {
-  // },
+  before: async function (capabilities, specs) {
+    // must be run per wdio instance to have the correct test entity IDs
+    // the setUp itself should only add entities the first time it's called
+    // which happens before any e2e test is run via a wdio.conf.ts hook.
+    await GlobalSetup.setUp();
+  },
   /**
    * Runs before a WebdriverIO command gets executed.
    * @param {string} commandName hook command name

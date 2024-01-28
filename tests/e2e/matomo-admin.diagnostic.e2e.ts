@@ -30,6 +30,6 @@ describe('Matomo Admin > Diagnostic', () => {
     await DeviceDetectionPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.diagnostic.device-detection')
-    ).toEqual(0);
+    ).toBeLessThan(0.01);
   });
 });

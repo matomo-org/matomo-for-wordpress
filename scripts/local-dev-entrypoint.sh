@@ -132,7 +132,7 @@ define('FORCE_SSL', false);
 define('FORCE_SSL_ADMIN', false);
 
 define( 'MATOMO_ANALYTICS_FILE', __DIR__ . '/wp-content/plugins/matomo/matomo.php' );
-define( 'MATOMO_TAG_MANAGER_STORAGE_DIR', '/../../$WORDPRESS_VERSION/wp-content/uploads/matomo/' );
+define( 'MATOMO_LOCAL_ENVIRONMENT', 1 );
 
 \$table_prefix = 'wp_';
 
@@ -199,6 +199,7 @@ php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
 # extra actions required during tests
 if [ "$WORDPRESS_FOLDER" = "test" ]; then
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo globalSetting set track_mode default
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo sync sites
 fi
 
 # add index.php file listing available installs to root /var/www/html
@@ -366,7 +367,8 @@ fi
 # make sure the files can be edited outside of docker (for easier debugging)
 # TODO: file permissions becoming a pain, shouldn't have to deal with this for dev env. this works for now though.
 touch /var/www/html/$WORDPRESS_FOLDER/debug.log /var/www/html/matomo.wpload_dir.php
-mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads
+mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo
+chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads
 find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chown "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" {} +
 find "/var/www/html/$WORDPRESS_FOLDER" -path "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" -prune -o -exec chmod 0777 {} +
 chmod -R 0777 "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo/app/tmp" "/var/www/html/index.php" "/usr/local/etc/php/conf.d" "/var/www/html/$WORDPRESS_FOLDER/debug.log" /var/www/html/matomo.wpload_dir.php
@@ -379,6 +381,9 @@ if ! which apache2-foreground &> /dev/null; then
 
   php-fpm "$@"
 else
+  # set port to exposed port so we can make server side requests to localhost
+  sed -i "s/Listen 80\\>/Listen $PORT/" /etc/apache2/ports.conf
+
   # make sure home url points to 'localhost'
   php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
   \$pdo->exec('UPDATE \`$WP_DB_NAME\`.wp_options SET option_value = REPLACE(option_value, \'nginx\', \'localhost\') WHERE option_name IN (\'home\', \'siteurl\')');" || true

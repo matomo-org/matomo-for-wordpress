@@ -11,7 +11,13 @@ import MatomoReportingPage from '../../matomo-reporting.page.js';
 
 class TransitionsPage extends MatomoReportingPage {
   async open() {
-    return await super.open('General_Actions.Transitions_Transitions');
+    const result = await super.open('General_Actions.Transitions_Transitions');
+
+    await browser.waitUntil(
+      async () => !(await $('#transitions_inline_loading').isDisplayed()),
+    );
+
+    return result;
   }
 }
 

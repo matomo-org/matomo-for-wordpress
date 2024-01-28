@@ -11,6 +11,7 @@ namespace WpMatomo;
 
 use Exception;
 use Piwik\API\Request;
+use Piwik\API\ResponseBuilder;
 use Piwik\Common;
 use WP_Error;
 use WP_REST_Request;
@@ -88,6 +89,19 @@ class API {
 		$this->register_route( 'Goals', 'addGoal' );
 		$this->register_route( 'Goals', 'updateGoal' );
 		$this->register_route( 'Goals', 'deleteGoal' );
+
+		$this->register_route( 'TagManager', 'getContainerTags' );
+		$this->register_route( 'TagManager', 'addContainerTag' );
+		$this->register_route( 'TagManager', 'getContainerTriggers' );
+		$this->register_route( 'TagManager', 'addContainerTrigger' );
+		$this->register_route( 'TagManager', 'getContainerVariables' );
+		$this->register_route( 'TagManager', 'addContainerVariable' );
+		$this->register_route( 'TagManager', 'addContainer' );
+		$this->register_route( 'TagManager', 'getContainer' );
+		$this->register_route( 'TagManager', 'getContainers' );
+		$this->register_route( 'TagManager', 'getContainerVersions' );
+		$this->register_route( 'TagManager', 'createContainerVersion' );
+		$this->register_route( 'TagManager', 'publishContainerVersion' );
 	}
 
 	public function hit() {
@@ -153,10 +167,11 @@ class API {
 			'invalidate' => 'POST',
 			'run'        => 'POST',
 			'send'       => 'POST',
+			'publish'    => 'POST',
 			'delete'     => 'DELETE',
 			'remove'     => 'DELETE',
 		];
-		$starts_with_keep_prefix = [ 'anonymize', 'invalidate', 'run', 'send' ];
+		$starts_with_keep_prefix = [ 'anonymize', 'invalidate', 'run', 'send', 'publish' ];
 
 		$method        = 'GET';
 		$wp_api_module = $this->to_snake_case( $api_module );
@@ -220,15 +235,28 @@ class API {
 			}
 		}
 
-		if ( isset( $params['format'] ) && 'json' === $params['format'] ) {
-			// WordPress always JSON encodes the result of REST API methods, so sending format=json to Matomo
-			// results in double JSON encoding the result. so if format=json is detected, we override the format
-			// to 'original', to ensure it's only JSON encoded once.
-			$params['format'] = 'original';
-		}
+		$output_format    = empty( $params['format'] ) ? 'json' : $params['format'];
+		$params['format'] = 'original';
 
 		try {
 			$result = Request::processRequest( $api_method, $params );
+
+			$response_builder = new ResponseBuilder( $output_format, $params );
+			$response_builder->disableDataTablePostProcessor(); // done within Request, we don't need to use it again
+
+			$result = $response_builder->getResponse( $result );
+
+			if ( 'json' === $output_format ) {
+				// WordPress always JSON encodes the result of REST API methods, so sending format=json to Matomo
+				// results in double JSON encoding the result. so if format=json is detected, we have to parse the
+				// the JSON before handing it over to WordPress.
+				$result = json_decode( $result, true );
+
+				// scalar values are returned as is currently
+				if ( array_key_exists( 'value', $result ) && count( $result ) === 1 ) {
+					$result = $result['value'];
+				}
+			}
 		} catch ( Exception $e ) {
 			$code = 'matomo_error';
 			if ( $e->getCode() ) {
