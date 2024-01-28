@@ -18,9 +18,13 @@ describe('MWP Admin > Settings', () => {
   it('should load the tracking tab correctly', async () => {
     await MwpSettingsPage.open();
 
+    if (!process.env.PHP_VERSION) {
+      throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
+    }
+
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.settings.tracking')
+      await browser.checkFullPageScreen(`mwp-admin.settings.tracking.${process.env.PHP_VERSION}`)
     ).toEqual(0);
   });
 
