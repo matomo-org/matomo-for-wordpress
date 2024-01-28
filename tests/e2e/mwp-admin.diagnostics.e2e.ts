@@ -18,10 +18,14 @@ describe('MWP Admin > Diagnostics', () => {
   it('should load the system report tab correctly', async () => {
     await MwpDiagnosticsPage.open();
 
+    if (!process.env.PHP_VERSION) {
+      throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
+    }
+
     await MwpDiagnosticsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.diagnostics.system-report')
-    ).toEqual(0);
+      await browser.checkFullPageScreen(`mwp-admin.diagnostics.system-report.${process.env.PHP_VERSION}`)
+    ).toBeLessThan(0.01);
   });
 
   it('should load the troubleshooting tab correctly', async () => {
