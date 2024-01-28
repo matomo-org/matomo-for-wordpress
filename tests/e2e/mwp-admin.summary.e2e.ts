@@ -11,6 +11,8 @@ import MwpSummaryPage from './pageobjects/mwp-admin/summary.page.js';
 import Website from './website.js';
 
 describe('MWP Admin > Summary', () => {
+  const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
+
   before(async () => {
     await Website.login();
   });
@@ -20,7 +22,7 @@ describe('MWP Admin > Summary', () => {
 
     await MwpSummaryPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.summary')
+      await browser.checkFullPageScreen(`mwp-admin.summary${trunkSuffix}`)
     ).toBeLessThan(0.01);
   });
 
@@ -29,7 +31,7 @@ describe('MWP Admin > Summary', () => {
 
     await MwpSummaryPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.summary.thismonth')
+      await browser.checkFullPageScreen(`mwp-admin.summary.thismonth${trunkSuffix}`)
     ).toBeLessThan(0.01);
   });
 

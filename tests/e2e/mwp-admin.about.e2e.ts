@@ -11,6 +11,8 @@ import MwpAboutPage from './pageobjects/mwp-admin/about.page.js';
 import Website from './website.js';
 
 describe('MWP Admin > About', () => {
+  const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
+
   before(async () => {
     await Website.login();
   });
@@ -20,7 +22,7 @@ describe('MWP Admin > About', () => {
 
     await MwpAboutPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.about')
+      await browser.checkFullPageScreen(`mwp-admin.about${trunkSuffix}`)
     ).toEqual(0);
   });
 });

@@ -11,6 +11,8 @@ import MwpDiagnosticsPage from './pageobjects/mwp-admin/diagnostics.page.js';
 import Website from './website.js';
 
 describe('MWP Admin > Diagnostics', () => {
+  const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
+
   before(async () => {
     await Website.login();
   });
@@ -24,7 +26,7 @@ describe('MWP Admin > Diagnostics', () => {
 
     await MwpDiagnosticsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.diagnostics.system-report.${process.env.PHP_VERSION}`)
+      await browser.checkFullPageScreen(`mwp-admin.diagnostics.system-report.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toBeLessThan(0.01);
   });
 
@@ -34,7 +36,7 @@ describe('MWP Admin > Diagnostics', () => {
 
     await MwpDiagnosticsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.diagnostics.troubleshooting')
+      await browser.checkFullPageScreen(`mwp-admin.diagnostics.troubleshooting${trunkSuffix}`)
     ).toEqual(0);
   });
 });

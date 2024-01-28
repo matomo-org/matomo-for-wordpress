@@ -11,6 +11,8 @@ import MwpGetStartedPage from './pageobjects/mwp-admin/get-started.page.js';
 import Website from './website.js';
 
 describe('MWP Admin > Get Started', () => {
+  const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
+
   before(async () => {
     await Website.login();
   });
@@ -20,7 +22,7 @@ describe('MWP Admin > Get Started', () => {
 
     await MwpGetStartedPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.get-started')
+      await browser.checkFullPageScreen(`mwp-admin.get-started${trunkSuffix}`)
     ).toEqual(0);
   });
 });

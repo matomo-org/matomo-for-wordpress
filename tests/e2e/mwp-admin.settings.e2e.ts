@@ -11,6 +11,8 @@ import MwpSettingsPage from './pageobjects/mwp-admin/settings.page.js';
 import Website from './website.js';
 
 describe('MWP Admin > Settings', () => {
+  const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
+
   before(async () => {
     await Website.login();
   });
@@ -24,7 +26,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.settings.tracking.${process.env.PHP_VERSION}`)
+      await browser.checkFullPageScreen(`mwp-admin.settings.tracking.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -34,7 +36,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.settings.access')
+      await browser.checkFullPageScreen(`mwp-admin.settings.access${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -44,7 +46,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.settings.privacy')
+      await browser.checkFullPageScreen(`mwp-admin.settings.privacy${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -54,7 +56,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.settings.exclusions')
+      await browser.checkFullPageScreen(`mwp-admin.settings.exclusions${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -64,7 +66,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.settings.geolocation')
+      await browser.checkFullPageScreen(`mwp-admin.settings.geolocation${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -74,7 +76,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.settings.advanced')
+      await browser.checkFullPageScreen(`mwp-admin.settings.advanced${trunkSuffix}`)
     ).toEqual(0);
   });
 });

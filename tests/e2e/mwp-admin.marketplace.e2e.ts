@@ -11,6 +11,8 @@ import MwpMarketplacePage from './pageobjects/mwp-admin/marketplace.page.js';
 import Website from './website.js';
 
 describe('MWP Admin > Marketplace', () => {
+  const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
+
   before(async () => {
     await Website.login();
   });
@@ -20,7 +22,7 @@ describe('MWP Admin > Marketplace', () => {
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.marketplace.overview')
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.overview${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -30,7 +32,7 @@ describe('MWP Admin > Marketplace', () => {
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.marketplace.install-plugins')
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.install-plugins${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -40,7 +42,7 @@ describe('MWP Admin > Marketplace', () => {
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('mwp-admin.marketplace.subscriptions')
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.subscriptions${trunkSuffix}`)
     ).toEqual(0);
   });
 });
