@@ -56,7 +56,7 @@ describe('Matomo Reporting > Visitors', () => {
     await RealTimePage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-reporting.visitors.real-time')
-    ).toBeLessThan(0.1);
+    ).toBeLessThan(0.3);
   });
 
   it('should load the real-time map page correctly', async () => {

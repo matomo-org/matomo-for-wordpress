@@ -129,4 +129,12 @@ export default class Page {
       element.dispatchEvent(new Event('input', { bubbles: true }));
     }, selector, value);
   }
+
+  async prepareWpAdminForScreenshot() {
+    await browser.execute(() => {
+      window.jQuery('.notice-ocean-extra-plugin').hide();
+      window.jQuery('.notice-ocean-extra-plugin .notice-dismiss').click();
+      window.jQuery('#wpadminbar,#adminmenumain').hide();
+    });
+  }
 }
