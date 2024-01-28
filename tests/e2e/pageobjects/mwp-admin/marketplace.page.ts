@@ -7,9 +7,9 @@
  */
 
 import { $ } from '@wdio/globals';
-import Page from '../page.js';
+import MwpPage from './page.js';
 
-class MwpMarketplacePage extends Page {
+class MwpMarketplacePage extends MwpPage {
   async open() {
     return await super.open('/wp-admin/admin.php?page=matomo-marketplace');
   }

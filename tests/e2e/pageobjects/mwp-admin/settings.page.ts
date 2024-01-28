@@ -6,9 +6,9 @@
  *
  */
 
-import Page from '../page.js';
+import MwpPage from './page.js';
 
-class MwpSettingsPage extends Page {
+class MwpSettingsPage extends MwpPage {
   open() {
     return super.open('/wp-admin/admin.php?page=matomo-settings');
   }
