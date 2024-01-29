@@ -23,6 +23,7 @@ use Piwik\Url;
 use Piwik\Widget\WidgetsList;
 use WpMatomo\Bootstrap;
 use WpMatomo\Settings;
+use WpOrg\Requests\Utility\CaseInsensitiveDictionary;
 
 if (!defined( 'ABSPATH')) {
     exit; // if accessed directly
@@ -282,7 +283,10 @@ class WordPress extends Plugin
         }
 
         $status = wp_remote_retrieve_response_code($wpResponse);
-        $headers = wp_remote_retrieve_headers($wpResponse)->getAll();
+        $headers = wp_remote_retrieve_headers($wpResponse);
+        if ($headers instanceof CaseInsensitiveDictionary) {
+            $headers = $headers->getAll();
+        }
         $response = wp_remote_retrieve_body($wpResponse);
     }
 
