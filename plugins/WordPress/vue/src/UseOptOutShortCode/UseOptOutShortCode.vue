@@ -5,7 +5,6 @@
 -->
 
 <template>
-  <!-- TODO: translate -->
   <div class="WordPressOptOutCustomizer">
     <h3>{{ translate('WordPress_UseShortCode') }}</h3>
     <p>
