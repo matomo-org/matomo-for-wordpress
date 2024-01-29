@@ -1299,12 +1299,9 @@ class SystemReport {
 					array(
 						'method'    => 'GET',
 						'sslverify' => false,
-						'timeout'   => 2,
+						'timeout'   => 3,
 					)
 				);
-				if ( ! is_array( $result ) ) {
-					print '<pre>not an array: ' . var_export( $result, true ) . '</pre>';
-				}
 				if ( is_array( $result ) ) {
 					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 					$file_content = file_get_contents( dirname( MATOMO_ANALYTICS_FILE ) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . '.htaccess' );
