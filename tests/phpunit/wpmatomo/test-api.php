@@ -50,7 +50,7 @@ class ApiTest extends MatomoAnalytics_TestCase {
 		$request->set_param( 'format', 'json' );
 
 		$response = rest_get_server()->dispatch( $request );
-		$this->assertStringStartsWith( '4.', $response->get_data() );
+		$this->assertStringStartsWith( '5.', $response->get_data() );
 		// check that the string is not serialized json
 		$this->assertNull( json_decode( $response->get_data() ) );
 	}
