@@ -25,7 +25,7 @@ use Piwik\Plugin\Manager;
 use Piwik\Segment;
 use Piwik\Site;
 use Piwik\Timer;
-use Psr\Log\LoggerInterface;
+use Piwik\Log\LoggerInterface;
 
 class QueueConsumer
 {
@@ -269,7 +269,7 @@ class QueueConsumer
                 $this->addInvalidationToExclude($invalidatedArchive);
                 if ($alreadyInProgressId < $invalidatedArchive['idinvalidation']) {
                     $this->logger->debug("Skipping invalidated archive {$invalidatedArchive['idinvalidation']}, invalidation already in progress. Since in progress is older, not removing invalidation.");
-               } else if ($alreadyInProgressId > $invalidatedArchive['idinvalidation']) {
+                } else if ($alreadyInProgressId > $invalidatedArchive['idinvalidation']) {
                     $this->logger->debug("Skipping invalidated archive {$invalidatedArchive['idinvalidation']}, invalidation already in progress. Since in progress is newer, will remove invalidation.");
                     $this->model->deleteInvalidations([$invalidatedArchive]);
                 }
@@ -616,11 +616,12 @@ class QueueConsumer
         // if valid archive already exists, do not re-archive
         $minDateTimeProcessedUTC = Date::now()->subSeconds(Rules::getPeriodArchiveTimeToLiveDefault($periodLabel));
         $archiveIdAndVisits = ArchiveSelector::getArchiveIdAndVisits($params, $minDateTimeProcessedUTC, $includeInvalidated = false);
+        $idArchives = $archiveIdAndVisits['idArchives'];
+        $tsArchived = $archiveIdAndVisits['tsArchived'];
 
-        $tsArchived = !empty($archiveIdAndVisits[4]) ? Date::factory($archiveIdAndVisits[4])->getDatetime() : null;
+        $tsArchived = !empty($tsArchived) ? Date::factory($tsArchived)->getDatetime() : null;
 
-        $idArchive = $archiveIdAndVisits[0];
-        if (empty($idArchive)) {
+        if (empty($idArchives)) {
             return [false, $tsArchived];
         }
 

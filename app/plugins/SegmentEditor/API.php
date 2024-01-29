@@ -18,6 +18,7 @@ use Piwik\Piwik;
 use Piwik\Config;
 use Piwik\Segment;
 use Piwik\Cache;
+use Piwik\Url;
 
 /**
  * The SegmentEditor API lets you add, update, delete custom Segments, and list saved segments.
@@ -104,7 +105,7 @@ class API extends \Piwik\Plugin\API
         if (empty($idSite) && $autoArchive) {
             if (!Piwik::hasUserSuperUserAccess()) {
                 throw new Exception(
-                    "Please contact Support to make these changes on your behalf. ".
+                    "Please contact Support to make these changes on your behalf. " .
                     " To modify a pre-processed segment for all websites, a user must have super user access. "
                 );
             }
@@ -122,7 +123,7 @@ class API extends \Piwik\Plugin\API
             if (Rules::isBrowserTriggerEnabled()) {
                 $message = "Pre-processed segments can only be created if browser triggered archiving is disabled.";
                 if (Piwik::hasUserSuperUserAccess()) {
-                    $message .= " To disable browser archiving follow the instructions here: https://matomo.org/docs/setup-auto-archiving/.";
+                    $message .= " To disable browser archiving follow the instructions here: " . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/setup-auto-archiving/');
                 }
                 throw new Exception($message);
             }
@@ -355,7 +356,6 @@ class API extends \Piwik\Plugin\API
             if (!$segment['enable_all_users']) {
                 Piwik::checkUserHasSuperUserAccessOrIsTheUser($segment['login']);
             }
-
         } catch (Exception $e) {
             throw new Exception($this->getMessageCannotEditSegmentCreatedBySuperUser());
         }
@@ -394,8 +394,31 @@ class API extends \Piwik\Plugin\API
             }
         }
 
+        $segments = $this->filterSegmentsWithDisabledElements($segments, $idSite);
         $segments = $this->sortSegmentsCreatedByUserFirst($segments);
 
+        return $segments;
+    }
+
+    /**
+     * Filter out any segments which cannot be initialized due to disable plugins or features
+     *
+     * @param array $segments
+     * @param bool|int $idSite
+     *
+     * @return array
+     */
+    private function filterSegmentsWithDisabledElements(array $segments, $idSite = false): array
+    {
+        $idSites = false === $idSite ? [] : [$idSite];
+
+        foreach ($segments as $k => $segment) {
+            try {
+                new Segment($segment['definition'], $idSites);
+            } catch (Exception $e) {
+                unset($segments[$k]);
+            }
+        }
         return $segments;
     }
 

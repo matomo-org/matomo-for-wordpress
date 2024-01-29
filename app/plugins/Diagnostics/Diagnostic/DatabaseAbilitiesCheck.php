@@ -12,6 +12,7 @@ use Piwik\Config;
 use Piwik\Db;
 use Piwik\DbHelper;
 use Piwik\Translation\Translator;
+use Piwik\Url;
 
 /**
  * Check if Piwik can use LOAD DATA INFILE.
@@ -64,7 +65,8 @@ class DatabaseAbilitiesCheck implements Diagnostic
                 DiagnosticResult::STATUS_WARNING, 'UTF8mb4 charset<br/><br/>' .
                 $this->translator->translate('Diagnostics_DatabaseUtf8mb4CharsetAvailableButNotUsed', '<code>' . PIWIK_INCLUDE_PATH . '/console core:convert-to-utf8mb4</code>') .
                 '<br/><br/>' .
-                $this->translator->translate('Diagnostics_DatabaseUtf8Requirement', ['�', '<a href="https://matomo.org/faq/how-to-update/how-to-convert-the-database-to-utf8mb4-charset/" rel="noreferrer noopener" target="_blank">', '</a>']) .
+                $this->translator->translate('Diagnostics_DatabaseUtf8Requirement', ['�',
+                    '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to-update/how-to-convert-the-database-to-utf8mb4-charset/') . '" rel="noreferrer noopener" target="_blank">', '</a>']) .
                 '<br/>'
             );
         }
@@ -73,7 +75,8 @@ class DatabaseAbilitiesCheck implements Diagnostic
             DiagnosticResult::STATUS_WARNING, 'UTF8mb4 charset<br/><br/>' .
             $this->translator->translate('Diagnostics_DatabaseUtf8mb4CharsetRecommended') .
             '<br/><br/>' .
-            $this->translator->translate('Diagnostics_DatabaseUtf8Requirement', ['�', '<a href="https://matomo.org/faq/how-to-update/how-to-convert-the-database-to-utf8mb4-charset/" rel="noreferrer noopener" target="_blank">', '</a>']) .
+            $this->translator->translate('Diagnostics_DatabaseUtf8Requirement', ['�',
+                '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to-update/how-to-convert-the-database-to-utf8mb4-charset/') . '" rel="noreferrer noopener" target="_blank">', '</a>']) .
             '<br/>'
         );
     }
@@ -121,7 +124,7 @@ class DatabaseAbilitiesCheck implements Diagnostic
                 '<br/><strong>%s:</strong> %s<br/>%s',
                 $this->translator->translate('General_Error'),
                 $errorMessage,
-                'Troubleshooting: <a target="_blank" rel="noreferrer noopener" href="https://matomo.org/faq/troubleshooting/faq_194">FAQ on matomo.org</a>'
+                'Troubleshooting: <a target="_blank" rel="noreferrer noopener" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/troubleshooting/faq_194') . '">FAQ on matomo.org</a>'
             );
         }
 
@@ -144,7 +147,7 @@ class DatabaseAbilitiesCheck implements Diagnostic
             // insert an entry into the new temporary table
             Db::exec('INSERT INTO `piwik_test_table_temp` (`id`, `val`) VALUES ("1", "val1");');
 
-            for ($i=0; $i < 5; $i++) {
+            for ($i = 0; $i < 5; $i++) {
                 // try reading the entry a few times to ensure it doesn't fail, which might be possible when using load balanced databases
                 $result = Db::fetchRow('SELECT * FROM `piwik_test_table_temp` WHERE `id` = 1');
 
@@ -155,11 +158,10 @@ class DatabaseAbilitiesCheck implements Diagnostic
         } catch (\Exception $e) {
             $status = DiagnosticResult::STATUS_ERROR;
             $comment .= '<br/>' . $this->translator->translate('Diagnostics_MysqlTemporaryTablesWarning');
-            $comment .= '<br/>Troubleshooting: <a target="_blank" rel="noreferrer noopener" href="https://matomo.org/faq/how-to-install/faq_23484/">FAQ on matomo.org</a>';
+            $comment .= '<br/>Troubleshooting: <a target="_blank" rel="noreferrer noopener" href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to-install/faq_23484/') . '">FAQ on matomo.org</a>';
         }
 
         return new DiagnosticResultItem($status, $comment);
-
     }
 
     protected function checkTransactionLevel()
@@ -176,6 +178,5 @@ class DatabaseAbilitiesCheck implements Diagnostic
         }
 
         return new DiagnosticResultItem($status, $comment);
-
     }
 }

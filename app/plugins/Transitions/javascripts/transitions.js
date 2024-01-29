@@ -79,7 +79,14 @@ DataTable_RowActions_Transitions.prototype.doOpenPopover = function (link) {
 
     var i = 0;
     while (i < parts.length) {
-        var paramName = decodeURIComponent(parts[i]);
+        var paramName = '';
+
+        try {
+            paramName = decodeURIComponent(parts[i]);
+        } catch (e) {
+            // invalid parameter
+        }
+
         if (ALLOWED_OVERRIDE_PARAMS.indexOf(paramName) === -1) {
             i += 1;
             continue;
@@ -128,7 +135,7 @@ DataTable_RowActions_Registry.register({
 
             if (dataTableParams['period'] === 'range') {
 
-                var piwikPeriods = piwikHelper.getAngularDependency('piwikPeriods');
+                var piwikPeriods = window.CoreHome.Periods;
                 if (piwikPeriods) {
                     var range = piwikPeriods.parse(dataTableParams['period'], dataTableParams['date']);
                     if (range) {
@@ -242,7 +249,7 @@ Piwik_Transitions.prototype.showPopover = function (showEmbeddedInReport) {
         $('#transitions_inline_loading').show();
     } else {
         this.popover = Piwik_Popover.showLoading('Transitions', self.actionName, 550);
-        Piwik_Popover.addHelpButton('https://matomo.org/docs/transitions');
+        Piwik_Popover.addHelpButton(_pk_externalRawLink('https://matomo.org/docs/transitions'));
     }
 
     var bothLoaded = function () {
@@ -261,7 +268,10 @@ Piwik_Transitions.prototype.showPopover = function (showEmbeddedInReport) {
             self.canvas.narrowMode();
         }
 
+        // truncate already placed elements, so height can be calculated correctly.
+        self.canvas.truncateVisibleBoxTexts();
         self.render();
+        // truncate elements added during render()
         self.canvas.truncateVisibleBoxTexts();
     };
 
@@ -387,10 +397,7 @@ Piwik_Transitions.prototype.render = function () {
 
     this.renderLoops();
 
-    var $rootScope = piwikHelper.getAngularDependency('$rootScope');
-    if ($rootScope) {
-        $rootScope.$emit('Transitions.dataChanged', {'actionType': this.actionType, 'actionName': this.actionName});
-    }
+    window.CoreHome.Matomo.postEvent('Transitions.dataChanged', {'actionType': this.actionType, 'actionName': this.actionName});
 };
 
 /** Render left side: referrer groups & direct entries */
@@ -517,6 +524,7 @@ Piwik_Transitions.prototype.renderLoops = function () {
     this.addTooltipShowingPercentageOfAllPageviews(loops, 'loops');
 
     this.canvas.renderLoops(this.model.getPercentage('loops'));
+    loops.css({marginTop: $('#Transitions_CenterBox').outerHeight() + 45});
 };
 
 Piwik_Transitions.prototype.renderEntries = function (onlyBg) {
@@ -636,12 +644,9 @@ Piwik_Transitions.prototype.renderOpenGroup = function (groupName, side, onlyBg)
             if (this.showEmbeddedInReport) {
                 onClick = (function (url) {
                     return function () {
-                        var $rootScope = piwikHelper.getAngularDependency('$rootScope');
-                        if ($rootScope) {
-                            $rootScope.$emit('Transitions.switchTransitionsUrl', {
-                                url:url
-                            });
-                        }
+                        window.CoreHome.Matomo.postEvent('Transitions.switchTransitionsUrl', {
+                            url: url,
+                        });
                     };
                 })(label);
             } else {
@@ -1043,8 +1048,6 @@ Piwik_Transitions_Canvas.prototype.truncateVisibleBoxTexts = function () {
             text = leftPart + '...' + rightPart;
             span.html(piwikHelper.addBreakpointsToUrl(text));
         }
-
-        span.removeClass('Transitions_Truncate');
     });
 };
 
@@ -1261,7 +1264,7 @@ Piwik_Transitions_Canvas.prototype.renderLoops = function (share) {
 
     // curve from the upper left connection to the center box to the lower left connection to the text box
     var point1 = {x: this.leftCurveEndX, y: this.leftCurvePositionY};
-    var point2 = {x: this.leftCurveEndX, y: 470};
+    var point2 = {x: this.leftCurveEndX, y: $('#Transitions_CenterBox').outerHeight() + 70};
 
     var cpLeftX = (this.leftCurveBeginX + this.leftCurveEndX) / 2 + 30;
     var cp1 = {x: cpLeftX, y: point1.y};
@@ -1693,10 +1696,6 @@ Piwik_Transitions_Util = {
                 spanClass = 'Transitions_Metric';
             }
             span.addClass(spanClass);
-        }
-        if ($.browser.msie && parseFloat($.browser.version) < 8) {
-            // ie7 fix
-            value += '&nbsp;';
         }
         span.html(value);
     }

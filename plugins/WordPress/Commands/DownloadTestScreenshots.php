@@ -13,9 +13,6 @@ use Piwik\Development;
 use Piwik\Filesystem;
 use Piwik\Http;
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class DownloadTestScreenshots extends ConsoleCommand
@@ -23,15 +20,18 @@ class DownloadTestScreenshots extends ConsoleCommand
     protected function configure()
     {
         $this->setName('wordpress:download-test-screenshots');
-        $this->addOption('artifact', null, InputOption::VALUE_REQUIRED,
+        $this->addRequiredValueOption('artifact', null,
             'The ID of the screenshot artifacts to download.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $input = $this->getInput();
+        $output = $this->getOutput();
+
         $artifactId = $input->getOption('artifact');
         if (empty($artifactId)) {
-            $artifactId = $this->pickArtifact($input, $output);
+            $artifactId = $this->pickArtifact();
         }
 
         $artifactUrl = "https://api.github.com/repos/matomo-org/matomo-for-wordpress/actions/artifacts/$artifactId/zip";
@@ -47,6 +47,8 @@ class DownloadTestScreenshots extends ConsoleCommand
         }
 
         $output->writeln("Done. The artifacts were extracted to ./tests/e2e/actual.");
+
+        return 0;
     }
 
     public function isEnabled()
@@ -94,7 +96,7 @@ class DownloadTestScreenshots extends ConsoleCommand
         }
     }
 
-    private function pickArtifact(InputInterface $input, OutputInterface $output)
+    private function pickArtifact()
     {
         $artifactsApiUrl = 'https://api.github.com/repos/matomo-org/matomo-for-wordpress/actions/artifacts?per_page=100';
 
@@ -112,9 +114,15 @@ class DownloadTestScreenshots extends ConsoleCommand
         $builds = array_keys($builds);
         $builds = array_slice($builds, 0, 10);
 
-        $helper = $this->getHelper('question');
+        // hack needed in matomo 5, since helpers can no longer be accessed directly
+        $klass = new \ReflectionClass(get_parent_class(get_parent_class(self::class)));
+        $property = $klass->getProperty('helperSet');
+        $property->setAccessible(true);
+        $helperSet = $property->getValue($this);
+
+        $helper = $helperSet->get('question');
         $question = new ChoiceQuestion('Select a build:', $builds);
-        $build = $helper->ask($input, $output, $question);
+        $build = $helper->ask($this->getInput(), $this->getOutput(), $question);
 
         preg_match('/workflow run ([^)]+)\)/', $build, $matches);
         $buildId = $matches[1];
@@ -138,7 +146,7 @@ class DownloadTestScreenshots extends ConsoleCommand
         $artifactNames = array_column($artifacts, 'name');
 
         $question = new ChoiceQuestion('Select an artifact:', $artifactNames);
-        $artifactName = $helper->ask($input, $output, $question);
+        $artifactName = $helper->ask($this->getInput(), $this->getOutput(), $question);
 
         foreach ($artifacts as $artifactInfo) {
             if ($artifactInfo['name'] == $artifactName) {

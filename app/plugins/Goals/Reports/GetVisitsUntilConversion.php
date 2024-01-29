@@ -10,8 +10,8 @@ namespace Piwik\Plugins\Goals\Reports;
 
 use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
-use Piwik\Plugins\Goals\Columns\VisitsUntilConversion;
 use Piwik\Plugins\Goals\Archiver;
+use Piwik\Plugins\Goals\Columns\VisitsUntilConversion;
 
 class GetVisitsUntilConversion extends Base
 {
@@ -45,8 +45,6 @@ class GetVisitsUntilConversion extends Base
         $view->requestConfig->filter_sort_column = 'label';
         $view->requestConfig->filter_sort_order  = 'asc';
         $view->requestConfig->filter_limit       = count(Archiver::$visitCountRanges);
-
-        $view->config->addTranslations(array('label' => $this->dimension->getName()));
     }
 
     public function configureReportMetadata(&$availableReports, $infos)
@@ -65,5 +63,4 @@ class GetVisitsUntilConversion extends Base
             return $goal['name'] . ' - ' . $name;
         });
     }
-
 }

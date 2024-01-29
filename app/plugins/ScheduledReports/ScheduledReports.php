@@ -30,7 +30,6 @@ use Piwik\View;
  */
 class ScheduledReports extends \Piwik\Plugin
 {
-
     const DISPLAY_FORMAT_GRAPHS_ONLY_FOR_KEY_METRICS = 1; // Display Tables Only (Graphs only for key metrics)
     const DISPLAY_FORMAT_GRAPHS_ONLY = 2; // Display Graphs Only for all reports
     const DISPLAY_FORMAT_TABLES_AND_GRAPHS = 3; // Display Tables and Graphs for all reports
@@ -89,7 +88,7 @@ class ScheduledReports extends \Piwik\Plugin
             'ScheduledReports.processReports'           => 'processReports',
             'ScheduledReports.allowMultipleReports'     => 'allowMultipleReports',
             'ScheduledReports.sendReport'               => 'sendReport',
-            'Template.reportParametersScheduledReports' => 'template_reportParametersScheduledReports',
+            'Template.reportParametersScheduledReports' => 'templateReportParametersScheduledReports',
             'UsersManager.deleteUser'                   => 'deleteUserReport',
             'UsersManager.removeSiteAccess'             => 'deleteUserReportForSites',
             'SitesManager.deleteSite.end'               => 'deleteSiteReport',
@@ -147,7 +146,6 @@ class ScheduledReports extends \Piwik\Plugin
         $translationKeys[] = 'ScheduledReports_ReportType';
         $translationKeys[] = 'ScheduledReports_AggregateReportsFormat';
         $translationKeys[] = 'ScheduledReports_EvolutionGraph';
-        $translationKeys[] = 'ScheduledReports_EvolutionGraphsShowForPreviousN';
         $translationKeys[] = 'ScheduledReports_ReportsIncluded';
         $translationKeys[] = 'ScheduledReports_ReportIncludeNWebsites';
         $translationKeys[] = 'SegmentEditor_LoadingSegmentedDataMayTakeSomeTime';
@@ -341,8 +339,8 @@ class ScheduledReports extends \Piwik\Plugin
      * @param $additionalFiles
      * @param Period|null $period
      * @param $force
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws \Piwik\Exception\DI\DependencyException
+     * @throws \Piwik\Exception\DI\NotFoundException
      */
     public function sendReport($reportType, $report, $contents, $filename, $prettyDate, $reportSubject, $reportTitle,
                                $additionalFiles, $period, $force)
@@ -428,7 +426,7 @@ class ScheduledReports extends \Piwik\Plugin
 
             if ($textContent) {
                 $link = SettingsPiwik::getPiwikUrl() . 'index.php?module=ScheduledReports&action=unsubscribe&token=' . $tokens[$email];
-                $mail->setBodyText($textContent . "\n\n".Piwik::translate('ScheduledReports_UnsubscribeFooter', [$link]));
+                $mail->setBodyText($textContent . "\n\n" . Piwik::translate('ScheduledReports_UnsubscribeFooter', [$link]));
             }
 
             try {
@@ -509,7 +507,7 @@ class ScheduledReports extends \Piwik\Plugin
         $recipients = array_values(array_filter($recipients));
     }
 
-    public static function template_reportParametersScheduledReports(&$out)
+    public static function templateReportParametersScheduledReports(&$out)
     {
         $view = new View('@ScheduledReports/reportParametersScheduledReports');
         $view->currentUserEmail = Piwik::getCurrentUserEmail();

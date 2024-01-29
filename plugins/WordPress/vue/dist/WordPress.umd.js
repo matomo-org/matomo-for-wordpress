@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("CoreHome"));
+		module.exports = factory(require("CoreHome"), require("vue"));
 	else if(typeof define === 'function' && define.amd)
-		define(["CoreHome"], factory);
+		define(["CoreHome", ], factory);
 	else if(typeof exports === 'object')
-		exports["WordPress"] = factory(require("CoreHome"));
+		exports["WordPress"] = factory(require("CoreHome"), require("vue"));
 	else
-		root["WordPress"] = factory(root["CoreHome"]);
-})((typeof self !== 'undefined' ? self : this), function(__WEBPACK_EXTERNAL_MODULE__19dc__) {
+		root["WordPress"] = factory(root["CoreHome"], root["Vue"]);
+})((typeof self !== 'undefined' ? self : this), function(__WEBPACK_EXTERNAL_MODULE__19dc__, __WEBPACK_EXTERNAL_MODULE__8bbf__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -188,6 +188,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
+/***/ "8bbf":
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE__8bbf__;
+
+/***/ }),
+
 /***/ "fae3":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -196,7 +203,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
-__webpack_require__.d(__webpack_exports__, "value", function() { return /* reexport */ value; });
+__webpack_require__.d(__webpack_exports__, "UseOptOutShortCode", function() { return /* reexport */ UseOptOutShortCode; });
 
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/setPublicPath.js
 // This file is imported into lib/wc client bundles.
@@ -222,9 +229,66 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
+// EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
+var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
+
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--0-1!../plugins/WordPress/vue/src/UseOptOutShortCode/UseOptOutShortCode.vue?vue&type=template&id=d50b32b6
+
+var _hoisted_1 = {
+  class: "WordPressOptOutCustomizer"
+};
+var _hoisted_2 = ["innerHTML"];
+
+var _hoisted_3 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("br", null, null, -1);
+
+var _hoisted_4 = {
+  style: {
+    "margin": "20px"
+  }
+};
+var _hoisted_5 = {
+  style: {
+    "list-style": "disc"
+  }
+};
+
+var _hoisted_6 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("code", null, "[matomo_opt_out language=de]", -1);
+
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", _hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('WordPress_UseShortCode')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("p", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
+    innerHTML: _ctx.$sanitize(_ctx.shortCodeDesc1)
+  }, null, 8, _hoisted_2), _hoisted_3, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('WordPress_UseShortCodeDesc2')) + ":", 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("ul", _hoisted_4, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("li", _hoisted_5, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('WordPress_UseShortCodeOptionLanguage')), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("p", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('WordPress_Example')) + ": ", 1), _hoisted_6])]);
+}
+// CONCATENATED MODULE: ../plugins/WordPress/vue/src/UseOptOutShortCode/UseOptOutShortCode.vue?vue&type=template&id=d50b32b6
+
 // EXTERNAL MODULE: external "CoreHome"
 var external_CoreHome_ = __webpack_require__("19dc");
 
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-typescript/node_modules/cache-loader/dist/cjs.js??ref--14-0!./node_modules/babel-loader/lib!./node_modules/@vue/cli-plugin-typescript/node_modules/ts-loader??ref--14-2!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--0-1!../plugins/WordPress/vue/src/UseOptOutShortCode/UseOptOutShortCode.vue?vue&type=script&lang=ts
+
+
+/* harmony default export */ var UseOptOutShortCodevue_type_script_lang_ts = (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["defineComponent"])({
+  computed: {
+    shortCodeDesc1: function shortCodeDesc1() {
+      return Object(external_CoreHome_["translate"])('WordPress_UseShortCodeDesc1', '<code>[matomo_opt_out]</code>');
+    }
+  }
+}));
+external_CoreHome_["Matomo"].on('PrivacyManager.UsersOptOut.preface', function (components) {
+  components.push({
+    plugin: 'WordPress',
+    component: 'UseOptOutShortCode'
+  });
+});
+// CONCATENATED MODULE: ../plugins/WordPress/vue/src/UseOptOutShortCode/UseOptOutShortCode.vue?vue&type=script&lang=ts
+ 
+// CONCATENATED MODULE: ../plugins/WordPress/vue/src/UseOptOutShortCode/UseOptOutShortCode.vue
+
+
+
+UseOptOutShortCodevue_type_script_lang_ts.render = render
+
+/* harmony default export */ var UseOptOutShortCode = (UseOptOutShortCodevue_type_script_lang_ts);
 // CONCATENATED MODULE: ../plugins/WordPress/vue/src/index.ts
 /**
  * Matomo - free/libre analytics platform
@@ -232,8 +296,6 @@ var external_CoreHome_ = __webpack_require__("19dc");
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
-var value = Object(external_CoreHome_["translate"])('WordPress_Whatever');
 
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib-no-default.js
 

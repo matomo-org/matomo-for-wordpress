@@ -108,7 +108,6 @@ class Updater
 
             $this->installNewFiles($extractedArchiveDirectory);
             $messages[] = $this->translator->translate('CoreUpdater_InstallingTheLatestVersion');
-
         } catch (ArchiveDownloadException $e) {
             throw $e;
         } catch (Exception $e) {
@@ -206,6 +205,8 @@ class Updater
         } catch (\Throwable $e) {
             throw new UpdaterException($e, $messages);
         }
+
+        Filesystem::deleteAllCacheOnUpdate();
 
         return $messages;
     }

@@ -24,6 +24,8 @@ use Piwik\Option;
 use Piwik\Piwik;
 use Piwik\Plugin\SettingsProvider;
 use Piwik\Plugins\CorePluginsAdmin\SettingsMetadata;
+use Piwik\Plugins\SitesManager\SiteContentDetection\ConsentManagerDetectionAbstract;
+use Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract;
 use Piwik\Plugins\WebsiteMeasurable\Settings\Urls;
 use Piwik\ProxyHttp;
 use Piwik\Scheduler\Scheduler;
@@ -32,6 +34,7 @@ use Piwik\Settings\Measurable\MeasurableSettings;
 use Piwik\SettingsPiwik;
 use Piwik\SettingsServer;
 use Piwik\Site;
+use Piwik\SiteContentDetector;
 use Piwik\Tracker\Cache;
 use Piwik\Tracker\TrackerCodeGenerator;
 use Piwik\Translation\Translator;
@@ -56,7 +59,7 @@ use Piwik\UrlHelper;
  */
 class API extends \Piwik\Plugin\API
 {
-    const DEFAULT_SEARCH_KEYWORD_PARAMETERS = 'q,query,s,search,searchword,k,keyword';
+    const DEFAULT_SEARCH_KEYWORD_PARAMETERS = 'q,query,s,search,searchword,k,keyword,keywords';
     const OPTION_EXCLUDED_IPS_GLOBAL = 'SitesManager_ExcludedIpsGlobal';
     const OPTION_DEFAULT_TIMEZONE = 'SitesManager_DefaultTimezone';
     const OPTION_DEFAULT_CURRENCY = 'SitesManager_DefaultCurrency';
@@ -84,11 +87,15 @@ class API extends \Piwik\Plugin\API
 
     private $timezoneNameCache = [];
 
-    public function __construct(SettingsProvider $provider, SettingsMetadata $settingsMetadata, Translator $translator)
+    /** @var SiteContentDetector */
+    private $siteContentDetector;
+
+    public function __construct(SettingsProvider $provider, SettingsMetadata $settingsMetadata, Translator $translator, SiteContentDetector $siteContentDetector)
     {
         $this->settingsProvider = $provider;
         $this->settingsMetadata = $settingsMetadata;
         $this->translator = $translator;
+        $this->siteContentDetector = $siteContentDetector;
     }
 
     /**
@@ -100,38 +107,39 @@ class API extends \Piwik\Plugin\API
      * @param bool   $mergeSubdomains
      * @param bool   $groupPageTitlesByDomain
      * @param bool   $mergeAliasUrls
-     * @param bool   $visitorCustomVariables
-     * @param bool   $pageCustomVariables
-     * @param bool   $customCampaignNameQueryParam
-     * @param bool   $customCampaignKeywordParam
+     * @param array  $visitorCustomVariables
+     * @param array  $pageCustomVariables
+     * @param string $customCampaignNameQueryParam
+     * @param string $customCampaignKeywordParam
      * @param bool   $doNotTrack
      * @param bool   $disableCookies
      * @param bool   $trackNoScript
      * @param bool   $crossDomain
      * @param bool   $forceMatomoEndpoint Whether the Matomo endpoint should be forced if Matomo was installed prior 3.7.0.
-     * @param bool   $excludedQueryParams
-     * @param mixed  $excludedReferrers array or comma separated string of ignored referrers. Defaults to configured ignored referrers
+     * @param string|array  $excludedQueryParams array or comma separated string of excluded query parameters.
+     * @param string|array  $excludedReferrers array or comma separated string of ignored referrers. Defaults to configured ignored referrers
      *
      * @return string The Javascript tag ready to be included on the HTML pages
      * @throws Exception
+     * @unsanitized
      */
     public function getJavascriptTag(
-        $idSite,
-        $piwikUrl = '',
-        $mergeSubdomains = false,
-        $groupPageTitlesByDomain = false,
-        $mergeAliasUrls = false,
-        $visitorCustomVariables = false,
-        $pageCustomVariables = false,
-        $customCampaignNameQueryParam = false,
-        $customCampaignKeywordParam = false,
-        $doNotTrack = false,
-        $disableCookies = false,
-        $trackNoScript = false,
-        $crossDomain = false,
-        $forceMatomoEndpoint = false,
-        $excludedQueryParams = false,
-        $excludedReferrers = false
+        int $idSite,
+        string $piwikUrl = '',
+        bool $mergeSubdomains = false,
+        bool $groupPageTitlesByDomain = false,
+        bool $mergeAliasUrls = false,
+        array $visitorCustomVariables = [],
+        array $pageCustomVariables = [],
+        string $customCampaignNameQueryParam = '',
+        string $customCampaignKeywordParam = '',
+        bool $doNotTrack = false,
+        bool $disableCookies = false,
+        bool $trackNoScript = false,
+        bool $crossDomain = false,
+        bool $forceMatomoEndpoint = false,
+        $excludedQueryParams = '',
+        $excludedReferrers = ''
     ) {
         Piwik::checkUserHasViewAccess($idSite);
 
@@ -139,18 +147,9 @@ class API extends \Piwik\Plugin\API
             $piwikUrl = SettingsPiwik::getPiwikUrl();
         }
 
-        // Revert the automatic encoding
-        // TODO remove that when https://github.com/piwik/piwik/issues/4231 is fixed
-        $piwikUrl = Common::unsanitizeInputValue($piwikUrl);
-        $visitorCustomVariables = Common::unsanitizeInputValues($visitorCustomVariables);
-        $pageCustomVariables = Common::unsanitizeInputValues($pageCustomVariables);
-        $customCampaignNameQueryParam = Common::unsanitizeInputValue($customCampaignNameQueryParam);
-        $customCampaignKeywordParam = Common::unsanitizeInputValue($customCampaignKeywordParam);
-
         if (is_array($excludedQueryParams)) {
             $excludedQueryParams = implode(',', $excludedQueryParams);
         }
-        $excludedQueryParams = Common::unsanitizeInputValue($excludedQueryParams);
 
         $generator = new TrackerCodeGenerator();
         if ($forceMatomoEndpoint) {
@@ -1771,5 +1770,30 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSomeViewAccess();
 
         return SettingsPiwik::getWebsitesCountToDisplay();
+    }
+
+
+    /**
+     * Detect consent manager details for a site
+     *
+     * @internal
+     * @unsanitized
+     */
+    public function detectConsentManager(int $idSite, int $timeOut = 60): ?array
+    {
+        Piwik::checkUserHasViewAccess($idSite);
+
+        $this->siteContentDetector->detectContent([SiteContentDetectionAbstract::TYPE_CONSENT_MANAGER], $idSite, null, $timeOut);
+        $consentManagers = $this->siteContentDetector->getDetectsByType(SiteContentDetectionAbstract::TYPE_CONSENT_MANAGER);
+        if (!empty($consentManagers)) {
+            /** @var ConsentManagerDetectionAbstract $consentManager */
+            $consentManager = $this->siteContentDetector->getSiteContentDetectionById(reset($consentManagers));
+            return ['name' => $consentManager::getName(),
+                    'url' => $consentManager::getInstructionUrl(),
+                    'isConnected' => in_array($consentManager::getId(), $this->siteContentDetector->connectedConsentManagers)
+            ];
+        }
+
+        return null;
     }
 }

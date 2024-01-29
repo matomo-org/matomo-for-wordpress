@@ -204,7 +204,6 @@ class API extends \Piwik\Plugin\API
         // Cleanup data to return the top suggested (non empty) labels for this segment
         $values = $table->getColumn($segmentName);
 
-
         // Select also flattened keys (custom variables "page" scope, page URLs for one visit, page titles for one visit)
         $valuesBis = $table->getColumnsStartingWith($segmentName . ColumnDelete::APPEND_TO_COLUMN_NAME_TO_KEEP);
         $values = array_merge($values, $valuesBis);
@@ -361,7 +360,7 @@ class API extends \Piwik\Plugin\API
         }
         krsort($columnsByPlugin);
 
-        $mergedDataTable = false;
+        $mergedDataTable = null;
         $params = compact('idSite', 'period', 'date', 'segment');
         foreach ($columnsByPlugin as $plugin => $columns) {
             // load the data
@@ -374,7 +373,7 @@ class API extends \Piwik\Plugin\API
             });
 
             // merge reports
-            if ($mergedDataTable === false) {
+            if ($mergedDataTable === null) {
                 $mergedDataTable = $dataTable;
             } else {
                 $merger = new MergeDataTables(true);
@@ -388,7 +387,7 @@ class API extends \Piwik\Plugin\API
             $mergedDataTable->queueFilter('ColumnDelete', array(false, array_keys($columnsMap)));
         }
 
-        return $mergedDataTable;
+        return $mergedDataTable ?? new DataTable();
     }
 
     /**
@@ -449,34 +448,27 @@ class API extends \Piwik\Plugin\API
      *
      * @param array $urls The array of API requests.
      * @return array
+     * @unsanitized
      */
     public function getBulkRequest($urls)
     {
         if (empty($urls) || !is_array($urls)) {
-            return array();
+            return [];
         }
 
-        $urls = array_map('urldecode', $urls);
-        $urls = array_map(array('Piwik\Common', 'unsanitizeInputValue'), $urls);
+        $request = \Piwik\Request::fromRequest();
+        $queryParameters = $request->getParameters();
+        unset($queryParameters['urls']);
 
-        $result = array();
+        $result = [];
         foreach ($urls as $url) {
-            $params = Request::getRequestArrayFromString($url . '&format=json');
+            $params = \Piwik\Request::fromQueryString($url)->getParameters();
+            $params['format'] = 'json';
+
+            $params += $queryParameters;
 
             if (!empty($params['method']) && $params['method'] === 'API.getBulkRequest') {
                 continue;
-            }
-
-            if (isset($params['urls']) && $params['urls'] == $urls) {
-                // by default 'urls' is added to $params as Request::getRequestArrayFromString adds all $_GET/$_POST
-                // default parameters
-                unset($params['urls']);
-            }
-
-            if (!empty($params['segment']) && strpos($url, 'segment=') > -1) {
-                // only unsanitize input when segment is actually present in URL, not when it was used from
-                // $defaultRequest in Request::getRequestArrayFromString from $_GET/$_POST
-                $params['segment'] = urlencode(Common::unsanitizeInputValue($params['segment']));
             }
 
             $req = new Request($params);
@@ -562,7 +554,7 @@ class API extends \Piwik\Plugin\API
                     );
                     // we don't look at row columns since this could include rows that won't work eg Other summary rows. etc
                     // and it is generally not reliable.
-                    if (!empty($segment) && preg_match('/^' . implode('|',$remove) . '/', $segment)) {
+                    if (!empty($segment) && preg_match('/^' . implode('|', $remove) . '/', $segment)) {
                         $values[] = urldecode(urldecode(str_replace($remove, '', $segment)));
                     }
                 }
@@ -605,7 +597,6 @@ class API extends \Piwik\Plugin\API
             if (empty($values)) {
                 throw new \Exception("There was no data to suggest for $segmentName");
             }
-
         } else {
             $values = $this->getSuggestedValuesForSegmentName($idSite, $segment, $maxSuggestionsToReturn);
         }
@@ -742,7 +733,7 @@ class API extends \Piwik\Plugin\API
     protected function doesSegmentNeedActionsData($segmentName)
     {
         // If you update this, also update flattenVisitorDetailsArray
-        $segmentsNeedActionsInfo = array('visitConvertedGoalId',
+        $segmentsNeedActionsInfo = array('visitConvertedGoalId', 'visitConvertedGoalName',
             'pageUrl', 'pageTitle', 'siteSearchKeyword', 'siteSearchCategory', 'siteSearchCount',
             'entryPageTitle', 'entryPageUrl', 'exitPageTitle', 'exitPageUrl',
             'outlinkUrl', 'downloadUrl', 'eventUrl', 'orderId', 'revenueOrder', 'revenueAbandonedCart', 'productViewName', 'productViewSku', 'productViewPrice',
@@ -813,8 +804,8 @@ class API extends \Piwik\Plugin\API
     }
 }
 
-/**
- */
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MultipleClasses
 class Plugin extends \Piwik\Plugin
 {
     public function __construct()
@@ -829,7 +820,9 @@ class Plugin extends \Piwik\Plugin
     public function registerEvents()
     {
         return array(
+            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
             'AssetManager.getStylesheetFiles' => 'getStylesheetFiles',
+            'Template.jsGlobalVariables' => 'getJsGlobalVariables',
             'Platform.initialized' => 'detectIsApiRequest'
         );
     }
@@ -843,5 +836,21 @@ class Plugin extends \Piwik\Plugin
     {
         $stylesheets[] = "plugins/API/stylesheets/listAllAPI.less";
         $stylesheets[] = "plugins/API/stylesheets/glossary.less";
+    }
+
+    public function getJsGlobalVariables(&$out)
+    {
+        // Do not perform page comparison check for glossary widget
+        // This is performed here and not in Comparison.store.ts, as the widget might be used like on glossary.matomo.org
+        // where url parameters are hidden in the request and javascript can't access the current module and action
+        if (Piwik::getModule() === 'API' && Piwik::getAction() === 'glossary' && \Piwik\Request::fromRequest()->getBoolParameter('widget', false)) {
+            $out .= "piwik.isPagesComparisonApiDisabled = true;\n";
+        }
+    }
+
+    public function getClientSideTranslationKeys(&$translations)
+    {
+        $translations[] = 'API_Glossary';
+        $translations[] = 'API_LearnAboutCommonlyUsedTerms2';
     }
 }

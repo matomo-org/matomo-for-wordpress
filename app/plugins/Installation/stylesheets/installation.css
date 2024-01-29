@@ -107,7 +107,7 @@ p.next-step:first-child {
     border-radius: 2px;
     margin: 10px;
     color: #E0645D;
-    border: 1px solid #D4291F;
+    border: 1px solid #d2312d;
 }
 .warning img {
     vertical-align: bottom;
@@ -125,7 +125,7 @@ p.next-step:first-child {
     color: #D73F36;
     margin-right: 10px;
 }
-.system-check .icon-info2, .system-check-legend .icon-info2 {
+.system-check .icon-info, .system-check-legend .icon-info {
     color: #00bcd4;
     margin-right: 10px;
 }
@@ -158,10 +158,9 @@ p.next-step:first-child {
     font-size: 1.6em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    display: block;
-    margin-left: 4px;
-    float: left;
-    width: 1.1em;
+    display:inline-block;
+    margin-left:4px;
+    float:left;
 }
 
 .copyToClipboardIcon:before {
@@ -177,10 +176,9 @@ p.next-step:first-child {
     font-size: 1.6em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    display: block;
-    margin-left: 4px;
-    float: left;
-    width: 1.1em;
+    display:inline-block;
+    margin-left:4px;
+    float:left;
 }
 
 .copyToClipboardIconCheck:before {
@@ -189,47 +187,34 @@ p.next-step:first-child {
 }
 
 .copyToClipboardButton {
-    position: relative;
-    float: right;
-    margin-right: 0.2em;
-    border-radius: 100%;
-    min-width: 3.0em;
-    max-width: 3.0em;
-    height: 3.0em;
-    overflow: hidden;
-    background: #fefefe;
-    padding-left: 4px;
-    padding-right: 4px;
-    cursor: pointer;
-    transition: max-width .5s ease-out 2s, border-radius 2s ease-out 2s;
-}
-
-.copyToClipboardButton:focus {
-    background: #fefefe;
-}
-
-.copyToClipboardButton:hover {
-    transition: max-width .5s ease-out 0s, border-radius 0.1s;
-    max-width: 18em;
-    border-radius: 5px;
-}
-
-.copyToClipboardPositionDiv {
     position: absolute;
     right: .5em;
     top: .5em;
+    margin-right: 0.2em;
+    margin-top: 0.2em;
+    border-radius: 100%;
+    width: 3.0em;
+    height: 3.0em;
+    display: inline-block;
+    transition: width 0.7s;
+    overflow: hidden;
+    background: #fefefe;
+    padding-left:4px;
+    padding-right:4px;
+    cursor: pointer;
 }
 
 .copyToClipboardCopiedDiv {
-    font-size: 0.8em;
+    font-size:0.8em;
     display: none;
-    position: relative;
-    float:right;
-    top: 0.8em;
+    position: absolute;
+    right: 9em;
+    top: 1.6em;
     margin-right: 1em;
-    width: auto;
-    padding: 0.5em 1em;
-    border-radius: 5px;
+    padding-top:0.4em;
+    width: 10.2em;
+    height: 2em;
+    border-radius: 5%;
     background: #fefefe;
     text-align: center;
     vertical-align: middle;
@@ -239,18 +224,21 @@ p.next-step:first-child {
     overflow: visible;
 }
 
+.copyToClipboardButton:hover {
+    width: 6.3em;
+    border-radius: 10%;
+}
+
 .copyToClipboardButton span {
-    display: block;
-    float: left;
-    margin-left: 3em;
+    display: inline-block;
+    line-height: 1.3em;
+    margin-left: 1em;
     white-space: nowrap;
     overflow: hidden;
-    position: relative;
-    width: calc(100% - 1.1em);
-    text-align:left;
+    position: absolute;
+    left: 2em;
     text-transform: uppercase;
-    margin-top: -1.5em;
-    margin-right: -1.5em;
+    padding-top: 0.35em;
 }
 
 .copyToClipboardWrapper {

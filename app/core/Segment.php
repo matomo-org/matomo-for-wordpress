@@ -17,6 +17,7 @@ use Piwik\DataAccess\LogQueryBuilder;
 use Piwik\Plugins\SegmentEditor\SegmentEditor;
 use Piwik\Segment\SegmentExpression;
 use Piwik\Plugins\SegmentEditor\Model as SegmentEditorModel;
+use Piwik\Segment\SegmentsList;
 
 /**
  * Limits the set of visits Piwik uses when aggregating analytics data.
@@ -103,7 +104,7 @@ class Segment
     const SEGMENT_TRUNCATE_LIMIT = 8192;
 
     const CACHE_KEY = 'segmenthashes';
-    const SEGMENT_HAS_BUILT_CACHE_KEY ='segmenthashbuilt';
+    const SEGMENT_HAS_BUILT_CACHE_KEY = 'segmenthashbuilt';
 
     /**
      * Constructor.
@@ -123,6 +124,7 @@ class Segment
      */
     public function __construct($segmentCondition, $idSites, Date $startDate = null, Date $endDate = null)
     {
+
         $this->segmentQueryBuilder = StaticContainer::get('Piwik\DataAccess\LogQueryBuilder');
 
         $segmentCondition = trim($segmentCondition ?: '');
@@ -146,11 +148,14 @@ class Segment
         // can usually be parsed successfully. To pick the right one, we try both and pick the one w/ more
         // successfully parsed subexpressions.
         $subexpressionsDecoded = 0;
-        try {
-            $this->initializeSegment(urldecode($segmentCondition), $idSites);
-            $subexpressionsDecoded = $this->segmentExpression->getSubExpressionCount();
-        } catch (Exception $e) {
-            // ignore
+
+        if (urldecode($segmentCondition) !== $segmentCondition) {
+            try {
+                $this->initializeSegment(urldecode($segmentCondition), $idSites);
+                $subexpressionsDecoded = $this->segmentExpression->getSubExpressionCount();
+            } catch (Exception $e) {
+                // ignore
+            }
         }
 
         $subexpressionsRaw = 0;
@@ -162,7 +167,7 @@ class Segment
         }
 
         if ($subexpressionsRaw > $subexpressionsDecoded) {
-            $this->initializeSegment($segmentCondition, $idSites);
+            // segment initialized above
             $this->isSegmentEncoded = false;
         } else {
             $this->initializeSegment(urldecode($segmentCondition), $idSites);
@@ -189,40 +194,46 @@ class Segment
         $cache = PiwikCache::getTransientCache();
 
         //covert cache id
-        $cacheId = 'API.getSegmentsMetadata.'.SettingsPiwik::getPiwikInstanceId() . '.' . implode(",", $this->idSites);
+        $cacheId = 'API.getSegmentsMetadata.' . SettingsPiwik::getPiwikInstanceId() . '.' . implode(",", $this->idSites);
 
         //fetch cache lockId
-        $this->availableSegments = $cache->fetch($cacheId);
+        $availableSegments = $cache->fetch($cacheId);
         // segment metadata
-        if (empty($this->availableSegments)) {
-
-            $this->availableSegments = Request::processRequest('API.getSegmentsMetadata', array(
+        if (empty($availableSegments)) {
+            $availableSegments = Request::processRequest('API.getSegmentsMetadata', array(
               'idSites'                 => $this->idSites,
               '_hideImplementationData' => 0,
               'filter_limit'            => -1,
               'filter_offset'           => 0,
               '_showAllSegments'        => 1,
             ), []);
-            $cache->save($cacheId, $this->availableSegments);
+
+            // index by segment name
+            $availableSegments = array_column($availableSegments, null, 'segment');
+
+            // remove segments we don't have permission to use
+            foreach ($availableSegments as $segment => $segmentInfo) {
+                if (isset($segmentInfo['permission']) && $segmentInfo['permission'] != 1) {
+                    $availableSegments[$segment] = null;
+                }
+            }
+
+            $cache->save($cacheId, $availableSegments);
         }
 
-        return $this->availableSegments;
+        return $availableSegments;
     }
 
     private function getSegmentByName($name)
     {
         $segments = $this->getAvailableSegments();
 
-        foreach ($segments as $segment) {
-            if ($segment['segment'] == $name && !empty($name)) {
-
-                // check permission
-                if (isset($segment['permission']) && $segment['permission'] != 1) {
-                    throw new NoAccessException("You do not have enough permission to access the segment " . $name);
-                }
-
-                return $segment;
+        if (array_key_exists($name, $segments)) {
+            if ($segments[$name] === null) {
+                throw new NoAccessException("You do not have enough permission to access the segment " . $name);
             }
+
+            return $segments[$name];
         }
 
         throw new Exception("Segment '$name' is not a supported segment.");
@@ -252,52 +263,44 @@ class Segment
         // parse segments
         $expressions = $segment->parseSubExpressions();
         $expressions = $this->getExpressionsWithUnionsResolved($expressions);
+        $expressions = $this->mergeSubqueryExpressionsInTree($expressions);
 
         // convert segments name to sql segment
         // check that user is allowed to view this segment
         // and apply a filter to the value to match if necessary (to map DB fields format)
-        $cleanedExpressions = array();
-        foreach ($expressions as $expression) {
-            $operand = $expression[SegmentExpression::INDEX_OPERAND];
-            $expression[SegmentExpression::INDEX_OPERAND] = $this->getCleanedExpression($operand);
-            $cleanedExpressions[] = $expression;
-        }
+
+        $cleanedExpressions = array_map(function (array $orExpressions) {
+            return array_map(function (array $operand) {
+                return $this->getCleanedExpression($operand);
+            }, $orExpressions);
+        }, $expressions);
 
         $segment->setSubExpressionsAfterCleanup($cleanedExpressions);
     }
 
-    private function getExpressionsWithUnionsResolved($expressions)
+    private function getExpressionsWithUnionsResolved(array $expressions): array
     {
-        $expressionsWithUnions = array();
-        foreach ($expressions as $expression) {
-            $operand = $expression[SegmentExpression::INDEX_OPERAND];
-            $name    = $operand[SegmentExpression::INDEX_OPERAND_NAME];
+        $expressionsWithUnions = array_map(function ($orExpressions) {
+            $mappedOrExpressions = [];
+            foreach ($orExpressions as $operand) {
+                $name = $operand[SegmentExpression::INDEX_OPERAND_NAME];
 
-            $availableSegment = $this->getSegmentByName($name);
+                $availableSegment = $this->getSegmentByName($name);
 
-            // We leave segments using !@ and != operands untouched for segments not on log_visit table as they will be build using a subquery
-            if (!$this->doesSegmentNeedSubquery($operand[SegmentExpression::INDEX_OPERAND_OPERATOR], $name) && !empty($availableSegment['unionOfSegments'])) {
-                $count = 0;
-                foreach ($availableSegment['unionOfSegments'] as $segmentNameOfUnion) {
-                    $count++;
-                    $operator = SegmentExpression::BOOL_OPERATOR_OR; // we connect all segments within that union via OR
-                    if ($count === count($availableSegment['unionOfSegments'])) {
-                        $operator = $expression[SegmentExpression::INDEX_BOOL_OPERATOR];
+                // We leave segments using !@ and != operands untouched for segments not on log_visit table as they will be build using a subquery
+                if (!$this->doesSegmentNeedSubquery($operand[SegmentExpression::INDEX_OPERAND_OPERATOR], $name)
+                    && !empty($availableSegment['unionOfSegments'])
+                ) {
+                    foreach ($availableSegment['unionOfSegments'] as $segmentNameOfUnion) {
+                        $operand[SegmentExpression::INDEX_OPERAND_NAME] = $segmentNameOfUnion;
+                        $mappedOrExpressions[] = $operand;
                     }
-
-                    $operand[SegmentExpression::INDEX_OPERAND_NAME] = $segmentNameOfUnion;
-                    $expressionsWithUnions[] = array(
-                        SegmentExpression::INDEX_BOOL_OPERATOR => $operator,
-                        SegmentExpression::INDEX_OPERAND => $operand
-                    );
+                } else {
+                    $mappedOrExpressions[] = $operand;
                 }
-            } else {
-                $expressionsWithUnions[] = array(
-                    SegmentExpression::INDEX_BOOL_OPERATOR => $expression[SegmentExpression::INDEX_BOOL_OPERATOR],
-                    SegmentExpression::INDEX_OPERAND => $operand
-                );
             }
-        }
+            return $mappedOrExpressions;
+        }, $expressions);
 
         return $expressionsWithUnions;
     }
@@ -380,23 +383,49 @@ class Segment
             || Rules::isSegmentPreProcessed($idSites, $this);
     }
 
-    protected $availableSegments = array();
-
-    protected function getCleanedExpression($expression)
+    protected function getCleanedExpression(array $expression): array
     {
         $name      = $expression[SegmentExpression::INDEX_OPERAND_NAME];
         $matchType = $expression[SegmentExpression::INDEX_OPERAND_OPERATOR];
         $value     = $expression[SegmentExpression::INDEX_OPERAND_VALUE];
 
-        $segment = $this->getSegmentByName($name);
-        $sqlName = $segment['sqlSegment'];
+        if (empty($this->idSites)) {
+            $segmentsList = SegmentsList::get();
+        } else {
+            $segmentsList = Context::changeIdSite(implode(',', $this->idSites), function () {
+                return SegmentsList::get();
+            });
+        }
+        $segmentObject = $segmentsList->getSegment($name);
 
-        // Build subqueries for segments that are not on log_visit table but use !@ or != as operator
-        // This is required to ensure segments like actionUrl!@value really do not include any visit having an action containing `value`
-        if ($this->doesSegmentNeedSubquery($matchType, $name)) {
-            $operator = $this->getInvertedOperatorForSubQuery($matchType);
-            $stringSegment = $name . $operator . $value;
-            $segmentObj = new Segment($stringSegment, $this->idSites, $this->startDate, $this->endDate);
+        $sqlName = $segmentObject ? $segmentObject->getSqlSegment() : null;
+
+        $joinTable = null;
+        if ($segmentObject
+            && $segmentObject->dimension
+            && $segmentObject->dimension->getDbColumnJoin()
+        ) {
+            $join = $segmentObject->dimension->getDbColumnJoin();
+            $dbDiscriminator = $segmentObject->dimension->getDbDiscriminator();
+
+            // we append alias since an archive query may add the table with a different join. we could eg add $table_$segmentName but
+            // then we would join an extra table per segment when we ideally want to join each table only once. However, we still need
+            // to see which table/column it joins to join it accurately each table extra if the same table is joined with different columns;
+            $tableAlias = $join->getTable() . '_segment_' . str_replace('.', '', $sqlName ?: '');
+            $joinTable = [
+                'table' => $join->getTable(),
+                'tableAlias' => $tableAlias,
+                'field' => $tableAlias . '.' . $join->getTargetColumn(),
+                'joinOn' => $sqlName . ' = ' . $tableAlias . '.' . $join->getColumn(),
+            ];
+
+            if ($dbDiscriminator) {
+                $joinTable['discriminator'] = $tableAlias . '.' . $dbDiscriminator->getColumn() . ' = \'' .  $dbDiscriminator->getValue() . '\'';
+            }
+        }
+
+        if ($matchType == SegmentExpression::MATCH_IDVISIT_NOT_IN) {
+            $segmentObj = new Segment($value, $this->idSites, $this->startDate, $this->endDate);
 
             $select = 'log_visit.idvisit';
             $from = 'log_visit';
@@ -405,7 +434,7 @@ class Segment
             $bind = [];
             if (!empty($this->idSites)) {
                 $where[] = "$from.idsite IN (" . Common::getSqlStringFieldsArray($this->idSites) . ")";
-                $bind  = $this->idSites;
+                $bind = $this->idSites;
             }
             if ($this->startDate instanceof Date) {
                 $where[] = "$from.$datetimeField >= ?";
@@ -422,8 +451,14 @@ class Segment
             $query = $segmentObj->getSelectQuery($select, $from, implode(' AND ', $where), $bind);
             $logQueryBuilder->forceInnerGroupBySubselect($forceGroupByBackup);
 
-            return ['log_visit.idvisit', SegmentExpression::MATCH_ACTIONS_NOT_CONTAINS, $query];
+            return ['log_visit.idvisit', SegmentExpression::MATCH_ACTIONS_NOT_CONTAINS, $query, null, null];
         }
+
+        if (empty($segmentObject)) {
+            throw new Exception("Segment '$name' is not a supported segment.");
+        }
+
+        $segment = $this->getSegmentByName($name);
 
         if ($matchType != SegmentExpression::MATCH_IS_NOT_NULL_NOR_EMPTY
             && $matchType != SegmentExpression::MATCH_IS_NULL_OR_EMPTY) {
@@ -436,8 +471,8 @@ class Segment
             if (isset($segment['sqlFilter'])) {
                 $value = call_user_func($segment['sqlFilter'], $value, $segment['sqlSegment'], $matchType, $name);
 
-                if(is_null($value)) { // null is returned in TableLogAction::getIdActionFromSegment()
-                    return array(null, $matchType, null);
+                if (is_null($value)) { // null is returned in TableLogAction::getIdActionFromSegment()
+                    return array(null, $matchType, null, null, $segment);
                 }
 
                 // sqlFilter-callbacks might return arrays for more complex cases
@@ -445,11 +480,17 @@ class Segment
                 if (is_array($value) && isset($value['SQL'])) {
                     // Special case: returned value is a sub sql expression!
                     $matchType = SegmentExpression::MATCH_ACTIONS_CONTAINS;
+                    $joinTable = null;
+                }
+
+                if (is_array($value) && isset($value['value'])) {
+                    $value = $value['value'];
+                    $joinTable = !empty($value['joinTable']);
                 }
             }
         }
 
-        return array($sqlName, $matchType, $value);
+        return array($sqlName, $matchType, $value, $joinTable, $segment);
     }
 
     /**
@@ -660,5 +701,91 @@ class Segment
     public function getOriginalString()
     {
         return $this->originalString;
+    }
+
+    /**
+     * Build subqueries for segments that are not on log_visit table but use !@ or != as operator
+     * This is required to ensure segments like actionUrl!@value really do not include any visit having an action containing `value`
+     *
+     * Adjacent segment conditions that both require subqueries are merged here into single NOT IN sql subqueries,
+     * which improves performance.
+     *
+     * Subquery segment conditions that are next to each other in a chain of OR's are merged together and
+     * subquery segment conditions that are next to each other in a chain of AND's, but are also alone and not
+     * a part of an OR expression, are merged.
+     *
+     * The operands for the merged conditions in the parsed intermediate structure use the special MATCH_IDVISIT_NOT_IN
+     * operator.
+     */
+    private function mergeSubqueryExpressionsInTree(array $tree): array
+    {
+        $andExpressions = array_map(function ($orExpressions) {
+            return $this->mergeSubqueryExpressionsInExpr($orExpressions, false);
+        }, $tree);
+
+        $mappedAndExpressions = $this->mergeSubqueryExpressionsInExpr($andExpressions, true);
+
+        return $mappedAndExpressions;
+    }
+
+    private function mergeSubqueryExpressionsInExpr(array $expressions, bool $isAndChain): array
+    {
+        // nothing to merge if there's only one expression
+        if (!$isAndChain && count($expressions) <= 1) {
+            return $expressions;
+        }
+
+        $mappedExpressions = [];
+        $idvisitNotInExpressions = [];
+
+        foreach ($expressions as $childExpressionsOrOperand) {
+            // if this is an AND chain w/ more than one sub-expression being OR-ed together, we can't do anything about the NOT IN subqueries there
+            if ($isAndChain
+                && count($childExpressionsOrOperand) > 1
+            ) {
+                $mappedExpressions[] = $childExpressionsOrOperand;
+                continue;
+            }
+
+            $operand = $isAndChain ? $childExpressionsOrOperand[0] : $childExpressionsOrOperand;
+
+            $name = $operand[SegmentExpression::INDEX_OPERAND_NAME];
+            $matchType = $operand[SegmentExpression::INDEX_OPERAND_OPERATOR];
+            $value = $operand[SegmentExpression::INDEX_OPERAND_VALUE];
+
+            if (!$this->doesSegmentNeedSubquery($matchType, $name)) {
+                $mappedExpressions[] = $childExpressionsOrOperand;
+                continue;
+            }
+
+            // if the segment is pageTitle!=def, then NOT IN sql will have to be idvisit NOT IN (... WHERE pageTitle == def),
+            // so we must invert the operator before we create a MATCH_IDVISIT_NOT_IN operand below
+            $operator = $this->getInvertedOperatorForSubQuery($matchType);
+            $idvisitNotInExpressions[] = $name . $operator . $this->escapeSegmentValue($value);
+        }
+
+        if (!empty($idvisitNotInExpressions)) {
+            $newOperand = [
+                SegmentExpression::INDEX_OPERAND_NAME => null,
+                SegmentExpression::INDEX_OPERAND_OPERATOR => SegmentExpression::MATCH_IDVISIT_NOT_IN,
+                SegmentExpression::INDEX_OPERAND_VALUE => implode($isAndChain ? SegmentExpression::OR_DELIMITER : SegmentExpression::AND_DELIMITER, $idvisitNotInExpressions),
+            ];
+
+            $mappedExpressions[] = $isAndChain ? [$newOperand] : $newOperand;
+        }
+
+        return $mappedExpressions;
+    }
+
+
+    /**
+     * Escapes segment expression delimiters in a segment value with a backslash if not already done.
+     */
+    private function escapeSegmentValue(string $value): string
+    {
+        $delimiterPattern = SegmentExpression::AND_DELIMITER . SegmentExpression::OR_DELIMITER;
+        $pattern = '/((?<!\\\)[' . preg_quote($delimiterPattern) . '])/';
+
+        return preg_replace($pattern, '\\\$1', $value);
     }
 }

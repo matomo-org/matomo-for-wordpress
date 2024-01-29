@@ -1,11 +1,14 @@
 <template>
   <div class="tagManagerTrackingCode">
     <ActivityIndicator
-      :style="{opacity: isLoading ? 1 : 0}"
+      v-show="isLoading"
       :loading="true"
       v-if="showContainerRow || environments.length > 1"
     />
-    <div class="row" v-if="showContainerRow || environments.length > 1">
+    <div class="row"
+         v-if="showContainerRow || environments.length > 1"
+         v-show="!isLoading"
+    >
       <div class="col s12 m4 ">
         <div class="form-group row">
           <div class="col s12 input-field">
@@ -63,7 +66,7 @@
       {{ translate('TagManager_NoReleasesFoundForContainer') }}
       <a href>{{ translate('TagManager_PublishVersionToEnvironmentToViewEmbedCode') }} </a>
     </div>
-    <div
+    <template
       v-for="(installInstruction, index) in installInstructions"
       :key="index"
     >
@@ -74,15 +77,13 @@
           :href="installInstruction.helpUrl"
         >{{ translate('TagManager_LearnMore') }}</a>.
       </p>
-      <div v-if="showPlainMtmSteps">
+      <template v-if="showPlainMtmSteps">
         <li>
-          {{ translate('TagManager_SiteWithoutDataMtmStep2') }}
-          <a :href="linkTo('dashboard', site.id, idContainer)">
-            {{ translate('TagManager_Container') }} {{ translate('Dashboard_Dashboard') }}
-          </a>. <span v-html="$sanitize(getLearnMoreLink)"></span>.
+          <span v-html="$sanitize(getMtmStep2)">
+          </span>.&nbsp;<span v-html="$sanitize(getLearnMoreLink)"></span>.
         </li>
         <li v-html="$sanitize(getMtmStep3)"></li>
-      </div>
+      </template>
       <div>
         <pre
           class="codeblock"
@@ -91,10 +92,13 @@
           v-copy-to-clipboard="{}"
         />
       </div>
-    </div>
-    <div v-if="showBottom">
-      <p v-if="idContainer" v-html="$sanitize(getCongratulationsText)"></p>
-    </div>
+    </template>
+    <template v-if="showBottom && !noReleaseFound && idContainer">
+      <p v-if="!showTestSection" v-html="$sanitize(getCongratulationsText)"></p>
+      <template v-else>
+        <li><component :is="testComponent" :site="site"></component></li>
+      </template>
+    </template>
   </div>
 </template>
 
@@ -109,6 +113,8 @@ import {
   Matomo,
   translate,
   CopyToClipboard,
+  useExternalPluginComponent,
+  externalLink,
 } from 'CoreHome';
 import { Field } from 'CorePluginsAdmin';
 import {
@@ -151,10 +157,10 @@ function ucfirst(s: string): string {
 export default defineComponent({
   props: {
     showContainerRow: Boolean,
-    currentAction: String,
     showBottom: Boolean,
     showDescription: Boolean,
     showPlainMtmSteps: Boolean,
+    showTestSection: Boolean,
   },
   components: {
     ActivityIndicator,
@@ -344,14 +350,23 @@ export default defineComponent({
     getLearnMoreLink() {
       return translate(
         'TagManager_CustomHtmlTagHelpText',
-        '<a rel="noreferrer noopener" target="_blank" href="https://matomo.org/faq/tag-manager/container-dashboard-in-matomo-tag-manager/">',
+        externalLink('https://matomo.org/faq/tag-manager/container-dashboard-in-matomo-tag-manager/'),
+        '</a>',
+      );
+    },
+    getMtmStep2() {
+      const idSite = this.site && this.site.id ? this.site.id as string : '';
+      const link = this.linkTo('dashboard', idSite, this.idContainer, []);
+      return translate(
+        'TagManager_SiteWithoutDataMtmStep2',
+        `<a href="${link}">`,
         '</a>',
       );
     },
     getMtmStep3() {
       return translate(
         'TagManager_SiteWithoutDataMtmStep3', '&lt;/head&gt;',
-        '<a rel="noreferrer noopener" target="_blank" href="https://developer.matomo.org/guides/tagmanager/embedding">',
+        externalLink('https://developer.matomo.org/guides/tagmanager/embedding'),
         '</a>',
       );
     },
@@ -361,6 +376,12 @@ export default defineComponent({
         '<strong>',
         '</strong>',
       );
+    },
+    testComponent() {
+      if (this.showTestSection) {
+        return useExternalPluginComponent('JsTrackerInstallCheck', 'JsTrackerInstallCheck');
+      }
+      return '';
     },
   },
 });

@@ -9,7 +9,6 @@
 namespace Piwik\Plugins\Tour;
 
 use Piwik\Piwik;
-use Piwik\SiteContentDetector;
 use Piwik\Plugins\Tour\Engagement\Levels;
 use Piwik\Plugins\Tour\Engagement\Challenges;
 
@@ -20,7 +19,6 @@ use Piwik\Plugins\Tour\Engagement\Challenges;
  */
 class API extends \Piwik\Plugin\API
 {
-
     /**
      * @var Challenges
      */
@@ -31,14 +29,11 @@ class API extends \Piwik\Plugin\API
      */
     private $levels;
 
-    /** @var SiteContentDetector */
-    private $siteContentDetector;
 
-    public function __construct(Challenges $challenges, Levels $levels, SiteContentDetector $siteContentDetector)
+    public function __construct(Challenges $challenges, Levels $levels)
     {
         $this->challenges = $challenges;
         $this->levels = $levels;
-        $this->siteContentDetector = $siteContentDetector;
     }
 
     /**
@@ -52,6 +47,8 @@ class API extends \Piwik\Plugin\API
 
         $challenges = array();
 
+        $login = Piwik::getCurrentUserLogin();
+
         foreach ($this->challenges->getChallenges() as $challenge) {
 
             if ($challenge->isDisabled()) {
@@ -62,34 +59,13 @@ class API extends \Piwik\Plugin\API
                 'id' => $challenge->getId(),
                 'name' => $challenge->getName(),
                 'description' => $challenge->getDescription(),
-                'isCompleted' => $challenge->isCompleted(),
-                'isSkipped' => $challenge->isSkipped(),
+                'isCompleted' => $challenge->isCompleted($login),
+                'isSkipped' => $challenge->isSkipped($login),
                 'url' => $challenge->getUrl()
             ];
         }
 
         return $challenges;
-    }
-
-    /**
-     * Detect consent manager details for a site
-     *
-     * @return null|array[]
-     * @internal
-     */
-    public function detectConsentManager($idSite, $timeOut = 60)
-    {
-        Piwik::checkUserHasViewAccess($idSite);
-
-        $this->siteContentDetector->detectContent([SiteContentDetector::CONSENT_MANAGER]);
-        if ($this->siteContentDetector->consentManagerId) {
-            return ['name' => $this->siteContentDetector->consentManagerName,
-                    'url' => $this->siteContentDetector->consentManagerUrl,
-                    'isConnected' => $this->siteContentDetector->isConnected
-                ];
-        }
-
-        return null;
     }
 
     /**
@@ -103,10 +79,12 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasSuperUserAccess();
 
+        $login = Piwik::getCurrentUserLogin();
+
         foreach ($this->challenges->getChallenges() as $challenge) {
             if ($challenge->getId() === $id) {
-                if (!$challenge->isCompleted()) {
-                    $challenge->skipChallenge();
+                if (!$challenge->isCompleted($login)) {
+                    $challenge->skipChallenge($login);
                     return true;
                 }
 

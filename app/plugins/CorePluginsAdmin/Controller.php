@@ -116,7 +116,7 @@ class Controller extends Plugin\ControllerAdmin
 
         if (!$this->passwordVerify->isPasswordCorrect(
             Piwik::getCurrentUserLogin(),
-            Common::getRequestVar('confirmPassword', null, 'string')
+            \Piwik\Request::fromRequest()->getStringParameter('confirmPassword')
         )) {
             throw new \Exception($this->translator->translate('Login_LoginPasswordNotCorrect'));
         }
@@ -222,13 +222,18 @@ class Controller extends Plugin\ControllerAdmin
         $view->isMarketplaceEnabled = Marketplace::isMarketplaceEnabled();
         $view->isPluginsAdminEnabled = CorePluginsAdmin::isPluginsAdminEnabled();
 
-        $view->pluginsHavingUpdate    = array();
-        $view->marketplacePluginNames = array();
+        $view->pluginsHavingUpdate    = [];
+        $view->marketplacePluginNames = [];
 
         if (Marketplace::isMarketplaceEnabled() && $this->marketplacePlugins) {
             try {
                 $view->marketplacePluginNames = $this->marketplacePlugins->getAvailablePluginNames($themesOnly);
                 $view->pluginsHavingUpdate    = $this->marketplacePlugins->getPluginsHavingUpdate();
+
+                $view->pluginUpdateNonces = [];
+                foreach ($view->pluginsHavingUpdate as $name => $plugin) {
+                    $view->pluginUpdateNonces[$name] = Nonce::getNonce($plugin['name']);
+                }
             } catch(Exception $e) {
                 // curl exec connection error (ie. server not connected to internet)
             }
@@ -475,7 +480,6 @@ class Controller extends Plugin\ControllerAdmin
 
                 $this->redirectToIndex('CorePluginsAdmin', $actionToRedirect);
             }
-
         }
     }
 
@@ -641,5 +645,4 @@ class Controller extends Plugin\ControllerAdmin
         $this->pluginManager->deactivatePlugin($pluginName);
         $this->redirectAfterModification($redirectAfter);
     }
-
 }

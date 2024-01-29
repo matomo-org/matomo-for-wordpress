@@ -13,7 +13,7 @@
     <input
       v-if="name"
       type="hidden"
-      :value="modelValue?.id"
+      :value="displayedModelValue?.id"
       :name="name"
     />
     <a
@@ -27,16 +27,16 @@
       :title="selectorLinkTitle"
     >
       <span
-        class="icon icon-arrow-bottom"
+        class="icon icon-chevron-down"
         :class="{'iconHidden': isLoading, 'collapsed': !showSitesList}"
       />
       <span>
         <span
-          v-text="modelValue?.name || firstSiteName"
-          v-if="modelValue?.name || !placeholder"
+          v-text="displayedModelValue?.name || firstSiteName"
+          v-if="displayedModelValue?.name || !placeholder"
         />
         <span
-          v-if="!modelValue?.name && placeholder"
+          v-if="!displayedModelValue?.name && placeholder"
           class="placeholder"
         >{{ placeholder }}</span>
       </span>
@@ -95,16 +95,12 @@
         </ul>
         <ul
           v-show="!sites.length && searchTerm"
-          class="ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all
-                 siteSelect"
+          class="custom_select_ul_list"
         >
-          <li class="ui-menu-item">
-            <a
-              class="ui-corner-all"
-              tabindex="-1"
-            >
+          <li>
+            <div class="noresult">
               {{ translate('SitesManager_NotFound') + ' ' + searchTerm }}
-            </a>
+            </div>
           </li>
         </ul>
       </div>
@@ -216,10 +212,7 @@ export default defineComponent({
     window.initTopControls();
 
     this.loadInitialSites().then(() => {
-      if ((!this.modelValue || !this.modelValue.id)
-        && (!this.hasMultipleSites || this.defaultToFirstSite)
-        && this.sites[0]
-      ) {
+      if (this.shouldDefaultToFirstSite) {
         this.$emit('update:modelValue', { id: this.sites[0].idsite, name: this.sites[0].name });
       }
     });
@@ -273,6 +266,32 @@ export default defineComponent({
         period: MatomoUrl.parsed.value.period,
       });
       return `?${newQuery}`;
+    },
+    shouldDefaultToFirstSite() {
+      return !this.modelValue?.id
+        && (!this.hasMultipleSites || this.defaultToFirstSite)
+        && this.sites[0];
+    },
+    // using an extra computed property in case SiteSelector is used directly
+    // in a vue-entry, and there is no parent component with state to respond
+    // to update:modelValue events
+    displayedModelValue() {
+      if (this.modelValue) {
+        return this.modelValue;
+      }
+
+      if (Matomo.idSite) {
+        return {
+          id: Matomo.idSite,
+          name: Matomo.helper.htmlDecode(Matomo.siteName),
+        };
+      }
+
+      if (this.shouldDefaultToFirstSite) {
+        return { id: this.sites[0].idsite, name: this.sites[0].name };
+      }
+
+      return null;
     },
   },
   methods: {

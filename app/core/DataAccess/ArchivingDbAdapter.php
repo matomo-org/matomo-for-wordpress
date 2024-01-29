@@ -12,7 +12,7 @@ namespace Piwik\DataAccess;
 use Piwik\Config;
 use Piwik\Db\AdapterInterface;
 use Piwik\DbHelper;
-use Psr\Log\LoggerInterface;
+use Piwik\Log\LoggerInterface;
 use Exception;
 
 class ArchivingDbAdapter
@@ -44,52 +44,52 @@ class ArchivingDbAdapter
         return call_user_func_array([$this->wrapped, $name], $arguments);
     }
 
-    public function exec($sql)
+    public function exec($sql, ...$params)
     {
         $sql = DbHelper::addMaxExecutionTimeHintToQuery($sql, $this->maxExecutionTime);
         $this->logSql($sql);
 
-        return call_user_func_array([$this, "callFunction"], array_merge([__FUNCTION__], func_get_args()));
+        return $this->callFunction(__FUNCTION__, $sql, ...$params);
     }
 
-    public function query($sql)
+    public function query($sql, ...$params)
     {
         $sql = DbHelper::addMaxExecutionTimeHintToQuery($sql, $this->maxExecutionTime);
         $this->logSql($sql);
 
-        return call_user_func_array([$this, "callFunction"], array_merge([__FUNCTION__], func_get_args()));
+        return $this->callFunction(__FUNCTION__, $sql, ...$params);
     }
 
-    public function fetchAll($sql)
+    public function fetchAll($sql, ...$params)
     {
         $sql = DbHelper::addMaxExecutionTimeHintToQuery($sql, $this->maxExecutionTime);
         $this->logSql($sql);
 
-        return call_user_func_array([$this, "callFunction"], array_merge([__FUNCTION__], func_get_args()));
+        return $this->callFunction(__FUNCTION__, $sql, ...$params);
     }
 
-    public function fetchRow($sql)
+    public function fetchRow($sql, ...$params)
     {
         $sql = DbHelper::addMaxExecutionTimeHintToQuery($sql, $this->maxExecutionTime);
         $this->logSql($sql);
 
-        return call_user_func_array([$this, "callFunction"], array_merge([__FUNCTION__], func_get_args()));
+        return $this->callFunction(__FUNCTION__, $sql, ...$params);
     }
 
-    public function fetchOne($sql)
+    public function fetchOne($sql, ...$params)
     {
         $sql = DbHelper::addMaxExecutionTimeHintToQuery($sql, $this->maxExecutionTime);
         $this->logSql($sql);
 
-        return call_user_func_array([$this, "callFunction"], array_merge([__FUNCTION__], func_get_args()));
+        return $this->callFunction(__FUNCTION__, $sql, ...$params);
     }
 
-    public function fetchAssoc($sql)
+    public function fetchAssoc($sql, ...$params)
     {
         $sql = DbHelper::addMaxExecutionTimeHintToQuery($sql, $this->maxExecutionTime);
         $this->logSql($sql);
 
-        return call_user_func_array([$this, "callFunction"], array_merge([__FUNCTION__], func_get_args()));
+        return $this->callFunction(__FUNCTION__, $sql, ...$params);
     }
 
     /**
@@ -112,10 +112,7 @@ class ArchivingDbAdapter
         }
     }
 
-    private function callFunction($function) {
-
-        $args = func_get_args();
-        unset($args[0]);
+    private function callFunction($function, ...$args) {
 
         try {
             return call_user_func_array([$this->wrapped, $function], $args);
@@ -126,10 +123,8 @@ class ArchivingDbAdapter
             {
                 $this->logger->warning('Archiver query exceeded maximum execution time: {details}',
                     ['details' => json_encode($args, true)]);
-
             }
             throw $e;
         }
     }
-
 }

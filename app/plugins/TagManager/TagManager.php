@@ -16,6 +16,8 @@ use Piwik\Exception\UnexpectedWebsiteFoundException;
 use Piwik\Log;
 use Piwik\Piwik;
 use Piwik\Plugin;
+use Piwik\Plugins\SitesManager\SiteContentDetection\ReactJs;
+use Piwik\Plugin\Manager;
 use Piwik\Plugins\TagManager\Access\Capability\PublishLiveContainer;
 use Piwik\Plugins\TagManager\Access\Capability\TagManagerWrite;
 use Piwik\Plugins\TagManager\Access\Capability\UseCustomTemplates;
@@ -32,9 +34,10 @@ use Piwik\Plugins\CoreHome\SystemSummary;
 use Piwik\Plugins\TagManager\Model\Container\ContainerIdGenerator;
 use Piwik\Plugins\TagManager\Model\Salt;
 use Piwik\Site;
+use Piwik\SiteContentDetector;
 use Piwik\View;
 use Piwik\Context;
-use Psr\Log\LoggerInterface;
+use Piwik\Log\LoggerInterface;
 use Piwik\SettingsPiwik;
 
 class TagManager extends \Piwik\Plugin
@@ -60,6 +63,7 @@ class TagManager extends \Piwik\Plugin
             'SitesManager.addSite.end' => 'onSiteAdded',
             'System.addSystemSummaryItems' => 'addSystemSummaryItems',
             'Template.endTrackingCodePage' => 'addTagManagerCode',
+            'Template.siteWithoutDataTab.MatomoTagManager.content' => 'setTagManagerCode',
             'Template.endTrackingHelpPage' => 'addTagManagerTrackingCodeHelp',
             'Template.endTrackingCodePageTableOfContents' => 'endTrackingCodePageTableOfContents',
             'Tracker.PageUrl.getQueryParametersToExclude' => 'getQueryParametersToExclude',
@@ -68,8 +72,7 @@ class TagManager extends \Piwik\Plugin
             'Access.Capability.addCapabilities' => 'addCapabilities',
             'TwoFactorAuth.requiresTwoFactorAuthentication' => 'requiresTwoFactorAuthentication',
             'Db.getTablesInstalled' => 'getTablesInstalled',
-            'Template.embedReactTagManagerTrackingCode' => 'embedReactTagManagerTrackingCode',
-            'Template.embedSPATagManagerTrackingCode' => 'embedSPATagManagerTrackingCode',
+            'Template.siteWithoutDataTab.ReactJs.content' => 'embedReactTagManagerTrackingCode',
         );
     }
 
@@ -266,25 +269,24 @@ class TagManager extends \Piwik\Plugin
         $view = new View("@TagManager/trackingCode");
         $view->action = Piwik::getAction();
         $view->showContainerRow = $model->getNumContainersTotal() > 1;
+        $view->isJsTrackerInstallCheckAvailable = Manager::getInstance()->isPluginActivated('JsTrackerInstallCheck');
         $out .= $view->render();
     }
 
-    public function embedReactTagManagerTrackingCode(&$out)
+    public function setTagManagerCode(&$out)
+    {
+        $newContent = '<h2>' . Piwik::translate('SitesManager_StepByStepGuide') . '</h2>';
+        $this->addTagManagerCode($newContent);
+        $out = $newContent;
+    }
+
+    public function embedReactTagManagerTrackingCode(&$out, SiteContentDetector $detector)
     {
         Piwik::checkUserHasSomeViewAccess();
         $model = $this->getContainerModel();
         $view = new View("@TagManager/trackingCodeReact");
         $view->action = Piwik::getAction();
-        $view->showContainerRow = $model->getNumContainersTotal() > 1;
-        $out .= $view->render();
-    }
-
-    public function embedSPATagManagerTrackingCode(&$out)
-    {
-        Piwik::checkUserHasSomeViewAccess();
-        $model = $this->getContainerModel();
-        $view = new View("@TagManager/trackingSPA");
-        $view->action = Piwik::getAction();
+        $view->wasDetected = $detector->wasDetected(ReactJs::getId());
         $view->showContainerRow = $model->getNumContainersTotal() > 1;
         $out .= $view->render();
     }
@@ -427,10 +429,8 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_ConfigureEnvironmentsSuperUser';
         $result[] = 'TagManager_WantToDeployThisChangeCreateVersion';
         $result[] = 'TagManager_ConfigureWhenTagDoes';
-        $result[] = 'TagManager_CustomizeTracking';
         $result[] = 'TagManager_ViewContainerDashboard';
         $result[] = 'TagManager_NoMatomoConfigFoundForContainer';
-        $result[] = 'TagManager_CustomizeTrackingTeaser';
         $result[] = 'TagManager_PublishLiveEnvironmentCapabilityRequired';
         $result[] = 'TagManager_CapabilityPublishLiveContainer';
         $result[] = 'TagManager_VersionAlreadyPublishedToAllEnvironments';
@@ -596,7 +596,6 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_VersionImportContentTitle';
         $result[] = 'TagManager_VersionImportOverwriteContent';
         $result[] = 'TagManager_CustomVariables';
-        $result[] = 'TagManager_PreconfiguredVariables';
         $result[] = 'TagManager_EditContainer';
         $result[] = 'TagManager_CreateNewContainer';
         $result[] = 'TagManager_CreateNewContainerNow';
@@ -608,6 +607,37 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_InstallCode';
         $result[] = 'TagManager_InstallCodePublishEnvironmentNote';
         $result[] = 'TagManager_GettingStartedNotice';
+        $result[] = 'TagManager_GettingStarted';
+        $result[] = 'CorePluginsAdmin_WhatIsTagManager';
+        $result[] = 'TagManager_GettingStartedWhatIsIntro';
+        $result[] = 'TagManager_GettingStartedAnalyticsTracking';
+        $result[] = 'TagManager_GettingStartedConversionTracking';
+        $result[] = 'TagManager_GettingStartedNewsletterSignups';
+        $result[] = 'TagManager_GettingStartedExitActions';
+        $result[] = 'TagManager_GettingStartedRemarketing';
+        $result[] = 'TagManager_GettingStartedSocialWidgets';
+        $result[] = 'TagManager_GettingStartedAffiliates';
+        $result[] = 'TagManager_GettingStartedAds';
+        $result[] = 'TagManager_GettingStartedAndMore';
+        $result[] = 'TagManager_GettingStartedMainComponents';
+        $result[] = 'TagManager_GettingStartedTagComponent';
+        $result[] = 'TagManager_GettingStartedTriggerComponent';
+        $result[] = 'TagManager_GettingStartedVariableComponent';
+        $result[] = 'TagManager_GettingStartedWhyDoINeed';
+        $result[] = 'TagManager_GettingStartedWhyMakesLifeEasier';
+        $result[] = 'TagManager_GettingStartedWhyThirdPartySnippets';
+        $result[] = 'TagManager_GettingStartedWhyAccuracyPerformance';
+        $result[] = 'TagManager_GettingStartedHowDoI';
+        $result[] = 'TagManager_GettingStartedHowCreateContainer';
+        $result[] = 'TagManager_GettingStartedHowCopyCode';
+        $result[] = 'TagManager_GettingStartedHowAddTagsToContainer';
+        $result[] = 'TagManager_GettingStartedWhatIfUnsupported';
+        $result[] = 'TagManager_GettingStartedCustomTags';
+        $result[] = 'TagManager_GettingStartedContributeTags';
+        $result[] = 'TagManager_CreateNewVersionNow';
+        $result[] = 'TagManager_TagManager';
+        $result[] = 'TagManager_MatomoTagManager';
+        $result[] = 'TagManager_TagManagerTrackingInfo';
         $result[] = 'TagManager_InvalidDebugUrlError';
         $result[] = 'TagManager_TagDescriptionHelp';
         $result[] = 'TagManager_TriggerDescriptionHelp';
@@ -638,6 +668,7 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_VersionsCreatedDescription';
         $result[] = 'TagManager_VersionsActionDescription';
         $result[] = 'TagManager_CreateNewVersionNow';
+        $result[] = 'TagManager_SelectAVariable';
         $result[] = 'TagManager_AddThisTagPubIdTitle';
         $result[] = 'TagManager_AddThisTagPubIdDescription';
         $result[] = 'TagManager_AddThisParentSelectorTitle';
@@ -816,9 +847,6 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_SPAFollowStep15';
         $result[] = 'TagManager_SPAFollowStep16';
         $result[] = 'TagManager_ReactFollowStep16';
-        $result[] = 'TagManager_SiteWithoutDataMtmIntro';
-        $result[] = 'TagManager_SiteWithoutDataMtmStep2';
-        $result[] = 'TagManager_SiteWithoutDataMtmStep3';
         $result[] = 'TagManager_HistoryChangeTriggerName';
         $result[] = 'TagManager_CategoryUserEngagement';
         $result[] = 'TagManager_Publish';
@@ -826,6 +854,11 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_CustomUrl';
         $result[] = 'TagManager_PageViewTriggerName';
         $result[] = 'TagManager_MatomoTagName';
+        $result[] = 'TagManager_SiteWithoutDataMtmIntro';
+        $result[] = 'TagManager_SiteWithoutDataMtmStep2';
+        $result[] = 'TagManager_SiteWithoutDataMtmStep3';
+        $result[] = 'TagManager_IgnoreGtmDataLaterDescription';
+        $result[] = 'TagManager_IgnoreGtmDataLaterTitle';
     }
 
     public function getStylesheetFiles(&$stylesheets)

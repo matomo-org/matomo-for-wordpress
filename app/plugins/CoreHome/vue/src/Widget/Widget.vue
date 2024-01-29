@@ -6,8 +6,7 @@
 
 <template>
   <div
-    v-if="actualWidget"
-    v-show="showWidget"
+    v-if="actualWidget && showWidget"
     class="matomo-widget"
     :class="{'isFirstWidgetInPage': actualWidget.isFirstInPage}"
     :id="actualWidget.uniqueId"
@@ -109,7 +108,7 @@ export default defineComponent({
   setup() {
     function tooltipContent(this: HTMLElement) {
       const $this = window.$(this) as JQuery;
-      if ($this.attr('piwik-field') === '' || $this.hasClass('matomo-form-field')) {
+      if ($this.hasClass('matomo-form-field')) {
         // do not show it for form fields
         return '';
       }

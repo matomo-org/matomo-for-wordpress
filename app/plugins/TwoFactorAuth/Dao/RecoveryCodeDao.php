@@ -82,6 +82,4 @@ class RecoveryCodeDao
 
         Db::query($query, array($login));
     }
-
 }
-

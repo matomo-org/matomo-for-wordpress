@@ -75,7 +75,7 @@ class Piwik
 
         $message = str_replace("\n", "<br/>", $message);
 
-        $output = "<html><body>".
+        $output = "<html><body>" .
             "<style>a{color:red;}</style>\n" .
             "<div style='color:red;font-size:120%; width:100%;margin: 30px;'>" .
             " <div style='width: 50px; float: left;'><img src='plugins/Morpheus/images/error_medium.png' /></div>" .
@@ -83,7 +83,7 @@ class Piwik
             $message .
             "  </div>" .
             " </div>" .
-            "</div>".
+            "</div>" .
             "</body></html>";
         print($output);
         exit;
@@ -369,7 +369,6 @@ class Piwik
 
             return $token[$reason];
         }
-
     }
 
     /**
@@ -967,5 +966,22 @@ class Piwik
         }
 
         return Date::yesterday()->subMonth($lastNMonthsToInvalidate)->setDay(1);
+    }
+
+    /**
+     * Given the fully qualified name of a class located within a Matomo plugin,
+     * returns the name of the plugin.
+     *
+     * Uses the fact that Matomo plugins have namespaces like Piwik\Plugins\MyPlugin.
+     *
+     * @param string $className the name of a class located within a Matomo plugin
+     * @return string the plugin name
+     */
+    public static function getPluginNameOfMatomoClass(string $className): string
+    {
+        $parts = explode('\\', $className);
+        $parts = array_filter($parts);
+        $plugin = $parts[2] ?? '';
+        return $plugin;
     }
 }

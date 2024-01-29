@@ -34,7 +34,6 @@ class GetPlugin extends Base
         $this->getBasicDevicePluginsDisplayProperties($view);
 
         $view->config->addTranslations(array(
-            'label'                => $this->dimension->getName(),
             'nb_visits_percentage' =>
             str_replace(' ', '&nbsp;', Piwik::translate('General_ColumnPercentageVisits'))
         ));
@@ -53,5 +52,4 @@ class GetPlugin extends Base
         $view->requestConfig->filter_limit       = count(DevicePlugins::getAllPluginColumns());
         $view->requestConfig->totals             = 0;
     }
-
 }

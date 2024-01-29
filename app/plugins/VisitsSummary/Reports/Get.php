@@ -60,8 +60,8 @@ class Get extends \Piwik\Plugin\Report
 
         $this->subcategoryId = 'General_Overview';
         // Used to process metrics, not displayed/used directly
-//								'sum_visit_length',
-//								'nb_visits_converted',
+//                                'sum_visit_length',
+//                                'nb_visits_converted',
         $this->order = 1;
     }
 
@@ -155,10 +155,11 @@ class Get extends \Piwik\Plugin\Report
                     return [
                         'currentValue' => $value,
                         'pastValue' => $pastValue,
+                        'isLowerValueBetter' => Metrics::isLowerValueBetter($columnName),
                         'tooltip' => Piwik::translate('General_EvolutionSummaryGeneric', [
-                            $currentValueFormatted.' '.$columnTranslation,
+                            $currentValueFormatted . ' ' . $columnTranslation,
                             $currentPrettyDate,
-                            $pastValueFormatted.' '.$columnTranslation,
+                            $pastValueFormatted . ' ' . $columnTranslation,
                             $lastPrettyDate,
                             CalculateEvolutionFilter::calculate($value, $pastValue, $precision = 1)])
                     ];
@@ -207,7 +208,6 @@ class Get extends \Piwik\Plugin\Report
             'nb_uniq_pageviews' => 'NbUniquePageviewsDescription',
             'bounce_rate' => 'NbVisitsBounced',
         );
-
     }
 
     private function getSparklineTranslations()
@@ -262,7 +262,7 @@ class Get extends \Piwik\Plugin\Report
             $view->config->addSparklineMetric(array('nb_actions_per_visit'), 71);
             $view->config->addSparklineMetric(array('nb_outlinks', 'nb_uniq_outlinks'), 72);
 
-            if (version_compare(DbHelper::getInstallVersion(),'4.0.0-b1', '<')) {
+            if (version_compare(DbHelper::getInstallVersion(), '4.0.0-b1', '<')) {
                 $view->config->addSparklineMetric(array('avg_time_generation'), 73);
             }
 
@@ -307,5 +307,4 @@ class Get extends \Piwik\Plugin\Report
             $dataTable->deleteColumn($this->usersColumn, true);
         }
     }
-
 }

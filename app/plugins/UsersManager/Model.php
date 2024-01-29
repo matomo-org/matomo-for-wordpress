@@ -10,6 +10,7 @@ namespace Piwik\Plugins\UsersManager;
 
 use Piwik\Auth\Password;
 use Piwik\Common;
+use Piwik\Config\GeneralConfig;
 use Piwik\Date;
 use Piwik\Db;
 use Piwik\Option;
@@ -205,10 +206,10 @@ class Model
         $selector = "a.access";
         if ($access) {
             $selector = 'b.access';
-            $joins .= " LEFT JOIN ". Common::prefixTable('access') ." b on a.idsite = b.idsite AND a.login = b.login";
+            $joins .= " LEFT JOIN " . Common::prefixTable('access') . " b on a.idsite = b.idsite AND a.login = b.login";
         }
 
-        $sql = 'SELECT SQL_CALC_FOUND_ROWS s.idsite as idsite, s.name as site_name, GROUP_CONCAT('.$selector.' SEPARATOR "|") as access
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS s.idsite as idsite, s.name as site_name, GROUP_CONCAT(' . $selector . ' SEPARATOR "|") as access
                   FROM ' . Common::prefixTable('access') . " a
                 $joins
                 $where
@@ -283,7 +284,6 @@ class Model
                 // endless loop in case there is some bug somewhere
                 throw new \Exception('Failed to generate token');
             }
-
         } while ($this->getUserByInviteToken($token));
 
         return $token;
@@ -302,7 +302,6 @@ class Model
                 // endless loop in case there is some bug somewhere
                 throw new \Exception('Failed to generate token');
             }
-
         } while ($this->getUserByTokenAuth($token));
 
         return $token;
@@ -314,13 +313,28 @@ class Model
             'abcdef1234567890') . microtime(true) . Common::generateUniqId() . SettingsPiwik::getSalt());
     }
 
+    /**
+     * Add a new token auth record to the database
+     *
+     * @param       $login
+     * @param       $tokenAuth
+     * @param       $description
+     * @param       $dateCreated
+     * @param null  $dateExpired
+     * @param false $isSystemToken
+     * @param bool  $secureOnly     True if this token can only be used in a secure way (e.g. POST requests), default false
+     *
+     * @return int                  Primary key of the new token auth
+     * @throws \Piwik\Tracker\Db\DbException
+     */
     public function addTokenAuth(
       $login,
       $tokenAuth,
       $description,
       $dateCreated,
       $dateExpired = null,
-      $isSystemToken = false
+      $isSystemToken = false,
+      bool $secureOnly = false
     ) {
         if (!$this->getUser($login)) {
             throw new \Exception('User ' . $login . ' does not exist');
@@ -335,13 +349,13 @@ class Model
 
         $isSystemToken = (int)$isSystemToken;
 
-        $insertSql = "INSERT INTO " . $this->tokenTable . ' (login, description, password, date_created, date_expired, system_token, hash_algo) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        $insertSql = "INSERT INTO " . $this->tokenTable . ' (login, description, password, date_created, date_expired, system_token, hash_algo, secure_only) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
         $tokenAuth = $this->hashTokenAuth($tokenAuth);
 
         $db = $this->getDb();
         $db->query($insertSql,
-          [$login, $description, $tokenAuth, $dateCreated, $dateExpired, $isSystemToken, self::TOKEN_HASH_ALGO]);
+          [$login, $description, $tokenAuth, $dateCreated, $dateExpired, $isSystemToken, self::TOKEN_HASH_ALGO, $secureOnly]);
 
         return $db->lastInsertId();
     }
@@ -372,16 +386,37 @@ class Model
         );
     }
 
-    private function getTokenByTokenAuthIfNotExpired($tokenAuth)
+    /**
+     * Attempt to load a valid auth token
+     *
+     * @param string|null $tokenAuth    The token auth string
+     * @param bool $isTokenSecured      True if the token was sent via a secure mechanism (POST request, Auth header)
+     *
+     * @return array|bool               An array representing the token record, or null if not found
+     * @throws \Exception
+     */
+    private function getTokenByTokenAuthIfNotExpired(?string $tokenAuth, bool $isTokenSecured)
     {
+        // If the token wasn't provided via a secure mechanism and use of secure tokens is enforced globally
+        // then don't attempt to find the token
+        if (GeneralConfig::getConfigValue('only_allow_secure_auth_tokens') && !$isTokenSecured) {
+            return false;
+        }
+
         $tokenAuth = $this->hashTokenAuth($tokenAuth);
         $db = $this->getDb();
 
         $expired = $this->getQueryNotExpiredToken();
         $bind = array_merge(array($tokenAuth), $expired['bind']);
 
-        $token = $db->fetchRow("SELECT * FROM " . $this->tokenTable . " WHERE `password` = ? and " . $expired['sql'],
-          $bind);
+        $sql = "SELECT * FROM " . $this->tokenTable . " WHERE `password` = ? AND " . $expired['sql'];
+
+        // If the token was not send via a secure mechanism then exclude secure_only tokens
+        if (!$isTokenSecured) {
+            $sql .= " AND secure_only = 0";
+        }
+
+        $token = $db->fetchRow($sql, $bind);
 
         return $token;
     }
@@ -507,17 +542,29 @@ class Model
         }
     }
 
-    public function getUserByTokenAuth($tokenAuth)
+    /**
+     * Get an array of user data using the supplied token
+     *
+     * @param string|null   $tokenAuth
+     *
+     * @return array|null
+     * @throws \Exception
+     */
+    public function getUserByTokenAuth(?string $tokenAuth): ?array
     {
         if ($tokenAuth === 'anonymous') {
-            return $this->getUser('anonymous');
+            $row = $this->getUser('anonymous');
+            return (is_array($row) ? $row : null);
         }
 
-        $token = $this->getTokenByTokenAuthIfNotExpired($tokenAuth);
+        $token = $this->getTokenByTokenAuthIfNotExpired($tokenAuth, \Piwik\API\Request::isTokenAuthProvidedSecurely());
         if (!empty($token)) {
             $db = $this->getDb();
-            return $db->fetchRow("SELECT * FROM " . $this->userTable . " WHERE `login` = ?", $token['login']);
+            $row = $db->fetchRow("SELECT * FROM " . $this->userTable . " WHERE `login` = ?", $token['login']);
+            return (is_array($row) ? $row : null);
         }
+
+        return null;
     }
 
     /**

@@ -21,7 +21,6 @@ use Piwik\Plugins\UserCountry\LocationProvider;
  */
 abstract class GeoIp2 extends LocationProvider
 {
-
     const TEST_IP = '194.57.91.215';
     const SWITCH_TO_ISO_REGIONS_OPTION_NAME = 'usercountry.switchtoisoregions';
 
@@ -142,7 +141,7 @@ abstract class GeoIp2 extends LocationProvider
     {
         foreach (self::$dbNames as $key => $names) {
             foreach ($names as $name) {
-                if ($name === $filename || preg_match('/'.$name.'/', $filename)) {
+                if ($name === $filename || preg_match('/' . $name . '/', $filename)) {
                     return $key;
                 }
             }
@@ -177,6 +176,24 @@ abstract class GeoIp2 extends LocationProvider
      * @return array
      */
     public static function getRegionNames()
+    {
+        $regionsByCountry = self::getRegions();
+
+        foreach ($regionsByCountry as $countryCode => &$regions) {
+            foreach ($regions as $regionCode => &$regionData) {
+                $regionData = $regionData['name'];
+            }
+        }
+
+        return $regionsByCountry;
+    }
+
+    /**
+     * Returns an array of region names mapped by country code & region code.
+     *
+     * @return array
+     */
+    public static function getRegions()
     {
         if (is_null(self::$regionNames)) {
             self::$regionNames = require_once __DIR__ . '/../data/isoRegionNames.php';

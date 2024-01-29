@@ -11,7 +11,6 @@ namespace Piwik\API\DataTableManipulator;
 use Piwik\API\DataTableManipulator;
 use Piwik\Common;
 use Piwik\DataTable;
-use Piwik\DataTable\Row;
 
 /**
  * This class is responsible for handling the label parameter that can be
@@ -83,7 +82,7 @@ class LabelFilter extends DataTableManipulator
      *
      * @param array $labelParts
      * @param DataTable $dataTable
-     * @return Row|false
+     * @return DataTable\Row|false
      */
     private function doFilterRecursiveDescend($labelParts, $dataTable)
     {

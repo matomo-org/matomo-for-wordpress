@@ -42,8 +42,7 @@ class Config extends \Piwik\ViewDataTable\Config
     private $evolutionGraphLinkable = true;
 
     /**
-     * Adds possibility to set html attributes on the sparklines title / headline. For example can be used
-     * to set an angular directive
+     * Adds possibility to set html attributes on the sparklines title / headline.
      * @var string
      */
     public $title_attributes = array();
@@ -255,7 +254,7 @@ class Config extends \Piwik\ViewDataTable\Config
                 }
             } else {
                 $msg  = 'The number of values and descriptions need to be the same to add a sparkline. ';
-                $msg .= 'Values: ' . implode(', ', $values). ' Descriptions: ' . implode(', ', $description);
+                $msg .= 'Values: ' . implode(', ', $values) . ' Descriptions: ' . implode(', ', $description);
                 throw new \Exception($msg);
             }
         }
@@ -313,11 +312,11 @@ class Config extends \Piwik\ViewDataTable\Config
             if ($evolutionPercent != 0 || $evolution['currentValue'] != 0) {
                 $sparkline['evolution'] = array(
                     'percent' => $evolutionPercent,
+                    'isLowerValueBetter' => !empty($evolution['isLowerValueBetter']) ? $evolution['isLowerValueBetter'] : false,
                     'tooltip' => !empty($evolution['tooltip']) ? $evolution['tooltip'] : null,
                     'trend' => $evolution['currentValue'] - $evolution['pastValue'],
                 );
             }
-
         }
 
         $this->sparklines[] = $sparkline;
@@ -336,7 +335,7 @@ class Config extends \Piwik\ViewDataTable\Config
                 if (!empty($params['compareDates'])) {
                     foreach ($params['compareDates'] as $index => $comparisonDate) {
                         $comparePeriod = Period\Factory::build('day', $comparisonDate);
-                        $tooltip .= ' ' . Piwik::translate('General_Period') . ' '.($index+2).': ' . $comparePeriod->getLocalizedShortString() . '.';
+                        $tooltip .= ' ' . Piwik::translate('General_Period') . ' ' . ($index + 2) . ': ' . $comparePeriod->getLocalizedShortString() . '.';
                     }
                 }
             }
@@ -485,5 +484,4 @@ class Config extends \Piwik\ViewDataTable\Config
 
         return $paramsToSet;
     }
-
 }

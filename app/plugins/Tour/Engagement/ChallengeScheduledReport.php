@@ -44,10 +44,10 @@ class ChallengeScheduledReport extends Challenge
         return 'add_scheduled_report';
     }
 
-    public function isCompleted()
+    public function isCompleted(string $login)
     {
         if (!isset($this->completed)) {
-            $this->completed = $this->finder->hasAddedNewEmailReport(Piwik::getCurrentUserLogin());
+            $this->completed = $this->finder->hasAddedNewEmailReport($login);
         }
         return $this->completed;
     }
@@ -56,6 +56,4 @@ class ChallengeScheduledReport extends Challenge
     {
         return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'ScheduledReports', 'action' => 'index', 'widget' => false));
     }
-
-
 }

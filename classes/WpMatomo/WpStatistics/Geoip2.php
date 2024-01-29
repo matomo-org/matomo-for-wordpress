@@ -82,15 +82,27 @@ class Geoip2 {
 			if ( empty( $region_code ) ) {
 				$regions = include dirname( MATOMO_ANALYTICS_FILE ) . '/app/plugins/GeoIp2/data/isoRegionNames.php';
 				if ( array_key_exists( $record->country->isoCode, $regions ) ) {
-					$regions_code = array_flip( $regions[ $record->country->isoCode ] );
 					// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-					if ( array_key_exists( $record->mostSpecificSubdivision->name, $regions_code ) ) {
-						// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-						$region_code = $regions_code[ $record->mostSpecificSubdivision->name ];
-					}
-					if ( empty( $region_code ) ) {
-						if ( array_key_exists( $region, $regions_code ) ) {
-							$region_code = $regions_code[ $region ];
+					$region_name         = $record->mostSpecificSubdivision->name;
+					$regions_for_country = $regions[ $record->country->isoCode ];
+
+					$region_code = null;
+					foreach ( $regions_for_country as $code => $region_info ) {
+						if ( $region_info['name'] === $region_name
+							|| in_array( $region_name, $region_info['altNames'], true )
+						) {
+							$region_code = $code;
+							break;
+						}
+
+						if ( $region
+							&& (
+								$region === $region_info['name']
+								|| in_array( $region, $region_info['altNames'], true )
+							)
+						) {
+							$region_code = $code;
+							break;
 						}
 					}
 				}

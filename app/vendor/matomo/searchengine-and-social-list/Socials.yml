@@ -7,6 +7,10 @@ Bebo:
 BlackPlanet:
   - blackplanet.com
 
+Bluesky:
+  - bsky.app
+  - skyfeed.app
+
 Buzznet:
   - buzznet.com
 
@@ -208,6 +212,9 @@ Renren:
 Skyrock:
   - skyrock.com
 
+Snapchat:
+  - snapchat.com
+
 Sonico.com:
   - sonico.com
 
@@ -226,6 +233,13 @@ Taringa!:
 Telegram:
   - web.telegram.org
   - org.telegram.messenger
+
+Threads:
+  - threads.net
+  - l.threads.net
+
+TikTok:
+  - tiktok.com
 
 Tuenti:
   - tuenti.com
@@ -276,6 +290,11 @@ WeeWorld:
 
 "Windows Live Spaces":
   - login.live.com
+
+Workplace:
+  - workplace.com
+  - l.workplace.com
+  - lm.workplace.com
 
 Xanga:
   - xanga.com

@@ -14,6 +14,8 @@ use Piwik\DataTable\Filter\SafeDecodeLabel;
 use Piwik\Metrics\Formatter;
 use Piwik\Plugin\Manager;
 use Piwik\Tracker\GoalManager;
+use Piwik\Translation\Translator;
+use Piwik\Twig\Extension\EscapeFilter;
 use Piwik\View\RenderTokenParser;
 use Piwik\Visualization\Sparkline;
 use Twig\Environment;
@@ -29,7 +31,7 @@ function piwik_filter_truncate($string, $size)
     if (mb_strlen(html_entity_decode($string)) <= $size) {
         return $string;
     } else {
-        preg_match('/^(&(?:[a-z\d]+|#\d+|#x[a-f\d]+);|.){'.$size.'}/i', $string, $shortenString);
+        preg_match('/^(&(?:[a-z\d]+|#\d+|#x[a-f\d]+);|.){' . $size . '}/i', $string, $shortenString);
         return reset($shortenString) . "...";
     }
 }
@@ -40,24 +42,14 @@ function piwik_format_number($string, $minFractionDigits, $maxFractionDigits)
     return $formatter->format($string, $minFractionDigits, $maxFractionDigits);
 }
 
-function piwik_fix_lbrace($string)
-{
-    return Common::fixLbrace($string);
-}
-
 function piwik_escape_filter(Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false) {
 
     $string = twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
 
     switch ($strategy) {
-        case 'html':
-        case 'html_attr':
-            return piwik_fix_lbrace($string);
         case 'url':
             $encoded = rawurlencode('{');
             return str_replace('{{', $encoded . $encoded, $string);
-        case 'css':
-        case 'js':
         default:
             return $string;
     }
@@ -68,27 +60,6 @@ function piwik_format_money($amount, $idSite)
     $currencySymbol = Site::getCurrencySymbolFor($idSite);
     $numberFormatter = NumberFormatter::getInstance();
     return $numberFormatter->formatCurrency($amount, $currencySymbol, GoalManager::REVENUE_PRECISION);
-}
-
-class PiwikTwigFilterExtension extends \Twig\Extension\AbstractExtension
-{
-    public function getFilters()
-    {
-        return array(
-            new TwigFilter('e', '\Piwik\piwik_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
-            new TwigFilter('escape', '\Piwik\piwik_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe'))
-        );
-    }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName()
-    {
-        return 'escaper2';
-    }
 }
 
 /**
@@ -145,24 +116,26 @@ class Twig
         );
         $this->twig->addExtension(new DebugExtension());
 
-        $this->addFilter_translate();
-        $this->addFilter_urlRewriteWithParameters();
-        $this->addFilter_sumTime();
-        $this->addFilter_money();
-        $this->addFilter_truncate();
-        $this->addFilter_notification();
-        $this->addFilter_percent();
-        $this->addFilter_percentage();
-        $this->addFilter_percentEvolution();
-        $this->addFilter_prettyDate();
-        $this->addFilter_safeDecodeRaw();
-        $this->addFilter_number();
-        $this->addFilter_anonymiseSystemInfo();
-        $this->addFilter_nonce();
-        $this->addFilter_md5();
-        $this->addFilter_onlyDomain();
-        $this->addFilter_safelink();
-        $this->addFilter_implode();
+        $this->addFilterTranslate();
+        $this->addFilterListings();
+        $this->addFilterUrlRewriteWithParameters();
+        $this->addFilterSumTime();
+        $this->addFilterMoney();
+        $this->addFilterTruncate();
+        $this->addFilterNotification();
+        $this->addFilterPercent();
+        $this->addFilterPercentage();
+        $this->addFilterPercentEvolution();
+        $this->addFilterPrettyDate();
+        $this->addFilterSafeDecodeRaw();
+        $this->addFilterNumber();
+        $this->addFilterAnonymiseSystemInfo();
+        $this->addFilterNonce();
+        $this->addFilterMd5();
+        $this->addFilterOnlyDomain();
+        $this->addFilterSafelink();
+        $this->addFilterTrackMatomoLink();
+        $this->addFilterImplode();
         $this->twig->addFilter(new TwigFilter('ucwords', 'ucwords'));
         $this->twig->addFilter(new TwigFilter('lcfirst', 'lcfirst'));
         $this->twig->addFilter(new TwigFilter('ucfirst', 'ucfirst'));
@@ -170,24 +143,26 @@ class Twig
             return preg_replace($pattern, $replacement, $subject);
         }));
 
-        $this->addFunction_includeAssets();
-        $this->addFunction_linkTo();
-        $this->addFunction_sparkline();
-        $this->addFunction_postEvent();
-        $this->addFunction_isPluginLoaded();
-        $this->addFunction_getJavascriptTranslations();
+        $this->addFunctionExternalLink();
+        $this->addFunctionExternalRawLink();
+        $this->addFunctionIncludeAssets();
+        $this->addFunctionLinkTo();
+        $this->addFunctionSparkline();
+        $this->addFunctionPostEvent();
+        $this->addFunctionIsPluginLoaded();
+        $this->addFunctionGetJavascriptTranslations();
 
         $this->twig->addTokenParser(new RenderTokenParser());
 
-        $this->addTest_false();
-        $this->addTest_true();
-        $this->addTest_emptyString();
-        $this->addTest_isNumeric();
+        $this->addTestFalse();
+        $this->addTestTrue();
+        $this->addTestEmptyString();
+        $this->addTestIsNumeric();
 
-        $this->twig->addExtension(new PiwikTwigFilterExtension());
+        $this->twig->addExtension(new EscapeFilter());
     }
 
-    private function addTest_false()
+    private function addTestFalse()
     {
         $test = new TwigTest(
             'false',
@@ -198,7 +173,7 @@ class Twig
         $this->twig->addTest($test);
     }
 
-    private function addTest_true()
+    private function addTestTrue()
     {
         $test = new TwigTest(
             'true',
@@ -209,7 +184,7 @@ class Twig
         $this->twig->addTest($test);
     }
 
-    private function addTest_emptyString()
+    private function addTestEmptyString()
     {
         $test = new TwigTest(
             'emptyString',
@@ -220,7 +195,7 @@ class Twig
         $this->twig->addTest($test);
     }
 
-    protected function addFunction_getJavascriptTranslations()
+    protected function addFunctionGetJavascriptTranslations()
     {
         $getJavascriptTranslations = new TwigFunction(
             'getJavascriptTranslations',
@@ -229,7 +204,7 @@ class Twig
         $this->twig->addFunction($getJavascriptTranslations);
     }
 
-    protected function addFunction_isPluginLoaded()
+    protected function addFunctionIsPluginLoaded()
     {
         $isPluginLoadedFunction = new TwigFunction('isPluginLoaded', function ($pluginName) {
             return \Piwik\Plugin\Manager::getInstance()->isPluginLoaded($pluginName);
@@ -237,7 +212,7 @@ class Twig
         $this->twig->addFunction($isPluginLoadedFunction);
     }
 
-    protected function addFunction_includeAssets()
+    protected function addFunctionIncludeAssets()
     {
         $includeAssetsFunction = new TwigFunction('includeAssets', function ($params) {
             if (!isset($params['type'])) {
@@ -245,11 +220,12 @@ class Twig
             }
 
             $assetType = strtolower($params['type']);
+            $deferJs = boolval($params['defer'] ?? false);
             switch ($assetType) {
                 case 'css':
                     return AssetManager::getInstance()->getCssInclusionDirective();
                 case 'js':
-                    return AssetManager::getInstance()->getJsInclusionDirective();
+                    return AssetManager::getInstance()->getJsInclusionDirective($deferJs);
                 default:
                     throw new Exception("The twig function includeAssets 'type' parameter needs to be either 'css' or 'js'.");
             }
@@ -257,7 +233,7 @@ class Twig
         $this->twig->addFunction($includeAssetsFunction);
     }
 
-    protected function addFunction_postEvent()
+    protected function addFunctionPostEvent()
     {
         $postEventFunction = new TwigFunction('postEvent', function ($eventName) {
             // get parameters to twig function
@@ -276,7 +252,7 @@ class Twig
         $this->twig->addFunction($postEventFunction);
     }
 
-    protected function addFunction_sparkline()
+    protected function addFunctionSparkline()
     {
         $sparklineFunction = new TwigFunction('sparkline', function ($src) {
             $width = Sparkline::DEFAULT_WIDTH;
@@ -286,7 +262,7 @@ class Twig
         $this->twig->addFunction($sparklineFunction);
     }
 
-    protected function addFunction_linkTo()
+    protected function addFunctionLinkTo()
     {
         $urlFunction = new TwigFunction('linkTo', function ($params) {
             return 'index.php' . Url::getCurrentQueryStringWithParametersModified($params);
@@ -295,12 +271,39 @@ class Twig
     }
 
     /**
+     * Build an external link for a URL
+     *
+     * Usage:
+     *     externallink(url)
+     *
+     */
+    private function addFunctionExternalLink()
+    {
+        $externalLink = new TwigFunction('externallink', function ($url) {
+            // Add tracking parameters if a matomo.org link
+            $url =  Url::addCampaignParametersToMatomoLink($url);
+
+            return "<a target='_blank' rel='noreferrer noopener' href='" . $url . "'>";
+        });
+        $this->twig->addFunction($externalLink);
+    }
+
+    private function addFunctionExternalRawLink()
+    {
+        $externalRawLink = new TwigFunction('externalrawlink', function ($url) {
+            // Add tracking parameters if a matomo.org link
+            return Url::addCampaignParametersToMatomoLink($url);
+        });
+        $this->twig->addFunction($externalRawLink);
+    }
+
+    /**
      * @return FilesystemLoader
      */
     private function getDefaultThemeLoader()
     {
         $themeDir = Manager::getPluginDirectory(\Piwik\Plugin\Manager::DEFAULT_THEME) . '/templates/';
-        $themeLoader = new FilesystemLoader(array($themeDir), PIWIK_DOCUMENT_ROOT.DIRECTORY_SEPARATOR);
+        $themeLoader = new FilesystemLoader(array($themeDir), PIWIK_DOCUMENT_ROOT . DIRECTORY_SEPARATOR);
 
         return $themeLoader;
     }
@@ -318,7 +321,7 @@ class Twig
         if (!file_exists($themeDir)) {
             return false;
         }
-        $themeLoader = new FilesystemLoader(array($themeDir), PIWIK_DOCUMENT_ROOT.DIRECTORY_SEPARATOR);
+        $themeLoader = new FilesystemLoader(array($themeDir), PIWIK_DOCUMENT_ROOT . DIRECTORY_SEPARATOR);
 
         return $themeLoader;
     }
@@ -328,7 +331,7 @@ class Twig
         return $this->twig;
     }
 
-    protected function addFilter_notification()
+    protected function addFilterNotification()
     {
         $twigEnv = $this->getTwigEnvironment();
         $notificationFunction = new TwigFilter('notification', function ($message, $options) use ($twigEnv) {
@@ -344,7 +347,7 @@ class Twig
             $template .= '>';
 
             if (!empty($options['raw'])) {
-                $template .= piwik_fix_lbrace($message);
+                $template .= $message;
             } else {
                 $template .= piwik_escape_filter($twigEnv, $message, 'html');
             }
@@ -352,12 +355,11 @@ class Twig
             $template .= '</div>';
 
             return $template;
-
         }, array('is_safe' => array('html')));
         $this->twig->addFilter($notificationFunction);
     }
 
-    protected function addFilter_safeDecodeRaw()
+    protected function addFilterSafeDecodeRaw()
     {
         $rawSafeDecoded = new TwigFilter('rawSafeDecoded', function ($string) {
 
@@ -370,13 +372,12 @@ class Twig
 
             $string = SafeDecodeLabel::decodeLabelSafe($string);
 
-            return piwik_fix_lbrace($string);
-
+            return $string;
         }, array('is_safe' => array('all')));
         $this->twig->addFilter($rawSafeDecoded);
     }
 
-    protected function addFilter_prettyDate()
+    protected function addFilterPrettyDate()
     {
         $prettyDate = new TwigFilter('prettyDate', function ($dateString, $period) {
             return Period\Factory::build($period, $dateString)->getLocalizedShortString();
@@ -384,7 +385,7 @@ class Twig
         $this->twig->addFilter($prettyDate);
     }
 
-    protected function addFilter_percentage()
+    protected function addFilterPercentage()
     {
         $percentage = new TwigFilter('percentage', function ($string, $totalValue, $precision = 1) {
             $formatter = NumberFormatter::getInstance();
@@ -393,7 +394,7 @@ class Twig
         $this->twig->addFilter($percentage);
     }
 
-    protected function addFilter_percent()
+    protected function addFilterPercent()
     {
         $percentage = new TwigFilter('percent', function ($string, $precision = 1) {
             $formatter = NumberFormatter::getInstance();
@@ -402,7 +403,7 @@ class Twig
         $this->twig->addFilter($percentage);
     }
 
-    protected function addFilter_percentEvolution()
+    protected function addFilterPercentEvolution()
     {
         $percentage = new TwigFilter('percentEvolution', function ($string) {
             $formatter = NumberFormatter::getInstance();
@@ -416,7 +417,7 @@ class Twig
         return StaticContainer::get('Piwik\ProfessionalServices\Advertising');
     }
 
-    protected function addFilter_number()
+    protected function addFilterNumber()
     {
         $formatter = new TwigFilter('number', function ($string, $minFractionDigits = 0, $maxFractionDigits = 0) {
             return piwik_format_number($string, $minFractionDigits, $maxFractionDigits);
@@ -424,7 +425,7 @@ class Twig
         $this->twig->addFilter($formatter);
     }
 
-    protected function addFilter_anonymiseSystemInfo()
+    protected function addFilterAnonymiseSystemInfo()
     {
         $formatter = new TwigFilter('anonymiseSystemInfo', function ($string) {
             if ($string === null) {
@@ -450,13 +451,13 @@ class Twig
         $this->twig->addFilter($formatter);
     }
 
-    protected function addFilter_nonce()
+    protected function addFilterNonce()
     {
         $nonce = new TwigFilter('nonce', array('Piwik\\Nonce', 'getNonce'));
         $this->twig->addFilter($nonce);
     }
 
-    private function addFilter_md5()
+    private function addFilterMd5()
     {
         $md5 = new TwigFilter('md5', function ($value) {
             return md5($value);
@@ -464,7 +465,7 @@ class Twig
         $this->twig->addFilter($md5);
     }
 
-    private function addFilter_onlyDomain()
+    private function addFilterOnlyDomain()
     {
         $domainOnly = new TwigFilter('domainOnly', function ($url) {
             $parsed = parse_url($url);
@@ -473,7 +474,7 @@ class Twig
         $this->twig->addFilter($domainOnly);
     }
 
-    protected function addFilter_truncate()
+    protected function addFilterTruncate()
     {
         $truncateFilter = new TwigFilter('truncate', function ($string, $size) {
             return piwik_filter_truncate($string, $size);
@@ -481,7 +482,7 @@ class Twig
         $this->twig->addFilter($truncateFilter);
     }
 
-    protected function addFilter_money()
+    protected function addFilterMoney()
     {
         $moneyFilter = new TwigFilter('money', function ($amount) {
             if (func_num_args() != 2) {
@@ -494,7 +495,7 @@ class Twig
         $this->twig->addFilter($moneyFilter);
     }
 
-    protected function addFilter_sumTime()
+    protected function addFilterSumTime()
     {
         $formatter = $this->formatter;
         $sumtimeFilter = new TwigFilter('sumtime', function ($numberOfSeconds) use ($formatter) {
@@ -503,7 +504,7 @@ class Twig
         $this->twig->addFilter($sumtimeFilter);
     }
 
-    protected function addFilter_urlRewriteWithParameters()
+    protected function addFilterUrlRewriteWithParameters()
     {
         $urlRewriteFilter = new TwigFilter('urlRewriteWithParameters', function ($parameters) {
             $parameters['updated'] = null;
@@ -513,7 +514,7 @@ class Twig
         $this->twig->addFilter($urlRewriteFilter);
     }
 
-    protected function addFilter_translate()
+    protected function addFilterTranslate()
     {
         $translateFilter = new TwigFilter('translate', function ($stringToken) {
             if (func_num_args() <= 1) {
@@ -531,6 +532,25 @@ class Twig
             return $stringTranslated;
         });
         $this->twig->addFilter($translateFilter);
+    }
+
+    protected function addFilterListings()
+    {
+        $andListing = new TwigFilter('andListing', function ($items) {
+            if (!is_array($items)) {
+                return $items; // don't do anything if input data is incorrect
+            }
+            return StaticContainer::get(Translator::class)->createAndListing($items);
+        });
+        $this->twig->addFilter($andListing);
+
+        $orListing = new TwigFilter('orListing', function ($items) {
+            if (!is_array($items)) {
+                return $items; // don't do anything if input data is incorrect
+            }
+            return StaticContainer::get(Translator::class)->createOrListing($items);
+        });
+        $this->twig->addFilter($orListing);
     }
 
     private function addPluginNamespaces(FilesystemLoader $loader)
@@ -581,7 +601,7 @@ class Twig
         }
     }
 
-    private function addFilter_safelink()
+    private function addFilterSafelink()
     {
         $safelink = new TwigFilter('safelink', function ($url) {
             if (!UrlHelper::isLookLikeSafeUrl($url)) {
@@ -592,7 +612,32 @@ class Twig
         $this->twig->addFilter($safelink);
     }
 
-    private function addFilter_implode()
+    /**
+     * Modify any links to matomo domains to add campaign tracking parameters
+     *
+     * Typical usage:
+     *
+     * Apply default campaign tracking parameters:
+     * {{ 'https://matomo.org/faq/123'|trackmatomolink }}
+     *
+     * Apply custom campaign tracking parameters:
+     * {{ 'https://matomo.org/faq/123'|trackmatomolink('SomeCampaign', 'SomeSource', 'SomeMedium') }}
+     *
+     */
+    private function addFilterTrackMatomoLink()
+    {
+        $trackLink = new TwigFilter('trackmatomolink', function ($url) {
+            $params = func_get_args();
+            array_shift($params);
+            $campaign = (count($params) > 0 ? $params[0] : null);
+            $source = (count($params) > 1 ? $params[1] : null);
+            $medium = (count($params) > 2 ? $params[2] : null);
+            return Url::addCampaignParametersToMatomoLink($url, $campaign, $source, $medium);
+        });
+        $this->twig->addFilter($trackLink);
+    }
+
+    private function addFilterImplode()
     {
         $implode = new TwigFilter('implode', function ($value, $separator) {
             return implode($separator, $value);
@@ -600,7 +645,7 @@ class Twig
         $this->twig->addFilter($implode);
     }
 
-    private function addTest_isNumeric()
+    private function addTestIsNumeric()
     {
         $test = new TwigTest(
             'numeric',

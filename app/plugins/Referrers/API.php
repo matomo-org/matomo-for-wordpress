@@ -89,7 +89,7 @@ class API extends \Piwik\Plugin\API
      */
     protected function getDataTable($name, $idSite, $period, $date, $segment, $expanded = false, $idSubtable = null)
     {
-        $dataTable = Archive::createDataTableFromArchive($name, $idSite, $period, $date, $segment, $expanded, $flat=false, $idSubtable);
+        $dataTable = Archive::createDataTableFromArchive($name, $idSite, $period, $date, $segment, $expanded, $flat = false, $idSubtable);
         return $dataTable;
     }
 
@@ -141,9 +141,6 @@ class API extends \Piwik\Plugin\API
             }
 
             if ($result) {
-                $result->filter('ColumnCallbackDeleteMetadata', array('segment'));
-                $result->filter('ColumnCallbackDeleteMetadata', array('segmentValue'));
-
                 return $this->removeSubtableIds($result); // this report won't return subtables of individual reports
             }
         }
@@ -229,7 +226,7 @@ class API extends \Piwik\Plugin\API
         if ($flat) {
             $dataTable->filterSubtables('Piwik\Plugins\Referrers\DataTable\Filter\SearchEnginesFromKeywordId', array($dataTable));
         } else {
-            $dataTable->filter('AddSegmentValue');
+            $dataTable->filter('AddSegmentByLabel', ['referrerKeyword', '', $allowEmptyValue = true]);
             $dataTable->queueFilter('PrependSegment', array('referrerType==search;'));
         }
 
@@ -299,7 +296,7 @@ class API extends \Piwik\Plugin\API
 
         $dataTable->filter('Piwik\Plugins\Referrers\DataTable\Filter\SearchEnginesFromKeywordId', array($keywords, $idSubtable));
         $dataTable->filter('AddSegmentByLabel', array('referrerName'));
-        $dataTable->queueFilter('PrependSegment', array('referrerKeyword=='.$keyword.';referrerType==search;'));
+        $dataTable->queueFilter('PrependSegment', array('referrerKeyword==' . $keyword . ';referrerType==search;'));
 
         return $dataTable;
     }
@@ -310,14 +307,41 @@ class API extends \Piwik\Plugin\API
         $dataTable = Archive::createDataTableFromArchive(Archiver::SEARCH_ENGINES_RECORD_NAME, $idSite, $period, $date, $segment, $expanded, $flat);
 
         if ($flat) {
-            $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'url', function ($url) { return SearchEngine::getInstance()->getUrlFromName($url); }));
-            $dataTable->filter('MetadataCallbackAddMetadata', array('url', 'logo', function ($url) { return SearchEngine::getInstance()->getLogoFromUrl($url); }));
-            $dataTable->filterSubtables('Piwik\Plugins\Referrers\DataTable\Filter\KeywordsFromSearchEngineId', array($dataTable));
+            $dataTable->filter('ColumnCallbackAddMetadata', array(
+                'label',
+                'url',
+                function ($url) {
+                    return SearchEngine::getInstance()->getUrlFromName($url);
+                }
+            ));
+            $dataTable->filter('MetadataCallbackAddMetadata', array(
+                'url',
+                'logo',
+                function ($url) {
+                    return SearchEngine::getInstance()->getLogoFromUrl($url);
+                }
+            ));
+            $dataTable->filterSubtables(
+                'Piwik\Plugins\Referrers\DataTable\Filter\KeywordsFromSearchEngineId',
+                array($dataTable)
+            );
         } else {
             $dataTable->filter('AddSegmentByLabel', array('referrerName'));
             $dataTable->queueFilter('PrependSegment', array('referrerType==search;'));
-            $dataTable->queueFilter('ColumnCallbackAddMetadata', array('label', 'url', function ($url) { return SearchEngine::getInstance()->getUrlFromName($url); }));
-            $dataTable->queueFilter('MetadataCallbackAddMetadata', array('url', 'logo', function ($url) { return SearchEngine::getInstance()->getLogoFromUrl($url); }));
+            $dataTable->queueFilter('ColumnCallbackAddMetadata', array(
+                'label',
+                'url',
+                function ($url) {
+                    return SearchEngine::getInstance()->getUrlFromName($url);
+                }
+            ));
+            $dataTable->queueFilter('MetadataCallbackAddMetadata', array(
+                'url',
+                'logo',
+                function ($url) {
+                    return SearchEngine::getInstance()->getLogoFromUrl($url);
+                }
+            ));
         }
 
         return $dataTable;
@@ -366,7 +390,7 @@ class API extends \Piwik\Plugin\API
 
         $dataTable = $this->getDataTable(Archiver::CAMPAIGNS_RECORD_NAME, $idSite, $period, $date, $segment, $expanded = false, $idSubtable);
         $dataTable->filter('AddSegmentByLabel', array('referrerKeyword'));
-        $dataTable->queueFilter('PrependSegment', array('referrerName=='.$campaign.';referrerType==campaign;'));
+        $dataTable->queueFilter('PrependSegment', array('referrerName==' . $campaign . ';referrerType==campaign;'));
         return $dataTable;
     }
 
@@ -422,7 +446,16 @@ class API extends \Piwik\Plugin\API
 
         $dataTable = $this->completeSocialTablesWithOldReports($dataTable, $idSite, $period, $date, $segment, $expanded, $flat);
 
-        $dataTable->filter('MetadataCallbackAddMetadata', array('url', 'logo', function ($url) { return Social::getInstance()->getLogoFromUrl($url); }));
+        $dataTable->filter('MetadataCallbackAddMetadata', array(
+            'url',
+            'logo',
+            function ($url) {
+                return Social::getInstance()->getLogoFromUrl($url);
+            }
+        ));
+
+        $dataTable->filter('AddSegmentByLabel', array('referrerName'));
+        $dataTable->queueFilter('PrependSegment', array('referrerType==social;'));
 
         return $dataTable;
     }

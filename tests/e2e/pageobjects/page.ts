@@ -135,6 +135,7 @@ export default class Page {
       window.jQuery('.notice-ocean-extra-plugin').hide();
       window.jQuery('.notice-ocean-extra-plugin .notice-dismiss').click();
       window.jQuery('#wpadminbar,#adminmenumain').hide();
+      window.jQuery('#footer-upgrade').hide();
     });
   }
 }

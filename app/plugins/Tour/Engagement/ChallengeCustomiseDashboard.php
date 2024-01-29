@@ -10,6 +10,7 @@ namespace Piwik\Plugins\Tour\Engagement;
 
 use Piwik\Piwik;
 use Piwik\Plugins\Tour\Dao\DataFinder;
+use Piwik\Url;
 
 class ChallengeCustomiseDashboard extends Challenge
 {
@@ -43,10 +44,9 @@ class ChallengeCustomiseDashboard extends Challenge
         return 'customise_dashboard';
     }
 
-    public function isCompleted()
+    public function isCompleted(string $login)
     {
         if (!isset($this->completed)) {
-            $login = Piwik::getCurrentUserLogin();
             $this->completed = $this->finder->hasAddedOrCustomisedDashboard($login);
         }
         return $this->completed;
@@ -54,8 +54,6 @@ class ChallengeCustomiseDashboard extends Challenge
 
     public function getUrl()
     {
-        return 'https://matomo.org/faq/dashboards/create-dashboards-and-customise-widgets-and-layout/';
+        return Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/dashboards/create-dashboards-and-customise-widgets-and-layout/');
     }
-
-
 }

@@ -14,8 +14,8 @@ use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\FrontController;
-use Piwik\Http\HttpCodeException;
 use Piwik\IP;
+use Piwik\NoAccessException;
 use Piwik\Piwik;
 use Piwik\Plugins\Login\Security\BruteForceDetection;
 use Piwik\Session;
@@ -36,8 +36,9 @@ class Login extends \Piwik\Plugin
     public function registerEvents()
     {
         $hooks = array(
+            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
             'User.isNotAuthorized'             => 'noAccess',
-            'API.Request.authenticate'         => 'ApiRequestAuthenticate',
+            'API.Request.authenticate'         => 'apiRequestAuthenticate',
             'AssetManager.getJavaScriptFiles'  => 'getJsFiles',
             'AssetManager.getStylesheetFiles'  => 'getStylesheetFiles',
             'Session.beforeSessionStart'       => 'beforeSessionStart',
@@ -58,26 +59,35 @@ class Login extends \Piwik\Plugin
             'Controller.Login.acceptInvitation' => 'beforeLoginCheckBruteForce',
             'Controller.Login.declineInvitation' => 'beforeLoginCheckBruteForce',
             'Login.authenticate.successful'    => 'beforeLoginCheckBruteForce',
-            'Login.beforeLoginCheckAllowed'  => 'beforeLoginCheckBruteForce',
-            'Login.recordFailedLoginAttempt'  => 'onFailedLoginRecordAttempt', // record any failed attempt in UI
+            'Login.beforeLoginCheckAllowed'    => 'beforeLoginCheckBruteForce',
+            'Login.recordFailedLoginAttempt'   => 'onFailedLoginRecordAttempt', // record any failed attempt in UI
             'Login.authenticate.failed'        => 'onFailedLoginRecordAttempt', // record any failed attempt in UI
-            'API.Request.authenticate.failed' => 'onFailedLoginRecordAttempt', // record any failed attempt in Reporting API
+            'API.Request.authenticate.failed'  => 'onFailedAPILogin', // record any failed attempt in Reporting API
             'Tracker.Request.authenticate.failed' => 'onFailedLoginRecordAttempt', // record any failed attempt in Tracker API
         );
 
         $loginPlugin = Piwik::getLoginPluginName();
 
         if ($loginPlugin && $loginPlugin !== 'Login') {
-            $hooks['Controller.'.$loginPlugin.'.logme']           = 'beforeLoginCheckBruteForce';
-            $hooks['Controller.'.$loginPlugin. '.']               = 'beforeLoginCheckBruteForce';
-            $hooks['Controller.'.$loginPlugin.'.index']           = 'beforeLoginCheckBruteForce';
-            $hooks['Controller.'.$loginPlugin.'.confirmResetPassword'] = 'beforeLoginCheckBruteForce';
-            $hooks['Controller.'.$loginPlugin.'.confirmPassword'] = 'beforeLoginCheckBruteForce';
-            $hooks['Controller.'.$loginPlugin.'.resetPassword']   = 'beforeLoginCheckBruteForce';
-            $hooks['Controller.'.$loginPlugin.'.login']           = 'beforeLoginCheckBruteForce';
+            $hooks['Controller.' . $loginPlugin . '.logme']           = 'beforeLoginCheckBruteForce';
+            $hooks['Controller.' . $loginPlugin . '.']                = 'beforeLoginCheckBruteForce';
+            $hooks['Controller.' . $loginPlugin . '.index']           = 'beforeLoginCheckBruteForce';
+            $hooks['Controller.' . $loginPlugin . '.confirmResetPassword'] = 'beforeLoginCheckBruteForce';
+            $hooks['Controller.' . $loginPlugin . '.confirmPassword'] = 'beforeLoginCheckBruteForce';
+            $hooks['Controller.' . $loginPlugin . '.resetPassword']   = 'beforeLoginCheckBruteForce';
+            $hooks['Controller.' . $loginPlugin . '.login']           = 'beforeLoginCheckBruteForce';
         }
 
         return $hooks;
+    }
+
+    public function getClientSideTranslationKeys(&$translations)
+    {
+        $translations[] = 'Login_CurrentlyBlockedIPs';
+        $translations[] = 'Login_CurrentlyBlockedIPsUnblockInfo';
+        $translations[] = 'Login_UnblockAllIPs';
+        $translations[] = 'Login_CurrentlyBlockedIPsUnblockConfirm';
+        $translations[] = 'Login_IPsAlwaysBlocked';
     }
 
     public function isTrackerPlugin()
@@ -117,6 +127,22 @@ class Login extends \Piwik\Plugin
         }
     }
 
+    public function onFailedAPILogin()
+    {
+        $this->onFailedLoginRecordAttempt();
+
+        // Only throw an exception if this is an API request
+        if ($this->isModuleIsAPI()) {
+
+            // Throw an exception if a token was provided but it was invalid
+            if (Request::isTokenAuthProvidedSecurely()) {
+                throw new NoAccessException('Unable to authenticate with the provided token. It is either invalid or expired.');
+            } else {
+                throw new NoAccessException('Unable to authenticate with the provided token. It is either invalid, expired or is required to be sent as a POST parameter.');
+            }
+        }
+    }
+
     public function beforeLoginCheckBruteForce()
     {
         $bruteForce = StaticContainer::get('Piwik\Plugins\Login\Security\BruteForceDetection');
@@ -138,7 +164,7 @@ class Login extends \Piwik\Plugin
         /** @var BruteForceDetection $bruteForce */
         $bruteForce = StaticContainer::get('Piwik\Plugins\Login\Security\BruteForceDetection');
         if (!$this->hasPerformedBruteForceCheckForUserPwdLogin && $bruteForce->isEnabled() && $bruteForce->isUserLoginBlocked($login)) {
-            $ex = new HttpCodeException(Piwik::translate('Login_LoginNotAllowedBecauseUserLoginBlocked'), 403);
+            $ex = new NoAccessException(Piwik::translate('Login_LoginNotAllowedBecauseUserLoginBlocked'), 403);
             throw $ex;
         }
         // for performance reasons we make sure to execute it only once per request
@@ -151,7 +177,7 @@ class Login extends \Piwik\Plugin
         $jsFiles[] = "plugins/Login/javascripts/bruteforcelog.js";
     }
 
-   public function getStylesheetFiles(&$stylesheetFiles)
+    public function getStylesheetFiles(&$stylesheetFiles)
     {
         $stylesheetFiles[] = "plugins/Login/stylesheets/login.less";
         $stylesheetFiles[] = "plugins/Login/stylesheets/variables.less";
@@ -197,7 +223,7 @@ class Login extends \Piwik\Plugin
      * Set login name and authentication token for API request.
      * Listens to API.Request.authenticate hook.
      */
-    public function ApiRequestAuthenticate($tokenAuth)
+    public function apiRequestAuthenticate($tokenAuth)
     {
         $this->beforeLoginCheckBruteForce();
 
@@ -225,6 +251,4 @@ class Login extends \Piwik\Plugin
 
         return $login;
     }
-
-
 }

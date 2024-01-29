@@ -2054,13 +2054,6 @@ Sputnik:
     params:
       - q
     backlink: 'search?q={k}'
-start.fyi:
-  -
-    urls:
-      - search.start.fyi
-    params:
-      - q
-    backlink: '?q={k}'
 StartPage:
   -
     urls:
@@ -2549,6 +2542,7 @@ Yandex:
       - 'www.yandex.{}'
       - 'clck.yandex.{}'
       - 'm.yandex.{}'
+      - ya.ru
     params:
       - text
     backlink: 'yandsearch?text={k}'

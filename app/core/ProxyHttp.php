@@ -68,7 +68,7 @@ class ProxyHttp
                                             $byteEnd = false, $filename = false)
     {
         // if the file cannot be found return HTTP status code '404'
-        if (!file_exists($file)) {
+        if (empty($file) || !file_exists($file)) {
             Common::sendResponseCode(404);
             return;
         }
@@ -302,7 +302,7 @@ class ProxyHttp
         }
 
         if (false === $data) {
-            throw new \Exception('compressing file '.$fileToCompress.' failed');
+            throw new \Exception('compressing file ' . $fileToCompress . ' failed');
         }
 
         file_put_contents($compressedFilePath, $data);

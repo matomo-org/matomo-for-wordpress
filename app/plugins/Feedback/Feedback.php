@@ -91,7 +91,6 @@ class Feedback extends \Piwik\Plugin
         $translationKeys[] = 'Feedback_Question4';
         $translationKeys[] = 'Feedback_FeedbackTitle';
         $translationKeys[] = 'Feedback_FeedbackSubtitle';
-        $translationKeys[] = 'Feedback_Policy';
         $translationKeys[] = 'Feedback_ThankYourForFeedback';
         $translationKeys[] = 'Feedback_ThankYou';
         $translationKeys[] = 'Feedback_MessageBodyValidationError';
@@ -153,7 +152,7 @@ class Feedback extends \Piwik\Plugin
             }
 
             // Otherwise we set the date to somewhen within the next 6 months
-            $nextReminder = Date::now()->getStartOfDay()->addDay(Common::getRandomInt(1, 6*30))->toString('Y-m-d');
+            $nextReminder = Date::now()->getStartOfDay()->addDay(Common::getRandomInt(1, 6 * 30))->toString('Y-m-d');
             $feedbackReminder->setUserOption($nextReminder);
             return false;
         }
@@ -163,7 +162,6 @@ class Feedback extends \Piwik\Plugin
             return false;
         }
         return true;
-
     }
 
     // needs to be protected not private for testing purpose
@@ -171,5 +169,4 @@ class Feedback extends \Piwik\Plugin
     {
         return defined('PIWIK_TEST_MODE') && PIWIK_TEST_MODE && !Common::getRequestVar('forceFeedbackTest', false);
     }
-
 }

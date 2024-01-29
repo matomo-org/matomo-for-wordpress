@@ -3,9 +3,25 @@ const path = require('path');
 
 const pluginExternals = getPluginExternals();
 
+function scanPluginExternals() {
+  const pluginExternals = {};
+
+  const pluginsDir = path.join(__dirname, 'plugins');
+  for (let pluginName of fs.readdirSync(pluginsDir)) {
+    const vuePackageFolder = path.join(pluginsDir, pluginName, 'vue', 'src');
+    if (!fs.existsSync(vuePackageFolder)) {
+      continue;
+    }
+
+    pluginExternals[pluginName] = pluginName;
+  }
+
+  return pluginExternals;
+}
+
 function getPluginExternals() {
   if (!process.env.MATOMO_ALL_PLUGINS) {
-    throw new Error('The MATOMO_ALL_PLUGINS environment variable must be set to all available plugins with vue sources.');
+    return scanPluginExternals();
   }
 
   const allPluginsWithVueFolder = process.env.MATOMO_ALL_PLUGINS.split(',');
@@ -16,7 +32,7 @@ if (!process.env.MATOMO_CURRENT_PLUGIN) {
   console.log("The MATOMO_CURRENT_PLUGIN environment variable is not set!");
 }
 
-const pluginPath = process.env.MATOMO_CURRENT_PLUGIN;
+const pluginPath = process.env.MATOMO_CURRENT_PLUGIN || '';
 const pluginName = path.basename(pluginPath);
 
 const srcPath = `${pluginPath}/vue/src/`;

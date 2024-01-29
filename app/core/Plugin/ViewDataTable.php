@@ -216,7 +216,7 @@ abstract class ViewDataTable implements ViewInterface
                     if (!$relatedReport) {
                         continue;
                     }
-                    
+
                     $relatedReportName = $relatedReport->getName();
 
                     $this->config->addRelatedReport($relatedReport->getModule() . '.' . $relatedReport->getAction(),
@@ -232,6 +232,11 @@ abstract class ViewDataTable implements ViewInterface
             $processedMetrics = $report->getProcessedMetrics();
             if (!empty($processedMetrics)) {
                 $this->config->addTranslations($processedMetrics);
+            }
+
+            $dimension = $report->getDimension();
+            if (!empty($dimension)) {
+                $this->config->addTranslations(['label' => $dimension->getName()]);
             }
 
             $this->config->title = $report->getName();

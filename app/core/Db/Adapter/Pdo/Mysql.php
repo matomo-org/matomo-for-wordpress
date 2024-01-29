@@ -29,7 +29,7 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
      *
      * @param array|Zend_Config $config database configuration
      */
-    
+
     // this is used for indicate TransactionLevel Cache
     public $supportsUncommitted;
 
@@ -62,6 +62,13 @@ class Mysql extends Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
             }
         }
         parent::__construct($config);
+    }
+
+    public function closeConnection()
+    {
+        $this->cachePreparedStatement = [];
+
+        parent::closeConnection();
     }
 
     /**

@@ -30,7 +30,7 @@ use Piwik\Scheduler\Schedule\Monthly;
 use Piwik\Scheduler\Schedule\Weekly;
 use Piwik\SettingsPiwik;
 use Piwik\Unzip;
-use Psr\Log\LoggerInterface;
+use Piwik\Log\LoggerInterface;
 
 /**
  * Used to automatically update installed GeoIP 2 databases, and manages the updater's
@@ -81,7 +81,7 @@ class GeoIP2AutoUpdater extends Task
             case self::SCHEDULE_PERIOD_MONTHLY:
             default:
                 $schedulePeriod = new Monthly();
-                $schedulePeriod->setDayOfWeek(3, 0);
+                $schedulePeriod->setDay(3);
                 break;
         }
 
@@ -472,7 +472,7 @@ class GeoIP2AutoUpdater extends Task
         $host = $parsedUrl['host'] ?? '';
 
         if (empty($schema) || empty($host) || !in_array(mb_strtolower($schema), ['http', 'https'])) {
-            throw new Exception(Piwik::translate('GeoIp2_MalFormedUpdateUrl', '<i>'.Common::sanitizeInputValue($url).'</i>'));
+            throw new Exception(Piwik::translate('GeoIp2_MalFormedUpdateUrl', '<i>' . Common::sanitizeInputValue($url) . '</i>'));
         }
 
         $validHosts = Config::getInstance()->General['geolocation_download_from_trusted_hosts'];
@@ -487,7 +487,7 @@ class GeoIP2AutoUpdater extends Task
 
         if (true !== $isValidHost) {
             throw new Exception(Piwik::translate('GeoIp2_InvalidGeoIPUpdateHost', [
-                '<i>'.$url.'</i>', '<i>'.implode(', ', $validHosts).'</i>', '<i>geolocation_download_from_trusted_hosts</i>'
+                '<i>' . $url . '</i>', '<i>' . implode(', ', $validHosts) . '</i>', '<i>geolocation_download_from_trusted_hosts</i>'
             ]));
         }
     }

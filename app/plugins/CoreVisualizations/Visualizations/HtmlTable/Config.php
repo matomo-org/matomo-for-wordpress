@@ -144,6 +144,7 @@ class Config extends VisualizationConfig
             'keep_summary_row',
             'subtable_controller_action',
             'show_dimensions',
+            'row_identifier',
             'min_label_width',
             'max_label_width',
         ));
@@ -160,5 +161,4 @@ class Config extends VisualizationConfig
             'show_dimensions',
         ));
     }
-
 }

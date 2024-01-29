@@ -16,7 +16,6 @@ use Exception;
 
 class SettingsMetadata
 {
-
     /**
      * @param Settings[]  $settingsInstances
      * @param array $settingValues   array('pluginName' => array('settingName' => 'settingValue'))
@@ -35,7 +34,6 @@ class SettingsMetadata
                     }
                 }
             }
-
         } catch (Exception $e) {
             $message = $e->getMessage();
 
@@ -124,8 +122,6 @@ class SettingsMetadata
             'availableValues' => $availableValues,
             'description' => $config->description,
             'inlineHelp' => $config->inlineHelp,
-            // deprecated but kept here for API output BC
-            'templateFile' => $config->customUiControlTemplateFile,
             'introduction' => $config->introduction,
             'condition' => $config->condition,
             'fullWidth' => $config->fullWidth,
@@ -137,5 +133,4 @@ class SettingsMetadata
 
         return $result;
     }
-
 }

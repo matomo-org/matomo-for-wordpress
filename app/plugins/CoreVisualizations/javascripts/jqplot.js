@@ -389,7 +389,7 @@ function rowEvolutionGetMetricNameFromRow(tr)
                 // Work out incomplete data points
                 this.jqplotParams['incompleteDataPoints'] = 0;
 
-                var piwikPeriods = piwikHelper.getAngularDependency('piwikPeriods');
+                var piwikPeriods = window.CoreHome.Periods;
 
                 var period = this.param.period;
                 // If date is actually a range then adjust the period type for the containsToday check
@@ -415,9 +415,7 @@ function rowEvolutionGetMetricNameFromRow(tr)
             // TODO: this code destroys plots when a page is switched. there must be a better way of managing memory.
             if (typeof $.jqplot.visiblePlots == 'undefined') {
                 $.jqplot.visiblePlots = [];
-                var $rootScope = piwikHelper.getAngularDependency('$rootScope');
-
-                $rootScope.$on('piwikPageChange', function () {
+                window.CoreHome.Matomo.on('matomoPageChange', function () {
                     for (var i = 0; i < $.jqplot.visiblePlots.length; i++) {
                         if ($.jqplot.visiblePlots[i] == null) {
                             continue;
@@ -571,7 +569,7 @@ function rowEvolutionGetMetricNameFromRow(tr)
             if (
               axis.tickOptions
               && axis.tickOptions.formatString
-              && axis.tickOptions.formatString.substring(2, 3) == '%'
+              && axis.tickOptions.formatString.endsWith('%')
               && maxCrossDataSets > 100
             ) {
                 maxCrossDataSets = 100;
@@ -626,7 +624,7 @@ function rowEvolutionGetMetricNameFromRow(tr)
                 if ($rowEvolution.data('initialMetrics')) {
                     initialMetrics = $rowEvolution.data('initialMetrics');
 
-                    if (angular.isArray(initialMetrics)) {
+                    if (Array.isArray(initialMetrics)) {
                         for (var j = 0; j < initialMetrics.length; j++) {
                             // find index of series and data
                             for (var k = 0; k < this.jqplotParams.series.length; k++) {
@@ -689,7 +687,7 @@ function rowEvolutionGetMetricNameFromRow(tr)
                 seriesColorNames = ['series0', 'series1', 'series2', 'series3', 'series4', 'series5',
                     'series6', 'series7', 'series8', 'series9', 'series10'];
 
-            var comparisonService = piwikHelper.getAngularDependency('piwikComparisonsService');
+            var comparisonService = window.CoreHome.ComparisonsStoreInstance;
             if (comparisonService.isComparing() && typeof this.jqplotParams.series[0].seriesIndex !== 'undefined') {
                 namespace = 'comparison-series-color';
 
@@ -897,14 +895,6 @@ RowEvolutionSeriesToggle.prototype.attachEvents = function () {
             }
             // fade out the others
             el.find('td').css('opacity', .5);
-        }
-
-        // prevent selecting in ie & opera (they don't support doing this via css)
-        if ($.browser.msie) {
-            this.ondrag = function () { return false; };
-            this.onselectstart = function () { return false; };
-        } else if ($.browser.opera) {
-            $(this).attr('unselectable', 'on');
         }
 
         // the API outputs the label double encoded when it shouldn't. so when looking for a matching label we have

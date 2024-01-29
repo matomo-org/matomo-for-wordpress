@@ -61,7 +61,6 @@ class StackedBarEvolution extends JqplotDataGenerator\Evolution
             $allSeriesData[$column] = $this->getSeriesData($column, $dataTable);
         }
 
-        $visualization->dataTable = $dataTable;
         $visualization->properties = $this->properties;
 
         $seriesMetadata = [];
@@ -78,8 +77,12 @@ class StackedBarEvolution extends JqplotDataGenerator\Evolution
         $xLabelStrs = [];
         $xAxisTicks = [];
         foreach ($xLabels as $index => $seriesXLabels) {
-            $xLabelStrs[$index] = array_map(function (Period $p) { return $p->getLocalizedLongString(); }, $seriesXLabels);
-            $xAxisTicks[$index] = array_map(function (Period $p) { return $p->getLocalizedShortString(); }, $seriesXLabels);
+            $xLabelStrs[$index] = array_map(function (Period $p) {
+                return $p->getLocalizedLongString();
+            }, $seriesXLabels);
+            $xAxisTicks[$index] = array_map(function (Period $p) {
+                return $p->getLocalizedShortString();
+            }, $seriesXLabels);
         }
 
         $visualization->setAxisXLabelsMultiple($xLabelStrs, [], $xAxisTicks);

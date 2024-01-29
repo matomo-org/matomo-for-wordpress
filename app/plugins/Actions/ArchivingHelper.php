@@ -39,7 +39,7 @@ class ArchivingHelper
      * @param array $actionsTablesByType
      * @return int
      */
-    public static function updateActionsTableWithRowQuery($query, $fieldQueried, & $actionsTablesByType, $metricsConfig)
+    public static function updateActionsTableWithRowQuery($query, $fieldQueried, $actionsTablesByType, $metricsConfig)
     {
         $rowsProcessed = 0;
         while ($row = $query->fetch()) {
@@ -201,11 +201,11 @@ class ArchivingHelper
     {
         $rowsProcessed = 0;
 
-         while ($row = $resultSet->fetch()) {
-             if (self::updateActionsTableRowWithGoals($row, $isPages)) {
-                 $rowsProcessed++;
-             }
-         }
+        while ($row = $resultSet->fetch()) {
+            if (self::updateActionsTableRowWithGoals($row, $isPages)) {
+                $rowsProcessed++;
+            }
+        }
          return $rowsProcessed;
     }
 
@@ -302,7 +302,6 @@ class ArchivingHelper
                     $row[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY] = (float) $row[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY];
                 }
             }
-
         }
 
         // Get goals column
@@ -324,7 +323,13 @@ class ArchivingHelper
                 if (!isset($goalsColumn[$row['idgoal']][$metricKey])) {
                     $goalsColumn[$row['idgoal']][$metricKey] = $row[$metricKey];
                 } else {
-                    $goalsColumn[$row['idgoal']][$metricKey] += $row[$metricKey];
+                    if ($metricKey == PiwikMetrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE) {
+                        if ($goalsColumn[$row['idgoal']][$metricKey] < $row[$metricKey]) {
+                            $goalsColumn[$row['idgoal']][$metricKey] = $row[$metricKey];
+                        }
+                    } else {
+                        $goalsColumn[$row['idgoal']][$metricKey] += $row[$metricKey];
+                    }
                 }
 
                 // Write goals column back to datatable
@@ -416,7 +421,6 @@ class ArchivingHelper
             $limit = 100000;
         }
         return $limit;
-
     }
 
     /**
@@ -518,11 +522,11 @@ class ArchivingHelper
      * @param array $actionsTablesByType
      * @return DataTable\Row
      */
-    public static function getActionRow($actionName, $actionType, $urlPrefix, &$actionsTablesByType)
+    public static function getActionRow($actionName, $actionType, $urlPrefix, $actionsTablesByType)
     {
         // we work on the root table of the given TYPE (either ACTION_URL or DOWNLOAD or OUTLINK etc.)
         /* @var DataTable $currentTable */
-        $currentTable =& $actionsTablesByType[$actionType];
+        $currentTable = $actionsTablesByType[$actionType];
 
         if (is_null($currentTable)) {
             throw new \Exception("Action table for type '$actionType' was not found during Actions archiving.");

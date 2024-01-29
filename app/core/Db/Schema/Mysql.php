@@ -58,6 +58,7 @@ class Mysql implements SchemaInterface
                           invite_link_token VARCHAR(191) NULL,
                           invite_expired_at TIMESTAMP NULL,
                           invite_accept_at TIMESTAMP NULL,
+                          ts_changes_shown TIMESTAMP NULL,
                             PRIMARY KEY(login),
                             UNIQUE INDEX `uniq_email` (`email`)
                           ) ENGINE=$engine DEFAULT CHARSET=$charset
@@ -65,13 +66,14 @@ class Mysql implements SchemaInterface
             'user_token_auth' => "CREATE TABLE {$prefixTables}user_token_auth (
                           idusertokenauth BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
                           login VARCHAR(100) NOT NULL,
-                          description VARCHAR(".Model::MAX_LENGTH_TOKEN_DESCRIPTION.") NOT NULL,
+                          description VARCHAR(" . Model::MAX_LENGTH_TOKEN_DESCRIPTION . ") NOT NULL,
                           password VARCHAR(191) NOT NULL,
                           hash_algo VARCHAR(30) NOT NULL,
                           system_token TINYINT(1) NOT NULL DEFAULT 0,
                           last_used DATETIME NULL,
                           date_created DATETIME NOT NULL,
                           date_expired DATETIME NULL,
+                          secure_only TINYINT(2) unsigned NOT NULL DEFAULT '0',
                             PRIMARY KEY(idusertokenauth),
                             UNIQUE KEY uniq_password(password)
                           ) ENGINE=$engine DEFAULT CHARSET=$charset
@@ -198,7 +200,7 @@ class Mysql implements SchemaInterface
                                 PRIMARY KEY(idvisit),
                                 INDEX index_idsite_config_datetime (idsite, config_id, visit_last_action_time),
                                 INDEX index_idsite_datetime (idsite, visit_last_action_time),
-                                INDEX index_idsite_idvisitor (idsite, idvisitor, visit_last_action_time DESC)
+                                INDEX index_idsite_idvisitor_time (idsite, idvisitor, visit_last_action_time DESC)
                               ) ENGINE=$engine DEFAULT CHARSET=$charset
             ",
 
@@ -299,7 +301,7 @@ class Mysql implements SchemaInterface
                                       ts_archived DATETIME NULL,
                                       value DOUBLE NULL,
                                         PRIMARY KEY(idarchive, name),
-                                        INDEX index_idsite_dates_period(idsite, date1, date2, period, ts_archived),
+                                        INDEX index_idsite_dates_period(idsite, date1, date2, period, name(6)),
                                         INDEX index_period_archived(period, ts_archived)
                                       ) ENGINE=$engine DEFAULT CHARSET=$charset
             ",
@@ -361,7 +363,7 @@ class Mysql implements SchemaInterface
                                   ) ENGINE=$engine DEFAULT CHARSET=$charset
             ",
             'locks'                   => "CREATE TABLE `{$prefixTables}locks` (
-                                      `key` VARCHAR(".Lock::MAX_KEY_LEN.") NOT NULL,
+                                      `key` VARCHAR(" . Lock::MAX_KEY_LEN . ") NOT NULL,
                                       `value` VARCHAR(255) NULL DEFAULT NULL,
                                       `expiry_time` BIGINT UNSIGNED DEFAULT 9999999999,
                                       PRIMARY KEY (`key`)
@@ -521,7 +523,7 @@ class Mysql implements SchemaInterface
         $dbName = str_replace('`', '', $dbName);
         $charset    = DbHelper::getDefaultCharset();
 
-        Db::exec("CREATE DATABASE IF NOT EXISTS `" . $dbName . "` DEFAULT CHARACTER SET ".$charset);
+        Db::exec("CREATE DATABASE IF NOT EXISTS `" . $dbName . "` DEFAULT CHARACTER SET " . $charset);
     }
 
     /**

@@ -428,6 +428,17 @@ class Manager
         return array_intersect_key(self::$pluginsToWebRootDirCache, array_flip($this->pluginsToLoad));
     }
 
+    public function getPluginUmdsToLoadOnDemand()
+    {
+        $pluginsToLoadOnDemand = [];
+        foreach ($this->getPluginsLoadedAndActivated() as $plugin) {
+            if (method_exists($plugin, 'shouldLoadUmdOnDemand') && $plugin->shouldLoadUmdOnDemand()) {
+                $pluginsToLoadOnDemand[] = $plugin->getPluginName();
+            }
+        }
+        return $pluginsToLoadOnDemand;
+    }
+
     /**
      * Returns the path to all plugins directories. Each plugins directory may contain several plugins.
      * All paths have a trailing slash '/'.
@@ -495,6 +506,34 @@ class Manager
 
         // assume default directory when plugin does not exist just yet
         return self::getPluginsDirectory() . $pluginName;
+    }
+
+    /**
+     * Returns the plugin directory path relative to Matomo's root directory.
+     *
+     * @param string $pluginName
+     * @return string
+     */
+    public static function getRelativePluginDirectory(string $pluginName): string
+    {
+        $result = self::getPluginDirectory($pluginName);
+
+        $matomoPath = rtrim(PIWIK_INCLUDE_PATH, '/') . '/';
+        $webroots = array_merge(
+            Manager::getAlternativeWebRootDirectories(),
+            [$matomoPath => '/']
+        );
+
+        foreach ($webroots as $webrootAbsolute => $webrootRelative) {
+            if (strpos($result, $webrootAbsolute) === 0) {
+                $result = str_replace($webrootAbsolute, $webrootRelative, $result);
+                break;
+            }
+        }
+
+        $result = ltrim($result, '/');
+
+        return $result;
     }
 
     /**
@@ -1193,7 +1232,7 @@ class Manager
 
     public function isValidPluginName($pluginName)
     {
-        return (bool) preg_match('/^[a-zA-Z]([a-zA-Z0-9_]*)$/D', $pluginName);
+        return (bool) preg_match('/^[a-zA-Z]([a-zA-Z0-9_]){0,59}$/D', $pluginName);
     }
 
     /**
@@ -1224,7 +1263,7 @@ class Manager
         if (!class_exists($namespacedClass, false)) {
             throw new \Exception("The class $pluginClassName couldn't be found in the file '$path'");
         }
-        $newPlugin = new $namespacedClass;
+        $newPlugin = new $namespacedClass();
 
         if (!($newPlugin instanceof Plugin)) {
             throw new \Exception("The plugin $pluginClassName in the file $path must inherit from Plugin.");
@@ -1702,6 +1741,22 @@ class Manager
                 throw $e;
             }
             // we ignore any error while Matomo is not installed yet. refs #16741
+        }
+    }
+
+    public function getVersion(string $pluginName): ?string
+    {
+        if ($this->isPluginLoaded($pluginName)) {
+            return (string) $this->getLoadedPlugin($pluginName)->getVersion();
+        } elseif (!$this->isPluginInFilesystem($pluginName)) {
+            return null;
+        } else {
+            try {
+                $plugin = new Plugin($pluginName);
+                return (string) $plugin->getVersion();
+            } catch (\Exception $e) {
+                return null;
+            }
         }
     }
 }

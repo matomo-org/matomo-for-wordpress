@@ -30,11 +30,9 @@ class GetCity extends Base
     {
         $view->config->show_exclude_low_population = false;
         $view->config->documentation = $this->documentation;
-        $view->config->addTranslation('label', $this->dimension->getName());
 
         $view->requestConfig->filter_limit = 5;
 
         $this->checkIfNoDataForGeoIpReport($view);
     }
-
 }

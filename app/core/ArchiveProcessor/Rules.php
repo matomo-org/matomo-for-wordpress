@@ -372,7 +372,7 @@ class Rules
 
         if (is_string($pluginArchivingSetting)) {
             $pluginArchivingSetting = explode(",", $pluginArchivingSetting);
-            $pluginArchivingSetting = array_filter($pluginArchivingSetting, function($plugin){
+            $pluginArchivingSetting = array_filter($pluginArchivingSetting, function($plugin) {
                 return Manager::getInstance()->isValidPluginName($plugin);
             });
         }
@@ -380,5 +380,14 @@ class Rules
         $pluginArchivingSetting = array_map('strtolower', $pluginArchivingSetting);
 
         return in_array(strtolower($pluginName), $pluginArchivingSetting);
+    }
+
+    public static function shouldProcessOnlyReportsRequestedInArchiveQuery(string $periodLabel): bool
+    {
+        if (SettingsServer::isArchivePhpTriggered()) {
+            return false;
+        }
+
+        return $periodLabel === 'range';
     }
 }

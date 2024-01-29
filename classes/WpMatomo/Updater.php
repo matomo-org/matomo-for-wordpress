@@ -58,12 +58,12 @@ class Updater {
 		$keys         = [];
 		$plugin_files = $GLOBALS['MATOMO_PLUGIN_FILES'];
 		if ( ! in_array( MATOMO_ANALYTICS_FILE, $plugin_files, true ) ) {
-			$plugin_files[] = MATOMO_ANALYTICS_FILE;
+			array_unshift( $plugin_files, MATOMO_ANALYTICS_FILE );
 			// making sure this plugin is in the list so when itself gets updated
 			// it will execute the core updates
 		}
 
-		foreach ( $GLOBALS['MATOMO_PLUGIN_FILES'] as $plugin_file ) {
+		foreach ( $plugin_files as $plugin_file ) {
 			$plugin_data = get_plugin_data( $plugin_file, $markup = false, $translate = false );
 
 			$key           = Settings::OPTION_PREFIX . 'plugin-version-' . basename( str_ireplace( '.php', '', $plugin_file ) );

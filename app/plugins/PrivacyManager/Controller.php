@@ -21,6 +21,8 @@ use Piwik\Plugin\Manager;
 use Piwik\Plugins\CustomJsTracker\File;
 use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Piwik\Plugins\LanguagesManager\API as APILanguagesManager;
+use Piwik\Plugins\SitesManager\SiteContentDetection\ConsentManagerDetectionAbstract;
+use Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract;
 use Piwik\SiteContentDetector;
 use Piwik\Scheduler\Scheduler;
 use Piwik\Tracker\TrackerCodeGenerator;
@@ -99,11 +101,11 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $reportRetention = '';
 
         if ($purgeDataSettings['delete_reports_older_than'] > 12) {
-            $years = floor($purgeDataSettings['delete_reports_older_than']/12);
+            $years = floor($purgeDataSettings['delete_reports_older_than'] / 12);
             $reportRetention .=  $years . ' ' . Piwik::translate($years > 1 ? 'Intl_PeriodYears' : 'Intl_PeriodYear') . ' ';
         }
         if ($purgeDataSettings['delete_reports_older_than'] % 12 > 0) {
-            $months = floor($purgeDataSettings['delete_reports_older_than']%12);
+            $months = floor($purgeDataSettings['delete_reports_older_than'] % 12);
             $reportRetention .= $months . ' ' . Piwik::translate($months > 1 ? 'Intl_PeriodMonths' : 'Intl_PeriodMonth');
         }
 
@@ -111,24 +113,27 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
 
         if ($purgeDataSettings['delete_logs_older_than'] > 90) {
             // only show months when it is more than 90 days...
-            $months = floor($purgeDataSettings['delete_logs_older_than']/30.4);
+            $months = floor($purgeDataSettings['delete_logs_older_than'] / 30.4);
             $daysLeft = round($purgeDataSettings['delete_logs_older_than'] - ($months * 30.4));
             $rawDataRetention .= $months . ' ' . Piwik::translate($months > 1 ? 'Intl_PeriodMonths' : 'Intl_PeriodMonth') . ' ';
 
             if ($daysLeft > 0) {
                 $rawDataRetention .= $daysLeft . ' ' . Piwik::translate($daysLeft > 1 ? 'Intl_PeriodDays' : 'Intl_PeriodDay');
             }
-
         } elseif ($purgeDataSettings['delete_logs_older_than'] > 0) {
             $days = $purgeDataSettings['delete_logs_older_than'];
             $rawDataRetention .= $days . ' ' . Piwik::translate($days > 1 ? 'Intl_PeriodDays' : 'Intl_PeriodDay');
         }
+
+        $afterGDPROverviewIntroContent = '';
+        Piwik::postEvent('Template.afterGDPROverviewIntro', [&$afterGDPROverviewIntroContent]);
 
         return $this->renderTemplate('gdprOverview', [
             'reportRetention'     => trim($reportRetention),
             'rawDataRetention'    => trim($rawDataRetention),
             'deleteLogsEnable'    => $purgeDataSettings['delete_logs_enable'],
             'deleteReportsEnable' => $purgeDataSettings['delete_reports_enable'],
+            'afterGDPROverviewIntroContent' => $afterGDPROverviewIntroContent,
         ]);
     }
 
@@ -171,13 +176,25 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
 
         $view = new View('@PrivacyManager/askingForConsent');
 
-        $this->siteContentDetector->detectContent([SiteContentDetector::CONSENT_MANAGER]);
+        $this->siteContentDetector->detectContent([SiteContentDetectionAbstract::TYPE_CONSENT_MANAGER]);
+        $consentManager = $this->siteContentDetector->getDetectsByType(SiteContentDetectionAbstract::TYPE_CONSENT_MANAGER);
         $view->consentManagerName = null;
-        if ($this->siteContentDetector->consentManagerId) {
-            $view->consentManagerName = $this->siteContentDetector->consentManagerName;
-            $view->consentManagerUrl = $this->siteContentDetector->consentManagerUrl;
-            $view->consentManagerIsConnected = $this->siteContentDetector->isConnected;
+        if (!empty($consentManager)) {
+            $consentManager = $this->siteContentDetector->getSiteContentDetectionById(reset($consentManager));
+            if ($consentManager instanceof ConsentManagerDetectionAbstract) {
+                $view->consentManagerName = $consentManager::getName();
+                $view->consentManagerUrl = $consentManager::getInstructionUrl();
+                $view->consentManagerIsConnected = in_array(
+                    $consentManager::getId(),
+                    $this->siteContentDetector->connectedConsentManagers
+                );
+            }
         }
+
+        $consentManagers = SiteContentDetector::getKnownConsentManagers();
+        $knownConsentManagers = array_combine(array_column($consentManagers, 'name'), array_column($consentManagers, 'instructionUrl'));
+
+        $view->knownConsentManagers = $knownConsentManagers;
         $this->setBasicVariablesView($view);
         return $view->render();
     }
@@ -400,5 +417,4 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
 
         return $deleteDataInfos;
     }
-
 }

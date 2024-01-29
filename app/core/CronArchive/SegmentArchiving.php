@@ -20,7 +20,7 @@ use Piwik\Period\Range;
 use Piwik\Plugins\SegmentEditor\Model;
 use Piwik\Segment;
 use Piwik\Site;
-use Psr\Log\LoggerInterface;
+use Piwik\Log\LoggerInterface;
 
 /**
  * Provides URLs that initiate archiving during cron archiving for segments.
@@ -75,7 +75,7 @@ class SegmentArchiving
         $this->segmentEditorModel = $segmentEditorModel ?: new Model();
         $this->segmentListCache = $segmentListCache ?: new Transient();
         $this->now = $now ?: Date::factory('now');
-        $this->logger = $logger ?: StaticContainer::get('Psr\Log\LoggerInterface');
+        $this->logger = $logger ?: StaticContainer::get(LoggerInterface::class);
         $this->forceArchiveAllSegments = self::getShouldForceArchiveAllSegments();
     }
 
@@ -174,7 +174,14 @@ class SegmentArchiving
         }
     }
 
-    private function getCreatedTimeOfSegment($storedSegment)
+    /**
+     * Retrieve the created and last edited time as date objects from the supplied segment array
+     *
+     * @param array $storedSegment
+     *
+     * @return array
+     */
+    private function getCreatedTimeOfSegment(array $storedSegment): array
     {
         // check for an earlier ts_created timestamp
         $createdTime = empty($storedSegment['ts_created']) ? null : Date::factory($storedSegment['ts_created']);
@@ -185,9 +192,10 @@ class SegmentArchiving
         }
 
         // check for a later ts_last_edit timestamp
-        $lastEditTime = empty($storedSegment['ts_last_edit']) ? null : Date::factory($storedSegment['ts_last_edit']);
+        $lastEditTime = empty($storedSegment['ts_last_edit']) || $storedSegment['ts_last_edit'] === '0000-00-00 00:00:00'
+            ? null : Date::factory($storedSegment['ts_last_edit']);
 
-        return array($createdTime, $lastEditTime);
+        return [$createdTime, $lastEditTime];
     }
 
     private function getEarliestVisitTimeFor($idSite)

@@ -1,0 +1,22 @@
+{
+    "name": "matomo/ini",
+    "type": "library",
+    "license": "LGPL-3.0",
+    "autoload": {
+        "psr-4": {
+            "Matomo\\Ini\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Matomo\\Ini\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5",
+        "phpbench/phpbench": "^1.0"
+    }
+}

@@ -17,21 +17,30 @@
         v-for="category in menu"
         :class="{ 'active': category.id === activeCategory }"
         :key="category.id"
+        :data-category-id="category.id"
       >
+        <component
+          v-if="category.component"
+          :is="category.component"
+          @action="loadCategory(category)"
+        ></component>
         <a
+          v-if="!category.component"
           class="item"
           tabindex="5"
           href=""
           @click.prevent="loadCategory(category)"
         >
           <span
-            :class="`menu-icon ${category.icon ? category.icon : 'icon-arrow-right'}`"
+            :class="`menu-icon ${category.icon ? category.icon :
+              (category.subcategories && category.id === activeCategory ?
+                'icon-chevron-down' : 'icon-chevron-right')}`"
           />{{ category.name }}
           <span class="hidden">
             {{ translate('CoreHome_Menu') }}
           </span>
         </a>
-        <ul role="menu">
+        <ul v-if="!category.component" role="menu">
           <li
             role="menuitem"
             :class="{
@@ -91,25 +100,32 @@
     </ul>
     <ul
       id="mobile-left-menu"
-      class="sidenav hide-on-large-only"
+      class="sidenav sidenav--reporting-menu-mobile hide-on-large-only"
     >
       <li
         class="no-padding"
         v-for="category in menu"
         :key="category.id"
+        :data-category-id="category.id"
       >
+        <component
+          v-if="category.component"
+          :is="category.component"
+          @action="loadCategory(category)"
+        ></component>
         <ul
+          v-if="!category.component"
           class="collapsible collapsible-accordion"
           v-side-nav="{ activator: sideNavActivator }"
         >
           <li>
             <a class="collapsible-header">
-              <i :class="category.icon ? category.icon : 'icon-arrow-bottom'" />{{ category.name }}
+              <i :class="category.icon ? category.icon : 'icon-chevron-down'" />{{ category.name }}
             </a>
             <div class="collapsible-body">
               <ul>
                 <li v-for="subcategory in category.subcategories" :key="subcategory.id">
-                  <span v-if="subcategory.isGroup">
+                  <template v-if="subcategory.isGroup">
                     <a
                       @click="loadSubcategory(category, subcat)"
                       :href="`#?${makeUrl(category, subcat)}`"
@@ -118,15 +134,15 @@
                     >
                       {{ subcat.name }}
                     </a>
-                  </span>
-                  <span v-if="!subcategory.isGroup">
+                  </template>
+                  <template v-if="!subcategory.isGroup">
                     <a
                       @click="loadSubcategory(category, subcategory)"
                       :href="`#?${makeUrl(category, subcategory)}`"
                     >
                       {{ subcategory.name }}
                     </a>
-                  </span>
+                  </template>
                 </li>
               </ul>
             </div>
@@ -149,6 +165,7 @@ import { translate } from '../translate';
 import WidgetsStoreInstance from '../Widget/Widgets.store';
 import { Category, CategoryContainer } from './Category';
 import { Subcategory, SubcategoryContainer } from './Subcategory';
+import useExternalPluginComponent from '../useExternalPluginComponent';
 
 const REPORTING_HELP_NOTIFICATION_ID = 'reportingmenu-help';
 
@@ -178,7 +195,16 @@ export default defineComponent({
       return document.querySelector('nav .activateLeftMenu');
     },
     menu() {
-      return ReportingMenuStoreInstance.menu.value;
+      const categories = ReportingMenuStoreInstance.menu.value;
+
+      categories.forEach((category) => {
+        if (category.widget && category.widget.indexOf('.') > 0) {
+          const [widgetPlugin, widgetComponent] = category.widget.split('.');
+          category.component = useExternalPluginComponent(widgetPlugin, widgetComponent);
+        }
+      });
+
+      return categories;
     },
     activeCategory() {
       return ReportingMenuStoreInstance.activeCategory.value;
@@ -221,7 +247,7 @@ export default defineComponent({
       );
     });
 
-    Matomo.on('piwikPageChange', () => {
+    Matomo.on('matomoPageChange', () => {
       if (!this.initialLoad) {
         window.globalAjaxQueue.abort();
       }
@@ -281,10 +307,13 @@ export default defineComponent({
       NotificationsStore.remove(REPORTING_HELP_NOTIFICATION_ID);
 
       const isActive = ReportingMenuStoreInstance.toggleCategory(category);
-      if (isActive
-        && (category as SubcategoryContainer).subcategories
-        && (category as SubcategoryContainer).subcategories.length === 1
-      ) {
+
+      // one subcategory or a widget and some subcategories to allow to load the category
+      const { subcategories } = category as SubcategoryContainer;
+      const categoryCanLoad = (subcategories && subcategories.length === 1)
+        || (category.widget && subcategories && subcategories.length);
+
+      if (isActive && categoryCanLoad) {
         this.helpShownCategory = null;
 
         const subcategory = (category as SubcategoryContainer).subcategories[0];
@@ -300,7 +329,10 @@ export default defineComponent({
 
       NotificationsStore.remove(REPORTING_HELP_NOTIFICATION_ID);
 
-      if (subcategory && subcategory.id === this.activeSubcategory) {
+      if (subcategory
+        && subcategory.id === MatomoUrl.parsed.value.subcategory
+        && category.id === MatomoUrl.parsed.value.category
+      ) {
         this.helpShownCategory = null;
 
         // this menu item is already active, a location change success would not be triggered,

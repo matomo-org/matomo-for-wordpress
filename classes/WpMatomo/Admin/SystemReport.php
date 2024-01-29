@@ -1299,7 +1299,7 @@ class SystemReport {
 					array(
 						'method'    => 'GET',
 						'sslverify' => false,
-						'timeout'   => 2,
+						'timeout'   => 3,
 					)
 				);
 				if ( is_array( $result ) ) {

@@ -3,10 +3,11 @@
  * Test release.
  *
  * @package matomo
+ *
  */
 class ReleaseTest extends MatomoAnalytics_TestCase {
 
-	const MAX_RELEASE_SIZE = 20971520;
+	const MAX_RELEASE_SIZE = 26214400; // 25mb
 
 	/**
 	 * @dataProvider get_needed_files
@@ -76,18 +77,9 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 		$contents        = substr( $contents, strpos( $contents, "\n" ) );
 		$current_hash    = md5( $contents );
 
-		$application = new \Piwik\Console();
-		$application->setAutoExit( false );
-
-		$input  = new \Symfony\Component\Console\Input\ArrayInput(
-			[
-				'command' => 'wordpress:generate-core-assets',
-			]
-		);
-		$output = new \Symfony\Component\Console\Output\BufferedOutput();
-
-		$return_code = $application->run( $input, $output );
-		$this->assertEquals( 0, $return_code, 'Generate command failed: ' . $output->fetch() );
+		// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
+		[$return_code, $output] = $this->execute_command( 'wordpress:generate-core-assets' );
+		$this->assertEquals( 0, $return_code, 'Generate command failed: ' . $output );
 
 		$contents            = file_get_contents( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . $generated_asset );
 		$contents            = substr( $contents, strpos( $contents, "\n" ) );
@@ -111,14 +103,10 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			'matomo/libs/jqplot/excanvas.min.js',
 			'matomo/libs/jqplot/build_minified_script.sh',
 			'matomo/plugins/Morpheus/fonts/selection.json',
-			'matomo/plugins/Morpheus/stylesheets/base/font.css',
-			'matomo/node_modules/angular/angular.min.js',
-			'matomo/node_modules/angular/index.js',
 			'matomo/node_modules/visibilityjs/lib/visibility.js',
 			'matomo/node_modules/visibilityjs/lib/visibility.fallback.js',
 			'matomo/node_modules/visibilityjs/lib/visibility.core.js',
 			'matomo/node_modules/visibilityjs/lib/visibility.timers.js',
-			'matomo/node_modules/jquery.browser/dist/jquery.browser.min.js',
 			'matomo/node_modules/mousetrap/mousetrap.min.js',
 			'matomo/node_modules/jquery.dotdotdot/dist/jquery.dotdotdot.js',
 			'matomo/node_modules/vue/dist/vue.global.prod.js',
@@ -146,21 +134,12 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			$application->setAutoExit( false );
 
 			// generate release
-			$input  = new \Symfony\Component\Console\Input\ArrayInput(
-				[
-					'command' => 'wordpress:build-release',
-					'--name'  => 'test-release',
-					'--zip'   => true,
-				]
-			);
-			$output = new \Symfony\Component\Console\Output\BufferedOutput();
+			// phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled
+			[$return_code, $output] = $this->execute_command( 'wordpress:build-release --name=test-release --zip' );
+			$this->assertEquals( 0, $return_code, 'Generate command failed: ' . $output );
 
-			$return_code    = $application->run( $input, $output );
-			$fetched_output = $output->fetch();
-			$this->assertEquals( 0, $return_code, 'Generate command failed: ' . $fetched_output );
-
-			$path_to_zip = dirname( PIWIK_INCLUDE_PATH ) . '/matomo-test-release.zip';
-			$this->assertFileExists( $path_to_zip, 'release zip not created: ' . $fetched_output );
+			$path_to_zip = 'matomo-test-release.zip';
+			$this->assertFileExists( $path_to_zip, 'release zip not created: ' . $output );
 
 			// download core release
 			$version          = \Piwik\Version::VERSION;
@@ -185,6 +164,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 					|| preg_match( '%^matomo/node_modules/jquery/%', $path )
 					|| preg_match( '%^matomo/plugins/.*?/vue/src%', $path )
 					|| preg_match( '%^matomo/plugins/.*?/vue/dist/*.*?\.umd\.js$%', $path )
+					|| preg_match( '%^matomo/plugins/.*?/vue/dist/umd.metadata.json$%', $path )
 					|| in_array( $path, $ignored_core_files, true )
 				) {
 					continue;
@@ -267,5 +247,13 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 		$this->assertGreaterThan( 0, count( $output ) );
 
 		return $output;
+	}
+
+	private function execute_command( $command ) {
+		// run in a separate process so phpunit's symfony console version isn't used
+		$command = PIWIK_INCLUDE_PATH . '/console ' . $command;
+		exec( $command, $output, $return_code );
+		$output = implode( '\n', $output );
+		return [ $return_code, $output ];
 	}
 }

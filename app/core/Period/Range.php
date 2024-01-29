@@ -169,7 +169,7 @@ class Range extends Period
         return $out;
     }
 
-    protected function getMaxN($lastN)
+    protected function getMaxN(int $lastN): int
     {
         switch ($this->strPeriod) {
             case 'day':
@@ -244,7 +244,7 @@ class Range extends Period
                 }
             }
 
-            $lastN = $this->getMaxN($lastN);
+            $lastN = $this->getMaxN((int) $lastN);
 
             // last1 means only one result ; last2 means 2 results so we remove only 1 to the days/weeks/etc
             $lastN--;
@@ -379,9 +379,9 @@ class Range extends Period
                     $endOfPeriod = $endOfMonth;
                 } //   If end of this week is later than end date, we use days
                 elseif ($this->isEndOfWeekLaterThanEndDate($endDate, $endOfWeek) &&
-                    ($endOfWeek->isEarlier($this->today)
-                        || $startOfWeek->toString() != $startDate->toString()
-                        || $endDate->isEarlier($this->today))
+                    ($endOfWeek->isEarlier($this->today) ||
+                        $startOfWeek->toString() != $startDate->toString() ||
+                        $endDate->isEarlier($this->today))
                 ) {
                     $this->fillArraySubPeriods($startDate, $endDate, 'day');
                     break 1;
