@@ -64,10 +64,14 @@ describe('Matomo Reporting > Behaviour', () => {
         $(`#${widget} .tableAllColumnsSwitch`)[0].click();
       }, w);
 
-      await browser.pause(2000);
+      await browser.waitUntil(() => {
+        return browser.execute(() => {
+          return $('.loadingPiwik:visible').length === 0;
+        });
+      }, { interval: 1000 });
     }
 
-    await browser.pause(3000);
+    await browser.pause(4000);
 
     await EngagementPage.disableHoverStyles();
     await expect(
