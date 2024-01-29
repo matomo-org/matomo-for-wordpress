@@ -68,7 +68,7 @@ class DeviceDetector
     /**
      * Current version number of DeviceDetector
      */
-    public const VERSION = '6.2.0';
+    public const VERSION = '6.2.1';
 
     /**
      * Constant used as value for unknown browser / os
@@ -149,13 +149,13 @@ class DeviceDetector
 
     /**
      * Holds the cache class used for caching the parsed yml-Files
-     * @var CacheInterface
+     * @var CacheInterface|null
      */
     protected $cache = null;
 
     /**
      * Holds the parser class used for parsing yml-Files
-     * @var YamlParser
+     * @var YamlParser|null
      */
     protected $yamlParser = null;
 
@@ -794,13 +794,13 @@ class DeviceDetector
     }
 
     /**
-     * Returns if the parsed UA contains the 'Desktop x64;' or 'Desktop x32;' or 'Desktop WOW64' fragment
+     * Returns if the parsed UA contains the 'Desktop;', 'Desktop x32;', 'Desktop x64;' or 'Desktop WOW64;' fragment
      *
      * @return bool
      */
     protected function hasDesktopFragment(): bool
     {
-        $regex = 'Desktop (x(?:32|64)|WOW64);';
+        $regex = 'Desktop(?: (x(?:32|64)|WOW64))?;';
 
         return !!$this->matchUserAgent($regex);
     }
@@ -1048,10 +1048,11 @@ class DeviceDetector
         }
 
         /**
-         * Devices running Kylo or Espial TV Browsers are assumed to be a TV
+         * Devices running those browsers are assumed to be a TV
          */
         if (\in_array($clientName, [
-            'Kylo', 'Espial TV Browser', 'LUJO TV Browser', 'LogicUI TV Browser', 'Open TV Browser',
+            'Kylo', 'Espial TV Browser', 'LUJO TV Browser', 'LogicUI TV Browser', 'Open TV Browser', 'Seraphic Sraf',
+            'Opera Devices',
         ])
         ) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;

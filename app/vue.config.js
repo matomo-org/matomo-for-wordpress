@@ -123,9 +123,6 @@ module.exports = {
             declaration: true,
             noEmit: false,
             outDir: `${__dirname}/@types/${pluginName}`,
-            paths: {
-              "*": [`${__dirname}/@types/*`, `${__dirname}/node_modules/*`, '*']
-            },
           };
           return options;
         });

@@ -42,7 +42,7 @@ class ReportsProvider
 
         $klassName = $listApiToReport[$api];
 
-        return new $klassName;
+        return new $klassName();
     }
 
     private static function getMapOfModuleActionsToReport()
@@ -198,6 +198,16 @@ class ReportsProvider
         return $result;
     }
 
+    /**
+     * @param string|null $catIdA
+     * @param string|null $subcatIdA
+     * @param int $orderA
+     * @param string|null $catIdB
+     * @param string|null $subcatIdB
+     * @param int $orderB
+     *
+     * @return int
+     */
     public function compareCategories($catIdA, $subcatIdA, $orderA, $catIdB, $subcatIdB, $orderB)
     {
         if (!isset($this->categoryList)) {
@@ -228,7 +238,6 @@ class ReportsProvider
                     }
 
                     return $subcatA->getOrder() < $subcatB->getOrder() ? -1 : 1;
-
                 } elseif ($subcatA) {
                     return 1;
                 } elseif ($subcatB) {
@@ -243,7 +252,6 @@ class ReportsProvider
             }
 
             return $catA->getOrder() < $catB->getOrder() ? -1 : 1;
-
         } elseif (isset($catA)) {
             return -1;
         } elseif (isset($catB)) {
@@ -259,7 +267,7 @@ class ReportsProvider
             return $orderA < $orderB ? -1 : 1;
         }
 
-        return strnatcasecmp($catIdA, $catIdB);
+        return strnatcasecmp($catIdA ?? '', $catIdB ?? '');
     }
 
     /**

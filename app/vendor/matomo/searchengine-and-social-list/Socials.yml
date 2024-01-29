@@ -234,6 +234,10 @@ Telegram:
   - web.telegram.org
   - org.telegram.messenger
 
+Threads:
+  - threads.net
+  - l.threads.net
+
 TikTok:
   - tiktok.com
 
@@ -286,6 +290,11 @@ WeeWorld:
 
 "Windows Live Spaces":
   - login.live.com
+
+Workplace:
+  - workplace.com
+  - l.workplace.com
+  - lm.workplace.com
 
 Xanga:
   - xanga.com

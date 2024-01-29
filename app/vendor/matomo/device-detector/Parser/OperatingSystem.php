@@ -98,6 +98,7 @@ class OperatingSystem extends AbstractParser
         'LEN' => 'Lineage OS',
         'LBT' => 'Lubuntu',
         'LOS' => 'Lumin OS',
+        'LUN' => 'LuneOS',
         'VLN' => 'VectorLinux',
         'MAC' => 'Mac',
         'MAE' => 'Maemo',
@@ -212,7 +213,7 @@ class OperatingSystem extends AbstractParser
         'Mac'                   => ['MAC'],
         'Mobile Gaming Console' => ['PSP', 'NDS', 'XBX'],
         'Real-time OS'          => ['MTK', 'TDX', 'MRE', 'JME', 'REX'],
-        'Other Mobile'          => ['WOS', 'POS', 'SBA', 'TIZ', 'SMG', 'MAE'],
+        'Other Mobile'          => ['WOS', 'POS', 'SBA', 'TIZ', 'SMG', 'MAE', 'LUN'],
         'Symbian'               => ['SYM', 'SYS', 'SY3', 'S60', 'S40'],
         'Unix'                  => ['SOS', 'AIX', 'HPX', 'BSD', 'NBS', 'OBS', 'DFB', 'SYL', 'IRI', 'T64', 'INF'],
         'WebTV'                 => ['WTV'],
@@ -312,6 +313,27 @@ class OperatingSystem extends AbstractParser
                 if ('HarmonyOS' === $name) {
                     $version = '';
                 }
+
+                if ('Fire OS' === $osFromUserAgent['name']) {
+                        $majorVersion = (int) (\explode('.', $version, 1)[0] ?? '0');
+
+                        $fireOsVersionMapping = [
+                            '11'    => '8',
+                            '10'    => '8',
+                            '9'     => '7',
+                            '7'     => '6',
+                            '5'     => '5',
+                            '4.4.3' => '4.5.1',
+                            '4.4.2' => '4',
+                            '4.2.2' => '3',
+                            '4.0.3' => '3',
+                            '4.0.2' => '3',
+                            '4'     => '2',
+                            '2'     => '1',
+                        ];
+
+                        $version = $fireOsVersionMapping[$version] ?? $fireOsVersionMapping[$majorVersion] ?? $version;
+                }
             }
 
             $short = $osFromClientHints['short_name'];
@@ -334,7 +356,10 @@ class OperatingSystem extends AbstractParser
 
         $platform    = $this->parsePlatform();
         $family      = self::getOsFamily($short);
-        $androidApps = ['com.hisense.odinbrowser', 'com.seraphic.openinet.pre', 'com.appssppa.idesktoppcbrowser'];
+        $androidApps = [
+            'com.hisense.odinbrowser', 'com.seraphic.openinet.pre', 'com.appssppa.idesktoppcbrowser',
+            'every.browser.inc',
+        ];
 
         if (null !== $this->clientHints) {
             if (\in_array($this->clientHints->getApp(), $androidApps) && 'Android' !== $name) {

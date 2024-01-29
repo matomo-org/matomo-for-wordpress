@@ -2122,12 +2122,12 @@
         "SimpleRealTimeWidget_Message": "%1$s ja %2$s perioodis viimased %3$s",
         "ViewVisitorProfile": "Kuva külastaja profiil",
         "VisitedPages": "Külastatud lehed",
-        "VisitsLog": "lastuste logi",
-        "VisitorLog": "lastuste logi",
+        "VisitorLog": "Külastuste logi",
         "VisitorProfile": "Külastaja profiil",
         "VisitorsInRealTime": "Külastused reaalajas",
         "VisitorsLastVisit": "Antud külastaja viimane külastus lehel oli %s päeva tagasi.",
-        "VisitsFrom": "%1$s%2$s külastust %3$s pärineb"
+        "VisitsFrom": "%1$s%2$s külastust %3$s pärineb",
+        "VisitsLog": "Külastuste logi"
     },
     "Login": {
         "InvalidOrExpiredToken": "Kontrollkood on kehtetu.",
