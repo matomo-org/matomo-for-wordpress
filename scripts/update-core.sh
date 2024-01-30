@@ -64,7 +64,6 @@ if [ ! -z "$MATOMO_SCOPER_PATH" ]; then
   echo "Running matomo-scoper..."
 
   php "$MATOMO_SCOPER_PATH/bin/matomo-scoper" scope -y  --rename-references --ignore-platform-check "$MATOMO_ROOT"
-  rm "$MATOMO_ROOT/scoper.inc.php"
 else
   echo "Error: MATOMO_SCOPER_PATH not defined."
   exit 1;
