@@ -13,7 +13,7 @@ use Piwik\Development;
 use Piwik\Filesystem;
 use Piwik\Http;
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Question\ChoiceQuestion;
+use Matomo\Dependencies\Symfony\Component\Console\Question\ChoiceQuestion;
 
 class DownloadTestScreenshots extends ConsoleCommand
 {
