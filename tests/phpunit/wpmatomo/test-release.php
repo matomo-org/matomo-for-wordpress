@@ -127,6 +127,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			'app/node_modules/.htaccess',
 			'app/plugins/.htaccess',
 			'app/vendor/.htaccess',
+			'app/vendor/autoload_original.php',
 		];
 
 		try {
@@ -195,7 +196,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 				$path_in_core_release = preg_replace( '%^app/%', 'matomo/', $path );
 				if ( empty( $matomo_core_contents[ $path_in_core_release ] ) ) {
 					// check if file was prefixed
-					$prefixed_path = preg_replace( '%^matomo/vendor/%', 'matomo/vendor/prefixed/', $path_in_core_release );
+					$prefixed_path = preg_replace( '%^matomo/vendor/prefixed/%', 'matomo/vendor/', $path_in_core_release );
 					if ( ! empty( $matomo_core_contents[ $prefixed_path ] ) ) {
 						continue;
 					}
