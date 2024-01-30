@@ -4,11 +4,15 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitb8d6f32e01934011c4119536a22eba01
+class ComposerStaticInitc99d97452b55037f5a5c8fad445d643f
 {
     public static $files = array(
 'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+'0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+'320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
 '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
+'8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
+'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
 '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
 '8ac259e46781d60665439a97846a4a66' => __DIR__ . '/..' . '/lox/xhprof/xhprof_lib/utils/xhprof_lib.php',
 'e30869f87cf76d235b75bb956c7ba9ed' => __DIR__ . '/..' . '/lox/xhprof/xhprof_lib/utils/xhprof_runs.php',
@@ -614,6 +618,7 @@ class ComposerStaticInitb8d6f32e01934011c4119536a22eba01
         'MaxMind\\WebService\\Http\\CurlRequest' => __DIR__ . '/..' . '/maxmind/web-service-common/src/WebService/Http/CurlRequest.php',
         'MaxMind\\WebService\\Http\\Request' => __DIR__ . '/..' . '/maxmind/web-service-common/src/WebService/Http/Request.php',
         'MaxMind\\WebService\\Http\\RequestFactory' => __DIR__ . '/..' . '/maxmind/web-service-common/src/WebService/Http/RequestFactory.php',
+        'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'OS_Guess' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/OS/Guess.php',
         'PDF417' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/pdf417.php',
         'PEAR' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
@@ -2968,7 +2973,11 @@ class ComposerStaticInitb8d6f32e01934011c4119536a22eba01
         'Piwik\\Widget\\WidgetsList' => __DIR__ . '/../..' . '/core/Widget/WidgetsList.php',
         'QRcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/qrcode.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+        'Symfony\\Polyfill\\Ctype\\Ctype' => __DIR__ . '/..' . '/symfony/polyfill-ctype/Ctype.php',
         'Symfony\\Polyfill\\Iconv\\Iconv' => __DIR__ . '/..' . '/symfony/polyfill-iconv/Iconv.php',
+        'Symfony\\Polyfill\\Intl\\Grapheme\\Grapheme' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/Grapheme.php',
+        'Symfony\\Polyfill\\Intl\\Normalizer\\Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Normalizer.php',
+        'Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/Mbstring.php',
         'Symfony\\Polyfill\\Php73\\Php73' => __DIR__ . '/..' . '/symfony/polyfill-php73/Php73.php',
         'Symfony\\Polyfill\\Php80\\Php80' => __DIR__ . '/..' . '/symfony/polyfill-php80/Php80.php',
         'Symfony\\Polyfill\\Php80\\PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/PhpToken.php',
@@ -3061,11 +3070,11 @@ class ComposerStaticInitb8d6f32e01934011c4119536a22eba01
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitb8d6f32e01934011c4119536a22eba01::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitb8d6f32e01934011c4119536a22eba01::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitb8d6f32e01934011c4119536a22eba01::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInitb8d6f32e01934011c4119536a22eba01::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInitb8d6f32e01934011c4119536a22eba01::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc99d97452b55037f5a5c8fad445d643f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc99d97452b55037f5a5c8fad445d643f::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitc99d97452b55037f5a5c8fad445d643f::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInitc99d97452b55037f5a5c8fad445d643f::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInitc99d97452b55037f5a5c8fad445d643f::$classMap;
 
         }, null, ClassLoader::class);
     }

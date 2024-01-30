@@ -4,17 +4,13 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc44df35a60910a6bd47ad694f2439618
+class ComposerStaticInit64386cc356ea01010596509fd0b6aa66
 {
     public static $files = array (
         '14f31c04451e5135516391e2ab40385d' => __DIR__ . '/../..' . '/php-di/php-di/src/functions.php',
-        '8297c8aac33b35b8c89efd974dd6812c' => __DIR__ . '/../..' . '/symfony/polyfill-ctype/bootstrap.php',
-        'c566ed1e5ae44d8ef9cb2584f3302b9c' => __DIR__ . '/../..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '66cfd3a7190309803b5cc0fea03a4cdc' => __DIR__ . '/../..' . '/symfony/deprecation-contracts/function.php',
         'cf15db0dadced1bb06881d38a6ab91d1' => __DIR__ . '/../..' . '/symfony/string/Resources/functions.php',
         '6ec8b17a2a73929b12ae06804034a3cd' => __DIR__ . '/../..' . '/opis/closure/functions.php',
-        '29f093cc0c4dc77890d55ec832fe3ea3' => __DIR__ . '/../..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
-        '6bf5c1ba48c4a6ae78a74ee16e666950' => __DIR__ . '/../..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         'b2f23a3075c5237dd63d2c12b0edd375' => __DIR__ . '/../..' . '/symfony/var-dumper/Resources/functions/dump.php',
     );
 
@@ -190,7 +186,6 @@ class ComposerStaticInitc44df35a60910a6bd47ad694f2439618
         'Matomo\\Dependencies\\Monolog\\ResettableInterface' => __DIR__ . '/../..' . '/monolog/monolog/src/Monolog/ResettableInterface.php',
         'Matomo\\Dependencies\\Monolog\\SignalHandler' => __DIR__ . '/../..' . '/monolog/monolog/src/Monolog/SignalHandler.php',
         'Matomo\\Dependencies\\Monolog\\Utils' => __DIR__ . '/../..' . '/monolog/monolog/src/Monolog/Utils.php',
-        'Matomo\\Dependencies\\Normalizer' => __DIR__ . '/../..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'Matomo\\Dependencies\\Opis\\Closure\\Analyzer' => __DIR__ . '/../..' . '/opis/closure/src/Analyzer.php',
         'Matomo\\Dependencies\\Opis\\Closure\\ClosureContext' => __DIR__ . '/../..' . '/opis/closure/src/ClosureContext.php',
         'Matomo\\Dependencies\\Opis\\Closure\\ClosureScope' => __DIR__ . '/../..' . '/opis/closure/src/ClosureScope.php',
@@ -707,10 +702,6 @@ class ComposerStaticInitc44df35a60910a6bd47ad694f2439618
         'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\ServiceSubscriberInterface' => __DIR__ . '/../..' . '/symfony/service-contracts/ServiceSubscriberInterface.php',
         'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\ServiceSubscriberTrait' => __DIR__ . '/../..' . '/symfony/service-contracts/ServiceSubscriberTrait.php',
         'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\Test\\ServiceLocatorTest' => __DIR__ . '/../..' . '/symfony/service-contracts/Test/ServiceLocatorTest.php',
-        'Matomo\\Dependencies\\Symfony\\Polyfill\\Ctype\\Ctype' => __DIR__ . '/../..' . '/symfony/polyfill-ctype/Ctype.php',
-        'Matomo\\Dependencies\\Symfony\\Polyfill\\Intl\\Grapheme\\Grapheme' => __DIR__ . '/../..' . '/symfony/polyfill-intl-grapheme/Grapheme.php',
-        'Matomo\\Dependencies\\Symfony\\Polyfill\\Intl\\Normalizer\\Normalizer' => __DIR__ . '/../..' . '/symfony/polyfill-intl-normalizer/Normalizer.php',
-        'Matomo\\Dependencies\\Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/../..' . '/symfony/polyfill-mbstring/Mbstring.php',
         'Matomo\\Dependencies\\Twig\\Cache\\CacheInterface' => __DIR__ . '/../..' . '/twig/twig/src/Cache/CacheInterface.php',
         'Matomo\\Dependencies\\Twig\\Cache\\FilesystemCache' => __DIR__ . '/../..' . '/twig/twig/src/Cache/FilesystemCache.php',
         'Matomo\\Dependencies\\Twig\\Cache\\NullCache' => __DIR__ . '/../..' . '/twig/twig/src/Cache/NullCache.php',
@@ -892,7 +883,7 @@ class ComposerStaticInitc44df35a60910a6bd47ad694f2439618
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInitc44df35a60910a6bd47ad694f2439618::$classMap;
+            $loader->classMap = ComposerStaticInit64386cc356ea01010596509fd0b6aa66::$classMap;
 
         }, null, ClassLoader::class);
     }
