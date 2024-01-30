@@ -60,7 +60,6 @@ cp -R matomo/* $MATOMO_ROOT
 cp -R matomo/.* $MATOMO_ROOT
 rm -r matomo/
 
-# TODO: force the use of matomo-scoper after we're sure everything works
 if [ ! -z "$MATOMO_SCOPER_PATH" ]; then
   echo "Running matomo-scoper..."
 
@@ -92,8 +91,10 @@ cd $SCRIPTPATH
 find $MATOMO_ROOT/ -iname 'tests' -type d -prune -exec rm -rf {} \;
 
 rm -rf $MATOMO_ROOT/vendor/bin
+rm -rf $MATOMO_ROOT/vendor/prefixed/bin
 rm -rf $MATOMO_ROOT/config/environment/test.php
 rm -rf $MATOMO_ROOT/config/environment/ui-test.php
+rm -rf $MATOMO_ROOT/vendor/prefixed/twig/twig/ext
 rm -rf $MATOMO_ROOT/vendor/twig/twig/ext
 rm -rf $MATOMO_ROOT/vendor/doctrine/cache/lib/Doctrine/Common/Cache/RiakCache.php
 rm -rf $MATOMO_ROOT/node_modules/materialize-css/extras $MATOMO_ROOT/node_modules/materialize-css/js $MATOMO_ROOT/node_modules/materialize-css/sass
@@ -119,7 +120,8 @@ rm -rf $MATOMO_ROOT/vendor/symfony/console/Symfony/Component/Console/Resources/b
 rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/resources/doc
 rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/coverage.sh
 rm -rf $MATOMO_ROOT/vendor/szymach/c-pchart/codeception.yml
-rm $MATOMO_ROOT/vendor/monolog/monolog/phpstan.neon.dist
+rm -f $MATOMO_ROOT/vendor/prefixed/monolog/monolog/phpstan.neon.dist
+rm -f $MATOMO_ROOT/vendor/monolog/monolog/phpstan.neon.dist
 rm $MATOMO_ROOT/vendor/composer/installed.json
 rm $MATOMO_ROOT/vendor/lox/xhprof/package.xml
 rm $MATOMO_ROOT/vendor/pear/archive_tar/package.xml
