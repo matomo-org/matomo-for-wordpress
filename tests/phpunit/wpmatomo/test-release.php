@@ -128,6 +128,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			'app/plugins/.htaccess',
 			'app/vendor/.htaccess',
 			'app/vendor/autoload_original.php',
+			'app/vendor/prefixed/vendor/autoload.php',
 		];
 
 		try {
@@ -188,6 +189,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			$extraneous_files = [];
 			foreach ( $mwp_release_contents as $path => $ignore ) {
 				if ( ! preg_match( '%^app/%', $path )
+					|| preg_match( '%^app/vendor/prefixed/vendor/composer%', $path )
 					|| in_array( $path, $ignored_mwp_files, true )
 				) {
 					continue;
