@@ -9,9 +9,8 @@
 namespace Piwik\Plugins\WordPress\Commands;
 
 use Piwik\Development;
-use Symfony\Component\Console\Input\ArrayInput;
+use Matomo\Dependencies\Symfony\Component\Console\Input\ArrayInput;
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputOption;
 
 class BuildRelease extends ConsoleCommand
 {
