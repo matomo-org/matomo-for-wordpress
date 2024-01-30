@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Db;
 
 use Piwik\Config;
 use Piwik\Singleton;
-
 /**
  * Schema abstraction
  *
@@ -21,14 +21,12 @@ use Piwik\Singleton;
 class Schema extends Singleton
 {
     const DEFAULT_SCHEMA = 'Mysql';
-
     /**
      * Type of database schema
      *
      * @var string
      */
     private $schema = null;
-
     /**
      * Get schema class name
      *
@@ -38,29 +36,23 @@ class Schema extends Singleton
     private static function getSchemaClassName($schemaName)
     {
         // Upgrade from pre 2.0.4
-        if (strtolower($schemaName) == 'myisam'
-            || empty($schemaName)) {
+        if (strtolower($schemaName) == 'myisam' || empty($schemaName)) {
             $schemaName = self::DEFAULT_SCHEMA;
         }
-
         $class = str_replace(' ', '\\', ucwords(str_replace('_', ' ', strtolower($schemaName))));
-        return '\Piwik\Db\Schema\\' . $class;
+        return '\\Piwik\\Db\\Schema\\' . $class;
     }
-
-
     /**
      * Load schema
      */
     private function loadSchema()
     {
-        $config     = Config::getInstance();
-        $dbInfos    = $config->database;
+        $config = Config::getInstance();
+        $dbInfos = $config->database;
         $schemaName = trim($dbInfos['schema']);
-
-        $className    = self::getSchemaClassName($schemaName);
+        $className = self::getSchemaClassName($schemaName);
         $this->schema = new $className();
     }
-
     /**
      * Returns an instance that subclasses Schema
      *
@@ -71,10 +63,8 @@ class Schema extends Singleton
         if ($this->schema === null) {
             $this->loadSchema();
         }
-
         return $this->schema;
     }
-
     /**
      * Get the SQL to create a specific Piwik table
      *
@@ -85,7 +75,6 @@ class Schema extends Singleton
     {
         return $this->getSchema()->getTableCreateSql($tableName);
     }
-
     /**
      * Get the SQL to create Piwik tables
      *
@@ -95,7 +84,6 @@ class Schema extends Singleton
     {
         return $this->getSchema()->getTablesCreateSql();
     }
-
     /**
      * Creates a new table in the database.
      *
@@ -106,7 +94,6 @@ class Schema extends Singleton
     {
         $this->getSchema()->createTable($nameWithoutPrefix, $createDefinition);
     }
-
     /**
      * Create database
      *
@@ -116,7 +103,6 @@ class Schema extends Singleton
     {
         $this->getSchema()->createDatabase($dbName);
     }
-
     /**
      * Drop database
      */
@@ -124,7 +110,6 @@ class Schema extends Singleton
     {
         $this->getSchema()->dropDatabase($dbName);
     }
-
     /**
      * Create all tables
      */
@@ -132,7 +117,6 @@ class Schema extends Singleton
     {
         $this->getSchema()->createTables();
     }
-
     /**
      * Creates an entry in the User table for the "anonymous" user.
      */
@@ -140,7 +124,6 @@ class Schema extends Singleton
     {
         $this->getSchema()->createAnonymousUser();
     }
-
     /**
      * Records the Matomo version a user used when installing this Matomo for the first time
      */
@@ -148,7 +131,6 @@ class Schema extends Singleton
     {
         $this->getSchema()->recordInstallVersion();
     }
-
     /**
      * Returns which Matomo version was used to install this Matomo for the first time.
      */
@@ -156,7 +138,6 @@ class Schema extends Singleton
     {
         return $this->getSchema()->getInstallVersion();
     }
-
     /**
      * Truncate all tables
      */
@@ -164,7 +145,6 @@ class Schema extends Singleton
     {
         $this->getSchema()->truncateAllTables();
     }
-
     /**
      * Names of all the prefixed tables in piwik
      * Doesn't use the DB
@@ -175,7 +155,6 @@ class Schema extends Singleton
     {
         return $this->getSchema()->getTablesNames();
     }
-
     /**
      * Get list of tables installed
      *
@@ -186,7 +165,6 @@ class Schema extends Singleton
     {
         return $this->getSchema()->getTablesInstalled($forceReload);
     }
-
     /**
      * Get list of installed columns in a table
      *
@@ -198,7 +176,6 @@ class Schema extends Singleton
     {
         return $this->getSchema()->getTableColumns($tableName);
     }
-
     /**
      * Returns true if Piwik tables exist
      *

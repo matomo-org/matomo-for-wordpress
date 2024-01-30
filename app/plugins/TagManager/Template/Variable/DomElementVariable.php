@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,14 +11,12 @@ namespace Piwik\Plugins\TagManager\Template\Variable;
 use Piwik\Piwik;
 use Piwik\Settings\FieldConfig;
 use Piwik\Validators\NotEmpty;
-
-class DomElementVariable extends BaseVariable
+class DomElementVariable extends \Piwik\Plugins\TagManager\Template\Variable\BaseVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_PAGE_VARIABLES;
     }
-
     public function getParameters()
     {
         $selectionMethod = $this->makeSetting('selectionMethod', 'elementId', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
@@ -25,45 +24,35 @@ class DomElementVariable extends BaseVariable
             $field->description = Piwik::translate('TagManager_DomElementVariableSelectionMethodDescription');
             $field->uiControl = FieldConfig::UI_CONTROL_SINGLE_SELECT;
             $field->validators[] = new NotEmpty();
-            $field->availableValues = array(
-                'cssSelector' => 'CSS Selector',
-                'elementId' => 'Element ID',
-            );
+            $field->availableValues = array('cssSelector' => 'CSS Selector', 'elementId' => 'Element ID');
         });
-        return array(
-            $selectionMethod,
-            $this->makeSetting('cssSelector', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) use ($selectionMethod) {
-                $field->title = Piwik::translate('TagManager_ElementVisibilityTriggerCssSelectorTitle');
-                $field->description = Piwik::translate('TagManager_DomElementVariableCssSelectorDescription');
-                $field->condition = 'selectionMethod == "cssSelector"';
-                $field->validate = function ($value) use ($selectionMethod, $field) {
-                    if ($selectionMethod->getValue() === 'cssSelector' && empty($value)) {
-                        throw new \Exception('Please specify a value for ' . $field->title);
-                    }
-                };
-            }),
-            $this->makeSetting('elementId', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) use ($selectionMethod) {
-                $field->title = Piwik::translate('TagManager_ElementVisibilityTriggerElementIDTitle');
-                $field->description = Piwik::translate('TagManager_ElementVisibilityTriggerElementIDDescription');
-                $field->condition = 'selectionMethod == "elementId"';
-                $field->validate = function ($value) use ($selectionMethod, $field) {
-                    if ($selectionMethod->getValue() === 'elementId' && empty($value)) {
-                        throw new \Exception('Please specify a value for ' . $field->title);
-                    }
-                };
-                $field->transform = function ($value) {
-                    return trim($value);
-                };
-            }),
-            $this->makeSetting('attributeName', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
-                $field->title = Piwik::translate('TagManager_DomElementVariableAttributeNameTitle');
-                $field->inlineHelp = Piwik::translate('TagManager_DomElementVariableAttributeNameInlineHelp');
-                $field->transform = function ($value) {
-                    return trim($value);
-                };
-            }),
-
-        );
+        return array($selectionMethod, $this->makeSetting('cssSelector', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) use($selectionMethod) {
+            $field->title = Piwik::translate('TagManager_ElementVisibilityTriggerCssSelectorTitle');
+            $field->description = Piwik::translate('TagManager_DomElementVariableCssSelectorDescription');
+            $field->condition = 'selectionMethod == "cssSelector"';
+            $field->validate = function ($value) use($selectionMethod, $field) {
+                if ($selectionMethod->getValue() === 'cssSelector' && empty($value)) {
+                    throw new \Exception('Please specify a value for ' . $field->title);
+                }
+            };
+        }), $this->makeSetting('elementId', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) use($selectionMethod) {
+            $field->title = Piwik::translate('TagManager_ElementVisibilityTriggerElementIDTitle');
+            $field->description = Piwik::translate('TagManager_ElementVisibilityTriggerElementIDDescription');
+            $field->condition = 'selectionMethod == "elementId"';
+            $field->validate = function ($value) use($selectionMethod, $field) {
+                if ($selectionMethod->getValue() === 'elementId' && empty($value)) {
+                    throw new \Exception('Please specify a value for ' . $field->title);
+                }
+            };
+            $field->transform = function ($value) {
+                return trim($value);
+            };
+        }), $this->makeSetting('attributeName', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
+            $field->title = Piwik::translate('TagManager_DomElementVariableAttributeNameTitle');
+            $field->inlineHelp = Piwik::translate('TagManager_DomElementVariableAttributeNameInlineHelp');
+            $field->transform = function ($value) {
+                return trim($value);
+            };
+        }));
     }
-
 }

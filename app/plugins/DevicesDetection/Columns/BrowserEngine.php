@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,8 +13,7 @@ use Piwik\Metrics\Formatter;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-
-class BrowserEngine extends Base
+class BrowserEngine extends \Piwik\Plugins\DevicesDetection\Columns\Base
 {
     protected $columnName = 'config_browser_engine';
     protected $columnType = 'VARCHAR(10) NULL';
@@ -21,14 +21,12 @@ class BrowserEngine extends Base
     protected $nameSingular = 'DevicesDetection_BrowserEngine';
     protected $namePlural = 'DevicesDetection_BrowserEngines';
     protected $acceptValues = 'Trident, WebKit, Presto, Gecko, Blink, etc.';
-    protected $suggestedValuesCallback = '\DeviceDetector\Parser\Client\Browser\Engine::getAvailableEngines';
+    protected $suggestedValuesCallback = '\\DeviceDetector\\Parser\\Client\\Browser\\Engine::getAvailableEngines';
     protected $type = self::TYPE_TEXT;
-
     public function formatValue($value, $idSite, Formatter $formatter)
     {
         return \Piwik\Plugins\DevicesDetection\getBrowserEngineName($value);
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -37,15 +35,11 @@ class BrowserEngine extends Base
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $parser    = $this->getUAParser($request->getUserAgent(), $request->getClientHints());
-
+        $parser = $this->getUAParser($request->getUserAgent(), $request->getClientHints());
         $aBrowserInfo = $parser->getClient();
-
         if (!empty($aBrowserInfo['engine'])) {
-
             return $aBrowserInfo['engine'];
         }
-
         return '';
     }
 }

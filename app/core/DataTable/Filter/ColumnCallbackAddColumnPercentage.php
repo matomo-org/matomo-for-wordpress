@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\DataTable\Filter;
 
 use Piwik\Piwik;
-
 /**
  * Calculates a percentage value for each row of a {@link DataTable} and adds the result
  * to each row.
@@ -23,7 +23,7 @@ use Piwik\Piwik;
  *
  * @api
  */
-class ColumnCallbackAddColumnPercentage extends ColumnCallbackAddColumnQuotient
+class ColumnCallbackAddColumnPercentage extends \Piwik\DataTable\Filter\ColumnCallbackAddColumnQuotient
 {
     /**
      * Formats the given value as a percentage.

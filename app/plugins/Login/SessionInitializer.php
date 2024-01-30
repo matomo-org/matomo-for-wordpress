@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -17,7 +18,6 @@ use Piwik\Piwik;
 use Piwik\Plugins\UsersManager\API as UsersManagerAPI;
 use Piwik\ProxyHttp;
 use Piwik\Session;
-
 /**
  */
 class SessionInitializer
@@ -28,7 +28,6 @@ class SessionInitializer
      * @var UsersManagerAPI
      */
     private $usersManagerAPI;
-
     /**
      * The authenticated session cookie's name. Defaults to the value of the `[General] login_cookie_name`
      * INI config option.
@@ -36,7 +35,6 @@ class SessionInitializer
      * @var string
      */
     private $authCookieName;
-
     /**
      * The time in seconds before the authenticated session cookie expires. Only used if `$rememberMe`
      * is true in the {@link initSession()} call.
@@ -46,7 +44,6 @@ class SessionInitializer
      * @var string
      */
     private $authCookieValidTime;
-
     /**
      * The path for the authenticated session cookie. Defaults to the value of the `[General] login_cookie_path`
      * INI config option.
@@ -54,7 +51,6 @@ class SessionInitializer
      * @var string
      */
     private $authCookiePath;
-
     /**
      * Constructor.
      *
@@ -63,30 +59,25 @@ class SessionInitializer
      * @param int|null $authCookieValidTime
      * @param string|null $authCookiePath
      */
-    public function __construct($usersManagerAPI = null, $authCookieName = null, $authCookieValidTime = null,
-                                $authCookiePath = null)
+    public function __construct($usersManagerAPI = null, $authCookieName = null, $authCookieValidTime = null, $authCookiePath = null)
     {
         if (empty($usersManagerAPI)) {
             $usersManagerAPI = UsersManagerAPI::getInstance();
         }
         $this->usersManagerAPI = $usersManagerAPI;
-
         if (empty($authCookieName)) {
             $authCookieName = Config::getInstance()->General['login_cookie_name'];
         }
         $this->authCookieName = $authCookieName;
-
         if (empty($authCookieValidTime)) {
             $authCookieValidTime = Config::getInstance()->General['login_cookie_expire'];
         }
         $this->authCookieValidTime = $authCookieValidTime;
-
         if (empty($authCookiePath)) {
             $authCookiePath = Config::getInstance()->General['login_cookie_path'];
         }
         $this->authCookiePath = $authCookiePath;
     }
-
     /**
      * Authenticates the user and, if successful, initializes an authenticated session.
      *
@@ -98,22 +89,15 @@ class SessionInitializer
     public function initSession(AuthInterface $auth, $rememberMe)
     {
         $this->regenerateSessionId();
-
         $authResult = $this->doAuthenticateSession($auth);
-
         if (!$authResult->wasAuthenticationSuccessful()) {
-
             Piwik::postEvent('Login.authenticate.failed', array($auth->getLogin()));
-
             $this->processFailedSession($rememberMe);
         } else {
-
             Piwik::postEvent('Login.authenticate.successful', array($auth->getLogin()));
-
             $this->processSuccessfulSession($authResult, $rememberMe);
         }
     }
-
     /**
      * Authenticates the user.
      *
@@ -125,16 +109,9 @@ class SessionInitializer
      */
     protected function doAuthenticateSession(AuthInterface $auth)
     {
-        Piwik::postEvent(
-            'Login.authenticate',
-            array(
-                $auth->getLogin(),
-            )
-        );
-
+        Piwik::postEvent('Login.authenticate', array($auth->getLogin()));
         return $auth->authenticate();
     }
-
     /**
      * Returns a Cookie instance that manages the browser cookie used to store session
      * information.
@@ -149,7 +126,6 @@ class SessionInitializer
         $cookie = new Cookie($this->authCookieName, $authCookieExpiry, $this->authCookiePath);
         return $cookie;
     }
-
     /**
      * Executed when the session could not authenticate.
      *
@@ -161,10 +137,8 @@ class SessionInitializer
     {
         $cookie = $this->getAuthCookie($rememberMe);
         $cookie->delete();
-
         throw new Exception(Piwik::translate('Login_LoginPasswordNotCorrect'));
     }
-
     /**
      * Executed when the session was successfully authenticated.
      *
@@ -178,15 +152,12 @@ class SessionInitializer
         $cookie->setSecure(ProxyHttp::isHttps());
         $cookie->setHttpOnly(true);
         $cookie->save();
-
         return $cookie;
     }
-
     protected function regenerateSessionId()
     {
         Session::regenerateId();
     }
-
     /**
      * Accessor to compute the hashed authentication token.
      *

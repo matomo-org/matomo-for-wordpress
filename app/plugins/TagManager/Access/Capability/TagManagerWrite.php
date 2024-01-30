@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,37 +13,27 @@ use Piwik\Access\Capability;
 use Piwik\Access\Role\Admin;
 use Piwik\Access\Role\Write;
 use Piwik\Piwik;
-
 class TagManagerWrite extends Capability
 {
     public const ID = 'tagmanager_write';
-
-    public function getId(): string
+    public function getId() : string
     {
         return self::ID;
     }
-
-    public function getCategory(): string
+    public function getCategory() : string
     {
         return Piwik::translate('TagManager_TagManager');
     }
-
-    public function getName(): string
+    public function getName() : string
     {
         return Piwik::translate('UsersManager_PrivWrite');
     }
-
-    public function getDescription(): string
+    public function getDescription() : string
     {
         return Piwik::translate('TagManager_CapabilityWriteDescription');
     }
-
-    public function getIncludedInRoles(): array
+    public function getIncludedInRoles() : array
     {
-        return array(
-            Write::ID,
-            Admin::ID
-        );
+        return array(Write::ID, Admin::ID);
     }
-
 }

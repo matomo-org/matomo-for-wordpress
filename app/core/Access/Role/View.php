@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,27 +12,22 @@ namespace Piwik\Access\Role;
 use Piwik\Access\Role;
 use Piwik\Piwik;
 use Piwik\Url;
-
 class View extends Role
 {
     public const ID = 'view';
-
-    public function getName(): string
+    public function getName() : string
     {
         return Piwik::translate('UsersManager_PrivView');
     }
-
-    public function getId(): string
+    public function getId() : string
     {
         return self::ID;
     }
-
-    public function getDescription(): string
+    public function getDescription() : string
     {
         return Piwik::translate('UsersManager_PrivViewDescription');
     }
-
-    public function getHelpUrl(): string
+    public function getHelpUrl() : string
     {
         return Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/general/faq_70/');
     }

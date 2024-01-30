@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,7 +14,6 @@ use Piwik\Auth as AuthInterface;
 use Piwik\AuthResult;
 use Piwik\Piwik;
 use Piwik\Session;
-
 /**
  * Initializes authenticated sessions using an Auth implementation.
  */
@@ -28,22 +28,15 @@ class SessionInitializer
     public function initSession(AuthInterface $auth)
     {
         $this->regenerateSessionId();
-
         $authResult = $this->doAuthenticateSession($auth);
-
         if (!$authResult->wasAuthenticationSuccessful()) {
-
             Piwik::postEvent('Login.authenticate.failed', array($auth->getLogin()));
-
             $this->processFailedSession();
         } else {
-
             Piwik::postEvent('Login.authenticate.successful', array($auth->getLogin()));
-
             $this->processSuccessfulSession($authResult);
         }
     }
-
     /**
      * Authenticates the user.
      *
@@ -55,16 +48,9 @@ class SessionInitializer
      */
     protected function doAuthenticateSession(AuthInterface $auth)
     {
-        Piwik::postEvent(
-            'Login.authenticate',
-            array(
-                $auth->getLogin(),
-            )
-        );
-
+        Piwik::postEvent('Login.authenticate', array($auth->getLogin()));
         return $auth->authenticate();
     }
-
     /**
      * Executed when the session could not authenticate.
      *
@@ -74,7 +60,6 @@ class SessionInitializer
     {
         throw new Exception(Piwik::translate('Login_LoginPasswordNotCorrect'));
     }
-
     /**
      * Executed when the session was successfully authenticated.
      *
@@ -82,20 +67,17 @@ class SessionInitializer
      */
     protected function processSuccessfulSession(AuthResult $authResult)
     {
-        $sessionIdentifier = new SessionFingerprint();
+        $sessionIdentifier = new \Piwik\Session\SessionFingerprint();
         $sessionIdentifier->initialize($authResult->getIdentity(), $authResult->getTokenAuth(), $this->isRemembered());
-
         /**
          * @ignore
          */
         Piwik::postEvent('Login.authenticate.processSuccessfulSession.end', array($authResult->getIdentity()));
     }
-
     protected function regenerateSessionId()
     {
         Session::regenerateId();
     }
-
     private function isRemembered()
     {
         $cookieParams = session_get_cookie_params();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -34,7 +35,6 @@ class Subcategory
      * @var string eg 'General_Overview' or 'VisitTime_ByServerTimeWidgetName'.
      */
     protected $id = '';
-
     /**
      * The id of the category the subcategory belongs to, must be specified.
      * See {@link Piwik\Widget\WidgetConfig::setCategoryId()`} or {@link Piwik\Report\getCategoryId()}.
@@ -42,19 +42,16 @@ class Subcategory
      * @var string A translation key eg 'General_Visits' or 'Goals_Goals'
      */
     protected $categoryId = '';
-
     /**
      * The name that shall be used in the menu etc, defaults to the specified {@link $id}. See {@link $id}.
      * @var string
      */
     protected $name = '';
-
     /**
      * The order of the subcategory. The lower the value the earlier a widget or a report will be displayed.
      * @var int
      */
     protected $order = 99;
-
     /**
      * Sets (overwrites) the id of the subcategory see {@link $id}.
      *
@@ -66,7 +63,6 @@ class Subcategory
         $this->id = $id;
         return $this;
     }
-
     /**
      * Get the id of the subcategory.
      * @return string
@@ -75,7 +71,6 @@ class Subcategory
     {
         return $this->id;
     }
-
     /**
      * Get the specified categoryId see {@link $categoryId}.
      *
@@ -85,7 +80,6 @@ class Subcategory
     {
         return $this->categoryId;
     }
-
     /**
      * Sets (overwrites) the categoryId see {@link $categoryId}.
      *
@@ -97,7 +91,6 @@ class Subcategory
         $this->categoryId = $categoryId;
         return $this;
     }
-
     /**
      * Sets (overwrites) the name see {@link $name} and {@link $id}.
      *
@@ -109,7 +102,6 @@ class Subcategory
         $this->name = $name;
         return $this;
     }
-
     /**
      * Get the name of the subcategory.
      * @return string
@@ -119,10 +111,8 @@ class Subcategory
         if (!empty($this->name)) {
             return $this->name;
         }
-
         return $this->id;
     }
-
     /**
      * Sets (overwrites) the order see {@link $order}.
      *
@@ -134,7 +124,6 @@ class Subcategory
         $this->order = (int) $order;
         return $this;
     }
-
     /**
      * Get the order of the subcategory.
      * @return int
@@ -143,7 +132,6 @@ class Subcategory
     {
         return $this->order;
     }
-
     /**
      * Get the help text (if any) for this category.
      * @return null

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,7 +14,6 @@ use Piwik\CacheId;
 use Piwik\Plugin;
 use Piwik\Piwik;
 use Piwik\Plugins\Live\ProfileSummary\ProfileSummaryAbstract;
-
 /**
  *
  */
@@ -23,12 +23,10 @@ class ProfileSummaryProvider
      * @var Plugin\Manager
      */
     private $pluginManager;
-
     public function __construct(Plugin\Manager $pluginManager)
     {
         $this->pluginManager = $pluginManager;
     }
-
     /**
      * Returns all available profile summaries
      *
@@ -38,11 +36,9 @@ class ProfileSummaryProvider
     public function getAllInstances()
     {
         $cacheId = CacheId::pluginAware('ProfileSummaries');
-        $cache   = Cache::getTransientCache();
-
+        $cache = Cache::getTransientCache();
         if (!$cache->contains($cacheId)) {
             $instances = [];
-
             /**
              * Triggered to add new live profile summaries.
              *
@@ -56,11 +52,9 @@ class ProfileSummaryProvider
              * @param ProfileSummaryAbstract[] $profileSummaries An array of profile summaries
              */
             Piwik::postEvent('Live.addProfileSummaries', array(&$instances));
-
             foreach ($this->getAllProfileSummaryClasses() as $className) {
                 $instances[] = new $className();
             }
-
             /**
              * Triggered to filter / restrict profile summaries.
              *
@@ -78,13 +72,10 @@ class ProfileSummaryProvider
              * @param ProfileSummaryAbstract[] $profileSummaries An array of profile summaries
              */
             Piwik::postEvent('Live.filterProfileSummaries', array(&$instances));
-
             $cache->save($cacheId, $instances);
         }
-
         return $cache->fetch($cacheId);
     }
-
     /**
      * Returns class names of all VisitorDetails classes.
      *
@@ -93,6 +84,6 @@ class ProfileSummaryProvider
      */
     protected function getAllProfileSummaryClasses()
     {
-        return $this->pluginManager->findMultipleComponents('ProfileSummary', 'Piwik\Plugins\Live\ProfileSummary\ProfileSummaryAbstract');
+        return $this->pluginManager->findMultipleComponents('ProfileSummary', 'Piwik\\Plugins\\Live\\ProfileSummary\\ProfileSummaryAbstract');
     }
 }

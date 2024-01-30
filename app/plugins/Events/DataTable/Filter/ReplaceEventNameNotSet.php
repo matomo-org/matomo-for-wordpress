@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable;
 use Piwik\Piwik;
 use Piwik\Plugins\Events\Archiver;
-
 class ReplaceEventNameNotSet extends BaseFilter
 {
     /**
@@ -24,7 +24,6 @@ class ReplaceEventNameNotSet extends BaseFilter
     {
         parent::__construct($table);
     }
-
     /**
      * @param DataTable $table
      */

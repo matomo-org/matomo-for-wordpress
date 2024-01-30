@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\DevicePlugins\Columns;
 
 use Piwik\Columns\Dimension;
-
 class Plugin extends Dimension
 {
     protected $nameSingular = 'General_Plugin';

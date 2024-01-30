@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -15,7 +16,6 @@ use Piwik\Plugins\Contents\Actions\ActionContent;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\TableLogAction;
-
 class ContentTarget extends ActionDimension
 {
     protected $columnName = 'idaction_content_target';
@@ -27,35 +27,28 @@ class ContentTarget extends ActionDimension
     protected $category = 'General_Actions';
     protected $acceptValues = 'For instance the URL of a landing page: "http://landingpage.example.com"';
     protected $sqlFilter = [TableLogAction::class, 'getOptimizedIdActionSqlMatch'];
-
     public function getDbColumnJoin()
     {
         return new ActionNameJoin();
     }
-
     public function getDbDiscriminator()
     {
         return new Discriminator('log_action', 'type', $this->getActionId());
     }
-
     public function getActionId()
     {
         return Action::TYPE_CONTENT_TARGET;
     }
-
     public function onLookupAction(Request $request, Action $action)
     {
-        if (!($action instanceof ActionContent)) {
+        if (!$action instanceof ActionContent) {
             return false;
         }
-
         $contentTarget = $request->getParam('c_t');
         $contentTarget = trim($contentTarget);
-
         if (strlen($contentTarget) > 0) {
             return $contentTarget;
         }
-
         return false;
     }
 }

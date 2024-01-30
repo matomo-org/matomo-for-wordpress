@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\Insights\DataTable\Filter;
 
 use Piwik\DataTable;
-
 /**
  * Removes all rows whose value is too low.
  */
@@ -18,7 +18,6 @@ class ExcludeLowValue extends DataTable\BaseFilter
     private $minimumValue;
     private $columnToRead;
     private $columnToCheckToBeTrue;
-
     /**
      * @param DataTable $table
      * @param string $columnToRead
@@ -33,21 +32,16 @@ class ExcludeLowValue extends DataTable\BaseFilter
         $this->minimumValue = $minimumValue;
         $this->columnToCheckToBeTrue = $columnToCheckToBeTrue;
     }
-
     public function filter($table)
     {
         if (!$this->minimumValue) {
             return;
         }
-
         foreach ($table->getRows() as $key => $row) {
-
             if ($this->columnToCheckToBeTrue && !$row->getColumn($this->columnToCheckToBeTrue)) {
                 continue;
             }
-
             $value = $row->getColumn($this->columnToRead);
-
             if ($this->minimumValue > abs($value)) {
                 $table->deleteRow($key);
             }

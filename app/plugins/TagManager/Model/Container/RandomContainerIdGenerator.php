@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,19 +10,16 @@ namespace Piwik\Plugins\TagManager\Model\Container;
 
 use Piwik\Common;
 use Piwik\Plugins\TagManager\Dao\ContainersDao;
-
-class RandomContainerIdGenerator implements ContainerIdGenerator
+class RandomContainerIdGenerator implements \Piwik\Plugins\TagManager\Model\Container\ContainerIdGenerator
 {
     /**
      * @var ContainersDao
      */
     private $dao;
-
     public function __construct(ContainersDao $containersDao)
     {
         $this->dao = $containersDao;
     }
-
     public function generateId()
     {
         $numTries = 0;
@@ -32,8 +30,6 @@ class RandomContainerIdGenerator implements ContainerIdGenerator
             $idContainer = Common::getRandomString($len = 1, $alphabet = "abcdefghijklmnoprstuvwxyzABCDEFGHIJKLMNOPRSTUVWXYZ123456789");
             $idContainer .= Common::getRandomString($len = 7, $alphabet = "abcdefghijklmnoprstuvwxyzABCDEFGHIJKLMNOPRSTUVWXYZ0123456789");
         } while ($this->dao->hasContainer($idContainer) && $numTries < 100);
-
         return $idContainer;
     }
 }
-

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -14,16 +15,10 @@ namespace Piwik\Menu;
 class Group
 {
     private $items;
-
     public function add($subTitleMenu, $url, $tooltip = false)
     {
-        $this->items[] = array(
-            'name'    => $subTitleMenu,
-            'url'     => $url,
-            'tooltip' => $tooltip
-        );
+        $this->items[] = array('name' => $subTitleMenu, 'url' => $url, 'tooltip' => $tooltip);
     }
-
     public function getItems()
     {
         return $this->items;

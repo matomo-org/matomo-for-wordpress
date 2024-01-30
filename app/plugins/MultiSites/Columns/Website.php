@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Plugins\MultiSites\Columns;
 
 use Piwik\Columns\Dimension;
 use Piwik\Piwik;
-
 class Website extends Dimension
 {
     public function getName()

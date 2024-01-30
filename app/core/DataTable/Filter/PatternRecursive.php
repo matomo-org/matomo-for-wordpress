@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable;
-
 /**
  * Deletes rows that do not contain a column that matches a regex pattern and do not contain a
  * subtable that contains a column that matches a regex pattern.
@@ -27,7 +27,6 @@ class PatternRecursive extends BaseFilter
     private $columnToFilter;
     private $patternToSearch;
     private $patternToSearchQuoted;
-
     /**
      * Constructor.
      *
@@ -39,11 +38,11 @@ class PatternRecursive extends BaseFilter
     {
         parent::__construct($table);
         $this->patternToSearch = $patternToSearch;
-        $this->patternToSearchQuoted = Pattern::getPatternQuoted($patternToSearch);
-        $this->patternToSearch = $patternToSearch; //preg_quote($patternToSearch);
+        $this->patternToSearchQuoted = \Piwik\DataTable\Filter\Pattern::getPatternQuoted($patternToSearch);
+        $this->patternToSearch = $patternToSearch;
+        //preg_quote($patternToSearch);
         $this->columnToFilter = $columnToFilter;
     }
-
     /**
      * See {@link PatternRecursive}.
      *
@@ -53,13 +52,11 @@ class PatternRecursive extends BaseFilter
     public function filter($table)
     {
         $rows = $table->getRows();
-
         foreach ($rows as $key => $row) {
             // A row is deleted if
             // 1 - its label doesn't contain the pattern
             // AND 2 - the label is not found in the children
             $patternNotFoundInChildren = false;
-
             $subTable = $row->getSubtable();
             if (!$subTable) {
                 $patternNotFoundInChildren = true;
@@ -70,14 +67,10 @@ class PatternRecursive extends BaseFilter
                     $patternNotFoundInChildren = true;
                 }
             }
-
-            if ($patternNotFoundInChildren
-                && !Pattern::match($this->patternToSearchQuoted, $row->getColumn($this->columnToFilter), $invertedMatch = false)
-            ) {
+            if ($patternNotFoundInChildren && !\Piwik\DataTable\Filter\Pattern::match($this->patternToSearchQuoted, $row->getColumn($this->columnToFilter), $invertedMatch = false)) {
                 $table->deleteRow($key);
             }
         }
-
         return $table->getRowsCount();
     }
 }

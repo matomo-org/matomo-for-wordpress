@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,12 +7,10 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Scheduler\Schedule;
 
 use Exception;
 use Piwik\Date;
-
 /**
  * Describes the interval on which a scheduled task is executed. Use the {@link factory()} method
  * to create Schedule instances.
@@ -27,14 +26,12 @@ abstract class Schedule
     const PERIOD_HOUR = 'hour';
     const PERIOD_YEAR = 'year';
     const PERIOD_RANGE = 'range';
-
     /**
      * @link http://php.net/manual/en/function.date.php, format string : 'G'
      * Defaults to midnight
      * @var integer
      */
     protected $hour = 0;
-
     /**
      * For weekly scheduling : http://php.net/manual/en/function.date.php, format string : 'N', defaults to Monday
      * For monthly scheduling : day of the month (1 to 31) (note: will be capped at the latest day available the
@@ -42,9 +39,7 @@ abstract class Schedule
      * @var integer
      */
     protected $day = 1;
-
     protected $timezone = null;
-
     /**
      * @param $period
      * @return Daily|Monthly|Weekly
@@ -55,19 +50,17 @@ abstract class Schedule
     {
         switch ($period) {
             case self::PERIOD_MONTH:
-                return new Monthly();
+                return new \Piwik\Scheduler\Schedule\Monthly();
             case self::PERIOD_WEEK:
-                return new Weekly();
+                return new \Piwik\Scheduler\Schedule\Weekly();
             case self::PERIOD_DAY:
-                return new Daily();
+                return new \Piwik\Scheduler\Schedule\Daily();
             case self::PERIOD_HOUR:
-                return new Hourly();
-
+                return new \Piwik\Scheduler\Schedule\Hourly();
             default:
                 throw new Exception('period ' . $period . 'is undefined.');
         }
     }
-
     /**
      * Returns the system time used by subclasses to compute schedulings.
      * This method has been introduced so unit tests can override the current system time.
@@ -77,7 +70,6 @@ abstract class Schedule
     {
         return time();
     }
-
     /**
      * Computes the next scheduled time based on the system time at which the method has been called and
      * the underlying scheduling interval.
@@ -86,8 +78,7 @@ abstract class Schedule
      * @return integer Returns the rescheduled time measured in the number of seconds since the Unix Epoch
      * @ignore
      */
-    abstract public function getRescheduledTime();
-
+    public abstract function getRescheduledTime();
     /**
      * Sets the day of the period to execute the scheduled task. Not a valid operation for all period types.
      *
@@ -95,8 +86,7 @@ abstract class Schedule
      * @param  int $_day a number describing the day to set. Its meaning depends on the Schedule's period type.
      * @throws Exception if method not supported by subclass or parameter _day is invalid
      */
-    abstract public function setDay($_day);
-
+    public abstract function setDay($_day);
     /**
      * Sets the hour of the day on which the task should be executed.
      *
@@ -109,10 +99,8 @@ abstract class Schedule
         if (!($hour >= 0 && $hour < 24)) {
             throw new Exception("Invalid hour parameter, must be >=0 and < 24");
         }
-
         $this->hour = $hour;
     }
-
     /**
      * By setting a timezone you make sure the scheduled task will be run at the requested time in the
      * given timezone. This is useful for instance in case you want to make sure a task runs at midnight in a website's
@@ -124,36 +112,27 @@ abstract class Schedule
     {
         $this->timezone = $timezone;
     }
-
     protected function adjustTimezone($rescheduledTime)
     {
         if (is_null($this->timezone)) {
             return $rescheduledTime;
         }
-
         $arbitraryDateInUTC = Date::factory('2011-01-01');
-        $dateInTimezone     = Date::factory('2011-01-01', $this->timezone);
-
+        $dateInTimezone = Date::factory('2011-01-01', $this->timezone);
         $midnightInTimezone = date('H', $dateInTimezone->getTimestamp());
-
         if ($arbitraryDateInUTC->isEarlier($dateInTimezone)) {
             $hoursDifference = 0 - $midnightInTimezone;
         } else {
             $hoursDifference = 24 - $midnightInTimezone;
         }
-
-        $hoursDifference  = $hoursDifference % 24;
-
-        $rescheduledTime += (3600 * $hoursDifference);
-
+        $hoursDifference = $hoursDifference % 24;
+        $rescheduledTime += 3600 * $hoursDifference;
         if ($this->getTime() > $rescheduledTime) {
             // make sure the rescheduled date is in the future
-            $rescheduledTime = (24 * 3600) + $rescheduledTime;
+            $rescheduledTime = 24 * 3600 + $rescheduledTime;
         }
-
         return $rescheduledTime;
     }
-
     /**
      * Computes the delta in seconds needed to adjust the rescheduled time to the required hour.
      *
@@ -164,17 +143,10 @@ abstract class Schedule
     {
         if ($this->hour !== null) {
             // Reset the number of minutes and set the scheduled hour to the one specified with setHour()
-            $rescheduledTime = mktime($this->hour,
-                0,
-                date('s', $rescheduledTime),
-                date('n', $rescheduledTime),
-                date('j', $rescheduledTime),
-                date('Y', $rescheduledTime)
-            );
+            $rescheduledTime = mktime($this->hour, 0, date('s', $rescheduledTime), date('n', $rescheduledTime), date('j', $rescheduledTime), date('Y', $rescheduledTime));
         }
         return $rescheduledTime;
     }
-
     /**
      * Returns a new Schedule instance using a string description of the scheduled period type
      * and a string description of the day within the period to execute the task on.
@@ -197,17 +169,17 @@ abstract class Schedule
     {
         switch ($periodType) {
             case 'hourly':
-                return new Hourly();
+                return new \Piwik\Scheduler\Schedule\Hourly();
             case 'daily':
-                return new Daily();
+                return new \Piwik\Scheduler\Schedule\Daily();
             case 'weekly':
-                $result = new Weekly();
+                $result = new \Piwik\Scheduler\Schedule\Weekly();
                 if ($periodDay !== false) {
                     $result->setDay($periodDay);
                 }
                 return $result;
             case 'monthly':
-                $result = new Monthly($periodDay);
+                $result = new \Piwik\Scheduler\Schedule\Monthly($periodDay);
                 if ($periodDay !== false) {
                     if (is_int($periodDay)) {
                         $result->setDay($periodDay);
@@ -217,8 +189,7 @@ abstract class Schedule
                 }
                 return $result;
             default:
-                throw new Exception("Unsupported scheduled period type: '$periodType'. Supported values are"
-                                  . " 'hourly', 'daily', 'weekly' or 'monthly'.");
+                throw new Exception("Unsupported scheduled period type: '{$periodType}'. Supported values are" . " 'hourly', 'daily', 'weekly' or 'monthly'.");
         }
     }
 }

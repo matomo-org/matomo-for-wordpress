@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,13 +13,11 @@ use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable;
 use Piwik\Metrics;
 use Piwik\Plugins\CoreHome\Columns\UserId;
-
 class RemoveUserIfNeeded extends BaseFilter
 {
     private $idSite;
     private $period;
     private $date;
-
     /**
      * Constructor.
      *
@@ -29,17 +28,15 @@ class RemoveUserIfNeeded extends BaseFilter
         parent::__construct($table);
         $this->idSite = $idSite;
         $this->period = $period;
-        $this->date   = $date;
+        $this->date = $date;
     }
-
     /**
      * @param DataTable $table
      */
     public function filter($table)
     {
         $userId = new UserId();
-        if (!$userId->hasDataTableUsers($table) &&
-            !$userId->isUsedInAtLeastOneSite(array($this->idSite), $this->period, $this->date)) {
+        if (!$userId->hasDataTableUsers($table) && !$userId->isUsedInAtLeastOneSite(array($this->idSite), $this->period, $this->date)) {
             $table->deleteColumn(Metrics::INDEX_NB_USERS);
         }
     }

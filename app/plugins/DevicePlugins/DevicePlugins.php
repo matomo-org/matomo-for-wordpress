@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,7 +14,6 @@ use Piwik\CacheId;
 use Piwik\Columns\Dimension;
 use Piwik\Piwik;
 use Piwik\Plugin;
-
 /**
  *
  */
@@ -24,21 +24,13 @@ class DevicePlugins extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array(
-            'Metrics.getDefaultMetricTranslations' => 'addMetricTranslations',
-        );
+        return array('Metrics.getDefaultMetricTranslations' => 'addMetricTranslations');
     }
-
     public function addMetricTranslations(&$translations)
     {
-        $metrics = array(
-            'nb_visits_percentage' => Piwik::translate('General_ColumnPercentageVisits')
-        );
-
+        $metrics = array('nb_visits_percentage' => Piwik::translate('General_ColumnPercentageVisits'));
         $translations = array_merge($translations, $metrics);
     }
-
-
     /**
      * Returns all available DevicePlugins Columns
      *
@@ -48,24 +40,19 @@ class DevicePlugins extends \Piwik\Plugin
     public static function getAllPluginColumns()
     {
         $cacheId = CacheId::pluginAware('DevicePluginColumns');
-        $cache   = Cache::getTransientCache();
+        $cache = Cache::getTransientCache();
         $removedDimensions = Dimension::getRemovedDimensions();
-
         if (!$cache->contains($cacheId)) {
             $instances = [];
-
             foreach (self::getAllDevicePluginsColumnClasses() as $className) {
                 if (!in_array($className, $removedDimensions)) {
                     $instances[] = new $className();
                 }
             }
-
             $cache->save($cacheId, $instances);
         }
-
         return $cache->fetch($cacheId);
     }
-
     /**
      * Returns class names of all DevicePlugins Column classes.
      *
@@ -74,6 +61,6 @@ class DevicePlugins extends \Piwik\Plugin
      */
     protected static function getAllDevicePluginsColumnClasses()
     {
-        return Plugin\Manager::getInstance()->findMultipleComponents('Columns', 'Piwik\Plugins\DevicePlugins\Columns\DevicePluginColumn');
+        return Plugin\Manager::getInstance()->findMultipleComponents('Columns', 'Piwik\\Plugins\\DevicePlugins\\Columns\\DevicePluginColumn');
     }
 }

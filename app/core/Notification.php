@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -48,76 +49,64 @@ namespace Piwik;
 class Notification
 {
     const CONTEXT_SUCCESS = 'success';
-    const CONTEXT_ERROR   = 'error';
-    const CONTEXT_INFO    = 'info';
+    const CONTEXT_ERROR = 'error';
+    const CONTEXT_INFO = 'info';
     const CONTEXT_WARNING = 'warning';
-
     /**
      * Lowest priority value.
      */
-    const PRIORITY_MIN    = 1;
-
+    const PRIORITY_MIN = 1;
     /**
      * Lower priority value.
      */
-    const PRIORITY_LOW    = 25;
-
+    const PRIORITY_LOW = 25;
     /**
      * Higher priority value.
      */
-    const PRIORITY_HIGH   = 50;
-
+    const PRIORITY_HIGH = 50;
     /**
      * Highest priority value.
      */
-    const PRIORITY_MAX    = 100;
-
+    const PRIORITY_MAX = 100;
     /**
      * If this flag is applied, no close icon will be displayed. _Note: persistent notifications always have a close
      * icon._
      *
      * See {@link $flags}.
      */
-    const FLAG_NO_CLEAR   = 1;
-
+    const FLAG_NO_CLEAR = 1;
     /**
      * If this flag is applied, a close icon will be displayed.
      *
      * See {@link $flags}.
      */
-    const FLAG_CLEAR  = 0;
-
+    const FLAG_CLEAR = 0;
     /**
      * Notifications of this type will be displayed for a few seconds and then faded out.
      */
-    const TYPE_TOAST      = 'toast';
-
+    const TYPE_TOAST = 'toast';
     /**
      * Notifications of this type will be displayed until the new user explicitly closes the notification.
      * The notifications will display even if the user reloads the page.
      */
     const TYPE_PERSISTENT = 'persistent';
-
     /**
      * Notifications of this type will be displayed only once. They will disappear after a page reload or
      * change.
      */
-    const TYPE_TRANSIENT  = 'transient';
-
+    const TYPE_TRANSIENT = 'transient';
     /**
      * The notification title. The title is optional and is displayed directly before the message content.
      *
      * @var string
      */
     public $title;
-
     /**
      * The notification message. Must be set.
      *
      * @var string
      */
     public $message;
-
     /**
      * Contains extra display options.
      *
@@ -126,14 +115,12 @@ class Notification
      * @var int
      */
     public $flags = self::FLAG_NO_CLEAR;
-
     /**
      * The notification's display type. See `TYPE_*` constants in {@link Notification}.
      *
      * @var string
      */
     public $type = self::TYPE_TRANSIENT;
-
     /**
      * The notification's context (message type). See `CONTEXT_*` constants in {@link Notification}.
      *
@@ -142,7 +129,6 @@ class Notification
      * @var string
      */
     public $context = self::CONTEXT_INFO;
-
     /**
      * The notification's priority. The higher the priority, the higher the order. See `PRIORITY_*`
      * constants in {@link Notification} to see possible priority values.
@@ -150,7 +136,6 @@ class Notification
      * @var int
      */
     public $priority;
-
     /**
      * If true, the message will not be escaped before being outputted as HTML. If you set this to
      * `true`, make sure you escape text yourself in order to avoid XSS vulnerabilities.
@@ -158,7 +143,6 @@ class Notification
      * @var bool
      */
     public $raw = false;
-
     /**
      * Constructor.
      *
@@ -170,10 +154,8 @@ class Notification
         if (empty($message)) {
             throw new \Exception('No notification message given');
         }
-
         $this->message = $message;
     }
-
     /**
      * Returns `1` if the notification will be displayed without a close button, `0` if otherwise.
      *
@@ -184,10 +166,8 @@ class Notification
         if ($this->flags & self::FLAG_NO_CLEAR) {
             return 1;
         }
-
         return 0;
     }
-
     /**
      * Returns the notification's priority. If no priority has been set, a priority will be set based
      * on the notification's context.
@@ -197,18 +177,12 @@ class Notification
     public function getPriority()
     {
         if (!isset($this->priority)) {
-            $typeToPriority = array(static::CONTEXT_ERROR   => static::PRIORITY_MAX,
-                                    static::CONTEXT_WARNING => static::PRIORITY_HIGH,
-                                    static::CONTEXT_SUCCESS => static::PRIORITY_MIN,
-                                    static::CONTEXT_INFO    => static::PRIORITY_LOW);
-
+            $typeToPriority = array(static::CONTEXT_ERROR => static::PRIORITY_MAX, static::CONTEXT_WARNING => static::PRIORITY_HIGH, static::CONTEXT_SUCCESS => static::PRIORITY_MIN, static::CONTEXT_INFO => static::PRIORITY_LOW);
             if (array_key_exists($this->context, $typeToPriority)) {
                 return $typeToPriority[$this->context];
             }
-
             return static::PRIORITY_LOW;
         }
-
         return $this->priority;
     }
 }

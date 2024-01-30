@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,23 +8,19 @@
  */
 namespace Piwik\Plugins\TagManager\Template\Trigger;
 
-class WindowLoadedTrigger extends BaseTrigger
+class WindowLoadedTrigger extends \Piwik\Plugins\TagManager\Template\Trigger\BaseTrigger
 {
     const ID = 'WindowLoaded';
-
     public function getId()
     {
         return self::ID;
     }
-
     public function getCategory()
     {
         return self::CATEGORY_PAGE_VIEW;
     }
-
     public function getParameters()
     {
         return array();
     }
-
 }

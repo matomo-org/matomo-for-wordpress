@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,31 +12,24 @@ use Piwik\Piwik;
 use Piwik\Settings\FieldConfig;
 use Piwik\Validators\CharacterLength;
 use Piwik\Validators\NotEmpty;
-
-class CookieVariable extends BaseVariable
+class CookieVariable extends \Piwik\Plugins\TagManager\Template\Variable\BaseVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_PAGE_VARIABLES;
     }
-
     public function getParameters()
     {
-        return array(
-            $this->makeSetting('cookieName', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
-                $field->title = Piwik::translate('TagManager_CookieVariableCookieNameTitle');
-                $field->validators[] = new NotEmpty();
-                $field->validators[] = new CharacterLength(1, 500);
-                $field->transform = function ($value) {
-                    return trim($value);
-                };
-            }),
-            $this->makeSetting('urlDecode', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
-                $field->title = Piwik::translate('TagManager_CookieVariableUrlDecodeTitle');
-                $field->inlineHelp = Piwik::translate('TagManager_CookieVariableUrlDecodeDescription');
-            }),
-
-        );
+        return array($this->makeSetting('cookieName', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
+            $field->title = Piwik::translate('TagManager_CookieVariableCookieNameTitle');
+            $field->validators[] = new NotEmpty();
+            $field->validators[] = new CharacterLength(1, 500);
+            $field->transform = function ($value) {
+                return trim($value);
+            };
+        }), $this->makeSetting('urlDecode', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+            $field->title = Piwik::translate('TagManager_CookieVariableUrlDecodeTitle');
+            $field->inlineHelp = Piwik::translate('TagManager_CookieVariableUrlDecodeDescription');
+        }));
     }
-
 }

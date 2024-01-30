@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\UserCountry\Categories;
 
 use Piwik\Category\Category;
-
 class LocationsCategory extends Category
 {
     protected $id = 'UserCountry_VisitLocation';

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,12 +11,10 @@ namespace Piwik\Plugins\Ecommerce\Columns;
 
 use Piwik\Columns\DimensionSegmentFactory;
 use Piwik\Segment\SegmentsList;
-
-class ProductViewCategory2 extends ProductViewCategory
+class ProductViewCategory2 extends \Piwik\Plugins\Ecommerce\Columns\ProductViewCategory
 {
     protected $columnName = 'idaction_product_cat2';
     protected $categoryNumber = 2;
-
     public function configureSegments(SegmentsList $segmentsList, DimensionSegmentFactory $dimensionSegmentFactory)
     {
         // handled in category 1

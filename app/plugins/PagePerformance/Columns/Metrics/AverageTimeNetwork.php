@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,7 +9,6 @@
 namespace Piwik\Plugins\PagePerformance\Columns\Metrics;
 
 use Piwik\Piwik;
-
 /**
  * The average amount of time needed to connect to the server. Calculated as
  *
@@ -17,15 +17,13 @@ use Piwik\Piwik;
  * The above metrics are calculated during archiving. This metric is calculated before
  * serving a report.
  */
-class AverageTimeNetwork extends AveragePerformanceMetric
+class AverageTimeNetwork extends \Piwik\Plugins\PagePerformance\Columns\Metrics\AveragePerformanceMetric
 {
     const ID = 'time_network';
-
     public function getTranslatedName()
     {
         return Piwik::translate('PagePerformance_ColumnAverageTimeNetwork');
     }
-
     public function getDocumentation()
     {
         return Piwik::translate('PagePerformance_ColumnAverageTimeNetworkDocumentation');

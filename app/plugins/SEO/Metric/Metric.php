@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik\Plugins\SEO\Metric;
 
 /**
@@ -17,37 +17,30 @@ class Metric
      * @var string
      */
     private $id;
-
     /**
      * @var string
      */
     private $name;
-
     /**
      * @var string
      */
     private $value;
-
     /**
      * @var string
      */
     private $logo;
-
     /**
      * @var string|null
      */
     private $logoLink;
-
     /**
      * @var string|null
      */
     private $logoTooltip;
-
     /**
      * @var string|null
      */
     private $valueSuffix;
-
     /**
      * @param string $id
      * @param string $name Can be a string or a translation ID.
@@ -67,7 +60,6 @@ class Metric
         $this->logoTooltip = $logoTooltip;
         $this->valueSuffix = $valueSuffix;
     }
-
     /**
      * @return string
      */
@@ -75,7 +67,6 @@ class Metric
     {
         return $this->id;
     }
-
     /**
      * @return string
      */
@@ -83,7 +74,6 @@ class Metric
     {
         return $this->name;
     }
-
     /**
      * @return string
      */
@@ -91,7 +81,6 @@ class Metric
     {
         return $this->value;
     }
-
     /**
      * @return string
      */
@@ -99,7 +88,6 @@ class Metric
     {
         return $this->logo;
     }
-
     /**
      * @return string|null
      */
@@ -107,7 +95,6 @@ class Metric
     {
         return $this->logoLink;
     }
-
     /**
      * @return string|null
      */
@@ -115,7 +102,6 @@ class Metric
     {
         return $this->logoTooltip;
     }
-
     /**
      * @return null|string
      */
@@ -123,7 +109,6 @@ class Metric
     {
         return $this->valueSuffix;
     }
-
     /**
      * Allows the class to be serialized with var_export (in the cache).
      *
@@ -132,14 +117,6 @@ class Metric
      */
     public static function __set_state($array)
     {
-        return new self(
-            $array['id'],
-            $array['name'],
-            $array['value'],
-            $array['logo'],
-            $array['logoLink'],
-            $array['logoTooltip'],
-            $array['valueSuffix']
-        );
+        return new self($array['id'], $array['name'], $array['value'], $array['logo'], $array['logoLink'], $array['logoTooltip'], $array['valueSuffix']);
     }
 }

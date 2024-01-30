@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Plugins\DevicesDetection\Columns;
 use Piwik\Container\StaticContainer;
 use Piwik\DeviceDetector\DeviceDetectorFactory;
 use Piwik\Plugin\Dimension\VisitDimension;
-
 abstract class Base extends VisitDimension
 {
     protected function getUAParser($userAgent, $clientHints)

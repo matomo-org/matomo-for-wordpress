@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,20 +13,17 @@ use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\DevicesDetection\Columns\OsVersion;
 use Piwik\Plugin\ReportsProvider;
-
-class GetOsVersions extends Base
+class GetOsVersions extends \Piwik\Plugins\DevicesDetection\Reports\Base
 {
     protected function init()
     {
         parent::init();
-        $this->dimension     = new OsVersion();
-        $this->name          = Piwik::translate('DevicesDetection_OperatingSystemVersions');
+        $this->dimension = new OsVersion();
+        $this->name = Piwik::translate('DevicesDetection_OperatingSystemVersions');
         $this->documentation = Piwik::translate('DevicesDetection_OperatingSystemVersionsReportDocumentation');
         $this->order = 2;
-
         $this->subcategoryId = 'DevicesDetection_Software';
     }
-
     public function configureView(ViewDataTable $view)
     {
         $view->config->title = $this->name;
@@ -33,11 +31,8 @@ class GetOsVersions extends Base
         $view->config->show_exclude_low_population = false;
         $view->config->addTranslation('label', Piwik::translate("DevicesDetection_dataTableLabelSystemVersion"));
     }
-
     public function getRelatedReports()
     {
-        return array(
-            ReportsProvider::factory('DevicesDetection', 'getOsFamilies'),
-        );
+        return array(ReportsProvider::factory('DevicesDetection', 'getOsFamilies'));
     }
 }

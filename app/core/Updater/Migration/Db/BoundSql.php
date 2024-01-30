@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,19 +7,18 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Updater\Migration\Db;
-use Piwik\Db;
 
+use Piwik\Db;
 /**
  * @see Factory::boundSql()
  * @ignore
  */
-class BoundSql extends Sql
+class BoundSql extends \Piwik\Updater\Migration\Db\Sql
 {
     /**
      * @var array
      */
     private $bind;
-
     /**
      * BoundSql constructor.
      * @param string $sql
@@ -30,21 +30,17 @@ class BoundSql extends Sql
         parent::__construct($sql, $errorCodesToIgnore);
         $this->bind = (array) $bind;
     }
-
     public function __toString()
     {
         $sql = parent::__toString();
-
         foreach ($this->bind as $value) {
             if (!is_int($value) && !is_float($value)) {
-                $value = "'" . addcslashes($value, "\000\n\r\\'\"\032") . "'";
+                $value = "'" . addcslashes($value, "\x00\n\r\\'\"\x1a") . "'";
             }
             $sql = substr_replace($sql, $value, $pos = strpos($sql, '?'), $len = 1);
         }
-
         return $sql;
     }
-
     public function exec()
     {
         Db::query($this->sql, $this->bind);

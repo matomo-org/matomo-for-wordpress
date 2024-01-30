@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
-
 /**
  * Delete all rows from the table that are not in the given [offset, offset+limit) range.
  *
@@ -27,17 +27,14 @@ class Limit extends BaseFilter
      * @var int
      */
     public $offset;
-
     /**
      * @var int
      */
     public $limit;
-
     /**
      * @var bool
      */
     public $keepSummaryRow;
-
     /**
      * Constructor.
      *
@@ -49,12 +46,10 @@ class Limit extends BaseFilter
     public function __construct($table, $offset, $limit = -1, $keepSummaryRow = false)
     {
         parent::__construct($table);
-
         $this->offset = $offset;
-        $this->limit  = $limit;
+        $this->limit = $limit;
         $this->keepSummaryRow = $keepSummaryRow;
     }
-
     /**
      * See {@link Limit}.
      *
@@ -63,11 +58,9 @@ class Limit extends BaseFilter
     public function filter($table)
     {
         $table->setMetadata(DataTable::TOTAL_ROWS_BEFORE_LIMIT_METADATA_NAME, $table->getRowsCount());
-
         if ($this->keepSummaryRow) {
             $summaryRow = $table->getRowFromId(DataTable::ID_SUMMARY_ROW);
         }
-
         // we delete from 0 to offset
         if ($this->offset > 0) {
             $table->deleteRowsOffset(0, $this->offset);
@@ -76,7 +69,6 @@ class Limit extends BaseFilter
         if ($this->limit >= 0) {
             $table->deleteRowsOffset($this->limit);
         }
-
         if ($this->keepSummaryRow && !empty($summaryRow)) {
             $table->addSummaryRow($summaryRow);
         }

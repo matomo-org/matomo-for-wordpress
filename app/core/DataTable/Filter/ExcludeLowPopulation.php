@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\DataTable\Filter;
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
 use Piwik\Metrics;
-
 /**
  * Deletes all rows for which a specific column has a value that is lower than
  * specified minimum threshold value.
@@ -35,7 +35,6 @@ use Piwik\Metrics;
 class ExcludeLowPopulation extends BaseFilter
 {
     const MINIMUM_SIGNIFICANT_PERCENTAGE_THRESHOLD = 0.02;
-
     /**
      * The minimum value to enforce in a datatable for a specified column. Rows found with
      * a value less than this are removed.
@@ -43,9 +42,7 @@ class ExcludeLowPopulation extends BaseFilter
      * @var number
      */
     private $minimumValue;
-
     private $columnToFilter;
-
     /**
      * Constructor.
      *
@@ -62,14 +59,11 @@ class ExcludeLowPopulation extends BaseFilter
     public function __construct($table, $columnToFilter, $minimumValue, $minimumPercentageThreshold = false)
     {
         parent::__construct($table);
-
         $row = $table->getFirstRow();
         if ($row === false) {
             return;
         }
-
         $this->columnToFilter = $this->selectColumnToExclude($columnToFilter, $row);
-
         if ($minimumValue == 0) {
             if ($minimumPercentageThreshold === false) {
                 $minimumPercentageThreshold = self::MINIMUM_SIGNIFICANT_PERCENTAGE_THRESHOLD;
@@ -78,10 +72,8 @@ class ExcludeLowPopulation extends BaseFilter
             $sumValues = array_sum($allValues);
             $minimumValue = $sumValues * $minimumPercentageThreshold;
         }
-
         $this->minimumValue = $minimumValue;
     }
-
     /**
      * See {@link ExcludeLowPopulation}.
      *
@@ -89,17 +81,15 @@ class ExcludeLowPopulation extends BaseFilter
      */
     public function filter($table)
     {
-        if(empty($this->columnToFilter)) {
+        if (empty($this->columnToFilter)) {
             return;
         }
         $minimumValue = $this->minimumValue;
-        $isValueLowPopulation = function ($value) use ($minimumValue) {
+        $isValueLowPopulation = function ($value) use($minimumValue) {
             return $value < $minimumValue;
         };
-
         $table->filter('ColumnCallbackDeleteRow', array($this->columnToFilter, $isValueLowPopulation));
     }
-
     /**
      * Sets the column to be used for Excluding low population
      *
@@ -111,17 +101,14 @@ class ExcludeLowPopulation extends BaseFilter
         if ($row->hasColumn($columnToFilter)) {
             return $columnToFilter;
         }
-
         // filter_excludelowpop=nb_visits but the column name is still Metrics::INDEX_NB_VISITS in the table
         $columnIdToName = Metrics::getMappingFromNameToId();
         if (isset($columnIdToName[$columnToFilter])) {
             $column = $columnIdToName[$columnToFilter];
-
             if ($row->hasColumn($column)) {
                 return $column;
             }
         }
-
         return $columnToFilter;
     }
 }

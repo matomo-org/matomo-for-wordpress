@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,33 +14,28 @@ use Piwik\Widget\Widget;
 use Piwik\Widget\WidgetConfig;
 use Piwik\Translation\Translator;
 use Piwik\View;
-
 class GetPromoVideo extends Widget
 {
     /**
      * @var Translator
      */
     private $translator;
-
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;
     }
-
     public static function configure(WidgetConfig $config)
     {
         $config->setCategoryId('About Matomo');
         $config->setName('Installation_Welcome');
         $config->setOrder(10);
     }
-
     public function render()
     {
         $view = new View('@CoreHome/getPromoVideo');
-        $view->shareText     = $this->translator->translate('CoreHome_SharePiwikShort');
+        $view->shareText = $this->translator->translate('CoreHome_SharePiwikShort');
         $view->shareTextLong = $this->translator->translate('CoreHome_SharePiwikLong');
         $view->promoVideoUrl = Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/videos/');
-
         return $view->render();
     }
 }

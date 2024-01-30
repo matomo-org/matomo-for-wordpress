@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,15 +9,12 @@
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
 use Piwik\Plugins\TagManager\Context\WebContext;
-
-
-class UtcDateVariable extends BasePreConfiguredVariable
+class UtcDateVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BasePreConfiguredVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_DATE;
     }
-
     public function loadTemplate($context, $entity, $skipTemplate = false)
     {
         switch ($context) {
@@ -24,5 +22,4 @@ class UtcDateVariable extends BasePreConfiguredVariable
                 return $this->makeReturnTemplateMethod('new Date().toUTCString()', $skipTemplate);
         }
     }
-
 }

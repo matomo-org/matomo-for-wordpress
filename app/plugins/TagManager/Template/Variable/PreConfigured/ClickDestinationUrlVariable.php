@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,16 +8,14 @@
  */
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
-class ClickDestinationUrlVariable extends BaseDataLayerVariable
+class ClickDestinationUrlVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BaseDataLayerVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_CLICKS;
     }
-
     protected function getDataLayerVariableName()
     {
         return 'mtm.clickElementUrl';
     }
-
 }

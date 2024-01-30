@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\Ecommerce\Categories;
 
 use Piwik\Category\Category;
-
 class EcommerceCategory extends Category
 {
     protected $id = 'Goals_Ecommerce';

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,16 +8,14 @@
  */
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
-class ErrorMessageVariable extends BaseDataLayerVariable
+class ErrorMessageVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BaseDataLayerVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_ERRORS;
     }
-
     protected function getDataLayerVariableName()
     {
         return 'mtm.errorMessage';
     }
-
 }

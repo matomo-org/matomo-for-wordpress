@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@ namespace Piwik\Plugins\Dashboard;
 
 use Piwik\API\Request;
 use Piwik\Piwik;
-
 /**
  * This API is the <a href='http://matomo.org/docs/analytics-api/reference/' rel='noreferrer' target='_blank'>Dashboard API</a>: it gives information about dashboards.
  *
@@ -18,14 +18,12 @@ use Piwik\Piwik;
 class API extends \Piwik\Plugin\API
 {
     private $dashboard = null;
-    private $model     = null;
-
-    public function __construct(Dashboard $dashboard, Model $model)
+    private $model = null;
+    public function __construct(\Piwik\Plugins\Dashboard\Dashboard $dashboard, \Piwik\Plugins\Dashboard\Model $model)
     {
         $this->dashboard = $dashboard;
-        $this->model     = $model;
+        $this->model = $model;
     }
-
     /**
      * Get each dashboard that belongs to a user including the containing widgets that are placed within each dashboard.
      * If the user has not created any dashboard yet, the default dashboard will be returned unless
@@ -39,22 +37,16 @@ class API extends \Piwik\Plugin\API
     public function getDashboards($login = '', $returnDefaultIfEmpty = true)
     {
         $login = $login ? $login : Piwik::getCurrentUserLogin();
-
         $dashboards = [];
-
         if (!Piwik::isUserIsAnonymous()) {
             Piwik::checkUserHasSuperUserAccessOrIsTheUser($login);
             $dashboards = $this->getUserDashboards($login);
         }
-
         if (empty($dashboards) && $returnDefaultIfEmpty) {
             $dashboards = array($this->getDefaultDashboard());
         }
-
         return $dashboards;
     }
-
-
     /**
      * Creates a new dashboard for the given login
      *
@@ -69,16 +61,12 @@ class API extends \Piwik\Plugin\API
     {
         $this->checkLoginIsNotAnonymous($login);
         Piwik::checkUserHasSuperUserAccessOrIsTheUser($login);
-
         $layout = '{}';
-
         if ($addDefaultWidgets) {
             $layout = $this->dashboard->getDefaultLayout();
         }
-
         return $this->model->createNewDashboardForUser($login, $dashboardName, $layout);
     }
-
     /**
      * Removes a dashboard according to given dashboard id and login
      *
@@ -92,16 +80,13 @@ class API extends \Piwik\Plugin\API
      * @param int $idDashboard id of the dashboard to be removed
      * @param string $login  Login of the dashboard user [defaults to current user]
      */
-    public function removeDashboard($idDashboard, $login='')
+    public function removeDashboard($idDashboard, $login = '')
     {
         $login = $login ? $login : Piwik::getCurrentUserLogin();
-
         $this->checkLoginIsNotAnonymous($login);
         Piwik::checkUserHasSuperUserAccessOrIsTheUser($login);
-
         $this->model->deleteDashboardForUser($idDashboard, $login);
     }
-
     /**
      * Copy a dashboard of current user to another user
      *
@@ -116,7 +101,6 @@ class API extends \Piwik\Plugin\API
     public function copyDashboardToUser($idDashboard, $copyToUser, $dashboardName = '')
     {
         Piwik::checkUserHasSomeAdminAccess();
-
         // get users only returns users of sites the current user has at least admin access to
         $users = Request::processRequest('UsersManager.getUsers', ['filter_limit' => -1]);
         $userFound = false;
@@ -126,42 +110,32 @@ class API extends \Piwik\Plugin\API
                 break;
             }
         }
-
         if (!$userFound) {
             throw new \Exception(sprintf('Cannot copy dashboard to user %s, user not found.', $copyToUser));
         }
-
-        $login  = Piwik::getCurrentUserLogin();
+        $login = Piwik::getCurrentUserLogin();
         $layout = $this->dashboard->getLayoutForUser($login, $idDashboard);
-
         if ($layout !== false) {
             return $this->model->createNewDashboardForUser($copyToUser, $dashboardName, $layout);
         }
-
         throw new \Exception('Dashboard not found');
     }
-
     /**
      * Resets a dashboard to the default widget configuration
      *
      * Note: Only a super user is able to reset dashboards for other users
-
      * @param int $idDashboard dashboard id
      * @param string $login user the dashboard belongs
      *
      */
-    public function resetDashboardLayout($idDashboard, $login='')
+    public function resetDashboardLayout($idDashboard, $login = '')
     {
         $login = $login ?: Piwik::getCurrentUserLogin();
-
         $this->checkLoginIsNotAnonymous($login);
         Piwik::checkUserHasSuperUserAccessOrIsTheUser($login);
-
         $layout = $this->dashboard->getDefaultLayout();
-
         $this->model->updateLayoutForUser($login, $idDashboard, $layout);
     }
-
     /**
      * Get the default dashboard.
      * @return \array[]
@@ -171,12 +145,9 @@ class API extends \Piwik\Plugin\API
         $defaultLayout = $this->dashboard->getDefaultLayout();
         $defaultLayout = $this->dashboard->decodeLayout($defaultLayout);
         $defaultDashboard = array('name' => Piwik::translate('Dashboard_Dashboard'), 'layout' => $defaultLayout, 'iddashboard' => 1);
-
         $widgets = $this->getVisibleWidgetsWithinDashboard($defaultDashboard);
-
         return $this->buildDashboard($defaultDashboard, $widgets);
     }
-
     /**
      * Get all dashboards which a user has created.
      *
@@ -186,70 +157,53 @@ class API extends \Piwik\Plugin\API
     private function getUserDashboards($userLogin)
     {
         $userDashboards = $this->dashboard->getAllDashboards($userLogin);
-
         $dashboards = array();
-
         foreach ($userDashboards as $userDashboard) {
             $widgets = $this->getVisibleWidgetsWithinDashboard($userDashboard);
             $dashboards[] = $this->buildDashboard($userDashboard, $widgets);
         }
-
         return $dashboards;
     }
-
     private function getVisibleWidgetsWithinDashboard($dashboard)
     {
         $columns = $this->getColumnsFromDashboard($dashboard);
-
         $widgets = array();
         $columns = array_filter($columns);
-
         foreach ($columns as $column) {
             foreach ($column as $widget) {
-
                 if ($this->widgetIsNotHidden($widget) && !empty($widget->parameters->module)) {
                     $module = $widget->parameters->module;
                     $action = $widget->parameters->action;
-
                     $widgets[] = array('module' => $module, 'action' => $action);
                 }
             }
         }
-
         return $widgets;
     }
-
     private function checkLoginIsNotAnonymous($login)
     {
         Piwik::checkUserIsNotAnonymous();
-
         if ($login === 'anonymous') {
             throw new \Exception('This method can\'t be performed for anonymous user');
         }
     }
-
     private function getColumnsFromDashboard($dashboard)
     {
         if (empty($dashboard['layout'])) {
             return array();
         }
-
         if (is_array($dashboard['layout'])) {
             return $dashboard['layout'];
         }
-
         if (!empty($dashboard['layout']->columns)) {
             return $dashboard['layout']->columns;
         }
-
         return array();
     }
-
     private function buildDashboard($dashboard, $widgets)
     {
         return array('name' => $dashboard['name'], 'id' => $dashboard['iddashboard'], 'widgets' => $widgets);
     }
-
     private function widgetIsNotHidden($widget)
     {
         return empty($widget->isHidden);

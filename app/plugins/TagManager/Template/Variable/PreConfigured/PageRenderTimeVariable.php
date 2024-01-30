@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,14 +9,12 @@
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
 use Piwik\Plugins\TagManager\Context\WebContext;
-
-class PageRenderTimeVariable extends BasePreConfiguredVariable
+class PageRenderTimeVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BasePreConfiguredVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_PERFORMANCE;
     }
-
     public function loadTemplate($context, $entity, $skipTemplate = false)
     {
         switch ($context) {

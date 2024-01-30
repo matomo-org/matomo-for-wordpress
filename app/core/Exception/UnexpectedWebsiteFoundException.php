@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,6 +9,6 @@
  */
 namespace Piwik\Exception;
 
-class UnexpectedWebsiteFoundException extends Exception
+class UnexpectedWebsiteFoundException extends \Piwik\Exception\Exception
 {
 }

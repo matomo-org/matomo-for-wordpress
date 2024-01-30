@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik\Plugins\Diagnostics\Diagnostic;
 
 /**
@@ -17,20 +17,17 @@ class DiagnosticResultItem implements \JsonSerializable
      * @var string
      */
     private $status;
-
     /**
      * Optional comment about the item.
      *
      * @var string
      */
     private $comment;
-
     public function __construct($status, $comment = '')
     {
         $this->status = $status;
         $this->comment = $comment;
     }
-
     /**
      * @return string
      */
@@ -38,7 +35,6 @@ class DiagnosticResultItem implements \JsonSerializable
     {
         return $this->status;
     }
-
     /**
      * @return string
      */
@@ -46,12 +42,8 @@ class DiagnosticResultItem implements \JsonSerializable
     {
         return $this->comment;
     }
-
-    public function jsonSerialize(): array
+    public function jsonSerialize() : array
     {
-        return [
-            'status' => $this->status,
-            'comment' => $this->comment,
-        ];
+        return ['status' => $this->status, 'comment' => $this->comment];
     }
 }

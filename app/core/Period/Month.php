@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,15 +11,12 @@ namespace Piwik\Period;
 
 use Piwik\Date;
 use Piwik\Period;
-
 /**
  */
 class Month extends Period
 {
     const PERIOD_ID = 3;
-
     protected $label = 'month';
-
     /**
      * Returns the current period as a localized short string
      *
@@ -30,7 +28,6 @@ class Month extends Period
         $out = $this->getDateStart()->getLocalized(Date::DATE_FORMAT_MONTH_SHORT);
         return $out;
     }
-
     /**
      * Returns the current period as a localized long string
      *
@@ -42,7 +39,6 @@ class Month extends Period
         $out = $this->getDateStart()->getLocalized(Date::DATE_FORMAT_MONTH_LONG);
         return $out;
     }
-
     /**
      * Returns the current period as a string
      *
@@ -53,7 +49,6 @@ class Month extends Period
         $out = $this->getDateStart()->toString('Y-m');
         return $out;
     }
-
     /**
      * Generates the subperiods (one for each day in the month)
      */
@@ -62,17 +57,12 @@ class Month extends Period
         if ($this->subperiodsProcessed) {
             return;
         }
-
         parent::generate();
-
         $date = $this->date;
-
         $startMonth = $date->setDay(1)->setTime('00:00:00');
-        $endMonth   = $startMonth->addPeriod(1, 'month')->setDay(1)->subDay(1);
-
+        $endMonth = $startMonth->addPeriod(1, 'month')->setDay(1)->subDay(1);
         $this->processOptimalSubperiods($startMonth, $endMonth);
     }
-
     /**
      * Determine which kind of period is best to use.
      * See Range.test.php
@@ -82,13 +72,10 @@ class Month extends Period
      */
     protected function processOptimalSubperiods($startDate, $endDate)
     {
-        while ($startDate->isEarlier($endDate)
-            || $startDate == $endDate
-        ) {
-            $week        = new Week($startDate);
+        while ($startDate->isEarlier($endDate) || $startDate == $endDate) {
+            $week = new \Piwik\Period\Week($startDate);
             $startOfWeek = $week->getDateStart();
-            $endOfWeek   = $week->getDateEnd();
-
+            $endOfWeek = $week->getDateEnd();
             if ($endOfWeek->isLater($endDate)) {
                 $this->fillDayPeriods($startDate, $endDate);
             } elseif ($startOfWeek == $startDate) {
@@ -96,11 +83,9 @@ class Month extends Period
             } else {
                 $this->fillDayPeriods($startDate, $endOfWeek);
             }
-
             $startDate = $endOfWeek->addDay(1);
         }
     }
-
     /**
      * Fills the periods from startDate to endDate with days
      *
@@ -109,17 +94,15 @@ class Month extends Period
      */
     private function fillDayPeriods($startDate, $endDate)
     {
-        while (($startDate->isEarlier($endDate) || $startDate == $endDate)) {
-            $this->addSubperiod(new Day($startDate));
+        while ($startDate->isEarlier($endDate) || $startDate == $endDate) {
+            $this->addSubperiod(new \Piwik\Period\Day($startDate));
             $startDate = $startDate->addDay(1);
         }
     }
-
     public function getImmediateChildPeriodLabel()
     {
         return 'week';
     }
-
     public function getParentPeriodLabel()
     {
         return 'year';

@@ -6,13 +6,9 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Zend_' => array($baseDir . '/libs'),
-    'PEAR_' => array($baseDir . '/libs'),
     'Less' => array($vendorDir . '/wikimedia/less.php/lib'),
     'JShrink' => array($vendorDir . '/tedivm/jshrink/src'),
-    'HTML_' => array($baseDir . '/libs'),
     'Console' => array($vendorDir . '/pear/console_getopt'),
     'Archive_Tar' => array($vendorDir . '/pear/archive_tar'),
-    'Archive_' => array($baseDir . '/libs'),
     '' => array($vendorDir . '/pear/pear-core-minimal/src'),
 );

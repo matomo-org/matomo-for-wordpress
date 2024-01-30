@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -15,7 +16,7 @@ namespace Piwik\Menu;
  *
  * @method static \Piwik\Menu\MenuTop getInstance()
  */
-class MenuTop extends MenuAbstract
+class MenuTop extends \Piwik\Menu\MenuAbstract
 {
     /**
      * Directly adds a menu entry containing html.
@@ -41,7 +42,6 @@ class MenuTop extends MenuAbstract
             }
         }
     }
-
     /**
      * Triggers the Menu.Top.addItems hook and returns the menu.
      *
@@ -50,12 +50,10 @@ class MenuTop extends MenuAbstract
     public function getMenu()
     {
         if (!$this->menu) {
-
             foreach ($this->getAllMenus() as $menu) {
                 $menu->configureTopMenu($this);
             }
         }
-
         return parent::getMenu();
     }
 }

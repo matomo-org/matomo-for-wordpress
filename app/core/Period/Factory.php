@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -14,7 +15,6 @@ use Piwik\Date;
 use Piwik\Period;
 use Piwik\Piwik;
 use Piwik\Plugin;
-
 /**
  * Creates Period instances using the values used for the 'period' and 'date'
  * query parameters.
@@ -40,14 +40,12 @@ abstract class Factory
     {
         // empty
     }
-
     /**
      * Returns true if this factory should handle the period/date string combination.
      *
      * @return bool
      */
     public abstract function shouldHandle($strPeriod, $strDate);
-
     /**
      * Creates a period using the value of the 'date' query parameter.
      *
@@ -57,7 +55,6 @@ abstract class Factory
      * @return Period
      */
     public abstract function make($strPeriod, $date, $timezone);
-
     /**
      * Creates a new Period instance with a period ID and {@link Date} instance.
      *
@@ -72,34 +69,29 @@ abstract class Factory
     public static function build($period, $date, $timezone = 'UTC')
     {
         self::checkPeriodIsEnabled($period);
-
         if (is_string($date)) {
             [$period, $date] = self::convertRangeToDateIfNeeded($period, $date);
-            if (Period::isMultiplePeriod($date, $period)
-                || $period == 'range'
-            ) {
-
-                return new Range($period, $date, $timezone);
+            if (Period::isMultiplePeriod($date, $period) || $period == 'range') {
+                return new \Piwik\Period\Range($period, $date, $timezone);
             }
-
             $dateObject = Date::factory($date);
-        } else if ($date instanceof Date) {
-            $dateObject = $date;
         } else {
-            throw new \Exception("Invalid date supplied to Period\Factory::build(): " . gettype($date));
+            if ($date instanceof Date) {
+                $dateObject = $date;
+            } else {
+                throw new \Exception("Invalid date supplied to Period\\Factory::build(): " . gettype($date));
+            }
         }
-
         switch ($period) {
             case 'day':
-                return new Day($dateObject);
+                return new \Piwik\Period\Day($dateObject);
             case 'week':
-                return new Week($dateObject);
+                return new \Piwik\Period\Week($dateObject);
             case 'month':
-                return new Month($dateObject);
+                return new \Piwik\Period\Month($dateObject);
             case 'year':
-                return new Year($dateObject);
+                return new \Piwik\Period\Year($dateObject);
         }
-
         /** @var string[] $customPeriodFactories */
         $customPeriodFactories = Plugin\Manager::getInstance()->findComponents('PeriodFactory', self::class);
         foreach ($customPeriodFactories as $customPeriodFactoryClass) {
@@ -108,17 +100,14 @@ abstract class Factory
                 return $customPeriodFactory->make($period, $date, $timezone);
             }
         }
-
-        throw new \Exception("Don't know how to create a '$period' period! (date = $date)");
+        throw new \Exception("Don't know how to create a '{$period}' period! (date = {$date})");
     }
-
     public static function checkPeriodIsEnabled($period)
     {
         if (!self::isPeriodEnabledForAPI($period)) {
             self::throwExceptionInvalidPeriod($period);
         }
     }
-
     /**
      * @param $strPeriod
      * @throws \Exception
@@ -130,7 +119,6 @@ abstract class Factory
         $message = Piwik::translate('General_ExceptionInvalidPeriod', array($strPeriod, $periods));
         throw new Exception($message);
     }
-
     private static function convertRangeToDateIfNeeded($period, $date)
     {
         if (is_string($period) && is_string($date) && $period === 'range') {
@@ -140,10 +128,8 @@ abstract class Factory
                 $date = $dates[0];
             }
         }
-
         return array($period, $date);
     }
-
     /**
      * Creates a Period instance using a period, date and timezone.
      *
@@ -159,43 +145,38 @@ abstract class Factory
         if (empty($timezone)) {
             $timezone = 'UTC';
         }
-
         [$period, $date] = self::convertRangeToDateIfNeeded($period, $date);
-
         if ($period == 'range') {
             self::checkPeriodIsEnabled('range');
-            $oPeriod = new Range('range', $date, $timezone, Date::factory('today', $timezone));
+            $oPeriod = new \Piwik\Period\Range('range', $date, $timezone, Date::factory('today', $timezone));
         } else {
-            if (!($date instanceof Date)) {
+            if (!$date instanceof Date) {
                 if (preg_match('/^(now|today|yesterday|yesterdaySameTime|last[ -]?(?:week|month|year))$/i', $date)) {
                     $date = Date::factoryInTimezone($date, $timezone);
                 }
                 $date = Date::factory($date);
             }
-            $oPeriod = Factory::build($period, $date);
+            $oPeriod = \Piwik\Period\Factory::build($period, $date);
         }
         return $oPeriod;
     }
-
     /**
      * @param $period
      * @return bool
      */
     public static function isPeriodEnabledForAPI($period)
     {
-        $periodValidator = new PeriodValidator();
+        $periodValidator = new \Piwik\Period\PeriodValidator();
         return $periodValidator->isPeriodAllowedForAPI($period);
     }
-
     /**
      * @return array
      */
     public static function getPeriodsEnabledForAPI()
     {
-        $periodValidator = new PeriodValidator();
+        $periodValidator = new \Piwik\Period\PeriodValidator();
         return $periodValidator->getPeriodsAllowedForAPI();
     }
-
     public static function isAnyLowerPeriodDisabledForAPI($periodLabel)
     {
         $parentPeriod = null;
@@ -212,12 +193,9 @@ abstract class Factory
             default:
                 break;
         }
-
         if ($parentPeriod === null) {
             return false;
         }
-
-        return !self::isPeriodEnabledForAPI($parentPeriod)
-            || self::isAnyLowerPeriodDisabledForAPI($parentPeriod);
+        return !self::isPeriodEnabledForAPI($parentPeriod) || self::isAnyLowerPeriodDisabledForAPI($parentPeriod);
     }
 }

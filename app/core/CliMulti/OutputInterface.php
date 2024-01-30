@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,18 +8,12 @@
  */
 namespace Piwik\CliMulti;
 
-
 interface OutputInterface
 {
     public function getOutputId();
-
     public function write($content);
-
-    public function isAbnormal(): bool;
-
-    public function exists(): bool;
-
+    public function isAbnormal() : bool;
+    public function exists() : bool;
     public function get();
-
     public function destroy();
 }

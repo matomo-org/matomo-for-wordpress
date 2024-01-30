@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -14,8 +15,7 @@ use Piwik\Piwik;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-
-class DeviceBrand extends Base
+class DeviceBrand extends \Piwik\Plugins\DevicesDetection\Columns\Base
 {
     protected $columnName = 'config_device_brand';
     protected $columnType = 'VARCHAR( 100 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL';
@@ -23,32 +23,27 @@ class DeviceBrand extends Base
     protected $nameSingular = 'DevicesDetection_DeviceBrand';
     protected $namePlural = 'DevicesDetection_DeviceBrands';
     protected $segmentName = 'deviceBrand';
-
-
     public function formatValue($value, $idSite, Formatter $formatter)
     {
         return \Piwik\Plugins\DevicesDetection\getDeviceBrandLabel($value);
     }
-
     public function __construct()
     {
         $brands = AbstractDeviceParser::$deviceBrands;
-        natcasesort ($brands);
+        natcasesort($brands);
         $brandList = implode(", ", $brands);
         $this->acceptValues = $brandList;
-
-        $this->sqlFilter = function ($brand) use ($brandList, $brands) {
+        $this->sqlFilter = function ($brand) use($brandList, $brands) {
             if ($brand == Piwik::translate('General_Unknown')) {
                 return '';
             }
             $index = array_search(trim(urldecode($brand)), $brands);
             if ($index === false) {
-                throw new \Exception("deviceBrand segment must be one of: $brandList");
+                throw new \Exception("deviceBrand segment must be one of: {$brandList}");
             }
             return $index;
         };
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -57,11 +52,9 @@ class DeviceBrand extends Base
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $parser    = $this->getUAParser($request->getUserAgent(), $request->getClientHints());
-
+        $parser = $this->getUAParser($request->getUserAgent(), $request->getClientHints());
         return $parser->getBrand();
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor

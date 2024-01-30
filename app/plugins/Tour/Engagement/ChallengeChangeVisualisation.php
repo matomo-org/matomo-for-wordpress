@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,24 +11,20 @@ namespace Piwik\Plugins\Tour\Engagement;
 
 use Piwik\Piwik;
 use Piwik\Url;
-
-class ChallengeChangeVisualisation extends Challenge
+class ChallengeChangeVisualisation extends \Piwik\Plugins\Tour\Engagement\Challenge
 {
     public function getName()
     {
         return Piwik::translate('Tour_ChangeVisualisation');
     }
-
     public function getDescription()
     {
         return Piwik::translate('Tour_ChangeVisualisationDescription');
     }
-
     public function getId()
     {
         return 'change_visualisations';
     }
-
     public function getUrl()
     {
         return Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/reports/graphs-and-visualisations-in-matomo/');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,24 +11,20 @@ namespace Piwik\Plugins\Tour\Engagement;
 
 use Piwik\Piwik;
 use Piwik\Url;
-
-class ChallengeViewVisitorProfile extends Challenge
+class ChallengeViewVisitorProfile extends \Piwik\Plugins\Tour\Engagement\Challenge
 {
     public function getName()
     {
         return Piwik::translate('Tour_ViewX', Piwik::translate('Live_VisitorProfile'));
     }
-
     public function getDescription()
     {
         return Piwik::translate('Tour_ViewVisitorProfileDescription');
     }
-
     public function getId()
     {
         return 'view_visitor_profile';
     }
-
     public function getUrl()
     {
         return Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/user-profile/');

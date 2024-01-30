@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\Marketplace\Categories;
 
 use Piwik\Category\Subcategory;
-
 class BrowseSubcategory extends Subcategory
 {
     protected $categoryId = 'Marketplace_Marketplace';

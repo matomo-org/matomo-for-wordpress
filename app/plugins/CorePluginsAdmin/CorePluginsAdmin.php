@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -15,7 +16,6 @@ use Piwik\Plugin;
 use Piwik\Plugins\CoreHome\SystemSummary;
 use Piwik\Plugins\CorePluginsAdmin\Model\TagManagerTeaser;
 use Piwik\Changes\Model as ChangesModel;
-
 class CorePluginsAdmin extends Plugin
 {
     /**
@@ -23,17 +23,8 @@ class CorePluginsAdmin extends Plugin
      */
     public function registerEvents()
     {
-        return array(
-            'AssetManager.getJavaScriptFiles'        => 'getJsFiles',
-            'AssetManager.getStylesheetFiles'        => 'getStylesheetFiles',
-            'System.addSystemSummaryItems'           => 'addSystemSummaryItems',
-            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
-            'Updater.componentUpdated'               => 'addPluginChanges',
-            'PluginManager.pluginActivated'          => 'onPluginActivated',
-            'PluginManager.pluginDeactivated'        => 'removePluginChanges'
-        );
+        return array('AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'System.addSystemSummaryItems' => 'addSystemSummaryItems', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Updater.componentUpdated' => 'addPluginChanges', 'PluginManager.pluginActivated' => 'onPluginActivated', 'PluginManager.pluginDeactivated' => 'removePluginChanges');
     }
-
     /**
      * Add any changes from newly activated or updated plugins to the changes table
      *
@@ -43,7 +34,6 @@ class CorePluginsAdmin extends Plugin
     {
         $this->getChangesModel()->addChanges($pluginName);
     }
-
     /**
      * Remove any changes from a plugin that has been uninstalled
      *
@@ -53,17 +43,15 @@ class CorePluginsAdmin extends Plugin
     {
         $this->getChangesModel()->removeChanges($pluginName);
     }
-
     /**
      * Retrieve an instantiated ChangesModel object
      *
      * @return ChangesModel
      */
-    private function getChangesModel(): ChangesModel
+    private function getChangesModel() : ChangesModel
     {
         return StaticContainer::get(\Piwik\Changes\Model::class);
     }
-
     public function onPluginActivated($pluginName)
     {
         if ($pluginName === 'TagManager') {
@@ -71,16 +59,13 @@ class CorePluginsAdmin extends Plugin
             $tagManagerTeaser = new TagManagerTeaser(Piwik::getCurrentUserLogin());
             $tagManagerTeaser->disableGlobally();
         }
-
         $this->addPluginChanges($pluginName);
     }
-
     public function addSystemSummaryItems(&$systemSummary)
     {
         $numPlugins = Plugin\Manager::getInstance()->getNumberOfActivatedPluginsExcludingAlwaysActivated();
         $systemSummary[] = new SystemSummary\Item($key = 'plugins', Piwik::translate('CoreHome_SystemSummaryNActivatedPlugins', $numPlugins), $value = null, $url = array('module' => 'CorePluginsAdmin', 'action' => 'plugins'), $icon = '', $order = 11);
     }
-
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/CorePluginsAdmin/stylesheets/plugins_admin.less";
@@ -90,23 +75,19 @@ class CorePluginsAdmin extends Plugin
         $stylesheets[] = "plugins/CorePluginsAdmin/vue/src/FormField/FieldSelect.less";
         $stylesheets[] = "plugins/CorePluginsAdmin/vue/src/PasswordConfirmation/PasswordConfirmation.less";
     }
-
     public static function isPluginsAdminEnabled()
     {
         return (bool) Config::getInstance()->General['enable_plugins_admin'];
     }
-
     public static function isPluginUploadEnabled()
     {
         return (bool) Config::getInstance()->General['enable_plugin_upload'];
     }
-
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = "node_modules/jquery.dotdotdot/dist/jquery.dotdotdot.js";
         $jsFiles[] = "plugins/CoreHome/javascripts/popover.js";
     }
-
     public function getClientSideTranslationKeys(&$translations)
     {
         $translations[] = 'CorePluginsAdmin_NoZipFileSelected';

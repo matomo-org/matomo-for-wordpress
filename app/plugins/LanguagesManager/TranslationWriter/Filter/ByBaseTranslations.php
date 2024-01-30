@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,13 +7,11 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\LanguagesManager\TranslationWriter\Filter;
 
-class ByBaseTranslations extends FilterAbstract
+class ByBaseTranslations extends \Piwik\Plugins\LanguagesManager\TranslationWriter\Filter\FilterAbstract
 {
     protected $baseTranslations = array();
-
     /**
      * Sets base translations
      *
@@ -22,7 +21,6 @@ class ByBaseTranslations extends FilterAbstract
     {
         $this->baseTranslations = $baseTranslations;
     }
-
     /**
      * Removes all translations that aren't present in the base translations set in constructor
      *
@@ -33,20 +31,16 @@ class ByBaseTranslations extends FilterAbstract
     public function filter($translations)
     {
         $cleanedTranslations = array();
-
         foreach ($translations as $pluginName => $pluginTranslations) {
-
             if (empty($this->baseTranslations[$pluginName])) {
                 $this->filteredData[$pluginName] = $pluginTranslations;
                 continue;
             }
-
             foreach ($pluginTranslations as $key => $translation) {
                 if (isset($this->baseTranslations[$pluginName][$key])) {
                     $cleanedTranslations[$pluginName][$key] = $translation;
                 }
             }
-
             if (!empty($cleanedTranslations[$pluginName])) {
                 $diff = array_diff($translations[$pluginName], $cleanedTranslations[$pluginName]);
             } else {
@@ -56,7 +50,6 @@ class ByBaseTranslations extends FilterAbstract
                 $this->filteredData[$pluginName] = $diff;
             }
         }
-
         return $cleanedTranslations;
     }
 }

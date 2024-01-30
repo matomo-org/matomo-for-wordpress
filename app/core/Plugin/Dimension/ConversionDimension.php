@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -17,7 +18,6 @@ use Piwik\Tracker\GoalManager;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Plugin;
-
 /**
  * Defines a new conversion dimension that records any visit related information during tracking.
  *
@@ -35,10 +35,8 @@ use Piwik\Plugin;
 abstract class ConversionDimension extends Dimension
 {
     const INSTALLER_PREFIX = 'log_conversion.';
-
     protected $dbTableName = 'log_conversion';
     protected $category = 'Goals_Conversion';
-
     /**
      * Get all conversion dimensions that are defined by all activated plugins.
      * @ignore
@@ -46,24 +44,19 @@ abstract class ConversionDimension extends Dimension
     public static function getAllDimensions()
     {
         $cacheId = CacheId::pluginAware('ConversionDimensions');
-        $cache   = PiwikCache::getTransientCache();
-
+        $cache = PiwikCache::getTransientCache();
         if (!$cache->contains($cacheId)) {
-            $plugins   = PluginManager::getInstance()->getPluginsLoadedAndActivated();
+            $plugins = PluginManager::getInstance()->getPluginsLoadedAndActivated();
             $instances = array();
-
             foreach ($plugins as $plugin) {
                 foreach (self::getDimensions($plugin) as $instance) {
                     $instances[] = $instance;
                 }
             }
-
             $cache->save($cacheId, $instances);
         }
-
         return $cache->fetch($cacheId);
     }
-
     /**
      * Get all conversion dimensions that are defined by the given plugin.
      * @param Plugin $plugin
@@ -73,15 +66,12 @@ abstract class ConversionDimension extends Dimension
     public static function getDimensions(Plugin $plugin)
     {
         $dimensions = $plugin->findMultipleComponents('Columns', '\\Piwik\\Plugin\\Dimension\\ConversionDimension');
-        $instances  = array();
-
+        $instances = array();
         foreach ($dimensions as $dimension) {
             $instances[] = new $dimension();
         }
-
         return $instances;
     }
-
     /**
      * This event is triggered when an ecommerce order is converted. Any returned value will be persist in the database.
      * Return boolean `false` if you do not want to change the value in some cases.
@@ -98,7 +88,6 @@ abstract class ConversionDimension extends Dimension
     {
         return false;
     }
-
     /**
      * This event is triggered when an ecommerce cart update is converted. Any returned value will be persist in the
      * database. Return boolean `false` if you do not want to change the value in some cases.
@@ -115,7 +104,6 @@ abstract class ConversionDimension extends Dimension
     {
         return false;
     }
-
     /**
      * This event is triggered when an any custom goal is converted. Any returned value will be persist in the
      * database. Return boolean `false` if you do not want to change the value in some cases.

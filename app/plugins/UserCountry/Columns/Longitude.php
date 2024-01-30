@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,8 +13,7 @@ use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-
-class Longitude extends Base
+class Longitude extends \Piwik\Plugins\UserCountry\Columns\Base
 {
     protected $columnName = 'location_longitude';
     protected $columnType = 'decimal(9, 6) DEFAULT NULL';
@@ -23,7 +23,6 @@ class Longitude extends Base
     protected $segmentName = 'longitude';
     protected $nameSingular = 'UserCountry_Longitude';
     protected $namePlural = 'UserCountry_Longitudes';
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -33,18 +32,13 @@ class Longitude extends Base
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $value = $this->getUrlOverrideValueIfAllowed('long', $request);
-
         if ($value !== false) {
             return $value;
         }
-
         $userInfo = $this->getUserInfo($request, $visitor);
-
         $longitude = $this->getLocationDetail($userInfo, LocationProvider::LONGITUDE_KEY);
-
         return $longitude;
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -55,7 +49,6 @@ class Longitude extends Base
     {
         return $this->getUrlOverrideValueIfAllowed('long', $request);
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor

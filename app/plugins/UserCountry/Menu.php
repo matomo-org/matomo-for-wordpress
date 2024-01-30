@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,15 +11,12 @@ namespace Piwik\Plugins\UserCountry;
 
 use Piwik\Menu\MenuAdmin;
 use Piwik\Piwik;
-
 class Menu extends \Piwik\Plugin\Menu
 {
     public function configureAdminMenu(MenuAdmin $menu)
     {
-        if (UserCountry::isGeoLocationAdminEnabled() && Piwik::hasUserSuperUserAccess()) {
-            $menu->addSystemItem('UserCountry_Geolocation',
-                                 $this->urlForAction('adminIndex'),
-                                 $order = 30);
+        if (\Piwik\Plugins\UserCountry\UserCountry::isGeoLocationAdminEnabled() && Piwik::hasUserSuperUserAccess()) {
+            $menu->addSystemItem('UserCountry_Geolocation', $this->urlForAction('adminIndex'), $order = 30);
         }
     }
 }

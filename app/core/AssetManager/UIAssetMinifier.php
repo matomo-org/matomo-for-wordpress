@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,17 +13,14 @@ namespace Piwik\AssetManager;
 use Exception;
 use JShrink\Minifier;
 use Piwik\Singleton;
-
 class UIAssetMinifier extends Singleton
 {
     const MINIFIED_JS_RATIO = 100;
-
     protected function __construct()
     {
         self::validateDependency();
         parent::__construct();
     }
-
     /**
      * Indicates if the provided JavaScript content has already been minified or not.
      * The heuristic is based on a custom ratio : (size of file) / (number of lines).
@@ -36,18 +34,13 @@ class UIAssetMinifier extends Singleton
     public function isMinifiedJs($content)
     {
         $lineCount = substr_count($content, "\n");
-
         if ($lineCount == 0) {
             return true;
         }
-
         $contentSize = strlen($content);
-
         $ratio = $contentSize / $lineCount;
-
         return $ratio > self::MINIFIED_JS_RATIO;
     }
-
     /**
      * @param string $content
      * @return string
@@ -56,11 +49,10 @@ class UIAssetMinifier extends Singleton
     {
         return Minifier::minify($content);
     }
-
     private static function validateDependency()
     {
         if (!class_exists("JShrink\\Minifier")) {
-            throw new Exception("JShrink could not be found, maybe you are using Matomo from git and need to update Composer. $ php composer.phar update");
+            throw new Exception("JShrink could not be found, maybe you are using Matomo from git and need to update Composer. \$ php composer.phar update");
         }
     }
 }

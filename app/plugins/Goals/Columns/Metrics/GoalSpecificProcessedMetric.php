@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Piwik\DataTable\Row;
 use Piwik\Piwik;
 use Piwik\Plugin\ProcessedMetric;
 use Piwik\Tracker\GoalManager;
-
 /**
  * Base class for processed metrics that are calculated using metrics that are
  * specific to certain goals.
@@ -25,14 +25,12 @@ abstract class GoalSpecificProcessedMetric extends ProcessedMetric
      * @var int
      */
     protected $idGoal;
-
     /**
      * The ID of the site the goal belongs to.
      *
      * @var int
      */
     protected $idSite;
-
     /**
      * Constructor.
      *
@@ -45,7 +43,6 @@ abstract class GoalSpecificProcessedMetric extends ProcessedMetric
         $this->idSite = $idSite;
         $this->idGoal = $idGoal;
     }
-
     protected function getGoalMetrics(Row $row)
     {
         $allGoalMetrics = $this->getMetric($row, 'goals');
@@ -70,32 +67,26 @@ abstract class GoalSpecificProcessedMetric extends ProcessedMetric
             }
         }
     }
-
     protected static $goalsCache = [];
-
-    protected function getGoalName(): string
+    protected function getGoalName() : string
     {
         if ($this->idGoal == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER) {
             return Piwik::translate('Goals_EcommerceOrder');
-        } else if ($this->idGoal == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART) {
-            return Piwik::translate('Goals_AbandonedCart');
+        } else {
+            if ($this->idGoal == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART) {
+                return Piwik::translate('Goals_AbandonedCart');
+            }
         }
-
         if (isset($this->idSite)) {
             if (!isset(self::$goalsCache[$this->idSite])) {
-                self::$goalsCache[$this->idSite] = Request::processRequest(
-                    'Goals.getGoals',
-                    ['idSite' => $this->idSite, 'filter_limit' => '-1'],
-                    $default = []
-                );
+                self::$goalsCache[$this->idSite] = Request::processRequest('Goals.getGoals', ['idSite' => $this->idSite, 'filter_limit' => '-1'], $default = []);
             }
             return self::$goalsCache[$this->idSite][$this->idGoal]['name'] ?? '';
         } else {
             return '';
         }
     }
-
-    protected function getGoalNameForDocs(): string
+    protected function getGoalNameForDocs() : string
     {
         $goalName = $this->getGoalName();
         if ($goalName == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER) {

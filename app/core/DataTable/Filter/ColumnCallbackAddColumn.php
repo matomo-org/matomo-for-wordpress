@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\DataTable\Filter;
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
 use Piwik\Plugins\CoreHome\Columns\Metrics\CallableProcessedMetric;
-
 /**
  * Adds a new column to every row of a {@link DataTable} based on the result of callback.
  *
@@ -31,23 +31,19 @@ class ColumnCallbackAddColumn extends BaseFilter
      * The names of the columns to pass to the callback.
      */
     private $columns;
-
     /**
      * The name of the column to add.
      */
     private $columnToAdd;
-
     /**
      * The callback to apply to each row of the DataTable. The result is added as
      * the value of a new column.
      */
     private $functionToApply;
-
     /**
      * Extra parameters to pass to the callback.
      */
     private $functionParameters;
-
     /**
      * Constructor.
      *
@@ -62,17 +58,14 @@ class ColumnCallbackAddColumn extends BaseFilter
     public function __construct($table, $columns, $columnToAdd, $functionToApply, $functionParameters = array())
     {
         parent::__construct($table);
-
         if (!is_array($columns)) {
             $columns = array($columns);
         }
-
         $this->columns = $columns;
         $this->columnToAdd = $columnToAdd;
         $this->functionToApply = $functionToApply;
         $this->functionParameters = $functionParameters;
     }
-
     /**
      * See {@link ColumnCallbackAddColumn}.
      *
@@ -81,30 +74,22 @@ class ColumnCallbackAddColumn extends BaseFilter
     public function filter($table)
     {
         $columns = $this->columns;
-        $functionParams  = $this->functionParameters;
+        $functionParams = $this->functionParameters;
         $functionToApply = $this->functionToApply;
-
         $extraProcessedMetrics = $table->getMetadata(DataTable::EXTRA_PROCESSED_METRICS_METADATA_NAME);
-
         if (empty($extraProcessedMetrics)) {
             $extraProcessedMetrics = array();
         }
-
-        $metric = new CallableProcessedMetric($this->columnToAdd, function (DataTable\Row $row) use ($columns, $functionParams, $functionToApply) {
-
+        $metric = new CallableProcessedMetric($this->columnToAdd, function (DataTable\Row $row) use($columns, $functionParams, $functionToApply) {
             $columnValues = array();
             foreach ($columns as $column) {
                 $columnValues[] = $row->getColumn($column);
             }
-
             $parameters = array_merge($columnValues, $functionParams);
-
             return call_user_func_array($functionToApply, $parameters);
         }, $columns);
         $extraProcessedMetrics[] = $metric;
-
         $table->setMetadata(DataTable::EXTRA_PROCESSED_METRICS_METADATA_NAME, $extraProcessedMetrics);
-
         foreach ($table->getRows() as $row) {
             $row->setColumn($this->columnToAdd, $metric->compute($row));
             $this->filterSubTable($row);

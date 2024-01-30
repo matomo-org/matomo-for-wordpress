@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,24 +11,20 @@ namespace Piwik\Plugins\Tour\Engagement;
 
 use Piwik\Piwik;
 use Piwik\Url;
-
-class ChallengeViewRowEvolution extends Challenge
+class ChallengeViewRowEvolution extends \Piwik\Plugins\Tour\Engagement\Challenge
 {
     public function getName()
     {
         return Piwik::translate('Tour_ViewX', Piwik::translate('Tour_RowEvolution'));
     }
-
     public function getDescription()
     {
         return Piwik::translate('Tour_ViewRowEvolutionDescription');
     }
-
     public function getId()
     {
         return 'view_row_evolution';
     }
-
     public function getUrl()
     {
         return Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/row-evolution/');

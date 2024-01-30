@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Plugins\Contents\Widgets;
 
 use Piwik\Plugins\CoreHome\CoreHome;
 use Piwik\Widget\WidgetContainerConfig;
-
 class ContentsByDimension extends WidgetContainerConfig
 {
     protected $layout = CoreHome::WIDGET_CONTAINER_LAYOUT_BY_DIMENSION;

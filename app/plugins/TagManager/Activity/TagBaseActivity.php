@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,30 +9,22 @@
 namespace Piwik\Plugins\TagManager\Activity;
 
 use Piwik\Container\StaticContainer;
-
-abstract class TagBaseActivity extends BaseActivity
+abstract class TagBaseActivity extends \Piwik\Plugins\TagManager\Activity\BaseActivity
 {
     protected $entityType = 'containertag';
-
     private function getEntityDao()
     {
-        return StaticContainer::get('Piwik\Plugins\TagManager\Dao\TagsDao');
+        return StaticContainer::get('Piwik\\Plugins\\TagManager\\Dao\\TagsDao');
     }
-
     protected function getEntityData($idSite, $idContainer, $idContainerVersion, $idEntity)
     {
         $entity = $this->getEntityDao()->getContainerTag($idSite, $idContainerVersion, $idEntity);
-
         if (!empty($entity['name'])) {
             $entityName = $entity['name'];
         } else {
             // entity might not be set when we are handling "deleted" activity
             $entityName = 'ID: ' . (int) $idEntity;
         }
-
-        return array(
-            'id' => $idEntity,
-            'name' => $entityName
-        );
+        return array('id' => $idEntity, 'name' => $entityName);
     }
 }

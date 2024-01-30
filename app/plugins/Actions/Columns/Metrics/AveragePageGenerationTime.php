@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -14,7 +15,6 @@ use Piwik\Metrics\Formatter;
 use Piwik\Piwik;
 use Piwik\Plugin\ProcessedMetric;
 use Piwik\Columns\Dimension;
-
 /**
  * The average amount of time it takes to generate a page. Calculated as
  *
@@ -34,62 +34,39 @@ class AveragePageGenerationTime extends ProcessedMetric
     {
         return 'avg_time_generation';
     }
-
     public function getTranslatedName()
     {
         return Piwik::translate('General_ColumnAverageGenerationTime');
     }
-
     public function getDependentMetrics()
     {
         return array('sum_time_generation', 'nb_hits_with_time_generation');
     }
-
     public function getTemporaryMetrics()
     {
         return array('sum_time_generation');
     }
-
     public function compute(Row $row)
     {
         $sumGenerationTime = $this->getMetric($row, 'sum_time_generation');
         $hitsWithTimeGeneration = $this->getMetric($row, 'nb_hits_with_time_generation');
-
         return Piwik::getQuotientSafe($sumGenerationTime, $hitsWithTimeGeneration, $precision = 3);
     }
-
     public function format($value, Formatter $formatter)
     {
-        if ($formatter instanceof Formatter\Html
-            && !$value
-        ) {
+        if ($formatter instanceof Formatter\Html && !$value) {
             return '-';
         } else {
             return $formatter->getPrettyTimeFromSeconds($value, $displayAsSentence = true);
         }
     }
-
     public function beforeCompute($report, DataTable $table)
     {
         $hasTimeGeneration = array_sum($this->getMetricValues($table, 'sum_time_generation')) > 0;
-
-        if (!$hasTimeGeneration
-            && $table->getRowsCount() != 0
-            && !$this->hasAverageTimeGeneration($table)
-        ) {
+        if (!$hasTimeGeneration && $table->getRowsCount() != 0 && !$this->hasAverageTimeGeneration($table)) {
             // No generation time: remove it from the API output and add it to empty_columns metadata, so that
             // the columns can also be removed from the view
-            $table->filter('ColumnDelete', array(array(
-                Metrics::INDEX_PAGE_SUM_TIME_GENERATION,
-                Metrics::INDEX_PAGE_NB_HITS_WITH_TIME_GENERATION,
-                Metrics::INDEX_PAGE_MIN_TIME_GENERATION,
-                Metrics::INDEX_PAGE_MAX_TIME_GENERATION,
-                'sum_time_generation',
-                'nb_hits_with_time_generation',
-                'min_time_generation',
-                'max_time_generation'
-            )));
-
+            $table->filter('ColumnDelete', array(array(Metrics::INDEX_PAGE_SUM_TIME_GENERATION, Metrics::INDEX_PAGE_NB_HITS_WITH_TIME_GENERATION, Metrics::INDEX_PAGE_MIN_TIME_GENERATION, Metrics::INDEX_PAGE_MAX_TIME_GENERATION, 'sum_time_generation', 'nb_hits_with_time_generation', 'min_time_generation', 'max_time_generation')));
             if ($table instanceof DataTable) {
                 $emptyColumns = $table->getMetadata(DataTable::EMPTY_COLUMNS_METADATA_NAME);
                 if (!is_array($emptyColumns)) {
@@ -102,16 +79,13 @@ class AveragePageGenerationTime extends ProcessedMetric
                 $table->setMetadata(DataTable::EMPTY_COLUMNS_METADATA_NAME, $emptyColumns);
             }
         }
-
         return $hasTimeGeneration;
     }
-
     private function hasAverageTimeGeneration(DataTable $table)
     {
         return $table->getFirstRow()->getColumn('avg_time_generation') !== false;
     }
-
-    public function getSemanticType(): ?string
+    public function getSemanticType() : ?string
     {
         return Dimension::TYPE_DURATION_S;
     }

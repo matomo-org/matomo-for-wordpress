@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik;
 
 use Exception;
 use XHProfRuns_Default;
-
 /**
  * Class Profiler helps with measuring memory, and profiling the database.
  * To enable set in your config.ini.php
@@ -30,7 +30,6 @@ class Profiler
      * @var bool
      */
     private static $isXhprofSetup = false;
-
     /**
      * Returns memory usage
      *
@@ -48,9 +47,8 @@ class Profiler
             return "Memory usage function not found.";
         }
         $usage = number_format(round($memory / 1024 / 1024, 2), 2);
-        return "$usage Mb";
+        return "{$usage} Mb";
     }
-
     /**
      * Outputs SQL Profiling reports from Zend
      *
@@ -58,13 +56,11 @@ class Profiler
      */
     public static function displayDbProfileReport()
     {
-        $profiler = Db::get()->getProfiler();
-
+        $profiler = \Piwik\Db::get()->getProfiler();
         if (!$profiler->getEnabled()) {
             // To display the profiler you should enable enable_sql_profiler on your config/config.ini.php file
             return;
         }
-
         $infoIndexedByQuery = array();
         foreach ($profiler->getQueryProfiles() as $query) {
             if (isset($infoIndexedByQuery[$query->getQuery()])) {
@@ -72,13 +68,10 @@ class Profiler
             } else {
                 $existing = array('count' => 0, 'sumTimeMs' => 0);
             }
-            $new = array('count'     => $existing['count'] + 1,
-                         'sumTimeMs' => $existing['count'] + $query->getElapsedSecs() * 1000);
+            $new = array('count' => $existing['count'] + 1, 'sumTimeMs' => $existing['count'] + $query->getElapsedSecs() * 1000);
             $infoIndexedByQuery[$query->getQuery()] = $new;
         }
-
         uasort($infoIndexedByQuery, 'self::sortTimeDesc');
-
         $str = '<hr /><strong>SQL Profiler</strong><hr /><strong>Summary</strong><br/>';
         $totalTime = $profiler->getTotalElapsedSecs();
         $queryCount = $profiler->getTotalNumQueries();
@@ -93,27 +86,24 @@ class Profiler
         $str .= 'Executed ' . $queryCount . ' queries in ' . round($totalTime, 3) . ' seconds';
         $str .= '(Average query length: ' . round($totalTime / $queryCount, 3) . ' seconds)';
         $str .= '<br />Queries per second: ' . round($queryCount / $totalTime, 1);
-        $str .= '<br />Longest query length: ' . round($longestTime, 3) . " seconds (<code>$longestQuery</code>)";
-        Log::debug($str);
+        $str .= '<br />Longest query length: ' . round($longestTime, 3) . " seconds (<code>{$longestQuery}</code>)";
+        \Piwik\Log::debug($str);
         self::getSqlProfilingQueryBreakdownOutput($infoIndexedByQuery);
     }
-
     private static function maxSumMsFirst($a, $b)
     {
         if ($a['sum_time_ms'] == $b['sum_time_ms']) {
             return 0;
         }
-        return ($a['sum_time_ms'] < $b['sum_time_ms']) ? -1 : 1;
+        return $a['sum_time_ms'] < $b['sum_time_ms'] ? -1 : 1;
     }
-
     private static function sortTimeDesc($a, $b)
     {
         if ($a['sumTimeMs'] == $b['sumTimeMs']) {
             return 0;
         }
-        return ($a['sumTimeMs'] < $b['sumTimeMs']) ? -1 : 1;
+        return $a['sumTimeMs'] < $b['sumTimeMs'] ? -1 : 1;
     }
-
     /**
      * Print profiling report for the tracker
      *
@@ -122,16 +112,14 @@ class Profiler
     public static function displayDbTrackerProfile($db = null)
     {
         if (is_null($db)) {
-            $db = Tracker::getDatabase();
+            $db = \Piwik\Tracker::getDatabase();
         }
-        $tableName = Common::prefixTable('log_profiling');
-
+        $tableName = \Piwik\Common::prefixTable('log_profiling');
         $all = $db->fetchAll('SELECT * FROM ' . $tableName);
         if ($all === false) {
             return;
         }
         uasort($all, 'self::maxSumMsFirst');
-
         $infoIndexedByQuery = array();
         foreach ($all as $infoQuery) {
             $query = $infoQuery['query'];
@@ -141,19 +129,17 @@ class Profiler
         }
         self::getSqlProfilingQueryBreakdownOutput($infoIndexedByQuery);
     }
-
     /**
      * Print number of queries and elapsed time
      */
     public static function printQueryCount()
     {
         $totalTime = self::getDbElapsedSecs();
-        $queryCount = Profiler::getQueryCount();
+        $queryCount = \Piwik\Profiler::getQueryCount();
         if ($queryCount > 0) {
-            Log::debug(sprintf("Total queries = %d (total sql time = %.2fs)", $queryCount, $totalTime));
+            \Piwik\Log::debug(sprintf("Total queries = %d (total sql time = %.2fs)", $queryCount, $totalTime));
         }
     }
-
     /**
      * Get total elapsed time (in seconds)
      *
@@ -161,10 +147,9 @@ class Profiler
      */
     public static function getDbElapsedSecs()
     {
-        $profiler = Db::get()->getProfiler();
+        $profiler = \Piwik\Db::get()->getProfiler();
         return $profiler->getTotalElapsedSecs();
     }
-
     /**
      * Get total number of queries
      *
@@ -172,10 +157,9 @@ class Profiler
      */
     public static function getQueryCount()
     {
-        $profiler = Db::get()->getProfiler();
+        $profiler = \Piwik\Db::get()->getProfiler();
         return $profiler->getTotalNumQueries();
     }
-
     /**
      * Log a breakdown by query
      *
@@ -192,66 +176,54 @@ class Profiler
                 $avgTimeMs = $timeMs / $count;
                 $avgTimeString = " (average = <b>" . round($avgTimeMs, 1) . "ms</b>)";
             }
-            $query = preg_replace('/([\t\n\r ]+)/', ' ', $query);
-            $output .= "Executed <b>$count</b> time" . ($count == 1 ? '' : 's') . " in <b>" . $timeMs . "ms</b> $avgTimeString <pre>\t$query</pre>";
+            $query = preg_replace('/([\\t\\n\\r ]+)/', ' ', $query);
+            $output .= "Executed <b>{$count}</b> time" . ($count == 1 ? '' : 's') . " in <b>" . $timeMs . "ms</b> {$avgTimeString} <pre>\t{$query}</pre>";
         }
-        Log::debug($output);
+        \Piwik\Log::debug($output);
     }
-
     /**
      * Initializes Profiling via XHProf.
      * See: https://github.com/piwik/piwik/blob/master/tests/README.xhprof.md
      */
     public static function setupProfilerXHProf($mainRun = false, $setupDuringTracking = false)
     {
-        if (!$setupDuringTracking
-            && SettingsServer::isTrackerApiRequest()
-        ) {
+        if (!$setupDuringTracking && \Piwik\SettingsServer::isTrackerApiRequest()) {
             // do not profile Tracker
             return;
         }
-
         if (self::$isXhprofSetup) {
             return;
         }
-
         $hasXhprof = function_exists('xhprof_enable');
         $hasTidewaysXhprof = function_exists('tideways_xhprof_enable') || function_exists('tideways_enable');
-
         if (!$hasXhprof && !$hasTidewaysXhprof) {
             $xhProfPath = PIWIK_INCLUDE_PATH . '/vendor/lox/xhprof/extension/modules/xhprof.so';
-            throw new Exception("Cannot find xhprof_enable, make sure to 1) install xhprof: run 'composer install --dev' and build the extension, and 2) add 'extension=$xhProfPath' to your php.ini.");
+            throw new Exception("Cannot find xhprof_enable, make sure to 1) install xhprof: run 'composer install --dev' and build the extension, and 2) add 'extension={$xhProfPath}' to your php.ini.");
         }
-
         $outputDir = ini_get("xhprof.output_dir");
         if (!$outputDir && $hasTidewaysXhprof) {
             $outputDir = sys_get_temp_dir();
         }
-
         if (empty($outputDir)) {
             throw new Exception("The profiler output dir is not set. Add 'xhprof.output_dir=...' to your php.ini.");
         }
         if (!is_writable($outputDir)) {
             throw new Exception("The profiler output dir '" . ini_get("xhprof.output_dir") . "' should exist and be writable.");
         }
-
         if (!function_exists('xhprof_error')) {
             function xhprof_error($out)
             {
                 echo substr($out, 0, 300) . '...';
             }
         }
-
-        $currentGitBranch = SettingsPiwik::getCurrentGitBranch();
+        $currentGitBranch = \Piwik\SettingsPiwik::getCurrentGitBranch();
         $profilerNamespace = "piwik";
         if ($currentGitBranch != 'master') {
             $profilerNamespace .= "-" . $currentGitBranch;
         }
-
         if ($mainRun) {
             self::setProfilingRunIds(array());
         }
-
         if (function_exists('xhprof_enable')) {
             xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
         } elseif (function_exists('tideways_enable')) {
@@ -259,8 +231,7 @@ class Profiler
         } elseif (function_exists('tideways_xhprof_enable')) {
             tideways_xhprof_enable(TIDEWAYS_XHPROF_FLAGS_MEMORY | TIDEWAYS_XHPROF_FLAGS_CPU);
         }
-
-        register_shutdown_function(function () use ($profilerNamespace, $mainRun, $outputDir) {
+        register_shutdown_function(function () use($profilerNamespace, $mainRun, $outputDir) {
             if (function_exists('xhprof_disable')) {
                 $xhprofData = xhprof_disable();
                 $xhprofRuns = new XHProfRuns_Default();
@@ -272,63 +243,47 @@ class Profiler
                     $xhprofData = tideways_disable();
                 }
                 $runId = uniqid();
-                file_put_contents(
-                    $outputDir . DIRECTORY_SEPARATOR . $runId . '.' . $profilerNamespace . '.xhprof',
-                    serialize($xhprofData)
-                );
-                $meta = array('time' => time(), 'instance' => SettingsPiwik::getPiwikInstanceId());
+                file_put_contents($outputDir . DIRECTORY_SEPARATOR . $runId . '.' . $profilerNamespace . '.xhprof', serialize($xhprofData));
+                $meta = array('time' => time(), 'instance' => \Piwik\SettingsPiwik::getPiwikInstanceId());
                 if (!empty($_GET)) {
                     $meta['get'] = $_GET;
                 }
                 if (!empty($_POST)) {
                     $meta['post'] = $_POST;
                 }
-                file_put_contents(
-                    $outputDir . DIRECTORY_SEPARATOR . $runId . '.' . $profilerNamespace . '.meta',
-                    serialize($meta)
-                );
+                file_put_contents($outputDir . DIRECTORY_SEPARATOR . $runId . '.' . $profilerNamespace . '.meta', serialize($meta));
             }
-
             if (empty($runId)) {
                 die('could not write profiler run');
             }
-
-            $runs = Profiler::getProfilingRunIds();
+            $runs = \Piwik\Profiler::getProfilingRunIds();
             array_unshift($runs, $runId);
-
             if ($mainRun) {
-                Profiler::aggregateXhprofRuns($runs, $profilerNamespace, $saveTo = $runId);
-
-                $baseUrlStored = SettingsPiwik::getPiwikUrl();
-                $host = Url::getHost();
-
+                \Piwik\Profiler::aggregateXhprofRuns($runs, $profilerNamespace, $saveTo = $runId);
+                $baseUrlStored = \Piwik\SettingsPiwik::getPiwikUrl();
+                $host = \Piwik\Url::getHost();
                 $out = "\n\n";
                 $baseUrl = "http://" . $host . "/" . @$_SERVER['REQUEST_URI'];
                 if (strlen($baseUrlStored) > strlen($baseUrl)) {
                     $baseUrl = $baseUrlStored;
                 }
-                $baseUrl = $baseUrlStored . "vendor/lox/xhprof/xhprof_html/?source=$profilerNamespace&run=$runId";
-                $baseUrl = Common::sanitizeInputValue($baseUrl);
-
+                $baseUrl = $baseUrlStored . "vendor/lox/xhprof/xhprof_html/?source={$profilerNamespace}&run={$runId}";
+                $baseUrl = \Piwik\Common::sanitizeInputValue($baseUrl);
                 $out .= "Profiler report is available at:\n";
-                $out .= "<a href='$baseUrl'>$baseUrl</a>";
+                $out .= "<a href='{$baseUrl}'>{$baseUrl}</a>";
                 $out .= "\n\n";
-
-                if (Development::isEnabled()) {
+                if (\Piwik\Development::isEnabled()) {
                     $out .= "WARNING: Development mode is enabled. Many runtime optimizations are not applied in development mode. ";
                     $out .= "Unless you intend to profile Matomo in development mode, your profile may not be accurate.";
                     $out .= "\n\n";
                 }
-
                 echo $out;
             } else {
-                Profiler::setProfilingRunIds($runs);
+                \Piwik\Profiler::setProfilingRunIds($runs);
             }
         });
-
         self::$isXhprofSetup = true;
     }
-
     /**
      * Aggregates xhprof runs w/o normalizing (xhprof_aggregate_runs will always average data which
      * does not fit Piwik's use case).
@@ -336,12 +291,9 @@ class Profiler
     public static function aggregateXhprofRuns($runIds, $profilerNamespace, $saveToRunId)
     {
         $xhprofRuns = new XHProfRuns_Default();
-
         $aggregatedData = array();
-
         foreach ($runIds as $runId) {
             $xhprofRunData = $xhprofRuns->get_run($runId, $profilerNamespace, $description);
-
             foreach ($xhprofRunData as $key => $data) {
                 if (empty($aggregatedData[$key])) {
                     $aggregatedData[$key] = $data;
@@ -350,25 +302,26 @@ class Profiler
                     if ($key == "main()") {
                         continue;
                     }
-
-                    $aggregatedData[$key]["ct"] += $data["ct"]; // call count
-                    $aggregatedData[$key]["wt"] += $data["wt"]; // incl. wall time
-                    $aggregatedData[$key]["cpu"] += $data["cpu"]; // cpu time
-                    $aggregatedData[$key]["mu"] += $data["mu"]; // memory usage
-                    $aggregatedData[$key]["pmu"] = max($aggregatedData[$key]["pmu"], $data["pmu"]); // peak mem usage
+                    $aggregatedData[$key]["ct"] += $data["ct"];
+                    // call count
+                    $aggregatedData[$key]["wt"] += $data["wt"];
+                    // incl. wall time
+                    $aggregatedData[$key]["cpu"] += $data["cpu"];
+                    // cpu time
+                    $aggregatedData[$key]["mu"] += $data["mu"];
+                    // memory usage
+                    $aggregatedData[$key]["pmu"] = max($aggregatedData[$key]["pmu"], $data["pmu"]);
+                    // peak mem usage
                 }
             }
         }
-
         $xhprofRuns->save_run($aggregatedData, $profilerNamespace, $saveToRunId);
     }
-
     public static function setProfilingRunIds($ids)
     {
         file_put_contents(self::getPathToXHProfRunIds(), json_encode($ids));
         @chmod(self::getPathToXHProfRunIds(), 0777);
     }
-
     public static function getProfilingRunIds()
     {
         $runIds = file_get_contents(self::getPathToXHProfRunIds());
@@ -378,7 +331,6 @@ class Profiler
         }
         return $array;
     }
-
     /**
      * @return string
      */

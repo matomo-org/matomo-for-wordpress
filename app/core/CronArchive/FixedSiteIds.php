@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,24 +9,20 @@
  */
 namespace Piwik\CronArchive;
 
-
 class FixedSiteIds
 {
     private $siteIds = array();
-    private $index   = -1;
-
+    private $index = -1;
     public function __construct($websiteIds)
     {
         if (!empty($websiteIds)) {
             $this->siteIds = array_values($websiteIds);
         }
     }
-
     public function getInitialSiteIds()
     {
         return $this->siteIds;
     }
-
     /**
      * Get the number of total websites that needs to be processed.
      *
@@ -35,7 +32,6 @@ class FixedSiteIds
     {
         return count($this->siteIds);
     }
-
     /**
      * Get the number of already processed websites. All websites were processed by the current archiver.
      *
@@ -44,29 +40,23 @@ class FixedSiteIds
     public function getNumProcessedWebsites()
     {
         $numProcessed = $this->index + 1;
-
         if ($numProcessed > $this->getNumSites()) {
             return $this->getNumSites();
         }
-
         return $numProcessed;
     }
-
     public function getNextSiteId()
     {
         $this->index++;
-
         if (!empty($this->siteIds[$this->index])) {
             return $this->siteIds[$this->index];
         }
-
         return null;
     }
-
     /**
      * @return bool
      */
-    public function isContinuingPreviousRun(): bool
+    public function isContinuingPreviousRun() : bool
     {
         return false;
     }

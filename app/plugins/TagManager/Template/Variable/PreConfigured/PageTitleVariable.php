@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,15 +9,12 @@
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
 use Piwik\Plugins\TagManager\Context\WebContext;
-
-
-class PageTitleVariable extends BasePreConfiguredVariable
+class PageTitleVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BasePreConfiguredVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_PAGE_VARIABLES;
     }
-
     public function loadTemplate($context, $entity, $skipTemplate = false)
     {
         switch ($context) {
@@ -24,5 +22,4 @@ class PageTitleVariable extends BasePreConfiguredVariable
                 return $this->makeReturnTemplateMethod('parameters.document.title', $skipTemplate);
         }
     }
-
 }

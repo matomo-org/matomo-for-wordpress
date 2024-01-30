@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\CronArchive;
 
 use Piwik\Exception\Exception;
-
 class StopArchiverException extends Exception
 {
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Plugins\Live;
 
 use Exception;
 use Piwik\Piwik;
-
 class VisitorFactory
 {
     /**
@@ -25,7 +25,6 @@ class VisitorFactory
     public function create(array $visitorRawData = array())
     {
         $visitor = null;
-
         /**
          * Triggered while visit is filtering in live plugin. Subscribers to this
          * event can force the use of a custom visitor object that extends from
@@ -37,13 +36,11 @@ class VisitorFactory
          * @param array $visitorRawData Raw data using in Visitor object constructor.
          */
         Piwik::postEvent('Live.makeNewVisitorObject', array(&$visitor, $visitorRawData));
-
         if (is_null($visitor)) {
-            $visitor = new Visitor($visitorRawData);
-        } elseif (!($visitor instanceof VisitorInterface)) {
+            $visitor = new \Piwik\Plugins\Live\Visitor($visitorRawData);
+        } elseif (!$visitor instanceof \Piwik\Plugins\Live\VisitorInterface) {
             throw new Exception("The Visitor object set in the plugin must implement VisitorInterface");
         }
-
         return $visitor;
     }
 }

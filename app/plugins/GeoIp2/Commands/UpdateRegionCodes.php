@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,7 +14,6 @@ use Piwik\Http;
 use Piwik\Plugin\ConsoleCommand;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2\Php;
 use Piwik\Plugins\UserCountry\LocationProvider;
-
 /**
  * This command can be used to update the list of regions and their names that Matomo knows about.
  * A list of iso regions is fetched from the iso-codes project. This list will then be used to update the regions array
@@ -37,78 +37,53 @@ use Piwik\Plugins\UserCountry\LocationProvider;
 class UpdateRegionCodes extends ConsoleCommand
 {
     public $source = 'https://salsa.debian.org/iso-codes-team/iso-codes/-/raw/main/data/iso_3166-2.json';
-
     protected function configure()
     {
         $this->setName('usercountry:update-region-codes');
         $this->setDescription("Updates the ISO region names");
         $this->addOptionalValueOption('db-ip-csv', null, 'Uses the provided DB IP CSV database to iterate over all included IP ranges.');
     }
-
     public function isEnabled()
     {
         return Development::isEnabled();
     }
-
     /**
      * @return int
      */
-    protected function doExecute(): int
+    protected function doExecute() : int
     {
         $output = $this->getOutput();
         $input = $this->getInput();
-
         $regionsFile = __DIR__ . '/../data/isoRegionNames.php';
-
         $output->setDecorated(true);
-
         $output->writeln('Starting region codes update');
-
         $output->write('Fetching region codes from ' . $this->source);
-
         try {
             $newContent = Http::sendHttpRequest($this->source, 1000);
         } catch (\Exception $e) {
             $output->writeln(' <fg=red>X (Fetching content failed)</>');
             return self::FAILURE;
         }
-
         $regionData = json_decode($newContent, true);
-
         if (empty($regionData)) {
             $output->writeln(' <fg=red>X (Content could not be parsed)</>');
             return self::FAILURE;
         }
-
         $output->writeln(' <fg=green>✓</>');
-
         $newRegions = [];
         foreach ($regionData['3166-2'] as $region) {
             list($countryCode, $regionCode) = explode('-', $region['code']);
-            $newRegions[$countryCode][$regionCode] = [
-                'name' => $region['name'],
-                'altNames' => [],
-                'current' => true
-            ];
+            $newRegions[$countryCode][$regionCode] = ['name' => $region['name'], 'altNames' => [], 'current' => true];
         }
-
-
         ksort($newRegions);
-
-        $currentRegions = include $regionsFile;
-
+        $currentRegions = (include $regionsFile);
         foreach ($currentRegions as $countryCode => $regions) {
             foreach ($regions as $regionCode => $regionData) {
                 if (isset($newRegions[$countryCode][$regionCode])) {
                     $newRegions[$countryCode][$regionCode]['altNames'] = $regionData['altNames'];
-
-                    if (
-                        $newRegions[$countryCode][$regionCode]['name'] !== $regionData['name']
-                        && !in_array($regionData['name'], $newRegions[$countryCode][$regionCode]['altNames'])
-                    ) {
+                    if ($newRegions[$countryCode][$regionCode]['name'] !== $regionData['name'] && !in_array($regionData['name'], $newRegions[$countryCode][$regionCode]['altNames'])) {
                         $newRegions[$countryCode][$regionCode]['altNames'][] = $regionData['name'];
                     }
-
                     if (($key = array_search($newRegions[$countryCode][$regionCode]['name'], $newRegions[$countryCode][$regionCode]['altNames'])) !== false) {
                         unset($newRegions[$countryCode][$regionCode]['altNames'][$key]);
                         $newRegions[$countryCode][$regionCode]['altNames'] = array_values($newRegions[$countryCode][$regionCode]['altNames']);
@@ -119,19 +94,15 @@ class UpdateRegionCodes extends ConsoleCommand
                 }
             }
         }
-
         $dbIpCsvFile = $input->getOption('db-ip-csv');
-
         if (!empty($dbIpCsvFile)) {
             $this->enrichWithDbIpRegions($dbIpCsvFile, $newRegions);
         }
-
         if (json_encode($newRegions) === json_encode($currentRegions)) {
             $output->writeln('');
             $output->writeln('Everything already up to date <fg=green>✓</>');
             return self::SUCCESS;
         }
-
         $content = <<<CONTENT
 <?php
 // The below list contains all ISO region codes and names known to Matomo
@@ -147,80 +118,53 @@ class UpdateRegionCodes extends ConsoleCommand
 // ]
 return 
 CONTENT;
-
         $content .= var_export($newRegions, true) . ';';
-
         file_put_contents($regionsFile, $content);
-
         $output->writeln('File successfully updated <fg=green>✓</>');
-
         return self::SUCCESS;
     }
-
     private function enrichWithDbIpRegions(string $dbIpCsvFile, array &$regions)
     {
         $output = $this->getOutput();
         $output->writeln('Start looking through GeoIP database for missing region names');
-
         $php = new Php();
-
         $supportedInfo = $php->getSupportedLocationInfo();
-
         if (empty($supportedInfo[LocationProvider::REGION_CODE_KEY])) {
             $output->writeln(' <fg=red>X Region codes not supported by currently used GeoIP database. Skipping.</>');
             return;
         }
-
         $output->writeln('Iterating through all IPv4 addresses...');
-
         $this->initProgressBar(6396645);
-
         $handle = fopen($dbIpCsvFile, 'r');
-
-        while(!feof($handle)){
+        while (!feof($handle)) {
             $csv = str_getcsv(fgets($handle));
             $ip = $csv[0] ?? '';
-
             $this->advanceProgressBar();
-
             if (empty($ip)) {
                 continue;
             }
-
             $location = $php->getLocation(['ip' => $ip]);
-
             $countryCode = $location[LocationProvider::COUNTRY_CODE_KEY] ?? null;
             $regionCode = $location[LocationProvider::REGION_CODE_KEY] ?? null;
             $regionName = $location[LocationProvider::REGION_NAME_KEY] ?? null;
-
             if (empty($countryCode) || empty($regionCode) || empty($regionName)) {
                 continue;
             }
-
             if (!array_key_exists($countryCode, $regions)) {
                 continue;
             }
-
             if (!array_key_exists($regionCode, $regions[$countryCode])) {
                 $output->writeln('');
-                $output->writeln("Adding missing region $regionName ($regionCode) for country $countryCode <fg=green>✓</>");
-                $regions[$countryCode][$regionCode] = [
-                    'name' => $regionName,
-                    'altNames' => [],
-                    'current' => false,
-                ];
+                $output->writeln("Adding missing region {$regionName} ({$regionCode}) for country {$countryCode} <fg=green>✓</>");
+                $regions[$countryCode][$regionCode] = ['name' => $regionName, 'altNames' => [], 'current' => false];
             } else {
-                if (
-                    $regionName !== $regions[$countryCode][$regionCode]['name']
-                    && !in_array($regionName, $regions[$countryCode][$regionCode]['altNames'])
-                ) {
+                if ($regionName !== $regions[$countryCode][$regionCode]['name'] && !in_array($regionName, $regions[$countryCode][$regionCode]['altNames'])) {
                     $output->writeln('');
-                    $output->writeln("Adding alternate region name $regionName to region {$regions[$countryCode][$regionCode]['name']} ($regionCode) for country $countryCode <fg=green>✓</>");
+                    $output->writeln("Adding alternate region name {$regionName} to region {$regions[$countryCode][$regionCode]['name']} ({$regionCode}) for country {$countryCode} <fg=green>✓</>");
                     $regions[$countryCode][$regionCode]['altNames'][] = $regionName;
                 }
             }
         }
-
         fclose($handle);
         $this->finishProgressBar();
     }

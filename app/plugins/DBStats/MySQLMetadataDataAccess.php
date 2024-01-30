@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Plugins\DBStats;
 use Exception;
 use Piwik\Config;
 use Piwik\Db;
-
 /**
  * Data Access Object that serves MySQL stats.
  */
@@ -30,39 +30,34 @@ class MySQLMetadataDataAccess
             if (empty($fullStatus)) {
                 throw new Exception('Error, SHOW STATUS failed');
             }
-
             $status = array(
-                'Uptime'                 => $fullStatus['Uptime']['Value'],
-                'Threads'                => $fullStatus['Threads_running']['Value'],
-                'Questions'              => $fullStatus['Questions']['Value'],
-                'Slow queries'           => $fullStatus['Slow_queries']['Value'],
-                'Flush tables'           => $fullStatus['Flush_commands']['Value'],
-                'Open tables'            => $fullStatus['Open_tables']['Value'],
-                'Opens'                  => 'unavailable', // not available via SHOW STATUS
-                'Queries per second avg' => 'unavailable' // not available via SHOW STATUS
+                'Uptime' => $fullStatus['Uptime']['Value'],
+                'Threads' => $fullStatus['Threads_running']['Value'],
+                'Questions' => $fullStatus['Questions']['Value'],
+                'Slow queries' => $fullStatus['Slow_queries']['Value'],
+                'Flush tables' => $fullStatus['Flush_commands']['Value'],
+                'Open tables' => $fullStatus['Open_tables']['Value'],
+                'Opens' => 'unavailable',
+                // not available via SHOW STATUS
+                'Queries per second avg' => 'unavailable',
             );
         }
-
         return $status;
     }
-
     public function getTableStatus($tableName)
     {
         return Db::fetchRow("SHOW TABLE STATUS LIKE ?", array($tableName));
     }
-
     public function getAllTablesStatus()
     {
         return Db::fetchAll("SHOW TABLE STATUS");
     }
-
     public function getRowCountsByArchiveName($tableName, $extraCols)
     {
         // otherwise, create data table & cache it
-        $sql = "SELECT name as 'label', COUNT(*) as 'row_count'$extraCols FROM $tableName GROUP BY name";
+        $sql = "SELECT name as 'label', COUNT(*) as 'row_count'{$extraCols} FROM {$tableName} GROUP BY name";
         return Db::fetchAll($sql);
     }
-
     public function getColumnsFromTable($tableName)
     {
         return Db::fetchAll("SHOW COLUMNS FROM " . $tableName);

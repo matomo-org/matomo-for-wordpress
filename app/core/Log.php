@@ -1,17 +1,16 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik;
 
 use Piwik\Log\Logger;
 use Piwik\Container\StaticContainer;
 use Piwik\Log\LoggerInterface;
-
 /**
  * Logging utility class.
  *
@@ -57,7 +56,7 @@ use Piwik\Log\LoggerInterface;
  * @deprecated Inject and use Piwik\Log\LoggerInterface instead of this class.
  * @see \Piwik\Log\LoggerInterface
  */
-class Log extends Singleton
+class Log extends \Piwik\Singleton
 {
     // log levels
     const NONE = 0;
@@ -66,32 +65,27 @@ class Log extends Singleton
     const INFO = 3;
     const DEBUG = 4;
     const VERBOSE = 5;
-
     // config option names
     const LOG_LEVEL_CONFIG_OPTION = 'log_level';
     const LOG_WRITERS_CONFIG_OPTION = 'log_writers';
     const LOGGER_FILE_PATH_CONFIG_OPTION = 'logger_file_path';
     const STRING_MESSAGE_FORMAT_OPTION = 'string_message_format';
-
     /**
      * The backtrace string to use when testing.
      *
      * @var string
      */
     public static $debugBacktraceForTests;
-
     /**
      * Singleton instance.
      *
      * @var Log
      */
     private static $instance;
-
     /**
      * @var LoggerInterface
      */
     private $logger;
-
     public static function getInstance()
     {
         if (self::$instance === null) {
@@ -107,7 +101,6 @@ class Log extends Singleton
     {
         self::$instance = $instance;
     }
-
     /**
      * @param LoggerInterface $logger
      */
@@ -115,7 +108,6 @@ class Log extends Singleton
     {
         $this->logger = $logger;
     }
-
     /**
      * Logs a message using the ERROR log level.
      *
@@ -130,7 +122,6 @@ class Log extends Singleton
     {
         self::logMessage(Logger::ERROR, $message, $printFparams);
     }
-
     /**
      * Logs a message using the WARNING log level.
      *
@@ -145,7 +136,6 @@ class Log extends Singleton
     {
         self::logMessage(Logger::WARNING, $message, $printFparams);
     }
-
     /**
      * Logs a message using the INFO log level.
      *
@@ -160,7 +150,6 @@ class Log extends Singleton
     {
         self::logMessage(Logger::INFO, $message, $printFparams);
     }
-
     /**
      * Logs a message using the DEBUG log level.
      *
@@ -175,7 +164,6 @@ class Log extends Singleton
     {
         self::logMessage(Logger::DEBUG, $message, $printFparams);
     }
-
     /**
      * Logs a message using the VERBOSE log level.
      *
@@ -190,7 +178,6 @@ class Log extends Singleton
     {
         self::logMessage(Logger::DEBUG, $message, $printFparams);
     }
-
     private function doLog($level, $message, $parameters = array())
     {
         // To ensure the compatibility with PSR-3, the message must be a string
@@ -198,22 +185,16 @@ class Log extends Singleton
             $parameters['exception'] = $message;
             $message = $message->getMessage();
         }
-
         if (is_object($message) || is_array($message) || is_resource($message)) {
-            $this->logger->warning('Trying to log a message that is not a string', array(
-                'exception' => new \InvalidArgumentException('Trying to log a message that is not a string')
-            ));
+            $this->logger->warning('Trying to log a message that is not a string', array('exception' => new \InvalidArgumentException('Trying to log a message that is not a string')));
             return;
         }
-
         $this->logger->log($level, $message, $parameters);
     }
-
     private static function logMessage($level, $message, array $parameters)
     {
         self::getInstance()->doLog($level, $message, $parameters);
     }
-
     public static function getMonologLevel($level)
     {
         switch ($level) {
@@ -233,12 +214,11 @@ class Log extends Singleton
                 return Logger::EMERGENCY;
         }
     }
-
     public static function getMonologLevelIfValid($level)
     {
         $level = strtoupper($level);
-        if (!empty($level) && defined('Piwik\Log::' . strtoupper($level))) {
-            return self::getMonologLevel(constant('Piwik\Log::' . strtoupper($level)));
+        if (!empty($level) && defined('Piwik\\Log::' . strtoupper($level))) {
+            return self::getMonologLevel(constant('Piwik\\Log::' . strtoupper($level)));
         }
         return null;
     }

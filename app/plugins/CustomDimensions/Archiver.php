@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -14,7 +15,6 @@ namespace Piwik\Plugins\CustomDimensions;
 class Archiver extends \Piwik\Plugin\Archiver
 {
     const LABEL_CUSTOM_VALUE_NOT_DEFINED = "Value not defined";
-
     public static function buildRecordNameForCustomDimensionId($id)
     {
         return 'CustomDimensions_Dimension' . (int) $id;

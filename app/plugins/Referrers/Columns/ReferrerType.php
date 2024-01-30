@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,8 +14,7 @@ use Piwik\Metrics\Formatter;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-
-class ReferrerType extends Base
+class ReferrerType extends \Piwik\Plugins\Referrers\Columns\Base
 {
     protected $columnName = 'referer_type';
     protected $columnType = 'TINYINT(1) UNSIGNED NULL';
@@ -22,26 +22,17 @@ class ReferrerType extends Base
     protected $segmentName = 'referrerType';
     protected $nameSingular = 'Referrers_Type';
     protected $namePlural = 'Referrers_ReferrerTypes';
-    protected $sqlFilterValue = 'Piwik\Plugins\Referrers\getReferrerTypeFromShortName';
+    protected $sqlFilterValue = 'Piwik\\Plugins\\Referrers\\getReferrerTypeFromShortName';
     protected $acceptValues = 'direct, search, website, campaign';
     protected $category = 'Referrers_Referrers';
-
     public function formatValue($value, $idSite, Formatter $formatter)
     {
         return \Piwik\Plugins\Referrers\getReferrerTypeLabel($value);
     }
-
     public function getEnumColumnValues()
     {
-        return array(
-            Common::REFERRER_TYPE_DIRECT_ENTRY   => 'direct',
-            Common::REFERRER_TYPE_WEBSITE        => 'website',
-            Common::REFERRER_TYPE_SEARCH_ENGINE  => 'search',
-            Common::REFERRER_TYPE_SOCIAL_NETWORK => 'social',
-            Common::REFERRER_TYPE_CAMPAIGN       => 'campaign',
-        );
+        return array(Common::REFERRER_TYPE_DIRECT_ENTRY => 'direct', Common::REFERRER_TYPE_WEBSITE => 'website', Common::REFERRER_TYPE_SEARCH_ENGINE => 'search', Common::REFERRER_TYPE_SOCIAL_NETWORK => 'social', Common::REFERRER_TYPE_CAMPAIGN => 'campaign');
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -51,22 +42,16 @@ class ReferrerType extends Base
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $information = $this->getReferrerInformationFromRequest($request, $visitor);
-
         return $information['referer_type'];
     }
-
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
         $information = $this->getReferrerInformationFromRequest($request, $visitor);
-        if ($this->isCurrentReferrerDirectEntry($visitor)
-            && $information['referer_type'] != Common::REFERRER_TYPE_DIRECT_ENTRY
-        ) {
+        if ($this->isCurrentReferrerDirectEntry($visitor) && $information['referer_type'] != Common::REFERRER_TYPE_DIRECT_ENTRY) {
             return $information['referer_type'];
         }
-
         return false;
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor

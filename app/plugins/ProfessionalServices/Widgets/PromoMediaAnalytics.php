@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,40 +13,28 @@ use Piwik\Container\StaticContainer;
 use Piwik\Piwik;
 use Piwik\View;
 use Piwik\Widget\WidgetConfig;
-
-class PromoMediaAnalytics extends DismissibleWidget
+class PromoMediaAnalytics extends \Piwik\Plugins\ProfessionalServices\Widgets\DismissibleWidget
 {
     private const PROMO_PLUGIN_NAME = 'MediaAnalytics';
-
     public static function configure(WidgetConfig $config)
     {
         $config->setCategoryId('ProfessionalServices_PromoMediaAnalytics');
         $config->setSubcategoryId('ProfessionalServices_PromoOverview');
         $config->setIsNotWidgetizable();
-
-        $promoWidgetApplicable = StaticContainer::get('Piwik\Plugins\ProfessionalServices\PromoWidgetApplicable');
-
+        $promoWidgetApplicable = StaticContainer::get('Piwik\\Plugins\\ProfessionalServices\\PromoWidgetApplicable');
         $isEnabled = $promoWidgetApplicable->check(self::PROMO_PLUGIN_NAME, self::getDismissibleWidgetName());
         $config->setIsEnabled($isEnabled);
     }
-
     public function render()
     {
-        $marketplacePlugins = StaticContainer::get('Piwik\Plugins\Marketplace\Plugins');
+        $marketplacePlugins = StaticContainer::get('Piwik\\Plugins\\Marketplace\\Plugins');
         $pluginInfo = $marketplacePlugins->getPluginInfo(self::PROMO_PLUGIN_NAME);
-
         $view = new View('@ProfessionalServices/pluginAdvertising');
         $view->plugin = $pluginInfo;
         $view->widgetName = self::getDismissibleWidgetName();
         $view->userCanDismiss = Piwik::isUserIsAnonymous() === false;
-
-        $view->title  = Piwik::translate('ProfessionalServices_PromoUnlockPowerOf', $pluginInfo['displayName']);
-        $view->listOfFeatures = [
-            Piwik::translate('ProfessionalServices_MediaAnalyticsFeature01'),
-            Piwik::translate('ProfessionalServices_MediaAnalyticsFeature02'),
-            Piwik::translate('ProfessionalServices_MediaAnalyticsFeature03'),
-        ];
-
+        $view->title = Piwik::translate('ProfessionalServices_PromoUnlockPowerOf', $pluginInfo['displayName']);
+        $view->listOfFeatures = [Piwik::translate('ProfessionalServices_MediaAnalyticsFeature01'), Piwik::translate('ProfessionalServices_MediaAnalyticsFeature02'), Piwik::translate('ProfessionalServices_MediaAnalyticsFeature03')];
         return $view->render();
     }
 }

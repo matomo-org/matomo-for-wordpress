@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\Referrers\Categories;
 
 use Piwik\Category\Subcategory;
-
 class CampaignUrlBuilderSubcategory extends Subcategory
 {
     protected $categoryId = 'Referrers_Referrers';

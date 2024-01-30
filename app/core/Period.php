@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Piwik\Container\StaticContainer;
 use Piwik\Period\Factory;
 use Piwik\Period\Range;
 use Piwik\Translation\Translator;
-
 /**
  * Date range representation.
  *
@@ -36,47 +36,37 @@ abstract class Period
      */
     protected $subperiods = array();
     protected $subperiodsProcessed = false;
-
     /**
      * @var string
      */
     protected $label = null;
-
     /**
      * @var Date
      */
     protected $date = null;
-
     /**
      * @var Translator
      */
     protected $translator;
-
     /**
      * Constructor.
      *
      * @param Date $date
      * @ignore
      */
-    public function __construct(Date $date)
+    public function __construct(\Piwik\Date $date)
     {
         $this->date = clone $date;
-
-        $this->translator = StaticContainer::get('Piwik\Translation\Translator');
+        $this->translator = StaticContainer::get('Piwik\\Translation\\Translator');
     }
-
     public function __sleep()
     {
-        return [
-            'date',
-        ];
+        return ['date'];
     }
-
     public function __wakeup()
     {
-        $this->translator = StaticContainer::get('Piwik\Translation\Translator');
+        $this->translator = StaticContainer::get('Piwik\\Translation\\Translator');
     }
-
     /**
      * Returns true if `$dateString` and `$period` represent multiple periods.
      *
@@ -96,12 +86,8 @@ abstract class Period
      */
     public static function isMultiplePeriod($dateString, $period)
     {
-        return is_string($dateString)
-            && (preg_match('/^(last|previous){1}([0-9]*)$/D', $dateString, $regs)
-                || Range::parseDateRange($dateString))
-            && $period != 'range';
+        return is_string($dateString) && (preg_match('/^(last|previous){1}([0-9]*)$/D', $dateString, $regs) || Range::parseDateRange($dateString)) && $period != 'range';
     }
-
     /**
      * Checks the given date format whether it is a correct date format and if not, throw an exception.
      *
@@ -117,10 +103,8 @@ abstract class Period
         if (self::isMultiplePeriod($dateString, 'day')) {
             return;
         }
-
-        Date::factory($dateString);
+        \Piwik\Date::factory($dateString);
     }
-
     /**
      * Returns the first day of the period.
      *
@@ -129,23 +113,18 @@ abstract class Period
     public function getDateStart()
     {
         $this->generate();
-
         if (count($this->subperiods) == 0) {
             return $this->getDate();
         }
-
         $periods = $this->getSubperiods();
-
         /** @var $currentPeriod Period */
         $currentPeriod = $periods[0];
         while ($currentPeriod->getNumberOfSubperiods() > 0) {
-            $periods       = $currentPeriod->getSubperiods();
+            $periods = $currentPeriod->getSubperiods();
             $currentPeriod = $periods[0];
         }
-
         return $currentPeriod->getDate();
     }
-
     /**
      * Returns the start date & time of this period.
      *
@@ -155,7 +134,6 @@ abstract class Period
     {
         return $this->getDateStart()->getStartOfDay();
     }
-
     /**
      * Returns the end date & time of this period.
      *
@@ -165,7 +143,6 @@ abstract class Period
     {
         return $this->getDateEnd()->getEndOfDay();
     }
-
     /**
      * Returns the last day of the period.
      *
@@ -174,23 +151,18 @@ abstract class Period
     public function getDateEnd()
     {
         $this->generate();
-
         if (count($this->subperiods) == 0) {
             return $this->getDate();
         }
-
         $periods = $this->getSubperiods();
-
         /** @var $currentPeriod Period */
         $currentPeriod = $periods[count($periods) - 1];
         while ($currentPeriod->getNumberOfSubperiods() > 0) {
-            $periods       = $currentPeriod->getSubperiods();
+            $periods = $currentPeriod->getSubperiods();
             $currentPeriod = $periods[count($periods) - 1];
         }
-
         return $currentPeriod->getDate();
     }
-
     /**
      * Returns the period ID.
      *
@@ -198,9 +170,8 @@ abstract class Period
      */
     public function getId()
     {
-        return Piwik::$idPeriods[$this->getLabel()];
+        return \Piwik\Piwik::$idPeriods[$this->getLabel()];
     }
-
     /**
      * Returns the label for the current period.
      *
@@ -210,7 +181,6 @@ abstract class Period
     {
         return $this->label;
     }
-
     /**
      * @return Date
      */
@@ -218,12 +188,10 @@ abstract class Period
     {
         return $this->date;
     }
-
     protected function generate()
     {
         $this->subperiodsProcessed = true;
     }
-
     /**
      * Returns the number of available subperiods.
      *
@@ -234,7 +202,6 @@ abstract class Period
         $this->generate();
         return count($this->subperiods);
     }
-
     /**
      * Returns the set of Period instances that together make up this period. For a year,
      * this would be 12 months. For a month this would be 28-31 days. Etc.
@@ -246,7 +213,6 @@ abstract class Period
         $this->generate();
         return $this->subperiods;
     }
-
     /**
      * Returns whether the date `$date` is within the current period or not.
      *
@@ -255,25 +221,21 @@ abstract class Period
      * @param Date $today
      * @return bool
      */
-    public function isDateInPeriod(Date $date)
+    public function isDateInPeriod(\Piwik\Date $date)
     {
         $ts = $date->getStartOfDay()->getTimestamp();
-        return $ts >= $this->getDateStart()->getStartOfDay()->getTimestamp()
-            && $ts < $this->getDateEnd()->addDay(1)->getStartOfDay()->getTimestamp();
+        return $ts >= $this->getDateStart()->getStartOfDay()->getTimestamp() && $ts < $this->getDateEnd()->addDay(1)->getStartOfDay()->getTimestamp();
     }
-
     /**
      * Returns whether the given period date range intersects with this one.
      *
      * @param Period $other
      * @return bool
      */
-    public function isPeriodIntersectingWith(Period $other)
+    public function isPeriodIntersectingWith(\Piwik\Period $other)
     {
-        return !($this->getDateEnd()->getTimestamp() < $other->getDateStart()->getTimestamp()
-            || $this->getDateStart()->getTimestamp() > $other->getDateEnd()->getTimestamp());
+        return !($this->getDateEnd()->getTimestamp() < $other->getDateStart()->getTimestamp() || $this->getDateStart()->getTimestamp() > $other->getDateEnd()->getTimestamp());
     }
-
     /**
      * Returns the start day and day after the end day for this period in the given timezone.
      *
@@ -283,10 +245,8 @@ abstract class Period
     {
         $date1 = $this->getDateTimeStart()->setTimezone($timezone);
         $date2 = $this->getDateTimeEnd()->setTimezone($timezone);
-
         return [$date1, $date2];
     }
-
     /**
      * Add a date to the period.
      *
@@ -299,7 +259,6 @@ abstract class Period
     {
         $this->subperiods[] = $period;
     }
-
     /**
      * Returns a list of strings representing the current period.
      *
@@ -309,20 +268,16 @@ abstract class Period
     public function toString($format = "Y-m-d")
     {
         $this->generate();
-
         $dateString = array();
         foreach ($this->subperiods as $period) {
             $childPeriodStr = $period->toString($format);
             if (is_array($childPeriodStr)) {
                 $childPeriodStr = implode(",", $childPeriodStr);
             }
-
             $dateString[] = $childPeriodStr;
         }
-
         return $dateString;
     }
-
     /**
      * See {@link toString()}.
      *
@@ -332,30 +287,26 @@ abstract class Period
     {
         return implode(",", $this->toString());
     }
-
     /**
      * Returns a pretty string describing this period.
      *
      * @return string
      */
-    abstract public function getPrettyString();
-
+    public abstract function getPrettyString();
     /**
      * Returns a short string description of this period that is localized with the currently used
      * language.
      *
      * @return string
      */
-    abstract public function getLocalizedShortString();
-
+    public abstract function getLocalizedShortString();
     /**
      * Returns a long string description of this period that is localized with the currently used
      * language.
      *
      * @return string
      */
-    abstract public function getLocalizedLongString();
-
+    public abstract function getLocalizedLongString();
     /**
      * Returns the label of the period type that is one size smaller than this one, or null if
      * it's the smallest.
@@ -367,8 +318,7 @@ abstract class Period
      * @ignore
      * @return string|null
      */
-    abstract public function getImmediateChildPeriodLabel();
-
+    public abstract function getImmediateChildPeriodLabel();
     /**
      * Returns the label of the period type that is one size bigger than this one, or null
      * if it's the biggest.
@@ -379,8 +329,7 @@ abstract class Period
      *
      * @ignore
      */
-    abstract public function getParentPeriodLabel();
-
+    public abstract function getParentPeriodLabel();
     /**
      * Returns the date range string comprising two dates
      *
@@ -389,11 +338,9 @@ abstract class Period
     public function getRangeString()
     {
         $dateStart = $this->getDateStart();
-        $dateEnd   = $this->getDateEnd();
-
+        $dateEnd = $this->getDateEnd();
         return $dateStart->toString("Y-m-d") . "," . $dateEnd->toString("Y-m-d");
     }
-
     /**
      * @param string $format
      *
@@ -404,13 +351,10 @@ abstract class Period
         $dateStart = $this->getDateStart();
         $dateEnd = $this->getDateEnd();
         list($formatStart, $formatEnd) = $this->explodeFormat($format);
-
         $string = $dateStart->getLocalized($formatStart);
         $string .= $dateEnd->getLocalized($formatEnd, false);
-
         return $string;
     }
-
     /**
      * Explodes the given format into two pieces. One that can be user for start date and the other for end date
      *
@@ -419,33 +363,22 @@ abstract class Period
      */
     protected function explodeFormat($format)
     {
-        $intervalTokens = array(
-            array('d', 'E', 'C'),
-            array('M', 'L'),
-            array('y')
-        );
-
+        $intervalTokens = array(array('d', 'E', 'C'), array('M', 'L'), array('y'));
         $offset = strlen($format);
         // replace string literals encapsulated by ' with same country of *
         $cleanedFormat = preg_replace_callback('/(\'[^\']+\')/', array($this, 'replaceWithStars'), $format);
-
         // search for first duplicate date field
-        foreach ($intervalTokens AS $tokens) {
-            if (preg_match_all('/[' . implode('|', $tokens) . ']+/', $cleanedFormat, $matches, PREG_OFFSET_CAPTURE) &&
-                count($matches[0]) > 1 && $offset > $matches[0][1][1]
-            ) {
+        foreach ($intervalTokens as $tokens) {
+            if (preg_match_all('/[' . implode('|', $tokens) . ']+/', $cleanedFormat, $matches, PREG_OFFSET_CAPTURE) && count($matches[0]) > 1 && $offset > $matches[0][1][1]) {
                 $offset = $matches[0][1][1];
             }
         }
-
         return array(substr($format, 0, $offset), substr($format, $offset));
     }
-
     private function replaceWithStars($matches)
     {
         return str_repeat("*", strlen($matches[0]));
     }
-
     protected function getRangeFormat($short = false)
     {
         $maxDifference = 'D';
@@ -454,12 +387,9 @@ abstract class Period
         } elseif ($this->getDateStart()->toString('m') != $this->getDateEnd()->toString('m')) {
             $maxDifference = 'M';
         }
-
-        $dateTimeFormatProvider = StaticContainer::get('Piwik\Intl\Data\Provider\DateTimeFormatProvider');
-
+        $dateTimeFormatProvider = StaticContainer::get('Piwik\\Intl\\Data\\Provider\\DateTimeFormatProvider');
         return $dateTimeFormatProvider->getRangeFormatPattern($short, $maxDifference);
     }
-
     /**
      * Returns all child periods that exist within this periods entire date range. Cascades
      * downwards over all period types that are smaller than this one. For example, month periods
@@ -475,16 +405,13 @@ abstract class Period
     {
         return $this->getAllOverlappingChildPeriodsInRange($this->getDateStart(), $this->getDateEnd());
     }
-
-    private function getAllOverlappingChildPeriodsInRange(Date $dateStart, Date $dateEnd)
+    private function getAllOverlappingChildPeriodsInRange(\Piwik\Date $dateStart, \Piwik\Date $dateEnd)
     {
         $result = array();
-
         $childPeriodType = $this->getImmediateChildPeriodLabel();
         if (empty($childPeriodType)) {
             return $result;
         }
-
         $childPeriods = Factory::build($childPeriodType, $dateStart->toString() . ',' . $dateEnd->toString());
         return array_merge($childPeriods->getSubperiods(), $childPeriods->getAllOverlappingChildPeriodsInRange($dateStart, $dateEnd));
     }

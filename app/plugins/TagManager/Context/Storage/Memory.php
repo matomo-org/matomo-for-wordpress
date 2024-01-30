@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,20 +8,17 @@
  */
 namespace Piwik\Plugins\TagManager\Context\Storage;
 
-class Memory implements StorageInterface
+class Memory implements \Piwik\Plugins\TagManager\Context\Storage\StorageInterface
 {
     private $content = array();
-
     public function save($name, $data)
     {
         $this->content[$name] = $data;
     }
-
     public function delete($name)
     {
         unset($this->content[$name]);
     }
-
     public function find($sDir, $sPattern)
     {
         $found = array();
@@ -31,5 +29,4 @@ class Memory implements StorageInterface
         }
         return $found;
     }
-
 }

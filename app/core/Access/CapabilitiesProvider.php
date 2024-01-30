@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,21 +13,18 @@ use Exception;
 use Piwik\CacheId;
 use Piwik\Piwik;
 use Piwik\Cache as PiwikCache;
-
 class CapabilitiesProvider
 {
     /**
      * @return Capability[]
      * @throws Exception
      */
-    public function getAllCapabilities(): array
+    public function getAllCapabilities() : array
     {
         $cacheId = CacheId::siteAware(CacheId::languageAware('Capabilities'));
-        $cache   = PiwikCache::getTransientCache();
-
+        $cache = PiwikCache::getTransientCache();
         if (!$cache->contains($cacheId)) {
             $capabilities = [];
-
             /**
              * Triggered to add new capabilities.
              *
@@ -41,7 +39,6 @@ class CapabilitiesProvider
              * @internal
              */
             Piwik::postEvent('Access.Capability.addCapabilities', array(&$capabilities));
-
             /**
              * Triggered to filter / restrict capabilities.
              *
@@ -60,39 +57,32 @@ class CapabilitiesProvider
              * @internal
              */
             Piwik::postEvent('Access.Capability.filterCapabilities', array(&$capabilities));
-
             $capabilities = \array_values($capabilities);
-
             $this->checkCapabilityIds($capabilities);
-
             $cache->save($cacheId, $capabilities);
             return $capabilities;
         }
-
         return $cache->fetch($cacheId);
     }
-
     /**
      * @param $capabilityId
      * @return Capability|null
      * @throws Exception
      */
-    public function getCapability(string $capabilityId): ?Capability
+    public function getCapability(string $capabilityId) : ?\Piwik\Access\Capability
     {
         foreach ($this->getAllCapabilities() as $capability) {
             if ($capabilityId === $capability->getId()) {
                 return $capability;
             }
         }
-
         return null;
     }
-
     /**
      * @return string[]
      * @throws Exception
      */
-    public function getAllCapabilityIds(): array
+    public function getAllCapabilityIds() : array
     {
         $ids = array();
         foreach ($this->getAllCapabilities() as $capability) {
@@ -100,41 +90,37 @@ class CapabilitiesProvider
         }
         return $ids;
     }
-
     /**
      * @param $capabilityId
      * @return bool
      * @throws Exception
      */
-    public function isValidCapability($capabilityId): bool
+    public function isValidCapability($capabilityId) : bool
     {
         $capabilities = $this->getAllCapabilityIds();
-
         return \in_array($capabilityId, $capabilities, true);
     }
-
     /**
      * @param $capabilityId
      * @throws Exception
      */
-    public function checkValidCapability($capabilityId): void
+    public function checkValidCapability($capabilityId) : void
     {
         if (!$this->isValidCapability($capabilityId)) {
             $capabilities = $this->getAllCapabilityIds();
             throw new \Exception(Piwik::translate("UsersManager_ExceptionAccessValues", implode(", ", $capabilities)));
         }
     }
-
     /**
      * @param Capability[] $capabilities
      * @throws Exception
      */
-    private function checkCapabilityIds(array $capabilities): void
+    private function checkCapabilityIds(array $capabilities) : void
     {
         foreach ($capabilities as $capability) {
             $id = $capability->getId();
             if (preg_match('/[^a-zA-Z0-9_-]/', $id)) {
-                throw new \Exception("Capability with invalid ID found: '$id'. Valid characters are 'a-zA-Z0-9_-'.");
+                throw new \Exception("Capability with invalid ID found: '{$id}'. Valid characters are 'a-zA-Z0-9_-'.");
             }
         }
     }

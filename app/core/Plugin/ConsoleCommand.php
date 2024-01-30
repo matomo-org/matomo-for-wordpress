@@ -7,23 +7,21 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugin;
 
-use Symfony\Component\Console\Command\Command as SymfonyCommand;
-use Symfony\Component\Console\Exception\LogicException;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\Question;
-
+use Matomo\Dependencies\Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Matomo\Dependencies\Symfony\Component\Console\Exception\LogicException;
+use Matomo\Dependencies\Symfony\Component\Console\Helper\ProgressBar;
+use Matomo\Dependencies\Symfony\Component\Console\Helper\QuestionHelper;
+use Matomo\Dependencies\Symfony\Component\Console\Helper\Table;
+use Matomo\Dependencies\Symfony\Component\Console\Input\ArrayInput;
+use Matomo\Dependencies\Symfony\Component\Console\Input\InputArgument;
+use Matomo\Dependencies\Symfony\Component\Console\Input\InputInterface;
+use Matomo\Dependencies\Symfony\Component\Console\Input\InputOption;
+use Matomo\Dependencies\Symfony\Component\Console\Output\NullOutput;
+use Matomo\Dependencies\Symfony\Component\Console\Output\OutputInterface;
+use Matomo\Dependencies\Symfony\Component\Console\Question\ConfirmationQuestion;
+use Matomo\Dependencies\Symfony\Component\Console\Question\Question;
 /**
  * The base class for console commands.
  *
@@ -35,81 +33,68 @@ class ConsoleCommand extends SymfonyCommand
      * @var ProgressBar|null
      */
     private $progress = null;
-
     /**
      * @var OutputInterface|null
      */
     private $output = null;
-
     /**
      * @var InputInterface|null
      */
     private $input = null;
-
     /**
      * Sends the given messages as success message to the output interface (surrounded by empty lines)
      *
      * @param string[] $messages
      * @return void
      */
-    public function writeSuccessMessage(array $messages): void
+    public function writeSuccessMessage(array $messages) : void
     {
         $this->getOutput()->writeln('');
-
         foreach ($messages as $message) {
-            $this->getOutput()->writeln(self::wrapInTag('info', $message ));
+            $this->getOutput()->writeln(self::wrapInTag('info', $message));
         }
-
         $this->getOutput()->writeln('');
     }
-
     /**
      * Sends the given messages as comment message to the output interface (surrounded by empty lines)
      *
      * @param string[] $messages
      * @return void
      */
-    public function writeComment(array $messages): void
+    public function writeComment(array $messages) : void
     {
         $this->getOutput()->writeln('');
-
         foreach ($messages as $message) {
-            $this->getOutput()->writeln(self::wrapInTag('comment', $message ));
+            $this->getOutput()->writeln(self::wrapInTag('comment', $message));
         }
-
         $this->getOutput()->writeln('');
     }
-
     /**
      * Checks if all input options that are marked as requires-value were provided
      *
      * @return void
      * @throws \InvalidArgumentException
      */
-    protected function checkAllRequiredOptionsAreNotEmpty(): void
+    protected function checkAllRequiredOptionsAreNotEmpty() : void
     {
         $options = $this->getDefinition()->getOptions();
-
         foreach ($options as $option) {
-            $name  = $option->getName();
+            $name = $option->getName();
             $value = $this->getInput()->getOption($name);
-
             if ($option->isValueRequired() && empty($value)) {
                 throw new \InvalidArgumentException(sprintf('The required option --%s is not set', $name));
             }
         }
     }
-
     /**
      * This method can't be used.
      *
      * @see doExecute
      */
-    final protected function execute(InputInterface $input, OutputInterface $output): int
+    protected final function execute(InputInterface $input, OutputInterface $output) : int
     {
         return $this->doExecute();
     }
-
     /**
      * Method is final to make it impossible to overwrite it in plugin commands
      *
@@ -117,14 +102,13 @@ class ConsoleCommand extends SymfonyCommand
      * @param OutputInterface $output
      * @return int
      */
-    final public function run(InputInterface $input, OutputInterface $output): int
+    public final function run(InputInterface $input, OutputInterface $output) : int
     {
         // Ensure input and output are available for methods like `doExecute`, `doInteract` and `doInitialize`
-        $this->input  = $input;
+        $this->input = $input;
         $this->output = $output;
         return parent::run($input, $output);
     }
-
     /**
      * Adds a negatable option (e.g. --ansi / --no-ansi)
      *
@@ -138,7 +122,6 @@ class ConsoleCommand extends SymfonyCommand
     {
         return parent::addOption($name, $shortcut, InputOption::VALUE_NEGATABLE, $description, $default);
     }
-
     /**
      * Adds an option with optional value
      *
@@ -149,17 +132,11 @@ class ConsoleCommand extends SymfonyCommand
      * @param bool              $acceptArrays
      * @return ConsoleCommand
      */
-    public function addOptionalValueOption(
-        string $name,
-        $shortcut = null,
-        string $description = '',
-        $default = null,
-        bool $acceptArrays = false
-    ) {
+    public function addOptionalValueOption(string $name, $shortcut = null, string $description = '', $default = null, bool $acceptArrays = false)
+    {
         $mode = $acceptArrays ? InputOption::VALUE_IS_ARRAY : 0;
         return parent::addOption($name, $shortcut, $mode | InputOption::VALUE_OPTIONAL, $description, $default);
     }
-
     /**
      * Adds a valueless option
      *
@@ -173,7 +150,6 @@ class ConsoleCommand extends SymfonyCommand
     {
         return parent::addOption($name, $shortcut, InputOption::VALUE_NONE, $description, $default);
     }
-
     /**
      * Adds an option with required value
      *
@@ -184,32 +160,20 @@ class ConsoleCommand extends SymfonyCommand
      * @param bool              $acceptArrays
      * @return ConsoleCommand
      */
-    public function addRequiredValueOption(
-        string $name,
-        $shortcut = null,
-        string $description = '',
-        $default = null,
-        bool $acceptArrays = false
-    ) {
+    public function addRequiredValueOption(string $name, $shortcut = null, string $description = '', $default = null, bool $acceptArrays = false)
+    {
         $mode = $acceptArrays ? InputOption::VALUE_IS_ARRAY : 0;
         return parent::addOption($name, $shortcut, $mode | InputOption::VALUE_REQUIRED, $description, $default);
     }
-
     /**
      * This method can't be used.
      *
      * @see addNegatableOption, addOptionalValueOption, addNoValueOption, addRequiredValueOption
      */
-    public function addOption(
-        string $name,
-        $shortcut = null,
-        int $mode = null,
-        string $description = '',
-        $default = null
-    ) {
+    public function addOption(string $name, $shortcut = null, int $mode = null, string $description = '', $default = null)
+    {
         throw new \LogicException('addOption should not be used.');
     }
-
     /**
      * Adds an optional argument to the command
      *
@@ -219,16 +183,11 @@ class ConsoleCommand extends SymfonyCommand
      * @param bool   $acceptArrays Defines if the option accepts multiple values (array)
      * @return ConsoleCommand
      */
-    public function addOptionalArgument(
-        string $name,
-        string $description = '',
-        $default = null,
-        bool $acceptArrays = false
-    ) {
+    public function addOptionalArgument(string $name, string $description = '', $default = null, bool $acceptArrays = false)
+    {
         $mode = $acceptArrays ? InputArgument::IS_ARRAY : 0;
         return parent::addArgument($name, $mode | InputArgument::OPTIONAL, $description, $default);
     }
-
     /**
      * Adds a required argument to the command
      *
@@ -238,16 +197,11 @@ class ConsoleCommand extends SymfonyCommand
      * @param bool   $acceptArrays Defines if the option accepts multiple values (array)
      * @return ConsoleCommand
      */
-    public function addRequiredArgument(
-        string $name,
-        string $description = '',
-        $default = null,
-        bool $acceptArrays = false
-    ) {
+    public function addRequiredArgument(string $name, string $description = '', $default = null, bool $acceptArrays = false)
+    {
         $mode = $acceptArrays ? InputArgument::IS_ARRAY : 0;
         return parent::addArgument($name, $mode | InputArgument::REQUIRED, $description, $default);
     }
-
     /**
      * This method can't be used.
      *
@@ -257,27 +211,24 @@ class ConsoleCommand extends SymfonyCommand
     {
         throw new \LogicException('addArgument can not be used.');
     }
-
     /**
      * Method that implements the actual command code
      *
      * @return int  use self::SUCCESS or self::FAILURE
      */
-    protected function doExecute(): int
+    protected function doExecute() : int
     {
         throw new LogicException('You must override the doExecute() method in the concrete command class.');
     }
-
     /**
      * This method can't be used.
      *
      * @see doInteract
      */
-    final protected function interact(InputInterface $input, OutputInterface $output)
+    protected final function interact(InputInterface $input, OutputInterface $output)
     {
         $this->doInteract();
     }
-
     /**
      * Interacts with the user.
      *
@@ -287,20 +238,18 @@ class ConsoleCommand extends SymfonyCommand
      *
      * @return void
      */
-    protected function doInteract(): void
+    protected function doInteract() : void
     {
     }
-
     /**
      * This method can't be used.
      *
      * @see doInitialize
      */
-    final protected function initialize(InputInterface $input, OutputInterface $output)
+    protected final function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->doInitialize();
     }
-
     /**
      * Initializes the command after the input has been bound and before the input is validated.
      *
@@ -310,36 +259,32 @@ class ConsoleCommand extends SymfonyCommand
      *
      * @return void
      */
-    protected function doInitialize(): void
+    protected function doInitialize() : void
     {
     }
-
     /**
      * @return OutputInterface
      */
-    protected function getOutput(): OutputInterface
+    protected function getOutput() : OutputInterface
     {
         return $this->output;
     }
-
     /**
      * @param OutputInterface $ouput
      *
      * @return void
      */
-    protected function setOutput(OutputInterface $output): void
+    protected function setOutput(OutputInterface $output) : void
     {
         $this->output = $output;
     }
-
     /**
      * @return InputInterface
      */
-    protected function getInput(): InputInterface
+    protected function getInput() : InputInterface
     {
         return $this->input;
     }
-
     /**
      * This method can't be used.
      *
@@ -349,7 +294,6 @@ class ConsoleCommand extends SymfonyCommand
     {
         throw new \LogicException('getHelper can not be used');
     }
-
     /**
      * Helper method to ask the user for confirmation
      *
@@ -360,14 +304,13 @@ class ConsoleCommand extends SymfonyCommand
      * @param string $trueAnswerRegex
      * @return bool
      */
-    protected function askForConfirmation(string $question, bool $default = true, string $trueAnswerRegex = '/^y/i'): bool
+    protected function askForConfirmation(string $question, bool $default = true, string $trueAnswerRegex = '/^y/i') : bool
     {
         /** @var QuestionHelper $helper */
-        $helper   = parent::getHelper('question');
+        $helper = parent::getHelper('question');
         $question = new ConfirmationQuestion($question, $default, $trueAnswerRegex);
         return (bool) $helper->ask($this->getInput(), $this->getOutput(), $question);
     }
-
     /**
      * Ask the user for input and validates the provided value using the given callable
      *
@@ -379,20 +322,15 @@ class ConsoleCommand extends SymfonyCommand
      * @param iterable|null $autocompleterValues
      * @return mixed
      */
-    protected function askAndValidate(
-        string $question,
-        callable $validator = null,
-        $default = null,
-        iterable $autocompleterValues = null
-    ) {
+    protected function askAndValidate(string $question, callable $validator = null, $default = null, iterable $autocompleterValues = null)
+    {
         /** @var QuestionHelper $helper */
-        $helper   = parent::getHelper('question');
+        $helper = parent::getHelper('question');
         $question = new Question($question, $default);
         $question->setValidator($validator);
         $question->setAutocompleterValues($autocompleterValues);
         return $helper->ask($this->getInput(), $this->getOutput(), $question);
     }
-
     /**
      * Ask the user for input
      *
@@ -406,7 +344,6 @@ class ConsoleCommand extends SymfonyCommand
     {
         return $this->askAndValidate($question, null, $default);
     }
-
     /**
      * Initializes a progress bar for the current command
      *
@@ -417,52 +354,46 @@ class ConsoleCommand extends SymfonyCommand
      * @param int $numChangesToPerform
      * @return ProgressBar
      */
-    protected function initProgressBar(int $numChangesToPerform = 0): ProgressBar
+    protected function initProgressBar(int $numChangesToPerform = 0) : ProgressBar
     {
         $this->progress = new ProgressBar($this->getOutput(), $numChangesToPerform);
         return $this->progress;
     }
-
     /**
      * Starts a previously initialized progress bar
      *
      * @param int $numChangesToPerform
      * @return void
      */
-    protected function startProgressBar(int $numChangesToPerform = 0): void
+    protected function startProgressBar(int $numChangesToPerform = 0) : void
     {
         $this->progress->start($numChangesToPerform);
     }
-
     /**
      * Advances the previously initialized progress bar
      *
      * @param int $step
      * @return void
      */
-    protected function advanceProgressBar(int $step = 1): void
+    protected function advanceProgressBar(int $step = 1) : void
     {
         if (empty($this->progress)) {
             throw new \Exception('No progress bar initialized.');
         }
-
         $this->progress->advance($step);
     }
-
     /**
      * Finished the initialized progress bar
      *
      * @return void
      */
-    protected function finishProgressBar(): void
+    protected function finishProgressBar() : void
     {
         if (empty($this->progress)) {
             throw new \Exception('No progress bar initialized.');
         }
-
         $this->progress->finish();
     }
-
     /**
      * Helper for rendering tables in console output
      *
@@ -475,12 +406,9 @@ class ConsoleCommand extends SymfonyCommand
     protected function renderTable(array $header, array $rows)
     {
         $table = new Table($this->getOutput());
-        $table
-            ->setHeaders($header)
-            ->setRows($rows);
+        $table->setHeaders($header)->setRows($rows);
         $table->render();
     }
-
     /**
      * Runs a certain command
      *
@@ -490,15 +418,14 @@ class ConsoleCommand extends SymfonyCommand
      * @return int
      * @throws \Symfony\Component\Console\Exception\ExceptionInterface
      */
-    protected function runCommand(string $command, array $arguments, bool $hideOutput = false): int
+    protected function runCommand(string $command, array $arguments, bool $hideOutput = false) : int
     {
-        $command     = $this->getApplication()->find($command);
-        $arguments   = ['command' => $command] + $arguments;
+        $command = $this->getApplication()->find($command);
+        $arguments = ['command' => $command] + $arguments;
         $inputObject = new ArrayInput($arguments);
         $inputObject->setInteractive($this->getInput()->isInteractive());
         return $command->run($inputObject, $hideOutput ? new NullOutput() : $this->getOutput());
     }
-
     /**
      * Wrap the input string in an open and closing HTML/XML tag.
      * E.g. wrap_in_tag('info', 'my string') returns '<info>my string</info>'
@@ -507,8 +434,8 @@ class ConsoleCommand extends SymfonyCommand
      * @param string $str String to wrap with the tag.
      * @return string The wrapped string.
      */
-    public static function wrapInTag(string $tagname, string $str): string
+    public static function wrapInTag(string $tagname, string $str) : string
     {
-        return "<$tagname>$str</$tagname>";
+        return "<{$tagname}>{$str}</{$tagname}>";
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Plugins\MobileMessaging;
 use Piwik\Common;
 use Piwik\Piwik;
 use Piwik\Plugins\MobileMessaging\SMSProvider;
-
 /**
  * The MobileMessaging API lets you manage and access all the MobileMessaging plugin features including :
  *  - manage SMS API credential
@@ -24,15 +24,12 @@ class API extends \Piwik\Plugin\API
 {
     const VERIFICATION_CODE_LENGTH = 5;
     const SMS_FROM = 'Matomo';
-
     /** @var Model $model */
     protected $model;
-
-    public function __construct(Model $model)
+    public function __construct(\Piwik\Plugins\MobileMessaging\Model $model)
     {
         $this->model = $model;
     }
-
     /**
      * determine if SMS API credential are available for the current user
      *
@@ -41,11 +38,9 @@ class API extends \Piwik\Plugin\API
     public function areSMSAPICredentialProvided()
     {
         Piwik::checkUserHasSomeViewAccess();
-
         $credential = $this->model->getSMSAPICredential();
-        return isset($credential[MobileMessaging::API_KEY_OPTION]);
+        return isset($credential[\Piwik\Plugins\MobileMessaging\MobileMessaging::API_KEY_OPTION]);
     }
-
     /**
      * return the SMS API Provider for the current user
      *
@@ -55,9 +50,8 @@ class API extends \Piwik\Plugin\API
     {
         $this->checkCredentialManagementRights();
         $credential = $this->model->getSMSAPICredential();
-        return $credential[MobileMessaging::PROVIDER_OPTION];
+        return $credential[\Piwik\Plugins\MobileMessaging\MobileMessaging::PROVIDER_OPTION];
     }
-
     /**
      * set the SMS API credential
      *
@@ -69,20 +63,14 @@ class API extends \Piwik\Plugin\API
     public function setSMSAPICredential($provider, $credentials = array())
     {
         $this->checkCredentialManagementRights();
-
         $smsProviderInstance = SMSProvider::factory($provider);
         $smsProviderInstance->verifyCredential($credentials);
-
         $settings = $this->model->getCredentialManagerSettings();
-
-        $settings[MobileMessaging::PROVIDER_OPTION] = $provider;
-        $settings[MobileMessaging::API_KEY_OPTION] = $credentials;
-
+        $settings[\Piwik\Plugins\MobileMessaging\MobileMessaging::PROVIDER_OPTION] = $provider;
+        $settings[\Piwik\Plugins\MobileMessaging\MobileMessaging::API_KEY_OPTION] = $credentials;
         $this->model->setCredentialManagerSettings($settings);
-
         return true;
     }
-
     /**
      * add phone number
      *
@@ -93,34 +81,19 @@ class API extends \Piwik\Plugin\API
     public function addPhoneNumber($phoneNumber)
     {
         Piwik::checkUserIsNotAnonymous();
-
         $phoneNumber = $this->sanitizePhoneNumber($phoneNumber);
-
         $verificationCode = "";
         for ($i = 0; $i < self::VERIFICATION_CODE_LENGTH; $i++) {
             $verificationCode .= Common::getRandomInt(0, 9);
         }
-
-        $smsText = Piwik::translate(
-            'MobileMessaging_VerificationText',
-            array(
-                 $verificationCode,
-                 Piwik::translate('General_Settings'),
-                 Piwik::translate('MobileMessaging_SettingsMenu')
-            )
-        );
-
+        $smsText = Piwik::translate('MobileMessaging_VerificationText', array($verificationCode, Piwik::translate('General_Settings'), Piwik::translate('MobileMessaging_SettingsMenu')));
         $this->model->sendSMS($smsText, $phoneNumber, self::SMS_FROM);
-
         $phoneNumbers = $this->model->retrievePhoneNumbers(Piwik::getCurrentUserLogin());
         $phoneNumbers[$phoneNumber] = $verificationCode;
         $this->model->savePhoneNumbers(Piwik::getCurrentUserLogin(), $phoneNumbers);
-
-        $this->model->increaseCount(Piwik::getCurrentUserLogin(), MobileMessaging::PHONE_NUMBER_VALIDATION_REQUEST_COUNT_OPTION, $phoneNumber);
-
+        $this->model->increaseCount(Piwik::getCurrentUserLogin(), \Piwik\Plugins\MobileMessaging\MobileMessaging::PHONE_NUMBER_VALIDATION_REQUEST_COUNT_OPTION, $phoneNumber);
         return true;
     }
-
     /**
      * sanitize phone number
      *
@@ -131,7 +104,6 @@ class API extends \Piwik\Plugin\API
     {
         return str_replace(' ', '', $phoneNumber);
     }
-
     /**
      * get remaining credit
      *
@@ -140,14 +112,10 @@ class API extends \Piwik\Plugin\API
     public function getCreditLeft()
     {
         $this->checkCredentialManagementRights();
-
         $credential = $this->model->getSMSAPICredential();
-        $SMSProvider = SMSProvider::factory($credential[MobileMessaging::PROVIDER_OPTION]);
-        return $SMSProvider->getCreditLeft(
-            $credential[MobileMessaging::API_KEY_OPTION]
-        );
+        $SMSProvider = SMSProvider::factory($credential[\Piwik\Plugins\MobileMessaging\MobileMessaging::PROVIDER_OPTION]);
+        return $SMSProvider->getCreditLeft($credential[\Piwik\Plugins\MobileMessaging\MobileMessaging::API_KEY_OPTION]);
     }
-
     /**
      * remove phone number
      *
@@ -158,11 +126,9 @@ class API extends \Piwik\Plugin\API
     public function removePhoneNumber($phoneNumber)
     {
         Piwik::checkUserIsNotAnonymous();
-
         $phoneNumbers = $this->model->retrievePhoneNumbers(Piwik::getCurrentUserLogin());
         unset($phoneNumbers[$phoneNumber]);
         $this->model->savePhoneNumbers(Piwik::getCurrentUserLogin(), $phoneNumbers);
-
         /**
          * Triggered after a phone number has been deleted. This event should be used to clean up any data that is
          * related to the now deleted phone number. The ScheduledReports plugin, for example, uses this event to remove
@@ -178,10 +144,8 @@ class API extends \Piwik\Plugin\API
          * @param string $phoneNumber The phone number that was just deleted.
          */
         Piwik::postEvent('MobileMessaging.deletePhoneNumber', array($phoneNumber));
-
         return true;
     }
-
     /**
      * validate phone number
      *
@@ -193,21 +157,16 @@ class API extends \Piwik\Plugin\API
     public function validatePhoneNumber($phoneNumber, $verificationCode)
     {
         Piwik::checkUserIsNotAnonymous();
-
         $phoneNumbers = $this->model->retrievePhoneNumbers(Piwik::getCurrentUserLogin());
-
         if (isset($phoneNumbers[$phoneNumber])) {
             if ($verificationCode == $phoneNumbers[$phoneNumber]) {
-
                 $phoneNumbers[$phoneNumber] = null;
                 $this->model->savePhoneNumbers(Piwik::getCurrentUserLogin(), $phoneNumbers);
                 return true;
             }
         }
-
         return false;
     }
-
     /**
      * delete the SMS API credential
      *
@@ -216,16 +175,11 @@ class API extends \Piwik\Plugin\API
     public function deleteSMSAPICredential()
     {
         $this->checkCredentialManagementRights();
-
         $settings = $this->model->getCredentialManagerSettings();
-
-        $settings[MobileMessaging::API_KEY_OPTION] = null;
-
+        $settings[\Piwik\Plugins\MobileMessaging\MobileMessaging::API_KEY_OPTION] = null;
         $this->model->setCredentialManagerSettings($settings);
-
         return true;
     }
-
     /**
      * Specify if normal users can manage their own SMS API credential
      *
@@ -236,7 +190,6 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
         $this->model->setDelegatedManagement($delegatedManagement);
     }
-
     /**
      * Determine if normal users can manage their own SMS API credential
      *
@@ -247,7 +200,6 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSomeViewAccess();
         return $this->model->getDelegatedManagement();
     }
-
     private function checkCredentialManagementRights()
     {
         $this->getDelegatedManagement() ? Piwik::checkUserIsNotAnonymous() : Piwik::checkUserHasSuperUserAccess();

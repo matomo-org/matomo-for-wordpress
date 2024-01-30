@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -15,7 +16,6 @@ use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\TableLogAction;
 use Piwik\Tracker\Visitor;
-
 class ExitPageTitle extends VisitDimension
 {
     protected $columnName = 'visit_exit_idaction_name';
@@ -27,17 +27,14 @@ class ExitPageTitle extends VisitDimension
     protected $suggestedValuesApi = 'Actions.getExitPageTitles';
     protected $type = self::TYPE_TEXT;
     protected $sqlFilter = [TableLogAction::class, 'getOptimizedIdActionSqlMatch'];
-
     public function getDbColumnJoin()
     {
         return new ActionNameJoin();
     }
-
     public function getDbDiscriminator()
     {
         return new Discriminator('log_action', 'type', Action::TYPE_PAGE_TITLE);
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -47,14 +44,11 @@ class ExitPageTitle extends VisitDimension
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $idActionName = false;
-
         if (!empty($action)) {
             $idActionName = $action->getIdActionNameForEntryAndExitIds();
         }
-
         return (int) $idActionName;
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -66,7 +60,6 @@ class ExitPageTitle extends VisitDimension
         if (empty($action)) {
             return false;
         }
-
         return $action->getIdActionNameForEntryAndExitIds();
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,24 +11,20 @@ namespace Piwik\Plugins\CoreUpdater\ReleaseChannel;
 
 use Piwik\Piwik;
 use Piwik\Plugins\CoreUpdater\ReleaseChannel;
-
 class LatestBeta extends ReleaseChannel
 {
     public function getId()
     {
         return 'latest_beta';
     }
-
     public function getName()
     {
         return Piwik::translate('CoreUpdater_LatestBetaRelease');
     }
-
     public function doesPreferStable()
     {
         return false;
     }
-
     public function getOrder()
     {
         return 11;

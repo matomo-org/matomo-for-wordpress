@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\MobileAppMeasurable;
 
 use Piwik\Url;
-
 class Type extends \Piwik\Measurable\Type
 {
     const ID = 'mobileapp';
@@ -17,7 +17,6 @@ class Type extends \Piwik\Measurable\Type
     protected $namePlural = 'MobileAppMeasurable_MobileApps';
     protected $description = 'MobileAppMeasurable_MobileAppDescription';
     protected $howToSetupUrl = 'https://developer.matomo.org/guides/tracking-api-clients#mobile-sdks';
-
     public function __construct()
     {
         $this->howToSetupUrl = Url::addCampaignParametersToMatomoLink($this->howToSetupUrl);

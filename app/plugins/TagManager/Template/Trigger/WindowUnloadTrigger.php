@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,16 +8,14 @@
  */
 namespace Piwik\Plugins\TagManager\Template\Trigger;
 
-class WindowUnloadTrigger extends BaseTrigger
+class WindowUnloadTrigger extends \Piwik\Plugins\TagManager\Template\Trigger\BaseTrigger
 {
     public function getCategory()
     {
         return self::CATEGORY_USER_ENGAGEMENT;
     }
-
     public function getParameters()
     {
         return array();
     }
-
 }

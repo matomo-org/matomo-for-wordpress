@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,14 +13,12 @@ use Piwik\Tracker\Action;
 use Piwik\Tracker\GoalManager;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
-
-class RevenueDiscount extends BaseConversion
+class RevenueDiscount extends \Piwik\Plugins\Ecommerce\Columns\BaseConversion
 {
     protected $columnName = 'revenue_discount';
     protected $type = self::TYPE_MONEY;
     protected $category = 'Goals_Ecommerce';
     protected $nameSingular = 'General_Discount';
-
     /**
      * @param Request $request
      * @param Visitor $visitor

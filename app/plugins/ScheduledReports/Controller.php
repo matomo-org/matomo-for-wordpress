@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -19,23 +20,19 @@ use Piwik\Plugins\LanguagesManager\LanguagesManager;
 use Piwik\Plugins\SegmentEditor\SegmentEditor;
 use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\View;
-
 /**
  *
  */
 class Controller extends \Piwik\Plugin\Controller
 {
-    const DEFAULT_REPORT_TYPE = ScheduledReports::EMAIL_TYPE;
-
+    const DEFAULT_REPORT_TYPE = \Piwik\Plugins\ScheduledReports\ScheduledReports::EMAIL_TYPE;
     public function index()
     {
         $view = new View('@ScheduledReports/index');
         $this->setGeneralVariablesView($view);
-
-        $view->countWebsites      = count(APISitesManager::getInstance()->getSitesIdWithAtLeastViewAccess());
-
+        $view->countWebsites = count(APISitesManager::getInstance()->getSitesIdWithAtLeastViewAccess());
         // get report types
-        $reportTypes = API::getReportTypes();
+        $reportTypes = \Piwik\Plugins\ScheduledReports\API::getReportTypes();
         $reportTypeOptions = array();
         foreach ($reportTypes as $reportType => $icon) {
             $reportTypeOptions[$reportType] = mb_strtoupper($reportType);
@@ -43,39 +40,33 @@ class Controller extends \Piwik\Plugin\Controller
         $view->reportTypes = $reportTypes;
         $view->reportTypeOptions = $reportTypeOptions;
         $view->defaultReportType = self::DEFAULT_REPORT_TYPE;
-        $view->defaultReportFormat = ScheduledReports::DEFAULT_REPORT_FORMAT;
+        $view->defaultReportFormat = \Piwik\Plugins\ScheduledReports\ScheduledReports::DEFAULT_REPORT_FORMAT;
         $view->defaultEvolutionPeriodN = ImageGraph::getDefaultGraphEvolutionLastPeriods();
-        $view->displayFormats = ScheduledReports::getDisplayFormats();
-
+        $view->displayFormats = \Piwik\Plugins\ScheduledReports\ScheduledReports::getDisplayFormats();
         $view->paramPeriods = [];
-
         $periodValidator = new PeriodValidator();
         $allowedPeriods = $periodValidator->getPeriodsAllowedForAPI();
-
         foreach ($allowedPeriods as $label) {
             if ($label === 'range') {
                 continue;
             }
-
             $view->paramPeriods[$label] = Piwik::translate('Intl_Period' . ucfirst($label));
         }
-
         $reportsByCategoryByType = array();
         $reportFormatsByReportTypeOptions = array();
         $reportFormatsByReportType = array();
         $allowMultipleReportsByReportType = array();
         foreach ($reportTypes as $reportType => $reportTypeIcon) {
             // get report formats
-            $reportFormatsByReportType[$reportType] = API::getReportFormats($reportType);
+            $reportFormatsByReportType[$reportType] = \Piwik\Plugins\ScheduledReports\API::getReportFormats($reportType);
             $reportFormatsByReportTypeOptions[$reportType] = $reportFormatsByReportType[$reportType];
             foreach ($reportFormatsByReportTypeOptions[$reportType] as $type => $icon) {
                 $reportFormatsByReportTypeOptions[$reportType][$type] = mb_strtoupper($type);
             }
-            $allowMultipleReportsByReportType[$reportType] = API::allowMultipleReports($reportType);
-
+            $allowMultipleReportsByReportType[$reportType] = \Piwik\Plugins\ScheduledReports\API::allowMultipleReports($reportType);
             // get report metadata
             $reportsByCategory = array();
-            $availableReportMetadata = API::getReportMetadata($this->idSite, $reportType);
+            $availableReportMetadata = \Piwik\Plugins\ScheduledReports\API::getReportMetadata($this->idSite, $reportType);
             foreach ($availableReportMetadata as $reportMetadata) {
                 $reportsByCategory[$reportMetadata['category']][] = $reportMetadata;
             }
@@ -85,38 +76,29 @@ class Controller extends \Piwik\Plugin\Controller
         $view->reportFormatsByReportType = $reportFormatsByReportType;
         $view->reportFormatsByReportTypeOptions = $reportFormatsByReportTypeOptions;
         $view->allowMultipleReportsByReportType = $allowMultipleReportsByReportType;
-
         $reports = array();
         $reportsById = array();
         if (!Piwik::isUserIsAnonymous()) {
-            $reports = API::getInstance()->getReports($this->idSite, $period = false, $idReport = false, $ifSuperUserReturnOnlySuperUserReports = true);
+            $reports = \Piwik\Plugins\ScheduledReports\API::getInstance()->getReports($this->idSite, $period = false, $idReport = false, $ifSuperUserReturnOnlySuperUserReports = true);
             foreach ($reports as &$report) {
                 $report['evolutionPeriodFor'] = $report['evolution_graph_within_period'] ? 'each' : 'prev';
                 $report['evolutionPeriodN'] = (int) $report['evolution_graph_period_n'] ?: ImageGraph::getDefaultGraphEvolutionLastPeriods();
                 $report['periodParam'] = $report['period_param'];
-
-                $report['recipients'] = API::getReportRecipients($report);
+                $report['recipients'] = \Piwik\Plugins\ScheduledReports\API::getReportRecipients($report);
                 $reportsById[$report['idreport']] = $report;
             }
         }
         $view->reports = $reports;
         $view->reportsJSON = json_encode($reportsById);
-
-        $view->downloadOutputType = API::OUTPUT_INLINE;
-
-        $view->periods = ScheduledReports::getPeriodToFrequency();
-        $view->defaultPeriod = ScheduledReports::DEFAULT_PERIOD;
-        $view->defaultHour = ScheduledReports::DEFAULT_HOUR;
-        $view->periodTranslations = ScheduledReports::getPeriodFrequencyTranslations();
-
+        $view->downloadOutputType = \Piwik\Plugins\ScheduledReports\API::OUTPUT_INLINE;
+        $view->periods = \Piwik\Plugins\ScheduledReports\ScheduledReports::getPeriodToFrequency();
+        $view->defaultPeriod = \Piwik\Plugins\ScheduledReports\ScheduledReports::DEFAULT_PERIOD;
+        $view->defaultHour = \Piwik\Plugins\ScheduledReports\ScheduledReports::DEFAULT_HOUR;
+        $view->periodTranslations = \Piwik\Plugins\ScheduledReports\ScheduledReports::getPeriodFrequencyTranslations();
         $view->language = LanguagesManager::getLanguageCodeForCurrentUser();
-
         $view->segmentEditorActivated = false;
-        if (API::isSegmentEditorActivated()) {
-
-            $savedSegmentsById = array(
-                '' => Piwik::translate('SegmentEditor_DefaultAllVisits')
-            );
+        if (\Piwik\Plugins\ScheduledReports\API::isSegmentEditorActivated()) {
+            $savedSegmentsById = array('' => Piwik::translate('SegmentEditor_DefaultAllVisits'));
             $allSegments = SegmentEditor::getAllSegmentsForSite($this->idSite);
             foreach ($allSegments as $savedSegment) {
                 $savedSegmentsById[$savedSegment['idsegment']] = $savedSegment['name'];
@@ -124,44 +106,31 @@ class Controller extends \Piwik\Plugin\Controller
             $view->savedSegmentsById = $savedSegmentsById;
             $view->segmentEditorActivated = true;
         }
-
         return $view->render();
     }
-
     public function unsubscribe()
     {
         $view = new View('@ScheduledReports/unsubscribe');
         $this->setBasicVariablesView($view);
         $view->linkTitle = Piwik::getRandomTitle();
-
         $token = Common::getRequestVar('token', '', 'string');
-
         if (empty($token)) {
             $view->error = Piwik::translate('ScheduledReports_NoTokenProvided');
             return $view->render();
         }
-
-        $subscriptionModel = new SubscriptionModel();
-        $subscription      = $subscriptionModel->getSubscription($token);
-
+        $subscriptionModel = new \Piwik\Plugins\ScheduledReports\SubscriptionModel();
+        $subscription = $subscriptionModel->getSubscription($token);
         if (empty($subscription)) {
             $view->error = Piwik::translate('ScheduledReports_NoSubscriptionFound');
             return $view->render();
         }
-
-        $report = Access::doAsSuperUser(function() use ($subscription) {
-            $reports = Request::processRequest('ScheduledReports.getReports', [
-                'idReport'    => $subscription['idreport'],
-            ]);
+        $report = Access::doAsSuperUser(function () use($subscription) {
+            $reports = Request::processRequest('ScheduledReports.getReports', ['idReport' => $subscription['idreport']]);
             return reset($reports);
         });
-
         $confirm = Common::getRequestVar('confirm', '', 'string');
-
         $view->reportName = $report['description'];
-
         $nonce = Common::getRequestVar('nonce', '', 'string');
-
         if (!empty($confirm) && Nonce::verifyNonce('Report.Unsubscribe', $nonce)) {
             Nonce::discardNonce('Report.Unsubscribe');
             $subscriptionModel->unsubscribe($token);
@@ -169,7 +138,6 @@ class Controller extends \Piwik\Plugin\Controller
         } else {
             $view->nonce = Nonce::getNonce('Report.Unsubscribe');
         }
-
         return $view->render();
     }
 }

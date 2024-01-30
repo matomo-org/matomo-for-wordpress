@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,15 +11,12 @@ namespace Piwik\Period;
 
 use Piwik\Date;
 use Piwik\Period;
-
 /**
  */
 class Year extends Period
 {
     const PERIOD_ID = 4;
-
     protected $label = 'year';
-
     /**
      * Returns the current period as a localized short string
      *
@@ -28,7 +26,6 @@ class Year extends Period
     {
         return $this->getLocalizedLongString();
     }
-
     /**
      * Returns the current period as a localized long string
      *
@@ -40,7 +37,6 @@ class Year extends Period
         $out = $this->getDateStart()->getLocalized(Date::DATE_FORMAT_YEAR);
         return $out;
     }
-
     /**
      * Returns the current period as a string
      *
@@ -51,7 +47,6 @@ class Year extends Period
         $out = $this->getDateStart()->toString('Y');
         return $out;
     }
-
     /**
      * Generates the subperiods (one for each month of the year)
      */
@@ -60,18 +55,12 @@ class Year extends Period
         if ($this->subperiodsProcessed) {
             return;
         }
-
         parent::generate();
-
         $year = $this->date->toString("Y");
         for ($i = 1; $i <= 12; $i++) {
-            $this->addSubperiod(new Month(
-                    Date::factory("$year-$i-01")
-                )
-            );
+            $this->addSubperiod(new \Piwik\Period\Month(Date::factory("{$year}-{$i}-01")));
         }
     }
-
     /**
      * Returns the current period as a string
      *
@@ -81,20 +70,16 @@ class Year extends Period
     public function toString($format = 'ignored')
     {
         $this->generate();
-
         $stringMonth = array();
         foreach ($this->subperiods as $month) {
             $stringMonth[] = $month->getDateStart()->toString("Y") . "-" . $month->getDateStart()->toString("m") . "-01";
         }
-
         return $stringMonth;
     }
-
     public function getImmediateChildPeriodLabel()
     {
         return 'month';
     }
-
     public function getParentPeriodLabel()
     {
         return null;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,8 +13,7 @@ use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-
-class Latitude extends Base
+class Latitude extends \Piwik\Plugins\UserCountry\Columns\Base
 {
     protected $columnName = 'location_latitude';
     protected $columnType = 'decimal(9, 6) DEFAULT NULL';
@@ -23,7 +23,6 @@ class Latitude extends Base
     protected $nameSingular = 'UserCountry_Latitude';
     protected $namePlural = 'UserCountry_Latitudes';
     protected $acceptValues = '-33.578, 40.830, etc.<br/>You can select visitors within a lat/long range using &segment=lat&gt;X;lat&lt;Y;long&gt;M;long&lt;N.';
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -33,18 +32,13 @@ class Latitude extends Base
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $value = $this->getUrlOverrideValueIfAllowed('lat', $request);
-
         if ($value !== false) {
             return $value;
         }
-
         $userInfo = $this->getUserInfo($request, $visitor);
-
         $latitude = $this->getLocationDetail($userInfo, LocationProvider::LATITUDE_KEY);
-
         return $latitude;
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -55,7 +49,6 @@ class Latitude extends Base
     {
         return $this->getUrlOverrideValueIfAllowed('lat', $request);
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor

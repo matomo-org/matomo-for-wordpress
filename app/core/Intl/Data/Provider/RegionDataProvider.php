@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik\Intl\Data\Provider;
 
 /**
@@ -16,7 +16,6 @@ class RegionDataProvider
     private $continentList;
     private $countryList;
     private $countryExtraList;
-
     /**
      * Returns the list of continent codes.
      *
@@ -26,12 +25,10 @@ class RegionDataProvider
     public function getContinentList()
     {
         if ($this->continentList === null) {
-            $this->continentList = require __DIR__ . '/../Resources/continents.php';
+            $this->continentList = (require __DIR__ . '/../Resources/continents.php');
         }
-
         return $this->continentList;
     }
-
     /**
      * Returns the list of valid country codes.
      *
@@ -42,16 +39,14 @@ class RegionDataProvider
     public function getCountryList($includeInternalCodes = false)
     {
         if ($this->countryList === null) {
-            $this->countryList = require __DIR__ . '/../Resources/countries.php';
+            $this->countryList = (require __DIR__ . '/../Resources/countries.php');
         }
         if ($this->countryExtraList === null) {
-            $this->countryExtraList = require __DIR__ . '/../Resources/countries-extra.php';
+            $this->countryExtraList = (require __DIR__ . '/../Resources/countries-extra.php');
         }
-
         if ($includeInternalCodes) {
             return array_merge($this->countryList, $this->countryExtraList);
         }
-
         return $this->countryList;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,4 @@ interface TagManagerDao
 {
     public function install();
     public function uninstall();
-
 }
-
-

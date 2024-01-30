@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,7 +7,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\TagManager;
 
 use Piwik\Plugins\TagManager\Template\Tag\MatomoTag;
@@ -15,7 +15,6 @@ use Piwik\Updater;
 use Piwik\Updater\Migration;
 use Piwik\Updater\Migration\Factory as MigrationFactory;
 use Piwik\Updates as PiwikUpdates;
-
 /**
  * Update for version 5.0.0-rc8.
  */
@@ -25,12 +24,10 @@ class Updates_5_0_0_rc8 extends PiwikUpdates
      * @var MigrationFactory
      */
     private $migration;
-
     public function __construct(MigrationFactory $factory)
     {
         $this->migration = $factory;
     }
-
     /**
      * Return database migrations to be executed in this update.
      *
@@ -44,11 +41,8 @@ class Updates_5_0_0_rc8 extends PiwikUpdates
      */
     public function getMigrations(Updater $updater)
     {
-        return array(
-            $this->migration->db->addColumn('tagmanager_container', 'ignoreGtmDataLayer', 'TINYINT(1) UNSIGNED NOT NULL DEFAULT 0', 'description'),
-        );
+        return array($this->migration->db->addColumn('tagmanager_container', 'ignoreGtmDataLayer', 'TINYINT(1) UNSIGNED NOT NULL DEFAULT 0', 'description'));
     }
-
     /**
      * Perform the incremental version update.
      *

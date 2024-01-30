@@ -9,8 +9,8 @@
 
 namespace Piwik\Plugins\WordPress;
 
-use Monolog\Handler\HandlerInterface;
-use Monolog\Processor\PsrLogMessageProcessor;
+use Matomo\Dependencies\Monolog\Handler\HandlerInterface;
+use Matomo\Dependencies\Monolog\Processor\PsrLogMessageProcessor;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
@@ -23,7 +23,7 @@ use Piwik\Plugins\Monolog\Processor\RequestIdProcessor;
 use Piwik\Plugins\Monolog\Processor\SprintfProcessor;
 use Piwik\Plugins\Monolog\Processor\TokenProcessor;
 use Piwik\SettingsServer;
-use Psr\Log\AbstractLogger;
+use Matomo\Dependencies\Psr\Log\AbstractLogger;
 use Piwik\Log\LoggerInterface;
 use WpMatomo\Bootstrap;
 

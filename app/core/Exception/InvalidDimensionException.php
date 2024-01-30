@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,6 +9,6 @@
  */
 namespace Piwik\Exception;
 
-class InvalidDimensionException extends Exception
+class InvalidDimensionException extends \Piwik\Exception\Exception
 {
 }

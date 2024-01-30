@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Plugins\CustomDimensions\Dimension;
 
 use Piwik\Plugin\Dimension\ActionDimension;
 use Piwik\Plugins\CustomDimensions\Tracker\CustomDimensionsRequestProcessor;
-
 /**
  * We do not put this one in columns directory of the plugin since we do not want to have it automatically detected.
  * We create instances of it dynamically when needed instead.
@@ -19,7 +19,6 @@ class CustomActionDimension extends ActionDimension
 {
     protected $idDimension = null;
     protected $actualName = null;
-
     public function __construct($column, $name, $idDimension)
     {
         $this->columnName = $column;
@@ -28,7 +27,6 @@ class CustomActionDimension extends ActionDimension
         $this->idDimension = $idDimension;
         $this->segmentName = CustomDimensionsRequestProcessor::buildCustomDimensionTrackingApiName($idDimension);
     }
-
     /**
      * The name of the dimension which will be visible for instance in the UI of a related report and in the mobile app.
      * @return string
@@ -37,7 +35,6 @@ class CustomActionDimension extends ActionDimension
     {
         return $this->actualName;
     }
-
     public function getId()
     {
         return 'CustomDimension.CustomDimension' . $this->idDimension;

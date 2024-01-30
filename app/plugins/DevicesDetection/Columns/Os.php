@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -18,8 +19,7 @@ use Piwik\Tracker\Request;
 use Piwik\Tracker\Settings;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-
-class Os extends Base
+class Os extends \Piwik\Plugins\DevicesDetection\Columns\Base
 {
     protected $columnName = 'config_os';
     protected $columnType = 'CHAR(3) NULL';
@@ -28,13 +28,11 @@ class Os extends Base
     protected $namePlural = 'DevicesDetection_OperatingSystems';
     protected $acceptValues = 'WIN, LIN, MAX, AND, IOS etc.';
     protected $type = self::TYPE_TEXT;
-
     public function configureSegments(SegmentsList $segmentsList, DimensionSegmentFactory $dimensionSegmentFactory)
     {
         $segment = new Segment();
         $segment->setName('DevicesDetection_OperatingSystemCode');
         $segmentsList->addSegment($dimensionSegmentFactory->createSegment($segment));
-
         $segment = new Segment();
         $segment->setSegment('operatingSystemName');
         $segment->setName('DevicesDetection_ColumnOperatingSystem');
@@ -42,34 +40,28 @@ class Os extends Base
         $segment->setNeedsMostFrequentValues(false);
         $segment->setSqlFilterValue(function ($val) {
             $oss = OperatingSystem::getAvailableOperatingSystems();
-            $oss = array_map(function($val) {
+            $oss = array_map(function ($val) {
                 return mb_strtolower($val);
             }, $oss);
-            $result   = array_search(mb_strtolower($val), $oss);
-
+            $result = array_search(mb_strtolower($val), $oss);
             if ($result === false) {
                 $result = 'UNK';
             }
-
             return $result;
         });
         $segment->setSuggestedValuesCallback(function ($idSite, $maxValuesToReturn, $table) {
-            return $this->sortStaticListByUsage(OperatingSystem::getAvailableOperatingSystems(), $table,
-                'operatingSystemCode', $maxValuesToReturn);
+            return $this->sortStaticListByUsage(OperatingSystem::getAvailableOperatingSystems(), $table, 'operatingSystemCode', $maxValuesToReturn);
         });
         $segmentsList->addSegment($dimensionSegmentFactory->createSegment($segment));
     }
-
     public function formatValue($value, $idSite, Formatter $formatter)
     {
         return \Piwik\Plugins\DevicesDetection\getOSFamilyFullName($value);
     }
-
     public function getName()
     {
         return Piwik::translate('DevicesDetection_OperatingSystemFamily');
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -78,15 +70,13 @@ class Os extends Base
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $parser    = $this->getUAParser($request->getUserAgent(), $request->getClientHints());
-
+        $parser = $this->getUAParser($request->getUserAgent(), $request->getClientHints());
         if ($parser->isBot()) {
             $os = Settings::OS_BOT;
         } else {
             $os = $parser->getOS();
             $os = $os['short_name'] ?? 'UNK';
         }
-
         return $os;
     }
 }

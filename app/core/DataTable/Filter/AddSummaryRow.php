@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\DataTable\Filter;
 use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable;
 use Piwik\DataTable\Row\DataTableSummaryRow;
-
 /**
  * Adds a summary row to {@link DataTable}s that contains the sum of all other table rows.
  *
@@ -30,7 +30,6 @@ class AddSummaryRow extends BaseFilter
      * @var int
      */
     private $labelSummaryRow;
-
     /**
      * Constructor.
      *
@@ -42,7 +41,6 @@ class AddSummaryRow extends BaseFilter
         parent::__construct($table);
         $this->labelSummaryRow = $labelSummaryRow;
     }
-
     /**
      * Executes the filter. See {@link AddSummaryRow}.
      *

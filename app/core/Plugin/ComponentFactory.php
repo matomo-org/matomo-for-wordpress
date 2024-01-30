@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Plugin;
 use Piwik\Log;
 use Piwik\Plugin\Manager as PluginManager;
 use Exception;
-
 /**
  * Factory class with methods to find and instantiate Plugin components.
  */
@@ -37,33 +37,24 @@ class ComponentFactory
     public static function factory($pluginName, $componentClassSimpleName, $componentTypeClass)
     {
         if (empty($pluginName) || empty($componentClassSimpleName)) {
-            Log::debug("ComponentFactory::%s: empty plugin name or component simple name requested (%s, %s)",
-                __FUNCTION__, $pluginName, $componentClassSimpleName);
-
+            Log::debug("ComponentFactory::%s: empty plugin name or component simple name requested (%s, %s)", __FUNCTION__, $pluginName, $componentClassSimpleName);
             return null;
         }
-
         $plugin = self::getActivatedPlugin(__FUNCTION__, $pluginName);
         if (empty($plugin)) {
             return null;
         }
-
         $subnamespace = $componentTypeClass::COMPONENT_SUBNAMESPACE;
         $desiredComponentClass = 'Piwik\\Plugins\\' . $pluginName . '\\' . $subnamespace . '\\' . $componentClassSimpleName;
-
         $components = $plugin->findMultipleComponents($subnamespace, $componentTypeClass);
         foreach ($components as $class) {
             if ($class === $desiredComponentClass) {
                 return new $class();
             }
         }
-
-        Log::debug("ComponentFactory::%s: Could not find requested component (args = ['%s', '%s', '%s']).",
-            __FUNCTION__, $pluginName, $componentClassSimpleName, $componentTypeClass);
-
+        Log::debug("ComponentFactory::%s: Could not find requested component (args = ['%s', '%s', '%s']).", __FUNCTION__, $pluginName, $componentClassSimpleName, $componentTypeClass);
         return null;
     }
-
     /**
      * Finds a component instance that satisfies a given predicate.
      *
@@ -77,7 +68,6 @@ class ComponentFactory
     public static function getComponentIf($componentTypeClass, $pluginName, $predicate)
     {
         $pluginManager = PluginManager::getInstance();
-
         // get components to search through
         $subnamespace = $componentTypeClass::COMPONENT_SUBNAMESPACE;
         if (empty($pluginName)) {
@@ -87,10 +77,8 @@ class ComponentFactory
             if (empty($plugin)) {
                 return null;
             }
-
             $components = $plugin->findMultipleComponents($subnamespace, $componentTypeClass);
         }
-
         // find component that satisfieds predicate
         foreach ($components as $class) {
             $component = new $class();
@@ -98,13 +86,9 @@ class ComponentFactory
                 return $component;
             }
         }
-
-        Log::debug("ComponentFactory::%s: Could not find component that satisfies predicate (args = ['%s', '%s', '%s']).",
-            __FUNCTION__, $componentTypeClass, $pluginName, get_class($predicate));
-
+        Log::debug("ComponentFactory::%s: Could not find component that satisfies predicate (args = ['%s', '%s', '%s']).", __FUNCTION__, $componentTypeClass, $pluginName, get_class($predicate));
         return null;
     }
-
     /**
      * @param string $function
      * @param string $pluginName
@@ -115,16 +99,12 @@ class ComponentFactory
         $pluginManager = PluginManager::getInstance();
         try {
             if (!$pluginManager->isPluginActivated($pluginName)) {
-                Log::debug("ComponentFactory::%s: component for deactivated plugin ('%s') requested.",
-                    $function, $pluginName);
-
+                Log::debug("ComponentFactory::%s: component for deactivated plugin ('%s') requested.", $function, $pluginName);
                 return null;
             }
-
             return $pluginManager->getLoadedPlugin($pluginName);
         } catch (Exception $e) {
             Log::debug($e);
-
             return null;
         }
     }

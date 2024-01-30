@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,29 +12,24 @@ use Piwik\Plugins\TagManager\Model\Container;
 use Piwik\Plugins\TagManager\Model\Tag;
 use Piwik\Plugins\TagManager\Model\Trigger;
 use Piwik\Plugins\TagManager\Model\Variable;
-
 class Export
 {
     /**
      * @var Tag
      */
     private $tags;
-
     /**
      * @var Trigger
      */
     private $triggers;
-
     /**
      * @var Variable
      */
     private $variables;
-
     /**
      * @var Container
      */
     private $containers;
-
     public function __construct(Tag $tags, Trigger $triggers, Variable $variables, Container $containers)
     {
         $this->tags = $tags;
@@ -41,21 +37,12 @@ class Export
         $this->variables = $variables;
         $this->containers = $containers;
     }
-
     public function exportContainerVersion($idSite, $idContainer, $idContainerVersion)
     {
         $container = $this->containers->getContainer($idSite, $idContainer);
         $version = $this->containers->getContainerVersion($idSite, $idContainer, $idContainerVersion);
         $container['revision'] = $version['revision'];
-        $container['version'] = array(
-            'name' => $version['name'],
-            'description' => $version['description'],
-            'revision' => $version['revision'],
-            'created_date' => $version['created_date'],
-            'created_date_pretty' => $version['created_date_pretty'],
-            'updated_date' => $version['updated_date'],
-            'updated_date_pretty' => $version['updated_date_pretty']
-        );
+        $container['version'] = array('name' => $version['name'], 'description' => $version['description'], 'revision' => $version['revision'], 'created_date' => $version['created_date'], 'created_date_pretty' => $version['created_date_pretty'], 'updated_date' => $version['updated_date'], 'updated_date_pretty' => $version['updated_date_pretty']);
         $container['tags'] = $this->exportTags($idSite, $idContainerVersion);
         $container['triggers'] = $this->exportTriggers($idSite, $idContainerVersion);
         $container['variables'] = $this->exportVariables($idSite, $idContainerVersion);
@@ -64,10 +51,8 @@ class Export
         unset($container['draft']);
         unset($container['versions']);
         unset($container['releases']);
-
         return $container;
     }
-
     public function exportTags($idSite, $idContainerVersion)
     {
         $tags = $this->tags->getContainerTags($idSite, $idContainerVersion);
@@ -80,7 +65,6 @@ class Export
         }
         return $tags;
     }
-
     public function exportTriggers($idSite, $idContainerVersion)
     {
         $triggers = $this->triggers->getContainerTriggers($idSite, $idContainerVersion);
@@ -93,7 +77,6 @@ class Export
         }
         return $triggers;
     }
-
     public function exportVariables($idSite, $idContainerVersion)
     {
         $variables = $this->variables->getContainerVariables($idSite, $idContainerVersion);
@@ -106,6 +89,4 @@ class Export
         }
         return $variables;
     }
-
-
 }

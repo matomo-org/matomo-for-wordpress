@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,21 +8,18 @@
  */
 namespace Piwik\Plugins\TagManager\Template\Trigger;
 
-class AllElementsClickTrigger extends BaseTrigger
+class AllElementsClickTrigger extends \Piwik\Plugins\TagManager\Template\Trigger\BaseTrigger
 {
     public function getCategory()
     {
         return self::CATEGORY_CLICK;
     }
-
     public function getIcon()
     {
         return 'plugins/TagManager/images/icons/pointer.svg';
     }
-
     public function getParameters()
     {
         return array();
     }
-
 }

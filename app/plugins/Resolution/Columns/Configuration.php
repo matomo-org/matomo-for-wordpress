@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\Resolution\Columns;
 
 use Piwik\Columns\Dimension;
-
 class Configuration extends Dimension
 {
     protected $nameSingular = 'Resolution_ColumnConfiguration';

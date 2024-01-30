@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,7 +9,6 @@
 namespace Piwik\Updater\Migration\Config;
 
 use Piwik\Container\StaticContainer;
-
 /**
  * Provides config migrations.
  *
@@ -20,7 +20,6 @@ class Factory
      * @var \Piwik\Container\Container
      */
     private $container;
-
     /**
      * @ignore
      */
@@ -28,7 +27,6 @@ class Factory
     {
         $this->container = StaticContainer::getContainer();
     }
-
     /**
      * Sets a configuration to the Matomo config file
      *
@@ -39,10 +37,6 @@ class Factory
      */
     public function set($section, $key, $value)
     {
-        return $this->container->make('Piwik\Updater\Migration\Config\Set', array(
-            'section' => $section,
-            'key' => $key,
-            'value' => $value,
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Config\\Set', array('section' => $section, 'key' => $key, 'value' => $value));
     }
 }

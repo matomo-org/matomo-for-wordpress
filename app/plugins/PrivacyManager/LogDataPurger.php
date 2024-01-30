@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -17,7 +18,6 @@ use Piwik\Db\TransactionLevel;
 use Piwik\Log;
 use Piwik\LogDeleter;
 use Piwik\Piwik;
-
 /**
  * Purges the log_visit, log_conversion and related tables of old visit data.
  */
@@ -27,21 +27,18 @@ class LogDataPurger
      * The max set of rows each table scan select should query at one time.
      */
     public static $selectSegmentSize = 100000;
-
     /**
      * LogDeleter service used to delete visits.
      *
      * @var LogDeleter
      */
     private $logDeleter;
-
     /**
      * DAO class that is used to delete unused actions.
      *
      * @var RawLogDao
      */
     private $rawLogDao;
-
     /**
      * Constructor.
      */
@@ -50,7 +47,6 @@ class LogDataPurger
         $this->logDeleter = $logDeleter;
         $this->rawLogDao = $rawLogDao;
     }
-
     /**
      * Purges old data from the following tables:
      * - log_visit
@@ -67,16 +63,11 @@ class LogDataPurger
     public function purgeData($deleteLogsOlderThan, $deleteUnusedLogActions)
     {
         $dateUpperLimit = Date::factory("today")->subDay($deleteLogsOlderThan);
-
         $transactionLevel = new TransactionLevel(Db::get());
         $transactionLevel->setUncommitted();
-
         $this->logDeleter->deleteVisitsFor($start = null, $dateUpperLimit->getDatetime());
-
         $transactionLevel->restorePreviousStatus();
-
         $logTables = self::getDeleteTableLogTables();
-
         // delete unused actions from the log_action table (but only if we can lock tables)
         if ($deleteUnusedLogActions) {
             if (Db::isLockPrivilegeGranted()) {
@@ -86,7 +77,6 @@ class LogDataPurger
                 Log::warning($logMessage);
             }
         }
-
         /**
          * Triggered when a plugin is supposed to delete log/raw data that is older than a certain amount of days.
          *
@@ -102,11 +92,9 @@ class LogDataPurger
          *                                 Visits and related data whose age is greater than this number will be purged.
          */
         Piwik::postEvent('PrivacyManager.deleteLogsOlderThan', array($dateUpperLimit, $deleteLogsOlderThan));
-
         // optimize table overhead after deletion
         Db::optimizeTables($logTables);
     }
-
     /**
      * Returns an array describing what data would be purged if purging were invoked.
      *
@@ -124,7 +112,6 @@ class LogDataPurger
     public function getPurgeEstimate($deleteLogsOlderThan)
     {
         $result = array();
-
         // deal w/ log tables that will be purged
         $maxIdVisit = $this->getDeleteIdVisitOffset($deleteLogsOlderThan);
         if (!empty($maxIdVisit)) {
@@ -138,10 +125,8 @@ class LogDataPurger
                 }
             }
         }
-
         return $result;
     }
-
     /**
      * get highest idVisit to delete rows from
      * @return string
@@ -149,49 +134,34 @@ class LogDataPurger
     private function getDeleteIdVisitOffset($deleteLogsOlderThan)
     {
         $logVisit = Common::prefixTable("log_visit");
-
         // get max idvisit
-        $maxIdVisit = Db::fetchOne("SELECT MAX(idvisit) FROM $logVisit");
+        $maxIdVisit = Db::fetchOne("SELECT MAX(idvisit) FROM {$logVisit}");
         if (empty($maxIdVisit)) {
             return false;
         }
-
         // select highest idvisit to delete from
         $dateStart = Date::factory("today")->subDay($deleteLogsOlderThan);
-        $sql = "SELECT idvisit
-		          FROM $logVisit
-		         WHERE '" . $dateStart->toString('Y-m-d H:i:s') . "' > visit_last_action_time
-		           AND idvisit <= ?
-		           AND idvisit > ?
-		      ORDER BY idvisit DESC
-		         LIMIT 1";
-
+        $sql = "SELECT idvisit\n\t\t          FROM {$logVisit}\n\t\t         WHERE '" . $dateStart->toString('Y-m-d H:i:s') . "' > visit_last_action_time\n\t\t           AND idvisit <= ?\n\t\t           AND idvisit > ?\n\t\t      ORDER BY idvisit DESC\n\t\t         LIMIT 1";
         return Db::segmentedFetchFirst($sql, $maxIdVisit, 0, -self::$selectSegmentSize);
     }
-
     private function getLogTableDeleteCount($table, $maxIdVisit)
     {
-        $sql = "SELECT COUNT(*) FROM $table WHERE idvisit <= ?";
+        $sql = "SELECT COUNT(*) FROM {$table} WHERE idvisit <= ?";
         return (int) Db::fetchOne($sql, array($maxIdVisit));
     }
-
     // let's hardcode, since these are not dynamically created tables
     public static function getDeleteTableLogTables()
     {
-        $provider = StaticContainer::get('Piwik\Plugin\LogTablesProvider');
-
+        $provider = StaticContainer::get('Piwik\\Plugin\\LogTablesProvider');
         $result = array();
         foreach ($provider->getAllLogTables() as $logTable) {
-
             if ($logTable->getColumnToJoinOnIdVisit()) {
                 $result[] = Common::prefixTable($logTable->getName());
             }
         }
-
         if (Db::isLockPrivilegeGranted()) {
             $result[] = Common::prefixTable('log_action');
         }
-
         return $result;
     }
 }

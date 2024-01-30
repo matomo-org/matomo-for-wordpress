@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -17,7 +18,6 @@ use Piwik\Tracker\Db\DbException;
 use Piwik\Updater\Migration;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugin\Manager as PluginManager;
-
 /**
  * Change model class
  *
@@ -29,20 +29,16 @@ class Model
     const NO_CHANGES_EXIST = 0;
     const CHANGES_EXIST = 1;
     const NEW_CHANGES_EXIST = 2;
-
     /**
      * @var Db\AdapterInterface
      */
     private $db;
-
     /** @var array */
     private $changeItems = null;
-
     public function __construct()
     {
         $this->db = Db::get();
     }
-
     /**
      * Add any new changes for a plugin to the changes table
      *
@@ -50,37 +46,28 @@ class Model
      *
      * @throws \Exception
      */
-    public function addChanges(string $pluginName): void
+    public function addChanges(string $pluginName) : void
     {
         $pluginManager = PluginManager::getInstance();
-
-        if ($pluginManager &&
-            $pluginManager->isValidPluginName($pluginName) &&
-            $pluginManager->isPluginInFilesystem($pluginName) &&
-            $pluginManager->isPluginActivated($pluginName))
-        {
-
+        if ($pluginManager && $pluginManager->isValidPluginName($pluginName) && $pluginManager->isPluginInFilesystem($pluginName) && $pluginManager->isPluginActivated($pluginName)) {
             $plugin = $pluginManager->loadPlugin($pluginName);
             if (!$plugin) {
                 return;
             }
-
             $changes = $plugin->getChanges();
             foreach ($changes as $change) {
                 $this->addChange($pluginName, $change);
             }
         }
     }
-
     /**
      * Remove all changes for a plugin
      *
      * @param string $pluginName
      */
-    public function removeChanges(string $pluginName): void
+    public function removeChanges(string $pluginName) : void
     {
         $table = Common::prefixTable('changes');
-
         try {
             $this->db->query("DELETE FROM " . $table . " WHERE plugin_name = ?", [$pluginName]);
         } catch (\Exception $e) {
@@ -90,37 +77,29 @@ class Model
             throw $e;
         }
     }
-
     /**
      * Add a change item to the database table
      *
      * @param string $pluginName
      * @param array  $change
      */
-    public function addChange(string $pluginName, array $change): void
+    public function addChange(string $pluginName, array $change) : void
     {
-        if(!isset($change['version']) || !isset($change['title']) || !isset($change['description'])) {
-            StaticContainer::get(LoggerInterface::class)->warning(
-                "Change item for plugin {plugin} missing version, title or description fields - ignored",
-                ['plugin' => $pluginName]);
+        if (!isset($change['version']) || !isset($change['title']) || !isset($change['description'])) {
+            StaticContainer::get(LoggerInterface::class)->warning("Change item for plugin {plugin} missing version, title or description fields - ignored", ['plugin' => $pluginName]);
             return;
         }
-
         $table = Common::prefixTable('changes');
-
         $fields = ['created_time', 'plugin_name', 'version', 'title', 'description'];
         $params = [Date::now()->getDatetime(), $pluginName, $change['version'], $change['title'], $change['description']];
-
         if (isset($change['link_name']) && isset($change['link'])) {
             $fields[] = 'link_name';
             $fields[] = 'link';
             $params[] = $change['link_name'];
             $params[] = $change['link'];
         }
-
         $insertSql = 'INSERT IGNORE INTO ' . $table . ' (' . implode(',', $fields) . ') 
                       VALUES (' . Common::getSqlStringFieldsArray($params) . ')';
-
         try {
             $this->db->query($insertSql, $params);
         } catch (\Exception $e) {
@@ -130,7 +109,6 @@ class Model
             throw $e;
         }
     }
-
     /**
      * Check if any changes items exist
      *
@@ -138,28 +116,27 @@ class Model
      *
      * @return int
      */
-    public function doChangesExist(?int $newerThanId = null): int
+    public function doChangesExist(?int $newerThanId = null) : int
     {
         $changeItems = $this->getChangeItems();
-
         $all = 0;
         $new = 0;
         foreach ($changeItems as $c) {
             $all++;
-            if ($newerThanId === null || (isset($c['idchange']) && $c['idchange'] > $newerThanId)) {
+            if ($newerThanId === null || isset($c['idchange']) && $c['idchange'] > $newerThanId) {
                 $new++;
             }
         }
-
         if ($all === 0) {
             return self::NO_CHANGES_EXIST;
-        } else if ($all > 0 && $new === 0) {
-            return self::CHANGES_EXIST;
         } else {
-            return self::NEW_CHANGES_EXIST;
+            if ($all > 0 && $new === 0) {
+                return self::CHANGES_EXIST;
+            } else {
+                return self::NEW_CHANGES_EXIST;
+            }
         }
     }
-
     /**
      * Get count of new changes
      *
@@ -167,37 +144,34 @@ class Model
      *
      * @return int
      */
-    public function getNewChangesCount(?int $newerThanId = null): int
+    public function getNewChangesCount(?int $newerThanId = null) : int
     {
         $changes = $this->getChangeItems();
         $new = 0;
         foreach ($changes as $c) {
-            if ($newerThanId === null || (isset($c['idchange']) && $c['idchange'] > $newerThanId)) {
+            if ($newerThanId === null || isset($c['idchange']) && $c['idchange'] > $newerThanId) {
                 $new++;
             }
         }
         return $new;
     }
-
     /**
      * Return an array of change items from the changes table
      *
      * @return array
      * @throws DbException
      */
-    public function getChangeItems(): array
+    public function getChangeItems() : array
     {
-
         if ($this->changeItems !== null) {
             return $this->changeItems;
         }
-
-        $showAtLeast = 10; // Always show at least this number of changes
-        $expireOlderThanDays = 90; // Don't show changes that were added to the table more than x days ago
-
+        $showAtLeast = 10;
+        // Always show at least this number of changes
+        $expireOlderThanDays = 90;
+        // Don't show changes that were added to the table more than x days ago
         $table = Common::prefixTable('changes');
         $selectSql = "SELECT * FROM " . $table . " WHERE title IS NOT NULL ORDER BY idchange DESC";
-
         try {
             $changes = $this->db->fetchAll($selectSql);
         } catch (\Exception $e) {
@@ -206,18 +180,16 @@ class Model
             }
             throw $e;
         }
-
         // Remove expired changes, only if there are at more than the minimum changes
         $cutOffDate = Date::now()->subDay($expireOlderThanDays);
         foreach ($changes as $k => $change) {
             if (isset($change['idchange'])) {
-                $changes[$k]['idchange'] = (int)$change['idchange'];
+                $changes[$k]['idchange'] = (int) $change['idchange'];
             }
             if (count($changes) > $showAtLeast && $change['created_time'] < $cutOffDate) {
                 unset($changes[$k]);
             }
         }
-
         /**
          * Event triggered before changes are displayed
          *
@@ -237,9 +209,7 @@ class Model
          * @param array &$changes
          */
         Piwik::postEvent('Changes.filterChanges', array(&$changes));
-
         $this->changeItems = $changes;
-
         return $this->changeItems;
     }
 }

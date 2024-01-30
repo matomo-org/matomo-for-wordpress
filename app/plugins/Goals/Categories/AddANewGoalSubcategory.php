@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\Goals\Categories;
 
 use Piwik\Category\Subcategory;
-
 class AddANewGoalSubcategory extends Subcategory
 {
     protected $categoryId = 'Goals_Goals';

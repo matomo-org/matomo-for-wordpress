@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -15,7 +16,6 @@ use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\TableLogAction;
 use Piwik\Tracker\Visitor;
-
 class EntryPageUrl extends VisitDimension
 {
     protected $columnName = 'visit_entry_idaction_url';
@@ -27,17 +27,14 @@ class EntryPageUrl extends VisitDimension
     protected $category = 'General_Actions';
     protected $type = self::TYPE_URL;
     protected $sqlFilter = [TableLogAction::class, 'getOptimizedIdActionSqlMatch'];
-
     public function getDbColumnJoin()
     {
         return new ActionNameJoin();
     }
-
     public function getDbDiscriminator()
     {
         return new Discriminator('log_action', 'type', Action::TYPE_PAGE_URL);
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -47,18 +44,14 @@ class EntryPageUrl extends VisitDimension
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $idActionUrl = false;
-
         if (!empty($action)) {
             $idActionUrl = $action->getIdActionUrlForEntryAndExitIds();
         }
-
-        if($idActionUrl === false) {
+        if ($idActionUrl === false) {
             return false;
         }
-
         return (int) $idActionUrl;
     }
-
     /*
      * @param Request $request
      * @param Visitor $visitor
@@ -68,14 +61,12 @@ class EntryPageUrl extends VisitDimension
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
         $idAction = $visitor->getVisitorColumn('visit_entry_idaction_url');
-
         if (is_null($idAction) && !empty($action)) {
             $idAction = $action->getIdActionUrlForEntryAndExitIds();
             if (!empty($idAction)) {
                 return $idAction;
             }
         }
-
         return false;
     }
 }

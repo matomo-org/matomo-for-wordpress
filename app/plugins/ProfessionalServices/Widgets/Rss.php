@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\ProfessionalServices\Widgets;
 
 use Piwik\Widget\WidgetConfig;
-
 class Rss extends \Piwik\Widget\Widget
 {
     public static function configure(WidgetConfig $config)
@@ -17,7 +17,6 @@ class Rss extends \Piwik\Widget\Widget
         $config->setCategoryId('About Matomo');
         $config->setIsEnabled(false);
     }
-
     public function render()
     {
         return '';

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\VisitTime\Columns;
 
 use Piwik\Columns\Dimension;
-
 class DayOfTheWeek extends Dimension
 {
     protected $nameSingular = 'VisitTime_DayOfWeek';

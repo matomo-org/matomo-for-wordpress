@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,7 +9,6 @@
 namespace Piwik\Plugins\TagManager;
 
 use Piwik\Menu\MenuAbstract;
-
 /**
  * Contains menu entries for the Tag Manager menu.
  * Plugins can implement the `configureTagManagerMenu()` method of the `Menu` plugin class to add, rename of remove
@@ -32,7 +32,6 @@ class MenuTagManager extends MenuAbstract
                 }
             }
         }
-
         return parent::getMenu();
     }
 }

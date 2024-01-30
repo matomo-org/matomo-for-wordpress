@@ -11,9 +11,7 @@ namespace Piwik\Plugins\WordPress\Commands;
 use Piwik\Development;
 use Symfony\Component\Console\Input\ArrayInput;
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class BuildRelease extends ConsoleCommand
 {
@@ -23,7 +21,7 @@ class BuildRelease extends ConsoleCommand
         $this->setDescription('Builds a release, either to a .zip or .tar.gz archive.');
         $this->addNoValueOption('zip', null, 'If supplied, a .zip archive will be created.');
         $this->addNoValueOption('tgz', null, 'If supplied, a .tgz archive will be created.');
-        $this->addRequiredValueOption('name', null, InputOption::VALUE_REQUIRED,
+        $this->addRequiredValueOption('name', null,
             'The name of this release, should be set to a semantic version number. If not supplied, the latest value from CHANGELOG.md is used.');
     }
 

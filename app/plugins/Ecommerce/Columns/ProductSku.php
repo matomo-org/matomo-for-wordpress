@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,7 +14,6 @@ use Piwik\Columns\Discriminator;
 use Piwik\Columns\Join\ActionNameJoin;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\TableLogAction;
-
 class ProductSku extends Dimension
 {
     protected $type = self::TYPE_TEXT;
@@ -24,12 +24,10 @@ class ProductSku extends Dimension
     protected $category = 'Goals_Ecommerce';
     protected $segmentName = 'productSku';
     protected $sqlFilter = [TableLogAction::class, 'getOptimizedIdActionSqlMatch'];
-
     public function getDbColumnJoin()
     {
         return new ActionNameJoin();
     }
-
     public function getDbDiscriminator()
     {
         return new Discriminator('log_action', 'type', Action::TYPE_ECOMMERCE_ITEM_SKU);

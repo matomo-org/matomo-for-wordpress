@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\Goals\Categories;
 
 use Piwik\Category\Category;
-
 class GoalsCategory extends Category
 {
     protected $id = 'Goals_Goals';

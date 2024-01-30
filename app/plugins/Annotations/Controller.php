@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Date;
 use Piwik\View;
-
 /**
  * Controller for the Annotations plugin.
  *
@@ -44,48 +44,35 @@ class Controller extends \Piwik\Plugin\Controller
     public function getAnnotationManager($fetch = false, $date = false, $period = false, $lastN = false)
     {
         $this->checkSitePermission();
-
         if ($date === false) {
             $date = Common::getRequestVar('date', false);
         }
-
         if ($period === false) {
             $period = Common::getRequestVar('period', 'day');
         }
-
         if ($lastN === false) {
             $lastN = Common::getRequestVar('lastN', false);
         }
-
         // create & render the view
         $view = new View('@Annotations/getAnnotationManager');
-
-        $allAnnotations = Request::processRequest(
-            'Annotations.getAll', array('date' => $date, 'period' => $period, 'lastN' => $lastN));
+        $allAnnotations = Request::processRequest('Annotations.getAll', array('date' => $date, 'period' => $period, 'lastN' => $lastN));
         $view->annotations = empty($allAnnotations[$this->idSite]) ? array() : $allAnnotations[$this->idSite];
-
         $view->period = $period;
         $view->lastN = $lastN;
-
-        list($startDate, $endDate) = Annotations::getDateRangeForPeriod($date, $period, $lastN);
+        list($startDate, $endDate) = \Piwik\Plugins\Annotations\Annotations::getDateRangeForPeriod($date, $period, $lastN);
         $view->startDate = $startDate->toString();
         $view->endDate = $endDate->toString();
-
         if ($startDate->toString() !== $endDate->toString()) {
             $view->selectedDate = Date::today()->toString();
         } else {
             $view->selectedDate = $endDate->toString();
         }
-
         $dateFormat = Date::DATE_FORMAT_SHORT;
         $view->startDatePretty = $startDate->getLocalized($dateFormat);
         $view->endDatePretty = $endDate->getLocalized($dateFormat);
-
-        $view->canUserAddNotes = AnnotationList::canUserAddNotesFor($this->idSite);
-
+        $view->canUserAddNotes = \Piwik\Plugins\Annotations\AnnotationList::canUserAddNotesFor($this->idSite);
         return $view->render();
     }
-
     /**
      * Controller action that modifies an annotation and returns HTML displaying
      * the modified annotation.
@@ -107,17 +94,13 @@ class Controller extends \Piwik\Plugin\Controller
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $this->checkTokenInUrl();
-
             $view = new View('@Annotations/saveAnnotation');
-
             // NOTE: permissions checked in API method
             // save the annotation
             $view->annotation = Request::processRequest("Annotations.save");
-
             return $view->render();
         }
     }
-
     /**
      * Controller action that adds a new annotation for a site and returns new
      * annotation manager HTML for the site and date range.
@@ -141,7 +124,6 @@ class Controller extends \Piwik\Plugin\Controller
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $this->checkTokenInUrl();
-
             // the date used is for the annotation manager HTML that gets echo'd. we
             // use this date for the new annotation, unless it is a date range, in
             // which case we use the first date of the range.
@@ -149,16 +131,13 @@ class Controller extends \Piwik\Plugin\Controller
             if (strpos($date, ',') !== false) {
                 $date = reset(explode(',', $date));
             }
-
             // add the annotation. NOTE: permissions checked in API method
             Request::processRequest("Annotations.add", array('date' => $date));
-
             $managerDate = Common::getRequestVar('managerDate', false);
             $managerPeriod = Common::getRequestVar('managerPeriod', false);
             return $this->getAnnotationManager($fetch = true, $managerDate, $managerPeriod);
         }
     }
-
     /**
      * Controller action that deletes an annotation and returns new annotation
      * manager HTML for the site & date range.
@@ -180,14 +159,11 @@ class Controller extends \Piwik\Plugin\Controller
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $this->checkTokenInUrl();
-
             // delete annotation. NOTE: permissions checked in API method
             Request::processRequest("Annotations.delete");
-
             return $this->getAnnotationManager($fetch = true);
         }
     }
-
     /**
      * Controller action that echo's HTML that displays marker icons for an
      * evolution graph's x-axis. The marker icons still need to be positioned
@@ -209,13 +185,11 @@ class Controller extends \Piwik\Plugin\Controller
     public function getEvolutionIcons()
     {
         // get annotation the count
-        $annotationCounts = Request::processRequest(
-            "Annotations.getAnnotationCountForDates", array('getAnnotationText' => 1));
-
+        $annotationCounts = Request::processRequest("Annotations.getAnnotationCountForDates", array('getAnnotationText' => 1));
         // create & render the view
         $view = new View('@Annotations/getEvolutionIcons');
-        $view->annotationCounts = reset($annotationCounts); // only one idSite allowed for this action
-
+        $view->annotationCounts = reset($annotationCounts);
+        // only one idSite allowed for this action
         return $view->render();
     }
 }

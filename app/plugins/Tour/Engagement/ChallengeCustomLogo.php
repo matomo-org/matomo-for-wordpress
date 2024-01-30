@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,39 +13,32 @@ use Piwik\Piwik;
 use Piwik\Plugins\CoreAdminHome\CustomLogo;
 use Piwik\Plugins\Tour\Dao\DataFinder;
 use Piwik\Url;
-
-class ChallengeCustomLogo extends Challenge
+class ChallengeCustomLogo extends \Piwik\Plugins\Tour\Engagement\Challenge
 {
     /**
      * @var DataFinder
      */
     private $finder;
-
     /**
      * @var null|bool
      */
     private $completed = null;
-
     public function __construct(DataFinder $dataFinder)
     {
         $this->finder = $dataFinder;
     }
-
     public function getName()
     {
         return Piwik::translate('Tour_UploadLogo');
     }
-
     public function getDescription()
     {
         return Piwik::translate('CoreAdminHome_CustomLogoHelpText');
     }
-
     public function getId()
     {
         return 'custom_logo';
     }
-
     public function isCompleted(string $login)
     {
         if (!isset($this->completed)) {
@@ -53,7 +47,6 @@ class ChallengeCustomLogo extends Challenge
         }
         return $this->completed;
     }
-
     public function getUrl()
     {
         return 'index.php' . Url::getCurrentQueryStringWithParametersModified(array('module' => 'CoreAdminHome', 'action' => 'generalSettings', 'widget' => false)) . '#/#useCustomLogo';

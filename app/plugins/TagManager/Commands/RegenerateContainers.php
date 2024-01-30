@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@ namespace Piwik\Plugins\TagManager\Commands;
 
 use Piwik\Piwik;
 use Piwik\Plugin\ConsoleCommand;
-
 class RegenerateContainers extends ConsoleCommand
 {
     protected function configure()
@@ -18,20 +18,16 @@ class RegenerateContainers extends ConsoleCommand
         $this->setDescription('Re-generates all released container files');
         $this->addNoValueOption('only-with-preview-release', null, 'Only regenerate containers with a preview release.');
     }
-
     /**
      * @return int
      */
-    protected function doExecute(): int
+    protected function doExecute() : int
     {
         $input = $this->getInput();
         $output = $this->getOutput();
         $onlyPreview = $input->getOption('only-with-preview-release');
-
         Piwik::postEvent('TagManager.regenerateContainerReleases', [$onlyPreview]);
-
         $output->writeln('<info>Done</info>');
-
         return self::SUCCESS;
     }
 }

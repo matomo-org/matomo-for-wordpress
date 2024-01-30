@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\DataTable\Filter;
 use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable;
 use Piwik\Piwik;
-
 /**
  * Replaces the label of the summary row with a supplied label.
  *
@@ -33,7 +33,6 @@ class ReplaceSummaryRowLabel extends BaseFilter
      * @var string|null
      */
     private $newLabel;
-
     /**
      * Constructor.
      *
@@ -49,7 +48,6 @@ class ReplaceSummaryRowLabel extends BaseFilter
         }
         $this->newLabel = $newLabel;
     }
-
     /**
      * See {@link ReplaceSummaryRowLabel}.
      *
@@ -61,7 +59,6 @@ class ReplaceSummaryRowLabel extends BaseFilter
         if ($row) {
             $row->setColumn('label', $this->newLabel);
         }
-
         // recurse
         foreach ($table->getRowsWithoutSummaryRow() as $row) {
             $subTable = $row->getSubtable();
@@ -69,8 +66,6 @@ class ReplaceSummaryRowLabel extends BaseFilter
                 $this->filter($subTable);
             }
         }
-
-
         $summaryRow = $table->getRowFromId(DataTable::ID_SUMMARY_ROW);
         if (!empty($summaryRow)) {
             $subTable = $summaryRow->getSubtable();

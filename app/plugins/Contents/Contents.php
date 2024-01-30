@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Plugins\Contents;
 use Piwik\Columns\Dimension;
 use Piwik\Common;
 use Piwik\Piwik;
-
 class Contents extends \Piwik\Plugin
 {
     /**
@@ -19,39 +19,28 @@ class Contents extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array(
-            'Metrics.getDefaultMetricTranslations' => 'addMetricTranslations',
-            'Metrics.getDefaultMetricDocumentationTranslations' => 'addMetricDocumentationTranslations',
-            'Metrics.getDefaultMetricSemanticTypes' => 'addMetricSemanticTypes',
-            'AssetManager.getJavaScriptFiles' => 'getJsFiles',
-            'Actions.getCustomActionDimensionFieldsAndJoins' => 'provideActionDimensionFields'
-        );
+        return array('Metrics.getDefaultMetricTranslations' => 'addMetricTranslations', 'Metrics.getDefaultMetricDocumentationTranslations' => 'addMetricDocumentationTranslations', 'Metrics.getDefaultMetricSemanticTypes' => 'addMetricSemanticTypes', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'Actions.getCustomActionDimensionFieldsAndJoins' => 'provideActionDimensionFields');
     }
-
     public function addMetricTranslations(&$translations)
     {
-        $translations['nb_impressions']   = 'Contents_Impressions';
-        $translations['nb_interactions']  = 'Contents_ContentInteractions';
+        $translations['nb_impressions'] = 'Contents_Impressions';
+        $translations['nb_interactions'] = 'Contents_ContentInteractions';
         $translations['interaction_rate'] = 'Contents_InteractionRate';
     }
-
-    public function addMetricSemanticTypes(array &$types): void
+    public function addMetricSemanticTypes(array &$types) : void
     {
-        $types['nb_impressions']   = Dimension::TYPE_NUMBER;
-        $types['nb_interactions']  = Dimension::TYPE_NUMBER;
+        $types['nb_impressions'] = Dimension::TYPE_NUMBER;
+        $types['nb_interactions'] = Dimension::TYPE_NUMBER;
     }
-
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = "plugins/Contents/javascripts/contentsDataTable.js";
     }
-
     public function addMetricDocumentationTranslations(&$translations)
     {
         $translations['nb_impressions'] = Piwik::translate('Contents_ImpressionsMetricDocumentation');
         $translations['nb_interactions'] = Piwik::translate('Contents_InteractionsMetricDocumentation');
     }
-
     public function provideActionDimensionFields(&$fields, &$joins)
     {
         $fields[] = 'log_action_content_name.name as contentName';

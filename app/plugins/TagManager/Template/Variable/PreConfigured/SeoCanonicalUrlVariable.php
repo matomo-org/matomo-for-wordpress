@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,12 +8,10 @@
  */
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
-
-class SeoCanonicalUrlVariable extends BasePreConfiguredVariable
+class SeoCanonicalUrlVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BasePreConfiguredVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_SEO;
     }
-
 }

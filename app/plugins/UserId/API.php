@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Plugins\UserId;
 use Piwik\Archive;
 use Piwik\Piwik;
 use Piwik\DataTable;
-
 /**
  * API for plugin UserId. Allows to get User IDs table.
  *
@@ -34,12 +34,10 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasViewAccess($idSite);
         $archive = Archive::build($idSite, $period, $date, $segment);
-        $dataTable = $archive->getDataTable(Archiver::USERID_ARCHIVE_RECORD);
-
+        $dataTable = $archive->getDataTable(\Piwik\Plugins\UserId\Archiver::USERID_ARCHIVE_RECORD);
         $dataTable->queueFilter('ReplaceColumnNames');
         $dataTable->queueFilter('ReplaceSummaryRowLabel');
         $dataTable->queueFilter('AddSegmentByLabel', array('userId'));
-
         return $dataTable;
     }
 }

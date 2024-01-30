@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,24 +11,20 @@ namespace Piwik\Plugins\Tour\Engagement;
 
 use Piwik\Piwik;
 use Piwik\Url;
-
-class ChallengeFlattenActions extends Challenge
+class ChallengeFlattenActions extends \Piwik\Plugins\Tour\Engagement\Challenge
 {
     public function getName()
     {
         return Piwik::translate('Tour_FlattenActions');
     }
-
     public function getDescription()
     {
         return Piwik::translate('Tour_FlattenActionsDescription');
     }
-
     public function getId()
     {
         return 'flatten_actions';
     }
-
     public function getUrl()
     {
         return Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/reports/graphs-and-visualisations-in-matomo/#flattening-reports');

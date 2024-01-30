@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik\CronArchive\Performance;
 
 class Measurement
@@ -14,47 +14,38 @@ class Measurement
      * @var string
      */
     private $category;
-
     /**
      * @var string
      */
     private $measuredName;
-
     /**
      * @var string
      */
     private $idSite;
-
     /**
      * @var string
      */
     private $dateRange;
-
     /**
      * @var string
      */
     private $periodType;
-
     /**
      * @var string
      */
     private $segment;
-
     /**
      * @var float
      */
     private $time;
-
     /**
      * @var string
      */
     private $memory;
-
     /**
      * @var string
      */
     private $peakMemory;
-
     public function __construct($category, $name, $idSite, $dateRange, $periodType, $segment, $time, $memory, $peakMemory)
     {
         $this->category = $category;
@@ -67,22 +58,11 @@ class Measurement
         $this->memory = $memory;
         $this->peakMemory = $peakMemory;
     }
-
     public function __toString()
     {
-        $parts = [
-            ucfirst($this->category) . ": {$this->measuredName}",
-            "idSite: {$this->idSite}",
-            "period: {$this->periodType} ({$this->dateRange})",
-            "segment: " . (!empty($this->segment) ? $this->segment : 'none'),
-            "duration: {$this->time}s",
-            "memory leak: {$this->memory}",
-            "peak memory usage: {$this->peakMemory}",
-        ];
-
+        $parts = [ucfirst($this->category) . ": {$this->measuredName}", "idSite: {$this->idSite}", "period: {$this->periodType} ({$this->dateRange})", "segment: " . (!empty($this->segment) ? $this->segment : 'none'), "duration: {$this->time}s", "memory leak: {$this->memory}", "peak memory usage: {$this->peakMemory}"];
         return implode(', ', $parts);
     }
-
     /**
      * @return string
      */
@@ -90,7 +70,6 @@ class Measurement
     {
         return $this->category;
     }
-
     /**
      * @param string $category
      */
@@ -98,7 +77,6 @@ class Measurement
     {
         $this->category = $category;
     }
-
     /**
      * @return string
      */
@@ -106,7 +84,6 @@ class Measurement
     {
         return $this->measuredName;
     }
-
     /**
      * @param string $measuredName
      */
@@ -114,7 +91,6 @@ class Measurement
     {
         $this->measuredName = $measuredName;
     }
-
     /**
      * @return string
      */
@@ -122,7 +98,6 @@ class Measurement
     {
         return $this->idSite;
     }
-
     /**
      * @param string $idSite
      */
@@ -130,7 +105,6 @@ class Measurement
     {
         $this->idSite = $idSite;
     }
-
     /**
      * @return string
      */
@@ -138,7 +112,6 @@ class Measurement
     {
         return $this->dateRange;
     }
-
     /**
      * @param string $dateRange
      */
@@ -146,7 +119,6 @@ class Measurement
     {
         $this->dateRange = $dateRange;
     }
-
     /**
      * @return string
      */
@@ -154,7 +126,6 @@ class Measurement
     {
         return $this->periodType;
     }
-
     /**
      * @param string $periodType
      */

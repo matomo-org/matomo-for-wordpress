@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\DataTable\Filter;
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
 use Piwik\Development;
-
 /**
  * Executes a filter for each row of a {@link DataTable} and generates a segment filter for each row.
  *
@@ -27,7 +27,6 @@ class AddSegmentByLabel extends BaseFilter
     private $segments;
     private $delimiter;
     private $allowEmptyValue;
-
     /**
      * Generates a segment filter based on the label column and the given segment names
      *
@@ -40,16 +39,13 @@ class AddSegmentByLabel extends BaseFilter
     public function __construct($table, $segmentOrSegments, $delimiter = '', $allowEmptyValue = false)
     {
         parent::__construct($table);
-
         if (!is_array($segmentOrSegments)) {
             $segmentOrSegments = array($segmentOrSegments);
         }
-
-        $this->segments  = $segmentOrSegments;
+        $this->segments = $segmentOrSegments;
         $this->delimiter = $delimiter;
         $this->allowEmptyValue = $allowEmptyValue;
     }
-
     /**
      * See {@link AddSegmentByLabel}.
      *
@@ -62,26 +58,21 @@ class AddSegmentByLabel extends BaseFilter
             Development::error($msg);
             return;
         }
-
         if (count($this->segments) === 1) {
             $segment = reset($this->segments);
-
             foreach ($table->getRowsWithoutSummaryRow() as $key => $row) {
                 $label = $row->getColumn('label');
-
                 if (!empty($label) || $label === 0 || $label === '0' || $this->allowEmptyValue) {
                     $row->setMetadata('segment', $segment . '==' . urlencode($label));
                 }
             }
         } elseif (!empty($this->delimiter)) {
-            $numSegments  = count($this->segments);
+            $numSegments = count($this->segments);
             $conditionAnd = ';';
-
             foreach ($table->getRowsWithoutSummaryRow() as $key => $row) {
                 $label = $row->getColumn('label');
                 if (!empty($label) || $label === 0 || $label === '0') {
                     $parts = explode($this->delimiter, $label);
-
                     if (count($parts) === $numSegments) {
                         $filter = array();
                         foreach ($this->segments as $index => $segment) {
@@ -95,7 +86,7 @@ class AddSegmentByLabel extends BaseFilter
             }
         } else {
             $names = implode(', ', $this->segments);
-            $msg   = 'Multiple segments are given but no delimiter defined. Segments: ' . $names;
+            $msg = 'Multiple segments are given but no delimiter defined. Segments: ' . $names;
             Development::error($msg);
         }
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\Referrers\DataTable\Filter;
 
 use Piwik\DataTable;
-
 class GroupDifferentSocialWritings extends DataTable\BaseFilter
 {
     public function filter($table)

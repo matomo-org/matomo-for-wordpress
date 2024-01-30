@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,12 +7,10 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\DevicesDetection\RecordBuilders;
 
 use Piwik\Plugins\DevicesDetection\Archiver;
-
-class DeviceTypes extends Base
+class DeviceTypes extends \Piwik\Plugins\DevicesDetection\RecordBuilders\Base
 {
     public function __construct()
     {
