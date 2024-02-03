@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
-
 /**
  * Executes a callback for each row of a {@link DataTable} and prepends each existing segment with the
  * given segment.
@@ -20,7 +20,7 @@ use Piwik\DataTable;
  *
  * @api
  */
-class PrependSegment extends PrependValueToMetadata
+class PrependSegment extends \Piwik\DataTable\Filter\PrependValueToMetadata
 {
     /**
      * @param DataTable $table

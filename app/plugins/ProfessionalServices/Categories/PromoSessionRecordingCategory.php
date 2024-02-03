@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\ProfessionalServices\Categories;
 
 use Piwik\Category\Category;
-
 class PromoSessionRecordingCategory extends Category
 {
     protected $id = 'ProfessionalServices_PromoSessionRecording';

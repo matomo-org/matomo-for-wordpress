@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Plugins\JsTrackerInstallCheck;
 use Piwik\Piwik;
 use Piwik\Site;
 use Piwik\UrlHelper;
-
 /**
  * @internal
  */
@@ -20,15 +20,12 @@ class API extends \Piwik\Plugin\API
      * @var JsTrackerInstallCheck
      */
     protected $jsTrackerInstallCheck;
-
     // disables automatic sanitizing for all public API methods in this class
     protected $autoSanitizeInputParams = false;
-
-    public function __construct(JsTrackerInstallCheck $jsTrackerInstallCheck)
+    public function __construct(\Piwik\Plugins\JsTrackerInstallCheck\JsTrackerInstallCheck $jsTrackerInstallCheck)
     {
         $this->jsTrackerInstallCheck = $jsTrackerInstallCheck;
     }
-
     /**
      * Check whether a test request has been recorded for the provided nonce. If no request has been recorded or the
      * nonce isn't found, return false. This also returns the main URL for the specified site so that we can auto-
@@ -41,20 +38,14 @@ class API extends \Piwik\Plugin\API
      * E.g. ['isSuccess' => true, 'mainUrl' => 'https://some-test-site.com']
      * @throws \Exception If the user doesn't have the right permissions
      */
-    public function wasJsTrackerInstallTestSuccessful(int $idSite, string $nonce = ''): array
+    public function wasJsTrackerInstallTestSuccessful(int $idSite, string $nonce = '') : array
     {
         Piwik::checkUserHasViewAccess($idSite);
-
         if (!empty($nonce) && !\preg_match('/^[a-f0-9]{32}$/i', $nonce)) {
             throw new \Exception('The provided nonce is invalid.');
         }
-
-        return [
-            'isSuccess' => $this->jsTrackerInstallCheck->checkForJsTrackerInstallTestSuccess($idSite, $nonce),
-            'mainUrl' => Site::getMainUrlFor($idSite),
-        ];
+        return ['isSuccess' => $this->jsTrackerInstallCheck->checkForJsTrackerInstallTestSuccess($idSite, $nonce), 'mainUrl' => Site::getMainUrlFor($idSite)];
     }
-
     /**
      * Initiate a test whether the JS tracking code has been successfully installed for a site. It generates a nonce and
      * stores it in the option table so that it can be accessed later during the Tracker.isExcludedVisit event.
@@ -66,14 +57,12 @@ class API extends \Piwik\Plugin\API
      * E.g. ['url' => 'https://some-site.com?tracker_install_check=c3dfa1abbbab6381baca0793b8dd5d', 'nonce' => 'c3dfa1abbbab6381baca0793b8dd5d']
      * @throws \Exception If the user doesn't have the right permissions
      */
-    public function initiateJsTrackerInstallTest(int $idSite, string $url = ''): array
+    public function initiateJsTrackerInstallTest(int $idSite, string $url = '') : array
     {
         Piwik::checkUserHasViewAccess($idSite);
-
         if (!empty($url) && !UrlHelper::isLookLikeUrl($url)) {
             throw new \Exception(Piwik::translate('SitesManager_ExceptionInvalidUrl', $url));
         }
-
         return $this->jsTrackerInstallCheck->initiateJsTrackerInstallTest($idSite, $url);
     }
 }

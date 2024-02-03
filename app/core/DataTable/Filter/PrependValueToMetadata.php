@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
-
 /**
  * Executes a callback for each row of a {@link DataTable} and prepends the given value to each metadata entry
  * but only if the given metadata entry exists.
@@ -25,7 +25,6 @@ class PrependValueToMetadata extends BaseFilter
 {
     private $metadataColumn;
     private $valueToPrepend;
-
     /**
      * @param DataTable $table
      * @param string $metadataName    The name of the metadata that should be prepended
@@ -34,11 +33,9 @@ class PrependValueToMetadata extends BaseFilter
     public function __construct($table, $metadataName, $valueToPrepend)
     {
         parent::__construct($table);
-
         $this->metadataColumn = $metadataName;
         $this->valueToPrepend = $valueToPrepend;
     }
-
     /**
      * See {@link PrependValueToMetadata}.
      *
@@ -49,11 +46,9 @@ class PrependValueToMetadata extends BaseFilter
         if (empty($this->metadataColumn) || empty($this->valueToPrepend)) {
             return;
         }
-
         $metadataColumn = $this->metadataColumn;
         $valueToPrepend = $this->valueToPrepend;
-
-        $table->filter(function (DataTable $dataTable) use ($metadataColumn, $valueToPrepend) {
+        $table->filter(function (DataTable $dataTable) use($metadataColumn, $valueToPrepend) {
             foreach ($dataTable->getRows() as $row) {
                 $filter = $row->getMetadata($metadataColumn);
                 if ($filter !== false) {

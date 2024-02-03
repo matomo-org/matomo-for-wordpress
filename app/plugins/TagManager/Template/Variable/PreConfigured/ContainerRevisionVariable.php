@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,15 +9,12 @@
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
 use Piwik\Plugins\TagManager\Context\WebContext;
-
-
-class ContainerRevisionVariable extends BasePreConfiguredVariable
+class ContainerRevisionVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BasePreConfiguredVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_CONTAINER_INFO;
     }
-
     public function loadTemplate($context, $entity, $skipTemplate = false)
     {
         switch ($context) {
@@ -24,5 +22,4 @@ class ContainerRevisionVariable extends BasePreConfiguredVariable
                 return $this->makeReturnTemplateMethod('parameters.container.revision', $skipTemplate);
         }
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -21,7 +22,7 @@ namespace Piwik\DataTable\Filter;
  *
  * @api
  */
-class AddSegmentValue extends ColumnCallbackAddMetadata
+class AddSegmentValue extends \Piwik\DataTable\Filter\ColumnCallbackAddMetadata
 {
     public function __construct($table, $callback = null)
     {

@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik\Intl\Data\Provider;
 
 /**
@@ -15,7 +15,6 @@ class LanguageDataProvider
 {
     private $languageList;
     private $languageToCountryList;
-
     /**
      * Returns the list of valid language codes.
      *
@@ -26,12 +25,10 @@ class LanguageDataProvider
     public function getLanguageList()
     {
         if ($this->languageList === null) {
-            $this->languageList = require __DIR__ . '/../Resources/languages.php';
+            $this->languageList = (require __DIR__ . '/../Resources/languages.php');
         }
-
         return $this->languageList;
     }
-
     /**
      * Returns the list of language to country mappings.
      *
@@ -42,9 +39,8 @@ class LanguageDataProvider
     public function getLanguageToCountryList()
     {
         if ($this->languageToCountryList === null) {
-            $this->languageToCountryList = require __DIR__ . '/../Resources/languages-to-countries.php';
+            $this->languageToCountryList = (require __DIR__ . '/../Resources/languages-to-countries.php');
         }
-
         return $this->languageToCountryList;
     }
 }

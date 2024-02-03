@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,7 +9,6 @@
 namespace Piwik\Plugins\PagePerformance\Columns\Metrics;
 
 use Piwik\Piwik;
-
 /**
  * The average amount of time browser needs to execute javascript waiting for window.load event. Calculated as
  *
@@ -17,15 +17,13 @@ use Piwik\Piwik;
  * The above metrics are calculated during archiving. This metric is calculated before
  * serving a report.
  */
-class AverageTimeOnLoad extends AveragePerformanceMetric
+class AverageTimeOnLoad extends \Piwik\Plugins\PagePerformance\Columns\Metrics\AveragePerformanceMetric
 {
     const ID = 'time_on_load';
-
     public function getTranslatedName()
     {
         return Piwik::translate('PagePerformance_ColumnAverageTimeOnLoad');
     }
-
     public function getDocumentation()
     {
         return Piwik::translate('PagePerformance_ColumnAverageTimeOnLoadDocumentation');

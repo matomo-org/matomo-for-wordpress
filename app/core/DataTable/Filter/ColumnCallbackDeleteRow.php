@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
-
 /**
  * Deletes all rows for which a callback returns true.
  *
@@ -28,7 +28,6 @@ class ColumnCallbackDeleteRow extends BaseFilter
     private $function;
     private $functionParams;
     private $columnsToFilter;
-
     /**
      * Constructor.
      *
@@ -43,20 +42,16 @@ class ColumnCallbackDeleteRow extends BaseFilter
     public function __construct($table, $columnsToFilter, $function, $functionParams = [])
     {
         parent::__construct($table);
-
         if (!is_array($functionParams)) {
             $functionParams = array($functionParams);
         }
-
         if (!is_array($columnsToFilter)) {
             $columnsToFilter = array($columnsToFilter);
         }
-
         $this->function = $function;
         $this->columnsToFilter = $columnsToFilter;
         $this->functionParams = $functionParams;
     }
-
     /**
      * Filters the given data table
      *
@@ -69,12 +64,10 @@ class ColumnCallbackDeleteRow extends BaseFilter
             foreach ($this->columnsToFilter as $column) {
                 $params[] = $row->getColumn($column);
             }
-
             $params = array_merge($params, $this->functionParams);
             if (call_user_func_array($this->function, $params) === true) {
                 $table->deleteRow($key);
             }
-
             $this->filterSubTable($row);
         }
     }

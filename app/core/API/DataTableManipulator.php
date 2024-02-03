@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -16,7 +17,6 @@ use Piwik\DataTable;
 use Piwik\Period\Range;
 use Piwik\Plugins\API\API;
 use Piwik\Url;
-
 /**
  * Base class for manipulating data tables.
  * It provides generic mechanisms like iteration and loading subtables.
@@ -35,7 +35,6 @@ abstract class DataTableManipulator
     protected $apiMethod;
     protected $request;
     protected $apiMethodForSubtable;
-
     /**
      * Constructor
      *
@@ -49,7 +48,6 @@ abstract class DataTableManipulator
         $this->apiMethod = $apiMethod;
         $this->request = $request;
     }
-
     /**
      * This method can be used by subclasses to iterate over data tables that might be
      * data table maps. It calls back the template method self::doManipulate for each table.
@@ -69,7 +67,6 @@ abstract class DataTableManipulator
             return $dataTable;
         }
     }
-
     /**
      * Manipulates child DataTables of a DataTable\Map. See @manipulate for more info.
      *
@@ -85,13 +82,11 @@ abstract class DataTableManipulator
         }
         return $result;
     }
-
     /**
      * Manipulates a single DataTable instance. Derived classes must define
      * this function.
      */
-    abstract protected function manipulateDataTable($dataTable);
-
+    protected abstract function manipulateDataTable($dataTable);
     /**
      * Load the subtable for a row.
      * Returns null if none is found.
@@ -106,14 +101,11 @@ abstract class DataTableManipulator
         if (!($this->apiModule && $this->apiMethod && count($this->request))) {
             return null;
         }
-
         $request = $this->request;
-
         $idSubTable = $row->getIdSubDataTable();
         if ($idSubTable === null) {
             return null;
         }
-
         $request['idSubtable'] = $idSubTable;
         if ($dataTable) {
             $period = $dataTable->getMetadata(DataTableFactory::TABLE_METADATA_PERIOD_INDEX);
@@ -123,11 +115,9 @@ abstract class DataTableManipulator
                 $request['date'] = $period->getDateStart()->toString();
             }
         }
-
         $method = $this->getApiMethodForSubtable($request);
         return $this->callApiAndReturnDataTable($this->apiModule, $method, $request);
     }
-
     /**
      * In this method, subclasses can clean up the request array for loading subtables
      * in order to make ResponseBuilder behave correctly (e.g. not trigger the
@@ -136,8 +126,7 @@ abstract class DataTableManipulator
      * @param $request
      * @return
      */
-    abstract protected function manipulateSubtableRequest($request);
-
+    protected abstract function manipulateSubtableRequest($request);
     /**
      * Extract the API method for loading subtables from the meta data
      *
@@ -152,7 +141,6 @@ abstract class DataTableManipulator
             } else {
                 $idSite = 'all';
             }
-
             $apiParameters = array();
             $entityNames = StaticContainer::get('entities.idNames');
             foreach ($entityNames as $idName) {
@@ -160,22 +148,14 @@ abstract class DataTableManipulator
                     $apiParameters[$idName] = $request[$idName];
                 }
             }
-
             $meta = API::getInstance()->getMetadata($idSite, $this->apiModule, $this->apiMethod, $apiParameters);
-
             if (empty($meta) && array_key_exists('idGoal', $apiParameters)) {
                 unset($apiParameters['idGoal']);
                 $meta = API::getInstance()->getMetadata($idSite, $this->apiModule, $this->apiMethod, $apiParameters);
             }
-
             if (empty($meta)) {
-                throw new Exception(sprintf(
-                    "The DataTable cannot be manipulated: Metadata for report %s.%s could not be found. You can define the metadata in a hook, see example at: %s",
-                    $this->apiModule, $this->apiMethod,
-                    Url::addCampaignParametersToMatomoLink('https://developer.matomo.org/api-reference/events#apigetreportmetadata')
-                ));
+                throw new Exception(sprintf("The DataTable cannot be manipulated: Metadata for report %s.%s could not be found. You can define the metadata in a hook, see example at: %s", $this->apiModule, $this->apiMethod, Url::addCampaignParametersToMatomoLink('https://developer.matomo.org/api-reference/events#apigetreportmetadata')));
             }
-
             if (isset($meta[0]['actionToLoadSubTables'])) {
                 $this->apiMethodForSubtable = $meta[0]['actionToLoadSubTables'];
             } else {
@@ -184,36 +164,30 @@ abstract class DataTableManipulator
         }
         return $this->apiMethodForSubtable;
     }
-
     protected function callApiAndReturnDataTable($apiModule, $method, $request)
     {
-        $class = Request::getClassNameAPI($apiModule);
-
+        $class = \Piwik\API\Request::getClassNameAPI($apiModule);
         $request = $this->manipulateSubtableRequest($request);
         $request['serialize'] = 0;
         $request['expanded'] = 0;
         $request['format'] = 'original';
         $request['format_metrics'] = 0;
         $request['compare'] = 0;
-
         // don't want to run recursive filters on the subtables as they are loaded,
         // otherwise the result will be empty in places (or everywhere). instead we
         // run it on the flattened table.
         unset($request['filter_pattern_recursive']);
-
-        $dataTable = Proxy::getInstance()->call($class, $method, $request);
-        $response = new ResponseBuilder($format = 'original', $request);
+        $dataTable = \Piwik\API\Proxy::getInstance()->call($class, $method, $request);
+        $response = new \Piwik\API\ResponseBuilder($format = 'original', $request);
         $response->disableSendHeader();
         $dataTable = $response->getResponse($dataTable, $apiModule, $method);
-
         // save API method name so it can be used by filters
         if ($dataTable instanceof DataTable\DataTableInterface) {
-            $dataTable->filter(function (DataTable $table) use ($apiModule, $method) {
+            $dataTable->filter(function (DataTable $table) use($apiModule, $method) {
                 $table->setMetadata('apiModule', $apiModule);
                 $table->setMetadata('apiMethod', $method);
             });
         }
-
         return $dataTable;
     }
 }

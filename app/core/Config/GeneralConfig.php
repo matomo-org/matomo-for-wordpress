@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,9 +9,9 @@
  */
 namespace Piwik\Config;
 
-class GeneralConfig extends SectionConfig
+class GeneralConfig extends \Piwik\Config\SectionConfig
 {
-    public static function getSectionName(): string
+    public static function getSectionName() : string
     {
         return 'General';
     }

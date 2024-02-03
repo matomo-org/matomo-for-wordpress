@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Plugins\MultiSites\DataTable\Filter;
 use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable\Row;
 use Piwik\DataTable;
-
 /**
  * Makes sure to not have any subtables anymore and applies the limit to the flattened table.
  *
@@ -49,12 +49,11 @@ use Piwik\DataTable;
 class NestedSitesLimiter extends BaseFilter
 {
     private $offset = 0;
-    private $limit  = 0;
+    private $limit = 0;
     /**
      * @var Row[]
      */
-    private $rows   = array();
-
+    private $rows = array();
     /**
      * Constructor.
      *
@@ -64,9 +63,8 @@ class NestedSitesLimiter extends BaseFilter
     {
         parent::__construct($table);
         $this->offset = $offset;
-        $this->limit  = $limit;
+        $this->limit = $limit;
     }
-
     /**
      * @param DataTable $table
      */
@@ -74,12 +72,9 @@ class NestedSitesLimiter extends BaseFilter
     {
         $numRows = 0;
         $lastGroupFromPreviousPage = null;
-
         foreach ($table->getRows() as $row) {
-
             $this->addRowIfNeeded($row, $numRows);
             $numRows++;
-
             $subtable = $row->getSubtable();
             if ($subtable) {
                 if (!$this->hasRows()) {
@@ -91,36 +86,28 @@ class NestedSitesLimiter extends BaseFilter
                 }
                 $row->removeSubtable();
             }
-
             if ($this->hasNumberOfRequestedRowsFound()) {
                 break;
             }
         }
-
         $this->prependGroupIfFirstSiteBelongsToAGroupButGroupIsMissingInRows($lastGroupFromPreviousPage);
-
         $table->setRows($this->rows);
     }
-
     private function hasNumberOfRequestedRowsFound()
     {
         return count($this->rows) >= $this->limit;
     }
-
     private function hasRows()
     {
         return count($this->rows) !== 0;
     }
-
     private function addRowIfNeeded(Row $row, $numRows)
     {
         $inOffset = $numRows >= $this->offset;
-
         if ($inOffset && !$this->hasNumberOfRequestedRowsFound()) {
             $this->rows[] = $row;
         }
     }
-
     /**
      * @param Row $lastGroupFromPreviousPage
      */

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -17,7 +18,6 @@ use Piwik\Period;
 use Piwik\Plugin\Manager as PluginManager;
 use Piwik\Plugins\UsersManager\UserPreferences;
 use Piwik\Site;
-
 /**
  * Base class of all plugin menu providers. Plugins that define their own menu items can extend this class to easily
  * add new items, to remove or to rename existing items.
@@ -36,15 +36,12 @@ class Menu
     {
         // Constructor kept for BC (because called in implementations)
     }
-
     private function getModule()
     {
         $className = get_class($this);
         $className = explode('\\', $className);
-
         return $className[2];
     }
-
     /**
      * Generates a URL for the default action of the plugin controller.
      *
@@ -67,10 +64,8 @@ class Menu
         $params = (array) $additionalParams;
         $params['action'] = '';
         $params['module'] = $this->getModule();
-
         return $params;
     }
-
     /**
      * Generates a URL for the given action. In your plugin controller you have to create a method with the same name
      * as this method will be executed when a user clicks on the menu item. If you want to generate a URL for the
@@ -87,14 +82,11 @@ class Menu
     {
         $module = $this->getModule();
         $this->checkisValidCallable($module, $controllerAction);
-
         $params = (array) $additionalParams;
         $params['action'] = $controllerAction;
         $params['module'] = $module;
-
         return $params;
     }
-
     /**
      * Generates a URL for the given action of the given module. We usually do not recommend to use this method as you
      * should make sure the method of that module actually exists. If the plugin owner of that module changes the method
@@ -113,21 +105,15 @@ class Menu
     protected function urlForModuleAction($module, $controllerAction, $additionalParams = array())
     {
         $this->checkisValidCallable($module, $controllerAction);
-
         $pluginManager = PluginManager::getInstance();
-
-        if (!$pluginManager->isPluginLoaded($module) ||
-            !$pluginManager->isPluginActivated($module)) {
+        if (!$pluginManager->isPluginLoaded($module) || !$pluginManager->isPluginActivated($module)) {
             return null;
         }
-
         $params = (array) $additionalParams;
         $params['action'] = $controllerAction;
         $params['module'] = $module;
-
         return $params;
     }
-
     /**
      * Generates a URL to the given action of the current module, and it will also append some URL query parameters from the
      * User preferences: idSite, period, date. If you do not need the parameters idSite, period and date to be generated
@@ -141,10 +127,8 @@ class Menu
     protected function urlForActionWithDefaultUserParams($controllerAction, $additionalParams = array())
     {
         $module = $this->getModule();
-
         return $this->urlForModuleActionWithDefaultUserParams($module, $controllerAction, $additionalParams);
     }
-
     /**
      * Generates a URL to the given action of the given module, and it will also append some URL query parameters from the
      * User preferences: idSite, period, date. If you do not need the parameters idSite, period and date to be generated
@@ -160,7 +144,6 @@ class Menu
     protected function urlForModuleActionWithDefaultUserParams($module, $controllerAction, $additionalParams = array())
     {
         $urlModuleAction = $this->urlForModuleAction($module, $controllerAction);
-
         $date = Common::getRequestVar('date', false);
         if ($date) {
             $urlModuleAction['date'] = $date;
@@ -169,15 +152,9 @@ class Menu
         if ($period) {
             $urlModuleAction['period'] = $period;
         }
-
         // We want the current query parameters to override the user's defaults
-        return array_merge(
-            $this->urlForDefaultUserParams(),
-            $urlModuleAction,
-            $additionalParams
-        );
+        return array_merge($this->urlForDefaultUserParams(), $urlModuleAction, $additionalParams);
     }
-
     /**
      * Returns the &idSite=X&period=Y&date=Z query string fragment,
      * fetched from current logged-in user's preferences.
@@ -203,7 +180,6 @@ class Menu
         if (empty($defaultDate)) {
             $defaultDate = $userPreferences->getDefaultDate();
         }
-
         if ($defaultPeriod !== 'range' && !empty($defaultDate) && $defaultDate !== 'today') {
             // not easy to make it work for range... is rarely the default anyway especially when just setting up
             // Matomo as this logic is basically only applied on the first day a site is created
@@ -212,17 +188,15 @@ class Menu
             try {
                 $siteCreationDate = Site::getCreationDateFor($websiteId);
                 $siteTimezone = Site::getTimezoneFor($websiteId);
-
                 if (!empty($siteCreationDate)) {
                     if (is_numeric($defaultDate)) {
-                        $defaultDate = (int) $defaultDate; //prevent possible exception should defaultDate be a string timestamp
+                        $defaultDate = (int) $defaultDate;
+                        //prevent possible exception should defaultDate be a string timestamp
                     }
                     $siteCreationDate = Date::factory($siteCreationDate, $siteTimezone);
                     $defaultDateObj = Date::factory($defaultDate, $siteTimezone);
-
                     $period = Period\Factory::build($defaultPeriod, $defaultDateObj);
                     $endDate = $period->getDateEnd();
-
                     if ($endDate->isEarlier($siteCreationDate)) {
                         // when selected date is before site creation date or it is the site creation day
                         $defaultDate = $siteCreationDate->toString();
@@ -232,13 +206,8 @@ class Menu
                 //ignore any error in case site was just deleted or the given date is not valid etc.
             }
         }
-        return array(
-            'idSite' => $websiteId,
-            'period' => $defaultPeriod,
-            'date'   => $defaultDate,
-        );
+        return array('idSite' => $websiteId, 'period' => $defaultPeriod, 'date' => $defaultDate);
     }
-
     /**
      * Configures the top menu which is supposed to contain analytics related items such as the
      * "All Websites Dashboard".
@@ -246,7 +215,6 @@ class Menu
     public function configureTopMenu(MenuTop $menu)
     {
     }
-
     /**
      * Configures the admin menu which is supposed to contain only administration related items such as
      * "Websites", "Users" or "Settings".
@@ -254,30 +222,23 @@ class Menu
     public function configureAdminMenu(MenuAdmin $menu)
     {
     }
-
     private function checkisValidCallable($module, $action)
     {
         if (!Development::isEnabled()) {
             return;
         }
-
         $prefix = 'Menu item added in ' . get_class($this) . ' will fail when being selected. ';
-
         if (!is_string($action)) {
             Development::error($prefix . 'No valid action is specified. Make sure the defined action that should be executed is a string.');
         }
-
         $reportAction = lcfirst(substr($action, 4));
-        if (ReportsProvider::factory($module, $reportAction)) {
+        if (\Piwik\Plugin\ReportsProvider::factory($module, $reportAction)) {
             return;
         }
-
         $controllerClass = '\\Piwik\\Plugins\\' . $module . '\\Controller';
-
         if (!Development::methodExists($controllerClass, $action)) {
             Development::error($prefix . 'The defined action "' . $action . '" does not exist in ' . $controllerClass . '". Make sure to define such a method.');
         }
-
         if (!Development::isCallableMethod($controllerClass, $action)) {
             Development::error($prefix . 'The defined action "' . $action . '" is not callable on "' . $controllerClass . '". Make sure the method is public.');
         }

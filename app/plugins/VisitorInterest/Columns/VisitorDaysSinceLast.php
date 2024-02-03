@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Piwik - free/libre analytics platform
  *
@@ -6,11 +7,9 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\VisitorInterest\Columns;
 
 use Piwik\Plugin\Dimension\VisitDimension;
-
 class VisitorDaysSinceLast extends VisitDimension
 {
     protected $category = 'General_Visitors';

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\DataTable\Renderer;
 
 use Piwik\DataTable;
 use Piwik\DataTable\Renderer;
-
 /**
  * Simple output
  */
@@ -22,7 +22,6 @@ class Console extends Renderer
      * @var string
      */
     protected $prefixRows = '#';
-
     /**
      * Computes the dataTable output and returns the string/binary
      *
@@ -32,7 +31,6 @@ class Console extends Renderer
     {
         return $this->renderTable($this->table);
     }
-
     /**
      * Sets the prefix to be used
      *
@@ -42,7 +40,6 @@ class Console extends Renderer
     {
         $this->prefixRows = $str;
     }
-
     /**
      * Computes the output of the given array of data tables
      *
@@ -61,7 +58,6 @@ class Console extends Renderer
         }
         return $output;
     }
-
     /**
      * Computes the given dataTable output and returns the string/binary
      *
@@ -73,18 +69,14 @@ class Console extends Renderer
     {
         if (is_array($table)) {
             // convert array to DataTable
-
             $table = DataTable::makeFromSimpleArray($table);
         }
-
         if ($table instanceof DataTable\Map) {
             return $this->renderDataTableMap($table, $prefix);
         }
-
         if ($table->getRowsCount() === 0) {
             return "Empty table<br />\n";
         }
-
         static $depth = 0;
         $output = '';
         $i = 1;
@@ -98,33 +90,27 @@ class Console extends Renderer
                     break;
                 }
                 if (is_string($value)) {
-                    $value = "'$value'";
+                    $value = "'{$value}'";
                 } elseif (is_array($value)) {
                     $value = var_export($value, true);
                 }
-
-                $columns[] = "'$column' => $value";
+                $columns[] = "'{$column}' => {$value}";
             }
             if ($dataTableMapBreak === true) {
                 continue;
             }
             $columns = implode(", ", $columns);
-
             $metadata = array();
             foreach ($row->getMetadata() as $name => $value) {
                 if (is_string($value)) {
-                    $value = "'$value'";
+                    $value = "'{$value}'";
                 } elseif (is_array($value)) {
                     $value = var_export($value, true);
                 }
-                $metadata[] = "'$name' => $value";
+                $metadata[] = "'{$name}' => {$value}";
             }
             $metadata = implode(", ", $metadata);
-
-            $output .= str_repeat($this->prefixRows, $depth)
-                . "- $i [" . $columns . "] [" . $metadata . "] [idsubtable = "
-                . $row->getIdSubDataTable() . "]<br />\n";
-
+            $output .= str_repeat($this->prefixRows, $depth) . "- {$i} [" . $columns . "] [" . $metadata . "] [idsubtable = " . $row->getIdSubDataTable() . "]<br />\n";
             if (!is_null($row->getIdSubDataTable())) {
                 $subTable = $row->getSubtable();
                 if ($subTable) {
@@ -137,16 +123,15 @@ class Console extends Renderer
             }
             $i++;
         }
-
         $metadata = $table->getAllTableMetadata();
         if (!empty($metadata)) {
             $output .= "<hr />Metadata<br />";
             foreach ($metadata as $id => $metadataIn) {
                 $output .= "<br />";
-                $output .= $prefix . " <b>$id</b><br />";
+                $output .= $prefix . " <b>{$id}</b><br />";
                 if (is_array($metadataIn)) {
                     foreach ($metadataIn as $name => $value) {
-                        if (is_object($value) && !method_exists( $value, '__toString' )) {
+                        if (is_object($value) && !method_exists($value, '__toString')) {
                             $value = 'Object [' . get_class($value) . ']';
                         } elseif (is_array($value)) {
                             $value = 'Array ' . json_encode($value);
@@ -154,7 +139,7 @@ class Console extends Renderer
                         if (is_array($value)) {
                             $value = json_encode($value);
                         }
-                        $output .= $prefix . $prefix . "$name => $value";
+                        $output .= $prefix . $prefix . "{$name} => {$value}";
                     }
                 }
             }

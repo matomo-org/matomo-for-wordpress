@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,23 +9,17 @@
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
 use Piwik\Common;
-
-
 use Piwik\Plugins\TagManager\Template\Variable\BaseVariable;
-
-
 abstract class BasePreConfiguredVariable extends BaseVariable
 {
     public function isPreConfigured()
     {
         return true;
     }
-
-    final public function getParameters()
+    public final function getParameters()
     {
         return [];
     }
-
     protected function makeReturnTemplateMethod($js, $skipTemplate = false)
     {
         $js = trim($js);
@@ -34,12 +29,9 @@ abstract class BasePreConfiguredVariable extends BaseVariable
         if (strpos($js, 'return ') !== 0) {
             $js = 'return ' . $js;
         }
-
         if ($skipTemplate) {
             return $js;
         }
-
         return '(function () { return function (parameters, TagManager) { this.get = function () { ' . $js . '   }; } })();';
     }
-
 }

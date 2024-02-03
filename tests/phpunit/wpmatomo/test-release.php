@@ -127,6 +127,8 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			'app/node_modules/.htaccess',
 			'app/plugins/.htaccess',
 			'app/vendor/.htaccess',
+			'app/vendor/autoload_original.php',
+			'app/vendor/prefixed/vendor/autoload.php',
 		];
 
 		try {
@@ -172,6 +174,12 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 
 				$path_in_mwp_release = preg_replace( '%^matomo/%', 'app/', $path );
 				if ( empty( $mwp_release_contents[ $path_in_mwp_release ] ) ) {
+					// check if file was prefixed
+					$prefixed_path = preg_replace( '%^app/vendor/%', 'app/vendor/prefixed/', $path_in_mwp_release );
+					if ( ! empty( $mwp_release_contents[ $prefixed_path ] ) ) {
+						continue;
+					}
+
 					$missing_files[] = $path;
 				}
 			}
@@ -181,6 +189,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			$extraneous_files = [];
 			foreach ( $mwp_release_contents as $path => $ignore ) {
 				if ( ! preg_match( '%^app/%', $path )
+					|| preg_match( '%^app/vendor/prefixed/vendor/composer%', $path )
 					|| in_array( $path, $ignored_mwp_files, true )
 				) {
 					continue;
@@ -188,6 +197,12 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 
 				$path_in_core_release = preg_replace( '%^app/%', 'matomo/', $path );
 				if ( empty( $matomo_core_contents[ $path_in_core_release ] ) ) {
+					// check if file was prefixed
+					$prefixed_path = preg_replace( '%^matomo/vendor/prefixed/%', 'matomo/vendor/', $path_in_core_release );
+					if ( ! empty( $matomo_core_contents[ $prefixed_path ] ) ) {
+						continue;
+					}
+
 					$extraneous_files[] = $path;
 				}
 			}

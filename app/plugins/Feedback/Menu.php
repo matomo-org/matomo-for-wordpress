@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Plugins\Feedback;
 
 use Piwik\Menu\MenuTop;
 use Piwik\Piwik;
-
 class Menu extends \Piwik\Plugin\Menu
 {
     public function configureTopMenu(MenuTop $menu)

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,8 +14,7 @@ use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
 use DeviceDetector\Parser\Device\AbstractDeviceParser as DeviceParser;
-
-class DeviceType extends Base
+class DeviceType extends \Piwik\Plugins\DevicesDetection\Columns\Base
 {
     protected $columnName = 'config_device_type';
     protected $columnType = 'TINYINT( 100 ) NULL DEFAULT NULL';
@@ -22,26 +22,21 @@ class DeviceType extends Base
     protected $type = self::TYPE_ENUM;
     protected $nameSingular = 'DevicesDetection_DeviceType';
     protected $namePlural = 'DevicesDetection_DeviceTypes';
-
     public function __construct()
     {
-        $deviceTypes    = DeviceParser::getAvailableDeviceTypeNames();
+        $deviceTypes = DeviceParser::getAvailableDeviceTypeNames();
         $deviceTypeList = implode(", ", $deviceTypes);
-
         $this->acceptValues = $deviceTypeList;
     }
-
     public function formatValue($value, $idSite, Formatter $formatter)
     {
         return \Piwik\Plugins\DevicesDetection\getDeviceTypeLabel($value);
     }
-
     public function getEnumColumnValues()
     {
         $values = DeviceParser::getAvailableDeviceTypes();
         return array_flip($values);
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -50,11 +45,9 @@ class DeviceType extends Base
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $parser    = $this->getUAParser($request->getUserAgent(), $request->getClientHints());
-
+        $parser = $this->getUAParser($request->getUserAgent(), $request->getClientHints());
         return $parser->getDevice();
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor

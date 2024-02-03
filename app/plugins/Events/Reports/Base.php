@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -17,7 +18,6 @@ use Piwik\Plugins\Events\Columns\Metrics\AverageEventValue;
 use Piwik\Report\ReportWidgetFactory;
 use Piwik\Url;
 use Piwik\Widget\WidgetsList;
-
 abstract class Base extends \Piwik\Plugin\Report
 {
     protected function init()
@@ -25,23 +25,15 @@ abstract class Base extends \Piwik\Plugin\Report
         $this->categoryId = 'General_Actions';
         $this->subcategoryId = 'Events_Events';
         $this->onlineGuideUrl = Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/event-tracking/');
-
-        $this->processedMetrics = array(
-            new AverageEventValue()
-        );
+        $this->processedMetrics = array(new AverageEventValue());
     }
-
     public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory)
     {
         if (!$this->isSubtableReport) {
-            $widget = $factory->createWidget()->setParameters(array(
-                'secondaryDimension' => API::getInstance()->getDefaultSecondaryDimension($this->action)
-            ));
-
+            $widget = $factory->createWidget()->setParameters(array('secondaryDimension' => API::getInstance()->getDefaultSecondaryDimension($this->action)));
             $widgetsList->addToContainerWidget('Events', $widget);
         }
     }
-
     public function configureView(ViewDataTable $view)
     {
         if (Common::getRequestVar('secondaryDimension', '', 'string')) {
@@ -53,22 +45,18 @@ abstract class Base extends \Piwik\Plugin\Report
             }
             $view->requestConfig->overridableProperties = array_values($view->requestConfig->overridableProperties);
         }
-
         if (property_exists($view->config, 'selectable_columns')) {
             $view->config->selectable_columns = ['nb_events', 'nb_visits', 'sum_event_value', 'nb_events_with_value'];
         }
-
         $this->configureFooterMessage($view);
     }
-
     protected function configureFooterMessage(ViewDataTable $view)
     {
         if ($this->isSubtableReport) {
             // no footer message for subtables
             return;
         }
-
-        $view->config->filters[] = function(DataTable $dataTable) use ($view) {
+        $view->config->filters[] = function (DataTable $dataTable) use($view) {
             $out = '';
             EventDispatcher::getInstance()->postEvent('Template.afterEventsReport', [&$out, $dataTable]);
             $view->config->show_footer_message = $out;

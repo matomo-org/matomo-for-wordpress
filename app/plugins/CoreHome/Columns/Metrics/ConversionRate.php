@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Piwik\DataTable\Row;
 use Piwik\Metrics\Formatter;
 use Piwik\Piwik;
 use Piwik\Plugin\ProcessedMetric;
-
 /**
  * The percent of visits that result in a conversion. Calculated as:
  *
@@ -26,30 +26,25 @@ class ConversionRate extends ProcessedMetric
     {
         return 'conversion_rate';
     }
-
     public function getTranslatedName()
     {
         return Piwik::translate('General_ColumnConversionRate');
     }
-
     public function getDependentMetrics()
     {
         return array('nb_visits_converted', 'nb_visits');
     }
-
     public function format($value, Formatter $formatter)
     {
         return $formatter->getPrettyPercentFromQuotient($value);
     }
-
     public function compute(Row $row)
     {
         $nbVisitsConverted = $this->getMetric($row, 'nb_visits_converted');
         $nbVisits = $this->getMetric($row, 'nb_visits');
         return Piwik::getQuotientSafe($nbVisitsConverted, $nbVisits, $precision = 4);
     }
-
-    public function getSemanticType(): ?string
+    public function getSemanticType() : ?string
     {
         return Dimension::TYPE_PERCENT;
     }

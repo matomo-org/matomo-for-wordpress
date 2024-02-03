@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -24,44 +25,27 @@ use Piwik\Plugins\Tour\Engagement\ChallengeSelectDateRange;
 use Piwik\Plugins\Tour\Engagement\ChallengeViewRowEvolution;
 use Piwik\Plugins\Tour\Engagement\ChallengeViewVisitorProfile;
 use Piwik\Plugins\Tour\Engagement\ChallengeViewVisitsLog;
-
 class Tour extends \Piwik\Plugin
 {
     public function registerEvents()
     {
-        return array(
-            'AssetManager.getStylesheetFiles' => 'getStylesheetFiles',
-            'AssetManager.getJavaScriptFiles' => 'getJsFiles',
-            'Dashboard.changeDefaultDashboardLayout' => 'changeDefaultDashboardLayout',
-            'API.Annotations.add.end' => 'onAnnotationAdded',
-            'API.Goals.addGoal.end' => 'onGoalAdded',
-            'UsersManager.inviteUser.end' => 'onUserInvited',
-            'Controller.CoreHome.getRowEvolutionPopover' => 'onViewRowEvolution',
-            'Controller.Live.getLastVisitsDetails' => 'onViewVisitorLog',
-            'Controller.Live.getVisitorProfilePopup' => 'onViewVisitorProfile',
-            'Controller.Marketplace.overview' => 'onBrowseMarketplace',
-            'ViewDataTable.configure' => array('function' => 'onConfigureView', 'after' => true),
-        );
+        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'Dashboard.changeDefaultDashboardLayout' => 'changeDefaultDashboardLayout', 'API.Annotations.add.end' => 'onAnnotationAdded', 'API.Goals.addGoal.end' => 'onGoalAdded', 'UsersManager.inviteUser.end' => 'onUserInvited', 'Controller.CoreHome.getRowEvolutionPopover' => 'onViewRowEvolution', 'Controller.Live.getLastVisitsDetails' => 'onViewVisitorLog', 'Controller.Live.getVisitorProfilePopup' => 'onViewVisitorProfile', 'Controller.Marketplace.overview' => 'onBrowseMarketplace', 'ViewDataTable.configure' => array('function' => 'onConfigureView', 'after' => true));
     }
-
     public function onBrowseMarketplace()
     {
         $this->setSimpleChallengeCompleted(ChallengeBrowseMarketplace::class);
     }
-
     public function onConfigureView()
     {
         if (Common::getRequestVar('period', '', 'string') === 'range') {
             $this->setSimpleChallengeCompleted(ChallengeSelectDateRange::class);
         }
-
         if (Common::getRequestVar('flat', '0', 'string') === '1') {
             $module = Piwik::getModule();
             if ($module === 'Actions' || $module === 'Contents' || $module === 'UsersFlow') {
                 $this->setSimpleChallengeCompleted(ChallengeFlattenActions::class);
             }
         }
-
         $viewDataTable = Common::getRequestVar('viewDataTable', '', 'string');
         if ($viewDataTable && !Common::getRequestVar('forceView', '', 'string')) {
             if ($viewDataTable !== Sparkline::ID && $viewDataTable !== Evolution::ID) {
@@ -70,7 +54,6 @@ class Tour extends \Piwik\Plugin
             }
         }
     }
-
     private function setSimpleChallengeCompleted($className)
     {
         if (Piwik::hasUserSuperUserAccess()) {
@@ -79,22 +62,18 @@ class Tour extends \Piwik\Plugin
             $challenge->setCompleted(Piwik::getCurrentUserLogin());
         }
     }
-
     public function onViewRowEvolution()
     {
         $this->setSimpleChallengeCompleted(ChallengeViewRowEvolution::class);
     }
-
     public function onViewVisitorLog()
     {
         $this->setSimpleChallengeCompleted(ChallengeViewVisitsLog::class);
     }
-
     public function onViewVisitorProfile()
     {
         $this->setSimpleChallengeCompleted(ChallengeViewVisitorProfile::class);
     }
-
     public function onAnnotationAdded($response)
     {
         if (Piwik::hasUserSuperUserAccess() && !empty($response)) {
@@ -102,7 +81,6 @@ class Tour extends \Piwik\Plugin
             $annotation->setCompleted(Piwik::getCurrentUserLogin());
         }
     }
-
     public function onGoalAdded($response)
     {
         if (Piwik::hasUserSuperUserAccess() && !empty($response)) {
@@ -110,7 +88,6 @@ class Tour extends \Piwik\Plugin
             $annotation->setCompleted(Piwik::getCurrentUserLogin());
         }
     }
-
     public function onUserInvited()
     {
         if (Piwik::hasUserSuperUserAccess()) {
@@ -118,7 +95,6 @@ class Tour extends \Piwik\Plugin
             $annotation->setCompleted(Piwik::getCurrentUserLogin());
         }
     }
-
     public function changeDefaultDashboardLayout(&$defaultLayout)
     {
         if (Piwik::hasUserSuperUserAccess()) {
@@ -130,12 +106,10 @@ class Tour extends \Piwik\Plugin
             $defaultLayout = json_encode($defaultLayout);
         }
     }
-
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/Tour/stylesheets/engagement.less";
     }
-
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = "plugins/Tour/javascripts/engagement.js";

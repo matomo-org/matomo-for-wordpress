@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Plugins\CustomDimensions\Columns\Metrics;
 use Piwik\Columns\Dimension;
 use Piwik\Piwik;
 use Piwik\Plugins\Actions\Columns\Metrics\AverageTimeOnPage;
-
 /**
  * The average amount of time spent on a dimension. Calculated as:
  *
@@ -24,13 +24,11 @@ class AverageTimeOnDimension extends AverageTimeOnPage
     {
         return 'avg_time_on_dimension';
     }
-
     public function getTranslatedName()
     {
         return Piwik::translate('CustomDimensions_ColumnAvgTimeOnDimension');
     }
-
-    public function getSemanticType(): ?string
+    public function getSemanticType() : ?string
     {
         return Dimension::TYPE_DURATION_S;
     }

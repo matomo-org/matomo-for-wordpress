@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -15,7 +16,6 @@ use Matomo\Network\IP as NetworkIp;
 use Piwik\NoAccessException;
 use Piwik\Piwik;
 use Piwik\SettingsServer;
-
 /**
  * This class is in CoreHome since some alternative Login plugins disable the Login plugin and we want to ensure the
  * feature works for all login plugins.
@@ -27,51 +27,39 @@ class LoginAllowlist
         $general = $this->getGeneralConfig();
         return !empty($general['login_allowlist_apply_to_reporting_api_requests']) || !empty($general['login_whitelist_apply_to_reporting_api_requests']);
     }
-
     public function shouldCheckAllowlist()
     {
         if (Common::isPhpCliMode()) {
             return false;
         }
-
         // ignore whitelist checks for opt out iframe or opt out JS
-        if (!SettingsServer::isTrackerApiRequest()
-            && (('CoreAdminHome' === Piwik::getModule() && ('optOut' === Piwik::getAction() || 'optOutJS' === Piwik::getAction())))
-            )
-        {
+        if (!SettingsServer::isTrackerApiRequest() && ('CoreAdminHome' === Piwik::getModule() && ('optOut' === Piwik::getAction() || 'optOutJS' === Piwik::getAction()))) {
             return false;
         }
-
         $ips = $this->getAllowlistedLoginIps();
         return !empty($ips);
     }
-
     public function checkIsAllowed($ipString)
     {
         if (!$this->isIpAllowed($ipString)) {
             throw new NoAccessException(Piwik::translate('CoreHome_ExceptionNotAllowlistedIP', $ipString));
         }
     }
-
     public function isIpAllowed($userIpString)
     {
         $userIp = NetworkIp::fromStringIP($userIpString);
         $ipsAllowed = $this->getAllowlistedLoginIps();
-
         if (empty($ipsAllowed)) {
             return false;
         }
-
         return $userIp->isInRanges($ipsAllowed);
     }
-
     /**
      * @return array
      */
     protected function getAllowlistedLoginIps()
     {
         $ips = StaticContainer::get('login.allowlist.ips');
-
         if (!empty($ips) && is_array($ips)) {
             $ips = array_map(function ($ip) {
                 return trim($ip);
@@ -81,10 +69,8 @@ class LoginAllowlist
             });
             return array_unique(array_values($ips));
         }
-
         return array();
     }
-
     private function getGeneralConfig()
     {
         $config = Config::getInstance();

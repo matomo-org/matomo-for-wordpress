@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -16,7 +17,6 @@ use Piwik\Period;
 use Piwik\Period\Range;
 use Piwik\Piwik;
 use Piwik\ProxyHttp;
-
 /**
  * CSV export
  *
@@ -35,42 +35,35 @@ class Csv extends Renderer
      * @var string
      */
     public $separator = ",";
-
     /**
      * Line end
      *
      * @var string
      */
     public $lineEnd = "\n";
-
     /**
      * 'metadata' columns will be exported, prefixed by 'metadata_'
      *
      * @var bool
      */
     public $exportMetadata = true;
-
     /**
      * Converts the content to unicode so that UTF8 characters (eg. chinese) can be imported in Excel
      *
      * @var bool
      */
     public $convertToUnicode = true;
-
     /**
      * idSubtable will be exported in a column called 'idsubdatatable'
      *
      * @var bool
      */
     public $exportIdSubtable = true;
-
     /**
      * This string is also hardcoded in archive,sh
      */
     const NO_DATA_AVAILABLE = 'No data available';
-
     private $unsupportedColumns = array();
-
     /**
      * Computes the dataTable output and returns the string/binary
      *
@@ -82,13 +75,10 @@ class Csv extends Renderer
         if (empty($str)) {
             return self::NO_DATA_AVAILABLE;
         }
-
         $this->renderHeader();
-
         $str = $this->convertToUnicode($str);
         return $str;
     }
-
     /**
      * Enables / Disables unicode converting
      *
@@ -98,7 +88,6 @@ class Csv extends Renderer
     {
         $this->convertToUnicode = $bool;
     }
-
     /**
      * Sets the column separator
      *
@@ -108,7 +97,6 @@ class Csv extends Renderer
     {
         $this->separator = $separator;
     }
-
     /**
      * Computes the output of the given data table
      *
@@ -122,7 +110,6 @@ class Csv extends Renderer
             // convert array to DataTable
             $table = DataTable::makeFromSimpleArray($table);
         }
-
         if ($table instanceof DataTable\Map) {
             $str = $this->renderDataTableMap($table, $allColumns);
         } else {
@@ -130,7 +117,6 @@ class Csv extends Renderer
         }
         return $str;
     }
-
     /**
      * Computes the output of the given data table array
      *
@@ -143,10 +129,8 @@ class Csv extends Renderer
         $str = '';
         foreach ($table->getDataTables() as $currentLinePrefix => $dataTable) {
             $returned = explode("\n", $this->renderTable($dataTable, $allColumns));
-
             // get rid of the columns names
             $returned = array_slice($returned, 1);
-
             // case empty datatable we don't print anything in the CSV export
             // when in xml we would output <result date="2008-01-15" />
             if (!empty($returned)) {
@@ -156,16 +140,12 @@ class Csv extends Renderer
                 $str .= "\n" . implode("\n", $returned);
             }
         }
-
         // prepend table key to column list
         $allColumns = array_merge(array($table->getKeyName() => true), $allColumns);
-
         // add header to output string
         $str = $this->getHeaderLine(array_keys($allColumns)) . $str;
-
         return $str;
     }
-
     /**
      * Converts the output of the given simple data table
      *
@@ -182,20 +162,16 @@ class Csv extends Renderer
                 if (count($columnNameToValue) === 1) {
                     // simple tables should only have one column, the value
                     $allColumns['value'] = true;
-
                     $value = array_values($columnNameToValue);
                     $str = 'value' . $this->lineEnd . $this->formatValue($value[0]);
                     return $str;
                 }
             }
         }
-
         $csv = $this->makeArrayFromDataTable($table, $allColumns);
-
         $str = $this->buildCsvString($allColumns, $csv);
         return $str;
     }
-
     /**
      * Returns the CSV header line for a set of metrics. Will translate columns if desired.
      *
@@ -209,18 +185,14 @@ class Csv extends Renderer
                 unset($columnMetrics[$index]);
             }
         }
-
         if ($this->translateColumnNames) {
             $columnMetrics = $this->translateColumnNames($columnMetrics);
         }
-
         foreach ($columnMetrics as &$value) {
             $value = $this->formatValue($value);
         }
-
         return implode($this->separator, $columnMetrics);
     }
-
     /**
      * Formats/Escapes the given value
      *
@@ -229,74 +201,53 @@ class Csv extends Renderer
      */
     public function formatValue($value)
     {
-        if (is_string($value)
-            && !is_numeric($value)
-        ) {
+        if (is_string($value) && !is_numeric($value)) {
             $value = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
         } elseif ($value === false) {
             $value = 0;
         }
-
         $value = $this->formatFormulas($value);
-
         if (is_string($value)) {
             $value = str_replace(["\t"], ' ', $value);
-
             // surround value with double quotes if it contains a double quote or a commonly used separator
-            if (strpos($value, '"') !== false
-                || strpos($value, $this->separator) !== false
-                || strpos($value, ',') !== false
-                || strpos($value, ';') !== false
-            ) {
+            if (strpos($value, '"') !== false || strpos($value, $this->separator) !== false || strpos($value, ',') !== false || strpos($value, ';') !== false) {
                 $value = '"' . str_replace('"', '""', $value) . '"';
             }
         }
-
         // in some number formats (e.g. German), the decimal separator is a comma
         // we need to catch and replace this
         if (is_numeric($value)) {
-            $value = (string)$value;
+            $value = (string) $value;
             $value = str_replace(',', '.', $value);
         }
-
         return $value;
     }
-
     protected function formatFormulas($value)
     {
         // Excel / Libreoffice formulas may start with one of these characters
         $formulaStartsWith = array('=', '+', '-', '@');
-
         // remove first % sign and if string is still a number, return it as is
         $valueWithoutFirstPercentSign = $this->removeFirstPercentSign($value);
-
-        if (empty($valueWithoutFirstPercentSign)
-            || !is_string($value)
-            || is_numeric($valueWithoutFirstPercentSign)) {
+        if (empty($valueWithoutFirstPercentSign) || !is_string($value) || is_numeric($valueWithoutFirstPercentSign)) {
             return $value;
         }
-
         $firstCharCellValue = $valueWithoutFirstPercentSign[0];
         $isFormula = in_array($firstCharCellValue, $formulaStartsWith);
-        if($isFormula) {
+        if ($isFormula) {
             return "'" . $value;
         }
-
         return $value;
     }
-
     /**
      * Sends the http headers for csv file
      */
     protected function renderHeader()
     {
         $fileName = Piwik::translate('General_Export');
-
         $period = Common::getRequestVar('period', false);
         $date = Common::getRequestVar('date', false);
         if ($period || $date) {
             // in test cases, there are no request params set
-
             if ($period === 'range') {
                 $period = new Range($period, $date);
             } elseif (strpos($date, ',') !== false) {
@@ -304,21 +255,15 @@ class Csv extends Renderer
             } else {
                 $period = Period\Factory::build($period, $date);
             }
-
             $prettyDate = $period->getLocalizedLongString();
-
             $meta = $this->getApiMetaData();
             $name = !empty($meta['name']) ? $meta['name'] : '';
-
-            $fileName .= ' _ ' . $name
-                . ' _ ' . $prettyDate . '.csv';
+            $fileName .= ' _ ' . $name . ' _ ' . $prettyDate . '.csv';
         }
-
         // silent fail otherwise unit tests fail
         Common::sendHeader("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($fileName), true);
         ProxyHttp::overrideCacheControlHeaders();
     }
-
     /**
      * Flattens an array of column values so they can be outputted as CSV (which does not support
      * nested structures).
@@ -327,19 +272,15 @@ class Csv extends Renderer
     {
         foreach ($columns as $name => $value) {
             $csvName = sprintf($csvColumnNameTemplate, $this->getCsvColumnName($name));
-
             if (is_array($value)) {
                 // if we're translating column names and this is an array of arrays, the column name
                 // format becomes a bit more complicated. also in this case, we assume $value is not
                 // nested beyond 2 levels (ie, array(0 => array(0 => 1, 1 => 2)), but not array(
                 // 0 => array(0 => array(), 1 => array())) )
-                if ($this->translateColumnNames
-                    && is_array(reset($value))
-                ) {
+                if ($this->translateColumnNames && is_array(reset($value))) {
                     foreach ($value as $level1Key => $level1Value) {
                         $inner = $name === 'goals' ? Piwik::translate('Goals_GoalX', $level1Key) : $name . ' ' . $level1Key;
                         $columnNameTemplate = '%s (' . $inner . ')';
-
                         $this->flattenColumnArray($level1Value, $csvRow, $columnNameTemplate);
                     }
                 } else {
@@ -349,10 +290,8 @@ class Csv extends Renderer
                 $csvRow[$csvName] = $value;
             }
         }
-
         return $csvRow;
     }
-
     private function getCsvColumnName($name)
     {
         if ($this->translateColumnNames) {
@@ -361,7 +300,6 @@ class Csv extends Renderer
             return $name;
         }
     }
-
     /**
      * @param $allColumns
      * @param $csv
@@ -370,19 +308,14 @@ class Csv extends Renderer
     private function buildCsvString($allColumns, $csv)
     {
         $str = '';
-
         // specific case, we have only one column and this column wasn't named properly (indexed by a number)
         // we don't print anything in the CSV file => an empty line
-        if (sizeof($allColumns) === 1
-            && reset($allColumns)
-            && !is_string(key($allColumns))
-        ) {
+        if (sizeof($allColumns) === 1 && reset($allColumns) && !is_string(key($allColumns))) {
             $str .= '';
         } else {
             // render row names
             $str .= $this->getHeaderLine(array_keys($allColumns)) . $this->lineEnd;
         }
-
         // we render the CSV
         foreach ($csv as $theRow) {
             $rowStr = '';
@@ -396,7 +329,6 @@ class Csv extends Renderer
         $str = substr($str, 0, -strlen($this->lineEnd));
         return $str;
     }
-
     /**
      * @param $table
      * @param $allColumns
@@ -407,7 +339,6 @@ class Csv extends Renderer
         $csv = array();
         foreach ($table->getRows() as $row) {
             $csvRow = $this->flattenColumnArray($row->getColumns());
-
             if ($this->exportMetadata) {
                 $metadata = $row->getMetadata();
                 foreach ($metadata as $name => $value) {
@@ -420,10 +351,7 @@ class Csv extends Renderer
                     } else {
                         $name = 'metadata_' . $name;
                     }
-
-                    if (is_array($value)
-                        || is_object($value)
-                    ) {
+                    if (is_array($value) || is_object($value)) {
                         if (!in_array($name, $this->unsupportedColumns)) {
                             $this->unsupportedColumns[] = $name;
                         }
@@ -432,7 +360,6 @@ class Csv extends Renderer
                     }
                 }
             }
-
             foreach ($csvRow as $name => $value) {
                 if (in_array($name, $this->unsupportedColumns)) {
                     unset($allColumns[$name]);
@@ -440,19 +367,14 @@ class Csv extends Renderer
                     $allColumns[$name] = true;
                 }
             }
-
             if ($this->exportIdSubtable) {
                 $idsubdatatable = $row->getIdSubDataTable();
-                if ($idsubdatatable !== false
-                    && $this->hideIdSubDatatable === false
-                ) {
+                if ($idsubdatatable !== false && $this->hideIdSubDatatable === false) {
                     $csvRow['idsubdatatable'] = $idsubdatatable;
                 }
             }
-
             $csv[] = $csvRow;
         }
-
         if (!empty($this->unsupportedColumns)) {
             foreach ($this->unsupportedColumns as $unsupportedColumn) {
                 foreach ($csv as $index => $row) {
@@ -460,24 +382,19 @@ class Csv extends Renderer
                 }
             }
         }
-
         return $csv;
     }
-
     /**
      * @param $str
      * @return string
      */
     private function convertToUnicode($str)
     {
-        if ($this->convertToUnicode
-            && function_exists('mb_convert_encoding')
-        ) {
+        if ($this->convertToUnicode && function_exists('mb_convert_encoding')) {
             $str = chr(255) . chr(254) . mb_convert_encoding($str, 'UTF-16LE', 'UTF-8');
         }
         return $str;
     }
-
     /**
      * @param $value
      * @return mixed

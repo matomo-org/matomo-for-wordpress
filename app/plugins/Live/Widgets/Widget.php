@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Plugins\Live\Widgets;
 use Piwik\Common;
 use Piwik\Plugins\Live\Live;
 use Piwik\Widget\WidgetConfig;
-
 class Widget extends \Piwik\Widget\Widget
 {
     public static function configure(WidgetConfig $config)
@@ -21,13 +21,10 @@ class Widget extends \Piwik\Widget\Widget
         $config->setName('Live_VisitorsInRealTime');
         $config->setIsWide();
         $config->setOrder(20);
-
         $idSite = Common::getRequestVar('idSite', 0, 'int');
-
         if (empty($idSite)) {
             return;
         }
-
         if (!Live::isVisitorLogEnabled($idSite)) {
             $config->disable();
         }

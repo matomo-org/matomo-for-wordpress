@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,51 +13,41 @@ use Piwik\ProxyHttp;
 use Piwik\Translation\Translator;
 use Piwik\Url;
 use Piwik\View;
-
 /**
  * Check that Matomo is configured to force SSL.
  */
-class ForceSSLCheck implements Diagnostic
+class ForceSSLCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
     /**
      * @var Translator
      */
     private $translator;
-
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;
     }
-
     public function execute()
     {
         $label = $this->translator->translate('General_ForcedSSL');
-
         // special handling during install
         $isPiwikInstalling = !Config::getInstance()->existsLocalConfig();
         if ($isPiwikInstalling) {
             if (ProxyHttp::isHttps()) {
                 return [];
             }
-
             $view = new View('@Diagnostics/force_ssl_link');
             $view->link = 'https://' . Url::getCurrentHost() . Url::getCurrentScriptName(false) . Url::getCurrentQueryString();
             $message = $view->render();
-            return [DiagnosticResult::singleResult($label, DiagnosticResult::STATUS_WARNING, $message)];
+            return [\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING, $message)];
         }
-
-        $forceSSLEnabled = (Config::getInstance()->General['force_ssl'] == 1);
-
+        $forceSSLEnabled = Config::getInstance()->General['force_ssl'] == 1;
         if ($forceSSLEnabled) {
-            return array(DiagnosticResult::singleResult($label, DiagnosticResult::STATUS_OK));
+            return array(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK));
         }
-
         $comment = $this->translator->translate('General_ForceSSLRecommended', ['<code>force_ssl = 1</code>', '<code>General</code>']);
-
         if (!ProxyHttp::isHttps()) {
             $comment .= '<br /><br />' . $this->translator->translate('General_NotPossibleWithoutHttps');
         }
-
-        return array(DiagnosticResult::singleResult($label, DiagnosticResult::STATUS_WARNING, $comment));
+        return array(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING, $comment));
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,8 +13,7 @@ use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-
-class Region extends Base
+class Region extends \Piwik\Plugins\UserCountry\Columns\Base
 {
     protected $columnName = 'location_region';
     protected $columnType = 'char(3) DEFAULT NULL';
@@ -23,7 +23,6 @@ class Region extends Base
     protected $nameSingular = 'UserCountry_Region';
     protected $namePlural = 'UserCountryMap_Regions';
     protected $acceptValues = '01 02, OR, P8, etc.<br/>eg. region=BFC;country=fr';
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -37,12 +36,9 @@ class Region extends Base
             $value = substr($value, 0, 3);
             return $value;
         }
-
         $userInfo = $this->getUserInfo($request, $visitor);
-
         return $this->getLocationDetail($userInfo, LocationProvider::REGION_CODE_KEY);
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -53,7 +49,6 @@ class Region extends Base
     {
         return $this->getUrlOverrideValueIfAllowed('region', $request);
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor

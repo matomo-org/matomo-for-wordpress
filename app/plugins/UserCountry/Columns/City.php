@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,8 +13,7 @@ use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-
-class City extends Base
+class City extends \Piwik\Plugins\UserCountry\Columns\Base
 {
     protected $columnName = 'location_city';
     protected $columnType = 'varchar(255) DEFAULT NULL';
@@ -23,7 +23,6 @@ class City extends Base
     protected $namePlural = 'UserCountryMap_Cities';
     protected $acceptValues = 'Sydney, Sao Paolo, Rome, etc.';
     protected $category = 'UserCountry_VisitLocation';
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -37,12 +36,9 @@ class City extends Base
             $value = substr($value, 0, 255);
             return $value;
         }
-
         $userInfo = $this->getUserInfo($request, $visitor);
-
         return $this->getLocationDetail($userInfo, LocationProvider::CITY_NAME_KEY);
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -53,7 +49,6 @@ class City extends Base
     {
         return $this->getUrlOverrideValueIfAllowed('city', $request);
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor

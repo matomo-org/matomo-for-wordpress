@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,7 +7,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Tracker;
 
 /**
@@ -21,8 +21,7 @@ interface VisitInterface
      * @param Request $request
      * @return void
      */
-    public function setRequest(Request $request);
-
+    public function setRequest(\Piwik\Tracker\Request $request);
     /**
      * Tracks a visit.
      *

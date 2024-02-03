@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,17 +9,14 @@
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
 use Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BaseDataLayerVariable;
-
 class ClickButtonVariable extends BaseDataLayerVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_CLICKS;
     }
-
     protected function getDataLayerVariableName()
     {
         return 'mtm.clickButton';
     }
-
 }

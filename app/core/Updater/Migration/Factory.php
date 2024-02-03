@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Updater\Migration;
 use Piwik\Updater\Migration\Db\Factory as DbFactory;
 use Piwik\Updater\Migration\Plugin\Factory as PluginFactory;
 use Piwik\Updater\Migration\Config\Factory as ConfigFactory;
-
 /**
  * Migration factory to create various migrations that implement the Migration interface.
  *
@@ -22,17 +22,14 @@ class Factory
      * @var DbFactory
      */
     public $db;
-
     /**
      * @var PluginFactory
      */
     public $plugin;
-
     /**
      * @var ConfigFactory
      */
     public $config;
-
     /**
      * @ignore
      */

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,7 +7,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Settings\FieldConfig;
 
 /**
@@ -30,7 +30,6 @@ class ArrayField
      * @var string
      */
     public $uiControl = null;
-
     /**
      * Array like ['plugin' => 'MyPlugin', 'component' => 'MyExportedCustomFieldComponent']. For an example see
      * "plugins/CorePluginsAdmin/vue/src/FormField/FieldText.vue"
@@ -38,7 +37,6 @@ class ArrayField
      * @var string[]
      */
     public $customFieldComponent = null;
-
     /**
      * This setting's display name, for example, `'Refresh Interval'`.
      *
@@ -47,7 +45,6 @@ class ArrayField
      * @var string
      */
     public $title = '';
-
     /**
      * The list of all available values for this setting. If null, the setting can have any value.
      *
@@ -59,20 +56,13 @@ class ArrayField
      * @var null|array
      */
     public $availableValues = null;
-
     public function __construct($title, $uiControl = 'text')
     {
         $this->title = $title;
         $this->uiControl = $uiControl;
     }
-
     public function toArray()
     {
-        return array(
-            'title' => $this->title,
-            'uiControl' => $this->uiControl,
-            'component' => $this->customFieldComponent,
-            'availableValues' => $this->availableValues,
-        );
+        return array('title' => $this->title, 'uiControl' => $this->uiControl, 'component' => $this->customFieldComponent, 'availableValues' => $this->availableValues);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,7 +14,6 @@ use Piwik\Metrics\Formatter;
 use Piwik\Piwik;
 use Piwik\Plugin\ProcessedMetric;
 use Piwik\Columns\Dimension;
-
 /**
  * The average amount for a certain performance metric. Calculated as
  *
@@ -25,58 +25,39 @@ use Piwik\Columns\Dimension;
 abstract class AveragePerformanceMetric extends ProcessedMetric
 {
     const ID = '';
-
     public function getName()
     {
         return 'avg_' . static::ID;
     }
-
     public function getDependentMetrics()
     {
         return array('sum_' . static::ID, 'nb_hits_with_' . static::ID);
     }
-
     public function getTemporaryMetrics()
     {
         return array('sum_' . static::ID);
     }
-
     public function compute(Row $row)
     {
         $sumGenerationTime = $this->getMetric($row, 'sum_' . static::ID);
         $hitsWithTimeGeneration = $this->getMetric($row, 'nb_hits_with_' . static::ID);
-
         return Piwik::getQuotientSafe($sumGenerationTime, $hitsWithTimeGeneration, $precision = 3);
     }
-
     public function format($value, Formatter $formatter)
     {
-        if ($formatter instanceof Formatter\Html
-            && !$value
-        ) {
+        if ($formatter instanceof Formatter\Html && !$value) {
             return '-';
         } else {
             return $formatter->getPrettyTimeFromSeconds($value, $displayAsSentence = true);
         }
     }
-
     public function beforeCompute($report, DataTable $table)
     {
         $hasTimeGeneration = array_sum($this->getMetricValues($table, 'sum_' . static::ID)) > 0;
-
-        if (!$hasTimeGeneration
-            && $table->getRowsCount() != 0
-            && !$this->hasAverageMetric($table)
-        ) {
+        if (!$hasTimeGeneration && $table->getRowsCount() != 0 && !$this->hasAverageMetric($table)) {
             // No generation time: remove it from the API output and add it to empty_columns metadata, so that
             // the columns can also be removed from the view
-            $table->filter('ColumnDelete', array(array(
-                'sum_' . static::ID,
-                'nb_hits_with_' . static::ID,
-                'min_' . static::ID,
-                'max_' . static::ID
-            )));
-
+            $table->filter('ColumnDelete', array(array('sum_' . static::ID, 'nb_hits_with_' . static::ID, 'min_' . static::ID, 'max_' . static::ID)));
             if ($table instanceof DataTable) {
                 $emptyColumns = $table->getMetadata(DataTable::EMPTY_COLUMNS_METADATA_NAME);
                 if (!is_array($emptyColumns)) {
@@ -89,16 +70,13 @@ abstract class AveragePerformanceMetric extends ProcessedMetric
                 $table->setMetadata(DataTable::EMPTY_COLUMNS_METADATA_NAME, $emptyColumns);
             }
         }
-
         return $hasTimeGeneration;
     }
-
     private function hasAverageMetric(DataTable $table)
     {
         return $table->getFirstRow()->getColumn($this->getName()) !== false;
     }
-
-    public function getSemanticType(): ?string
+    public function getSemanticType() : ?string
     {
         return Dimension::TYPE_DURATION_S;
     }

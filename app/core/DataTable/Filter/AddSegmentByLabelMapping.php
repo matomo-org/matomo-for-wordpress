@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
-
 /**
  * Executes a filter for each row of a {@link DataTable} and generates a segment filter for each row.
  * It will map the label column to a segmentValue by searching for the label in the index of the given
@@ -26,7 +26,6 @@ class AddSegmentByLabelMapping extends BaseFilter
 {
     private $segment;
     private $mapping;
-
     /**
      * @param DataTable $table
      * @param string $segment
@@ -35,11 +34,9 @@ class AddSegmentByLabelMapping extends BaseFilter
     public function __construct($table, $segment, $mapping)
     {
         parent::__construct($table);
-
         $this->segment = $segment;
         $this->mapping = $mapping;
     }
-
     /**
      * See {@link AddSegmentByLabelMapping}.
      *
@@ -50,10 +47,8 @@ class AddSegmentByLabelMapping extends BaseFilter
         if (empty($this->segment) || empty($this->mapping)) {
             return;
         }
-
         foreach ($table->getRows() as $row) {
             $label = $row->getColumn('label');
-
             if (!empty($this->mapping[$label])) {
                 $label = $this->mapping[$label];
                 $row->setMetadata('segment', $this->segment . '==' . urlencode($label));

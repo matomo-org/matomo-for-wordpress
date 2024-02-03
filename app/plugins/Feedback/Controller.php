@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Piwik\Url;
 use Piwik\View;
 use Piwik\Version;
 use Piwik\Container\StaticContainer;
-
 class Controller extends \Piwik\Plugin\Controller
 {
     function index()

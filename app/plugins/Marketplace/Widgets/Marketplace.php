@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Plugins\Marketplace\Widgets;
 use Piwik\Piwik;
 use Piwik\Widget\Widget;
 use Piwik\Widget\WidgetConfig;
-
 class Marketplace extends Widget
 {
     public static function configure(WidgetConfig $config)

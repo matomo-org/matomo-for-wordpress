@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,7 +7,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\DevicesDetection;
 
 class Archiver extends \Piwik\Plugin\Archiver
@@ -20,7 +20,6 @@ class Archiver extends \Piwik\Plugin\Archiver
     const BROWSER_RECORD_NAME = 'DevicesDetection_browsers';
     const BROWSER_ENGINE_RECORD_NAME = 'DevicesDetection_browserEngines';
     const BROWSER_VERSION_RECORD_NAME = 'DevicesDetection_browserVersions';
-
     const DEVICE_TYPE_FIELD = "config_device_type";
     const DEVICE_BRAND_FIELD = "config_device_brand";
     const DEVICE_MODEL_FIELD = "CONCAT(log_visit.config_device_brand, ';', log_visit.config_device_model)";

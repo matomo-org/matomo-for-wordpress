@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,7 +9,6 @@
 namespace Piwik\Plugins\Diagnostics;
 
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
-
 /**
  * A diagnostic report contains all the results of all the diagnostics.
  */
@@ -18,27 +18,22 @@ class DiagnosticReport
      * @var DiagnosticResult[]
      */
     private $mandatoryDiagnosticResults;
-
     /**
      * @var DiagnosticResult[]
      */
     private $optionalDiagnosticResults;
-
     /**
      * @var DiagnosticResult[]
      */
     private $informationalResults;
-
     /**
      * @var int
      */
     private $errorCount = 0;
-
     /**
      * @var int
      */
     private $warningCount = 0;
-
     /**
      * @param DiagnosticResult[] $mandatoryDiagnosticResults
      * @param DiagnosticResult[] $optionalDiagnosticResults
@@ -49,10 +44,8 @@ class DiagnosticReport
         $this->mandatoryDiagnosticResults = $mandatoryDiagnosticResults;
         $this->optionalDiagnosticResults = $optionalDiagnosticResults;
         $this->informationalResults = $informationalResults;
-
         $this->computeErrorAndWarningCount();
     }
-
     /**
      * @return bool
      */
@@ -60,7 +53,6 @@ class DiagnosticReport
     {
         return $this->getErrorCount() > 0;
     }
-
     /**
      * @return bool
      */
@@ -68,7 +60,6 @@ class DiagnosticReport
     {
         return $this->getWarningCount() > 0;
     }
-
     /**
      * @return int
      */
@@ -76,7 +67,6 @@ class DiagnosticReport
     {
         return $this->errorCount;
     }
-
     /**
      * @return int
      */
@@ -84,7 +74,6 @@ class DiagnosticReport
     {
         return $this->warningCount;
     }
-
     /**
      * @return DiagnosticResult[]
      */
@@ -92,7 +81,6 @@ class DiagnosticReport
     {
         return array_merge($this->mandatoryDiagnosticResults, $this->optionalDiagnosticResults, $this->informationalResults);
     }
-
     /**
      * @return DiagnosticResult[]
      */
@@ -100,7 +88,6 @@ class DiagnosticReport
     {
         return $this->mandatoryDiagnosticResults;
     }
-
     /**
      * @return DiagnosticResult[]
      */
@@ -108,12 +95,10 @@ class DiagnosticReport
     {
         return $this->optionalDiagnosticResults;
     }
-
     public function getInformationalResults()
     {
         return $this->informationalResults;
     }
-
     private function computeErrorAndWarningCount()
     {
         foreach ($this->getAllResults() as $result) {

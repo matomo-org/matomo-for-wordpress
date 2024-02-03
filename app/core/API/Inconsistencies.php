@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -28,20 +29,6 @@ class Inconsistencies
      */
     public function getPercentMetricsToFormat()
     {
-        return array(
-            'bounce_rate',
-            'conversion_rate',
-            'abandoned_rate',
-            'interaction_rate',
-            'exit_rate',
-            'bounce_rate_returning',
-            'nb_visits_percentage',
-            '/.*_evolution/',
-            '/step_.*_rate/',
-            '/funnel_.*_rate/',
-            '/form_.*_rate/',
-            '/field_.*_rate/',
-            '/Referrers.*_percent/',
-        );
+        return array('bounce_rate', 'conversion_rate', 'abandoned_rate', 'interaction_rate', 'exit_rate', 'bounce_rate_returning', 'nb_visits_percentage', '/.*_evolution/', '/step_.*_rate/', '/funnel_.*_rate/', '/form_.*_rate/', '/field_.*_rate/', '/Referrers.*_percent/');
     }
 }

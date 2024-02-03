@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,29 +8,23 @@
  */
 namespace Piwik\Plugins\TagManager\Template\Trigger;
 
-
-class PageViewTrigger extends BaseTrigger
+class PageViewTrigger extends \Piwik\Plugins\TagManager\Template\Trigger\BaseTrigger
 {
     const ID = 'PageView';
-
     public function getId()
     {
         return self::ID;
     }
-
     public function getCategory()
     {
         return self::CATEGORY_PAGE_VIEW;
     }
-
     public function getIcon()
     {
         return 'plugins/TagManager/images/icons/pageview.svg';
     }
-
     public function getParameters()
     {
         return array();
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\Row;
-
 /**
  * Execute a callback for each row of a {@link DataTable} passing certain column values and metadata
  * as metadata, and replaces row metadata with the callback result.
@@ -23,7 +23,7 @@ use Piwik\DataTable\Row;
  *
  * @api
  */
-class MetadataCallbackReplace extends ColumnCallbackReplace
+class MetadataCallbackReplace extends \Piwik\DataTable\Filter\ColumnCallbackReplace
 {
     /**
      * Constructor.
@@ -38,12 +38,10 @@ class MetadataCallbackReplace extends ColumnCallbackReplace
      * @param array $extraColumnParameters Extra column values that should be passed to the callback, but
      *                                     shouldn't be replaced.
      */
-    public function __construct($table, $metadataToFilter, $functionToApply, $functionParameters = null,
-                                $extraColumnParameters = array())
+    public function __construct($table, $metadataToFilter, $functionToApply, $functionParameters = null, $extraColumnParameters = array())
     {
         parent::__construct($table, $metadataToFilter, $functionToApply, $functionParameters, $extraColumnParameters);
     }
-
     /**
      * @param Row $row
      * @param string $metadataToFilter
@@ -53,7 +51,6 @@ class MetadataCallbackReplace extends ColumnCallbackReplace
     {
         $row->setMetadata($metadataToFilter, $newValue);
     }
-
     /**
      * @param Row $row
      * @param string $metadataToFilter

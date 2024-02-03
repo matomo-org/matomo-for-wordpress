@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,20 +12,18 @@ namespace Piwik\Plugins\DevicesDetection\Reports;
 use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\DevicesDetection\Columns\DeviceBrand;
-
-class GetBrand extends Base
+class GetBrand extends \Piwik\Plugins\DevicesDetection\Reports\Base
 {
     protected function init()
     {
         parent::init();
-        $this->dimension     = new DeviceBrand();
-        $this->name          = Piwik::translate('DevicesDetection_DeviceBrand');
+        $this->dimension = new DeviceBrand();
+        $this->name = Piwik::translate('DevicesDetection_DeviceBrand');
         $this->documentation = Piwik::translate('DevicesDetection_DeviceBrandReportDocumentation');
         $this->order = 4;
         $this->hasGoalMetrics = true;
         $this->subcategoryId = 'DevicesDetection_Devices';
     }
-
     public function configureView(ViewDataTable $view)
     {
         $view->config->show_search = true;

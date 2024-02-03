@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Plugins\UserId\Reports;
 
 use Piwik\Plugin\Report;
 use Piwik\Url;
-
 abstract class Base extends Report
 {
     protected function init()

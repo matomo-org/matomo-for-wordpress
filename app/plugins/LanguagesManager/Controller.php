@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,7 +14,6 @@ use Piwik\Common;
 use Piwik\Nonce;
 use Piwik\Piwik;
 use Piwik\Url;
-
 /**
  */
 class Controller extends \Piwik\Plugin\ControllerAdmin
@@ -26,17 +26,13 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     {
         $language = Common::getRequestVar('language');
         $nonce = Common::getRequestVar('nonce', '');
-
-        Nonce::checkNonce(LanguagesManager::LANGUAGE_SELECTION_NONCE, $nonce);
-
-        LanguagesManager::setLanguageForSession($language);
+        Nonce::checkNonce(\Piwik\Plugins\LanguagesManager\LanguagesManager::LANGUAGE_SELECTION_NONCE, $nonce);
+        \Piwik\Plugins\LanguagesManager\LanguagesManager::setLanguageForSession($language);
         Url::redirectToReferrer();
     }
-
     public function searchTranslation()
     {
         Piwik::checkUserHasSomeAdminAccess();
-
         return $this->renderTemplate('searchTranslation');
     }
 }

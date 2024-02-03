@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,17 +8,14 @@
  */
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
-
-class HistoryHashNewVariable extends BaseDataLayerVariable
+class HistoryHashNewVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BaseDataLayerVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_HISTORY;
     }
-
     protected function getDataLayerVariableName()
     {
         return 'mtm.newUrlHash';
     }
-
 }

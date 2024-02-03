@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,15 +8,11 @@
  */
 namespace Piwik\Plugins\TagManager\Model;
 
-
 use Piwik\Date;
 use Piwik\Site;
-
-
 class BaseModel
 {
     private $now;
-
     /**
      * @ignore tests only
      * @param string $now
@@ -24,7 +21,6 @@ class BaseModel
     {
         $this->now = $now;
     }
-
     protected function getCurrentDateTime()
     {
         if (isset($this->now)) {
@@ -32,11 +28,9 @@ class BaseModel
         }
         return Date::now()->getDatetime();
     }
-
     protected function formatDate($date, $idSite)
     {
         $timezone = Site::getTimezoneFor($idSite);
         return Date::factory($date, $timezone)->getLocalized(Date::DATETIME_FORMAT_SHORT);
     }
 }
-

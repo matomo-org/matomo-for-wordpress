@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\Referrers\Columns;
 
 use Piwik\Columns\Dimension;
-
 class Referrer extends Dimension
 {
     protected $type = self::TYPE_TEXT;

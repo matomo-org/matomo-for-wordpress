@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Plugins\Ecommerce\Columns;
 
 use Piwik\Plugin\Dimension\ConversionDimension;
 use Piwik\Tracker\GoalManager;
-
 abstract class BaseConversion extends ConversionDimension
 {
     /**
@@ -24,13 +24,10 @@ abstract class BaseConversion extends ConversionDimension
         if (false === $revenue) {
             return false;
         }
-
         if (round($revenue) == $revenue) {
             return $revenue;
         }
-
         $value = round($revenue, GoalManager::REVENUE_PRECISION);
-
         return $value;
     }
 }

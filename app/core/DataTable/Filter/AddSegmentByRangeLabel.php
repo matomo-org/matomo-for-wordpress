@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\DataTable\Filter;
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
 use Piwik\Development;
-
 /**
  * Executes a filter for each row of a {@link DataTable} and generates a segment filter for each row.
  *
@@ -26,7 +26,6 @@ class AddSegmentByRangeLabel extends BaseFilter
     private $segments;
     private $delimiter;
     private $segment;
-
     /**
      * Generates a segment filter based on the label column and the given segment name
      *
@@ -36,10 +35,8 @@ class AddSegmentByRangeLabel extends BaseFilter
     public function __construct($table, $segment)
     {
         parent::__construct($table);
-
-        $this->segment   = $segment;
+        $this->segment = $segment;
     }
-
     /**
      * @param DataTable $table
      */
@@ -50,35 +47,27 @@ class AddSegmentByRangeLabel extends BaseFilter
             Development::error($msg);
             return;
         }
-
         foreach ($table->getRowsWithoutSummaryRow() as $key => $row) {
             $label = $row->getColumn('label');
-
             if (empty($label)) {
                 return;
             }
-
             if ($label === 'General_NewVisits') {
                 $row->setMetadata('segment', 'visitorType==new');
                 continue;
             }
-
             // if there's more than one element, handle as a range w/ an upper bound
             if (strpos($label, "-") !== false) {
                 // get the range
                 sscanf($label, "%d - %d", $lowerBound, $upperBound);
-
                 if ($lowerBound == $upperBound) {
                     $row->setMetadata('segment', $this->segment . '==' . urlencode($lowerBound));
                 } else {
-                    $row->setMetadata('segment', $this->segment . '>=' . urlencode($lowerBound) . ';' .
-                                                              $this->segment . '<=' . urlencode($upperBound));
+                    $row->setMetadata('segment', $this->segment . '>=' . urlencode($lowerBound) . ';' . $this->segment . '<=' . urlencode($upperBound));
                 }
-            } // if there's one element, handle as a range w/ no upper bound
-            else {
+            } else {
                 // get the lower bound
                 sscanf($label, "%d", $lowerBound);
-
                 if ($lowerBound !== null) {
                     $row->setMetadata('segment', $this->segment . '>=' . urlencode($lowerBound));
                 }

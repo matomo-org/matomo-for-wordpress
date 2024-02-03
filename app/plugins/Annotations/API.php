@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,12 +12,10 @@ namespace Piwik\Plugins\Annotations;
 use Exception;
 use Piwik\Date;
 use Piwik\Piwik;
-
 /**
  * @see plugins/Annotations/AnnotationList.php
  */
 require_once PIWIK_INCLUDE_PATH . '/plugins/Annotations/AnnotationList.php';
-
 /**
  * API for annotations plugin. Provides methods to create, modify, delete & query
  * annotations.
@@ -41,16 +40,12 @@ class API extends \Piwik\Plugin\API
         $this->checkUserCanAddNotesFor($idSite);
         $this->checkSingleIdSite($idSite, $extraMessage = "Note: Cannot add one note to multiple sites.");
         $this->checkDateIsValid($date);
-
         // add, save & return a new annotation
-        $annotations = new AnnotationList($idSite);
-
+        $annotations = new \Piwik\Plugins\Annotations\AnnotationList($idSite);
         $newAnnotation = $annotations->add($idSite, $date, $note, $starred);
         $annotations->save($idSite);
-
         return $newAnnotation;
     }
-
     /**
      * Modifies an annotation for a site and returns the modified annotation
      * and its ID.
@@ -77,20 +72,15 @@ class API extends \Piwik\Plugin\API
     {
         $this->checkSingleIdSite($idSite, $extraMessage = "Note: Cannot modify more than one note at a time.");
         $this->checkDateIsValid($date, $canBeNull = true);
-
         // get the annotations for the site
-        $annotations = new AnnotationList($idSite);
-
+        $annotations = new \Piwik\Plugins\Annotations\AnnotationList($idSite);
         // check permissions
         $this->checkUserCanModifyOrDelete($idSite, $annotations->get($idSite, $idNote));
-
         // modify the annotation, and save the whole list
         $annotations->update($idSite, $idNote, $date, $note, $starred);
         $annotations->save($idSite);
-
         return $annotations->get($idSite, $idNote);
     }
-
     /**
      * Removes an annotation from a site's list of annotations.
      *
@@ -106,17 +96,13 @@ class API extends \Piwik\Plugin\API
     public function delete($idSite, $idNote)
     {
         $this->checkSingleIdSite($idSite, $extraMessage = "Note: Cannot delete annotations from multiple sites.");
-
-        $annotations = new AnnotationList($idSite);
-
+        $annotations = new \Piwik\Plugins\Annotations\AnnotationList($idSite);
         // check permissions
         $this->checkUserCanModifyOrDelete($idSite, $annotations->get($idSite, $idNote));
-
         // remove the note & save the list
         $annotations->remove($idSite, $idNote);
         $annotations->save($idSite);
     }
-
     /**
      * Removes all annotations for a single site. Only super users can use this method.
      *
@@ -125,16 +111,12 @@ class API extends \Piwik\Plugin\API
     public function deleteAll($idSite)
     {
         Piwik::checkUserHasSuperUserAccess();
-
         $this->checkSingleIdSite($idSite, $extraMessage = "Note: Cannot delete annotations from multiple sites.");
-
-        $annotations = new AnnotationList($idSite);
-
+        $annotations = new \Piwik\Plugins\Annotations\AnnotationList($idSite);
         // remove the notes & save the list
         $annotations->removeAll($idSite);
         $annotations->save($idSite);
     }
-
     /**
      * Returns a single note for one site.
      *
@@ -151,14 +133,11 @@ class API extends \Piwik\Plugin\API
     public function get($idSite, $idNote)
     {
         Piwik::checkUserHasViewAccess($idSite);
-
         $this->checkSingleIdSite($idSite, $extraMessage = "Note: Specify only one site ID when getting ONE note.");
-
         // get single annotation
-        $annotations = new AnnotationList($idSite);
+        $annotations = new \Piwik\Plugins\Annotations\AnnotationList($idSite);
         return $annotations->get($idSite, $idNote);
     }
-
     /**
      * Returns every annotation for a specific site within a specific date range.
      * The date range is specified by a date, the period type (day/week/month/year)
@@ -182,15 +161,11 @@ class API extends \Piwik\Plugin\API
     public function getAll($idSite, $date = false, $period = 'day', $lastN = false)
     {
         Piwik::checkUserHasViewAccess($idSite);
-
-        $annotations = new AnnotationList($idSite);
-
+        $annotations = new \Piwik\Plugins\Annotations\AnnotationList($idSite);
         // if date/period are supplied, determine start/end date for search
-        list($startDate, $endDate) = Annotations::getDateRangeForPeriod($date, $period, $lastN);
-
+        list($startDate, $endDate) = \Piwik\Plugins\Annotations\Annotations::getDateRangeForPeriod($date, $period, $lastN);
         return $annotations->search($startDate, $endDate);
     }
-
     /**
      * Returns the count of annotations for a list of periods, including the count of
      * starred annotations.
@@ -219,13 +194,11 @@ class API extends \Piwik\Plugin\API
     public function getAnnotationCountForDates($idSite, $date, $period, $lastN = false, $getAnnotationText = false)
     {
         Piwik::checkUserHasViewAccess($idSite);
-
         // get start & end date for request. lastN is ignored if $period == 'range'
-        list($startDate, $endDate) = Annotations::getDateRangeForPeriod($date, $period, $lastN);
+        list($startDate, $endDate) = \Piwik\Plugins\Annotations\Annotations::getDateRangeForPeriod($date, $period, $lastN);
         if ($period == 'range') {
             $period = 'day';
         }
-
         // create list of dates
         $dates = array();
         for (; $startDate->getTimestamp() <= $endDate->getTimestamp(); $startDate = $startDate->addPeriod(1, $period)) {
@@ -233,33 +206,24 @@ class API extends \Piwik\Plugin\API
         }
         // we add one for the end of the last period (used in for loop below to bound annotation dates)
         $dates[] = $startDate;
-
         // get annotations for the site
-        $annotations = new AnnotationList($idSite);
-
+        $annotations = new \Piwik\Plugins\Annotations\AnnotationList($idSite);
         // create result w/ 0-counts
         $result = array();
         for ($i = 0; $i != count($dates) - 1; ++$i) {
             $date = $dates[$i];
             $nextDate = $dates[$i + 1];
             $strDate = $date->toString();
-
             foreach ($annotations->getIdSites() as $idSite) {
                 $result[$idSite][$strDate] = $annotations->count($idSite, $date, $nextDate);
-
                 // if only one annotation, return the one annotation's text w/ the counts
-                if ($getAnnotationText
-                    && $result[$idSite][$strDate]['count'] == 1
-                ) {
-                    $annotationsForSite = $annotations->search(
-                        $date, Date::factory($nextDate->getTimestamp() - 1), $idSite);
+                if ($getAnnotationText && $result[$idSite][$strDate]['count'] == 1) {
+                    $annotationsForSite = $annotations->search($date, Date::factory($nextDate->getTimestamp() - 1), $idSite);
                     $annotation = reset($annotationsForSite[$idSite]);
-
                     $result[$idSite][$strDate]['note'] = $annotation['note'];
                 }
             }
         }
-
         // convert associative array into array of pairs (so it can be traversed by index)
         $pairResult = array();
         foreach ($result as $idSite => $counts) {
@@ -269,7 +233,6 @@ class API extends \Piwik\Plugin\API
         }
         return $pairResult;
     }
-
     /**
      * Throws if the current user is not allowed to modify or delete an annotation.
      *
@@ -283,7 +246,6 @@ class API extends \Piwik\Plugin\API
             throw new Exception(Piwik::translate('Annotations_YouCannotModifyThisNote'));
         }
     }
-
     /**
      * Throws if the current user is not allowed to create annotations for a site.
      *
@@ -293,11 +255,10 @@ class API extends \Piwik\Plugin\API
      */
     private static function checkUserCanAddNotesFor($idSite)
     {
-        if (!AnnotationList::canUserAddNotesFor($idSite)) {
-            throw new Exception("The current user is not allowed to add notes for site #$idSite.");
+        if (!\Piwik\Plugins\Annotations\AnnotationList::canUserAddNotesFor($idSite)) {
+            throw new Exception("The current user is not allowed to add notes for site #{$idSite}.");
         }
     }
-
     /**
      * Utility function, makes sure idSite string has only one site ID and throws if
      * otherwise.
@@ -306,22 +267,18 @@ class API extends \Piwik\Plugin\API
     {
         // can only add a note to one site
         if (!is_numeric($idSite)) {
-            throw new Exception("Invalid idSite: '$idSite'. $extraMessage");
+            throw new Exception("Invalid idSite: '{$idSite}'. {$extraMessage}");
         }
     }
-
     /**
      * Utility function, makes sure date string is valid date, and throws if
      * otherwise.
      */
     private function checkDateIsValid($date, $canBeNull = false)
     {
-        if ($date === null
-            && $canBeNull
-        ) {
+        if ($date === null && $canBeNull) {
             return;
         }
-
         Date::factory($date);
     }
 }

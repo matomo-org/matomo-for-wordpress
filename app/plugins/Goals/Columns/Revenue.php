@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\Goals\Columns;
 
 use Piwik\Plugin\Dimension\ConversionDimension;
-
 class Revenue extends ConversionDimension
 {
     protected $columnName = 'revenue';

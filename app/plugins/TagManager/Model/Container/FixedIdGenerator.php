@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,17 +11,15 @@ namespace Piwik\Plugins\TagManager\Model\Container;
 /**
  * @ignore for tests only
  */
-class FixedIdGenerator implements ContainerIdGenerator
+class FixedIdGenerator implements \Piwik\Plugins\TagManager\Model\Container\ContainerIdGenerator
 {
     /**
      * @var string
      */
     private $startId = 0;
-
     public function generateId()
     {
         $this->startId++;
         return 'aaatest' . $this->startId;
     }
 }
-

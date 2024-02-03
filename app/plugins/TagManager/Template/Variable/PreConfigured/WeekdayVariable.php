@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,12 +9,10 @@
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
 use Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BasePreConfiguredVariable;
-
 class WeekdayVariable extends BasePreConfiguredVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_DATE;
     }
-
 }

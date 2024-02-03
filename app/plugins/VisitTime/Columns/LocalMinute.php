@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,9 +13,7 @@ use Piwik\Columns\DimensionMetricFactory;
 use Piwik\Columns\MetricsList;
 use Piwik\Metrics\Formatter;
 use Piwik\Plugin\Dimension\VisitDimension;
-
 require_once PIWIK_INCLUDE_PATH . '/plugins/VisitTime/functions.php';
-
 class LocalMinute extends VisitDimension
 {
     protected $columnName = 'visitor_localtime';
@@ -23,19 +22,16 @@ class LocalMinute extends VisitDimension
     protected $nameSingular = 'VisitTime_ColumnLocalMinute';
     protected $sqlSegment = 'MINUTE(log_visit.visitor_localtime)';
     protected $acceptValues = '0, 1, 2, 3, ..., 67, 57, 58, 59';
-
     public function __construct()
     {
         $this->suggestedValuesCallback = function ($idSite, $maxValuesToReturn) {
             return range(0, min(59, $maxValuesToReturn));
         };
     }
-
     public function configureMetrics(MetricsList $metricsList, DimensionMetricFactory $dimensionMetricFactory)
     {
         // no metrics for this dimension
     }
-
     public function formatValue($value, $idSite, Formatter $formatter)
     {
         return $value;

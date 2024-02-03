@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,7 +14,6 @@ use Piwik\Piwik;
 use Piwik\ProxyHttp;
 use Piwik\Plugins\CoreHome\SystemSummary;
 use Piwik\Settings\Storage\Backend\PluginSettingsTable;
-
 /**
  *
  */
@@ -24,17 +24,8 @@ class CoreAdminHome extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array(
-            'AssetManager.getStylesheetFiles' => 'getStylesheetFiles',
-            'AssetManager.getJavaScriptFiles' => 'getJsFiles',
-            'UsersManager.deleteUser'         => 'cleanupUser',
-            'API.DocumentationGenerator.@hideExceptForSuperUser' => 'displayOnlyForSuperUser',
-            'Template.jsGlobalVariables' => 'addJsGlobalVariables',
-            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
-            'System.addSystemSummaryItems' => 'addSystemSummaryItems',
-        );
+        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'UsersManager.deleteUser' => 'cleanupUser', 'API.DocumentationGenerator.@hideExceptForSuperUser' => 'displayOnlyForSuperUser', 'Template.jsGlobalVariables' => 'addJsGlobalVariables', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'System.addSystemSummaryItems' => 'addSystemSummaryItems');
     }
-
     public function addSystemSummaryItems(&$systemSummary)
     {
         if (Piwik::isUserHasSomeAdminAccess()) {
@@ -47,12 +38,10 @@ class CoreAdminHome extends \Piwik\Plugin
             $systemSummary[] = new SystemSummary\Item($key = 'trackingfailures', Piwik::translate('CoreAdminHome_NTrackingFailures', $numFailures), $value = null, array('module' => 'CoreAdminHome', 'action' => 'trackingFailures'), $icon, $order = 9);
         }
     }
-
     public function cleanupUser($userLogin)
     {
         PluginSettingsTable::removeAllUserSettingsForUser($userLogin);
     }
-
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "node_modules/jquery-ui-dist/jquery-ui.min.css";
@@ -63,7 +52,6 @@ class CoreAdminHome extends \Piwik\Plugin
         $stylesheets[] = "plugins/CoreAdminHome/stylesheets/whatIsNew.less";
         $stylesheets[] = "plugins/CoreAdminHome/stylesheets/trackingCodeGenerator.less";
     }
-
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = "node_modules/jquery/dist/jquery.min.js";
@@ -73,12 +61,10 @@ class CoreAdminHome extends \Piwik\Plugin
         $jsFiles[] = "plugins/CoreHome/javascripts/broadcast.js";
         $jsFiles[] = "plugins/CoreAdminHome/javascripts/protocolCheck.js";
     }
-
     public function displayOnlyForSuperUser(&$hide)
     {
         $hide = !Piwik::hasUserSuperUserAccess();
     }
-
     public function addJsGlobalVariables(&$out)
     {
         if (ProxyHttp::isHttps()) {
@@ -86,10 +72,8 @@ class CoreAdminHome extends \Piwik\Plugin
         } else {
             $isHttps = 'false';
         }
-
-        $out .= "piwik.hasServerDetectedHttps = $isHttps;\n";
+        $out .= "piwik.hasServerDetectedHttps = {$isHttps};\n";
     }
-
     public function getClientSideTranslationKeys(&$translationKeys)
     {
         $translationKeys[] = 'CoreAdminHome_ProtocolNotDetectedCorrectly';

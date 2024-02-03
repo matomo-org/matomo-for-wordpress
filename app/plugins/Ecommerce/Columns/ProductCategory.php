@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -16,36 +17,29 @@ use Piwik\Plugin\Segment;
 use Piwik\Segment\SegmentsList;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\TableLogAction;
-
 class ProductCategory extends Dimension
 {
     const PRODUCT_CATEGORY_COUNT = 5;
-
     protected $type = self::TYPE_TEXT;
     protected $category = 'Goals_Ecommerce';
     protected $nameSingular = 'Goals_ProductCategory';
-
     public function getDbColumnJoin()
     {
         return new ActionNameJoin();
     }
-
     public function getDbDiscriminator()
     {
         return new Discriminator('log_action', 'type', Action::TYPE_ECOMMERCE_ITEM_CATEGORY);
     }
-
     public function configureSegments(SegmentsList $segmentsList, DimensionSegmentFactory $dimensionSegmentFactory)
     {
         $individualProductCategorySegments = $this->getProductCategorySegments(self::PRODUCT_CATEGORY_COUNT);
-
         // add individual productCategoryN segments for use as a union (these segments are not available through the UI/API)
         foreach ($individualProductCategorySegments as $i => $productCategoryName) {
             $productCategoryColumnName = 'idaction_category';
             if ($i > 0) {
                 $productCategoryColumnName .= $i + 1;
             }
-
             $segment = new Segment();
             $segment->setCategory($this->category);
             $segment->setType('dimension');
@@ -56,7 +50,6 @@ class ProductCategory extends Dimension
             $segment->setIsInternal(true);
             $segmentsList->addSegment($dimensionSegmentFactory->createSegment($segment));
         }
-
         // add a union of these individual columns as productCategory
         $segment = new Segment();
         $segment->setCategory($this->category);
@@ -66,7 +59,6 @@ class ProductCategory extends Dimension
         $segment->setUnionOfSegments($individualProductCategorySegments);
         $segmentsList->addSegment($dimensionSegmentFactory->createSegment($segment));
     }
-
     private function getProductCategorySegments($categoryCount)
     {
         $result = [];

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,19 +11,16 @@ namespace Piwik\Plugins\VisitTime\Reports;
 
 use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Bar;
-
 abstract class Base extends \Piwik\Plugin\Report
 {
     protected function init()
     {
         $this->categoryId = 'General_Visitors';
     }
-
     public function getDefaultTypeViewDataTable()
     {
         return Bar::ID;
     }
-
     /**
      * @param ViewDataTable $view
      */

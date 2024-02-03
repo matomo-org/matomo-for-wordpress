@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -20,7 +21,6 @@ class Archiver extends \Piwik\Plugin\Archiver
     const SITE_SEARCH_RECORD_NAME = 'Actions_sitesearch';
     const SITE_SEARCH_CATEGORY_RECORD_NAME = 'Actions_SiteSearchCategories';
     const PAGE_URLS_RECORD_NAME = 'Actions_actions_url';
-
     const METRIC_PAGEVIEWS_RECORD_NAME = 'Actions_nb_pageviews';
     const METRIC_UNIQ_PAGEVIEWS_RECORD_NAME = 'Actions_nb_uniq_pageviews';
     const METRIC_SUM_TIME_RECORD_NAME = 'Actions_sum_time_generation';

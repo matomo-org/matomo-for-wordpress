@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,6 +9,6 @@
  */
 namespace Piwik\Exception;
 
-class StylesheetLessCompileException extends Exception
+class StylesheetLessCompileException extends \Piwik\Exception\Exception
 {
 }

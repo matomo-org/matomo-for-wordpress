@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,31 +13,24 @@ use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\Actions\Columns\DestinationPage;
 use Piwik\Plugin\ReportsProvider;
-
-class GetPageUrlsFollowingSiteSearch extends GetPageTitlesFollowingSiteSearch
+class GetPageUrlsFollowingSiteSearch extends \Piwik\Plugins\Actions\Reports\GetPageTitlesFollowingSiteSearch
 {
     protected function init()
     {
         parent::init();
-        $this->dimension     = new DestinationPage();
-        $this->name          = Piwik::translate('Actions_WidgetPageUrlsFollowingSearch');
+        $this->dimension = new DestinationPage();
+        $this->name = Piwik::translate('Actions_WidgetPageUrlsFollowingSearch');
         $this->documentation = Piwik::translate('Actions_SiteSearchFollowingPagesDoc') . '<br/>' . Piwik::translate('General_UsePlusMinusIconsDocumentation');
         $this->order = 16;
-
         $this->subcategoryId = 'Actions_SubmenuSitesearch';
     }
-
     public function configureView(ViewDataTable $view)
     {
         $title = Piwik::translate('Actions_WidgetPageTitlesFollowingSearch');
-
         $this->configureViewForUrlAndTitle($view, $title);
     }
-
     public function getRelatedReports()
     {
-        return array(
-            ReportsProvider::factory('Actions', 'getPageTitlesFollowingSiteSearch'),
-        );
+        return array(ReportsProvider::factory('Actions', 'getPageTitlesFollowingSiteSearch'));
     }
 }

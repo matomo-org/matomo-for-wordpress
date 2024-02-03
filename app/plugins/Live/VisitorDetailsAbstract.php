@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Plugins\Live;
 
 use Piwik\DataTable;
 use Piwik\Db;
-
 /**
  * Class VisitorDetailsAbstract
  *
@@ -26,7 +26,6 @@ abstract class VisitorDetailsAbstract
      * @var array
      */
     protected $details = array();
-
     /**
      * Set details of current visit
      *
@@ -37,7 +36,6 @@ abstract class VisitorDetailsAbstract
     {
         $this->details = $details;
     }
-
     /**
      * Makes it possible to extend the visitor details returned from API
      *
@@ -56,7 +54,6 @@ abstract class VisitorDetailsAbstract
     public function extendVisitorDetails(&$visitor)
     {
     }
-
     /**
      * Makes it possible to enrich the action set for a single visit
      *
@@ -73,7 +70,6 @@ abstract class VisitorDetailsAbstract
     public function provideActionsForVisit(&$actions, $visitorDetails)
     {
     }
-
     /**
      * Makes it possible to enrich the action set for multiple visits identified by given visit ids
      *
@@ -102,7 +98,6 @@ abstract class VisitorDetailsAbstract
     public function provideActionsForVisitIds(&$actions, $visitIds)
     {
     }
-
     /**
      * Allows filtering the provided actions
      *
@@ -123,7 +118,6 @@ abstract class VisitorDetailsAbstract
     public function filterActions(&$actions, $visitorDetailsArray)
     {
     }
-
     /**
      * Allows extending each action with additional information
      *
@@ -142,7 +136,6 @@ abstract class VisitorDetailsAbstract
     public function extendActionDetails(&$action, $nextAction, $visitorDetails)
     {
     }
-
     /**
      * Called when rendering a single Action
      *
@@ -170,7 +163,6 @@ abstract class VisitorDetailsAbstract
     {
         return '';
     }
-
     /**
      * Called for rendering the tooltip on actions
      * returned array needs to look like this:
@@ -202,7 +194,6 @@ abstract class VisitorDetailsAbstract
     {
         return [];
     }
-
     /**
      * Called when rendering the Icons in visits log
      *
@@ -222,7 +213,6 @@ abstract class VisitorDetailsAbstract
     {
         return '';
     }
-
     /**
      * Called when rendering the visitor details in visits log
      * returned array needs to look like this:
@@ -246,7 +236,6 @@ abstract class VisitorDetailsAbstract
     {
         return [];
     }
-
     /**
      * Allows manipulating the visitor profile properties
      * Will be called when visitor profile is initialized
@@ -265,7 +254,6 @@ abstract class VisitorDetailsAbstract
     public function initProfile($visits, &$profile)
     {
     }
-
     /**
      * Allows manipulating the visitor profile properties based on included visits
      * Will be called for every action within the profile
@@ -282,7 +270,6 @@ abstract class VisitorDetailsAbstract
     public function handleProfileVisit($visit, &$profile)
     {
     }
-
     /**
      * Allows manipulating the visitor profile properties based on included actions
      * Will be called for every action within the profile
@@ -304,7 +291,6 @@ abstract class VisitorDetailsAbstract
     public function handleProfileAction($action, &$profile)
     {
     }
-
     /**
      * Will be called after iterating over all actions
      * Can be used to set profile information that requires data that was set while iterating over visits & actions
@@ -325,7 +311,6 @@ abstract class VisitorDetailsAbstract
     public function finalizeProfile($visits, &$profile)
     {
     }
-
     /**
      * @since Matomo 3.12
      * @return Db|Db\AdapterInterface

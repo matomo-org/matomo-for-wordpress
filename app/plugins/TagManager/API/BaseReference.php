@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,7 +14,6 @@ class BaseReference
     protected $referenceName;
     protected $referenceTypeName;
     protected $referenceType;
-
     public function __construct($referenceId, $referenceName, $referenceType, $referenceTypeName)
     {
         $this->referenceId = $referenceId;
@@ -21,16 +21,8 @@ class BaseReference
         $this->referenceTypeName = $referenceTypeName;
         $this->referenceName = $referenceName;
     }
-
     public function toArray()
     {
-        return array(
-            'referenceId' => $this->referenceId,
-            'referenceType' => $this->referenceType,
-            'referenceTypeName' => $this->referenceTypeName,
-            'referenceName' => $this->referenceName
-        );
+        return array('referenceId' => $this->referenceId, 'referenceType' => $this->referenceType, 'referenceTypeName' => $this->referenceTypeName, 'referenceName' => $this->referenceName);
     }
-
-
 }

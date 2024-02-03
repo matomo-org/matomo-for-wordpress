@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\UserId\Columns;
 
 use Piwik\Plugin\Dimension\VisitDimension;
-
 /**
  * UserId dimension
  */

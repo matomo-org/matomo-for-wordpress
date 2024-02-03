@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,37 +9,30 @@
 namespace Piwik\Plugins\TagManager\Template\Trigger;
 
 use Piwik\Plugins\TagManager\Template\Trigger\BaseTrigger;
-
 class UserInteractionTrigger extends BaseTrigger
 {
     public function getCategory()
     {
         return self::CATEGORY_USER_ENGAGEMENT;
     }
-
     public function getName()
     {
         return parent::getName();
     }
-
     public function getDescription()
     {
         return parent::getDescription();
     }
-
     public function getHelp()
     {
         return parent::getHelp();
     }
-
     public function getIcon()
     {
         return 'plugins/TagManager/images/icons/interaction.svg';
     }
-
     public function getParameters()
     {
         return array();
     }
-
 }

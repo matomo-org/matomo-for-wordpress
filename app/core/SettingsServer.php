@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -25,11 +26,8 @@ class SettingsServer
      */
     public static function isArchivePhpTriggered()
     {
-        return !empty($_GET['trigger'])
-                && $_GET['trigger'] == 'archivephp'
-                && Piwik::hasUserSuperUserAccess();
+        return !empty($_GET['trigger']) && $_GET['trigger'] == 'archivephp' && \Piwik\Piwik::hasUserSuperUserAccess();
     }
-
     /**
      * Returns true if the current request is a Tracker request.
      *
@@ -39,7 +37,6 @@ class SettingsServer
     {
         return !empty($GLOBALS['PIWIK_TRACKER_MODE']);
     }
-
     /**
      * Mark the current request as a Tracker API request
      */
@@ -47,7 +44,6 @@ class SettingsServer
     {
         $GLOBALS['PIWIK_TRACKER_MODE'] = true;
     }
-
     /**
      * Set the current request is not a tracker API request
      */
@@ -55,7 +51,6 @@ class SettingsServer
     {
         $GLOBALS['PIWIK_TRACKER_MODE'] = false;
     }
-
     /**
      * Returns true if Matomo is running within Matomo for WordPress.
      *
@@ -64,9 +59,8 @@ class SettingsServer
      */
     public static function isMatomoForWordPress()
     {
-        return defined( 'ABSPATH') && function_exists('\add_action');
+        return defined('ABSPATH') && function_exists('\\add_action');
     }
-
     /**
      * Returns `true` if running on Microsoft IIS 7 (or above), `false` if otherwise.
      *
@@ -75,13 +69,9 @@ class SettingsServer
      */
     public static function isIIS()
     {
-        $iis = isset($_SERVER['SERVER_SOFTWARE']) &&
-            preg_match('/^Microsoft-IIS\/(.+)/', $_SERVER['SERVER_SOFTWARE'], $matches) &&
-            version_compare($matches[1], '7') >= 0;
-
+        $iis = isset($_SERVER['SERVER_SOFTWARE']) && preg_match('/^Microsoft-IIS\\/(.+)/', $_SERVER['SERVER_SOFTWARE'], $matches) && version_compare($matches[1], '7') >= 0;
         return $iis;
     }
-
     /**
      * Returns `true` if running on a Windows operating system, `false` if otherwise.
      *
@@ -96,7 +86,6 @@ class SettingsServer
         }
         return PHP_OS_FAMILY === "Windows";
     }
-
     /**
      * Returns `true` if this PHP version/build supports timezone manipulation
      * (e.g., php >= 5.2, or compiled with **EXPERIMENTAL_DATE_SUPPORT=1** for
@@ -107,14 +96,8 @@ class SettingsServer
      */
     public static function isTimezoneSupportEnabled()
     {
-        return
-            function_exists('date_create') &&
-            function_exists('date_default_timezone_set') &&
-            function_exists('timezone_identifiers_list') &&
-            function_exists('timezone_open') &&
-            function_exists('timezone_offset_get');
+        return function_exists('date_create') && function_exists('date_default_timezone_set') && function_exists('timezone_identifiers_list') && function_exists('timezone_open') && function_exists('timezone_offset_get');
     }
-
     /**
      * Returns `true` if the GD PHP extension is available, `false` if otherwise.
      *
@@ -128,16 +111,13 @@ class SettingsServer
         static $gd = null;
         if (is_null($gd)) {
             $gd = false;
-
             $extensions = @get_loaded_extensions();
             if (is_array($extensions)) {
                 $gd = in_array('gd', $extensions) && function_exists('imageftbbox');
             }
         }
-
         return $gd;
     }
-
     /**
      * Raise PHP memory limit if below the minimum required
      *
@@ -147,18 +127,16 @@ class SettingsServer
     {
         if (self::isArchivePhpTriggered()) {
             // core:archive command: no time limit
-            self::setMaxExecutionTime( 0 );
+            self::setMaxExecutionTime(0);
         }
-
         $memoryLimit = self::getMemoryLimitValue();
         if ($memoryLimit === false) {
             return false;
         }
-        $minimumMemoryLimit = Config::getInstance()->General['minimum_memory_limit'];
-
+        $minimumMemoryLimit = \Piwik\Config::getInstance()->General['minimum_memory_limit'];
         if (self::isArchivePhpTriggered()) {
             // core:archive command:  high memory limit
-            $minimumMemoryLimitWhenArchiving = Config::getInstance()->General['minimum_memory_limit_when_archiving'];
+            $minimumMemoryLimitWhenArchiving = \Piwik\Config::getInstance()->General['minimum_memory_limit_when_archiving'];
             if ($memoryLimit < $minimumMemoryLimitWhenArchiving) {
                 return self::setMemoryLimit($minimumMemoryLimitWhenArchiving);
             }
@@ -169,7 +147,6 @@ class SettingsServer
         }
         return false;
     }
-
     /**
      * Set PHP memory limit
      *
@@ -182,14 +159,11 @@ class SettingsServer
     {
         // in Megabytes
         $currentValue = self::getMemoryLimitValue();
-        if ($currentValue === false
-            || ($currentValue < $minimumMemoryLimit && @ini_set('memory_limit', $minimumMemoryLimit . 'M'))
-        ) {
+        if ($currentValue === false || $currentValue < $minimumMemoryLimit && @ini_set('memory_limit', $minimumMemoryLimit . 'M')) {
             return true;
         }
         return false;
     }
-
     /**
      * Get php memory_limit (in Megabytes)
      *
@@ -203,11 +177,9 @@ class SettingsServer
         if (($memory = ini_get('memory_limit')) > 0) {
             return self::getMegaBytesFromShorthandByte($memory);
         }
-
         // no memory limit
         return false;
     }
-
     /**
      * Get php post_max_size (in Megabytes)
      *
@@ -218,11 +190,9 @@ class SettingsServer
         if (($maxPostSize = ini_get('post_max_size')) > 0) {
             return self::getMegaBytesFromShorthandByte($maxPostSize);
         }
-
         // no max upload size
         return false;
     }
-
     /**
      * @see http://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes
      * @param $value
@@ -231,7 +201,6 @@ class SettingsServer
     private static function getMegaBytesFromShorthandByte($value)
     {
         $value = str_replace(' ', '', $value);
-
         $shorthandByteOption = substr($value, -1);
         switch ($shorthandByteOption) {
             case 'G':
@@ -244,14 +213,11 @@ class SettingsServer
             case 'k':
                 return substr($value, 0, -1) / 1024;
         }
-
         if (is_numeric($value)) {
             return (int) $value / 1048576;
         }
-
         return false;
     }
-
     /**
      * Set maximum script execution time.
      *
@@ -265,7 +231,6 @@ class SettingsServer
             @set_time_limit($executionTime);
         }
     }
-
     public static function isMac()
     {
         return defined('PHP_OS') && PHP_OS === 'Darwin';

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,21 +7,15 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\DevicesDetection;
 
 require_once PIWIK_INCLUDE_PATH . '/plugins/DevicesDetection/functions.php';
-
 class DevicesDetection extends \Piwik\Plugin
 {
     public function registerEvents()
     {
-        return [
-            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
-            'AssetManager.getStylesheetFiles' => 'getStylesheetFiles',
-        ];
+        return ['Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles'];
     }
-
     public function getClientSideTranslationKeys(&$translations)
     {
         $translations[] = 'DevicesDetection_UserAgent';
@@ -42,7 +37,6 @@ class DevicesDetection extends \Piwik\Plugin
         $translations[] = 'DevicesDetection_ConsiderClientHints';
         $translations[] = 'DevicesDetection_ClientHintsNotSupported';
     }
-
     public function getStylesheetFiles(&$files)
     {
         $files[] = 'plugins/DevicesDetection/vue/src/DetectionPage/DetectionPage.less';

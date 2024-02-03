@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,12 +9,10 @@
  */
 namespace Piwik\Plugins\Live\Reports;
 
-
-class GetLastVisits extends Base
+class GetLastVisits extends \Piwik\Plugins\Live\Reports\Base
 {
     // this class only exists to disable the default sort column
     protected $defaultSortColumn = '';
-
     public function buildReportMetadata()
     {
         // do not add this report as metadata

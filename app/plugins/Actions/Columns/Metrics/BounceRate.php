@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Piwik\DataTable\Row;
 use Piwik\Metrics\Formatter;
 use Piwik\Piwik;
 use Piwik\Plugin\ProcessedMetric;
-
 /**
  * The bounce rate for individual pages. Calculated as:
  *
@@ -26,31 +26,25 @@ class BounceRate extends ProcessedMetric
     {
         return 'bounce_rate';
     }
-
     public function getTranslatedName()
     {
         return Piwik::translate('General_ColumnBounceRate');
     }
-
     public function compute(Row $row)
     {
         $entryBounceCount = $this->getMetric($row, 'entry_bounce_count');
         $entryVisits = $this->getMetric($row, 'entry_nb_visits');
-
         return Piwik::getQuotientSafe($entryBounceCount, $entryVisits, $precision = 2);
     }
-
     public function format($value, Formatter $formatter)
     {
         return $formatter->getPrettyPercentFromQuotient($value);
     }
-
     public function getDependentMetrics()
     {
         return array('entry_bounce_count', 'entry_nb_visits');
     }
-
-    public function getSemanticType(): ?string
+    public function getSemanticType() : ?string
     {
         return Dimension::TYPE_PERCENT;
     }

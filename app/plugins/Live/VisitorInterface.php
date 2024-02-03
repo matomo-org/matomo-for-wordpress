@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -14,7 +15,6 @@ interface VisitorInterface
      * @return array
      */
     public function getAllVisitorDetails();
-
     /**
      * @return string|bool
      */

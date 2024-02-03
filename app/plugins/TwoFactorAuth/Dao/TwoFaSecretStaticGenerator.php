@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,7 +8,7 @@
  */
 namespace Piwik\Plugins\TwoFactorAuth\Dao;
 
-class TwoFaSecretStaticGenerator extends TwoFaSecretRandomGenerator
+class TwoFaSecretStaticGenerator extends \Piwik\Plugins\TwoFactorAuth\Dao\TwoFaSecretRandomGenerator
 {
     public function generateSecret()
     {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,12 +7,10 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Settings\Storage;
 
 use Piwik\Settings\Storage\Backend\BackendInterface;
 use Piwik\SettingsServer;
-
 /**
  * Factory to create an instance of a storage. The storage can be created with different backends depending on the need.
  */
@@ -19,7 +18,6 @@ class Factory
 {
     // cache prevents multiple loading of storage
     private $cache = array();
-
     /**
      * Get a storage instance for plugin settings.
      *
@@ -33,15 +31,12 @@ class Factory
     public function getPluginStorage($pluginName, $userLogin)
     {
         $id = $pluginName . '#' . $userLogin;
-
         if (!isset($this->cache[$id])) {
-            $backend = new Backend\PluginSettingsTable($pluginName, $userLogin);
+            $backend = new \Piwik\Settings\Storage\Backend\PluginSettingsTable($pluginName, $userLogin);
             $this->cache[$id] = $this->makeStorage($backend);
         }
-
         return $this->cache[$id];
     }
-
     /**
      * @param string $section
      * @return mixed
@@ -50,13 +45,11 @@ class Factory
     {
         $id = 'config' . $section;
         if (!isset($this->cache[$id])) {
-            $backend = new Backend\Config($section);
+            $backend = new \Piwik\Settings\Storage\Backend\Config($section);
             $this->cache[$id] = $this->makeStorage($backend);
         }
-
         return $this->cache[$id];
     }
-
     /**
      * Get a storage instance for measurable settings.
      *
@@ -71,19 +64,15 @@ class Factory
     public function getMeasurableSettingsStorage($idSite, $pluginName)
     {
         $id = 'measurableSettings' . (int) $idSite . '#' . $pluginName;
-
         if (empty($idSite)) {
             return $this->getNonPersistentStorage($id . '#nonpersistent');
         }
-
         if (!isset($this->cache[$id])) {
-            $backend = new Backend\MeasurableSettingsTable($idSite, $pluginName);
+            $backend = new \Piwik\Settings\Storage\Backend\MeasurableSettingsTable($idSite, $pluginName);
             $this->cache[$id] = $this->makeStorage($backend);
         }
-
         return $this->cache[$id];
     }
-
     /**
      * Get a storage instance for settings that will be saved in the "site" table.
      *
@@ -99,19 +88,15 @@ class Factory
     public function getSitesTable($idSite)
     {
         $id = 'sitesTable#' . $idSite;
-
         if (empty($idSite)) {
             return $this->getNonPersistentStorage($id . '#nonpersistent');
         }
-
         if (!isset($this->cache[$id])) {
-            $backend = new Backend\SitesTable($idSite);
+            $backend = new \Piwik\Settings\Storage\Backend\SitesTable($idSite);
             $this->cache[$id] = $this->makeStorage($backend);
         }
-
         return $this->cache[$id];
     }
-
     /**
      * Get a storage with a backend that will never persist or load any value.
      *
@@ -120,9 +105,8 @@ class Factory
      */
     public function getNonPersistentStorage($key)
     {
-        return new Storage(new Backend\NullBackend($key));
+        return new \Piwik\Settings\Storage\Storage(new \Piwik\Settings\Storage\Backend\NullBackend($key));
     }
-
     /**
      * Makes a new storage object based on a custom backend interface.
      *
@@ -132,9 +116,8 @@ class Factory
     public function makeStorage(BackendInterface $backend)
     {
         if (SettingsServer::isTrackerApiRequest()) {
-            $backend = new Backend\Cache($backend);
+            $backend = new \Piwik\Settings\Storage\Backend\Cache($backend);
         }
-
-        return new Storage($backend);
+        return new \Piwik\Settings\Storage\Storage($backend);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -24,7 +25,6 @@ use Piwik\Plugin\ThemeStyles;
 use Piwik\SettingsPiwik;
 use Piwik\SettingsServer;
 use Piwik\Tracker\Model as TrackerModel;
-
 /**
  *
  */
@@ -36,90 +36,64 @@ class CoreHome extends \Piwik\Plugin
      * @api
      */
     const WIDGET_CONTAINER_LAYOUT_BY_DIMENSION = 'ByDimension';
-
     /**
      * @see \Piwik\Plugin::registerEvents
      */
     public function registerEvents()
     {
-        return array(
-            'AssetManager.getStylesheetFiles'        => 'getStylesheetFiles',
-            'AssetManager.getJavaScriptFiles'        => 'getJsFiles',
-            'AssetManager.filterMergedJavaScripts'   => 'filterMergedJavaScripts',
-            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
-            'Metric.addComputedMetrics'              => 'addComputedMetrics',
-            'Request.initAuthenticationObject' => ['function' => 'checkAllowedIpsOnAuthentication', 'before' => true],
-            'AssetManager.addStylesheets' => 'addStylesheets',
-            'Request.dispatchCoreAndPluginUpdatesScreen' => ['function' => 'checkAllowedIpsOnAuthentication', 'before' => true],
-            'Tracker.setTrackerCacheGeneral' => 'setTrackerCacheGeneral',
-        );
+        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.filterMergedJavaScripts' => 'filterMergedJavaScripts', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Metric.addComputedMetrics' => 'addComputedMetrics', 'Request.initAuthenticationObject' => ['function' => 'checkAllowedIpsOnAuthentication', 'before' => true], 'AssetManager.addStylesheets' => 'addStylesheets', 'Request.dispatchCoreAndPluginUpdatesScreen' => ['function' => 'checkAllowedIpsOnAuthentication', 'before' => true], 'Tracker.setTrackerCacheGeneral' => 'setTrackerCacheGeneral');
     }
-
     public function isTrackerPlugin()
     {
         return true;
     }
-
     public function setTrackerCacheGeneral(&$cacheGeneral)
     {
         /** @var ArchiveInvalidator $archiveInvalidator */
         $archiveInvalidator = StaticContainer::get(ArchiveInvalidator::class);
         $cacheGeneral[ArchiveInvalidator::TRACKER_CACHE_KEY] = $archiveInvalidator->getAllRememberToInvalidateArchivedReportsLater();
-
         $hasIndex = DbHelper::tableHasIndex(Common::prefixTable('log_visit'), 'index_idsite_idvisitor_time');
         $cacheGeneral[TrackerModel::CACHE_KEY_INDEX_IDSITE_IDVISITOR_TIME] = $hasIndex;
     }
-
     public function addStylesheets(&$mergedContent)
     {
         $themeStyles = ThemeStyles::get();
         $mergedContent = $themeStyles->toLessCode() . "\n" . $mergedContent;
     }
-
     public function checkAllowedIpsOnAuthentication()
     {
         if (SettingsServer::isTrackerApiRequest()) {
             // authenticated tracking requests should always work
             return;
         }
-
         $isApi = Piwik::getModule() === 'API' && (Piwik::getAction() == '' || Piwik::getAction() == 'index');
-
         if ($isApi) {
             // will be checked in API itself to make sure we return an API response in the proper format.
             return;
         }
-
-        $list = new LoginAllowlist();
+        $list = new \Piwik\Plugins\CoreHome\LoginAllowlist();
         if ($list->shouldCheckAllowlist()) {
             $ip = IP::getIpFromHeader();
             $list->checkIsAllowed($ip);
         }
     }
-
     public function addComputedMetrics(MetricsList $list, ComputedMetricFactory $computedMetricFactory)
     {
         $metrics = $list->getMetrics();
         foreach ($metrics as $metric) {
             if ($metric instanceof ArchivedMetric && $metric->getDimension()) {
                 $metricName = $metric->getName();
-                if ($metric->getDbTableName() === 'log_visit'
-                    && $metricName !== 'nb_uniq_visitors'
-                    && $metricName !== 'nb_visits'
-                    && strpos($metricName, ArchivedMetric::AGGREGATION_SUM_PREFIX) === 0
-                ) {
+                if ($metric->getDbTableName() === 'log_visit' && $metricName !== 'nb_uniq_visitors' && $metricName !== 'nb_visits' && strpos($metricName, ArchivedMetric::AGGREGATION_SUM_PREFIX) === 0) {
                     $metric = $computedMetricFactory->createComputedMetric($metric->getName(), 'nb_visits', ComputedMetric::AGGREGATION_AVG);
                     $list->addMetric($metric);
                 }
             }
         }
     }
-
     public function filterMergedJavaScripts(&$mergedContent)
     {
         $mergedContent = preg_replace('/(sourceMappingURL=(.*?).map)/', '', $mergedContent);
     }
-
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "node_modules/jquery-ui-dist/jquery-ui.min.css";
@@ -157,7 +131,6 @@ class CoreHome extends \Piwik\Plugin
         $stylesheets[] = "plugins/CoreHome/vue/src/Comparisons/Comparisons.less";
         $stylesheets[] = "plugins/CoreHome/stylesheets/vue-transitions.less";
     }
-
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = "node_modules/jquery/dist/jquery.min.js";
@@ -167,7 +140,6 @@ class CoreHome extends \Piwik\Plugin
         $jsFiles[] = "node_modules/jquery.scrollto/jquery.scrollTo.min.js";
         $jsFiles[] = "node_modules/sprintf-js/dist/sprintf.min.js";
         $jsFiles[] = "node_modules/mousetrap/mousetrap.min.js";
-
         $jsFiles[] = "plugins/Morpheus/javascripts/piwikHelper.js";
         $jsFiles[] = "plugins/Morpheus/javascripts/layout.js";
         $jsFiles[] = "plugins/CoreHome/javascripts/require.js";
@@ -185,14 +157,12 @@ class CoreHome extends \Piwik\Plugin
         $jsFiles[] = "plugins/CoreHome/javascripts/notification.js";
         $jsFiles[] = "plugins/CoreHome/javascripts/numberFormatter.js";
         $jsFiles[] = "plugins/CoreHome/javascripts/listingFormatter.js";
-
         // we have to load these CorePluginsAdmin files here. If we loaded them in CorePluginsAdmin,
         // there would be JS errors as CorePluginsAdmin is loaded first. Meaning it is loaded before
         // any Vue UMD file is loaded etc.
         $jsFiles[] = "node_modules/iframe-resizer/js/iframeResizer.min.js";
         $jsFiles[] = "node_modules/iframe-resizer/js/iframeResizer.contentWindow.min.js";
     }
-
     public function getClientSideTranslationKeys(&$translationKeys)
     {
         $translationKeys[] = 'General_Export';
@@ -395,13 +365,9 @@ class CoreHome extends \Piwik\Plugin
         $translationKeys[] = 'General_YouAreCurrentlyUsing';
         $translationKeys[] = 'General_Copy';
         $translationKeys[] = 'General_CopiedToClipboard';
-
         // add admin menu translations
-        if (SettingsPiwik::isMatomoInstalled()
-            && Common::getRequestVar('module', '') != 'CoreUpdater'
-            && Piwik::isUserHasSomeViewAccess()
-        ) {
-            Access::doAsSuperUser(function() use (&$translationKeys) {
+        if (SettingsPiwik::isMatomoInstalled() && Common::getRequestVar('module', '') != 'CoreUpdater' && Piwik::isUserHasSomeViewAccess()) {
+            Access::doAsSuperUser(function () use(&$translationKeys) {
                 $menu = MenuAdmin::getInstance()->getMenu();
                 foreach ($menu as $level1 => $level2) {
                     $translationKeys[] = $level1;

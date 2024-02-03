@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,13 +11,11 @@ namespace Piwik\Plugins\Live\Categories;
 
 use Piwik\Category\Subcategory;
 use Piwik\Piwik;
-
 class RealTimeVisitorsSubcategory extends Subcategory
 {
     protected $categoryId = 'General_Visitors';
     protected $id = 'General_RealTime';
     protected $order = 7;
-
     public function getHelp()
     {
         $result = '<p>' . Piwik::translate('Live_RealTimeHelp1') . '</p>';

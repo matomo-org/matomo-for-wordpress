@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,27 +12,22 @@ use Piwik\Piwik;
 use Piwik\Settings\FieldConfig;
 use Piwik\Validators\CharacterLength;
 use Piwik\Validators\NotEmpty;
-
-class JavaScriptVariable extends BaseVariable
+class JavaScriptVariable extends \Piwik\Plugins\TagManager\Template\Variable\BaseVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_PAGE_VARIABLES;
     }
-
     public function getParameters()
     {
-        return array(
-            $this->makeSetting('variableName', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
-                $field->title = Piwik::translate('TagManager_JavaScriptVariableNameTitle');
-                $field->description = Piwik::translate('TagManager_JavaScriptVariableNameDescription');
-                $field->validators[] = new NotEmpty();
-                $field->validators[] = new CharacterLength(1, 500);
-                $field->transform = function ($value) {
-                    return trim($value);
-                };
-            }),
-        );
+        return array($this->makeSetting('variableName', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
+            $field->title = Piwik::translate('TagManager_JavaScriptVariableNameTitle');
+            $field->description = Piwik::translate('TagManager_JavaScriptVariableNameDescription');
+            $field->validators[] = new NotEmpty();
+            $field->validators[] = new CharacterLength(1, 500);
+            $field->transform = function ($value) {
+                return trim($value);
+            };
+        }));
     }
-
 }

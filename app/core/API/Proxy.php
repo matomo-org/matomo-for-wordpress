@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,7 +7,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\API;
 
 use Exception;
@@ -18,17 +18,14 @@ use Piwik\Plugin\API;
 use Piwik\Plugin\Manager;
 use ReflectionClass;
 use ReflectionMethod;
-
 // prevent upgrade error eg from Matomo 3.x to Matomo 4.x. Refs https://github.com/matomo-org/matomo/pull/16468
 // the `false` is important otherwise it would fail and try to load the proxy.php file again.
-if (!class_exists('Piwik\API\NoDefaultValue', false)) {
-
+if (!class_exists('Piwik\\API\\NoDefaultValue', false)) {
     // phpcs:ignoreFile PSR1.Classes.ClassDeclaration.MultipleClasses
     class NoDefaultValue
     {
     }
 }
-
 /**
  * Proxy is a singleton that has the knowledge of every method available, their parameters
  * and default values.
@@ -41,23 +38,18 @@ class Proxy
 {
     // array of already registered plugins names
     protected $alreadyRegistered = array();
-
     protected $metadataArray = array();
     private $hideIgnoredFunctions = true;
-
     // when a parameter doesn't have a default value we use this
     private $noDefaultValue;
-
     public function __construct()
     {
-        $this->noDefaultValue = new NoDefaultValue();
+        $this->noDefaultValue = new \Piwik\API\NoDefaultValue();
     }
-
     public static function getInstance()
     {
         return StaticContainer::get(self::class);
     }
-
     /**
      * Returns array containing reflection meta data for all the loaded classes
      * eg. number of parameters, method names, etc.
@@ -69,7 +61,6 @@ class Proxy
         ksort($this->metadataArray);
         return $this->metadataArray;
     }
-
     /**
      * Registers the API information of a given module.
      *
@@ -87,21 +78,17 @@ class Proxy
         if (isset($this->alreadyRegistered[$className])) {
             return;
         }
-
         $this->includeApiFile($className);
         $this->checkClassIsSingleton($className);
-
         $rClass = new ReflectionClass($className);
         if (!$this->shouldHideAPIMethod($rClass->getDocComment())) {
             foreach ($rClass->getMethods() as $method) {
                 $this->loadMethodMetadata($className, $method);
             }
-
             $this->setDocumentation($rClass, $className);
             $this->alreadyRegistered[$className] = true;
         }
     }
-
     /**
      * Will be displayed in the API page
      *
@@ -113,7 +100,6 @@ class Proxy
         // Doc comment
         $doc = $rClass->getDocComment();
         $doc = str_replace(" * " . PHP_EOL, "<br>", $doc);
-
         // boldify the first line only if there is more than one line, otherwise too much bold
         if (substr_count($doc, '<br>') > 1) {
             $firstLineBreak = strpos($doc, "<br>");
@@ -122,12 +108,10 @@ class Proxy
         $doc = preg_replace("/(@package)[a-z _A-Z]*/", "", $doc);
         $doc = preg_replace("/(@method).*/", "", $doc);
         $doc = str_replace(array("\t", "\n", "/**", "*/", " * ", " *", "  ", "\t*", "  *  @package"), " ", $doc);
-
         // replace 'foo' and `bar` and "foobar" with code blocks... much magic
         $doc = preg_replace('/`(.*?)`/', '<code>$1</code>', $doc);
         $this->metadataArray[$className]['__documentation'] = $doc;
     }
-
     /**
      * Returns number of classes already loaded
      * @return int
@@ -136,7 +120,6 @@ class Proxy
     {
         return count($this->alreadyRegistered);
     }
-
     /**
      * Will execute $className->$methodName($parametersValues)
      * If any error is detected (wrong number of parameters, method not found, class not found, etc.)
@@ -155,35 +138,27 @@ class Proxy
     public function call($className, $methodName, $parametersRequest)
     {
         // Temporarily sets the Request array to this API call context
-        return Context::executeWithQueryParameters($parametersRequest, function () use ($className, $methodName, $parametersRequest) {
+        return Context::executeWithQueryParameters($parametersRequest, function () use($className, $methodName, $parametersRequest) {
             $this->registerClass($className);
-
             $request = new \Piwik\Request($parametersRequest);
-
             /**
              * instantiate the object
              * @var API $object
              */
             $object = $className::getInstance();
-
             // check method exists
             $this->checkMethodExists($className, $methodName);
-
             // get the list of parameters required by the method
             $parameterNamesDefaultValuesAndTypes = $this->getParametersListWithTypes($className, $methodName);
-
             // load parameters in the right order, etc.
             if ($object->usesAutoSanitizeInputParams() && !$this->usesUnsanitizedInputParams($className, $methodName)) {
                 $finalParameters = $this->getSanitizedRequestParametersArray($parameterNamesDefaultValuesAndTypes, $request->getParameters());
             } else {
                 $finalParameters = $this->getRequestParametersArray($parameterNamesDefaultValuesAndTypes, $request);
             }
-
             // allow plugins to manipulate the value
             $pluginName = $this->getModuleNameFromClassName($className);
-
             $returnedValue = null;
-
             /**
              * Triggered before an API request is dispatched.
              *
@@ -206,7 +181,6 @@ class Proxy
              * @param string $methodName The name of the API method that will be called.
              */
             Piwik::postEvent('API.Request.dispatch', array(&$finalParameters, $pluginName, $methodName));
-
             /**
              * Triggered before an API request is dispatched.
              *
@@ -226,7 +200,6 @@ class Proxy
              * @param array &$finalParameters List of parameters that will be passed to the API method.
              */
             Piwik::postEvent(sprintf('API.%s.%s', $pluginName, $methodName), array(&$finalParameters));
-
             /**
              * Triggered before an API request is dispatched.
              *
@@ -241,28 +214,17 @@ class Proxy
              * @param array $parametersRequest The query parameters for this request.
              */
             Piwik::postEvent('API.Request.intercept', [&$returnedValue, $finalParameters, $pluginName, $methodName, $parametersRequest]);
-
             $apiParametersInCorrectOrder = array();
-
             foreach ($parameterNamesDefaultValuesAndTypes as $name => $parameter) {
                 if (isset($finalParameters[$name]) || array_key_exists($name, $finalParameters)) {
                     $apiParametersInCorrectOrder[] = $finalParameters[$name];
                 }
             }
-
             // call the method if a hook hasn't already set an output variable
             if ($returnedValue === null) {
                 $returnedValue = call_user_func_array(array($object, $methodName), $apiParametersInCorrectOrder);
             }
-
-            $endHookParams = array(
-                &$returnedValue,
-                array('className'  => $className,
-                    'module'     => $pluginName,
-                    'action'     => $methodName,
-                    'parameters' => $finalParameters)
-            );
-
+            $endHookParams = array(&$returnedValue, array('className' => $className, 'module' => $pluginName, 'action' => $methodName, 'parameters' => $finalParameters));
             /**
              * Triggered directly after an API request is dispatched.
              *
@@ -301,7 +263,6 @@ class Proxy
              *                                           method.
              */
             Piwik::postEvent(sprintf('API.%s.%s.end', $pluginName, $methodName), $endHookParams);
-
             /**
              * Triggered directly after an API request is dispatched.
              *
@@ -341,11 +302,9 @@ class Proxy
              *                                           method.
              */
             Piwik::postEvent('API.Request.dispatch.end', $endHookParams);
-
             return $returnedValue;
         });
     }
-
     /**
      * Returns the parameters names and default values for the method $name
      * of the class $class
@@ -360,12 +319,8 @@ class Proxy
      */
     public function getParametersList($class, $name)
     {
-        return array_combine(
-            array_keys($this->metadataArray[$class][$name]['parameters']),
-            array_column($this->metadataArray[$class][$name]['parameters'], 'default')
-        );
+        return array_combine(array_keys($this->metadataArray[$class][$name]['parameters']), array_column($this->metadataArray[$class][$name]['parameters'], 'default'));
     }
-
     /**
      * Returns the parameters names, default values and types for the method $name
      * of the class $class
@@ -381,7 +336,6 @@ class Proxy
     {
         return $this->metadataArray[$class][$name]['parameters'];
     }
-
     /**
      * Check if given method name is deprecated or not.
      */
@@ -389,7 +343,6 @@ class Proxy
     {
         return $this->metadataArray[$class][$methodName]['isDeprecated'] ?? false;
     }
-
     /**
      * Check if given method uses unsanitized input parameters.
      */
@@ -397,7 +350,6 @@ class Proxy
     {
         return $this->metadataArray[$class][$methodName]['unsanitizedInputParams'] ?? false;
     }
-
     /**
      * Returns the 'moduleName' part of '\\Piwik\\Plugins\\moduleName\\API'
      *
@@ -408,20 +360,16 @@ class Proxy
     {
         return str_replace(array('\\Piwik\\Plugins\\', '\\API'), '', $className);
     }
-
     public function isExistingApiAction($pluginName, $apiAction)
     {
-        $namespacedApiClassName = "\\Piwik\\Plugins\\$pluginName\\API";
+        $namespacedApiClassName = "\\Piwik\\Plugins\\{$pluginName}\\API";
         $api = $namespacedApiClassName::getInstance();
-
         return method_exists($api, $apiAction);
     }
-
     public function buildApiActionName($pluginName, $apiAction)
     {
         return sprintf("%s.%s", $pluginName, $apiAction);
     }
-
     /**
      * Sets whether to hide '@ignore'd functions from method metadata or not.
      *
@@ -430,12 +378,10 @@ class Proxy
     public function setHideIgnoredFunctions($hideIgnoredFunctions)
     {
         $this->hideIgnoredFunctions = $hideIgnoredFunctions;
-
         // make sure metadata gets reloaded
         $this->alreadyRegistered = array();
         $this->metadataArray = array();
     }
-
     /**
      * Returns an array containing the *sanitized* values of the parameters to pass to the method to call
      *
@@ -452,13 +398,12 @@ class Proxy
                 $defaultValue = $parameter['default'];
                 $type = $parameter['type'];
                 $request = new \Piwik\Request($parametersRequest);
-
                 if (in_array($name, ['segment', 'password', 'passwordConfirmation']) && !empty($parametersRequest[$name])) {
                     // special handling for some parameters:
                     // segment: we do not want to sanitize user input as it would break the segment encoding
                     // password / passwordConfirmation: sanitizing this parameters might change special chars in passwords, breaking login and confirmation boxes
-                    $requestValue = ($parametersRequest[$name]);
-                } elseif ($defaultValue instanceof NoDefaultValue) {
+                    $requestValue = $parametersRequest[$name];
+                } elseif ($defaultValue instanceof \Piwik\API\NoDefaultValue) {
                     if ($type === 'bool') {
                         $requestValue = $request->getBoolParameter($name);
                     } else {
@@ -473,9 +418,7 @@ class Proxy
                         }
                     } catch (Exception $e) {
                         // Special case: empty parameter in the URL, should return the empty string
-                        if (isset($parametersRequest[$name])
-                            && $parametersRequest[$name] === ''
-                        ) {
+                        if (isset($parametersRequest[$name]) && $parametersRequest[$name] === '') {
                             $requestValue = '';
                         } else {
                             $requestValue = $defaultValue;
@@ -489,7 +432,6 @@ class Proxy
         }
         return $finalParameters;
     }
-
     /**
      * Returns an array containing the values of the parameters to pass to the method to call
      *
@@ -498,7 +440,7 @@ class Proxy
      * @throws Exception
      * @return array values to pass to the function call
      */
-    private function getRequestParametersArray($requiredParameters, \Piwik\Request $request): array
+    private function getRequestParametersArray($requiredParameters, \Piwik\Request $request) : array
     {
         $finalParameters = [];
         foreach ($requiredParameters as $name => $parameter) {
@@ -506,7 +448,6 @@ class Proxy
                 $defaultValue = $parameter['default'];
                 $type = $parameter['type'] ?? '';
                 $requestValue = null;
-
                 switch (strtolower($type)) {
                     case 'bool':
                         $method = 'getBoolParameter';
@@ -526,17 +467,16 @@ class Proxy
                     default:
                         $method = 'getParameter';
                 }
-
-                if ($defaultValue instanceof NoDefaultValue) {
-                    $requestValue = $request->$method($name);
+                if ($defaultValue instanceof \Piwik\API\NoDefaultValue) {
+                    $requestValue = $request->{$method}($name);
                 } elseif ($defaultValue === null) {
                     try {
-                        $requestValue = $request->$method($name);
+                        $requestValue = $request->{$method}($name);
                     } catch (\InvalidArgumentException $e) {
                         $requestValue = null;
                     }
                 } else {
-                    $requestValue = $request->$method($name, $defaultValue);
+                    $requestValue = $request->{$method}($name, $defaultValue);
                 }
             } catch (Exception $e) {
                 throw new Exception(Piwik::translate('General_PleaseSpecifyValue', [$name]));
@@ -545,7 +485,6 @@ class Proxy
         }
         return $finalParameters;
     }
-
     /**
      * Includes the class API by looking up plugins/xxx/API.php
      *
@@ -556,14 +495,13 @@ class Proxy
     {
         $module = self::getModuleNameFromClassName($fileName);
         $path = Manager::getPluginDirectory($module) . '/API.php';
-
         if (is_readable($path)) {
-            require_once $path; // prefixed by PIWIK_INCLUDE_PATH
+            require_once $path;
+            // prefixed by PIWIK_INCLUDE_PATH
         } else {
-            throw new Exception("API module $module not found.");
+            throw new Exception("API module {$module} not found.");
         }
     }
-
     /**
      * @param string $class name of a class
      * @param ReflectionMethod $method instance of ReflectionMethod
@@ -576,35 +514,25 @@ class Proxy
         $name = $method->getName();
         $parameters = $method->getParameters();
         $docComment = $method->getDocComment();
-
         $aParameters = array();
         foreach ($parameters as $parameter) {
             $nameVariable = $parameter->getName();
-
             $defaultValue = $this->noDefaultValue;
             if ($parameter->isDefaultValueAvailable()) {
                 $defaultValue = $parameter->getDefaultValue();
             }
-
             $type = $parameter->getType();
-
             // In case no default value is defined in the method, but the type hint allows null, we assume null as default value
             if ($type && $type->allowsNull() && $defaultValue === $this->noDefaultValue) {
                 $defaultValue = null;
             }
-
-            $aParameters[$nameVariable] = [
-                'default' => $defaultValue,
-                'type' => ($type && $type->isBuiltin()) ? $type->getName() : null,
-                'allowsNull' => $type ? $type->allowsNull() : $defaultValue === null,
-            ];
+            $aParameters[$nameVariable] = ['default' => $defaultValue, 'type' => $type && $type->isBuiltin() ? $type->getName() : null, 'allowsNull' => $type ? $type->allowsNull() : $defaultValue === null];
         }
         $this->metadataArray[$class][$name]['parameters'] = $aParameters;
         $this->metadataArray[$class][$name]['numberOfRequiredParameters'] = $method->getNumberOfRequiredParameters();
         $this->metadataArray[$class][$name]['isDeprecated'] = false !== strstr($docComment, '@deprecated');
         $this->metadataArray[$class][$name]['unsanitizedInputParams'] = false !== strstr($docComment, '@unsanitized');
     }
-
     /**
      * Checks that the method exists in the class
      *
@@ -618,7 +546,6 @@ class Proxy
             throw new Exception(Piwik::translate('General_ExceptionMethodNotFound', array($methodName, $className)));
         }
     }
-
     /**
      * @param $docComment
      * @return bool
@@ -626,18 +553,13 @@ class Proxy
     public function shouldHideAPIMethod($docComment)
     {
         $hideLine = strstr($docComment, '@hide');
-
         if ($hideLine === false) {
             return false;
         }
-
         $hideLine = trim($hideLine);
         $hideLine .= ' ';
-
         $token = trim(strtok($hideLine, " "), "\n");
-
         $hide = false;
-
         if (!empty($token)) {
             /**
              * This event exists for checking whether a Plugin API class or a Plugin API method tagged
@@ -647,10 +569,8 @@ class Proxy
              */
             Piwik::postEvent(sprintf('API.DocumentationGenerator.%s', $token), array(&$hide));
         }
-
         return $hide;
     }
-
     /**
      * @param ReflectionMethod $method
      * @return bool
@@ -660,18 +580,14 @@ class Proxy
         if (!$method->isPublic() || $method->isConstructor() || $method->getName() === 'getInstance') {
             return false;
         }
-
         if ($this->hideIgnoredFunctions && false !== strstr($method->getDocComment(), '@ignore')) {
             return false;
         }
-
         if ($this->shouldHideAPIMethod($method->getDocComment())) {
             return false;
         }
-
         return true;
     }
-
     /**
      * Returns true if the method is found in the API of the given class name.
      *
@@ -683,7 +599,6 @@ class Proxy
     {
         return isset($this->metadataArray[$className][$methodName]);
     }
-
     /**
      * Checks that the class is a Singleton (presence of the getInstance() method)
      *
@@ -693,7 +608,7 @@ class Proxy
     private function checkClassIsSingleton($className)
     {
         if (!method_exists($className, "getInstance")) {
-            throw new Exception("$className that provide an API must be Singleton and have a 'public static function getInstance()' method.");
+            throw new Exception("{$className} that provide an API must be Singleton and have a 'public static function getInstance()' method.");
         }
     }
 }

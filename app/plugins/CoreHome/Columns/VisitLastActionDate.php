@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,7 +14,6 @@ use Piwik\Columns\MetricsList;
 use Piwik\Date;
 use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Metrics\Formatter;
-
 class VisitLastActionDate extends VisitDimension
 {
     protected $columnName = 'visit_last_action_time';
@@ -22,7 +22,6 @@ class VisitLastActionDate extends VisitDimension
     protected $nameSingular = 'VisitTime_ColumnVisitEndUTCDate';
     protected $sqlSegment = 'DATE(log_visit.visit_last_action_time)';
     protected $acceptValues = '2018-12-31, 2018-03-20, ...';
-
     public function __construct()
     {
         $this->suggestedValuesCallback = function ($idSite, $maxValuesToReturn) {
@@ -39,12 +38,10 @@ class VisitLastActionDate extends VisitDimension
             return $return;
         };
     }
-
     public function configureMetrics(MetricsList $metricsList, DimensionMetricFactory $dimensionMetricFactory)
     {
         // no metrics for this dimension
     }
-
     public function formatValue($value, $idSite, Formatter $formatter)
     {
         return $value;

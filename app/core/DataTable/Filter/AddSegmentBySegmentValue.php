@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable;
-
 /**
  * Converts for each row of a {@link DataTable} a segmentValue to a segment (expression). The name of the segment
  * is automatically detected based on the given report.
@@ -27,7 +27,6 @@ class AddSegmentBySegmentValue extends BaseFilter
      * @var \Piwik\Plugin\Report
      */
     private $report;
-
     /**
      * @param DataTable $table
      * @param $report
@@ -37,7 +36,6 @@ class AddSegmentBySegmentValue extends BaseFilter
         parent::__construct($table);
         $this->report = $report;
     }
-
     /**
      * See {@link AddSegmentBySegmentValue}.
      *
@@ -49,33 +47,24 @@ class AddSegmentBySegmentValue extends BaseFilter
         if (empty($this->report) || !$table->getRowsCount()) {
             return;
         }
-
         $dimension = $this->report->getDimension();
-
         if (empty($dimension)) {
             return;
         }
-
         $segments = $dimension->getSegments();
-
         if (empty($segments)) {
             return;
         }
-
         $this->enableRecursive(true);
-
         /** @var \Piwik\Plugin\Segment $segment */
-        $segment     = reset($segments);
+        $segment = reset($segments);
         $segmentName = $segment->getSegment();
-
         foreach ($table->getRows() as $row) {
-            $value  = $row->getMetadata('segmentValue');
+            $value = $row->getMetadata('segmentValue');
             $filter = $row->getMetadata('segment');
-
             if ($value !== false && $filter === false) {
                 $row->setMetadata('segment', sprintf('%s==%s', $segmentName, urlencode($value)));
             }
-
             $this->filterSubTable($row);
         }
     }

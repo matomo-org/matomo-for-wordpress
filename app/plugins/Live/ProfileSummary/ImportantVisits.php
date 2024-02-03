@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,16 +7,14 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\Live\ProfileSummary;
 
 use Piwik\Piwik;
 use Piwik\View;
-
 /**
  * Class ImportantVisits
  */
-class ImportantVisits extends ProfileSummaryAbstract
+class ImportantVisits extends \Piwik\Plugins\Live\ProfileSummary\ProfileSummaryAbstract
 {
     /**
      * @inheritdoc
@@ -24,17 +23,15 @@ class ImportantVisits extends ProfileSummaryAbstract
     {
         return Piwik::translate('General_Summary');
     }
-
     /**
      * @inheritdoc
      */
     public function render()
     {
-        $viewVisits              = new View('@Live/_profileSummaryVisits.twig');
+        $viewVisits = new View('@Live/_profileSummaryVisits.twig');
         $viewVisits->visitorData = $this->profile;
         return $viewVisits->render();
     }
-
     /**
      * @inheritdoc
      */

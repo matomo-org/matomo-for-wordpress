@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik\Plugins\CoreHome\Columns\Metrics;
 
 use Piwik\Columns\Dimension;
@@ -14,7 +14,6 @@ use Piwik\DataTable\Row;
 use Piwik\Metrics\Formatter;
 use Piwik\Piwik;
 use Piwik\Plugin\ProcessedMetric;
-
 /**
  * Percent of visits in the whole table. Calculated as:
  *
@@ -26,7 +25,6 @@ class VisitsPercent extends ProcessedMetric
 {
     private $cachedTotalVisits = null;
     private $forceTotalVisits = null;
-
     /**
      * Constructor.
      *
@@ -36,34 +34,27 @@ class VisitsPercent extends ProcessedMetric
     {
         $this->forceTotalVisits = $totalVisits;
     }
-
     public function getName()
     {
         return 'nb_visits_percentage';
     }
-
     public function getTranslatedName()
     {
         return Piwik::translate('General_ColumnPercentageVisits');
     }
-
     public function compute(Row $row)
     {
         $visits = $this->getMetric($row, 'nb_visits');
-
         return Piwik::getQuotientSafe($visits, $this->cachedTotalVisits, $precision = 2);
     }
-
     public function format($value, Formatter $formatter)
     {
         return $formatter->getPrettyPercentFromQuotient($value);
     }
-
     public function getDependentMetrics()
     {
         return array('nb_visits');
     }
-
     public function beforeCompute($report, DataTable $table)
     {
         if ($this->forceTotalVisits === null) {
@@ -71,11 +62,10 @@ class VisitsPercent extends ProcessedMetric
         } else {
             $this->cachedTotalVisits = $this->forceTotalVisits;
         }
-
-        return true; // always compute
+        return true;
+        // always compute
     }
-
-    public function getSemanticType(): ?string
+    public function getSemanticType() : ?string
     {
         return Dimension::TYPE_PERCENT;
     }

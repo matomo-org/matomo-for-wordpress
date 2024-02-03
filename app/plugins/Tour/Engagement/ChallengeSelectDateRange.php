@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,24 +11,20 @@ namespace Piwik\Plugins\Tour\Engagement;
 
 use Piwik\Piwik;
 use Piwik\Url;
-
-class ChallengeSelectDateRange extends Challenge
+class ChallengeSelectDateRange extends \Piwik\Plugins\Tour\Engagement\Challenge
 {
     public function getName()
     {
         return Piwik::translate('Tour_SelectDateRange');
     }
-
     public function getDescription()
     {
         return Piwik::translate('Tour_SelectDateRangeDescription');
     }
-
     public function getId()
     {
         return 'select_date_range';
     }
-
     public function getUrl()
     {
         return Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/reports/data-selectors-in-matomo/');

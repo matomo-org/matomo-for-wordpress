@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,11 +8,11 @@
  *
  */
 namespace Piwik\Plugins\RssWidget;
+
 use Piwik\Plugins\RssWidget\Widgets\RssChangelog;
 use Piwik\Plugins\RssWidget\Widgets\RssPiwik;
 use Piwik\SettingsPiwik;
 use Piwik\Widget\WidgetsList;
-
 /**
  *
  */
@@ -22,25 +23,18 @@ class RssWidget extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array(
-            'AssetManager.getStylesheetFiles' => 'getStylesheetFiles',
-            'Request.getRenamedModuleAndAction' => 'renameExampleRssWidgetModule',
-            'Widget.filterWidgets' => 'filterWidgets'
-        );
+        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Request.getRenamedModuleAndAction' => 'renameExampleRssWidgetModule', 'Widget.filterWidgets' => 'filterWidgets');
     }
-
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/RssWidget/stylesheets/rss.less";
     }
-
     public function renameExampleRssWidgetModule(&$module, &$action)
     {
         if ($module == 'ExampleRssWidget') {
             $module = 'RssWidget';
         }
     }
-
     /**
      * @param WidgetsList $list
      */

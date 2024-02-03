@@ -6,13 +6,10 @@ class RequiredPhpSetting implements \JsonSerializable
 {
     /** @var string */
     private $setting;
-
     /** @var array */
     private $requiredValues;
-
     /** @var string */
-    private $errorResult = DiagnosticResult::STATUS_ERROR;
-
+    private $errorResult = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_ERROR;
     /**
      * @param string $setting
      * @param int $requiredValue
@@ -23,7 +20,6 @@ class RequiredPhpSetting implements \JsonSerializable
         $this->setting = $setting;
         $this->addRequiredValue($requiredValue, $operator);
     }
-
     /**
      * @param int $requiredValue
      * @param string $operator
@@ -32,19 +28,12 @@ class RequiredPhpSetting implements \JsonSerializable
      */
     public function addRequiredValue($requiredValue, $operator)
     {
-        if(!is_int($requiredValue)){
+        if (!is_int($requiredValue)) {
             throw new \InvalidArgumentException('Required value must be an integer.');
         }
-
-        $this->requiredValues[] = array(
-            'requiredValue' => $requiredValue,
-            'operator' => $operator,
-            'isValid' => null,
-        );
-
+        $this->requiredValues[] = array('requiredValue' => $requiredValue, 'operator' => $operator, 'isValid' => null);
         return $this;
     }
-
     /**
      * @param $errorResult
      *
@@ -52,15 +41,12 @@ class RequiredPhpSetting implements \JsonSerializable
      */
     public function setErrorResult($errorResult)
     {
-        if ($errorResult !== DiagnosticResult::STATUS_WARNING && $errorResult !== DiagnosticResult::STATUS_ERROR) {
+        if ($errorResult !== \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING && $errorResult !== \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_ERROR) {
             throw new \InvalidArgumentException('Error result must be either DiagnosticResult::STATUS_WARNING or DiagnosticResult::STATUS_ERROR.');
         }
-
         $this->errorResult = $errorResult;
-
         return $this;
     }
-
     /**
      * @return string
      */
@@ -68,7 +54,6 @@ class RequiredPhpSetting implements \JsonSerializable
     {
         return $this->errorResult;
     }
-
     /**
      * Checks required values against php.ini value.
      *
@@ -77,30 +62,24 @@ class RequiredPhpSetting implements \JsonSerializable
     public function check()
     {
         $currentValue = (int) ini_get($this->setting);
-
         $return = false;
-        foreach($this->requiredValues as $key => $requiredValue){
+        foreach ($this->requiredValues as $key => $requiredValue) {
             $this->requiredValues[$key]['isValid'] = version_compare($currentValue, $requiredValue['requiredValue'], $requiredValue['operator']);
-
-            if($this->requiredValues[$key]['isValid']){
+            if ($this->requiredValues[$key]['isValid']) {
                 $return = true;
             }
         }
-
         return $return;
     }
-
-    public function __toString(): string
+    public function __toString() : string
     {
         $checks = array();
-        foreach($this->requiredValues as $requiredValue){
+        foreach ($this->requiredValues as $requiredValue) {
             $checks[] = $requiredValue['operator'] . ' ' . $requiredValue['requiredValue'];
         }
-
         return $this->setting . ' ' . implode(' OR ', $checks);
     }
-
-    public function jsonSerialize(): string
+    public function jsonSerialize() : string
     {
         return $this->__toString();
     }

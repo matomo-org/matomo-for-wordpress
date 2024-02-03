@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik\Plugins\LanguagesManager\TranslationWriter;
 
 use Exception;
@@ -15,7 +15,6 @@ use Piwik\Piwik;
 use Piwik\Plugin\Manager;
 use Piwik\Plugins\LanguagesManager\TranslationWriter\Filter\FilterAbstract;
 use Piwik\Plugins\LanguagesManager\TranslationWriter\Validate\ValidateAbstract;
-
 /**
  * Writes translations to file.
  */
@@ -27,61 +26,51 @@ class Writer
      * @var string
      */
     protected $language = '';
-
     /**
      * Name of a plugin (if set in constructor)
      *
      * @var string|null
      */
     protected $pluginName = null;
-
     /**
      * translations to write to file
      *
      * @var array
      */
     protected $translations = array();
-
     /**
      * Validators to check translations with
      *
      * @var ValidateAbstract[]
      */
     protected $validators = array();
-
     /**
      * Message why validation failed
      *
      * @var string|null
      */
     protected $validationMessage = null;
-
     /**
      * Filters to to apply to translations
      *
      * @var FilterAbstract[]
      */
     protected $filters = array();
-
     /**
      * Messages which filter changed the data
      *
      * @var array
      */
     protected $filterMessages = array();
-
     /**
      * Data that had been changed by filters
      *
      * @var array
      */
     protected $filteredData = array();
-
     const UNFILTERED = 'unfiltered';
-    const FILTERED   = 'filtered';
-
+    const FILTERED = 'filtered';
     protected $currentState = self::UNFILTERED;
-
     /**
      * If $pluginName is given, Writer will be initialized for the given plugin if it exists
      * Otherwise it will be initialized for core translations
@@ -93,19 +82,14 @@ class Writer
     public function __construct($language, $pluginName = null)
     {
         $this->setLanguage($language);
-
         if (!empty($pluginName)) {
             $installedPlugins = \Piwik\Plugin\Manager::getInstance()->readPluginsDirectory();
-
             if (!in_array($pluginName, $installedPlugins)) {
-
                 throw new Exception(Piwik::translate('General_ExceptionLanguageFileNotFound', array($pluginName)));
             }
-
             $this->pluginName = $pluginName;
         }
     }
-
     /**
      * @param string $language ISO 639-1 alpha-2 language code
      *
@@ -116,10 +100,8 @@ class Writer
         if (!preg_match('/^([a-z]{2,3}(-[a-z]{2,3})?)$/i', $language)) {
             throw new Exception(Piwik::translate('General_ExceptionLanguageFileNotFound', array($language)));
         }
-
         $this->language = strtolower($language);
     }
-
     /**
      * @return string ISO 639-1 alpha-2 language code
      */
@@ -127,7 +109,6 @@ class Writer
     {
         return $this->language;
     }
-
     /**
      * Returns if there are translations available or not
      * @return bool
@@ -136,7 +117,6 @@ class Writer
     {
         return !empty($this->translations);
     }
-
     /**
      * Set the translations to write (and cleans them)
      *
@@ -148,7 +128,6 @@ class Writer
         $this->translations = $translations;
         $this->applyFilters();
     }
-
     /**
      * Get translations from file
      *
@@ -159,17 +138,13 @@ class Writer
     public function getTranslations($lang)
     {
         $path = $this->getTranslationPathBaseDirectory('lang', $lang);
-
         if (!is_readable($path)) {
             return array();
         }
-
         $data = file_get_contents($path);
         $translations = json_decode($data, true);
-
         return $translations;
     }
-
     /**
      * Returns the temporary path for translations
      *
@@ -179,7 +154,6 @@ class Writer
     {
         return $this->getTranslationPathBaseDirectory('tmp');
     }
-
     /**
      * Returns the path to translation files
      *
@@ -189,7 +163,6 @@ class Writer
     {
         return $this->getTranslationPathBaseDirectory('lang');
     }
-
     /**
      * Get translation file path based on given params
      *
@@ -203,23 +176,18 @@ class Writer
         if (empty($lang)) {
             $lang = $this->getLanguage();
         }
-
         if (!empty($this->pluginName)) {
-
             if ($base == 'tmp') {
                 return sprintf('%s/plugins/%s/lang/%s.json', StaticContainer::get('path.tmp'), $this->pluginName, $lang);
             } else {
                 return sprintf('%s/lang/%s.json', Manager::getPluginDirectory($this->pluginName), $lang);
             }
         }
-
         if ($base == 'tmp') {
             return sprintf('%s/%s.json', StaticContainer::get('path.tmp'), $lang);
         }
-
         return sprintf('%s/%s/%s.json', PIWIK_INCLUDE_PATH, $base, $lang);
     }
-
     /**
      * Converts translations to a string that can be written to a file
      *
@@ -237,10 +205,8 @@ class Writer
         if (defined('JSON_PRETTY_PRINT')) {
             $options |= JSON_PRETTY_PRINT;
         }
-
         return json_encode($this->translations, $options);
     }
-
     /**
      * Save translations to file; translations should already be cleaned.
      *
@@ -250,18 +216,13 @@ class Writer
     public function save()
     {
         $this->applyFilters();
-
         if (!$this->hasTranslations() || !$this->isValid()) {
             throw new Exception('unable to save empty or invalid translations');
         }
-
         $path = $this->getTranslationPath();
-
         Filesystem::mkdir(dirname($path));
-
         return file_put_contents($path, $this->__toString());
     }
-
     /**
      * Save translations to  temporary file; translations should already be cleansed.
      *
@@ -271,18 +232,13 @@ class Writer
     public function saveTemporary()
     {
         $this->applyFilters();
-
         if (!$this->hasTranslations() || !$this->isValid()) {
             throw new Exception('unable to save empty or invalid translations');
         }
-
         $path = $this->getTemporaryTranslationPath();
-
         Filesystem::mkdir(dirname($path));
-
         return file_put_contents($path, $this->__toString());
     }
-
     /**
      * Adds an validator to check before saving
      *
@@ -292,7 +248,6 @@ class Writer
     {
         $this->validators[] = $validator;
     }
-
     /**
      * Returns if translations are valid to save or not
      *
@@ -301,19 +256,15 @@ class Writer
     public function isValid()
     {
         $this->applyFilters();
-
         $this->validationMessage = null;
-
         foreach ($this->validators as $validator) {
             if (!$validator->isValid($this->translations)) {
                 $this->validationMessage = $validator->getMessage();
                 return false;
             }
         }
-
         return true;
     }
-
     /**
      * Returns last validation message
      *
@@ -323,7 +274,6 @@ class Writer
     {
         return $this->validationMessage;
     }
-
     /**
      * Returns if the were translations removed while cleaning
      *
@@ -333,7 +283,6 @@ class Writer
     {
         return !empty($this->filterMessages);
     }
-
     /**
      * Returns the cleaning errors
      *
@@ -343,7 +292,6 @@ class Writer
     {
         return $this->filterMessages;
     }
-
     /**
      * Returns the cleaning errors
      *
@@ -353,7 +301,6 @@ class Writer
     {
         return $this->filteredData;
     }
-
     /**
      * @param FilterAbstract $filter
      */
@@ -361,7 +308,6 @@ class Writer
     {
         $this->filters[] = $filter;
     }
-
     /**
      * @throws \Exception
      *
@@ -373,19 +319,14 @@ class Writer
         if ($this->currentState == self::FILTERED) {
             return $this->wasFiltered();
         }
-
         $this->filterMessages = array();
-
         // skip if not translations available
         if (!$this->hasTranslations()) {
             $this->currentState = self::FILTERED;
             return false;
         }
-
         $cleanedTranslations = $this->translations;
-
         foreach ($this->filters as $filter) {
-
             $cleanedTranslations = $filter->filter($cleanedTranslations);
             $filteredData = $filter->getFilteredData();
             if (!empty($filteredData)) {
@@ -393,13 +334,10 @@ class Writer
                 $this->filteredData[get_class($filter)] = $filteredData;
             }
         }
-
         $this->currentState = self::FILTERED;
-
         if ($cleanedTranslations != $this->translations) {
             $this->filterMessages[] = 'translations have been cleaned';
         }
-
         $this->translations = $cleanedTranslations;
         return $this->wasFiltered();
     }

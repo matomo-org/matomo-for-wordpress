@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -16,7 +17,6 @@ use Piwik\Plugins\Events\Actions\ActionEvent;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\TableLogAction;
-
 class EventCategory extends ActionDimension
 {
     protected $columnName = 'idaction_event_category';
@@ -28,35 +28,28 @@ class EventCategory extends ActionDimension
     protected $nameSingular = 'Events_EventCategory';
     protected $namePlural = 'Events_EventCategories';
     protected $sqlFilter = [TableLogAction::class, 'getOptimizedIdActionSqlMatch'];
-
     public function getDbColumnJoin()
     {
         return new ActionNameJoin();
     }
-
     public function getDbDiscriminator()
     {
         return new Discriminator('log_action', 'type', $this->getActionId());
     }
-
     public function getActionId()
     {
         return Action::TYPE_EVENT_CATEGORY;
     }
-
     public function onLookupAction(Request $request, Action $action)
     {
-        if (!($action instanceof ActionEvent)) {
+        if (!$action instanceof ActionEvent) {
             return false;
         }
-
         $eventCategory = $action->getEventCategory();
         $eventCategory = trim($eventCategory);
-
         if (strlen($eventCategory) > 0) {
             return $eventCategory;
         }
-
         throw new InvalidRequestParameterException('Param `e_c` must not be empty or filled with whitespaces');
     }
 }

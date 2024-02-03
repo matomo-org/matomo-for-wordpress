@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,16 +12,15 @@ namespace Piwik\Plugins\Events\Reports;
 use Piwik\Common;
 use Piwik\Piwik;
 use Piwik\Plugins\Events\Columns\EventAction;
-
-class GetAction extends Base
+class GetAction extends \Piwik\Plugins\Events\Reports\Base
 {
     protected function init()
     {
         parent::init();
-        $this->dimension     = new EventAction();
-        $this->name          = Piwik::translate('Events_EventActions');
+        $this->dimension = new EventAction();
+        $this->name = Piwik::translate('Events_EventActions');
         $this->documentation = Piwik::translate('Events_EventActionsReportDocumentation');
-        $this->metrics       = array('nb_events', 'sum_event_value', 'min_event_value', 'max_event_value', 'nb_events_with_value');
+        $this->metrics = array('nb_events', 'sum_event_value', 'min_event_value', 'max_event_value', 'nb_events_with_value');
         if (Common::getRequestVar('secondaryDimension', false) == 'eventCategory') {
             $this->actionToLoadSubTables = 'getCategoryFromNameId';
         } else {

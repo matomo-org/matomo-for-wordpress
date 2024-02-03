@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -16,7 +17,6 @@ use Piwik\Segment\SegmentsList;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
-
 class SearchCategory extends ActionDimension
 {
     protected $type = self::TYPE_TEXT;
@@ -25,16 +25,13 @@ class SearchCategory extends ActionDimension
     protected $segmentName = 'siteSearchCategory';
     protected $columnName = 'search_cat';
     protected $columnType = 'VARCHAR(200) NULL';
-
     public function onNewAction(Request $request, Visitor $visitor, Action $action)
     {
         if ($action instanceof ActionSiteSearch) {
             return $action->getSearchCategory();
         }
-
         return parent::onNewAction($request, $visitor, $action);
     }
-
     public function configureSegments(SegmentsList $segmentsList, DimensionSegmentFactory $dimensionSegmentFactory)
     {
         $segment = new Segment();

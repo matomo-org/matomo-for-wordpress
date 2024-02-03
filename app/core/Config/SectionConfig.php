@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,11 +10,9 @@
 namespace Piwik\Config;
 
 use Piwik\Config;
-
 abstract class SectionConfig
 {
-    public abstract static function getSectionName(): string;
-
+    public static abstract function getSectionName() : string;
     /**
      * Set the value for a setting
      *
@@ -22,13 +21,12 @@ abstract class SectionConfig
      *
      * @return void
      */
-    public static function setConfigValue(string $name, $value): void
+    public static function setConfigValue(string $name, $value) : void
     {
         $section = self::getConfig();
         $section[$name] = $value;
         Config::getInstance()->{static::getSectionName()} = $section;
     }
-
     /**
      * Get a setting value
      *
@@ -46,7 +44,6 @@ abstract class SectionConfig
         }
         return $config[$name] ?? null;
     }
-
     /**
      * Get the section config as an array
      *
@@ -56,7 +53,6 @@ abstract class SectionConfig
     {
         return Config::getInstance()->{static::getSectionName()};
     }
-
     /**
      * Get the site specific config (if any) as an array
      *
@@ -67,6 +63,6 @@ abstract class SectionConfig
     private static function getSiteSpecificConfig(int $idSite)
     {
         $key = static::getSectionName() . '_' . $idSite;
-        return Config::getInstance()->$key;
+        return Config::getInstance()->{$key};
     }
 }

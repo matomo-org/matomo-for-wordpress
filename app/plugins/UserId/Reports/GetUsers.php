@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik\Plugins\UserId\Reports;
 
 use Piwik\Piwik;
@@ -13,28 +13,24 @@ use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\CoreVisualizations\Visualizations\HtmlTable;
 use Piwik\Plugins\UserId\Columns\UserId;
 use Piwik\Url;
-
 /**
  * A report showing all unique user IDs and some aggregated information about them. It also allows
  * to open a popover with visitor details
  */
-class GetUsers extends Base
+class GetUsers extends \Piwik\Plugins\UserId\Reports\Base
 {
     protected function init()
     {
         parent::init();
-
         $this->name = Piwik::translate('UserId_UserReportTitle');
         $this->subcategoryId = 'UserId_UserReportTitle';
         $this->documentation = Piwik::translate('UserId_UserReportDocumentation');
         $this->dimension = new UserId();
         $this->metrics = array('label', 'nb_visits', 'nb_actions', 'nb_visits_converted');
         $this->supportsFlatten = false;
-
         // This defines in which order your report appears in the mobile app, in the menu and in the list of widgets
         $this->order = 9;
     }
-
     /**
      * @return array
      */
@@ -42,7 +38,6 @@ class GetUsers extends Base
     {
         return array();
     }
-
     /**
      * @param ViewDataTable $view
      */
@@ -50,7 +45,6 @@ class GetUsers extends Base
     {
         $view->config->addTranslation('label', Piwik::translate('General_UserId'));
         $view->config->addTranslation('nb_visits_converted', Piwik::translate('General_VisitConvertedGoal'));
-
         /*
          * Hide most of the table footer actions, leaving only export icons and pagination
          */
@@ -59,14 +53,10 @@ class GetUsers extends Base
         $view->config->show_related_reports = false;
         $view->config->show_insights = false;
         $view->config->show_pivot_by_subtable = false;
-        $view->config->no_data_message = Piwik::translate('CoreHome_ThereIsNoDataForThisReport') . '<br><br>'
-          . sprintf(Piwik::translate('UserId_ThereIsNoDataForThisReportHelp'),
-            "<a target='_blank' rel='noreferrer noopener' href='" . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/user-id/') . "'>", "</a>");
-
+        $view->config->no_data_message = Piwik::translate('CoreHome_ThereIsNoDataForThisReport') . '<br><br>' . sprintf(Piwik::translate('UserId_ThereIsNoDataForThisReportHelp'), "<a target='_blank' rel='noreferrer noopener' href='" . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/user-id/') . "'>", "</a>");
         if ($view->isViewDataTableId(HtmlTable::ID)) {
             $view->config->disable_row_evolution = false;
         }
-
         // exclude users with less then 2 visits, when low population filter is active
         $view->requestConfig->filter_excludelowpop_value = 2;
     }

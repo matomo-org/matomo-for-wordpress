@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\DataTable;
 
 use Piwik\DataTable;
-
 /**
  * A {@link Piwik\DataTable} where every row has two columns: **label** and **value**.
  *

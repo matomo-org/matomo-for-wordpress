@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'observers.global' => DI\add([
-        ['Platform.initialized', DI\value(function () {
+    'observers.global' => \Piwik\DI::add([
+        ['Platform.initialized', \Piwik\DI::value(function () {
             if (defined('MATOMO_LOCAL_ENVIRONMENT')
                 && MATOMO_LOCAL_ENVIRONMENT
                 && !empty($_GET['force-past-date'])

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,12 +7,10 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Settings\Measurable;
 
 use Piwik\Container\StaticContainer;
 use Piwik\Piwik;
-
 /**
  * Describes a Measurable setting for a measurable type such as a website, a mobile app, ...
  *
@@ -23,7 +22,6 @@ class MeasurableSetting extends \Piwik\Settings\Setting
      * @var int
      */
     private $idSite = 0;
-
     /**
      * Constructor.
      *
@@ -36,13 +34,10 @@ class MeasurableSetting extends \Piwik\Settings\Setting
     public function __construct($name, $defaultValue, $type, $pluginName, $idSite)
     {
         parent::__construct($name, $defaultValue, $type, $pluginName);
-
         $this->idSite = $idSite;
-
-        $storageFactory = StaticContainer::get('Piwik\Settings\Storage\Factory');
+        $storageFactory = StaticContainer::get('Piwik\\Settings\\Storage\\Factory');
         $this->storage = $storageFactory->getMeasurableSettingsStorage($idSite, $this->pluginName);
     }
-
     /**
      * Returns `true` if this setting can be displayed for the current user, `false` if otherwise.
      *
@@ -53,17 +48,14 @@ class MeasurableSetting extends \Piwik\Settings\Setting
         if (isset($this->hasWritePermission)) {
             return $this->hasWritePermission;
         }
-
         // performance improvement, do not detect this in __construct otherwise likely rather "big" query to DB.
         if ($this->hasSiteBeenCreated()) {
             $this->hasWritePermission = Piwik::isUserHasAdminAccess($this->idSite);
         } else {
             $this->hasWritePermission = Piwik::hasUserSuperUserAccess();
         }
-
         return $this->hasWritePermission;
     }
-
     private function hasSiteBeenCreated()
     {
         return !empty($this->idSite);

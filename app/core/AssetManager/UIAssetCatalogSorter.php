@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -14,7 +15,6 @@ class UIAssetCatalogSorter
      * @var string[]
      */
     private $priorityOrder;
-
     /**
      * @param string[] $priorityOrder
      */
@@ -22,29 +22,24 @@ class UIAssetCatalogSorter
     {
         $this->priorityOrder = $priorityOrder;
     }
-
     /**
      * @param UIAssetCatalog $uiAssetCatalog
      * @return UIAssetCatalog
      */
     public function sortUIAssetCatalog($uiAssetCatalog)
     {
-        $sortedCatalog = new UIAssetCatalog($this);
+        $sortedCatalog = new \Piwik\AssetManager\UIAssetCatalog($this);
         foreach ($this->priorityOrder as $filePattern) {
-            $assetsMatchingPattern = array_filter($uiAssetCatalog->getAssets(), function ($uiAsset) use ($filePattern) {
+            $assetsMatchingPattern = array_filter($uiAssetCatalog->getAssets(), function ($uiAsset) use($filePattern) {
                 return preg_match('~^' . $filePattern . '~', $uiAsset->getRelativeLocation());
             });
-
             foreach ($assetsMatchingPattern as $assetMatchingPattern) {
                 $sortedCatalog->addUIAsset($assetMatchingPattern);
             }
         }
-
         $this->addUnmatchedAssets($uiAssetCatalog, $sortedCatalog);
-
         return $sortedCatalog;
     }
-
     /**
      * @param UIAssetCatalog $uiAssetCatalog
      * @param UIAssetCatalog $sortedCatalog

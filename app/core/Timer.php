@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik;
 
 use Piwik\Metrics\Formatter;
-
 /**
  *
  */
@@ -19,17 +19,14 @@ class Timer
     private $memoryStart;
     private $formatter;
     private $timerEnd;
-
     /**
      * @return \Piwik\Timer
      */
     public function __construct()
     {
         $this->formatter = new Formatter();
-
         $this->init();
     }
-
     /**
      * @return void
      */
@@ -38,12 +35,10 @@ class Timer
         $this->timerStart = $this->getMicrotime();
         $this->memoryStart = $this->getMemoryUsage();
     }
-
     public function finish()
     {
         $this->timerEnd = $this->getMicrotime();
     }
-
     /**
      * @param int $decimals
      * @return string
@@ -52,7 +47,6 @@ class Timer
     {
         return number_format($this->getTimerEnd() - $this->timerStart, $decimals, '.', '');
     }
-
     /**
      * @param int $decimals
      * @return string
@@ -61,7 +55,6 @@ class Timer
     {
         return number_format(1000 * ($this->getTimerEnd() - $this->timerStart), $decimals, '.', '');
     }
-
     /**
      * @return string
      */
@@ -69,7 +62,6 @@ class Timer
     {
         return "Memory delta: " . $this->getMemoryLeakValue();
     }
-
     /**
      * @return string
      */
@@ -77,7 +69,6 @@ class Timer
     {
         return $this->formatter->getPrettySizeFromBytes($this->getMemoryUsage() - $this->memoryStart);
     }
-
     /**
      * @return string
      */
@@ -85,7 +76,6 @@ class Timer
     {
         return $this->formatter->getPrettySizeFromBytes($this->getPeakMemoryUsage());
     }
-
     /**
      * @return string
      */
@@ -93,21 +83,18 @@ class Timer
     {
         return "Time elapsed: " . $this->getTime() . "s";
     }
-
     private function getTimerEnd()
     {
         return $this->timerEnd ?: $this->getMicrotime();
     }
-
     /**
      * @return float
      */
     private function getMicrotime()
     {
         list($micro_seconds, $seconds) = explode(" ", microtime());
-        return ((float)$micro_seconds + (float)$seconds);
+        return (float) $micro_seconds + (float) $seconds;
     }
-
     /**
      * Returns current memory usage, if available
      *
@@ -120,7 +107,6 @@ class Timer
         }
         return 0;
     }
-
     public function getPeakMemoryUsage()
     {
         if (function_exists('memory_get_peak_usage')) {

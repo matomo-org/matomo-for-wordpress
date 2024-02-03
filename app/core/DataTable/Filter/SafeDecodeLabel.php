@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
-
 /**
  * Sanitizes DataTable labels as an extra precaution. Called internally by Piwik.
  *
@@ -18,9 +18,7 @@ use Piwik\DataTable\BaseFilter;
 class SafeDecodeLabel extends BaseFilter
 {
     const APPLIED_METADATA_NAME = 'SafeDecodeLabelApplied';
-
     private $columnToDecode;
-
     /**
      * @param DataTable $table
      */
@@ -29,7 +27,6 @@ class SafeDecodeLabel extends BaseFilter
         parent::__construct($table);
         $this->columnToDecode = 'label';
     }
-
     /**
      * Decodes the given value
      *
@@ -43,17 +40,13 @@ class SafeDecodeLabel extends BaseFilter
         }
         $raw = urldecode($value);
         $value = htmlspecialchars_decode($raw, ENT_QUOTES);
-
         // ENT_IGNORE so that if utf8 string has some errors, we simply discard invalid code unit sequences
         $style = ENT_QUOTES | ENT_IGNORE;
-
         // See changes in 5.4: http://nikic.github.com/2012/01/28/htmlspecialchars-improvements-in-PHP-5-4.html
         // Note: at some point we should change ENT_IGNORE to ENT_SUBSTITUTE
         $value = htmlspecialchars($value, $style, 'UTF-8');
-
         return $value;
     }
-
     /**
      * Decodes all columns of the given data table
      *
@@ -64,13 +57,11 @@ class SafeDecodeLabel extends BaseFilter
         if ($table->getMetadata(self::APPLIED_METADATA_NAME)) {
             return;
         }
-
         foreach ($table->getRows() as $row) {
             $value = $row->getColumn($this->columnToDecode);
             if ($value !== false) {
                 $value = self::decodeLabelSafe($value);
                 $row->setColumn($this->columnToDecode, $value);
-
                 $this->filterSubTable($row);
             }
         }

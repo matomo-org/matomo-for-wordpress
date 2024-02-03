@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\MultiSites;
 
 use Piwik\Piwik;
-
 class MultiSites extends \Piwik\Plugin
 {
     /**
@@ -17,35 +17,18 @@ class MultiSites extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array(
-            'AssetManager.getStylesheetFiles' => 'getStylesheetFiles',
-            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
-            'Metrics.getDefaultMetricTranslations'  => 'addMetricTranslations',
-            'API.getPagesComparisonsDisabledFor'     => 'getPagesComparisonsDisabledFor',
-        );
+        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Metrics.getDefaultMetricTranslations' => 'addMetricTranslations', 'API.getPagesComparisonsDisabledFor' => 'getPagesComparisonsDisabledFor');
     }
-
     public function getPagesComparisonsDisabledFor(&$pages)
     {
         $pages[] = 'MultiSites.index';
     }
-
     public function addMetricTranslations(&$translations)
     {
         $appendix = " " . Piwik::translate('MultiSites_Evolution');
-        $metrics = array(
-            'visits_evolution'    => Piwik::translate('General_ColumnNbVisits') . $appendix,
-            'actions_evolution'   => Piwik::translate('General_ColumnNbActions') . $appendix,
-            'pageviews_evolution' => Piwik::translate('General_ColumnPageviews') . $appendix,
-            'revenue_evolution'   => Piwik::translate('General_ColumnRevenue') . $appendix,
-            'nb_conversions_evolution' => Piwik::translate('Goals_ColumnConversions') . $appendix,
-            'orders_evolution'         => Piwik::translate('General_EcommerceOrders') . $appendix,
-            'ecommerce_revenue_evolution' => Piwik::translate('General_ProductRevenue') . $appendix,
-        );
-
+        $metrics = array('visits_evolution' => Piwik::translate('General_ColumnNbVisits') . $appendix, 'actions_evolution' => Piwik::translate('General_ColumnNbActions') . $appendix, 'pageviews_evolution' => Piwik::translate('General_ColumnPageviews') . $appendix, 'revenue_evolution' => Piwik::translate('General_ColumnRevenue') . $appendix, 'nb_conversions_evolution' => Piwik::translate('Goals_ColumnConversions') . $appendix, 'orders_evolution' => Piwik::translate('General_EcommerceOrders') . $appendix, 'ecommerce_revenue_evolution' => Piwik::translate('General_ProductRevenue') . $appendix);
         $translations = array_merge($translations, $metrics);
     }
-
     public function getClientSideTranslationKeys(&$translations)
     {
         $translations[] = 'General_Website';
@@ -78,7 +61,6 @@ class MultiSites extends \Piwik\Plugin
         $translations[] = 'MultiSites_EvolutionComparisonMonth';
         $translations[] = 'MultiSites_EvolutionComparisonYear';
     }
-
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/MultiSites/vue/src/Dashboard/Dashboard.less";

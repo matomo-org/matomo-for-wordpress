@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,7 +9,7 @@
  */
 namespace Piwik\Exception;
 
-class InvalidRequestParameterException extends Exception
+class InvalidRequestParameterException extends \Piwik\Exception\Exception
 {
     public function __toString()
     {

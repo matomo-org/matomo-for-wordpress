@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,19 +10,16 @@
 namespace Piwik\Plugin;
 
 use Piwik\Container\StaticContainer;
-
 class RequestProcessors
 {
     public function getRequestProcessors()
     {
-        $manager    = Manager::getInstance();
+        $manager = \Piwik\Plugin\Manager::getInstance();
         $processors = $manager->findMultipleComponents('Tracker', 'Piwik\\Tracker\\RequestProcessor');
-
         $instances = array();
         foreach ($processors as $processor) {
             $instances[] = StaticContainer::get($processor);
         }
-
         return $instances;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -15,7 +16,6 @@ use Piwik\Plugins\Events\Actions\ActionEvent;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\TableLogAction;
-
 class EventName extends ActionDimension
 {
     protected $columnName = 'idaction_name';
@@ -23,39 +23,31 @@ class EventName extends ActionDimension
     protected $category = 'Events_Events';
     protected $segmentName = 'eventName';
     protected $suggestedValuesApi = 'Events.getName';
-
     protected $nameSingular = 'Events_EventName';
     protected $namePlural = 'Events_EventNames';
     protected $sqlFilter = [TableLogAction::class, 'getOptimizedIdActionSqlMatch'];
-
     public function getDbColumnJoin()
     {
         return new ActionNameJoin();
     }
-
     public function getDbDiscriminator()
     {
         return new Discriminator('log_action', 'type', $this->getActionId());
     }
-
     public function getActionId()
     {
         return Action::TYPE_EVENT_NAME;
     }
-
     public function onLookupAction(Request $request, Action $action)
     {
-        if (!($action instanceof ActionEvent)) {
+        if (!$action instanceof ActionEvent) {
             return false;
         }
-
         $eventName = $action->getEventName();
         $eventName = trim($eventName);
-
         if (strlen($eventName) > 0) {
             return $eventName;
         }
-
         return false;
     }
 }

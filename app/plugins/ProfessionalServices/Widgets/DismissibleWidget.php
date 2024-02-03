@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,15 +10,13 @@
 namespace Piwik\Plugins\ProfessionalServices\Widgets;
 
 use Piwik\Widget\Widget;
-
 abstract class DismissibleWidget extends Widget
 {
-    public static function getDismissibleWidgetName(): string
+    public static function getDismissibleWidgetName() : string
     {
         return substr(strrchr(static::class, "\\"), 1);
     }
-
-    public static function exists(string $widgetName): bool
+    public static function exists(string $widgetName) : bool
     {
         return class_exists(substr(__CLASS__, 0, strrpos(__CLASS__, "\\")) . "\\" . $widgetName);
     }

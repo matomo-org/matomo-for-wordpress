@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@ namespace Piwik\Plugins\Diagnostics;
 
 use Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic;
 use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
-
 /**
  * Runs the Piwik diagnostics.
  *
@@ -21,17 +21,14 @@ class DiagnosticService
      * @var Diagnostic[]
      */
     private $mandatoryDiagnostics;
-
     /**
      * @var Diagnostic[]
      */
     private $optionalDiagnostics;
-
     /**
      * @var Diagnostic[]
      */
     private $informationDiagnostics;
-
     /**
      * @param Diagnostic[] $mandatoryDiagnostics
      * @param Diagnostic[] $optionalDiagnostics
@@ -43,19 +40,13 @@ class DiagnosticService
         $this->optionalDiagnostics = $this->removeDisabledDiagnostics($optionalDiagnostics, $disabledDiagnostics);
         $this->informationDiagnostics = $this->removeDisabledDiagnostics($informationDiagnostics, $disabledDiagnostics);
     }
-
     /**
      * @return DiagnosticReport
      */
     public function runDiagnostics()
     {
-        return new DiagnosticReport(
-            $this->run($this->mandatoryDiagnostics),
-            $this->run($this->optionalDiagnostics),
-            $this->run($this->informationDiagnostics)
-        );
+        return new \Piwik\Plugins\Diagnostics\DiagnosticReport($this->run($this->mandatoryDiagnostics), $this->run($this->optionalDiagnostics), $this->run($this->informationDiagnostics));
     }
-
     /**
      * @param Diagnostic[] $diagnostics
      * @return DiagnosticResult[]
@@ -63,18 +54,15 @@ class DiagnosticService
     private function run(array $diagnostics)
     {
         $results = array();
-
         foreach ($diagnostics as $diagnostic) {
             $results = array_merge($results, $diagnostic->execute());
         }
-
         return $results;
     }
-
     private function removeDisabledDiagnostics(array $diagnostics, array $disabledDiagnostics)
     {
-        return array_filter($diagnostics, function (Diagnostic $diagnostic) use ($disabledDiagnostics) {
-            return ! in_array($diagnostic, $disabledDiagnostics, true);
+        return array_filter($diagnostics, function (Diagnostic $diagnostic) use($disabledDiagnostics) {
+            return !in_array($diagnostic, $disabledDiagnostics, true);
         });
     }
 }

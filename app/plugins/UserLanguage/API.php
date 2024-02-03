@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,12 +11,10 @@ namespace Piwik\Plugins\UserLanguage;
 
 use Piwik\Archive;
 use Piwik\Piwik;
-
 /**
  * @see plugins/UserLanguage/functions.php
  */
 require_once PIWIK_INCLUDE_PATH . '/plugins/UserLanguage/functions.php';
-
 /**
  * The UserLanguage API lets you access reports about your Visitors language setting
  *
@@ -32,28 +31,24 @@ class API extends \Piwik\Plugin\API
         $dataTable->queueFilter('ReplaceSummaryRowLabel');
         return $dataTable;
     }
-
     public function getLanguage($idSite, $period, $date, $segment = false)
     {
-        $dataTable = $this->getDataTable(Archiver::LANGUAGE_RECORD_NAME, $idSite, $period, $date, $segment);
-        $dataTable->filter('GroupBy', array('label', __NAMESPACE__ . '\groupByLangCallback'));
-        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'segment', function($label) {
+        $dataTable = $this->getDataTable(\Piwik\Plugins\UserLanguage\Archiver::LANGUAGE_RECORD_NAME, $idSite, $period, $date, $segment);
+        $dataTable->filter('GroupBy', array('label', __NAMESPACE__ . '\\groupByLangCallback'));
+        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'segment', function ($label) {
             if (empty($label) || $label == 'xx') {
                 return 'languageCode==xx';
             }
             return sprintf('languageCode==%1$s,languageCode=@%1$s-', $label);
         }));
-        $dataTable->filter('ColumnCallbackReplace', array('label', __NAMESPACE__ . '\languageTranslate'));
-
+        $dataTable->filter('ColumnCallbackReplace', array('label', __NAMESPACE__ . '\\languageTranslate'));
         return $dataTable;
     }
-
     public function getLanguageCode($idSite, $period, $date, $segment = false)
     {
-        $dataTable = $this->getDataTable(Archiver::LANGUAGE_RECORD_NAME, $idSite, $period, $date, $segment);
+        $dataTable = $this->getDataTable(\Piwik\Plugins\UserLanguage\Archiver::LANGUAGE_RECORD_NAME, $idSite, $period, $date, $segment);
         $dataTable->filter('AddSegmentValue');
-        $dataTable->filter('ColumnCallbackReplace', array('label', __NAMESPACE__ . '\languageTranslateWithCode'));
-
+        $dataTable->filter('ColumnCallbackReplace', array('label', __NAMESPACE__ . '\\languageTranslateWithCode'));
         return $dataTable;
     }
 }

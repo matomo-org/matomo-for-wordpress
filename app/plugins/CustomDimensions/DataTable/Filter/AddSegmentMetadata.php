@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,11 +13,9 @@ use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable;
 use Piwik\Plugins\CustomDimensions\Archiver;
 use Piwik\Plugins\CustomDimensions\Tracker\CustomDimensionsRequestProcessor;
-
 class AddSegmentMetadata extends BaseFilter
 {
     private $idDimension;
-
     /**
      * Constructor.
      *
@@ -27,14 +26,12 @@ class AddSegmentMetadata extends BaseFilter
         parent::__construct($table);
         $this->idDimension = $idDimension;
     }
-
     /**
      * @param DataTable $table
      */
     public function filter($table)
     {
         $dimension = CustomDimensionsRequestProcessor::buildCustomDimensionTrackingApiName($this->idDimension);
-
         foreach ($table->getRows() as $row) {
             $label = $row->getColumn('label');
             if ($label !== false) {
@@ -43,10 +40,9 @@ class AddSegmentMetadata extends BaseFilter
                 }
                 $row->setMetadata('segment', $dimension . '==' . urlencode($label));
             }
-
             $subTable = $row->getSubtable();
             if ($subTable) {
-                $subTable->filter('Piwik\Plugins\CustomDimensions\DataTable\Filter\AddSubtableSegmentMetadata', array($this->idDimension, $label));
+                $subTable->filter('Piwik\\Plugins\\CustomDimensions\\DataTable\\Filter\\AddSubtableSegmentMetadata', array($this->idDimension, $label));
             }
         }
     }

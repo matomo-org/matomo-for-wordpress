@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Settings\Plugin;
 
 use Piwik\Piwik;
 use Piwik\Settings\Settings;
-
 /**
  * Base class of all plugin settings providers. Plugins that define their own configuration settings
  * can extend this class to easily make their settings available to Piwik users.
@@ -33,10 +33,8 @@ abstract class UserSettings extends Settings
     public function __construct()
     {
         parent::__construct();
-
         $this->init();
     }
-
     /**
      * Creates a new user setting.
      *
@@ -55,14 +53,11 @@ abstract class UserSettings extends Settings
     protected function makeSetting($name, $defaultValue, $type, $configureCallback)
     {
         $userLogin = Piwik::getCurrentUserLogin();
-
-        $setting = new UserSetting($name, $defaultValue, $type, $this->pluginName, $userLogin);
+        $setting = new \Piwik\Settings\Plugin\UserSetting($name, $defaultValue, $type, $this->pluginName, $userLogin);
         $setting->setConfigureCallback($configureCallback);
-
         $this->addSetting($setting);
         return $setting;
     }
-
     /**
      * Saves (persists) the current setting values in the database.
      *
@@ -71,7 +66,6 @@ abstract class UserSettings extends Settings
     public function save()
     {
         parent::save();
-
         /**
          * Triggered after user settings have been updated.
          *
