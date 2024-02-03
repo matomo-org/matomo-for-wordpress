@@ -2,7 +2,7 @@
 Contributors: matomoteam
 Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
 Requires at least: 4.8
-Tested up to: 6.3.2
+Tested up to: 6.4.3
 Stable tag: 5.0.1
 Requires PHP: 7.2.5
 License: GPLv3 or later
@@ -12,7 +12,13 @@ Matomo is the #1 Google Analytics alternative that gives you full control over y
 
 == Description ==
 
-Already Matomo On-Premise or Matomo Cloud user? You need to use the [Connect Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead of this plugin.
+_Already a Matomo On-Premise or Matomo Cloud user? You need to use the [Connect Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead of this plugin._
+
+**New in Matomo 5.0:**
+
+* Improved compatibility with other WordPress plugins.
+* Important security fixes.
+* Many other bug fixes and performance improvements.
 
 For all you WordPress website owners wanting an easier way to get customer insights to grow your business, you can now get the solution the professionals use, for free!
 
