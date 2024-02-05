@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,5 +14,4 @@ namespace Piwik\Plugins\CorePluginsAdmin;
  */
 class PluginInstallerException extends \Exception
 {
-
 }

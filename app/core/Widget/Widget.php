@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,8 +8,8 @@
  *
  */
 namespace Piwik\Widget;
-use Piwik\View;
 
+use Piwik\View;
 /**
  * Defines a new widget. You can create a new widget using the console command `./console generate:widget`.
  * The generated widget will guide you through the creation of a widget.
@@ -23,10 +24,9 @@ class Widget
      * @param WidgetConfig $config
      * @api
      */
-    public static function configure(WidgetConfig $config)
+    public static function configure(\Piwik\Widget\WidgetConfig $config)
     {
     }
-
     /**
      * @return string
      */
@@ -34,7 +34,6 @@ class Widget
     {
         return '';
     }
-
     /**
      * Assigns the given variables to the template and renders it.
      *
@@ -64,14 +63,10 @@ class Widget
             $aPluginName = $aPluginName[2];
             $template = '@' . $aPluginName . '/' . $template;
         }
-
         $view = new View($template);
-
         foreach ($variables as $key => $value) {
-            $view->$key = $value;
+            $view->{$key} = $value;
         }
-
         return $view->render();
     }
-
 }

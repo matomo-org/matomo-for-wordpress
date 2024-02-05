@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -17,9 +18,7 @@ use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Metrics\Formatter;
-
 require_once PIWIK_INCLUDE_PATH . '/plugins/VisitTime/functions.php';
-
 /**
  * This dimension holds the best guess for a visit's end time. It is set the last action
  * time for each visit. `ping=1` requests can be sent to update the dimension value so
@@ -36,7 +35,6 @@ class VisitLastActionTime extends VisitDimension
     protected $sqlSegment = 'HOUR(log_visit.visit_last_action_time)';
     protected $segmentName = 'visitServerHour';
     protected $acceptValues = '0, 1, 2, 3, ..., 20, 21, 22, 23';
-
     /**
      * Converts the hour to the hour depending on the configured site's timezone.
      * Only works correct if a date/period is present in the request. Otherwise the result may vary depending on the
@@ -62,23 +60,19 @@ class VisitLastActionTime extends VisitDimension
         }
         $timezone = Site::getTimezoneFor($idSite);
         $datetime = $date->toString() . ' ' . $hour . ':00:00';
-        $hourInTz = (int)Date::factory($datetime, $timezone)->toString('H');
+        $hourInTz = (int) Date::factory($datetime, $timezone)->toString('H');
         return $hourInTz;
     }
-
     public function formatValue($value, $idSite, Formatter $formatter)
     {
         $hourInTz = self::convertHourToHourInSiteTimezone($value, $idSite);
-
         return \Piwik\Plugins\VisitTime\getTimeLabel($hourInTz);
     }
-
     // we do not install or define column definition here as we need to create this column when installing as there is
     // an index on it. Currently we do not define the index here... although we could overwrite the install() method
     // and add column 'visit_last_action_time' and add index. Problem is there is also an index
     // INDEX(idsite, config_id, visit_last_action_time) and we maybe not be sure whether idsite already exists at
     // installing point (we do not know whether idsite column will be added first).
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -89,7 +83,6 @@ class VisitLastActionTime extends VisitDimension
     {
         return Date::getDatetimeFromTimestamp($request->getCurrentTimestamp());
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -101,15 +94,11 @@ class VisitLastActionTime extends VisitDimension
         if ($request->getParam('ping') == 1) {
             return false;
         }
-
         $originalVisitLastActionTime = $visitor->getPreviousVisitColumn('visit_last_action_time');
-
-        if (!empty($originalVisitLastActionTime)
-            && Date::factory($originalVisitLastActionTime)->getTimestamp() > $request->getCurrentTimestamp()) {
+        if (!empty($originalVisitLastActionTime) && Date::factory($originalVisitLastActionTime)->getTimestamp() > $request->getCurrentTimestamp()) {
             // make sure to not set visit_last_action_time to an earlier time eg if tracking requests aren't sent in order
             return $originalVisitLastActionTime;
         }
-
         return $this->onNewVisit($request, $visitor, $action);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -17,20 +18,14 @@ class Insights extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array(
-            'AssetManager.getJavaScriptFiles' => 'getJsFiles',
-            'AssetManager.getStylesheetFiles' => 'getStylesheetFiles'
-        );
+        return array('AssetManager.getJavaScriptFiles' => 'getJsFiles', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles');
     }
-
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/Insights/stylesheets/insightVisualization.less";
     }
-
     public function getJsFiles(&$jsFiles)
     {
         $jsFiles[] = "plugins/Insights/javascripts/insightsDataTable.js";
     }
-
 }

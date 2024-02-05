@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
-
 /**
  * Deletes every row for which a specific column does not match a supplied regex pattern.
  *
@@ -30,7 +30,6 @@ class Pattern extends BaseFilter
     private $patternToSearch;
     private $patternToSearchQuoted;
     private $invertedMatch;
-
     /**
      * Constructor.
      *
@@ -48,7 +47,6 @@ class Pattern extends BaseFilter
         $this->columnToFilter = $columnToFilter;
         $this->invertedMatch = $invertedMatch;
     }
-
     /**
      * Helper method to return the given pattern quoted
      *
@@ -58,9 +56,8 @@ class Pattern extends BaseFilter
      */
     public static function getPatternQuoted($pattern)
     {
-        return '/' . str_replace('/', '\/', $pattern) . '/';
+        return '/' . str_replace('/', '\\/', $pattern) . '/';
     }
-
     /**
      * Performs case insensitive match
      *
@@ -74,7 +71,6 @@ class Pattern extends BaseFilter
     {
         return preg_match($patternQuoted . "i", $string) == 1 ^ $invertedMatch;
     }
-
     /**
      * See {@link Pattern}.
      *
@@ -86,7 +82,7 @@ class Pattern extends BaseFilter
             //instead search must handle
             // - negative search with -piwik
             // - exact match with ""
-            // see (?!pattern) 	A subexpression that performs a negative lookahead search, which matches the search string at any point where a string not matching pattern begins.
+            // see (?!pattern)     A subexpression that performs a negative lookahead search, which matches the search string at any point where a string not matching pattern begins.
             $value = $row->getColumn($this->columnToFilter);
             if ($value === false) {
                 $value = $row->getMetadata($this->columnToFilter);
@@ -96,7 +92,6 @@ class Pattern extends BaseFilter
             }
         }
     }
-
     /**
      * See {@link Pattern}.
      *
@@ -106,20 +101,17 @@ class Pattern extends BaseFilter
     public function filterArray($array)
     {
         $newArray = array();
-
         foreach ($array as $key => $row) {
             foreach ($this->columnToFilter as $column) {
                 if (!array_key_exists($column, $row)) {
                     continue;
                 }
-
                 if (self::match($this->patternToSearchQuoted, $row[$column], $this->invertedMatch)) {
                     $newArray[$key] = $row;
                     continue 2;
                 }
             }
         }
-
         return $newArray;
     }
 }

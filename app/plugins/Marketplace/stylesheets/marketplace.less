@@ -1,10 +1,10 @@
 .subscriptionOverview {
     .icon-error, .errorMessage {
-        color: @color-red-piwik;
+        color: @color-red-matomo;
     }
 
     .icon-ok {
-        color: @color-green-piwik;
+        color: @color-green-matomo;
     }
 
     .icon-warning {
@@ -81,6 +81,14 @@
     .plugin {
         h3 {
             word-wrap: break-word;
+
+            a {
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: none;
+                }
+            }
         }
         text-align: center;
         .description {
@@ -90,25 +98,24 @@
             padding-bottom: 0;
             margin-bottom: 10px;
             .more {
-                text-decoration: underline;
-                color: @theme-color-text;
+                color: @theme-color-link;
+                white-space: nowrap;
             }
         }
         img.preview {
             max-width: 250px;
             width: 100%;
         }
-        .footer {
-            .download.plugin-details {
-                padding-left: 0;
-                padding-right: 0;
-            }
-        }
         .metadata {
             color: @color-silver-l50;
             font-size: 95%;
             margin: 15px 15px 10px;
             list-style: none;
+            a {
+                color: @theme-color-link;
+                text-decoration: underline;
+                cursor: pointer;
+            }
             li {
                 text-overflow: ellipsis;
                 overflow: hidden;
@@ -135,6 +142,11 @@
         .footer {
             padding: 12px 40px;
 
+            .download.plugin-details {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
             .btn-link.plugin-details {
                 padding-left: 0;
                 padding-right: 0;
@@ -160,5 +172,48 @@
     .startUpload {
         margin-top: 20px;
         margin-bottom: 20px;
+    }
+}
+
+.manage-license-key {
+    .manage-license-key-intro {
+        margin-bottom: 20px;
+    }
+
+    .manage-license-key-input {
+        width: 50%;
+        display: inline-block;
+        vertical-align: middle;
+        padding-right: 24px;
+
+        @media only screen and (max-width: 1024px) {
+            width: 40%;
+        }
+
+        @media only screen and (max-width: 768px) {
+            width: 100%;
+            padding-right: 0;
+        }
+
+        .form-group {
+            margin: 0;
+        }
+
+        .row .col {
+            padding: 0;
+        }
+    }
+
+    .loadingPiwik,
+    #submit_license_key,
+    #remove_license_key {
+        display: inline-block;
+        margin-right: 24px;
+    }
+
+    #remove_license_key {
+        .btn {
+            background-color: @color-red-matomo;
+        }
     }
 }

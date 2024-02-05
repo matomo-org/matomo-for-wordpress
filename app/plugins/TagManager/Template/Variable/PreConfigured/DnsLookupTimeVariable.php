@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,19 +9,17 @@
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
 use Piwik\Plugins\TagManager\Context\WebContext;
-
-class DnsLookupTimeVariable extends BasePreConfiguredVariable
+class DnsLookupTimeVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BasePreConfiguredVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_PERFORMANCE;
     }
-
-    public function loadTemplate($context, $entity)
+    public function loadTemplate($context, $entity, $skipTemplate = false)
     {
         switch ($context) {
             case WebContext::ID:
-                return $this->makeReturnTemplateMethod("TagManager.window.getPerformanceTiming('domainLookupEnd') - TagManager.window.getPerformanceTiming('domainLookupStart')");
+                return $this->makeReturnTemplateMethod("TagManager.window.getPerformanceTiming('domainLookupEnd') - TagManager.window.getPerformanceTiming('domainLookupStart')", $skipTemplate);
         }
     }
 }

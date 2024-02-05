@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Intl\Data\Provider\RegionDataProvider;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
-
 /**
  *
  */
@@ -23,15 +23,8 @@ class UserCountry extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array(
-            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
-            'AssetManager.getStylesheetFiles'        => 'getStylesheetFiles',
-            'AssetManager.getJavaScriptFiles'        => 'getJsFiles',
-            'Tracker.setTrackerCacheGeneral'         => 'setTrackerCacheGeneral',
-            'Insights.addReportToOverview'           => 'addReportToInsightsOverview',
-        );
+        return array('Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'Tracker.setTrackerCacheGeneral' => 'setTrackerCacheGeneral', 'Insights.addReportToOverview' => 'addReportToInsightsOverview');
     }
-
     public function getClientSideTranslationKeys(&$translations)
     {
         $translations[] = 'General_InfoFor';
@@ -43,27 +36,26 @@ class UserCountry extends \Piwik\Plugin
         $translations[] = 'UserCountry_CannotLocalizeLocalIP';
         $translations[] = 'UserCountry_NoProviders';
         $translations[] = 'General_Disabled';
+        $translations[] = 'UserCountry_GeolocationPageDesc';
+        $translations[] = 'UserCountry_LocationProvider';
+        $translations[] = 'UserCountry_Geolocation';
+        $translations[] = 'UserCountry_DistinctCountries';
     }
-
     public function addReportToInsightsOverview(&$reports)
     {
         $reports['UserCountry_getCountry'] = array();
     }
-
     public function setTrackerCacheGeneral(&$cache)
     {
-        $cache['currentLocationProviderId'] = LocationProvider::getCurrentProviderId();
+        $cache['currentLocationProviderId'] = \Piwik\Plugins\UserCountry\LocationProvider::getCurrentProviderId();
     }
-
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/UserCountry/stylesheets/userCountry.less";
     }
-
     public function getJsFiles(&$jsFiles)
     {
     }
-
     /**
      * Returns a list of country codes for a given continent code.
      *
@@ -73,8 +65,7 @@ class UserCountry extends \Piwik\Plugin
     public static function getCountriesForContinent($continent)
     {
         /** @var RegionDataProvider $regionDataProvider */
-        $regionDataProvider = StaticContainer::get('Piwik\Intl\Data\Provider\RegionDataProvider');
-
+        $regionDataProvider = StaticContainer::get('Piwik\\Intl\\Data\\Provider\\RegionDataProvider');
         $result = array();
         $continent = strtolower($continent);
         foreach ($regionDataProvider->getCountryList() as $countryCode => $continentCode) {
@@ -82,10 +73,9 @@ class UserCountry extends \Piwik\Plugin
                 $result[] = $countryCode;
             }
         }
-        return array('SQL'  => "'" . implode("', '", $result) . "', ?",
-                     'bind' => '-'); // HACK: SegmentExpression requires a $bind, even if there's nothing to bind
+        return array('SQL' => "'" . implode("', '", $result) . "', ?", 'bind' => '-');
+        // HACK: SegmentExpression requires a $bind, even if there's nothing to bind
     }
-
     /**
      * Returns true if a GeoIP provider is installed & working, false if otherwise.
      *
@@ -93,15 +83,11 @@ class UserCountry extends \Piwik\Plugin
      */
     public function isGeoIPWorking()
     {
-        $provider = LocationProvider::getCurrentProvider();
-        return $provider instanceof GeoIp2
-        && $provider->isAvailable() === true
-        && $provider->isWorking() === true;
+        $provider = \Piwik\Plugins\UserCountry\LocationProvider::getCurrentProvider();
+        return $provider instanceof GeoIp2 && $provider->isAvailable() === true && $provider->isWorking() === true;
     }
-
     public static function isGeoLocationAdminEnabled()
     {
         return (bool) Config::getInstance()->General['enable_geolocation_admin'];
     }
-
 }

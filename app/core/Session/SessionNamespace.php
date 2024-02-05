@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Session;
 use Piwik\Common;
 use Piwik\Session;
 use Zend_Session_Namespace;
-
 /**
  * Session namespace.
  *
@@ -29,9 +29,7 @@ class SessionNamespace extends Zend_Session_Namespace
             self::$_writable = true;
             return;
         }
-
         Session::start();
-
         parent::__construct($namespace, $singleInstance);
     }
 }

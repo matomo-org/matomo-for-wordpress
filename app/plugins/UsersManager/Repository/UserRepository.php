@@ -15,40 +15,40 @@ use Piwik\Plugins\UsersManager\LastSeenTimeLogger;
 use Piwik\Plugins\UsersManager\Model;
 use Piwik\Plugins\UsersManager\UserAccessFilter;
 use Piwik\Plugins\UsersManager\UsersManager;
+use Piwik\Plugins\UsersManager\Validators\AllowedEmailDomain;
 use Piwik\Plugins\UsersManager\Validators\Email;
 use Piwik\Plugins\UsersManager\Validators\Login;
 use Piwik\Site;
 use Piwik\Validators\BaseValidator;
-
 class UserRepository
 {
     /**
      * @var Model
      */
     protected $model;
-
     /**
      * @var UserAccessFilter
      */
     protected $filter;
-
     /**
      * @var Password
      */
     protected $password;
-
+    /**
+     * @var AllowedEmailDomain
+     */
+    protected $allowedEmailDomain;
     /**
      * @var ?bool
      */
     private $twoFaPluginActivated = null;
-
-    public function __construct(Model $model, UserAccessFilter $filter, Password $password)
+    public function __construct(Model $model, UserAccessFilter $filter, Password $password, AllowedEmailDomain $allowedEmailDomain)
     {
         $this->model = $model;
         $this->filter = $filter;
         $this->password = $password;
+        $this->allowedEmailDomain = $allowedEmailDomain;
     }
-
     /**
      * @param string $userLogin
      * @param string $email
@@ -57,23 +57,14 @@ class UserRepository
      * @param bool   $isPasswordHashed
      * @throws \Exception
      */
-    public function create(
-        string $userLogin,
-        string $email,
-        ?int $initialIdSite = null,
-        string $password = '',
-        bool $isPasswordHashed = false
-    ): void {
-
-
+    public function create(string $userLogin, string $email, ?int $initialIdSite = null, string $password = '', bool $isPasswordHashed = false) : void
+    {
         if (!Piwik::hasUserSuperUserAccess()) {
             // check if the user has admin access to the site
             Piwik::checkUserHasAdminAccess($initialIdSite);
         }
-
         BaseValidator::check(Piwik::translate('General_Username'), $userLogin, [new Login(true)]);
-        BaseValidator::check(Piwik::translate('Installation_Email'), $email, [new Email(true)]);
-
+        BaseValidator::check(Piwik::translate('Installation_Email'), $email, [new Email(true), $this->allowedEmailDomain]);
         if (!empty($password)) {
             if (!$isPasswordHashed) {
                 $passwordTransformed = UsersManager::getPasswordHash($password);
@@ -82,17 +73,13 @@ class UserRepository
             }
             $password = $this->password->hash($passwordTransformed);
         }
-
         $this->model->addUser($userLogin, $password, $email, Date::now()->getDatetime());
-
         if ($initialIdSite) {
             API::getInstance()->setUserAccess($userLogin, 'view', $initialIdSite);
         }
-
         $this->sendUserCreationNotification($userLogin);
     }
-
-    public function inviteUser(string $userLogin, string $email, ?int $initialIdSite = null, $expiryInDays = null): void
+    public function inviteUser(string $userLogin, string $email, ?int $initialIdSite = null, $expiryInDays = null) : void
     {
         $this->create($userLogin, $email, $initialIdSite);
         $this->model->updateUserFields($userLogin, ['invited_by' => Piwik::getCurrentUserLogin()]);
@@ -101,76 +88,56 @@ class UserRepository
         $this->model->attachInviteToken($userLogin, $generatedToken, $expiryInDays);
         $this->sendInvitationEmail($user, $generatedToken, $expiryInDays);
     }
-
-    public function reInviteUser(string $userLogin, $expiryInDays = null): void
+    public function reInviteUser(string $userLogin, $expiryInDays = null) : void
     {
         $user = $this->model->getUser($userLogin);
         $generatedToken = $this->model->generateRandomInviteToken();
         $this->model->attachInviteToken($userLogin, $generatedToken, $expiryInDays);
         $this->sendInvitationEmail($user, $generatedToken, $expiryInDays);
     }
-
-    public function generateInviteToken(string $userLogin, $expiryInDays = null): string
+    public function generateInviteToken(string $userLogin, $expiryInDays = null) : string
     {
         $generatedToken = $this->model->generateRandomInviteToken();
         $this->model->attachInviteLinkToken($userLogin, $generatedToken, $expiryInDays);
         return $generatedToken;
     }
-
-    protected function sendUserCreationNotification(string $createdUserLogin): void
+    protected function sendUserCreationNotification(string $createdUserLogin) : void
     {
-        $mail = StaticContainer::getContainer()->make(UserCreatedEmail::class, [
-            'login'        => Piwik::getCurrentUserLogin(),
-            'emailAddress' => Piwik::getCurrentUserEmail(),
-            'userLogin'    => $createdUserLogin,
-        ]);
+        $mail = StaticContainer::getContainer()->make(UserCreatedEmail::class, ['login' => Piwik::getCurrentUserLogin(), 'emailAddress' => Piwik::getCurrentUserEmail(), 'userLogin' => $createdUserLogin]);
         $mail->safeSend();
     }
-
-    protected function sendInvitationEmail(array $user, string $inviteToken, int $expiryInDays): void
+    protected function sendInvitationEmail(array $user, string $inviteToken, int $expiryInDays) : void
     {
         $site = $this->model->getSitesAccessFromUser($user['login']);
-
         if (isset($site[0])) {
             $siteName = Site::getNameFor($site[0]['site']);
         } else {
             $siteName = "Default Site";
         }
-
-        $email = StaticContainer::getContainer()->make(UserInviteEmail::class, [
-            'currentUser'  => Piwik::getCurrentUserLogin(),
-            'invitedUser'  => $user,
-            'siteName'     => $siteName,
-            'token'        => $inviteToken,
-            'expiryInDays' => $expiryInDays
-        ]);
+        $email = StaticContainer::getContainer()->make(UserInviteEmail::class, ['currentUser' => Piwik::getCurrentUserLogin(), 'invitedUser' => $user, 'siteName' => $siteName, 'token' => $inviteToken, 'expiryInDays' => $expiryInDays]);
         $email->safeSend();
     }
-
     /**
      * @param array $user
      * @return array
      * @throws \Exception
      */
-    public function enrichUser(array $user): array
+    public function enrichUser(array $user) : array
     {
         if (empty($user)) {
             return $user;
         }
-
         unset($user['token_auth']);
         unset($user['password']);
         unset($user['ts_password_modified']);
         unset($user['idchange_last_viewed']);
+        unset($user['ts_changes_shown']);
         unset($user['invite_token']);
         unset($user['invite_link_token']);
-
         if ($lastSeen = LastSeenTimeLogger::getLastSeenTimeForUser($user['login'])) {
             $user['last_seen'] = Date::getDatetimeFromTimestamp($lastSeen);
         }
-
         $user['invite_status'] = 'active';
-
         if (!empty($user['invite_expired_at'])) {
             $inviteExpireAt = Date::factory($user['invite_expired_at']);
             // if token expired
@@ -183,30 +150,24 @@ class UserRepository
                 $user['invite_status'] = $dayLeft;
             }
         }
-
         if (Piwik::hasUserSuperUserAccess()) {
             $user['uses_2fa'] = !empty($user['twofactor_secret']) && $this->isTwoFactorAuthPluginEnabled();
             unset($user['twofactor_secret']);
             return $user;
         }
-
         $newUser = ['login' => $user['login']];
-
         if ($user['login'] === Piwik::getCurrentUserLogin() || !empty($user['superuser_access'])) {
             $newUser['email'] = $user['email'];
         }
-
         if (isset($user['role'])) {
             $newUser['role'] = $user['role'] == 'superuser' ? 'admin' : $user['role'];
         }
         if (isset($user['capabilities'])) {
             $newUser['capabilities'] = $user['capabilities'];
         }
-
         if (isset($user['superuser_access'])) {
             $newUser['superuser_access'] = $user['superuser_access'];
         }
-
         if (isset($user['last_seen'])) {
             $newUser['last_seen'] = $user['last_seen'];
         }
@@ -214,16 +175,14 @@ class UserRepository
         if (isset($user['invited_by'])) {
             $newUser['invited_by'] = $user['invited_by'];
         }
-
         return $newUser;
     }
-
     /**
      * @param array $users
      * @return mixed
      * @throws \Exception
      */
-    public function enrichUsers(array $users): array
+    public function enrichUsers(array $users) : array
     {
         if (!empty($users)) {
             foreach ($users as $index => $user) {
@@ -232,15 +191,13 @@ class UserRepository
         }
         return $users;
     }
-
     /**
      * @param array $users
      * @return mixed
      */
-    public function enrichUsersWithLastSeen(array $users): array
+    public function enrichUsersWithLastSeen(array $users) : array
     {
         $formatter = new Formatter();
-
         $lastSeenTimes = LastSeenTimeLogger::getLastSeenTimesForAllUsers();
         foreach ($users as &$user) {
             $login = $user['login'];
@@ -250,8 +207,7 @@ class UserRepository
         }
         return $users;
     }
-
-    private function isTwoFactorAuthPluginEnabled(): bool
+    private function isTwoFactorAuthPluginEnabled() : bool
     {
         if (!isset($this->twoFaPluginActivated)) {
             $this->twoFaPluginActivated = Plugin\Manager::getInstance()->isPluginActivated('TwoFactorAuth');

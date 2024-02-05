@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,13 +11,12 @@ namespace Piwik\Plugin;
 
 use Exception;
 use Piwik\Piwik;
+use Piwik\Url;
 use Piwik\Version;
-
 /**
  * @see core/Version.php
  */
 require_once PIWIK_INCLUDE_PATH . '/core/Version.php';
-
 /**
  * Loads plugin metadata found in the following files:
  * - piwik.json
@@ -24,14 +24,12 @@ require_once PIWIK_INCLUDE_PATH . '/core/Version.php';
 class MetadataLoader
 {
     const PLUGIN_JSON_FILENAME = 'plugin.json';
-
     /**
      * The name of the plugin whose metadata will be loaded.
      *
      * @var string
      */
     private $pluginName;
-
     /**
      * Constructor.
      *
@@ -41,7 +39,6 @@ class MetadataLoader
     {
         $this->pluginName = $pluginName;
     }
-
     /**
      * Loads plugin metadata. @see Plugin::getInformation.
      *
@@ -50,46 +47,28 @@ class MetadataLoader
     public function load()
     {
         $defaults = $this->getDefaultPluginInformation();
-        $plugin   = $this->loadPluginInfoJson();
-
+        $plugin = $this->loadPluginInfoJson();
         // use translated plugin description if available
         if ($defaults['description'] != Piwik::translate($defaults['description'])) {
             unset($plugin['description']);
         }
-
         // look for a license file
         $licenseFile = $this->getPathToLicenseFile();
-        if(!empty($licenseFile)) {
+        if (!empty($licenseFile)) {
             $plugin['license_file'] = $licenseFile;
         }
-
-        return array_merge(
-            $defaults,
-            $plugin
-        );
+        return array_merge($defaults, $plugin);
     }
-
     public function hasPluginJson()
     {
         $hasJson = $this->loadPluginInfoJson();
-
         return !empty($hasJson);
     }
-
     private function getDefaultPluginInformation()
     {
         $descriptionKey = $this->pluginName . '_PluginDescription';
-        return array(
-            'description'      => $descriptionKey,
-            'homepage'         => 'https://matomo.org/',
-            'authors'          => array(array('name' => 'Matomo', 'homepage'  => 'https://matomo.org/')),
-            'license'          => 'GPL v3+',
-            'version'          => Version::VERSION,
-            'theme'            => false,
-            'require'          => array()
-        );
+        return ['description' => $descriptionKey, 'homepage' => Url::addCampaignParametersToMatomoLink('https://matomo.org/'), 'authors' => [['name' => 'Matomo', 'homepage' => Url::addCampaignParametersToMatomoLink('https://matomo.org/')]], 'license' => 'GPL v3+', 'version' => Version::VERSION, 'theme' => false, 'require' => []];
     }
-
     /**
      * It is important that this method works without using anything from DI
      * @return array|mixed
@@ -99,34 +78,26 @@ class MetadataLoader
         $path = $this->getPathToPluginJson();
         return $this->loadJsonMetadata($path);
     }
-
     public function getPathToPluginJson()
     {
         $path = $this->getPathToPluginFolder() . '/' . self::PLUGIN_JSON_FILENAME;
         return $path;
     }
-
     private function loadJsonMetadata($path)
     {
         if (!file_exists($path)) {
             return array();
         }
-
         $json = file_get_contents($path);
         if (!$json) {
             return array();
         }
-
         $info = json_decode($json, $assoc = true);
-        if (!is_array($info)
-            || empty($info)
-        ) {
-            throw new Exception("Invalid JSON file: $path");
+        if (!is_array($info) || empty($info)) {
+            throw new Exception("Invalid JSON file: {$path}");
         }
-
         return $info;
     }
-
     /**
      * @return string
      */
@@ -134,18 +105,13 @@ class MetadataLoader
     {
         return \Piwik\Plugin\Manager::getPluginDirectory($this->pluginName);
     }
-
     /**
      * @return null|string
      */
     public function getPathToLicenseFile()
     {
         $prefixPath = $this->getPathToPluginFolder() . '/';
-        $licenseFiles = array(
-            'LICENSE',
-            'LICENSE.md',
-            'LICENSE.txt'
-        );
+        $licenseFiles = array('LICENSE', 'LICENSE.md', 'LICENSE.txt');
         foreach ($licenseFiles as $licenseFile) {
             $pathToLicense = $prefixPath . $licenseFile;
             if (is_file($pathToLicense) && is_readable($pathToLicense)) {

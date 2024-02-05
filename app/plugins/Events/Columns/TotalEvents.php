@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
-
 class TotalEvents extends VisitDimension
 {
     protected $columnName = 'visit_total_events';
@@ -20,9 +20,7 @@ class TotalEvents extends VisitDimension
     protected $segmentName = 'events';
     protected $nameSingular = 'Events_Events';
     protected $acceptValues = 'To select all visits who triggered an Event, use: &segment=events>0';
-
     protected $type = self::TYPE_NUMBER;
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -34,10 +32,8 @@ class TotalEvents extends VisitDimension
         if ($this->isEventAction($action)) {
             return 1;
         }
-
         return 0;
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -49,16 +45,14 @@ class TotalEvents extends VisitDimension
         if ($this->isEventAction($action)) {
             return 'visit_total_events + 1';
         }
-
         return false;
     }
-
     /**
      * @param Action|null $action
      * @return bool
      */
     private function isEventAction($action)
     {
-        return ($action && $action->getActionType() == Action::TYPE_EVENT);
+        return $action && $action->getActionType() == Action::TYPE_EVENT;
     }
 }

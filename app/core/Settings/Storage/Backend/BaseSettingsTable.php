@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,25 +12,18 @@ namespace Piwik\Settings\Storage\Backend;
 use Piwik\Concurrency\Lock;
 use Piwik\Container\StaticContainer;
 use Piwik\Db;
-
-abstract class BaseSettingsTable implements BackendInterface
+abstract class BaseSettingsTable implements \Piwik\Settings\Storage\Backend\BackendInterface
 {
     /**
      * @var Db\AdapterInterface
      */
     protected $db;
-
     /** @var Lock */
     protected $lock;
-
     public function __construct()
     {
-        $this->lock = StaticContainer::getContainer()->make(
-            Lock::class,
-            array ('lockKeyStart' => 'PluginSettingsTable')
-        );
+        $this->lock = StaticContainer::getContainer()->make(Lock::class, array('lockKeyStart' => 'PluginSettingsTable'));
     }
-
     protected function initDbIfNeeded()
     {
         if (!isset($this->db)) {
@@ -37,5 +31,4 @@ abstract class BaseSettingsTable implements BackendInterface
             $this->db = Db::get();
         }
     }
-
 }

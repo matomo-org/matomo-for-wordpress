@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -15,7 +16,7 @@ namespace Piwik\DataTable\Renderer;
  * TSV is therefore the 'CSV' that is Excel compatible
  *
  */
-class Tsv extends Csv
+class Tsv extends \Piwik\DataTable\Renderer\Csv
 {
     /**
      * Constructor
@@ -25,7 +26,6 @@ class Tsv extends Csv
         parent::__construct();
         $this->setSeparator("\t");
     }
-
     /**
      * Computes the dataTable output and returns the string/binary
      *

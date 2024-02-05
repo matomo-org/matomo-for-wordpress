@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,30 +12,24 @@ namespace Piwik\Plugins\UserCountry\Reports;
 use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\UserCountry\Columns\City;
-
-class GetCity extends Base
+class GetCity extends \Piwik\Plugins\UserCountry\Reports\Base
 {
     protected function init()
     {
         parent::init();
-        $this->dimension      = new City();
-        $this->name           = Piwik::translate('UserCountry_City');
-        $this->documentation  = Piwik::translate('UserCountry_getCityDocumentation') . '<br/>' . $this->getGeoIPReportDocSuffix();
-        $this->metrics        = array('nb_visits', 'nb_uniq_visitors', 'nb_actions');
+        $this->dimension = new City();
+        $this->name = Piwik::translate('UserCountry_City');
+        $this->documentation = Piwik::translate('UserCountry_getCityDocumentation') . '<br/>' . $this->getGeoIPReportDocSuffix();
+        $this->metrics = array('nb_visits', 'nb_uniq_visitors', 'nb_actions');
         $this->hasGoalMetrics = true;
         $this->order = 10;
         $this->subcategoryId = 'UserCountry_SubmenuLocations';
     }
-
     public function configureView(ViewDataTable $view)
     {
         $view->config->show_exclude_low_population = false;
         $view->config->documentation = $this->documentation;
-        $view->config->addTranslation('label', $this->dimension->getName());
-
         $view->requestConfig->filter_limit = 5;
-
         $this->checkIfNoDataForGeoIpReport($view);
     }
-
 }

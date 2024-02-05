@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,18 +11,16 @@ namespace Piwik\Plugins\Events\Reports;
 
 use Piwik\Piwik;
 use Piwik\Plugins\Events\Columns\EventCategory;
-
 /**
  * Report metadata class for the Events.getCategoryFromActionId class.
  */
-class GetCategoryFromActionId extends Base
+class GetCategoryFromActionId extends \Piwik\Plugins\Events\Reports\Base
 {
     protected function init()
     {
         parent::init();
-
-        $this->dimension     = new EventCategory();
-        $this->name          = Piwik::translate('Events_EventCategories');
+        $this->dimension = new EventCategory();
+        $this->name = Piwik::translate('Events_EventCategories');
         $this->isSubtableReport = true;
     }
 }

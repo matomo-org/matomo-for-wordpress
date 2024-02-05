@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -24,8 +25,7 @@ use Piwik\Plugins\CoreHome\LoginAllowlist;
 use Piwik\SettingsServer;
 use Piwik\Url;
 use Piwik\UrlHelper;
-use Psr\Log\LoggerInterface;
-
+use Piwik\Log\LoggerInterface;
 /**
  * Dispatches API requests to the appropriate API method.
  *
@@ -81,9 +81,7 @@ class Request
      * @var int
      */
     private static $nestedApiInvocationCount = 0;
-
     private $request = null;
-
     /**
      * Converts the supplied request string into an array of query parameter name/value
      * mappings. The current query parameters (everything in `$_GET` and `$_POST`) are
@@ -99,33 +97,26 @@ class Request
     {
         if ($defaultRequest === null) {
             $defaultRequest = self::getDefaultRequest();
-
             $requestRaw = self::getRequestParametersGET();
             if (!empty($requestRaw['segment'])) {
                 $defaultRequest['segment'] = $requestRaw['segment'];
             }
-
             // Only default to formatting metrics if the request doesn't already contain the format metrics parameter
             if (!isset($defaultRequest['format_metrics']) && !isset($request['format_metrics'])) {
                 $defaultRequest['format_metrics'] = 'bc';
             }
         }
-
         $requestArray = $defaultRequest;
-
         if (!is_null($request)) {
             if (is_array($request)) {
                 $requestParsed = $request;
             } else {
                 $request = trim($request);
                 $request = str_replace(array("\n", "\t"), '', $request);
-
                 $requestParsed = UrlHelper::getArrayFromQueryString($request);
             }
-
             $requestArray = $requestParsed + $defaultRequest;
         }
-
         foreach ($requestArray as &$element) {
             if (!is_array($element)) {
                 $element = trim((string) $element);
@@ -133,7 +124,6 @@ class Request
         }
         return $requestArray;
     }
-
     /**
      * Constructor.
      *
@@ -150,7 +140,6 @@ class Request
         $this->sanitizeRequest();
         $this->renameModuleAndActionInRequest();
     }
-
     /**
      * For backward compatibility: Piwik API still works if module=Referers,
      * we rewrite to correct renamed plugin: Referrers
@@ -171,10 +160,8 @@ class Request
          * @param $action string
          */
         Piwik::postEvent('Request.getRenamedModuleAndAction', array(&$module, &$action));
-
         return array($module, $action);
     }
-
     /**
      * Make sure that the request contains no logical errors
      */
@@ -184,13 +171,10 @@ class Request
         // depending on whether the table has been loaded yet. expanded=1 causes all tables to be loaded, which
         // is why the label filter can't descend when a recursive label has been requested.
         // To fix this, we remove the expanded parameter if a label parameter is set.
-        if (isset($this->request['label']) && !empty($this->request['label'])
-            && isset($this->request['expanded']) && $this->request['expanded']
-        ) {
+        if (isset($this->request['label']) && !empty($this->request['label']) && isset($this->request['expanded']) && $this->request['expanded']) {
             unset($this->request['expanded']);
         }
     }
-
     /**
      * Dispatches the API request to the appropriate API method and returns the result
      * after post-processing.
@@ -217,26 +201,24 @@ class Request
     public function process()
     {
         $shouldReloadAuth = false;
-
         try {
             ++self::$nestedApiInvocationCount;
-
             // read the format requested for the output data
             $outputFormat = strtolower(Common::getRequestVar('format', 'xml', 'string', $this->request));
-
             $disablePostProcessing = $this->shouldDisablePostProcessing();
-
             // create the response
-            $response = new ResponseBuilder($outputFormat, $this->request);
+            $response = new \Piwik\API\ResponseBuilder($outputFormat, $this->request);
+            // do not send any header when processing a nested API request,
+            // as the headers might remain for to the original response
+            if (!self::isCurrentApiRequestTheRootApiRequest()) {
+                $response->disableSendHeader();
+            }
             if ($disablePostProcessing) {
                 $response->disableDataTablePostProcessor();
             }
-
-            $corsHandler = new CORSHandler();
+            $corsHandler = new \Piwik\API\CORSHandler();
             $corsHandler->handle();
-
             $tokenAuth = Common::getRequestVar('token_auth', '', 'string', $this->request);
-
             // IP check is needed here as we cannot listen to API.Request.authenticate as it would then not return proper API format response.
             // We can also not do it by listening to API.Request.dispatch as by then the user is already authenticated and we want to make sure
             // to not expose any information in case the IP is not allowed.
@@ -245,71 +227,53 @@ class Request
                 $ip = IP::getIpFromHeader();
                 $list->checkIsAllowed($ip);
             }
-
             // read parameters
             $moduleMethod = Common::getRequestVar('method', null, 'string', $this->request);
-
-            list($module, $method) = $this->extractModuleAndMethod($moduleMethod);
-            list($module, $method) = self::getRenamedModuleAndAction($module, $method);
-
+            [$module, $method] = $this->extractModuleAndMethod($moduleMethod);
+            [$module, $method] = self::getRenamedModuleAndAction($module, $method);
             PluginManager::getInstance()->checkIsPluginActivated($module);
-
             $apiClassName = self::getClassNameAPI($module);
-
             if ($shouldReloadAuth = self::shouldReloadAuthUsingTokenAuth($this->request)) {
                 $access = Access::getInstance();
                 $tokenAuthToRestore = $access->getTokenAuth();
                 $hadSuperUserAccess = $access->hasSuperUserAccess();
                 self::forceReloadAuthUsingTokenAuth($tokenAuth);
             }
-
             // call the method
-            $returnedValue = Proxy::getInstance()->call($apiClassName, $method, $this->request);
-
+            $returnedValue = \Piwik\API\Proxy::getInstance()->call($apiClassName, $method, $this->request);
             // get the response with the request query parameters loaded, since DataTablePost processor will use the Report
             // class instance, which may inspect the query parameters. (eg, it may look for the idCustomReport parameters
             // which may only exist in $this->request, if the request was called programmatically)
-            $toReturn = Context::executeWithQueryParameters($this->request, function () use ($response, $returnedValue, $module, $method) {
+            $toReturn = Context::executeWithQueryParameters($this->request, function () use($response, $returnedValue, $module, $method) {
                 return $response->getResponse($returnedValue, $module, $method);
             });
         } catch (Exception $e) {
-            StaticContainer::get(LoggerInterface::class)->error('Uncaught exception in API: {exception}', [
-                'exception' => $e,
-                'ignoreInScreenWriter' => true,
-            ]);
-
+            StaticContainer::get(LoggerInterface::class)->error('Uncaught exception in API: {exception}', ['exception' => $e, 'ignoreInScreenWriter' => true]);
             if (empty($response)) {
-               $response = new ResponseBuilder('console', $this->request);
+                $response = new \Piwik\API\ResponseBuilder('console', $this->request);
             }
-            
             $toReturn = $response->getResponseException($e);
         } finally {
             --self::$nestedApiInvocationCount;
         }
-
         if ($shouldReloadAuth) {
             $this->restoreAuthUsingTokenAuth($tokenAuthToRestore, $hadSuperUserAccess);
         }
-
         return $toReturn;
     }
-
     private function restoreAuthUsingTokenAuth($tokenToRestore, $hadSuperUserAccess)
     {
         // if we would not make sure to unset super user access, the tokenAuth would be not authenticated and any
         // token would just keep super user access (eg if the token that was reloaded before had super user access)
         Access::getInstance()->setSuperUserAccess(false);
-
         // we need to restore by reloading the tokenAuth as some permissions could have been removed in the API
         // request etc. Otherwise we could just store a clone of Access::getInstance() and restore here
         self::forceReloadAuthUsingTokenAuth($tokenToRestore);
-
         if ($hadSuperUserAccess && !Access::getInstance()->hasSuperUserAccess()) {
             // we are in context of `doAsSuperUser()` and need to restore this behaviour
             Access::getInstance()->setSuperUserAccess(true);
         }
     }
-
     /**
      * Returns the name of a plugin's API class by plugin name.
      *
@@ -318,9 +282,8 @@ class Request
      */
     public static function getClassNameAPI($plugin)
     {
-        return sprintf('\Piwik\Plugins\%s\API', $plugin);
+        return sprintf('\\Piwik\\Plugins\\%s\\API', $plugin);
     }
-
     /**
      * @ignore
      * @internal
@@ -330,7 +293,6 @@ class Request
     {
         Cache::getTransientCache()->save('API.setIsRootRequestApiRequest', $currentApiMethod);
     }
-
     /**
      * @ignore
      * @internal
@@ -340,7 +302,6 @@ class Request
     {
         return Cache::getTransientCache()->fetch('API.setIsRootRequestApiRequest');
     }
-
     /**
      * Detect if the root request (the actual request) is an API request or not. To detect whether an API is currently
      * request within any request, have a look at {@link isApiRequest()}.
@@ -353,7 +314,6 @@ class Request
         $apiMethod = Cache::getTransientCache()->fetch('API.setIsRootRequestApiRequest');
         return !empty($apiMethod);
     }
-
     /**
      * Checks if the currently executing API request is the root API request or not.
      *
@@ -367,7 +327,6 @@ class Request
     {
         return self::$nestedApiInvocationCount == 1;
     }
-
     /**
      * Detect if request is an API request. Meaning the module is 'API' and an API method having a valid format was
      * specified. Note that this method will return true even if the actual request is for example a regular UI
@@ -384,7 +343,6 @@ class Request
         $method = self::getMethodIfApiRequest($request);
         return !empty($method);
     }
-
     /**
      * Returns the current API method being executed, if the current request is an API request.
      *
@@ -396,11 +354,9 @@ class Request
     {
         $module = Common::getRequestVar('module', '', 'string', $request);
         $method = Common::getRequestVar('method', '', 'string', $request);
-
-        $isApi = $module === 'API' && !empty($method) && (count(explode('.', $method)) === 2);
+        $isApi = $module === 'API' && !empty($method) && count(explode('.', $method)) === 2;
         return $isApi ? $method : null;
     }
-
     /**
      * If the token_auth is found in the $request parameter,
      * the current session will be authenticated using this token_auth.
@@ -414,12 +370,10 @@ class Request
     {
         // if a token_auth is specified in the API request, we load the right permissions
         $token_auth = Common::getRequestVar('token_auth', '', 'string', $request);
-
         if (self::shouldReloadAuthUsingTokenAuth($request)) {
             self::forceReloadAuthUsingTokenAuth($token_auth);
         }
     }
-
     /**
      * The current session will be authenticated using this token_auth.
      * It will overwrite the previous Auth object.
@@ -449,7 +403,6 @@ class Request
         }
         SettingsServer::raiseMemoryLimitIfNecessary();
     }
-
     /**
      * Needs to be called AFTER the user has been authenticated using a token.
      *
@@ -461,23 +414,17 @@ class Request
      */
     public static function checkTokenAuthIsNotLimited($module, $action)
     {
-        $isApi = ($module === 'API' && (empty($action) || $action === 'index'));
-        if ($isApi
-            || Common::isPhpCliMode()
-        ) {
+        $isApi = $module === 'API' && (empty($action) || $action === 'index');
+        if ($isApi || Common::isPhpCliMode()) {
             return;
         }
-
         if (Access::getInstance()->hasSuperUserAccess()) {
-            $ex = new \Piwik\Exception\Exception(Piwik::translate('Widgetize_TooHighAccessLevel', ['<a href="https://matomo.org/faq/troubleshooting/faq_147/" rel="noreferrer noopener">', '</a>']));
+            $ex = new \Piwik\Exception\Exception(Piwik::translate('Widgetize_TooHighAccessLevel', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/troubleshooting/faq_147/') . '" rel="noreferrer noopener">', '</a>']));
             $ex->setIsHtmlMessage();
             throw $ex;
         }
-
         $allowWriteAmin = Config::getInstance()->General['enable_framed_allow_write_admin_token_auth'] == 1;
-        if (Piwik::isUserHasSomeWriteAccess()
-            && !$allowWriteAmin
-        ) {
+        if (Piwik::isUserHasSomeWriteAccess() && !$allowWriteAmin) {
             // we allow UI authentication/ embedding widgets / reports etc only for users that have only view
             // access. it's mostly there to get users to use auth tokens of view users when embedding reports
             // token_auth is fine for API calls since they would be always authenticated later anyway
@@ -485,10 +432,11 @@ class Request
             //
             // NOTE: this does not apply if the [General] enable_framed_allow_write_admin_token_auth INI
             // option is set.
-            throw new \Exception(Piwik::translate('Widgetize_ViewAccessRequired', ['https://matomo.org/faq/troubleshooting/faq_147/']));
+            $ex = new \Piwik\Exception\Exception(Piwik::translate('Widgetize_ViewAccessRequired', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/troubleshooting/faq_147/') . '" rel="noreferrer noopener">https://matomo.org/faq/troubleshooting/faq_147/</a>']));
+            $ex->setIsHtmlMessage();
+            throw $ex;
         }
     }
-
     /**
      * @internal
      * @ignore
@@ -501,21 +449,27 @@ class Request
         if (is_null($request)) {
             $request = self::getDefaultRequest();
         }
-
         if (!isset($request['token_auth'])) {
             // no token is given so we just keep the current loaded user
             return false;
         }
-
         // a token is specified, we need to reload auth in case it is different than the current one, even if it is empty
         $tokenAuth = Common::getRequestVar('token_auth', '', 'string', $request);
-
         // not using !== is on purpose as getTokenAuth() might return null whereas $tokenAuth is '' . In this case
         // we do not need to reload.
-
         return $tokenAuth != Access::getInstance()->getTokenAuth();
     }
-
+    /**
+     * Returns true if a token_auth parameter was supplied via a secure mechanism and is not present as a URL parameter
+     * At the moment POST requests are checked, but in future other mechanism such as Authorisation HTTP header
+     * and bearer tokens might be used as well.
+     *
+     * @return bool True if token was supplied in a secure way
+     */
+    public static function isTokenAuthProvidedSecurely() : bool
+    {
+        return \Piwik\Request::fromGet()->getStringParameter('token_auth', '') === '' && \Piwik\Request::fromPost()->getStringParameter('token_auth', '') !== '';
+    }
     /**
      * Returns array($class, $method) from the given string $class.$method
      *
@@ -531,7 +485,6 @@ class Request
         }
         return $a;
     }
-
     /**
      * Helper method that processes an API request in one line using the variables in `$_GET`
      * and `$_POST`.
@@ -554,12 +507,10 @@ class Request
         $params['method'] = $method;
         $params['compare'] = '0';
         $params = $paramOverride + $params;
-
         // process request
-        $request = new Request($params, $defaultRequest);
+        $request = new \Piwik\API\Request($params, $defaultRequest);
         return $request->process();
     }
-
     /**
      * Returns the original request parameters in the current query string as an array mapping
      * query parameter names with values. The result of this function will not be affected
@@ -575,7 +526,6 @@ class Request
         $GET = UrlHelper::getArrayFromQueryString($_SERVER['QUERY_STRING']);
         return $GET;
     }
-
     /**
      * Returns the URL for the current requested report w/o any filter parameters.
      *
@@ -587,9 +537,8 @@ class Request
     public static function getBaseReportUrl($module, $action, $queryParams = array())
     {
         $params = array_merge($queryParams, array('module' => $module, 'action' => $action));
-        return Request::getCurrentUrlWithoutGenericFilters($params);
+        return \Piwik\API\Request::getCurrentUrlWithoutGenericFilters($params);
     }
-
     /**
      * Returns the current URL without generic filter query parameters.
      *
@@ -600,7 +549,7 @@ class Request
     {
         // unset all filter query params so the related report will show up in its default state,
         // unless the filter param was in $queryParams
-        $genericFiltersInfo = DataTableGenericFilter::getGenericFiltersInformation();
+        $genericFiltersInfo = \Piwik\API\DataTableGenericFilter::getGenericFiltersInformation();
         foreach ($genericFiltersInfo as $filter) {
             foreach ($filter[1] as $queryParamName => $queryParamInfo) {
                 if (!isset($params[$queryParamName])) {
@@ -608,14 +557,11 @@ class Request
                 }
             }
         }
-
         $params['compareDates'] = null;
         $params['comparePeriods'] = null;
         $params['compareSegments'] = null;
-
         return Url::getCurrentQueryStringWithParametersModified($params);
     }
-
     /**
      * Returns whether the DataTable result will have to be expanded for the
      * current request before rendering.
@@ -627,11 +573,8 @@ class Request
     {
         // if filter_column_recursive & filter_pattern_recursive are supplied, and flat isn't supplied
         // we have to load all the child subtables.
-        return Common::getRequestVar('filter_column_recursive', false) !== false
-            && Common::getRequestVar('filter_pattern_recursive', false) !== false
-            && !self::shouldLoadFlatten();
+        return Common::getRequestVar('filter_column_recursive', false) !== false && Common::getRequestVar('filter_pattern_recursive', false) !== false && !self::shouldLoadFlatten();
     }
-
     /**
      * @return bool
      */
@@ -639,7 +582,6 @@ class Request
     {
         return Common::getRequestVar('flat', false) == 1;
     }
-
     /**
      * Returns the segment query parameter from the original request, without modifications.
      *
@@ -651,14 +593,13 @@ class Request
         $segmentRaw = false;
         $segment = Common::getRequestVar('segment', '', 'string');
         if (!empty($segment)) {
-            $request = Request::getRequestParametersGET();
+            $request = \Piwik\API\Request::getRequestParametersGET();
             if (!empty($request['segment'])) {
                 $segmentRaw = $request['segment'];
             }
         }
         return $segmentRaw;
     }
-
     private function renameModuleAndActionInRequest()
     {
         if (empty($this->request['apiModule'])) {
@@ -667,9 +608,8 @@ class Request
         if (empty($this->request['apiAction'])) {
             $this->request['apiAction'] = null;
         }
-        list($this->request['apiModule'], $this->request['apiAction']) = $this->getRenamedModuleAndAction($this->request['apiModule'], $this->request['apiAction']);
+        [$this->request['apiModule'], $this->request['apiAction']] = $this->getRenamedModuleAndAction($this->request['apiModule'], $this->request['apiAction']);
     }
-
     /**
      * @return array
      */
@@ -677,11 +617,9 @@ class Request
     {
         return $_GET + $_POST;
     }
-
     private function shouldDisablePostProcessing()
     {
         $shouldDisable = false;
-
         /**
          * After an API method returns a value, the value is post processed (eg, rows are sorted
          * based on the `filter_sort_column` query parameter, rows are truncated based on the
@@ -694,12 +632,9 @@ class Request
          * @param array $request The request parameters.
          */
         Piwik::postEvent('Request.shouldDisablePostProcessing', [&$shouldDisable, $this->request]);
-
         if (!$shouldDisable) {
-            $shouldDisable = self::isCurrentApiRequestTheRootApiRequest() &&
-                Common::getRequestVar('disable_root_datatable_post_processor', 0, 'int', $this->request) == 1;
+            $shouldDisable = self::isCurrentApiRequestTheRootApiRequest() && Common::getRequestVar('disable_root_datatable_post_processor', 0, 'int', $this->request) == 1;
         }
-
         return $shouldDisable;
     }
 }

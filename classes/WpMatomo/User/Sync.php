@@ -73,6 +73,10 @@ class Sync {
 	public function sync_all() {
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 			foreach ( get_sites() as $site ) {
+				if ( 1 === (int) $site->deleted ) {
+					continue;
+				}
+
 				switch_to_blog( $site->blog_id );
 
 				$idsite = Site::get_matomo_site_id( $site->blog_id );

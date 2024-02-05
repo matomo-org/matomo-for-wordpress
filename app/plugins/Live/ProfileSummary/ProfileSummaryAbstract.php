@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -23,7 +24,6 @@ abstract class ProfileSummaryAbstract
      * @var array
      */
     protected $profile = [];
-
     /**
      * Set profile information
      *
@@ -33,7 +33,6 @@ abstract class ProfileSummaryAbstract
     {
         $this->profile = $profile;
     }
-
     /**
      * Returns the unique ID
      *
@@ -43,14 +42,12 @@ abstract class ProfileSummaryAbstract
     {
         return static::class;
     }
-
     /**
      * Returns the descriptive name
      *
      * @return string
      */
-    abstract public function getName();
-
+    public abstract function getName();
     /**
      * Renders and returns the summary
      *
@@ -68,12 +65,11 @@ abstract class ProfileSummaryAbstract
      *
      * @return string
      */
-    abstract public function render();
-
+    public abstract function render();
     /**
      * Returns order indicator used to sort all summaries before displaying them
      *
      * @return int
      */
-    abstract public function getOrder();
+    public abstract function getOrder();
 }

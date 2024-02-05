@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -14,7 +15,6 @@ use Piwik\Columns\Dimension;
 use Piwik\Columns\DimensionSegmentFactory;
 use Piwik\Piwik;
 use Piwik\Plugin\Segment;
-
 /**
  * Manages the global list of segments that can be used.
  *
@@ -32,18 +32,15 @@ class SegmentsList
      * @var Segment[]
      */
     private $segments = array();
-
     private $segmentsByNameCache = array();
-
     /**
      * @param Segment $segment
      */
     public function addSegment(Segment $segment)
     {
-        $this->segments[]          = $segment;
+        $this->segments[] = $segment;
         $this->segmentsByNameCache = array();
     }
-
     /**
      * Get all available segments.
      *
@@ -53,7 +50,6 @@ class SegmentsList
     {
         return $this->segments;
     }
-
     /**
      * Removes one or more segments from the segments list.
      *
@@ -73,7 +69,6 @@ class SegmentsList
             }
         }
     }
-
     /**
      * @param string $segmentExpression Name of the segment expression. eg `pageUrl`
      * @return Segment|null
@@ -85,14 +80,11 @@ class SegmentsList
                 $this->segmentsByNameCache[$segment->getSegment()] = $segment;
             }
         }
-
         if (!empty($this->segmentsByNameCache[$segmentExpression])) {
             return $this->segmentsByNameCache[$segmentExpression];
         }
-
         return null;
     }
-
     /**
      * Get all metrics defined in the Piwik platform.
      * @ignore
@@ -102,13 +94,10 @@ class SegmentsList
     {
         $cache = Cache::getTransientCache();
         $cacheKey = CacheId::siteAware('SegmentsList');
-
         if ($cache->contains($cacheKey)) {
             return $cache->fetch($cacheKey);
         }
-
-        $list = new static;
-
+        $list = new static();
         /**
          * Triggered to add custom segment definitions.
          *
@@ -127,11 +116,9 @@ class SegmentsList
          * @param SegmentsList $list An instance of the SegmentsList. You can add segments to the list this way.
          */
         Piwik::postEvent('Segment.addSegments', array($list));
-
         foreach (Dimension::getAllDimensions() as $dimension) {
             $dimension->configureSegments($list, new DimensionSegmentFactory($dimension));
         }
-
         /**
          * Triggered to filter segment definitions.
          *
@@ -145,10 +132,7 @@ class SegmentsList
          * @param SegmentsList $list An instance of the SegmentsList.
          */
         Piwik::postEvent('Segment.filterSegments', array($list));
-        
         $cache->save($cacheKey, $list);
-
         return $list;
     }
-
 }

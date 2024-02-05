@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,8 +7,8 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Category;
-use Piwik\Piwik;
 
+use Piwik\Piwik;
 /**
  * Base type for category. lets you change the name for a categoryId and specify a different order
  * so the category appears eg at a different order in the reporting menu.
@@ -25,24 +26,26 @@ class Category
      * @var string Should be a translation key, eg 'General_Vists'
      */
     protected $id = '';
-
     /**
      * @var Subcategory[]
      */
     protected $subcategories = array();
-
     /**
      * The order of the category. The lower the value the further left the category will appear in the menu.
      * @var int
      */
     protected $order = 99;
-
     /**
      * The icon for this category, eg 'icon-user'
      * @var int
      */
     protected $icon = '';
-
+    /**
+     * Optional widget spec to replace the category in the reporting menu, e.g. Marketplace.RichMenuButton
+     *
+     * @var string
+     */
+    protected $widget = '';
     /**
      * @param int $order
      * @return static
@@ -52,51 +55,41 @@ class Category
         $this->order = (int) $order;
         return $this;
     }
-
     public function getOrder()
     {
         return $this->order;
     }
-
     public function setId($id)
     {
         $this->id = $id;
         return $this;
     }
-
     public function getId()
     {
         return $this->id;
     }
-
     public function getDisplayName()
     {
         return Piwik::translate($this->getId());
     }
-
-    public function addSubcategory(Subcategory $subcategory)
+    public function addSubcategory(\Piwik\Category\Subcategory $subcategory)
     {
         $subcategoryId = $subcategory->getId();
-
         if ($this->hasSubcategory($subcategoryId)) {
             throw new \Exception(sprintf('Subcategory %s already exists for category %s', $subcategoryId, $this->getId()));
         }
-
         $this->subcategories[$subcategoryId] = $subcategory;
     }
-
     public function hasSubcategory($subcategoryId)
     {
         return isset($this->subcategories[$subcategoryId]);
     }
-
     public function getSubcategory($subcategoryId)
     {
         if ($this->hasSubcategory($subcategoryId)) {
             return $this->subcategories[$subcategoryId];
         }
     }
-
     /**
      * @return Subcategory[]
      */
@@ -104,23 +97,28 @@ class Category
     {
         return array_values($this->subcategories);
     }
-
     public function hasSubCategories()
     {
         return !empty($this->subcategories);
     }
-
     public function setIcon($icon)
     {
         $this->icon = $icon;
         return $this;
     }
-
     public function getIcon()
     {
         return $this->icon;
     }
-
+    public function setWidget(string $widget) : self
+    {
+        $this->widget = $widget;
+        return $this;
+    }
+    public function getWidget() : string
+    {
+        return $this->widget;
+    }
     /**
      * Get the help text (if any) for this category.
      * @return null

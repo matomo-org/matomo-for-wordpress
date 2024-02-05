@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
-
 /**
  * Executes a callback for each row of a {@link DataTable} and adds the result as a new
  * row metadata value.
@@ -28,7 +28,6 @@ class ColumnCallbackAddMetadata extends BaseFilter
     private $functionParameters;
     private $metadataToAdd;
     private $applyToSummaryRow;
-
     /**
      * Constructor.
      *
@@ -40,22 +39,18 @@ class ColumnCallbackAddMetadata extends BaseFilter
      *                                  instead.
      * @param bool $applyToSummaryRow Whether the callback should be applied to the summary row or not.
      */
-    public function __construct($table, $columnsToRead, $metadataToAdd, $functionToApply = null,
-                                $functionParameters = null, $applyToSummaryRow = true)
+    public function __construct($table, $columnsToRead, $metadataToAdd, $functionToApply = null, $functionParameters = null, $applyToSummaryRow = true)
     {
         parent::__construct($table);
-
         if (!is_array($columnsToRead)) {
             $columnsToRead = array($columnsToRead);
         }
-
-        $this->columnsToRead      = $columnsToRead;
-        $this->functionToApply    = $functionToApply;
+        $this->columnsToRead = $columnsToRead;
+        $this->functionToApply = $functionToApply;
         $this->functionParameters = $functionParameters;
-        $this->metadataToAdd      = $metadataToAdd;
-        $this->applyToSummaryRow  = $applyToSummaryRow;
+        $this->metadataToAdd = $metadataToAdd;
+        $this->applyToSummaryRow = $applyToSummaryRow;
     }
-
     /**
      * See {@link ColumnCallbackAddMetadata}.
      *
@@ -68,13 +63,11 @@ class ColumnCallbackAddMetadata extends BaseFilter
         } else {
             $rows = $table->getRowsWithoutSummaryRow();
         }
-
         foreach ($rows as $key => $row) {
             $parameters = array();
             foreach ($this->columnsToRead as $columnsToRead) {
                 $parameters[] = $row->getColumn($columnsToRead);
             }
-
             if (!is_null($this->functionParameters)) {
                 $parameters = array_merge($parameters, $this->functionParameters);
             }

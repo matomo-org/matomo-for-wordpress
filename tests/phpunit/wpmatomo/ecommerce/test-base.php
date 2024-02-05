@@ -15,7 +15,7 @@ class BaseTest extends MatomoAnalytics_TestCase {
 	 */
 	protected $base;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->settings = new Settings();
 
@@ -41,10 +41,17 @@ class BaseTest extends MatomoAnalytics_TestCase {
 			50,
 		);
 
+		$cdata_start = "/* <![CDATA[ */\n";
+		$cdata_end   = "/* ]]> */\n";
+		if ( getenv( 'WORDPRESS_VERSION' ) && ( getenv( 'WORDPRESS_VERSION' ) !== 'latest' && version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' ) ) ) {
+			$cdata_start = '';
+			$cdata_end   = '';
+		}
+
 		$this->assertSame(
-			'<script ' . $this->get_type_attribute() . '>' . PHP_EOL .
+			'<script ' . $this->get_type_attribute() . ">\n$cdata_start" .
 			'window._paq = window._paq || []; window._paq.push(["setEcommerceView","sku","product-title",[],50]);' . PHP_EOL .
-			'</script>' . PHP_EOL,
+			"$cdata_end</script>" . PHP_EOL,
 			$this->base->wrap_script( $this->base->make_matomo_js_tracker_call( $params ) )
 		);
 	}

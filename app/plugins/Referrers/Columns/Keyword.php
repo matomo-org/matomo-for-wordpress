@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,8 +13,7 @@ use Piwik\Common;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-
-class Keyword extends Base
+class Keyword extends \Piwik\Plugins\Referrers\Columns\Base
 {
     protected $columnName = 'referer_keyword';
     protected $columnType = 'VARCHAR(255) NULL';
@@ -23,7 +23,6 @@ class Keyword extends Base
     protected $acceptValues = 'Encoded%20Keyword, keyword';
     protected $type = self::TYPE_TEXT;
     protected $category = 'Referrers_Referrers';
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -35,19 +34,14 @@ class Keyword extends Base
         $information = $this->getReferrerInformationFromRequest($request, $visitor);
         return $information['referer_keyword'];
     }
-
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
         $information = $this->getReferrerInformationFromRequest($request, $visitor);
-        if ($this->isCurrentReferrerDirectEntry($visitor)
-            && $information['referer_type'] != Common::REFERRER_TYPE_DIRECT_ENTRY
-        ) {
+        if ($this->isCurrentReferrerDirectEntry($visitor) && $information['referer_type'] != Common::REFERRER_TYPE_DIRECT_ENTRY) {
             return $information['referer_keyword'];
         }
-
         return false;
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor

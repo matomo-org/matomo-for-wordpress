@@ -1,5 +1,20 @@
 == Changelog ===
 
+= 5.0.1
+* Update Matomo core to 5.0.1, which includes improved security, many bug fixes and performance improvements.
+* Fix most existing plugin incompatibilities.
+* Fix double encoded JSON response from REST API when `format=json` is used in Matomo API requests. If you use the Matomo API through WordPress REST requests, you may need to adjust your code that processes API responses.
+* Matomo TagManager API methods added to WordPress' REST API.
+* Respect user's configured error_reporting INI config value.
+* Fix reports not being output correctly in WordPress' REST API.
+* Fix ecommerce events not tracked if orders created from WordPress' REST API.
+* Fix site sync tries to synchronize deleted blogs.
+* Fix broken WpStatistics import caused by upates in the WpStatistics plugin.
+* Add diagnostic that checks if WordPress can be loaded via PHP CLI.
+* Make sure correct matomoversion query parameter is included in links to Matomo plugins.
+* Fix scheduled tasks can be invoked non-stop when wp_next_scheduled() returns 0.
+* Fix ms-blogs.php should only be required if currently in a multisite install.
+
 = 4.15.3 =
 * Compatibility with WooCommerce's HPOS feature
 * Avoid executing System Report on every Matomo for WordPress admin page view

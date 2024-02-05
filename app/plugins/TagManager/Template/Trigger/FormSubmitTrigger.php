@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,21 +8,18 @@
  */
 namespace Piwik\Plugins\TagManager\Template\Trigger;
 
-class FormSubmitTrigger extends BaseTrigger
+class FormSubmitTrigger extends \Piwik\Plugins\TagManager\Template\Trigger\BaseTrigger
 {
     public function getCategory()
     {
         return self::CATEGORY_USER_ENGAGEMENT;
     }
-
     public function getIcon()
     {
         return 'plugins/TagManager/images/icons/form.svg';
     }
-
     public function getParameters()
     {
         return array();
     }
-
 }

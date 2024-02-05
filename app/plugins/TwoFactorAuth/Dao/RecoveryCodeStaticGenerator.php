@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,14 +8,12 @@
  */
 namespace Piwik\Plugins\TwoFactorAuth\Dao;
 
-class RecoveryCodeStaticGenerator extends RecoveryCodeRandomGenerator
+class RecoveryCodeStaticGenerator extends \Piwik\Plugins\TwoFactorAuth\Dao\RecoveryCodeRandomGenerator
 {
     private $index = 10;
-
     public function generateCode()
     {
         $this->index++;
         return str_pad($this->index, 16, '0');
     }
 }
-

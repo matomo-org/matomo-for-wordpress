@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\VisitorInterest;
 
 use Piwik\Plugins\Live\VisitorDetailsAbstract;
-
 class VisitorDetails extends VisitorDetailsAbstract
 {
     public function extendVisitorDetails(&$visitor)

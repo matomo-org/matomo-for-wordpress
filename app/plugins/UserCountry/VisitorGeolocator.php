@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -16,10 +17,8 @@ use Piwik\DataAccess\RawLogDao;
 use Matomo\Network\IPUtils;
 use Piwik\Plugins\UserCountry\LocationProvider\DisabledProvider;
 use Piwik\Tracker\Visit;
-use Psr\Log\LoggerInterface;
-
+use Piwik\Log\LoggerInterface;
 require_once PIWIK_INCLUDE_PATH . "/plugins/UserCountry/LocationProvider.php";
-
 /**
  * Service that determines a visitor's location using visitor information.
  *
@@ -39,123 +38,90 @@ require_once PIWIK_INCLUDE_PATH . "/plugins/UserCountry/LocationProvider.php";
 class VisitorGeolocator
 {
     const LAT_LONG_COMPARE_EPSILON = 0.0001;
-
     /**
      * @var string[]
      */
-    public static $logVisitFieldsToUpdate = array(
-        'location_country'   => LocationProvider::COUNTRY_CODE_KEY,
-        'location_region'    => LocationProvider::REGION_CODE_KEY,
-        'location_city'      => LocationProvider::CITY_NAME_KEY,
-        'location_latitude'  => LocationProvider::LATITUDE_KEY,
-        'location_longitude' => LocationProvider::LONGITUDE_KEY
-    );
-
+    public static $logVisitFieldsToUpdate = array('location_country' => \Piwik\Plugins\UserCountry\LocationProvider::COUNTRY_CODE_KEY, 'location_region' => \Piwik\Plugins\UserCountry\LocationProvider::REGION_CODE_KEY, 'location_city' => \Piwik\Plugins\UserCountry\LocationProvider::CITY_NAME_KEY, 'location_latitude' => \Piwik\Plugins\UserCountry\LocationProvider::LATITUDE_KEY, 'location_longitude' => \Piwik\Plugins\UserCountry\LocationProvider::LONGITUDE_KEY);
     /**
      * @var Cache
      */
     protected static $defaultLocationCache = null;
-
     /**
      * @var LocationProvider
      */
     private $provider;
-
     /**
      * @var LocationProvider
      */
     private $backupProvider;
-
     /**
      * @var Cache
      */
     private $locationCache;
-
     /**
      * @var RawLogDao
      */
     protected $dao;
-
     /**
      * @var LoggerInterface
      */
     protected $logger;
-
-    public function __construct(LocationProvider $provider = null, LocationProvider $backupProvider = null, Cache $locationCache = null,
-                                RawLogDao $dao = null, LoggerInterface $logger = null)
+    public function __construct(\Piwik\Plugins\UserCountry\LocationProvider $provider = null, \Piwik\Plugins\UserCountry\LocationProvider $backupProvider = null, Cache $locationCache = null, RawLogDao $dao = null, LoggerInterface $logger = null)
     {
         if ($provider === null) {
             // note: Common::getCurrentLocationProviderId() uses the tracker cache, which is why it's used here instead
             // of accessing the option table
-            $provider = LocationProvider::getProviderById(Common::getCurrentLocationProviderId());
-
+            $provider = \Piwik\Plugins\UserCountry\LocationProvider::getProviderById(Common::getCurrentLocationProviderId());
             if (empty($provider)) {
-                Common::printDebug("GEO: no current location provider sent, falling back to '" . LocationProvider::getDefaultProviderId() . "' one.");
-
+                Common::printDebug("GEO: no current location provider sent, falling back to '" . \Piwik\Plugins\UserCountry\LocationProvider::getDefaultProviderId() . "' one.");
                 $provider = $this->getDefaultProvider();
             }
         }
         $this->provider = $provider;
-
         $this->backupProvider = $backupProvider ?: $this->getDefaultProvider();
         $this->locationCache = $locationCache ?: self::getDefaultLocationCache();
         $this->dao = $dao ?: new RawLogDao();
-        $this->logger = $logger ?: StaticContainer::get('Psr\Log\LoggerInterface');
+        $this->logger = $logger ?: StaticContainer::get(LoggerInterface::class);
     }
-
     public function getLocation($userInfo, $useClassCache = true)
     {
         $userInfoKey = md5(implode(',', $userInfo));
-        if ($useClassCache
-            && $this->locationCache->contains($userInfoKey)
-        ) {
+        if ($useClassCache && $this->locationCache->contains($userInfoKey)) {
             return $this->locationCache->fetch($userInfoKey);
         }
-
         $location = $this->getLocationObject($this->provider, $userInfo);
-
         if (empty($location)) {
             $providerId = $this->provider->getId();
-            Common::printDebug("GEO: couldn't find a location with Geo Module '$providerId'");
-
+            Common::printDebug("GEO: couldn't find a location with Geo Module '{$providerId}'");
             // Only use the default provider as fallback if the configured one isn't "disabled"
             if ($providerId != DisabledProvider::ID && $providerId != $this->backupProvider->getId()) {
                 Common::printDebug("Using default provider as fallback...");
-
                 $location = $this->getLocationObject($this->backupProvider, $userInfo);
             }
         }
-
         $location = $location ?: array();
         if (empty($location['country_code'])) {
             $location['country_code'] = Visit::UNKNOWN_CODE;
         }
-
         $this->locationCache->save($userInfoKey, $location);
-
         return $location;
     }
-
     /**
      * @param LocationProvider $provider
      * @param array $userInfo
      * @return array|false
      */
-    private function getLocationObject(LocationProvider $provider, $userInfo)
+    private function getLocationObject(\Piwik\Plugins\UserCountry\LocationProvider $provider, $userInfo)
     {
-        $location   = $provider->getLocation($userInfo);
+        $location = $provider->getLocation($userInfo);
         $providerId = $provider->getId();
-        $ipAddress  = $userInfo['ip'];
-
+        $ipAddress = $userInfo['ip'];
         if ($location === false) {
             return false;
         }
-
-        Common::printDebug("GEO: Found IP $ipAddress location (provider '" . $providerId . "'): " . var_export($location, true));
-
+        Common::printDebug("GEO: Found IP {$ipAddress} location (provider '" . $providerId . "'): " . var_export($location, true));
         return $location;
     }
-
     /**
      * Geolcates an existing visit and then updates it if it's current attributes are different than
      * what was geolocated. Also updates all conversions of a visit.
@@ -173,38 +139,23 @@ class VisitorGeolocator
             $this->logger->debug('Empty idvisit field. Skipping re-attribution..');
             return null;
         }
-
         $idVisit = $visit['idvisit'];
-
         if (empty($visit['location_ip'])) {
             $this->logger->debug('Empty location_ip field for idvisit = %s. Skipping re-attribution.', array('idvisit' => $idVisit));
             return null;
         }
-
         $ip = IPUtils::binaryToStringIP($visit['location_ip']);
         $location = $this->getLocation(array('ip' => $ip), $useClassCache);
-
         $valuesToUpdate = $this->getVisitFieldsToUpdate($visit, $location);
-
         if (!empty($valuesToUpdate)) {
-            $this->logger->debug('Updating visit with idvisit = {idVisit} (IP = {ip}). Changes: {changes}', array(
-                'idVisit' => $idVisit,
-                'ip' => $ip,
-                'changes' => json_encode($valuesToUpdate)
-            ));
-
+            $this->logger->debug('Updating visit with idvisit = {idVisit} (IP = {ip}). Changes: {changes}', array('idVisit' => $idVisit, 'ip' => $ip, 'changes' => json_encode($valuesToUpdate)));
             $this->dao->updateVisits($valuesToUpdate, $idVisit);
             $this->dao->updateConversions($valuesToUpdate, $idVisit);
         } else {
-            $this->logger->debug('Nothing to update for idvisit = %s (IP = {ip}). Existing location info is same as geolocated.', array(
-                'idVisit' => $idVisit,
-                'ip' => $ip
-            ));
+            $this->logger->debug('Nothing to update for idvisit = %s (IP = {ip}). Existing location info is same as geolocated.', array('idVisit' => $idVisit, 'ip' => $ip));
         }
-
         return $valuesToUpdate;
     }
-
     /**
      * Returns location log values that are different than the values currently in a log row.
      *
@@ -214,26 +165,22 @@ class VisitorGeolocator
      */
     private function getVisitFieldsToUpdate(array $row, $location)
     {
-        if (isset($location[LocationProvider::COUNTRY_CODE_KEY])) {
-            $location[LocationProvider::COUNTRY_CODE_KEY] = strtolower($location[LocationProvider::COUNTRY_CODE_KEY]);
+        if (isset($location[\Piwik\Plugins\UserCountry\LocationProvider::COUNTRY_CODE_KEY])) {
+            $location[\Piwik\Plugins\UserCountry\LocationProvider::COUNTRY_CODE_KEY] = strtolower($location[\Piwik\Plugins\UserCountry\LocationProvider::COUNTRY_CODE_KEY]);
         }
-
         $valuesToUpdate = array();
         foreach (self::$logVisitFieldsToUpdate as $column => $locationKey) {
             if (empty($location[$locationKey])) {
                 continue;
             }
-
             $locationPropertyValue = $location[$locationKey];
             $existingPropertyValue = $row[$column];
-
             if (!$this->areLocationPropertiesEqual($locationKey, $locationPropertyValue, $existingPropertyValue)) {
                 $valuesToUpdate[$column] = $locationPropertyValue;
             }
         }
         return $valuesToUpdate;
     }
-
     /**
      * Re-geolocate visits within a date range for a specified site (if any).
      *
@@ -246,29 +193,21 @@ class VisitorGeolocator
      */
     public function reattributeVisitLogs($from, $to, $idSite = null, $iterationStep = 1000, $onLogProcessed = null)
     {
-        $visitFieldsToSelect = array_merge(array('idvisit', 'location_ip'), array_keys(VisitorGeolocator::$logVisitFieldsToUpdate));
-
-        $conditions = array(
-            array('visit_last_action_time', '>=', $from),
-            array('visit_last_action_time', '<', $to)
-        );
-
+        $visitFieldsToSelect = array_merge(array('idvisit', 'location_ip'), array_keys(\Piwik\Plugins\UserCountry\VisitorGeolocator::$logVisitFieldsToUpdate));
+        $conditions = array(array('visit_last_action_time', '>=', $from), array('visit_last_action_time', '<', $to));
         if (!empty($idSite)) {
             $conditions[] = array('idsite', '=', $idSite);
         }
-
         $self = $this;
-        $this->dao->forAllLogs('log_visit', $visitFieldsToSelect, $conditions, $iterationStep, function ($logs) use ($self, $onLogProcessed) {
+        $this->dao->forAllLogs('log_visit', $visitFieldsToSelect, $conditions, $iterationStep, function ($logs) use($self, $onLogProcessed) {
             foreach ($logs as $row) {
                 $updatedValues = $self->attributeExistingVisit($row);
-
                 if (!empty($onLogProcessed)) {
                     $onLogProcessed($row, $updatedValues);
                 }
             }
         }, $willDelete = false);
     }
-
     /**
      * @return LocationProvider
      */
@@ -276,7 +215,6 @@ class VisitorGeolocator
     {
         return $this->provider;
     }
-
     /**
      * @return LocationProvider
      */
@@ -284,29 +222,23 @@ class VisitorGeolocator
     {
         return $this->backupProvider;
     }
-
     private function areLocationPropertiesEqual($locationKey, $locationPropertyValue, $existingPropertyValue)
     {
-        if (($locationKey == LocationProvider::LATITUDE_KEY
-             || $locationKey == LocationProvider::LONGITUDE_KEY)
-            && $existingPropertyValue != 0
-        ) {
+        if (($locationKey == \Piwik\Plugins\UserCountry\LocationProvider::LATITUDE_KEY || $locationKey == \Piwik\Plugins\UserCountry\LocationProvider::LONGITUDE_KEY) && $existingPropertyValue != 0) {
             // floating point comparison
             return abs(($locationPropertyValue - $existingPropertyValue) / $existingPropertyValue) < self::LAT_LONG_COMPARE_EPSILON;
         } else {
             return $locationPropertyValue == $existingPropertyValue;
         }
     }
-
     private function getDefaultProvider()
     {
-        return LocationProvider::getProviderById(LocationProvider::getDefaultProviderId());
+        return \Piwik\Plugins\UserCountry\LocationProvider::getProviderById(\Piwik\Plugins\UserCountry\LocationProvider::getDefaultProviderId());
     }
-
     public static function getDefaultLocationCache()
     {
         if (self::$defaultLocationCache === null) {
-            if (class_exists('\Piwik\Cache\Transient')) {
+            if (class_exists('\\Piwik\\Cache\\Transient')) {
                 // during the oneclickupdate from 3.x => greater, this class will be loaded, so we have to use it instead of the Matomo namespaced one
                 self::$defaultLocationCache = new \Piwik\Cache\Transient();
             } else {

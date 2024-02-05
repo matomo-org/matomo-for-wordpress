@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,14 +7,12 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\Ecommerce\ProfileSummary;
 
 use Piwik\Common;
 use Piwik\Piwik;
 use Piwik\Plugins\Live\ProfileSummary\ProfileSummaryAbstract;
 use Piwik\View;
-
 /**
  * Class EcommerceSummary
  */
@@ -26,7 +25,6 @@ class EcommerceSummary extends ProfileSummaryAbstract
     {
         return Piwik::translate('Goals_Ecommerce');
     }
-
     /**
      * @inheritdoc
      */
@@ -35,13 +33,11 @@ class EcommerceSummary extends ProfileSummaryAbstract
         if (empty($this->profile['totalEcommerceRevenue'])) {
             return '';
         }
-
-        $view              = new View('@Ecommerce/_profileSummary.twig');
-        $view->idSite      = Common::getRequestVar('idSite', null, 'int');
+        $view = new View('@Ecommerce/_profileSummary.twig');
+        $view->idSite = Common::getRequestVar('idSite', null, 'int');
         $view->visitorData = $this->profile;
         return $view->render();
     }
-
     /**
      * @inheritdoc
      */

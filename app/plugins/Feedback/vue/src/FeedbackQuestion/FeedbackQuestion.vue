@@ -68,7 +68,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import {
-  MatomoDialog, AjaxHelper, setCookie, getCookie, translate,
+  MatomoDialog, AjaxHelper, setCookie, getCookie, translate, externalLink,
 } from 'CoreHome';
 
 const { $ } = window;
@@ -91,14 +91,14 @@ interface SendFeedbackForSurveyResponse {
 const cookieName = 'feedback-question';
 export default defineComponent({
   props: {
-    showQuestionBanner: String,
+    showQuestionBanner: Boolean,
   },
   components: {
     MatomoDialog,
   },
   computed: {
     isHidden() {
-      if (this.showQuestionBanner === '0') {
+      if (!this.showQuestionBanner) {
         return true;
       }
       return !!this.hide;
@@ -106,7 +106,8 @@ export default defineComponent({
     feedbackPolicy() {
       return translate(
         'Feedback_Policy',
-        '<a rel="nofollow" href="https://matomo.org/privacy-policy/" target="_blank">',
+        /* eslint-disable prefer-template */
+        externalLink('https://matomo.org/privacy-policy/'),
         '</a>',
       );
     },
@@ -135,7 +136,7 @@ export default defineComponent({
     },
   },
   created() {
-    if (this.showQuestionBanner !== '0') {
+    if (this.showQuestionBanner) {
       this.initQuestion();
     }
   },

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,24 +12,20 @@ namespace Piwik\Plugins\Referrers\Reports;
 use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\Referrers\Columns\Keyword;
-
-class GetKeywordsFromSearchEngineId extends Base
+class GetKeywordsFromSearchEngineId extends \Piwik\Plugins\Referrers\Reports\Base
 {
     protected function init()
     {
         parent::init();
-        $this->dimension     = new Keyword();
-        $this->name          = Piwik::translate('Referrers_SearchEngines');
+        $this->dimension = new Keyword();
+        $this->name = Piwik::translate('Referrers_SearchEngines');
         $this->documentation = Piwik::translate('Referrers_SearchEnginesReportDocumentation', '<br />');
         $this->isSubtableReport = true;
         $this->order = 8;
     }
-
     public function configureView(ViewDataTable $view)
     {
         $view->config->show_search = false;
         $view->config->show_exclude_low_population = false;
-        $view->config->addTranslation('label', $this->dimension->getName());
     }
-
 }

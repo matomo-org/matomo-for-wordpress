@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -21,7 +22,6 @@ class Item
     private $urlParams;
     private $icon;
     private $order;
-
     /**
      * Item constructor.
      * @param string $key  The key or ID for this item. The entry in the widget will have this class so it is possible
@@ -42,7 +42,6 @@ class Item
         $this->icon = $icon;
         $this->order = $order;
     }
-
     /**
      * @return string
      */
@@ -50,7 +49,6 @@ class Item
     {
         return $this->key;
     }
-
     /**
      * @return string
      */
@@ -58,7 +56,6 @@ class Item
     {
         return $this->label;
     }
-
     /**
      * @return mixed
      */
@@ -66,7 +63,6 @@ class Item
     {
         return $this->value;
     }
-
     /**
      * @return array|null
      */
@@ -74,7 +70,6 @@ class Item
     {
         return $this->urlParams;
     }
-
     /**
      * @return string
      */
@@ -82,7 +77,6 @@ class Item
     {
         return $this->icon;
     }
-
     /**
      * @return int
      */
@@ -90,5 +84,4 @@ class Item
     {
         return $this->order;
     }
-
 }

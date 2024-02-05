@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Plugins\CoreHome;
 
 use Piwik\Menu\MenuTop;
 use Piwik\Piwik;
-
 class Menu extends \Piwik\Plugin\Menu
 {
     public function configureTopMenu(MenuTop $menu)
@@ -24,10 +24,8 @@ class Menu extends \Piwik\Plugin\Menu
             $menu->addItem('General_Logout', null, array('module' => $module, 'action' => 'logout', 'idSite' => null), 1000, Piwik::translate('General_Logout'));
         }
     }
-
     private function getLoginModule()
     {
         return Piwik::getLoginPluginName();
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,33 +9,27 @@
 namespace Piwik\Plugins\TagManager\Context;
 
 use Piwik\Container\StaticContainer;
-
 use Piwik\Plugin\Manager;
-
-class ContextProvider {
-
+class ContextProvider
+{
     /**
      * @var BaseContext[]
      */
     private $cached;
-
     /**
      * @var Manager
      */
     private $pluginManager;
-
     public function __construct(Manager $pluginManager)
     {
         $this->pluginManager = $pluginManager;
     }
-
     public function checkIsValidContext($contextId)
     {
         if (!$this->getContext($contextId)) {
             throw new \Exception(sprintf('The context "%s" is not supported', $contextId));
         }
     }
-
     /**
      * @param string $contextId  eg "web"
      * @return BaseContext|null
@@ -47,7 +42,6 @@ class ContextProvider {
             }
         }
     }
-
     /**
      * @return BaseContext[]
      */
@@ -55,20 +49,16 @@ class ContextProvider {
     {
         if (!isset($this->cached)) {
             $tags = $this->pluginManager->findMultipleComponents('Context', 'Piwik\\Plugins\\TagManager\\Context\\BaseContext');
-
             $this->cached = array();
             foreach ($tags as $tag) {
                 $this->cached[] = StaticContainer::get($tag);
             }
-
             usort($this->cached, function ($a, $b) {
                 /** @var $a baseContext */
                 /** @var $b baseContext */
                 return $a->getOrder() - $b->getOrder();
             });
         }
-
         return $this->cached;
     }
-
 }

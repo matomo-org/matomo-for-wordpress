@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,7 @@
 namespace Piwik;
 
 use Piwik\Container\StaticContainer;
-
+use Piwik\Log\LoggerInterface;
 /**
  * Convenient key-value storage for user specified options and temporary
  * data that needs to be persisted beyond one request.
@@ -47,7 +48,6 @@ class Option
     {
         return self::getInstance()->getValue($name);
     }
-
     /**
      * Returns option values for options whose names are like a given pattern. Only `%` is supported as part of the
      * pattern.
@@ -60,7 +60,6 @@ class Option
     {
         return self::getInstance()->getNameLike($namePattern);
     }
-
     /**
      * Sets an option value by name.
      *
@@ -73,7 +72,6 @@ class Option
     {
         self::getInstance()->setValue($name, $value, $autoload);
     }
-
     /**
      * Deletes an option.
      *
@@ -84,7 +82,6 @@ class Option
     {
         self::getInstance()->deleteValue($name, $value);
     }
-
     /**
      * Deletes all options that match the supplied pattern. Only `%` is supported as part of the
      * pattern.
@@ -96,12 +93,10 @@ class Option
     {
         self::getInstance()->deleteNameLike($namePattern, $value);
     }
-
     public static function clearCachedOption($name)
     {
         self::getInstance()->clearCachedOptionByName($name);
     }
-
     /**
      * Clears the option value cache and forces a reload from the Database.
      * Used in unit tests to reset the state of the object between tests.
@@ -115,23 +110,19 @@ class Option
         $option->loaded = false;
         $option->all = array();
     }
-
     /**
      * @var array
      */
     private $all = array();
-
     /**
      * @var bool
      */
     private $loaded = false;
-
     /**
      * Singleton instance
      * @var \Piwik\Option
      */
     private static $instance = null;
-
     /**
      * Returns Singleton instance
      *
@@ -140,12 +131,10 @@ class Option
     private static function getInstance()
     {
         if (self::$instance == null) {
-            self::$instance = new self;
+            self::$instance = new self();
         }
-
         return self::$instance;
     }
-
     /**
      * Sets the singleton instance. For testing purposes.
      *
@@ -156,14 +145,12 @@ class Option
     {
         self::$instance = $instance;
     }
-
     /**
      * Private Constructor
      */
     private function __construct()
     {
     }
-
     protected function clearCachedOptionByName($name)
     {
         $name = $this->trimOptionNameIfNeeded($name);
@@ -171,7 +158,6 @@ class Option
             unset($this->all[$name]);
         }
     }
-
     protected function getValue($name)
     {
         $name = $this->trimOptionNameIfNeeded($name);
@@ -179,99 +165,73 @@ class Option
         if (isset($this->all[$name])) {
             return $this->all[$name];
         }
-
-        $value = Db::fetchOne('SELECT option_value FROM `' . Common::prefixTable('option') . '` ' .
-                              'WHERE option_name = ?', [$name]);
-
+        $value = \Piwik\Db::fetchOne('SELECT option_value FROM `' . \Piwik\Common::prefixTable('option') . '` ' . 'WHERE option_name = ?', [$name]);
         $this->all[$name] = $value;
         return $value;
     }
-
     protected function setValue($name, $value, $autoLoad = 0)
     {
-        $autoLoad = (int)$autoLoad;
-        $name     = $this->trimOptionNameIfNeeded($name);
-
-        $sql  = 'UPDATE `' . Common::prefixTable('option') . '` SET option_value = ?, autoload = ? WHERE option_name = ?';
+        $autoLoad = (int) $autoLoad;
+        $name = $this->trimOptionNameIfNeeded($name);
+        $sql = 'UPDATE `' . \Piwik\Common::prefixTable('option') . '` SET option_value = ?, autoload = ? WHERE option_name = ?';
         $bind = array($value, $autoLoad, $name);
-
-        $result = Db::query($sql, $bind);
-
-        $rowsUpdated = Db::get()->rowCount($result);
-
-        if (! $rowsUpdated) {
+        $result = \Piwik\Db::query($sql, $bind);
+        $rowsUpdated = \Piwik\Db::get()->rowCount($result);
+        if (!$rowsUpdated) {
             try {
-                $sql  = 'INSERT IGNORE INTO `' . Common::prefixTable('option') . '` (option_name, option_value, autoload) ' .
-                        'VALUES (?, ?, ?) ';
+                $sql = 'INSERT IGNORE INTO `' . \Piwik\Common::prefixTable('option') . '` (option_name, option_value, autoload) ' . 'VALUES (?, ?, ?) ';
                 $bind = array($name, $value, $autoLoad);
-
-                Db::query($sql, $bind);
+                \Piwik\Db::query($sql, $bind);
             } catch (\Exception $e) {
             }
         }
-
         $this->all[$name] = $value;
     }
-
     protected function deleteValue($name, $value)
     {
-        $name   = $this->trimOptionNameIfNeeded($name);
-        $sql    = 'DELETE FROM `' . Common::prefixTable('option') . '` WHERE option_name = ?';
+        $name = $this->trimOptionNameIfNeeded($name);
+        $sql = 'DELETE FROM `' . \Piwik\Common::prefixTable('option') . '` WHERE option_name = ?';
         $bind[] = $name;
-
         if (isset($value)) {
-            $sql   .= ' AND option_value = ?';
+            $sql .= ' AND option_value = ?';
             $bind[] = $value;
         }
-
-        Db::query($sql, $bind);
-
+        \Piwik\Db::query($sql, $bind);
         $this->clearCache();
     }
-
     protected function deleteNameLike($name, $value = null)
     {
-        $name   = $this->trimOptionNameIfNeeded($name);
+        $name = $this->trimOptionNameIfNeeded($name);
         $name = $this->getNameForLike($name);
-
-        $sql    = 'DELETE FROM `' . Common::prefixTable('option') . '` WHERE option_name LIKE ?';
+        $sql = 'DELETE FROM `' . \Piwik\Common::prefixTable('option') . '` WHERE option_name LIKE ?';
         $bind[] = $name;
-
         if (isset($value)) {
-            $sql   .= ' AND option_value = ?';
+            $sql .= ' AND option_value = ?';
             $bind[] = $value;
         }
-
-        Db::query($sql, $bind);
-
+        \Piwik\Db::query($sql, $bind);
         $this->clearCache();
     }
-
     private function getNameForLike($name)
     {
-        $name = str_replace('\_', '###NOREPLACE###', $name);
-        $name = str_replace('_', '\_', $name);
-        $name = str_replace( '###NOREPLACE###', '\_', $name);
+        $name = str_replace('\\_', '###NOREPLACE###', $name);
+        $name = str_replace('_', '\\_', $name);
+        $name = str_replace('###NOREPLACE###', '\\_', $name);
         return $name;
     }
-
     protected function getNameLike($name)
     {
         $name = $this->trimOptionNameIfNeeded($name);
         $name = $this->getNameForLike($name);
-
-        $sql  = 'SELECT option_name, option_value FROM `' . Common::prefixTable('option') . '` WHERE option_name LIKE ?';
+        $sql = 'SELECT option_name, option_value FROM `' . \Piwik\Common::prefixTable('option') . '` WHERE option_name LIKE ?';
         $bind = array($name);
-        $rows = Db::fetchAll($sql, $bind);
-
+        $rows = \Piwik\Db::fetchAll($sql, $bind);
         $result = array();
         foreach ($rows as $row) {
             $result[$row['option_name']] = $row['option_value'];
         }
-
         return $result;
     }
-
     /**
      * Initialize cache with autoload settings.
      *
@@ -282,25 +242,20 @@ class Option
         if ($this->loaded) {
             return;
         }
-
-        $table = Common::prefixTable('option');
-        $sql   = 'SELECT option_value, option_name FROM `' . $table . '` WHERE autoload = 1';
-        $all   = Db::fetchAll($sql);
-
+        $table = \Piwik\Common::prefixTable('option');
+        $sql = 'SELECT option_value, option_name FROM `' . $table . '` WHERE autoload = 1';
+        $all = \Piwik\Db::fetchAll($sql);
         foreach ($all as $option) {
             $this->all[$option['option_name']] = $option['option_value'];
         }
-
         $this->loaded = true;
     }
-
     private function trimOptionNameIfNeeded($name)
     {
         if (strlen($name) > 191) {
-            StaticContainer::get('Psr\Log\LoggerInterface')->debug("Option name '$name' is too long and was trimmed to 191 chars");
+            StaticContainer::get(LoggerInterface::class)->debug("Option name '{$name}' is too long and was trimmed to 191 chars");
             $name = substr($name, 0, 191);
         }
-
         return $name;
     }
 }

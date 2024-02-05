@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,37 +7,27 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\LanguagesManager\Commands;
 
 use Piwik\Plugins\LanguagesManager\API;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-
 /**
  */
-class LanguageCodes extends TranslationBase
+class LanguageCodes extends \Piwik\Plugins\LanguagesManager\Commands\TranslationBase
 {
     protected function configure()
     {
-        $this->setName('translations:languagecodes')
-             ->addOption('all', 'a', InputOption::VALUE_NONE, 'Displays all languages (ignores language configuration)')
-             ->setDescription('Shows available language codes');
+        $this->setName('translations:languagecodes')->addNoValueOption('all', 'a', 'Displays all languages (ignores language configuration)')->setDescription('Shows available language codes');
     }
-
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute() : int
     {
-        $languages = API::getInstance()->getAvailableLanguageNames($input->getOption('all'));
-
-        $languageCodes = array();
+        $languages = API::getInstance()->getAvailableLanguageNames($this->getInput()->getOption('all'));
+        $languageCodes = [];
         foreach ($languages as $languageInfo) {
             $languageCodes[] = $languageInfo['code'];
         }
-
         sort($languageCodes);
-
-        $output->writeln("Currently available languages:");
-        $output->writeln(implode("\n", $languageCodes));
+        $this->getOutput()->writeln("Currently available languages:");
+        $this->getOutput()->writeln(implode("\n", $languageCodes));
+        return self::SUCCESS;
     }
 }

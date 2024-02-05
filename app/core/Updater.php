@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -16,7 +17,6 @@ use Piwik\Updater\Migration;
 use Piwik\Exception\MissingFilePermissionException;
 use Piwik\Updater\UpdateObserver;
 use Zend_Db_Exception;
-
 /**
  * Load and execute all relevant, incremental update scripts for Piwik core and plugins, and bump the component version numbers for completed updates.
  *
@@ -26,24 +26,20 @@ class Updater
     const INDEX_CURRENT_VERSION = 0;
     const INDEX_NEW_VERSION = 1;
     const OPTION_KEY_MATOMO_UPDATE_HISTORY = 'MatomoUpdateHistory';
-
     private $pathUpdateFileCore;
     private $pathUpdateFilePlugins;
     private $hasMajorDbUpdate = false;
     private $updatedClasses = array();
     private $componentsWithNewVersion = array();
     private $componentsWithUpdateFile = array();
-
     /**
      * @var UpdateObserver[]
      */
     private $updateObservers = array();
-
     /**
      * @var Columns\Updater
      */
     private $columnsUpdater;
-
     /**
      * Currently used Updater instance, set on construction. This instance is used to provide backwards
      * compatibility w/ old code that may use the deprecated static methods in Updates.
@@ -51,7 +47,6 @@ class Updater
      * @var Updater
      */
     private static $activeInstance;
-
     /**
      * Constructor.
      *
@@ -60,21 +55,17 @@ class Updater
      *                                           for the plugin name.
      * @param Columns\Updater|null $columnsUpdater The dimensions updater instance.
      */
-    public function __construct($pathUpdateFileCore = null, $pathUpdateFilePlugins = null, Columns\Updater $columnsUpdater = null)
+    public function __construct($pathUpdateFileCore = null, $pathUpdateFilePlugins = null, \Piwik\Columns\Updater $columnsUpdater = null)
     {
         $this->pathUpdateFileCore = $pathUpdateFileCore ?: PIWIK_INCLUDE_PATH . '/core/Updates/';
-
         if ($pathUpdateFilePlugins) {
             $this->pathUpdateFilePlugins = $pathUpdateFilePlugins;
         } else {
             $this->pathUpdateFilePlugins = null;
         }
-
-        $this->columnsUpdater = $columnsUpdater ?: new Columns\Updater();
-
+        $this->columnsUpdater = $columnsUpdater ?: new \Piwik\Columns\Updater();
         self::$activeInstance = $this;
     }
-
     /**
      * Adds an UpdateObserver to the internal list of listeners.
      *
@@ -84,7 +75,6 @@ class Updater
     {
         $this->updateObservers[] = $listener;
     }
-
     /**
      * Marks a component as successfully updated to a specific version in the database. Sets an option
      * that looks like `"version_$componentName"`.
@@ -96,23 +86,19 @@ class Updater
     public function markComponentSuccessfullyUpdated($name, $version, $isNew = false)
     {
         try {
-            Option::set(self::getNameInOptionTable($name), $version, $autoLoad = 1);
+            \Piwik\Option::set(self::getNameInOptionTable($name), $version, $autoLoad = 1);
         } catch (\Exception $e) {
             // case when the option table is not yet created (before 0.2.10)
         }
-
         if ($isNew) {
-
             /**
              * Event triggered after a new component has been installed.
              *
              * @param string $name The component that has been installed.
              */
-            Piwik::postEvent('Updater.componentInstalled', array($name));
-
+            \Piwik\Piwik::postEvent('Updater.componentInstalled', array($name));
             return;
         }
-
         /**
          * Event triggered after a component has been updated.
          *
@@ -136,9 +122,8 @@ class Updater
          * @param string $componentName 'core', plugin name or dimension name
          * @param string $updatedVersion version updated to
          */
-        Piwik::postEvent('Updater.componentUpdated', array($name, $version));
+        \Piwik\Piwik::postEvent('Updater.componentUpdated', array($name, $version));
     }
-
     /**
      * Marks a component as successfully uninstalled. Deletes an option
      * that looks like `"version_$componentName"`.
@@ -148,19 +133,17 @@ class Updater
     public function markComponentSuccessfullyUninstalled($name)
     {
         try {
-            Option::delete(self::getNameInOptionTable($name));
+            \Piwik\Option::delete(self::getNameInOptionTable($name));
         } catch (\Exception $e) {
             // case when the option table is not yet created (before 0.2.10)
         }
-
         /**
          * Event triggered after a component has been uninstalled.
          *
          * @param string $name The component that has been uninstalled.
          */
-        Piwik::postEvent('Updater.componentUninstalled', array($name));
+        \Piwik\Piwik::postEvent('Updater.componentUninstalled', array($name));
     }
-
     /**
      * Returns the currently installed version of a Piwik component.
      *
@@ -171,10 +154,10 @@ class Updater
     public function getCurrentComponentVersion($name)
     {
         try {
-            $currentVersion = Option::get(self::getNameInOptionTable($name));
+            $currentVersion = \Piwik\Option::get(self::getNameInOptionTable($name));
         } catch (\Exception $e) {
             // mysql error 1146: table doesn't exist
-            if (Db::get()->isErrNo($e, '1146')) {
+            if (\Piwik\Db::get()->isErrNo($e, '1146')) {
                 // case when the option table is not yet created (before 0.2.10)
                 $currentVersion = false;
             } else {
@@ -182,10 +165,8 @@ class Updater
                 throw $e;
             }
         }
-
         return $currentVersion;
     }
-
     /**
      * Returns a list of components (core | plugin) that need to run through the upgrade process.
      *
@@ -202,7 +183,6 @@ class Updater
         $this->componentsWithUpdateFile = $this->loadComponentsWithUpdateFile();
         return $this->componentsWithUpdateFile;
     }
-
     /**
      * Component has a new version?
      *
@@ -213,7 +193,6 @@ class Updater
     {
         return isset($this->componentsWithNewVersion[$componentName]);
     }
-
     /**
      * Does one of the new versions involve a major database update?
      * Note: getSqlQueriesToExecute() must be called before this method!
@@ -224,7 +203,6 @@ class Updater
     {
         return $this->hasMajorDbUpdate;
     }
-
     /**
      * Returns the list of SQL queries that would be executed during the update
      *
@@ -233,27 +211,24 @@ class Updater
      */
     public function getSqlQueriesToExecute()
     {
-        $queries    = [];
+        $queries = [];
         $classNames = [];
-
         foreach ($this->componentsWithUpdateFile as $componentName => $componentUpdateInfo) {
             foreach ($componentUpdateInfo as $file => $fileVersion) {
-                require_once $file; // prefixed by PIWIK_INCLUDE_PATH
-
+                require_once $file;
+                // prefixed by PIWIK_INCLUDE_PATH
                 $className = $this->getUpdateClassName($componentName, $fileVersion);
                 if (!class_exists($className, false)) {
                     // throwing an error here causes Matomo to show the safe mode instead of showing an exception fatal only
                     // that makes it possible to deactivate / uninstall a broken plugin to recover Matomo directly
-                    throw new \Error("The class $className was not found in $file");
+                    throw new \Error("The class {$className} was not found in {$file}");
                 }
-
                 if (in_array($className, $classNames)) {
-                    continue; // prevent from getting updates from Piwik\Columns\Updater multiple times
+                    continue;
+                    // prevent from getting updates from Piwik\Columns\Updater multiple times
                 }
-
                 $classNames[] = $className;
-
-                $migrationsForComponent = Access::doAsSuperUser(function() use ($className) {
+                $migrationsForComponent = \Piwik\Access::doAsSuperUser(function () use($className) {
                     /** @var Updates $update */
                     $update = StaticContainer::getContainer()->make($className);
                     return $update->getMigrations($this);
@@ -267,23 +242,18 @@ class Updater
         }
         return $queries;
     }
-
     public function getUpdateClassName($componentName, $fileVersion)
     {
         $suffix = strtolower(str_replace(array('-', '.'), '_', $fileVersion));
         $className = 'Updates_' . $suffix;
-
         if ($componentName == 'core') {
             return '\\Piwik\\Updates\\' . $className;
         }
-
         if (ColumnUpdater::isDimensionComponent($componentName)) {
             return '\\Piwik\\Columns\\Updater';
         }
-
         return '\\Piwik\\Plugins\\' . $componentName . '\\' . $className;
     }
-
     /**
      * Update the named component
      *
@@ -294,49 +264,36 @@ class Updater
     public function update($componentName)
     {
         $warningMessages = array();
-
         $this->executeListenerHook('onComponentUpdateStarting', array($componentName));
-
         foreach ($this->componentsWithUpdateFile[$componentName] as $file => $fileVersion) {
             try {
-                require_once $file; // prefixed by PIWIK_INCLUDE_PATH
-
+                require_once $file;
+                // prefixed by PIWIK_INCLUDE_PATH
                 $className = $this->getUpdateClassName($componentName, $fileVersion);
-                if (!in_array($className, $this->updatedClasses)
-                    && class_exists($className, false)
-                ) {
+                if (!in_array($className, $this->updatedClasses) && class_exists($className, false)) {
                     $this->executeListenerHook('onComponentUpdateFileStarting', array($componentName, $file, $className, $fileVersion));
-
                     $this->executeSingleUpdateClass($className);
-
                     $this->executeListenerHook('onComponentUpdateFileFinished', array($componentName, $file, $className, $fileVersion));
-
                     // makes sure to call Piwik\Columns\Updater only once as one call updates all dimensions at the same
                     // time for better performance
                     $this->updatedClasses[] = $className;
                 }
-
                 $this->markComponentSuccessfullyUpdated($componentName, $fileVersion);
-            } catch (UpdaterErrorException $e) {
+            } catch (\Piwik\UpdaterErrorException $e) {
                 $this->executeListenerHook('onError', array($componentName, $fileVersion, $e));
                 throw $e;
-
             } catch (\Exception $e) {
                 $warningMessages[] = $e->getMessage();
-
                 $this->executeListenerHook('onWarning', array($componentName, $fileVersion, $e));
             }
         }
-
         // to debug, create core/Updates/X.php, update the core/Version.php, throw an Exception in the try, and comment the following lines
         $updatedVersion = $this->componentsWithNewVersion[$componentName][self::INDEX_NEW_VERSION];
         $this->markComponentSuccessfullyUpdated($componentName, $updatedVersion);
-
         $this->executeListenerHook('onComponentUpdateFinished', array($componentName, $updatedVersion, $warningMessages));
         ServerFilesGenerator::createFilesForSecurity();
         return $warningMessages;
     }
-
     /**
      * Construct list of update files for the outdated components
      *
@@ -345,11 +302,9 @@ class Updater
     private function loadComponentsWithUpdateFile()
     {
         $componentsWithUpdateFile = array();
-
         foreach ($this->componentsWithNewVersion as $name => $versions) {
             $currentVersion = $versions[self::INDEX_CURRENT_VERSION];
             $newVersion = $versions[self::INDEX_NEW_VERSION];
-
             if ($name == 'core') {
                 $pathToUpdates = $this->pathUpdateFileCore . '*.php';
             } elseif (ColumnUpdater::isDimensionComponent($name)) {
@@ -361,25 +316,18 @@ class Updater
                     $pathToUpdates = Manager::getPluginDirectory($name) . '/Updates/*.php';
                 }
             }
-
             if (!empty($pathToUpdates)) {
                 $files = _glob($pathToUpdates);
                 if ($files == false) {
                     $files = array();
                 }
-
                 foreach ($files as $file) {
                     $fileVersion = basename($file, '.php');
-                    if (// if the update is from a newer version
-                        version_compare($currentVersion, $fileVersion) == -1
-                        // but we don't execute updates from non existing future releases
-                        && version_compare($fileVersion, $newVersion) <= 0
-                    ) {
+                    if (version_compare($currentVersion, $fileVersion) == -1 && version_compare($fileVersion, $newVersion) <= 0) {
                         $componentsWithUpdateFile[$name][$file] = $fileVersion;
                     }
                 }
             }
-
             if (isset($componentsWithUpdateFile[$name])) {
                 // order the update files by version asc
                 uasort($componentsWithUpdateFile[$name], "version_compare");
@@ -388,10 +336,8 @@ class Updater
                 $this->markComponentSuccessfullyUpdated($name, $newVersion);
             }
         }
-
         return $componentsWithUpdateFile;
     }
-
     /**
      * Construct list of outdated components
      *
@@ -406,42 +352,32 @@ class Updater
     public function getComponentsWithNewVersion($componentsToCheck)
     {
         $componentsToUpdate = array();
-
         // we make sure core updates are processed before any plugin updates
         if (isset($componentsToCheck['core'])) {
             $coreVersions = $componentsToCheck['core'];
             unset($componentsToCheck['core']);
             $componentsToCheck = array_merge(array('core' => $coreVersions), $componentsToCheck);
         }
-
         $recordedCoreVersion = $this->getCurrentComponentVersion('core');
         if (empty($recordedCoreVersion)) {
             // This should not happen
-            $recordedCoreVersion = Version::VERSION;
+            $recordedCoreVersion = \Piwik\Version::VERSION;
             $this->markComponentSuccessfullyUpdated('core', $recordedCoreVersion);
         }
-
         foreach ($componentsToCheck as $name => $version) {
             $currentVersion = $this->getCurrentComponentVersion($name);
-
             if (ColumnUpdater::isDimensionComponent($name)) {
                 $isComponentOutdated = $currentVersion !== $version;
             } else {
                 // note: when versionCompare == 1, the version in the DB is newer, we choose to ignore
                 $isComponentOutdated = version_compare($currentVersion, $version) == -1;
             }
-
             if ($isComponentOutdated || $currentVersion === false) {
-                $componentsToUpdate[$name] = array(
-                    self::INDEX_CURRENT_VERSION => $currentVersion,
-                    self::INDEX_NEW_VERSION     => $version
-                );
+                $componentsToUpdate[$name] = array(self::INDEX_CURRENT_VERSION => $currentVersion, self::INDEX_NEW_VERSION => $version);
             }
         }
-
         return $componentsToUpdate;
     }
-
     /**
      * Updates multiple components, while capturing & returning errors and warnings.
      *
@@ -458,32 +394,27 @@ class Updater
     public function updateComponents($componentsWithUpdateFile)
     {
         $warnings = array();
-        $errors   = array();
+        $errors = array();
         $deactivatedPlugins = array();
         $coreError = false;
-
         try {
-            $history = Option::get(self::OPTION_KEY_MATOMO_UPDATE_HISTORY);
+            $history = \Piwik\Option::get(self::OPTION_KEY_MATOMO_UPDATE_HISTORY);
             $history = explode(',', (string) $history);
-            $previousVersion = Option::get(self::getNameInOptionTable('core'));
-
+            $previousVersion = \Piwik\Option::get(self::getNameInOptionTable('core'));
             if (!empty($previousVersion) && !in_array($previousVersion, $history, true)) {
                 // this allows us to see which versions of matomo the user was using before this update so we better understand
                 // which version maybe regressed something
-                array_unshift( $history, $previousVersion );
-                $history = array_slice( $history, 0, 6 ); // lets keep only the last 6 versions
-                Option::set(self::OPTION_KEY_MATOMO_UPDATE_HISTORY, implode(',', $history));
+                array_unshift($history, $previousVersion);
+                $history = array_slice($history, 0, 6);
+                // lets keep only the last 6 versions
+                \Piwik\Option::set(self::OPTION_KEY_MATOMO_UPDATE_HISTORY, implode(',', $history));
             }
         } catch (\Exception $e) {
             // case when the option table is not yet created (before 0.2.10)
         }
-
         if (!empty($componentsWithUpdateFile)) {
-
-            Access::doAsSuperUser(function() use ($componentsWithUpdateFile, &$coreError, &$deactivatedPlugins, &$errors, &$warnings) {
-
+            \Piwik\Access::doAsSuperUser(function () use($componentsWithUpdateFile, &$coreError, &$deactivatedPlugins, &$errors, &$warnings) {
                 $pluginManager = \Piwik\Plugin\Manager::getInstance();
-
                 // if error in any core update, show message + help message + EXIT
                 // if errors in any plugins updates, show them on screen, disable plugins that errored + CONTINUE
                 // if warning in any core update or in any plugins update, show message + CONTINUE
@@ -491,7 +422,7 @@ class Updater
                 foreach ($componentsWithUpdateFile as $name => $filenames) {
                     try {
                         $warnings = array_merge($warnings, $this->update($name));
-                    } catch (UpdaterErrorException $e) {
+                    } catch (\Piwik\UpdaterErrorException $e) {
                         $errors[] = $e->getMessage();
                         if ($name == 'core') {
                             $coreError = true;
@@ -505,28 +436,17 @@ class Updater
                         }
                     }
                 }
-
             });
         }
-
-        Filesystem::deleteAllCacheOnUpdate();
+        \Piwik\Filesystem::deleteAllCacheOnUpdate();
         ServerFilesGenerator::createFilesForSecurity();
-
-        $result = array(
-            'warnings'  => $warnings,
-            'errors'    => $errors,
-            'coreError' => $coreError,
-            'deactivatedPlugins' => $deactivatedPlugins
-        );
-
+        $result = array('warnings' => $warnings, 'errors' => $errors, 'coreError' => $coreError, 'deactivatedPlugins' => $deactivatedPlugins);
         /**
          * Triggered after Piwik has been updated.
          */
-        Piwik::postEvent('CoreUpdater.update.end');
-
+        \Piwik\Piwik::postEvent('CoreUpdater.update.end');
         return $result;
     }
-
     /**
      * Returns any updates that should occur for core and all plugins that are both loaded and
      * installed. Also includes updates required for dimensions.
@@ -535,10 +455,7 @@ class Updater
      */
     public function getComponentUpdates()
     {
-        $componentsToCheck = array(
-            'core' => Version::VERSION
-        );
-
+        $componentsToCheck = array('core' => \Piwik\Version::VERSION);
         $manager = \Piwik\Plugin\Manager::getInstance();
         $plugins = $manager->getLoadedPlugins();
         foreach ($plugins as $pluginName => $plugin) {
@@ -546,23 +463,17 @@ class Updater
                 $componentsToCheck[$pluginName] = $plugin->getVersion();
             }
         }
-
         $columnsVersions = $this->columnsUpdater->getAllVersions($this);
         foreach ($columnsVersions as $component => $version) {
             $componentsToCheck[$component] = $version;
         }
-
         $componentsWithUpdateFile = $this->getComponentsWithUpdateFile($componentsToCheck);
-
         if (count($componentsWithUpdateFile) == 0) {
             $this->columnsUpdater->onNoUpdateAvailable($columnsVersions);
-
             return null;
         }
-
         return $componentsWithUpdateFile;
     }
-
     /**
      * Execute multiple migration queries from a single Update file.
      *
@@ -577,7 +488,6 @@ class Updater
             $this->executeMigration($file, $migration);
         }
     }
-
     /**
      * @param $file
      * @param Migration $migration
@@ -588,27 +498,21 @@ class Updater
     {
         try {
             $this->executeListenerHook('onStartExecutingMigration', array($file, $migration));
-
             $migration->exec();
-
         } catch (\Exception $e) {
             if (!$migration->shouldIgnoreError($e)) {
-                $message = sprintf("%s:\nError trying to execute the migration '%s'.\nThe error was: %s",
-                                   $file, $migration->__toString(), $e->getMessage());
-                throw new UpdaterErrorException($message);
+                $message = sprintf("%s:\nError trying to execute the migration '%s'.\nThe error was: %s", $file, $migration->__toString(), $e->getMessage());
+                throw new \Piwik\UpdaterErrorException($message);
             }
         }
-
         $this->executeListenerHook('onFinishedExecutingMigration', array($file, $migration));
     }
-
     private function executeListenerHook($hookName, $arguments)
     {
         foreach ($this->updateObservers as $listener) {
             call_user_func_array(array($listener, $hookName), $arguments);
         }
     }
-
     private function executeSingleUpdateClass($className)
     {
         $update = StaticContainer::getContainer()->make($className);
@@ -618,26 +522,24 @@ class Updater
             // if an Update file executes PHP statements directly, DB exceptions be handled by executeSingleMigrationQuery, so
             // make sure to check for them here
             if ($e instanceof Zend_Db_Exception) {
-                throw new UpdaterErrorException($e->getMessage(), $e->getCode(), $e);
-            } else if ($e instanceof MissingFilePermissionException) {
-                throw new UpdaterErrorException($e->getMessage(), $e->getCode(), $e);
-            }{
-                throw $e;
+                throw new \Piwik\UpdaterErrorException($e->getMessage(), $e->getCode(), $e);
+            } else {
+                if ($e instanceof MissingFilePermissionException) {
+                    throw new \Piwik\UpdaterErrorException($e->getMessage(), $e->getCode(), $e);
+                }
             }
+            throw $e;
         }
     }
-
     private function keepBcForOldMigrationQueryFormat($index, $migration)
     {
         if (!is_object($migration)) {
             // keep BC for old format (pre 3.0): array($sqlQuery => $errorCodeToIgnore)
-            $migrationFactory = StaticContainer::get('Piwik\Updater\Migration\Factory');
+            $migrationFactory = StaticContainer::get('Piwik\\Updater\\Migration\\Factory');
             $migration = $migrationFactory->db->sql($index, $migration);
         }
-
         return $migration;
     }
-
     /**
      * Record version of successfully completed component update
      *
@@ -648,7 +550,6 @@ class Updater
     {
         self::$activeInstance->markComponentSuccessfullyUpdated($name, $version);
     }
-
     /**
      * Returns the flag name to use in the option table to record current schema version
      * @param string $name

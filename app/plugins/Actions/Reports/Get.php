@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,28 +11,15 @@ namespace Piwik\Plugins\Actions\Reports;
 
 use Piwik\Piwik;
 use Piwik\Plugins\Actions\Columns\Metrics\AveragePageGenerationTime;
-
-class Get extends Base
+class Get extends \Piwik\Plugins\Actions\Reports\Base
 {
     protected function init()
     {
         parent::init();
-
-        $this->name          = Piwik::translate('General_Actions') . ' - ' . Piwik::translate('General_MainMetrics');
+        $this->name = Piwik::translate('General_Actions') . ' - ' . Piwik::translate('General_MainMetrics');
         $this->documentation = Piwik::translate('Actions_MainMetricsReportDocumentation');
         $this->order = 1;
-        $this->processedMetrics = array(
-            new AveragePageGenerationTime()
-        );
-        $this->metrics  = array(
-            'nb_pageviews',
-            'nb_uniq_pageviews',
-            'nb_downloads',
-            'nb_uniq_downloads',
-            'nb_outlinks',
-            'nb_uniq_outlinks',
-            'nb_searches',
-            'nb_keywords'
-        );
+        $this->processedMetrics = array(new AveragePageGenerationTime());
+        $this->metrics = array('nb_pageviews', 'nb_uniq_pageviews', 'nb_downloads', 'nb_uniq_downloads', 'nb_outlinks', 'nb_uniq_outlinks', 'nb_searches', 'nb_keywords');
     }
 }

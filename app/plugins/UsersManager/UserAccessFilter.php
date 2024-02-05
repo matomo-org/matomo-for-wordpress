@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,11 +7,9 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\UsersManager;
 
 use Piwik\Access;
-
 /**
  * This class offers methods to filter a list of users, logins, or anything that is related to users/logins.
  *
@@ -30,42 +29,35 @@ class UserAccessFilter
      * @var Model
      */
     private $model;
-
     /**
      * @var Access
      */
     private $access;
-
     /**
      * Holds a list of all idSites the current user has view access to. Only used for caching.
      * @var array
      */
     private $idSitesWithAdmin;
-
     /**
      * Holds a list of all user logins that have admin access. Only used for caching
      * @var array  Array ('loginName' => array(idsites...))
      */
     private $usersWithAdminAccess;
-
     /**
      * Holds a list of all user logins that have write access. Only used for caching
      * @var array  Array ('loginName' => array(idsites...))
      */
     private $usersWithWriteAccess;
-
     /**
      * Holds a list of all user logins that have view access. Only used for caching
      * @var array  Array ('loginName' => array(idsites...))
      */
     private $usersWithViewAccess;
-
-    public function __construct(Model $model, Access $access)
+    public function __construct(\Piwik\Plugins\UsersManager\Model $model, Access $access)
     {
-        $this->model  = $model;
+        $this->model = $model;
         $this->access = $access;
     }
-
     /**
      * Removes all array values where the current user has no permission to see the existence of a given login index/key.
      * @param array $arrayIndexedByLogin An array that is indexed by login / usernames. Eg:
@@ -75,14 +67,12 @@ class UserAccessFilter
     public function filterLoginIndexedArray($arrayIndexedByLogin)
     {
         if ($this->access->hasSuperUserAccess()) {
-            return $arrayIndexedByLogin; // this part is not needed but makes it faster for super user.
+            return $arrayIndexedByLogin;
+            // this part is not needed but makes it faster for super user.
         }
-
         $allowedLogins = $this->filterLogins(array_keys($arrayIndexedByLogin));
-
         return array_intersect_key($arrayIndexedByLogin, array_flip($allowedLogins));
     }
-
     /**
      * Removes all users from the list of the given users where the current user has no permission to see the existence
      * of that other user.
@@ -95,7 +85,6 @@ class UserAccessFilter
         if ($this->access->hasSuperUserAccess()) {
             return $users;
         }
-
         if (!$this->access->isUserHasSomeAdminAccess()) {
             // keep only own user if it is in the list
             foreach ($users as $user) {
@@ -103,16 +92,13 @@ class UserAccessFilter
                     return array($user);
                 }
             }
-
             return array();
         }
-
         return array_values(array_filter($users, function ($user) {
             $isPendingVisible = empty($user['invite_token']) || $this->isOwnLogin($user['invited_by']);
             return $isPendingVisible && $this->isNonSuperUserAllowedToSeeThisLogin($user['login']);
         }));
     }
-
     /**
      * Returns the given user only if the current user has permission to see the given user
      * @param array $user An array containing a key 'login'
@@ -120,13 +106,10 @@ class UserAccessFilter
      */
     public function filterUser($user)
     {
-        if ($this->access->hasSuperUserAccess()
-          || (!empty($user['login']) && $this->isNonSuperUserAllowedToSeeThisLogin($user['login']))
-        ) {
+        if ($this->access->hasSuperUserAccess() || !empty($user['login']) && $this->isNonSuperUserAllowedToSeeThisLogin($user['login'])) {
             return $user;
         }
     }
-
     /**
      * Removes all logins from the list of logins where the current user has no permission to see them.
      *
@@ -138,7 +121,6 @@ class UserAccessFilter
         if ($this->access->hasSuperUserAccess()) {
             return $logins;
         }
-
         if (!$this->access->isUserHasSomeAdminAccess()) {
             // keep only own user if it is in the list
             foreach ($logins as $login) {
@@ -146,45 +128,34 @@ class UserAccessFilter
                     return array($login);
                 }
             }
-
             return array();
         }
-
         foreach ($logins as $index => $login) {
             if (!$this->isNonSuperUserAllowedToSeeThisLogin($login)) {
                 unset($logins[$index]);
             }
         }
-
         return array_values($logins);
     }
-
     protected function isNonSuperUserAllowedToSeeThisLogin($login)
     {
         // we do not test for super user access here for better performance as we would otherwise test for access for
         // each single login in the other calling methods.
         return $this->hasAccessToSameSite($login) || $this->isOwnLogin($login);
     }
-
     private function isOwnLogin($login)
     {
         return $login === $this->access->getLogin();
     }
-
     private function hasAccessToSameSite($login)
     {
         // users is allowed to see other users having view or admin access to these sites
         if (!isset($this->idSitesWithAdmin)) {
-            $this->idSitesWithAdmin     = $this->access->getSitesIdWithAdminAccess();
+            $this->idSitesWithAdmin = $this->access->getSitesIdWithAdminAccess();
             $this->usersWithAdminAccess = $this->model->getUsersSitesFromAccess('admin');
             $this->usersWithWriteAccess = $this->model->getUsersSitesFromAccess('write');
-            $this->usersWithViewAccess  = $this->model->getUsersSitesFromAccess('view');
+            $this->usersWithViewAccess = $this->model->getUsersSitesFromAccess('view');
         }
-
-        return (
-          (isset($this->usersWithViewAccess[$login]) && array_intersect($this->idSitesWithAdmin, $this->usersWithViewAccess[$login]))
-          || (isset($this->usersWithWriteAccess[$login]) && array_intersect($this->idSitesWithAdmin, $this->usersWithWriteAccess[$login]))
-          || (isset($this->usersWithAdminAccess[$login]) && array_intersect($this->idSitesWithAdmin, $this->usersWithAdminAccess[$login]))
-        );
+        return isset($this->usersWithViewAccess[$login]) && array_intersect($this->idSitesWithAdmin, $this->usersWithViewAccess[$login]) || isset($this->usersWithWriteAccess[$login]) && array_intersect($this->idSitesWithAdmin, $this->usersWithWriteAccess[$login]) || isset($this->usersWithAdminAccess[$login]) && array_intersect($this->idSitesWithAdmin, $this->usersWithAdminAccess[$login]);
     }
 }

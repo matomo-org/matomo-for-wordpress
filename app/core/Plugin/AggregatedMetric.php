@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,7 +8,6 @@
  */
 namespace Piwik\Plugin;
 
-
 /**
  * Base type for metric metadata classes that describe aggregated metrics. These metrics are
  * computed in the backend data store and are aggregated in PHP when Piwik archives period reports.
@@ -15,7 +15,7 @@ namespace Piwik\Plugin;
  * Note: This class is a placeholder. It will be filled out at a later date. Right now, only
  * processed metrics can be defined this way.
  */
-abstract class AggregatedMetric extends Metric
+abstract class AggregatedMetric extends \Piwik\Plugin\Metric
 {
     // stub, to be filled out later
 }

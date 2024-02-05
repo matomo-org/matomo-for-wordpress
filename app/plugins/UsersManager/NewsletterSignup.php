@@ -15,11 +15,9 @@ use Piwik\Http;
 use Piwik\Option;
 use Piwik\Plugins\Marketplace\Api\Client;
 use Piwik\SettingsPiwik;
-
 class NewsletterSignup
 {
     const NEWSLETTER_SIGNUP_OPTION = 'UsersManager.newsletterSignup.';
-
     public static function signupForNewsletter($userLogin, $email, $matomoOrg = false, $professionalServices = false)
     {
         // Don't bother if they aren't signing up for at least one newsletter, or if we don't have internet access
@@ -27,17 +25,9 @@ class NewsletterSignup
         if (!$doSignup) {
             return false;
         }
-
         $url = Client::getApiServiceUrl();
         $url .= '/1.0/subscribeNewsletter/';
-
-        $params = array(
-            'email'     => $email,
-            'piwikorg'  => (int)$matomoOrg,
-            'piwikpro'  => (int)$professionalServices,
-            'language'  => StaticContainer::get('Piwik\Translation\Translator')->getCurrentLanguage(),
-        );
-
+        $params = array('email' => $email, 'piwikorg' => (int) $matomoOrg, 'piwikpro' => (int) $professionalServices, 'language' => StaticContainer::get('Piwik\\Translation\\Translator')->getCurrentLanguage());
         $url .= '?' . Http::buildQuery($params);
         try {
             Http::sendHttpRequest($url, $timeout = 2);

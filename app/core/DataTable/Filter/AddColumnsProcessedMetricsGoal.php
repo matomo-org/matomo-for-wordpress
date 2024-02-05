@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -26,7 +27,6 @@ use Piwik\Plugins\Goals\Columns\Metrics\GoalSpecific\RevenuePerEntry as GoalSpec
 use Piwik\Plugins\Goals\Columns\Metrics\GoalSpecific\RevenueAttrib;
 use Piwik\Plugins\Goals\Columns\Metrics\GoalSpecific\RevenueEntry;
 use Piwik\Plugins\Goals\Columns\Metrics\RevenuePerVisit;
-
 /**
  * Adds goal related metrics to a {@link DataTable} using metrics that already exist.
  *
@@ -63,59 +63,50 @@ use Piwik\Plugins\Goals\Columns\Metrics\RevenuePerVisit;
  *
  * @api
  */
-class AddColumnsProcessedMetricsGoal extends AddColumnsProcessedMetrics
+class AddColumnsProcessedMetricsGoal extends \Piwik\DataTable\Filter\AddColumnsProcessedMetrics
 {
-
     /**
      * Process metrics for entry page views, with ECommerce
      */
     const GOALS_ENTRY_PAGES_ECOMMERCE = -6;
-
     /**
      * Process for page views, with ECommerce
      */
     const GOALS_PAGES_ECOMMERCE = -5;
-
     /**
      * Process metrics for entry page views
      */
     const GOALS_ENTRY_PAGES = -4;
-
     /**
      * Process for page views
      */
     const GOALS_PAGES = -3;
-
     /**
      * Process main goal metrics: conversion rate, revenue per visit
      */
     const GOALS_MINIMAL_REPORT = -2;
-
     /**
      * Process main goal metrics, and conversion rate per goal
      */
     const GOALS_OVERVIEW = -1;
-
     /**
      * Process all goal and per-goal metrics
      */
     const GOALS_FULL_TABLE = 0;
-
+    const ACTIONS_PAGE_REPORTS_WITH_GOAL_METRICS = ['Actions.getPageUrls', 'Actions.getPageTitles'];
+    const ACTIONS_ENTRY_PAGE_REPORTS_WITH_GOAL_METRICS = ['Actions.getEntryPageUrls', 'Actions.getEntryPageTitles'];
     /**
      * @var string
      */
     private $processOnlyIdGoal;
-
     /**
      * @var bool
      */
     private $isEcommerce;
-
     /**
      * @var mixed|null
      */
     private $goalsToProcess;
-
     /**
      * Constructor.
      *
@@ -135,7 +126,6 @@ class AddColumnsProcessedMetricsGoal extends AddColumnsProcessedMetrics
         $this->deleteRowsWithNoVisit = false;
         $this->goalsToProcess = $goalsToProcess;
     }
-
     /**
      * Adds the processed metrics. See {@link AddColumnsProcessedMetrics} for
      * more information.
@@ -146,62 +136,58 @@ class AddColumnsProcessedMetricsGoal extends AddColumnsProcessedMetrics
     {
         // Add standard processed metrics
         parent::filter($table);
-
         $goals = $this->getGoalsInTable($table);
         if (!empty($this->goalsToProcess)) {
             $goals = array_unique(array_merge($goals, $this->goalsToProcess));
             sort($goals);
         }
-
         $idSite = DataTableFactory::getSiteIdFromMetadata($table);
-
         $extraProcessedMetrics = $table->getMetadata(DataTable::EXTRA_PROCESSED_METRICS_METADATA_NAME);
-
         $extraProcessedMetrics[] = new RevenuePerVisit();
         if ($this->processOnlyIdGoal != self::GOALS_MINIMAL_REPORT) {
             foreach ($goals as $idGoal) {
-                if (($this->processOnlyIdGoal > self::GOALS_FULL_TABLE
-                        || $this->isEcommerce)
-                    && $this->processOnlyIdGoal != $idGoal
-                ) {
+                if (($this->processOnlyIdGoal > self::GOALS_FULL_TABLE || $this->isEcommerce) && $this->processOnlyIdGoal != $idGoal) {
                     continue;
                 }
-
-                $extraProcessedMetrics[] = new ConversionRate($idSite, $idGoal); // PerGoal\ConversionRate
-
+                $extraProcessedMetrics[] = new ConversionRate($idSite, $idGoal);
+                // PerGoal\ConversionRate
                 // When the table is displayed by clicking on the flag icon, we only display the columns
                 // Visits, Conversions, Per goal conversion rate, Revenue
                 if ($this->processOnlyIdGoal == self::GOALS_OVERVIEW) {
-                   continue;
+                    continue;
                 }
-
-                $extraProcessedMetrics[] = new Conversions($idSite, $idGoal); // PerGoal\Conversions or GoalSpecific\
-                $extraProcessedMetrics[] = new GoalSpecificRevenuePerVisit($idSite, $idGoal); // PerGoal\Revenue
-                $extraProcessedMetrics[] = new Revenue($idSite, $idGoal); // PerGoal\Revenue
-
+                $extraProcessedMetrics[] = new Conversions($idSite, $idGoal);
+                // PerGoal\Conversions or GoalSpecific\
+                $extraProcessedMetrics[] = new GoalSpecificRevenuePerVisit($idSite, $idGoal);
+                // PerGoal\Revenue
+                $extraProcessedMetrics[] = new Revenue($idSite, $idGoal);
+                // PerGoal\Revenue
                 if ($this->processOnlyIdGoal == self::GOALS_PAGES || $this->processOnlyIdGoal == self::GOALS_PAGES_ECOMMERCE) {
-                    $extraProcessedMetrics[] = new ConversionsAttrib($idSite, $idGoal); // PerGoal\Conversions or GoalSpecific\
-                    $extraProcessedMetrics[] = new RevenueAttrib($idSite, $idGoal); // PerGoal\Revenue attrib
-                    $extraProcessedMetrics[] = new ConversionPageRate($idSite, $idGoal); // PerGoal\ConversionRate for page uniq views
+                    $extraProcessedMetrics[] = new ConversionsAttrib($idSite, $idGoal);
+                    // PerGoal\Conversions or GoalSpecific\
+                    $extraProcessedMetrics[] = new RevenueAttrib($idSite, $idGoal);
+                    // PerGoal\Revenue attrib
+                    $extraProcessedMetrics[] = new ConversionPageRate($idSite, $idGoal);
+                    // PerGoal\ConversionRate for page uniq views
                 }
-
                 if ($this->processOnlyIdGoal == self::GOALS_ENTRY_PAGES || $this->processOnlyIdGoal == self::GOALS_ENTRY_PAGES_ECOMMERCE) {
-                    $extraProcessedMetrics[] = new ConversionsEntry($idSite, $idGoal); // PerGoal\Conversions or GoalSpecific\
-                    $extraProcessedMetrics[] = new GoalSpecificRevenuePerEntry($idSite, $idGoal); // PerGoal\Revenue entries
-                    $extraProcessedMetrics[] = new RevenueEntry($idSite, $idGoal); // PerGoal\Revenue entrances
-                    $extraProcessedMetrics[] = new ConversionEntryRate($idSite, $idGoal); // PerGoal\ConversionRate for entrances
+                    $extraProcessedMetrics[] = new ConversionsEntry($idSite, $idGoal);
+                    // PerGoal\Conversions or GoalSpecific\
+                    $extraProcessedMetrics[] = new GoalSpecificRevenuePerEntry($idSite, $idGoal);
+                    // PerGoal\Revenue entries
+                    $extraProcessedMetrics[] = new RevenueEntry($idSite, $idGoal);
+                    // PerGoal\Revenue entrances
+                    $extraProcessedMetrics[] = new ConversionEntryRate($idSite, $idGoal);
+                    // PerGoal\ConversionRate for entrances
                 }
-
                 if ($this->isEcommerce || $this->processOnlyIdGoal == self::GOALS_PAGES_ECOMMERCE || $this->processOnlyIdGoal == self::GOALS_ENTRY_PAGES_ECOMMERCE) {
                     $extraProcessedMetrics[] = new AverageOrderRevenue($idSite, $idGoal);
                     $extraProcessedMetrics[] = new ItemsCount($idSite, $idGoal);
                 }
             }
         }
-
         $table->setMetadata(DataTable::EXTRA_PROCESSED_METRICS_METADATA_NAME, $extraProcessedMetrics);
     }
-
     private function getGoalsInTable(DataTable $table)
     {
         $result = array();
@@ -210,12 +196,37 @@ class AddColumnsProcessedMetricsGoal extends AddColumnsProcessedMetrics
             if (!$goals) {
                 continue;
             }
-
             foreach ($goals as $goalId => $goalMetrics) {
                 $goalId = str_replace("idgoal=", "", $goalId);
                 $result[] = $goalId;
             }
         }
         return array_unique($result);
+    }
+    /**
+     * Returns an idGoal override to use for the processOnlyIdGoal parameter of this filter if $requestMethod
+     * is for a Actions page report or an Actions entry page report.
+     *
+     * @param int|string|null $idGoal if set to ecommerceOrder or ecommerceAbandonedCart, returns a processOnlyIdGoal value
+     *                                that will result in extra ecommerce metrics being computed
+     * @return int|string|null
+     */
+    public static function getProcessOnlyIdGoalToUseForReport($idGoal, string $requestMethod)
+    {
+        // Check if one of the pages display types should be used
+        if (in_array($requestMethod, self::ACTIONS_PAGE_REPORTS_WITH_GOAL_METRICS)) {
+            if ($idGoal === Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER || $idGoal === Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART) {
+                return self::GOALS_PAGES_ECOMMERCE;
+            } else {
+                return self::GOALS_PAGES;
+            }
+        } elseif (in_array($requestMethod, self::ACTIONS_ENTRY_PAGE_REPORTS_WITH_GOAL_METRICS)) {
+            if ($idGoal === Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER || $idGoal === Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART) {
+                return self::GOALS_ENTRY_PAGES_ECOMMERCE;
+            } else {
+                return self::GOALS_ENTRY_PAGES;
+            }
+        }
+        return $idGoal;
     }
 }

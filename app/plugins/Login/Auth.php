@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -16,29 +17,24 @@ use Piwik\DbHelper;
 use Piwik\Piwik;
 use Piwik\Plugins\UsersManager\Model;
 use Piwik\Plugins\UsersManager\UsersManager;
-
 class Auth implements \Piwik\Auth
 {
     protected $login;
     protected $token_auth;
     protected $hashedPassword;
-
     /**
      * @var Model
      */
     private $userModel;
-
     /**
      * @var Password
      */
     private $passwordHelper;
-
     public function __construct()
     {
-        $this->userModel      = new Model();
+        $this->userModel = new Model();
         $this->passwordHelper = new Password();
     }
-
     /**
      * Authentication module's name, e.g., "Login"
      *
@@ -48,7 +44,6 @@ class Auth implements \Piwik\Auth
     {
         return 'Login';
     }
-
     /**
      * Authenticates user
      *
@@ -69,72 +64,55 @@ class Auth implements \Piwik\Auth
             if (strpos($e->getMessage(), 'user_token_auth') && !DbHelper::tableExists(Common::prefixTable('user_token_auth'))) {
                 return new AuthResult(AuthResult::SUCCESS, 'anonymous', 'anonymous');
             }
-
             throw $e;
         }
-
         return new AuthResult(AuthResult::FAILURE, $this->login, $this->token_auth);
     }
-
     private function authenticateWithPassword($login, $passwordHash)
     {
         $user = $this->userModel->getUser($login);
-
         if (empty($user['login'])) {
             return new AuthResult(AuthResult::FAILURE, $login, null);
         }
-
         if ($this->passwordHelper->verify($passwordHash, $user['password'])) {
             if ($this->passwordHelper->needsRehash($user['password'])) {
                 $newPasswordHash = $this->passwordHelper->hash($passwordHash);
-
                 $this->userModel->updateUser($login, $newPasswordHash, $user['email']);
             }
-            $this->token_auth = null; // make sure to generate a random token 
-
+            $this->token_auth = null;
+            // make sure to generate a random token
             return $this->authenticationSuccess($user);
         }
-
         return new AuthResult(AuthResult::FAILURE, $login, null);
     }
-
     private function authenticateWithToken($token)
     {
         $user = $this->userModel->getUserByTokenAuth($token);
-
         if (!empty($user['login'])) {
             $this->userModel->setTokenAuthWasUsed($token, Date::now()->getDatetime());
             return $this->authenticationSuccess($user);
         }
-
         return new AuthResult(AuthResult::FAILURE, null, $token);
     }
-
     private function authenticateWithLoginAndToken($token, $login)
     {
         $user = $this->userModel->getUserByTokenAuth($token);
-
         if (!empty($user['login']) && $user['login'] === $login) {
             $this->userModel->setTokenAuthWasUsed($token, Date::now()->getDatetime());
             return $this->authenticationSuccess($user);
         }
-
         return new AuthResult(AuthResult::FAILURE, $login, $token);
     }
-
     private function authenticationSuccess(array $user)
     {
         if (empty($this->token_auth)) {
             $this->token_auth = $this->userModel->generateRandomTokenAuth();
             // we generated one randomly which will then be stored in the session and used across the session
         }
-
         $isSuperUser = (int) $user['superuser_access'];
         $code = $isSuperUser ? AuthResult::SUCCESS_SUPERUSER_AUTH_CODE : AuthResult::SUCCESS;
-
         return new AuthResult($code, $user['login'], $this->token_auth);
     }
-
     /**
      * Returns the login of the user being authenticated.
      *
@@ -144,7 +122,6 @@ class Auth implements \Piwik\Auth
     {
         return $this->login;
     }
-
     /**
      * Accessor to set login name
      *
@@ -154,7 +131,6 @@ class Auth implements \Piwik\Auth
     {
         $this->login = $login;
     }
-
     /**
      * Returns the secret used to calculate a user's token auth.
      *
@@ -164,7 +140,6 @@ class Auth implements \Piwik\Auth
     {
         return $this->hashedPassword;
     }
-
     /**
      * Accessor to set authentication token
      *
@@ -174,7 +149,6 @@ class Auth implements \Piwik\Auth
     {
         $this->token_auth = $token_auth;
     }
-
     /**
      * Sets the password to authenticate with.
      *
@@ -188,7 +162,6 @@ class Auth implements \Piwik\Auth
             $this->hashedPassword = UsersManager::getPasswordHash($password);
         }
     }
-
     /**
      * Sets the password hash to use when authentication.
      *
@@ -200,13 +173,10 @@ class Auth implements \Piwik\Auth
             $this->hashedPassword = null;
             return;
         }
-
         // check that the password hash is valid (sanity check)
         UsersManager::checkPasswordHash($passwordHash, Piwik::translate('Login_ExceptionPasswordMD5HashExpected'));
-
         $this->hashedPassword = $passwordHash;
     }
-
     // for tests
     public function getTokenAuth()
     {

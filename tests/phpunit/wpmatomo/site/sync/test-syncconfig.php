@@ -13,7 +13,7 @@ class SiteSyncConfigTest extends MatomoAnalytics_TestCase {
 	 */
 	private $sync_config;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$settings = new Settings();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -7,12 +8,10 @@
  */
 namespace Piwik\Plugins\TagManager\API;
 
-
 use Piwik\Piwik;
 use Piwik\Plugins\TagManager\Template\Tag\BaseTag;
 use Piwik\Plugins\TagManager\Template\Trigger\BaseTrigger;
 use Piwik\Plugins\TagManager\Template\Variable\BaseVariable;
-
 class TemplateMetadata
 {
     /**
@@ -28,21 +27,15 @@ class TemplateMetadata
             } else {
                 $tagArray = $template->toArray();
             }
-
             $category = $tagArray['category'];
             if (!isset($byCategory[$category])) {
-                $byCategory[$category] = [
-                    'name' => $category,
-                    'types' => []
-                ];
+                $byCategory[$category] = ['name' => $category, 'types' => []];
             }
             $byCategory[$category]['types'][] = $tagArray;
         }
-
         $byCategory = array_values($byCategory);
-
         $othersTranslated = Piwik::translate('General_Others');
-        usort($byCategory, function ($catA, $catB) use ($othersTranslated) {
+        usort($byCategory, function ($catA, $catB) use($othersTranslated) {
             if ($catA['name'] === 'General_Others' || $catA['name'] === $othersTranslated) {
                 return 1;
             }
@@ -51,19 +44,14 @@ class TemplateMetadata
             }
             return strnatcmp($catA['name'], $catB['name']);
         });
-
         foreach ($byCategory as &$category) {
             usort($category['types'], function ($tagA, $tagB) {
                 if ($tagA['order'] == $tagB['order']) {
                     return strnatcmp($tagA['name'], $tagB['name']);
-
                 }
                 return $tagA['order'] - $tagB['order'];
             });
         }
-
         return $byCategory;
     }
-
-
 }

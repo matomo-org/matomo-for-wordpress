@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,14 +11,12 @@ namespace Piwik\Plugins\Referrers\DataTable\Filter;
 
 use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable;
-
 class UrlsForSocial extends BaseFilter
 {
     /**
      * @var bool
      */
     private $sortRecursive;
-
     /**
      * Constructor.
      *
@@ -27,10 +26,8 @@ class UrlsForSocial extends BaseFilter
     public function __construct($table, $sortRecursive)
     {
         parent::__construct($table);
-
         $this->sortRecursive = $sortRecursive;
     }
-
     /**
      * @param DataTable $table
      */
@@ -38,9 +35,8 @@ class UrlsForSocial extends BaseFilter
     {
         // make url labels clickable
         $table->filter('ColumnCallbackAddMetadata', array('label', 'url'));
-
         // prettify the DataTable
-        $table->filter('ColumnCallbackReplace', array('label', 'Piwik\Plugins\Referrers\removeUrlProtocol'));
+        $table->filter('ColumnCallbackReplace', array('label', 'Piwik\\Plugins\\Referrers\\removeUrlProtocol'));
         $table->queueFilter('ReplaceColumnNames');
     }
 }

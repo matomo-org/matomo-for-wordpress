@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -16,7 +17,6 @@ use Piwik\Metrics\Formatter;
 use Piwik\Piwik;
 use Piwik\Plugin\ProcessedMetric;
 use Piwik\Tracker\GoalManager;
-
 /**
  * The amount of revenue per visit (or per conversion if there are no visits). Calculated as:
  *
@@ -27,63 +27,52 @@ use Piwik\Tracker\GoalManager;
 class RevenuePerVisit extends ProcessedMetric
 {
     private $idSite;
-
     public function getName()
     {
         return 'revenue_per_visit';
     }
-
     public function getTranslatedName()
     {
         return Piwik::translate('General_ColumnValuePerVisit');
     }
-
     public function getDependentMetrics()
     {
-        return array('revenue', 'nb_visits', 'nb_conversions','goals');
+        return array('revenue', 'nb_visits', 'nb_conversions', 'goals');
     }
-
     public function compute(Row $row)
     {
         $mappingFromNameToIdGoal = Metrics::getMappingFromNameToIdGoal();
         $goals = $this->getMetric($row, 'goals') ?: array();
-
         $revenue = 0;
         foreach ($goals as $goalId => $goalMetrics) {
-            if ($goalId == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART) {
+            if (is_numeric($goalId) && $goalId < GoalManager::IDGOAL_ORDER) {
                 continue;
             }
-            if ($goalId >= GoalManager::IDGOAL_ORDER
-                || $goalId == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER
-            ) {
-                $revenue += (int) $this->getMetric($goalMetrics, 'revenue', $mappingFromNameToIdGoal);
+            if (!is_numeric($goalId) && $goalId != Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER) {
+                continue;
             }
+            $revenue += (int) $this->getMetric($goalMetrics, 'revenue', $mappingFromNameToIdGoal);
         }
-
         if ($revenue == 0) {
             $revenue = (int) $this->getMetric($row, 'revenue');
         }
-
-        $nbVisits    = (int) $this->getMetric($row, 'nb_visits');
+        $nbVisits = (int) $this->getMetric($row, 'nb_visits');
         $conversions = (int) $this->getMetric($row, 'nb_conversions');
-
         // If no visit for this metric, but some conversions, we still want to display some kind of "revenue per visit"
         // even though it will actually be in this edge case "Revenue per conversion"
         return Piwik::getQuotientSafe($revenue, $nbVisits == 0 ? $conversions : $nbVisits, GoalManager::REVENUE_PRECISION);
     }
-
     public function format($value, Formatter $formatter)
     {
         return $formatter->getPrettyMoney($value, $this->idSite);
     }
-
     public function beforeFormat($report, DataTable $table)
     {
         $this->idSite = DataTableFactory::getSiteIdFromMetadata($table);
-        return !empty($this->idSite); // skip formatting if there is no site to get currency info from
+        return !empty($this->idSite);
+        // skip formatting if there is no site to get currency info from
     }
-
-    public function getSemanticType(): ?string
+    public function getSemanticType() : ?string
     {
         return Dimension::TYPE_MONEY;
     }

@@ -29,11 +29,6 @@ concurrency:
   group: php-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  MYSQL_DOCKER_IMG: 'bitnami/mariadb:latest'
-  DB_NAME: 'wp_matomo_tests'
-  PHP_VERSION: '8.0'
-
 jobs:
   unit_tests:
     runs-on: 'ubuntu-20.04'
@@ -41,28 +36,24 @@ jobs:
       fail-fast: false
       matrix:
         wp-versions: [ 'latest' ]
-        php-versions: [ '7.2', '7.3', '7.4', '8.0' ]
+        php-versions: [ '7.2', '8.1' ]
+        multisite: [ "singlesite", "multisite" ]
         include:
           - wp-versions: '5.2'
             php-versions: '7.2'
+            multisite: 'singlesite'
+          - wp-versions: '5.2'
+            php-versions: '7.2'
+            multisite: 'multisite'
     permissions:
       contents: read  # <--- allows to read repo
     steps:
-      - name: Checkout plugin project
+      - name: Checkout project
         uses: actions/checkout@v3
         with:
           persist-credentials: true
-          path: wp-content/plugins/matomo
-
-      - name: Shutdown Ubuntu MySQL
-        run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
-
-      - name: Start MariaDB service
-        shell: bash
-        run: |
-          docker run -d --name mariadb --tmpfs /var/lib/mariadb:rw --tmpfs /bitnami/mariadb/data:rw -v /bitnami/mariadb -p 3306:3306 -e ALLOW_EMPTY_PASSWORD=yes ${{ env.MYSQL_DOCKER_IMG }} > /dev/null
-          sleep 10
-          mysql -h127.0.0.1 -uroot -e "CREATE DATABASE ${{ env.DB_NAME }}";
+          lfs: true
+      - run: git lfs pull
 
       - name: Setup PHP ${{ matrix.php-versions }}
         uses: shivammathur/setup-php@v2
@@ -85,21 +76,67 @@ jobs:
       - name: Check PHP Version
         run: php -v
 
+      # note: we update the dependencies since they only exist for the unit tests, and we need to use different
+      # versions of phpunit/etc. for different PHP versions
+      - name: Update test dependencies
+        shell: bash
+        run: |
+          if [[ "${{ matrix.wp-versions }}" = "5.2" ]]; then
+            sed -i 's%"yoast/phpunit-polyfills": ".*"%"yoast/phpunit-polyfills": "^1.1"%g' composer.json
+          fi
+
+          composer update --with-all-dependencies
+
       - name: Install dependencies
         shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
+        run: composer install
 
-      - name: Install test environment
-        shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./bin/install-wp-tests.sh ${{ env.DB_NAME }} root '' 127.0.0.1 ${{ matrix.wp-versions }} true
+      # TODO: redundancy w/ e2e_tests, could be moved to a script
+      # docker-compose up
+      # TODO: i can't seem to get docker layer caching to work.
+      - run: |
+          export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed 's/pipelines/artifactcache/')
+          export ACTIONS_RUNTIME_TOKEN=$ACTIONS_ID_TOKEN_REQUEST_TOKEN
 
-      - name: Run unit tests in non multisite context
-        shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && ./vendor/bin/phpunit
+          docker buildx build --cache-to type=gha --cache-from type=gha --build-arg PHP_VERSION=${{ matrix.php-versions }} --build-context project="${{ github.workspace }}/scripts" --file=scripts/Dockerfile.local scripts
+        env:
+          PHP_VERSION: ${{ matrix.php-versions }}
+          WOOCOMMERCE: 0
+          WORDPRESS_FOLDER: test
+          RESET_DATABASE: 1
+          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: |
+          cat > .env <<EOF
+          PHP_VERSION=$PHP_VERSION
+          WOOCOMMERCE=0
+          WORDPRESS_FOLDER=test
+          RESET_DATABASE=1
+          WORDPRESS_VERSION=$WORDPRESS_VERSION
+          UID=$UID
+          EOF
+        env:
+          PHP_VERSION: ${{ matrix.php-versions }}
+          WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: chmod -R 777 . # required to build the release
+      - run: sudo chown -R $UID:1000 . # required for wordpress' filesystem direct implementation
+      - run: docker compose --env-file .env.default --env-file .env up -d wordpress
+      - run: sleep 60 # wait for docker-compose launch to finish
+      - run: npm run compose logs wordpress --no-color # for debugging failures to start
 
-      - name: Run unit tests in multisite context
+      - name: Run unit tests
         shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && WP_MULTISITE=1 ./vendor/bin/phpunit
+        run: |
+          if [[ "${{ matrix.multisite }}" == "singlesite" ]]; then
+            echo "Running in single site context"
+          else
+            echo "Running in multisite context"
+
+            cat >> .env <<EOF
+          WP_MULTISITE=1
+          EOF
+          fi
+
+          npm run compose run phpunit
 
   e2e_tests:
     runs-on: 'ubuntu-22.04'
@@ -113,8 +150,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          lfs: true
           persist-credentials: false
+          lfs: true
+      - run: git lfs pull
 
       # setup xvfb
       - run: sudo apt-get update && sudo apt-get install -y xvfb x11-xserver-utils xauth
@@ -131,9 +169,18 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
       - run: npm install
 
+      # TODO: try to remove this after prefixing
+      # disable deprecation notices in e2e tests. we can't control much of the code being
+      # tested (ie, WordPress, other WordPress plugins), and it's very easy for one of them
+      # to trigger a deprecation notice
+      - name: Disable deprecation notices
+        shell: bash
+        run: |
+          mkdir docker
+          echo '[PHP]' > docker/php-custom.ini
+          echo 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_NOTICE' >> docker/php-custom.ini
+
       # docker-compose up
-      - run: ls ${{ github.workspace }}/scripts
-      - run: pwd
       # TODO: i can't seem to get docker layer caching to work.
       - run: |
           export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed 's/pipelines/artifactcache/')
@@ -153,12 +200,28 @@ jobs:
           WORDPRESS_FOLDER=test
           RESET_DATABASE=1
           WORDPRESS_VERSION=$WORDPRESS_VERSION
+          INSTALLING_FROM_ZIP=1
+          UID=$UID
           EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+      - run: chmod -R 777 . # required to build the release
       - run: docker compose --env-file .env.default --env-file .env up -d wordpress
       - run: sleep 60 # wait for docker-compose launch to finish
+      - run: npm run compose logs wordpress --no-color # for debugging failures to start
+
+      # build release from current code
+      - run: npm run compose -- run console wordpress:build-release --name=test --zip
+
+      # install release from plugin
+      - run: |
+          mv matomo-test.zip matomo.zip
+          rm -rf ./docker/wordpress/test/wp-content/plugins/matomo
+          npm run compose -- run wp --allow-root plugin install --activate /var/www/html/matomo-for-wordpress/matomo.zip
+          npm run compose -- run wp --allow-root matomo install
+
+          sudo chmod -R 777 ./docker/wordpress/test/wp-content/cache/matomo
 
       # run tests
       - run: xvfb-run --auto-servernum npm run wdio
@@ -169,14 +232,28 @@ jobs:
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
 
+      - name: Archive test artifacts (actual)
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: actual-screenshots-${{ matrix.php-versions }}-${{ matrix.wp-versions }}
+          path: tests/e2e/actual
+      - name: Archive test artifacts (diffs)
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: diff-screenshots-${{ matrix.php-versions }}-${{ matrix.wp-versions }}
+          path: tests/e2e/diff
+
       # output docker-compose logs
       - run: npm run compose logs wordpress --no-color
+        if: always()
       - run: npm run compose stop
 
   checkstyle:
     runs-on: 'ubuntu-20.04'
     steps:
-      - name: Checkout plugin project
+      - name: Checkout project
         uses: actions/checkout@v3
         with:
           persist-credentials: true
@@ -185,7 +262,7 @@ jobs:
       - name: Setup PHP for checkstyle
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ env.PHP_VERSION }}
+          php-version: 8.0
           extensions: curl, dom, exif, fileinfo, hash, imagick, json, mbstring, mysqli, openssl, pcre, sodium, xml, zip
           ini-values: |
             post_max_size=8M,
@@ -205,7 +282,9 @@ jobs:
 
       - name: Install dependencies
         shell: bash
-        run: cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
+        run: |
+          cd ${{ github.workspace }}/wp-content/plugins/matomo && composer update --with-all-dependencies
+          cd ${{ github.workspace }}/wp-content/plugins/matomo && composer install
 
       - name: Run checkstyle
         shell: bash

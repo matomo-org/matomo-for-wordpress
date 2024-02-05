@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -21,7 +22,6 @@ use Piwik\Plugins\UsersManager\UsersManager;
 use Piwik\Plugins\UsersManager\UserUpdater;
 use Piwik\SettingsPiwik;
 use Piwik\Url;
-
 /**
  * Contains the logic for different parts of the password reset process.
  *
@@ -65,26 +65,22 @@ class PasswordResetter
      * @var Password
      */
     protected $passwordHelper;
-
     /**
      * @var UsersManagerAPI
      */
     protected $usersManagerApi;
-
     /**
      * The module to link to in the confirm password reset email.
      *
      * @var string
      */
     private $confirmPasswordModule = "Login";
-
     /**
      * The action to link to in the confirm password reset email.
      *
      * @var string
      */
     private $confirmPasswordAction = "confirmResetPassword";
-
     /**
      * The name to use in the From: part of the confirm password reset email.
      *
@@ -93,7 +89,6 @@ class PasswordResetter
      * @var string
      */
     private $emailFromName;
-
     /**
      * The from email to use in the confirm password reset email.
      *
@@ -102,7 +97,6 @@ class PasswordResetter
      * @var
      */
     private $emailFromAddress;
-
     /**
      * Constructor.
      *
@@ -113,32 +107,26 @@ class PasswordResetter
      * @param string|null $emailFromAddress
      * @param Password $passwordHelper
      */
-    public function __construct($usersManagerApi = null, $confirmPasswordModule = null, $confirmPasswordAction = null,
-                                $emailFromName = null, $emailFromAddress = null, $passwordHelper = null)
+    public function __construct($usersManagerApi = null, $confirmPasswordModule = null, $confirmPasswordAction = null, $emailFromName = null, $emailFromAddress = null, $passwordHelper = null)
     {
         if (empty($usersManagerApi)) {
             $usersManagerApi = UsersManagerAPI::getInstance();
         }
         $this->usersManagerApi = $usersManagerApi;
-
         $this->confirmPasswordModule = Piwik::getLoginPluginName();
         if (!empty($confirmPasswordModule)) {
             $this->confirmPasswordModule = $confirmPasswordModule;
         }
-
         if (!empty($confirmPasswordAction)) {
             $this->confirmPasswordAction = $confirmPasswordAction;
         }
-
         $this->emailFromName = $emailFromName;
         $this->emailFromAddress = $emailFromAddress;
-
         if (empty($passwordHelper)) {
             $passwordHelper = new Password();
         }
         $this->passwordHelper = $passwordHelper;
     }
-
     /**
      * Initiates the password reset process. This method will save the password reset
      * information as an {@link Option} and send an email with the reset confirmation
@@ -156,34 +144,27 @@ class PasswordResetter
     public function initiatePasswordResetProcess($loginOrEmail, $newPassword)
     {
         $this->checkNewPassword($newPassword);
-
         // 'anonymous' has no password and cannot be reset
         if ($loginOrEmail === 'anonymous') {
             throw new Exception(Piwik::translate('Login_InvalidUsernameEmail'));
         }
-
         // get the user's login
         $user = $this->getUserInformation($loginOrEmail);
         if ($user === null) {
             throw new Exception(Piwik::translate('Login_InvalidUsernameEmail'));
         }
-
         $login = $user['login'];
-
         $keySuffix = time() . Common::getRandomString($length = 32);
         $this->savePasswordResetInfo($login, $newPassword, $keySuffix);
-
         // ... send email with confirmation link
         try {
             $this->sendEmailConfirmationLink($user, $keySuffix);
         } catch (Exception $ex) {
             // remove password reset info
             $this->removePasswordResetInfo($login);
-
             throw new Exception($ex->getMessage() . Piwik::translate('Login_ContactAdmin'));
         }
     }
-
     public function checkValidConfirmPasswordToken($login, $resetToken)
     {
         // get password reset info & user info
@@ -191,25 +172,16 @@ class PasswordResetter
         if ($user === null) {
             throw new Exception(Piwik::translate('Login_InvalidUsernameEmail'));
         }
-
         // check that the reset token is valid
         $resetInfo = $this->getPasswordToResetTo($login);
-        if ($resetInfo === false
-            || empty($resetInfo['hash'])
-            || empty($resetInfo['keySuffix'])
-            || !$this->isTokenValid($resetToken, $user, $resetInfo['keySuffix'])
-        ) {
+        if ($resetInfo === false || empty($resetInfo['hash']) || empty($resetInfo['keySuffix']) || !$this->isTokenValid($resetToken, $user, $resetInfo['keySuffix'])) {
             throw new Exception(Piwik::translate('Login_InvalidOrExpiredToken'));
         }
-
         // check that the stored password hash is valid (sanity check)
         $resetPassword = $resetInfo['hash'];
-
         $this->checkPasswordHash($resetPassword);
-
         return $resetPassword;
     }
-
     /**
      * Confirms a password reset. This should be called after {@link initiatePasswordResetProcess()}
      * is called.
@@ -225,17 +197,11 @@ class PasswordResetter
      */
     public function setHashedPasswordForLogin($login, $passwordHash)
     {
-        Access::doAsSuperUser(function () use ($login, $passwordHash) {
+        Access::doAsSuperUser(function () use($login, $passwordHash) {
             $userUpdater = new UserUpdater();
-            $userUpdater->updateUserWithoutCurrentPassword(
-                $login,
-                $passwordHash,
-                $email = false,
-                $isPasswordHashed = true
-            );
+            $userUpdater->updateUserWithoutCurrentPassword($login, $passwordHash, $email = false, $isPasswordHashed = true);
         });
     }
-
     /**
      * Returns true if a reset token is valid, false if otherwise. A reset token is valid if
      * it exists and has not expired.
@@ -248,7 +214,6 @@ class PasswordResetter
     public function isTokenValid($token, $user, $keySuffix)
     {
         $now = time();
-
         // token valid for 24 hrs (give or take, due to the coarse granularity in our strftime format string)
         for ($i = 0; $i <= 24; $i++) {
             $generatedToken = $this->generatePasswordResetToken($user, $keySuffix, $now + $i * 60 * 60);
@@ -256,11 +221,9 @@ class PasswordResetter
                 return true;
             }
         }
-
         // fails if token is invalid, expired, password already changed, other user information has changed, ...
         return false;
     }
-
     /**
      * Generate a password reset token.  Expires in 24 hours from the beginning of the current hour.
      *
@@ -281,21 +244,15 @@ class PasswordResetter
         if (!$expiryTimestamp) {
             $expiryTimestamp = $this->getDefaultExpiryTime();
         }
-
         $expiry = date('YmdH', $expiryTimestamp);
-        $token = $this->generateSecureHash(
-            $expiry . $user['login'] . $user['email'] . $user['ts_password_modified'] . $keySuffix,
-            $user['password']
-        );
+        $token = $this->generateSecureHash($expiry . $user['login'] . $user['email'] . $user['ts_password_modified'] . $keySuffix, $user['password']);
         return $token;
     }
-
     public function doesResetPasswordHashMatchesPassword($passwordPlain, $passwordHash)
     {
         $passwordPlain = UsersManager::getPasswordHash($passwordPlain);
         return $this->passwordHelper->verify($passwordPlain, $passwordHash);
     }
-
     /**
      * Generates a hash using a hash "identifier" and some data to hash. The hash identifier is
      * a string that differentiates the hash in some way.
@@ -314,16 +271,9 @@ class PasswordResetter
     {
         // mitigate rainbow table attack
         $halfDataLen = strlen($data) / 2;
-
-        $stringToHash = $hashIdentifier
-                      . substr($data, 0, $halfDataLen)
-                      . $this->getSalt()
-                      . substr($data, $halfDataLen)
-                      ;
-
+        $stringToHash = $hashIdentifier . substr($data, 0, $halfDataLen) . $this->getSalt() . substr($data, $halfDataLen);
         return $this->hashData($stringToHash);
     }
-
     /**
      * Returns the string salt to use when generating a secure hash. Defaults to the value of
      * the `[General] salt` INI config option.
@@ -336,7 +286,6 @@ class PasswordResetter
     {
         return SettingsPiwik::getSalt();
     }
-
     /**
      * Hashes a string.
      *
@@ -349,7 +298,6 @@ class PasswordResetter
     {
         return Common::hash($data);
     }
-
     /**
      * Returns an expiration time from the current time. By default it will be one day (24 hrs) from
      * now.
@@ -361,9 +309,9 @@ class PasswordResetter
      */
     protected function getDefaultExpiryTime()
     {
-        return time() + 24 * 60 * 60; /* +24 hrs */
+        return time() + 24 * 60 * 60;
+        /* +24 hrs */
     }
-
     /**
      * Checks the reset password's complexity. Will use UsersManager's requirements for user passwords.
      *
@@ -376,7 +324,6 @@ class PasswordResetter
     {
         UsersManager::checkPassword($newPassword);
     }
-
     /**
      * Returns user information based on a login or email.
      *
@@ -390,21 +337,19 @@ class PasswordResetter
     protected function getUserInformation($loginOrMail)
     {
         $userModel = new Model();
-
         if ($userModel->isPendingUser($loginOrMail)) {
             return null;
         }
-
         $user = null;
-
         if ($userModel->userExists($loginOrMail)) {
             $user = $userModel->getUser($loginOrMail);
-        } else if ($userModel->userEmailExists($loginOrMail)) {
-            $user = $userModel->getUserByEmail($loginOrMail);
+        } else {
+            if ($userModel->userEmailExists($loginOrMail)) {
+                $user = $userModel->getUserByEmail($loginOrMail);
+            }
         }
         return $user;
     }
-
     /**
      * Checks the password hash that was retrieved from the Option table. Used as a sanity check
      * when finishing the reset password process. If a password is obviously malformed, changing
@@ -418,12 +363,10 @@ class PasswordResetter
     protected function checkPasswordHash($passwordHash)
     {
         $hashInfo = $this->passwordHelper->info($passwordHash);
-
         if (!isset($hashInfo['algo']) || 0 >= $hashInfo['algo']) {
             throw new Exception(Piwik::translate('Login_ExceptionPasswordMD5HashExpected'));
         }
     }
-
     /**
      * Sends email confirmation link for a password reset request.
      *
@@ -434,31 +377,22 @@ class PasswordResetter
     {
         $login = $user['login'];
         $email = $user['email'];
-
         // construct a password reset token from user information
         $resetToken = $this->generatePasswordResetToken($user, $keySuffix);
-
         $confirmPasswordModule = $this->confirmPasswordModule;
         $confirmPasswordAction = $this->confirmPasswordAction;
-
         $ip = IP::getIpFromHeader();
-        $url = Url::getCurrentUrlWithoutQueryString()
-            . "?module=$confirmPasswordModule&action=$confirmPasswordAction&login=" . urlencode($login)
-            . "&resetToken=" . urlencode($resetToken);
-
+        $url = Url::getCurrentUrlWithoutQueryString() . "?module={$confirmPasswordModule}&action={$confirmPasswordAction}&login=" . urlencode($login) . "&resetToken=" . urlencode($resetToken);
         // send email with new password
         $mail = new PasswordResetEmail($login, $ip, $url);
         $mail->addTo($email, $login);
-
         if ($this->emailFromAddress || $this->emailFromName) {
             $mail->setFrom($this->emailFromAddress, $this->emailFromName);
         } else {
             $mail->setDefaultFromPiwik();
         }
-
         @$mail->send();
     }
-
     /**
      * Stores password reset info for a specific login.
      *
@@ -471,37 +405,23 @@ class PasswordResetter
     private function savePasswordResetInfo($login, $newPassword, $keySuffix)
     {
         $optionName = self::getPasswordResetInfoOptionName($login);
-
         $existingResetInfo = Option::get($optionName);
-
         $time = time();
         $count = 0;
-
         if ($existingResetInfo) {
             $existingResetInfo = json_decode($existingResetInfo, true);
-
-            if (isset($existingResetInfo['timestamp']) && $existingResetInfo['timestamp'] > time()-3600) {
+            if (isset($existingResetInfo['timestamp']) && $existingResetInfo['timestamp'] > time() - 3600) {
                 $time = $existingResetInfo['timestamp'];
                 $count = !empty($existingResetInfo['requests']) ? $existingResetInfo['requests'] : $count;
-
-                if(isset($existingResetInfo['requests']) && $existingResetInfo['requests'] > 2) {
+                if (isset($existingResetInfo['requests']) && $existingResetInfo['requests'] > 2) {
                     throw new Exception(Piwik::translate('Login_PasswordResetAlreadySent'));
                 }
             }
         }
-
-
-        $optionData = [
-            'hash' => $this->passwordHelper->hash(UsersManager::getPasswordHash($newPassword)),
-            'keySuffix' => $keySuffix,
-            'timestamp' => $time,
-            'requests' => $count+1
-        ];
+        $optionData = ['hash' => $this->passwordHelper->hash(UsersManager::getPasswordHash($newPassword)), 'keySuffix' => $keySuffix, 'timestamp' => $time, 'requests' => $count + 1];
         $optionData = json_encode($optionData);
-
         Option::set($optionName, $optionData);
     }
-
     /**
      * Gets password hash stored in password reset info.
      *
@@ -515,7 +435,6 @@ class PasswordResetter
         $optionValue = json_decode($optionValue, $isAssoc = true);
         return $optionValue;
     }
-
     /**
      * Removes stored password reset info if it exists.
      *
@@ -526,7 +445,6 @@ class PasswordResetter
         $optionName = self::getPasswordResetInfoOptionName($login);
         Option::delete($optionName);
     }
-
     /**
      * Gets the option name for the option that will store a user's password change
      * request.

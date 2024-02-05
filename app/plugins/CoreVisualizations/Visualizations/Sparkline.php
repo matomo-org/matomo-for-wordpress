@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,7 +14,6 @@ use Piwik\Common;
 use Piwik\DataTable;
 use Piwik\Period;
 use Piwik\Plugin\ViewDataTable;
-
 /**
  * Reads the requested DataTable from the API and prepare data for the Sparkline view.
  *
@@ -21,12 +21,10 @@ use Piwik\Plugin\ViewDataTable;
 class Sparkline extends ViewDataTable
 {
     const ID = 'sparkline';
-
     public function supportsComparison()
     {
         return true;
     }
-
     /**
      * @see ViewDataTable::main()
      * @return mixed
@@ -36,49 +34,38 @@ class Sparkline extends ViewDataTable
         // If period=range, we force the sparkline to draw daily data points
         $period = Common::getRequestVar('period');
         $date = Common::getRequestVar('date');
-
         if ($period == 'range') {
             $periodObj = Period\Factory::build($period, $date);
             $_GET['period'] = 'day';
             $_GET['date'] = $periodObj->getRangeString();
         }
-
         if ($this->isComparing()) {
             $this->transformSingleComparisonPeriods();
         }
-
         $this->loadDataTableFromAPI();
-
         // then revert the hack for potentially subsequent getRequestVar
         $_GET['period'] = $period;
         $_GET['date'] = $date;
-
         $columnToPlot = $this->getColumnToPlot();
-
         $graph = new \Piwik\Visualization\Sparkline();
-
         if ($this->isComparing()) {
             $otherSeries = [];
-
             $comparisonSeries = $this->getComparisonSeries($this->dataTable);
             foreach ($comparisonSeries as $seriesName) {
                 $otherSeries[$seriesName] = [];
             }
-
-            $this->dataTable->filter(function (DataTable $table) use ($comparisonSeries, &$otherSeries, $columnToPlot) {
+            $this->dataTable->filter(function (DataTable $table) use($comparisonSeries, &$otherSeries, $columnToPlot) {
                 foreach ($table->getRows() as $row) {
                     $comparisons = $row->getComparisons();
                     if (empty($comparisons)) {
                         continue;
                     }
-
                     foreach ($comparisons->getRows() as $comparisonRow) {
                         $compareSeriesPretty = $comparisonRow->getMetadata('compareSeriesPretty');
                         $otherSeries[$compareSeriesPretty][] = $comparisonRow->getColumn($columnToPlot);
                     }
                 }
             });
-
             foreach ($otherSeries as $seriesValues) {
                 $seriesValues = $this->ensureValuesEvenIfEmpty($seriesValues);
                 $graph->addSeries($seriesValues);
@@ -88,22 +75,17 @@ class Sparkline extends ViewDataTable
             $values = $this->ensureValuesEvenIfEmpty($values);
             $graph->addSeries($values);
         }
-
         $height = Common::getRequestVar('height', 0, 'int');
         if (!empty($height)) {
             $graph->setHeight($height);
         }
-
         $width = Common::getRequestVar('width', 0, 'int');
         if (!empty($width)) {
             $graph->setWidth($width);
         }
-
         $graph->main();
-
         return $graph->render();
     }
-
     /**
      * @param DataTable\Map $dataTableMap
      * @param string $columnToPlot
@@ -114,51 +96,37 @@ class Sparkline extends ViewDataTable
     protected function getValuesFromDataTableMap($dataTableMap, $columnToPlot)
     {
         $dataTableMap->applyQueuedFilters();
-
         $values = array();
-
         foreach ($dataTableMap->getDataTables() as $table) {
-
             if ($table->getRowsCount() > 1) {
                 throw new Exception("Expecting only one row per DataTable");
             }
-
-            $value   = 0;
+            $value = 0;
             $onlyRow = $table->getFirstRow();
-
             if (false !== $onlyRow) {
                 if (!empty($columnToPlot)) {
                     $value = $onlyRow->getColumn($columnToPlot);
-                } // if not specified, we load by default the first column found
-                // eg. case of getLastDistinctCountriesGraph
-                else {
+                } else {
                     $columns = $onlyRow->getColumns();
                     $value = current($columns);
                 }
             }
-
             $values[] = $value;
         }
-
         return $values;
     }
-
     private function getColumnToPlot()
     {
         $columns = $this->config->columns_to_display;
-
         $columnToPlot = false;
-
         if (!empty($columns)) {
             $columnToPlot = reset($columns);
             if ($columnToPlot == 'label') {
                 $columnToPlot = next($columns);
             }
         }
-
         return $columnToPlot;
     }
-
     protected function getValuesFromDataTable($dataTable, $columnToPlot)
     {
         // a Set is returned when using the normal code path to request data from Archives, in all core plugins
@@ -170,10 +138,8 @@ class Sparkline extends ViewDataTable
         } else {
             $values = [];
         }
-
         return $values;
     }
-
     private function ensureValuesEvenIfEmpty(array $values)
     {
         if (empty($values)) {
@@ -181,7 +147,6 @@ class Sparkline extends ViewDataTable
         }
         return $values;
     }
-
     private function getComparisonSeries(DataTable\DataTableInterface $dataTable)
     {
         if ($dataTable instanceof DataTable\Map) {
@@ -191,23 +156,19 @@ class Sparkline extends ViewDataTable
             return $dataTable->getMetadata('comparisonSeries') ?: [];
         }
     }
-
     private function transformSingleComparisonPeriods()
     {
         $comparePeriods = Common::getRequestVar('comparePeriods', $default = [], $type = 'array');
         $compareDates = Common::getRequestVar('compareDates', $default = [], $type = 'array');
-
         foreach ($comparePeriods as $index => $comparePeriod) {
             $compareDate = $compareDates[$index];
             if (Period::isMultiplePeriod($compareDate, $comparePeriod)) {
                 continue;
             }
-
             $periodObj = Period\Factory::build($comparePeriod, $compareDate);
             $comparePeriods[$index] = 'day';
             $compareDates[$index] = $periodObj->getRangeString();
         }
-
         $this->requestConfig->request_parameters_to_modify['comparePeriods'] = $comparePeriods;
         $this->requestConfig->request_parameters_to_modify['compareDates'] = $compareDates;
     }

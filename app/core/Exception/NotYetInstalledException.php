@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,8 +10,7 @@
 namespace Piwik\Exception;
 
 use Throwable;
-
-class NotYetInstalledException extends InvalidRequestParameterException
+class NotYetInstalledException extends \Piwik\Exception\InvalidRequestParameterException
 {
     public function __construct($message = "", $code = 0, Throwable $previous = null)
     {

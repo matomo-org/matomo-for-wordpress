@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@ namespace Piwik\Plugins\TagManager\Template\Tag;
 
 use Piwik\Plugins\TagManager\Context\WebContext;
 use Piwik\Plugins\TagManager\Template\BaseTemplate;
-
 /**
  * @api
  */
@@ -24,9 +24,7 @@ abstract class BaseTag extends BaseTemplate
     const CATEGORY_REMARKETING = 'TagManager_CategoryRemarketing';
     const CATEGORY_SOCIAL = 'TagManager_CategorySocial';
     const CATEGORY_OTHERS = 'General_Others';
-    
     protected $templateType = 'Tag';
-
     /**
      * @inheritdoc
      */
@@ -34,15 +32,11 @@ abstract class BaseTag extends BaseTemplate
     {
         return self::CATEGORY_OTHERS;
     }
-
     /**
      * @inheritdoc
      */
     public function getSupportedContexts()
     {
-        return array(
-            WebContext::ID
-        );
+        return array(WebContext::ID);
     }
-
 }

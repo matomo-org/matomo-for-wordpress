@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,10 +11,8 @@ namespace Piwik\AssetManager\UIAssetFetcher;
 
 use Piwik\AssetManager\UIAssetFetcher;
 use Piwik\Piwik;
-
 class JScriptUIAssetFetcher extends UIAssetFetcher
 {
-
     protected function retrieveFileLocations()
     {
         if (!empty($this->plugins)) {
@@ -41,14 +40,11 @@ class JScriptUIAssetFetcher extends UIAssetFetcher
              *
              * @param string[] $jsFiles The JavaScript files to load.
              */
-             Piwik::postEvent('AssetManager.getJavaScriptFiles', array(&$this->fileLocations), null, $this->plugins);
+            Piwik::postEvent('AssetManager.getJavaScriptFiles', array(&$this->fileLocations), null, $this->plugins);
         }
-
         $this->addThemeFiles();
-
         $this->mapBowerComponentFilesForBC($this->fileLocations);
     }
-
     protected function addThemeFiles()
     {
         $theme = $this->getTheme();
@@ -57,7 +53,6 @@ class JScriptUIAssetFetcher extends UIAssetFetcher
         }
         if (in_array($theme->getThemeName(), $this->plugins)) {
             $jsInThemes = $this->getTheme()->getJavaScriptFiles();
-
             if (!empty($jsInThemes)) {
                 foreach ($jsInThemes as $jsFile) {
                     $this->fileLocations[] = $jsFile;
@@ -65,17 +60,16 @@ class JScriptUIAssetFetcher extends UIAssetFetcher
             }
         }
     }
-
     protected function getPriorityOrder()
     {
         return array(
             'node_modules/jquery/dist/jquery.min.js',
             'node_modules/jquery/dist/jquery.js',
-            'node_modules/materialize-css/dist/js/materialize.min.js', // so jquery ui datepicker overrides materializecss
+            'node_modules/@materializecss/materialize/dist/js/materialize.min.js',
+            // so jquery ui datepicker overrides materializecss
             'node_modules/jquery-ui-dist/jquery-ui.min.js',
             'node_modules/jquery-ui-dist/jquery-ui.js',
             "plugins/CoreHome/javascripts/materialize-bc.js",
-            "node_modules/jquery.browser/dist/jquery.browser.min.js",
             'node_modules/',
             'libs/',
             'js/',
@@ -87,7 +81,8 @@ class JScriptUIAssetFetcher extends UIAssetFetcher
             'plugins/Morpheus/javascripts/',
             'plugins/CoreHome/javascripts/uiControl.js',
             'plugins/CoreHome/javascripts/broadcast.js',
-            'plugins/CoreHome/javascripts/', // load CoreHome JS before other plugins
+            'plugins/CoreHome/javascripts/',
+            // load CoreHome JS before other plugins
             'plugins/',
             'tests/',
         );

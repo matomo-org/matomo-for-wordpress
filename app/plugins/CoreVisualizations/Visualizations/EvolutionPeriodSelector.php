@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,35 +7,30 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\CoreVisualizations\Visualizations;
+
 use Piwik\Date;
 use Piwik\Period;
 use Piwik\Period\Factory;
 use Piwik\Plugins\CoreVisualizations\Visualizations\Sparklines\Config;
-
 class EvolutionPeriodSelector
 {
     /**
      * @var Config
      */
     private $config;
-
     public function __construct(Config $config)
     {
         $this->config = $config;
     }
-
-    public function getNumDaysDifference(Date $date1, Date $date2): int
+    public function getNumDaysDifference(Date $date1, Date $date2) : int
     {
         $days = abs($date1->getTimestamp() - $date2->getTimestamp()) / 60 / 60 / 24;
         return (int) round($days);
     }
-
-    public function setDatePeriods($params, Period $originalPeriod, $comparisonPeriods, $isComparing): array
+    public function setDatePeriods($params, Period $originalPeriod, $comparisonPeriods, $isComparing) : array
     {
         $highestPeriodInCommon = $this->getHighestPeriodInCommon($originalPeriod, $comparisonPeriods);
-
         if ($isComparing) {
             // when not comparing we usually show the last30 data points from the end date. However, when comparing dates,
             // or periods then we don't want to do this and rather only draw the evolution of the selected range. This way
@@ -43,17 +39,15 @@ class EvolutionPeriodSelector
             // over last 30 days vs yesterday over the last 30 days which isn't very helpful to compare.
             // that means when you compare month of Dec 2022 with Dec 2021, then the shown sparkline should be comparing
             // Dec 1st 2022,Dec 31st 2022 with Dec 1st 2021,Dec31st 2021. And not show eg the last 30 months.
-
             // we want to use the higest possible period we can for best performance and for best detecting trends
             $params['period'] = $highestPeriodInCommon;
             $params['date'] = $originalPeriod->getRangeString();
-
             $params['compareDates'] = [];
             $params['comparePeriods'] = [];
-
             foreach ($comparisonPeriods as $period) {
                 $params['compareDates'][] = $period->getRangeString();
-                $params['comparePeriods'][] = $params['period']; // need to ensure to use same period for both the base and the comparison period
+                $params['comparePeriods'][] = $params['period'];
+                // need to ensure to use same period for both the base and the comparison period
             }
         } else {
             // when not comparing we select the last 30 days/weeks/months/years.
@@ -66,11 +60,9 @@ class EvolutionPeriodSelector
                 $params['date'] = $originalPeriod->getRangeString();
             }
         }
-
         return $params;
     }
-
-    public function getComparisonPeriodObjects($comparePeriods, $compareDates): array
+    public function getComparisonPeriodObjects($comparePeriods, $compareDates) : array
     {
         $periods = [];
         if (!empty($comparePeriods)) {
@@ -81,7 +73,6 @@ class EvolutionPeriodSelector
         }
         return $periods;
     }
-
     /**
      * Given all the periods, determine what is the lowest period we can use. For example if someone compares
      * a range of 2 years with a range of 2 days, then we still need to use "day" periods in the sparkline as otherwise
@@ -94,10 +85,9 @@ class EvolutionPeriodSelector
      * @param $comparisonPeriods
      * @return string
      */
-    public function getHighestPeriodInCommon(Period $originalPeriod, $comparisonPeriods): string
+    public function getHighestPeriodInCommon(Period $originalPeriod, $comparisonPeriods) : string
     {
         $lowestNumDaysInRange = $this->getNumDaysDifference($originalPeriod->getDateStart(), $originalPeriod->getDateEnd());
-
         if (!empty($comparisonPeriods)) {
             foreach ($comparisonPeriods as $period) {
                 $numDaysInRange = $this->getNumDaysDifference($period->getDateStart(), $period->getDateEnd());
@@ -106,7 +96,6 @@ class EvolutionPeriodSelector
                 }
             }
         }
-
         $periodToUse = 'day';
         if ($lowestNumDaysInRange >= 7 * 365) {
             $periodToUse = 'year';
@@ -115,8 +104,6 @@ class EvolutionPeriodSelector
         } elseif ($lowestNumDaysInRange >= 180) {
             $periodToUse = 'week';
         }
-
         return $periodToUse;
     }
-
 }

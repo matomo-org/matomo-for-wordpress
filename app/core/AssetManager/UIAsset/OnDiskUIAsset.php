@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,24 +13,20 @@ use Exception;
 use Piwik\AssetManager\UIAsset;
 use Piwik\Common;
 use Piwik\Filesystem;
-
 class OnDiskUIAsset extends UIAsset
 {
     /**
      * @var string
      */
     private $baseDirectory;
-
     /**
      * @var string
      */
     private $relativeLocation;
-
     /**
      * @var string
      */
     private $relativeRootDir;
-
     /**
      * @param string $baseDirectory
      * @param string $fileLocation
@@ -38,21 +35,15 @@ class OnDiskUIAsset extends UIAsset
     {
         $this->baseDirectory = $baseDirectory;
         $this->relativeLocation = $fileLocation;
-
-        if (!empty($relativeRootDir)
-            && is_string($relativeRootDir)
-            && !Common::stringEndsWith($relativeRootDir, '/')) {
+        if (!empty($relativeRootDir) && is_string($relativeRootDir) && !Common::stringEndsWith($relativeRootDir, '/')) {
             $relativeRootDir .= '/';
         }
-
         $this->relativeRootDir = $relativeRootDir;
     }
-
     public function getAbsoluteLocation()
     {
         return $this->baseDirectory . '/' . $this->relativeLocation;
     }
-
     public function getRelativeLocation()
     {
         if (isset($this->relativeRootDir)) {
@@ -60,19 +51,16 @@ class OnDiskUIAsset extends UIAsset
         }
         return $this->relativeLocation;
     }
-
     public function getBaseDirectory()
     {
         return $this->baseDirectory;
     }
-
     public function validateFile()
     {
         if (!$this->assetIsReadable()) {
             throw new Exception("The ui asset with 'href' = " . $this->getAbsoluteLocation() . " is not readable");
         }
     }
-
     public function delete()
     {
         if ($this->exists()) {
@@ -81,32 +69,26 @@ class OnDiskUIAsset extends UIAsset
             } catch (Exception $e) {
                 throw new Exception("Unable to delete merged file : " . $this->getAbsoluteLocation() . ". Please delete the file and refresh");
             }
-
             // try to remove compressed version of the merged file.
             Filesystem::remove($this->getAbsoluteLocation() . ".deflate", true);
             Filesystem::remove($this->getAbsoluteLocation() . ".gz", true);
         }
     }
-
     /**
      * @param string $content
      * @throws \Exception
      */
-    public function writeContent($content)
+    public function writeContent($content) : void
     {
         $this->delete();
-
-        $newFile = @fopen($this->getAbsoluteLocation(), "w");
-
+        $location = $this->getAbsoluteLocation();
+        $newFile = @fopen($location, 'w');
         if (!$newFile) {
-            throw new Exception("The file : " . $newFile . " can not be opened in write mode.");
+            throw new Exception('The file : ' . $location . ' can not be opened in write mode.');
         }
-
         fwrite($newFile, $content);
-
         fclose($newFile);
     }
-
     /**
      * @return string
      */
@@ -114,12 +96,10 @@ class OnDiskUIAsset extends UIAsset
     {
         return file_get_contents($this->getAbsoluteLocation());
     }
-
     public function exists()
     {
         return $this->assetIsReadable();
     }
-
     /**
      * @return boolean
      */
@@ -127,7 +107,6 @@ class OnDiskUIAsset extends UIAsset
     {
         return is_readable($this->getAbsoluteLocation());
     }
-
     public function getModificationDate()
     {
         return filemtime($this->getAbsoluteLocation());

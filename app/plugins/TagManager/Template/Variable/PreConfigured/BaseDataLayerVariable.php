@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,11 +9,9 @@
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
 use Piwik\Plugins\TagManager\Context\WebContext;
-
-abstract class BaseDataLayerVariable extends BasePreConfiguredVariable
+abstract class BaseDataLayerVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BasePreConfiguredVariable
 {
-    abstract protected function getDataLayerVariableName();
-
+    protected abstract function getDataLayerVariableName();
     public function loadTemplate($context, $entity)
     {
         switch ($context) {
@@ -20,12 +19,16 @@ abstract class BaseDataLayerVariable extends BasePreConfiguredVariable
                 return $this->makeDataLayerTemplateMethod($this->getDataLayerVariableName());
         }
     }
-
+    public function getDataLayerVariableJs()
+    {
+        $dataLayerVariableName = $this->getDataLayerVariableName();
+        if ($dataLayerVariableName) {
+            return "TagManager.dataLayer.get('{$dataLayerVariableName}')";
+        }
+    }
     protected function makeDataLayerTemplateMethod($dataLayerKey)
     {
         $js = 'return parameters.container.dataLayer.get("' . $dataLayerKey . '")';
-
         return '(function () { return function (parameters, TagManager) { this.get = function () { ' . $js . '   }; } })();';
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,7 @@ namespace Piwik\Updater\Migration\Db;
  * @see Factory::dropTable()
  * @ignore
  */
-class DropTable extends Sql
+class DropTable extends \Piwik\Updater\Migration\Db\Sql
 {
     /**
      * @param string $table Prefixed table name
@@ -19,8 +20,6 @@ class DropTable extends Sql
     public function __construct($table)
     {
         $sql = sprintf('DROP TABLE IF EXISTS `%s`', $table);
-
         parent::__construct($sql, array(static::ERROR_CODE_TABLE_NOT_EXISTS, static::ERROR_CODE_UNKNOWN_TABLE));
     }
-
 }

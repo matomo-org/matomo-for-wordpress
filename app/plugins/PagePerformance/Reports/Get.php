@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -16,26 +17,23 @@ use Piwik\Plugins\PagePerformance\Metrics;
 use Piwik\Plugins\PagePerformance\Visualizations\JqplotGraph\StackedBarEvolution;
 use Piwik\Plugins\PagePerformance\Visualizations\PerformanceColumns;
 use Piwik\Report\ReportWidgetFactory;
+use Piwik\Url;
 use Piwik\Widget\WidgetsList;
-
 class Get extends \Piwik\Plugin\Report
 {
     protected function init()
     {
         parent::init();
-
         $this->dimension = null;
         $this->categoryId = 'General_Actions';
         $this->subcategoryId = 'PagePerformance_Performance';
         $this->order = 5;
-
         $this->name = Piwik::translate('PagePerformance_Overview');
         $this->documentation = Piwik::translate('PagePerformance_OverviewDocumentation');
-        $this->onlineGuideUrl = 'https://matomo.org/faq/how-to/how-do-i-see-page-performance-reports/';
+        $this->onlineGuideUrl = Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to/how-do-i-see-page-performance-reports/');
         $this->processedMetrics = Metrics::getAllPagePerformanceMetrics();
         $this->metrics = Metrics::getAllPagePerformanceMetrics();
     }
-
     public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory)
     {
         $config = $factory->createWidget();
@@ -44,14 +42,12 @@ class Get extends \Piwik\Plugin\Report
         $config->setOrder(1);
         $config->setName('PagePerformance_EvolutionOverPeriod');
         $widgetsList->addWidgetConfig($config);
-
         $config = $factory->createWidget();
         $config->forceViewDataTable(Sparklines::ID);
         $config->setName('');
         $config->setIsNotWidgetizable();
         $config->setOrder(2);
         $widgetsList->addWidgetConfig($config);
-
         $config = $factory->createWidget();
         $config->forceViewDataTable(PerformanceColumns::ID);
         $config->setModule('Actions');
@@ -63,7 +59,6 @@ class Get extends \Piwik\Plugin\Report
         $config->setIsNotWidgetizable();
         $config->setIsWide();
         $widgetsList->addWidgetConfig($config);
-
         $config = $factory->createWidget();
         $config->forceViewDataTable(PerformanceColumns::ID);
         $config->setModule('Actions');
@@ -76,20 +71,15 @@ class Get extends \Piwik\Plugin\Report
         $config->setIsNotWidgetizable();
         $widgetsList->addWidgetConfig($config);
     }
-
     public function configureView(ViewDataTable $view)
     {
-        if ($view->isViewDataTableId(Sparklines::ID)
-            && $view instanceof Sparklines
-        ) {
+        if ($view->isViewDataTableId(Sparklines::ID) && $view instanceof Sparklines) {
             $this->addSparklineColumns($view);
-
             $view->config->columns_to_display = array_keys(Metrics::getAllPagePerformanceMetrics());
             $view->config->setNotLinkableWithAnyEvolutionGraph();
             $this->configureFooterMessage($view);
         }
     }
-
     private function addSparklineColumns(Sparklines $view)
     {
         $count = 0;
@@ -97,7 +87,6 @@ class Get extends \Piwik\Plugin\Report
             $view->config->addSparklineMetric([$metric], $count++);
         }
     }
-
     private function configureFooterMessage(ViewDataTable $view)
     {
         $out = '';

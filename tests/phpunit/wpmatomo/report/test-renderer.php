@@ -9,7 +9,7 @@ class ReportRendererTest extends MatomoAnalytics_TestCase {
 
 	protected $disable_temp_tables = true;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->create_set_super_admin();
@@ -17,13 +17,13 @@ class ReportRendererTest extends MatomoAnalytics_TestCase {
 
 	public function test_render_report_no_dimension_no_data() {
 		$report = do_shortcode( '[matomo_report unique_id=VisitsSummary_get limit=15 report_date=' . Dates::YESTERDAY . ']' );
-		$this->assertContains( 'There is no data for this report.', $report );
+		$this->assertStringContainsString( 'There is no data for this report.', $report );
 	}
 
 	public function test_render_report_with_dimension_no_data() {
 		$report = do_shortcode( '[matomo_report unique_id=Actions_getPageTitles limit=15 report_date=' . Dates::YESTERDAY . ']' );
 
-		$this->assertContains( 'There is no data for this report.', $report );
+		$this->assertStringContainsString( 'There is no data for this report.', $report );
 	}
 
 	public function test_render_report_no_dimension_with_data() {
@@ -33,7 +33,7 @@ class ReportRendererTest extends MatomoAnalytics_TestCase {
 		$this->enable_browser_archiving();
 
 		$report = do_shortcode( '[matomo_report unique_id=VisitsSummary_get limit=15 report_date=' . Dates::THIS_MONTH . ']' );
-		$this->assertContains( '<td width="75%">Unique visitors</td><td width="25%">1</td></tr><tr><td width="75%">Visits</td><td width="25%">1</td></tr>', $report );
+		$this->assertStringContainsString( '<td width="75%">Unique visitors</td><td width="25%">1</td></tr><tr><td width="75%">Visits</td><td width="25%">1</td></tr>', $report );
 	}
 
 	public function test_render_report_with_dimension_with_data() {
@@ -43,9 +43,9 @@ class ReportRendererTest extends MatomoAnalytics_TestCase {
 		$this->enable_browser_archiving();
 
 		$report = do_shortcode( '[matomo_report unique_id=Actions_getPageUrls limit=15 report_date=' . Dates::TODAY . ']' );
-		$this->assertContains( '</td><td width="25%">1</td></tr>', $report );
-		$this->assertContains( '<th width="75%">Page URL</th>', $report );
-		$this->assertContains( '<th class="right">Pageviews</th>', $report );
+		$this->assertStringContainsString( '</td><td width="25%">1</td></tr>', $report );
+		$this->assertStringContainsString( '<th width="75%">Page URL</th>', $report );
+		$this->assertStringContainsString( '<th class="right">Pageviews</th>', $report );
 	}
 
 	public function test_show_visits_over_time() {
@@ -55,7 +55,7 @@ class ReportRendererTest extends MatomoAnalytics_TestCase {
 		$this->enable_browser_archiving();
 
 		$report = do_shortcode( '[matomo_report unique_id=' . \WpMatomo\Report\Renderer::CUSTOM_UNIQUE_ID_VISITS_OVER_TIME . ' limit=18]' );
-		$this->assertContains( '<tr><td width="75%"', $report );
+		$this->assertStringContainsString( '<tr><td width="75%"', $report );
 		$parts = explode( '<tr><td width="75%"', $report );
 		$this->assertCount( 19, $parts );
 	}

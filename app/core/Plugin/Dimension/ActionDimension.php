@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -17,7 +18,6 @@ use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Exception;
-
 /**
  * Defines a new action dimension that records any information during tracking for each action.
  *
@@ -34,10 +34,8 @@ use Exception;
 abstract class ActionDimension extends Dimension
 {
     const INSTALLER_PREFIX = 'log_link_visit_action.';
-
     protected $dbTableName = 'log_link_visit_action';
     protected $category = 'General_Actions';
-
     /**
      * If the value you want to save for your dimension is something like a page title or page url, you usually do not
      * want to save the raw value over and over again to save bytes in the database. Instead you want to save each value
@@ -57,7 +55,6 @@ abstract class ActionDimension extends Dimension
     {
         return false;
     }
-
     /**
      * An action id. The value returned by the lookup action will be associated with this id in the log_action table.
      * @return int
@@ -67,7 +64,6 @@ abstract class ActionDimension extends Dimension
     {
         throw new Exception('You need to overwrite the getActionId method in case you implement the onLookupAction method in class: ' . get_class($this));
     }
-
     /**
      * This event is triggered before a new action is logged to the `log_link_visit_action` table. It overwrites any
      * looked up action so it makes usually no sense to implement both methods but it sometimes does. You can assign
@@ -84,7 +80,6 @@ abstract class ActionDimension extends Dimension
     {
         return false;
     }
-
     /**
      * Get all action dimensions that are defined by all activated plugins.
      * @return ActionDimension[]
@@ -93,24 +88,19 @@ abstract class ActionDimension extends Dimension
     public static function getAllDimensions()
     {
         $cacheId = CacheId::pluginAware('ActionDimensions');
-        $cache   = PiwikCache::getTransientCache();
-
+        $cache = PiwikCache::getTransientCache();
         if (!$cache->contains($cacheId)) {
-            $plugins   = PluginManager::getInstance()->getPluginsLoadedAndActivated();
+            $plugins = PluginManager::getInstance()->getPluginsLoadedAndActivated();
             $instances = array();
-
             foreach ($plugins as $plugin) {
                 foreach (self::getDimensions($plugin) as $instance) {
                     $instances[] = $instance;
                 }
             }
-
             $cache->save($cacheId, $instances);
         }
-
         return $cache->fetch($cacheId);
     }
-
     /**
      * Get all action dimensions that are defined by the given plugin.
      * @param Plugin $plugin
@@ -120,12 +110,10 @@ abstract class ActionDimension extends Dimension
     public static function getDimensions(Plugin $plugin)
     {
         $dimensions = $plugin->findMultipleComponents('Columns', '\\Piwik\\Plugin\\Dimension\\ActionDimension');
-        $instances  = array();
-
+        $instances = array();
         foreach ($dimensions as $dimension) {
             $instances[] = new $dimension();
         }
-
         return $instances;
     }
 }

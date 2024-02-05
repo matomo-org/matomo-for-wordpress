@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,6 +9,11 @@
  */
 namespace Piwik\Exception;
 
-class NoPrivilegesException extends Exception
+use Piwik\Http\HttpCodeException;
+class NoPrivilegesException extends \Piwik\Exception\Exception implements HttpCodeException
 {
+    public function __construct($message, $code = 401)
+    {
+        parent::__construct($message, $code);
+    }
 }

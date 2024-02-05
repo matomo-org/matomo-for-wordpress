@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,9 +14,8 @@ use Piwik\Container\StaticContainer;
 use Piwik\Plugin;
 use Piwik\Cache as PiwikCache;
 use Piwik\Settings\Measurable\MeasurableSettings;
-use \Piwik\Settings\Plugin\UserSettings;
-use \Piwik\Settings\Plugin\SystemSettings;
-
+use Piwik\Settings\Plugin\UserSettings;
+use Piwik\Settings\Plugin\SystemSettings;
 /**
  * Base class of all plugin settings providers. Plugins that define their own configuration settings
  * can extend this class to easily make their settings available to Piwik users.
@@ -31,12 +31,10 @@ class SettingsProvider
      * @var Plugin\Manager
      */
     private $pluginManager;
-
     public function __construct(Plugin\Manager $pluginManager)
     {
         $this->pluginManager = $pluginManager;
     }
-
     /**
      *
      * Get user settings implemented by a specific plugin (if implemented by this plugin).
@@ -46,16 +44,13 @@ class SettingsProvider
     public function getSystemSettings($pluginName)
     {
         $plugin = $this->getLoadedAndActivated($pluginName);
-
         if ($plugin) {
             $settings = $plugin->findComponent('SystemSettings', 'Piwik\\Settings\\Plugin\\SystemSettings');
-
             if ($settings) {
                 return StaticContainer::get($settings);
             }
         }
     }
-
     /**
      * Get user settings implemented by a specific plugin (if implemented by this plugin).
      * @param string $pluginName
@@ -64,16 +59,13 @@ class SettingsProvider
     public function getUserSettings($pluginName)
     {
         $plugin = $this->getLoadedAndActivated($pluginName);
-
         if ($plugin) {
             $settings = $plugin->findComponent('UserSettings', 'Piwik\\Settings\\Plugin\\UserSettings');
-
             if ($settings) {
                 return StaticContainer::get($settings);
             }
         }
     }
-
     /**
      * Returns all available system settings. A plugin has to specify a file named `SystemSettings.php` containing a
      * class named `SystemSettings` that extends `Piwik\Settings\Plugin\SystemSettings` in order to be considered as
@@ -85,25 +77,19 @@ class SettingsProvider
     {
         $cacheId = CacheId::languageAware('AllSystemSettings');
         $cache = PiwikCache::getTransientCache();
-
         if (!$cache->contains($cacheId)) {
             $pluginNames = $this->pluginManager->getActivatedPlugins();
             $byPluginName = array();
-
             foreach ($pluginNames as $plugin) {
                 $component = $this->getSystemSettings($plugin);
-
                 if (!empty($component)) {
                     $byPluginName[$plugin] = $component;
                 }
             }
-
             $cache->save($cacheId, $byPluginName);
         }
-
         return $cache->fetch($cacheId);
     }
-
     /**
      * Returns all available user settings. A plugin has to specify a file named `UserSettings.php` containing a class
      * named `UserSettings` that extends `Piwik\Settings\Plugin\UserSettings` in order to be considered as a plugin
@@ -115,25 +101,19 @@ class SettingsProvider
     {
         $cacheId = CacheId::languageAware('AllUserSettings');
         $cache = PiwikCache::getTransientCache();
-
         if (!$cache->contains($cacheId)) {
             $pluginNames = $this->pluginManager->getActivatedPlugins();
             $byPluginName = array();
-
             foreach ($pluginNames as $plugin) {
                 $component = $this->getUserSettings($plugin);
-
                 if (!empty($component)) {
                     $byPluginName[$plugin] = $component;
                 }
             }
-
             $cache->save($cacheId, $byPluginName);
         }
-
         return $cache->fetch($cacheId);
     }
-
     /**
      * @api
      *
@@ -151,19 +131,13 @@ class SettingsProvider
     public function getMeasurableSettings($pluginName, $idSite, $idType = null)
     {
         $plugin = $this->getLoadedAndActivated($pluginName);
-
         if ($plugin) {
             $component = $plugin->findComponent('MeasurableSettings', 'Piwik\\Settings\\Measurable\\MeasurableSettings');
-
             if ($component) {
-                return StaticContainer::getContainer()->make($component, array(
-                    'idSite' => $idSite,
-                    'idMeasurableType' => $idType
-                ));
+                return StaticContainer::getContainer()->make($component, array('idSite' => $idSite, 'idMeasurableType' => $idType));
             }
         }
     }
-
     /**
      * @api
      *
@@ -180,36 +154,28 @@ class SettingsProvider
     {
         $pluginNames = $this->pluginManager->getActivatedPlugins();
         $byPluginName = array();
-
         foreach ($pluginNames as $plugin) {
             $component = $this->getMeasurableSettings($plugin, $idSite, $idMeasurableType);
-
             if (!empty($component)) {
                 $byPluginName[$plugin] = $component;
             }
         }
-
         return $byPluginName;
     }
-
     private function getLoadedAndActivated($pluginName)
     {
         if (!$this->pluginManager->isPluginLoaded($pluginName)) {
             return;
         }
-
         try {
             if (!$this->pluginManager->isPluginActivated($pluginName)) {
                 return;
             }
-
             $plugin = $this->pluginManager->getLoadedPlugin($pluginName);
         } catch (\Exception $e) {
             // we are not allowed to use possible settings from this plugin, plugin is not active
             return;
         }
-
         return $plugin;
     }
-
 }

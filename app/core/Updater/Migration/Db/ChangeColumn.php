@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,13 +12,11 @@ namespace Piwik\Updater\Migration\Db;
  * @see Factory::changeColumn()
  * @ignore
  */
-class ChangeColumn extends Sql
+class ChangeColumn extends \Piwik\Updater\Migration\Db\Sql
 {
     public function __construct($table, $oldColumnName, $newColumnName, $columnType)
     {
         $sql = sprintf("ALTER TABLE `%s` CHANGE `%s` `%s` %s", $table, $oldColumnName, $newColumnName, $columnType);
-        parent::__construct($sql, array(static::ERROR_CODE_DUPLICATE_COLUMN,
-                                        static::ERROR_CODE_UNKNOWN_COLUMN));
+        parent::__construct($sql, array(static::ERROR_CODE_DUPLICATE_COLUMN, static::ERROR_CODE_UNKNOWN_COLUMN));
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Plugins\PrivacyManager;
 use Piwik\Common;
 use Piwik\Piwik;
 use Piwik\Tracker\IgnoreCookie;
-
 /**
  * Excludes visits where user agent's request contains either:
  *
@@ -22,15 +22,13 @@ use Piwik\Tracker\IgnoreCookie;
 class DoNotTrackHeaderChecker
 {
     protected $config;
-
     /**
      * @param Config $config
      */
     public function __construct($config = null)
     {
-        $this->config = $config ?: new Config();
+        $this->config = $config ?: new \Piwik\Plugins\PrivacyManager\Config();
     }
-
     /**
      * Checks for DoNotTrack headers and if found, sets `$exclude` to `true`.
      */
@@ -40,22 +38,16 @@ class DoNotTrackHeaderChecker
             Common::printDebug("Visit is already excluded, no need to check DoNotTrack support.");
             return;
         }
-
         $exclude = $this->isDoNotTrackFound();
-
-        if($exclude) {
-
+        if ($exclude) {
             IgnoreCookie::deleteThirdPartyCookieUIDIfExists();
-
             // this is an optional supplement to the site's tracking status resource at:
             //     /.well-known/dnt
             // per Tracking Preference Expression
-            
             //Tracking Preference Expression has been updated to require Tk: N rather than Tk: 1
             Common::sendHeader('Tk: N');
         }
     }
-
     /**
      * @return bool
      */
@@ -65,24 +57,19 @@ class DoNotTrackHeaderChecker
             Common::printDebug("DoNotTrack support is not enabled, skip check");
             return false;
         }
-
         if (!$this->isHeaderDntFound()) {
             Common::printDebug("DoNotTrack header not found");
             return false;
         }
-
         $shouldIgnore = false;
-
         Piwik::postEvent('PrivacyManager.shouldIgnoreDnt', array(&$shouldIgnore));
-        if($shouldIgnore) {
+        if ($shouldIgnore) {
             Common::printDebug("DoNotTrack header ignored by Matomo because of a plugin");
             return false;
         }
-
         Common::printDebug("DoNotTrack header found!");
         return true;
     }
-
     /**
      * Deactivates DoNotTrack header checking. This function will not be called by the Tracker.
      */
@@ -90,7 +77,6 @@ class DoNotTrackHeaderChecker
     {
         $this->config->doNotTrackEnabled = false;
     }
-
     /**
      * Activates DoNotTrack header checking. This function will not be called by the Tracker.
      */
@@ -98,7 +84,6 @@ class DoNotTrackHeaderChecker
     {
         $this->config->doNotTrackEnabled = true;
     }
-
     /**
      * Returns true if server side DoNotTrack support is enabled, false if otherwise.
      *
@@ -108,13 +93,11 @@ class DoNotTrackHeaderChecker
     {
         return $this->config->doNotTrackEnabled;
     }
-
     /**
      * @return bool
      */
     protected function isHeaderDntFound()
     {
-        return (isset($_SERVER['HTTP_X_DO_NOT_TRACK']) && $_SERVER['HTTP_X_DO_NOT_TRACK'] === '1')
-            || (isset($_SERVER['HTTP_DNT']) && substr($_SERVER['HTTP_DNT'], 0, 1) === '1');
+        return isset($_SERVER['HTTP_X_DO_NOT_TRACK']) && $_SERVER['HTTP_X_DO_NOT_TRACK'] === '1' || isset($_SERVER['HTTP_DNT']) && substr($_SERVER['HTTP_DNT'], 0, 1) === '1';
     }
 }

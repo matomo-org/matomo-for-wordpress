@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik;
 
 use Exception;
-
 /**
  * Base class for all factory types.
  *
@@ -32,20 +32,16 @@ abstract class BaseFactory
     public static function factory($classId)
     {
         $className = static::getClassNameFromClassId($classId);
-
         if (!class_exists($className)) {
             self::sendPlainHeader();
             throw new Exception(static::getInvalidClassIdExceptionMessage($classId));
         }
-
-        return new $className;
+        return new $className();
     }
-
     private static function sendPlainHeader()
     {
-        Common::sendHeader('Content-Type: text/plain; charset=utf-8');
+        \Piwik\Common::sendHeader('Content-Type: text/plain; charset=utf-8');
     }
-
     /**
      * Should return a class name based on the class's associated string ID.
      */
@@ -53,13 +49,12 @@ abstract class BaseFactory
     {
         return $id;
     }
-
     /**
      * Should return a message to use in an Exception when an invalid class ID is supplied to
      * {@link factory()}.
      */
     protected static function getInvalidClassIdExceptionMessage($id)
     {
-        return "Invalid class ID '$id' for " . get_called_class() . "::factory().";
+        return "Invalid class ID '{$id}' for " . get_called_class() . "::factory().";
     }
 }

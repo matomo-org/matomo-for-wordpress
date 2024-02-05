@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,7 @@ namespace Piwik\ProfessionalServices;
 
 use Piwik\Plugin;
 use Piwik\Config;
-
+use Piwik\Url;
 /**
  * Advertising for providers of Professional Support for Piwik.
  *
@@ -20,23 +21,19 @@ use Piwik\Config;
 class Advertising
 {
     const CAMPAIGN_NAME_PROFESSIONAL_SERVICES = 'App_ProfessionalServices';
-
     /**
      * @var Plugin\Manager
      */
     private $pluginManager;
-
     /**
      * @var Config
      */
     private $config;
-
     public function __construct(Plugin\Manager $pluginManager, Config $config)
     {
         $this->pluginManager = $pluginManager;
         $this->config = $config;
     }
-
     /**
      * Returns true if it is ok to show some advertising in the Piwik UI.
      * @return bool
@@ -45,7 +42,6 @@ class Advertising
     {
         return self::isAdsEnabledInConfig($this->config->General);
     }
-
     /**
      * Get URL for promoting Professional Services for Piwik
      *
@@ -55,17 +51,8 @@ class Advertising
      */
     public function getPromoUrlForProfessionalServices($campaignMedium, $campaignContent = '')
     {
-        $url = 'https://matomo.org/support-plans/?';
-
-        $campaign = $this->getCampaignParametersForPromoUrl(
-            $name = self::CAMPAIGN_NAME_PROFESSIONAL_SERVICES,
-            $campaignMedium,
-            $campaignContent
-        );
-
-        return $url . $campaign;
+        return Url::addCampaignParametersToMatomoLink('https://matomo.org/support-plans/', self::CAMPAIGN_NAME_PROFESSIONAL_SERVICES, null, $campaignMedium);
     }
-
     /**
      * Appends campaign parameters to the given URL for promoting any Professional Support for Piwik service.
      *
@@ -73,25 +60,16 @@ class Advertising
      * @param string $campaignName
      * @param string $campaignMedium
      * @param string $campaignContent
+     * @param string $campaignSource
      * @return string
      */
-    public function addPromoCampaignParametersToUrl($url, $campaignName, $campaignMedium, $campaignContent = '')
+    public function addPromoCampaignParametersToUrl($url, $campaignName, $campaignMedium, $campaignContent = '', $campaignSource = null)
     {
         if (empty($url)) {
             return '';
         }
-
-        if (strpos($url, '?') === false) {
-            $url .= '?';
-        } else {
-            $url .= '&';
-        }
-
-        $url .= $this->getCampaignParametersForPromoUrl($campaignName, $campaignMedium, $campaignContent);
-
-        return $url;
+        return Url::addCampaignParametersToMatomoLink($url, $campaignName, $campaignSource, $campaignMedium . ($campaignContent !== '' ? '.' . $campaignContent : ''));
     }
-
     /**
      * @deprecated
      * Generates campaign URL parameters that can be used with promoting Professional Support service.
@@ -104,14 +82,11 @@ class Advertising
     private function getCampaignParametersForPromoUrl($campaignName, $campaignMedium, $campaignContent = '')
     {
         $campaignName = sprintf('pk_campaign=%s&pk_medium=%s&pk_source=Matomo_App', $campaignName, $campaignMedium);
-
         if (!empty($campaignContent)) {
             $campaignName .= '&pk_content=' . $campaignContent;
         }
-
         return $campaignName;
     }
-
     /**
      * @param $configGeneralSection
      * @return bool

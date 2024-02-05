@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -19,21 +20,18 @@ class AuthResult
     const FAILURE = 0;
     const SUCCESS = 1;
     const SUCCESS_SUPERUSER_AUTH_CODE = 42;
-
     /**
      * token_auth parameter used to authenticate in the API
      *
      * @var string
      */
     protected $tokenAuth = null;
-
     /**
      * The login used to authenticate.
      *
      * @var string
      */
     protected $login = null;
-
     /**
      * The authentication result code. Can be self::FAILURE, self::SUCCESS, or
      * self::SUCCESS_SUPERUSER_AUTH_CODE.
@@ -41,7 +39,6 @@ class AuthResult
      * @var int
      */
     protected $code = null;
-
     /**
      * Constructor for AuthResult
      *
@@ -51,11 +48,10 @@ class AuthResult
      */
     public function __construct($code, $login, $tokenAuth)
     {
-        $this->code      = (int)$code;
-        $this->login     = $login;
+        $this->code = (int) $code;
+        $this->login = $login;
         $this->tokenAuth = $tokenAuth;
     }
-
     /**
      * Returns the login used to authenticate.
      *
@@ -65,7 +61,6 @@ class AuthResult
     {
         return $this->login;
     }
-
     /**
      * Returns the token_auth to authenticate the current user in the API
      *
@@ -75,7 +70,6 @@ class AuthResult
     {
         return $this->tokenAuth;
     }
-
     /**
      * Returns the authentication result code.
      *
@@ -85,7 +79,6 @@ class AuthResult
     {
         return $this->code;
     }
-
     /**
      * Returns true if the user has Super User access, false otherwise.
      *
@@ -95,7 +88,6 @@ class AuthResult
     {
         return $this->getCode() == self::SUCCESS_SUPERUSER_AUTH_CODE;
     }
-
     /**
      * Returns true if this result was successfully authentication.
      *

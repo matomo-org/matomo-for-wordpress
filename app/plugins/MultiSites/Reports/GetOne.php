@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,17 +11,15 @@ namespace Piwik\Plugins\MultiSites\Reports;
 
 use Piwik\Piwik;
 use Piwik\Plugins\MultiSites\Columns\Website;
-
-class GetOne extends Base
+class GetOne extends \Piwik\Plugins\MultiSites\Reports\Base
 {
     protected function init()
     {
         parent::init();
-        $this->dimension     = new Website();
-        $this->name          = Piwik::translate('General_SingleWebsitesDashboard');
+        $this->dimension = new Website();
+        $this->name = Piwik::translate('General_SingleWebsitesDashboard');
         $this->documentation = Piwik::translate('MultiSites_SingleWebsitesDashboardDocumentation');
         $this->constantRowsCount = false;
         $this->order = 5;
     }
-
 }

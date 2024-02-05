@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
-
 /**
  * A {@link DataTable} filter that replaces range labels whose values are in seconds with
  * prettier, human-friendlier versions.
@@ -24,7 +24,7 @@ use Piwik\DataTable;
  *
  * @api
  */
-class BeautifyTimeRangeLabels extends BeautifyRangeLabels
+class BeautifyTimeRangeLabels extends \Piwik\DataTable\Filter\BeautifyRangeLabels
 {
     /**
      * A format string used to create pretty range labels when the range's
@@ -34,7 +34,6 @@ class BeautifyTimeRangeLabels extends BeautifyRangeLabels
      * range bound.
      */
     protected $labelSecondsPlural;
-
     /**
      * Constructor.
      *
@@ -51,10 +50,8 @@ class BeautifyTimeRangeLabels extends BeautifyRangeLabels
     public function __construct($table, $labelSecondsPlural, $labelMinutesSingular, $labelMinutesPlural)
     {
         parent::__construct($table, $labelMinutesSingular, $labelMinutesPlural);
-
         $this->labelSecondsPlural = $labelSecondsPlural;
     }
-
     /**
      * Beautifies and returns a range label whose range spans over one unit, ie
      * 1-1, 2-2 or 3-3.
@@ -76,7 +73,6 @@ class BeautifyTimeRangeLabels extends BeautifyRangeLabels
             return sprintf($this->labelPlural, ceil($lowerBound / 60));
         }
     }
-
     /**
      * Beautifies and returns a range label whose range is bounded and spans over
      * more than one unit, ie 1-5, 5-10 but NOT 11+.
@@ -97,7 +93,6 @@ class BeautifyTimeRangeLabels extends BeautifyRangeLabels
             return sprintf($this->labelPlural, ceil($lowerBound / 60) . "-" . ceil($upperBound / 60));
         }
     }
-
     /**
      * Beautifies and returns a range label whose range is unbounded, ie
      * 5+, 10+, etc.

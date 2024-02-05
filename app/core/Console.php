@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,93 +10,65 @@
 namespace Piwik;
 
 use Exception;
-use Monolog\Handler\FingersCrossedHandler;
+use Matomo\Dependencies\Monolog\Handler\FingersCrossedHandler;
 use Piwik\Application\Environment;
 use Piwik\Config\ConfigNotFoundException;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugin\Manager as PluginManager;
 use Piwik\Plugins\Monolog\Handler\FailureLogMessageDetector;
-use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-
+use Piwik\Log\LoggerInterface;
+use Matomo\Dependencies\Symfony\Bridge\Monolog\Handler\ConsoleHandler;
+use Matomo\Dependencies\Symfony\Component\Console\Application;
+use Matomo\Dependencies\Symfony\Component\Console\Command\Command;
+use Matomo\Dependencies\Symfony\Component\Console\Input\InputInterface;
+use Matomo\Dependencies\Symfony\Component\Console\Input\InputOption;
+use Matomo\Dependencies\Symfony\Component\Console\Output\OutputInterface;
 class Console extends Application
 {
     /**
      * @var Environment
      */
     private $environment;
-
     public function __construct(Environment $environment = null)
     {
         $this->setServerArgsIfPhpCgi();
-
-        parent::__construct('Matomo', Version::VERSION);
-
+        parent::__construct('Matomo', \Piwik\Version::VERSION);
         $this->environment = $environment;
-
-        $option = new InputOption('matomo-domain',
-            null,
-            InputOption::VALUE_OPTIONAL,
-            'Matomo URL (protocol and domain) eg. "http://matomo.example.org"'
-        );
-
+        $option = new InputOption('matomo-domain', null, InputOption::VALUE_OPTIONAL, 'Matomo URL (protocol and domain) eg. "http://matomo.example.org"');
         $this->getDefinition()->addOption($option);
-
-        $option = new InputOption('xhprof',
-            null,
-            InputOption::VALUE_NONE,
-            'Enable profiling with XHProf'
-        );
-
+        $option = new InputOption('xhprof', null, InputOption::VALUE_NONE, 'Enable profiling with XHProf');
         $this->getDefinition()->addOption($option);
-
-        $option = new InputOption('ignore-warn', null, InputOption::VALUE_NONE,
-            'Return 0 exit code even if there are warning logs or error logs detected in the command output.');
-
+        $option = new InputOption('ignore-warn', null, InputOption::VALUE_NONE, 'Return 0 exit code even if there are warning logs or error logs detected in the command output.');
         $this->getDefinition()->addOption($option);
     }
-
-    public function renderException($e, $output)
+    public function renderThrowable(\Throwable $e, OutputInterface $output) : void
     {
         $logHandlers = StaticContainer::get('log.handlers');
-
         $hasFingersCrossed = false;
         foreach ($logHandlers as $handler) {
             if ($handler instanceof FingersCrossedHandler) {
                 $hasFingersCrossed = true;
-                continue;
+                break;
             }
         }
-
-        if ($hasFingersCrossed
-            && $output->getVerbosity() < OutputInterface::VERBOSITY_VERBOSE
-        ) {
+        if ($hasFingersCrossed && !$output->isVerbose()) {
             $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
         }
-
-        parent::renderException($e, $output);
+        parent::renderThrowable($e, $output);
     }
-
     public function doRun(InputInterface $input, OutputInterface $output)
     {
         try {
             return $this->doRunImpl($input, $output);
         } catch (\Exception $ex) {
             try {
-                FrontController::generateSafeModeOutputFromException($ex);
+                \Piwik\FrontController::generateSafeModeOutputFromException($ex);
             } catch (\Exception $ex) {
                 // ignore, we re-throw the original exception, not a wrapped one
             }
-
             throw $ex;
         }
     }
-
     /**
      * Makes parent doRun method available
      *
@@ -107,76 +80,58 @@ class Console extends Application
     {
         return parent::doRun($input, $output);
     }
-
     private function doRunImpl(InputInterface $input, OutputInterface $output)
     {
         if ($input->hasParameterOption('--xhprof')) {
-            Profiler::setupProfilerXHProf(true, true);
+            \Piwik\Profiler::setupProfilerXHProf(true, true);
         }
-
         $this->initMatomoHost($input);
         $this->initEnvironment($output);
         $this->initLoggerOutput($output);
-
         try {
             self::initPlugins();
         } catch (ConfigNotFoundException $e) {
             // Piwik not installed yet, no config file?
-            Log::warning($e->getMessage());
+            \Piwik\Log::warning($e->getMessage());
         }
-
         $this->initAuth();
-
         $commands = $this->getAvailableCommands();
-
         foreach ($commands as $command) {
             $this->addCommandIfExists($command);
         }
-
         $exitCode = null;
-
         /**
          * @ignore
          */
-        Piwik::postEvent('Console.doRun', [&$exitCode, $input, $output]);
-
+        \Piwik\Piwik::postEvent('Console.doRun', [&$exitCode, $input, $output]);
         if ($exitCode === null) {
             $self = $this;
-            $exitCode = Access::doAsSuperUser(function () use ($input, $output, $self) {
-                return
-                    call_user_func(array($self, 'originDoRun'), $input, $output);
+            $exitCode = \Piwik\Access::doAsSuperUser(function () use($input, $output, $self) {
+                return call_user_func(array($self, 'originDoRun'), $input, $output);
             });
         }
-
         $importantLogDetector = StaticContainer::get(FailureLogMessageDetector::class);
-        if (!$input->hasParameterOption('--ignore-warn')
-            && $exitCode === 0
-            && $importantLogDetector->hasEncounteredImportantLog()
-        ) {
+        if (!$input->hasParameterOption('--ignore-warn') && $exitCode === 0 && $importantLogDetector->hasEncounteredImportantLog()) {
             $output->writeln("Error: error or warning logs detected, exit 1");
             $exitCode = 1;
         }
-
         return $exitCode;
     }
-
     private function addCommandIfExists($command)
     {
         if (!class_exists($command)) {
-            Log::warning(sprintf('Cannot add command %s, class does not exist', $command));
-        } elseif (!is_subclass_of($command, 'Piwik\Plugin\ConsoleCommand')) {
-            Log::warning(sprintf('Cannot add command %s, class does not extend Piwik\Plugin\ConsoleCommand', $command));
+            \Piwik\Log::warning(sprintf('Cannot add command %s, class does not exist', $command));
+        } elseif (!is_subclass_of($command, 'Piwik\\Plugin\\ConsoleCommand')) {
+            \Piwik\Log::warning(sprintf('Cannot add command %s, class does not extend Piwik\\Plugin\\ConsoleCommand', $command));
         } else {
             /** @var Command $commandInstance */
-            $commandInstance = new $command;
-
+            $commandInstance = new $command();
             // do not add the command if it already exists; this way we can add the command ourselves in tests
             if (!$this->has($commandInstance->getName())) {
                 $this->add($commandInstance);
             }
         }
     }
-
     /**
      * Returns a list of available command classnames.
      *
@@ -186,9 +141,7 @@ class Console extends Application
     {
         $commands = $this->getDefaultPiwikCommands();
         $detected = PluginManager::getInstance()->findMultipleComponents('Commands', 'Piwik\\Plugin\\ConsoleCommand');
-
         $commands = array_merge($commands, $detected);
-
         /**
          * Triggered to filter / restrict console commands. Plugins that want to restrict commands
          * should subscribe to this event and remove commands from the existing list.
@@ -205,49 +158,39 @@ class Console extends Application
          *
          * @param array &$commands An array containing a list of command class names.
          */
-        Piwik::postEvent('Console.filterCommands', array(&$commands));
-
+        \Piwik\Piwik::postEvent('Console.filterCommands', array(&$commands));
         $commands = array_values(array_unique($commands));
-
         return $commands;
     }
-
     private function setServerArgsIfPhpCgi()
     {
-        if (Common::isPhpCgiType()) {
+        if (\Piwik\Common::isPhpCgiType()) {
             $_SERVER['argv'] = array();
             foreach ($_GET as $name => $value) {
                 $argument = $name;
                 if (!empty($value)) {
                     $argument .= '=' . $value;
                 }
-
                 $_SERVER['argv'][] = $argument;
             }
-
             if (!defined('STDIN')) {
                 define('STDIN', fopen('php://stdin', 'r'));
             }
         }
     }
-
     public static function isSupported()
     {
-        return Common::isPhpCliMode() && !Common::isPhpCgiType();
+        return \Piwik\Common::isPhpCliMode() && !\Piwik\Common::isPhpCgiType();
     }
-
     protected function initMatomoHost(InputInterface $input)
     {
         $matomoHostname = $input->getParameterOption('--matomo-domain');
-
         if (empty($matomoHostname)) {
             $matomoHostname = $input->getParameterOption('--url');
         }
-
-        $matomoHostname = UrlHelper::getHostFromUrl($matomoHostname);
-        Url::setHost($matomoHostname);
+        $matomoHostname = \Piwik\UrlHelper::getHostFromUrl($matomoHostname);
+        \Piwik\Url::setHost($matomoHostname);
     }
-
     protected function initEnvironment(OutputInterface $output)
     {
         try {
@@ -255,14 +198,12 @@ class Console extends Application
                 $this->environment = new Environment('cli');
                 $this->environment->init();
             }
-
-            $config = Config::getInstance();
+            $config = \Piwik\Config::getInstance();
             return $config;
         } catch (\Exception $e) {
             $output->writeln($e->getMessage() . "\n");
         }
     }
-
     /**
      * Register the console output into the logger.
      *
@@ -274,51 +215,39 @@ class Console extends Application
     private function initLoggerOutput(OutputInterface $output)
     {
         /** @var ConsoleHandler $consoleLogHandler */
-        $consoleLogHandler = StaticContainer::get('Symfony\Bridge\Monolog\Handler\ConsoleHandler');
+        $consoleLogHandler = StaticContainer::get('Matomo\\Dependencies\\Symfony\\Bridge\\Monolog\\Handler\\ConsoleHandler');
         $consoleLogHandler->setOutput($output);
     }
-
     public static function initPlugins()
     {
-        Plugin\Manager::getInstance()->loadActivatedPlugins();
-        Plugin\Manager::getInstance()->loadPluginTranslations();
+        \Piwik\Plugin\Manager::getInstance()->loadActivatedPlugins();
+        \Piwik\Plugin\Manager::getInstance()->loadPluginTranslations();
     }
-
     private function getDefaultPiwikCommands()
     {
-        $commands = array(
-            'Piwik\CliMulti\RequestCommand'
-        );
-
+        $commands = array('Piwik\\CliMulti\\RequestCommand');
         $commandsFromPluginsMarkedInConfig = $this->getCommandsFromPluginsMarkedInConfig();
         $commands = array_merge($commands, $commandsFromPluginsMarkedInConfig);
-
         return $commands;
     }
-
     private function getCommandsFromPluginsMarkedInConfig()
     {
-        $plugins = Config::getInstance()->General['always_load_commands_from_plugin'];
+        $plugins = \Piwik\Config::getInstance()->General['always_load_commands_from_plugin'];
         $plugins = explode(',', $plugins);
-
         $commands = array();
-        foreach($plugins as $plugin) {
-            $instance = new Plugin($plugin);
+        foreach ($plugins as $plugin) {
+            $instance = new \Piwik\Plugin($plugin);
             $commands = array_merge($commands, $instance->findMultipleComponents('Commands', 'Piwik\\Plugin\\ConsoleCommand'));
         }
         return $commands;
     }
-
     private function initAuth()
     {
-        Piwik::postEvent('Request.initAuthenticationObject');
+        \Piwik\Piwik::postEvent('Request.initAuthenticationObject');
         try {
-            StaticContainer::get('Piwik\Auth');
+            StaticContainer::get('Piwik\\Auth');
         } catch (Exception $e) {
-            $message = "Authentication object cannot be found in the container. Maybe the Login plugin is not activated?
-                        You can activate the plugin by adding:
-                        Plugins[] = Login
-                        under the [Plugins] section in your config/config.ini.php";
+            $message = "Authentication object cannot be found in the container. Maybe the Login plugin is not activated?\n                        You can activate the plugin by adding:\n                        Plugins[] = Login\n                        under the [Plugins] section in your config/config.ini.php";
             StaticContainer::get(LoggerInterface::class)->warning($message);
         }
     }

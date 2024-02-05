@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,22 +10,23 @@
 namespace Piwik\Plugins\CoreHome\Columns;
 
 use Piwik\Cache;
+use Piwik\Columns\DimensionSegmentFactory;
 use Piwik\DataTable;
 use Piwik\DataTable\Map;
 use Piwik\Metrics;
 use Piwik\Plugin;
 use Piwik\Plugin\Dimension\VisitDimension;
+use Piwik\Plugins\Live\Live;
+use Piwik\Segment\SegmentsList;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-
 /**
  * UserId dimension.
  */
 class UserId extends VisitDimension
 {
     const MAXLENGTH = 200;
-
     /**
      * @var string
      */
@@ -35,16 +37,20 @@ class UserId extends VisitDimension
     protected $nameSingular = 'General_UserId';
     protected $namePlural = 'General_UserIds';
     protected $acceptValues = 'any non empty unique string identifying the user (such as an email address or a username).';
-
     public function __construct()
     {
         $this->columnType = 'VARCHAR(' . self::MAXLENGTH . ') NULL';
-
         if (Plugin\Manager::getInstance()->isPluginActivated('UserId')) {
             $this->suggestedValuesApi = 'UserId.getUsers';
         }
     }
-
+    public function configureSegments(SegmentsList $segmentsList, DimensionSegmentFactory $dimensionSegmentFactory)
+    {
+        // Configure userId segment only if visitor profile is available
+        if (Live::isVisitorProfileEnabled()) {
+            parent::configureSegments($segmentsList, $dimensionSegmentFactory);
+        }
+    }
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -59,7 +65,6 @@ class UserId extends VisitDimension
         }
         return $value;
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -71,17 +76,14 @@ class UserId extends VisitDimension
     {
         return $this->onNewVisit($request, $visitor, $action);
     }
-
     public function isUsedInAtLeastOneSite($idSites, $period, $date)
     {
         if ($period === 'day' || $period === 'week') {
             $period = 'month';
         }
-
         if ($period === 'range') {
             $period = 'day';
         }
-
         if (!empty($idSites)) {
             foreach ($idSites as $idSite) {
                 if ($this->isUsedInSiteCached($idSite, $period, $date)) {
@@ -89,36 +91,23 @@ class UserId extends VisitDimension
                 }
             }
         }
-
         return false;
     }
-
     private function isUsedInSiteCached($idSite, $period, $date)
     {
         $cache = Cache::getTransientCache();
-        $key   = sprintf('%d.%s.%s', $idSite, $period, $date);
-
+        $key = sprintf('%d.%s.%s', $idSite, $period, $date);
         if (!$cache->contains($key)) {
             $result = $this->isUsedInSite($idSite, $period, $date);
             $cache->save($key, $result);
         }
-
         return $cache->fetch($key);
     }
-
     private function isUsedInSite($idSite, $period, $date)
     {
-        $result = \Piwik\API\Request::processRequest('VisitsSummary.get', [
-            'columns' => 'nb_users',
-            'idSite' => $idSite,
-            'period' => $period,
-            'date' => $date,
-            'segment' => false,
-        ], $default = []);
-
+        $result = \Piwik\API\Request::processRequest('VisitsSummary.get', ['columns' => 'nb_users', 'idSite' => $idSite, 'period' => $period, 'date' => $date, 'segment' => false], $default = []);
         return $this->hasDataTableUsers($result);
     }
-
     public function hasDataTableUsers(DataTable\DataTableInterface $result)
     {
         if ($result instanceof Map) {
@@ -128,22 +117,17 @@ class UserId extends VisitDimension
                 }
             }
         }
-
         if (!$result->getRowsCount()) {
             return false;
         }
-
         $firstRow = $result->getFirstRow();
         if ($firstRow instanceof DataTable\Row && $firstRow->hasColumn(Metrics::INDEX_NB_USERS)) {
             $metric = Metrics::INDEX_NB_USERS;
         } else {
             $metric = 'nb_users';
         }
-
         $numUsers = $result->getColumn($metric);
         $numUsers = array_sum($numUsers);
-
         return !empty($numUsers);
     }
-
 }

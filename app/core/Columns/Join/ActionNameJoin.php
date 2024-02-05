@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Columns\Join;
 
 use Piwik\Columns;
-
 /**
  * @api
  * @since 3.1.0
@@ -20,5 +20,4 @@ class ActionNameJoin extends Columns\Join
     {
         parent::__construct('log_action', 'idaction', 'name');
     }
-
 }

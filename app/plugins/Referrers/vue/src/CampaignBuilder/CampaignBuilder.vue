@@ -128,8 +128,10 @@
       <div v-show="generatedUrl">
         <h3>{{ translate('Referrers_URLCampaignBuilderResult') }}</h3>
         <div>
-          <pre id="urlCampaignBuilderResult" v-copy-to-clipboard="{}"
-            ><code v-text="generatedUrl" /></pre>
+          <pre
+            id="urlCampaignBuilderResult"
+            v-copy-to-clipboard="{}"
+          ><code v-text="generatedUrl" /></pre>
         </div>
       </div>
     </form>

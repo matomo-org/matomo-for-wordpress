@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,10 +10,8 @@
 namespace Piwik;
 
 use Piwik\Container\StaticContainer;
-
 class Cache
 {
-
     /**
      * This can be considered as the default cache to use in case you don't know which one to pick. It does not support
      * the caching of any objects though. Only boolean, numbers, strings and arrays are supported. Whenever you request
@@ -23,9 +22,8 @@ class Cache
      */
     public static function getLazyCache()
     {
-        return StaticContainer::get('Matomo\Cache\Lazy');
+        return StaticContainer::get('Matomo\\Cache\\Lazy');
     }
-
     /**
      * This class is used to cache any data during one request. It won't be persisted between requests and it can
      * cache all kind of data, even objects or resources. This cache is very fast.
@@ -34,9 +32,8 @@ class Cache
      */
     public static function getTransientCache()
     {
-        return StaticContainer::get('Matomo\Cache\Transient');
+        return StaticContainer::get('Matomo\\Cache\\Transient');
     }
-
     /**
      * This cache stores all its cache entries under one "cache" entry in a configurable backend.
      *
@@ -52,16 +49,14 @@ class Cache
      */
     public static function getEagerCache()
     {
-        return StaticContainer::get('Matomo\Cache\Eager');
+        return StaticContainer::get('Matomo\\Cache\\Eager');
     }
-
     public static function flushAll()
     {
         self::getLazyCache()->flushAll();
         self::getTransientCache()->flushAll();
         self::getEagerCache()->flushAll();
     }
-
     /**
      * @param $type
      * @return \Matomo\Cache\Backend
@@ -70,47 +65,33 @@ class Cache
     {
         $factory = new \Matomo\Cache\Backend\Factory();
         $options = self::getOptions($type);
-
         $backend = $factory->buildBackend($type, $options);
-
         return $backend;
     }
-
     private static function getOptions($type)
     {
         $options = self::getBackendOptions($type);
-
         switch ($type) {
             case 'file':
-
                 $options = array('directory' => StaticContainer::get('path.cache'));
                 break;
-
             case 'chained':
-
                 foreach ($options['backends'] as $backend) {
                     $options[$backend] = self::getOptions($backend);
                 }
-
                 break;
-
             case 'redis':
-
                 if (!empty($options['timeout'])) {
-                    $options['timeout'] = (float)Common::forceDotAsSeparatorForDecimalPoint($options['timeout']);
+                    $options['timeout'] = (float) \Piwik\Common::forceDotAsSeparatorForDecimalPoint($options['timeout']);
                 }
-
                 break;
         }
-
         return $options;
     }
-
     private static function getBackendOptions($backend)
     {
         $key = ucfirst($backend) . 'Cache';
-        $options = Config::getInstance()->$key;
-
+        $options = \Piwik\Config::getInstance()->{$key};
         return $options;
     }
 }

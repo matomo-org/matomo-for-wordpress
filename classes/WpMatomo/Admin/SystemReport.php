@@ -126,6 +126,11 @@ class SystemReport {
 	 */
 	private $binary;
 
+	/**
+	 * @var string
+	 */
+	private $path_to_plugin;
+
 	private static $matomo_tables;
 
 	public function __construct( Settings $settings ) {
@@ -133,6 +138,7 @@ class SystemReport {
 		$this->logger               = new Logger();
 		$this->db_settings          = new \WpMatomo\Db\Settings();
 		$this->shell_exec_available = function_exists( 'shell_exec' );
+		$this->path_to_plugin       = $this->get_abs_path_to_plugin();
 	}
 
 	public function get_not_compatible_plugins() {
@@ -430,9 +436,9 @@ class SystemReport {
 			$value    = __( 'ok', 'matomo' );
 			$comment  = '';
 			if ( ! intval( $this->get_phpcli_output( '-r "echo extension_loaded(\'mysqli\');"' ) ) ) {
-					$value    = __( 'missing', 'matomo' );
-					$is_error = true;
-					$comment  = esc_html__( 'Your PHP cli does not load the MySQLi extension. You might have archiving problems in Matomo but also others problems in your WordPress cron tasks. You should enable this extension', 'matomo' );
+				$value    = __( 'missing', 'matomo' );
+				$is_error = true;
+				$comment  = esc_html__( 'Your PHP cli does not load the MySQLi extension. You might have archiving problems in Matomo but also others problems in your WordPress cron tasks. You should enable this extension', 'matomo' );
 			}
 
 			$rows[] = [
@@ -441,9 +447,60 @@ class SystemReport {
 				'comment'  => $comment,
 				'is_error' => $is_error,
 			];
+
+			$this->check_wp_can_be_loaded_in_php_cli( $rows );
 		}
 
 		return $rows;
+	}
+
+	private function check_wp_can_be_loaded_in_php_cli( &$rows ) {
+		if ( ! $this->binary ) {
+			return;
+		}
+
+		$wp_load_path = $this->find_wp_load_path();
+		if ( ! $wp_load_path ) {
+			return;
+		}
+
+		try {
+			$cli_multi = new CliMulti();
+
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$supports_async = $cli_multi->supportsAsync;
+		} catch ( \Exception $ex ) {
+			$rows[] = [
+				'name'       => esc_html__( 'PHP CLI configuration', 'matomo' ),
+				'value'      => esc_html__( 'Unexpected error', 'matomo' ),
+				'is_warning' => true,
+				'comment'    => sprintf( esc_html__( 'Could not detect whether async archiving is enabled: %s', 'matomo' ), $ex->getMessage() ),
+			];
+		}
+
+		if ( ! $supports_async ) {
+			return;
+		}
+
+		$command = "-r 'require_once( \"$wp_load_path\" );'";
+		$output  = $this->get_phpcli_output( $command );
+		if ( empty( $output ) ) {
+			$rows[] = [
+				'name'  => esc_html__( 'PHP CLI configuration', 'matomo' ),
+				'value' => esc_html__( 'Configured correctly', 'matomo' ),
+			];
+		} else {
+			$error_message = esc_html__(
+				'WordPress cannot be loaded via PHP CLI. Please ensure both WordPress and PHP CLI are correctly configured. Note: If you are using get_cfg_var() in your wp-config.php, you will need to make sure the php.ini file for PHP CLI has the correct values. You may need to contact your hosting provider for these changes to be made.',
+				'matomo'
+			);
+
+			$rows[] = [
+				'name'    => esc_html__( 'PHP CLI configuration', 'matomo' ),
+				'value'   => esc_html__( 'warning', 'matomo' ),
+				'comment' => $error_message,
+			];
+		}
 	}
 
 	private function get_phpcli_output( $phpcli_params ) {
@@ -1242,7 +1299,7 @@ class SystemReport {
 					array(
 						'method'    => 'GET',
 						'sslverify' => false,
-						'timeout'   => 2,
+						'timeout'   => 3,
 					)
 				);
 				if ( is_array( $result ) ) {
@@ -1932,6 +1989,31 @@ class SystemReport {
 		}
 
 		return $content;
+	}
+
+	private function get_abs_path_to_plugin() {
+		if ( is_dir( ABSPATH . '/wp-content/plugins/matomo' ) ) {
+			return ABSPATH . '/wp-content/plugins/matomo';
+		} elseif ( is_dir( ABSPATH . '/wp-content/mu-plugins/matomo' ) ) {
+			return ABSPATH . '/wp-content/mu-plugins/matomo';
+		} else {
+			return __DIR__ . '/../../..';
+		}
+	}
+
+	private function find_wp_load_path() {
+		$abs_path   = rtrim( ABSPATH, '/' );
+		$search_dir = $this->get_abs_path_to_plugin();
+
+		while ( ! is_file( $search_dir . '/wp-load.php' ) && strpos( $search_dir, $abs_path ) === 0 ) {
+			$search_dir = dirname( $search_dir );
+		}
+
+		if ( strpos( $search_dir, $abs_path ) !== 0 ) {
+			return null;
+		}
+
+		return $search_dir . '/wp-load.php';
 	}
 
 	private function get_php_cli_binary() {

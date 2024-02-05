@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Columns;
 
 use Piwik\Plugin\ArchivedMetric;
 use Piwik\Plugin\ComputedMetric;
-
 /**
  * A factory to create computed metrics.
  *
@@ -22,34 +22,27 @@ class ComputedMetricFactory
      * @var MetricsList
      */
     private $metricsList = null;
-
     /**
      * Generates a new report metric factory.
      * @param MetricsList $list A report list instance
      * @ignore
      */
-    public function __construct(MetricsList $list)
+    public function __construct(\Piwik\Columns\MetricsList $list)
     {
         $this->metricsList = $list;
     }
-
     /**
      * @return \Piwik\Plugin\ComputedMetric
      */
     public function createComputedMetric($metricName1, $metricName2, $aggregation)
     {
         $metric1 = $this->metricsList->getMetric($metricName1);
-
         if (!$metric1 instanceof ArchivedMetric || !$metric1->getDimension()) {
             throw new \Exception('Only possible to create computed metric for an archived metric with a dimension');
         }
-
         $dimension1 = $metric1->getDimension();
-
         $metric = new ComputedMetric($metricName1, $metricName2, $aggregation);
         $metric->setCategory($dimension1->getCategoryId());
-
         return $metric;
     }
-
 }

@@ -15,7 +15,7 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 	 */
 	private $updater;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->updater = new Updater( new Settings() );

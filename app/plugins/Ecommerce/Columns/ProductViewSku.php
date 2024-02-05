@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -16,7 +17,7 @@ use Piwik\Plugin\Manager;
 use Piwik\Plugins\CustomVariables\Tracker\CustomVariablesRequestProcessor;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
-
+use Piwik\Tracker\TableLogAction;
 class ProductViewSku extends ActionDimension
 {
     protected $type = self::TYPE_TEXT;
@@ -25,24 +26,20 @@ class ProductViewSku extends ActionDimension
     protected $segmentName = 'productViewSku';
     protected $columnType = 'INT(10) UNSIGNED NULL';
     protected $category = 'Goals_Ecommerce';
-    protected $sqlFilter = '\\Piwik\\Tracker\\TableLogAction::getIdActionFromSegment';
-
+    protected $sqlFilter = [TableLogAction::class, 'getOptimizedIdActionSqlMatch'];
     public function getDbColumnJoin()
     {
         return new ActionNameJoin();
     }
-
     public function getDbDiscriminator()
     {
         return new Discriminator('log_action', 'type', Action::TYPE_ECOMMERCE_ITEM_SKU);
     }
-
     public function onLookupAction(Request $request, Action $action)
     {
         if ($request->hasParam('_pks')) {
             return Common::unsanitizeInputValue($request->getParam('_pks'));
         }
-
         // fall back to custom variables (might happen if old logs are replayed)
         if (Manager::getInstance()->isPluginActivated('CustomVariables')) {
             $customVariables = CustomVariablesRequestProcessor::getCustomVariablesInPageScope($request);
@@ -50,10 +47,8 @@ class ProductViewSku extends ActionDimension
                 return $customVariables['custom_var_v3'] ?? false;
             }
         }
-
         return parent::onLookupAction($request, $action);
     }
-
     public function getActionId()
     {
         return Action::TYPE_ECOMMERCE_ITEM_SKU;

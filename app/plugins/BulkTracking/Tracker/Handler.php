@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,7 +7,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\BulkTracking\Tracker;
 
 use Piwik\AuthResult;
@@ -18,40 +18,31 @@ use Piwik\Tracker;
 use Piwik\Tracker\RequestSet;
 use Piwik\Tracker\TrackerConfig;
 use Exception;
-
 class Handler extends Tracker\Handler
 {
     private $transactionId = null;
-
     public function __construct()
     {
         parent::__construct();
-
-        $this->setResponse(new Response());
+        $this->setResponse(new \Piwik\Plugins\BulkTracking\Tracker\Response());
     }
-
     public function onStartTrackRequests(Tracker $tracker, RequestSet $requestSet)
     {
         if ($this->isTransactionSupported()) {
             $this->beginTransaction();
         }
     }
-
     public function onAllRequestsTracked(Tracker $tracker, RequestSet $requestSet)
     {
         $this->commitTransaction();
-
         // Do not run schedule task if we are importing logs or doing custom tracking (as it could slow down)
     }
-
     public function process(Tracker $tracker, RequestSet $requestSet)
     {
         $isAuthenticated = $this->isBulkTrackingRequestAuthenticated($requestSet);
-
         /** @var Response $response */
         $response = $this->getResponse();
         $response->setIsAuthenticated($isAuthenticated);
-
         $invalidRequests = array();
         foreach ($requestSet->getRequests() as $index => $request) {
             try {
@@ -61,31 +52,26 @@ class Handler extends Tracker\Handler
             } catch (InvalidRequestParameterException $ex) {
                 $invalidRequests[] = $index;
             } catch (Exception $e) {
-                if (stripos($e->getMessage(), 'Lock wait timeout exceeded')
-                    || Tracker::getDatabase()->isErrNo($e, 1205)) {
+                if (stripos($e->getMessage(), 'Lock wait timeout exceeded') || Tracker::getDatabase()->isErrNo($e, 1205)) {
                     continue;
                 } else {
                     throw $e;
                 }
             }
         }
-
         $response->setInvalidRequests($invalidRequests);
     }
-
     public function onException(Tracker $tracker, RequestSet $requestSet, Exception $e)
     {
         $this->rollbackTransaction();
         parent::onException($tracker, $requestSet, $e);
     }
-
     private function beginTransaction()
     {
         if (empty($this->transactionId)) {
             $this->transactionId = $this->getDb()->beginTransaction();
         }
     }
-
     private function commitTransaction()
     {
         if (!empty($this->transactionId)) {
@@ -93,7 +79,6 @@ class Handler extends Tracker\Handler
             $this->transactionId = null;
         }
     }
-
     private function rollbackTransaction()
     {
         if (!empty($this->transactionId)) {
@@ -101,12 +86,10 @@ class Handler extends Tracker\Handler
             $this->transactionId = null;
         }
     }
-
     private function getDb()
     {
         return Tracker::getDatabase();
     }
-
     /**
      * @return bool
      */
@@ -114,24 +97,20 @@ class Handler extends Tracker\Handler
     {
         return (bool) TrackerConfig::getConfigValue('bulk_requests_use_transaction');
     }
-
     private function isBulkTrackingRequestAuthenticated(RequestSet $requestSet)
     {
         $tokenAuth = $requestSet->getTokenAuth();
         if (empty($tokenAuth)) {
             return false;
         }
-
         Piwik::postEvent('Request.initAuthenticationObject');
-
         /** @var \Piwik\Auth $auth */
-        $auth = StaticContainer::get('Piwik\Auth');
+        $auth = StaticContainer::get('Piwik\\Auth');
         $auth->setTokenAuth($tokenAuth);
         $auth->setLogin(null);
         $auth->setPassword(null);
         $auth->setPasswordHash(null);
         $access = $auth->authenticate();
-
         return $access->getCode() == AuthResult::SUCCESS_SUPERUSER_AUTH_CODE;
     }
 }

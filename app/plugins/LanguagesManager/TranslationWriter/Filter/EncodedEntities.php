@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,15 +7,12 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\LanguagesManager\TranslationWriter\Filter;
 
 use Piwik\Container\StaticContainer;
-
-class EncodedEntities extends FilterAbstract
+class EncodedEntities extends \Piwik\Plugins\LanguagesManager\TranslationWriter\Filter\FilterAbstract
 {
     protected $baseTranslations = array();
-
     /**
      * Sets base translations
      *
@@ -24,7 +22,6 @@ class EncodedEntities extends FilterAbstract
     {
         $this->baseTranslations = $baseTranslations;
     }
-
     /**
      * Decodes all encoded entities in the given translations
      *
@@ -36,23 +33,19 @@ class EncodedEntities extends FilterAbstract
     {
         foreach ($translations as $pluginName => $pluginTranslations) {
             foreach ($pluginTranslations as $key => $translation) {
-
-                if (isset($this->baseTranslations[$pluginName][$key]) &&
-                    $this->baseTranslations[$pluginName][$key] != StaticContainer::get('Piwik\Translation\Translator')->clean($this->baseTranslations[$pluginName][$key])) {
-                    continue; // skip if base translation already contains encoded entities
+                if (isset($this->baseTranslations[$pluginName][$key]) && $this->baseTranslations[$pluginName][$key] != StaticContainer::get('Piwik\\Translation\\Translator')->clean($this->baseTranslations[$pluginName][$key])) {
+                    continue;
+                    // skip if base translation already contains encoded entities
                 }
-
                 // remove encoded entities
-                $decoded = StaticContainer::get('Piwik\Translation\Translator')->clean($translation);
+                $decoded = StaticContainer::get('Piwik\\Translation\\Translator')->clean($translation);
                 if ($translation != $decoded) {
                     $this->filteredData[$pluginName][$key] = $translation;
                     $translations[$pluginName][$key] = $decoded;
                     continue;
                 }
-
             }
         }
-
         return $translations;
     }
 }

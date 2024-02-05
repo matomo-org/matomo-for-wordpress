@@ -7,7 +7,7 @@ use WpMatomo\PrivacyBadge;
 
 class PrivacyBadgeTest extends MatomoUnit_TestCase {
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$badge = new PrivacyBadge();
@@ -19,11 +19,11 @@ class PrivacyBadgeTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_privacy_badge_shortcode_size() {
-		$this->assertContains( 'width="99" height="99"', do_shortcode( '[matomo_privacy_badge size=99]' ) );
+		$this->assertStringContainsString( 'width="99" height="99"', do_shortcode( '[matomo_privacy_badge size=99]' ) );
 	}
 
 	public function test_privacy_badge_shortcode_size_percent() {
-		$this->assertContains( 'width="99%" height="99%"', do_shortcode( '[matomo_privacy_badge size=99%]' ) );
+		$this->assertStringContainsString( 'width="99%" height="99%"', do_shortcode( '[matomo_privacy_badge size=99%]' ) );
 	}
 
 }

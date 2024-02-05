@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,4 +12,3 @@ interface ContainerIdGenerator
 {
     public function generateId();
 }
-

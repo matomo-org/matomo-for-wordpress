@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,30 +11,25 @@ namespace Piwik\Plugins\Goals\Reports;
 
 use Piwik\API\Request;
 use Piwik\Piwik;
-
+use Piwik\Url;
 abstract class Base extends \Piwik\Plugin\Report
 {
     protected $orderGoal = 50;
-
     protected function init()
     {
         $this->categoryId = 'Goals_Goals';
-        $this->onlineGuideUrl = 'https://matomo.org/docs/tracking-goals-web-analytics/';
+        $this->onlineGuideUrl = Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/tracking-goals-web-analytics/');
     }
-
     protected function addReportMetadataForEachGoal(&$availableReports, $infos, $goalNameFormatter, $isGoalSummaryReport = false)
     {
         $idSite = $this->getIdSiteFromInfos($infos);
-        $goals  = $this->getGoalsForIdSite($idSite);
-
+        $goals = $this->getGoalsForIdSite($idSite);
         foreach ($goals as $goal) {
-            $this->name       = $goalNameFormatter($goal);
+            $this->name = $goalNameFormatter($goal);
             $this->parameters = array('idGoal' => $goal['idgoal']);
-            $this->order      = $this->orderGoal + $goal['idgoal'] * 3;
-
+            $this->order = $this->orderGoal + $goal['idgoal'] * 3;
             $availableReports[] = $this->buildReportMetadata();
         }
-
         // for goal overview
         if ($isGoalSummaryReport) {
             $this->name = Piwik::translate('Goals_GoalsOverview');
@@ -43,27 +39,21 @@ abstract class Base extends \Piwik\Plugin\Report
         $this->parameters = ['idGoal' => 0];
         $this->order = $this->orderGoal;
         $availableReports[] = $this->buildReportMetadata();
-
         $this->init();
     }
-
     protected function getIdSiteFromInfos($infos)
     {
         $idSite = $infos['idSite'];
-
         if (empty($idSite)) {
             return null;
         }
-
         return $idSite;
     }
-
     private function getGoalsForIdSite($idSite)
     {
         if (empty($idSite)) {
             return array();
         }
-
         return Request::processRequest('Goals.getGoals', ['idSite' => $idSite, 'filter_limit' => '-1'], $default = []);
     }
 }

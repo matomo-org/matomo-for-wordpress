@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\MultiSites\Categories;
 
 use Piwik\Category\Category;
-
 class MultiSitesCategory extends Category
 {
     protected $id = 'General_MultiSitesSummary';

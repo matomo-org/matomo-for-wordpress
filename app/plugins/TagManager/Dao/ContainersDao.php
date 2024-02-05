@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,88 +14,53 @@ use Piwik\Plugins\TagManager\Input\Description;
 use Piwik\Plugins\TagManager\Input\Name;
 use Piwik\Piwik;
 use Exception;
-
-class ContainersDao extends BaseDao implements TagManagerDao
+class ContainersDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piwik\Plugins\TagManager\Dao\TagManagerDao
 {
     const ERROR_NAME_IN_USE = 2919;
-
     protected $table = 'tagmanager_container';
-
     public function install()
     {
-        DbHelper::createTable($this->table, "
-                  `idcontainer` VARCHAR(8) NOT NULL,
-                  `idsite` int(11) UNSIGNED NOT NULL,
-                  `context` VARCHAR(10) NOT NULL,
-                  `name` VARCHAR(" . Name::MAX_LENGTH . ") NOT NULL,
-                  `description` VARCHAR(" . Description::MAX_LENGTH . ") NOT NULL DEFAULT '',
-                  `status` VARCHAR(10) NOT NULL,
-                  `created_date` DATETIME NOT NULL,
-                  `updated_date` DATETIME NOT NULL,
-                  `deleted_date` DATETIME NULL,
-                  PRIMARY KEY(`idcontainer`), KEY (`idsite`)");
+        DbHelper::createTable($this->table, "\n                  `idcontainer` VARCHAR(8) NOT NULL,\n                  `idsite` int(11) UNSIGNED NOT NULL,\n                  `context` VARCHAR(10) NOT NULL,\n                  `name` VARCHAR(" . Name::MAX_LENGTH . ") NOT NULL,\n                  `description` VARCHAR(" . Description::MAX_LENGTH . ") NOT NULL DEFAULT '',\n                  `ignoreGtmDataLayer` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,\n                  `status` VARCHAR(10) NOT NULL,\n                  `created_date` DATETIME NOT NULL,\n                  `updated_date` DATETIME NOT NULL,\n                  `deleted_date` DATETIME NULL,\n                  PRIMARY KEY(`idcontainer`), KEY (`idsite`)");
         // we cannot set a unique key on (`idsite`, `name`) because we soft delete tags and want to make sure names can be used again after deleting an entry
     }
-
     private function isNameInUse($idSite, $name, $exceptIdContainer = null)
     {
         $sql = sprintf("SELECT idcontainer FROM %s WHERE idsite = ? AND `name` = ? AND status = ?", $this->tablePrefixed);
         $bind = array($idSite, $name, self::STATUS_ACTIVE);
-
         if (!empty($exceptIdContainer)) {
             $sql .= ' AND idcontainer != ?';
             $bind[] = $exceptIdContainer;
         }
-
         $idSite = Db::fetchOne($sql, $bind);
         return !empty($idSite);
     }
-
     private function isContainerInUse($idContainer)
     {
         $sql = sprintf("SELECT idcontainer FROM %s WHERE idcontainer = ?", $this->tablePrefixed);
         $bind = array($idContainer);
-
         $idSite = Db::fetchOne($sql, $bind);
         return !empty($idSite);
     }
-
     public function hasContainer($idContainer)
     {
         $table = $this->tablePrefixed;
         $bind = array($idContainer);
-        $container = Db::fetchOne("SELECT idcontainer FROM $table WHERE idcontainer = ?", $bind);
-
+        $container = Db::fetchOne("SELECT idcontainer FROM {$table} WHERE idcontainer = ?", $bind);
         return !empty($container);
     }
-
-    public function createContainer($idSite, $idContainer, $context, $name, $description, $createdDate)
+    public function createContainer($idSite, $idContainer, $context, $name, $description, $createdDate, $ignoreGtmDataLayer)
     {
         if ($this->isContainerInUse($idContainer)) {
             throw new Exception(Piwik::translate('TagManager_ErrorContainerIdDuplicate'));
         }
-
         if ($this->isNameInUse($idSite, $name)) {
             throw new Exception(Piwik::translate('TagManager_ErrorNameDuplicate'), self::ERROR_NAME_IN_USE);
         }
-
-        $status = ContainersDao::STATUS_ACTIVE;
-        $values = array(
-            'idsite' => $idSite,
-            'idcontainer' => $idContainer,
-            'context' => $context,
-            'name' => $name,
-            'description' => !empty($description) ? $description : '',
-            'status' => $status,
-            'created_date' => $createdDate,
-            'updated_date' => $createdDate
-        );
-
+        $status = \Piwik\Plugins\TagManager\Dao\ContainersDao::STATUS_ACTIVE;
+        $values = array('idsite' => $idSite, 'idcontainer' => $idContainer, 'context' => $context, 'name' => $name, 'description' => !empty($description) ? $description : '', 'ignoreGtmDataLayer' => !empty($ignoreGtmDataLayer) ? $ignoreGtmDataLayer : 0, 'status' => $status, 'created_date' => $createdDate, 'updated_date' => $createdDate);
         $this->insertRecord($values);
-
         return $values['idcontainer'];
     }
-
     public function updateContainerColumns($idSite, $idContainer, $columns)
     {
         if (!empty($columns)) {
@@ -104,11 +70,9 @@ class ContainersDao extends BaseDao implements TagManagerDao
             if (isset($columns['name']) && $this->isNameInUse($idSite, $columns['name'], $idContainer)) {
                 throw new Exception(Piwik::translate('TagManager_ErrorNameDuplicate'), self::ERROR_NAME_IN_USE);
             }
-
-            $this->updateEntity($columns, ['idsite' => (int)$idSite, 'idcontainer' => $idContainer]);
+            $this->updateEntity($columns, ['idsite' => (int) $idSite, 'idcontainer' => $idContainer]);
         }
     }
-
     /**
      * @return int
      */
@@ -117,7 +81,6 @@ class ContainersDao extends BaseDao implements TagManagerDao
         $sql = sprintf("SELECT COUNT(*) as containers FROM %s WHERE `status` = ?", $this->tablePrefixed);
         return (int) Db::fetchOne($sql, array(self::STATUS_ACTIVE));
     }
-
     /**
      * @return int
      */
@@ -126,7 +89,6 @@ class ContainersDao extends BaseDao implements TagManagerDao
         $sql = sprintf("SELECT COUNT(*) as containers FROM %s WHERE `status` = ? and `idsite` = ?", $this->tablePrefixed);
         return (int) Db::fetchOne($sql, array(self::STATUS_ACTIVE, $idSite));
     }
-
     /**
      * @return array
      */
@@ -135,13 +97,11 @@ class ContainersDao extends BaseDao implements TagManagerDao
         $sql = sprintf("SELECT idcontainer, idsite FROM %s WHERE `status` = ?", $this->tablePrefixed);
         return Db::fetchAll($sql, array(self::STATUS_ACTIVE));
     }
-
     public function getAllContainers()
     {
         $containers = Db::fetchAll('SELECT * FROM ' . $this->tablePrefixed . ' ORDER BY idcontainer ASC');
         return $this->enrichContainers($containers);
     }
-
     /**
      * @param int $idSite
      * @return array
@@ -149,11 +109,9 @@ class ContainersDao extends BaseDao implements TagManagerDao
     public function getContainersForSite($idSite)
     {
         $table = $this->tablePrefixed;
-        $containers = Db::fetchAll("SELECT * FROM $table WHERE idsite = ? and status = ? ORDER BY created_date ASC, name ASC", array($idSite, self::STATUS_ACTIVE));
-
+        $containers = Db::fetchAll("SELECT * FROM {$table} WHERE idsite = ? and status = ? ORDER BY created_date ASC, name ASC", array($idSite, self::STATUS_ACTIVE));
         return $this->enrichContainers($containers);
     }
-
     /**
      * @param $idSite
      * @param $idContainer
@@ -163,11 +121,9 @@ class ContainersDao extends BaseDao implements TagManagerDao
     {
         $table = $this->tablePrefixed;
         $bind = array(self::STATUS_ACTIVE, $idSite, $idContainer);
-        $container = Db::fetchRow("SELECT * FROM $table WHERE status = ? and idsite = ? and idcontainer = ?", $bind);
-
+        $container = Db::fetchRow("SELECT * FROM {$table} WHERE status = ? and idsite = ? and idcontainer = ?", $bind);
         return $this->enrichContainer($container);
     }
-
     /**
      * @param int $idSite
      * @param string $deletedDate
@@ -175,13 +131,10 @@ class ContainersDao extends BaseDao implements TagManagerDao
     public function deleteContainersForSite($idSite, $deletedDate)
     {
         $table = $this->tablePrefixed;
-
-        $query = "UPDATE $table SET status = ?, deleted_date = ? WHERE idsite = ? and status != ?";
+        $query = "UPDATE {$table} SET status = ?, deleted_date = ? WHERE idsite = ? and status != ?";
         $bind = array(self::STATUS_DELETED, $deletedDate, $idSite, self::STATUS_DELETED);
-
         Db::query($query, $bind);
     }
-
     /**
      * @param int $idSite
      * @param int $idContainer
@@ -190,35 +143,26 @@ class ContainersDao extends BaseDao implements TagManagerDao
     public function deleteContainer($idSite, $idContainer, $deletedDate)
     {
         $table = $this->tablePrefixed;
-
-        $query = "UPDATE $table SET status = ?, deleted_date = ? WHERE idsite = ? and idcontainer = ? and status != ?";
+        $query = "UPDATE {$table} SET status = ?, deleted_date = ? WHERE idsite = ? and idcontainer = ? and status != ?";
         $bind = array(self::STATUS_DELETED, $deletedDate, $idSite, $idContainer, self::STATUS_DELETED);
-
         Db::query($query, $bind);
     }
-
     private function enrichContainers($containers)
     {
         if (empty($containers)) {
             return array();
         }
-
         foreach ($containers as $index => $container) {
             $containers[$index] = $this->enrichContainer($container);
         }
-
         return $containers;
     }
-
     private function enrichContainer($container)
     {
         if (empty($container)) {
             return $container;
         }
-
         $container['idsite'] = (int) $container['idsite'];
-
         return $container;
     }
 }
-

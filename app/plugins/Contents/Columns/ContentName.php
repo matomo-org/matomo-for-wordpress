@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -15,7 +16,7 @@ use Piwik\Exception\InvalidRequestParameterException;
 use Piwik\Plugins\Contents\Actions\ActionContent;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
-
+use Piwik\Tracker\TableLogAction;
 class ContentName extends ActionDimension
 {
     protected $columnName = 'idaction_content_name';
@@ -27,36 +28,29 @@ class ContentName extends ActionDimension
     protected $suggestedValuesApi = 'Contents.getContentNames';
     protected $type = self::TYPE_TEXT;
     protected $category = 'General_Actions';
-    protected $sqlFilter = '\\Piwik\\Tracker\\TableLogAction::getIdActionFromSegment';
-
+    protected $sqlFilter = [TableLogAction::class, 'getOptimizedIdActionSqlMatch'];
     public function getDbColumnJoin()
     {
         return new ActionNameJoin();
     }
-
     public function getDbDiscriminator()
     {
         return new Discriminator('log_action', 'type', $this->getActionId());
     }
-
     public function getActionId()
     {
         return Action::TYPE_CONTENT_NAME;
     }
-
     public function onLookupAction(Request $request, Action $action)
     {
-        if (!($action instanceof ActionContent)) {
+        if (!$action instanceof ActionContent) {
             return false;
         }
-
         $contentName = $request->getParam('c_n');
         $contentName = trim($contentName);
-
         if (strlen($contentName) > 0) {
             return $contentName;
         }
-
         throw new InvalidRequestParameterException('Param `c_n` must not be empty or filled with whitespaces');
     }
 }

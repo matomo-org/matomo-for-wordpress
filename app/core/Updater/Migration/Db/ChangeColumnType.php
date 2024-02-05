@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,11 +12,10 @@ namespace Piwik\Updater\Migration\Db;
  * @see Factory::changeColumnType()
  * @ignore
  */
-class ChangeColumnType extends ChangeColumn
+class ChangeColumnType extends \Piwik\Updater\Migration\Db\ChangeColumn
 {
     public function __construct($table, $columnName, $columnType)
     {
         parent::__construct($table, $columnName, $columnName, $columnType);
     }
-
 }

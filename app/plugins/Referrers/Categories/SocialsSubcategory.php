@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,16 +11,13 @@ namespace Piwik\Plugins\Referrers\Categories;
 
 use Piwik\Category\Subcategory;
 use Piwik\Piwik;
-
 class SocialsSubcategory extends Subcategory
 {
     protected $categoryId = 'Referrers_Referrers';
     protected $id = 'Referrers_Socials';
     protected $order = 16;
-
     public function getHelp()
     {
-        return '<p>' . Piwik::translate('Referrers_SocialsSubcategoryHelp') . '</p>'
-            . '<p>' . Piwik::translate('Referrers_WebsitesSubcategoryHelp2') . '</p>';
+        return '<p>' . Piwik::translate('Referrers_SocialsSubcategoryHelp') . '</p>' . '<p>' . Piwik::translate('Referrers_WebsitesSubcategoryHelp2') . '</p>';
     }
 }

@@ -2,16 +2,6 @@
     display: none;
 }
 
-[piwik-enriched-headline] {
-    visibility: hidden;
-    height: 47px;
-}
-
-[piwik-enriched-headline].ng-isolate-scope {
-    visibility: visible;
-    height: auto;
-}
-
 .enrichedHeadline {
     min-height: 22px;
 
@@ -59,6 +49,7 @@
         opacity: 0.4;
         font-size: 16px;
         color: @theme-color-text-light !important;
+        text-decoration: none;
 
         &:hover, &.active {
             color: @theme-color-help-background-color !important;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,14 +10,11 @@
 namespace Piwik\Plugins\API\Renderer;
 
 use Piwik\Common;
-
-class Tsv extends Csv
+class Tsv extends \Piwik\Plugins\API\Renderer\Csv
 {
-
     public function renderSuccess($message)
     {
         Common::sendHeader("Content-Disposition: attachment; filename=piwik-report-export.csv");
         return "message\t" . $message;
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,7 +9,6 @@
 namespace Piwik\Plugins\TwoFactorAuth\Dao;
 
 require_once PIWIK_DOCUMENT_ROOT . '/libs/Authenticator/TwoFactorAuthenticator.php';
-
 class TwoFaSecretRandomGenerator
 {
     public function generateSecret()
@@ -17,4 +17,3 @@ class TwoFaSecretRandomGenerator
         return $authenticator->createSecret(16);
     }
 }
-

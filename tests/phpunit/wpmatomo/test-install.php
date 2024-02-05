@@ -22,7 +22,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 	 */
 	private $uninstaller;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->installer   = $this->make_installer();
@@ -103,6 +103,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 					'invite_expired_at'    => null,
 					'invite_accept_at'     => null,
 					'invite_link_token'    => null,
+					'ts_changes_shown'     => null,
 				),
 			),
 			$all_users
@@ -132,6 +133,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 			$this->markTestSkipped( 'Not multisite.' );
 			return;
 		}
+
 		$blogid1 = self::factory()->blog->create();
 		switch_to_blog( $blogid1 );
 
@@ -145,7 +147,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$blogid = get_current_blog_id();
 
 		$paths = new Paths();
-		$this->assertContains( 'wp-content/uploads/sites/' . $blogid . '/matomo/config/config.ini.php', $paths->get_config_ini_path() );
+		$this->assertStringContainsString( 'wp-content/uploads/sites/' . $blogid . '/matomo/config/config.ini.php', $paths->get_config_ini_path() );
 		$this->assertTrue( $this->installer->looks_like_it_is_installed() );
 
 		$sites_model = new SitesModel();

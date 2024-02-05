@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,10 +14,9 @@ namespace Piwik\Plugins\Actions;
  */
 class Segment extends \Piwik\Plugin\Segment
 {
-    protected  function init()
+    protected function init()
     {
         $this->setCategory('General_Actions');
         $this->setSqlFilter('\\Piwik\\Tracker\\TableLogAction::getIdActionFromSegment');
     }
 }
-

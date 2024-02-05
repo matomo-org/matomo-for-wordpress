@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,10 +10,8 @@
 namespace Piwik\Plugins\Goals\Columns;
 
 use Piwik\Columns\Dimension;
-
 class VisitsUntilConversion extends Dimension
 {
     protected $type = self::TYPE_NUMBER;
     protected $nameSingular = 'Goals_VisitsUntilConv';
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,30 +13,24 @@ use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\DevicesDetection\Columns\BrowserVersion;
 use Piwik\Plugin\ReportsProvider;
-
-class GetBrowserVersions extends Base
+class GetBrowserVersions extends \Piwik\Plugins\DevicesDetection\Reports\Base
 {
     protected function init()
     {
         parent::init();
-        $this->dimension     = new BrowserVersion();
-        $this->name          = Piwik::translate('DevicesDetection_BrowserVersion');
+        $this->dimension = new BrowserVersion();
+        $this->name = Piwik::translate('DevicesDetection_BrowserVersion');
         $this->documentation = Piwik::translate('DevicesDetection_WidgetBrowserVersionsDocumentation');
         $this->order = 6;
         $this->subcategoryId = 'DevicesDetection_Software';
     }
-
     public function configureView(ViewDataTable $view)
     {
         $view->config->show_search = true;
         $view->config->show_exclude_low_population = false;
-        $view->config->addTranslation('label', $this->dimension->getName());
     }
-
     public function getRelatedReports()
     {
-        return array(
-            ReportsProvider::factory('DevicesDetection', 'getBrowsers'),
-        );
+        return array(ReportsProvider::factory('DevicesDetection', 'getBrowsers'));
     }
 }

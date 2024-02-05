@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,6 +9,6 @@
  */
 namespace Piwik\Plugins\CoreUpdater;
 
-class NoUpdatesFoundException extends \Exception {
-
+class NoUpdatesFoundException extends \Exception
+{
 }

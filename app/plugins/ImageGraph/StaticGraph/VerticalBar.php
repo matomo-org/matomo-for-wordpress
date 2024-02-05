@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,24 +12,12 @@ namespace Piwik\Plugins\ImageGraph\StaticGraph;
 /**
  *
  */
-class VerticalBar extends GridGraph
+class VerticalBar extends \Piwik\Plugins\ImageGraph\StaticGraph\GridGraph
 {
-    const INTERLEAVE = 0.10;
-
+    const INTERLEAVE = 0.1;
     public function renderGraph()
     {
-        $this->initGridChart(
-            $displayVerticalGridLines = false,
-            $bulletType = LEGEND_FAMILY_BOX,
-            $horizontalGraph = false,
-            $showTicks = true,
-            $verticalLegend = false
-        );
-
-        $this->pImage->drawBarChart(
-            array(
-                 'Interleave' => self::INTERLEAVE,
-            )
-        );
+        $this->initGridChart($displayVerticalGridLines = false, $bulletType = LEGEND_FAMILY_BOX, $horizontalGraph = false, $showTicks = true, $verticalLegend = false);
+        $this->pImage->drawBarChart(array('Interleave' => self::INTERLEAVE));
     }
 }

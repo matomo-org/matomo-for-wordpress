@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,11 +7,11 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Updater\Migration\Db;
+
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Db;
 use Piwik\Updater\Migration\Db as DbMigration;
-
 /**
  * Executes a given SQL query.
  *
@@ -19,17 +20,14 @@ use Piwik\Updater\Migration\Db as DbMigration;
  */
 class Sql extends DbMigration
 {
-
     /**
      * @var string
      */
     protected $sql;
-
     /**
      * @var false|int|array
      */
     private $errorCodesToIgnore;
-
     /**
      * Sql constructor.
      *
@@ -41,27 +39,22 @@ class Sql extends DbMigration
         if (!is_array($errorCodesToIgnore)) {
             $errorCodesToIgnore = array($errorCodesToIgnore);
         }
-
         $this->sql = $sql;
         $globalErrorCodesToIgnore = Config::getInstance()->database['ignore_error_codes'] ?? [];
-        $this->errorCodesToIgnore = array_merge($errorCodesToIgnore, (is_array($globalErrorCodesToIgnore) ? $globalErrorCodesToIgnore : []));
+        $this->errorCodesToIgnore = array_merge($errorCodesToIgnore, is_array($globalErrorCodesToIgnore) ? $globalErrorCodesToIgnore : []);
     }
-
     public function shouldIgnoreError($exception)
     {
         if (empty($this->errorCodesToIgnore)) {
             return false;
         }
-
         foreach ($this->errorCodesToIgnore as $code) {
             if (Db::get()->isErrNo($exception, $code)) {
                 return true;
             }
         }
-
         return false;
     }
-
     /**
      * @internal
      * @param int $errorCode
@@ -70,10 +63,8 @@ class Sql extends DbMigration
     public function addErrorCodeToIgnore($errorCode)
     {
         $this->errorCodesToIgnore[] = $errorCode;
-
         return $this;
     }
-
     /**
      * @internal
      */
@@ -81,18 +72,14 @@ class Sql extends DbMigration
     {
         return $this->errorCodesToIgnore;
     }
-
     public function __toString()
     {
         $sql = $this->sql;
-
         if (!empty($sql) && !Common::stringEndsWith($sql, ';')) {
             $sql .= ';';
         }
-
         return $sql;
     }
-
     public function exec()
     {
         if (!empty($this->sql)) {

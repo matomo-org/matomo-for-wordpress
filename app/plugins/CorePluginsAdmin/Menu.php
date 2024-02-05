@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -15,11 +16,9 @@ use Piwik\Piwik;
 use Piwik\Plugins\CorePluginsAdmin\Model\TagManagerTeaser;
 use Piwik\Plugins\Marketplace\Marketplace;
 use Piwik\Plugins\Marketplace\Plugins;
-
 class Menu extends \Piwik\Plugin\Menu
 {
     private $marketplacePlugins;
-
     /**
      * Menu constructor.
      * @param Plugins $marketplacePlugins
@@ -30,44 +29,34 @@ class Menu extends \Piwik\Plugin\Menu
             $this->marketplacePlugins = $marketplacePlugins;
         } elseif (Marketplace::isMarketplaceEnabled()) {
             // we load it manually as marketplace plugin might not be loaded
-            $this->marketplacePlugins = StaticContainer::get('Piwik\Plugins\Marketplace\Plugins');
+            $this->marketplacePlugins = StaticContainer::get('Piwik\\Plugins\\Marketplace\\Plugins');
         }
     }
-
     public function configureTopMenu(MenuTop $menu)
     {
         $tagManagerTeaser = new TagManagerTeaser(Piwik::getCurrentUserLogin());
-
         if ($tagManagerTeaser->shouldShowTeaser()) {
             $menu->addItem('Tag Manager', null, $this->urlForAction('tagManagerTeaser'));
         }
     }
-
     public function configureAdminMenu(MenuAdmin $menu)
     {
-        $hasSuperUserAcess    = Piwik::hasUserSuperUserAccess();
-        $isAnonymous          = Piwik::isUserIsAnonymous();
+        $hasSuperUserAccess = Piwik::hasUserSuperUserAccess();
+        $isAnonymous = Piwik::isUserIsAnonymous();
         $isMarketplaceEnabled = Marketplace::isMarketplaceEnabled();
-
         $pluginsUpdateMessage = '';
-
-        if ($hasSuperUserAcess && $isMarketplaceEnabled && $this->marketplacePlugins) {
+        $skipPluginUpdateCheck = StaticContainer::get('dev.disable_plugin_update_checks');
+        if (!$skipPluginUpdateCheck && $hasSuperUserAccess && $isMarketplaceEnabled && $this->marketplacePlugins) {
             $pluginsHavingUpdate = $this->marketplacePlugins->getPluginsHavingUpdate();
-
             if (!empty($pluginsHavingUpdate)) {
                 $pluginsUpdateMessage = sprintf(' (%d)', count($pluginsHavingUpdate));
             }
         }
-
         if (!$isAnonymous) {
-            $menu->addPlatformItem(null, "", $order = 7);
+            $menu->addPlatformItem('', [], 7);
         }
-
-        if ($hasSuperUserAcess) {
-            $menu->addSystemItem(Piwik::translate('General_Plugins') . $pluginsUpdateMessage,
-                $this->urlForAction('plugins', array('activated' => '')),
-                $order = 20);
+        if ($hasSuperUserAccess) {
+            $menu->addPluginItem(Piwik::translate('General_ManagePlugins') . $pluginsUpdateMessage, $this->urlForAction('plugins', ['activated' => '']), 10);
         }
     }
-
 }

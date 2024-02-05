@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik;
 
 use Exception;
 use Piwik\Db\Adapter;
-
 /**
  * Contains SQL related helper functions for Piwik's MySQL database.
  *
@@ -33,12 +33,9 @@ use Piwik\Db\Adapter;
 class Db
 {
     const SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
-
     private static $connection = null;
     private static $readerConnection = null;
-
     private static $logQueries = true;
-
     // this is used for indicate TransactionLevel Cache
     public $supportsUncommitted;
     /**
@@ -48,17 +45,14 @@ class Db
      */
     public static function get()
     {
-        if (SettingsServer::isTrackerApiRequest()) {
-            return Tracker::getDatabase();
+        if (\Piwik\SettingsServer::isTrackerApiRequest()) {
+            return \Piwik\Tracker::getDatabase();
         }
-
         if (!self::hasDatabaseObject()) {
             self::createDatabaseObject();
         }
-
         return self::$connection;
     }
-
     /**
      * @internal
      * @ignore
@@ -66,11 +60,9 @@ class Db
      */
     public static function hasReaderConfigured()
     {
-        $readerConfig = Config::getInstance()->database_reader;
-
+        $readerConfig = \Piwik\Config::getInstance()->database_reader;
         return !empty($readerConfig['host']);
     }
-
     /**
      * Returns the database connection and creates it if it hasn't been already. Make sure to not write any data on
      * the reader and only use the connection to read data.
@@ -84,14 +76,11 @@ class Db
         if (!self::hasReaderConfigured()) {
             return self::get();
         }
-
         if (!self::hasReaderDatabaseObject()) {
             self::createReaderDatabaseObject();
         }
-
         return self::$readerConnection;
     }
-
     /**
      * Returns an array with the Database connection information.
      *
@@ -100,12 +89,10 @@ class Db
      */
     public static function getDatabaseConfig($dbConfig = null)
     {
-        $config = Config::getInstance();
-
+        $config = \Piwik\Config::getInstance();
         if (is_null($dbConfig)) {
             $dbConfig = $config->database;
         }
-
         /**
          * Triggered before a database connection is established.
          *
@@ -124,13 +111,10 @@ class Db
          *                        - **adapter**: either `'PDO\MYSQL'` or `'MYSQLI'`
          *                        - **type**: The MySQL engine to use, for instance 'InnoDB'
          */
-        Piwik::postEvent('Db.getDatabaseConfig', array(&$dbConfig));
-
+        \Piwik\Piwik::postEvent('Db.getDatabaseConfig', array(&$dbConfig));
         $dbConfig['profiler'] = @$config->Debug['enable_sql_profiler'];
-
         return $dbConfig;
     }
-
     /**
      * For tests only.
      * @param $connection
@@ -141,7 +125,6 @@ class Db
     {
         self::$connection = $connection;
     }
-
     /**
      * Connects to the database.
      *
@@ -153,12 +136,9 @@ class Db
     public static function createDatabaseObject($dbConfig = null)
     {
         $dbConfig = self::getDatabaseConfig($dbConfig);
-
         $db = @Adapter::factory($dbConfig['adapter'], $dbConfig);
-
         self::$connection = $db;
     }
-
     /**
      * Connects to the reader database.
      *
@@ -172,9 +152,8 @@ class Db
     public static function createReaderDatabaseObject($dbConfig = null)
     {
         if (!isset($dbConfig)) {
-            $dbConfig = Config::getInstance()->database_reader;
+            $dbConfig = \Piwik\Config::getInstance()->database_reader;
         }
-
         $masterDbConfig = self::getDatabaseConfig();
         $dbConfig = self::getDatabaseConfig($dbConfig);
         $dbConfig['adapter'] = $masterDbConfig['adapter'];
@@ -182,16 +161,12 @@ class Db
         $dbConfig['type'] = $masterDbConfig['type'];
         $dbConfig['tables_prefix'] = $masterDbConfig['tables_prefix'];
         $dbConfig['charset'] = $masterDbConfig['charset'];
-
         $db = @Adapter::factory($dbConfig['adapter'], $dbConfig);
-
         if (!empty($dbConfig['aurora_readonly_read_committed'])) {
             $db->exec('set session aurora_read_replica_read_committed = ON;set session transaction isolation level read committed;');
         }
-
         self::$readerConnection = $db;
     }
-
     /**
      * Detect whether a database object is initialized / created or not.
      *
@@ -201,7 +176,6 @@ class Db
     {
         return isset(self::$connection);
     }
-
     /**
      * Detect whether a database object is initialized / created or not.
      *
@@ -211,7 +185,6 @@ class Db
     {
         return isset(self::$readerConnection);
     }
-
     /**
      * Disconnects and destroys the database connection.
      *
@@ -220,16 +193,14 @@ class Db
     public static function destroyDatabaseObject()
     {
         if (self::hasDatabaseObject()) {
-            DbHelper::disconnectDatabase();
+            \Piwik\DbHelper::disconnectDatabase();
         }
         self::$connection = null;
-
         if (self::hasReaderDatabaseObject()) {
             self::$readerConnection->closeConnection();
         }
         self::$readerConnection = null;
     }
-
     /**
      * Executes an unprepared SQL query. Recommended for DDL statements like `CREATE`,
      * `DROP` and `ALTER`. The return value is DBMS-specific. For MySQLI, it returns the
@@ -246,21 +217,16 @@ class Db
         $db = self::get();
         $profiler = $db->getProfiler();
         $q = $profiler->queryStart($sql, \Zend_Db_Profiler::INSERT);
-
         try {
             self::logSql(__FUNCTION__, $sql);
-
             $return = self::get()->exec($sql);
         } catch (Exception $ex) {
             self::logExtraInfoIfDeadlock($ex);
             throw $ex;
         }
-
         $profiler->queryEnd($q);
-
         return $return;
     }
-
     /**
      * Executes an SQL query and returns the [Zend_Db_Statement](http://framework.zend.com/manual/1.12/en/zend.db.statement.html)
      * for the query.
@@ -277,14 +243,12 @@ class Db
     {
         try {
             self::logSql(__FUNCTION__, $sql, $parameters);
-
             return self::get()->query($sql, $parameters);
         } catch (Exception $ex) {
             self::logExtraInfoIfDeadlock($ex);
             throw $ex;
         }
     }
-
     /**
      * Executes an SQL `SELECT` statement and returns all fetched rows from the result set.
      *
@@ -298,14 +262,12 @@ class Db
     {
         try {
             self::logSql(__FUNCTION__, $sql, $parameters);
-
             return self::get()->fetchAll($sql, $parameters);
         } catch (Exception $ex) {
             self::logExtraInfoIfDeadlock($ex);
             throw $ex;
         }
     }
-
     /**
      * Executes an SQL `SELECT` statement and returns the first row of the result set.
      *
@@ -319,14 +281,12 @@ class Db
     {
         try {
             self::logSql(__FUNCTION__, $sql, $parameters);
-
             return self::get()->fetchRow($sql, $parameters);
         } catch (Exception $ex) {
             self::logExtraInfoIfDeadlock($ex);
             throw $ex;
         }
     }
-
     /**
      * Executes an SQL `SELECT` statement and returns the first column value of the first
      * row in the result set.
@@ -340,14 +300,12 @@ class Db
     {
         try {
             self::logSql(__FUNCTION__, $sql, $parameters);
-
             return self::get()->fetchOne($sql, $parameters);
         } catch (Exception $ex) {
             self::logExtraInfoIfDeadlock($ex);
             throw $ex;
         }
     }
-
     /**
      * Executes an SQL `SELECT` statement and returns the entire result set indexed by the first
      * selected field.
@@ -365,14 +323,12 @@ class Db
     {
         try {
             self::logSql(__FUNCTION__, $sql, $parameters);
-
             return self::get()->fetchAssoc($sql, $parameters);
         } catch (Exception $ex) {
             self::logExtraInfoIfDeadlock($ex);
             throw $ex;
         }
     }
-
     /**
      * Deletes all desired rows in a table, while using a limit. This function will execute many
      * DELETE queries until there are no more rows to delete.
@@ -395,23 +351,16 @@ class Db
      */
     public static function deleteAllRows($table, $where, $orderBy, $maxRowsPerQuery = 100000, $parameters = array())
     {
-        $orderByClause = $orderBy ? "ORDER BY $orderBy" : "";
-
-        $sql = "DELETE FROM $table $where $orderByClause
-                LIMIT " . (int)$maxRowsPerQuery;
-
+        $orderByClause = $orderBy ? "ORDER BY {$orderBy}" : "";
+        $sql = "DELETE FROM {$table} {$where} {$orderByClause}\n                LIMIT " . (int) $maxRowsPerQuery;
         // delete rows w/ a limit
         $totalRowsDeleted = 0;
-
         do {
             $rowsDeleted = self::query($sql, $parameters)->rowCount();
-
             $totalRowsDeleted += $rowsDeleted;
         } while ($rowsDeleted >= $maxRowsPerQuery);
-
         return $totalRowsDeleted;
     }
-
     /**
      * Runs an `OPTIMIZE TABLE` query on the supplied table or tables.
      *
@@ -425,42 +374,29 @@ class Db
      */
     public static function optimizeTables($tables, $force = false)
     {
-        $optimize = Config::getInstance()->General['enable_sql_optimize_queries'];
-
-        if (empty($optimize)
-            && !$force
-        ) {
+        $optimize = \Piwik\Config::getInstance()->General['enable_sql_optimize_queries'];
+        if (empty($optimize) && !$force) {
             return false;
         }
-
         if (empty($tables)) {
             return false;
         }
-
         if (!is_array($tables)) {
             $tables = array($tables);
         }
-
-        if (!self::isOptimizeInnoDBSupported()
-            && !$force
-        ) {
+        if (!self::isOptimizeInnoDBSupported() && !$force) {
             // filter out all InnoDB tables
             $myisamDbTables = array();
             foreach (self::getTableStatus() as $row) {
-                if (strtolower($row['Engine']) == 'myisam'
-                    && in_array($row['Name'], $tables)
-                ) {
+                if (strtolower($row['Engine']) == 'myisam' && in_array($row['Name'], $tables)) {
                     $myisamDbTables[] = $row['Name'];
                 }
             }
-
             $tables = $myisamDbTables;
         }
-
         if (empty($tables)) {
             return false;
         }
-
         // optimize the tables
         $success = true;
         foreach ($tables as &$t) {
@@ -469,16 +405,12 @@ class Db
                 $success = false;
             }
         }
-
         return $success;
-
     }
-
     private static function getTableStatus()
     {
-        return Db::fetchAll("SHOW TABLE STATUS");
+        return \Piwik\Db::fetchAll("SHOW TABLE STATUS");
     }
-
     /**
      * Drops the supplied table or tables.
      *
@@ -491,19 +423,16 @@ class Db
         if (!is_array($tables)) {
             $tables = array($tables);
         }
-
         return self::query("DROP TABLE `" . implode('`,`', $tables) . "`");
     }
-
     /**
      * Drops all tables
      */
     public static function dropAllTables()
     {
-        $tablesAlreadyInstalled = DbHelper::getTablesInstalled();
+        $tablesAlreadyInstalled = \Piwik\DbHelper::getTablesInstalled();
         self::dropTables($tablesAlreadyInstalled);
     }
-
     /**
      * Locks the supplied table or tables.
      *
@@ -521,23 +450,18 @@ class Db
         if (!is_array($tablesToRead)) {
             $tablesToRead = array($tablesToRead);
         }
-
         if (!is_array($tablesToWrite)) {
             $tablesToWrite = array($tablesToWrite);
         }
-
         $lockExprs = array();
         foreach ($tablesToWrite as $table) {
             $lockExprs[] = $table . " WRITE";
         }
-
         foreach ($tablesToRead as $table) {
             $lockExprs[] = $table . " READ";
         }
-
         return self::exec("LOCK TABLES " . implode(', ', $lockExprs));
     }
-
     /**
      * Releases all table locks.
      *
@@ -550,7 +474,6 @@ class Db
     {
         return self::exec("UNLOCK TABLES");
     }
-
     /**
      * Performs a `SELECT` statement on a table one chunk at a time and returns the first
      * successfully fetched value.
@@ -592,7 +515,6 @@ class Db
     public static function segmentedFetchFirst($sql, $first, $last, $step, $params = array())
     {
         $result = false;
-
         if ($step > 0) {
             for ($i = $first; $result === false && $i <= $last; $i += $step) {
                 $result = self::fetchOne($sql, array_merge($params, array($i, $i + $step)));
@@ -602,10 +524,8 @@ class Db
                 $result = self::fetchOne($sql, array_merge($params, array($i, $i + $step)));
             }
         }
-
         return $result;
     }
-
     /**
      * Performs a `SELECT` on a table one chunk at a time and returns an array
      * of every fetched value.
@@ -630,7 +550,6 @@ class Db
     public static function segmentedFetchOne($sql, $first, $last, $step, $params = array())
     {
         $result = array();
-
         if ($step > 0) {
             for ($i = $first; $i <= $last; $i += $step) {
                 $result[] = self::fetchOne($sql, array_merge($params, array($i, $i + $step)));
@@ -640,10 +559,8 @@ class Db
                 $result[] = self::fetchOne($sql, array_merge($params, array($i, $i + $step)));
             }
         }
-
         return $result;
     }
-
     /**
      * Performs a SELECT on a table one chunk at a time and returns an array
      * of every fetched row.
@@ -669,22 +586,19 @@ class Db
     public static function segmentedFetchAll($sql, $first, $last, $step, $params = array())
     {
         $result = array();
-
         if ($step > 0) {
             for ($i = $first; $i <= $last; $i += $step) {
                 $currentParams = array_merge($params, array($i, $i + $step));
-                $result        = array_merge($result, self::fetchAll($sql, $currentParams));
+                $result = array_merge($result, self::fetchAll($sql, $currentParams));
             }
         } else {
             for ($i = $first; $i >= $last; $i += $step) {
                 $currentParams = array_merge($params, array($i, $i + $step));
-                $result        = array_merge($result, self::fetchAll($sql, $currentParams));
+                $result = array_merge($result, self::fetchAll($sql, $currentParams));
             }
         }
-
         return $result;
     }
-
     /**
      * Performs a `UPDATE` or `DELETE` statement on a table one chunk at a time.
      *
@@ -717,7 +631,6 @@ class Db
             }
         }
     }
-
     /**
      * Attempts to get a named lock. This function uses a timeout of 1s, but will
      * retry a set number of times.
@@ -732,7 +645,6 @@ class Db
         if (strlen($lockName) > 64) {
             throw new \Exception('DB lock name has to be 64 characters or less for MySQL 5.7 compatibility.');
         }
-
         /*
          * the server (e.g., shared hosting) may have a low wait timeout
          * so instead of a single GET_LOCK() with a 30 second timeout,
@@ -740,9 +652,7 @@ class Db
          * connection
          */
         $sql = 'SELECT GET_LOCK(?, 1)';
-
         $db = self::get();
-
         while ($maxRetries > 0) {
             $result = $db->fetchOne($sql, array($lockName));
             if ($result == '1') {
@@ -750,10 +660,8 @@ class Db
             }
             $maxRetries--;
         }
-
         return false;
     }
-
     /**
      * Releases a named lock.
      *
@@ -763,11 +671,9 @@ class Db
     public static function releaseDbLock($lockName)
     {
         $sql = 'SELECT RELEASE_LOCK(?)';
-
         $db = self::get();
         return $db->fetchOne($sql, array($lockName)) == '1';
     }
-
     /**
      * Cached result of isLockprivilegeGranted function.
      *
@@ -777,7 +683,6 @@ class Db
      * @ignore
      */
     public static $lockPrivilegeGranted = null;
-
     /**
      * Checks whether the database user is allowed to lock tables.
      *
@@ -787,67 +692,51 @@ class Db
     {
         if (is_null(self::$lockPrivilegeGranted)) {
             try {
-                Db::lockTables(Common::prefixTable('site_url'));
-                Db::unlockAllTables();
-
+                \Piwik\Db::lockTables(\Piwik\Common::prefixTable('site_url'));
+                \Piwik\Db::unlockAllTables();
                 self::$lockPrivilegeGranted = true;
             } catch (Exception $ex) {
                 self::$lockPrivilegeGranted = false;
             }
         }
-
         return self::$lockPrivilegeGranted;
     }
-
     private static function logExtraInfoIfDeadlock($ex)
     {
-        if (!self::get()->isErrNo($ex, 1213)
-            && !self::get()->isErrNo($ex, 1205)
-        ) {
+        if (!self::get()->isErrNo($ex, 1213) && !self::get()->isErrNo($ex, 1205)) {
             return;
         }
-
         try {
             $deadlockInfo = self::fetchAll("SHOW ENGINE INNODB STATUS");
-
             // log using exception so backtrace appears in log output
-            Log::debug(new Exception("Encountered deadlock: " . print_r($deadlockInfo, true)));
-        } catch(\Exception $e) {
+            \Piwik\Log::debug(new Exception("Encountered deadlock: " . print_r($deadlockInfo, true)));
+        } catch (\Exception $e) {
             //  1227 Access denied; you need (at least one of) the PROCESS privilege(s) for this operation
         }
     }
-
     private static function logSql($functionName, $sql, $parameters = array())
     {
         self::checkBoundParametersIfInDevMode($sql, $parameters);
-
-        if (self::$logQueries === false
-            || @Config::getInstance()->Debug['log_sql_queries'] != 1
-        ) {
+        if (self::$logQueries === false || @\Piwik\Config::getInstance()->Debug['log_sql_queries'] != 1) {
             return;
         }
-
         // NOTE: at the moment we don't log parameters in order to avoid sensitive information leaks
-        Log::debug("Db::%s() executing SQL: %s", $functionName, $sql);
+        \Piwik\Log::debug("Db::%s() executing SQL: %s", $functionName, $sql);
     }
-
     private static function checkBoundParametersIfInDevMode($sql, $parameters)
     {
-        if (!Development::isEnabled()) {
+        if (!\Piwik\Development::isEnabled()) {
             return;
         }
-
         if (!is_array($parameters)) {
             $parameters = [$parameters];
         }
-
         foreach ($parameters as $index => $parameter) {
-            if ($parameter instanceof Date) {
-                throw new \Exception("Found bound parameter (index = $index) is Date instance which will not work correctly in following SQL: $sql");
+            if ($parameter instanceof \Piwik\Date) {
+                throw new \Exception("Found bound parameter (index = {$index}) is Date instance which will not work correctly in following SQL: {$sql}");
             }
         }
     }
-
     /**
      * @param bool $enable
      */
@@ -855,7 +744,6 @@ class Db
     {
         self::$logQueries = $enable;
     }
-
     /**
      * @return boolean
      */
@@ -863,19 +751,15 @@ class Db
     {
         return self::$logQueries;
     }
-
     public static function isOptimizeInnoDBSupported($version = null)
     {
         if ($version === null) {
-            $version = Db::fetchOne("SELECT VERSION()");
+            $version = \Piwik\Db::fetchOne("SELECT VERSION()");
         }
-
         $version = strtolower($version);
-
         if (strpos($version, "mariadb") === false) {
             return false;
         }
-
         $semanticVersion = strstr($version, '-', $beforeNeedle = true);
         return version_compare($semanticVersion, '10.1.1', '>=');
     }

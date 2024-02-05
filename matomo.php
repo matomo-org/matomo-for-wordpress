@@ -4,10 +4,10 @@
  * Description: The #1 Google Analytics alternative that gives you full control over your data and protects the privacy for your users. Free, secure and open.
  * Author: Matomo
  * Author URI: https://matomo.org
- * Version: 4.15.3
+ * Version: 5.0.1
  * Domain Path: /languages
  * WC requires at least: 2.4.0
- * WC tested up to: 7.7.0
+ * WC tested up to: 8.5.2
  *
  * Matomo - free/libre analytics platform
  *
@@ -162,6 +162,31 @@ function matomo_anonymize_value( $value ) {
 
 $GLOBALS['MATOMO_MARKETPLACE_PLUGINS'] = array();
 
+function matomo_rel_path( $to_dir, $from_dir ) {
+	$to_dir_parts   = array_values( array_filter( explode( DIRECTORY_SEPARATOR, $to_dir ) ) );
+	$from_dir_parts = array_values( array_filter( explode( DIRECTORY_SEPARATOR, $from_dir ) ) );
+
+	$to_index   = 0;
+	$from_index = 0;
+
+	$to_dir_segment_count   = count( $to_dir_parts );
+	$from_dir_segment_count = count( $from_dir_parts );
+
+	// skip over common parts of $to_dir and $from_dir
+	for ( ; $to_index < $to_dir_segment_count && $from_index < $from_dir_segment_count && $to_dir_parts[ $to_index ] === $from_dir_parts[ $from_index ]; ++$to_index, ++$from_index );
+
+	// ascend from $to_dir to common root it has with $from_dir
+	$relative_path = str_repeat( '..' . DIRECTORY_SEPARATOR, count( $from_dir_parts ) - $from_index );
+
+	// descend from common root to target in rest of $to_dir
+	$rest = array_slice( $to_dir_parts, $to_index );
+	if ( ! empty( $rest ) ) {
+		$relative_path = $relative_path . implode( DIRECTORY_SEPARATOR, $rest );
+	}
+
+	return $relative_path;
+}
+
 function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace_plugin = false ) {
 	if ( ! in_array( $wp_plugin_file, $GLOBALS['MATOMO_PLUGIN_FILES'], true ) ) {
 		$GLOBALS['MATOMO_PLUGIN_FILES'][] = $wp_plugin_file;
@@ -183,16 +208,9 @@ function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace
 		}
 	}
 
-	$matomo_dir       = __DIR__ . DIRECTORY_SEPARATOR . 'app';
-	$matomo_dir_parts = explode( DIRECTORY_SEPARATOR, $matomo_dir );
-	$root_dir_parts   = explode( DIRECTORY_SEPARATOR, $root_dir );
-	$webroot_dir      = '';
-	foreach ( $matomo_dir_parts as $index => $part ) {
-		if ( isset( $root_dir_parts[ $index ] ) && $root_dir_parts[ $index ] === $part ) {
-			continue;
-		}
-		$webroot_dir .= '../';
-	}
+	$matomo_dir  = __DIR__ . DIRECTORY_SEPARATOR . 'app';
+	$webroot_dir = matomo_rel_path( $root_dir, $matomo_dir );
+
 	$GLOBALS['MATOMO_PLUGIN_DIRS'][] = array(
 		'pluginsPathAbsolute'        => $root_dir,
 		'webrootDirRelativeToMatomo' => $webroot_dir,
@@ -209,4 +227,5 @@ if ( matomo_is_app_request() || ! empty( $GLOBALS['MATOMO_LOADED_DIRECTLY'] ) ) 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'WpMatomo.php';
 require 'shared.php';
 matomo_add_plugin( __DIR__ . '/plugins/WordPress', MATOMO_ANALYTICS_FILE );
+
 new WpMatomo();

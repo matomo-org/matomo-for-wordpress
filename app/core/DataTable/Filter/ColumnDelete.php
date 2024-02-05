@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
-
 /**
  * Filter that will remove columns from a {@link DataTable} using either a blacklist,
  * allowlist or both.
@@ -35,7 +35,6 @@ class ColumnDelete extends BaseFilter
      * @var array
      */
     private $columnsToRemove;
-
     /**
      * The columns that should be kept in DataTable rows. All other columns will be
      * removed. If a column is in $columnsToRemove and this variable, it will NOT be kept.
@@ -43,7 +42,6 @@ class ColumnDelete extends BaseFilter
      * @var array
      */
     private $columnsToKeep;
-
     /**
      * Hack: when specifying "showColumns", sometimes we'd like to also keep columns that "look" like a given column,
      * without manually specifying all these columns (which may not be possible if column names are generated dynamically)
@@ -51,21 +49,18 @@ class ColumnDelete extends BaseFilter
      * Column will be kept, if they match any name in the $columnsToKeep, or if they look like anyColumnToKeep__anythingHere
      */
     const APPEND_TO_COLUMN_NAME_TO_KEEP = '__';
-
     /**
      * Delete the column, only if the value was zero
      *
      * @var bool
      */
     private $deleteIfZeroOnly;
-
     /**
      * Delete the column recursively in all nested arrays as well
      *
      * @var bool
      */
     private $deleteRecursive;
-
     /**
      * Constructor.
      *
@@ -81,21 +76,18 @@ class ColumnDelete extends BaseFilter
     public function __construct($table, $columnsToRemove, $columnsToKeep = array(), $deleteIfZeroOnly = false, $deleteRecursive = false)
     {
         parent::__construct($table);
-
         if (is_string($columnsToRemove)) {
             $columnsToRemove = $columnsToRemove === '' ? array() : explode(',', $columnsToRemove);
         }
-
         if (is_string($columnsToKeep)) {
             $columnsToKeep = $columnsToKeep === '' ? array() : explode(',', $columnsToKeep);
         }
-
         $this->columnsToRemove = $columnsToRemove;
-        $this->columnsToKeep = array_flip($columnsToKeep); // flip so we can use isset instead of in_array
+        $this->columnsToKeep = array_flip($columnsToKeep);
+        // flip so we can use isset instead of in_array
         $this->deleteIfZeroOnly = $deleteIfZeroOnly;
         $this->deleteRecursive = $deleteRecursive;
     }
-
     /**
      * See {@link ColumnDelete}.
      *
@@ -106,32 +98,26 @@ class ColumnDelete extends BaseFilter
     {
         // always do recursive filter
         $this->enableRecursive(true);
-        $recurse = false; // only recurse if there are columns to remove/keep
-
+        $recurse = false;
+        // only recurse if there are columns to remove/keep
         // remove columns specified in $this->columnsToRemove
         if (!empty($this->columnsToRemove)) {
             $this->removeColumnsFromTable($table);
             $recurse = true;
         }
-
         // remove columns not specified in $columnsToKeep
         if (!empty($this->columnsToKeep)) {
             foreach ($table as $index => $row) {
                 $columnsToDelete = array();
                 foreach ($row as $name => $value) {
                     $keep = false;
-
                     // @see self::APPEND_TO_COLUMN_NAME_TO_KEEP
                     foreach ($this->columnsToKeep as $nameKeep => $true) {
                         if (strpos($name, $nameKeep . self::APPEND_TO_COLUMN_NAME_TO_KEEP) === 0) {
                             $keep = true;
                         }
                     }
-
-                    if (!$keep
-                        && $name !== 'label' // label cannot be removed via allowlisting
-                        && !isset($this->columnsToKeep[$name])
-                    ) {
+                    if (!$keep && $name !== 'label' && !isset($this->columnsToKeep[$name])) {
                         // we cannot remove row directly to prevent notice "ArrayIterator::next(): Array was modified
                         // outside object and internal position is no longer valid in /var/www..."
                         $columnsToDelete[] = $name;
@@ -141,20 +127,16 @@ class ColumnDelete extends BaseFilter
                     unset($table[$index][$columnToDelete]);
                 }
             }
-
             $recurse = true;
         }
-
         // recurse
         if ($recurse && !is_array($table)) {
             foreach ($table as $row) {
                 $this->filterSubTable($row);
             }
         }
-
         return $table;
     }
-
     /**
      * @param $table
      */
@@ -163,14 +145,11 @@ class ColumnDelete extends BaseFilter
         if (!$this->isArrayAccess($table)) {
             return;
         }
-
         foreach ($table as $index => $row) {
             if (!$this->isArrayAccess($row)) {
                 continue;
             }
-
             foreach ($this->columnsToRemove as $column) {
-
                 if (is_array($row)) {
                     if (!array_key_exists($column, $row)) {
                         continue;
@@ -180,23 +159,19 @@ class ColumnDelete extends BaseFilter
                         continue;
                     }
                 }
-
                 if ($this->deleteIfZeroOnly) {
                     $value = $row[$column];
                     if ($value === false || !empty($value)) {
                         continue;
                     }
                 }
-
                 unset($table[$index][$column]);
             }
-
             if ($this->deleteRecursive) {
                 $this->removeColumnsFromTable($table[$index]);
             }
         }
     }
-
     /**
      * @param $table
      * @return bool

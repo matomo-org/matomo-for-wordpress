@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@ namespace Piwik\Updater\Migration\Db;
 
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
-
 /**
  * Provides database migrations.
  *
@@ -18,10 +18,9 @@ use Piwik\Container\StaticContainer;
 class Factory
 {
     /**
-     * @var \DI\Container
+     * @var \Piwik\Container\Container
      */
     private $container;
-
     /**
      * @ignore
      */
@@ -29,7 +28,6 @@ class Factory
     {
         $this->container = StaticContainer::getContainer();
     }
-
     /**
      * Performs a custom SQL query during the update.
      *
@@ -48,12 +46,8 @@ class Factory
         if ($errorCodesToIgnore === false) {
             $errorCodesToIgnore = array();
         }
-
-        return $this->container->make('Piwik\Updater\Migration\Db\Sql', array(
-            'sql' => $sql, 'errorCodesToIgnore' => $errorCodesToIgnore
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\Sql', array('sql' => $sql, 'errorCodesToIgnore' => $errorCodesToIgnore));
     }
-
     /**
      * Performs a custom SQL query that uses bound parameters during the update.
      *
@@ -75,12 +69,8 @@ class Factory
         if ($errorCodesToIgnore === false) {
             $errorCodesToIgnore = array();
         }
-
-        return $this->container->make('Piwik\Updater\Migration\Db\BoundSql', array(
-            'sql' => $sql, 'errorCodesToIgnore' => $errorCodesToIgnore, 'bind' => $bind
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\BoundSql', array('sql' => $sql, 'errorCodesToIgnore' => $errorCodesToIgnore, 'bind' => $bind));
     }
-
     /**
      * Creates a new database table.
      * @param string $table  Unprefixed database table name, eg 'log_visit'.
@@ -92,16 +82,11 @@ class Factory
     public function createTable($table, $columnNames, $primaryKey = array())
     {
         $table = $this->prefixTable($table);
-
         if (!empty($primaryKey) && !is_array($primaryKey)) {
             $primaryKey = array($primaryKey);
         }
-
-        return $this->container->make('Piwik\Updater\Migration\Db\CreateTable', array(
-            'table' => $table, 'columnNames' => $columnNames, 'primaryKey' => $primaryKey
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\CreateTable', array('table' => $table, 'columnNames' => $columnNames, 'primaryKey' => $primaryKey));
     }
-
     /**
      * Drops an existing database table.
      * @param string $table  Unprefixed database table name, eg 'log_visit'.
@@ -110,12 +95,8 @@ class Factory
     public function dropTable($table)
     {
         $table = $this->prefixTable($table);
-
-        return $this->container->make('Piwik\Updater\Migration\Db\DropTable', array(
-            'table' => $table
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\DropTable', array('table' => $table));
     }
-
     /**
      * Adds a new database table column to an existing table.
      *
@@ -130,12 +111,8 @@ class Factory
     public function addColumn($table, $columnName, $columnType, $placeColumnAfter = null)
     {
         $table = $this->prefixTable($table);
-
-        return $this->container->make('Piwik\Updater\Migration\Db\AddColumn', array(
-            'table' => $table, 'columnName' => $columnName, 'columnType' => $columnType, 'placeColumnAfter' => $placeColumnAfter
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\AddColumn', array('table' => $table, 'columnName' => $columnName, 'columnType' => $columnType, 'placeColumnAfter' => $placeColumnAfter));
     }
-
     /**
      * Adds multiple new database table columns to an existing table at once.
      *
@@ -154,12 +131,8 @@ class Factory
     public function addColumns($table, $columns, $placeColumnAfter = null)
     {
         $table = $this->prefixTable($table);
-
-        return $this->container->make('Piwik\Updater\Migration\Db\AddColumns', array(
-            'table' => $table, 'columns' => $columns, 'placeColumnAfter' => $placeColumnAfter
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\AddColumns', array('table' => $table, 'columns' => $columns, 'placeColumnAfter' => $placeColumnAfter));
     }
-
     /**
      * Drops an existing database table column.
      *
@@ -170,12 +143,8 @@ class Factory
     public function dropColumn($table, $columnName)
     {
         $table = $this->prefixTable($table);
-
-        return $this->container->make('Piwik\Updater\Migration\Db\DropColumn', array(
-            'table' => $table, 'columnName' => $columnName
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\DropColumn', array('table' => $table, 'columnName' => $columnName));
     }
-
     /**
      * Drops an existing database table column.
      *
@@ -186,12 +155,8 @@ class Factory
     public function dropColumns($table, $columnNames)
     {
         $table = $this->prefixTable($table);
-
-        return $this->container->make('Piwik\Updater\Migration\Db\DropColumns', array(
-            'tableName' => $table, 'columnNames' => $columnNames
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\DropColumns', array('tableName' => $table, 'columnNames' => $columnNames));
     }
-
     /**
      * Changes the column name and column type of an existing database table column.
      *
@@ -205,13 +170,8 @@ class Factory
     public function changeColumn($table, $oldColumnName, $newColumnName, $columnType)
     {
         $table = $this->prefixTable($table);
-
-        return $this->container->make('Piwik\Updater\Migration\Db\ChangeColumn', array(
-            'table' => $table, 'oldColumnName' => $oldColumnName,
-            'newColumnName' => $newColumnName, 'columnType' => $columnType
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\ChangeColumn', array('table' => $table, 'oldColumnName' => $oldColumnName, 'newColumnName' => $newColumnName, 'columnType' => $columnType));
     }
-
     /**
      * Changes the type of an existing database table column.
      *
@@ -224,12 +184,8 @@ class Factory
     public function changeColumnType($table, $columnName, $columnType)
     {
         $table = $this->prefixTable($table);
-
-        return $this->container->make('Piwik\Updater\Migration\Db\ChangeColumnType', array(
-            'table' => $table, 'columnName' => $columnName, 'columnType' => $columnType
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\ChangeColumnType', array('table' => $table, 'columnName' => $columnName, 'columnType' => $columnType));
     }
-
     /**
      * Changes the type of multiple existing database table columns at the same time.
      *
@@ -245,12 +201,8 @@ class Factory
     public function changeColumnTypes($table, $columns)
     {
         $table = $this->prefixTable($table);
-
-        return $this->container->make('Piwik\Updater\Migration\Db\ChangeColumnTypes', array(
-            'table' => $table, 'columns' => $columns
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\ChangeColumnTypes', array('table' => $table, 'columns' => $columns));
     }
-
     /**
      * Adds an index to an existing database table.
      *
@@ -271,16 +223,11 @@ class Factory
     public function addIndex($table, $columnNames, $indexName = '')
     {
         $table = $this->prefixTable($table);
-
         if (!is_array($columnNames)) {
             $columnNames = array($columnNames);
         }
-
-        return $this->container->make('Piwik\Updater\Migration\Db\AddIndex', array(
-            'table' => $table, 'columnNames' => $columnNames, 'indexName' => $indexName
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\AddIndex', array('table' => $table, 'columnNames' => $columnNames, 'indexName' => $indexName));
     }
-
     /**
      * Adds a unique key to an existing database table.
      *
@@ -300,16 +247,11 @@ class Factory
     public function addUniqueKey($table, $columnNames, $indexName = '')
     {
         $table = $this->prefixTable($table);
-
         if (!is_array($columnNames)) {
             $columnNames = array($columnNames);
         }
-
-        return $this->container->make('Piwik\Updater\Migration\Db\AddUniqueKey', array(
-            'table' => $table, 'columnNames' => $columnNames, 'indexName' => $indexName
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\AddUniqueKey', array('table' => $table, 'columnNames' => $columnNames, 'indexName' => $indexName));
     }
-
     /**
      * Drops an existing index from a database table.
      *
@@ -320,12 +262,8 @@ class Factory
     public function dropIndex($table, $indexName)
     {
         $table = $this->prefixTable($table);
-
-        return $this->container->make('Piwik\Updater\Migration\Db\DropIndex', array(
-            'table' => $table, 'indexName' => $indexName
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\DropIndex', array('table' => $table, 'indexName' => $indexName));
     }
-
     /**
      * Drops an existing index from a database table.
      *
@@ -335,12 +273,8 @@ class Factory
     public function dropPrimaryKey($table)
     {
         $table = $this->prefixTable($table);
-
-        return $this->container->make('Piwik\Updater\Migration\Db\DropPrimaryKey', array(
-            'table' => $table
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\DropPrimaryKey', array('table' => $table));
     }
-
     /**
      * Adds a primary key to an existing database table.
      *
@@ -356,12 +290,8 @@ class Factory
         if (!is_array($columnNames)) {
             $columnNames = array($columnNames);
         }
-
-        return $this->container->make('Piwik\Updater\Migration\Db\AddPrimaryKey', array(
-            'table' => $table, 'columnNames' => $columnNames
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\AddPrimaryKey', array('table' => $table, 'columnNames' => $columnNames));
     }
-
     /**
      * Inserts a new record / row into an existing database table.
      *
@@ -376,12 +306,8 @@ class Factory
     public function insert($table, $columnValuePairs)
     {
         $table = $this->prefixTable($table);
-
-        return $this->container->make('Piwik\Updater\Migration\Db\Insert', array(
-            'table' => $table, 'columnValuePairs' => $columnValuePairs
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\Insert', array('table' => $table, 'columnValuePairs' => $columnValuePairs));
     }
-
     /**
      * Performs a batch insert into a specific table using either LOAD DATA INFILE or plain INSERTs,
      * as a fallback. On MySQL, LOAD DATA INFILE is 20x faster than a series of plain INSERTs.
@@ -400,13 +326,8 @@ class Factory
     public function batchInsert($table, $columnNames, $values, $throwException = false, $charset = 'utf8')
     {
         $table = $this->prefixTable($table);
-
-        return $this->container->make('Piwik\Updater\Migration\Db\BatchInsert', array(
-            'table' => $table, 'columnNames' => $columnNames, 'values' => $values,
-            'throwException' => $throwException, 'charset' => $charset
-        ));
+        return $this->container->make('Piwik\\Updater\\Migration\\Db\\BatchInsert', array('table' => $table, 'columnNames' => $columnNames, 'values' => $values, 'throwException' => $throwException, 'charset' => $charset));
     }
-
     private function prefixTable($table)
     {
         return Common::prefixTable($table);

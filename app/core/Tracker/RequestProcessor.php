@@ -1,15 +1,14 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik\Tracker;
 
 use Piwik\Tracker\Visit\VisitProperties;
-
 /**
  * Base class for all tracker RequestProcessors. RequestProcessors handle and respond to tracking
  * requests.
@@ -84,11 +83,10 @@ abstract class RequestProcessor
      *
      * @param Request $request
      */
-    public function manipulateRequest(Request $request)
+    public function manipulateRequest(\Piwik\Tracker\Request $request)
     {
         // empty
     }
-
     /**
      * This is the second method called when processing a tracker request.
      *
@@ -102,11 +100,10 @@ abstract class RequestProcessor
      * @param Request $request
      * @return bool If `true` the tracking request will be aborted.
      */
-    public function processRequestParams(VisitProperties $visitProperties, Request $request)
+    public function processRequestParams(VisitProperties $visitProperties, \Piwik\Tracker\Request $request)
     {
         return false;
     }
-
     /**
      * This is the third method called when processing a tracker request.
      *
@@ -122,27 +119,25 @@ abstract class RequestProcessor
      * @param Request $request
      * @return bool If `true` the tracking request will be aborted.
      */
-    public function afterRequestProcessed(VisitProperties $visitProperties, Request $request)
+    public function afterRequestProcessed(VisitProperties $visitProperties, \Piwik\Tracker\Request $request)
     {
         return false;
     }
-
     /**
      * This method is called before recording a new visit. You can set/change visit information here
      * to change what gets inserted into `log_visit`.
      *
      * Only implement this method if you cannot use a Dimension for the same thing.
-     * 
+     *
      * Please note that the `onNewAction` hook in an action dimension is executed after this method.
      *
      * @param VisitProperties $visitProperties
      * @param Request $request
      */
-    public function onNewVisit(VisitProperties $visitProperties, Request $request)
+    public function onNewVisit(VisitProperties $visitProperties, \Piwik\Tracker\Request $request)
     {
         // empty
     }
-
     /**
      * This method is called before updating an existing visit. You can set/change visit information
      * here to change what gets recorded in `log_visit`.
@@ -155,11 +150,10 @@ abstract class RequestProcessor
      * @param VisitProperties $visitProperties
      * @param Request $request
      */
-    public function onExistingVisit(&$valuesToUpdate, VisitProperties $visitProperties, Request $request)
+    public function onExistingVisit(&$valuesToUpdate, VisitProperties $visitProperties, \Piwik\Tracker\Request $request)
     {
         // empty
     }
-
     /**
      * This method is called last. Derived classes should use this method to insert log data. They
      * should also only read request metadata, and not set it.
@@ -171,7 +165,7 @@ abstract class RequestProcessor
      * @param VisitProperties $visitProperties
      * @param Request $request
      */
-    public function recordLogs(VisitProperties $visitProperties, Request $request)
+    public function recordLogs(VisitProperties $visitProperties, \Piwik\Tracker\Request $request)
     {
         // empty
     }

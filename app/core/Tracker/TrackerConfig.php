@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Tracker;
 
 use Piwik\Config;
-
 class TrackerConfig
 {
     /**
@@ -24,7 +24,6 @@ class TrackerConfig
         $section[$name] = $value;
         Config::getInstance()->Tracker = $section;
     }
-
     public static function getConfigValue($name, $idSite = null)
     {
         $config = self::getConfig();
@@ -34,15 +33,13 @@ class TrackerConfig
         }
         return $config[$name] ?? null;
     }
-
     private static function getConfig()
     {
         return Config::getInstance()->Tracker;
     }
-
     private static function getSiteSpecificConfig($idSite)
     {
         $key = 'Tracker_' . $idSite;
-        return Config::getInstance()->$key;
+        return Config::getInstance()->{$key};
     }
 }

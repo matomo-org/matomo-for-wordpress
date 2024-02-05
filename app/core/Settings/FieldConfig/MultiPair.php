@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,7 +7,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Settings\FieldConfig;
 
 /**
@@ -29,7 +29,6 @@ class MultiPair
      * @var string
      */
     public $key = '';
-
     /**
      * Describes what HTML element should be used to manipulate the setting through Piwik's UI.
      *
@@ -38,16 +37,6 @@ class MultiPair
      * @var string
      */
     public $uiControl = null;
-
-    /**
-     * Defines a custom template file for a UI control. This file should render a UI control and expose the value in a
-     * "formField.value" angular model. For an example see "plugins/CorePluginsAdmin/angularjs/form-field/field-text.html"
-     *
-     * @var string
-     * @deprecated use customFieldComponent instead
-     */
-    public $customUiControlTemplateFile = '';
-
     /**
      * Array like ['plugin' => 'MyPlugin', 'component' => 'MyExportedCustomFieldComponent']. For an example see
      * "plugins/CorePluginsAdmin/vue/src/FormField/FieldText.vue"
@@ -55,7 +44,6 @@ class MultiPair
      * @var string[]
      */
     public $customFieldComponent = null;
-
     /**
      * This setting's display name, for example, `'Refresh Interval'`.
      *
@@ -64,7 +52,6 @@ class MultiPair
      * @var string
      */
     public $title = '';
-
     /**
      * The list of all available values for this setting. If null, the setting can have any value.
      *
@@ -76,24 +63,14 @@ class MultiPair
      * @var null|array
      */
     public $availableValues = null;
-
     public function __construct($title, $key, $uiControl = 'text')
     {
         $this->title = $title;
         $this->key = $key;
         $this->uiControl = $uiControl;
     }
-
     public function toArray()
     {
-        return array(
-            'key' => $this->key,
-            'title' => $this->title,
-            'uiControl' => $this->uiControl,
-            'templateFile' => $this->customUiControlTemplateFile,
-            'component' => $this->customFieldComponent,
-            'availableValues' => $this->availableValues,
-        );
+        return array('key' => $this->key, 'title' => $this->title, 'uiControl' => $this->uiControl, 'component' => $this->customFieldComponent, 'availableValues' => $this->availableValues);
     }
-
 }

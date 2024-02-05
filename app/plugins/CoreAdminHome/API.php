@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,8 +10,9 @@
 namespace Piwik\Plugins\CoreAdminHome;
 
 use Exception;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
+use Matomo\Dependencies\Monolog\Handler\StreamHandler;
+use Piwik\Changes\UserChanges;
+use Piwik\Log\Logger;
 use Piwik\Access;
 use Piwik\ArchiveProcessor\Rules;
 use Piwik\ArchiveProcessor;
@@ -19,6 +21,7 @@ use Piwik\Container\StaticContainer;
 use Piwik\Archive\ArchiveInvalidator;
 use Piwik\CronArchive;
 use Piwik\Date;
+use Piwik\Log\LoggerInterface;
 use Piwik\Period\Factory;
 use Piwik\Piwik;
 use Piwik\Segment;
@@ -27,7 +30,7 @@ use Piwik\SettingsServer;
 use Piwik\Site;
 use Piwik\Tracker\Failures;
 use Piwik\Url;
-
+use Piwik\Plugins\UsersManager\Model as UsersModel;
 /**
  * @method static \Piwik\Plugins\CoreAdminHome\API getInstance()
  */
@@ -37,31 +40,25 @@ class API extends \Piwik\Plugin\API
      * @var Scheduler
      */
     private $scheduler;
-
     /**
      * @var ArchiveInvalidator
      */
     private $invalidator;
-
     /**
      * @var Failures
      */
     private $trackingFailures;
-
     /**
      * @var OptOutManager
      */
     private $optOutManager;
-
-    public function __construct(Scheduler $scheduler, ArchiveInvalidator $invalidator, Failures $trackingFailures,
-                                OptOutManager $optOutManager)
+    public function __construct(Scheduler $scheduler, ArchiveInvalidator $invalidator, Failures $trackingFailures, \Piwik\Plugins\CoreAdminHome\OptOutManager $optOutManager)
     {
         $this->scheduler = $scheduler;
         $this->invalidator = $invalidator;
         $this->trackingFailures = $trackingFailures;
         $this->optOutManager = $optOutManager;
     }
-
     /**
      * Will run all scheduled tasks due to run at this time.
      *
@@ -71,55 +68,43 @@ class API extends \Piwik\Plugin\API
     public function runScheduledTasks()
     {
         Piwik::checkUserHasSuperUserAccess();
-
         return $this->scheduler->run();
     }
-
     /**
      * @internal
      */
     public function setArchiveSettings($enableBrowserTriggerArchiving, $todayArchiveTimeToLive)
     {
         Piwik::checkUserHasSuperUserAccess();
-
-        if (!Controller::isGeneralSettingsAdminEnabled()) {
+        if (!\Piwik\Plugins\CoreAdminHome\Controller::isGeneralSettingsAdminEnabled()) {
             throw new Exception('General settings admin is not enabled');
         }
-
-        Rules::setBrowserTriggerArchiving((bool)$enableBrowserTriggerArchiving);
+        Rules::setBrowserTriggerArchiving((bool) $enableBrowserTriggerArchiving);
         Rules::setTodayArchiveTimeToLive($todayArchiveTimeToLive);
-
         return true;
     }
-
     /**
      * @internal
      */
     public function setTrustedHosts($trustedHosts)
     {
         Piwik::checkUserHasSuperUserAccess();
-
-        if (!Controller::isGeneralSettingsAdminEnabled()) {
+        if (!\Piwik\Plugins\CoreAdminHome\Controller::isGeneralSettingsAdminEnabled()) {
             throw new Exception('General settings admin is not enabled');
         }
-
         if (!empty($trustedHosts)) {
             Url::saveTrustedHostnameInConfig($trustedHosts);
             Config::getInstance()->forceSave();
         }
-
         return true;
     }
-
     /**
      * @internal
      */
     public function setBrandingSettings($useCustomLogo)
     {
         Piwik::checkUserHasSuperUserAccess();
-
-        $customLogo = new CustomLogo();
-
+        $customLogo = new \Piwik\Plugins\CoreAdminHome\CustomLogo();
         if ($customLogo->isCustomLogoFeatureEnabled()) {
             if ($useCustomLogo) {
                 $customLogo->enable();
@@ -127,7 +112,6 @@ class API extends \Piwik\Plugin\API
                 $customLogo->disable();
             }
         }
-
         return true;
     }
     /**
@@ -150,36 +134,27 @@ class API extends \Piwik\Plugin\API
      * @return array
      * @hideExceptForSuperUser
      */
-    public function invalidateArchivedReports($idSites, $dates, $period = false, $segment = false, $cascadeDown = false,
-                                              $_forceInvalidateNonexistent = false)
+    public function invalidateArchivedReports($idSites, $dates, $period = false, $segment = false, $cascadeDown = false, $_forceInvalidateNonexistent = false)
     {
         $idSites = Site::getIdSitesFromIdSitesString($idSites);
         if (empty($idSites)) {
             throw new Exception("Specify a value for &idSites= as a comma separated list of website IDs, for which your token_auth has 'admin' permission");
         }
-
         Piwik::checkUserHasAdminAccess($idSites);
-
         if (!empty($segment)) {
             $segment = new Segment($segment, $idSites);
         } else {
             $segment = null;
         }
-
         /** Date[]|string[] $dates */
-        list($dates, $invalidDates) = $this->getDatesToInvalidateFromString($dates, $period);
-
-        $invalidationResult = $this->invalidator->markArchivesAsInvalidated($idSites, $dates, $period, $segment, (bool)$cascadeDown, (bool)$_forceInvalidateNonexistent);
-
+        [$dates, $invalidDates] = $this->getDatesToInvalidateFromString($dates, $period);
+        $invalidationResult = $this->invalidator->markArchivesAsInvalidated($idSites, $dates, $period, $segment, (bool) $cascadeDown, (bool) $_forceInvalidateNonexistent);
         $output = $invalidationResult->makeOutputLogs();
         if ($invalidDates) {
-            $output[] = 'Warning: some of the Dates to invalidate were invalid: \'' .
-                implode("', '", $invalidDates) . "'. Matomo simply ignored those and proceeded with the others.";
+            $output[] = 'Warning: some of the Dates to invalidate were invalid: \'' . implode("', '", $invalidDates) . "'. Matomo simply ignored those and proceeded with the others.";
         }
-
-        return $invalidationResult->makeOutputLogs();
+        return $output;
     }
-
     /**
      * Initiates cron archiving via web request.
      *
@@ -188,18 +163,15 @@ class API extends \Piwik\Plugin\API
     public function runCronArchiving()
     {
         Piwik::checkUserHasSuperUserAccess();
-
         // HTTP request: logs needs to be dumped in the HTTP response (on top of existing log destinations)
-        /** @var \Monolog\Logger $logger */
-        $logger = StaticContainer::get('Psr\Log\LoggerInterface');
+        /** @var \Piwik\Log\Logger $logger */
+        $logger = StaticContainer::get(LoggerInterface::class);
         $handler = new StreamHandler('php://output', Logger::INFO);
-        $handler->setFormatter(StaticContainer::get('Piwik\Plugins\Monolog\Formatter\LineMessageFormatter'));
+        $handler->setFormatter(StaticContainer::get('Piwik\\Plugins\\Monolog\\Formatter\\LineMessageFormatter'));
         $logger->pushHandler($handler);
-
         $archiver = new CronArchive();
         $archiver->main();
     }
-
     /**
      * Deletes all tracking failures this user has at least admin access to.
      * A super user will also delete tracking failures for sites that don't exist.
@@ -215,7 +187,6 @@ class API extends \Piwik\Plugin\API
             $this->trackingFailures->deleteTrackingFailures($idSites);
         }
     }
-
     /**
      * Deletes a specific tracking failure
      * @param int $idSite
@@ -225,10 +196,8 @@ class API extends \Piwik\Plugin\API
     {
         $idSite = (int) $idSite;
         Piwik::checkUserHasAdminAccess($idSite);
-
         $this->trackingFailures->deleteTrackingFailure($idSite, $idFailure);
     }
-
     /**
      * Get all tracking failures. A user retrieves only tracking failures for sites with at least admin access.
      * A super user will also retrieve failed requests for sites that don't exist.
@@ -242,13 +211,10 @@ class API extends \Piwik\Plugin\API
             Piwik::checkUserHasSomeAdminAccess();
             $idSites = Access::getInstance()->getSitesIdWithAdminAccess();
             Piwik::checkUserHasAdminAccess($idSites);
-
             $failures = $this->trackingFailures->getFailuresForSites($idSites);
         }
-
         return $failures;
     }
-
     /**
      * @param $idSite
      * @param $period
@@ -267,70 +233,55 @@ class API extends \Piwik\Plugin\API
         } else {
             Piwik::checkUserHasViewAccess($idSite);
         }
-
         // if cron archiving is running, we will invalidate in CronArchive, not here
         $isArchivePhpTriggered = SettingsServer::isArchivePhpTriggered();
         $invalidateBeforeArchiving = !$isArchivePhpTriggered;
-
         $period = Factory::build($period, $date);
         $site = new Site($idSite);
-        $parameters = new ArchiveProcessor\Parameters(
-            $site,
-            $period,
-            new Segment(
-                $segment,
-                [$idSite],
-                $period->getDateTimeStart()->setTimezone($site->getTimezone()),
-                $period->getDateTimeEnd()->setTimezone($site->getTimezone())
-            )
-        );
+        $parameters = new ArchiveProcessor\Parameters($site, $period, new Segment($segment, [$idSite], $period->getDateTimeStart()->setTimezone($site->getTimezone()), $period->getDateTimeEnd()->setTimezone($site->getTimezone())));
         if ($report) {
             $parameters->setArchiveOnlyReport($report);
         }
-
         // TODO: need to test case when there are multiple plugin archives w/ only some data each. does purging remove some that we need?
         $archiveLoader = new ArchiveProcessor\Loader($parameters, $invalidateBeforeArchiving);
-
         $result = $archiveLoader->prepareArchive($plugin);
         if (!empty($result)) {
-            $result = [
-                'idarchives' => $result[0],
-                'nb_visits' => $result[1],
-            ];
+            $result = ['idarchives' => $result[0], 'nb_visits' => $result[1]];
         }
         return $result;
     }
-
     /**
      * Ensure the specified dates are valid.
      * Store invalid date so we can log them
-     * @param array|string $dates
+     * @param array|string  $dates
+     * @param string        $period
+     *
      * @return array
      */
-    private function getDatesToInvalidateFromString($dates, $period)
+    private function getDatesToInvalidateFromString($dates, string $period) : array
     {
-        $toInvalidate = array();
-        $invalidDates = array();
-
+        $toInvalidate = [];
+        $invalidDates = [];
         if (!is_array($dates)) {
-            $dates = explode(',', trim($dates));
+            if ($period !== 'range') {
+                $dates = explode(',', trim($dates));
+            } else {
+                $dates = [trim($dates)];
+            }
         }
-
         $dates = array_unique($dates);
-
         foreach ($dates as $theDate) {
             $theDate = trim($theDate);
-
             if ($period == 'range') {
                 try {
-                    $period = Factory::build('range', $theDate);
+                    $periodObj = Factory::build('range', $theDate);
+                    $subPeriods = $periodObj->getSubperiods();
                 } catch (\Exception $e) {
                     $invalidDates[] = $theDate;
                     continue;
                 }
-
-                if ($period->getRangeString() == $theDate) {
-                    $toInvalidate[] = $theDate;
+                if (count($subPeriods)) {
+                    $toInvalidate[] = $periodObj->getRangeString();
                 } else {
                     $invalidDates[] = $theDate;
                 }
@@ -341,7 +292,6 @@ class API extends \Piwik\Plugin\API
                     $invalidDates[] = $theDate;
                     continue;
                 }
-
                 if ($date->toString() == $theDate || $theDate == 'today' || $theDate == 'yesterday') {
                     $toInvalidate[] = $date;
                 } else {
@@ -349,10 +299,8 @@ class API extends \Piwik\Plugin\API
                 }
             }
         }
-
-        return array($toInvalidate, $invalidDates);
+        return [$toInvalidate, $invalidDates];
     }
-
     /**
      * Show the JavaScript opt out code
      *
@@ -369,15 +317,10 @@ class API extends \Piwik\Plugin\API
      *
      * @internal
      */
-    public function getOptOutJSEmbedCode(string $backgroundColor, string $fontColor,
-                                         string $fontSize, string $fontFamily, bool $applyStyling, bool $showIntro,
-                                         string $matomoUrl, string $language): string
+    public function getOptOutJSEmbedCode(string $backgroundColor, string $fontColor, string $fontSize, string $fontFamily, bool $applyStyling, bool $showIntro, string $matomoUrl, string $language) : string
     {
-
-        return $this->optOutManager->getOptOutJSEmbedCode($matomoUrl, $language, $backgroundColor, $fontColor, $fontSize,
-                                                          $fontFamily, $applyStyling, $showIntro);
+        return $this->optOutManager->getOptOutJSEmbedCode($matomoUrl, $language, $backgroundColor, $fontColor, $fontSize, $fontFamily, $applyStyling, $showIntro);
     }
-
     /**
      * Show the self-contained JavaScript opt out code
      *
@@ -392,12 +335,26 @@ class API extends \Piwik\Plugin\API
      *
      * @internal
      */
-    public function getOptOutSelfContainedEmbedCode(string $backgroundColor,
-                                                    string $fontColor, string $fontSize, string $fontFamily,
-                                                    bool $applyStyling = false, bool $showIntro = true): string
+    public function getOptOutSelfContainedEmbedCode(string $backgroundColor, string $fontColor, string $fontSize, string $fontFamily, bool $applyStyling = false, bool $showIntro = true) : string
     {
         return $this->optOutManager->getOptOutSelfContainedEmbedCode($backgroundColor, $fontColor, $fontSize, $fontFamily, $applyStyling, $showIntro);
     }
-
-
+    /**
+     * Mark all "what's new" changes as having been read by the user
+     *
+     * @internal
+     */
+    public function whatIsNewMarkAllChangesReadForCurrentUser()
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        Piwik::checkUserIsNotAnonymous();
+        $model = new UsersModel();
+        $user = $model->getUser(Piwik::getCurrentUserLogin());
+        if (is_array($user)) {
+            $userChanges = new UserChanges($user);
+            $userChanges->markChangesAsRead();
+            return true;
+        }
+        return false;
+    }
 }

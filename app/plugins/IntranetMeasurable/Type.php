@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -15,6 +16,4 @@ class Type extends \Piwik\Measurable\Type
     protected $namePlural = 'IntranetMeasurable_Intranets';
     protected $description = 'IntranetMeasurable_IntranetDescription';
     protected $howToSetupUrl = '?module=CoreAdminHome&action=trackingCodeGenerator';
-
 }
-

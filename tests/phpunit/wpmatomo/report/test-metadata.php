@@ -13,7 +13,7 @@ class ReportMetadataTest extends MatomoAnalytics_TestCase {
 	 */
 	private $metadata;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->metadata = new Metadata();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,12 +7,10 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Validators;
 
 abstract class BaseValidator
 {
-
     /**
      * The method to validate a value. If the value has not an expected format, an instance of
      * {@link Piwik\Validators\Exception} should be thrown.
@@ -19,14 +18,12 @@ abstract class BaseValidator
      * @param $value
      * @throws Exception
      */
-    abstract public function validate($value);
-
+    public abstract function validate($value);
     protected function isValueBare($value)
     {
         // we allow this value. if it is supposed to be not empty, please use NotEmpty validator on top
         return $value === false || $value === null || $value === '';
     }
-
     /**
      * Lets you easily check a value against multiple validators.
      *
@@ -41,7 +38,7 @@ abstract class BaseValidator
             try {
                 $validator->validate($value);
             } catch (\Exception $e) {
-                throw new Exception(strip_tags($name) . ': ' . $e->getMessage(), $e->getCode());
+                throw new \Piwik\Validators\Exception(strip_tags($name) . ': ' . $e->getMessage(), $e->getCode());
             }
         }
     }

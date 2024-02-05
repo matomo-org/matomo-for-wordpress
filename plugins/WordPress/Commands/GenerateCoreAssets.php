@@ -31,7 +31,7 @@ class GenerateCoreAssets extends ConsoleCommand
         $this->setDescription('Generate the core JS asset file');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
 	    ServerFilesGenerator::createFilesForSecurity();
 
@@ -66,6 +66,10 @@ class GenerateCoreAssets extends ConsoleCommand
         $content = $assetManager->getMergedCoreJavaScript()->getContent();
 
         file_put_contents(plugin_dir_path(MATOMO_ANALYTICS_FILE) . 'assets/js/asset_manager_core_js.js', $content);
+
+        $this->getOutput()->writeln("<info>Finished generating core assets.</info>");
+
+        return self::SUCCESS;
     }
 
 }

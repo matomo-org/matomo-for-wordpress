@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Plugins\PrivacyManager;
 
 use Piwik\Option;
 use Piwik\Tracker\Cache;
-
 /**
  * @property bool $doNotTrackEnabled    Enable / Disable Do Not Track {@see DoNotTrackHeaderChecker}
  * @property bool $ipAnonymizerEnabled  Enable / Disable IP Anonymizer {@see IPAnonymizer}
@@ -30,69 +30,47 @@ use Piwik\Tracker\Cache;
  */
 class Config
 {
-    private $properties = array(
-        'useAnonymizedIpForVisitEnrichment' => array('type' => 'boolean', 'default' => false),
-        'ipAddressMaskLength'               => array('type' => 'integer', 'default' => 2),
-        'doNotTrackEnabled'                 => array('type' => 'boolean', 'default' => true),
-        'ipAnonymizerEnabled'               => array('type' => 'boolean', 'default' => true),
-        'forceCookielessTracking'           => array('type' => 'boolean', 'default' => false),
-        'anonymizeUserId'                   => array('type' => 'boolean', 'default' => false),
-        'anonymizeOrderId'                  => array('type' => 'boolean', 'default' => false),
-        'anonymizeReferrer'                 => array('type' => 'string', 'default' => ''),
-    );
-
+    private $properties = array('useAnonymizedIpForVisitEnrichment' => array('type' => 'boolean', 'default' => false), 'ipAddressMaskLength' => array('type' => 'integer', 'default' => 2), 'doNotTrackEnabled' => array('type' => 'boolean', 'default' => false), 'ipAnonymizerEnabled' => array('type' => 'boolean', 'default' => true), 'forceCookielessTracking' => array('type' => 'boolean', 'default' => false), 'anonymizeUserId' => array('type' => 'boolean', 'default' => false), 'anonymizeOrderId' => array('type' => 'boolean', 'default' => false), 'anonymizeReferrer' => array('type' => 'string', 'default' => ''));
     public function __set($name, $value)
     {
         if (!array_key_exists($name, $this->properties)) {
             throw new \Exception(sprintf('Property %s does not exist', $name));
         }
-
         $this->set($name, $value, $this->properties[$name]);
     }
-
     public function __get($name)
     {
         if (!array_key_exists($name, $this->properties)) {
             throw new \Exception(sprintf('Property %s does not exist', $name));
         }
-
         return $this->getFromTrackerCache($name, $this->properties[$name]);
     }
-
     private function prefix($optionName)
     {
         return 'PrivacyManager.' . $optionName;
     }
-
     private function getFromTrackerCache($name, $config)
     {
-        $name  = $this->prefix($name);
+        $name = $this->prefix($name);
         $cache = Cache::getCacheGeneral();
-
         if (array_key_exists($name, $cache)) {
             $value = $cache[$name];
             settype($value, $config['type']);
-
             return $value;
         }
-
         return $config['default'];
     }
-
     private function getFromOption($name, $config)
     {
-        $name  = $this->prefix($name);
+        $name = $this->prefix($name);
         $value = Option::get($name);
-
         if (false !== $value) {
             settype($value, $config['type']);
         } else {
             $value = $config['default'];
         }
-
         return $value;
     }
-
     private function set($name, $value, $config)
     {
         if ('boolean' == $config['type']) {
@@ -100,18 +78,14 @@ class Config
         } else {
             settype($value, $config['type']);
         }
-
         Option::set($this->prefix($name), $value);
         Cache::clearCacheGeneral();
     }
-
     public function setTrackerCacheGeneral($cacheContent)
     {
         foreach ($this->properties as $name => $config) {
             $cacheContent[$this->prefix($name)] = $this->getFromOption($name, $config);
         }
-
         return $cacheContent;
     }
-
 }

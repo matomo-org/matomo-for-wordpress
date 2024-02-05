@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -23,14 +24,12 @@ abstract class ReleaseChannel
      * channel
      * @return string
      */
-    abstract public function getId();
-
+    public abstract function getId();
     /**
      * Get a human readable name for this release channel, will be visible in the UI. Should be already translated.
      * @return string
      */
-    abstract public function getName();
-
+    public abstract function getName();
     /**
      * Whether only stable versions are wanted or also beta versions.
      * @return bool
@@ -39,15 +38,13 @@ abstract class ReleaseChannel
     {
         return true;
     }
-
     /**
      * Get the latest available version number for this release channel. Eg '2.15.0-b4' or '2.15.0'. Should be
      * a semantic version number in format MAJOR.MINOR.PATCH (http://semver.org/). Returning an empty string in case
      * one cannot connect to the remote server can be acceptable.
      * @return string
      */
-    abstract public function getUrlToCheckForLatestAvailableVersion();
-
+    public abstract function getUrlToCheckForLatestAvailableVersion();
     /**
      * Get the URL to download a specific Piwik archive for the given version number. The returned URL should not
      * include a URI scheme, meaning it should start with '://...'.
@@ -55,8 +52,7 @@ abstract class ReleaseChannel
      * @param string $version
      * @return string
      */
-    abstract public function getDownloadUrlWithoutScheme($version);
-
+    public abstract function getDownloadUrlWithoutScheme($version);
     /**
      * Get the description for this release channel. Will be shown directly next to the name of the release in the
      * Admin UI. For example 'Recommended' or 'Long Term Support version'.
@@ -66,7 +62,6 @@ abstract class ReleaseChannel
     {
         return '';
     }
-
     /**
      * Get the order for this release channel. The lower the number the more important this release channel is. The
      * release channel having the lowest order will be shown first and will be used as default release channel in case

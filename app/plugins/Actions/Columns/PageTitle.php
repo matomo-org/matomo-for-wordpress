@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,7 @@ use Piwik\Columns\Discriminator;
 use Piwik\Columns\Join\ActionNameJoin;
 use Piwik\Plugin\Dimension\ActionDimension;
 use Piwik\Tracker\Action;
-
+use Piwik\Tracker\TableLogAction;
 class PageTitle extends ActionDimension
 {
     protected $columnName = 'idaction_name';
@@ -23,13 +24,11 @@ class PageTitle extends ActionDimension
     protected $namePlural = 'Actions_WidgetPageTitles';
     protected $category = 'General_Actions';
     protected $suggestedValuesApi = 'Actions.getPageTitles';
-    protected $sqlFilter = '\\Piwik\\Tracker\\TableLogAction::getIdActionFromSegment';
-
+    protected $sqlFilter = [TableLogAction::class, 'getOptimizedIdActionSqlMatch'];
     public function getDbColumnJoin()
     {
         return new ActionNameJoin();
     }
-
     public function getDbDiscriminator()
     {
         return new Discriminator('log_action', 'type', Action::TYPE_PAGE_TITLE);

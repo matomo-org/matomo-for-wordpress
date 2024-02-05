@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,23 +12,18 @@ namespace Piwik\Plugins\UserLanguage\Reports;
 use Piwik\Piwik;
 use Piwik\Plugins\UserLanguage\Columns\Language;
 use Piwik\Plugin\ReportsProvider;
-
-class GetLanguageCode extends GetLanguage
+class GetLanguageCode extends \Piwik\Plugins\UserLanguage\Reports\GetLanguage
 {
     protected function init()
     {
         parent::init();
-        $this->dimension     = new Language();
-        $this->name          = Piwik::translate('UserLanguage_LanguageCode');
+        $this->dimension = new Language();
+        $this->name = Piwik::translate('UserLanguage_LanguageCode');
         $this->documentation = Piwik::translate('UserLanguage_getLanguageCodeDocumentation');
         $this->order = 11;
     }
-
     public function getRelatedReports()
     {
-        return array(
-            ReportsProvider::factory('UserLanguage', 'getLanguage'),
-        );
+        return array(ReportsProvider::factory('UserLanguage', 'getLanguage'));
     }
-
 }

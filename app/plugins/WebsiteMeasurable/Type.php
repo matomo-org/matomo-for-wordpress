@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,10 +12,10 @@ namespace Piwik\Plugins\WebsiteMeasurable;
 class Type extends \Piwik\Measurable\Type
 {
     const ID = 'website';
-    protected $name = 'Referrers_ColumnWebsite'; // we will use new key of WebsiteType_ once we have them
-    protected $namePlural = 'SitesManager_Sites'; // translated into more languages
+    protected $name = 'Referrers_ColumnWebsite';
+    // we will use new key of WebsiteType_ once we have them
+    protected $namePlural = 'SitesManager_Sites';
+    // translated into more languages
     protected $description = 'WebsiteMeasurable_WebsiteDescription';
     protected $howToSetupUrl = '?module=CoreAdminHome&action=trackingCodeGenerator';
-
 }
-

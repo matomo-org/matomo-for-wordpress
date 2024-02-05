@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,9 +14,8 @@ namespace Piwik\Plugins\CoreHome;
  */
 class Segment extends \Piwik\Plugin\Segment
 {
-    protected  function init()
+    protected function init()
     {
         $this->setCategory('General_Visit');
     }
 }
-

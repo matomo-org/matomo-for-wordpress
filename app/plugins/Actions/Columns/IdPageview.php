@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -14,14 +15,12 @@ use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Plugin\Dimension\ActionDimension;
-
 class IdPageview extends ActionDimension
 {
     protected $columnName = 'idpageview';
     protected $columnType = 'CHAR(6) NULL DEFAULT NULL';
     protected $type = self::TYPE_TEXT;
     protected $nameSingular = 'Actions_ColumnIdPageview';
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -34,10 +33,8 @@ class IdPageview extends ActionDimension
     {
         return substr($request->getParam('pv_id'), 0, 6);
     }
-
     public function configureMetrics(MetricsList $metricsList, DimensionMetricFactory $dimensionMetricFactory)
     {
         // metrics for idpageview do not really make any sense
     }
-
 }

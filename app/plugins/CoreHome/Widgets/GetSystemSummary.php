@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -16,7 +17,6 @@ use Piwik\Plugins\SegmentEditor\Services\StoredSegmentService;
 use Piwik\Version;
 use Piwik\Widget\Widget;
 use Piwik\Widget\WidgetConfig;
-
 class GetSystemSummary extends Widget
 {
     const TEST_MYSQL_VERSION = 'mysql-version-redacted';
@@ -25,18 +25,15 @@ class GetSystemSummary extends Widget
      * @var StoredSegmentService
      */
     private $storedSegmentService;
-
     /**
      * @var Plugin\Manager
      */
     private $pluginManager;
-
     public function __construct(StoredSegmentService $storedSegmentService, Plugin\Manager $pluginManager)
     {
         $this->storedSegmentService = $storedSegmentService;
         $this->pluginManager = $pluginManager;
     }
-
     public static function configure(WidgetConfig $config)
     {
         $config->setCategoryId('About Matomo');
@@ -44,14 +41,11 @@ class GetSystemSummary extends Widget
         $config->setOrder(15);
         $config->setIsEnabled(Piwik::hasUserSuperUserAccess());
     }
-
     public function render()
     {
         $mysqlVersion = $this->getMySqlVersion();
         $phpVersion = $this->getPHPVersion();
-
         $systemSummary = array();
-
         /**
          * Triggered to add system summary items that are shown in the System Summary widget.
          *
@@ -66,11 +60,9 @@ class GetSystemSummary extends Widget
          * @param Item[] &$systemSummary An array containing system summary items.
          */
         Piwik::postEvent('System.addSystemSummaryItems', array(&$systemSummary));
-
         $systemSummary[] = new Item($key = 'piwik-version', Piwik::translate('CoreHome_SystemSummaryPiwikVersion'), Version::VERSION, $url = null, $icon = '', $order = 21);
         $systemSummary[] = new Item($key = 'mysql-version', Piwik::translate('CoreHome_SystemSummaryMysqlVersion'), $mysqlVersion, $url = null, $icon = '', $order = 22);
         $systemSummary[] = new Item($key = 'php-version', Piwik::translate('CoreHome_SystemSummaryPhpVersion'), $phpVersion, $url = null, $icon = '', $order = 23);
-
         $systemSummary = array_filter($systemSummary);
         usort($systemSummary, function ($itemA, $itemB) {
             if ($itemA->getOrder() == $itemB->getOrder()) {
@@ -81,7 +73,6 @@ class GetSystemSummary extends Widget
             }
             return -1;
         });
-
         /**
          * Triggered to filter system summary items that are shown in the System Summary widget. A plugin might also
          * sort the system summary items differently.
@@ -100,32 +91,22 @@ class GetSystemSummary extends Widget
          * @param Item[] &$systemSummary An array containing system summary items.
          */
         Piwik::postEvent('System.filterSystemSummaryItems', array(&$systemSummary));
-
         $systemSummary = array_filter($systemSummary);
-
-        return $this->renderTemplate('getSystemSummary', array(
-            'items' => $systemSummary
-        ));
+        return $this->renderTemplate('getSystemSummary', array('items' => $systemSummary));
     }
-
     private function getMySqlVersion()
     {
         if (defined('PIWIK_TEST_MODE')) {
             return self::TEST_MYSQL_VERSION;
         }
-
         $db = Db::get();
         return $db->getServerVersion();
-
     }
-
     private function getPHPVersion()
     {
         if (defined('PIWIK_TEST_MODE')) {
             return self::TEST_PHP_VERSION;
         }
-
         return phpversion();
     }
-
 }

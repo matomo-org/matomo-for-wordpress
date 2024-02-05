@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,18 +14,15 @@ use Piwik\Piwik;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-
-class PluginRealPlayer extends DevicePluginColumn
+class PluginRealPlayer extends \Piwik\Plugins\DevicePlugins\Columns\DevicePluginColumn
 {
     protected $columnName = 'config_realplayer';
     protected $columnType = 'TINYINT(1) NULL';
     protected $type = self::TYPE_BOOL;
-
     public function getName()
     {
         return Piwik::translate('General_Plugin') . ' (RealPlayer)';
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor

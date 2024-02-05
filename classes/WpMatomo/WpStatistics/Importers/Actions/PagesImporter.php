@@ -44,9 +44,13 @@ class PagesImporter extends RecordImporter implements ActionsInterface {
 					'paged'    => $page,
 				]
 			);
-			$no_data     = ( ( array_key_exists( 'no_data', $pages_found ) ) && ( 1 === $pages_found['no_data'] ) );
+
+			$has_no_data_prop     = ( array_key_exists( 'no_data', $pages_found ) && ( 1 === $pages_found['no_data'] ) );
+			$has_empty_pages_prop = ( array_key_exists( 'pages', $pages_found ) && empty( $pages_found['pages'] ) );
+			$no_data              = $has_no_data_prop || $has_empty_pages_prop;
+
 			if ( ! $no_data ) {
-				$pages = array_merge( $pages, $pages_found );
+				$pages = array_merge( $pages, array_key_exists( 'pages', $pages_found ) ? $pages_found['pages'] : $pages_found );
 			}
 		} while ( true !== $no_data );
 		$search_keywords = SearchQueryConverter::convert( $pages );

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -14,7 +15,6 @@ use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
-
 class VisitsCount extends VisitDimension
 {
     protected $columnName = 'visitor_count_visits';
@@ -22,12 +22,10 @@ class VisitsCount extends VisitDimension
     protected $segmentName = 'visitCount';
     protected $nameSingular = 'General_NumberOfVisits';
     protected $type = self::TYPE_NUMBER;
-
     public function configureMetrics(MetricsList $metricsList, DimensionMetricFactory $dimensionMetricFactory)
     {
         // no metrics for this dimension, it would be rather confusing I think
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -43,7 +41,6 @@ class VisitsCount extends VisitDimension
         $result = $previousVisitCount + 1;
         return $result;
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor

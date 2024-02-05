@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,27 +14,19 @@ use Piwik\View;
 use Piwik\Piwik;
 use Piwik\Common;
 use Piwik\Plugins\Feedback\FeedbackReminder;
-
 /**
  *
  */
 class Feedback extends \Piwik\Plugin
 {
     const NEVER_REMIND_ME_AGAIN = "-1";
-
     /**
      * @see \Piwik\Plugin::registerEvents
      */
     public function registerEvents()
     {
-        return array(
-            'AssetManager.getStylesheetFiles'        => 'getStylesheetFiles',
-            'AssetManager.getJavaScriptFiles'        => 'getJsFiles',
-            'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
-            'Controller.CoreHome.index.end'          => 'renderViewsAndAddToPage'
-        );
+        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'AssetManager.getJavaScriptFiles' => 'getJsFiles', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'Controller.CoreHome.index.end' => 'renderViewsAndAddToPage');
     }
-
     public function getStylesheetFiles(&$stylesheets)
     {
         $stylesheets[] = "plugins/Feedback/stylesheets/feedback.less";
@@ -41,11 +34,9 @@ class Feedback extends \Piwik\Plugin
         $stylesheets[] = "plugins/Feedback/vue/src/ReviewLinks/ReviewLinks.less";
         $stylesheets[] = "plugins/Feedback/vue/src/FeedbackQuestion/FeedbackQuestion.less";
     }
-
     public function getJsFiles(&$jsFiles)
     {
     }
-
     public function getClientSideTranslationKeys(&$translationKeys)
     {
         $translationKeys[] = 'Feedback_ThankYouHeart';
@@ -91,12 +82,10 @@ class Feedback extends \Piwik\Plugin
         $translationKeys[] = 'Feedback_Question4';
         $translationKeys[] = 'Feedback_FeedbackTitle';
         $translationKeys[] = 'Feedback_FeedbackSubtitle';
-        $translationKeys[] = 'Feedback_Policy';
         $translationKeys[] = 'Feedback_ThankYourForFeedback';
         $translationKeys[] = 'Feedback_ThankYou';
         $translationKeys[] = 'Feedback_MessageBodyValidationError';
     }
-
     public function renderViewsAndAddToPage(&$pageHtml)
     {
         //only show on superuser
@@ -104,46 +93,34 @@ class Feedback extends \Piwik\Plugin
             return $pageHtml;
         }
         $feedbackQuestionBanner = $this->renderFeedbackQuestion();
-
         $matches = preg_split('/(<body.*?>)/i', $pageHtml, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
         $pageHtml = $matches[0] . $matches[1] . $feedbackQuestionBanner . $matches[2];
     }
-
-
     public function renderFeedbackQuestion()
     {
         $feedbackQuestionBanner = new View('@Feedback/feedbackQuestionBanner');
-        $feedbackQuestionBanner->showQuestionBanner = (int)$this->showQuestionBanner();
-
+        $feedbackQuestionBanner->showQuestionBanner = (int) $this->showQuestionBanner();
         return $feedbackQuestionBanner->render();
     }
-
     public function showQuestionBanner()
     {
         if (Piwik::isUserIsAnonymous()) {
             return false;
         }
-
         // Hide Feedback popup in all tests except if forced
         if ($this->isDisabledInTestMode()) {
             return false;
         }
-
         $shouldShowQuestionBanner = true;
-
         Piwik::postEvent('Feedback.showQuestionBanner', [&$shouldShowQuestionBanner]);
-
         if (!$shouldShowQuestionBanner) {
             return false;
         }
-
         $feedbackReminder = new FeedbackReminder();
         $nextReminderDate = $feedbackReminder->getUserOption();
         $now = Date::now()->getTimestamp();
-
         // If there isn't any reminder date set, or never remind me was selected previously (-1) we determine a new date
         if ($nextReminderDate === false || $nextReminderDate <= 0) {
-
             // if user was created within the last 6 months, we set the date to 6 months after his creation date
             $userCreatedDate = Piwik::getCurrentUserCreationDate();
             if (!empty($userCreatedDate) && Date::factory($userCreatedDate)->addMonth(6)->getTimestamp() > $now) {
@@ -151,25 +128,20 @@ class Feedback extends \Piwik\Plugin
                 $feedbackReminder->setUserOption($nextReminder);
                 return false;
             }
-
             // Otherwise we set the date to somewhen within the next 6 months
-            $nextReminder = Date::now()->getStartOfDay()->addDay(Common::getRandomInt(1, 6*30))->toString('Y-m-d');
+            $nextReminder = Date::now()->getStartOfDay()->addDay(Common::getRandomInt(1, 6 * 30))->toString('Y-m-d');
             $feedbackReminder->setUserOption($nextReminder);
             return false;
         }
-
         $nextReminderDate = Date::factory($nextReminderDate);
         if ($nextReminderDate->getTimestamp() > $now) {
             return false;
         }
         return true;
-
     }
-
     // needs to be protected not private for testing purpose
     protected function isDisabledInTestMode()
     {
         return defined('PIWIK_TEST_MODE') && PIWIK_TEST_MODE && !Common::getRequestVar('forceFeedbackTest', false);
     }
-
 }

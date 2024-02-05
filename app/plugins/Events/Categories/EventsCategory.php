@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,11 +10,9 @@
 namespace Piwik\Plugins\Events\Categories;
 
 use Piwik\Category\Category;
-
 // Needed for dimensions and metrics
 class EventsCategory extends Category
 {
     protected $id = 'Events_Events';
     protected $order = 12;
-
 }

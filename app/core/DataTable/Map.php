@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Closure;
 use Piwik\Common;
 use Piwik\DataTable;
 use Piwik\DataTable\Renderer\Html;
-
 /**
  * Stores an array of {@link DataTable}s indexed by one type of {@link DataTable} metadata (such as site ID
  * or period).
@@ -25,7 +25,7 @@ use Piwik\DataTable\Renderer\Html;
  *
  * @api
  */
-class Map implements DataTableInterface
+class Map implements \Piwik\DataTable\DataTableInterface
 {
     /**
      * Array containing the DataTable within this Set
@@ -33,13 +33,11 @@ class Map implements DataTableInterface
      * @var DataTable[]
      */
     protected $array = array();
-
     /**
      * @see self::getKeyName()
      * @var string
      */
     protected $keyName = 'defaultKeyName';
-
     /**
      * Returns a string description of the data used to index the DataTables.
      *
@@ -51,7 +49,6 @@ class Map implements DataTableInterface
     {
         return $this->keyName;
     }
-
     /**
      * Set the name of they metadata used to index {@link DataTable}s. See {@link getKeyName()}.
      *
@@ -61,7 +58,6 @@ class Map implements DataTableInterface
     {
         $this->keyName = $name;
     }
-
     /**
      * Returns the number of {@link DataTable}s in this DataTable\Map.
      *
@@ -71,7 +67,6 @@ class Map implements DataTableInterface
     {
         return count($this->getDataTables());
     }
-
     /**
      * Queue a filter to {@link DataTable} child of contained by this instance.
      *
@@ -86,7 +81,6 @@ class Map implements DataTableInterface
             $table->queueFilter($className, $parameters);
         }
     }
-
     /**
      * Apply the filters previously queued to each DataTable contained by this DataTable\Map.
      */
@@ -96,7 +90,6 @@ class Map implements DataTableInterface
             $table->applyQueuedFilters();
         }
     }
-
     /**
      * Apply a filter to all tables contained by this instance.
      *
@@ -109,7 +102,33 @@ class Map implements DataTableInterface
             $table->filter($className, $parameters);
         }
     }
-
+    /**
+     * Apply a callback to all tables contained by this instance and tables with the same key in $otherTables.
+     *
+     * This method is used to iterate over multiple DataTable\Map's concurrently.
+     *
+     * $filter will be called with multiple DataTable instances, the first is the instance contained in
+     * this Map instance. The rest are the corresponding instances found in $otherTables. The position of
+     * the parameter in $filter corresponds with the position in $otherTables.
+     *
+     * If a key exists in this instance but not in one of the otherTables, $filter will be invoked with null
+     * for that parameter.
+     *
+     * @param Map[] $otherTables Other tables to invoke $filter with.
+     * @param callable $filter A function like `function (DataTable $thisTable, $otherTable1, $otherTable2, ...) {}`.
+     * @return mixed[] The return value of each `multiFilter()` call made on child tables, indexed by the keys in this Map instance.
+     */
+    public function multiFilter($otherTables, $filter)
+    {
+        $result = [];
+        foreach ($this->getDataTables() as $key => $childTable) {
+            $otherChildTables = array_map(function ($otherTable) use($key) {
+                return !empty($otherTable) && $otherTable->hasTable($key) ? $otherTable->getTable($key) : null;
+            }, $otherTables);
+            $result[$key] = $childTable->multiFilter($otherChildTables, $filter);
+        }
+        return $result;
+    }
     /**
      * Apply a filter to all subtables contained by this instance.
      *
@@ -122,7 +141,6 @@ class Map implements DataTableInterface
             $table->filterSubtables($className, $parameters);
         }
     }
-
     /**
      * Apply a queued filter to all subtables contained by this instance.
      *
@@ -135,7 +153,6 @@ class Map implements DataTableInterface
             $table->queueFilterSubtables($className, $parameters);
         }
     }
-
     /**
      * Returns the array of DataTables contained by this class.
      *
@@ -145,7 +162,6 @@ class Map implements DataTableInterface
     {
         return $this->array;
     }
-
     /**
      * Returns the table with the specific label.
      *
@@ -156,7 +172,6 @@ class Map implements DataTableInterface
     {
         return $this->array[$label];
     }
-
     /**
      * @param string $label
      * @return bool
@@ -165,7 +180,6 @@ class Map implements DataTableInterface
     {
         return isset($this->array[$label]);
     }
-
     /**
      * Returns the first element in the Map's array.
      *
@@ -175,7 +189,6 @@ class Map implements DataTableInterface
     {
         return reset($this->array);
     }
-
     /**
      * Returns the last element in the Map's array.
      *
@@ -185,7 +198,6 @@ class Map implements DataTableInterface
     {
         return end($this->array);
     }
-
     /**
      * Adds a new {@link DataTable} or Map instance to this DataTable\Map.
      *
@@ -196,23 +208,18 @@ class Map implements DataTableInterface
     {
         $this->array[$label] = $table;
     }
-
     public function getRowFromIdSubDataTable($idSubtable)
     {
         $dataTables = $this->getDataTables();
-
         // find first datatable containing data
         foreach ($dataTables as $subTable) {
             $subTableRow = $subTable->getRowFromIdSubDataTable($idSubtable);
-
             if (!empty($subTableRow)) {
                 return $subTableRow;
             }
         }
-
         return null;
     }
-
     /**
      * Returns a string output of this DataTable\Map (applying the default renderer to every {@link DataTable}
      * of this DataTable\Map).
@@ -223,9 +230,8 @@ class Map implements DataTableInterface
     {
         $renderer = new Html();
         $renderer->setTable($this);
-        return (string)$renderer;
+        return (string) $renderer;
     }
-
     /**
      * See {@link DataTable::enableRecursiveSort()}.
      */
@@ -235,7 +241,6 @@ class Map implements DataTableInterface
             $table->enableRecursiveSort();
         }
     }
-
     /**
      * See {@link DataTable::disableFilter()}.
      */
@@ -245,7 +250,6 @@ class Map implements DataTableInterface
             $table->disableFilter($className);
         }
     }
-
     /**
      * @ignore
      */
@@ -255,7 +259,6 @@ class Map implements DataTableInterface
             $table->disableRecursiveFilters();
         }
     }
-
     /**
      * @ignore
      */
@@ -265,7 +268,6 @@ class Map implements DataTableInterface
             $table->enableRecursiveFilters();
         }
     }
-
     /**
      * Renames the given column in each contained {@link DataTable}.
      *
@@ -280,7 +282,6 @@ class Map implements DataTableInterface
             $table->renameColumn($oldName, $newName);
         }
     }
-
     /**
      * Deletes the specified columns in each contained {@link DataTable}.
      *
@@ -295,7 +296,6 @@ class Map implements DataTableInterface
             $table->deleteColumns($columns);
         }
     }
-
     /**
      * Deletes a table from the array of DataTables.
      *
@@ -305,7 +305,6 @@ class Map implements DataTableInterface
     {
         unset($this->array[$id]);
     }
-
     /**
      * Deletes the given column in every contained {@link DataTable}.
      *
@@ -318,7 +317,6 @@ class Map implements DataTableInterface
             $table->deleteColumn($name);
         }
     }
-
     /**
      * Returns the array containing all column values in all contained {@link DataTable}s for the requested column.
      *
@@ -328,17 +326,14 @@ class Map implements DataTableInterface
     public function getColumn($name)
     {
         $values = array();
-
         foreach ($this->getDataTables() as $table) {
             $moreValues = $table->getColumn($name);
             foreach ($moreValues as &$value) {
                 $values[] = $value;
             }
         }
-
         return $values;
     }
-
     /**
      * Merges the rows of every child {@link DataTable} into a new one and
      * returns it. This function will also set the label of the merged rows
@@ -393,37 +388,29 @@ class Map implements DataTableInterface
     public function mergeChildren()
     {
         $firstChild = reset($this->array);
-
-        if ($firstChild instanceof Map) {
+        if ($firstChild instanceof \Piwik\DataTable\Map) {
             $result = $firstChild->getEmptyClone();
-
             /** @var $subDataTableMap Map */
             foreach ($this->getDataTables() as $label => $subDataTableMap) {
                 foreach ($subDataTableMap->getDataTables() as $innerLabel => $subTable) {
                     if (!isset($result->array[$innerLabel])) {
                         $dataTable = new DataTable();
                         $dataTable->setMetadataValues($subTable->getAllTableMetadata());
-
                         $result->addTable($dataTable, $innerLabel);
                     }
-
                     $this->copyRowsAndSetLabel($result->array[$innerLabel], $subTable, $label);
                 }
             }
         } else {
             $result = new DataTable();
-
             foreach ($this->getDataTables() as $label => $subTable) {
                 $this->copyRowsAndSetLabel($result, $subTable, $label);
                 Common::destroy($subTable);
             }
-
             $this->array = array();
         }
-
         return $result;
     }
-
     /**
      * Utility function used by mergeChildren. Copies the rows from one table,
      * sets their 'label' columns to a value and adds them to another table.
@@ -437,17 +424,11 @@ class Map implements DataTableInterface
         foreach ($fromTable->getRows() as $fromRow) {
             $oldColumns = $fromRow->getColumns();
             unset($oldColumns['label']);
-
             $columns = array_merge(array('label' => $label), $oldColumns);
-            $row = new Row(array(
-                                Row::COLUMNS              => $columns,
-                                Row::METADATA             => $fromRow->getMetadata(),
-                                Row::DATATABLE_ASSOCIATED => $fromRow->getIdSubDataTable()
-                           ));
+            $row = new \Piwik\DataTable\Row(array(\Piwik\DataTable\Row::COLUMNS => $columns, \Piwik\DataTable\Row::METADATA => $fromRow->getMetadata(), \Piwik\DataTable\Row::DATATABLE_ASSOCIATED => $fromRow->getIdSubDataTable()));
             $toTable->addRow($row);
         }
     }
-
     /**
      * Sums a DataTable to all the tables in this array.
      *
@@ -463,7 +444,6 @@ class Map implements DataTableInterface
             $childTable->addDataTable($tableToSum);
         }
     }
-
     /**
      * Returns a new DataTable\Map w/ child tables that have had their
      * subtables merged.
@@ -480,7 +460,6 @@ class Map implements DataTableInterface
         }
         return $result;
     }
-
     /**
      * Returns a new DataTable\Map w/o any child DataTables, but with
      * the same key name as this instance.
@@ -489,11 +468,10 @@ class Map implements DataTableInterface
      */
     public function getEmptyClone()
     {
-        $dataTableMap = new Map;
+        $dataTableMap = new \Piwik\DataTable\Map();
         $dataTableMap->setKeyName($this->getKeyName());
         return $dataTableMap;
     }
-
     /**
      * Returns the intersection of children's metadata arrays (what they all have in common).
      *
@@ -511,7 +489,6 @@ class Map implements DataTableInterface
         }
         return array_values($data);
     }
-
     /**
      * Delete row metadata by name in every row.
      *
@@ -524,7 +501,6 @@ class Map implements DataTableInterface
             $table->deleteRowsMetadata($name, $deleteRecursiveInSubtables);
         }
     }
-
     /**
      * See {@link DataTable::getColumns()}.
      *

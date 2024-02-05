@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Measurable\Type;
 use Piwik\Container\StaticContainer;
 use Piwik\Plugin\Manager as PluginManager;
 use Piwik\Measurable\Type;
-
 class TypeManager
 {
     /**
@@ -20,15 +20,12 @@ class TypeManager
     public function getAllTypes()
     {
         $components = PluginManager::getInstance()->findComponents('Type', '\\Piwik\\Measurable\\Type');
-
         $instances = array();
         foreach ($components as $component) {
             $instances[] = StaticContainer::get($component);
         }
-
         return $instances;
     }
-
     public function isExistingType($typeId)
     {
         foreach ($this->getAllTypes() as $type) {
@@ -36,10 +33,8 @@ class TypeManager
                 return true;
             }
         }
-
         return false;
     }
-
     /**
      * @param string $typeId
      * @return Type|null
@@ -51,8 +46,6 @@ class TypeManager
                 return $type;
             }
         }
-
         return new Type();
     }
 }
-

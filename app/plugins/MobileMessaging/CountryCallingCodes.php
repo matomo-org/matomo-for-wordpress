@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,7 +7,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\MobileMessaging;
 
 /**
@@ -19,21 +19,25 @@ class CountryCallingCodes
         'ad' => '376',
         'ae' => '971',
         'af' => '93',
-        'ag' => '1268', // @wikipedia original value: 1 268
-        'ai' => '1264', // @wikipedia original value: 1 264
+        'ag' => '1268',
+        // @wikipedia original value: 1 268
+        'ai' => '1264',
+        // @wikipedia original value: 1 264
         'al' => '355',
         'am' => '374',
         'ao' => '244',
-//		'aq' => 'MISSING CODE', // @wikipedia In Antarctica dialing is dependent on the parent country of each base
+        //        'aq' => 'MISSING CODE', // @wikipedia In Antarctica dialing is dependent on the parent country of each base
         'ar' => '54',
-        'as' => '1684', // @wikipedia original value: 1 684
+        'as' => '1684',
+        // @wikipedia original value: 1 684
         'at' => '43',
         'au' => '61',
         'aw' => '297',
         'ax' => '358',
         'az' => '994',
         'ba' => '387',
-        'bb' => '1246', // @wikipedia original value: 1 246
+        'bb' => '1246',
+        // @wikipedia original value: 1 246
         'bd' => '880',
         'be' => '32',
         'bf' => '226',
@@ -42,14 +46,17 @@ class CountryCallingCodes
         'bi' => '257',
         'bj' => '229',
         'bl' => '590',
-        'bm' => '1441', // @wikipedia original value: 1 441
+        'bm' => '1441',
+        // @wikipedia original value: 1 441
         'bn' => '673',
         'bo' => '591',
-        'bq' => '5997', // @wikipedia original value: 599 7
+        'bq' => '5997',
+        // @wikipedia original value: 599 7
         'br' => '55',
-        'bs' => '1242', // @wikipedia original value: 1 242
+        'bs' => '1242',
+        // @wikipedia original value: 1 242
         'bt' => '975',
-//		'bv' => 'MISSING CODE',
+        //        'bv' => 'MISSING CODE',
         'bw' => '267',
         'by' => '375',
         'bz' => '501',
@@ -68,15 +75,17 @@ class CountryCallingCodes
         'cr' => '506',
         'cu' => '53',
         'cv' => '238',
-        'cw' => '5999', // @wikipedia original value: 599 9
+        'cw' => '5999',
+        // @wikipedia original value: 599 9
         'cx' => '61',
         'cy' => '357',
         'cz' => '420',
         'de' => '49',
         'dj' => '253',
         'dk' => '45',
-        'dm' => '1767', // @wikipedia original value: 1 767
-//		'do' => 'MISSING CODE', // @wikipedia original values: 1 809, 1 829, 1 849
+        'dm' => '1767',
+        // @wikipedia original value: 1 767
+        //        'do' => 'MISSING CODE', // @wikipedia original values: 1 809, 1 829, 1 849
         'dz' => '213',
         'ec' => '593',
         'ee' => '372',
@@ -93,7 +102,8 @@ class CountryCallingCodes
         'fr' => '33',
         'ga' => '241',
         'gb' => '44',
-        'gd' => '1473', // @wikipedia original value: 1 473
+        'gd' => '1473',
+        // @wikipedia original value: 1 473
         'ge' => '995',
         'gf' => '594',
         'gg' => '44',
@@ -107,11 +117,12 @@ class CountryCallingCodes
         'gr' => '30',
         'gs' => '500',
         'gt' => '502',
-        'gu' => '1671', // @wikipedia original value: 1 671
+        'gu' => '1671',
+        // @wikipedia original value: 1 671
         'gw' => '245',
         'gy' => '592',
         'hk' => '852',
-//		'hm' => 'MISSING CODE',
+        //        'hm' => 'MISSING CODE',
         'hn' => '504',
         'hr' => '385',
         'ht' => '509',
@@ -127,7 +138,8 @@ class CountryCallingCodes
         'is' => '354',
         'it' => '39',
         'je' => '44',
-        'jm' => '1876', // @wikipedia original value: 1 876
+        'jm' => '1876',
+        // @wikipedia original value: 1 876
         'jo' => '962',
         'jp' => '81',
         'ke' => '254',
@@ -135,15 +147,18 @@ class CountryCallingCodes
         'kh' => '855',
         'ki' => '686',
         'km' => '269',
-        'kn' => '1869', // @wikipedia original value: 1 869
+        'kn' => '1869',
+        // @wikipedia original value: 1 869
         'kp' => '850',
         'kr' => '82',
         'kw' => '965',
-        'ky' => '1345', // @wikipedia original value: 1 345
-//		'kz' => 'MISSING CODE', // @wikipedia original values: 7 6, 7 7
+        'ky' => '1345',
+        // @wikipedia original value: 1 345
+        //        'kz' => 'MISSING CODE', // @wikipedia original values: 7 6, 7 7
         'la' => '856',
         'lb' => '961',
-        'lc' => '1758', // @wikipedia original value: 1 758
+        'lc' => '1758',
+        // @wikipedia original value: 1 758
         'li' => '423',
         'lk' => '94',
         'lr' => '231',
@@ -164,10 +179,12 @@ class CountryCallingCodes
         'mm' => '95',
         'mn' => '976',
         'mo' => '853',
-        'mp' => '1670', // @wikipedia original value: 1 670
+        'mp' => '1670',
+        // @wikipedia original value: 1 670
         'mq' => '596',
         'mr' => '222',
-        'ms' => '1664', // @wikipedia original value: 1 664
+        'ms' => '1664',
+        // @wikipedia original value: 1 664
         'mt' => '356',
         'mu' => '230',
         'mv' => '960',
@@ -197,7 +214,7 @@ class CountryCallingCodes
         'pl' => '48',
         'pm' => '508',
         'pn' => '672',
-//		'pr' => 'MISSING CODE', // @wikipedia original values: 1 787, 1 939
+        //        'pr' => 'MISSING CODE', // @wikipedia original values: 1 787, 1 939
         'ps' => '970',
         'pt' => '351',
         'pw' => '680',
@@ -226,12 +243,14 @@ class CountryCallingCodes
         'ss' => '211',
         'st' => '239',
         'sv' => '503',
-        'sx' => '1721', //@wikipedia original value: 1 721
+        'sx' => '1721',
+        //@wikipedia original value: 1 721
         'sy' => '963',
         'sz' => '268',
-        'tc' => '1649', // @wikipedia original value: 1 649
+        'tc' => '1649',
+        // @wikipedia original value: 1 649
         'td' => '235',
-//		'tf' => 'MISSING CODE',
+        //        'tf' => 'MISSING CODE',
         'tg' => '228',
         'th' => '66',
         'tj' => '992',
@@ -241,21 +260,25 @@ class CountryCallingCodes
         'tn' => '216',
         'to' => '676',
         'tr' => '90',
-        'tt' => '1868', // @wikipedia original value: 1 868
+        'tt' => '1868',
+        // @wikipedia original value: 1 868
         'tv' => '688',
         'tw' => '886',
         'tz' => '255',
         'ua' => '380',
         'ug' => '256',
-//		'um' => 'MISSING CODE',
+        //        'um' => 'MISSING CODE',
         'us' => '1',
         'uy' => '598',
         'uz' => '998',
-//		'va' => 'MISSING CODE', // @wikipedia original values: 39 066, assigned 379
-        'vc' => '1784', // @wikipedia original value: 1 784
+        //        'va' => 'MISSING CODE', // @wikipedia original values: 39 066, assigned 379
+        'vc' => '1784',
+        // @wikipedia original value: 1 784
         've' => '58',
-        'vg' => '1284', // @wikipedia original value: 1 284
-        'vi' => '1340', // @wikipedia original value: 1 340
+        'vg' => '1284',
+        // @wikipedia original value: 1 284
+        'vi' => '1340',
+        // @wikipedia original value: 1 340
         'vn' => '84',
         'vu' => '678',
         'wf' => '681',
@@ -264,6 +287,6 @@ class CountryCallingCodes
         'yt' => '262',
         'za' => '27',
         'zm' => '260',
-        'zw' => '263'
+        'zw' => '263',
     );
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,24 +9,20 @@
 namespace Piwik\Plugins\TagManager;
 
 use Piwik\Plugin;
-
 class Tasks extends \Piwik\Plugin\Tasks
 {
     /**
      * @var Plugin\Manager
      */
     private $pluginManager;
-
     public function __construct(Plugin\Manager $pluginManager)
     {
         $this->pluginManager = $pluginManager;
     }
-
     public function schedule()
     {
         $this->hourly('regenerateReleasedContainers');
     }
-
     public function regenerateReleasedContainers()
     {
         /** @var TagManager $tagManager */

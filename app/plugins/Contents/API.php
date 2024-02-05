@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Piwik\Archive;
 use Piwik\DataTable;
 use Piwik\Piwik;
 use Piwik\Plugins\Contents\Archiver;
-
 /**
  * API for plugin Contents
  *
@@ -24,32 +24,26 @@ class API extends \Piwik\Plugin\API
     {
         return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, false, $idSubtable);
     }
-
     public function getContentPieces($idSite, $period, $date, $segment = false, $idSubtable = false)
     {
         return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, false, $idSubtable);
     }
-
     private function getDataTable($name, $idSite, $period, $date, $segment, $expanded, $idSubtable)
     {
         Piwik::checkUserHasViewAccess($idSite);
-        $recordName = Dimensions::getRecordNameForAction($name);
-        $dataTable  = Archive::createDataTableFromArchive($recordName, $idSite, $period, $date, $segment, $expanded, $flat=false, $idSubtable);
-
+        $recordName = \Piwik\Plugins\Contents\Dimensions::getRecordNameForAction($name);
+        $dataTable = Archive::createDataTableFromArchive($recordName, $idSite, $period, $date, $segment, $expanded, $flat = false, $idSubtable);
         if (empty($idSubtable)) {
             $dataTable->filter('AddSegmentValue', array(function ($label) {
                 if ($label === Archiver::CONTENT_PIECE_NOT_SET) {
                     return false;
                 }
-
                 return $label;
             }));
         }
-
         $this->filterDataTable($dataTable);
         return $dataTable;
     }
-
     /**
      * @param DataTable $dataTable
      */

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,7 @@ namespace Piwik\Updater\Migration\Db;
  * @see Factory::dropIndex()
  * @ignore
  */
-class DropIndex extends Sql
+class DropIndex extends \Piwik\Updater\Migration\Db\Sql
 {
     /**
      * @param string $table Prefixed table name
@@ -20,8 +21,6 @@ class DropIndex extends Sql
     public function __construct($table, $indexName)
     {
         $sql = sprintf('ALTER TABLE `%s` DROP INDEX `%s`', $table, $indexName);
-
         parent::__construct($sql, array(static::ERROR_CODE_COLUMN_NOT_EXISTS));
     }
-
 }

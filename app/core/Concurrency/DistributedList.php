@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,8 +11,7 @@ namespace Piwik\Concurrency;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
 use Piwik\Option;
-use Psr\Log\LoggerInterface;
-
+use Piwik\Log\LoggerInterface;
 /**
  * Manages a simple distributed list stored in an Option. No locking occurs, so the list
  * is not thread safe, and should only be used for use cases where atomicity is not
@@ -28,12 +28,10 @@ class DistributedList
      * @var string
      */
     private $optionName;
-
     /**
      * @var LoggerInterface
      */
     private $logger;
-
     /**
      * Constructor.
      *
@@ -42,9 +40,8 @@ class DistributedList
     public function __construct($optionName, LoggerInterface $logger = null)
     {
         $this->optionName = $optionName;
-        $this->logger = $logger ?: StaticContainer::get('Psr\Log\LoggerInterface');
+        $this->logger = $logger ?: StaticContainer::get(LoggerInterface::class);
     }
-
     /**
      * Queries the option table and returns all items in this list.
      *
@@ -53,22 +50,15 @@ class DistributedList
     public function getAll()
     {
         $result = $this->getListOptionValue();
-
         foreach ($result as $key => $item) {
             // remove non-array items (unexpected state, though can happen when upgrading from an old Piwik)
             if (is_array($item)) {
-                $this->logger->info("Found array item in DistributedList option value '{name}': {data}", array(
-                    'name' => $this->optionName,
-                    'data' => var_export($result, true)
-                ));
-
+                $this->logger->info("Found array item in DistributedList option value '{name}': {data}", array('name' => $this->optionName, 'data' => var_export($result, true)));
                 unset($result[$key]);
             }
         }
-
         return $result;
     }
-
     /**
      * Sets the contents of the list in the option table.
      *
@@ -78,15 +68,13 @@ class DistributedList
     {
         foreach ($items as $key => &$item) {
             if (is_array($item)) {
-                throw new \InvalidArgumentException("Array item encountered in DistributedList::setAll() [ key = $key ].");
+                throw new \InvalidArgumentException("Array item encountered in DistributedList::setAll() [ key = {$key} ].");
             } else {
-                $item = (string)$item;
+                $item = (string) $item;
             }
         }
-
         Option::set($this->optionName, serialize($items));
     }
-
     /**
      * Adds one or more items to the list in the option table.
      *
@@ -100,10 +88,8 @@ class DistributedList
         } else {
             $allItems[] = $item;
         }
-
         $this->setAll($allItems);
     }
-
     /**
      * Removes one or more items by value from the list in the option table.
      *
@@ -116,21 +102,16 @@ class DistributedList
         if (!is_array($items)) {
             $items = array($items);
         }
-
         $allItems = $this->getAll();
-
         foreach ($items as $item) {
             $existingIndex = array_search($item, $allItems);
             if ($existingIndex === false) {
                 return;
             }
-
             unset($allItems[$existingIndex]);
         }
-
         $this->setAll(array_values($allItems));
     }
-
     /**
      * Removes one or more items by index from the list in the option table.
      *
@@ -143,27 +124,19 @@ class DistributedList
         if (!is_array($indices)) {
             $indices = array($indices);
         }
-
         $indices = array_unique($indices);
-
         $allItems = $this->getAll();
         foreach ($indices as $index) {
             unset($allItems[$index]);
         }
-
         $this->setAll(array_values($allItems));
     }
-
     protected function getListOptionValue()
     {
         Option::clearCachedOption($this->optionName);
         $array = Option::get($this->optionName);
-
         $result = array();
-        if ($array
-            && ($array = Common::safe_unserialize($array))
-            && count($array)
-        ) {
+        if ($array && ($array = Common::safe_unserialize($array)) && count($array)) {
             $result = $array;
         }
         return $result;

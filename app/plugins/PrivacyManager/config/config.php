@@ -1,7 +1,5 @@
 <?php
-return array(
 
-    'diagnostics.informational' => DI\add(array(
-        DI\get('Piwik\Plugins\PrivacyManager\Diagnostic\PrivacyInformational'),
-    )),
-);
+namespace {
+    return array('diagnostics.informational' => \Piwik\DI::add(array(\Piwik\DI::get('Piwik\\Plugins\\PrivacyManager\\Diagnostic\\PrivacyInformational'))));
+}

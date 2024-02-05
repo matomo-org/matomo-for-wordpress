@@ -1,0 +1,8 @@
+tests/
+tmp/
+plugins/*/javascripts/
+plugins/*/tests/UI/
+plugins/*/vue/dist/**/*.js
+js/*.js
+piwik.js
+matomo.js

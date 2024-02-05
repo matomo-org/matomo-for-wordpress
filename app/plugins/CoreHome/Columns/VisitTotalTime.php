@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,7 +14,6 @@ use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
-
 class VisitTotalTime extends VisitDimension
 {
     protected $columnName = 'visit_total_time';
@@ -21,7 +21,6 @@ class VisitTotalTime extends VisitDimension
     protected $segmentName = 'visitDuration';
     protected $nameSingular = 'General_ColumnVisitDuration';
     protected $type = self::TYPE_DURATION_S;
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -32,10 +31,8 @@ class VisitTotalTime extends VisitDimension
     {
         $totalTime = Config::getInstance()->Tracker['default_time_one_page_visit'];
         $totalTime = $this->cleanupVisitTotalTime($totalTime);
-
         return $totalTime;
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -45,13 +42,10 @@ class VisitTotalTime extends VisitDimension
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
         $firstActionTime = $visitor->getVisitorColumn('visit_first_action_time');
-
         $totalTime = 1 + $request->getCurrentTimestamp() - $firstActionTime;
         $totalTime = $this->cleanupVisitTotalTime($totalTime);
-
         return $totalTime;
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -63,33 +57,25 @@ class VisitTotalTime extends VisitDimension
         if (!$visitor->isVisitorKnown()) {
             return false;
         }
-
         $totalTime = $visitor->getVisitorColumn('visit_total_time');
-
         // If a pageview and goal conversion in the same second, with previously a goal conversion recorded
         // the request would not "update" the row since all values are the same as previous
         // therefore the request below throws exception, instead we make sure the UPDATE will affect the row
         $totalTime = $totalTime + $request->getParam('idgoal');
         // +2 to offset idgoal=-1 and idgoal=0
         $totalTime = $totalTime + 2;
-
         return $this->cleanupVisitTotalTime($totalTime);
     }
-
     public function getRequiredVisitFields()
     {
         return array('visit_first_action_time');
     }
-
     private function cleanupVisitTotalTime($t)
     {
-        $t = (int)$t;
-
+        $t = (int) $t;
         if ($t < 0) {
             $t = 0;
         }
-
         return $t;
     }
-
 }

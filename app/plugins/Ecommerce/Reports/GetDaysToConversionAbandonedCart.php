@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,13 +11,11 @@ namespace Piwik\Plugins\Ecommerce\Reports;
 
 use Piwik\Piwik;
 use Piwik\Plugins\Goals\Columns\DaysToConversion;
-
-class GetDaysToConversionAbandonedCart extends Base
+class GetDaysToConversionAbandonedCart extends \Piwik\Plugins\Ecommerce\Reports\Base
 {
     protected function init()
     {
         parent::init();
-
         $this->action = 'getDaysToConversion';
         $this->name = Piwik::translate('General_AbandonedCarts') . ' - ' . Piwik::translate('Goals_DaysToConv');
         $this->dimension = new DaysToConversion();
@@ -24,8 +23,6 @@ class GetDaysToConversionAbandonedCart extends Base
         $this->processedMetrics = false;
         $this->metrics = array('nb_conversions');
         $this->order = 25;
-
-        $this->parameters =  array('idGoal' => Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART);
+        $this->parameters = array('idGoal' => Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART);
     }
-
 }

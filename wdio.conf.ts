@@ -1,4 +1,20 @@
+import * as path from 'path';
+import * as url from 'url';
 import type { Options } from '@wdio/types'
+import GlobalSetup from './tests/e2e/global-setup.ts';
+
+const dirname = path.dirname(url.fileURLToPath(import.meta.url));
+
+async function saveScreenshotIfError(test, error) {
+  if (error && !error.matcherResult) {
+    const failureScreenshotName = test.title.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') + '_failure';
+    try {
+      await browser.saveFullPageScreen(failureScreenshotName);
+    } catch (e) {
+      console.log(`could not save failure screenshot ${failureScreenshotName}`);
+    }
+  }
+}
 
 export const config: Options.Testrunner = {
   //
@@ -36,7 +52,9 @@ export const config: Options.Testrunner = {
   ],
   // Patterns to exclude.
   exclude: [
-      // 'path/to/excluded/files'
+    './tests/e2e/tracking.e2e.ts',
+    './tests/e2e/tracking.ecommerce.e2e.ts',
+    './tests/e2e/tracking.tag-manager.e2e.ts',
   ],
   //
   // ============
@@ -54,7 +72,7 @@ export const config: Options.Testrunner = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  maxInstances: 10,
+  maxInstances: 5,
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -73,7 +91,7 @@ export const config: Options.Testrunner = {
   // Define all options that are relevant for the WebdriverIO instance here
   //
   // Level of logging verbosity: trace | debug | info | warn | error | silent
-  logLevel: 'info',
+  logLevel: 'error',
   //
   // Set specific log levels per logger
   // loggers:
@@ -113,7 +131,34 @@ export const config: Options.Testrunner = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: ['intercept'],
+  services: [
+    'intercept',
+
+    [
+      'image-comparison',
+      {
+        baselineFolder: path.join(dirname, 'tests/e2e/baseline/'),
+        formatImageName: '{tag}',
+        screenshotPath: path.join(dirname, 'tests/e2e/'),
+        savePerInstance: true,
+        autoSaveBaseline: false,
+        blockOutStatusBar: true,
+        blockOutToolBar: true,
+        // Options for the tabbing image
+        tabbableOptions: {
+          circle: {
+            size: 18,
+            fontSize: 18,
+            // ...
+          },
+          line: {
+            color: '#ff221a', // hex-code or for example words like `red|black|green`
+            width: 3,
+          },
+        },
+      },
+    ],
+  ],
   //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
@@ -142,7 +187,7 @@ export const config: Options.Testrunner = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
       ui: 'bdd',
-      timeout: 60000
+      timeout: 300000,
   },
 
   //
@@ -153,13 +198,27 @@ export const config: Options.Testrunner = {
   // it and to build services around it. You can either apply a single function or an array of
   // methods to it. If one of them returns with a promise, WebdriverIO will wait until that promise got
   // resolved to continue.
+  async afterTest(test, context, { error }) {
+    await saveScreenshotIfError(test, error);
+  },
+
+  async afterHook(test, context, { error }) {
+    await saveScreenshotIfError(test, error);
+  },
+
   /**
    * Gets executed once before all workers get launched.
    * @param {object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  // onPrepare: function (config, capabilities) {
-  // },
+  onPrepare: async function (config, capabilities) {
+    try {
+      await GlobalSetup.setUp();
+    } catch (e) {
+      console.log(`Aborting, failed to finish global setup:\n${e.stack}`);
+      process.exit(1);
+    }
+  },
   /**
    * Gets executed before a worker process is spawned and can be used to initialise specific service
    * for that worker as well as modify runtime environments in an async fashion.
@@ -188,7 +247,7 @@ export const config: Options.Testrunner = {
    * @param {Array.<String>} specs List of spec file paths that are to be run
    * @param {string} cid worker id (e.g. 0-0)
    */
-  // beforeSession: function (config, capabilities, specs, cid) {
+  // beforeSession: async function (config, capabilities, specs, cid) {
   // },
   /**
    * Gets executed before test execution begins. At this point you can access to all global
@@ -197,8 +256,12 @@ export const config: Options.Testrunner = {
    * @param {Array.<String>} specs        List of spec file paths that are to be run
    * @param {object}         browser      instance of created browser/device session
    */
-  // before: function (capabilities, specs) {
-  // },
+  before: async function (capabilities, specs) {
+    // must be run per wdio instance to have the correct test entity IDs
+    // the setUp itself should only add entities the first time it's called
+    // which happens before any e2e test is run via a wdio.conf.ts hook.
+    await GlobalSetup.setUp();
+  },
   /**
    * Runs before a WebdriverIO command gets executed.
    * @param {string} commandName hook command name

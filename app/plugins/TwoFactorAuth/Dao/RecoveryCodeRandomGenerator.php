@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,12 +9,10 @@
 namespace Piwik\Plugins\TwoFactorAuth\Dao;
 
 use Piwik\Common;
-
 class RecoveryCodeRandomGenerator
 {
     public function generateCode()
     {
-       return Common::getRandomString(16);
+        return Common::getRandomString(16);
     }
 }
-

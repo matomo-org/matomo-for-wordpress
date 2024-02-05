@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,12 +9,11 @@
 namespace Piwik\Updater\Migration\Db;
 
 use Piwik\DataAccess\TableMetadata;
-
 /**
  * @see Factory::addColumns()
  * @ignore
  */
-class AddColumns extends Sql
+class AddColumns extends \Piwik\Updater\Migration\Db\Sql
 {
     public function __construct($table, $columns, $placeColumnAfter)
     {
@@ -23,26 +23,19 @@ class AddColumns extends Sql
         } catch (\Exception $ex) {
             $existingColumns = [];
         }
-
         $changes = array();
         foreach ($columns as $columnName => $columnType) {
             if (in_array($columnName, $existingColumns)) {
                 continue;
             }
-
             $part = sprintf("ADD COLUMN `%s` %s", $columnName, $columnType);
-
             if (!empty($placeColumnAfter)) {
                 $part .= sprintf(' AFTER `%s`', $placeColumnAfter);
                 $placeColumnAfter = $columnName;
             }
-
             $changes[] = $part;
         }
-
         $sql = sprintf("ALTER TABLE `%s` %s", $table, implode(', ', $changes));
-
         parent::__construct($sql, static::ERROR_CODE_DUPLICATE_COLUMN);
     }
-
 }

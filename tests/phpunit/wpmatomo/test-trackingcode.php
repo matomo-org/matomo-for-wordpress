@@ -28,7 +28,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 	 */
 	private $capabilities;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->settings      = new Settings();
@@ -39,7 +39,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		Site::map_matomo_site_id( get_current_blog_id(), 23 );
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->capabilities->remove_hooks();
 		parent::tearDown();
 	}
@@ -74,7 +74,7 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		do_action( 'wp_footer' );
 
 		$contents = ob_get_clean();
-		$this->assertNotContains( 'idsite', $contents );
+		$this->assertStringNotContainsString( 'idsite', $contents );
 	}
 
 
@@ -93,9 +93,10 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		do_action( 'wp_footer' );
 		$footer = ob_get_clean();
 
-		$this->assertNotContains( 'idsite', $header );
-		$this->assertContains( '<!-- Matomo --><script ' . $this->get_type_attribute() . ">\nvar _paq = window._paq = window._paq || [];", $footer );
-		$this->assertContains( '_paq.push([\'setSiteId\', \'23\'])', $footer );
+		$this->assertStringNotContainsString( 'idsite', $header );
+		$this->assertStringContainsString( '<!-- Matomo --><script ' . $this->get_type_attribute() . ">\n", $footer );
+		$this->assertStringContainsString( 'var _paq = window._paq = window._paq || [];', $footer );
+		$this->assertStringContainsString( '_paq.push([\'setSiteId\', \'23\'])', $footer );
 	}
 
 
@@ -115,9 +116,10 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		do_action( 'wp_footer' );
 		$footer = ob_get_clean();
 
-		$this->assertNotContains( 'idsite', $footer );
-		$this->assertContains( '<!-- Matomo --><script ' . $this->get_type_attribute() . ">\nvar _paq = window._paq = window._paq || [];", $header );
-		$this->assertContains( '_paq.push([\'setSiteId\', \'23\'])', $header );
+		$this->assertStringNotContainsString( 'idsite', $footer );
+		$this->assertStringContainsString( '<!-- Matomo --><script ' . $this->get_type_attribute() . ">\n", $header );
+		$this->assertStringContainsString( 'var _paq = window._paq = window._paq || [];', $header );
+		$this->assertStringContainsString( '_paq.push([\'setSiteId\', \'23\'])', $header );
 	}
 
 	public function test_tracking_noscriptenabled_default() {
@@ -130,12 +132,16 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 		$this->tracking_code->register_hooks();
 
 		ob_start();
+		do_action( 'wp_head' );
+		ob_get_clean();
+
+		ob_start();
 		do_action( 'wp_footer' );
 		$footer = ob_get_clean();
 
-		$this->assertContains( '<noscript><p><img referrerpolicy="no-referrer-when-downgrade"', $footer );
-		$this->assertContains( '</noscript>', $footer );
-		$this->assertNotContains( '<noscript><noscript>', $footer );// make sure noscript not present twice
+		$this->assertStringContainsString( '<noscript><p><img referrerpolicy="no-referrer-when-downgrade"', $footer );
+		$this->assertStringContainsString( '</noscript>', $footer );
+		$this->assertStringNotContainsString( '<noscript><noscript>', $footer );// make sure noscript not present twice
 	}
 
 	public function test_tracking_noscriptenabled_manually_adds_noscript_when_needed() {
@@ -147,13 +153,16 @@ class TrackingCodeTest extends MatomoUnit_TestCase {
 			)
 		);
 		$this->tracking_code->register_hooks();
+		ob_start();
+		do_action( 'wp_head' );
+		ob_get_clean();
 
 		ob_start();
 		do_action( 'wp_footer' );
 		$footer = ob_get_clean();
 
-		$this->assertContains( '<noscript><p>test</p></noscript>', $footer );
-		$this->assertNotContains( '<noscript><noscript>', $footer );// make sure noscript not present twice
+		$this->assertStringContainsString( '<noscript><p>test</p></noscript>', $footer );
+		$this->assertStringNotContainsString( '<noscript><noscript>', $footer );// make sure noscript not present twice
 	}
 
 	public function test_forward_cross_domain_visitor_id() {

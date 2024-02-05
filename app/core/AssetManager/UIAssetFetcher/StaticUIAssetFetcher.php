@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,26 +10,21 @@
 namespace Piwik\AssetManager\UIAssetFetcher;
 
 use Piwik\AssetManager\UIAssetFetcher;
-
 class StaticUIAssetFetcher extends UIAssetFetcher
 {
     /**
      * @var string[]
      */
     private $priorityOrder;
-
     public function __construct($fileLocations, $priorityOrder, $theme)
     {
         parent::__construct(array(), $theme);
-
         $this->fileLocations = $fileLocations;
         $this->priorityOrder = $priorityOrder;
     }
-
     protected function retrieveFileLocations()
     {
     }
-
     protected function getPriorityOrder()
     {
         return $this->priorityOrder;

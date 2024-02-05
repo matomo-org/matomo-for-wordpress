@@ -13,7 +13,7 @@ class AdminTrackingSettingsBootstrappedTest extends MatomoAnalytics_TestCase {
 	 */
 	private $tracking_settings;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$settings                = new Settings();

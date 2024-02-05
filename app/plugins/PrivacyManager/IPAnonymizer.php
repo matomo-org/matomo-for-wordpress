@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Plugins\PrivacyManager;
 
 use Piwik\Common;
 use Matomo\Network\IP;
-
 /**
  * Anonymize visitor IP addresses to comply with the privacy laws/guidelines in countries, such as Germany.
  */
@@ -26,10 +26,8 @@ class IPAnonymizer
     public static function applyIPMask(IP $ip, $maskLength)
     {
         $newIpObject = $ip->anonymize($maskLength);
-
         return $newIpObject;
     }
-
     /**
      * Hook on Tracker.Visit.setVisitorIp to anomymize visitor IP addresses
      * @param string $ip IP address in binary format (network format)
@@ -37,38 +35,31 @@ class IPAnonymizer
     public function setVisitorIpAddress(&$ip)
     {
         $ipObject = IP::fromBinaryIP($ip);
-
         if (!$this->isActive()) {
-            Common::printDebug("Visitor IP was _not_ anonymized: ". $ipObject->toString());
+            Common::printDebug("Visitor IP was _not_ anonymized: " . $ipObject->toString());
             return;
         }
-
-        $privacyConfig = new Config();
-
+        $privacyConfig = new \Piwik\Plugins\PrivacyManager\Config();
         $newIpObject = self::applyIPMask($ipObject, $privacyConfig->ipAddressMaskLength);
         $ip = $newIpObject->toBinary();
-
-        Common::printDebug("Visitor IP (was: ". $ipObject->toString() .") has been anonymized: ". $newIpObject->toString());
+        Common::printDebug("Visitor IP (was: " . $ipObject->toString() . ") has been anonymized: " . $newIpObject->toString());
     }
-
     /**
      * Deactivates IP anonymization. This function will not be called by the Tracker.
      */
     public static function deactivate()
     {
-        $privacyConfig = new Config();
+        $privacyConfig = new \Piwik\Plugins\PrivacyManager\Config();
         $privacyConfig->ipAnonymizerEnabled = false;
     }
-
     /**
      * Activates IP anonymization. This function will not be called by the Tracker.
      */
     public static function activate()
     {
-        $privacyConfig = new Config();
+        $privacyConfig = new \Piwik\Plugins\PrivacyManager\Config();
         $privacyConfig->ipAnonymizerEnabled = true;
     }
-
     /**
      * Returns true if IP anonymization support is enabled, false if otherwise.
      *
@@ -76,7 +67,7 @@ class IPAnonymizer
      */
     public static function isActive()
     {
-        $privacyConfig = new Config();
+        $privacyConfig = new \Piwik\Plugins\PrivacyManager\Config();
         return $privacyConfig->ipAnonymizerEnabled;
     }
 }

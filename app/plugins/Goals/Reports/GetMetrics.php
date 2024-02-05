@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,26 +13,23 @@ use Piwik\Piwik;
 use Piwik\Plugins\CoreHome\Columns\Metrics\ConversionRate;
 use Piwik\Report\ReportWidgetFactory;
 use Piwik\Widget\WidgetsList;
-
-class GetMetrics extends Get
+class GetMetrics extends \Piwik\Plugins\Goals\Reports\Get
 {
     protected function init()
     {
         parent::init();
-
         $this->name = Piwik::translate('Goals_Goals');
         $this->processedMetrics = array(new ConversionRate());
-        $this->documentation = ''; // TODO
+        $this->documentation = '';
+        // TODO
         $this->order = 1;
         $this->orderGoal = 50;
-        $this->metrics = array( 'nb_conversions', 'nb_visits_converted', 'revenue');
+        $this->metrics = array('nb_conversions', 'nb_visits_converted', 'revenue');
         $this->parameters = null;
     }
-
     public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory)
     {
     }
-
     public function configureReportMetadata(&$availableReports, $infos)
     {
     }

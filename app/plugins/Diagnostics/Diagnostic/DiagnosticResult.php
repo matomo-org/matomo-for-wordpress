@@ -1,47 +1,41 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik\Plugins\Diagnostics\Diagnostic;
 
 use Piwik\Common;
-
 /**
  * The result of a diagnostic.
  *
  * @api
  */
-class DiagnosticResult
+class DiagnosticResult implements \JsonSerializable
 {
     const STATUS_ERROR = 'error';
     const STATUS_WARNING = 'warning';
     const STATUS_OK = 'ok';
     const STATUS_INFORMATIONAL = 'informational';
-
     /**
      * @var string
      */
     private $label;
-
     /**
      * @var string
      */
     private $longErrorMessage = '';
-
     /**
      * @var DiagnosticResultItem[]
      */
     private $items = array();
-
     public function __construct($label)
     {
         $this->label = $label;
     }
-
     /**
      * @param string $label
      * @param string $status
@@ -51,10 +45,9 @@ class DiagnosticResult
     public static function singleResult($label, $status, $comment = '')
     {
         $result = new self($label);
-        $result->addItem(new DiagnosticResultItem($status, $comment));
+        $result->addItem(new \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResultItem($status, $comment));
         return $result;
     }
-
     /**
      * @param string $label
      * @param string $comment
@@ -68,14 +61,11 @@ class DiagnosticResult
         } elseif ($comment === false) {
             $comment = '0';
         }
-
         if ($escapeComment) {
-            $comment = Common::fixLbrace(Common::sanitizeInputValue($comment));
+            $comment = Common::sanitizeInputValue($comment);
         }
-
         return self::singleResult($label, self::STATUS_INFORMATIONAL, $comment);
     }
-
     /**
      * @return string
      */
@@ -83,7 +73,6 @@ class DiagnosticResult
     {
         return $this->label;
     }
-
     /**
      * @return DiagnosticResultItem[]
      */
@@ -91,12 +80,10 @@ class DiagnosticResult
     {
         return $this->items;
     }
-
-    public function addItem(DiagnosticResultItem $item)
+    public function addItem(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResultItem $item)
     {
         $this->items[] = $item;
     }
-
     /**
      * @param DiagnosticResultItem[] $items
      */
@@ -104,7 +91,6 @@ class DiagnosticResult
     {
         $this->items = $items;
     }
-
     /**
      * @return string
      */
@@ -112,7 +98,6 @@ class DiagnosticResult
     {
         return $this->longErrorMessage;
     }
-
     /**
      * @param string $longErrorMessage
      */
@@ -120,7 +105,6 @@ class DiagnosticResult
     {
         $this->longErrorMessage = $longErrorMessage;
     }
-
     /**
      * Returns the worst status of the items.
      *
@@ -129,17 +113,18 @@ class DiagnosticResult
     public function getStatus()
     {
         $status = self::STATUS_OK;
-
         foreach ($this->getItems() as $item) {
             if ($item->getStatus() === self::STATUS_ERROR) {
                 return self::STATUS_ERROR;
             }
-
             if ($item->getStatus() === self::STATUS_WARNING) {
                 $status = self::STATUS_WARNING;
             }
         }
-
         return $status;
+    }
+    public function jsonSerialize() : array
+    {
+        return ['label' => $this->label, 'longErrorMessage' => $this->longErrorMessage, 'items' => $this->items];
     }
 }

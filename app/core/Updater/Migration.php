@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,7 +9,6 @@
 namespace Piwik\Updater;
 
 use Exception;
-
 /**
  * Base class for migrations. Any migration must extend this class.
  *
@@ -20,16 +20,14 @@ abstract class Migration
      * Executes the migration.
      * @return void
      */
-    abstract public function exec();
-
+    public abstract function exec();
     /**
      * Get a description of what the migration actually does. For example "Activate plugin $plugin" or
      * "SELECT * FROM table".
      *
      * @return string
      */
-    abstract public function __toString();
-
+    public abstract function __toString();
     /**
      * Decides whether an error should be ignored or not.
      * @param Exception $exception

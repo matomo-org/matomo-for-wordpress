@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Plugins\CoreHome\Columns;
 use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
-
 class Profilable extends VisitDimension
 {
     const COLUMN_TYPE = 'TINYINT(1) NULL';
@@ -20,27 +20,21 @@ class Profilable extends VisitDimension
     protected $nameSingular = 'CoreHome_Profilable';
     protected $segmentName = 'profilable';
     protected $type = self::TYPE_BOOL;
-
     protected $acceptValues = '1 for profilable (eg cookies were used), 0 for not profilable (eg no cookies were used)';
-
     public function __construct()
     {
         $this->suggestedValuesCallback = function ($idSite, $maxValuesToReturn) {
             return ['0', '1'];
         };
     }
-
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $value = $request->getVisitorId();
-
         if (empty($value)) {
             return 0;
         }
-
         return 1;
     }
-
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
         if ($visitor->getVisitorColumn($this->columnName)) {
@@ -48,8 +42,6 @@ class Profilable extends VisitDimension
             // for this same visit with the fingerprint
             return 1;
         }
-
         return $this->onNewVisit($request, $visitor, $action);
     }
-
 }

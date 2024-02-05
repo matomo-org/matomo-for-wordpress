@@ -30,6 +30,8 @@ use WpMatomo\User;
 /**
  * Piwik constants
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
  */
 class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 
@@ -73,14 +75,20 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		return $query;
 	}
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		if ( ! defined( 'PIWIK_TEST_MODE' ) ) {
 			define( 'PIWIK_TEST_MODE', true );
 		}
+
 		$uninstall = new Uninstaller();
 		$uninstall->uninstall( true );
+
+		if ( is_multisite() ) {
+			$this->delete_extraneous_blogs();
+		}
+
 		clearstatcache();
 
 		Bootstrap::set_not_bootstrapped();
@@ -137,7 +145,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		}
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		if ( ! empty( $GLOBALS['wpdb'] ) ) {
 			$GLOBALS['wpdb']->suppress_errors( true );
 		}
@@ -147,6 +155,11 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 
 		unset( $_GET['trigger'] );
 		Metadata::clear_cache();
+
+		if ( is_multisite() ) {
+			$this->delete_extraneous_blogs();
+		}
+
 		parent::tearDown();
 	}
 
@@ -155,10 +168,18 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	}
 
 	protected function assert_tracking_response( $tracking_response ) {
+		$this->assertEquals( $this->get_expected_tracking_response(), $tracking_response );
+	}
+
+	protected function assert_not_tracking_response( $tracking_response ) {
+		$this->assertNotEquals( $this->get_expected_tracking_response(), $tracking_response );
+	}
+
+	private function get_expected_tracking_response() {
 		$trans_gif_64 = 'R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 		$expected_response = base64_decode( $trans_gif_64 );
-		$this->assertEquals( $expected_response, $tracking_response );
+		return $expected_response;
 	}
 
 	protected function enable_browser_archiving() {
@@ -219,5 +240,20 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		$sync->sync_current_users();
 
 		return $id;
+	}
+
+	private function delete_extraneous_blogs() {
+		global $wpdb;
+
+		switch_to_blog( 1 );
+
+		$blogs = $wpdb->get_results( 'SELECT blog_id, deleted FROM ' . $wpdb->blogs . ' ORDER BY blog_id', ARRAY_A );
+		foreach ( $blogs as $blog ) {
+			if ( 1 === (int) $blog['deleted'] || 1 === (int) $blog['blog_id'] ) {
+				continue;
+			}
+
+			wpmu_delete_blog( $blog['blog_id'] );
+		}
 	}
 }

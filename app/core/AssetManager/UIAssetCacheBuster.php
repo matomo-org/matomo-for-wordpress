@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ namespace Piwik\AssetManager;
 use Piwik\Plugin\Manager;
 use Piwik\Singleton;
 use Piwik\Version;
-
 class UIAssetCacheBuster extends Singleton
 {
     /**
@@ -28,36 +28,27 @@ class UIAssetCacheBuster extends Singleton
     public function piwikVersionBasedCacheBuster($pluginNames = false)
     {
         static $cachedCacheBuster = null;
-
         if (empty($cachedCacheBuster) || $pluginNames !== false) {
-
-            $masterFile     = PIWIK_INCLUDE_PATH . '/.git/refs/heads/master';
+            $masterFile = PIWIK_INCLUDE_PATH . '/.git/refs/heads/master';
             $currentGitHash = file_exists($masterFile) ? @file_get_contents($masterFile) : '';
             $manager = Manager::getInstance();
-
             $plugins = !$pluginNames ? $manager->getActivatedPlugins() : $pluginNames;
             sort($plugins);
-
             $pluginsInfo = '';
             foreach ($plugins as $pluginName) {
                 if ($manager->isPluginLoaded($pluginName)) {
-                    $plugin      = $manager->getLoadedPlugin($pluginName);
+                    $plugin = $manager->getLoadedPlugin($pluginName);
                     $pluginsInfo .= $plugin->getPluginName() . $plugin->getVersion() . ',';
                 }
             }
-
             $cacheBuster = md5($pluginsInfo . PHP_VERSION . Version::VERSION . trim($currentGitHash ?? ''));
-
             if ($pluginNames !== false) {
                 return $cacheBuster;
             }
-
             $cachedCacheBuster = $cacheBuster;
         }
-        
         return $cachedCacheBuster;
     }
-
     /**
      * @param string $content
      * @return string

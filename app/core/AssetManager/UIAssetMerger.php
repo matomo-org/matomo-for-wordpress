@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,34 +9,28 @@
  */
 namespace Piwik\AssetManager;
 
-
 abstract class UIAssetMerger
 {
     /**
      * @var UIAssetFetcher
      */
     private $assetFetcher;
-
     /**
      * @var UIAsset
      */
     private $mergedAsset;
-
     /**
      * @var string
      */
     protected $mergedContent;
-
     /**
      * @var UIAssetCacheBuster
      */
     protected $cacheBuster;
-
     /**
      * @var string
      */
     protected $cacheBusterValue;
-
     /**
      * @param UIAsset $mergedAsset
      * @param UIAssetFetcher $assetFetcher
@@ -47,78 +42,59 @@ abstract class UIAssetMerger
         $this->assetFetcher = $assetFetcher;
         $this->cacheBuster = $cacheBuster;
     }
-
     public function generateFile()
     {
         if (!$this->shouldGenerate()) {
             return;
         }
-
         $this->mergedContent = $this->getMergedAssets();
-
         $this->postEvent($this->mergedContent);
-
         $this->adjustPaths();
-
         $this->addPreamble();
-
         $this->writeContentToFile();
     }
-
     /**
      * @return string
      */
-    abstract protected function getMergedAssets();
-
+    protected abstract function getMergedAssets();
     /**
      * @return string
      */
-    abstract protected function generateCacheBuster();
-
+    protected abstract function generateCacheBuster();
     /**
      * @return string
      */
-    abstract protected function getPreamble();
-
+    protected abstract function getPreamble();
     /**
      * @return string
      */
-    abstract protected function getFileSeparator();
-
+    protected abstract function getFileSeparator();
     /**
      * @param UIAsset $uiAsset
      * @return string
      */
-    abstract protected function processFileContent($uiAsset);
-
+    protected abstract function processFileContent($uiAsset);
     /**
      * @param string $mergedContent
      */
-    abstract protected function postEvent(&$mergedContent);
-
+    protected abstract function postEvent(&$mergedContent);
     protected function getConcatenatedAssets()
     {
         if (empty($this->mergedContent)) {
             $this->concatenateAssets();
         }
-
         return $this->mergedContent;
     }
-
     protected function concatenateAssets()
     {
         $mergedContent = '';
-
         foreach ($this->getAssetCatalog()->getAssets() as $uiAsset) {
             $uiAsset->validateFile();
             $content = $this->processFileContent($uiAsset);
-
             $mergedContent .= $this->getFileSeparator() . $content;
         }
-
         $this->mergedContent = $mergedContent;
     }
-
     /**
      * @return string[]
      */
@@ -126,7 +102,6 @@ abstract class UIAssetMerger
     {
         return $this->assetFetcher->getPlugins();
     }
-
     /**
      * @return UIAssetCatalog
      */
@@ -134,7 +109,6 @@ abstract class UIAssetMerger
     {
         return $this->assetFetcher->getCatalog();
     }
-
     /**
      * @return boolean
      */
@@ -143,10 +117,8 @@ abstract class UIAssetMerger
         if (!$this->mergedAsset->exists()) {
             return true;
         }
-
         return !$this->isFileUpToDate();
     }
-
     /**
      * @return boolean
      */
@@ -155,16 +127,13 @@ abstract class UIAssetMerger
         $f = fopen($this->mergedAsset->getAbsoluteLocation(), 'r');
         $firstLine = fgets($f);
         fclose($f);
-
         if (!empty($firstLine) && trim($firstLine) == trim($this->getCacheBusterValue())) {
             return true;
         }
-
         // Some CSS file in the merge, has changed since last merged asset was generated
         // Note: we do not detect changes in @import'ed LESS files
         return false;
     }
-
     private function adjustPaths()
     {
         $theme = $this->assetFetcher->getTheme();
@@ -173,12 +142,10 @@ abstract class UIAssetMerger
             $this->mergedContent = $this->assetFetcher->getTheme()->rewriteAssetsPathToTheme($this->mergedContent);
         }
     }
-
     private function writeContentToFile()
     {
         $this->mergedAsset->writeContent($this->mergedContent);
     }
-
     /**
      * @return string
      */
@@ -187,10 +154,8 @@ abstract class UIAssetMerger
         if (empty($this->cacheBusterValue)) {
             $this->cacheBusterValue = $this->generateCacheBuster();
         }
-
         return $this->cacheBusterValue;
     }
-
     private function addPreamble()
     {
         $this->mergedContent = $this->getPreamble() . $this->mergedContent;

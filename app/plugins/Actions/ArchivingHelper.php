@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -20,7 +21,6 @@ use Piwik\Tracker\Action;
 use Piwik\Tracker\PageUrl;
 use Piwik\Tracker\GoalManager;
 use Zend_Db_Statement;
-
 /**
  * This static class provides:
  * - logic to parse/cleanup Action names,
@@ -30,7 +30,6 @@ use Zend_Db_Statement;
 class ArchivingHelper
 {
     const OTHERS_ROW_KEY = '';
-
     /**
      * Ideally this should use the DataArray object instead of custom data structure
      *
@@ -39,51 +38,41 @@ class ArchivingHelper
      * @param array $actionsTablesByType
      * @return int
      */
-    public static function updateActionsTableWithRowQuery($query, $fieldQueried, & $actionsTablesByType, $metricsConfig)
+    public static function updateActionsTableWithRowQuery($query, $fieldQueried, $actionsTablesByType, $metricsConfig)
     {
         $rowsProcessed = 0;
         while ($row = $query->fetch()) {
             if (empty($row['idaction'])) {
-                $row['type'] = ($fieldQueried == 'idaction_url' ? Action::TYPE_PAGE_URL : Action::TYPE_PAGE_TITLE);
+                $row['type'] = $fieldQueried == 'idaction_url' ? Action::TYPE_PAGE_URL : Action::TYPE_PAGE_TITLE;
                 // This will be replaced with 'X not defined' later
                 $row['name'] = '';
                 // Yes, this is kind of a hack, so we don't mix 'page url not defined' with 'page title not defined' etc.
                 $row['idaction'] = -$row['type'];
             }
-
             if ($row['type'] != Action::TYPE_SITE_SEARCH) {
                 unset($row[PiwikMetrics::INDEX_SITE_SEARCH_HAS_NO_RESULT]);
             }
-
             if (in_array($row['type'], array(Action::TYPE_CONTENT, Action::TYPE_EVENT, Action::TYPE_EVENT_NAME, Action::TYPE_CONTENT_PIECE, Action::TYPE_CONTENT_TARGET))) {
                 continue;
             }
-
             $hasRowName = !empty($row['name']) && $row['name'] != RankingQuery::LABEL_SUMMARY_ROW;
-
             // This will appear as <url /> in the API, which is actually very important to keep
             // eg. When there's at least one row in a report that does not have a URL, not having this <url/> would break HTML/PDF reports.
             $url = '';
             $pageTitlePath = null;
-            if ($row['type'] == Action::TYPE_SITE_SEARCH
-                || $row['type'] == Action::TYPE_PAGE_TITLE
-            ) {
+            if ($row['type'] == Action::TYPE_SITE_SEARCH || $row['type'] == Action::TYPE_PAGE_TITLE) {
                 $url = null;
                 if ($hasRowName) {
                     $pageTitlePath = $row['name'];
                 }
             } elseif ($hasRowName) {
-                $url = PageUrl::reconstructNormalizedUrl((string)$row['name'], $row['url_prefix']);
+                $url = PageUrl::reconstructNormalizedUrl((string) $row['name'], $row['url_prefix']);
             }
-
-            if (isset($row['name'])
-                && isset($row['type'])
-            ) {
+            if (isset($row['name']) && isset($row['type'])) {
                 $actionName = $row['name'];
                 $actionType = $row['type'];
                 $urlPrefix = $row['url_prefix'];
                 $idaction = $row['idaction'];
-
                 // in some unknown case, the type field is NULL, as reported in #1082 - we ignore this page view
                 if (empty($actionType)) {
                     if ($idaction != DataTable::LABEL_SUMMARY_ROW) {
@@ -91,35 +80,26 @@ class ArchivingHelper
                     }
                     continue;
                 }
-
                 $actionRow = self::getActionRow($actionName, $actionType, $urlPrefix, $actionsTablesByType);
-
                 self::setCachedActionRow($idaction, $actionType, $actionRow);
             } else {
                 $actionRow = self::getCachedActionRow($row['idaction'], $row['type']);
-
                 // Action processed as "to skip" for some reasons
                 if ($actionRow === false) {
                     continue;
                 }
             }
-
             if (is_null($actionRow)) {
                 continue;
             }
-
             // Here we do ensure that, the Metadata URL set for a given row, is the one from the Pageview with the most hits.
             // This is to ensure that when, different URLs are loaded with the same page name.
             // For example http://piwik.org and http://id.piwik.org are reported in Piwik > Actions > Pages with /index
             // But, we must make sure http://piwik.org is used to link & for transitions
             // Note: this code is partly duplicated from Row->sumRowMetadata()
-            if (!is_null($url)
-                && !$actionRow->isSummaryRow()
-            ) {
+            if (!is_null($url) && !$actionRow->isSummaryRow()) {
                 if (($existingUrl = $actionRow->getMetadata('url')) !== false) {
-                    if (!empty($row[PiwikMetrics::INDEX_PAGE_NB_HITS])
-                        && $row[PiwikMetrics::INDEX_PAGE_NB_HITS] > $actionRow->maxVisitsSummed
-                    ) {
+                    if (!empty($row[PiwikMetrics::INDEX_PAGE_NB_HITS]) && $row[PiwikMetrics::INDEX_PAGE_NB_HITS] > $actionRow->maxVisitsSummed) {
                         $actionRow->setMetadata('url', $url);
                         $actionRow->maxVisitsSummed = $row[PiwikMetrics::INDEX_PAGE_NB_HITS];
                     }
@@ -128,16 +108,10 @@ class ArchivingHelper
                     $actionRow->maxVisitsSummed = !empty($row[PiwikMetrics::INDEX_PAGE_NB_HITS]) ? $row[PiwikMetrics::INDEX_PAGE_NB_HITS] : 0;
                 }
             }
-
-            if ($pageTitlePath !== null
-                && !$actionRow->isSummaryRow()
-            ) {
+            if ($pageTitlePath !== null && !$actionRow->isSummaryRow()) {
                 $actionRow->setMetadata('page_title_path', $pageTitlePath);
             }
-
-            if ($row['type'] != Action::TYPE_PAGE_URL
-                && $row['type'] != Action::TYPE_PAGE_TITLE
-            ) {
+            if ($row['type'] != Action::TYPE_PAGE_URL && $row['type'] != Action::TYPE_PAGE_TITLE) {
                 // only keep performance metrics when they're used (i.e. for URLs and page titles)
                 if (array_key_exists(PiwikMetrics::INDEX_PAGE_SUM_TIME_GENERATION, $row)) {
                     unset($row[PiwikMetrics::INDEX_PAGE_SUM_TIME_GENERATION]);
@@ -152,12 +126,10 @@ class ArchivingHelper
                     unset($row[PiwikMetrics::INDEX_PAGE_MAX_TIME_GENERATION]);
                 }
             }
-
             unset($row['name']);
             unset($row['type']);
             unset($row['idaction']);
             unset($row['url_prefix']);
-
             foreach ($row as $name => $value) {
                 // in some edge cases, we have twice the same action name with 2 different idaction
                 // - this happens when 2 visitors visit the same new page at the same time, and 2 actions get recorded for the same name
@@ -169,7 +141,6 @@ class ArchivingHelper
                     $actionRow->addColumn($name, $value);
                 }
             }
-
             // if the exit_action was not recorded properly in the log_link_visit_action
             // there would be an error message when getting the nb_hits column
             // we must fake the record and add the columns
@@ -182,12 +153,10 @@ class ArchivingHelper
             }
             $rowsProcessed++;
         }
-
         // just to make sure php copies the last $actionRow in the $parentTable array
         $actionRow =& $actionsTablesByType;
         return $rowsProcessed;
     }
-
     /**
      * Update the existing action datatable with goal columns
      *
@@ -197,18 +166,16 @@ class ArchivingHelper
      * @return int  Number of rows processed
      * @throws \Exception
      */
-    public static function updateActionsTableWithGoals($resultSet,  bool $isPages): int
+    public static function updateActionsTableWithGoals($resultSet, bool $isPages) : int
     {
         $rowsProcessed = 0;
-
-         while ($row = $resultSet->fetch()) {
-             if (self::updateActionsTableRowWithGoals($row, $isPages)) {
-                 $rowsProcessed++;
-             }
-         }
-         return $rowsProcessed;
+        while ($row = $resultSet->fetch()) {
+            if (self::updateActionsTableRowWithGoals($row, $isPages)) {
+                $rowsProcessed++;
+            }
+        }
+        return $rowsProcessed;
     }
-
     /**
      * Add goals metrics to a single row of the actions table
      *
@@ -218,132 +185,114 @@ class ArchivingHelper
      * @return bool
      * @throws \Exception
      */
-    private static function updateActionsTableRowWithGoals(array $row, bool $isPages): bool
+    private static function updateActionsTableRowWithGoals(array $row, bool $isPages) : bool
     {
-
         if (!isset($row['idaction']) || !isset($row['type'])) {
             return false;
         }
-
         // Match the existing action row in the datatable
         $actionRow = self::getCachedActionRow($row['idaction'], $row['type']);
         if ($actionRow === false || is_null($actionRow)) {
             return false;
         }
-
         // Define the possible goal metrics available in the goals data resultset
         if ($isPages) {
             // Page view metrics
             $possibleMetrics = [
-                PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS             => 'nb_conversions',           // 1
-                PiwikMetrics::INDEX_GOAL_REVENUE                    => 'revenue',                  // 2
-                PiwikMetrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE       => 'nb_conv_pages_before',     // 9
-                PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ATTRIB      => 'nb_conversions_attrib',    // 10
-                PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_PAGE_RATE   => 'nb_conversions_page_rate', // 11
-                PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_PAGE_UNIQ   => 'nb_conversions_page_uniq', // 12
-                PiwikMetrics::INDEX_GOAL_REVENUE_ATTRIB             => 'revenue_attrib',           // 15
+                PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS => 'nb_conversions',
+                // 1
+                PiwikMetrics::INDEX_GOAL_REVENUE => 'revenue',
+                // 2
+                PiwikMetrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE => 'nb_conv_pages_before',
+                // 9
+                PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ATTRIB => 'nb_conversions_attrib',
+                // 10
+                PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_PAGE_RATE => 'nb_conversions_page_rate',
+                // 11
+                PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_PAGE_UNIQ => 'nb_conversions_page_uniq',
+                // 12
+                PiwikMetrics::INDEX_GOAL_REVENUE_ATTRIB => 'revenue_attrib',
             ];
         } else {
             // Entry page metrics
             $possibleMetrics = [
-                PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY              => 'revenue_entry',             // 17
-                PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY_RATE  => 'nb_conversions_entry_rate', // 12
-                PiwikMetrics::INDEX_GOAL_REVENUE_PER_ENTRY          => 'revenue_per_entry',         // 13
-                PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY       => 'nb_conversions_entry',      // 16
+                PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY => 'revenue_entry',
+                // 17
+                PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY_RATE => 'nb_conversions_entry_rate',
+                // 12
+                PiwikMetrics::INDEX_GOAL_REVENUE_PER_ENTRY => 'revenue_per_entry',
+                // 13
+                PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY => 'nb_conversions_entry',
             ];
         }
-
         unset($row['type']);
         unset($row['idaction']);
-
         if (!isset($row['idgoal'])) {
-             return false;
+            return false;
         }
-
-        if ($isPages &&
-            isset($row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ATTRIB]) &&
-            isset($row[PiwikMetrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE]))
-        {
+        if ($isPages && isset($row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ATTRIB]) && isset($row[PiwikMetrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE])) {
             /**
              * Ensures this metric is available. It will be calculated later using a filter.
              * @see \Piwik\Plugins\Goals\DataTable\Filter\CalculateConversionPageRate
              */
             $row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_PAGE_RATE] = 0;
         }
-
         if (isset($row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ATTRIB])) {
             $row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ATTRIB] = (float) $row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ATTRIB];
         }
-
         if (isset($row[PiwikMetrics::INDEX_GOAL_REVENUE_ATTRIB])) {
             $row[PiwikMetrics::INDEX_GOAL_REVENUE_ATTRIB] = (float) $row[PiwikMetrics::INDEX_GOAL_REVENUE_ATTRIB];
         }
-
         if (!$isPages) {
             $nbEntrances = $actionRow->getColumn(PiwikMetrics::INDEX_PAGE_ENTRY_NB_VISITS);
             $conversions = $row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY];
             if ($nbEntrances !== false && is_numeric($nbEntrances) && $nbEntrances > 0) {
-
                 // Calculate conversion entry rate
                 if (isset($row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY])) {
-                    $row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY_RATE] = Piwik::getQuotientSafe(
-                        $conversions,
-                        $nbEntrances,
-                        GoalManager::REVENUE_PRECISION + 1);
+                    $row[PiwikMetrics::INDEX_GOAL_NB_CONVERSIONS_ENTRY_RATE] = Piwik::getQuotientSafe($conversions, $nbEntrances, GoalManager::REVENUE_PRECISION + 1);
                 }
-
                 // Calculate revenue per entry
                 if (isset($row[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY])) {
-                    $row[PiwikMetrics::INDEX_GOAL_REVENUE_PER_ENTRY] = (float) Piwik::getQuotientSafe(
-                        $row[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY],
-                        $nbEntrances,
-                        GoalManager::REVENUE_PRECISION + 1);
-
+                    $row[PiwikMetrics::INDEX_GOAL_REVENUE_PER_ENTRY] = (float) Piwik::getQuotientSafe($row[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY], $nbEntrances, GoalManager::REVENUE_PRECISION + 1);
                     $row[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY] = (float) $row[PiwikMetrics::INDEX_GOAL_REVENUE_ENTRY];
                 }
             }
-
         }
-
         // Get goals column
         $goalsColumn = $actionRow->getColumn(PiwikMetrics::INDEX_GOALS);
         if ($goalsColumn === false) {
             $goalsColumn = [];
         }
-
         // Create goal subarray if not exists
         if (!isset($goalsColumn[$row['idgoal']])) {
             $goalsColumn[$row['idgoal']] = [];
         }
-
         // Find metric columns in the goal query row and add them to the actions data table row
         foreach ($possibleMetrics as $metricKey => $columnName) {
             if (isset($row[$metricKey])) {
-
                 // Add metric
                 if (!isset($goalsColumn[$row['idgoal']][$metricKey])) {
                     $goalsColumn[$row['idgoal']][$metricKey] = $row[$metricKey];
                 } else {
-                    $goalsColumn[$row['idgoal']][$metricKey] += $row[$metricKey];
+                    if ($metricKey == PiwikMetrics::INDEX_GOAL_NB_PAGES_UNIQ_BEFORE) {
+                        if ($goalsColumn[$row['idgoal']][$metricKey] < $row[$metricKey]) {
+                            $goalsColumn[$row['idgoal']][$metricKey] = $row[$metricKey];
+                        }
+                    } else {
+                        $goalsColumn[$row['idgoal']][$metricKey] += $row[$metricKey];
+                    }
                 }
-
                 // Write goals column back to datatable
                 $actionRow->setColumn(PiwikMetrics::INDEX_GOALS, $goalsColumn);
             }
         }
         return true;
     }
-
     public static function removeEmptyColumns($dataTable)
     {
         // Delete all columns that have a value of zero
-        $dataTable->filter('ColumnDelete', array(
-                                                $columnsToRemove = array(PiwikMetrics::INDEX_PAGE_IS_FOLLOWING_SITE_SEARCH_NB_HITS),
-                                                $columnsToKeep = array(),
-                                                $deleteIfZeroOnly = true
-                                           ));
+        $dataTable->filter('ColumnDelete', array($columnsToRemove = array(PiwikMetrics::INDEX_PAGE_IS_FOLLOWING_SITE_SEARCH_NB_HITS), $columnsToKeep = array(), $deleteIfZeroOnly = true));
     }
-
     /**
      * For rows which have subtables (eg. directories with sub pages),
      * deletes columns which don't make sense when all values of sub pages are summed.
@@ -353,28 +302,22 @@ class ArchivingHelper
     public static function deleteInvalidSummedColumnsFromDataTable($dataTable)
     {
         foreach ($dataTable->getRows() as $id => $row) {
-            if (($idSubtable = $row->getIdSubDataTable()) !== null
-                || $id === DataTable::ID_SUMMARY_ROW
-            ) {
+            if (($idSubtable = $row->getIdSubDataTable()) !== null || $id === DataTable::ID_SUMMARY_ROW) {
                 $subTable = $row->getSubtable();
                 if ($subTable) {
                     self::deleteInvalidSummedColumnsFromDataTable($subTable);
                 }
-
                 if ($row instanceof DataTableSummaryRow) {
                     $row->recalculate();
                 }
-
-                foreach (Metrics::$columnsToDeleteAfterAggregation as $name) {
+                foreach (\Piwik\Plugins\Actions\Metrics::$columnsToDeleteAfterAggregation as $name) {
                     $row->deleteColumn($name);
                 }
             }
         }
-
         // And this as well
-        ArchivingHelper::removeEmptyColumns($dataTable);
+        \Piwik\Plugins\Actions\ArchivingHelper::removeEmptyColumns($dataTable);
     }
-
     /**
      * Returns the limit to use with RankingQuery for this plugin.
      *
@@ -384,12 +327,7 @@ class ArchivingHelper
     {
         $configGeneral = Config::getInstance()->General;
         $configLimit = $configGeneral['archiving_ranking_query_row_limit'];
-        $limit = $configLimit == 0 ? 0 : max(
-            $configLimit,
-            $configGeneral['datatable_archiving_maximum_rows_actions'],
-            $configGeneral['datatable_archiving_maximum_rows_subtable_actions']
-        );
-
+        $limit = $configLimit == 0 ? 0 : max($configLimit, $configGeneral['datatable_archiving_maximum_rows_actions'], $configGeneral['datatable_archiving_maximum_rows_subtable_actions']);
         // FIXME: This is a quick fix for #3482. The actual cause of the bug is that
         // the site search & performance metrics additions to
         // ArchivingHelper::updateActionsTableWithRowQuery expect every
@@ -416,9 +354,7 @@ class ArchivingHelper
             $limit = 100000;
         }
         return $limit;
-
     }
-
     /**
      * @param $columnName
      * @param $alreadyValue
@@ -429,16 +365,16 @@ class ArchivingHelper
     {
         if (array_key_exists($columnName, $metricsConfig)) {
             $config = $metricsConfig[$columnName];
-
             if (!empty($config['aggregation'])) {
-
                 if ($config['aggregation'] == 'min') {
                     if (empty($alreadyValue)) {
                         $newValue = $value;
-                    } else if (empty($value)) {
-                        $newValue = $alreadyValue;
                     } else {
-                        $newValue = min($alreadyValue, $value);
+                        if (empty($value)) {
+                            $newValue = $alreadyValue;
+                        } else {
+                            $newValue = min($alreadyValue, $value);
+                        }
                     }
                     return $newValue;
                 }
@@ -448,22 +384,18 @@ class ArchivingHelper
                 }
             }
         }
-
         $newValue = $alreadyValue + $value;
         return $newValue;
     }
-
     public static $maximumRowsInDataTableLevelZero;
     public static $maximumRowsInSubDataTable;
     public static $maximumRowsInDataTableSiteSearch;
     public static $columnToSortByBeforeTruncation;
-
     protected static $actionUrlCategoryDelimiter = null;
     protected static $actionTitleCategoryDelimiter = null;
     protected static $defaultActionName = null;
     protected static $defaultActionNameWhenNotDefined = null;
     protected static $defaultActionUrlWhenNotDefined = null;
-
     public static function reloadConfig()
     {
         // for BC, we read the old style delimiter first (see #1067)
@@ -474,16 +406,13 @@ class ArchivingHelper
         } else {
             self::$actionUrlCategoryDelimiter = self::$actionTitleCategoryDelimiter = $actionDelimiter;
         }
-
         self::$defaultActionName = Config::getInstance()->General['action_default_name'];
         self::$columnToSortByBeforeTruncation = PiwikMetrics::INDEX_NB_VISITS;
         self::$maximumRowsInDataTableLevelZero = Config::getInstance()->General['datatable_archiving_maximum_rows_actions'];
         self::$maximumRowsInSubDataTable = Config::getInstance()->General['datatable_archiving_maximum_rows_subtable_actions'];
         self::$maximumRowsInDataTableSiteSearch = Config::getInstance()->General['datatable_archiving_maximum_rows_site_search'];
-
         DataTable::setMaximumDepthLevelAllowedAtLeast(self::getSubCategoryLevelLimit() + 1);
     }
-
     /**
      * The default row is used when archiving, if data is inconsistent in the DB,
      * there could be pages that have exit/entry hits, but don't yet
@@ -498,16 +427,10 @@ class ArchivingHelper
             // This row is used in the case where an action is know as an exit_action
             // but this action was not properly recorded when it was hit in the first place
             // so we add this fake row information to make sure there is a nb_hits, etc. column for every action
-            $row = new Row(array(
-                                Row::COLUMNS => array(
-                                    PiwikMetrics::INDEX_NB_VISITS        => 1,
-                                    PiwikMetrics::INDEX_NB_UNIQ_VISITORS => 1,
-                                    PiwikMetrics::INDEX_PAGE_NB_HITS     => 1,
-                                )));
+            $row = new Row(array(Row::COLUMNS => array(PiwikMetrics::INDEX_NB_VISITS => 1, PiwikMetrics::INDEX_NB_UNIQ_VISITORS => 1, PiwikMetrics::INDEX_PAGE_NB_HITS => 1)));
         }
         return $row;
     }
-
     /**
      * Given a page name and type, builds a recursive datatable where
      * each level of the tree is a category, based on the page name split by a delimiter (slash / by default)
@@ -518,16 +441,14 @@ class ArchivingHelper
      * @param array $actionsTablesByType
      * @return DataTable\Row
      */
-    public static function getActionRow($actionName, $actionType, $urlPrefix, &$actionsTablesByType)
+    public static function getActionRow($actionName, $actionType, $urlPrefix, $actionsTablesByType)
     {
         // we work on the root table of the given TYPE (either ACTION_URL or DOWNLOAD or OUTLINK etc.)
         /* @var DataTable $currentTable */
-        $currentTable =& $actionsTablesByType[$actionType];
-
+        $currentTable = $actionsTablesByType[$actionType];
         if (is_null($currentTable)) {
-            throw new \Exception("Action table for type '$actionType' was not found during Actions archiving.");
+            throw new \Exception("Action table for type '{$actionType}' was not found during Actions archiving.");
         }
-
         // check for ranking query cut-off
         if ($actionName == RankingQuery::LABEL_SUMMARY_ROW) {
             $summaryRow = $currentTable->getRowFromId(DataTable::ID_SUMMARY_ROW);
@@ -536,15 +457,11 @@ class ArchivingHelper
             }
             return $summaryRow;
         }
-
         // go to the level of the subcategory
         $actionExplodedNames = self::getActionExplodedNames($actionName, $actionType, $urlPrefix);
-        list($row, $level) = $currentTable->walkPath(
-            $actionExplodedNames, self::getDefaultRowColumns(), self::$maximumRowsInSubDataTable);
-
+        list($row, $level) = $currentTable->walkPath($actionExplodedNames, self::getDefaultRowColumns(), self::$maximumRowsInSubDataTable);
         return $row;
     }
-
     /**
      * Returns the configured sub-category level limit.
      *
@@ -554,7 +471,6 @@ class ArchivingHelper
     {
         return Config::getInstance()->General['action_category_level_limit'];
     }
-
     /**
      * Returns default label for the action type
      *
@@ -572,7 +488,6 @@ class ArchivingHelper
         }
         return self::$defaultActionUrlWhenNotDefined;
     }
-
     /**
      * Explodes action name into an array of elements.
      *
@@ -601,30 +516,23 @@ class ArchivingHelper
         if ($type == Action::TYPE_SITE_SEARCH) {
             return array($name);
         }
-
         $name = str_replace("\n", "", $name);
-
         if ($type == Action::TYPE_PAGE_TITLE && self::$actionTitleCategoryDelimiter === '') {
             if ($name === '' || $name === false || $name === null || trim($name) === '') {
                 $name = self::getUnknownActionName($type);
             }
             return array(' ' . trim($name));
         }
-
         $name = self::parseNameFromPageUrl($name, $type, $urlPrefix);
-
         // outlinks and downloads
         if (is_array($name)) {
             return $name;
         }
-
         $split = self::splitNameByDelimiter($name, $type);
-
         if (empty($split)) {
             $defaultName = self::getUnknownActionName($type);
             return array(trim($defaultName));
         }
-
         $lastPageName = end($split);
         // we are careful to prefix the page URL / name with some value
         // so that if a page has the same name as a category
@@ -637,7 +545,6 @@ class ArchivingHelper
         $split[count($split) - 1] = $lastPageName;
         return array_values($split);
     }
-
     /**
      * Gets the key for the cache of action rows from an action ID and type.
      *
@@ -647,21 +554,16 @@ class ArchivingHelper
      */
     private static function getCachedActionRowKey($idAction, $actionType)
     {
-        return $idAction == RankingQuery::LABEL_SUMMARY_ROW
-            ? $actionType . '_others'
-            : $idAction;
+        return $idAction == RankingQuery::LABEL_SUMMARY_ROW ? $actionType . '_others' : $idAction;
     }
-
     /**
      * Static cache to store Rows during processing
      */
     protected static $cacheParsedAction = array();
-
     public static function clearActionsCache()
     {
         self::$cacheParsedAction = array();
     }
-
     /**
      * Get cached action row by id & type. If $idAction is set to -1, the 'Others' row
      * for the specific action type will be returned.
@@ -673,17 +575,14 @@ class ArchivingHelper
     private static function getCachedActionRow($idAction, $actionType)
     {
         $cacheLabel = self::getCachedActionRowKey($idAction, $actionType);
-
         if (!isset(self::$cacheParsedAction[$cacheLabel])) {
             // This can happen when
             // - We select an entry page ID that was only seen yesterday, so wasn't selected in the first query
             // - We count time spent on a page, when this page was only seen yesterday
             return false;
         }
-
         return self::$cacheParsedAction[$cacheLabel];
     }
-
     /**
      * Set cached action row for an id & type.
      *
@@ -696,7 +595,6 @@ class ArchivingHelper
         $cacheLabel = self::getCachedActionRowKey($idAction, $actionType);
         self::$cacheParsedAction[$cacheLabel] = $actionRow;
     }
-
     /**
      * Returns the default columns for a row in an Actions DataTable.
      *
@@ -704,12 +602,8 @@ class ArchivingHelper
      */
     private static function getDefaultRowColumns()
     {
-        return array(PiwikMetrics::INDEX_NB_VISITS           => 0,
-                     PiwikMetrics::INDEX_NB_UNIQ_VISITORS    => 0,
-                     PiwikMetrics::INDEX_PAGE_NB_HITS        => 0,
-                     PiwikMetrics::INDEX_PAGE_SUM_TIME_SPENT => 0);
+        return array(PiwikMetrics::INDEX_NB_VISITS => 0, PiwikMetrics::INDEX_NB_UNIQ_VISITORS => 0, PiwikMetrics::INDEX_PAGE_NB_HITS => 0, PiwikMetrics::INDEX_PAGE_SUM_TIME_SPENT => 0);
     }
-
     /**
      * Creates a summary row for an Actions DataTable.
      *
@@ -717,17 +611,14 @@ class ArchivingHelper
      */
     private static function createSummaryRow()
     {
-        $summaryRow = new Row(array(
-                            Row::COLUMNS =>
-                                array('label' => DataTable::LABEL_SUMMARY_ROW) + self::getDefaultRowColumns()
-                       ));
-        $summaryRow->setIsSummaryRow(); // this should be set in DataTable::addSummaryRow(), but we set it here as well to be safe
+        $summaryRow = new Row(array(Row::COLUMNS => array('label' => DataTable::LABEL_SUMMARY_ROW) + self::getDefaultRowColumns()));
+        $summaryRow->setIsSummaryRow();
+        // this should be set in DataTable::addSummaryRow(), but we set it here as well to be safe
         return $summaryRow;
     }
-
     private static function splitNameByDelimiter($name, $type)
     {
-        if(is_array($name)) {
+        if (is_array($name)) {
             return $name;
         }
         if ($type == Action::TYPE_PAGE_TITLE) {
@@ -735,23 +626,17 @@ class ArchivingHelper
         } else {
             $categoryDelimiter = self::$actionUrlCategoryDelimiter;
         }
-
         if (empty($categoryDelimiter)) {
             return array(trim($name));
         }
-
         $split = explode($categoryDelimiter, $name, self::getSubCategoryLevelLimit());
-
         // trim every category and remove empty categories
         $split = array_map('trim', $split);
         $split = array_filter($split, 'strlen');
-
         // forces array key to start at 0
         $split = array_values($split);
-
         return $split;
     }
-
     private static function parseNameFromPageUrl($name, $type, $urlPrefix)
     {
         $urlRegexAfterDomain = '([^/]+)[/]?([^#]*)[#]?(.*)';
@@ -763,7 +648,6 @@ class ArchivingHelper
             // we know that normalization has been done on db level because $urlPrefix is set
             $urlRegex = '@^' . $urlRegexAfterDomain . '$@i';
         }
-
         $matches = array();
         preg_match($urlRegex, $name, $matches);
         if (!count($matches)) {
@@ -772,44 +656,35 @@ class ArchivingHelper
         $urlHost = $matches[1];
         $urlPath = $matches[2];
         $urlFragment = $matches[3];
-
         if (in_array($type, array(Action::TYPE_DOWNLOAD, Action::TYPE_OUTLINK))) {
             $path = '/' . trim($urlPath);
             if (!empty($urlFragment)) {
                 $path .= '#' . $urlFragment;
             }
-
             return array(trim($urlHost), $path);
         }
-
         $name = $urlPath;
         if ($name === '' || substr($name, -1) == '/') {
             $name .= self::$defaultActionName;
         }
-
         $urlFragment = PageUrl::processUrlFragment($urlFragment);
         if (!empty($urlFragment)) {
             $name .= '#' . $urlFragment;
         }
-
         return $name;
     }
-
     public static function setFolderPathMetadata(DataTable $dataTable, $isUrl, $prefix = '')
     {
         $configGeneral = Config::getInstance()->General;
         $separator = $isUrl ? '/' : $configGeneral['action_title_category_delimiter'];
         $metadataName = $isUrl ? 'folder_url_start' : 'page_title_path';
-
         foreach ($dataTable->getRows() as $row) {
             $subtable = $row->getSubtable();
             if (!$subtable) {
                 continue;
             }
-
             $metadataValue = $prefix . $row->getColumn('label');
             $row->setMetadata($metadataName, $metadataValue);
-
             self::setFolderPathMetadata($subtable, $isUrl, $metadataValue . $separator);
         }
     }

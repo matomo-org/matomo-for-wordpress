@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\Db;
 
 use Zend_Db_Table;
 use Piwik\Piwik;
-
 /**
  */
 class Adapter
@@ -23,7 +23,7 @@ class Adapter
      * @param bool $connect
      * @return AdapterInterface
      */
-    public static function factory($adapterName, & $dbInfos, $connect = true)
+    public static function factory($adapterName, &$dbInfos, $connect = true)
     {
         if ($connect) {
             if (isset($dbInfos['port']) && is_string($dbInfos['port']) && $dbInfos['port'][0] === '/') {
@@ -31,44 +31,35 @@ class Adapter
                 unset($dbInfos['host']);
                 unset($dbInfos['port']);
             }
-
             // not used by Zend Framework
             unset($dbInfos['tables_prefix']);
             unset($dbInfos['adapter']);
             unset($dbInfos['schema']);
         }
-
         $className = self::getAdapterClassName($adapterName);
-
         // make sure not to pass any references otherwise they will modify $dbInfos
         $infos = array();
         foreach ($dbInfos as $key => $val) {
             $infos[$key] = $val;
         }
-
         $adapter = new $className($infos);
-
         if ($connect) {
             try {
                 $adapter->getConnection();
-
                 Zend_Db_Table::setDefaultAdapter($adapter);
                 // we don't want the connection information to appear in the logs
                 $adapter->resetConfig();
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 // we don't want certain exceptions to leak information
                 $msg = self::overriddenExceptionMessage($e->getMessage());
                 if ('' !== $msg) {
                     throw new \Exception($msg);
                 }
-
                 throw $e;
             }
         }
-
         return $adapter;
     }
-
     /**
      * Get adapter class name
      *
@@ -78,13 +69,12 @@ class Adapter
      */
     private static function getAdapterClassName($adapterName)
     {
-        $className = 'Piwik\Db\Adapter\\' . str_replace(' ', '\\', ucwords(str_replace(array('_', '\\'), ' ', strtolower($adapterName))));
+        $className = 'Piwik\\Db\\Adapter\\' . str_replace(' ', '\\', ucwords(str_replace(array('_', '\\'), ' ', strtolower($adapterName))));
         if (!class_exists($className)) {
             throw new \Exception(sprintf("Adapter '%s' is not valid. Maybe check that your Matomo configuration files in config/*.ini.php are readable by the webserver.", $adapterName));
         }
         return $className;
     }
-
     /**
      * Get default port for named adapter
      *
@@ -96,7 +86,6 @@ class Adapter
         $className = self::getAdapterClassName($adapterName);
         return call_user_func(array($className, 'getDefaultPort'));
     }
-
     /**
      * Get list of adapters
      *
@@ -106,24 +95,18 @@ class Adapter
     {
         static $adapterNames = array(
             // currently supported by Piwik
-            'Pdo\Mysql',
+            'Pdo\\Mysql',
             'Mysqli',
-
-            // other adapters supported by Zend_Db
         );
-
         $adapters = array();
-
         foreach ($adapterNames as $adapterName) {
-            $className = '\Piwik\Db\Adapter\\' . $adapterName;
+            $className = '\\Piwik\\Db\\Adapter\\' . $adapterName;
             if (call_user_func(array($className, 'isEnabled'))) {
                 $adapters[strtoupper($adapterName)] = call_user_func(array($className, 'getDefaultPort'));
             }
         }
-
         return $adapters;
     }
-
     /**
      * Checks if the available adapters are recommended by Piwik or not.
      * @param string $adapterName
@@ -133,7 +116,6 @@ class Adapter
     {
         return strtolower($adapterName) === 'pdo/mysql';
     }
-
     /**
      * Intercepts certain exception messages and replaces leaky ones with ones that don't reveal too much info
      * @param string $message
@@ -143,18 +125,16 @@ class Adapter
     {
         $safeMessageMap = array(
             // add any exception search terms and their replacement message here
-            '[2006]'                        => Piwik::translate('General_ExceptionDatabaseUnavailable'),
-            'MySQL server has gone away'    => Piwik::translate('General_ExceptionDatabaseUnavailable'),
-            '[1698]'                        => Piwik::translate('General_ExceptionDatabaseAccess'),
-            'Access denied'                 => Piwik::translate('General_ExceptionDatabaseAccess')
+            '[2006]' => Piwik::translate('General_ExceptionDatabaseUnavailable'),
+            'MySQL server has gone away' => Piwik::translate('General_ExceptionDatabaseUnavailable'),
+            '[1698]' => Piwik::translate('General_ExceptionDatabaseAccess'),
+            'Access denied' => Piwik::translate('General_ExceptionDatabaseAccess'),
         );
-
         foreach ($safeMessageMap as $search_term => $safeMessage) {
             if (strpos($message, $search_term) !== false) {
                 return $safeMessage;
             }
         }
-
         return '';
     }
 }

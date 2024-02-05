@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\DataTable;
 
 use Piwik\DataTable;
-
 /**
  * A filter is set of logic that manipulates a DataTable. Existing filters do things like,
  *
@@ -33,7 +33,6 @@ abstract class BaseFilter
      * @var bool
      */
     protected $enableRecursive = false;
-
     /**
      * Constructor.
      *
@@ -43,14 +42,12 @@ abstract class BaseFilter
     {
         // empty
     }
-
     /**
      * Manipulates a {@link DataTable} in some way.
      *
      * @param DataTable $table
      */
-    abstract public function filter($table);
-
+    public abstract function filter($table);
     /**
      * Enables/Disables recursive filtering. Whether this property is actually used
      * is up to the derived BaseFilter class.
@@ -59,15 +56,14 @@ abstract class BaseFilter
      */
     public function enableRecursive($enable)
     {
-        $this->enableRecursive = (bool)$enable;
+        $this->enableRecursive = (bool) $enable;
     }
-
     /**
      * Filters a row's subtable, if one exists and is loaded in memory.
      *
      * @param Row $row The row whose subtable should be filter.
      */
-    public function filterSubTable(Row $row)
+    public function filterSubTable(\Piwik\DataTable\Row $row)
     {
         if (!$this->enableRecursive) {
             return;

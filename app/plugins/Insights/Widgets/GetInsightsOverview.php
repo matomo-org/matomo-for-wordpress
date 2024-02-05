@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\Insights\Widgets;
 
 use Piwik\Widget\WidgetConfig;
-
 class GetInsightsOverview extends \Piwik\Widget\Widget
 {
     public static function configure(WidgetConfig $config)

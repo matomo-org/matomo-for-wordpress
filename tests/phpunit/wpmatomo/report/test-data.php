@@ -14,7 +14,7 @@ class ReportDataTest extends MatomoAnalytics_TestCase {
 
 	protected $disable_temp_tables = true;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->data = new Data();

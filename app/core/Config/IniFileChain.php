@@ -6,7 +6,6 @@
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik\Config;
 
 use Piwik\Common;
@@ -14,7 +13,6 @@ use Matomo\Ini\IniReader;
 use Matomo\Ini\IniReadingException;
 use Matomo\Ini\IniWriter;
 use Piwik\Piwik;
-
 /**
  * Manages a list of INI files where the settings in each INI file merge with or override the
  * settings in the previous INI file.
@@ -45,14 +43,12 @@ class IniFileChain
      * @var array
      */
     protected $settingsChain = [];
-
     /**
      * The merged INI settings.
      *
      * @var array
      */
     protected $mergedSettings = [];
-
     /**
      * Constructor.
      *
@@ -63,7 +59,6 @@ class IniFileChain
     {
         $this->reload($defaultSettingsFiles, $userSettingsFile);
     }
-
     /**
      * Return setting section by reference.
      *
@@ -75,11 +70,9 @@ class IniFileChain
         if (!isset($this->mergedSettings[$name])) {
             $this->mergedSettings[$name] = [];
         }
-
         $result =& $this->mergedSettings[$name];
         return $result;
     }
-
     /**
      * Return setting section from a specific file, rather than the current merged settings.
      *
@@ -90,7 +83,6 @@ class IniFileChain
     {
         return @$this->settingsChain[$file][$name];
     }
-
     /**
      * Sets a setting value.
      *
@@ -103,10 +95,8 @@ class IniFileChain
         if ($value !== null) {
             $value = $this->replaceInvalidChars($value);
         }
-
         $this->mergedSettings[$name] = $value;
     }
-
     /**
      * Returns all settings. Changes made to the array result will be reflected in the
      * IniFileChain instance.
@@ -117,7 +107,6 @@ class IniFileChain
     {
         return $this->mergedSettings;
     }
-
     /**
      * Dumps the current in-memory setting values to a string in INI format and returns it.
      *
@@ -128,7 +117,6 @@ class IniFileChain
     {
         return $this->dumpSettings($this->mergedSettings, $header);
     }
-
     /**
      * Writes the difference of the in-memory setting values and the on-disk user settings file setting
      * values to a string in INI format, and returns it.
@@ -142,12 +130,9 @@ class IniFileChain
     public function dumpChanges($header = '')
     {
         $userSettingsFile = $this->getUserSettingsFile();
-
         $defaultSettings = $this->getMergedDefaultSettings();
         $existingMutableSettings = $this->settingsChain[$userSettingsFile];
-
         $dirty = false;
-
         $configToWrite = [];
         foreach ($this->mergedSettings as $sectionName => $changedSection) {
             if (isset($existingMutableSettings[$sectionName])) {
@@ -155,38 +140,27 @@ class IniFileChain
             } else {
                 $existingMutableSection = [];
             }
-
             // remove default values from both (they should not get written to local)
             if (isset($defaultSettings[$sectionName])) {
                 $changedSection = $this->arrayUnmerge($defaultSettings[$sectionName], $changedSection);
                 $existingMutableSection = $this->arrayUnmerge($defaultSettings[$sectionName], $existingMutableSection);
             }
-
             // if either local/config have non-default values and the other doesn't,
             // OR both have values, but different values, we must write to config.ini.php
-            if (
-                empty($changedSection) xor empty($existingMutableSection)
-                || (!empty($changedSection)
-                    && !empty($existingMutableSection)
-                    && self::compareElements($changedSection, $existingMutableSection))
-            ) {
+            if (empty($changedSection) xor empty($existingMutableSection) || !empty($changedSection) && !empty($existingMutableSection) && self::compareElements($changedSection, $existingMutableSection)) {
                 $dirty = true;
             }
-
             $configToWrite[$sectionName] = $changedSection;
         }
-
         if ($dirty) {
             // sort config sections by how early they appear in the file chain
             $self = $this;
-            uksort($configToWrite, function ($sectionNameLhs, $sectionNameRhs) use ($self) {
+            uksort($configToWrite, function ($sectionNameLhs, $sectionNameRhs) use($self) {
                 $lhsIndex = $self->findIndexOfFirstFileWithSection($sectionNameLhs);
                 $rhsIndex = $self->findIndexOfFirstFileWithSection($sectionNameRhs);
-
                 if ($lhsIndex == $rhsIndex) {
                     $lhsIndexInFile = $self->getIndexOfSectionInFile($lhsIndex, $sectionNameLhs);
                     $rhsIndexInFile = $self->getIndexOfSectionInFile($rhsIndex, $sectionNameRhs);
-
                     if ($lhsIndexInFile == $rhsIndexInFile) {
                         return 0;
                     } elseif ($lhsIndexInFile < $rhsIndexInFile) {
@@ -200,43 +174,30 @@ class IniFileChain
                     return 1;
                 }
             });
-
             return $this->dumpSettings($configToWrite, $header);
         } else {
             return null;
         }
     }
-
     /**
      * Reloads settings from disk.
      */
     public function reload($defaultSettingsFiles = [], $userSettingsFile = null)
     {
-        if (
-            !empty($defaultSettingsFiles)
-            || !empty($userSettingsFile)
-        ) {
+        if (!empty($defaultSettingsFiles) || !empty($userSettingsFile)) {
             $this->resetSettingsChain($defaultSettingsFiles, $userSettingsFile);
         }
-
         $hasAbsoluteConfigFile = !empty($userSettingsFile) && strpos($userSettingsFile, DIRECTORY_SEPARATOR) === 0;
         $useConfigCache = !empty($GLOBALS['ENABLE_CONFIG_PHP_CACHE']) && $hasAbsoluteConfigFile;
-
         if ($useConfigCache && is_file($userSettingsFile)) {
-            $cache = new Cache();
+            $cache = new \Piwik\Config\Cache();
             $values = $cache->doFetch(self::CONFIG_CACHE_KEY);
-
-            if (
-                !empty($values)
-                && isset($values['mergedSettings'])
-                && isset($values['settingsChain'][$userSettingsFile])
-            ) {
+            if (!empty($values) && isset($values['mergedSettings']) && isset($values['settingsChain'][$userSettingsFile])) {
                 $this->mergedSettings = $values['mergedSettings'];
                 $this->settingsChain = $values['settingsChain'];
                 return;
             }
         }
-
         $reader = new IniReader();
         foreach ($this->settingsChain as $file => $ignore) {
             if (is_readable($file)) {
@@ -246,28 +207,19 @@ class IniFileChain
                 } catch (IniReadingException $ex) {
                     throw new IniReadingException('Unable to read INI file {' . $file . '}: ' . $ex->getMessage() . "\n Your host may have disabled parse_ini_file().");
                 }
-
                 $this->decodeValues($this->settingsChain[$file]);
             }
         }
-
         $merged = $this->mergeFileSettings();
         // remove reference to $this->settingsChain... otherwise dump() or compareElements() will never notice a difference
         // on PHP 7+ as they would be always equal
         $this->mergedSettings = $this->copy($merged);
-
         if (!empty($GLOBALS['MATOMO_MODIFY_CONFIG_SETTINGS']) && !empty($this->mergedSettings)) {
             $this->mergedSettings = call_user_func($GLOBALS['MATOMO_MODIFY_CONFIG_SETTINGS'], $this->mergedSettings);
         }
-
-        if (
-            $useConfigCache
-            && !empty($this->mergedSettings)
-            && !empty($this->settingsChain)
-            && Cache::hasHostConfig($this->mergedSettings)
-        ) {
+        if ($useConfigCache && !empty($this->mergedSettings) && !empty($this->settingsChain) && \Piwik\Config\Cache::hasHostConfig($this->mergedSettings)) {
             $ttlOneHour = 3600;
-            $cache = new Cache();
+            $cache = new \Piwik\Config\Cache();
             if ($cache->isValidHost($this->mergedSettings)) {
                 // we make sure to save the config only if the host is valid...
                 $data = ['mergedSettings' => $this->mergedSettings, 'settingsChain' => $this->settingsChain];
@@ -275,15 +227,13 @@ class IniFileChain
             }
         }
     }
-
     public function deleteConfigCache()
     {
         if (!empty($GLOBALS['ENABLE_CONFIG_PHP_CACHE'])) {
-            $cache = new Cache();
-            $cache->doDelete(IniFileChain::CONFIG_CACHE_KEY);
+            $cache = new \Piwik\Config\Cache();
+            $cache->doDelete(\Piwik\Config\IniFileChain::CONFIG_CACHE_KEY);
         }
     }
-
     private function copy($merged)
     {
         $copy = [];
@@ -296,26 +246,21 @@ class IniFileChain
         }
         return $copy;
     }
-
     private function resetSettingsChain($defaultSettingsFiles, $userSettingsFile)
     {
         $this->settingsChain = [];
-
         if (!empty($defaultSettingsFiles)) {
             foreach ($defaultSettingsFiles as $file) {
                 $this->settingsChain[$file] = null;
             }
         }
-
         if (!empty($userSettingsFile)) {
             $this->settingsChain[$userSettingsFile] = null;
         }
     }
-
     protected function mergeFileSettings()
     {
         $mergedSettings = $this->getMergedDefaultSettings();
-
         $userSettings = end($this->settingsChain) ?: [];
         foreach ($userSettings as $sectionName => $section) {
             if (!isset($mergedSettings[$sectionName])) {
@@ -326,23 +271,16 @@ class IniFileChain
                 $mergedSettings[$sectionName] = array_merge($mergedSettings[$sectionName], $section);
             }
         }
-
         return $mergedSettings;
     }
-
     protected function getMergedDefaultSettings()
     {
         $userSettingsFile = $this->getUserSettingsFile();
-
         $mergedSettings = [];
         foreach ($this->settingsChain as $file => $settings) {
-            if (
-                $file == $userSettingsFile
-                || empty($settings)
-            ) {
+            if ($file == $userSettingsFile || empty($settings)) {
                 continue;
             }
-
             foreach ($settings as $sectionName => $section) {
                 if (!isset($mergedSettings[$sectionName])) {
                     $mergedSettings[$sectionName] = $section;
@@ -353,14 +291,12 @@ class IniFileChain
         }
         return $mergedSettings;
     }
-
     protected function getUserSettingsFile()
     {
         // the user settings file is the last key in $settingsChain
         end($this->settingsChain);
         return key($this->settingsChain);
     }
-
     /**
      * Comparison function
      *
@@ -374,21 +310,16 @@ class IniFileChain
             if (is_array($elem2)) {
                 return strcmp(serialize($elem1), serialize($elem2));
             }
-
             return 1;
         }
-
         if (is_array($elem2)) {
             return -1;
         }
-
-        if ((string)$elem1 === (string)$elem2) {
+        if ((string) $elem1 === (string) $elem2) {
             return 0;
         }
-
-        return ((string)$elem1 > (string)$elem2) ? 1 : -1;
+        return (string) $elem1 > (string) $elem2 ? 1 : -1;
     }
-
     /**
      * Compare arrays and return difference, such that:
      *
@@ -403,18 +334,14 @@ class IniFileChain
         // return key/value pairs for keys in $modified but not in $original
         // return key/value pairs for keys in both $modified and $original, but values differ
         // ignore keys that are in $original but not in $modified
-
         if (empty($original) || !is_array($original)) {
             $original = [];
         }
-
         if (empty($modified) || !is_array($modified)) {
             $modified = [];
         }
-
         return array_udiff_assoc($modified, $original, [__CLASS__, 'compareElements']);
     }
-
     /**
      * array_merge_recursive does indeed merge arrays, but it converts values with duplicate
      * keys to arrays rather than overwriting the value in the first array with the duplicate
@@ -444,15 +371,14 @@ class IniFileChain
     {
         $merged = $array1;
         foreach ($array2 as $key => &$value) {
-            if (is_array($value) && isset($merged [$key]) && is_array($merged [$key])) {
-                $merged [$key] = $this->array_merge_recursive_distinct($merged [$key], $value);
+            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+                $merged[$key] = $this->array_merge_recursive_distinct($merged[$key], $value);
             } else {
-                $merged [$key] = $value;
+                $merged[$key] = $value;
             }
         }
         return $merged;
     }
-
     /**
      * public for use in closure.
      */
@@ -463,12 +389,10 @@ class IniFileChain
             if (isset($settings[$sectionName])) {
                 break;
             }
-
             ++$count;
         }
         return $count;
     }
-
     /**
      * public for use in closure.
      */
@@ -478,17 +402,13 @@ class IniFileChain
         for ($i = 0; $i != $fileIndex; ++$i) {
             next($this->settingsChain);
         }
-
         $settingsData = current($this->settingsChain);
         if (empty($settingsData)) {
             return -1;
         }
-
         $settingsDataSectionNames = array_keys($settingsData);
-
         return array_search($sectionName, $settingsDataSectionNames);
     }
-
     /**
      * Encode HTML entities
      *
@@ -509,7 +429,6 @@ class IniFileChain
         }
         return $values;
     }
-
     /**
      * Decode HTML entities
      *
@@ -528,7 +447,6 @@ class IniFileChain
         }
         return $values;
     }
-
     private function dumpSettings($values, $header)
     {
         /**
@@ -548,11 +466,9 @@ class IniFileChain
          */
         Piwik::postEvent('Config.beforeSave', [&$values]);
         $values = $this->encodeValues($values);
-
         $writer = new IniWriter();
         return $writer->writeToString($values, $header);
     }
-
     private function replaceInvalidChars($value)
     {
         if (is_array($value)) {
@@ -562,15 +478,13 @@ class IniFileChain
                 if (is_array($arrayValue)) {
                     $arrayValue = $this->replaceInvalidChars($arrayValue);
                 }
-
                 $result[$key] = $arrayValue;
             }
             return $result;
         } else {
-            return preg_replace('/[^a-zA-Z0-9_\[\]-]/', '', $value);
+            return preg_replace('/[^a-zA-Z0-9_\\[\\]-]/', '', $value);
         }
     }
-
     private function replaceSectionInvalidChars($value)
     {
         return preg_replace('/[^a-zA-Z0-9_-]/', '', $value);

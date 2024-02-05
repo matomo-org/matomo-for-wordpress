@@ -12,7 +12,7 @@ class AdminPrivacySettingsTest extends MatomoUnit_TestCase {
 	 */
 	private $privacy_settings;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$settings               = new \WpMatomo\Settings();
@@ -24,7 +24,7 @@ class AdminPrivacySettingsTest extends MatomoUnit_TestCase {
 		$this->privacy_settings->show_settings();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( 'Let users opt-out of tracking', $output );
+		$this->assertStringContainsString( 'Let users opt-out of tracking', $output );
 	}
 
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,7 @@ use Piwik\Columns\Discriminator;
 use Piwik\Columns\Join\ActionNameJoin;
 use Piwik\Plugin\Dimension\ActionDimension;
 use Piwik\Tracker\Action;
-
+use Piwik\Tracker\TableLogAction;
 class SearchKeyword extends ActionDimension
 {
     protected $columnName = 'idaction_name';
@@ -20,13 +21,11 @@ class SearchKeyword extends ActionDimension
     protected $nameSingular = 'Actions_SiteSearchKeyword';
     protected $namePlural = 'Actions_SiteSearchKeywords';
     protected $type = self::TYPE_TEXT;
-    protected $sqlFilter = '\\Piwik\\Tracker\\TableLogAction::getIdActionFromSegment';
-
+    protected $sqlFilter = [TableLogAction::class, 'getOptimizedIdActionSqlMatch'];
     public function getDbColumnJoin()
     {
         return new ActionNameJoin();
     }
-
     public function getDbDiscriminator()
     {
         return new Discriminator('log_action', 'type', Action::TYPE_SITE_SEARCH);

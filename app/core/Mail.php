@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,14 +9,14 @@
  */
 namespace Piwik;
 
-use DI\NotFoundException;
-use DI\DependencyException;
+use PHPMailer\PHPMailer\Exception;
+use Piwik\Exception\DI\NotFoundException;
+use Piwik\Exception\DI\DependencyException;
 use Piwik\Container\StaticContainer;
 use Piwik\Email\ContentGenerator;
 use Piwik\Plugins\CoreAdminHome\CustomLogo;
 use Piwik\Translation\Translator;
-use Psr\Log\LoggerInterface;
-
+use Piwik\Log\LoggerInterface;
 /**
  * Class for sending mails
  *
@@ -33,11 +34,9 @@ class Mail
     protected $bccs = [];
     protected $attachments = [];
     protected $smtpDebug = false;
-
     public function __construct()
     {
     }
-
     /**
      * Sets the sender.
      *
@@ -49,31 +48,25 @@ class Mail
         $this->fromName = $name;
         $this->fromEmail = $this->parseDomainPlaceholderAsPiwikHostName($email);
     }
-
     /**
      * Sets the default sender
      *
-     * @throws \DI\NotFoundException
+     * @throws NotFoundException
      */
     public function setDefaultFromPiwik()
     {
         $customLogo = new CustomLogo();
-
         /** @var Translator $translator */
-        $translator = StaticContainer::get('Piwik\Translation\Translator');
-
-        $fromEmailName = Config::getInstance()->General['noreply_email_name'];
-
+        $translator = StaticContainer::get('Piwik\\Translation\\Translator');
+        $fromEmailName = \Piwik\Config::getInstance()->General['noreply_email_name'];
         if (empty($fromEmailName) && $customLogo->isEnabled()) {
             $fromEmailName = $translator->translate('CoreHome_WebAnalyticsReports');
         } elseif (empty($fromEmailName)) {
             $fromEmailName = $translator->translate('TagManager_MatomoTagName');
         }
-
-        $fromEmailAddress = Config::getInstance()->General['noreply_email_address'];
+        $fromEmailAddress = \Piwik\Config::getInstance()->General['noreply_email_address'];
         $this->setFrom($fromEmailAddress, $fromEmailName);
     }
-
     /**
      * Returns the address the mail will be sent from
      *
@@ -83,7 +76,6 @@ class Mail
     {
         return $this->fromEmail;
     }
-
     /**
      * Returns the address the mail will be sent from
      *
@@ -93,10 +85,10 @@ class Mail
     {
         return $this->fromName;
     }
-
     /**
      * @param View|string $body
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function setWrappedHtmlBody($body)
     {
@@ -104,7 +96,6 @@ class Mail
         $bodyHtml = $contentGenerator->generateHtmlContent($body);
         $this->bodyHTML = $bodyHtml;
     }
-
     /**
      * Sets the HTML part of the mail
      *
@@ -114,7 +105,6 @@ class Mail
     {
         $this->bodyHTML = $html;
     }
-
     /**
      * Sets the text part of the mail.
      * If bodyHtml is set, this will be used as alternative text part
@@ -125,7 +115,6 @@ class Mail
     {
         $this->bodyText = $txt;
     }
-
     /**
      * Returns html content of the mail
      *
@@ -135,7 +124,6 @@ class Mail
     {
         return $this->bodyHTML;
     }
-
     /**
      * Returns text content of the mail
      *
@@ -145,7 +133,6 @@ class Mail
     {
         return $this->bodyText;
     }
-
     /**
      * Sets the subject of the mail
      *
@@ -156,7 +143,6 @@ class Mail
         $subject = $this->sanitiseString($subject);
         $this->subject = $subject;
     }
-
     /**
      * Return the subject of the mail
      *
@@ -166,7 +152,6 @@ class Mail
     {
         return $this->subject;
     }
-
     /**
      * Adds a recipient
      *
@@ -177,7 +162,6 @@ class Mail
     {
         $this->recipients[$address] = $name;
     }
-
     /**
      * Returns the list of recipients
      *
@@ -187,7 +171,6 @@ class Mail
     {
         return $this->recipients;
     }
-
     /**
      * Add Bcc address
      *
@@ -198,7 +181,6 @@ class Mail
     {
         $this->bccs[$email] = $name;
     }
-
     /**
      * Returns the list of bcc addresses
      *
@@ -208,7 +190,6 @@ class Mail
     {
         return $this->bccs;
     }
-
     /**
      * Removes all recipients and bccs from the list
      */
@@ -217,7 +198,6 @@ class Mail
         $this->recipients = [];
         $this->bccs = [];
     }
-
     /**
      * Add Reply-To address
      *
@@ -228,7 +208,6 @@ class Mail
     {
         $this->replyTos[$this->parseDomainPlaceholderAsPiwikHostName($email)] = $name;
     }
-
     /**
      * Sets the reply to address (all previously added addresses will be removed)
      *
@@ -240,7 +219,6 @@ class Mail
         $this->replyTos = [];
         $this->addReplyTo($email, $name);
     }
-
     /**
      * Returns the list of reply to addresses
      *
@@ -250,48 +228,38 @@ class Mail
     {
         return $this->replyTos;
     }
-
     public function addAttachment($body, $mimeType = '', $filename = null, $cid = null)
     {
         $filename = $this->sanitiseString($filename);
-        $this->attachments[] = [
-            'content' => $body,
-            'filename' => $filename,
-            'mimetype' => $mimeType,
-            'cid' => $cid
-        ];
+        $this->attachments[] = ['content' => $body, 'filename' => $filename, 'mimetype' => $mimeType, 'cid' => $cid];
     }
-
     public function getAttachments()
     {
         return $this->attachments;
     }
-
     /**
      * Sends the mail
      *
      * @return bool|null returns null if sending the mail was aborted by the Mail.send event
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws Exception
      */
     public function send()
     {
         if (!$this->shouldSendMail()) {
             return false;
         }
-
         $mail = $this;
-
         /**
          * This event is posted right before an email is sent. You can use it to customize the email by, for example, replacing
          * the subject/body, changing the from address, etc.
          *
          * @param Mail $mail The Mail instance that is about to be sent.
          */
-        Piwik::postEvent('Mail.send', [$mail]);
-
-        return StaticContainer::get('Piwik\Mail\Transport')->send($mail);
+        \Piwik\Piwik::postEvent('Mail.send', [$mail]);
+        return StaticContainer::get('Piwik\\Mail\\Transport')->send($mail);
     }
-
     /**
      * If the send email process throws an exception, we catch it and log it
      *
@@ -308,7 +276,6 @@ class Mail
             StaticContainer::get(LoggerInterface::class)->warning('Could not send {class} email: {exception}', ['class' => get_class($this), 'exception' => $e]);
         }
     }
-
     /**
      * Enables SMTP debugging
      *
@@ -318,7 +285,6 @@ class Mail
     {
         $this->smtpDebug = $smtpDebug;
     }
-
     /**
      * Returns whether SMTP debugging is enabled or not
      *
@@ -328,7 +294,6 @@ class Mail
     {
         return $this->smtpDebug;
     }
-
     /**
      * Returns the hostname mails will be sent from
      *
@@ -336,18 +301,16 @@ class Mail
      */
     public function getMailHost()
     {
-        $hostname  = Config::getInstance()->mail['defaultHostnameIfEmpty'];
-        $piwikHost = Url::getCurrentHost($hostname);
-
+        $hostname = \Piwik\Config::getInstance()->mail['defaultHostnameIfEmpty'];
+        $piwikHost = \Piwik\Url::getCurrentHost($hostname);
         // If known Piwik URL, use it instead of "localhost"
-        $piwikUrl = SettingsPiwik::getPiwikUrl();
-        $url      = parse_url($piwikUrl);
+        $piwikUrl = \Piwik\SettingsPiwik::getPiwikUrl();
+        $url = parse_url($piwikUrl);
         if ($this->isHostDefinedAndNotLocal($url)) {
             $piwikHost = $url['host'];
         }
         return $piwikHost;
     }
-
     /**
      * @param string $email
      * @return string
@@ -357,16 +320,14 @@ class Mail
         $piwikHost = $this->getMailHost();
         return str_replace('{DOMAIN}', $piwikHost, $email);
     }
-
     /**
      * @param array $url
      * @return bool
      */
     protected function isHostDefinedAndNotLocal($url)
     {
-        return isset($url['host']) && !Url::isLocalHost($url['host']);
+        return isset($url['host']) && !\Piwik\Url::isLocalHost($url['host']);
     }
-
     /**
      * Replaces characters known to appear incorrectly in some email clients
      *
@@ -380,27 +341,22 @@ class Mail
         $string = str_replace($search, $replace, $string);
         return $string;
     }
-
     private function shouldSendMail()
     {
-        $config = Config::getInstance();
+        $config = \Piwik\Config::getInstance();
         $general = $config->General;
         if (empty($general['emails_enabled'])) {
             return false;
         }
-
         $shouldSendMail = true;
-
         $mail = $this;
-
         /**
          * This event is posted before sending an email. You can use it to abort sending a specific email, if you want.
          *
          * @param bool &$shouldSendMail Whether to send this email or not. Set to false to skip sending.
          * @param Mail $mail The Mail instance that will be sent.
          */
-        Piwik::postEvent('Mail.shouldSend', [&$shouldSendMail, $mail]);
-
+        \Piwik\Piwik::postEvent('Mail.shouldSend', [&$shouldSendMail, $mail]);
         return $shouldSendMail;
     }
 }

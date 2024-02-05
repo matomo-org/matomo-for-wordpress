@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Plugins\Referrers;
 use Piwik\Common;
 use Piwik\Piwik;
 use Piwik\UrlHelper;
-
 /**
  * Returns path component from a URL
  *
@@ -26,7 +26,6 @@ function getPathFromUrl($url)
     }
     return $path;
 }
-
 /**
  * Return translated referrer type
  *
@@ -63,7 +62,6 @@ function getReferrerTypeLabel($label)
     }
     return Piwik::translate($indexTranslation);
 }
-
 /**
  * Works in both directions
  * @param string $name
@@ -72,22 +70,15 @@ function getReferrerTypeLabel($label)
  */
 function getReferrerTypeFromShortName($name)
 {
-    $map = array(
-        Common::REFERRER_TYPE_SEARCH_ENGINE  => 'search',
-        Common::REFERRER_TYPE_SOCIAL_NETWORK => 'social',
-        Common::REFERRER_TYPE_WEBSITE        => 'website',
-        Common::REFERRER_TYPE_DIRECT_ENTRY   => 'direct',
-        Common::REFERRER_TYPE_CAMPAIGN       => 'campaign',
-    );
+    $map = array(Common::REFERRER_TYPE_SEARCH_ENGINE => 'search', Common::REFERRER_TYPE_SOCIAL_NETWORK => 'social', Common::REFERRER_TYPE_WEBSITE => 'website', Common::REFERRER_TYPE_DIRECT_ENTRY => 'direct', Common::REFERRER_TYPE_CAMPAIGN => 'campaign');
     if (isset($map[$name])) {
         return $map[$name];
     }
     if ($found = array_search($name, $map)) {
         return $found;
     }
-    throw new \Exception("Referrer type '$name' is not valid.");
+    throw new \Exception("Referrer type '{$name}' is not valid.");
 }
-
 /**
  * Returns a URL w/o the protocol type.
  *
@@ -96,7 +87,7 @@ function getReferrerTypeFromShortName($name)
  */
 function removeUrlProtocol($url)
 {
-    if (preg_match('/^[a-zA-Z_-]+:\/\//', $url, $matches)) {
+    if (preg_match('/^[a-zA-Z_-]+:\\/\\//', $url, $matches)) {
         return substr($url, strlen($matches[0]));
     }
     return $url;

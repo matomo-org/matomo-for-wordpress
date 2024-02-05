@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,19 +13,16 @@ use Piwik\Common;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
-
-class ReferrerName extends Base
+class ReferrerName extends \Piwik\Plugins\Referrers\Columns\Base
 {
     protected $columnName = 'referer_name';
     protected $columnType = 'VARCHAR(255) NULL';
     protected $type = self::TYPE_TEXT;
-
     protected $nameSingular = 'Referrers_ReferrerName';
     protected $namePlural = 'Referrers_ReferrerNames';
     protected $segmentName = 'referrerName';
     protected $acceptValues = 'twitter.com, www.facebook.com, Bing, Google, Yahoo, CampaignName';
     protected $category = 'Referrers_Referrers';
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -36,19 +34,14 @@ class ReferrerName extends Base
         $information = $this->getReferrerInformationFromRequest($request, $visitor);
         return $information['referer_name'];
     }
-
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
         $information = $this->getReferrerInformationFromRequest($request, $visitor);
-        if ($this->isCurrentReferrerDirectEntry($visitor)
-            && $information['referer_type'] != Common::REFERRER_TYPE_DIRECT_ENTRY
-        ) {
+        if ($this->isCurrentReferrerDirectEntry($visitor) && $information['referer_type'] != Common::REFERRER_TYPE_DIRECT_ENTRY) {
             return $information['referer_name'];
         }
-
         return false;
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor

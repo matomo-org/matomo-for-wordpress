@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,14 +9,11 @@
 namespace Piwik\Plugins\TagManager\API;
 
 use Piwik\Piwik;
-
-class VariableReference extends BaseReference
+class VariableReference extends \Piwik\Plugins\TagManager\API\BaseReference
 {
     public function __construct($referenceId, $referenceName)
     {
         $referenceTypeName = Piwik::translate('TagManager_Variable');
         parent::__construct($referenceId, $referenceName, 'variable', $referenceTypeName);
     }
-
-
 }

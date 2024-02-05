@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\Referrers\DataTable\Filter;
 
 use Piwik\DataTable;
-
 class KeywordNotDefined extends DataTable\Filter\ColumnCallbackReplace
 {
     /**
@@ -19,6 +19,6 @@ class KeywordNotDefined extends DataTable\Filter\ColumnCallbackReplace
      */
     public function __construct($table)
     {
-        parent::__construct($table, 'label', 'Piwik\Plugins\Referrers\API::getCleanKeyword');
+        parent::__construct($table, 'label', 'Piwik\\Plugins\\Referrers\\API::getCleanKeyword');
     }
 }

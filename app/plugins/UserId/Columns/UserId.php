@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,13 +10,10 @@
 namespace Piwik\Plugins\UserId\Columns;
 
 use Piwik\Plugin\Dimension\VisitDimension;
-
 /**
  * UserId dimension
  */
 class UserId extends VisitDimension
 {
-
     protected $nameSingular = 'UserId_UserId';
-
 }

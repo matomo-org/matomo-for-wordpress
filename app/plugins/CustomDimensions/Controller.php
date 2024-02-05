@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,20 +11,12 @@ namespace Piwik\Plugins\CustomDimensions;
 
 use Piwik\Common;
 use Piwik\Piwik;
-
 class Controller extends \Piwik\Plugin\ControllerAdmin
 {
     public function manage()
     {
         $idSite = Common::getRequestVar('idSite');
-
         Piwik::checkUserHasWriteAccess($idSite);
-
-        return $this->renderTemplate('manage', array(
-            'idSite' => $this->idSite,
-            'title' => Piwik::translate('CustomDimensions_CustomDimensions'
-        )));
+        return $this->renderTemplate('manage', array('idSite' => $this->idSite, 'title' => Piwik::translate('CustomDimensions_CustomDimensions')));
     }
-
 }
-

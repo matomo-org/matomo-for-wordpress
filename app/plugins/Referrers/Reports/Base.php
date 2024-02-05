@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -14,5 +15,4 @@ abstract class Base extends \Piwik\Plugin\Report
     {
         $this->categoryId = 'Referrers_Referrers';
     }
-
 }

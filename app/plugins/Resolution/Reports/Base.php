@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,21 +11,17 @@ namespace Piwik\Plugins\Resolution\Reports;
 
 use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\CoreVisualizations\Visualizations\Graph;
-
 abstract class Base extends \Piwik\Plugin\Report
 {
     protected function init()
     {
         $this->categoryId = 'General_Visitors';
     }
-
     protected function getBasicResolutionDisplayProperties(ViewDataTable $view)
     {
         $view->config->show_search = false;
         $view->config->show_exclude_low_population = false;
-
         $view->requestConfig->filter_limit = 5;
-
         if ($view->isViewDataTableId(Graph::ID)) {
             $view->config->max_graph_elements = 5;
         }

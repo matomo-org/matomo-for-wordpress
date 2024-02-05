@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,19 +12,11 @@ namespace Piwik\Plugins\ImageGraph\StaticGraph;
 /**
  *
  */
-class Evolution extends GridGraph
+class Evolution extends \Piwik\Plugins\ImageGraph\StaticGraph\GridGraph
 {
-
     public function renderGraph()
     {
-        $this->initGridChart(
-            $displayVerticalGridLines = true,
-            $bulletType = LEGEND_FAMILY_LINE,
-            $horizontalGraph = false,
-            $showTicks = true,
-            $verticalLegend = true
-        );
-
+        $this->initGridChart($displayVerticalGridLines = true, $bulletType = LEGEND_FAMILY_LINE, $horizontalGraph = false, $showTicks = true, $verticalLegend = true);
         $this->pImage->drawLineChart();
     }
 }

@@ -85,6 +85,10 @@ class Sync {
 
 		if ( is_multisite() && function_exists( 'get_sites' ) ) {
 			foreach ( get_sites() as $site ) {
+				if ( 1 === (int) $site->deleted ) {
+					continue;
+				}
+
 				/** @var WP_Site $site */
 				switch_to_blog( $site->blog_id );
 				try {

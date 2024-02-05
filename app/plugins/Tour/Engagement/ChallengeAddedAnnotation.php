@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,28 +10,23 @@
 namespace Piwik\Plugins\Tour\Engagement;
 
 use Piwik\Piwik;
-
-class ChallengeAddedAnnotation extends Challenge
+use Piwik\Url;
+class ChallengeAddedAnnotation extends \Piwik\Plugins\Tour\Engagement\Challenge
 {
     public function getName()
     {
         return Piwik::translate('Tour_AddAnnotation');
     }
-
     public function getDescription()
     {
         return Piwik::translate('Annotations_PluginDescription');
     }
-
     public function getId()
     {
         return 'add_annotation';
     }
-
     public function getUrl()
     {
-        return 'https://matomo.org/docs/annotations/';
+        return Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/annotations/');
     }
-
-
 }

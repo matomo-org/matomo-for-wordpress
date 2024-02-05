@@ -32,7 +32,7 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 	 */
 	private $settings;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->settings = new Settings();
@@ -40,7 +40,7 @@ class CapabilitiesTest extends MatomoAnalytics_TestCase {
 		$this->caps->register_hooks();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->caps->remove_hooks();
 		parent::tearDown();
 	}

@@ -1,0 +1,156 @@
+var SegmentedVisitorLog = function() {
+
+    function getDataTableFromApiMethod(apiMethod)
+    {
+        var div = $(require('piwik/UI').DataTable.getDataTableByReport(apiMethod));
+        if (div.length && div.data('uiControlObject')) {
+            return div.data('uiControlObject');
+        }
+    }
+
+    function getLabelFromTr ($tr, apiMethod) {
+        var label;
+
+        if (apiMethod && 0 === apiMethod.indexOf('Actions.')) {
+            // for now only use this for Actions... I know a hack :( Otherwise in Search Engines
+            // it would show "http://www.searchenginename.org" instead of "SearchEngineName"
+            label = $tr.attr('data-url-label');
+        }
+
+        if (!label) {
+            label = $tr.find('.label .value').text();
+        }
+
+        if (label) {
+            label = $.trim(label);
+        }
+
+        return label;
+    }
+
+
+    function getDimensionFromApiMethod(apiMethod)
+    {
+        if (!apiMethod) {
+            return;
+        }
+
+        var dataTable = getDataTableFromApiMethod(apiMethod);
+        var metadata  = getMetadataFromDataTable(dataTable);
+
+        if (metadata && metadata.dimension) {
+            return metadata.dimension;
+        }
+    }
+
+    function getMetadataFromDataTable(dataTable)
+    {
+        if (dataTable) {
+
+            return dataTable.getReportMetadata();
+        }
+    }
+
+    function findTitleOfRowHavingRawSegmentValue(apiMethod, rawSegmentValue)
+    {
+        var $tr = $('[data-report="' + apiMethod + '"] tr[data-segment-filter="' + rawSegmentValue + '"]').first();
+
+        return getLabelFromTr($tr, apiMethod);
+    }
+
+    function setPopoverTitle(apiMethod, segment, index) {
+        var dataTable = getDataTableFromApiMethod(apiMethod);
+
+        if (!dataTable) {
+            if (index < 15) {
+                // this is needed when the popover is opened before the dataTable is there which can often
+                // happen when opening the popover directly via URL (broadcast.popoverHandler)
+                setTimeout(function () {
+                    setPopoverTitle(apiMethod, segment, index + 1);
+                }, 150);
+            }
+            return;
+        }
+
+        var segmentName = getDimensionFromApiMethod(apiMethod);
+        var segmentValue = findTitleOfRowHavingRawSegmentValue(apiMethod, segment);
+
+        if (!segmentName || (segment && segment.indexOf(';') > 0)) {
+            segmentName = _pk_translate('General_Segment');
+            var segmentParts = segment.split(';');
+            segmentValue = segmentParts.join(' ' + _pk_translate('General_And') + ' ');
+        }
+
+        segmentName = piwikHelper.escape(segmentName);
+        segmentName = piwikHelper.htmlEntities(segmentName);
+        segmentValue = piwikHelper.escape(segmentValue);
+        segmentValue = piwikHelper.htmlEntities(segmentValue);
+        segmentName = segmentName.replace(/(&amp;)(#[0-9]{2,5};)/g, '&$2');
+        segmentValue = segmentValue.replace(/(&amp;)(#[0-9]{2,5};)/g, '&$2');
+
+        var title = _pk_translate('Live_SegmentedVisitorLogTitle', [segmentName, segmentValue]);
+
+        Piwik_Popover.setTitle(title);
+    }
+
+    function show(apiMethod, segment, extraParams) {
+
+        if (!piwik.visitorLogEnabled) {
+            console.error('Visitor Log was disabled in website settings');
+            return;
+        }
+
+        // open the popover
+        var box = Piwik_Popover.showLoading('Segmented Visits Log');
+        box.addClass('segmentedVisitorLogPopover');
+
+
+        var callback = function (html) {
+            Piwik_Popover.setContent(html);
+
+            // remove title returned from the server
+            var title = box.find('.enrichedHeadline').closest('h2');
+
+            // if the enriched headline has been already parsed, there might be additional content,
+            // so we prefer using the original title, which is placed in div with class "title"
+            // @see plugins/CoreHome/vue/src/EnrichedHeadline/EnrichedHeadline.vue
+            if (title.find('.title')) {
+                var defaultTitle = title.find('.title').text();
+            } else {
+                var defaultTitle = title.text();
+            }
+
+            if (title.length) {
+                title.remove();
+            }
+
+            Piwik_Popover.setTitle(defaultTitle);
+
+            setPopoverTitle(apiMethod, segment, 0);
+        };
+
+        // prepare loading the popover contents
+        var requestParams = {
+            module: 'Live',
+            action: 'indexVisitorLog',
+            segment: encodeURIComponent(segment),
+            disableLink: 1,
+            small: 1,
+            enableAddNewSegment: 1,
+        };
+
+        $.extend(requestParams, extraParams);
+
+        var ajaxRequest = new ajaxHelper();
+        ajaxRequest.addParams(requestParams, 'get');
+        ajaxRequest.withTokenInUrl();
+        ajaxRequest.setCallback(callback);
+        ajaxRequest.setFormat('html');
+        ajaxRequest.send();
+    }
+
+    return {
+        show: show
+    }
+}();
+

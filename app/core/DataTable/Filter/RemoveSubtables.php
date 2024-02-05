@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik\DataTable\Filter;
 
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
-
 /**
  * Delete all existing subtables from rows.
  *
@@ -31,7 +31,6 @@ class RemoveSubtables extends BaseFilter
     {
         parent::__construct($table);
     }
-
     /**
      * See {@link Limit}.
      *

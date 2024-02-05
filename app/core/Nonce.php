@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik;
 
 use Piwik\Session\SessionNamespace;
-
 /**
  * Nonce class.
  *
@@ -38,22 +38,18 @@ class Nonce
         // save session-dependent nonce
         $ns = new SessionNamespace($id);
         $nonce = $ns->nonce;
-
         // re-use an unexpired nonce (a small deviation from the "used only once" principle, so long as we do not reset the expiration)
         // to handle browser pre-fetch or double fetch caused by some browser add-ons/extensions
         if (empty($nonce)) {
             // generate a new nonce
-            $nonce = md5(SettingsPiwik::getSalt() . time() . Common::generateUniqId());
+            $nonce = md5(\Piwik\SettingsPiwik::getSalt() . time() . \Piwik\Common::generateUniqId());
             $ns->nonce = $nonce;
         }
-
         // extend lifetime if nonce is requested again to prevent from early timeout if nonce is requested again
         // a few seconds before timeout
         $ns->setExpirationSeconds($ttl, 'nonce');
-
         return $nonce;
     }
-
     /**
      * Returns if a nonce is valid and comes from a valid request.
      *
@@ -74,7 +70,6 @@ class Nonce
         $error = self::verifyNonceWithErrorMessage($id, $cnonce, $allowedReferrerHost);
         return $error === "";
     }
-
     /**
      * Returns an error message, if any of the individual checks fails.
      *
@@ -95,68 +90,44 @@ class Nonce
     {
         $ns = new SessionNamespace($id);
         $nonce = $ns->nonce;
-
         $additionalErrors = '';
-
         //  The Session cookie is set to a secure cookie, when SSL is mis-configured, it can cause the PHP session cookie ID to change on each page view.
         //  Indicate to user how to solve this particular use case by forcing secure connections.
-        if (Url::isSecureConnectionAssumedByPiwikButNotForcedYet()) {
-            $additionalErrors =  '<br/><br/>' . Piwik::translate('Login_InvalidNonceSSLMisconfigured',
-                array(
-                  '<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/faq/how-to/faq_91/">',
-                  '</a>',
-                  'config/config.ini.php',
-                  '<pre>force_ssl=1</pre>',
-                  '<pre>[General]</pre>',
-                )
-              );
+        if (\Piwik\Url::isSecureConnectionAssumedByPiwikButNotForcedYet()) {
+            $additionalErrors = '<br/><br/>' . \Piwik\Piwik::translate('Login_InvalidNonceSSLMisconfigured', array('<a target="_blank" rel="noreferrer noopener" href="' . \Piwik\Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to/faq_91/') . '">', '</a>', 'config/config.ini.php', '<pre>force_ssl=1</pre>', '<pre>[General]</pre>'));
         }
-
         // validate token
         if (empty($cnonce) || $cnonce !== $nonce) {
-            return Piwik::translate('Login_InvalidNonceToken');
+            return \Piwik\Piwik::translate('Login_InvalidNonceToken');
         }
-
         // Validate referrer if present
-        $referrer = Url::getReferrer();
+        $referrer = \Piwik\Url::getReferrer();
         if (!empty($referrer)) {
             // Allow the instance host by default, if no allowedReferrerHost is specified.
-            if (empty($allowedReferrerHost) && !Url::isLocalUrl($referrer)) {
-                return Piwik::translate('Login_InvalidNonceReferrer', array(
-                        '<a target="_blank" rel="noreferrer noopener" href="https://matomo.org/faq/how-to-install/faq_98">',
-                        '</a>'
-                    )) . $additionalErrors;
+            if (empty($allowedReferrerHost) && !\Piwik\Url::isLocalUrl($referrer)) {
+                return \Piwik\Piwik::translate('Login_InvalidNonceReferrer', array('<a target="_blank" rel="noreferrer noopener" href="' . \Piwik\Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to-install/faq_98') . '">', '</a>')) . $additionalErrors;
             }
-
             // Test that referrer matches what is allowed.
             if (!empty($allowedReferrerHost) && !self::isReferrerHostValid($referrer, $allowedReferrerHost)) {
-                return Piwik::translate('Login_InvalidNonceUnexpectedReferrer') . $additionalErrors;
+                return \Piwik\Piwik::translate('Login_InvalidNonceUnexpectedReferrer') . $additionalErrors;
             }
         }
-
         // validate origin
         $origin = self::getOrigin();
-        if (!empty($origin) &&
-          ($origin == 'null'
-            || !in_array($origin, self::getAcceptableOrigins()))
-        ) {
-            return Piwik::translate('Login_InvalidNonceOrigin') . $additionalErrors;
+        if (!empty($origin) && ($origin == 'null' || !in_array($origin, self::getAcceptableOrigins()))) {
+            return \Piwik\Piwik::translate('Login_InvalidNonceOrigin') . $additionalErrors;
         }
-
         return '';
     }
-
     // public for tests
     public static function isReferrerHostValid($referrer, $allowedReferrerHost)
     {
         if (empty($referrer)) {
             return false;
         }
-
-        $referrerHost = Url::getHostFromUrl($referrer);
-        return preg_match('/(^|\.)' . preg_quote($allowedReferrerHost) . '$/i', $referrerHost);
+        $referrerHost = \Piwik\Url::getHostFromUrl($referrer);
+        return preg_match('/(^|\\.)' . preg_quote($allowedReferrerHost) . '$/i', $referrerHost);
     }
-
     /**
      * Force expiration of the current nonce.
      *
@@ -167,7 +138,6 @@ class Nonce
         $ns = new SessionNamespace($id);
         $ns->unsetAll();
     }
-
     /**
      * Returns the **Origin** HTTP header or `false` if not found.
      *
@@ -180,7 +150,6 @@ class Nonce
         }
         return false;
     }
-
     /**
      * Returns a list acceptable values for the HTTP **Origin** header.
      *
@@ -188,41 +157,26 @@ class Nonce
      */
     public static function getAcceptableOrigins()
     {
-        $host = Url::getCurrentHost(null);
-
+        $host = \Piwik\Url::getCurrentHost(null);
         if (empty($host)) {
             return array();
         }
-
         // parse host:port
         if (preg_match('/^([^:]+):([0-9]+)$/D', $host, $matches)) {
             $host = $matches[1];
             $port = $matches[2];
-            $origins = array(
-                'http://' . $host,
-                'https://' . $host,
-            );
+            $origins = array('http://' . $host, 'https://' . $host);
             if ($port != 443) {
-                $origins[] = 'http://' . $host .':' . $port;
+                $origins[] = 'http://' . $host . ':' . $port;
             }
             $origins[] = 'https://' . $host . ':' . $port;
-        } elseif (Config::getInstance()->General['force_ssl']) {
-            $origins = array(
-                'https://' . $host,
-                'https://' . $host . ':443',
-            );
+        } elseif (\Piwik\Config::getInstance()->General['force_ssl']) {
+            $origins = array('https://' . $host, 'https://' . $host . ':443');
         } else {
-            $origins = array(
-                'http://' . $host,
-                'https://' . $host,
-                'http://' . $host . ':80',
-                'https://' . $host . ':443',
-            );
+            $origins = array('http://' . $host, 'https://' . $host, 'http://' . $host . ':80', 'https://' . $host . ':443');
         }
-
         return $origins;
     }
-
     /**
      * Verifies and discards a nonce.
      *
@@ -234,13 +188,11 @@ class Nonce
     public static function checkNonce($nonceName, $nonce = null, $allowedReferrerHost = null)
     {
         if ($nonce === null) {
-            $nonce = Common::getRequestVar('nonce', null, 'string');
+            $nonce = \Piwik\Common::getRequestVar('nonce', null, 'string');
         }
-
         if (!self::verifyNonce($nonceName, $nonce, $allowedReferrerHost)) {
-            throw new \Exception(Piwik::translate('General_ExceptionSecurityCheckFailed'));
+            throw new \Exception(\Piwik\Piwik::translate('General_ExceptionSecurityCheckFailed'));
         }
-
         self::discardNonce($nonceName);
     }
 }

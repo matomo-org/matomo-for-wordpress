@@ -1,16 +1,15 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik\Auth;
 
 use Exception;
 use Piwik\Config;
-
 /**
  * Main class to handle actions related to password hashing and verification.
  *
@@ -43,7 +42,6 @@ class Password
                 throw new Exception("invalid password_hash_algorithm");
         }
     }
-
     /**
      * Fetches argon2 options from config.ini.php
      *
@@ -64,7 +62,6 @@ class Password
         }
         return $options;
     }
-
     /**
      * Hashes a password with the configured algorithm.
      *
@@ -75,7 +72,6 @@ class Password
     {
         return password_hash($password, $this->preferredAlgorithm(), $this->algorithmOptions());
     }
-
     /**
      * Returns information about a hashed password (algo, options, ...).
      *
@@ -88,7 +84,6 @@ class Password
     {
         return password_get_info($hash);
     }
-
     /**
      * Rehashes a user's password if necessary.
      *
@@ -102,7 +97,6 @@ class Password
     {
         return password_needs_rehash($hash, $this->preferredAlgorithm(), $this->algorithmOptions());
     }
-
     /**
      * Verifies a user's password against the provided hash.
      *

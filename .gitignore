@@ -7,8 +7,11 @@
 /empty/
 /node_modules/*
 !/node_modules/chart.js
+.phpunit.result.cache
+/tests/e2e/actual/
+/tests/e2e/diff/
+/app/scoper.inc.php
 
 # for local docker dev
 docker
 .env
-

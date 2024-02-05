@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\DataTable\Filter;
 use Piwik\DataTable;
 use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable\Row;
-
 /**
  * DataTable filter that will group {@link DataTable} rows together based on the results
  * of a reduce function. Rows with the same reduce result will be summed and merged.
@@ -34,18 +34,15 @@ class GroupBy extends BaseFilter
      * @var string
      */
     private $groupByColumn;
-
     /**
      * A callback that modifies the $groupByColumn of each row in some way. Rows with
      * the same reduction result will be added together.
      */
     private $reduceFunction;
-
     /**
      * Extra parameters to pass to the reduce function.
      */
     private $parameters;
-
     /**
      * Constructor.
      *
@@ -59,12 +56,10 @@ class GroupBy extends BaseFilter
     public function __construct($table, $groupByColumn, $reduceFunction = null, $parameters = array())
     {
         parent::__construct($table);
-
-        $this->groupByColumn  = $groupByColumn;
+        $this->groupByColumn = $groupByColumn;
         $this->reduceFunction = $reduceFunction;
-        $this->parameters     = $parameters;
+        $this->parameters = $parameters;
     }
-
     /**
      * See {@link GroupBy}.
      *
@@ -75,17 +70,14 @@ class GroupBy extends BaseFilter
         /** @var Row[] $groupByRows */
         $groupByRows = array();
         $nonGroupByRowIds = array();
-
         foreach ($table->getRowsWithoutSummaryRow() as $rowId => $row) {
             $groupByColumnValue = $row->getColumn($this->groupByColumn);
             $groupByValue = $groupByColumnValue;
-
             // reduce the group by column of this row
             if ($this->reduceFunction) {
-                $parameters   = array_merge(array($groupByColumnValue), $this->parameters);
+                $parameters = array_merge(array($groupByColumnValue), $this->parameters);
                 $groupByValue = call_user_func_array($this->reduceFunction, $parameters);
             }
-
             if (!isset($groupByRows[$groupByValue])) {
                 // if we haven't encountered this group by value before, we mark this row as a
                 // row to keep, and change the group by column to the reduced value.
@@ -98,11 +90,9 @@ class GroupBy extends BaseFilter
                 $nonGroupByRowIds[] = $rowId;
             }
         }
-
         if ($this->groupByColumn === 'label') {
             $table->setLabelsHaveChanged();
         }
-
         // delete the unneeded rows.
         $table->deleteRows($nonGroupByRowIds);
     }

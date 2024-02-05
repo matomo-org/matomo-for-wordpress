@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -13,32 +14,26 @@ use Piwik\Plugin\ViewDataTable;
 use Piwik\Plugins\UserCountry\Columns\Continent;
 use Piwik\Report\ReportWidgetFactory;
 use Piwik\Widget\WidgetsList;
-
-class GetContinent extends Base
+class GetContinent extends \Piwik\Plugins\UserCountry\Reports\Base
 {
     protected function init()
     {
         parent::init();
-        $this->dimension      = new Continent();
-        $this->name           = Piwik::translate('UserCountry_Continent');
-        $this->documentation  = Piwik::translate('UserCountry_getContinentDocumentation');
-        $this->metrics        = array('nb_visits', 'nb_uniq_visitors', 'nb_actions');
+        $this->dimension = new Continent();
+        $this->name = Piwik::translate('UserCountry_Continent');
+        $this->documentation = Piwik::translate('UserCountry_getContinentDocumentation');
+        $this->metrics = array('nb_visits', 'nb_uniq_visitors', 'nb_actions');
         $this->hasGoalMetrics = true;
         $this->order = 6;
-
         $this->subcategoryId = 'UserCountry_SubmenuLocations';
     }
-
     public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory)
     {
         $widgetsList->addWidgetConfig($factory->createContainerWidget('Continent'));
-
         $widgetsList->addToContainerWidget('Continent', $factory->createWidget());
-
         $widget = $factory->createWidget()->setAction('getDistinctCountries')->setName('');
         $widgetsList->addToContainerWidget('Continent', $widget);
     }
-
     public function configureView(ViewDataTable $view)
     {
         $view->config->show_exclude_low_population = false;
@@ -47,7 +42,5 @@ class GetContinent extends Base
         $view->config->show_pagination_control = false;
         $view->config->show_limit_control = false;
         $view->config->documentation = $this->documentation;
-        $view->config->addTranslation('label', $this->dimension->getName());
     }
-
 }

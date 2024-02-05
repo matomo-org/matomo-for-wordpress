@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\VisitorInterest\Columns;
 
 use Piwik\Columns\Dimension;
-
 class PagesPerVisit extends Dimension
 {
     protected $nameSingular = 'VisitorInterest_ColumnPagesPerVisit';

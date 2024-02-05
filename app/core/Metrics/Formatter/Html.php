@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,7 +9,6 @@
 namespace Piwik\Metrics\Formatter;
 
 use Piwik\Metrics\Formatter;
-
 /**
  * Metrics formatter that formats for HTML output. Uses non-breaking spaces in formatted values
  * so text will stay unbroken in HTML views.
@@ -21,21 +21,18 @@ class Html extends Formatter
         $result = $this->replaceSpaceWithNonBreakingSpace($result);
         return $result;
     }
-
     public function getPrettySizeFromBytes($size, $unit = null, $precision = 1)
     {
         $result = parent::getPrettySizeFromBytes($size, $unit, $precision);
         $result = $this->replaceSpaceWithNonBreakingSpace($result);
         return $result;
     }
-
     public function getPrettyMoney($value, $idSite)
     {
         $result = parent::getPrettyMoney($value, $idSite);
         $result = $this->replaceSpaceWithNonBreakingSpace($result);
         return $result;
     }
-
     private function replaceSpaceWithNonBreakingSpace($value)
     {
         return str_replace(' ', '&nbsp;', $value);

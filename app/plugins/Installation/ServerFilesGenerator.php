@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Plugins\Installation;
 use Piwik\Container\StaticContainer;
 use Piwik\Filesystem;
 use Piwik\SettingsServer;
-
 class ServerFilesGenerator
 {
     public static function createFilesForSecurity()
@@ -20,7 +20,6 @@ class ServerFilesGenerator
         self::createWebConfigFiles();
         self::createWebRootFiles();
     }
-
     /**
      * Generate Apache .htaccess files to restrict access
      * .htaccess files are created on all webservers even Nginx, as sometimes Nginx knows how to handle .htaccess files
@@ -29,74 +28,28 @@ class ServerFilesGenerator
     {
         $denyAll = self::getDenyAllHtaccessContent();
         $allow = self::getAllowHtaccessContent();
-
-        $allowAny =
-            "# Allow any file in this directory\n" .
-            "<Files \"*\">\n" .
-            "\t" . $allow . "\n" .
-            "</Files>\n";
-
-        $allowStaticAssets =
-            "# Serve HTML files as text/html mime type - Note: requires mod_mime apache module!\n" .
-            "<IfModule mod_mime.c>\n" .
-            "   AddHandler text/html .html\n" .
-            "   AddHandler text/html .htm\n" .
-            "</IfModule>\n\n" .
-
-            "# Allow to serve static files which are safe\n" .
-            "<Files ~ \"\\.(gif|ico|jpg|png|svg|js|css|htm|html|mp3|mp4|wav|ogg|avi|ttf|eot|woff|woff2)$\">\n" .
-            $allow . "\n" .
-            "</Files>\n";
-
-        $noCachePreview = "
-# do not cache preview container files
-<Files  ~ \"^container_.*_preview\.js$\">
-<IfModule mod_headers.c>
-Header set Cache-Control \"Cache-Control: private, no-cache, no-store\"
-</IfModule>
-</Files>";
-
-        $allowManifestFile =
-            "# Allow to serve manifest.json\n" .
-            "<Files \"manifest.json\">\n" .
-            $allow . "\n" .
-            "</Files>\n";
-
-        $directoriesToProtect = array(
-            '/js'           => $allowAny . $noCachePreview,
-            '/libs'         => $denyAll . $allowStaticAssets,
-            '/vendor'       => $denyAll . $allowStaticAssets,
-            '/plugins'      => $denyAll . $allowStaticAssets . $allowManifestFile,
-            '/misc/user'    => $denyAll . $allowStaticAssets,
-            '/node_modules' => $denyAll . $allowStaticAssets,
-        );
+        $allowAny = "# Allow any file in this directory\n" . "<Files \"*\">\n" . "\t" . $allow . "\n" . "</Files>\n";
+        $allowStaticAssets = "# Serve HTML files as text/html mime type - Note: requires mod_mime apache module!\n" . "<IfModule mod_mime.c>\n" . "   AddHandler text/html .html\n" . "   AddHandler text/html .htm\n" . "</IfModule>\n\n" . "# Allow to serve static files which are safe\n" . "<Files ~ \"\\.(gif|ico|jpg|png|svg|js|css|htm|html|mp3|mp4|wav|ogg|avi|ttf|eot|woff|woff2)\$\">\n" . $allow . "\n" . "</Files>\n";
+        $noCachePreview = "\n# do not cache preview container files\n<Files  ~ \"^container_.*_preview\\.js\$\">\n<IfModule mod_headers.c>\nHeader set Cache-Control \"Cache-Control: private, no-cache, no-store\"\n</IfModule>\n</Files>";
+        $allowManifestFile = "# Allow to serve manifest.json\n" . "<Files \"manifest.json\">\n" . $allow . "\n" . "</Files>\n";
+        $directoriesToProtect = array('/js' => $allowAny . $noCachePreview, '/libs' => $denyAll . $allowStaticAssets, '/vendor' => $denyAll . $allowStaticAssets, '/plugins' => $denyAll . $allowStaticAssets . $allowManifestFile, '/misc/user' => $denyAll . $allowStaticAssets, '/node_modules' => $denyAll . $allowStaticAssets);
         foreach ($directoriesToProtect as $directoryToProtect => $content) {
             self::createHtAccess(PIWIK_INCLUDE_PATH . $directoryToProtect, $overwrite = true, $content);
         }
-
         // deny access to these folders
-        $directoriesToProtect = array(
-            PIWIK_USER_PATH . '/config' => $denyAll,
-            PIWIK_INCLUDE_PATH. '/core' => $denyAll,
-            PIWIK_INCLUDE_PATH . '/lang' => $denyAll,
-            StaticContainer::get('path.tmp') => $denyAll,
-        );
-	    
+        $directoriesToProtect = array(PIWIK_USER_PATH . '/config' => $denyAll, PIWIK_INCLUDE_PATH . '/core' => $denyAll, PIWIK_INCLUDE_PATH . '/lang' => $denyAll, StaticContainer::get('path.tmp') => $denyAll);
         if (!empty($GLOBALS['CONFIG_INI_PATH_RESOLVER']) && is_callable($GLOBALS['CONFIG_INI_PATH_RESOLVER'])) {
             $file = call_user_func($GLOBALS['CONFIG_INI_PATH_RESOLVER']);
             $directoriesToProtect[dirname($file)] = $denyAll;
         }
-
         $gitDir = PIWIK_INCLUDE_PATH . '/.git';
         if (is_dir($gitDir) && is_writable($gitDir)) {
             $directoriesToProtect[$gitDir] = $denyAll;
         }
-
         foreach ($directoriesToProtect as $directoryToProtect => $content) {
             self::createHtAccess($directoryToProtect, $overwrite = true, $content);
         }
     }
-
     /**
      * Create .htaccess file in specified directory
      *
@@ -111,13 +64,11 @@ Header set Cache-Control \"Cache-Control: private, no-cache, no-store\"
     protected static function createHtAccess($path, $overwrite, $content)
     {
         $file = $path . '/.htaccess';
-
         $content = "# This file is auto generated by Matomo, do not edit directly\n# Please report any issue or improvement directly to the Matomo team.\n\n" . $content;
         if ($overwrite || !file_exists($file)) {
             @file_put_contents($file, $content, LOCK_EX);
         }
     }
-
     /**
      * Generate IIS web.config files to restrict access
      *
@@ -128,8 +79,7 @@ Header set Cache-Control \"Cache-Control: private, no-cache, no-store\"
         if (!SettingsServer::isIIS()) {
             return;
         }
-        @file_put_contents(PIWIK_INCLUDE_PATH . '/web.config',
-            '<?xml version="1.0" encoding="UTF-8"?>
+        @file_put_contents(PIWIK_INCLUDE_PATH . '/web.config', '<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
   <system.webServer>
     <security>
@@ -168,23 +118,14 @@ Header set Cache-Control \"Cache-Control: private, no-cache, no-store\"
     </staticContent>
   </system.webServer>
 </configuration>');
-
         // deny direct access to .php files
-        $directoriesToProtect = array(
-            '/libs',
-            '/vendor',
-            '/plugins',
-            '/node_modules',
-        );
-
+        $directoriesToProtect = array('/libs', '/vendor', '/plugins', '/node_modules');
         $additionForPlugins = '
         <alwaysAllowedUrls>
           <add url="/plugins/HeatmapSessionRecording/configs.php" />
         </alwaysAllowedUrls>';
-
         foreach ($directoriesToProtect as $directoryToProtect) {
-            @file_put_contents(PIWIK_INCLUDE_PATH . $directoryToProtect . '/web.config',
-                '<?xml version="1.0" encoding="UTF-8"?>
+            @file_put_contents(PIWIK_INCLUDE_PATH . $directoryToProtect . '/web.config', '<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
   <system.webServer>
     <security>
@@ -198,7 +139,6 @@ Header set Cache-Control \"Cache-Control: private, no-cache, no-store\"
 </configuration>');
         }
     }
-
     public static function deleteWebConfigFiles()
     {
         $path = PIWIK_INCLUDE_PATH;
@@ -208,7 +148,6 @@ Header set Cache-Control \"Cache-Control: private, no-cache, no-store\"
         @unlink($path . '/plugins/web.config');
         @unlink($path . '/node_modules/web.config');
     }
-
     /**
      * Generate default robots.txt, favicon.ico, etc to suppress
      * 404 (Not Found) errors in the web server logs, if Piwik
@@ -218,69 +157,58 @@ Header set Cache-Control \"Cache-Control: private, no-cache, no-store\"
      */
     public static function createWebRootFiles()
     {
-        $filesToCreate = array(
-            '/robots.txt',
-            '/favicon.ico',
-        );
+        $filesToCreate = array('/robots.txt', '/favicon.ico');
         foreach ($filesToCreate as $file) {
             $path = PIWIK_DOCUMENT_ROOT . $file;
-            if(!file_exists($path)) {
+            if (!file_exists($path)) {
                 @file_put_contents($path, '');
             }
         }
     }
-
     /**
      * @return string
      */
     protected static function getDenyAllHtaccessContent()
     {
         $deny = self::getDenyHtaccessContent();
-        $denyAll =
-            "# First, deny access to all files in this directory\n" .
-            "<Files \"*\">\n" .
-            $deny . "\n" .
-            "</Files>\n";
-
+        $denyAll = "# First, deny access to all files in this directory\n" . "<Files \"*\">\n" . $deny . "\n" . "</Files>\n";
         return $denyAll;
     }
-
     /**
      * @return string
      */
     public static function getDenyHtaccessContent()
     {
-# Source: https://github.com/phpbb/phpbb/pull/2386/files#diff-f72a38c4bec79cc6ded3f8e435d6bd55L11
-# With Apache 2.4 the "Order, Deny" syntax has been deprecated and moved from
-# module mod_authz_host to a new module called mod_access_compat (which may be
-# disabled) and a new "Require" syntax has been introduced to mod_authz_host.
-# We could just conditionally provide both versions, but unfortunately Apache
-# does not explicitly tell us its version if the module mod_version is not
-# available. In this case, we check for the availability of module
-# mod_authz_core (which should be on 2.4 or higher only) as a best guess.
+        # Source: https://github.com/phpbb/phpbb/pull/2386/files#diff-f72a38c4bec79cc6ded3f8e435d6bd55L11
+        # With Apache 2.4 the "Order, Deny" syntax has been deprecated and moved from
+        # module mod_authz_host to a new module called mod_access_compat (which may be
+        # disabled) and a new "Require" syntax has been introduced to mod_authz_host.
+        # We could just conditionally provide both versions, but unfortunately Apache
+        # does not explicitly tell us its version if the module mod_version is not
+        # available. In this case, we check for the availability of module
+        # mod_authz_core (which should be on 2.4 or higher only) as a best guess.
         $deny = <<<HTACCESS_DENY
 <IfModule mod_version.c>
-	<IfVersion < 2.4>
-		Order Deny,Allow
-		Deny from All
-	</IfVersion>
-	<IfVersion >= 2.4>
-		Require all denied
-	</IfVersion>
+\t<IfVersion < 2.4>
+\t\tOrder Deny,Allow
+\t\tDeny from All
+\t</IfVersion>
+\t<IfVersion >= 2.4>
+\t\tRequire all denied
+\t</IfVersion>
 </IfModule>
 <IfModule !mod_version.c>
-	<IfModule !mod_authz_core.c>
-		Order Deny,Allow
-		Deny from All
-	</IfModule>
-	<IfModule mod_authz_core.c>
-		Require all denied
-	</IfModule>
+\t<IfModule !mod_authz_core.c>
+\t\tOrder Deny,Allow
+\t\tDeny from All
+\t</IfModule>
+\t<IfModule mod_authz_core.c>
+\t\tRequire all denied
+\t</IfModule>
 </IfModule>
 HTACCESS_DENY;
         return $deny;
     }
-
     /**
      * @return string
      */
@@ -288,49 +216,35 @@ HTACCESS_DENY;
     {
         $allow = <<<HTACCESS_ALLOW
 <IfModule mod_version.c>
-	<IfVersion < 2.4>
-		Order Allow,Deny
-		Allow from All
-	</IfVersion>
-	<IfVersion >= 2.4>
-		Require all granted
-	</IfVersion>
+\t<IfVersion < 2.4>
+\t\tOrder Allow,Deny
+\t\tAllow from All
+\t</IfVersion>
+\t<IfVersion >= 2.4>
+\t\tRequire all granted
+\t</IfVersion>
 </IfModule>
 <IfModule !mod_version.c>
-	<IfModule !mod_authz_core.c>
-		Order Allow,Deny
-		Allow from All
-	</IfModule>
-	<IfModule mod_authz_core.c>
-		Require all granted
-	</IfModule>
+\t<IfModule !mod_authz_core.c>
+\t\tOrder Allow,Deny
+\t\tAllow from All
+\t</IfModule>
+\t<IfModule mod_authz_core.c>
+\t\tRequire all granted
+\t</IfModule>
 </IfModule>
 HTACCESS_ALLOW;
         return $allow;
     }
-
     /**
      * Deletes all existing .htaccess files and web.config files that Matomo may have created,
      */
     public static function deleteHtAccessFiles()
     {
         $files = Filesystem::globr(PIWIK_INCLUDE_PATH, ".htaccess");
-
         // that match the list of directories we create htaccess files
         // (ie. not the root /.htaccess)
-        $directoriesWithAutoHtaccess = array(
-            '/js',
-            '/libs',
-            '/vendor',
-            '/plugins',
-            '/misc/user',
-            '/node_modules',
-            '/config',
-            '/core',
-            '/lang',
-            '/tmp',
-        );
-
+        $directoriesWithAutoHtaccess = array('/js', '/libs', '/vendor', '/plugins', '/misc/user', '/node_modules', '/config', '/core', '/lang', '/tmp');
         foreach ($files as $file) {
             foreach ($directoriesWithAutoHtaccess as $dirToDelete) {
                 // only delete the first .htaccess and not the ones in sub-directories
@@ -341,5 +255,4 @@ HTACCESS_ALLOW;
             }
         }
     }
-
 }

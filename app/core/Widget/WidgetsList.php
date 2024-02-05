@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Piwik\Container\StaticContainer;
 use Piwik\Development;
 use Piwik\Piwik;
 use Piwik\Report\ReportWidgetFactory;
-
 /**
  * Manages the global list of reports that can be displayed as dashboard widgets.
  *
@@ -30,34 +30,29 @@ class WidgetsList
      * @var WidgetConfig[]
      */
     private $widgets = array();
-
     /**
      * @var WidgetContainerConfig[]
      */
     private $container;
-
     /**
      * @var array
      */
     private $containerWidgets;
-
     /**
      * Adds a new widget to the widget config. Please make sure the widget is enabled before adding a widget as
      * no such checks will be performed.
      *
      * @param WidgetConfig $widget
      */
-    public function addWidgetConfig(WidgetConfig $widget)
+    public function addWidgetConfig(\Piwik\Widget\WidgetConfig $widget)
     {
-        if ($widget instanceof WidgetContainerConfig) {
+        if ($widget instanceof \Piwik\Widget\WidgetContainerConfig) {
             $this->addContainer($widget);
         } elseif (Development::isEnabled()) {
             $this->checkIsValidWidget($widget);
         }
-
         $this->widgets[] = $widget;
     }
-
     /**
      * Add multiple widget configs at once. See {@link addWidgetConfig()}.
      *
@@ -69,13 +64,10 @@ class WidgetsList
             $this->addWidgetConfig($widget);
         }
     }
-
-    private function addContainer(WidgetContainerConfig $containerWidget)
+    private function addContainer(\Piwik\Widget\WidgetContainerConfig $containerWidget)
     {
         $widgetId = $containerWidget->getId();
-
         $this->container[$widgetId] = $containerWidget;
-
         // widgets were added to this container, but the container did not exist yet.
         if (isset($this->containerWidgets[$widgetId])) {
             foreach ($this->containerWidgets[$widgetId] as $widget) {
@@ -84,7 +76,6 @@ class WidgetsList
             unset($this->containerWidgets[$widgetId]);
         }
     }
-
     /**
      * Get all added widget configs.
      *
@@ -94,18 +85,15 @@ class WidgetsList
     {
         return $this->widgets;
     }
-
-    private function checkIsValidWidget(WidgetConfig $widget)
+    private function checkIsValidWidget(\Piwik\Widget\WidgetConfig $widget)
     {
         if (!$widget->getModule()) {
             Development::error('No module is defined for added widget having name "' . $widget->getName());
         }
-
         if (!$widget->getAction()) {
             Development::error('No action is defined for added widget having name "' . $widget->getName());
         }
     }
-
     /**
      * Add a widget to a widget container. It doesn't matter whether the container was added to this list already
      * or whether the container is added later. As long as a container having the same containerId is added at
@@ -115,7 +103,7 @@ class WidgetsList
      * @param string $containerId  eg 'Products' or 'Contents'. See {@link WidgetContainerConfig::setId}
      * @param WidgetConfig $widget
      */
-    public function addToContainerWidget($containerId, WidgetConfig $widget)
+    public function addToContainerWidget($containerId, \Piwik\Widget\WidgetConfig $widget)
     {
         if (isset($this->container[$containerId])) {
             $this->container[$containerId]->addWidgetConfig($widget);
@@ -123,11 +111,9 @@ class WidgetsList
             if (!isset($this->containerWidgets[$containerId])) {
                 $this->containerWidgets[$containerId] = array();
             }
-
             $this->containerWidgets[$containerId][] = $widget;
         }
     }
-
     /**
      * Removes one or more widgets from the widget list.
      *
@@ -146,7 +132,6 @@ class WidgetsList
             }
         }
     }
-
     /**
      * Returns `true` if a widget exists in the widget list, `false` if otherwise.
      *
@@ -161,10 +146,8 @@ class WidgetsList
                 return true;
             }
         }
-
         return false;
     }
-
     /**
      * Get all widgets defined in the Piwik platform.
      * @ignore
@@ -172,25 +155,21 @@ class WidgetsList
      */
     public static function get()
     {
-        $list = new static;
-
-        $widgets = StaticContainer::get('Piwik\Plugin\WidgetsProvider');
-
+        $list = new static();
+        $widgets = StaticContainer::get('Piwik\\Plugin\\WidgetsProvider');
         $widgetContainerConfigs = $widgets->getWidgetContainerConfigs();
         foreach ($widgetContainerConfigs as $config) {
             if ($config->isEnabled()) {
                 $list->addWidgetConfig($config);
             }
         }
-
         $widgetConfigs = $widgets->getWidgetConfigs();
         foreach ($widgetConfigs as $widget) {
             if ($widget->isEnabled()) {
                 $list->addWidgetConfig($widget);
             }
         }
-
-        $reports = StaticContainer::get('Piwik\Plugin\ReportsProvider');
+        $reports = StaticContainer::get('Piwik\\Plugin\\ReportsProvider');
         $reports = $reports->getAllReports();
         foreach ($reports as $report) {
             if ($report->isEnabled()) {
@@ -198,7 +177,6 @@ class WidgetsList
                 $report->configureWidgets($list, $factory);
             }
         }
-
         /**
          * Triggered to filter widgets.
          *
@@ -212,10 +190,8 @@ class WidgetsList
          * @param WidgetsList $list An instance of the WidgetsList. You can change the list of widgets this way.
          */
         Piwik::postEvent('Widget.filterWidgets', array($list));
-
         return $list;
     }
-
     /**
      * CAUTION! If you ever change this method, existing updates will fail as they currently use that method!
      * If you change the output the uniqueId for existing widgets would not be found anymore
@@ -230,7 +206,6 @@ class WidgetsList
     public static function getWidgetUniqueId($controllerName, $controllerAction, $customParameters = array())
     {
         $widgetUniqueId = 'widget' . $controllerName . $controllerAction;
-
         foreach ($customParameters as $name => $value) {
             if (is_array($value)) {
                 // use 'Array' for backward compatibility;
@@ -241,8 +216,6 @@ class WidgetsList
             $value = str_replace('%', '', $value);
             $widgetUniqueId .= $name . $value;
         }
-
         return $widgetUniqueId;
     }
-
 }

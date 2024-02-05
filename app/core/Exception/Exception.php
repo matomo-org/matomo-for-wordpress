@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Exception;
 
 use Exception as PhpException;
-
 /**
  * An exception whose message has HTML content. When these exceptions are caught
  * the message will not be sanitized before being displayed to the user.
@@ -17,12 +17,10 @@ use Exception as PhpException;
 class Exception extends PhpException
 {
     private $isHtmlMessage = false;
-
     public function setIsHtmlMessage()
     {
         $this->isHtmlMessage = true;
     }
-
     public function isHtmlMessage()
     {
         return $this->isHtmlMessage;

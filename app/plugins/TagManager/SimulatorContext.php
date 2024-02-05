@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,28 +9,23 @@
 namespace Piwik\Plugins\TagManager;
 
 use Piwik\Plugins\TagManager\Context\BaseContext;
-
 // we don't have this context in the "Context" directory of this plugin because we don't want it to be picked up as a component
 // we only want to use it to detect whether a variable references itself or if there is any recursion
 class SimulatorContext extends BaseContext
 {
     const ID = 'simulator';
-
     public function getId()
     {
         return self::ID;
     }
-
     public function getName()
     {
         return 'Simulator';
     }
-
     public function getOrder()
     {
         return 15;
     }
-
     public function generate($container)
     {
         foreach ($container['releases'] as $release) {
@@ -39,15 +35,12 @@ class SimulatorContext extends BaseContext
         }
         return [];
     }
-
     public function getInstallInstructions($container, $environment)
     {
         return [];
     }
-
     public function getInstallInstructionsReact($container, $environment)
     {
         return [];
     }
-
 }

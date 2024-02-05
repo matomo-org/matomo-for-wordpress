@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\Ecommerce\Columns;
 
 use Piwik\Columns\Dimension;
-
 class ProductPrice extends Dimension
 {
     protected $type = self::TYPE_MONEY;
@@ -18,5 +18,4 @@ class ProductPrice extends Dimension
     protected $nameSingular = 'Goals_ProductPrice';
     protected $category = 'Goals_Ecommerce';
     protected $segmentName = 'productPrice';
-
 }

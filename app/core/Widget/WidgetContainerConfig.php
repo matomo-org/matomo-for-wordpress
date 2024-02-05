@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -20,7 +21,7 @@ namespace Piwik\Widget;
  *
  * @api since Piwik 3.0.0
  */
-class WidgetContainerConfig extends WidgetConfig
+class WidgetContainerConfig extends \Piwik\Widget\WidgetConfig
 {
     /**
      * @var WidgetConfig[]
@@ -28,11 +29,9 @@ class WidgetContainerConfig extends WidgetConfig
     protected $widgets = array();
     protected $layout = '';
     protected $id = '';
-
     protected $module = 'CoreHome';
     protected $action = 'renderWidgetContainer';
     protected $isWidgetizable = false;
-
     /**
      * Sets (overwrites) the id of the widget container.
      *
@@ -47,7 +46,6 @@ class WidgetContainerConfig extends WidgetConfig
         $this->id = $id;
         return $this;
     }
-
     /**
      * Get the id of the widget.
      * @return string
@@ -56,7 +54,6 @@ class WidgetContainerConfig extends WidgetConfig
     {
         return $this->id;
     }
-
     /**
      * Sets the layout of the container widget.
      *
@@ -72,7 +69,6 @@ class WidgetContainerConfig extends WidgetConfig
         $this->layout = $layout;
         return $this;
     }
-
     /**
      * Gets the currently set layout.
      * @return string
@@ -81,20 +77,17 @@ class WidgetContainerConfig extends WidgetConfig
     {
         return $this->layout;
     }
-
     /**
      * Adds a new widget to the container widget.
      *
      * @param WidgetConfig $widget
      * @return static
      */
-    public function addWidgetConfig(WidgetConfig $widget)
+    public function addWidgetConfig(\Piwik\Widget\WidgetConfig $widget)
     {
         $this->widgets[] = $widget;
-
         return $this;
     }
-
     /**
      * Set (overwrite) widget configs.
      *
@@ -104,7 +97,6 @@ class WidgetContainerConfig extends WidgetConfig
     {
         $this->widgets = $configs;
     }
-
     /**
      * Get all added widget configs.
      *
@@ -114,7 +106,6 @@ class WidgetContainerConfig extends WidgetConfig
     {
         return $this->widgets;
     }
-
     /**
      * @inheritdoc
      */
@@ -124,10 +115,8 @@ class WidgetContainerConfig extends WidgetConfig
         unset($parameters['module']);
         unset($parameters['action']);
         unset($parameters['containerId']);
-
-        return WidgetsList::getWidgetUniqueId($this->id, '', $parameters);
+        return \Piwik\Widget\WidgetsList::getWidgetUniqueId($this->id, '', $parameters);
     }
-
     /**
      * @inheritdoc
      */
@@ -137,5 +126,4 @@ class WidgetContainerConfig extends WidgetConfig
         $params['containerId'] = $this->getId();
         return $params;
     }
-
 }

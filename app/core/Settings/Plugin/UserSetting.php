@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,14 +7,12 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Settings\Plugin;
 
 use Piwik\Container\StaticContainer;
 use Piwik\Piwik;
 use Exception;
 use Piwik\Settings\Setting;
-
 /**
  * Describes a per user setting. Each user will be able to change this setting for themselves,
  * but not for other users.
@@ -26,7 +25,6 @@ class UserSetting extends Setting
      * @var null|string
      */
     private $userLogin = null;
-
     /**
      * Constructor.
      *
@@ -40,17 +38,13 @@ class UserSetting extends Setting
     public function __construct($name, $defaultValue, $type, $pluginName, $userLogin)
     {
         parent::__construct($name, $defaultValue, $type, $pluginName);
-
         if (empty($userLogin)) {
             throw new Exception('No userLogin given to create setting ' . $name);
         }
-
         $this->userLogin = $userLogin;
-
-        $factory = StaticContainer::get('Piwik\Settings\Storage\Factory');
+        $factory = StaticContainer::get('Piwik\\Settings\\Storage\\Factory');
         $this->storage = $factory->getPluginStorage($this->pluginName, $this->userLogin);
     }
-
     /**
      * Returns `true` if this setting can be displayed for the current user, `false` if otherwise.
      *
@@ -61,11 +55,8 @@ class UserSetting extends Setting
         if (isset($this->hasWritePermission)) {
             return $this->hasWritePermission;
         }
-
         // performance improvement, do not detect this in __construct otherwise likely rather "big" query to DB.
         $this->hasWritePermission = Piwik::isUserHasSomeViewAccess();
-
         return $this->hasWritePermission;
     }
-
 }

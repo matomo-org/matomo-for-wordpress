@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,13 +12,11 @@ namespace Piwik\Updater\Migration\Db;
  * @see Factory::dropColumn()
  * @ignore
  */
-class DropColumn extends Sql
+class DropColumn extends \Piwik\Updater\Migration\Db\Sql
 {
     public function __construct($table, $columnName)
     {
         $sql = sprintf("ALTER TABLE `%s` DROP COLUMN `%s`", $table, $columnName);
-
         parent::__construct($sql, static::ERROR_CODE_COLUMN_NOT_EXISTS);
     }
-
 }

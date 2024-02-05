@@ -29,7 +29,11 @@ return array(
 	},
 	// we want to avoid the regular monolog logger as it could interfere with other plugins maybe. for now lets use a
 	// custom logger
-	'Psr\Log\LoggerInterface' => DI\get('\Piwik\Plugins\WordPress\Logger'),
+	'Piwik\Log\LoggerInterface' => \Piwik\DI::get('\Piwik\Plugins\WordPress\Logger'),
+	// following two entries used by CoreAdminHome.runCronArchiving
+	'log.short.format' => '%level% %tag%[%datetime%] %message%',
+	'Piwik\Plugins\Monolog\Formatter\LineMessageFormatter' => \Piwik\DI::create('Piwik\Plugins\Monolog\Formatter\LineMessageFormatter')
+		->constructor(\Piwik\DI::get('log.short.format')),
 	'TagManagerContainerStorageDir' => function () {
 		if (defined('MATOMO_TAG_MANAGER_STORAGE_DIR')) {
 			return MATOMO_TAG_MANAGER_STORAGE_DIR;
@@ -40,18 +44,18 @@ return array(
 		return rtrim('/'. $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir().'/'), '/');
 	},
 	'TagManagerContainerWebDir' => function () {
-		if (defined('MATOMO_TAG_MANAGER_STORAGE_DIR')) {
-			return MATOMO_TAG_MANAGER_STORAGE_DIR;
+		if (defined('MATOMO_TAG_MANAGER_WEB_DIR')) {
+			return MATOMO_TAG_MANAGER_WEB_DIR;
 		}
 
 		// the location where we store the generated javascript or json container files
 		$paths = new \WpMatomo\Paths();
-		return rtrim('/'. $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir().'/'), '/');
+		return rtrim('/'. matomo_rel_path($paths->get_upload_base_dir() . '/', WP_PLUGIN_DIR . '/matomo/app'), '/');
 	},
-	'Piwik\Plugins\Login\PasswordVerifier' => DI\autowire('Piwik\Plugins\WordPress\WpPasswordVerifier'),
-	'Piwik\Session\SessionAuth' => DI\autowire('Piwik\Plugins\WordPress\SessionAuth'),
-	'Piwik\Auth' => DI\autowire('Piwik\Plugins\WordPress\Auth'),
-	\Piwik\Config::class => DI\decorate(function ($previous) {
+	'Piwik\Plugins\Login\PasswordVerifier' => \Piwik\DI::autowire('Piwik\Plugins\WordPress\WpPasswordVerifier'),
+	'Piwik\Session\SessionAuth' => \Piwik\DI::autowire('Piwik\Plugins\WordPress\SessionAuth'),
+	'Piwik\Auth' => \Piwik\DI::autowire('Piwik\Plugins\WordPress\Auth'),
+	\Piwik\Config::class => \Piwik\DI::decorate(function ($previous) {
 
 		\Piwik\Plugins\TagManager\TagManager::$enableAutoContainerCreation = false;
 
@@ -113,8 +117,8 @@ return array(
 
 		return $previous;
 	}),
-	'Piwik\Mail\Transport' => DI\autowire('WpMatomo\Email'),
-	'Piwik\Plugins\CustomJsTracker\TrackerUpdater' => DI\decorate(function ($previous) {
+	'Piwik\Mail\Transport' => \Piwik\DI::autowire('WpMatomo\Email'),
+	'Piwik\Plugins\CustomJsTracker\TrackerUpdater' => \Piwik\DI::decorate(function ($previous) {
 		/** @var \Piwik\Plugins\CustomJsTracker\TrackerUpdater $previous */
 
 		$paths = new Paths();
@@ -124,7 +128,7 @@ return array(
 
 		return $previous;
 	}),
-	'diagnostics.optional' => DI\decorate(function ($checks) {
+	'diagnostics.optional' => \Piwik\DI::decorate(function ($checks) {
 		foreach ($checks as $index => $check) {
 			if ($check && is_object($check)) {
 				$class_name = get_class($check);
@@ -141,11 +145,11 @@ return array(
 		}
 		return array_values(array_filter($checks));
 	}),
-	'diagnostics.disabled'  => \DI\add([
-		\DI\get(\Piwik\Plugins\Diagnostics\Diagnostic\PageSpeedCheck::class),
+	'diagnostics.disabled'  => \Piwik\DI::add([
+		\Piwik\DI::get(\Piwik\Plugins\Diagnostics\Diagnostic\PageSpeedCheck::class),
 	]),
-	'observers.global' => DI\add(array(
-		array('FrontController.modifyErrorPage', DI\value(function (&$result, $ex) {
+	'observers.global' => \Piwik\DI::add(array(
+		array('FrontController.modifyErrorPage', \Piwik\DI::value(function (&$result, $ex) {
 			if (!empty($ex) && is_object($ex) && $ex instanceof \Piwik\Exception\NoWebsiteFoundException) {
 				// try to repair itself in case for some reason the site was not yet synced... on next reload it would
 				// then work
@@ -167,17 +171,17 @@ return array(
 				}
 			}
 		})),
-		array('Db.getDatabaseConfig', DI\value(function (&$config) {
+		array('Db.getDatabaseConfig', \Piwik\DI::value(function (&$config) {
 			// we don't want to save these and instead detect them on demand.
 			// for security reasons etc we don't want to duplicate these values
 			include_once plugin_dir_path(MATOMO_ANALYTICS_FILE ) . 'classes/WpMatomo/Db/WordPress.php';
 		})),
-		array('Tracker.getDatabaseConfig', DI\value(function (&$configDb) {
+		array('Tracker.getDatabaseConfig', \Piwik\DI::value(function (&$configDb) {
 			// we don't want to save these and instead detect them on demand.
 			// for security reasons etc we don't want to duplicate these values
 			include_once plugin_dir_path(MATOMO_ANALYTICS_FILE ) . 'classes/WpMatomo/Db/WordPress.php';
 		})),
-		array('Config.beforeSave', DI\value(function (&$values) {
+		array('Config.beforeSave', \Piwik\DI::value(function (&$values) {
 			// we don't want to save these and instead detect them on demand.
 			// for security reasons etc we don't want to duplicate these values
 			unset($values['database']['host']);

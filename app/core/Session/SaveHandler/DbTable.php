@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,7 +7,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Session\SaveHandler;
 
 use Piwik\Db;
@@ -16,7 +16,6 @@ use Piwik\SettingsPiwik;
 use Piwik\Updater\Migration;
 use Zend_Session;
 use Zend_Session_SaveHandler_Interface;
-
 /**
  * Database-backed session save handler
  *
@@ -24,13 +23,10 @@ use Zend_Session_SaveHandler_Interface;
 class DbTable implements Zend_Session_SaveHandler_Interface
 {
     public static $wasSessionToLargeToRead = false;
-
     protected $config;
     protected $maxLifetime;
-
     const TABLE_NAME = 'session';
     const TOKEN_HASH_ALGO = 'sha512';
-
     /**
      * @param array $config
      */
@@ -39,14 +35,11 @@ class DbTable implements Zend_Session_SaveHandler_Interface
         $this->config = $config;
         $this->maxLifetime = ini_get('session.gc_maxlifetime');
     }
-
     private function hashSessionId($id)
     {
         $salt = SettingsPiwik::getSalt();
         return hash(self::TOKEN_HASH_ALGO, $id . $salt);
     }
-
-
     /**
      * Destructor
      *
@@ -56,7 +49,6 @@ class DbTable implements Zend_Session_SaveHandler_Interface
     {
         Zend_Session::writeClose();
     }
-
     /**
      * Open Session - retrieve resources
      *
@@ -67,10 +59,8 @@ class DbTable implements Zend_Session_SaveHandler_Interface
     public function open($save_path, $name)
     {
         Db::get()->getConnection();
-
         return true;
     }
-
     /**
      * Close Session - free resources
      *
@@ -80,7 +70,6 @@ class DbTable implements Zend_Session_SaveHandler_Interface
     {
         return true;
     }
-
     /**
      * Read session data
      *
@@ -90,19 +79,13 @@ class DbTable implements Zend_Session_SaveHandler_Interface
     public function read($id)
     {
         $id = $this->hashSessionId($id);
-        $sql = 'SELECT ' . $this->config['dataColumn'] . ' FROM ' . $this->config['name']
-            . ' WHERE ' . $this->config['primary'] . ' = ?'
-            . ' AND ' . $this->config['modifiedColumn'] . ' + ' . $this->config['lifetimeColumn'] . ' >= ?';
-
+        $sql = 'SELECT ' . $this->config['dataColumn'] . ' FROM ' . $this->config['name'] . ' WHERE ' . $this->config['primary'] . ' = ?' . ' AND ' . $this->config['modifiedColumn'] . ' + ' . $this->config['lifetimeColumn'] . ' >= ?';
         $result = $this->fetchOne($sql, array($id, time()));
-
         if (!$result) {
             $result = '';
         }
-
         return $result;
     }
-
     private function fetchOne($sql, $bind)
     {
         try {
@@ -117,7 +100,6 @@ class DbTable implements Zend_Session_SaveHandler_Interface
         }
         return $result;
     }
-
     private function query($sql, $bind)
     {
         try {
@@ -132,7 +114,6 @@ class DbTable implements Zend_Session_SaveHandler_Interface
         }
         return $result;
     }
-
     /**
      * Write Session - commit data to resource
      *
@@ -143,23 +124,10 @@ class DbTable implements Zend_Session_SaveHandler_Interface
     public function write($id, $data)
     {
         $id = $this->hashSessionId($id);
-
-        $sql = 'INSERT INTO ' . $this->config['name']
-            . ' (' . $this->config['primary'] . ','
-            . $this->config['modifiedColumn'] . ','
-            . $this->config['lifetimeColumn'] . ','
-            . $this->config['dataColumn'] . ')'
-            . ' VALUES (?,?,?,?)'
-            . ' ON DUPLICATE KEY UPDATE '
-            . $this->config['modifiedColumn'] . ' = ?,'
-            . $this->config['lifetimeColumn'] . ' = ?,'
-            . $this->config['dataColumn'] . ' = ?';
-
+        $sql = 'INSERT INTO ' . $this->config['name'] . ' (' . $this->config['primary'] . ',' . $this->config['modifiedColumn'] . ',' . $this->config['lifetimeColumn'] . ',' . $this->config['dataColumn'] . ')' . ' VALUES (?,?,?,?)' . ' ON DUPLICATE KEY UPDATE ' . $this->config['modifiedColumn'] . ' = ?,' . $this->config['lifetimeColumn'] . ' = ?,' . $this->config['dataColumn'] . ' = ?';
         $this->query($sql, array($id, time(), $this->maxLifetime, $data, time(), $this->maxLifetime, $data));
-
         return true;
     }
-
     /**
      * Destroy Session - remove data from resource for
      * given session id
@@ -170,14 +138,10 @@ class DbTable implements Zend_Session_SaveHandler_Interface
     public function destroy($id)
     {
         $id = $this->hashSessionId($id);
-
         $sql = 'DELETE FROM ' . $this->config['name'] . ' WHERE ' . $this->config['primary'] . ' = ?';
-
         $this->query($sql, array($id));
-
         return true;
     }
-
     /**
      * Garbage Collection - remove old session data older
      * than $maxlifetime (in seconds)
@@ -187,14 +151,10 @@ class DbTable implements Zend_Session_SaveHandler_Interface
      */
     public function gc($maxlifetime)
     {
-        $sql = 'DELETE FROM ' . $this->config['name']
-            . ' WHERE ' . $this->config['modifiedColumn'] . ' + ' . $this->config['lifetimeColumn'] . ' < ?';
-
+        $sql = 'DELETE FROM ' . $this->config['name'] . ' WHERE ' . $this->config['modifiedColumn'] . ' + ' . $this->config['lifetimeColumn'] . ' < ?';
         $this->query($sql, array(time()));
-
         return true;
     }
-
     private function migrateToDbSessionTable()
     {
         // happens when updating from Piwik 1.4 or earlier to Matomo 3.7+
@@ -210,5 +170,4 @@ class DbTable implements Zend_Session_SaveHandler_Interface
             }
         }
     }
-
 }

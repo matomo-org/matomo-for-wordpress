@@ -20,7 +20,7 @@ class AccessTest extends MatomoAnalytics_TestCase {
 	 */
 	private $capabilities;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$settings           = new Settings();
@@ -30,7 +30,7 @@ class AccessTest extends MatomoAnalytics_TestCase {
 		$this->access = new Access( $settings );
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->capabilities->remove_hooks();
 		$this->reset_roles();
 

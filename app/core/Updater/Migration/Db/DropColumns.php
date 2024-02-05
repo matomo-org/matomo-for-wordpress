@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,23 +9,20 @@
 namespace Piwik\Updater\Migration\Db;
 
 use Piwik\DbHelper;
-
 /**
  * @see Factory::dropColumn()
  * @ignore
  */
-class DropColumns extends Sql
+class DropColumns extends \Piwik\Updater\Migration\Db\Sql
 {
     public function __construct($tableName, $columnNames)
     {
         $table = DbHelper::getTableColumns($tableName);
-
         // we need to remove all not existing columns. Otherwise if only one of the columns doesn't exist, all of
         // the columns wouldn't be removed
-        $columnNames = array_filter($columnNames, function ($columnName) use ($table) {
+        $columnNames = array_filter($columnNames, function ($columnName) use($table) {
             return isset($table[$columnName]);
         });
-
         if (empty($columnNames)) {
             parent::__construct('', static::ERROR_CODE_COLUMN_NOT_EXISTS);
         } else {
@@ -32,11 +30,8 @@ class DropColumns extends Sql
             $dropColumns = array_map(function ($columnName) {
                 return sprintf('DROP COLUMN `%s`', $columnName);
             }, $columnNames);
-
             $sql = sprintf("ALTER TABLE `%s` %s", $tableName, implode(', ', $dropColumns));
             parent::__construct($sql, static::ERROR_CODE_COLUMN_NOT_EXISTS);
         }
-
     }
-
 }

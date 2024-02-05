@@ -1,17 +1,16 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik\Plugins\CustomJsTracker;
 
 use Piwik\Container\StaticContainer;
 use Piwik\Piwik;
 use Piwik\Plugins\CustomJsTracker\Exception\AccessDeniedException;
-
 /**
  * API for plugin CustomJsTracker
  *
@@ -27,9 +26,8 @@ class API extends \Piwik\Plugin\API
     public function doesIncludePluginTrackersAutomatically()
     {
         Piwik::checkUserHasSomeAdminAccess();
-
         try {
-            $updater = StaticContainer::get('Piwik\Plugins\CustomJsTracker\TrackerUpdater');
+            $updater = StaticContainer::get('Piwik\\Plugins\\CustomJsTracker\\TrackerUpdater');
             $updater->checkWillSucceed();
             return true;
         } catch (AccessDeniedException $e) {
@@ -38,5 +36,4 @@ class API extends \Piwik\Plugin\API
             return false;
         }
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,16 +11,13 @@ namespace Piwik\Plugins\Ecommerce\Categories;
 
 use Piwik\Category\Subcategory;
 use Piwik\Piwik;
-
 class SalesSubcategory extends Subcategory
 {
     protected $categoryId = 'Goals_Ecommerce';
     protected $id = 'Ecommerce_Sales';
     protected $order = 15;
-
     public function getHelp()
     {
-        return '<p>' . Piwik::translate('Ecommerce_SalesSubcategoryHelp1') . '</p>'
-            . '<p>' . Piwik::translate('Ecommerce_SalesSubcategoryHelp2') . '</p>';
+        return '<p>' . Piwik::translate('Ecommerce_SalesSubcategoryHelp1') . '</p>' . '<p>' . Piwik::translate('Ecommerce_SalesSubcategoryHelp2') . '</p>';
     }
 }

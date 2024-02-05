@@ -30,11 +30,15 @@ class GenerateLangFiles extends ConsoleCommand
     protected function configure()
     {
         $this->setName('wordpress:generate-lang-files');
-        $this->setDescription('Generate the core JS asset file');
+        $this->setDescription('Generate the core JS language file');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function doExecute(): int
     {
+        $output = $this->getOutput();
+
+        ServerFilesGenerator::createFilesForSecurity();
+
 	    $languages = API::getInstance()->getAvailableLanguages();
 	    $plugins = Plugin\Manager::getInstance()->loadAllPluginsAndGetTheirInfo();
 	    foreach ($languages as $language) {
@@ -46,13 +50,15 @@ class GenerateLangFiles extends ConsoleCommand
 				    $mixin = json_decode(file_get_contents($file), true);
 				    $base = array_merge($base, $mixin);
 
-				    Filesystem::deleteFileIfExists($file);
+                    Filesystem::deleteFileIfExists($file);
 			    }
 		    }
 
 		    file_put_contents($corePath, json_encode($base, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 	    }
 
-    }
+        $output->writeln("<info>Finished generating lang files.</info>");
 
+        return self::SUCCESS;
+    }
 }

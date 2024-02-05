@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
-
 class VisitTotalSearches extends VisitDimension
 {
     protected $columnName = 'visit_total_searches';
@@ -21,7 +21,6 @@ class VisitTotalSearches extends VisitDimension
     protected $nameSingular = 'General_NbSearches';
     protected $acceptValues = 'To select all visits who used internal Site Search, use: &segment=searches>0';
     protected $type = self::TYPE_NUMBER;
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -33,10 +32,8 @@ class VisitTotalSearches extends VisitDimension
         if ($this->isSiteSearchAction($action)) {
             return 1;
         }
-
         return 0;
     }
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -48,17 +45,14 @@ class VisitTotalSearches extends VisitDimension
         if ($this->isSiteSearchAction($action)) {
             return 'visit_total_searches + 1';
         }
-
         return false;
     }
-
     /**
      * @param Action|null $action
      * @return bool
      */
     private function isSiteSearchAction($action)
     {
-        return ($action && $action->getActionType() == Action::TYPE_SITE_SEARCH);
+        return $action && $action->getActionType() == Action::TYPE_SITE_SEARCH;
     }
-
 }

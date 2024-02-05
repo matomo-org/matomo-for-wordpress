@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Piwik\Common;
 use Piwik\Piwik;
 use Piwik\Widget\Widget;
 use Piwik\Widget\WidgetConfig;
-
 class GetTransitions extends Widget
 {
     public static function configure(WidgetConfig $config)
@@ -26,21 +26,14 @@ class GetTransitions extends Widget
             $config->disable();
         }
     }
-
     private static function getIdSite()
     {
         return Common::getRequestVar('idSite', 0, 'int');
     }
-
     public function render()
     {
         Piwik::checkUserHasViewAccess(self::getIdSite());
-
         $isWidgetized = Common::getRequestVar('widget', 0, 'int') === 1;
-
-        return $this->renderTemplate('transitions', array(
-            'isWidget' => $isWidgetized
-        ));
+        return $this->renderTemplate('transitions', array('isWidget' => $isWidgetized));
     }
-
 }

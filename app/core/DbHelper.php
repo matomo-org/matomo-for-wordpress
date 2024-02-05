@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik;
 use Exception;
 use Piwik\Db\Schema;
 use Piwik\DataAccess\ArchiveTableCreator;
-
 /**
  * Contains database related helper functions.
  */
@@ -27,7 +27,6 @@ class DbHelper
     {
         return Schema::getInstance()->getTablesInstalled($forceReload);
     }
-
     /**
      * Returns `true` if a table in the database, `false` if otherwise.
      *
@@ -38,10 +37,9 @@ class DbHelper
      */
     public static function tableExists($tableName)
     {
-        $tableName = str_replace(['%', '_', "'"], ['\%', '\_', '_'], $tableName);
-        return Db::get()->query(sprintf("SHOW TABLES LIKE '%s'", $tableName))->rowCount() > 0;
+        $tableName = str_replace(['%', '_', "'"], ['\\%', '\\_', '_'], $tableName);
+        return \Piwik\Db::get()->query(sprintf("SHOW TABLES LIKE '%s'", $tableName))->rowCount() > 0;
     }
-
     /**
      * Get list of installed columns in a table
      *
@@ -53,7 +51,6 @@ class DbHelper
     {
         return Schema::getInstance()->getTableColumns($tableName);
     }
-
     /**
      * Creates a new table in the database.
      *
@@ -74,7 +71,6 @@ class DbHelper
     {
         Schema::getInstance()->createTable($nameWithoutPrefix, $createDefinition);
     }
-
     /**
      * Returns true if Piwik is installed
      *
@@ -90,7 +86,6 @@ class DbHelper
             return false;
         }
     }
-
     /**
      * Truncate all tables
      */
@@ -98,7 +93,6 @@ class DbHelper
     {
         Schema::getInstance()->truncateAllTables();
     }
-
     /**
      * Creates an entry in the User table for the "anonymous" user.
      */
@@ -106,7 +100,6 @@ class DbHelper
     {
         Schema::getInstance()->createAnonymousUser();
     }
-
     /**
      * Records the Matomo version a user used when installing this Matomo for the first time
      */
@@ -114,11 +107,10 @@ class DbHelper
     {
         Schema::getInstance()->recordInstallVersion();
     }
-
     /**
      * Returns which Matomo version was used to install this Matomo for the first time.
      */
-    public static function getInstallVersion(): string
+    public static function getInstallVersion() : string
     {
         return Schema::getInstance()->getInstallVersion() ?? '0';
         // need string as usage is usually
@@ -126,16 +118,15 @@ class DbHelper
         // and PHP 8.1 throws a deprecation warning otherwise
         // @see https://github.com/matomo-org/matomo/pull/17989#issuecomment-921298360
     }
-
     public static function wasMatomoInstalledBeforeVersion($version)
     {
         $installVersion = self::getInstallVersion();
         if (empty($installVersion)) {
-            return true; // we assume yes it was installed
+            return true;
+            // we assume yes it was installed
         }
         return true === version_compare($version, $installVersion, '>');
     }
-
     /**
      * Create all tables
      */
@@ -143,7 +134,6 @@ class DbHelper
     {
         Schema::getInstance()->createTables();
     }
-
     /**
      * Drop database, used in tests
      */
@@ -153,8 +143,6 @@ class DbHelper
             Schema::getInstance()->dropDatabase($dbName);
         }
     }
-
-
     /**
      * Checks the database server version against the required minimum
      * version.
@@ -165,17 +153,15 @@ class DbHelper
      */
     public static function checkDatabaseVersion()
     {
-        Db::get()->checkServerVersion();
+        \Piwik\Db::get()->checkServerVersion();
     }
-
     /**
      * Disconnect from database
      */
     public static function disconnectDatabase()
     {
-        Db::get()->closeConnection();
+        \Piwik\Db::get()->closeConnection();
     }
-
     /**
      * Create database
      *
@@ -185,7 +171,6 @@ class DbHelper
     {
         Schema::getInstance()->createDatabase($dbName);
     }
-
     /**
      * Returns if the given table has an index with the given name
      *
@@ -197,10 +182,9 @@ class DbHelper
      */
     public static function tableHasIndex($table, $indexName)
     {
-        $result = Db::get()->fetchOne('SHOW INDEX FROM '.$table.' WHERE Key_name = ?', [$indexName]);
+        $result = \Piwik\Db::get()->fetchOne('SHOW INDEX FROM ' . $table . ' WHERE Key_name = ?', [$indexName]);
         return !empty($result);
     }
-
     /**
      * Returns the default database charset to use
      *
@@ -211,27 +195,23 @@ class DbHelper
      */
     public static function getDefaultCharset()
     {
-        $result = Db::get()->fetchRow("SHOW CHARACTER SET LIKE 'utf8mb4'");
-
+        $result = \Piwik\Db::get()->fetchRow("SHOW CHARACTER SET LIKE 'utf8mb4'");
         if (empty($result)) {
-            return 'utf8'; // charset not available
+            return 'utf8';
+            // charset not available
         }
-
-        $result = Db::get()->fetchRow("SHOW VARIABLES LIKE 'character_set_database'");
-
+        $result = \Piwik\Db::get()->fetchRow("SHOW VARIABLES LIKE 'character_set_database'");
         if (!empty($result) && $result['Value'] === 'utf8mb4') {
-            return 'utf8mb4'; // database has utf8mb4 charset, so assume it can be used
+            return 'utf8mb4';
+            // database has utf8mb4 charset, so assume it can be used
         }
-
-        $result = Db::get()->fetchRow("SHOW VARIABLES LIKE 'innodb_file_per_table'");
-
+        $result = \Piwik\Db::get()->fetchRow("SHOW VARIABLES LIKE 'innodb_file_per_table'");
         if (empty($result) || $result['Value'] !== 'ON') {
-            return 'utf8'; // innodb_file_per_table is required for utf8mb4
+            return 'utf8';
+            // innodb_file_per_table is required for utf8mb4
         }
-
         return 'utf8mb4';
     }
-
     /**
      * Returns sql queries to convert all installed tables to utf8mb4
      *
@@ -239,17 +219,13 @@ class DbHelper
      */
     public static function getUtf8mb4ConversionQueries()
     {
-        $allTables = DbHelper::getTablesInstalled();
-
-        $queries   = [];
-
+        $allTables = \Piwik\DbHelper::getTablesInstalled();
+        $queries = [];
         foreach ($allTables as $table) {
-            $queries[] = "ALTER TABLE `$table` CONVERT TO CHARACTER SET utf8mb4;";
+            $queries[] = "ALTER TABLE `{$table}` CONVERT TO CHARACTER SET utf8mb4;";
         }
-
         return $queries;
     }
-
     /**
      * Get the SQL to create Piwik tables
      *
@@ -259,7 +235,6 @@ class DbHelper
     {
         return Schema::getInstance()->getTablesCreateSql();
     }
-
     /**
      * Get the SQL to create a specific Piwik table
      *
@@ -270,21 +245,17 @@ class DbHelper
     {
         return Schema::getInstance()->getTableCreateSql($tableName);
     }
-
     /**
      * Deletes archive tables. For use in tests.
      */
     public static function deleteArchiveTables()
     {
         foreach (ArchiveTableCreator::getTablesArchivesInstalled() as $table) {
-            Log::debug("Dropping table $table");
-
-            Db::query("DROP TABLE IF EXISTS `$table`");
+            \Piwik\Log::debug("Dropping table {$table}");
+            \Piwik\Db::query("DROP TABLE IF EXISTS `{$table}`");
         }
-
         ArchiveTableCreator::refreshTableList($forceReload = true);
     }
-
     /**
      * Adds a MAX_EXECUTION_TIME hint into a SELECT query if $limit is bigger than 1
      *
@@ -297,21 +268,17 @@ class DbHelper
         if ($limit <= 0) {
             return $sql;
         }
-
         $sql = trim($sql);
         $pos = stripos($sql, 'SELECT');
-        if ($pos !== false) {
-
+        $isMaxExecutionTimeoutAlreadyPresent = stripos($sql, 'MAX_EXECUTION_TIME(') !== false;
+        if ($pos !== false && !$isMaxExecutionTimeoutAlreadyPresent) {
             $timeInMs = $limit * 1000;
             $timeInMs = (int) $timeInMs;
-            $maxExecutionTimeHint = ' /*+ MAX_EXECUTION_TIME('.$timeInMs.') */ ';
-
+            $maxExecutionTimeHint = ' /*+ MAX_EXECUTION_TIME(' . $timeInMs . ') */ ';
             $sql = substr_replace($sql, 'SELECT ' . $maxExecutionTimeHint, $pos, strlen('SELECT'));
         }
-
         return $sql;
     }
-
     /**
      * Add an origin hint to the query to identify the main parameters and segment for debugging
      *
@@ -324,33 +291,48 @@ class DbHelper
      *
      * @return string   Modified SQL query string with hint added
      */
-    public static function addOriginHintToQuery(string $sql, string $origin, ?Date $dateStart = null, ?Date $dateEnd = null,
-                                          ?array $sites = null, ?Segment $segment = null): string
+    public static function addOriginHintToQuery(string $sql, string $origin, ?\Piwik\Date $dateStart = null, ?\Piwik\Date $dateEnd = null, ?array $sites = null, ?\Piwik\Segment $segment = null) : string
     {
         $select = 'SELECT';
         if ($origin && 0 === strpos(trim($sql), $select)) {
             $sql = trim($sql);
             $sql = 'SELECT /* ' . $origin . ' */' . substr($sql, strlen($select));
         }
-
         if ($dateStart !== null && $dateEnd !== null && 0 === strpos(trim($sql), $select)) {
             $sql = trim($sql);
             $sql = 'SELECT /* ' . $dateStart->toString() . ',' . $dateEnd->toString() . ' */' . substr($sql, strlen($select));
         }
-
         if ($sites && is_array($sites) && 0 === strpos(trim($sql), $select)) {
             $sql = trim($sql);
             $sql = 'SELECT /* ' . 'sites ' . implode(',', array_map('intval', $sites)) . ' */' . substr($sql, strlen($select));
         }
-
         if ($segment && !$segment->isEmpty() && 0 === strpos(trim($sql), $select)) {
             $sql = trim($sql);
-            $sql = 'SELECT /* ' . 'segmenthash ' . $segment->getHash(). ' */' . substr($sql, strlen($select));
+            $sql = 'SELECT /* ' . 'segmenthash ' . $segment->getHash() . ' */' . substr($sql, strlen($select));
         }
-
         return $sql;
     }
-
+    /**
+     * Add an optimizer hint to the query to set the first table used by the MySQL join execution plan
+     *
+     * https://dev.mysql.com/doc/refman/8.0/en/optimizer-hints.html#optimizer-hints-join-order
+     *
+     * @param string $sql       SQL query string
+     * @param string $prefix    Table prefix to be used as the first table in the plan
+     *
+     * @return string           Modified query string with hint added
+     */
+    public static function addJoinPrefixHintToQuery(string $sql, string $prefix) : string
+    {
+        if (strpos(trim($sql), '/*+ JOIN_PREFIX(') === false) {
+            $select = 'SELECT';
+            if (0 === strpos(trim($sql), $select)) {
+                $sql = trim($sql);
+                $sql = 'SELECT /*+ JOIN_PREFIX(' . $prefix . ') */' . substr($sql, strlen($select));
+            }
+        }
+        return $sql;
+    }
     /**
      * Returns true if the string is a valid database name for MySQL. MySQL allows + in the database names.
      * Database names that start with a-Z or 0-9 and contain a-Z, 0-9, underscore(_), dash(-), plus(+), and dot(.) will be accepted.
@@ -362,7 +344,6 @@ class DbHelper
      */
     public static function isValidDbname($dbname)
     {
-        return (0 !== preg_match('/(^[a-zA-Z0-9]+([a-zA-Z0-9\_\.\-\+]*))$/D', $dbname));
+        return 0 !== preg_match('/(^[a-zA-Z0-9]+([a-zA-Z0-9\\_\\.\\-\\+]*))$/D', $dbname);
     }
-
 }

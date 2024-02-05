@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -6,7 +7,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik;
 
 /**
@@ -19,15 +19,12 @@ namespace Piwik;
 class Singleton
 {
     protected static $instances;
-
     protected function __construct()
     {
     }
-
-    final protected function __clone()
+    protected final function __clone()
     {
     }
-
     /**
      * Returns the singleton instance for the derived class. If the singleton instance
      * has not been created, this method will create it.
@@ -37,13 +34,11 @@ class Singleton
     public static function getInstance()
     {
         $class = get_called_class();
-
         if (!isset(self::$instances[$class])) {
-            self::$instances[$class] = new $class;
+            self::$instances[$class] = new $class();
         }
         return self::$instances[$class];
     }
-
     /**
      * Used in tests only
      * @ignore
@@ -53,7 +48,6 @@ class Singleton
         $class = get_called_class();
         unset(self::$instances[$class]);
     }
-
     /**
      * Sets the singleton instance. For testing purposes.
      * @ignore
@@ -63,7 +57,6 @@ class Singleton
         $class = get_called_class();
         self::$instances[$class] = $instance;
     }
-
     /**
      * @ignore
      */

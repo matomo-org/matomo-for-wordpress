@@ -7,7 +7,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-
 namespace Piwik\Plugins\UserCountry\LocationProvider;
 
 use Matomo\Network\IP;
@@ -21,7 +20,7 @@ use Piwik\Plugins\PrivacyManager\Config as PrivacyManagerConfig;
 use Piwik\Plugins\Provider\Provider as ProviderProvider;
 use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Tracker\TrackerConfig;
-
+use Piwik\Url;
 /**
  * The default LocationProvider, this LocationProvider guesses a visitor's country
  * using the language they use. This provider is not very accurate.
@@ -31,7 +30,6 @@ class DefaultProvider extends LocationProvider
 {
     const ID = 'default';
     const TITLE = 'General_Default';
-
     /**
      * Guesses a visitor's location using a visitor's browser language.
      *
@@ -41,58 +39,40 @@ class DefaultProvider extends LocationProvider
     public function getLocation($info)
     {
         $country = $this->getCountryUsingProviderExtensionIfAvailable($info['ip']);
-
         if (empty($country)) {
             $enableLanguageToCountryGuess = Config::getInstance()->Tracker['enable_language_to_country_guess'];
-
             if (empty($info['lang'])) {
                 $info['lang'] = Common::getBrowserLanguage();
             }
             $country = Common::getCountry($info['lang'], $enableLanguageToCountryGuess, $info['ip']);
         }
-
         $location = [parent::COUNTRY_CODE_KEY => $country];
         $this->completeLocationResult($location);
-
         return $location;
     }
-
-
     private function getCountryUsingProviderExtensionIfAvailable($ipAddress)
     {
-        if (
-            !Manager::getInstance()->isPluginInstalled('Provider')
-            || !class_exists('Piwik\Plugins\Provider\Provider')
-            || Common::getRequestVar('dp', 0, 'int') === 1
-        ) {
+        if (!Manager::getInstance()->isPluginInstalled('Provider') || !class_exists('Piwik\\Plugins\\Provider\\Provider') || Common::getRequestVar('dp', 0, 'int') === 1) {
             return false;
         }
-
         $privacyConfig = new PrivacyManagerConfig();
-
         // when using anonymized ip for enrichment we skip this check
         if ($privacyConfig->useAnonymizedIpForVisitEnrichment) {
             return false;
         }
-
         $hostname = $this->getHost($ipAddress);
         $hostnameExtension = ProviderProvider::getCleanHostname($hostname);
-
         $hostnameDomain = substr($hostnameExtension, 1 + strrpos($hostnameExtension, '.'));
         if ($hostnameDomain == 'uk') {
             $hostnameDomain = 'gb';
         }
-
         /** @var RegionDataProvider $regionDataProvider */
-        $regionDataProvider = StaticContainer::get('Piwik\Intl\Data\Provider\RegionDataProvider');
-
+        $regionDataProvider = StaticContainer::get('Piwik\\Intl\\Data\\Provider\\RegionDataProvider');
         if (array_key_exists($hostnameDomain, $regionDataProvider->getCountryList())) {
             return $hostnameDomain;
         }
-
         return false;
     }
-
     /**
      * Returns the hostname given the IP address string
      *
@@ -102,13 +82,10 @@ class DefaultProvider extends LocationProvider
     protected function getHost($ipStr)
     {
         $ip = IP::fromStringIP($ipStr);
-
         $host = $ip->getHostname();
-        $host = ($host === null ? $ipStr : $host);
-
+        $host = $host === null ? $ipStr : $host;
         return trim(strtolower($host));
     }
-
     /**
      * Returns whether this location provider is available.
      *
@@ -118,8 +95,6 @@ class DefaultProvider extends LocationProvider
     {
         return !!TrackerConfig::getConfigValue('enable_default_location_provider');
     }
-
-
     /**
      * Returns whether this location provider is visible.
      *
@@ -129,7 +104,6 @@ class DefaultProvider extends LocationProvider
     {
         return !!TrackerConfig::getConfigValue('enable_default_location_provider');
     }
-
     /**
      * Returns whether this location provider is working correctly.
      *
@@ -141,7 +115,6 @@ class DefaultProvider extends LocationProvider
     {
         return true;
     }
-
     /**
      * Returns an array describing the types of location information this provider will
      * return.
@@ -156,12 +129,8 @@ class DefaultProvider extends LocationProvider
      */
     public function getSupportedLocationInfo()
     {
-        return [self::CONTINENT_CODE_KEY => true,
-                     self::CONTINENT_NAME_KEY => true,
-                     self::COUNTRY_CODE_KEY   => true,
-                     self::COUNTRY_NAME_KEY   => true];
+        return [self::CONTINENT_CODE_KEY => true, self::CONTINENT_NAME_KEY => true, self::COUNTRY_CODE_KEY => true, self::COUNTRY_NAME_KEY => true];
     }
-
     /**
      * Returns information about this location provider. Contains an id, title & description:
      *
@@ -175,24 +144,13 @@ class DefaultProvider extends LocationProvider
      */
     public function getInfo()
     {
-        $desc = '<p>' . Piwik::translate('UserCountry_DefaultLocationProviderDesc1') . ' '
-            . Piwik::translate(
-                'UserCountry_DefaultLocationProviderDesc2',
-                ['<strong>', '', '', '</strong>']
-            )
-            . '</p><p><a href="https://matomo.org/faq/how-to/faq_163" rel="noreferrer noopener"  target="_blank">'
-            . Piwik::translate('UserCountry_HowToInstallGeoIPDatabases')
-            . '</a></p>';
+        $desc = '<p>' . Piwik::translate('UserCountry_DefaultLocationProviderDesc1') . ' ' . Piwik::translate('UserCountry_DefaultLocationProviderDesc2', ['<strong>', '', '', '</strong>']) . '</p><p><a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to/faq_163') . '" rel="noreferrer noopener"  target="_blank">' . Piwik::translate('UserCountry_HowToInstallGeoIPDatabases') . '</a></p>';
         return ['id' => self::ID, 'title' => self::TITLE, 'description' => $desc, 'order' => 1];
     }
-
-    public function getUsageWarning(): ?string
+    public function getUsageWarning() : ?string
     {
         $comment = Piwik::translate('UserCountry_DefaultLocationProviderDesc1') . ' ';
-        $comment .= Piwik::translate('UserCountry_DefaultLocationProviderDesc2', [
-            '<a href="https://matomo.org/docs/geo-locate/" rel="noreferrer noopener" target="_blank">', '', '', '</a>'
-        ]);
-
+        $comment .= Piwik::translate('UserCountry_DefaultLocationProviderDesc2', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/docs/geo-locate/') . '" rel="noreferrer noopener" target="_blank">', '', '', '</a>']);
         return $comment;
     }
 }

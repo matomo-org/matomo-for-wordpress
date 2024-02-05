@@ -53,9 +53,10 @@ jobs:
             core.setFailed('User is not allowed to release.')
       - uses: actions/checkout@v3
         with:
-          lfs: false
+          lfs: true
           fetch-depth: '0'
           token: ${{ secrets.GITHUB_TOKEN }} # for pushing to protected branch
+      - run: git lfs pull
       - name: "Check tag"
         run: |
             if [[ -n "${{ github.event.inputs.version }}" ]]
@@ -76,10 +77,18 @@ jobs:
               fi
 
               echo "version=$version" >> $GITHUB_ENV
+      # start local environment so we can run the wordpress:build-release command
+      - run: |
+          mkdir -p ./docker/wordpress
+          docker compose --env-file .env.default --env-file .env up -d wordpress
+      - run: sleep 60 # wait for docker-compose launch to finish
+      - run: chmod -R 777 . # required to build the release
+      - name: "Build releases"
+        run: npm run compose -- run console wordpress:build-release --name=${{ env.version }} --zip --tgz
       - name: "Create release"
         uses: ncipollo/release-action@c4bf6c1ab090090498fb7f3ddc9f99ba5ab619b9
         with:
-            artifacts: "archives/matomo-${{ env.version }}.*"
+            artifacts: "matomo-${{ env.version }}.*"
             allowUpdates: ${{ steps.tag.outputs.update }}
             tag: ${{ env.version }}
             body: "If you download this release, make sure the directory name within the 'wordpress/wp-content' directory is 'matomo' and not for example 'matomo-for-wordpress'. [View changes](https://github.com/matomo-org/matomo-for-wordpress/blob/develop/CHANGELOG.md)"

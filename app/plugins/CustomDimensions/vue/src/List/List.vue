@@ -76,7 +76,7 @@
             class="btn"
             :disabled="!scope.numSlotsLeft"
             v-show="!isLoading"
-            v-on:click="addDimension(scope.value)"
+            @click="addDimension(scope.value)"
           >
             <span class="icon-add" /> {{ translate('CustomDimensions_ConfigureNewDimension') }}
             <span class="info">({{ translate(
@@ -175,7 +175,7 @@ export default defineComponent({
       return result;
     },
     siteName(): string {
-      return Matomo.helper.htmlDecode(Matomo.siteName);
+      return Matomo.helper.htmlEntities(Matomo.helper.htmlDecode(Matomo.siteName));
     },
   },
 });

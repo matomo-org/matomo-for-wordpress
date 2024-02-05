@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,11 +9,10 @@
  */
 namespace Piwik\Plugins\Ecommerce\Columns;
 
-class Items extends BaseConversion
+class Items extends \Piwik\Plugins\Ecommerce\Columns\BaseConversion
 {
     protected $columnName = 'items';
     protected $type = self::TYPE_NUMBER;
     protected $category = 'Goals_Ecommerce';
     protected $nameSingular = 'Ecommerce_NumberOfItems';
-
 }

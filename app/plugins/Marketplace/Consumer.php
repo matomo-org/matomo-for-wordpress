@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,7 @@
 namespace Piwik\Plugins\Marketplace;
 
 /**
- * A consumer is a user having specified a license key in the Marketplace. 
+ * A consumer is a user having specified a license key in the Marketplace.
  */
 class Consumer
 {
@@ -17,15 +18,12 @@ class Consumer
      * @var Api\Client
      */
     private $marketplaceClient;
-
     private $consumer = false;
     private $isValid = null;
-
-    public function __construct(Api\Client $marketplaceClient)
+    public function __construct(\Piwik\Plugins\Marketplace\Api\Client $marketplaceClient)
     {
         $this->marketplaceClient = $marketplaceClient;
     }
-
     /**
      * For tests only.
      * @internal
@@ -35,13 +33,11 @@ class Consumer
     {
         return $this->marketplaceClient;
     }
-
     public function clearCache()
     {
         $this->consumer = false;
         $this->isValid = null;
     }
-
     public function getConsumer()
     {
         if ($this->consumer === false) {
@@ -52,17 +48,13 @@ class Consumer
                 $this->consumer = array();
             }
         }
-
         return $this->consumer;
     }
-
     public function isValidConsumer()
     {
         if (!isset($this->isValid)) {
             $this->isValid = $this->marketplaceClient->isValidConsumer();
         }
-
         return $this->isValid;
     }
-
 }

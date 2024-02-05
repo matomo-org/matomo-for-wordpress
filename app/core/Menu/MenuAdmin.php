@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Menu;
 
 use Piwik\Development;
-
 /**
  * Contains menu entries for the Admin menu.
  * Plugins can implement the `configureAdminMenu()` method of the `Menu` plugin class to add, rename of remove
@@ -17,7 +17,7 @@ use Piwik\Development;
  *
  * @method static \Piwik\Menu\MenuAdmin getInstance()
  */
-class MenuAdmin extends MenuAbstract
+class MenuAdmin extends \Piwik\Menu\MenuAbstract
 {
     /**
      * See {@link add()}. Adds a new menu item to the manage section of the user menu.
@@ -32,7 +32,6 @@ class MenuAdmin extends MenuAbstract
     {
         $this->addItem('UsersManager_MenuPersonal', $menuName, $url, $order, $tooltip);
     }
-
     /**
      * See {@link add()}. Adds a new menu item to the development section of the admin menu.
      * @param string $menuName
@@ -48,7 +47,6 @@ class MenuAdmin extends MenuAbstract
             $this->addItem('CoreAdminHome_MenuDevelopment', $menuName, $url, $order, $tooltip);
         }
     }
-
     /**
      * See {@link add()}. Adds a new menu item to the diagnostic section of the admin menu.
      * @param string $menuName
@@ -62,7 +60,6 @@ class MenuAdmin extends MenuAbstract
     {
         $this->addItem('CoreAdminHome_MenuDiagnostic', $menuName, $url, $order, $tooltip);
     }
-
     /**
      * See {@link add()}. Adds a new menu item to the platform section of the admin menu.
      * @param string $menuName
@@ -76,7 +73,19 @@ class MenuAdmin extends MenuAbstract
     {
         $this->addItem('CorePluginsAdmin_MenuPlatform', $menuName, $url, $order, $tooltip);
     }
-
+    /**
+     * See {@link add()}. Adds a new menu item to the plugins section of the admin menu.
+     * @param string $menuName
+     * @param array $url
+     * @param int $order
+     * @param bool|string $tooltip
+     * @api
+     * @since 5.0.0
+     */
+    public function addPluginItem(string $menuName, array $url, int $order = 50, $tooltip = false)
+    {
+        $this->addItem('General_Plugins', $menuName, $url, $order, $tooltip);
+    }
     /**
      * See {@link add()}. Adds a new menu item to the measurable section of the admin menu.
      * @param string $menuName
@@ -90,7 +99,6 @@ class MenuAdmin extends MenuAbstract
     {
         $this->addItem('CoreAdminHome_MenuMeasurables', $menuName, $url, $order, $tooltip);
     }
-
     /**
      * See {@link add()}. Adds a new menu item to the manage section of the admin menu.
      * @param string $menuName
@@ -104,7 +112,6 @@ class MenuAdmin extends MenuAbstract
     {
         $this->addItem('CoreAdminHome_MenuSystem', $menuName, $url, $order, $tooltip);
     }
-
     /**
      * Triggers the Menu.MenuAdmin.addItems hook and returns the admin menu.
      *
@@ -113,12 +120,10 @@ class MenuAdmin extends MenuAbstract
     public function getMenu()
     {
         if (!$this->menu) {
-
             foreach ($this->getAllMenus() as $menu) {
                 $menu->configureAdminMenu($this);
             }
         }
-
         return parent::getMenu();
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -23,7 +24,6 @@ use Piwik\Plugins\PagePerformance\Columns\TimeNetwork;
 use Piwik\Plugins\PagePerformance\Columns\TimeServer;
 use Piwik\Plugins\PagePerformance\Columns\TimeOnLoad;
 use Piwik\Plugins\PagePerformance\Columns\TimeTransfer;
-
 class Metrics
 {
     /**
@@ -31,58 +31,33 @@ class Metrics
      */
     public static function getPagePerformanceMetrics()
     {
-        $metrics = [
-            new AverageTimeNetwork(),
-            new AverageTimeServer(),
-            new AverageTimeTransfer(),
-            new AverageTimeDomProcessing(),
-            new AverageTimeDomCompletion(),
-            new AverageTimeOnLoad(),
-        ];
-
+        $metrics = [new AverageTimeNetwork(), new AverageTimeServer(), new AverageTimeTransfer(), new AverageTimeDomProcessing(), new AverageTimeDomCompletion(), new AverageTimeOnLoad()];
         $mappedMetrics = [];
-
         foreach ($metrics as $metric) {
             $mappedMetrics[$metric->getName()] = $metric;
         }
-
         return $mappedMetrics;
     }
-
     /**
      * @return \Piwik\Plugins\PagePerformance\Columns\Metrics\AveragePerformanceMetric[]
      */
     public static function getAllPagePerformanceMetrics()
     {
-        $metrics = [
-            new AverageTimeNetwork(),
-            new AverageTimeServer(),
-            new AverageTimeTransfer(),
-            new AverageTimeDomProcessing(),
-            new AverageTimeDomCompletion(),
-            new AverageTimeOnLoad(),
-            new AveragePageLoadTime()
-        ];
-
+        $metrics = [new AverageTimeNetwork(), new AverageTimeServer(), new AverageTimeTransfer(), new AverageTimeDomProcessing(), new AverageTimeDomCompletion(), new AverageTimeOnLoad(), new AveragePageLoadTime()];
         $mappedMetrics = [];
-
         foreach ($metrics as $metric) {
             $mappedMetrics[$metric->getName()] = $metric;
         }
-
         return $mappedMetrics;
     }
-
     public static function getMetricTranslations()
     {
         $translations = array();
         foreach (self::getAllPagePerformanceMetrics() as $metric) {
             $translations[$metric->getName()] = $metric->getTranslatedName();
         }
-
         return $translations;
     }
-
     public static function getMetricSemanticTypes()
     {
         $types = [];
@@ -91,54 +66,21 @@ class Metrics
         }
         return $types;
     }
-
     public static function attachActionMetrics(&$metricsConfig)
     {
         $table = 'log_link_visit_action';
-
         /**
          * @var ActionDimension[] $performanceDimensions
          */
-        $performanceDimensions = [
-            new TimeNetwork(),
-            new TimeServer(),
-            new TimeTransfer(),
-            new TimeDomProcessing(),
-            new TimeDomCompletion(),
-            new TimeOnLoad()
-        ];
-        foreach($performanceDimensions as $dimension) {
+        $performanceDimensions = [new TimeNetwork(), new TimeServer(), new TimeTransfer(), new TimeDomProcessing(), new TimeDomCompletion(), new TimeOnLoad()];
+        foreach ($performanceDimensions as $dimension) {
             $id = $dimension->getColumnName();
             $column = $table . '.' . $id;
-            $metricsConfig['sum_'.$id] = [
-                'aggregation' => 'sum',
-                'query' => "sum(
-                    case when " . $column . " is null
-                        then 0
-                        else " . $column . "
-                    end
-                ) / 1000"
-            ];
-            $metricsConfig['nb_hits_with_'.$id] = [
-                'aggregation' => 'sum',
-                'query' => "sum(
-                    case when " . $column . " is null
-                        then 0
-                        else 1
-                    end
-                )"
-            ];
-            $metricsConfig['min_'.$id] = [
-                'aggregation' => 'min',
-                'query' => "min(" . $column . ") / 1000"
-            ];
-            $metricsConfig['max_'.$id] = [
-                'aggregation' => 'max',
-                'query' => "max(" . $column . ") / 1000"
-            ];
+            $metricsConfig['sum_' . $id] = ['aggregation' => 'sum', 'query' => "sum(\n                    case when " . $column . " is null\n                        then 0\n                        else " . $column . "\n                    end\n                ) / 1000"];
+            $metricsConfig['nb_hits_with_' . $id] = ['aggregation' => 'sum', 'query' => "sum(\n                    case when " . $column . " is null\n                        then 0\n                        else 1\n                    end\n                )"];
+            $metricsConfig['min_' . $id] = ['aggregation' => 'min', 'query' => "min(" . $column . ") / 1000"];
+            $metricsConfig['max_' . $id] = ['aggregation' => 'max', 'query' => "max(" . $column . ") / 1000"];
         }
-
         return $metricsConfig;
     }
-
 }

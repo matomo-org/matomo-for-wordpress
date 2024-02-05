@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,20 +11,17 @@ namespace Piwik\Access;
 
 abstract class Capability
 {
-    abstract public function getId(): string;
-    abstract public function getName(): string;
-    abstract public function getCategory(): string;
-    abstract public function getDescription(): string;
-    abstract public function getIncludedInRoles(): array;
-
-    public function getHelpUrl(): string
+    public abstract function getId() : string;
+    public abstract function getName() : string;
+    public abstract function getCategory() : string;
+    public abstract function getDescription() : string;
+    public abstract function getIncludedInRoles() : array;
+    public function getHelpUrl() : string
     {
         return '';
     }
-
-    public function hasRoleCapability(string $idRole): bool
+    public function hasRoleCapability(string $idRole) : bool
     {
         return \in_array($idRole, $this->getIncludedInRoles(), true);
     }
-
 }

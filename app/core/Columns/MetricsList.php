@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -14,7 +15,6 @@ use Piwik\Piwik;
 use Piwik\Plugin\ArchivedMetric;
 use Piwik\Plugin\Metric;
 use Piwik\Plugin\ProcessedMetric;
-
 /**
  * Manages the global list of metrics that can be used in reports.
  *
@@ -33,9 +33,7 @@ class MetricsList
      * @var Metric[]
      */
     private $metrics = array();
-
     private $metricsByNameCache = array();
-
     /**
      * @param Metric $metric
      */
@@ -44,7 +42,6 @@ class MetricsList
         $this->metrics[] = $metric;
         $this->metricsByNameCache = array();
     }
-
     /**
      * Get all available metrics.
      *
@@ -54,7 +51,6 @@ class MetricsList
     {
         return $this->metrics;
     }
-
     /**
      * Removes one or more metrics from the metrics list.
      *
@@ -74,7 +70,6 @@ class MetricsList
             }
         }
     }
-
     /**
      * @param string $metricName
      * @return Metric|ArchivedMetric|null
@@ -87,14 +82,11 @@ class MetricsList
                 $this->metricsByNameCache[$metric->getName()] = $metric;
             }
         }
-
         if (!empty($this->metricsByNameCache[$metricName])) {
             return $this->metricsByNameCache[$metricName];
         }
-
         return null;
     }
-
     /**
      * Get all metrics defined in the Piwik platform.
      * @ignore
@@ -104,13 +96,10 @@ class MetricsList
     {
         $cache = Cache::getTransientCache();
         $cacheKey = CacheId::siteAware('MetricsList');
-
         if ($cache->contains($cacheKey)) {
             return $cache->fetch($cacheKey);
         }
-
-        $list = new static;
-
+        $list = new static();
         /**
          * Triggered to add new metrics that cannot be picked up automatically by the platform.
          * This is useful if the plugin allows a user to create metrics dynamically. For example
@@ -126,15 +115,12 @@ class MetricsList
          * @param MetricsList $list An instance of the MetricsList. You can add metrics to the list this way.
          */
         Piwik::postEvent('Metric.addMetrics', array($list));
-
-        $dimensions = Dimension::getAllDimensions();
+        $dimensions = \Piwik\Columns\Dimension::getAllDimensions();
         foreach ($dimensions as $dimension) {
-            $factory = new DimensionMetricFactory($dimension);
+            $factory = new \Piwik\Columns\DimensionMetricFactory($dimension);
             $dimension->configureMetrics($list, $factory);
         }
-
-        $computedFactory = new ComputedMetricFactory($list);
-
+        $computedFactory = new \Piwik\Columns\ComputedMetricFactory($list);
         /**
          * Triggered to add new metrics that cannot be picked up automatically by the platform.
          * This is useful if the plugin allows a user to create metrics dynamically. For example
@@ -150,7 +136,6 @@ class MetricsList
          * @param MetricsList $list An instance of the MetricsList. You can add metrics to the list this way.
          */
         Piwik::postEvent('Metric.addComputedMetrics', array($list, $computedFactory));
-
         /**
          * Triggered to filter metrics.
          *
@@ -164,28 +149,24 @@ class MetricsList
          * @param MetricsList $list An instance of the MetricsList. You can change the list of metrics this way.
          */
         Piwik::postEvent('Metric.filterMetrics', array($list));
-
         $availableMetrics = array();
         foreach ($list->getMetrics() as $metric) {
             $availableMetrics[] = $metric->getName();
         }
-
         foreach ($list->metrics as $index => $metric) {
             if ($metric instanceof ProcessedMetric) {
                 $depMetrics = $metric->getDependentMetrics();
                 if (is_array($depMetrics)) {
                     foreach ($depMetrics as $depMetric) {
                         if (!in_array($depMetric, $availableMetrics, $strict = true)) {
-                            unset($list->metrics[$index]); // not resolvable metric
+                            unset($list->metrics[$index]);
+                            // not resolvable metric
                         }
                     }
                 }
             }
         }
-
         $cache->save($cacheKey, $list);
-
         return $list;
     }
-
 }

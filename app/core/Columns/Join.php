@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Columns;
 
 use Exception;
-
 /**
  * @api
  * @since 3.1.0
@@ -19,7 +19,6 @@ class Join
     private $table;
     private $column;
     private $targetColumn;
-
     /**
      * Join constructor.
      * @param $table
@@ -33,7 +32,6 @@ class Join
         $this->column = $column;
         $this->targetColumn = $targetColumn;
     }
-
     /**
      * @return string
      */
@@ -41,7 +39,6 @@ class Join
     {
         return $this->table;
     }
-
     /**
      * @return string
      */
@@ -49,7 +46,6 @@ class Join
     {
         return $this->column;
     }
-
     /**
      * @return string
      */
@@ -57,5 +53,4 @@ class Join
     {
         return $this->targetColumn;
     }
-
 }

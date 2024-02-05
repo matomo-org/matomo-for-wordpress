@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -14,7 +15,6 @@ use Piwik\DataTable;
 use Piwik\Metrics;
 use Piwik\Piwik;
 use Piwik\Tracker\GoalManager;
-
 /**
  * Replaces column names in each row of a table using an array that maps old column
  * names new ones.
@@ -40,7 +40,6 @@ use Piwik\Tracker\GoalManager;
 class ReplaceColumnNames extends BaseFilter
 {
     protected $mappingToApply;
-
     /**
      * Constructor.
      *
@@ -61,7 +60,6 @@ class ReplaceColumnNames extends BaseFilter
             $this->mappingToApply = $mappingToApply;
         }
     }
-
     /**
      * See {@link ReplaceColumnNames}.
      *
@@ -75,26 +73,22 @@ class ReplaceColumnNames extends BaseFilter
             $this->filterTable($table);
         }
     }
-
     /**
      * @param DataTable $table
      */
     protected function filterTable($table)
     {
         $rows = $table->getRows();
-
         $totalRow = $table->getTotalsRow();
         if ($totalRow) {
             $rows[] = $totalRow;
         }
-
         foreach ($rows as $row) {
             $newColumns = $this->getRenamedColumns($row->getColumns());
             $row->setColumns($newColumns);
             $this->filterSubTable($row);
         }
     }
-
     /**
      * @param Simple $table
      */
@@ -110,18 +104,14 @@ class ReplaceColumnNames extends BaseFilter
             }
         }
     }
-
     protected function getRenamedColumn($column)
     {
         $newName = false;
-        if (isset($this->mappingToApply[$column])
-            && $this->mappingToApply[$column] != $column
-        ) {
+        if (isset($this->mappingToApply[$column]) && $this->mappingToApply[$column] != $column) {
             $newName = $this->mappingToApply[$column];
         }
         return $newName;
     }
-
     /**
      * Checks the given columns and renames them if required
      *
@@ -145,14 +135,12 @@ class ReplaceColumnNames extends BaseFilter
                 if (isset($newColumns[$renamedColumn])) {
                     $columnValue += $newColumns[$renamedColumn];
                 }
-
                 $columnName = $renamedColumn;
             }
             $newColumns[$columnName] = $columnValue;
         }
         return $newColumns;
     }
-
     /**
      * @param $columnValue
      * @return array

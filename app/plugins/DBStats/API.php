@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,7 +12,6 @@ namespace Piwik\Plugins\DBStats;
 use Piwik\Common;
 use Piwik\DataTable;
 use Piwik\Piwik;
-
 /**
  * DBStats API is used to request the overall status of the Mysql tables in use by Matomo.
  * @hideExceptForSuperUser
@@ -23,17 +23,15 @@ class API extends \Piwik\Plugin\API
      * The MySQLMetadataProvider instance that fetches table/db status information.
      */
     private $metadataProvider;
-
-    public function __construct(MySQLMetadataProvider $metadataProvider)
+    public function __construct(\Piwik\Plugins\DBStats\MySQLMetadataProvider $metadataProvider)
     {
         $this->metadataProvider = $metadataProvider;
     }
-
     /**
      * Gets some general information about this Matomo installation, including the count of
      * websites tracked, the count of users and the total space used by the database.
      *
-     * 
+     *
      * @return array Contains the website count, user count and total space used by the database.
      */
     public function getGeneralInformation()
@@ -44,16 +42,12 @@ class API extends \Piwik\Plugin\API
         foreach ($this->metadataProvider->getAllTablesStatus() as $status) {
             $totalSpaceUsed += $status['Data_length'] + $status['Index_length'];
         }
-
         $siteTableStatus = $this->metadataProvider->getTableStatus('site');
         $userTableStatus = $this->metadataProvider->getTableStatus('user');
-
         $siteCount = $siteTableStatus['Rows'];
         $userCount = $userTableStatus['Rows'];
-
         return array($siteCount, $userCount, $totalSpaceUsed);
     }
-
     /**
      * Gets general database info that is not specific to any table.
      *
@@ -64,7 +58,6 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
         return $this->metadataProvider->getDBStatus();
     }
-
     /**
      * Returns a datatable summarizing how data is distributed among Matomo tables.
      *
@@ -76,34 +69,28 @@ class API extends \Piwik\Plugin\API
     public function getDatabaseUsageSummary()
     {
         Piwik::checkUserHasSuperUserAccess();
-
         $emptyRow = array('data_size' => 0, 'index_size' => 0, 'row_count' => 0);
-        $rows = array(
-            'tracker_data' => $emptyRow,
-            'metric_data'  => $emptyRow,
-            'report_data'  => $emptyRow,
-            'other_data'   => $emptyRow
-        );
-
+        $rows = array('tracker_data' => $emptyRow, 'metric_data' => $emptyRow, 'report_data' => $emptyRow, 'other_data' => $emptyRow);
         foreach ($this->metadataProvider->getAllTablesStatus() as $status) {
             if ($this->isNumericArchiveTable($status['Name'])) {
-                $rowToAddTo = & $rows['metric_data'];
-            } else if ($this->isBlobArchiveTable($status['Name'])) {
-                $rowToAddTo = & $rows['report_data'];
-            } else if ($this->isTrackerTable($status['Name'])) {
-                $rowToAddTo = & $rows['tracker_data'];
+                $rowToAddTo =& $rows['metric_data'];
             } else {
-                $rowToAddTo = & $rows['other_data'];
+                if ($this->isBlobArchiveTable($status['Name'])) {
+                    $rowToAddTo =& $rows['report_data'];
+                } else {
+                    if ($this->isTrackerTable($status['Name'])) {
+                        $rowToAddTo =& $rows['tracker_data'];
+                    } else {
+                        $rowToAddTo =& $rows['other_data'];
+                    }
+                }
             }
-
             $rowToAddTo['data_size'] += $status['Data_length'];
             $rowToAddTo['index_size'] += $status['Index_length'];
             $rowToAddTo['row_count'] += $status['Rows'];
         }
-
         return DataTable::makeFromIndexedArray($rows);
     }
-
     /**
      * Returns a datatable describing how much space is taken up by each log table.
      *
@@ -114,7 +101,6 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
         return $this->getTablesSummary($this->metadataProvider->getAllLogTableStatus());
     }
-
     /**
      * Returns a datatable describing how much space is taken up by each numeric
      * archive table.
@@ -126,7 +112,6 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
         return $this->getTablesSummary($this->metadataProvider->getAllNumericArchiveStatus());
     }
-
     /**
      * Returns a datatable describing how much space is taken up by each numeric
      * archive table, grouped by year.
@@ -136,14 +121,12 @@ class API extends \Piwik\Plugin\API
     public function getMetricDataSummaryByYear()
     {
         Piwik::checkUserHasSuperUserAccess();
-
         $dataTable = $this->getMetricDataSummary();
-
-        $dataTable->filter('GroupBy', array('label', function($tableName) { return $this->getArchiveTableYear($tableName); }));
-
+        $dataTable->filter('GroupBy', array('label', function ($tableName) {
+            return $this->getArchiveTableYear($tableName);
+        }));
         return $dataTable;
     }
-
     /**
      * Returns a datatable describing how much space is taken up by each blob
      * archive table.
@@ -155,7 +138,6 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
         return $this->getTablesSummary($this->metadataProvider->getAllBlobArchiveStatus());
     }
-
     /**
      * Returns a datatable describing how much space is taken up by each blob
      * archive table, grouped by year.
@@ -165,14 +147,12 @@ class API extends \Piwik\Plugin\API
     public function getReportDataSummaryByYear()
     {
         Piwik::checkUserHasSuperUserAccess();
-
         $dataTable = $this->getReportDataSummary();
-
-        $dataTable->filter('GroupBy', array('label', function($tableName) { return $this->getArchiveTableYear($tableName); }));
-
+        $dataTable->filter('GroupBy', array('label', function ($tableName) {
+            return $this->getArchiveTableYear($tableName);
+        }));
         return $dataTable;
     }
-
     /**
      * Returns a datatable describing how much space is taken up by 'admin' tables.
      *
@@ -186,7 +166,6 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
         return $this->getTablesSummary($this->metadataProvider->getAllAdminTableStatus());
     }
-
     /**
      * Returns a datatable describing how much total space is taken up by each
      * individual report type.
@@ -202,7 +181,6 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
         return $this->metadataProvider->getRowCountsAndSizeByBlobName($forceCache);
     }
-
     /**
      * Returns a datatable describing how much total space is taken up by each
      * individual metric type.
@@ -218,7 +196,6 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
         return $this->metadataProvider->getRowCountsAndSizeByMetricName($forceCache);
     }
-
     /**
      * Returns a datatable representation of a set of table statuses.
      *
@@ -229,34 +206,25 @@ class API extends \Piwik\Plugin\API
     {
         $dataTable = new DataTable();
         foreach ($statuses as $status) {
-            $dataTable->addRowFromSimpleArray(array(
-                                                   'label'      => $status['Name'],
-                                                   'data_size'  => $status['Data_length'],
-                                                   'index_size' => $status['Index_length'],
-                                                   'row_count'  => $status['Rows']
-                                              ));
+            $dataTable->addRowFromSimpleArray(array('label' => $status['Name'], 'data_size' => $status['Data_length'], 'index_size' => $status['Index_length'], 'row_count' => $status['Rows']));
         }
         return $dataTable;
     }
-
     /** Returns true if $name is the name of a numeric archive table, false if otherwise. */
     private function isNumericArchiveTable($name)
     {
         return strpos($name, Common::prefixTable('archive_numeric_')) === 0;
     }
-
     /** Returns true if $name is the name of a blob archive table, false if otherwise. */
     private function isBlobArchiveTable($name)
     {
         return strpos($name, Common::prefixTable('archive_blob_')) === 0;
     }
-
     /** Returns true if $name is the name of a log table, false if otherwise. */
     private function isTrackerTable($name)
     {
         return strpos($name, Common::prefixTable('log_')) === 0;
     }
-
     /**
      * Gets the year of an archive table from its name.
      *
@@ -269,7 +237,6 @@ class API extends \Piwik\Plugin\API
         if (preg_match("/archive_(?:numeric|blob)_([0-9]+)_/", $tableName, $matches) === 0) {
             return '';
         }
-
         return $matches[1];
     }
 }

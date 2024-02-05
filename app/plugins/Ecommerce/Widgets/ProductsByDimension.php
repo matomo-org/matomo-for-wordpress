@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,22 +13,18 @@ use Piwik\Common;
 use Piwik\Plugins\CoreHome\CoreHome;
 use Piwik\Site;
 use Piwik\Widget\WidgetContainerConfig;
-
 class ProductsByDimension extends WidgetContainerConfig
 {
     protected $layout = CoreHome::WIDGET_CONTAINER_LAYOUT_BY_DIMENSION;
     protected $id = 'Products';
     protected $categoryId = 'Goals_Ecommerce';
     protected $subcategoryId = 'Goals_Products';
-
     public function isEnabled()
     {
         $idSite = Common::getRequestVar('idSite', false, 'int');
-
         if (empty($idSite)) {
             return false;
         }
-
         $site = new Site($idSite);
         return $site->isEcommerceEnabled();
     }

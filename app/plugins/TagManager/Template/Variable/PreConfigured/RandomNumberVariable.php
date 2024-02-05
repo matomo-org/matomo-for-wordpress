@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,21 +9,17 @@
 namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
 use Piwik\Plugins\TagManager\Context\WebContext;
-
-
-class RandomNumberVariable extends BasePreConfiguredVariable
+class RandomNumberVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BasePreConfiguredVariable
 {
     public function getCategory()
     {
         return self::CATEGORY_UTILITIES;
     }
-
-    public function loadTemplate($context, $entity)
+    public function loadTemplate($context, $entity, $skipTemplate = false)
     {
         switch ($context) {
             case WebContext::ID:
-                return $this->makeReturnTemplateMethod('Math.floor(Math.random() * 20000000000)');
+                return $this->makeReturnTemplateMethod('Math.floor(Math.random() * 20000000000)', $skipTemplate);
         }
     }
-
 }

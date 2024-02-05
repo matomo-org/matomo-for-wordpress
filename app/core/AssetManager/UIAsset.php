@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,26 +9,21 @@
  */
 namespace Piwik\AssetManager;
 
-
 abstract class UIAsset
 {
-    abstract public function validateFile();
-
+    public abstract function validateFile();
     /**
      * @return string
      */
-    abstract public function getAbsoluteLocation();
-
+    public abstract function getAbsoluteLocation();
     /**
      * @return string
      */
-    abstract public function getRelativeLocation();
-
+    public abstract function getRelativeLocation();
     /**
      * @return string
      */
-    abstract public function getBaseDirectory();
-
+    public abstract function getBaseDirectory();
     /**
      * Removes the previous file if it exists.
      * Also tries to remove compressed version of the file.
@@ -35,26 +31,22 @@ abstract class UIAsset
      * @see ProxyStaticFile::serveStaticFile(serveFile
      * @throws Exception if the file couldn't be deleted
      */
-    abstract public function delete();
-
+    public abstract function delete();
     /**
      * @param string $content
      * @throws \Exception
      */
-    abstract public function writeContent($content);
-
+    public abstract function writeContent($content);
     /**
      * @return string
      */
-    abstract public function getContent();
-
+    public abstract function getContent();
     /**
      * @return boolean
      */
-    abstract public function exists();
-
+    public abstract function exists();
     /**
      * @return int
      */
-    abstract public function getModificationDate();
+    public abstract function getModificationDate();
 }

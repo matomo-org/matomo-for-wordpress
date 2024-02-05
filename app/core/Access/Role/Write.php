@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,29 +11,23 @@ namespace Piwik\Access\Role;
 
 use Piwik\Access\Role;
 use Piwik\Piwik;
-
 class Write extends Role
 {
     public const ID = 'write';
-
-    public function getName(): string
+    public function getName() : string
     {
         return Piwik::translate('UsersManager_PrivWrite');
     }
-
-    public function getId(): string
+    public function getId() : string
     {
         return self::ID;
     }
-
-    public function getDescription(): string
+    public function getDescription() : string
     {
         return Piwik::translate('UsersManager_PrivWriteDescription');
     }
-
-    public function getHelpUrl(): string
+    public function getHelpUrl() : string
     {
         return 'https://matomo.org/faq/general/faq_26910';
     }
-
 }

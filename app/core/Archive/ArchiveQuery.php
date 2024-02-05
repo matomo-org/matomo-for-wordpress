@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,9 +9,7 @@
  */
 namespace Piwik\Archive;
 
-
 use Piwik\DataTable;
-
 interface ArchiveQuery
 {
     /**
@@ -18,26 +17,22 @@ interface ArchiveQuery
      * @return false|number|array
      */
     public function getNumeric($names);
-
     /**
      * @param string|string[] $names
      * @return DataTable|DataTable\Map
      */
     public function getDataTableFromNumeric($names);
-
     /**
      * @param $names
      * @return mixed
      */
     public function getDataTableFromNumericAndMergeChildren($names);
-
     /**
      * @param string $name
      * @param int|string|null $idSubtable
      * @return DataTable|DataTable\Map
      */
     public function getDataTable($name, $idSubtable = null);
-
     /**
      * @param string $name
      * @param int|string|null $idSubtable

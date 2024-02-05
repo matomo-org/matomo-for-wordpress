@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,7 +13,6 @@ use Piwik\Plugin\Dimension\VisitDimension;
 use Piwik\Tracker\Action;
 use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
-
 class Resolution extends VisitDimension
 {
     protected $columnName = 'config_resolution';
@@ -22,7 +22,6 @@ class Resolution extends VisitDimension
     protected $nameSingular = 'Resolution_ColumnResolution';
     protected $namePlural = 'Resolution_Resolutions';
     protected $type = self::TYPE_TEXT;
-
     /**
      * @param Request $request
      * @param Visitor $visitor
@@ -32,12 +31,9 @@ class Resolution extends VisitDimension
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $resolution = $request->getParam('res');
-
         if (!empty($resolution)) {
             return substr($resolution, 0, 9);
         }
-
         return $resolution;
     }
-
 }

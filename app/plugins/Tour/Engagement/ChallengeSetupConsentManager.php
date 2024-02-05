@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,16 +10,17 @@
 namespace Piwik\Plugins\Tour\Engagement;
 
 use Piwik\Piwik;
+use Piwik\Plugins\SitesManager\SiteContentDetection\ConsentManagerDetectionAbstract;
+use Piwik\Plugins\SitesManager\SiteContentDetection\SiteContentDetectionAbstract;
 use Piwik\SiteContentDetector;
-
-
-class ChallengeSetupConsentManager extends Challenge
+class ChallengeSetupConsentManager extends \Piwik\Plugins\Tour\Engagement\Challenge
 {
-
     /** @var SiteContentDetector */
     private $siteContentDetector;
-
-
+    /**
+     * @var ConsentManagerDetectionAbstract|null
+     */
+    private $detectedContentManager;
     /**
      * @param SiteContentDetector $siteContentDetector
      * @param array|null         $siteData    String of site content, content of the current site will be retrieved if left blank
@@ -27,51 +29,52 @@ class ChallengeSetupConsentManager extends Challenge
     {
         parent::__construct();
         $this->siteContentDetector = $siteContentDetector;
-        $this->siteContentDetector->detectContent([SiteContentDetector::CONSENT_MANAGER], null, $siteData);
+        $this->siteContentDetector->detectContent([SiteContentDetectionAbstract::TYPE_CONSENT_MANAGER], null, $siteData);
+        $contentManagers = $this->siteContentDetector->getDetectsByType(SiteContentDetectionAbstract::TYPE_CONSENT_MANAGER);
+        $this->detectedContentManager = $this->siteContentDetector->getSiteContentDetectionById(reset($contentManagers));
     }
-
     public function getName()
     {
-        return Piwik::translate('Tour_ConnectConsentManager', [$this->siteContentDetector->consentManagerName]);
+        return Piwik::translate('Tour_ConnectConsentManager', [$this->getConsentManagerName()]);
     }
-
     public function getDescription()
     {
-        return Piwik::translate('Tour_ConnectConsentManagerIntro', [$this->siteContentDetector->consentManagerName]);
+        return Piwik::translate('Tour_ConnectConsentManagerIntro', [$this->getConsentManagerName()]);
     }
-
     public function getId()
     {
         return 'setup_consent_manager';
     }
-
     public function getConsentManagerId()
     {
-        return $this->siteContentDetector->consentManagerId;
-    }
-
-    public function isCompleted()
-    {
-
-        if (!$this->siteContentDetector->consentManagerId) {
-            return true;
+        if (empty($this->detectedContentManager)) {
+            return null;
         }
-
-        return $this->siteContentDetector->isConnected;
+        return $this->detectedContentManager::getId();
     }
-
-    public function isDisabled()
+    public function getConsentManagerName()
     {
-        return ($this->siteContentDetector->consentManagerId === null);
-    }
-
-    public function getUrl()
-    {
-        if ($this->siteContentDetector->consentManagerId === null) {
+        if (empty($this->detectedContentManager)) {
             return '';
         }
-
-        return $this->siteContentDetector->consentManagerUrl;
+        return $this->detectedContentManager::getName();
     }
-
+    public function isCompleted(string $login)
+    {
+        if (empty($this->detectedContentManager)) {
+            return true;
+        }
+        return in_array($this->detectedContentManager::getId(), $this->siteContentDetector->connectedConsentManagers);
+    }
+    public function isDisabled()
+    {
+        return empty($this->detectedContentManager);
+    }
+    public function getUrl()
+    {
+        if (empty($this->detectedContentManager)) {
+            return '';
+        }
+        return $this->detectedContentManager::getInstructionUrl();
+    }
 }

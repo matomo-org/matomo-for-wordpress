@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -11,11 +12,10 @@ namespace Piwik\Updater\Migration\Db;
  * @see Factory::addUniqueKey()
  * @ignore
  */
-class AddUniqueKey extends AddIndex
+class AddUniqueKey extends \Piwik\Updater\Migration\Db\AddIndex
 {
     protected $indexType = 'UNIQUE KEY';
     protected $indexNamePrefix = 'unique';
-
     /**
      * AddUniqueKey constructor.
      * @param string $table
@@ -26,5 +26,4 @@ class AddUniqueKey extends AddIndex
     {
         parent::__construct($table, $columnNames, $indexName);
     }
-
 }

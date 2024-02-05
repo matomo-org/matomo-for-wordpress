@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -12,13 +13,12 @@ use Piwik\API\Request;
 use Piwik\Common;
 use Piwik\Piwik;
 use Piwik\View;
-
 /**
  * Class Summary
  *
  * Displays some general details in the profile summary
  */
-class Summary extends ProfileSummaryAbstract
+class Summary extends \Piwik\Plugins\Live\ProfileSummary\ProfileSummaryAbstract
 {
     /**
      * @inheritdoc
@@ -27,19 +27,17 @@ class Summary extends ProfileSummaryAbstract
     {
         return Piwik::translate('General_Summary');
     }
-
     /**
      * @inheritdoc
      */
     public function render()
     {
-        $idSite            = Common::getRequestVar('idSite', null, 'int');
-        $view              = new View('@Live/_profileSummary.twig');
-        $view->goals       = Request::processRequest('Goals.getGoals', ['idSite' => $idSite, 'filter_limit' => '-1'], $default = []);
+        $idSite = Common::getRequestVar('idSite', null, 'int');
+        $view = new View('@Live/_profileSummary.twig');
+        $view->goals = Request::processRequest('Goals.getGoals', ['idSite' => $idSite, 'filter_limit' => '-1'], $default = []);
         $view->visitorData = $this->profile;
         return $view->render();
     }
-
     /**
      * @inheritdoc
      */

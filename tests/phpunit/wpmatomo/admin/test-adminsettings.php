@@ -13,7 +13,7 @@ class AdminSettingsTest extends MatomoUnit_TestCase {
 	 */
 	private $admin_settings;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$settings             = new Settings();
@@ -27,8 +27,8 @@ class AdminSettingsTest extends MatomoUnit_TestCase {
 		$this->admin_settings->show();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertContains( 'Tracking', $output );
-		$this->assertContains( 'Access', $output );
+		$this->assertStringContainsString( 'Tracking', $output );
+		$this->assertStringContainsString( 'Access', $output );
 	}
 
 }

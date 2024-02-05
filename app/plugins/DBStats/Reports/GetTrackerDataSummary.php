@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,26 +11,22 @@ namespace Piwik\Plugins\DBStats\Reports;
 
 use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
-
 /**
  * Shows a datatable that displays the amount of space each individual log table
  * takes up in the MySQL database.
  */
-class GetTrackerDataSummary extends Base
+class GetTrackerDataSummary extends \Piwik\Plugins\DBStats\Reports\Base
 {
     protected function init()
     {
         $this->name = Piwik::translate('DBStats_TrackerTables');
     }
-
     public function configureView(ViewDataTable $view)
     {
         $this->addBaseDisplayProperties($view);
         $this->addPresentationFilters($view);
-
         $view->requestConfig->filter_sort_order = 'asc';
-        $view->config->show_offset_information  = false;
-        $view->config->show_pagination_control  = false;
+        $view->config->show_offset_information = false;
+        $view->config->show_pagination_control = false;
     }
-
 }

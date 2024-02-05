@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Piwik\Plugins\Ecommerce\Columns;
 
 use Piwik\Columns\Dimension;
-
 class ProductQuantity extends Dimension
 {
     protected $type = self::TYPE_NUMBER;
@@ -17,5 +17,4 @@ class ProductQuantity extends Dimension
     protected $columnName = 'quantity';
     protected $nameSingular = 'Goals_ProductQuantity';
     protected $category = 'Goals_Ecommerce';
-
 }

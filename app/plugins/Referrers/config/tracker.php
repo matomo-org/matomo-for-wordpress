@@ -1,2 +1,5 @@
-<?php 
-return array(); 
+<?php
+
+namespace {
+    return array();
+}

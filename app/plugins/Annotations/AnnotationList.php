@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -14,7 +15,6 @@ use Piwik\Date;
 use Piwik\Option;
 use Piwik\Piwik;
 use Piwik\Site;
-
 /**
  * This class can be used to query & modify annotations for multiple sites
  * at once.
@@ -34,21 +34,18 @@ use Piwik\Site;
 class AnnotationList
 {
     const ANNOTATION_COLLECTION_OPTION_SUFFIX = '_annotations';
-
     /**
      * List of site IDs this instance holds annotations for.
      *
      * @var array
      */
     private $idSites;
-
     /**
      * Array that associates lists of annotations with site IDs.
      *
      * @var array
      */
     private $annotations;
-
     /**
      * Constructor. Loads annotations from the database.
      *
@@ -59,7 +56,6 @@ class AnnotationList
         $this->idSites = Site::getIdSitesFromIdSitesString($idSites);
         $this->annotations = $this->getAnnotationsForSite();
     }
-
     /**
      * Returns the list of site IDs this list contains annotations for.
      *
@@ -69,7 +65,6 @@ class AnnotationList
     {
         return $this->idSites;
     }
-
     /**
      * Creates a new annotation for a site. This method does not perist the result.
      * To save the new annotation in the database, call $this->save.
@@ -86,16 +81,12 @@ class AnnotationList
     {
         $this->checkIdSiteIsLoaded($idSite);
         $date = Date::factory($date)->toString('Y-m-d');
-
         $this->annotations[$idSite][] = self::makeAnnotation($date, $note, $starred);
-
         // get the id of the new annotation
         end($this->annotations[$idSite]);
         $newNoteId = key($this->annotations[$idSite]);
-
         return $this->get($idSite, $newNoteId);
     }
-
     /**
      * Persists the annotations list for a site, overwriting whatever exists.
      *
@@ -105,11 +96,9 @@ class AnnotationList
     public function save($idSite)
     {
         $this->checkIdSiteIsLoaded($idSite);
-
         $optionName = self::getAnnotationCollectionOptionName($idSite);
         Option::set($optionName, serialize($this->annotations[$idSite]));
     }
-
     /**
      * Modifies an annotation in this instance's collection of annotations.
      *
@@ -131,7 +120,6 @@ class AnnotationList
     {
         $this->checkIdSiteIsLoaded($idSite);
         $this->checkNoteExists($idSite, $idNote);
-
         $annotation =& $this->annotations[$idSite][$idNote];
         if ($date !== null) {
             $annotation['date'] = Date::factory($date)->toString('Y-m-d');
@@ -143,7 +131,6 @@ class AnnotationList
             $annotation['starred'] = $starred;
         }
     }
-
     /**
      * Removes a note from a site's collection of annotations.
      *
@@ -159,10 +146,8 @@ class AnnotationList
     {
         $this->checkIdSiteIsLoaded($idSite);
         $this->checkNoteExists($idSite, $idNote);
-
         unset($this->annotations[$idSite][$idNote]);
     }
-
     /**
      * Removes all notes for a single site.
      *
@@ -175,10 +160,8 @@ class AnnotationList
     public function removeAll($idSite)
     {
         $this->checkIdSiteIsLoaded($idSite);
-
         $this->annotations[$idSite] = array();
     }
-
     /**
      * Retrieves an annotation by ID.
      *
@@ -199,12 +182,10 @@ class AnnotationList
     {
         $this->checkIdSiteIsLoaded($idSite);
         $this->checkNoteExists($idSite, $idNote);
-
         $annotation = $this->annotations[$idSite][$idNote];
         $this->augmentAnnotationData($idSite, $idNote, $annotation);
         return $annotation;
     }
-
     /**
      * Returns all annotations within a specific date range. The result is
      * an array that maps site IDs with arrays of annotations within the range.
@@ -238,7 +219,6 @@ class AnnotationList
         } else {
             $idSites = array_keys($this->annotations);
         }
-
         // collect annotations that are within the right date range & belong to the right
         // site
         $result = array();
@@ -246,21 +226,16 @@ class AnnotationList
             if (!isset($this->annotations[$idSite])) {
                 continue;
             }
-
             foreach ($this->annotations[$idSite] as $idNote => $annotation) {
                 if ($startDate !== false) {
                     $annotationDate = Date::factory($annotation['date']);
-                    if ($annotationDate->getTimestamp() < $startDate->getTimestamp()
-                        || $annotationDate->getTimestamp() > $endDate->getTimestamp()
-                    ) {
+                    if ($annotationDate->getTimestamp() < $startDate->getTimestamp() || $annotationDate->getTimestamp() > $endDate->getTimestamp()) {
                         continue;
                     }
                 }
-
                 $this->augmentAnnotationData($idSite, $idNote, $annotation);
                 $result[$idSite][] = $annotation;
             }
-
             // sort by annotation date
             if (!empty($result[$idSite])) {
                 uasort($result[$idSite], array($this, 'compareAnnotationDate'));
@@ -268,7 +243,6 @@ class AnnotationList
         }
         return $result;
     }
-
     /**
      * Counts annotations & starred annotations within a date range and returns
      * the counts. The date range includes the start date, but not the end date.
@@ -283,10 +257,8 @@ class AnnotationList
     public function count($idSite, $startDate, $endDate)
     {
         $this->checkIdSiteIsLoaded($idSite);
-
         // search includes end date, and count should not, so subtract one from the timestamp
         $annotations = $this->search($startDate, Date::factory($endDate->getTimestamp() - 1));
-
         // count the annotations
         $count = $starred = 0;
         if (!empty($annotations[$idSite])) {
@@ -297,10 +269,8 @@ class AnnotationList
                 }
             }
         }
-
         return array('count' => $count, 'starred' => $starred);
     }
-
     /**
      * Utility function. Creates a new annotation.
      *
@@ -311,12 +281,8 @@ class AnnotationList
      */
     private function makeAnnotation($date, $note, $starred = 0)
     {
-        return array('date'    => $date,
-                     'note'    => $note,
-                     'starred' => (int)$starred,
-                     'user'    => Piwik::getCurrentUserLogin());
+        return array('date' => $date, 'note' => $note, 'starred' => (int) $starred, 'user' => Piwik::getCurrentUserLogin());
     }
-
     /**
      * Retrieves annotations from the database for the sites supplied to the
      * constructor.
@@ -329,7 +295,6 @@ class AnnotationList
         foreach ($this->idSites as $id) {
             $optionName = self::getAnnotationCollectionOptionName($id);
             $serialized = Option::get($optionName);
-
             if ($serialized !== false) {
                 $result[$id] = Common::safe_unserialize($serialized);
                 if (empty($result[$id])) {
@@ -342,7 +307,6 @@ class AnnotationList
         }
         return $result;
     }
-
     /**
      * Utility function that checks if a site ID was supplied and if not,
      * throws an exception.
@@ -356,10 +320,9 @@ class AnnotationList
     private function checkIdSiteIsLoaded($idSite)
     {
         if (!in_array($idSite, $this->idSites)) {
-            throw new Exception("This AnnotationList was not initialized with idSite '$idSite'.");
+            throw new Exception("This AnnotationList was not initialized with idSite '{$idSite}'.");
         }
     }
-
     /**
      * Utility function that checks if a note exists for a site, and if not,
      * throws an exception.
@@ -371,10 +334,9 @@ class AnnotationList
     private function checkNoteExists($idSite, $idNote)
     {
         if (empty($this->annotations[$idSite][$idNote])) {
-            throw new Exception("There is no note with id '$idNote' for site with id '$idSite'.");
+            throw new Exception("There is no note with id '{$idNote}' for site with id '{$idSite}'.");
         }
     }
-
     /**
      * Returns true if the current user can modify or delete a specific annotation.
      *
@@ -389,12 +351,9 @@ class AnnotationList
     public static function canUserModifyOrDelete($idSite, $annotation)
     {
         // user can save if user is admin or if has view access, is not anonymous & is user who wrote note
-        $canEdit = Piwik::isUserHasWriteAccess($idSite)
-            || (!Piwik::isUserIsAnonymous()
-                && Piwik::getCurrentUserLogin() == $annotation['user']);
+        $canEdit = Piwik::isUserHasWriteAccess($idSite) || !Piwik::isUserIsAnonymous() && Piwik::getCurrentUserLogin() == $annotation['user'];
         return $canEdit;
     }
-
     /**
      * Adds extra data to an annotation, including the annotation's ID and whether
      * the current user can edit or delete it.
@@ -409,13 +368,11 @@ class AnnotationList
     {
         $annotation['idNote'] = $idNote;
         $annotation['canEditOrDelete'] = self::canUserModifyOrDelete($idSite, $annotation);
-
         // we don't supply user info if the current user is anonymous
         if (Piwik::isUserIsAnonymous()) {
             unset($annotation['user']);
         }
     }
-
     /**
      * Utility function that compares two annotations.
      *
@@ -428,10 +385,9 @@ class AnnotationList
         if ($lhs['date'] == $rhs['date']) {
             return $lhs['idNote'] <= $rhs['idNote'] ? -1 : 1;
         }
-
-        return $lhs['date'] < $rhs['date'] ? -1 : 1; // string comparison works because date format should be YYYY-MM-DD
+        return $lhs['date'] < $rhs['date'] ? -1 : 1;
+        // string comparison works because date format should be YYYY-MM-DD
     }
-
     /**
      * Returns true if the current user can add notes for a specific site.
      *
@@ -440,10 +396,8 @@ class AnnotationList
      */
     public static function canUserAddNotesFor($idSite)
     {
-        return Piwik::isUserHasViewAccess($idSite)
-        && !Piwik::isUserIsAnonymous();
+        return Piwik::isUserHasViewAccess($idSite) && !Piwik::isUserIsAnonymous();
     }
-
     /**
      * Returns the option name used to store annotations for a site.
      *

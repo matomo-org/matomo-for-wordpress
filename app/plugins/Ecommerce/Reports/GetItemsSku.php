@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,19 +11,14 @@ namespace Piwik\Plugins\Ecommerce\Reports;
 
 use Piwik\Piwik;
 use Piwik\Plugins\Ecommerce\Columns\ProductSku;
-
-class GetItemsSku extends BaseItem
+class GetItemsSku extends \Piwik\Plugins\Ecommerce\Reports\BaseItem
 {
-
     protected function init()
     {
         parent::init();
-
-        $this->name      = Piwik::translate('Goals_ProductSKU');
+        $this->name = Piwik::translate('Goals_ProductSKU');
         $this->dimension = new ProductSku();
-        $this->order     = 31;
-
+        $this->order = 31;
         $this->subcategoryId = 'Goals_Products';
     }
-
 }

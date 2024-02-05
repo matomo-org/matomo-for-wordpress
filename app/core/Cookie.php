@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -10,7 +11,6 @@ namespace Piwik;
 
 use DateTime;
 use Piwik\Container\StaticContainer;
-
 /**
  * Simple class to handle the cookies:
  * - read a cookie values
@@ -24,60 +24,50 @@ class Cookie
      * Don't create a cookie bigger than 1k
      */
     const MAX_COOKIE_SIZE = 1024;
-
     /**
      * The name of the cookie
      * @var string
      */
     protected $name = null;
-
     /**
      * The expire time for the cookie (expressed in UNIX Timestamp)
      * @var int
      */
     protected $expire = null;
-
     /**
      * Restrict cookie path
      * @var string
      */
     protected $path = '';
-
     /**
      * @var string
      */
     protected $keyStore = false;
-
     /**
      * Restrict cookie to a domain (or subdomains)
      * @var string
      */
     protected $domain = '';
-
     /**
      * If true, cookie should only be transmitted over secure HTTPS
      * @var bool
      */
     protected $secure = false;
-
     /**
      * If true, cookie will only be made available via the HTTP protocol.
      * Note: not well supported by browsers.
      * @var bool
      */
     protected $httponly = false;
-
     /**
      * The content of the cookie
      * @var array
      */
     protected $value = array();
-
     /**
      * The character used to separate the tuple name=value in the cookie
      */
     const VALUE_SEPARATOR = ':';
-
     /**
      * Instantiate a new Cookie object and tries to load the cookie content if the cookie
      * exists already.
@@ -93,13 +83,11 @@ class Cookie
         $this->name = $cookieName;
         $this->path = $path;
         $this->expire = $expire;
-
         $this->keyStore = $keyStore;
         if ($this->isCookieFound()) {
             $this->loadContentFromCookie();
         }
     }
-
     /**
      * Returns true if the visitor already has the cookie.
      *
@@ -109,7 +97,6 @@ class Cookie
     {
         return self::isCookieInRequest($this->name);
     }
-
     /**
      * Returns the default expiry time, 2 years
      *
@@ -119,7 +106,6 @@ class Cookie
     {
         return time() + 86400 * 365 * 2;
     }
-
     /**
      * setcookie() replacement -- we don't use the built-in function because
      * it is buggy for some PHP versions.
@@ -143,51 +129,36 @@ class Cookie
                 $Domain = substr($Domain, 4);
             }
             $Domain = '.' . $Domain;
-
             // Remove port information.
             $Port = strpos($Domain, ':');
             if ($Port !== false) {
                 $Domain = substr($Domain, 0, $Port);
             }
         }
-
         // Format expire time only for non session cookies
         if (0 !== $Expires) {
             $Expires = $this->formatExpireTime($Expires);
         }
-
-        $header = 'Set-Cookie: ' . rawurlencode($Name) . '=' . rawurlencode($Value)
-            . (empty($Expires) ? '' : '; expires=' . $Expires)
-            . (empty($Path) ? '' : '; path=' . $Path)
-            . (empty($Domain) ? '' : '; domain=' . rawurlencode($Domain))
-            . (!$Secure ? '' : '; secure')
-            . (!$HTTPOnly ? '' : '; HttpOnly')
-            . (!$sameSite ? '' : '; SameSite=' . rawurlencode($sameSite));
-
-        Common::sendHeader($header, false);
+        $header = 'Set-Cookie: ' . rawurlencode($Name) . '=' . rawurlencode($Value) . (empty($Expires) ? '' : '; expires=' . $Expires) . (empty($Path) ? '' : '; path=' . $Path) . (empty($Domain) ? '' : '; domain=' . rawurlencode($Domain)) . (!$Secure ? '' : '; secure') . (!$HTTPOnly ? '' : '; HttpOnly') . (!$sameSite ? '' : '; SameSite=' . rawurlencode($sameSite));
+        \Piwik\Common::sendHeader($header, false);
     }
-
     /**
      * We set the privacy policy header
      */
     protected function setP3PHeader()
     {
-        Common::sendHeader("P3P: CP='OTI DSP COR NID STP UNI OTPa OUR'");
+        \Piwik\Common::sendHeader("P3P: CP='OTI DSP COR NID STP UNI OTPa OUR'");
     }
-
     /**
      * Delete the cookie
      */
     public function delete()
     {
         $this->setP3PHeader();
-
         $this->setCookie($this->name, 'deleted', time() - 31536001, $this->path, $this->domain);
         $this->setCookie($this->name, 'deleted', time() - 31536001, $this->path, $this->domain, TRUE, FALSE, 'None');
-
         $this->clear();
     }
-
     /**
      * Saves the cookie (set the Cookie header).
      * You have to call this method before sending any text to the browser or you would get the
@@ -205,11 +176,9 @@ class Cookie
             $this->delete();
             return;
         }
-
         $this->setP3PHeader();
         $this->setCookie($this->name, $cookieString, $this->expire, $this->path, $this->domain, $this->secure, $this->httponly, $sameSite);
     }
-
     /**
      * Extract signed content from string: content VALUE_SEPARATOR '_=' signature
      * Only needed for BC.
@@ -220,17 +189,12 @@ class Cookie
     private function extractSignedContent($content)
     {
         $signature = substr($content, -40);
-
-        if (substr($content, -43, 3) === self::VALUE_SEPARATOR . '_=' &&
-            ($signature === sha1(substr($content, 0, -40) . SettingsPiwik::getSalt()))
-        ) {
+        if (substr($content, -43, 3) === self::VALUE_SEPARATOR . '_=' && $signature === sha1(substr($content, 0, -40) . \Piwik\SettingsPiwik::getSalt())) {
             // strip trailing: VALUE_SEPARATOR '_=' signature"
             return substr($content, 0, -43);
         }
-
         return false;
     }
-
     /**
      * Load the cookie content into a php array.
      * Parses the cookie string to extract the different variables.
@@ -243,24 +207,18 @@ class Cookie
         // this value
         $cookieStr = $this->extractSignedContent($_COOKIE[$this->name]);
         $isSigned = !empty($cookieStr);
-
-        if ($cookieStr === false
-            && !empty($_COOKIE[$this->name])
-            && strpos($_COOKIE[$this->name], '=') !== false) {
+        if ($cookieStr === false && !empty($_COOKIE[$this->name]) && strpos($_COOKIE[$this->name], '=') !== false) {
             // cookie was set since Matomo 4
             $cookieStr = $_COOKIE[$this->name];
         }
-
         if ($cookieStr === false) {
             return;
         }
-
         $values = explode(self::VALUE_SEPARATOR, $cookieStr);
         foreach ($values as $nameValue) {
             $equalPos = strpos($nameValue, '=');
             $varName = substr($nameValue, 0, $equalPos);
             $varValue = substr($nameValue, $equalPos + 1);
-
             if (!is_numeric($varValue)) {
                 $tmpValue = base64_decode($varValue);
                 if ($isSigned) {
@@ -269,7 +227,6 @@ class Cookie
                 } else {
                     $varValue = $tmpValue;
                 }
-
                 // discard entire cookie
                 // note: this assumes we never serialize a boolean
                 // can only happen when it was signed pre Matomo 4
@@ -279,11 +236,9 @@ class Cookie
                     break;
                 }
             }
-
             $this->value[$varName] = $varValue;
         }
     }
-
     /**
      * Returns the string to save in the cookie from the $this->value array of values.
      * It goes through the array and generates the cookie content string.
@@ -293,19 +248,16 @@ class Cookie
     public function generateContentString()
     {
         $cookieStrArr = [];
-
         foreach ($this->value as $name => $value) {
-            if (!is_numeric($value) && !is_string($value))  {
+            if (!is_numeric($value) && !is_string($value)) {
                 throw new \Exception('Only strings and numbers can be used in cookies. Value is of type ' . gettype($value));
             } elseif (!is_numeric($value)) {
                 $value = base64_encode($value);
             }
-            $cookieStrArr[] = "$name=$value";
+            $cookieStrArr[] = "{$name}={$value}";
         }
-
         return implode(self::VALUE_SEPARATOR, $cookieStrArr);
     }
-
     /**
      * Set cookie domain
      *
@@ -315,7 +267,6 @@ class Cookie
     {
         $this->domain = $domain;
     }
-
     /**
      * Set secure flag
      *
@@ -325,7 +276,6 @@ class Cookie
     {
         $this->secure = $secure;
     }
-
     /**
      * Set HTTP only
      *
@@ -335,7 +285,6 @@ class Cookie
     {
         $this->httponly = $httponly;
     }
-
     /**
      * Registers a new name => value association in the cookie.
      *
@@ -349,7 +298,6 @@ class Cookie
     public function set($name, $value)
     {
         $name = self::escapeValue($name);
-
         // Delete value if $value === null
         if (is_null($value)) {
             if ($this->keyStore === false) {
@@ -359,15 +307,12 @@ class Cookie
             unset($this->value[$this->keyStore][$name]);
             return;
         }
-
         if ($this->keyStore === false) {
             $this->value[$name] = $value;
             return;
         }
-
         $this->value[$this->keyStore][$name] = $value;
     }
-
     /**
      * Returns the value defined by $name from the cookie.
      *
@@ -381,17 +326,13 @@ class Cookie
             if (isset($this->value[$name])) {
                 return self::escapeValue($this->value[$name]);
             }
-
             return false;
         }
-
         if (isset($this->value[$this->keyStore][$name])) {
             return self::escapeValue($this->value[$this->keyStore][$name]);
         }
-
         return false;
     }
-
     /**
      * Removes all values from the cookie.
      */
@@ -399,7 +340,6 @@ class Cookie
     {
         $this->value = [];
     }
-
     /**
      * Returns an easy to read cookie dump
      *
@@ -407,13 +347,11 @@ class Cookie
      */
     public function __toString()
     {
-        $str  = 'COOKIE ' . $this->name . ', rows count: ' . count($this->value) . ', cookie size = ' . strlen($this->generateContentString()) . " bytes, ";
-        $str .= 'path: ' . $this->path. ', expire: ' . $this->expire . "\n";
+        $str = 'COOKIE ' . $this->name . ', rows count: ' . count($this->value) . ', cookie size = ' . strlen($this->generateContentString()) . " bytes, ";
+        $str .= 'path: ' . $this->path . ', expire: ' . $this->expire . "\n";
         $str .= var_export($this->value, $return = true);
-
         return $str;
     }
-
     /**
      * Escape values from the cookie before sending them back to the client
      * (when using the get() method).
@@ -423,9 +361,8 @@ class Cookie
      */
     protected static function escapeValue($value)
     {
-        return Common::sanitizeInputValues($value);
+        return \Piwik\Common::sanitizeInputValues($value);
     }
-
     /**
      * Returns true if a cookie named '$name' is in the current HTTP request,
      * false if otherwise.
@@ -437,7 +374,6 @@ class Cookie
     {
         return isset($_COOKIE[$name]);
     }
-
     /**
      * Find the most suitable value for a cookie SameSite attribute, given environmental restrictions which
      * may make the most "correct" value impractical:
@@ -454,26 +390,23 @@ class Cookie
     private static function getSameSiteValueForBrowser($default)
     {
         $sameSite = ucfirst(strtolower($default));
-
         if ($sameSite === 'None') {
-            if ((!ProxyHttp::isHttps())) {
-                $sameSite = 'Lax'; // None can be only used when secure flag will be set
+            if (!\Piwik\ProxyHttp::isHttps()) {
+                $sameSite = 'Lax';
+                // None can be only used when secure flag will be set
             } else {
-                $userAgent = Http::getUserAgent();
+                $userAgent = \Piwik\Http::getUserAgent();
                 $ddFactory = StaticContainer::get(\Piwik\DeviceDetector\DeviceDetectorFactory::class);
-                $deviceDetector = $ddFactory->makeInstance($userAgent, Http::getClientHintsFromServerVariables());
+                $deviceDetector = $ddFactory->makeInstance($userAgent, \Piwik\Http::getClientHintsFromServerVariables());
                 $deviceDetector->parse();
-
                 $browserFamily = \DeviceDetector\Parser\Client\Browser::getBrowserFamily($deviceDetector->getClient('short_name'));
                 if ($browserFamily === 'Safari') {
                     $sameSite = '';
                 }
             }
         }
-
         return $sameSite;
     }
-
     /**
      *  extend Cookie by timestamp or sting like + 30 years, + 10 months, default 2 years
      * @param $time
@@ -482,14 +415,17 @@ class Cookie
     public function formatExpireTime($time = null)
     {
         $expireTime = new DateTime();
-        if (is_null($time) || (is_int($time) && $time < 0)) {
+        if (is_null($time) || is_int($time) && $time < 0) {
             $expireTime->modify("+2 years");
-        } else if (is_int($time)) {
-            $expireTime->setTimestamp($time);
-        } else if (!$expireTime->modify($time)) {
-            $expireTime->modify("+2 years");
+        } else {
+            if (is_int($time)) {
+                $expireTime->setTimestamp($time);
+            } else {
+                if (!$expireTime->modify($time)) {
+                    $expireTime->modify("+2 years");
+                }
+            }
         }
         return $expireTime->format(DateTime::COOKIE);
-
     }
 }

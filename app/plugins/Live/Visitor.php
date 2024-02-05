@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -15,30 +16,23 @@ use Piwik\DataTable\Filter\ColumnDelete;
 use Piwik\Plugin;
 use Piwik\Piwik;
 use Piwik\Plugins\Live\Visualizations\VisitorLog;
-
-class Visitor implements VisitorInterface
+class Visitor implements \Piwik\Plugins\Live\VisitorInterface
 {
     private $details = array();
-
     function __construct($visitorRawData)
     {
         $this->details = $visitorRawData;
     }
-
     function getAllVisitorDetails()
     {
         $visitor = array();
-
         $instances = self::getAllVisitorDetailsInstances();
-
         foreach ($instances as $instance) {
             $instance->setDetails($this->details);
             $instance->extendVisitorDetails($visitor);
         }
-
         return $visitor;
     }
-
     /**
      * Returns all available visitor details instances
      *
@@ -48,13 +42,9 @@ class Visitor implements VisitorInterface
     public static function getAllVisitorDetailsInstances()
     {
         $cacheId = CacheId::pluginAware('VisitorDetails');
-        $cache   = Cache::getTransientCache();
-
+        $cache = Cache::getTransientCache();
         if (!$cache->contains($cacheId)) {
-            $instances = [
-                new VisitorDetails() // needs to be first
-            ];
-
+            $instances = [new \Piwik\Plugins\Live\VisitorDetails()];
             /**
              * Triggered to add new visitor details that cannot be picked up by the platform automatically.
              *
@@ -68,17 +58,13 @@ class Visitor implements VisitorInterface
              * @param VisitorDetailsAbstract[] $visitorDetails An array of visitorDetails
              */
             Piwik::postEvent('Live.addVisitorDetails', array(&$instances));
-
             foreach (self::getAllVisitorDetailsClasses() as $className) {
                 $instance = new $className();
-
-                if ($instance instanceof VisitorDetails) {
+                if ($instance instanceof \Piwik\Plugins\Live\VisitorDetails) {
                     continue;
                 }
-
                 $instances[] = $instance;
             }
-
             /**
              * Triggered to filter / restrict vistor details.
              *
@@ -96,13 +82,10 @@ class Visitor implements VisitorInterface
              * @param VisitorDetailsAbstract[] $visitorDetails An array of visitorDetails
              */
             Piwik::postEvent('Live.filterVisitorDetails', array(&$instances));
-
             $cache->save($cacheId, $instances);
         }
-
         return $cache->fetch($cacheId);
     }
-
     /**
      * Returns class names of all VisitorDetails classes.
      *
@@ -111,9 +94,8 @@ class Visitor implements VisitorInterface
      */
     protected static function getAllVisitorDetailsClasses()
     {
-        return Plugin\Manager::getInstance()->findComponents('VisitorDetails', 'Piwik\Plugins\Live\VisitorDetailsAbstract');
+        return Plugin\Manager::getInstance()->findComponents('VisitorDetails', 'Piwik\\Plugins\\Live\\VisitorDetailsAbstract');
     }
-
     function getVisitorId()
     {
         if (isset($this->details['idvisitor'])) {
@@ -121,7 +103,6 @@ class Visitor implements VisitorInterface
         }
         return false;
     }
-
     /**
      * Removes fields that the user should only access if they are Super User or admin (cookie, IP,
      * md5 config "fingerprint" hash)
@@ -132,23 +113,15 @@ class Visitor implements VisitorInterface
     public static function cleanVisitorDetails($visitorDetails)
     {
         if (Piwik::isUserIsAnonymous()) {
-            $toUnset = array(
-                'idvisitor',
-                'user_id',
-                'location_ip',
-                'config_id'
-            );
-
+            $toUnset = array('idvisitor', 'user_id', 'location_ip', 'config_id');
             foreach ($toUnset as $keyName) {
                 if (isset($visitorDetails[$keyName])) {
                     unset($visitorDetails[$keyName]);
                 }
             }
         }
-
         return $visitorDetails;
     }
-
     /**
      * The &flat=1 feature is used by API.getSuggestedValuesForSegment
      *
@@ -159,16 +132,13 @@ class Visitor implements VisitorInterface
     {
         // NOTE: if you flatten more fields from the "actionDetails" array
         //       ==> also update API/API.php getSuggestedValuesForSegment(), the $segmentsNeedActionsInfo array
-
         // flatten visit custom variables
-        if (!empty($visitorDetailsArray['customVariables'])
-            && is_array($visitorDetailsArray['customVariables'])) {
+        if (!empty($visitorDetailsArray['customVariables']) && is_array($visitorDetailsArray['customVariables'])) {
             foreach ($visitorDetailsArray['customVariables'] as $thisCustomVar) {
                 $visitorDetailsArray = array_merge($visitorDetailsArray, $thisCustomVar);
             }
             unset($visitorDetailsArray['customVariables']);
         }
-
         // flatten page views custom variables
         $count = 1;
         foreach ($visitorDetailsArray['actionDetails'] as $action) {
@@ -182,7 +152,6 @@ class Visitor implements VisitorInterface
                 }
             }
         }
-
         // Flatten Goals
         $count = 1;
         foreach ($visitorDetailsArray['actionDetails'] as $action) {
@@ -192,28 +161,19 @@ class Visitor implements VisitorInterface
                 $count++;
             }
         }
-
         // Flatten Page Titles/URLs
         $count = 1;
         foreach ($visitorDetailsArray['actionDetails'] as $action) {
-
             // API.getSuggestedValuesForSegment
-            $flattenForActionType = array(
-                'outlink' => 'outlinkUrl',
-                'download' => 'downloadUrl',
-                'event' => 'eventUrl',
-                'action' => 'pageUrl'
-            );
-            foreach($flattenForActionType as $actionType => $flattenedKeyPrefix) {
-                if (!empty($action['url'])
-                    && $action['type'] == $actionType) {
+            $flattenForActionType = array('outlink' => 'outlinkUrl', 'download' => 'downloadUrl', 'event' => 'eventUrl', 'action' => 'pageUrl');
+            foreach ($flattenForActionType as $actionType => $flattenedKeyPrefix) {
+                if (!empty($action['url']) && $action['type'] == $actionType) {
                     $flattenedKeyName = $flattenedKeyPrefix . ColumnDelete::APPEND_TO_COLUMN_NAME_TO_KEEP . $count;
                     $visitorDetailsArray[$flattenedKeyName] = $action['url'];
                 }
             }
-
-            $flatten = array( 'pageTitle', 'siteSearchKeyword', 'eventCategory', 'eventAction', 'eventName', 'eventValue');
-            foreach($flatten as $toFlatten) {
+            $flatten = array('pageTitle', 'siteSearchKeyword', 'eventCategory', 'eventAction', 'eventName', 'eventValue');
+            foreach ($flatten as $toFlatten) {
                 if (!empty($action[$toFlatten])) {
                     $flattenedKeyName = $toFlatten . ColumnDelete::APPEND_TO_COLUMN_NAME_TO_KEEP . $count;
                     $visitorDetailsArray[$flattenedKeyName] = $action[$toFlatten];
@@ -221,7 +181,6 @@ class Visitor implements VisitorInterface
             }
             $count++;
         }
-
         // Entry/exit pages
         $firstAction = $lastAction = false;
         foreach ($visitorDetailsArray['actionDetails'] as $action) {
@@ -232,7 +191,6 @@ class Visitor implements VisitorInterface
                 $lastAction = $action;
             }
         }
-
         if (!empty($firstAction['pageTitle'])) {
             $visitorDetailsArray['entryPageTitle'] = $firstAction['pageTitle'];
         }
@@ -245,10 +203,8 @@ class Visitor implements VisitorInterface
         if (!empty($lastAction['url'])) {
             $visitorDetailsArray['exitPageUrl'] = $lastAction['url'];
         }
-
         return $visitorDetailsArray;
     }
-
     /**
      * @param array $visitorDetailsArray
      * @param array $actionDetails  preset action details
@@ -257,44 +213,34 @@ class Visitor implements VisitorInterface
      */
     public static function enrichVisitorArrayWithActions($visitorDetailsArray, $actionDetails = array())
     {
-        $actionsLimit = (int)Config::getInstance()->General['visitor_log_maximum_actions_per_visit'];
+        $actionsLimit = (int) Config::getInstance()->General['visitor_log_maximum_actions_per_visit'];
         $visitorDetailsManipulators = self::getAllVisitorDetailsInstances();
-
         foreach ($visitorDetailsManipulators as $instance) {
             $instance->provideActionsForVisit($actionDetails, $visitorDetailsArray);
         }
-
         foreach ($visitorDetailsManipulators as $instance) {
             $instance->filterActions($actionDetails, $visitorDetailsArray);
         }
-
         $actionDetails = self::sortActionDetails($actionDetails);
-
         $actionDetails = array_values($actionDetails);
-
         // limit actions
         if ($actionsLimit < count($actionDetails)) {
             $visitorDetailsArray['truncatedActionsCount'] = count($actionDetails) - $actionsLimit;
             $actionDetails = array_slice($actionDetails, 0, $actionsLimit);
         }
-
         foreach ($actionDetails as $actionIdx => &$actionDetail) {
             $actionDetail =& $actionDetails[$actionIdx];
-            $nextAction = isset($actionDetails[$actionIdx+1]) ? $actionDetails[$actionIdx+1] : null;
-
+            $nextAction = isset($actionDetails[$actionIdx + 1]) ? $actionDetails[$actionIdx + 1] : null;
             foreach ($visitorDetailsManipulators as $instance) {
                 $instance->extendActionDetails($actionDetail, $nextAction, $visitorDetailsArray);
             }
         }
-
         $visitorDetailsArray['actionDetails'] = $actionDetails;
-
         return $visitorDetailsArray;
     }
-
     private static function sortActionDetails($actions)
     {
-        usort($actions, function ($a, $b) use ($actions) {
+        usort($actions, function ($a, $b) use($actions) {
             $fields = array('serverTimePretty', 'idlink_va', 'type', 'title', 'url', 'pageIdAction', 'goalId');
             foreach ($fields as $field) {
                 $sort = VisitorLog::sortByActionsOnPageColumn($a, $b, $field);
@@ -302,14 +248,10 @@ class Visitor implements VisitorInterface
                     return $sort;
                 }
             }
-
             $indexA = array_search($a, $actions);
             $indexB = array_search($b, $actions);
-
             return $indexA > $indexB ? 1 : -1;
         });
-
         return $actions;
     }
-
 }

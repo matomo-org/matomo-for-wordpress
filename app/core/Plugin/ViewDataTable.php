@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -20,7 +21,6 @@ use Piwik\ViewDataTable\Config as VizConfig;
 use Piwik\ViewDataTable\Manager as ViewDataTableManager;
 use Piwik\ViewDataTable\Request as ViewDataTableRequest;
 use Piwik\ViewDataTable\RequestConfig as VizRequest;
-
 /**
  * The base class of all report visualizations.
  *
@@ -144,35 +144,29 @@ use Piwik\ViewDataTable\RequestConfig as VizRequest;
 abstract class ViewDataTable implements ViewInterface
 {
     const ID = '';
-
     /**
      * DataTable loaded from the API for this ViewDataTable.
      *
      * @var DataTable
      */
     protected $dataTable = null;
-
     /**
      * Contains display properties for this visualization.
      *
      * @var \Piwik\ViewDataTable\Config
      */
     public $config;
-
     /**
      * Contains request properties for this visualization.
      *
      * @var \Piwik\ViewDataTable\RequestConfig
      */
     public $requestConfig;
-
     /**
      * @var ViewDataTableRequest
      */
     protected $request;
-
     private $isComparing = null;
-
     /**
      * Constructor. Initializes display and request properties to their default values.
      * Posts the {@hook ViewDataTable.configure} event which plugins can use to configure the
@@ -186,59 +180,47 @@ abstract class ViewDataTable implements ViewInterface
         } else {
             list($controllerName, $controllerAction) = explode('.', $controllerAction);
         }
-
         $this->requestConfig = static::getDefaultRequestConfig();
-        $this->config        = static::getDefaultConfig();
+        $this->config = static::getDefaultConfig();
         $this->config->subtable_controller_action = $controllerAction;
         $this->config->setController($controllerName, $controllerAction);
-
         $this->request = new ViewDataTableRequest($this->requestConfig);
-
         $this->requestConfig->idSubtable = Common::getRequestVar('idSubtable', false, 'int');
-        $this->config->self_url          = Request::getBaseReportUrl($controllerName, $controllerAction);
-
+        $this->config->self_url = Request::getBaseReportUrl($controllerName, $controllerAction);
         $this->requestConfig->apiMethodToRequestDataTable = $apiMethodToRequestDataTable;
-
-        $report = ReportsProvider::factory($this->requestConfig->getApiModuleToRequest(), $this->requestConfig->getApiMethodToRequest());
-
+        $report = \Piwik\Plugin\ReportsProvider::factory($this->requestConfig->getApiModuleToRequest(), $this->requestConfig->getApiMethodToRequest());
         if (!empty($report)) {
             /** @var Report $report */
             $subtable = $report->getActionToLoadSubTables();
             if (!empty($subtable)) {
                 $this->config->subtable_controller_action = $subtable;
             }
-
             $this->config->show_goals = $report->hasGoalMetrics();
-
             $relatedReports = $report->getRelatedReports();
             if (!empty($relatedReports)) {
                 foreach ($relatedReports as $relatedReport) {
                     if (!$relatedReport) {
                         continue;
                     }
-                    
                     $relatedReportName = $relatedReport->getName();
-
-                    $this->config->addRelatedReport($relatedReport->getModule() . '.' . $relatedReport->getAction(),
-                                                    $relatedReportName);
+                    $this->config->addRelatedReport($relatedReport->getModule() . '.' . $relatedReport->getAction(), $relatedReportName);
                 }
             }
-
             $metrics = $report->getMetrics();
             if (!empty($metrics)) {
                 $this->config->addTranslations($metrics);
             }
-
             $processedMetrics = $report->getProcessedMetrics();
             if (!empty($processedMetrics)) {
                 $this->config->addTranslations($processedMetrics);
             }
-
+            $dimension = $report->getDimension();
+            if (!empty($dimension)) {
+                $this->config->addTranslations(['label' => $dimension->getName()]);
+            }
             $this->config->title = $report->getName();
-
             $report->configureView($this);
         }
-
         /**
          * Triggered during {@link ViewDataTable} construction. Subscribers should customize
          * the view based on the report that is being displayed.
@@ -265,24 +247,17 @@ abstract class ViewDataTable implements ViewInterface
          * @param ViewDataTable $view The instance to configure.
          */
         Piwik::postEvent('ViewDataTable.configure', array($this));
-
         $this->assignRelatedReportsTitle();
-
-        $this->config->show_footer_icons = (false == $this->requestConfig->idSubtable);
-
+        $this->config->show_footer_icons = false == $this->requestConfig->idSubtable;
         // the exclude low population threshold value is sometimes obtained by requesting data.
         // to avoid issuing unnecessary requests when display properties are determined by metadata,
         // we allow it to be a closure.
-        if (isset($this->requestConfig->filter_excludelowpop_value)
-            && $this->requestConfig->filter_excludelowpop_value instanceof \Closure
-        ) {
+        if (isset($this->requestConfig->filter_excludelowpop_value) && $this->requestConfig->filter_excludelowpop_value instanceof \Closure) {
             $function = $this->requestConfig->filter_excludelowpop_value;
             $this->requestConfig->filter_excludelowpop_value = $function();
         }
-
         $this->overrideViewPropertiesWithParams($overrideParams);
         $this->overrideViewPropertiesWithQueryParams();
-
         /**
          * Triggered after {@link ViewDataTable} construction. Subscribers should customize
          * the view based on the report that is being displayed.
@@ -308,7 +283,6 @@ abstract class ViewDataTable implements ViewInterface
          */
         Piwik::postEvent('ViewDataTable.configure.end', array($this));
     }
-
     private function assignRelatedReportsTitle()
     {
         if (!empty($this->config->related_reports_title)) {
@@ -321,7 +295,6 @@ abstract class ViewDataTable implements ViewInterface
             $this->config->related_reports_title = Piwik::translate('General_RelatedReports') . ':';
         }
     }
-
     /**
      * Returns the default config instance.
      *
@@ -336,7 +309,6 @@ abstract class ViewDataTable implements ViewInterface
     {
         return new VizConfig();
     }
-
     /**
      * Returns the default request config instance.
      *
@@ -351,7 +323,6 @@ abstract class ViewDataTable implements ViewInterface
     {
         return new VizRequest();
     }
-
     protected function loadDataTableFromAPI()
     {
         if (!is_null($this->dataTable)) {
@@ -359,17 +330,13 @@ abstract class ViewDataTable implements ViewInterface
             // this happens when setDataTable has been used
             return $this->dataTable;
         }
-
         $extraParams = [];
         if ($this->isComparing()) {
             $extraParams['compare'] = '1';
         }
-
         $this->dataTable = $this->request->loadDataTableFromAPI($extraParams);
-
         return $this->dataTable;
     }
-
     /**
      * Returns the viewDataTable ID for this DataTable visualization.
      *
@@ -382,15 +349,12 @@ abstract class ViewDataTable implements ViewInterface
     public static function getViewDataTableId()
     {
         $id = static::ID;
-
         if (empty($id)) {
             $message = sprintf('ViewDataTable %s does not define an ID. Set the ID constant to fix this issue', get_called_class());
             throw new \Exception($message);
         }
-
         return $id;
     }
-
     /**
      * Returns `true` if this instance's or any of its ancestors' viewDataTable IDs equals the supplied ID,
      * `false` if otherwise.
@@ -404,10 +368,8 @@ abstract class ViewDataTable implements ViewInterface
     public function isViewDataTableId($viewDataTableId)
     {
         $myIds = ViewDataTableManager::getIdsWithInheritance(get_called_class());
-
         return in_array($viewDataTableId, $myIds);
     }
-
     /**
      * Returns the DataTable loaded from the API.
      *
@@ -419,10 +381,8 @@ abstract class ViewDataTable implements ViewInterface
         if (is_null($this->dataTable)) {
             throw new \Exception("The DataTable object has not yet been created");
         }
-
         return $this->dataTable;
     }
-
     /**
      * To prevent calling an API multiple times, the DataTable can be set directly.
      * It won't be loaded from the API in this case.
@@ -434,7 +394,6 @@ abstract class ViewDataTable implements ViewInterface
     {
         $this->dataTable = $dataTable;
     }
-
     /**
      * Checks that the API returned a normal DataTable (as opposed to DataTable\Map)
      * @throws \Exception
@@ -442,9 +401,8 @@ abstract class ViewDataTable implements ViewInterface
      */
     protected function checkStandardDataTable()
     {
-        Piwik::checkObjectTypeIs($this->dataTable, array('\Piwik\DataTable'));
+        Piwik::checkObjectTypeIs($this->dataTable, array('\\Piwik\\DataTable'));
     }
-
     /**
      * Requests all needed data and renders the view.
      *
@@ -454,12 +412,10 @@ abstract class ViewDataTable implements ViewInterface
     {
         return '';
     }
-
     protected function getDefaultDataTableCssClass()
     {
         return 'dataTableViz' . Piwik::getUnnamespacedClassName(get_class($this));
     }
-
     /**
      * Returns the list of view properties that can be overridden by query parameters.
      *
@@ -469,28 +425,23 @@ abstract class ViewDataTable implements ViewInterface
     {
         return array_merge($this->config->overridableProperties, $this->requestConfig->overridableProperties);
     }
-
     private function overrideViewPropertiesWithQueryParams()
     {
         $properties = $this->getOverridableProperties();
-
         foreach ($properties as $name) {
             if (property_exists($this->requestConfig, $name)) {
-                $this->requestConfig->$name = $this->getPropertyFromQueryParam($name, $this->requestConfig->$name);
+                $this->requestConfig->{$name} = $this->getPropertyFromQueryParam($name, $this->requestConfig->{$name});
             } elseif (property_exists($this->config, $name)) {
-                $this->config->$name = $this->getPropertyFromQueryParam($name, $this->config->$name);
+                $this->config->{$name} = $this->getPropertyFromQueryParam($name, $this->config->{$name});
             }
         }
-
         // handle special 'columns' query parameter
         $columns = Common::getRequestVar('columns', false);
-
         if (false !== $columns) {
             $this->config->columns_to_display = Piwik::getArrayFromApiParameter($columns);
             array_unshift($this->config->columns_to_display, 'label');
         }
     }
-
     protected function getPropertyFromQueryParam($name, $defaultValue)
     {
         $type = is_numeric($defaultValue) ? 'int' : null;
@@ -501,7 +452,6 @@ abstract class ViewDataTable implements ViewInterface
         }
         return $value;
     }
-
     /**
      * Returns `true` if this instance will request a single DataTable, `false` if requesting
      * more than one.
@@ -511,20 +461,14 @@ abstract class ViewDataTable implements ViewInterface
     public function isRequestingSingleDataTable()
     {
         $requestArray = $this->request->getRequestArray() + $_GET + $_POST;
-        $date   = Common::getRequestVar('date', null, 'string', $requestArray);
+        $date = Common::getRequestVar('date', null, 'string', $requestArray);
         $period = Common::getRequestVar('period', null, 'string', $requestArray);
         $idSite = Common::getRequestVar('idSite', null, 'string', $requestArray);
-
-        if (Period::isMultiplePeriod($date, $period)
-            || strpos($idSite, ',') !== false
-            || $idSite == 'all'
-        ) {
+        if (Period::isMultiplePeriod($date, $period) || strpos($idSite, ',') !== false || $idSite == 'all') {
             return false;
         }
-
         return true;
     }
-
     /**
      * Returns `true` if this visualization can display some type of data or not.
      *
@@ -536,28 +480,25 @@ abstract class ViewDataTable implements ViewInterface
      * @param  ViewDataTable $view Contains the API request being checked.
      * @return bool
      */
-    public static function canDisplayViewDataTable(ViewDataTable $view)
+    public static function canDisplayViewDataTable(\Piwik\Plugin\ViewDataTable $view)
     {
         return $view->config->show_all_views_icons;
     }
-
     private function overrideViewPropertiesWithParams($overrideParams)
     {
         if (empty($overrideParams)) {
             return;
         }
-
         foreach ($overrideParams as $key => $value) {
             if (property_exists($this->requestConfig, $key)) {
-                $this->requestConfig->$key = $value;
+                $this->requestConfig->{$key} = $value;
             } elseif (property_exists($this->config, $key)) {
-                $this->config->$key = $value;
+                $this->config->{$key} = $value;
             } elseif ($key != 'enable_filter_excludelowpop') {
                 $this->config->custom_parameters[$key] = $value;
             }
         }
     }
-
     /**
      * Display a meaningful error message when any invalid parameter is being set.
      *
@@ -567,14 +508,10 @@ abstract class ViewDataTable implements ViewInterface
     public function throwWhenSettingNonOverridableParameter($overrideParams)
     {
         $nonOverridableParams = $this->getNonOverridableParams($overrideParams);
-        if(count($nonOverridableParams) > 0) {
-            throw new \Exception(sprintf(
-                "Setting parameters %s is not allowed. Please report this bug to the Matomo team.",
-                implode(" and ", $nonOverridableParams)
-            ));
+        if (count($nonOverridableParams) > 0) {
+            throw new \Exception(sprintf("Setting parameters %s is not allowed. Please report this bug to the Matomo team.", implode(" and ", $nonOverridableParams)));
         }
     }
-
     /**
      * @param $overrideParams
      * @return array
@@ -591,14 +528,12 @@ abstract class ViewDataTable implements ViewInterface
                 // setting Config.custom_parameters is always allowed
                 continue;
             }
-
             if (!in_array($paramName, $allowedParams)) {
                 $paramsCannotBeOverridden[] = $paramName;
             }
         }
         return $paramsCannotBeOverridden;
     }
-
     /**
      * Returns true if both this current visualization supports comparison, and if comparison query parameters
      * are present in the URL.
@@ -607,19 +542,14 @@ abstract class ViewDataTable implements ViewInterface
      */
     public function isComparing()
     {
-        if (!$this->supportsComparison()
-            || $this->config->disable_comparison
-        ) {
+        if (!$this->supportsComparison() || $this->config->disable_comparison) {
             return false;
         }
-
         $request = $this->request->getRequestArray();
         $request = ApiRequest::getRequestArrayFromString($request);
-
         $result = DataComparisonFilter::isCompareParamsPresent($request);
         return $result;
     }
-
     /**
      * Implementations should override this method if they support a special comparison view. By
      * default, it is assumed visualizations do not support comparison.
@@ -630,7 +560,6 @@ abstract class ViewDataTable implements ViewInterface
     {
         return false;
     }
-
     public function getRequestArray()
     {
         $requestArray = $this->request->getRequestArray();
