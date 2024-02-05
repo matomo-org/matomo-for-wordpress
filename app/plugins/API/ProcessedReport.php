@@ -545,6 +545,7 @@ class ProcessedReport
                     $enhancedRow->addColumn($columnName, $prettyValue);
                 } else {
                     if ($returnRawMetrics) {
+                        // For example the Maps Widget requires the raw metrics to do advanced datavis
                         if (!isset($columnValue)) {
                             $columnValue = 0;
                         }

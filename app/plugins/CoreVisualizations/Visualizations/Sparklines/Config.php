@@ -256,10 +256,7 @@ class Config extends \Piwik\ViewDataTable\Config
                 throw new \Exception('In order to show an evolution in the sparklines view a currentValue and pastValue array key needs to be present');
             }
             $evolutionPercent = CalculateEvolutionFilter::calculate($evolution['currentValue'], $evolution['pastValue'], $precision = 1);
-            // do not display evolution if evolution percent is 0 and current value is 0
-            if ($evolutionPercent != 0 || $evolution['currentValue'] != 0) {
-                $sparkline['evolution'] = array('percent' => $evolutionPercent, 'isLowerValueBetter' => !empty($evolution['isLowerValueBetter']) ? $evolution['isLowerValueBetter'] : false, 'tooltip' => !empty($evolution['tooltip']) ? $evolution['tooltip'] : null, 'trend' => $evolution['currentValue'] - $evolution['pastValue']);
-            }
+            $sparkline['evolution'] = array('percent' => $evolutionPercent, 'isLowerValueBetter' => !empty($evolution['isLowerValueBetter']) ? $evolution['isLowerValueBetter'] : false, 'tooltip' => !empty($evolution['tooltip']) ? $evolution['tooltip'] : null, 'trend' => $evolution['currentValue'] - $evolution['pastValue']);
         }
         $this->sparklines[] = $sparkline;
     }

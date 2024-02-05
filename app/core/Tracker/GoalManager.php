@@ -292,6 +292,7 @@ class GoalManager
             $conversionDimensions = ConversionDimension::getAllDimensions();
             $conversion = $this->triggerHookOnDimensions($request, $conversionDimensions, 'onEcommerceOrderConversion', $visitor, $action, $conversion);
         } else {
+            // If Cart update, select current items in the previous Cart
             $debugMessage = 'The conversion is an Ecommerce Cart Update';
             $conversion['buster'] = 0;
             $conversion['idgoal'] = self::IDGOAL_CART;
@@ -445,6 +446,7 @@ class GoalManager
             if (!is_array($category)) {
                 $actionsToLookup[] = array(trim($category), \Piwik\Tracker\Action::TYPE_ECOMMERCE_ITEM_CATEGORY);
             } else {
+                // Multiple categories
                 $countCategories = 0;
                 foreach ($category as $productCategory) {
                     $productCategory = trim($productCategory);

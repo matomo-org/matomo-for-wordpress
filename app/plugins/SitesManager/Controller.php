@@ -228,8 +228,14 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         if (empty($detectedCMSes) || $this->siteContentDetector->wasDetected(WordPress::getId())) {
             return '';
         }
-        $detectedCms = $this->siteContentDetector->getSiteContentDetectionById(reset($detectedCMSes));
-        if (null === $detectedCms) {
+        $detectedCms = null;
+        foreach ($detectedCMSes as $detected) {
+            $detectedCms = $this->siteContentDetector->getSiteContentDetectionById($detected);
+            if (null !== $detectedCms && !empty($detectedCms::getInstructionUrl())) {
+                break;
+            }
+        }
+        if (null === $detectedCms || empty($detectedCms::getInstructionUrl())) {
             return '';
         }
         return Piwik::translate('SitesManager_SiteWithoutDataDetectedSite', [$detectedCms::getName(), '<a target="_blank" rel="noreferrer noopener" href="' . $detectedCms::getInstructionUrl() . '">', '</a>']);

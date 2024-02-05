@@ -85,6 +85,7 @@ class BeautifyRangeLabels extends \Piwik\DataTable\Filter\ColumnCallbackReplace
                 return $this->getRangeLabel($value, $lowerBound, $upperBound);
             }
         } else {
+            // if there's one element, handle as a range w/ no upper bound
             // get the lower bound
             sscanf($value, "%d", $lowerBound);
             if ($lowerBound !== null) {

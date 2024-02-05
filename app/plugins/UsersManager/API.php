@@ -285,46 +285,55 @@ class API extends \Piwik\Plugin\API
      */
     public function getUsersPlusRole($idSite, $limit = null, $offset = 0, $filter_search = null, $filter_access = null, $filter_status = null)
     {
-        if (!$this->isUserHasAdminAccessTo($idSite)) {
-            // if the user is not an admin to $idSite, they can only see their own user
-            if ($offset > 1) {
-                Common::sendHeader('X-Matomo-Total-Results: 1');
-                return [];
-            }
-            $user = $this->model->getUser($this->access->getLogin());
-            $user['role'] = $this->access->getRoleForSite($idSite);
-            $user['capabilities'] = $this->access->getCapabilitiesForSite($idSite);
-            $users = [$user];
-            $totalResults = 1;
+        if (Piwik::isUserIsAnonymous()) {
+            // anonymous user should never see any results.
+            Common::sendHeader('X-Matomo-Total-Results: 0');
+            return [];
         } else {
-            // if the current user is not the superuser, only select users that have access to a site this user
-            // has admin access to
-            $loginsToLimit = null;
-            if (!Piwik::hasUserSuperUserAccess()) {
-                $adminIdSites = Access::getInstance()->getSitesIdWithAdminAccess();
-                if (empty($adminIdSites)) {
-                    // sanity check
-                    throw new \Exception("The current admin user does not have access to any sites.");
+            if (!$this->isUserHasAdminAccessTo($idSite)) {
+                // if the user is not an admin to $idSite, they can only see their own user
+                if ($offset > 1) {
+                    Common::sendHeader('X-Matomo-Total-Results: 1');
+                    return [];
                 }
-                $loginsToLimit = $this->model->getUsersWithAccessToSites($adminIdSites);
-            }
-            if ($loginsToLimit !== null && empty($loginsToLimit)) {
-                // if the current user is not the superuser, and getUsersWithAccessToSites() returned an empty result,
-                // access is managed by another plugin, and the current user cannot manage any user with UsersManager
-                Common::sendHeader('X-Matomo-Total-Results: 0');
-                return [];
+                $users = [];
+                $user = $this->model->getUser($this->access->getLogin());
+                if ($user) {
+                    $user['role'] = $this->access->getRoleForSite($idSite);
+                    $user['capabilities'] = $this->access->getCapabilitiesForSite($idSite);
+                    $users = [$user];
+                }
+                $totalResults = count($users);
             } else {
-                [$users, $totalResults] = $this->model->getUsersWithRole($idSite, $limit, $offset, $filter_search, $filter_access, $filter_status, $loginsToLimit);
-                foreach ($users as &$user) {
-                    $user['superuser_access'] = $user['superuser_access'] == 1;
-                    if ($user['superuser_access']) {
-                        $user['role'] = 'superuser';
-                        $user['capabilities'] = [];
-                    } else {
-                        [$user['role'], $user['capabilities']] = $this->getRoleAndCapabilitiesFromAccess($user['access']);
-                        $user['role'] = empty($user['role']) ? 'noaccess' : reset($user['role']);
+                // if the current user is not the superuser, only select users that have access to a site this user
+                // has admin access to
+                $loginsToLimit = null;
+                if (!Piwik::hasUserSuperUserAccess()) {
+                    $adminIdSites = Access::getInstance()->getSitesIdWithAdminAccess();
+                    if (empty($adminIdSites)) {
+                        // sanity check
+                        throw new \Exception("The current admin user does not have access to any sites.");
                     }
-                    unset($user['access']);
+                    $loginsToLimit = $this->model->getUsersWithAccessToSites($adminIdSites);
+                }
+                if ($loginsToLimit !== null && empty($loginsToLimit)) {
+                    // if the current user is not the superuser, and getUsersWithAccessToSites() returned an empty result,
+                    // access is managed by another plugin, and the current user cannot manage any user with UsersManager
+                    Common::sendHeader('X-Matomo-Total-Results: 0');
+                    return [];
+                } else {
+                    [$users, $totalResults] = $this->model->getUsersWithRole($idSite, $limit, $offset, $filter_search, $filter_access, $filter_status, $loginsToLimit);
+                    foreach ($users as &$user) {
+                        $user['superuser_access'] = $user['superuser_access'] == 1;
+                        if ($user['superuser_access']) {
+                            $user['role'] = 'superuser';
+                            $user['capabilities'] = [];
+                        } else {
+                            [$user['role'], $user['capabilities']] = $this->getRoleAndCapabilitiesFromAccess($user['access']);
+                            $user['role'] = empty($user['role']) ? 'noaccess' : reset($user['role']);
+                        }
+                        unset($user['access']);
+                    }
                 }
             }
         }
