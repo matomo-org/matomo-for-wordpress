@@ -81,6 +81,8 @@ mkdir -p ./docker/wordpress
 cat > .env <<EOF
 UID=$UID
 EOF
+docker compose --env-file .env.default --env-file .env up -d wordpress
+sleep 60 # wait for docker-compose launch to finish
 npm run compose -- run console wordpress:build-release --name=$VERSION --tgz
 
 echo "➤ Copying files..."

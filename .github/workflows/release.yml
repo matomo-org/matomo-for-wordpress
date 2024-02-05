@@ -97,6 +97,8 @@ jobs:
             body: "If you download this release, make sure the directory name within the 'wordpress/wp-content' directory is 'matomo' and not for example 'matomo-for-wordpress'. [View changes](https://github.com/matomo-org/matomo-for-wordpress/blob/develop/CHANGELOG.md)"
             prerelease: ${{ steps.tag.outputs.prerelease }}
             token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Stop docker"
+        run: npm run compose stop
       - name: "Deploy on wordpress"
         run: |
           chmod +x ./scripts/*.sh
