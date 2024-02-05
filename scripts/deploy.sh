@@ -77,6 +77,7 @@ git clone --recurse-submodules --single-branch --branch live https://github.com/
 cd "$GITHUB_WORKSPACE"
 
 echo "➤ Building release..."
+mkdir -p ./docker/wordpress
 cat > .env <<EOF
 UID=$UID
 EOF
