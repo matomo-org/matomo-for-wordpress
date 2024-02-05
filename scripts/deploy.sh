@@ -93,9 +93,9 @@ cd "$SVN_DIR"
 
 # Copy from clean copy to /trunk, excluding dotorg assets
 # The --delete flag will delete anything in destination that no longer exists in source
-rsync -rc "$TMP_DIR/app/plugins" trunk/app --delete --delete-excluded
+rsync -rc "$TMP_DIR/app" trunk --delete --delete-excluded
 
-if [[ -d trunk/app/plugins/plugins ]]; then
+if [[ -d trunk/app/app ]]; then
   exit 1;
 fi
 
