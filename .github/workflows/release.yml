@@ -86,17 +86,17 @@ jobs:
       - run: chmod -R 777 . # required to build the release
       - run: docker compose --env-file .env.default --env-file .env up -d wordpress
       - run: sleep 60 # wait for docker-compose launch to finish
-      - name: "Build releases"
-        run: npm run compose -- run console wordpress:build-release --name=${{ env.version }} --zip --tgz
-      - name: "Create release"
-        uses: ncipollo/release-action@c4bf6c1ab090090498fb7f3ddc9f99ba5ab619b9
-        with:
-            artifacts: "matomo-${{ env.version }}.*"
-            allowUpdates: ${{ steps.tag.outputs.update }}
-            tag: ${{ env.version }}
-            body: "If you download this release, make sure the directory name within the 'wordpress/wp-content' directory is 'matomo' and not for example 'matomo-for-wordpress'. [View changes](https://github.com/matomo-org/matomo-for-wordpress/blob/develop/CHANGELOG.md)"
-            prerelease: ${{ steps.tag.outputs.prerelease }}
-            token: ${{ secrets.GITHUB_TOKEN }}
+      #- name: "Build releases"
+      #  run: npm run compose -- run console wordpress:build-release --name=${{ env.version }} --zip --tgz
+      #- name: "Create release"
+      #  uses: ncipollo/release-action@c4bf6c1ab090090498fb7f3ddc9f99ba5ab619b9
+      #  with:
+      #      artifacts: "matomo-${{ env.version }}.*"
+      #      allowUpdates: ${{ steps.tag.outputs.update }}
+      #      tag: ${{ env.version }}
+      #      body: "If you download this release, make sure the directory name within the 'wordpress/wp-content' directory is 'matomo' and not for example 'matomo-for-wordpress'. [View changes](https://github.com/matomo-org/matomo-for-wordpress/blob/develop/CHANGELOG.md)"
+      #      prerelease: ${{ steps.tag.outputs.prerelease }}
+      #      token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Stop docker"
         run: npm run compose stop
       - name: "Deploy on wordpress"
