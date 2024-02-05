@@ -64,7 +64,7 @@ class RedisCaster
         } elseif (isset(self::SERIALIZERS[$serializer])) {
             $serializer = new ConstStub(self::SERIALIZERS[$serializer], $serializer);
         }
-        $compression = \defined('Matomo\\Dependencies\\Redis::OPT_COMPRESSION') ? $redis->getOption(\Redis::OPT_COMPRESSION) : 0;
+        $compression = \defined('Redis::OPT_COMPRESSION') ? $redis->getOption(\Redis::OPT_COMPRESSION) : 0;
         if (\is_array($compression)) {
             foreach ($compression as &$v) {
                 if (isset(self::COMPRESSION_MODES[$v])) {
@@ -74,7 +74,7 @@ class RedisCaster
         } elseif (isset(self::COMPRESSION_MODES[$compression])) {
             $compression = new ConstStub(self::COMPRESSION_MODES[$compression], $compression);
         }
-        $retry = \defined('Matomo\\Dependencies\\Redis::OPT_SCAN') ? $redis->getOption(\Redis::OPT_SCAN) : 0;
+        $retry = \defined('Redis::OPT_SCAN') ? $redis->getOption(\Redis::OPT_SCAN) : 0;
         if (\is_array($retry)) {
             foreach ($retry as &$v) {
                 $v = new ConstStub($v ? 'RETRY' : 'NORETRY', $v);
@@ -82,7 +82,7 @@ class RedisCaster
         } else {
             $retry = new ConstStub($retry ? 'RETRY' : 'NORETRY', $retry);
         }
-        $options += ['TCP_KEEPALIVE' => \defined('Matomo\\Dependencies\\Redis::OPT_TCP_KEEPALIVE') ? $redis->getOption(\Redis::OPT_TCP_KEEPALIVE) : 0, 'READ_TIMEOUT' => $redis->getOption(\Redis::OPT_READ_TIMEOUT), 'COMPRESSION' => $compression, 'SERIALIZER' => $serializer, 'PREFIX' => $redis->getOption(\Redis::OPT_PREFIX), 'SCAN' => $retry];
+        $options += ['TCP_KEEPALIVE' => \defined('Redis::OPT_TCP_KEEPALIVE') ? $redis->getOption(\Redis::OPT_TCP_KEEPALIVE) : 0, 'READ_TIMEOUT' => $redis->getOption(\Redis::OPT_READ_TIMEOUT), 'COMPRESSION' => $compression, 'SERIALIZER' => $serializer, 'PREFIX' => $redis->getOption(\Redis::OPT_PREFIX), 'SCAN' => $retry];
         return new EnumStub($options);
     }
 }

@@ -46,7 +46,7 @@ class CacheWarmerAggregate implements CacheWarmerInterface
      */
     public function warmUp(string $cacheDir) : array
     {
-        if ($collectDeprecations = $this->debug && !\defined('Matomo\\Dependencies\\PHPUNIT_COMPOSER_INSTALL')) {
+        if ($collectDeprecations = $this->debug && !\defined('PHPUNIT_COMPOSER_INSTALL')) {
             $collectedLogs = [];
             $previousHandler = set_error_handler(function ($type, $message, $file, $line) use(&$collectedLogs, &$previousHandler) {
                 if (\E_USER_DEPRECATED !== $type && \E_DEPRECATED !== $type) {

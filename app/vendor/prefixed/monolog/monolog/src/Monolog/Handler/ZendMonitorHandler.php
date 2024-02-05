@@ -35,11 +35,11 @@ class ZendMonitorHandler extends AbstractProcessingHandler
      */
     public function __construct($level = Logger::DEBUG, $bubble = true)
     {
-        if (!function_exists('Matomo\\Dependencies\\zend_monitor_custom_event')) {
+        if (!function_exists('zend_monitor_custom_event')) {
             throw new MissingExtensionException('You must have Zend Server installed with Zend Monitor enabled in order to use this handler');
         }
         //zend monitor constants are not defined if zend monitor is not enabled.
-        $this->levelMap = array(Logger::DEBUG => \Matomo\Dependencies\ZEND_MONITOR_EVENT_SEVERITY_INFO, Logger::INFO => \Matomo\Dependencies\ZEND_MONITOR_EVENT_SEVERITY_INFO, Logger::NOTICE => \Matomo\Dependencies\ZEND_MONITOR_EVENT_SEVERITY_INFO, Logger::WARNING => \Matomo\Dependencies\ZEND_MONITOR_EVENT_SEVERITY_WARNING, Logger::ERROR => \Matomo\Dependencies\ZEND_MONITOR_EVENT_SEVERITY_ERROR, Logger::CRITICAL => \Matomo\Dependencies\ZEND_MONITOR_EVENT_SEVERITY_ERROR, Logger::ALERT => \Matomo\Dependencies\ZEND_MONITOR_EVENT_SEVERITY_ERROR, Logger::EMERGENCY => \Matomo\Dependencies\ZEND_MONITOR_EVENT_SEVERITY_ERROR);
+        $this->levelMap = array(Logger::DEBUG => \ZEND_MONITOR_EVENT_SEVERITY_INFO, Logger::INFO => \ZEND_MONITOR_EVENT_SEVERITY_INFO, Logger::NOTICE => \ZEND_MONITOR_EVENT_SEVERITY_INFO, Logger::WARNING => \ZEND_MONITOR_EVENT_SEVERITY_WARNING, Logger::ERROR => \ZEND_MONITOR_EVENT_SEVERITY_ERROR, Logger::CRITICAL => \ZEND_MONITOR_EVENT_SEVERITY_ERROR, Logger::ALERT => \ZEND_MONITOR_EVENT_SEVERITY_ERROR, Logger::EMERGENCY => \ZEND_MONITOR_EVENT_SEVERITY_ERROR);
         parent::__construct($level, $bubble);
     }
     /**

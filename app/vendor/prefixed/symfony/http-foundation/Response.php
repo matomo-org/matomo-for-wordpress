@@ -388,7 +388,7 @@ class Response
         $this->sendContent();
         if (\function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
-        } elseif (\function_exists('Matomo\\Dependencies\\litespeed_finish_request')) {
+        } elseif (\function_exists('litespeed_finish_request')) {
             litespeed_finish_request();
         } elseif (!\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true)) {
             static::closeOutputBuffers(0, true);
