@@ -77,6 +77,7 @@ git clone --recurse-submodules --single-branch --branch live https://github.com/
 cd "$GITHUB_WORKSPACE"
 
 echo "➤ Building release..."
+cp "$GITHUB_WORKSPACE/.env" .env
 npm run compose -- run console wordpress:build-release --name=$VERSION --tgz
 
 echo "➤ Copying files..."
