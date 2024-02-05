@@ -93,7 +93,7 @@ cd "$SVN_DIR"
 
 # Copy from clean copy to /trunk, excluding dotorg assets
 # The --delete flag will delete anything in destination that no longer exists in source
-rsync -rc "$TMP_DIR/" trunk/ --delete --delete-excluded
+rsync -rc "$TMP_DIR/app/core" trunk/app/core --delete --delete-excluded
 
 # Copy dotorg assets to /assets
 rsync -rc "$GITHUB_WORKSPACE/$ASSETS_DIR/" assets/ --delete --delete-excluded
@@ -110,7 +110,7 @@ svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm %@ > /dev/null
 
 # Copy tag locally to make this a single commit
 # echo "➤ Copying tag..."
-svn cp "trunk" "tags/$VERSION"
+# svn cp "trunk" "tags/$VERSION"
 
 # Fix screenshots getting force downloaded when clicking them
 # https://developer.wordpress.org/plugins/wordpress-org/plugin-assets/
@@ -131,6 +131,6 @@ echo "➤ svn status..."
 svn status
 
 echo "➤ Committing files..."
-svn commit -m "Update to version $VERSION from GitHub" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+svn commit -m "Partially update to version $VERSION from GitHub (app/core only)" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
 
 echo "✓ Plugin deployed!"
