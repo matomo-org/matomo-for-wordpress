@@ -2,8 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="<?php 
-namespace Matomo\Dependencies;
-
 echo $this->charset;
 ?>" />
     <meta name="robots" content="noindex,nofollow,noarchive" />

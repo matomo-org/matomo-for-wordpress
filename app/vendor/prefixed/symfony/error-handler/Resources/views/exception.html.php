@@ -1,6 +1,4 @@
 <div class="exception-summary <?php 
-namespace Matomo\Dependencies;
-
 echo !$exceptionMessage ? 'exception-without-message' : '';
 ?>">
     <div class="exception-metadata">

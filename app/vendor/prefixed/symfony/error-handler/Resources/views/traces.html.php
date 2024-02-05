@@ -1,6 +1,4 @@
 <div class="trace trace-as-html" id="trace-box-<?php 
-namespace Matomo\Dependencies;
-
 echo $index;
 ?>">
     <div class="trace-details">

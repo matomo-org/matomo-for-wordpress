@@ -1,7 +1,5 @@
 #!/usr/bin/env php
 <?php 
-namespace Matomo\Dependencies;
-
 /*
  * This file is part of the Symfony package.
  *

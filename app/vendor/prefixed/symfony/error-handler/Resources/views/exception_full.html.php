@@ -1,6 +1,4 @@
 <!-- <?php 
-namespace Matomo\Dependencies;
-
 echo $_message = \sprintf('%s (%d %s)', $exceptionMessage, $statusCode, $statusText);
 ?> -->
 <!DOCTYPE html>
