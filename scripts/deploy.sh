@@ -109,8 +109,8 @@ svn add . --force > /dev/null
 svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm %@ > /dev/null
 
 # Copy tag locally to make this a single commit
-# echo "➤ Copying tag..."
-# svn cp "trunk" "tags/$VERSION"
+echo "➤ Copying tag..."
+svn cp "trunk" "tags/$VERSION"
 
 # Fix screenshots getting force downloaded when clicking them
 # https://developer.wordpress.org/plugins/wordpress-org/plugin-assets/
@@ -131,6 +131,6 @@ echo "➤ svn status..."
 svn status
 
 echo "➤ Committing files..."
-svn commit -m "Partially update to version $VERSION from GitHub (app/core only)" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+svn commit -m "Update to version $VERSION from GitHub" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
 
 echo "✓ Plugin deployed!"
