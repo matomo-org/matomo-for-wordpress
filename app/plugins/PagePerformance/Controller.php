@@ -43,7 +43,7 @@ class Controller extends PluginController
         $apiMethod = $request->getStringParameter('apiMethod');
         $period = $request->getStringParameter('period');
         $date = $request->getStringParameter('date');
-        $params = ['method' => $apiMethod, 'period' => 'range' === $period ? 'day' : $period, 'label' => $request->getStringParameter('label', ''), 'idSite' => $this->idSite, 'segment' => $request->getStringParameter('segment', ''), 'date' => 'range' === $period ? $date : EvolutionViz::getDateRangeAndLastN($period, $date)[0], 'format' => 'original', 'serialize' => '0'];
+        $params = ['method' => $apiMethod, 'period' => 'range' === $period ? 'day' : $period, 'label' => $request->getStringParameter('label', ''), 'idSite' => $this->idSite, 'segment' => $request->getStringParameter('segment', ''), 'date' => 'range' === $period ? $date : EvolutionViz::getDateRangeAndLastN($period, $date)[0], 'format' => 'original', 'flat' => $request->getIntegerParameter('flat', 0), 'serialize' => '0'];
         /** @var DataTable $dataTable */
         $dataTable = Request::processRequest($apiMethod, $params, []);
         $dataTable->deleteColumn('label');

@@ -11,11 +11,13 @@ namespace Piwik\Plugins\CorePluginsAdmin;
 
 use Piwik\Common;
 use Piwik\Piwik;
+use Piwik\Settings\FieldConfig;
 use Piwik\Settings\Setting;
 use Piwik\Settings\Settings;
 use Exception;
 class SettingsMetadata
 {
+    const PASSWORD_PLACEHOLDER = '******';
     /**
      * @param Settings[]  $settingsInstances
      * @param array $settingValues   array('pluginName' => array('settingName' => 'settingValue'))
@@ -27,7 +29,8 @@ class SettingsMetadata
             foreach ($settingsInstances as $pluginName => $pluginSetting) {
                 foreach ($pluginSetting->getSettingsWritableByCurrentUser() as $setting) {
                     $value = $this->findSettingValueFromRequest($settingValues, $pluginName, $setting->getName());
-                    if (isset($value)) {
+                    $fieldConfig = $setting->configureField();
+                    if (isset($value) && ($fieldConfig->uiControl !== FieldConfig::UI_CONTROL_PASSWORD || $value !== self::PASSWORD_PLACEHOLDER)) {
                         $setting->setValue($value);
                     }
                 }
@@ -89,7 +92,11 @@ class SettingsMetadata
         if (is_array($availableValues)) {
             $availableValues = (object) $availableValues;
         }
-        $result = array('name' => $setting->getName(), 'title' => $config->title, 'value' => $setting->getValue(), 'defaultValue' => $setting->getDefaultValue(), 'type' => $setting->getType(), 'uiControl' => $config->uiControl, 'uiControlAttributes' => $config->uiControlAttributes, 'availableValues' => $availableValues, 'description' => $config->description, 'inlineHelp' => $config->inlineHelp, 'introduction' => $config->introduction, 'condition' => $config->condition, 'fullWidth' => $config->fullWidth);
+        $value = $setting->getValue();
+        if (!empty($value) && $config->uiControl === FieldConfig::UI_CONTROL_PASSWORD) {
+            $value = self::PASSWORD_PLACEHOLDER;
+        }
+        $result = array('name' => $setting->getName(), 'title' => $config->title, 'value' => $value, 'defaultValue' => $setting->getDefaultValue(), 'type' => $setting->getType(), 'uiControl' => $config->uiControl, 'uiControlAttributes' => $config->uiControlAttributes, 'availableValues' => $availableValues, 'description' => $config->description, 'inlineHelp' => $config->inlineHelp, 'introduction' => $config->introduction, 'condition' => $config->condition, 'fullWidth' => $config->fullWidth);
         if ($config->customFieldComponent) {
             $result['component'] = $config->customFieldComponent;
         }

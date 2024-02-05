@@ -257,6 +257,8 @@ class DocumentationGenerator
             if (isset($knowExampleDefaultParametersValues[$nameVariable])) {
                 $defaultValue = $knowExampleDefaultParametersValues[$nameVariable];
             } elseif ($defaultValue instanceof \Piwik\API\NoDefaultValue) {
+                // if there isn't a default value for a given parameter,
+                // we need a 'know default value' or we can't generate the link
                 return false;
             }
         }

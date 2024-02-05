@@ -331,6 +331,7 @@ class Pdf extends ReportRenderer
                         $this->TCPDF->SetXY($restoreX, $restoreY);
                     }
                 } else {
+                    // metrics column
                     // No value means 0
                     if (empty($rowMetrics[$columnId])) {
                         $rowMetrics[$columnId] = 0;

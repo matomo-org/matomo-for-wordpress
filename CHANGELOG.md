@@ -1,6 +1,9 @@
 == Changelog ===
 
-= 5.0.1
+= 5.0.2 =
+* Update Matomo core to 5.0.2.
+
+= 5.0.1 =
 * Update Matomo core to 5.0.1, which includes improved security, many bug fixes and performance improvements.
 * Fix most existing plugin incompatibilities.
 * Fix double encoded JSON response from REST API when `format=json` is used in Matomo API requests. If you use the Matomo API through WordPress REST requests, you may need to adjust your code that processes API responses.
