@@ -75,6 +75,7 @@ echo "➤ Checking out git matomo-for-wordpress repository..."
 git clone --recurse-submodules --single-branch --branch live https://github.com/matomo-org/matomo-for-wordpress.git "$GITHUB_WORKSPACE"
 
 cd "$GITHUB_WORKSPACE"
+git lfs pull
 
 echo "➤ Building release..."
 mkdir -p ./docker/wordpress
