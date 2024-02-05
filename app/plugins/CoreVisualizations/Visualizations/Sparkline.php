@@ -107,6 +107,8 @@ class Sparkline extends ViewDataTable
                 if (!empty($columnToPlot)) {
                     $value = $onlyRow->getColumn($columnToPlot);
                 } else {
+                    // if not specified, we load by default the first column found
+                    // eg. case of getLastDistinctCountriesGraph
                     $columns = $onlyRow->getColumns();
                     $value = current($columns);
                 }
