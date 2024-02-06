@@ -203,7 +203,7 @@ function matomo_is_plugin_compatible( $wp_plugin_file ) {
 		if ( empty( $plugin_manifest['require']['matomo'] )
 			&& empty( $plugin_manifest['require']['piwik'] )
 		) {
-			return null;
+			return false;
 		}
 
 		$core_requirement = isset( $plugin_manifest['require']['matomo'] )
