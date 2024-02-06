@@ -189,7 +189,9 @@ function matomo_rel_path( $to_dir, $from_dir ) {
 
 function matomo_is_plugin_compatible( $wp_plugin_file ) {
 	$plugin_manifest_path = dirname( $wp_plugin_file ) . '/plugin.json';
-	if ( ! is_file( $plugin_manifest_path ) ) {
+	if ( ! is_file( $plugin_manifest_path )
+		|| ! is_readable( $plugin_manifest_path )
+	) {
 		return false;
 	}
 
