@@ -188,6 +188,8 @@ function matomo_rel_path( $to_dir, $from_dir ) {
 }
 
 function matomo_is_plugin_compatible( $wp_plugin_file ) {
+	require_once __DIR__ . '/app/core/Version.php';
+
 	$plugin_manifest_path = dirname( $wp_plugin_file ) . '/plugin.json';
 	if ( ! is_file( $plugin_manifest_path )
 		|| ! is_readable( $plugin_manifest_path )
@@ -195,7 +197,12 @@ function matomo_is_plugin_compatible( $wp_plugin_file ) {
 		return false;
 	}
 
-	$cache_key   = 'matomo_plugin_compatible_' . basename( $wp_plugin_file ) . '_' . filemtime( $plugin_manifest_path );
+	$modified_time = filemtime( $plugin_manifest_path );
+	if ( false === $modified_time ) {
+		return false;
+	}
+
+	$cache_key   = 'matomo_plugin_compatible_' . basename( $wp_plugin_file ) . '_' . \Piwik\Version::VERSION . '_' . $modified_time;
 	$cache_value = get_transient( $cache_key );
 
 	if ( false === $cache_value ) {
@@ -220,7 +227,8 @@ function matomo_is_plugin_compatible( $wp_plugin_file ) {
 		$is_compatible = empty( $missing_dependencies );
 		$cache_value   = (int) $is_compatible;
 
-		set_transient( $cache_key, $cache_value );
+		$two_months = 60 * 60 * 24 * 60;
+		set_transient( $cache_key, $cache_value, $two_months );
 	}
 
 	return 1 === (int) $cache_value;
