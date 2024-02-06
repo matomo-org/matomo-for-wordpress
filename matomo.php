@@ -187,6 +187,43 @@ function matomo_rel_path( $to_dir, $from_dir ) {
 	return $relative_path;
 }
 
+function matomo_is_plugin_compatible( $wp_plugin_file ) {
+	$plugin_manifest_path = dirname( $wp_plugin_file ) . '/plugin.json';
+	if ( ! is_file( $plugin_manifest_path ) ) {
+		return false;
+	}
+
+	$cache_key   = 'matomo_plugin_compatible_' . basename( $wp_plugin_file ) . '_' . filemtime( $plugin_manifest_path );
+	$cache_value = get_transient( $cache_key );
+
+	if ( false === $cache_value ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$plugin_manifest = file_get_contents( $plugin_manifest_path );
+		$plugin_manifest = json_decode( $plugin_manifest, true );
+		if ( empty( $plugin_manifest['require']['matomo'] )
+			&& empty( $plugin_manifest['require']['piwik'] )
+		) {
+			return null;
+		}
+
+		$core_requirement = isset( $plugin_manifest['require']['matomo'] )
+			? $plugin_manifest['require']['matomo']
+			: $plugin_manifest['require']['piwik'];
+
+		require_once __DIR__ . '/app/vendor/autoload.php';
+
+		$dependency           = new \Piwik\Plugin\Dependency();
+		$missing_dependencies = $dependency->getMissingDependencies( [ 'matomo' => $core_requirement ] );
+
+		$is_compatible = empty( $missing_dependencies );
+		$cache_value   = (int) $is_compatible;
+
+		set_transient( $cache_key, $cache_value );
+	}
+
+	return 1 === (int) $cache_value;
+}
+
 function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace_plugin = false ) {
 	if ( ! in_array( $wp_plugin_file, $GLOBALS['MATOMO_PLUGIN_FILES'], true ) ) {
 		$GLOBALS['MATOMO_PLUGIN_FILES'][] = $wp_plugin_file;
@@ -197,6 +234,10 @@ function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace
 	}
 
 	if ( $is_marketplace_plugin && dirname( $wp_plugin_file ) === $plugins_directory ) {
+		if ( ! matomo_is_plugin_compatible( $wp_plugin_file ) ) {
+			return;
+		}
+
 		$GLOBALS['MATOMO_MARKETPLACE_PLUGINS'][] = $wp_plugin_file;
 	}
 
