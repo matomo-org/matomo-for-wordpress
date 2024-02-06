@@ -206,8 +206,9 @@ function matomo_is_plugin_compatible( $wp_plugin_file ) {
 	$cache_value = get_transient( $cache_key );
 
 	if ( false === $cache_value ) {
-		// assume it's not in case the following code fails.
-		// this way, the following request will work.
+		// assume the plugin is not compatible in case the below code fails.
+		// this way, the following request will work rather than trigger the same
+		// error.
 		$two_months = 60 * 60 * 24 * 60;
 		set_transient( $cache_key, 0, $two_months );
 
