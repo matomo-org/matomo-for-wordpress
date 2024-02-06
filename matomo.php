@@ -209,8 +209,8 @@ function matomo_is_plugin_compatible( $wp_plugin_file ) {
 		// assume the plugin is not compatible in case the below code fails.
 		// this way, the following request will work rather than trigger the same
 		// error.
-		$two_months = 60 * 60 * 24 * 60;
-		set_transient( $cache_key, 0, $two_months );
+		$one_day = 24 * 60 * 60;
+		set_transient( $cache_key, 0, $one_day );
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		$plugin_manifest = file_get_contents( $plugin_manifest_path );
@@ -233,6 +233,7 @@ function matomo_is_plugin_compatible( $wp_plugin_file ) {
 		$is_compatible = empty( $missing_dependencies );
 		$cache_value   = (int) $is_compatible;
 
+		$two_months = 60 * 60 * 24 * 60;
 		set_transient( $cache_key, $cache_value, $two_months );
 	}
 
