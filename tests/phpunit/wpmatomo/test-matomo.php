@@ -50,11 +50,8 @@ class MatomoTest extends MatomoUnit_TestCase {
 	}
 
 	public function get_test_data_for_matomo_is_plugin_compatible() {
-		require_once __DIR__ . '/../../../app/core/Version.php';
+		$current_major_version = $this->get_current_major_version();
 
-		$current_major_version = \Piwik\Version::MAJOR_VERSION;
-
-		// >=5.0.0-b4,<6.0.0-b1
 		$not_compatible_constraint = '>=' . ( $current_major_version - 1 ) . '.0.0-b1,<' . $current_major_version . '.0.0-b1';
 		$compatible_constraint     = '>=' . $current_major_version . '.0.0-b1,<' . ( $current_major_version + 1 ) . '.0.0-b1';
 
@@ -152,7 +149,42 @@ class MatomoTest extends MatomoUnit_TestCase {
 		];
 	}
 
+	public function test_matomo_is_plugin_compatible_rechecks_if_plugin_manifest_changes() {
+		$current_major_version = $this->get_current_major_version();
+
+		$not_compatible_constraint = '>=' . ( $current_major_version - 1 ) . '.0.0-b1,<' . $current_major_version . '.0.0-b1';
+		$compatible_constraint     = '>=' . $current_major_version . '.0.0-b1,<' . ( $current_major_version + 1 ) . '.0.0-b1';
+
+		$plugin_json_contents = [
+			'require' => [ 'matomo' => $not_compatible_constraint ],
+		];
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+		file_put_contents( $this->get_test_plugin_manifest_path(), wp_json_encode( $plugin_json_contents ) );
+
+		$actual = matomo_is_plugin_compatible( __DIR__ . '/PluginFile.php' );
+		$this->assertFalse( $actual );
+
+		sleep( 1 ); // so file modified time increases
+		clearstatcache( false, $this->get_test_plugin_manifest_path() );
+
+		$plugin_json_contents = [
+			'require' => [ 'matomo' => $compatible_constraint ],
+		];
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+		file_put_contents( $this->get_test_plugin_manifest_path(), wp_json_encode( $plugin_json_contents ) );
+
+		$actual = matomo_is_plugin_compatible( __DIR__ . '/PluginFile.php' );
+		$this->assertTrue( $actual );
+	}
+
 	private function get_test_plugin_manifest_path() {
 		return __DIR__ . '/plugin.json';
+	}
+
+	private function get_current_major_version() {
+		require_once __DIR__ . '/../../../app/core/Version.php';
+		return \Piwik\Version::MAJOR_VERSION;
 	}
 }
