@@ -1,5 +1,8 @@
 == Changelog ===
 
+= 5.0.3 =
+* Fix critical error that can occur while upgrading to Matomo for WordPress 5, if using Matomo marketplace plugins.
+
 = 5.0.2 =
 * Update Matomo core to 5.0.2.
 
