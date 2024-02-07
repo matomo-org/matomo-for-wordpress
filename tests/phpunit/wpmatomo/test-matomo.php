@@ -49,11 +49,6 @@ class MatomoTest extends MatomoUnit_TestCase {
 		$this->mk_temp_dir();
 
 		if ( null !== $plugin_json_contents ) {
-			clearstatcache();
-			if ( ! is_dir( dirname( $this->get_test_plugin_manifest_path() ) ) ) {
-				throw new \Exception("temp dir does not exist?");
-			}
-
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
 			file_put_contents( $this->get_test_plugin_manifest_path(), wp_json_encode( $plugin_json_contents ) );
 		}
