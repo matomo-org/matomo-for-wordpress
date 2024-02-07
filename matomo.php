@@ -212,6 +212,8 @@ function matomo_is_plugin_compatible( $wp_plugin_file ) {
 		$one_day = 24 * 60 * 60;
 		set_transient( $cache_key, 0, $one_day );
 
+		clearstatcache( false, $plugin_manifest_path );
+
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		$plugin_manifest = file_get_contents( $plugin_manifest_path );
 		$plugin_manifest = json_decode( $plugin_manifest, true );
@@ -238,6 +240,24 @@ function matomo_is_plugin_compatible( $wp_plugin_file ) {
 	}
 
 	return 1 === (int) $cache_value;
+}
+
+function matomo_filter_incompatible_plugins( &$plugin_list ) {
+	if ( empty( $GLOBALS['MATOMO_MARKETPLACE_PLUGINS'] ) ) {
+		return;
+	}
+
+	$incompatible_plugins = [];
+	foreach ( $GLOBALS['MATOMO_MARKETPLACE_PLUGINS'] as $wp_plugin_file ) {
+		if ( matomo_is_plugin_compatible( $wp_plugin_file ) ) {
+			continue;
+		}
+
+		$plugin_name            = basename( dirname( $wp_plugin_file ) );
+		$incompatible_plugins[] = $plugin_name;
+	}
+
+	$plugin_list = array_diff( $plugin_list, $incompatible_plugins );
 }
 
 function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace_plugin = false ) {

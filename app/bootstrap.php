@@ -250,6 +250,9 @@ $GLOBALS['MATOMO_MODIFY_CONFIG_SETTINGS'] = function ($settings) {
 			}
 		}
 	}
+	if (!empty($GLOBALS['MATOMO_MARKETPLACE_PLUGINS'])) {
+		matomo_filter_incompatible_plugins($plugins['Plugins']);
+	}
 	$settings['Plugins'] = $plugins;
 	return $settings;
 };
