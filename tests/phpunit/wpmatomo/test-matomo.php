@@ -1,14 +1,26 @@
 <?php
+
 /**
  * Test matomo.php.
+ *
+ * phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
  *
  * @package matomo
  */
 class MatomoTest extends MatomoUnit_TestCase {
 
+	public function set_up() {
+		parent::set_up();
+
+		mkdir( dirname( $this->get_test_plugin_manifest_path() ), 0777, true );
+	}
+
 	public function tear_down() {
-		if ( is_file( $this->get_test_plugin_manifest_path() ) ) {
-			unlink( $this->get_test_plugin_manifest_path() );
+		unset( $GLOBALS['MATOMO_MARKETPLACE_PLUGINS'] );
+
+		if ( is_dir( dirname( $this->get_test_plugin_manifest_path() ) ) ) {
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
+			shell_exec( 'rm -r ' . dirname( $this->get_test_plugin_manifest_path() ) );
 		}
 
 		parent::tear_down();
@@ -45,15 +57,15 @@ class MatomoTest extends MatomoUnit_TestCase {
 			file_put_contents( $this->get_test_plugin_manifest_path(), wp_json_encode( $plugin_json_contents ) );
 		}
 
-		$actual = matomo_is_plugin_compatible( __DIR__ . '/PluginFile.php' );
+		$actual = matomo_is_plugin_compatible( __DIR__ . '/temp/PluginFile.php' );
 		$this->assertEquals( $expected, $actual );
 	}
 
 	public function get_test_data_for_matomo_is_plugin_compatible() {
 		$current_major_version = $this->get_current_major_version();
 
-		$not_compatible_constraint = '>=' . ( $current_major_version - 1 ) . '.0.0-b1,<' . $current_major_version . '.0.0-b1';
-		$compatible_constraint     = '>=' . $current_major_version . '.0.0-b1,<' . ( $current_major_version + 1 ) . '.0.0-b1';
+		$not_compatible_constraint = $this->get_not_compatible_constraint();
+		$compatible_constraint     = $this->get_compatible_constraint();
 
 		$incomplete_constraint_compatible   = '>=' . $current_major_version . '.0.0-b1';
 		$incomplete_constraint_incompatible = '<' . ( $current_major_version - 1 ) . '.5.0';
@@ -150,19 +162,16 @@ class MatomoTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_matomo_is_plugin_compatible_rechecks_if_plugin_manifest_changes() {
-		$current_major_version = $this->get_current_major_version();
-
-		$not_compatible_constraint = '>=' . ( $current_major_version - 1 ) . '.0.0-b1,<' . $current_major_version . '.0.0-b1';
-		$compatible_constraint     = '>=' . $current_major_version . '.0.0-b1,<' . ( $current_major_version + 1 ) . '.0.0-b1';
+		$not_compatible_constraint = $this->get_not_compatible_constraint();
+		$compatible_constraint     = $this->get_compatible_constraint();
 
 		$plugin_json_contents = [
 			'require' => [ 'matomo' => $not_compatible_constraint ],
 		];
 
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
 		file_put_contents( $this->get_test_plugin_manifest_path(), wp_json_encode( $plugin_json_contents ) );
 
-		$actual = matomo_is_plugin_compatible( __DIR__ . '/PluginFile.php' );
+		$actual = matomo_is_plugin_compatible( __DIR__ . '/temp/PluginFile.php' );
 		$this->assertFalse( $actual );
 
 		sleep( 1 ); // so file modified time increases
@@ -171,19 +180,64 @@ class MatomoTest extends MatomoUnit_TestCase {
 			'require' => [ 'matomo' => $compatible_constraint ],
 		];
 
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
 		file_put_contents( $this->get_test_plugin_manifest_path(), wp_json_encode( $plugin_json_contents ) );
 
-		$actual = matomo_is_plugin_compatible( __DIR__ . '/PluginFile.php' );
+		$actual = matomo_is_plugin_compatible( __DIR__ . '/temp/PluginFile.php' );
 		$this->assertTrue( $actual );
 	}
 
+	public function test_matomo_filter_incompatible_plugins() {
+		$GLOBALS['MATOMO_MARKETPLACE_PLUGINS'] = [
+			__DIR__ . '/temp/CompatiblePlugin/CompatiblePlugin.php',
+			__DIR__ . '/temp/IncompatiblePlugin/IncompatiblePlugin.php',
+		];
+
+		$not_compatible_constraint = $this->get_not_compatible_constraint();
+		$compatible_constraint     = $this->get_compatible_constraint();
+
+		mkdir( __DIR__ . '/temp/CompatiblePlugin' );
+		file_put_contents(
+			__DIR__ . '/temp/CompatiblePlugin/plugin.json',
+			wp_json_encode(
+				[
+					'require' => [ 'matomo' => $compatible_constraint ],
+				]
+			)
+		);
+
+		mkdir( __DIR__ . '/temp/IncompatiblePlugin' );
+		file_put_contents(
+			__DIR__ . '/temp/IncompatiblePlugin/plugin.json',
+			wp_json_encode(
+				[
+					'require' => [ 'matomo' => $not_compatible_constraint ],
+				]
+			)
+		);
+
+		$actual = [ 'CompatiblePlugin', 'IncompatiblePlugin', 'CorePlugin' ];
+		matomo_filter_incompatible_plugins( $actual );
+
+		$expected = [ 'CompatiblePlugin', 'CorePlugin' ];
+		$this->assertEquals( $expected, $actual );
+	}
+
 	private function get_test_plugin_manifest_path() {
-		return __DIR__ . '/plugin.json';
+		return __DIR__ . '/temp/plugin.json';
 	}
 
 	private function get_current_major_version() {
 		require_once __DIR__ . '/../../../app/core/Version.php';
 		return \Piwik\Version::MAJOR_VERSION;
+	}
+
+	private function get_not_compatible_constraint() {
+		$current_major_version = $this->get_current_major_version();
+		return '>=' . ( $current_major_version - 1 ) . '.0.0-b1,<' . $current_major_version . '.0.0-b1';
+	}
+
+	private function get_compatible_constraint() {
+		$current_major_version = $this->get_current_major_version();
+		return '>=' . $current_major_version . '.0.0-b1,<' . ( $current_major_version + 1 ) . '.0.0-b1';
 	}
 }

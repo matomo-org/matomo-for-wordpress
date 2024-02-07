@@ -256,7 +256,7 @@ function matomo_filter_incompatible_plugins( &$plugin_list ) {
 		$incompatible_plugins[] = $plugin_name;
 	}
 
-	$plugin_list = array_diff( $plugin_list, $incompatible_plugins );
+	$plugin_list = array_values( array_diff( $plugin_list, $incompatible_plugins ) );
 }
 
 function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace_plugin = false ) {
