@@ -191,13 +191,13 @@ function matomo_is_plugin_compatible( $wp_plugin_file ) {
 	require_once __DIR__ . '/app/core/Version.php';
 
 	$plugin_manifest_path = dirname( $wp_plugin_file ) . '/plugin.json';
+	clearstatcache( false, $plugin_manifest_path );
+
 	if ( ! is_file( $plugin_manifest_path )
 		|| ! is_readable( $plugin_manifest_path )
 	) {
 		return false;
 	}
-
-	clearstatcache( false, $plugin_manifest_path );
 
 	$modified_time = filemtime( $plugin_manifest_path );
 	if ( false === $modified_time ) {
@@ -208,7 +208,7 @@ function matomo_is_plugin_compatible( $wp_plugin_file ) {
 	$cache_value = get_transient( $cache_key );
 	if ( false === $cache_value ) {
 		// assume the plugin is not compatible in case the below code fails.
-		// this way, the following request will work rather than trigger the same
+		// this way, the next request will work rather than trigger the same
 		// error.
 		$one_day = 24 * 60 * 60;
 		set_transient( $cache_key, 0, $one_day );
