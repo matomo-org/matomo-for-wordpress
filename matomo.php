@@ -250,10 +250,6 @@ function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace
 	}
 
 	if ( $is_marketplace_plugin && dirname( $wp_plugin_file ) === $plugins_directory ) {
-		if ( ! matomo_is_plugin_compatible( $wp_plugin_file ) ) {
-			return;
-		}
-
 		$GLOBALS['MATOMO_MARKETPLACE_PLUGINS'][] = $wp_plugin_file;
 	}
 

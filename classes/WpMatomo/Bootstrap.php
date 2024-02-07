@@ -29,6 +29,8 @@ class Bootstrap {
 
 	private static $bootstrapped_by_wordpress = false;
 
+	private static $are_incompatible_plugins_filtered = false;
+
 	/**
 	 * Tests only
 	 *
@@ -51,6 +53,12 @@ class Bootstrap {
 
 		self::$bootstrapped_by_wordpress = true;
 		self::$assume_not_bootstrapped   = false; // we need to unset it again to prevent recursion
+
+		if ( ! self::$are_incompatible_plugins_filtered ) {
+			$this->filter_incompatible_plugins();
+
+			self::$are_incompatible_plugins_filtered = true;
+		}
 
 		if ( ! defined( 'PIWIK_ENABLE_DISPATCH' ) ) {
 			define( 'PIWIK_ENABLE_DISPATCH', false );
@@ -108,5 +116,32 @@ class Bootstrap {
 	public static function do_bootstrap() {
 		$bootstrap = new Bootstrap();
 		$bootstrap->bootstrap();
+	}
+
+	/**
+	 * TODO: test
+	 * public for tests
+	 *
+	 * @return void
+	 */
+	public function filter_incompatible_plugins() {
+		if ( empty( $GLOBALS['MATOMO_MARKETPLACE_PLUGINS'] ) ) {
+			return;
+		}
+
+		$incompatible_plugins = [];
+		foreach ( $GLOBALS['MATOMO_MARKETPLACE_PLUGINS'] as $wp_plugin_file ) {
+			if ( matomo_is_plugin_compatible( $wp_plugin_file ) ) {
+				continue;
+			}
+
+			$plugin_name            = basename( dirname( $wp_plugin_file ) );
+			$incompatible_plugins[] = $plugin_name;
+		}
+
+		$GLOBALS['MATOMO_PLUGINS_ENABLED'] = array_diff(
+			$GLOBALS['MATOMO_PLUGINS_ENABLED'],
+			$incompatible_plugins
+		);
 	}
 }
