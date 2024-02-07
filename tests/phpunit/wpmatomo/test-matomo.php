@@ -9,12 +9,6 @@
  */
 class MatomoTest extends MatomoUnit_TestCase {
 
-	public function set_up() {
-		parent::set_up();
-
-		mkdir( dirname( $this->get_test_plugin_manifest_path() ), 0777, true );
-	}
-
 	public function tear_down() {
 		unset( $GLOBALS['MATOMO_MARKETPLACE_PLUGINS'] );
 
@@ -52,7 +46,14 @@ class MatomoTest extends MatomoUnit_TestCase {
 	 * @dataProvider get_test_data_for_matomo_is_plugin_compatible
 	 */
 	public function test_matomo_is_plugin_compatible( $plugin_json_contents, $expected ) {
+		$this->mk_temp_dir();
+
 		if ( null !== $plugin_json_contents ) {
+			clearstatcache();
+			if ( ! is_dir( dirname( $this->get_test_plugin_manifest_path() ) ) ) {
+				throw new \Exception("temp dir does not exist?");
+			}
+
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
 			file_put_contents( $this->get_test_plugin_manifest_path(), wp_json_encode( $plugin_json_contents ) );
 		}
@@ -162,6 +163,8 @@ class MatomoTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_matomo_is_plugin_compatible_rechecks_if_plugin_manifest_changes() {
+		$this->mk_temp_dir();
+
 		$not_compatible_constraint = $this->get_not_compatible_constraint();
 		$compatible_constraint     = $this->get_compatible_constraint();
 
@@ -187,6 +190,8 @@ class MatomoTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_matomo_filter_incompatible_plugins() {
+		$this->mk_temp_dir();
+
 		$GLOBALS['MATOMO_MARKETPLACE_PLUGINS'] = [
 			__DIR__ . '/temp/CompatiblePlugin/CompatiblePlugin.php',
 			__DIR__ . '/temp/IncompatiblePlugin/IncompatiblePlugin.php',
@@ -239,5 +244,14 @@ class MatomoTest extends MatomoUnit_TestCase {
 	private function get_compatible_constraint() {
 		$current_major_version = $this->get_current_major_version();
 		return '>=' . $current_major_version . '.0.0-b1,<' . ( $current_major_version + 1 ) . '.0.0-b1';
+	}
+
+	private function mk_temp_dir() {
+		clearstatcache();
+
+		$dir = dirname( $this->get_test_plugin_manifest_path() );
+		if ( ! is_dir( $dir ) ) {
+			mkdir( $dir, 0777, true );
+		}
 	}
 }
