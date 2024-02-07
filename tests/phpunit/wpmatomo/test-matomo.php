@@ -166,7 +166,6 @@ class MatomoTest extends MatomoUnit_TestCase {
 		$this->assertFalse( $actual );
 
 		sleep( 1 ); // so file modified time increases
-		clearstatcache( false, $this->get_test_plugin_manifest_path() );
 
 		$plugin_json_contents = [
 			'require' => [ 'matomo' => $compatible_constraint ],

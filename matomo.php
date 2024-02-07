@@ -197,6 +197,8 @@ function matomo_is_plugin_compatible( $wp_plugin_file ) {
 		return false;
 	}
 
+	clearstatcache( false, $plugin_manifest_path );
+
 	$modified_time = filemtime( $plugin_manifest_path );
 	if ( false === $modified_time ) {
 		return false;
@@ -204,15 +206,12 @@ function matomo_is_plugin_compatible( $wp_plugin_file ) {
 
 	$cache_key   = 'matomo_plugin_compatible_' . basename( $wp_plugin_file ) . '_' . \Piwik\Version::VERSION . '_' . $modified_time;
 	$cache_value = get_transient( $cache_key );
-
 	if ( false === $cache_value ) {
 		// assume the plugin is not compatible in case the below code fails.
 		// this way, the following request will work rather than trigger the same
 		// error.
 		$one_day = 24 * 60 * 60;
 		set_transient( $cache_key, 0, $one_day );
-
-		clearstatcache( false, $plugin_manifest_path );
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		$plugin_manifest = file_get_contents( $plugin_manifest_path );
