@@ -187,6 +187,78 @@ function matomo_rel_path( $to_dir, $from_dir ) {
 	return $relative_path;
 }
 
+function matomo_is_plugin_compatible( $wp_plugin_file ) {
+	require_once __DIR__ . '/app/core/Version.php';
+
+	$plugin_manifest_path = dirname( $wp_plugin_file ) . '/plugin.json';
+	clearstatcache( false, $plugin_manifest_path );
+
+	if ( ! is_file( $plugin_manifest_path )
+		|| ! is_readable( $plugin_manifest_path )
+	) {
+		return false;
+	}
+
+	$modified_time = filemtime( $plugin_manifest_path );
+	if ( false === $modified_time ) {
+		return false;
+	}
+
+	$cache_key   = 'matomo_plugin_compatible_' . basename( $wp_plugin_file ) . '_' . \Piwik\Version::VERSION . '_' . $modified_time;
+	$cache_value = get_transient( $cache_key );
+	if ( false === $cache_value ) {
+		// assume the plugin is not compatible in case the below code fails.
+		// this way, the next request will work rather than trigger the same
+		// error.
+		$one_day = 24 * 60 * 60;
+		set_transient( $cache_key, 0, $one_day );
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$plugin_manifest = file_get_contents( $plugin_manifest_path );
+		$plugin_manifest = json_decode( $plugin_manifest, true );
+		if ( empty( $plugin_manifest['require']['matomo'] )
+			&& empty( $plugin_manifest['require']['piwik'] )
+		) {
+			return false;
+		}
+
+		$core_requirement = isset( $plugin_manifest['require']['matomo'] )
+			? $plugin_manifest['require']['matomo']
+			: $plugin_manifest['require']['piwik'];
+
+		require_once __DIR__ . '/app/vendor/autoload.php';
+
+		$dependency           = new \Piwik\Plugin\Dependency();
+		$missing_dependencies = $dependency->getMissingDependencies( [ 'matomo' => $core_requirement ] );
+
+		$is_compatible = empty( $missing_dependencies );
+		$cache_value   = (int) $is_compatible;
+
+		$two_months = 60 * 60 * 24 * 60;
+		set_transient( $cache_key, $cache_value, $two_months );
+	}
+
+	return 1 === (int) $cache_value;
+}
+
+function matomo_filter_incompatible_plugins( &$plugin_list ) {
+	if ( empty( $GLOBALS['MATOMO_MARKETPLACE_PLUGINS'] ) ) {
+		return;
+	}
+
+	$incompatible_plugins = [];
+	foreach ( $GLOBALS['MATOMO_MARKETPLACE_PLUGINS'] as $wp_plugin_file ) {
+		if ( matomo_is_plugin_compatible( $wp_plugin_file ) ) {
+			continue;
+		}
+
+		$plugin_name            = basename( dirname( $wp_plugin_file ) );
+		$incompatible_plugins[] = $plugin_name;
+	}
+
+	$plugin_list = array_values( array_diff( $plugin_list, $incompatible_plugins ) );
+}
+
 function matomo_add_plugin( $plugins_directory, $wp_plugin_file, $is_marketplace_plugin = false ) {
 	if ( ! in_array( $wp_plugin_file, $GLOBALS['MATOMO_PLUGIN_FILES'], true ) ) {
 		$GLOBALS['MATOMO_PLUGIN_FILES'][] = $wp_plugin_file;

@@ -29,6 +29,8 @@ class Bootstrap {
 
 	private static $bootstrapped_by_wordpress = false;
 
+	private static $are_incompatible_plugins_filtered = false;
+
 	/**
 	 * Tests only
 	 *
@@ -51,6 +53,12 @@ class Bootstrap {
 
 		self::$bootstrapped_by_wordpress = true;
 		self::$assume_not_bootstrapped   = false; // we need to unset it again to prevent recursion
+
+		if ( ! self::$are_incompatible_plugins_filtered ) {
+			matomo_filter_incompatible_plugins( $GLOBALS['MATOMO_PLUGINS_ENABLED'] );
+
+			self::$are_incompatible_plugins_filtered = true;
+		}
 
 		if ( ! defined( 'PIWIK_ENABLE_DISPATCH' ) ) {
 			define( 'PIWIK_ENABLE_DISPATCH', false );
