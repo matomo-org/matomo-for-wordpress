@@ -6,7 +6,7 @@
  *
  */
 
-import { $ } from '@wdio/globals';
+import { $, browser } from '@wdio/globals';
 import MwpPage from './page.js';
 
 class MwpMarketplacePage extends MwpPage {
@@ -16,6 +16,18 @@ class MwpMarketplacePage extends MwpPage {
 
   async openInstallPluginsTab() {
     await $('a.nav-tab=Install Plugins').click();
+
+    await $('td.column-version').waitForExist();
+
+    // remove version strings so test will pass when plugin requirements
+    // change
+    await browser.execute(() => {
+      $('td.column-version').each((i, e) => {
+        $(e).html(
+          $(e).html().replace(/\d+\.\d+\.\d+/g, '-')
+        );
+      });
+    });
   }
 
   async openSubscriptionsTab() {
