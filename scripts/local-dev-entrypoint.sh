@@ -100,8 +100,8 @@ if [ ! -f "/var/www/html/$WORDPRESS_FOLDER/wp-config.php" ]; then
 define( 'WP_ALLOW_MULTISITE', true );
 define( 'MULTISITE', true );
 define( 'SUBDOMAIN_INSTALL', false );
-define( 'DOMAIN_CURRENT_SITE', 'localhost:3000' );
-define( 'PATH_CURRENT_SITE', '/6.3.2-multi/' );
+define( 'DOMAIN_CURRENT_SITE', 'localhost' . ($PORT === 80 ? '' : ':$PORT') );
+define( 'PATH_CURRENT_SITE', '/$WORDPRESS_FOLDER/' );
 define( 'SITE_ID_CURRENT_SITE', 1 );
 define( 'BLOG_ID_CURRENT_SITE', 1 );
 "
@@ -150,34 +150,44 @@ EOF
   echo "setup wp-config.php!"
 fi
 
+HOSTNAME=localhost
+if [[ $PORT != "80" ]]; then
+  HOSTNAME="$HOSTNAME:$PORT"
+fi
+
 # install wordpress
+echo "installing wordpress"
 if [[ "$MULTISITE" = "1" ]]; then
-  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER core multisite-install --url=localhost:3000 --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER core multisite-install --url=$HOSTNAME --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
 
   cat > "/var/www/html/$WORDPRESS_FOLDER/.htaccess" <<EOF
 RewriteEngine On
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-RewriteBase /6.3.2-multi/
-RewriteRule ^index\.php$ - [L]
+RewriteBase /$WORDPRESS_FOLDER/
+RewriteRule ^index\.php\$ - [L]
 
 # add a trailing slash to /wp-admin
-RewriteRule ^([_0-9a-zA-Z-]+/)?wp-admin$ $1wp-admin/ [R=301,L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?wp-admin\$ \$1wp-admin/ [R=301,L]
 
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
-RewriteRule ^([_0-9a-zA-Z-]+/)?(wp-(content|admin|includes).*) $2 [L]
-RewriteRule ^([_0-9a-zA-Z-]+/)?(.*\.php)$ $2 [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?(wp-(content|admin|includes).*) \$2 [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?(.*\.php)\$ \$2 [L]
 RewriteRule . index.php [L]
 EOF
 
-  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set siteurl "http://localhost:3000/$WORDPRESS_FOLDER"
-  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set home "http://localhost:3000/$WORDPRESS_FOLDER/main"
-else
-  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER core install --url=localhost:3000 --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set siteurl "http://$HOSTNAME/$WORDPRESS_FOLDER"
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set home "http://$HOSTNAME/$WORDPRESS_FOLDER"
 
-  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set siteurl "http://localhost:3000/$WORDPRESS_FOLDER"
-  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set home "http://localhost:3000/$WORDPRESS_FOLDER"
+  # create test sites
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER site create --slug=test2
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER site create --slug=test3
+else
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER core install --url="$HOSTNAME" --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
+
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set siteurl "http://$HOSTNAME/$WORDPRESS_FOLDER"
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set home "http://$HOSTNAME/$WORDPRESS_FOLDER"
 fi
 
 # link matomo for wordpress volume as wordpress plugin
@@ -189,7 +199,11 @@ if [[ -d "/var/www/html/woocommerce-piwik-analytics" && ! -d "/var/www/html/$WOR
   ln -s /var/www/html/woocommerce-piwik-analytics /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/woocommerce-piwik-analytics
 fi
 
-/var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin activate matomo
+if [[ "$MULTISITE" = "1" ]]; then
+  COMMAND_SUFFIX=" --network"
+fi
+
+/var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin activate matomo $COMMAND_SUFFIX
 /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER matomo install
 
 # update site created date for e2e tests
