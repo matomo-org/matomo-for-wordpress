@@ -33,7 +33,12 @@ class Website {
     const wordpressFolder = process.env.WORDPRESS_FOLDER || wordpressVersion;
     const wordpressVersionUrlPart = wordpressFolder ? `/${wordpressFolder}` : '';
 
-    return `${process.env.WORDPRESS_URL || 'http://localhost:3000'}${wordpressVersionUrlPart}`
+    let defaultHostname = 'localhost';
+    if (process.env.PORT && process.env.PORT !== '80') {
+      defaultHostname = `${defaultHostname}:${process.env.PORT}`;
+    }
+
+    return `${process.env.WORDPRESS_URL || `http://${defaultHostname}`}${wordpressVersionUrlPart}`
   }
 
   async login() {
