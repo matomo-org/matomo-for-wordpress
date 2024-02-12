@@ -22,9 +22,9 @@ class MwpMarketplacePage extends MwpPage {
     // remove version strings so test will pass when plugin requirements
     // change
     await browser.execute(() => {
-      $('td.column-version').each((i, e) => {
-        $(e).html(
-          $(e).html().replace(/\d+\.\d+\.\d+/g, '-')
+      window.jQuery('td.column-version').each((i, e) => {
+        window.jQuery(e).html(
+          window.jQuery(e).html().replace(/\d+\.\d+\.\d+/g, '-')
         );
       });
     });
