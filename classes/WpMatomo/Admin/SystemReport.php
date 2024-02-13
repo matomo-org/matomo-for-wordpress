@@ -71,35 +71,7 @@ class SystemReport {
 	const TROUBLESHOOT_RUN_UPDATER        = 'matomo_troubleshooting_action_run_updater';
 
 	private $not_compatible_plugins = [
-		'background-manager',
-		// Uses an old version of Twig and plugin is no longer maintained.
-		'all-in-one-event-calendar',
-		// Uses an old version of Twig
-		'tweet-old-post-pro',
-		// uses a newer version of monolog
-		'wp-rss-aggregator',
-		// twig conflict
-		'age-verification-for-woocommerce',
-		// see https://github.com/matomo-org/matomo-for-wordpress/issues/428
 		'minify-html-markup',
-		// see https://wordpress.org/support/topic/graphs-are-not-displayed-in-the-visits-overview-widget/#post-14298068
-		'bigbuy-wc-dropshipping-connector',
-		// see https://wordpress.org/support/topic/20-total-errors-during-this-script-execution/
-		'google-listings-and-ads',
-		// see https://wordpress.org/support/topic/20-total-errors-during-this-script-execution/
-		'post-smtp',
-		// see https://wordpress.org/support/topic/activation-of-another-plugin-breaks-matomo/#post-15045079
-		'adshares',
-		// see https://github.com/matomo-org/matomo-for-wordpress/issues/618
-		'bluehost-wordpress-plugin',
-		// see https://wordpress.org/support/topic/archive-error-with-wp-rocket/
-		'wp-rocket',
-		// see https://github.com/matomo-org/matomo-for-wordpress/issues/697
-		'backwpup',
-		// see https://github.com/matomo-org/matomo-for-wordpress/issues/710
-		'fs-poster',
-		// see https://github.com/matomo-org/matomo-for-wordpress/issues/790
-		'advanced-gutenberg',
 	];
 
 	private $valid_tabs = [ 'troubleshooting' ];
@@ -1856,39 +1828,15 @@ class SystemReport {
 			);
 
 			$used_not_compatible = array_intersect( $active_plugins, $this->not_compatible_plugins );
-			if ( in_array( 'wp-rocket', $used_not_compatible, true ) ) {
-				if ( defined( 'WP_ROCKET_VERSION' ) && ( version_compare( WP_ROCKET_VERSION, '3.11.5' ) <= 0 ) ) {
-					unset( $used_not_compatible[ array_search( 'wp-rocket', $used_not_compatible, true ) ] );
-				}
-			}
-
 			if ( ! empty( $used_not_compatible ) ) {
 				$additional_comment = '';
-				if ( in_array( 'tweet-old-post-pro', $used_not_compatible, true ) ) {
-					$additional_comment .= '<br><br>' . esc_html__( 'A workaround for Revive Old Posts Pro may be to add the following line to your "wp-config.php"', 'matomo' ) . '<br><code>define( \'MATOMO_SUPPORT_ASYNC_ARCHIVING\', false );</code>.';
-				}
-				if ( in_array( 'post-smtp', $used_not_compatible, true ) ) {
-					$additional_comment .= '<br><br>' . esc_html__( 'The PDF report files from the email reports will be missing when the PostSMTP mode is selected but it works when the PHPMailer mode is selected.', 'matomo' );
-				}
-				if ( in_array( 'wp-rocket', $used_not_compatible, true ) ) {
-					$additional_comment .= '<br><br>' . sprintf( esc_html__( 'WP-Rocket is incompatible from version 3.12. Until fixes, please reinstall version 3.11.5 if you have a newer version. For more information please visit %s', 'matomo' ), sprintf( '<a href="%s" target="_blank">%s</a>', 'https://github.com/matomo-org/matomo-for-wordpress/wiki/Downgrade-wp-rocket-to-a-version-compatible-with-the-Matomo-plugin', esc_html__( 'How to downgrade Wp-rocket to be compatible with Matomo', 'matomo' ) ) );
-				}
-				$is_warning = false;
-				$is_error   = false;
 				if ( count( $used_not_compatible ) ) {
-					$is_warning = true;
-					$is_error   = false;
-					if ( in_array( 'cookiebot', $used_not_compatible, true ) ) {
-						$is_warning = false;
-						$is_error   = true;
-					}
-
 					$rows[] = [
 						'name'       => __( 'Not compatible plugins', 'matomo' ),
 						'value'      => count( $used_not_compatible ),
 						'comment'    => implode( ', ', $used_not_compatible ) . '<br><br>' . sprintf( esc_html__( 'Matomo may work fine when using these plugins but there may be some issues. For more information %1$sSee %2$s', 'matomo' ), '<br/>', sprintf( '<a href="%s" target="_blank">%s</a>', 'https://matomo.org/faq/wordpress/which-plugins-is-matomo-for-wordpress-known-to-be-not-compatible-with/', esc_html__( 'this FAQ', 'matomo' ) ) ) . $additional_comment,
-						'is_warning' => $is_warning,
-						'is_error'   => $is_error,
+						'is_warning' => true,
+						'is_error'   => false,
 					];
 				}
 			}
