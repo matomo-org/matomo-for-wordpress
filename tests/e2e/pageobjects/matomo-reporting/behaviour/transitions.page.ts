@@ -6,16 +6,18 @@
  *
  */
 
-import { $ } from '@wdio/globals';
+import { $, browser } from '@wdio/globals';
 import MatomoReportingPage from '../../matomo-reporting.page.js';
 
 class TransitionsPage extends MatomoReportingPage {
   async open() {
     const result = await super.open('General_Actions.Transitions_Transitions');
 
+    await browser.pause(500);
     await browser.waitUntil(
       async () => !(await $('#transitions_inline_loading').isDisplayed()),
     );
+    await browser.pause(500);
 
     return result;
   }
