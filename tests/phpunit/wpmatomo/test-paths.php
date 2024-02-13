@@ -140,55 +140,39 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_get_relative_dir_to_matomo_with_matomo_in_path_for_tracker_js() {
-		// run the test only if we have been able to rename the path
-		if ( $this->add_matomo_in_document_root() ) {
-			$valid_values                    = array(
-				'matomo.js',
-			);
-			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
-			$val                             = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js', $temporary_matomo_analytics_file );
-			$this->assertContains( $val, $valid_values );
-			// automatically double check that it works
-			$this->assertTrue( is_file( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js' ) );
-		} else {
-			$this->fail( 'Can\'t rename.' );
-		}
+		$valid_values                    = array(
+			'matomo.js',
+		);
+		$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
+		$val                             = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js', $temporary_matomo_analytics_file );
+		$this->assertContains( $val, $valid_values );
+		// automatically double check that it works
+		$this->assertTrue( is_file( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js' ) );
 	}
 
 	public function test_get_relative_dir_to_matomo_with_matomo_in_path_for_upload_dir() {
-		// run the test only if we have been able to rename the path
-		if ( $this->add_matomo_in_document_root() ) {
-			$valid_values = array(
-				'../../../uploads/matomo',
-			);
+		$valid_values = array(
+			'../../../uploads/matomo',
+		);
 
-			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
-			// do not use the path get upload dir method: it returns the path on the test instance
-			$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo', $temporary_matomo_analytics_file );
-			$this->assertContains( $val, $valid_values );
-			// do not check like the others test if the folder exist: in unit tests outside a WordPress context, uploads folder does not ezist
-			// $this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo' ) );
-		} else {
-			$this->fail( 'Can\'t rename.' );
-		}
+		$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
+		// do not use the path get upload dir method: it returns the path on the test instance
+		$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo', $temporary_matomo_analytics_file );
+		$this->assertContains( $val, $valid_values );
+		$this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo' ) );
 	}
 
 	public function test_get_relative_dir_to_matomo_with_matomo_in_path_for_upload_dir_config() {
-		// run the test only if we have been able to rename the path
-		if ( $this->add_matomo_in_document_root() ) {
-			$valid_values = array(
-				'../../../uploads/matomo/config',
-			);
+		$valid_values = array(
+			'../../../uploads/matomo/config',
+		);
 
-			$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
-			// do not use the path get upload dir method: it returns the path on the test instance
-			$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config', $temporary_matomo_analytics_file );
-			$this->assertContains( $val, $valid_values );
-			// do not check like the others test if the folder exist: in unit tests outside a WordPress context, uploads folder does not ezist
-			// $this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config' ) );
-		} else {
-			$this->fail( 'Can\'t rename.' );
-		}
+		$temporary_matomo_analytics_file = $this->get_alternate_matomo_analytics_file();
+		// do not use the path get upload dir method: it returns the path on the test instance
+		$val = $this->paths->get_relative_dir_to_matomo( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config', $temporary_matomo_analytics_file );
+		$this->assertContains( $val, $valid_values );
+		// do not check like the others test if the folder exist: in unit tests outside a WordPress context, uploads folder does not ezist
+		// $this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config' ) );
 	}
 
 	public function test_clear_assets_dir_does_not_fail() {
