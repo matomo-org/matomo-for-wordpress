@@ -1271,7 +1271,7 @@ class SystemReport {
 					array(
 						'method'    => 'GET',
 						'sslverify' => false,
-						'timeout'   => 3,
+						'timeout'   => defined( 'MATOMO_LOCAL_ENVIRONMENT' ) && MATOMO_LOCAL_ENVIRONMENT ? 5 : 2,
 					)
 				);
 				if ( is_array( $result ) ) {
