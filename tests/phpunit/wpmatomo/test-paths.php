@@ -151,7 +151,7 @@ class PathsTest extends MatomoUnit_TestCase {
 			// automatically double check that it works
 			$this->assertTrue( is_file( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js' ) );
 		} else {
-			$this->markTestSkipped( 'Can t rename.' );
+			$this->fail( 'Can\'t rename.' );
 		}
 	}
 
@@ -169,7 +169,7 @@ class PathsTest extends MatomoUnit_TestCase {
 			// do not check like the others test if the folder exist: in unit tests outside a WordPress context, uploads folder does not ezist
 			// $this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo' ) );
 		} else {
-			$this->markTestSkipped( 'Can t rename.' );
+			$this->fail( 'Can\'t rename.' );
 		}
 	}
 
@@ -187,7 +187,7 @@ class PathsTest extends MatomoUnit_TestCase {
 			// do not check like the others test if the folder exist: in unit tests outside a WordPress context, uploads folder does not ezist
 			// $this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config' ) );
 		} else {
-			$this->markTestSkipped( 'Can t rename.' );
+			$this->fail( 'Can\'t rename.' );
 		}
 	}
 
