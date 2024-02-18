@@ -48,7 +48,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	protected $disable_temp_tables = false;
 
 	/**
-	 * @param $query
+	 * @param string $query
 	 *
 	 * @return mixed
 	 * phpcs:disable PSR2.Methods.MethodDeclaration.Underscore
@@ -62,7 +62,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	}
 
 	/**
-	 * @param $query
+	 * @param string $query
 	 *
 	 * @return mixed
 	 * phpcs:disable PSR2.Methods.MethodDeclaration.Underscore

@@ -230,7 +230,7 @@ class MatomoCommands extends WP_CLI_Command {
 	}
 
 	/**
-	 * @param $assoc_args
+	 * @param bool $force
 	 */
 	private function do_update( $force ) {
 		$settings = new Settings();

@@ -180,8 +180,8 @@ class Sync {
 	 * Sync all users. Make sure to always pass all sites that exist within a given site... you cannot just sync an individual
 	 * user... we would delete all other users
 	 *
-	 * @param WP_User[] $users
-	 * @param $idsite
+	 * @param WP_User[]  $users
+	 * @param int|string $idsite
 	 */
 	protected function sync_users( $users, $idsite ) {
 		Bootstrap::do_bootstrap();
