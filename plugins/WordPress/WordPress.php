@@ -436,10 +436,11 @@ class WordPress extends Plugin
         throw new \Exception('This feature is not available');
     }
 
-	public function getStylesheetFiles(&$files)
-	{
-		$files[] = "../plugins/WordPress/stylesheets/user.css";
-		$files[] = "../plugins/WordPress/stylesheets/optout.css";
-		$files[] = "../plugins/WordPress/stylesheets/export.css";
-	}
+    public function getStylesheetFiles(&$files)
+    {
+        $files[] = "../plugins/WordPress/stylesheets/user.css";
+        $files[] = "../plugins/WordPress/stylesheets/optout.css";
+        $files[] = "../plugins/WordPress/stylesheets/export.css";
+        $files[] = "../plugins/WordPress/stylesheets/blogselection.css";
+    }
 }

@@ -119,8 +119,8 @@ class Paths {
 	/**
 	 * parameter matomo_file is required for the unit test cases (when checking with a path including the string matomo)
 	 *
-	 * @param $target_dir
-	 * @param string     $matomo_file
+	 * @param string $target_dir
+	 * @param string $matomo_file
 	 *
 	 * @return string
 	 */

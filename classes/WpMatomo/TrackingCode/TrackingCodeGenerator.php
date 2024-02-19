@@ -211,7 +211,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 	}
 
 	/**
-	 * @param $idsite
+	 * @param int|string $idsite
 	 *
 	 * @return array
 	 */

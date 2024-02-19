@@ -33,6 +33,11 @@ ol.matomo-list {
     min-height: 50px;
 }
 
+.matomo-plugin-list .plugin-card .desc > p.matomo-description,
+.matomo-plugin-list .plugin-card .desc > p.authors {
+    margin: 1em 0;
+}
+
 .matomo-marketplace-notice .dashicons-video-alt3 {
     display: inline-block;
 }

@@ -47,7 +47,7 @@ class Geoip2 {
 	}
 
 	/**
-	 * @param $ip
+	 * @param string $ip
 	 *
 	 * @return \GeoIp2\Model\City|mixed
 	 * @throws \GeoIp2\Exception\AddressNotFoundException In case IP address is not found.

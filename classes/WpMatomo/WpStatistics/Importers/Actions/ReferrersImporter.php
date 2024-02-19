@@ -49,7 +49,7 @@ class ReferrersImporter extends RecordImporter implements ActionsInterface {
 	 * Matomo expects some fixed values for the search engine.
 	 * Convert them here
 	 *
-	 * @param $wp_statistics_data
+	 * @param array $wp_statistics_data
 	 *
 	 * @return void
 	 */

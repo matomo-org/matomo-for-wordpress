@@ -20,11 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Data {
 
 	/**
-	 * @param $report_metadata
-	 * @param $period
-	 * @param $date
-	 * @param $sort_by_column
-	 * @param $filter_limit
+	 * @param array      $report_metadata
+	 * @param string     $period
+	 * @param string     $date
+	 * @param string     $sort_by_column
+	 * @param string|int $filter_limit
 	 *
 	 * @return array  An array containing reportData, metrics, columns, ...
 	 */
