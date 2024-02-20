@@ -18,7 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Paths {
 
-	private static $host_init_filesystem = false;
+	private static $host_init_filesystem        = false;
+	private static $host_init_filesystem_failed = false;
 
 	public function get_file_system() {
 		if ( ! function_exists( 'WP_Filesystem' ) ) {
@@ -26,15 +27,20 @@ class Paths {
 		}
 
 		if ( ! self::$host_init_filesystem ) {
-			self::$host_init_filesystem = true;
-			WP_Filesystem();
+			self::$host_init_filesystem        = true;
+			self::$host_init_filesystem_failed = WP_Filesystem();
 		}
+
 		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
 			require_once ABSPATH . '/wp-admin/includes/class-wp-filesystem-base.php';
 			require_once ABSPATH . '/wp-admin/includes/class-wp-filesystem-direct.php';
 		}
 
 		return new WP_Filesystem_Direct( new stdClass() );
+	}
+
+	public function get_host_init_filesystem_failed() {
+		return self::$host_init_filesystem_failed;
 	}
 
 	public function get_upload_base_url() {
@@ -209,5 +215,17 @@ class Paths {
 		if ( $global_dir && $global_dir !== $dir ) {
 			$file_system_direct->rmdir( $dir );
 		}
+	}
+
+	public function is_upload_dir_writable() {
+		$upload_dir = $this->get_upload_base_dir();
+
+		// the WP direct filesystem abstraction may not be available based on user
+		// configuration. in this case, we can't write to the upload dir using WP_Filesystem
+		$is_filesystem_direct_available = defined( 'FS_CHMOD_FILE' );
+		return is_dir( $upload_dir )
+			&& is_writable( $upload_dir )
+			&& ! $this->get_host_init_filesystem_failed()
+			&& $is_filesystem_direct_available;
 	}
 }

@@ -1241,6 +1241,15 @@ class SystemReport {
 			];
 		}
 
+		$paths = new Paths();
+		$paths->get_file_system();
+		$rows[] = [
+			'name'       => 'WP Filesystem Initialized',
+			'value'      => ! $paths->get_host_init_filesystem_failed(),
+			'is_warning' => ! $paths->get_host_init_filesystem_failed(),
+			'comment'    => esc_html__( 'The WordPress Filesystem was not initialized correctly (WP_Filesystem() returned false). This indicates a WordPress or server configuration issue, please contact your hosting provider to resolve it.', 'matomo' ),
+		];
+
 		return $rows;
 	}
 

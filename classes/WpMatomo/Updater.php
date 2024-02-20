@@ -152,7 +152,7 @@ class Updater {
 		$upload_dir = $paths->get_upload_base_dir();
 
 		$wp_filesystem = $paths->get_file_system();
-		if ( is_dir( $upload_dir ) && is_writable( $upload_dir ) ) {
+		if ( $paths->is_upload_dir_writable() ) {
 			$wp_filesystem->put_contents( $upload_dir . '/index.php', '//hello' );
 			$wp_filesystem->put_contents( $upload_dir . '/index.html', '//hello' );
 			$wp_filesystem->put_contents( $upload_dir . '/index.htm', '//hello' );
@@ -167,7 +167,7 @@ class Updater {
 			);
 		}
 		$config_dir = $paths->get_config_ini_path();
-		if ( is_dir( $config_dir ) && is_writable( $config_dir ) ) {
+		if ( $paths->is_upload_dir_writable() ) {
 			$wp_filesystem->put_contents( $config_dir . '/index.php', '//hello' );
 			$wp_filesystem->put_contents( $config_dir . '/index.html', '//hello' );
 			$wp_filesystem->put_contents( $config_dir . '/index.htm', '//hello' );
