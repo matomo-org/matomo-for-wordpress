@@ -103,7 +103,7 @@ rm -rf $MATOMO_ROOT/vendor/container-interop/container-interop/docs
 rm -rf $MATOMO_ROOT/vendor/davaxi/sparkline/composer-8.json
 rm -rf $MATOMO_ROOT/vendor/davaxi/sparkline/docker-compose.yml
 rm -rf $MATOMO_ROOT/vendor/davaxi/sparkline/Dockerfile
-rm -rf $MATOMO_ROOT/vendor/geoip2/geoip2/examples/
+rm -rf $MATOMO_ROOT/vendor/prefixed/geoip2/geoip2/examples/
 rm -rf $MATOMO_ROOT/vendor/lox/xhprof/bin
 rm -rf $MATOMO_ROOT/vendor/lox/xhprof/examples
 rm -rf $MATOMO_ROOT/vendor/lox/xhprof/scripts
