@@ -18,8 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Paths {
 
-	private static $host_init_filesystem        = false;
-	private static $host_init_filesystem_failed = false;
+	private static $host_init_filesystem           = false;
+	private static $host_init_filesystem_succeeded = false;
 
 	public function get_file_system() {
 		if ( ! function_exists( 'WP_Filesystem' ) ) {
@@ -27,8 +27,8 @@ class Paths {
 		}
 
 		if ( ! self::$host_init_filesystem ) {
-			self::$host_init_filesystem        = true;
-			self::$host_init_filesystem_failed = WP_Filesystem();
+			self::$host_init_filesystem           = true;
+			self::$host_init_filesystem_succeeded = WP_Filesystem();
 		}
 
 		if ( ! class_exists( '\WP_Filesystem_Direct' ) ) {
@@ -39,8 +39,8 @@ class Paths {
 		return new WP_Filesystem_Direct( new stdClass() );
 	}
 
-	public function get_host_init_filesystem_failed() {
-		return self::$host_init_filesystem_failed;
+	public function get_host_init_filesystem_succeeded() {
+		return self::$host_init_filesystem_succeeded;
 	}
 
 	public function get_upload_base_url() {
@@ -217,6 +217,11 @@ class Paths {
 		}
 	}
 
+	/**
+	 * Must be called after Paths::get_file_system().
+	 *
+	 * @return bool
+	 */
 	public function is_upload_dir_writable() {
 		$upload_dir = $this->get_upload_base_dir();
 
@@ -225,7 +230,7 @@ class Paths {
 		$is_filesystem_direct_available = defined( 'FS_CHMOD_FILE' );
 		return is_dir( $upload_dir )
 			&& is_writable( $upload_dir )
-			&& ! $this->get_host_init_filesystem_failed()
+			&& $this->get_host_init_filesystem_succeeded()
 			&& $is_filesystem_direct_available;
 	}
 }
