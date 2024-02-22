@@ -1251,7 +1251,7 @@ class SystemReport {
 			'is_warning' => ! $filesystem_init_succeeded,
 			'comment'    => $filesystem_init_succeeded
 				? null
-				: esc_html__( 'The WordPress Filesystem was not initialized correctly (WP_Filesystem() returned false). This indicates a WordPress or server configuration issue, please contact your hosting provider to resolve it.', 'matomo' ),
+				: esc_html__( 'The WordPress Filesystem abstraction was not initialized correctly (WP_Filesystem() returned false). This indicates a WordPress or server configuration issue which may cause problems in Matomo and other plugins. To resolve it, contact your hosting provider.', 'matomo' ),
 		];
 
 		return $rows;
