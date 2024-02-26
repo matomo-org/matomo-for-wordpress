@@ -309,8 +309,8 @@ class Woocommerce extends Base {
 	}
 
 	/**
-	 * @param WC_Order $order
-	 * @param $item
+	 * @param WC_Order       $order
+	 * @param \WC_Order_Item $item
 	 *
 	 * @return mixed
 	 */

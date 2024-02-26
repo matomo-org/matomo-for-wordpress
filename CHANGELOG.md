@@ -1,5 +1,9 @@
 == Changelog ===
 
+= 5.0.4 =
+* Fix display error in the multisite site selector.
+* Remove diagnostics related to formerly incompatible WP plugins.
+
 = 5.0.3 =
 * Fix critical error that can occur while upgrading to Matomo for WordPress 5, if using Matomo marketplace plugins.
 

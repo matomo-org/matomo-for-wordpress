@@ -322,7 +322,7 @@ class Settings {
 	}
 
 	/**
-	 * @param $values
+	 * @param array $values
 	 *
 	 * @api
 	 */

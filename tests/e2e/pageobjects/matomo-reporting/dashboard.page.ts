@@ -6,7 +6,7 @@
  *
  */
 
-import { $, $$ } from '@wdio/globals';
+import { $, $$, browser } from '@wdio/globals';
 import MatomoReportingPage from '../matomo-reporting.page.js';
 
 class DashboardPage extends MatomoReportingPage {
@@ -25,8 +25,8 @@ class DashboardPage extends MatomoReportingPage {
     });
     await browser.execute(function () {
       $('.widget ul.rss').hide();
-      $('#visitsLive .realTimeWidget_datetime').hide();
     });
+    await this.addStylesToPage('#visitsLive .realTimeWidget_datetime { display: none !important; }');
     await this.waitForImages();
 
     return result;

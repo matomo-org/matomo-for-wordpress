@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1f6363ec0a0864e55f3b948721f24397
+class ComposerStaticInitf3a388dad1a85c624c7b09656cafd746
 {
     public static $files = array (
         '14f31c04451e5135516391e2ab40385d' => __DIR__ . '/../..' . '/php-di/php-di/src/functions.php',
@@ -16,6 +16,8 @@ class ComposerStaticInit1f6363ec0a0864e55f3b948721f24397
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Matomo\\Dependencies\\Archive_Tar' => __DIR__ . '/../..' . '/pear/archive_tar/Archive/Tar.php',
+        'Matomo\\Dependencies\\Console_Getopt' => __DIR__ . '/../..' . '/pear/console_getopt/Console/Getopt.php',
         'Matomo\\Dependencies\\DI\\Annotation\\Inject' => __DIR__ . '/../..' . '/php-di/php-di/src/Annotation/Inject.php',
         'Matomo\\Dependencies\\DI\\Annotation\\Injectable' => __DIR__ . '/../..' . '/php-di/php-di/src/Annotation/Injectable.php',
         'Matomo\\Dependencies\\DI\\CompiledContainer' => __DIR__ . '/../..' . '/php-di/php-di/src/CompiledContainer.php',
@@ -74,6 +76,37 @@ class ComposerStaticInit1f6363ec0a0864e55f3b948721f24397
         'Matomo\\Dependencies\\DI\\Invoker\\FactoryParameterResolver' => __DIR__ . '/../..' . '/php-di/php-di/src/Invoker/FactoryParameterResolver.php',
         'Matomo\\Dependencies\\DI\\NotFoundException' => __DIR__ . '/../..' . '/php-di/php-di/src/NotFoundException.php',
         'Matomo\\Dependencies\\DI\\Proxy\\ProxyFactory' => __DIR__ . '/../..' . '/php-di/php-di/src/Proxy/ProxyFactory.php',
+        'Matomo\\Dependencies\\GeoIp2\\Database\\Reader' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Database/Reader.php',
+        'Matomo\\Dependencies\\GeoIp2\\Exception\\AddressNotFoundException' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Exception/AddressNotFoundException.php',
+        'Matomo\\Dependencies\\GeoIp2\\Exception\\AuthenticationException' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Exception/AuthenticationException.php',
+        'Matomo\\Dependencies\\GeoIp2\\Exception\\GeoIp2Exception' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Exception/GeoIp2Exception.php',
+        'Matomo\\Dependencies\\GeoIp2\\Exception\\HttpException' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Exception/HttpException.php',
+        'Matomo\\Dependencies\\GeoIp2\\Exception\\InvalidRequestException' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Exception/InvalidRequestException.php',
+        'Matomo\\Dependencies\\GeoIp2\\Exception\\OutOfQueriesException' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Exception/OutOfQueriesException.php',
+        'Matomo\\Dependencies\\GeoIp2\\Model\\AbstractModel' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Model/AbstractModel.php',
+        'Matomo\\Dependencies\\GeoIp2\\Model\\AnonymousIp' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Model/AnonymousIp.php',
+        'Matomo\\Dependencies\\GeoIp2\\Model\\Asn' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Model/Asn.php',
+        'Matomo\\Dependencies\\GeoIp2\\Model\\City' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Model/City.php',
+        'Matomo\\Dependencies\\GeoIp2\\Model\\ConnectionType' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Model/ConnectionType.php',
+        'Matomo\\Dependencies\\GeoIp2\\Model\\Country' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Model/Country.php',
+        'Matomo\\Dependencies\\GeoIp2\\Model\\Domain' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Model/Domain.php',
+        'Matomo\\Dependencies\\GeoIp2\\Model\\Enterprise' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Model/Enterprise.php',
+        'Matomo\\Dependencies\\GeoIp2\\Model\\Insights' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Model/Insights.php',
+        'Matomo\\Dependencies\\GeoIp2\\Model\\Isp' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Model/Isp.php',
+        'Matomo\\Dependencies\\GeoIp2\\ProviderInterface' => __DIR__ . '/../..' . '/geoip2/geoip2/src/ProviderInterface.php',
+        'Matomo\\Dependencies\\GeoIp2\\Record\\AbstractPlaceRecord' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Record/AbstractPlaceRecord.php',
+        'Matomo\\Dependencies\\GeoIp2\\Record\\AbstractRecord' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Record/AbstractRecord.php',
+        'Matomo\\Dependencies\\GeoIp2\\Record\\City' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Record/City.php',
+        'Matomo\\Dependencies\\GeoIp2\\Record\\Continent' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Record/Continent.php',
+        'Matomo\\Dependencies\\GeoIp2\\Record\\Country' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Record/Country.php',
+        'Matomo\\Dependencies\\GeoIp2\\Record\\Location' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Record/Location.php',
+        'Matomo\\Dependencies\\GeoIp2\\Record\\MaxMind' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Record/MaxMind.php',
+        'Matomo\\Dependencies\\GeoIp2\\Record\\Postal' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Record/Postal.php',
+        'Matomo\\Dependencies\\GeoIp2\\Record\\RepresentedCountry' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Record/RepresentedCountry.php',
+        'Matomo\\Dependencies\\GeoIp2\\Record\\Subdivision' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Record/Subdivision.php',
+        'Matomo\\Dependencies\\GeoIp2\\Record\\Traits' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Record/Traits.php',
+        'Matomo\\Dependencies\\GeoIp2\\Util' => __DIR__ . '/../..' . '/geoip2/geoip2/src/Util.php',
+        'Matomo\\Dependencies\\GeoIp2\\WebService\\Client' => __DIR__ . '/../..' . '/geoip2/geoip2/src/WebService/Client.php',
         'Matomo\\Dependencies\\Invoker\\CallableResolver' => __DIR__ . '/../..' . '/php-di/invoker/src/CallableResolver.php',
         'Matomo\\Dependencies\\Invoker\\Exception\\InvocationException' => __DIR__ . '/../..' . '/php-di/invoker/src/Exception/InvocationException.php',
         'Matomo\\Dependencies\\Invoker\\Exception\\NotCallableException' => __DIR__ . '/../..' . '/php-di/invoker/src/Exception/NotCallableException.php',
@@ -89,6 +122,23 @@ class ComposerStaticInit1f6363ec0a0864e55f3b948721f24397
         'Matomo\\Dependencies\\Invoker\\ParameterResolver\\ResolverChain' => __DIR__ . '/../..' . '/php-di/invoker/src/ParameterResolver/ResolverChain.php',
         'Matomo\\Dependencies\\Invoker\\ParameterResolver\\TypeHintResolver' => __DIR__ . '/../..' . '/php-di/invoker/src/ParameterResolver/TypeHintResolver.php',
         'Matomo\\Dependencies\\Invoker\\Reflection\\CallableReflection' => __DIR__ . '/../..' . '/php-di/invoker/src/Reflection/CallableReflection.php',
+        'Matomo\\Dependencies\\MaxMind\\Db\\Reader' => __DIR__ . '/../..' . '/maxmind-db/reader/src/MaxMind/Db/Reader.php',
+        'Matomo\\Dependencies\\MaxMind\\Db\\Reader\\Decoder' => __DIR__ . '/../..' . '/maxmind-db/reader/src/MaxMind/Db/Reader/Decoder.php',
+        'Matomo\\Dependencies\\MaxMind\\Db\\Reader\\InvalidDatabaseException' => __DIR__ . '/../..' . '/maxmind-db/reader/src/MaxMind/Db/Reader/InvalidDatabaseException.php',
+        'Matomo\\Dependencies\\MaxMind\\Db\\Reader\\Metadata' => __DIR__ . '/../..' . '/maxmind-db/reader/src/MaxMind/Db/Reader/Metadata.php',
+        'Matomo\\Dependencies\\MaxMind\\Db\\Reader\\Util' => __DIR__ . '/../..' . '/maxmind-db/reader/src/MaxMind/Db/Reader/Util.php',
+        'Matomo\\Dependencies\\MaxMind\\Exception\\AuthenticationException' => __DIR__ . '/../..' . '/maxmind/web-service-common/src/Exception/AuthenticationException.php',
+        'Matomo\\Dependencies\\MaxMind\\Exception\\HttpException' => __DIR__ . '/../..' . '/maxmind/web-service-common/src/Exception/HttpException.php',
+        'Matomo\\Dependencies\\MaxMind\\Exception\\InsufficientFundsException' => __DIR__ . '/../..' . '/maxmind/web-service-common/src/Exception/InsufficientFundsException.php',
+        'Matomo\\Dependencies\\MaxMind\\Exception\\InvalidInputException' => __DIR__ . '/../..' . '/maxmind/web-service-common/src/Exception/InvalidInputException.php',
+        'Matomo\\Dependencies\\MaxMind\\Exception\\InvalidRequestException' => __DIR__ . '/../..' . '/maxmind/web-service-common/src/Exception/InvalidRequestException.php',
+        'Matomo\\Dependencies\\MaxMind\\Exception\\IpAddressNotFoundException' => __DIR__ . '/../..' . '/maxmind/web-service-common/src/Exception/IpAddressNotFoundException.php',
+        'Matomo\\Dependencies\\MaxMind\\Exception\\PermissionRequiredException' => __DIR__ . '/../..' . '/maxmind/web-service-common/src/Exception/PermissionRequiredException.php',
+        'Matomo\\Dependencies\\MaxMind\\Exception\\WebServiceException' => __DIR__ . '/../..' . '/maxmind/web-service-common/src/Exception/WebServiceException.php',
+        'Matomo\\Dependencies\\MaxMind\\WebService\\Client' => __DIR__ . '/../..' . '/maxmind/web-service-common/src/WebService/Client.php',
+        'Matomo\\Dependencies\\MaxMind\\WebService\\Http\\CurlRequest' => __DIR__ . '/../..' . '/maxmind/web-service-common/src/WebService/Http/CurlRequest.php',
+        'Matomo\\Dependencies\\MaxMind\\WebService\\Http\\Request' => __DIR__ . '/../..' . '/maxmind/web-service-common/src/WebService/Http/Request.php',
+        'Matomo\\Dependencies\\MaxMind\\WebService\\Http\\RequestFactory' => __DIR__ . '/../..' . '/maxmind/web-service-common/src/WebService/Http/RequestFactory.php',
         'Matomo\\Dependencies\\Monolog\\ErrorHandler' => __DIR__ . '/../..' . '/monolog/monolog/src/Monolog/ErrorHandler.php',
         'Matomo\\Dependencies\\Monolog\\Formatter\\ChromePHPFormatter' => __DIR__ . '/../..' . '/monolog/monolog/src/Monolog/Formatter/ChromePHPFormatter.php',
         'Matomo\\Dependencies\\Monolog\\Formatter\\ElasticaFormatter' => __DIR__ . '/../..' . '/monolog/monolog/src/Monolog/Formatter/ElasticaFormatter.php',
@@ -186,6 +236,7 @@ class ComposerStaticInit1f6363ec0a0864e55f3b948721f24397
         'Matomo\\Dependencies\\Monolog\\ResettableInterface' => __DIR__ . '/../..' . '/monolog/monolog/src/Monolog/ResettableInterface.php',
         'Matomo\\Dependencies\\Monolog\\SignalHandler' => __DIR__ . '/../..' . '/monolog/monolog/src/Monolog/SignalHandler.php',
         'Matomo\\Dependencies\\Monolog\\Utils' => __DIR__ . '/../..' . '/monolog/monolog/src/Monolog/Utils.php',
+        'Matomo\\Dependencies\\OS_Guess' => __DIR__ . '/../..' . '/pear/pear-core-minimal/src/OS/Guess.php',
         'Matomo\\Dependencies\\Opis\\Closure\\Analyzer' => __DIR__ . '/../..' . '/opis/closure/src/Analyzer.php',
         'Matomo\\Dependencies\\Opis\\Closure\\ClosureContext' => __DIR__ . '/../..' . '/opis/closure/src/ClosureContext.php',
         'Matomo\\Dependencies\\Opis\\Closure\\ClosureScope' => __DIR__ . '/../..' . '/opis/closure/src/ClosureScope.php',
@@ -196,6 +247,10 @@ class ComposerStaticInit1f6363ec0a0864e55f3b948721f24397
         'Matomo\\Dependencies\\Opis\\Closure\\SecurityProvider' => __DIR__ . '/../..' . '/opis/closure/src/SecurityProvider.php',
         'Matomo\\Dependencies\\Opis\\Closure\\SelfReference' => __DIR__ . '/../..' . '/opis/closure/src/SelfReference.php',
         'Matomo\\Dependencies\\Opis\\Closure\\SerializableClosure' => __DIR__ . '/../..' . '/opis/closure/src/SerializableClosure.php',
+        'Matomo\\Dependencies\\PEAR' => __DIR__ . '/../..' . '/pear/pear-core-minimal/src/PEAR.php',
+        'Matomo\\Dependencies\\PEAR_Error' => __DIR__ . '/../..' . '/pear/pear-core-minimal/src/PEAR.php',
+        'Matomo\\Dependencies\\PEAR_ErrorStack' => __DIR__ . '/../..' . '/pear/pear-core-minimal/src/PEAR/ErrorStack.php',
+        'Matomo\\Dependencies\\PEAR_Exception' => __DIR__ . '/../..' . '/pear/pear_exception/PEAR/Exception.php',
         'Matomo\\Dependencies\\PhpDocReader\\AnnotationException' => __DIR__ . '/../..' . '/php-di/phpdoc-reader/src/PhpDocReader/AnnotationException.php',
         'Matomo\\Dependencies\\PhpDocReader\\PhpDocReader' => __DIR__ . '/../..' . '/php-di/phpdoc-reader/src/PhpDocReader/PhpDocReader.php',
         'Matomo\\Dependencies\\PhpDocReader\\PhpParser\\TokenParser' => __DIR__ . '/../..' . '/php-di/phpdoc-reader/src/PhpDocReader/PhpParser/TokenParser.php',
@@ -702,6 +757,7 @@ class ComposerStaticInit1f6363ec0a0864e55f3b948721f24397
         'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\ServiceSubscriberInterface' => __DIR__ . '/../..' . '/symfony/service-contracts/ServiceSubscriberInterface.php',
         'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\ServiceSubscriberTrait' => __DIR__ . '/../..' . '/symfony/service-contracts/ServiceSubscriberTrait.php',
         'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\Test\\ServiceLocatorTest' => __DIR__ . '/../..' . '/symfony/service-contracts/Test/ServiceLocatorTest.php',
+        'Matomo\\Dependencies\\System' => __DIR__ . '/../..' . '/pear/pear-core-minimal/src/System.php',
         'Matomo\\Dependencies\\Twig\\Cache\\CacheInterface' => __DIR__ . '/../..' . '/twig/twig/src/Cache/CacheInterface.php',
         'Matomo\\Dependencies\\Twig\\Cache\\FilesystemCache' => __DIR__ . '/../..' . '/twig/twig/src/Cache/FilesystemCache.php',
         'Matomo\\Dependencies\\Twig\\Cache\\NullCache' => __DIR__ . '/../..' . '/twig/twig/src/Cache/NullCache.php',
@@ -878,12 +934,13 @@ class ComposerStaticInit1f6363ec0a0864e55f3b948721f24397
         'Matomo\\Dependencies\\Twig\\TwigTest' => __DIR__ . '/../..' . '/twig/twig/src/TwigTest.php',
         'Matomo\\Dependencies\\Twig\\Util\\DeprecationCollector' => __DIR__ . '/../..' . '/twig/twig/src/Util/DeprecationCollector.php',
         'Matomo\\Dependencies\\Twig\\Util\\TemplateDirIterator' => __DIR__ . '/../..' . '/twig/twig/src/Util/TemplateDirIterator.php',
+        'PEAR_PHPTest' => __DIR__ . '/../..' . '/pear/archive_tar/tests/phpt_test.php.inc',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit1f6363ec0a0864e55f3b948721f24397::$classMap;
+            $loader->classMap = ComposerStaticInitf3a388dad1a85c624c7b09656cafd746::$classMap;
 
         }, null, ClassLoader::class);
     }
