@@ -104,7 +104,8 @@ class PathsTest extends MatomoUnit_TestCase {
 
 	public function test_get_relative_dir_to_matomo() {
 		$valid_values = array(
-			'../tests/phpunit/wpmatomo', // travis
+			'../tests/phpunit/wpmatomo',
+			'../../../../../matomo-for-wordpress/tests/phpunit/wpmatomo', // github actions
 		);
 		$val          = $this->paths->get_relative_dir_to_matomo( __DIR__ );
 		$this->assertContains( $val, $valid_values );
@@ -203,8 +204,7 @@ class PathsTest extends MatomoUnit_TestCase {
 		$dir_to_test = $plugin_dir . 'plugins/WordPress';
 
 		$valid_values = array(
-			// local docker in github action where we symlink into wordpress
-			'../../test/wp-content/plugins/matomo/plugins/WordPress',
+			'../plugins/WordPress',
 		);
 		$val          = $this->paths->get_relative_dir_to_matomo( $dir_to_test );
 		$this->assertContains( $val, $valid_values );
