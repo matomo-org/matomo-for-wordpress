@@ -1,12 +1,12 @@
 {
-    "name": "pear/archive_tar",
+    "name": "pear\/archive_tar",
     "description": "Tar file management class with compression support (gzip, bzip2, lzma2)",
     "type": "library",
     "keywords": [
         "archive",
         "tar"
     ],
-    "homepage": "https://github.com/pear/Archive_Tar",
+    "homepage": "https:\/\/github.com\/pear\/Archive_Tar",
     "license": "BSD-3-Clause",
     "authors": [
         {
@@ -24,7 +24,7 @@
     ],
     "require": {
         "php": ">=5.2.0",
-        "pear/pear-core-minimal": "^1.10.0alpha2"
+        "pear\/pear-core-minimal": "^1.10.0alpha2"
     },
     "suggest": {
         "ext-zlib": "Gzip compression support.",
@@ -32,19 +32,19 @@
         "ext-xz": "Lzma2 compression support."
     },
     "autoload": {
-        "psr-0": {
-            "Archive_Tar": ""
-        }
+        "classmap": [
+            ""
+        ]
     },
     "include-path": [
-        "./"
+        ".\/"
     ],
     "support": {
-        "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=Archive_Tar",
-        "source": "https://github.com/pear/Archive_Tar"
+        "issues": "http:\/\/pear.php.net\/bugs\/search.php?cmd=display&package_name[]=Archive_Tar",
+        "source": "https:\/\/github.com\/pear\/Archive_Tar"
     },
     "require-dev": {
-        "phpunit/phpunit": "*"
+        "phpunit\/phpunit": "*"
     },
     "extra": {
         "branch-alias": {

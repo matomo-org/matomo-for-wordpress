@@ -1,4 +1,7 @@
 <?php
+
+namespace Matomo\Dependencies;
+
 /**
  * Dummy file to make autoloaders work
  *
@@ -11,4 +14,3 @@
  * @link     http://pear.php.net/package/PEAR
  */
 require_once __DIR__ . '/../PEAR.php';
-?>

@@ -114,7 +114,7 @@ rm -rf $MATOMO_ROOT/vendor/maxmind-db/reader/autoload.php
 rm -rf $MATOMO_ROOT/vendor/maxmind-db/reader/CHANGELOG.md
 rm -rf $MATOMO_ROOT/vendor/maxmind/web-service-common/dev-bin/
 rm -rf $MATOMO_ROOT/vendor/maxmind/web-service-common/CHANGELOG.md
-rm -rf $MATOMO_ROOT/vendor/pear/archive_tar/docs
+rm -rf $MATOMO_ROOT/vendor/prefixed/pear/archive_tar/docs
 rm -rf $MATOMO_ROOT/vendor/php-di/invoker/doc/
 rm -rf $MATOMO_ROOT/vendor/php-di/php-di/benchmarks/
 rm -rf $MATOMO_ROOT/vendor/symfony/console/Symfony/Component/Console/Resources/bin
@@ -125,8 +125,8 @@ rm -f $MATOMO_ROOT/vendor/prefixed/monolog/monolog/phpstan.neon.dist
 rm -f $MATOMO_ROOT/vendor/monolog/monolog/phpstan.neon.dist
 rm $MATOMO_ROOT/vendor/composer/installed.json
 rm $MATOMO_ROOT/vendor/lox/xhprof/package.xml
-rm $MATOMO_ROOT/vendor/pear/archive_tar/package.xml
-rm $MATOMO_ROOT/vendor/pear/console_getopt/package.xml
+rm $MATOMO_ROOT/vendor/prefixed/pear/archive_tar/package.xml
+rm $MATOMO_ROOT/vendor/prefixed/pear/console_getopt/package.xml
 
 rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/tools
 rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/examples

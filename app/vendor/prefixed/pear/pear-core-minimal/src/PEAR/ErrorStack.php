@@ -1,4 +1,7 @@
 <?php
+
+namespace Matomo\Dependencies;
+
 /**
  * Error Stack Implementation
  * 
@@ -25,7 +28,6 @@
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
  * @link       http://pear.php.net/package/PEAR_ErrorStack
  */
-
 /**
  * Singleton storage
  * 
@@ -41,7 +43,6 @@
  * @global array $GLOBALS['_PEAR_ERRORSTACK_SINGLETON']
  */
 $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'] = array();
-
 /**
  * Global error callback (default)
  * 
@@ -54,10 +55,7 @@ $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'] = array();
  * @access private
  * @global array $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK']
  */
-$GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK'] = array(
-    '*' => false,
-);
-
+$GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK'] = array('*' => \false);
 /**
  * Global Log object (default)
  * 
@@ -67,8 +65,7 @@ $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK'] = array(
  * @access private
  * @global array $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER']
  */
-$GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'] = false;
-
+$GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'] = \false;
 /**
  * Global Overriding Callback
  * 
@@ -79,7 +76,6 @@ $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'] = false;
  * @global array $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER']
  */
 $GLOBALS['_PEAR_ERRORSTACK_OVERRIDE_CALLBACK'] = array();
-
 /**#@+
  * One of four possible return values from the error Callback
  * @see PEAR_ErrorStack::_errorCallback()
@@ -88,38 +84,36 @@ $GLOBALS['_PEAR_ERRORSTACK_OVERRIDE_CALLBACK'] = array();
  * If this is returned, then the error will be both pushed onto the stack
  * and logged.
  */
-define('PEAR_ERRORSTACK_PUSHANDLOG', 1);
+\define('Matomo\\Dependencies\\PEAR_ERRORSTACK_PUSHANDLOG', 1);
 /**
  * If this is returned, then the error will only be pushed onto the stack,
  * and not logged.
  */
-define('PEAR_ERRORSTACK_PUSH', 2);
+\define('Matomo\\Dependencies\\PEAR_ERRORSTACK_PUSH', 2);
 /**
  * If this is returned, then the error will only be logged, but not pushed
  * onto the error stack.
  */
-define('PEAR_ERRORSTACK_LOG', 3);
+\define('Matomo\\Dependencies\\PEAR_ERRORSTACK_LOG', 3);
 /**
  * If this is returned, then the error is completely ignored.
  */
-define('PEAR_ERRORSTACK_IGNORE', 4);
+\define('Matomo\\Dependencies\\PEAR_ERRORSTACK_IGNORE', 4);
 /**
  * If this is returned, then the error is logged and die() is called.
  */
-define('PEAR_ERRORSTACK_DIE', 5);
+\define('Matomo\\Dependencies\\PEAR_ERRORSTACK_DIE', 5);
 /**#@-*/
-
 /**
  * Error code for an attempt to instantiate a non-class as a PEAR_ErrorStack in
  * the singleton method.
  */
-define('PEAR_ERRORSTACK_ERR_NONCLASS', 1);
-
+\define('Matomo\\Dependencies\\PEAR_ERRORSTACK_ERR_NONCLASS', 1);
 /**
  * Error code for an attempt to pass an object into {@link PEAR_ErrorStack::getMessage()}
  * that has no __toString() method
  */
-define('PEAR_ERRORSTACK_ERR_OBJTOSTRING', 2);
+\define('Matomo\\Dependencies\\PEAR_ERRORSTACK_ERR_OBJTOSTRING', 2);
 /**
  * Error Stack Implementation
  *
@@ -138,7 +132,8 @@ define('PEAR_ERRORSTACK_ERR_OBJTOSTRING', 2);
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
  * @link       http://pear.php.net/package/PEAR_ErrorStack
  */
-class PEAR_ErrorStack {
+class PEAR_ErrorStack
+{
     /**
      * Errors are stored in the order that they are pushed on the stack.
      * @since 0.4alpha Errors are no longer organized by error level.
@@ -148,7 +143,6 @@ class PEAR_ErrorStack {
      * @access private
      */
     var $_errors = array();
-
     /**
      * Storage of errors by level.
      *
@@ -158,21 +152,18 @@ class PEAR_ErrorStack {
      * @access private
      */
     var $_errorsByLevel = array();
-
     /**
      * Package name this error stack represents
      * @var string
      * @access protected
      */
     var $_package;
-    
     /**
      * Determines whether a PEAR_Error is thrown upon every error addition
      * @var boolean
      * @access private
      */
-    var $_compat = false;
-    
+    var $_compat = \false;
     /**
      * If set to a valid callback, this will be used to generate the error
      * message from the error code, otherwise the message passed in will be
@@ -180,8 +171,7 @@ class PEAR_ErrorStack {
      * @var false|string|array
      * @access private
      */
-    var $_msgCallback = false;
-    
+    var $_msgCallback = \false;
     /**
      * If set to a valid callback, this will be used to generate the error
      * context for an error.  For PHP-related errors, this will be a file
@@ -191,8 +181,7 @@ class PEAR_ErrorStack {
      * @var false|string|array
      * @access protected
      */
-    var $_contextCallback = false;
-
+    var $_contextCallback = \false;
     /**
      * If set to a valid callback, this will be called every time an error
      * is pushed onto the stack.  The return value will be used to determine
@@ -204,21 +193,18 @@ class PEAR_ErrorStack {
      * @access protected
      */
     var $_errorCallback = array();
-
     /**
      * PEAR::Log object for logging errors
      * @var false|Log
      * @access protected
      */
-    var $_logger = false;
-
+    var $_logger = \false;
     /**
      * Error messages - designed to be overridden
      * @var array
      * @abstract
      */
     var $_errorMsgs = array();
-
     /**
      * Set up a new error stack
      *
@@ -228,15 +214,13 @@ class PEAR_ErrorStack {
      *                 defaults to {@link getFileLine()}
      * @param boolean  $throwPEAR_Error
      */
-    function __construct($package, $msgCallback = false, $contextCallback = false,
-                         $throwPEAR_Error = false)
+    function __construct($package, $msgCallback = \false, $contextCallback = \false, $throwPEAR_Error = \false)
     {
         $this->_package = $package;
         $this->setMessageCallback($msgCallback);
         $this->setContextCallback($contextCallback);
         $this->_compat = $throwPEAR_Error;
     }
-    
     /**
      * Return a single error stack for this package.
      * 
@@ -251,28 +235,20 @@ class PEAR_ErrorStack {
      *
      * @return PEAR_ErrorStack
      */
-    public static function &singleton(
-        $package, $msgCallback = false, $contextCallback = false,
-        $throwPEAR_Error = false, $stackClass = 'PEAR_ErrorStack'
-    ) {
+    public static function &singleton($package, $msgCallback = \false, $contextCallback = \false, $throwPEAR_Error = \false, $stackClass = 'PEAR_ErrorStack')
+    {
         if (isset($GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package])) {
             return $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package];
         }
-        if (!class_exists($stackClass)) {
-            if (function_exists('debug_backtrace')) {
-                $trace = debug_backtrace();
+        if (!\class_exists($stackClass)) {
+            if (\function_exists('debug_backtrace')) {
+                $trace = \debug_backtrace();
             }
-            PEAR_ErrorStack::staticPush('PEAR_ErrorStack', PEAR_ERRORSTACK_ERR_NONCLASS,
-                'exception', array('stackclass' => $stackClass),
-                'stack class "%stackclass%" is not a valid class name (should be like PEAR_ErrorStack)',
-                false, $trace);
+            PEAR_ErrorStack::staticPush('PEAR_ErrorStack', \Matomo\Dependencies\PEAR_ERRORSTACK_ERR_NONCLASS, 'exception', array('stackclass' => $stackClass), 'stack class "%stackclass%" is not a valid class name (should be like PEAR_ErrorStack)', \false, $trace);
         }
-        $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package] =
-            new $stackClass($package, $msgCallback, $contextCallback, $throwPEAR_Error);
-
+        $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package] = new $stackClass($package, $msgCallback, $contextCallback, $throwPEAR_Error);
         return $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package];
     }
-
     /**
      * Internal error handler for PEAR_ErrorStack class
      * 
@@ -288,37 +264,34 @@ class PEAR_ErrorStack {
             } else {
                 echo "\n";
             }
-            var_dump($err['context']);
+            \var_dump($err['context']);
             die($message);
         }
     }
-    
     /**
      * Set up a PEAR::Log object for all error stacks that don't have one
      * @param Log $log 
      */
     public static function setDefaultLogger(&$log)
     {
-        if (is_object($log) && method_exists($log, 'log') ) {
-            $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'] = &$log;
-        } elseif (is_callable($log)) {
-            $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'] = &$log;
+        if (\is_object($log) && \method_exists($log, 'log')) {
+            $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'] =& $log;
+        } elseif (\is_callable($log)) {
+            $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'] =& $log;
         }
     }
-    
     /**
      * Set up a PEAR::Log object for this error stack
      * @param Log $log 
      */
     function setLogger(&$log)
     {
-        if (is_object($log) && method_exists($log, 'log') ) {
-            $this->_logger = &$log;
-        } elseif (is_callable($log)) {
-            $this->_logger = &$log;
+        if (\is_object($log) && \method_exists($log, 'log')) {
+            $this->_logger =& $log;
+        } elseif (\is_callable($log)) {
+            $this->_logger =& $log;
         }
     }
-    
     /**
      * Set an error code => error message mapping callback
      * 
@@ -331,12 +304,11 @@ class PEAR_ErrorStack {
         if (!$msgCallback) {
             $this->_msgCallback = array(&$this, 'getErrorMessage');
         } else {
-            if (is_callable($msgCallback)) {
+            if (\is_callable($msgCallback)) {
                 $this->_msgCallback = $msgCallback;
             }
         }
     }
-    
     /**
      * Get an error code => error message mapping callback
      * 
@@ -348,7 +320,6 @@ class PEAR_ErrorStack {
     {
         return $this->_msgCallback;
     }
-    
     /**
      * Sets a default callback to be used by all error stacks
      * 
@@ -357,15 +328,14 @@ class PEAR_ErrorStack {
      * @param array|string Callback function/method
      * @param string Package name, or false for all packages
      */
-    public static function setDefaultCallback($callback = false, $package = false)
+    public static function setDefaultCallback($callback = \false, $package = \false)
     {
-        if (!is_callable($callback)) {
-            $callback = false;
+        if (!\is_callable($callback)) {
+            $callback = \false;
         }
         $package = $package ? $package : '*';
         $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK'][$package] = $callback;
     }
-    
     /**
      * Set a callback that generates context information (location of error) for an error stack
      * 
@@ -377,17 +347,16 @@ class PEAR_ErrorStack {
     function setContextCallback($contextCallback)
     {
         if ($contextCallback === null) {
-            return $this->_contextCallback = false;
+            return $this->_contextCallback = \false;
         }
         if (!$contextCallback) {
             $this->_contextCallback = array(&$this, 'getFileLine');
         } else {
-            if (is_callable($contextCallback)) {
+            if (\is_callable($contextCallback)) {
                 $this->_contextCallback = $contextCallback;
             }
         }
     }
-    
     /**
      * Set an error Callback
      * If set to a valid callback, this will be called every time an error
@@ -405,9 +374,8 @@ class PEAR_ErrorStack {
      */
     function pushCallback($cb)
     {
-        array_push($this->_errorCallback, $cb);
+        \array_push($this->_errorCallback, $cb);
     }
-    
     /**
      * Remove a callback from the error callback stack
      * @see pushCallback()
@@ -415,12 +383,11 @@ class PEAR_ErrorStack {
      */
     function popCallback()
     {
-        if (!count($this->_errorCallback)) {
-            return false;
+        if (!\count($this->_errorCallback)) {
+            return \false;
         }
-        return array_pop($this->_errorCallback);
+        return \array_pop($this->_errorCallback);
     }
-    
     /**
      * Set a temporary overriding error callback for every package error stack
      *
@@ -432,9 +399,8 @@ class PEAR_ErrorStack {
      */
     public static function staticPushCallback($cb)
     {
-        array_push($GLOBALS['_PEAR_ERRORSTACK_OVERRIDE_CALLBACK'], $cb);
+        \array_push($GLOBALS['_PEAR_ERRORSTACK_OVERRIDE_CALLBACK'], $cb);
     }
-    
     /**
      * Remove a temporary overriding error callback
      * @see staticPushCallback()
@@ -442,13 +408,12 @@ class PEAR_ErrorStack {
      */
     public static function staticPopCallback()
     {
-        $ret = array_pop($GLOBALS['_PEAR_ERRORSTACK_OVERRIDE_CALLBACK']);
-        if (!is_array($GLOBALS['_PEAR_ERRORSTACK_OVERRIDE_CALLBACK'])) {
+        $ret = \array_pop($GLOBALS['_PEAR_ERRORSTACK_OVERRIDE_CALLBACK']);
+        if (!\is_array($GLOBALS['_PEAR_ERRORSTACK_OVERRIDE_CALLBACK'])) {
             $GLOBALS['_PEAR_ERRORSTACK_OVERRIDE_CALLBACK'] = array();
         }
         return $ret;
     }
-    
     /**
      * Add an error to the stack
      * 
@@ -490,83 +455,67 @@ class PEAR_ErrorStack {
      * 
      * Normally, the previous array is returned.
      */
-    function push($code, $level = 'error', $params = array(), $msg = false,
-                  $repackage = false, $backtrace = false)
+    function push($code, $level = 'error', $params = array(), $msg = \false, $repackage = \false, $backtrace = \false)
     {
-        $context = false;
+        $context = \false;
         // grab error context
         if ($this->_contextCallback) {
             if (!$backtrace) {
-                $backtrace = debug_backtrace();
+                $backtrace = \debug_backtrace();
             }
-            $context = call_user_func($this->_contextCallback, $code, $params, $backtrace);
+            $context = \call_user_func($this->_contextCallback, $code, $params, $backtrace);
         }
-        
         // save error
-        $time = explode(' ', microtime());
+        $time = \explode(' ', \microtime());
         $time = $time[1] + $time[0];
-        $err = array(
-                'code' => $code,
-                'params' => $params,
-                'package' => $this->_package,
-                'level' => $level,
-                'time' => $time,
-                'context' => $context,
-                'message' => $msg,
-               );
-
+        $err = array('code' => $code, 'params' => $params, 'package' => $this->_package, 'level' => $level, 'time' => $time, 'context' => $context, 'message' => $msg);
         if ($repackage) {
             $err['repackage'] = $repackage;
         }
-
         // set up the error message, if necessary
         if ($this->_msgCallback) {
-            $msg = call_user_func_array($this->_msgCallback,
-                                        array(&$this, $err));
+            $msg = \call_user_func_array($this->_msgCallback, array(&$this, $err));
             $err['message'] = $msg;
-        }        
-        $push = $log = true;
-        $die = false;
+        }
+        $push = $log = \true;
+        $die = \false;
         // try the overriding callback first
         $callback = $this->staticPopCallback();
         if ($callback) {
             $this->staticPushCallback($callback);
         }
-        if (!is_callable($callback)) {
+        if (!\is_callable($callback)) {
             // try the local callback next
             $callback = $this->popCallback();
-            if (is_callable($callback)) {
+            if (\is_callable($callback)) {
                 $this->pushCallback($callback);
             } else {
                 // try the default callback
-                $callback = isset($GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK'][$this->_package]) ?
-                    $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK'][$this->_package] :
-                    $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK']['*'];
+                $callback = isset($GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK'][$this->_package]) ? $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK'][$this->_package] : $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK']['*'];
             }
         }
-        if (is_callable($callback)) {
-            switch(call_user_func($callback, $err)){
-            	case PEAR_ERRORSTACK_IGNORE: 
-            		return $err;
-        		break;
-            	case PEAR_ERRORSTACK_PUSH: 
-            		$log = false;
-        		break;
-            	case PEAR_ERRORSTACK_LOG: 
-            		$push = false;
-        		break;
-            	case PEAR_ERRORSTACK_DIE: 
-            		$die = true;
-        		break;
-                // anything else returned has the same effect as pushandlog
+        if (\is_callable($callback)) {
+            switch (\call_user_func($callback, $err)) {
+                case \Matomo\Dependencies\PEAR_ERRORSTACK_IGNORE:
+                    return $err;
+                    break;
+                case \Matomo\Dependencies\PEAR_ERRORSTACK_PUSH:
+                    $log = \false;
+                    break;
+                case \Matomo\Dependencies\PEAR_ERRORSTACK_LOG:
+                    $push = \false;
+                    break;
+                case \Matomo\Dependencies\PEAR_ERRORSTACK_DIE:
+                    $die = \true;
+                    break;
             }
         }
         if ($push) {
-            array_unshift($this->_errors, $err);
+            \array_unshift($this->_errors, $err);
             if (!isset($this->_errorsByLevel[$err['level']])) {
                 $this->_errorsByLevel[$err['level']] = array();
             }
-            $this->_errorsByLevel[$err['level']][] = &$this->_errors[0];
+            $this->_errorsByLevel[$err['level']][] =& $this->_errors[0];
         }
         if ($log) {
             if ($this->_logger || $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER']) {
@@ -574,14 +523,13 @@ class PEAR_ErrorStack {
             }
         }
         if ($die) {
-            die();
+            die;
         }
         if ($this->_compat && $push) {
             return $this->raiseError($msg, $code, null, null, $err);
         }
         return $err;
     }
-    
     /**
      * Static version of {@link push()}
      * 
@@ -600,21 +548,18 @@ class PEAR_ErrorStack {
      * @return PEAR_Error|array if compatibility mode is on, a PEAR_Error is also
      *                          thrown.  see docs for {@link push()}
      */
-    public static function staticPush(
-        $package, $code, $level = 'error', $params = array(),
-        $msg = false, $repackage = false, $backtrace = false
-    ) {
-        $s = &PEAR_ErrorStack::singleton($package);
+    public static function staticPush($package, $code, $level = 'error', $params = array(), $msg = \false, $repackage = \false, $backtrace = \false)
+    {
+        $s =& PEAR_ErrorStack::singleton($package);
         if ($s->_contextCallback) {
             if (!$backtrace) {
-                if (function_exists('debug_backtrace')) {
-                    $backtrace = debug_backtrace();
+                if (\function_exists('debug_backtrace')) {
+                    $backtrace = \debug_backtrace();
                 }
             }
         }
         return $s->push($code, $level, $params, $msg, $repackage, $backtrace);
     }
-    
     /**
      * Log an error using PEAR::Log
      * @param array $err Error array
@@ -624,32 +569,23 @@ class PEAR_ErrorStack {
     function _log($err)
     {
         if ($this->_logger) {
-            $logger = &$this->_logger;
+            $logger =& $this->_logger;
         } else {
-            $logger = &$GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'];
+            $logger =& $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'];
         }
-        if (is_a($logger, 'Log')) {
-            $levels = array(
-                'exception' => PEAR_LOG_CRIT,
-                'alert' => PEAR_LOG_ALERT,
-                'critical' => PEAR_LOG_CRIT,
-                'error' => PEAR_LOG_ERR,
-                'warning' => PEAR_LOG_WARNING,
-                'notice' => PEAR_LOG_NOTICE,
-                'info' => PEAR_LOG_INFO,
-                'debug' => PEAR_LOG_DEBUG);
+        if (\is_a($logger, 'Matomo\\Dependencies\\Log')) {
+            $levels = array('exception' => \Matomo\Dependencies\PEAR_LOG_CRIT, 'alert' => \Matomo\Dependencies\PEAR_LOG_ALERT, 'critical' => \Matomo\Dependencies\PEAR_LOG_CRIT, 'error' => \Matomo\Dependencies\PEAR_LOG_ERR, 'warning' => \Matomo\Dependencies\PEAR_LOG_WARNING, 'notice' => \Matomo\Dependencies\PEAR_LOG_NOTICE, 'info' => \Matomo\Dependencies\PEAR_LOG_INFO, 'debug' => \Matomo\Dependencies\PEAR_LOG_DEBUG);
             if (isset($levels[$err['level']])) {
                 $level = $levels[$err['level']];
             } else {
-                $level = PEAR_LOG_INFO;
+                $level = \Matomo\Dependencies\PEAR_LOG_INFO;
             }
             $logger->log($err['message'], $level, $err);
-        } else { // support non-standard logs
-            call_user_func($logger, $err);
+        } else {
+            // support non-standard logs
+            \call_user_func($logger, $err);
         }
     }
-
-    
     /**
      * Pop an error off of the error stack
      * 
@@ -659,16 +595,15 @@ class PEAR_ErrorStack {
      */
     function pop()
     {
-        $err = @array_shift($this->_errors);
-        if (!is_null($err)) {
-            @array_pop($this->_errorsByLevel[$err['level']]);
-            if (!count($this->_errorsByLevel[$err['level']])) {
+        $err = @\array_shift($this->_errors);
+        if (!\is_null($err)) {
+            @\array_pop($this->_errorsByLevel[$err['level']]);
+            if (!\count($this->_errorsByLevel[$err['level']])) {
                 unset($this->_errorsByLevel[$err['level']]);
             }
         }
         return $err;
     }
-
     /**
      * Pop an error off of the error stack, static method
      *
@@ -680,26 +615,24 @@ class PEAR_ErrorStack {
     {
         if ($package) {
             if (!isset($GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package])) {
-                return false;
+                return \false;
             }
             return $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package]->pop();
         }
     }
-
     /**
      * Determine whether there are any errors on the stack
      * @param string|array Level name.  Use to determine if any errors
      * of level (string), or levels (array) have been pushed
      * @return boolean
      */
-    function hasErrors($level = false)
+    function hasErrors($level = \false)
     {
         if ($level) {
             return isset($this->_errorsByLevel[$level]);
         }
-        return count($this->_errors);
+        return \count($this->_errors);
     }
-    
     /**
      * Retrieve all errors since last purge
      * 
@@ -707,7 +640,7 @@ class PEAR_ErrorStack {
      * @param string level name, to return only errors of a particular severity
      * @return array
      */
-    function getErrors($purge = false, $level = false)
+    function getErrors($purge = \false, $level = \false)
     {
         if (!$purge) {
             if ($level) {
@@ -724,10 +657,10 @@ class PEAR_ErrorStack {
             $ret = $this->_errorsByLevel[$level];
             foreach ($this->_errorsByLevel[$level] as $i => $unused) {
                 // entries are references to the $_errors array
-                $this->_errorsByLevel[$level][$i] = false;
+                $this->_errorsByLevel[$level][$i] = \false;
             }
             // array_filter removes all entries === false
-            $this->_errors = array_filter($this->_errors);
+            $this->_errors = \array_filter($this->_errors);
             unset($this->_errorsByLevel[$level]);
             return $ret;
         }
@@ -736,7 +669,6 @@ class PEAR_ErrorStack {
         $this->_errorsByLevel = array();
         return $ret;
     }
-    
     /**
      * Determine whether there are any errors on a single error stack, or on any error stack
      *
@@ -746,22 +678,21 @@ class PEAR_ErrorStack {
      * @param string Level name to check for a particular severity
      * @return boolean
      */
-    public static function staticHasErrors($package = false, $level = false)
+    public static function staticHasErrors($package = \false, $level = \false)
     {
         if ($package) {
             if (!isset($GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package])) {
-                return false;
+                return \false;
             }
             return $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package]->hasErrors($level);
         }
         foreach ($GLOBALS['_PEAR_ERRORSTACK_SINGLETON'] as $package => $obj) {
             if ($obj->hasErrors($level)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
-    
     /**
      * Get a list of all errors since last purge, organized by package
      * @since PEAR 1.4.0dev BC break! $level is now in the place $merge used to be
@@ -773,30 +704,27 @@ class PEAR_ErrorStack {
      *
      * @return array 
      */
-    public static function staticGetErrors(
-        $purge = false, $level = false, $merge = false,
-        $sortfunc = array('PEAR_ErrorStack', '_sortErrors')
-    ) {
+    public static function staticGetErrors($purge = \false, $level = \false, $merge = \false, $sortfunc = array('PEAR_ErrorStack', '_sortErrors'))
+    {
         $ret = array();
-        if (!is_callable($sortfunc)) {
+        if (!\is_callable($sortfunc)) {
             $sortfunc = array('PEAR_ErrorStack', '_sortErrors');
         }
         foreach ($GLOBALS['_PEAR_ERRORSTACK_SINGLETON'] as $package => $obj) {
             $test = $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package]->getErrors($purge, $level);
             if ($test) {
                 if ($merge) {
-                    $ret = array_merge($ret, $test);
+                    $ret = \array_merge($ret, $test);
                 } else {
                     $ret[$package] = $test;
                 }
             }
         }
         if ($merge) {
-            usort($ret, $sortfunc);
+            \usort($ret, $sortfunc);
         }
         return $ret;
     }
-    
     /**
      * Error sorting function, sorts by time
      * @access private
@@ -811,7 +739,6 @@ class PEAR_ErrorStack {
         }
         return -1;
     }
-
     /**
      * Standard file/line number/function/class context callback
      *
@@ -828,16 +755,14 @@ class PEAR_ErrorStack {
     public static function getFileLine($code, $params, $backtrace = null)
     {
         if ($backtrace === null) {
-            return false;
+            return \false;
         }
         $frame = 0;
         $functionframe = 1;
         if (!isset($backtrace[1])) {
             $functionframe = 0;
         } else {
-            while (isset($backtrace[$functionframe]['function']) &&
-                  $backtrace[$functionframe]['function'] == 'eval' &&
-                  isset($backtrace[$functionframe + 1])) {
+            while (isset($backtrace[$functionframe]['function']) && $backtrace[$functionframe]['function'] == 'eval' && isset($backtrace[$functionframe + 1])) {
                 $functionframe++;
             }
         }
@@ -847,12 +772,9 @@ class PEAR_ErrorStack {
             }
             $funcbacktrace = $backtrace[$functionframe];
             $filebacktrace = $backtrace[$frame];
-            $ret = array('file' => $filebacktrace['file'],
-                         'line' => $filebacktrace['line']);
+            $ret = array('file' => $filebacktrace['file'], 'line' => $filebacktrace['line']);
             // rearrange for eval'd code or create function errors
-            if (strpos($filebacktrace['file'], '(') && 
-            	  preg_match(';^(.*?)\((\d+)\) : (.*?)\\z;', $filebacktrace['file'],
-                  $matches)) {
+            if (\strpos($filebacktrace['file'], '(') && \preg_match(';^(.*?)\\((\\d+)\\) : (.*?)\\z;', $filebacktrace['file'], $matches)) {
                 $ret['file'] = $matches[1];
                 $ret['line'] = $matches[2] + 0;
             }
@@ -870,9 +792,8 @@ class PEAR_ErrorStack {
             }
             return $ret;
         }
-        return false;
+        return \false;
     }
-    
     /**
      * Standard error message generation callback
      * 
@@ -900,36 +821,33 @@ class PEAR_ErrorStack {
      *
      * @return string
      */
-    public static function getErrorMessage(&$stack, $err, $template = false)
+    public static function getErrorMessage(&$stack, $err, $template = \false)
     {
         if ($template) {
             $mainmsg = $template;
         } else {
             $mainmsg = $stack->getErrorMessageTemplate($err['code']);
         }
-        $mainmsg = str_replace('%__msg%', $err['message'], $mainmsg);
-        if (is_array($err['params']) && count($err['params'])) {
+        $mainmsg = \str_replace('%__msg%', $err['message'], $mainmsg);
+        if (\is_array($err['params']) && \count($err['params'])) {
             foreach ($err['params'] as $name => $val) {
-                if (is_array($val)) {
+                if (\is_array($val)) {
                     // @ is needed in case $val is a multi-dimensional array
-                    $val = @implode(', ', $val);
+                    $val = @\implode(', ', $val);
                 }
-                if (is_object($val)) {
-                    if (method_exists($val, '__toString')) {
+                if (\is_object($val)) {
+                    if (\method_exists($val, '__toString')) {
                         $val = $val->__toString();
                     } else {
-                        PEAR_ErrorStack::staticPush('PEAR_ErrorStack', PEAR_ERRORSTACK_ERR_OBJTOSTRING,
-                            'warning', array('obj' => get_class($val)),
-                            'object %obj% passed into getErrorMessage, but has no __toString() method');
+                        PEAR_ErrorStack::staticPush('PEAR_ErrorStack', \Matomo\Dependencies\PEAR_ERRORSTACK_ERR_OBJTOSTRING, 'warning', array('obj' => \get_class($val)), 'object %obj% passed into getErrorMessage, but has no __toString() method');
                         $val = 'Object';
                     }
                 }
-                $mainmsg = str_replace('%' . $name . '%', $val, $mainmsg);
+                $mainmsg = \str_replace('%' . $name . '%', $val, $mainmsg);
             }
         }
         return $mainmsg;
     }
-    
     /**
      * Standard Error Message Template generator from code
      * @return string
@@ -941,7 +859,6 @@ class PEAR_ErrorStack {
         }
         return $this->_errorMsgs[$code];
     }
-    
     /**
      * Set the Error Message Template array
      * 
@@ -960,8 +877,6 @@ class PEAR_ErrorStack {
     {
         $this->_errorMsgs = $template;
     }
-    
-    
     /**
      * emulate PEAR::raiseError()
      * 
@@ -970,10 +885,9 @@ class PEAR_ErrorStack {
     function raiseError()
     {
         require_once 'PEAR.php';
-        $args = func_get_args();
-        return call_user_func_array(array('PEAR', 'raiseError'), $args);
+        $args = \func_get_args();
+        return \call_user_func_array(array('PEAR', 'raiseError'), $args);
     }
 }
-$stack = &PEAR_ErrorStack::singleton('PEAR_ErrorStack');
+$stack =& PEAR_ErrorStack::singleton('PEAR_ErrorStack');
 $stack->pushCallback(array('PEAR_ErrorStack', '_handleError'));
-?>
