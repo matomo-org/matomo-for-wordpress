@@ -7,6 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'Matomo\\Dependencies\\Archive_Tar' => $baseDir . '/pear/archive_tar/Archive/Tar.php',
+    'Matomo\\Dependencies\\Console_Getopt' => $baseDir . '/pear/console_getopt/Console/Getopt.php',
     'Matomo\\Dependencies\\DI\\Annotation\\Inject' => $baseDir . '/php-di/php-di/src/Annotation/Inject.php',
     'Matomo\\Dependencies\\DI\\Annotation\\Injectable' => $baseDir . '/php-di/php-di/src/Annotation/Injectable.php',
     'Matomo\\Dependencies\\DI\\CompiledContainer' => $baseDir . '/php-di/php-di/src/CompiledContainer.php',
@@ -225,6 +227,7 @@ return array(
     'Matomo\\Dependencies\\Monolog\\ResettableInterface' => $baseDir . '/monolog/monolog/src/Monolog/ResettableInterface.php',
     'Matomo\\Dependencies\\Monolog\\SignalHandler' => $baseDir . '/monolog/monolog/src/Monolog/SignalHandler.php',
     'Matomo\\Dependencies\\Monolog\\Utils' => $baseDir . '/monolog/monolog/src/Monolog/Utils.php',
+    'Matomo\\Dependencies\\OS_Guess' => $baseDir . '/pear/pear-core-minimal/src/OS/Guess.php',
     'Matomo\\Dependencies\\Opis\\Closure\\Analyzer' => $baseDir . '/opis/closure/src/Analyzer.php',
     'Matomo\\Dependencies\\Opis\\Closure\\ClosureContext' => $baseDir . '/opis/closure/src/ClosureContext.php',
     'Matomo\\Dependencies\\Opis\\Closure\\ClosureScope' => $baseDir . '/opis/closure/src/ClosureScope.php',
@@ -235,6 +238,10 @@ return array(
     'Matomo\\Dependencies\\Opis\\Closure\\SecurityProvider' => $baseDir . '/opis/closure/src/SecurityProvider.php',
     'Matomo\\Dependencies\\Opis\\Closure\\SelfReference' => $baseDir . '/opis/closure/src/SelfReference.php',
     'Matomo\\Dependencies\\Opis\\Closure\\SerializableClosure' => $baseDir . '/opis/closure/src/SerializableClosure.php',
+    'Matomo\\Dependencies\\PEAR' => $baseDir . '/pear/pear-core-minimal/src/PEAR.php',
+    'Matomo\\Dependencies\\PEAR_Error' => $baseDir . '/pear/pear-core-minimal/src/PEAR.php',
+    'Matomo\\Dependencies\\PEAR_ErrorStack' => $baseDir . '/pear/pear-core-minimal/src/PEAR/ErrorStack.php',
+    'Matomo\\Dependencies\\PEAR_Exception' => $baseDir . '/pear/pear_exception/PEAR/Exception.php',
     'Matomo\\Dependencies\\PhpDocReader\\AnnotationException' => $baseDir . '/php-di/phpdoc-reader/src/PhpDocReader/AnnotationException.php',
     'Matomo\\Dependencies\\PhpDocReader\\PhpDocReader' => $baseDir . '/php-di/phpdoc-reader/src/PhpDocReader/PhpDocReader.php',
     'Matomo\\Dependencies\\PhpDocReader\\PhpParser\\TokenParser' => $baseDir . '/php-di/phpdoc-reader/src/PhpDocReader/PhpParser/TokenParser.php',
@@ -741,6 +748,7 @@ return array(
     'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\ServiceSubscriberInterface' => $baseDir . '/symfony/service-contracts/ServiceSubscriberInterface.php',
     'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\ServiceSubscriberTrait' => $baseDir . '/symfony/service-contracts/ServiceSubscriberTrait.php',
     'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\Test\\ServiceLocatorTest' => $baseDir . '/symfony/service-contracts/Test/ServiceLocatorTest.php',
+    'Matomo\\Dependencies\\System' => $baseDir . '/pear/pear-core-minimal/src/System.php',
     'Matomo\\Dependencies\\Twig\\Cache\\CacheInterface' => $baseDir . '/twig/twig/src/Cache/CacheInterface.php',
     'Matomo\\Dependencies\\Twig\\Cache\\FilesystemCache' => $baseDir . '/twig/twig/src/Cache/FilesystemCache.php',
     'Matomo\\Dependencies\\Twig\\Cache\\NullCache' => $baseDir . '/twig/twig/src/Cache/NullCache.php',
@@ -917,4 +925,5 @@ return array(
     'Matomo\\Dependencies\\Twig\\TwigTest' => $baseDir . '/twig/twig/src/TwigTest.php',
     'Matomo\\Dependencies\\Twig\\Util\\DeprecationCollector' => $baseDir . '/twig/twig/src/Util/DeprecationCollector.php',
     'Matomo\\Dependencies\\Twig\\Util\\TemplateDirIterator' => $baseDir . '/twig/twig/src/Util/TemplateDirIterator.php',
+    'PEAR_PHPTest' => $baseDir . '/pear/archive_tar/tests/phpt_test.php.inc',
 );

@@ -6,7 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Archive_Tar' => $vendorDir . '/pear/archive_tar/Archive/Tar.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Composer\\CaBundle\\CaBundle' => $vendorDir . '/composer/ca-bundle/src/CaBundle.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
@@ -18,7 +17,6 @@ return array(
     'Composer\\Semver\\Constraint\\MultiConstraint' => $vendorDir . '/composer/semver/src/Constraint/MultiConstraint.php',
     'Composer\\Semver\\Semver' => $vendorDir . '/composer/semver/src/Semver.php',
     'Composer\\Semver\\VersionParser' => $vendorDir . '/composer/semver/src/VersionParser.php',
-    'Console_Getopt' => $vendorDir . '/pear/console_getopt/Console/Getopt.php',
     'CpChart\\Barcode\\Barcode128' => $vendorDir . '/szymach/c-pchart/src/Barcode/Barcode128.php',
     'CpChart\\Barcode\\Barcode39' => $vendorDir . '/szymach/c-pchart/src/Barcode/Barcode39.php',
     'CpChart\\BaseDraw' => $vendorDir . '/szymach/c-pchart/src/BaseDraw.php',
@@ -272,11 +270,7 @@ return array(
     'Matomo\\Network\\IPv4' => $vendorDir . '/matomo/network/src/IPv4.php',
     'Matomo\\Network\\IPv6' => $vendorDir . '/matomo/network/src/IPv6.php',
     'Normalizer' => $vendorDir . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
-    'OS_Guess' => $vendorDir . '/pear/pear-core-minimal/src/OS/Guess.php',
     'PDF417' => $vendorDir . '/tecnickcom/tcpdf/include/barcodes/pdf417.php',
-    'PEAR' => $vendorDir . '/pear/pear-core-minimal/src/PEAR.php',
-    'PEAR_ErrorStack' => $vendorDir . '/pear/pear-core-minimal/src/PEAR/ErrorStack.php',
-    'PEAR_Exception' => $vendorDir . '/pear/pear_exception/PEAR/Exception.php',
     'PHPMailer\\PHPMailer\\DSNConfigurator' => $vendorDir . '/phpmailer/phpmailer/src/DSNConfigurator.php',
     'PHPMailer\\PHPMailer\\Exception' => $vendorDir . '/phpmailer/phpmailer/src/Exception.php',
     'PHPMailer\\PHPMailer\\OAuth' => $vendorDir . '/phpmailer/phpmailer/src/OAuth.php',
@@ -2634,7 +2628,6 @@ return array(
     'Symfony\\Polyfill\\Php73\\Php73' => $vendorDir . '/symfony/polyfill-php73/Php73.php',
     'Symfony\\Polyfill\\Php80\\Php80' => $vendorDir . '/symfony/polyfill-php80/Php80.php',
     'Symfony\\Polyfill\\Php80\\PhpToken' => $vendorDir . '/symfony/polyfill-php80/PhpToken.php',
-    'System' => $vendorDir . '/pear/pear-core-minimal/src/System.php',
     'TCPDF' => $vendorDir . '/tecnickcom/tcpdf/tcpdf.php',
     'TCPDF2DBarcode' => $vendorDir . '/tecnickcom/tcpdf/tcpdf_barcodes_2d.php',
     'TCPDFBarcode' => $vendorDir . '/tecnickcom/tcpdf/tcpdf_barcodes_1d.php',

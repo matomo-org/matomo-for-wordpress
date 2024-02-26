@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit82b56f91b437251af444fada2e6df282
+class ComposerStaticInitc06cf0014df75982cd88890cc3348e31
 {
     public static $files = array(
 'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -305,7 +305,6 @@ class ComposerStaticInit82b56f91b437251af444fada2e6df282
     );
 
     public static $classMap = array (
-        'Archive_Tar' => __DIR__ . '/..' . '/pear/archive_tar/Archive/Tar.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\CaBundle\\CaBundle' => __DIR__ . '/..' . '/composer/ca-bundle/src/CaBundle.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
@@ -317,7 +316,6 @@ class ComposerStaticInit82b56f91b437251af444fada2e6df282
         'Composer\\Semver\\Constraint\\MultiConstraint' => __DIR__ . '/..' . '/composer/semver/src/Constraint/MultiConstraint.php',
         'Composer\\Semver\\Semver' => __DIR__ . '/..' . '/composer/semver/src/Semver.php',
         'Composer\\Semver\\VersionParser' => __DIR__ . '/..' . '/composer/semver/src/VersionParser.php',
-        'Console_Getopt' => __DIR__ . '/..' . '/pear/console_getopt/Console/Getopt.php',
         'CpChart\\Barcode\\Barcode128' => __DIR__ . '/..' . '/szymach/c-pchart/src/Barcode/Barcode128.php',
         'CpChart\\Barcode\\Barcode39' => __DIR__ . '/..' . '/szymach/c-pchart/src/Barcode/Barcode39.php',
         'CpChart\\BaseDraw' => __DIR__ . '/..' . '/szymach/c-pchart/src/BaseDraw.php',
@@ -571,11 +569,7 @@ class ComposerStaticInit82b56f91b437251af444fada2e6df282
         'Matomo\\Network\\IPv4' => __DIR__ . '/..' . '/matomo/network/src/IPv4.php',
         'Matomo\\Network\\IPv6' => __DIR__ . '/..' . '/matomo/network/src/IPv6.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
-        'OS_Guess' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/OS/Guess.php',
         'PDF417' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/pdf417.php',
-        'PEAR' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
-        'PEAR_ErrorStack' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR/ErrorStack.php',
-        'PEAR_Exception' => __DIR__ . '/..' . '/pear/pear_exception/PEAR/Exception.php',
         'PHPMailer\\PHPMailer\\DSNConfigurator' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/DSNConfigurator.php',
         'PHPMailer\\PHPMailer\\Exception' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/Exception.php',
         'PHPMailer\\PHPMailer\\OAuth' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/OAuth.php',
@@ -2933,7 +2927,6 @@ class ComposerStaticInit82b56f91b437251af444fada2e6df282
         'Symfony\\Polyfill\\Php73\\Php73' => __DIR__ . '/..' . '/symfony/polyfill-php73/Php73.php',
         'Symfony\\Polyfill\\Php80\\Php80' => __DIR__ . '/..' . '/symfony/polyfill-php80/Php80.php',
         'Symfony\\Polyfill\\Php80\\PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/PhpToken.php',
-        'System' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/System.php',
         'TCPDF' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf.php',
         'TCPDF2DBarcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_barcodes_2d.php',
         'TCPDFBarcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_barcodes_1d.php',
@@ -3022,11 +3015,11 @@ class ComposerStaticInit82b56f91b437251af444fada2e6df282
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit82b56f91b437251af444fada2e6df282::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit82b56f91b437251af444fada2e6df282::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit82b56f91b437251af444fada2e6df282::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit82b56f91b437251af444fada2e6df282::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInit82b56f91b437251af444fada2e6df282::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc06cf0014df75982cd88890cc3348e31::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc06cf0014df75982cd88890cc3348e31::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitc06cf0014df75982cd88890cc3348e31::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInitc06cf0014df75982cd88890cc3348e31::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInitc06cf0014df75982cd88890cc3348e31::$classMap;
 
         }, null, ClassLoader::class);
     }

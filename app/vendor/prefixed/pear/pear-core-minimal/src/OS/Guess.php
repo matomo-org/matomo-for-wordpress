@@ -1,4 +1,7 @@
 <?php
+
+namespace Matomo\Dependencies;
+
 /**
  * The OS_Guess class
  *
@@ -13,9 +16,7 @@
  * @link      http://pear.php.net/package/PEAR
  * @since     File available since PEAR 0.1
  */
-
 // {{{ uname examples
-
 // php_uname() without args returns the same as 'uname -a', or a PHP-custom
 // string for Windows.
 // PHP versions prior to 4.3 return the uname of the host where PHP was built,
@@ -68,13 +69,10 @@
 //
 // Mac OS X early versions
 //
-
 // }}}
-
 /* TODO:
  * - define endianness, to allow matchSignature("bigend") etc.
  */
-
 /**
  * Retrieves information about the current operating system
  *
@@ -97,108 +95,86 @@ class OS_Guess
     var $cpu;
     var $release;
     var $extra;
-
     function __construct($uname = null)
     {
-        list($this->sysname,
-             $this->release,
-             $this->cpu,
-             $this->extra,
-             $this->nodename) = $this->parseSignature($uname);
+        list($this->sysname, $this->release, $this->cpu, $this->extra, $this->nodename) = $this->parseSignature($uname);
     }
-
     function parseSignature($uname = null)
     {
-        static $sysmap = array(
-            'HP-UX' => 'hpux',
-            'IRIX64' => 'irix',
-        );
-        static $cpumap = array(
-            'i586' => 'i386',
-            'i686' => 'i386',
-            'ppc' => 'powerpc',
-        );
+        static $sysmap = array('HP-UX' => 'hpux', 'IRIX64' => 'irix');
+        static $cpumap = array('i586' => 'i386', 'i686' => 'i386', 'ppc' => 'powerpc');
         if ($uname === null) {
-            $uname = php_uname();
+            $uname = \php_uname();
         }
-        $parts = preg_split('/\s+/', trim($uname));
-        $n = count($parts);
-
-        $release  = $machine = $cpu = '';
-        $sysname  = $parts[0];
+        $parts = \preg_split('/\\s+/', \trim($uname));
+        $n = \count($parts);
+        $release = $machine = $cpu = '';
+        $sysname = $parts[0];
         $nodename = $parts[1];
-        $cpu      = $parts[$n-1];
+        $cpu = $parts[$n - 1];
         $extra = '';
         if ($cpu == 'unknown') {
             $cpu = $parts[$n - 2];
         }
-
         switch ($sysname) {
-            case 'AIX' :
-                $release = "$parts[3].$parts[2]";
+            case 'AIX':
+                $release = "{$parts[3]}.{$parts[2]}";
                 break;
-            case 'Windows' :
+            case 'Windows':
                 $release = $parts[1];
                 if ($release == '95/98') {
                     $release = '9x';
                 }
                 $cpu = 'i386';
                 break;
-            case 'Linux' :
+            case 'Linux':
                 $extra = $this->_detectGlibcVersion();
                 // use only the first two digits from the kernel version
-                $release = preg_replace('/^([0-9]+\.[0-9]+).*/', '\1', $parts[2]);
+                $release = \preg_replace('/^([0-9]+\\.[0-9]+).*/', '\\1', $parts[2]);
                 break;
-            case 'Mac' :
+            case 'Mac':
                 $sysname = 'darwin';
                 $nodename = $parts[2];
                 $release = $parts[3];
                 $cpu = $this->_determineIfPowerpc($cpu, $parts);
                 break;
-            case 'Darwin' :
+            case 'Darwin':
                 $cpu = $this->_determineIfPowerpc($cpu, $parts);
-                $release = preg_replace('/^([0-9]+\.[0-9]+).*/', '\1', $parts[2]);
+                $release = \preg_replace('/^([0-9]+\\.[0-9]+).*/', '\\1', $parts[2]);
                 break;
             default:
-                $release = preg_replace('/-.*/', '', $parts[2]);
+                $release = \preg_replace('/-.*/', '', $parts[2]);
                 break;
         }
-
         if (isset($sysmap[$sysname])) {
             $sysname = $sysmap[$sysname];
         } else {
-            $sysname = strtolower($sysname);
+            $sysname = \strtolower($sysname);
         }
         if (isset($cpumap[$cpu])) {
             $cpu = $cpumap[$cpu];
         }
         return array($sysname, $release, $cpu, $extra, $nodename);
     }
-
     function _determineIfPowerpc($cpu, $parts)
     {
-        $n = count($parts);
+        $n = \count($parts);
         if ($cpu == 'Macintosh' && $parts[$n - 2] == 'Power') {
             $cpu = 'powerpc';
         }
         return $cpu;
     }
-
     function _detectGlibcVersion()
     {
-        static $glibc = false;
-        if ($glibc !== false) {
-            return $glibc; // no need to run this multiple times
+        static $glibc = \false;
+        if ($glibc !== \false) {
+            return $glibc;
+            // no need to run this multiple times
         }
         $major = $minor = 0;
         include_once "System.php";
-
         // Let's try reading possible libc.so.6 symlinks
-        $libcs = array(
-            '/lib64/libc.so.6',
-            '/lib/libc.so.6',
-            '/lib/i386-linux-gnu/libc.so.6'
-        );
+        $libcs = array('/lib64/libc.so.6', '/lib/libc.so.6', '/lib/i386-linux-gnu/libc.so.6');
         $versions = array();
         foreach ($libcs as $file) {
             $versions = $this->_readGlibCVersionFromSymlink($file);
@@ -207,119 +183,102 @@ class OS_Guess
                 break;
             }
         }
-
         // Use glibc's <features.h> header file to
         // get major and minor version number:
         if (!($major && $minor)) {
             $versions = $this->_readGlibCVersionFromFeaturesHeaderFile();
         }
-        if (is_array($versions) && $versions != []) {
+        if (\is_array($versions) && $versions != []) {
             list($major, $minor) = $versions;
         }
-
         if (!($major && $minor)) {
             return $glibc = '';
         }
-
         return $glibc = "glibc{$major}.{$minor}";
     }
-
     function _readGlibCVersionFromSymlink($file)
     {
         $versions = array();
-        if (@is_link($file)
-            && (preg_match('/^libc-(.*)\.so$/', basename(readlink($file)), $matches))
-        ) {
-            $versions = explode('.', $matches[1]);
+        if (@\is_link($file) && \preg_match('/^libc-(.*)\\.so$/', \basename(\readlink($file)), $matches)) {
+            $versions = \explode('.', $matches[1]);
         }
         return $versions;
     }
-
-
     function _readGlibCVersionFromFeaturesHeaderFile()
     {
         $features_header_file = '/usr/include/features.h';
-        if (!(@file_exists($features_header_file)
-            && @is_readable($features_header_file))
-        ) {
+        if (!(@\file_exists($features_header_file) && @\is_readable($features_header_file))) {
             return array();
         }
-        if (!@file_exists('/usr/bin/cpp') || !@is_executable('/usr/bin/cpp')) {
+        if (!@\file_exists('/usr/bin/cpp') || !@\is_executable('/usr/bin/cpp')) {
             return $this->_parseFeaturesHeaderFile($features_header_file);
-        } // no cpp
-
+        }
+        // no cpp
         return $this->_fromGlibCTest();
     }
-
     function _parseFeaturesHeaderFile($features_header_file)
     {
-        $features_file = fopen($features_header_file, 'rb');
-        while (!feof($features_file)) {
-            $line = fgets($features_file, 8192);
+        $features_file = \fopen($features_header_file, 'rb');
+        while (!\feof($features_file)) {
+            $line = \fgets($features_file, 8192);
             if (!$this->_IsADefinition($line)) {
                 continue;
             }
-            if (strpos($line, '__GLIBC__')) {
+            if (\strpos($line, '__GLIBC__')) {
                 // major version number #define __GLIBC__ version
-                $line = preg_split('/\s+/', $line);
-                $glibc_major = trim($line[2]);
+                $line = \preg_split('/\\s+/', $line);
+                $glibc_major = \trim($line[2]);
                 if (isset($glibc_minor)) {
                     break;
                 }
                 continue;
             }
-
-            if (strpos($line, '__GLIBC_MINOR__')) {
+            if (\strpos($line, '__GLIBC_MINOR__')) {
                 // got the minor version number
                 // #define __GLIBC_MINOR__ version
-                $line = preg_split('/\s+/', $line);
-                $glibc_minor = trim($line[2]);
+                $line = \preg_split('/\\s+/', $line);
+                $glibc_minor = \trim($line[2]);
                 if (isset($glibc_major)) {
                     break;
                 }
             }
         }
-        fclose($features_file);
+        \fclose($features_file);
         if (!isset($glibc_major) || !isset($glibc_minor)) {
             return array();
         }
-        return array(trim($glibc_major), trim($glibc_minor));
+        return array(\trim($glibc_major), \trim($glibc_minor));
     }
-
     function _IsADefinition($line)
     {
-        if ($line === false) {
-            return false;
+        if ($line === \false) {
+            return \false;
         }
-        return strpos(trim($line), '#define') !== false;
+        return \strpos(\trim($line), '#define') !== \false;
     }
-
     function _fromGlibCTest()
     {
         $major = null;
         $minor = null;
-
-        $tmpfile = System::mktemp("glibctest");
-        $fp = fopen($tmpfile, "w");
-        fwrite($fp, "#include <features.h>\n__GLIBC__ __GLIBC_MINOR__\n");
-        fclose($fp);
-        $cpp = popen("/usr/bin/cpp $tmpfile", "r");
-        while ($line = fgets($cpp, 1024)) {
-            if ($line[0] == '#' || trim($line) == '') {
+        $tmpfile = \Matomo\Dependencies\System::mktemp("glibctest");
+        $fp = \fopen($tmpfile, "w");
+        \fwrite($fp, "#include <features.h>\n__GLIBC__ __GLIBC_MINOR__\n");
+        \fclose($fp);
+        $cpp = \popen("/usr/bin/cpp {$tmpfile}", "r");
+        while ($line = \fgets($cpp, 1024)) {
+            if ($line[0] == '#' || \trim($line) == '') {
                 continue;
             }
-
-            if (list($major, $minor) = explode(' ', trim($line))) {
+            if (list($major, $minor) = \explode(' ', \trim($line))) {
                 break;
             }
         }
-        pclose($cpp);
-        unlink($tmpfile);
+        \pclose($cpp);
+        \unlink($tmpfile);
         if ($major !== null && $minor !== null) {
             return [$major, $minor];
         }
     }
-
     function getSignature()
     {
         if (empty($this->extra)) {
@@ -327,36 +286,30 @@ class OS_Guess
         }
         return "{$this->sysname}-{$this->release}-{$this->cpu}-{$this->extra}";
     }
-
     function getSysname()
     {
         return $this->sysname;
     }
-
     function getNodename()
     {
         return $this->nodename;
     }
-
     function getCpu()
     {
         return $this->cpu;
     }
-
     function getRelease()
     {
         return $this->release;
     }
-
     function getExtra()
     {
         return $this->extra;
     }
-
     function matchSignature($match)
     {
-        $fragments = is_array($match) ? $match : explode('-', $match);
-        $n = count($fragments);
+        $fragments = \is_array($match) ? $match : \explode('-', $match);
+        $n = \count($fragments);
         $matches = 0;
         if ($n > 0) {
             $matches += $this->_matchFragment($fragments[0], $this->sysname);
@@ -370,21 +323,16 @@ class OS_Guess
         if ($n > 3) {
             $matches += $this->_matchFragment($fragments[3], $this->extra);
         }
-        return ($matches == $n);
+        return $matches == $n;
     }
-
     function _matchFragment($fragment, $value)
     {
-        if (strcspn($fragment, '*?') < strlen($fragment)) {
-            $expression = str_replace(
-                array('*', '?', '/'),
-                array('.*', '.', '\\/'),
-                $fragment
-            );
+        if (\strcspn($fragment, '*?') < \strlen($fragment)) {
+            $expression = \str_replace(array('*', '?', '/'), array('.*', '.', '\\/'), $fragment);
             $reg = '/^' . $expression . '\\z/';
-            return preg_match($reg, $value);
+            return \preg_match($reg, $value);
         }
-        return ($fragment == '*' || !strcasecmp($fragment, $value));
+        return $fragment == '*' || !\strcasecmp($fragment, $value);
     }
 }
 /*

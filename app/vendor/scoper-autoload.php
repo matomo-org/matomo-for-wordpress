@@ -19,4 +19,10 @@ if (isset($existingComposerAutoloadFiles)) {
     unset($GLOBALS['__composer_autoload_files']);
 }
 
+// Function aliases. For more information see:
+// https://github.com/humbug/php-scoper/blob/master/docs/further-reading.md#function-aliases
+if (!function_exists('gzopen')) { function gzopen() { return \Matomo\Dependencies\gzopen(...func_get_args()); } }
+if (!function_exists('gzseek')) { function gzseek() { return \Matomo\Dependencies\gzseek(...func_get_args()); } }
+if (!function_exists('gztell')) { function gztell() { return \Matomo\Dependencies\gztell(...func_get_args()); } }
+
 return $loader;
