@@ -26,9 +26,10 @@ class PathsTest extends MatomoUnit_TestCase {
 
 	public function __construct() {
 		parent::__construct();
-		$this->root_path             = realpath( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . '/../../../' );
+		$this->root_path             = dirname( dirname( dirname( plugin_dir_path( MATOMO_ANALYTICS_FILE ) ) ) );
 		$this->root_path_with_matomo = dirname( $this->root_path ) . '/matomo';
 	}
+
 	public function setUp(): void {
 		parent::setUp();
 
