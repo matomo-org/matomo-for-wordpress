@@ -27,7 +27,7 @@ class PathsTest extends MatomoUnit_TestCase {
 	public function __construct() {
 		parent::__construct();
 		$this->root_path             = dirname( dirname( dirname( plugin_dir_path( MATOMO_ANALYTICS_FILE ) ) ) );
-		$this->root_path_with_matomo = dirname( $this->root_path ) . '/matomo';
+		$this->root_path_with_matomo = $this->root_path . '/matomo';
 	}
 
 	public function setUp(): void {
@@ -37,12 +37,8 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function tearDown(): void {
-		if ( is_dir( $this->root_path_with_matomo ) ) {
-			if ( is_link( $this->root_path ) ) {
-				unlink( $this->root_path );
-			}
-			rename( $this->root_path_with_matomo, $this->root_path );
-			chdir( $this->root_path );
+		if ( is_link( $this->root_path_with_matomo ) ) {
+			unlink( $this->root_path_with_matomo );
 		}
 		parent::tearDown();
 	}
