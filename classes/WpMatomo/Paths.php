@@ -132,7 +132,7 @@ class Paths {
 	 */
 	public function get_relative_dir_to_matomo( $target_dir, $matomo_file = MATOMO_ANALYTICS_FILE ) {
 		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-		return matomo_rel_path( $target_dir, @realpath( plugin_dir_path( $matomo_file ) . 'app' ) );
+		return matomo_rel_path( $target_dir, plugin_dir_path( $matomo_file ) . 'app' );
 	}
 
 	public function get_gloal_upload_dir_if_possible( $file_to_look_for = '' ) {
