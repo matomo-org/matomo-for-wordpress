@@ -26,9 +26,10 @@ class PathsTest extends MatomoUnit_TestCase {
 
 	public function __construct() {
 		parent::__construct();
-		$this->root_path             = realpath( plugin_dir_path( MATOMO_ANALYTICS_FILE ) . '/../../../' );
-		$this->root_path_with_matomo = dirname( $this->root_path ) . '/matomo';
+		$this->root_path             = dirname( dirname( dirname( plugin_dir_path( MATOMO_ANALYTICS_FILE ) ) ) );
+		$this->root_path_with_matomo = $this->root_path . '/matomo';
 	}
+
 	public function setUp(): void {
 		parent::setUp();
 
@@ -36,12 +37,8 @@ class PathsTest extends MatomoUnit_TestCase {
 	}
 
 	public function tearDown(): void {
-		if ( is_dir( $this->root_path_with_matomo ) ) {
-			if ( is_link( $this->root_path ) ) {
-				unlink( $this->root_path );
-			}
-			rename( $this->root_path_with_matomo, $this->root_path );
-			chdir( $this->root_path );
+		if ( is_link( $this->root_path_with_matomo ) ) {
+			unlink( $this->root_path_with_matomo );
 		}
 		parent::tearDown();
 	}
@@ -107,7 +104,8 @@ class PathsTest extends MatomoUnit_TestCase {
 
 	public function test_get_relative_dir_to_matomo() {
 		$valid_values = array(
-			'../tests/phpunit/wpmatomo', // travis
+			'../tests/phpunit/wpmatomo',
+			'../../../../../matomo-for-wordpress/tests/phpunit/wpmatomo', // github actions
 		);
 		$val          = $this->paths->get_relative_dir_to_matomo( __DIR__ );
 		$this->assertContains( $val, $valid_values );
@@ -117,19 +115,17 @@ class PathsTest extends MatomoUnit_TestCase {
 
 	/**
 	 * rename part of the document root to add matomo in its path
+	 *
+	 * @throws \Exception If not writable.
 	 */
 	private function add_matomo_in_document_root() {
-		$renamed = false;
 		if ( is_writeable( $this->root_path ) ) {
 			// replace the last part of the root path by matomo
 			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-			$renamed = @rename( $this->root_path, $this->root_path_with_matomo );
-			if ( $renamed ) {
-				// create a link for the phpunit dependencies
-				$renamed = symlink( $this->root_path_with_matomo, $this->root_path );
-			}
+			return symlink( $this->root_path, $this->root_path_with_matomo );
+		} else {
+			throw new \Exception( "{$this->root_path} not writable!" );
 		}
-		return $renamed;
 	}
 
 	/**
@@ -151,7 +147,7 @@ class PathsTest extends MatomoUnit_TestCase {
 			// automatically double check that it works
 			$this->assertTrue( is_file( plugin_dir_path( $temporary_matomo_analytics_file ) . 'app/matomo.js' ) );
 		} else {
-			$this->markTestSkipped( 'Can t rename.' );
+			$this->fail( 'Can\'t rename.' );
 		}
 	}
 
@@ -169,7 +165,7 @@ class PathsTest extends MatomoUnit_TestCase {
 			// do not check like the others test if the folder exist: in unit tests outside a WordPress context, uploads folder does not ezist
 			// $this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo' ) );
 		} else {
-			$this->markTestSkipped( 'Can t rename.' );
+			$this->fail( 'Can\'t rename.' );
 		}
 	}
 
@@ -187,7 +183,7 @@ class PathsTest extends MatomoUnit_TestCase {
 			// do not check like the others test if the folder exist: in unit tests outside a WordPress context, uploads folder does not ezist
 			// $this->assertTrue( is_dir( plugin_dir_path( $temporary_matomo_analytics_file ) . '../../uploads/matomo/config' ) );
 		} else {
-			$this->markTestSkipped( 'Can t rename.' );
+			$this->fail( 'Can\'t rename.' );
 		}
 	}
 
@@ -208,8 +204,7 @@ class PathsTest extends MatomoUnit_TestCase {
 		$dir_to_test = $plugin_dir . 'plugins/WordPress';
 
 		$valid_values = array(
-			// local docker in github action where we symlink into wordpress
-			'../../test/wp-content/plugins/matomo/plugins/WordPress',
+			'../plugins/WordPress',
 		);
 		$val          = $this->paths->get_relative_dir_to_matomo( $dir_to_test );
 		$this->assertContains( $val, $valid_values );
