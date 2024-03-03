@@ -1,5 +1,10 @@
 == Changelog ===
 
+= 5.0.5 =
+* Improved compatibility with CiviCRM.
+* Improved compatibility with AzonPress.
+* Avoid critical error that can occur when a WordPress server's filesystem is not recognized as "direct".
+
 = 5.0.4 =
 * Fix display error in the multisite site selector.
 * Remove diagnostics related to formerly incompatible WP plugins.
