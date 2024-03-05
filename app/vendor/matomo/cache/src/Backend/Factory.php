@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,73 +10,57 @@
 namespace Matomo\Cache\Backend;
 
 use Matomo\Cache\Backend;
-
 class Factory
 {
     public function buildArrayCache()
     {
-        return new ArrayCache();
+        return new \Matomo\Cache\Backend\ArrayCache();
     }
-
     public function buildFileCache($options)
     {
-        return new File($options['directory']);
+        return new \Matomo\Cache\Backend\File($options['directory']);
     }
-
     public function buildNullCache()
     {
-        return new NullCache();
+        return new \Matomo\Cache\Backend\NullCache();
     }
-
     public function buildChainedCache($options)
     {
         $backends = array();
-
         foreach ($options['backends'] as $backendToBuild) {
-
             $backendOptions = array();
             if (array_key_exists($backendToBuild, $options)) {
                 $backendOptions = $options[$backendToBuild];
             }
-
             $backends[] = $this->buildBackend($backendToBuild, $backendOptions);
         }
-
-        return new Chained($backends);
+        return new \Matomo\Cache\Backend\Chained($backends);
     }
-
     public function buildRedisCache($options)
     {
         if (empty($options['unix_socket']) && (empty($options['host']) || empty($options['port']))) {
             throw new \InvalidArgumentException('RedisCache is not configured. Please provide at least a host and a port');
         }
-
         $timeout = 0.0;
         if (array_key_exists('timeout', $options)) {
             $timeout = $options['timeout'];
         }
-
         $redis = new \Redis();
         if (empty($options['unix_socket'])) {
             $redis->connect($options['host'], $options['port'], $timeout);
         } else {
             $redis->connect($options['unix_socket'], 0, $timeout);
         }
-
         if (!empty($options['password'])) {
             $redis->auth($options['password']);
         }
-
         if (array_key_exists('database', $options)) {
             $redis->select((int) $options['database']);
         }
-
-        $redisCache = new Redis();
+        $redisCache = new \Matomo\Cache\Backend\Redis();
         $redisCache->setRedis($redis);
-
         return $redisCache;
     }
-
     /**
      * @param string $class
      * @param array $options
@@ -84,19 +69,16 @@ class Factory
      *
      * @throws Factory\BackendNotFoundException
      */
-    public function buildDecorated( $class,  $options )
+    public function buildDecorated($class, $options)
     {
         $backendToBuild = $options["backend"];
         $backendOptions = array();
         if (array_key_exists($backendToBuild, $options)) {
             $backendOptions = $options[$backendToBuild];
         }
-
         $backend = $this->buildBackend($backendToBuild, $backendOptions);
-
         return new $class($backend, $options);
     }
-
     /**
      * Build a specific backend instance.
      *
@@ -109,36 +91,21 @@ class Factory
     {
         switch ($type) {
             case 'array':
-
                 return $this->buildArrayCache();
-
             case 'file':
-
                 return $this->buildFileCache($options);
-
             case 'chained':
-
                 return $this->buildChainedCache($options);
-
             case 'null':
-
                 return $this->buildNullCache();
-
             case 'redis':
-
                 return $this->buildRedisCache($options);
-
             case 'defaultTimeout':
-
-                return $this->buildDecorated(DefaultTimeoutDecorated::class, $options);
-
+                return $this->buildDecorated(\Matomo\Cache\Backend\DefaultTimeoutDecorated::class, $options);
             case 'keyPrefix':
-
-                return $this->buildDecorated(KeyPrefixDecorated::class, $options);
-
+                return $this->buildDecorated(\Matomo\Cache\Backend\KeyPrefixDecorated::class, $options);
             default:
-
-                throw new Factory\BackendNotFoundException("Cache backend $type not valid");
+                throw new \Matomo\Cache\Backend\Factory\BackendNotFoundException("Cache backend {$type} not valid");
         }
     }
 }

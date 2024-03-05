@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,11 +10,9 @@
 namespace Matomo\Cache;
 
 use Matomo\Cache\Backend;
-
-class Lazy implements Cache
+class Lazy implements \Matomo\Cache\Cache
 {
     private $backend;
-
     /**
      * Initializes the cache.
      *
@@ -23,7 +22,6 @@ class Lazy implements Cache
     {
         $this->backend = $backend;
     }
-
     /**
      * Fetches an entry from the cache.
      *
@@ -33,20 +31,16 @@ class Lazy implements Cache
     public function fetch($id)
     {
         $id = $this->getCompletedCacheIdIfValid($id);
-
         return $this->backend->doFetch($id);
     }
-
     /**
      * {@inheritdoc}
      */
     public function contains($id)
     {
         $id = $this->getCompletedCacheIdIfValid($id);
-
         return $this->backend->doContains($id);
     }
-
     /**
      * Puts data into the cache.
      *
@@ -60,25 +54,20 @@ class Lazy implements Cache
     public function save($id, $data, $lifeTime = 0)
     {
         $id = $this->getCompletedCacheIdIfValid($id);
-
         if (is_object($data)) {
             throw new \InvalidArgumentException('You cannot use this cache to cache an object, only arrays, strings and numbers. Have a look at Transient cache.');
             // for performance reasons we do currently not recursively search whether any array contains an object.
         }
-
         return $this->backend->doSave($id, $data, $lifeTime);
     }
-
     /**
      * {@inheritdoc}
      */
     public function delete($id)
     {
         $id = $this->getCompletedCacheIdIfValid($id);
-
         return $this->backend->doDelete($id);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -86,24 +75,20 @@ class Lazy implements Cache
     {
         return $this->backend->doFlush();
     }
-
     private function getCompletedCacheIdIfValid($id)
     {
         $this->checkId($id);
         return 'matomocache_' . $id;
     }
-
     private function checkId($id)
     {
         if (empty($id)) {
             throw new \InvalidArgumentException('Empty cache id given');
         }
-
         if (!$this->isValidId($id)) {
-            throw new \InvalidArgumentException("Invalid cache id request $id");
+            throw new \InvalidArgumentException("Invalid cache id request {$id}");
         }
     }
-
     /**
      * Returns true if the string is a valid id.
      *
@@ -116,6 +101,6 @@ class Lazy implements Cache
      */
     private function isValidId($id)
     {
-        return (0 !== preg_match('/(^[a-zA-Z0-9]+([a-zA-Z_0-9.-]*))$/D', $id));
+        return 0 !== preg_match('/(^[a-zA-Z0-9]+([a-zA-Z_0-9.-]*))$/D', $id);
     }
 }

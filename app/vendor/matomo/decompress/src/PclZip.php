@@ -1,17 +1,17 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL v3 or later
  */
-
 namespace Matomo\Decompress;
 
 /**
  * Unzip wrapper around PclZip
  */
-class PclZip implements DecompressInterface
+class PclZip implements \Matomo\Decompress\DecompressInterface
 {
     /**
      * @var \PclZip
@@ -21,7 +21,6 @@ class PclZip implements DecompressInterface
      * @var string
      */
     public $filename;
-
     /**
      * Constructor
      *
@@ -29,10 +28,9 @@ class PclZip implements DecompressInterface
      */
     public function __construct($filename)
     {
-        $this->pclzip   = new \PclZip($filename);
+        $this->pclzip = new \PclZip($filename);
         $this->filename = $filename;
     }
-
     /**
      * Extract files from archive to target directory
      *
@@ -46,30 +44,18 @@ class PclZip implements DecompressInterface
         if (empty($list)) {
             return 0;
         }
-
         foreach ($list as $entry) {
             $filename = str_replace('\\', '/', $entry['stored_filename']);
-            $parts    = explode('/', $filename);
-
-            if (!strncmp($filename, '/', 1) ||
-                array_search('..', $parts) !== false ||
-                strpos($filename, ':') !== false
-            ) {
+            $parts = explode('/', $filename);
+            if (!strncmp($filename, '/', 1) || array_search('..', $parts) !== false || strpos($filename, ':') !== false) {
                 return 0;
             }
         }
-
         // PCLZIP_CB_PRE_EXTRACT callback returns 0 to skip, 1 to resume, or 2 to abort
-        return $this->pclzip->extract(
-            PCLZIP_OPT_PATH, $pathExtracted,
-            PCLZIP_OPT_STOP_ON_ERROR,
-            PCLZIP_OPT_REPLACE_NEWER,
-            PCLZIP_CB_PRE_EXTRACT, function ($p_event, &$p_header) use ($pathExtracted) {
-                return strncmp($p_header['filename'], $pathExtracted, strlen($pathExtracted)) ? 0 : 1;
-            }
-        );
+        return $this->pclzip->extract(PCLZIP_OPT_PATH, $pathExtracted, PCLZIP_OPT_STOP_ON_ERROR, PCLZIP_OPT_REPLACE_NEWER, PCLZIP_CB_PRE_EXTRACT, function ($p_event, &$p_header) use($pathExtracted) {
+            return strncmp($p_header['filename'], $pathExtracted, strlen($pathExtracted)) ? 0 : 1;
+        });
     }
-
     /**
      * Get error status string for the latest error
      *

@@ -6,13 +6,12 @@ use function zend_shm_cache_clear;
 use function zend_shm_cache_delete;
 use function zend_shm_cache_fetch;
 use function zend_shm_cache_store;
-
 /**
  * Zend Data Cache cache driver.
  *
  * @link   www.doctrine-project.org
  */
-class ZendDataCache extends CacheProvider
+class ZendDataCache extends \Doctrine\Common\Cache\CacheProvider
 {
     /**
      * {@inheritdoc}
@@ -21,7 +20,6 @@ class ZendDataCache extends CacheProvider
     {
         return zend_shm_cache_fetch($id);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -29,7 +27,6 @@ class ZendDataCache extends CacheProvider
     {
         return zend_shm_cache_fetch($id) !== false;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -37,7 +34,6 @@ class ZendDataCache extends CacheProvider
     {
         return zend_shm_cache_store($id, $data, $lifeTime);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -45,7 +41,6 @@ class ZendDataCache extends CacheProvider
     {
         return zend_shm_cache_delete($id);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -55,10 +50,8 @@ class ZendDataCache extends CacheProvider
         if (empty($namespace)) {
             return zend_shm_cache_clear();
         }
-
         return zend_shm_cache_clear($namespace);
     }
-
     /**
      * {@inheritdoc}
      */

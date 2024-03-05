@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,14 +10,12 @@
 namespace Matomo\Cache\Backend;
 
 use Matomo\Cache\Backend;
-
 class BaseDecorator implements Backend
 {
     /**
      * @var Backend
      */
     protected $decorated;
-
     /**
      * Constructor.
      *
@@ -29,32 +28,26 @@ class BaseDecorator implements Backend
     {
         $this->decorated = $decorated;
     }
-
     public function doFetch($id)
     {
         return $this->decorated->doFetch($id);
     }
-
     public function doContains($id)
     {
         return $this->decorated->doContains($id);
     }
-
     public function doSave($id, $data, $lifeTime = 0)
     {
-        return $this->decorated->doSave( $id, $data, $lifeTime);
+        return $this->decorated->doSave($id, $data, $lifeTime);
     }
-
     public function doDelete($id)
     {
         return $this->decorated->doDelete($id);
     }
-
     public function doFlush()
     {
         return $this->decorated->doFlush();
     }
-
     public function getBackend()
     {
         return $this->decorated;
