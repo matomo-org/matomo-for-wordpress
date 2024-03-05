@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Matomo\Ini;
 
 /**
@@ -17,12 +17,10 @@ class IniReader
      * @var bool
      */
     private $useNativeFunction;
-
     public function __construct()
     {
         $this->useNativeFunction = function_exists('parse_ini_string');
     }
-
     /**
      * Reads a INI configuration file and returns it as an array.
      *
@@ -47,10 +45,8 @@ class IniReader
     public function readFile($filename)
     {
         $ini = $this->getContentOfIniFile($filename);
-
         return $this->readString($ini);
     }
-
     /**
      * Reads a INI configuration string and returns it as an array.
      *
@@ -77,16 +73,13 @@ class IniReader
         // On PHP 5.3.3 an empty line return is needed at the end
         // See http://3v4l.org/jD1Lh
         $ini .= "\n";
-
         if ($this->useNativeFunction) {
             $array = $this->readWithNativeFunction($ini);
         } else {
             $array = $this->readWithAlternativeImplementation($ini);
         }
-
         return $array;
     }
-
     /**
      * @param string $ini
      * @throws IniReadingException
@@ -95,12 +88,10 @@ class IniReader
     private function readWithNativeFunction($ini)
     {
         $array = @parse_ini_string($ini, true);
-
         if ($array === false) {
             $e = error_get_last();
-            throw new IniReadingException('Syntax error in INI configuration: ' . $e['message']);
+            throw new \Matomo\Ini\IniReadingException('Syntax error in INI configuration: ' . $e['message']);
         }
-
         // We cannot use INI_SCANNER_RAW by default because it is buggy under PHP 5.3.14 and 5.4.4
         // http://3v4l.org/m24cT
         $rawValues = @parse_ini_string($ini, true, INI_SCANNER_RAW);
@@ -108,25 +99,19 @@ class IniReader
             return $this->decode($array, $array);
         }
         $array = $this->decode($array, $rawValues);
-
         return $array;
     }
-
     private function getContentOfIniFile($filename)
     {
         if (!file_exists($filename) || !is_readable($filename)) {
-            throw new IniReadingException(sprintf("The file %s doesn't exist or is not readable", $filename));
+            throw new \Matomo\Ini\IniReadingException(sprintf("The file %s doesn't exist or is not readable", $filename));
         }
-
         $content = $this->getFileContent($filename);
-
         if ($content === false) {
-            throw new IniReadingException(sprintf('Impossible to read the file %s', $filename));
+            throw new \Matomo\Ini\IniReadingException(sprintf('Impossible to read the file %s', $filename));
         }
-
         return $content;
     }
-
     /**
      * Reads ini comments for each key.
      *
@@ -152,15 +137,11 @@ class IniReader
     {
         $ini = $this->getContentOfIniFile($filename);
         $ini = $this->splitIniContentIntoLines($ini);
-
         $descriptions = array();
-
         $section = '';
         $lastComment = '';
-
         foreach ($ini as $line) {
             $line = trim($line);
-
             if (strpos($line, '[') === 0) {
                 $tmp = explode(']', $line);
                 $section = trim(substr($tmp[0], 1));
@@ -168,12 +149,10 @@ class IniReader
                 $lastComment = '';
                 continue;
             }
-
             if ($line === '') {
                 $lastComment = "\n";
                 continue;
             }
-
             if (!preg_match('/^[a-zA-Z0-9[]/', $line)) {
                 if (strpos($line, ';') === 0) {
                     $line = trim(substr($line, 1));
@@ -182,33 +161,25 @@ class IniReader
                 $lastComment .= $line . "\n";
                 continue;
             }
-
             [$key, $value] = explode('=', $line, 2);
-
             $key = trim($key);
             if (strpos($key, '[]') === strlen($key) - 2) {
                 $key = substr($key, 0, -2);
             }
-
             if (empty($descriptions[$section][$key])) {
                 $descriptions[$section][$key] = $lastComment;
             }
-
             $lastComment = '';
         }
-
         return $descriptions;
     }
-
     private function splitIniContentIntoLines($ini)
     {
         if (is_string($ini)) {
             $ini = explode("\n", str_replace("\r", "\n", $ini));
         }
-
         return $ini;
     }
-
     /**
      * Reimplementation in case `parse_ini_file()` is disabled.
      *
@@ -221,11 +192,9 @@ class IniReader
     private function readWithAlternativeImplementation($ini)
     {
         $ini = $this->splitIniContentIntoLines($ini);
-
         if (count($ini) == 0) {
             return array();
         }
-
         $sections = array();
         $values = array();
         $result = array();
@@ -234,12 +203,10 @@ class IniReader
         foreach ($ini as $line) {
             $line = trim($line);
             $line = str_replace("\t", " ", $line);
-
             // Comments
             if (!preg_match('/^[a-zA-Z0-9[]/', $line)) {
                 continue;
             }
-
             // Sections
             if ($line[0] == '[') {
                 $tmp = explode(']', $line);
@@ -247,7 +214,6 @@ class IniReader
                 $i++;
                 continue;
             }
-
             // Key-value pair
             [$key, $value] = explode('=', $line, 2);
             $key = trim($key);
@@ -255,10 +221,7 @@ class IniReader
             if (strstr($value, ";")) {
                 $tmp = explode(';', $value);
                 if (count($tmp) == 2) {
-                    if ((($value[0] != '"') && ($value[0] != "'")) ||
-                        preg_match('/^".*"\s*;/', $value) || preg_match('/^".*;[^"]*$/', $value) ||
-                        preg_match("/^'.*'\s*;/", $value) || preg_match("/^'.*;[^']*$/", $value)
-                    ) {
+                    if ($value[0] != '"' && $value[0] != "'" || preg_match('/^".*"\\s*;/', $value) || preg_match('/^".*;[^"]*$/', $value) || preg_match("/^'.*'\\s*;/", $value) || preg_match("/^'.*;[^']*\$/", $value)) {
                         $value = $tmp[0];
                     }
                 } else {
@@ -271,9 +234,7 @@ class IniReader
                     }
                 }
             }
-
             $value = trim($value);
-
             // Special keywords
             if ($value === 'true' || $value === 'yes' || $value === 'on') {
                 $value = true;
@@ -282,19 +243,17 @@ class IniReader
             } elseif ($value === '' || $value === 'null') {
                 $value = null;
             }
-
             if (is_string($value)) {
                 if (preg_match('/^"(.*)"$/', $value)) {
                     $value = preg_replace('/^"(.*)"$/', '$1', $value);
-                    $value = str_replace('\"', '"', $value);
-                } elseif (preg_match("/^'(.*)'$/", $value)) {
-                    $value = preg_replace("/^'(.*)'$/", '$1', $value);
-                    $value = str_replace("\'", "'", $value);
+                    $value = str_replace('\\"', '"', $value);
+                } elseif (preg_match("/^'(.*)'\$/", $value)) {
+                    $value = preg_replace("/^'(.*)'\$/", '$1', $value);
+                    $value = str_replace("\\'", "'", $value);
                 } else {
                     $value = trim($value, "'\"");
                 }
             }
-
             if ($i == 0) {
                 if (substr($key, -2) == '[]') {
                     $globals[substr($key, 0, -2)][] = $value;
@@ -309,7 +268,6 @@ class IniReader
                 }
             }
         }
-
         for ($j = 0; $j < $i; $j++) {
             if (isset($values[$j])) {
                 $result[$sections[$j]] = $values[$j];
@@ -317,12 +275,9 @@ class IniReader
                 $result[$sections[$j]] = array();
             }
         }
-
         $finalResult = $result + $globals;
-
         return $this->decode($finalResult, $finalResult);
     }
-
     /**
      * @param string $filename
      * @return bool|string Returns false if failure.
@@ -345,10 +300,8 @@ class IniReader
             fclose($handle);
             return $ini;
         }
-
         return false;
     }
-
     /**
      * We have to decode values manually because parse_ini_file() has a poor implementation.
      *
@@ -365,21 +318,16 @@ class IniReader
             }
             return $value;
         }
-
-        if (! is_string($value)) {
+        if (!is_string($value)) {
             return $value;
         }
-
         $value = $this->decodeBoolean($value, $rawValue);
         $value = $this->decodeNull($value, $rawValue);
-
         if (is_numeric($value) && $this->noLossWhenCastToInt($value)) {
             return $value + 0;
         }
-
         return $value;
     }
-
     private function decodeBoolean($value, $rawValue)
     {
         if ($value === '1' && ($rawValue === 'true' || $rawValue === 'yes' || $rawValue === 'on')) {
@@ -390,7 +338,6 @@ class IniReader
         }
         return $value;
     }
-
     private function decodeNull($value, $rawValue)
     {
         if ($value === '' && $rawValue === 'null') {
@@ -398,12 +345,10 @@ class IniReader
         }
         return $value;
     }
-
     private function noLossWhenCastToInt($value)
     {
         return (string) ($value + 0) === $value;
     }
-
     /**
      * @return bool
      */
@@ -411,7 +356,6 @@ class IniReader
     {
         return $this->useNativeFunction;
     }
-
     /**
      * @param bool $useNativeFunction
      *
@@ -420,7 +364,6 @@ class IniReader
     public function setUseNativeFunction($useNativeFunction)
     {
         $this->useNativeFunction = $useNativeFunction;
-
         return $this;
     }
 }

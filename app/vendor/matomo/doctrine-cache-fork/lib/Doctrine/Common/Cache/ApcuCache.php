@@ -10,13 +10,12 @@ use function apcu_fetch;
 use function apcu_sma_info;
 use function apcu_store;
 use function count;
-
 /**
  * APCu cache provider.
  *
  * @link   www.doctrine-project.org
  */
-class ApcuCache extends CacheProvider
+class ApcuCache extends \Doctrine\Common\Cache\CacheProvider
 {
     /**
      * {@inheritdoc}
@@ -25,7 +24,6 @@ class ApcuCache extends CacheProvider
     {
         return apcu_fetch($id);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -33,7 +31,6 @@ class ApcuCache extends CacheProvider
     {
         return apcu_exists($id);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -41,26 +38,22 @@ class ApcuCache extends CacheProvider
     {
         return apcu_store($id, $data, $lifeTime);
     }
-
     /**
      * {@inheritdoc}
      */
     protected function doDelete($id)
     {
         // apcu_delete returns false if the id does not exist
-        return apcu_delete($id) || ! apcu_exists($id);
+        return apcu_delete($id) || !apcu_exists($id);
     }
-
     /**
      * {@inheritdoc}
      */
     protected function doDeleteMultiple(array $keys)
     {
         $result = apcu_delete($keys);
-
         return $result !== false && count($result) !== count($keys);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -68,7 +61,6 @@ class ApcuCache extends CacheProvider
     {
         return apcu_clear_cache();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -76,31 +68,21 @@ class ApcuCache extends CacheProvider
     {
         return apcu_fetch($keys) ?: [];
     }
-
     /**
      * {@inheritdoc}
      */
     protected function doSaveMultiple(array $keysAndValues, $lifetime = 0)
     {
         $result = apcu_store($keysAndValues, null, $lifetime);
-
         return empty($result);
     }
-
     /**
      * {@inheritdoc}
      */
     protected function doGetStats()
     {
         $info = apcu_cache_info(true);
-        $sma  = apcu_sma_info();
-
-        return [
-            Cache::STATS_HITS             => $info['num_hits'],
-            Cache::STATS_MISSES           => $info['num_misses'],
-            Cache::STATS_UPTIME           => $info['start_time'],
-            Cache::STATS_MEMORY_USAGE     => $info['mem_size'],
-            Cache::STATS_MEMORY_AVAILABLE => $sma['avail_mem'],
-        ];
+        $sma = apcu_sma_info();
+        return [\Doctrine\Common\Cache\Cache::STATS_HITS => $info['num_hits'], \Doctrine\Common\Cache\Cache::STATS_MISSES => $info['num_misses'], \Doctrine\Common\Cache\Cache::STATS_UPTIME => $info['start_time'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_USAGE => $info['mem_size'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_AVAILABLE => $sma['avail_mem']];
     }
 }

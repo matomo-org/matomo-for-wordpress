@@ -7,17 +7,15 @@ use MongoCollection;
 use MongoDB\Collection;
 use const E_USER_DEPRECATED;
 use function trigger_error;
-
 /**
  * MongoDB cache provider.
  */
-class MongoDBCache extends CacheProvider
+class MongoDBCache extends \Doctrine\Common\Cache\CacheProvider
 {
     /**
      * The data field will store the serialized PHP value.
      */
     public const DATA_FIELD = 'd';
-
     /**
      * The expiration field will store a MongoDate value indicating when the
      * cache entry should expire.
@@ -34,10 +32,8 @@ class MongoDBCache extends CacheProvider
      * @see http://docs.mongodb.org/manual/tutorial/expire-data/
      */
     public const EXPIRATION_FIELD = 'e';
-
     /** @var CacheProvider */
     private $provider;
-
     /**
      * This provider will default to the write concern and read preference
      * options set on the collection instance (or inherited from MongoDB or
@@ -54,14 +50,13 @@ class MongoDBCache extends CacheProvider
     {
         if ($collection instanceof MongoCollection) {
             @trigger_error('Using a MongoCollection instance for creating a cache adapter is deprecated and will be removed in 2.0', E_USER_DEPRECATED);
-            $this->provider = new LegacyMongoDBCache($collection);
+            $this->provider = new \Doctrine\Common\Cache\LegacyMongoDBCache($collection);
         } elseif ($collection instanceof Collection) {
-            $this->provider = new ExtMongoDBCache($collection);
+            $this->provider = new \Doctrine\Common\Cache\ExtMongoDBCache($collection);
         } else {
-            throw new InvalidArgumentException('Invalid collection given - expected a MongoCollection or MongoDB\Collection instance');
+            throw new InvalidArgumentException('Invalid collection given - expected a MongoCollection or MongoDB\\Collection instance');
         }
     }
-
     /**
      * {@inheritdoc}
      */
@@ -69,7 +64,6 @@ class MongoDBCache extends CacheProvider
     {
         return $this->provider->doFetch($id);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -77,7 +71,6 @@ class MongoDBCache extends CacheProvider
     {
         return $this->provider->doContains($id);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -85,7 +78,6 @@ class MongoDBCache extends CacheProvider
     {
         return $this->provider->doSave($id, $data, $lifeTime);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -93,7 +85,6 @@ class MongoDBCache extends CacheProvider
     {
         return $this->provider->doDelete($id);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -101,7 +92,6 @@ class MongoDBCache extends CacheProvider
     {
         return $this->provider->doFlush();
     }
-
     /**
      * {@inheritdoc}
      */

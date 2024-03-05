@@ -7,9 +7,7 @@
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
-
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace DeviceDetector\Parser;
 
 /**
@@ -19,31 +17,27 @@ namespace DeviceDetector\Parser;
  *
  * Detected bots are defined in regexes/bots.yml
  */
-class Bot extends AbstractBotParser
+class Bot extends \DeviceDetector\Parser\AbstractBotParser
 {
     /**
      * @var string
      */
     protected $fixtureFile = 'regexes/bots.yml';
-
     /**
      * @var string
      */
     protected $parserName = 'bot';
-
     /**
      * @var bool
      */
     protected $discardDetails = false;
-
     /**
      * Enables information discarding
      */
-    public function discardDetails(): void
+    public function discardDetails() : void
     {
         $this->discardDetails = true;
     }
-
     /**
      * Parses the current UA and checks whether it contains bot information
      *
@@ -62,27 +56,22 @@ class Bot extends AbstractBotParser
      *
      * @return array|null
      */
-    public function parse(): ?array
+    public function parse() : ?array
     {
         $result = null;
-
         if ($this->preMatchOverall()) {
             if ($this->discardDetails) {
                 return [true];
             }
-
             foreach ($this->getRegexes() as $regex) {
                 $matches = $this->matchUserAgent($regex['regex']);
-
                 if ($matches) {
                     unset($regex['regex']);
                     $result = $regex;
-
                     break;
                 }
             }
         }
-
         return $result;
     }
 }

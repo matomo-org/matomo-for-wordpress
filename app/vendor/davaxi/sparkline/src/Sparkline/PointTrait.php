@@ -3,7 +3,6 @@
 namespace Davaxi\Sparkline;
 
 use InvalidArgumentException;
-
 /**
  * Trait PointTrait.
  */
@@ -13,7 +12,6 @@ trait PointTrait
      * @var array
      */
     protected $points = [];
-
     /**
      * @param int|string $index
      * @param float $dotRadius
@@ -33,32 +31,23 @@ trait PointTrait
             throw new InvalidArgumentException('Invalid index : ' . $index);
         }
         $this->checkPointIndex($index, $seriesIndex);
-        $this->points[] = [
-            'series' => $seriesIndex,
-            'index' => $index,
-            'radius' => $dotRadius,
-            'color' => $this->colorHexToRGB($colorHex),
-        ];
+        $this->points[] = ['series' => $seriesIndex, 'index' => $index, 'radius' => $dotRadius, 'color' => $this->colorHexToRGB($colorHex)];
     }
-
     /**
      * @param int $seriesIndex
      * @return array
      */
-    protected function getPointIndexMapping(int $seriesIndex = 0): array
+    protected function getPointIndexMapping(int $seriesIndex = 0) : array
     {
         $count = $this->getCount($seriesIndex);
         list($minIndex, $min, $maxIndex, $max) = $this->getExtremeValues($seriesIndex);
-
         $mapping = [];
         $mapping['first'] = $count > 1 ? 0 : -1;
         $mapping['last'] = $count > 1 ? $count - 1 : -1;
         $mapping['minimum'] = $min !== $max ? $minIndex : -1;
         $mapping['maximum'] = $min !== $max ? $maxIndex : -1;
-
         return $mapping;
     }
-
     /**
      * @param int $index
      * @param int $seriesIndex

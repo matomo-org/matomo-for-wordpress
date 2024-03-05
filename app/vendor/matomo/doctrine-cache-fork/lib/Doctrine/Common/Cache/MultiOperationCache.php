@@ -7,6 +7,6 @@ namespace Doctrine\Common\Cache;
  *
  * @link   www.doctrine-project.org
  */
-interface MultiOperationCache extends MultiGetCache, MultiDeleteCache, MultiPutCache
+interface MultiOperationCache extends \Doctrine\Common\Cache\MultiGetCache, \Doctrine\Common\Cache\MultiDeleteCache, \Doctrine\Common\Cache\MultiPutCache
 {
 }

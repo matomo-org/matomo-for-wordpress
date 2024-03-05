@@ -7,9 +7,7 @@
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
-
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace DeviceDetector\Parser\Device;
 
 /**
@@ -17,13 +15,12 @@ namespace DeviceDetector\Parser\Device;
  *
  * Device parser for mobile detection
  */
-class Mobile extends AbstractDeviceParser
+class Mobile extends \DeviceDetector\Parser\Device\AbstractDeviceParser
 {
     /**
      * @var string
      */
     protected $fixtureFile = 'regexes/device/mobiles.yml';
-
     /**
      * @var string
      */

@@ -7,9 +7,7 @@
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
-
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace DeviceDetector\Parser\Device;
 
 /**
@@ -17,27 +15,24 @@ namespace DeviceDetector\Parser\Device;
  *
  * Device parser for console detection
  */
-class Console extends AbstractDeviceParser
+class Console extends \DeviceDetector\Parser\Device\AbstractDeviceParser
 {
     /**
      * @var string
      */
     protected $fixtureFile = 'regexes/device/consoles.yml';
-
     /**
      * @var string
      */
     protected $parserName = 'console';
-
     /**
      * @inheritdoc
      */
-    public function parse(): ?array
+    public function parse() : ?array
     {
         if (!$this->preMatchOverall()) {
             return null;
         }
-
         return parent::parse();
     }
 }

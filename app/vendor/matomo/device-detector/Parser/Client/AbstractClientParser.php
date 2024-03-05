@@ -7,25 +7,20 @@
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
-
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace DeviceDetector\Parser\Client;
 
 use DeviceDetector\Parser\AbstractParser;
-
 abstract class AbstractClientParser extends AbstractParser
 {
     /**
      * @var string
      */
     protected $fixtureFile = '';
-
     /**
      * @var string
      */
     protected $parserName = '';
-
     /**
      * Parses the current UA and checks whether it contains any client information
      *
@@ -41,29 +36,20 @@ abstract class AbstractClientParser extends AbstractParser
      *
      * @return array|null
      */
-    public function parse(): ?array
+    public function parse() : ?array
     {
         $result = null;
-
         if ($this->preMatchOverall()) {
             foreach ($this->getRegexes() as $regex) {
                 $matches = $this->matchUserAgent($regex['regex']);
-
                 if ($matches) {
-                    $result = [
-                        'type'    => $this->parserName,
-                        'name'    => $this->buildByMatch($regex['name'], $matches),
-                        'version' => $this->buildVersion((string) $regex['version'], $matches),
-                    ];
-
+                    $result = ['type' => $this->parserName, 'name' => $this->buildByMatch($regex['name'], $matches), 'version' => $this->buildVersion((string) $regex['version'], $matches)];
                     break;
                 }
             }
         }
-
         return $result;
     }
-
     /**
      * Returns all names defined in the regexes
      *
@@ -71,22 +57,19 @@ abstract class AbstractClientParser extends AbstractParser
      *
      * @return array
      */
-    public static function getAvailableClients(): array
+    public static function getAvailableClients() : array
     {
-        $instance = new static(); // @phpstan-ignore-line
-        $regexes  = $instance->getRegexes();
-        $names    = [];
-
+        $instance = new static();
+        // @phpstan-ignore-line
+        $regexes = $instance->getRegexes();
+        $names = [];
         foreach ($regexes as $regex) {
             if ('$1' === $regex['name']) {
                 continue;
             }
-
             $names[] = $regex['name'];
         }
-
         \natcasesort($names);
-
         return \array_unique($names);
     }
 }

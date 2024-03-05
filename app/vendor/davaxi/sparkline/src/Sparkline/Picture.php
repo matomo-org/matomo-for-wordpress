@@ -8,22 +8,18 @@ namespace Davaxi\Sparkline;
 class Picture
 {
     const DOT_RADIUS_TO_WIDTH = 2;
-
     /**
      * @var resource
      */
     protected $resource;
-
     /**
      * @var int
      */
     protected $height;
-
     /**
      * @var int
      */
     protected $width;
-
     /**
      * Picture constructor.
      * @param int $width
@@ -35,61 +31,35 @@ class Picture
         $this->height = $height;
         $this->resource = imagecreatetruecolor($width, $height);
     }
-
     /**
      * @param array $setColor
      *
      * @return int
      */
-    protected function getBackground(array $setColor = []): int
+    protected function getBackground(array $setColor = []) : int
     {
         if ($setColor) {
-            return imagecolorallocate(
-                $this->resource,
-                $setColor[0],
-                $setColor[1],
-                $setColor[2]
-            );
+            return imagecolorallocate($this->resource, $setColor[0], $setColor[1], $setColor[2]);
         }
-
-        return imagecolorallocatealpha(
-            $this->resource,
-            0,
-            0,
-            0,
-            127
-        );
+        return imagecolorallocatealpha($this->resource, 0, 0, 0, 127);
     }
-
     /**
      * @param array $lineColor
      *
      * @return int
      */
-    public function getLineColor(array $lineColor): int
+    public function getLineColor(array $lineColor) : int
     {
-        return imagecolorallocate(
-            $this->resource,
-            $lineColor[0],
-            $lineColor[1],
-            $lineColor[2]
-        );
+        return imagecolorallocate($this->resource, $lineColor[0], $lineColor[1], $lineColor[2]);
     }
-
     /**
      * @param array $backgroundColor
      */
     public function applyBackground(array $backgroundColor)
     {
         imagesavealpha($this->resource, true);
-        imagefill(
-            $this->resource,
-            0,
-            0,
-            $this->getBackground($backgroundColor)
-        );
+        imagefill($this->resource, 0, 0, $this->getBackground($backgroundColor));
     }
-
     /**
      * @param int $lineThickness
      */
@@ -97,7 +67,6 @@ class Picture
     {
         imagesetthickness($this->resource, $lineThickness);
     }
-
     /**
      * @param array $polygon
      * @param array $fillColor
@@ -115,7 +84,6 @@ class Picture
             imagefilledpolygon($this->resource, $polygon, $fillColor);
         }
     }
-
     /**
      * @param array $line
      * @param array $lineColor
@@ -128,7 +96,6 @@ class Picture
             imageline($this->resource, $pictureX1, $pictureY1, $pictureX2, $pictureY2, $lineColor);
         }
     }
-
     /**
      * @param int $positionX
      * @param int $positionY
@@ -140,24 +107,10 @@ class Picture
         if (!$color || !$radius) {
             return;
         }
-
-        $minimumColor = imagecolorallocate(
-            $this->resource,
-            $color[0],
-            $color[1],
-            $color[2]
-        );
-        $dotDiameter = (int)round($radius * static::DOT_RADIUS_TO_WIDTH);
-        imagefilledellipse(
-            $this->resource,
-            $positionX,
-            $positionY,
-            $dotDiameter,
-            $dotDiameter,
-            $minimumColor
-        );
+        $minimumColor = imagecolorallocate($this->resource, $color[0], $color[1], $color[2]);
+        $dotDiameter = (int) round($radius * static::DOT_RADIUS_TO_WIDTH);
+        imagefilledellipse($this->resource, $positionX, $positionY, $dotDiameter, $dotDiameter, $minimumColor);
     }
-
     /**
      * @param int $width
      * @param int $height
@@ -168,21 +121,9 @@ class Picture
     {
         $sparkline = imagecreatetruecolor($width, $height);
         imagealphablending($sparkline, false);
-        imagecopyresampled(
-            $sparkline,
-            $this->resource,
-            0,
-            0,
-            0,
-            0,
-            $width,
-            $height,
-            $this->width,
-            $this->height
-        );
+        imagecopyresampled($sparkline, $this->resource, 0, 0, 0, 0, $width, $height, $this->width, $this->height);
         imagesavealpha($sparkline, true);
         imagedestroy($this->resource);
-
         return $sparkline;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,7 +10,6 @@
 namespace Matomo\Cache;
 
 use Matomo\Cache\Backend;
-
 /**
  * This cache uses one "cache" entry for all cache entries it contains.
  *
@@ -25,7 +25,7 @@ use Matomo\Cache\Backend;
  * // ... at some point or at the end of the request
  * $cache->persistCacheIfNeeded($lifeTime = 43200);
  */
-class Eager implements Cache
+class Eager implements \Matomo\Cache\Cache
 {
     /**
      * @var Backend
@@ -34,7 +34,6 @@ class Eager implements Cache
     private $storageId;
     private $content = array();
     private $isDirty = false;
-
     /**
      * Loads the cache entries from the given backend using the given storageId.
      *
@@ -45,14 +44,11 @@ class Eager implements Cache
     {
         $this->storage = $storage;
         $this->storageId = $storageId;
-
         $content = $storage->doFetch($storageId);
-
         if (is_array($content)) {
             $this->content = $content;
         }
     }
-
     /**
      * Fetches an entry from the cache.
      *
@@ -66,7 +62,6 @@ class Eager implements Cache
     {
         return $this->content[$id];
     }
-
     /**
      * {@inheritdoc}
      */
@@ -74,7 +69,6 @@ class Eager implements Cache
     {
         return array_key_exists($id, $this->content);
     }
-
     /**
      * Puts data into the cache.
      *
@@ -89,12 +83,10 @@ class Eager implements Cache
             throw new \InvalidArgumentException('You cannot use this cache to cache an object, only arrays, strings and numbers. Have a look at Transient cache.');
             // for performance reasons we do currently not recursively search whether any array contains an object.
         }
-
         $this->content[$id] = $content;
         $this->isDirty = true;
         return true;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -105,23 +97,18 @@ class Eager implements Cache
             unset($this->content[$id]);
             return true;
         }
-
         return false;
     }
-
     /**
      * {@inheritdoc}
      */
     public function flushAll()
     {
         $this->storage->doDelete($this->storageId);
-
         $this->content = array();
         $this->isDirty = false;
-
         return true;
     }
-
     /**
      * Will persist all previously made changes if there were any.
      *
@@ -134,5 +121,4 @@ class Eager implements Cache
             $this->storage->doSave($this->storageId, $this->content, $lifeTime);
         }
     }
-
 }

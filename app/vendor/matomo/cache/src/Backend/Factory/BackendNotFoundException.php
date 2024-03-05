@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -8,8 +9,7 @@
  */
 namespace Matomo\Cache\Backend\Factory;
 
-use \Exception;
-
-class BackendNotFoundException extends Exception {
-
+use Exception;
+class BackendNotFoundException extends Exception
+{
 }

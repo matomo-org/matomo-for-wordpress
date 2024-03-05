@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -17,7 +18,6 @@ interface Cache
      * @return mixed The cached data or FALSE, if no cache entry exists for the given id.
      */
     public function fetch($id);
-
     /**
      * Tests if an entry exists in the cache.
      *
@@ -25,7 +25,6 @@ interface Cache
      * @return boolean TRUE if a cache entry exists for the given cache id, FALSE otherwise.
      */
     public function contains($id);
-
     /**
      * Puts data into the cache.
      *
@@ -37,7 +36,6 @@ interface Cache
      * @return boolean TRUE if the entry was successfully stored in the cache, FALSE otherwise.
      */
     public function save($id, $data, $lifeTime = 0);
-
     /**
      * Deletes a cache entry.
      *
@@ -45,7 +43,6 @@ interface Cache
      * @return boolean TRUE if the cache entry was successfully deleted, FALSE otherwise.
      */
     public function delete($id);
-
     /**
      * Flushes all cache entries.
      *

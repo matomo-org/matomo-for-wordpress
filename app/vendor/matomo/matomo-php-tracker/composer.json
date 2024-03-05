@@ -1,20 +1,25 @@
 {
-    "name": "matomo/matomo-php-tracker",
+    "name": "matomo\/matomo-php-tracker",
     "description": "PHP Client for Matomo Analytics Tracking API",
-    "keywords": ["matomo","piwik","tracker","analytics"],
-    "homepage": "https://matomo.org",
+    "keywords": [
+        "matomo",
+        "piwik",
+        "tracker",
+        "analytics"
+    ],
+    "homepage": "https:\/\/matomo.org",
     "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "The Matomo Team",
             "email": "hello@matomo.org",
-            "homepage": "https://matomo.org/team/"
+            "homepage": "https:\/\/matomo.org\/team\/"
         }
     ],
     "support": {
-        "forum": "https://forum.matomo.org/",
-        "issues": "https://github.com/matomo-org/matomo-php-tracker/issues",
-        "source": "https://github.com/matomo-org/matomo-php-tracker"
+        "forum": "https:\/\/forum.matomo.org\/",
+        "issues": "https:\/\/github.com\/matomo-org\/matomo-php-tracker\/issues",
+        "source": "https:\/\/github.com\/matomo-org\/matomo-php-tracker"
     },
     "require": {
         "php": "^7.0 || ^8.0",
@@ -24,9 +29,11 @@
         "ext-curl": "Using this extension to issue the HTTPS request to Matomo"
     },
     "autoload": {
-        "classmap": ["."]
+        "classmap": [
+            "."
+        ]
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.3"
+        "phpunit\/phpunit": "^9.3"
     }
 }
