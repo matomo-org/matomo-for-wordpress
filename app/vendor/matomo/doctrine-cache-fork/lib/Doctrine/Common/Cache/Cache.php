@@ -9,10 +9,10 @@ namespace Doctrine\Common\Cache;
  */
 interface Cache
 {
-    public const STATS_HITS             = 'hits';
-    public const STATS_MISSES           = 'misses';
-    public const STATS_UPTIME           = 'uptime';
-    public const STATS_MEMORY_USAGE     = 'memory_usage';
+    public const STATS_HITS = 'hits';
+    public const STATS_MISSES = 'misses';
+    public const STATS_UPTIME = 'uptime';
+    public const STATS_MEMORY_USAGE = 'memory_usage';
     public const STATS_MEMORY_AVAILABLE = 'memory_available';
     /**
      * Only for backward compatibility (may be removed in next major release)
@@ -20,7 +20,6 @@ interface Cache
      * @deprecated
      */
     public const STATS_MEMORY_AVAILIABLE = 'memory_available';
-
     /**
      * Fetches an entry from the cache.
      *
@@ -29,7 +28,6 @@ interface Cache
      * @return mixed The cached data or FALSE, if no cache entry exists for the given id.
      */
     public function fetch($id);
-
     /**
      * Tests if an entry exists in the cache.
      *
@@ -38,7 +36,6 @@ interface Cache
      * @return bool TRUE if a cache entry exists for the given cache id, FALSE otherwise.
      */
     public function contains($id);
-
     /**
      * Puts data into the cache.
      *
@@ -53,7 +50,6 @@ interface Cache
      * @return bool TRUE if the entry was successfully stored in the cache, FALSE otherwise.
      */
     public function save($id, $data, $lifeTime = 0);
-
     /**
      * Deletes a cache entry.
      *
@@ -63,7 +59,6 @@ interface Cache
      *              Deleting a non-existing entry is considered successful.
      */
     public function delete($id);
-
     /**
      * Retrieves cached information from the data store.
      *

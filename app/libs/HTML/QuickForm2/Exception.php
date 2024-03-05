@@ -45,7 +45,7 @@ namespace {
      * @link       http://pear.php.net/package/HTML_QuickForm2
      */
     /**
-     * Base class for exceptions in PEAR
+     * Base class for exceptions in \Matomo\Dependencies\PEAR
      */
     // require_once 'PEAR/Exception.php';
     /**
@@ -60,7 +60,7 @@ namespace {
      * @package    HTML_QuickForm2
      * @version    Release: @package_version@
      */
-    class HTML_QuickForm2_Exception extends \PEAR_Exception
+    class HTML_QuickForm2_Exception extends \Matomo\Dependencies\PEAR_Exception
     {
     }
     /**

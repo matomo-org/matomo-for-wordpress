@@ -10,7 +10,7 @@
 namespace Piwik\Plugins\GeoIp2;
 
 use Exception;
-use GeoIp2\Database\Reader;
+use Matomo\Dependencies\GeoIp2\Database\Reader;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;

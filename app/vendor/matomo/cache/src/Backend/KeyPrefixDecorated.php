@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,14 +10,12 @@
 namespace Matomo\Cache\Backend;
 
 use Matomo\Cache\Backend;
-
-class KeyPrefixDecorated extends BaseDecorator
+class KeyPrefixDecorated extends \Matomo\Cache\Backend\BaseDecorator
 {
     /**
      * @var string
      */
     private $keyPrefix;
-
     /**
      * Constructor.
      *
@@ -30,29 +29,23 @@ class KeyPrefixDecorated extends BaseDecorator
         if (!isset($options['keyPrefix']) || !is_string($options['keyPrefix'])) {
             throw new \InvalidArgumentException("The keyPrefix option is required and must be a string");
         }
-
         $this->keyPrefix = $options['keyPrefix'];
         parent::__construct($decorated);
     }
-
     public function doFetch($id)
     {
         return $this->decorated->doFetch($this->keyPrefix . $id);
     }
-
     public function doContains($id)
     {
         return $this->decorated->doContains($this->keyPrefix . $id);
     }
-
     public function doSave($id, $data, $lifeTime = 0)
     {
         return $this->decorated->doSave($this->keyPrefix . $id, $data, $lifeTime);
     }
-
     public function doDelete($id)
     {
         return $this->decorated->doDelete($this->keyPrefix . $id);
     }
-
 }

@@ -7,7 +7,7 @@ namespace Doctrine\Common\Cache;
  *
  * @link   www.doctrine-project.org
  */
-class VoidCache extends CacheProvider
+class VoidCache extends \Doctrine\Common\Cache\CacheProvider
 {
     /**
      * {@inheritDoc}
@@ -16,7 +16,6 @@ class VoidCache extends CacheProvider
     {
         return false;
     }
-
     /**
      * {@inheritDoc}
      */
@@ -24,7 +23,6 @@ class VoidCache extends CacheProvider
     {
         return false;
     }
-
     /**
      * {@inheritDoc}
      */
@@ -32,7 +30,6 @@ class VoidCache extends CacheProvider
     {
         return true;
     }
-
     /**
      * {@inheritDoc}
      */
@@ -40,7 +37,6 @@ class VoidCache extends CacheProvider
     {
         return true;
     }
-
     /**
      * {@inheritDoc}
      */
@@ -48,7 +44,6 @@ class VoidCache extends CacheProvider
     {
         return true;
     }
-
     /**
      * {@inheritDoc}
      */

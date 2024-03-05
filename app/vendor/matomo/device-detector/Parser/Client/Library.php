@@ -7,9 +7,7 @@
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
-
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace DeviceDetector\Parser\Client;
 
 /**
@@ -17,13 +15,12 @@ namespace DeviceDetector\Parser\Client;
  *
  * Client parser for tool & software detection
  */
-class Library extends AbstractClientParser
+class Library extends \DeviceDetector\Parser\Client\AbstractClientParser
 {
     /**
      * @var string
      */
     protected $fixtureFile = 'regexes/client/libraries.yml';
-
     /**
      * @var string
      */

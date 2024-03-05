@@ -4,7 +4,6 @@ namespace Doctrine\Common\Cache;
 
 use Memcache;
 use function time;
-
 /**
  * Memcache cache provider.
  *
@@ -12,11 +11,10 @@ use function time;
  *
  * @link   www.doctrine-project.org
  */
-class MemcacheCache extends CacheProvider
+class MemcacheCache extends \Doctrine\Common\Cache\CacheProvider
 {
     /** @var Memcache|null */
     private $memcache;
-
     /**
      * Sets the memcache instance to use.
      *
@@ -26,7 +24,6 @@ class MemcacheCache extends CacheProvider
     {
         $this->memcache = $memcache;
     }
-
     /**
      * Gets the memcache instance used by the cache.
      *
@@ -36,7 +33,6 @@ class MemcacheCache extends CacheProvider
     {
         return $this->memcache;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -44,7 +40,6 @@ class MemcacheCache extends CacheProvider
     {
         return $this->memcache->get($id);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -52,11 +47,9 @@ class MemcacheCache extends CacheProvider
     {
         $flags = null;
         $this->memcache->get($id, $flags);
-
         //if memcache has changed the value of "flags", it means the value exists
         return $flags !== null;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -65,19 +58,16 @@ class MemcacheCache extends CacheProvider
         if ($lifeTime > 30 * 24 * 3600) {
             $lifeTime = time() + $lifeTime;
         }
-
         return $this->memcache->set($id, $data, 0, (int) $lifeTime);
     }
-
     /**
      * {@inheritdoc}
      */
     protected function doDelete($id)
     {
         // Memcache::delete() returns false if entry does not exist
-        return $this->memcache->delete($id) || ! $this->doContains($id);
+        return $this->memcache->delete($id) || !$this->doContains($id);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -85,20 +75,12 @@ class MemcacheCache extends CacheProvider
     {
         return $this->memcache->flush();
     }
-
     /**
      * {@inheritdoc}
      */
     protected function doGetStats()
     {
         $stats = $this->memcache->getStats();
-
-        return [
-            Cache::STATS_HITS   => $stats['get_hits'],
-            Cache::STATS_MISSES => $stats['get_misses'],
-            Cache::STATS_UPTIME => $stats['uptime'],
-            Cache::STATS_MEMORY_USAGE     => $stats['bytes'],
-            Cache::STATS_MEMORY_AVAILABLE => $stats['limit_maxbytes'],
-        ];
+        return [\Doctrine\Common\Cache\Cache::STATS_HITS => $stats['get_hits'], \Doctrine\Common\Cache\Cache::STATS_MISSES => $stats['get_misses'], \Doctrine\Common\Cache\Cache::STATS_UPTIME => $stats['uptime'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_USAGE => $stats['bytes'], \Doctrine\Common\Cache\Cache::STATS_MEMORY_AVAILABLE => $stats['limit_maxbytes']];
     }
 }

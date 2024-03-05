@@ -41,7 +41,7 @@ return array(
 
 		// the location where we store the generated javascript or json container files
 		$paths = new \WpMatomo\Paths();
-		return rtrim('/'. $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir().'/'), '/');
+		return rtrim('/'. $paths->get_relative_dir_to_matomo($paths->get_upload_base_dir().'/', @realpath(MATOMO_ANALYTICS_FILE)), '/');
 	},
 	'TagManagerContainerWebDir' => function () {
 		if (defined('MATOMO_TAG_MANAGER_WEB_DIR')) {

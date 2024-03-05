@@ -1,34 +1,39 @@
 {
-    "name": "matomo/cache",
+    "name": "matomo\/cache",
     "type": "library",
     "license": "LGPL-3.0",
     "description": "PHP caching library based on Doctrine cache",
-    "keywords": ["cache","array","file","redis"],
+    "keywords": [
+        "cache",
+        "array",
+        "file",
+        "redis"
+    ],
     "authors": [
         {
             "name": "The Matomo Team",
             "email": "hello@matomo.org",
-            "homepage": "https://matomo.org/the-matomo-team/"
+            "homepage": "https:\/\/matomo.org\/the-matomo-team\/"
         }
     ],
     "autoload": {
         "psr-4": {
-            "Matomo\\Cache\\": "src/"
+            "Matomo\\Cache\\": "src\/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Matomo\\Cache\\": "tests/"
+            "Tests\\Matomo\\Cache\\": "tests\/"
         }
     },
     "require": {
         "php": ">=7.1",
-        "matomo/doctrine-cache-fork": "1.10.4"
+        "matomo\/doctrine-cache-fork": "1.10.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "~7.0"
+        "phpunit\/phpunit": "~7.0"
     },
-    "config":{
+    "config": {
         "platform": {
             "php": "7.1.0"
         }
@@ -36,7 +41,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/matomo-org/cache.git"
+            "url": "https:\/\/github.com\/matomo-org\/cache.git"
         }
     ]
 }

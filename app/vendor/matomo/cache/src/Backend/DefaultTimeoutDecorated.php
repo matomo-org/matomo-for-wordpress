@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Matomo - free/libre analytics platform
  *
@@ -9,15 +10,12 @@
 namespace Matomo\Cache\Backend;
 
 use Matomo\Cache\Backend;
-
-class DefaultTimeoutDecorated extends BaseDecorator
+class DefaultTimeoutDecorated extends \Matomo\Cache\Backend\BaseDecorator
 {
     /**
      * @var integer
      */
     private $defaultTTL;
-
-
     /**
      * Constructor.
      *
@@ -31,13 +29,11 @@ class DefaultTimeoutDecorated extends BaseDecorator
         if (!isset($options['defaultTimeout']) || !is_int($options['defaultTimeout'])) {
             throw new \InvalidArgumentException("The defaultTimeout option is required and must be an integer");
         }
-
         $this->defaultTTL = $options['defaultTimeout'];
         parent::__construct($decorated);
     }
-
     public function doSave($id, $data, $lifeTime = 0)
     {
-        return $this->decorated->doSave( $id, $data, $lifeTime ?: $this->defaultTTL);
+        return $this->decorated->doSave($id, $data, $lifeTime ?: $this->defaultTTL);
     }
 }

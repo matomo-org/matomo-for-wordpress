@@ -1241,6 +1241,19 @@ class SystemReport {
 			];
 		}
 
+		$paths = new Paths();
+		$paths->get_file_system();
+
+		$filesystem_init_succeeded = $paths->get_host_init_filesystem_succeeded();
+		$rows[]                    = [
+			'name'       => 'WP_Filesystem Initialized',
+			'value'      => $filesystem_init_succeeded,
+			'is_warning' => ! $filesystem_init_succeeded,
+			'comment'    => $filesystem_init_succeeded
+				? null
+				: esc_html__( 'The WordPress Filesystem abstraction was not initialized correctly (WP_Filesystem() returned false). This indicates a WordPress or server configuration issue which may cause problems in Matomo and other plugins. To resolve it, contact your hosting provider.', 'matomo' ),
+		];
+
 		return $rows;
 	}
 
