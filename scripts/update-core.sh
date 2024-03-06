@@ -127,6 +127,8 @@ rm $MATOMO_ROOT/vendor/composer/installed.json
 rm $MATOMO_ROOT/vendor/lox/xhprof/package.xml
 rm $MATOMO_ROOT/vendor/prefixed/pear/archive_tar/package.xml
 rm $MATOMO_ROOT/vendor/prefixed/pear/console_getopt/package.xml
+rm -r $MATOMO_ROOT/vendor/phpmailer
+rm $MATOMO_ROOT/core/Mail/Transport.php
 
 rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/tools
 rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/examples
