@@ -37,6 +37,7 @@ services:
     entrypoint: /usr/src/entrypoint.sh
     depends_on:
       - $BACKEND
+      - mailer
     deploy:
       restart_policy:
         condition: on-failure
@@ -178,3 +179,16 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+
+  mailer:
+    image: axllent/mailpit
+    deploy:
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - ./docker/mailer:/data
+    ports:
+      - 8025:8025
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
