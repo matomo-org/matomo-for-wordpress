@@ -131,6 +131,17 @@ define( 'NONCE_SALT',       'put your unique phrase here' );
 define('FORCE_SSL', false);
 define('FORCE_SSL_ADMIN', false);
 
+# mail settings
+define( 'WPMS_ON', true );
+define( 'WPMS_MAILER', 'smtp' );
+define( 'WPMS_SMTP_HOST', 'mailer' );
+define( 'WPMS_SMTP_PORT', 1025 );
+define( 'WPMS_SSL', 'none' );
+define( 'WPMS_SMTP_AUTH', false );
+define( 'WPMS_SMTP_AUTOTLS', true );
+define( 'WPMS_SMTP_USER', '' );
+define( 'WPMS_SMTP_PASS', '' );
+
 define( 'MATOMO_ANALYTICS_FILE', __DIR__ . '/wp-content/plugins/matomo/matomo.php' );
 define( 'MATOMO_LOCAL_ENVIRONMENT', 1 );
 
@@ -234,7 +245,7 @@ if [ ! -f "/var/www/html/index.php" ]; then
 <ul>
 <?php
   foreach (scandir(__DIR__) as \$folder) {
-    if (preg_match('/^\d+\.\d+\.\d+\$/', \$folder) && is_dir(\$folder)) {
+    if (is_dir(\$folder) && is_file(\$folder . '/wp-load.php')) {
 ?>
 <li><a href="<?php echo \$folder; ?>/"><?php echo \$folder; ?></a></li>
 <?php
@@ -318,6 +329,9 @@ if [[ "$WOOCOMMERCE" == "1" && ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER wc product create --name="Small camera tripod in red" --short_description="Small camera tripod in red" --description="Small portable tripod for your camera. Available colors: red." --slug="camera-tripod-small" --regular_price="13.99" --sku="PROD_5" --images="[{\"id\":$IMAGE_ID}]" || true
 fi
 
+# setup wp-mail-smtp
+/var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root plugin install wp-mail-smtp --activate
+
 # create WordPress app password for matomo API
 if [[ ! -f /var/www/html/$WORDPRESS_FOLDER/apppassword ]]; then
   if /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root --user=$WP_ADMIN_USER user application-password exists root wp_rest; then
@@ -361,6 +375,18 @@ if [ ! -f $WP_TESTS_DIR/wp-tests-config.php ]; then
   sed -i "s/yourusernamehere/root/" "$WP_TESTS_DIR"/wp-tests-config.php
   sed -i "s/yourpasswordhere/pass/" "$WP_TESTS_DIR"/wp-tests-config.php
   sed -i "s|'localhost'|getenv('WP_DB_HOST')|" "$WP_TESTS_DIR"/wp-tests-config.php
+  cat >> "$WP_TESTS_DIR/wp-tests-config.php" <<EOF
+# mail settings
+define( 'WPMS_ON', true );
+define( 'WPMS_MAILER', 'smtp' );
+define( 'WPMS_SMTP_HOST', 'mailer' );
+define( 'WPMS_SMTP_PORT', 1025 );
+define( 'WPMS_SSL', 'none' );
+define( 'WPMS_SMTP_AUTH', false );
+define( 'WPMS_SMTP_AUTOTLS', true );
+define( 'WPMS_SMTP_USER', '' );
+define( 'WPMS_SMTP_PASS', '' );
+EOF
 fi
 
 # create unit test database if it does not already exist

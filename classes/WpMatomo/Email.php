@@ -148,7 +148,9 @@ class Email {
 		remove_action( 'wp_mail_failed', [ $this, 'on_error' ] );
 		remove_filter( 'wp_mail_content_type', [ $this, 'set_content_type' ] );
 
-		$fluent_smtp_workaround->reset_phpmailer();
+		if ( isset( $fluent_smtp_workaround ) ) {
+			$fluent_smtp_workaround->reset_phpmailer();
+		}
 
 		if ( ! $success ) {
 			$message = 'Error unknown.';
