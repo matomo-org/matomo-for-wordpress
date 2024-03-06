@@ -375,6 +375,18 @@ if [ ! -f $WP_TESTS_DIR/wp-tests-config.php ]; then
   sed -i "s/yourusernamehere/root/" "$WP_TESTS_DIR"/wp-tests-config.php
   sed -i "s/yourpasswordhere/pass/" "$WP_TESTS_DIR"/wp-tests-config.php
   sed -i "s|'localhost'|getenv('WP_DB_HOST')|" "$WP_TESTS_DIR"/wp-tests-config.php
+  cat >> "$WP_TESTS_DIR/wp-tests-config.php" <<EOF
+# mail settings
+define( 'WPMS_ON', true );
+define( 'WPMS_MAILER', 'smtp' );
+define( 'WPMS_SMTP_HOST', 'mailer' );
+define( 'WPMS_SMTP_PORT', 1025 );
+define( 'WPMS_SSL', 'none' );
+define( 'WPMS_SMTP_AUTH', false );
+define( 'WPMS_SMTP_AUTOTLS', true );
+define( 'WPMS_SMTP_USER', '' );
+define( 'WPMS_SMTP_PASS', '' );
+EOF
 fi
 
 # create unit test database if it does not already exist
