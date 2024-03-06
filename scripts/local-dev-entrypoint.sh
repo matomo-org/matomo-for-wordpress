@@ -234,7 +234,7 @@ if [ ! -f "/var/www/html/index.php" ]; then
 <ul>
 <?php
   foreach (scandir(__DIR__) as \$folder) {
-    if (preg_match('/^\d+\.\d+\.\d+\$/', \$folder) && is_dir(\$folder)) {
+    if (is_dir(\$folder) && is_file(\$folder . '/wp-load.php')) {
 ?>
 <li><a href="<?php echo \$folder; ?>/"><?php echo \$folder; ?></a></li>
 <?php
