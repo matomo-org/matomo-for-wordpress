@@ -9,6 +9,13 @@ use Piwik\Mail;
 
 class MailTest extends MatomoAnalytics_TestCase {
 	public function test_mail() {
+		if ( getenv( 'WORDPRESS_VERSION' )
+			&& ( getenv( 'WORDPRESS_VERSION' ) !== 'latest'
+				&& version_compare( getenv( 'WORDPRESS_VERSION' ), '5.2', '<=' ) )
+		) {
+			$this->markTestSkipped( 'test only run for later WordPress versions' );
+		}
+
 		if ( ! is_file( $this->plugin_file() ) ) {
 			$this->fail( 'cannot run mail test without wp-mail-smtp, plugin must be installed and configured via consts locally' );
 		}
