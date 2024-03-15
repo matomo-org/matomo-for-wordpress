@@ -86,7 +86,14 @@ class Base {
 			$this->ajax_tracker_calls[] = $params;
 		}
 
-		return sprintf( 'window._paq = window._paq || []; window._paq.push(%s);', wp_json_encode( $params ) );
+		$args = [];
+		if ( WpMatomo::$settings->get_global_option( 'disable_cookies' ) ) {
+			$args[] = wp_json_encode( [ 'disableCookies' ] );
+		}
+		$args[] = wp_json_encode( $params );
+		$args   = implode( ',', $args );
+
+		return sprintf( 'window._paq = window._paq || []; window._paq.push(%s);', $args );
 	}
 
 	protected function wrap_script( $script ) {
