@@ -49,7 +49,7 @@ class Base {
 
 	private $ajax_tracker_calls = [];
 
-	public function __construct( AjaxTracker $tracker, Settings $settings = null ) {
+	public function __construct( AjaxTracker $tracker, Settings $settings ) {
 		$this->logger   = new Logger();
 		$this->tracker  = $tracker;
 		$this->settings = $settings;
