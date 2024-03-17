@@ -9,7 +9,9 @@
 
 namespace WpMatomo\Admin;
 
+use Piwik\Plugin\Manager;
 use WpMatomo\Access;
+use WpMatomo\Bootstrap;
 use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -82,6 +84,9 @@ class AdminSettings {
 			];
 		}
 
+		$plugin_settings_tabs = $this->get_plugin_settings_tabs();
+		$setting_tabs        = array_merge( $setting_tabs, $plugin_settings_tabs );
+
 		$setting_tabs = apply_filters( 'matomo_setting_tabs', $setting_tabs, $this->settings );
 
 		if ( ! empty( $_GET['tab'] ) ) {
@@ -95,5 +100,34 @@ class AdminSettings {
 		$matomo_settings = $this->settings;
 
 		include dirname( __FILE__ ) . '/views/settings.php';
+	}
+
+	private function get_plugin_settings_tabs() {
+		// TODO: cache this so we don't always have to bootstrap matomo here
+		// TODO: make sure get_plugins() does not include get_mu_plugins()
+		$all_wordpress_plugins = array_merge( get_plugins(), get_mu_plugins() );
+		$all_wordpress_plugins = array_combine(
+			array_map(
+				function ( $path ) {
+					return basename( dirname( $path ) );
+				},
+				array_keys( $all_wordpress_plugins )
+			),
+			$all_wordpress_plugins
+		);
+
+		Bootstrap::do_bootstrap();
+		$all_matomo_plugins = Manager::getInstance()->getActivatedPlugins();
+
+		$marketplace_plugins = array_intersect( array_keys( $all_wordpress_plugins ), $all_matomo_plugins );
+
+		$tabs = [];
+		foreach ( $marketplace_plugins as $plugin_name ) {
+			$plugin_display_name = $all_wordpress_plugins[$plugin_name]['Name'];
+			$plugin_display_name = preg_replace('/\s+\(Matomo Plugin\)\s*/', '', $plugin_display_name);
+
+			$tabs["plugin-${plugin_name}"] = new PluginMeasurableSettings( $plugin_name, $plugin_display_name );
+		}
+		return $tabs;
 	}
 }
