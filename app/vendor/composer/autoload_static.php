@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit2976a116eec17951407a4c14052334b9
+class ComposerStaticInit8ae6ee8cbe5f64cd46bb4ba174014db3
 {
     public static $files = array(
 'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -54,7 +54,6 @@ class ComposerStaticInit2976a116eec17951407a4c14052334b9
             'Piwik\\Plugins\\' => 14,
             'Piwik\\' => 6,
             'PhpDocReader\\' => 13,
-            'PHPMailer\\PHPMailer\\' => 20,
         ),
         'O' => 
         array (
@@ -190,10 +189,6 @@ class ComposerStaticInit2976a116eec17951407a4c14052334b9
         'PhpDocReader\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-di/phpdoc-reader/src/PhpDocReader',
-        ),
-        'PHPMailer\\PHPMailer\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'Opis\\Closure\\' => 
         array (
@@ -570,13 +565,6 @@ class ComposerStaticInit2976a116eec17951407a4c14052334b9
         'Matomo\\Network\\IPv6' => __DIR__ . '/..' . '/matomo/network/src/IPv6.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'PDF417' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/pdf417.php',
-        'PHPMailer\\PHPMailer\\DSNConfigurator' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/DSNConfigurator.php',
-        'PHPMailer\\PHPMailer\\Exception' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/Exception.php',
-        'PHPMailer\\PHPMailer\\OAuth' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/OAuth.php',
-        'PHPMailer\\PHPMailer\\OAuthTokenProvider' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/OAuthTokenProvider.php',
-        'PHPMailer\\PHPMailer\\PHPMailer' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/PHPMailer.php',
-        'PHPMailer\\PHPMailer\\POP3' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/POP3.php',
-        'PHPMailer\\PHPMailer\\SMTP' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/SMTP.php',
         'PclZip' => __DIR__ . '/..' . '/matomo/decompress/libs/PclZip/pclzip.lib.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'PiwikTracker' => __DIR__ . '/..' . '/matomo/matomo-php-tracker/PiwikTracker.php',
@@ -3015,11 +3003,11 @@ class ComposerStaticInit2976a116eec17951407a4c14052334b9
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit2976a116eec17951407a4c14052334b9::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit2976a116eec17951407a4c14052334b9::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit2976a116eec17951407a4c14052334b9::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit2976a116eec17951407a4c14052334b9::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInit2976a116eec17951407a4c14052334b9::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit8ae6ee8cbe5f64cd46bb4ba174014db3::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit8ae6ee8cbe5f64cd46bb4ba174014db3::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit8ae6ee8cbe5f64cd46bb4ba174014db3::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInit8ae6ee8cbe5f64cd46bb4ba174014db3::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInit8ae6ee8cbe5f64cd46bb4ba174014db3::$classMap;
 
         }, null, ClassLoader::class);
     }

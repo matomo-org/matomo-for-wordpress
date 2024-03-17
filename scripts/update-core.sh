@@ -56,6 +56,7 @@ find . -name .git -exec rm -rf {} +
 cd ..
 
 rm -r "${MATOMO_ROOT:?}/"* "${MATOMO_ROOT:?}/".*
+rm -r matomo/vendor/phpmailer # removing before scoping so it won't be included in the autoloader files
 cp -R matomo/* $MATOMO_ROOT
 cp -R matomo/.* $MATOMO_ROOT
 rm -r matomo/
@@ -127,7 +128,6 @@ rm $MATOMO_ROOT/vendor/composer/installed.json
 rm $MATOMO_ROOT/vendor/lox/xhprof/package.xml
 rm $MATOMO_ROOT/vendor/prefixed/pear/archive_tar/package.xml
 rm $MATOMO_ROOT/vendor/prefixed/pear/console_getopt/package.xml
-rm -r $MATOMO_ROOT/vendor/phpmailer
 rm $MATOMO_ROOT/core/Mail/Transport.php
 
 rm -rf $MATOMO_ROOT/vendor/tecnickcom/tcpdf/tools
