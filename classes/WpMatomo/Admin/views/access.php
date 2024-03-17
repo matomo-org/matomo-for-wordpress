@@ -78,8 +78,7 @@ use WpMatomo\Roles;
 <p>
 	<?php
 	esc_html_e(
-		'Want to give individual users access to Matomo? Simply create a user in your WordPress and assign of these roles
-    to the user:',
+		'Want to give individual users access to Matomo? Create a user in your WordPress with one of these roles:',
 		'matomo'
 	)
 	?>

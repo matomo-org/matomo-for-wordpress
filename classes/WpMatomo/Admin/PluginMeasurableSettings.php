@@ -37,5 +37,10 @@ class PluginMeasurableSettings implements AdminSettingsInterface {
 	public function show_settings() {
 		// TODO: Implement show_settings() method.
 		echo "{$this->plugin_display_name} settings content, hey hey hey!";
+
+		/*
+		- get measurable settings for plugin from matomo
+		- display via new view
+		*/
 	}
 }
