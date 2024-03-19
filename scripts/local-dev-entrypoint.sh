@@ -399,6 +399,10 @@ php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
 echo "set allow_wp_app_password_auth config..."
 php /var/www/html/matomo-for-wordpress/app/console config:set --section=Tracker --key=allow_wp_app_password_auth --value=1
 
+# add test-utility-plugin used in UI tests
+mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/mu-plugins
+cp /var/www/html/matomo-for-wordpress/tests/e2e/resources/test-utility-plugin/test-utility-plugin.php /var/www/html/$WORDPRESS_FOLDER/wp-content/mu-plugins/test-utility-plugin.php
+
 FIlE_OWNER_USERID=$UID
 if [[ -z "$FIlE_OWNER_USERID" || "$FIlE_OWNER_USERID" == "0" ]]; then
   FIlE_OWNER_USERID=1000
