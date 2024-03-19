@@ -235,13 +235,13 @@ class WpMatomo {
 			&& ! $tracking_code->is_hidden_user() ) {
 			$tracker = new AjaxTracker( self::$settings );
 
-			$woocommerce = new Woocommerce( $tracker );
+			$woocommerce = new Woocommerce( $tracker, self::$settings );
 			$woocommerce->register_hooks();
 
-			$easy_digital_downloads = new EasyDigitalDownloads( $tracker );
+			$easy_digital_downloads = new EasyDigitalDownloads( $tracker, self::$settings );
 			$easy_digital_downloads->register_hooks();
 
-			$member_press = new MemberPress( $tracker );
+			$member_press = new MemberPress( $tracker, self::$settings );
 			$member_press->register_hooks();
 
 			do_action( 'matomo_ecommerce_init', $tracker );
