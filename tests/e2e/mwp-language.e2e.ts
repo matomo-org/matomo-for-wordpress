@@ -8,8 +8,8 @@
 
 import { expect, browser } from '@wdio/globals';
 import Website from './website.js';
-import SummaryPage from './pageobjects/mwp-admin/summary.page';
-import OverviewPage from "./pageobjects/matomo-reporting/visitors/overview.page";
+import SummaryPage from './pageobjects/mwp-admin/summary.page.js';
+import OverviewPage from './pageobjects/matomo-reporting/visitors/overview.page.js';
 
 describe('MWP Language', () => {
   before(async () => {
@@ -20,7 +20,7 @@ describe('MWP Language', () => {
     await Website.setSiteLanguage('de');
 
     await SummaryPage.open();
-    await SummaryPage.disableHoverStyles();
+    await SummaryPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-lang.site-lang.mwp-admin')
     ).toEqual(0);
@@ -38,7 +38,7 @@ describe('MWP Language', () => {
     await Website.setUserProfileLanguage('fr');
 
     await SummaryPage.open();
-    await SummaryPage.disableHoverStyles();
+    await SummaryPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-lang.profile-lang.mwp-admin')
     ).toEqual(0);
@@ -55,7 +55,7 @@ describe('MWP Language', () => {
   it('should use the appropriate language in MWP admin when a plugin calls switch_to_locale', async () => {
     // mwp_switch_to_locale query param handled by test-utility-plugin.php
     await SummaryPage.openWith({ mwp_switch_to_locale: 'jp' });
-    await SummaryPage.disableHoverStyles();
+    await SummaryPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-lang.switch-to-locale.mwp-admin')
     ).toEqual(0);
