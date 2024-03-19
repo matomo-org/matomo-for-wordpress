@@ -19,17 +19,11 @@ describe('MWP Language', () => {
   it('should use the appropriate language in MWP admin when the site language changes', async () => {
     await Website.setSiteLanguage('de_DE');
 
-    await expect(
-      await browser.checkFullPageScreen('matomo-lang.site-lang.mwp-admin')
-    ).toEqual(0);
-    /*
     await SummaryPage.open();
     await SummaryPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-lang.site-lang.mwp-admin')
     ).toEqual(0);
-
-     */
   });
 
   it('should use the appropriate language in Matomo Reporting when the site language changes', async () => {
