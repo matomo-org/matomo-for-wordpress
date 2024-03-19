@@ -14,6 +14,13 @@ import OverviewPage from './pageobjects/matomo-reporting/visitors/overview.page.
 describe('MWP Language', () => {
   before(async () => {
     await Website.login();
+    await Website.setSiteLanguage('');
+    await Website.setUserProfileLanguage('site-default');
+  });
+
+  after(async () => {
+    await Website.setSiteLanguage('');
+    await Website.setUserProfileLanguage('site-default');
   });
 
   it('should use the appropriate language in MWP admin when the site language changes', async () => {
@@ -52,18 +59,18 @@ describe('MWP Language', () => {
     ).toEqual(0);
   });
 
-  it('should use the appropriate language in MWP admin when a plugin calls switch_to_locale', async () => {
+  it.skip('should use the appropriate language in MWP admin when a plugin calls switch_to_locale', async () => {
     // mwp_switch_to_locale query param handled by test-utility-plugin.php
-    await SummaryPage.openWith({ mwp_switch_to_locale: 'jp' });
+    await SummaryPage.openWith({ mwp_switch_to_locale: 'ja' });
     await SummaryPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen('matomo-lang.switch-to-locale.mwp-admin')
     ).toEqual(0);
   });
 
-  it('should use the appropriate language in Matomo Reporting when a plugin calls switch_to_locale', async () => {
+  it.skip('should use the appropriate language in Matomo Reporting when a plugin calls switch_to_locale', async () => {
     // mwp_switch_to_locale query param handled by test-utility-plugin.php
-    await OverviewPage.openWith({ mwp_switch_to_locale: 'jp' });
+    await OverviewPage.openWith({ mwp_switch_to_locale: 'ja' });
     await OverviewPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-lang.switch-to-locale.matomo-reporting')

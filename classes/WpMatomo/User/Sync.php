@@ -56,23 +56,25 @@ class Sync {
 		add_action( 'add_user_to_blog', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
 		add_action( 'remove_user_from_blog', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
 		add_action( 'user_register', [ $this, 'sync_current_users_1000' ], $prio = 10, $args = 0 );
-		add_action( 'update_option_WPLANG', [ $this, 'sync_background' ], $prio = 10, $args = 0 );
+		add_action( 'update_option_WPLANG', [ $this, 'on_site_language_change' ], $prio = 10, $args = 0 );
 		add_action( 'profile_update', [ $this, 'sync_maybe_background' ], $prio = 10, $args = 0 );
 	}
 
 	public function sync_maybe_background() {
 		global $pagenow;
 		if ( is_admin() && 'users.php' === $pagenow ) {
-			$this->sync_background();
+			// eg for profile update we don't want to sync directly see #365 as it could cause issues with other plugins
+			// if they eg alter `get_users` option
+			wp_schedule_single_event( time() + 5, ScheduledTasks::EVENT_SYNC );
 		} else {
 			$this->sync_current_users_1000();
 		}
 	}
 
-	public function sync_background() {
-		// eg for profile update we don't want to sync directly see #365 as it could cause issues with other plugins
-		// if they eg alter `get_users` option
-		wp_schedule_single_event( time() + 5, ScheduledTasks::EVENT_SYNC );
+	public function on_site_language_change() {
+		unset( $GLOBALS['locale'] ); // same thing that's done after saving in options.php
+
+		$this->sync_current_users_1000();
 	}
 
 	public function sync_all() {
