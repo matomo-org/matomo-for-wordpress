@@ -6,7 +6,7 @@
  *
  */
 
-import { browser, $ } from '@wdio/globals';
+import {browser, $, expect} from '@wdio/globals';
 import fetch from 'node-fetch';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -192,6 +192,11 @@ class Website {
     await $('#submit').click();
 
     await $('#setting-error-settings_updated').waitForDisplayed();
+
+    const selectedLanguage = await browser.execute(() => window.jQuery('#WPLANG').val());
+    if (selectedLanguage !== locale) {
+      throw new Error(`unable to set site language to ${locale}`);
+    }
   }
 
   async setUserProfileLanguage(locale: string) {
@@ -206,6 +211,11 @@ class Website {
     await $('#submit').click();
 
     await $('#message.updated').waitForDisplayed();
+
+    const selectedLanguage = await browser.execute(() => window.jQuery('#locale').val());
+    if (selectedLanguage !== locale) {
+      throw new Error(`unable to set user profile language to ${locale}`);
+    }
   }
 }
 
