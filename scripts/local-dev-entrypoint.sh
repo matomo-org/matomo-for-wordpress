@@ -116,6 +116,7 @@ define( 'DB_HOST', getenv('WP_DB_HOST') );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
 define( 'WP_DEBUG', false );
+define( "WP_DEBUG_LOG", false );
 define( 'WP_ENVIRONMENT_TYPE', 'local' );
 $MULTISITE_CONFIG
 
@@ -400,6 +401,10 @@ php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
 # set allow_wp_app_password_auth tracker config, used in tests
 echo "set allow_wp_app_password_auth config..."
 php /var/www/html/matomo-for-wordpress/app/console config:set --section=Tracker --key=allow_wp_app_password_auth --value=1
+
+# add test-utility-plugin used in UI tests
+mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/mu-plugins
+cp /var/www/html/matomo-for-wordpress/tests/e2e/resources/test-utility-plugin/test-utility-plugin.php /var/www/html/$WORDPRESS_FOLDER/wp-content/mu-plugins/test-utility-plugin.php
 
 FIlE_OWNER_USERID=$UID
 if [[ -z "$FIlE_OWNER_USERID" || "$FIlE_OWNER_USERID" == "0" ]]; then

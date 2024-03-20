@@ -6,10 +6,10 @@
  *
  */
 
+import {browser, $, expect} from '@wdio/globals';
 import fetch from 'node-fetch';
 import * as path from 'path';
 import * as fs from 'fs';
-import {browser} from "@wdio/globals";
 
 let latestWordpressVersion: string|undefined;
 
@@ -178,6 +178,44 @@ class Website {
   async deleteAllCookies() {
     await browser.deleteAllCookies();
     this.loggedIn = false;
+  }
+
+  async setSiteLanguage(locale: string) {
+    const pageUrl = `${await this.baseUrl()}/wp-admin/options-general.php`;
+    await browser.url(pageUrl);
+    await $('#WPLANG').waitForDisplayed();
+
+    await browser.execute((l) => {
+      window.jQuery('#WPLANG').val(l).change();
+    }, locale);
+
+    await $('#submit').click();
+
+    await $('#setting-error-settings_updated').waitForDisplayed();
+
+    const selectedLanguage = await browser.execute(() => window.jQuery('#WPLANG').val());
+    if (selectedLanguage !== locale) {
+      throw new Error(`unable to set site language to ${locale}`);
+    }
+  }
+
+  async setUserProfileLanguage(locale: string) {
+    const pageUrl = `${await this.baseUrl()}/wp-admin/profile.php`;
+    await browser.url(pageUrl);
+    await $('#locale').waitForDisplayed();
+
+    await browser.execute((l) => {
+      window.jQuery('#locale').val(l).change();
+    }, locale);
+
+    await $('#submit').click();
+
+    await $('#message.updated').waitForDisplayed();
+
+    const selectedLanguage = await browser.execute(() => window.jQuery('#locale').val());
+    if (selectedLanguage !== locale) {
+      throw new Error(`unable to set user profile language to ${locale}`);
+    }
   }
 }
 

@@ -10,7 +10,11 @@ import MatomoReportingPage from '../../matomo-reporting.page.js';
 
 class OverviewPage extends MatomoReportingPage {
   async open() {
-    return await super.open('General_Visitors.General_Overview');
+    return await this.openWith();
+  }
+
+  async openWith(params: Record<string, string> = {}) {
+    return await super.open('General_Visitors.General_Overview', params);
   }
 }
 
