@@ -17,6 +17,8 @@ class ContainerTagsPage extends TagManagerPage {
     });
 
     await $('.tagManagerTagList td.description').waitForDisplayed();
+    await $('.chip').waitForDisplayed();
+    await browser.pause(500);
 
     await this.normalizeContainerSelector();
 
