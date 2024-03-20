@@ -12,6 +12,8 @@ import SummaryPage from './pageobjects/mwp-admin/summary.page.js';
 import OverviewPage from './pageobjects/matomo-reporting/visitors/overview.page.js';
 
 describe('MWP Language', () => {
+  const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
+
   before(async () => {
     await Website.login();
     await Website.setSiteLanguage('');
@@ -29,7 +31,7 @@ describe('MWP Language', () => {
     await SummaryPage.open();
     await SummaryPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-lang.site-lang.mwp-admin')
+      await browser.checkFullPageScreen(`matomo-lang.site-lang.mwp-admin${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -47,7 +49,7 @@ describe('MWP Language', () => {
     await SummaryPage.open();
     await SummaryPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-lang.profile-lang.mwp-admin')
+      await browser.checkFullPageScreen(`matomo-lang.profile-lang.mwp-admin${trunkSuffix}`)
     ).toEqual(0);
   });
 
