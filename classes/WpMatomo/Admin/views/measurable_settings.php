@@ -26,6 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <iframe
 	id="plugin_measurable_settings"
+	title="Plugin Settings for <?php echo esc_attr( $plugin_display_name ); ?>"
 	style="width:100%;"
 	src="<?php echo esc_url( $home_url . '/wp-content/plugins/matomo/app/index.php?idSite=' . rawurlencode( $idsite ) . '&module=WordPress&action=showMeasurableSettings&pluginName=' . rawurlencode( $plugin_name ) ); ?>"
 ></iframe>

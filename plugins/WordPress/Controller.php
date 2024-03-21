@@ -56,11 +56,13 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         ) {
             $view = new View('@WordPress/measurableSettingsNoAccess.twig');
             $this->setBasicVariablesNoneAdminView($view);
+            $view->setXFrameOptions('same-origin');
             return $view->render();
         }
 
         $view = new View('@WordPress/measurableSettings.twig');
         $this->setBasicVariablesView($view);
+        $view->setXFrameOptions('same-origin');
         return $view->render();
     }
 
