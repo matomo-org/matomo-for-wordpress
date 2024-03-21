@@ -37,10 +37,11 @@ class PluginMeasurableSettings implements AdminSettingsInterface {
 	}
 
 	public function show_settings() {
-		$plugin_name = $this->plugin_name;
-		$home_url    = home_url();
-		$site        = new Site();
-		$idsite      = $site->get_current_matomo_site_id();
+		$plugin_name         = $this->plugin_name;
+		$plugin_display_name = $this->plugin_display_name;
+		$home_url            = home_url();
+		$site                = new Site();
+		$idsite              = $site->get_current_matomo_site_id();
 
 		include dirname( __FILE__ ) . '/views/measurable_settings.php';
 	}

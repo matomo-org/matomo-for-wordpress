@@ -12,6 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
+<p><?php echo esc_html( $plugin_display_name ) . ' ' . esc_html__( 'Settings', 'matomo' ); ?></p>
+
 <script>
 	window.addEventListener(
 		'DOMContentLoaded',

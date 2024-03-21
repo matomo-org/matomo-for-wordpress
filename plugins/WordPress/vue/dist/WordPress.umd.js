@@ -204,6 +204,7 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, "UseOptOutShortCode", function() { return /* reexport */ UseOptOutShortCode; });
+__webpack_require__.d(__webpack_exports__, "PluginMeasurableSettings", function() { return /* reexport */ PluginMeasurableSettings; });
 
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/setPublicPath.js
 // This file is imported into lib/wc client bundles.
@@ -232,7 +233,7 @@ if (typeof window !== 'undefined') {
 // EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
 var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
 
-// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--0-1!../plugins/WordPress/vue/src/UseOptOutShortCode/UseOptOutShortCode.vue?vue&type=template&id=d50b32b6
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--0-1!../plugins/WordPress/vue/src/UseOptOutShortCode/UseOptOutShortCode.vue?vue&type=template&id=70cf818a
 
 var _hoisted_1 = {
   class: "WordPressOptOutCustomizer"
@@ -259,7 +260,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     innerHTML: _ctx.$sanitize(_ctx.shortCodeDesc1)
   }, null, 8, _hoisted_2), _hoisted_3, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('WordPress_UseShortCodeDesc2')) + ":", 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("ul", _hoisted_4, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("li", _hoisted_5, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('WordPress_UseShortCodeOptionLanguage')), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("p", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('WordPress_Example')) + ": ", 1), _hoisted_6])]);
 }
-// CONCATENATED MODULE: ../plugins/WordPress/vue/src/UseOptOutShortCode/UseOptOutShortCode.vue?vue&type=template&id=d50b32b6
+// CONCATENATED MODULE: ../plugins/WordPress/vue/src/UseOptOutShortCode/UseOptOutShortCode.vue?vue&type=template&id=70cf818a
 
 // EXTERNAL MODULE: external "CoreHome"
 var external_CoreHome_ = __webpack_require__("19dc");
@@ -289,6 +290,30 @@ external_CoreHome_["Matomo"].on('PrivacyManager.UsersOptOut.preface', function (
 UseOptOutShortCodevue_type_script_lang_ts.render = render
 
 /* harmony default export */ var UseOptOutShortCode = (UseOptOutShortCodevue_type_script_lang_ts);
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--0-1!../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=template&id=77c61d78
+
+var PluginMeasurableSettingsvue_type_template_id_77c61d78_hoisted_1 = {
+  class: "pluginMeasurableSettings"
+};
+function PluginMeasurableSettingsvue_type_template_id_77c61d78_render(_ctx, _cache, $props, $setup, $data, $options) {
+  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", PluginMeasurableSettingsvue_type_template_id_77c61d78_hoisted_1, " TODO ");
+}
+// CONCATENATED MODULE: ../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=template&id=77c61d78
+
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-typescript/node_modules/cache-loader/dist/cjs.js??ref--14-0!./node_modules/babel-loader/lib!./node_modules/@vue/cli-plugin-typescript/node_modules/ts-loader??ref--14-2!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--0-1!../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=script&lang=ts
+ // import { translate } from 'CoreHome';
+
+/* harmony default export */ var PluginMeasurableSettingsvue_type_script_lang_ts = (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["defineComponent"])({// TODO
+}));
+// CONCATENATED MODULE: ../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=script&lang=ts
+ 
+// CONCATENATED MODULE: ../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue
+
+
+
+PluginMeasurableSettingsvue_type_script_lang_ts.render = PluginMeasurableSettingsvue_type_template_id_77c61d78_render
+
+/* harmony default export */ var PluginMeasurableSettings = (PluginMeasurableSettingsvue_type_script_lang_ts);
 // CONCATENATED MODULE: ../plugins/WordPress/vue/src/index.ts
 /**
  * Matomo - free/libre analytics platform
@@ -296,6 +321,7 @@ UseOptOutShortCodevue_type_script_lang_ts.render = render
  * @link https://matomo.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib-no-default.js
 
