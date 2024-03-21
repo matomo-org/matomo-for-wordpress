@@ -12,6 +12,7 @@ namespace Piwik\Plugins\WordPress;
 use Exception;
 use Piwik\API\Request;
 use Piwik\Common;
+use Piwik\Config;
 use Piwik\FrontController;
 use Piwik\Option;
 use Piwik\Piwik;
@@ -63,12 +64,30 @@ class WordPress extends Plugin
             'API.Tour.getChallenges.end' => 'modifyTourChallenges',
 	        'API.ScheduledReports.generateReport.end' => 'onGenerateReportEnd',
             'API.CorePluginsAdmin.getSystemSettings.end' => 'onGetSystemSettingsEnd',
+            'API.SitesManager.updateSite' => 'allowUpdateSiteForMeasurableSettings',
+            'API.SitesManager.updateSite.end' => 'reDisableSitesAdmin',
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
             'CustomJsTracker.manipulateJsTracker' => 'updateHeatmapTrackerPath',
             'Visualization.beforeRender' => 'onBeforeRenderView',
             'AssetManager.getStylesheetFiles'  => 'getStylesheetFiles',
             'Controller.CorePluginsAdmin.safemode.end' => 'modifySafemodeHtml',
         );
+    }
+
+    public function allowUpdateSiteForMeasurableSettings($finalParameters)
+    {
+        $filteredParameters = array_filter($finalParameters);
+        if (count($filteredParameters) === 2
+            && !empty($filteredParameters['settingValues'])
+            && !empty($filteredParameters['idSite'])
+        ) {
+            Config::getInstance()->General['enable_sites_admin'] = true;
+        }
+    }
+
+    public function reDisableSitesAdmin()
+    {
+        Config::getInstance()->General['enable_sites_admin'] = false;
     }
 
     public function modifySafemodeHtml(&$output)

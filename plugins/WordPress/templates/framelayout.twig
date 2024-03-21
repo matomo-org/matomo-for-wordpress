@@ -7,7 +7,7 @@
 
     {# conditional iframe buster #}
     <script type="text/javascript">
-      if (!/\/+wp-admin\/+admin\.php$/.test(top.location.pathname)) {
+      if (top.location.pathname !== {{ adminPhpUrl|json_encode }}) {
         document.head.remove();
         window.addEventListener('DOMContentLoaded', function () {
           document.body.style.display = 'none';

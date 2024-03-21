@@ -7,11 +7,13 @@
 
 <template>
   <div class="pluginMeasurableSettings">
+    <ActivityIndicator :loading="isLoading"/>
+
     <GroupedSettings
         :group-name="pluginName"
         :settings="measurableSettings"
         :all-setting-values="settingValues"
-        @change="settingValues[`${settingsPerPlugin.pluginName}.${$event.name}`] = $event.value"
+        @change="settingValues[`${pluginName}.${$event.name}`] = $event.value"
     />
 
     <div class="settingsFormFooter row">
@@ -24,6 +26,8 @@
             :value="translate('WordPress_SaveChanges')"
             @click="saveSettings()"
         />
+
+        <ActivityIndicator :loading="isSaving" loading-message="" style="display:inline-block;" />
       </div>
     </div>
   </div>
@@ -31,7 +35,7 @@
 
 <script lang="ts">
 import { defineComponent, DeepReadonly } from 'vue';
-import { AjaxHelper } from 'CoreHome';
+import { ActivityIndicator, AjaxHelper } from 'CoreHome';
 import {
   GroupedSettings,
   SettingsForSinglePlugin,
@@ -57,6 +61,7 @@ export default defineComponent({
     },
   },
   components: {
+    ActivityIndicator,
     GroupedSettings,
   },
   data(): PluginMeasurableSettingsData {
@@ -95,7 +100,50 @@ export default defineComponent({
   },
   methods: {
     saveSettings() {
-      // TODO
+      if (this.isSaving) {
+        return; // saving already in progress
+      }
+
+      const values: Record<string, unknown> = {
+        idSite: this.idSite,
+        settingValues: {
+          [this.pluginName]: [],
+        },
+      };
+
+      // process setting values
+      Object.entries(this.settingValues).forEach(([fullName, fieldValue]) => {
+        const [pluginName, name] = fullName.split('.');
+
+        const settingValues = values.settingValues as Record<string, Setting[]>;
+        if (!settingValues[pluginName]) {
+          settingValues[pluginName] = [];
+        }
+
+        let value = fieldValue;
+        if (fieldValue === false) {
+          value = '0';
+        } else if (fieldValue === true) {
+          value = '1';
+        } else if (Array.isArray(fieldValue)) {
+          value = fieldValue.filter((x) => !!x);
+        }
+
+        settingValues[pluginName].push({
+          name,
+          value,
+        });
+      });
+
+      this.isSaving = true;
+      AjaxHelper.post<{ value: string|number }>(
+        {
+          method: 'SitesManager.updateSite',
+        },
+        values,
+      ).finally(() => {
+        this.isSaving = false;
+      });
     },
   },
 });

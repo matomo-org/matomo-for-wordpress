@@ -59,12 +59,14 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             $view = new View('@WordPress/measurableSettingsNoAccess.twig');
             $this->setBasicVariablesNoneAdminView($view);
             $view->setXFrameOptions('same-origin');
+            $view->adminPhpUrl = $this->getAdminPhpUrl();
             return $view->render();
         }
 
         $view = new View('@WordPress/measurableSettings.twig');
         $view->idSite = $idSite;
         $view->pluginName = $pluginName;
+        $view->adminPhpUrl = $this->getAdminPhpUrl();
         $this->setBasicVariablesView($view);
         $view->setXFrameOptions('same-origin');
         return $view->render();
@@ -78,5 +80,10 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         } catch (NoAccessException $ex) {
             return false;
         }
+    }
+
+    private function getAdminPhpUrl()
+    {
+        return home_url('/wp-admin/admin.php');
     }
 }
