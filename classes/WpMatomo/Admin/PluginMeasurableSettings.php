@@ -9,6 +9,8 @@
 
 namespace WpMatomo\Admin;
 
+use WpMatomo\Site;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -21,12 +23,12 @@ class PluginMeasurableSettings implements AdminSettingsInterface {
 	private $plugin_name;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	private $plugin_display_name;
 
 	public function __construct( $plugin_name, $plugin_display_name ) {
-		$this->plugin_name = $plugin_name;
+		$this->plugin_name         = $plugin_name;
 		$this->plugin_display_name = $plugin_display_name;
 	}
 
@@ -35,12 +37,11 @@ class PluginMeasurableSettings implements AdminSettingsInterface {
 	}
 
 	public function show_settings() {
-		// TODO: Implement show_settings() method.
-		echo "{$this->plugin_display_name} settings content, hey hey hey!";
+		$plugin_name = $this->plugin_name;
+		$home_url    = home_url();
+		$site        = new Site();
+		$idsite      = $site->get_current_matomo_site_id();
 
-		/*
-		- get measurable settings for plugin from matomo
-		- display via new view
-		*/
+		include dirname( __FILE__ ) . '/views/measurable_settings.php';
 	}
 }

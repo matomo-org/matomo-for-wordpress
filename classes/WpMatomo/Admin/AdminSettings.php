@@ -85,7 +85,7 @@ class AdminSettings {
 		}
 
 		$plugin_settings_tabs = $this->get_plugin_settings_tabs();
-		$setting_tabs        = array_merge( $setting_tabs, $plugin_settings_tabs );
+		$setting_tabs         = array_merge( $setting_tabs, $plugin_settings_tabs );
 
 		$setting_tabs = apply_filters( 'matomo_setting_tabs', $setting_tabs, $this->settings );
 
@@ -123,10 +123,15 @@ class AdminSettings {
 
 		$tabs = [];
 		foreach ( $marketplace_plugins as $plugin_name ) {
-			$plugin_display_name = $all_wordpress_plugins[$plugin_name]['Name'];
-			$plugin_display_name = preg_replace('/\s+\(Matomo Plugin\)\s*/', '', $plugin_display_name);
+			$settings_class = 'Piwik\\Plugins\\' . $plugin_name . '\\MeasurableSettings';
+			if ( ! class_exists( $settings_class ) ) {
+				continue;
+			}
 
-			$tabs["plugin-${plugin_name}"] = new PluginMeasurableSettings( $plugin_name, $plugin_display_name );
+			$plugin_display_name = $all_wordpress_plugins[ $plugin_name ]['Name'];
+			$plugin_display_name = preg_replace( '/\s+\(Matomo Plugin\)\s*/', '', $plugin_display_name );
+
+			$tabs[ "plugin-${plugin_name}" ] = new PluginMeasurableSettings( $plugin_name, $plugin_display_name );
 		}
 		return $tabs;
 	}

@@ -20,6 +20,7 @@ use Piwik\Plugin\Manager;
 use Piwik\Plugins\CoreHome\SystemSummary\Item;
 use Piwik\Scheduler\Task;
 use Piwik\Url;
+use Piwik\Version;
 use Piwik\Widget\WidgetsList;
 use WpMatomo\Bootstrap;
 use WpMatomo\Settings;
@@ -66,10 +67,28 @@ class WordPress extends Plugin
             'CustomJsTracker.manipulateJsTracker' => 'updateHeatmapTrackerPath',
             'Visualization.beforeRender' => 'onBeforeRenderView',
             'AssetManager.getStylesheetFiles'  => 'getStylesheetFiles',
+            'Controller.CorePluginsAdmin.safemode.end' => 'modifySafemodeHtml',
         );
     }
 
-    public function onBeforeRenderView (Plugin\ViewDataTable $view)
+    public function modifySafemodeHtml(&$output)
+    {
+        // add iframeResizer.contentWindow.min.js so it will resize correctly when in an iframe
+        $output = str_replace(
+            '<title>',
+            "<script src=\"node_modules/iframe-resizer/js/iframeResizer.contentWindow.min.js\" defer></script><title>",
+            $output
+        );
+
+        // replace core version with MWP version so as to not confuse users
+        $mwpInfo = get_plugin_data(MATOMO_ANALYTICS_FILE) ?: [];
+        $mwpVersion = $mwpInfo['Version'] ?? null;
+        if (!empty($mwpVersion)) {
+            $output = str_replace('(v' . Version::VERSION . ')', '(v' . $mwpVersion . ')', $output);
+        }
+    }
+
+    public function onBeforeRenderView(Plugin\ViewDataTable $view)
     {
     	if ($view->requestConfig->getApiModuleToRequest() === 'UserCountry' && $view->config->show_footer_message && strpos($view->config->show_footer_message, 'href') !== false) {
     		// dont suggest setting up geoip

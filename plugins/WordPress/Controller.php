@@ -9,11 +9,16 @@
 
 namespace Piwik\Plugins\WordPress;
 
+use Piwik\Access;
+use Piwik\NoAccessException;
+use Piwik\Request;
+use Piwik\View;
+
 if (!defined( 'ABSPATH')) {
 	exit; // if accessed directly
 }
 
-class Controller extends \Piwik\Plugin\Controller
+class Controller extends \Piwik\Plugin\ControllerAdmin
 {
     public function index()
     {
@@ -37,5 +42,35 @@ class Controller extends \Piwik\Plugin\Controller
 	        wp_safe_redirect(admin_url());
         }
         exit;
+    }
+
+    public function showMeasurableSettings()
+    {
+        $idSite = Request::fromRequest()->getIntegerParameter('idSite', 0);
+        if (!$idSite) {
+            return '';
+        }
+
+        if (!is_user_logged_in()
+            || !$this->doesUserHaveAdminAccessTo($idSite)
+        ) {
+            $view = new View('@WordPress/measurableSettingsNoAccess.twig');
+            $this->setBasicVariablesNoneAdminView($view);
+            return $view->render();
+        }
+
+        $view = new View('@WordPress/measurableSettings.twig');
+        $this->setBasicVariablesView($view);
+        return $view->render();
+    }
+
+    private function doesUserHaveAdminAccessTo($idSite)
+    {
+        try {
+            Access::getInstance()->checkUserHasAdminAccess($idSite);
+            return true;
+        } catch (NoAccessException $ex) {
+            return false;
+        }
     }
 }

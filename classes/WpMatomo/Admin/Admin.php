@@ -30,5 +30,7 @@ class Admin {
 	public function load_scripts() {
 		wp_enqueue_style( 'matomo_admin_css', plugins_url( 'assets/css/admin-style.css', MATOMO_ANALYTICS_FILE ), false, '1.0.0' );
 		wp_enqueue_script( 'matomo_admin_js', plugins_url( 'assets/js/admin.js', MATOMO_ANALYTICS_FILE ), [ 'jquery' ], '1.0', true );
+		// TODO: version should be core matomo version
+		wp_enqueue_script( 'matomo_iframe_resizer', plugins_url( 'app/node_modules/iframe-resizer/js/iframeResizer.min.js', MATOMO_ANALYTICS_FILE ), [], '1.0', [ 'defer', false ] );
 	}
 }
