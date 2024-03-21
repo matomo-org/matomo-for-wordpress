@@ -297,29 +297,33 @@ external_CoreHome_["Matomo"].on('PrivacyManager.UsersOptOut.preface', function (
 UseOptOutShortCodevue_type_script_lang_ts.render = render
 
 /* harmony default export */ var UseOptOutShortCode = (UseOptOutShortCodevue_type_script_lang_ts);
-// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--0-1!../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=template&id=07c34ed8
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--0-1!../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=template&id=65dd84e3
 
-var PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_1 = {
+var PluginMeasurableSettingsvue_type_template_id_65dd84e3_hoisted_1 = {
   class: "pluginMeasurableSettings"
 };
-var PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_2 = {
+var PluginMeasurableSettingsvue_type_template_id_65dd84e3_hoisted_2 = {
   class: "settingsFormFooter row"
 };
-var PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_3 = {
+var PluginMeasurableSettingsvue_type_template_id_65dd84e3_hoisted_3 = {
   class: "col s12"
 };
-var PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_4 = ["disabled", "value"];
-function PluginMeasurableSettingsvue_type_template_id_07c34ed8_render(_ctx, _cache, $props, $setup, $data, $options) {
+var PluginMeasurableSettingsvue_type_template_id_65dd84e3_hoisted_4 = ["disabled", "value"];
+function PluginMeasurableSettingsvue_type_template_id_65dd84e3_render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_ActivityIndicator = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("ActivityIndicator");
+
   var _component_GroupedSettings = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("GroupedSettings");
 
-  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_GroupedSettings, {
+  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", PluginMeasurableSettingsvue_type_template_id_65dd84e3_hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_ActivityIndicator, {
+    loading: _ctx.isLoading
+  }, null, 8, ["loading"]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_GroupedSettings, {
     "group-name": _ctx.pluginName,
     settings: _ctx.measurableSettings,
     "all-setting-values": _ctx.settingValues,
     onChange: _cache[0] || (_cache[0] = function ($event) {
-      return _ctx.settingValues["".concat(_ctx.settingsPerPlugin.pluginName, ".").concat($event.name)] = $event.value;
+      return _ctx.settingValues["".concat(_ctx.pluginName, ".").concat($event.name)] = $event.value;
     })
-  }, null, 8, ["group-name", "settings", "all-setting-values"]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_2, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_3, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("input", {
+  }, null, 8, ["group-name", "settings", "all-setting-values"]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", PluginMeasurableSettingsvue_type_template_id_65dd84e3_hoisted_2, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", PluginMeasurableSettingsvue_type_template_id_65dd84e3_hoisted_3, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("input", {
     disabled: _ctx.isSaving,
     type: "submit",
     class: "button-primary",
@@ -327,14 +331,34 @@ function PluginMeasurableSettingsvue_type_template_id_07c34ed8_render(_ctx, _cac
     onClick: _cache[1] || (_cache[1] = function ($event) {
       return _ctx.saveSettings();
     })
-  }, null, 8, PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_4), [[external_commonjs_vue_commonjs2_vue_root_Vue_["vShow"], !_ctx.isLoading]])])])]);
+  }, null, 8, PluginMeasurableSettingsvue_type_template_id_65dd84e3_hoisted_4), [[external_commonjs_vue_commonjs2_vue_root_Vue_["vShow"], !_ctx.isLoading]]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_ActivityIndicator, {
+    loading: _ctx.isSaving,
+    "loading-message": "",
+    style: {
+      "display": "inline-block"
+    }
+  }, null, 8, ["loading"])])])]);
 }
-// CONCATENATED MODULE: ../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=template&id=07c34ed8
+// CONCATENATED MODULE: ../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=template&id=65dd84e3
 
 // EXTERNAL MODULE: external "CorePluginsAdmin"
 var external_CorePluginsAdmin_ = __webpack_require__("a5a2");
 
 // CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-typescript/node_modules/cache-loader/dist/cjs.js??ref--14-0!./node_modules/babel-loader/lib!./node_modules/@vue/cli-plugin-typescript/node_modules/ts-loader??ref--14-2!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--0-1!../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=script&lang=ts
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -350,6 +374,7 @@ var external_CorePluginsAdmin_ = __webpack_require__("a5a2");
     }
   },
   components: {
+    ActivityIndicator: external_CoreHome_["ActivityIndicator"],
     GroupedSettings: external_CorePluginsAdmin_["GroupedSettings"]
   },
   data: function data() {
@@ -392,7 +417,57 @@ var external_CorePluginsAdmin_ = __webpack_require__("a5a2");
     }
   },
   methods: {
-    saveSettings: function saveSettings() {// TODO
+    saveSettings: function saveSettings() {
+      var _this3 = this;
+
+      if (this.isSaving) {
+        return; // saving already in progress
+      }
+
+      var values = {
+        idSite: this.idSite,
+        settingValues: _defineProperty({}, this.pluginName, [])
+      }; // process setting values
+
+      Object.entries(this.settingValues).forEach(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            fullName = _ref2[0],
+            fieldValue = _ref2[1];
+
+        var _fullName$split = fullName.split('.'),
+            _fullName$split2 = _slicedToArray(_fullName$split, 2),
+            pluginName = _fullName$split2[0],
+            name = _fullName$split2[1];
+
+        var settingValues = values.settingValues;
+
+        if (!settingValues[pluginName]) {
+          settingValues[pluginName] = [];
+        }
+
+        var value = fieldValue;
+
+        if (fieldValue === false) {
+          value = '0';
+        } else if (fieldValue === true) {
+          value = '1';
+        } else if (Array.isArray(fieldValue)) {
+          value = fieldValue.filter(function (x) {
+            return !!x;
+          });
+        }
+
+        settingValues[pluginName].push({
+          name: name,
+          value: value
+        });
+      });
+      this.isSaving = true;
+      external_CoreHome_["AjaxHelper"].post({
+        method: 'SitesManager.updateSite'
+      }, values).finally(function () {
+        _this3.isSaving = false;
+      });
     }
   }
 }));
@@ -402,7 +477,7 @@ var external_CorePluginsAdmin_ = __webpack_require__("a5a2");
 
 
 
-PluginMeasurableSettingsvue_type_script_lang_ts.render = PluginMeasurableSettingsvue_type_template_id_07c34ed8_render
+PluginMeasurableSettingsvue_type_script_lang_ts.render = PluginMeasurableSettingsvue_type_template_id_65dd84e3_render
 
 /* harmony default export */ var PluginMeasurableSettings = (PluginMeasurableSettingsvue_type_script_lang_ts);
 // CONCATENATED MODULE: ../plugins/WordPress/vue/src/index.ts
