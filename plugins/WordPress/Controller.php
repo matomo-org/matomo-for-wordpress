@@ -11,6 +11,7 @@ namespace Piwik\Plugins\WordPress;
 
 use Piwik\Access;
 use Piwik\NoAccessException;
+use Piwik\Plugin\Manager;
 use Piwik\Request;
 use Piwik\View;
 
@@ -47,7 +48,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     public function showMeasurableSettings()
     {
         $idSite = Request::fromRequest()->getIntegerParameter('idSite', 0);
-        if (!$idSite) {
+        $pluginName = Request::fromRequest()->getStringParameter('plugin', '');
+        if (!$idSite || !$pluginName || !Manager::getInstance()->isPluginActivated($pluginName)) {
             return '';
         }
 
@@ -61,6 +63,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
 
         $view = new View('@WordPress/measurableSettings.twig');
+        $view->idSite = $idSite;
+        $view->pluginName = $pluginName;
         $this->setBasicVariablesView($view);
         $view->setXFrameOptions('same-origin');
         return $view->render();

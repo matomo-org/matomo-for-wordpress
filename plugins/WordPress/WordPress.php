@@ -113,6 +113,7 @@ class WordPress extends Plugin
         $translationKeys[] = 'WordPress_UseShortCodeDesc2';
         $translationKeys[] = 'WordPress_UseShortCodeOptionLanguage';
         $translationKeys[] = 'WordPress_Example';
+        $translationKeys[] = 'WordPress_SaveChanges';
 	}
 
     public function modifyTourChallenges(&$challenges)
@@ -461,5 +462,6 @@ class WordPress extends Plugin
         $files[] = "../plugins/WordPress/stylesheets/optout.css";
         $files[] = "../plugins/WordPress/stylesheets/export.css";
         $files[] = "../plugins/WordPress/stylesheets/blogselection.css";
+        $files[] = "../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.less";
     }
 }

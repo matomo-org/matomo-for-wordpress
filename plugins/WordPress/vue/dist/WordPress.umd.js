@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("CoreHome"), require("vue"));
+		module.exports = factory(require("CoreHome"), require("vue"), require("CorePluginsAdmin"));
 	else if(typeof define === 'function' && define.amd)
-		define(["CoreHome", ], factory);
+		define(["CoreHome", , "CorePluginsAdmin"], factory);
 	else if(typeof exports === 'object')
-		exports["WordPress"] = factory(require("CoreHome"), require("vue"));
+		exports["WordPress"] = factory(require("CoreHome"), require("vue"), require("CorePluginsAdmin"));
 	else
-		root["WordPress"] = factory(root["CoreHome"], root["Vue"]);
-})((typeof self !== 'undefined' ? self : this), function(__WEBPACK_EXTERNAL_MODULE__19dc__, __WEBPACK_EXTERNAL_MODULE__8bbf__) {
+		root["WordPress"] = factory(root["CoreHome"], root["Vue"], root["CorePluginsAdmin"]);
+})((typeof self !== 'undefined' ? self : this), function(__WEBPACK_EXTERNAL_MODULE__19dc__, __WEBPACK_EXTERNAL_MODULE__8bbf__, __WEBPACK_EXTERNAL_MODULE_a5a2__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -195,6 +195,13 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__8bbf__;
 
 /***/ }),
 
+/***/ "a5a2":
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_a5a2__;
+
+/***/ }),
+
 /***/ "fae3":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -290,20 +297,104 @@ external_CoreHome_["Matomo"].on('PrivacyManager.UsersOptOut.preface', function (
 UseOptOutShortCodevue_type_script_lang_ts.render = render
 
 /* harmony default export */ var UseOptOutShortCode = (UseOptOutShortCodevue_type_script_lang_ts);
-// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--0-1!../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=template&id=77c61d78
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--0-1!../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=template&id=07c34ed8
 
-var PluginMeasurableSettingsvue_type_template_id_77c61d78_hoisted_1 = {
+var PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_1 = {
   class: "pluginMeasurableSettings"
 };
-function PluginMeasurableSettingsvue_type_template_id_77c61d78_render(_ctx, _cache, $props, $setup, $data, $options) {
-  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", PluginMeasurableSettingsvue_type_template_id_77c61d78_hoisted_1, " TODO ");
+var PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_2 = {
+  class: "settingsFormFooter row"
+};
+var PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_3 = {
+  class: "col s12"
+};
+var PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_4 = ["disabled", "value"];
+function PluginMeasurableSettingsvue_type_template_id_07c34ed8_render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_GroupedSettings = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("GroupedSettings");
+
+  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_GroupedSettings, {
+    "group-name": _ctx.pluginName,
+    settings: _ctx.measurableSettings,
+    "all-setting-values": _ctx.settingValues,
+    onChange: _cache[0] || (_cache[0] = function ($event) {
+      return _ctx.settingValues["".concat(_ctx.settingsPerPlugin.pluginName, ".").concat($event.name)] = $event.value;
+    })
+  }, null, 8, ["group-name", "settings", "all-setting-values"]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_2, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_3, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("input", {
+    disabled: _ctx.isSaving,
+    type: "submit",
+    class: "button-primary",
+    value: _ctx.translate('WordPress_SaveChanges'),
+    onClick: _cache[1] || (_cache[1] = function ($event) {
+      return _ctx.saveSettings();
+    })
+  }, null, 8, PluginMeasurableSettingsvue_type_template_id_07c34ed8_hoisted_4), [[external_commonjs_vue_commonjs2_vue_root_Vue_["vShow"], !_ctx.isLoading]])])])]);
 }
-// CONCATENATED MODULE: ../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=template&id=77c61d78
+// CONCATENATED MODULE: ../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=template&id=07c34ed8
+
+// EXTERNAL MODULE: external "CorePluginsAdmin"
+var external_CorePluginsAdmin_ = __webpack_require__("a5a2");
 
 // CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-typescript/node_modules/cache-loader/dist/cjs.js??ref--14-0!./node_modules/babel-loader/lib!./node_modules/@vue/cli-plugin-typescript/node_modules/ts-loader??ref--14-2!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--0-1!../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=script&lang=ts
- // import { translate } from 'CoreHome';
 
-/* harmony default export */ var PluginMeasurableSettingsvue_type_script_lang_ts = (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["defineComponent"])({// TODO
+
+
+/* harmony default export */ var PluginMeasurableSettingsvue_type_script_lang_ts = (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["defineComponent"])({
+  props: {
+    idSite: {
+      type: Number,
+      required: true
+    },
+    pluginName: {
+      type: String,
+      required: true
+    }
+  },
+  components: {
+    GroupedSettings: external_CorePluginsAdmin_["GroupedSettings"]
+  },
+  data: function data() {
+    return {
+      isSaving: false,
+      isLoading: true,
+      measurableSettings: [],
+      settingValues: {}
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    this.isLoading = true;
+    external_CoreHome_["AjaxHelper"].fetch({
+      method: 'SitesManager.getSiteSettings',
+      idSite: this.idSite
+    }).then(function (settings) {
+      var settingsForPlugin = settings.find(function (settingsPerPlugin) {
+        return settingsPerPlugin.pluginName === _this.pluginName;
+      });
+      _this.measurableSettings = (settingsForPlugin === null || settingsForPlugin === void 0 ? void 0 : settingsForPlugin.settings) || [];
+    }).finally(function () {
+      _this.isLoading = false;
+    });
+  },
+  watch: {
+    measurableSettings: function measurableSettings(settings) {
+      var _this2 = this;
+
+      if (!settings.length) {
+        return;
+      }
+
+      var settingValues = {};
+      settings.forEach(function (setting) {
+        settingValues["".concat(_this2.pluginName, ".").concat(setting.name)] = setting.value;
+      });
+      this.settingValues = settingValues;
+    }
+  },
+  methods: {
+    saveSettings: function saveSettings() {// TODO
+    }
+  }
 }));
 // CONCATENATED MODULE: ../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=script&lang=ts
  
@@ -311,7 +402,7 @@ function PluginMeasurableSettingsvue_type_template_id_77c61d78_render(_ctx, _cac
 
 
 
-PluginMeasurableSettingsvue_type_script_lang_ts.render = PluginMeasurableSettingsvue_type_template_id_77c61d78_render
+PluginMeasurableSettingsvue_type_script_lang_ts.render = PluginMeasurableSettingsvue_type_template_id_07c34ed8_render
 
 /* harmony default export */ var PluginMeasurableSettings = (PluginMeasurableSettingsvue_type_script_lang_ts);
 // CONCATENATED MODULE: ../plugins/WordPress/vue/src/index.ts

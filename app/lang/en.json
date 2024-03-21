@@ -5748,5 +5748,15 @@
         "ViewableAnonymously": "If you want your widgets to be viewable by everybody, you first have to set the 'view' permissions to the anonymous user in the %1$sUsers Management section%2$s. <br \/>Alternatively, if you are publishing widgets on a password protected or private page, you don't necessarily have to allow 'anonymous' to view your reports. In this case, you can add the secret <code>token_auth<\/code> parameter in the widget URL. You can manage your auth tokens on your %3$sSecurity page%4$s.",
         "EmbedIframe": "&rsaquo; Embed Iframe",
         "DirectLink": "&rsaquo; Direct Link"
+    },
+    "WordPress": {
+        "TokenAuthMissing": "Missing token_auth in the request.",
+        "ExceptionInvalidToken": "Invalid token_auth in the request.",
+        "UseShortCode": "Use the WordPress short code",
+        "UseShortCodeDesc1": "Use the short code %1$s to embed the opt out into your website.",
+        "UseShortCodeDesc2": "You can use these short code options",
+        "UseShortCodeOptionLanguage": "language - eg de or en. By default the language is detected automatically based on the user's browser",
+        "Example": "Example",
+        "SaveChanges": "Save Changes"
     }
 }
