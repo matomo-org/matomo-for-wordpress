@@ -70,7 +70,7 @@ describe('MWP Admin > Marketplace', () => {
     expect(await $('tr.active[data-slug="SEOWebVitals"]').isExisting()).toBeTruthy();
   });
 
-  it('should install plugins in bulk', async () => {
+  it('should bulk install plugins correctly', async () => {
     await MwpMarketplacePage.open();
     await MwpMarketplacePage.openInstallPluginsTab();
 
@@ -79,6 +79,27 @@ describe('MWP Admin > Marketplace', () => {
       window.jQuery('#bulk-action-selector-top').val('tgmpa-bulk-install');
     });
     await $('.bulkactions #doaction').click();
-    // TODO
+
+    await browser.waitUntil(() => window.jQuery('p:contains("All installations have been completed.")').length > 0);
+
+    await MwpMarketplacePage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.plugins-installed${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
+  it('should bulk activate plugins in correctly', async () => {
+    await MwpMarketplacePage.openInstallPluginsTab();
+    await MwpMarketplacePage.showToActivatePlugins();
+
+    await $('#cb-select-all-1').click();
+    await browser.execute(() => {
+      window.jQuery('#bulk-action-selector-top').val('tgmpa-bulk-activate');
+    });
+    await $('.bulkactions #doaction').click();
+
+    await expect(
+      await browser.checkElement('#message.updated', `mwp-admin.marketplace.plugins-activated${trunkSuffix}`)
+    ).toEqual(0);
   });
 });

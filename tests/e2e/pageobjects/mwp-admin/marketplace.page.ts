@@ -74,6 +74,11 @@ class MwpMarketplacePage extends MwpPage {
     await $('#wp-content p a.button-primary').click();
     await $('table.plugins').waitForDisplayed();
   }
+
+  async showToActivatePlugins() {
+    await $('.subsubsub li.activate > a').click();
+    await $('.subsubsub li.activate > a.current').waitForDisplayed();
+  }
 }
 
 export default new MwpMarketplacePage();
