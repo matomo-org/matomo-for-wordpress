@@ -1,0 +1,3 @@
+[submodule "marketplace"]
+	path = marketplace
+	url = git@github.com:matomo-org/matomo-marketplace-for-wordpress.git
