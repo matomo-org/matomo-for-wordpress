@@ -19,6 +19,15 @@ class MwpMarketplacePage extends MwpPage {
 
     await $('td.column-version').waitForExist();
 
+    // remove most plugins so the screenshot will stay the same over time
+    await browser.execute(() => {
+      window.jQuery('tbody#the-list > tr').each((i, e) => {
+        if (window.jQuery('td[data-colname="Developer"]', e).text() !== 'matomo-org') {
+          window.jQuery(e).remove();
+        }
+      });
+    });
+
     // remove version strings so test will pass when plugin requirements
     // change
     await browser.execute(() => {
@@ -32,6 +41,38 @@ class MwpMarketplacePage extends MwpPage {
 
   async openSubscriptionsTab() {
     await $('a.nav-tab=Subscriptions').click();
+  }
+
+  async setSubscriptionLicense(license: string) {
+    if (!license) {
+      throw new Error('no license specified in TEST_SHOP_LICENSE environment var, cannot run test');
+    }
+
+    // just for screenshots, make sure the license does not display
+    await browser.execute(() => {
+      window.jQuery('input[name="matomo_license_key"]').attr('type', 'password');
+    });
+
+    await browser.execute((l) => {
+      window.jQuery('input[name="matomo_license_key"]').val(l);
+    }, license);
+
+    await $('#wpbody-content .button-primary').click();
+
+    await $('#wpbody-content form#tgmpa-plugins').waitForDisplayed();
+  }
+
+  async installPlugin(plugin: string) {
+    await browser.execute((p) => {
+      window.jQuery(`input#${p}`).closest('tr').find('span.install > a')[0].click();
+    }, plugin);
+
+    await $('#wp-content p a.button-primary').waitForDisplayed();
+  }
+
+  async activateInstalledPlugin() {
+    await $('#wp-content p a.button-primary').click();
+    await $('table.plugins').waitForDisplayed();
   }
 }
 

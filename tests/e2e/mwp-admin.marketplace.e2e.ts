@@ -27,7 +27,6 @@ describe('MWP Admin > Marketplace', () => {
   });
 
   it('should load the install plugins tab correctly', async () => {
-    await MwpMarketplacePage.open();
     await MwpMarketplacePage.openInstallPluginsTab();
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
@@ -37,12 +36,49 @@ describe('MWP Admin > Marketplace', () => {
   });
 
   it('should load the subscriptions tab correctly', async () => {
-    await MwpMarketplacePage.open();
     await MwpMarketplacePage.openSubscriptionsTab();
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.marketplace.subscriptions${trunkSuffix}`)
     ).toEqual(0);
+  });
+
+  it('should save a subscription license', async () => {
+    await MwpMarketplacePage.setSubscriptionLicense(process.env.TEST_SHOP_LICENSE); // TODO
+    await MwpMarketplacePage.openSubscriptionsTab();
+
+    await MwpMarketplacePage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.license_set${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
+  it('should show premium plugins in the subscriptions tab after setting a license', async () => {
+    await MwpMarketplacePage.openInstallPluginsTab();
+
+    await MwpMarketplacePage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.install-with-premium${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
+  it('should install and activate a premium plugin successfully', async () => {
+    await MwpMarketplacePage.installPlugin('SEOWebVitals');
+    await MwpMarketplacePage.activateInstalledPlugin();
+
+    expect(await $('tr.active[data-slug="SEOWebVitals"]').isExisting()).toBeTruthy();
+  });
+
+  it('should install plugins in bulk', async () => {
+    await MwpMarketplacePage.open();
+    await MwpMarketplacePage.openInstallPluginsTab();
+
+    await $('#cb-select-all-1').click();
+    await browser.execute(() => {
+      window.jQuery('#bulk-action-selector-top').val('tgmpa-bulk-install');
+    });
+    await $('.bulkactions #doaction').click();
+    // TODO
   });
 });
