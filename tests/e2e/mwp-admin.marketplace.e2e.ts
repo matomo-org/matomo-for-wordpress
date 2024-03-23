@@ -27,6 +27,7 @@ describe('MWP Admin > Marketplace', () => {
   });
 
   it('should load the install plugins tab correctly', async () => {
+    await browser.refresh();
     await MwpMarketplacePage.openInstallPluginsTab();
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
@@ -36,6 +37,7 @@ describe('MWP Admin > Marketplace', () => {
   });
 
   it('should load the subscriptions tab correctly', async () => {
+    await browser.refresh();
     await MwpMarketplacePage.openSubscriptionsTab();
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
@@ -45,7 +47,8 @@ describe('MWP Admin > Marketplace', () => {
   });
 
   it('should save a subscription license', async () => {
-    await MwpMarketplacePage.setSubscriptionLicense(process.env.TEST_SHOP_LICENSE); // TODO
+    await browser.refresh();
+    await MwpMarketplacePage.setSubscriptionLicense(process.env.TEST_SHOP_LICENSE);
     await MwpMarketplacePage.openSubscriptionsTab();
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
@@ -55,6 +58,7 @@ describe('MWP Admin > Marketplace', () => {
   });
 
   it('should show premium plugins in the subscriptions tab after setting a license', async () => {
+    await browser.refresh();
     await MwpMarketplacePage.openInstallPluginsTab();
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
@@ -64,6 +68,7 @@ describe('MWP Admin > Marketplace', () => {
   });
 
   it('should install and activate a premium plugin successfully', async () => {
+    await browser.refresh();
     await MwpMarketplacePage.installPlugin('SEOWebVitals');
     await MwpMarketplacePage.activateInstalledPlugin();
 
@@ -80,7 +85,9 @@ describe('MWP Admin > Marketplace', () => {
     });
     await $('.bulkactions #doaction').click();
 
-    await browser.waitUntil(() => window.jQuery('p:contains("All installations have been completed.")').length > 0);
+    await browser.waitUntil(() => {
+      return browser.execute(() => window.jQuery('p:contains("All installations have been completed.")').length > 0);
+    });
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
@@ -88,7 +95,8 @@ describe('MWP Admin > Marketplace', () => {
     ).toEqual(0);
   });
 
-  it('should bulk activate plugins in correctly', async () => {
+  it.only('should bulk activate plugins in correctly', async () => {
+    await MwpMarketplacePage.open();
     await MwpMarketplacePage.openInstallPluginsTab();
     await MwpMarketplacePage.showToActivatePlugins();
 
@@ -97,6 +105,8 @@ describe('MWP Admin > Marketplace', () => {
       window.jQuery('#bulk-action-selector-top').val('tgmpa-bulk-activate');
     });
     await $('.bulkactions #doaction').click();
+
+    await $('#message.updated').waitForDisplayed();
 
     await expect(
       await browser.checkElement('#message.updated', `mwp-admin.marketplace.plugins-activated${trunkSuffix}`)

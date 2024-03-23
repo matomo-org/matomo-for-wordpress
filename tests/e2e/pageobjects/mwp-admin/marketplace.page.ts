@@ -22,7 +22,9 @@ class MwpMarketplacePage extends MwpPage {
     // remove most plugins so the screenshot will stay the same over time
     await browser.execute(() => {
       window.jQuery('tbody#the-list > tr').each((i, e) => {
-        if (window.jQuery('td[data-colname="Developer"]', e).text() !== 'matomo-org') {
+        if (window.jQuery('td[data-colname="Developer"]', e).text() !== 'matomo-org'
+          || window.jQuery('td[data-colname="Plugin"]>strong>a', e).text() === 'Force SSL' // test environment does not use ssl
+        ) {
           window.jQuery(e).remove();
         }
       });
@@ -64,14 +66,14 @@ class MwpMarketplacePage extends MwpPage {
 
   async installPlugin(plugin: string) {
     await browser.execute((p) => {
-      window.jQuery(`input#${p}`).closest('tr').find('span.install > a')[0].click();
+      window.jQuery(`.check-column input[value="${p}"]`).closest('tr').find('span.install > a')[0].click();
     }, plugin);
 
-    await $('#wp-content p a.button-primary').waitForDisplayed();
+    await $('#wpbody-content p a.button-primary').waitForDisplayed({ timeout: 20000 });
   }
 
   async activateInstalledPlugin() {
-    await $('#wp-content p a.button-primary').click();
+    await $('#wpbody-content p a.button-primary').click();
     await $('table.plugins').waitForDisplayed();
   }
 
