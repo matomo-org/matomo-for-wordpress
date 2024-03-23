@@ -23,6 +23,14 @@ class MwpSummaryPage extends MwpPage {
   async changePeriod(periodDescriptor: string) {
     await $(`a.button=${periodDescriptor}`).click();
   }
+
+  async pinReport(index: number) {
+    const boxes = await $$('.postbox');
+    const pin = await boxes[index].$('button.handlediv');
+    await pin.click();
+
+    await $('.notice.notice-success="Dashboard updated."').waitForDisplayed();
+  }
 }
 
 export default new MwpSummaryPage();
