@@ -202,7 +202,6 @@ jobs:
           PHP_VERSION=$PHP_VERSION
           WOOCOMMERCE=1
           WORDPRESS_FOLDER=test
-          RESET_DATABASE=1
           WORDPRESS_VERSION=$WORDPRESS_VERSION
           UID=$UID
           EOF
@@ -233,7 +232,6 @@ jobs:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 1
           WORDPRESS_FOLDER: test
-          RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
           RELEASE_ZIP: ${{ github.workspace }}/matomo.zip
       - name: Archive test artifacts (actual)
