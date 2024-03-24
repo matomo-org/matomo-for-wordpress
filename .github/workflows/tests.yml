@@ -179,6 +179,10 @@ jobs:
           mkdir docker
           echo '[PHP]' > docker/php-custom.ini
           echo 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_NOTICE' >> docker/php-custom.ini
+          echo 'upload_max_filesize = 128M' >> docker/php-custom.ini
+          echo 'memory_limit = 2G' >> docker/php-custom.ini
+          echo 'max_execution_time = 600' >> docker/php-custom.ini
+          echo 'post_max_size = 128M' >> docker/php-custom.ini
 
       # docker-compose up
       # TODO: i can't seem to get docker layer caching to work.
@@ -198,9 +202,7 @@ jobs:
           PHP_VERSION=$PHP_VERSION
           WOOCOMMERCE=1
           WORDPRESS_FOLDER=test
-          RESET_DATABASE=1
           WORDPRESS_VERSION=$WORDPRESS_VERSION
-          INSTALLING_FROM_ZIP=1
           UID=$UID
           EOF
         env:
@@ -212,26 +214,26 @@ jobs:
       - run: npm run compose logs wordpress --no-color # for debugging failures to start
 
       # build release from current code
-      - run: npm run compose -- run console wordpress:build-release --name=test --zip
-
-      # install release from plugin
       - run: |
+          npm run compose -- run console wordpress:build-release --name=test --zip
           mv matomo-test.zip matomo.zip
-          rm -rf ./docker/wordpress/test/wp-content/plugins/matomo
-          npm run compose -- run wp --allow-root plugin install --activate /var/www/html/matomo-for-wordpress/matomo.zip
-          npm run compose -- run wp --allow-root matomo install
 
-          sudo chmod -R 777 ./docker/wordpress/test/wp-content/cache/matomo
+      # restart wordpress but with latest stable matomo
+      - run: |
+          echo 'INSTALLING_FROM_ZIP=1' >> .env
+          docker compose --env-file .env.default --env-file .env stop wordpress
+          docker compose --env-file .env.default --env-file .env up -d wordpress
+          sleep 20
+          npm run compose logs wordpress --no-color
 
-      # run tests
+      # run tests TODO: are all these vars needed?
       - run: xvfb-run --auto-servernum npm run wdio
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WOOCOMMERCE: 1
           WORDPRESS_FOLDER: test
-          RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
-
+          RELEASE_ZIP: ${{ github.workspace }}/matomo.zip
       - name: Archive test artifacts (actual)
         uses: actions/upload-artifact@v3
         if: always()

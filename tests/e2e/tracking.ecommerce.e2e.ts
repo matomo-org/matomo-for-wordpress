@@ -11,10 +11,12 @@ import BlogProductPage from './pageobjects/blog-product.page.js';
 import BlogCheckoutPage from './pageobjects/blog-checkout.page.js';
 import MatomoApi from './apiobjects/matomo.api.js';
 import Website from './website.js';
+import GlobalSetup from './global-setup.js';
 
 
 describe('Tracking (Ecommerce)', function() {
   before(async () => {
+    await GlobalSetup.setUp();
     await Website.deleteAllCookies();
   });
 
