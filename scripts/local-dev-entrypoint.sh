@@ -203,16 +203,12 @@ else
 fi
 
 # link matomo for wordpress volume as wordpress plugin
-if [[ "INSTALLING_FROM_ZIP" != "1" ]]; then
+if [[ "$INSTALLING_FROM_ZIP" != "1" ]]; then
   if [[ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]]; then
     ln -s /var/www/html/matomo-for-wordpress "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo"
   fi
 else
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate "https://downloads.wordpress.org/plugin/matomo.latest-stable.zip"
-fi
-
-if [[ -d "/var/www/html/woocommerce-piwik-analytics" && ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/woocommerce-piwik-analytics" ]]; then
-  ln -s /var/www/html/woocommerce-piwik-analytics /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/woocommerce-piwik-analytics
 fi
 
 if [[ "$MULTISITE" = "1" ]]; then
