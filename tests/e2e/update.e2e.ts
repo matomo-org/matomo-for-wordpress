@@ -48,10 +48,11 @@ describe('MWP Updating', () => {
     await $('#install-plugin-submit').waitForClickable();
     await $('#install-plugin-submit').click();
 
-    await browser.pause(10000);
-
+    console.log(await browser.execute(() => document.body.innerHTML));
     await $('.update-from-upload-overwrite').waitForDisplayed();
-    await $('.update-from-upload-overwrite').click();
+    await browser.execute(() => {
+      window.jQuery('.update-from-upload-overwrite')[0].click();
+    });
 
     await browser.waitUntil(async () => {
       return await browser.execute(() => {
