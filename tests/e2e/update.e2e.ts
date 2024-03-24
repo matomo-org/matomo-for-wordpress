@@ -49,7 +49,6 @@ describe('MWP Updating', () => {
     await $('#install-plugin-submit').click();
 
     await browser.pause(10000);
-    throw new Error('fail');
 
     await $('.update-from-upload-overwrite').waitForDisplayed();
     await $('.update-from-upload-overwrite').click();
