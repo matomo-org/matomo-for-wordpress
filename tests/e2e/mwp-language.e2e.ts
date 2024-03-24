@@ -10,11 +10,13 @@ import { expect, browser } from '@wdio/globals';
 import Website from './website.js';
 import SummaryPage from './pageobjects/mwp-admin/summary.page.js';
 import OverviewPage from './pageobjects/matomo-reporting/visitors/overview.page.js';
+import GlobalSetup from './global-setup.js';
 
 describe('MWP Language', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
 
   before(async () => {
+    await GlobalSetup.setUp();
     await Website.login();
     await Website.setSiteLanguage('');
     await Website.setUserProfileLanguage('site-default');
