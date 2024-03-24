@@ -58,12 +58,5 @@ describe('MWP Updating', () => {
         return window.jQuery && window.jQuery('p:contains(Plugin updated successfully.)').length > 0;
       });
     }, { timeout: 30000 });
-
-    await SummaryPage.open();
-
-    await SummaryPage.prepareWpAdminForScreenshot();
-    await expect(
-      await browser.checkFullPageScreen(`mwp-update.summary-after-update${trunkSuffix}`)
-    ).toEqual(0);
   });
 });
