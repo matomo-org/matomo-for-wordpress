@@ -25,7 +25,7 @@ describe('MWP Updating', () => {
     const latestStableVersion = pluginInfo.version as string;
 
     await browser.url(`${await Website.baseUrl()}/wp-admin/plugins.php`);
-    await $('tr[data-slug="matomo"]').toBeDisplayed();
+    await $('tr[data-slug="matomo"]').waitForDisplayed();
 
     const actualVersion = await browser.execute(() => {
       const [, v] = window.jQuery('tr[data-slug="matomo"] .plugin-version-author-uri').text().match(/Version (\d+\.\d+\.\d+)/);
@@ -39,7 +39,7 @@ describe('MWP Updating', () => {
     const pathToRelease = process.env.RELEASE_ZIP || MatomoCli.buildRelease();
 
     await browser.url(`${await Website.baseUrl()}/wp-admin/plugin-install.php`);
-    await $('a.upload-view-toggle').toBeDisplayed();
+    await $('a.upload-view-toggle').waitForDisplayed();
 
     await $('a.upload-view-toggle').click();
     await $('#pluginzip').setValue(pathToRelease);
