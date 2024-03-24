@@ -36,7 +36,7 @@ describe('MWP Updating', () => {
   });
 
   it('should succeed when updating to the current code', async () => {
-    const pathToRelease = MatomoCli.buildRelease();
+    const pathToRelease = process.env.RELEASE_ZIP || MatomoCli.buildRelease();
 
     await browser.url(`${await Website.baseUrl()}/wp-admin/plugin-install.php`);
     await $('a.upload-view-toggle').toBeDisplayed();

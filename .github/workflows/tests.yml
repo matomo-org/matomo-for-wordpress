@@ -212,16 +212,9 @@ jobs:
       - run: npm run compose logs wordpress --no-color # for debugging failures to start
 
       # build release from current code
-      - run: npm run compose -- run console wordpress:build-release --name=test --zip
-
-      # install release from plugin
       - run: |
+          npm run compose -- run console wordpress:build-release --name=test --zip
           mv matomo-test.zip matomo.zip
-          rm -rf ./docker/wordpress/test/wp-content/plugins/matomo
-          npm run compose -- run wp --allow-root plugin install --activate /var/www/html/matomo-for-wordpress/matomo.zip
-          npm run compose -- run wp --allow-root matomo install
-
-          sudo chmod -R 777 ./docker/wordpress/test/wp-content/cache/matomo
 
       # run tests
       - run: xvfb-run --auto-servernum npm run wdio
@@ -231,6 +224,7 @@ jobs:
           WORDPRESS_FOLDER: test
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
+          RELEASE_ZIP: ${{ github.workspace }}/matomo.zip
 
       - name: Archive test artifacts (actual)
         uses: actions/upload-artifact@v3
