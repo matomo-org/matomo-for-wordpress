@@ -52,6 +52,7 @@ export const config: Options.Testrunner = {
   ],
   // Patterns to exclude. (all executed without parallelism before these tests, see wdio.conf.tracking.ts)
   exclude: [
+    './tests/e2e/update.e2e.ts',
     './tests/e2e/mwp-admin.marketplace.e2e.ts',
     './tests/e2e/tracking.e2e.ts',
     './tests/e2e/tracking.ecommerce.e2e.ts',
@@ -215,6 +216,7 @@ export const config: Options.Testrunner = {
    */
   onPrepare: async function (config, capabilities) {
     try {
+      console.log('Performing one time setup...');
       await GlobalSetup.setUp();
     } catch (e) {
       console.log(`Aborting, failed to finish global setup:\n${e.stack}`);

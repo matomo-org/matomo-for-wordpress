@@ -35,5 +35,10 @@ describe('MWP Admin > Summary', () => {
     ).toBeLessThan(0.01);
   });
 
-  // TODO: add test for report pinning
+  it('should pin reports to the WordPress dashboard when the pin icon is clicked', async () => {
+    await MwpSummaryPage.pinReport(0);
+
+    await browser.url(`${await Website.baseUrl()}/wp-admin/index.php`);
+    await $('#matomo_dashboard_widget_visits_over_time_thismonth').waitForDisplayed();
+  });
 });

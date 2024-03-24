@@ -11,9 +11,11 @@ import BlogHomepage from './pageobjects/blog-homepage.page.js';
 import BlogPostPage from './pageobjects/blog-post.page.js';
 import MatomoApi from './apiobjects/matomo.api.js';
 import Website from './website.js';
+import GlobalSetup from './global-setup.js';
 
 describe('Tracking', () => {
   before(async () => {
+    await GlobalSetup.setUp();
     await Website.deleteAllCookies();
   });
 

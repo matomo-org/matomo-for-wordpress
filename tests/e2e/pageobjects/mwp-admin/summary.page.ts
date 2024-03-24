@@ -6,7 +6,7 @@
  *
  */
 
-import { $ } from '@wdio/globals';
+import { $, browser } from '@wdio/globals';
 import * as querystring from 'querystring';
 import MwpPage from './page.js';
 
@@ -22,6 +22,16 @@ class MwpSummaryPage extends MwpPage {
 
   async changePeriod(periodDescriptor: string) {
     await $(`a.button=${periodDescriptor}`).click();
+  }
+
+  async pinReport(index: number) {
+    const boxes = await $$('.postbox');
+    const pin = await boxes[index].$('button.handlediv');
+    await pin.click();
+
+    await browser.waitUntil(async () => {
+      return await browser.execute(async () => window.jQuery('.notice.notice-success:contains(Dashboard updated.)').length);
+    });
   }
 }
 
