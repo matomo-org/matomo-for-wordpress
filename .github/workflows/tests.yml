@@ -204,7 +204,6 @@ jobs:
           WORDPRESS_FOLDER=test
           RESET_DATABASE=1
           WORDPRESS_VERSION=$WORDPRESS_VERSION
-          INSTALLING_FROM_ZIP=1
           UID=$UID
           EOF
         env:
@@ -220,7 +219,15 @@ jobs:
           npm run compose -- run console wordpress:build-release --name=test --zip
           mv matomo-test.zip matomo.zip
 
-      # run tests
+      # restart wordpress but with latest stable matomo
+      - run: |
+          echo 'INSTALLING_FROM_ZIP=1' >> .env
+          docker compose --env-file .env.default --env-file .env stop wordpress
+          docker compose --env-file .env.default --env-file .env up -d wordpress
+          sleep 20
+          npm run compose logs wordpress --no-color
+
+      # run tests TODO: are all these vars needed?
       - run: xvfb-run --auto-servernum npm run wdio
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
@@ -229,7 +236,6 @@ jobs:
           RESET_DATABASE: 1
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
           RELEASE_ZIP: ${{ github.workspace }}/matomo.zip
-
       - name: Archive test artifacts (actual)
         uses: actions/upload-artifact@v3
         if: always()
