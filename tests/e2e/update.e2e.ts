@@ -7,6 +7,7 @@
  */
 
 import { browser, $, expect } from '@wdio/globals';
+import fetch from 'node-fetch';
 import Website from './website.js';
 import MatomoCli from './apiobjects/matomo.cli.js';
 import SummaryPage from './pageobjects/mwp-admin/summary.page.js';
