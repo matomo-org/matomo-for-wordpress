@@ -179,6 +179,9 @@ jobs:
           mkdir docker
           echo '[PHP]' > docker/php-custom.ini
           echo 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_NOTICE' >> docker/php-custom.ini
+          echo 'upload_max_filesize = 128M' >> docker/php-custom.ini
+          echo 'memory_limit = 2G' >> docker/php-custom.ini
+          echo 'max_execution_time = 600' >> docker/php-custom.ini
 
       # docker-compose up
       # TODO: i can't seem to get docker layer caching to work.
