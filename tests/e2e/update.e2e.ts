@@ -45,7 +45,7 @@ describe('MWP Updating', () => {
     await $('#pluginzip').setValue(pathToRelease);
     await browser.pause(250);
 
-    throw new Error('fail');
+    await $('#install-plugin-submit').waitForClickable();
     await $('#install-plugin-submit').click();
 
     await $('.update-from-upload-overwrite').waitForDisplayed();
