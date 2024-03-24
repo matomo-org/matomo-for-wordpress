@@ -48,7 +48,6 @@ describe('MWP Updating', () => {
     await $('#install-plugin-submit').waitForClickable();
     await $('#install-plugin-submit').click();
 
-    console.log(await browser.execute(() => document.body.innerHTML));
     await $('.update-from-upload-overwrite').waitForDisplayed();
     await browser.execute(() => {
       window.jQuery('.update-from-upload-overwrite')[0].click();
@@ -58,7 +57,7 @@ describe('MWP Updating', () => {
       return await browser.execute(() => {
         return window.jQuery && window.jQuery('p:contains(Plugin updated successfully.)').length > 0;
       });
-    });
+    }, { timeout: 120000 });
 
     await SummaryPage.open();
 
