@@ -25,6 +25,10 @@ describe('Tracking (Ecommerce)', function() {
     // overall or number of conversions overall without
     await Website.setUpWooCommerce();
 
+    await browser.url(`${await Website.baseUrl()}/wp-admin/themes.php`);
+    await browser.pause(3000);
+    throw new Error('fail');
+
     await BlogProductPage.open();
     await BlogProductPage.waitForTrackingRequest(1); // pageview + product view in one request
 
