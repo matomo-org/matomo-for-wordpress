@@ -20,15 +20,7 @@ class MwpMarketplacePage extends MwpPage {
     await $('td.column-version').waitForExist();
 
     // remove most plugins so the screenshot will stay the same over time
-    await browser.execute(() => {
-      window.jQuery('tbody#the-list > tr').each((i, e) => {
-        if (window.jQuery('td[data-colname="Developer"]', e).text() !== 'matomo-org'
-          || window.jQuery('td[data-colname="Plugin"]>strong>a', e).text() === 'Force SSL' // test environment does not use ssl
-        ) {
-          window.jQuery(e).remove();
-        }
-      });
-    });
+    await this.removeThirdPartyPlugins();
 
     // remove version strings so test will pass when plugin requirements
     // change
@@ -37,6 +29,18 @@ class MwpMarketplacePage extends MwpPage {
         window.jQuery(e).html(
           window.jQuery(e).html().replace(/\d+\.\d+\.\d+(-[a-zA-Z0-9]+)?/g, '-')
         );
+      });
+    });
+  }
+
+  async removeThirdPartyPlugins() {
+    await browser.execute(() => {
+      window.jQuery('tbody#the-list > tr').each((i, e) => {
+        if (window.jQuery('td[data-colname="Developer"]', e).text() !== 'matomo-org'
+          || window.jQuery('td[data-colname="Plugin"]>strong>a', e).text() === 'Force SSL' // test environment does not use ssl
+        ) {
+          window.jQuery(e).remove();
+        }
       });
     });
   }

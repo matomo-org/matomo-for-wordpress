@@ -20,6 +20,10 @@ describe('MWP Admin > Marketplace', () => {
     await Website.login();
   });
 
+  after(async () => {
+    await SummaryPage.open(); // open matomo page to trigger any pending updates
+  });
+
   it('should load the overview tab correctly', async () => {
     await MwpMarketplacePage.open();
 
@@ -111,11 +115,10 @@ describe('MWP Admin > Marketplace', () => {
 
     await $('#message.updated').waitForDisplayed();
 
+    await MwpMarketplacePage.removeThirdPartyPlugins();
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.marketplace.plugins-activated${trunkSuffix}`)
     ).toEqual(0);
-
-    await SummaryPage.open(); // open matomo page to trigger any pending updates
   });
 });
