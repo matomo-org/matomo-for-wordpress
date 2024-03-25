@@ -9,11 +9,13 @@
 import { expect, browser } from '@wdio/globals';
 import MwpMarketplacePage from './pageobjects/mwp-admin/marketplace.page.js';
 import Website from './website.js';
+import GlobalSetup from './global-setup.js';
 
 describe('MWP Admin > Marketplace', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
 
   before(async () => {
+    await GlobalSetup.setUp();
     await Website.login();
   });
 
