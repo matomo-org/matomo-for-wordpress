@@ -53,6 +53,7 @@ jobs:
         with:
           persist-credentials: true
           lfs: true
+          submodules: true
       - run: git lfs pull
 
       - name: Setup PHP ${{ matrix.php-versions }}
@@ -152,6 +153,7 @@ jobs:
         with:
           persist-credentials: false
           lfs: true
+          submodules: true
       - run: git lfs pull
 
       # setup xvfb
@@ -260,6 +262,7 @@ jobs:
         with:
           persist-credentials: true
           path: wp-content/plugins/matomo
+          submodules: true
 
       - name: Setup PHP for checkstyle
         uses: shivammathur/setup-php@v2
