@@ -228,7 +228,7 @@ jobs:
           sleep 20
           npm run compose logs wordpress --no-color
 
-      # run tests TODO: are all these vars needed?
+      # run tests
       - run: xvfb-run --auto-servernum npm run wdio
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
@@ -236,6 +236,7 @@ jobs:
           WORDPRESS_FOLDER: test
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
           RELEASE_ZIP: ${{ github.workspace }}/matomo.zip
+          TEST_SHOP_LICENSE: ${{ secrets.TEST_SHOP_LICENSE }}
       - name: Archive test artifacts (actual)
         uses: actions/upload-artifact@v3
         if: always()
