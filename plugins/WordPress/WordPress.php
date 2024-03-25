@@ -265,6 +265,9 @@ class WordPress extends Plugin
             'body'                => $params['body'],
             'sslverify'           => true,
         );
+        if (defined( 'MATOMO_LOCAL_ENVIRONMENT' ) && MATOMO_LOCAL_ENVIRONMENT) {
+            $args['timeout'] = max($args['timeout'], 5);
+        }
         if (!empty($params['userAgent'])) {
             $args['user-agent'] = $params['userAgent'];
         }

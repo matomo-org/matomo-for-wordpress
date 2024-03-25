@@ -53,6 +53,7 @@ jobs:
         with:
           persist-credentials: true
           lfs: true
+          submodules: true
       - run: git lfs pull
 
       - name: Setup PHP ${{ matrix.php-versions }}
@@ -152,6 +153,7 @@ jobs:
         with:
           persist-credentials: false
           lfs: true
+          submodules: true
       - run: git lfs pull
 
       # setup xvfb
@@ -226,7 +228,7 @@ jobs:
           sleep 20
           npm run compose logs wordpress --no-color
 
-      # run tests TODO: are all these vars needed?
+      # run tests
       - run: xvfb-run --auto-servernum npm run wdio
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
@@ -234,6 +236,7 @@ jobs:
           WORDPRESS_FOLDER: test
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
           RELEASE_ZIP: ${{ github.workspace }}/matomo.zip
+          TEST_SHOP_LICENSE: ${{ secrets.TEST_SHOP_LICENSE }}
       - name: Archive test artifacts (actual)
         uses: actions/upload-artifact@v3
         if: always()
@@ -260,6 +263,7 @@ jobs:
         with:
           persist-credentials: true
           path: wp-content/plugins/matomo
+          submodules: true
 
       - name: Setup PHP for checkstyle
         uses: shivammathur/setup-php@v2

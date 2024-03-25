@@ -12,6 +12,7 @@ class PersonalSettingsPage extends MatomoAdminPage {
   async open() {
     const result = await super.open('UsersManager.userSettings');
     await $('#userSettingsTable').waitForDisplayed();
+    await $('.pluginSettings .checkbox').waitForDisplayed();
     await browser.pause(1000);
     return result;
   }

@@ -50,9 +50,10 @@ export const config: Options.Testrunner = {
   specs: [
     './tests/e2e/**/*.e2e.ts'
   ],
-  // Patterns to exclude.
+  // Patterns to exclude. (all executed without parallelism before these tests, see wdio.conf.tracking.ts)
   exclude: [
     './tests/e2e/update.e2e.ts',
+    './tests/e2e/mwp-admin.marketplace.e2e.ts',
     './tests/e2e/tracking.e2e.ts',
     './tests/e2e/tracking.ecommerce.e2e.ts',
     './tests/e2e/tracking.tag-manager.e2e.ts',
