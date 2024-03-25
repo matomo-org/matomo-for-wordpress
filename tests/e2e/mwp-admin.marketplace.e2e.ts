@@ -111,8 +111,9 @@ describe('MWP Admin > Marketplace', () => {
 
     await $('#message.updated').waitForDisplayed();
 
+    await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkElement('#message.updated', `mwp-admin.marketplace.plugins-activated${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.plugins-activated${trunkSuffix}`)
     ).toEqual(0);
 
     await SummaryPage.open(); // open matomo page to trigger any pending updates
