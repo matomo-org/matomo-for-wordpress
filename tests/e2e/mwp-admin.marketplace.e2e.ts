@@ -95,7 +95,7 @@ describe('MWP Admin > Marketplace', () => {
     ).toEqual(0);
   });
 
-  it.only('should bulk activate plugins in correctly', async () => {
+  it('should bulk activate plugins in correctly', async () => {
     await MwpMarketplacePage.open();
     await MwpMarketplacePage.openInstallPluginsTab();
     await MwpMarketplacePage.showToActivatePlugins();
