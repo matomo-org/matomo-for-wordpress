@@ -10,6 +10,7 @@ import { expect, browser } from '@wdio/globals';
 import MwpMarketplacePage from './pageobjects/mwp-admin/marketplace.page.js';
 import Website from './website.js';
 import GlobalSetup from './global-setup.js';
+import SummaryPage from './pageobjects/mwp-admin/summary.page.js';
 
 describe('MWP Admin > Marketplace', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -113,5 +114,7 @@ describe('MWP Admin > Marketplace', () => {
     await expect(
       await browser.checkElement('#message.updated', `mwp-admin.marketplace.plugins-activated${trunkSuffix}`)
     ).toEqual(0);
+
+    await SummaryPage.open(); // open matomo page to trigger any pending updates
   });
 });
