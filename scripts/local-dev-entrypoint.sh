@@ -262,9 +262,6 @@ if [ ! -f "/var/www/html/index.php" ]; then
 EOF
 fi
 
-# TODO: test that checks published marketplace.zip matches local one
-# TODO: add marketplace release information to docs
-
 if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress" ]; then
   echo "installing matomo marketplace"
   ln -s /var/www/html/matomo-for-wordpress/marketplace "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress"
