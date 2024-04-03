@@ -26,6 +26,7 @@ use WpMatomo\Ecommerce\Woocommerce;
 use WpMatomo\Installer;
 use WpMatomo\OptOut;
 use WpMatomo\Paths;
+use WpMatomo\PluginAdminOverrides;
 use WpMatomo\RedirectOnActivation;
 use WpMatomo\Report\Renderer;
 use WpMatomo\Roles;
@@ -111,6 +112,9 @@ class WpMatomo {
 			 */
 			$redirect = new RedirectOnActivation( $this );
 			$redirect->register_hooks();
+
+			$plugin_admin_overrides = new PluginAdminOverrides();
+			$plugin_admin_overrides->register_hooks();
 		}
 
 		$tracking_code = new TrackingCode( self::$settings );
