@@ -92,6 +92,7 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 	public function test_update_converts_row_format_if_row_too_small_to_fit_new_dimension() {
 		$dimensions_to_remove = [
 			'pageviews_before',
+			'config_device_model',
 			'config_device_brand',
 		];
 
@@ -144,7 +145,7 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 
 	private function assert_columns_exist( $table, $columns ) {
 		$existing_columns = \Piwik\Db::fetchAll( 'SHOW COLUMNS IN ' . \Piwik\Common::prefixTable( $table ) );
-		$existing_columns = array_column( $existing_columns, 'Name' );
+		$existing_columns = array_column( $existing_columns, 'Field' );
 
 		$missing_columns = array_diff( $columns, $existing_columns );
 		$this->assertEquals( [], $missing_columns, 'Found missing columns' );
