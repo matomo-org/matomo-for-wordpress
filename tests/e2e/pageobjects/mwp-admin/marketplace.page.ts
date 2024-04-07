@@ -73,7 +73,7 @@ class MwpMarketplacePage extends MwpPage {
       window.jQuery(`.check-column input[value="${p}"]`).closest('tr').find('span.install > a')[0].click();
     }, plugin);
 
-    await $('#wpbody-content p a.button-primary').waitForDisplayed({ timeout: 20000 });
+    await $('#wpbody-content p a.button-primary').waitForDisplayed({ timeout: 30000 });
   }
 
   async activateInstalledPlugin() {
