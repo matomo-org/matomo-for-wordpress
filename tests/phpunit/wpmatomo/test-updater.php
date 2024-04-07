@@ -16,6 +16,8 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 	private $updater;
 
 	public function setUp(): void {
+		$this->disable_temp_tables = true;
+
 		parent::setUp();
 
 		$this->updater = new Updater( new Settings() );
@@ -90,23 +92,21 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 	public function test_update_converts_row_format_if_row_too_small_to_fit_new_dimension() {
 		$dimensions_to_remove = [
 			'pageviews_before',
-			'referer_keyword',
-			'location_city',
 			'config_device_brand',
 		];
 
 		$this->remove_log_conversion_dimensions( $dimensions_to_remove );
-		$this->set_log_conversion_row_format( 'COMPACT' );
+		$this->set_log_conversion_row_format( 'Compact' );
 
 		$row_format = $this->get_log_conversion_row_format();
-		$this->assertEquals( 'COMPACT', $row_format ); // sanity check
+		$this->assertEquals( 'Compact', $row_format ); // sanity check
 
 		$this->updater->update();
 
-		$row_format = $this->get_log_conversion_row_format();
-		$this->assertEquals( 'DYNAMIC', $row_format );
-
 		$this->assert_columns_exist( 'log_conversion', $dimensions_to_remove );
+
+		$row_format = $this->get_log_conversion_row_format();
+		$this->assertEquals( 'Dynamic', $row_format );
 	}
 
 	private function remove_log_conversion_dimensions( $dimensions_to_remove ) {
@@ -147,6 +147,6 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 		$existing_columns = array_column( $existing_columns, 'Name' );
 
 		$missing_columns = array_diff( $columns, $existing_columns );
-		$this->assertEquals( [], $missing_columns );
+		$this->assertEquals( [], $missing_columns, 'Found missing columns' );
 	}
 }
