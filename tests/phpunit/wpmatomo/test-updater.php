@@ -87,4 +87,66 @@ class UpdaterTest extends MatomoAnalytics_TestCase {
 		$this->assertTrue( true );
 	}
 
+	public function test_update_converts_row_format_if_row_too_small_to_fit_new_dimension() {
+		$dimensions_to_remove = [
+			'pageviews_before',
+			'referer_keyword',
+			'location_city',
+			'config_device_brand',
+		];
+
+		$this->remove_log_conversion_dimensions( $dimensions_to_remove );
+		$this->set_log_conversion_row_format( 'COMPACT' );
+
+		$row_format = $this->get_log_conversion_row_format();
+		$this->assertEquals( 'COMPACT', $row_format ); // sanity check
+
+		$this->updater->update();
+
+		$row_format = $this->get_log_conversion_row_format();
+		$this->assertEquals( 'DYNAMIC', $row_format );
+
+		$this->assert_columns_exist( 'log_conversion', $dimensions_to_remove );
+	}
+
+	private function remove_log_conversion_dimensions( $dimensions_to_remove ) {
+		// remove columns
+		$statements = [];
+		foreach ( $dimensions_to_remove as $dimension ) {
+			$statements[] = "DROP COLUMN `$dimension`";
+		}
+		$sql = 'ALTER TABLE ' . \Piwik\Common::prefixTable( 'log_conversion' ) . ' ' . implode( ', ', $statements );
+		\Piwik\Db::exec( $sql );
+
+		// remove option table entries
+		$conditions = [];
+		foreach ( $dimensions_to_remove as $dimension ) {
+			$conditions[] = "option_name LIKE '%$dimension%'";
+		}
+		$sql = 'DELETE FROM ' . \Piwik\Common::prefixTable( 'option' ) . ' WHERE ' . implode( ' OR ', $conditions );
+		\Piwik\Db::exec( $sql );
+	}
+
+	private function set_log_conversion_row_format( $row_format ) {
+		$sql = 'ALTER TABLE ' . \Piwik\Common::prefixTable( 'log_conversion' ) . ' ROW_FORMAT=' . $row_format;
+		\Piwik\Db::exec( $sql );
+	}
+
+	private function get_log_conversion_row_format() {
+		$log_conversion = \Piwik\Common::prefixTable( 'log_conversion' );
+		$sql            = "SELECT row_format FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = '$log_conversion'";
+		$format         = \Piwik\Db::fetchOne( $sql );
+		if ( empty( $format ) ) {
+			throw new \Exception( 'matomo not installed in test' );
+		}
+		return $format;
+	}
+
+	private function assert_columns_exist( $table, $columns ) {
+		$existing_columns = \Piwik\Db::fetchAll( 'SHOW COLUMNS IN ' . \Piwik\Common::prefixTable( $table ) );
+		$existing_columns = array_column( $existing_columns, 'Name' );
+
+		$missing_columns = array_diff( $columns, $existing_columns );
+		$this->assertEquals( [], $missing_columns );
+	}
 }
