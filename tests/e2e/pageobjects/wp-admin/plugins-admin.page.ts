@@ -7,10 +7,17 @@
  */
 
 import Page from '../page.js';
+import {browser} from "@wdio/globals";
 
 class PluginsAdminPage extends Page {
   async open() {
     return await super.open('/wp-admin/plugins.php');
+  }
+
+  async hideNonMatomoRows() {
+    await browser.execute(() => {
+      window.jQuery('tr[data-slug]:not([data-slug="matomo"])').hide();
+    });
   }
 }
 

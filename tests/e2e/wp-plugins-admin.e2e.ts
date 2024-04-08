@@ -20,8 +20,10 @@ describe('WordPress Customizations > Plugins Admin', () => {
   it('should show the data deletion setting in the plugins admin', async () => {
     await PluginsAdmin.open();
 
+    await PluginsAdmin.prepareWpAdminForScreenshot();
+    await PluginsAdmin.hideNonMatomoRows();
     expect(
-      await browser.checkElement('tr[data-slug="matomo"]', `wp-customizations.plugins-admin.data-deletion${trunkSuffix}`)
+      await browser.checkFullPageScreen(`wp-customizations.plugins-admin.data-deletion${trunkSuffix}`)
     ).toEqual(0);
   });
 
