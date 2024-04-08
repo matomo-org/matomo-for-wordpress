@@ -17,7 +17,7 @@ class MwpMarketplacePage extends MwpPage {
   async openInstallPluginsTab() {
     await $('a.nav-tab=Install Plugins').click();
 
-    await $('td.column-version').waitForExist({ timeout: 20000 });
+    await $('td.column-version').waitForExist({ timeout: 30000 });
 
     // remove most plugins so the screenshot will stay the same over time
     await this.removeThirdPartyPlugins();
