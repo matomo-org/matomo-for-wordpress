@@ -113,7 +113,7 @@ class WpMatomo {
 			$redirect = new RedirectOnActivation( $this );
 			$redirect->register_hooks();
 
-			$plugin_admin_overrides = new PluginAdminOverrides();
+			$plugin_admin_overrides = new PluginAdminOverrides( self::$settings );
 			$plugin_admin_overrides->register_hooks();
 		}
 

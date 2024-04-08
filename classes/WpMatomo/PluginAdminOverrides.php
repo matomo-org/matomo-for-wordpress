@@ -10,17 +10,47 @@
 namespace WpMatomo;
 
 /**
- * TODO
+ * Customizations for the WordPress plugins page.
  */
 class PluginAdminOverrides {
-	public function register_hooks() {
-		add_action( 'admin_enqueue_scripts', [ $this, 'add_plugins_php_override_script' ] );
+	/**
+	 * @var Settings
+	 */
+	private $settings;
+
+	public function __construct( $settings ) {
+		$this->settings = $settings;
 	}
 
-	public function add_plugins_php_override_script() {
+	public function register_hooks() {
 		if ( $this->is_plugins_php_page() ) {
-			wp_enqueue_script( 'matomo_plugins_php_override', plugins_url( 'assets/js/plugins-admin.js', MATOMO_ANALYTICS_FILE ), [ 'jquery', 'jquery-ui-dialog' ], '1.0', true );
+			add_action( 'admin_footer', [ $this, 'add_data_deletion_notice_if_plugins_php' ] );
 		}
+	}
+
+	public function add_data_deletion_notice_if_plugins_php() {
+		$note                          = esc_html__( 'Note', 'matomo' );
+		$change_settings_url           = home_url( '/wp-admin/admin.php?page=matomo-settings&tab=advanced' );
+		$change_data_deletion_settings = esc_html__( 'Change data deletion settings.', 'matomo' );
+
+		if ( $this->settings->should_delete_all_data_on_uninstall() ) {
+			$deletion_setting_notice = esc_html__( 'Data will be permanently deleted upon plugin deletion.', 'matomo' );
+		} else {
+			$deletion_setting_notice = esc_html__( 'Data will %1$snot%2$s be deleted upon plugin deletion.', 'matomo' );
+			$deletion_setting_notice = sprintf( $deletion_setting_notice, '<strong style="display:inline;">', '</strong>' );
+		}
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo <<<EOF
+<script>
+jQuery(document).ready(
+  function () {
+    var \$title = jQuery('body.plugins-php tr[data-slug="matomo"] td.plugin-title > strong:first-child');
+    \$title.after('<p><span style="margin: 0 2px 2px 0; display: inline-block; vertical-align: middle;">ℹ️</span> $note: $deletion_setting_notice<br/><a href="$change_settings_url">$change_data_deletion_settings</a></p>');
+  }
+);
+</script>
+EOF;
 	}
 
 	private function is_plugins_php_page() {
