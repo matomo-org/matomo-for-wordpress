@@ -46,7 +46,7 @@ class PluginAdminOverrides {
 jQuery(document).ready(
   function () {
     var \$title = jQuery('body.plugins-php tr[data-slug="matomo"] td.plugin-title > strong:first-child');
-    \$title.after('<p><span style="margin: 0 2px 2px 0; display: inline-block; vertical-align: middle;">ℹ️</span> $note: $deletion_setting_notice<br/><a href="$change_settings_url">$change_data_deletion_settings</a></p>');
+    \$title.after('<p><span style="margin: 0 2px 2px 0; display: inline-block; vertical-align: middle;">ℹ️</span> $note: $deletion_setting_notice<br/><a href="$change_settings_url" id="mwp-data-deletion-settings">$change_data_deletion_settings</a></p>');
   }
 );
 </script>
