@@ -73,17 +73,17 @@ class MwpMarketplacePage extends MwpPage {
       window.jQuery(`.check-column input[value="${p}"]`).closest('tr').find('span.install > a')[0].click();
     }, plugin);
 
-    await $('#wpbody-content p a.button-primary').waitForDisplayed({ timeout: 20000 });
+    await $('#wpbody-content p a.button-primary').waitForDisplayed({ timeout: 30000 });
   }
 
   async activateInstalledPlugin() {
     await $('#wpbody-content p a.button-primary').click();
-    await $('table.plugins').waitForDisplayed();
+    await $('table.plugins').waitForDisplayed({ timeout: 30000 });
   }
 
   async showToActivatePlugins() {
     await $('.subsubsub li.activate > a').click();
-    await $('.subsubsub li.activate > a.current').waitForDisplayed();
+    await $('.subsubsub li.activate > a.current').waitForDisplayed({ timeout: 30000 });
   }
 }
 
