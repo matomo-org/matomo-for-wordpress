@@ -14,15 +14,15 @@ describe('MWP Admin > Diagnostics', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
 
   before(async () => {
+    if (!process.env.PHP_VERSION) {
+      throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
+    }
+
     await Website.login();
   });
 
   it('should load the system report tab correctly', async () => {
     await MwpDiagnosticsPage.open();
-
-    if (!process.env.PHP_VERSION) {
-      throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
-    }
 
     await MwpDiagnosticsPage.prepareWpAdminForScreenshot();
     await expect(

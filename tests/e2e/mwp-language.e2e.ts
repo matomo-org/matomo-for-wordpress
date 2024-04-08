@@ -16,6 +16,10 @@ describe('MWP Language', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
 
   before(async () => {
+    if (!process.env.PHP_VERSION) {
+      throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
+    }
+
     await GlobalSetup.setUp();
     await Website.login();
     await Website.setSiteLanguage('');
@@ -33,7 +37,7 @@ describe('MWP Language', () => {
     await SummaryPage.open();
     await SummaryPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`matomo-lang.site-lang.mwp-admin${trunkSuffix}`)
+      await browser.checkFullPageScreen(`matomo-lang.site-lang.mwp-admin.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -51,7 +55,7 @@ describe('MWP Language', () => {
     await SummaryPage.open();
     await SummaryPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`matomo-lang.profile-lang.mwp-admin${trunkSuffix}`)
+      await browser.checkFullPageScreen(`matomo-lang.profile-lang.mwp-admin.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -68,7 +72,7 @@ describe('MWP Language', () => {
     await SummaryPage.openWith({ mwp_switch_to_locale: 'ja' });
     await SummaryPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen('matomo-lang.switch-to-locale.mwp-admin')
+      await browser.checkFullPageScreen(`matomo-lang.switch-to-locale.mwp-admin.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
