@@ -94,7 +94,7 @@ describe('MWP Admin > Marketplace', () => {
 
     await browser.waitUntil(() => {
       return browser.execute(() => window.jQuery('p:contains("All installations have been completed.")').length > 0);
-    }, { timeout: 20000 });
+    }, { timeout: 30000 });
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(

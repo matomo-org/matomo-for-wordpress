@@ -19,6 +19,12 @@ class PluginsAdminPage extends Page {
       window.jQuery('tr[data-slug]:not([data-slug="matomo"])').hide();
     });
   }
+
+  async hideNotifications() {
+    await browser.execute(() => {
+      window.jQuery('div[id="message"]').hide();
+    });
+  }
 }
 
 export default new PluginsAdminPage();

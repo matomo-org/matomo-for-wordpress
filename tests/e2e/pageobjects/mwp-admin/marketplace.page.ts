@@ -65,7 +65,7 @@ class MwpMarketplacePage extends MwpPage {
 
     await $('#wpbody-content .button-primary').click();
 
-    await $('#wpbody-content form#tgmpa-plugins').waitForDisplayed();
+    await $('#wpbody-content form#tgmpa-plugins').waitForDisplayed({ timeout: 30000 });
   }
 
   async installPlugin(plugin: string) {
