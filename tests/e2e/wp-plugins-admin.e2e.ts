@@ -23,6 +23,7 @@ describe('WordPress Customizations > Plugins Admin', () => {
     await PluginsAdmin.prepareWpAdminForScreenshot();
     await PluginsAdmin.hideNonMatomoRows();
     await PluginsAdmin.hideNotifications();
+    await PluginsAdmin.hidePluginFilters();
     expect(
       await browser.checkFullPageScreen(`wp-customizations.plugins-admin.data-deletion${trunkSuffix}`)
     ).toEqual(0);

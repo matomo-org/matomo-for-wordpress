@@ -25,6 +25,12 @@ class PluginsAdminPage extends Page {
       window.jQuery('div[id="message"]').hide();
     });
   }
+
+  async hidePluginFilters() {
+    await browser.execute(() => {
+      window.jQuery('.subsubsub').hide();
+    });
+  }
 }
 
 export default new PluginsAdminPage();
