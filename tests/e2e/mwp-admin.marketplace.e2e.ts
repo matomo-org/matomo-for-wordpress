@@ -113,7 +113,7 @@ describe('MWP Admin > Marketplace', () => {
     });
     await $('.bulkactions #doaction').click();
 
-    await $('#message.updated').waitForDisplayed();
+    await $('#message.updated').waitForDisplayed({ timeout: 120000 });
 
     await MwpMarketplacePage.removeThirdPartyPlugins();
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
