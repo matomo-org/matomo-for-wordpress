@@ -32,6 +32,10 @@ class MwpMarketplacePage extends MwpPage {
       });
     });
 
+    await this.removePluginCounts();
+  }
+
+  async removePluginCounts() {
     // remove number of plugins so test will pass when new plugins are released/
     // other plugins are removed
     await browser.execute(() => {
@@ -92,6 +96,7 @@ class MwpMarketplacePage extends MwpPage {
   async showToActivatePlugins() {
     await $('.subsubsub li.activate > a').click();
     await $('.subsubsub li.activate > a.current').waitForDisplayed({ timeout: 30000 });
+    await this.removePluginCounts();
   }
 }
 
