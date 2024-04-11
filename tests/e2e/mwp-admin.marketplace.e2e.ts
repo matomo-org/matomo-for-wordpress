@@ -116,6 +116,7 @@ describe('MWP Admin > Marketplace', () => {
     await $('#message.updated').waitForDisplayed({ timeout: 120000 });
 
     await MwpMarketplacePage.removeThirdPartyPlugins();
+    await MwpMarketplacePage.removePluginCounts();
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.marketplace.plugins-activated${trunkSuffix}`)

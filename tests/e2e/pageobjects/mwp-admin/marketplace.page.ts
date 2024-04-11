@@ -96,7 +96,6 @@ class MwpMarketplacePage extends MwpPage {
   async showToActivatePlugins() {
     await $('.subsubsub li.activate > a').click();
     await $('.subsubsub li.activate > a.current').waitForDisplayed({ timeout: 30000 });
-    await this.removePluginCounts();
   }
 }
 
