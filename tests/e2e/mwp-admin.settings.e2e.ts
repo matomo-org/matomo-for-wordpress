@@ -79,4 +79,14 @@ describe('MWP Admin > Settings', () => {
       await browser.checkFullPageScreen(`mwp-admin.settings.advanced${trunkSuffix}`)
     ).toEqual(0);
   });
+
+  it('should load plugin measurable settings correctly', async () => {
+    await MwpSettingsPage.open();
+    await MwpSettingsPage.openMeasurableSettings('SEO Web Vitals');
+
+    await MwpSettingsPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.settings.seowebvitals${trunkSuffix}`)
+    ).toEqual(0);
+  });
 });

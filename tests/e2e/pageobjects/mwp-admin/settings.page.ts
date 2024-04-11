@@ -60,6 +60,10 @@ class MwpSettingsPage extends MwpPage {
   async openAdvancedTab() {
     await $('a.nav-tab=Advanced').click();
   }
+
+  async openMeasurableSettings(pluginDisplayName: string) {
+    await $(`a.nav-tab=${pluginDisplayName}`).click();
+  }
 }
 
 export default new MwpSettingsPage();
