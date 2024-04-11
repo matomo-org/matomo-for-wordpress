@@ -31,6 +31,14 @@ class MwpMarketplacePage extends MwpPage {
         );
       });
     });
+
+    // remove number of plugins so test will pass when new plugins are released/
+    // other plugins are removed
+    await browser.execute(() => {
+      window.jQuery('.subsubsub .count').each((i, e) => {
+        window.jQuery(e).text('()');
+      });
+    });
   }
 
   async removeThirdPartyPlugins() {
