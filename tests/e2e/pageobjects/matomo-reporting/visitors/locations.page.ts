@@ -6,7 +6,7 @@
  *
  */
 
-import { $ } from '@wdio/globals';
+import { $, browser } from '@wdio/globals';
 import MatomoReportingPage from '../../matomo-reporting.page.js';
 
 class LocationsPage extends MatomoReportingPage {
@@ -15,6 +15,10 @@ class LocationsPage extends MatomoReportingPage {
     await browser.waitUntil(async () => {
       return await $('.UserCountryMap_map.kartograph').isDisplayed();
     });
+    await browser.execute(() => {
+      $('.UserCountryMap_map.kartograph').css('height', '239px'); // the height can change randomly in CI it seems
+    });
+    await browser.pause(500);
     return result;
   }
 }

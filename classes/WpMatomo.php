@@ -26,6 +26,7 @@ use WpMatomo\Ecommerce\Woocommerce;
 use WpMatomo\Installer;
 use WpMatomo\OptOut;
 use WpMatomo\Paths;
+use WpMatomo\PluginAdminOverrides;
 use WpMatomo\RedirectOnActivation;
 use WpMatomo\Report\Renderer;
 use WpMatomo\Roles;
@@ -111,6 +112,9 @@ class WpMatomo {
 			 */
 			$redirect = new RedirectOnActivation( $this );
 			$redirect->register_hooks();
+
+			$plugin_admin_overrides = new PluginAdminOverrides( self::$settings );
+			$plugin_admin_overrides->register_hooks();
 		}
 
 		$tracking_code = new TrackingCode( self::$settings );
@@ -235,13 +239,13 @@ class WpMatomo {
 			&& ! $tracking_code->is_hidden_user() ) {
 			$tracker = new AjaxTracker( self::$settings );
 
-			$woocommerce = new Woocommerce( $tracker );
+			$woocommerce = new Woocommerce( $tracker, self::$settings );
 			$woocommerce->register_hooks();
 
-			$easy_digital_downloads = new EasyDigitalDownloads( $tracker );
+			$easy_digital_downloads = new EasyDigitalDownloads( $tracker, self::$settings );
 			$easy_digital_downloads->register_hooks();
 
-			$member_press = new MemberPress( $tracker );
+			$member_press = new MemberPress( $tracker, self::$settings );
 			$member_press->register_hooks();
 
 			do_action( 'matomo_ecommerce_init', $tracker );

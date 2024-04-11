@@ -22,7 +22,7 @@ class DashboardPage extends MatomoReportingPage {
     }, { timeout: 20000 });
     await browser.waitUntil(async () => {
       return await $('.UserCountryMap_map.kartograph').isDisplayed();
-    });
+    }, { timeout: 20000 });
     await browser.execute(function () {
       $('.widget ul.rss').hide();
     });

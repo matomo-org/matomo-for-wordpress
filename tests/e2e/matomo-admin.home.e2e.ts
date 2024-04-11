@@ -19,7 +19,7 @@ describe('Matomo Admin > Home', () => {
     await MatomoHomePage.open();
 
     await browser.execute(function () {
-      $('ul.rss').hide();
+      window.jQuery('ul.rss').hide();
     });
 
     await MatomoHomePage.disableHoverStyles();

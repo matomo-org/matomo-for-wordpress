@@ -7,7 +7,6 @@
 #   - WP_ADMIN_USER - the admin wordpress username, defaults to 'root'
 #   - WP_ADMIN_EMAIL - the admin user's email, defaults to 'nobody@nowhere.local'
 #   - WOOCOMMERCE - if set, installs and sets up woocommerce
-#   - WOOCOMMERCE_PIWIK_ANALYTICS - path to woocommerce-piwik-analytics repo clone to link to in wordpress
 #   - MULTISITE - if set to '1', creates a multisite wordpress install. the folder will be suffixed with '-multi'
 
 services:
@@ -30,7 +29,6 @@ services:
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
-      - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
       - ./scripts/local-gitconfig:/root/.gitconfig
     ports:
       - "$PORT:$PORT"
@@ -41,6 +39,8 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   # nginx service
   fpm:
@@ -59,7 +59,6 @@ services:
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
-      - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
       - ./scripts/local-gitconfig:/.gitconfig
     entrypoint: /usr/src/entrypoint.sh
     depends_on:
@@ -122,7 +121,6 @@ services:
       - .:/var/www/html/matomo-for-wordpress
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
-      - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
       - ./scripts/local-gitconfig:/.gitconfig
     ports:
       - "$PORT:80"
@@ -147,7 +145,6 @@ services:
       - .:/var/www/html/matomo-for-wordpress
       - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
-      - "$WOOCOMMERCE_PIWIK_ANALYTICS:/var/www/html/woocommerce-piwik-analytics"
       - ./scripts/local-gitconfig:/.gitconfig
     environment:
       EXECUTE_PHPUNIT: 1

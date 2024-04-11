@@ -42,11 +42,17 @@ class Base {
 	 */
 	protected $cart_update_queue = '';
 
+	/**
+	 * @var Settings
+	 */
+	protected $settings;
+
 	private $ajax_tracker_calls = [];
 
-	public function __construct( AjaxTracker $tracker ) {
-		$this->logger  = new Logger();
-		$this->tracker = $tracker;
+	public function __construct( AjaxTracker $tracker, Settings $settings ) {
+		$this->logger   = new Logger();
+		$this->tracker  = $tracker;
+		$this->settings = $settings;
 
 		// by using prefix we make sure it will be removed on unistall and make sure it's clear it belongs to us
 		$this->key_order_tracked = Settings::OPTION_PREFIX . $this->key_order_tracked;
@@ -78,7 +84,7 @@ class Base {
 	protected function should_track_background() {
 		return ( defined( 'DOING_AJAX' ) && DOING_AJAX )
 			   || ( defined( 'REST_REQUEST' ) && REST_REQUEST )
-			   || WpMatomo::$settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_TAGMANAGER;
+			   || $this->settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_TAGMANAGER;
 	}
 
 	protected function make_matomo_js_tracker_call( $params ) {
@@ -86,7 +92,13 @@ class Base {
 			$this->ajax_tracker_calls[] = $params;
 		}
 
-		return sprintf( 'window._paq = window._paq || []; window._paq.push(%s);', wp_json_encode( $params ) );
+		$code = 'window._paq = window._paq || [];';
+		if ( $this->settings->get_global_option( 'disable_cookies' ) ) {
+			$code .= ' ' . WpMatomo\TrackingCode\TrackingCodeGenerator::get_disable_cookies_partial();
+		}
+		$code .= sprintf( ' window._paq.push(%s);', wp_json_encode( $params ) );
+
+		return $code;
 	}
 
 	protected function wrap_script( $script ) {

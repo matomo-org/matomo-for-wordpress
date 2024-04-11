@@ -8,4 +8,5 @@ export const config = {
   maxInstances: 1,
   specs: baseConfig.exclude,
   exclude: [],
+  onPrepare: null,
 };
