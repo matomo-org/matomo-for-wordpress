@@ -277,6 +277,8 @@ if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/wp-statistics" ]; 
   WP_STATS_VERSION=""
   if php -r "exit(version_compare('$WORDPRESS_VERSION', '5.3', '<') ? 0 : 1);"; then
     WP_STATS_VERSION="--version=13.2.16"
+  elif php -r "exit(version_compare(PHP_VERSION, '8.0', '<') ? 0 : 1);"; then
+    WP_STATS_VERSION="--version=14.5.2"
   fi
 
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate wp-statistics $WP_STATS_VERSION
