@@ -6,6 +6,7 @@
  *
  */
 
+import { browser, $ } from '@wdio/globals';
 import MwpPage from './page.js';
 
 class MwpSettingsPage extends MwpPage {
@@ -63,6 +64,8 @@ class MwpSettingsPage extends MwpPage {
 
   async openMeasurableSettings(pluginDisplayName: string) {
     await $(`a.nav-tab=${pluginDisplayName}`).click();
+    await $('iframe').waitForDisplayed();
+    await browser.pause(2000); // wait for iframe resizer to activate
   }
 }
 
