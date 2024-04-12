@@ -16,15 +16,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 	window.addEventListener(
 		'DOMContentLoaded',
 		function () {
-			// TODO: log if debug mode enabled or something
-			window.iFrameResize( { log: false, bodyPadding: '0 0 16px 0' }, '#plugin_measurable_settings' );
+			window.iFrameResize( { log: <?php echo defined( 'WP_DEBUG' ) && WP_DEBUG ? 'true' : 'false'; ?>, bodyPadding: '0 0 16px 0' }, '#plugin_measurable_settings' );
 		}
 	);
 </script>
 
+<p>
+	<em>
+		<?php echo esc_html__( 'Settings not loading?', 'matomo' ); ?>
+		<a href="<?php echo esc_url( $home_url . '/wp-content/plugins/matomo/app/index.php?idSite=' . rawurlencode( $idsite ) . '&module=WordPress&action=showMeasurableSettings&plugin=' . rawurlencode( $plugin_name ) ); ?>" target="_blank">
+			<?php echo esc_html__( 'Click this link to open them in a new window.', 'matomo' ); ?>
+		</a>
+	</em>
+</p>
+
 <iframe
 	id="plugin_measurable_settings"
-	title="Plugin Settings for <?php echo esc_attr( $plugin_display_name ); ?>"
+	title="<?php echo esc_attr__( 'Plugin Settings for', 'matomo' ); ?> <?php echo esc_attr( $plugin_display_name ); ?>"
 	style="width:100%;margin-top:1em;"
 	src="<?php echo esc_url( $home_url . '/wp-content/plugins/matomo/app/index.php?idSite=' . rawurlencode( $idsite ) . '&module=WordPress&action=showMeasurableSettings&plugin=' . rawurlencode( $plugin_name ) ); ?>"
 ></iframe>
