@@ -66,6 +66,10 @@ class MwpSettingsPage extends MwpPage {
     await $(`a.nav-tab=${pluginDisplayName}`).click();
     await $('iframe').waitForDisplayed();
     await browser.pause(2000); // wait for iframe resizer to activate
+    const t = await browser.execute(() => {
+      return typeof window.iFrameResize;
+    });
+    console.log('iFrameResize is ' + t);
   }
 }
 

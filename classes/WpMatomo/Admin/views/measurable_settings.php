@@ -16,9 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	window.addEventListener(
 		'DOMContentLoaded',
 		function () {
-			console.error('resizing iframe');
 			// TODO: log if debug mode enabled or something
-			window.iFrameResize( { log: true, bodyPadding: '0 0 16px 0' }, '#plugin_measurable_settings' );
+			window.iFrameResize( { log: false, bodyPadding: '0 0 16px 0' }, '#plugin_measurable_settings' );
 		}
 	);
 </script>
