@@ -103,8 +103,48 @@ class AdminSettings {
 	}
 
 	private function get_plugin_settings_tabs() {
-		// TODO: cache this so we don't always have to bootstrap matomo here
-		// TODO: make sure get_plugins() does not include get_mu_plugins()
+		$active_wordpress_plugins = get_option( 'active_plugins', [] );
+
+		$cache_key = 'plugin-settings-tabs-' . md5( implode( ',', $active_wordpress_plugins ) );
+
+		$tabs = get_transient( $cache_key );
+		if ( false === $tabs || ! is_array( $tabs ) || empty( $active_wordpress_plugins ) ) {
+			$all_wordpress_plugins = $this->get_wordpress_plugins();
+
+			Bootstrap::do_bootstrap();
+			$all_matomo_plugins = Manager::getInstance()->getActivatedPlugins();
+
+			$marketplace_plugins = array_intersect( array_keys( $all_wordpress_plugins ), $all_matomo_plugins );
+
+			$tabs = [];
+			foreach ( $marketplace_plugins as $plugin_name ) {
+				$settings_class = 'Piwik\\Plugins\\' . $plugin_name . '\\MeasurableSettings';
+				if ( ! class_exists( $settings_class ) ) {
+					continue;
+				}
+
+				$plugin_display_name = $all_wordpress_plugins[ $plugin_name ]['Name'];
+				$plugin_display_name = preg_replace( '/\s+\(Matomo Plugin\)\s*/', '', $plugin_display_name );
+
+				$tabs[ "plugin-${plugin_name}" ] = [
+					'plugin_name'         => $plugin_name,
+					'plugin_display_name' => $plugin_display_name,
+				];
+			}
+
+			set_transient( $cache_key, $tabs, 60 * 60 * 24 * 7 );
+		}
+
+		$tabs = array_map(
+			function ( $info ) {
+				return new PluginMeasurableSettings( $info['plugin_name'], $info['plugin_display_name'] );
+			},
+			$tabs
+		);
+		return $tabs;
+	}
+
+	private function get_wordpress_plugins() {
 		$all_wordpress_plugins = array_merge( get_plugins(), get_mu_plugins() );
 		$all_wordpress_plugins = array_combine(
 			array_map(
@@ -115,24 +155,6 @@ class AdminSettings {
 			),
 			$all_wordpress_plugins
 		);
-
-		Bootstrap::do_bootstrap();
-		$all_matomo_plugins = Manager::getInstance()->getActivatedPlugins();
-
-		$marketplace_plugins = array_intersect( array_keys( $all_wordpress_plugins ), $all_matomo_plugins );
-
-		$tabs = [];
-		foreach ( $marketplace_plugins as $plugin_name ) {
-			$settings_class = 'Piwik\\Plugins\\' . $plugin_name . '\\MeasurableSettings';
-			if ( ! class_exists( $settings_class ) ) {
-				continue;
-			}
-
-			$plugin_display_name = $all_wordpress_plugins[ $plugin_name ]['Name'];
-			$plugin_display_name = preg_replace( '/\s+\(Matomo Plugin\)\s*/', '', $plugin_display_name );
-
-			$tabs[ "plugin-${plugin_name}" ] = new PluginMeasurableSettings( $plugin_name, $plugin_display_name );
-		}
-		return $tabs;
+		return $all_wordpress_plugins;
 	}
 }

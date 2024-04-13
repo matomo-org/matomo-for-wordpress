@@ -1,6 +1,5 @@
 {% extends '@WordPress/framelayout.twig' %}
 
 {% block content %}
-    <!-- TODO: translate -->
-    <h4>You need to be a Matomo administrator for this site to be able to change these settings.</h4>
+    <h4>{{ 'WordPress_MeasurableSettingsNoAccess'|translate }}</h4>
 {% endblock %}

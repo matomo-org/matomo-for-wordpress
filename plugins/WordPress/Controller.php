@@ -11,6 +11,7 @@ namespace Piwik\Plugins\WordPress;
 
 use Piwik\Access;
 use Piwik\NoAccessException;
+use Piwik\Piwik;
 use Piwik\Plugin\Manager;
 use Piwik\Request;
 use Piwik\View;
@@ -47,6 +48,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
 
     public function showMeasurableSettings()
     {
+        Piwik::checkUserIsNotAnonymous();
+
         $idSite = Request::fromRequest()->getIntegerParameter('idSite', 0);
         $pluginName = Request::fromRequest()->getStringParameter('plugin', '');
         if (!$idSite || !$pluginName || !Manager::getInstance()->isPluginActivated($pluginName)) {
