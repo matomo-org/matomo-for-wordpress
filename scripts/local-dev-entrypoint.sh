@@ -193,8 +193,8 @@ EOF
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER option set home "http://$HOSTNAME/$WORDPRESS_FOLDER"
 
   # create test sites
-  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER site create --slug=test2
-  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER site create --slug=test3
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER site create --slug=test2 || true
+  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER site create --slug=test3 || true
 else
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER core install --url="$HOSTNAME" --title="Matomo for Wordpress Test" --admin_user=$WP_ADMIN_USER --admin_password=pass --admin_email=$WP_ADMIN_EMAIL
 

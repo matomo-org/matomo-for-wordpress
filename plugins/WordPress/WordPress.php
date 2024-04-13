@@ -133,6 +133,7 @@ class WordPress extends Plugin
         $translationKeys[] = 'WordPress_UseShortCodeOptionLanguage';
         $translationKeys[] = 'WordPress_Example';
         $translationKeys[] = 'WordPress_SaveChanges';
+        $translationKeys[] = 'WordPress_NoMeasurableSettingsAvailable';
 	}
 
     public function modifyTourChallenges(&$challenges)

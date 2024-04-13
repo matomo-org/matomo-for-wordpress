@@ -8,6 +8,7 @@
     "UseShortCodeOptionLanguage": "language - eg de or en. By default the language is detected automatically based on the user's browser",
     "Example": "Example",
     "SaveChanges": "Save Changes",
-    "MeasurableSettingsNoAccess": "You need to be a Matomo administrator for this site to be able to change these settings."
+    "MeasurableSettingsNoAccess": "You need to be a Matomo administrator for this site to be able to change these settings.",
+    "NoMeasurableSettingsAvailable": "No website specific settings for this plugin are currently available. This usually means there are some global settings that must be set for the plugin in the %1$sMatomo Admin%2$s."
   }
 }

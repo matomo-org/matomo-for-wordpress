@@ -17,9 +17,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 		'DOMContentLoaded',
 		function () {
 			window.iFrameResize( { log: <?php echo defined( 'WP_DEBUG' ) && WP_DEBUG ? 'true' : 'false'; ?>, bodyPadding: '0 0 16px 0' }, '#plugin_measurable_settings' );
+
+			window.addEventListener('message', (e) => {
+				if (e.data === 'open-matomo-admin') {
+					document.querySelector('#openMatomoAdminLink').click();
+				}
+			});
 		}
 	);
 </script>
+
+<a href="<?php echo esc_url( $home_url . '/wp-content/plugins/matomo/app/index.php?module=CoreAdminHome&action=generalSettings' ); ?>" style="display:none;" id="openMatomoAdminLink"></a>
 
 <p>
 	<em>

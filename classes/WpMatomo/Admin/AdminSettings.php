@@ -9,6 +9,7 @@
 
 namespace WpMatomo\Admin;
 
+use Piwik\API\Request;
 use Piwik\Plugin\Manager;
 use WpMatomo\Access;
 use WpMatomo\Bootstrap;

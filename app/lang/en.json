@@ -5757,6 +5757,7 @@
         "UseShortCodeDesc2": "You can use these short code options",
         "UseShortCodeOptionLanguage": "language - eg de or en. By default the language is detected automatically based on the user's browser",
         "Example": "Example",
-        "SaveChanges": "Save Changes"
+        "SaveChanges": "Save Changes",
+        "NoMeasurableSettingsAvailable": "No website specific settings for this plugin are currently available. This generally means there are some global settings that must be set for the plugin in the %1$sMatomo Admin%2$s."
     }
 }

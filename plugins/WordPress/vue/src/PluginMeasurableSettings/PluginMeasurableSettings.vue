@@ -6,25 +6,31 @@
 -->
 
 <template>
-  <div class="pluginMeasurableSettings">
+  <div class="pluginMeasurableSettings" ref="root">
     <ActivityIndicator :loading="isLoading"/>
 
     <GroupedSettings
-        :group-name="pluginName"
-        :settings="measurableSettings"
-        :all-setting-values="settingValues"
-        @change="settingValues[`${pluginName}.${$event.name}`] = $event.value"
+      :group-name="pluginName"
+      :settings="measurableSettings"
+      :all-setting-values="settingValues"
+      @change="settingValues[`${pluginName}.${$event.name}`] = $event.value"
     />
 
-    <div class="settingsFormFooter row">
+    <p
+      v-if="!measurableSettings.length"
+      v-html="$sanitize(noMeasurableSettingsAvailableText)"
+      class="noMeasurableSettingsAvailable"
+    ></p>
+
+    <div class="settingsFormFooter row" v-if="measurableSettings.length">
       <div class="col s12">
         <input
-            v-show="!isLoading"
-            :disabled="isSaving"
-            type="submit"
-            class="button-primary"
-            :value="translate('WordPress_SaveChanges')"
-            @click="saveSettings()"
+          v-show="!isLoading"
+          :disabled="isSaving"
+          type="submit"
+          class="button-primary"
+          :value="translate('WordPress_SaveChanges')"
+          @click="saveSettings()"
         />
 
         <ActivityIndicator :loading="isSaving" loading-message="" style="display:inline-block;" />
@@ -35,7 +41,12 @@
 
 <script lang="ts">
 import { defineComponent, DeepReadonly } from 'vue';
-import { ActivityIndicator, AjaxHelper } from 'CoreHome';
+import {
+  ActivityIndicator,
+  AjaxHelper,
+  translate,
+  MatomoUrl,
+} from 'CoreHome';
 import {
   GroupedSettings,
   SettingsForSinglePlugin,
@@ -85,6 +96,15 @@ export default defineComponent({
       this.isLoading = false;
     });
   },
+  mounted() {
+    $(this.$refs.root as HTMLElement).on('click', '.matomoAdminLink', (e) => {
+      if (window.self !== window.top) {
+        e.preventDefault();
+
+        window.parent.postMessage('open-matomo-admin', window.location.origin);
+      }
+    });
+  },
   watch: {
     measurableSettings(settings: Setting[]) {
       if (!settings.length) {
@@ -96,6 +116,21 @@ export default defineComponent({
         settingValues[`${this.pluginName}.${setting.name}`] = setting.value;
       });
       this.settingValues = settingValues;
+    },
+  },
+  computed: {
+    noMeasurableSettingsAvailableText() {
+      const link = `index.php?${MatomoUrl.stringify({
+        ...MatomoUrl.urlParsed.value,
+        module: 'CoreAdminHome',
+        action: 'generalSettings',
+      })}`;
+
+      return translate(
+        'WordPress_NoMeasurableSettingsAvailable',
+        `<a href="${link}" class="matomoAdminLink">`,
+        '</a>',
+      );
     },
   },
   methods: {
