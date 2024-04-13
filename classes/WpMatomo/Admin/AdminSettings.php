@@ -104,9 +104,14 @@ class AdminSettings {
 	}
 
 	private function get_plugin_settings_tabs() {
-		$active_wordpress_plugins = get_option( 'active_plugins', [] );
+		$active_wordpress_plugins = (array) get_option( 'active_plugins', [] );
 
 		$cache_key = 'plugin-settings-tabs-' . md5( implode( ',', $active_wordpress_plugins ) );
+
+		if ( $this->settings->is_network_enabled() ) {
+			$network_plugins = (array) get_site_option( 'active_sitewide_plugins', [] );
+			$cache_key       = $cache_key . '-' . md5( implode( ',', $network_plugins ) );
+		}
 
 		$tabs = get_transient( $cache_key );
 		if ( false === $tabs || ! is_array( $tabs ) || empty( $active_wordpress_plugins ) ) {

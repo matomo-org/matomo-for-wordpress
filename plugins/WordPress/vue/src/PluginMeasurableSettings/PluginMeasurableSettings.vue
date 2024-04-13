@@ -17,12 +17,12 @@
     />
 
     <p
-      v-if="!measurableSettings.length"
+      v-if="!isLoading && !measurableSettings.length"
       v-html="$sanitize(noMeasurableSettingsAvailableText)"
       class="noMeasurableSettingsAvailable"
     ></p>
 
-    <div class="settingsFormFooter row" v-if="measurableSettings.length">
+    <div class="settingsFormFooter row" v-if="isLoading && measurableSettings.length">
       <div class="col s12">
         <input
           v-show="!isLoading"

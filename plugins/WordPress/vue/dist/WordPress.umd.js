@@ -297,27 +297,27 @@ external_CoreHome_["Matomo"].on('PrivacyManager.UsersOptOut.preface', function (
 UseOptOutShortCodevue_type_script_lang_ts.render = render
 
 /* harmony default export */ var UseOptOutShortCode = (UseOptOutShortCodevue_type_script_lang_ts);
-// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--0-1!../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=template&id=2d4807a1
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--0-1!../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=template&id=622babb4
 
-var PluginMeasurableSettingsvue_type_template_id_2d4807a1_hoisted_1 = {
+var PluginMeasurableSettingsvue_type_template_id_622babb4_hoisted_1 = {
   class: "pluginMeasurableSettings",
   ref: "root"
 };
-var PluginMeasurableSettingsvue_type_template_id_2d4807a1_hoisted_2 = ["innerHTML"];
-var PluginMeasurableSettingsvue_type_template_id_2d4807a1_hoisted_3 = {
+var PluginMeasurableSettingsvue_type_template_id_622babb4_hoisted_2 = ["innerHTML"];
+var PluginMeasurableSettingsvue_type_template_id_622babb4_hoisted_3 = {
   key: 1,
   class: "settingsFormFooter row"
 };
-var PluginMeasurableSettingsvue_type_template_id_2d4807a1_hoisted_4 = {
+var PluginMeasurableSettingsvue_type_template_id_622babb4_hoisted_4 = {
   class: "col s12"
 };
-var PluginMeasurableSettingsvue_type_template_id_2d4807a1_hoisted_5 = ["disabled", "value"];
-function PluginMeasurableSettingsvue_type_template_id_2d4807a1_render(_ctx, _cache, $props, $setup, $data, $options) {
+var PluginMeasurableSettingsvue_type_template_id_622babb4_hoisted_5 = ["disabled", "value"];
+function PluginMeasurableSettingsvue_type_template_id_622babb4_render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_ActivityIndicator = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("ActivityIndicator");
 
   var _component_GroupedSettings = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("GroupedSettings");
 
-  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", PluginMeasurableSettingsvue_type_template_id_2d4807a1_hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_ActivityIndicator, {
+  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", PluginMeasurableSettingsvue_type_template_id_622babb4_hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_ActivityIndicator, {
     loading: _ctx.isLoading
   }, null, 8, ["loading"]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_GroupedSettings, {
     "group-name": _ctx.pluginName,
@@ -326,11 +326,11 @@ function PluginMeasurableSettingsvue_type_template_id_2d4807a1_render(_ctx, _cac
     onChange: _cache[0] || (_cache[0] = function ($event) {
       return _ctx.settingValues["".concat(_ctx.pluginName, ".").concat($event.name)] = $event.value;
     })
-  }, null, 8, ["group-name", "settings", "all-setting-values"]), !_ctx.measurableSettings.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", {
+  }, null, 8, ["group-name", "settings", "all-setting-values"]), !_ctx.isLoading && !_ctx.measurableSettings.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", {
     key: 0,
     innerHTML: _ctx.$sanitize(_ctx.noMeasurableSettingsAvailableText),
     class: "noMeasurableSettingsAvailable"
-  }, null, 8, PluginMeasurableSettingsvue_type_template_id_2d4807a1_hoisted_2)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.measurableSettings.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", PluginMeasurableSettingsvue_type_template_id_2d4807a1_hoisted_3, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", PluginMeasurableSettingsvue_type_template_id_2d4807a1_hoisted_4, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("input", {
+  }, null, 8, PluginMeasurableSettingsvue_type_template_id_622babb4_hoisted_2)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.isLoading && _ctx.measurableSettings.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", PluginMeasurableSettingsvue_type_template_id_622babb4_hoisted_3, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", PluginMeasurableSettingsvue_type_template_id_622babb4_hoisted_4, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withDirectives"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("input", {
     disabled: _ctx.isSaving,
     type: "submit",
     class: "button-primary",
@@ -338,7 +338,7 @@ function PluginMeasurableSettingsvue_type_template_id_2d4807a1_render(_ctx, _cac
     onClick: _cache[1] || (_cache[1] = function ($event) {
       return _ctx.saveSettings();
     })
-  }, null, 8, PluginMeasurableSettingsvue_type_template_id_2d4807a1_hoisted_5), [[external_commonjs_vue_commonjs2_vue_root_Vue_["vShow"], !_ctx.isLoading]]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_ActivityIndicator, {
+  }, null, 8, PluginMeasurableSettingsvue_type_template_id_622babb4_hoisted_5), [[external_commonjs_vue_commonjs2_vue_root_Vue_["vShow"], !_ctx.isLoading]]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_ActivityIndicator, {
     loading: _ctx.isSaving,
     "loading-message": "",
     style: {
@@ -346,7 +346,7 @@ function PluginMeasurableSettingsvue_type_template_id_2d4807a1_render(_ctx, _cac
     }
   }, null, 8, ["loading"])])])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 512);
 }
-// CONCATENATED MODULE: ../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=template&id=2d4807a1
+// CONCATENATED MODULE: ../plugins/WordPress/vue/src/PluginMeasurableSettings/PluginMeasurableSettings.vue?vue&type=template&id=622babb4
 
 // EXTERNAL MODULE: external "CorePluginsAdmin"
 var external_CorePluginsAdmin_ = __webpack_require__("a5a2");
@@ -501,7 +501,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
-PluginMeasurableSettingsvue_type_script_lang_ts.render = PluginMeasurableSettingsvue_type_template_id_2d4807a1_render
+PluginMeasurableSettingsvue_type_script_lang_ts.render = PluginMeasurableSettingsvue_type_template_id_622babb4_render
 
 /* harmony default export */ var PluginMeasurableSettings = (PluginMeasurableSettingsvue_type_script_lang_ts);
 // CONCATENATED MODULE: ../plugins/WordPress/vue/src/index.ts
