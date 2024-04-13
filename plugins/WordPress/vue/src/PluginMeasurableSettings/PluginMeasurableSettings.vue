@@ -22,7 +22,7 @@
       class="noMeasurableSettingsAvailable"
     ></p>
 
-    <div class="settingsFormFooter row" v-if="isLoading && measurableSettings.length">
+    <div class="settingsFormFooter row" v-if="!isLoading && measurableSettings.length">
       <div class="col s12">
         <input
           v-show="!isLoading"

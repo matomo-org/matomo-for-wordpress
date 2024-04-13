@@ -9,7 +9,6 @@
 
 namespace WpMatomo\Admin;
 
-use Piwik\API\Request;
 use Piwik\Plugin\Manager;
 use WpMatomo\Access;
 use WpMatomo\Bootstrap;
@@ -86,6 +85,12 @@ class AdminSettings {
 		}
 
 		$plugin_settings_tabs = $this->get_plugin_settings_tabs();
+		$plugin_settings_tabs = array_map(
+			function ( $info ) {
+				return new PluginMeasurableSettings( $info['plugin_name'], $info['plugin_display_name'] );
+			},
+			$plugin_settings_tabs
+		);
 		$setting_tabs         = array_merge( $setting_tabs, $plugin_settings_tabs );
 
 		$setting_tabs = apply_filters( 'matomo_setting_tabs', $setting_tabs, $this->settings );
@@ -141,12 +146,6 @@ class AdminSettings {
 			set_transient( $cache_key, $tabs, 60 * 60 * 24 * 7 );
 		}
 
-		$tabs = array_map(
-			function ( $info ) {
-				return new PluginMeasurableSettings( $info['plugin_name'], $info['plugin_display_name'] );
-			},
-			$tabs
-		);
 		return $tabs;
 	}
 

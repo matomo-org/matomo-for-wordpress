@@ -67,6 +67,19 @@ class MwpSettingsPage extends MwpPage {
     await $('iframe').waitForDisplayed();
     await browser.pause(2000); // wait for iframe resizer to activate
   }
+
+  async setSeoWebVitalsSettingValue(value: string) {
+    await browser.execute((v) => {
+      window.jQuery('#plugin_measurable_settings').contents()
+        .find('textarea[name="check_urls"]').val(v).trigger('change');
+    }, value);
+    await browser.pause(250); // for the value in Vue to update
+    await browser.execute(() => {
+      window.jQuery('#plugin_measurable_settings').contents()
+        .find('.settingsFormFooter input')[0].click();
+    });
+    await browser.pause(3000);
+  }
 }
 
 export default new MwpSettingsPage();

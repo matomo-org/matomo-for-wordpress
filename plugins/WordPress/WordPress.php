@@ -93,9 +93,10 @@ class WordPress extends Plugin
     public function modifySafemodeHtml(&$output)
     {
         // add iframeResizer.contentWindow.min.js so it will resize correctly when in an iframe
+        $scriptUrl = plugins_url( 'assets/js/iframeResizer.contentWindow.min.js', MATOMO_ANALYTICS_FILE );
         $output = str_replace(
             '<title>',
-            "<script src=\"node_modules/iframe-resizer/js/iframeResizer.contentWindow.min.js\" defer></script><title>",
+            "<script src=\"$scriptUrl\" defer></script><title>",
             $output
         );
 
