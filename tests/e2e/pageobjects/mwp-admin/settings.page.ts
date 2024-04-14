@@ -71,7 +71,7 @@ class MwpSettingsPage extends MwpPage {
   async setSeoWebVitalsSettingValue(value: string) {
     await browser.execute((v) => {
       window.jQuery('#plugin_measurable_settings').contents()
-        .find('textarea[name="check_urls"]').val(v).trigger('change');
+        .find('textarea[name="check_urls"]').val(v)[0].dispatchEvent(new Event('change'));
     }, value);
     await browser.pause(250); // for the value in Vue to update
     await browser.execute(() => {
