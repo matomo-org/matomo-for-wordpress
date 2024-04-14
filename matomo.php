@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Matomo Analytics - Ethical Stats. Powerful Insights.
- * Description: The #1 Google Analytics alternative that gives you full control over your data and protects the privacy for your users. Free, secure and open.
+ * Description: Privacy friendly, GDPR compliant and self-hosted, Matomo is the #1 Google Analytics alternative that gives you full control over your data and protects the privacy for your users. Free, secure and open.
  * Author: Matomo
  * Author URI: https://matomo.org
  * Version: 5.0.5
