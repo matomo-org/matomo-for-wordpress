@@ -38,7 +38,7 @@ class Website {
       defaultHostname = `${defaultHostname}:${process.env.PORT}`;
     }
 
-    return `${process.env.WORDPRESS_URL || `http://${defaultHostname}`}${wordpressVersionUrlPart}`
+    return `${process.env.WORDPRESS_URL || `http://${defaultHostname}/${wordpressVersionUrlPart}`}`;
   }
 
   async login() {
@@ -47,6 +47,7 @@ class Website {
     }
 
     const baseUrl = await this.baseUrl();
+    console.log(`${baseUrl}/wp-login.php`);
     await browser.url(`${baseUrl}/wp-login.php`);
 
     await $('#user_login').setValue(process.env.WORDPRESS_USER_LOGIN || 'root');
