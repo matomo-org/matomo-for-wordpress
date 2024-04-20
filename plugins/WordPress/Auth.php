@@ -63,7 +63,7 @@ class Auth extends \Piwik\Plugins\Login\Auth
 
         $callback = function () { return true; };
 
-        add_filter('application_password_is_api_request', $callback);
+        add_filter('application_password_is_api_request', $callback, PHP_INT_MAX);
         try {
             $loggedInUserId = wp_validate_application_password(false);
             $isUserLoggedIn = $loggedInUserId !== false;

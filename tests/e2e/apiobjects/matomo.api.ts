@@ -52,7 +52,7 @@ class MatomoApi {
       throw new Error('No application password found!');
     }
 
-    const userPass = `root:${nonce}`;
+    const userPass = `${process.env.WORDPRESS_USER_LOGIN || 'root'}:${nonce}`;
     const response = await fetch(fullUrl, {
       method: restMethod,
       headers: {
