@@ -9,6 +9,9 @@
 
 namespace WpMatomo\Admin;
 
+use Piwik\Context;
+use Piwik\FrontController;
+use WpMatomo\Bootstrap;
 use WpMatomo\Site;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -42,6 +45,20 @@ class PluginMeasurableSettings implements AdminSettingsInterface {
 		$home_url            = home_url();
 		$site                = new Site();
 		$idsite              = $site->get_current_matomo_site_id();
+
+		Bootstrap::do_bootstrap();
+
+		$matomo_html = Context::executeWithQueryParameters(
+			[
+				'idSite' => $idsite,
+				'plugin' => $plugin_name,
+				'module' => 'WordPress',
+				'action' => 'showMeasurableSettings',
+			],
+			function () {
+				return FrontController::getInstance()->dispatch();
+			}
+		);
 
 		include dirname( __FILE__ ) . '/views/measurable_settings.php';
 	}

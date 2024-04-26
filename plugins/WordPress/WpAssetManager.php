@@ -15,6 +15,7 @@ use Piwik\Container\StaticContainer;
 use Piwik\Plugins\WordPress\AssetManager\NeverDeleteOnDiskUiAsset;
 use Piwik\Translation\Translator;
 use Piwik\ProxyHttp;
+use Piwik\Url;
 use Piwik\Version;
 
 if (!defined( 'ABSPATH')) {
@@ -28,6 +29,7 @@ class WpAssetManager extends AssetManager
 	}
 
     public function getMergedCoreJavaScript() {
+        print "here?";exit;
 		$path = rtrim( plugin_dir_path( MATOMO_ANALYTICS_FILE ), '/' ) . '/assets/js';
 		$file = 'asset_manager_core_js.js';
 
@@ -93,21 +95,32 @@ class WpAssetManager extends AssetManager
 
 		$result .= "<script type=\"text/javascript\">window.$ = jQuery;</script>";
 
-		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, '../assets/js/asset_manager_core_js.js?v=' . Version::VERSION);
-
-		// may need to change or allow to this... but how to make the wp-includes relative?
-		// $result .= sprintf(self::JS_IMPORT_DIRECTIVE, plugins_url( 'assets/js/asset_manager_core_js.js', MATOMO_ANALYTICS_FILE )  . '?v=' . Version::VERSION);
+        $asset_manager_core_js = plugins_url('assets/js/asset_manager_core_js.js?v=' . Version::VERSION, MATOMO_ANALYTICS_FILE);
+		$result .= sprintf(self::JS_IMPORT_DIRECTIVE, $asset_manager_core_js);
 
 		if ($this->isMergedAssetsDisabled()) {
 			$this->getMergedNonCoreJSAsset()->delete();
 			$result .= $this->getIndividualJsIncludesFromAssetFetcher($this->getNonCoreJScriptFetcher());
 			$result .= $this->getIndividualJsIncludesFromAssetFetcher($this->getPluginUmdJScriptFetcher());
 		} else {
-			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, self::GET_NON_CORE_JS_MODULE_ACTION);
+			$result .= sprintf(self::JS_IMPORT_DIRECTIVE, plugins_url( 'app/' . self::GET_NON_CORE_JS_MODULE_ACTION, MATOMO_ANALYTICS_FILE ) );
 			$result .= $this->getPluginUmdChunks();
 		}
 		return $result;
 	}
+
+    protected function getPluginUmdChunks()
+    {
+        $fetcher = $this->getPluginUmdJScriptFetcher();
+        $chunks = $fetcher->getChunkFiles();
+        $result = '';
+        foreach ($chunks as $chunk) {
+            $src = self::GET_JS_UMD_MODULE_ACTION . urlencode($chunk->getChunkName());
+            $src = plugins_url('app/' . $src, MATOMO_ANALYTICS_FILE);
+            $result .= sprintf(self::JS_DEFER_IMPORT_DIRECTIVE, $src);
+        }
+        return $result;
+    }
 
     /**
      * Performs the same functionality as AssetManager::getIndividualJsIncludesFromAssetFetcher(),

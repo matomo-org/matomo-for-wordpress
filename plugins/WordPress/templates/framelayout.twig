@@ -1,28 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="robots" content="noindex,nofollow">
-    <meta name="google" content="notranslate">
-
-    {# conditional iframe buster #}
-    <script type="text/javascript">
-      if (top.location.pathname !== {{ adminPhpUrl|json_encode }}) {
-        document.head.remove();
-        window.addEventListener('DOMContentLoaded', function () {
-          document.body.style.display = 'none';
-          document.body.innerHTML = '';
-        });
-      }
+<div id="embeddedmatomo">
+    <script>
+      window.addEventListener('DOMContentLoaded', function () {
+        var AjaxHelper = window.CoreHome.AjaxHelper;
+        var oldSend = AjaxHelper.prototype.send;
+        AjaxHelper.prototype.send = function () {
+          if (this.getUrl === '?' || this.getUrl === 'index.php?') {
+            this.getUrl = {{ matomoIndexPhpUrl|json_encode|raw }} + '?';
+          }
+          return oldSend.apply(this, [].slice.call(arguments));
+        };
+      }, true);
     </script>
 
     {% include "_jsGlobalVariables.twig" %}
     {% include "_jsCssIncludes.twig" %}
-</head>
-<body>
+
     <div id="root">
         {% block content %}
         {% endblock %}
     </div>
-</body>
-</html>
+</div>

@@ -60,6 +60,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             || !$this->doesUserHaveAdminAccessTo($idSite)
         ) {
             $view = new View('@WordPress/measurableSettingsNoAccess.twig');
+            $view->disableCacheBuster();
             $this->setBasicVariablesNoneAdminView($view);
             $view->setXFrameOptions('same-origin');
             $view->adminPhpUrl = $this->getAdminPhpUrl();
@@ -67,9 +68,11 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
 
         $view = new View('@WordPress/measurableSettings.twig');
+        $view->disableCacheBuster();
         $view->idSite = $idSite;
         $view->pluginName = $pluginName;
         $view->adminPhpUrl = $this->getAdminPhpUrl();
+        $view->matomoIndexPhpUrl = plugins_url('app/index.php', MATOMO_ANALYTICS_FILE);
         $this->setBasicVariablesView($view);
         $view->setXFrameOptions('same-origin');
         return $view->render();
