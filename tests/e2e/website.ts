@@ -134,42 +134,23 @@ class Website {
     await browser.waitUntil(async () => {
       return await browser.execute(() => {
         return window.jQuery('span:contains(Set up payments)').length > 0
-          || window.jQuery('span:contains(You set up payments)').length > 0;
+          || window.jQuery('span:contains(You set up payments)').length > 0
+          || window.jQuery('span:contains(Get paid)').length > 0;
       });
     });
 
     // enable cash on delivery
+    await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-settings&tab=checkout`);
     const isPaymentsSetup = await browser.execute(() => {
-      return window.jQuery('span:contains(You set up payments)').length > 0;
+      return window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0;
     });
 
     if (!isPaymentsSetup) {
       await browser.execute(() => {
-        window.jQuery('span:contains(Set up payments)').closest('li')[0].click();
+        window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
       });
 
-      await $('.woocommerce-task-payment-cod').waitForExist();
-
-      const numAttempts = 3;
-      for (let i = 0; i < numAttempts; ++i) {
-        await browser.execute(() => {
-          window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action')[0].click();
-        });
-
-        try {
-          await browser.waitUntil(() => {
-            return browser.execute(() => {
-              return window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action:contains(Manage)').length > 0;
-            });
-          });
-
-          break;
-        } catch (e) {
-          if (i + 1 >= numAttempts) {
-            throw e;
-          }
-        }
-      }
+      await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist();
     }
 
     this.isWooCommerceSetup = true;
