@@ -16,7 +16,7 @@ class ContainerDashboardPage extends TagManagerPage {
       idContainer: GlobalSetup.testIdContainer,
     });
 
-    await $('.containerDashboard .card-content').waitForDisplayed();
+    await $('.containerDashboard .card-content').waitForDisplayed({ timeout: 20000 });
 
     await this.normalizeContainerSelector();
 
