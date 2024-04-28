@@ -146,11 +146,19 @@ class Website {
     });
 
     if (!isPaymentsSetup) {
-      await browser.execute(() => {
-        window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
-      });
+      if (await $('#woocommerce_cod_enabled').isExisting()) {
+        await $('label[for="woocommerce_cod_enabled"]').click();
+        await $('.woocommerce-save-button').click();
+        await browser.waitUntil(async () => {
+          return window.jQuery('#message:contains(Your settings have been saved)').length > 0;
+        });
+      } else {
+        await browser.execute(() => {
+          window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
+        });
 
-      await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({ timeout: 30000 });
+        await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({timeout: 30000});
+      }
     }
 
     this.isWooCommerceSetup = true;
