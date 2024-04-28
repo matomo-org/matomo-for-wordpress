@@ -1,6 +1,6 @@
 === Matomo Analytics - Ethical Stats. Powerful Insights. ===
 Contributors: matomoteam
-Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
+Tags: matomo,analytics,statistics,stats,ecommerce
 Requires at least: 4.8
 Tested up to: 6.5.0
 Stable tag: 5.0.5
