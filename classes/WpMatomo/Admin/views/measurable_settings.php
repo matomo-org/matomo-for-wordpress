@@ -17,5 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	title="<?php echo esc_attr__( 'Plugin Settings for', 'matomo' ); ?> <?php echo esc_attr( $plugin_display_name ); ?>"
 	style="width:100%;margin-top:1em;"
 >
-	<?php echo $matomo_html; ?>
+	<?php
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $matomo_html;
+	?>
 </div>
