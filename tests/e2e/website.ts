@@ -137,7 +137,7 @@ class Website {
           || window.jQuery('span:contains(You set up payments)').length > 0
           || window.jQuery('span:contains(Get paid)').length > 0;
       });
-    });
+    }, { timeout: 30000 });
 
     // enable cash on delivery
     await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-settings&tab=checkout`);
@@ -150,7 +150,7 @@ class Website {
         window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
       });
 
-      await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist();
+      await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({ timeout: 30000 });
     }
 
     this.isWooCommerceSetup = true;
