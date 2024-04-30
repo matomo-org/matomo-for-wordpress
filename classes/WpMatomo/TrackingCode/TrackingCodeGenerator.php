@@ -45,6 +45,16 @@ class TrackingCodeGenerator {
 		$this->logger   = new Logger();
 	}
 
+	public static function get_disable_cookies_partial() {
+		// if ecommerce tracking is enabled, disableCookies can be added to _paq multiple times
+		// (since ecommerce tracking methods can be called before the main tracking JS in some situations).
+		// piwik.js complains if the initial _paq array has more than one of the same method, so
+		// we only add it if it's not there to begin with.
+		return 'if (!window._paq.find || !window._paq.find(function (m) { return m[0] === "disableCookies"; })) {
+	window._paq.push(["disableCookies"]);
+}';
+	}
+
 	public function register_hooks() {
 		add_action( 'matomo_site_synced', [ $this, 'update_tracking_code' ], $prio = 10, $args = 0 );
 		add_action( 'matomo_tracking_settings_changed', [ $this, 'update_tracking_code' ], $prio = 10, $args = 0 );
@@ -238,7 +248,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 			$options[] = "_paq.push(['setLinkClasses', " . wp_json_encode( $this->settings->get_global_option( 'set_link_classes' ) ) . ']);';
 		}
 		if ( $this->settings->get_global_option( 'disable_cookies' ) ) {
-			$options[] = "_paq.push(['disableCookies']);";
+			$options[] = self::get_disable_cookies_partial();
 		}
 		if ( $this->settings->get_global_option( 'track_crossdomain_linking' ) ) {
 			$options[] = "_paq.push(['enableCrossDomainLinking']);";

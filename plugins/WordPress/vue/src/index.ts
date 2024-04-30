@@ -6,3 +6,4 @@
  */
 
 export { default as UseOptOutShortCode } from './UseOptOutShortCode/UseOptOutShortCode.vue';
+export { default as PluginMeasurableSettings } from './PluginMeasurableSettings/PluginMeasurableSettings.vue';

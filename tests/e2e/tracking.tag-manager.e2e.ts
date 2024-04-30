@@ -6,12 +6,11 @@
  *
  */
 
-import * as fs from 'fs';
 import { expect, browser } from '@wdio/globals'
 import BlogHomepage from './pageobjects/blog-homepage.page.js';
 import MwpSettingsPage from './pageobjects/mwp-admin/settings.page.js';
 import Website from './website.js';
-import path from "path";
+import GlobalSetup from './global-setup.js';
 
 describe('Tracking - Tag Manager', () => {
   async function enableTagManagerTracking() {
@@ -25,6 +24,7 @@ describe('Tracking - Tag Manager', () => {
   }
 
   before(async () => {
+    await GlobalSetup.setUp();
     await Website.deleteAllCookies();
     await Website.login();
   });

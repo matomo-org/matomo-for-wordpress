@@ -48,6 +48,8 @@ class AjaxTracker extends \MatomoTracker {
 		if ( ! $settings->get_global_option( 'disable_cookies' ) ) {
 			$cookie_domain = $settings->get_tracking_cookie_domain();
 			$this->enableCookies( $cookie_domain );
+		} else {
+			$this->disableCookieSupport();
 		}
 
 		if ( $this->loadVisitorIdCookie() ) {

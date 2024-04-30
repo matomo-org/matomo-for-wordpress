@@ -23,7 +23,7 @@ export default class TagManagerPage extends MatomoAdminPage {
       $('li[role=menuitem] a.item:contains(Publish)')[0].click();
     });
 
-    await $('.modal .editVersion input').waitForExist();
+    await $('.modal .editVersion input').waitForDisplayed();
 
     await browser.pause(1000);
   }

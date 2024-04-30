@@ -9,7 +9,9 @@
 
 namespace WpMatomo\Admin;
 
+use Piwik\Plugin\Manager;
 use WpMatomo\Access;
+use WpMatomo\Bootstrap;
 use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -82,6 +84,15 @@ class AdminSettings {
 			];
 		}
 
+		$plugin_settings_tabs = $this->get_plugin_settings_tabs();
+		$plugin_settings_tabs = array_map(
+			function ( $info ) {
+				return new PluginMeasurableSettings( $info['plugin_name'], $info['plugin_display_name'] );
+			},
+			$plugin_settings_tabs
+		);
+		$setting_tabs         = array_merge( $setting_tabs, $plugin_settings_tabs );
+
 		$setting_tabs = apply_filters( 'matomo_setting_tabs', $setting_tabs, $this->settings );
 
 		if ( ! empty( $_GET['tab'] ) ) {
@@ -95,5 +106,60 @@ class AdminSettings {
 		$matomo_settings = $this->settings;
 
 		include dirname( __FILE__ ) . '/views/settings.php';
+	}
+
+	private function get_plugin_settings_tabs() {
+		$active_wordpress_plugins = (array) get_option( 'active_plugins', [] );
+
+		$cache_key = 'plugin-settings-tabs-' . md5( implode( ',', $active_wordpress_plugins ) );
+
+		if ( $this->settings->is_network_enabled() ) {
+			$network_plugins = (array) get_site_option( 'active_sitewide_plugins', [] );
+			$cache_key       = $cache_key . '-' . md5( implode( ',', $network_plugins ) );
+		}
+
+		$tabs = get_transient( $cache_key );
+		if ( false === $tabs || ! is_array( $tabs ) || empty( $active_wordpress_plugins ) ) {
+			$all_wordpress_plugins = $this->get_wordpress_plugins();
+
+			Bootstrap::do_bootstrap();
+			$all_matomo_plugins = Manager::getInstance()->getActivatedPlugins();
+
+			$marketplace_plugins = array_intersect( array_keys( $all_wordpress_plugins ), $all_matomo_plugins );
+
+			$tabs = [];
+			foreach ( $marketplace_plugins as $plugin_name ) {
+				$settings_class = 'Piwik\\Plugins\\' . $plugin_name . '\\MeasurableSettings';
+				if ( ! class_exists( $settings_class ) ) {
+					continue;
+				}
+
+				$plugin_display_name = $all_wordpress_plugins[ $plugin_name ]['Name'];
+				$plugin_display_name = preg_replace( '/\s+\(Matomo Plugin\)\s*/', '', $plugin_display_name );
+
+				$tabs[ "plugin-${plugin_name}" ] = [
+					'plugin_name'         => $plugin_name,
+					'plugin_display_name' => $plugin_display_name,
+				];
+			}
+
+			set_transient( $cache_key, $tabs, 60 * 60 * 24 * 7 );
+		}
+
+		return $tabs;
+	}
+
+	private function get_wordpress_plugins() {
+		$all_wordpress_plugins = array_merge( get_plugins(), get_mu_plugins() );
+		$all_wordpress_plugins = array_combine(
+			array_map(
+				function ( $path ) {
+					return basename( dirname( $path ) );
+				},
+				array_keys( $all_wordpress_plugins )
+			),
+			$all_wordpress_plugins
+		);
+		return $all_wordpress_plugins;
 	}
 }

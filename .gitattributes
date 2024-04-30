@@ -1,5 +1,6 @@
 *.png filter=lfs diff=lfs merge=lfs -text
 
+/marketplace/ export-ignore
 /tests/ export-ignore
 /scripts/ export-ignore
 /vendor/ export-ignore
@@ -56,7 +57,8 @@ babel.config.js export-ignore
 .eslintignore export-ignore
 .eslintrc.js export-ignore
 jest.config.js export-ignore
-/plugins/WordPress/vue/src export-ignore
+/plugins/WordPress/vue/src/**/*.ts export-ignore
+/plugins/WordPress/vue/src/**/*.vue export-ignore
 /plugins/WordPress/vue/dist/*.umd.js export-ignore
 *.gzip export-ignore
 .stylelintrc.json export-ignore

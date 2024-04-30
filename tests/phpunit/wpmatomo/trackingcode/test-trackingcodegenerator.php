@@ -93,7 +93,9 @@ g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/wp-content\/pl
 			'<!-- Matomo --><script ' . $this->get_type_attribute() . '>' . "\n$cdata_start" . 'var _paq = window._paq = window._paq || [];
 _paq.push([\'addDownloadExtensions\', "zip|waf"]);
 _paq.push([\'setLinkClasses\', "clickme|foo"]);
-_paq.push([\'disableCookies\']);
+if (!window._paq.find || !window._paq.find(function (m) { return m[0] === "disableCookies"; })) {
+	window._paq.push(["disableCookies"]);
+}
 _paq.push([\'enableCrossDomainLinking\']);
 _paq.push(["setCookieDomain", "*.example.org"]);
 _paq.push([\'trackAllContentImpressions\']);_paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'alwaysUseSendBeacon\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/index.php?rest_route=\/matomo\/v1\/hit\/"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];

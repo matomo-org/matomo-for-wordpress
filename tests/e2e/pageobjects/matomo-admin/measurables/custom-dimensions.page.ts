@@ -13,7 +13,7 @@ class CustomDimensionsPage extends MatomoAdminPage {
   async open() {
     const result = await super.open('CustomDimensions.manage');
 
-    await $('.manageCustomDimensions table').waitForDisplayed();
+    await $('.manageCustomDimensions table').waitForDisplayed({ timeout: 20000 });
 
     return result;
   }

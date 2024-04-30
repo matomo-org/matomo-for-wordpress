@@ -17,7 +17,10 @@ class MwpMarketplacePage extends MwpPage {
   async openInstallPluginsTab() {
     await $('a.nav-tab=Install Plugins').click();
 
-    await $('td.column-version').waitForExist();
+    await $('td.column-version').waitForExist({ timeout: 30000 });
+
+    // remove most plugins so the screenshot will stay the same over time
+    await this.removeThirdPartyPlugins();
 
     // remove version strings so test will pass when plugin requirements
     // change
@@ -28,10 +31,71 @@ class MwpMarketplacePage extends MwpPage {
         );
       });
     });
+
+    await this.removePluginCounts();
+  }
+
+  async removePluginCounts() {
+    // remove number of plugins so test will pass when new plugins are released/
+    // other plugins are removed
+    await browser.execute(() => {
+      window.jQuery('.subsubsub .count').each((i, e) => {
+        window.jQuery(e).text('()');
+      });
+    });
+  }
+
+  async removeThirdPartyPlugins() {
+    await browser.execute(() => {
+      window.jQuery('tbody#the-list > tr').each((i, e) => {
+        if (window.jQuery('td[data-colname="Developer"]', e).text() !== 'matomo-org'
+          || window.jQuery('td[data-colname="Plugin"]>strong>a', e).text() === 'Force SSL' // test environment does not use ssl
+        ) {
+          window.jQuery(e).remove();
+        }
+      });
+    });
   }
 
   async openSubscriptionsTab() {
     await $('a.nav-tab=Subscriptions').click();
+  }
+
+  async setSubscriptionLicense(license: string) {
+    if (!license) {
+      throw new Error('no license specified in TEST_SHOP_LICENSE environment var, cannot run test');
+    }
+
+    // just for screenshots, make sure the license does not display
+    await browser.execute(() => {
+      window.jQuery('input[name="matomo_license_key"]').attr('type', 'password');
+    });
+
+    await browser.execute((l) => {
+      window.jQuery('input[name="matomo_license_key"]').val(l);
+    }, license);
+
+    await $('#wpbody-content .button-primary').click();
+
+    await $('#wpbody-content form#tgmpa-plugins').waitForDisplayed({ timeout: 30000 });
+  }
+
+  async installPlugin(plugin: string) {
+    await browser.execute((p) => {
+      window.jQuery(`.check-column input[value="${p}"]`).closest('tr').find('span.install > a')[0].click();
+    }, plugin);
+
+    await $('#wpbody-content p a.button-primary').waitForDisplayed({ timeout: 30000 });
+  }
+
+  async activateInstalledPlugin() {
+    await $('#wpbody-content p a.button-primary').click();
+    await $('table.plugins').waitForDisplayed({ timeout: 30000 });
+  }
+
+  async showToActivatePlugins() {
+    await $('.subsubsub li.activate > a').click();
+    await $('.subsubsub li.activate > a.current').waitForDisplayed({ timeout: 30000 });
   }
 }
 

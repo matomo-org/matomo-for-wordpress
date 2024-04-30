@@ -6,10 +6,10 @@
  *
  */
 
+import {browser, $, expect} from '@wdio/globals';
 import fetch from 'node-fetch';
 import * as path from 'path';
 import * as fs from 'fs';
-import {browser} from "@wdio/globals";
 
 let latestWordpressVersion: string|undefined;
 
@@ -134,41 +134,30 @@ class Website {
     await browser.waitUntil(async () => {
       return await browser.execute(() => {
         return window.jQuery('span:contains(Set up payments)').length > 0
-          || window.jQuery('span:contains(You set up payments)').length > 0;
+          || window.jQuery('span:contains(You set up payments)').length > 0
+          || window.jQuery('span:contains(Get paid)').length > 0;
       });
-    });
+    }, { timeout: 30000 });
 
     // enable cash on delivery
+    await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-settings&tab=checkout`);
     const isPaymentsSetup = await browser.execute(() => {
-      return window.jQuery('span:contains(You set up payments)').length > 0;
+      return window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0;
     });
 
     if (!isPaymentsSetup) {
-      await browser.execute(() => {
-        window.jQuery('span:contains(Set up payments)').closest('li')[0].click();
-      });
-
-      await $('.woocommerce-task-payment-cod').waitForExist();
-
-      const numAttempts = 3;
-      for (let i = 0; i < numAttempts; ++i) {
+      if (await $('#woocommerce_cod_enabled').isExisting()) {
+        await $('label[for="woocommerce_cod_enabled"]').click();
+        await $('.woocommerce-save-button').click();
+        await browser.waitUntil(async () => {
+          return window.jQuery('#message:contains(Your settings have been saved)').length > 0;
+        });
+      } else {
         await browser.execute(() => {
-          window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action')[0].click();
+          window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
         });
 
-        try {
-          await browser.waitUntil(() => {
-            return browser.execute(() => {
-              return window.jQuery('.woocommerce-task-payment-cod .woocommerce-task-payment__action:contains(Manage)').length > 0;
-            });
-          });
-
-          break;
-        } catch (e) {
-          if (i + 1 >= numAttempts) {
-            throw e;
-          }
-        }
+        await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({timeout: 30000});
       }
     }
 
@@ -178,6 +167,44 @@ class Website {
   async deleteAllCookies() {
     await browser.deleteAllCookies();
     this.loggedIn = false;
+  }
+
+  async setSiteLanguage(locale: string) {
+    const pageUrl = `${await this.baseUrl()}/wp-admin/options-general.php`;
+    await browser.url(pageUrl);
+    await $('#WPLANG').waitForDisplayed();
+
+    await browser.execute((l) => {
+      window.jQuery('#WPLANG').val(l).change();
+    }, locale);
+
+    await $('#submit').click();
+
+    await $('#setting-error-settings_updated').waitForDisplayed();
+
+    const selectedLanguage = await browser.execute(() => window.jQuery('#WPLANG').val());
+    if (selectedLanguage !== locale) {
+      throw new Error(`unable to set site language to ${locale}`);
+    }
+  }
+
+  async setUserProfileLanguage(locale: string) {
+    const pageUrl = `${await this.baseUrl()}/wp-admin/profile.php`;
+    await browser.url(pageUrl);
+    await $('#locale').waitForDisplayed();
+
+    await browser.execute((l) => {
+      window.jQuery('#locale').val(l).change();
+    }, locale);
+
+    await $('#submit').click();
+
+    await $('#message.updated').waitForDisplayed();
+
+    const selectedLanguage = await browser.execute(() => window.jQuery('#locale').val());
+    if (selectedLanguage !== locale) {
+      throw new Error(`unable to set user profile language to ${locale}`);
+    }
   }
 }
 

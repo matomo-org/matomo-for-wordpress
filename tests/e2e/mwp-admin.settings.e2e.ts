@@ -6,7 +6,7 @@
  *
  */
 
-import { expect, browser } from '@wdio/globals';
+import {expect, browser, $} from '@wdio/globals';
 import MwpSettingsPage from './pageobjects/mwp-admin/settings.page.js';
 import Website from './website.js';
 
@@ -77,6 +77,38 @@ describe('MWP Admin > Settings', () => {
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.settings.advanced${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
+  it('should load plugin measurable settings correctly', async () => {
+    await MwpSettingsPage.open();
+    await MwpSettingsPage.openMeasurableSettings('SEO Web Vitals');
+
+    await MwpSettingsPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.settings.seowebvitals${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
+  it('should save measurable setting values correctly', async () => {
+    await MwpSettingsPage.setSeoWebVitalsSettingValue('http://somesite.com');
+    await browser.refresh();
+    await $('iframe').waitForDisplayed();
+    await browser.pause(2000); // wait for iframe resizer to activate
+
+    await MwpSettingsPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.settings.seowebvitals-saved${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
+  it('should display the appropriate message when measurable settings are hidden', async () => {
+    await MwpSettingsPage.open();
+    await MwpSettingsPage.openMeasurableSettings('Search Engine Keywords Performance');
+
+    await MwpSettingsPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.settings.searchperformance${trunkSuffix}`)
     ).toEqual(0);
   });
 });

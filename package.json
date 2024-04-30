@@ -18,7 +18,8 @@
     "wdio": "wdio run ./wdio.conf.tracking.ts && wdio run ./wdio.conf.ts",
     "compose": "docker compose --env-file .env.default --env-file .env",
     "phpcs": "./vendor/bin/phpcs",
-    "matomo:console": "docker compose --env-file .env.default --env-file .env run --rm console"
+    "matomo:console": "docker compose --env-file .env.default --env-file .env run --rm console",
+    "wp:cli": "docker compose --env-file .env.default --env-file .env run --rm wp"
   },
   "dependencies": {
     "chart.js": "^3.4.1"

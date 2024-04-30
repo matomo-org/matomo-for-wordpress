@@ -1,14 +1,14 @@
 === Matomo Analytics - Ethical Stats. Powerful Insights. ===
 Contributors: matomoteam
-Tags: matomo,piwik,analytics,statistics,stats,tracking,ecommerce
+Tags: matomo,analytics,statistics,stats,ecommerce
 Requires at least: 4.8
-Tested up to: 6.4.3
-Stable tag: 5.0.5
+Tested up to: 6.5.2
+Stable tag: 5.0.6
 Requires PHP: 7.2.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Matomo is the #1 Google Analytics alternative that gives you full control over your data and protects user privacy. Free, secure, and open.
+Privacy friendly, GDPR compliant and self-hosted, Matomo is the #1 Google Analytics alternative that gives you full control over your data and protects user privacy. Free, secure, and open.
 
 == Description ==
 

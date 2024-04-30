@@ -45,12 +45,19 @@ class GenerateLangFiles extends ConsoleCommand
 	    	$corePath = PIWIK_INCLUDE_PATH . '/lang/' . $language . '.json';
 	    	$base = json_decode(file_get_contents($corePath), true);
 	    	foreach ($plugins as $plugin => $pluginInfo) {
-			    $file = PIWIK_INCLUDE_PATH . '/plugins/' . $plugin . '/lang/' . $language . '.json';
+                $pluginDir = Plugin\Manager::getPluginDirectory($plugin);
+                if (strpos(realpath($pluginDir), 'wp-content') !== false) {
+                    continue;
+                }
+
+			    $file = $pluginDir . '/lang/' . $language . '.json';
 			    if (file_exists($file)) {
 				    $mixin = json_decode(file_get_contents($file), true);
 				    $base = array_merge($base, $mixin);
 
-                    Filesystem::deleteFileIfExists($file);
+                    if ($plugin !== 'WordPress') {
+                        Filesystem::deleteFileIfExists($file);
+                    }
 			    }
 		    }
 

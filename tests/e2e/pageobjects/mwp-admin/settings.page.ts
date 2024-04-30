@@ -6,6 +6,7 @@
  *
  */
 
+import { browser, $ } from '@wdio/globals';
 import MwpPage from './page.js';
 
 class MwpSettingsPage extends MwpPage {
@@ -59,6 +60,25 @@ class MwpSettingsPage extends MwpPage {
 
   async openAdvancedTab() {
     await $('a.nav-tab=Advanced').click();
+  }
+
+  async openMeasurableSettings(pluginDisplayName: string) {
+    await $(`a.nav-tab=${pluginDisplayName}`).click();
+    await $('iframe').waitForDisplayed();
+    await browser.pause(2000); // wait for iframe resizer to activate
+  }
+
+  async setSeoWebVitalsSettingValue(value: string) {
+    await browser.execute((v) => {
+      window.jQuery('#plugin_measurable_settings').contents()
+        .find('textarea[name="check_urls"]').val(v)[0].dispatchEvent(new Event('change'));
+    }, value);
+    await browser.pause(250); // for the value in Vue to update
+    await browser.execute(() => {
+      window.jQuery('#plugin_measurable_settings').contents()
+        .find('.settingsFormFooter input')[0].click();
+    });
+    await browser.pause(3000);
   }
 }
 
