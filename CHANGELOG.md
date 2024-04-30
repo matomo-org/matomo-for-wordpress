@@ -1,5 +1,11 @@
 == Changelog ===
 
+= 5.0.6 =
+* Display previously inaccessible Matomo plugin per-site settings in new settings tabs.
+* Added a notice to the WP plugins admin displaying whether deleting the plugin will delete analytics data or not.
+* During updates to Matomo, try to automatically fix any MySQL ROW_FORMAT errors that occur.
+* Bug fix: ensure cookies will not be set during ecommerce tracking if cookies are disabled in settings.
+
 = 5.0.5 =
 * Improved compatibility with CiviCRM.
 * Improved compatibility with AzonPress.
