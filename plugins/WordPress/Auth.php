@@ -61,6 +61,14 @@ class Auth extends \Piwik\Plugins\Login\Auth
             return null;
         }
 
+        // workaround issue in siteground where PHP_AUTH_USER is incorrectly set
+        // and includes the auth scheme part of the Authorization header (ie, "Basic ")
+        $oldAuthUser = null;
+        if (!empty($_SERVER['PHP_AUTH_USER'])) {
+            $oldAuthUser = $_SERVER['PHP_AUTH_USER'];
+            $_SERVER['PHP_AUTH_USER'] = preg_replace('/^Basic /', '', $_SERVER['PHP_AUTH_USER']);
+        }
+
         $callback = function () { return true; };
 
         add_filter('application_password_is_api_request', $callback, PHP_INT_MAX);
@@ -69,6 +77,10 @@ class Auth extends \Piwik\Plugins\Login\Auth
             $isUserLoggedIn = $loggedInUserId !== false;
         } finally {
             remove_filter('application_password_is_api_request', $callback);
+
+            if (!empty($oldAuthUser)) {
+                $_SERVER['PHP_AUTH_USER'] = $oldAuthUser;
+            }
         }
 
         if (!$isUserLoggedIn) {
