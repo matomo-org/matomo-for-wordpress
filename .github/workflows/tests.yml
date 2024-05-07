@@ -206,6 +206,7 @@ jobs:
           WORDPRESS_FOLDER=test
           WORDPRESS_VERSION=$WORDPRESS_VERSION
           UID=$UID
+          WITHOUT_MARKETPLACE=1
           EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}

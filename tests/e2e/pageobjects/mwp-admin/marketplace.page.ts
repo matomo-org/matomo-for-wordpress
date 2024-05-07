@@ -7,9 +7,65 @@
  */
 
 import { $, browser } from '@wdio/globals';
+import * as fs from 'fs';
+import * as path from 'path';
 import MwpPage from './page.js';
+import * as url from 'url';
+
+const dirname = path.dirname(url.fileURLToPath(import.meta.url));
+
+const DOWNLOADS_DIR = path.join(dirname, '..', '..', 'downloads');
+
+class MwpMarketplaceSetupWizard {
+  async downloadPlugin(): Promise<string> {
+    const downloadUrl = await browser.execute(() => window.jQuery('.download-plugin').attr('href'));
+    const downloadPath = path.join(DOWNLOADS_DIR, path.basename(downloadUrl));
+
+    await $('.download-plugin').click();
+    await browser.waitUntil(() => fs.existsSync(downloadPath), 5000);
+
+    return downloadPath;
+  }
+
+  async goToPluginsAdmin(): Promise<void> {
+    await $('.open-plugin-upload').click();
+
+    await browser.waitUntil(async () => {
+      await browser.pause(2000);
+      try {
+        await browser.switchWindow(/\/wp-admin\/plugin-install\.php\?tab=upload/);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }, { timeout: 15000 });
+
+    await $('#pluginzip').waitForDisplayed();
+  }
+
+  async uploadPluginAndActivate(pathToPlugin: string): Promise<void> {
+    await $('#pluginzip').setValue(pathToPlugin);
+    await browser.pause(500);
+    await $('#install-plugin-submit').click();
+    await $('.button=Activate Plugin').waitForDisplayed();
+
+    await $('.button=Activate Plugin').click();
+    await browser.waitUntil(() => {
+      return browser.execute(() => /\/wp-admin\/plugins\.php$/.test(window.location.pathname));
+    });
+
+    await browser.closeWindow();
+    await browser.switchWindow(/page=matomo-marketplace/);
+  }
+
+  async waitForReload(): Promise<void> {
+    await $('#tgmpa-plugins .install').waitForDisplayed({ timeout: 30000 });
+  }
+}
 
 class MwpMarketplacePage extends MwpPage {
+  readonly setupWizard = new MwpMarketplaceSetupWizard();
+
   async open() {
     return await super.open('/wp-admin/admin.php?page=matomo-marketplace');
   }
@@ -17,22 +73,18 @@ class MwpMarketplacePage extends MwpPage {
   async openInstallPluginsTab() {
     await $('a.nav-tab=Install Plugins').click();
 
-    await $('td.column-version').waitForExist({ timeout: 30000 });
+    await $('td.column-version,.matomo-marketplace-wizard').waitForExist({ timeout: 30000 });
 
-    // remove most plugins so the screenshot will stay the same over time
-    await this.removeThirdPartyPlugins();
+    if (await $('td.column-version').isExisting()) {
+      // remove most plugins so the screenshot will stay the same over time
+      await this.removeThirdPartyPlugins();
 
-    // remove version strings so test will pass when plugin requirements
-    // change
-    await browser.execute(() => {
-      window.jQuery('td.column-version').each((i, e) => {
-        window.jQuery(e).html(
-          window.jQuery(e).html().replace(/\d+\.\d+\.\d+(-[a-zA-Z0-9]+)?/g, '-')
-        );
-      });
-    });
+      // remove version strings so test will pass when plugin requirements
+      // change
+      await this.removeVersionStrings();
 
-    await this.removePluginCounts();
+      await this.removePluginCounts();
+    }
   }
 
   async removePluginCounts() {
@@ -96,6 +148,16 @@ class MwpMarketplacePage extends MwpPage {
   async showToActivatePlugins() {
     await $('.subsubsub li.activate > a').click();
     await $('.subsubsub li.activate > a.current').waitForDisplayed({ timeout: 30000 });
+  }
+
+  async removeVersionStrings() {
+    await browser.execute(() => {
+      window.jQuery('td.column-version').each((i, e) => {
+        window.jQuery(e).html(
+          window.jQuery(e).html().replace(/\d+\.\d+\.\d+(-[a-zA-Z0-9]+)?/g, '-')
+        );
+      });
+    });
   }
 }
 

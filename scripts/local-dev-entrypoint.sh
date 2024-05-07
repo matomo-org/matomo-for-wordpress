@@ -262,12 +262,16 @@ if [ ! -f "/var/www/html/index.php" ]; then
 EOF
 fi
 
-if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress" ]; then
-  echo "installing matomo marketplace"
-  ln -s /var/www/html/matomo-for-wordpress/marketplace "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress"
-  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin activate matomo-marketplace-for-wordpress
+if [[ "$WITHOUT_MARKETPLACE" = "1" ]]; then
+  rm -f "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress" || true
 else
-  /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin activate matomo-marketplace-for-wordpress
+  if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress" ]; then
+    echo "installing matomo marketplace"
+    ln -s /var/www/html/matomo-for-wordpress/marketplace "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo-marketplace-for-wordpress"
+    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin activate matomo-marketplace-for-wordpress
+  else
+    /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin activate matomo-marketplace-for-wordpress
+  fi
 fi
 
 # other plugins used during tests

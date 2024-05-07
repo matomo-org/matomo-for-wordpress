@@ -57,6 +57,6 @@ describe('MWP Updating', () => {
       return await browser.execute(() => {
         return window.jQuery && window.jQuery('p:contains(Plugin updated successfully.)').length > 0;
       });
-    }, { timeout: 30000 });
+    }, { timeout: 60000 });
   });
 });

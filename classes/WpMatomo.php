@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WpMatomo\Admin\Admin;
 use WpMatomo\Admin\Chart;
 use WpMatomo\Admin\Dashboard;
+use WpMatomo\Admin\MarketplaceSetupWizard;
 use WpMatomo\Admin\Menu;
 use WpMatomo\AjaxTracker;
 use WpMatomo\Annotations;
@@ -133,6 +134,9 @@ class WpMatomo {
 				'add_settings_link',
 			]
 		);
+
+		// TODO: need better way of doing ajax?
+		MarketplaceSetupWizard::register_ajax();
 	}
 
 	private function check_compatibility() {

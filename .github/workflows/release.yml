@@ -56,6 +56,7 @@ jobs:
           lfs: true
           fetch-depth: '0'
           token: ${{ secrets.GITHUB_TOKEN }} # for pushing to protected branch
+          submodules: true
       - run: git lfs pull
       - name: "Check tag"
         run: |
@@ -86,6 +87,7 @@ jobs:
       - run: chmod -R 777 . # required to build the release
       - run: docker compose --env-file .env.default --env-file .env up -d wordpress
       - run: sleep 60 # wait for docker-compose launch to finish
+      - run: npm run compose logs wordpress --no-color # for debugging failures to start
       - name: "Build releases"
         run: npm run compose -- run console wordpress:build-release --name=${{ env.version }} --zip --tgz
       - name: "Create release"

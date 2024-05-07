@@ -33,6 +33,40 @@ describe('MWP Admin > Marketplace', () => {
     ).toEqual(0);
   });
 
+  it('should show the marketplace setup wizard when the marketplace plugins is not installed', async () => {
+    await browser.refresh();
+    await MwpMarketplacePage.openInstallPluginsTab();
+
+    await MwpMarketplacePage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.setup-wizard${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
+  it('should provide functionality that simplifies the process of downloading and installing the plugin', async () => {
+    const pathToPlugin = await MwpMarketplacePage.setupWizard.downloadPlugin();
+    await MwpMarketplacePage.setupWizard.goToPluginsAdmin();
+    await MwpMarketplacePage.setupWizard.uploadPluginAndActivate(pathToPlugin);
+    await MwpMarketplacePage.setupWizard.waitForReload();
+
+    await MwpMarketplacePage.removeThirdPartyPlugins();
+    await MwpMarketplacePage.removePluginCounts();
+    await MwpMarketplacePage.removeVersionStrings();
+    await MwpMarketplacePage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.setup-wizard-finished${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
+  it('should load the overview tab correctly when the marketplace plugin is installed', async () => {
+    await MwpMarketplacePage.open();
+
+    await MwpMarketplacePage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.overview-after-install${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
   it('should load the install plugins tab correctly', async () => {
     await browser.refresh();
     await MwpMarketplacePage.openInstallPluginsTab();

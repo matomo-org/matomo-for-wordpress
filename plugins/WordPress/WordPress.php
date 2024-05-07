@@ -307,7 +307,7 @@ class WordPress extends Plugin
             'sslverify'           => true,
         );
         if (defined( 'MATOMO_LOCAL_ENVIRONMENT' ) && MATOMO_LOCAL_ENVIRONMENT) {
-            $args['timeout'] = max($args['timeout'], 5);
+            $args['timeout'] = max($args['timeout'], 8);
         }
         if (!empty($params['userAgent'])) {
             $args['user-agent'] = $params['userAgent'];
