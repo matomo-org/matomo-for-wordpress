@@ -24,7 +24,7 @@ class MatomoApi {
     const fullUrl = `${trackingEndpoint}?${params}`;
 
     const nonce = await Website.getWpNonce();
-    const userPass = `root:${nonce}`;
+    const userPass = `${process.env.WORDPRESS_USER_LOGIN || 'root'}:${nonce}`;
 
     const response = await fetch(fullUrl, {
       method: 'GET',

@@ -6,11 +6,7 @@ import { config as baseConfig } from './wdio.conf.js';
 export const config = {
   ...baseConfig,
   maxInstances: 1,
-  // specs: baseConfig.exclude,
-  specs: [
-    //'./tests/e2e/update.e2e.ts',
-    './tests/e2e/mwp-admin.marketplace.e2e.ts',
-  ],
+  specs: baseConfig.exclude,
   exclude: [],
   onPrepare: null,
   before: null,
