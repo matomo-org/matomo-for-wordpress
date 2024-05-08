@@ -15,6 +15,7 @@ const REQUIRED_ENV_VARS = {
   RELEASE_ZIP: 'the path to the Matomo for WordPress archive to test against',
   WORDPRESS_USER_LOGIN: 'the WordPress superuser login for the install to run tests against',
   WORDPRESS_USER_PASS: 'the WordPress superuser password for the install to run tests against',
+  TEST_SHOP_LICENSE: 'a shop.matomo.org license to use that has access to every premium feature',
 };
 
 Object.entries(REQUIRED_ENV_VARS).forEach(([name, description]) => {
@@ -28,28 +29,35 @@ Object.entries(REQUIRED_ENV_VARS).forEach(([name, description]) => {
 // so, here, we replace any occurrences of \$ with $, to get the same value that docker sees.
 process.env.WORDPRESS_USER_PASS = process.env.WORDPRESS_USER_PASS.replace(/\\\$/g, '$');
 
-let oldCheckFullpageScreen;
+let isBrowserProxied = false;
 
 export const config = {
   ...baseConfig,
   maxInstances: 1,
   exclude: [],
   specs: [...baseConfig.exclude, ...baseConfig.specs],
-  before: [
-    baseConfig.before,
-    async function () {
-      oldCheckFullpageScreen = browser.checkFullPageScreen;
-
-      // overwrite browser.checkFullPageScreen so it never returns a failure
-      // (this is to avoid spamming the output with failures, since the expected screenshots
-      // of WordPress run through docker will not match a hosted WordPress)
-      browser.checkFullPageScreen = async function (...args) {
-        await oldCheckFullpageScreen.call(this, ...args);
-        return 0;
-      };
-    },
-  ],
-  after: async function () {
-    browser.checkFullPageScreen = oldCheckFullpageScreen;
+  mochaOpts: {
+    ...baseConfig.mochaOpts,
+    bail: true,
+  },
+  bail: 1,
+  beforeTest: async function () {
+    // overwrite browser.checkFullPageScreen so it never returns a failure
+    // (this is to avoid spamming the output with failures, since the expected screenshots
+    // of WordPress run through docker will not match a hosted WordPress)
+    if (!isBrowserProxied) {
+      isBrowserProxied = true;
+      global._wdioGlobals.set('browser', new Proxy(global._wdioGlobals.get('browser'), {
+        get(target, prop) {
+          if (prop === 'checkFullPageScreen') {
+            return async function (...args) {
+              await target[prop].call(this, ...args);
+              return 0;
+            };
+          }
+          return target[prop];
+        },
+      }));
+    }
   },
 };
