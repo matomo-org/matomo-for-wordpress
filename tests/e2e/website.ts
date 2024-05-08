@@ -206,6 +206,34 @@ class Website {
       throw new Error(`unable to set user profile language to ${locale}`);
     }
   }
+
+  async removeMatomoMarketplacePlugin() {
+    const pageUrl = `${await this.baseUrl()}/wp-admin/plugins.php`;
+    await browser.url(pageUrl);
+
+    await $('tr[data-slug]').waitForExist();
+
+    if (await $('tr[data-slug="matomo-marketplace-for-wordpress"]').isExisting()) {
+      console.log('Removing existing Matomo Marketplace plugin...');
+
+      if (await $('tr[data-slug="matomo-marketplace-for-wordpress"] .deactivate').isExisting()) {
+        await browser.execute(() => {
+          window.jQuery('tr[data-slug="matomo-marketplace-for-wordpress"] .deactivate > a')[0].click();
+        });
+        await browser.waitUntil(() => {
+          return browser.execute(() => !!window.jQuery('#message:contains(Plugin deactivated.)').length);
+        });
+      }
+
+      await browser.execute(() => {
+        window.jQuery('tr[data-slug="matomo-marketplace-for-wordpress"] .delete > a')[0].click();
+      });
+      await browser.waitUntil(() => browser.isAlertOpen());
+      await browser.acceptAlert();
+
+      await $('#matomo-marketplace-for-wordpress-deleted').waitForExist();
+    }
+  }
 }
 
 export default new Website();

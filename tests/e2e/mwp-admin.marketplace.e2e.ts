@@ -18,6 +18,7 @@ describe('MWP Admin > Marketplace', () => {
   before(async () => {
     await GlobalSetup.setUp();
     await Website.login();
+    await Website.removeMatomoMarketplacePlugin();
   });
 
   after(async () => {
