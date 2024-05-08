@@ -58,7 +58,7 @@ class BuildRelease extends ConsoleCommand
     private function getReleaseVersion()
     {
         $version = $this->getInput()->getOption('name');
-        if (!empty($version)) {
+        if (is_string($version)) {
             return $version;
         }
 
@@ -88,15 +88,17 @@ class BuildRelease extends ConsoleCommand
 
     private function generateArchive($format, $version, $stashHash)
     {
+        $versionSuffix = empty($version) ? '' : "-$version";
+
         $pathToRepo = $this->getPathToGitRepo();
-        $outputFile = $pathToRepo . "/matomo-$version.$format";
+        $outputFile = $pathToRepo . "/matomo$versionSuffix.$format";
 
         $this->getOutput()->writeln("Generating $format archive at $outputFile...");
 
-        $command = "git -C " . $pathToRepo . " archive --format=$format $stashHash > " . $outputFile;
+        $command = "git -C " . $pathToRepo . " archive --prefix=matomo/ --format=$format $stashHash > " . $outputFile;
         $this->executeShellCommand($command, "Failed to generate $format archive!");
 
-        $this->getOutput()->writeln("<info>Created archive matomo-$version.$format.</info>");
+        $this->getOutput()->writeln("<info>Created archive matomo$versionSuffix.$format.</info>");
     }
 
     private function addGeneratedFilesToGit()
