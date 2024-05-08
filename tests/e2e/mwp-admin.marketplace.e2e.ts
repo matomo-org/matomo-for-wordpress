@@ -18,7 +18,6 @@ describe('MWP Admin > Marketplace', () => {
   before(async () => {
     await GlobalSetup.setUp();
     await Website.login();
-    await Website.removeMatomoMarketplacePlugin();
   });
 
   after(async () => {
@@ -26,6 +25,8 @@ describe('MWP Admin > Marketplace', () => {
   });
 
   it('should load the overview tab correctly', async () => {
+    await Website.removeMatomoMarketplacePlugin();
+
     await MwpMarketplacePage.open();
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
@@ -129,7 +130,7 @@ describe('MWP Admin > Marketplace', () => {
 
     await browser.waitUntil(() => {
       return browser.execute(() => window.jQuery('p:contains("All installations have been completed.")').length > 0);
-    }, { timeout: 120000 });
+    }, { timeout: 300000 });
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(

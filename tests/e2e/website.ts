@@ -214,25 +214,48 @@ class Website {
     await $('tr[data-slug]').waitForExist();
 
     if (await $('tr[data-slug="matomo-marketplace-for-wordpress"]').isExisting()) {
-      console.log('Removing existing Matomo Marketplace plugin...');
+      await this.removePlugin('matomo-marketplace-for-wordpress');
 
-      if (await $('tr[data-slug="matomo-marketplace-for-wordpress"] .deactivate').isExisting()) {
-        await browser.execute(() => {
-          window.jQuery('tr[data-slug="matomo-marketplace-for-wordpress"] .deactivate > a')[0].click();
-        });
-        await browser.waitUntil(() => {
-          return browser.execute(() => !!window.jQuery('#message:contains(Plugin deactivated.)').length);
-        });
+      const pluginRows = await $$('tr[data-slug]');
+      for (let row of pluginRows) {
+        const slug = await row.getAttribute('data-slug');
+        if (/-matomo-plugin$/.test(slug)) {
+          await this.removePlugin(slug);
+        }
       }
-
-      await browser.execute(() => {
-        window.jQuery('tr[data-slug="matomo-marketplace-for-wordpress"] .delete > a')[0].click();
-      });
-      await browser.waitUntil(() => browser.isAlertOpen());
-      await browser.acceptAlert();
-
-      await $('#matomo-marketplace-for-wordpress-deleted').waitForExist();
     }
+  }
+
+  private async removePlugin(slug: string) {
+    console.log(`Removing the ${slug} plugin...`);
+
+    if (await $(`tr[data-slug="${slug}"] .deactivate`).isExisting()) {
+      await browser.execute((s) => {
+        window.jQuery(`tr[data-slug="${s}"] .deactivate > a`)[0].click();
+      }, slug);
+      await browser.waitUntil(() => {
+        return browser.execute(() => !!window.jQuery('#message:contains(Plugin deactivated.)').length);
+      }, { timeout: 60000 });
+    }
+
+    await browser.execute((s) => {
+      window.jQuery(`tr[data-slug="${s}"] .delete > a`)[0].click();
+    }, slug);
+    await browser.waitUntil(async () => {
+      try {
+        await browser.getAlertText();
+        return true;
+      } catch (error: any) {
+        if (error.name === 'no such alert') {
+          return false;
+        } else {
+          throw error;
+        }
+      }
+    });
+    await browser.acceptAlert();
+
+    await $(`#${slug}-deleted`).waitForExist({ timeout: 60000 });
   }
 }
 

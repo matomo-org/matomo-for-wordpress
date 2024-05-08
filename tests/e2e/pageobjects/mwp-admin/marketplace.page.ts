@@ -23,6 +23,7 @@ class MwpMarketplaceSetupWizard {
 
     await $('.download-plugin').click();
     await browser.waitUntil(() => fs.existsSync(downloadPath), 5000);
+    await browser.pause(1000);
 
     return downloadPath;
   }
