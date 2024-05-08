@@ -23,6 +23,11 @@ Object.entries(REQUIRED_ENV_VARS).forEach(([name, description]) => {
   }
 });
 
+// wdio and docker handle .env files differently. docker allows interpolation via `$var`, but wdio doesn't.
+// for docker, '$' chars must be escaped with a slash, ie '\$', but wdio will just include the slash.
+// so, here, we replace any occurrences of \$ with $, to get the same value that docker sees.
+process.env.WORDPRESS_USER_PASS = process.env.WORDPRESS_USER_PASS.replace(/\\\$/g, '$');
+
 let oldCheckFullpageScreen;
 
 export const config = {
