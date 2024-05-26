@@ -213,8 +213,8 @@ class Menu {
 		}
 		add_submenu_page(
 			self::$parent_slug,
-			__( 'About', 'matomo' ),
-			__( 'About', 'matomo' ),
+			__( 'Help', 'matomo' ),
+			__( 'Help', 'matomo' ),
 			Capabilities::KEY_VIEW,
 			self::SLUG_ABOUT,
 			[
