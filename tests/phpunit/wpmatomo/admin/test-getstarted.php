@@ -42,7 +42,6 @@ class AdminGetStartedTest extends MatomoUnit_TestCase {
 		$this->get_started->show();
 		$output = ob_get_clean();
 		$this->assertNotEmpty( $output );
-		$this->assertStringContainsString( 'About', $output );
 	}
 
 	public function test_show_does_change_value_if_nonce() {

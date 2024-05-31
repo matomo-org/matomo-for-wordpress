@@ -1,9 +1,14 @@
-.matomo-tracking-form th {
-    width: 30%;
+.matomo-tracking-form tr {
+    padding: 6px 0;
 }
 
 .matomo-tracking-form th {
     width: 30%;
+    vertical-align: top;
+}
+
+.matomo-tracking-form th label {
+    vertical-align: baseline;
 }
 
 .matomo-systemreport-comment {

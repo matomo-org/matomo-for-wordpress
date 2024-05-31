@@ -67,7 +67,7 @@ if ( count( $settings_errors ) ) {
 		}
 
 		if ( ! empty( $containers ) ) {
-			echo '<tr class="matomo-track-option matomo-track-option-tagmanager">';
+			echo '<tr class="matomo-track-option matomo-track-option-tagmanager' . ( $settings->get_global_option( 'track_mode' ) !== TrackingSettings::TRACK_MODE_TAGMANAGER ? ' hidden' : '' ) . '">';
 			echo '<th scope="row"><label for="tagmanger_container_ids">' . esc_html__( 'Add these Tag Manager containers', 'matomo' ) . '</label>:</th><td>';
 			$selected_container_ids = $settings->get_global_option( 'tagmanger_container_ids' );
 			foreach ( $containers as $container_id => $container_name ) {
