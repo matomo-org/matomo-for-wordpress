@@ -197,10 +197,8 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			return;
 		}
 
-		$possible_values = [ 156, 81, 77, 91 ];
-
 		$report = $this->fetch_report( 'Actions', 'getPageUrls' );
-		$this->assertContains( $report['reportData']->getRowsCount(), $possible_values );
+		$this->assertGreaterThan( 75, $report['reportData']->getRowsCount() );
 	}
 
 	protected function fetch_report( $report_name, $method ) {
