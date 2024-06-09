@@ -1,5 +1,8 @@
 == Changelog ===
 
+= 5.0.8 =
+* Improve PHP CLI diagnostic change: avoid reporting issues when a hosting provider does not support CLI archiving.
+
 = 5.0.7 =
 * Bug fix: setting an email report's segment to "All Visits" did not work properly.
 * Update core Matomo to version 5.0.3.

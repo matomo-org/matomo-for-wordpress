@@ -387,6 +387,20 @@ class SystemReport {
 		$rows = [];
 
 		if ( $this->shell_exec_available ) {
+			try {
+				$cli_multi = new CliMulti();
+
+				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$supports_async = $cli_multi->supportsAsync;
+			} catch ( \Exception $ex ) {
+				$rows[] = [
+					'name'       => esc_html__( 'PHP CLI configuration', 'matomo' ),
+					'value'      => esc_html__( 'Unexpected error', 'matomo' ),
+					'is_warning' => true,
+					'comment'    => sprintf( esc_html__( 'Could not detect whether async archiving is enabled: %s', 'matomo' ), $ex->getMessage() ),
+				];
+			}
+
 			$phpcli_version = $this->get_phpcli_output( '-r "echo phpversion();"' );
 
 			$is_warning = false;
@@ -394,9 +408,11 @@ class SystemReport {
 
 			$advanced_settings_url = home_url( '/wp-admin/admin.php?page=matomo-settings&tab=advanced#matomo[disable_async_archiving]' );
 
+			$is_using_cli_archiving = ! \WpMatomo::is_async_archiving_manually_disabled() && $supports_async;
+
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 			if ( version_compare( $phpcli_version, PHP_VERSION ) < 0 ) {
-				if ( ! \WpMatomo::is_async_archiving_manually_disabled() ) {
+				if ( $is_using_cli_archiving ) {
 					$is_warning = true;
 				}
 
@@ -429,10 +445,12 @@ class SystemReport {
 				'name'     => esc_html__( 'MySQLi support', 'matomo' ),
 				'value'    => $value,
 				'comment'  => $comment,
-				'is_error' => $is_error,
+				'is_error' => $is_using_cli_archiving ? $is_error : false,
 			];
 
-			$this->check_wp_can_be_loaded_in_php_cli( $rows );
+			if ( $supports_async ) {
+				$this->check_wp_can_be_loaded_in_php_cli( $rows );
+			}
 		}
 
 		return $rows;
@@ -445,24 +463,6 @@ class SystemReport {
 
 		$wp_load_path = $this->find_wp_load_path();
 		if ( ! $wp_load_path ) {
-			return;
-		}
-
-		try {
-			$cli_multi = new CliMulti();
-
-			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			$supports_async = $cli_multi->supportsAsync;
-		} catch ( \Exception $ex ) {
-			$rows[] = [
-				'name'       => esc_html__( 'PHP CLI configuration', 'matomo' ),
-				'value'      => esc_html__( 'Unexpected error', 'matomo' ),
-				'is_warning' => true,
-				'comment'    => sprintf( esc_html__( 'Could not detect whether async archiving is enabled: %s', 'matomo' ), $ex->getMessage() ),
-			];
-		}
-
-		if ( ! $supports_async ) {
 			return;
 		}
 
