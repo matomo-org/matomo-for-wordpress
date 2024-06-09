@@ -24,7 +24,7 @@ namespace {
             // Override the default verbosity map to make it more verbose by default
             $verbosityMap = array(OutputInterface::VERBOSITY_NORMAL => Logger::INFO, OutputInterface::VERBOSITY_VERBOSE => Logger::DEBUG, OutputInterface::VERBOSITY_VERY_VERBOSE => Logger::DEBUG, OutputInterface::VERBOSITY_DEBUG => Logger::DEBUG, OutputInterface::VERBOSITY_QUIET => Logger::ERROR);
             $handler = new ConsoleHandler(null, \true, $verbosityMap);
-            $handler->setFormatter(new \Piwik\Plugins\Monolog\Formatter\ConsoleFormatter(['format' => $c->get('log.console.format'), 'multiline' => \true]));
+            $handler->setFormatter(new \Piwik\Plugins\Monolog\Formatter\ConsoleFormatter(['date_format' => 'Y-m-d H:i:s', 'format' => $c->get('log.console.format'), 'multiline' => \true]));
             return $handler;
         },
         'log.console.format' => '%start_tag%%level_name% [%datetime%] %extra.request_id% %end_tag% %message%' . \PHP_EOL,

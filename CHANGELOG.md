@@ -1,5 +1,13 @@
 == Changelog ===
 
+= 5.0.7 =
+* Bug fix: setting an email report's segment to "All Visits" did not work properly.
+* Update core Matomo to version 5.0.3.
+* Workaround bug in the SMTP2GO WordPress plugin causing PDF email reports to be sent without the attached report.
+* Change PHP CLI diagnostic to avoid showing users an "error" that has no effect on Matomo's ability to function.
+* Better error handling for Matomo cron tasks.
+* Add a simple new setup wizard for the Matomo Marketplace for new users.
+
 = 5.0.6 =
 * Display previously inaccessible Matomo plugin per-site settings in new settings tabs.
 * Added a notice to the WP plugins admin displaying whether deleting the plugin will delete analytics data or not.

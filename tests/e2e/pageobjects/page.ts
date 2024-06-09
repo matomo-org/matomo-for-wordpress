@@ -44,13 +44,13 @@ export default class Page {
 
   async enableHoverStyles() {
     await browser.execute(() => {
-      $('html').addClass('disable-hover');
+      $('html').removeClass('disable-hover');
     });
   }
 
   async disableHoverStyles() {
     await browser.execute(() => {
-      $('html').removeClass('disable-hover');
+      $('html').addClass('disable-hover');
     });
   }
 

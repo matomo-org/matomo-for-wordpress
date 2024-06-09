@@ -1,9 +1,16 @@
 import * as path from 'path';
 import * as url from 'url';
+import * as fs from 'fs';
 import type { Options } from '@wdio/types'
 import GlobalSetup from './tests/e2e/global-setup.ts';
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
+
+const DOWNLOADS_DIR = path.join(dirname, 'tests', 'e2e', 'downloads');
+
+if (!fs.existsSync(DOWNLOADS_DIR)) {
+  fs.mkdirSync(DOWNLOADS_DIR);
+}
 
 async function saveScreenshotIfError(test, error) {
   if (error && !error.matcherResult) {
@@ -83,8 +90,18 @@ export const config: Options.Testrunner = {
   //
   capabilities: [
     {
-        browserName: 'firefox',
-    },
+      browserName: 'firefox',
+      "moz:debuggerAddress": true,
+      "moz:firefoxOptions": {
+        args: ['-headless'],
+        prefs: {
+          "browser.download.dir": DOWNLOADS_DIR,
+          "browser.download.folderList": 2,
+          "browser.download.manager.showWhenStarting": false,
+          "browser.helperApps.neverAsk.saveToDisk": "*/*"
+        }
+      }
+    } as any,
   ],
 
   //

@@ -110,10 +110,10 @@ class Logger {
 		return trim( $trace );
 	}
 
-	public function log_exception( $key, Exception $e ) {
+	public function log_exception( $key, Exception $e, $prefix = 'Matomo error:' ) {
 		$trace   = $this->get_readable_trace( $e );
 		$message = $e->getMessage() . ' => ' . $trace;
-		$this->log( 'Matomo error: ' . $message );
+		$this->log( $prefix . ' ' . $message );
 		$this->persist( $key, $message );
 	}
 }

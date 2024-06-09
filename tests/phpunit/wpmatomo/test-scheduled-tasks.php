@@ -114,13 +114,85 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	}
 
 	public function test_perform_update_does_not_fail() {
-		try {
-			$this->tasks->perform_update();
-			$this->assertTrue( true );
-		} catch ( Exception $e ) {
-			$this->assertFalse( true );
-		}
+		$success = $this->tasks->perform_update();
+		$this->assertTrue( $success );
 	}
 
+	/**
+	 * @provideContainerConfig getContainerConfigForGeoIpFail
+	 */
+	public function test_geoip_update_reschedules_to_tomorrow_on_failure() {
+		// remove event scheduled during install
+		wp_unschedule_event( wp_next_scheduled( ScheduledTasks::EVENT_GEOIP ), ScheduledTasks::EVENT_GEOIP );
+		$tasks = $this->get_tasks_for_event( ScheduledTasks::EVENT_GEOIP );
+		$this->assertEmpty( $tasks );
 
+		// schedule the next event 10 days in the future
+		wp_schedule_single_event( time() + 10 * 24 * 60 * 60, ScheduledTasks::EVENT_GEOIP );
+
+		$this->tasks->update_geo_ip2_db();
+
+		$tasks = $this->get_tasks_for_event( ScheduledTasks::EVENT_GEOIP );
+		$this->assertNotEmpty( $tasks );
+
+		$earliest_task_time = key( $tasks );
+		$time_diff          = $earliest_task_time - time();
+
+		$seconds_in_a_day = 60 * 60 * 24;
+		$this->assertGreaterThanOrEqual( $seconds_in_a_day - 5, $time_diff );
+		$this->assertLessThanOrEqual( $seconds_in_a_day + 5, $time_diff );
+
+		$task_failures = $this->tasks->get_recorded_task_failures();
+		$this->assertEquals( [ 'update_geoip2' ], array_keys( $task_failures ) );
+	}
+
+	/**
+	 * @provideContainerConfig getContainerConfigForGeoIpFail
+	 */
+	public function test_geoip_update_does_not_reschedule_if_already_scheduled_within_two_days() {
+		// remove event scheduled during install
+		wp_unschedule_event( wp_next_scheduled( ScheduledTasks::EVENT_GEOIP ), ScheduledTasks::EVENT_GEOIP );
+		$tasks = $this->get_tasks_for_event( ScheduledTasks::EVENT_GEOIP );
+		$this->assertEmpty( $tasks );
+
+		// schedule the next event 10 days in the future
+		wp_schedule_single_event( time() + 1.5 * 24 * 60 * 60, ScheduledTasks::EVENT_GEOIP );
+
+		$pre_scheduled_time = wp_next_scheduled( ScheduledTasks::EVENT_GEOIP );
+
+		$this->tasks->update_geo_ip2_db();
+
+		$tasks = $this->get_tasks_for_event( ScheduledTasks::EVENT_GEOIP );
+		$this->assertCount( 1, $tasks );
+
+		$earliest_task_time = key( $tasks );
+		$this->assertEquals( $pre_scheduled_time, $earliest_task_time );
+
+		$task_failures = $this->tasks->get_recorded_task_failures();
+		$this->assertEquals( [ 'update_geoip2' ], array_keys( $task_failures ) );
+	}
+
+	public function getContainerConfigForGeoIpFail() {
+		return [
+			\Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::class => function () {
+				// phpcs:ignore WordPress.Classes.ClassInstantiation.MissingParenthesis
+				return new class extends \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater {
+					public function update() {
+						throw new \Exception( 'forced error' );
+					}
+				};
+			},
+		];
+	}
+
+	private function get_tasks_for_event( $event_name ) {
+		$tasks = _get_cron_array();
+		$tasks = array_filter(
+			$tasks,
+			function ( $tasks_for_time ) use ( $event_name ) {
+				return ! empty( $tasks_for_time[ $event_name ] );
+			}
+		);
+		return $tasks;
+	}
 }

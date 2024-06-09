@@ -135,6 +135,21 @@ class Email {
 								PHPMailer::ENCODING_BASE64,
 								$attachment['mimetype']
 							);
+
+							// smtp2go does not correctly detect attachments add via PHPMailer::addStringAttachment.
+							// addStringAttachment() will set the attachment's "cid" to `0`, but in SMTP2GOMailer.php
+							// inline attachments are only detected if the cid is non-empty and is a string. further,
+							// the cid is used as the filename.
+							//
+							// to workaround this, we manually set the cid to the attachment filename.
+							if ( is_plugin_active( 'smtp2go/smtp2go-wordpress-plugin.php' ) ) {
+								$attachments                                 = $phpmailer->getAttachments();
+								$attachments[ count( $attachments ) - 1 ][7] = $attachment['filename'];
+
+								$property = new \ReflectionProperty( get_class( $phpmailer ), 'attachment' );
+								$property->setAccessible( true );
+								$property->setValue( $phpmailer, $attachments );
+							}
 						}
 					}
 

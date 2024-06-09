@@ -131,7 +131,7 @@ class Installer {
 
 			try {
 				$this->logger->log( 'Matomo will now init the environment' );
-				$environment = new \Piwik\Application\Environment( null );
+				$environment = new \Piwik\Application\Environment( null, Bootstrap::get_extra_di_definitions() );
 				$environment->init();
 			} catch ( Exception $e ) {
 				$this->logger->log( 'Ignoring error environment init' );

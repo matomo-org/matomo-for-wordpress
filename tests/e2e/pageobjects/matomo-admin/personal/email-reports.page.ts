@@ -13,6 +13,7 @@ class EmailReportsPage extends MatomoAdminPage {
     const result = await super.open('ScheduledReports.index');
     await this.hideDateSelectorDate();
     await $('#add-report').waitForDisplayed();
+    await this.waitForImages();
     return result;
   }
 

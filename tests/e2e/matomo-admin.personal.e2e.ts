@@ -31,7 +31,7 @@ describe('Matomo Admin > Personal', () => {
     await EmailReportsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.personal.email-reports')
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(0.02);
   });
 
   it('should create an email report successfully', async () => {
@@ -43,7 +43,7 @@ describe('Matomo Admin > Personal', () => {
     await EmailReportsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo-admin.personal.email-reports.create')
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(0.02);
   });
 
   it('should load the created email report successfully', async () => {

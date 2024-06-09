@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WpMatomo\Admin\Admin;
 use WpMatomo\Admin\Chart;
 use WpMatomo\Admin\Dashboard;
+use WpMatomo\Admin\MarketplaceSetupWizard;
 use WpMatomo\Admin\Menu;
 use WpMatomo\AjaxTracker;
 use WpMatomo\Annotations;
@@ -75,6 +76,8 @@ class WpMatomo {
 
 		$scheduled_tasks = new ScheduledTasks( self::$settings );
 		$scheduled_tasks->schedule();
+		$scheduled_tasks->register_ajax();
+		$scheduled_tasks->show_errors_if_admin();
 
 		$privacy_badge = new OptOut();
 		$privacy_badge->register_hooks();
@@ -133,6 +136,9 @@ class WpMatomo {
 				'add_settings_link',
 			]
 		);
+
+		// TODO: need better way of doing ajax?
+		MarketplaceSetupWizard::register_ajax();
 	}
 
 	private function check_compatibility() {
@@ -261,5 +267,14 @@ class WpMatomo {
 				}
 			}
 		);
+	}
+
+	public static function is_async_archiving_manually_disabled() {
+		return ( defined( 'MATOMO_SUPPORT_ASYNC_ARCHIVING' ) && ! MATOMO_SUPPORT_ASYNC_ARCHIVING )
+			|| self::is_async_archiving_disabled_by_setting();
+	}
+
+	private static function is_async_archiving_disabled_by_setting() {
+		return self::$settings->is_async_archiving_disabled_by_option();
 	}
 }

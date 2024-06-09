@@ -178,7 +178,7 @@ class Menu {
 
 		if ( $this->settings->is_network_enabled() || ! is_network_admin() ) {
 			$warning = '';
-			if ( isset( $_GET['page'] ) && substr( sanitize_text_field( wp_unslash( $_GET['page'] ) ), 0, 7 ) === 'matomo-' ) {
+			if ( Admin::is_matomo_admin() ) {
 				$system_report = new \WpMatomo\Admin\SystemReport( $this->settings );
 				if ( ! get_user_meta( get_current_user_id(), \WpMatomo\ErrorNotice::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED ) && $system_report->errors_present() ) {
 					$warning = '<span class="awaiting-mod">!</span>';

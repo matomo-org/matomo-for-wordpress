@@ -69,6 +69,18 @@ abstract class StaticGraph extends BaseFactory
     {
         return array_keys(self::$availableStaticGraphTypes);
     }
+    public static function fixWhitespaceNonUnifont($value)
+    {
+        if (!is_string($value)) {
+            return $value;
+        }
+        return strtr($value, [
+            // thin space
+            " " => ' ',
+            // narrow non-break-space
+            " " => "\xC2\xA0",
+        ]);
+    }
     /**
      * Save rendering to disk
      *
@@ -202,13 +214,15 @@ abstract class StaticGraph extends BaseFactory
                 $this->pData->setSeriePicture($column, $ordinateLogo);
             }
         }
-        // Use a different formating method if not using unifont
+        // Fix whitespace if not using unifont
+        $abscissaSeries = $this->abscissaSeries;
         $formatMethodName = 'formatYAxis';
-        if (strpos($this->font, 'unifont') === false) {
+        if (false === strpos($this->font, \Piwik\Plugins\ImageGraph\API::UNICODE_FONT)) {
+            $abscissaSeries = array_map([$this, 'fixWhitespaceNonUnifont'], $abscissaSeries);
             $formatMethodName = 'formatYAxisNonUnifont';
         }
         $this->pData->setAxisDisplay(0, AXIS_FORMAT_CUSTOM, '\\Piwik\\Plugins\\ImageGraph\\' . $formatMethodName);
-        $this->pData->addPoints($this->abscissaSeries, self::ABSCISSA_SERIE_NAME);
+        $this->pData->addPoints($abscissaSeries, self::ABSCISSA_SERIE_NAME);
         $this->pData->setAbscissa(self::ABSCISSA_SERIE_NAME);
     }
     protected function createResizedImageCopyIfNeeded($image)
@@ -309,6 +323,5 @@ function formatYAxis($value)
  */
 function formatYAxisNonUnifont($value)
 {
-    // Replace any narrow non-breaking spaces with non-breaking spaces as some fonts may not support it
-    return str_replace(" ", "\xC2\xA0", NumberFormatter::getInstance()->format($value));
+    return \Piwik\Plugins\ImageGraph\StaticGraph::fixWhitespaceNonUnifont(NumberFormatter::getInstance()->format($value));
 }

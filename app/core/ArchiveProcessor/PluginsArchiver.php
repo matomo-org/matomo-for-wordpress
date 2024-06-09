@@ -219,7 +219,7 @@ class PluginsArchiver
         if ($this->params->shouldOnlyArchiveRequestedPlugin()) {
             return false;
         }
-        if (\Piwik\ArchiveProcessor\Rules::shouldProcessReportsAllPlugins(array($this->params->getSite()->getId()), $this->params->getSegment(), $this->params->getPeriod()->getLabel())) {
+        if (\Piwik\ArchiveProcessor\Rules::shouldProcessReportsAllPlugins([$this->params->getSite()->getId()], $this->params->getSegment(), $this->params->getPeriod()->getLabel())) {
             return true;
         }
         if ($this->params->getRequestedPlugin() && !\Piwik\Plugin\Manager::getInstance()->isPluginLoaded($this->params->getRequestedPlugin())) {

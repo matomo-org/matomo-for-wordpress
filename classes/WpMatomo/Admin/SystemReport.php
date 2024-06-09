@@ -24,6 +24,7 @@ use Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult;
 use Piwik\Plugins\Diagnostics\DiagnosticService;
 use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\UserCountry\LocationProvider;
+use Piwik\Plugins\WordPress\WordPress;
 use Piwik\SettingsPiwik;
 use Piwik\Tracker\Failures;
 use Piwik\Version;
@@ -387,21 +388,32 @@ class SystemReport {
 
 		if ( $this->shell_exec_available ) {
 			$phpcli_version = $this->get_phpcli_output( '-r "echo phpversion();"' );
-            // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
-			global $piwik_minimumPHPVersion;
+
+			$is_warning = false;
+			$comment    = '';
+
+			$advanced_settings_url = home_url( '/wp-admin/admin.php?page=matomo-settings&tab=advanced#matomo[disable_async_archiving]' );
+
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
-			if ( version_compare( $phpcli_version, $piwik_minimumPHPVersion ) <= 0 ) {
-				$is_error = true;
-				$comment  = sprintf( esc_html__( 'Your PHP cli version is not compatible with the %s. Please upgrade your PHP cli version, otherwise, you might have some archiving errors', 'matomo' ), sprintf( '<a href="%s" target="_blank">%s</a>', 'https://matomo.org/faq/on-premise/matomo-requirements/', esc_html__( 'Matomo requirements', 'matomo' ) ) );
-			} else {
-				$is_error = false;
-				$comment  = '';
+			if ( version_compare( $phpcli_version, PHP_VERSION ) < 0 ) {
+				if ( ! \WpMatomo::is_async_archiving_manually_disabled() ) {
+					$is_warning = true;
+				}
+
+				$comment = sprintf(
+					esc_html__( 'The detected PHP CLI version does not match the PHP web version. To avoid archiving errors, %1$senable archiving via HTTP requests%2$s, or %3$smanually set the path to your PHP CLI executable%4$s to the one for PHP version %5$s.', 'matomo' ),
+					'<a href="' . $advanced_settings_url . '">',
+					'</a>',
+					'<a href="https://matomo.org/faq/how-to-solve-the-error-message-your-php-cli-version-is-not-compatible-with-the-matomo-requirements/" target="_blank" rel="noreferrer noopener">',
+					'</a>',
+					PHP_VERSION
+				);
 			}
 			$rows[] = [
-				'name'     => esc_html__( 'PHP cli Version', 'matomo' ),
-				'value'    => $phpcli_version,
-				'comment'  => $comment,
-				'is_error' => $is_error,
+				'name'       => esc_html__( 'PHP CLI Version', 'matomo' ),
+				'value'      => $phpcli_version,
+				'comment'    => $comment,
+				'is_warning' => $is_warning,
 			];
 
 			$is_error = false;

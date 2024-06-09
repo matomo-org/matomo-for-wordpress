@@ -23,6 +23,10 @@ use Piwik\Plugins\Referrers\API as APIReferrers;
 use Piwik\View;
 class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
 {
+    /**
+     * @var array<int, array<string>>
+     */
+    private $cachedAdditionalSiteUrls = [];
     public function extendVisitorDetails(&$visitor)
     {
         $idSite = $this->getIdSite();
@@ -88,14 +92,14 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
         if (empty($template)) {
             return;
         }
-        $sitesModel = new \Piwik\Plugins\SitesManager\Model();
         if (isset($action['type']) && in_array($action['type'], ['outlink', 'download']) && isset($action['url'])) {
             $action['url'] = html_entity_decode($action['url'], ENT_QUOTES, "UTF-8");
         }
+        $idSite = $this->getIdSite();
         $view = new View($template);
         $view->sendHeadersWhenRendering = false;
-        $view->mainUrl = trim(Site::getMainUrlFor($this->getIdSite()));
-        $view->additionalUrls = $sitesModel->getAliasSiteUrlsFromId($this->getIdSite());
+        $view->mainUrl = trim(Site::getMainUrlFor($idSite));
+        $view->additionalUrls = $this->getAdditionalUrlsForSite($idSite);
         $view->action = $action;
         $view->previousAction = $previousAction;
         $view->visitInfo = $visitorDetails;
@@ -247,5 +251,18 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
             return $summary;
         }
         return $visit->getColumn('referrerName');
+    }
+    /**
+     * @return array<int, array<string>>
+     */
+    private function getAdditionalUrlsForSite(int $idSite) : array
+    {
+        if (isset($this->cachedAdditionalSiteUrls[$idSite])) {
+            return $this->cachedAdditionalSiteUrls[$idSite];
+        }
+        $sitesModel = new \Piwik\Plugins\SitesManager\Model();
+        $additionalSiteUrls = $sitesModel->getAliasSiteUrlsFromId($idSite);
+        $this->cachedAdditionalSiteUrls[$idSite] = $additionalSiteUrls;
+        return $additionalSiteUrls;
     }
 }

@@ -1,5 +1,9 @@
 {
     "General": {
         "TranslatorName": "Matomo Development Team"
+    },
+    "Intl": {
+        "OriginalLanguageName": "Development",
+        "EnglishLanguageName": "Development"
     }
 }

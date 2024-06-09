@@ -17,7 +17,7 @@ class TransitionsPage extends MatomoReportingPage {
     await browser.waitUntil(
       async () => !(await $('#transitions_inline_loading').isDisplayed()),
     );
-    await browser.pause(1000);
+    await browser.pause(2000);
 
     return result;
   }

@@ -23,6 +23,7 @@ use Piwik\Scheduler\Task;
 use Piwik\Url;
 use Piwik\Version;
 use Piwik\Widget\WidgetsList;
+use WpMatomo;
 use WpMatomo\Bootstrap;
 use WpMatomo\Settings;
 use WpOrg\Requests\Utility\CaseInsensitiveDictionary;
@@ -202,8 +203,7 @@ class WordPress extends Plugin
         if (is_multisite()
             || !empty($_SERVER['MATOMO_WP_ROOT_PATH'])
             || !matomo_has_compatible_content_dir()
-            || (defined( 'MATOMO_SUPPORT_ASYNC_ARCHIVING') && !MATOMO_SUPPORT_ASYNC_ARCHIVING)
-            || $this->isAsyncArchivingDisabledBySetting()
+            || WpMatomo::is_async_archiving_manually_disabled()
         ) {
             // console wouldn't really work in multi site mode... therefore we prefer to archive in the same request
             // WP_DEBUG also breaks things since it's logging things to stdout and then safe unserialise doesn't work
@@ -211,12 +211,6 @@ class WordPress extends Plugin
             // but not on the CLI
             $supportsAsync = false;
         }
-    }
-
-    private function isAsyncArchivingDisabledBySetting()
-    {
-        $settings = \WpMatomo::$settings;
-        return $settings->is_async_archiving_disabled_by_option();
     }
 
     public function onHeader(&$out)

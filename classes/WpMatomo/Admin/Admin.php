@@ -27,6 +27,11 @@ class Admin {
 		add_action( 'admin_enqueue_scripts', [ $this, 'load_scripts' ] );
 	}
 
+	public static function is_matomo_admin() {
+		return isset( $_GET['page'] )
+			&& substr( sanitize_text_field( wp_unslash( $_GET['page'] ) ), 0, 7 ) === 'matomo-';
+	}
+
 	public function load_scripts() {
 		wp_enqueue_style( 'matomo_admin_css', plugins_url( 'assets/css/admin-style.css', MATOMO_ANALYTICS_FILE ), false, '1.0.0' );
 		wp_enqueue_script( 'matomo_admin_js', plugins_url( 'assets/js/admin.js', MATOMO_ANALYTICS_FILE ), [ 'jquery' ], '1.0', true );

@@ -82,6 +82,18 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 			define( 'PIWIK_TEST_MODE', true );
 		}
 
+		$annotations = PHPUnit\Util\Test::parseTestMethodAnnotations( static::class, $this->getName() );
+		if ( ! empty( $annotations['method']['provideContainerConfig'][0] ) ) {
+			$container_config = $annotations['method']['provideContainerConfig'][0];
+
+			$method      = new ReflectionMethod( $this, $container_config );
+			$definitions = $method->invoke( $this );
+
+			Bootstrap::set_extra_di_definitions( $definitions );
+		} else {
+			Bootstrap::set_extra_di_definitions( [] );
+		}
+
 		$uninstall = new Uninstaller();
 		$uninstall->uninstall( true );
 
@@ -146,6 +158,8 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	}
 
 	public function tearDown(): void {
+		Bootstrap::set_extra_di_definitions( [] );
+
 		if ( ! empty( $GLOBALS['wpdb'] ) ) {
 			$GLOBALS['wpdb']->suppress_errors( true );
 		}

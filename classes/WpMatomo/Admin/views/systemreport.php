@@ -14,8 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<style type="text/css">
-	.matomo-systemreport a {
+<style>
+	.matomo-systemreport table a {
 		color: inherit;
 		text-decoration: underline;
 	}
@@ -129,7 +129,8 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 			echo '<h2>' . esc_html( $matomo_table['title'] ) . "</h2><table class='widefat'><thead></thead><tbody>";
 			foreach ( $matomo_table['rows'] as $matomo_row ) {
 				if ( ! empty( $matomo_row['section'] ) ) {
-					echo '</tbody><thead><tr><th colspan="3" class="section">' . esc_html( $matomo_row['section'] ) . '</th></tr></thead><tbody>';
+					echo '</tbody><thead id="' . esc_attr( preg_replace( '/[^a-zA-Z0-9_-]/', '', strtolower( $matomo_row['section'] ) ) )
+						. '"><tr><th colspan="3" class="section">' . esc_html( $matomo_row['section'] ) . '</th></tr></thead><tbody>';
 					continue;
 				}
 				$matomo_value = $matomo_row['value'];

@@ -31,6 +31,20 @@ class Bootstrap {
 
 	private static $are_incompatible_plugins_filtered = false;
 
+	private static $extra_di_definitions = [];
+
+	public static function set_extra_di_definitions( array $definitions ) {
+		if ( ! defined( 'PIWIK_TEST_MODE' ) ) {
+			throw new \Exception( 'set_extra_di_definitions is only for tests' );
+		}
+
+		self::$extra_di_definitions = $definitions;
+	}
+
+	public static function get_extra_di_definitions() {
+		return self::$extra_di_definitions;
+	}
+
 	/**
 	 * Tests only
 	 *
@@ -84,7 +98,7 @@ class Bootstrap {
 
 		include_once 'Db/WordPress.php';
 
-		$environment = new Environment( null );
+		$environment = new Environment( null, self::$extra_di_definitions );
 		$environment->init();
 
 		FrontController::unsetInstance();

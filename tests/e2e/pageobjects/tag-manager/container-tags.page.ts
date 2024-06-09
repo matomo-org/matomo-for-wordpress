@@ -26,7 +26,7 @@ class ContainerTagsPage extends TagManagerPage {
       $('td.lastUpdated').each((i, e) => $(e).html('REMOVED'));
     });
 
-    await browser.pause(1000);
+    await browser.pause(2000);
 
     return result;
   }

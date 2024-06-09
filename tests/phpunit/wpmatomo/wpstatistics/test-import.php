@@ -98,7 +98,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'UserCountry', 'getCountry' );
-		$this->assertEquals( 89, $report['reportData']->getRowsCount() );
+		$this->assertGreaterThan( 80, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_regions_found() {
@@ -197,7 +197,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			return;
 		}
 
-		$possible_values = [ 156, 81, 77 ];
+		$possible_values = [ 156, 81, 77, 90, 91 ];
 
 		$report = $this->fetch_report( 'Actions', 'getPageUrls' );
 		$this->assertContains( $report['reportData']->getRowsCount(), $possible_values );

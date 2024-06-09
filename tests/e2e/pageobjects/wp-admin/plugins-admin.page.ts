@@ -31,6 +31,16 @@ class PluginsAdminPage extends Page {
       window.jQuery('.subsubsub').hide();
     });
   }
+
+  async hidePluginVersion() {
+    await browser.execute(() => {
+      window.jQuery('.plugin-version-author-uri').each(function () {
+        window.jQuery(this).html(
+          window.jQuery(this).html().replace(/Version \d+\.\d+\.\d+/g, 'Version REMOVED')
+        );
+      });
+    });
+  }
 }
 
 export default new PluginsAdminPage();
