@@ -118,7 +118,7 @@ class PEAR
      * @var     string
      * @access  private
      */
-    var $_error_class = 'PEAR_Error';
+    var $_error_class = 'Matomo\\Dependencies\\PEAR_Error';
     /**
      * An array of expected errors.
      *
@@ -502,7 +502,7 @@ class PEAR
         } elseif ($object !== null && isset($object->_error_class)) {
             $ec = $object->_error_class;
         } else {
-            $ec = 'PEAR_Error';
+            $ec = 'Matomo\\Dependencies\\PEAR_Error';
         }
         if ($skipmsg) {
             $a = new $ec($code, $mode, $options, $userinfo);
@@ -790,7 +790,7 @@ class PEAR_Error
         $this->code = $code;
         $this->mode = $mode;
         $this->userinfo = $userinfo;
-        $skiptrace = PEAR::getStaticProperty('PEAR_Error', 'skiptrace');
+        $skiptrace = PEAR::getStaticProperty('Matomo\\Dependencies\\PEAR_Error', 'skiptrace');
         if (!$skiptrace) {
             $this->backtrace = \debug_backtrace();
             if (isset($this->backtrace[0]) && isset($this->backtrace[0]['object'])) {

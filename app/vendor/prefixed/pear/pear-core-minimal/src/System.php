@@ -77,7 +77,7 @@ class System
                 if ($b[0] == '"' || $b[0] == "'") {
                     continue;
                 }
-            
+
                 $escape = escapeshellarg($b);
                 $pos = $a[1] + $offset;
                 $argv = substr_replace($argv, $escape, $pos, strlen($b));
@@ -410,7 +410,7 @@ class System
             //$GLOBALS['_System_temp_files'][] = dirname($tmp);
         }
         if ($first_time) {
-            PEAR::registerShutdownFunc(array('System', '_removeTmpFiles'));
+            PEAR::registerShutdownFunc(array('Matomo\\Dependencies\\System', '_removeTmpFiles'));
             $first_time = \false;
         }
         return $tmp;
