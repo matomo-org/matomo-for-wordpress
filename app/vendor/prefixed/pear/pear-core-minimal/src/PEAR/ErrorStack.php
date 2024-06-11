@@ -4,7 +4,7 @@ namespace Matomo\Dependencies;
 
 /**
  * Error Stack Implementation
- *
+ * 
  * This is an incredibly simple implementation of a very complex error handling
  * facility.  It contains the ability
  * to track multiple errors from multiple packages simultaneously.  In addition,
@@ -12,10 +12,10 @@ namespace Matomo\Dependencies;
  * information such as the exact file, line number, class and function that
  * generated the error, and if necessary, it can raise a traditional PEAR_Error.
  * It has built-in support for PEAR::Log, to log errors as they occur
- *
+ * 
  * Since version 0.2alpha, it is also possible to selectively ignore errors,
  * through the use of an error callback, see {@link pushCallback()}
- *
+ * 
  * Since version 0.3alpha, it is possible to specify the exception class
  * returned from {@link push()}
  *
@@ -30,7 +30,7 @@ namespace Matomo\Dependencies;
  */
 /**
  * Singleton storage
- *
+ * 
  * Format:
  * <pre>
  * array(
@@ -45,7 +45,7 @@ namespace Matomo\Dependencies;
 $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'] = array();
 /**
  * Global error callback (default)
- *
+ * 
  * This is only used if set to non-false.  * is the default callback for
  * all packages, whereas specific packages may set a default callback
  * for all instances, regardless of whether they are a singleton or not.
@@ -58,7 +58,7 @@ $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'] = array();
 $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK'] = array('*' => \false);
 /**
  * Global Log object (default)
- *
+ * 
  * This is only used if set to non-false.  Use to set a default log object for
  * all stacks, regardless of instantiation order or location
  * @see PEAR_ErrorStack::setDefaultLogger()
@@ -68,7 +68,7 @@ $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK'] = array('*' => \false);
 $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'] = \false;
 /**
  * Global Overriding Callback
- *
+ * 
  * This callback will override any error callbacks that specific loggers have set.
  * Use with EXTREME caution
  * @see PEAR_ErrorStack::staticPushCallback()
@@ -223,7 +223,7 @@ class PEAR_ErrorStack
     }
     /**
      * Return a single error stack for this package.
-     *
+     * 
      * Note that all parameters are ignored if the stack for package $package
      * has already been instantiated
      * @param string   $package name of the package this error stack represents
@@ -235,7 +235,7 @@ class PEAR_ErrorStack
      *
      * @return PEAR_ErrorStack
      */
-    public static function &singleton($package, $msgCallback = \false, $contextCallback = \false, $throwPEAR_Error = \false, $stackClass = 'Matomo\\Dependencies\\PEAR_ErrorStack')
+    public static function &singleton($package, $msgCallback = \false, $contextCallback = \false, $throwPEAR_Error = \false, $stackClass = '\\Matomo\\Dependencies\\PEAR_ErrorStack')
     {
         if (isset($GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package])) {
             return $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package];
@@ -244,14 +244,14 @@ class PEAR_ErrorStack
             if (\function_exists('debug_backtrace')) {
                 $trace = \debug_backtrace();
             }
-            PEAR_ErrorStack::staticPush('Matomo\\Dependencies\\PEAR_ErrorStack', \Matomo\Dependencies\PEAR_ERRORSTACK_ERR_NONCLASS, 'exception', array('stackclass' => $stackClass), 'stack class "%stackclass%" is not a valid class name (should be like PEAR_ErrorStack)', \false, $trace);
+            PEAR_ErrorStack::staticPush('\\Matomo\\Dependencies\\PEAR_ErrorStack', \Matomo\Dependencies\PEAR_ERRORSTACK_ERR_NONCLASS, 'exception', array('stackclass' => $stackClass), 'stack class "%stackclass%" is not a valid class name (should be like PEAR_ErrorStack)', \false, $trace);
         }
         $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package] = new $stackClass($package, $msgCallback, $contextCallback, $throwPEAR_Error);
         return $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package];
     }
     /**
      * Internal error handler for PEAR_ErrorStack class
-     *
+     * 
      * Dies if the error is an exception (and would have died anyway)
      * @access private
      */
@@ -270,7 +270,7 @@ class PEAR_ErrorStack
     }
     /**
      * Set up a PEAR::Log object for all error stacks that don't have one
-     * @param Log $log
+     * @param Log $log 
      */
     public static function setDefaultLogger(&$log)
     {
@@ -282,7 +282,7 @@ class PEAR_ErrorStack
     }
     /**
      * Set up a PEAR::Log object for this error stack
-     * @param Log $log
+     * @param Log $log 
      */
     function setLogger(&$log)
     {
@@ -294,7 +294,7 @@ class PEAR_ErrorStack
     }
     /**
      * Set an error code => error message mapping callback
-     *
+     * 
      * This method sets the callback that can be used to generate error
      * messages for any instance
      * @param array|string Callback function/method
@@ -311,7 +311,7 @@ class PEAR_ErrorStack
     }
     /**
      * Get an error code => error message mapping callback
-     *
+     * 
      * This method returns the current callback that can be used to generate error
      * messages
      * @return array|string|false Callback function/method or false if none
@@ -322,7 +322,7 @@ class PEAR_ErrorStack
     }
     /**
      * Sets a default callback to be used by all error stacks
-     *
+     * 
      * This method sets the callback that can be used to generate error
      * messages for a singleton
      * @param array|string Callback function/method
@@ -338,7 +338,7 @@ class PEAR_ErrorStack
     }
     /**
      * Set a callback that generates context information (location of error) for an error stack
-     *
+     * 
      * This method sets the callback that can be used to generate context
      * information for an error.  Passing in NULL will disable context generation
      * and remove the expensive call to debug_backtrace()
@@ -362,9 +362,9 @@ class PEAR_ErrorStack
      * If set to a valid callback, this will be called every time an error
      * is pushed onto the stack.  The return value will be used to determine
      * whether to allow an error to be pushed or logged.
-     *
+     * 
      * The return value must be one of the ERRORSTACK_* constants.
-     *
+     * 
      * This functionality can be used to emulate PEAR's pushErrorHandling, and
      * the PEAR_ERROR_CALLBACK mode, without affecting the integrity of
      * the error stack or logging
@@ -416,12 +416,12 @@ class PEAR_ErrorStack
     }
     /**
      * Add an error to the stack
-     *
+     * 
      * If the message generator exists, it is called with 2 parameters.
      *  - the current Error Stack object
      *  - an array that is in the same format as an error.  Available indices
      *    are 'code', 'package', 'time', 'params', 'level', and 'context'
-     *
+     * 
      * Next, if the error should contain context information, this is
      * handled by the context grabbing method.
      * Finally, the error is pushed onto the proper error stack
@@ -439,7 +439,7 @@ class PEAR_ErrorStack
      * @return PEAR_Error|array if compatibility mode is on, a PEAR_Error is also
      * thrown.  If a PEAR_Error is returned, the userinfo
      * property is set to the following array:
-     *
+     * 
      * <code>
      * array(
      *    'code' => $code,
@@ -452,7 +452,7 @@ class PEAR_ErrorStack
      * //['repackage' => $err] repackaged error array/Exception class
      * );
      * </code>
-     *
+     * 
      * Normally, the previous array is returned.
      */
     function push($code, $level = 'error', $params = array(), $msg = \false, $repackage = \false, $backtrace = \false)
@@ -532,7 +532,7 @@ class PEAR_ErrorStack
     }
     /**
      * Static version of {@link push()}
-     *
+     * 
      * @param string $package   Package name this error belongs to
      * @param int    $code      Package-specific error code
      * @param string $level     Error level.  This is NOT spell-checked
@@ -588,7 +588,7 @@ class PEAR_ErrorStack
     }
     /**
      * Pop an error off of the error stack
-     *
+     * 
      * @return false|array
      * @since 0.4alpha it is no longer possible to specify a specific error
      * level to return - the last error pushed will be returned, instead
@@ -635,7 +635,7 @@ class PEAR_ErrorStack
     }
     /**
      * Retrieve all errors since last purge
-     *
+     * 
      * @param boolean set in order to empty the error stack
      * @param string level name, to return only errors of a particular severity
      * @return array
@@ -702,13 +702,13 @@ class PEAR_ErrorStack
      * @param array   $sortfunc Function used to sort a merged array - default
      *        sorts by time, and should be good for most cases
      *
-     * @return array
+     * @return array 
      */
-    public static function staticGetErrors($purge = \false, $level = \false, $merge = \false, $sortfunc = array('Matomo\\Dependencies\\PEAR_ErrorStack', '_sortErrors'))
+    public static function staticGetErrors($purge = \false, $level = \false, $merge = \false, $sortfunc = array('\\Matomo\\Dependencies\\PEAR_ErrorStack', '_sortErrors'))
     {
         $ret = array();
         if (!\is_callable($sortfunc)) {
-            $sortfunc = array('Matomo\\Dependencies\\PEAR_ErrorStack', '_sortErrors');
+            $sortfunc = array('\\Matomo\\Dependencies\\PEAR_ErrorStack', '_sortErrors');
         }
         foreach ($GLOBALS['_PEAR_ERRORSTACK_SINGLETON'] as $package => $obj) {
             $test = $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package]->getErrors($purge, $level);
@@ -796,23 +796,23 @@ class PEAR_ErrorStack
     }
     /**
      * Standard error message generation callback
-     *
+     * 
      * This method may also be called by a custom error message generator
      * to fill in template values from the params array, simply
      * set the third parameter to the error message template string to use
-     *
+     * 
      * The special variable %__msg% is reserved: use it only to specify
      * where a message passed in by the user should be placed in the template,
      * like so:
-     *
+     * 
      * Error message: %msg% - internal error
-     *
+     * 
      * If the message passed like so:
-     *
+     * 
      * <code>
      * $stack->push(ERROR_CODE, 'error', array(), 'server error 500');
      * </code>
-     *
+     * 
      * The returned error message will be "Error message: server error 500 -
      * internal error"
      * @param PEAR_ErrorStack
@@ -839,7 +839,7 @@ class PEAR_ErrorStack
                     if (\method_exists($val, '__toString')) {
                         $val = $val->__toString();
                     } else {
-                        PEAR_ErrorStack::staticPush('Matomo\\Dependencies\\PEAR_ErrorStack', \Matomo\Dependencies\PEAR_ERRORSTACK_ERR_OBJTOSTRING, 'warning', array('obj' => \get_class($val)), 'object %obj% passed into getErrorMessage, but has no __toString() method');
+                        PEAR_ErrorStack::staticPush('\\Matomo\\Dependencies\\PEAR_ErrorStack', \Matomo\Dependencies\PEAR_ERRORSTACK_ERR_OBJTOSTRING, 'warning', array('obj' => \get_class($val)), 'object %obj% passed into getErrorMessage, but has no __toString() method');
                         $val = 'Object';
                     }
                 }
@@ -861,12 +861,12 @@ class PEAR_ErrorStack
     }
     /**
      * Set the Error Message Template array
-     *
+     * 
      * The array format must be:
      * <pre>
      * array(error code => 'message template',...)
      * </pre>
-     *
+     * 
      * Error message parameters passed into {@link push()} will be used as input
      * for the error message.  If the template is 'message %foo% was %bar%', and the
      * parameters are array('foo' => 'one', 'bar' => 'six'), the error message returned will
@@ -879,7 +879,7 @@ class PEAR_ErrorStack
     }
     /**
      * emulate PEAR::raiseError()
-     *
+     * 
      * @return PEAR_Error
      */
     function raiseError()
@@ -889,5 +889,5 @@ class PEAR_ErrorStack
         return \call_user_func_array(array('PEAR', 'raiseError'), $args);
     }
 }
-$stack =& PEAR_ErrorStack::singleton('Matomo\\Dependencies\\PEAR_ErrorStack');
-$stack->pushCallback(array('Matomo\\Dependencies\\PEAR_ErrorStack', '_handleError'));
+$stack =& PEAR_ErrorStack::singleton('\\Matomo\\Dependencies\\PEAR_ErrorStack');
+$stack->pushCallback(array('\\Matomo\\Dependencies\\PEAR_ErrorStack', '_handleError'));
