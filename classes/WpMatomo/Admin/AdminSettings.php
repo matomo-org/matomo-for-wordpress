@@ -137,7 +137,7 @@ class AdminSettings {
 				$plugin_display_name = $all_wordpress_plugins[ $plugin_name ]['Name'];
 				$plugin_display_name = preg_replace( '/\s+\(Matomo Plugin\)\s*/', '', $plugin_display_name );
 
-				$tabs[ "plugin-${plugin_name}" ] = [
+				$tabs[ "plugin-{$plugin_name}" ] = [
 					'plugin_name'         => $plugin_name,
 					'plugin_display_name' => $plugin_display_name,
 				];
