@@ -777,6 +777,10 @@ enable_load_data_infile = 1
 ; - links to Uninstall themes will be disabled (but user can still enable/disable themes)
 enable_plugins_admin = 1
 
+; Defines when a plugin trial request expires and a new one can be requested
+; By settings this value to -1 plugin trial requests will be disabled
+plugin_trial_request_expiration_in_days = 28
+
 ; By setting this option to 0 the users management will be disabled
 enable_users_admin = 1
 
@@ -1271,6 +1275,33 @@ PluginsInstalled[] = Installation
 PluginsInstalled[] = Monolog
 PluginsInstalled[] = Intl
 PluginsInstalled[] = JsTrackerInstallCheck
+
+[PagePerformance]
+; The configuration below provides the possibility to enable capping of values used for generating 'sum/total' and 'average' metrics for page performance reports.
+; This allows to reduce the impact of single failed performance measurements.
+;
+; The recommended caps are at 100-fold an avg/high value. Thereby one wrong value in 10,000 values results in a 1% deviation:
+; (1x 100N + 9999x N) / 10000 ~= 101% N
+;
+; By default capping is disabled. To enable capping overwrite the configs below with a value higher than 0.
+
+; Cap for Network time: avg/high 100ms (recommended value: 10000)
+time_network_cap_duration_ms = 0
+
+; Cap for Server time: avg/high 500ms (recommended value: 50000)
+time_server_cap_duration_ms = 0
+
+; Cap for Transfer time: avg/high 250ms (recommended value: 25000)
+time_transfer_cap_duration_ms = 0
+
+; Cap for DOM processing time: avg/high 500ms (recommended value: 50000)
+time_dom_processing_cap_duration_ms = 0
+
+; Cap for DOM completion time: avg/high 1500ms (recommended value: 150000)
+time_dom_completion_cap_duration_ms = 0
+
+; Cap for On load time: avg/high 10ms (recommended value: 1000)
+time_on_load_cap_duration_ms = 0
 
 [APISettings]
 ; Any key/value pair can be added in this section, they will be available via the REST call

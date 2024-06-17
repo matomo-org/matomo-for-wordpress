@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\UsersManager\Sql;
 
@@ -56,13 +56,11 @@ class SiteAccessFilter
         if ($this->filterByRole) {
             if ($this->filterByRole == 'noaccess') {
                 $result[] = 'a.access IS NULL';
+            } elseif ($this->filterByRole == 'some') {
+                $result[] = 'a.access IS NOT NULL';
             } else {
-                if ($this->filterByRole == 'some') {
-                    $result[] = 'a.access IS NOT NULL';
-                } else {
-                    $result[] = 'a.access = ?';
-                    $bind[] = $this->filterByRole;
-                }
+                $result[] = 'a.access = ?';
+                $bind[] = $this->filterByRole;
             }
         }
         if (!empty($this->idSites)) {

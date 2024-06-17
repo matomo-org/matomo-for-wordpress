@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\UpdateCheck;
 
@@ -71,5 +70,13 @@ abstract class ReleaseChannel
     public function getOrder()
     {
         return 99;
+    }
+    /**
+     * If the channel should be possible to be enabled in the system settings.
+     * @return bool
+     */
+    public function isSelectableInSettings() : bool
+    {
+        return true;
     }
 }

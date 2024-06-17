@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Referrers;
 
@@ -172,7 +171,7 @@ class API extends \Piwik\Plugin\API
         $dataTable->queueFilter('Piwik\\Plugins\\Referrers\\DataTable\\Filter\\KeywordNotDefined');
         return $dataTable;
     }
-    const LABEL_KEYWORD_NOT_DEFINED = "";
+    public const LABEL_KEYWORD_NOT_DEFINED = "";
     /**
      * @ignore
      */
@@ -589,22 +588,20 @@ class API extends \Piwik\Plugin\API
             $result = new DataTable\Simple();
             $result->addRowFromSimpleArray($newRow);
             return $result;
-        } else {
-            if ($table instanceof DataTable\Map) {
-                $result = new DataTable\Map();
-                $result->setKeyName($table->getKeyName());
-                foreach ($table->getDataTables() as $label => $childTable) {
-                    if ($childTable->getRowsCount() > 0) {
-                        $referrerTypeTable = $this->createReferrerTypeTable($childTable);
-                        $result->addTable($referrerTypeTable, $label);
-                    } else {
-                        $result->addTable(new DataTable(), $label);
-                    }
+        } elseif ($table instanceof DataTable\Map) {
+            $result = new DataTable\Map();
+            $result->setKeyName($table->getKeyName());
+            foreach ($table->getDataTables() as $label => $childTable) {
+                if ($childTable->getRowsCount() > 0) {
+                    $referrerTypeTable = $this->createReferrerTypeTable($childTable);
+                    $result->addTable($referrerTypeTable, $label);
+                } else {
+                    $result->addTable(new DataTable(), $label);
                 }
-            } else {
-                throw new \Exception("Unexpected DataTable type: " . get_class($table));
-                // sanity check
             }
+        } else {
+            throw new \Exception("Unexpected DataTable type: " . get_class($table));
+            // sanity check
         }
         return $result;
     }
@@ -626,16 +623,14 @@ class API extends \Piwik\Plugin\API
             foreach ($numericArchives->getFirstRow() as $name => $value) {
                 $row->setColumn($name, $value);
             }
-        } else {
-            if ($table instanceof DataTable\Map) {
-                foreach ($table->getDataTables() as $label => $childTable) {
-                    $numericArchiveChildTable = $numericArchives->getTable($label);
-                    $this->mergeNumericArchives($childTable, $numericArchiveChildTable);
-                }
-            } else {
-                throw new \Exception("Unexpected DataTable type: " . get_class($table));
-                // sanity check
+        } elseif ($table instanceof DataTable\Map) {
+            foreach ($table->getDataTables() as $label => $childTable) {
+                $numericArchiveChildTable = $numericArchives->getTable($label);
+                $this->mergeNumericArchives($childTable, $numericArchiveChildTable);
             }
+        } else {
+            throw new \Exception("Unexpected DataTable type: " . get_class($table));
+            // sanity check
         }
     }
 }

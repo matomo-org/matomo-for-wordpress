@@ -122,6 +122,8 @@ final class EnglishInflector implements InflectorInterface
         // Third entry: Whether the suffix may succeed a vowel
         // Fourth entry: Whether the suffix may succeed a consonant
         // Fifth entry: plural suffix, normal
+        // axes (axis)
+        ['sixa', 4, false, false, 'axes'],
         // criterion (criteria)
         ['airetirc', 8, false, false, 'criterion'],
         // nebulae (nebula)
@@ -204,6 +206,10 @@ final class EnglishInflector implements InflectorInterface
         ['sub', 3, true, true, 'buses'],
         // circuses (circus)
         ['suc', 3, true, true, 'cuses'],
+        // hippocampi (hippocampus)
+        ['supmacoppih', 11, false, false, 'hippocampi'],
+        // campuses (campus)
+        ['sup', 3, true, true, 'puses'],
         // status (status)
         ['sutats', 6, true, true, ['status', 'statuses']],
         // conspectuses (conspectus), prospectuses (prospectus)
@@ -270,6 +276,8 @@ final class EnglishInflector implements InflectorInterface
         'seiceps',
         // traffic
         'ciffart',
+        // aircraft
+        'tfarcria',
     ];
     /**
      * {@inheritdoc}

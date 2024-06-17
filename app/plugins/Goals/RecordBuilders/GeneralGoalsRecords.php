@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Goals\RecordBuilders;
 
@@ -21,9 +20,9 @@ use Piwik\Plugins\Goals\Goals;
 use Piwik\Tracker\GoalManager;
 class GeneralGoalsRecords extends \Piwik\Plugins\Goals\RecordBuilders\Base
 {
-    const VISITS_COUNT_FIELD = 'visitor_count_visits';
-    const LOG_CONVERSION_TABLE = 'log_conversion';
-    const SECONDS_SINCE_FIRST_VISIT_FIELD = 'visitor_seconds_since_first';
+    public const VISITS_COUNT_FIELD = 'visitor_count_visits';
+    public const LOG_CONVERSION_TABLE = 'log_conversion';
+    public const SECONDS_SINCE_FIRST_VISIT_FIELD = 'visitor_seconds_since_first';
     protected function aggregate(ArchiveProcessor $archiveProcessor) : array
     {
         $idSite = $this->getSiteId($archiveProcessor);

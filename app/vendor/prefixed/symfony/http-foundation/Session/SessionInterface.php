@@ -59,7 +59,7 @@ interface SessionInterface
      *
      * @return bool
      */
-    public function invalidate(int $lifetime = null);
+    public function invalidate(?int $lifetime = null);
     /**
      * Migrates the current session to a new session id while maintaining all
      * session attributes.
@@ -72,7 +72,7 @@ interface SessionInterface
      *
      * @return bool
      */
-    public function migrate(bool $destroy = false, int $lifetime = null);
+    public function migrate(bool $destroy = false, ?int $lifetime = null);
     /**
      * Force the session to be saved and closed.
      *

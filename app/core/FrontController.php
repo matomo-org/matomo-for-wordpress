@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik;
 
@@ -64,9 +63,9 @@ use Piwik\Log\LoggerInterface;
  */
 class FrontController extends \Piwik\Singleton
 {
-    const DEFAULT_MODULE = 'CoreHome';
-    const DEFAULT_LOGIN = 'anonymous';
-    const DEFAULT_TOKEN_AUTH = 'anonymous';
+    public const DEFAULT_MODULE = 'CoreHome';
+    public const DEFAULT_LOGIN = 'anonymous';
+    public const DEFAULT_TOKEN_AUTH = 'anonymous';
     // public for tests
     public static $requestId = null;
     /**
@@ -342,7 +341,6 @@ class FrontController extends \Piwik\Singleton
             $authAdapter = $this->makeAuthenticator();
             $success = \Piwik\Access::getInstance()->reloadAccess($authAdapter);
             if ($success && \Piwik\Piwik::isUserIsAnonymous() && $authAdapter->getLogin() === 'anonymous' && \Piwik\Piwik::isUserHasSomeViewAccess() && \Piwik\Session::isSessionStarted() && \Piwik\Session::isWritable()) {
-                // only if session was started and writable, don't do it eg for API
                 // usually the session would be started when someone logs in using login controller. But in this
                 // case we need to init session here for anoynymous users
                 $init = StaticContainer::get(SessionInitializer::class);

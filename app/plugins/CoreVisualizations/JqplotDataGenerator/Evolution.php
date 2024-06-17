@@ -3,12 +3,12 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CoreVisualizations\JqplotDataGenerator;
 
+use Piwik\Archive\ArchiveState;
 use Piwik\Archive\DataTableFactory;
 use Piwik\Common;
 use Piwik\DataTable;
@@ -18,6 +18,7 @@ use Piwik\Period;
 use Piwik\Period\Factory;
 use Piwik\Plugins\API\Filter\DataComparisonFilter;
 use Piwik\Plugins\CoreVisualizations\JqplotDataGenerator;
+use Piwik\Site;
 use Piwik\Url;
 /**
  * Generates JQPlot JSON data/config for evolution graphs.
@@ -56,7 +57,7 @@ class Evolution extends JqplotDataGenerator
         // if rows to display are not specified, default to all rows (TODO: perhaps this should be done elsewhere?)
         $rowsToDisplay = ($this->properties['rows_to_display'] ?: array_unique($dataTable->getColumn('label'))) ?: [false];
         $columnsToDisplay = array_values($this->properties['columns_to_display']);
-        list($seriesMetadata, $seriesUnits, $seriesLabels, $seriesToXAxis) = $this->getSeriesMetadata($rowsToDisplay, $columnsToDisplay, $units, $dataTables);
+        [$seriesMetadata, $seriesUnits, $seriesLabels, $seriesToXAxis] = $this->getSeriesMetadata($rowsToDisplay, $columnsToDisplay, $units, $dataTables);
         // collect series data to show. each row-to-display/column-to-display permutation creates a series.
         $allSeriesData = [];
         foreach ($rowsToDisplay as $rowIdentifier) {
@@ -106,6 +107,7 @@ class Evolution extends JqplotDataGenerator
             }
             $visualization->setAxisXOnClick($axisXOnClick);
         }
+        $this->setDataStates($visualization, $dataTables);
     }
     private function getSeriesData($rowLabel, $columnName, DataTable\Map $dataTable)
     {
@@ -249,7 +251,7 @@ class Evolution extends JqplotDataGenerator
                         $metricIndex = $rowIndex * count($columnsToDisplay) + $columnIndex;
                         $seriesMetadata[$wholeSeriesLabel] = ['metricIndex' => $metricIndex, 'seriesIndex' => $seriesIndex];
                         $seriesUnits[$wholeSeriesLabel] = $units[$columnName];
-                        list($periodIndex, $segmentIndex) = DataComparisonFilter::getIndividualComparisonRowIndices($table, $seriesIndex);
+                        [$periodIndex, $segmentIndex] = DataComparisonFilter::getIndividualComparisonRowIndices($table, $seriesIndex);
                         $seriesToXAxis[] = $periodIndex;
                     }
                 } else {
@@ -259,5 +261,39 @@ class Evolution extends JqplotDataGenerator
             }
         }
         return [$seriesMetadata, $seriesUnits, $seriesLabels, $seriesToXAxis];
+    }
+    /**
+     * @param array<DataTable> $dataTables
+     */
+    private function setDataStates(\Piwik\Plugins\CoreVisualizations\JqplotDataGenerator\Chart $visualization, array $dataTables) : void
+    {
+        if (0 === count($dataTables)) {
+            return;
+        }
+        $dataTableDates = array_keys($dataTables);
+        $mostRecentDate = end($dataTableDates);
+        /** @var Site $site */
+        $site = $dataTables[$mostRecentDate]->getMetadata(DataTableFactory::TABLE_METADATA_SITE_INDEX);
+        $dataStates = [];
+        $siteToday = Date::factoryInTimezone('today', $site->getTimezone())->getTimestamp();
+        $previousState = ArchiveState::COMPLETE;
+        foreach ($dataTableDates as $dataTableDate) {
+            /** @var Period $period */
+            $period = $dataTables[$dataTableDate]->getMetadata(DataTableFactory::TABLE_METADATA_PERIOD_INDEX);
+            $state = $dataTables[$dataTableDate]->getMetadata(DataTable::ARCHIVE_STATE_METADATA_NAME);
+            if (false === $state) {
+                // Missing archive state information should only occur if no
+                // usable archive was found in the database. Treat a missing archive
+                // (for example if there are legitimately zero visits to a site)
+                // as complete unless it follows an incomplete archive.
+                $state = ArchiveState::INCOMPLETE === $previousState ? ArchiveState::INCOMPLETE : ArchiveState::COMPLETE;
+            }
+            if ($siteToday <= $period->getDateEnd()->getTimestamp()) {
+                $state = ArchiveState::INCOMPLETE;
+            }
+            $dataStates[$dataTableDate] = $state;
+            $previousState = $state;
+        }
+        $visualization->setDataStates(array_values($dataStates));
     }
 }

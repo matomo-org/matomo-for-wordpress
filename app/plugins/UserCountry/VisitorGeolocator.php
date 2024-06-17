@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\UserCountry;
 
@@ -37,7 +36,7 @@ require_once PIWIK_INCLUDE_PATH . "/plugins/UserCountry/LocationProvider.php";
  */
 class VisitorGeolocator
 {
-    const LAT_LONG_COMPARE_EPSILON = 0.0001;
+    public const LAT_LONG_COMPARE_EPSILON = 0.0001;
     /**
      * @var string[]
      */

@@ -26,7 +26,7 @@ class MethodCallExpression extends AbstractExpression
             $compiler->raw('method_exists($macros[')->repr($this->getNode('node')->getAttribute('name'))->raw('], ')->repr($this->getAttribute('method'))->raw(')');
             return;
         }
-        $compiler->raw('\Matomo\Dependencies\twig_call_macro($macros[')->repr($this->getNode('node')->getAttribute('name'))->raw('], ')->repr($this->getAttribute('method'))->raw(', [');
+        $compiler->raw('CoreExtension::callMacro($macros[')->repr($this->getNode('node')->getAttribute('name'))->raw('], ')->repr($this->getAttribute('method'))->raw(', [');
         $first = true;
         foreach ($this->getNode('arguments')->getKeyValuePairs() as $pair) {
             if (!$first) {

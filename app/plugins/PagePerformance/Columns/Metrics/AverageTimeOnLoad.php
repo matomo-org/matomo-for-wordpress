@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\PagePerformance\Columns\Metrics;
 
@@ -19,7 +19,7 @@ use Piwik\Piwik;
  */
 class AverageTimeOnLoad extends \Piwik\Plugins\PagePerformance\Columns\Metrics\AveragePerformanceMetric
 {
-    const ID = 'time_on_load';
+    public const ID = 'time_on_load';
     public function getTranslatedName()
     {
         return Piwik::translate('PagePerformance_ColumnAverageTimeOnLoad');

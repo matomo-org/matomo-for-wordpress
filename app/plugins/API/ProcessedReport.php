@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\API;
 
@@ -543,14 +542,12 @@ class ProcessedReport
                         $prettyValue = $columnValue;
                     }
                     $enhancedRow->addColumn($columnName, $prettyValue);
-                } else {
-                    if ($returnRawMetrics) {
-                        // For example the Maps Widget requires the raw metrics to do advanced datavis
-                        if (!isset($columnValue)) {
-                            $columnValue = 0;
-                        }
-                        $enhancedRow->addColumn($columnName, $columnValue);
+                } elseif ($returnRawMetrics) {
+                    // For example the Maps Widget requires the raw metrics to do advanced datavis
+                    if (!isset($columnValue)) {
+                        $columnValue = 0;
                     }
+                    $enhancedRow->addColumn($columnName, $columnValue);
                 }
             }
             /** @var DataTable $comparisons */
@@ -612,18 +609,12 @@ class ProcessedReport
             }
             if (!array_key_exists($metric, $totals)) {
                 $totals[$metric] = $value;
-            } else {
-                if (0 === strpos($metric, 'min_')) {
-                    $totals[$metric] = min($totals[$metric], $value);
-                } else {
-                    if (0 === strpos($metric, 'max_')) {
-                        $totals[$metric] = max($totals[$metric], $value);
-                    } else {
-                        if ($value) {
-                            $totals[$metric] += $value;
-                        }
-                    }
-                }
+            } elseif (0 === strpos($metric, 'min_')) {
+                $totals[$metric] = min($totals[$metric], $value);
+            } elseif (0 === strpos($metric, 'max_')) {
+                $totals[$metric] = max($totals[$metric], $value);
+            } elseif ($value) {
+                $totals[$metric] += $value;
             }
         }
         return $totals;

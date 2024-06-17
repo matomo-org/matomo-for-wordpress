@@ -80,7 +80,7 @@ class File extends \SplFileInfo
      *
      * @throws FileException if the target file could not be created
      */
-    public function move(string $directory, string $name = null)
+    public function move(string $directory, ?string $name = null)
     {
         $target = $this->getTargetFile($directory, $name);
         set_error_handler(function ($type, $msg) use(&$error) {
@@ -108,7 +108,7 @@ class File extends \SplFileInfo
     /**
      * @return self
      */
-    protected function getTargetFile(string $directory, string $name = null)
+    protected function getTargetFile(string $directory, ?string $name = null)
     {
         if (!is_dir($directory)) {
             if (false === @mkdir($directory, 0777, true) && !is_dir($directory)) {

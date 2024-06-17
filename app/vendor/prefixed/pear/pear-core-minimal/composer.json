@@ -10,9 +10,9 @@
         }
     ],
     "autoload": {
-        "psr-4": {
-            "Matomo\\Dependencies\\\\": "src\/\/"
-        }
+        "classmap": [
+            "src\/"
+        ]
     },
     "include-path": [
         "src\/"

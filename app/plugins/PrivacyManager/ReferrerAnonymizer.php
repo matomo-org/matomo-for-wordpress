@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\PrivacyManager;
 
@@ -13,10 +12,10 @@ use Piwik\Common;
 use Piwik\Piwik;
 class ReferrerAnonymizer
 {
-    const EXCLUDE_QUERY = 'exclude_query';
-    const EXCLUDE_PATH = 'exclude_path';
-    const EXCLUDE_ALL = 'exclude_all';
-    const EXCLUDE_NONE = '';
+    public const EXCLUDE_QUERY = 'exclude_query';
+    public const EXCLUDE_PATH = 'exclude_path';
+    public const EXCLUDE_ALL = 'exclude_all';
+    public const EXCLUDE_NONE = '';
     public function getAvailableAnonymizationOptions()
     {
         return array(self::EXCLUDE_NONE => Piwik::translate('PrivacyManager_AnonymizeReferrerExcludeNone'), self::EXCLUDE_QUERY => Piwik::translate('PrivacyManager_AnonymizeReferrerExcludeQuery'), self::EXCLUDE_PATH => Piwik::translate('PrivacyManager_AnonymizeReferrerExcludePath'), self::EXCLUDE_ALL => Piwik::translate('PrivacyManager_AnonymizeReferrerExcludeAll'));

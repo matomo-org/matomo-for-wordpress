@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Login;
 
@@ -16,11 +15,11 @@ use Piwik\QuickForm2;
  */
 class FormResetPassword extends QuickForm2
 {
-    function __construct($id = 'resetpasswordform', $method = 'post', $attributes = null, $trackSubmit = false)
+    public function __construct($id = 'resetpasswordform', $method = 'post', $attributes = null, $trackSubmit = false)
     {
         parent::__construct($id, $method, $attributes, $trackSubmit);
     }
-    function init()
+    public function init()
     {
         $this->addElement('text', 'form_login')->addRule('required', Piwik::translate('General_Required', Piwik::translate('Login_LoginOrEmail')));
         $password = $this->addElement('password', 'form_password');

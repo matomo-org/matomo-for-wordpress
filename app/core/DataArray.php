@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik;
 
@@ -205,7 +204,7 @@ class DataArray
     {
         return array(\Piwik\Metrics::INDEX_NB_UNIQ_VISITORS => 0, \Piwik\Metrics::INDEX_NB_VISITS => 0, \Piwik\Metrics::INDEX_EVENT_NB_HITS => 0, \Piwik\Metrics::INDEX_EVENT_NB_HITS_WITH_VALUE => 0, \Piwik\Metrics::INDEX_EVENT_SUM_EVENT_VALUE => 0, \Piwik\Metrics::INDEX_EVENT_MIN_EVENT_VALUE => false, \Piwik\Metrics::INDEX_EVENT_MAX_EVENT_VALUE => 0);
     }
-    const EVENT_VALUE_PRECISION = 2;
+    public const EVENT_VALUE_PRECISION = 2;
     /**
      * @param array $newRowToAdd
      * @param array $oldRowToUpdate

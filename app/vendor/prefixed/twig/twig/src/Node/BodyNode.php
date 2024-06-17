@@ -10,11 +10,13 @@
  */
 namespace Matomo\Dependencies\Twig\Node;
 
+use Matomo\Dependencies\Twig\Attribute\YieldReady;
 /**
  * Represents a body node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class BodyNode extends Node
 {
 }

@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\JsTrackerInstallCheck;
 
@@ -15,7 +15,7 @@ use Piwik\Site;
 use Piwik\Tracker\Request;
 class JsTrackerInstallCheck extends \Piwik\Plugin
 {
-    const QUERY_PARAM_NAME = 'tracker_install_check';
+    public const QUERY_PARAM_NAME = 'tracker_install_check';
     public function registerEvents()
     {
         return ['Tracker.isExcludedVisit' => 'isExcludedVisit', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles'];

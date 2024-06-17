@@ -34,13 +34,13 @@ class OperatingSystem extends \DeviceDetector\Parser\AbstractParser
      *
      * @var array
      */
-    protected static $operatingSystems = ['AIX' => 'AIX', 'AND' => 'Android', 'ADR' => 'Android TV', 'AMZ' => 'Amazon Linux', 'AMG' => 'AmigaOS', 'ATV' => 'tvOS', 'ARL' => 'Arch Linux', 'BTR' => 'BackTrack', 'SBA' => 'Bada', 'BEO' => 'BeOS', 'BLB' => 'BlackBerry OS', 'QNX' => 'BlackBerry Tablet OS', 'BOS' => 'Bliss OS', 'BMP' => 'Brew', 'CAI' => 'Caixa Mágica', 'CES' => 'CentOS', 'CST' => 'CentOS Stream', 'CLR' => 'ClearOS Mobile', 'COS' => 'Chrome OS', 'CRS' => 'Chromium OS', 'CHN' => 'China OS', 'CYN' => 'CyanogenMod', 'DEB' => 'Debian', 'DEE' => 'Deepin', 'DFB' => 'DragonFly', 'DVK' => 'DVKBuntu', 'FED' => 'Fedora', 'FEN' => 'Fenix', 'FOS' => 'Firefox OS', 'FIR' => 'Fire OS', 'FOR' => 'Foresight Linux', 'FRE' => 'Freebox', 'BSD' => 'FreeBSD', 'FYD' => 'FydeOS', 'FUC' => 'Fuchsia', 'GNT' => 'Gentoo', 'GRI' => 'GridOS', 'GTV' => 'Google TV', 'HPX' => 'HP-UX', 'HAI' => 'Haiku OS', 'IPA' => 'iPadOS', 'HAR' => 'HarmonyOS', 'HAS' => 'HasCodingOS', 'IRI' => 'IRIX', 'INF' => 'Inferno', 'JME' => 'Java ME', 'KOS' => 'KaiOS', 'KAL' => 'Kali', 'KAN' => 'Kanotix', 'KNO' => 'Knoppix', 'KTV' => 'KreaTV', 'KBT' => 'Kubuntu', 'LIN' => 'GNU/Linux', 'LND' => 'LindowsOS', 'LNS' => 'Linspire', 'LEN' => 'Lineage OS', 'LBT' => 'Lubuntu', 'LOS' => 'Lumin OS', 'LUN' => 'LuneOS', 'VLN' => 'VectorLinux', 'MAC' => 'Mac', 'MAE' => 'Maemo', 'MAG' => 'Mageia', 'MDR' => 'Mandriva', 'SMG' => 'MeeGo', 'MCD' => 'MocorDroid', 'MON' => 'moonOS', 'MIN' => 'Mint', 'MLD' => 'MildWild', 'MOR' => 'MorphOS', 'NBS' => 'NetBSD', 'MTK' => 'MTK / Nucleus', 'MRE' => 'MRE', 'WII' => 'Nintendo', 'NDS' => 'Nintendo Mobile', 'NOV' => 'Nova', 'OS2' => 'OS/2', 'T64' => 'OSF1', 'OBS' => 'OpenBSD', 'OWR' => 'OpenWrt', 'OTV' => 'Opera TV', 'ORA' => 'Oracle Linux', 'ORD' => 'Ordissimo', 'PAR' => 'Pardus', 'PCL' => 'PCLinuxOS', 'PIC' => 'PICO OS', 'PLA' => 'Plasma Mobile', 'PSP' => 'PlayStation Portable', 'PS3' => 'PlayStation', 'PUR' => 'PureOS', 'RHT' => 'Red Hat', 'RED' => 'RedOS', 'REV' => 'Revenge OS', 'ROS' => 'RISC OS', 'ROK' => 'Roku OS', 'RSO' => 'Rosa', 'ROU' => 'RouterOS', 'REM' => 'Remix OS', 'RRS' => 'Resurrection Remix OS', 'REX' => 'REX', 'RZD' => 'RazoDroiD', 'SAB' => 'Sabayon', 'SSE' => 'SUSE', 'SAF' => 'Sailfish OS', 'SEE' => 'SeewoOS', 'SIR' => 'Sirin OS', 'SLW' => 'Slackware', 'SOS' => 'Solaris', 'SYL' => 'Syllable', 'SYM' => 'Symbian', 'SYS' => 'Symbian OS', 'S40' => 'Symbian OS Series 40', 'S60' => 'Symbian OS Series 60', 'SY3' => 'Symbian^3', 'TEN' => 'TencentOS', 'TDX' => 'ThreadX', 'TIZ' => 'Tizen', 'TIV' => 'TiVo OS', 'TOS' => 'TmaxOS', 'UBT' => 'Ubuntu', 'VID' => 'VIDAA', 'WAS' => 'watchOS', 'WER' => 'Wear OS', 'WTV' => 'WebTV', 'WHS' => 'Whale OS', 'WIN' => 'Windows', 'WCE' => 'Windows CE', 'WIO' => 'Windows IoT', 'WMO' => 'Windows Mobile', 'WPH' => 'Windows Phone', 'WRT' => 'Windows RT', 'XBX' => 'Xbox', 'XBT' => 'Xubuntu', 'YNS' => 'YunOS', 'ZEN' => 'Zenwalk', 'ZOR' => 'ZorinOS', 'IOS' => 'iOS', 'POS' => 'palmOS', 'WOS' => 'webOS'];
+    protected static $operatingSystems = ['AIX' => 'AIX', 'AND' => 'Android', 'ADR' => 'Android TV', 'ALP' => 'Alpine Linux', 'AMZ' => 'Amazon Linux', 'AMG' => 'AmigaOS', 'ARM' => 'Armadillo OS', 'ATV' => 'tvOS', 'ARL' => 'Arch Linux', 'AOS' => 'AOSC OS', 'ASP' => 'ASPLinux', 'BTR' => 'BackTrack', 'SBA' => 'Bada', 'BEO' => 'BeOS', 'BLB' => 'BlackBerry OS', 'QNX' => 'BlackBerry Tablet OS', 'BOS' => 'Bliss OS', 'BMP' => 'Brew', 'BSN' => 'BrightSignOS', 'CAI' => 'Caixa Mágica', 'CES' => 'CentOS', 'CST' => 'CentOS Stream', 'CLO' => 'Clear Linux OS', 'CLR' => 'ClearOS Mobile', 'COS' => 'Chrome OS', 'CRS' => 'Chromium OS', 'CHN' => 'China OS', 'CYN' => 'CyanogenMod', 'DEB' => 'Debian', 'DEE' => 'Deepin', 'DFB' => 'DragonFly', 'DVK' => 'DVKBuntu', 'ELE' => 'ElectroBSD', 'EUL' => 'EulerOS', 'FED' => 'Fedora', 'FEN' => 'Fenix', 'FOS' => 'Firefox OS', 'FIR' => 'Fire OS', 'FOR' => 'Foresight Linux', 'FRE' => 'Freebox', 'BSD' => 'FreeBSD', 'FRI' => 'FRITZ!OS', 'FYD' => 'FydeOS', 'FUC' => 'Fuchsia', 'GNT' => 'Gentoo', 'GRI' => 'GridOS', 'GTV' => 'Google TV', 'HPX' => 'HP-UX', 'HAI' => 'Haiku OS', 'IPA' => 'iPadOS', 'HAR' => 'HarmonyOS', 'HAS' => 'HasCodingOS', 'HEL' => 'HELIX OS', 'IRI' => 'IRIX', 'INF' => 'Inferno', 'JME' => 'Java ME', 'KOS' => 'KaiOS', 'KAL' => 'Kali', 'KAN' => 'Kanotix', 'KNO' => 'Knoppix', 'KTV' => 'KreaTV', 'KBT' => 'Kubuntu', 'LIN' => 'GNU/Linux', 'LND' => 'LindowsOS', 'LNS' => 'Linspire', 'LEN' => 'Lineage OS', 'LIR' => 'Liri OS', 'LOO' => 'Loongnix', 'LBT' => 'Lubuntu', 'LOS' => 'Lumin OS', 'LUN' => 'LuneOS', 'VLN' => 'VectorLinux', 'MAC' => 'Mac', 'MAE' => 'Maemo', 'MAG' => 'Mageia', 'MDR' => 'Mandriva', 'SMG' => 'MeeGo', 'MCD' => 'MocorDroid', 'MON' => 'moonOS', 'MIN' => 'Mint', 'MLD' => 'MildWild', 'MOR' => 'MorphOS', 'NBS' => 'NetBSD', 'MTK' => 'MTK / Nucleus', 'MRE' => 'MRE', 'WII' => 'Nintendo', 'NDS' => 'Nintendo Mobile', 'NOV' => 'Nova', 'OS2' => 'OS/2', 'T64' => 'OSF1', 'OBS' => 'OpenBSD', 'OVZ' => 'OpenVZ', 'OWR' => 'OpenWrt', 'OTV' => 'Opera TV', 'ORA' => 'Oracle Linux', 'ORD' => 'Ordissimo', 'PAR' => 'Pardus', 'PCL' => 'PCLinuxOS', 'PIC' => 'PICO OS', 'PLA' => 'Plasma Mobile', 'PSP' => 'PlayStation Portable', 'PS3' => 'PlayStation', 'PVE' => 'Proxmox VE', 'PUR' => 'PureOS', 'PIO' => 'Raspberry Pi OS', 'RAS' => 'Raspbian', 'RHT' => 'Red Hat', 'RST' => 'Red Star', 'RED' => 'RedOS', 'REV' => 'Revenge OS', 'ROS' => 'RISC OS', 'ROC' => 'Rocky Linux', 'ROK' => 'Roku OS', 'RSO' => 'Rosa', 'ROU' => 'RouterOS', 'REM' => 'Remix OS', 'RRS' => 'Resurrection Remix OS', 'REX' => 'REX', 'RZD' => 'RazoDroiD', 'SAB' => 'Sabayon', 'SSE' => 'SUSE', 'SAF' => 'Sailfish OS', 'SCI' => 'Scientific Linux', 'SEE' => 'SeewoOS', 'SER' => 'SerenityOS', 'SIR' => 'Sirin OS', 'SLW' => 'Slackware', 'SOS' => 'Solaris', 'SYL' => 'Syllable', 'SYM' => 'Symbian', 'SYS' => 'Symbian OS', 'S40' => 'Symbian OS Series 40', 'S60' => 'Symbian OS Series 60', 'SY3' => 'Symbian^3', 'TEN' => 'TencentOS', 'TDX' => 'ThreadX', 'TIZ' => 'Tizen', 'TIV' => 'TiVo OS', 'TOS' => 'TmaxOS', 'UBT' => 'Ubuntu', 'UOS' => 'UOS', 'VID' => 'VIDAA', 'WAS' => 'watchOS', 'WER' => 'Wear OS', 'WTV' => 'WebTV', 'WHS' => 'Whale OS', 'WIN' => 'Windows', 'WCE' => 'Windows CE', 'WIO' => 'Windows IoT', 'WMO' => 'Windows Mobile', 'WPH' => 'Windows Phone', 'WRT' => 'Windows RT', 'XBX' => 'Xbox', 'XBT' => 'Xubuntu', 'YNS' => 'YunOS', 'ZEN' => 'Zenwalk', 'ZOR' => 'ZorinOS', 'IOS' => 'iOS', 'POS' => 'palmOS', 'WEB' => 'Webian', 'WOS' => 'webOS'];
     /**
      * Operating system families mapped to the short codes of the associated operating systems
      *
      * @var array
      */
-    protected static $osFamilies = ['Android' => ['AND', 'CYN', 'FIR', 'REM', 'RZD', 'MLD', 'MCD', 'YNS', 'GRI', 'HAR', 'ADR', 'CLR', 'BOS', 'REV', 'LEN', 'SIR', 'RRS', 'WER', 'PIC'], 'AmigaOS' => ['AMG', 'MOR'], 'BlackBerry' => ['BLB', 'QNX'], 'Brew' => ['BMP'], 'BeOS' => ['BEO', 'HAI'], 'Chrome OS' => ['COS', 'CRS', 'FYD', 'SEE'], 'Firefox OS' => ['FOS', 'KOS'], 'Gaming Console' => ['WII', 'PS3'], 'Google TV' => ['GTV'], 'IBM' => ['OS2'], 'iOS' => ['IOS', 'ATV', 'WAS', 'IPA'], 'RISC OS' => ['ROS'], 'GNU/Linux' => ['LIN', 'ARL', 'DEB', 'KNO', 'MIN', 'UBT', 'KBT', 'XBT', 'LBT', 'FED', 'RHT', 'VLN', 'MDR', 'GNT', 'SAB', 'SLW', 'SSE', 'CES', 'BTR', 'SAF', 'ORD', 'TOS', 'RSO', 'DEE', 'FRE', 'MAG', 'FEN', 'CAI', 'PCL', 'HAS', 'LOS', 'DVK', 'ROK', 'OWR', 'OTV', 'KTV', 'PUR', 'PLA', 'FUC', 'PAR', 'FOR', 'MON', 'KAN', 'ZEN', 'LND', 'LNS', 'CHN', 'AMZ', 'TEN', 'CST', 'NOV', 'ROU', 'ZOR', 'RED', 'KAL', 'ORA', 'VID', 'TIV'], 'Mac' => ['MAC'], 'Mobile Gaming Console' => ['PSP', 'NDS', 'XBX'], 'Real-time OS' => ['MTK', 'TDX', 'MRE', 'JME', 'REX'], 'Other Mobile' => ['WOS', 'POS', 'SBA', 'TIZ', 'SMG', 'MAE', 'LUN'], 'Symbian' => ['SYM', 'SYS', 'SY3', 'S60', 'S40'], 'Unix' => ['SOS', 'AIX', 'HPX', 'BSD', 'NBS', 'OBS', 'DFB', 'SYL', 'IRI', 'T64', 'INF'], 'WebTV' => ['WTV'], 'Windows' => ['WIN'], 'Windows Mobile' => ['WPH', 'WMO', 'WCE', 'WRT', 'WIO'], 'Other Smart TV' => ['WHS']];
+    protected static $osFamilies = ['Android' => ['AND', 'CYN', 'FIR', 'REM', 'RZD', 'MLD', 'MCD', 'YNS', 'GRI', 'HAR', 'ADR', 'CLR', 'BOS', 'REV', 'LEN', 'SIR', 'RRS', 'WER', 'PIC', 'ARM', 'HEL'], 'AmigaOS' => ['AMG', 'MOR'], 'BlackBerry' => ['BLB', 'QNX'], 'Brew' => ['BMP'], 'BeOS' => ['BEO', 'HAI'], 'Chrome OS' => ['COS', 'CRS', 'FYD', 'SEE'], 'Firefox OS' => ['FOS', 'KOS'], 'Gaming Console' => ['WII', 'PS3'], 'Google TV' => ['GTV'], 'IBM' => ['OS2'], 'iOS' => ['IOS', 'ATV', 'WAS', 'IPA'], 'RISC OS' => ['ROS'], 'GNU/Linux' => ['LIN', 'ARL', 'DEB', 'KNO', 'MIN', 'UBT', 'KBT', 'XBT', 'LBT', 'FED', 'RHT', 'VLN', 'MDR', 'GNT', 'SAB', 'SLW', 'SSE', 'CES', 'BTR', 'SAF', 'ORD', 'TOS', 'RSO', 'DEE', 'FRE', 'MAG', 'FEN', 'CAI', 'PCL', 'HAS', 'LOS', 'DVK', 'ROK', 'OWR', 'OTV', 'KTV', 'PUR', 'PLA', 'FUC', 'PAR', 'FOR', 'MON', 'KAN', 'ZEN', 'LND', 'LNS', 'CHN', 'AMZ', 'TEN', 'CST', 'NOV', 'ROU', 'ZOR', 'RED', 'KAL', 'ORA', 'VID', 'TIV', 'BSN', 'RAS', 'UOS', 'PIO', 'FRI', 'LIR', 'WEB', 'SER', 'ASP', 'AOS', 'LOO', 'EUL', 'SCI', 'ALP', 'CLO', 'ROC', 'OVZ', 'PVE', 'RST'], 'Mac' => ['MAC'], 'Mobile Gaming Console' => ['PSP', 'NDS', 'XBX'], 'Real-time OS' => ['MTK', 'TDX', 'MRE', 'JME', 'REX'], 'Other Mobile' => ['WOS', 'POS', 'SBA', 'TIZ', 'SMG', 'MAE', 'LUN'], 'Symbian' => ['SYM', 'SYS', 'SY3', 'S60', 'S40'], 'Unix' => ['SOS', 'AIX', 'HPX', 'BSD', 'NBS', 'OBS', 'DFB', 'SYL', 'IRI', 'T64', 'INF', 'ELE'], 'WebTV' => ['WTV'], 'Windows' => ['WIN'], 'Windows Mobile' => ['WPH', 'WMO', 'WCE', 'WRT', 'WIO'], 'Other Smart TV' => ['WHS']];
     /**
      * Contains a list of mappings from OS names we use to known client hint values
      *
@@ -53,6 +53,18 @@ class OperatingSystem extends \DeviceDetector\Parser\AbstractParser
      * @var array
      */
     protected static $desktopOsArray = ['AmigaOS', 'IBM', 'GNU/Linux', 'Mac', 'Unix', 'Windows', 'BeOS', 'Chrome OS', 'Chromium OS'];
+    /**
+     * Fire OS version mapping
+     *
+     * @var array
+     */
+    private $fireOsVersionMapping = ['11' => '8', '10' => '8', '9' => '7', '7' => '6', '5' => '5', '4.4.3' => '4.5.1', '4.4.2' => '4', '4.2.2' => '3', '4.0.3' => '3', '4.0.2' => '3', '4' => '2', '2' => '1'];
+    /**
+     * Lineage OS version mapping
+     *
+     * @var array
+     */
+    private $lineageOsVersionMapping = ['14' => '21', '13' => '20.0', '12.1' => '19.1', '12' => '19.0', '11' => '18.0', '10' => '17.0', '9' => '16.0', '8.1.0' => '15.1', '8.0.0' => '15.0', '7.1.2' => '14.1', '7.1.1' => '14.1', '7.0' => '14.0', '6.0.1' => '13.0', '6.0' => '13.0', '5.1.1' => '12.1', '5.0.2' => '12.0', '5.0' => '12.0', '4.4.4' => '11.0', '4.3' => '10.2', '4.2.2' => '10.1', '4.0.4' => '9.1.0'];
     /**
      * Returns all available operating systems
      *
@@ -112,10 +124,12 @@ class OperatingSystem extends \DeviceDetector\Parser\AbstractParser
                 if ('HarmonyOS' === $name) {
                     $version = '';
                 }
+                if ('PICO OS' === $name) {
+                    $version = $osFromUserAgent['version'];
+                }
                 if ('Fire OS' === $osFromUserAgent['name']) {
                     $majorVersion = (int) (\explode('.', $version, 1)[0] ?? '0');
-                    $fireOsVersionMapping = ['11' => '8', '10' => '8', '9' => '7', '7' => '6', '5' => '5', '4.4.3' => '4.5.1', '4.4.2' => '4', '4.2.2' => '3', '4.0.3' => '3', '4.0.2' => '3', '4' => '2', '2' => '1'];
-                    $version = $fireOsVersionMapping[$version] ?? $fireOsVersionMapping[$majorVersion] ?? $version;
+                    $version = $this->fireOsVersionMapping[$version] ?? $this->fireOsVersionMapping[$majorVersion] ?? '';
                 }
             }
             $short = $osFromClientHints['short_name'];
@@ -140,6 +154,20 @@ class OperatingSystem extends \DeviceDetector\Parser\AbstractParser
                 $family = 'Android';
                 $short = 'ADR';
                 $version = '';
+            }
+            if ('org.lineageos.jelly' === $this->clientHints->getApp() && 'Lineage OS' !== $name) {
+                $majorVersion = (int) (\explode('.', $version, 1)[0] ?? '0');
+                $name = 'Lineage OS';
+                $family = 'Android';
+                $short = 'LEN';
+                $version = $this->lineageOsVersionMapping[$version] ?? $this->lineageOsVersionMapping[$majorVersion] ?? '';
+            }
+            if ('org.mozilla.tv.firefox' === $this->clientHints->getApp() && 'Fire OS' !== $name) {
+                $majorVersion = (int) (\explode('.', $version, 1)[0] ?? '0');
+                $name = 'Fire OS';
+                $family = 'Android';
+                $short = 'FIR';
+                $version = $this->fireOsVersionMapping[$version] ?? $this->fireOsVersionMapping[$majorVersion] ?? '';
             }
         }
         $return = ['name' => $name, 'short_name' => $short, 'version' => $version, 'platform' => $platform, 'family' => $family];
@@ -278,11 +306,17 @@ class OperatingSystem extends \DeviceDetector\Parser\AbstractParser
             if (false !== \strpos($arch, 'arm')) {
                 return 'ARM';
             }
+            if (false !== \strpos($arch, 'loongarch64')) {
+                return 'LoongArch64';
+            }
             if (false !== \strpos($arch, 'mips')) {
                 return 'MIPS';
             }
             if (false !== \strpos($arch, 'sh4')) {
                 return 'SuperH';
+            }
+            if (false !== \strpos($arch, 'sparc64')) {
+                return 'SPARC64';
             }
             if (false !== \strpos($arch, 'x64') || false !== \strpos($arch, 'x86') && '64' === $this->clientHints->getBitness()) {
                 return 'x64';
@@ -291,8 +325,11 @@ class OperatingSystem extends \DeviceDetector\Parser\AbstractParser
                 return 'x86';
             }
         }
-        if ($this->matchUserAgent('arm|aarch64|Apple ?TV|Watch ?OS|Watch1,[12]')) {
+        if ($this->matchUserAgent('arm|.*arm64|aarch64|Apple ?TV|Watch ?OS|Watch1,[12]')) {
             return 'ARM';
+        }
+        if ($this->matchUserAgent('loongarch64')) {
+            return 'LoongArch64';
         }
         if ($this->matchUserAgent('mips')) {
             return 'MIPS';
@@ -300,10 +337,13 @@ class OperatingSystem extends \DeviceDetector\Parser\AbstractParser
         if ($this->matchUserAgent('sh4')) {
             return 'SuperH';
         }
+        if ($this->matchUserAgent('sparc64')) {
+            return 'SPARC64';
+        }
         if ($this->matchUserAgent('64-?bit|WOW64|(?:Intel)?x64|WINDOWS_64|win64|amd64|x86_?64')) {
             return 'x64';
         }
-        if ($this->matchUserAgent('.+32bit|.+win32|(?:i[0-9]|x)86|i86pc')) {
+        if ($this->matchUserAgent('.*32bit|.*win32|(?:i[0-9]|x)86|i86pc')) {
             return 'x86';
         }
         return '';

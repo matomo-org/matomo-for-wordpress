@@ -34,7 +34,7 @@ class Session implements SessionInterface, \IteratorAggregate, \Countable
     private $data = [];
     private $usageIndex = 0;
     private $usageReporter;
-    public function __construct(SessionStorageInterface $storage = null, AttributeBagInterface $attributes = null, FlashBagInterface $flashes = null, callable $usageReporter = null)
+    public function __construct(?SessionStorageInterface $storage = null, ?AttributeBagInterface $attributes = null, ?FlashBagInterface $flashes = null, ?callable $usageReporter = null)
     {
         $this->storage = $storage ?? new NativeSessionStorage();
         $this->usageReporter = $usageReporter;
@@ -153,7 +153,7 @@ class Session implements SessionInterface, \IteratorAggregate, \Countable
     /**
      * {@inheritdoc}
      */
-    public function invalidate(int $lifetime = null)
+    public function invalidate(?int $lifetime = null)
     {
         $this->storage->clear();
         return $this->migrate(true, $lifetime);
@@ -161,7 +161,7 @@ class Session implements SessionInterface, \IteratorAggregate, \Countable
     /**
      * {@inheritdoc}
      */
-    public function migrate(bool $destroy = false, int $lifetime = null)
+    public function migrate(bool $destroy = false, ?int $lifetime = null)
     {
         return $this->storage->regenerate($destroy, $lifetime);
     }

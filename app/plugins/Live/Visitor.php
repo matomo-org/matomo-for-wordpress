@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Live;
 
@@ -19,11 +18,11 @@ use Piwik\Plugins\Live\Visualizations\VisitorLog;
 class Visitor implements \Piwik\Plugins\Live\VisitorInterface
 {
     private $details = array();
-    function __construct($visitorRawData)
+    public function __construct($visitorRawData)
     {
         $this->details = $visitorRawData;
     }
-    function getAllVisitorDetails()
+    public function getAllVisitorDetails()
     {
         $visitor = array();
         $instances = self::getAllVisitorDetailsInstances();
@@ -96,7 +95,7 @@ class Visitor implements \Piwik\Plugins\Live\VisitorInterface
     {
         return Plugin\Manager::getInstance()->findComponents('VisitorDetails', 'Piwik\\Plugins\\Live\\VisitorDetailsAbstract');
     }
-    function getVisitorId()
+    public function getVisitorId()
     {
         if (isset($this->details['idvisitor'])) {
             return bin2hex($this->details['idvisitor']);

@@ -15,7 +15,7 @@ class HasEveryBinary extends AbstractBinary
 {
     public function compile(Compiler $compiler) : void
     {
-        $compiler->raw('\Matomo\Dependencies\twig_array_every($this->env, ')->subcompile($this->getNode('left'))->raw(', ')->subcompile($this->getNode('right'))->raw(')');
+        $compiler->raw('CoreExtension::arrayEvery($this->env, ')->subcompile($this->getNode('left'))->raw(', ')->subcompile($this->getNode('right'))->raw(')');
     }
     public function operator(Compiler $compiler) : Compiler
     {

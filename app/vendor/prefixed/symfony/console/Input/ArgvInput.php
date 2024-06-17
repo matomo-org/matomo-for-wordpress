@@ -40,7 +40,7 @@ class ArgvInput extends Input
 {
     private $tokens;
     private $parsed;
-    public function __construct(array $argv = null, InputDefinition $definition = null)
+    public function __construct(?array $argv = null, ?InputDefinition $definition = null)
     {
         $argv = $argv ?? $_SERVER['argv'] ?? [];
         // strip the application name

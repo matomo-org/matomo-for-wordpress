@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\DataAccess;
 
@@ -16,7 +15,7 @@ use Piwik\Plugin\LogTablesProvider;
 use Piwik\Segment\SegmentExpression;
 class LogQueryBuilder
 {
-    const FORCE_INNER_GROUP_BY_NO_SUBSELECT = '__##nosubquery##__';
+    public const FORCE_INNER_GROUP_BY_NO_SUBSELECT = '__##nosubquery##__';
     /**
      * @var LogTablesProvider
      */

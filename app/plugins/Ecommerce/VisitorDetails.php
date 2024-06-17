@@ -4,8 +4,7 @@
  * Matomo - free/libre analytics platform
  *
  * @link    https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Ecommerce;
 
@@ -23,8 +22,8 @@ use Piwik\Tracker\GoalManager;
 use Piwik\View;
 class VisitorDetails extends VisitorDetailsAbstract
 {
-    const CATEGORY_COUNT = 5;
-    const DEFAULT_LIFETIME_STAT = array('lifeTimeRevenue' => 0, 'lifeTimeConversions' => 0, 'lifeTimeEcommerceItems' => 0);
+    public const CATEGORY_COUNT = 5;
+    public const DEFAULT_LIFETIME_STAT = array('lifeTimeRevenue' => 0, 'lifeTimeConversions' => 0, 'lifeTimeEcommerceItems' => 0);
     public function extendVisitorDetails(&$visitor)
     {
         if (Site::isEcommerceEnabledFor($visitor['idSite'])) {
@@ -90,10 +89,8 @@ class VisitorDetails extends VisitorDetailsAbstract
                 if (strpos($column, 'revenue') !== false) {
                     if (!is_numeric($value)) {
                         $ecommerceDetail[$column] = 0;
-                    } else {
-                        if ($value == round($value)) {
-                            $ecommerceDetail[$column] = round($value);
-                        }
+                    } elseif ($value == round($value)) {
+                        $ecommerceDetail[$column] = round($value);
                     }
                 }
             }

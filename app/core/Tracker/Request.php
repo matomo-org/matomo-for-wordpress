@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Tracker;
 
@@ -50,7 +49,7 @@ class Request
      * @var string[][]
      */
     private $requestMetadata = array();
-    const UNKNOWN_RESOLUTION = 'unknown';
+    public const UNKNOWN_RESOLUTION = 'unknown';
     private $customTimestampDoesNotRequireTokenauthWhenNewerThan;
     /**
      * @param $params
@@ -260,7 +259,8 @@ class Request
      */
     public function getBrowserLanguage()
     {
-        return Common::getRequestVar('lang', Common::getBrowserLanguage(), 'string', $this->params);
+        $parameterValue = Common::getRequestVar('lang', '', 'string', $this->params);
+        return Common::getBrowserLanguage($parameterValue ?: null);
     }
     /**
      * @return string

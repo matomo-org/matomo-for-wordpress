@@ -127,7 +127,7 @@ class ConsoleFormatter implements FormatterInterface
         $record['message'] = strtr($message, $replacements);
         return $record;
     }
-    private function dumpData($data, bool $colors = null) : string
+    private function dumpData($data, ?bool $colors = null) : string
     {
         if (null === $this->dumper) {
             return '';

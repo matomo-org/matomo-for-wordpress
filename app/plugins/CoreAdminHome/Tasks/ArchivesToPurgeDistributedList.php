@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CoreAdminHome\Tasks;
 
@@ -25,7 +25,7 @@ use Piwik\Date;
  */
 class ArchivesToPurgeDistributedList extends DistributedList
 {
-    const OPTION_INVALIDATED_DATES_SITES_TO_PURGE = 'InvalidatedOldReports_DatesWebsiteIds';
+    public const OPTION_INVALIDATED_DATES_SITES_TO_PURGE = 'InvalidatedOldReports_DatesWebsiteIds';
     public function __construct()
     {
         parent::__construct(self::OPTION_INVALIDATED_DATES_SITES_TO_PURGE);

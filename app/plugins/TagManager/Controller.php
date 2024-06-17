@@ -95,6 +95,8 @@ class Controller extends \Piwik\Plugin\Controller
     }
     public function manageVersions()
     {
+        $idSite = Common::getRequestVar('idSite', null, 'int');
+        $this->accessValidator->checkWriteCapability($idSite);
         $path = \Piwik\Plugins\TagManager\TagManager::getAbsolutePathToContainerDirectory();
         Filechecks::dieIfDirectoriesNotWritable(array($path));
         $versionsHelpText = $this->renderTemplate('helpContent', ['subHeading' => Piwik::translate('TagManager_ManageVersionsHelp1'), 'paragraphs' => [Piwik::translate('TagManager_ManageVersionsHelp2'), Piwik::translate('TagManager_ManageVersionsHelp3', ['<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/guide/tag-manager/versions-and-publish/') . '" rel="noreferrer noopener" target="_blank">', '</a>', '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/') . '" rel="noreferrer noopener" target="_blank">', '</a>', '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/tag-manager-training/') . '" rel="noreferrer noopener" target="_blank">', '</a>'])]]);

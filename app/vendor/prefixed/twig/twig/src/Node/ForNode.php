@@ -11,6 +11,7 @@
  */
 namespace Matomo\Dependencies\Twig\Node;
 
+use Matomo\Dependencies\Twig\Attribute\YieldReady;
 use Matomo\Dependencies\Twig\Compiler;
 use Matomo\Dependencies\Twig\Node\Expression\AbstractExpression;
 use Matomo\Dependencies\Twig\Node\Expression\AssignNameExpression;
@@ -19,10 +20,11 @@ use Matomo\Dependencies\Twig\Node\Expression\AssignNameExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class ForNode extends Node
 {
     private $loop;
-    public function __construct(AssignNameExpression $keyTarget, AssignNameExpression $valueTarget, AbstractExpression $seq, ?Node $ifexpr, Node $body, ?Node $else, int $lineno, string $tag = null)
+    public function __construct(AssignNameExpression $keyTarget, AssignNameExpression $valueTarget, AbstractExpression $seq, ?Node $ifexpr, Node $body, ?Node $else, int $lineno, ?string $tag = null)
     {
         $body = new Node([$body, $this->loop = new ForLoopNode($lineno, $tag)]);
         $nodes = ['key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body];
@@ -33,7 +35,7 @@ class ForNode extends Node
     }
     public function compile(Compiler $compiler) : void
     {
-        $compiler->addDebugInfo($this)->write("\$context['_parent'] = \$context;\n")->write("\$context['_seq'] = \\Matomo\\Dependencies\\twig_ensure_traversable(")->subcompile($this->getNode('seq'))->raw(");\n");
+        $compiler->addDebugInfo($this)->write("\$context['_parent'] = \$context;\n")->write("\$context['_seq'] = CoreExtension::ensureTraversable(")->subcompile($this->getNode('seq'))->raw(");\n");
         if ($this->hasNode('else')) {
             $compiler->write("\$context['_iterated'] = false;\n");
         }

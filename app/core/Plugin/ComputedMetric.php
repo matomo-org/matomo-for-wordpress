@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugin;
 
@@ -18,8 +18,8 @@ use Piwik\Metrics\Formatter;
 use Piwik\Piwik;
 class ComputedMetric extends \Piwik\Plugin\ProcessedMetric
 {
-    const AGGREGATION_AVG = 'avg';
-    const AGGREGATION_RATE = 'rate';
+    public const AGGREGATION_AVG = 'avg';
+    public const AGGREGATION_RATE = 'rate';
     /**
      * @var string
      */
@@ -173,13 +173,11 @@ class ComputedMetric extends \Piwik\Plugin\ProcessedMetric
                     return $metric1->getTranslatedName() . ' per ' . $metric2->getTranslatedName();
                 }
                 return $this->metric1 . ' per ' . $this->metric2;
-            } else {
-                if ($this->aggregation === self::AGGREGATION_RATE) {
-                    if ($metric1 && $metric1 instanceof \Piwik\Plugin\ArchivedMetric) {
-                        return Piwik::translate('General_ComputedMetricRate', array($metric1->getTranslatedName()));
-                    } else {
-                        return Piwik::translate('General_ComputedMetricRate', array($this->metric1));
-                    }
+            } elseif ($this->aggregation === self::AGGREGATION_RATE) {
+                if ($metric1 && $metric1 instanceof \Piwik\Plugin\ArchivedMetric) {
+                    return Piwik::translate('General_ComputedMetricRate', array($metric1->getTranslatedName()));
+                } else {
+                    return Piwik::translate('General_ComputedMetricRate', array($this->metric1));
                 }
             }
         }
@@ -199,13 +197,11 @@ class ComputedMetric extends \Piwik\Plugin\ProcessedMetric
                     return Piwik::translate('General_ComputedMetricAverageShortDocumentation', array($metric1->getDimension()->getName()));
                 }
                 return Piwik::translate('General_ComputedMetricAverageDocumentation', array($this->metric1, $this->metric2));
-            } else {
-                if ($this->aggregation === self::AGGREGATION_RATE) {
-                    if ($metric1 && $metric1 instanceof \Piwik\Plugin\ArchivedMetric) {
-                        return Piwik::translate('General_ComputedMetricRateDocumentation', array($metric1->getDimension()->getNamePlural(), $metric2->getDimension()->getNamePlural()));
-                    } else {
-                        return Piwik::translate('General_ComputedMetricRateShortDocumentation', array($this->metric1));
-                    }
+            } elseif ($this->aggregation === self::AGGREGATION_RATE) {
+                if ($metric1 && $metric1 instanceof \Piwik\Plugin\ArchivedMetric) {
+                    return Piwik::translate('General_ComputedMetricRateDocumentation', array($metric1->getDimension()->getNamePlural(), $metric2->getDimension()->getNamePlural()));
+                } else {
+                    return Piwik::translate('General_ComputedMetricRateShortDocumentation', array($this->metric1));
                 }
             }
         }

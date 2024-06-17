@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\API;
 
@@ -116,12 +115,10 @@ class WidgetMetadata
                     return $this->compareWidgetIds($widgetA, $widgetB);
                 }
                 return $subOrderA > $subOrderB ? 1 : -1;
-            } else {
-                if (empty($widgetA['subcategory']['order']) && empty($widgetB['subcategory']['order'])) {
-                    return $this->compareWidgetIds($widgetA, $widgetB);
-                } elseif (!empty($widgetA['subcategory']['order'])) {
-                    return 1;
-                }
+            } elseif (empty($widgetA['subcategory']['order']) && empty($widgetB['subcategory']['order'])) {
+                return $this->compareWidgetIds($widgetA, $widgetB);
+            } elseif (!empty($widgetA['subcategory']['order'])) {
+                return 1;
             }
             return -1;
         }

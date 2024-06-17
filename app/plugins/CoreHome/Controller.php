@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CoreHome;
 
@@ -92,7 +91,7 @@ class Controller extends \Piwik\Plugin\Controller
         }
         return $content;
     }
-    function redirectToCoreHomeIndex()
+    public function redirectToCoreHomeIndex()
     {
         $defaultReport = API::getInstance()->getUserPreference(API::PREFERENCE_DEFAULT_REPORT, Piwik::getCurrentUserLogin());
         $module = 'CoreHome';

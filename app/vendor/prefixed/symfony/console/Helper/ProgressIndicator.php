@@ -36,7 +36,7 @@ class ProgressIndicator
      * @param int        $indicatorChangeInterval Change interval in milliseconds
      * @param array|null $indicatorValues         Animated indicator characters
      */
-    public function __construct(OutputInterface $output, string $format = null, int $indicatorChangeInterval = 100, array $indicatorValues = null)
+    public function __construct(OutputInterface $output, ?string $format = null, int $indicatorChangeInterval = 100, ?array $indicatorValues = null)
     {
         $this->output = $output;
         if (null === $format) {
@@ -98,8 +98,6 @@ class ProgressIndicator
     }
     /**
      * Finish the indicator with message.
-     *
-     * @param $message
      */
     public function finish(string $message)
     {

@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\MobileMessaging;
 
@@ -22,8 +21,8 @@ use Piwik\Plugins\MobileMessaging\SMSProvider;
  */
 class API extends \Piwik\Plugin\API
 {
-    const VERIFICATION_CODE_LENGTH = 5;
-    const SMS_FROM = 'Matomo';
+    public const VERIFICATION_CODE_LENGTH = 5;
+    public const SMS_FROM = 'Matomo';
     /** @var Model $model */
     protected $model;
     public function __construct(\Piwik\Plugins\MobileMessaging\Model $model)

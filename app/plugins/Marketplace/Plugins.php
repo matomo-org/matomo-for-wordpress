@@ -3,12 +3,12 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Marketplace;
 
+use Piwik\Container\StaticContainer;
 use Piwik\Date;
 use Piwik\ProfessionalServices\Advertising;
 use Piwik\Plugin\Dependency as PluginDependency;
@@ -142,6 +142,10 @@ class Plugins
      */
     public function getPluginsHavingUpdate() : array
     {
+        $skipPluginUpdateCheck = StaticContainer::get('dev.disable_plugin_update_checks');
+        if ($skipPluginUpdateCheck) {
+            return [];
+        }
         $this->pluginManager->loadAllPluginsAndGetTheirInfo();
         $loadedPlugins = $this->pluginManager->getLoadedPlugins();
         try {
@@ -201,6 +205,7 @@ class Plugins
         $plugin['isInvalid'] = $this->pluginManager->isPluginThirdPartyAndBogus($plugin['name']);
         $plugin['canBeUpdated'] = $plugin['isInstalled'] && $this->hasPluginUpdate($plugin);
         $plugin['lastUpdated'] = $this->toShortDate($plugin['lastUpdated']);
+        $plugin['canBePurchased'] = !$plugin['isDownloadable'] && !empty($plugin['shop']['url']);
         if ($plugin['isInstalled']) {
             $plugin = $this->enrichLicenseInformation($plugin);
         } else {
@@ -226,6 +231,10 @@ class Plugins
             }
         }
         $plugin = $this->addMissingRequirements($plugin);
+        $plugin['isEligibleForFreeTrial'] = $plugin['canBePurchased'] && empty($plugin['missingRequirements']) && empty($plugin['consumer']['license']);
+        $this->addPriceFrom($plugin);
+        $this->addPluginCoverImage($plugin);
+        $this->prettifyNumberOfDownloads($plugin);
         return $plugin;
     }
     private function enrichLicenseInformation($plugin)
@@ -253,11 +262,14 @@ class Plugins
         return $date;
     }
     /**
+     * Determine if there are any missing requirements/dependencies for the plugin
+     *
      * @param $plugin
+     * @return array
      */
-    private function addMissingRequirements($plugin)
+    private function addMissingRequirements($plugin) : array
     {
-        $plugin['missingRequirements'] = array();
+        $plugin['missingRequirements'] = [];
         if (empty($plugin['versions']) || !is_array($plugin['versions'])) {
             return $plugin;
         }
@@ -269,5 +281,67 @@ class Plugins
         $dependency = new PluginDependency();
         $plugin['missingRequirements'] = $dependency->getMissingDependencies($requires);
         return $plugin;
+    }
+    /**
+     * Find the cheapest shop variant, and if none is found specified, return the first variant.
+     *
+     * @param $plugin
+     * @return void
+     */
+    private function addPriceFrom(&$plugin) : void
+    {
+        $variations = $plugin['shop']['variations'] ?? [];
+        if (!count($variations)) {
+            $plugin['priceFrom'] = null;
+            return;
+        }
+        $plugin['priceFrom'] = array_shift($variations);
+        // use first as the default
+        foreach ($variations as $variation) {
+            if ($variation['cheapest'] ?? false) {
+                $plugin['priceFrom'] = $variation;
+                return;
+            }
+        }
+    }
+    /**
+     * If plugin provides a cover image via Marketplace, we use that.
+     *
+     * If there's no cover image from the marketplace (e.g. for plugins not yet categorised or not providing a custom
+     * cover image), we use Matomo image for Matomo plugins and a generic cover image otherwise.
+     *
+     * @param $plugin
+     * @return void
+     */
+    private function addPluginCoverImage(&$plugin) : void
+    {
+        // if plugin provides cover image (either from the screenshots or based on its category, we use that
+        if (!empty($plugin['coverImage'])) {
+            return;
+        }
+        $coverImage = 'uncategorised';
+        // use Matomo image for paid plugins, i.e. plugins without the isFree flag and with shop info
+        if (in_array(strtolower($plugin['owner']), ['piwik', 'matomo-org']) && empty($plugin['isFree']) && !empty($plugin['shop'])) {
+            $coverImage = 'matomo';
+        }
+        $plugin['coverImage'] = 'plugins/Marketplace/images/categories/' . $coverImage . '.png';
+    }
+    /**
+     * Add prettified number of downloads to plugin info to shorten large numbers to 1k or 1m format.
+     *
+     * @param $plugin
+     * @return void
+     */
+    private function prettifyNumberOfDownloads(&$plugin) : void
+    {
+        $num = $nice = $plugin['numDownloads'] ?? 0;
+        if ($num >= 1000 && $num < 100000) {
+            $nice = round($num / 1000, 1, PHP_ROUND_HALF_DOWN) . 'k';
+        } elseif ($num >= 100000 && $num < 1000000) {
+            $nice = floor($num / 1000) . 'k';
+        } elseif ($num >= 1000000) {
+            $nice = floor($num / 1000000) . 'm';
+        }
+        $plugin['numDownloadsPretty'] = $nice;
     }
 }

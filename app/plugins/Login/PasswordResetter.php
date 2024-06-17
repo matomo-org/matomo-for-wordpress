@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Login;
 
@@ -343,10 +343,8 @@ class PasswordResetter
         $user = null;
         if ($userModel->userExists($loginOrMail)) {
             $user = $userModel->getUser($loginOrMail);
-        } else {
-            if ($userModel->userEmailExists($loginOrMail)) {
-                $user = $userModel->getUserByEmail($loginOrMail);
-            }
+        } elseif ($userModel->userEmailExists($loginOrMail)) {
+            $user = $userModel->getUserByEmail($loginOrMail);
         }
         return $user;
     }

@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Referrers;
 
@@ -23,9 +22,9 @@ use Piwik\UrlHelper;
  */
 class SearchEngine extends Singleton
 {
-    const OPTION_STORAGE_NAME = 'SearchEngineDefinitions';
+    public const OPTION_STORAGE_NAME = 'SearchEngineDefinitions';
     /** @var string location of definition file (relative to PIWIK_INCLUDE_PATH) */
-    const DEFINITION_FILE = '/vendor/matomo/searchengine-and-social-list/SearchEngines.yml';
+    public const DEFINITION_FILE = '/vendor/matomo/searchengine-and-social-list/SearchEngines.yml';
     protected $definitionList = null;
     /**
      * Returns list of search engines by URL

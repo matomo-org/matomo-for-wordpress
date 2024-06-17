@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Actions;
 
@@ -29,7 +28,7 @@ use Zend_Db_Statement;
  */
 class ArchivingHelper
 {
-    const OTHERS_ROW_KEY = '';
+    public const OTHERS_ROW_KEY = '';
     /**
      * Ideally this should use the DataArray object instead of custom data structure
      *
@@ -369,12 +368,10 @@ class ArchivingHelper
                 if ($config['aggregation'] == 'min') {
                     if (empty($alreadyValue)) {
                         $newValue = $value;
+                    } elseif (empty($value)) {
+                        $newValue = $alreadyValue;
                     } else {
-                        if (empty($value)) {
-                            $newValue = $alreadyValue;
-                        } else {
-                            $newValue = min($alreadyValue, $value);
-                        }
+                        $newValue = min($alreadyValue, $value);
                     }
                     return $newValue;
                 }

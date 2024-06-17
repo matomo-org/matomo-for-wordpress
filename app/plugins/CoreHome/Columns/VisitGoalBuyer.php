@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CoreHome\Columns;
 
@@ -19,10 +18,10 @@ use Piwik\Tracker\Visitor;
 class VisitGoalBuyer extends VisitDimension
 {
     // log_visit.visit_goal_buyer
-    const TYPE_BUYER_NONE = 0;
-    const TYPE_BUYER_ORDERED = 1;
-    const TYPE_BUYER_OPEN_CART = GoalManager::TYPE_BUYER_OPEN_CART;
-    const TYPE_BUYER_ORDERED_AND_OPEN_CART = GoalManager::TYPE_BUYER_ORDERED_AND_OPEN_CART;
+    public const TYPE_BUYER_NONE = 0;
+    public const TYPE_BUYER_ORDERED = 1;
+    public const TYPE_BUYER_OPEN_CART = GoalManager::TYPE_BUYER_OPEN_CART;
+    public const TYPE_BUYER_ORDERED_AND_OPEN_CART = GoalManager::TYPE_BUYER_ORDERED_AND_OPEN_CART;
     protected static $visitEcommerceStatus = array(self::TYPE_BUYER_NONE => 'none', self::TYPE_BUYER_ORDERED => 'ordered', self::TYPE_BUYER_OPEN_CART => 'abandonedCart', self::TYPE_BUYER_ORDERED_AND_OPEN_CART => 'orderedThenAbandonedCart');
     protected $columnName = 'visit_goal_buyer';
     protected $columnType = 'TINYINT(1) NULL';

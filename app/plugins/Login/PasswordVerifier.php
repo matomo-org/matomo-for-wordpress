@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Login;
 
@@ -15,8 +15,8 @@ use Piwik\Session\SessionNamespace;
 use Piwik\Url;
 class PasswordVerifier
 {
-    const VERIFY_VALID_FOR_MINUTES = 30;
-    const VERIFY_REVALIDATE_X_MINUTES_LEFT = 15;
+    public const VERIFY_VALID_FOR_MINUTES = 30;
+    public const VERIFY_REVALIDATE_X_MINUTES_LEFT = 15;
     /**
      * @var Date|null
      */

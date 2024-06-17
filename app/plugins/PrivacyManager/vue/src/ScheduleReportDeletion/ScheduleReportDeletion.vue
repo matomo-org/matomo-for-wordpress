@@ -1,7 +1,8 @@
 <!--
   Matomo - free/libre analytics platform
-  @link https://matomo.org
-  @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+
+  @link    https://matomo.org
+  @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
 -->
 
 <template>
@@ -97,15 +98,12 @@
       <PasswordConfirmation
         v-model="showPasswordConfirmModal"
         @confirmed="save"
-      >
-        <h2>{{ translate('UsersManager_ConfirmWithPassword') }}</h2>
-      </PasswordConfirmation>
+      />
       <PasswordConfirmation
         v-model="showPasswordConfirmModalForPurge"
         @confirmed="executePurgeNow"
       >
         <h2>{{ translate('PrivacyManager_PurgeNowConfirm') }}</h2>
-        <div>{{ translate('UsersManager_ConfirmWithPassword') }}</div>
       </PasswordConfirmation>
     </ContentBlock>
   </div>

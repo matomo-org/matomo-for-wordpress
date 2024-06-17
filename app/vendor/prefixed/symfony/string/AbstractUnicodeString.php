@@ -169,7 +169,7 @@ abstract class AbstractUnicodeString extends AbstractString
         }
         return $str;
     }
-    public function join(array $strings, string $lastGlue = null) : parent
+    public function join(array $strings, ?string $lastGlue = null) : parent
     {
         $str = clone $this;
         $tail = null !== $lastGlue && 1 < \count($strings) ? $lastGlue . array_pop($strings) : '';

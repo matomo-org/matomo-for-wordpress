@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\MobileMessaging;
 
@@ -22,17 +21,17 @@ use Piwik\View;
  */
 class MobileMessaging extends \Piwik\Plugin
 {
-    const DELEGATED_MANAGEMENT_OPTION = 'MobileMessaging_DelegatedManagement';
-    const PROVIDER_OPTION = 'Provider';
-    const API_KEY_OPTION = 'APIKey';
-    const PHONE_NUMBERS_OPTION = 'PhoneNumbers';
-    const PHONE_NUMBER_VALIDATION_REQUEST_COUNT_OPTION = 'PhoneNumberValidationRequestCount';
-    const SMS_SENT_COUNT_OPTION = 'SMSSentCount';
-    const DELEGATED_MANAGEMENT_OPTION_DEFAULT = 'false';
-    const USER_SETTINGS_POSTFIX_OPTION = '_MobileMessagingSettings';
-    const PHONE_NUMBERS_PARAMETER = 'phoneNumbers';
-    const MOBILE_TYPE = 'mobile';
-    const SMS_FORMAT = 'sms';
+    public const DELEGATED_MANAGEMENT_OPTION = 'MobileMessaging_DelegatedManagement';
+    public const PROVIDER_OPTION = 'Provider';
+    public const API_KEY_OPTION = 'APIKey';
+    public const PHONE_NUMBERS_OPTION = 'PhoneNumbers';
+    public const PHONE_NUMBER_VALIDATION_REQUEST_COUNT_OPTION = 'PhoneNumberValidationRequestCount';
+    public const SMS_SENT_COUNT_OPTION = 'SMSSentCount';
+    public const DELEGATED_MANAGEMENT_OPTION_DEFAULT = 'false';
+    public const USER_SETTINGS_POSTFIX_OPTION = '_MobileMessagingSettings';
+    public const PHONE_NUMBERS_PARAMETER = 'phoneNumbers';
+    public const MOBILE_TYPE = 'mobile';
+    public const SMS_FORMAT = 'sms';
     private static $availableParameters = array(self::PHONE_NUMBERS_PARAMETER => true);
     private static $managedReportTypes = array(self::MOBILE_TYPE => 'plugins/MobileMessaging/images/phone.png');
     private static $managedReportFormats = array(self::SMS_FORMAT => 'plugins/MobileMessaging/images/phone.png');
@@ -204,14 +203,14 @@ class MobileMessaging extends \Piwik\Plugin
     {
         return in_array($reportType, array_keys(self::$managedReportTypes));
     }
-    function install()
+    public function install()
     {
         $delegatedManagement = Option::get(self::DELEGATED_MANAGEMENT_OPTION);
         if (empty($delegatedManagement)) {
             Option::set(self::DELEGATED_MANAGEMENT_OPTION, self::DELEGATED_MANAGEMENT_OPTION_DEFAULT);
         }
     }
-    function deactivate()
+    public function deactivate()
     {
         // delete all mobile reports
         $APIScheduledReports = APIScheduledReports::getInstance();

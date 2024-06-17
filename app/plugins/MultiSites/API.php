@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\MultiSites;
 
@@ -30,19 +29,19 @@ use Piwik\Site;
  */
 class API extends \Piwik\Plugin\API
 {
-    const METRIC_TRANSLATION_KEY = 'translation';
-    const METRIC_EVOLUTION_COL_NAME_KEY = 'evolution_column_name';
-    const METRIC_RECORD_NAME_KEY = 'record_name';
-    const METRIC_COL_NAME_KEY = 'metric_column_name';
-    const METRIC_IS_ECOMMERCE_KEY = 'is_ecommerce';
-    const NB_VISITS_METRIC = 'nb_visits';
-    const NB_ACTIONS_METRIC = 'nb_actions';
-    const NB_PAGEVIEWS_LABEL = 'nb_pageviews';
-    const NB_PAGEVIEWS_METRIC = 'Actions_nb_pageviews';
-    const GOAL_REVENUE_METRIC = 'revenue';
-    const GOAL_CONVERSION_METRIC = 'nb_conversions';
-    const ECOMMERCE_ORDERS_METRIC = 'orders';
-    const ECOMMERCE_REVENUE_METRIC = 'ecommerce_revenue';
+    public const METRIC_TRANSLATION_KEY = 'translation';
+    public const METRIC_EVOLUTION_COL_NAME_KEY = 'evolution_column_name';
+    public const METRIC_RECORD_NAME_KEY = 'record_name';
+    public const METRIC_COL_NAME_KEY = 'metric_column_name';
+    public const METRIC_IS_ECOMMERCE_KEY = 'is_ecommerce';
+    public const NB_VISITS_METRIC = 'nb_visits';
+    public const NB_ACTIONS_METRIC = 'nb_actions';
+    public const NB_PAGEVIEWS_LABEL = 'nb_pageviews';
+    public const NB_PAGEVIEWS_METRIC = 'Actions_nb_pageviews';
+    public const GOAL_REVENUE_METRIC = 'revenue';
+    public const GOAL_CONVERSION_METRIC = 'nb_conversions';
+    public const ECOMMERCE_ORDERS_METRIC = 'orders';
+    public const ECOMMERCE_REVENUE_METRIC = 'ecommerce_revenue';
     private static $baseMetrics = array(self::NB_VISITS_METRIC => array(self::METRIC_TRANSLATION_KEY => 'General_ColumnNbVisits', self::METRIC_EVOLUTION_COL_NAME_KEY => 'visits_evolution', self::METRIC_RECORD_NAME_KEY => self::NB_VISITS_METRIC, self::METRIC_COL_NAME_KEY => self::NB_VISITS_METRIC, self::METRIC_IS_ECOMMERCE_KEY => false), self::NB_ACTIONS_METRIC => array(self::METRIC_TRANSLATION_KEY => 'General_ColumnNbActions', self::METRIC_EVOLUTION_COL_NAME_KEY => 'actions_evolution', self::METRIC_RECORD_NAME_KEY => self::NB_ACTIONS_METRIC, self::METRIC_COL_NAME_KEY => self::NB_ACTIONS_METRIC, self::METRIC_IS_ECOMMERCE_KEY => false));
     /**
      * Returns a report displaying the total visits, actions and revenue, as
@@ -254,9 +253,10 @@ class API extends \Piwik\Plugin\API
                 return $value == 0;
             }]);
         }
-        // Remove <ts_archived> row metadata, it's already been used by any filters that needed it
+        // Remove unnecessary row metadata already been used by any filters that needed them
         $dataTable->queueFilter(function ($dataTable) {
             $dataTable->deleteRowsMetadata(DataTable::ARCHIVED_DATE_METADATA_NAME);
+            $dataTable->deleteRowsMetadata(DataTable::ARCHIVE_STATE_METADATA_NAME);
             $dataTable->deleteColumn('_metadata');
         });
         if ($multipleWebsitesRequested && $dataTable->getRowsCount() === 1 && $dataTable instanceof DataTable\Simple) {

@@ -23,7 +23,7 @@ final class Dumper
     private $dumper;
     private $cloner;
     private $handler;
-    public function __construct(OutputInterface $output, CliDumper $dumper = null, ClonerInterface $cloner = null)
+    public function __construct(OutputInterface $output, ?CliDumper $dumper = null, ?ClonerInterface $cloner = null)
     {
         $this->output = $output;
         $this->dumper = $dumper;

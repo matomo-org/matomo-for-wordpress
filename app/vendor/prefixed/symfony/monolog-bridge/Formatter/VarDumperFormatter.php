@@ -18,7 +18,7 @@ use Matomo\Dependencies\Symfony\Component\VarDumper\Cloner\VarCloner;
 class VarDumperFormatter implements FormatterInterface
 {
     private $cloner;
-    public function __construct(VarCloner $cloner = null)
+    public function __construct(?VarCloner $cloner = null)
     {
         $this->cloner = $cloner ?? new VarCloner();
     }

@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Diagnostics\Diagnostic;
 
@@ -41,6 +41,11 @@ class DatabaseAbilitiesCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Di
         }
         $result->addItem($this->checkTemporaryTables());
         $result->addItem($this->checkTransactionLevel());
+        $databaseVersion = Db::fetchOne('SELECT VERSION();');
+        if (strpos(strtolower($databaseVersion), 'mariadb') !== false && Config\DatabaseConfig::getConfigValue('schema') !== 'Mariadb') {
+            $comment = $this->translator->translate('Diagnostics_MariaDbNotConfigured');
+            $result->addItem(new \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResultItem(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_INFORMATIONAL, $comment));
+        }
         return [$result];
     }
     protected function checkUtf8mb4Charset()

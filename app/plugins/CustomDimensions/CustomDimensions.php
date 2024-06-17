@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CustomDimensions;
 
@@ -20,9 +19,9 @@ use Piwik\Tracker;
 use Piwik\Plugin;
 class CustomDimensions extends Plugin
 {
-    const SCOPE_ACTION = 'action';
-    const SCOPE_VISIT = 'visit';
-    const SCOPE_CONVERSION = 'conversion';
+    public const SCOPE_ACTION = 'action';
+    public const SCOPE_VISIT = 'visit';
+    public const SCOPE_CONVERSION = 'conversion';
     /**
      * @var Configuration
      */
@@ -190,13 +189,11 @@ class CustomDimensions extends Plugin
         $key = 'ConfiguredCustomDimensions_' . (int) $idSite;
         if ($cache->contains($key)) {
             $dimensions = $cache->fetch($key);
+        } elseif ($idSite) {
+            $dimensions = Request::processRequest('CustomDimensions.getConfiguredCustomDimensions', ['idSite' => $idSite], []);
+            $cache->save($key, $dimensions);
         } else {
-            if ($idSite) {
-                $dimensions = Request::processRequest('CustomDimensions.getConfiguredCustomDimensions', ['idSite' => $idSite], []);
-                $cache->save($key, $dimensions);
-            } else {
-                $dimensions = array();
-            }
+            $dimensions = array();
         }
         return $dimensions;
     }

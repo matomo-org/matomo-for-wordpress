@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CorePluginsAdmin;
 
@@ -85,7 +84,6 @@ class CorePluginsAdmin extends Plugin
     }
     public function getJsFiles(&$jsFiles)
     {
-        $jsFiles[] = "node_modules/jquery.dotdotdot/dist/jquery.dotdotdot.js";
         $jsFiles[] = "plugins/CoreHome/javascripts/popover.js";
     }
     public function getClientSideTranslationKeys(&$translations)
@@ -144,5 +142,8 @@ class CorePluginsAdmin extends Plugin
         $translations[] = 'CorePluginsAdmin_InfoThemeIsUsedByOtherUsersAsWell';
         $translations[] = 'CorePluginsAdmin_ThemesManagement';
         $translations[] = 'CorePluginsAdmin_NUpdatesAvailable';
+        $translations[] = 'CorePluginsAdmin_PluginFreeTrialStarted';
+        $translations[] = 'CorePluginsAdmin_PluginFreeTrialStartedAccountCreatedMessage';
+        $translations[] = 'CorePluginsAdmin_PluginFreeTrialStartedAccountCreatedTitle';
     }
 }

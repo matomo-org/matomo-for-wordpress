@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Annotations;
 
@@ -67,20 +66,18 @@ class Annotations extends \Piwik\Plugin
             $oPeriod = new Period\Range('day', $date);
             $startDate = $oPeriod->getDateStart()->getStartOfDay();
             $endDate = $oPeriod->getDateEnd()->getStartOfDay();
+        } elseif ($lastN == false && !$isMultiplePeriod) {
+            $oPeriod = Period\Factory::build($period, Date::factory($date));
+            $startDate = $oPeriod->getDateStart();
+            $endDate = $oPeriod->getDateEnd();
         } else {
-            if ($lastN == false && !$isMultiplePeriod) {
-                $oPeriod = Period\Factory::build($period, Date::factory($date));
-                $startDate = $oPeriod->getDateStart();
-                $endDate = $oPeriod->getDateEnd();
-            } else {
-                // if the range includes the last N periods or is a multiple period
-                if (!$isMultiplePeriod) {
-                    list($date, $lastN) = EvolutionViz::getDateRangeAndLastN($period, $date, $lastN);
-                }
-                list($startDate, $endDate) = explode(',', $date);
-                $startDate = Date::factory($startDate);
-                $endDate = Date::factory($endDate);
+            // if the range includes the last N periods or is a multiple period
+            if (!$isMultiplePeriod) {
+                list($date, $lastN) = EvolutionViz::getDateRangeAndLastN($period, $date, $lastN);
             }
+            list($startDate, $endDate) = explode(',', $date);
+            $startDate = Date::factory($startDate);
+            $endDate = Date::factory($endDate);
         }
         return array($startDate, $endDate);
     }

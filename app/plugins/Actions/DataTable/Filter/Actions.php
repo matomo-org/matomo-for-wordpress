@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Actions\DataTable\Filter;
 
@@ -66,39 +65,31 @@ class Actions extends BaseFilter
                                 $row->setMetadata('url', 'https://' . mb_substr($url, 7));
                             }
                         }
-                    } else {
-                        if ($folderUrlStart) {
-                            $row->setMetadata('segment', 'pageUrl=^' . urlencode(urlencode($folderUrlStart)));
+                    } elseif ($folderUrlStart) {
+                        $row->setMetadata('segment', 'pageUrl=^' . urlencode(urlencode($folderUrlStart)));
+                    } elseif ($pageTitlePath) {
+                        if ($row->getIdSubDataTable()) {
+                            $row->setMetadata('segment', 'pageTitle=^' . urlencode(urlencode(trim($pageTitlePath))));
                         } else {
-                            if ($pageTitlePath) {
-                                if ($row->getIdSubDataTable()) {
-                                    $row->setMetadata('segment', 'pageTitle=^' . urlencode(urlencode(trim($pageTitlePath))));
-                                } else {
-                                    $row->setMetadata('segmentValue', urlencode(trim($pageTitlePath)));
-                                }
+                            $row->setMetadata('segmentValue', urlencode(trim($pageTitlePath)));
+                        }
+                    } elseif ($isPageTitleType && !in_array($label, [DataTable::LABEL_SUMMARY_ROW])) {
+                        // for older data w/o page_title_path metadata
+                        if ($row->getIdSubDataTable()) {
+                            $row->setMetadata('segment', 'pageTitle=^' . urlencode(urlencode(trim($label))));
+                        } else {
+                            if (trim($label) == $notDefinedTitle) {
+                                $row->setMetadata('segmentValue', '');
                             } else {
-                                if ($isPageTitleType && !in_array($label, [DataTable::LABEL_SUMMARY_ROW])) {
-                                    // for older data w/o page_title_path metadata
-                                    if ($row->getIdSubDataTable()) {
-                                        $row->setMetadata('segment', 'pageTitle=^' . urlencode(urlencode(trim($label))));
-                                    } else {
-                                        if (trim($label) == $notDefinedTitle) {
-                                            $row->setMetadata('segmentValue', '');
-                                        } else {
-                                            $row->setMetadata('segmentValue', urlencode(trim($label)));
-                                        }
-                                    }
-                                } else {
-                                    if ($this->actionType == Action::TYPE_PAGE_URL && $urlPrefix) {
-                                        // folder for older data w/ no folder URL metadata
-                                        if ($label === $notDefinedUrl) {
-                                            $row->setMetadata('segmentValue', '');
-                                        } else {
-                                            $row->setMetadata('segment', 'pageUrl=^' . urlencode(urlencode($urlPrefix . '/' . $label)));
-                                        }
-                                    }
-                                }
+                                $row->setMetadata('segmentValue', urlencode(trim($label)));
                             }
+                        }
+                    } elseif ($this->actionType == Action::TYPE_PAGE_URL && $urlPrefix) {
+                        // folder for older data w/ no folder URL metadata
+                        if ($label === $notDefinedUrl) {
+                            $row->setMetadata('segmentValue', '');
+                        } else {
+                            $row->setMetadata('segment', 'pageUrl=^' . urlencode(urlencode($urlPrefix . '/' . $label)));
                         }
                     }
                 }

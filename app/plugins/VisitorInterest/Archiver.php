@@ -3,19 +3,18 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\VisitorInterest;
 
 class Archiver extends \Piwik\Plugin\Archiver
 {
     // third element is unit (s for seconds, default is munutes)
-    const TIME_SPENT_RECORD_NAME = 'VisitorInterest_timeGap';
-    const PAGES_VIEWED_RECORD_NAME = 'VisitorInterest_pageGap';
-    const VISITS_COUNT_RECORD_NAME = 'VisitorInterest_visitsByVisitCount';
-    const DAYS_SINCE_LAST_RECORD_NAME = 'VisitorInterest_daysSinceLastVisit';
+    public const TIME_SPENT_RECORD_NAME = 'VisitorInterest_timeGap';
+    public const PAGES_VIEWED_RECORD_NAME = 'VisitorInterest_pageGap';
+    public const VISITS_COUNT_RECORD_NAME = 'VisitorInterest_visitsByVisitCount';
+    public const DAYS_SINCE_LAST_RECORD_NAME = 'VisitorInterest_daysSinceLastVisit';
     public static $timeGap = array(array(0, 10, 's'), array(11, 30, 's'), array(31, 60, 's'), array(1, 2), array(2, 4), array(4, 7), array(7, 10), array(10, 15), array(15, 30), array(30));
     public static $pageGap = array(array(1, 1), array(2, 2), array(3, 3), array(4, 4), array(5, 5), array(6, 7), array(8, 10), array(11, 14), array(15, 20), array(20));
     /**
@@ -37,12 +36,10 @@ class Archiver extends \Piwik\Plugin\Archiver
             if (count($gap) == 3 && $gap[2] == 's') {
                 // if the units are already in seconds, just assign them
                 $secondsGap[] = array($gap[0], $gap[1]);
+            } elseif (count($gap) == 2) {
+                $secondsGap[] = array($gap[0] * 60, $gap[1] * 60);
             } else {
-                if (count($gap) == 2) {
-                    $secondsGap[] = array($gap[0] * 60, $gap[1] * 60);
-                } else {
-                    $secondsGap[] = array($gap[0] * 60);
-                }
+                $secondsGap[] = array($gap[0] * 60);
             }
         }
         return $secondsGap;

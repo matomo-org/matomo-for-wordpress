@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Tracker;
 
@@ -19,9 +18,9 @@ use Piwik\Db as PiwikDb;
 use Piwik\Url;
 class Failures
 {
-    const CLEANUP_OLD_FAILURES_DAYS = 2;
-    const FAILURE_ID_INVALID_SITE = 1;
-    const FAILURE_ID_NOT_AUTHENTICATED = 2;
+    public const CLEANUP_OLD_FAILURES_DAYS = 2;
+    public const FAILURE_ID_INVALID_SITE = 1;
+    public const FAILURE_ID_NOT_AUTHENTICATED = 2;
     private $table = 'tracking_failure';
     private $tablePrefixed;
     private $now;

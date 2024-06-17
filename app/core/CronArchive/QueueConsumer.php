@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\CronArchive;
 
@@ -224,11 +223,9 @@ class QueueConsumer
                 $this->addInvalidationToExclude($invalidatedArchive);
                 if ($alreadyInProgressId < $invalidatedArchive['idinvalidation']) {
                     $this->logger->debug("Skipping invalidated archive {$invalidatedArchive['idinvalidation']}, invalidation already in progress. Since in progress is older, not removing invalidation.");
-                } else {
-                    if ($alreadyInProgressId > $invalidatedArchive['idinvalidation']) {
-                        $this->logger->debug("Skipping invalidated archive {$invalidatedArchive['idinvalidation']}, invalidation already in progress. Since in progress is newer, will remove invalidation.");
-                        $this->model->deleteInvalidations([$invalidatedArchive]);
-                    }
+                } elseif ($alreadyInProgressId > $invalidatedArchive['idinvalidation']) {
+                    $this->logger->debug("Skipping invalidated archive {$invalidatedArchive['idinvalidation']}, invalidation already in progress. Since in progress is newer, will remove invalidation.");
+                    $this->model->deleteInvalidations([$invalidatedArchive]);
                 }
                 continue;
             }
@@ -327,6 +324,9 @@ class QueueConsumer
         $period = PeriodFactory::build($periodLabel, $dateStr);
         $segment = new Segment($invalidatedArchive['segment'], [$invalidatedArchive['idsite']]);
         $params = new Parameters($site, $period, $segment);
+        if (!empty($invalidatedArchive['plugin'])) {
+            $params->setRequestedPlugin($invalidatedArchive['plugin']);
+        }
         $loader = new Loader($params);
         return $loader->canSkipThisArchive();
         // if no point in archiving, skip
@@ -460,6 +460,9 @@ class QueueConsumer
         $period = PeriodFactory::build($periodLabel, $dateStr);
         $segment = new Segment($invalidatedArchive['segment'], [$invalidatedArchive['idsite']]);
         $params = new Parameters($site, $period, $segment);
+        if (!empty($invalidatedArchive['plugin'])) {
+            $params->setRequestedPlugin($invalidatedArchive['plugin']);
+        }
         // if latest archive includes today and is usable (DONE_OK or DONE_INVALIDATED and recent enough), skip
         $today = Date::factoryInTimezone('today', Site::getTimezoneFor($site->getId()));
         $isArchiveIncludesToday = $period->isDateInPeriod($today);

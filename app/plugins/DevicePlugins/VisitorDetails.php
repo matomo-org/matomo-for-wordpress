@@ -4,8 +4,7 @@
  * Matomo - free/libre analytics platform
  *
  * @link    https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\DevicePlugins;
 
@@ -13,7 +12,7 @@ use Piwik\Plugins\Live\VisitorDetailsAbstract;
 require_once PIWIK_INCLUDE_PATH . '/plugins/DevicePlugins/functions.php';
 class VisitorDetails extends VisitorDetailsAbstract
 {
-    const DELIMITER_PLUGIN_NAME = ", ";
+    public const DELIMITER_PLUGIN_NAME = ", ";
     public function extendVisitorDetails(&$visitor)
     {
         $visitor['plugins'] = $this->getPlugins();

@@ -20,7 +20,7 @@ use Matomo\Dependencies\Twig\Node\Node;
  */
 class BlockReferenceExpression extends AbstractExpression
 {
-    public function __construct(Node $name, ?Node $template, int $lineno, string $tag = null)
+    public function __construct(Node $name, ?Node $template, int $lineno, ?string $tag = null)
     {
         $nodes = ['name' => $name];
         if (null !== $template) {
@@ -35,7 +35,8 @@ class BlockReferenceExpression extends AbstractExpression
         } else {
             if ($this->getAttribute('output')) {
                 $compiler->addDebugInfo($this);
-                $this->compileTemplateCall($compiler, 'displayBlock')->raw(";\n");
+                $compiler->write('yield from ');
+                $this->compileTemplateCall($compiler, 'yieldBlock')->raw(";\n");
             } else {
                 $this->compileTemplateCall($compiler, 'renderBlock');
             }
@@ -48,7 +49,7 @@ class BlockReferenceExpression extends AbstractExpression
         } else {
             $compiler->write('$this->loadTemplate(')->subcompile($this->getNode('template'))->raw(', ')->repr($this->getTemplateName())->raw(', ')->repr($this->getTemplateLine())->raw(')');
         }
-        $compiler->raw(sprintf('->%s', $method));
+        $compiler->raw(sprintf('->unwrap()->%s', $method));
         return $this->compileBlockArguments($compiler);
     }
     private function compileBlockArguments(Compiler $compiler) : Compiler

@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik;
 
@@ -93,9 +92,9 @@ class Segment
     /**
      * Truncate the Segments to 8k
      */
-    const SEGMENT_TRUNCATE_LIMIT = 8192;
-    const CACHE_KEY = 'segmenthashes';
-    const SEGMENT_HAS_BUILT_CACHE_KEY = 'segmenthashbuilt';
+    public const SEGMENT_TRUNCATE_LIMIT = 8192;
+    public const CACHE_KEY = 'segmenthashes';
+    public const SEGMENT_HAS_BUILT_CACHE_KEY = 'segmenthashbuilt';
     /**
      * Constructor.
      *
@@ -211,10 +210,8 @@ class Segment
         $this->string = $string;
         if (empty($idSites)) {
             $idSites = [];
-        } else {
-            if (!is_array($idSites)) {
-                $idSites = [$idSites];
-            }
+        } elseif (!is_array($idSites)) {
+            $idSites = [$idSites];
         }
         $this->idSites = $idSites;
         $segment = new SegmentExpression($string);
@@ -264,10 +261,8 @@ class Segment
                     return true;
                 }
             }
-        } else {
-            if (strpos($availableSegment['sqlSegment'], 'log_visit.') === 0) {
-                return true;
-            }
+        } elseif (strpos($availableSegment['sqlSegment'], 'log_visit.') === 0) {
+            return true;
         }
         return false;
     }
@@ -287,10 +282,8 @@ class Segment
     {
         if ($operator === SegmentExpression::MATCH_DOES_NOT_CONTAIN) {
             return SegmentExpression::MATCH_CONTAINS;
-        } else {
-            if ($operator === SegmentExpression::MATCH_NOT_EQUAL) {
-                return SegmentExpression::MATCH_EQUAL;
-            }
+        } elseif ($operator === SegmentExpression::MATCH_NOT_EQUAL) {
+            return SegmentExpression::MATCH_EQUAL;
         }
         throw new Exception("Operator not support for subqueries");
     }

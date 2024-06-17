@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik;
 
@@ -63,7 +62,7 @@ function piwik_format_money($amount, $idSite)
  */
 class Twig
 {
-    const SPARKLINE_TEMPLATE = '<img loading="lazy" alt="" data-src="%s" width="%d" height="%d" />
+    public const SPARKLINE_TEMPLATE = '<img loading="lazy" alt="" data-src="%s" width="%d" height="%d" />
     <script type="text/javascript">$(function() { piwik.initSparklines(); });</script>';
     /**
      * @var Environment

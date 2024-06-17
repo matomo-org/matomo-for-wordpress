@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\View;
 
@@ -21,7 +20,7 @@ use Piwik\View;
 use Piwik\Plugin\Manager;
 class HtmlReportEmailHeaderView extends View
 {
-    const TEMPLATE_FILE = '@CoreHome/ReportRenderer/_htmlReportHeader';
+    public const TEMPLATE_FILE = '@CoreHome/ReportRenderer/_htmlReportHeader';
     private static $reportFrequencyTranslationByPeriod = [Schedule::PERIOD_NEVER => '', Schedule::PERIOD_DAY => 'General_DailyReport', Schedule::PERIOD_WEEK => 'General_WeeklyReport', Schedule::PERIOD_MONTH => 'General_MonthlyReport', Schedule::PERIOD_YEAR => 'General_YearlyReport', Schedule::PERIOD_RANGE => 'General_RangeReports'];
     public function __construct($reportTitle, $prettyDate, $description, $reportMetadata, $segment, $idSite, $period)
     {

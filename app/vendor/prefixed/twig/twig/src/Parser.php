@@ -86,6 +86,9 @@ class Parser
         }
         $node = new ModuleNode(new BodyNode([$body]), $this->parent, new Node($this->blocks), new Node($this->macros), new Node($this->traits), $this->embeddedTemplates, $stream->getSourceContext());
         $traverser = new NodeTraverser($this->env, $this->visitors);
+        /**
+         * @var ModuleNode $node
+         */
         $node = $traverser->traverse($node);
         // restore previous stack so previous parse() call can resume working
         foreach (array_pop($this->stack) as $key => $val) {
@@ -204,7 +207,7 @@ class Parser
         $template->setIndex(mt_rand());
         $this->embeddedTemplates[] = $template;
     }
-    public function addImportedSymbol(string $type, string $alias, string $name = null, AbstractExpression $node = null) : void
+    public function addImportedSymbol(string $type, string $alias, ?string $name = null, ?AbstractExpression $node = null) : void
     {
         $this->importedSymbols[0][$type][$alias] = ['name' => $name, 'node' => $node];
     }
