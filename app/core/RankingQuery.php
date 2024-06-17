@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik;
 
@@ -42,7 +41,7 @@ class RankingQuery
 {
     // a special label used to mark the 'Others' row in a ranking query result set. this is mapped to the
     // datatable summary row during archiving.
-    const LABEL_SUMMARY_ROW = '__mtm_ranking_query_others__';
+    public const LABEL_SUMMARY_ROW = '__mtm_ranking_query_others__';
     /**
      * Contains the labels of the inner query.
      * Format: "label" => true (to make sure labels don't appear twice)

@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik;
 
@@ -21,7 +20,7 @@ use Zend_Session;
  */
 class Session extends Zend_Session
 {
-    const SESSION_NAME = 'MATOMO_SESSID';
+    public const SESSION_NAME = 'MATOMO_SESSID';
     public static $sessionName = self::SESSION_NAME;
     protected static $sessionStarted = false;
     /**

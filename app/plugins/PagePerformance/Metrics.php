@@ -3,14 +3,13 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\PagePerformance;
 
 use Piwik\Columns\Dimension;
-use Piwik\Plugin\Dimension\ActionDimension;
+use Piwik\Plugins\PagePerformance\Columns\Base;
 use Piwik\Plugins\PagePerformance\Columns\Metrics\AveragePageLoadTime;
 use Piwik\Plugins\PagePerformance\Columns\Metrics\AverageTimeDomCompletion;
 use Piwik\Plugins\PagePerformance\Columns\Metrics\AverageTimeDomProcessing;
@@ -70,13 +69,13 @@ class Metrics
     {
         $table = 'log_link_visit_action';
         /**
-         * @var ActionDimension[] $performanceDimensions
+         * @var Base[] $performanceDimensions
          */
         $performanceDimensions = [new TimeNetwork(), new TimeServer(), new TimeTransfer(), new TimeDomProcessing(), new TimeDomCompletion(), new TimeOnLoad()];
         foreach ($performanceDimensions as $dimension) {
             $id = $dimension->getColumnName();
             $column = $table . '.' . $id;
-            $metricsConfig['sum_' . $id] = ['aggregation' => 'sum', 'query' => "sum(\n                    case when " . $column . " is null\n                        then 0\n                        else " . $column . "\n                    end\n                ) / 1000"];
+            $metricsConfig['sum_' . $id] = ['aggregation' => 'sum', 'query' => "sum(" . sprintf($dimension->getSqlCappedValue(), $column) . ") / 1000"];
             $metricsConfig['nb_hits_with_' . $id] = ['aggregation' => 'sum', 'query' => "sum(\n                    case when " . $column . " is null\n                        then 0\n                        else 1\n                    end\n                )"];
             $metricsConfig['min_' . $id] = ['aggregation' => 'min', 'query' => "min(" . $column . ") / 1000"];
             $metricsConfig['max_' . $id] = ['aggregation' => 'max', 'query' => "max(" . $column . ") / 1000"];

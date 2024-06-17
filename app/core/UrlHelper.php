@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik;
 
@@ -30,7 +29,7 @@ class UrlHelper
     protected static function inArrayMatchesRegex($test, $patterns) : bool
     {
         foreach ($patterns as $val) {
-            if (@preg_match($val, null) === false) {
+            if (@preg_match($val, '') === false) {
                 if (strcasecmp($val, $test) === 0) {
                     return true;
                 }

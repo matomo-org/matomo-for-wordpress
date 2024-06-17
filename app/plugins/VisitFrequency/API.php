@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\VisitFrequency;
 
@@ -24,10 +23,10 @@ use Piwik\Site;
 class API extends \Piwik\Plugin\API
 {
     // visitorType==returning,visitorType==returningCustomer
-    const RETURNING_VISITOR_SEGMENT = "visitorType%3D%3Dreturning%2CvisitorType%3D%3DreturningCustomer";
-    const RETURNING_COLUMN_SUFFIX = "_returning";
-    const NEW_VISITOR_SEGMENT = 'visitorType%3D%3Dnew';
-    const NEW_COLUMN_SUFFIX = "_new";
+    public const RETURNING_VISITOR_SEGMENT = "visitorType%3D%3Dreturning%2CvisitorType%3D%3DreturningCustomer";
+    public const RETURNING_COLUMN_SUFFIX = "_returning";
+    public const NEW_VISITOR_SEGMENT = 'visitorType%3D%3Dnew';
+    public const NEW_COLUMN_SUFFIX = "_new";
     /**
      * @param int $idSite
      * @param string $period
@@ -45,13 +44,11 @@ class API extends \Piwik\Plugin\API
         if ($idSite === 'all' || count(Site::getIdSitesFromIdSitesString($idSite)) > 1) {
             $resultSet = new DataTable\Map();
             $resultSet->setKeyName('idSite');
+        } elseif (Period::isMultiplePeriod($date, $period)) {
+            $resultSet = new DataTable\Map();
+            $resultSet->setKeyName('period');
         } else {
-            if (Period::isMultiplePeriod($date, $period)) {
-                $resultSet = new DataTable\Map();
-                $resultSet->setKeyName('period');
-            } else {
-                $resultSet = new DataTable\Simple();
-            }
+            $resultSet = new DataTable\Simple();
         }
         foreach ($visitTypes as $columnSuffix => $visitorTypeSegment) {
             $modifiedSegment = Segment::combine($segment, SegmentExpression::AND_DELIMITER, $visitorTypeSegment);

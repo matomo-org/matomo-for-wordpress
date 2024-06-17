@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Archive;
 
@@ -21,8 +20,8 @@ use Piwik\Site;
  */
 class DataTableFactory
 {
-    const TABLE_METADATA_SEGMENT_INDEX = 'segment';
-    const TABLE_METADATA_SEGMENT_PRETTY_INDEX = 'segmentPretty';
+    public const TABLE_METADATA_SEGMENT_INDEX = 'segment';
+    public const TABLE_METADATA_SEGMENT_PRETTY_INDEX = 'segmentPretty';
     /**
      * @see DataCollection::$dataNames.
      */
@@ -75,8 +74,8 @@ class DataTableFactory
      * @see DataCollection::$defaultRow.
      */
     private $defaultRow;
-    const TABLE_METADATA_SITE_INDEX = 'site';
-    const TABLE_METADATA_PERIOD_INDEX = 'period';
+    public const TABLE_METADATA_SITE_INDEX = 'site';
+    public const TABLE_METADATA_PERIOD_INDEX = 'period';
     /**
      * Constructor.
      */

@@ -26,7 +26,7 @@ class DumpListener implements EventSubscriberInterface
     private $cloner;
     private $dumper;
     private $connection;
-    public function __construct(ClonerInterface $cloner, DataDumperInterface $dumper, Connection $connection = null)
+    public function __construct(ClonerInterface $cloner, DataDumperInterface $dumper, ?Connection $connection = null)
     {
         $this->cloner = $cloner;
         $this->dumper = $dumper;

@@ -3,12 +3,13 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Updater\Migration\Db;
 
 use Piwik\DataAccess\TableMetadata;
+use Piwik\Db\Schema;
 /**
  * @see Factory::addColumns()
  * @ignore
@@ -35,7 +36,15 @@ class AddColumns extends \Piwik\Updater\Migration\Db\Sql
             }
             $changes[] = $part;
         }
-        $sql = sprintf("ALTER TABLE `%s` %s", $table, implode(', ', $changes));
-        parent::__construct($sql, static::ERROR_CODE_DUPLICATE_COLUMN);
+        if (Schema::getInstance()->supportsComplexColumnUpdates()) {
+            $sql = sprintf("ALTER TABLE `%s` %s", $table, implode(', ', $changes));
+            parent::__construct($sql, static::ERROR_CODE_DUPLICATE_COLUMN);
+        } else {
+            $queriesToPerform = [];
+            foreach ($changes as $change) {
+                $queriesToPerform[] = sprintf("ALTER TABLE `%s` %s", $table, $change);
+            }
+            parent::__construct(implode(';', $queriesToPerform), static::ERROR_CODE_DUPLICATE_COLUMN);
+        }
     }
 }

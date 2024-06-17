@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\CronArchive;
 
@@ -19,9 +18,9 @@ use Piwik\Option;
  */
 class SharedSiteIds
 {
-    const OPTION_DEFAULT = 'SharedSiteIdsToArchive';
-    const OPTION_ALL_WEBSITES = 'SharedSiteIdsToArchive_AllWebsites';
-    const KEY_TIMESTAMP = '_ResetQueueTime';
+    public const OPTION_DEFAULT = 'SharedSiteIdsToArchive';
+    public const OPTION_ALL_WEBSITES = 'SharedSiteIdsToArchive_AllWebsites';
+    public const KEY_TIMESTAMP = '_ResetQueueTime';
     /**
      * @var string
      */

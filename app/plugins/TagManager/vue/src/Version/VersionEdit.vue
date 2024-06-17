@@ -12,72 +12,80 @@
     >
       <p v-show="isLoading">
         <span class="loadingPiwik">
-          <img src="plugins/Morpheus/images/loading-blue.gif" />
+          <img src="plugins/Morpheus/images/loading-blue.gif"/>
           {{ translate('General_LoadingData') }}
         </span>
       </p>
       <p v-show="isUpdating">
         <span class="loadingPiwik">
-          <img src="plugins/Morpheus/images/loading-blue.gif" />
+          <img src="plugins/Morpheus/images/loading-blue.gif"/>
           {{ translate('TagManager_UpdatingData') }}
         </span>
       </p>
       <form @submit="edit ? updateVersion() : createVersion()">
         <div>
-          <div>
-            <Field
-              uicontrol="text"
-              name="name"
-              :inline-help="versionNameHelpText"
-              :inline-help-bind="{ lastVersion }"
-              :model-value="version.name"
-              @update:model-value="version.name = $event; setValueHasChanged()"
-              :maxlength="30"
-              :title="translate('TagManager_VersionName')"
-            />
-          </div>
-          <div>
-            <Field
-              uicontrol="textarea"
-              name="description"
-              :model-value="version.description"
-              @update:model-value="version.description = $event; setValueHasChanged()"
-              :title="translate('TagManager_VersionDescription')"
-              :inline-help="translate('TagManager_VersionDescriptionHelp')"
-            />
-          </div>
-          <SaveButton
-            class="createButton no-publish"
-            @confirm="edit ? updateVersion() : createVersion()"
-            :disabled="isUpdating || !isDirty"
-            :saving="isUpdating"
-            :value="edit
+          <div v-if="hasPublishCapability()">
+            <div>
+              <Field
+                uicontrol="text"
+                name="name"
+                :inline-help="versionNameHelpText"
+                :inline-help-bind="{ lastVersion }"
+                :model-value="version.name"
+                @update:model-value="version.name = $event; setValueHasChanged()"
+                :maxlength="30"
+                :title="translate('TagManager_VersionName')"
+              />
+            </div>
+            <div>
+              <Field
+                uicontrol="textarea"
+                name="description"
+                :model-value="version.description"
+                @update:model-value="version.description = $event; setValueHasChanged()"
+                :title="translate('TagManager_VersionDescription')"
+                :inline-help="translate('TagManager_VersionDescriptionHelp')"
+              />
+            </div>
+            <SaveButton
+              class="createButton no-publish"
+              @confirm="edit ? updateVersion() : createVersion()"
+              :disabled="isUpdating || !isDirty"
+              :saving="isUpdating"
+              :value="edit
               ? translate('CoreUpdater_UpdateTitle') :
               translate('TagManager_CreateVersionWithoutPublishing')"
-          >
-          </SaveButton>
-          <div v-if="create && environments.length">
-            <Field
-              uicontrol="select"
-              name="environment"
-              :inline-help="selectTagManagerEnvironmentHelp"
-              :inline-help-bind="{ canPublishToLive }"
-              :model-value="version.environments?.[0]"
-              @update:model-value="version.environments[0] = $event; setValueHasChanged()"
-              :options="environments"
-              :introduction="translate('TagManager_OrCreateAndPublishVersion')"
-              :title="translate('TagManager_Environment')"
-            />
+            >
+            </SaveButton>
+            <div v-if="create && environments.length">
+              <Field
+                uicontrol="select"
+                name="environment"
+                :inline-help="selectTagManagerEnvironmentHelp"
+                :inline-help-bind="{ canPublishToLive }"
+                :model-value="version.environments?.[0]"
+                @update:model-value="version.environments[0] = $event; setValueHasChanged()"
+                :options="environments"
+                :introduction="translate('TagManager_OrCreateAndPublishVersion')"
+                :title="translate('TagManager_Environment')"
+              />
+            </div>
+            <SaveButton
+              class="publishButton"
+              v-if="create && environments.length"
+              @confirm="createVersionAndPublish()"
+              :disabled="isUpdating || !isDirty"
+              :saving="isUpdating"
+              :value="translate('TagManager_CreateVersionAndPublishRelease')"
+            >
+            </SaveButton>
           </div>
-          <SaveButton
-            class="publishButton"
-            v-if="create && environments.length"
-            @confirm="createVersionAndPublish()"
-            :disabled="isUpdating || !isDirty"
-            :saving="isUpdating"
-            :value="translate('TagManager_CreateVersionAndPublishRelease')"
-          >
-          </SaveButton>
+          <div v-else>
+            <div class="alert alert-warning"
+                 v-html="$sanitize(showNoAccessErrorMessage)"
+            >
+            </div>
+          </div>
           <div
             class="versionChanges"
             v-if="lastVersion"
@@ -136,7 +144,7 @@ import {
   NotificationsStore,
   NotificationType,
   clone,
-  MatomoUrl,
+  MatomoUrl, externalLink,
 } from 'CoreHome';
 import { Field, SaveButton } from 'CorePluginsAdmin';
 import AvailableEnvironmentsStore from '../AvailableEnvironments.store';
@@ -150,7 +158,7 @@ import SelectTagManagerEnvironmentHelpText from './SelectTagManagerEnvironmentHe
 
 interface VersionEditState {
   isDirty: boolean;
-  lastVersion: string|null;
+  lastVersion: string | null;
   versionChanges: SingleDiff[];
   isLoadingVersionChanges: boolean;
   isUpdatingVersion: boolean;
@@ -272,6 +280,8 @@ export default defineComponent({
             this.idContainerVersion,
             lastContainerVersion!,
           ).then((diff) => {
+            diff.sort((a, b) => (
+              new Date(b.lastChanged).valueOf() - new Date(a.lastChanged).valueOf()));
             this.versionChanges = diff;
             this.isLoadingVersionChanges = false;
           });
@@ -359,11 +369,14 @@ export default defineComponent({
 
           setTimeout(() => {
             const createdX = translate('TagManager_CreatedX', translate('TagManager_Version'));
-            const wantToRedeploy = translate(
-              'TagManager_WantToDeployThisChangeCreateVersion',
-              '<a class="createNewVersionLink">',
-              '</a>',
-            );
+            let wantToRedeploy = '';
+            if (this.hasPublishCapability()) {
+              wantToRedeploy = translate(
+                'TagManager_WantToDeployThisChangeCreateVersion',
+                '<a class="createNewVersionLink">',
+                '</a>',
+              );
+            }
 
             this.showNotification(`${createdX} ${wantToRedeploy}`, 'success');
           }, 200);
@@ -469,6 +482,9 @@ export default defineComponent({
 
       return true;
     },
+    hasPublishCapability() {
+      return Matomo.hasUserCapability('tagmanager_write') && Matomo.hasUserCapability('tagmanager_use_custom_templates');
+    },
   },
   computed: {
     create() {
@@ -507,6 +523,13 @@ export default defineComponent({
       return this.create
         ? translate('TagManager_CreateNewVersion')
         : translate('TagManager_EditVersion');
+    },
+    showNoAccessErrorMessage() {
+      return translate(
+        'TagManager_VersionEditWithNoAccessMessage',
+        externalLink('https://matomo.org/faq/tag-manager/faq_26547/'),
+        '</a>',
+      );
     },
   },
 });

@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Diagnostics\Diagnostic;
 
@@ -37,13 +37,11 @@ class MemoryLimitCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnost
         if (false === $memoryLimit) {
             $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK;
             $comment = $this->translator->translate('Installation_SystemCheckMemoryNoMemoryLimitSet');
+        } elseif ($memoryLimit >= $this->minimumMemoryLimit) {
+            $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK;
         } else {
-            if ($memoryLimit >= $this->minimumMemoryLimit) {
-                $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK;
-            } else {
-                $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING;
-                $comment .= sprintf('<br />%s<br />%s', $this->translator->translate('Installation_SystemCheckMemoryLimitHelp'), $this->translator->translate('Installation_RestartWebServer'));
-            }
+            $status = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING;
+            $comment .= sprintf('<br />%s<br />%s', $this->translator->translate('Installation_SystemCheckMemoryLimitHelp'), $this->translator->translate('Installation_RestartWebServer'));
         }
         return array(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, $status, $comment));
     }

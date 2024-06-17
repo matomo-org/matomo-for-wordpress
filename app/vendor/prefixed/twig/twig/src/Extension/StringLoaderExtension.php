@@ -10,27 +10,27 @@
  */
 namespace Matomo\Dependencies\Twig\Extension;
 
+use Matomo\Dependencies\Twig\Environment;
+use Matomo\Dependencies\Twig\TemplateWrapper;
 use Matomo\Dependencies\Twig\TwigFunction;
 final class StringLoaderExtension extends AbstractExtension
 {
     public function getFunctions() : array
     {
-        return [new TwigFunction('template_from_string', '\Matomo\Dependencies\twig_template_from_string', ['needs_environment' => true])];
+        return [new TwigFunction('template_from_string', [self::class, 'templateFromString'], ['needs_environment' => true])];
     }
-}
-namespace Matomo\Dependencies;
-
-use Matomo\Dependencies\Twig\Environment;
-use Matomo\Dependencies\Twig\TemplateWrapper;
-/**
- * Loads a template from a string.
- *
- *     {{ include(template_from_string("Hello {{ name }}")) }}
- *
- * @param string $template A template as a string or object implementing __toString()
- * @param string $name     An optional name of the template to be used in error messages
- */
-function twig_template_from_string(Environment $env, $template, string $name = null) : TemplateWrapper
-{
-    return $env->createTemplate((string) $template, $name);
+    /**
+     * Loads a template from a string.
+     *
+     *     {{ include(template_from_string("Hello {{ name }}")) }}
+     *
+     * @param string      $template A template as a string or object implementing __toString()
+     * @param string|null $name     An optional name of the template to be used in error messages
+     *
+     * @internal
+     */
+    public static function templateFromString(Environment $env, $template, ?string $name = null) : TemplateWrapper
+    {
+        return $env->createTemplate((string) $template, $name);
+    }
 }

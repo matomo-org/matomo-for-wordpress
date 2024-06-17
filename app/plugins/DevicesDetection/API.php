@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\DevicesDetection;
 
@@ -165,21 +164,19 @@ class API extends \Piwik\Plugin\API
                 $newDataTable = $this->mergeDataTables($table, $versionDataTables[$label]);
                 $dataTable->addTable($newDataTable, $label);
             }
-        } else {
-            if (!$dataTable->getRowsCount() && $dataTable2->getRowsCount()) {
-                $dataTable2->filter('GroupBy', ['label', function ($label) {
-                    if (preg_match("/(.+) [0-9]+(?:\\.[0-9]+)?\$/", $label, $matches)) {
-                        return $matches[1];
-                        // should match for browsers
-                    }
-                    if (strpos($label, ';')) {
-                        return substr($label, 0, 3);
-                        // should match for os
-                    }
-                    return $label;
-                }]);
-                return $dataTable2;
-            }
+        } elseif (!$dataTable->getRowsCount() && $dataTable2->getRowsCount()) {
+            $dataTable2->filter('GroupBy', ['label', function ($label) {
+                if (preg_match("/(.+) [0-9]+(?:\\.[0-9]+)?\$/", $label, $matches)) {
+                    return $matches[1];
+                    // should match for browsers
+                }
+                if (strpos($label, ';')) {
+                    return substr($label, 0, 3);
+                    // should match for os
+                }
+                return $label;
+            }]);
+            return $dataTable2;
         }
         return $dataTable;
     }

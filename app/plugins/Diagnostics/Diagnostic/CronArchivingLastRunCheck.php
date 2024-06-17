@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Diagnostics\Diagnostic;
 
@@ -24,7 +23,7 @@ use Piwik\Url;
  */
 class CronArchivingLastRunCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
 {
-    const SECONDS_IN_DAY = 86400;
+    public const SECONDS_IN_DAY = 86400;
     /**
      * @var Translator
      */
@@ -61,13 +60,11 @@ class CronArchivingLastRunCheck implements \Piwik\Plugins\Diagnostics\Diagnostic
         // check archiving has been run recently
         if ($diffTime > self::SECONDS_IN_DAY * 2) {
             $result = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_ERROR, $errorComment);
+        } elseif ($diffTime > self::SECONDS_IN_DAY) {
+            $result = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING, $errorComment);
         } else {
-            if ($diffTime > self::SECONDS_IN_DAY) {
-                $result = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING, $errorComment);
-            } else {
-                $comment = $this->translator->translate('Diagnostics_CronArchivingRanSuccessfullyXAgo', $diffTimePretty);
-                $result = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK, $comment);
-            }
+            $comment = $this->translator->translate('Diagnostics_CronArchivingRanSuccessfullyXAgo', $diffTimePretty);
+            $result = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK, $comment);
         }
         return [$result];
     }

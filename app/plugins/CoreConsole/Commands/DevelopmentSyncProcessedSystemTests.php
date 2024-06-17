@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CoreConsole\Commands;
 
@@ -51,10 +50,8 @@ class DevelopmentSyncProcessedSystemTests extends ConsoleCommand
         $repository = $input->getOption('repository');
         if ($input->getOption('plugin')) {
             $targetDir = sprintf(PIWIK_INCLUDE_PATH . '/plugins/%s/tests/System/%s/', $input->getOption('plugin'), $expected ? 'expected' : 'processed');
-        } else {
-            if (preg_match('/plugin-([a-z0-9]{3,40})$/i', $repository, $match)) {
-                $targetDir = sprintf(PIWIK_INCLUDE_PATH . '/plugins/%s/tests/System/%s/', $match[1], $expected ? 'expected' : 'processed');
-            }
+        } elseif (preg_match('/plugin-([a-z0-9]{3,40})$/i', $repository, $match)) {
+            $targetDir = sprintf(PIWIK_INCLUDE_PATH . '/plugins/%s/tests/System/%s/', $match[1], $expected ? 'expected' : 'processed');
         }
         $tmpDir = StaticContainer::get('path.tmp') . '/';
         $this->validate($buildNumber, $targetDir, $tmpDir);

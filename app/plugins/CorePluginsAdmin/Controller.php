@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CorePluginsAdmin;
 
@@ -34,9 +33,9 @@ use Piwik\Version;
 use Piwik\View;
 class Controller extends Plugin\ControllerAdmin
 {
-    const ACTIVATE_NONCE = 'CorePluginsAdmin.activatePlugin';
-    const DEACTIVATE_NONCE = 'CorePluginsAdmin.deactivatePlugin';
-    const UNINSTALL_NONCE = 'CorePluginsAdmin.uninstallPlugin';
+    public const ACTIVATE_NONCE = 'CorePluginsAdmin.activatePlugin';
+    public const DEACTIVATE_NONCE = 'CorePluginsAdmin.deactivatePlugin';
+    public const UNINSTALL_NONCE = 'CorePluginsAdmin.uninstallPlugin';
     /**
      * @var Translator
      */
@@ -172,13 +171,13 @@ class Controller extends Plugin\ControllerAdmin
         $view->pluginNamesHavingSettings = array_keys($this->settingsProvider->getAllSystemSettings());
         $view->isMarketplaceEnabled = Marketplace::isMarketplaceEnabled();
         $view->isPluginsAdminEnabled = \Piwik\Plugins\CorePluginsAdmin\CorePluginsAdmin::isPluginsAdminEnabled();
-        $view->pluginsHavingUpdate = [];
         $view->marketplacePluginNames = [];
+        $view->pluginsHavingUpdate = [];
+        $view->pluginUpdateNonces = [];
         if (Marketplace::isMarketplaceEnabled() && $this->marketplacePlugins) {
             try {
                 $view->marketplacePluginNames = $this->marketplacePlugins->getAvailablePluginNames($themesOnly);
                 $view->pluginsHavingUpdate = $this->marketplacePlugins->getPluginsHavingUpdate();
-                $view->pluginUpdateNonces = [];
                 foreach ($view->pluginsHavingUpdate as $name => $plugin) {
                     $view->pluginUpdateNonces[$name] = Nonce::getNonce($plugin['name']);
                 }

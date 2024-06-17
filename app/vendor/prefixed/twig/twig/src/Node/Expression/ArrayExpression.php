@@ -43,7 +43,7 @@ class ArrayExpression extends AbstractExpression
         }
         return false;
     }
-    public function addElement(AbstractExpression $value, AbstractExpression $key = null) : void
+    public function addElement(AbstractExpression $value, ?AbstractExpression $key = null) : void
     {
         if (null === $key) {
             $key = new ConstantExpression(++$this->index, $value->getTemplateLine());
@@ -55,7 +55,7 @@ class ArrayExpression extends AbstractExpression
         $keyValuePairs = $this->getKeyValuePairs();
         $needsArrayMergeSpread = \PHP_VERSION_ID < 80100 && $this->hasSpreadItem($keyValuePairs);
         if ($needsArrayMergeSpread) {
-            $compiler->raw('\Matomo\Dependencies\twig_array_merge(');
+            $compiler->raw('CoreExtension::merge(');
         }
         $compiler->raw('[');
         $first = true;

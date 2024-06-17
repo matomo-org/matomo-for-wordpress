@@ -1,7 +1,8 @@
 <!--
   Matomo - free/libre analytics platform
-  @link https://matomo.org
-  @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+
+  @link    https://matomo.org
+  @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
 -->
 
 <template>
@@ -47,7 +48,7 @@
         </div>
         <PagedUsersList
           @edit-user="onEditUser($event.user)"
-          @change-user-role="onChangeUserRole($event.users, $event.role)"
+          @change-user-role="onChangeUserRole($event.users, $event.role, $event.password)"
           @delete-user="onDeleteUser($event.users, $event.password)"
           @search-change="searchParams = $event.params; fetchUsers()"
           @resend-invite="showResendPopup($event.user)"
@@ -140,9 +141,7 @@
     <PasswordConfirmation
       v-model="showPasswordConfirmationForInviteAction"
       @confirmed="onInviteAction"
-    >
-      <p>{{ translate('UsersManager_ConfirmWithPassword') }}</p>
-    </PasswordConfirmation>
+    />
   </div>
 </template>
 
@@ -295,7 +294,7 @@ export default defineComponent({
     showAddExistingUserModal() {
       $(this.$refs.addExistingUserModal as HTMLElement).modal({ dismissible: false }).modal('open');
     },
-    onChangeUserRole(users: User[]|string, role: string) {
+    onChangeUserRole(users: User[]|string, role: string, password: string) {
       this.isLoadingUsers = true;
 
       Promise.resolve().then(() => {
@@ -316,6 +315,7 @@ export default defineComponent({
             userLogin: login,
             capabilities: role,
             idSites: this.searchParams.idSite,
+            passwordConfirmation: password,
           }));
         } else {
           requests = userLogins.map((login) => ({
@@ -323,13 +323,16 @@ export default defineComponent({
             userLogin: login,
             access: role,
             idSites: this.searchParams.idSite,
+            passwordConfirmation: password,
           }));
         }
 
         return AjaxHelper.fetch(requests, { createErrorNotification: true });
       }).catch(() => {
         // ignore (errors will still be displayed to the user)
-      }).then(() => this.fetchUsers());
+      }).finally(
+        () => this.fetchUsers(),
+      );
     },
     getAllUsersInSearch() {
       return AjaxHelper.fetch<User[]>({

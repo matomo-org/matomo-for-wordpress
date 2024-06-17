@@ -10,6 +10,7 @@
  */
 namespace Matomo\Dependencies\Twig\Node;
 
+use Matomo\Dependencies\Twig\Attribute\YieldReady;
 use Matomo\Dependencies\Twig\Compiler;
 /**
  * Represents an autoescape node.
@@ -22,6 +23,7 @@ use Matomo\Dependencies\Twig\Compiler;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class AutoEscapeNode extends Node
 {
     public function __construct($value, Node $body, int $lineno, string $tag = 'autoescape')

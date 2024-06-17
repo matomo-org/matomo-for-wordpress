@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Diagnostics\Diagnostic;
 
@@ -46,7 +45,7 @@ class DbAdapterCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
     {
         $results = array();
         $adapters = Adapter::getAdapters();
-        foreach ($adapters as $adapter => $port) {
+        foreach ($adapters as $adapter) {
             $label = $adapter . ' ' . $this->translator->translate('Installation_Extension');
             $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::singleResult($label, \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK);
         }

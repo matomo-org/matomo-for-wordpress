@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Tracker;
 
@@ -17,7 +16,7 @@ use Piwik\DeviceDetector\DeviceDetectorFactory;
 use Piwik\SettingsPiwik;
 class Settings
 {
-    const OS_BOT = 'BOT';
+    public const OS_BOT = 'BOT';
     /**
      * If `true`, the config ID for a visitor will be the same no matter what site is being tracked.
      * If `false, the config ID will be different.

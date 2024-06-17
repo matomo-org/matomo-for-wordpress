@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugin;
 
@@ -90,12 +89,10 @@ class Dependency
         $minVersion = str_replace(array('>', '=', '<', '!', '~', '^'), '', $requiredVersion);
         if (preg_match("/^\\<=?\\d/", $requiredVersion)) {
             $upperLimit = '>=' . $minVersion[0] . '.0.0-b1,' . $requiredVersion;
+        } elseif (!empty($minVersion) && is_numeric($minVersion[0])) {
+            $upperLimit = $requiredVersion . ',<' . ($minVersion[0] + 1) . '.0.0-b1';
         } else {
-            if (!empty($minVersion) && is_numeric($minVersion[0])) {
-                $upperLimit = $requiredVersion . ',<' . ($minVersion[0] + 1) . '.0.0-b1';
-            } else {
-                $upperLimit = '>=4.0.0-b1,<5.0.0-b1';
-            }
+            $upperLimit = '>=4.0.0-b1,<5.0.0-b1';
         }
         return $upperLimit;
     }

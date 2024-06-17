@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\GeoIp2\Commands;
 
@@ -18,8 +17,8 @@ use Piwik\Plugins\UserCountry\LocationProvider;
 use Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 class ConvertRegionCodesToIso extends ConsoleCommand
 {
-    const OPTION_NAME = 'regioncodes_converted';
-    const MAPPING_TABLE_NAME = 'fips2iso';
+    public const OPTION_NAME = 'regioncodes_converted';
+    public const MAPPING_TABLE_NAME = 'fips2iso';
     protected function configure()
     {
         $this->setName('usercountry:convert-region-codes');

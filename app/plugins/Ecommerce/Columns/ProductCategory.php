@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Ecommerce\Columns;
 
@@ -19,7 +18,7 @@ use Piwik\Tracker\Action;
 use Piwik\Tracker\TableLogAction;
 class ProductCategory extends Dimension
 {
-    const PRODUCT_CATEGORY_COUNT = 5;
+    public const PRODUCT_CATEGORY_COUNT = 5;
     protected $type = self::TYPE_TEXT;
     protected $category = 'Goals_Ecommerce';
     protected $nameSingular = 'Goals_ProductCategory';

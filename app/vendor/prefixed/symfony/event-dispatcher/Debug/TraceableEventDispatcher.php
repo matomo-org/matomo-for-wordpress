@@ -38,7 +38,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
     private $orphanedEvents;
     private $requestStack;
     private $currentRequestHash = '';
-    public function __construct(EventDispatcherInterface $dispatcher, Stopwatch $stopwatch, LoggerInterface $logger = null, RequestStack $requestStack = null)
+    public function __construct(EventDispatcherInterface $dispatcher, Stopwatch $stopwatch, ?LoggerInterface $logger = null, ?RequestStack $requestStack = null)
     {
         $this->dispatcher = $dispatcher;
         $this->stopwatch = $stopwatch;
@@ -87,7 +87,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
     /**
      * {@inheritdoc}
      */
-    public function getListeners(string $eventName = null)
+    public function getListeners(?string $eventName = null)
     {
         return $this->dispatcher->getListeners($eventName);
     }
@@ -110,14 +110,14 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
     /**
      * {@inheritdoc}
      */
-    public function hasListeners(string $eventName = null)
+    public function hasListeners(?string $eventName = null)
     {
         return $this->dispatcher->hasListeners($eventName);
     }
     /**
      * {@inheritdoc}
      */
-    public function dispatch(object $event, string $eventName = null) : object
+    public function dispatch(object $event, ?string $eventName = null) : object
     {
         $eventName = $eventName ?? \get_class($event);
         if (null === $this->callStack) {
@@ -151,7 +151,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
     /**
      * @return array
      */
-    public function getCalledListeners(Request $request = null)
+    public function getCalledListeners(?Request $request = null)
     {
         if (null === $this->callStack) {
             return [];
@@ -169,7 +169,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
     /**
      * @return array
      */
-    public function getNotCalledListeners(Request $request = null)
+    public function getNotCalledListeners(?Request $request = null)
     {
         try {
             $allListeners = $this->getListeners();
@@ -204,7 +204,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
         uasort($notCalled, [$this, 'sortNotCalledListeners']);
         return $notCalled;
     }
-    public function getOrphanedEvents(Request $request = null) : array
+    public function getOrphanedEvents(?Request $request = null) : array
     {
         if ($request) {
             return $this->orphanedEvents[spl_object_hash($request)] ?? [];

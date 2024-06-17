@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link http://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\UsersManager;
 
@@ -17,7 +16,7 @@ use Piwik\Plugins\Marketplace\Api\Client;
 use Piwik\SettingsPiwik;
 class NewsletterSignup
 {
-    const NEWSLETTER_SIGNUP_OPTION = 'UsersManager.newsletterSignup.';
+    public const NEWSLETTER_SIGNUP_OPTION = 'UsersManager.newsletterSignup.';
     public static function signupForNewsletter($userLogin, $email, $matomoOrg = false, $professionalServices = false)
     {
         // Don't bother if they aren't signing up for at least one newsletter, or if we don't have internet access

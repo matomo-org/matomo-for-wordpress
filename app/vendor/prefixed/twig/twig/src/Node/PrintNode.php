@@ -11,6 +11,7 @@
  */
 namespace Matomo\Dependencies\Twig\Node;
 
+use Matomo\Dependencies\Twig\Attribute\YieldReady;
 use Matomo\Dependencies\Twig\Compiler;
 use Matomo\Dependencies\Twig\Node\Expression\AbstractExpression;
 /**
@@ -18,14 +19,16 @@ use Matomo\Dependencies\Twig\Node\Expression\AbstractExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class PrintNode extends Node implements NodeOutputInterface
 {
-    public function __construct(AbstractExpression $expr, int $lineno, string $tag = null)
+    public function __construct(AbstractExpression $expr, int $lineno, ?string $tag = null)
     {
         parent::__construct(['expr' => $expr], [], $lineno, $tag);
     }
     public function compile(Compiler $compiler) : void
     {
-        $compiler->addDebugInfo($this)->write('echo ')->subcompile($this->getNode('expr'))->raw(";\n");
+        $compiler->addDebugInfo($this);
+        $compiler->write('yield ')->subcompile($this->getNode('expr'))->raw(";\n");
     }
 }

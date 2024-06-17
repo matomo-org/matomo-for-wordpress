@@ -1,7 +1,8 @@
 <!--
   Matomo - free/libre analytics platform
-  @link https://matomo.org
-  @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+
+  @link    https://matomo.org
+  @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
 -->
 
 <template>
@@ -138,8 +139,6 @@
       <h2 v-if="enabled && enableDeleteLogs">
         {{ translate('PrivacyManager_DeleteBothConfirm') }}
       </h2>
-      <div v-if="enabled">{{ translate('UsersManager_ConfirmWithPassword') }}</div>
-      <h2 v-if="!enabled">{{ translate('UsersManager_ConfirmWithPassword') }}</h2>
     </PasswordConfirmation>
   </div>
 </template>

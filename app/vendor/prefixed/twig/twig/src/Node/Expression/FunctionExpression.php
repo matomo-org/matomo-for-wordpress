@@ -11,6 +11,7 @@
 namespace Matomo\Dependencies\Twig\Node\Expression;
 
 use Matomo\Dependencies\Twig\Compiler;
+use Matomo\Dependencies\Twig\Extension\CoreExtension;
 use Matomo\Dependencies\Twig\Node\Node;
 class FunctionExpression extends CallExpression
 {
@@ -24,12 +25,13 @@ class FunctionExpression extends CallExpression
         $function = $compiler->getEnvironment()->getFunction($name);
         $this->setAttribute('name', $name);
         $this->setAttribute('type', 'function');
+        $this->setAttribute('needs_charset', $function->needsCharset());
         $this->setAttribute('needs_environment', $function->needsEnvironment());
         $this->setAttribute('needs_context', $function->needsContext());
         $this->setAttribute('arguments', $function->getArguments());
         $callable = $function->getCallable();
         if ('constant' === $name && $this->getAttribute('is_defined_test')) {
-            $callable = '\Matomo\Dependencies\twig_constant_is_defined';
+            $callable = [CoreExtension::class, 'constantIsDefined'];
         }
         $this->setAttribute('callable', $callable);
         $this->setAttribute('is_variadic', $function->isVariadic());

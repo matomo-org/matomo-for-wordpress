@@ -3,28 +3,38 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CoreVisualizations\JqplotDataGenerator;
 
+use Exception;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
+use Piwik\Log\LoggerInterface;
 use Piwik\NumberFormatter;
 use Piwik\ProxyHttp;
-/**
- *
- */
 class Chart
 {
-    // the data kept here conforms to the jqplot data layout
-    // @see http://www.jqplot.com/docs/files/jqPlotOptions-txt.html
-    protected $series = array();
-    protected $data = array();
-    protected $axes = array();
     // temporary
     public $properties;
+    // the data kept here conforms to the jqplot data layout
+    // @see http://www.jqplot.com/docs/files/jqPlotOptions-txt.html
+    protected $series = [];
+    protected $data = [];
+    protected $axes = [];
+    /**
+     * @var array<string>
+     */
+    protected $dataStates = [];
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+    public function __construct(LoggerInterface $logger = null)
+    {
+        $this->logger = $logger ?? StaticContainer::get(LoggerInterface::class);
+    }
     public function setAxisXLabels($xLabels, $xTicks = null, $index = 0)
     {
         $axisName = $this->getXAxis($index);
@@ -97,12 +107,10 @@ class Chart
         foreach ($axesIds as $unit => $axisId) {
             if ($unit === '%') {
                 $this->axes[$axisId]['tickOptions']['formatString'] = str_replace('0', '%s', NumberFormatter::getInstance()->formatPercent(0, 0, 0));
+            } elseif (in_array($unit, $currencies)) {
+                $this->axes[$axisId]['tickOptions']['formatString'] = str_replace('0', '%s', NumberFormatter::getInstance()->formatCurrency(0, $unit, 0));
             } else {
-                if (in_array($unit, $currencies)) {
-                    $this->axes[$axisId]['tickOptions']['formatString'] = str_replace('0', '%s', NumberFormatter::getInstance()->formatCurrency(0, $unit, 0));
-                } else {
-                    $this->axes[$axisId]['tickOptions']['formatString'] = '%s' . $unit;
-                }
+                $this->axes[$axisId]['tickOptions']['formatString'] = '%s' . $unit;
             }
         }
         // map each series to appropriate yaxis
@@ -122,8 +130,9 @@ class Chart
     public function render()
     {
         ProxyHttp::overrideCacheControlHeaders();
+        $this->checkDataStateAvailableForAllTicks();
         // See http://www.jqplot.com/docs/files/jqPlotOptions-txt.html
-        $data = array('params' => array('axes' => &$this->axes, 'series' => &$this->series), 'data' => &$this->data);
+        $data = ['params' => ['axes' => &$this->axes, 'series' => &$this->series], 'data' => &$this->data, 'dataStates' => &$this->dataStates];
         return $data;
     }
     public function setAxisXLabelsMultiple($xLabels, $seriesToXAxis, $ticks = null)
@@ -138,6 +147,17 @@ class Chart
             $this->series[$seriesIndex]['_xaxis'] = $axisName;
         }
     }
+    /**
+     * Set state information ("complete", "incomplete", ...) for the data points.
+     *
+     * Each entry is associated with all values of all series having the same index (stored in $data).
+     *
+     * @param array<string> $dataStates
+     */
+    public function setDataStates(array $dataStates) : void
+    {
+        $this->dataStates = $dataStates;
+    }
     private function getXAxis($index)
     {
         $axisName = 'xaxis';
@@ -145,5 +165,23 @@ class Chart
             $axisName = 'x' . ($index + 1) . 'axis';
         }
         return $axisName;
+    }
+    private function checkDataStateAvailableForAllTicks() : void
+    {
+        if ([] === $this->dataStates) {
+            return;
+        }
+        $maxTickCount = 0;
+        $stateCount = count($this->dataStates);
+        if ([] !== $this->data) {
+            $dataCounts = array_map('count', $this->data);
+            $uniqueCounts = array_unique($dataCounts);
+            $maxTickCount = max($uniqueCounts);
+        }
+        if ($stateCount === $maxTickCount) {
+            return;
+        }
+        $ex = new Exception(sprintf('Data state information does not span graph length (%u ticks, %u states)', $maxTickCount, $stateCount));
+        $this->logger->info('{exception}', ['exception' => $ex]);
     }
 }

@@ -198,14 +198,14 @@ class PEAR
         if (!isset(self::$bivalentMethods[$method])) {
             \trigger_error('Call to undefined method PEAR::' . $method . '()', \E_USER_ERROR);
         }
-        return \call_user_func_array(array(\get_class(), '_' . $method), \array_merge(array($this), $arguments));
+        return \call_user_func_array(array(__CLASS__, '_' . $method), \array_merge(array($this), $arguments));
     }
     public static function __callStatic($method, $arguments)
     {
         if (!isset(self::$bivalentMethods[$method])) {
             \trigger_error('Call to undefined method PEAR::' . $method . '()', \E_USER_ERROR);
         }
-        return \call_user_func_array(array(\get_class(), '_' . $method), \array_merge(array(null), $arguments));
+        return \call_user_func_array(array(__CLASS__, '_' . $method), \array_merge(array(null), $arguments));
     }
     /**
      * If you have a class that's mostly/entirely static, and you need static

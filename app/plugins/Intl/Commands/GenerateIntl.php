@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Intl\Commands;
 
@@ -198,10 +197,8 @@ class GenerateIntl extends ConsoleCommand
             if (array_key_exists($langCode, $languageData) && $languageData[$langCode] != $langCode && $langCode !== 'pt') {
                 // We ignore `pt` here, as we otherwise would end up with having `pt` and `pt_BR` using the same original name
                 $translations['Intl']['OriginalLanguageName'] = $this->transform($languageData[$langCode]);
-            } else {
-                if (array_key_exists($requestLangCode, $languageData) && $languageData[$requestLangCode] != $requestLangCode) {
-                    $translations['Intl']['OriginalLanguageName'] = $this->transform($languageData[$requestLangCode]);
-                }
+            } elseif (array_key_exists($requestLangCode, $languageData) && $languageData[$requestLangCode] != $requestLangCode) {
+                $translations['Intl']['OriginalLanguageName'] = $this->transform($languageData[$requestLangCode]);
             }
             $translations['Intl']['EnglishLanguageName'] = $this->getEnglishLanguageName($langCode, $requestLangCode);
             $this->getOutput()->writeln('Saved language data for ' . $langCode);

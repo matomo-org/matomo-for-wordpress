@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\DBStats\Reports;
 
@@ -64,26 +63,24 @@ abstract class Base extends \Piwik\Plugin\Report
                 $view->config->filters[] = array('ColumnCallbackAddColumnPercentage', array('percent_total', 'total_size', 'total_size', $quotientPrecision = 0, $shouldSkipRows = false, $getDivisorFromSummaryRow = true), $isPriority = false);
                 $view->requestConfig->filter_sort_column = 'percent_total';
             }
-        } else {
-            if ($view->isViewDataTableId(Graph::ID)) {
-                if ($addTotalSizeColumn) {
-                    $view->config->columns_to_display = array('label', 'total_size');
-                    // when displaying a graph, we force sizes to be shown as the same unit so axis labels
-                    // will be readable. NOTE: The unit should depend on the smallest value of the data table,
-                    // however there's no way to know this information, short of creating a custom filter. For
-                    // now, just assume KB.
-                    $fixedMemoryUnit = 'K';
-                    $view->config->y_axis_unit = ' K';
-                    $view->requestConfig->filter_sort_column = 'total_size';
-                    $view->requestConfig->filter_sort_order = 'desc';
-                } else {
-                    $view->config->columns_to_display = array('label', 'row_count');
-                    $view->config->y_axis_unit = ' ' . Piwik::translate('General_Rows');
-                    $view->requestConfig->filter_sort_column = 'row_count';
-                    $view->requestConfig->filter_sort_order = 'desc';
-                }
-                $view->config->selectable_rows = array();
+        } elseif ($view->isViewDataTableId(Graph::ID)) {
+            if ($addTotalSizeColumn) {
+                $view->config->columns_to_display = array('label', 'total_size');
+                // when displaying a graph, we force sizes to be shown as the same unit so axis labels
+                // will be readable. NOTE: The unit should depend on the smallest value of the data table,
+                // however there's no way to know this information, short of creating a custom filter. For
+                // now, just assume KB.
+                $fixedMemoryUnit = 'K';
+                $view->config->y_axis_unit = ' K';
+                $view->requestConfig->filter_sort_column = 'total_size';
+                $view->requestConfig->filter_sort_order = 'desc';
+            } else {
+                $view->config->columns_to_display = array('label', 'row_count');
+                $view->config->y_axis_unit = ' ' . Piwik::translate('General_Rows');
+                $view->requestConfig->filter_sort_column = 'row_count';
+                $view->requestConfig->filter_sort_order = 'desc';
             }
+            $view->config->selectable_rows = array();
         }
         $formatter = new Formatter();
         $getPrettySize = array($formatter, 'getPrettySizeFromBytes');

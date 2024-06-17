@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugin;
 
@@ -23,7 +22,7 @@ require_once PIWIK_INCLUDE_PATH . '/core/Version.php';
  */
 class MetadataLoader
 {
-    const PLUGIN_JSON_FILENAME = 'plugin.json';
+    public const PLUGIN_JSON_FILENAME = 'plugin.json';
     /**
      * The name of the plugin whose metadata will be loaded.
      *

@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CorePluginsAdmin;
 
@@ -26,7 +25,7 @@ use Piwik\Plugins\Marketplace\Api\Client;
  */
 class PluginInstaller
 {
-    const PATH_TO_DOWNLOAD = '/latest/plugins/';
+    public const PATH_TO_DOWNLOAD = '/latest/plugins/';
     private $pluginName;
     /**
      * Null if Marketplace Plugin is not installed

@@ -407,6 +407,7 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_ChooseTriggerToContinue';
         $result[] = 'TagManager_ChooseVariableToContinue';
         $result[] = 'TagManager_TriggerConditionsHelp';
+        $result[] = 'TagManager_TriggerConditionsHelpText';
         $result[] = 'TagManager_EnablingPreviewPleaseWait';
         $result[] = 'TagManager_DisablingPreviewPleaseWait';
         $result[] = 'TagManager_UpdatingDebugSiteUrlPleaseWait';
@@ -798,6 +799,7 @@ class TagManager extends \Piwik\Plugin
         $result[] = 'TagManager_SiteWithoutDataMtmStep3';
         $result[] = 'TagManager_IgnoreGtmDataLaterDescription';
         $result[] = 'TagManager_IgnoreGtmDataLaterTitle';
+        $result[] = 'TagManager_VersionEditWithNoAccessMessage';
     }
     public function getStylesheetFiles(&$stylesheets)
     {

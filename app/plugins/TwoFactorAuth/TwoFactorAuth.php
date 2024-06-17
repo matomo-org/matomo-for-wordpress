@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\TwoFactorAuth;
 
@@ -162,10 +162,8 @@ class TwoFactorAuth extends \Piwik\Plugin
                     }
                     throw new Exception(Piwik::translate('TwoFactorAuth_InvalidAuthCode'));
                 }
-            } else {
-                if ($twoFa->isUserRequiredToHaveTwoFactorEnabled() && !\Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication::isUserUsingTwoFactorAuthentication($login)) {
-                    throw new Exception(Piwik::translate('TwoFactorAuth_RequiredAuthCodeNotConfiguredAPI'));
-                }
+            } elseif ($twoFa->isUserRequiredToHaveTwoFactorEnabled() && !\Piwik\Plugins\TwoFactorAuth\TwoFactorAuthentication::isUserUsingTwoFactorAuthentication($login)) {
+                throw new Exception(Piwik::translate('TwoFactorAuth_RequiredAuthCodeNotConfiguredAPI'));
             }
         }
     }
@@ -189,11 +187,9 @@ class TwoFactorAuth extends \Piwik\Plugin
                 if (!Request::isRootRequestApiRequest()) {
                     $module = 'TwoFactorAuth';
                     $action = 'loginTwoFactorAuth';
-                } else {
-                    if (Common::getRequestVar('force_api_session', 0) == 1) {
-                        // don't allow API requests with session auth if 2fa code hasn't been verified.
-                        throw new Exception(Piwik::translate('General_YourSessionHasExpired'));
-                    }
+                } elseif (Common::getRequestVar('force_api_session', 0) == 1) {
+                    // don't allow API requests with session auth if 2fa code hasn't been verified.
+                    throw new Exception(Piwik::translate('General_YourSessionHasExpired'));
                 }
             }
         } elseif (!$isUsing2FA && $twoFa->isUserRequiredToHaveTwoFactorEnabled()) {

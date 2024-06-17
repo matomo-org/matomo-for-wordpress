@@ -82,7 +82,7 @@ class Command
      *
      * @throws LogicException When the command name is empty
      */
-    public function __construct(string $name = null)
+    public function __construct(?string $name = null)
     {
         $this->definition = new InputDefinition();
         if (null === $name && null !== ($name = static::getDefaultName())) {
@@ -110,7 +110,7 @@ class Command
     {
         $this->ignoreValidationErrors = true;
     }
-    public function setApplication(Application $application = null)
+    public function setApplication(?Application $application = null)
     {
         $this->application = $application;
         if ($application) {
@@ -379,7 +379,7 @@ class Command
      *
      * @throws InvalidArgumentException When argument mode is not valid
      */
-    public function addArgument(string $name, int $mode = null, string $description = '', $default = null)
+    public function addArgument(string $name, ?int $mode = null, string $description = '', $default = null)
     {
         $this->definition->addArgument(new InputArgument($name, $mode, $description, $default));
         if (null !== $this->fullDefinition) {
@@ -398,7 +398,7 @@ class Command
      *
      * @throws InvalidArgumentException If option mode is invalid or incompatible
      */
-    public function addOption(string $name, $shortcut = null, int $mode = null, string $description = '', $default = null)
+    public function addOption(string $name, $shortcut = null, ?int $mode = null, string $description = '', $default = null)
     {
         $this->definition->addOption(new InputOption($name, $shortcut, $mode, $description, $default));
         if (null !== $this->fullDefinition) {

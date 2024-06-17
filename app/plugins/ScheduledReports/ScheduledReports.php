@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\ScheduledReports;
 
@@ -30,29 +29,29 @@ use Piwik\View;
  */
 class ScheduledReports extends \Piwik\Plugin
 {
-    const DISPLAY_FORMAT_GRAPHS_ONLY_FOR_KEY_METRICS = 1;
+    public const DISPLAY_FORMAT_GRAPHS_ONLY_FOR_KEY_METRICS = 1;
     // Display Tables Only (Graphs only for key metrics)
-    const DISPLAY_FORMAT_GRAPHS_ONLY = 2;
+    public const DISPLAY_FORMAT_GRAPHS_ONLY = 2;
     // Display Graphs Only for all reports
-    const DISPLAY_FORMAT_TABLES_AND_GRAPHS = 3;
+    public const DISPLAY_FORMAT_TABLES_AND_GRAPHS = 3;
     // Display Tables and Graphs for all reports
-    const DISPLAY_FORMAT_TABLES_ONLY = 4;
+    public const DISPLAY_FORMAT_TABLES_ONLY = 4;
     // Display only tables for all reports
-    const DEFAULT_DISPLAY_FORMAT = self::DISPLAY_FORMAT_GRAPHS_ONLY_FOR_KEY_METRICS;
-    const DEFAULT_REPORT_FORMAT = ReportRenderer::HTML_FORMAT;
-    const DEFAULT_PERIOD = 'week';
-    const DEFAULT_HOUR = '0';
-    const EMAIL_ME_PARAMETER = 'emailMe';
-    const EVOLUTION_GRAPH_PARAMETER = 'evolutionGraph';
-    const ADDITIONAL_EMAILS_PARAMETER = 'additionalEmails';
-    const DISPLAY_FORMAT_PARAMETER = 'displayFormat';
-    const EMAIL_ME_PARAMETER_DEFAULT_VALUE = true;
-    const EVOLUTION_GRAPH_PARAMETER_DEFAULT_VALUE = false;
-    const EMAIL_TYPE = 'email';
+    public const DEFAULT_DISPLAY_FORMAT = self::DISPLAY_FORMAT_GRAPHS_ONLY_FOR_KEY_METRICS;
+    public const DEFAULT_REPORT_FORMAT = ReportRenderer::HTML_FORMAT;
+    public const DEFAULT_PERIOD = 'week';
+    public const DEFAULT_HOUR = '0';
+    public const EMAIL_ME_PARAMETER = 'emailMe';
+    public const EVOLUTION_GRAPH_PARAMETER = 'evolutionGraph';
+    public const ADDITIONAL_EMAILS_PARAMETER = 'additionalEmails';
+    public const DISPLAY_FORMAT_PARAMETER = 'displayFormat';
+    public const EMAIL_ME_PARAMETER_DEFAULT_VALUE = true;
+    public const EVOLUTION_GRAPH_PARAMETER_DEFAULT_VALUE = false;
+    public const EMAIL_TYPE = 'email';
     private static $availableParameters = array(self::EMAIL_ME_PARAMETER => false, self::EVOLUTION_GRAPH_PARAMETER => false, self::ADDITIONAL_EMAILS_PARAMETER => false, self::DISPLAY_FORMAT_PARAMETER => true);
     private static $managedReportTypes = array(self::EMAIL_TYPE => 'plugins/Morpheus/images/email.png');
     private static $managedReportFormats = array(ReportRenderer::HTML_FORMAT => 'plugins/Morpheus/images/html_icon.png', ReportRenderer::PDF_FORMAT => 'plugins/Morpheus/icons/dist/plugins/pdf.png', ReportRenderer::CSV_FORMAT => 'plugins/Morpheus/images/export.png', ReportRenderer::TSV_FORMAT => 'plugins/Morpheus/images/export.png');
-    const OPTION_KEY_LAST_SENT_DATERANGE = 'report_last_sent_daterange_';
+    public const OPTION_KEY_LAST_SENT_DATERANGE = 'report_last_sent_daterange_';
     /**
      * @see \Piwik\Plugin::registerEvents
      */

@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Db\Schema;
 
@@ -26,8 +25,8 @@ use Piwik\Version;
  */
 class Mysql implements SchemaInterface
 {
-    const OPTION_NAME_MATOMO_INSTALL_VERSION = 'install_version';
-    const MAX_TABLE_NAME_LENGTH = 64;
+    public const OPTION_NAME_MATOMO_INSTALL_VERSION = 'install_version';
+    public const MAX_TABLE_NAME_LENGTH = 64;
     private $tablesInstalled = null;
     /**
      * Get the SQL to create Piwik tables
@@ -248,6 +247,37 @@ class Mysql implements SchemaInterface
         foreach ($tables as $table) {
             Db::query("TRUNCATE `{$table}`");
         }
+    }
+    /**
+     * Adds a MAX_EXECUTION_TIME hint into a SELECT query if $limit is bigger than 0
+     *
+     * @param string $sql  query to add hint to
+     * @param float $limit  time limit in seconds
+     * @return string
+     */
+    public function addMaxExecutionTimeHintToQuery(string $sql, float $limit) : string
+    {
+        if ($limit <= 0) {
+            return $sql;
+        }
+        $sql = trim($sql);
+        $pos = stripos($sql, 'SELECT');
+        $isMaxExecutionTimeoutAlreadyPresent = stripos($sql, 'MAX_EXECUTION_TIME(') !== false;
+        if ($pos !== false && !$isMaxExecutionTimeoutAlreadyPresent) {
+            $timeInMs = $limit * 1000;
+            $timeInMs = (int) $timeInMs;
+            $maxExecutionTimeHint = ' /*+ MAX_EXECUTION_TIME(' . $timeInMs . ') */ ';
+            $sql = substr_replace($sql, 'SELECT ' . $maxExecutionTimeHint, $pos, strlen('SELECT'));
+        }
+        return $sql;
+    }
+    public function supportsComplexColumnUpdates() : bool
+    {
+        return true;
+    }
+    public function getDefaultPort() : int
+    {
+        return 3306;
     }
     private function getTablePrefix()
     {

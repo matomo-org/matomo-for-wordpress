@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Tracker;
 
@@ -46,9 +46,10 @@ class TrackerCodeGenerator
      * @param bool $crossDomain
      * @param bool $excludedQueryParams
      * @param array $excludedReferrers
+     * @param bool $disableCampaignParameters
      * @return string Javascript code.
      */
-    public function generate($idSite, $piwikUrl, $mergeSubdomains = false, $groupPageTitlesByDomain = false, $mergeAliasUrls = false, $visitorCustomVariables = null, $pageCustomVariables = null, $customCampaignNameQueryParam = null, $customCampaignKeywordParam = null, $doNotTrack = false, $disableCookies = false, $trackNoScript = false, $crossDomain = false, $excludedQueryParams = false, $excludedReferrers = [])
+    public function generate($idSite, $piwikUrl, $mergeSubdomains = false, $groupPageTitlesByDomain = false, $mergeAliasUrls = false, $visitorCustomVariables = null, $pageCustomVariables = null, $customCampaignNameQueryParam = null, $customCampaignKeywordParam = null, $doNotTrack = false, $disableCookies = false, $trackNoScript = false, $crossDomain = false, $excludedQueryParams = false, $excludedReferrers = [], $disableCampaignParameters = false)
     {
         // changes made to this code should be mirrored in plugins/CoreAdminHome/javascripts/jsTrackingGenerator.js var generateJsCode
         if (substr($piwikUrl, 0, 4) !== 'http') {
@@ -95,6 +96,9 @@ class TrackerCodeGenerator
                 }
             }
         }
+        if ($disableCampaignParameters) {
+            $options .= '  _paq.push(["disableCampaignParameters"]);' . "\n";
+        }
         if ($customCampaignNameQueryParam) {
             $options .= '  _paq.push(["setCampaignNameKey", ' . json_encode($customCampaignNameQueryParam) . ']);' . "\n";
         }
@@ -136,7 +140,7 @@ class TrackerCodeGenerator
         if (SettingsPiwik::isHttpsForced()) {
             $codeImpl['protocol'] = 'https://';
         }
-        $parameters = compact('mergeSubdomains', 'groupPageTitlesByDomain', 'mergeAliasUrls', 'visitorCustomVariables', 'pageCustomVariables', 'customCampaignNameQueryParam', 'customCampaignKeywordParam', 'doNotTrack');
+        $parameters = compact('mergeSubdomains', 'groupPageTitlesByDomain', 'mergeAliasUrls', 'visitorCustomVariables', 'pageCustomVariables', 'customCampaignNameQueryParam', 'customCampaignKeywordParam', 'doNotTrack', 'disableCampaignParameters');
         /**
          * Triggered when generating JavaScript tracking code server side. Plugins can use
          * this event to customise the JavaScript tracking code that is displayed to the

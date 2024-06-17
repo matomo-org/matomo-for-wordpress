@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\MobileMessaging\ReportRenderer;
 
@@ -19,9 +18,9 @@ use Piwik\View;
  */
 class Sms extends ReportRenderer
 {
-    const FLOAT_REGEXP = '/[-+]?[0-9]*[\\.,]?[0-9]+/';
-    const SMS_CONTENT_TYPE = 'text/plain';
-    const SMS_FILE_EXTENSION = 'sms';
+    public const FLOAT_REGEXP = '/[-+]?[0-9]*[\\.,]?[0-9]+/';
+    public const SMS_CONTENT_TYPE = 'text/plain';
+    public const SMS_FILE_EXTENSION = 'sms';
     private $rendering = "";
     public function setLocale($locale)
     {

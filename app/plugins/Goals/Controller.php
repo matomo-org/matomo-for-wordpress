@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Goals;
 
@@ -36,7 +35,7 @@ class Controller extends \Piwik\Plugin\Controller
      * Number of "Your top converting keywords/etc are" to display in the per Goal overview page
      * @var int
      */
-    const COUNT_TOP_ROWS_TO_DISPLAY = 3;
+    public const COUNT_TOP_ROWS_TO_DISPLAY = 3;
     protected $goalColumnNameToLabel = array('avg_order_revenue' => 'General_AverageOrderValue', 'nb_conversions' => 'Goals_ColumnConversions', 'conversion_rate' => 'General_ColumnConversionRate', 'revenue' => 'General_TotalRevenue', 'items' => 'General_PurchasedProducts');
     /**
      * @var Translator

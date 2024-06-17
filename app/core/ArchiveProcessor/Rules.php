@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\ArchiveProcessor;
 
@@ -30,9 +29,9 @@ use Piwik\Tracker\Cache;
  */
 class Rules
 {
-    const OPTION_TODAY_ARCHIVE_TTL = 'todayArchiveTimeToLive';
-    const OPTION_BROWSER_TRIGGER_ARCHIVING = 'enableBrowserTriggerArchiving';
-    const FLAG_TABLE_PURGED = 'lastPurge_';
+    public const OPTION_TODAY_ARCHIVE_TTL = 'todayArchiveTimeToLive';
+    public const OPTION_BROWSER_TRIGGER_ARCHIVING = 'enableBrowserTriggerArchiving';
+    public const FLAG_TABLE_PURGED = 'lastPurge_';
     /** Flag that will forcefully disable the archiving process (used in tests only) */
     public static $archivingDisabledByTests = false;
     /** To disable the Pure Outdated Archive set this to true will skip this task */

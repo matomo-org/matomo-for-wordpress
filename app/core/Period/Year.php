@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Period;
 
@@ -15,7 +14,7 @@ use Piwik\Period;
  */
 class Year extends Period
 {
-    const PERIOD_ID = 4;
+    public const PERIOD_ID = 4;
     protected $label = 'year';
     /**
      * Returns the current period as a localized short string

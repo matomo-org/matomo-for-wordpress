@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\PrivacyManager;
 
@@ -124,12 +124,10 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
         if ($anonymizeIPEnable == '1') {
             \Piwik\Plugins\PrivacyManager\IPAnonymizer::activate();
+        } elseif ($anonymizeIPEnable == '0') {
+            \Piwik\Plugins\PrivacyManager\IPAnonymizer::deactivate();
         } else {
-            if ($anonymizeIPEnable == '0') {
-                \Piwik\Plugins\PrivacyManager\IPAnonymizer::deactivate();
-            } else {
-                // pass
-            }
+            // pass
         }
         if (!empty($anonymizeReferrer) && !array_key_exists($anonymizeReferrer, $this->referrerAnonymizer->getAvailableAnonymizationOptions())) {
             $anonymizeReferrer = '';

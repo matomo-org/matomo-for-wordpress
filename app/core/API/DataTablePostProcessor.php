@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\API;
 
@@ -30,7 +30,7 @@ use Piwik\Plugins\CoreHome\Columns\Metrics\EvolutionMetric;
  */
 class DataTablePostProcessor
 {
-    const PROCESSED_METRICS_COMPUTED_FLAG = 'processed_metrics_computed';
+    public const PROCESSED_METRICS_COMPUTED_FLAG = 'processed_metrics_computed';
     /**
      * @var null|Report
      */
@@ -103,6 +103,7 @@ class DataTablePostProcessor
             call_user_func($this->callbackBeforeGenericFilters, $dataTable);
         }
         $dataTable = $this->applyGenericFilters($dataTable);
+        $dataTable = $this->applyArchiveStateFilter($dataTable);
         $this->applyComputeProcessedMetrics($dataTable);
         $dataTable = $this->applyComparison($dataTable);
         if ($this->callbackAfterGenericFilters) {
@@ -121,6 +122,20 @@ class DataTablePostProcessor
     {
         $dataTable->filter('AddSegmentBySegmentValue', array($this->report));
         $dataTable->filter('ColumnCallbackDeleteMetadata', array('segmentValue'));
+        return $dataTable;
+    }
+    /**
+     * @param DataTableInterface $dataTable
+     * @return DataTableInterface
+     */
+    public function applyArchiveStateFilter(DataTableInterface $dataTable) : DataTableInterface
+    {
+        $fetchArchiveState = (new \Piwik\Request($this->request))->getBoolParameter('fetch_archive_state', false);
+        if (false === $fetchArchiveState) {
+            $dataTable->filter(function (DataTable $table) {
+                $table->deleteMetadata(DataTable::ARCHIVE_STATE_METADATA_NAME);
+            });
+        }
         return $dataTable;
     }
     /**
@@ -275,10 +290,8 @@ class DataTablePostProcessor
         $showRawMetrics = Common::getRequestVar('showRawMetrics', 0, 'int', $this->request);
         if (!empty($hideColumns) || !empty($showColumns)) {
             $dataTable->filter('ColumnDelete', array($hideColumns, $showColumns, $deleteIfZeroOnly = false, $hideColumnsRecursively));
-        } else {
-            if ($showRawMetrics !== 1) {
-                $this->removeTemporaryMetrics($dataTable);
-            }
+        } elseif ($showRawMetrics !== 1) {
+            $this->removeTemporaryMetrics($dataTable);
         }
         return $dataTable;
     }

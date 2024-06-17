@@ -476,6 +476,14 @@ Claro Search:
     params:
       - q
     backlink: '?q={k}'
+ChatGPT:
+  -
+    urls:
+      - chat.openai.com
+    params: []
+    hiddenkeyword:
+      - '/^$/'
+      - '/'
 Clix:
   -
     urls:

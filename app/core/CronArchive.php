@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik;
 
@@ -43,22 +42,22 @@ use Piwik\Log\LoggerInterface;
 class CronArchive
 {
     // the url can be set here before the init, and it will be used instead of --url=
-    const CRON_INVALIDATION_TIME_OPTION_NAME = 'CronArchive.lastInvalidationTime';
+    public const CRON_INVALIDATION_TIME_OPTION_NAME = 'CronArchive.lastInvalidationTime';
     public static $url = false;
-    const TABLES_WITH_INVALIDATED_ARCHIVES = 'CronArchive.getTablesWithInvalidatedArchives';
-    const TABLES_WITH_INVALIDATED_ARCHIVES_TTL = 3600;
+    public const TABLES_WITH_INVALIDATED_ARCHIVES = 'CronArchive.getTablesWithInvalidatedArchives';
+    public const TABLES_WITH_INVALIDATED_ARCHIVES_TTL = 3600;
     // Max parallel requests for a same site's segments
-    const MAX_CONCURRENT_API_REQUESTS = 3;
+    public const MAX_CONCURRENT_API_REQUESTS = 3;
     // force-timeout-for-periods default (1 hour)
-    const SECONDS_DELAY_BETWEEN_PERIOD_ARCHIVES = 3600;
+    public const SECONDS_DELAY_BETWEEN_PERIOD_ARCHIVES = 3600;
     // Flag to know when the archive cron is calling the API
-    const APPEND_TO_API_REQUEST = '&trigger=archivephp';
+    public const APPEND_TO_API_REQUEST = '&trigger=archivephp';
     // Flag used to record timestamp in Option::
-    const OPTION_ARCHIVING_FINISHED_TS = "LastCompletedFullArchiving";
+    public const OPTION_ARCHIVING_FINISHED_TS = "LastCompletedFullArchiving";
     // Name of option used to store starting timestamp
-    const OPTION_ARCHIVING_STARTED_TS = "LastFullArchivingStartTime";
+    public const OPTION_ARCHIVING_STARTED_TS = "LastFullArchivingStartTime";
     // Show only first N characters from Piwik API output in case of errors
-    const TRUNCATE_ERROR_MESSAGE_SUMMARY = 6000;
+    public const TRUNCATE_ERROR_MESSAGE_SUMMARY = 6000;
     // By default, we only process the current week/month/year at most once an hour
     private $todayArchiveTimeToLive;
     private $allWebsites = [];
@@ -77,7 +76,7 @@ class CronArchive
     private $lastSuccessRunTimestamp = false;
     private $errors = [];
     private $apiToInvalidateArchivedReport;
-    const NO_ERROR = "no error";
+    public const NO_ERROR = "no error";
     public $testmode = false;
     /**
      * The list of IDs for sites for whom archiving should be initiated. If supplied, only these

@@ -1,7 +1,8 @@
 <!--
   Matomo - free/libre analytics platform
-  @link https://matomo.org
-  @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+
+  @link    https://matomo.org
+  @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
 -->
 
 <template>
@@ -182,7 +183,6 @@
       @confirmed="scheduleAnonymization"
     >
       <h2>{{ translate('PrivacyManager_AnonymizeDataConfirm') }}</h2>
-      <div>{{ translate('UsersManager_ConfirmWithPassword') }}</div>
     </PasswordConfirmation>
   </div>
 </template>

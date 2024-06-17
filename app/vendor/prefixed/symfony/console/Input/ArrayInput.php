@@ -24,7 +24,7 @@ use Matomo\Dependencies\Symfony\Component\Console\Exception\InvalidOptionExcepti
 class ArrayInput extends Input
 {
     private $parameters;
-    public function __construct(array $parameters, InputDefinition $definition = null)
+    public function __construct(array $parameters, ?InputDefinition $definition = null)
     {
         $this->parameters = $parameters;
         parent::__construct($definition);

@@ -51,7 +51,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     protected $resolver;
     protected $requestStack;
     private $argumentResolver;
-    public function __construct(EventDispatcherInterface $dispatcher, ControllerResolverInterface $resolver, RequestStack $requestStack = null, ArgumentResolverInterface $argumentResolver = null)
+    public function __construct(EventDispatcherInterface $dispatcher, ControllerResolverInterface $resolver, ?RequestStack $requestStack = null, ?ArgumentResolverInterface $argumentResolver = null)
     {
         $this->dispatcher = $dispatcher;
         $this->resolver = $resolver;
@@ -90,7 +90,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     /**
      * @internal
      */
-    public function terminateWithException(\Throwable $exception, Request $request = null)
+    public function terminateWithException(\Throwable $exception, ?Request $request = null)
     {
         if (!($request = $request ?: $this->requestStack->getMainRequest())) {
             throw $exception;

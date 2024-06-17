@@ -10,6 +10,9 @@
  */
 namespace Matomo\Dependencies\Twig\Extension;
 
+use Matomo\Dependencies\Twig\Environment;
+use Matomo\Dependencies\Twig\Template;
+use Matomo\Dependencies\Twig\TemplateWrapper;
 use Matomo\Dependencies\Twig\TwigFunction;
 final class DebugExtension extends AbstractExtension
 {
@@ -17,30 +20,28 @@ final class DebugExtension extends AbstractExtension
     {
         // dump is safe if var_dump is overridden by xdebug
         $isDumpOutputHtmlSafe = \extension_loaded('xdebug') && (false === \ini_get('xdebug.overload_var_dump') || \ini_get('xdebug.overload_var_dump')) && (false === \ini_get('html_errors') || \ini_get('html_errors')) || 'cli' === \PHP_SAPI;
-        return [new TwigFunction('dump', '\Matomo\Dependencies\twig_var_dump', ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true, 'is_variadic' => true])];
+        return [new TwigFunction('dump', [self::class, 'dump'], ['is_safe' => $isDumpOutputHtmlSafe ? ['html'] : [], 'needs_context' => true, 'needs_environment' => true, 'is_variadic' => true])];
     }
-}
-namespace Matomo\Dependencies;
-
-use Matomo\Dependencies\Twig\Environment;
-use Matomo\Dependencies\Twig\Template;
-use Matomo\Dependencies\Twig\TemplateWrapper;
-function twig_var_dump(Environment $env, $context, ...$vars)
-{
-    if (!$env->isDebug()) {
-        return;
-    }
-    \ob_start();
-    if (!$vars) {
-        $vars = [];
-        foreach ($context as $key => $value) {
-            if (!$value instanceof Template && !$value instanceof TemplateWrapper) {
-                $vars[$key] = $value;
-            }
+    /**
+     * @internal
+     */
+    public static function dump(Environment $env, $context, ...$vars)
+    {
+        if (!$env->isDebug()) {
+            return;
         }
-        \var_dump($vars);
-    } else {
-        \var_dump(...$vars);
+        ob_start();
+        if (!$vars) {
+            $vars = [];
+            foreach ($context as $key => $value) {
+                if (!$value instanceof Template && !$value instanceof TemplateWrapper) {
+                    $vars[$key] = $value;
+                }
+            }
+            var_dump($vars);
+        } else {
+            var_dump(...$vars);
+        }
+        return ob_get_clean();
     }
-    return \ob_get_clean();
 }

@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 
@@ -26,8 +25,8 @@ use Piwik\View;
  */
 class ServerModule extends GeoIp2
 {
-    const ID = 'geoip2server';
-    const TITLE = 'DBIP / GeoIP 2 (%s)';
+    public const ID = 'geoip2server';
+    public const TITLE = 'DBIP / GeoIP 2 (%s)';
     public static $defaultGeoIpServerVars = array(parent::CONTINENT_CODE_KEY => 'MM_CONTINENT_CODE', parent::CONTINENT_NAME_KEY => 'MM_CONTINENT_NAME', parent::COUNTRY_CODE_KEY => 'MM_COUNTRY_CODE', parent::COUNTRY_NAME_KEY => 'MM_COUNTRY_NAME', parent::REGION_CODE_KEY => 'MM_REGION_CODE', parent::REGION_NAME_KEY => 'MM_REGION_NAME', parent::LATITUDE_KEY => 'MM_LATITUDE', parent::LONGITUDE_KEY => 'MM_LONGITUDE', parent::POSTAL_CODE_KEY => 'MM_POSTAL_CODE', parent::CITY_NAME_KEY => 'MM_CITY_NAME', parent::ISP_KEY => 'MM_ISP', parent::ORG_KEY => 'MM_ORG');
     /**
      * Uses a GeoIP 2 database to get a visitor's location based on their IP address.

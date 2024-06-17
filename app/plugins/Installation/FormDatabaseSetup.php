@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Installation;
 
@@ -26,6 +25,7 @@ use Zend_Db_Adapter_Exception;
  */
 class FormDatabaseSetup extends QuickForm2
 {
+    const MASKED_PASSWORD_VALUE = '**********';
     function __construct($id = 'databasesetupform', $method = 'post', $attributes = null, $trackSubmit = false)
     {
         parent::__construct($id, $method, $attributes = array('autocomplete' => 'off'), $trackSubmit);
@@ -37,7 +37,7 @@ class FormDatabaseSetup extends QuickForm2
         HTML_QuickForm2_Factory::registerRule('checkUserPrivileges', 'Piwik\\Plugins\\Installation\\RuleCheckUserPrivileges');
         $availableAdapters = Adapter::getAdapters();
         $adapters = array();
-        foreach ($availableAdapters as $adapter => $port) {
+        foreach ($availableAdapters as $adapter) {
             $adapters[$adapter] = $adapter;
             if (Adapter::isRecommendedAdapter($adapter)) {
                 $adapters[$adapter] .= ' (' . Piwik::translate('General_Recommended') . ')';
@@ -54,23 +54,36 @@ class FormDatabaseSetup extends QuickForm2
         $item->addRule('checkValidDbname', Piwik::translate('General_NotValid', Piwik::translate('Installation_DatabaseSetupDatabaseName')));
         $this->addElement('text', 'tables_prefix')->setLabel(Piwik::translate('Installation_DatabaseSetupTablePrefix'))->addRule('checkValidFilename', Piwik::translate('General_NotValid', Piwik::translate('Installation_DatabaseSetupTablePrefix')));
         $this->addElement('select', 'adapter')->setLabel(Piwik::translate('Installation_DatabaseSetupAdapter'))->loadOptions($adapters)->addRule('required', Piwik::translate('General_Required', Piwik::translate('Installation_DatabaseSetupAdapter')));
+        $this->addElement('select', 'schema')->setLabel(Piwik::translate('Installation_DatabaseSetupEngine'))->loadOptions(['Mysql' => 'MySQL', 'Mariadb' => 'MariaDB'])->addRule('required', Piwik::translate('General_Required', Piwik::translate('Installation_DatabaseSetupEngine')));
         $this->addElement('submit', 'submit', array('value' => Piwik::translate('General_Next') . ' »', 'class' => 'btn'));
         $defaultDatabaseType = Config::getInstance()->database['type'];
         $this->addElement('hidden', 'type')->setLabel('Database engine');
-        $defaults = array('host' => '127.0.0.1', 'type' => $defaultDatabaseType, 'tables_prefix' => 'matomo_');
-        $defaultsEnvironment = array('host', 'adapter', 'tables_prefix', 'username', 'password', 'dbname');
+        $defaults = array('host' => '127.0.0.1', 'type' => $defaultDatabaseType, 'tables_prefix' => 'matomo_', 'schema' => 'Mysql', 'port' => '3306');
+        $defaultsEnvironment = array('host', 'adapter', 'tables_prefix', 'username', 'schema', 'password', 'dbname');
         foreach ($defaultsEnvironment as $name) {
-            $envName = 'DATABASE_' . strtoupper($name);
-            // fyi getenv is case insensitive
-            $envNameMatomo = 'MATOMO_' . $envName;
-            if (getenv($envNameMatomo)) {
-                $defaults[$name] = getenv($envNameMatomo);
-            } elseif (getenv($envName)) {
-                $defaults[$name] = getenv($envName);
+            $envValue = $this->getEnvironmentSetting($name);
+            if (null !== $envValue) {
+                $defaults[$name] = $envValue;
             }
+        }
+        if (array_key_exists('password', $defaults)) {
+            $defaults['password'] = self::MASKED_PASSWORD_VALUE;
+            // ensure not to show password in UI
         }
         // default values
         $this->addDataSource(new HTML_QuickForm2_DataSource_Array($defaults));
+    }
+    private function getEnvironmentSetting(string $name) : ?string
+    {
+        $envName = 'DATABASE_' . strtoupper($name);
+        // fyi getenv is case insensitive
+        $envNameMatomo = 'MATOMO_' . $envName;
+        if (is_string(getenv($envNameMatomo))) {
+            return getenv($envNameMatomo);
+        } elseif (is_string(getenv($envName))) {
+            return getenv($envName);
+        }
+        return null;
     }
     /**
      * Creates database object based on form data.
@@ -86,10 +99,15 @@ class FormDatabaseSetup extends QuickForm2
             throw new Exception("No database name");
         }
         $adapter = $this->getSubmitValue('adapter');
-        $port = Adapter::getDefaultPortForAdapter($adapter);
         $host = $this->getSubmitValue('host');
         $tables_prefix = $this->getSubmitValue('tables_prefix');
-        $dbInfos = array('host' => is_null($host) ? $host : trim($host), 'username' => $this->getSubmitValue('username'), 'password' => $this->getSubmitValue('password'), 'dbname' => $dbname, 'tables_prefix' => is_null($tables_prefix) ? $tables_prefix : trim($tables_prefix), 'adapter' => $adapter, 'port' => $port, 'schema' => Config::getInstance()->database['schema'], 'type' => $this->getSubmitValue('type'), 'enable_ssl' => false);
+        $password = $this->getSubmitValue('password');
+        $passwordFromEnv = $this->getEnvironmentSetting('password');
+        if ($password === self::MASKED_PASSWORD_VALUE && null !== $passwordFromEnv) {
+            $password = $passwordFromEnv;
+        }
+        $schema = $this->getSubmitValue('schema');
+        $dbInfos = array('host' => is_null($host) ? $host : trim($host), 'username' => $this->getSubmitValue('username'), 'password' => $password, 'dbname' => $dbname, 'tables_prefix' => is_null($tables_prefix) ? $tables_prefix : trim($tables_prefix), 'adapter' => $adapter, 'port' => Db\Schema::getDefaultPortForSchema($schema), 'schema' => $schema, 'type' => $this->getSubmitValue('type'), 'enable_ssl' => false);
         if (($portIndex = strpos($dbInfos['host'], '/')) !== false) {
             // unix_socket=/path/sock.n
             $dbInfos['port'] = substr($dbInfos['host'], $portIndex);
@@ -136,8 +154,8 @@ class FormDatabaseSetup extends QuickForm2
  */
 class RuleCheckUserPrivileges extends HTML_QuickForm2_Rule
 {
-    const TEST_TABLE_NAME = 'piwik_test_table';
-    const TEST_TEMP_TABLE_NAME = 'piwik_test_table_temp';
+    public const TEST_TABLE_NAME = 'piwik_test_table';
+    public const TEST_TEMP_TABLE_NAME = 'piwik_test_table_temp';
     /**
      * Checks that the DB user entered in the form has the necessary privileges for Piwik
      * to run.
@@ -174,9 +192,13 @@ class RuleCheckUserPrivileges extends HTML_QuickForm2_Rule
             foreach ($queries as $sql) {
                 try {
                     if (in_array($privilegeType, array('SELECT'))) {
-                        $db->fetchAll($sql);
+                        $ret = $db->fetchAll($sql);
                     } else {
-                        $db->exec($sql);
+                        $ret = $db->exec($sql);
+                    }
+                    // In case an exception is not thrown check the return
+                    if ($ret === -1) {
+                        return false;
                     }
                 } catch (Exception $ex) {
                     if ($this->isAccessDenied($ex)) {

@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\UserCountry\LocationProvider;
 
@@ -18,8 +17,8 @@ use Piwik\Url;
  */
 class DisabledProvider extends LocationProvider
 {
-    const ID = 'disabled';
-    const TITLE = 'General_Disabled';
+    public const ID = 'disabled';
+    public const TITLE = 'General_Disabled';
     /**
      * Guesses a visitor's location using a visitor's browser language.
      *

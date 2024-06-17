@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik;
 
@@ -207,10 +206,8 @@ class ArchiveProcessor
                 $columns = $table->getColumns();
                 if (in_array(\Piwik\Metrics::INDEX_NB_VISITS, $columns)) {
                     $columnToSortByBeforeTruncation = \Piwik\Metrics::INDEX_NB_VISITS;
-                } else {
-                    if (in_array('nb_visits', $columns)) {
-                        $columnToSortByBeforeTruncation = 'nb_visits';
-                    }
+                } elseif (in_array('nb_visits', $columns)) {
+                    $columnToSortByBeforeTruncation = 'nb_visits';
                 }
             }
             $blob = $table->getSerialized($maximumRowsInDataTableLevelZero, $maximumRowsInSubDataTable, $columnToSortByBeforeTruncation);
@@ -364,20 +361,18 @@ class ArchiveProcessor
             $tableToAddTo = null;
             if ($tableId === null) {
                 $tableToAddTo = $result;
+            } elseif (empty($tableIdToResultRowMapping[$period][$tableId])) {
+                // sanity check
+                StaticContainer::get(LoggerInterface::class)->info('Unexpected state when aggregating DataTable, unknown period/table ID combination encountered: {period} - {tableId}.' . ' This either means the SQL to order blobs is behaving incorrectly or the blob data is corrupt in some way.', ['period' => $period, 'tableId' => $tableId]);
+                continue;
             } else {
-                if (empty($tableIdToResultRowMapping[$period][$tableId])) {
-                    // sanity check
-                    StaticContainer::get(LoggerInterface::class)->info('Unexpected state when aggregating DataTable, unknown period/table ID combination encountered: {period} - {tableId}.' . ' This either means the SQL to order blobs is behaving incorrectly or the blob data is corrupt in some way.', ['period' => $period, 'tableId' => $tableId]);
-                    continue;
-                } else {
-                    $rowToAddTo = $tableIdToResultRowMapping[$period][$tableId];
-                    if (!$rowToAddTo->getIdSubDataTable()) {
-                        $newTable = new \Piwik\DataTable();
-                        $newTable->setMetadata(\Piwik\DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME, $columnsAggregationOperation);
-                        $rowToAddTo->setSubtable($newTable);
-                    }
-                    $tableToAddTo = $rowToAddTo->getSubtable();
+                $rowToAddTo = $tableIdToResultRowMapping[$period][$tableId];
+                if (!$rowToAddTo->getIdSubDataTable()) {
+                    $newTable = new \Piwik\DataTable();
+                    $newTable->setMetadata(\Piwik\DataTable::COLUMN_AGGREGATION_OPS_METADATA_NAME, $columnsAggregationOperation);
+                    $rowToAddTo->setSubtable($newTable);
                 }
+                $tableToAddTo = $rowToAddTo->getSubtable();
             }
             $tableToAddTo->addDataTable($blobTable);
             // add subtable IDs for $blobTableRow to $tableIdToResultRowMapping
