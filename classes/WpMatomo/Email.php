@@ -112,27 +112,31 @@ class Email {
 						if ( isset( $header[0] ) && isset( $header[1] ) &&
 							 is_string( $header[0] ) && is_string( $header[1] ) &&
 							 'x-matomo' === Common::mb_strtolower( $header[0] ) &&
-							 trim( $header[1] ) === $random_id ) {
+							 trim( $header[1] ) === $random_id
+						) {
 							$match = true;
 						}
 					}
 					if ( ! $match ) {
 						return; // attachments aren't for this mail
 					}
+
+					$base64_encoding = class_exists( PHPMailer::class ) ? PHPMailer::ENCODING_BASE64 : 'base64';
+
 					foreach ( $attachments as $attachment ) {
 						if ( ! empty( $attachment['cid'] ) ) {
 							$phpmailer->addStringEmbeddedImage(
 								$attachment['content'],
 								$attachment['cid'],
 								$attachment['filename'],
-								PHPMailer::ENCODING_BASE64,
+								$base64_encoding,
 								$attachment['mimetype']
 							);
 						} else {
 							$phpmailer->addStringAttachment(
 								$attachment['content'],
 								$attachment['filename'],
-								PHPMailer::ENCODING_BASE64,
+								$base64_encoding,
 								$attachment['mimetype']
 							);
 
