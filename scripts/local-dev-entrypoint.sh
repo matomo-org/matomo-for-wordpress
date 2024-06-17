@@ -351,7 +351,7 @@ if [[ "$WOOCOMMERCE" == "1" ]]; then
 fi
 
 # setup wp-mail-smtp
-if php -r "exit(version_compare('$WORDPRESS_VERSION', '5.5', '<') ? 0 : 1);"; then
+if [[ "$WORDPRESS_VERSION" != "trunk" ]] && php -r "exit(version_compare('$WORDPRESS_VERSION', '5.5', '<') ? 0 : 1);"; then
   WP_MAIL_SMTP_VERSION="--version=3.11.1"
 fi
 /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER --allow-root plugin install --activate $WP_MAIL_SMTP_VERSION wp-mail-smtp
