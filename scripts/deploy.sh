@@ -66,7 +66,7 @@ svn update --set-depth infinity assets
 svn update --set-depth infinity trunk
 svn update --set-depth immediates tags
 
-if [[ -d "tags/$VERSION" ]]; then
+if [[ -d "tags/$VERSION" ]] || [[ "$FORCE_DEPLOY" == "1" ]]; then
 	echo "ℹ︎ Version $VERSION of plugin $SLUG was already published";
 	exit
 fi
