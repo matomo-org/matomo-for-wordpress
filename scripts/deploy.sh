@@ -98,36 +98,44 @@ rsync -rc "$TMP_DIR/" trunk --delete --delete-excluded
 # Copy dotorg assets to /assets
 rsync -rc "$GITHUB_WORKSPACE/$ASSETS_DIR/" assets/ --delete --delete-excluded
 
-# Add everything and commit to SVN
-# The force flag ensures we recurse into subdirectories even if they are already added
-# Suppress stdout in favor of svn status later for readability
-echo "➤ Preparing files..."
-svn add . --force > /dev/null
+# Add everything and commit to SVN (in chunks in case there's too many changes in Matomo core)
+PIECES=(app/core app/plugins app/vendor app .)
+for chunk in ${PIECES[@]}; do
+  if [[ ! -d "trunk/$chunk" ]]; then
+    echo "➤ ERROR: '$chunk' folder does not exist"
+    exit 1;
+  fi
 
-# SVN delete all deleted files
-# Also suppress stdout here
-svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm %@ > /dev/null
+  # The force flag ensures we recurse into subdirectories even if they are already added
+  # Suppress stdout in favor of svn status later for readability
+  echo "➤ Preparing files ($chunk)..."
+  svn add "trunk/$chunk" --force > /dev/null
 
-# Fix screenshots getting force downloaded when clicking them
-# https://developer.wordpress.org/plugins/wordpress-org/plugin-assets/
-if test -d "assets" && test -n "$(find "assets" -maxdepth 1 -name "*.png" -print -quit)"; then
-    svn propset svn:mime-type image/png assets/*.png || true
-fi
-if test -d "assets" && test -n "$(find "assets" -maxdepth 1 -name "*.jpg" -print -quit)"; then
-    svn propset svn:mime-type image/png assets/*.jpg || true
-fi
-if test -d "assets" && test -n "$(find "assets" -maxdepth 1 -name "*.gif" -print -quit)"; then
-    svn propset svn:mime-type image/png assets/*.gif || true
-fi
-if test -d "assets" && test -n "$(find "assets" -maxdepth 1 -name "*.svg" -print -quit)"; then
-    svn propset svn:mime-type image/png assets/*.svg || true
-fi
+  # SVN delete all deleted files
+  # Also suppress stdout here
+  svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm %@ > /dev/null
 
-echo "➤ svn status..."
-svn status
+  # Fix screenshots getting force downloaded when clicking them
+  # https://developer.wordpress.org/plugins/wordpress-org/plugin-assets/
+  if test -d "assets" && test -n "$(find "assets" -maxdepth 1 -name "*.png" -print -quit)"; then
+      svn propset svn:mime-type image/png assets/*.png || true
+  fi
+  if test -d "assets" && test -n "$(find "assets" -maxdepth 1 -name "*.jpg" -print -quit)"; then
+      svn propset svn:mime-type image/png assets/*.jpg || true
+  fi
+  if test -d "assets" && test -n "$(find "assets" -maxdepth 1 -name "*.gif" -print -quit)"; then
+      svn propset svn:mime-type image/png assets/*.gif || true
+  fi
+  if test -d "assets" && test -n "$(find "assets" -maxdepth 1 -name "*.svg" -print -quit)"; then
+      svn propset svn:mime-type image/png assets/*.svg || true
+  fi
 
-echo "➤ Committing files..."
-svn commit -m "Update to version $VERSION from GitHub" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+  echo "➤ svn status ($chunk)..."
+  svn status
+
+  echo "➤ Committing files ($chunk)..."
+  svn commit -m "Update to version $VERSION from GitHub ($chunk)" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+done
 
 # Copy tag locally in another commit
 echo "➤ Copying tag..."
