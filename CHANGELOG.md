@@ -6,7 +6,6 @@
 * Bug fix: fix rare critical error when PEAR library is used in a certain way.
 * Fix deprecation notice in marketplace setup wizard.
 
-
 = 5.0.8 =
 * Improve PHP CLI diagnostic change: avoid reporting issues when a hosting provider does not support CLI archiving.
 
