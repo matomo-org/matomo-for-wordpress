@@ -109,7 +109,7 @@ for chunk in ${PIECES[@]}; do
   # The force flag ensures we recurse into subdirectories even if they are already added
   # Suppress stdout in favor of svn status later for readability
   echo "➤ Preparing files ($chunk)..."
-  svn add "trunk/$chunk" --force > /dev/null
+  svn add "trunk/$chunk" --force # > /dev/null
 
   # SVN delete all deleted files
   # Also suppress stdout here
@@ -139,6 +139,16 @@ done
 
 # Copy tag locally in another commit
 echo "➤ Copying tag..."
+echo "DISABLED"
+exit
+
+if [[ -d "tags/$VERSION" ]]; then
+  svn rm "tags/$VERSION"
+
+  echo "➤ Deleting existing tag..."
+  svn commit -m "Deleting existing $VERSION for replacement" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+fi
+
 svn cp "trunk" "tags/$VERSION"
 
 echo "➤ svn status..."
