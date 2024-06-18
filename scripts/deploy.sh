@@ -147,8 +147,6 @@ done
 
 # Copy tag locally in another commit
 echo "➤ Copying tag..."
-echo "DISABLED"
-exit
 
 if [[ -d "tags/$VERSION" ]]; then
   svn rm "tags/$VERSION"
