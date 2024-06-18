@@ -108,7 +108,6 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			'matomo/node_modules/visibilityjs/lib/visibility.core.js',
 			'matomo/node_modules/visibilityjs/lib/visibility.timers.js',
 			'matomo/node_modules/mousetrap/mousetrap.min.js',
-			'matomo/node_modules/jquery.dotdotdot/dist/jquery.dotdotdot.js',
 			'matomo/node_modules/vue/dist/vue.global.prod.js',
 			'matomo/node_modules/vue/dist/vue.global.js',
 			'matomo/node_modules/qrcodejs2/qrcode.min.js',

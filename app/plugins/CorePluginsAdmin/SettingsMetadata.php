@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CorePluginsAdmin;
 
@@ -17,7 +16,7 @@ use Piwik\Settings\Settings;
 use Exception;
 class SettingsMetadata
 {
-    const PASSWORD_PLACEHOLDER = '******';
+    public const PASSWORD_PLACEHOLDER = '******';
     /**
      * @param Settings[]  $settingsInstances
      * @param array $settingValues   array('pluginName' => array('settingName' => 'settingValue'))

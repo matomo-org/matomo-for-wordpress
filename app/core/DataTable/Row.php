@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\DataTable;
 
@@ -26,7 +25,7 @@ use Piwik\Log\LoggerInterface;
  */
 class Row extends \ArrayObject
 {
-    const COMPARISONS_METADATA_NAME = 'comparisons';
+    public const COMPARISONS_METADATA_NAME = 'comparisons';
     /**
      * List of columns that cannot be summed. An associative array for speed.
      *
@@ -36,7 +35,9 @@ class Row extends \ArrayObject
         'label' => true,
         'full_url' => true,
         // column used w/ old Piwik versions,
-        'ts_archived' => true,
+        DataTable::ARCHIVED_DATE_METADATA_NAME => true,
+        // date column used in metadata for proportional tooltips
+        DataTable::ARCHIVE_STATE_METADATA_NAME => true,
     );
     // @see sumRow - implementation detail
     public $maxVisitsSummed = 0;
@@ -47,9 +48,9 @@ class Row extends \ArrayObject
      */
     public $subtableId = null;
     private $isSummaryRow = false;
-    const COLUMNS = 0;
-    const METADATA = 1;
-    const DATATABLE_ASSOCIATED = 3;
+    public const COLUMNS = 0;
+    public const METADATA = 1;
+    public const DATATABLE_ASSOCIATED = 3;
     /**
      * Constructor.
      *
@@ -594,13 +595,11 @@ class Row extends \ArrayObject
         if (is_numeric($columnToSumValue)) {
             if ($thisColumnValue === false) {
                 $thisColumnValue = 0;
-            } else {
-                if (!is_numeric($thisColumnValue)) {
-                    $label = $this->getColumn('label');
-                    $thisColumnDescription = $this->getColumnValueDescriptionForError($thisColumnValue);
-                    $columnToSumValueDescription = $this->getColumnValueDescriptionForError($columnToSumValue);
-                    throw new \Exception(sprintf('Trying to sum unsupported operands for column %s in row with label = %s: %s + %s', $columnName, $label, $thisColumnDescription, $columnToSumValueDescription));
-                }
+            } elseif (!is_numeric($thisColumnValue)) {
+                $label = $this->getColumn('label');
+                $thisColumnDescription = $this->getColumnValueDescriptionForError($thisColumnValue);
+                $columnToSumValueDescription = $this->getColumnValueDescriptionForError($columnToSumValue);
+                throw new \Exception(sprintf('Trying to sum unsupported operands for column %s in row with label = %s: %s + %s', $columnName, $label, $thisColumnDescription, $columnToSumValueDescription));
             }
             return $thisColumnValue + $columnToSumValue;
         }

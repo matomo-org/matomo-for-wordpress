@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Overlay;
 
@@ -96,10 +95,8 @@ class Controller extends \Piwik\Plugin\Controller
                 }
                 if ($metric == 'bounce_rate' || $metric == 'exit_rate') {
                     $value = $formatter->getPrettyPercentFromQuotient($value);
-                } else {
-                    if ($metric == 'avg_time_on_page') {
-                        $value = $formatter->getPrettyTimeFromSeconds($value, $displayAsSentence = true);
-                    }
+                } elseif ($metric == 'avg_time_on_page') {
+                    $value = $formatter->getPrettyTimeFromSeconds($value, $displayAsSentence = true);
                 }
                 $data[] = array('name' => $translations[$metric], 'value' => $value);
             }

@@ -410,7 +410,7 @@ class System
             //$GLOBALS['_System_temp_files'][] = dirname($tmp);
         }
         if ($first_time) {
-            PEAR::registerShutdownFunc(array('System', '_removeTmpFiles'));
+            PEAR::registerShutdownFunc(array('\\Matomo\\Dependencies\\System', '_removeTmpFiles'));
             $first_time = \false;
         }
         return $tmp;

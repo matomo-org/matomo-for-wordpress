@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CoreAdminHome\Commands;
 
@@ -18,8 +18,8 @@ use Piwik\Plugin\ConsoleCommand;
  */
 class OptimizeArchiveTables extends ConsoleCommand
 {
-    const ALL_TABLES_STRING = 'all';
-    const CURRENT_MONTH_STRING = 'now';
+    public const ALL_TABLES_STRING = 'all';
+    public const CURRENT_MONTH_STRING = 'now';
     protected function configure()
     {
         $this->setName('database:optimize-archive-tables');
@@ -57,22 +57,18 @@ class OptimizeArchiveTables extends ConsoleCommand
             $dateSpecifier = reset($dateSpecifiers);
             if ($dateSpecifier == self::ALL_TABLES_STRING) {
                 return $this->getAllArchiveTableMonths();
-            } else {
-                if ($dateSpecifier == self::CURRENT_MONTH_STRING) {
-                    $now = Date::factory('now');
-                    return array(ArchiveTableCreator::getTableMonthFromDate($now));
-                } else {
-                    if (strpos($dateSpecifier, 'last') === 0) {
-                        $lastN = substr($dateSpecifier, 4);
-                        if (!ctype_digit($lastN)) {
-                            throw new \Exception("Invalid lastN specifier '{$lastN}'. The end must be an integer, eg, last1 or last2.");
-                        }
-                        if ($lastN <= 0) {
-                            throw new \Exception("Invalid lastN value '{$lastN}'.");
-                        }
-                        return $this->getLastNTableMonths((int) $lastN);
-                    }
+            } elseif ($dateSpecifier == self::CURRENT_MONTH_STRING) {
+                $now = Date::factory('now');
+                return array(ArchiveTableCreator::getTableMonthFromDate($now));
+            } elseif (strpos($dateSpecifier, 'last') === 0) {
+                $lastN = substr($dateSpecifier, 4);
+                if (!ctype_digit($lastN)) {
+                    throw new \Exception("Invalid lastN specifier '{$lastN}'. The end must be an integer, eg, last1 or last2.");
                 }
+                if ($lastN <= 0) {
+                    throw new \Exception("Invalid lastN value '{$lastN}'.");
+                }
+                return $this->getLastNTableMonths((int) $lastN);
             }
         }
         $tableMonths = array();

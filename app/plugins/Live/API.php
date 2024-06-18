@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Live;
 
@@ -259,6 +258,23 @@ class API extends \Piwik\Plugin\API
         $dataTable = $this->makeVisitorTableFromArray($data);
         $this->addFilterToCleanVisitors($dataTable, $idSite, false, true);
         return $dataTable;
+    }
+    /**
+     * Returns the most recent date time (in UTC) an action was performed for the given idSite
+     * If period and date is given the most recent visit in that period is returned
+     * If no action was performed in this timeframe an empty string is returned
+     *
+     * @param int|string $idSite
+     * @param string|null $period
+     * @param string|null $date
+     * @return string
+     * @throws Exception
+     */
+    public function getMostRecentVisitsDateTime($idSite, string $period = null, string $date = null) : string
+    {
+        Piwik::checkUserHasViewAccess($idSite);
+        $model = new \Piwik\Plugins\Live\Model();
+        return $model->getMostRecentVisitsDateTime($idSite, $period, $date);
     }
     /**
      * For an array of visits, query the list of pages for this visit

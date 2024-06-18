@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugin;
 
@@ -21,7 +21,7 @@ abstract class ProcessedMetric extends \Piwik\Plugin\Metric
     /**
      * The sub-namespace name in a plugin where ProcessedMetrics are stored.
      */
-    const COMPONENT_SUBNAMESPACE = 'Columns\\Metrics';
+    public const COMPONENT_SUBNAMESPACE = 'Columns\\Metrics';
     /**
      * Computes the metric using the values in a {@link Piwik\DataTable\Row}.
      *

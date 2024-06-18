@@ -12,7 +12,7 @@ namespace {
         // For BC reasons
         'Matomo\\Dependencies\\Monolog\\Logger' => \Piwik\DI::get(Logger::class),
         'Matomo\\Dependencies\\Psr\\Log\\LoggerInterface' => \Piwik\DI::get(Log\LoggerInterface::class),
-        'log.handler.classes' => array('file' => 'Piwik\\Plugins\\Monolog\\Handler\\FileHandler', 'screen' => 'Piwik\\Plugins\\Monolog\\Handler\\WebNotificationHandler', 'database' => 'Piwik\\Plugins\\Monolog\\Handler\\DatabaseHandler', 'errorlog' => 'Matomo\\Dependencies\\Monolog\\Handler\\ErrorLogHandler', 'syslog' => 'Matomo\\Dependencies\\Monolog\\Handler\\SyslogHandler'),
+        'log.handler.classes' => array('file' => 'Piwik\\Plugins\\Monolog\\Handler\\FileHandler', 'screen' => 'Piwik\\Plugins\\Monolog\\Handler\\WebNotificationHandler', 'database' => 'Piwik\\Plugins\\Monolog\\Handler\\DatabaseHandler', 'errorlog' => 'Piwik\\Plugins\\Monolog\\Handler\\ErrorLogHandler', 'syslog' => 'Piwik\\Plugins\\Monolog\\Handler\\SyslogHandler'),
         'log.handlers' => \Piwik\DI::factory(function (Container $c) {
             if ($c->has('ini.log.log_writers')) {
                 $writerNames = $c->get('ini.log.log_writers');
@@ -56,8 +56,8 @@ namespace {
         }),
         'log.processors' => array(\Piwik\DI::get('Piwik\\Plugins\\Monolog\\Processor\\SprintfProcessor'), \Piwik\DI::get('Piwik\\Plugins\\Monolog\\Processor\\ClassNameProcessor'), \Piwik\DI::get('Piwik\\Plugins\\Monolog\\Processor\\RequestIdProcessor'), \Piwik\DI::get('Piwik\\Plugins\\Monolog\\Processor\\ExceptionToTextProcessor'), \Piwik\DI::get('Matomo\\Dependencies\\Monolog\\Processor\\PsrLogMessageProcessor'), \Piwik\DI::get('Piwik\\Plugins\\Monolog\\Processor\\TokenProcessor')),
         'Piwik\\Plugins\\Monolog\\Handler\\FileHandler' => \Piwik\DI::create()->constructor(\Piwik\DI::get('log.file.filename'), \Piwik\DI::get('log.level.file'))->method('setFormatter', \Piwik\DI::get('log.lineMessageFormatter.file')),
-        'Matomo\\Dependencies\\Monolog\\Handler\\ErrorLogHandler' => \Piwik\DI::autowire()->constructorParameter('level', \Piwik\DI::get('log.level.errorlog'))->method('setFormatter', \Piwik\DI::get('log.lineMessageFormatter.file')),
-        'Matomo\\Dependencies\\Monolog\\Handler\\SyslogHandler' => \Piwik\DI::autowire()->constructorParameter('ident', \Piwik\DI::get('log.syslog.ident'))->constructorParameter('level', \Piwik\DI::get('log.level.syslog'))->method('setFormatter', \Piwik\DI::get('log.lineMessageFormatter.file')),
+        'Piwik\\Plugins\\Monolog\\Handler\\ErrorLogHandler' => \Piwik\DI::autowire()->constructorParameter('level', \Piwik\DI::get('log.level.errorlog'))->method('setFormatter', \Piwik\DI::get('log.lineMessageFormatter.file')),
+        'Piwik\\Plugins\\Monolog\\Handler\\SyslogHandler' => \Piwik\DI::autowire()->constructorParameter('ident', \Piwik\DI::get('log.syslog.ident'))->constructorParameter('level', \Piwik\DI::get('log.level.syslog'))->method('setFormatter', \Piwik\DI::get('log.lineMessageFormatter.file')),
         'Piwik\\Plugins\\Monolog\\Handler\\DatabaseHandler' => \Piwik\DI::create()->constructor(\Piwik\DI::get('log.level.database'))->method('setFormatter', \Piwik\DI::get('log.lineMessageFormatter')),
         'Piwik\\Plugins\\Monolog\\Handler\\WebNotificationHandler' => \Piwik\DI::create()->constructor(\Piwik\DI::get('log.level.screen'))->method('setFormatter', \Piwik\DI::get('log.lineMessageFormatter')),
         'log.level' => \Piwik\DI::factory(function (Container $c) {

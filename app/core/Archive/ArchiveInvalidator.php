@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Archive;
 
@@ -55,9 +54,9 @@ use Piwik\Log\LoggerInterface;
  */
 class ArchiveInvalidator
 {
-    const TRACKER_CACHE_KEY = 'ArchiveInvalidator.rememberToInvalidate';
-    const INVALIDATION_STATUS_QUEUED = 0;
-    const INVALIDATION_STATUS_IN_PROGRESS = 1;
+    public const TRACKER_CACHE_KEY = 'ArchiveInvalidator.rememberToInvalidate';
+    public const INVALIDATION_STATUS_QUEUED = 0;
+    public const INVALIDATION_STATUS_IN_PROGRESS = 1;
     private $rememberArchivedReportIdStart = 'report_to_invalidate_';
     /**
      * @var Model
@@ -133,10 +132,19 @@ class ArchiveInvalidator
         }
         return $generalCache[$cacheKey][$idSite][$dateStr];
     }
-    public function getRememberedArchivedReportsThatShouldBeInvalidated()
+    public function getDaysWithRememberedInvalidationsForSite(int $idSite) : array
     {
-        $reports = Option::getLike('%' . str_replace('_', '\\_', $this->rememberArchivedReportIdStart) . '%\\_%');
-        $sitesPerDay = array();
+        return array_keys($this->getRememberedArchivedReportsThatShouldBeInvalidated($idSite));
+    }
+    public function getRememberedArchivedReportsThatShouldBeInvalidated(int $idSite = null)
+    {
+        if (null === $idSite) {
+            $optionName = $this->rememberArchivedReportIdStart . '%';
+        } else {
+            $optionName = $this->buildRememberArchivedReportIdForSite($idSite);
+        }
+        $reports = Option::getLike('%' . str_replace('_', '\\_', $optionName) . '\\_%');
+        $sitesPerDay = [];
         foreach ($reports as $report => $value) {
             $report = substr($report, strpos($report, $this->rememberArchivedReportIdStart));
             $report = str_replace($this->rememberArchivedReportIdStart, '', $report);
@@ -147,7 +155,7 @@ class ArchiveInvalidator
                 continue;
             }
             if (empty($sitesPerDay[$date])) {
-                $sitesPerDay[$date] = array();
+                $sitesPerDay[$date] = [];
             }
             $sitesPerDay[$date][] = $siteId;
         }
@@ -321,11 +329,9 @@ class ArchiveInvalidator
     {
         if ($period->getLabel() == 'range') {
             return;
-        } else {
-            if ($period->getLabel() == 'day' && $this->shouldPropagateUp($period)) {
-                $this->addParentPeriodsByYearMonth($result, $period);
-                return;
-            }
+        } elseif ($period->getLabel() == 'day' && $this->shouldPropagateUp($period)) {
+            $this->addParentPeriodsByYearMonth($result, $period);
+            return;
         }
         foreach ($period->getSubperiods() as $subperiod) {
             $result[$this->getYearMonth($subperiod)][$this->getUniquePeriodId($subperiod)] = $subperiod;
@@ -397,11 +403,9 @@ class ArchiveInvalidator
                 // INI setting set to 0 months so no rearchiving
             }
             $startDate = $earliestDateToRearchive;
-        } else {
-            if (!empty($earliestDateToRearchive)) {
-                // don't allow archiving further back than the rearchive_reports_in_past_last_n_months date allows
-                $startDate = $startDate->isEarlier($earliestDateToRearchive) ? $earliestDateToRearchive : $startDate;
-            }
+        } elseif (!empty($earliestDateToRearchive)) {
+            // don't allow archiving further back than the rearchive_reports_in_past_last_n_months date allows
+            $startDate = $startDate->isEarlier($earliestDateToRearchive) ? $earliestDateToRearchive : $startDate;
         }
         if ($idSites === 'all') {
             $idSites = $this->getAllSitesId();

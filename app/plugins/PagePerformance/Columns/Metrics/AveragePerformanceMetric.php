@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\PagePerformance\Columns\Metrics;
 
@@ -24,7 +24,7 @@ use Piwik\Columns\Dimension;
  */
 abstract class AveragePerformanceMetric extends ProcessedMetric
 {
-    const ID = '';
+    public const ID = '';
     public function getName()
     {
         return 'avg_' . static::ID;

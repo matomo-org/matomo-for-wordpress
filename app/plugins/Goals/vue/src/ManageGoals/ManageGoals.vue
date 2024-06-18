@@ -1,7 +1,8 @@
 <!--
   Matomo - free/libre analytics platform
-  @link https://matomo.org
-  @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+
+  @link    https://matomo.org
+  @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
 -->
 
 <template>
@@ -40,8 +41,7 @@
                   :is="beforeGoalListActionsHeadComponent"
                 ></component>
 
-                <th v-if="userCanEditGoals">{{ translate('General_Edit') }}</th>
-                <th v-if="userCanEditGoals">{{ translate('General_Delete') }}</th>
+                <th v-if="userCanEditGoals">{{ translate('General_Actions') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -85,21 +85,17 @@
 
                 <td v-if="userCanEditGoals" style="padding-top:2px">
                   <button
+                    v-if="userCanEditGoals"
                     @click="editGoal(goal.idgoal)"
-                    class="table-action"
+                    class="table-action icon-edit"
                     :title="translate('General_Edit')"
-                  >
-                    <span class="icon-edit"></span>
-                  </button>
-                </td>
-                <td v-if="userCanEditGoals" style="padding-top:2px">
+                  ></button>
                   <button
+                    v-if="userCanEditGoals"
                     @click="deleteGoal(goal.idgoal)"
-                    class="table-action"
+                    class="table-action icon-delete"
                     :title="translate('General_Delete')"
-                  >
-                    <span class="icon-delete"></span>
-                  </button>
+                  ></button>
                 </td>
               </tr>
             </tbody>
@@ -137,7 +133,8 @@
                 name="goal_name"
                 v-model="goal.name"
                 :maxlength="50"
-                :title="translate('Goals_GoalName')">
+                :title="translate('Goals_GoalName')"
+                @change="goalNameChanged">
               </Field>
             </div>
 
@@ -504,7 +501,7 @@ export default defineComponent({
       useEventValueAsRevenue: boolean,
       goalId: string|number,
     ) {
-      Matomo.postEvent('Goals.beforeInitGoalForm', goalMethodAPI, goalId);
+      Matomo.postEvent('Goals.beforeInitGoalForm', goalMethodAPI, goalId, goalName);
 
       this.apiMethod = goalMethodAPI;
 
@@ -695,6 +692,9 @@ export default defineComponent({
     },
     ucfirst(s: string) {
       return `${s.slice(0, 1).toUpperCase()}${s.slice(1)}`;
+    },
+    goalNameChanged() {
+      Matomo.postEvent('Goals.goalNameChanged', this.goal.name);
     },
   },
   computed: {

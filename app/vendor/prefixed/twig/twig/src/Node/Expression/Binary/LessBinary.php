@@ -19,7 +19,7 @@ class LessBinary extends AbstractBinary
             parent::compile($compiler);
             return;
         }
-        $compiler->raw('(-1 === \Matomo\Dependencies\twig_compare(')->subcompile($this->getNode('left'))->raw(', ')->subcompile($this->getNode('right'))->raw('))');
+        $compiler->raw('(-1 === CoreExtension::compare(')->subcompile($this->getNode('left'))->raw(', ')->subcompile($this->getNode('right'))->raw('))');
     }
     public function operator(Compiler $compiler) : Compiler
     {

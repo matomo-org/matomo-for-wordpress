@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\UserCountryMap;
 
@@ -25,7 +24,7 @@ require_once PIWIK_INCLUDE_PATH . '/plugins/UserCountry/functions.php';
 class Controller extends \Piwik\Plugin\Controller
 {
     // By default plot up to the last 3 days of visitors on the map, for low traffic sites
-    const REAL_TIME_WINDOW = 'last3';
+    public const REAL_TIME_WINDOW = 'last3';
     /**
      * @var Translator
      */
@@ -56,9 +55,9 @@ class Controller extends \Piwik\Plugin\Controller
         $request = new Request('method=VisitsSummary.get&format=json' . '&idSite=' . $this->idSite . '&period=' . $period . '&date=' . $date . '&segment=' . $segment . '&token_auth=' . $token_auth . '&filter_limit=-1');
         $config = [];
         $config['visitsSummary'] = json_decode($request->process(), true);
-        $config['countryDataUrl'] = $this->_report('UserCountry', 'getCountry', $this->idSite, $period, $date, $token_auth, false, $segment);
-        $config['regionDataUrl'] = $this->_report('UserCountry', 'getRegion', $this->idSite, $period, $date, $token_auth, true, $segment);
-        $config['cityDataUrl'] = $this->_report('UserCountry', 'getCity', $this->idSite, $period, $date, $token_auth, true, $segment);
+        $config['countryDataUrl'] = $this->report('UserCountry', 'getCountry', $this->idSite, $period, $date, $token_auth, false, $segment);
+        $config['regionDataUrl'] = $this->report('UserCountry', 'getRegion', $this->idSite, $period, $date, $token_auth, true, $segment);
+        $config['cityDataUrl'] = $this->report('UserCountry', 'getCity', $this->idSite, $period, $date, $token_auth, true, $segment);
         $config['countrySummaryUrl'] = $this->getApiRequestUrl('VisitsSummary', 'get', $this->idSite, $period, $date, $token_auth, true, $segment);
         $view->defaultMetric = array_key_exists('nb_uniq_visitors', $config['visitsSummary']) ? 'nb_uniq_visitors' : 'nb_visits';
         $noVisitTranslation = $this->translator->translate('UserCountryMap_NoVisit');
@@ -183,7 +182,7 @@ class Controller extends \Piwik\Plugin\Controller
         }
         return $url;
     }
-    private function _report($module, $action, $idSite, $period, $date, $token_auth, $filter_by_country = false, $segmentOverride = false)
+    private function report($module, $action, $idSite, $period, $date, $token_auth, $filter_by_country = false, $segmentOverride = false)
     {
         return $this->getApiRequestUrl('API', 'getProcessedReport&apiModule=' . $module . '&apiAction=' . $action, $idSite, $period, $date, $token_auth, $filter_by_country, $segmentOverride);
     }

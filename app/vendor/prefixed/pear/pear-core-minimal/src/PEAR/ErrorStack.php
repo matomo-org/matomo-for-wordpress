@@ -235,7 +235,7 @@ class PEAR_ErrorStack
      *
      * @return PEAR_ErrorStack
      */
-    public static function &singleton($package, $msgCallback = \false, $contextCallback = \false, $throwPEAR_Error = \false, $stackClass = 'PEAR_ErrorStack')
+    public static function &singleton($package, $msgCallback = \false, $contextCallback = \false, $throwPEAR_Error = \false, $stackClass = '\\Matomo\\Dependencies\\PEAR_ErrorStack')
     {
         if (isset($GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package])) {
             return $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package];
@@ -244,7 +244,7 @@ class PEAR_ErrorStack
             if (\function_exists('debug_backtrace')) {
                 $trace = \debug_backtrace();
             }
-            PEAR_ErrorStack::staticPush('PEAR_ErrorStack', \Matomo\Dependencies\PEAR_ERRORSTACK_ERR_NONCLASS, 'exception', array('stackclass' => $stackClass), 'stack class "%stackclass%" is not a valid class name (should be like PEAR_ErrorStack)', \false, $trace);
+            PEAR_ErrorStack::staticPush('\\Matomo\\Dependencies\\PEAR_ErrorStack', \Matomo\Dependencies\PEAR_ERRORSTACK_ERR_NONCLASS, 'exception', array('stackclass' => $stackClass), 'stack class "%stackclass%" is not a valid class name (should be like PEAR_ErrorStack)', \false, $trace);
         }
         $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package] = new $stackClass($package, $msgCallback, $contextCallback, $throwPEAR_Error);
         return $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package];
@@ -704,11 +704,11 @@ class PEAR_ErrorStack
      *
      * @return array 
      */
-    public static function staticGetErrors($purge = \false, $level = \false, $merge = \false, $sortfunc = array('PEAR_ErrorStack', '_sortErrors'))
+    public static function staticGetErrors($purge = \false, $level = \false, $merge = \false, $sortfunc = array('\\Matomo\\Dependencies\\PEAR_ErrorStack', '_sortErrors'))
     {
         $ret = array();
         if (!\is_callable($sortfunc)) {
-            $sortfunc = array('PEAR_ErrorStack', '_sortErrors');
+            $sortfunc = array('\\Matomo\\Dependencies\\PEAR_ErrorStack', '_sortErrors');
         }
         foreach ($GLOBALS['_PEAR_ERRORSTACK_SINGLETON'] as $package => $obj) {
             $test = $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package]->getErrors($purge, $level);
@@ -839,7 +839,7 @@ class PEAR_ErrorStack
                     if (\method_exists($val, '__toString')) {
                         $val = $val->__toString();
                     } else {
-                        PEAR_ErrorStack::staticPush('PEAR_ErrorStack', \Matomo\Dependencies\PEAR_ERRORSTACK_ERR_OBJTOSTRING, 'warning', array('obj' => \get_class($val)), 'object %obj% passed into getErrorMessage, but has no __toString() method');
+                        PEAR_ErrorStack::staticPush('\\Matomo\\Dependencies\\PEAR_ErrorStack', \Matomo\Dependencies\PEAR_ERRORSTACK_ERR_OBJTOSTRING, 'warning', array('obj' => \get_class($val)), 'object %obj% passed into getErrorMessage, but has no __toString() method');
                         $val = 'Object';
                     }
                 }
@@ -889,5 +889,5 @@ class PEAR_ErrorStack
         return \call_user_func_array(array('PEAR', 'raiseError'), $args);
     }
 }
-$stack =& PEAR_ErrorStack::singleton('PEAR_ErrorStack');
-$stack->pushCallback(array('PEAR_ErrorStack', '_handleError'));
+$stack =& PEAR_ErrorStack::singleton('\\Matomo\\Dependencies\\PEAR_ErrorStack');
+$stack->pushCallback(array('\\Matomo\\Dependencies\\PEAR_ErrorStack', '_handleError'));

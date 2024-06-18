@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Feedback;
 
@@ -56,12 +55,10 @@ class API extends \Piwik\Plugin\API
         // Determine where Matomo is running and add as source
         if (Config::getHostname() === 'demo.matomo.cloud') {
             $source = 'Demo';
+        } elseif (SettingsServer::isMatomoForWordPress()) {
+            $source = 'Wordpress';
         } else {
-            if (SettingsServer::isMatomoForWordPress()) {
-                $source = 'Wordpress';
-            } else {
-                $source = 'On-Premise';
-            }
+            $source = 'On-Premise';
         }
         $body .= "Source: " . $source . "\n";
         $this->sendMail($subject, $body);

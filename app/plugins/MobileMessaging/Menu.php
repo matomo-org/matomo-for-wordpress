@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\MobileMessaging;
 
@@ -20,10 +19,8 @@ class Menu extends \Piwik\Plugin\Menu
         $order = 35;
         if (Piwik::hasUserSuperUserAccess()) {
             $menu->addSystemItem($title, $url, $order);
-        } else {
-            if (!Piwik::isUserIsAnonymous()) {
-                $menu->addPersonalItem($title, $url, $order);
-            }
+        } elseif (!Piwik::isUserIsAnonymous()) {
+            $menu->addPersonalItem($title, $url, $order);
         }
     }
 }

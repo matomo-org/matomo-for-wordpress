@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\ImageGraph;
 
@@ -36,12 +35,12 @@ use Piwik\SettingsServer;
  */
 class API extends \Piwik\Plugin\API
 {
-    const FILENAME_KEY = 'filename';
-    const TRUNCATE_KEY = 'truncate';
-    const WIDTH_KEY = 'width';
-    const HEIGHT_KEY = 'height';
-    const MAX_WIDTH = 2048;
-    const MAX_HEIGHT = 2048;
+    public const FILENAME_KEY = 'filename';
+    public const TRUNCATE_KEY = 'truncate';
+    public const WIDTH_KEY = 'width';
+    public const HEIGHT_KEY = 'height';
+    public const MAX_WIDTH = 2048;
+    public const MAX_HEIGHT = 2048;
     private static $DEFAULT_PARAMETERS = array(\Piwik\Plugins\ImageGraph\StaticGraph::GRAPH_TYPE_BASIC_LINE => array(self::FILENAME_KEY => 'BasicLine', self::TRUNCATE_KEY => 6, self::WIDTH_KEY => 1044, self::HEIGHT_KEY => 290), \Piwik\Plugins\ImageGraph\StaticGraph::GRAPH_TYPE_VERTICAL_BAR => array(self::FILENAME_KEY => 'BasicBar', self::TRUNCATE_KEY => 6, self::WIDTH_KEY => 1044, self::HEIGHT_KEY => 290), \Piwik\Plugins\ImageGraph\StaticGraph::GRAPH_TYPE_HORIZONTAL_BAR => array(
         self::FILENAME_KEY => 'HorizontalBar',
         self::TRUNCATE_KEY => null,
@@ -50,21 +49,21 @@ class API extends \Piwik\Plugin\API
         self::HEIGHT_KEY => 290,
     ), \Piwik\Plugins\ImageGraph\StaticGraph::GRAPH_TYPE_3D_PIE => array(self::FILENAME_KEY => '3DPie', self::TRUNCATE_KEY => 5, self::WIDTH_KEY => 1044, self::HEIGHT_KEY => 290), \Piwik\Plugins\ImageGraph\StaticGraph::GRAPH_TYPE_BASIC_PIE => array(self::FILENAME_KEY => 'BasicPie', self::TRUNCATE_KEY => 5, self::WIDTH_KEY => 1044, self::HEIGHT_KEY => 290));
     private static $DEFAULT_GRAPH_TYPE_OVERRIDE = array('Referrers_getReferrerType' => array(false => \Piwik\Plugins\ImageGraph\StaticGraph::GRAPH_TYPE_HORIZONTAL_BAR));
-    const GRAPH_OUTPUT_INLINE = 0;
-    const GRAPH_OUTPUT_FILE = 1;
-    const GRAPH_OUTPUT_PHP = 2;
-    const DEFAULT_ORDINATE_METRIC = 'nb_visits';
-    const FONT_DIR = '/plugins/ImageGraph/fonts/';
-    const DEFAULT_FONT = 'tahoma.ttf';
-    const UNICODE_FONT = 'unifont.ttf';
-    const DEFAULT_FONT_SIZE = 9;
-    const DEFAULT_LEGEND_FONT_SIZE_OFFSET = 2;
-    const DEFAULT_TEXT_COLOR = '222222';
-    const DEFAULT_BACKGROUND_COLOR = 'FFFFFF';
-    const DEFAULT_GRID_COLOR = 'CCCCCC';
+    public const GRAPH_OUTPUT_INLINE = 0;
+    public const GRAPH_OUTPUT_FILE = 1;
+    public const GRAPH_OUTPUT_PHP = 2;
+    public const DEFAULT_ORDINATE_METRIC = 'nb_visits';
+    public const FONT_DIR = '/plugins/ImageGraph/fonts/';
+    public const DEFAULT_FONT = 'tahoma.ttf';
+    public const UNICODE_FONT = 'unifont.ttf';
+    public const DEFAULT_FONT_SIZE = 9;
+    public const DEFAULT_LEGEND_FONT_SIZE_OFFSET = 2;
+    public const DEFAULT_TEXT_COLOR = '222222';
+    public const DEFAULT_BACKGROUND_COLOR = 'FFFFFF';
+    public const DEFAULT_GRID_COLOR = 'CCCCCC';
     // number of row evolutions to plot when no labels are specified, can be overridden using &filter_limit
-    const DEFAULT_NB_ROW_EVOLUTIONS = 5;
-    const MAX_NB_ROW_LABELS = 10;
+    public const DEFAULT_NB_ROW_EVOLUTIONS = 5;
+    public const MAX_NB_ROW_LABELS = 10;
     public function get($idSite, $period, $date, $apiModule, $apiAction, $graphType = false, $outputType = \Piwik\Plugins\ImageGraph\API::GRAPH_OUTPUT_INLINE, $columns = false, $labels = false, $showLegend = true, $width = false, $height = false, $fontSize = \Piwik\Plugins\ImageGraph\API::DEFAULT_FONT_SIZE, $legendFontSize = false, $aliasedGraph = true, $idGoal = false, $colors = false, $textColor = \Piwik\Plugins\ImageGraph\API::DEFAULT_TEXT_COLOR, $backgroundColor = \Piwik\Plugins\ImageGraph\API::DEFAULT_BACKGROUND_COLOR, $gridColor = \Piwik\Plugins\ImageGraph\API::DEFAULT_GRID_COLOR, $idSubtable = false, $legendAppendMetric = true, $segment = false, $idDimension = false)
     {
         $idSite = (int) $idSite;
@@ -143,12 +142,10 @@ class API extends \Piwik\Plugin\API
             if (empty($columns)) {
                 if (!empty($reportColumns[self::DEFAULT_ORDINATE_METRIC])) {
                     $ordinateColumns[] = self::DEFAULT_ORDINATE_METRIC;
+                } elseif (!empty($metadata['metrics'])) {
+                    $ordinateColumns[] = key($metadata['metrics']);
                 } else {
-                    if (!empty($metadata['metrics'])) {
-                        $ordinateColumns[] = key($metadata['metrics']);
-                    } else {
-                        throw new Exception(Piwik::translate('ImageGraph_ColumnOrdinateMissing', array(self::DEFAULT_ORDINATE_METRIC, implode(',', array_keys($reportColumns)))));
-                    }
+                    throw new Exception(Piwik::translate('ImageGraph_ColumnOrdinateMissing', array(self::DEFAULT_ORDINATE_METRIC, implode(',', array_keys($reportColumns)))));
                 }
             } else {
                 $ordinateColumns = explode(',', $columns);

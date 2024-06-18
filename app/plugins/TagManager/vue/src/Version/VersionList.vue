@@ -45,7 +45,7 @@
               {{ translate('TagManager_NoVersionsFound') }}
               <a
                 class="createContainerVersionNow"
-                v-show="hasWriteAccess"
+                v-show="hasWriteAccess && hasCustomTemplatesCapability"
                 @click="createVersion()"
               >
                 {{ translate('TagManager_CreateNewVersionNow') }}
@@ -84,13 +84,13 @@
             <td class="action">
               <a
                 class="table-action icon-rocket"
-                v-show="hasWriteAccess"
+                v-show="hasWriteAccess && hasCustomTemplatesCapability"
                 @click="publishVersion(version)"
                 :title="translate('TagManager_PublishVersion', version.name)"
               />
               <a
                 class="table-action icon-bug"
-                v-show="hasWriteAccess"
+                v-show="hasWriteAccess && hasCustomTemplatesCapability"
                 @click="enableDebugMode(version.idcontainerversion)"
                 :title="translate('TagManager_EnablePreviewDebug')"
               />
@@ -109,7 +109,8 @@
               />
               <a
                 class="table-action icon-delete"
-                v-show="version.releases.length === 0 && hasWriteAccess"
+                v-show="version.releases.length === 0 && hasWriteAccess
+                && hasCustomTemplatesCapability"
                 @click="deleteVersion(version)"
                 :title="translate('TagManager_DeleteX', translate('TagManager_Version'))"
               />
@@ -120,7 +121,7 @@
       <div class="tableActionBar">
         <a
           class="createNewVersion"
-          v-show="hasWriteAccess"
+          v-show="hasWriteAccess && hasCustomTemplatesCapability"
           @click="createVersion()"
         >
           <span class="icon-add">&nbsp;</span>{{ translate('TagManager_CreateNewVersion') }}
@@ -381,6 +382,9 @@ export default defineComponent({
     },
     hasWriteAccess() {
       return Matomo.hasUserCapability('tagmanager_write');
+    },
+    hasCustomTemplatesCapability() {
+      return Matomo.hasUserCapability('tagmanager_use_custom_templates');
     },
     canPublishToLive() {
       return Matomo.hasUserCapability('tagmanager_publish_live_container');

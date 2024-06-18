@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\API;
 
@@ -51,7 +50,12 @@ class RowEvolution
         $metadata = $this->getRowEvolutionMetaData($idSite, $period, $date, $apiModule, $apiAction, $language, $apiParameters);
         // if goal metrics should be shown, we replace the metrics
         if ($showGoalMetricsForGoal !== false) {
-            $metadata['metrics'] = ['nb_visits' => $metadata['metrics']['nb_visits']];
+            if (array_key_exists('nb_visits', $metadata['metrics'])) {
+                $metadata['metrics'] = ['nb_visits' => $metadata['metrics']['nb_visits']];
+            } else {
+                // if no visits are available, simply use the first available metric
+                $metadata['metrics'] = array_slice($metadata['metrics'], 0, 1);
+            }
             // Use ecommerce specific metrics / column names when only showing ecommerce metrics
             if ($showGoalMetricsForGoal === Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER) {
                 $metadata['metrics']['goal_ecommerceOrder_nb_conversions'] = Piwik::translate('General_EcommerceOrders');
@@ -384,10 +388,8 @@ class RowEvolution
                 $value = $firstRow ? floatval($firstRow->getColumn($metric)) : 0;
                 if ($value > 0) {
                     $firstNonZeroFound[$metric] = true;
-                } else {
-                    if (!isset($firstNonZeroFound[$metric])) {
-                        continue;
-                    }
+                } elseif (!isset($firstNonZeroFound[$metric])) {
+                    continue;
                 }
                 if (!isset($metricsResult[$metric]['min']) || $metricsResult[$metric]['min'] > $value) {
                     $metricsResult[$metric]['min'] = $value;
@@ -433,19 +435,15 @@ class RowEvolution
                     $prettyLabel = $labelRow->getColumn('label_html');
                     if ($prettyLabel !== false) {
                         $actualLabels[$labelIdx] = $prettyLabel;
-                    } else {
-                        if (!empty($labelPretty[$labelIdx])) {
-                            $actualLabels[$labelIdx] = $labelPretty[$labelIdx];
-                        }
+                    } elseif (!empty($labelPretty[$labelIdx])) {
+                        $actualLabels[$labelIdx] = $labelPretty[$labelIdx];
                     }
                     $logos[$labelIdx] = $labelRow->getMetadata('logo');
                     if (!empty($actualLabels[$labelIdx])) {
                         break;
                     }
-                } else {
-                    if (!empty($labelPretty[$labelIdx])) {
-                        $actualLabels[$labelIdx] = $labelPretty[$labelIdx];
-                    }
+                } elseif (!empty($labelPretty[$labelIdx])) {
+                    $actualLabels[$labelIdx] = $labelPretty[$labelIdx];
                 }
             }
             if (empty($actualLabels[$labelIdx])) {

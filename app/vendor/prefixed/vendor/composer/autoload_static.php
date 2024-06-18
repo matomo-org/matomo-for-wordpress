@@ -4,9 +4,13 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit589fff9b31ed7ab3d6084995b963d31f
+class ComposerStaticInit47b38957cb7abb837da5063f6a09e77a
 {
     public static $files = array (
+        '57561443c5204a2081a57dea43ad4761' => __DIR__ . '/../..' . '/twig/twig/src/Resources/core.php',
+        'f8292008d9de50247e13d73bafe960d8' => __DIR__ . '/../..' . '/twig/twig/src/Resources/debug.php',
+        '4f5f9c20f40d6dd76a229472337d1063' => __DIR__ . '/../..' . '/twig/twig/src/Resources/escaper.php',
+        '1667aaec7a4fcb8ee62cbc8011ffe403' => __DIR__ . '/../..' . '/twig/twig/src/Resources/string_loader.php',
         '14f31c04451e5135516391e2ab40385d' => __DIR__ . '/../..' . '/php-di/php-di/src/functions.php',
         '66cfd3a7190309803b5cc0fea03a4cdc' => __DIR__ . '/../..' . '/symfony/deprecation-contracts/function.php',
         'cf15db0dadced1bb06881d38a6ab91d1' => __DIR__ . '/../..' . '/symfony/string/Resources/functions.php',
@@ -757,7 +761,9 @@ class ComposerStaticInit589fff9b31ed7ab3d6084995b963d31f
         'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\ServiceSubscriberInterface' => __DIR__ . '/../..' . '/symfony/service-contracts/ServiceSubscriberInterface.php',
         'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\ServiceSubscriberTrait' => __DIR__ . '/../..' . '/symfony/service-contracts/ServiceSubscriberTrait.php',
         'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\Test\\ServiceLocatorTest' => __DIR__ . '/../..' . '/symfony/service-contracts/Test/ServiceLocatorTest.php',
+        'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\Test\\ServiceLocatorTestCase' => __DIR__ . '/../..' . '/symfony/service-contracts/Test/ServiceLocatorTestCase.php',
         'Matomo\\Dependencies\\System' => __DIR__ . '/../..' . '/pear/pear-core-minimal/src/System.php',
+        'Matomo\\Dependencies\\Twig\\Attribute\\YieldReady' => __DIR__ . '/../..' . '/twig/twig/src/Attribute/YieldReady.php',
         'Matomo\\Dependencies\\Twig\\Cache\\CacheInterface' => __DIR__ . '/../..' . '/twig/twig/src/Cache/CacheInterface.php',
         'Matomo\\Dependencies\\Twig\\Cache\\FilesystemCache' => __DIR__ . '/../..' . '/twig/twig/src/Cache/FilesystemCache.php',
         'Matomo\\Dependencies\\Twig\\Cache\\NullCache' => __DIR__ . '/../..' . '/twig/twig/src/Cache/NullCache.php',
@@ -781,6 +787,7 @@ class ComposerStaticInit589fff9b31ed7ab3d6084995b963d31f
         'Matomo\\Dependencies\\Twig\\Extension\\SandboxExtension' => __DIR__ . '/../..' . '/twig/twig/src/Extension/SandboxExtension.php',
         'Matomo\\Dependencies\\Twig\\Extension\\StagingExtension' => __DIR__ . '/../..' . '/twig/twig/src/Extension/StagingExtension.php',
         'Matomo\\Dependencies\\Twig\\Extension\\StringLoaderExtension' => __DIR__ . '/../..' . '/twig/twig/src/Extension/StringLoaderExtension.php',
+        'Matomo\\Dependencies\\Twig\\Extension\\YieldNotReadyExtension' => __DIR__ . '/../..' . '/twig/twig/src/Extension/YieldNotReadyExtension.php',
         'Matomo\\Dependencies\\Twig\\FileExtensionEscapingStrategy' => __DIR__ . '/../..' . '/twig/twig/src/FileExtensionEscapingStrategy.php',
         'Matomo\\Dependencies\\Twig\\Lexer' => __DIR__ . '/../..' . '/twig/twig/src/Lexer.php',
         'Matomo\\Dependencies\\Twig\\Loader\\ArrayLoader' => __DIR__ . '/../..' . '/twig/twig/src/Loader/ArrayLoader.php',
@@ -796,10 +803,12 @@ class ComposerStaticInit589fff9b31ed7ab3d6084995b963d31f
         'Matomo\\Dependencies\\Twig\\NodeVisitor\\OptimizerNodeVisitor' => __DIR__ . '/../..' . '/twig/twig/src/NodeVisitor/OptimizerNodeVisitor.php',
         'Matomo\\Dependencies\\Twig\\NodeVisitor\\SafeAnalysisNodeVisitor' => __DIR__ . '/../..' . '/twig/twig/src/NodeVisitor/SafeAnalysisNodeVisitor.php',
         'Matomo\\Dependencies\\Twig\\NodeVisitor\\SandboxNodeVisitor' => __DIR__ . '/../..' . '/twig/twig/src/NodeVisitor/SandboxNodeVisitor.php',
+        'Matomo\\Dependencies\\Twig\\NodeVisitor\\YieldNotReadyNodeVisitor' => __DIR__ . '/../..' . '/twig/twig/src/NodeVisitor/YieldNotReadyNodeVisitor.php',
         'Matomo\\Dependencies\\Twig\\Node\\AutoEscapeNode' => __DIR__ . '/../..' . '/twig/twig/src/Node/AutoEscapeNode.php',
         'Matomo\\Dependencies\\Twig\\Node\\BlockNode' => __DIR__ . '/../..' . '/twig/twig/src/Node/BlockNode.php',
         'Matomo\\Dependencies\\Twig\\Node\\BlockReferenceNode' => __DIR__ . '/../..' . '/twig/twig/src/Node/BlockReferenceNode.php',
         'Matomo\\Dependencies\\Twig\\Node\\BodyNode' => __DIR__ . '/../..' . '/twig/twig/src/Node/BodyNode.php',
+        'Matomo\\Dependencies\\Twig\\Node\\CaptureNode' => __DIR__ . '/../..' . '/twig/twig/src/Node/CaptureNode.php',
         'Matomo\\Dependencies\\Twig\\Node\\CheckSecurityCallNode' => __DIR__ . '/../..' . '/twig/twig/src/Node/CheckSecurityCallNode.php',
         'Matomo\\Dependencies\\Twig\\Node\\CheckSecurityNode' => __DIR__ . '/../..' . '/twig/twig/src/Node/CheckSecurityNode.php',
         'Matomo\\Dependencies\\Twig\\Node\\CheckToStringNode' => __DIR__ . '/../..' . '/twig/twig/src/Node/CheckToStringNode.php',
@@ -894,6 +903,7 @@ class ComposerStaticInit589fff9b31ed7ab3d6084995b963d31f
         'Matomo\\Dependencies\\Twig\\RuntimeLoader\\ContainerRuntimeLoader' => __DIR__ . '/../..' . '/twig/twig/src/RuntimeLoader/ContainerRuntimeLoader.php',
         'Matomo\\Dependencies\\Twig\\RuntimeLoader\\FactoryRuntimeLoader' => __DIR__ . '/../..' . '/twig/twig/src/RuntimeLoader/FactoryRuntimeLoader.php',
         'Matomo\\Dependencies\\Twig\\RuntimeLoader\\RuntimeLoaderInterface' => __DIR__ . '/../..' . '/twig/twig/src/RuntimeLoader/RuntimeLoaderInterface.php',
+        'Matomo\\Dependencies\\Twig\\Runtime\\EscaperRuntime' => __DIR__ . '/../..' . '/twig/twig/src/Runtime/EscaperRuntime.php',
         'Matomo\\Dependencies\\Twig\\Sandbox\\SecurityError' => __DIR__ . '/../..' . '/twig/twig/src/Sandbox/SecurityError.php',
         'Matomo\\Dependencies\\Twig\\Sandbox\\SecurityNotAllowedFilterError' => __DIR__ . '/../..' . '/twig/twig/src/Sandbox/SecurityNotAllowedFilterError.php',
         'Matomo\\Dependencies\\Twig\\Sandbox\\SecurityNotAllowedFunctionError' => __DIR__ . '/../..' . '/twig/twig/src/Sandbox/SecurityNotAllowedFunctionError.php',
@@ -902,6 +912,7 @@ class ComposerStaticInit589fff9b31ed7ab3d6084995b963d31f
         'Matomo\\Dependencies\\Twig\\Sandbox\\SecurityNotAllowedTagError' => __DIR__ . '/../..' . '/twig/twig/src/Sandbox/SecurityNotAllowedTagError.php',
         'Matomo\\Dependencies\\Twig\\Sandbox\\SecurityPolicy' => __DIR__ . '/../..' . '/twig/twig/src/Sandbox/SecurityPolicy.php',
         'Matomo\\Dependencies\\Twig\\Sandbox\\SecurityPolicyInterface' => __DIR__ . '/../..' . '/twig/twig/src/Sandbox/SecurityPolicyInterface.php',
+        'Matomo\\Dependencies\\Twig\\Sandbox\\SourcePolicyInterface' => __DIR__ . '/../..' . '/twig/twig/src/Sandbox/SourcePolicyInterface.php',
         'Matomo\\Dependencies\\Twig\\Source' => __DIR__ . '/../..' . '/twig/twig/src/Source.php',
         'Matomo\\Dependencies\\Twig\\Template' => __DIR__ . '/../..' . '/twig/twig/src/Template.php',
         'Matomo\\Dependencies\\Twig\\TemplateWrapper' => __DIR__ . '/../..' . '/twig/twig/src/TemplateWrapper.php',
@@ -940,7 +951,7 @@ class ComposerStaticInit589fff9b31ed7ab3d6084995b963d31f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit589fff9b31ed7ab3d6084995b963d31f::$classMap;
+            $loader->classMap = ComposerStaticInit47b38957cb7abb837da5063f6a09e77a::$classMap;
 
         }, null, ClassLoader::class);
     }

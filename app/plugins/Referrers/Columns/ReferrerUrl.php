@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Referrers\Columns;
 
@@ -15,7 +14,7 @@ use Piwik\Tracker\Visitor;
 use Piwik\Tracker\Action;
 class ReferrerUrl extends \Piwik\Plugins\Referrers\Columns\Base
 {
-    const MAX_LEN = 1500;
+    public const MAX_LEN = 1500;
     protected $columnName = 'referer_url';
     protected $type = self::TYPE_TEXT;
     protected $segmentName = 'referrerUrl';

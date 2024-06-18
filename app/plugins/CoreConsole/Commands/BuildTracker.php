@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CoreConsole\Commands;
 
@@ -14,7 +14,7 @@ use Piwik\Plugin\Manager;
 use Piwik\Unzip;
 class BuildTracker extends ConsoleCommand
 {
-    const YUI_COMPRESSOR_URL = 'https://github.com/yui/yuicompressor/releases/download/v2.4.8/yuicompressor-2.4.8.zip';
+    public const YUI_COMPRESSOR_URL = 'https://github.com/yui/yuicompressor/releases/download/v2.4.8/yuicompressor-2.4.8.zip';
     protected function configure()
     {
         $this->setName('development:build-tracker-js');

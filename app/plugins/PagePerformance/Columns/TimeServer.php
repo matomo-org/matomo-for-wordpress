@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\PagePerformance\Columns;
 
@@ -16,8 +15,8 @@ use Piwik\Plugin\ArchivedMetric;
 use Piwik\Plugin\ComputedMetric;
 class TimeServer extends \Piwik\Plugins\PagePerformance\Columns\Base
 {
-    const COLUMN_TYPE = 'MEDIUMINT(10) UNSIGNED NULL';
-    const COLUMN_NAME = 'time_server';
+    public const COLUMN_TYPE = 'MEDIUMINT(10) UNSIGNED NULL';
+    public const COLUMN_NAME = 'time_server';
     protected $columnName = self::COLUMN_NAME;
     protected $columnType = self::COLUMN_TYPE;
     protected $nameSingular = 'PagePerformance_ColumnTimeServer';
@@ -27,7 +26,7 @@ class TimeServer extends \Piwik\Plugins\PagePerformance\Columns\Base
     }
     public function configureMetrics(MetricsList $metricsList, DimensionMetricFactory $dimensionMetricFactory)
     {
-        $metric1 = $dimensionMetricFactory->createMetric(ArchivedMetric::AGGREGATION_SUM);
+        $metric1 = $dimensionMetricFactory->createMetric('sum(' . $this->getSqlCappedValue() . ')');
         $metric1->setName('sum_time_server');
         $metricsList->addMetric($metric1);
         $metric2 = $dimensionMetricFactory->createMetric(ArchivedMetric::AGGREGATION_MAX);

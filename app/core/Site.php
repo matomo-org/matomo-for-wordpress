@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik;
 
@@ -40,7 +39,7 @@ use Piwik\Plugins\SitesManager\API;
  */
 class Site
 {
-    const DEFAULT_SITE_TYPE = "website";
+    public const DEFAULT_SITE_TYPE = "website";
     private static $intProperties = ['idsite', 'ecommerce', 'sitesearch', 'exclude_unknown_urls', 'keep_url_fragment'];
     /**
      * @var int|null

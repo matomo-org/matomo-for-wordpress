@@ -90,7 +90,7 @@
                 if (!parameters.matomoConfig || !parameters.matomoConfig.name) {
                     return;
                 }
-                
+
                 // this is the matomoConfig variable name and the only way to differentiate two different tracker
                 // configurations
                 var variableName = parameters.matomoConfig.name;
@@ -126,6 +126,10 @@
                         tracker.disableBrowserFeatureDetection();
                     }
 
+                    if (matomoConfig.disableCampaignParameters) {
+                        tracker.disableCampaignParameters();
+                    }
+
                     if (matomoConfig.disableCookies) {
                         tracker.disableCookies();
                     }
@@ -137,6 +141,12 @@
 
                     if (matomoConfig.cookieSameSite) {
                         tracker.setCookieSameSite(matomoConfig.cookieSameSite);
+                    }
+
+                    if (matomoConfig.customCookieTimeOutEnable) {
+                        tracker.setVisitorCookieTimeout(matomoConfig.customCookieTimeOut * 86400);
+                        tracker.setReferralCookieTimeout(matomoConfig.referralCookieTimeOut * 86400);
+                        tracker.setSessionCookieTimeout(matomoConfig.sessionCookieTimeOut * 60);
                     }
 
                     if (matomoConfig.setSecureCookie) {
@@ -180,10 +190,10 @@
                     if (matomoConfig.disableAlwaysUseSendBeacon) {
                         tracker.disableAlwaysUseSendBeacon();
                     }
-                    
+
                     if (matomoConfig.forceRequestMethod) {
                         tracker.setRequestMethod(matomoConfig.requestMethod);
-                        if(matomoConfig.requestMethod == 'POST'){
+                        if(matomoConfig.requestMethod.toUpperCase() === 'POST'){
                             tracker.setRequestContentType(matomoConfig.requestContentType);
                         }
                     }
@@ -207,11 +217,11 @@
                     if (matomoConfig.disablePerformanceTracking) {
                         tracker.disablePerformanceTracking();
                     }
-                    
+
                     if (typeof matomoConfig.appendToTrackingUrl === 'string' && matomoConfig.appendToTrackingUrl.length > 0) {
                         tracker.appendToTrackingUrl(matomoConfig.appendToTrackingUrl);
                     }
-                    
+
                     if(typeof matomoConfig.customRequestProcessing === 'function'
                         && matomoConfig.customRequestProcessing.length >= 1 ) {
                         tracker.setCustomRequestProcessing(matomoConfig.customRequestProcessing);
@@ -280,16 +290,11 @@
                         var customUrl = parameters.get('customUrl');
                         if (customUrl) {
                             tracker.setCustomUrl(customUrl);
-                        }                        
-                        if (matomoConfig.customCookieTimeOutEnable) {  
-                            tracker.setVisitorCookieTimeout(matomoConfig.customCookieTimeOut * 86400);
-                            tracker.setReferralCookieTimeout(matomoConfig.referralCookieTimeOut * 86400);
-                            tracker.setSessionCookieTimeout(matomoConfig.sessionCookieTimeOut * 60);
                         }
 
                         if (parameters.get('isEcommerceView')) {
                             tracker.setEcommerceView(parameters.get('productSKU'), parameters.get('productName'), parameters.get('categoryName'), parameters.get('price'));
-                        }                            
+                        }
 
                         tracker.trackPageView();
                     } else if (trackingType === 'event') {

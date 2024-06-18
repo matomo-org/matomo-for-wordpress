@@ -148,9 +148,12 @@ final class ProgressBar
     {
         $this->messages[$name] = $message;
     }
+    /**
+     * @return string|null
+     */
     public function getMessage(string $name = 'message')
     {
-        return $this->messages[$name];
+        return $this->messages[$name] ?? null;
     }
     public function getStartTime() : int
     {
@@ -249,7 +252,7 @@ final class ProgressBar
      *
      * @param int|null $max Number of steps to complete the bar (0 if indeterminate), if null it will be inferred from $iterable
      */
-    public function iterate(iterable $iterable, int $max = null) : iterable
+    public function iterate(iterable $iterable, ?int $max = null) : iterable
     {
         $this->start($max ?? (is_countable($iterable) ? \count($iterable) : 0));
         foreach ($iterable as $key => $value) {
@@ -263,7 +266,7 @@ final class ProgressBar
      *
      * @param int|null $max Number of steps to complete the bar (0 if indeterminate), null to leave unchanged
      */
-    public function start(int $max = null)
+    public function start(?int $max = null)
     {
         $this->startTime = time();
         $this->step = 0;

@@ -103,8 +103,10 @@ class UserRepository
     }
     protected function sendUserCreationNotification(string $createdUserLogin) : void
     {
-        $mail = StaticContainer::getContainer()->make(UserCreatedEmail::class, ['login' => Piwik::getCurrentUserLogin(), 'emailAddress' => Piwik::getCurrentUserEmail(), 'userLogin' => $createdUserLogin]);
-        $mail->safeSend();
+        if (Piwik::getCurrentUserLogin() !== 'anonymous') {
+            $mail = StaticContainer::getContainer()->make(UserCreatedEmail::class, ['login' => Piwik::getCurrentUserLogin(), 'emailAddress' => Piwik::getCurrentUserEmail(), 'userLogin' => $createdUserLogin]);
+            $mail->safeSend();
+        }
     }
     protected function sendInvitationEmail(array $user, string $inviteToken, int $expiryInDays) : void
     {

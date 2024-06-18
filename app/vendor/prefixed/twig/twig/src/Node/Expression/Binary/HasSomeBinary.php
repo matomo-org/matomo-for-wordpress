@@ -15,7 +15,7 @@ class HasSomeBinary extends AbstractBinary
 {
     public function compile(Compiler $compiler) : void
     {
-        $compiler->raw('\Matomo\Dependencies\twig_array_some($this->env, ')->subcompile($this->getNode('left'))->raw(', ')->subcompile($this->getNode('right'))->raw(')');
+        $compiler->raw('CoreExtension::arraySome($this->env, ')->subcompile($this->getNode('left'))->raw(', ')->subcompile($this->getNode('right'))->raw(')');
     }
     public function operator(Compiler $compiler) : Compiler
     {

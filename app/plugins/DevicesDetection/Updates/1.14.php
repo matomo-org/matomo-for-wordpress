@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\DevicesDetection;
 
@@ -26,7 +25,7 @@ class Updates_1_14 extends Updates
     {
         return array($this->migration->db->changeColumnTypes('log_visit', array('config_os_version' => 'VARCHAR( 100 ) DEFAULT NULL', 'config_device_type' => 'VARCHAR( 100 ) DEFAULT NULL')));
     }
-    static function isMajorUpdate()
+    public static function isMajorUpdate()
     {
         return true;
     }

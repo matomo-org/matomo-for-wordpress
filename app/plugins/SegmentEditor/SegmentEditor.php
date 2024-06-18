@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\SegmentEditor;
 
@@ -36,7 +35,7 @@ use Piwik\View;
  */
 class SegmentEditor extends \Piwik\Plugin
 {
-    const NO_DATA_UNPROCESSED_SEGMENT_ID = 'nodata_segment_not_processed';
+    public const NO_DATA_UNPROCESSED_SEGMENT_ID = 'nodata_segment_not_processed';
     /**
      * @see \Piwik\Plugin::registerEvents
      */
@@ -85,7 +84,7 @@ class SegmentEditor extends \Piwik\Plugin
         }
         $systemSummary[] = new SystemSummary\Item($key = 'segments', $message, $value = null, $url = null, $icon = 'icon-segment', $order = 6);
     }
-    function getSegmentEditorHtml(&$out)
+    public function getSegmentEditorHtml(&$out)
     {
         $selector = new \Piwik\Plugins\SegmentEditor\SegmentSelectorControl();
         $out .= $selector->render();

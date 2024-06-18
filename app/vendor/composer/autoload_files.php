@@ -22,5 +22,9 @@ return array(
     'b33e3d135e5d9e47d845c576147bda89' => $vendorDir . '/php-di/php-di/src/functions.php',
     'def43f6c87e4f8dfd0c9e1b1bab14fe8' => $vendorDir . '/symfony/polyfill-iconv/bootstrap.php',
     '7bb4f001eb5212bde073bf47a4bbedad' => $vendorDir . '/szymach/c-pchart/constants.php',
+    '89efb1254ef2d1c5d80096acd12c4098' => $vendorDir . '/twig/twig/src/Resources/core.php',
+    'ffecb95d45175fd40f75be8a23b34f90' => $vendorDir . '/twig/twig/src/Resources/debug.php',
+    'c7baa00073ee9c61edf148c51917cfb4' => $vendorDir . '/twig/twig/src/Resources/escaper.php',
+    'f844ccf1d25df8663951193c3fc307c8' => $vendorDir . '/twig/twig/src/Resources/string_loader.php',
     'c03755bd507301ecda84f959218be302' => $baseDir . '/LegacyAutoloader.php',
 );

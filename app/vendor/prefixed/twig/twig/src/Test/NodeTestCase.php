@@ -17,6 +17,10 @@ use Matomo\Dependencies\Twig\Loader\ArrayLoader;
 use Matomo\Dependencies\Twig\Node\Node;
 abstract class NodeTestCase extends TestCase
 {
+    /**
+     * @var Environment
+     */
+    private $currentEnv;
     public abstract function getTests();
     /**
      * @dataProvider getTests
@@ -25,7 +29,7 @@ abstract class NodeTestCase extends TestCase
     {
         $this->assertNodeCompilation($source, $node, $environment, $isPattern);
     }
-    public function assertNodeCompilation($source, Node $node, Environment $environment = null, $isPattern = false)
+    public function assertNodeCompilation($source, Node $node, ?Environment $environment = null, $isPattern = false)
     {
         $compiler = $this->getCompiler($environment);
         $compiler->compile($node);
@@ -35,13 +39,13 @@ abstract class NodeTestCase extends TestCase
             $this->assertEquals($source, trim($compiler->getSource()));
         }
     }
-    protected function getCompiler(Environment $environment = null)
+    protected function getCompiler(?Environment $environment = null)
     {
         return new Compiler($environment ?? $this->getEnvironment());
     }
     protected function getEnvironment()
     {
-        return new Environment(new ArrayLoader([]));
+        return $this->currentEnv = new Environment(new ArrayLoader([]));
     }
     protected function getVariableGetter($name, $line = false)
     {
@@ -50,6 +54,6 @@ abstract class NodeTestCase extends TestCase
     }
     protected function getAttributeGetter()
     {
-        return '\Matomo\Dependencies\twig_get_attribute($this->env, $this->source, ';
+        return 'CoreExtension::getAttribute($this->env, $this->source, ';
     }
 }

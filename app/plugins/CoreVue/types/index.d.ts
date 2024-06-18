@@ -1,8 +1,8 @@
 /*!
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
 import jqXHR = JQuery.jqXHR;
@@ -65,6 +65,7 @@ declare global {
     close();
     setTitle(title: string): void;
     setContent(html: string|HTMLElement|JQuery|JQLite): void;
+    showError(title: string, message?: string, backLabel?: string): void;
     showLoading(loadingName: string, popoverSubject?: string, height?: number, dialogClass?: string): JQuery;
     onClose(fn: () => void);
     createPopupAndLoadUrl(url: string, loadingName: string, dialogClass?: string, ajaxRequest?: QueryParameters): void;

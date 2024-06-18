@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\ScheduledReports;
 
@@ -48,20 +47,20 @@ use Piwik\Log\LoggerInterface;
  */
 class API extends \Piwik\Plugin\API
 {
-    const VALIDATE_PARAMETERS_EVENT = 'ScheduledReports.validateReportParameters';
-    const GET_REPORT_PARAMETERS_EVENT = 'ScheduledReports.getReportParameters';
-    const GET_REPORT_METADATA_EVENT = 'ScheduledReports.getReportMetadata';
-    const GET_REPORT_TYPES_EVENT = 'ScheduledReports.getReportTypes';
-    const GET_REPORT_FORMATS_EVENT = 'ScheduledReports.getReportFormats';
-    const GET_RENDERER_INSTANCE_EVENT = 'ScheduledReports.getRendererInstance';
-    const PROCESS_REPORTS_EVENT = 'ScheduledReports.processReports';
-    const GET_REPORT_RECIPIENTS_EVENT = 'ScheduledReports.getReportRecipients';
-    const ALLOW_MULTIPLE_REPORTS_EVENT = 'ScheduledReports.allowMultipleReports';
-    const SEND_REPORT_EVENT = 'ScheduledReports.sendReport';
-    const OUTPUT_DOWNLOAD = 1;
-    const OUTPUT_SAVE_ON_DISK = 2;
-    const OUTPUT_INLINE = 3;
-    const OUTPUT_RETURN = 4;
+    public const VALIDATE_PARAMETERS_EVENT = 'ScheduledReports.validateReportParameters';
+    public const GET_REPORT_PARAMETERS_EVENT = 'ScheduledReports.getReportParameters';
+    public const GET_REPORT_METADATA_EVENT = 'ScheduledReports.getReportMetadata';
+    public const GET_REPORT_TYPES_EVENT = 'ScheduledReports.getReportTypes';
+    public const GET_REPORT_FORMATS_EVENT = 'ScheduledReports.getReportFormats';
+    public const GET_RENDERER_INSTANCE_EVENT = 'ScheduledReports.getRendererInstance';
+    public const PROCESS_REPORTS_EVENT = 'ScheduledReports.processReports';
+    public const GET_REPORT_RECIPIENTS_EVENT = 'ScheduledReports.getReportRecipients';
+    public const ALLOW_MULTIPLE_REPORTS_EVENT = 'ScheduledReports.allowMultipleReports';
+    public const SEND_REPORT_EVENT = 'ScheduledReports.sendReport';
+    public const OUTPUT_DOWNLOAD = 1;
+    public const OUTPUT_SAVE_ON_DISK = 2;
+    public const OUTPUT_INLINE = 3;
+    public const OUTPUT_RETURN = 4;
     private $enableSaveReportOnDisk = false;
     // static cache storing reports
     public static $cache = [];
@@ -260,8 +259,7 @@ class API extends \Piwik\Plugin\API
         if (empty($period)) {
             $period = $report['period_param'];
         }
-        $this->checkSinglePeriod($period, $date);
-        $date = Date::factory($date)->toString('Y-m-d');
+        $this->checkDateAndPeriodCombination($date, $period);
         // override report format
         if (!empty($reportFormat)) {
             self::validateReportFormat($reportType, $reportFormat);
@@ -785,10 +783,15 @@ class API extends \Piwik\Plugin\API
             throw new NoAccessException(Piwik::translate('General_ExceptionPrivilege', ["'view'"]));
         }
     }
-    private function checkSinglePeriod($period, $date)
+    private function checkDateAndPeriodCombination($date, $period) : void
     {
+        if ('range' === $period) {
+            Period::checkDateFormat($date);
+            return;
+        }
         if (Period::isMultiplePeriod($date, $period)) {
             throw new Http\BadRequestException("This API method does not support multiple periods.");
         }
+        Date::factory($date);
     }
 }

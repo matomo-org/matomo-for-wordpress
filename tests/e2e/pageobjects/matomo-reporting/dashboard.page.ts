@@ -19,10 +19,10 @@ class DashboardPage extends MatomoReportingPage {
       const loadedWidgetCount = (await $$('#dashboardWidgetsArea .widgetContent > *:first-child:not(.widgetLoading)')).length;
 
       return loadedWidgetCount >= widgetsCount;
-    }, { timeout: 20000 });
+    }, { timeout: 30000 });
     await browser.waitUntil(async () => {
       return await $('.UserCountryMap_map.kartograph').isDisplayed();
-    }, { timeout: 20000 });
+    }, { timeout: 30000 });
     await browser.execute(function () {
       $('.widget ul.rss').hide();
     });

@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik;
 
@@ -438,14 +437,12 @@ if (!class_exists('Piwik\\Plugin')) {
             $lastCronArchiveTime = (int) \Piwik\Option::get(\Piwik\CronArchive::OPTION_ARCHIVING_FINISHED_TS);
             if (empty($lastCronArchiveTime)) {
                 $dateTime = $lastDeactivationTime;
+            } elseif (empty($lastDeactivationTime)) {
+                $dateTime = null;
+                // use default earliest time
             } else {
-                if (empty($lastDeactivationTime)) {
-                    $dateTime = null;
-                    // use default earliest time
-                } else {
-                    $lastCronArchiveTime = \Piwik\Date::factory($lastCronArchiveTime);
-                    $dateTime = $lastDeactivationTime->isEarlier($lastCronArchiveTime) ? $lastDeactivationTime : $lastCronArchiveTime;
-                }
+                $lastCronArchiveTime = \Piwik\Date::factory($lastCronArchiveTime);
+                $dateTime = $lastDeactivationTime->isEarlier($lastCronArchiveTime) ? $lastDeactivationTime : $lastCronArchiveTime;
             }
             if (empty($dateTime)) {
                 // sanity check

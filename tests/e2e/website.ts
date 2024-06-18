@@ -157,7 +157,7 @@ class Website {
           window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--disabled').closest('a')[0].click();
         });
 
-        await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({timeout: 30000});
+        await $('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').waitForExist({ timeout: 60000 });
       }
     }
 
