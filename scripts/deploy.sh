@@ -91,17 +91,23 @@ tar -xf "matomo-$VERSION.tgz" --directory="$TMP_DIR" # the archive is created vi
 
 cd "$SVN_DIR"
 
-# Copy from clean copy to /trunk, excluding dotorg assets
-# The --delete flag will delete anything in destination that no longer exists in source
-rsync -rc "$TMP_DIR/" trunk --delete --delete-excluded
-
 # Copy dotorg assets to /assets
 rsync -rc "$GITHUB_WORKSPACE/$ASSETS_DIR/" assets/ --delete --delete-excluded
 
 # Add everything and commit to SVN (in chunks in case there's too many changes in Matomo core)
 PIECES=(app/core app/plugins app/vendor app .)
 for chunk in ${PIECES[@]}; do
-  if [[ ! -d "trunk/$chunk" ]]; then
+  # Copy from clean copy to /trunk, excluding dotorg assets
+  # The --delete flag will delete anything in destination that no longer exists in source
+  RSYNC_FROM="$TMP_DIR/$chunk/"
+  RSYNC_TO="trunk/$chunk"
+  if [[ "$chunk" == "." ]]; then
+    RSYNC_FROM="$TMP_DIR/"
+    RSYNC_TO="trunk"
+  fi
+  rsync -rc RSYNC_FROM RSYNC_TO --delete --delete-excluded
+
+  if [[ ! -d "trunk/$chunk" ]]; then # sanity check
     echo "➤ ERROR: '$chunk' folder does not exist"
     exit 1;
   fi
@@ -109,7 +115,7 @@ for chunk in ${PIECES[@]}; do
   # The force flag ensures we recurse into subdirectories even if they are already added
   # Suppress stdout in favor of svn status later for readability
   echo "➤ Preparing files ($chunk)..."
-  svn add "trunk/$chunk" --force # > /dev/null
+  svn add . --force # > /dev/null
 
   # SVN delete all deleted files
   # Also suppress stdout here
