@@ -1,5 +1,12 @@
 == Changelog ===
 
+= 5.1.0 =
+* Upgrade Matomo core to version 5.1.0 (changes: https://matomo.org/changelog/matomo-5-1-0/).
+* Bug fix: sending emails with attachments failed on WordPress 5.
+* Bug fix: fix rare critical error when PEAR library is used in a certain way.
+* Fix deprecation notice in marketplace setup wizard.
+
+
 = 5.0.8 =
 * Improve PHP CLI diagnostic change: avoid reporting issues when a hosting provider does not support CLI archiving.
 
