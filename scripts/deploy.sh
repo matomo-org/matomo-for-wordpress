@@ -105,7 +105,7 @@ for chunk in ${PIECES[@]}; do
     RSYNC_FROM="$TMP_DIR/"
     RSYNC_TO="trunk"
   fi
-  rsync -rc RSYNC_FROM RSYNC_TO --delete --delete-excluded
+  rsync -rc "$RSYNC_FROM" "$RSYNC_TO" --delete --delete-excluded
 
   if [[ ! -d "trunk/$chunk" ]]; then # sanity check
     echo "➤ ERROR: '$chunk' folder does not exist"
