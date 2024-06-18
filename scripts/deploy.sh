@@ -131,7 +131,7 @@ for chunk in ${PIECES[@]}; do
   fi
 
   echo "➤ svn status ($chunk)..."
-  svn status
+  # svn status
 
   echo "➤ Committing files ($chunk)..."
   svn commit -m "Update to version $VERSION from GitHub ($chunk)" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
