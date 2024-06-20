@@ -221,7 +221,6 @@ class ScheduledTasks {
 		return true;
 	}
 
-	// TODO: more logging
 	public function update_geo_ip2_db() {
 		$this->remove_task_errors( [ 'update_geoip2' ] );
 

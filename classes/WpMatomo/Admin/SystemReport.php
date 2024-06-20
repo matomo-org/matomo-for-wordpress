@@ -264,12 +264,12 @@ class SystemReport {
 
 	public function errors_present() {
 		$cache_key   = 'matomo_system_report_has_errors';
-		$cache_value = get_transient( $cache_key );
+		$cache_value = get_site_transient( $cache_key );
 
 		if ( false === $cache_value ) {
 			// pre-record that there were no errors found. in case the system report fails to execute, this will
 			// allow the rest of Matomo for WordPress to continue to still be usable.
-			set_transient( $cache_key, 0, WEEK_IN_SECONDS );
+			set_site_transient( $cache_key, 0, WEEK_IN_SECONDS );
 
 			$matomo_tables = $this->get_error_tables();
 
@@ -284,7 +284,7 @@ class SystemReport {
 				}
 			}
 
-			set_transient( $cache_key, (int) $cache_value, WEEK_IN_SECONDS );
+			set_site_transient( $cache_key, (int) $cache_value, WEEK_IN_SECONDS );
 		}
 
 		return 1 === (int) $cache_value;
