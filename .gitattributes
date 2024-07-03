@@ -5,6 +5,7 @@
 /scripts/ export-ignore
 /vendor/ export-ignore
 /bin/ export-ignore
+/patches/ export-ignore
 /node_modules/chart.js/auto export-ignore
 /node_modules/chart.js/helpers export-ignore
 /node_modules/chart.js/types export-ignore

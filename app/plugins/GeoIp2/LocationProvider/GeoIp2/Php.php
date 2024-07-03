@@ -292,8 +292,8 @@ class Php extends GeoIp2
         }
         // try converting umlauts to closted ascii char if iconv is available
         if (function_exists('iconv')) {
-            $str1 = iconv('UTF-8', 'ASCII//TRANSLIT', $str1);
-            $str2 = iconv('UTF-8', 'ASCII//TRANSLIT', $str2);
+            $str1 = @iconv('UTF-8', 'ASCII//TRANSLIT', $str1) ?: $str1;
+            $str2 = @iconv('UTF-8', 'ASCII//TRANSLIT', $str2) ?: $str2;
         }
         return strtolower($str1) === strtolower($str2);
     }
