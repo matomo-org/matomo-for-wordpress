@@ -197,9 +197,28 @@ class SystemReport {
 					$sync->sync_current_site();
 				}
 				if ( ! empty( $_POST[ self::TROUBLESHOOT_RUN_UPDATER ] ) ) {
-					Updater::unlock();
-					$sync = new Updater( $this->settings );
-					$sync->update();
+					$update_from_version = ! empty( $_POST['matomo_troubleshooting_update_from'] )
+						? sanitize_text_field( wp_unslash( $_POST['matomo_troubleshooting_update_from'] ) )
+						: null;
+					$update_from_version = trim( $update_from_version );
+
+					if ( ! empty( $update_from_version )
+						&& ! preg_match( '/^\d+(?:.\d+)*$/', $update_from_version )
+					) {
+						echo '<div class="error"><p>' . esc_html__( 'Matomo Update Error', 'matomo' )
+							. ': unrecognized version string "' . esc_html( $update_from_version )
+							. '", ignoring.</p></div>';
+
+						$update_from_version = '';
+					}
+
+					try {
+						Updater::unlock();
+						$sync = new Updater( $this->settings );
+						$sync->update( $update_from_version );
+					} catch ( \Exception $e ) {
+						echo '<div class="error"><p>' . esc_html__( 'Matomo Update Error', 'matomo' ) . ': ' . esc_html( matomo_anonymize_value( $e->getMessage() . ' =>' . $this->logger->get_readable_trace( $e ) ) ) . '</p></div>';
+					}
 				}
 			}
 			if ( $this->settings->is_network_enabled() ) {
