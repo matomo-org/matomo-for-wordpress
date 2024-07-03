@@ -216,6 +216,13 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 					   class='button-primary'
 					   title="<?php esc_attr_e( 'Force trigger a Matomo update in case it failed error', 'matomo' ); ?>"
 					   value="<?php esc_html_e( 'Run Updater', 'matomo' ); ?>">
+				<label for="matomo_troubleshooting_update_from">Run updates from version:</label>
+				<input id="matomo_troubleshooting_update_from"
+					   type="text"
+					   name="matomo_troubleshooting_update_from"
+					   title="<?php esc_attr_e( 'Enter a version to re-run updates from, eg, "5.0.0".', 'matomo' ); ?>"
+					   value="">
+				<br/><br/>
 			<?php } ?>
 			<?php if ( $settings->is_network_enabled() ) { ?>
 				<input name="<?php echo esc_attr( SystemReport::TROUBLESHOOT_SYNC_ALL_USERS ); ?>" type="submit"
