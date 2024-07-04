@@ -76,7 +76,13 @@ class ScheduledTasks {
 
 		foreach ( $this->get_all_events() as $event_name => $event_config ) {
 			if ( $looks_installed && wp_next_scheduled( $event_name ) === false ) {
-				wp_schedule_event( time(), $event_config['interval'], $event_name );
+				$this->logger->log( "scheduling $event_name for immediate execution, then repeating on the {$event_config['interval']} schedule" );
+
+				/** @var \WP_Error $error */
+				$error = wp_schedule_event( time(), $event_config['interval'], $event_name, [], true );
+				if ( is_wp_error( $error ) ) {
+					$this->logger->log_exception( 'scheduled_tasks', new \Exception( "scheduling $event_name failed: " . $error->get_error_message() ) );
+				}
 			}
 
 			// logging last execution start time
