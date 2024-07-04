@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik;
 
@@ -67,6 +66,7 @@ class Filechecks
             $realpath = \Piwik\Filesystem::realpath(PIWIK_INCLUDE_PATH . '/');
             $directoryList = "<code>chown -R " . self::getUserAndGroup() . " " . $realpath . "</code><br />" . $directoryList;
         }
+        $optionalUserInfo = '';
         if (function_exists('shell_exec')) {
             $currentUser = self::getUser();
             if (!empty($currentUser)) {
@@ -121,7 +121,7 @@ class Filechecks
         if (!function_exists('shell_exec')) {
             return $user . ':' . $user;
         }
-        $group = trim(shell_exec('groups ' . $user . ' | cut -f3 -d" "'));
+        $group = trim(shell_exec('groups ' . $user . ' | cut -f3 -d" "') ?? '');
         if (empty($group) && function_exists('posix_getegid') && function_exists('posix_getgrgid')) {
             $currentGroupId = posix_getegid();
             $group = posix_getpwuid($currentGroupId);
@@ -139,7 +139,7 @@ class Filechecks
     public static function getUser()
     {
         if (function_exists('shell_exec')) {
-            return trim(shell_exec('whoami'));
+            return trim(shell_exec('whoami') ?? '');
         }
         $currentUser = get_current_user();
         if (empty($currentUser) && function_exists('posix_geteuid') && function_exists('posix_getpwuid')) {

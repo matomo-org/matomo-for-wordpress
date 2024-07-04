@@ -1,13 +1,14 @@
 <!--
   Matomo - free/libre analytics platform
-  @link https://matomo.org
-  @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+
+  @link    https://matomo.org
+  @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
 -->
 
 <template>
   <div class="reportingMenu">
     <ul
-      class="navbar hide-on-med-and-down"
+      class="navbar hide-on-med-and-down collapsible"
       role="menu"
       :aria-label="translate('CoreHome_MainNavigation')"
     >

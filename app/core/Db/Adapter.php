@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Db;
 
@@ -78,6 +77,7 @@ class Adapter
     /**
      * Get default port for named adapter
      *
+     * @deprecated use Schema::getDefaultPortForSchema instead
      * @param string $adapterName
      * @return int
      */
@@ -102,7 +102,7 @@ class Adapter
         foreach ($adapterNames as $adapterName) {
             $className = '\\Piwik\\Db\\Adapter\\' . $adapterName;
             if (call_user_func(array($className, 'isEnabled'))) {
-                $adapters[strtoupper($adapterName)] = call_user_func(array($className, 'getDefaultPort'));
+                $adapters[] = strtoupper($adapterName);
             }
         }
         return $adapters;

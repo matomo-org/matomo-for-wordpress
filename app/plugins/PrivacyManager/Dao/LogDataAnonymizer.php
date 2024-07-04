@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\PrivacyManager\Dao;
 
@@ -22,7 +21,7 @@ use Piwik\Tracker\Model;
 use Exception;
 class LogDataAnonymizer
 {
-    const NUM_ROWS_UPDATE_AT_ONCE = 10000;
+    public const NUM_ROWS_UPDATE_AT_ONCE = 10000;
     protected $COLUMNS_BLACKLISTED = array('idvisit', 'idvisitor', 'idsite', 'visit_last_action_time', 'config_id', 'location_ip', 'idlink_va', 'server_time', 'idgoal', 'buster', 'idorder');
     /**
      * @var string

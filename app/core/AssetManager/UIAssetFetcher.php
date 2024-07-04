@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\AssetManager;
 
@@ -124,7 +123,7 @@ abstract class UIAssetFetcher
     {
         return $this->theme;
     }
-    public static $bowerComponentFileMappings = ['libs/bower_components/jquery/dist/jquery.min.js' => 'node_modules/jquery/dist/jquery.min.js', 'libs/bower_components/jquery-ui/ui/minified/jquery-ui.min.js' => 'node_modules/jquery-ui-dist/jquery-ui.min.js', "libs/bower_components/sprintf/dist/sprintf.min.js" => "node_modules/sprintf-js/dist/sprintf.min.js", "libs/bower_components/materialize/dist/js/materialize.min.js" => "node_modules/@materializecss/materialize/dist/js/materialize.min.js", "libs/bower_components/jquery.scrollTo/jquery.scrollTo.min.js" => "node_modules/jquery.scrollto/jquery.scrollTo.min.js", "libs/bower_components/mousetrap/mousetrap.min.js" => "node_modules/mousetrap/mousetrap.min.js", "libs/bower_components/jQuery.dotdotdot/src/js/jquery.dotdotdot.min.js" => "node_modules/jquery.dotdotdot/dist/jquery.dotdotdot.js", "libs/bower_components/visibilityjs/lib/visibility.core.js" => "node_modules/visibilityjs/lib/visibility.core.js", "libs/bower_components/iframe-resizer/js/iframeResizer.min.js" => "node_modules/iframe-resizer/js/iframeResizer.min.js", "libs/bower_components/qrcode.js/qrcode.js" => "node_modules/qrcodejs2/qrcode.min.js", "libs/bower_components/chroma-js/chroma.min.js" => "node_modules/chroma-js/chroma.min.js", "libs/jquery/jquery.browser.js" => null, "libs/jquery/jquery.truncate.js" => null, "libs/jquery/themes/base/jquery-ui.min.css" => "node_modules/jquery-ui-dist/jquery-ui.min.css", "libs/bower_components/materialize/dist/css/materialize.min.css" => "node_modules/@materializecss/materialize/dist/css/materialize.min.css", "node_modules/jquery-ui-dist/jquery-ui.theme.min.css" => "node_modules/jquery-ui-dist/jquery-ui.theme.min.css"];
+    public static $bowerComponentFileMappings = ['libs/bower_components/jquery/dist/jquery.min.js' => 'node_modules/jquery/dist/jquery.min.js', 'libs/bower_components/jquery-ui/ui/minified/jquery-ui.min.js' => 'node_modules/jquery-ui-dist/jquery-ui.min.js', "libs/bower_components/sprintf/dist/sprintf.min.js" => "node_modules/sprintf-js/dist/sprintf.min.js", "libs/bower_components/materialize/dist/js/materialize.min.js" => "node_modules/@materializecss/materialize/dist/js/materialize.min.js", "libs/bower_components/jquery.scrollTo/jquery.scrollTo.min.js" => "node_modules/jquery.scrollto/jquery.scrollTo.min.js", "libs/bower_components/mousetrap/mousetrap.min.js" => "node_modules/mousetrap/mousetrap.min.js", "libs/bower_components/visibilityjs/lib/visibility.core.js" => "node_modules/visibilityjs/lib/visibility.core.js", "libs/bower_components/iframe-resizer/js/iframeResizer.min.js" => "node_modules/iframe-resizer/js/iframeResizer.min.js", "libs/bower_components/qrcode.js/qrcode.js" => "node_modules/qrcodejs2/qrcode.min.js", "libs/bower_components/chroma-js/chroma.min.js" => "node_modules/chroma-js/chroma.min.js", "libs/jquery/jquery.browser.js" => null, "libs/jquery/jquery.truncate.js" => null, "libs/jquery/themes/base/jquery-ui.min.css" => "node_modules/jquery-ui-dist/jquery-ui.min.css", "libs/bower_components/materialize/dist/css/materialize.min.css" => "node_modules/@materializecss/materialize/dist/css/materialize.min.css", "node_modules/jquery-ui-dist/jquery-ui.theme.min.css" => "node_modules/jquery-ui-dist/jquery-ui.theme.min.css"];
     protected function mapBowerComponentFilesForBC(array &$fileLocations)
     {
         foreach ($fileLocations as $index => $location) {

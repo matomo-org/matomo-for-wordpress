@@ -16,7 +16,7 @@ class DbMaxPacket implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnostic
      * @var Translator
      */
     private $translator;
-    const MIN_VALUE_MAX_PACKET_MB = 64;
+    public const MIN_VALUE_MAX_PACKET_MB = 64;
     public function __construct(Translator $translator)
     {
         $this->translator = $translator;

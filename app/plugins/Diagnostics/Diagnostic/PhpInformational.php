@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Diagnostics\Diagnostic;
 
@@ -51,12 +51,10 @@ class PhpInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnost
             if (!empty($_SERVER['SERVER_SOFTWARE'])) {
                 if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') !== false) {
                     $comment .= $this->translator->translate('Diagnostics_PHPFPMWarningApache', ['<code>ProxyPass /config !</code>', '<code>mod_proxy_fcgi.c</code>', '<code>ProxyPassMatch</code>']);
+                } elseif (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'nginx') !== false) {
+                    $comment .= $this->translator->translate('Diagnostics_PHPFPMWarningNginx', ['<a href="https://github.com/matomo-org/matomo-nginx#readme" target="_blank">', '</a>']);
                 } else {
-                    if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'nginx') !== false) {
-                        $comment .= $this->translator->translate('Diagnostics_PHPFPMWarningNginx', ['<a href="https://github.com/matomo-org/matomo-nginx#readme" target="_blank">', '</a>']);
-                    } else {
-                        $comment .= $this->translator->translate('Diagnostics_PHPFPMWarningGeneric');
-                    }
+                    $comment .= $this->translator->translate('Diagnostics_PHPFPMWarningGeneric');
                 }
             } else {
                 $comment .= $this->translator->translate('Diagnostics_PHPFPMWarningGeneric');

@@ -468,12 +468,24 @@ class WordPress extends Mysqli {
 
 		$fields = array();
 		foreach ( $bind as $field => $val ) {
-			$fields[] = "`$field` = %s";
+			// wpdb's prepare doesn't seem to handle null values correctly. they are set to `''`
+			// in some cases, so we handle this explicitly here.
+			if ($val === null) {
+				unset($bind[$field]);
+				$fields[] = "`$field` = NULL";
+			} else {
+				$fields[] = "`$field` = %s";
+			}
 		}
 		$fields = implode( ', ', $fields );
 
-		$sql      = "UPDATE `$table` SET $fields " . ( ( $where ) ? " WHERE $where" : '' );
-		$prepared = $wpdb->prepare( $sql, $bind );
+		$sql = "UPDATE `$table` SET $fields " . ( ( $where ) ? " WHERE $where" : '' );
+
+		if ( empty( $bind ) ) {
+			$prepared = $sql;
+		} else {
+			$prepared = $wpdb->prepare( $sql, $bind );
+		}
 
 		$this->before_execute_query( $wpdb, '' );
 

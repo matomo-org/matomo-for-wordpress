@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\API\Filter;
 
@@ -382,11 +382,9 @@ class DataComparisonFilter
                     if (!$this->invertCompareChangeCompute && $index < $segmentCount) {
                         continue;
                         // do not calculate for first period
-                    } else {
-                        if ($this->invertCompareChangeCompute && $periodIndex != 0) {
-                            continue;
-                            // when inverting change calculation, only calculate for first period rows
-                        }
+                    } elseif ($this->invertCompareChangeCompute && $periodIndex != 0) {
+                        continue;
+                        // when inverting change calculation, only calculate for first period rows
                     }
                     if (!$this->invertCompareChangeCompute) {
                         $otherPeriodRowIndex = $segmentIndex;

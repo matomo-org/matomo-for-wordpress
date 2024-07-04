@@ -31,6 +31,10 @@ on:
       password:
         description: 'Release password'
         required: true
+      force:
+        description: 'Force (0 or 1)'
+        required: false
+        default: 0
 
 env:
   RELEASE_PASSWORD: ${{ secrets.RELEASE_PASSWORD }}
@@ -60,11 +64,18 @@ jobs:
       - run: git lfs pull
       - name: "Check tag"
         run: |
+            existing_version=$(cat readme.txt | grep -oP "Stable tag: \K(.+)")
+
             if [[ -n "${{ github.event.inputs.version }}" ]]
             then
               version="${{ github.event.inputs.version }}"
+
+              if [[ "$existing_version" != "$version" ]]; then
+                echo "Version in readme.txt not set correctly, aborting."
+                exit 1
+              fi
             else
-              version=$(cat readme.txt | grep -oP "Stable tag: \K(.+)")
+              version=$existing_version
             fi
             echo "Version to build: '$version'"
 
@@ -110,3 +121,5 @@ jobs:
 
           echo "update=false" >> $GITHUB_OUTPUT
         shell: bash
+        env:
+          FORCE_DEPLOY: ${{ github.event.inputs.force }}

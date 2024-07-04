@@ -115,7 +115,7 @@ class Updater {
 		return $executed_updates;
 	}
 
-	public function update() {
+	public function update( $update_from_version = null ) {
 		Bootstrap::do_bootstrap();
 
 		if ( $this->load_plugin_functions() ) {
@@ -145,12 +145,23 @@ class Updater {
 		Option::clearCache();
 		PiwikCache::flushAll();
 
-		\Piwik\Access::doAsSuperUser(
-			function () {
-				self::update_components();
-				self::update_components();
+		$current_version = Option::get( 'version_core' );
+
+		try {
+			if ( ! empty( $update_from_version ) ) {
+				Option::set( 'version_core', $update_from_version );
 			}
-		);
+
+			\Piwik\Access::doAsSuperUser(
+				function () {
+					self::update_components();
+					self::update_components();
+				}
+			);
+		} catch ( \Exception $ex ) {
+			Option::set( 'version_core', $current_version );
+			throw $ex;
+		}
 
 		$upload_dir = $paths->get_upload_base_dir();
 

@@ -197,9 +197,28 @@ class SystemReport {
 					$sync->sync_current_site();
 				}
 				if ( ! empty( $_POST[ self::TROUBLESHOOT_RUN_UPDATER ] ) ) {
-					Updater::unlock();
-					$sync = new Updater( $this->settings );
-					$sync->update();
+					$update_from_version = ! empty( $_POST['matomo_troubleshooting_update_from'] )
+						? sanitize_text_field( wp_unslash( $_POST['matomo_troubleshooting_update_from'] ) )
+						: null;
+					$update_from_version = trim( $update_from_version );
+
+					if ( ! empty( $update_from_version )
+						&& ! preg_match( '/^\d+(?:.\d+)*$/', $update_from_version )
+					) {
+						echo '<div class="error"><p>' . esc_html__( 'Matomo Update Error', 'matomo' )
+							. ': unrecognized version string "' . esc_html( $update_from_version )
+							. '", ignoring.</p></div>';
+
+						$update_from_version = '';
+					}
+
+					try {
+						Updater::unlock();
+						$sync = new Updater( $this->settings );
+						$sync->update( $update_from_version );
+					} catch ( \Exception $e ) {
+						echo '<div class="error"><p>' . esc_html__( 'Matomo Update Error', 'matomo' ) . ': ' . esc_html( matomo_anonymize_value( $e->getMessage() . ' =>' . $this->logger->get_readable_trace( $e ) ) ) . '</p></div>';
+					}
 				}
 			}
 			if ( $this->settings->is_network_enabled() ) {
@@ -264,12 +283,12 @@ class SystemReport {
 
 	public function errors_present() {
 		$cache_key   = 'matomo_system_report_has_errors';
-		$cache_value = get_transient( $cache_key );
+		$cache_value = get_site_transient( $cache_key );
 
 		if ( false === $cache_value ) {
 			// pre-record that there were no errors found. in case the system report fails to execute, this will
 			// allow the rest of Matomo for WordPress to continue to still be usable.
-			set_transient( $cache_key, 0, WEEK_IN_SECONDS );
+			set_site_transient( $cache_key, 0, WEEK_IN_SECONDS );
 
 			$matomo_tables = $this->get_error_tables();
 
@@ -284,7 +303,7 @@ class SystemReport {
 				}
 			}
 
-			set_transient( $cache_key, (int) $cache_value, WEEK_IN_SECONDS );
+			set_site_transient( $cache_key, (int) $cache_value, WEEK_IN_SECONDS );
 		}
 
 		return 1 === (int) $cache_value;
@@ -387,6 +406,20 @@ class SystemReport {
 		$rows = [];
 
 		if ( $this->shell_exec_available ) {
+			try {
+				$cli_multi = new CliMulti();
+
+				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$supports_async = $cli_multi->supportsAsync;
+			} catch ( \Exception $ex ) {
+				$rows[] = [
+					'name'       => esc_html__( 'PHP CLI configuration', 'matomo' ),
+					'value'      => esc_html__( 'Unexpected error', 'matomo' ),
+					'is_warning' => true,
+					'comment'    => sprintf( esc_html__( 'Could not detect whether async archiving is enabled: %s', 'matomo' ), $ex->getMessage() ),
+				];
+			}
+
 			$phpcli_version = $this->get_phpcli_output( '-r "echo phpversion();"' );
 
 			$is_warning = false;
@@ -394,9 +427,11 @@ class SystemReport {
 
 			$advanced_settings_url = home_url( '/wp-admin/admin.php?page=matomo-settings&tab=advanced#matomo[disable_async_archiving]' );
 
+			$is_using_cli_archiving = ! \WpMatomo::is_async_archiving_manually_disabled() && $supports_async;
+
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 			if ( version_compare( $phpcli_version, PHP_VERSION ) < 0 ) {
-				if ( ! \WpMatomo::is_async_archiving_manually_disabled() ) {
+				if ( $is_using_cli_archiving ) {
 					$is_warning = true;
 				}
 
@@ -429,10 +464,12 @@ class SystemReport {
 				'name'     => esc_html__( 'MySQLi support', 'matomo' ),
 				'value'    => $value,
 				'comment'  => $comment,
-				'is_error' => $is_error,
+				'is_error' => $is_using_cli_archiving ? $is_error : false,
 			];
 
-			$this->check_wp_can_be_loaded_in_php_cli( $rows );
+			if ( $supports_async ) {
+				$this->check_wp_can_be_loaded_in_php_cli( $rows );
+			}
 		}
 
 		return $rows;
@@ -445,24 +482,6 @@ class SystemReport {
 
 		$wp_load_path = $this->find_wp_load_path();
 		if ( ! $wp_load_path ) {
-			return;
-		}
-
-		try {
-			$cli_multi = new CliMulti();
-
-			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			$supports_async = $cli_multi->supportsAsync;
-		} catch ( \Exception $ex ) {
-			$rows[] = [
-				'name'       => esc_html__( 'PHP CLI configuration', 'matomo' ),
-				'value'      => esc_html__( 'Unexpected error', 'matomo' ),
-				'is_warning' => true,
-				'comment'    => sprintf( esc_html__( 'Could not detect whether async archiving is enabled: %s', 'matomo' ), $ex->getMessage() ),
-			];
-		}
-
-		if ( ! $supports_async ) {
 			return;
 		}
 

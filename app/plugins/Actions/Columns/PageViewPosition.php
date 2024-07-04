@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Actions\Columns;
 
@@ -30,10 +29,8 @@ class PageViewPosition extends ActionDimension
         $shouldCount = \Piwik\Plugins\Actions\Columns\VisitTotalInteractions::shouldCountInteraction($action);
         if ($shouldCount && $visitor->isNewVisit()) {
             return 1;
-        } else {
-            if ($shouldCount) {
-                return \Piwik\Plugins\Actions\Columns\VisitTotalInteractions::getNextInteractionPosition($request);
-            }
+        } elseif ($shouldCount) {
+            return \Piwik\Plugins\Actions\Columns\VisitTotalInteractions::getNextInteractionPosition($request);
         }
         // we re-use same interaction position as last page view eg for events etc.
         $position = \Piwik\Plugins\Actions\Columns\VisitTotalInteractions::getCurrentInteractionPosition($request);

@@ -51,7 +51,14 @@ abstract class CallExpression extends AbstractExpression
     {
         $compiler->raw($isArray ? '[' : '(');
         $first = true;
+        if ($this->hasAttribute('needs_charset') && $this->getAttribute('needs_charset')) {
+            $compiler->raw('$this->env->getCharset()');
+            $first = false;
+        }
         if ($this->hasAttribute('needs_environment') && $this->getAttribute('needs_environment')) {
+            if (!$first) {
+                $compiler->raw(', ');
+            }
             $compiler->raw('$this->env');
             $first = false;
         }
@@ -118,7 +125,7 @@ abstract class CallExpression extends AbstractExpression
             }
             throw new \LogicException($message);
         }
-        list($callableParameters, $isPhpVariadic) = $this->getCallableParameters($callable, $isVariadic);
+        [$callableParameters, $isPhpVariadic] = $this->getCallableParameters($callable, $isVariadic);
         $arguments = [];
         $names = [];
         $missingArguments = [];
@@ -201,6 +208,9 @@ abstract class CallExpression extends AbstractExpression
         if ($this->hasNode('node')) {
             array_shift($parameters);
         }
+        if ($this->hasAttribute('needs_charset') && $this->getAttribute('needs_charset')) {
+            array_shift($parameters);
+        }
         if ($this->hasAttribute('needs_environment') && $this->getAttribute('needs_environment')) {
             array_shift($parameters);
         }
@@ -246,7 +256,7 @@ abstract class CallExpression extends AbstractExpression
             throw new \LogicException(sprintf('Callback for %s "%s" is not callable in the current scope.', $this->getAttribute('type'), $this->getAttribute('name')), 0, $e);
         }
         $r = new \ReflectionFunction($closure);
-        if (str_contains($r->name, '{closure}')) {
+        if (str_contains($r->name, '{closure')) {
             return $this->reflector = [$r, $callable, 'Closure'];
         }
         if ($object = $r->getClosureThis()) {

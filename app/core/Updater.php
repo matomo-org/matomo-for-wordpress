@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik;
 
@@ -23,9 +22,9 @@ use Zend_Db_Exception;
  */
 class Updater
 {
-    const INDEX_CURRENT_VERSION = 0;
-    const INDEX_NEW_VERSION = 1;
-    const OPTION_KEY_MATOMO_UPDATE_HISTORY = 'MatomoUpdateHistory';
+    public const INDEX_CURRENT_VERSION = 0;
+    public const INDEX_NEW_VERSION = 1;
+    public const OPTION_KEY_MATOMO_UPDATE_HISTORY = 'MatomoUpdateHistory';
     private $pathUpdateFileCore;
     private $pathUpdateFilePlugins;
     private $hasMajorDbUpdate = false;
@@ -523,10 +522,8 @@ class Updater
             // make sure to check for them here
             if ($e instanceof Zend_Db_Exception) {
                 throw new \Piwik\UpdaterErrorException($e->getMessage(), $e->getCode(), $e);
-            } else {
-                if ($e instanceof MissingFilePermissionException) {
-                    throw new \Piwik\UpdaterErrorException($e->getMessage(), $e->getCode(), $e);
-                }
+            } elseif ($e instanceof MissingFilePermissionException) {
+                throw new \Piwik\UpdaterErrorException($e->getMessage(), $e->getCode(), $e);
             }
             throw $e;
         }

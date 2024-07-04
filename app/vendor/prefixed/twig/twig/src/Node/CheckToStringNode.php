@@ -10,6 +10,7 @@
  */
 namespace Matomo\Dependencies\Twig\Node;
 
+use Matomo\Dependencies\Twig\Attribute\YieldReady;
 use Matomo\Dependencies\Twig\Compiler;
 use Matomo\Dependencies\Twig\Node\Expression\AbstractExpression;
 /**
@@ -22,6 +23,7 @@ use Matomo\Dependencies\Twig\Node\Expression\AbstractExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class CheckToStringNode extends AbstractExpression
 {
     public function __construct(AbstractExpression $expr)

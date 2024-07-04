@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugin;
 
@@ -39,8 +38,8 @@ use Piwik\Updater;
  */
 class Manager
 {
-    const LAST_PLUGIN_ACTIVATION_TIME_OPTION_PREFIX = 'LastPluginActivation.';
-    const LAST_PLUGIN_DEACTIVATION_TIME_OPTION_PREFIX = 'LastPluginDeactivation.';
+    public const LAST_PLUGIN_ACTIVATION_TIME_OPTION_PREFIX = 'LastPluginActivation.';
+    public const LAST_PLUGIN_DEACTIVATION_TIME_OPTION_PREFIX = 'LastPluginDeactivation.';
     /**
      * @return self
      */
@@ -60,7 +59,7 @@ class Manager
     /**
      * Default theme used in Piwik.
      */
-    const DEFAULT_THEME = "Morpheus";
+    public const DEFAULT_THEME = "Morpheus";
     protected $doLoadAlwaysActivatedPlugins = true;
     // These are always activated and cannot be deactivated
     protected $pluginToAlwaysActivate = array(
@@ -168,7 +167,7 @@ class Manager
         return $this->trackerPluginsNotToLoad;
     }
     // If a plugin hooks onto at least an event starting with "Tracker.", we load the plugin during tracker
-    const TRACKER_EVENT_PREFIX = 'Tracker.';
+    public const TRACKER_EVENT_PREFIX = 'Tracker.';
     /**
      * @param $pluginName
      * @return bool

@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Period;
 
@@ -75,12 +74,10 @@ abstract class Factory
                 return new \Piwik\Period\Range($period, $date, $timezone);
             }
             $dateObject = Date::factory($date);
+        } elseif ($date instanceof Date) {
+            $dateObject = $date;
         } else {
-            if ($date instanceof Date) {
-                $dateObject = $date;
-            } else {
-                throw new \Exception("Invalid date supplied to Period\\Factory::build(): " . gettype($date));
-            }
+            throw new \Exception("Invalid date supplied to Period\\Factory::build(): " . gettype($date));
         }
         switch ($period) {
             case 'day':

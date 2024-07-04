@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\DataAccess;
 
@@ -13,8 +12,8 @@ use Piwik\Common;
 use Piwik\Date;
 class ArchiveTableCreator
 {
-    const NUMERIC_TABLE = "numeric";
-    const BLOB_TABLE = "blob";
+    public const NUMERIC_TABLE = "numeric";
+    public const BLOB_TABLE = "blob";
     public static $tablesAlreadyInstalled = null;
     public static function getNumericTable(Date $date)
     {

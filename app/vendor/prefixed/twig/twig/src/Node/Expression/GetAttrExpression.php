@@ -33,7 +33,7 @@ class GetAttrExpression extends AbstractExpression
             $compiler->raw('((' . $var . ' = ')->subcompile($this->getNode('node'))->raw(') && is_array(')->raw($var)->raw(') || ')->raw($var)->raw(' instanceof ArrayAccess ? (')->raw($var)->raw('[')->subcompile($this->getNode('attribute'))->raw('] ?? null) : null)');
             return;
         }
-        $compiler->raw('\Matomo\Dependencies\twig_get_attribute($this->env, $this->source, ');
+        $compiler->raw('CoreExtension::getAttribute($this->env, $this->source, ');
         if ($this->getAttribute('ignore_strict_check')) {
             $this->getNode('node')->setAttribute('ignore_strict_check', true);
         }

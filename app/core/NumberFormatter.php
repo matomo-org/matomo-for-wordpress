@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik;
 
@@ -220,7 +219,7 @@ class NumberFormatter
             }
         }
         // Assemble the final number and insert it into the pattern.
-        $value = $minorDigits ? $majorDigits . '.' . $minorDigits : $majorDigits;
+        $value = strlen($minorDigits) ? $majorDigits . '.' . $minorDigits : $majorDigits;
         $value = preg_replace('/#(?:[\\.,]#+)*0(?:[,\\.][0#]+)*/', $value, $pattern);
         // Localize the number.
         $value = $this->replaceSymbols($value);

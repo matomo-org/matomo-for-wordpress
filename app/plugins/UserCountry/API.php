@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\UserCountry;
 
@@ -94,15 +93,13 @@ class API extends \Piwik\Plugin\API
                     }
                     return implode($separator, $splitLabel);
                 }));
-            } else {
-                if ($dt->getRowFromLabel('1|ti')) {
-                    $dt->filter('GroupBy', array('label', function ($label) {
-                        if ($label == '1|ti') {
-                            return '14|cn';
-                        }
-                        return $label;
-                    }));
-                }
+            } elseif ($dt->getRowFromLabel('1|ti')) {
+                $dt->filter('GroupBy', array('label', function ($label) {
+                    if ($label == '1|ti') {
+                        return '14|cn';
+                    }
+                    return $label;
+                }));
             }
         });
         $segments = array('regionCode', 'countryCode');

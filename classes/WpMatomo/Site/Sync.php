@@ -190,7 +190,7 @@ class Sync {
 
 			$site = $sites_manager_model->getSiteFromId( $idsite );
 			if ( ! empty( $site ) ) {
-				// if site doesn't exist for some reason then we have to create it
+				// if site has changed then we have to update it
 				if ( $site['name'] !== $blog_name
 					 || $site['main_url'] !== $blog_url
 				     // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison

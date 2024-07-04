@@ -15,7 +15,7 @@ class NotInBinary extends AbstractBinary
 {
     public function compile(Compiler $compiler) : void
     {
-        $compiler->raw('!\Matomo\Dependencies\twig_in_filter(')->subcompile($this->getNode('left'))->raw(', ')->subcompile($this->getNode('right'))->raw(')');
+        $compiler->raw('!CoreExtension::inFilter(')->subcompile($this->getNode('left'))->raw(', ')->subcompile($this->getNode('right'))->raw(')');
     }
     public function operator(Compiler $compiler) : Compiler
     {

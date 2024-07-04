@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\SitesManager;
 
@@ -57,16 +56,16 @@ use Piwik\UrlHelper;
  */
 class API extends \Piwik\Plugin\API
 {
-    const DEFAULT_SEARCH_KEYWORD_PARAMETERS = 'q,query,s,search,searchword,k,keyword,keywords';
-    const OPTION_EXCLUDED_IPS_GLOBAL = 'SitesManager_ExcludedIpsGlobal';
-    const OPTION_DEFAULT_TIMEZONE = 'SitesManager_DefaultTimezone';
-    const OPTION_DEFAULT_CURRENCY = 'SitesManager_DefaultCurrency';
-    const OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL = 'SitesManager_ExcludedQueryParameters';
-    const OPTION_SEARCH_KEYWORD_QUERY_PARAMETERS_GLOBAL = 'SitesManager_SearchKeywordParameters';
-    const OPTION_SEARCH_CATEGORY_QUERY_PARAMETERS_GLOBAL = 'SitesManager_SearchCategoryParameters';
-    const OPTION_EXCLUDED_USER_AGENTS_GLOBAL = 'SitesManager_ExcludedUserAgentsGlobal';
-    const OPTION_EXCLUDED_REFERRERS_GLOBAL = 'SitesManager_ExcludedReferrersGlobal';
-    const OPTION_KEEP_URL_FRAGMENTS_GLOBAL = 'SitesManager_KeepURLFragmentsGlobal';
+    public const DEFAULT_SEARCH_KEYWORD_PARAMETERS = 'q,query,s,search,searchword,k,keyword,keywords';
+    public const OPTION_EXCLUDED_IPS_GLOBAL = 'SitesManager_ExcludedIpsGlobal';
+    public const OPTION_DEFAULT_TIMEZONE = 'SitesManager_DefaultTimezone';
+    public const OPTION_DEFAULT_CURRENCY = 'SitesManager_DefaultCurrency';
+    public const OPTION_EXCLUDED_QUERY_PARAMETERS_GLOBAL = 'SitesManager_ExcludedQueryParameters';
+    public const OPTION_SEARCH_KEYWORD_QUERY_PARAMETERS_GLOBAL = 'SitesManager_SearchKeywordParameters';
+    public const OPTION_SEARCH_CATEGORY_QUERY_PARAMETERS_GLOBAL = 'SitesManager_SearchCategoryParameters';
+    public const OPTION_EXCLUDED_USER_AGENTS_GLOBAL = 'SitesManager_ExcludedUserAgentsGlobal';
+    public const OPTION_EXCLUDED_REFERRERS_GLOBAL = 'SitesManager_ExcludedReferrersGlobal';
+    public const OPTION_KEEP_URL_FRAGMENTS_GLOBAL = 'SitesManager_KeepURLFragmentsGlobal';
     /**
      * @var SettingsProvider
      */
@@ -109,12 +108,13 @@ class API extends \Piwik\Plugin\API
      * @param bool   $forceMatomoEndpoint Whether the Matomo endpoint should be forced if Matomo was installed prior 3.7.0.
      * @param string|array  $excludedQueryParams array or comma separated string of excluded query parameters.
      * @param string|array  $excludedReferrers array or comma separated string of ignored referrers. Defaults to configured ignored referrers
+     * @param bool   $disableCampaignParameters Prevent campaign parameters being sent to the tracker
      *
      * @return string The Javascript tag ready to be included on the HTML pages
      * @throws Exception
      * @unsanitized
      */
-    public function getJavascriptTag(int $idSite, string $piwikUrl = '', bool $mergeSubdomains = false, bool $groupPageTitlesByDomain = false, bool $mergeAliasUrls = false, array $visitorCustomVariables = [], array $pageCustomVariables = [], string $customCampaignNameQueryParam = '', string $customCampaignKeywordParam = '', bool $doNotTrack = false, bool $disableCookies = false, bool $trackNoScript = false, bool $crossDomain = false, bool $forceMatomoEndpoint = false, $excludedQueryParams = '', $excludedReferrers = '')
+    public function getJavascriptTag(int $idSite, string $piwikUrl = '', bool $mergeSubdomains = false, bool $groupPageTitlesByDomain = false, bool $mergeAliasUrls = false, array $visitorCustomVariables = [], array $pageCustomVariables = [], string $customCampaignNameQueryParam = '', string $customCampaignKeywordParam = '', bool $doNotTrack = false, bool $disableCookies = false, bool $trackNoScript = false, bool $crossDomain = false, bool $forceMatomoEndpoint = false, $excludedQueryParams = '', $excludedReferrers = '', bool $disableCampaignParameters = false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         if (empty($piwikUrl)) {
@@ -127,7 +127,7 @@ class API extends \Piwik\Plugin\API
         if ($forceMatomoEndpoint) {
             $generator->forceMatomoEndpoint();
         }
-        $code = $generator->generate($idSite, $piwikUrl, $mergeSubdomains, $groupPageTitlesByDomain, $mergeAliasUrls, $visitorCustomVariables, $pageCustomVariables, $customCampaignNameQueryParam, $customCampaignKeywordParam, $doNotTrack, $disableCookies, $trackNoScript, $crossDomain, $excludedQueryParams, $excludedReferrers);
+        $code = $generator->generate($idSite, $piwikUrl, $mergeSubdomains, $groupPageTitlesByDomain, $mergeAliasUrls, $visitorCustomVariables, $pageCustomVariables, $customCampaignNameQueryParam, $customCampaignKeywordParam, $doNotTrack, $disableCookies, $trackNoScript, $crossDomain, $excludedQueryParams, $excludedReferrers, $disableCampaignParameters);
         return str_replace(['<br>', '<br />', '<br/>'], '', $code);
     }
     /**
@@ -837,6 +837,22 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasSomeAdminAccess();
         return Option::get(self::OPTION_SEARCH_CATEGORY_QUERY_PARAMETERS_GLOBAL);
+    }
+    /**
+     * Returns the list of URL query parameters that are excluded for the given website
+     *
+     * Globally excluded parameters are included in this list
+     */
+    public function getExcludedQueryParameters(int $idSite) : array
+    {
+        $site = $this->getSiteFromId($idSite);
+        try {
+            return \Piwik\Plugins\SitesManager\SitesManager::getTrackerExcludedQueryParameters($site);
+        } catch (Exception $e) {
+            // an exception is thrown when the user has no view access.
+            // do not throw the exception to the outside.
+            return [];
+        }
     }
     /**
      * Returns the list of URL query parameters that are excluded from all websites

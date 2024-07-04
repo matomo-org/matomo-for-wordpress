@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CoreHome\Columns;
 
@@ -17,9 +16,9 @@ use Piwik\Tracker\Request;
 use Piwik\Tracker\Visitor;
 class VisitorReturning extends VisitDimension
 {
-    const IS_RETURNING_CUSTOMER = 2;
-    const IS_RETURNING = 1;
-    const IS_NEW = 0;
+    public const IS_RETURNING_CUSTOMER = 2;
+    public const IS_RETURNING = 1;
+    public const IS_NEW = 0;
     protected $columnName = 'visitor_returning';
     protected $columnType = 'TINYINT(1) NULL';
     protected $segmentName = 'visitorType';

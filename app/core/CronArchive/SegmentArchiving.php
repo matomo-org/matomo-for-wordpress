@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\CronArchive;
 
@@ -29,10 +29,10 @@ use Piwik\Log\LoggerInterface;
  */
 class SegmentArchiving
 {
-    const BEGINNING_OF_TIME = 'beginning_of_time';
-    const CREATION_TIME = 'segment_creation_time';
-    const LAST_EDIT_TIME = 'segment_last_edit_time';
-    const DEFAULT_BEGINNING_OF_TIME_LAST_N_YEARS = 7;
+    public const BEGINNING_OF_TIME = 'beginning_of_time';
+    public const CREATION_TIME = 'segment_creation_time';
+    public const LAST_EDIT_TIME = 'segment_last_edit_time';
+    public const DEFAULT_BEGINNING_OF_TIME_LAST_N_YEARS = 7;
     /**
      * @var Model
      */
@@ -99,51 +99,45 @@ class SegmentArchiving
             }
             $this->logger->debug("process_new_segments_from set to segment_creation_time, oldest date to process is {time}", array('time' => $segmentCreatedTime));
             return $segmentCreatedTime;
+        } elseif ($this->processNewSegmentsFrom == \Piwik\CronArchive\SegmentArchiving::LAST_EDIT_TIME) {
+            if (empty($segmentLastEditedTime)) {
+                return null;
+            }
+            $this->logger->debug("process_new_segments_from set to segment_last_edit_time, segment last edit time is {time}", array('time' => $segmentLastEditedTime));
+            return $segmentLastEditedTime;
+        } elseif (preg_match("/^editLast([0-9]+)\$/", $this->processNewSegmentsFrom, $matches)) {
+            if (empty($segmentLastEditedTime)) {
+                return null;
+            }
+            $lastN = $matches[1];
+            list($lastDate, $lastPeriod) = Range::getDateXPeriodsAgo($lastN, $segmentLastEditedTime, 'day');
+            $result = Date::factory($lastDate);
+            $this->logger->debug("process_new_segments_from set to editLast{N}, oldest date to process is {time}", array('N' => $lastN, 'time' => $result));
+            return $result;
+        } elseif (preg_match("/^last([0-9]+)\$/", $this->processNewSegmentsFrom, $matches)) {
+            if (empty($segmentCreatedTime)) {
+                return null;
+            }
+            $lastN = $matches[1];
+            list($lastDate, $lastPeriod) = Range::getDateXPeriodsAgo($lastN, $segmentCreatedTime, 'day');
+            $result = Date::factory($lastDate);
+            $this->logger->debug("process_new_segments_from set to last{N}, oldest date to process is {time}", array('N' => $lastN, 'time' => $result));
+            return $result;
         } else {
-            if ($this->processNewSegmentsFrom == \Piwik\CronArchive\SegmentArchiving::LAST_EDIT_TIME) {
-                if (empty($segmentLastEditedTime)) {
-                    return null;
-                }
-                $this->logger->debug("process_new_segments_from set to segment_last_edit_time, segment last edit time is {time}", array('time' => $segmentLastEditedTime));
-                return $segmentLastEditedTime;
-            } else {
-                if (preg_match("/^editLast([0-9]+)\$/", $this->processNewSegmentsFrom, $matches)) {
-                    if (empty($segmentLastEditedTime)) {
-                        return null;
-                    }
-                    $lastN = $matches[1];
-                    list($lastDate, $lastPeriod) = Range::getDateXPeriodsAgo($lastN, $segmentLastEditedTime, 'day');
-                    $result = Date::factory($lastDate);
-                    $this->logger->debug("process_new_segments_from set to editLast{N}, oldest date to process is {time}", array('N' => $lastN, 'time' => $result));
-                    return $result;
-                } else {
-                    if (preg_match("/^last([0-9]+)\$/", $this->processNewSegmentsFrom, $matches)) {
-                        if (empty($segmentCreatedTime)) {
-                            return null;
-                        }
-                        $lastN = $matches[1];
-                        list($lastDate, $lastPeriod) = Range::getDateXPeriodsAgo($lastN, $segmentCreatedTime, 'day');
-                        $result = Date::factory($lastDate);
-                        $this->logger->debug("process_new_segments_from set to last{N}, oldest date to process is {time}", array('N' => $lastN, 'time' => $result));
-                        return $result;
-                    } else {
-                        $this->logger->debug("process_new_segments_from set to beginning_of_time or cannot recognize value");
-                        $result = Date::factory('today')->subYear($this->beginningOfTimeLastNInYears);
-                        $idSite = $segmentInfo['enable_only_idsite'] ?? null;
-                        if (!empty($idSite)) {
-                            $siteCreationDate = Date::factory(Site::getCreationDateFor($idSite));
-                            if ($result->isEarlier($siteCreationDate)) {
-                                $result = $siteCreationDate;
-                            }
-                        }
-                        $earliestVisitTime = $this->getEarliestVisitTimeFor($idSite);
-                        if (!empty($earliestVisitTime) && $result->isEarlier($earliestVisitTime)) {
-                            $result = $earliestVisitTime;
-                        }
-                        return $result;
-                    }
+            $this->logger->debug("process_new_segments_from set to beginning_of_time or cannot recognize value");
+            $result = Date::factory('today')->subYear($this->beginningOfTimeLastNInYears);
+            $idSite = $segmentInfo['enable_only_idsite'] ?? null;
+            if (!empty($idSite)) {
+                $siteCreationDate = Date::factory(Site::getCreationDateFor($idSite));
+                if ($result->isEarlier($siteCreationDate)) {
+                    $result = $siteCreationDate;
                 }
             }
+            $earliestVisitTime = $this->getEarliestVisitTimeFor($idSite);
+            if (!empty($earliestVisitTime) && $result->isEarlier($earliestVisitTime)) {
+                $result = $earliestVisitTime;
+            }
+            return $result;
         }
     }
     /**

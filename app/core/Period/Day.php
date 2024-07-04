@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Period;
 
@@ -16,7 +15,7 @@ use Piwik\Period;
  */
 class Day extends Period
 {
-    const PERIOD_ID = 1;
+    public const PERIOD_ID = 1;
     protected $label = 'day';
     /**
      * Returns the day of the period as a string

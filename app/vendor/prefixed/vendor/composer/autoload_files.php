@@ -6,6 +6,10 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    '57561443c5204a2081a57dea43ad4761' => $baseDir . '/twig/twig/src/Resources/core.php',
+    'f8292008d9de50247e13d73bafe960d8' => $baseDir . '/twig/twig/src/Resources/debug.php',
+    '4f5f9c20f40d6dd76a229472337d1063' => $baseDir . '/twig/twig/src/Resources/escaper.php',
+    '1667aaec7a4fcb8ee62cbc8011ffe403' => $baseDir . '/twig/twig/src/Resources/string_loader.php',
     '14f31c04451e5135516391e2ab40385d' => $baseDir . '/php-di/php-di/src/functions.php',
     '66cfd3a7190309803b5cc0fea03a4cdc' => $baseDir . '/symfony/deprecation-contracts/function.php',
     'cf15db0dadced1bb06881d38a6ab91d1' => $baseDir . '/symfony/string/Resources/functions.php',

@@ -213,6 +213,64 @@ class DbWordPressTest extends MatomoAnalytics_TestCase {
 		$this->assertEquals( 3, $result );
 	}
 
+	public function test_update_sets_null_values_correctly() {
+		$table = Common::prefixTable( 'logger_message' );
+
+		$this->db->exec( "INSERT INTO $table (tag, timestamp, level, message) VALUES ('tag', CURRENT_TIMESTAMP, 'level', 'message')" );
+
+		$row = $this->db->fetchRow( "SELECT * FROM $table" );
+		$this->assertNotNull( $row['tag'] );
+		$this->assertNotNull( $row['timestamp'] );
+		$this->assertNotNull( $row['level'] );
+		$this->assertNotNull( $row['message'] );
+
+		$this->db->update(
+			$table,
+			[
+				'tag'       => null,
+				'timestamp' => null,
+				'level'     => 'alevel',
+				'message'   => null,
+			],
+			'idlogger_message = ' . (int) $row['idlogger_message']
+		);
+
+		$row = $this->db->fetchRow( "SELECT * FROM $table WHERE idlogger_message = " . (int) $row['idlogger_message'] );
+		$this->assertNull( $row['tag'] );
+		$this->assertNull( $row['timestamp'] );
+		$this->assertEquals( 'alevel', $row['level'] );
+		$this->assertNull( $row['message'] );
+	}
+
+	public function test_update_sets_null_values_correctly_when_all_params_are_null() {
+		$table = Common::prefixTable( 'logger_message' );
+
+		$this->db->exec( "INSERT INTO $table (tag, timestamp, level, message) VALUES ('tag', CURRENT_TIMESTAMP, 'level', 'message')" );
+
+		$row = $this->db->fetchRow( "SELECT * FROM $table" );
+		$this->assertNotNull( $row['tag'] );
+		$this->assertNotNull( $row['timestamp'] );
+		$this->assertNotNull( $row['level'] );
+		$this->assertNotNull( $row['message'] );
+
+		$this->db->update(
+			$table,
+			[
+				'tag'       => null,
+				'timestamp' => null,
+				'level'     => null,
+				'message'   => null,
+			],
+			'idlogger_message = ' . (int) $row['idlogger_message']
+		);
+
+		$row = $this->db->fetchRow( "SELECT * FROM $table WHERE idlogger_message = " . (int) $row['idlogger_message'] );
+		$this->assertNull( $row['tag'] );
+		$this->assertNull( $row['timestamp'] );
+		$this->assertNull( $row['level'] );
+		$this->assertNull( $row['message'] );
+	}
+
 	private function insert_many_values() {
 		$this->insert_access( 'foo', 'view' );
 		$this->insert_access( 'bar', 'write' );

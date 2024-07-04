@@ -10,6 +10,7 @@
  */
 namespace Matomo\Dependencies\Twig\Profiler\Node;
 
+use Matomo\Dependencies\Twig\Attribute\YieldReady;
 use Matomo\Dependencies\Twig\Compiler;
 use Matomo\Dependencies\Twig\Node\Node;
 /**
@@ -17,6 +18,7 @@ use Matomo\Dependencies\Twig\Node\Node;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class LeaveProfileNode extends Node
 {
     public function __construct(string $varName)

@@ -47,7 +47,7 @@ class CliDumper extends AbstractDumper
     /**
      * {@inheritdoc}
      */
-    public function __construct($output = null, string $charset = null, int $flags = 0)
+    public function __construct($output = null, ?string $charset = null, int $flags = 0)
     {
         parent::__construct($output, $charset, $flags);
         if ('\\' === \DIRECTORY_SEPARATOR && !$this->isWindowsTrueColor()) {
@@ -482,6 +482,9 @@ class CliDumper extends AbstractDumper
      */
     protected function dumpLine(int $depth, bool $endOfValue = false)
     {
+        if (null === $this->colors) {
+            $this->colors = $this->supportsColors();
+        }
         if ($this->colors) {
             $this->line = sprintf("\x1b[%sm%s\x1b[m", $this->styles['default'], $this->line);
         }
@@ -518,13 +521,22 @@ class CliDumper extends AbstractDumper
         if (isset($_SERVER['NO_COLOR']) || false !== getenv('NO_COLOR')) {
             return false;
         }
-        if ('Hyper' === getenv('TERM_PROGRAM')) {
+        // Detect msysgit/mingw and assume this is a tty because detection
+        // does not work correctly, see https://github.com/composer/composer/issues/9690
+        if (!@stream_isatty($stream) && !\in_array(strtoupper((string) getenv('MSYSTEM')), ['MINGW32', 'MINGW64'], true)) {
+            return false;
+        }
+        if ('\\' === \DIRECTORY_SEPARATOR && @sapi_windows_vt100_support($stream)) {
             return true;
         }
-        if (\DIRECTORY_SEPARATOR === '\\') {
-            return \function_exists('sapi_windows_vt100_support') && @sapi_windows_vt100_support($stream) || false !== getenv('ANSICON') || 'ON' === getenv('ConEmuANSI') || 'xterm' === getenv('TERM');
+        if ('Hyper' === getenv('TERM_PROGRAM') || false !== getenv('COLORTERM') || false !== getenv('ANSICON') || 'ON' === getenv('ConEmuANSI')) {
+            return true;
         }
-        return stream_isatty($stream);
+        if ('dumb' === ($term = (string) getenv('TERM'))) {
+            return false;
+        }
+        // See https://github.com/chalk/supports-color/blob/d4f413efaf8da045c5ab440ed418ef02dbb28bf1/index.js#L157
+        return preg_match('/^((screen|xterm|vt100|vt220|putty|rxvt|ansi|cygwin|linux).*)|(.*-256(color)?(-bce)?)$/', $term);
     }
     /**
      * Returns true if the Windows terminal supports true color.

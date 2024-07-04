@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\API\Filter\DataComparisonFilter;
 
@@ -38,43 +38,41 @@ class ComparisonRowGenerator
     {
         if ($tables instanceof DataTable) {
             $this->compareTable($compareMetadata, $tables, $compareTables, $compareTables);
-        } else {
-            if ($tables instanceof DataTable\Map) {
-                $childTablesArray = array_values($tables->getDataTables());
-                $compareTablesArray = $compareTables instanceof DataTable\Map ? array_values($compareTables->getDataTables()) : [];
-                $isDatePeriod = $tables->getKeyName() == 'date';
-                foreach ($childTablesArray as $index => $childTable) {
-                    $compareChildTable = !empty($compareTablesArray[$index]) ? $compareTablesArray[$index] : null;
-                    $this->compareTables($compareMetadata, $childTable, $compareChildTable);
-                }
-                // in case one of the compared periods has more periods than the main one, we want to fill the result with empty datatables
-                // so the comparison data is still present. this allows us to see that data in an evolution report.
-                if ($isDatePeriod) {
-                    $lastTable = end($childTablesArray);
-                    /** @var Period $lastPeriod */
-                    $lastPeriod = $lastTable->getMetadata('period');
-                    $periodType = $lastPeriod->getLabel();
-                    for ($i = count($childTablesArray); $i < count($compareTablesArray); ++$i) {
-                        $periodChangeCount = $i - count($childTablesArray) + 1;
-                        $newPeriod = Period\Factory::build($periodType, $lastPeriod->getDateStart()->addPeriod($periodChangeCount, $periodType));
-                        // create an empty table for the main request
-                        $newTable = new DataTable();
-                        $newTable->setAllTableMetadata($lastTable->getAllTableMetadata());
-                        $newTable->setMetadata('period', $newPeriod);
-                        if ($newPeriod->getLabel() === 'week' || $newPeriod->getLabel() === 'range') {
-                            $periodLabel = $newPeriod->getRangeString();
-                        } else {
-                            $periodLabel = $newPeriod->getPrettyString();
-                        }
-                        $tables->addTable($newTable, $periodLabel);
-                        // compare with the empty table
-                        $compareTable = !empty($compareTablesArray[$i]) ? $compareTablesArray[$i] : null;
-                        $this->compareTables($compareMetadata, $newTable, $compareTable);
-                    }
-                }
-            } else {
-                throw new \Exception("Unexpected DataTable type: " . get_class($tables));
+        } elseif ($tables instanceof DataTable\Map) {
+            $childTablesArray = array_values($tables->getDataTables());
+            $compareTablesArray = $compareTables instanceof DataTable\Map ? array_values($compareTables->getDataTables()) : [];
+            $isDatePeriod = $tables->getKeyName() == 'date';
+            foreach ($childTablesArray as $index => $childTable) {
+                $compareChildTable = !empty($compareTablesArray[$index]) ? $compareTablesArray[$index] : null;
+                $this->compareTables($compareMetadata, $childTable, $compareChildTable);
             }
+            // in case one of the compared periods has more periods than the main one, we want to fill the result with empty datatables
+            // so the comparison data is still present. this allows us to see that data in an evolution report.
+            if ($isDatePeriod) {
+                $lastTable = end($childTablesArray);
+                /** @var Period $lastPeriod */
+                $lastPeriod = $lastTable->getMetadata('period');
+                $periodType = $lastPeriod->getLabel();
+                for ($i = count($childTablesArray); $i < count($compareTablesArray); ++$i) {
+                    $periodChangeCount = $i - count($childTablesArray) + 1;
+                    $newPeriod = Period\Factory::build($periodType, $lastPeriod->getDateStart()->addPeriod($periodChangeCount, $periodType));
+                    // create an empty table for the main request
+                    $newTable = new DataTable();
+                    $newTable->setAllTableMetadata($lastTable->getAllTableMetadata());
+                    $newTable->setMetadata('period', $newPeriod);
+                    if ($newPeriod->getLabel() === 'week' || $newPeriod->getLabel() === 'range') {
+                        $periodLabel = $newPeriod->getRangeString();
+                    } else {
+                        $periodLabel = $newPeriod->getPrettyString();
+                    }
+                    $tables->addTable($newTable, $periodLabel);
+                    // compare with the empty table
+                    $compareTable = !empty($compareTablesArray[$i]) ? $compareTablesArray[$i] : null;
+                    $this->compareTables($compareMetadata, $newTable, $compareTable);
+                }
+            }
+        } else {
+            throw new \Exception("Unexpected DataTable type: " . get_class($tables));
         }
     }
     private function compareTable($compareMetadata, DataTable $table, DataTable $rootCompareTable = null, DataTable $compareTable = null)
@@ -88,10 +86,8 @@ class ComparisonRowGenerator
             $compareRow = null;
             if ($compareTable instanceof Simple) {
                 $compareRow = $compareTable->getFirstRow() ?: null;
-            } else {
-                if ($compareTable instanceof DataTable) {
-                    $compareRow = $compareTable->getRowFromLabel($label) ?: null;
-                }
+            } elseif ($compareTable instanceof DataTable) {
+                $compareRow = $compareTable->getRowFromLabel($label) ?: null;
             }
             $this->compareRow($table, $compareMetadata, $row, $compareRow, $rootCompareTable);
         }
@@ -152,11 +148,9 @@ class ComparisonRowGenerator
                 $newSegment = Segment::combine($newRow->getMetadata('compareSegment'), SegmentExpression::AND_DELIMITER, $newSegment);
             }
             $newRow->setMetadata('segment', $newSegment);
-        } else {
-            if ($this->segmentNameForReport && $row->getMetadata('segmentValue') !== false) {
-                $segmentValue = $row->getMetadata('segmentValue');
-                $newRow->setMetadata('segment', sprintf('%s==%s', $this->segmentNameForReport, urlencode($segmentValue)));
-            }
+        } elseif ($this->segmentNameForReport && $row->getMetadata('segmentValue') !== false) {
+            $segmentValue = $row->getMetadata('segmentValue');
+            $newRow->setMetadata('segment', sprintf('%s==%s', $this->segmentNameForReport, urlencode($segmentValue)));
         }
         $comparisonDataTable->addRow($newRow);
         // recurse on subtable if there

@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\ArchiveProcessor;
 
@@ -219,7 +218,7 @@ class PluginsArchiver
         if ($this->params->shouldOnlyArchiveRequestedPlugin()) {
             return false;
         }
-        if (\Piwik\ArchiveProcessor\Rules::shouldProcessReportsAllPlugins(array($this->params->getSite()->getId()), $this->params->getSegment(), $this->params->getPeriod()->getLabel())) {
+        if (\Piwik\ArchiveProcessor\Rules::shouldProcessReportsAllPlugins([$this->params->getSite()->getId()], $this->params->getSegment(), $this->params->getPeriod()->getLabel())) {
             return true;
         }
         if ($this->params->getRequestedPlugin() && !\Piwik\Plugin\Manager::getInstance()->isPluginLoaded($this->params->getRequestedPlugin())) {

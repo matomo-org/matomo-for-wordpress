@@ -23,6 +23,6 @@ final class InlinePrint extends AbstractExpression
     }
     public function compile(Compiler $compiler) : void
     {
-        $compiler->raw('print (')->subcompile($this->getNode('node'))->raw(')');
+        $compiler->raw('yield ')->subcompile($this->getNode('node'));
     }
 }

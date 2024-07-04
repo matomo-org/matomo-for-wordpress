@@ -3,8 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Metrics;
 
@@ -25,7 +25,7 @@ use Piwik\Tracker\GoalManager;
  */
 class Formatter
 {
-    const PROCESSED_METRICS_FORMATTED_FLAG = 'processed_metrics_formatted';
+    public const PROCESSED_METRICS_FORMATTED_FLAG = 'processed_metrics_formatted';
     /**
      * Returns a prettified string representation of a number. The result will have
      * thousands separators and a decimal point specific to the current locale, eg,

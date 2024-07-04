@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Ecommerce\Reports;
 
@@ -75,13 +74,11 @@ abstract class BaseItem extends \Piwik\Plugins\Ecommerce\Reports\Base
         if ($viewDataTable == 'ecommerceOrder') {
             $view->config->custom_parameters['viewDataTable'] = 'table';
             $abandonedCart = false;
+        } elseif ($viewDataTable == 'ecommerceAbandonedCart') {
+            $view->config->custom_parameters['viewDataTable'] = 'table';
+            $abandonedCart = true;
         } else {
-            if ($viewDataTable == 'ecommerceAbandonedCart') {
-                $view->config->custom_parameters['viewDataTable'] = 'table';
-                $abandonedCart = true;
-            } else {
-                $abandonedCart = $this->isAbandonedCart($fetchIfNotSet = true);
-            }
+            $abandonedCart = $this->isAbandonedCart($fetchIfNotSet = true);
         }
         if ($abandonedCart) {
             $columns['abandoned_carts'] = Piwik::translate('General_AbandonedCarts');

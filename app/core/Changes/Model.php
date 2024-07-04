@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Changes;
 
@@ -26,9 +25,9 @@ use Piwik\Plugin\Manager as PluginManager;
  */
 class Model
 {
-    const NO_CHANGES_EXIST = 0;
-    const CHANGES_EXIST = 1;
-    const NEW_CHANGES_EXIST = 2;
+    public const NO_CHANGES_EXIST = 0;
+    public const CHANGES_EXIST = 1;
+    public const NEW_CHANGES_EXIST = 2;
     /**
      * @var Db\AdapterInterface
      */
@@ -129,12 +128,10 @@ class Model
         }
         if ($all === 0) {
             return self::NO_CHANGES_EXIST;
+        } elseif ($all > 0 && $new === 0) {
+            return self::CHANGES_EXIST;
         } else {
-            if ($all > 0 && $new === 0) {
-                return self::CHANGES_EXIST;
-            } else {
-                return self::NEW_CHANGES_EXIST;
-            }
+            return self::NEW_CHANGES_EXIST;
         }
     }
     /**
@@ -156,7 +153,7 @@ class Model
         return $new;
     }
     /**
-     * Return an array of change items from the changes table
+     * Return an array of change items for the last 6 months from the changes table
      *
      * @return array
      * @throws DbException
@@ -166,30 +163,19 @@ class Model
         if ($this->changeItems !== null) {
             return $this->changeItems;
         }
-        $showAtLeast = 10;
-        // Always show at least this number of changes
-        $expireOlderThanDays = 90;
-        // Don't show changes that were added to the table more than x days ago
         $table = Common::prefixTable('changes');
-        $selectSql = "SELECT * FROM " . $table . " WHERE title IS NOT NULL ORDER BY idchange DESC";
+        $selectSql = "SELECT * FROM " . $table . " WHERE title IS NOT NULL AND created_time > ? ORDER BY idchange DESC";
         try {
-            $changes = $this->db->fetchAll($selectSql);
+            $changes = $this->db->fetchAll($selectSql, [Date::now()->subMonth(6)]);
         } catch (\Exception $e) {
             if (Db::get()->isErrNo($e, Migration\Db::ERROR_CODE_TABLE_NOT_EXISTS)) {
                 return [];
             }
             throw $e;
         }
-        // Remove expired changes, only if there are at more than the minimum changes
-        $cutOffDate = Date::now()->subDay($expireOlderThanDays);
-        foreach ($changes as $k => $change) {
-            if (isset($change['idchange'])) {
-                $changes[$k]['idchange'] = (int) $change['idchange'];
-            }
-            if (count($changes) > $showAtLeast && $change['created_time'] < $cutOffDate) {
-                unset($changes[$k]);
-            }
-        }
+        array_walk($changes, function (&$change) {
+            $change['idchange'] = (int) $change['idchange'];
+        });
         /**
          * Event triggered before changes are displayed
          *

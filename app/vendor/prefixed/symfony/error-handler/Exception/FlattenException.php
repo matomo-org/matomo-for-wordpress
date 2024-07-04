@@ -49,14 +49,14 @@ class FlattenException
     /**
      * @return static
      */
-    public static function create(\Exception $exception, int $statusCode = null, array $headers = []) : self
+    public static function create(\Exception $exception, ?int $statusCode = null, array $headers = []) : self
     {
         return static::createFromThrowable($exception, $statusCode, $headers);
     }
     /**
      * @return static
      */
-    public static function createFromThrowable(\Throwable $exception, int $statusCode = null, array $headers = []) : self
+    public static function createFromThrowable(\Throwable $exception, ?int $statusCode = null, array $headers = []) : self
     {
         $e = new static();
         $e->setMessage($exception->getMessage());

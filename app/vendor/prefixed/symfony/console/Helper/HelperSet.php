@@ -33,7 +33,7 @@ class HelperSet implements \IteratorAggregate
             $this->set($helper, \is_int($alias) ? null : $alias);
         }
     }
-    public function set(HelperInterface $helper, string $alias = null)
+    public function set(HelperInterface $helper, ?string $alias = null)
     {
         $this->helpers[$helper->getName()] = $helper;
         if (null !== $alias) {
@@ -67,7 +67,7 @@ class HelperSet implements \IteratorAggregate
     /**
      * @deprecated since Symfony 5.4
      */
-    public function setCommand(Command $command = null)
+    public function setCommand(?Command $command = null)
     {
         trigger_deprecation('symfony/console', '5.4', 'Method "%s()" is deprecated.', __METHOD__);
         $this->command = $command;

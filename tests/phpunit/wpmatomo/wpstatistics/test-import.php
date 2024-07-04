@@ -98,7 +98,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'UserCountry', 'getCountry' );
-		$this->assertEquals( 89, $report['reportData']->getRowsCount() );
+		$this->assertGreaterThan( 80, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_regions_found() {

@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\GeoIp2\LocationProvider\GeoIp2;
 
@@ -29,8 +28,8 @@ use Piwik\View;
  */
 class Php extends GeoIp2
 {
-    const ID = 'geoip2php';
-    const TITLE = 'DBIP / GeoIP 2 (Php)';
+    public const ID = 'geoip2php';
+    public const TITLE = 'DBIP / GeoIP 2 (Php)';
     /**
      * The GeoIP2 reader instances used. This array will contain at most two
      * of them: one for location info and one for ISP info
@@ -293,8 +292,8 @@ class Php extends GeoIp2
         }
         // try converting umlauts to closted ascii char if iconv is available
         if (function_exists('iconv')) {
-            $str1 = iconv('UTF-8', 'ASCII//TRANSLIT', $str1);
-            $str2 = iconv('UTF-8', 'ASCII//TRANSLIT', $str2);
+            $str1 = @iconv('UTF-8', 'ASCII//TRANSLIT', $str1) ?: $str1;
+            $str2 = @iconv('UTF-8', 'ASCII//TRANSLIT', $str2) ?: $str2;
         }
         return strtolower($str1) === strtolower($str2);
     }

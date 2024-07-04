@@ -10,15 +10,17 @@
  */
 namespace Matomo\Dependencies\Twig\Node;
 
+use Matomo\Dependencies\Twig\Attribute\YieldReady;
 use Matomo\Dependencies\Twig\Compiler;
 /**
  * Represents a sandbox node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class SandboxNode extends Node
 {
-    public function __construct(Node $body, int $lineno, string $tag = null)
+    public function __construct(Node $body, int $lineno, ?string $tag = null)
     {
         parent::__construct(['body' => $body], [], $lineno, $tag);
     }

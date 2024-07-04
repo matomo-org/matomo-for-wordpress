@@ -10,6 +10,7 @@
  */
 namespace Matomo\Dependencies\Twig\Node;
 
+use Matomo\Dependencies\Twig\Attribute\YieldReady;
 use Matomo\Dependencies\Twig\Compiler;
 use Matomo\Dependencies\Twig\Node\Expression\AbstractExpression;
 use Matomo\Dependencies\Twig\Node\Expression\NameExpression;
@@ -18,9 +19,10 @@ use Matomo\Dependencies\Twig\Node\Expression\NameExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class ImportNode extends Node
 {
-    public function __construct(AbstractExpression $expr, AbstractExpression $var, int $lineno, string $tag = null, bool $global = true)
+    public function __construct(AbstractExpression $expr, AbstractExpression $var, int $lineno, ?string $tag = null, bool $global = true)
     {
         parent::__construct(['expr' => $expr, 'var' => $var], ['global' => $global], $lineno, $tag);
     }

@@ -11,15 +11,17 @@
  */
 namespace Matomo\Dependencies\Twig\Node;
 
+use Matomo\Dependencies\Twig\Attribute\YieldReady;
 use Matomo\Dependencies\Twig\Compiler;
 /**
  * Represents an if node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class IfNode extends Node
 {
-    public function __construct(Node $tests, ?Node $else, int $lineno, string $tag = null)
+    public function __construct(Node $tests, ?Node $else, int $lineno, ?string $tag = null)
     {
         $nodes = ['tests' => $tests];
         if (null !== $else) {
@@ -36,10 +38,10 @@ class IfNode extends Node
             } else {
                 $compiler->write('if (');
             }
-            $compiler->subcompile($this->getNode('tests')->getNode($i))->raw(") {\n")->indent();
+            $compiler->subcompile($this->getNode('tests')->getNode((string) $i))->raw(") {\n")->indent();
             // The node might not exists if the content is empty
-            if ($this->getNode('tests')->hasNode($i + 1)) {
-                $compiler->subcompile($this->getNode('tests')->getNode($i + 1));
+            if ($this->getNode('tests')->hasNode((string) ($i + 1))) {
+                $compiler->subcompile($this->getNode('tests')->getNode((string) ($i + 1)));
             }
         }
         if ($this->hasNode('else')) {

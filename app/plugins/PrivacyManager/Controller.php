@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\PrivacyManager;
 
@@ -33,9 +32,9 @@ use Piwik\View;
  */
 class Controller extends \Piwik\Plugin\ControllerAdmin
 {
-    const OPTION_LAST_DELETE_PIWIK_LOGS = "lastDelete_piwik_logs";
-    const ACTIVATE_DNT_NONCE = 'PrivacyManager.activateDnt';
-    const DEACTIVATE_DNT_NONCE = 'PrivacyManager.deactivateDnt';
+    public const OPTION_LAST_DELETE_PIWIK_LOGS = "lastDelete_piwik_logs";
+    public const ACTIVATE_DNT_NONCE = 'PrivacyManager.activateDnt';
+    public const DEACTIVATE_DNT_NONCE = 'PrivacyManager.deactivateDnt';
     /**
      * @var ReferrerAnonymizer
      */

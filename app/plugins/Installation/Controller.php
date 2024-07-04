@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Installation;
 
@@ -64,7 +63,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      *
      * @return string function name
      */
-    function getDefaultAction()
+    public function getDefaultAction()
     {
         $steps = array_keys($this->steps);
         return $steps[0];
@@ -76,7 +75,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      *
      * @param string $possibleErrorMessage Possible error message which may be set in the frontcontroller when event. Config.badConfigurationFile was triggered
      */
-    function welcome($possibleErrorMessage = null)
+    public function welcome($possibleErrorMessage = null)
     {
         // Delete merged js/css files to force regenerations based on updated activated plugin list
         Filesystem::deleteAllCacheOnUpdate();
@@ -88,7 +87,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     /**
      * Installation Step 2: System Check
      */
-    function systemCheck()
+    public function systemCheck()
     {
         $this->checkPiwikIsNotInstalled();
         $this->deleteConfigFileIfNeeded();
@@ -108,7 +107,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      * Installation Step 3: Database Set-up
      * @throws Exception|Zend_Db_Adapter_Exception
      */
-    function databaseSetup()
+    public function databaseSetup()
     {
         $this->checkPiwikIsNotInstalled();
         $view = new \Piwik\Plugins\Installation\View('@Installation/databaseSetup', $this->getInstallationSteps(), __FUNCTION__);
@@ -131,7 +130,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     /**
      * Installation Step 4: Table Creation
      */
-    function tablesCreation()
+    public function tablesCreation()
     {
         $this->checkPiwikIsNotInstalled();
         $view = new \Piwik\Plugins\Installation\View('@Installation/tablesCreation', $this->getInstallationSteps(), __FUNCTION__);
@@ -164,7 +163,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
         return $view->render();
     }
-    function reuseTables()
+    public function reuseTables()
     {
         $this->checkPiwikIsNotInstalled();
         $steps = $this->getInstallationSteps();
@@ -187,7 +186,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     /**
      * Installation Step 5: General Set-up (superuser login/password/email and subscriptions)
      */
-    function setupSuperUser()
+    public function setupSuperUser()
     {
         $this->checkPiwikIsNotInstalled();
         $superUserAlreadyExists = Access::doAsSuperUser(function () {

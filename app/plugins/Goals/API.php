@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Goals;
 
@@ -55,7 +54,7 @@ use Piwik\Validators\WhitelistedValue;
  */
 class API extends \Piwik\Plugin\API
 {
-    const AVG_PRICE_VIEWED = 'avg_price_viewed';
+    public const AVG_PRICE_VIEWED = 'avg_price_viewed';
     /**
      * Return a single goal.
      *
@@ -364,12 +363,10 @@ class API extends \Piwik\Plugin\API
     {
         if ($idGoal == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER) {
             return GoalManager::IDGOAL_ORDER;
+        } elseif ($idGoal == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART) {
+            return GoalManager::IDGOAL_CART;
         } else {
-            if ($idGoal == Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART) {
-                return GoalManager::IDGOAL_CART;
-            } else {
-                return $idGoal;
-            }
+            return $idGoal;
         }
     }
     /**

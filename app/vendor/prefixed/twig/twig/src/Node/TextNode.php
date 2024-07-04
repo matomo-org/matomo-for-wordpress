@@ -11,12 +11,14 @@
  */
 namespace Matomo\Dependencies\Twig\Node;
 
+use Matomo\Dependencies\Twig\Attribute\YieldReady;
 use Matomo\Dependencies\Twig\Compiler;
 /**
  * Represents a text node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class TextNode extends Node implements NodeOutputInterface
 {
     public function __construct(string $data, int $lineno)
@@ -25,6 +27,7 @@ class TextNode extends Node implements NodeOutputInterface
     }
     public function compile(Compiler $compiler) : void
     {
-        $compiler->addDebugInfo($this)->write('echo ')->string($this->getAttribute('data'))->raw(";\n");
+        $compiler->addDebugInfo($this);
+        $compiler->write('yield ')->string($this->getAttribute('data'))->raw(";\n");
     }
 }

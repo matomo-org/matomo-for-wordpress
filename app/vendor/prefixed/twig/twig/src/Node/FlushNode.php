@@ -10,12 +10,14 @@
  */
 namespace Matomo\Dependencies\Twig\Node;
 
+use Matomo\Dependencies\Twig\Attribute\YieldReady;
 use Matomo\Dependencies\Twig\Compiler;
 /**
  * Represents a flush node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+#[YieldReady]
 class FlushNode extends Node
 {
     public function __construct(int $lineno, string $tag)

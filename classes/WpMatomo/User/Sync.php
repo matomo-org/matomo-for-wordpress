@@ -326,6 +326,17 @@ class Sync {
 			// note: it's also possible there are multiple users with the same email address,
 			// but this is currently unsupported in matomo so we don't take that into consideration.
 			if ( $user_by_email ) {
+				$this->logger->log_exception(
+					'user_sync',
+					new \Exception(
+						'Syncing user with email identical to a user already synced in Matomo. ' .
+						'This means there are multiple WP users with the same email, which Matomo ' .
+						'does not support, or something has deleted the WP option mapping WP user ' .
+						'to Matomo user. Assuming this is a new user to sync and deleting existing user ' .
+						'preferences and options.'
+					)
+				);
+
 				$user_model->deleteUser( $user_by_email['login'] );
 			}
 

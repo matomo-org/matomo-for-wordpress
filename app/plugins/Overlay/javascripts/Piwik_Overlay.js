@@ -1,8 +1,8 @@
 /*!
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
 var Piwik_Overlay = (function () {
@@ -11,7 +11,7 @@ var Piwik_Overlay = (function () {
     var ORIGIN_PARSE_REGEX = /^https?:\/\/[^\/]*/;
     var ALLOWED_API_REQUEST_WHITELIST = [
         'Overlay.getTranslations',
-        'Overlay.getExcludedQueryParameters',
+        'SitesManager.getExcludedQueryParameters',
         'Overlay.getFollowingPages',
     ];
 

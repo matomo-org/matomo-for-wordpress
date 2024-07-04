@@ -28,7 +28,7 @@ class StreamedResponse extends Response
     protected $callback;
     protected $streamed;
     private $headersSent;
-    public function __construct(callable $callback = null, int $status = 200, array $headers = [])
+    public function __construct(?callable $callback = null, int $status = 200, array $headers = [])
     {
         parent::__construct(null, $status, $headers);
         if (null !== $callback) {

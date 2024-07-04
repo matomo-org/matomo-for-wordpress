@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\Tour\Engagement;
 
@@ -20,8 +19,8 @@ use Piwik\Settings\Storage\Backend\PluginSettingsTable;
  */
 abstract class Challenge
 {
-    const APPENDIX_SKIPPED = '_skipped';
-    const APPENDIX_COMPLETED = '_completed';
+    public const APPENDIX_SKIPPED = '_skipped';
+    public const APPENDIX_COMPLETED = '_completed';
     private static $settings = [];
     public function __construct()
     {

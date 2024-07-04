@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\CoreHome\DataTableRowAction;
 
@@ -241,14 +240,12 @@ class RowEvolution
                 if (substr($change, 0, 1) == '+') {
                     $changeClass = $lowerIsBetter ? 'bad' : 'good';
                     $changeImage = $lowerIsBetter ? 'arrow_up_red' : 'arrow_up';
+                } elseif (substr($change, 0, 1) == '-') {
+                    $changeClass = $lowerIsBetter ? 'good' : 'bad';
+                    $changeImage = $lowerIsBetter ? 'arrow_down_green' : 'arrow_down';
                 } else {
-                    if (substr($change, 0, 1) == '-') {
-                        $changeClass = $lowerIsBetter ? 'good' : 'bad';
-                        $changeImage = $lowerIsBetter ? 'arrow_down_green' : 'arrow_down';
-                    } else {
-                        $changeClass = 'neutral';
-                        $changeImage = false;
-                    }
+                    $changeClass = 'neutral';
+                    $changeImage = false;
                 }
                 $change = '<span class="' . $changeClass . '">' . ($changeImage ? '<img src="plugins/MultiSites/images/' . $changeImage . '.png" /> ' : '') . $change . '</span>';
                 $details .= ', ' . Piwik::translate('RowEvolution_MetricChangeText', $change);

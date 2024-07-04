@@ -3,9 +3,8 @@
 /**
  * Matomo - free/libre analytics platform
  *
- * @link https://matomo.org
- * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
+ * @link    https://matomo.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 namespace Piwik\Plugins\ImageGraph;
 
@@ -33,7 +32,7 @@ class ImageGraph extends \Piwik\Plugin
         return $hooks;
     }
     // Number of periods to plot on an evolution graph
-    const GRAPH_EVOLUTION_LAST_PERIODS = 30;
+    public const GRAPH_EVOLUTION_LAST_PERIODS = 30;
     /**
      * @param array $reports
      * @param array $info
@@ -67,21 +66,19 @@ class ImageGraph extends \Piwik\Plugin
                 // for period=range, show the configured sub-periods
                 $periodForMultiplePeriodGraph = Config::getInstance()->General['graphs_default_period_to_plot_when_period_range'];
                 $dateForMultiplePeriodGraph = $dateForSinglePeriodGraph;
+            } elseif ($info['period'] == 'day' || !Config::getInstance()->General['graphs_show_evolution_within_selected_period']) {
+                // for period=day, always show the last n days
+                // if graphs_show_evolution_within_selected_period=false, show the last n periods
+                $periodForMultiplePeriodGraph = $periodForSinglePeriodGraph;
+                $dateForMultiplePeriodGraph = Range::getRelativeToEndDate($periodForSinglePeriodGraph, 'last' . self::getDefaultGraphEvolutionLastPeriods(), $dateForSinglePeriodGraph, $piwikSite);
             } else {
-                if ($info['period'] == 'day' || !Config::getInstance()->General['graphs_show_evolution_within_selected_period']) {
-                    // for period=day, always show the last n days
-                    // if graphs_show_evolution_within_selected_period=false, show the last n periods
-                    $periodForMultiplePeriodGraph = $periodForSinglePeriodGraph;
-                    $dateForMultiplePeriodGraph = Range::getRelativeToEndDate($periodForSinglePeriodGraph, 'last' . self::getDefaultGraphEvolutionLastPeriods(), $dateForSinglePeriodGraph, $piwikSite);
-                } else {
-                    // if graphs_show_evolution_within_selected_period=true, show the days within the period
-                    // (except if the period is day, see above)
-                    $periodForMultiplePeriodGraph = 'day';
-                    $period = PeriodFactory::build($info['period'], $info['date']);
-                    $start = $period->getDateStart()->toString();
-                    $end = $period->getDateEnd()->toString();
-                    $dateForMultiplePeriodGraph = $start . ',' . $end;
-                }
+                // if graphs_show_evolution_within_selected_period=true, show the days within the period
+                // (except if the period is day, see above)
+                $periodForMultiplePeriodGraph = 'day';
+                $period = PeriodFactory::build($info['period'], $info['date']);
+                $start = $period->getDateStart()->toString();
+                $end = $period->getDateEnd()->toString();
+                $dateForMultiplePeriodGraph = $start . ',' . $end;
             }
         }
         $token_auth = Common::getRequestVar('token_auth', false);
