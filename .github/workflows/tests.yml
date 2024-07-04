@@ -114,6 +114,7 @@ jobs:
           RESET_DATABASE=1
           WORDPRESS_VERSION=$WORDPRESS_VERSION
           UID=$UID
+          WP_DEBUG=true
           EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
@@ -207,6 +208,7 @@ jobs:
           WORDPRESS_VERSION=$WORDPRESS_VERSION
           UID=$UID
           WITHOUT_MARKETPLACE=1
+          WP_DEBUG=true
           EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
