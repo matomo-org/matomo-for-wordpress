@@ -29,6 +29,11 @@ echo
 
 echo "<?php # /var/www/html/$WORDPRESS_FOLDER/wp-load.php" > /var/www/html/matomo.wpload_dir.php || true
 
+if [[ "$1" = "bash" ]]; then
+  "$@"
+  exit $?
+fi
+
 if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
   exit $?

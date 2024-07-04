@@ -119,6 +119,12 @@ Enter `pass` for the password.
 
 (For mysql, replace instances of "mariadb" in the command with "mysql".)
 
+**Starting a shell in the container**
+
+```bash
+npm run compose -- run wordpress bash
+```
+
 #### Updating the Matomo core version
 
 Matomo for WordPress embeds the self-hosted Matomo in the `app/` subdirectory. To update the version that is used,
