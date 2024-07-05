@@ -41,7 +41,21 @@ if ( empty( $show_this_page ) ) {
 	}
 	?>
 
+	<p>
+	<?php require 'info_matomo_desc.php'; ?>
+	</p>
+
+	<hr/>
+
+	<!-- TODO: translate when text is finalized -->
+	<h1 style="font-size:1.4em">
+		To start tracking data and getting relevant reports and insights, complete these steps:
+	</h1>
+
 	<h2>1. <?php esc_html_e( 'Update your privacy page', 'matomo' ); ?></h2>
+
+	<p>Before tracking data, it's important to think about how you will respect the privacy of your users, and how you will
+	ensure compliance with any relevant privacy guidelines, like the GDPR or ePrivacy Directive.</p>
 
 	<p>
 	<?php echo sprintf( esc_html__( 'Give your users the chance to opt-out of tracking by either adding the shortcode %1$s or by adding the "Matomo opt out" block to your privacy page.', 'matomo' ), '<code>[matomo_opt_out]</code>' ); ?>
@@ -65,6 +79,8 @@ if ( empty( $show_this_page ) ) {
 	<?php } else { ?>
 		<h2>2. <?php esc_html_e( 'Enable tracking', 'matomo' ); ?></h2>
 
+		<p>Enable tracking with the default configuration below.</p>
+
 		<form method="post"> <?php wp_nonce_field( GetStarted::NONCE_NAME ); ?>
 			<input type="hidden" name="<?php echo esc_attr( GetStarted::FORM_NAME ); ?>[track_mode]"
 				   value="<?php echo esc_attr( TrackingSettings::TRACK_MODE_DEFAULT ); ?>">
@@ -73,12 +89,15 @@ if ( empty( $show_this_page ) ) {
 	<?php } ?>
 
 	<h2>3. <?php esc_html_e( 'Done', 'matomo' ); ?></h2>
+
+	<p>Once data is tracked, your reports will soon appear!</p>
+
 	<form method="post">
 		<?php wp_nonce_field( GetStarted::NONCE_NAME ); ?>
 		<input type="hidden" name="<?php echo esc_attr( GetStarted::FORM_NAME ); ?>[show_get_started_page]"
 			   value="no">
 		<input type="submit" class="button-primary"
-			   value="<?php esc_html_e( 'Don\'t show this page anymore', 'matomo' ); ?>">
+			   value="<?php esc_html_e( 'Hide this page', 'matomo' ); ?>">
 	</form>
 	<p>
 		<br/>
