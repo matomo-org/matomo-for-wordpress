@@ -32,8 +32,12 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	 */
 	private $settings;
 
+	public $geoip_update_call_count = 0;
+
 	public function setUp(): void {
 		parent::setUp();
+
+		$this->geoip_update_call_count = 0;
 
 		$this->settings = new Settings();
 		$this->tasks    = new ScheduledTasks( $this->settings );
@@ -119,7 +123,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	}
 
 	/**
-	 * @provideContainerConfig getContainerConfigForGeoIpFail
+	 * @provideContainerConfig get_container_config_for_geoip_fail
 	 */
 	public function test_geoip_update_reschedules_to_tomorrow_on_failure() {
 		// remove event scheduled during install
@@ -147,7 +151,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	}
 
 	/**
-	 * @provideContainerConfig getContainerConfigForGeoIpFail
+	 * @provideContainerConfig get_container_config_for_geoip_fail
 	 */
 	public function test_geoip_update_does_not_reschedule_if_already_scheduled_within_two_days() {
 		// remove event scheduled during install
@@ -172,13 +176,58 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 		$this->assertEquals( [ 'update_geoip2' ], array_keys( $task_failures ) );
 	}
 
-	public function getContainerConfigForGeoIpFail() {
+	/**
+	 * @provideContainerConfig get_container_config_for_geoip_no_op
+	 */
+	public function test_geoip_only_runs_on_multisite_if_site_is_not_main_site() {
+		if ( ! is_multisite() ) {
+			return;
+		}
+
+		$main_site = get_current_blog_id();
+		$this->assertNotEmpty( $main_site );
+
+		$this->tasks->update_geo_ip2_db();
+		$this->assertEquals( 1, $this->geoip_update_call_count );
+
+		$blogid1 = self::factory()->blog->create();
+		switch_to_blog( $blogid1 );
+
+		$this->tasks->update_geo_ip2_db();
+		$this->assertEquals( 1, $this->geoip_update_call_count );
+
+		switch_to_blog( $main_site );
+
+		$this->tasks->update_geo_ip2_db();
+		$this->assertEquals( 2, $this->geoip_update_call_count );
+	}
+
+	public function get_container_config_for_geoip_fail() {
 		return [
 			\Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::class => function () {
 				// phpcs:ignore WordPress.Classes.ClassInstantiation.MissingParenthesis
 				return new class extends \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater {
 					public function update() {
 						throw new \Exception( 'forced error' );
+					}
+				};
+			},
+		];
+	}
+
+	public function get_container_config_for_geoip_no_op() {
+		return [
+			\Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater::class => function () {
+				// phpcs:ignore WordPress.Classes.ClassInstantiation.MissingParenthesis
+				return new class($this) extends \Piwik\Plugins\GeoIp2\GeoIP2AutoUpdater {
+					private $test;
+
+					public function __construct( ScheduledTasksTest $test ) {
+						$this->test = $test;
+					}
+
+					public function update() {
+						$this->test->geoip_update_call_count += 1;
 					}
 				};
 			},
