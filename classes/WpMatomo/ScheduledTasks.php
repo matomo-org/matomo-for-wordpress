@@ -228,6 +228,10 @@ class ScheduledTasks {
 	}
 
 	public function update_geo_ip2_db() {
+		if ( is_multisite() && ! is_main_site() ) {
+			return; // only run this task once per entire WP install
+		}
+
 		$this->remove_task_errors( [ 'update_geoip2' ] );
 
 		$this->logger->log( 'Scheduled tasks update geoip database' );
