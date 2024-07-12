@@ -460,16 +460,8 @@ class ScheduledTasks {
 		add_action(
 			'admin_enqueue_scripts',
 			function () {
-				wp_enqueue_script(
-					'matomo-scheduled-task-errors',
-					plugins_url( '/assets/js/scheduled_task_errors.js', MATOMO_ANALYTICS_FILE ),
-					[ 'jquery' ],
-					'1.0.0',
-					true
-				);
-
 				wp_localize_script(
-					'matomo-scheduled-task-errors',
+					'matomo-admin-js',
 					'mtmScheduledTaskErrorAjax',
 					[
 						'ajax_url' => admin_url( 'admin-ajax.php' ),
