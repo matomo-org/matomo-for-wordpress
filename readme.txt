@@ -2,8 +2,8 @@
 Contributors: matomoteam
 Tags: matomo,analytics,statistics,stats,ecommerce
 Requires at least: 4.8
-Tested up to: 6.5.4
-Stable tag: 5.1.0
+Tested up to: 6.5.5
+Stable tag: 5.1.1
 Requires PHP: 7.2.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -14,11 +14,9 @@ Privacy friendly, GDPR compliant and self-hosted, Matomo is the #1 Google Analyt
 
 _Already a Matomo On-Premise or Matomo Cloud user? You need to use the [Connect Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead of this plugin._
 
-**New in Matomo 5.0:**
+**New in Matomo 5.1.1:**
 
-* Improved compatibility with other WordPress plugins.
-* Important security fixes.
-* Many other bug fixes and performance improvements.
+* A very minor security patch in the functionality that hides a Matomo for WordPress notification.
 
 For all you WordPress website owners wanting an easier way to get customer insights to grow your business, you can now get the solution the professionals use, for free!
 

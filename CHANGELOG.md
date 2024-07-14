@@ -1,5 +1,12 @@
 == Changelog ===
 
+= 5.1.1 =
+* Bug fix: in multisite installs, make sure the geoip database update only runs once for the entire WordPress instance.
+* Bug fix: system report error notice should only be shown to superusers.
+* Bug fix: patch Matomo core to fix an iconv() notice that can occur during geolocation.
+* Allow re-running updates from a specific version in troubleshooting page to help when WordPress fails to update the plugin completely.
+* Very minor security fix: functionality that hides notifications for users is no longer able to be used in replay attacks.
+
 = 5.1.0 =
 * Upgrade Matomo core to version 5.1.0 (changes: https://matomo.org/changelog/matomo-5-1-0/).
 * Bug fix: sending emails with attachments failed on WordPress 5.
