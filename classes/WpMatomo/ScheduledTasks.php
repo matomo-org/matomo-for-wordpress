@@ -76,7 +76,13 @@ class ScheduledTasks {
 
 		foreach ( $this->get_all_events() as $event_name => $event_config ) {
 			if ( $looks_installed && wp_next_scheduled( $event_name ) === false ) {
-				wp_schedule_event( time(), $event_config['interval'], $event_name );
+				$this->logger->log( "scheduling $event_name for immediate execution, then repeating on the {$event_config['interval']} schedule" );
+
+				/** @var \WP_Error $error */
+				$error = wp_schedule_event( time(), $event_config['interval'], $event_name, [], true );
+				if ( is_wp_error( $error ) ) {
+					$this->logger->log_exception( 'scheduled_tasks', new \Exception( "scheduling $event_name failed: " . $error->get_error_message() ) );
+				}
 			}
 
 			// logging last execution start time
@@ -222,6 +228,10 @@ class ScheduledTasks {
 	}
 
 	public function update_geo_ip2_db() {
+		if ( is_multisite() && ! is_main_site() ) {
+			return; // only run this task once per entire WP install
+		}
+
 		$this->remove_task_errors( [ 'update_geoip2' ] );
 
 		$this->logger->log( 'Scheduled tasks update geoip database' );
@@ -450,16 +460,8 @@ class ScheduledTasks {
 		add_action(
 			'admin_enqueue_scripts',
 			function () {
-				wp_enqueue_script(
-					'matomo-scheduled-task-errors',
-					plugins_url( '/assets/js/scheduled_task_errors.js', MATOMO_ANALYTICS_FILE ),
-					[ 'jquery' ],
-					'1.0.0',
-					true
-				);
-
 				wp_localize_script(
-					'matomo-scheduled-task-errors',
+					'matomo-admin-js',
 					'mtmScheduledTaskErrorAjax',
 					[
 						'ajax_url' => admin_url( 'admin-ajax.php' ),

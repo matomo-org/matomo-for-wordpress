@@ -197,9 +197,28 @@ class SystemReport {
 					$sync->sync_current_site();
 				}
 				if ( ! empty( $_POST[ self::TROUBLESHOOT_RUN_UPDATER ] ) ) {
-					Updater::unlock();
-					$sync = new Updater( $this->settings );
-					$sync->update();
+					$update_from_version = ! empty( $_POST['matomo_troubleshooting_update_from'] )
+						? sanitize_text_field( wp_unslash( $_POST['matomo_troubleshooting_update_from'] ) )
+						: null;
+					$update_from_version = trim( $update_from_version );
+
+					if ( ! empty( $update_from_version )
+						&& ! preg_match( '/^\d+(?:.\d+)*$/', $update_from_version )
+					) {
+						echo '<div class="error"><p>' . esc_html__( 'Matomo Update Error', 'matomo' )
+							. ': unrecognized version string "' . esc_html( $update_from_version )
+							. '", ignoring.</p></div>';
+
+						$update_from_version = '';
+					}
+
+					try {
+						Updater::unlock();
+						$sync = new Updater( $this->settings );
+						$sync->update( $update_from_version );
+					} catch ( \Exception $e ) {
+						echo '<div class="error"><p>' . esc_html__( 'Matomo Update Error', 'matomo' ) . ': ' . esc_html( matomo_anonymize_value( $e->getMessage() . ' =>' . $this->logger->get_readable_trace( $e ) ) ) . '</p></div>';
+					}
 				}
 			}
 			if ( $this->settings->is_network_enabled() ) {
@@ -264,12 +283,12 @@ class SystemReport {
 
 	public function errors_present() {
 		$cache_key   = 'matomo_system_report_has_errors';
-		$cache_value = get_transient( $cache_key );
+		$cache_value = get_site_transient( $cache_key );
 
 		if ( false === $cache_value ) {
 			// pre-record that there were no errors found. in case the system report fails to execute, this will
 			// allow the rest of Matomo for WordPress to continue to still be usable.
-			set_transient( $cache_key, 0, WEEK_IN_SECONDS );
+			set_site_transient( $cache_key, 0, WEEK_IN_SECONDS );
 
 			$matomo_tables = $this->get_error_tables();
 
@@ -284,7 +303,7 @@ class SystemReport {
 				}
 			}
 
-			set_transient( $cache_key, (int) $cache_value, WEEK_IN_SECONDS );
+			set_site_transient( $cache_key, (int) $cache_value, WEEK_IN_SECONDS );
 		}
 
 		return 1 === (int) $cache_value;

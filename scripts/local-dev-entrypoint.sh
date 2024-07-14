@@ -29,6 +29,11 @@ echo
 
 echo "<?php # /var/www/html/$WORDPRESS_FOLDER/wp-load.php" > /var/www/html/matomo.wpload_dir.php || true
 
+if [[ "$1" = "bash" ]]; then
+  "$@"
+  exit $?
+fi
+
 if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
   /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
   exit $?
@@ -107,6 +112,7 @@ define( 'BLOG_ID_CURRENT_SITE', 1 );
 "
   fi
 
+  WP_DEBUG="${WP_DEBUG:-false}"
   cat > "/var/www/html/$WORDPRESS_FOLDER/wp-config.php" <<EOF
 <?php
 define( 'DB_NAME', '$WP_DB_NAME' );
@@ -115,7 +121,7 @@ define( 'DB_PASSWORD', 'pass' );
 define( 'DB_HOST', getenv('WP_DB_HOST') );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
-define( 'WP_DEBUG', false );
+define( 'WP_DEBUG', $WP_DEBUG );
 define( "WP_DEBUG_LOG", false );
 define( 'WP_ENVIRONMENT_TYPE', 'local' );
 $MULTISITE_CONFIG

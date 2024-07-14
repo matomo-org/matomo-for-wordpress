@@ -38,6 +38,14 @@ cp $MATOMO_ROOT/bootstrap.php bootstrap.php
 cp $MATOMO_ROOT/.htaccess .htaccess
 
 cd matomo/
+
+echo -e "Applying patches to Matomo core..."
+for patch in $(ls $SCRIPTPATH/../patches/*.diff);
+do
+  echo -e "  applying $patch"
+  git apply "$patch"
+done
+
 rm -r ./tests
 # delete most submodules (copied from https://github.com/matomo-org/matomo/blob/5.x-dev/.github/scripts/build-package.sh)
 SUBMODULES_PACKAGED_WITH_CORE='log-analytics|plugins/Morpheus/icons|plugins/TagManager'
