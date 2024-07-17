@@ -34,7 +34,30 @@ class Admin {
 
 	public function load_scripts() {
 		wp_enqueue_style( 'matomo_admin_css', plugins_url( 'assets/css/admin-style.css', MATOMO_ANALYTICS_FILE ), false, '1.0.0' );
-		wp_enqueue_script( 'matomo_admin_js', plugins_url( 'assets/js/admin.js', MATOMO_ANALYTICS_FILE ), [ 'jquery' ], '1.0', true );
 		wp_enqueue_script( 'matomo_iframe_resizer', plugins_url( 'assets/js/iframeResizer.min.js', MATOMO_ANALYTICS_FILE ), [], '1.0', [ 'defer', false ] );
+
+		wp_enqueue_script(
+			'matomo-admin-js',
+			plugins_url( '/assets/js/admin.js', MATOMO_ANALYTICS_FILE ),
+			[ 'jquery' ],
+			'1.0.1',
+			true
+		);
+		wp_localize_script(
+			'matomo-admin-js',
+			'mtmSystemReportErrorNoticeAjax',
+			[
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'nonce'    => wp_create_nonce( 'matomo-systemreport-notice-dismiss' ),
+			]
+		);
+		wp_localize_script(
+			'matomo-admin-js',
+			'mtmReferralDismissNoticeAjax',
+			[
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'nonce'    => wp_create_nonce( 'matomo-referral-notice-dismiss' ),
+			]
+		);
 	}
 }
