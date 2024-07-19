@@ -20,6 +20,8 @@ class ErrorNotice {
 		add_action(
 			'wp_ajax_matomo_system_report_error_dismissed',
 			function () {
+				check_ajax_referer( 'matomo-systemreport-notice-dismiss' );
+
 				if ( is_admin() ) {
 					update_user_meta( get_current_user_id(), self::OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED, true );
 				}

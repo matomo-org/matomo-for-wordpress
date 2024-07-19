@@ -491,6 +491,8 @@ class ScheduledTasks {
 	}
 
 	public function remove_cron_error_ajax() {
+		check_ajax_referer( 'matomo-scheduled-task-errors' );
+
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		if ( empty( $_POST['matomo_job_id'] ) ) {
 			wp_send_json( false );
