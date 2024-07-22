@@ -47,6 +47,8 @@ class Referral {
 		add_action(
 			'wp_ajax_matomo_referral_dismiss_admin_notice',
 			function () use ( $self ) {
+				check_ajax_referer( 'matomo-referral-notice-dismiss' );
+
 				if ( is_admin() && $self->should_show() && $self->can_refer() ) {
 					// no need for an nonce check here as it's nothing critical
 					if ( ! empty( $_POST['forever'] ) ) {

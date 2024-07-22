@@ -2,7 +2,7 @@
 
 namespace WpMatomo\WpStatistics;
 
-use GeoIp2\Database\Reader;
+use Matomo\Dependencies\GeoIp2\Database\Reader;
 use WpMatomo\Paths;
 
 /**
