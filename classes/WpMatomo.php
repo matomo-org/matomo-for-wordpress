@@ -64,6 +64,7 @@ class WpMatomo {
 		}
 
 		add_action( 'init', [ $this, 'init_plugin' ] );
+		add_action( 'activated_plugin', [ $this, 'on_plugin_activated' ] );
 
 		$capabilities = new Capabilities( self::$settings );
 		$capabilities->register_hooks();
@@ -276,5 +277,12 @@ class WpMatomo {
 
 	private static function is_async_archiving_disabled_by_setting() {
 		return self::$settings->is_async_archiving_disabled_by_option();
+	}
+
+	public function on_plugin_activated( $plugin ) {
+		if ( is_admin() && plugin_basename( MATOMO_ANALYTICS_FILE ) === $plugin ) {
+			wp_safe_redirect( home_url( '/wp-admin/admin.php?page=matomo-get-started' ) );
+			exit;
+		}
 	}
 }

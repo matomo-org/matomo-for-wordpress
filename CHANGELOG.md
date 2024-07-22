@@ -1,7 +1,7 @@
 == Changelog ===
 
 = 5.1.2 =
-* Incomplete bug fix: the clickjacking or replay attack fix for functionality that hides notifications for users was incomplete.
+* Incomplete bug fix: the session hijacking or replay attack fix for functionality that hides notifications for users was incomplete.
 * Bug fix: the wp-statistics import is broken when the newest version of wp-statistics is installed.
 
 = 5.1.1 =
@@ -9,7 +9,7 @@
 * Bug fix: system report error notice should only be shown to superusers.
 * Bug fix: patch Matomo core to fix an iconv() notice that can occur during geolocation.
 * Allow re-running updates from a specific version in troubleshooting page to help when WordPress fails to update the plugin completely.
-* Very minor security fix: functionality that hides notifications for users is no longer able to be used in clickjacking or replay attacks.
+* Very minor security fix: functionality that hides notifications for users is no longer able to be used in session hijacking or replay attacks.
 
 = 5.1.0 =
 * Upgrade Matomo core to version 5.1.0 (changes: https://matomo.org/changelog/matomo-5-1-0/).

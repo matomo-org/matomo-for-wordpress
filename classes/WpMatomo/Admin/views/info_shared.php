@@ -11,23 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 ?>
-<h1><?php esc_html_e( 'About', 'matomo' ); ?><?php matomo_header_icon( true ); ?> </h1>
+<h1>
+	<span style="margin-right: 2px;"><?php esc_html_e( 'About', 'matomo' ); ?></span>
+	<?php matomo_header_icon( true ); ?>
+</h1>
 
 <p>
 	<?php
-	echo sprintf(
-		esc_html__(
-			'%1$sMatomo Analytics%2$s is the most powerful
-    analytics platform for WordPress, designed for your success. It is our mission to help you grow
-    your business while giving you %3$sfull control over your data%4$s. All
-    data is stored in your WordPress. You own the data, nobody else.',
-			'matomo'
-		),
-		'<a target="_blank" rel="noreferrer noopener" href="https://matomo.org">',
-		'</a>',
-		'<strong>',
-		'</strong>'
-	);
+	require_once 'info_matomo_desc.php';
 	?>
 </p>
 <ul class="matomo-list">
