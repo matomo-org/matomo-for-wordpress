@@ -97,10 +97,6 @@ ol.matomo-list {
     border: 0;
 }
 
-#matomo_default_tracking_code {
-    margin-top: 100px;
-}
-
 #matomo_default_tracking_code textarea {
     width: 100%;
     height: 140px;
