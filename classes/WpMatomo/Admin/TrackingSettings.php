@@ -272,7 +272,7 @@ class TrackingSettings implements AdminSettingsInterface {
 				'disabled' => false,
 			],
 			self::TRACK_MODE_DEFAULT    => [
-				'name'     => esc_html__( 'Default tracking', 'matomo' ),
+				'name'     => esc_html__( 'Auto', 'matomo' ),
 				'disabled' => false,
 			],
 			self::TRACK_MODE_MANUALLY   => [

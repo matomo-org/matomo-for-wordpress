@@ -71,7 +71,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 			esc_html__( 'You can choose between four tracking code modes:', 'matomo' ),
 			esc_html__( 'Disabled', 'matomo' ),
 			esc_html__( 'matomo will not add the tracking code. Use this, if you want to add the tracking code to your template files or you use another plugin to add the tracking code.', 'matomo' ),
-			esc_html__( 'Default tracking', 'matomo' ),
+			esc_html__( 'Auto tracking', 'matomo' ),
 			esc_html__( 'matomo will use Matomo\'s standard tracking code.', 'matomo' ) . ' ' . esc_html__( 'This mode is recommended for most use cases.', 'matomo' ),
 			esc_html__( 'Enter manually', 'matomo' ),
 			esc_html__( 'Enter your own tracking code manually. You can choose one of the prior options, pre-configure your tracking code and switch to manually editing at last.', 'matomo' ) . ( $settings->is_network_enabled() ? ' ' . esc_html__( 'Use the placeholder {ID} to add the Matomo site ID.', 'matomo' ) : '' ),
@@ -104,7 +104,8 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 		</tbody>
 	</table>
 
-	<h2>General</h2>
+	<h2><?php esc_html_e( 'General', 'matomo' ); ?></h2>
+	<p><?php esc_html_e( 'These settings are not specific to a single tracking mode. Most are available in all tracking modes, but some are only supported by one or two modes.', 'matomo' ); ?></p>
 	<table class="matomo-tracking-form widefat">
 		<tbody>
 		<?php
@@ -198,8 +199,8 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 		</tbody>
 	</table>
 
-	<!-- TODO: header translating + section descriptions -->
-	<h2>Auto Tracking</h2>
+	<h2><?php esc_html_e( 'Auto Tracking', 'matomo' ); ?></h2>
+	<p><?php esc_html_e( 'The Auto tracking mode automatically generates the Matomo tracking JavaScript based on the settings below. Pick and choose what you\'d like to track, and Matomo for WordPress will set everything else up for you.', 'matomo' ); ?></p>
 	<table class="matomo-tracking-form widefat">
 		<tbody>
 		<?php
@@ -420,7 +421,8 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 		</tbody>
 	</table>
 
-	<h2>Manual Tracking</h2>
+	<h2><?php esc_html_e( 'Manual Tracking', 'matomo' ); ?></h2>
+	<p><?php esc_html_e( 'The Manual tracking mode lets you write the JavaScript tracking code yourself. You can customize it however you choose to save it below. Matomo for WordPress will then embed this script into your website HTML.', 'matomo' ); ?></p>
 	<table class="matomo-tracking-form widefat">
 		<tbody>
 		<?php
@@ -456,7 +458,8 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 		</tbody>
 	</table>
 
-	<h2>Script Tag</h2>
+	<h2><?php esc_html_e( '<script> Tags', 'matomo' ); ?></h2>
+	<p><?php esc_html_e( 'These options are available for most tracking modes and control just how Matomo for WordPress embeds <script> elements into your pages. Most users will not need to change these settings.', 'matomo' ); ?></p>
 	<table class="matomo-tracking-form widefat">
 		<tbody>
 		<?php
@@ -514,7 +517,8 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 		</tbody>
 	</table>
 
-	<h2>Developer Settings</h2>
+	<h2><?php esc_html_e( 'Developer Settings', 'matomo' ); ?></h2>
+	<p><?php esc_html_e( 'If your tracking code is not working as expected, this setting may help you find out why. When enabled, the tracker debug mode will output diagnostic information in tracking requests. It is recommended to only enable it when/if you need it.', 'matomo' ); ?></p>
 	<table class="matomo-tracking-form widefat">
 		<tbody>
 		<?php
