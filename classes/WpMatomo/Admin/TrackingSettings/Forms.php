@@ -164,7 +164,59 @@ class Forms {
 			// we make sure it will select the right settings by default
 			$script_change .= '<script type="text/javascript">setTimeout(function () { jQuery("#' . esc_js( $id ) . '").change(); }, 800);</script>';
 		}
-		printf( '<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%3$s">%s:%s</label></th><td><select name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%s]" id="%3$s" onchange="%s">%s</select> %s</td></tr>', esc_html( $name ), $script_change, esc_attr( $id ), $on_change, $options_list, $this->get_description( $id, $description, $hide_description ) );
+		printf( '<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '"><td scope="row"><label for="%3$s">%s:%s</label></td><td><select name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%s]" id="%3$s" onchange="%s">%s</select> %s</td></tr>', esc_html( $name ), $script_change, esc_attr( $id ), $on_change, $options_list, $this->get_description( $id, $description, $hide_description ) );
+	}
+
+	/**
+	 * Show a set of radio buttons
+	 *
+	 * @param string  $id option id
+	 * @param string  $name descriptive option name
+	 * @param array   $options list of options to show array[](option id => descriptive name)
+	 * @param string  $description option description
+	 * @param string  $on_change javascript for onchange event (default: empty)
+	 * @param boolean $is_hidden set to true to initially hide the option (default: false)
+	 * @param string  $group_name define a class name to access a group of option rows by javascript (default: empty)
+	 * @param boolean $hide_description $hideDescription set to false to show description initially (default: true)
+	 * @param boolean $global set to false if the textarea shows a site-specific option (default: true)
+	 */
+	public function show_radio( $id, $name, $options = [], $description = '', $on_change = '', $is_hidden = false, $group_name = '', $hide_description = true, $global = true ) {
+		$button_list = [];
+
+		$default = $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
+		if ( is_array( $options ) ) {
+			foreach ( $options as $key => $value ) {
+				$radio_id = esc_attr( $id . '_' . $key );
+
+				$button_list[] = sprintf(
+					'<input type="radio" id="%s" name="%s" value="%s" %s onchange="%s" />'
+					. '<label for="%s">%s</label>',
+					$radio_id,
+					esc_attr( TrackingSettings::FORM_NAME ) . '[' . $name . ']',
+					esc_attr( $key ),
+					// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+					( $key == $default ? 'checked="checked"' : '' ),
+					$on_change,
+					$radio_id,
+					esc_html( $value )
+				);
+			}
+		}
+		$script_change = '';
+		if ( $on_change ) {
+			// we make sure it will select the right settings by default
+			$script_change .= '<script type="text/javascript">setTimeout(function () { jQuery("#' . esc_js( $id ) . '").change(); }, 800);</script>';
+		}
+		printf(
+			'<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '">'
+			. '<td scope="row"><label>%s:%s</label></td>'
+			. '<td><div style="display:inline-block">%s</div> %s</td>'
+			. '</tr>',
+			esc_html( $name ),
+			$script_change,
+			implode( '<br/>', $button_list ),
+			$this->get_description( $id, $description, $hide_description )
+		);
 	}
 
 	/**

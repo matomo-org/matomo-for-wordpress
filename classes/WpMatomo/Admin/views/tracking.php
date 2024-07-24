@@ -78,7 +78,7 @@ if ( count( $settings_errors ) ) {
 			esc_html__( 'Tag Manager', 'matomo' ),
 			esc_html__( 'If you have created containers in the Tag Manager, you can select one of them and it will embed the code for the container automatically.', 'matomo' )
 		);
-		$matomo_form->show_select(
+		$matomo_form->show_radio(
 			'track_mode',
 			esc_html__( 'Tracking mode', 'matomo' ),
 			$track_modes,
