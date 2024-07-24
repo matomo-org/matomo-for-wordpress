@@ -20,7 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 /**
- * @todo set up the nonce verification
+ * TODO: maybe we can move the form data collection to a single class
+ * Note: nonce verification exists, but phpcs can't tell since it's in a method
+ * that calls other methods that then access post data.
  * phpcs:disable WordPress.Security.NonceVerification.Missing
  */
 class TrackingSettings implements AdminSettingsInterface {
