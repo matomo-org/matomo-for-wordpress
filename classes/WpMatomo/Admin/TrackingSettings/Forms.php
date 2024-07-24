@@ -209,7 +209,7 @@ class Forms {
 		}
 		printf(
 			'<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '">'
-			. '<td scope="row"><label>%s:%s</label></td>'
+			. '<th scope="row"><label>%s:%s</label></th>'
 			. '<td><div style="display:inline-block">%s</div> %s</td>'
 			. '</tr>',
 			esc_html( $name ),
