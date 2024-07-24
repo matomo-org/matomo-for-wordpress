@@ -41,27 +41,27 @@ if ( count( $settings_errors ) ) {
 }
 
 ?>
-<form method="post">
+<?php
+$track_mode             = $settings->get_global_option( 'track_mode' );
+$matomo_is_not_tracking = TrackingSettings::TRACK_MODE_DISABLED === $track_mode;
+
+$matomo_is_not_generated_tracking     = $matomo_is_not_tracking || $settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
+$matomo_full_generated_tracking_group = 'matomo-track-option matomo-track-option-default  ';
+
+$matomo_manually_network = '';
+if ( $settings->is_network_enabled() ) {
+	$matomo_manually_network = ' ' . sprintf( esc_html__( 'You can use these variables: %1$s. %2$sLearn more%3$s', 'matomo' ), '{MATOMO_IDSITE}, {MATOMO_API_ENDPOINT}, {MATOMO_JS_ENDPOINT}', '<a href="https://matomo.org/faq/wordpress/how-can-i-configure-the-tracking-code-manually-when-i-have-wordpress-network-enabled-in-multisite-mode/" target="_blank" rel="noreferrer noopener">', '</a>' );
+}
+
+$matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Submit" type="submit" class="button-primary" value="' . esc_attr__( 'Save Changes', 'matomo' ) . '" /></p></td></tr>';
+?>
+<form id="tracking-settings" method="post" data-track-mode="<?php echo esc_attr( $track_mode ); ?>">
 	<?php wp_nonce_field( TrackingSettings::NONCE_NAME ); ?>
 	<p>
 		<?php esc_html_e( 'Here you can optionally configure the tracking to your liking if you want (you don\'t have to configure it).', 'matomo' ); ?>
 		<?php esc_html_e( 'The configured tracking code will be embedded into your website automatically and you won\'t need to do anything unless you disabled the tracking.', 'matomo' ); ?>
 		<?php esc_html_e( 'If you are seeing a tracking code below, you don\'t have to embed this tracking code into your site. The plugin does this automatically for you.', 'matomo' ); ?>
 	</p>
-
-	<?php
-	$matomo_is_not_tracking = $settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_DISABLED;
-
-	$matomo_is_not_generated_tracking     = $matomo_is_not_tracking || $settings->get_global_option( 'track_mode' ) === TrackingSettings::TRACK_MODE_MANUALLY;
-	$matomo_full_generated_tracking_group = 'matomo-track-option matomo-track-option-default  ';
-
-	$matomo_manually_network = '';
-	if ( $settings->is_network_enabled() ) {
-		$matomo_manually_network = ' ' . sprintf( esc_html__( 'You can use these variables: %1$s. %2$sLearn more%3$s', 'matomo' ), '{MATOMO_IDSITE}, {MATOMO_API_ENDPOINT}, {MATOMO_JS_ENDPOINT}', '<a href="https://matomo.org/faq/wordpress/how-can-i-configure-the-tracking-code-manually-when-i-have-wordpress-network-enabled-in-multisite-mode/" target="_blank" rel="noreferrer noopener">', '</a>' );
-	}
-
-	$matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Submit" type="submit" class="button-primary" value="' . esc_attr__( 'Save Changes', 'matomo' ) . '" /></p></td></tr>';
-	?>
 
 	<table class="matomo-tracking-form widefat">
 		<tbody>
@@ -84,6 +84,9 @@ if ( count( $settings_errors ) ) {
 			$track_modes,
 			$matomo_description,
 			'jQuery(\'#tracking_code, #noscript_code\').prop(\'readonly\', jQuery(\'#track_mode\').val() != \'manually\');'
+			. ' jQuery(\'#track_mode\').closest(\'form\').attr(\'data-track-mode\', jQuery(\'input[name="matomo[track_mode]"]:checked\').val());',
+			false,
+			'track_mode'
 		);
 
 		if ( ! empty( $containers ) ) {
@@ -108,7 +111,7 @@ if ( count( $settings_errors ) ) {
 		$matomo_form->show_checkbox(
 			'track_ecommerce',
 			esc_html__( 'Enable ecommerce', 'matomo' ),
-			esc_html__( 'Matom can track Ecommerce orders, abandoned carts and product views for WooCommerce, Easy Digital Downloads, MemberPress, and more. Disabling this feature will also remove Ecommerce reports from the Matomo UI.', 'matomo' ),
+			esc_html__( 'Matomo can track Ecommerce orders, abandoned carts and product views for WooCommerce, Easy Digital Downloads, MemberPress, and more. Disabling this feature will also remove Ecommerce reports from the Matomo UI.', 'matomo' ),
 			false,
 			$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager'
 		);

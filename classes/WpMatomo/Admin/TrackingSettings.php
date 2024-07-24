@@ -265,13 +265,27 @@ class TrackingSettings implements AdminSettingsInterface {
 		$containers = $this->get_active_containers();
 
 		$track_modes = [
-			self::TRACK_MODE_DISABLED => esc_html__( 'Disabled', 'matomo' ),
-			self::TRACK_MODE_DEFAULT  => esc_html__( 'Default tracking', 'matomo' ),
-			self::TRACK_MODE_MANUALLY => esc_html__( 'Enter manually', 'matomo' ),
+			self::TRACK_MODE_DISABLED   => [
+				'name'     => esc_html__( 'Disabled', 'matomo' ),
+				'disabled' => false,
+			],
+			self::TRACK_MODE_DEFAULT    => [
+				'name'     => esc_html__( 'Default tracking', 'matomo' ),
+				'disabled' => false,
+			],
+			self::TRACK_MODE_MANUALLY   => [
+				'name'     => esc_html__( 'Enter manually', 'matomo' ),
+				'disabled' => false,
+			],
+			self::TRACK_MODE_TAGMANAGER => [
+				'name'     => esc_html__( 'Tag Manager', 'matomo' ),
+				'disabled' => false,
+			],
 		];
 
-		if ( ! empty( $containers ) ) {
-			$track_modes[ self::TRACK_MODE_TAGMANAGER ] = esc_html__( 'Tag Manager', 'matomo' );
+		if ( empty( $containers ) ) {
+			$track_modes[ self::TRACK_MODE_TAGMANAGER ]['disabled'] = true;
+			$track_modes[ self::TRACK_MODE_TAGMANAGER ]['tooltip']  = __( 'No containers were found. Create one to be able to use the Tag Manager tracking mode.', 'matomo' );
 		}
 
 		$site   = new Site();

@@ -105,13 +105,11 @@ ol.matomo-list {
     height: 50px;
 }
 
-table.matomo-tracking-form {
-    textarea {
-        display: inline-block;
-        width: 95%;
-    }
+table.matomo-tracking-form textarea {
+    display: inline-block;
+    width: 95%;
+}
 
-    th {
-        max-width: 30%;
-    }
+table.matomo-tracking-form th {
+    max-width: 30%;
 }

@@ -164,7 +164,7 @@ class Forms {
 			// we make sure it will select the right settings by default
 			$script_change .= '<script type="text/javascript">setTimeout(function () { jQuery("#' . esc_js( $id ) . '").change(); }, 800);</script>';
 		}
-		printf( '<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '"><td scope="row"><label for="%3$s">%s:%s</label></td><td><select name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%s]" id="%3$s" onchange="%s">%s</select> %s</td></tr>', esc_html( $name ), $script_change, esc_attr( $id ), $on_change, $options_list, $this->get_description( $id, $description, $hide_description ) );
+		printf( '<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%3$s">%s:%s</label></th><td><select name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%s]" id="%3$s" onchange="%s">%s</select> %s</td></tr>', esc_html( $name ), $script_change, esc_attr( $id ), $on_change, $options_list, $this->get_description( $id, $description, $hide_description ) );
 	}
 
 	/**
@@ -185,20 +185,32 @@ class Forms {
 
 		$default = $global ? $this->settings->get_global_option( $id ) : $this->settings->get_option( $id );
 		if ( is_array( $options ) ) {
-			foreach ( $options as $key => $value ) {
+			foreach ( $options as $key => $info ) {
+				$label    = $info;
+				$disabled = false;
+				$tooltip  = null;
+
+				if ( is_array( $info ) ) {
+					$disabled = $info['disabled'];
+					$tooltip  = isset( $info['tooltip'] ) ? $info['tooltip'] : null;
+					$label    = $info['name'];
+				}
+
 				$radio_id = esc_attr( $id . '_' . $key );
 
 				$button_list[] = sprintf(
-					'<input type="radio" id="%s" name="%s" value="%s" %s onchange="%s" />'
-					. '<label for="%s">%s</label>',
+					'<span%s><input type="radio" id="%s" name="%s" value="%s" %s %s onchange="%s" />'
+					. '<label for="%s">%s</label></span>',
+					( $tooltip ? ' title="' . esc_attr( $tooltip ) . '"' : '' ),
 					$radio_id,
-					esc_attr( TrackingSettings::FORM_NAME ) . '[' . $name . ']',
+					esc_attr( TrackingSettings::FORM_NAME ) . '[' . $id . ']',
 					esc_attr( $key ),
 					// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 					( $key == $default ? 'checked="checked"' : '' ),
-					$on_change,
+					( $disabled ? 'disabled="disabled"' : '' ),
+					esc_attr( $on_change ),
 					$radio_id,
-					esc_html( $value )
+					esc_html( $label )
 				);
 			}
 		}
@@ -210,10 +222,11 @@ class Forms {
 		printf(
 			'<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '">'
 			. '<th scope="row"><label>%s:%s</label></th>'
-			. '<td><div style="display:inline-block">%s</div> %s</td>'
+			. '<td><div id="%s" style="display:inline-block">%s</div> %s</td>'
 			. '</tr>',
 			esc_html( $name ),
 			$script_change,
+			$id,
 			implode( '<br/>', $button_list ),
 			$this->get_description( $id, $description, $hide_description )
 		);
