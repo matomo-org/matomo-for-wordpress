@@ -31,7 +31,7 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 	}
 
 	private function make_tracking_code() {
-		$this->tracking_code = new TrackingCodeGenerator( $this->settings );
+		$this->tracking_code = new TrackingCodeGenerator( $this->settings, \WpMatomo\TrackingCode\GeneratorOptions::from_settings( $this->settings ) );
 	}
 
 	private function get_tracking_code() {

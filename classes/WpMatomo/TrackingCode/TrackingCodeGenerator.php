@@ -33,15 +33,18 @@ class TrackingCodeGenerator {
 	private $settings;
 
 	/**
+	 * @var GeneratorOptions
+	 */
+	private $options;
+
+	/**
 	 * @var Logger
 	 */
 	private $logger;
 
-	/**
-	 * @param Settings $settings
-	 */
-	public function __construct( $settings ) {
+	public function __construct( Settings $settings, GeneratorOptions $options ) {
 		$this->settings = $settings;
+		$this->options  = $options;
 		$this->logger   = new Logger();
 	}
 
@@ -186,13 +189,13 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 	public function get_tracker_endpoint() {
 		$paths = new Paths();
 
-		if ( $this->settings->get_global_option( 'track_api_endpoint' ) === 'restapi' ) {
+		if ( $this->options->get_track_api_endpoint() === 'restapi' ) {
 			$tracker_endpoint = $paths->get_tracker_api_rest_api_endpoint();
 		} else {
 			$tracker_endpoint = $paths->get_tracker_api_url_in_matomo_dir();
 		}
 
-		if ( $this->settings->get_global_option( 'force_protocol' ) === 'https' ) {
+		if ( $this->options->get_force_protocol() === 'https' ) {
 			$tracker_endpoint = preg_replace( '(^http://)', 'https://', $tracker_endpoint );
 		} else {
 			$tracker_endpoint = preg_replace( '(^https?://)', '//', $tracker_endpoint );
@@ -203,15 +206,15 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 
 	public function get_js_endpoint() {
 		$paths = new Paths();
-		if ( $this->settings->get_global_option( 'track_js_endpoint' ) === 'restapi' ) {
+		if ( $this->options->get_track_js_endpoint() === 'restapi' ) {
 			$js_endpoint = $paths->get_js_tracker_rest_api_endpoint();
-		} elseif ( $this->settings->get_global_option( 'track_js_endpoint' ) === 'plugin' ) {
+		} elseif ( $this->options->get_track_js_endpoint() === 'plugin' ) {
 			$js_endpoint = plugins_url( 'app/matomo.js', MATOMO_ANALYTICS_FILE );
 		} else {
 			$js_endpoint = $paths->get_js_tracker_url_in_matomo_dir();
 		}
 
-		if ( $this->settings->get_global_option( 'force_protocol' ) === 'https' ) {
+		if ( $this->options->get_force_protocol() === 'https' ) {
 			$js_endpoint = preg_replace( '(^http://)', 'https://', $js_endpoint );
 		} else {
 			$js_endpoint = preg_replace( '(^https?://)', '//', $js_endpoint );
@@ -235,34 +238,34 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 
 		$options = [];
 
-		if ( $this->settings->get_global_option( 'set_download_extensions' ) ) {
-			$options[] = "_paq.push(['setDownloadExtensions', " . wp_json_encode( $this->settings->get_global_option( 'set_download_extensions' ) ) . ']);';
+		if ( $this->options->get_set_download_extensions() ) {
+			$options[] = "_paq.push(['setDownloadExtensions', " . wp_json_encode( $this->options->get_set_download_extensions() ) . ']);';
 		}
-		if ( $this->settings->get_global_option( 'add_download_extensions' ) ) {
-			$options[] = "_paq.push(['addDownloadExtensions', " . wp_json_encode( $this->settings->get_global_option( 'add_download_extensions' ) ) . ']);';
+		if ( $this->options->get_add_download_extensions() ) {
+			$options[] = "_paq.push(['addDownloadExtensions', " . wp_json_encode( $this->options->get_add_download_extensions() ) . ']);';
 		}
-		if ( $this->settings->get_global_option( 'set_download_classes' ) ) {
-			$options[] = "_paq.push(['setDownloadClasses', " . wp_json_encode( $this->settings->get_global_option( 'set_download_classes' ) ) . ']);';
+		if ( $this->options->get_set_download_classes() ) {
+			$options[] = "_paq.push(['setDownloadClasses', " . wp_json_encode( $this->options->get_set_download_classes() ) . ']);';
 		}
-		if ( $this->settings->get_global_option( 'set_link_classes' ) ) {
-			$options[] = "_paq.push(['setLinkClasses', " . wp_json_encode( $this->settings->get_global_option( 'set_link_classes' ) ) . ']);';
+		if ( $this->options->get_set_link_classes() ) {
+			$options[] = "_paq.push(['setLinkClasses', " . wp_json_encode( $this->options->get_set_link_classes() ) . ']);';
 		}
-		if ( $this->settings->get_global_option( 'disable_cookies' ) ) {
+		if ( $this->options->get_disable_cookies() ) {
 			$options[] = self::get_disable_cookies_partial();
 		}
-		if ( $this->settings->get_global_option( 'track_crossdomain_linking' ) ) {
+		if ( $this->options->get_track_crossdomain_linking() ) {
 			$options[] = "_paq.push(['enableCrossDomainLinking']);";
 		}
-		if ( $this->settings->get_global_option( 'track_jserrors' ) ) {
+		if ( $this->options->get_track_jserrors() ) {
 			$options[] = "_paq.push(['enableJSErrorTracking']);";
 		}
 
-		$cookie_domain = $this->settings->get_tracking_cookie_domain();
+		$cookie_domain = $this->get_tracking_cookie_domain();
 		if ( ! empty( $cookie_domain ) ) {
 			$options[] = '_paq.push(["setCookieDomain", ' . wp_json_encode( $cookie_domain ) . ']);';
 		}
 
-		$track_across_alias = $this->settings->get_global_option( 'track_across_alias' );
+		$track_across_alias = $this->options->get_track_across_alias();
 
 		if ( $track_across_alias ) {
 			// todo detect more hosts such as when using WPML etc
@@ -278,34 +281,34 @@ g.type=\'text/javascript\'; g.async=true; g.src="' . $container_url . '"; s.pare
 				$options[] = '_paq.push(["setDomains", ' . wp_json_encode( $hosts ) . ']);';
 			}
 		}
-		if ( $this->settings->get_global_option( 'force_post' ) ) {
+		if ( $this->options->get_force_post() ) {
 			$options[] = "_paq.push(['setRequestMethod', 'POST']);";
 		}
 
 		$cookie_consent        = new CookieConsent();
-		$cookie_consent_option = $cookie_consent->get_tracking_consent_option( $this->settings->get_global_option( 'cookie_consent' ) );
+		$cookie_consent_option = $cookie_consent->get_tracking_consent_option( $this->options->get_cookie_consent() );
 		// for unit test cases
 		if ( ! empty( $cookie_consent_option ) ) {
 			$options[] = $cookie_consent_option;
 		}
 
-		if ( $this->settings->get_global_option( 'limit_cookies' ) ) {
-			$options[] = "_paq.push(['setVisitorCookieTimeout', " . wp_json_encode( $this->settings->get_global_option( 'limit_cookies_visitor' ) ) . ']);';
-			$options[] = "_paq.push(['setSessionCookieTimeout', " . wp_json_encode( $this->settings->get_global_option( 'limit_cookies_session' ) ) . ']);';
-			$options[] = "_paq.push(['setReferralCookieTimeout', " . wp_json_encode( $this->settings->get_global_option( 'limit_cookies_referral' ) ) . ']);';
+		if ( $this->options->get_limit_cookies() ) {
+			$options[] = "_paq.push(['setVisitorCookieTimeout', " . wp_json_encode( $this->options->get_limit_cookies_visitor() ) . ']);';
+			$options[] = "_paq.push(['setSessionCookieTimeout', " . wp_json_encode( $this->options->get_limit_cookies_session() ) . ']);';
+			$options[] = "_paq.push(['setReferralCookieTimeout', " . wp_json_encode( $this->options->get_limit_cookies_referral() ) . ']);';
 		}
-		if ( $this->settings->get_global_option( 'track_content' ) === 'all' ) {
+		if ( $this->options->get_track_content() === 'all' ) {
 			$options[] = "_paq.push(['trackAllContentImpressions']);";
-		} elseif ( $this->settings->get_global_option( 'track_content' ) === 'visible' ) {
+		} elseif ( $this->options->get_track_content() === 'visible' ) {
 			$options[] = "_paq.push(['trackVisibleContentImpressions']);";
 		}
-		if ( (int) $this->settings->get_global_option( 'track_heartbeat' ) > 0 ) {
-			$options[] = "_paq.push(['enableHeartBeatTimer', " . intval( $this->settings->get_global_option( 'track_heartbeat' ) ) . ']);';
+		if ( (int) $this->options->get_track_heartbeat() > 0 ) {
+			$options[] = "_paq.push(['enableHeartBeatTimer', " . intval( $this->options->get_track_heartbeat() ) . ']);';
 		}
 
 		$data_cf_async        = '';
 		$data_of_async_option = [];
-		if ( $this->settings->get_global_option( 'track_datacfasync' ) ) {
+		if ( $this->options->get_track_datacfasync() ) {
 			$data_cf_async                        = 'data-cfasync="false"';
 			$data_of_async_option['data-cfasync'] = 'false';
 		}
@@ -346,6 +349,18 @@ g.type='text/javascript'; g.async=true; g.src=" . wp_json_encode( $js_endpoint )
 			'script'   => $script,
 			'noscript' => $no_script,
 		];
+	}
+
+	public function get_tracking_cookie_domain() {
+		if ( $this->options->get_track_across()
+			|| $this->options->get_track_crossdomain_linking() ) {
+			$host = wp_parse_url( home_url(), PHP_URL_HOST );
+			if ( ! empty( $host ) ) {
+				return '*.' . $host;
+			}
+		}
+
+		return '';
 	}
 
 	private function apply_404_changes( $tracking_code ) {

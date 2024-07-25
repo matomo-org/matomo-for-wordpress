@@ -25,8 +25,8 @@ window.jQuery(document).ready(function ($) {
         }),
         function (data) {
           if (data) {
-            $('#generated_tracking_code').text(data.tracking_code);
-            $('#generated_noscript_code').text(data.noscript_code);
+            $('#generated_tracking_code').text(data.script);
+            $('#generated_noscript_code').text(data.noscript);
           }
         },
       );

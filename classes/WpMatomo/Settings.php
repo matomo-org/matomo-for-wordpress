@@ -403,18 +403,6 @@ class Settings {
 		return $this->get_global_option( 'track_crossdomain_linking' );
 	}
 
-	public function get_tracking_cookie_domain() {
-		if ( $this->get_global_option( 'track_across' )
-			 || $this->get_global_option( 'track_crossdomain_linking' ) ) {
-			$host = wp_parse_url( home_url(), PHP_URL_HOST );
-			if ( ! empty( $host ) ) {
-				return '*.' . $host;
-			}
-		}
-
-		return '';
-	}
-
 	public function should_delete_all_data_on_uninstall() {
 		if ( defined( 'MATOMO_REMOVE_ALL_DATA' ) ) {
 			return (bool) MATOMO_REMOVE_ALL_DATA;

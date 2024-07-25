@@ -14,6 +14,7 @@ use WpMatomo\Capabilities;
 use WpMatomo\Settings;
 use WpMatomo\Site;
 use WpMatomo\Site\Sync\SyncConfig as SiteConfigSync;
+use WpMatomo\TrackingCode\GeneratorOptions;
 use WpMatomo\TrackingCode\TrackingCodeGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -299,7 +300,7 @@ class TrackingSettings implements AdminSettingsInterface {
 
 		$cookie_consent_modes = $this->get_cookie_consent_modes();
 
-		$tracking_code_generator      = new TrackingCodeGenerator( $this->settings );
+		$tracking_code_generator      = new TrackingCodeGenerator( $this->settings, GeneratorOptions::from_settings( $this->settings ) );
 		$matomo_default_tracking_code = $tracking_code_generator->prepare_tracking_code( $idsite );
 
 		include dirname( __FILE__ ) . '/views/tracking.php';
@@ -386,11 +387,12 @@ class TrackingSettings implements AdminSettingsInterface {
 	public static function generate_tracking_code() {
 		check_ajax_referer( self::NONCE_NAME_GENERATE_TRACKING_CODE_AJAX );
 
-		wp_send_json(
-			[
-				'tracking_code' => 'TEST TRACKING CODE',
-				'noscript_code' => 'TEST NOSCRIPT CODE',
-			]
-		);
+		$blod_id = get_current_blog_id();
+		$idsite  = Site::get_matomo_site_id( $blod_id );
+
+		$generator     = new TrackingCodeGenerator( \WpMatomo::$settings, GeneratorOptions::from_request( $_POST ) );
+		$tracking_code = $generator->prepare_tracking_code( $idsite );
+
+		wp_send_json( $tracking_code );
 	}
 }
