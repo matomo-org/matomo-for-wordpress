@@ -26,12 +26,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * phpcs:disable WordPress.Security.NonceVerification.Missing
  */
 class TrackingSettings implements AdminSettingsInterface {
-	const FORM_NAME             = 'matomo';
-	const NONCE_NAME            = 'matomo_settings';
-	const TRACK_MODE_DEFAULT    = 'default';
-	const TRACK_MODE_DISABLED   = 'disabled';
-	const TRACK_MODE_MANUALLY   = 'manually';
-	const TRACK_MODE_TAGMANAGER = 'tagmanager';
+	const FORM_NAME                              = 'matomo';
+	const NONCE_NAME                             = 'matomo_settings';
+	const TRACK_MODE_DEFAULT                     = 'default';
+	const TRACK_MODE_DISABLED                    = 'disabled';
+	const TRACK_MODE_MANUALLY                    = 'manually';
+	const TRACK_MODE_TAGMANAGER                  = 'tagmanager';
+	const NONCE_NAME_GENERATE_TRACKING_CODE_AJAX = 'matomo-tracking-settings-code';
 
 	/**
 	 * @var Settings
@@ -43,6 +44,7 @@ class TrackingSettings implements AdminSettingsInterface {
 	 */
 	public function __construct( $settings ) {
 		$this->settings = $settings;
+		$this->add_hooks();
 	}
 
 	public function get_title() {
@@ -347,5 +349,48 @@ class TrackingSettings implements AdminSettingsInterface {
 		}
 
 		return $by_id;
+	}
+
+	private function add_hooks() {
+		add_action(
+			'admin_enqueue_scripts',
+			function ( $page ) {
+				if ( 'matomo-analytics_page_matomo-settings' !== $page ) {
+					return;
+				}
+
+				wp_enqueue_script(
+					'matomo-tracking-settings',
+					plugins_url( '/assets/js/tracking_settings.js', MATOMO_ANALYTICS_FILE ),
+					[ 'jquery' ],
+					'1.0.0',
+					true
+				);
+
+				wp_localize_script(
+					'matomo-tracking-settings',
+					'mtmTrackingSettingsAjax',
+					[
+						'ajax_url' => admin_url( 'admin-ajax.php' ),
+						'nonce'    => wp_create_nonce( self::NONCE_NAME_GENERATE_TRACKING_CODE_AJAX ),
+					]
+				);
+			}
+		);
+	}
+
+	public static function register_ajax() {
+		add_action( 'wp_ajax_matomo_generate_tracking_code', [ self::class, 'generate_tracking_code' ] );
+	}
+
+	public static function generate_tracking_code() {
+		check_ajax_referer( self::NONCE_NAME_GENERATE_TRACKING_CODE_AJAX );
+
+		wp_send_json(
+			[
+				'tracking_code' => 'TEST TRACKING CODE',
+				'noscript_code' => 'TEST NOSCRIPT CODE',
+			]
+		);
 	}
 }

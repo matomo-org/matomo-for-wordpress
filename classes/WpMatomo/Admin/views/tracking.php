@@ -201,7 +201,48 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 
 	<h2><?php esc_html_e( 'Auto Tracking', 'matomo' ); ?></h2>
 	<p><?php esc_html_e( 'The Auto tracking mode automatically generates the Matomo tracking JavaScript based on the settings below. Pick and choose what you\'d like to track, and Matomo for WordPress will set everything else up for you.', 'matomo' ); ?></p>
-	<table class="matomo-tracking-form widefat">
+	<p id="showGeneratedTrackingCode"><a href="#"><?php esc_html_e( 'Show generated tracking code', 'matomo' ); ?></a></p>
+	<p id="hideGeneratedTrackingCode" style="display:none;"><a href="#"><?php esc_html_e( 'Hide generated tracking code', 'matomo' ); ?></a></p>
+	<table class="matomo-tracking-form widefat" id="generatedTrackingCode" style="display:none;margin-bottom:1em;">
+		<?php
+		$matomo_form->show_textarea(
+			'generated_tracking_code',
+			esc_html__( 'Tracking code', 'matomo' ),
+			15,
+			sprintf(
+				esc_html__( 'This is a preview of your current tracking code based on your configuration below. You don\'t need to do anything with it and this is purely for your information. The tracking code is a piece of code that will be automatically embedded into your site and send information about your visitors to Matomo. Have a look at the system report to get a list of all available JS tracker and tracking API endpoints. You don\'t need to embed this tracking code into your website, our plugin will do this automatically. %s', 'matomo' ),
+				$matomo_manually_network
+			),
+			false,
+			'',
+			false,
+			'',
+			true,
+			false
+		);
+
+		$matomo_form->show_textarea(
+			'generated_noscript_code',
+			esc_html__( '<noscript> code', 'matomo' ),
+			2,
+			__( 'This is a preview of your &lt;noscript&gt; code which is part of your tracking code. This code will only be embedded into your website if the noscript feature is enabled.', 'matomo' ),
+			false,
+			'',
+			false,
+			'',
+			true,
+			false
+		);
+		?>
+	</table>
+	<script>
+		jQuery('#showGeneratedTrackingCode,#hideGeneratedTrackingCode').on('click', 'a', function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			jQuery('#generatedTrackingCode,#showGeneratedTrackingCode,#hideGeneratedTrackingCode').toggle();
+		});
+	</script>
+	<table class="matomo-tracking-form widefat auto-tracking-form">
 		<tbody>
 		<?php
 		$matomo_form->show_checkbox(
@@ -422,7 +463,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 	</table>
 
 	<h2><?php esc_html_e( 'Manual Tracking', 'matomo' ); ?></h2>
-	<p><?php esc_html_e( 'The Manual tracking mode lets you write the JavaScript tracking code yourself. You can customize it however you choose to save it below. Matomo for WordPress will then embed this script into your website HTML.', 'matomo' ); ?></p>
+	<p><?php esc_html_e( 'The Manual tracking mode lets you write the JavaScript tracking code yourself. You can customize it however you choose to save it below. Matomo for WordPress will then embed this script into your website\'s HTML.', 'matomo' ); ?></p>
 	<table class="matomo-tracking-form widefat">
 		<tbody>
 		<?php
