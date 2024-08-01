@@ -321,27 +321,27 @@ class GeneratorOptions {
 	 */
 	public static function from_request( $request ) {
 		$options = new GeneratorOptions();
-		$options->set_track_api_endpoint( $request['track_api_endpoint'] );
-		$options->set_force_protocol( $request['force_protocol'] );
-		$options->set_track_js_endpoint( $request['track_js_endpoint'] );
-		$options->set_set_download_extensions( $request['set_download_extensions'] );
-		$options->set_add_download_extensions( $request['add_download_extensions'] );
-		$options->set_set_download_classes( $request['set_download_classes'] );
-		$options->set_set_link_classes( $request['set_link_classes'] );
-		$options->set_disable_cookies( $request['disable_cookies'] );
-		$options->set_track_crossdomain_linking( $request['track_crossdomain_linking'] );
-		$options->set_track_jserrors( $request['track_jserrors'] );
-		$options->set_track_across( $request['track_across'] );
-		$options->set_track_across_alias( $request['track_across_alias'] );
-		$options->set_force_post( $request['force_post'] );
-		$options->set_cookie_consent( $request['cookie_consent'] );
-		$options->set_limit_cookies( $request['limit_cookies'] );
-		$options->set_limit_cookies_visitor( $request['limit_cookies_visitor'] );
-		$options->set_limit_cookies_referral( $request['limit_cookies_referral'] );
-		$options->set_limit_cookies_session( $request['limit_cookies_session'] );
-		$options->set_track_heartbeat( $request['track_content'] );
-		$options->set_track_datacfasync( $request['track_datacfasync'] );
-		$options->set_track_content( $request['track_content'] );
+		$options->set_track_api_endpoint( $request['matomo']['track_api_endpoint'] );
+		$options->set_force_protocol( $request['matomo']['force_protocol'] );
+		$options->set_track_js_endpoint( $request['matomo']['track_js_endpoint'] );
+		$options->set_set_download_extensions( $request['matomo']['set_download_extensions'] );
+		$options->set_add_download_extensions( $request['matomo']['add_download_extensions'] );
+		$options->set_set_download_classes( $request['matomo']['set_download_classes'] );
+		$options->set_set_link_classes( $request['matomo']['set_link_classes'] );
+		$options->set_disable_cookies( $request['matomo']['disable_cookies'] );
+		$options->set_track_crossdomain_linking( $request['matomo']['track_crossdomain_linking'] );
+		$options->set_track_jserrors( $request['matomo']['track_jserrors'] );
+		$options->set_track_across( $request['matomo']['track_across'] );
+		$options->set_track_across_alias( $request['matomo']['track_across_alias'] );
+		$options->set_force_post( $request['matomo']['force_post'] );
+		$options->set_cookie_consent( $request['matomo']['cookie_consent'] );
+		$options->set_limit_cookies( $request['matomo']['limit_cookies'] );
+		$options->set_limit_cookies_visitor( $request['matomo']['limit_cookies_visitor'] );
+		$options->set_limit_cookies_referral( $request['matomo']['limit_cookies_referral'] );
+		$options->set_limit_cookies_session( $request['matomo']['limit_cookies_session'] );
+		$options->set_track_heartbeat( $request['matomo']['track_content'] );
+		$options->set_track_datacfasync( $request['matomo']['track_datacfasync'] );
+		$options->set_track_content( $request['matomo']['track_content'] );
 		return $options;
 	}
 }

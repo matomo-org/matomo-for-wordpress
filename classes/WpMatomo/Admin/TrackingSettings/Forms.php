@@ -82,7 +82,7 @@ class Forms {
 	 */
 	public function show_textarea( $id, $name, $rows, $description, $is_hidden, $group_name, $hide_description = true, $on_change = '', $is_readonly = false, $global = true ) {
 		printf(
-			'<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s</label>:</th><td><textarea cols="80" rows="' . esc_attr( $rows ) . '" id="%s" name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%2$s]" onchange="%s"' . ( $is_readonly ? ' readonly="readonly"' : '' ) . '>%s</textarea> %s</td></tr>',
+			'<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s</label>:</th><td><textarea cols="80" rows="' . esc_attr( $rows ) . '" id="%s" name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%2$s]" onchange="%s" spellcheck="false"' . ( $is_readonly ? ' readonly="readonly"' : '' ) . '>%s</textarea> %s</td></tr>',
 			esc_html( $name ),
 			esc_attr( $id ),
 			$on_change,

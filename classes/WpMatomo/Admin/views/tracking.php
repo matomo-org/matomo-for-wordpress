@@ -126,6 +126,19 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 		);
 
 		$matomo_form->show_checkbox(
+			'track_search',
+			esc_html__( 'Track search', 'matomo' ),
+			esc_html__( 'Use Matomo\'s advanced Site Search Analytics feature.', 'matomo' ) . ' ' .
+			sprintf(
+				esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ),
+				'<a href="https://matomo.org/faq/reports/tracking-site-search-keywords/#track-site-search-using-the-tracking-api-advanced-users-only" rel="noreferrer noopener" target="_BLANK">',
+				'</a>'
+			),
+			false,
+			$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager'
+		);
+
+		$matomo_form->show_checkbox(
 			'track_404',
 			esc_html__( 'Track 404', 'matomo' ),
 			esc_html__( 'Matomo can automatically add a 404-category to track 404-page-visits.', 'matomo' ) .
@@ -251,19 +264,6 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 			esc_html__( 'Disable all tracking cookies for a visitor.', 'matomo' ),
 			false,
 			$matomo_full_generated_tracking_group
-		);
-
-		$matomo_form->show_checkbox(
-			'track_search',
-			esc_html__( 'Track search', 'matomo' ),
-			esc_html__( 'Use Matomo\'s advanced Site Search Analytics feature.', 'matomo' ) . ' ' .
-			sprintf(
-				esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ),
-				'<a href="https://matomo.org/faq/reports/tracking-site-search-keywords/#track-site-search-using-the-tracking-api-advanced-users-only" rel="noreferrer noopener" target="_BLANK">',
-				'</a>'
-			),
-			false,
-			$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager'
 		);
 
 		$matomo_form->show_checkbox(
@@ -479,7 +479,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 			'matomo-track-option matomo-track-option-default matomo-track-option-tagmanager  matomo-track-option-manually',
 			! $settings->is_network_enabled(),
 			'',
-			( $settings->get_global_option( 'track_mode' ) !== 'manually' ),
+			false,
 			false
 		);
 
@@ -492,7 +492,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 			'matomo-track-option matomo-track-option-default  matomo-track-option-manually',
 			true,
 			'',
-			( $settings->get_global_option( 'track_mode' ) !== 'manually' ),
+			false,
 			false
 		);
 		?>

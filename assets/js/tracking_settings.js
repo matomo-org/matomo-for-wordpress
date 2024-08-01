@@ -8,7 +8,7 @@
 
 window.jQuery(document).ready(function ($) {
   if (typeof mtmTrackingSettingsAjax !== 'undefined' && mtmTrackingSettingsAjax.ajax_url) {
-    $('.auto-tracking-form').on('change', function () {
+    function updateGeneratedTrackingCode() {
       var settings = $('form#tracking-settings').serializeArray().reduce(function (accumulator, current) {
         if (/^_/.test(current.name)) {
           return accumulator;
@@ -30,6 +30,10 @@ window.jQuery(document).ready(function ($) {
           }
         },
       );
-    });
+    }
+
+    $('.auto-tracking-form').on('change', updateGeneratedTrackingCode);
+
+    updateGeneratedTrackingCode();
   }
 });
