@@ -7,6 +7,7 @@
  */
 
 window.jQuery(document).ready(function ($) {
+  // generated tracking code update
   if (typeof mtmTrackingSettingsAjax !== 'undefined' && mtmTrackingSettingsAjax.ajax_url) {
     function updateGeneratedTrackingCode() {
       var settings = $('form#tracking-settings').serializeArray().reduce(function (accumulator, current) {
@@ -33,7 +34,15 @@ window.jQuery(document).ready(function ($) {
     }
 
     $('.auto-tracking-form').on('change', updateGeneratedTrackingCode);
-
     updateGeneratedTrackingCode();
   }
+
+  // warn if user has unsaved changes
+  var initialFormContents = $('#tracking-settings').serialize();
+  window.addEventListener('beforeunload', function (e) {
+    var currentFormContents = $('#tracking-settings').serialize();
+    if (initialFormContents !== currentFormContents) {
+      e.preventDefault();
+    }
+  });
 });

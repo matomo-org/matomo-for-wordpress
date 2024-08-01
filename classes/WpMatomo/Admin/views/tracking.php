@@ -58,9 +58,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 <form id="tracking-settings" method="post" data-track-mode="<?php echo esc_attr( $track_mode ); ?>">
 	<?php wp_nonce_field( TrackingSettings::NONCE_NAME ); ?>
 	<p>
-		<?php esc_html_e( 'Here you can optionally configure the tracking to your liking if you want (you don\'t have to configure it).', 'matomo' ); ?>
-		<?php esc_html_e( 'The configured tracking code will be embedded into your website automatically and you won\'t need to do anything unless you disabled the tracking.', 'matomo' ); ?>
-		<?php esc_html_e( 'If you are seeing a tracking code below, you don\'t have to embed this tracking code into your site. The plugin does this automatically for you.', 'matomo' ); ?>
+		<?php esc_html_e( 'Here you can configure tracking to your liking, if you\'d like. Alternatively, you can simply enable tracking, and just rely on the default settings.', 'matomo' ); ?>
 	</p>
 
 	<table class="matomo-tracking-form widefat">
@@ -231,7 +229,8 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 			false,
 			'',
 			true,
-			false
+			false,
+			true
 		);
 
 		$matomo_form->show_textarea(
@@ -244,7 +243,8 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 			false,
 			'',
 			true,
-			false
+			false,
+			true
 		);
 		?>
 	</table>
