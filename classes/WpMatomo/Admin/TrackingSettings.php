@@ -303,6 +303,8 @@ class TrackingSettings implements AdminSettingsInterface {
 		$tracking_code_generator      = new TrackingCodeGenerator( $this->settings, GeneratorOptions::from_settings( $this->settings ) );
 		$matomo_default_tracking_code = $tracking_code_generator->prepare_tracking_code( $idsite );
 
+		$matomo_exclusion_settings_url = home_url( '/wp-admin/admin.php?page=matomo-settings&tab=exlusions' );
+
 		include dirname( __FILE__ ) . '/views/tracking.php';
 	}
 
@@ -362,7 +364,7 @@ class TrackingSettings implements AdminSettingsInterface {
 
 				wp_enqueue_script(
 					'matomo-tracking-settings',
-					plugins_url( '/assets/js/tracking_settings.js', MATOMO_ANALYTICS_FILE ),
+					plugins_url( '/assets/js/settings.js', MATOMO_ANALYTICS_FILE ),
 					[ 'jquery' ],
 					'1.0.1',
 					true

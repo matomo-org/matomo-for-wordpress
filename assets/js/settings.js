@@ -37,12 +37,24 @@ window.jQuery(document).ready(function ($) {
     updateGeneratedTrackingCode();
   }
 
-  // warn if user has unsaved changes
-  var initialFormContents = $('#tracking-settings').serialize();
-  window.addEventListener('beforeunload', function (e) {
+  function beforePageUnload(e) {
     var currentFormContents = $('#tracking-settings').serialize();
     if (initialFormContents !== currentFormContents) {
       e.preventDefault();
     }
+  }
+
+  // warn if user has unsaved changes
+  var initialFormContents = $('#tracking-settings').serialize();
+  window.addEventListener('beforeunload', beforePageUnload);
+  $('form#tracking-settings').on('submit', function () {
+    window.removeEventListener('beforeunload', beforePageUnload);
+  });
+
+  // even spacing between post types
+  var postLengths = $('.post-types > div').toArray().map((function (e) { return $(e).width(); }));
+  var maxPostLength = Math.max.apply(null, postLengths);
+  $('.post-types > div').each(function () {
+    $(this).width(maxPostLength);
   });
 });
