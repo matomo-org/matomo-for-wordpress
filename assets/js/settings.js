@@ -50,11 +50,4 @@ window.jQuery(document).ready(function ($) {
   $('form#tracking-settings').on('submit', function () {
     window.removeEventListener('beforeunload', beforePageUnload);
   });
-
-  // even spacing between post types
-  var postLengths = $('.post-types > div').toArray().map((function (e) { return $(e).width(); }));
-  var maxPostLength = Math.max.apply(null, postLengths);
-  $('.post-types > div').each(function () {
-    $(this).width(maxPostLength);
-  });
 });
