@@ -33,7 +33,7 @@ window.jQuery(document).ready(function ($) {
       );
     }
 
-    $('.auto-tracking-form').on('change', updateGeneratedTrackingCode);
+    $('#auto-tracking-settings').on('change', ':not(#generatedTrackingCode)', updateGeneratedTrackingCode);
     updateGeneratedTrackingCode();
   }
 
