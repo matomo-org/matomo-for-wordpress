@@ -28,6 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var string[] $settings_errors */
 /** @var array $cookie_consent_modes */
 /** @var string $matomo_exclusion_settings_url */
+/** @var array $matomo_track_mode_descriptions $matomo_form */
 
 $matomo_form  = new \WpMatomo\Admin\TrackingSettings\Forms( $settings );
 $matomo_paths = new Paths();
@@ -87,6 +88,10 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 		transform: rotate(90deg);
 		margin-right: 6px;
 	}
+
+	#tracking-settings .widefat td p.description {
+		margin-bottom: 0;
+	}
 </style>
 <script>
 	window.jQuery(document).ready(function ($) {
@@ -120,23 +125,11 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 	<table class="matomo-tracking-form widefat">
 		<tbody>
 		<?php
-		$matomo_description = sprintf(
-			'%s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s<br /><strong>%s:</strong> %s',
-			esc_html__( 'You can choose between four tracking modes:', 'matomo' ),
-			esc_html__( 'Disabled', 'matomo' ),
-			esc_html__( 'Matomo will not add the tracking code itself. Use this if you want to add the tracking code by hand your template files or use another plugin to add the tracking code.', 'matomo' ),
-			esc_html__( 'Auto tracking', 'matomo' ),
-			esc_html__( 'Matomo will automatically generate and embed the tracking code based on the Auto tracking settings below.', 'matomo' ) . ' ' . esc_html__( 'This is the recommended mode for most users.', 'matomo' ),
-			esc_html__( 'Enter manually', 'matomo' ),
-			esc_html__( 'Define your own tracking JavaScript by hand below, and Matomo will embed it into your website.', 'matomo' ) . ( $settings->is_network_enabled() ? ' ' . esc_html__( 'Use the placeholder {ID} to add the Matomo site ID.', 'matomo' ) : '' ),
-			esc_html__( 'Tag Manager', 'matomo' ),
-			esc_html__( 'If you\'ve created containers in the Tag Manager, you can use this tracking mode to embed one of them into your website automatically.', 'matomo' )
-		);
 		$matomo_form->show_radio(
 			'track_mode',
 			esc_html__( 'Tracking mode', 'matomo' ),
 			$track_modes,
-			$matomo_description,
+			$matomo_track_mode_descriptions,
 			'jQuery(\'#track_mode\').closest(\'form\').attr(\'data-track-mode\', jQuery(\'input[name="matomo[track_mode]"]:checked\').val());',
 			false,
 			'track_mode'
@@ -292,7 +285,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 				echo '<div><input type="checkbox" ' . ( isset( $matomo_filter [ $object_post_type->name ] ) && $matomo_filter [ $object_post_type->name ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[add_post_annotations][' . esc_attr( $object_post_type->name ) . ']" /> <span>' . esc_html( $object_post_type->label ) . '</span></div>';
 			}
 			echo '</div>';
-			echo '<span class="dashicons dashicons-editor-help" style="cursor: pointer;" onclick="jQuery(\'#add_post_annotations-desc\').toggleClass(\'hidden\');"></span> <p class="description hidden" id="add_post_annotations-desc">' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/annotations/" rel="noreferrer noopener" target="_BLANK">', '</a>' ) . '</p></td></tr>';
+			echo '<p class="description" id="add_post_annotations-desc">' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/annotations/" rel="noreferrer noopener" target="_BLANK">', '</a>' ) . '</p></td></tr>';
 			?>
 			</tbody>
 		</table>
@@ -316,7 +309,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 	<hr/>
 
 	<div id="auto-tracking-settings" class="collapsible-settings">
-		<h2><?php esc_html_e( 'Auto Tracking', 'matomo' ); ?></h2>
+		<h2><?php esc_html_e( 'Settings for Auto Tracking mode', 'matomo' ); ?></h2>
 		<p><?php esc_html_e( 'The Auto tracking mode automatically generates and embeds the Matomo tracking JavaScript based on the settings below. Pick and choose what you\'d like to track, and Matomo for WordPress will set everything else up for you.', 'matomo' ); ?></p>
 		<p id="showGeneratedTrackingCode"><a href="#"><?php esc_html_e( 'Show generated tracking code', 'matomo' ); ?></a></p>
 		<p id="hideGeneratedTrackingCode" style="display:none;"><a href="#"><?php esc_html_e( 'Hide generated tracking code', 'matomo' ); ?></a></p>
@@ -582,7 +575,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 	<hr/>
 
 	<div id="manual-tracking-settings" class="collapsible-settings">
-		<h2><?php esc_html_e( 'Manual Tracking', 'matomo' ); ?></h2>
+		<h2><?php esc_html_e( 'Settings for Manual Tracking mode', 'matomo' ); ?></h2>
 		<p><?php esc_html_e( 'With the Manual tracking mode, you can write the JavaScript tracking code yourself, customizing it in whatever way you need to. Matomo for WordPress will then embed this script into your website\'s HTML.', 'matomo' ); ?></p>
 		<table class="matomo-tracking-form widefat">
 			<tbody>
@@ -723,8 +716,8 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 		<p>
 			<?php echo sprintf( esc_html__( 'Want to embed the tracking code manually into your site or using a different plugin? No problem! Simply copy/paste below tracking code. Want to adjust it? %1$sCheck out our developer documentation.%2$s', 'matomo' ), '<a href="https://developer.matomo.org/guides/tracking-javascript-guide" target="_blank" rel="noreferrer noopener">', '</a>' ); ?>
 		</p>
-		<?php echo '<pre><textarea>' . esc_html( implode( ";\n", explode( ';', $matomo_default_tracking_code['script'] ) ) ) . '</textarea></pre>'; ?>
+		<?php echo '<pre><textarea readonly="readonly">' . esc_html( preg_replace( '/\\n+/', "\n", implode( ";\n", explode( ';', $matomo_default_tracking_code['script'] ) ) ) ) . '</textarea></pre>'; ?>
 		<h3><?php esc_html_e( '<noscript> tracking code', 'matomo' ); ?></h3>
-		<?php echo '<pre><textarea class="no_script">' . esc_html( $matomo_default_tracking_code['noscript'] ) . '</textarea></pre>'; ?>
+		<?php echo '<pre><textarea readonly="readonly" class="no_script">' . esc_html( $matomo_default_tracking_code['noscript'] ) . '</textarea></pre>'; ?>
 	</div>
 <?php } ?>

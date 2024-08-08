@@ -279,13 +279,20 @@ class TrackingSettings implements AdminSettingsInterface {
 				'disabled' => false,
 			],
 			self::TRACK_MODE_MANUALLY   => [
-				'name'     => esc_html__( 'Enter manually', 'matomo' ),
+				'name'     => esc_html__( 'Manual', 'matomo' ),
 				'disabled' => false,
 			],
 			self::TRACK_MODE_TAGMANAGER => [
 				'name'     => esc_html__( 'Tag Manager', 'matomo' ),
 				'disabled' => false,
 			],
+		];
+
+		$matomo_track_mode_descriptions = [
+			self::TRACK_MODE_DISABLED   => esc_html__( 'Matomo will not add the tracking code itself. Use this if you want to add the tracking code by hand your template files or use another plugin to add the tracking code.', 'matomo' ),
+			self::TRACK_MODE_DEFAULT    => esc_html__( 'Matomo will automatically generate and embed the tracking code based on the Auto tracking settings below.', 'matomo' ) . ' ' . esc_html__( 'This is the recommended mode for most users.', 'matomo' ),
+			self::TRACK_MODE_MANUALLY   => esc_html__( 'Define your own tracking JavaScript by hand below, and Matomo will embed it into your website.', 'matomo' ) . ( $settings->is_network_enabled() ? ' ' . esc_html__( 'Use the placeholder {ID} to add the Matomo site ID.', 'matomo' ) : '' ),
+			self::TRACK_MODE_TAGMANAGER => esc_html__( 'If you\'ve created containers in the Tag Manager, you can use this tracking mode to embed one of them into your website automatically.', 'matomo' ),
 		];
 
 		if ( empty( $containers ) ) {
