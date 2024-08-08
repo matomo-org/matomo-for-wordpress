@@ -99,7 +99,7 @@ ol.matomo-list {
 
 #matomo_default_tracking_code textarea {
     width: 100%;
-    height: 140px;
+    height: 280px;
 }
 #matomo_default_tracking_code textarea.no_script {
     height: 50px;

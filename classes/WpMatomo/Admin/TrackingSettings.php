@@ -275,7 +275,7 @@ class TrackingSettings implements AdminSettingsInterface {
 				'disabled' => false,
 			],
 			self::TRACK_MODE_DEFAULT    => [
-				'name'     => esc_html__( 'Auto', 'matomo' ),
+				'name'     => esc_html__( 'Auto (recommended)', 'matomo' ),
 				'disabled' => false,
 			],
 			self::TRACK_MODE_MANUALLY   => [
@@ -291,14 +291,21 @@ class TrackingSettings implements AdminSettingsInterface {
 		$matomo_track_mode_descriptions = [
 			self::TRACK_MODE_DISABLED   => esc_html__( 'Matomo will not add the tracking code itself. Use this if you want to add the tracking code by hand your template files or use another plugin to add the tracking code.', 'matomo' ),
 			self::TRACK_MODE_DEFAULT    => esc_html__( 'Matomo will automatically generate and embed the tracking code based on the Auto tracking settings below.', 'matomo' ) . ' ' . esc_html__( 'This is the recommended mode for most users.', 'matomo' ),
-			self::TRACK_MODE_MANUALLY   => esc_html__( 'Define your own tracking JavaScript by hand below, and Matomo will embed it into your website.', 'matomo' ) . ( $settings->is_network_enabled() ? ' ' . esc_html__( 'Use the placeholder {ID} to add the Matomo site ID.', 'matomo' ) : '' ),
+			self::TRACK_MODE_MANUALLY   => sprintf(
+				esc_html__( '%1$sDefine your own tracking JavaScript by hand below%2$s, and Matomo will embed it into your website.', 'matomo' ) . ( $settings->is_network_enabled() ? ' ' . esc_html__( 'Use the placeholder {ID} to add the Matomo site ID.', 'matomo' ) : '' ),
+				'<a href="#manual-tracking-settings">',
+				'</a>'
+			),
 			self::TRACK_MODE_TAGMANAGER => esc_html__( 'If you\'ve created containers in the Tag Manager, you can use this tracking mode to embed one of them into your website automatically.', 'matomo' ),
 		];
 
 		if ( empty( $containers ) ) {
-			$track_modes[ self::TRACK_MODE_TAGMANAGER ]['disabled'] = true;
-			$track_modes[ self::TRACK_MODE_TAGMANAGER ]['tooltip']  = __( 'No containers were found. Create one to be able to use the Tag Manager tracking mode.', 'matomo' );
+			$track_modes[ self::TRACK_MODE_TAGMANAGER ]['disabled']         = true;
+			$track_modes[ self::TRACK_MODE_TAGMANAGER ]['tooltip']          = esc_html__( 'No containers were found. Create one to be able to use the Tag Manager tracking mode.', 'matomo' );
+			$matomo_track_mode_descriptions[ self::TRACK_MODE_TAGMANAGER ] .= ' ' . esc_html__( 'This mode is not selectable since no containers have been created in the Tag Manager.', 'matomo' );
 		}
+
+		$matomo_track_mode_descriptions[ self::TRACK_MODE_TAGMANAGER ] .= '<br/><a href="https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/" target="_blank" rel="noreferrer noopener">' . esc_html__( 'Read our documentation on the Matomo Tag Manager to learn more.', 'matomo' ) . '</a>';
 
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
