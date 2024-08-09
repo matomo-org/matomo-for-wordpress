@@ -50,4 +50,14 @@ window.jQuery(document).ready(function ($) {
   $('form#tracking-settings').on('submit', function () {
     window.removeEventListener('beforeunload', beforePageUnload);
   });
+
+  // auto-expand section if hash points to section
+  function onHashChange() {
+    var target = $(window.location.hash);
+    if (target.length) {
+      target.closest('.collapsible-settings').addClass('expanded');
+    }
+  }
+  window.addEventListener('hashchange', onHashChange);
+  onHashChange();
 });
