@@ -116,7 +116,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 		});
 	});
 </script>
-<form id="tracking-settings" method="post" data-track-mode="<?php echo esc_attr( $track_mode ); ?>">
+<form id="tracking-settings" method="post" data-track-mode="<?php echo esc_attr( $track_mode ); ?>" action="#">
 	<?php wp_nonce_field( TrackingSettings::NONCE_NAME ); ?>
 	<p>
 		<?php esc_html_e( 'Here you can configure visit tracking to your liking. Alternatively, you can simply enable tracking, and just rely on the default settings.', 'matomo' ); ?>
