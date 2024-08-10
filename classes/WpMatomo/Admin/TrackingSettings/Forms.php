@@ -22,8 +22,8 @@ use WpMatomo\Settings;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
+
 /**
- * we deal with HTML
  * phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
  */
 class Forms {
