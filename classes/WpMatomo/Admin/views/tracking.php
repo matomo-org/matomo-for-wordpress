@@ -692,7 +692,9 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 					'always'    => esc_html__( 'Always enabled', 'matomo' ),
 					'on_demand' => esc_html__( 'Enabled on demand', 'matomo' ),
 				],
-				__( 'For security and privacy reasons you should only enable this setting for as short time of a time as possible.', 'matomo' ),
+				__( 'For security and privacy reasons you should only enable this setting for as short time of a time as possible.', 'matomo' )
+				. '<br/>'
+				. __( 'If enabling on demand, add \'&debug=1\' to tracker requests to trigger debug output.', 'matomo' ),
 				'',
 				false,
 				$matomo_full_generated_tracking_group . ' matomo-track-option-disabled matomo-track-option-manually matomo-track-option-tagmanager'
