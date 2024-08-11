@@ -49,7 +49,7 @@ class AjaxTracker extends \MatomoTracker {
 		$this->pageUrl     = ! empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : false;
 
 		if ( ! $settings->get_global_option( 'disable_cookies' ) ) {
-			$tracking_code_generator = new TrackingCodeGenerator( $settings, GeneratorOptions::from_settings( $settings ) );
+			$tracking_code_generator = new TrackingCodeGenerator( $settings, new GeneratorOptions( $settings ) );
 			$cookie_domain = $tracking_code_generator->get_tracking_cookie_domain();
 			$this->enableCookies( $cookie_domain );
 		} else {

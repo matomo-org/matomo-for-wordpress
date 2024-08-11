@@ -314,7 +314,7 @@ class TrackingSettings implements AdminSettingsInterface {
 
 		$cookie_consent_modes = $this->get_cookie_consent_modes();
 
-		$tracking_code_generator      = new TrackingCodeGenerator( $this->settings, GeneratorOptions::from_settings( $this->settings ) );
+		$tracking_code_generator      = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings ) );
 		$matomo_default_tracking_code = $tracking_code_generator->prepare_tracking_code( $idsite );
 
 		$matomo_exclusion_settings_url = home_url( '/wp-admin/admin.php?page=matomo-settings&tab=exlusions' );
@@ -406,7 +406,7 @@ class TrackingSettings implements AdminSettingsInterface {
 		$blod_id = get_current_blog_id();
 		$idsite  = Site::get_matomo_site_id( $blod_id );
 
-		$generator     = new TrackingCodeGenerator( \WpMatomo::$settings, GeneratorOptions::from_request( $_POST ) );
+		$generator     = new TrackingCodeGenerator( \WpMatomo::$settings, new GeneratorOptions( \WpMatomo::$settings, $_POST ) );
 		$tracking_code = $generator->prepare_tracking_code( $idsite );
 
 		wp_send_json( $tracking_code );

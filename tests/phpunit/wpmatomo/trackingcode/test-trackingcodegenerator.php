@@ -3,12 +3,10 @@
  * @package matomo
  */
 
-use WpMatomo\Access;
 use WpMatomo\Admin\TrackingSettings;
 use WpMatomo\Admin\CookieConsent;
-use WpMatomo\Capabilities;
-use WpMatomo\Roles;
 use WpMatomo\Settings;
+use WpMatomo\TrackingCode\GeneratorOptions;
 use WpMatomo\TrackingCode\TrackingCodeGenerator;
 
 class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
@@ -31,7 +29,7 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 	}
 
 	private function make_tracking_code() {
-		$this->tracking_code = new TrackingCodeGenerator( $this->settings, \WpMatomo\TrackingCode\GeneratorOptions::from_settings( $this->settings ) );
+		$this->tracking_code = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings ) );
 	}
 
 	private function get_tracking_code() {
@@ -279,5 +277,16 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 			)
 		);
 		$this->assertStringContainsString( "_paq.push(['requireConsent']);", $this->get_tracking_code() );
+	}
+
+	public function test_get_tracking_cookie_domain_no_cookie_domain() {
+		$this->make_tracking_code();
+		$this->assertSame( '', $this->tracking_code->get_tracking_cookie_domain() );
+	}
+
+	public function test_get_tracking_cookie_domain_returns_cookie_domain() {
+		$this->make_tracking_code();
+		$this->settings->set_global_option( 'track_across', true );
+		$this->assertSame( '*.example.org', $this->tracking_code->get_tracking_cookie_domain() );
 	}
 }

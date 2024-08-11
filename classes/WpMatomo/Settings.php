@@ -54,9 +54,11 @@ class Settings {
 	/**
 	 * Register default configuration set
 	 *
+	 * (public for tests)
+	 *
 	 * @var array
 	 */
-	private $default_global_settings = [
+	public $default_global_settings = [
 		// Plugin settings
 		'last_settings_update'                     => 0,
 		self::OPTION_LAST_TRACKING_SETTINGS_CHANGE => 0,

@@ -40,7 +40,7 @@ class TrackingCode {
 	public function __construct( $settings ) {
 		$this->settings  = $settings;
 		$this->logger    = new Logger();
-		$this->generator = new TrackingCodeGenerator( $this->settings, GeneratorOptions::from_settings( $this->settings ) );
+		$this->generator = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings ) );
 		$this->generator->register_hooks();
 	}
 
