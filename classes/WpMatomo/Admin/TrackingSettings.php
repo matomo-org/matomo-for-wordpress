@@ -403,8 +403,8 @@ class TrackingSettings implements AdminSettingsInterface {
 	public static function generate_tracking_code() {
 		check_ajax_referer( self::NONCE_NAME_GENERATE_TRACKING_CODE_AJAX );
 
-		$blod_id = get_current_blog_id();
-		$idsite  = Site::get_matomo_site_id( $blod_id );
+		$blog_id = get_current_blog_id();
+		$idsite  = Site::get_matomo_site_id( $blog_id );
 
 		$generator     = new TrackingCodeGenerator( \WpMatomo::$settings, new GeneratorOptions( \WpMatomo::$settings, $_POST ) );
 		$tracking_code = $generator->prepare_tracking_code( $idsite );
