@@ -61,7 +61,22 @@ class Forms {
 	 * @param string  $on_change javascript for onchange event (default: empty)
 	 */
 	public function show_checkbox( $id, $name, $description, $is_hidden = false, $group_name = '', $hide_description = false, $on_change = '' ) {
-		printf( '<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '"><th scope="row"><label for="%2$s">%s:</label></th><td><input type="checkbox" value="1"' . ( $this->settings->get_global_option( $id ) ? ' checked="checked"' : '' ) . ' onchange="jQuery(\'#%s\').val(this.checked?1:0);%s" /><input id="%2$s" type="hidden" name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%2$s]" value="' . (int) $this->settings->get_global_option( $id ) . '" /> %s</td></tr>', esc_html( $name ), esc_attr( $id ), $on_change, $this->get_description( $id, $description, $hide_description ) );
+		printf(
+			'<tr class="' . esc_attr( $group_name ) . ( $is_hidden ? ' hidden' : '' ) . '">'
+			. '<th scope="row"><label for="%2$s">%s:</label></th>'
+			. '<td>'
+			. '<label class="matomo-toggle">'
+			. '<input type="checkbox" value="1"' . ( $this->settings->get_global_option( $id ) ? ' checked="checked"' : '' ) . ' onchange="jQuery(\'#%s\').val(this.checked?1:0);%s" />'
+			. '<span class="slider"></span>'
+			. '</label>'
+			. '<input id="%2$s" type="hidden" name="' . esc_attr( TrackingSettings::FORM_NAME ) . '[%2$s]" value="' . (int) $this->settings->get_global_option( $id ) . '" /> %s'
+			. '</td>'
+			. '</tr>',
+			esc_html( $name ),
+			esc_attr( $id ),
+			$on_change,
+			$this->get_description( $id, $description, $hide_description )
+		);
 	}
 
 	/**

@@ -113,3 +113,51 @@ table.matomo-tracking-form textarea {
 table.matomo-tracking-form th {
     max-width: 30%;
 }
+
+/* toggle styles */
+.matomo-toggle {
+    position: relative;
+    display: inline-block;
+    width: 2.375em;
+    height: 1.345em;
+}
+.matomo-toggle input {
+    height: 0;
+    width: 0;
+    opacity: 0;
+}
+.matomo-toggle .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 1.345em;
+}
+.matomo-toggle .slider:before {
+    position: absolute;
+    content: "";
+    height: 1.03em;
+    width: 1.03em;
+    left: .15835em;
+    bottom: .15835em;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+}
+.matomo-toggle input:checked + .slider {
+    background-color: #2271b1;
+}
+.matomo-toggle input:focus + .slider {
+    box-shadow: 0 0 1px #2271b1;
+}
+.matomo-toggle input:checked + .slider:before {
+    -webkit-transform: translateX(1.03em);
+    -ms-transform: translateX(1.03em);
+    transform: translateX(1.03em);
+}
