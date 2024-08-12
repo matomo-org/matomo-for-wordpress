@@ -92,6 +92,19 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 	#tracking-settings .widefat td p.description {
 		margin-bottom: 0;
 	}
+
+	label[for="tagmanger_container_ids"] {
+		display: block;
+		margin-bottom: 1em;
+	}
+
+	#matomo-tagmanager-container-select {
+		display: none;
+	}
+
+	#tracking-settings[data-track-mode="tagmanager"] #matomo-tagmanager-container-select {
+		display: table-row;
+	}
 </style>
 <script>
 	window.jQuery(document).ready(function ($) {
@@ -136,15 +149,17 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 		);
 
 		if ( ! empty( $containers ) ) {
-			echo '<tr class="matomo-track-option matomo-track-option-tagmanager' . ( $settings->get_global_option( 'track_mode' ) !== TrackingSettings::TRACK_MODE_TAGMANAGER ? ' hidden' : '' ) . '">';
-			echo '<th scope="row"><label for="tagmanger_container_ids">' . esc_html__( 'Add these Tag Manager containers', 'matomo' ) . '</label>:</th><td>';
+			echo '<tr class="matomo-track-option matomo-track-option-tagmanager" id="matomo-tagmanager-container-select">';
+			echo '<th scope="row"></th><td>';
+			echo '<div style="margin-left:1.5em">';
+			echo '<label for="tagmanger_container_ids">' . esc_html__( 'Add these Tag Manager containers', 'matomo' ) . ':</label>';
 			$selected_container_ids = $settings->get_global_option( 'tagmanger_container_ids' );
 			foreach ( $containers as $container_id => $container_name ) {
-				echo '<input type="checkbox" ' . ( isset( $selected_container_ids [ $container_id ] ) && $selected_container_ids [ $container_id ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[tagmanger_container_ids][' . esc_attr( $container_id ) . ']" /> ID:' . esc_html( $container_id ) . ' Name: ' . esc_html( $container_name ) . ' &nbsp; <br />';
+				echo '<input type="checkbox" ' . ( isset( $selected_container_ids [ $container_id ] ) && $selected_container_ids [ $container_id ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[tagmanger_container_ids][' . esc_attr( $container_id ) . ']" /> <strong>' . esc_html( $container_name ) . '</strong> (ID: ' . esc_html( $container_id ) . ')&nbsp; <br />';
 			}
-			echo '<br /><br /><a href="' . esc_url( menu_page_url( \WpMatomo\Admin\Menu::SLUG_TAGMANAGER, false ) ) . '" rel="noreferrer noopener" target="_blank">Edit containers <span class="dashicons-before dashicons-external"></span></a>';
-			echo '<br /><span class="dashicons dashicons-info-outline"></span> For Matomo to track you will need to add a Matomo Tag to the container. It otherwise won\'t track automatically.';
-			echo '</td></tr>';
+			echo '<a style="margin-top:.5em;display:inline-block;" href="' . esc_url( menu_page_url( \WpMatomo\Admin\Menu::SLUG_TAGMANAGER, false ) ) . '" rel="noreferrer noopener" target="_blank">Edit containers <span class="dashicons-before dashicons-external"></span></a>';
+			echo '<p style="margin-top:1em"><span class="dashicons dashicons-info-outline"></span> ' . esc_html__( 'For Matomo to track you will need to add a Matomo Tag to the container. It otherwise won\'t track automatically.', 'matomo' ) . '</p>';
+			echo '</div></td></tr>';
 		}
 		?>
 		</tbody>
@@ -278,7 +293,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 			<tbody>
 			<?php
 			echo '<tr class="' . esc_attr( $matomo_full_generated_tracking_group ) . ' matomo-track-option-manually">';
-			echo '<th scope="row"><label for="add_post_annotations">' . esc_html__( 'On new post of type', 'matomo' ) . '</label>:</th><td>';
+			echo '<th scope="row"><label for="add_post_annotations">' . esc_html__( 'On new post of type', 'matomo' ) . ':</label></th><td>';
 			echo '<div class="post-types">';
 			$matomo_filter = $settings->get_global_option( 'add_post_annotations' );
 			foreach ( get_post_types( [], 'objects' ) as $object_post_type ) {
