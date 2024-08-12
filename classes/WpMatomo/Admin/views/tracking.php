@@ -194,7 +194,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 			</tbody>
 		</table>
 
-		<h4><?php esc_html_e( 'Backoffice Tracking', 'matomo' ); ?></h4>
+		<h4><?php esc_html_e( 'Other Tracking', 'matomo' ); ?></h4>
 		<table class="matomo-tracking-form widefat">
 			<tbody>
 			<?php
@@ -225,14 +225,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 				false,
 				$matomo_full_generated_tracking_group . ' matomo-track-option-tagmanager'
 			);
-			?>
-			</tbody>
-		</table>
 
-		<h4><?php esc_html_e( 'Other Tracking', 'matomo' ); ?></h4>
-		<table class="matomo-tracking-form widefat">
-			<tbody>
-			<?php
 			$matomo_form->show_checkbox(
 				'track_search',
 				esc_html__( 'Track search', 'matomo' ),
