@@ -154,7 +154,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 
 	<div id="general-settings" class="collapsible-settings">
 		<h2><?php esc_html_e( 'General', 'matomo' ); ?></h2>
-		<p><?php esc_html_e( 'These settings apply to multiple tracking modes. Most are available in all tracking modes, but some are only supported by one or two modes.', 'matomo' ); ?></p>
+		<p><?php esc_html_e( 'These settings apply to all tracking modes (unless otherwise stated).', 'matomo' ); ?></p>
 
 		<h4><?php esc_html_e( 'Ecommerce Tracking', 'matomo' ); ?></h4>
 		<table class="matomo-tracking-form widefat">
@@ -297,7 +297,8 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 			$matomo_form->show_checkbox(
 				'track_noscript',
 				__( 'Add &lt;noscript&gt; to track visitors who disable JavaScript', 'matomo' ),
-				__( 'Adds the &lt;noscript&gt; code to your footer. This code is either generated automatically or defined by you, based on which tracking mode you choose use. This can be useful if you have a lot of visitors that have JavaScript disabled.', 'matomo' ),
+				__( 'Adds the &lt;noscript&gt; code to your footer. This code is either generated automatically or defined by you, based on which tracking mode you choose use. This can be useful if you have a lot of visitors that have JavaScript disabled.', 'matomo' )
+				. '<br/><br/><em>' . esc_html__( 'This setting does not apply to the Tag Manager tracking mode.', 'matomo' ) . '</em>',
 				false,
 				'matomo-track-option matomo-track-option-default  matomo-track-option-manually'
 			);
@@ -567,6 +568,33 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 				false,
 				$matomo_full_generated_tracking_group
 			);
+
+			$matomo_form->show_select(
+				'track_api_endpoint',
+				__( 'Endpoint for HTTP Tracking API', 'matomo' ),
+				[
+					'default' => esc_html__( 'Default', 'matomo' ),
+					'restapi' => esc_html__( 'Through WordPress Rest API', 'matomo' ),
+				],
+				sprintf( __( 'By default the HTTP Tracking API points to your Matomo plugin directory "%1$s". You can choose to use the WP Rest API (%2$s) instead for example to hide matomo.php or if the other URL doesn\'t work for you. Note: If the "Tag Manager" tracking mode is selected, then this URL will only be used in feed tracking.', 'matomo' ), esc_html( $matomo_paths->get_tracker_api_url_in_matomo_dir() ), esc_html( $matomo_paths->get_tracker_api_rest_api_endpoint() ) ),
+				'',
+				false,
+				$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager'
+			);
+
+			$matomo_form->show_select(
+				'track_js_endpoint',
+				__( 'Endpoint for JavaScript tracker', 'matomo' ),
+				[
+					'default' => esc_html__( 'Default', 'matomo' ),
+					'restapi' => esc_html__( 'Through WordPress Rest API (slower)', 'matomo' ),
+					'plugin'  => esc_html__( 'Plugin (an alternative JS file if the default is blocked by the webserver)', 'matomo' ),
+				],
+				sprintf( __( 'By default the JS tracking code will be loaded from "%1$s". You can choose to serve the JS file through the WP Rest API (%2$s) for example to hide matomo.js. Please note that this means every request to the JavaScript file will launch WordPress PHP and therefore will be slower compared to your webserver serving the JS file directly. Using the "Plugin" method will cause issues with our paid Heatmap and Session Recording, Form Analytics, and Media Analytics plugin.', 'matomo' ), esc_html( $matomo_paths->get_js_tracker_url_in_matomo_dir() ), esc_html( $matomo_paths->get_js_tracker_rest_api_endpoint() ) ),
+				'',
+				false,
+				$matomo_full_generated_tracking_group
+			);
 			?>
 			</tbody>
 		</table>
@@ -628,7 +656,8 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 					'disabled' => esc_html__( 'Disabled (default)', 'matomo' ),
 					'https'    => esc_html__( 'https (SSL)', 'matomo' ),
 				],
-				__( 'Choose if you want to force Matomo to use HTTP or HTTPS.', 'matomo' ),
+				__( 'Choose if you want to force Matomo to use HTTP or HTTPS.', 'matomo' )
+				. '<br/><br/><em>' . esc_html__( 'This setting does not apply to the Manual tracking mode.', 'matomo' ) . '</em>',
 				'',
 				false,
 				$matomo_full_generated_tracking_group . ' matomo-track-option-tagmanager'
@@ -645,31 +674,18 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 				false,
 				'matomo-track-option matomo-track-option-default  matomo-track-option-tagmanager matomo-track-option-manually'
 			);
-			$matomo_form->show_select(
-				'track_api_endpoint',
-				__( 'Endpoint for HTTP Tracking API', 'matomo' ),
-				[
-					'default' => esc_html__( 'Default', 'matomo' ),
-					'restapi' => esc_html__( 'Through WordPress Rest API', 'matomo' ),
-				],
-				sprintf( __( 'By default the HTTP Tracking API points to your Matomo plugin directory "%1$s". You can choose to use the WP Rest API (%2$s) instead for example to hide matomo.php or if the other URL doesn\'t work for you. Note: If the "Tag Manager" tracking mode is selected, then this URL will only be used in feed tracking.', 'matomo' ), esc_html( $matomo_paths->get_tracker_api_url_in_matomo_dir() ), esc_html( $matomo_paths->get_tracker_api_rest_api_endpoint() ) ),
-				'',
-				false,
-				$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager'
-			);
 
-			$matomo_form->show_select(
-				'track_js_endpoint',
-				__( 'Endpoint for JavaScript tracker', 'matomo' ),
-				[
-					'default' => esc_html__( 'Default', 'matomo' ),
-					'restapi' => esc_html__( 'Through WordPress Rest API (slower)', 'matomo' ),
-					'plugin'  => esc_html__( 'Plugin (an alternative JS file if the default is blocked by the webserver)', 'matomo' ),
-				],
-				sprintf( __( 'By default the JS tracking code will be loaded from "%1$s". You can choose to serve the JS file through the WP Rest API (%2$s) for example to hide matomo.js. Please note that this means every request to the JavaScript file will launch WordPress PHP and therefore will be slower compared to your webserver serving the JS file directly. Using the "Plugin" method will cause issues with our paid Heatmap and Session Recording, Form Analytics, and Media Analytics plugin.', 'matomo' ), esc_html( $matomo_paths->get_js_tracker_url_in_matomo_dir() ), esc_html( $matomo_paths->get_js_tracker_rest_api_endpoint() ) ),
-				'',
+			$matomo_form->show_checkbox(
+				'track_datacfasync',
+				esc_html__( 'Add data-cfasync=false', 'matomo' ),
+				esc_html__( 'Adds data-cfasync=false to the script tag, e.g., to ask Rocket Loader to ignore the script.', 'matomo' ) . ' ' .
+				sprintf(
+					esc_html__( 'See %1$sCloudFlare Knowledge Base%2$s.', 'matomo' ),
+					'<a href="https://support.cloudflare.com/hc/en-us/articles/200169436-How-can-I-have-Rocket-Loader-ignore-my-script-s-in-Automatic-Mode-" rel="noreferrer noopener" target="_BLANK">',
+					'</a>'
+				) . '<br/><br/><em>' . esc_html__( 'This setting does not apply to the Manual tracking mode.', 'matomo' ) . '</em>',
 				false,
-				$matomo_full_generated_tracking_group
+				$matomo_full_generated_tracking_group . '  matomo-track-option-tagmanager'
 			);
 			?>
 			</tbody>
