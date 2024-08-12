@@ -212,7 +212,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 
 			$matomo_form->show_select(
 				'track_user_id',
-				__( 'Track WordPress Username', 'matomo' ),
+				__( 'Track WordPress User ID', 'matomo' ),
 				[
 					'disabled'    => esc_html__( 'Disabled', 'matomo' ),
 					'uid'         => esc_html__( 'WP User ID', 'matomo' ),
