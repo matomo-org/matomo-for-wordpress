@@ -201,7 +201,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 				echo '<input type="checkbox" ' . ( isset( $selected_container_ids [ $container_id ] ) && $selected_container_ids [ $container_id ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[tagmanger_container_ids][' . esc_attr( $container_id ) . ']" /> <strong>' . esc_html( $container_name ) . '</strong> (ID: ' . esc_html( $container_id ) . ')&nbsp; <br />';
 			}
 			echo '<a style="margin-top:.5em;display:inline-block;" href="' . esc_url( menu_page_url( \WpMatomo\Admin\Menu::SLUG_TAGMANAGER, false ) ) . '" rel="noreferrer noopener" target="_blank">Edit containers <span class="dashicons-before dashicons-external"></span></a>';
-			echo '<p style="margin-top:1em"><span class="dashicons dashicons-info-outline"></span> ' . esc_html__( 'For Matomo to track you will need to add a Matomo Tag to the container. It otherwise won\'t track automatically.', 'matomo' ) . '</p>';
+			echo '<p style="margin-top:1em"><span class="dashicons dashicons-info-outline"></span> ' . sprintf( esc_html__( 'For Matomo to track you will need to %1$sadd a Matomo Tag to the container%2$s. It otherwise won\'t track automatically.', 'matomo' ), '<a href="https://matomo.org/faq/tag-manager/how-do-i-track-pageviews-of-my-website-using-matomo-tag-manager/" target="_blank" rel="noreferrer noopener">', '</a>' ) . '</p>';
 			echo '</div></td></tr>';
 		}
 		?>
