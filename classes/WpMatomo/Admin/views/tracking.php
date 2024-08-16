@@ -55,7 +55,7 @@ if ( $settings->is_network_enabled() ) {
 	$matomo_manually_network = ' ' . sprintf( esc_html__( 'You can use these variables: %1$s. %2$sLearn more%3$s', 'matomo' ), '{MATOMO_IDSITE}, {MATOMO_API_ENDPOINT}, {MATOMO_JS_ENDPOINT}', '<a href="https://matomo.org/faq/wordpress/how-can-i-configure-the-tracking-code-manually-when-i-have-wordpress-network-enabled-in-multisite-mode/" target="_blank" rel="noreferrer noopener">', '</a>' );
 }
 
-$matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Submit" type="submit" class="button-primary" value="' . esc_attr__( 'Save Changes', 'matomo' ) . '" /></p></td></tr>';
+$matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" class="button-primary" value="' . esc_attr__( 'Save Changes', 'matomo' ) . '" /></p>';
 ?>
 <style>
 	.post-types {
@@ -207,6 +207,11 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 		?>
 		</tbody>
 	</table>
+
+	<?php
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo $matomo_submit_button;
+	?>
 
 	<hr/>
 
