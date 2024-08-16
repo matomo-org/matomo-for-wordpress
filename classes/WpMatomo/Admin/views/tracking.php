@@ -105,6 +105,30 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 	#tracking-settings[data-track-mode="tagmanager"] #matomo-tagmanager-container-select {
 		display: table-row;
 	}
+
+	#tracking-settings .inactive-notice {
+		display: none;
+		text-transform: uppercase;
+		font-weight: 400;
+		font-size: 10px;
+		margin-bottom: 2px;
+	}
+
+	#tracking-settings:not([data-track-mode="manually"]) #manual-tracking-settings > h2 {
+		color: #888;
+	}
+
+	#tracking-settings:not([data-track-mode="default"]) #auto-tracking-settings > h2 {
+		color: #888;
+	}
+
+	#tracking-settings:not([data-track-mode="manually"]) #manual-tracking-settings .inactive-notice {
+		display: inline-block;
+	}
+
+	#tracking-settings:not([data-track-mode="default"]) #auto-tracking-settings .inactive-notice {
+		display: inline-block;
+	}
 </style>
 <script>
 	window.jQuery(document).ready(function ($) {
@@ -127,6 +151,25 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 			$(e.target).closest('.collapsible-settings').toggleClass('expanded');
 			setPostTypeSpacing();
 		});
+
+		function onTrackModeChange() {
+			var currentTrackMode = $('input[name="matomo[track_mode]"]:checked').val();
+
+			$(this)
+				.closest('form')
+				.attr('data-track-mode', currentTrackMode);
+
+			$('h2[data-inactive-title]')
+				.removeAttr('title')
+				.each(function () {
+					if (currentTrackMode !== $(this).closest('[data-settings-for]').attr('data-settings-for')) {
+						$(this).attr('title', $(this).attr('data-inactive-title'));
+					}
+				});
+		}
+
+		$('#track_mode').on('change', onTrackModeChange);
+		onTrackModeChange();
 	});
 </script>
 <form id="tracking-settings" method="post" data-track-mode="<?php echo esc_attr( $track_mode ); ?>" action="#">
@@ -143,7 +186,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 			esc_html__( 'Tracking mode', 'matomo' ),
 			$track_modes,
 			$matomo_track_mode_descriptions,
-			'jQuery(\'#track_mode\').closest(\'form\').attr(\'data-track-mode\', jQuery(\'input[name="matomo[track_mode]"]:checked\').val());',
+			null,
 			false,
 			'track_mode'
 		);
@@ -274,7 +317,7 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 				'track_feed_campaign',
 				esc_html__( 'RSS feed campaign name', 'matomo' ),
 				esc_html__( 'The campaign name to use if RSS feed links are tracked as a campaign.', 'matomo' ),
-				false,
+				true,
 				$matomo_full_generated_tracking_group . ' matomo-feed_campaign-option matomo-track-option-tagmanager'
 			);
 			?>
@@ -317,8 +360,11 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 
 	<hr/>
 
-	<div id="auto-tracking-settings" class="collapsible-settings">
-		<h2><?php esc_html_e( 'Settings for Auto Tracking mode', 'matomo' ); ?></h2>
+	<div id="auto-tracking-settings" class="collapsible-settings" data-settings-for="default">
+		<h2 data-inactive-title="<?php esc_attr_e( 'Note: these settings will only apply if the Auto tracking mode is active.', 'matomo' ); ?>">
+			<?php esc_html_e( 'Settings for Auto Tracking mode', 'matomo' ); ?>
+			<span class="inactive-notice">(<?php esc_html_e( 'Inactive', 'matomo' ); ?>)</span>
+		</h2>
 		<p><?php esc_html_e( 'The Auto tracking mode automatically generates and embeds the Matomo tracking JavaScript based on the settings below. Pick and choose what you\'d like to track, and Matomo for WordPress will set everything else up for you.', 'matomo' ); ?></p>
 		<p id="showGeneratedTrackingCode"><a href="#"><?php esc_html_e( 'Show generated tracking code', 'matomo' ); ?></a></p>
 		<p id="hideGeneratedTrackingCode" style="display:none;"><a href="#"><?php esc_html_e( 'Hide generated tracking code', 'matomo' ); ?></a></p>
@@ -610,8 +656,11 @@ $matomo_submit_button = '<tr><td colspan="2"><p class="submit"><input name="Subm
 
 	<hr/>
 
-	<div id="manual-tracking-settings" class="collapsible-settings">
-		<h2><?php esc_html_e( 'Settings for Manual Tracking mode', 'matomo' ); ?></h2>
+	<div id="manual-tracking-settings" class="collapsible-settings" data-settings-for="manual">
+		<h2 data-inactive-title="<?php esc_attr_e( 'Note: these settings will only apply if the Manual tracking mode is active.', 'matomo' ); ?>">
+			<?php esc_html_e( 'Settings for Manual Tracking mode', 'matomo' ); ?>
+			<span class="inactive-notice">(<?php esc_html_e( 'Inactive', 'matomo' ); ?>)</span>
+		</h2>
 		<p><?php esc_html_e( 'With the Manual tracking mode, you can write the JavaScript tracking code yourself, customizing it in whatever way you need to. Matomo for WordPress will then embed this script into your website\'s HTML.', 'matomo' ); ?></p>
 		<table class="matomo-tracking-form widefat">
 			<tbody>

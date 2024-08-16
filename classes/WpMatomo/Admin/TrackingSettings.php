@@ -270,10 +270,6 @@ class TrackingSettings implements AdminSettingsInterface {
 		$containers = $this->get_active_containers();
 
 		$track_modes = [
-			self::TRACK_MODE_DISABLED   => [
-				'name'     => esc_html__( 'Disabled', 'matomo' ),
-				'disabled' => false,
-			],
 			self::TRACK_MODE_DEFAULT    => [
 				'name'     => esc_html__( 'Auto (recommended)', 'matomo' ),
 				'disabled' => false,
@@ -284,6 +280,10 @@ class TrackingSettings implements AdminSettingsInterface {
 			],
 			self::TRACK_MODE_TAGMANAGER => [
 				'name'     => esc_html__( 'Tag Manager', 'matomo' ),
+				'disabled' => false,
+			],
+			self::TRACK_MODE_DISABLED   => [
+				'name'     => esc_html__( 'Disabled', 'matomo' ),
 				'disabled' => false,
 			],
 		];
