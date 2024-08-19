@@ -296,7 +296,7 @@ class TrackingSettings implements AdminSettingsInterface {
 				'<a href="#manual-tracking-settings">',
 				'</a>'
 			),
-			self::TRACK_MODE_TAGMANAGER => esc_html__( 'If you\'ve created containers in the Tag Manager, you can use this tracking mode to embed one of them into your website automatically.', 'matomo' ),
+			self::TRACK_MODE_TAGMANAGER => esc_html__( 'If you\'ve created containers in the Tag Manager, you can use this tracking mode to embed one or more of them into your website automatically.', 'matomo' ),
 		];
 
 		if ( empty( $containers ) ) {
@@ -305,7 +305,7 @@ class TrackingSettings implements AdminSettingsInterface {
 			$matomo_track_mode_descriptions[ self::TRACK_MODE_TAGMANAGER ] .= ' ' . esc_html__( 'This mode is not selectable since no containers have been created in the Tag Manager.', 'matomo' );
 		} else {
 			$container_select = '<div style="margin-left:1.5em" class="tagmanager-container-select">'
-				. '<label for="tagmanger_container_ids">' . esc_html__( 'Add these Tag Manager containers', 'matomo' ) . ':</label>';
+				. '<label for="tagmanger_container_ids">' . esc_html__( 'Select which Tag Manager containers will be added to each page', 'matomo' ) . ':</label>';
 
 			$selected_container_ids = $settings->get_global_option( 'tagmanger_container_ids' );
 			foreach ( $containers as $container_id => $container_name ) {
