@@ -212,7 +212,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 	<hr/>
 
 	<div id="general-settings" class="collapsible-settings">
-		<h2><?php esc_html_e( 'General', 'matomo' ); ?></h2>
+		<h2><?php esc_html_e( 'General Tracking Settings', 'matomo' ); ?></h2>
 		<p><?php esc_html_e( 'These settings apply to all tracking modes (unless otherwise stated).', 'matomo' ); ?></p>
 
 		<h4><?php esc_html_e( 'Ecommerce Tracking', 'matomo' ); ?></h4>
@@ -702,7 +702,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 	<hr/>
 
 	<div id="html-tag-settings" class="collapsible-settings">
-		<h2><?php esc_html_e( '<script> Tags', 'matomo' ); ?></h2>
+		<h2><?php esc_html_e( '<script> Tag Settings', 'matomo' ); ?></h2>
 		<p><?php esc_html_e( 'These options are available for most tracking modes and control exactly how Matomo for WordPress embeds <script> elements into your pages. Most users will not need to change these settings.', 'matomo' ); ?></p>
 		<table class="matomo-tracking-form widefat">
 			<tbody>
