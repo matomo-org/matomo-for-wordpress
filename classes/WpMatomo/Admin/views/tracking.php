@@ -166,6 +166,12 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 						$(this).attr('title', $(this).attr('data-inactive-title'));
 					}
 				});
+
+			$('[data-settings-for]')
+				.removeClass('expanded')
+				.each(function () {
+					$(this).toggleClass('expanded', $(this).attr('data-settings-for') === currentTrackMode);
+				});
 		}
 
 		$('#track_mode').on('change', onTrackModeChange);
@@ -661,7 +667,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 
 	<hr/>
 
-	<div id="manual-tracking-settings" class="collapsible-settings" data-settings-for="manual">
+	<div id="manual-tracking-settings" class="collapsible-settings" data-settings-for="manually">
 		<h2 data-inactive-title="<?php esc_attr_e( 'Note: these settings will only apply if the Manual tracking mode is active.', 'matomo' ); ?>">
 			<?php esc_html_e( 'Settings for Manual Tracking mode', 'matomo' ); ?>
 			<span class="inactive-notice">(<?php esc_html_e( 'Inactive', 'matomo' ); ?>)</span>
