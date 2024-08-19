@@ -303,9 +303,23 @@ class TrackingSettings implements AdminSettingsInterface {
 			$track_modes[ self::TRACK_MODE_TAGMANAGER ]['disabled']         = true;
 			$track_modes[ self::TRACK_MODE_TAGMANAGER ]['tooltip']          = esc_html__( 'No containers were found. Create one to be able to use the Tag Manager tracking mode.', 'matomo' );
 			$matomo_track_mode_descriptions[ self::TRACK_MODE_TAGMANAGER ] .= ' ' . esc_html__( 'This mode is not selectable since no containers have been created in the Tag Manager.', 'matomo' );
+		} else {
+			$container_select = '<div style="margin-left:1.5em" class="tagmanager-container-select">'
+				. '<label for="tagmanger_container_ids">' . esc_html__( 'Add these Tag Manager containers', 'matomo' ) . ':</label>';
+
+			$selected_container_ids = $settings->get_global_option( 'tagmanger_container_ids' );
+			foreach ( $containers as $container_id => $container_name ) {
+				$container_select .= '<input type="checkbox" ' . ( isset( $selected_container_ids [ $container_id ] ) && $selected_container_ids [ $container_id ] ? 'checked="checked" ' : '' ) . 'value="1" name="matomo[tagmanger_container_ids][' . esc_attr( $container_id ) . ']" /> <strong>' . esc_html( $container_name ) . '</strong> (ID: ' . esc_html( $container_id ) . ')&nbsp; <br />';
+			}
+
+			$container_select .= '<a style="margin-top:.5em;display:inline-block;" href="' . esc_url( menu_page_url( \WpMatomo\Admin\Menu::SLUG_TAGMANAGER, false ) ) . '" rel="noreferrer noopener" target="_blank">Edit containers <span class="dashicons-before dashicons-external"></span></a>';
+			$container_select .= '<p style="margin-top:1em"><span class="dashicons dashicons-info-outline"></span> ' . sprintf( esc_html__( 'For Matomo to track you will need to %1$sadd a Matomo Tag to the container%2$s. It otherwise won\'t track automatically.', 'matomo' ), '<a href="https://matomo.org/faq/tag-manager/how-do-i-track-pageviews-of-my-website-using-matomo-tag-manager/" target="_blank" rel="noreferrer noopener">', '</a>' ) . '</p>';
+			$container_select .= '</div>';
+
+			$matomo_track_mode_descriptions[ self::TRACK_MODE_TAGMANAGER ] .= $container_select;
 		}
 
-		$matomo_track_mode_descriptions[ self::TRACK_MODE_TAGMANAGER ] .= '<br/><a href="https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/" target="_blank" rel="noreferrer noopener">' . esc_html__( 'Read our documentation on the Matomo Tag Manager to learn more.', 'matomo' ) . '</a>';
+		$matomo_track_mode_descriptions[ self::TRACK_MODE_TAGMANAGER ] .= '<a  style="margin-left:1.5em;display:inline-block" href="https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/" target="_blank" rel="noreferrer noopener">' . esc_html__( 'Read our documentation on the Matomo Tag Manager to learn more.', 'matomo' ) . '</a>';
 
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
