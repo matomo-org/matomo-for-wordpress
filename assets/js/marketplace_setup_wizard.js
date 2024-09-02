@@ -12,7 +12,7 @@ window.jQuery(document).ready(function ($) {
 
     var interval = setInterval(function () {
       $.post(mtmMarketplaceWizardAjax.ajax_url, {
-        _ajax_nonce: mtmMarketplaceWizardAjax.nonce,
+        _ajax_nonce: mtmMarketplaceWizardAjax.is_active_nonce,
         action: 'mtm_is_marketplace_active',
       }, function (data) {
         if (data.active) {
@@ -33,7 +33,7 @@ window.jQuery(document).ready(function ($) {
     $('.wizard-waiting-for').show();
 
     $.post(mtmMarketplaceWizardAjax.ajax_url, {
-      _ajax_nonce: mtmMarketplaceWizardAjax.nonce,
+      _ajax_nonce: mtmMarketplaceWizardAjax.activate_nonce,
       action: 'mtm_activate_marketplace',
     }, pollForPluginActivation);
   }
