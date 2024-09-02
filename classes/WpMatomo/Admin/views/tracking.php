@@ -159,10 +159,13 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 		function onTrackModeChange() {
 			var currentTrackMode = $('input[name="matomo[track_mode]"]:checked').val();
 
+			// set the current track mode as an attribute on the <form> for css
 			$(this)
 				.closest('form')
 				.attr('data-track-mode', currentTrackMode);
 
+			// mark setting sections that do not apply to the currently selected track mode
+			// as "inactive"
 			$('h2[data-inactive-title]')
 				.removeAttr('title')
 				.each(function () {
@@ -171,6 +174,8 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 					}
 				});
 
+			// if a settings section for the currently selected track mode, auto expand it, and
+			// auto collapse other sections
 			$('[data-settings-for]')
 				.removeClass('expanded')
 				.each(function () {
@@ -222,7 +227,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 			$matomo_form->show_checkbox(
 				'track_ecommerce',
 				esc_html__( 'Enable ecommerce', 'matomo' ),
-				esc_html__( 'Enable to track Ecommerce orders, abandoned carts and product views for WooCommerce, Easy Digital Downloads, MemberPress, and more. Disabling this feature will stop tracking ecommerce data and remove Ecommerce reports from the Matomo UI.', 'matomo' ),
+				esc_html__( 'Enable to track Ecommerce orders, abandoned carts and product views for WooCommerce, Easy Digital Downloads, MemberPress, and more. Disabling this feature will stop tracking ecommerce data and remove Ecommerce reports from the Matomo display.', 'matomo' ),
 				false,
 				$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager'
 			);
@@ -376,7 +381,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				esc_html__( 'Tracking code', 'matomo' ),
 				15,
 				sprintf(
-					esc_html__( 'This is a preview of the tracking code generated based on the configuration below. You don\'t need to do anything with it and this is purely for your information. The tracking code is a piece of code that will be automatically embedded into your site and send information about your visitors to Matomo. Have a look at the system report to get a list of all available JS tracker and tracking API endpoints. You don\'t need to embed this tracking code into your website, our plugin will do this automatically. %s', 'matomo' ),
+					esc_html__( 'This is a preview of the tracking code generated based on the configuration below. You don\'t need to do anything with it and this is purely for your information. The tracking code is a piece of code that will be automatically embedded into your site and send information about your visitors to Matomo. Have a look at the system report to get a list of all available JS tracker and tracking API endpoints. Our plugin will automatically embed this code into your website. %s', 'matomo' ),
 					$matomo_manually_network
 				),
 				false,
@@ -533,7 +538,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 			$matomo_form->show_input(
 				'set_download_classes',
 				esc_html__( 'Set CSS classes to be treated as downloads', 'matomo' ),
-				esc_html__( 'Set the CSS classes of links that should be treated as downloads (in addition to \'piwik_download\'). Enter the list of CSS classes divided by a vertical bar (&#124;). Leave blank to keep Matomo\'s default settings.', 'matomo' ) . ' ' .
+				esc_html__( 'Set the CSS classes of links that, when clicked, should be tracked as downloads (in addition to \'piwik_download\'). Enter the list of CSS classes divided by a vertical bar (&#124;). Leave blank to keep Matomo\'s default settings.', 'matomo' ) . ' ' .
 				sprintf(
 					esc_html__( 'See %1$sMatomo JavaScript Tracking Client reference%2$s.', 'matomo' ),
 					'<a href="https://developer.matomo.org/api-reference/tracking-javascript" target="_BLANK">',
@@ -546,7 +551,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 			$matomo_form->show_input(
 				'set_link_classes',
 				esc_html__( 'Set CSS classes to be treated as outlinks', 'matomo' ),
-				esc_html__( 'Set CSS classes of links to be treated as outlinks (in addition to piwik_link), divided by a vertical bar (&#124;). Leave blank to keep Matomo\'s default settings.', 'matomo' ) . ' ' .
+				esc_html__( 'Set CSS classes of links that, when clicked, should be treated as outlinks (in addition to piwik_link), divided by a vertical bar (&#124;). Leave blank to keep Matomo\'s default settings.', 'matomo' ) . ' ' .
 				sprintf(
 					esc_html__( 'See %1$sMatomo JavaScript Tracking Client reference%2$s.', 'matomo' ),
 					'<a href="https://developer.matomo.org/api-reference/tracking-javascript" target="_BLANK">',
@@ -568,7 +573,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				esc_html__( 'Track JS errors', 'matomo' ),
 				esc_html__( 'Enable to track JavaScript errors that occur on your website as Matomo events.', 'matomo' )
 				. ' ' . sprintf( esc_html__( 'See %1$sMatomo FAQ%2$s.', 'matomo' ), '<a href="https://matomo.org/faq/how-to/how-do-i-enable-basic-javascript-error-tracking-and-reporting-in-matomo-browser-console-error-messages/" rel="noreferrer noopener" target="_BLANK">', '</a>' )
-				. ' ' . sprintf( esc_html__( 'For more advanced reporting of crashes, check out our %1$sCrash Analytics premium feature%2$s.', 'matomo' ), '<a href="https://plugins.matomo.org/CrashAnalytics" target="_blank" rel="noreferrer noopener">', '</a>' ),
+				. ' ' . sprintf( esc_html__( 'For more advanced reporting of crashes, check out our %1$sCrash Analytics premium feature%2$s.', 'matomo' ), '<a href="https://plugins.matomo.org/CrashAnalytics?wp=1" target="_blank" rel="noreferrer noopener">', '</a>' ),
 				false,
 				$matomo_full_generated_tracking_group
 			);
@@ -662,7 +667,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 			<?php esc_html_e( 'Settings for Manual Tracking mode', 'matomo' ); ?>
 			<span class="inactive-notice">(<?php esc_html_e( 'Inactive', 'matomo' ); ?>)</span>
 		</h2>
-		<p><?php esc_html_e( 'With the Manual tracking mode, you can write the JavaScript tracking code yourself, customizing it in whatever way you need to. Matomo for WordPress will then embed this script into your website\'s HTML.', 'matomo' ); ?></p>
+		<p><?php esc_html_e( 'With the Manual tracking mode, you can write the JavaScript tracking code yourself, customizing it any way you need to. Matomo for WordPress will then embed this script into your website\'s HTML.', 'matomo' ); ?></p>
 		<table class="matomo-tracking-form widefat">
 			<tbody>
 			<?php
@@ -671,7 +676,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				esc_html__( 'Tracking code', 'matomo' ),
 				15,
 				sprintf(
-					esc_html__( 'Enter your tracking code here. If you need a starting point, you can use the Auto tracking mode settings and view the generated code in the above section. Have a look at the system report to get a list of all available JS tracker and tracking API endpoints. You don\'t need to embed this tracking code into your website, our plugin does this automatically. %s', 'matomo' ),
+					esc_html__( 'Enter your tracking code here. If you need a starting point, you can use the Auto tracking mode settings and view the generated code in the above section. Have a look at the system report to get a list of all available JS tracker and tracking API endpoints. Note: all you need to do is define the code here. You don\'t need to embed it into your website, our plugin does this automatically. %s', 'matomo' ),
 					$matomo_manually_network
 				),
 				false,

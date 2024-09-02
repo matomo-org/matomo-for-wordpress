@@ -48,10 +48,6 @@ class TrackingCodeGenerator {
 		$this->logger   = new Logger();
 	}
 
-	public function set_generator_options( GeneratorOptions $options ) {
-		$this->options = $options;
-	}
-
 	public static function get_disable_cookies_partial() {
 		// if ecommerce tracking is enabled, disableCookies can be added to _paq multiple times
 		// (since ecommerce tracking methods can be called before the main tracking JS in some situations).

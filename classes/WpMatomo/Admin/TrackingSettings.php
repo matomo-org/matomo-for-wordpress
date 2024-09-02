@@ -289,10 +289,10 @@ class TrackingSettings implements AdminSettingsInterface {
 		];
 
 		$matomo_track_mode_descriptions = [
-			self::TRACK_MODE_DISABLED   => esc_html__( 'Matomo will not add the tracking code itself. Use this if you want to add the tracking code by hand your template files or use another plugin to add the tracking code.', 'matomo' ),
-			self::TRACK_MODE_DEFAULT    => esc_html__( 'Matomo will automatically generate and embed the tracking code based on the Auto tracking settings below.', 'matomo' ) . ' ' . esc_html__( 'This is the recommended mode for most users.', 'matomo' ),
+			self::TRACK_MODE_DISABLED   => esc_html__( 'Matomo will not add the tracking code itself. Use this mode if you want to add the tracking code by hand to your template files or you want to use another plugin to add the tracking code.', 'matomo' ),
+			self::TRACK_MODE_DEFAULT    => esc_html__( 'Matomo will automatically generate and embed the tracking code based on the Auto Tracking settings below.', 'matomo' ) . ' ' . esc_html__( 'This is the recommended mode for most users.', 'matomo' ),
 			self::TRACK_MODE_MANUALLY   => sprintf(
-				esc_html__( '%1$sDefine your own tracking JavaScript by hand below%2$s, and Matomo will embed it into your website.', 'matomo' ) . ( $settings->is_network_enabled() ? ' ' . esc_html__( 'Use the placeholder {ID} to add the Matomo site ID.', 'matomo' ) : '' ),
+				esc_html__( '%1$sDefine your own tracking JavaScript by hand below%2$s, and Matomo will embed it into your website.', 'matomo' ) . ( $settings->is_network_enabled() ? ' ' . esc_html__( 'Make sure to use the placeholder {ID} to add the Matomo site ID.', 'matomo' ) : '' ),
 				'<a href="#manual-tracking-settings">',
 				'</a>'
 			),

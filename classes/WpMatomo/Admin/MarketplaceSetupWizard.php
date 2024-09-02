@@ -67,7 +67,7 @@ class MarketplaceSetupWizard {
 		check_ajax_referer( self::AJAX_IS_ACTIVE_NONCE_NAME );
 
 		if ( ! current_user_can( 'activate_plugins' ) ) {
-			wp_send_json_error( [ 'message' => 'unauthorized' ], 403 );
+			wp_send_json_error( [ 'message' => 'forbidden' ], 403 );
 		}
 
 		wp_send_json( [ 'active' => is_plugin_active( self::MARKETPLACE_PLUGIN_FILE ) ] );
@@ -77,7 +77,7 @@ class MarketplaceSetupWizard {
 		check_ajax_referer( self::AJAX_ACTIVATE_NONCE_NAME );
 
 		if ( ! current_user_can( 'activate_plugins' ) ) {
-			wp_send_json_error( [ 'message' => 'unauthorized' ], 403 );
+			wp_send_json_error( [ 'message' => 'forbidden' ], 403 );
 		}
 
 		activate_plugin( self::MARKETPLACE_PLUGIN_FILE );

@@ -37,6 +37,8 @@ window.jQuery(document).ready(function ($) {
     updateGeneratedTrackingCode();
   }
 
+  // warn if user has unsaved changes
+  var initialFormContents = $('#tracking-settings').serialize();
   function beforePageUnload(e) {
     var currentFormContents = $('#tracking-settings').serialize();
     if (initialFormContents !== currentFormContents) {
@@ -44,8 +46,6 @@ window.jQuery(document).ready(function ($) {
     }
   }
 
-  // warn if user has unsaved changes
-  var initialFormContents = $('#tracking-settings').serialize();
   window.addEventListener('beforeunload', beforePageUnload);
   $('form#tracking-settings').on('submit', function () {
     window.removeEventListener('beforeunload', beforePageUnload);
