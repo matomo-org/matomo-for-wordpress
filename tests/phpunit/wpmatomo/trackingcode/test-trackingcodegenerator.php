@@ -311,7 +311,7 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 			[
 				'script'   => '<!-- Matomo --><script ' . $this->get_type_attribute() . ">\n$cdata_start" . 'var _paq = window._paq = window._paq || [];
 _paq.push([\'setRequestMethod\', \'POST\']);
-_paq.push([\'enableHeartBeatTimer\', 72]);_paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'alwaysUseSendBeacon\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push([\'setSiteId\', \'21\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
+_paq.push([\'enableHeartBeatTimer\', 72]);_paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'alwaysUseSendBeacon\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push([\'setSiteId\', \'1\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
 g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);' . "\n$cdata_end</script>\n<!-- End Matomo Code -->",
 				'noscript' => '<noscript><p><img referrerpolicy="no-referrer-when-downgrade" src="//example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>',
 			],
