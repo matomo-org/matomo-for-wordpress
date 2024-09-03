@@ -5,9 +5,6 @@
 
 use WpMatomo\Admin\MarketplaceSetupWizard;
 
-/**
- * @group only
- */
 class MarketplaceSetupWizardAjaxTest extends MatomoAnalytics_Ajax_TestCase {
 	public function setUp(): void {
 		parent::setUp();
