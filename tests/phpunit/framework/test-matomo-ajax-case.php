@@ -4,7 +4,7 @@
  *
  * @package matomo
  */
-class MatomoAnalytics_Ajax_TestCase extends MatomoUnit_Ajax_TestCase {
+abstract class MatomoAnalytics_Ajax_TestCase extends MatomoUnit_Ajax_TestCase {
 	/**
 	 * @var MatomoUnit_Matomo_Fixture
 	 */
@@ -13,7 +13,7 @@ class MatomoAnalytics_Ajax_TestCase extends MatomoUnit_Ajax_TestCase {
 	public function setUp(): void {
 		parent::setUp();
 		$this->matomo_fixture = new MatomoUnit_Matomo_Fixture();
-		$this->matomo_fixture->set_up( static::class, $this->getName() );
+		$this->matomo_fixture->set_up( $this );
 	}
 
 	public function tearDown(): void {

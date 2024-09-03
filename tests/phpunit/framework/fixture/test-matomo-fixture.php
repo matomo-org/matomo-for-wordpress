@@ -34,18 +34,20 @@ use WpMatomo\User;
  * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
  */
 class MatomoUnit_Matomo_Fixture {
-	public function set_up( $test_class_name, $test_method_name ) {
+	public function set_up( $test_case ) {
+		$test_class_name  = get_class( $test_case );
+		$test_method_name = $test_case->getName();
+
 		if ( ! defined( 'PIWIK_TEST_MODE' ) ) {
 			define( 'PIWIK_TEST_MODE', true );
 		}
 
-		// TODO: move this to test-matomo-fixture somehow
 		$annotations = PHPUnit\Util\Test::parseTestMethodAnnotations( $test_class_name, $test_method_name );
 		if ( ! empty( $annotations['method']['provideContainerConfig'][0] ) ) {
 			$container_config = $annotations['method']['provideContainerConfig'][0];
 
-			$method      = new ReflectionMethod( $this, $container_config );
-			$definitions = $method->invoke( $this );
+			$method      = new ReflectionMethod( $test_case, $container_config );
+			$definitions = $method->invoke( $test_case );
 
 			Bootstrap::set_extra_di_definitions( $definitions );
 		} else {

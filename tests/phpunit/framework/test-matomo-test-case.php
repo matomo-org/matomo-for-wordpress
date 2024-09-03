@@ -83,7 +83,7 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	public function setUp(): void {
 		parent::setUp();
 		$this->matomo_fixture = new MatomoUnit_Matomo_Fixture();
-		$this->matomo_fixture->set_up( static::class, $this->getName() );
+		$this->matomo_fixture->set_up( $this );
 	}
 
 	public function tearDown(): void {

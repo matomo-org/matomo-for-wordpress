@@ -2,7 +2,7 @@
 /**
  * @package matomo
  */
-class MatomoUnit_Ajax_TestCase extends \WP_Ajax_UnitTestCase {
+abstract class MatomoUnit_Ajax_TestCase extends \WP_Ajax_UnitTestCase {
 	/**
 	 * @var MatomoUnit_WordPress_Fixture
 	 */
