@@ -8,7 +8,7 @@ abstract class MatomoAnalytics_Ajax_TestCase extends MatomoUnit_Ajax_TestCase {
 	/**
 	 * @var MatomoUnit_Matomo_Fixture
 	 */
-	private $matomo_fixture;
+	protected $matomo_fixture;
 
 	public function setUp(): void {
 		parent::setUp();

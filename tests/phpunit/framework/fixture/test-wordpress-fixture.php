@@ -48,4 +48,8 @@ class MatomoUnit_WordPress_Fixture {
 			get_role( $role )->remove_cap( Capabilities::KEY_VIEW );
 		}
 	}
+
+	public function switch_to_admin_page() {
+		set_current_screen( 'edit-post' );
+	}
 }
