@@ -5,6 +5,9 @@
 
 use WpMatomo\Admin\MarketplaceSetupWizard;
 
+/**
+ * @group only
+ */
 class MarketplaceSetupWizardAjaxTest extends MatomoAnalytics_Ajax_TestCase {
 	public function setUp(): void {
 		parent::setUp();
@@ -55,14 +58,18 @@ PHP;
 		$userid = self::factory()->user->create( [ 'role' => 'editor' ] );
 		wp_set_current_user( $userid );
 
-		wp_create_nonce( MarketplaceSetupWizard::AJAX_IS_ACTIVE_NONCE_NAME );
+		$nonce = wp_create_nonce( MarketplaceSetupWizard::AJAX_IS_ACTIVE_NONCE_NAME );
 
-		try {
-			$this->call_ajax( 'matomo_is_marketplace_active', [], [ '_ajax_nonce' => 'garbagevalue' ] );
-			$this->fail( 'ajax method did not fail as expected' );
-		} catch ( WPAjaxDieStopException $e ) {
-			$this->assertEquals( '-1', $e->getMessage() ); // see check_ajax_referer()
-		}
+		$response = $this->call_ajax( 'matomo_is_marketplace_active', [], [ '_ajax_nonce' => $nonce ] );
+		$this->assertEquals(
+			[
+				'success' => false,
+				'data'    => [
+					'message' => 'forbidden',
+				],
+			],
+			$response
+		);
 	}
 
 	public function test_is_marketplace_active_returns_true_if_plugin_is_active() {
@@ -85,6 +92,53 @@ PHP;
 
 		$response = $this->call_ajax( 'matomo_is_marketplace_active', [], [ '_ajax_nonce' => $nonce_value ] );
 		$this->assertEquals( [ 'active' => false ], $response );
+	}
+
+	public function test_activate_marketplace_plugin_fails_if_incorrect_nonce_given() {
+		$this->assertFalse( is_plugin_active( 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php' ) );
+
+		wp_create_nonce( MarketplaceSetupWizard::AJAX_ACTIVATE_NONCE_NAME );
+
+		try {
+			$this->call_ajax( 'matomo_activate_marketplace', [], [ '_ajax_nonce' => 'garbagevalue' ] );
+			$this->fail( 'ajax method did not fail as expected' );
+		} catch ( WPAjaxDieStopException $e ) {
+			$this->assertEquals( '-1', $e->getMessage() ); // see check_ajax_referer()
+		}
+	}
+
+	public function test_activate_marketplace_plugin_fails_if_user_cannot_activate_plugins() {
+		$this->assertFalse( is_plugin_active( 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php' ) );
+
+		$userid = self::factory()->user->create( [ 'role' => 'editor' ] );
+		wp_set_current_user( $userid );
+
+		$nonce = wp_create_nonce( MarketplaceSetupWizard::AJAX_ACTIVATE_NONCE_NAME );
+
+		$response = $this->call_ajax( 'matomo_activate_marketplace', [], [ '_ajax_nonce' => $nonce ] );
+		$this->assertEquals(
+			[
+				'success' => false,
+				'data'    => [
+					'message' => 'forbidden',
+				],
+			],
+			$response
+		);
+	}
+
+	public function test_activate_marketplace_plugin_correctly_activates_the_plugin() {
+		$this->assertFalse( is_plugin_active( 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php' ) );
+
+		$userid = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		wp_set_current_user( $userid );
+
+		$nonce = wp_create_nonce( MarketplaceSetupWizard::AJAX_ACTIVATE_NONCE_NAME );
+
+		$response = $this->call_ajax( 'matomo_activate_marketplace', [], [ '_ajax_nonce' => $nonce ] );
+		$this->assertEquals( [], $response );
+
+		$this->assertTrue( is_plugin_active( 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php' ) );
 	}
 
 	private function get_marketplace_plugin_dir() {
