@@ -10,7 +10,7 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	/**
 	 * @var MatomoUnit_WordPress_Fixture
 	 */
-	private $wordpress_fixture;
+	protected $wordpress_fixture;
 
 	public function setUp(): void {
 		parent::setUp();

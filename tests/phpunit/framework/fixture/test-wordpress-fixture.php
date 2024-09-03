@@ -40,7 +40,7 @@ class MatomoUnit_WordPress_Fixture {
 	/**
 	 * Reset roles so they won't be stored across tests...
 	 */
-	protected function reset_roles() {
+	public function reset_roles() {
 		foreach ( array( 'editor', 'author', 'contributor' ) as $role ) {
 			get_role( $role )->remove_cap( Capabilities::KEY_SUPERUSER );
 			get_role( $role )->remove_cap( Capabilities::KEY_WRITE );

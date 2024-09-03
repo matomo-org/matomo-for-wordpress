@@ -36,6 +36,11 @@ use WpMatomo\User;
 class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 
 	/**
+	 * @var MatomoUnit_Matomo_Fixture
+	 */
+	protected $matomo_fixture;
+
+	/**
 	 * Disable creation of temporary tables. This may be needed when you're writing a test that is
 	 * tracking/archiving data. Problem is with temp tables many queries fail like this
 	 *
@@ -74,11 +79,6 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 
 		return $query;
 	}
-
-	/**
-	 * @var MatomoUnit_Matomo_Fixture
-	 */
-	private $matomo_fixture;
 
 	public function setUp(): void {
 		parent::setUp();
