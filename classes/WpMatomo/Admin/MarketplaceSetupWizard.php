@@ -59,8 +59,8 @@ class MarketplaceSetupWizard {
 	}
 
 	public static function register_ajax() {
-		add_action( 'wp_ajax_mtm_is_marketplace_active', [ self::class, 'is_marketplace_active' ] );
-		add_action( 'wp_ajax_mtm_activate_marketplace', [ self::class, 'activate_marketplace_plugin' ] );
+		add_action( 'wp_ajax_matomo_is_marketplace_active', [ self::class, 'is_marketplace_active' ] );
+		add_action( 'wp_ajax_matomo_activate_marketplace', [ self::class, 'activate_marketplace_plugin' ] );
 	}
 
 	public static function is_marketplace_active() {

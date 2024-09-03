@@ -59,6 +59,7 @@
 		<exclude name="PHPCompatibility.Lists.NewShortList.Found"/>
 		<exclude name="PHPCompatibility.Classes.NewAnonymousClasses.Found"/>
 		<exclude name="PHPCompatibility.InitialValue.NewConstantScalarExpressions.constFound"/>
+		<exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedCatch"/>
 	</rule>
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>

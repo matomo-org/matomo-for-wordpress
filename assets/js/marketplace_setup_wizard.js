@@ -13,7 +13,7 @@ window.jQuery(document).ready(function ($) {
     var interval = setInterval(function () {
       $.post(mtmMarketplaceWizardAjax.ajax_url, {
         _ajax_nonce: mtmMarketplaceWizardAjax.is_active_nonce,
-        action: 'mtm_is_marketplace_active',
+        action: 'matomo_is_marketplace_active',
       }, function (data) {
         if (data.active) {
           $('.wizard-waiting-for').hide();
@@ -34,7 +34,7 @@ window.jQuery(document).ready(function ($) {
 
     $.post(mtmMarketplaceWizardAjax.ajax_url, {
       _ajax_nonce: mtmMarketplaceWizardAjax.activate_nonce,
-      action: 'mtm_activate_marketplace',
+      action: 'matomo_activate_marketplace',
     }, pollForPluginActivation);
   }
 
