@@ -75,105 +75,19 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		return $query;
 	}
 
+	/**
+	 * @var MatomoUnit_Matomo_Fixture
+	 */
+	private $matomo_fixture;
+
 	public function setUp(): void {
 		parent::setUp();
-
-		if ( ! defined( 'PIWIK_TEST_MODE' ) ) {
-			define( 'PIWIK_TEST_MODE', true );
-		}
-
-		$annotations = PHPUnit\Util\Test::parseTestMethodAnnotations( static::class, $this->getName() );
-		if ( ! empty( $annotations['method']['provideContainerConfig'][0] ) ) {
-			$container_config = $annotations['method']['provideContainerConfig'][0];
-
-			$method      = new ReflectionMethod( $this, $container_config );
-			$definitions = $method->invoke( $this );
-
-			Bootstrap::set_extra_di_definitions( $definitions );
-		} else {
-			Bootstrap::set_extra_di_definitions( [] );
-		}
-
-		$uninstall = new Uninstaller();
-		$uninstall->uninstall( true );
-
-		if ( is_multisite() ) {
-			$this->delete_extraneous_blogs();
-		}
-
-		clearstatcache();
-
-		Bootstrap::set_not_bootstrapped();
-
-		$settings  = new Settings();
-		$installer = new Installer( $settings );
-		$installer->install();
-
-		// we need to init roles again... seems like WP isn't doing this by themselves...
-		// otherwise if one test adds eg Capability WRITE_MATOMO to a role "editor", in other tests this
-		// capability will still be present
-		global $wp_roles;
-		$wp_roles->init_roles();
-
-		$roles = new Roles( $settings );
-		$roles->add_roles();
-
-		add_action(
-			'set_current_user',
-			function () {
-				// auth might still be pointing to a different user...
-				Bootstrap::set_not_bootstrapped();
-			}
-		);
-
-		add_action(
-			'matomo_uninstall',
-			function () {
-				Option::clearCache();
-				Cache::flushAll();
-				\Piwik\Singleton::clearAll();
-				API::unsetAllInstances();
-				ArchiveTableCreator::clear();
-				Site::clearCache();
-				Archive::clearStaticCache();
-				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-				FrontController::$requestId = null;
-				Date::$now                  = null;
-				\Piwik\Tracker\Cache::deleteTrackerCache();
-				\Piwik\NumberFormatter::getInstance()->clearCache();
-				\Piwik\Plugins\ScheduledReports\API::$cache = array();
-				Manager::getInstance()->deleteAll();
-				\WpMatomo\Updater::unlock();
-				PluginsArchiver::$archivers = array();
-				$_GET                       = array();
-				$_REQUEST                   = array();
-				\Piwik\Container\StaticContainer::get( \Piwik\Translation\Translator::class )->reset();
-				\Piwik\Log::unsetInstance();
-			}
-		);
-
-		if ( ! empty( $GLOBALS['wpdb'] ) ) {
-			$GLOBALS['wpdb']->suppress_errors( false );
-		}
+		$this->matomo_fixture = new MatomoUnit_Matomo_Fixture();
+		$this->matomo_fixture->set_up( static::class, $this->getName() );
 	}
 
 	public function tearDown(): void {
-		Bootstrap::set_extra_di_definitions( [] );
-
-		if ( ! empty( $GLOBALS['wpdb'] ) ) {
-			$GLOBALS['wpdb']->suppress_errors( true );
-		}
-
-		$uninstall = new Uninstaller();
-		$uninstall->uninstall( true );
-
-		unset( $_GET['trigger'] );
-		Metadata::clear_cache();
-
-		if ( is_multisite() ) {
-			$this->delete_extraneous_blogs();
-		}
-
+		$this->matomo_fixture->tear_down();
 		parent::tearDown();
 	}
 
@@ -254,20 +168,5 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 		$sync->sync_current_users();
 
 		return $id;
-	}
-
-	private function delete_extraneous_blogs() {
-		global $wpdb;
-
-		switch_to_blog( 1 );
-
-		$blogs = $wpdb->get_results( 'SELECT blog_id, deleted FROM ' . $wpdb->blogs . ' ORDER BY blog_id', ARRAY_A );
-		foreach ( $blogs as $blog ) {
-			if ( 1 === (int) $blog['deleted'] || 1 === (int) $blog['blog_id'] ) {
-				continue;
-			}
-
-			wpmu_delete_blog( $blog['blog_id'] );
-		}
 	}
 }
