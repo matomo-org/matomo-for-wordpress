@@ -421,7 +421,32 @@ class TrackingSettings implements AdminSettingsInterface {
 		$blog_id = get_current_blog_id();
 		$idsite  = Site::get_matomo_site_id( $blog_id );
 
-		$generator     = new TrackingCodeGenerator( \WpMatomo::$settings, new GeneratorOptions( \WpMatomo::$settings, $_POST ) );
+		// phpcs complains if reading from $_POST is not done this way
+		$overrides = [
+			'track_datacfasync'         => isset( $_POST['track_datacfasync'] ) ? ( boolval( wp_unslash( $_POST['track_datacfasync'] ) ) ) : false,
+			'track_content'             => isset( $_POST['track_content'] ) ? ( sanitize_text_field( wp_unslash( $_POST['track_content'] ) ) ) : '',
+			'track_heartbeat'           => isset( $_POST['track_heartbeat'] ) ? ( intval( wp_unslash( $_POST['track_heartbeat'] ) ) ) : 0,
+			'limit_cookies'             => isset( $_POST['limit_cookies'] ) ? ( boolval( wp_unslash( $_POST['limit_cookies'] ) ) ) : false,
+			'limit_cookies_visitor'     => isset( $_POST['limit_cookies_visitor'] ) ? ( intval( wp_unslash( $_POST['limit_cookies_visitor'] ) ) ) : 0,
+			'limit_cookies_session'     => isset( $_POST['limit_cookies_session'] ) ? ( intval( wp_unslash( $_POST['limit_cookies_session'] ) ) ) : 0,
+			'limit_cookies_referral'    => isset( $_POST['limit_cookies_referral'] ) ? ( intval( wp_unslash( $_POST['limit_cookies_referral'] ) ) ) : 0,
+			'cookie_consent'            => isset( $_POST['cookie_consent'] ) ? ( sanitize_text_field( wp_unslash( $_POST['cookie_consent'] ) ) ) : '',
+			'force_post'                => isset( $_POST['force_post'] ) ? ( wp_unslash( boolval( $_POST['force_post'] ) ) ) : false,
+			'track_across_alias'        => isset( $_POST['track_across_alias'] ) ? ( boolval( wp_unslash( $_POST['track_across_alias'] ) ) ) : false,
+			'track_across'              => isset( $_POST['track_across'] ) ? ( boolval( wp_unslash( $_POST['track_across'] ) ) ) : false,
+			'track_crossdomain_linking' => isset( $_POST['track_crossdomain_linking'] ) ? ( boolval( wp_unslash( $_POST['track_crossdomain_linking'] ) ) ) : false,
+			'track_jserrors'            => isset( $_POST['track_jserrors'] ) ? ( boolval( wp_unslash( $_POST['track_jserrors'] ) ) ) : false,
+			'disable_cookies'           => isset( $_POST['disable_cookies'] ) ? ( boolval( wp_unslash( $_POST['disable_cookies'] ) ) ) : false,
+			'set_link_classes'          => isset( $_POST['set_link_classes'] ) ? ( sanitize_text_field( wp_unslash( $_POST['set_link_classes'] ) ) ) : '',
+			'set_download_classes'      => isset( $_POST['set_download_classes'] ) ? ( sanitize_text_field( wp_unslash( $_POST['set_download_classes'] ) ) ) : '',
+			'add_download_extensions'   => isset( $_POST['add_download_extensions'] ) ? ( sanitize_text_field( wp_unslash( $_POST['add_download_extensions'] ) ) ) : '',
+			'track_api_endpoint'        => isset( $_POST['track_api_endpoint'] ) ? ( sanitize_text_field( wp_unslash( $_POST['track_api_endpoint'] ) ) ) : '',
+			'force_protocol'            => isset( $_POST['force_protocol'] ) ? ( boolval( wp_unslash( $_POST['force_protocol'] ) ) ) : false,
+			'track_js_endpoint'         => isset( $_POST['track_js_endpoint'] ) ? ( sanitize_text_field( wp_unslash( $_POST['track_js_endpoint'] ) ) ) : '',
+			'set_download_extensions'   => isset( $_POST['set_download_extensions'] ) ? ( sanitize_text_field( wp_unslash( $_POST['set_download_extensions'] ) ) ) : '',
+		];
+
+		$generator     = new TrackingCodeGenerator( \WpMatomo::$settings, new GeneratorOptions( \WpMatomo::$settings, $overrides ) );
 		$tracking_code = $generator->prepare_tracking_code( $idsite );
 
 		wp_send_json( $tracking_code );

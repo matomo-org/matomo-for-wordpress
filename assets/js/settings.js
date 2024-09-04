@@ -14,7 +14,7 @@ window.jQuery(document).ready(function ($) {
         if (/^_/.test(current.name)) {
           return accumulator;
         }
-        accumulator[current.name] = current.value;
+        accumulator[current.name.replace(/^matomo\[(.*?)\]$/, '$1')] = current.value;
         return accumulator;
       }, {});
 

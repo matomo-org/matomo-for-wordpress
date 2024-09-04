@@ -24,6 +24,7 @@ describe('MWP Admin > Settings', () => {
       throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
     }
 
+    await MwpSettingsPage.removeTagManagerContainerIds();
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.settings.tracking.${process.env.PHP_VERSION}${trunkSuffix}`)
