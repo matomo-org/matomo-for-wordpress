@@ -89,18 +89,18 @@ class MwpSettingsPage extends MwpPage {
   }
 
   async selectTrackMode(trackMode: string) {
-    await browser.click(`matomo[track_mode][value="${trackMode}"]`);
+    await browser.$(`matomo[track_mode][value="${trackMode}"]`).click();
   }
 
   async changeSomeAutoTrackingSettings() {
-    await browser.click('input[name="matomo[disable_cookies]"]');
-    await browser.click('input[name="matomo[track_crossdomain_linking]"]');
+    await browser.$('input[name="matomo[disable_cookies]"]').click();
+    await browser.$('input[name="matomo[track_crossdomain_linking]"]').click;
     await (await browser.$('input[name="matomo[set_download_classes]"]')).setValue('a|b|c');
     await browser.pause(500);
   }
 
   async saveSettings() {
-    await browser.click('p.submit > input');
+    await browser.$('p.submit > input').click();
     await browser.waitUntil(() => {
       return window.jQuery('.updated.notice p:contains(Settings have been updated successfully)').length > 0;
     });
