@@ -80,6 +80,35 @@ class MwpSettingsPage extends MwpPage {
     });
     await browser.pause(3000);
   }
+
+  async expandAllTrackingSettingsSections() {
+    await browser.execute(() => {
+      window.jQuery('.collapsible-settings:not(.expanded) > h2').each(function () {
+        window.jQuery(this).click();
+      });
+
+      window.jQuery('#showGeneratedTrackingCode > a')[0].click();
+    });
+    await browser.pause(200);
+  }
+
+  async selectTrackMode(trackMode: string) {
+    await browser.click(`matomo[track_mode][value="${trackMode}"]`);
+  }
+
+  async changeSomeAutoTrackingSettings() {
+    await browser.click('input[name="matomo[disable_cookies]"]');
+    await browser.click('input[name="matomo[track_crossdomain_linking]"]');
+    await (await browser.$('input[name="matomo[set_download_classes]"]')).setValue('a|b|c');
+    await browser.pause(500);
+  }
+
+  async saveSettings() {
+    await browser.click('p.submit > input');
+    await browser.waitUntil(() => {
+      return window.jQuery('.updated.notice p:contains(Settings have been updated successfully)').length > 0;
+    });
+  }
 }
 
 export default new MwpSettingsPage();

@@ -30,6 +30,52 @@ describe('MWP Admin > Settings', () => {
     ).toEqual(0);
   });
 
+  it('should expand all tracking settings sections correctly', async () => {
+    await MwpSettingsPage.undoChangesToWpAdminForScreenshot();
+
+    await MwpSettingsPage.expandAllTrackingSettingsSections();
+
+    await MwpSettingsPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.settings.tracking.all-expanded.${process.env.PHP_VERSION}${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
+  it('should display the list of available containers when the tag manager tracking mode is selected', async () => {
+    await MwpSettingsPage.undoChangesToWpAdminForScreenshot();
+
+    await MwpSettingsPage.selectTrackMode('tagmanager');
+
+    await MwpSettingsPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.settings.tracking.tagmanager-selected.${process.env.PHP_VERSION}${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
+  it('should update the generated tracking code when an Auto Tracking mode setting changes', async () => {
+    await MwpSettingsPage.undoChangesToWpAdminForScreenshot();
+
+    await MwpSettingsPage.selectTrackMode('default');
+    await MwpSettingsPage.changeSomeAutoTrackingSettings();
+
+    await MwpSettingsPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.settings.tracking.auto-changed.${process.env.PHP_VERSION}${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
+  it('should correctly save tracking settings when the submit button is clicked', async () => {
+    await MwpSettingsPage.undoChangesToWpAdminForScreenshot();
+
+    await MwpSettingsPage.saveSettings();
+    await MwpSettingsPage.expandAllTrackingSettingsSections();
+
+    await MwpSettingsPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.settings.tracking.saved.${process.env.PHP_VERSION}${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
   it('should load the access tab correctly', async () => {
     await MwpSettingsPage.open();
     await MwpSettingsPage.openAccessTab();
