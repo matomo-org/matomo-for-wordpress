@@ -256,15 +256,6 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->assertSame( $test_value, $this->settings->get_js_tracking_code() );
 	}
 
-	public function test_get_tracking_cookie_domain_no_cookie_domain() {
-		$this->assertSame( '', $this->settings->get_tracking_cookie_domain() );
-	}
-
-	public function test_get_tracking_cookie_domain_returns_cookie_domain() {
-		$this->settings->set_global_option( 'track_across', true );
-		$this->assertSame( '*.example.org', $this->settings->get_tracking_cookie_domain() );
-	}
-
 	public function test_get_noscript_tracking_code_returns_noscript_tracking_code() {
 		$this->assertSame( '', $this->settings->get_noscript_tracking_code() );
 

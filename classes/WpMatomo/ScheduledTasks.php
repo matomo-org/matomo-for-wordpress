@@ -227,7 +227,7 @@ class ScheduledTasks {
 		return true;
 	}
 
-	public function update_geo_ip2_db() {
+	public function update_geo_ip2_db( $db_url_override = null, $asn_url_override = null ) {
 		if ( is_multisite() && ! is_main_site() ) {
 			return; // only run this task once per entire WP install
 		}
@@ -245,6 +245,13 @@ class ScheduledTasks {
 			} else {
 				$db_url  = 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&suffix=tar.gz&license_key=' . $maxmind_license;
 				$asn_url = 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&suffix=tar.gz&license_key=' . $maxmind_license;
+			}
+
+			if ( ! empty( $db_url_override ) ) {
+				$db_url = $db_url_override;
+			}
+			if ( ! empty( $asn_url_override ) ) {
+				$asn_url = $asn_url_override;
 			}
 
 			Option::set( GeoIP2AutoUpdater::LOC_URL_OPTION_NAME, $db_url );

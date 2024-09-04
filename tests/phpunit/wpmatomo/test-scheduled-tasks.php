@@ -181,6 +181,7 @@ class ScheduledTasksTest extends MatomoAnalytics_TestCase {
 	 */
 	public function test_geoip_only_runs_on_multisite_if_site_is_not_main_site() {
 		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'only runs if multisite' );
 			return;
 		}
 
