@@ -74,10 +74,8 @@ class ImportTest extends MatomoAnalytics_TestCase {
 				// must be set quickly due to the concurrent running tests
 				self::$imported = true;
 				$this->download_geoip();
+				$this->manually_load_plugin();
 			}
-
-			$this->manually_load_plugin();
-
 			// run the import
 			$importer = new Importer( new \Psr\Log\NullLogger() );
 			$site     = new Site();
@@ -100,7 +98,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		$schedule_task = new ScheduledTasks( new Settings() );
 		$schedule_task->update_geo_ip2_db( $wp_statistics_geoip_url );
 
-		$expected_path = ABSPATH . '/wp-content/uploads/matomo/GeoLite2-City.mmdb';
+		$expected_path = ABSPATH . '/wp-content/uploads/matomo/GeoIP2-City.mmdb';
 		if ( ! is_file( $expected_path ) ) {
 			throw new \Exception( 'failed to download geoip database. contents of upload directory: ' . var_export( scandir( dirname( $expected_path ) ), true ) );
 		}

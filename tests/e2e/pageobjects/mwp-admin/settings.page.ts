@@ -100,7 +100,9 @@ class MwpSettingsPage extends MwpPage {
   async saveSettings() {
     await browser.$('p.submit > input').click();
     await browser.waitUntil(() => {
-      return window.jQuery('.updated.notice p:contains(Settings have been updated successfully)').length > 0;
+      return browser.execute(() => {
+        return window.jQuery('.updated.notice p:contains(Settings have been updated successfully)').length > 0;
+      });
     });
   }
 }
