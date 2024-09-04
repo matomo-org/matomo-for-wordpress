@@ -7,6 +7,7 @@ use WpMatomo\Admin\TrackingSettings;
 use WpMatomo\Capabilities;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
+use WpMatomo\Site;
 
 /**
  * @group only
@@ -34,17 +35,20 @@ class AdminTrackingSettingsAjaxTest extends MatomoUnit_Ajax_TestCase {
 
 		$response = $this->call_ajax( 'matomo_generate_tracking_code', [], [ '_ajax_nonce' => $nonce ] );
 
+		$site   = new Site();
+		$idsite = $site->get_current_matomo_site_id();
+
 		$expected_js_code = <<<JS
 <!-- Matomo --><script>
 var _paq = window._paq = window._paq || [];
-_paq.push(['trackPageView']);_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);_paq.push(['setTrackerUrl', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push(['setSiteId', '0']);var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+_paq.push(['trackPageView']);_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);_paq.push(['setTrackerUrl', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push(['setSiteId', '$idsite']);var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
 g.type='text/javascript'; g.async=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);
 </script>
 <!-- End Matomo Code -->
 JS;
 
 		$expected_noscript_code = <<<JS
-<noscript><p><img referrerpolicy="no-referrer-when-downgrade" src="//example.org/wp-content/plugins/matomo/app/matomo.php?idsite=0&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+<noscript><p><img referrerpolicy="no-referrer-when-downgrade" src="//example.org/wp-content/plugins/matomo/app/matomo.php?idsite=$idsite&amp;rec=1" style="border:0;" alt="" /></p></noscript>
 JS;
 
 		$this->assertEquals(
@@ -70,18 +74,21 @@ JS;
 			]
 		);
 
+		$site   = new Site();
+		$idsite = $site->get_current_matomo_site_id();
+
 		$expected_js_code = <<<JS
 <!-- Matomo --><script>
 var _paq = window._paq = window._paq || [];
 _paq.push(['setRequestMethod', 'POST']);
-_paq.push(['enableHeartBeatTimer', 72]);_paq.push(['trackPageView']);_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);_paq.push(['setTrackerUrl', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push(['setSiteId', '0']);var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+_paq.push(['enableHeartBeatTimer', 72]);_paq.push(['trackPageView']);_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);_paq.push(['setTrackerUrl', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push(['setSiteId', '$idsite']);var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
 g.type='text/javascript'; g.async=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);
 </script>
 <!-- End Matomo Code -->
 JS;
 
 		$expected_noscript_code = <<<JS
-<noscript><p><img referrerpolicy="no-referrer-when-downgrade" src="//example.org/wp-content/plugins/matomo/app/matomo.php?idsite=0&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+<noscript><p><img referrerpolicy="no-referrer-when-downgrade" src="//example.org/wp-content/plugins/matomo/app/matomo.php?idsite=$idsite&amp;rec=1" style="border:0;" alt="" /></p></noscript>
 JS;
 
 		$this->assertEquals(
