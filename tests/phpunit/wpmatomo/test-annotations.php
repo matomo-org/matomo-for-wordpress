@@ -74,14 +74,14 @@ class AnnotationsTest extends MatomoAnalytics_TestCase {
 			)
 		);
 
-		$post_id = self::factory()->post->create_and_get( array( 'post_title' => 'hello-world' ) );
-		wp_publish_post( $post_id );
+		$post = self::factory()->post->create_and_get( array( 'post_title' => 'hello-world' ) );
+		wp_publish_post( $post );
 
 		$this->assertSame(
 			array(
 				array(
 					'date'            => gmdate( 'Y-m-d' ),
-					'note'            => 'Published: hello-world - URL: http://example.org/?p=' . $post_id,
+					'note'            => 'Published: hello-world - URL: http://example.org/?p=' . $post->ID,
 					'starred'         => 0,
 					'user'            => 'super user was set',
 					'idNote'          => 0,

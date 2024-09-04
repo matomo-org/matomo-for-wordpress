@@ -91,9 +91,11 @@ class MwpSettingsPage extends MwpPage {
   }
 
   async changeSomeAutoTrackingSettings() {
-    await browser.$('input[name="matomo[disable_cookies]"]').click();
-    await browser.$('input[name="matomo[track_crossdomain_linking]"]').click;
-    await (await browser.$('input[name="matomo[set_download_classes]"]')).setValue('a|b|c');
+    await browser.execute(() => {
+      window.jQuery('input[name="matomo[disable_cookies]"]').prev('.matomo-toggle').find('input').click();
+      window.jQuery('input[name="matomo[track_crossdomain_linking]"]').prev('.matomo-toggle').find('input').click();
+      window.jQuery('input[name="matomo[set_download_classes]"]').val('a|b|c');
+    });
     await browser.pause(500);
   }
 
