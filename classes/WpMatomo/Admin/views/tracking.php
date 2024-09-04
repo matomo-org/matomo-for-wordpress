@@ -106,6 +106,10 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 		display: table-row;
 	}
 
+	#tagmanager-read-more-link {
+		margin-left: 1.5em;
+	}
+
 	#tracking-settings .inactive-notice {
 		display: none;
 		text-transform: uppercase;

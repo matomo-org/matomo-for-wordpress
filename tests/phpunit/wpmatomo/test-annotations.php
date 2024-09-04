@@ -81,7 +81,7 @@ class AnnotationsTest extends MatomoAnalytics_TestCase {
 			array(
 				array(
 					'date'            => gmdate( 'Y-m-d' ),
-					'note'            => 'Published: hello-world - URL: http://example.org/?p=5',
+					'note'            => 'Published: hello-world - URL: http://example.org/?p=' . $post_id,
 					'starred'         => 0,
 					'user'            => 'super user was set',
 					'idNote'          => 0,

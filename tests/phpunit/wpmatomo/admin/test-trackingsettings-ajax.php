@@ -38,8 +38,13 @@ class AdminTrackingSettingsAjaxTest extends MatomoUnit_Ajax_TestCase {
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
+		$space = '';
+		if ( version_compare( getenv( 'WORDPRESS_VERSION' ), '5.2', '<=' ) ) {
+			$space = ' ';
+		}
+
 		$expected_js_code = <<<JS
-<!-- Matomo --><script>
+<!-- Matomo --><script{$space}>
 var _paq = window._paq = window._paq || [];
 _paq.push(['trackPageView']);_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);_paq.push(['setTrackerUrl', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push(['setSiteId', '$idsite']);var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
 g.type='text/javascript'; g.async=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);
@@ -77,8 +82,13 @@ JS;
 		$site   = new Site();
 		$idsite = $site->get_current_matomo_site_id();
 
+		$space = '';
+		if ( version_compare( getenv( 'WORDPRESS_VERSION' ), '5.2', '<=' ) ) {
+			$space = ' ';
+		}
+
 		$expected_js_code = <<<JS
-<!-- Matomo --><script>
+<!-- Matomo --><script{$space}>
 var _paq = window._paq = window._paq || [];
 _paq.push(['setRequestMethod', 'POST']);
 _paq.push(['enableHeartBeatTimer', 72]);_paq.push(['trackPageView']);_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);_paq.push(['setTrackerUrl', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push(['setSiteId', '$idsite']);var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];

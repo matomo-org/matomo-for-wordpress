@@ -18,7 +18,7 @@ class MwpSettingsPage extends MwpPage {
     await this.selectTrackMode('tagmanager');
 
     await browser.execute(() => {
-      window.jQuery('tr.matomo-track-option-tagmanager input[type="checkbox"]').first().prop('checked', true);
+      window.jQuery('.tagmanager-container-select input[type="checkbox"]').first().prop('checked', true);
     });
 
     await this.saveSettings();

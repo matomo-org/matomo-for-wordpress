@@ -319,7 +319,7 @@ class TrackingSettings implements AdminSettingsInterface {
 			$matomo_track_mode_descriptions[ self::TRACK_MODE_TAGMANAGER ] .= $container_select;
 		}
 
-		$matomo_track_mode_descriptions[ self::TRACK_MODE_TAGMANAGER ] .= '<a  style="margin-left:1.5em;display:inline-block" href="https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/" target="_blank" rel="noreferrer noopener">' . esc_html__( 'Read our documentation on the Matomo Tag Manager to learn more.', 'matomo' ) . '</a>';
+		$matomo_track_mode_descriptions[ self::TRACK_MODE_TAGMANAGER ] .= '<a id="tagmanager-read-more-link" style="display:inline-block" href="https://matomo.org/guide/tag-manager/getting-started-with-tag-manager/" target="_blank" rel="noreferrer noopener">' . esc_html__( 'Read our documentation on the Matomo Tag Manager to learn more.', 'matomo' ) . '</a>';
 
 		// /var/www/html/test/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb
 		$site   = new Site();
