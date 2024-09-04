@@ -89,7 +89,7 @@ class MwpSettingsPage extends MwpPage {
   }
 
   async selectTrackMode(trackMode: string) {
-    await browser.$(`matomo[track_mode][value="${trackMode}"]`).click();
+    await browser.$(`input[name="matomo[track_mode]"][value="${trackMode}"]`).click();
   }
 
   async changeSomeAutoTrackingSettings() {
