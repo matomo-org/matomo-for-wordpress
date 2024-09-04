@@ -9,6 +9,25 @@
 window.jQuery(document).ready(function ($) {
   // generated tracking code update
   if (typeof mtmTrackingSettingsAjax !== 'undefined' && mtmTrackingSettingsAjax.ajax_url) {
+    var DEFAULT_DEBOUNCE_DELAY = 300;
+
+    function debounce(fn, delayInMs) {
+      var timeout;
+
+      delayInMs = delayInMs || DEFAULT_DEBOUNCE_DELAY;
+
+      return function wrapper() {
+        var args = Array.from(arguments);
+        if (timeout) {
+          clearTimeout(timeout);
+        }
+
+        timeout = setTimeout(() => {
+          fn.apply(this, args);
+        }, delayInMs);
+      };
+    }
+
     function updateGeneratedTrackingCode() {
       var settings = $('form#tracking-settings').serializeArray().reduce(function (accumulator, current) {
         if (/^_/.test(current.name)) {
@@ -32,6 +51,8 @@ window.jQuery(document).ready(function ($) {
         },
       );
     }
+
+    updateGeneratedTrackingCode = debounce(updateGeneratedTrackingCode, 300);
 
     $('#auto-tracking-settings').on('change', ':not(#generatedTrackingCode)', updateGeneratedTrackingCode);
     updateGeneratedTrackingCode();
