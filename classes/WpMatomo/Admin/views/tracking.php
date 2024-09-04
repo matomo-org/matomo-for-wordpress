@@ -319,7 +319,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				esc_html__( 'This will add Matomo campaign parameters to RSS feed links.', 'matomo' ) . ' ' . sprintf( esc_html__( 'See %1$sMatomo documentation%2$s.', 'matomo' ), '<a href="https://matomo.org/docs/tracking-campaigns/" rel="noreferrer noopener" target="_BLANK">', '</a>' ),
 				false,
 				$matomo_full_generated_tracking_group . ' matomo-track-option-manually matomo-track-option-tagmanager',
-				true,
+				false,
 				'jQuery(\'tr.matomo-feed_campaign-option\').toggle(\'hidden\');'
 			);
 
