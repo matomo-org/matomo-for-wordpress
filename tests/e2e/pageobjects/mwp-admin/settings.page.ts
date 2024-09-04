@@ -113,6 +113,12 @@ class MwpSettingsPage extends MwpPage {
       window.jQuery('.tagmanager-container-select').html(
         window.jQuery('.tagmanager-container-select').html().replace(/\(ID: [a-zA-Z0-9]+\)/g, '(ID: REMOVED)')
       );
+
+      window.jQuery('textarea').each(function () {
+        window.jQuery(this).html(
+          window.jQuery(this).html().replace(/container_[a-zA-Z0-9]+\.js/g, 'container_REMOVED.js')
+        );
+      });
     });
   }
 }
