@@ -74,8 +74,10 @@ class ImportTest extends MatomoAnalytics_TestCase {
 				// must be set quickly due to the concurrent running tests
 				self::$imported = true;
 				$this->download_geoip();
-				$this->manually_load_plugin();
 			}
+
+			$this->manually_load_plugin();
+
 			// run the import
 			$importer = new Importer( new \Psr\Log\NullLogger() );
 			$site     = new Site();
