@@ -38,7 +38,13 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		$file = $this->plugin_file();
 		if ( file_exists( $file ) ) {
 			require_once $file;
-			$GLOBALS['WP_Statistics']->includes();
+
+			$wp_statistics = $GLOBALS['WP_Statistics'];
+			if ( method_exists( $wp_statistics, 'plugin_setup' ) ) {
+				$wp_statistics->plugin_setup();
+			} else {
+				$wp_statistics->includes();
+			}
 		}
 	}
 
