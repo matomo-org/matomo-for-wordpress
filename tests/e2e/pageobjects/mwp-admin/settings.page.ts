@@ -15,9 +15,7 @@ class MwpSettingsPage extends MwpPage {
   }
 
   async enableTagManagerTracking() {
-    await browser.execute(() => {
-      window.jQuery('#track_mode').val('tagmanager').change();
-    });
+    await this.selectTrackMode('tagmanager');
 
     await browser.execute(() => {
       window.jQuery('tr.matomo-track-option-tagmanager input[type="checkbox"]').first().prop('checked', true);
@@ -31,9 +29,7 @@ class MwpSettingsPage extends MwpPage {
   }
 
   async disableTagManagerTracking() {
-    await browser.execute(() => {
-      window.jQuery('#track_mode').val('default').change();
-    });
+    await this.selectTrackMode('default');
 
     await browser.execute(() => {
       window.jQuery('.matomo-tracking-form .submit > input').click();
