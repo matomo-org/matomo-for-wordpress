@@ -107,6 +107,14 @@ class MwpSettingsPage extends MwpPage {
       });
     });
   }
+
+  async removeTagManagerContainerIds() {
+    await browser.execute(() => {
+      window.jQuery('.tagmanager-container-select').html(
+        window.jQuery('.tagmanager-container-select').html().replace(/\(ID: [a-zA-Z0-9]+\)/g, '(ID: REMOVED)')
+      );
+    });
+  }
 }
 
 export default new MwpSettingsPage();

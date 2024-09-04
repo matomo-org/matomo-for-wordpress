@@ -35,6 +35,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.expandAllTrackingSettingsSections();
 
+    await MwpSettingsPage.removeTagManagerContainerIds();
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.settings.tracking.all-expanded.${process.env.PHP_VERSION}${trunkSuffix}`)
@@ -47,6 +48,7 @@ describe('MWP Admin > Settings', () => {
     await MwpSettingsPage.selectTrackMode('default');
     await MwpSettingsPage.changeSomeAutoTrackingSettings();
 
+    await MwpSettingsPage.removeTagManagerContainerIds();
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.settings.tracking.auto-changed.${process.env.PHP_VERSION}${trunkSuffix}`)
@@ -59,6 +61,7 @@ describe('MWP Admin > Settings', () => {
     await MwpSettingsPage.saveSettings();
     await MwpSettingsPage.expandAllTrackingSettingsSections();
 
+    await MwpSettingsPage.removeTagManagerContainerIds();
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.settings.tracking.saved.${process.env.PHP_VERSION}${trunkSuffix}`)
