@@ -438,7 +438,7 @@ $matomo_submit_button = '<p class="submit"><input name="Submit" type="submit" cl
 				esc_html__( 'If necessary, you can limit the cookie lifetime to avoid tracking your users over a longer period.', 'matomo' ),
 				false,
 				$matomo_full_generated_tracking_group,
-				true,
+				false,
 				'jQuery(\'tr.matomo-cookielifetime-option\').toggleClass(\'hidden\');'
 			);
 
