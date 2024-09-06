@@ -22,6 +22,9 @@ function die() {
 which git &> /dev/null || die "git is required for this script"
 which composer &> /dev/null || die "composer is required for this script"
 
+cd .. && npm run matomo:console &> /dev/null || die "local mwp environment must be running"
+cd scripts
+
 if [ -z "$MATOMO_SCOPER_PATH" ]; then
   die "Error: MATOMO_SCOPER_PATH not defined."
 fi
