@@ -22,6 +22,10 @@ function die() {
 which git &> /dev/null || die "git is required for this script"
 which composer &> /dev/null || die "composer is required for this script"
 
+if [ -z "$MATOMO_SCOPER_PATH" ]; then
+  die "Error: MATOMO_SCOPER_PATH not defined."
+fi
+
 trap catch_error ERR
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
@@ -69,14 +73,9 @@ cp -R matomo/* $MATOMO_ROOT
 cp -R matomo/.* $MATOMO_ROOT
 rm -r matomo/
 
-if [ ! -z "$MATOMO_SCOPER_PATH" ]; then
-  echo "Running matomo-scoper..."
+echo "Running matomo-scoper..."
 
-  php "$MATOMO_SCOPER_PATH/bin/matomo-scoper" scope -y  --rename-references --ignore-platform-check "$MATOMO_ROOT"
-else
-  echo "Error: MATOMO_SCOPER_PATH not defined."
-  exit 1;
-fi
+php "$MATOMO_SCOPER_PATH/bin/matomo-scoper" scope -y  --rename-references --ignore-platform-check "$MATOMO_ROOT"
 
 find $MATOMO_ROOT/misc/* -exec rm -rf {} +
 rm -r $MATOMO_ROOT/js/piwik.js
