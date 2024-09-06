@@ -240,6 +240,15 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 		}
 	}
 
+	public function test_matomo_at_latest_stable_release() {
+		$response = wp_remote_request( 'https://api.matomo.org/1.0/getLatestVersion' );
+		if ( is_wp_error( $response ) ) {
+			throw new \Exception( 'getLatestVersion request failed: ' . $response->get_error_message() );
+		}
+
+		$this->assertEquals( $response['body'], \Piwik\Version::VERSION );
+	}
+
 	private function get_zip_file_contents( $path_to_zip ) {
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		$output = shell_exec( 'unzip -l ' . $path_to_zip );
