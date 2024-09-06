@@ -10,7 +10,9 @@
 namespace WpMatomo\Admin;
 
 class MarketplaceSetupWizard {
-	const MARKETPLACE_PLUGIN_FILE = 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php';
+	const MARKETPLACE_PLUGIN_FILE   = 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php';
+	const AJAX_IS_ACTIVE_NONCE_NAME = 'matomo-marketplace-setup-wizard-is-active';
+	const AJAX_ACTIVATE_NONCE_NAME  = 'matomo-marketplace-setup-wizard-activate';
 
 	public function __construct() {
 		$this->add_hooks();
@@ -49,22 +51,35 @@ class MarketplaceSetupWizard {
 			'matomo-marketplace-setup-wizard',
 			'mtmMarketplaceWizardAjax',
 			[
-				'ajax_url' => admin_url( 'admin-ajax.php' ),
-				'nonce'    => wp_create_nonce( 'matomo-marketplace-setup-wizard' ),
+				'ajax_url'        => admin_url( 'admin-ajax.php' ),
+				'is_active_nonce' => wp_create_nonce( self::AJAX_IS_ACTIVE_NONCE_NAME ),
+				'activate_nonce'  => wp_create_nonce( self::AJAX_ACTIVATE_NONCE_NAME ),
 			]
 		);
 	}
 
 	public static function register_ajax() {
-		add_action( 'wp_ajax_mtm_is_marketplace_active', [ self::class, 'is_marketplace_active' ] );
-		add_action( 'wp_ajax_mtm_activate_marketplace', [ self::class, 'activate_marketplace_plugin' ] );
+		add_action( 'wp_ajax_matomo_is_marketplace_active', [ self::class, 'is_marketplace_active' ] );
+		add_action( 'wp_ajax_matomo_activate_marketplace', [ self::class, 'activate_marketplace_plugin' ] );
 	}
 
 	public static function is_marketplace_active() {
+		check_ajax_referer( self::AJAX_IS_ACTIVE_NONCE_NAME );
+
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			wp_send_json_error( [ 'message' => 'forbidden' ], 403 );
+		}
+
 		wp_send_json( [ 'active' => is_plugin_active( self::MARKETPLACE_PLUGIN_FILE ) ] );
 	}
 
 	public static function activate_marketplace_plugin() {
+		check_ajax_referer( self::AJAX_ACTIVATE_NONCE_NAME );
+
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			wp_send_json_error( [ 'message' => 'forbidden' ], 403 );
+		}
+
 		activate_plugin( self::MARKETPLACE_PLUGIN_FILE );
 		wp_send_json( [] );
 	}

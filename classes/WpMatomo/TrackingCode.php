@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
+use WpMatomo\TrackingCode\GeneratorOptions;
 use WpMatomo\TrackingCode\TrackingCodeGenerator;
 use WpMatomo\Settings;
 
@@ -39,7 +40,7 @@ class TrackingCode {
 	public function __construct( $settings ) {
 		$this->settings  = $settings;
 		$this->logger    = new Logger();
-		$this->generator = new TrackingCodeGenerator( $this->settings );
+		$this->generator = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings ) );
 		$this->generator->register_hooks();
 	}
 

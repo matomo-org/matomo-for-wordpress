@@ -15,25 +15,19 @@ class MwpSettingsPage extends MwpPage {
   }
 
   async enableTagManagerTracking() {
-    await browser.execute(() => {
-      window.jQuery('#track_mode').val('tagmanager').change();
-    });
+    await this.selectTrackMode('tagmanager');
 
     await browser.execute(() => {
-      window.jQuery('tr.matomo-track-option-tagmanager input[type="checkbox"]').first().prop('checked', true);
+      window.jQuery('.tagmanager-container-select input[type="checkbox"]').first().prop('checked', true);
     });
 
-    await browser.execute(() => {
-      window.jQuery('.matomo-tracking-form .submit > input')[0].click();
-    });
+    await this.saveSettings();
 
     await browser.pause(1000);
   }
 
   async disableTagManagerTracking() {
-    await browser.execute(() => {
-      window.jQuery('#track_mode').val('default').change();
-    });
+    await this.selectTrackMode('default');
 
     await browser.execute(() => {
       window.jQuery('.matomo-tracking-form .submit > input').click();
@@ -79,6 +73,53 @@ class MwpSettingsPage extends MwpPage {
         .find('.settingsFormFooter input')[0].click();
     });
     await browser.pause(3000);
+  }
+
+  async expandAllTrackingSettingsSections() {
+    await browser.execute(() => {
+      window.jQuery('.collapsible-settings:not(.expanded) > h2').each(function () {
+        window.jQuery(this).click();
+      });
+
+      window.jQuery('#showGeneratedTrackingCode > a')[0].click();
+    });
+    await browser.pause(200);
+  }
+
+  async selectTrackMode(trackMode: string) {
+    await browser.$(`input[name="matomo[track_mode]"][value="${trackMode}"]`).click();
+  }
+
+  async changeSomeAutoTrackingSettings() {
+    await browser.execute(() => {
+      window.jQuery('input[name="matomo[disable_cookies]"]').prev('.matomo-toggle').find('input').click();
+      window.jQuery('input[name="matomo[track_crossdomain_linking]"]').prev('.matomo-toggle').find('input').click();
+      window.jQuery('input[name="matomo[set_download_classes]"]').val('a|b|c');
+    });
+    await browser.pause(500);
+  }
+
+  async saveSettings() {
+    await browser.$('p.submit > input').click();
+    await browser.waitUntil(() => {
+      return browser.execute(() => {
+        return window.jQuery('.updated.notice p:contains(Settings have been updated successfully)').length > 0;
+      });
+    });
+  }
+
+  async removeTagManagerContainerIds() {
+    await browser.execute(() => {
+      window.jQuery('.tagmanager-container-select').html(
+        window.jQuery('.tagmanager-container-select').html().replace(/\(ID: [a-zA-Z0-9]+\)/g, '(ID: REMOVED)')
+      );
+
+      window.jQuery('textarea').each(function () {
+        window.jQuery(this).html(
+          window.jQuery(this).html().replace(/container_[a-zA-Z0-9]+\.js/g, 'container_REMOVED.js')
+        );
+      });
+    });
   }
 }
 

@@ -9,6 +9,9 @@
 
 namespace WpMatomo;
 
+use WpMatomo\TrackingCode\GeneratorOptions;
+use WpMatomo\TrackingCode\TrackingCodeGenerator;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
@@ -46,7 +49,8 @@ class AjaxTracker extends \MatomoTracker {
 		$this->pageUrl     = ! empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : false;
 
 		if ( ! $settings->get_global_option( 'disable_cookies' ) ) {
-			$cookie_domain = $settings->get_tracking_cookie_domain();
+			$tracking_code_generator = new TrackingCodeGenerator( $settings, new GeneratorOptions( $settings ) );
+			$cookie_domain = $tracking_code_generator->get_tracking_cookie_domain();
 			$this->enableCookies( $cookie_domain );
 		} else {
 			$this->disableCookieSupport();
