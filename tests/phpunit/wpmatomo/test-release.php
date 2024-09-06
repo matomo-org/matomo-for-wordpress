@@ -255,7 +255,8 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			throw new \Exception( 'check for WordPress version failed: ' . $response->get_error_message() );
 		}
 
-		$latest_version = $response['offers'][0]['version'];
+		$body           = json_decode( $response['body'], true );
+		$latest_version = $body['offers'][0]['version'];
 
 		$readme_txt = file_get_contents( __DIR__ . '/../../../readme.txt' );
 
@@ -275,7 +276,8 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			throw new \Exception( 'check for woocommerce version failed: ' . $response->get_error_message() );
 		}
 
-		$latest_version = $response['version'];
+		$body           = json_decode( $response['body'], true );
+		$latest_version = $body['version'];
 
 		$matomo_php = file_get_contents( __DIR__ . '/../../../matomo.php' );
 
