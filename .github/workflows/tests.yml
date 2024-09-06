@@ -11,6 +11,7 @@
 name: Matomo for WordPress Tests
 
 on:
+  workflow_dispatch:
   push:
   schedule:
     - cron: "0 0 * * 0"
