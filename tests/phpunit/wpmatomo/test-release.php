@@ -249,6 +249,46 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 		$this->assertEquals( $response['body'], \Piwik\Version::VERSION );
 	}
 
+	public function test_wordpress_tested_up_to_is_latest() {
+		$response = wp_remote_request( 'https://api.wordpress.org/core/version-check/1.7/' );
+		if ( is_wp_error( $response ) ) {
+			throw new \Exception( 'check for WordPress version failed: ' . $response->get_error_message() );
+		}
+
+		$latest_version = $response['offers'][0]['version'];
+
+		$readme_txt = file_get_contents( __DIR__ . '/../../../readme.txt' );
+
+		preg_match( '/Tested up to: (\d+.\d+.\d+)/', $readme_txt, $matches );
+		if ( empty( $matches[1] ) ) {
+			throw new \Exception( 'could not find tested up to version in readme.txt' );
+		}
+
+		$tested_up_to_version = $matches[1];
+
+		$this->assertEquals( $latest_version, $tested_up_to_version );
+	}
+
+	public function test_woocommerce_tested_up_to_is_latest() {
+		$response = wp_remote_request( 'https://api.wordpress.org/plugins/info/1.0/woocommerce.json' );
+		if ( is_wp_error( $response ) ) {
+			throw new \Exception( 'check for woocommerce version failed: ' . $response->get_error_message() );
+		}
+
+		$latest_version = $response['version'];
+
+		$matomo_php = file_get_contents( __DIR__ . '/../../../matomo.php' );
+
+		preg_match( '/WC tested up to: (\d+.\d+.\d+)/', $matomo_php, $matches );
+		if ( empty( $matches[1] ) ) {
+			throw new \Exception( 'could not find WC tested up to version in matomo.php' );
+		}
+
+		$tested_up_to_version = $matches[1];
+
+		$this->assertEquals( $latest_version, $tested_up_to_version );
+	}
+
 	private function get_zip_file_contents( $path_to_zip ) {
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec
 		$output = shell_exec( 'unzip -l ' . $path_to_zip );
