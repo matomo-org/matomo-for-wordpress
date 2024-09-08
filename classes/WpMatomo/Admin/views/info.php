@@ -54,7 +54,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<br/><br/>
 		<?php
 		echo sprintf(
-			esc_html__( 'Matomo will always cost you nothing to use, but that if you\'d like to support Matomo in a more meaningful way, take a look at our %1$spremium plugins%2$s.', 'matomo' ),
+			esc_html__( 'Matomo will always cost you nothing to use, but if you\'d like to support Matomo in a more meaningful way, take a look at our %1$spremium plugins%2$s.', 'matomo' ),
 			'<a href="https://plugins.matomo.org/premium" target="_blank" rel="noreferrer noopener">',
 			'</a>'
 		);

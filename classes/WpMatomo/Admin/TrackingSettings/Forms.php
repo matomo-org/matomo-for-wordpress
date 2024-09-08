@@ -223,7 +223,7 @@ class Forms {
 					. $desc,
 					( $tooltip ? ' title="' . esc_attr( $tooltip ) . '"' : '' ),
 					$radio_id,
-					esc_attr( TrackingSettings::FORM_NAME ) . '[' . $id . ']',
+					esc_attr( TrackingSettings::FORM_NAME ) . '[' . esc_attr( $id ) . ']',
 					esc_attr( $key ),
 					// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 					( $key == $default ? 'checked="checked"' : '' ),
@@ -246,7 +246,7 @@ class Forms {
 			. '</tr>',
 			esc_html( $name ),
 			$script_change,
-			$id,
+			esc_attr( $id ),
 			implode( is_array( $description ) ? '' : '<br/>', $button_list ),
 			is_array( $description ) ? '' : $this->get_description( $id, $description, $hide_description )
 		);
