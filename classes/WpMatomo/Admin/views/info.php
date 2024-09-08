@@ -21,11 +21,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="wrap">
 	<div id="icon-plugins" class="icon32"></div>
 
-	<?php require 'info_shared.php'; ?>
 	<?php
 	$show_troubleshooting_link = true;
 	require 'info_help.php';
 	?>
+
+	<h2><?php esc_html_e( 'High traffic websites', 'matomo' ); ?></h2>
+	<?php require 'info_high_traffic.php'; ?>
+
+	<?php require 'info_bug_report.php'; ?>
+
+	<hr/>
+
+	<?php require 'info_newsletter.php'; ?>
+	<?php require 'info_shared.php'; ?>
 
 	<h2><?php esc_html_e( 'Support the project', 'matomo' ); ?></h2>
 	<p>
@@ -43,30 +52,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 		);
 		?>
 		<br/><br/>
-		Matomo will always cost you nothing to use, but that doesn't mean it costs us nothing to make.
-		Matomo needs your continued support to grow and thrive.
 		<?php
 		echo sprintf(
-			esc_html__(
-				'You can also help us by %1$sdonating%2$s or by %3$spurchasing premium plugins%4$s which fund the
-        development of the free Matomo Analytics version.',
-				'matomo'
-			),
-			'<a href="' . esc_url( Menu::get_matomo_goto_url( Menu::REPORTING_GOTO_ADMIN ) ) . '">',
-			'</a>',
+			esc_html__( 'Matomo will always cost you nothing to use, but if you\'d like to support Matomo in a more meaningful way, take a look at our %1$spremium plugins%2$s.', 'matomo' ),
 			'<a href="https://plugins.matomo.org/premium" target="_blank" rel="noreferrer noopener">',
 			'</a>'
 		);
 		?>
-		Every penny will help.
 	</p>
-
-	<?php require 'info_newsletter.php'; ?>
-
-	<h2><?php esc_html_e( 'High traffic websites', 'matomo' ); ?></h2>
-	<?php require 'info_high_traffic.php'; ?>
-
-	<?php require 'info_bug_report.php'; ?>
 
 	<div class="matomo-footer">
 		<ul>

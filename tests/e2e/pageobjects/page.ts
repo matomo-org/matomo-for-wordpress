@@ -138,4 +138,12 @@ export default class Page {
       window.jQuery('#footer-upgrade').hide();
     });
   }
+
+  async undoChangesToWpAdminForScreenshot() {
+    await browser.execute(() => {
+      window.jQuery('.notice-ocean-extra-plugin').show();
+      window.jQuery('#wpadminbar,#adminmenumain').show();
+      window.jQuery('#footer-upgrade').show();
+    });
+  }
 }

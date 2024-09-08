@@ -22,6 +22,13 @@ function die() {
 which git &> /dev/null || die "git is required for this script"
 which composer &> /dev/null || die "composer is required for this script"
 
+cd .. && npm run matomo:console &> /dev/null || die "local mwp environment must be running"
+cd scripts
+
+if [ -z "$MATOMO_SCOPER_PATH" ]; then
+  die "Error: MATOMO_SCOPER_PATH not defined."
+fi
+
 trap catch_error ERR
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
@@ -69,14 +76,9 @@ cp -R matomo/* $MATOMO_ROOT
 cp -R matomo/.* $MATOMO_ROOT
 rm -r matomo/
 
-if [ ! -z "$MATOMO_SCOPER_PATH" ]; then
-  echo "Running matomo-scoper..."
+echo "Running matomo-scoper..."
 
-  php "$MATOMO_SCOPER_PATH/bin/matomo-scoper" scope -y  --rename-references --ignore-platform-check "$MATOMO_ROOT"
-else
-  echo "Error: MATOMO_SCOPER_PATH not defined."
-  exit 1;
-fi
+php "$MATOMO_SCOPER_PATH/bin/matomo-scoper" scope -y  --rename-references --ignore-platform-check "$MATOMO_ROOT"
 
 find $MATOMO_ROOT/misc/* -exec rm -rf {} +
 rm -r $MATOMO_ROOT/js/piwik.js
@@ -211,6 +213,7 @@ sed -i -e 's/!\/node_modules\/@materializecss\/materialize/!\/node_modules\/@mat
 RED='\033[0;31m'
 NO_COLOR='\033[0m'
 
-npm run compose -- run console wordpress:generate-lang-files || echo -e "${RED}Failed to generate lang files! Make sure to run 'npm run compose -- run console wordpress:generate-lang-files' after fixing the issue!${NO_COLOR}"
+npm run matomo:console wordpress:generate-lang-files || echo -e "${RED}Failed to generate lang files! Make sure to run 'npm run compose -- run console wordpress:generate-lang-files' after fixing the issue!${NO_COLOR}"
+npm run matomo:console wordpress:generate-core-assets || echo -e "${RED}Failed to regenerate core assets.${NO_COLOR}"
 
 echo -e "Done!... "

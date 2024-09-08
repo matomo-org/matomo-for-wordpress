@@ -3,12 +3,10 @@
  * @package matomo
  */
 
-use WpMatomo\Access;
 use WpMatomo\Admin\TrackingSettings;
 use WpMatomo\Admin\CookieConsent;
-use WpMatomo\Capabilities;
-use WpMatomo\Roles;
 use WpMatomo\Settings;
+use WpMatomo\TrackingCode\GeneratorOptions;
 use WpMatomo\TrackingCode\TrackingCodeGenerator;
 
 class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
@@ -31,7 +29,7 @@ class TrackingCodeGeneratorTest extends MatomoUnit_TestCase {
 	}
 
 	private function make_tracking_code() {
-		$this->tracking_code = new TrackingCodeGenerator( $this->settings );
+		$this->tracking_code = new TrackingCodeGenerator( $this->settings, new GeneratorOptions( $this->settings ) );
 	}
 
 	private function get_tracking_code() {
@@ -279,5 +277,45 @@ g.type=\'text/javascript\'; g.async=true; g.src="http://example.org/wp-content/u
 			)
 		);
 		$this->assertStringContainsString( "_paq.push(['requireConsent']);", $this->get_tracking_code() );
+	}
+
+	public function test_get_tracking_cookie_domain_no_cookie_domain() {
+		$this->make_tracking_code();
+		$this->assertSame( '', $this->tracking_code->get_tracking_cookie_domain() );
+	}
+
+	public function test_get_tracking_cookie_domain_returns_cookie_domain() {
+		$this->make_tracking_code();
+		$this->settings->set_global_option( 'track_across', true );
+		$this->assertSame( '*.example.org', $this->tracking_code->get_tracking_cookie_domain() );
+	}
+
+	public function test_prepare_tracking_code_when_using_options_from_request() {
+		$cdata_start = "/* <![CDATA[ */\n";
+		$cdata_end   = "/* ]]> */\n";
+		if ( getenv( 'WORDPRESS_VERSION' ) && ( getenv( 'WORDPRESS_VERSION' ) !== 'latest' && version_compare( getenv( 'WORDPRESS_VERSION' ), '6.4', '<' ) ) ) {
+			$cdata_start = '';
+			$cdata_end   = '';
+		}
+
+		$request = [
+			'track_mode'      => TrackingSettings::TRACK_MODE_DEFAULT,
+			'force_post'      => true,
+			'track_heartbeat' => 72,
+		];
+
+		$settings  = new Settings();
+		$generator = new TrackingCodeGenerator( $settings, new GeneratorOptions( $settings, $request ) );
+
+		$this->assertSame(
+			[
+				'script'   => '<!-- Matomo --><script ' . $this->get_type_attribute() . ">\n$cdata_start" . 'var _paq = window._paq = window._paq || [];
+_paq.push([\'setRequestMethod\', \'POST\']);
+_paq.push([\'enableHeartBeatTimer\', 72]);_paq.push([\'trackPageView\']);_paq.push([\'enableLinkTracking\']);_paq.push([\'alwaysUseSendBeacon\']);_paq.push([\'setTrackerUrl\', "\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push([\'setSiteId\', \'1\']);var d=document, g=d.createElement(\'script\'), s=d.getElementsByTagName(\'script\')[0];
+g.type=\'text/javascript\'; g.async=true; g.src="\/\/example.org\/wp-content\/plugins\/matomo\/app\/matomo.js"; s.parentNode.insertBefore(g,s);' . "\n$cdata_end</script>\n<!-- End Matomo Code -->",
+				'noscript' => '<noscript><p><img referrerpolicy="no-referrer-when-downgrade" src="//example.org/wp-content/plugins/matomo/app/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>',
+			],
+			$generator->prepare_tracking_code( 1 )
+		);
 	}
 }

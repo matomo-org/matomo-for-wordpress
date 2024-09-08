@@ -20,7 +20,8 @@
     "phpcs": "./vendor/bin/phpcs",
     "matomo:console": "docker compose --env-file .env.default --env-file .env run --rm console",
     "wp:cli": "docker compose --env-file .env.default --env-file .env run --rm wp",
-    "phpunit": "docker compose --env-file .env.default --env-file .env run --rm phpunit"
+    "phpunit": "docker compose --env-file .env.default --env-file .env run --rm phpunit",
+    "mariadb": "docker compose --env-file .env.default --env-file .env run mariadb mariadb -h mariadb -u root -p"
   },
   "dependencies": {
     "chart.js": "^3.4.1"

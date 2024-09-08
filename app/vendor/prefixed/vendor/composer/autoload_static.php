@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit47b38957cb7abb837da5063f6a09e77a
+class ComposerStaticInit69e2472aa6abd29b7e5b42ed20b91f70
 {
     public static $files = array (
         '57561443c5204a2081a57dea43ad4761' => __DIR__ . '/../..' . '/twig/twig/src/Resources/core.php',
@@ -951,7 +951,7 @@ class ComposerStaticInit47b38957cb7abb837da5063f6a09e77a
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit47b38957cb7abb837da5063f6a09e77a::$classMap;
+            $loader->classMap = ComposerStaticInit69e2472aa6abd29b7e5b42ed20b91f70::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -13,11 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 ?>
-<h2><?php esc_html_e( 'How can we help?', 'matomo' ); ?></h2>
+<h2 style="margin-bottom:16px;"><?php esc_html_e( 'How can we help?', 'matomo' ); ?></h2>
 
 <form method="get" action="https://matomo.org" target="_blank" rel="noreferrer noopener">
-	<input type="text" name="s" style="width:300px;"><input type="submit" class="button-secondary"
-															value="Search on matomo.org">
+	<input type="text" name="s" style="width:300px; margin-right: 8px;" placeholder="<?php esc_attr_e( 'Enter search term', 'matomo' ); ?>">
+	<input type="submit" class="button-secondary" value="Search on matomo.org">
 </form>
 <ul class="matomo-list">
 	<li><a target="_blank" rel="noreferrer noopener"

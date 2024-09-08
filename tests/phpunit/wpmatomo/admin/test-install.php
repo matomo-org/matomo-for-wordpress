@@ -25,7 +25,7 @@ class AdminInstallTest extends MatomoUnit_TestCase {
 	}
 
 	public function tearDown(): void {
-		$this->reset_roles();
+		$this->wordpress_fixture->reset_roles();
 		parent::tearDown();
 	}
 
