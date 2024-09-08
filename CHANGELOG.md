@@ -1,5 +1,10 @@
 == Changelog ===
 
+= 5.1.3 =
+* Update Matomo core to version 5.1.1 (changes: https://matomo.org/changelog/matomo-5-1-1/)
+* Moderate redesign to the feedback and get started admin pages.
+* Redesign of the tracker settings admin page.
+
 = 5.1.2 =
 * Incomplete bug fix: the session hijacking or replay attack fix for functionality that hides notifications for users was incomplete.
 * Bug fix: the wp-statistics import is broken when the newest version of wp-statistics is installed.
