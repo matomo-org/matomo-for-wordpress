@@ -147,6 +147,7 @@ return array(
 	}),
 	'diagnostics.disabled'  => \Piwik\DI::add([
 		\Piwik\DI::get(\Piwik\Plugins\Diagnostics\Diagnostic\PageSpeedCheck::class),
+		\Piwik\DI::get(\Piwik\Plugins\Diagnostics\Diagnostic\RecommendedPrivateDirectories::class),
 	]),
 	'observers.global' => \Piwik\DI::add(array(
 		array('FrontController.modifyErrorPage', \Piwik\DI::value(function (&$result, $ex) {
