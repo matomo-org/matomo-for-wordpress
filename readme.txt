@@ -14,9 +14,7 @@ Privacy friendly, GDPR compliant and self-hosted, Matomo is the #1 Google Analyt
 
 _Already a Matomo On-Premise or Matomo Cloud user? You need to use the [Connect Matomo plugin](https://wordpress.org/plugins/wp-piwik/) instead of this plugin._
 
-**New in Matomo 5.1.2:**
-
-* A very minor security patch in the functionality that hides a Matomo for WordPress notification.
+[youtube https://www.youtube.com/watch?v=puxi_Ey0iLc]
 
 For all you WordPress website owners wanting an easier way to get customer insights to grow your business, you can now get the solution the professionals use, for free!
 
@@ -27,8 +25,6 @@ Matomo’s mission is to give control and data ownership back to the user. By ho
 It’s also easier for you to get insights from Matomo Analytics with it’s time-saving interface design and out-of-the-box features, which require less manual configuration than Google Analytics.
 
 Matomo is free, secure and open - your ethical user insights platform.
-
-[youtube https://www.youtube.com/watch?v=puxi_Ey0iLc]
 
 **How Matomo Analytics for Wordpress solves problems:**
 
