@@ -8,7 +8,7 @@
  */
 namespace Piwik\Updater\Migration\Db;
 
-use Piwik\Db;
+use Piwik\Db\Schema;
 /**
  * @see Factory::createTable()
  * @ignore
@@ -17,12 +17,11 @@ class CreateTable extends \Piwik\Updater\Migration\Db\Sql
 {
     /**
      * Constructor.
-     * @param Db\Settings $dbSettings
      * @param string $table Prefixed table name
      * @param string|string[] $columnNames array(columnName => columnValue)
      * @param string|string[] $primaryKey one or multiple columns that define the primary key
      */
-    public function __construct(Db\Settings $dbSettings, $table, $columnNames, $primaryKey)
+    public function __construct($table, $columnNames, $primaryKey)
     {
         $columns = array();
         foreach ($columnNames as $column => $type) {
@@ -31,7 +30,7 @@ class CreateTable extends \Piwik\Updater\Migration\Db\Sql
         if (!empty($primaryKey)) {
             $columns[] = sprintf('PRIMARY KEY ( `%s` )', implode('`, `', $primaryKey));
         }
-        $sql = rtrim(sprintf('CREATE TABLE `%s` (%s) ENGINE=%s DEFAULT CHARSET=%s %s', $table, implode(', ', $columns), $dbSettings->getEngine(), $dbSettings->getUsedCharset(), $dbSettings->getRowFormat()));
+        $sql = sprintf('CREATE TABLE `%s` (%s) %s', $table, implode(', ', $columns), Schema::getInstance()->getTableCreateOptions());
         parent::__construct($sql, static::ERROR_CODE_TABLE_EXISTS);
     }
 }

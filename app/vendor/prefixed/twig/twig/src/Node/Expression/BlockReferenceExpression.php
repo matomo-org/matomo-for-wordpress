@@ -49,7 +49,7 @@ class BlockReferenceExpression extends AbstractExpression
         } else {
             $compiler->write('$this->loadTemplate(')->subcompile($this->getNode('template'))->raw(', ')->repr($this->getTemplateName())->raw(', ')->repr($this->getTemplateLine())->raw(')');
         }
-        $compiler->raw(sprintf('->unwrap()->%s', $method));
+        $compiler->raw(\sprintf('->unwrap()->%s', $method));
         return $this->compileBlockArguments($compiler);
     }
     private function compileBlockArguments(Compiler $compiler) : Compiler

@@ -12,6 +12,9 @@
 namespace Matomo\Dependencies\Twig\Node\Expression;
 
 use Matomo\Dependencies\Twig\Compiler;
+/**
+ * @final
+ */
 class ConstantExpression extends AbstractExpression
 {
     public function __construct($value, int $lineno)

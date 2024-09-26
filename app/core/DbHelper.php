@@ -192,7 +192,7 @@ class DbHelper
      * @return string
      * @throws Tracker\Db\DbException
      */
-    public static function getDefaultCharset()
+    public static function getDefaultCharset() : string
     {
         $result = \Piwik\Db::get()->fetchRow("SHOW CHARACTER SET LIKE 'utf8mb4'");
         if (empty($result)) {
@@ -210,6 +210,18 @@ class DbHelper
             // innodb_file_per_table is required for utf8mb4
         }
         return 'utf8mb4';
+    }
+    /**
+     * Returns the default collation for a charset.
+     *
+     * @param string $charset
+     *
+     * @return string
+     * @throws Exception
+     */
+    public static function getDefaultCollationForCharset(string $charset) : string
+    {
+        return Schema::getInstance()->getDefaultCollationForCharset($charset);
     }
     /**
      * Returns sql queries to convert all installed tables to utf8mb4
