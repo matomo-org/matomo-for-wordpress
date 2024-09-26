@@ -16,6 +16,10 @@ describe('MWP Admin > Marketplace', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
 
   before(async () => {
+    if (!process.env.PHP_VERSION) {
+      throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
+    }
+
     await GlobalSetup.setUp();
     await Website.login();
   });
@@ -29,7 +33,7 @@ describe('MWP Admin > Marketplace', () => {
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.marketplace.overview${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.overview.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -39,7 +43,7 @@ describe('MWP Admin > Marketplace', () => {
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.marketplace.setup-wizard${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.setup-wizard.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -54,7 +58,7 @@ describe('MWP Admin > Marketplace', () => {
     await MwpMarketplacePage.removeVersionStrings();
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.marketplace.setup-wizard-finished${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.setup-wizard-finished.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -63,7 +67,7 @@ describe('MWP Admin > Marketplace', () => {
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.marketplace.overview-after-install${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.overview-after-install.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -73,7 +77,7 @@ describe('MWP Admin > Marketplace', () => {
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.marketplace.install-plugins${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.install-plugins.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -83,7 +87,7 @@ describe('MWP Admin > Marketplace', () => {
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.marketplace.subscriptions${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.subscriptions.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -94,7 +98,7 @@ describe('MWP Admin > Marketplace', () => {
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.marketplace.license_set${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.license_set.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -104,7 +108,7 @@ describe('MWP Admin > Marketplace', () => {
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.marketplace.install-with-premium${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.install-with-premium.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -132,7 +136,7 @@ describe('MWP Admin > Marketplace', () => {
 
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.marketplace.plugins-installed${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.plugins-installed.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -153,7 +157,7 @@ describe('MWP Admin > Marketplace', () => {
     await MwpMarketplacePage.removePluginCounts();
     await MwpMarketplacePage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.marketplace.plugins-activated${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.marketplace.plugins-activated.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 });
