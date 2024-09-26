@@ -2,7 +2,7 @@
 Contributors: matomoteam
 Tags: matomo,analytics,statistics,stats,ecommerce
 Requires at least: 4.8
-Tested up to: 6.6.1
+Tested up to: 6.6.2
 Stable tag: 5.1.3
 Requires PHP: 7.2.5
 License: GPLv3 or later
