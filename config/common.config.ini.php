@@ -3,6 +3,8 @@
 
 [database]
 adapter = WordPress
+charset = utf8mb4
+collation = utf8mb4_general_ci
 
 [Tracker]
 tracker_cache_file_ttl = 4385
