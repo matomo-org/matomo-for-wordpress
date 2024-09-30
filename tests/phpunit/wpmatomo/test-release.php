@@ -129,6 +129,12 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 			'app/vendor/.htaccess',
 			'app/vendor/autoload_original.php',
 			'app/vendor/prefixed/vendor/autoload.php',
+
+			'app/vendor/prefixed/twig/twig/src/Cache/ChainCache.php',
+			'app/vendor/prefixed/twig/twig/src/Cache/ReadOnlyFilesystemCache.php',
+			'app/vendor/prefixed/twig/twig/src/Node/Expression/Filter/RawFilter.php',
+			'app/vendor/prefixed/twig/twig/src/Node/NameDeprecation.php',
+			'app/vendor/prefixed/twig/twig/src/Util/ReflectionCallable.php',
 		];
 
 		try {

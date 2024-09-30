@@ -24,11 +24,27 @@ class Mysql extends Db
      * @var PDO
      */
     protected $connection = null;
+    /**
+     * @var string
+     */
     protected $dsn;
+    /**
+     * @var string
+     */
     private $username;
+    /**
+     * @var string
+     */
     private $password;
+    /**
+     * @var string|null
+     */
     protected $charset;
-    protected $mysqlOptions = array();
+    /**
+     * @var string|null
+     */
+    private $collation;
+    protected $mysqlOptions = [];
     protected $activeTransaction = false;
     /**
      * Builds the DB object
@@ -50,6 +66,9 @@ class Mysql extends Db
         if (isset($dbInfo['charset'])) {
             $this->charset = $dbInfo['charset'];
             $this->dsn .= ';charset=' . $this->charset;
+            if (!empty($dbInfo['collation'])) {
+                $this->collation = $dbInfo['collation'];
+            }
         }
         if (isset($dbInfo['enable_ssl']) && $dbInfo['enable_ssl']) {
             if (!empty($dbInfo['ssl_key'])) {
@@ -363,6 +382,9 @@ class Mysql extends Db
          */
         if (!empty($this->charset)) {
             $sql = "SET NAMES '" . $this->charset . "'";
+            if (!empty($this->collation)) {
+                $sql .= " COLLATE '" . $this->collation . "'";
+            }
             $this->connection->exec($sql);
         }
     }

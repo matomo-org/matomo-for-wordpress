@@ -119,10 +119,6 @@ class WpMatomo {
 
 			$plugin_admin_overrides = new PluginAdminOverrides( self::$settings );
 			$plugin_admin_overrides->register_hooks();
-
-			// TODO: need better way of doing ajax?
-			MarketplaceSetupWizard::register_ajax();
-			WpMatomo\Admin\TrackingSettings::register_ajax();
 		}
 
 		$tracking_code = new TrackingCode( self::$settings );
@@ -141,6 +137,10 @@ class WpMatomo {
 				'add_settings_link',
 			]
 		);
+
+		// TODO: need better way of doing ajax?
+		MarketplaceSetupWizard::register_ajax();
+		WpMatomo\Admin\TrackingSettings::register_ajax();
 	}
 
 	private function check_compatibility() {

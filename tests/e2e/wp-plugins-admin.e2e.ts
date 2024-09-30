@@ -14,6 +14,10 @@ describe('WordPress Customizations > Plugins Admin', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
 
   before(async () => {
+    if (!process.env.PHP_VERSION) {
+      throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
+    }
+
     await Website.login();
   });
 
@@ -26,7 +30,7 @@ describe('WordPress Customizations > Plugins Admin', () => {
     await PluginsAdmin.hidePluginFilters();
     await PluginsAdmin.hidePluginVersion();
     expect(
-      await browser.checkFullPageScreen(`wp-customizations.plugins-admin.data-deletion${trunkSuffix}`)
+      await browser.checkFullPageScreen(`wp-customizations.plugins-admin.data-deletion.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 

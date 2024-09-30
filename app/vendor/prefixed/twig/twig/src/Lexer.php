@@ -132,7 +132,7 @@ class Lexer
         );
         if (!empty($this->brackets)) {
             [$expect, $lineno] = array_pop($this->brackets);
-            throw new SyntaxError(sprintf('Unclosed "%s".', $expect), $lineno, $this->source);
+            throw new SyntaxError(\sprintf('Unclosed "%s".', $expect), $lineno, $this->source);
         }
         return new TokenStream($this->tokens, $this->source);
     }
@@ -239,7 +239,7 @@ class Lexer
         if (preg_match('/\\s+/A', $this->code, $match, 0, $this->cursor)) {
             $this->moveCursor($match[0]);
             if ($this->cursor >= $this->end) {
-                throw new SyntaxError(sprintf('Unclosed "%s".', self::STATE_BLOCK === $this->state ? 'block' : 'variable'), $this->currentVarBlockLine, $this->source);
+                throw new SyntaxError(\sprintf('Unclosed "%s".', self::STATE_BLOCK === $this->state ? 'block' : 'variable'), $this->currentVarBlockLine, $this->source);
             }
         }
         // spread operator
@@ -282,11 +282,11 @@ class Lexer
                 $this->brackets[] = [$this->code[$this->cursor], $this->lineno];
             } elseif (str_contains(')]}', $this->code[$this->cursor])) {
                 if (empty($this->brackets)) {
-                    throw new SyntaxError(sprintf('Unexpected "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
+                    throw new SyntaxError(\sprintf('Unexpected "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
                 }
                 [$expect, $lineno] = array_pop($this->brackets);
                 if ($this->code[$this->cursor] != strtr($expect, '([{', ')]}')) {
-                    throw new SyntaxError(sprintf('Unclosed "%s".', $expect), $lineno, $this->source);
+                    throw new SyntaxError(\sprintf('Unclosed "%s".', $expect), $lineno, $this->source);
                 }
             }
             $this->pushToken(
@@ -307,7 +307,7 @@ class Lexer
             $this->pushState(self::STATE_STRING);
             $this->moveCursor($match[0]);
         } else {
-            throw new SyntaxError(sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
+            throw new SyntaxError(\sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
         }
     }
     private function lexRawData() : void
@@ -361,13 +361,13 @@ class Lexer
         } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             [$expect, $lineno] = array_pop($this->brackets);
             if ('"' != $this->code[$this->cursor]) {
-                throw new SyntaxError(sprintf('Unclosed "%s".', $expect), $lineno, $this->source);
+                throw new SyntaxError(\sprintf('Unclosed "%s".', $expect), $lineno, $this->source);
             }
             $this->popState();
             ++$this->cursor;
         } else {
             // unlexable
-            throw new SyntaxError(sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
+            throw new SyntaxError(\sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
         }
     }
     private function lexInterpolation() : void
