@@ -38,6 +38,7 @@ if (!function_exists('_parse_ini_file')) { function _parse_ini_file() { return \
 if (!function_exists('_readfile')) { function _readfile() { return \Matomo\Dependencies\_readfile(...func_get_args()); } }
 if (!function_exists('_safe_serialize')) { function _safe_serialize() { return \Matomo\Dependencies\_safe_serialize(...func_get_args()); } }
 if (!function_exists('_safe_unserialize')) { function _safe_unserialize() { return \Matomo\Dependencies\_safe_unserialize(...func_get_args()); } }
+if (!function_exists('array_is_list')) { function array_is_list() { return \Matomo\Dependencies\array_is_list(...func_get_args()); } }
 if (!function_exists('array_key_first')) { function array_key_first() { return \Matomo\Dependencies\array_key_first(...func_get_args()); } }
 if (!function_exists('array_key_last')) { function array_key_last() { return \Matomo\Dependencies\array_key_last(...func_get_args()); } }
 if (!function_exists('bar')) { function bar() { return \Matomo\Dependencies\bar(...func_get_args()); } }
@@ -56,6 +57,7 @@ if (!function_exists('dd_autoload')) { function dd_autoload() { return \Matomo\D
 if (!function_exists('disableEaccelerator')) { function disableEaccelerator() { return \Matomo\Dependencies\disableEaccelerator(...func_get_args()); } }
 if (!function_exists('displayXHProfReport')) { function displayXHProfReport() { return \Matomo\Dependencies\displayXHProfReport(...func_get_args()); } }
 if (!function_exists('dump')) { function dump() { return \Matomo\Dependencies\dump(...func_get_args()); } }
+if (!function_exists('enum_exists')) { function enum_exists() { return \Matomo\Dependencies\enum_exists(...func_get_args()); } }
 if (!function_exists('fdiv')) { function fdiv() { return \Matomo\Dependencies\fdiv(...func_get_args()); } }
 if (!function_exists('file_get_contents')) { function file_get_contents() { return \Matomo\Dependencies\file_get_contents(...func_get_args()); } }
 if (!function_exists('fnmatch')) { function fnmatch() { return \Matomo\Dependencies\fnmatch(...func_get_args()); } }
@@ -78,6 +80,7 @@ if (!function_exists('gzopen')) { function gzopen() { return \Matomo\Dependencie
 if (!function_exists('gzseek')) { function gzseek() { return \Matomo\Dependencies\gzseek(...func_get_args()); } }
 if (!function_exists('gztell')) { function gztell() { return \Matomo\Dependencies\gztell(...func_get_args()); } }
 if (!function_exists('hrtime')) { function hrtime() { return \Matomo\Dependencies\hrtime(...func_get_args()); } }
+if (!function_exists('humbug_phpscoper_expose_class')) { function humbug_phpscoper_expose_class() { return \Matomo\Dependencies\humbug_phpscoper_expose_class(...func_get_args()); } }
 if (!function_exists('iconv')) { function iconv() { return \Matomo\Dependencies\iconv(...func_get_args()); } }
 if (!function_exists('iconv_get_encoding')) { function iconv_get_encoding() { return \Matomo\Dependencies\iconv_get_encoding(...func_get_args()); } }
 if (!function_exists('iconv_mime_decode')) { function iconv_mime_decode() { return \Matomo\Dependencies\iconv_mime_decode(...func_get_args()); } }

@@ -58,7 +58,7 @@ export default class MatomoReportingPage extends MatomoPage {
       }
 
       return isThereWidgets && loadings.length === numWidgetsLoaded;
-    }, { timeout: 30000 });
+    }, { timeout: 45000 });
   }
 
   async waitForActionsTables() {

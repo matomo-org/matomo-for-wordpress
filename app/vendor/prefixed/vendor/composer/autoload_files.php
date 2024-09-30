@@ -12,6 +12,7 @@ return array(
     '1667aaec7a4fcb8ee62cbc8011ffe403' => $baseDir . '/twig/twig/src/Resources/string_loader.php',
     '14f31c04451e5135516391e2ab40385d' => $baseDir . '/php-di/php-di/src/functions.php',
     '66cfd3a7190309803b5cc0fea03a4cdc' => $baseDir . '/symfony/deprecation-contracts/function.php',
+    '0bb077418c51dbbe206e1992bd633d80' => $baseDir . '/symfony/polyfill-php81/bootstrap.php',
     'cf15db0dadced1bb06881d38a6ab91d1' => $baseDir . '/symfony/string/Resources/functions.php',
     '6ec8b17a2a73929b12ae06804034a3cd' => $baseDir . '/opis/closure/functions.php',
     'b2f23a3075c5237dd63d2c12b0edd375' => $baseDir . '/symfony/var-dumper/Resources/functions/dump.php',

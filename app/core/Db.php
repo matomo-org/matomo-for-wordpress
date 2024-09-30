@@ -160,6 +160,7 @@ class Db
         $dbConfig['type'] = $masterDbConfig['type'];
         $dbConfig['tables_prefix'] = $masterDbConfig['tables_prefix'];
         $dbConfig['charset'] = $masterDbConfig['charset'];
+        $dbConfig['collation'] = $masterDbConfig['collation'] ?? null;
         $db = @Adapter::factory($dbConfig['adapter'], $dbConfig);
         if (!empty($dbConfig['aurora_readonly_read_committed'])) {
             $db->exec('set session aurora_read_replica_read_committed = ON;set session transaction isolation level read committed;');

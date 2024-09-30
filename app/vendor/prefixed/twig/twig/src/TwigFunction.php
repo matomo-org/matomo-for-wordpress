@@ -32,7 +32,7 @@ final class TwigFunction
     {
         $this->name = $name;
         $this->callable = $callable;
-        $this->options = array_merge(['needs_environment' => false, 'needs_context' => false, 'needs_charset' => false, 'is_variadic' => false, 'is_safe' => null, 'is_safe_callback' => null, 'node_class' => FunctionExpression::class, 'deprecated' => false, 'alternative' => null], $options);
+        $this->options = array_merge(['needs_environment' => false, 'needs_context' => false, 'needs_charset' => false, 'is_variadic' => false, 'is_safe' => null, 'is_safe_callback' => null, 'node_class' => FunctionExpression::class, 'deprecated' => false, 'deprecating_package' => '', 'alternative' => null], $options);
     }
     public function getName() : string
     {
@@ -88,6 +88,10 @@ final class TwigFunction
     public function isDeprecated() : bool
     {
         return (bool) $this->options['deprecated'];
+    }
+    public function getDeprecatingPackage() : string
+    {
+        return $this->options['deprecating_package'];
     }
     public function getDeprecatedVersion() : string
     {

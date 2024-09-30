@@ -6,7 +6,7 @@
  *
  */
 
-import { expect, browser } from '@wdio/globals';
+import { expect, browser, $ } from '@wdio/globals';
 import MwpSummaryPage from './pageobjects/mwp-admin/summary.page.js';
 import Website from './website.js';
 
@@ -14,6 +14,10 @@ describe('MWP Admin > Summary', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
 
   before(async () => {
+    if (!process.env.PHP_VERSION) {
+      throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
+    }
+
     await Website.login();
   });
 
@@ -22,7 +26,7 @@ describe('MWP Admin > Summary', () => {
 
     await MwpSummaryPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.summary${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.summary.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toBeLessThan(0.01);
   });
 
@@ -31,7 +35,7 @@ describe('MWP Admin > Summary', () => {
 
     await MwpSummaryPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.summary.thismonth${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.summary.thismonth.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toBeLessThan(0.01);
   });
 

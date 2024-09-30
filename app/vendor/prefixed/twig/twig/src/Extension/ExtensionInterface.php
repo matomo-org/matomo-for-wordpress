@@ -11,8 +11,7 @@
 namespace Matomo\Dependencies\Twig\Extension;
 
 use Matomo\Dependencies\Twig\ExpressionParser;
-use Matomo\Dependencies\Twig\Node\Expression\Binary\AbstractBinary;
-use Matomo\Dependencies\Twig\Node\Expression\Unary\AbstractUnary;
+use Matomo\Dependencies\Twig\Node\Expression\AbstractExpression;
 use Matomo\Dependencies\Twig\NodeVisitor\NodeVisitorInterface;
 use Matomo\Dependencies\Twig\TokenParser\TokenParserInterface;
 use Matomo\Dependencies\Twig\TwigFilter;
@@ -61,8 +60,8 @@ interface ExtensionInterface
      * @return array<array> First array of unary operators, second array of binary operators
      *
      * @psalm-return array{
-     *     array<string, array{precedence: int, class: class-string<AbstractUnary>}>,
-     *     array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
+     *     array<string, array{precedence: int, class: class-string<AbstractExpression>}>,
+     *     array<string, array{precedence: int, class?: class-string<AbstractExpression>, associativity: ExpressionParser::OPERATOR_*}>
      * }
      */
     public function getOperators();

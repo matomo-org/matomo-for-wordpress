@@ -101,15 +101,15 @@ final class ModuleNode extends Node
             // traits
             foreach ($this->getNode('traits') as $i => $trait) {
                 $node = $trait->getNode('template');
-                $compiler->addDebugInfo($node)->write(sprintf('$_trait_%s = $this->loadTemplate(', $i))->subcompile($node)->raw(', ')->repr($node->getTemplateName())->raw(', ')->repr($node->getTemplateLine())->raw(");\n")->write(sprintf("if (!\$_trait_%s->unwrap()->isTraitable()) {\n", $i))->indent()->write("throw new RuntimeError('Template \"'.")->subcompile($trait->getNode('template'))->raw(".'\" cannot be used as a trait.', ")->repr($node->getTemplateLine())->raw(", \$this->source);\n")->outdent()->write("}\n")->write(sprintf("\$_trait_%s_blocks = \$_trait_%s->unwrap()->getBlocks();\n\n", $i, $i));
+                $compiler->addDebugInfo($node)->write(\sprintf('$_trait_%s = $this->loadTemplate(', $i))->subcompile($node)->raw(', ')->repr($node->getTemplateName())->raw(', ')->repr($node->getTemplateLine())->raw(");\n")->write(\sprintf("if (!\$_trait_%s->unwrap()->isTraitable()) {\n", $i))->indent()->write("throw new RuntimeError('Template \"'.")->subcompile($trait->getNode('template'))->raw(".'\" cannot be used as a trait.', ")->repr($node->getTemplateLine())->raw(", \$this->source);\n")->outdent()->write("}\n")->write(\sprintf("\$_trait_%s_blocks = \$_trait_%s->unwrap()->getBlocks();\n\n", $i, $i));
                 foreach ($trait->getNode('targets') as $key => $value) {
-                    $compiler->write(sprintf('if (!isset($_trait_%s_blocks[', $i))->string($key)->raw("])) {\n")->indent()->write("throw new RuntimeError('Block ")->string($key)->raw(' is not defined in trait ')->subcompile($trait->getNode('template'))->raw(".', ")->repr($node->getTemplateLine())->raw(", \$this->source);\n")->outdent()->write("}\n\n")->write(sprintf('$_trait_%s_blocks[', $i))->subcompile($value)->raw(sprintf('] = $_trait_%s_blocks[', $i))->string($key)->raw(sprintf(']; unset($_trait_%s_blocks[', $i))->string($key)->raw("]);\n\n");
+                    $compiler->write(\sprintf('if (!isset($_trait_%s_blocks[', $i))->string($key)->raw("])) {\n")->indent()->write("throw new RuntimeError('Block ")->string($key)->raw(' is not defined in trait ')->subcompile($trait->getNode('template'))->raw(".', ")->repr($node->getTemplateLine())->raw(", \$this->source);\n")->outdent()->write("}\n\n")->write(\sprintf('$_trait_%s_blocks[', $i))->subcompile($value)->raw(\sprintf('] = $_trait_%s_blocks[', $i))->string($key)->raw(\sprintf(']; unset($_trait_%s_blocks[', $i))->string($key)->raw("]);\n\n");
                 }
             }
             if ($countTraits > 1) {
                 $compiler->write("\$this->traits = array_merge(\n")->indent();
                 for ($i = 0; $i < $countTraits; ++$i) {
-                    $compiler->write(sprintf('$_trait_%s_blocks' . ($i == $countTraits - 1 ? '' : ',') . "\n", $i));
+                    $compiler->write(\sprintf('$_trait_%s_blocks' . ($i == $countTraits - 1 ? '' : ',') . "\n", $i));
                 }
                 $compiler->outdent()->write(");\n\n");
             } else {
@@ -122,7 +122,7 @@ final class ModuleNode extends Node
         // blocks
         $compiler->indent();
         foreach ($this->getNode('blocks') as $name => $node) {
-            $compiler->write(sprintf("'%s' => [\$this, 'block_%s'],\n", $name, $name));
+            $compiler->write(\sprintf("'%s' => [\$this, 'block_%s'],\n", $name, $name));
         }
         if ($countTraits) {
             $compiler->outdent()->write("]\n")->outdent()->write(");\n");
@@ -207,7 +207,7 @@ final class ModuleNode extends Node
     }
     protected function compileDebugInfo(Compiler $compiler)
     {
-        $compiler->write("/**\n")->write(" * @codeCoverageIgnore\n")->write(" */\n")->write("public function getDebugInfo()\n", "{\n")->indent()->write(sprintf("return %s;\n", str_replace("\n", '', var_export(array_reverse($compiler->getDebugInfo(), true), true))))->outdent()->write("}\n\n");
+        $compiler->write("/**\n")->write(" * @codeCoverageIgnore\n")->write(" */\n")->write("public function getDebugInfo()\n", "{\n")->indent()->write(\sprintf("return %s;\n", str_replace("\n", '', var_export(array_reverse($compiler->getDebugInfo(), true), true))))->outdent()->write("}\n\n");
     }
     protected function compileGetSourceContext(Compiler $compiler)
     {
@@ -216,7 +216,7 @@ final class ModuleNode extends Node
     protected function compileLoadTemplate(Compiler $compiler, $node, $var)
     {
         if ($node instanceof ConstantExpression) {
-            $compiler->write(sprintf('%s = $this->loadTemplate(', $var))->subcompile($node)->raw(', ')->repr($node->getTemplateName())->raw(', ')->repr($node->getTemplateLine())->raw(");\n");
+            $compiler->write(\sprintf('%s = $this->loadTemplate(', $var))->subcompile($node)->raw(', ')->repr($node->getTemplateName())->raw(', ')->repr($node->getTemplateLine())->raw(");\n");
         } else {
             throw new \LogicException('Trait templates can only be constant nodes.');
         }

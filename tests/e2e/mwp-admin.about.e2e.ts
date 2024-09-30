@@ -14,6 +14,10 @@ describe('MWP Admin > About', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
 
   before(async () => {
+    if (!process.env.PHP_VERSION) {
+      throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
+    }
+
     await Website.login();
   });
 
@@ -22,7 +26,7 @@ describe('MWP Admin > About', () => {
 
     await MwpAboutPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.about${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.about.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 });

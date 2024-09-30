@@ -77,7 +77,7 @@ class FilesystemLoader implements LoaderInterface
         $this->cache = $this->errorCache = [];
         $checkPath = $this->isAbsolutePath($path) ? $path : $this->rootPath . $path;
         if (!is_dir($checkPath)) {
-            throw new LoaderError(sprintf('The "%s" directory does not exist ("%s").', $path, $checkPath));
+            throw new LoaderError(\sprintf('The "%s" directory does not exist ("%s").', $path, $checkPath));
         }
         $this->paths[$namespace][] = rtrim($path, '/\\');
     }
@@ -90,7 +90,7 @@ class FilesystemLoader implements LoaderInterface
         $this->cache = $this->errorCache = [];
         $checkPath = $this->isAbsolutePath($path) ? $path : $this->rootPath . $path;
         if (!is_dir($checkPath)) {
-            throw new LoaderError(sprintf('The "%s" directory does not exist ("%s").', $path, $checkPath));
+            throw new LoaderError(\sprintf('The "%s" directory does not exist ("%s").', $path, $checkPath));
         }
         $path = rtrim($path, '/\\');
         if (!isset($this->paths[$namespace])) {
@@ -161,7 +161,7 @@ class FilesystemLoader implements LoaderInterface
             throw $e;
         }
         if (!isset($this->paths[$namespace])) {
-            $this->errorCache[$name] = sprintf('There are no registered paths for namespace "%s".', $namespace);
+            $this->errorCache[$name] = \sprintf('There are no registered paths for namespace "%s".', $namespace);
             if (!$throw) {
                 return null;
             }
@@ -178,7 +178,7 @@ class FilesystemLoader implements LoaderInterface
                 return $this->cache[$name] = $path . '/' . $shortname;
             }
         }
-        $this->errorCache[$name] = sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths[$namespace]));
+        $this->errorCache[$name] = \sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths[$namespace]));
         if (!$throw) {
             return null;
         }
@@ -192,7 +192,7 @@ class FilesystemLoader implements LoaderInterface
     {
         if (isset($name[0]) && '@' == $name[0]) {
             if (false === ($pos = strpos($name, '/'))) {
-                throw new LoaderError(sprintf('Malformed namespaced template name "%s" (expecting "@namespace/template_name").', $name));
+                throw new LoaderError(\sprintf('Malformed namespaced template name "%s" (expecting "@namespace/template_name").', $name));
             }
             $namespace = substr($name, 1, $pos - 1);
             $shortname = substr($name, $pos + 1);
@@ -215,7 +215,7 @@ class FilesystemLoader implements LoaderInterface
                 ++$level;
             }
             if ($level < 0) {
-                throw new LoaderError(sprintf('Looks like you try to load a template outside configured directories (%s).', $name));
+                throw new LoaderError(\sprintf('Looks like you try to load a template outside configured directories (%s).', $name));
             }
         }
     }

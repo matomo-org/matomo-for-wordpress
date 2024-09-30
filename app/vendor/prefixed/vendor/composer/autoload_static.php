@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit69e2472aa6abd29b7e5b42ed20b91f70
+class ComposerStaticInitd5d7eda3582e5816128327043277af9d
 {
     public static $files = array (
         '57561443c5204a2081a57dea43ad4761' => __DIR__ . '/../..' . '/twig/twig/src/Resources/core.php',
@@ -13,6 +13,7 @@ class ComposerStaticInit69e2472aa6abd29b7e5b42ed20b91f70
         '1667aaec7a4fcb8ee62cbc8011ffe403' => __DIR__ . '/../..' . '/twig/twig/src/Resources/string_loader.php',
         '14f31c04451e5135516391e2ab40385d' => __DIR__ . '/../..' . '/php-di/php-di/src/functions.php',
         '66cfd3a7190309803b5cc0fea03a4cdc' => __DIR__ . '/../..' . '/symfony/deprecation-contracts/function.php',
+        '0bb077418c51dbbe206e1992bd633d80' => __DIR__ . '/../..' . '/symfony/polyfill-php81/bootstrap.php',
         'cf15db0dadced1bb06881d38a6ab91d1' => __DIR__ . '/../..' . '/symfony/string/Resources/functions.php',
         '6ec8b17a2a73929b12ae06804034a3cd' => __DIR__ . '/../..' . '/opis/closure/functions.php',
         'b2f23a3075c5237dd63d2c12b0edd375' => __DIR__ . '/../..' . '/symfony/var-dumper/Resources/functions/dump.php',
@@ -21,6 +22,7 @@ class ComposerStaticInit69e2472aa6abd29b7e5b42ed20b91f70
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Matomo\\Dependencies\\Archive_Tar' => __DIR__ . '/../..' . '/pear/archive_tar/Archive/Tar.php',
+        'Matomo\\Dependencies\\CURLStringFile' => __DIR__ . '/../..' . '/symfony/polyfill-php81/Resources/stubs/CURLStringFile.php',
         'Matomo\\Dependencies\\Console_Getopt' => __DIR__ . '/../..' . '/pear/console_getopt/Console/Getopt.php',
         'Matomo\\Dependencies\\DI\\Annotation\\Inject' => __DIR__ . '/../..' . '/php-di/php-di/src/Annotation/Inject.php',
         'Matomo\\Dependencies\\DI\\Annotation\\Injectable' => __DIR__ . '/../..' . '/php-di/php-di/src/Annotation/Injectable.php',
@@ -276,6 +278,7 @@ class ComposerStaticInit69e2472aa6abd29b7e5b42ed20b91f70
         'Matomo\\Dependencies\\Psr\\Log\\Test\\DummyTest' => __DIR__ . '/../..' . '/psr/log/Psr/Log/Test/DummyTest.php',
         'Matomo\\Dependencies\\Psr\\Log\\Test\\LoggerInterfaceTest' => __DIR__ . '/../..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
         'Matomo\\Dependencies\\Psr\\Log\\Test\\TestLogger' => __DIR__ . '/../..' . '/psr/log/Psr/Log/Test/TestLogger.php',
+        'Matomo\\Dependencies\\ReturnTypeWillChange' => __DIR__ . '/../..' . '/symfony/polyfill-php81/Resources/stubs/ReturnTypeWillChange.php',
         'Matomo\\Dependencies\\Symfony\\Bridge\\Monolog\\Command\\ServerLogCommand' => __DIR__ . '/../..' . '/symfony/monolog-bridge/Command/ServerLogCommand.php',
         'Matomo\\Dependencies\\Symfony\\Bridge\\Monolog\\Formatter\\ConsoleFormatter' => __DIR__ . '/../..' . '/symfony/monolog-bridge/Formatter/ConsoleFormatter.php',
         'Matomo\\Dependencies\\Symfony\\Bridge\\Monolog\\Formatter\\VarDumperFormatter' => __DIR__ . '/../..' . '/symfony/monolog-bridge/Formatter/VarDumperFormatter.php',
@@ -762,11 +765,14 @@ class ComposerStaticInit69e2472aa6abd29b7e5b42ed20b91f70
         'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\ServiceSubscriberTrait' => __DIR__ . '/../..' . '/symfony/service-contracts/ServiceSubscriberTrait.php',
         'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\Test\\ServiceLocatorTest' => __DIR__ . '/../..' . '/symfony/service-contracts/Test/ServiceLocatorTest.php',
         'Matomo\\Dependencies\\Symfony\\Contracts\\Service\\Test\\ServiceLocatorTestCase' => __DIR__ . '/../..' . '/symfony/service-contracts/Test/ServiceLocatorTestCase.php',
+        'Matomo\\Dependencies\\Symfony\\Polyfill\\Php81\\Php81' => __DIR__ . '/../..' . '/symfony/polyfill-php81/Php81.php',
         'Matomo\\Dependencies\\System' => __DIR__ . '/../..' . '/pear/pear-core-minimal/src/System.php',
         'Matomo\\Dependencies\\Twig\\Attribute\\YieldReady' => __DIR__ . '/../..' . '/twig/twig/src/Attribute/YieldReady.php',
         'Matomo\\Dependencies\\Twig\\Cache\\CacheInterface' => __DIR__ . '/../..' . '/twig/twig/src/Cache/CacheInterface.php',
+        'Matomo\\Dependencies\\Twig\\Cache\\ChainCache' => __DIR__ . '/../..' . '/twig/twig/src/Cache/ChainCache.php',
         'Matomo\\Dependencies\\Twig\\Cache\\FilesystemCache' => __DIR__ . '/../..' . '/twig/twig/src/Cache/FilesystemCache.php',
         'Matomo\\Dependencies\\Twig\\Cache\\NullCache' => __DIR__ . '/../..' . '/twig/twig/src/Cache/NullCache.php',
+        'Matomo\\Dependencies\\Twig\\Cache\\ReadOnlyFilesystemCache' => __DIR__ . '/../..' . '/twig/twig/src/Cache/ReadOnlyFilesystemCache.php',
         'Matomo\\Dependencies\\Twig\\Compiler' => __DIR__ . '/../..' . '/twig/twig/src/Compiler.php',
         'Matomo\\Dependencies\\Twig\\Environment' => __DIR__ . '/../..' . '/twig/twig/src/Environment.php',
         'Matomo\\Dependencies\\Twig\\Error\\Error' => __DIR__ . '/../..' . '/twig/twig/src/Error/Error.php',
@@ -854,6 +860,7 @@ class ComposerStaticInit69e2472aa6abd29b7e5b42ed20b91f70
         'Matomo\\Dependencies\\Twig\\Node\\Expression\\ConstantExpression' => __DIR__ . '/../..' . '/twig/twig/src/Node/Expression/ConstantExpression.php',
         'Matomo\\Dependencies\\Twig\\Node\\Expression\\FilterExpression' => __DIR__ . '/../..' . '/twig/twig/src/Node/Expression/FilterExpression.php',
         'Matomo\\Dependencies\\Twig\\Node\\Expression\\Filter\\DefaultFilter' => __DIR__ . '/../..' . '/twig/twig/src/Node/Expression/Filter/DefaultFilter.php',
+        'Matomo\\Dependencies\\Twig\\Node\\Expression\\Filter\\RawFilter' => __DIR__ . '/../..' . '/twig/twig/src/Node/Expression/Filter/RawFilter.php',
         'Matomo\\Dependencies\\Twig\\Node\\Expression\\FunctionExpression' => __DIR__ . '/../..' . '/twig/twig/src/Node/Expression/FunctionExpression.php',
         'Matomo\\Dependencies\\Twig\\Node\\Expression\\GetAttrExpression' => __DIR__ . '/../..' . '/twig/twig/src/Node/Expression/GetAttrExpression.php',
         'Matomo\\Dependencies\\Twig\\Node\\Expression\\InlinePrint' => __DIR__ . '/../..' . '/twig/twig/src/Node/Expression/InlinePrint.php',
@@ -883,6 +890,7 @@ class ComposerStaticInit69e2472aa6abd29b7e5b42ed20b91f70
         'Matomo\\Dependencies\\Twig\\Node\\IncludeNode' => __DIR__ . '/../..' . '/twig/twig/src/Node/IncludeNode.php',
         'Matomo\\Dependencies\\Twig\\Node\\MacroNode' => __DIR__ . '/../..' . '/twig/twig/src/Node/MacroNode.php',
         'Matomo\\Dependencies\\Twig\\Node\\ModuleNode' => __DIR__ . '/../..' . '/twig/twig/src/Node/ModuleNode.php',
+        'Matomo\\Dependencies\\Twig\\Node\\NameDeprecation' => __DIR__ . '/../..' . '/twig/twig/src/Node/NameDeprecation.php',
         'Matomo\\Dependencies\\Twig\\Node\\Node' => __DIR__ . '/../..' . '/twig/twig/src/Node/Node.php',
         'Matomo\\Dependencies\\Twig\\Node\\NodeCaptureInterface' => __DIR__ . '/../..' . '/twig/twig/src/Node/NodeCaptureInterface.php',
         'Matomo\\Dependencies\\Twig\\Node\\NodeOutputInterface' => __DIR__ . '/../..' . '/twig/twig/src/Node/NodeOutputInterface.php',
@@ -944,6 +952,7 @@ class ComposerStaticInit69e2472aa6abd29b7e5b42ed20b91f70
         'Matomo\\Dependencies\\Twig\\TwigFunction' => __DIR__ . '/../..' . '/twig/twig/src/TwigFunction.php',
         'Matomo\\Dependencies\\Twig\\TwigTest' => __DIR__ . '/../..' . '/twig/twig/src/TwigTest.php',
         'Matomo\\Dependencies\\Twig\\Util\\DeprecationCollector' => __DIR__ . '/../..' . '/twig/twig/src/Util/DeprecationCollector.php',
+        'Matomo\\Dependencies\\Twig\\Util\\ReflectionCallable' => __DIR__ . '/../..' . '/twig/twig/src/Util/ReflectionCallable.php',
         'Matomo\\Dependencies\\Twig\\Util\\TemplateDirIterator' => __DIR__ . '/../..' . '/twig/twig/src/Util/TemplateDirIterator.php',
         'PEAR_PHPTest' => __DIR__ . '/../..' . '/pear/archive_tar/tests/phpt_test.php.inc',
     );
@@ -951,7 +960,7 @@ class ComposerStaticInit69e2472aa6abd29b7e5b42ed20b91f70
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit69e2472aa6abd29b7e5b42ed20b91f70::$classMap;
+            $loader->classMap = ComposerStaticInitd5d7eda3582e5816128327043277af9d::$classMap;
 
         }, null, ClassLoader::class);
     }

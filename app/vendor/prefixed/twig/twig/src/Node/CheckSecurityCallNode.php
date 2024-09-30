@@ -20,6 +20,6 @@ class CheckSecurityCallNode extends Node
 {
     public function compile(Compiler $compiler)
     {
-        $compiler->write("\$this->sandbox = \$this->env->getExtension(SandboxExtension::class);\n")->write("\$this->checkSecurity();\n");
+        $compiler->write("\$this->sandbox = \$this->extensions[SandboxExtension::class];\n")->write("\$this->checkSecurity();\n");
     }
 }
