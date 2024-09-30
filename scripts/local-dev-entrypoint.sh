@@ -152,6 +152,24 @@ define( 'WPMS_SMTP_PASS', '' );
 define( 'MATOMO_ANALYTICS_FILE', __DIR__ . '/wp-content/plugins/matomo/matomo.php' );
 define( 'MATOMO_LOCAL_ENVIRONMENT', 1 );
 
+if ( ! empty( \$_SERVER['HTTP_HOST'] )
+	&& preg_match( '/\.ngrok-free\.app$/', \$_SERVER['HTTP_HOST'] )
+) {
+	\$folder = basename( __DIR__ );
+	define('WP_HOME', 'https://' . \$_SERVER['HTTP_HOST'] . '/' . \$folder );
+	define('WP_SITEURL', 'https://' . \$_SERVER['HTTP_HOST'] . '/' . \$folder );
+} else {
+	\$folder = basename( __DIR__ );
+	define('WP_HOME', 'http://localhost/' . \$folder);
+	define('WP_SITEURL', 'http://localhost/' . \$folder);
+}
+
+if ( isset( \$_SERVER['HTTP_X_FORWARDED_PROTO'] )
+  && strpos( \$_SERVER['HTTP_X_FORWARDED_PROTO'], 'https' ) !== false
+) {
+	\$_SERVER['HTTPS'] = 'on';
+}
+
 \$table_prefix = 'wp_';
 
 /* That's all, stop editing! Happy publishing. */
