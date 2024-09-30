@@ -345,7 +345,8 @@ class Installer {
 			}
 		}
 
-		$charset = $wpdb->charset ? $wpdb->charset : 'utf8';
+		$charset   = $wpdb->charset ? $wpdb->charset : 'utf8';
+		$collation = $wpdb->collate ? $wpdb->collate : 'utf8mb4_general_ci';
 
 		$database = [
 			'host'          => $host,
@@ -354,6 +355,7 @@ class Installer {
 			'password'      => DB_PASSWORD,
 			'dbname'        => DB_NAME,
 			'charset'       => $charset,
+			'collation'     => $collation,
 			'tables_prefix' => $wpdb->prefix . MATOMO_DATABASE_PREFIX,
 			'adapter'       => 'WordPress',
 		];
