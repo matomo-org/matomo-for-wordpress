@@ -22,8 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-load_plugin_textdomain( 'matomo', false, basename( dirname( __FILE__ ) ) . '/languages' );
-
 if ( ! defined( 'MATOMO_ANALYTICS_FILE' ) ) {
 	define( 'MATOMO_ANALYTICS_FILE', __FILE__ );
 }
@@ -36,6 +34,13 @@ $GLOBALS['MATOMO_PLUGINS_ENABLED'] = array();
 
 /** MATOMO_PLUGIN_FILES => used to check for updates etc */
 $GLOBALS['MATOMO_PLUGIN_FILES'] = array( MATOMO_ANALYTICS_FILE );
+
+add_action(
+	'init',
+	function () {
+		load_plugin_textdomain( 'matomo', false, basename( dirname( __FILE__ ) ) . '/languages' );
+	}
+);
 
 function matomo_has_compatible_content_dir() {
 	if ( ! empty( $_SERVER['MATOMO_WP_ROOT_PATH'] )
