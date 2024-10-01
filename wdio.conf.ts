@@ -39,7 +39,7 @@ function checkWpDebugLogsForError() {
 
     let lines = contents.split("\n");
     let matomoErrors = lines.filter((line) => {
-      return /(notice|warning|error|deprecated):/i.test(line) && line.toLowerCase().includes('matomo');
+      return /php (notice|warning|error|deprecated):/i.test(line) && line.toLowerCase().includes('matomo');
     });
 
     if (matomoErrors.length) {
