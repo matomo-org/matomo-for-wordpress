@@ -154,6 +154,8 @@ jobs:
           fi
 
           npm run compose run phpunit
+      - run: cat ./docker/wordpress/test/wp-content/debug.log
+        if: always()
 
   e2e_tests:
     runs-on: 'ubuntu-22.04'
@@ -286,6 +288,10 @@ jobs:
       - run: npm run compose logs wordpress --no-color
         if: always()
       - run: npm run compose stop
+
+      # output debug.log
+      - run: cat ./docker/wordpress/test/wp-content/debug.log
+        if: always()
 
   checkstyle:
     runs-on: 'ubuntu-20.04'
