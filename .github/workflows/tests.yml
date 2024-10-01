@@ -126,8 +126,20 @@ jobs:
       - run: chmod -R 777 . # required to build the release
       - run: sudo chown -R $UID:1000 . # required for wordpress' filesystem direct implementation
       - run: docker compose --env-file .env.default --env-file .env up -d wordpress
-      - run: sleep 60 # wait for docker-compose launch to finish
+      - run: |
+          # wait for docker-compose launch to finish
+          elapsed=0
+          until [ -e ./docker/wordpress/test/setup_finished ] || (( elapsed++ >= 240 )); do
+            sleep 1
+          done
+
+          if [ ! -e ./docker/wordpress/test/setup_finished ]; then
+            echo "did not setup local environment in time"
+            exit 1
+          fi
+          [ -e /tmp/file.txt ] && echo File exists || echo Timeout
       - run: npm run compose logs wordpress --no-color # for debugging failures to start
+        if: always()
 
       - name: Run unit tests
         shell: bash
@@ -213,14 +225,30 @@ jobs:
           UID=$UID
           WITHOUT_MARKETPLACE=1
           WP_DEBUG=true
+          WP_DEBUG_LOG=true
+          WP_DEBUG_DISPLAY=false
           EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
       - run: chmod -R 777 . # required to build the release
       - run: docker compose --env-file .env.default --env-file .env up -d wordpress
-      - run: sleep 60 # wait for docker-compose launch to finish
+      - run: |
+          # wait for docker-compose launch to finish
+          elapsed=0
+          until [ -e ./docker/wordpress/test/setup_finished ] || (( elapsed++ >= 240 )); do
+            sleep 1
+          done
+
+          if [ ! -e ./docker/wordpress/test/setup_finished ]; then
+            echo "did not setup local environment in time"
+            exit 1
+          fi
+          [ -e /tmp/file.txt ] && echo File exists || echo Timeout
+      - run: |
+          cp ./functions_override.php ./docker/wordpress/test/wp-includes/functions.php
       - run: npm run compose logs wordpress --no-color # for debugging failures to start
+        if: always()
 
       # build release from current code
       - run: |
@@ -261,6 +289,10 @@ jobs:
       - run: npm run compose logs wordpress --no-color
         if: always()
       - run: npm run compose stop
+
+      # output debug.concat.log (created in a hook in wdio.conf.ts)
+      - run: cat ./docker/wordpress/test/wp-content/debug.concat.log || echo "debug.concat.log file does not exist"
+        if: always()
 
   checkstyle:
     runs-on: 'ubuntu-20.04'

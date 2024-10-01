@@ -104,8 +104,14 @@ for chunk in ${PIECES[@]}; do
   if [[ "$chunk" == "." ]]; then
     RSYNC_FROM="$TMP_DIR/"
     RSYNC_TO="trunk"
+
+    echo "➤ existing trunk version: $(cat readme.txt | grep -oP "Stable tag: \K(.+)")"
   fi
   rsync -rc "$RSYNC_FROM" "$RSYNC_TO" --delete --delete-excluded
+
+  if [[ "$chunk" == "." ]]; then
+    echo "➤ rsynced version: $(cat readme.txt | grep -oP "Stable tag: \K(.+)")"
+  fi
 
   if [[ ! -d "trunk/$chunk" ]]; then # sanity check
     echo "➤ ERROR: '$chunk' folder does not exist"

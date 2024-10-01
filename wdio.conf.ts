@@ -7,6 +7,7 @@ import GlobalSetup from './tests/e2e/global-setup.ts';
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 const DOWNLOADS_DIR = path.join(dirname, 'tests', 'e2e', 'downloads');
+const WORDPRESS_DIR_NAME = process.env.WORDPRESS_FOLDER || process.env.WORDPRESS_VERSION || '';
 
 if (!fs.existsSync(DOWNLOADS_DIR)) {
   fs.mkdirSync(DOWNLOADS_DIR);
@@ -20,6 +21,32 @@ async function saveScreenshotIfError(test, error) {
     } catch (e) {
       console.log(`could not save failure screenshot ${failureScreenshotName}`);
     }
+  }
+}
+
+function checkWpDebugLogsForError() {
+  const wpDebugLogPath = path.join(dirname, 'docker', 'wordpress', WORDPRESS_DIR_NAME, 'wp-content', 'debug.log');
+  const wpDebugLogConcatPath = path.join(dirname, 'docker', 'wordpress', WORDPRESS_DIR_NAME, 'wp-content', 'debug.concat.log');
+
+  if (!fs.existsSync(wpDebugLogPath)) {
+    return;
+  }
+
+  try {
+    let contents = fs.readFileSync(wpDebugLogPath).toString('utf-8');
+
+    fs.appendFileSync(wpDebugLogConcatPath, contents);
+
+    let lines = contents.split("\n");
+    let matomoErrors = lines.filter((line) => {
+      return /php (notice|warning|error|deprecated):/i.test(line) && line.toLowerCase().includes('matomo');
+    });
+
+    if (matomoErrors.length) {
+      throw new Error(`Found Matomo related errors/warnings in debug.log:\n- ${matomoErrors.join("\n- ")}`);
+    }
+  } finally {
+    fs.unlinkSync(wpDebugLogPath); // reset the wp-debug log file
   }
 }
 
@@ -218,8 +245,20 @@ export const config: Options.Testrunner = {
   // it and to build services around it. You can either apply a single function or an array of
   // methods to it. If one of them returns with a promise, WebdriverIO will wait until that promise got
   // resolved to continue.
-  async afterTest(test, context, { error }) {
-    await saveScreenshotIfError(test, error);
+  async afterTest(test, context, params) {
+    let { error } = params;
+
+    if (error) {
+      await saveScreenshotIfError(test, error);
+      return;
+    }
+
+    try {
+      checkWpDebugLogsForError();
+    } catch (err) {
+      await saveScreenshotIfError(test, err);
+      throw err;
+    }
   },
 
   async afterHook(test, context, { error }) {
