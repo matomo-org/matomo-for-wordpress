@@ -7,9 +7,7 @@ import GlobalSetup from './tests/e2e/global-setup.ts';
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 const DOWNLOADS_DIR = path.join(dirname, 'tests', 'e2e', 'downloads');
-
-console.log('wp-config contents:');
-console.log(fs.readFileSync(path.join(dirname, 'docker', 'wordpress', 'wp-config.php')));
+const WORDPRESS_DIR_NAME = process.env.WORDPRESS_FOLDER || process.env.WORDPRESS_VERSION || '';
 
 if (!fs.existsSync(DOWNLOADS_DIR)) {
   fs.mkdirSync(DOWNLOADS_DIR);
@@ -27,7 +25,7 @@ async function saveScreenshotIfError(test, error) {
 }
 
 function checkWpDebugLogsForError() {
-  const wpDebugLogPath = path.join(dirname, 'docker', 'wordpress', 'wp-content', 'debug.log');
+  const wpDebugLogPath = path.join(dirname, 'docker', 'wordpress', WORDPRESS_DIR_NAME, 'wp-content', 'debug.log');
 
   if (!fs.existsSync(wpDebugLogPath)) {
     return;
@@ -37,7 +35,7 @@ function checkWpDebugLogsForError() {
     let contents = fs.readFileSync(wpDebugLogPath).toString('utf-8').split("\n");
 
     let matomoErrors = contents.filter((line) => {
-      return /notice|warning|error|deprecated/i.test(line) && line.toLowerCase().includes('matomo');
+      return /(notice|warning|error|deprecated):/i.test(line) && line.toLowerCase().includes('matomo');
     });
 
     if (matomoErrors.length) {

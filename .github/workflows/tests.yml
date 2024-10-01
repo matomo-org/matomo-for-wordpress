@@ -119,8 +119,6 @@ jobs:
           WORDPRESS_VERSION=$WORDPRESS_VERSION
           UID=$UID
           WP_DEBUG=true
-          WP_DEBUG_LOG=true
-          WP_DEBUG_DISPLAY=false
           EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
@@ -128,7 +126,18 @@ jobs:
       - run: chmod -R 777 . # required to build the release
       - run: sudo chown -R $UID:1000 . # required for wordpress' filesystem direct implementation
       - run: docker compose --env-file .env.default --env-file .env up -d wordpress
-      - run: sleep 120 # wait for docker-compose launch to finish
+      - run: |
+          # wait for docker-compose launch to finish
+          elapsed=0
+          until [ -e ./docker/wordpress/test/setup_finished ] || (( elapsed++ >= 180 )); do
+            sleep 1
+          done
+
+          if [ ! -e ./docker/wordpress/test/setup_finished ]; then
+            echo "did not setup local environment in time"
+            exit 1
+          fi
+          [ -e /tmp/file.txt ] && echo File exists || echo Timeout
       - run: npm run compose logs wordpress --no-color # for debugging failures to start
 
       - name: Run unit tests
@@ -215,14 +224,28 @@ jobs:
           UID=$UID
           WITHOUT_MARKETPLACE=1
           WP_DEBUG=true
+          WP_DEBUG_LOG=true
+          WP_DEBUG_DISPLAY=false
           EOF
         env:
           PHP_VERSION: ${{ matrix.php-versions }}
           WORDPRESS_VERSION: ${{ matrix.wp-versions }}
       - run: chmod -R 777 . # required to build the release
       - run: docker compose --env-file .env.default --env-file .env up -d wordpress
-      - run: sleep 120 # wait for docker-compose launch to finish
+      - run: |
+          # wait for docker-compose launch to finish
+          elapsed=0
+          until [ -e ./docker/wordpress/test/setup_finished ] || (( elapsed++ >= 180 )); do
+            sleep 1
+          done
+
+          if [ ! -e ./docker/wordpress/test/setup_finished ]; then
+            echo "did not setup local environment in time"
+            exit 1
+          fi
+          [ -e /tmp/file.txt ] && echo File exists || echo Timeout
       - run: npm run compose logs wordpress --no-color # for debugging failures to start
+        if: always()
 
       # build release from current code
       - run: |
