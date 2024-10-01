@@ -154,8 +154,6 @@ jobs:
           fi
 
           npm run compose run phpunit
-      - run: cat ./docker/wordpress/test/wp-content/debug.log
-        if: always()
 
   e2e_tests:
     runs-on: 'ubuntu-22.04'
@@ -290,7 +288,7 @@ jobs:
       - run: npm run compose stop
 
       # output debug.log
-      - run: cat ./docker/wordpress/test/wp-content/debug.log
+      - run: cat ./docker/wordpress/test/wp-content/debug.log || echo "debug.log file does not exist"
         if: always()
 
   checkstyle:
