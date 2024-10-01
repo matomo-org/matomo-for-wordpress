@@ -287,8 +287,8 @@ jobs:
         if: always()
       - run: npm run compose stop
 
-      # output debug.log
-      - run: cat ./docker/wordpress/test/wp-content/debug.log || echo "debug.log file does not exist"
+      # output debug.concat.log (created in a hook in wdio.conf.ts)
+      - run: cat ./docker/wordpress/test/wp-content/debug.concat.log || echo "debug.concat.log file does not exist"
         if: always()
 
   checkstyle:
