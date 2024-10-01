@@ -8,6 +8,9 @@ const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 const DOWNLOADS_DIR = path.join(dirname, 'tests', 'e2e', 'downloads');
 
+console.log('wp-config contents:');
+console.log(fs.readFileSync(path.join(dirname, 'docker', 'wordpress', 'wp-config.php')));
+
 if (!fs.existsSync(DOWNLOADS_DIR)) {
   fs.mkdirSync(DOWNLOADS_DIR);
 }
@@ -20,6 +23,28 @@ async function saveScreenshotIfError(test, error) {
     } catch (e) {
       console.log(`could not save failure screenshot ${failureScreenshotName}`);
     }
+  }
+}
+
+function checkWpDebugLogsForError() {
+  const wpDebugLogPath = path.join(dirname, 'docker', 'wordpress', 'wp-content', 'debug.log');
+
+  if (!fs.existsSync(wpDebugLogPath)) {
+    return;
+  }
+
+  try {
+    let contents = fs.readFileSync(wpDebugLogPath).toString('utf-8').split("\n");
+
+    let matomoErrors = contents.filter((line) => {
+      return /notice|warning|error|deprecated/i.test(line) && line.toLowerCase().includes('matomo');
+    });
+
+    if (matomoErrors.length) {
+      throw new Error(`Found Matomo related errors/warnings in debug.log:\n- ${matomoErrors.join("\n- ")}`);
+    }
+  } finally {
+    fs.unlinkSync(wpDebugLogPath); // reset the wp-debug log file
   }
 }
 
@@ -218,8 +243,20 @@ export const config: Options.Testrunner = {
   // it and to build services around it. You can either apply a single function or an array of
   // methods to it. If one of them returns with a promise, WebdriverIO will wait until that promise got
   // resolved to continue.
-  async afterTest(test, context, { error }) {
-    await saveScreenshotIfError(test, error);
+  async afterTest(test, context, params) {
+    let { error } = params;
+
+    if (error) {
+      await saveScreenshotIfError(test, error);
+      return;
+    }
+
+    try {
+      checkWpDebugLogsForError();
+    } catch (err) {
+      await saveScreenshotIfError(test, err);
+      throw err;
+    }
   },
 
   async afterHook(test, context, { error }) {
