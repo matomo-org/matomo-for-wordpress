@@ -36,6 +36,7 @@ class DatabaseAbilitiesCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Di
         }
         $result = new \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult($this->translator->translate('Installation_DatabaseAbilities'));
         $result->addItem($this->checkUtf8mb4Charset());
+        $result->addItem($this->checkCollation());
         if (Config::getInstance()->General['enable_load_data_infile']) {
             $result->addItem($this->checkLoadDataInfile());
         }
@@ -59,6 +60,21 @@ class DatabaseAbilitiesCheck implements \Piwik\Plugins\Diagnostics\Diagnostic\Di
             return new \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResultItem(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING, 'UTF8mb4 charset<br/><br/>' . $this->translator->translate('Diagnostics_DatabaseUtf8mb4CharsetAvailableButNotUsed', '<code>' . PIWIK_INCLUDE_PATH . '/console core:convert-to-utf8mb4</code>') . '<br/><br/>' . $this->translator->translate('Diagnostics_DatabaseUtf8Requirement', ['�', '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to-update/how-to-convert-the-database-to-utf8mb4-charset/') . '" rel="noreferrer noopener" target="_blank">', '</a>']) . '<br/>');
         }
         return new \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResultItem(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING, 'UTF8mb4 charset<br/><br/>' . $this->translator->translate('Diagnostics_DatabaseUtf8mb4CharsetRecommended') . '<br/><br/>' . $this->translator->translate('Diagnostics_DatabaseUtf8Requirement', ['�', '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to-update/how-to-convert-the-database-to-utf8mb4-charset/') . '" rel="noreferrer noopener" target="_blank">', '</a>']) . '<br/>');
+    }
+    protected function checkCollation() : \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResultItem
+    {
+        $dbSettings = new Db\Settings();
+        $collation = $dbSettings->getUsedCollation();
+        if ('' !== $collation) {
+            return new \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResultItem(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_OK, 'Connection collation');
+        }
+        $collationConnection = Db::get()->fetchOne('SELECT @@collation_connection');
+        $collationCharset = DbHelper::getDefaultCollationForCharset($dbSettings->getUsedCharset());
+        $message = sprintf('Connection collation<br/><br/>%s<br/><br/>%s<br/>', $this->translator->translate('Diagnostics_DatabaseCollationNotConfigured'), $this->translator->translate('Diagnostics_DatabaseCollationConnection', [$collationConnection]));
+        if ('' !== $collationCharset) {
+            $message .= $this->translator->translate('Diagnostics_DatabaseCollationCharset', [$collationCharset]) . '<br/>';
+        }
+        return new \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResultItem(\Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::STATUS_WARNING, $message);
     }
     protected function checkLoadDataInfile()
     {

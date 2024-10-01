@@ -1,5 +1,9 @@
 == Changelog ===
 
+= 5.1.4 =
+* Update Matomo core to version 5.1.2 (changes: https://matomo.org/changelog/matomo-5-1-2/)
+* Update some Matomo core dependencies.
+
 = 5.1.3 =
 * Update Matomo core to version 5.1.1 (changes: https://matomo.org/changelog/matomo-5-1-1/)
 * Moderate redesign to the feedback and get started admin pages.

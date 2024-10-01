@@ -414,6 +414,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $this->setTrustedHost($config);
         $config->database = $dbInfos;
         $config->database['charset'] = DbHelper::getDefaultCharset();
+        $config->database['collation'] = DbHelper::getDefaultCollationForCharset($config->database['charset']);
         $config->forceSave();
         // re-save the currently viewed language (since we saved the config file, there is now a salt which makes the
         // existing session cookie invalid)

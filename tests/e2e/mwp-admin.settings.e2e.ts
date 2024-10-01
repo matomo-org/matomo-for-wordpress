@@ -14,15 +14,15 @@ describe('MWP Admin > Settings', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
 
   before(async () => {
+    if (!process.env.PHP_VERSION) {
+      throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
+    }
+
     await Website.login();
   });
 
   it('should load the tracking tab correctly', async () => {
     await MwpSettingsPage.open();
-
-    if (!process.env.PHP_VERSION) {
-      throw new Error('Unexpected: PHP_VERSION environment variable cannot be found.');
-    }
 
     await MwpSettingsPage.removeTagManagerContainerIds();
     await MwpSettingsPage.prepareWpAdminForScreenshot();
@@ -75,7 +75,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.settings.access${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.settings.access.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -85,7 +85,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.settings.privacy${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.settings.privacy.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -95,7 +95,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.settings.exclusions${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.settings.exclusions.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -105,7 +105,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.settings.geolocation${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.settings.geolocation.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -115,7 +115,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.settings.advanced${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.settings.advanced.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -125,7 +125,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.settings.seowebvitals${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.settings.seowebvitals.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -137,7 +137,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.settings.seowebvitals-saved${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.settings.seowebvitals-saved.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 
@@ -147,7 +147,7 @@ describe('MWP Admin > Settings', () => {
 
     await MwpSettingsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.settings.searchperformance${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.settings.searchperformance.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);
   });
 });

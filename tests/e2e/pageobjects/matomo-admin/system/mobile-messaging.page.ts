@@ -6,7 +6,7 @@
  *
  */
 
-import { $ } from '@wdio/globals';
+import { $, browser } from '@wdio/globals';
 import MatomoAdminPage from '../../matomo-admin.page.js';
 
 class MobileMessagingPage extends MatomoAdminPage {
@@ -14,7 +14,7 @@ class MobileMessagingPage extends MatomoAdminPage {
     const result = await super.open('MobileMessaging.index');
 
     await $('.manageMobileMessagingSettings').waitForDisplayed();
-    await $('#accountForm #username').waitForDisplayed();
+    await $('#accountForm #username').waitForDisplayed({ timeout: 20000 });
     await browser.pause(2000);
 
     return result;

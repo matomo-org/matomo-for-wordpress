@@ -16,6 +16,7 @@ return array(
     'e69f7f6ee287b969198c3c9d6777bd38' => $vendorDir . '/symfony/polyfill-intl-normalizer/bootstrap.php',
     '04c6c5c2f7095ccf6c481d3e53e1776f' => $vendorDir . '/mustangostang/spyc/Spyc.php',
     '538ca81a9a966a6716601ecf48f4eaef' => $vendorDir . '/opis/closure/functions.php',
+    '23c18046f52bef3eea034657bafda50f' => $vendorDir . '/symfony/polyfill-php81/bootstrap.php',
     'b6b991a57620e2fb6b2f66f03fe9ddc2' => $vendorDir . '/symfony/string/Resources/functions.php',
     '8ac259e46781d60665439a97846a4a66' => $vendorDir . '/lox/xhprof/xhprof_lib/utils/xhprof_lib.php',
     'e30869f87cf76d235b75bb956c7ba9ed' => $vendorDir . '/lox/xhprof/xhprof_lib/utils/xhprof_runs.php',

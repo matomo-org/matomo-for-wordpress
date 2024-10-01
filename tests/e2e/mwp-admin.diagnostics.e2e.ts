@@ -36,7 +36,7 @@ describe('MWP Admin > Diagnostics', () => {
 
     await MwpDiagnosticsPage.prepareWpAdminForScreenshot();
     await expect(
-      await browser.checkFullPageScreen(`mwp-admin.diagnostics.troubleshooting${trunkSuffix}`)
+      await browser.checkFullPageScreen(`mwp-admin.diagnostics.troubleshooting.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toBeLessThanOrEqual(0.01);
   });
 });
