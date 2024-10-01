@@ -40,8 +40,6 @@ add_action(
 	function () {
 		if ( ! doing_action( 'after_setup_theme' ) && ! did_action( 'after_setup_theme' ) ) {
 			wp_trigger_error('matomoinit', "matomo load_plugin_textdomain trace (incorrect): " . (new \Exception())->getTraceAsString() . ' - ' . json_encode($_GET) . ' - ' . json_encode($_POST));
-		} else {
-			wp_trigger_error('matomoinit', "matomo load_plugin_textdomain trace (correct): " . (new \Exception())->getTraceAsString() . ' - ' . json_encode($_GET) . ' - ' . json_encode($_POST));
 		}
 		load_plugin_textdomain( 'matomo', false, basename( dirname( __FILE__ ) ) . '/languages' );
 	}
