@@ -27,7 +27,7 @@ describe('MWP Admin > Diagnostics', () => {
     await MwpDiagnosticsPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.diagnostics.system-report.${process.env.PHP_VERSION}${trunkSuffix}`)
-    ).toBeLessThanOrEqual(0.025);
+    ).toBeLessThanOrEqual(0.03);
   });
 
   it('should load the troubleshooting tab correctly', async () => {

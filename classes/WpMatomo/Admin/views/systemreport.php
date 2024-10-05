@@ -29,6 +29,7 @@ use WpMatomo\Admin\SystemReport;
 /** @var array $matomo_tables */
 /** @var array $matomo_has_exception_logs */
 /** @var bool $matomo_has_warning_and_no_errors */
+/** @var bool $matomo_has_errors */
 /** @var string $matomo_active_tab */
 /** @var \WpMatomo\Settings $settings */
 
@@ -51,6 +52,21 @@ if ( ! function_exists( 'matomo_format_value_text' ) ) {
 ?>
 
 <div class="wrap matomo-systemreport">
+	<?php
+	// if there are no errors, make sure the error notice is not displayed
+	// (if there were errors previously, it may have been output before the system
+	// report is shown)
+	if ( empty( $matomo_has_errors ) && empty( $matomo_active_tab ) ) {
+		?>
+		<script>
+			window.jQuery(document).ready(function ($) {
+				$('#matomo-systemreporterrors.notice').remove();
+			});
+		</script>
+		<?php
+	}
+	?>
+
 	<?php
 	if ( $matomo_has_warning_and_no_errors ) {
 		?>
