@@ -325,7 +325,7 @@ class SystemReport {
 			$matomo_tables                 = $this->get_error_tables();
 			$matomo_tables                 = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
 
-			$this->set_errors_present_transient( $matomo_tables );
+			$matomo_has_errors = $this->set_errors_present_transient( $matomo_tables );
 
 			$matomo_tables                    = $this->add_errors_first( $matomo_tables );
 			$matomo_has_warning_and_no_errors = $this->has_only_warnings_no_error( $matomo_tables );
@@ -2028,6 +2028,8 @@ class SystemReport {
 		}
 
 		set_site_transient( $cache_key, (int) $cache_value, WEEK_IN_SECONDS );
+
+		return $cache_value;
 	}
 
 	private function get_errors_present_cache_key() {
