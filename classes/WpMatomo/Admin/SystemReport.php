@@ -282,7 +282,7 @@ class SystemReport {
 	}
 
 	public function errors_present() {
-		$cache_key   = 'matomo_system_report_has_errors';
+		$cache_key   = $this->get_errors_present_cache_key();
 		$cache_value = get_site_transient( $cache_key );
 
 		if ( false === $cache_value ) {
@@ -295,15 +295,7 @@ class SystemReport {
 			$matomo_tables = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
 			$matomo_tables = $this->add_errors_first( $matomo_tables );
 
-			foreach ( $matomo_tables as $report_table ) {
-				foreach ( $report_table['rows'] as $row ) {
-					if ( ! empty( $row['is_error'] ) || ! empty( $row['is_warning'] ) ) {
-						$cache_value = true;
-					}
-				}
-			}
-
-			set_site_transient( $cache_key, (int) $cache_value, WEEK_IN_SECONDS );
+			$this->set_errors_present_transient( $matomo_tables );
 		}
 
 		return 1 === (int) $cache_value;
@@ -323,17 +315,22 @@ class SystemReport {
 			}
 		}
 
-		$matomo_tables = [];
+		$matomo_tables                    = [];
+		$matomo_has_exception_logs        = [];
+		$matomo_has_warning_and_no_errors = false;
+
 		if ( empty( $matomo_active_tab ) ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting
 			$this->initial_error_reporting = @error_reporting();
 			$matomo_tables                 = $this->get_error_tables();
-		}
-		$matomo_tables                    = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
-		$matomo_tables                    = $this->add_errors_first( $matomo_tables );
-		$matomo_has_warning_and_no_errors = $this->has_only_warnings_no_error( $matomo_tables );
+			$matomo_tables                 = apply_filters( 'matomo_systemreport_tables', $matomo_tables );
 
-		$matomo_has_exception_logs = $this->logger->get_last_logged_entries();
+			$matomo_has_errors = $this->set_errors_present_transient( $matomo_tables );
+
+			$matomo_tables                    = $this->add_errors_first( $matomo_tables );
+			$matomo_has_warning_and_no_errors = $this->has_only_warnings_no_error( $matomo_tables );
+			$matomo_has_exception_logs        = $this->logger->get_last_logged_entries();
+		}
 
 		include dirname( __FILE__ ) . '/views/systemreport.php';
 	}
@@ -2016,5 +2013,26 @@ class SystemReport {
 		}
 
 		return $this->binary;
+	}
+
+	private function set_errors_present_transient( $matomo_tables ) {
+		$cache_key = $this->get_errors_present_cache_key();
+
+		$cache_value = false;
+		foreach ( $matomo_tables as $report_table ) {
+			foreach ( $report_table['rows'] as $row ) {
+				if ( ! empty( $row['is_error'] ) || ! empty( $row['is_warning'] ) ) {
+					$cache_value = true;
+				}
+			}
+		}
+
+		set_site_transient( $cache_key, (int) $cache_value, WEEK_IN_SECONDS );
+
+		return $cache_value;
+	}
+
+	private function get_errors_present_cache_key() {
+		return 'matomo_system_report_has_errors';
 	}
 }

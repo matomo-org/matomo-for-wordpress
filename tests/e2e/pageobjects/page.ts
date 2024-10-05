@@ -94,6 +94,7 @@ export default class Page {
     await browser.execute(function (c) {
       document.head.insertAdjacentHTML('beforeend', `<style>${c}</style>`);
     } as any, css);
+    await browser.pause(500); // wait for the browser to finish rendering
   }
 
   async waitForImages() {
