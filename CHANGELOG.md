@@ -1,5 +1,9 @@
 == Changelog ===
 
+= 5.1.5 =
+* Bug fix: remove system report issues notification earlier when system issues are resolved.
+* Bug fix: remove duplicate redirect on activation logic.
+
 = 5.1.4 =
 * Update Matomo core to version 5.1.2 (changes: https://matomo.org/changelog/matomo-5-1-2/)
 * Update some Matomo core dependencies.

@@ -245,8 +245,6 @@ jobs:
             exit 1
           fi
           [ -e /tmp/file.txt ] && echo File exists || echo Timeout
-      - run: |
-          cp ./functions_override.php ./docker/wordpress/test/wp-includes/functions.php
       - run: npm run compose logs wordpress --no-color # for debugging failures to start
         if: always()
 
