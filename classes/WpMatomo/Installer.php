@@ -345,6 +345,7 @@ class Installer {
 			}
 		}
 
+		$wpdb->init_charset();
 		$charset   = $wpdb->charset ? $wpdb->charset : 'utf8';
 		$collation = $wpdb->collate ? $wpdb->collate : 'utf8mb4_general_ci';
 
