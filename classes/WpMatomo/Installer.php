@@ -17,6 +17,7 @@ use Piwik\Container\StaticContainer;
 use Piwik\DbHelper;
 use Piwik\Exception\NotYetInstalledException;
 use Piwik\Plugin\API as PluginApi;
+use Piwik\Plugin\Manager;
 use Piwik\SettingsPiwik;
 use Piwik\Singleton;
 use WpMatomo\Site\Sync;
@@ -106,6 +107,8 @@ class Installer {
 
 			$db_info = $this->create_db();
 			$this->create_config( $db_info );
+
+			Manager::getInstance()->installLoadedPlugins();
 			$this->update_components();
 
 			// we're scheduling another update in case there are some dimensions to be updated or anything

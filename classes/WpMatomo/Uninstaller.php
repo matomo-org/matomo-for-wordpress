@@ -9,6 +9,7 @@
 
 namespace WpMatomo;
 
+use Piwik\Config;
 use WpMatomo\Admin\Dashboard;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -146,6 +147,14 @@ class Uninstaller {
 
 	private function drop_tables() {
 		global $wpdb;
+
+		Bootstrap::do_bootstrap();
+
+		$config = Config::getInstance();
+
+		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		$config->PluginsInstalled['PluginsInstalled'] = [];
+		$config->forceSave();
 
 		$db_settings      = new \WpMatomo\Db\Settings();
 		$installed_tables = $db_settings->get_installed_matomo_tables();
