@@ -54,8 +54,12 @@ class MatomoUnit_Matomo_Fixture {
 			Bootstrap::set_extra_di_definitions( [] );
 		}
 
-		$uninstall = new Uninstaller();
-		$uninstall->uninstall( true );
+		try {
+			$uninstall = new Uninstaller();
+			$uninstall->uninstall(true);
+		} catch ( \Exception $ex ) {
+			// ignore
+		}
 
 		if ( is_multisite() ) {
 			$this->delete_extraneous_blogs();
@@ -146,6 +150,7 @@ class MatomoUnit_Matomo_Fixture {
 				continue;
 			}
 
+			print "deleting blog {$blog['blog_id']}\n";@ob_flush();
 			wpmu_delete_blog( $blog['blog_id'] );
 		}
 	}

@@ -20,8 +20,6 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	}
 
 	public function tearDown(): void {
-		$this->throw_if_db_errors();
-
 		$this->wordpress_fixture->tear_down();
 		parent::tearDown();
 	}
@@ -60,21 +58,5 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 			$type = 'type="text/javascript"';
 		}
 		return $type;
-	}
-
-	protected function throw_if_db_errors() {
-		global $EZSQL_ERROR;
-
-		if ( ! empty( $EZSQL_ERROR ) ) {
-			$db_error_list = array_map(
-				function ( $db_error_info ) {
-					return "{$db_error_info['error_str']}, query = {$db_error_info['query']}";
-				},
-				$EZSQL_ERROR
-			);
-			$db_error_list = implode( "\n  -", $db_error_list );
-
-			throw new \Exception( "WordPress database errors encountered:\n  -" . $db_error_list );
-		}
 	}
 }

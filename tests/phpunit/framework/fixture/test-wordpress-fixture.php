@@ -7,6 +7,11 @@ use WpMatomo\Capabilities;
  */
 class MatomoUnit_WordPress_Fixture {
 	public function set_up() {
+		// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
+		if ( ! defined( 'DIEONDBERROR' ) ) {
+			define( 'DIEONDBERROR', 1 ); // so tests fail if a DB query fails
+		}
+
 		if ( ! function_exists( 'wp_delete_site' ) ) {
 			function wp_delete_site( $site_id ) {
 				wpmu_delete_blog( $site_id, true );
@@ -28,9 +33,6 @@ class MatomoUnit_WordPress_Fixture {
 				return str_replace( rtrim( dirname( plugin_dir_path( MATOMO_ANALYTICS_FILE ) ), '/' ), '', $url );
 			}
 		);
-		if ( ! empty( $GLOBALS['wpdb'] ) ) {
-			$GLOBALS['wpdb']->suppress_errors( true );
-		}
 	}
 
 	public function tear_down() {

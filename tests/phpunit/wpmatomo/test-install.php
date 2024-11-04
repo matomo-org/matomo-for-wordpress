@@ -129,6 +129,8 @@ class InstallTest extends MatomoAnalytics_TestCase {
 	 * @group ms-required
 	 */
 	public function test_install_also_installs_on_other_blog() {
+		global $wpdb;
+
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );
 			return;
@@ -153,7 +155,7 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$sites_model = new SitesModel();
 		$all_sites   = $sites_model->getAllSites();
 
-		wp_delete_site( $blogid1 );
+		wpmu_delete_blog( $blogid1 );
 
 		$this->assertCount( 1, $all_sites );
 	}

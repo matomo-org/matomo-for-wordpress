@@ -107,7 +107,9 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		if ( ! is_dir( dirname( $wpstats_database_path ) ) ) {
 			mkdir( dirname( $wpstats_database_path ), 0777, true );
 		}
-		symlink( $expected_path, $wpstats_database_path );
+		if ( ! is_file( $wpstats_database_path ) ) {
+			symlink( $expected_path, $wpstats_database_path );
+		}
 	}
 
 	public function test_countries_found() {
