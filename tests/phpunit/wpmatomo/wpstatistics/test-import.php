@@ -104,7 +104,9 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$wpstats_database_path = ABSPATH . '/wp-content/uploads/wp-statistics/GeoLite2-City.mmdb';
-		mkdir( dirname( $wpstats_database_path ), 0777, true );
+		if ( ! is_dir( dirname( $wpstats_database_path ) ) ) {
+			mkdir( dirname( $wpstats_database_path ), 0777, true );
+		}
 		symlink( $expected_path, $wpstats_database_path );
 	}
 
