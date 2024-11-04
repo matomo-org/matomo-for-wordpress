@@ -56,7 +56,7 @@ class MatomoUnit_Matomo_Fixture {
 
 		try {
 			$uninstall = new Uninstaller();
-			$uninstall->uninstall(true);
+			$uninstall->uninstall( true );
 		} catch ( \Exception $ex ) {
 			// ignore
 		}
@@ -150,7 +150,6 @@ class MatomoUnit_Matomo_Fixture {
 				continue;
 			}
 
-			print "deleting blog {$blog['blog_id']}\n";@ob_flush();
 			wpmu_delete_blog( $blog['blog_id'] );
 		}
 	}

@@ -94,7 +94,7 @@ class Installer {
 				define( 'PIWIK_ENABLE_SESSION_START', false );
 			}
 
-			Bootstrap::do_bootstrap();
+			Bootstrap::bootstrap_environment();
 
 			if ( ! SettingsPiwik::isMatomoInstalled() || ! $this->looks_like_it_is_installed() ) {
 				throw new NotYetInstalledException( 'Not yet installed' );
