@@ -104,6 +104,11 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 					E_USER_DEPRECATED   => 'User Deprecated',
 				];
 
+				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_error_reporting
+				if ( ! ( error_reporting() & $errno ) ) {
+					return;
+				}
+
 				// the core matomo code can have uses of deprecated functions
 				if ( E_USER_DEPRECATED !== $errno ) {
 					$errtype = isset( $error_names[ $errno ] ) ? $error_names[ $errno ] : $errno;
