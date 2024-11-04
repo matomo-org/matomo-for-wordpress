@@ -83,6 +83,9 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 	public function setUp(): void {
 		parent::setUp();
 
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_error_reporting
+		error_reporting( E_ALL );
+
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_set_error_handler
 		set_error_handler(
 			function ( $errno, $errstr, $errfile, $errline ) {
