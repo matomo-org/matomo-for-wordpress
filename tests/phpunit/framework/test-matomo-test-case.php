@@ -104,8 +104,11 @@ class MatomoAnalytics_TestCase extends MatomoUnit_TestCase {
 					E_USER_DEPRECATED   => 'User Deprecated',
 				];
 
-				$errtype = isset( $error_names[ $errno ] ) ? $error_names[ $errno ] : $errno;
-				throw new \Exception( "[$errtype] $errstr in $errfile:$errline" );
+				// the core matomo code can have uses of deprecated functions
+				if ( E_USER_DEPRECATED !== $errno ) {
+					$errtype = isset( $error_names[ $errno ] ) ? $error_names[ $errno ] : $errno;
+					throw new \Exception( "[$errtype] $errstr in $errfile:$errline" );
+				}
 			}
 		);
 
