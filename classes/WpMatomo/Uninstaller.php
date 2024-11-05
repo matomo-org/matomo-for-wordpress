@@ -150,12 +150,6 @@ class Uninstaller {
 
 		Bootstrap::do_bootstrap();
 
-		$config = Config::getInstance();
-
-		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		$config->PluginsInstalled['PluginsInstalled'] = [];
-		$config->forceSave();
-
 		$db_settings      = new \WpMatomo\Db\Settings();
 		$installed_tables = $db_settings->get_installed_matomo_tables();
 		$this->logger->log( sprintf( 'Matomo will now drop %s matomo tables', count( $installed_tables ) ) );

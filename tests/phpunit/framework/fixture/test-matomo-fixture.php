@@ -69,6 +69,12 @@ class MatomoUnit_Matomo_Fixture {
 
 		Bootstrap::set_not_bootstrapped();
 
+		// to make sure installation goes forward
+		$config = Config::getInstance();
+		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		$config->PluginsInstalled['PluginsInstalled'] = [];
+		$config->database['username']                 = ''; // to make sure SettingsPiwik::isMatomoInstalled() returns false
+
 		$settings  = new Settings();
 		$installer = new Installer( $settings );
 		$installer->install();
@@ -128,8 +134,12 @@ class MatomoUnit_Matomo_Fixture {
 			$GLOBALS['wpdb']->suppress_errors( true );
 		}
 
-		$uninstall = new Uninstaller();
-		$uninstall->uninstall( true );
+		try {
+			$uninstall = new Uninstaller();
+			$uninstall->uninstall( true );
+		} catch ( \Exception $ex ) {
+			// ignore
+		}
 
 		unset( $_GET['trigger'] );
 		Metadata::clear_cache();
