@@ -15,17 +15,14 @@ use Piwik\Date;
 use Piwik\FrontController;
 use Piwik\Option;
 use Piwik\Plugin\API;
+use Piwik\Plugin\Manager as PluginManager;
 use Piwik\Site;
 use WpMatomo\Bootstrap;
-use WpMatomo\Capabilities;
 use WpMatomo\Installer;
-use WpMatomo\Logger;
-use WpMatomo\Paths;
 use WpMatomo\Report\Metadata;
 use WpMatomo\Roles;
 use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
-use WpMatomo\User;
 
 /**
  * @package matomo
@@ -74,6 +71,8 @@ class MatomoUnit_Matomo_Fixture {
 		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$config->PluginsInstalled['PluginsInstalled'] = [];
 		$config->database['username']                 = ''; // to make sure SettingsPiwik::isMatomoInstalled() returns false
+
+		PluginManager::getInstance()->unloadPlugins();
 
 		$settings  = new Settings();
 		$installer = new Installer( $settings );
