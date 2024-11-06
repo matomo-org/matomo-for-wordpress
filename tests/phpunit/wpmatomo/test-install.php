@@ -3,6 +3,7 @@
  * @package matomo
  */
 
+use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\SitesManager\Model as SitesModel;
 use Piwik\Plugins\UsersManager\Model as UsersModel;
 use WpMatomo\Bootstrap;
@@ -62,8 +63,8 @@ class InstallTest extends MatomoAnalytics_TestCase {
 				array(
 					'idsite'                         => 1,
 					'name'                           => 'Test Blog',
-					'main_url'                       => '',
-					'ecommerce'                      => 0,
+					'main_url'                       => 'http://example.org',
+					'ecommerce'                      => 1,
 					'sitesearch'                     => 1,
 					'sitesearch_keyword_parameters'  => '',
 					'sitesearch_category_parameters' => '',
@@ -115,6 +116,8 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$this->assertFalse( $this->installer->looks_like_it_is_installed() );
 		$this->assertFalse( Installer::is_intalled() );
 
+		$this->matomo_fixture->reset_config_for_install();
+
 		Bootstrap::set_not_bootstrapped();
 		$this->assertTrue( $this->installer->install() );
 		$this->assertFalse( $this->installer->install() );
@@ -129,8 +132,6 @@ class InstallTest extends MatomoAnalytics_TestCase {
 	 * @group ms-required
 	 */
 	public function test_install_also_installs_on_other_blog() {
-		global $wpdb;
-
 		if ( ! is_multisite() ) {
 			$this->markTestSkipped( 'Not multisite.' );
 			return;

@@ -15,7 +15,6 @@ use Piwik\Date;
 use Piwik\FrontController;
 use Piwik\Option;
 use Piwik\Plugin\API;
-use Piwik\Plugin\Manager as PluginManager;
 use Piwik\Site;
 use WpMatomo\Bootstrap;
 use WpMatomo\Installer;
@@ -39,6 +38,8 @@ class MatomoUnit_Matomo_Fixture {
 			define( 'PIWIK_TEST_MODE', true );
 		}
 
+		unset( $GLOBALS['MATOMO_SWITCH_BLOG_SET_UP'] );
+
 		$annotations = PHPUnit\Util\Test::parseTestMethodAnnotations( $test_class_name, $test_method_name );
 		if ( ! empty( $annotations['method']['provideContainerConfig'][0] ) ) {
 			$container_config = $annotations['method']['provideContainerConfig'][0];
@@ -51,28 +52,14 @@ class MatomoUnit_Matomo_Fixture {
 			Bootstrap::set_extra_di_definitions( [] );
 		}
 
-		try {
-			$uninstall = new Uninstaller();
-			$uninstall->uninstall( true );
-		} catch ( \Exception $ex ) {
-			// ignore
-		}
-
-		if ( is_multisite() ) {
-			$this->delete_extraneous_blogs();
-		}
+		$this->uninstall_matomo();
 
 		clearstatcache();
 
 		Bootstrap::set_not_bootstrapped();
 
 		// to make sure installation goes forward
-		$config = Config::getInstance();
-		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		$config->PluginsInstalled['PluginsInstalled'] = [];
-		$config->database['username']                 = ''; // to make sure SettingsPiwik::isMatomoInstalled() returns false
-
-		PluginManager::getInstance()->unloadPlugins();
+		$this->reset_config_for_install();
 
 		$settings  = new Settings();
 		$installer = new Installer( $settings );
@@ -127,39 +114,43 @@ class MatomoUnit_Matomo_Fixture {
 	}
 
 	public function tear_down() {
-		Bootstrap::set_extra_di_definitions( [] );
-
 		if ( ! empty( $GLOBALS['wpdb'] ) ) {
-			$GLOBALS['wpdb']->suppress_errors( true );
+			$GLOBALS['wpdb']->suppress_errors( false );
 		}
 
-		try {
-			$uninstall = new Uninstaller();
-			$uninstall->uninstall( true );
-		} catch ( \Exception $ex ) {
-			// ignore
-		}
+		$this->uninstall_matomo();
+
+		$this->reset_config_for_install();
+		Bootstrap::set_extra_di_definitions( [] );
 
 		unset( $_GET['trigger'] );
 		Metadata::clear_cache();
+	}
 
-		if ( is_multisite() ) {
-			$this->delete_extraneous_blogs();
+	public function reset_config_for_install() {
+		$paths      = new \WpMatomo\Paths();
+		$local_path = $paths->get_config_ini_path();
+		if ( is_file( $local_path ) ) {
+			unlink( $local_path );
+		}
+
+		if ( class_exists( '\Piwik\Container\StaticContainer' ) ) {
+			\Piwik\Container\StaticContainer::get( \Piwik\Application\Kernel\GlobalSettingsProvider::class )->reload();
 		}
 	}
 
-	private function delete_extraneous_blogs() {
-		global $wpdb;
-
-		switch_to_blog( 1 );
-
-		$blogs = $wpdb->get_results( 'SELECT blog_id, deleted FROM ' . $wpdb->blogs . ' ORDER BY blog_id', ARRAY_A );
-		foreach ( $blogs as $blog ) {
-			if ( 1 === (int) $blog['deleted'] || 1 === (int) $blog['blog_id'] ) {
-				continue;
+	private function uninstall_matomo() {
+		try {
+			// will not be defined for the first run test case
+			if (
+				class_exists( '\Piwik\SettingsPiwik' )
+				&& \Piwik\SettingsPiwik::isMatomoInstalled()
+			) {
+				$uninstall = new Uninstaller();
+				$uninstall->uninstall( true );
 			}
-
-			wpmu_delete_blog( $blog['blog_id'] );
+		} catch ( \Exception $ex ) {
+			// ignore
 		}
 	}
 }

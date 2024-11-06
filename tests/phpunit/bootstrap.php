@@ -13,6 +13,11 @@
  */
 $tests_dir = getenv( 'WP_TESTS_DIR' );
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
+if ( ! defined( 'DIEONDBERROR' ) ) {
+	define( 'DIEONDBERROR', 1 ); // so tests fail if a DB query fails
+}
+
 if ( ! $tests_dir ) {
 	$tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
 }

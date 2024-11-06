@@ -26,14 +26,17 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 	 * @var Sync
 	 */
 	private $sync;
+
 	/**
 	 * @var MockMatomoSiteSync
 	 */
 	private $mock;
+
 	/**
 	 * @var Site
 	 */
 	private $site;
+
 	public function setUp(): void {
 		parent::setUp();
 
@@ -85,8 +88,6 @@ class SiteSyncTest extends MatomoAnalytics_TestCase {
 		);
 
 		$this->mock->sync_all();
-		wp_delete_site( $blogid1 );
-		wp_delete_site( $blogid2 );
 		$this->assertEquals(
 			array(
 				array(
