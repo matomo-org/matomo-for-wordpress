@@ -72,7 +72,9 @@ class MatomoUnit_Matomo_Fixture {
 		$wp_roles->init_roles();
 
 		$roles = new Roles( $settings );
-		$roles->add_roles();
+		// we force add the roles because the option marking roles as setup is added before tests run, and thus
+		// is always set when tests start
+		$roles->add_roles( true );
 
 		add_action(
 			'set_current_user',

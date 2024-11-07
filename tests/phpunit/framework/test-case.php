@@ -8,6 +8,7 @@ use \WpMatomo\Capabilities;
 /**
  * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
  * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
  */
 class MatomoUnit_TestCase extends WP_UnitTestCase {
 
@@ -16,13 +17,18 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	 */
 	protected $wordpress_fixture;
 
+	protected static $initial_table_data = [];
+
 	/**
 	 * The ROLLBACK WP_UnitTestCase sometimes does not rollback to the correct
-	 * state, which causes succeeding tests to fail. I am unable to find the reason
-	 * why the rollback fails, but disabling transactions entirely seems to fix things.
+	 * state, which causes succeeding tests to fail. (Specifically, it can revert to
+	 * a state where multiple blogs exist in the blogs table, but no other tables exist).
+	 * I am unable to find the reason why the rollback fails, but disabling
+	 * transactions entirely and manually dropping refilling tables to get to a clean
+	 * state seems to fix things.
 	 */
 	public function start_transaction() {
-		// empty
+		$this->snapshot_db_data();
 	}
 
 	public function setUp(): void {
@@ -43,6 +49,8 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 		$this->wordpress_fixture->tear_down();
 		parent::tearDown();
+
+		$this->restore_db_snapshot();
 	}
 
 	protected function assume_admin_page() {
@@ -95,5 +103,36 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 			$type = 'type="text/javascript"';
 		}
 		return $type;
+	}
+
+	private function snapshot_db_data() {
+		global $wpdb;
+
+		if ( ! empty( self::$initial_table_data ) ) {
+			return;
+		}
+
+		$tables = $wpdb->get_results( 'SHOW TABLES', ARRAY_A );
+		foreach ( $tables as $row ) {
+			$table                              = reset( $row );
+			self::$initial_table_data[ $table ] = $wpdb->get_results( "SELECT * FROM `$table`", ARRAY_A );
+		}
+	}
+
+	private function restore_db_snapshot() {
+		global $wpdb;
+
+		$tables = $wpdb->get_results( 'SHOW TABLES', ARRAY_A );
+		foreach ( $tables as $row ) {
+			$table = reset( $row );
+			$wpdb->query( "TRUNCATE `$table`" );
+
+			$rows = isset( self::$initial_table_data[ $table ] ) ? self::$initial_table_data[ $table ] : [];
+			if ( ! empty( $rows ) ) {
+				foreach ( $rows as $data_row ) {
+					$wpdb->insert( $table, $data_row );
+				}
+			}
+		}
 	}
 }
