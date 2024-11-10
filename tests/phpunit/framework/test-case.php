@@ -9,6 +9,7 @@ use \WpMatomo\Capabilities;
  * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
  * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
  * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
  */
 class MatomoUnit_TestCase extends WP_UnitTestCase {
 
@@ -120,17 +121,24 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	}
 
 	private function restore_db_snapshot() {
-		global $wpdb;
+		global $wpdb, $table_prefix;
 
 		$tables = $wpdb->get_results( 'SHOW TABLES', ARRAY_A );
 		foreach ( $tables as $row ) {
 			$table = reset( $row );
 			$wpdb->query( "TRUNCATE `$table`" );
 
-			$rows = isset( self::$initial_table_data[ $table ] ) ? self::$initial_table_data[ $table ] : [];
+			$rows = ! empty( self::$initial_table_data[ $table ] ) ? self::$initial_table_data[ $table ] : [];
 			if ( ! empty( $rows ) ) {
 				foreach ( $rows as $data_row ) {
 					$wpdb->insert( $table, $data_row );
+				}
+			} else {
+				$is_multisite_table = preg_match( '/^' . preg_quote( $table_prefix, '/' ) . '\d+_/', $table );
+				if ( $is_multisite_table ) {
+					// WordPress will only initialize a site if the site table for it does not exist
+					// so we have to drop these if present, not just truncate.
+					$wpdb->query( "DROP TABLE `$table`" );
 				}
 			}
 		}
