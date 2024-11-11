@@ -8,7 +8,6 @@ use Piwik\Plugins\Referrers\Archiver;
 use Piwik\Date;
 use WpMatomo\WpStatistics\DataConverters\ReferrersConverter;
 use WpMatomo\WpStatistics\DataConverters\SearchEngineConverter;
-use WpMatomo\WpStatistics\DataConverters\SearchKeywordConverter;
 
 /**
  * @package WpMatomo
