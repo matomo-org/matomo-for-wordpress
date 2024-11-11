@@ -6,6 +6,9 @@ use WpMatomo\Report\Data;
 use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
 
+/**
+ * @group only
+ */
 class ImportTest extends MatomoAnalytics_TestCase {
 	/**
 	 * static due to multiple tests instanciations
@@ -39,7 +42,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		if ( file_exists( $file ) ) {
 			require_once $file;
 
-			$wp_statistics = $GLOBALS['WP_Statistics'];
+			$wp_statistics = \WP_Statistics();
 			if ( method_exists( $wp_statistics, 'plugin_setup' ) ) {
 				$wp_statistics->plugin_setup();
 			} else {
@@ -56,6 +59,8 @@ class ImportTest extends MatomoAnalytics_TestCase {
 			global $wp_filesystem;
 
 			require_once $this->plugin_file();
+
+			set_current_screen( 'edit-post' ); // so is_admin() will return true
 
 			$this->data = new Data();
 
@@ -76,11 +81,17 @@ class ImportTest extends MatomoAnalytics_TestCase {
 				$this->download_geoip();
 				$this->manually_load_plugin();
 			}
+
+			// update the wp-statistics database
+			\WP_STATISTICS\Install::create_table( is_multisite() );
+			\WP_STATISTICS\Install::create_options();
+
 			// run the import
 			$importer = new Importer( new \Psr\Log\NullLogger() );
 			$site     = new Site();
 			$id_site  = $site->get_current_matomo_site_id();
 			// do not run the archiving for performances issues and because we test only daily reports
+			$importer->set_should_rethrow( true );
 			$importer->import( $id_site, false );
 		}
 	}
@@ -120,7 +131,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'UserCountry', 'getCountry' );
-		$this->assertGreaterThan( 80, $report['reportData']->getRowsCount() );
+		$this->assertGreaterThan( $report['reportData']->getRowsCount(), 80 );
 	}
 
 	public function test_regions_found() {
@@ -131,7 +142,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'UserCountry', 'getRegion' );
-		$this->assertGreaterThan( 300, $report['reportData']->getRowsCount() );
+		$this->assertGreaterThan( $report['reportData']->getRowsCount(), 300 );
 	}
 
 	public function test_cities_found() {
@@ -143,7 +154,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 
 		$report = $this->fetch_report( 'UserCountry', 'getCity' );
 		// 500 due to the limit in the datatable
-		$this->assertEquals( $report['reportData']->getRowsCount(), 500 );
+		$this->assertEquals( 500, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_browsers_found() {
@@ -154,7 +165,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'DevicesDetection', 'getBrowsers' );
-		$this->assertEquals( $report['reportData']->getRowsCount(), 15 );
+		$this->assertEquals( 15, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_os_found() {
@@ -165,7 +176,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'DevicesDetection', 'getOsVersions' );
-		$this->assertEquals( $report['reportData']->getRowsCount(), 10 );
+		$this->assertEquals( 10, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_referrers_found() {
@@ -176,7 +187,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'Referrers', 'getWebsites' );
-		$this->assertEquals( $report['reportData']->getRowsCount(), 49 );
+		$this->assertEquals( 49, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_search_engines_found() {
@@ -187,7 +198,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'Referrers', 'getSearchEngines' );
-		$this->assertEquals( $report['reportData']->getRowsCount(), 6 );
+		$this->assertEquals( 6, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_keywords_found() {
@@ -198,7 +209,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'Referrers', 'getKeywords' );
-		$this->assertEquals( $report['reportData']->getRowsCount(), 2 );
+		$this->assertEquals( 2, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_visitors_found() {
@@ -209,7 +220,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'VisitsSummary', 'get' );
-		$this->assertEquals( $report['reportData']->getFirstRow()->getColumn( 'nb_visits' ), 1298 );
+		$this->assertEquals( 1298, $report['reportData']->getFirstRow()->getColumn( 'nb_visits' ) );
 	}
 
 	public function test_pages_found() {
