@@ -62,9 +62,32 @@ class RecordImporter {
 	}
 
 	protected function get_visitors( Date $date ) {
+		if ( class_exists( '\WP_Statistics\Models\VisitorsModel' ) ) {
+			return $this->get_visitors_from_model( $date );
+		} else {
+			return $this->get_visitors_from_metabox( $date );
+		}
+	}
+
+	/**
+	 * Returns the prefixed table name for a wpstatistics plugin.
+	 *
+	 * @param string $unprefixed_name
+	 * @return array|mixed|string|null
+	 */
+	protected function get_table_name( $unprefixed_name ) {
+		if ( method_exists( DB::class, 'getTableName' ) ) {
+			return DB::getTableName( $unprefixed_name );
+		}
+
+		return DB::table( $unprefixed_name );
+	}
+
+	private function get_visitors_from_model( Date $date ) {
 		$page           = 1;
 		$limit          = 1000;
 		$visitors_found = [];
+
 		$visitors_model = new VisitorsModel();
 		do {
 			try {
@@ -100,23 +123,33 @@ class RecordImporter {
 		return $visitors_found;
 	}
 
-	/**
-	 * Returns the prefixed table name for a wpstatistics plugin.
-	 *
-	 * @param string $unprefixed_name
-	 * @return array|mixed|string|null
-	 */
-	protected function get_table_name( $unprefixed_name ) {
-		if ( method_exists( DB::class, 'getTableName' ) ) {
-			return DB::getTableName( $unprefixed_name );
-		}
-
-		return DB::table( $unprefixed_name );
-	}
-
 	private function convert_visitors_to_array( $visitors ) {
 		$method = new \ReflectionMethod( top_visitors::class, 'prepareResponse' );
 		$method->setAccessible( true );
 		return $method->invoke( null, $visitors );
+	}
+
+	private function get_visitors_from_metabox( Date $date ) {
+		$page           = 1;
+		$limit          = 1000;
+		$visitors_found = [];
+
+		do {
+			$visitors = top_visitors::get(
+				[
+					'day'      => $date->toString(),
+					'per_page' => $limit,
+					'paged'    => $page,
+				]
+			);
+			$page ++;
+			$no_data = ( ( array_key_exists( 'no_data', $visitors ) ) && ( 1 === $visitors['no_data'] ) );
+			if ( $no_data ) {
+				$visitors = [];
+			}
+			$visitors_found = array_merge( $visitors_found, $visitors );
+		} while ( true !== $no_data );
+
+		return $visitors_found;
 	}
 }

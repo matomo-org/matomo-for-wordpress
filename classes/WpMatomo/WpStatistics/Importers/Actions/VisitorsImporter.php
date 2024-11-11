@@ -17,6 +17,20 @@ class VisitorsImporter extends RecordImporter implements ActionsInterface {
 	const PLUGIN_NAME = 'VisitsSummary';
 
 	public function import_records( Date $date ) {
+		if ( class_exists( '\WP_Statistics\Models\VisitorsModel' ) ) {
+			$visits = $this->import_from_model( $date );
+		} else {
+			$visits = $this->import_from_metabox( $date );
+		}
+
+		$this->logger->debug( 'Import {nb_visits} visits...', [ 'nb_visits' => count( $visits ) ] );
+		$this->insert_numeric_records( [ Metrics::INDEX_NB_UNIQ_VISITORS => count( $visits ) ] );
+		$this->insert_numeric_records( [ Metrics::INDEX_NB_VISITS => count( $visits ) ] );
+		Common::destroy( $visits );
+		return $visits;
+	}
+
+	private function import_from_model( Date $date ) {
 		$limit  = 100;
 		$visits = [];
 		$page   = 0;
@@ -52,10 +66,28 @@ class VisitorsImporter extends RecordImporter implements ActionsInterface {
 			}
 		} while ( true !== $no_data );
 
-		$this->logger->debug( 'Import {nb_visits} visits...', [ 'nb_visits' => count( $visits ) ] );
-		$this->insert_numeric_records( [ Metrics::INDEX_NB_UNIQ_VISITORS => count( $visits ) ] );
-		$this->insert_numeric_records( [ Metrics::INDEX_NB_VISITS => count( $visits ) ] );
-		Common::destroy( $visits );
+		return $visits;
+	}
+
+	private function import_from_metabox( Date $date ) {
+		$limit  = 100;
+		$visits = [];
+		$page   = 0;
+		do {
+			$page ++;
+			$visits_found = top_visitors::get(
+				[
+					'day'      => $date->toString( Config::WP_STATISTICS_DATE_FORMAT ),
+					'per_page' => $limit,
+					'paged'    => $page,
+				]
+			);
+			$no_data      = ( ( array_key_exists( 'no_data', $visits_found ) ) && ( 1 === $visits_found['no_data'] ) );
+			if ( ! $no_data ) {
+				$visits = array_merge( $visits, $visits_found );
+			}
+		} while ( true !== $no_data );
+
 		return $visits;
 	}
 }
