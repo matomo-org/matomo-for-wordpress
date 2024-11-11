@@ -6,6 +6,7 @@ use Piwik\Common;
 use Piwik\Metrics;
 use WP_STATISTICS\MetaBox\top_visitors;
 use Piwik\Date;
+use WP_Statistics\Models\VisitorsModel;
 use WpMatomo\WpStatistics\Config;
 /**
  * @package WpMatomo
@@ -21,16 +22,33 @@ class VisitorsImporter extends RecordImporter implements ActionsInterface {
 		$page   = 0;
 		do {
 			$page ++;
-			$visits_found = top_visitors::get(
-				[
-					'day'      => $date->toString( Config::WP_STATISTICS_DATE_FORMAT ),
-					'per_page' => $limit,
-					'paged'    => $page,
-				]
-			);
-			$no_data      = ( ( array_key_exists( 'no_data', $visits_found ) ) && ( 1 === $visits_found['no_data'] ) );
+
+			// copied from wp-statistics-meta-box-top-visitors.php.
+			// used to use top_visitors::get(), but that no longer supports
+			// pagination.
+			try {
+				$visitors_model = new VisitorsModel();
+				$response       = $visitors_model->getVisitorsData(
+					[
+						'date'      => [
+							'from' => $date->toString(),
+							'to'   => $date->toString(),
+						],
+						'page'      => $page,
+						'per_page'  => $limit,
+						'order_by'  => 'hits',
+						'order'     => 'DESC',
+						'user_info' => true,
+						'page_info' => true,
+					]
+				);
+			} catch ( \Exception $e ) {
+				$response = array();
+			}
+
+			$no_data = count( $response ) < 1;
 			if ( ! $no_data ) {
-				$visits = array_merge( $visits, $visits_found );
+				$visits = array_merge( $visits, $response );
 			}
 		} while ( true !== $no_data );
 

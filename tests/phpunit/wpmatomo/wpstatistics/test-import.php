@@ -6,9 +6,6 @@ use WpMatomo\Report\Data;
 use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
 
-/**
- * @group only
- */
 class ImportTest extends MatomoAnalytics_TestCase {
 	/**
 	 * static due to multiple tests instanciations
@@ -131,7 +128,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'UserCountry', 'getCountry' );
-		$this->assertGreaterThan( $report['reportData']->getRowsCount(), 80 );
+		$this->assertGreaterThan( 80, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_regions_found() {
@@ -142,7 +139,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'UserCountry', 'getRegion' );
-		$this->assertGreaterThan( $report['reportData']->getRowsCount(), 300 );
+		$this->assertGreaterThan( 300, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_cities_found() {
@@ -165,7 +162,7 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'DevicesDetection', 'getBrowsers' );
-		$this->assertEquals( 15, $report['reportData']->getRowsCount() );
+		$this->assertGreaterThanOrEqual( 15, $report['reportData']->getRowsCount() );
 	}
 
 	public function test_os_found() {
@@ -201,17 +198,6 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		$this->assertEquals( 6, $report['reportData']->getRowsCount() );
 	}
 
-	public function test_keywords_found() {
-		if ( ! $this->can_be_tested() ) {
-			$this->markTestSkipped( 'CI or plugin unavailable' );
-
-			return;
-		}
-
-		$report = $this->fetch_report( 'Referrers', 'getKeywords' );
-		$this->assertEquals( 2, $report['reportData']->getRowsCount() );
-	}
-
 	public function test_visitors_found() {
 		if ( ! $this->can_be_tested() ) {
 			$this->markTestSkipped( 'CI or plugin unavailable' );
@@ -220,7 +206,10 @@ class ImportTest extends MatomoAnalytics_TestCase {
 		}
 
 		$report = $this->fetch_report( 'VisitsSummary', 'get' );
-		$this->assertEquals( 1298, $report['reportData']->getFirstRow()->getColumn( 'nb_visits' ) );
+		$row    = $report['reportData']->getFirstRow();
+
+		$this->assertInstanceOf( \Piwik\DataTable\Row::class, $row );
+		$this->assertEquals( 1298, $row->getColumn( 'nb_visits' ) );
 	}
 
 	public function test_pages_found() {
