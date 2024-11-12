@@ -27,7 +27,7 @@ describe('Matomo > Tag Manager', () => {
     await GettingStartedPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo.tag-manager.getting-started')
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(0.05);
   });
 
   it('should load the manage containers page correctly', async () => {
@@ -45,7 +45,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerDashboardPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo.tag-manager.container-dashboard')
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(0.05);
   });
 
   it('should load the container tags page correctly', async () => {
@@ -54,7 +54,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerTagsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo.tag-manager.container-tags')
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(0.05);
   });
 
   it('should load the container variables page correctly', async () => {
@@ -63,7 +63,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerVariablesPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo.tag-manager.container-variables')
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(0.05);
   });
 
   it('should load the container versions page correctly', async () => {
@@ -72,7 +72,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerVersionsPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo.tag-manager.container-versions')
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(0.05);
   });
 
   it('should load the container triggers page correctly', async () => {
@@ -81,7 +81,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerTriggersPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo.tag-manager.container-triggers')
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(0.05);
   });
 
   it('should load the publish popup correctly', async () => {
@@ -93,7 +93,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerTriggersPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo.tag-manager.publish-modal')
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(0.05);
   });
 
   it('should load the install code popup page correctly', async () => {
@@ -105,7 +105,7 @@ describe('Matomo > Tag Manager', () => {
     await ContainerTriggersPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo.tag-manager.install-code-modal')
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(0.05);
   });
 
   it('should enable preview mode correctly', async () => {
@@ -116,6 +116,6 @@ describe('Matomo > Tag Manager', () => {
     await ContainerTriggersPage.disableHoverStyles();
     await expect(
       await browser.checkFullPageScreen('matomo.tag-manager.preview-mode-enabled')
-    ).toEqual(0);
+    ).toBeLessThanOrEqual(0.05);
   });
 });

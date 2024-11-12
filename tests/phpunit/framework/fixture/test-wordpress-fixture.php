@@ -28,9 +28,6 @@ class MatomoUnit_WordPress_Fixture {
 				return str_replace( rtrim( dirname( plugin_dir_path( MATOMO_ANALYTICS_FILE ) ), '/' ), '', $url );
 			}
 		);
-		if ( ! empty( $GLOBALS['wpdb'] ) ) {
-			$GLOBALS['wpdb']->suppress_errors( true );
-		}
 	}
 
 	public function tear_down() {

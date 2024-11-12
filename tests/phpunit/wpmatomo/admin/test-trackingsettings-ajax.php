@@ -9,9 +9,6 @@ use WpMatomo\Roles;
 use WpMatomo\Settings;
 use WpMatomo\Site;
 
-/**
- * @group only
- */
 class AdminTrackingSettingsAjaxTest extends MatomoUnit_Ajax_TestCase {
 	public function setUp(): void {
 		parent::setUp();

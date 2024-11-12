@@ -78,6 +78,9 @@
 		</properties>
 	</rule>
 
+    <rule ref="WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
     <rule ref="PHPCompatibility.FunctionDeclarations.NewReturnTypeDeclarations.voidFound">
         <exclude-pattern>*/tests/*</exclude-pattern>
     </rule>

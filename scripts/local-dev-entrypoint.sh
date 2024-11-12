@@ -22,6 +22,8 @@ if [[ "$MULTISITE" = "1" ]]; then
   WORDPRESS_FOLDER="$WORDPRESS_FOLDER-multi"
 fi
 
+WP_DB_NAME=$(echo "wp_matomo_$WORDPRESS_FOLDER" | sed 's/\./_/g' | sed 's/-/_/g')
+
 export WP_TESTS_DIR=/var/www/html/$WORDPRESS_FOLDER/wp-test # used for setting up for tests and running phpunit
 
 echo "Using WordPress install $WORDPRESS_FOLDER."
@@ -43,6 +45,12 @@ elif [[ "$EXECUTE_CONSOLE" = "1" ]]; then
   exit $?
 elif [[ "$EXECUTE_PHPUNIT" = "1" ]]; then
   cd /var/www/html/matomo-for-wordpress
+
+  php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
+  \$pdo->exec('DROP DATABASE IF EXISTS \`${WP_DB_NAME}_test\`');\
+  \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
+  \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
+
   ./vendor/bin/phpunit "$@"
   exit $?
 fi
@@ -79,8 +87,6 @@ fi
 echo "waiting for database..."
 sleep 5 # wait for database
 echo "done."
-
-WP_DB_NAME=$(echo "wp_matomo_$WORDPRESS_FOLDER" | sed 's/\./_/g' | sed 's/-/_/g')
 
 # if requested, drop the database for a clean install (used mainly for automated tests)
 if [[ ! -z "$RESET_DATABASE" ]]; then
@@ -306,9 +312,9 @@ if [ ! -d "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/wp-statistics" ]; 
   echo "installing wp-statistics"
 
   WP_STATS_VERSION=""
-  if php -r "exit(version_compare('$WORDPRESS_VERSION', '5.3', '<') ? 0 : 1);"; then
+  if php -r "exit('$WORDPRESS_VERSION' !== 'trunk' && version_compare('$WORDPRESS_VERSION', '5.3', '<') ? 0 : 1);"; then
     WP_STATS_VERSION="--version=13.2.16"
-  elif php -r "exit(version_compare(PHP_VERSION, '8.0', '<') ? 0 : 1);"; then
+  elif php -r "exit('$WORDPRESS_VERSION' !== 'trunk' && version_compare(PHP_VERSION, '8.0', '<') ? 0 : 1);"; then
     WP_STATS_VERSION="--version=14.5.2"
   fi
 

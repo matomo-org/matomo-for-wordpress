@@ -49,9 +49,15 @@ class Importer {
 	 */
 	private $end_date = null;
 
+	private $should_rethrow = false;
+
 	public function __construct( LoggerInterface $logger ) {
 		$this->logger   = $logger;
 		$this->end_date = $this->get_ending_date();
+	}
+
+	public function set_should_rethrow( $should_rethrow ) {
+		$this->should_rethrow = $should_rethrow;
 	}
 
 	/**
@@ -271,5 +277,9 @@ SQL;
 
 	private function on_error( \Exception $ex ) {
 		$this->logger->info( 'Unexpected Error: {ex}', [ 'ex' => $ex ] );
+
+		if ( $this->should_rethrow ) {
+			throw $ex;
+		}
 	}
 }

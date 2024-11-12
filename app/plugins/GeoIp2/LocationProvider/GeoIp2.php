@@ -167,7 +167,7 @@ abstract class GeoIp2 extends LocationProvider
     public static function getRegions()
     {
         if (is_null(self::$regionNames)) {
-            self::$regionNames = (require_once __DIR__ . '/../data/isoRegionNames.php');
+            self::$regionNames = (require __DIR__ . '/../data/isoRegionNames.php');
         }
         return self::$regionNames;
     }
