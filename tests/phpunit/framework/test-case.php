@@ -21,11 +21,11 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	protected static $initial_table_data = [];
 
 	/**
-	 * The ROLLBACK WP_UnitTestCase sometimes does not rollback to the correct
+	 * The ROLLBACK executed by WP_UnitTestCase sometimes does not rollback to the correct
 	 * state, which causes succeeding tests to fail. (Specifically, it can revert to
 	 * a state where multiple blogs exist in the blogs table, but no other tables exist).
 	 * I am unable to find the reason why the rollback fails, but disabling
-	 * transactions entirely and manually dropping refilling tables to get to a clean
+	 * transactions entirely and manually dropping and refilling tables to get to a clean
 	 * state seems to fix things.
 	 */
 	public function start_transaction() {
