@@ -4,7 +4,6 @@
         bootstrap="tests/phpunit/bootstrap.php"
         backupGlobals="false"
         colors="true"
-        testdox="true"
         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.4/phpunit.xsd"
 >
   <testsuites>
