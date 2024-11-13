@@ -3,6 +3,7 @@
  * @package matomo
  */
 
+use Piwik\Plugins\SitesManager\Model;
 use Piwik\Plugins\SitesManager\Model as SitesModel;
 use Piwik\Plugins\UsersManager\Model as UsersModel;
 use WpMatomo\Bootstrap;
@@ -62,8 +63,8 @@ class InstallTest extends MatomoAnalytics_TestCase {
 				array(
 					'idsite'                         => 1,
 					'name'                           => 'Test Blog',
-					'main_url'                       => '',
-					'ecommerce'                      => 0,
+					'main_url'                       => 'http://example.org',
+					'ecommerce'                      => 1,
 					'sitesearch'                     => 1,
 					'sitesearch_keyword_parameters'  => '',
 					'sitesearch_category_parameters' => '',
@@ -115,6 +116,8 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$this->assertFalse( $this->installer->looks_like_it_is_installed() );
 		$this->assertFalse( Installer::is_intalled() );
 
+		$this->matomo_fixture->reset_config_for_install();
+
 		Bootstrap::set_not_bootstrapped();
 		$this->assertTrue( $this->installer->install() );
 		$this->assertFalse( $this->installer->install() );
@@ -153,9 +156,29 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$sites_model = new SitesModel();
 		$all_sites   = $sites_model->getAllSites();
 
-		wp_delete_site( $blogid1 );
+		wpmu_delete_blog( $blogid1 );
 
 		$this->assertCount( 1, $all_sites );
 	}
 
+	/**
+	 * @preserveGlobalState disabled
+	 * @runInSeparateProcess
+	 */
+	public function test_get_db_infos_respects_charset_overrides() {
+		global $wpdb;
+
+		$db_config = Installer::get_db_infos();
+
+		$this->assertEquals( $wpdb->charset ? $wpdb->charset : 'utf8', $db_config['charset'] );
+		$this->assertEquals( $wpdb->collate ? $wpdb->collate : 'utf8mb4_general_ci', $db_config['collation'] );
+
+		define( 'MATOMO_DB_CHARSET', 'dummycharset' );
+		define( 'MATOMO_DB_COLLATE', 'dummycollate' );
+
+		$db_config = Installer::get_db_infos();
+
+		$this->assertEquals( 'dummycharset', $db_config['charset'] );
+		$this->assertEquals( 'dummycollate', $db_config['collation'] );
+	}
 }

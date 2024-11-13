@@ -18,6 +18,7 @@ class RolesTest extends MatomoUnit_TestCase {
 		parent::setUp();
 
 		$this->roles = $this->make_roles();
+		$this->roles->uninstall();
 		$this->roles->add_roles();
 	}
 

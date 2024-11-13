@@ -39,7 +39,7 @@ class DeviceDetectionImporter extends RecordImporter implements ActionsInterface
 		Common::destroy( $devices );
 	}
 
-	private function convertPlatformsInMatomo( &$platforms ) {
+	private function convertPlatformsInMatomo( &$visitors ) {
 		// convert codification
 		$platform_ids   = array_keys( OperatingSystem::getAvailableOperatingSystems() );
 		$platform_names = array_values( OperatingSystem::getAvailableOperatingSystems() );
@@ -52,13 +52,22 @@ class DeviceDetectionImporter extends RecordImporter implements ActionsInterface
 		);
 		$platform_ids   = array_merge( $platform_ids, [ 'MAC;OS X' ] );
 		$platform_names = array_merge( $platform_names, [ 'OS X' ] );
-		foreach ( $platforms as $id => $platform ) {
-			if ( in_array( $platform['platform'], $platform_names, true ) ) {
-				$platforms[ $id ]['platform'] = str_replace( $platform_names, $platform_ids, $platform['platform'] );
+		foreach ( $visitors as $id => $visitor ) {
+			$platform = $this->get_platform( $visitor );
+			if ( in_array( $platform, $platform_names, true ) ) {
+				$visitors[ $id ]['platform'] = str_replace( $platform_names, $platform_ids, $platform );
 			} else {
-				$platforms[ $id ]['platform'] = 'UNK;UNK';
+				$visitors[ $id ]['platform'] = 'UNK;UNK';
 			}
 		}
+	}
+
+	private function get_platform( $visitor ) {
+		if ( isset( $visitor['os'] ) ) {
+			return $visitor['os']['name'];
+		}
+
+		return $visitor['platform'];
 	}
 
 	private function convertBrowsersInMatomo( &$devices ) {

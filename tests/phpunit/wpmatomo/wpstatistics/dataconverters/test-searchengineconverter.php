@@ -13,22 +13,15 @@ class SearchEngineConverterTest extends MatomoAnalytics_TestCase {
 		$data           = [
 			[
 				'engine' => 'Google',
-				'words'  => 'matomo',
-				'nb'     => 2,
+				'nb'     => 4,
 			],
 			[
 				'engine' => 'Bing',
-				'words'  => 'import',
 				'nb'     => 1,
-			],
-			[
-				'engine' => 'Google',
-				'words'  => 'import',
-				'nb'     => 2,
 			],
 		];
 		$search_engines = SearchEngineConverter::convert( $data );
-		$this->assertEquals( $search_engines->getRowsCount(), 2 );
-		$this->assertEquals( $search_engines->getFirstRow()->getColumn( 'nb_visits' ), 4 );
+		$this->assertEquals( 2, $search_engines->getRowsCount() );
+		$this->assertEquals( 4, $search_engines->getFirstRow()->getColumn( 'nb_visits' ) );
 	}
 }

@@ -17,6 +17,8 @@ use Piwik\Container\StaticContainer;
 use Piwik\DbHelper;
 use Piwik\Exception\NotYetInstalledException;
 use Piwik\Plugin\API as PluginApi;
+use Piwik\Plugin\Manager;
+use Piwik\Plugins\SitesManager\Model;
 use Piwik\SettingsPiwik;
 use Piwik\Singleton;
 use WpMatomo\Site\Sync;
@@ -94,7 +96,7 @@ class Installer {
 				define( 'PIWIK_ENABLE_SESSION_START', false );
 			}
 
-			Bootstrap::do_bootstrap();
+			Bootstrap::bootstrap_environment();
 
 			if ( ! SettingsPiwik::isMatomoInstalled() || ! $this->looks_like_it_is_installed() ) {
 				throw new NotYetInstalledException( 'Not yet installed' );
@@ -106,6 +108,13 @@ class Installer {
 
 			$db_info = $this->create_db();
 			$this->create_config( $db_info );
+
+			// unload plugins since plugin instances may be holding out of date information
+			Manager::getInstance()->unloadPlugins();
+			Manager::getInstance()->loadActivatedPlugins();
+			Manager::getInstance()->installLoadedPlugins();
+
+			$this->update_components();
 
 			// we're scheduling another update in case there are some dimensions to be updated or anything
 			// it is possible that because the plugins need to be reloaded etc that those updates are not executed right
@@ -251,7 +260,6 @@ class Installer {
 		}
 		DbHelper::createTables();
 		DbHelper::createAnonymousUser();
-		$this->update_components();
 
 		return $db_infos;
 	}
@@ -345,8 +353,15 @@ class Installer {
 			}
 		}
 
-		$charset   = $wpdb->charset ? $wpdb->charset : 'utf8';
+		$charset = $wpdb->charset ? $wpdb->charset : 'utf8';
+		if ( defined( 'MATOMO_DB_CHARSET' ) && MATOMO_DB_CHARSET ) {
+			$charset = MATOMO_DB_CHARSET;
+		}
+
 		$collation = $wpdb->collate ? $wpdb->collate : 'utf8mb4_general_ci';
+		if ( defined( 'MATOMO_DB_COLLATE' ) && MATOMO_DB_COLLATE ) {
+			$collation = MATOMO_DB_COLLATE;
+		}
 
 		$database = [
 			'host'          => $host,

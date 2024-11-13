@@ -82,8 +82,8 @@ class Roles {
 		];
 	}
 
-	public function add_roles() {
-		if ( ! $this->has_set_up_roles() ) {
+	public function add_roles( $force = false ) {
+		if ( ! $this->has_set_up_roles() || $force ) {
 			foreach ( $this->get_matomo_roles() as $role_name => $config ) {
 				add_role( $role_name, $config['name'], [ $config['defaultCap'] => true ] );
 			}

@@ -3,8 +3,14 @@
  * @package matomo
  */
 
-use \WpMatomo\Capabilities;
+require_once __DIR__ . '/fixture/test-wordpress-fixture.php';
 
+/**
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange
+ */
 class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 	/**
@@ -12,16 +18,40 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	 */
 	protected $wordpress_fixture;
 
+	protected static $initial_table_data = [];
+
+	/**
+	 * The ROLLBACK executed by WP_UnitTestCase sometimes does not rollback to the correct
+	 * state, which causes succeeding tests to fail. (Specifically, it can revert to
+	 * a state where multiple blogs exist in the blogs table, but no other tables exist).
+	 * I am unable to find the reason why the rollback fails, but disabling
+	 * transactions entirely and manually dropping and refilling tables to get to a clean
+	 * state seems to fix things.
+	 */
+	public function start_transaction() {
+		$this->snapshot_db_data();
+	}
+
 	public function setUp(): void {
 		parent::setUp();
+
+		if ( is_multisite() ) {
+			$this->delete_extraneous_blogs();
+		}
 
 		$this->wordpress_fixture = new MatomoUnit_WordPress_Fixture();
 		$this->wordpress_fixture->set_up();
 	}
 
 	public function tearDown(): void {
+		if ( is_multisite() ) {
+			$this->delete_extraneous_blogs();
+		}
+
 		$this->wordpress_fixture->tear_down();
 		parent::tearDown();
+
+		$this->restore_db_snapshot();
 	}
 
 	protected function assume_admin_page() {
@@ -48,6 +78,22 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		return $id;
 	}
 
+	private function delete_extraneous_blogs() {
+		global $wpdb;
+
+		while ( ms_is_switched() ) {
+			restore_current_blog();
+		}
+
+		$blogs = $wpdb->get_results( 'SELECT blog_id, deleted FROM ' . $wpdb->blogs . ' ORDER BY blog_id', ARRAY_A );
+		foreach ( $blogs as $blog ) {
+			if ( 1 === (int) $blog['deleted'] || 1 === (int) $blog['blog_id'] ) {
+				continue;
+			}
+
+			wpmu_delete_blog( $blog['blog_id'] );
+		}
+	}
 
 	/**
 	 * @return string
@@ -58,5 +104,43 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 			$type = 'type="text/javascript"';
 		}
 		return $type;
+	}
+
+	private function snapshot_db_data() {
+		global $wpdb;
+
+		if ( ! empty( self::$initial_table_data ) ) {
+			return;
+		}
+
+		$tables = $wpdb->get_results( 'SHOW TABLES', ARRAY_A );
+		foreach ( $tables as $row ) {
+			$table                              = reset( $row );
+			self::$initial_table_data[ $table ] = $wpdb->get_results( "SELECT * FROM `$table`", ARRAY_A );
+		}
+	}
+
+	private function restore_db_snapshot() {
+		global $wpdb, $table_prefix;
+
+		$tables = $wpdb->get_results( 'SHOW TABLES', ARRAY_A );
+		foreach ( $tables as $row ) {
+			$table = reset( $row );
+			$wpdb->query( "TRUNCATE `$table`" );
+
+			$rows = ! empty( self::$initial_table_data[ $table ] ) ? self::$initial_table_data[ $table ] : [];
+			if ( ! empty( $rows ) ) {
+				foreach ( $rows as $data_row ) {
+					$wpdb->insert( $table, $data_row );
+				}
+			} else {
+				$is_multisite_table = preg_match( '/^' . preg_quote( $table_prefix, '/' ) . '\d+_/', $table );
+				if ( $is_multisite_table ) {
+					// WordPress will only initialize a site if the site table for it does not exist
+					// so we have to drop these if present, not just truncate.
+					$wpdb->query( "DROP TABLE `$table`" );
+				}
+			}
+		}
 	}
 }

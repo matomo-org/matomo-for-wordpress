@@ -1,5 +1,11 @@
 == Changelog ===
 
+= 5.1.6 =
+* Bug fix: the wpstatistics importer failed to import search keywords due to a change in the wpstatistics plugin from over year ago.
+* Bug fix: the wpstatistics importer will now work with the latest wpstatistics version.
+* New consts: for users that need to use a separate charset/collation from the values configured wp-config.php, there are now two consts that allow you to do that: MATOMO_DB_CHARSET and MATOMO_DB_COLLATE.
+* Make the short description match both in matomo.php and readme.txt.
+
 = 5.1.5 =
 * Bug fix: remove system report issues notification earlier when system issues are resolved.
 * Bug fix: remove duplicate redirect on activation logic.

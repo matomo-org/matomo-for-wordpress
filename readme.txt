@@ -2,13 +2,13 @@
 Contributors: matomoteam
 Tags: matomo,analytics,statistics,stats,ecommerce
 Requires at least: 4.8
-Tested up to: 6.6.2
-Stable tag: 5.1.5
+Tested up to: 6.7.0
+Stable tag: 5.1.6
 Requires PHP: 7.2.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Privacy friendly, GDPR compliant and self-hosted, Matomo is the #1 Google Analytics alternative that gives you full control over your data and protects user privacy. Free, secure, and open.
+Privacy friendly, GDPR compliant and self-hosted. Matomo is the #1 Google Analytics alternative that gives you control of your data. Free and secure.
 
 == Description ==
 

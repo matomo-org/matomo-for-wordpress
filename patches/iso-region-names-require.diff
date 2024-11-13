@@ -1,0 +1,13 @@
+diff --git a/plugins/GeoIp2/LocationProvider/GeoIp2.php b/plugins/GeoIp2/LocationProvider/GeoIp2.php
+index 23817f7897..4d62d54f71 100644
+--- a/plugins/GeoIp2/LocationProvider/GeoIp2.php
++++ b/plugins/GeoIp2/LocationProvider/GeoIp2.php
+@@ -197,7 +197,7 @@ abstract class GeoIp2 extends LocationProvider
+     public static function getRegions()
+     {
+         if (is_null(self::$regionNames)) {
+-            self::$regionNames = require_once __DIR__ . '/../data/isoRegionNames.php';
++            self::$regionNames = require __DIR__ . '/../data/isoRegionNames.php';
+         }
+
+         return self::$regionNames;
