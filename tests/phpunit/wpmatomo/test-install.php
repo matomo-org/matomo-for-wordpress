@@ -161,4 +161,24 @@ class InstallTest extends MatomoAnalytics_TestCase {
 		$this->assertCount( 1, $all_sites );
 	}
 
+	/**
+	 * @preserveGlobalState disabled
+	 * @runInSeparateProcess
+	 */
+	public function test_get_db_infos_respects_charset_overrides() {
+		global $wpdb;
+
+		$db_config = Installer::get_db_infos();
+
+		$this->assertEquals( $wpdb->charset ? $wpdb->charset : 'utf8', $db_config['charset'] );
+		$this->assertEquals( $wpdb->collate ? $wpdb->collate : 'utf8mb4_general_ci', $db_config['collation'] );
+
+		define( 'MATOMO_DB_CHARSET', 'dummycharset' );
+		define( 'MATOMO_DB_COLLATE', 'dummycollate' );
+
+		$db_config = Installer::get_db_infos();
+
+		$this->assertEquals( 'dummycharset', $db_config['charset'] );
+		$this->assertEquals( 'dummycollate', $db_config['collation'] );
+	}
 }

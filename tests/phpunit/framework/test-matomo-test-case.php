@@ -27,6 +27,8 @@ use WpMatomo\Settings;
 use WpMatomo\Uninstaller;
 use WpMatomo\User;
 
+require_once __DIR__ . '/fixture/test-matomo-fixture.php';
+
 /**
  * Piwik constants
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
