@@ -3,7 +3,7 @@
  * @package matomo
  */
 
-use \WpMatomo\Capabilities;
+require_once __DIR__ . '/fixture/test-wordpress-fixture.php';
 
 /**
  * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
