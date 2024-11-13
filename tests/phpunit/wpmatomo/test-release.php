@@ -273,7 +273,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 
 		$tested_up_to_version = $matches[1];
 
-		$this->assertEquals( $latest_version, $tested_up_to_version );
+		$this->assertTrue( version_compare( $latest_version, $tested_up_to_version, '==' ) );
 	}
 
 	public function test_woocommerce_tested_up_to_is_latest() {
@@ -294,7 +294,7 @@ class ReleaseTest extends MatomoAnalytics_TestCase {
 
 		$tested_up_to_version = $matches[1];
 
-		$this->assertEquals( $latest_version, $tested_up_to_version );
+		$this->assertTrue( version_compare( $latest_version, $tested_up_to_version, '==' ) );
 	}
 
 	private function get_zip_file_contents( $path_to_zip ) {
