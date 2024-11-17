@@ -20,6 +20,8 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 	protected static $initial_table_data = [];
 
+	private $original_wpdb = null;
+
 	/**
 	 * The ROLLBACK executed by WP_UnitTestCase sometimes does not rollback to the correct
 	 * state, which causes succeeding tests to fail. (Specifically, it can revert to
@@ -35,6 +37,8 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
+		$this->overwrite_wpdb();
+
 		if ( is_multisite() ) {
 			$this->delete_extraneous_blogs();
 		}
@@ -49,6 +53,9 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		}
 
 		$this->wordpress_fixture->tear_down();
+
+		$this->restore_wpdb();
+
 		parent::tearDown();
 
 		$this->restore_db_snapshot();
@@ -142,5 +149,67 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 				}
 			}
 		}
+	}
+
+	private function overwrite_wpdb() {
+		global $wpdb;
+
+		$this->original_wpdb = $wpdb;
+
+		$wpdb = new class( $this->original_wpdb ) {
+			private $original_wpdb;
+
+			public function __construct( $original_wpdb ) {
+				$this->original_wpdb = $original_wpdb;
+			}
+
+			public function __call( $name, $arguments ) {
+				global $EZSQL_ERROR;
+
+				$original_error_count = $EZSQL_ERROR ? count( $EZSQL_ERROR ) : 0;
+
+				$result = call_user_func_array( [ $this->original_wpdb, $name ], $arguments );
+
+				$error_count = $EZSQL_ERROR ? count( $EZSQL_ERROR ) : 0;
+
+				if ( ! $this->original_wpdb->suppress_errors
+					&& $original_error_count !== $error_count
+				) {
+					$error_info = end( $EZSQL_ERROR );
+
+					$msg = sprintf(
+						"%s [%s]\n%s\n",
+						'WordPress database error:',
+						$error_info['error_str'],
+						$error_info['query']
+					);
+
+					throw new \Exception( $msg );
+				}
+
+				return $result;
+			}
+
+			public function __get( $name ) {
+				return $this->original_wpdb->$name;
+			}
+
+			public function __set( $name, $value ) {
+				$this->original_wpdb->$name = $value;
+			}
+
+			public function __isset( $name ) {
+				return isset( $this->original_wpdb->$name );
+			}
+
+			public function __unset( $name ) {
+				unset( $this->original_wpdb->$name );
+			}
+		};
+	}
+
+	private function restore_wpdb() {
+		global $wpdb;
+		$wpdb = $this->original_wpdb;
 	}
 }
