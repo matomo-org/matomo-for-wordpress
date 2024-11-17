@@ -452,6 +452,14 @@ php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
 \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
 \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
 
+# install GeoLite2 for matomo/wp-statisitcs
+if [ ! -f /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo/GeoIP2-City.mmdb ]; then
+  echo "downloading GeoLite2-City.mmdb..."
+
+  mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo
+  curl 'https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz' > /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo/GeoIP2-City.mmdb
+fi
+
 # set allow_wp_app_password_auth tracker config, used in tests
 echo "set allow_wp_app_password_auth config..."
 php /var/www/html/matomo-for-wordpress/app/console config:set --section=Tracker --key=allow_wp_app_password_auth --value=1
