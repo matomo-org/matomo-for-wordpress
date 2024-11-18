@@ -10,12 +10,30 @@ class VisitsTimeConverter extends VisitorsConverter implements DataConverterInte
 
 	public static function convert( array $wp_statistics_data ) {
 		$datatable = new DataTable();
-		$datatable->addRowFromSimpleArray(
-			[
-				'label'     => $wp_statistics_data[0]['date'],
-				'nb_visits' => count( $wp_statistics_data ),
-			]
-		);
+		if ( isset( $wp_statistics_data[0]['date'] ) ) { // older wp-statistics version
+			$datatable->addRowFromSimpleArray(
+				[
+					'label'     => $wp_statistics_data[0]['date'],
+					'nb_visits' => count( $wp_statistics_data ),
+				]
+			);
+		} else {
+			$data = [];
+			foreach ( $wp_statistics_data as $wp_stat_row ) {
+				$hour = gmdate( 'H', strtotime( $wp_stat_row['last_view'] ) );
+				if ( ! isset( $data[ $hour ] ) ) {
+					$data[ $hour ] = [
+						'label'            => $hour,
+						'nb_visits'        => 0,
+						'nb_uniq_visitors' => 0,
+					];
+				}
+
+				$data[ $hour ]['nb_visits'] ++;
+				$data[ $hour ]['nb_uniq_visitors'] ++;
+			}
+			$datatable->addRowsFromSimpleArray( array_values( $data ) );
+		}
 		return $datatable;
 	}
 }

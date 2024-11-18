@@ -123,7 +123,10 @@ class RecordImporter {
 		return $visitors_found;
 	}
 
-	private function convert_visitors_to_array( $visitors ) {
+	/**
+	 * Converts VisitorDecorator objects to an array that Converter classes expect.
+	 */
+	protected function convert_visitors_to_array( $visitors ) {
 		$method = new \ReflectionMethod( top_visitors::class, 'prepareResponse' );
 		$method->setAccessible( true );
 		return $method->invoke( null, $visitors );
