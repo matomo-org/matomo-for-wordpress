@@ -41,11 +41,11 @@ if [[ "$EXECUTE_CLI" = "1" ]]; then
   EXECUTE_ARGS="${@:2}"
 
   if [[ "$EXECUTE_TARGET" = "wp" ]]; then
-    /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$EXECUTE_ARGS"
+    /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER $EXECUTE_ARGS
     exit $?
   elif [[ "$EXECUTE_TARGET" = "matomo:console" ]]; then
     cd /var/www/html/matomo-for-wordpress/app
-    ./console "$EXECUTE_ARGS"
+    ./console $EXECUTE_ARGS
     exit $?
   elif [[ "$EXECUTE_TARGET" = "phpunit" ]]; then
     cd /var/www/html/matomo-for-wordpress
@@ -55,10 +55,10 @@ if [[ "$EXECUTE_CLI" = "1" ]]; then
     \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
     \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
 
-    ./vendor/bin/phpunit "$EXECUTE_ARGS"
+    ./vendor/bin/phpunit $EXECUTE_ARGS
     exit $?
   else
-    "$EXECUTE_TARGET" "$EXECUTE_ARGS"
+    "$EXECUTE_TARGET" $EXECUTE_ARGS
     exit $?
   fi
 fi
