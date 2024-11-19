@@ -154,7 +154,7 @@ jobs:
           EOF
           fi
 
-          npm run compose run phpunit
+          npm run phpunit
 
   e2e_tests:
     runs-on: 'ubuntu-22.04'
