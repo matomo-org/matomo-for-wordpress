@@ -36,23 +36,31 @@ if [[ "$1" = "bash" ]]; then
   exit $?
 fi
 
-if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
-  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
-  exit $?
-elif [[ "$EXECUTE_CONSOLE" = "1" ]]; then
-  cd /var/www/html/matomo-for-wordpress/app
-  ./console "$@"
-  exit $?
-elif [[ "$EXECUTE_PHPUNIT" = "1" ]]; then
-  cd /var/www/html/matomo-for-wordpress
+if [[ "$EXECUTE_CLI" = "1" ]]; then
+  EXECUTE_TARGET="$1"
+  EXECUTE_ARGS="${@:2}"
 
-  php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
-  \$pdo->exec('DROP DATABASE IF EXISTS \`${WP_DB_NAME}_test\`');\
-  \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
-  \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
+  if [[ "$EXECUTE_TARGET" = "wp" ]]; then
+    /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$EXECUTE_ARGS"
+    exit $?
+  elif [[ "$EXECUTE_TARGET" = "matomo:console" ]]; then
+    cd /var/www/html/matomo-for-wordpress/app
+    ./console "$EXECUTE_ARGS"
+    exit $?
+  elif [[ "$EXECUTE_TARGET" = "phpunit" ]]; then
+    cd /var/www/html/matomo-for-wordpress
 
-  ./vendor/bin/phpunit "$@"
-  exit $?
+    php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
+    \$pdo->exec('DROP DATABASE IF EXISTS \`${WP_DB_NAME}_test\`');\
+    \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
+    \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
+
+    ./vendor/bin/phpunit "$EXECUTE_ARGS"
+    exit $?
+  else
+    "$EXECUTE_TARGET" "$EXECUTE_ARGS"
+    exit $?
+  fi
 fi
 
 a2enmod rewrite || true
