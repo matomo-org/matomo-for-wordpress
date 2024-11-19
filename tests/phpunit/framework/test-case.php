@@ -190,7 +190,7 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 				return $result;
 			}
 
-			public function __get( $name ) {
+			public function &__get( $name ) {
 				return $this->original_wpdb->$name;
 			}
 
