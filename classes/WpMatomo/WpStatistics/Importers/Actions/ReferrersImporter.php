@@ -6,6 +6,7 @@ use Piwik\Common;
 use Piwik\DataTable;
 use Piwik\Plugins\Referrers\Archiver;
 use Piwik\Date;
+use WP_Statistics\Models\VisitorsModel;
 use WpMatomo\WpStatistics\DataConverters\ReferrersConverter;
 use WpMatomo\WpStatistics\DataConverters\SearchEngineConverter;
 
@@ -25,20 +26,6 @@ class ReferrersImporter extends RecordImporter implements ActionsInterface {
 	}
 
 	/**
-	 * @param Date $day
-	 *
-	 * @return DataTable
-	 */
-	private function get_keywords_and_search_engine_records( Date $day ) {
-		global $wpdb;
-		$sql                = 'select engine, count(visitor) AS nb from ' . $this->get_table_name( 'search' ) . " where last_counter = '" . $day->toString() . "' group by engine order by engine;";
-		$wp_statistics_data = $wpdb->get_results( $sql, ARRAY_A );
-		$this->convert_search_engines( $wp_statistics_data );
-		$search_engine_by_keyword = SearchEngineConverter::convert( $wp_statistics_data );
-		return $search_engine_by_keyword;
-	}
-
-	/**
 	 * Matomo expects some fixed values for the search engine.
 	 * Convert them here
 	 *
@@ -51,15 +38,15 @@ class ReferrersImporter extends RecordImporter implements ActionsInterface {
 			/*
 			 * the list of search engine available from wpstatistics is fixed
 			 */
-			$wp_statistics_data[ $row ]['engine'] = str_replace(
-				[ 'google', 'duckduckgo', 'bing', 'baidu', 'yahoo', 'yandex', 'startpage', 'qwant', 'ecosia', 'ask' ],
-				[ 'Google', 'DuckDuckGo', 'Bing', 'Baidu', 'Yahoo!', 'Yandex', 'StartPage', 'Qwant', 'Ecosia', 'Ask' ],
-				$line['engine']
-			);
+			$wp_statistics_data[ $row ]['engine'] = $this->convert_search_engine( $line['engine'] );
 		}
 	}
 	private function import_search_engines( Date $date ) {
-		$search_engine_by_keyword = $this->get_keywords_and_search_engine_records( $date );
+		if ( class_exists( '\WP_Statistics\Models\VisitorsModel' ) ) {
+			$search_engine_by_keyword = $this->get_search_engine_records_from_model( $date );
+		} else {
+			$search_engine_by_keyword = $this->get_search_engine_records_from_table( $date );
+		}
 
 		$this->logger->debug( 'Import {nb_se} search engines...', [ 'nb_se' => $search_engine_by_keyword->getRowsCount() ] );
 		$this->insert_record( Archiver::SEARCH_ENGINES_RECORD_NAME, $search_engine_by_keyword, $this->maximum_rows_in_data_table_level_zero, $this->maximum_rows_in_sub_data_table );
@@ -92,5 +79,57 @@ class ReferrersImporter extends RecordImporter implements ActionsInterface {
 			array( '%' . $wpdb->_real_escape( $domain_name ) . '%', $date->toString(), $limit )
 		);
 		return $wpdb->get_results( $sql, ARRAY_A );
+	}
+
+	/**
+	 * @param Date $day
+	 *
+	 * @return DataTable
+	 */
+	private function get_search_engine_records_from_table( Date $day ) {
+		global $wpdb;
+		$sql                = 'select engine, count(visitor) AS nb from ' . $this->get_table_name( 'search' ) . " where last_counter = '" . $day->toString() . "' group by engine order by engine;";
+		$wp_statistics_data = $wpdb->get_results( $sql, ARRAY_A );
+		$this->convert_search_engines( $wp_statistics_data );
+		$search_engine_by_keyword = SearchEngineConverter::convert( $wp_statistics_data );
+		return $search_engine_by_keyword;
+	}
+
+	private function get_search_engine_records_from_model( Date $day ) {
+		$visitors_model     = new VisitorsModel();
+		$search_engine_data = $visitors_model->getReferrers(
+			[
+				'date'           => [
+					'from' => $day->toString(),
+					'to'   => $day->toString(),
+				],
+				'source_channel' => [ 'search', 'paid_search' ],
+				'group_by'       => [ 'source_name' ],
+				'per_page'       => false,
+			]
+		);
+
+		$search_engine_data = array_map(
+			function ( $row ) {
+				return [
+					'engine' => $row->source_name,
+					'nb'     => $row->visitors,
+				];
+			},
+			$search_engine_data
+		);
+
+		$this->convert_search_engines( $search_engine_data );
+
+		$search_engine_by_keyword = SearchEngineConverter::convert( $search_engine_data );
+		return $search_engine_by_keyword;
+	}
+
+	private function convert_search_engine( $engine ) {
+		return str_replace(
+			[ 'google', 'duckduckgo', 'bing', 'baidu', 'yahoo', 'yandex', 'startpage', 'qwant', 'ecosia', 'ask' ],
+			[ 'Google', 'DuckDuckGo', 'Bing', 'Baidu', 'Yahoo!', 'Yandex', 'StartPage', 'Qwant', 'Ecosia', 'Ask' ],
+			$engine
+		);
 	}
 }

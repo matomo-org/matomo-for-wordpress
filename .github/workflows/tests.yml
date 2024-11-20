@@ -154,7 +154,7 @@ jobs:
           EOF
           fi
 
-          npm run compose run phpunit
+          npm run phpunit
 
   e2e_tests:
     runs-on: 'ubuntu-22.04'
@@ -250,7 +250,7 @@ jobs:
 
       # build release from current code
       - run: |
-          npm run compose -- run console wordpress:build-release --name=test --zip
+          npm run matomo:console -- wordpress:build-release --name=test --zip
           mv matomo-test.zip matomo.zip
 
       # restart wordpress but with latest stable matomo

@@ -36,23 +36,31 @@ if [[ "$1" = "bash" ]]; then
   exit $?
 fi
 
-if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
-  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
-  exit $?
-elif [[ "$EXECUTE_CONSOLE" = "1" ]]; then
-  cd /var/www/html/matomo-for-wordpress/app
-  ./console "$@"
-  exit $?
-elif [[ "$EXECUTE_PHPUNIT" = "1" ]]; then
-  cd /var/www/html/matomo-for-wordpress
+if [[ "$EXECUTE_CLI" = "1" ]]; then
+  EXECUTE_TARGET="$1"
+  EXECUTE_ARGS="${@:2}"
 
-  php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
-  \$pdo->exec('DROP DATABASE IF EXISTS \`${WP_DB_NAME}_test\`');\
-  \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
-  \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
+  if [[ "$EXECUTE_TARGET" = "wp" ]]; then
+    /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER $EXECUTE_ARGS
+    exit $?
+  elif [[ "$EXECUTE_TARGET" = "matomo:console" ]]; then
+    cd /var/www/html/matomo-for-wordpress/app
+    ./console $EXECUTE_ARGS
+    exit $?
+  elif [[ "$EXECUTE_TARGET" = "phpunit" ]]; then
+    cd /var/www/html/matomo-for-wordpress
 
-  ./vendor/bin/phpunit "$@"
-  exit $?
+    php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
+    \$pdo->exec('DROP DATABASE IF EXISTS \`${WP_DB_NAME}_test\`');\
+    \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
+    \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
+
+    ./vendor/bin/phpunit $EXECUTE_ARGS
+    exit $?
+  else
+    "$EXECUTE_TARGET" $EXECUTE_ARGS
+    exit $?
+  fi
 fi
 
 a2enmod rewrite || true
@@ -451,6 +459,14 @@ echo "creating test database..."
 php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
 \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
 \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
+
+# install GeoLite2 for matomo/wp-statisitcs
+if [ ! -f /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo/GeoIP2-City.mmdb ]; then
+  echo "downloading GeoLite2-City.mmdb..."
+
+  mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo
+  curl 'https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz' > /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo/GeoIP2-City.mmdb
+fi
 
 # set allow_wp_app_password_auth tracker config, used in tests
 echo "set allow_wp_app_password_auth config..."
