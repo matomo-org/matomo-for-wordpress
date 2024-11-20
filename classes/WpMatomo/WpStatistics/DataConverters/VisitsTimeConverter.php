@@ -20,7 +20,7 @@ class VisitsTimeConverter extends VisitorsConverter implements DataConverterInte
 		} else {
 			$data = [];
 			foreach ( $wp_statistics_data as $wp_stat_row ) {
-				$hour = gmdate( 'H', strtotime( $wp_stat_row['last_view'] ) );
+				$hour = gmdate( 'H', $wp_stat_row['last_view'] );
 				if ( ! isset( $data[ $hour ] ) ) {
 					$data[ $hour ] = [
 						'label'            => $hour,
