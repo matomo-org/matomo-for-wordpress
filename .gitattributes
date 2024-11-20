@@ -47,6 +47,7 @@ docker-compose.yml export-ignore
 tsconfig.json export-ignore
 tsconfig.spec.json export-ignore
 wdio.conf.ts export-ignore
+wdio.conf.tracking.ts export-ignore
 vue.config.js export-ignore
 .env.default export-ignore
 .env export-ignore
@@ -64,6 +65,7 @@ jest.config.js export-ignore
 *.gzip export-ignore
 .stylelintrc.json export-ignore
 .git-blame-ignore-revs export-ignore
+.gitmodules export-ignore
 
 # export-ignore rules for embedded matomo follow
 
