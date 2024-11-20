@@ -56,7 +56,7 @@ class ReferrersImporter extends RecordImporter implements ActionsInterface {
 	 * @param Date $date
 	 */
 	private function import_referrers( Date $date ) {
-		$referrers = $this->get_referrers( $date ); // TODO: modify to use VisitorsModel
+		$referrers = $this->get_referrers( $date );
 		$referrers = ReferrersConverter::convert( $referrers );
 		$this->logger->debug( 'Import {nb_referrers} referrers...', [ 'nb_referrers' => $referrers->getRowsCount() ] );
 		$this->insert_record( Archiver::WEBSITES_RECORD_NAME, $referrers, $this->maximum_rows_in_data_table_level_zero, $this->maximum_rows_in_sub_data_table );

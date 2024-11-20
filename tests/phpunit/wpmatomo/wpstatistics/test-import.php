@@ -6,9 +6,6 @@ use WpMatomo\Report\Data;
 use WpMatomo\ScheduledTasks;
 use WpMatomo\Settings;
 
-/**
- * @group only
- */
 class ImportTest extends MatomoAnalytics_TestCase {
 	/**
 	 * static due to multiple tests instanciations
