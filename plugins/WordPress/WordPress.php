@@ -136,6 +136,7 @@ class WordPress extends Plugin
         $translationKeys[] = 'WordPress_Example';
         $translationKeys[] = 'WordPress_SaveChanges';
         $translationKeys[] = 'WordPress_NoMeasurableSettingsAvailable';
+        $translationKeys[] = 'General_Confirm'; // this is not loaded client side by default for some reason
 	}
 
     public function modifyTourChallenges(&$challenges)
