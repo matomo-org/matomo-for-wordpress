@@ -13,10 +13,11 @@ class BrowsersConverter implements DataConverterInterface {
 		$browsers = new DataTable();
 		$data     = [];
 		foreach ( $wp_statistics_data as $visit ) {
-			if ( ! array_key_exists( $visit['browser']['name'], $data ) ) {
-				$data[ $visit['browser']['name'] ] = 0;
+			$browser_name = empty( $visit['browser']['name'] ) ? '' : $visit['browser']['name'];
+			if ( ! array_key_exists( $browser_name, $data ) ) {
+				$data[ $browser_name ] = 0;
 			}
-			$data[ $visit['browser']['name'] ]++;
+			$data[ $browser_name ]++;
 		}
 		foreach ( $data as $browser => $hits ) {
 			$browsers->addRowFromSimpleArray(
