@@ -3,6 +3,8 @@
 namespace WpMatomo\WpStatistics\DataConverters;
 
 use Piwik\DataTable;
+use WpMatomo\WpStatistics\Importers\Actions\RecordImporter;
+
 /**
  * @package WpMatomo
  * @subpackage WpStatisticsImport
@@ -15,14 +17,14 @@ class SubtableConverter {
 			foreach ( $wp_statistics_data as $row ) {
 				if ( ! array_key_exists( $row[ $first_key ], $data ) ) {
 					$data[ $row[ $first_key ] ] = [
-						'label'            => $row[ $first_key ],
+						'label'            => RecordImporter::get_label( $row, $first_key ),
 						'data'             => [],
 						'nb_uniq_visitors' => 0,
 						'nb_visits'        => 0,
 					];
 				}
 				$data[ $row[ $first_key ] ]['data'][ $row[ $second_key ] ] = [
-					'label'            => $row[ $second_key ],
+					'label'            => RecordImporter::get_label( $row, $second_key ),
 					'nb_uniq_visitors' => $row['nb'],
 					'nb_visits'        => $row['nb'],
 				];

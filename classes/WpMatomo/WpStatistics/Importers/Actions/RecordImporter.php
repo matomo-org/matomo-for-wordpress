@@ -190,4 +190,8 @@ class RecordImporter {
 
 		return $visitors_found;
 	}
+
+	public static function get_label( $row, $key ) {
+		return empty( $row[ $key ] ) ? '' : $row[ $key ];
+	}
 }
