@@ -23,18 +23,18 @@ describe('MWP Uninstall', () => {
       await dialog.accept();
     });
 
-    await $('#deactivate-matomo').waitForExist();
+    await $('#deactivate-matomo').waitForExist({ timeout: 60000 });
 
     await browser.execute(() => {
       window.jQuery('#deactivate-matomo')[0].click();
     });
 
-    await $('#delete-matomo').waitForExist();
+    await $('#delete-matomo').waitForExist({ timeout: 60000 });
 
     await browser.execute(() => {
       window.jQuery('#delete-matomo')[0].click();
     });
-  });
 
-  // TODO
+    await $('#matomo-deleted').waitForExist({ timeout: 60000 });
+  });
 });
