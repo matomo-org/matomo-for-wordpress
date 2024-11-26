@@ -10,14 +10,12 @@ import { browser, $, expect } from '@wdio/globals';
 import Website from '../e2e/website.js';
 
 describe('MWP Uninstall', () => {
-  const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
-
   before(async () => {
     await Website.login();
   });
 
   it('should uninstall and remove all data when the "remove all data" option is enabled', async () => {
-    await browser.url(`${await Website.baseUrl()}/plugins.php`);
+    await browser.url(`${await Website.baseUrl()}/wp-admin/plugins.php`);
 
     await browser.on('dialog', async (dialog) => {
       await dialog.accept();
