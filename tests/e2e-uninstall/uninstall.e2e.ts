@@ -17,10 +17,6 @@ describe('MWP Uninstall', () => {
   it('should uninstall and remove all data when the "remove all data" option is enabled', async () => {
     await browser.url(`${await Website.baseUrl()}/wp-admin/plugins.php`);
 
-    await browser.on('dialog', async (dialog) => {
-      await dialog.accept();
-    });
-
     await $('#deactivate-matomo').waitForExist({ timeout: 60000 });
 
     await browser.execute(() => {
@@ -28,6 +24,12 @@ describe('MWP Uninstall', () => {
     });
 
     await $('#delete-matomo').waitForExist({ timeout: 60000 });
+
+    await browser.on('dialog', async (dialog) => {
+      console.log('confirming', dialog.message());
+      process.exit(1);
+      await dialog.accept();
+    });
 
     await browser.execute(() => {
       window.jQuery('#delete-matomo')[0].click();

@@ -12,6 +12,8 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	die;
 }
 
+$GLOBALS['MATOMO_UNINSTALLING'] = 1;
+
 require 'shared.php';
 
 $matomo_is_using_multi_site    = function_exists( 'is_multisite' ) && is_multisite();
