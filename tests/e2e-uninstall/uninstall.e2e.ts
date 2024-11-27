@@ -25,15 +25,10 @@ describe('MWP Uninstall', () => {
 
     await $('#delete-matomo').waitForExist({ timeout: 60000 });
 
-    await browser.on('dialog', async (dialog) => {
-      console.log('confirming', dialog.message());
-      process.exit(1);
-      await dialog.accept();
-    });
-
     await browser.execute(() => {
       window.jQuery('#delete-matomo')[0].click();
     });
+    await browser.acceptAlert();
 
     await $('#matomo-deleted').waitForExist({ timeout: 180000 });
   });
