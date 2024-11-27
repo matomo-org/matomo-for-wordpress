@@ -20,7 +20,7 @@ if ( empty( $dbname ) ) {
 }
 
 $pdo   = new \PDO( "mysql:host=$host;dbname={$dbname}_test", 'root', 'pass' );
-$query = $pdo->prepare( "SHOW TABLES LIKE '%matomo%'" );
+$query = $pdo->prepare( 'SHOW TABLES' );
 $query->execute();
 
 $tables = $query->fetchAll( \PDO::FETCH_COLUMN );

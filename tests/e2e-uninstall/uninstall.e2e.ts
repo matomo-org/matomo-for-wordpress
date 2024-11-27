@@ -54,6 +54,9 @@ describe('MWP Uninstall', () => {
       throw new Error(`Failed to parse get-matomo-tables.php response: ${result}`);
     }
 
-    expect(result).toEqual([]);
+    expect(result.length).toBeGreaterThan(0); // sanity check
+
+    result = result.filter((t: string) => t.includes('matomo'));
+    expect(result).toEqual([]); // check there are no tables with "matomo" in the name
   });
 });
