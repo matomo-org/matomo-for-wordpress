@@ -15,7 +15,22 @@ describe('MWP Uninstall', () => {
     await Website.login();
   });
 
+  async function getTablesInstalled(): Promise<any> {
+    let result: any = await fetch(`${await Website.rootUrl()}/matomo-for-wordpress/tests/e2e-uninstall/get-matomo-tables.php`);
+    result = await result.text();
+    try {
+      result = JSON.parse(result);
+    } catch (e) {
+      throw new Error(`Failed to parse get-matomo-tables.php response: ${result}`);
+    }
+    return result;
+  }
+
   it('should uninstall and remove all data when the "remove all data" option is enabled', async () => {
+    let tablesBeforeUninstall = await getTablesInstalled();
+    tablesBeforeUninstall = tablesBeforeUninstall.filter((t: string) => t.includes('matomo'));
+    expect(tablesBeforeUninstall.length).toBeGreaterThan(0); // before uninstalling, check there are tables with "matomo" in the name
+
     await browser.url(`${await Website.baseUrl()}/wp-admin/plugins.php`);
 
     await $('#deactivate-matomo').waitForExist({ timeout: 60000 });
@@ -46,13 +61,7 @@ describe('MWP Uninstall', () => {
     }
 
     // check that no matomo table exists in the database
-    let result: any = await fetch(`${await Website.rootUrl()}/matomo-for-wordpress/tests/e2e-uninstall/get-matomo-tables.php`);
-    result = await result.text();
-    try {
-      result = JSON.parse(result);
-    } catch (e) {
-      throw new Error(`Failed to parse get-matomo-tables.php response: ${result}`);
-    }
+    let result = await getTablesInstalled();
 
     expect(result.length).toBeGreaterThan(0); // sanity check
 

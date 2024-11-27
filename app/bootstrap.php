@@ -160,8 +160,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( !is_plugin_active('matomo/matomo.php')
 	// during tests the plugin may temporarily not be active
 	&& (!defined( 'MATOMO_PHPUNIT_TEST' ) || !MATOMO_PHPUNIT_TEST)
-	// when uninstalling the plugin may not be active
-	&& empty( $GLOBALS['MATOMO_UNINSTALLING'] )
 ) {
 	exit;
 }
