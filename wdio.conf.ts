@@ -3,12 +3,8 @@ import * as url from 'url';
 import * as fs from 'fs';
 import type { Options } from '@wdio/types'
 import GlobalSetup from './tests/e2e/global-setup.ts';
-import { config as dotEnvConfig } from 'dotenv';
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
-
-dotEnvConfig({ path: path.join(dirname, '.env.default') });
-dotEnvConfig({ path: path.join(dirname, '.env') });
 
 const DOWNLOADS_DIR = path.join(dirname, 'tests', 'e2e', 'downloads');
 const WORDPRESS_DIR_NAME = process.env.WORDPRESS_FOLDER || process.env.WORDPRESS_VERSION || '';

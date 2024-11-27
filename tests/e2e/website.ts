@@ -42,7 +42,7 @@ class Website {
     const wordpressFolder = process.env.WORDPRESS_FOLDER || wordpressVersion;
     const wordpressVersionUrlPart = wordpressFolder ? `/${wordpressFolder}` : '';
 
-    return `${this.rootUrl()}/${wordpressVersionUrlPart}`;
+    return `${this.rootUrl()}${wordpressVersionUrlPart}`;
   }
 
   async login() {
