@@ -29,7 +29,7 @@ describe('MWP Uninstall', () => {
       window.jQuery('#delete-matomo')[0].click();
     });
 
-    await browser.pause(300); // wait for alert
+    await browser.pause(500); // wait for alert
 
     try {
       await browser.acceptAlert();
@@ -38,5 +38,7 @@ describe('MWP Uninstall', () => {
     }
 
     await $('#matomo-deleted').waitForExist({ timeout: 180000 });
+
+    // TODO: check that no matomo tables exist in db (somehow)
   });
 });
