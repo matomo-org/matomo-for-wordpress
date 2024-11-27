@@ -8,6 +8,7 @@
 
 import { browser, $, expect } from '@wdio/globals';
 import Website from '../e2e/website.js';
+import fetch from 'node-fetch';
 
 describe('MWP Uninstall', () => {
   before(async () => {
@@ -32,19 +33,27 @@ describe('MWP Uninstall', () => {
     await browser.pause(500); // wait for alert
 
     try {
+      // case when a confirm modal is shown
       await browser.acceptAlert();
-
       await $('#matomo-deleted').waitForExist({ timeout: 180000 });
     } catch (e) {
+      // case when the user is redirected to a page with a <form>
       await $('form #submit').waitForExist({ timeout: 30000 });
       await $('form #submit').click();
 
+      await $('table.plugins').waitForExist({ timeout: 180000 });
       await browser.pause(30000);
-
-      throw new Error('force fail');
-      // pass
     }
 
-    // TODO: check that no matomo tables exist in db (somehow)
+    // check that no matomo table exists in the database
+    let result: any = await fetch(`${await Website.rootUrl()}/matomo-for-wordpress/tests/e2e-uninstall/get-matomo-tables.php`);
+    result = await result.text();
+    try {
+      result = JSON.parse(result);
+    } catch (e) {
+      throw new Error(`Failed to parse get-matomo-tables.php response: ${result}`);
+    }
+
+    expect(result).toEqual([]);
   });
 });
