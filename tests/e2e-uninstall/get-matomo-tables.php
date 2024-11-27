@@ -19,7 +19,7 @@ if ( empty( $dbname ) ) {
 	exit;
 }
 
-$pdo   = new \PDO( "mysql:host=$host;dbname={$dbname}_test", 'root', 'pass' );
+$pdo   = new \PDO( "mysql:host=$host;dbname={$dbname}", 'root', 'pass' );
 $query = $pdo->prepare( 'SHOW TABLES' );
 $query->execute();
 
