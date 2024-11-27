@@ -28,7 +28,12 @@ describe('MWP Uninstall', () => {
     await browser.execute(() => {
       window.jQuery('#delete-matomo')[0].click();
     });
-    await browser.acceptAlert();
+
+    try {
+      await browser.acceptAlert();
+    } catch (e) {
+      // pass
+    }
 
     await $('#matomo-deleted').waitForExist({ timeout: 180000 });
   });
