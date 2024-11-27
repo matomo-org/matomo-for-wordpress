@@ -33,11 +33,17 @@ describe('MWP Uninstall', () => {
 
     try {
       await browser.acceptAlert();
+
+      await $('#matomo-deleted').waitForExist({ timeout: 180000 });
     } catch (e) {
+      await $('form #submit').waitForExist({ timeout: 30000 });
+      await $('form #submit').click();
+
+      await browser.pause(30000);
+
+      throw new Error('force fail');
       // pass
     }
-
-    await $('#matomo-deleted').waitForExist({ timeout: 180000 });
 
     // TODO: check that no matomo tables exist in db (somehow)
   });
