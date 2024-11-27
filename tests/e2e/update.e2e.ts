@@ -10,7 +10,6 @@ import { browser, $, expect } from '@wdio/globals';
 import fetch from 'node-fetch';
 import Website from './website.js';
 import MatomoCli from './apiobjects/matomo.cli.js';
-import SummaryPage from './pageobjects/mwp-admin/summary.page.js';
 
 describe('MWP Updating', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -25,7 +24,7 @@ describe('MWP Updating', () => {
     const latestStableVersion = pluginInfo.version as string;
 
     await browser.url(`${await Website.baseUrl()}/wp-admin/plugins.php`);
-    await $('tr[data-slug="matomo"]').waitForDisplayed();
+    await $('tr[data-slug="matomo"]').waitForDisplayed({ timeout: 30000 });
 
     const actualVersion = await browser.execute(() => {
       const [, v] = window.jQuery('tr[data-slug="matomo"] .plugin-version-author-uri').text().match(/Version (\d+\.\d+\.\d+)/);

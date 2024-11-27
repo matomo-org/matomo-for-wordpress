@@ -22,7 +22,7 @@ if [[ "$MULTISITE" = "1" ]]; then
   WORDPRESS_FOLDER="$WORDPRESS_FOLDER-multi"
 fi
 
-WP_DB_NAME=$(echo "wp_matomo_$WORDPRESS_FOLDER" | sed 's/\./_/g' | sed 's/-/_/g')
+export WP_DB_NAME=$(echo "wp_matomo_$WORDPRESS_FOLDER" | sed 's/\./_/g' | sed 's/-/_/g')
 
 export WP_TESTS_DIR=/var/www/html/$WORDPRESS_FOLDER/wp-test # used for setting up for tests and running phpunit
 

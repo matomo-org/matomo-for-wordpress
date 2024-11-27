@@ -82,7 +82,7 @@ export const config: Options.Testrunner = {
   // will be called from there.
   //
   specs: [
-    './tests/e2e/**/*.e2e.ts'
+    './tests/e2e/**/*.e2e.ts',
   ],
   // Patterns to exclude. (all executed without parallelism before these tests, see wdio.conf.tracking.ts)
   exclude: [
