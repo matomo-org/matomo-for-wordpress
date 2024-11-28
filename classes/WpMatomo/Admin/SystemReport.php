@@ -1452,6 +1452,9 @@ class SystemReport {
 			'comment' => ! empty( $disabled_functions ) ? $disabled_functions : '',
 		];
 
+		// try to set it before checking, since we try to set it in /app/bootstrap.php
+		@ini_set( 'zlib.output_compression', false );
+
 		$zlib_compression = ini_get( 'zlib.output_compression' );
 		$row              = [
 			'name'  => 'zlib.output_compression is off',

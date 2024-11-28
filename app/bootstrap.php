@@ -1,5 +1,11 @@
 <?php
 
+// if we're loading Matomo directly, rather than bootstrapping from within WordPress,
+// try to set some INI config values Matomo needs
+if ( ! defined( 'ABSPATH' ) ) {
+	@ini_set( 'zlib.output_compression', false );
+}
+
 // see plugins/WordPress/WordPress.php for more info
 $GLOBALS['MATOMO_WP_ORIGINAL_ERROR_REPORTING'] = error_reporting();
 
