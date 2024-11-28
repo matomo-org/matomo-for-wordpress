@@ -18,6 +18,7 @@
 .github export-ignore
 .gitignore export-ignore
 .gitattributes export-ignore
+.gitmodules export-ignore
 .travis.yml export-ignore
 package-lock.json export-ignore
 bower.json export-ignore
@@ -47,6 +48,7 @@ docker-compose.yml export-ignore
 tsconfig.json export-ignore
 tsconfig.spec.json export-ignore
 wdio.conf.ts export-ignore
+wdio.conf.tracking.ts export-ignore
 vue.config.js export-ignore
 .env.default export-ignore
 .env export-ignore
