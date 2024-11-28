@@ -60,6 +60,7 @@
 		<exclude name="PHPCompatibility.Classes.NewAnonymousClasses.Found"/>
 		<exclude name="PHPCompatibility.InitialValue.NewConstantScalarExpressions.constFound"/>
 		<exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedCatch"/>
+		<exclude name="WordPress.PHP.IniSet.Risky"/>
 	</rule>
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
