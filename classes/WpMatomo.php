@@ -45,6 +45,11 @@ class WpMatomo {
 	 */
 	public static $settings;
 
+	/**
+	 * @var \WpMatomo\Feature[]
+	 */
+	private $features = [];
+
 	public function __construct() {
 		$this->declare_woocommerce_hpos_compatible();
 
@@ -65,8 +70,7 @@ class WpMatomo {
 
 		add_action( 'init', [ $this, 'init_plugin' ] );
 
-		$capabilities = new Capabilities( self::$settings );
-		$capabilities->register_hooks();
+		$this->init_features();
 
 		$roles = new Roles( self::$settings );
 		$roles->register_hooks();
@@ -277,5 +281,21 @@ class WpMatomo {
 
 	private static function is_async_archiving_disabled_by_setting() {
 		return self::$settings->is_async_archiving_disabled_by_option();
+	}
+
+	private function init_features() {
+		$this->features = [
+			new Capabilities( self::$settings ),
+		];
+
+		foreach ( $this->features as $feature ) {
+			if ( $feature->is_enabled() ) {
+				$feature->register_hooks();
+			}
+
+			// ajax methods must be present even if other hooks should not be added,
+			// since ajax requests go through admin-ajax.php
+			$feature->register_ajax();
+		}
 	}
 }
