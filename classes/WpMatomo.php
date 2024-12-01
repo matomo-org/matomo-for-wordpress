@@ -284,12 +284,10 @@ class WpMatomo {
 	}
 
 	private function init_features() {
-		$this->features = [
-			new Capabilities( self::$settings ),
-		];
+		$this->features = $this->get_all_features();
 
 		foreach ( $this->features as $feature ) {
-			if ( $feature->is_enabled() ) {
+			if ( $feature->is_active() ) {
 				$feature->register_hooks();
 			}
 
@@ -297,5 +295,11 @@ class WpMatomo {
 			// since ajax requests go through admin-ajax.php
 			$feature->register_ajax();
 		}
+	}
+
+	private function get_all_features() {
+		return [
+			new Capabilities( self::$settings ),
+		];
 	}
 }

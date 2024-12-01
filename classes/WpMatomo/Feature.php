@@ -9,22 +9,51 @@
 
 namespace WpMatomo;
 
+/**
+ * Encapsulates a plugin feature. To create a new Feature:
+ *
+ * - subclass Feature and fill it out
+ * - create new instance of it in WpMatomo::get_all_features()
+ */
 abstract class Feature {
 
-	public function is_enabled() {
+	/**
+	 * Returns true if this feature is active for the current request.
+	 * For example, if the feature is admin only, it would return true
+	 * for admin pages, false if otherwise.
+	 *
+	 * Note: AJAX hooks are always added, regardless of what this function
+	 * returns, since AJAX methods go through admin-ajax.php, and not
+	 * any other script.
+	 *
+	 * @return bool
+	 */
+	public function is_active() {
 		return true;
 	}
 
-	public function register_ajax() {
-		// empty
-	}
-
+	/**
+	 * Register hooks for this feature. AJAX actions should not be
+	 * added herel
+	 *
+	 * @return void
+	 */
 	public function register_hooks() {
 		// empty
 	}
 
 	/**
-	 * Optional. For tests only.
+	 * Register handlers for custom AJAX methods for the feature here.
+	 *
+	 * @return void
+	 */
+	public function register_ajax() {
+		// empty
+	}
+
+	/**
+	 * Optional. For tests only. Should remove hooks added in register_hooks()
+	 * and in register_ajax().
 	 *
 	 * @return void
 	 */
