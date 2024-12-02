@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class OptOut {
+class OptOut extends Feature {
 	private $language = null;
 
 	public function register_hooks() {

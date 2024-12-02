@@ -10,12 +10,13 @@
 namespace WpMatomo\Report;
 
 use WpMatomo\Capabilities;
+use WpMatomo\Feature;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Renderer {
+class Renderer extends Feature {
 	const CUSTOM_UNIQUE_ID_VISITS_OVER_TIME = 'visits_over_time';
 
 	public function register_hooks() {

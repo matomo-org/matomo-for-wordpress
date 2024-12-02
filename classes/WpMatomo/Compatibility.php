@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Compatibility {
+class Compatibility extends Feature {
 	public function register_hooks() {
 		$this->ithemes_security();
 	}

@@ -72,28 +72,8 @@ class WpMatomo {
 
 		$this->init_features();
 
-		$roles = new Roles( self::$settings );
-		$roles->register_hooks();
-
-		$compatibility = new \WpMatomo\Compatibility();
-		$compatibility->register_hooks();
-
-		$scheduled_tasks = new ScheduledTasks( self::$settings );
-		$scheduled_tasks->schedule();
-		$scheduled_tasks->register_ajax();
-
-		$privacy_badge = new OptOut();
-		$privacy_badge->register_hooks();
-
-		$renderer = new Renderer();
-		$renderer->register_hooks();
-
-		$api = new API();
-		$api->register_hooks();
-
 		if ( is_admin() ) {
 			new Admin( self::$settings );
-			$scheduled_tasks->show_errors_if_admin();
 
 			$dashboard = new Dashboard();
 			$dashboard->register_hooks();
@@ -300,6 +280,12 @@ class WpMatomo {
 	private function get_all_features() {
 		return [
 			new Capabilities( self::$settings ),
+			new Roles( self::$settings ),
+			new \WpMatomo\Compatibility(),
+			new ScheduledTasks( self::$settings ),
+			new OptOut(),
+			new Renderer(),
+			new API(),
 		];
 	}
 }

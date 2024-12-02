@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * phpcs:disable WordPress.Security.NonceVerification.Missing
  */
-class API {
+class API extends Feature {
 	const VERSION = 'matomo/v1';
 
 	const ROUTE_HIT = 'hit';
