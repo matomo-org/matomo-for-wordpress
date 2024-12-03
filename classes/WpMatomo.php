@@ -48,7 +48,7 @@ class WpMatomo {
 	/**
 	 * @var \WpMatomo\Feature[]
 	 */
-	private $features = [];
+	private static $features = [];
 
 	public function __construct() {
 		$this->declare_woocommerce_hpos_compatible();
@@ -59,21 +59,12 @@ class WpMatomo {
 
 		self::$settings = new Settings();
 
-		add_action( 'init', [ $this, 'init_plugin' ] ); // TODO: move to new class
-
 		$this->init_features();
 
+		// TODO: this doesn't appear to be necessary or is it just to load the class?
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			new MatomoCommands();
 		}
-
-		add_filter(
-			'plugin_action_links_' . plugin_basename( MATOMO_ANALYTICS_FILE ),
-			[
-				$this,
-				'add_settings_link',
-			]
-		);
 
 		// TODO: need better way of doing ajax?
 		MarketplaceSetupWizard::register_ajax();
@@ -145,58 +136,6 @@ class WpMatomo {
 		return defined( 'MATOMO_DISABLE_ADDHANDLER' ) && MATOMO_DISABLE_ADDHANDLER;
 	}
 
-	public function add_settings_link( $links ) {
-		$get_started = new \WpMatomo\Admin\GetStarted( self::$settings );
-
-		if ( self::$settings->get_global_option( Settings::SHOW_GET_STARTED_PAGE ) && $get_started->can_user_manage() ) {
-			$links[] = '<a href="' . menu_page_url( Menu::SLUG_GET_STARTED, false ) . '">' . __( 'Get Started', 'matomo' ) . '</a>';
-		} elseif ( current_user_can( Capabilities::KEY_SUPERUSER ) ) {
-			$links[] = '<a href="' . menu_page_url( Menu::SLUG_SETTINGS, false ) . '">' . __( 'Settings', 'matomo' ) . '</a>';
-		}
-
-		return $links;
-	}
-
-	public function init_plugin() {
-		if ( ( is_admin() || matomo_is_app_request() ) && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
-			$installer = new Installer( self::$settings );
-			$installer->register_hooks();
-			if ( $installer->looks_like_it_is_installed() ) {
-				if ( is_admin() && ( ! defined( 'MATOMO_ENABLE_AUTO_UPGRADE' ) || MATOMO_ENABLE_AUTO_UPGRADE ) ) {
-					$updater = new Updater( self::$settings );
-					$updater->update_if_needed();
-				}
-			} else {
-				if ( matomo_is_app_request() ) {
-					// we can't install if matomo is requested... there's some circular reference
-					wp_safe_redirect( admin_url() );
-					exit;
-				} else {
-					if ( $installer->can_be_installed() ) {
-						$installer->install();
-					}
-				}
-			}
-		}
-		$tracking_code = new TrackingCode( self::$settings );
-		if ( self::$settings->is_tracking_enabled()
-			&& self::$settings->get_global_option( 'track_ecommerce' )
-			&& ! $tracking_code->is_hidden_user() ) {
-			$tracker = new AjaxTracker( self::$settings );
-
-			$woocommerce = new Woocommerce( $tracker, self::$settings );
-			$woocommerce->register_hooks();
-
-			$easy_digital_downloads = new EasyDigitalDownloads( $tracker, self::$settings );
-			$easy_digital_downloads->register_hooks();
-
-			$member_press = new MemberPress( $tracker, self::$settings );
-			$member_press->register_hooks();
-
-			do_action( 'matomo_ecommerce_init', $tracker );
-		}
-	}
-
 	private function declare_woocommerce_hpos_compatible() {
 		add_action(
 			'before_woocommerce_init',
@@ -218,9 +157,14 @@ class WpMatomo {
 	}
 
 	private function init_features() {
-		$this->features = $this->get_all_features();
+		$features = $this->get_all_features();
 
-		foreach ( $this->features as $feature ) {
+		self::$features = [];
+		foreach ( $features as $feature ) {
+			self::$features[ get_class( $feature ) ] = $feature;
+		}
+
+		foreach ( self::$features as $feature ) {
 			if ( $feature->is_active() ) {
 				$feature->register_hooks();
 			}
@@ -240,6 +184,7 @@ class WpMatomo {
 		}
 
 		return [
+			new \WpMatomo\PluginInit( self::$settings ),
 			new Capabilities( self::$settings ),
 			new Roles( self::$settings ),
 			new \WpMatomo\Compatibility(),
@@ -264,6 +209,8 @@ class WpMatomo {
 
 			new TrackingCode( self::$settings ),
 			new Annotations( self::$settings ),
+
+			new \WpMatomo\PluginActionLinks( self::$settings ),
 		];
 	}
 }
