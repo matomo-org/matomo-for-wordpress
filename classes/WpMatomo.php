@@ -1,4 +1,4 @@
-<?php
+n<?php
 /**
  * Matomo - free/libre analytics platform
  *
@@ -66,8 +66,6 @@ class WpMatomo {
 			new MatomoCommands();
 		}
 
-		// TODO: need better way of doing ajax?
-		MarketplaceSetupWizard::register_ajax();
 		WpMatomo\Admin\TrackingSettings::register_ajax();
 	}
 
@@ -161,11 +159,9 @@ class WpMatomo {
 
 		self::$features = [];
 		foreach ( $features as $feature ) {
-			self::$features[ get_class( $feature ) ] = $feature;
-		}
-
-		foreach ( self::$features as $feature ) {
 			if ( $feature->is_active() ) {
+				self::$features[ get_class( $feature ) ] = $feature;
+
 				$feature->register_hooks();
 			}
 
@@ -211,6 +207,20 @@ class WpMatomo {
 			new Annotations( self::$settings ),
 
 			new \WpMatomo\PluginActionLinks( self::$settings ),
+
+			new MarketplaceSetupWizard(),
 		];
+	}
+
+	/**
+	 * @param string $class_name
+	 * @return \WpMatomo\Feature|null
+	 */
+	public static function get_active_feature( $class_name ) {
+		if ( empty( self::$features[ $class_name ] ) ) {
+			return null;
+		}
+
+		return self::$features[ $class_name ];
 	}
 }

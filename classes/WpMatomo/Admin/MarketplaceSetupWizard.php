@@ -9,13 +9,26 @@
 
 namespace WpMatomo\Admin;
 
-class MarketplaceSetupWizard {
+use WpMatomo\Feature;
+
+class MarketplaceSetupWizard extends Feature {
 	const MARKETPLACE_PLUGIN_FILE   = 'matomo-marketplace-for-wordpress/matomo-marketplace-for-wordpress.php';
 	const AJAX_IS_ACTIVE_NONCE_NAME = 'matomo-marketplace-setup-wizard-is-active';
 	const AJAX_ACTIVATE_NONCE_NAME  = 'matomo-marketplace-setup-wizard-activate';
 
-	public function __construct() {
-		$this->add_hooks();
+	public function is_active() {
+		if ( ! is_admin() ) {
+			return false;
+		}
+
+		// TODO: probably better to use a filter in Marketplace, and a hook here rather than this
+		$marketplace = \WpMatomo::get_active_feature( Marketplace::class );
+		if ( empty( $marketplace ) ) {
+			return false;
+		}
+
+		$active_marketplace_tab = $marketplace->get_active_tab();
+		return 'install' === $active_marketplace_tab || 'subscriptions' === $active_marketplace_tab;
 	}
 
 	public function show() {
@@ -28,7 +41,7 @@ class MarketplaceSetupWizard {
 		include dirname( __FILE__ ) . '/views/marketplace_setup_wizard.php';
 	}
 
-	private function add_hooks() {
+	public function register_hooks() {
 		if ( ! current_user_can( 'upload_plugins' )
 			|| ! current_user_can( 'activate_plugins' )
 		) {
@@ -58,7 +71,7 @@ class MarketplaceSetupWizard {
 		);
 	}
 
-	public static function register_ajax() {
+	public function register_ajax() {
 		add_action( 'wp_ajax_matomo_is_marketplace_active', [ self::class, 'is_marketplace_active' ] );
 		add_action( 'wp_ajax_matomo_activate_marketplace', [ self::class, 'activate_marketplace_plugin' ] );
 	}
