@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @todo validate the nonce
  * phpcs:disable WordPress.Security.NonceVerification.Missing
  */
-class Referral {
+class Referral extends Feature {
 	const OPTION_NAME_REFERRAL_DISMISSED = 'matomo-referral-dismissed';
 
 	/**
@@ -30,6 +30,10 @@ class Referral {
 
 	public function __construct() {
 		$this->time = time();
+	}
+
+	public function is_active() {
+		return is_admin() && $this->should_show();
 	}
 
 	/**

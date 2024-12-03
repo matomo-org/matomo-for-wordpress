@@ -9,19 +9,37 @@
 
 namespace WpMatomo\Admin;
 
+use WpMatomo\Feature;
 use WpMatomo\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Admin {
+class Admin extends Feature {
+
+	/**
+	 * @var Settings
+	 */
+	private $settings;
+
+	private $init_menu;
+
 	/**
 	 * @param Settings $settings
 	 */
 	public function __construct( $settings, $init_menu = true ) {
-		if ( $init_menu ) {
-			new Menu( $settings );
+		$this->settings  = $settings;
+		$this->init_menu = $init_menu;
+	}
+
+	public function is_active() {
+		return is_admin();
+	}
+
+	public function register_hooks() {
+		if ( $this->init_menu ) {
+			new Menu( $this->settings );
 		}
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'load_scripts' ] );

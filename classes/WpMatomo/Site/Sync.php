@@ -18,6 +18,7 @@ use Piwik\Plugins\SitesManager;
 use Piwik\Plugins\SitesManager\Model;
 use WP_Site;
 use WpMatomo\Bootstrap;
+use WpMatomo\Feature;
 use WpMatomo\Installer;
 use WpMatomo\Logger;
 use WpMatomo\Settings;
@@ -32,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Properties coming from matomo
  * phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
  */
-class Sync {
+class Sync extends Feature {
 	const MAX_LENGTH_SITE_NAME = 90;
 
 	/**
@@ -54,6 +55,10 @@ class Sync {
 		$this->logger      = new Logger();
 		$this->settings    = $settings;
 		$this->config_sync = new SyncConfig( $settings );
+	}
+
+	public function is_active() {
+		return is_admin();
 	}
 
 	public function register_hooks() {

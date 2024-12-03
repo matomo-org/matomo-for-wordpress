@@ -5,7 +5,7 @@ namespace WpMatomo;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
-class ErrorNotice {
+class ErrorNotice extends Feature {
 
 	const OPTION_NAME_SYSTEM_REPORT_ERRORS_DISMISSED = 'matomo_system_report_errors_dismissed';
 
@@ -14,6 +14,11 @@ class ErrorNotice {
 	public function __construct( $settings ) {
 		$this->settings = $settings;
 	}
+
+	public function is_active() {
+		return is_admin();
+	}
+
 	public function register_hooks() {
 		add_action( 'admin_notices', [ $this, 'check_errors' ] );
 

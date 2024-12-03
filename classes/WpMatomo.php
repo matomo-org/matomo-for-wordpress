@@ -59,55 +59,9 @@ class WpMatomo {
 
 		self::$settings = new Settings();
 
-		if ( self::is_safe_mode() ) {
-			if ( is_admin() ) {
-				new Admin( self::$settings, false );
-				new \WpMatomo\Admin\SafeModeMenu( self::$settings );
-			}
-
-			return;
-		}
-
-		add_action( 'init', [ $this, 'init_plugin' ] );
+		add_action( 'init', [ $this, 'init_plugin' ] ); // TODO: move to new class
 
 		$this->init_features();
-
-		if ( is_admin() ) {
-			new Admin( self::$settings );
-
-			$dashboard = new Dashboard();
-			$dashboard->register_hooks();
-
-			$site_sync = new SiteSync( self::$settings );
-			$site_sync->register_hooks();
-			$user_sync = new UserSync();
-			$user_sync->register_hooks();
-
-			$referral = new \WpMatomo\Referral();
-			if ( $referral->should_show() ) {
-				$referral->register_hooks();
-			}
-
-			$error_notice = new \WpMatomo\ErrorNotice( self::$settings );
-			$error_notice->register_hooks();
-
-			$chart = new Chart();
-			$chart->register_hooks();
-
-			/*
-			 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
-			 */
-			$redirect = new RedirectOnActivation( $this );
-			$redirect->register_hooks();
-
-			$plugin_admin_overrides = new PluginAdminOverrides( self::$settings );
-			$plugin_admin_overrides->register_hooks();
-		}
-
-		$tracking_code = new TrackingCode( self::$settings );
-		$tracking_code->register_hooks();
-		$annotations = new Annotations( self::$settings );
-		$annotations->register_hooks();
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			new MatomoCommands();
@@ -278,6 +232,13 @@ class WpMatomo {
 	}
 
 	private function get_all_features() {
+		if ( self::is_safe_mode() ) {
+			return [
+				new Admin( self::$settings, false ),
+				new \WpMatomo\Admin\SafeModeMenu( self::$settings ),
+			];
+		}
+
 		return [
 			new Capabilities( self::$settings ),
 			new Roles( self::$settings ),
@@ -286,6 +247,23 @@ class WpMatomo {
 			new OptOut(),
 			new Renderer(),
 			new API(),
+			new Admin( self::$settings ),
+			new Dashboard(),
+			new SiteSync( self::$settings ),
+			new UserSync(),
+			new \WpMatomo\Referral(),
+			new \WpMatomo\ErrorNotice( self::$settings ),
+			new Chart(),
+
+			/*
+			 * @see https://github.com/matomo-org/matomo-for-wordpress/issues/434
+			 */
+			new RedirectOnActivation(),
+
+			new PluginAdminOverrides( self::$settings ),
+
+			new TrackingCode( self::$settings ),
+			new Annotations( self::$settings ),
 		];
 	}
 }

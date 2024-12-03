@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // if accessed directly
 }
 
-class Annotations {
+class Annotations extends Feature {
 	/**
 	 * @var Settings
 	 */
