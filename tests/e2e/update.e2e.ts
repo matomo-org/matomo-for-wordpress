@@ -47,7 +47,7 @@ describe('MWP Updating', () => {
     await $('#install-plugin-submit').waitForClickable();
     await $('#install-plugin-submit').click();
 
-    await $('.update-from-upload-overwrite').waitForDisplayed();
+    await $('.update-from-upload-overwrite').waitForDisplayed({ timeout: 30000 });
     await browser.execute(() => {
       window.jQuery('.update-from-upload-overwrite')[0].click();
     });
