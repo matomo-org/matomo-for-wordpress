@@ -28,7 +28,7 @@ services:
       - .:/var/www/html/matomo-for-wordpress
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
-      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-gitconfig:/root/.gitconfig
     ports:
       - "$PORT:$PORT"
@@ -58,7 +58,7 @@ services:
       - .:/var/www/html/matomo-for-wordpress
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
-      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-gitconfig:/.gitconfig
     entrypoint: /usr/src/entrypoint.sh
     depends_on:
@@ -95,7 +95,7 @@ services:
       - ./docker/wordpress:/var/www/html
       - .:/var/www/html/matomo-for-wordpress
       - ./docker/wp-cli:/.wp-cli
-      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./scripts/local-gitconfig:/.gitconfig
     ports:
