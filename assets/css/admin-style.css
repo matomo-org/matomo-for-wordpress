@@ -166,6 +166,6 @@ table.matomo-tracking-form th {
     position: relative;
 }
 
-#toplevel_page_matomo a.matomo-notification-dot {
+#toplevel_page_matomo .matomo-notification-dot {
     // TODO
 }

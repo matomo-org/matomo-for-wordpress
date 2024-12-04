@@ -31,12 +31,15 @@ class WhatsNewNotifications {
 	private $statuses = null;
 
 	public function is_active() {
-		return is_admin() && is_super_admin() && Admin::is_matomo_admin();
+		return is_admin() && is_super_admin();
 	}
 
 	public function register_hooks() {
 		add_action( 'admin_enqueue_scripts', [ $this, 'on_admin_enqueue_scripts' ] );
-		add_action( 'admin_notices', [ $this, 'on_admin_notices' ] );
+
+		if ( Admin::is_matomo_admin() ) {
+			add_action( 'admin_notices', [ $this, 'on_admin_notices' ] );
+		}
 	}
 
 	public function register_ajax() {
@@ -61,7 +64,6 @@ class WhatsNewNotifications {
 			]
 		);
 
-		// TODO: javascript part
 		$unseen_notifications = $this->get_unseen_notification_pages();
 		wp_localize_script(
 			'matomo-admin-js',
