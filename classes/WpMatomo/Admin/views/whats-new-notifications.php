@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var int[] $matomo_statuses */
 
 foreach ( $matomo_notifications as $matomo_notification ) { ?>
-<div class="notice notice-info matomo-whats-new is-dismissible" data-notification-id="<?php esc_attr_e( $matomo_notification['id'] ); ?>">
+<div class="notice notice-info matomo-whats-new is-dismissible" data-notification-id="<?php echo esc_attr( $matomo_notification['id'] ); ?>">
 	<p>
 		<?php
 			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
