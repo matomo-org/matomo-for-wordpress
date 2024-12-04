@@ -45,4 +45,15 @@ window.jQuery(document).ready(function ($) {
       });
     });
   }
+
+  // whats new notice dismiss
+  if (typeof mtmWhatsNewNotificationAjax !== undefined && mtmWhatsNewNotificationAjax.ajax_url) {
+      $('body').on('click', '.matomo-whats-new .notice-dismiss', function (e) {
+          $.post(mtmWhatsNewNotificationAjax.ajax_url, {
+              _ajax_nonce: mtmWhatsNewNotificationAjax.nonce,
+              action: 'mtm_dismiss_whats_new',
+              matomo_notification: $(e.target).closest('.matomo-whats-new').data('notification-id'),
+          });
+      });
+  }
 });

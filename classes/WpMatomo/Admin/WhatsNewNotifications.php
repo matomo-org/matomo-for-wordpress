@@ -52,7 +52,6 @@ class WhatsNewNotifications {
 	public function on_admin_enqueue_scripts() {
 		$this->mark_current_page_as_seen();
 
-		// TODO: javascript part
 		wp_localize_script(
 			'matomo-admin-js',
 			'mtmWhatsNewNotificationAjax',
@@ -63,7 +62,7 @@ class WhatsNewNotifications {
 		);
 
 		// TODO: javascript part
-		$unseen_notifications = $this->get_unseen_notifications();
+		$unseen_notifications = $this->get_unseen_notification_pages();
 		wp_localize_script(
 			'matomo-admin-js',
 			'mtmUnseenWhatsNewNotifications',
@@ -134,7 +133,7 @@ class WhatsNewNotifications {
 		$this->save_notification_statuses( $statuses );
 	}
 
-	private function get_unseen_notifications() {
+	private function get_unseen_notification_pages() {
 		$matomo_notifications = $this->get_current_notifications();
 		$matomo_statuses      = $this->get_notification_statuses();
 
@@ -144,7 +143,7 @@ class WhatsNewNotifications {
 			if ( ! isset( $matomo_statuses[ $id ] )
 				|| self::STATUS_UNSEEN === $matomo_statuses[ $id ]
 			) {
-				$matomo_unseen_notifications[] = $id;
+				$matomo_unseen_notifications[] = $notification['notification_marker_page'];
 			}
 		}
 		return $matomo_unseen_notifications;
