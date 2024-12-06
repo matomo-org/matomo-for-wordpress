@@ -59,28 +59,12 @@ class DownloadTestScreenshots extends ConsoleCommand
     private function downloadArtifacts($artifactId, $artifactUrl)
     {
         $outputPath = StaticContainer::get('path.tmp') . '/' . $artifactId . '.zip';
-        Http::sendHttpRequestBy(
-            Http::getTransportMethod(),
-            $artifactUrl,
-            60,
-            null,
-            $outputPath,
-            null,
-            0,
-            false,
-            false,
-            false,
-            false,
-            'GET',
-            null,
-            null,
-            null,
-            [
-                'Accept: application/vnd.github+json',
-                'Authorization: Bearer ' . $this->getGithubToken(),
-                'X-GitHub-Api-Version: 2022-11-28',
-            ]
-        );
+
+        // PHP curl cannot be used due to https://github.com/orgs/community/discussions/88698
+        $command = "curl -L '$artifactUrl' --header 'Accept: application/vnd.github+json' --header 'X-GitHub-Api-Version: 2022-11-28' "
+            . "--header 'Authorization: Bearer " . $this->getGithubToken() . "' --output '" . $outputPath . "'";
+        passthru($command);
+
         return $outputPath;
     }
 
