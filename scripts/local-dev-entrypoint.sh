@@ -250,8 +250,15 @@ if [[ "$INSTALLING_FROM_ZIP" != "1" ]]; then
   fi
 else
   echo "installing latest stable matomo..."
-  rm "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
+
+  if [ -L "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]; then
+    rm "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
+  else
+    rm -r "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
+  fi
+
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate "https://downloads.wordpress.org/plugin/matomo.latest-stable.zip"
+  chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo
 fi
 
 if [[ "$MULTISITE" = "1" ]]; then
