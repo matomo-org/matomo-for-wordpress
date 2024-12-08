@@ -123,5 +123,4 @@ class AdminSystemReportTest extends MatomoAnalytics_TestCase {
 
 		$wpdb->query( "ALTER TABLE $new_table_name RENAME $old_table_name" );
 	}
-
 }
