@@ -198,6 +198,7 @@ class Installer {
 
 		$matomo_url  = SettingsPiwik::getPiwikUrl();
 		$plugins_url = plugins_url( 'app', MATOMO_ANALYTICS_FILE );
+		$plugins_url = rtrim( $plugins_url, '/' ) . '/';
 		// need to make sure to update plugins url if it changes eg if installed somewhere else or domain changes
 
 		if ( $matomo_url
