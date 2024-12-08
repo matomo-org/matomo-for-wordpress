@@ -84,7 +84,7 @@ UID=$UID
 EOF
 docker compose --env-file .env.default --env-file .env up -d wordpress
 sleep 60 # wait for docker-compose launch to finish
-npm run compose -- run console wordpress:build-release --name=$VERSION --tgz
+npm run matomo:console -- wordpress:build-release --name=$VERSION --tgz
 
 echo "➤ Copying files..."
 tar -xf "matomo-$VERSION.tgz" --directory="$TMP_DIR" # the archive is created via the wordpress:build-release command
