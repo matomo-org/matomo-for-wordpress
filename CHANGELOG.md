@@ -1,5 +1,12 @@
 == Changelog ===
 
+= 5.1.7 =
+* Bug fix: in scheduled report emails, fix the URLs for flag images.
+* Bug fix: use same charset/collate as WordPress.
+* Bug fix: fix General_Confirm shown in some cases when showing the password confirmation modal.
+* Bug fix: fix uninstall script error.
+* Bug fix: more compatibility fixes with wpstatistics in the wpstatistics importer.
+
 = 5.1.6 =
 * Bug fix: the wpstatistics importer failed to import search keywords due to a change in the wpstatistics plugin from over year ago.
 * Bug fix: the wpstatistics importer will now work with the latest wpstatistics version.

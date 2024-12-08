@@ -148,8 +148,6 @@ class Uninstaller {
 	private function drop_tables() {
 		global $wpdb;
 
-		Bootstrap::do_bootstrap();
-
 		$db_settings      = new \WpMatomo\Db\Settings();
 		$installed_tables = $db_settings->get_installed_matomo_tables();
 		$this->logger->log( sprintf( 'Matomo will now drop %s matomo tables', count( $installed_tables ) ) );

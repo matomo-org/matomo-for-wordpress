@@ -224,6 +224,13 @@ class WordPress extends Mysqli {
 	private function prepareWp( $sql, $bind = array() ) {
 		global $wpdb;
 
+		// make sure CREATE TABLE statements includ IF NOT EXISTS
+		if ( strpos( $sql, 'CREATE TABLE' ) !== false
+			&& strpos( $sql, 'CREATE TABLE IF NOT EXISTS' ) === false
+		) {
+			$sql = preg_replace( '/CREATE TABLE (?!IF NOT EXISTS)/', 'CREATE TABLE IF NOT EXISTS ', $sql );
+		}
+
 		$sql = str_replace( '%', '%%', $sql ); // eg when "value like 'done%'"
 
 		if ( is_array( $bind ) && empty( $bind ) ) {

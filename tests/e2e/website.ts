@@ -28,17 +28,21 @@ class Website {
   private loggedIn: boolean = false;
   private isWooCommerceSetup: boolean = false;
 
-  async baseUrl() {
-    const wordpressVersion = process.env.WORDPRESS_VERSION || (await getLatestWordpressVersion());
-    const wordpressFolder = process.env.WORDPRESS_FOLDER || wordpressVersion;
-    const wordpressVersionUrlPart = wordpressFolder ? `/${wordpressFolder}` : '';
-
+  rootUrl() {
     let defaultHostname = 'localhost';
     if (process.env.PORT && process.env.PORT !== '80') {
       defaultHostname = `${defaultHostname}:${process.env.PORT}`;
     }
 
-    return `${process.env.WORDPRESS_URL || `http://${defaultHostname}`}${wordpressVersionUrlPart}`
+    return `${process.env.WORDPRESS_URL || `http://${defaultHostname}`}`;
+  }
+
+  async baseUrl() {
+    const wordpressVersion = process.env.WORDPRESS_VERSION || (await getLatestWordpressVersion());
+    const wordpressFolder = process.env.WORDPRESS_FOLDER || wordpressVersion;
+    const wordpressVersionUrlPart = wordpressFolder ? `/${wordpressFolder}` : '';
+
+    return `${this.rootUrl()}${wordpressVersionUrlPart}`;
   }
 
   async login() {

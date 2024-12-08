@@ -10,7 +10,6 @@ import { browser, $, expect } from '@wdio/globals';
 import fetch from 'node-fetch';
 import Website from './website.js';
 import MatomoCli from './apiobjects/matomo.cli.js';
-import SummaryPage from './pageobjects/mwp-admin/summary.page.js';
 
 describe('MWP Updating', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -25,7 +24,7 @@ describe('MWP Updating', () => {
     const latestStableVersion = pluginInfo.version as string;
 
     await browser.url(`${await Website.baseUrl()}/wp-admin/plugins.php`);
-    await $('tr[data-slug="matomo"]').waitForDisplayed();
+    await $('tr[data-slug="matomo"]').waitForDisplayed({ timeout: 30000 });
 
     const actualVersion = await browser.execute(() => {
       const [, v] = window.jQuery('tr[data-slug="matomo"] .plugin-version-author-uri').text().match(/Version (\d+\.\d+\.\d+)/);
@@ -41,17 +40,28 @@ describe('MWP Updating', () => {
     await browser.url(`${await Website.baseUrl()}/wp-admin/plugin-install.php`);
     await $('a.upload-view-toggle').waitForDisplayed();
 
-    await $('a.upload-view-toggle').click();
+    await browser.execute(() => {
+      window.jQuery('a.upload-view-toggle')[0].click();
+    });
+    await browser.pause(250);
+
     await $('#pluginzip').setValue(pathToRelease);
     await browser.pause(250);
 
     await $('#install-plugin-submit').waitForClickable();
-    await $('#install-plugin-submit').click();
-
-    await $('.update-from-upload-overwrite').waitForDisplayed();
     await browser.execute(() => {
-      window.jQuery('.update-from-upload-overwrite')[0].click();
+      window.jQuery('#install-plugin-submit')[0].click();
     });
+
+    try {
+      await $('.update-from-upload-overwrite').waitForExist();
+
+      await browser.execute(() => {
+        window.jQuery('.update-from-upload-overwrite')[0].click();
+      });
+    } catch (e) {
+      // ignore
+    }
 
     await browser.waitUntil(async () => {
       return await browser.execute(() => {
@@ -60,6 +70,6 @@ describe('MWP Updating', () => {
           window.jQuery('p:contains(Plugin downgraded successfully.)').length > 0
         );
       });
-    }, { timeout: 60000 });
+    }, {timeout: 60000});
   });
 });

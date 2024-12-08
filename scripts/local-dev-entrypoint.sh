@@ -22,7 +22,7 @@ if [[ "$MULTISITE" = "1" ]]; then
   WORDPRESS_FOLDER="$WORDPRESS_FOLDER-multi"
 fi
 
-WP_DB_NAME=$(echo "wp_matomo_$WORDPRESS_FOLDER" | sed 's/\./_/g' | sed 's/-/_/g')
+export WP_DB_NAME=$(echo "wp_matomo_$WORDPRESS_FOLDER" | sed 's/\./_/g' | sed 's/-/_/g')
 
 export WP_TESTS_DIR=/var/www/html/$WORDPRESS_FOLDER/wp-test # used for setting up for tests and running phpunit
 
@@ -36,23 +36,31 @@ if [[ "$1" = "bash" ]]; then
   exit $?
 fi
 
-if [[ "$EXECUTE_WP_CLI" = "1" ]]; then
-  /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER "$@"
-  exit $?
-elif [[ "$EXECUTE_CONSOLE" = "1" ]]; then
-  cd /var/www/html/matomo-for-wordpress/app
-  ./console "$@"
-  exit $?
-elif [[ "$EXECUTE_PHPUNIT" = "1" ]]; then
-  cd /var/www/html/matomo-for-wordpress
+if [[ "$EXECUTE_CLI" = "1" ]]; then
+  EXECUTE_TARGET="$1"
+  EXECUTE_ARGS="${@:2}"
 
-  php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
-  \$pdo->exec('DROP DATABASE IF EXISTS \`${WP_DB_NAME}_test\`');\
-  \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
-  \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
+  if [[ "$EXECUTE_TARGET" = "wp" ]]; then
+    /var/www/html/wp-cli.phar --path=/var/www/html/$WORDPRESS_FOLDER $EXECUTE_ARGS
+    exit $?
+  elif [[ "$EXECUTE_TARGET" = "matomo:console" ]]; then
+    cd /var/www/html/matomo-for-wordpress/app
+    ./console $EXECUTE_ARGS
+    exit $?
+  elif [[ "$EXECUTE_TARGET" = "phpunit" ]]; then
+    cd /var/www/html/matomo-for-wordpress
 
-  ./vendor/bin/phpunit "$@"
-  exit $?
+    php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
+    \$pdo->exec('DROP DATABASE IF EXISTS \`${WP_DB_NAME}_test\`');\
+    \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
+    \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
+
+    ./vendor/bin/phpunit $EXECUTE_ARGS
+    exit $?
+  else
+    "$EXECUTE_TARGET" $EXECUTE_ARGS
+    exit $?
+  fi
 fi
 
 a2enmod rewrite || true
@@ -242,8 +250,15 @@ if [[ "$INSTALLING_FROM_ZIP" != "1" ]]; then
   fi
 else
   echo "installing latest stable matomo..."
-  rm "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
+
+  if [ -L "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" ]; then
+    rm "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
+  else
+    rm -r "/var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo" || true
+  fi
+
   /var/www/html/wp-cli.phar --allow-root --path=/var/www/html/$WORDPRESS_FOLDER plugin install --activate "https://downloads.wordpress.org/plugin/matomo.latest-stable.zip"
+  chown -R "${FIlE_OWNER_USERID:-1000}:${GID:-1000}" /var/www/html/$WORDPRESS_FOLDER/wp-content/plugins/matomo
 fi
 
 if [[ "$MULTISITE" = "1" ]]; then
@@ -451,6 +466,14 @@ echo "creating test database..."
 php -r "\$pdo = new PDO('mysql:host=$WP_DB_HOST', 'root', 'pass');
 \$pdo->exec('CREATE DATABASE IF NOT EXISTS \`${WP_DB_NAME}_test\`');\
 \$pdo->exec('GRANT ALL PRIVILEGES ON ${WP_DB_NAME}_test.* TO \'root\'@\'%\' IDENTIFIED BY \'pass\'');"
+
+# install GeoLite2 for matomo/wp-statisitcs
+if [ ! -f /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo/GeoIP2-City.mmdb ]; then
+  echo "downloading GeoLite2-City.mmdb..."
+
+  mkdir -p /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo
+  curl 'https://cdn.jsdelivr.net/npm/geolite2-city/GeoLite2-City.mmdb.gz' > /var/www/html/$WORDPRESS_FOLDER/wp-content/uploads/matomo/GeoIP2-City.mmdb
+fi
 
 # set allow_wp_app_password_auth tracker config, used in tests
 echo "set allow_wp_app_password_auth config..."

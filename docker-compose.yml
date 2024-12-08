@@ -28,7 +28,7 @@ services:
       - .:/var/www/html/matomo-for-wordpress
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
-      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-gitconfig:/root/.gitconfig
     ports:
       - "$PORT:$PORT"
@@ -58,7 +58,7 @@ services:
       - .:/var/www/html/matomo-for-wordpress
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./docker/wp-cli:/.wp-cli
-      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-gitconfig:/.gitconfig
     entrypoint: /usr/src/entrypoint.sh
     depends_on:
@@ -81,7 +81,7 @@ services:
         condition: on-failure
 
   # service for running CLI utilities including wp-cli, the matomo console and phpunit
-  wp:
+  exec:
     env_file:
       - .env.default
       - .env
@@ -95,7 +95,7 @@ services:
       - ./docker/wordpress:/var/www/html
       - .:/var/www/html/matomo-for-wordpress
       - ./docker/wp-cli:/.wp-cli
-      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+      - ./scripts/local-php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
       - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
       - ./scripts/local-gitconfig:/.gitconfig
     ports:
@@ -103,57 +103,9 @@ services:
     user: "${UID:-1000}:${GID:-1000}"
     entrypoint: /usr/src/entrypoint.sh
     environment:
-      EXECUTE_WP_CLI: 1
+      EXECUTE_CLI: 1
     depends_on:
       - "$BACKEND"
-  console:
-    env_file:
-      - .env.default
-      - .env
-    build:
-      context: ./scripts
-      dockerfile: ./Dockerfile.local
-      args:
-        PHP_VERSION: "$PHP_VERSION"
-        PHP_TYPE: apache
-    volumes:
-      - ./docker/wordpress:/var/www/html
-      - .:/var/www/html/matomo-for-wordpress
-      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
-      - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
-      - ./scripts/local-gitconfig:/.gitconfig
-    ports:
-      - "$PORT:80"
-    user: "${UID:-1000}:${GID:-1000}"
-    entrypoint: /usr/src/entrypoint.sh
-    environment:
-      EXECUTE_CONSOLE: 1
-    depends_on:
-      - "${BACKEND:-mariadb}"
-  phpunit:
-    env_file:
-      - .env.default
-      - .env
-    build:
-      context: ./scripts
-      dockerfile: ./Dockerfile.local
-      args:
-        PHP_VERSION: "$PHP_VERSION"
-        PHP_TYPE: apache
-    volumes:
-      - ./docker/wordpress:/var/www/html
-      - .:/var/www/html/matomo-for-wordpress
-      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
-      - ./scripts/local-dev-entrypoint.sh:/usr/src/entrypoint.sh
-      - ./scripts/local-gitconfig:/.gitconfig
-    environment:
-      EXECUTE_PHPUNIT: 1
-    ports:
-      - "$PORT:80"
-    user: "${UID:-1000}:${GID:-1000}"
-    entrypoint: /usr/src/entrypoint.sh
-    depends_on:
-      - "${BACKEND:-mariadb}"
 
   # database service definitions
   mariadb:

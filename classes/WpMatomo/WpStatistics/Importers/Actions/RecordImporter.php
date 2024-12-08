@@ -5,6 +5,7 @@ namespace WpMatomo\WpStatistics\Importers\Actions;
 use Piwik\Config;
 use Piwik\DataTable;
 use WP_STATISTICS\DB;
+use WP_Statistics\Decorators\VisitorDecorator;
 use WP_STATISTICS\MetaBox\top_visitors;
 use WP_Statistics\Models\VisitorsModel;
 use WpMatomo\WpStatistics\RecordInserter;
@@ -123,10 +124,47 @@ class RecordImporter {
 		return $visitors_found;
 	}
 
-	private function convert_visitors_to_array( $visitors ) {
-		$method = new \ReflectionMethod( top_visitors::class, 'prepareResponse' );
-		$method->setAccessible( true );
-		return $method->invoke( null, $visitors );
+	/**
+	 * Converts VisitorDecorator objects to an array that Converter classes expect.
+	 *
+	 * @param VisitorDecorator[] $visitors
+	 */
+	protected function convert_visitors_to_array( $visitors ) {
+		$property = new \ReflectionProperty( VisitorDecorator::class, 'visitor' );
+		$property->setAccessible( true );
+
+		$result = [];
+		foreach ( $visitors as $visitor ) {
+			$raw_visitor_props   = $property->getValue( $visitor );
+			$last_view_timestamp = strtotime(
+				isset( $raw_visitor_props->last_view ) ? $raw_visitor_props->last_view : $raw_visitor_props->last_counter
+			);
+
+			$result[] = [
+				'ID'        => $visitor->getId(),
+				'IP'        => $visitor->getIP(),
+				'last_view' => $last_view_timestamp,
+				'last_page' => $visitor->getLastPage(),
+				'hits'      => $visitor->getHits(),
+				'referrer'  => [
+					'name' => $visitor->getReferral()->getRawReferrer(),
+					'link' => $visitor->getReferral()->getReferrer(),
+				],
+				'location'  => [
+					'country' => $visitor->getLocation()->getCountryName(),
+					'flag'    => $visitor->getLocation()->getCountryFlag(),
+				],
+				'browser'   => [
+					'name'    => $visitor->getBrowser()->getName(),
+					'version' => $visitor->getBrowser()->getVersion(),
+				],
+				'os'        => [
+					'name' => $visitor->getOs()->getName(),
+				],
+			];
+		}
+
+		return $result;
 	}
 
 	private function get_visitors_from_metabox( Date $date ) {
@@ -151,5 +189,9 @@ class RecordImporter {
 		} while ( true !== $no_data );
 
 		return $visitors_found;
+	}
+
+	public static function get_label( $row, $key ) {
+		return empty( $row[ $key ] ) ? '' : $row[ $key ];
 	}
 }

@@ -3,6 +3,7 @@
 namespace WpMatomo\WpStatistics\DataConverters;
 
 use Piwik\DataTable;
+use WpMatomo\WpStatistics\Importers\Actions\RecordImporter;
 
 /**
  * @package WpMatomo
@@ -17,7 +18,7 @@ class SearchEngineConverter extends VisitorsConverter implements DataConverterIn
 			foreach ( $wp_statistics_data as $row ) {
 				if ( ! array_key_exists( $row[ $key ], $data ) ) {
 					$data[ $row[ $key ] ] = [
-						'label'            => $row[ $key ],
+						'label'            => RecordImporter::get_label( $row, $key ),
 						'nb_visits'        => 0,
 						'nb_uniq_visitors' => 0,
 					];
