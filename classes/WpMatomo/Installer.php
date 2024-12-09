@@ -31,6 +31,9 @@ class Installer {
 	const OPTION_NAME_INSTALL_DATE    = 'matomo-install-date';
 	const OPTION_NAME_INSTALL_VERSION = 'matomo-install-version';
 
+	const DEFAULT_DB_CHARSET = 'utf8';
+	const DEFAULT_DB_COLLATE = '';
+
 	/**
 	 * @var Settings
 	 */
@@ -198,6 +201,7 @@ class Installer {
 
 		$matomo_url  = SettingsPiwik::getPiwikUrl();
 		$plugins_url = plugins_url( 'app', MATOMO_ANALYTICS_FILE );
+		$plugins_url = rtrim( $plugins_url, '/' ) . '/';
 		// need to make sure to update plugins url if it changes eg if installed somewhere else or domain changes
 
 		if ( $matomo_url
@@ -353,12 +357,12 @@ class Installer {
 			}
 		}
 
-		$charset = $wpdb->charset ? $wpdb->charset : 'utf8';
+		$charset = $wpdb->charset ? $wpdb->charset : self::DEFAULT_DB_CHARSET;
 		if ( defined( 'MATOMO_DB_CHARSET' ) && MATOMO_DB_CHARSET ) {
 			$charset = MATOMO_DB_CHARSET;
 		}
 
-		$collation = $wpdb->collate ? $wpdb->collate : 'utf8mb4_general_ci';
+		$collation = $wpdb->collate ? $wpdb->collate : self::DEFAULT_DB_COLLATE;
 		if ( defined( 'MATOMO_DB_COLLATE' ) && MATOMO_DB_COLLATE ) {
 			$collation = MATOMO_DB_COLLATE;
 		}
