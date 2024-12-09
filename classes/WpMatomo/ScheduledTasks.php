@@ -335,6 +335,9 @@ class ScheduledTasks {
 			return;
 		}
 
+		$installer = new Installer();
+		$installer->set_matomo_url();
+
 		$archiver = new CronArchive();
 		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$archiver->concurrentRequestsPerWebsite = 1;
