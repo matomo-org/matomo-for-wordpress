@@ -14,7 +14,24 @@ namespace WpMatomo\Admin;
 use WpMatomo\Settings;
 
 /**
- * TODO
+ * Handles the display of notifications about new features that we definitely want users
+ * to notice and read.
+ *
+ * Notification content is added and removed manually when needed from the get_current_notifications()
+ * function. This function returns an array where each element describes a notification to show.
+ *
+ * Elements of the array can have the following keys:
+ * - notification_marker_page: the MWP admin page to show a small red dot to signify to a user there's
+ *   something to see.
+ * - message: the HTML content of the notification.
+ * - show_on: either self::SHOW_ON_ALL_PAGES or self::SHOW_ON_SINGLE_PAGE. SHOW_ON_ALL_PAGES will show
+ *            the notification on every MWP admin page. SHOW_ON_SINGLE_PAGE will only show the
+ *            full notification on the page specified in the notification_marker_page property.
+ * - show_if: either true or false. If true, it is shown, if false it is not. If absent, defaults to true.
+ *            This property should be used to determine if a notification should be used based on the
+ *            current request or the current user's capabilities.
+ *
+ * The ID of the notification is specified as the array key.
  */
 class WhatsNewNotifications {
 
@@ -45,6 +62,7 @@ class WhatsNewNotifications {
 			return false;
 		}
 
+		$notifications_to_show = $this->get_notifications_to_show();
 		return ! empty( $notifications_to_show );
 	}
 
@@ -101,13 +119,7 @@ class WhatsNewNotifications {
 			return;
 		}
 
-		$notification = $notifications[ $notification_id ];
-		if ( isset( $notification['show_if'] )
-			|| ! $notification['show_if']
-		) {
-			wp_send_json( false );
-			return;
-		}
+		// NOTE: we can't check show_if here, as it may not be set correctly when requesting admin-ajax.php
 
 		$statuses                     = $this->get_notification_statuses();
 		$statuses[ $notification_id ] = self::STATUS_DISMISSED;
@@ -215,6 +227,20 @@ class WhatsNewNotifications {
 		return $notifications;
 	}
 
+	/**
+	 * Example:
+	 *
+	 * ```
+	 * 'crash-analytics-promo' => [
+	 *     'notification_marker_page' => 'matomo-marketplace',
+	 *     'message'                  => $this->get_crash_analytics_promo_message(),
+	 *     'show_on'                  => self::SHOW_ON_ALL_PAGES,
+	 *     'show_if'                  => current_user_can( 'install_plugins' ),
+	 * ],
+	 * ```
+	 *
+	 * @return array[]
+	 */
 	private function get_current_notifications() {
 		return [
 			// crash analytics
@@ -228,42 +254,40 @@ class WhatsNewNotifications {
 	}
 
 	private function get_crash_analytics_promo_message() {
-		// TODO: translations
+		$matomo_version = (int) explode( '.', $this->settings->get_global_option( 'core_version' ) )[0]; // TODO: code redundancy w/ marketplace.php
+		$screenshot_url = plugins_url( 'assets/img/crash_analytics_screenshot.png', MATOMO_ANALYTICS_FILE );
+		$plugin_url     = 'https://plugins.matomo.org/CrashAnalytics?wp=1&pk_campaign=WP&pk_source=Plugin&matomoversion=' . $matomo_version;
 
-		$text = <<<EOF
+		ob_start();
+		?>
 <div style="display: flex; flex-direction: row; align-items: stretch; justify-content: space-evenly;">
 	<div style="flex: 1;display:flex;flex-direction: column;justify-content: space-between;">
 		<div style="margin-right: 8px;">
-			<h6>New Premium Plugin!</h6>
-			<h3>Crash Analytics</h3>
-			<p><em>Uncover Errors and Elevate Your Site’s Performance</em></p>
+			<h6><?php esc_html_e( 'New Premium Plugin', 'matomo' ); ?>!</h6>
+			<h3><?php esc_html_e( 'Crash Analytics', 'matomo' ); ?></h3>
+			<p><em><?php esc_html_e( 'Uncover Errors and Elevate Your Site’s Performance', 'matomo' ); ?></em></p>
 			<p>
-			Broken carts, glitchy checkouts, unresponsive contact forms – they're not just annoyances; they're revenue pitfalls waiting to happen.
+			<?php esc_html_e( 'Broken carts, glitchy checkouts, unresponsive contact forms – they\'re not just annoyances; they\'re revenue pitfalls waiting to happen.', 'matomo' ); ?>
 			</p>
 			<p>
-			With Crash Analytics, you can improve user experience, boost conversion rates and grow revenue with 100%% website reliability.
+			<?php esc_html_e( 'With Crash Analytics, you can improve user experience, boost conversion rates and grow revenue with 100% website reliability.', 'matomo' ); ?>
 			</p>
 		</div>
 		<div>
 			<p>
-				<a href="%s" rel="noreferrer noopener" target="_blank">
-					<button class="button-primary">Learn more</button>
+				<a href="<?php echo esc_attr( $plugin_url ); ?>" rel="noreferrer noopener" target="_blank">
+					<button class="button-primary"><?php esc_html_e( 'Learn more', 'matomo' ); ?></button>
 				</a>
 			</p>
 		</div>
 	</div>
 	<div style="flex: 1; position: relative; height: 240px;">
-		<div style="position: absolute; background-image: url(%s); top: 10px; bottom: 10px; left: 0; right: 0; background-size: 100%% auto; background-position: top -140px left;"></div>
+		<div style="position: absolute; background-image: url(<?php echo esc_attr( $screenshot_url ); ?>); top: 10px; bottom: 10px; left: 0; right: 0; background-size: 100% auto; background-position: top -140px left;"></div>
 	</div>
 </div>
-EOF;
+		<?php
 
-		$matomo_version = (int) explode( '.', $this->settings->get_global_option( 'core_version' ) )[0]; // TODO: code redundancy w/ marketplace.php
-
-		return sprintf(
-			$text,
-			esc_attr( 'https://plugins.matomo.org/CrashAnalytics?wp=1&pk_campaign=WP&pk_source=Plugin&matomoversion=' . $matomo_version ),
-			esc_attr( plugins_url( 'assets/img/crash_analytics_screenshot.png', MATOMO_ANALYTICS_FILE ) )
-		);
+		$text = ob_get_clean();
+		return $text;
 	}
 }
