@@ -164,8 +164,49 @@ table.matomo-tracking-form th {
 
 #toplevel_page_matomo a {
     position: relative;
+    display: inline-block;
 }
 
-#toplevel_page_matomo .matomo-notification-dot {
-    // TODO
+#toplevel_page_matomo .matomo-notification-dot::before {
+    content: " ";
+    position: absolute;
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: red;
+    border-radius: 50%;
+    right: 4px;
+}
+
+.notice.matomo-whats-new {
+    border-left-color: #9D2235;
+}
+
+.notice.matomo-whats-new .button-primary {
+    background-color: #9D2235;
+    border-color: #9D2235;
+}
+
+.notice.matomo-whats-new h6 {
+    margin: 0;
+    font-style: italic;
+    color: #9D2235;
+    font-size: .8em;
+}
+
+.notice.matomo-whats-new h3 {
+    font-size: 1.6em;
+    margin: 6px 0;
+}
+
+.matomo-plugin-list.matomo-new-plugins .plugin-card {
+    position: relative;
+}
+
+.matomo-plugin-list.matomo-new-plugins .plugin-card .matomo-new-marker {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    font-style: italic;
+    color: #9D2235;
 }

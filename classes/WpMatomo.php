@@ -123,7 +123,7 @@ class WpMatomo {
 		add_action(
 			'init',
 			function () {
-				$whats_new_notifications = new \WpMatomo\Admin\WhatsNewNotifications();
+				$whats_new_notifications = new \WpMatomo\Admin\WhatsNewNotifications( self::$settings );
 				if ( $whats_new_notifications->is_active() ) {
 					$whats_new_notifications->register_hooks();
 				}

@@ -72,7 +72,7 @@ window.jQuery(document).ready(function ($) {
               return;
           }
 
-          $(this).addClass('matomo-notification-avail');
+          $(this).addClass('matomo-notification-dot');
       });
   }
 });
