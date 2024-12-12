@@ -41,7 +41,11 @@ class WhatsNewNotifications {
 	}
 
 	public function is_active() {
-		return is_admin() && is_super_admin();
+		if ( ! is_admin() ) {
+			return false;
+		}
+
+		return ! empty( $notifications_to_show );
 	}
 
 	public function register_hooks() {
@@ -85,11 +89,6 @@ class WhatsNewNotifications {
 	public function on_dismiss_notification() {
 		check_ajax_referer( self::NONCE_NAME );
 
-		if ( ! is_super_admin() ) { // TODO: change this
-			wp_send_json( false );
-			return;
-		}
-
 		if ( empty( $_POST['matomo_notification'] ) ) {
 			wp_send_json( false );
 			return;
@@ -98,6 +97,14 @@ class WhatsNewNotifications {
 		$notifications   = $this->get_current_notifications();
 		$notification_id = sanitize_text_field( wp_unslash( $_POST['matomo_notification'] ) );
 		if ( ! isset( $notifications[ $notification_id ] ) ) {
+			wp_send_json( false );
+			return;
+		}
+
+		$notification = $notifications[ $notification_id ];
+		if ( isset( $notification['show_if'] )
+			|| ! $notification['show_if']
+		) {
 			wp_send_json( false );
 			return;
 		}
@@ -166,18 +173,36 @@ class WhatsNewNotifications {
 		$current_page = Admin::get_current_page();
 
 		$matomo_notifications = $this->get_current_notifications();
-		$matomo_statuses      = $this->get_notification_statuses();
+		$matomo_notifications = array_filter(
+			$matomo_notifications,
+			function ( $notification ) use ( $current_page ) {
+				if (
+					isset( $notification['show_if'] )
+					&& false === $notification['show_if']
+				) {
+					return false;
+				}
+
+				// do not show notification if configured to show only on one page, and the current page
+				// isn't the page to display
+				if ( self::SHOW_ON_SINGLE_PAGE === $notification['show_on']
+					&& $notification['notification_marker_page'] !== $current_page
+				) {
+					return false;
+				}
+
+				return true;
+			}
+		);
+
+		if ( empty( $matomo_notifications ) ) { // return early to avoid getting the option below
+			return [];
+		}
+
+		$matomo_statuses = $this->get_notification_statuses();
 
 		$notifications = [];
 		foreach ( $matomo_notifications as $id => $notification ) {
-			// do not show notification if configured to show only on one page, and the current page
-			// isn't the page to display
-			if ( self::SHOW_ON_SINGLE_PAGE === $notification['show_on']
-				&& $notification['notification_marker_page'] !== $current_page
-			) {
-				continue;
-			}
-
 			// do not show the notification if it's been dismissed
 			if ( isset( $matomo_statuses[ $id ] )
 				&& self::STATUS_DISMISSED === $matomo_statuses[ $id ]
@@ -197,6 +222,7 @@ class WhatsNewNotifications {
 				'notification_marker_page' => 'matomo-marketplace',
 				'message'                  => $this->get_crash_analytics_promo_message(),
 				'show_on'                  => self::SHOW_ON_ALL_PAGES,
+				'show_if'                  => current_user_can( 'install_plugins' ),
 			],
 		];
 	}
