@@ -81,11 +81,37 @@ class WhatsNewNotificationsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_register_hooks_adds_some_hooks_if_not_on_admin_page() {
-		// TODO
+		$this->assume_admin_page();
+
+		$admin_enqueue_scripts_count_before = $this->get_hook_count( 'admin_enqueue_scripts' );
+		$admin_notices_count_before         = $this->get_hook_count( 'admin_notices' );
+
+		$instance = $this->make_test_instance( [] );
+		$instance->register_hooks();
+
+		$admin_enqueue_scripts_count_after = $this->get_hook_count( 'admin_enqueue_scripts' );
+		$admin_notices_count_after         = $this->get_hook_count( 'admin_notices' );
+
+		$this->assertEquals( 1, $admin_enqueue_scripts_count_after - $admin_enqueue_scripts_count_before );
+		$this->assertEquals( 0, $admin_notices_count_after - $admin_notices_count_before );
 	}
 
 	public function test_register_hooks_adds_all_hooks_when_on_admin_page() {
-		// TODO
+		$this->assume_admin_page();
+
+		$_GET['page'] = 'matomo-marketplace';
+
+		$admin_enqueue_scripts_count_before = $this->get_hook_count( 'admin_enqueue_scripts' );
+		$admin_notices_count_before         = $this->get_hook_count( 'admin_notices' );
+
+		$instance = $this->make_test_instance( [] );
+		$instance->register_hooks();
+
+		$admin_enqueue_scripts_count_after = $this->get_hook_count( 'admin_enqueue_scripts' );
+		$admin_notices_count_after         = $this->get_hook_count( 'admin_notices' );
+
+		$this->assertEquals( 1, $admin_enqueue_scripts_count_after - $admin_enqueue_scripts_count_before );
+		$this->assertEquals( 1, $admin_notices_count_after - $admin_notices_count_before );
 	}
 
 	public function test_on_admin_notices_outputs_nothing_when_no_notifications_to_show() {

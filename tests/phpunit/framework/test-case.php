@@ -212,4 +212,18 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		global $wpdb;
 		$wpdb = $this->original_wpdb;
 	}
+
+	protected function get_hook_count( $hook_name ) {
+		global $wp_filter;
+
+		if ( ! isset( $wp_filter[ $hook_name ] ) ) {
+			return 0;
+		}
+
+		$count = 0;
+		foreach ( $wp_filter[ $hook_name ]->callbacks as $entries_by_priority ) {
+			$count += count( $entries_by_priority );
+		}
+		return $count;
+	}
 }
