@@ -114,12 +114,41 @@ class WhatsNewNotificationsTest extends MatomoUnit_TestCase {
 		$this->assertEquals( 1, $admin_notices_count_after - $admin_notices_count_before );
 	}
 
+	public function test_on_admin_notices_outputs_nothing_when_no_notifications() {
+		$instance = $this->make_test_instance( [] );
+
+		ob_start();
+		$instance->on_admin_notices();
+		$output = trim( ob_get_clean() );
+
+		$this->assertEmpty( $output );
+	}
+
 	public function test_on_admin_notices_outputs_nothing_when_no_notifications_to_show() {
-		// TODO
+		$notifications = $this->get_notifications_with_all_types();
+		$instance      = $this->make_test_instance( $notifications );
+
+		$this->dismiss_all_notifications( $notifications );
+
+		ob_start();
+		$instance->on_admin_notices();
+		$output = trim( ob_get_clean() );
+
+		$this->assertEmpty( $output );
 	}
 
 	public function test_on_admin_notices_outputs_notification_html_correctly() {
-		// TODO
+		$_GET['page'] = 'matomo-marketplace';
+
+		$notifications = $this->get_notifications_with_all_types();
+		$instance      = $this->make_test_instance( $notifications );
+
+		ob_start();
+		$instance->on_admin_notices();
+		$output = trim( ob_get_clean() );
+
+		$this->assertStringContainsString( 'test message all-pages-promo', $output );
+		$this->assertStringContainsString( 'test message single-pages-promo', $output );
 	}
 
 	public function test_on_admin_enqueue_scripts_marks_notifications_for_the_current_page_as_seen() {
