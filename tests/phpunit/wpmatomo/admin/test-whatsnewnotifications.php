@@ -7,6 +7,8 @@ use WpMatomo\Admin\WhatsNewNotifications;
 use WpMatomo\Settings;
 
 /**
+ * TODO: multisite tests (manual)
+ *
  * @group only
  */
 class WhatsNewNotificationsTest extends MatomoUnit_TestCase {
@@ -33,19 +35,49 @@ class WhatsNewNotificationsTest extends MatomoUnit_TestCase {
 	public function test_is_active_should_return_false_if_no_notifications() {
 		$this->assume_admin_page();
 
-		// TODO
+		$instance = $this->make_test_instance( [] );
+		$actual   = $instance->is_active();
+
+		$this->assertFalse( $actual );
 	}
 
 	public function test_is_active_should_return_false_if_no_notifications_for_current_page() {
-		// TODO
+		$this->assume_admin_page();
+
+		$_GET['page'] = 'matomo-get-started';
+
+		$notifications = $this->get_notifications_for_single_page();
+		$instance      = $this->make_test_instance( $notifications );
+		$actual        = $instance->is_active();
+
+		$this->assertFalse( $actual );
 	}
 
 	public function test_is_active_should_return_false_if_all_notifications_dismissed() {
-		// TODO
+		$this->assume_admin_page();
+
+		$_GET['page'] = 'matomo-marketplace';
+
+		$notifications = $this->get_notifications_with_all_types();
+		$this->dismiss_all_notifications( $notifications );
+
+		$instance = $this->make_test_instance( $notifications );
+		$actual   = $instance->is_active();
+
+		$this->assertFalse( $actual );
 	}
 
 	public function test_is_active_returns_true_if_at_least_one_undismissed_notification_should_be_shown() {
-		// TODO
+		$this->assume_admin_page();
+
+		$_GET['page'] = 'matomo-marketplace';
+
+		$notifications = $this->get_notifications_with_all_types();
+
+		$instance = $this->make_test_instance( $notifications );
+		$actual   = $instance->is_active();
+
+		$this->assertTrue( $actual );
 	}
 
 	public function test_register_hooks_adds_some_hooks_if_not_on_admin_page() {
@@ -115,5 +147,41 @@ class WhatsNewNotificationsTest extends MatomoUnit_TestCase {
 				'show_if'                  => true,
 			],
 		];
+	}
+
+	private function get_notifications_for_single_page() {
+		return [
+			'single-pages-promo' => [
+				'notification_marker_page' => 'matomo-marketplace',
+				'message'                  => 'test message single-pages-promo',
+				'show_on'                  => WhatsNewNotifications::SHOW_ON_SINGLE_PAGE,
+				'show_if'                  => true,
+			],
+		];
+	}
+
+	private function get_notifications_with_all_types() {
+		return [
+			'all-pages-promo'    => [
+				'notification_marker_page' => 'matomo-marketplace',
+				'message'                  => 'test message all-pages-promo',
+				'show_on'                  => WhatsNewNotifications::SHOW_ON_ALL_PAGES,
+				'show_if'                  => true,
+			],
+			'single-pages-promo' => [
+				'notification_marker_page' => 'matomo-marketplace',
+				'message'                  => 'test message single-pages-promo',
+				'show_on'                  => WhatsNewNotifications::SHOW_ON_SINGLE_PAGE,
+				'show_if'                  => true,
+			],
+		];
+	}
+
+	private function dismiss_all_notifications( $notifications ) {
+		$status = [];
+		foreach ( $notifications as $id => $notification ) {
+			$status[ $id ] = WhatsNewNotifications::STATUS_DISMISSED;
+		}
+		update_option( WhatsNewNotifications::NOTIFICATION_STATUSES_OPTION_NAME, $status );
 	}
 }
