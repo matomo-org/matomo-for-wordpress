@@ -241,7 +241,7 @@ class WhatsNewNotifications {
 	 *
 	 * @return array[]
 	 */
-	private function get_current_notifications() {
+	protected function get_current_notifications() {
 		return [
 			// crash analytics
 			'crash-analytics-promo' => [
