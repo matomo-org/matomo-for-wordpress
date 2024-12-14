@@ -8,8 +8,6 @@ use WpMatomo\Settings;
 
 /**
  * TODO: multisite tests (manual)
- *
- * @group only
  */
 class WhatsNewNotificationsTest extends MatomoUnit_TestCase {
 
@@ -152,27 +150,162 @@ class WhatsNewNotificationsTest extends MatomoUnit_TestCase {
 	}
 
 	public function test_on_admin_enqueue_scripts_marks_notifications_for_the_current_page_as_seen() {
-		// TODO
+		$_GET['page'] = 'matomo-gdpr-tools';
+
+		$notifications = $this->get_notifications_for_different_pages();
+		$instance      = $this->make_test_instance( $notifications );
+
+		$statuses                = $this->get_all_statuses();
+		$expected_start_statuses = [];
+
+		$this->assertEquals( $expected_start_statuses, $statuses );
+
+		$instance->on_admin_enqueue_scripts();
+
+		$statuses                = $this->get_all_statuses();
+		$expected_start_statuses = [
+			'all-pages-promo' => WhatsNewNotifications::STATUS_SEEN,
+		];
+
+		$this->assertEquals( $expected_start_statuses, $statuses );
+
+		$_GET['page'] = 'matomo-marketplace';
+
+		$instance->on_admin_enqueue_scripts();
+
+		$statuses                = $this->get_all_statuses();
+		$expected_start_statuses = [
+			'all-pages-promo'    => WhatsNewNotifications::STATUS_SEEN,
+			'single-pages-promo' => WhatsNewNotifications::STATUS_SEEN,
+		];
+
+		$this->assertEquals( $expected_start_statuses, $statuses );
 	}
 
 	public function test_on_admin_enqueue_scripts_does_not_change_notification_status_if_no_notifications_for_the_current_page() {
-		// TODO
+		$_GET['page'] = 'some-other-page';
+
+		$notifications = $this->get_notifications_for_different_pages();
+		$instance      = $this->make_test_instance( $notifications );
+
+		$statuses                = $this->get_all_statuses();
+		$expected_start_statuses = [];
+
+		$this->assertEquals( $expected_start_statuses, $statuses );
+
+		$instance->on_admin_enqueue_scripts();
+
+		$statuses = $this->get_all_statuses();
+		$this->assertEquals( $expected_start_statuses, $statuses );
 	}
 
 	public function test_on_dismiss_notification_aborts_if_supplied_nonce_value_is_incorrect() {
-		// TODO
+		$this->doing_ajax();
+
+		wp_create_nonce( WhatsNewNotifications::NONCE_NAME );
+
+		$_GET['_ajax_nonce'] = 'incorrectvalue';
+
+		$notifications = $this->get_notifications_for_different_pages();
+		$instance      = $this->make_test_instance( $notifications );
+
+		$statuses = $this->get_all_statuses();
+		$this->assertEmpty( $statuses );
+
+		ob_start();
+		try {
+			$instance->on_dismiss_notification();
+		} catch ( \WPDieException $ex ) {
+			// ignore
+		}
+		$output = ob_end_clean();
+
+		$this->assertTrue( $output );
+
+		$statuses = $this->get_all_statuses();
+		$this->assertEmpty( $statuses );
 	}
 
 	public function test_on_dismiss_notification_returns_false_if_no_notification_id_supplied() {
-		// TODO
+		$this->doing_ajax();
+
+		$nonce                   = wp_create_nonce( WhatsNewNotifications::NONCE_NAME );
+		$_REQUEST['_ajax_nonce'] = $nonce;
+
+		$notifications = $this->get_notifications_for_different_pages();
+		$instance      = $this->make_test_instance( $notifications );
+
+		$statuses = $this->get_all_statuses();
+		$this->assertEmpty( $statuses );
+
+		ob_start();
+		try {
+			$instance->on_dismiss_notification();
+		} catch ( \WPDieException $ex ) {
+			// ignore
+		}
+		$output = ob_end_clean();
+
+		$this->assertEquals( 'false', $output );
+
+		$statuses = $this->get_all_statuses();
+		$this->assertEmpty( $statuses );
 	}
 
 	public function test_on_dismiss_notification_returns_false_if_notification_id_is_invalid() {
-		// TODO
+		$this->doing_ajax();
+
+		$nonce                   = wp_create_nonce( WhatsNewNotifications::NONCE_NAME );
+		$_REQUEST['_ajax_nonce'] = $nonce;
+
+		$notifications = $this->get_notifications_for_different_pages();
+		$instance      = $this->make_test_instance( $notifications );
+
+		$statuses = $this->get_all_statuses();
+		$this->assertEmpty( $statuses );
+
+		$_POST['matomo_notification'] = 'slakdjfasldkfjsd';
+
+		ob_start();
+		try {
+			$instance->on_dismiss_notification();
+		} catch ( \WPDieException $ex ) {
+			// ignore
+		}
+		$output = ob_end_clean();
+
+		$this->assertEquals( 'false', $output );
+
+		$statuses = $this->get_all_statuses();
+		$this->assertEmpty( $statuses );
 	}
 
 	public function test_on_dismiss_notification_changes_status_of_requested_notification_to_dismissed() {
-		// TODO
+		$this->doing_ajax();
+
+		$nonce                   = wp_create_nonce( WhatsNewNotifications::NONCE_NAME );
+		$_REQUEST['_ajax_nonce'] = $nonce;
+
+		$notifications = $this->get_notifications_for_different_pages();
+		$instance      = $this->make_test_instance( $notifications );
+
+		$statuses = $this->get_all_statuses();
+		$this->assertEmpty( $statuses );
+
+		$_POST['matomo_notification'] = 'single-pages-promo';
+
+		ob_start();
+		try {
+			$instance->on_dismiss_notification();
+		} catch ( \WPDieException $ex ) {
+			// ignore
+		}
+		$output = ob_end_clean();
+
+		$this->assertEquals( 'false', $output );
+
+		$statuses = $this->get_all_statuses();
+		$this->assertEquals( [ 'single-pages-promo' => WhatsNewNotifications::STATUS_DISMISSED ], $statuses );
 	}
 
 	private function make_test_instance( $notifications ) {
@@ -232,11 +365,33 @@ class WhatsNewNotificationsTest extends MatomoUnit_TestCase {
 		];
 	}
 
+	private function get_notifications_for_different_pages() {
+		return [
+			'all-pages-promo'    => [
+				'notification_marker_page' => 'matomo-gdpr-tools',
+				'message'                  => 'test message all-pages-promo',
+				'show_on'                  => WhatsNewNotifications::SHOW_ON_ALL_PAGES,
+				'show_if'                  => true,
+			],
+			'single-pages-promo' => [
+				'notification_marker_page' => 'matomo-marketplace',
+				'message'                  => 'test message single-pages-promo',
+				'show_on'                  => WhatsNewNotifications::SHOW_ON_SINGLE_PAGE,
+				'show_if'                  => true,
+			],
+		];
+	}
+
 	private function dismiss_all_notifications( $notifications ) {
 		$status = [];
 		foreach ( $notifications as $id => $notification ) {
 			$status[ $id ] = WhatsNewNotifications::STATUS_DISMISSED;
 		}
 		update_option( WhatsNewNotifications::NOTIFICATION_STATUSES_OPTION_NAME, $status );
+	}
+
+	private function get_all_statuses() {
+		$statuses = get_option( WhatsNewNotifications::NOTIFICATION_STATUSES_OPTION_NAME );
+		return is_array( $statuses ) ? $statuses : [];
 	}
 }

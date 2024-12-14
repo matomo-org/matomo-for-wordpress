@@ -154,15 +154,21 @@ class WhatsNewNotifications {
 	private function mark_current_page_as_seen() {
 		$current_page = Admin::get_current_page();
 
-		$notifications = $this->get_notifications_to_show();
-		$statuses      = $this->get_notification_statuses();
+		$notifications = $this->get_current_notifications();
 
+		$notifications_to_mark = [];
 		foreach ( $notifications as $notification_id => $notification ) {
 			if ( $notification['notification_marker_page'] === $current_page ) {
-				$statuses[ $notification_id ] = self::STATUS_SEEN;
+				$notifications_to_mark[ $notification_id ] = self::STATUS_SEEN;
 			}
 		}
 
+		if ( empty( $notifications_to_mark ) ) {
+			return;
+		}
+
+		$statuses = $this->get_notification_statuses();
+		$statuses = array_merge( $statuses, $notifications_to_mark );
 		$this->save_notification_statuses( $statuses );
 	}
 

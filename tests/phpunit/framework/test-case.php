@@ -38,6 +38,7 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 		parent::setUp();
 
 		$this->overwrite_wpdb();
+		$this->set_ajax_die_handler();
 
 		if ( is_multisite() ) {
 			$this->delete_extraneous_blogs();
@@ -54,6 +55,7 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 
 		$this->wordpress_fixture->tear_down();
 
+		$this->remove_ajax_die_handler();
 		$this->restore_wpdb();
 
 		parent::tearDown();
@@ -225,5 +227,18 @@ class MatomoUnit_TestCase extends WP_UnitTestCase {
 			$count += count( $entries_by_priority );
 		}
 		return $count;
+	}
+
+	private function set_ajax_die_handler() {
+		add_filter( 'wp_die_ajax_handler', [ $this, 'get_wp_die_handler' ], 1, 1 );
+	}
+
+	private function remove_ajax_die_handler() {
+		remove_filter( 'wp_die_ajax_handler', [ $this, 'get_wp_die_handler' ], 1, 1 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+	}
+
+	protected function doing_ajax() {
+		add_filter( 'wp_doing_ajax', '__return_true' );
 	}
 }
