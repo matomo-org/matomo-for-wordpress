@@ -10,6 +10,7 @@ import { browser, $, expect } from '@wdio/globals';
 import fetch from 'node-fetch';
 import Website from './website.js';
 import MatomoCli from './apiobjects/matomo.cli.js';
+import GetStartedPage from './pageobjects/get-started.page';
 
 describe('MWP Updating', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -71,5 +72,26 @@ describe('MWP Updating', () => {
         );
       });
     }, {timeout: 60000});
+  });
+
+  it('should display whats new notifications on install', async () => {
+    await GetStartedPage.open();
+
+    await GetStartedPage.prepareWpAdminForScreenshot();
+    await expect(
+      await browser.checkFullPageScreen(`mwp-admin.whats-new-notifications.${process.env.PHP_VERSION}${trunkSuffix}`)
+    ).toEqual(0);
+  });
+
+  it('should permanently hide whats new notifications on dismissal', async () => {
+    await browser.execute(() => {
+      window.jQuery('.matomo-whats-new .notice-dismiss').each(function () {
+        this.click();
+      });
+    });
+
+    await browser.waitUntil(async () => {
+      return await browser.execute(() => window.jQuery('.matomo-whats-new').length) === 0;
+    })
   });
 });
