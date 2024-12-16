@@ -10,7 +10,7 @@ import { browser, $, expect } from '@wdio/globals';
 import fetch from 'node-fetch';
 import Website from './website.js';
 import MatomoCli from './apiobjects/matomo.cli.js';
-import GetStartedPage from './pageobjects/get-started.page';
+import GetStartedPage from './pageobjects/get-started.page.js';
 
 describe('MWP Updating', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
