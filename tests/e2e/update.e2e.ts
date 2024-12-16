@@ -92,6 +92,8 @@ describe('MWP Updating', () => {
 
     await browser.waitUntil(async () => {
       return await browser.execute(() => window.jQuery('.matomo-whats-new').length) === 0;
-    })
+    });
+
+    await browser.pause(1000); // additional wait for ajax methods to complete
   });
 });
