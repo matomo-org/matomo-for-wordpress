@@ -151,7 +151,7 @@ namespace {
             $this->ip = !empty($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : \false;
             $this->acceptLanguage = !empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : \false;
             $this->userAgent = !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : \false;
-            $this->setClientHints(!empty($_SERVER['HTTP_SEC_CH_UA_MODEL']) ? $_SERVER['HTTP_SEC_CH_UA_MODEL'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_PLATFORM']) ? $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_PLATFORM_VERSION']) ? $_SERVER['HTTP_SEC_CH_UA_PLATFORM_VERSION'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_FULL_VERSION_LIST']) ? $_SERVER['HTTP_SEC_CH_UA_FULL_VERSION_LIST'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_FULL_VERSION']) ? $_SERVER['HTTP_SEC_CH_UA_FULL_VERSION'] : '');
+            $this->setClientHints(!empty($_SERVER['HTTP_SEC_CH_UA_MODEL']) ? $_SERVER['HTTP_SEC_CH_UA_MODEL'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_PLATFORM']) ? $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_PLATFORM_VERSION']) ? $_SERVER['HTTP_SEC_CH_UA_PLATFORM_VERSION'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_FULL_VERSION_LIST']) ? $_SERVER['HTTP_SEC_CH_UA_FULL_VERSION_LIST'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_FULL_VERSION']) ? $_SERVER['HTTP_SEC_CH_UA_FULL_VERSION'] : '', !empty($_SERVER['HTTP_SEC_CH_UA_FORM_FACTORS']) ? $_SERVER['HTTP_SEC_CH_UA_FORM_FACTORS'] : '');
             if (!empty($apiUrl)) {
                 self::$URL = $apiUrl;
             }
@@ -469,10 +469,12 @@ namespace {
          *                                      all brands with the structure
          *                                      [['brand' => 'Chrome', 'version' => '10.0.2'], ['brand' => '...]
          * @param string $uaFullVersion  Value of the header 'HTTP_SEC_CH_UA_FULL_VERSION'
+         * @param string|array<string> $formFactors  Value of the header 'HTTP_SEC_CH_UA_FORM_FACTORS'
+         *      or an array containing all form factors with structure ["Desktop", "XR"]
          *
          * @return $this
          */
-        public function setClientHints($model = '', $platform = '', $platformVersion = '', $fullVersionList = '', $uaFullVersion = '')
+        public function setClientHints($model = '', $platform = '', $platformVersion = '', $fullVersionList = '', $uaFullVersion = '', $formFactors = '')
         {
             if (\is_string($fullVersionList)) {
                 $reg = '/^"([^"]+)"; ?v="([^"]+)"(?:, )?/';
@@ -485,7 +487,15 @@ namespace {
             } elseif (!\is_array($fullVersionList)) {
                 $fullVersionList = [];
             }
-            $this->clientHints = \array_filter(['model' => $model, 'platform' => $platform, 'platformVersion' => $platformVersion, 'uaFullVersion' => $uaFullVersion, 'fullVersionList' => $fullVersionList]);
+            if (\is_string($formFactors)) {
+                $formFactors = \explode(',', $formFactors);
+                $formFactors = \array_filter(\array_map(function ($item) {
+                    return \trim($item, '" ');
+                }, $formFactors));
+            } elseif (!\is_array($formFactors)) {
+                $formFactors = [];
+            }
+            $this->clientHints = \array_filter(['model' => $model, 'platform' => $platform, 'platformVersion' => $platformVersion, 'uaFullVersion' => $uaFullVersion, 'fullVersionList' => $fullVersionList, 'formFactors' => $formFactors]);
             return $this;
         }
         /**

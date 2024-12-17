@@ -89,8 +89,8 @@ class Urls extends \Piwik\Settings\Measurable\MeasurableProperty
         $urls = array_map('urldecode', $urls);
         foreach ($urls as &$url) {
             $url = $this->removeTrailingSlash($url);
-            $scheme = parse_url($url, PHP_URL_SCHEME);
-            if (empty($scheme) && strpos($url, '://') === false) {
+            $scheme = parse_url($url, \PHP_URL_SCHEME);
+            if (empty($scheme) && strpos($url, '://') === \false) {
                 if (strpos($url, '//') === 0) {
                     $url = 'http:' . $url;
                 } else {

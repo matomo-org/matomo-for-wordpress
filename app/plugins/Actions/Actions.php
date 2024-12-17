@@ -65,29 +65,29 @@ class Actions extends \Piwik\Plugin
     }
     public function isSiteSearchEnabled($idSites, $idSite)
     {
-        $idSites = Site::getIdSitesFromIdSitesString($idSites, true);
+        $idSites = Site::getIdSitesFromIdSitesString($idSites, \true);
         if (!empty($idSite)) {
             $idSites[] = $idSite;
         }
         if (empty($idSites)) {
-            return false;
+            return \false;
         }
         foreach ($idSites as $idSite) {
             if (!Site::isSiteSearchEnabledFor($idSite)) {
-                return false;
+                return \false;
             }
         }
-        return true;
+        return \true;
     }
     public function configureViewDataTable(ViewDataTable $view)
     {
         if ($this->pluginName == $view->requestConfig->getApiModuleToRequest()) {
             if ($view->isRequestingSingleDataTable()) {
                 // make sure custom visualizations are shown on actions reports
-                $view->config->show_all_views_icons = true;
-                $view->config->show_bar_chart = false;
-                $view->config->show_pie_chart = false;
-                $view->config->show_tag_cloud = false;
+                $view->config->show_all_views_icons = \true;
+                $view->config->show_bar_chart = \false;
+                $view->config->show_pie_chart = \false;
+                $view->config->show_tag_cloud = \false;
             }
         }
     }

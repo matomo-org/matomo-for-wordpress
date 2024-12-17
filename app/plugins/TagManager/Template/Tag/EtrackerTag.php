@@ -15,7 +15,11 @@ use Piwik\Validators\CharacterLength;
 use Piwik\Validators\NumberRange;
 class EtrackerTag extends \Piwik\Plugins\TagManager\Template\Tag\BaseTag
 {
-    const PARAM_ETRACKER_CONFIG = 'etrackerConfig';
+    public const PARAM_ETRACKER_CONFIG = 'etrackerConfig';
+    public function getDescription()
+    {
+        return Piwik::translate('TagManager_EtrackerTagDescriptionNew');
+    }
     public function getIcon()
     {
         return 'plugins/TagManager/images/icons/etracker.svg';
@@ -162,7 +166,7 @@ class EtrackerTag extends \Piwik\Plugins\TagManager\Template\Tag\BaseTag
             $field->description = 'optional, e.g. Special payment targets, Cash discount, Payment in instalments';
             $field->customFieldComponent = self::FIELD_VARIABLE_COMPONENT;
             $field->condition = 'trackingType == "transaction"';
-        }), $this->makeSetting('etrackerTransactionDebugMode', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) use($trackingType) {
+        }), $this->makeSetting('etrackerTransactionDebugMode', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) use($trackingType) {
             $field->title = Piwik::translate('TagManager_EtrackerTagTransactionDebugModeTitle');
             $field->title = 'etracker Ecommerce Debug Mode';
             $field->customFieldComponent = self::FIELD_VARIABLE_COMPONENT;

@@ -41,13 +41,13 @@ class ContentTarget extends ActionDimension
     public function onLookupAction(Request $request, Action $action)
     {
         if (!$action instanceof ActionContent) {
-            return false;
+            return \false;
         }
         $contentTarget = $request->getParam('c_t');
         $contentTarget = trim($contentTarget);
         if (strlen($contentTarget) > 0) {
             return $contentTarget;
         }
-        return false;
+        return \false;
     }
 }

@@ -62,20 +62,20 @@ class Sparkline implements ViewInterface
         // remove default series
         foreach ($this->serieses as $seriesIndex => $series) {
             $values = [];
-            $hasFloat = false;
+            $hasFloat = \false;
             foreach ($series as $value) {
                 // replace localized decimal separator
                 $value = str_replace($thousandSeparator, '', $value);
                 $value = str_replace($decimalSeparator, '.', $value);
                 // sanitize value
-                $value = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION | FILTER_FLAG_ALLOW_SCIENTIFIC);
+                $value = filter_var($value, \FILTER_SANITIZE_NUMBER_FLOAT, \FILTER_FLAG_ALLOW_FRACTION | \FILTER_FLAG_ALLOW_SCIENTIFIC);
                 if (empty($value) || !is_numeric($value)) {
                     $value = 0;
                 }
                 $values[] = $value;
                 if (is_float($value + 0)) {
                     // coerce to int/float type before checking
-                    $hasFloat = true;
+                    $hasFloat = \true;
                 }
             }
             // the sparkline lib used converts everything to integers (see the FormatTrait.php file) which means float
@@ -149,7 +149,7 @@ class Sparkline implements ViewInterface
      */
     private function setSparklineColors($sparkline, $seriesIndex)
     {
-        $colors = Common::getRequestVar('colors', false, 'json');
+        $colors = Common::getRequestVar('colors', \false, 'json');
         $defaultColors = array('backgroundColor' => '#ffffff', 'lineColor' => '#162C4A', 'minPointColor' => '#ff7f7f', 'maxPointColor' => '#75BF7C', 'lastPointColor' => '#55AAFF', 'fillColor' => '#ffffff');
         if (empty($colors)) {
             $colors = $defaultColors;

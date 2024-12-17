@@ -45,6 +45,6 @@ class GetRank extends \Piwik\Widget\Widget
         /** @var \Piwik\DataTable\Renderer\Json $renderer */
         $renderer = Renderer::factory('json');
         $renderer->setTable($dataTable);
-        return $this->renderTemplate('getRank', array('urlToRank' => Url::getHostFromUrl($url), 'ranks' => json_decode($renderer->render(), true)));
+        return $this->renderTemplate('getRank', array('urlToRank' => Url::getHostFromUrl($url), 'ranks' => json_decode($renderer->render(), \true)));
     }
 }

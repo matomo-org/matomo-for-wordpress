@@ -100,7 +100,7 @@ class Controller extends \Piwik\Plugin\Controller
     private function setCounters($view)
     {
         $segment = Request::getRawSegmentFromRequest();
-        $executeTodayQuery = true;
+        $executeTodayQuery = \true;
         $view->countErrorToday = '';
         $view->countErrorHalfHour = '';
         try {
@@ -111,7 +111,7 @@ class Controller extends \Piwik\Plugin\Controller
             $today = ['visits' => '-', 'actions' => '-'];
             $view->countErrorToday = $e->getMessage();
             $view->countErrorHalfHour = $e->getMessage();
-            $executeTodayQuery = false;
+            $executeTodayQuery = \false;
             // if query for last 30 min failed, we also expect the 24 hour query to fail
         }
         try {
@@ -175,7 +175,7 @@ class Controller extends \Piwik\Plugin\Controller
             return '';
             // do not return more visits than configured for profile
         }
-        $nextVisits = Request::processRequest('Live.getLastVisitsDetails', array('segment' => \Piwik\Plugins\Live\Live::getSegmentWithVisitorId(), 'filter_limit' => \Piwik\Plugins\Live\VisitorProfile::VISITOR_PROFILE_MAX_VISITS_TO_SHOW, 'filter_offset' => $filterLimit, 'period' => false, 'date' => false));
+        $nextVisits = Request::processRequest('Live.getLastVisitsDetails', array('segment' => \Piwik\Plugins\Live\Live::getSegmentWithVisitorId(), 'filter_limit' => \Piwik\Plugins\Live\VisitorProfile::VISITOR_PROFILE_MAX_VISITS_TO_SHOW, 'filter_offset' => $filterLimit, 'period' => \false, 'date' => \false));
         if (empty($nextVisits)) {
             return '';
         }

@@ -40,7 +40,7 @@ class ProductConversionRate extends ProcessedMetric
         $orders = $this->getMetric($row, 'orders');
         $abandonedCarts = $this->getMetric($row, 'abandoned_carts');
         $visits = $this->getMetric($row, 'nb_visits');
-        return Piwik::getQuotientSafe($orders === false ? $abandonedCarts : $orders, $visits, GoalManager::REVENUE_PRECISION + 2);
+        return Piwik::getQuotientSafe($orders === \false ? $abandonedCarts : $orders, $visits, GoalManager::REVENUE_PRECISION + 2);
     }
     public function getDependentMetrics()
     {

@@ -21,7 +21,7 @@ use Piwik\Validators\NumberRange;
 use Piwik\Plugins\TagManager\Validators\CustomRequestProcessing;
 class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Variable\BaseVariable
 {
-    const ID = 'MatomoConfiguration';
+    public const ID = 'MatomoConfiguration';
     public function getId()
     {
         return self::ID;
@@ -36,7 +36,7 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
     }
     public function hasAdvancedSettings()
     {
-        return false;
+        return \false;
     }
     public function getParameters()
     {
@@ -77,83 +77,91 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
                     // valid... we do not validate idSite as it might point to different matomo...
                 }
                 $posBracket = strpos($value, '{{');
-                if ($posBracket === false || strpos($value, '}}', $posBracket) === false) {
+                if ($posBracket === \false || strpos($value, '}}', $posBracket) === \false) {
                     throw new \Exception(Piwik::translate('TagManager_MatomoConfigurationMatomoIDSiteException'));
                 }
             };
             $field->transform = function ($value) {
                 return trim($value);
             };
-        }), $this->makeSetting('enableLinkTracking', true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('enableLinkTracking', \true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableLinkTrackingTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableLinkTrackingDescription');
-        }), $this->makeSetting('enableFileTracking', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('enableFileTracking', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableFileTrackingTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableFileTrackingDescription');
-        }), $this->makeSetting('enableCrossDomainLinking', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('enableCrossDomainLinking', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableCrossDomainLinkingTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableCrossDomainLinkingDescription');
         }), $this->makeSetting('crossDomainLinkingTimeout', '180', FieldConfig::TYPE_INT, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoCrossDomainLinkingTimeoutTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoCrossDomainLinkingTimeoutDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_MatomoConfigurationMatomoCrossDomainLinkingTimeoutPlaceholder')];
             $field->condition = 'enableCrossDomainLinking';
             $field->validators[] = new NumberRange($min = 1);
-        }), $this->makeSetting('enableDoNotTrack', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('enableDoNotTrack', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableDoNotTrackTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableDoNotTrackDescription');
             $field->inlineHelp = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableDoNotTrackInlineHelp', array('<strong>', '</strong>'));
-        }), $this->makeSetting('disablePerformanceTracking', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('disablePerformanceTracking', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoDisablePerformanceTrackingTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoDisablePerformanceTrackingDescription');
-        }), $this->makeSetting('enableJSErrorTracking', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('enableJSErrorTracking', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableJSErrorTrackingTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableJSErrorTrackingDescription');
-        }), $this->makeSetting('enableHeartBeatTimer', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('enableHeartBeatTimer', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableHeartBeatTimerTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableHeartBeatTimerDescription');
         }), $this->makeSetting('heartBeatTime', '15', FieldConfig::TYPE_INT, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoHeartBeatTimeTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoHeartBeatTimeDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_MatomoConfigurationMatomoHeartBeatTimePlaceholder')];
             $field->condition = 'enableHeartBeatTimer';
             $field->validators[] = new NumberRange($min = 5);
-        }), $this->makeSetting('trackAllContentImpressions', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('trackAllContentImpressions', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoTrackAllContentImpressionsTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoTrackAllContentImpressionsDescription');
-        }), $this->makeSetting('trackVisibleContentImpressions', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('trackVisibleContentImpressions', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoTrackVisibleContentImpressionsTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoTrackVisibleContentImpressionsDescription');
-        }), $this->makeSetting('disableCookies', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('trackBots', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+            $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoTrackBotsTitle');
+            $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoTrackBotsDescription');
+        }), $this->makeSetting('disableCookies', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoDisableCookiesTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoDisableCookiesDescription');
             $field->condition = '!requireConsent && !requireCookieConsent';
-        }), $this->makeSetting('requireConsent', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('requireConsent', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoRequireConsentTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoRequireConsentDescription');
             $field->condition = '!requireCookieConsent && !disableCookies';
-        }), $this->makeSetting('requireCookieConsent', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('requireCookieConsent', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoRequireCookieConsentTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoRequireCookieConsentDescription');
             $field->condition = '!requireConsent && !disableCookies';
-        }), $this->makeSetting('customCookieTimeOutEnable', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('customCookieTimeOutEnable', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoCustomCookieTimeOutsEnableTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoCustomCookieTimeOutsEnableDescription');
             $field->condition = '!disableCookies';
         }), $this->makeSetting('customCookieTimeOut', '393', FieldConfig::TYPE_INT, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoVisitorCookieTimeOutTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoVisitorCookieTimeOutDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_MatomoConfigurationMatomoVisitorCookieTimeOutPlaceholder')];
             $field->condition = 'customCookieTimeOutEnable && !disableCookies';
             $field->validators[] = new NumberRange($min = 1);
         }), $this->makeSetting('referralCookieTimeOut', '182', FieldConfig::TYPE_INT, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoReferralCookieTimeOutTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoReferralCookieTimeOutDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_MatomoConfigurationMatomoReferralCookieTimeOutPlaceholder')];
             $field->condition = 'customCookieTimeOutEnable && !disableCookies';
             $field->validators[] = new NumberRange($min = 1);
         }), $this->makeSetting('sessionCookieTimeOut', '30', FieldConfig::TYPE_INT, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoSessionCookieTimeOutTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoSessionCookieTimeOutDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_MatomoConfigurationMatomoSessionCookieTimeOutPlaceholder')];
             $field->condition = 'customCookieTimeOutEnable && !disableCookies';
             $field->validators[] = new NumberRange($min = 1);
-        }), $this->makeSetting('setSecureCookie', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('setSecureCookie', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoSetSecureCookieTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoSetSecureCookieDescription');
         }), $this->makeSetting('cookieDomain', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
@@ -167,6 +175,7 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
         }), $this->makeSetting('cookieNamePrefix', '_pk_', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoCookieNamePrefixTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoCookieNamePrefixDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_MatomoConfigurationMatomoCookieNamePrefixPlaceholder')];
             $field->validators[] = new CharacterLength(1, 20);
             $field->transform = function ($value) {
                 return trim($value);
@@ -174,6 +183,7 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
         }), $this->makeSetting('cookiePath', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoCookiePathTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoCookiePathDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_MatomoConfigurationMatomoCookiePathPlaceholder')];
             $field->validators[] = new CharacterLength(0, 500);
             $field->transform = function ($value) {
                 return trim($value);
@@ -183,11 +193,11 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoCookieSameSiteDescription');
             $field->uiControl = FieldConfig::UI_CONTROL_SINGLE_SELECT;
             $field->availableValues = array('Lax' => 'Lax', 'None' => 'None', 'Strict' => 'Strict');
-        }), $this->makeSetting('disableBrowserFeatureDetection', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('disableBrowserFeatureDetection', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoDisableBrowserFeatureDetectionTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoDisableBrowserFeatureDetectionDescription');
             $field->inlineHelp = Piwik::translate('TagManager_MatomoConfigurationMatomoDisableBrowserFeatureDetectionInLineHelp', ['<br><strong>', '<a href="' . Url::addCampaignParametersToMatomoLink('https://matomo.org/faq/how-to/how-do-i-disable-browser-feature-detection-completely/', null, null, 'App.TagManager.getParameters') . '" target="_blank" rel="noreferrer noopener">', '</a>', '</strong>']);
-        }), $this->makeSetting('disableCampaignParameters', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('disableCampaignParameters', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoDisableCampaignParametersTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoDisableCampaignParametersDescription');
         }), $this->makeSetting('domains', array(), FieldConfig::TYPE_ARRAY, function (FieldConfig $field) {
@@ -217,11 +227,11 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
             $field1 = new FieldConfig\MultiPair('Domain', 'domain', FieldConfig::UI_CONTROL_TEXT);
             $field1->customFieldComponent = self::FIELD_VARIABLE_COMPONENT;
             $field->uiControlAttributes['field1'] = $field1->toArray();
-        }), $this->makeSetting('alwaysUseSendBeacon', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('alwaysUseSendBeacon', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoAlwaysUseSendBeaconTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoAlwaysUseSendBeaconDescription');
             $field->condition = '!disableAlwaysUseSendBeacon';
-        }), $this->makeSetting('disableAlwaysUseSendBeacon', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('disableAlwaysUseSendBeacon', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoDisableAlwaysUseSendBeaconTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoDisableAlwaysUseSendBeaconDescription');
             $field->condition = '!alwaysUseSendBeacon';
@@ -260,11 +270,11 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
             $field2->customFieldComponent = self::FIELD_VARIABLE_COMPONENT;
             $field->uiControlAttributes['field1'] = $field1->toArray();
             $field->uiControlAttributes['field2'] = $field2->toArray();
-        }), $this->makeSetting('registerAsDefaultTracker', true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('registerAsDefaultTracker', \true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoRegisterAsDefaultTrackerTitle');
             $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoRegisterAsDefaultTrackerDescription');
-        }), $this->makeSetting('bundleTracker', true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('bundleTracker', \true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoBundleTrackerTitle');
             $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoBundleTrackerDescription');
@@ -277,6 +287,7 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
         }), $matomoUrl = $this->makeSetting('jsEndpointCustom', 'custom.js', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoJsEndpointCustomTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoJsEndpointCustomDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_MatomoConfigurationMatomoJsEndpointCustomPlaceholder')];
             $field->condition = '!bundleTracker && jsEndpoint == "custom"';
             $field->transform = function ($value) {
                 return trim($value);
@@ -289,6 +300,7 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
         }), $matomoUrl = $this->makeSetting('trackingEndpointCustom', 'custom.php', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoTrackingEndpointCustomTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoTrackingEndpointCustomDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_MatomoConfigurationMatomoTrackingEndpointCustomPlaceholder')];
             $field->condition = 'trackingEndpoint == "custom"';
             $field->transform = function ($value) {
                 return trim($value);
@@ -297,7 +309,7 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoAppendToTrackingUrlTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoAppendToTrackingUrlDescription');
             $field->customFieldComponent = self::FIELD_VARIABLE_COMPONENT;
-        }), $this->makeSetting('forceRequestMethod', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('forceRequestMethod', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoForceRequestMethodTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoForceRequestMethodDescription');
         }), $this->makeSetting('requestMethod', 'GET', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
@@ -309,6 +321,7 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
         }), $matomoUrl = $this->makeSetting('requestContentType', 'application/x-www-form-urlencoded; charset=UTF-8', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoRequestContentTypeTitle');
             $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoRequestContentTypeDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_MatomoConfigurationMatomoRequestContentTypePlaceholder')];
             $field->condition = 'forceRequestMethod && requestMethod == "POST"';
             $field->transform = function ($value) {
                 return trim($value);
@@ -321,14 +334,14 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
         }));
         $pluginParameters = [];
         if (\Piwik\Plugin\Manager::getInstance()->isPluginActivated('FormAnalytics')) {
-            $pluginParameters[] = $this->makeSetting('enableFormAnalytics', true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+            $pluginParameters[] = $this->makeSetting('enableFormAnalytics', \true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
                 $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableFormAnalyticsTitle');
                 $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableFormAnalyticsDescription');
                 $field->inlineHelp = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableFormAnalyticsInlineHelp', array('<strong>', '</strong>'));
             });
         }
         if (\Piwik\Plugin\Manager::getInstance()->isPluginActivated('MediaAnalytics')) {
-            $pluginParameters[] = $this->makeSetting('enableMediaAnalytics', true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+            $pluginParameters[] = $this->makeSetting('enableMediaAnalytics', \true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
                 $field->title = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableMediaAnalyticsTitle');
                 $field->description = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableMediaAnalyticsDescription');
                 $field->inlineHelp = Piwik::translate('TagManager_MatomoConfigurationMatomoEnableMediaAnalyticsInlineHelp', array('<strong>', '</strong>'));
@@ -342,13 +355,13 @@ class MatomoConfigurationVariable extends \Piwik\Plugins\TagManager\Template\Var
         if (empty($pluginParameters)) {
             return $parameters;
         }
-        $found = false;
+        $found = \false;
         foreach ($parameters as $key => $parameter) {
             if ($parameter->getName() == $insertAfter) {
                 $found = $key;
             }
         }
-        if ($found === false) {
+        if ($found === \false) {
             return array_merge($parameters, $pluginParameters);
         }
         $firstPart = array_slice($parameters, 0, $found + 1);

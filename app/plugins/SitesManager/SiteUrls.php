@@ -53,10 +53,10 @@ class SiteUrls
         $this->sortUrlsByHost($allUrls);
         return $allUrls;
     }
-    public function addUrlByHost(&$allUrls, $idSite, $url, $addPath = true)
+    public function addUrlByHost(&$allUrls, $idSite, $url, $addPath = \true)
     {
         $urlParsed = @parse_url($url);
-        if ($urlParsed === false || !isset($urlParsed['host'])) {
+        if ($urlParsed === \false || !isset($urlParsed['host'])) {
             return;
         }
         $host = $this->toCanonicalHost($urlParsed['host']);
@@ -164,7 +164,7 @@ class SiteUrls
     {
         $idSite = $request->getIdSite();
         $url = $request->getParam('url');
-        $this->addUrlByHost($allUrls, $idSite, $url, $addPath = false);
+        $this->addUrlByHost($allUrls, $idSite, $url, $addPath = \false);
     }
     private function sortByPathDepth($pathA, $pathB)
     {

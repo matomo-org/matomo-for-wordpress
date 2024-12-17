@@ -19,7 +19,7 @@ use Matomo\Dependencies\Symfony\Component\Console\Exception\InvalidArgumentExcep
 class ChoiceQuestion extends Question
 {
     private $choices;
-    private $multiselect = false;
+    private $multiselect = \false;
     private $prompt = ' > ';
     private $errorMessage = 'Value "%s" is invalid';
     /**
@@ -134,15 +134,15 @@ class ChoiceQuestion extends Question
                 }
                 $result = array_search($value, $choices);
                 if (!$isAssoc) {
-                    if (false !== $result) {
+                    if (\false !== $result) {
                         $result = $choices[$result];
                     } elseif (isset($choices[$value])) {
                         $result = $choices[$value];
                     }
-                } elseif (false === $result && isset($choices[$value])) {
+                } elseif (\false === $result && isset($choices[$value])) {
                     $result = $value;
                 }
-                if (false === $result) {
+                if (\false === $result) {
                     throw new InvalidArgumentException(sprintf($errorMessage, $value));
                 }
                 // For associative choices, consistently return the key as string:

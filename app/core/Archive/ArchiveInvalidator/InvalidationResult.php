@@ -32,7 +32,7 @@ class InvalidationResult
      *
      * @var Date|bool
      */
-    public $minimumDateWithLogs = false;
+    public $minimumDateWithLogs = \false;
     /**
      * @return string[]
      */

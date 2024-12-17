@@ -40,17 +40,17 @@ class Controller extends \Piwik\Plugin\Controller
      * @param bool|string $lastN Override for 'lastN' query parameter.
      * @return string|void
      */
-    public function getAnnotationManager($fetch = false, $date = false, $period = false, $lastN = false)
+    public function getAnnotationManager($fetch = \false, $date = \false, $period = \false, $lastN = \false)
     {
         $this->checkSitePermission();
-        if ($date === false) {
-            $date = Common::getRequestVar('date', false);
+        if ($date === \false) {
+            $date = Common::getRequestVar('date', \false);
         }
-        if ($period === false) {
+        if ($period === \false) {
             $period = Common::getRequestVar('period', 'day');
         }
-        if ($lastN === false) {
-            $lastN = Common::getRequestVar('lastN', false);
+        if ($lastN === \false) {
+            $lastN = Common::getRequestVar('lastN', \false);
         }
         // create & render the view
         $view = new View('@Annotations/getAnnotationManager');
@@ -127,14 +127,14 @@ class Controller extends \Piwik\Plugin\Controller
             // use this date for the new annotation, unless it is a date range, in
             // which case we use the first date of the range.
             $date = Common::getRequestVar('date');
-            if (strpos($date, ',') !== false) {
+            if (strpos($date, ',') !== \false) {
                 $date = reset(explode(',', $date));
             }
             // add the annotation. NOTE: permissions checked in API method
             Request::processRequest("Annotations.add", array('date' => $date));
-            $managerDate = Common::getRequestVar('managerDate', false);
-            $managerPeriod = Common::getRequestVar('managerPeriod', false);
-            return $this->getAnnotationManager($fetch = true, $managerDate, $managerPeriod);
+            $managerDate = Common::getRequestVar('managerDate', \false);
+            $managerPeriod = Common::getRequestVar('managerPeriod', \false);
+            return $this->getAnnotationManager($fetch = \true, $managerDate, $managerPeriod);
         }
     }
     /**
@@ -160,7 +160,7 @@ class Controller extends \Piwik\Plugin\Controller
             $this->checkTokenInUrl();
             // delete annotation. NOTE: permissions checked in API method
             Request::processRequest("Annotations.delete");
-            return $this->getAnnotationManager($fetch = true);
+            return $this->getAnnotationManager($fetch = \true);
         }
     }
     /**

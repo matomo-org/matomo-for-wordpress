@@ -46,7 +46,7 @@ class API extends \Piwik\Plugin\API
      * @return DataTable|DataTable\Map
      * @throws \Exception
      */
-    public function getCustomDimension($idDimension, $idSite, $period, $date, $segment = false, $expanded = false, $flat = false, $idSubtable = false)
+    public function getCustomDimension($idDimension, $idSite, $period, $date, $segment = \false, $expanded = \false, $flat = \false, $idSubtable = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $dimension = new Dimension($idDimension, $idSite);
@@ -87,7 +87,7 @@ class API extends \Piwik\Plugin\API
      * @return int Returns the ID of the configured dimension. Note that the same idDimension will be used for different websites.
      * @throws \Exception
      */
-    public function configureNewCustomDimension($idSite, $name, $scope, $active, $extractions = array(), $caseSensitive = true)
+    public function configureNewCustomDimension($idSite, $name, $scope, $active, $extractions = array(), $caseSensitive = \true)
     {
         Piwik::checkUserHasWriteAccess($idSite);
         $this->checkCustomDimensionConfig($name, $active, $extractions, $caseSensitive);

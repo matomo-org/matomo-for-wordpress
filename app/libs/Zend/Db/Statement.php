@@ -264,7 +264,7 @@ namespace {
          * @param array $params OPTIONAL Values to bind to parameter placeholders.
          * @return bool
          */
-        public function execute(array $params = null)
+        public function execute(?array $params = null)
         {
             /*
              * Simple case - no query profiler to manage.

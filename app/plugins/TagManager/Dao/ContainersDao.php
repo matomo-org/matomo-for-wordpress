@@ -16,11 +16,11 @@ use Piwik\Piwik;
 use Exception;
 class ContainersDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Piwik\Plugins\TagManager\Dao\TagManagerDao
 {
-    const ERROR_NAME_IN_USE = 2919;
+    public const ERROR_NAME_IN_USE = 2919;
     protected $table = 'tagmanager_container';
     public function install()
     {
-        DbHelper::createTable($this->table, "\n                  `idcontainer` VARCHAR(8) NOT NULL,\n                  `idsite` int(11) UNSIGNED NOT NULL,\n                  `context` VARCHAR(10) NOT NULL,\n                  `name` VARCHAR(" . Name::MAX_LENGTH . ") NOT NULL,\n                  `description` VARCHAR(" . Description::MAX_LENGTH . ") NOT NULL DEFAULT '',\n                  `ignoreGtmDataLayer` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,\n                  `status` VARCHAR(10) NOT NULL,\n                  `created_date` DATETIME NOT NULL,\n                  `updated_date` DATETIME NOT NULL,\n                  `deleted_date` DATETIME NULL,\n                  PRIMARY KEY(`idcontainer`), KEY (`idsite`)");
+        DbHelper::createTable($this->table, "\n                  `idcontainer` VARCHAR(8) NOT NULL,\n                  `idsite` int(11) UNSIGNED NOT NULL,\n                  `context` VARCHAR(10) NOT NULL,\n                  `name` VARCHAR(" . Name::MAX_LENGTH . ") NOT NULL,\n                  `description` VARCHAR(" . Description::MAX_LENGTH . ") NOT NULL DEFAULT '',\n                  `ignoreGtmDataLayer` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,\n                  `activelySyncGtmDataLayer` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,\n                  `isTagFireLimitAllowedInPreviewMode` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,\n                  `status` VARCHAR(10) NOT NULL,\n                  `created_date` DATETIME NOT NULL,\n                  `updated_date` DATETIME NOT NULL,\n                  `deleted_date` DATETIME NULL,\n                  PRIMARY KEY(`idcontainer`), KEY (`idsite`)");
         // we cannot set a unique key on (`idsite`, `name`) because we soft delete tags and want to make sure names can be used again after deleting an entry
     }
     private function isNameInUse($idSite, $name, $exceptIdContainer = null)
@@ -48,7 +48,7 @@ class ContainersDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Pi
         $container = Db::fetchOne("SELECT idcontainer FROM {$table} WHERE idcontainer = ?", $bind);
         return !empty($container);
     }
-    public function createContainer($idSite, $idContainer, $context, $name, $description, $createdDate, $ignoreGtmDataLayer)
+    public function createContainer($idSite, $idContainer, $context, $name, $description, $createdDate, $ignoreGtmDataLayer, $isTagFireLimitAllowedInPreviewMode, $activelySyncGtmDataLayer)
     {
         if ($this->isContainerInUse($idContainer)) {
             throw new Exception(Piwik::translate('TagManager_ErrorContainerIdDuplicate'));
@@ -57,7 +57,7 @@ class ContainersDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Pi
             throw new Exception(Piwik::translate('TagManager_ErrorNameDuplicate'), self::ERROR_NAME_IN_USE);
         }
         $status = \Piwik\Plugins\TagManager\Dao\ContainersDao::STATUS_ACTIVE;
-        $values = array('idsite' => $idSite, 'idcontainer' => $idContainer, 'context' => $context, 'name' => $name, 'description' => !empty($description) ? $description : '', 'ignoreGtmDataLayer' => !empty($ignoreGtmDataLayer) ? $ignoreGtmDataLayer : 0, 'status' => $status, 'created_date' => $createdDate, 'updated_date' => $createdDate);
+        $values = array('idsite' => $idSite, 'idcontainer' => $idContainer, 'context' => $context, 'name' => $name, 'description' => !empty($description) ? $description : '', 'ignoreGtmDataLayer' => !empty($ignoreGtmDataLayer) ? $ignoreGtmDataLayer : 0, 'activelySyncGtmDataLayer' => !empty($activelySyncGtmDataLayer) ? $activelySyncGtmDataLayer : 0, 'isTagFireLimitAllowedInPreviewMode' => !empty($isTagFireLimitAllowedInPreviewMode) ? $isTagFireLimitAllowedInPreviewMode : 0, 'status' => $status, 'created_date' => $createdDate, 'updated_date' => $createdDate);
         $this->insertRecord($values);
         return $values['idcontainer'];
     }
@@ -146,6 +146,10 @@ class ContainersDao extends \Piwik\Plugins\TagManager\Dao\BaseDao implements \Pi
         $query = "UPDATE {$table} SET status = ?, deleted_date = ? WHERE idsite = ? and idcontainer = ? and status != ?";
         $bind = array(self::STATUS_DELETED, $deletedDate, $idSite, $idContainer, self::STATUS_DELETED);
         Db::query($query, $bind);
+    }
+    protected function isNameAlreadyUsed(int $idSite, string $name, ?int $idContainerVersion = null) : bool
+    {
+        return $this->isNameInUse($idSite, $name);
     }
     private function enrichContainers($containers)
     {

@@ -27,7 +27,7 @@ class Updater
     public const OPTION_KEY_MATOMO_UPDATE_HISTORY = 'MatomoUpdateHistory';
     private $pathUpdateFileCore;
     private $pathUpdateFilePlugins;
-    private $hasMajorDbUpdate = false;
+    private $hasMajorDbUpdate = \false;
     private $updatedClasses = array();
     private $componentsWithNewVersion = array();
     private $componentsWithUpdateFile = array();
@@ -54,7 +54,7 @@ class Updater
      *                                           for the plugin name.
      * @param Columns\Updater|null $columnsUpdater The dimensions updater instance.
      */
-    public function __construct($pathUpdateFileCore = null, $pathUpdateFilePlugins = null, \Piwik\Columns\Updater $columnsUpdater = null)
+    public function __construct($pathUpdateFileCore = null, $pathUpdateFilePlugins = null, ?\Piwik\Columns\Updater $columnsUpdater = null)
     {
         $this->pathUpdateFileCore = $pathUpdateFileCore ?: PIWIK_INCLUDE_PATH . '/core/Updates/';
         if ($pathUpdateFilePlugins) {
@@ -82,7 +82,7 @@ class Updater
      * @param string $version The component version (should use semantic versioning).
      * @param bool   $isNew indicates if the component is a new one (for plugins)
      */
-    public function markComponentSuccessfullyUpdated($name, $version, $isNew = false)
+    public function markComponentSuccessfullyUpdated($name, $version, $isNew = \false)
     {
         try {
             \Piwik\Option::set(self::getNameInOptionTable($name), $version, $autoLoad = 1);
@@ -158,7 +158,7 @@ class Updater
             // mysql error 1146: table doesn't exist
             if (\Piwik\Db::get()->isErrNo($e, '1146')) {
                 // case when the option table is not yet created (before 0.2.10)
-                $currentVersion = false;
+                $currentVersion = \false;
             } else {
                 // failed for some other reason
                 throw $e;
@@ -217,7 +217,7 @@ class Updater
                 require_once $file;
                 // prefixed by PIWIK_INCLUDE_PATH
                 $className = $this->getUpdateClassName($componentName, $fileVersion);
-                if (!class_exists($className, false)) {
+                if (!class_exists($className, \false)) {
                     // throwing an error here causes Matomo to show the safe mode instead of showing an exception fatal only
                     // that makes it possible to deactivate / uninstall a broken plugin to recover Matomo directly
                     throw new \Error("The class {$className} was not found in {$file}");
@@ -269,7 +269,7 @@ class Updater
                 require_once $file;
                 // prefixed by PIWIK_INCLUDE_PATH
                 $className = $this->getUpdateClassName($componentName, $fileVersion);
-                if (!in_array($className, $this->updatedClasses) && class_exists($className, false)) {
+                if (!in_array($className, $this->updatedClasses) && class_exists($className, \false)) {
                     $this->executeListenerHook('onComponentUpdateFileStarting', array($componentName, $file, $className, $fileVersion));
                     $this->executeSingleUpdateClass($className);
                     $this->executeListenerHook('onComponentUpdateFileFinished', array($componentName, $file, $className, $fileVersion));
@@ -317,7 +317,7 @@ class Updater
             }
             if (!empty($pathToUpdates)) {
                 $files = _glob($pathToUpdates);
-                if ($files == false) {
+                if ($files == \false) {
                     $files = array();
                 }
                 foreach ($files as $file) {
@@ -371,7 +371,7 @@ class Updater
                 // note: when versionCompare == 1, the version in the DB is newer, we choose to ignore
                 $isComponentOutdated = version_compare($currentVersion, $version) == -1;
             }
-            if ($isComponentOutdated || $currentVersion === false) {
+            if ($isComponentOutdated || $currentVersion === \false) {
                 $componentsToUpdate[$name] = array(self::INDEX_CURRENT_VERSION => $currentVersion, self::INDEX_NEW_VERSION => $version);
             }
         }
@@ -395,12 +395,12 @@ class Updater
         $warnings = array();
         $errors = array();
         $deactivatedPlugins = array();
-        $coreError = false;
+        $coreError = \false;
         try {
             $history = \Piwik\Option::get(self::OPTION_KEY_MATOMO_UPDATE_HISTORY);
             $history = explode(',', (string) $history);
             $previousVersion = \Piwik\Option::get(self::getNameInOptionTable('core'));
-            if (!empty($previousVersion) && !in_array($previousVersion, $history, true)) {
+            if (!empty($previousVersion) && !in_array($previousVersion, $history, \true)) {
                 // this allows us to see which versions of matomo the user was using before this update so we better understand
                 // which version maybe regressed something
                 array_unshift($history, $previousVersion);
@@ -424,10 +424,10 @@ class Updater
                     } catch (\Piwik\UpdaterErrorException $e) {
                         $errors[] = $e->getMessage();
                         if ($name == 'core') {
-                            $coreError = true;
+                            $coreError = \true;
                             break;
                         } elseif ($pluginManager->isPluginActivated($name) && $pluginManager->isPluginBundledWithCore($name)) {
-                            $coreError = true;
+                            $coreError = \true;
                             break;
                         } elseif ($pluginManager->isPluginActivated($name)) {
                             $pluginManager->deactivatePlugin($name);

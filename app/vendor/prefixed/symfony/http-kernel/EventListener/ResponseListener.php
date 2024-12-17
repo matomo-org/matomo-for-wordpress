@@ -24,7 +24,7 @@ class ResponseListener implements EventSubscriberInterface
 {
     private $charset;
     private $addContentLanguageHeader;
-    public function __construct(string $charset, bool $addContentLanguageHeader = false)
+    public function __construct(string $charset, bool $addContentLanguageHeader = \false)
     {
         $this->charset = $charset;
         $this->addContentLanguageHeader = $addContentLanguageHeader;
@@ -45,7 +45,7 @@ class ResponseListener implements EventSubscriberInterface
             $response->headers->set('Content-Language', $event->getRequest()->getLocale());
         }
         if ($event->getRequest()->attributes->get('_vary_by_language')) {
-            $response->setVary('Accept-Language', false);
+            $response->setVary('Accept-Language', \false);
         }
         $response->prepare($event->getRequest());
     }

@@ -24,6 +24,7 @@ class BingUETTag extends \Piwik\Plugins\TagManager\Template\Tag\BaseTag
             $field->title = Piwik::translate('TagManager_BingUETTagIdTitle');
             $field->uiControl = FieldConfig::UI_CONTROL_TEXT;
             $field->description = Piwik::translate('TagManager_BingUETTagIdDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_BingUETTagIdPlaceholder')];
             $field->validators[] = new NotEmpty();
             $field->validate = function ($value) {
                 $value = trim($value);

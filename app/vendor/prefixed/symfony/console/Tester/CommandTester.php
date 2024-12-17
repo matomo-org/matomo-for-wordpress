@@ -55,7 +55,7 @@ class CommandTester
             $this->input->setInteractive($options['interactive']);
         }
         if (!isset($options['decorated'])) {
-            $options['decorated'] = false;
+            $options['decorated'] = \false;
         }
         $this->initOutput($options);
         return $this->statusCode = $this->command->run($this->input, $this->output);

@@ -28,10 +28,10 @@ class Validator
     {
         if (Common::isPhpCliMode() && (!defined('PIWIK_TEST_MODE') || !PIWIK_TEST_MODE)) {
             // eg when archiving or executing other commands
-            return false;
+            return \false;
         }
         if (!SettingsPiwik::isMatomoInstalled()) {
-            return false;
+            return \false;
         }
         return !Piwik::isUserIsAnonymous();
     }

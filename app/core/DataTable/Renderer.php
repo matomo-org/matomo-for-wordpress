@@ -30,23 +30,23 @@ abstract class Renderer extends BaseFactory
      * @var Exception
      */
     protected $exception;
-    protected $renderSubTables = false;
-    protected $hideIdSubDatatable = false;
+    protected $renderSubTables = \false;
+    protected $hideIdSubDatatable = \false;
     /**
      * Whether to translate column names (i.e. metric names) or not
      * @var bool
      */
-    public $translateColumnNames = false;
+    public $translateColumnNames = \false;
     /**
      * Column translations
      * @var array
      */
-    private $columnTranslations = false;
+    private $columnTranslations = \false;
     /**
      * The API method that has returned the data that should be rendered
      * @var string
      */
-    public $apiMethod = false;
+    public $apiMethod = \false;
     /**
      * API metadata for the current report
      * @var array
@@ -153,16 +153,16 @@ abstract class Renderer extends BaseFactory
     public static function formatValueXml($value)
     {
         if (is_string($value) && !is_numeric($value)) {
-            $value = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+            $value = html_entity_decode($value, \ENT_QUOTES, 'UTF-8');
             // make sure non-UTF-8 chars don't cause htmlspecialchars to choke
             if (function_exists('mb_convert_encoding')) {
                 $value = @mb_convert_encoding($value, 'UTF-8', 'UTF-8');
             }
-            $value = htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
+            $value = htmlspecialchars($value, \ENT_COMPAT, 'UTF-8');
             $htmlentities = array("&nbsp;", "&iexcl;", "&cent;", "&pound;", "&curren;", "&yen;", "&brvbar;", "&sect;", "&uml;", "&copy;", "&ordf;", "&laquo;", "&not;", "&shy;", "&reg;", "&macr;", "&deg;", "&plusmn;", "&sup2;", "&sup3;", "&acute;", "&micro;", "&para;", "&middot;", "&cedil;", "&sup1;", "&ordm;", "&raquo;", "&frac14;", "&frac12;", "&frac34;", "&iquest;", "&Agrave;", "&Aacute;", "&Acirc;", "&Atilde;", "&Auml;", "&Aring;", "&AElig;", "&Ccedil;", "&Egrave;", "&Eacute;", "&Ecirc;", "&Euml;", "&Igrave;", "&Iacute;", "&Icirc;", "&Iuml;", "&ETH;", "&Ntilde;", "&Ograve;", "&Oacute;", "&Ocirc;", "&Otilde;", "&Ouml;", "&times;", "&Oslash;", "&Ugrave;", "&Uacute;", "&Ucirc;", "&Uuml;", "&Yacute;", "&THORN;", "&szlig;", "&agrave;", "&aacute;", "&acirc;", "&atilde;", "&auml;", "&aring;", "&aelig;", "&ccedil;", "&egrave;", "&eacute;", "&ecirc;", "&euml;", "&igrave;", "&iacute;", "&icirc;", "&iuml;", "&eth;", "&ntilde;", "&ograve;", "&oacute;", "&ocirc;", "&otilde;", "&ouml;", "&divide;", "&oslash;", "&ugrave;", "&uacute;", "&ucirc;", "&uuml;", "&yacute;", "&thorn;", "&yuml;", "&euro;");
             $xmlentities = array("&#162;", "&#163;", "&#164;", "&#165;", "&#166;", "&#167;", "&#168;", "&#169;", "&#170;", "&#171;", "&#172;", "&#173;", "&#174;", "&#175;", "&#176;", "&#177;", "&#178;", "&#179;", "&#180;", "&#181;", "&#182;", "&#183;", "&#184;", "&#185;", "&#186;", "&#187;", "&#188;", "&#189;", "&#190;", "&#191;", "&#192;", "&#193;", "&#194;", "&#195;", "&#196;", "&#197;", "&#198;", "&#199;", "&#200;", "&#201;", "&#202;", "&#203;", "&#204;", "&#205;", "&#206;", "&#207;", "&#208;", "&#209;", "&#210;", "&#211;", "&#212;", "&#213;", "&#214;", "&#215;", "&#216;", "&#217;", "&#218;", "&#219;", "&#220;", "&#221;", "&#222;", "&#223;", "&#224;", "&#225;", "&#226;", "&#227;", "&#228;", "&#229;", "&#230;", "&#231;", "&#232;", "&#233;", "&#234;", "&#235;", "&#236;", "&#237;", "&#238;", "&#239;", "&#240;", "&#241;", "&#242;", "&#243;", "&#244;", "&#245;", "&#246;", "&#247;", "&#248;", "&#249;", "&#250;", "&#251;", "&#252;", "&#253;", "&#254;", "&#255;", "&#8364;");
             $value = str_replace($htmlentities, $xmlentities, $value);
-        } elseif ($value === false) {
+        } elseif ($value === \false) {
             $value = 0;
         }
         return $value;
@@ -182,9 +182,9 @@ abstract class Renderer extends BaseFactory
         // load the translations only once
         // when multiple dates are requested (date=...,...&period=day), the meta data would
         // be loaded lots of times otherwise
-        if ($this->columnTranslations === false) {
+        if ($this->columnTranslations === \false) {
             $meta = $this->getApiMetaData();
-            if ($meta === false) {
+            if ($meta === \false) {
                 return $names;
             }
             $t = Metrics::getDefaultMetricTranslations();
@@ -217,7 +217,7 @@ abstract class Renderer extends BaseFactory
         if ($this->apiMetaData === null) {
             list($apiModule, $apiAction) = explode('.', $this->apiMethod);
             if (!$apiModule || !$apiAction) {
-                $this->apiMetaData = false;
+                $this->apiMetaData = \false;
             }
             $api = \Piwik\Plugins\API\API::getInstance();
             $meta = $api->getMetadata($this->idSite, $apiModule, $apiAction);
@@ -291,30 +291,30 @@ abstract class Renderer extends BaseFactory
      *                                      If null, it is determined.
      * @return bool
      */
-    protected static function shouldWrapArrayBeforeRendering($array, $wrapSingleValues = true, $isAssociativeArray = null)
+    protected static function shouldWrapArrayBeforeRendering($array, $wrapSingleValues = \true, $isAssociativeArray = null)
     {
         if (empty($array)) {
-            return false;
+            return \false;
         }
         if ($isAssociativeArray === null) {
             $isAssociativeArray = Piwik::isAssociativeArray($array);
         }
-        $wrap = true;
+        $wrap = \true;
         if ($isAssociativeArray) {
             // we don't wrap if the array has one element that is a value
             $firstValue = reset($array);
             if (!$wrapSingleValues && count($array) === 1 && (!is_array($firstValue) && !is_object($firstValue))) {
-                $wrap = false;
+                $wrap = \false;
             } else {
                 foreach ($array as $value) {
                     if (is_array($value) || is_object($value)) {
-                        $wrap = false;
+                        $wrap = \false;
                         break;
                     }
                 }
             }
         } else {
-            $wrap = false;
+            $wrap = \false;
         }
         return $wrap;
     }
@@ -376,7 +376,7 @@ abstract class Renderer extends BaseFactory
         foreach ($table->getRows() as $id => $row) {
             $newRow = array('columns' => $row->getColumns(), 'metadata' => $row->getMetadata(), 'idsubdatatable' => $row->getIdSubDataTable());
             if ($id == DataTable::ID_SUMMARY_ROW) {
-                $newRow['issummaryrow'] = true;
+                $newRow['issummaryrow'] = \true;
             }
             if (isset($newRow['metadata'][DataTable\Row::COMPARISONS_METADATA_NAME])) {
                 $newRow['metadata'][DataTable\Row::COMPARISONS_METADATA_NAME] = $row->getComparisons();
@@ -385,12 +385,12 @@ abstract class Renderer extends BaseFactory
             if ($this->isRenderSubtables() && $subTable) {
                 $subTable = $this->convertTable($subTable);
                 $newRow['subtable'] = $subTable;
-                if ($this->hideIdSubDatatable === false && isset($newRow['metadata']['idsubdatatable_in_db'])) {
+                if ($this->hideIdSubDatatable === \false && isset($newRow['metadata']['idsubdatatable_in_db'])) {
                     $newRow['columns']['idsubdatatable'] = $newRow['metadata']['idsubdatatable_in_db'];
                 }
                 unset($newRow['metadata']['idsubdatatable_in_db']);
             }
-            if ($this->hideIdSubDatatable !== false) {
+            if ($this->hideIdSubDatatable !== \false) {
                 unset($newRow['idsubdatatable']);
             }
             $array[] = $newRow;
@@ -407,7 +407,7 @@ abstract class Renderer extends BaseFactory
     {
         $array = [];
         $row = $table->getFirstRow();
-        if ($row === false) {
+        if ($row === \false) {
             return $array;
         }
         foreach ($row->getColumns() as $columnName => $columnValue) {
@@ -429,7 +429,7 @@ abstract class Renderer extends BaseFactory
         $flatArray = [];
         foreach ($array as $row) {
             $newRow = $row['columns'] + $row['metadata'];
-            if (isset($row['idsubdatatable']) && $this->hideIdSubDatatable === false) {
+            if (isset($row['idsubdatatable']) && $this->hideIdSubDatatable === \false) {
                 $newRow += array('idsubdatatable' => $row['idsubdatatable']);
             }
             if (isset($row['subtable'])) {

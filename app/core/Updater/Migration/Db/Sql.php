@@ -46,14 +46,14 @@ class Sql extends DbMigration
     public function shouldIgnoreError($exception)
     {
         if (empty($this->errorCodesToIgnore)) {
-            return false;
+            return \false;
         }
         foreach ($this->errorCodesToIgnore as $code) {
             if (Db::get()->isErrNo($exception, $code)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * @internal

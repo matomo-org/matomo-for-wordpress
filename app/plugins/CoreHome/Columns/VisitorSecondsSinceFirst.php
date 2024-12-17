@@ -35,7 +35,7 @@ class VisitorSecondsSinceFirst extends VisitDimension
         }
         $prevSecondsSinceFirst = $visitor->getPreviousVisitColumn('visitor_seconds_since_first');
         // no data for previous visit, we can't calculate for this one
-        if ($prevSecondsSinceFirst === null || $prevSecondsSinceFirst === false || $prevSecondsSinceFirst === '') {
+        if ($prevSecondsSinceFirst === null || $prevSecondsSinceFirst === \false || $prevSecondsSinceFirst === '') {
             return null;
         }
         $prevVisitStart = $visitor->getPreviousVisitColumn('visit_first_action_time');

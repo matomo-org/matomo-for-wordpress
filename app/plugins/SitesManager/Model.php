@@ -151,7 +151,7 @@ class Model
      * @param bool $limit
      * @return array
      */
-    public function getSitesFromIds($idSites, $limit = false)
+    public function getSitesFromIds($idSites, $limit = \false)
     {
         if (count($idSites) === 0) {
             return array();
@@ -314,7 +314,7 @@ class Model
             $where = 'OR s.idsite = ?';
         }
         $query = "SELECT *\n                  FROM " . $this->table . " s\n                  WHERE ( " . self::getPatternMatchSqlQuery('s') . "\n                          {$where} )\n                     AND idsite in ({$ids_str})";
-        if ($limit !== false) {
+        if ($limit !== \false) {
             $query .= " LIMIT " . (int) $limit;
         }
         $db = $this->getDb();

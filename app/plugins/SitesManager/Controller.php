@@ -11,6 +11,7 @@ namespace Piwik\Plugins\SitesManager;
 use Exception;
 use Piwik\API\ResponseBuilder;
 use Piwik\Common;
+use Piwik\Config;
 use Piwik\DataTable\Renderer\Json;
 use Piwik\Piwik;
 use Piwik\Plugin\Manager;
@@ -46,7 +47,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     public function globalSettings()
     {
         Piwik::checkUserHasSuperUserAccess();
-        return $this->renderTemplate('globalSettings');
+        return $this->renderTemplate('globalSettings', ['commonSensitiveQueryParams' => Config::getInstance()->SitesManager['CommonPIIParams']]);
     }
     public function getGlobalSettings()
     {
@@ -62,6 +63,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $globalSettings['excludedQueryParametersGlobal'] = \Piwik\Plugins\SitesManager\API::getInstance()->getExcludedQueryParametersGlobal();
         $globalSettings['excludedUserAgentsGlobal'] = \Piwik\Plugins\SitesManager\API::getInstance()->getExcludedUserAgentsGlobal();
         $globalSettings['excludedReferrersGlobal'] = \Piwik\Plugins\SitesManager\API::getInstance()->getExcludedReferrersGlobal();
+        $globalSettings['exclusionTypeForQueryParams'] = \Piwik\Plugins\SitesManager\API::getInstance()->getExclusionTypeForQueryParams();
         return $response->getResponse($globalSettings);
     }
     /**
@@ -72,24 +74,25 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $response = new ResponseBuilder(Common::getRequestVar('format'));
         try {
             $this->checkTokenInUrl();
-            $timezone = Common::getRequestVar('timezone', false);
-            $excludedIps = Common::getRequestVar('excludedIps', false);
-            $excludedQueryParameters = Common::getRequestVar('excludedQueryParameters', false);
-            $excludedUserAgents = Common::getRequestVar('excludedUserAgents', false);
-            $excludedReferrers = Common::getRequestVar('excludedReferrers', false);
-            $currency = Common::getRequestVar('currency', false);
+            $timezone = Common::getRequestVar('timezone', \false);
+            $excludedIps = Common::getRequestVar('excludedIps', \false);
+            $excludedQueryParameters = Common::getRequestVar('excludedQueryParameters', \false);
+            $excludedUserAgents = Common::getRequestVar('excludedUserAgents', \false);
+            $excludedReferrers = Common::getRequestVar('excludedReferrers', \false);
+            $currency = Common::getRequestVar('currency', \false);
             $searchKeywordParameters = Common::getRequestVar('searchKeywordParameters', $default = "");
             $searchCategoryParameters = Common::getRequestVar('searchCategoryParameters', $default = "");
             $keepURLFragments = Common::getRequestVar('keepURLFragments', $default = 0);
+            $exclusionTypeForQueryParams = Common::getRequestVar('exclusionTypeForQueryParams', $default = "");
             $api = \Piwik\Plugins\SitesManager\API::getInstance();
             $api->setDefaultTimezone($timezone);
             $api->setDefaultCurrency($currency);
-            $api->setGlobalExcludedQueryParameters($excludedQueryParameters);
             $api->setGlobalExcludedIps($excludedIps);
             $api->setGlobalExcludedUserAgents($excludedUserAgents);
             $api->setGlobalExcludedReferrers($excludedReferrers);
             $api->setGlobalSearchParameters($searchKeywordParameters, $searchCategoryParameters);
             $api->setKeepURLFragmentsGlobal($keepURLFragments);
+            $api->setGlobalQueryParamExclusion($exclusionTypeForQueryParams, $excludedQueryParameters);
             $toReturn = $response->getResponse();
         } catch (Exception $e) {
             $toReturn = $response->getResponseException($e);
@@ -100,7 +103,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     {
         Piwik::checkUserHasSomeViewAccess();
         $session = new Session\SessionNamespace('siteWithoutData');
-        $session->ignoreMessage = true;
+        $session->ignoreMessage = \true;
         $session->setExpirationSeconds($oneHour = 60 * 60);
         $url = Url::getCurrentUrlWithoutQueryString() . Url::getCurrentQueryStringWithParametersModified(array('module' => 'CoreHome', 'action' => 'index'));
         Url::redirectToUrl($url);
@@ -108,7 +111,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     public function siteWithoutData()
     {
         $this->checkSitePermission();
-        return $this->renderTemplateAs('siteWithoutData', ['inviteUserLink' => $this->getInviteUserLink(), 'hideWhatIsNew' => true], $viewType = 'basic');
+        return $this->renderTemplateAs('siteWithoutData', ['inviteUserLink' => $this->getInviteUserLink(), 'hideWhatIsNew' => \true], $viewType = 'basic');
     }
     public function getTrackingMethodsForSite()
     {
@@ -162,13 +165,13 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             return strnatcmp($a['name'], $b['name']);
         });
         // add integration and others tab
-        $trackingMethods[] = ['id' => 'Integrations', 'name' => Piwik::translate('SitesManager_Integrations'), 'type' => SiteContentDetectionAbstract::TYPE_OTHER, 'content' => $this->renderIntegrationsTab($instructionUrls), 'icon' => './plugins/SitesManager/images/integrations.svg', 'priority' => 10000, 'wasDetected' => false, 'isRecommended' => false, 'recommendationTitle' => '', 'recommendationText' => '', 'recommendationButton' => ''];
-        $trackingMethods[] = ['id' => 'Other', 'name' => Piwik::translate('SitesManager_SiteWithoutDataOtherWays'), 'type' => SiteContentDetectionAbstract::TYPE_OTHER, 'content' => $this->renderOthersTab($othersInstructions), 'icon' => './plugins/SitesManager/images/others.svg', 'priority' => 10001, 'wasDetected' => false, 'isRecommended' => false, 'recommendationTitle' => '', 'recommendationText' => '', 'recommendationButton' => ''];
+        $trackingMethods[] = ['id' => 'Integrations', 'name' => Piwik::translate('SitesManager_Integrations'), 'type' => SiteContentDetectionAbstract::TYPE_OTHER, 'content' => $this->renderIntegrationsTab($instructionUrls), 'icon' => './plugins/SitesManager/images/integrations.svg', 'priority' => 10000, 'wasDetected' => \false, 'isRecommended' => \false, 'recommendationTitle' => '', 'recommendationText' => '', 'recommendationButton' => ''];
+        $trackingMethods[] = ['id' => 'Other', 'name' => Piwik::translate('SitesManager_SiteWithoutDataOtherWays'), 'type' => SiteContentDetectionAbstract::TYPE_OTHER, 'content' => $this->renderOthersTab($othersInstructions), 'icon' => './plugins/SitesManager/images/others.svg', 'priority' => 10001, 'wasDetected' => \false, 'isRecommended' => \false, 'recommendationTitle' => '', 'recommendationText' => '', 'recommendationButton' => ''];
         $recommendedMethod = null;
         $matomoIndex = null;
         foreach ($trackingMethods as $index => $tab) {
             // Note: We recommend the first method that is recommended (after sorting by priority)
-            if (true === $tab['isRecommended']) {
+            if (\true === $tab['isRecommended']) {
                 $recommendedMethod = $tab;
                 unset($trackingMethods[$index]);
                 break;

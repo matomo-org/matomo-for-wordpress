@@ -35,6 +35,6 @@ abstract class Migration
      */
     public function shouldIgnoreError($exception)
     {
-        return false;
+        return \false;
     }
 }

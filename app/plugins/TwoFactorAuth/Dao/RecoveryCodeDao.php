@@ -49,9 +49,9 @@ class RecoveryCodeDao
     public function useRecoveryCode($login, $recoveryCode)
     {
         if ($this->deleteRecoveryCode($login, $recoveryCode)) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     public function getAllRecoveryCodesForLogin($login)
     {

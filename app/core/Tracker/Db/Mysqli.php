@@ -25,7 +25,7 @@ class Mysqli extends Db
     protected $password;
     protected $charset;
     protected $collation;
-    protected $activeTransaction = false;
+    protected $activeTransaction = \false;
     protected $enable_ssl;
     protected $ssl_key;
     protected $ssl_cert;
@@ -101,7 +101,7 @@ class Mysqli extends Db
         // The default error reporting of mysqli changed in PHP 8.1. To circumvent problems in our error handling we set
         // the erroring reporting to the default that was used prior PHP 8.1
         // See https://php.watch/versions/8.1/mysqli-error-mode for more details
-        mysqli_report(MYSQLI_REPORT_OFF);
+        mysqli_report(\MYSQLI_REPORT_OFF);
         $this->connection = mysqli_init();
         if ($this->enable_ssl) {
             mysqli_ssl_set($this->connection, $this->ssl_key, $this->ssl_cert, $this->ssl_ca, $this->ssl_ca_path, $this->ssl_cipher);
@@ -110,12 +110,12 @@ class Mysqli extends Db
         // rows that actually didn't have to be updated because the values didn't
         // change. This matches common behaviour among other database systems.
         // See #6296 why this is important in tracker
-        $flags = MYSQLI_CLIENT_FOUND_ROWS;
+        $flags = \MYSQLI_CLIENT_FOUND_ROWS;
         if ($this->enable_ssl) {
-            $flags = $flags | MYSQLI_CLIENT_SSL;
+            $flags = $flags | \MYSQLI_CLIENT_SSL;
         }
         if ($this->ssl_no_verify && defined('MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT')) {
-            $flags = $flags | MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
+            $flags = $flags | \MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
         }
         mysqli_real_connect($this->connection, $this->host, $this->username, $this->password, $this->dbname, $this->port, $this->socket, $flags);
         if (!$this->connection || mysqli_connect_errno()) {
@@ -159,9 +159,9 @@ class Mysqli extends Db
         }
         call_user_func_array(array($stmt, 'bind_result'), $values);
         $result = $stmt->fetch();
-        if ($result === null || $result === false) {
+        if ($result === null || $result === \false) {
             $stmt->reset();
-            return false;
+            return \false;
         }
         $val = array();
         foreach ($values as $key => $value) {
@@ -227,7 +227,7 @@ class Mysqli extends Db
                 $this->recordQueryProfile($query, $timer);
             }
             if ($row === null) {
-                $row = false;
+                $row = \false;
             }
             return $row;
         } catch (Exception $e) {
@@ -246,7 +246,7 @@ class Mysqli extends Db
     public function query($query, $parameters = array())
     {
         if (is_null($this->connection)) {
-            return false;
+            return \false;
         }
         try {
             if (self::$profiling) {
@@ -258,7 +258,7 @@ class Mysqli extends Db
             }
             return $stmt;
         } catch (Exception $e) {
-            throw new \Piwik\Tracker\Db\DbException("Error query: " . $e->getMessage() . "\n                                   In query: {$query}\n                                   Parameters: " . var_export($parameters, true), $e->getCode());
+            throw new \Piwik\Tracker\Db\DbException("Error query: " . $e->getMessage() . "\n                                   In query: {$query}\n                                   Parameters: " . var_export($parameters, \true), $e->getCode());
         }
     }
     /**
@@ -288,7 +288,7 @@ class Mysqli extends Db
             call_user_func_array(array($stmt, 'bind_param'), $refs);
         }
         $stmtResult = $stmt->execute();
-        if ($stmtResult === false) {
+        if ($stmtResult === \false) {
             throw new \Piwik\Tracker\Db\DbException("Mysqli statement execute error : " . $stmt->error, $stmt->errno);
         }
         if (!empty($stmt->error)) {
@@ -361,10 +361,10 @@ class Mysqli extends Db
      */
     public function beginTransaction()
     {
-        if (!$this->activeTransaction === false) {
+        if (!$this->activeTransaction === \false) {
             return;
         }
-        if ($this->connection->autocommit(false)) {
+        if ($this->connection->autocommit(\false)) {
             $this->activeTransaction = uniqid();
             return $this->activeTransaction;
         }
@@ -377,14 +377,14 @@ class Mysqli extends Db
      */
     public function commit($xid)
     {
-        if ($this->activeTransaction != $xid || $this->activeTransaction === false) {
+        if ($this->activeTransaction != $xid || $this->activeTransaction === \false) {
             return;
         }
-        $this->activeTransaction = false;
+        $this->activeTransaction = \false;
         if (!$this->connection->commit()) {
             throw new \Piwik\Tracker\Db\DbException("Commit failed");
         }
-        $this->connection->autocommit(true);
+        $this->connection->autocommit(\true);
     }
     /**
      * Rollback Transaction
@@ -394,13 +394,13 @@ class Mysqli extends Db
      */
     public function rollBack($xid)
     {
-        if ($this->activeTransaction != $xid || $this->activeTransaction === false) {
+        if ($this->activeTransaction != $xid || $this->activeTransaction === \false) {
             return;
         }
-        $this->activeTransaction = false;
+        $this->activeTransaction = \false;
         if (!$this->connection->rollback()) {
             throw new \Piwik\Tracker\Db\DbException("Rollback failed");
         }
-        $this->connection->autocommit(true);
+        $this->connection->autocommit(\true);
     }
 }

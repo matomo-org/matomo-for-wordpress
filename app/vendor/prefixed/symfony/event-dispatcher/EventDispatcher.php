@@ -110,10 +110,10 @@ class EventDispatcher implements EventDispatcherInterface
         }
         foreach ($this->listeners as $eventListeners) {
             if ($eventListeners) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * {@inheritdoc}

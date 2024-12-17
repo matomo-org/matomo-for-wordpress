@@ -79,6 +79,8 @@ class Metrics
     public const INDEX_CONTENT_NB_INTERACTIONS = 42;
     // Unique visitors fingerprints (useful to process unique visitors across websites)
     public const INDEX_NB_UNIQ_FINGERPRINTS = 43;
+    // Total number of hits
+    public const INDEX_NB_HITS = 44;
     // Goal reports
     public const INDEX_GOAL_NB_CONVERSIONS = 1;
     public const INDEX_GOAL_REVENUE = 2;
@@ -112,6 +114,7 @@ class Metrics
         \Piwik\Metrics::INDEX_GOALS => 'goals',
         \Piwik\Metrics::INDEX_SUM_DAILY_NB_UNIQ_VISITORS => 'sum_daily_nb_uniq_visitors',
         \Piwik\Metrics::INDEX_SUM_DAILY_NB_USERS => 'sum_daily_nb_users',
+        \Piwik\Metrics::INDEX_NB_HITS => 'hits',
         // Actions metrics
         \Piwik\Metrics::INDEX_PAGE_NB_HITS => 'nb_hits',
         \Piwik\Metrics::INDEX_PAGE_SUM_TIME_SPENT => 'sum_time_spent',
@@ -224,15 +227,15 @@ class Metrics
          */
         \Piwik\Piwik::postEvent('Metrics.isLowerValueBetter', [&$isLowerBetter, $column]);
         if (!is_null($isLowerBetter)) {
-            return true;
+            return \true;
         }
         $lowerIsBetterPatterns = array('bounce', 'exit');
         foreach ($lowerIsBetterPatterns as $pattern) {
-            if (strpos($column, $pattern) !== false) {
-                return true;
+            if (strpos($column, $pattern) !== \false) {
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Derive the unit name from a column name
@@ -257,7 +260,7 @@ class Metrics
             return $unit;
         }
         foreach ($nameToUnit as $pattern => $type) {
-            if (strpos($column, $pattern) !== false) {
+            if (strpos($column, $pattern) !== \false) {
                 return $type;
             }
         }
@@ -269,7 +272,7 @@ class Metrics
         $cache = PiwikCache::getTransientCache();
         $types = $cache->fetch($cacheId);
         if (empty($types)) {
-            $types = ['nb_visits' => Dimension::TYPE_NUMBER, 'nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'nb_actions' => Dimension::TYPE_NUMBER, 'nb_users' => Dimension::TYPE_NUMBER, 'avg_time_on_page' => Dimension::TYPE_DURATION_S, 'sum_time_spent' => Dimension::TYPE_DURATION_S, 'sum_visit_length' => Dimension::TYPE_DURATION_S, 'bounce_count' => Dimension::TYPE_NUMBER, 'bounce_count_returning' => Dimension::TYPE_NUMBER, 'max_actions' => Dimension::TYPE_NUMBER, 'max_actions_returning' => Dimension::TYPE_NUMBER, 'nb_visits_converted_returning' => Dimension::TYPE_NUMBER, 'sum_visit_length_returning' => Dimension::TYPE_NUMBER, 'nb_visits_converted' => Dimension::TYPE_NUMBER, 'nb_conversions' => Dimension::TYPE_NUMBER, 'revenue' => Dimension::TYPE_MONEY, 'nb_hits' => Dimension::TYPE_NUMBER, 'entry_nb_visits' => Dimension::TYPE_NUMBER, 'entry_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'exit_nb_visits' => Dimension::TYPE_NUMBER, 'exit_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'entry_bounce_count' => Dimension::TYPE_NUMBER, 'exit_bounce_count' => Dimension::TYPE_NUMBER, 'exit_rate' => Dimension::TYPE_PERCENT, 'sum_daily_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'sum_daily_nb_users' => Dimension::TYPE_NUMBER, 'sum_daily_entry_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'sum_daily_exit_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'entry_nb_actions' => Dimension::TYPE_NUMBER, 'entry_sum_visit_length' => Dimension::TYPE_NUMBER, 'nb_actions_per_visit' => Dimension::TYPE_NUMBER, 'avg_time_on_site' => Dimension::TYPE_DURATION_S, 'bounce_rate' => Dimension::TYPE_PERCENT, 'conversion_rate' => Dimension::TYPE_PERCENT];
+            $types = ['nb_visits' => Dimension::TYPE_NUMBER, 'nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'nb_actions' => Dimension::TYPE_NUMBER, 'nb_users' => Dimension::TYPE_NUMBER, 'avg_time_on_page' => Dimension::TYPE_DURATION_S, 'sum_time_spent' => Dimension::TYPE_DURATION_S, 'sum_visit_length' => Dimension::TYPE_DURATION_S, 'bounce_count' => Dimension::TYPE_NUMBER, 'bounce_count_returning' => Dimension::TYPE_NUMBER, 'max_actions' => Dimension::TYPE_NUMBER, 'max_actions_returning' => Dimension::TYPE_NUMBER, 'nb_visits_converted_returning' => Dimension::TYPE_NUMBER, 'sum_visit_length_returning' => Dimension::TYPE_NUMBER, 'nb_visits_converted' => Dimension::TYPE_NUMBER, 'nb_conversions' => Dimension::TYPE_NUMBER, 'revenue' => Dimension::TYPE_MONEY, 'nb_hits' => Dimension::TYPE_NUMBER, 'hits' => Dimension::TYPE_NUMBER, 'entry_nb_visits' => Dimension::TYPE_NUMBER, 'entry_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'exit_nb_visits' => Dimension::TYPE_NUMBER, 'exit_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'entry_bounce_count' => Dimension::TYPE_NUMBER, 'exit_bounce_count' => Dimension::TYPE_NUMBER, 'exit_rate' => Dimension::TYPE_PERCENT, 'sum_daily_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'sum_daily_nb_users' => Dimension::TYPE_NUMBER, 'sum_daily_entry_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'sum_daily_exit_nb_uniq_visitors' => Dimension::TYPE_NUMBER, 'entry_nb_actions' => Dimension::TYPE_NUMBER, 'entry_sum_visit_length' => Dimension::TYPE_NUMBER, 'nb_actions_per_visit' => Dimension::TYPE_NUMBER, 'avg_time_on_site' => Dimension::TYPE_DURATION_S, 'bounce_rate' => Dimension::TYPE_PERCENT, 'conversion_rate' => Dimension::TYPE_PERCENT];
             /**
              * Use this event to notify Matomo of the semantic types of metrics your plugin adds.
              *
@@ -297,7 +300,7 @@ class Metrics
         if ($cache->contains($cacheId)) {
             return $cache->fetch($cacheId);
         }
-        $translations = array('label' => 'General_ColumnLabel', 'date' => 'General_Date', 'avg_time_on_page' => 'General_ColumnAverageTimeOnPage', 'sum_time_spent' => 'General_ColumnSumVisitLength', 'sum_visit_length' => 'General_ColumnSumVisitLength', 'bounce_count' => 'General_ColumnBounces', 'bounce_count_returning' => 'VisitFrequency_ColumnBounceCountForReturningVisits', 'max_actions' => 'General_ColumnMaxActions', 'max_actions_returning' => 'VisitFrequency_ColumnMaxActionsInReturningVisit', 'nb_visits_converted_returning' => 'VisitFrequency_ColumnNbReturningVisitsConverted', 'sum_visit_length_returning' => 'VisitFrequency_ColumnSumVisitLengthReturning', 'nb_visits_converted' => 'General_ColumnVisitsWithConversions', 'nb_conversions' => 'Goals_ColumnConversions', 'revenue' => 'General_ColumnRevenue', 'nb_hits' => 'General_ColumnPageviews', 'entry_nb_visits' => 'General_ColumnEntrances', 'entry_nb_uniq_visitors' => 'General_ColumnUniqueEntrances', 'exit_nb_visits' => 'General_ColumnExits', 'exit_nb_uniq_visitors' => 'General_ColumnUniqueExits', 'entry_bounce_count' => 'General_ColumnBounces', 'exit_bounce_count' => 'General_ColumnBounces', 'exit_rate' => 'General_ColumnExitRate');
+        $translations = array('label' => 'General_ColumnLabel', 'date' => 'General_Date', 'avg_time_on_page' => 'General_ColumnAverageTimeOnPage', 'sum_time_spent' => 'General_ColumnSumVisitLength', 'sum_visit_length' => 'General_ColumnSumVisitLength', 'bounce_count' => 'General_ColumnBounces', 'bounce_count_returning' => 'VisitFrequency_ColumnBounceCountForReturningVisits', 'max_actions' => 'General_ColumnMaxActions', 'max_actions_returning' => 'VisitFrequency_ColumnMaxActionsInReturningVisit', 'nb_visits_converted_returning' => 'VisitFrequency_ColumnNbReturningVisitsConverted', 'sum_visit_length_returning' => 'VisitFrequency_ColumnSumVisitLengthReturning', 'nb_visits_converted' => 'General_ColumnVisitsWithConversions', 'nb_conversions' => 'Goals_ColumnConversions', 'revenue' => 'General_ColumnRevenue', 'nb_hits' => 'General_ColumnPageviews', 'hits' => 'General_ColumnHits', 'entry_nb_visits' => 'General_ColumnEntrances', 'entry_nb_uniq_visitors' => 'General_ColumnUniqueEntrances', 'exit_nb_visits' => 'General_ColumnExits', 'exit_nb_uniq_visitors' => 'General_ColumnUniqueExits', 'entry_bounce_count' => 'General_ColumnBounces', 'exit_bounce_count' => 'General_ColumnBounces', 'exit_rate' => 'General_ColumnExitRate');
         $dailySum = ' (' . \Piwik\Piwik::translate('General_DailySum') . ')';
         $afterEntry = ' ' . \Piwik\Piwik::translate('General_AfterEntry');
         $translations['sum_daily_nb_uniq_visitors'] = \Piwik\Piwik::translate('General_ColumnNbUniqVisitors') . $dailySum;
@@ -357,7 +360,7 @@ class Metrics
     }
     public static function getMetricIdsToProcessReportTotal()
     {
-        return array(self::INDEX_NB_VISITS, self::INDEX_NB_UNIQ_VISITORS, self::INDEX_NB_ACTIONS, self::INDEX_PAGE_NB_HITS, self::INDEX_NB_VISITS_CONVERTED, self::INDEX_NB_CONVERSIONS, self::INDEX_BOUNCE_COUNT, self::INDEX_PAGE_ENTRY_BOUNCE_COUNT, self::INDEX_PAGE_ENTRY_NB_VISITS, self::INDEX_PAGE_ENTRY_NB_ACTIONS, self::INDEX_PAGE_EXIT_NB_VISITS, self::INDEX_PAGE_EXIT_NB_UNIQ_VISITORS, self::INDEX_REVENUE);
+        return array(self::INDEX_NB_VISITS, self::INDEX_NB_UNIQ_VISITORS, self::INDEX_NB_ACTIONS, self::INDEX_NB_HITS, self::INDEX_PAGE_NB_HITS, self::INDEX_NB_VISITS_CONVERTED, self::INDEX_NB_CONVERSIONS, self::INDEX_BOUNCE_COUNT, self::INDEX_PAGE_ENTRY_BOUNCE_COUNT, self::INDEX_PAGE_ENTRY_NB_VISITS, self::INDEX_PAGE_ENTRY_NB_ACTIONS, self::INDEX_PAGE_EXIT_NB_VISITS, self::INDEX_PAGE_EXIT_NB_UNIQ_VISITORS, self::INDEX_REVENUE);
     }
     public static function getDefaultMetricsDocumentation()
     {
@@ -366,7 +369,7 @@ class Metrics
         if ($cache->contains($cacheId)) {
             return $cache->fetch($cacheId);
         }
-        $translations = array('nb_visits' => 'General_ColumnNbVisitsDocumentation', 'nb_uniq_visitors' => 'General_ColumnNbUniqVisitorsDocumentation', 'nb_actions' => 'General_ColumnNbActionsDocumentation', 'nb_users' => 'General_ColumnNbUsersDocumentation', 'nb_actions_per_visit' => 'General_ColumnActionsPerVisitDocumentation', 'avg_time_on_site' => 'General_ColumnAvgTimeOnSiteDocumentation', 'bounce_rate' => 'General_ColumnBounceRateDocumentation', 'conversion_rate' => 'General_ColumnConversionRateDocumentation', 'avg_time_on_page' => 'General_ColumnAverageTimeOnPageDocumentation', 'nb_hits' => 'General_ColumnPageviewsDocumentation', 'exit_rate' => 'General_ColumnExitRateDocumentation');
+        $translations = array('nb_visits' => 'General_ColumnNbVisitsDocumentation', 'nb_uniq_visitors' => 'General_ColumnNbUniqVisitorsDocumentation', 'nb_actions' => 'General_ColumnNbActionsDocumentation', 'nb_users' => 'General_ColumnNbUsersDocumentation', 'nb_actions_per_visit' => 'General_ColumnActionsPerVisitDocumentation', 'avg_time_on_site' => 'General_ColumnAvgTimeOnSiteDocumentation', 'bounce_rate' => 'General_ColumnBounceRateDocumentation', 'conversion_rate' => 'General_ColumnConversionRateDocumentation', 'avg_time_on_page' => 'General_ColumnAverageTimeOnPageDocumentation', 'nb_hits' => 'General_ColumnPageviewsDocumentation', 'hits' => 'General_ColumnHitsDocumentation', 'exit_rate' => 'General_ColumnExitRateDocumentation');
         /**
          * Use this event to register translations for metrics documentation processed by your plugin.
          *

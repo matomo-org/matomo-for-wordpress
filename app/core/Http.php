@@ -81,18 +81,18 @@ class Http
      *                     `false` is still returned on failure.
      * @api
      */
-    public static function sendHttpRequest($aUrl, $timeout, $userAgent = null, $destinationPath = null, $followDepth = 0, $acceptLanguage = false, $byteRange = false, $getExtendedInfo = false, $httpMethod = 'GET', $httpUsername = null, $httpPassword = null, $checkHostIsAllowed = true)
+    public static function sendHttpRequest($aUrl, $timeout, $userAgent = null, $destinationPath = null, $followDepth = 0, $acceptLanguage = \false, $byteRange = \false, $getExtendedInfo = \false, $httpMethod = 'GET', $httpUsername = null, $httpPassword = null, $checkHostIsAllowed = \true)
     {
         // create output file
         $file = self::ensureDestinationDirectoryExists($destinationPath);
         $acceptLanguage = $acceptLanguage ? 'Accept-Language: ' . $acceptLanguage : '';
-        return self::sendHttpRequestBy(self::getTransportMethod(), $aUrl, $timeout, $userAgent, $destinationPath, $file, $followDepth, $acceptLanguage, $acceptInvalidSslCertificate = false, $byteRange, $getExtendedInfo, $httpMethod, $httpUsername, $httpPassword, null, [], null, $checkHostIsAllowed);
+        return self::sendHttpRequestBy(self::getTransportMethod(), $aUrl, $timeout, $userAgent, $destinationPath, $file, $followDepth, $acceptLanguage, $acceptInvalidSslCertificate = \false, $byteRange, $getExtendedInfo, $httpMethod, $httpUsername, $httpPassword, null, [], null, $checkHostIsAllowed);
     }
     public static function ensureDestinationDirectoryExists($destinationPath)
     {
         if ($destinationPath) {
             \Piwik\Filesystem::mkdir(dirname($destinationPath));
-            if (($file = @fopen($destinationPath, 'wb')) === false || !is_resource($file)) {
+            if (($file = @fopen($destinationPath, 'wb')) === \false || !is_resource($file)) {
                 throw new Exception('Error while creating the file: ' . $destinationPath);
             }
             return $file;
@@ -101,13 +101,13 @@ class Http
     }
     private static function convertWildcardToPattern($wildcardHost)
     {
-        $flexibleStart = $flexibleEnd = false;
+        $flexibleStart = $flexibleEnd = \false;
         if (strpos($wildcardHost, '*.') === 0) {
-            $flexibleStart = true;
+            $flexibleStart = \true;
             $wildcardHost = substr($wildcardHost, 2);
         }
         if (\Piwik\Common::stringEndsWith($wildcardHost, '.*')) {
-            $flexibleEnd = true;
+            $flexibleEnd = \true;
             $wildcardHost = substr($wildcardHost, 0, -2);
         }
         $pattern = preg_quote($wildcardHost);
@@ -145,7 +145,7 @@ class Http
      * @return string|array  true (or string/array) on success; false on HTTP response error code (1xx or 4xx)
      *@throws Exception
      */
-    public static function sendHttpRequestBy($method, $aUrl, $timeout, $userAgent = null, $destinationPath = null, $file = null, $followDepth = 0, $acceptLanguage = false, $acceptInvalidSslCertificate = false, $byteRange = false, $getExtendedInfo = false, $httpMethod = 'GET', $httpUsername = null, $httpPassword = null, $requestBody = null, $additionalHeaders = array(), $forcePost = null, $checkHostIsAllowed = true)
+    public static function sendHttpRequestBy($method, $aUrl, $timeout, $userAgent = null, $destinationPath = null, $file = null, $followDepth = 0, $acceptLanguage = \false, $acceptInvalidSslCertificate = \false, $byteRange = \false, $getExtendedInfo = \false, $httpMethod = 'GET', $httpUsername = null, $httpPassword = null, $requestBody = null, $additionalHeaders = array(), $forcePost = null, $checkHostIsAllowed = \true)
     {
         if ($followDepth > 5) {
             throw new Exception('Too many redirects (' . $followDepth . ')');
@@ -156,10 +156,10 @@ class Http
             throw new Exception('Missing scheme in given url');
         }
         $allowedProtocols = \Piwik\Config::getInstance()->General['allowed_outgoing_protocols'];
-        $isAllowed = false;
+        $isAllowed = \false;
         foreach (explode(',', $allowedProtocols) as $protocol) {
             if (strtolower($parsedUrl['scheme']) === strtolower(trim($protocol))) {
-                $isAllowed = true;
+                $isAllowed = \true;
                 break;
             }
         }
@@ -168,10 +168,10 @@ class Http
         }
         if ($checkHostIsAllowed) {
             $disallowedHosts = StaticContainer::get('http.blocklist.hosts');
-            $isBlocked = false;
+            $isBlocked = \false;
             foreach ($disallowedHosts as $host) {
                 if (!empty($parsedUrl['host']) && preg_match(self::convertWildcardToPattern($host), $parsedUrl['host']) === 1) {
-                    $isBlocked = true;
+                    $isBlocked = \true;
                     break;
                 }
             }
@@ -234,7 +234,7 @@ class Http
              */
             \Piwik\Piwik::postEvent('Http.sendHttpRequest.end', array($aUrl, $httpEventParams, &$response, &$status, &$headers));
             if ($destinationPath && file_exists($destinationPath)) {
-                return true;
+                return \true;
             }
             if ($getExtendedInfo) {
                 return array('status' => $status, 'headers' => $headers, 'data' => $response);
@@ -249,7 +249,7 @@ class Http
             }
             // initialization
             $url = @parse_url($aUrl);
-            if ($url === false || !isset($url['scheme'])) {
+            if ($url === \false || !isset($url['scheme'])) {
                 throw new Exception('Malformed URL: ' . $aUrl);
             }
             if ($url['scheme'] != 'http' && $url['scheme'] != 'https') {
@@ -285,7 +285,7 @@ class Http
                 }
             }
             // connection attempt
-            if (($fsock = @fsockopen($connectHost, $connectPort, $errno, $errstr, $timeout)) === false || !is_resource($fsock)) {
+            if (($fsock = @fsockopen($connectHost, $connectPort, $errno, $errstr, $timeout)) === \false || !is_resource($fsock)) {
                 if (is_resource($file)) {
                     @fclose($file);
                 }
@@ -301,8 +301,8 @@ class Http
             } else {
                 fwrite($fsock, "\r\n");
             }
-            $streamMetaData = array('timed_out' => false);
-            @stream_set_blocking($fsock, true);
+            $streamMetaData = array('timed_out' => \false);
+            @stream_set_blocking($fsock, \true);
             if (function_exists('stream_set_timeout')) {
                 @stream_set_timeout($fsock, $timeout);
             } elseif (function_exists('socket_set_timeout')) {
@@ -342,7 +342,7 @@ class Http
                         }
                         @fclose($fsock);
                         if (!$getExtendedInfo) {
-                            return false;
+                            return \false;
                         } else {
                             return array('status' => $status);
                         }
@@ -359,7 +359,7 @@ class Http
                     if ($status < 300) {
                         throw new Exception('Unexpected redirect to Location: ' . rtrim($line) . ' for status code ' . $status);
                     }
-                    return self::sendHttpRequestBy($method, trim($m[1]), $timeout, $userAgent, $destinationPath, $file, $followDepth + 1, $acceptLanguage, $acceptInvalidSslCertificate = false, $byteRange, $getExtendedInfo, $httpMethod, $httpUsername, $httpPassword, $requestBodyQuery, $additionalHeaders);
+                    return self::sendHttpRequestBy($method, trim($m[1]), $timeout, $userAgent, $destinationPath, $file, $followDepth + 1, $acceptLanguage, $acceptInvalidSslCertificate = \false, $byteRange, $getExtendedInfo, $httpMethod, $httpUsername, $httpPassword, $requestBodyQuery, $additionalHeaders);
                 }
                 // save expected content length for later verification
                 if (preg_match('/^Content-Length:\\s*(\\d+)/', $line, $m)) {
@@ -394,7 +394,7 @@ class Http
             // determine success or failure
             @fclose(@$fsock);
         } elseif ($method == 'fopen') {
-            $response = false;
+            $response = \false;
             // we make sure the request takes less than a few seconds to fail
             // we create a stream_context (works in php >= 5.2.1)
             // we also set the socket_timeout (for php < 5.2.1)
@@ -410,7 +410,7 @@ class Http
                 ));
                 if (!empty($proxyHost) && !empty($proxyPort)) {
                     $stream_options['http']['proxy'] = 'tcp://' . $proxyHost . ':' . $proxyPort;
-                    $stream_options['http']['request_fulluri'] = true;
+                    $stream_options['http']['request_fulluri'] = \true;
                     // required by squid proxy
                     if (!empty($proxyUser) && !empty($proxyPassword)) {
                         $stream_options['http']['header'] .= 'Proxy-Authorization: Basic ' . base64_encode("{$proxyUser}:{$proxyPassword}") . "\r\n";
@@ -427,7 +427,7 @@ class Http
             }
             // save to file
             if (is_resource($file)) {
-                if (!($handle = fopen($aUrl, 'rb', false, $ctx))) {
+                if (!($handle = fopen($aUrl, 'rb', \false, $ctx))) {
                     throw new Exception("Unable to open {$aUrl}");
                 }
                 while (!feof($handle)) {
@@ -442,7 +442,7 @@ class Http
                 if (isset($http_response_header) && preg_match('~^HTTP/(\\d\\.\\d)\\s+(\\d+)(\\s*.*)?~', implode("\n", $http_response_header), $m)) {
                     $status = (int) $m[2];
                 }
-                if (!$status && $response === false) {
+                if (!$status && $response === \false) {
                     $error = \Piwik\ErrorHandler::getLastError();
                     throw new \Exception($error);
                 }
@@ -462,44 +462,44 @@ class Http
             }
             $ch = @curl_init();
             if (!empty($proxyHost) && !empty($proxyPort)) {
-                @curl_setopt($ch, CURLOPT_PROXY, $proxyHost . ':' . $proxyPort);
+                @curl_setopt($ch, \CURLOPT_PROXY, $proxyHost . ':' . $proxyPort);
                 if (!empty($proxyUser) && !empty($proxyPassword)) {
                     // PROXYAUTH defaults to BASIC
-                    @curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyUser . ':' . $proxyPassword);
+                    @curl_setopt($ch, \CURLOPT_PROXYUSERPWD, $proxyUser . ':' . $proxyPassword);
                 }
             }
             $curl_options = array(
                 // curl options (sorted oldest to newest)
-                CURLOPT_URL => $aUrl,
-                CURLOPT_USERAGENT => $userAgent,
-                CURLOPT_HTTPHEADER => array_merge(array($via, $acceptLanguage), $additionalHeaders),
+                \CURLOPT_URL => $aUrl,
+                \CURLOPT_USERAGENT => $userAgent,
+                \CURLOPT_HTTPHEADER => array_merge(array($via, $acceptLanguage), $additionalHeaders),
                 // only get header info if not saving directly to file
-                CURLOPT_HEADER => is_resource($file) ? false : true,
-                CURLOPT_CONNECTTIMEOUT => $timeout,
-                CURLOPT_TIMEOUT => $timeout,
+                \CURLOPT_HEADER => is_resource($file) ? \false : \true,
+                \CURLOPT_CONNECTTIMEOUT => $timeout,
+                \CURLOPT_TIMEOUT => $timeout,
             );
             if ($rangeBytes) {
-                curl_setopt($ch, CURLOPT_RANGE, $rangeBytes);
+                curl_setopt($ch, \CURLOPT_RANGE, $rangeBytes);
             } else {
                 // see https://github.com/matomo-org/matomo/pull/17009 for more info
                 // NOTE: we only do this when CURLOPT_RANGE is not being used, because when using both the
                 // response is empty.
-                $curl_options[CURLOPT_ENCODING] = "";
+                $curl_options[\CURLOPT_ENCODING] = "";
             }
             // Case core:archive command is triggering archiving on https:// and the certificate is not valid
             if ($acceptInvalidSslCertificate) {
-                $curl_options += array(CURLOPT_SSL_VERIFYHOST => false, CURLOPT_SSL_VERIFYPEER => false);
+                $curl_options += array(\CURLOPT_SSL_VERIFYHOST => \false, \CURLOPT_SSL_VERIFYPEER => \false);
             }
-            @curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $httpMethod);
+            @curl_setopt($ch, \CURLOPT_CUSTOMREQUEST, $httpMethod);
             if ($httpMethod == 'HEAD') {
-                @curl_setopt($ch, CURLOPT_NOBODY, true);
+                @curl_setopt($ch, \CURLOPT_NOBODY, \true);
             }
             if (strtolower($httpMethod) === 'post' && !empty($requestBodyQuery)) {
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $requestBodyQuery);
+                curl_setopt($ch, \CURLOPT_POST, 1);
+                curl_setopt($ch, \CURLOPT_POSTFIELDS, $requestBodyQuery);
             }
             if (!empty($httpUsername) && !empty($httpPassword)) {
-                $curl_options += array(CURLOPT_USERPWD => $httpUsername . ':' . $httpPassword);
+                $curl_options += array(\CURLOPT_USERPWD => $httpUsername . ':' . $httpPassword);
             }
             @curl_setopt_array($ch, $curl_options);
             self::configCurlCertificate($ch);
@@ -516,28 +516,28 @@ class Http
                 }
                 $curl_options = array(
                     // curl options (sorted oldest to newest)
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_REDIR_PROTOCOLS => $protocols,
-                    CURLOPT_MAXREDIRS => 5,
+                    \CURLOPT_FOLLOWLOCATION => \true,
+                    \CURLOPT_REDIR_PROTOCOLS => $protocols,
+                    \CURLOPT_MAXREDIRS => 5,
                 );
                 if ($forcePost) {
-                    $curl_options[CURLOPT_POSTREDIR] = CURL_REDIR_POST_ALL;
+                    $curl_options[\CURLOPT_POSTREDIR] = \CURL_REDIR_POST_ALL;
                 }
                 @curl_setopt_array($ch, $curl_options);
             }
             if (is_resource($file)) {
                 // write output directly to file
-                @curl_setopt($ch, CURLOPT_FILE, $file);
+                @curl_setopt($ch, \CURLOPT_FILE, $file);
             } else {
                 // internal to ext/curl
-                @curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                @curl_setopt($ch, \CURLOPT_RETURNTRANSFER, \true);
             }
             ob_start();
             $response = @curl_exec($ch);
             ob_end_clean();
-            if ($response === true) {
+            if ($response === \true) {
                 $response = '';
-            } elseif ($response === false) {
+            } elseif ($response === \false) {
                 $errstr = curl_error($ch);
                 if ($errstr != '') {
                     throw new Exception('curl_exec: ' . $errstr . '. Hostname requested was: ' . \Piwik\UrlHelper::getHostFromUrl($aUrl));
@@ -560,9 +560,9 @@ class Http
                     self::parseHeaderLine($headers, $line);
                 }
             }
-            $contentLength = @curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
-            $fileLength = is_resource($file) ? @curl_getinfo($ch, CURLINFO_SIZE_DOWNLOAD) : strlen($response);
-            $status = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $contentLength = @curl_getinfo($ch, \CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+            $fileLength = is_resource($file) ? @curl_getinfo($ch, \CURLINFO_SIZE_DOWNLOAD) : strlen($response);
+            $status = @curl_getinfo($ch, \CURLINFO_HTTP_CODE);
             @curl_close($ch);
             unset($ch);
         } else {
@@ -575,7 +575,7 @@ class Http
             if ($contentLength > 0 && $fileSize != $contentLength) {
                 throw new Exception('File size error: ' . $destinationPath . '; expected ' . $contentLength . ' bytes; received ' . $fileLength . ' bytes; saved ' . $fileSize . ' bytes to file');
             }
-            return true;
+            return \true;
         }
         /**
          * Triggered when an HTTP request finished. A plugin can for example listen to this and alter the response,
@@ -676,19 +676,19 @@ class Http
         // if we're starting a download, get the expected file size & save as an option
         $downloadOption = $outputPath . '_expectedDownloadSize';
         if (!$isContinuation) {
-            $expectedFileSizeResult = \Piwik\Http::sendHttpRequest($url, $timeout = 300, $userAgent = null, $destinationPath = null, $followDepth = 0, $acceptLanguage = false, $byteRange = false, $getExtendedInfo = true, $httpMethod = 'HEAD');
+            $expectedFileSizeResult = \Piwik\Http::sendHttpRequest($url, $timeout = 300, $userAgent = null, $destinationPath = null, $followDepth = 0, $acceptLanguage = \false, $byteRange = \false, $getExtendedInfo = \true, $httpMethod = 'HEAD');
             $expectedFileSize = 0;
             if (isset($expectedFileSizeResult['headers']['Content-Length'])) {
                 $expectedFileSize = (int) $expectedFileSizeResult['headers']['Content-Length'];
             }
             if ($expectedFileSize == 0) {
-                \Piwik\Log::info("HEAD request for '%s' failed, got following: %s", $url, print_r($expectedFileSizeResult, true));
+                \Piwik\Log::info("HEAD request for '%s' failed, got following: %s", $url, print_r($expectedFileSizeResult, \true));
                 throw new Exception(\Piwik\Piwik::translate('General_DownloadFail_HttpRequestFail'));
             }
             \Piwik\Option::set($downloadOption, $expectedFileSize);
         } else {
             $expectedFileSize = (int) \Piwik\Option::get($downloadOption);
-            if ($expectedFileSize === false) {
+            if ($expectedFileSize === \false) {
                 // sanity check
                 throw new Exception("Trying to continue a download that never started?! That's not supposed to happen...");
             }
@@ -700,17 +700,17 @@ class Http
             throw new Exception(\Piwik\Piwik::translate('General_DownloadFail_FileExistsContinue', "'" . $outputPath . "'") . ' ' . \Piwik\Piwik::translate('General_DownloadPleaseRemoveExisting'));
         }
         // download a chunk of the file
-        $result = \Piwik\Http::sendHttpRequest($url, $timeout = 300, $userAgent = null, $destinationPath = null, $followDepth = 0, $acceptLanguage = false, $byteRange = array($existingSize, min($existingSize + 1024 * 1024 - 1, $expectedFileSize)), $getExtendedInfo = true);
-        if ($result === false || $result['status'] < 200 || $result['status'] > 299) {
+        $result = \Piwik\Http::sendHttpRequest($url, $timeout = 300, $userAgent = null, $destinationPath = null, $followDepth = 0, $acceptLanguage = \false, $byteRange = array($existingSize, min($existingSize + 1024 * 1024 - 1, $expectedFileSize)), $getExtendedInfo = \true);
+        if ($result === \false || $result['status'] < 200 || $result['status'] > 299) {
             $result['data'] = self::truncateStr($result['data'], 1024);
-            \Piwik\Log::info("Failed to download range '%s-%s' of file from url '%s'. Got result: %s", $byteRange[0], $byteRange[1], $url, print_r($result, true));
+            \Piwik\Log::info("Failed to download range '%s-%s' of file from url '%s'. Got result: %s", $byteRange[0], $byteRange[1], $url, print_r($result, \true));
             throw new Exception(\Piwik\Piwik::translate('General_DownloadFail_HttpRequestFail'));
         }
         // write chunk to file
         $f = fopen($outputPath, 'ab');
         fwrite($f, $result['data']);
         fclose($f);
-        clearstatcache($clear_realpath_cache = true, $outputPath);
+        clearstatcache($clear_realpath_cache = \true, $outputPath);
         return array('current_size' => filesize($outputPath), 'expected_file_size' => $expectedFileSize);
     }
     /**
@@ -725,7 +725,7 @@ class Http
         } else {
             $cacertPath = CaBundle::getBundledCaBundlePath();
         }
-        @curl_setopt($ch, CURLOPT_CAINFO, $cacertPath);
+        @curl_setopt($ch, \CURLOPT_CAINFO, $cacertPath);
     }
     public static function getUserAgent()
     {
@@ -756,7 +756,7 @@ class Http
      */
     public static function fetchRemoteFile($url, $destinationPath = null, $tries = 0, $timeout = 10)
     {
-        @ignore_user_abort(true);
+        @ignore_user_abort(\true);
         \Piwik\SettingsServer::setMaxExecutionTime(0);
         return self::sendHttpRequest($url, $timeout, 'Update', $destinationPath);
     }
@@ -780,7 +780,7 @@ class Http
          * With HTTP/2 Cloudflare is passing headers in lowercase (e.g. 'content-type' instead of 'Content-Type')
          * which breaks any code which uses the header data.
          */
-        if (version_compare(PHP_VERSION, '5.5.16', '>=')) {
+        if (version_compare(\PHP_VERSION, '5.5.16', '>=')) {
             // Passing a second arg to ucwords is not supported by older versions of PHP
             $camelName = ucwords($name, '-');
             if ($camelName !== $name) {
@@ -814,7 +814,7 @@ class Http
         if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
             $modifiedSince = $_SERVER['HTTP_IF_MODIFIED_SINCE'];
             // strip any trailing data appended to header
-            if (false !== ($semicolonPos = strpos($modifiedSince, ';'))) {
+            if (\false !== ($semicolonPos = strpos($modifiedSince, ';'))) {
                 $modifiedSince = substr($modifiedSince, 0, $semicolonPos);
             }
         }

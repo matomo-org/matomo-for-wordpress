@@ -26,7 +26,7 @@ class LineMessageFormatter implements FormatterInterface
      * @param string $logMessageFormat
      * @param bool $allowInlineLineBreaks If disabled, a log message will be created for each line
      */
-    public function __construct($logMessageFormat, $allowInlineLineBreaks = true)
+    public function __construct($logMessageFormat, $allowInlineLineBreaks = \true)
     {
         $this->logMessageFormat = $logMessageFormat;
         $this->allowInlineLineBreaks = $allowInlineLineBreaks;

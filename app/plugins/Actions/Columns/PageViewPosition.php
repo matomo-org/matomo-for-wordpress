@@ -37,6 +37,6 @@ class PageViewPosition extends ActionDimension
         if ($position >= 1) {
             return $position;
         }
-        return false;
+        return \false;
     }
 }

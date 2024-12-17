@@ -46,7 +46,7 @@ class ShellTv extends \DeviceDetector\Parser\Device\AbstractDeviceParser
     public function parse() : ?array
     {
         // only parse user agents containing fragments: {brand} shell
-        if (false === $this->isShellTv()) {
+        if (\false === $this->isShellTv()) {
             return null;
         }
         parent::parse();

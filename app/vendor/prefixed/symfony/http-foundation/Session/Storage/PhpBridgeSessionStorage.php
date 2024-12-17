@@ -35,10 +35,10 @@ class PhpBridgeSessionStorage extends NativeSessionStorage
     public function start()
     {
         if ($this->started) {
-            return true;
+            return \true;
         }
         $this->loadSession();
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}

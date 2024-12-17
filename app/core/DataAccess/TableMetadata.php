@@ -43,7 +43,7 @@ class TableMetadata
     {
         $columns = $this->getColumns($table);
         $columns = array_filter($columns, function ($columnName) {
-            return strpos($columnName, 'idaction') !== false;
+            return strpos($columnName, 'idaction') !== \false;
         });
         return array_values($columns);
     }

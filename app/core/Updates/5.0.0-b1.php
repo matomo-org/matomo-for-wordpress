@@ -48,7 +48,7 @@ class Updates_5_0_0_b1 extends PiwikUpdates
         $migrations[] = $this->migration->db->addColumns('user_token_auth', ['post_only' => "TINYINT(2) UNSIGNED NOT NULL DEFAULT '0'"]);
         $migrations[] = $this->migration->db->addColumns('log_conversion', ['pageviews_before' => "SMALLINT UNSIGNED DEFAULT NULL"]);
         $instanceId = SettingsPiwik::getPiwikInstanceId();
-        if (strpos($instanceId, '.matomo.cloud') === false && strpos($instanceId, '.innocraft.cloud') === false) {
+        if (strpos($instanceId, '.matomo.cloud') === \false && strpos($instanceId, '.innocraft.cloud') === \false) {
             $commandString = './console core:calculate-conversion-pages --dates=yesterday,today';
             $populatePagesBefore = new CustomMigration([CalculateConversionPages::class, 'calculateYesterdayAndToday'], $commandString);
             $migrations[] = $populatePagesBefore;
@@ -96,16 +96,16 @@ class Updates_5_0_0_b1 extends PiwikUpdates
         $result = Db::fetchAll($sql);
         if (empty($result)) {
             // No index present
-            return false;
+            return \false;
         }
         // Check that the $result contains all the required column names. This is required as there was a previous index
         // with the same name that only consisted of two columns. We want to check this index is built with all three.
         // $diff will be empty if all three columns are found, meaning that the index already exists.
         $diff = array_diff(['idsite', 'idvisitor', 'visit_last_action_time'], array_column($result, 'Column_name'));
         if (!$diff) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     private function hasNewIndex() : bool
     {

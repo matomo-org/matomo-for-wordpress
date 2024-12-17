@@ -22,7 +22,7 @@ class DbHelper
      * @param bool $forceReload Invalidate cache
      * @return array  Tables installed
      */
-    public static function getTablesInstalled($forceReload = true)
+    public static function getTablesInstalled($forceReload = \true)
     {
         return Schema::getInstance()->getTablesInstalled($forceReload);
     }
@@ -82,7 +82,7 @@ class DbHelper
         try {
             return Schema::getInstance()->hasTables();
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
     }
     /**
@@ -121,10 +121,10 @@ class DbHelper
     {
         $installVersion = self::getInstallVersion();
         if (empty($installVersion)) {
-            return true;
+            return \true;
             // we assume yes it was installed
         }
-        return true === version_compare($version, $installVersion, '>');
+        return \true === version_compare($version, $installVersion, '>');
     }
     /**
      * Create all tables
@@ -265,7 +265,7 @@ class DbHelper
             \Piwik\Log::debug("Dropping table {$table}");
             \Piwik\Db::query("DROP TABLE IF EXISTS `{$table}`");
         }
-        ArchiveTableCreator::refreshTableList($forceReload = true);
+        ArchiveTableCreator::refreshTableList($forceReload = \true);
     }
     /**
      * Adds a MAX_EXECUTION_TIME hint into a SELECT query if $limit is bigger than 0
@@ -323,7 +323,7 @@ class DbHelper
      */
     public static function addJoinPrefixHintToQuery(string $sql, string $prefix) : string
     {
-        if (strpos(trim($sql), '/*+ JOIN_PREFIX(') === false) {
+        if (strpos(trim($sql), '/*+ JOIN_PREFIX(') === \false) {
             $select = 'SELECT';
             if (0 === strpos(trim($sql), $select)) {
                 $sql = trim($sql);

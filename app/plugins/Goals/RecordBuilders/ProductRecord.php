@@ -73,11 +73,11 @@ class ProductRecord extends \Piwik\Plugins\Goals\RecordBuilders\Base
         if ($this->usesEcommerce($this->getSiteId($archiveProcessor))) {
             foreach ($this->dimensionsToAggregate as $dimension) {
                 $query = $logAggregator->queryEcommerceItems($dimension);
-                if ($query !== false) {
+                if ($query !== \false) {
                     $this->aggregateFromEcommerceItems($itemReports, $query, $dimension);
                 }
                 $query = $this->queryItemViewsForDimension($logAggregator, $dimension);
-                if ($query !== false) {
+                if ($query !== \false) {
                     $this->aggregateFromEcommerceViews($itemReports, $query, $dimension);
                 }
             }
@@ -115,7 +115,7 @@ class ProductRecord extends \Piwik\Plugins\Goals\RecordBuilders\Base
     {
         while ($row = $query->fetch()) {
             $label = $this->getRowLabel($row, $dimension);
-            if ($label === false) {
+            if ($label === \false) {
                 continue;
                 // ignore empty additional categories
             }
@@ -139,7 +139,7 @@ class ProductRecord extends \Piwik\Plugins\Goals\RecordBuilders\Base
     {
         $column = $this->actionMapping[$dimension];
         $where = "log_link_visit_action.{$column} is not null";
-        return $logAggregator->queryActionsByDimension(['label' => 'log_action1.name'], $where, ['AVG(log_link_visit_action.product_price) AS `avg_price_viewed`'], false, null, [$column]);
+        return $logAggregator->queryActionsByDimension(['label' => 'log_action1.name'], $where, ['AVG(log_link_visit_action.product_price) AS `avg_price_viewed`'], \false, null, [$column]);
     }
     protected function roundColumnValues(array &$row) : void
     {

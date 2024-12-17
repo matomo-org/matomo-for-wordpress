@@ -100,7 +100,7 @@ class Visitor implements \Piwik\Plugins\Live\VisitorInterface
         if (isset($this->details['idvisitor'])) {
             return bin2hex($this->details['idvisitor']);
         }
-        return false;
+        return \false;
     }
     /**
      * Removes fields that the user should only access if they are Super User or admin (cookie, IP,
@@ -181,7 +181,7 @@ class Visitor implements \Piwik\Plugins\Live\VisitorInterface
             $count++;
         }
         // Entry/exit pages
-        $firstAction = $lastAction = false;
+        $firstAction = $lastAction = \false;
         foreach ($visitorDetailsArray['actionDetails'] as $action) {
             if ($action['type'] == 'action') {
                 if (empty($firstAction)) {

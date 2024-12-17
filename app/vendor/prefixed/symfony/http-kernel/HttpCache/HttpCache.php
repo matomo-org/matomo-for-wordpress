@@ -15,6 +15,7 @@
  */
 namespace Matomo\Dependencies\Symfony\Component\HttpKernel\HttpCache;
 
+use Matomo\Dependencies\Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Request;
 use Matomo\Dependencies\Symfony\Component\HttpFoundation\Response;
 use Matomo\Dependencies\Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -83,7 +84,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
         $this->surrogate = $surrogate;
         // needed in case there is a fatal error because the backend is too slow to respond
         register_shutdown_function([$this->store, 'cleanup']);
-        $this->options = array_merge(['debug' => false, 'default_ttl' => 0, 'private_headers' => ['Authorization', 'Cookie'], 'allow_reload' => false, 'allow_revalidate' => false, 'stale_while_revalidate' => 2, 'stale_if_error' => 60, 'trace_level' => 'none', 'trace_header' => 'X-Symfony-Cache'], $options);
+        $this->options = array_merge(['debug' => \false, 'default_ttl' => 0, 'private_headers' => ['Authorization', 'Cookie'], 'allow_reload' => \false, 'allow_revalidate' => \false, 'stale_while_revalidate' => 2, 'stale_if_error' => 60, 'trace_level' => 'none', 'trace_header' => 'X-Symfony-Cache'], $options);
         if (!isset($options['trace_level'])) {
             $this->options['trace_level'] = $this->options['debug'] ? 'full' : 'none';
         }
@@ -164,7 +165,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true)
+    public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = \true)
     {
         // FIXME: catch exceptions and implement a 500 error page here? -> in Varnish, there is a built-in error page mechanism
         if (HttpKernelInterface::MAIN_REQUEST === $type) {
@@ -224,7 +225,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
      *
      * @return Response
      */
-    protected function pass(Request $request, bool $catch = false)
+    protected function pass(Request $request, bool $catch = \false)
     {
         $this->record($request, 'pass');
         return $this->forward($request, $catch);
@@ -240,7 +241,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
      *
      * @see RFC2616 13.10
      */
-    protected function invalidate(Request $request, bool $catch = false)
+    protected function invalidate(Request $request, bool $catch = \false)
     {
         $response = $this->pass($request, $catch);
         // invalidate only when the response is successful
@@ -279,7 +280,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
      *
      * @throws \Exception
      */
-    protected function lookup(Request $request, bool $catch = false)
+    protected function lookup(Request $request, bool $catch = \false)
     {
         try {
             $entry = $this->store->lookup($request);
@@ -315,7 +316,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
      *
      * @return Response
      */
-    protected function validate(Request $request, Response $entry, bool $catch = false)
+    protected function validate(Request $request, Response $entry, bool $catch = \false)
     {
         $subRequest = clone $request;
         // send no head requests because we want content
@@ -366,7 +367,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
      *
      * @return Response
      */
-    protected function fetch(Request $request, bool $catch = false)
+    protected function fetch(Request $request, bool $catch = \false)
     {
         $subRequest = clone $request;
         // send no head requests because we want content
@@ -393,7 +394,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
      *
      * @return Response
      */
-    protected function forward(Request $request, bool $catch = false, ?Response $entry = null)
+    protected function forward(Request $request, bool $catch = \false, ?Response $entry = null)
     {
         if ($this->surrogate) {
             $this->surrogate->addSurrogateCapability($request);
@@ -461,7 +462,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
         if ($this->options['allow_revalidate'] && null !== ($maxAge = $request->headers->getCacheControlDirective('max-age'))) {
             return $maxAge > 0 && $maxAge >= $entry->getAge();
         }
-        return true;
+        return \true;
     }
     /**
      * Locks a Request during the call to the backend.
@@ -472,15 +473,15 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
     {
         // try to acquire a lock to call the backend
         $lock = $this->store->lock($request);
-        if (true === $lock) {
+        if (\true === $lock) {
             // we have the lock, call the backend
-            return false;
+            return \false;
         }
         // there is already another process calling the backend
         // May we serve a stale response?
         if ($this->mayServeStaleWhileRevalidate($entry)) {
             $this->record($request, 'stale-while-revalidate');
-            return true;
+            return \true;
         }
         // wait for the lock to be released
         if ($this->waitForLock($request)) {
@@ -499,7 +500,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
             $entry->setContent('503 Service Unavailable');
             $entry->headers->set('Retry-After', 10);
         }
-        return true;
+        return \true;
     }
     /**
      * Writes the Response to the cache.
@@ -534,7 +535,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
             $j = strpos($content, $boundary, 24);
             echo substr($content, 24, $j - 24);
             $i = $j + 24;
-            while (false !== ($j = strpos($content, $boundary, $i))) {
+            while (\false !== ($j = strpos($content, $boundary, $i))) {
                 [$uri, $alt, $ignoreErrors, $part] = explode("\n", substr($content, $i, $j - $i), 4);
                 $i = $j + 24;
                 echo $this->surrogate->handle($this, $uri, $alt, $ignoreErrors);
@@ -572,13 +573,13 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
             $key = strtolower(str_replace('HTTP_', '', $key));
             if ('cookie' === $key) {
                 if (\count($request->cookies->all())) {
-                    return true;
+                    return \true;
                 }
             } elseif ($request->headers->has($key)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Records that an event took place.
@@ -596,7 +597,11 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
         if ($qs = $request->getQueryString()) {
             $path .= '?' . $qs;
         }
-        return $request->getMethod() . ' ' . $path;
+        try {
+            return $request->getMethod() . ' ' . $path;
+        } catch (SuspiciousOperationException $e) {
+            return '_BAD_METHOD_ ' . $path;
+        }
     }
     /**
      * Checks whether the given (cached) response may be served as "stale" when a revalidation

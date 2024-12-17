@@ -20,7 +20,7 @@ class Index
         $configs = Request::processRequest('CustomDimensions.getConfiguredCustomDimensionsHavingScope', ['idSite' => $idSite, 'scope' => $scope]);
         foreach ($configs as $config) {
             $key = array_search($config['index'], $indexes);
-            if ($key !== false) {
+            if ($key !== \false) {
                 unset($indexes[$key]);
             }
         }

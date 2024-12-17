@@ -31,7 +31,7 @@ class ObjectDefinitionDumper
         }
         $str = sprintf('    class = %s%s', $warning, $className);
         // Lazy
-        $str .= \PHP_EOL . '    lazy = ' . var_export($definition->isLazy(), true);
+        $str .= \PHP_EOL . '    lazy = ' . var_export($definition->isLazy(), \true);
         if ($classExist) {
             // Constructor
             $str .= $this->dumpConstructor($className, $definition);
@@ -57,7 +57,7 @@ class ObjectDefinitionDumper
         $str = '';
         foreach ($definition->getPropertyInjections() as $propertyInjection) {
             $value = $propertyInjection->getValue();
-            $valueStr = $value instanceof Definition ? (string) $value : var_export($value, true);
+            $valueStr = $value instanceof Definition ? (string) $value : var_export($value, \true);
             $str .= sprintf(\PHP_EOL . '    $%s = %s', $propertyInjection->getPropertyName(), $valueStr);
         }
         return $str;
@@ -79,7 +79,7 @@ class ObjectDefinitionDumper
         foreach ($methodReflection->getParameters() as $index => $parameter) {
             if (array_key_exists($index, $definitionParameters)) {
                 $value = $definitionParameters[$index];
-                $valueStr = $value instanceof Definition ? (string) $value : var_export($value, true);
+                $valueStr = $value instanceof Definition ? (string) $value : var_export($value, \true);
                 $args[] = sprintf('$%s = %s', $parameter->getName(), $valueStr);
                 continue;
             }
@@ -87,7 +87,7 @@ class ObjectDefinitionDumper
             if ($parameter->isOptional()) {
                 try {
                     $value = $parameter->getDefaultValue();
-                    $args[] = sprintf('$%s = (default value) %s', $parameter->getName(), var_export($value, true));
+                    $args[] = sprintf('$%s = (default value) %s', $parameter->getName(), var_export($value, \true));
                     continue;
                 } catch (ReflectionException $e) {
                     // The default value can't be read through Reflection because it is a PHP internal class

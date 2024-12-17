@@ -111,13 +111,13 @@ class TableLogAction
         foreach ($actionsNameAndType as $fieldName => &$actionNameType) {
             @(list($name, $type, $urlPrefix) = $actionNameType);
             if (empty($name)) {
-                $fieldNameToActionId[$fieldName] = false;
+                $fieldNameToActionId[$fieldName] = \false;
                 continue;
             }
-            $found = false;
+            $found = \false;
             foreach ($actionIds as $row) {
                 if ($name == $row['name'] && $type == $row['type']) {
-                    $found = true;
+                    $found = \true;
                     $fieldNameToActionId[$fieldName] = $row['idaction'];
                     continue;
                 }
@@ -187,13 +187,13 @@ class TableLogAction
         if (!empty($exactMatch[$segmentName])) {
             return $exactMatch[$segmentName];
         }
-        if (stripos($segmentName, 'pageurl') !== false) {
+        if (stripos($segmentName, 'pageurl') !== \false) {
             return \Piwik\Tracker\Action::TYPE_PAGE_URL;
-        } elseif (stripos($segmentName, 'pagetitle') !== false) {
+        } elseif (stripos($segmentName, 'pagetitle') !== \false) {
             return \Piwik\Tracker\Action::TYPE_PAGE_TITLE;
-        } elseif (stripos($segmentName, 'sitesearch') !== false) {
+        } elseif (stripos($segmentName, 'sitesearch') !== \false) {
             return \Piwik\Tracker\Action::TYPE_SITE_SEARCH;
-        } elseif (stripos($segmentName, 'productcategory') !== false || stripos($segmentName, 'productviewcategory') !== false) {
+        } elseif (stripos($segmentName, 'productcategory') !== \false || stripos($segmentName, 'productviewcategory') !== \false) {
             return \Piwik\Tracker\Action::TYPE_ECOMMERCE_ITEM_CATEGORY;
         } else {
             throw new \Exception("We cannot guess the action type from the segment {$segmentName}.");
@@ -253,7 +253,7 @@ class TableLogAction
         if ($matchType == SegmentExpression::MATCH_EQUAL || $matchType == SegmentExpression::MATCH_NOT_EQUAL) {
             $result = self::getIdActionFromSegment($value, $sqlField, $matchType, $segmentName);
             if (is_numeric($result)) {
-                return ['value' => $result, 'joinTable' => false];
+                return ['value' => $result, 'joinTable' => \false];
             }
             return $result;
         }

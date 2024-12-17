@@ -44,7 +44,7 @@ class SymfonyStyle extends OutputStyle
     public function __construct(InputInterface $input, OutputInterface $output)
     {
         $this->input = $input;
-        $this->bufferedOutput = new TrimmedBufferOutput(\DIRECTORY_SEPARATOR === '\\' ? 4 : 2, $output->getVerbosity(), false, clone $output->getFormatter());
+        $this->bufferedOutput = new TrimmedBufferOutput(\DIRECTORY_SEPARATOR === '\\' ? 4 : 2, $output->getVerbosity(), \false, clone $output->getFormatter());
         // Windows cmd wraps lines as soon as the terminal width is reached, whether there are following chars or not.
         $width = (new Terminal())->getWidth() ?: self::MAX_LINE_LENGTH;
         $this->lineLength = min($width - (int) (\DIRECTORY_SEPARATOR === '\\'), self::MAX_LINE_LENGTH);
@@ -55,7 +55,7 @@ class SymfonyStyle extends OutputStyle
      *
      * @param string|array $messages The message to write in the block
      */
-    public function block($messages, ?string $type = null, ?string $style = null, string $prefix = ' ', bool $padding = false, bool $escape = true)
+    public function block($messages, ?string $type = null, ?string $style = null, string $prefix = ' ', bool $padding = \false, bool $escape = \true)
     {
         $messages = \is_array($messages) ? array_values($messages) : [$messages];
         $this->autoPrependBlock();
@@ -110,28 +110,28 @@ class SymfonyStyle extends OutputStyle
      */
     public function comment($message)
     {
-        $this->block($message, null, null, '<fg=default;bg=default> // </>', false, false);
+        $this->block($message, null, null, '<fg=default;bg=default> // </>', \false, \false);
     }
     /**
      * {@inheritdoc}
      */
     public function success($message)
     {
-        $this->block($message, 'OK', 'fg=black;bg=green', ' ', true);
+        $this->block($message, 'OK', 'fg=black;bg=green', ' ', \true);
     }
     /**
      * {@inheritdoc}
      */
     public function error($message)
     {
-        $this->block($message, 'ERROR', 'fg=white;bg=red', ' ', true);
+        $this->block($message, 'ERROR', 'fg=white;bg=red', ' ', \true);
     }
     /**
      * {@inheritdoc}
      */
     public function warning($message)
     {
-        $this->block($message, 'WARNING', 'fg=black;bg=yellow', ' ', true);
+        $this->block($message, 'WARNING', 'fg=black;bg=yellow', ' ', \true);
     }
     /**
      * {@inheritdoc}
@@ -147,14 +147,14 @@ class SymfonyStyle extends OutputStyle
      */
     public function info($message)
     {
-        $this->block($message, 'INFO', 'fg=green', ' ', true);
+        $this->block($message, 'INFO', 'fg=green', ' ', \true);
     }
     /**
      * {@inheritdoc}
      */
     public function caution($message)
     {
-        $this->block($message, 'CAUTION', 'fg=white;bg=red', ' ! ', true);
+        $this->block($message, 'CAUTION', 'fg=white;bg=red', ' ! ', \true);
     }
     /**
      * {@inheritdoc}
@@ -169,7 +169,7 @@ class SymfonyStyle extends OutputStyle
      */
     public function horizontalTable(array $headers, array $rows)
     {
-        $this->createTable()->setHorizontal(true)->setHeaders($headers)->setRows($rows)->render();
+        $this->createTable()->setHorizontal(\true)->setHeaders($headers)->setRows($rows)->render();
         $this->newLine();
     }
     /**
@@ -220,14 +220,14 @@ class SymfonyStyle extends OutputStyle
     public function askHidden(string $question, ?callable $validator = null)
     {
         $question = new Question($question);
-        $question->setHidden(true);
+        $question->setHidden(\true);
         $question->setValidator($validator);
         return $this->askQuestion($question);
     }
     /**
      * {@inheritdoc}
      */
-    public function confirm(string $question, bool $default = true)
+    public function confirm(string $question, bool $default = \true)
     {
         return $this->askQuestion(new ConfirmationQuestion($question, $default));
     }
@@ -317,13 +317,13 @@ class SymfonyStyle extends OutputStyle
         }
         foreach ($messages as $message) {
             parent::writeln($message, $type);
-            $this->writeBuffer($message, true, $type);
+            $this->writeBuffer($message, \true, $type);
         }
     }
     /**
      * {@inheritdoc}
      */
-    public function write($messages, bool $newline = false, int $type = self::OUTPUT_NORMAL)
+    public function write($messages, bool $newline = \false, int $type = self::OUTPUT_NORMAL)
     {
         if (!is_iterable($messages)) {
             $messages = [$messages];
@@ -388,7 +388,7 @@ class SymfonyStyle extends OutputStyle
         // We need to know if the last chars are PHP_EOL
         $this->bufferedOutput->write($message, $newLine, $type);
     }
-    private function createBlock(iterable $messages, ?string $type = null, ?string $style = null, string $prefix = ' ', bool $padding = false, bool $escape = false) : array
+    private function createBlock(iterable $messages, ?string $type = null, ?string $style = null, string $prefix = ' ', bool $padding = \false, bool $escape = \false) : array
     {
         $indentLength = 0;
         $prefixLength = Helper::width(Helper::removeDecoration($this->getFormatter(), $prefix));
@@ -405,7 +405,7 @@ class SymfonyStyle extends OutputStyle
             }
             $decorationLength = Helper::width($message) - Helper::width(Helper::removeDecoration($this->getFormatter(), $message));
             $messageLineLength = min($this->lineLength - $prefixLength - $indentLength + $decorationLength, $this->lineLength);
-            $messageLines = explode(\PHP_EOL, wordwrap($message, $messageLineLength, \PHP_EOL, true));
+            $messageLines = explode(\PHP_EOL, wordwrap($message, $messageLineLength, \PHP_EOL, \true));
             foreach ($messageLines as $messageLine) {
                 $lines[] = $messageLine;
             }

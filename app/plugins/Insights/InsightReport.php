@@ -98,9 +98,9 @@ class InsightReport
         foreach ($insight->getRows() as $row) {
             $label = $row->getColumn('label');
             if ($shakers->getRowFromLabel($label)) {
-                $row->setColumn('isMoverAndShaker', true);
+                $row->setColumn('isMoverAndShaker', \true);
             } else {
-                $row->setColumn('isMoverAndShaker', false);
+                $row->setColumn('isMoverAndShaker', \false);
             }
         }
         $this->addMoversAndShakersMetadata($insight, $totalValue, $lastTotalValue);

@@ -39,5 +39,5 @@ interface ArchiveQuery
      * @param bool $addMetadataSubtableId
      * @return DataTable|DataTable\Map
      */
-    public function getDataTableExpanded($name, $idSubtable = null, $depth = null, $addMetadataSubtableId = true);
+    public function getDataTableExpanded($name, $idSubtable = null, $depth = null, $addMetadataSubtableId = \true);
 }

@@ -30,7 +30,7 @@ class TestEmail extends ConsoleCommand
         $body = "Hello, world! <br/> This is a test email sent from {$matomoUrl}";
         $subject = "This is a test email sent from {$matomoUrl}";
         $mail = new Mail();
-        $mail->setSmtpDebug(true);
+        $mail->setSmtpDebug(\true);
         $mail->addTo($email, 'Matomo User');
         $mail->setFrom($config->General['noreply_email_address'], $config->General['noreply_email_name']);
         $mail->setSubject($subject);

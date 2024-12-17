@@ -191,21 +191,21 @@ class SettingsPiwik
         $exists = file_exists($config);
         // Piwik is not installed if the config file is not found
         if (!$exists) {
-            return false;
+            return \false;
         }
         $general = \Piwik\Config::getInstance()->General;
-        $isInstallationInProgress = false;
+        $isInstallationInProgress = \false;
         if (array_key_exists('installation_in_progress', $general)) {
             $isInstallationInProgress = (bool) $general['installation_in_progress'];
         }
         if ($isInstallationInProgress) {
-            return false;
+            return \false;
         }
         // Check that the database section is really set, ie. file is not empty
         if (empty(\Piwik\Config::getInstance()->database['username'])) {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * Check if outgoing internet connections are enabled
@@ -226,10 +226,10 @@ class SettingsPiwik
     public static function isAutoUpdateEnabled() : bool
     {
         $enableAutoUpdate = (bool) \Piwik\Config::getInstance()->General['enable_auto_update'];
-        if (self::isInternetEnabled() === true && $enableAutoUpdate === true) {
-            return true;
+        if (self::isInternetEnabled() === \true && $enableAutoUpdate === \true) {
+            return \true;
         }
-        return false;
+        return \false;
     }
     /**
      * Detects whether an auto update can be made. An update is possible if the user is not on multiple servers and if
@@ -311,11 +311,11 @@ class SettingsPiwik
      * @return void
      * @throws Exception
      */
-    public static function checkPiwikServerWorking(string $piwikServerUrl, bool $acceptInvalidSSLCertificates = false) : void
+    public static function checkPiwikServerWorking(string $piwikServerUrl, bool $acceptInvalidSSLCertificates = \false) : void
     {
         // Now testing if the webserver is running
         try {
-            $fetched = \Piwik\Http::sendHttpRequestBy('curl', $piwikServerUrl, $timeout = 45, $userAgent = null, $destinationPath = null, $file = null, $followDepth = 0, $acceptLanguage = false, $acceptInvalidSSLCertificates);
+            $fetched = \Piwik\Http::sendHttpRequestBy('curl', $piwikServerUrl, $timeout = 45, $userAgent = null, $destinationPath = null, $file = null, $followDepth = 0, $acceptLanguage = \false, $acceptInvalidSSLCertificates);
         } catch (Exception $e) {
             $fetched = "ERROR fetching: " . $e->getMessage();
         }
@@ -325,8 +325,8 @@ class SettingsPiwik
         $expectedString = 'misc/user/';
         // see checkPiwikIsNotInstalled()
         $expectedStringAlreadyInstalled = 'piwik-is-already-installed';
-        $expectedStringNotFound = strpos($fetched, $expectedString) === false && strpos($fetched, $expectedStringAlt) === false && strpos($fetched, $expectedStringAlreadyInstalled) === false;
-        $hasError = false !== strpos($fetched, PAGE_TITLE_WHEN_ERROR);
+        $expectedStringNotFound = strpos($fetched, $expectedString) === \false && strpos($fetched, $expectedStringAlt) === \false && strpos($fetched, $expectedStringAlreadyInstalled) === \false;
+        $hasError = \false !== strpos($fetched, PAGE_TITLE_WHEN_ERROR);
         if ($hasError || $expectedStringNotFound) {
             throw new Exception("\nMatomo should be running at: " . $piwikServerUrl . " but this URL returned an unexpected response: '" . $fetched . "'\n\n");
         }
@@ -374,7 +374,7 @@ class SettingsPiwik
         if (empty($instanceId)) {
             return $pathToRewrite;
         }
-        if (($posTmp = strrpos($pathToRewrite, $leadingPathToAppendHostnameTo)) === false) {
+        if (($posTmp = strrpos($pathToRewrite, $leadingPathToAppendHostnameTo)) === \false) {
             throw new Exception("The path {$pathToRewrite} was expected to contain the string  {$leadingPathToAppendHostnameTo}");
         }
         $tmpToReplace = $leadingPathToAppendHostnameTo . $instanceId . '/';
@@ -395,21 +395,21 @@ class SettingsPiwik
         }
         // config.ini.php not ready yet, instance_id will not be set
         if (!\Piwik\Config::getInstance()->existsLocalConfig()) {
-            return false;
+            return \false;
         }
         $instanceId = GeneralConfig::getConfigValue('instance_id');
         if (!empty($instanceId)) {
             return preg_replace('/[^\\w\\.-]/', '', $instanceId);
         }
         // do not rewrite the path as Matomo uses the standard config.ini.php file
-        return false;
+        return \false;
     }
     /**
      * @param string $currentUrl
      */
     public static function overwritePiwikUrl(string $currentUrl) : void
     {
-        \Piwik\Option::set(self::OPTION_PIWIK_URL, $currentUrl, $autoLoad = true);
+        \Piwik\Option::set(self::OPTION_PIWIK_URL, $currentUrl, $autoLoad = \true);
     }
     /**
      * @return bool
@@ -418,7 +418,7 @@ class SettingsPiwik
     {
         if (!self::isMatomoInstalled()) {
             // Only enable this feature after Piwik is already installed
-            return false;
+            return \false;
         }
         return \Piwik\Config::getInstance()->General['force_ssl'] == 1;
     }

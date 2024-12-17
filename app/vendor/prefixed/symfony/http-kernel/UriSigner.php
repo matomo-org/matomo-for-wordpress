@@ -63,7 +63,7 @@ class UriSigner
             $params = [];
         }
         if (empty($params[$this->parameter])) {
-            return false;
+            return \false;
         }
         $hash = $params[$this->parameter];
         unset($params[$this->parameter]);
@@ -77,7 +77,7 @@ class UriSigner
     }
     private function computeHash(string $uri) : string
     {
-        return base64_encode(hash_hmac('sha256', $uri, $this->secret, true));
+        return base64_encode(hash_hmac('sha256', $uri, $this->secret, \true));
     }
     private function buildUrl(array $url, array $params = []) : string
     {

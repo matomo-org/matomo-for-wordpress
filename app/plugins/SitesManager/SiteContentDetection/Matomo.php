@@ -41,10 +41,10 @@ class Matomo extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteConten
         $tests = ['/matomo\\.js/i', '/piwik\\.js/i', '/_paq\\.push/i'];
         foreach ($tests as $test) {
             if (preg_match($test, $data) === 1) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function renderInstructionsTab(SiteContentDetector $detector) : string
     {
@@ -67,7 +67,7 @@ class Matomo extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteConten
     }
     public function isRecommended(SiteContentDetector $detector) : bool
     {
-        return false;
+        return \false;
         // do not recommend this, as it's used as fall back
     }
     public function getRecommendationDetails(SiteContentDetector $detector) : array

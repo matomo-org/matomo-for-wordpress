@@ -64,7 +64,7 @@ class RequestSet
         if (!is_null($this->tokenAuth)) {
             return $this->tokenAuth;
         }
-        return Common::getRequestVar('token_auth', false);
+        return Common::getRequestVar('token_auth', \false);
     }
     private function areRequestsInitialized()
     {

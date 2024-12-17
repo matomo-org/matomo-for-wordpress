@@ -48,7 +48,7 @@ class ExitPageUrl extends VisitDimension
      */
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
-        $idActionUrl = false;
+        $idActionUrl = \false;
         if (!empty($action)) {
             $idActionUrl = $action->getIdActionUrlForEntryAndExitIds();
         }
@@ -63,7 +63,7 @@ class ExitPageUrl extends VisitDimension
     public function onExistingVisit(Request $request, Visitor $visitor, $action)
     {
         if (empty($action)) {
-            return false;
+            return \false;
         }
         $id = $action->getIdActionUrlForEntryAndExitIds();
         if (!empty($id)) {

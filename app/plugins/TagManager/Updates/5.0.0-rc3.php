@@ -58,14 +58,14 @@ class Updates_5_0_0_rc3 extends PiwikUpdates
         $migrator = new NewVariableParameterMigrator(MatomoConfigurationVariable::ID, 'heartBeatTime', 15);
         $migrator->addField('referralCookieTimeOut', 182);
         $migrator->addField('sessionCookieTimeOut', 30);
-        $migrator->addField('enableFileTracking', false);
+        $migrator->addField('enableFileTracking', \false);
         $migrator->addField('crossDomainLinkingTimeout', 180);
         $migrator->addField('cookieNamePrefix', '_pk_');
-        $migrator->addField('disablePerformanceTracking', false);
+        $migrator->addField('disablePerformanceTracking', \false);
         $migrator->addField('trackingEndpointCustom', 'custom.php');
         $migrator->addField('jsEndpointCustom', 'custom.js');
         $migrator->addField('appendToTrackingUrl', '');
-        $migrator->addField('forceRequestMethod', false);
+        $migrator->addField('forceRequestMethod', \false);
         $migrator->addField('requestMethod', 'GET');
         $migrator->addField('requestContentType', 'application/x-www-form-urlencoded; charset=UTF-8');
         $migrator->addField('customRequestProcessing', '');

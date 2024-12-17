@@ -13,7 +13,7 @@ use Piwik\Settings\FieldConfig;
 use Piwik\Validators\NotEmpty;
 class CustomJsFunctionVariable extends \Piwik\Plugins\TagManager\Template\Variable\BaseVariable
 {
-    const ID = 'CustomJsFunction';
+    public const ID = 'CustomJsFunction';
     public function getId()
     {
         return self::ID;
@@ -24,13 +24,14 @@ class CustomJsFunctionVariable extends \Piwik\Plugins\TagManager\Template\Variab
     }
     public function isCustomTemplate()
     {
-        return true;
+        return \true;
     }
     public function getParameters()
     {
         return array($this->makeSetting('jsFunction', 'function () { return ""; }', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_CustomJsFunctionVariableJsFunctionTitle');
             $field->description = Piwik::translate('TagManager_CustomJsFunctionVariableJsFunctionDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_CustomJsFunctionVariableJsFunctionPlaceholder')];
             $field->uiControl = FieldConfig::UI_CONTROL_TEXTAREA;
             $field->validators[] = new NotEmpty();
             $field->validate = function ($value) {
@@ -38,7 +39,7 @@ class CustomJsFunctionVariable extends \Piwik\Plugins\TagManager\Template\Variab
                 if (strpos($value, 'function') !== 0) {
                     throw new \Exception('The value needs to start with "function() { ... }"');
                 }
-                if (strpos($value, 'return ') === false) {
+                if (strpos($value, 'return ') === \false) {
                     throw new \Exception('The function needs to return a value');
                 }
             };

@@ -21,27 +21,27 @@ abstract class Base extends \Piwik\Plugin\Report
     protected function init()
     {
         $this->categoryId = 'General_Actions';
-        $this->processedMetrics = false;
+        $this->processedMetrics = \false;
         $this->recursiveLabelSeparator = '/';
     }
     protected function addBaseDisplayProperties(ViewDataTable $view)
     {
         $view->config->datatable_js_type = 'ActionsDataTable';
-        $view->config->search_recursive = true;
-        $view->config->show_table_all_columns = false;
+        $view->config->search_recursive = \true;
+        $view->config->show_table_all_columns = \false;
         $view->requestConfig->filter_limit = Actions::ACTIONS_REPORT_ROWS_DISPLAY;
-        $view->config->show_all_views_icons = false;
+        $view->config->show_all_views_icons = \false;
         if ($view->requestConfig->getRequestParam('performance') === '1') {
             $view->requestConfig->filter_limit = 25;
             // hide visualization selector
             $view->config->footer_icons = [['class' => 'tableAllColumnsSwitch', 'buttons' => []]];
         }
         if ($view->isViewDataTableId(HtmlTable::ID)) {
-            $view->config->show_embedded_subtable = true;
+            $view->config->show_embedded_subtable = \true;
         }
         if (Request::shouldLoadExpanded()) {
             if ($view->isViewDataTableId(HtmlTable::ID)) {
-                $view->config->show_expanded = true;
+                $view->config->show_expanded = \true;
             }
             $view->config->filters[] = function ($dataTable) {
                 Actions::setDataTableRowLevels($dataTable);
@@ -60,15 +60,15 @@ abstract class Base extends \Piwik\Plugin\Report
         // add avg_generation_time tooltip
         $tooltipCallback = function ($hits, $min, $max) use($formatter) {
             if (!$hits) {
-                return false;
+                return \false;
             }
-            return Piwik::translate("Actions_AvgGenerationTimeTooltip", array($hits, "<br />", $formatter->getPrettyTimeFromSeconds($min, true), $formatter->getPrettyTimeFromSeconds($max, true)));
+            return Piwik::translate("Actions_AvgGenerationTimeTooltip", array($hits, "<br />", $formatter->getPrettyTimeFromSeconds($min, \true), $formatter->getPrettyTimeFromSeconds($max, \true)));
         };
         $view->config->filters[] = array('ColumnCallbackAddMetadata', array(array('nb_hits_with_time_generation', 'min_time_generation', 'max_time_generation'), 'avg_time_generation_tooltip', $tooltipCallback));
         $this->addExcludeLowPopDisplayProperties($view);
         // hide the performance columns viz in page reports when not displayed as widget
         if ($view->requestConfig->getRequestParam('widget') != '1') {
-            $view->config->show_table_performance = false;
+            $view->config->show_table_performance = \false;
         }
     }
     protected function addExcludeLowPopDisplayProperties(ViewDataTable $view)

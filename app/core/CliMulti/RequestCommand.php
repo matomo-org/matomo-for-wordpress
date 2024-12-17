@@ -53,7 +53,7 @@ class RequestCommand extends ConsoleCommand
         }
         if ($this->getInput()->getOption('superuser')) {
             StaticContainer::addDefinitions(array('observers.global' => \Piwik\DI::add(array(array('Environment.bootstrapped', \Piwik\DI::value(function () {
-                Access::getInstance()->setSuperUserAccess(true);
+                Access::getInstance()->setSuperUserAccess(\true);
             }))))));
         }
         require_once PIWIK_INCLUDE_PATH . $indexFile;

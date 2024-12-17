@@ -27,17 +27,17 @@ final class ConsoleCommandEvent extends ConsoleEvent
     /**
      * Indicates if the command should be run or skipped.
      */
-    private $commandShouldRun = true;
+    private $commandShouldRun = \true;
     /**
      * Disables the command, so it won't be run.
      */
     public function disableCommand() : bool
     {
-        return $this->commandShouldRun = false;
+        return $this->commandShouldRun = \false;
     }
     public function enableCommand() : bool
     {
-        return $this->commandShouldRun = true;
+        return $this->commandShouldRun = \true;
     }
     /**
      * Returns true if the command is runnable, false otherwise.

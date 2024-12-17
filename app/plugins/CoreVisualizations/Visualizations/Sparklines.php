@@ -53,7 +53,7 @@ class Sparklines extends ViewDataTable
     }
     public function supportsComparison()
     {
-        return true;
+        return \true;
     }
     /**
      * @see ViewDataTable::main()
@@ -134,7 +134,7 @@ class Sparklines extends ViewDataTable
         $report = ReportsProvider::factory($this->requestConfig->getApiModuleToRequest(), $this->requestConfig->getApiMethodToRequest());
         $processedMetrics = Report::getProcessedMetricsForTable($data, $report);
         $metricFormatter = new MetricFormatter();
-        $idSite = $this->getRequestArray()['idSite'] ?? false;
+        $idSite = $this->getRequestArray()['idSite'] ?? \false;
         $firstRow = $data->getFirstRow();
         if ($firstRow) {
             $comparisons = $firstRow->getComparisons();
@@ -148,7 +148,7 @@ class Sparklines extends ViewDataTable
             $comparisonRows = [];
             foreach ($comparisons->getRows() as $comparisonRow) {
                 $segment = $comparisonRow->getMetadata('compareSegment');
-                if ($segment === false) {
+                if ($segment === \false) {
                     $segment = Request::getRawSegmentFromRequest() ?: '';
                 }
                 $date = $comparisonRow->getMetadata('compareDate');
@@ -211,7 +211,7 @@ class Sparklines extends ViewDataTable
                             }
                             if (isset($columnMetrics[$column[$i]]) && $columnMetrics[$column[$i]]) {
                                 $value = $columnMetrics[$columnToUse[$i]]->format($value, $metricFormatter);
-                            } elseif (strpos($columnToUse[$i], 'revenue') !== false && $idSite > 0) {
+                            } elseif (strpos($columnToUse[$i], 'revenue') !== \false && $idSite > 0) {
                                 $value = $metricFormatter->getPrettyMoney($value, $idSite);
                             }
                             $metricInfo = ['value' => $value, 'description' => $compareDescriptions[$i], 'group' => $periodPretty];
@@ -236,7 +236,7 @@ class Sparklines extends ViewDataTable
                     }
                     if (isset($columnMetrics[$column[$i]]) && $columnMetrics[$column[$i]]) {
                         $value = $columnMetrics[$column[$i]]->format($value, $metricFormatter);
-                    } elseif (strpos($column[$i], 'revenue') !== false && $idSite > 0) {
+                    } elseif (strpos($column[$i], 'revenue') !== \false && $idSite > 0) {
                         $value = $metricFormatter->getPrettyMoney($value, $idSite);
                     }
                     $newMetric = ['value' => $value, 'description' => $descriptions[$i]];
@@ -277,13 +277,13 @@ class Sparklines extends ViewDataTable
             if ($firstRow) {
                 $value = $firstRow->getColumn($col);
             }
-            if ($value === false) {
+            if ($value === \false) {
                 $value = 0;
             }
             if ($evolutionColumnNameSuffix !== null) {
                 $evolution = $firstRow->getColumn($col . $evolutionColumnNameSuffix);
                 $trend = $firstRow->getColumn($col . $trendColumnNameSuffix);
-                if ($evolution !== false) {
+                if ($evolution !== \false) {
                     $evolutions[] = ['percent' => ltrim($evolution, '+'), 'trend' => $trend, 'tooltip' => ''];
                 }
             }

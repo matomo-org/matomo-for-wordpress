@@ -45,8 +45,8 @@ class Indicator
         $IndicatorSections = isset($Format["IndicatorSections"]) ? $Format["IndicatorSections"] : null;
         $ValueDisplay = isset($Format["ValueDisplay"]) ? $Format["ValueDisplay"] : INDICATOR_VALUE_BUBBLE;
         $SectionsMargin = isset($Format["SectionsMargin"]) ? $Format["SectionsMargin"] : 4;
-        $DrawLeftHead = isset($Format["DrawLeftHead"]) ? $Format["DrawLeftHead"] : true;
-        $DrawRightHead = isset($Format["DrawRightHead"]) ? $Format["DrawRightHead"] : true;
+        $DrawLeftHead = isset($Format["DrawLeftHead"]) ? $Format["DrawLeftHead"] : \true;
+        $DrawRightHead = isset($Format["DrawRightHead"]) ? $Format["DrawRightHead"] : \true;
         $HeadSize = isset($Format["HeadSize"]) ? $Format["HeadSize"] : floor($Height / 4);
         $TextPadding = isset($Format["TextPadding"]) ? $Format["TextPadding"] : 4;
         $CaptionLayout = isset($Format["CaptionLayout"]) ? $Format["CaptionLayout"] : INDICATOR_CAPTION_EXTENDED;
@@ -123,7 +123,7 @@ class Indicator
                     $Poly = [];
                     $Poly[] = $X1;
                     $Poly[] = $Y;
-                    $LastPointWritten = false;
+                    $LastPointWritten = \false;
                     foreach ($Break as $iKey => $Value) {
                         if ($Value - 5 >= $X1) {
                             $Poly[] = $Value - 5;
@@ -141,7 +141,7 @@ class Indicator
                             $Offset = $Value + 5 - $X2;
                             $Poly[] = $X2;
                             $Poly[] = $Y + $Offset;
-                            $LastPointWritten = true;
+                            $LastPointWritten = \true;
                         }
                     }
                     if (!$LastPointWritten) {
@@ -191,7 +191,7 @@ class Indicator
                 $SubCaptionColor = ["Align" => TEXT_ALIGN_TOPLEFT, "FontName" => $CaptionFontName, "FontSize" => $CaptionFontSize, "R" => $Settings["R"] + $SubCaptionColorFactor, "G" => $Settings["G"] + $SubCaptionColorFactor, "B" => $Settings["B"] + $SubCaptionColorFactor];
             }
             $RestoreShadow = $this->pChartObject->Shadow;
-            $this->pChartObject->Shadow = false;
+            $this->pChartObject->Shadow = \false;
             if ($CaptionLayout == INDICATOR_CAPTION_DEFAULT) {
                 $this->pChartObject->drawText($X1, $Y + $Height + $TextPadding, $Caption, $CaptionColor);
             } elseif ($CaptionLayout == INDICATOR_CAPTION_EXTENDED) {
@@ -204,7 +204,7 @@ class Indicator
             $X1 = $X2 + $SectionsMargin;
         }
         $RestoreShadow = $this->pChartObject->Shadow;
-        $this->pChartObject->Shadow = false;
+        $this->pChartObject->Shadow = \false;
         foreach ($Values as $Key => $Value) {
             if ($Value >= $OverallMin && $Value <= $OverallMax) {
                 foreach ($IndicatorSections as $Key => $Settings) {

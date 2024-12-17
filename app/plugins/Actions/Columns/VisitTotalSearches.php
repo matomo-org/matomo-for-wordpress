@@ -44,7 +44,7 @@ class VisitTotalSearches extends VisitDimension
         if ($this->isSiteSearchAction($action)) {
             return 'visit_total_searches + 1';
         }
-        return false;
+        return \false;
     }
     /**
      * @param Action|null $action

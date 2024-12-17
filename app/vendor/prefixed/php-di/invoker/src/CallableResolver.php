@@ -31,12 +31,12 @@ class CallableResolver
      */
     public function resolve($callable)
     {
-        if (is_string($callable) && strpos($callable, '::') !== false) {
+        if (is_string($callable) && strpos($callable, '::') !== \false) {
             $callable = explode('::', $callable, 2);
         }
         $callable = $this->resolveFromContainer($callable);
         if (!is_callable($callable)) {
-            throw NotCallableException::fromInvalidCallable($callable, true);
+            throw NotCallableException::fromInvalidCallable($callable, \true);
         }
         return $callable;
     }
@@ -51,7 +51,7 @@ class CallableResolver
         if ($callable instanceof \Closure) {
             return $callable;
         }
-        $isStaticCallToNonStaticMethod = false;
+        $isStaticCallToNonStaticMethod = \false;
         // If it's already a callable there is nothing to do
         if (is_callable($callable)) {
             $isStaticCallToNonStaticMethod = $this->isStaticCallToNonStaticMethod($callable);
@@ -67,7 +67,7 @@ class CallableResolver
                 if ($this->container->has($callable)) {
                     throw $e;
                 }
-                throw NotCallableException::fromInvalidCallable($callable, true);
+                throw NotCallableException::fromInvalidCallable($callable, \true);
             }
         }
         // The callable is an array whose first item is a container entry name
@@ -103,6 +103,6 @@ class CallableResolver
             $reflection = new \ReflectionMethod($class, $method);
             return !$reflection->isStatic();
         }
-        return false;
+        return \false;
     }
 }

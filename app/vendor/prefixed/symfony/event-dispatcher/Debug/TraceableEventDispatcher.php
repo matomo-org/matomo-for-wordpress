@@ -193,7 +193,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
         $notCalled = [];
         foreach ($allListeners as $eventName => $listeners) {
             foreach ($listeners as $listener) {
-                if (!\in_array($listener, $calledListeners, true)) {
+                if (!\in_array($listener, $calledListeners, \true)) {
                     if (!$listener instanceof WrappedListener) {
                         $listener = new WrappedListener($listener, null, $this->stopwatch, $this);
                     }
@@ -262,7 +262,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
     private function postProcess(string $eventName) : void
     {
         unset($this->wrappedListeners[$eventName]);
-        $skipped = false;
+        $skipped = \false;
         foreach ($this->dispatcher->getListeners($eventName) as $listener) {
             if (!$listener instanceof WrappedListener) {
                 // #12845: a new listener was added during dispatch.
@@ -289,7 +289,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
                 if (null !== $this->logger) {
                     $this->logger->debug('Listener "{listener}" stopped propagation of the event "{event}".', $context);
                 }
-                $skipped = true;
+                $skipped = \true;
             }
         }
     }

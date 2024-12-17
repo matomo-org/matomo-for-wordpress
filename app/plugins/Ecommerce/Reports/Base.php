@@ -23,9 +23,9 @@ abstract class Base extends Report
     }
     public function isEnabled()
     {
-        $idSite = Common::getRequestVar('idSite', false, 'int');
+        $idSite = Common::getRequestVar('idSite', \false, 'int');
         if (empty($idSite)) {
-            return false;
+            return \false;
         }
         return $this->isEcommerceEnabled($idSite);
     }
@@ -49,7 +49,7 @@ abstract class Base extends Report
     {
         $idSite = $infos['idSite'];
         if (empty($idSite) || !is_numeric($idSite)) {
-            return false;
+            return \false;
         }
         return $this->isEcommerceEnabled($idSite);
     }

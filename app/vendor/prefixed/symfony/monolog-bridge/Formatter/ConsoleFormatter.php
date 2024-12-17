@@ -41,7 +41,7 @@ class ConsoleFormatter implements FormatterInterface
      */
     public function __construct(array $options = [])
     {
-        $this->options = array_replace(['format' => self::SIMPLE_FORMAT, 'date_format' => self::SIMPLE_DATE, 'colors' => true, 'multiline' => false, 'level_name_format' => '%-9s', 'ignore_empty_context_and_extra' => true], $options);
+        $this->options = array_replace(['format' => self::SIMPLE_FORMAT, 'date_format' => self::SIMPLE_DATE, 'colors' => \true, 'multiline' => \false, 'level_name_format' => '%-9s', 'ignore_empty_context_and_extra' => \true], $options);
         if (class_exists(VarCloner::class)) {
             $this->cloner = new VarCloner();
             $this->cloner->addCasters(['*' => [$this, 'castObject']]);
@@ -120,7 +120,7 @@ class ConsoleFormatter implements FormatterInterface
         $replacements = [];
         foreach ($context as $k => $v) {
             // Remove quotes added by the dumper around string.
-            $v = trim($this->dumpData($v, false), '"');
+            $v = trim($this->dumpData($v, \false), '"');
             $v = OutputFormatter::escape($v);
             $replacements['{' . $k . '}'] = sprintf('<comment>%s</>', $v);
         }
@@ -140,7 +140,7 @@ class ConsoleFormatter implements FormatterInterface
         if (!$data instanceof Data) {
             $data = $this->cloner->cloneVar($data);
         }
-        $data = $data->withRefHandles(false);
+        $data = $data->withRefHandles(\false);
         $this->dumper->dump($data);
         $dump = stream_get_contents($this->outputBuffer, -1, 0);
         rewind($this->outputBuffer);

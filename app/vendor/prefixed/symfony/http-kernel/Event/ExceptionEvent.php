@@ -31,7 +31,7 @@ final class ExceptionEvent extends RequestEvent
     /**
      * @var bool
      */
-    private $allowCustomResponseCode = false;
+    private $allowCustomResponseCode = \false;
     public function __construct(HttpKernelInterface $kernel, Request $request, int $requestType, \Throwable $e)
     {
         parent::__construct($kernel, $request, $requestType);
@@ -55,7 +55,7 @@ final class ExceptionEvent extends RequestEvent
      */
     public function allowCustomResponseCode() : void
     {
-        $this->allowCustomResponseCode = true;
+        $this->allowCustomResponseCode = \true;
     }
     /**
      * Returns true if the event allows a custom response code.

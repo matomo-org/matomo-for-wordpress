@@ -36,11 +36,11 @@ class MockArraySessionStorage implements SessionStorageInterface
     /**
      * @var bool
      */
-    protected $started = false;
+    protected $started = \false;
     /**
      * @var bool
      */
-    protected $closed = false;
+    protected $closed = \false;
     /**
      * @var array
      */
@@ -68,25 +68,25 @@ class MockArraySessionStorage implements SessionStorageInterface
     public function start()
     {
         if ($this->started) {
-            return true;
+            return \true;
         }
         if (empty($this->id)) {
             $this->id = $this->generateId();
         }
         $this->loadSession();
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
      */
-    public function regenerate(bool $destroy = false, ?int $lifetime = null)
+    public function regenerate(bool $destroy = \false, ?int $lifetime = null)
     {
         if (!$this->started) {
             $this->start();
         }
         $this->metadataBag->stampNew($lifetime);
         $this->id = $this->generateId();
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -128,8 +128,8 @@ class MockArraySessionStorage implements SessionStorageInterface
             throw new \RuntimeException('Trying to save a session that was not started yet or was already closed.');
         }
         // nothing to do since we don't persist the session data
-        $this->closed = false;
-        $this->started = false;
+        $this->closed = \false;
+        $this->started = \false;
     }
     /**
      * {@inheritdoc}
@@ -191,14 +191,11 @@ class MockArraySessionStorage implements SessionStorageInterface
     /**
      * Generates a session ID.
      *
-     * This doesn't need to be particularly cryptographically secure since this is just
-     * a mock.
-     *
      * @return string
      */
     protected function generateId()
     {
-        return hash('sha256', uniqid('ss_mock_', true));
+        return bin2hex(random_bytes(16));
     }
     protected function loadSession()
     {
@@ -208,7 +205,7 @@ class MockArraySessionStorage implements SessionStorageInterface
             $this->data[$key] = $this->data[$key] ?? [];
             $bag->initialize($this->data[$key]);
         }
-        $this->started = true;
-        $this->closed = false;
+        $this->started = \true;
+        $this->closed = \false;
     }
 }

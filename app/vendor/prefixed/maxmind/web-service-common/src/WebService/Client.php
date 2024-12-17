@@ -38,7 +38,7 @@ class Client
     /**
      * @var bool
      */
-    private $useHttps = true;
+    private $useHttps = \true;
     /**
      * @var RequestFactory
      */
@@ -122,7 +122,7 @@ class Client
     public function post(string $service, string $path, array $input) : ?array
     {
         $requestBody = json_encode($input);
-        if ($requestBody === false) {
+        if ($requestBody === \false) {
             throw new InvalidInputException('Error encoding input as JSON: ' . $this->jsonErrorDescription());
         }
         $request = $this->createRequest($path, ['Content-Type: application/json']);
@@ -224,7 +224,7 @@ class Client
         if ($contentType === null || !strstr($contentType, 'json')) {
             throw new HttpException("Received a {$statusCode} error for {$service} with " . 'the following body: ' . $body, $statusCode, $this->urlFor($path));
         }
-        $message = json_decode($body, true);
+        $message = json_decode($body, \true);
         if ($message === null) {
             throw new HttpException("Received a {$statusCode} error for {$service} but could " . 'not decode the response as JSON: ' . $this->jsonErrorDescription() . ' Body: ' . $body, $statusCode, $this->urlFor($path));
         }
@@ -312,7 +312,7 @@ class Client
         if ($body === null || $body === '') {
             throw new WebServiceException("Received a 200 response for {$service} but did not " . 'receive a HTTP body.');
         }
-        $decodedContent = json_decode($body, true);
+        $decodedContent = json_decode($body, \true);
         if ($decodedContent === null) {
             throw new WebServiceException("Received a 200 response for {$service} but could " . 'not decode the response as JSON: ' . $this->jsonErrorDescription() . ' Body: ' . $body);
         }
@@ -332,11 +332,11 @@ class Client
         if (substr($cert, 0, 7) === 'phar://') {
             $tempDir = sys_get_temp_dir();
             $newCert = tempnam($tempDir, 'geoip2-');
-            if ($newCert === false) {
+            if ($newCert === \false) {
                 throw new \RuntimeException("Unable to create temporary file in {$tempDir}");
             }
             if (!copy($cert, $newCert)) {
-                throw new \RuntimeException("Could not copy {$cert} to {$newCert}: " . var_export(error_get_last(), true));
+                throw new \RuntimeException("Could not copy {$cert} to {$newCert}: " . var_export(error_get_last(), \true));
             }
             // We use a shutdown function rather than the destructor as the
             // destructor isn't called on a fatal error such as an uncaught

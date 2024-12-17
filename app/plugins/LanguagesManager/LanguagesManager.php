@@ -132,7 +132,7 @@ class LanguagesManager extends \Piwik\Plugin
             $currentUser = Piwik::getCurrentUserLogin();
             return Request::processRequest('LanguagesManager.uses12HourClockForUser', array('login' => $currentUser));
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
     }
     /**
@@ -161,7 +161,7 @@ class LanguagesManager extends \Piwik\Plugin
                 return $language['name'];
             }
         }
-        return false;
+        return \false;
     }
     /**
      * @return string|false if language preference could not be loaded
@@ -175,7 +175,7 @@ class LanguagesManager extends \Piwik\Plugin
             $currentUser = Piwik::getCurrentUserLogin();
             return \Piwik\Plugins\LanguagesManager\API::getInstance()->getLanguageForUser($currentUser);
         } catch (Exception $e) {
-            return false;
+            return \false;
         }
     }
     /**
@@ -201,14 +201,14 @@ class LanguagesManager extends \Piwik\Plugin
     public static function setLanguageForSession($languageCode)
     {
         if (!\Piwik\Plugins\LanguagesManager\API::getInstance()->isLanguageAvailable($languageCode)) {
-            return false;
+            return \false;
         }
         $cookieName = Config::getInstance()->General['language_cookie_name'];
         $cookie = new Cookie($cookieName, 0);
         $cookie->set('language', $languageCode);
         $cookie->setSecure(ProxyHttp::isHttps());
-        $cookie->setHttpOnly(true);
+        $cookie->setHttpOnly(\true);
         $cookie->save('Lax');
-        return true;
+        return \true;
     }
 }

@@ -28,7 +28,7 @@ class VisitorId extends VisitDimension
     protected $namePlural = 'General_Visitors';
     protected $segmentName = 'visitorId';
     protected $acceptValues = '34c31e04394bdc63 - any 16 Hexadecimal chars ID, which can be fetched using the Tracking API function getVisitorId()';
-    protected $allowAnonymous = false;
+    protected $allowAnonymous = \false;
     protected $sqlFilterValue = ['Piwik\\Common', 'convertVisitorIdToBin'];
     protected $type = self::TYPE_BINARY;
     public function configureMetrics(MetricsList $metricsList, DimensionMetricFactory $dimensionMetricFactory)
@@ -47,7 +47,7 @@ class VisitorId extends VisitDimension
             if (!defined('PIWIK_TEST_MODE') || !PIWIK_TEST_MODE) {
                 throw $e;
             }
-            $visitorProfileEnabled = true;
+            $visitorProfileEnabled = \true;
         }
         if ($visitorProfileEnabled) {
             parent::configureSegments($segmentsList, $dimensionSegmentFactory);

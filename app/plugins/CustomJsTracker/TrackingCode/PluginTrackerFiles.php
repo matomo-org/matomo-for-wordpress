@@ -22,14 +22,14 @@ class PluginTrackerFiles
     /**
      * @var bool
      */
-    protected $ignoreMinified = false;
+    protected $ignoreMinified = \false;
     public function __construct()
     {
         $this->pluginManager = Plugin\Manager::getInstance();
     }
     public function ignoreMinified()
     {
-        $this->ignoreMinified = true;
+        $this->ignoreMinified = \true;
     }
     protected function getDirectoriesToLook()
     {
@@ -62,7 +62,7 @@ class PluginTrackerFiles
     }
     protected function shouldIncludeFile($pluginName)
     {
-        $shouldAddFile = true;
+        $shouldAddFile = \true;
         /**
          * Detect if a custom tracker file should be added to the piwik.js tracker or not.
          *

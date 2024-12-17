@@ -19,7 +19,7 @@ class Menu extends \Piwik\Plugin\Menu
     public function configureAdminMenu(MenuAdmin $menu)
     {
         $tooltip = Piwik::translate(\Piwik\Plugin\Manager::getInstance()->isPluginActivated('MobileMessaging') ? 'MobileMessaging_TopLinkTooltip' : 'ScheduledReports_TopLinkTooltip');
-        $menu->addPersonalItem($this->getTopMenuTranslationKey(), $this->urlForAction('index', array('segment' => false)), 7, $tooltip);
+        $menu->addPersonalItem($this->getTopMenuTranslationKey(), $this->urlForAction('index', array('segment' => \false)), 7, $tooltip);
     }
     public function getTopMenuTranslationKey()
     {
@@ -42,10 +42,10 @@ class Menu extends \Piwik\Plugin\Menu
         } catch (\Exception $e) {
             return self::PDF_REPORTS_TOP_MENU_TRANSLATION_KEY;
         }
-        $anyMobileReport = false;
+        $anyMobileReport = \false;
         foreach ($reports as $report) {
             if ($report['type'] == MobileMessaging::MOBILE_TYPE) {
-                $anyMobileReport = true;
+                $anyMobileReport = \true;
                 break;
             }
         }

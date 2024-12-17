@@ -41,13 +41,16 @@ class ConsoleCommand extends SymfonyCommand
      */
     private $input = null;
     /**
-     * Sends the given messages as success message to the output interface (surrounded by empty lines)
+     * Sends the given message(s) as success message(s) to the output interface (surrounded by empty lines)
      *
-     * @param string[] $messages
+     * @param string|string[] $messages
      * @return void
      */
-    public function writeSuccessMessage(array $messages) : void
+    public function writeSuccessMessage($messages) : void
     {
+        if (is_string($messages)) {
+            $messages = [$messages];
+        }
         $this->getOutput()->writeln('');
         foreach ($messages as $message) {
             $this->getOutput()->writeln(self::wrapInTag('info', $message));
@@ -55,13 +58,33 @@ class ConsoleCommand extends SymfonyCommand
         $this->getOutput()->writeln('');
     }
     /**
-     * Sends the given messages as comment message to the output interface (surrounded by empty lines)
+     * Sends the given message(s) as error message(s) to the output interface (surrounded by empty lines)
      *
-     * @param string[] $messages
+     * @param string|string[] $messages
      * @return void
      */
-    public function writeComment(array $messages) : void
+    public function writeErrorMessage($messages) : void
     {
+        if (is_string($messages)) {
+            $messages = [$messages];
+        }
+        $this->getOutput()->writeln('');
+        foreach ($messages as $message) {
+            $this->getOutput()->writeln(self::wrapInTag('error', $message));
+        }
+        $this->getOutput()->writeln('');
+    }
+    /**
+     * Sends the given messages as comment message to the output interface (surrounded by empty lines)
+     *
+     * @param string|string[] $messages
+     * @return void
+     */
+    public function writeComment($messages) : void
+    {
+        if (is_string($messages)) {
+            $messages = [$messages];
+        }
         $this->getOutput()->writeln('');
         foreach ($messages as $message) {
             $this->getOutput()->writeln(self::wrapInTag('comment', $message));
@@ -131,7 +154,7 @@ class ConsoleCommand extends SymfonyCommand
      * @param bool              $acceptArrays
      * @return ConsoleCommand
      */
-    public function addOptionalValueOption(string $name, $shortcut = null, string $description = '', $default = null, bool $acceptArrays = false)
+    public function addOptionalValueOption(string $name, $shortcut = null, string $description = '', $default = null, bool $acceptArrays = \false)
     {
         $mode = $acceptArrays ? InputOption::VALUE_IS_ARRAY : 0;
         return parent::addOption($name, $shortcut, $mode | InputOption::VALUE_OPTIONAL, $description, $default);
@@ -159,7 +182,7 @@ class ConsoleCommand extends SymfonyCommand
      * @param bool              $acceptArrays
      * @return ConsoleCommand
      */
-    public function addRequiredValueOption(string $name, $shortcut = null, string $description = '', $default = null, bool $acceptArrays = false)
+    public function addRequiredValueOption(string $name, $shortcut = null, string $description = '', $default = null, bool $acceptArrays = \false)
     {
         $mode = $acceptArrays ? InputOption::VALUE_IS_ARRAY : 0;
         return parent::addOption($name, $shortcut, $mode | InputOption::VALUE_REQUIRED, $description, $default);
@@ -169,7 +192,7 @@ class ConsoleCommand extends SymfonyCommand
      *
      * @see addNegatableOption, addOptionalValueOption, addNoValueOption, addRequiredValueOption
      */
-    public function addOption(string $name, $shortcut = null, int $mode = null, string $description = '', $default = null)
+    public function addOption(string $name, $shortcut = null, ?int $mode = null, string $description = '', $default = null)
     {
         throw new \LogicException('addOption should not be used.');
     }
@@ -182,7 +205,7 @@ class ConsoleCommand extends SymfonyCommand
      * @param bool   $acceptArrays Defines if the option accepts multiple values (array)
      * @return ConsoleCommand
      */
-    public function addOptionalArgument(string $name, string $description = '', $default = null, bool $acceptArrays = false)
+    public function addOptionalArgument(string $name, string $description = '', $default = null, bool $acceptArrays = \false)
     {
         $mode = $acceptArrays ? InputArgument::IS_ARRAY : 0;
         return parent::addArgument($name, $mode | InputArgument::OPTIONAL, $description, $default);
@@ -196,7 +219,7 @@ class ConsoleCommand extends SymfonyCommand
      * @param bool   $acceptArrays Defines if the option accepts multiple values (array)
      * @return ConsoleCommand
      */
-    public function addRequiredArgument(string $name, string $description = '', $default = null, bool $acceptArrays = false)
+    public function addRequiredArgument(string $name, string $description = '', $default = null, bool $acceptArrays = \false)
     {
         $mode = $acceptArrays ? InputArgument::IS_ARRAY : 0;
         return parent::addArgument($name, $mode | InputArgument::REQUIRED, $description, $default);
@@ -206,7 +229,7 @@ class ConsoleCommand extends SymfonyCommand
      *
      * @see addOptionalArgument, addRequiredArgument
      */
-    public function addArgument(string $name, int $mode = null, string $description = '', $default = null)
+    public function addArgument(string $name, ?int $mode = null, string $description = '', $default = null)
     {
         throw new \LogicException('addArgument can not be used.');
     }
@@ -303,7 +326,7 @@ class ConsoleCommand extends SymfonyCommand
      * @param string $trueAnswerRegex
      * @return bool
      */
-    protected function askForConfirmation(string $question, bool $default = true, string $trueAnswerRegex = '/^y/i') : bool
+    protected function askForConfirmation(string $question, bool $default = \true, string $trueAnswerRegex = '/^y/i') : bool
     {
         /** @var QuestionHelper $helper */
         $helper = parent::getHelper('question');
@@ -321,7 +344,7 @@ class ConsoleCommand extends SymfonyCommand
      * @param iterable|null $autocompleterValues
      * @return mixed
      */
-    protected function askAndValidate(string $question, callable $validator = null, $default = null, iterable $autocompleterValues = null)
+    protected function askAndValidate(string $question, ?callable $validator = null, $default = null, ?iterable $autocompleterValues = null)
     {
         /** @var QuestionHelper $helper */
         $helper = parent::getHelper('question');
@@ -417,7 +440,7 @@ class ConsoleCommand extends SymfonyCommand
      * @return int
      * @throws \Symfony\Component\Console\Exception\ExceptionInterface
      */
-    protected function runCommand(string $command, array $arguments, bool $hideOutput = false) : int
+    protected function runCommand(string $command, array $arguments, bool $hideOutput = \false) : int
     {
         $command = $this->getApplication()->find($command);
         $arguments = ['command' => $command] + $arguments;

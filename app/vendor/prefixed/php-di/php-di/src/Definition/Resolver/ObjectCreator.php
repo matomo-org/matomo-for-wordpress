@@ -81,7 +81,7 @@ class ObjectCreator implements DefinitionResolver
             $wrappedObject = $this->createInstance($definition, $parameters);
             $initializer = null;
             // turning off further lazy initialization
-            return true;
+            return \true;
         });
         return $proxy;
     }
@@ -160,7 +160,7 @@ class ObjectCreator implements DefinitionResolver
         $className = $className ?: get_class($object);
         $property = new ReflectionProperty($className, $propertyName);
         if (!$property->isPublic()) {
-            $property->setAccessible(true);
+            $property->setAccessible(\true);
         }
         $property->setValue($object, $propertyValue);
     }

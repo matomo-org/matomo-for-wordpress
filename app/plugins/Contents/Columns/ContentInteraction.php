@@ -41,13 +41,13 @@ class ContentInteraction extends ActionDimension
     public function onLookupAction(Request $request, Action $action)
     {
         if (!$action instanceof ActionContent) {
-            return false;
+            return \false;
         }
         $interaction = $request->getParam('c_i');
         $interaction = trim($interaction);
         if (strlen($interaction) > 0) {
             return $interaction;
         }
-        return false;
+        return \false;
     }
 }

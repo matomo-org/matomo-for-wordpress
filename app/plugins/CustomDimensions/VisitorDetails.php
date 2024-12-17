@@ -69,7 +69,7 @@ class VisitorDetails extends VisitorDetailsAbstract
             return [];
         }
         $view = new View('@CustomDimensions/_visitorDetails');
-        $view->sendHeadersWhenRendering = false;
+        $view->sendHeadersWhenRendering = \false;
         $view->visitInfo = $visitorDetails;
         $view->customDimensions = $this->getCustomDimensionsFromVisit($visitorDetails);
         return [[40, $view->render()]];
@@ -95,7 +95,7 @@ class VisitorDetails extends VisitorDetailsAbstract
         }
         $action['customDimensions'] = $customDimensions;
         $view = new View('@CustomDimensions/_actionTooltip');
-        $view->sendHeadersWhenRendering = false;
+        $view->sendHeadersWhenRendering = \false;
         $view->action = $action;
         return [[30, $view->render()]];
     }

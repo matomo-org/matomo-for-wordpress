@@ -31,10 +31,10 @@ class Campaign extends \Piwik\Plugins\Referrers\Columns\Base
      * @param Action|null $action
      * @return bool
      */
-    public function shouldForceNewVisit(Request $request, Visitor $visitor, Action $action = null)
+    public function shouldForceNewVisit(Request $request, Visitor $visitor, ?Action $action = null)
     {
         if (TrackerConfig::getConfigValue('create_new_visit_when_campaign_changes', $request->getIdSiteIfExists()) != 1) {
-            return false;
+            return \false;
         }
         $information = $this->getReferrerInformationFromRequest($request, $visitor);
         // we force a new visit if the referrer is a campaign and it's different than the currently recorded referrer.
@@ -42,8 +42,8 @@ class Campaign extends \Piwik\Plugins\Referrers\Columns\Base
         // we just update the existing referrer information instead of creating a visit.
         if ($information['referer_type'] == Common::REFERRER_TYPE_CAMPAIGN && $this->isReferrerInformationNew($visitor, $information) && !$this->isCurrentReferrerDirectEntry($visitor)) {
             Common::printDebug("Existing visit detected, but creating new visit because campaign information is different than last action.");
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
 }

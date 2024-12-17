@@ -42,7 +42,7 @@ class ErrorHandler
      */
     public static function pushFatalErrorBreadcrumb($className = null, $importantArgs = null)
     {
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $limit = 2);
+        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, $limit = 2);
         $backtrace[1]['class'] = $className;
         // knowing the derived class name is far more useful
         $backtrace[1]['args'] = empty($importantArgs) ? [] : array_map('json_encode', $importantArgs);
@@ -62,10 +62,10 @@ class ErrorHandler
             }
             $args = '';
             if (!empty($entry['args'])) {
-                $isFirst = true;
+                $isFirst = \true;
                 foreach ($entry['args'] as $name => $value) {
                     if ($isFirst) {
-                        $isFirst = false;
+                        $isFirst = \false;
                     } else {
                         $args .= ', ';
                     }
@@ -85,35 +85,37 @@ class ErrorHandler
     public static function getErrNoString($errno)
     {
         switch ($errno) {
-            case E_ERROR:
+            case \E_ERROR:
                 return "Error";
-            case E_WARNING:
+            case \E_WARNING:
                 return "Warning";
-            case E_PARSE:
+            case \E_PARSE:
                 return "Parse Error";
-            case E_NOTICE:
+            case \E_NOTICE:
                 return "Notice";
-            case E_CORE_ERROR:
+            case \E_CORE_ERROR:
                 return "Core Error";
-            case E_CORE_WARNING:
+            case \E_CORE_WARNING:
                 return "Core Warning";
-            case E_COMPILE_ERROR:
+            case \E_COMPILE_ERROR:
                 return "Compile Error";
-            case E_COMPILE_WARNING:
+            case \E_COMPILE_WARNING:
                 return "Compile Warning";
-            case E_USER_ERROR:
+            case \E_USER_ERROR:
                 return "User Error";
-            case E_USER_WARNING:
+            case \E_USER_WARNING:
                 return "User Warning";
-            case E_USER_NOTICE:
+            case \E_USER_NOTICE:
                 return "User Notice";
-            case E_STRICT:
+            // E_STRICT is deprecated as of PHP 8.4
+            // @todo can be removed once only PHP 8 is supported
+            case @\E_STRICT:
                 return "Strict Notice";
-            case E_RECOVERABLE_ERROR:
+            case \E_RECOVERABLE_ERROR:
                 return "Recoverable Error";
-            case E_DEPRECATED:
+            case \E_DEPRECATED:
                 return "Deprecated";
-            case E_USER_DEPRECATED:
+            case \E_USER_DEPRECATED:
                 return "User Deprecated";
             default:
                 return "Unknown error ({$errno})";
@@ -131,29 +133,31 @@ class ErrorHandler
             return;
         }
         switch ($errno) {
-            case E_ERROR:
-            case E_PARSE:
-            case E_CORE_ERROR:
-            case E_CORE_WARNING:
-            case E_COMPILE_ERROR:
-            case E_COMPILE_WARNING:
-            case E_USER_ERROR:
+            case \E_ERROR:
+            case \E_PARSE:
+            case \E_CORE_ERROR:
+            case \E_CORE_WARNING:
+            case \E_COMPILE_ERROR:
+            case \E_COMPILE_WARNING:
+            case \E_USER_ERROR:
                 \Piwik\Common::sendResponseCode(500);
                 // Convert the error to an exception with an HTML message
                 $e = new \Exception();
                 $backtrace = \Piwik_ShouldPrintBackTraceWithMessage() ? $e->getTraceAsString() : '';
                 $message = self::getHtmlMessage($errno, $errstr, $errfile, $errline, $backtrace);
                 throw new ErrorException($message, 0, $errno, $errfile, $errline);
-            case E_WARNING:
-            case E_NOTICE:
-            case E_USER_WARNING:
-            case E_USER_NOTICE:
-            case E_STRICT:
-            case E_RECOVERABLE_ERROR:
-            case E_DEPRECATED:
-            case E_USER_DEPRECATED:
+            case \E_WARNING:
+            case \E_NOTICE:
+            case \E_USER_WARNING:
+            case \E_USER_NOTICE:
+            // E_STRICT is deprecated as of PHP 8.4
+            // @todo can be removed once only PHP 8 is supported
+            case @\E_STRICT:
+            case \E_RECOVERABLE_ERROR:
+            case \E_DEPRECATED:
+            case \E_USER_DEPRECATED:
             default:
-                $context = array('trace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 15));
+                $context = array('trace' => debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 15));
                 try {
                     StaticContainer::get(LoggerInterface::class)->warning(self::createLogMessage($errno, $errstr, $errfile, $errline), $context);
                 } catch (\Exception $ex) {

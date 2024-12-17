@@ -46,7 +46,7 @@ class ProductCategory extends Dimension
             $segment->setSegment($productCategoryName);
             $segment->setSqlFilter([TableLogAction::class, 'getOptimizedIdActionSqlMatch']);
             $segment->setSqlSegment('log_conversion_item.' . $productCategoryColumnName);
-            $segment->setIsInternal(true);
+            $segment->setIsInternal(\true);
             $segmentsList->addSegment($dimensionSegmentFactory->createSegment($segment));
         }
         // add a union of these individual columns as productCategory

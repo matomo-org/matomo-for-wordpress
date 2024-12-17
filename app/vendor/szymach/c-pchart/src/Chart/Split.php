@@ -85,7 +85,7 @@ class Split
             $LeftY2 = $LeftY + $Value * $YScale;
             $RightY1 = $RightY + $Spacing;
             $RightY2 = $RightY + $Spacing + $Value * $YScale;
-            $Settings = ["R" => $Palette[$Key]["R"], "G" => $Palette[$Key]["G"], "B" => $Palette[$Key]["B"], "Alpha" => $Palette[$Key]["Alpha"], "NoDraw" => true, "Segments" => $Segments, "Surrounding" => $Surrounding];
+            $Settings = ["R" => $Palette[$Key]["R"], "G" => $Palette[$Key]["G"], "B" => $Palette[$Key]["B"], "Alpha" => $Palette[$Key]["Alpha"], "NoDraw" => \true, "Segments" => $Segments, "Surrounding" => $Surrounding];
             $Angle = $Object->getAngle($X2, $RightY1, $X1, $LeftY1);
             $VectorX1 = cos(deg2rad($Angle + 90)) * $Force + ($X2 - $X1) / 2 + $X1;
             $VectorY1 = sin(deg2rad($Angle + 90)) * $Force + ($RightY1 - $LeftY1) / 2 + $LeftY1;

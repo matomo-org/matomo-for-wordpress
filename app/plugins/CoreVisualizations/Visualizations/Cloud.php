@@ -26,7 +26,7 @@ class Cloud extends Visualization
     public const FOOTER_ICON = 'icon-tag-cloud';
     public const FOOTER_ICON_TITLE = 'General_TagCloud';
     /** Used by system tests to make sure output is consistent. */
-    public static $debugDisableShuffle = false;
+    public static $debugDisableShuffle = \false;
     public $truncatingLimit = 50;
     protected $wordsArray = [];
     private $rawValues = [];
@@ -59,11 +59,11 @@ class Cloud extends Visualization
     }
     public function beforeRender()
     {
-        $this->config->show_exclude_low_population = false;
-        $this->config->show_offset_information = false;
-        $this->config->show_limit_control = false;
+        $this->config->show_exclude_low_population = \false;
+        $this->config->show_offset_information = \false;
+        $this->config->show_limit_control = \false;
         // manually apply metric formatting
-        $this->applyMetricsFormatting(true);
+        $this->applyMetricsFormatting(\true);
         $this->generateCloudData();
     }
     private function generateCloudData()
@@ -74,7 +74,7 @@ class Cloud extends Visualization
         $columnToDisplay = isset($this->config->columns_to_display[1]) ? $this->config->columns_to_display[1] : 'nb_visits';
         $labelMetadata = [];
         foreach ($this->dataTable->getRows() as $row) {
-            $logo = false;
+            $logo = \false;
             if ($this->config->display_logo_instead_of_label) {
                 $logo = $row->getMetadata('logo');
             }

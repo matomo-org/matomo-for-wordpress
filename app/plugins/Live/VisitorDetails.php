@@ -40,10 +40,10 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
             'visitorId' => $this->getVisitorId(),
             'fingerprint' => $this->getFingerprint(),
             // => false are placeholders to be filled in API later
-            'actionDetails' => false,
-            'goalConversions' => false,
-            'siteCurrency' => false,
-            'siteCurrencySymbol' => false,
+            'actionDetails' => \false,
+            'goalConversions' => \false,
+            'siteCurrency' => \false,
+            'siteCurrencySymbol' => \false,
             // all time entries
             'serverDate' => $this->getServerDate(),
             'visitServerHour' => $this->getVisitServerHour(),
@@ -92,11 +92,11 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
             return;
         }
         if (isset($action['type']) && in_array($action['type'], ['outlink', 'download']) && isset($action['url'])) {
-            $action['url'] = html_entity_decode($action['url'], ENT_QUOTES, "UTF-8");
+            $action['url'] = html_entity_decode($action['url'], \ENT_QUOTES, "UTF-8");
         }
         $idSite = $this->getIdSite();
         $view = new View($template);
-        $view->sendHeadersWhenRendering = false;
+        $view->sendHeadersWhenRendering = \false;
         $view->mainUrl = trim(Site::getMainUrlFor($idSite));
         $view->additionalUrls = $this->getAdditionalUrlsForSite($idSite);
         $view->action = $action;
@@ -107,7 +107,7 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
     public function renderActionTooltip($action, $visitInfo)
     {
         $view = new View('@Live/_actionTooltip');
-        $view->sendHeadersWhenRendering = false;
+        $view->sendHeadersWhenRendering = \false;
         $view->action = $action;
         $view->visitInfo = $visitInfo;
         return [[0, $view->render()]];
@@ -116,7 +116,7 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
     {
         $view = new View('@Live/_visitorDetails.twig');
         $view->isProfileEnabled = \Piwik\Plugins\Live\Live::isVisitorProfileEnabled();
-        $view->sendHeadersWhenRendering = false;
+        $view->sendHeadersWhenRendering = \false;
         $view->visitInfo = $visitorDetails;
         return [[0, $view->render()]];
     }
@@ -124,7 +124,7 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
     {
         $view = new View('@Live/_visitorLogIcons.twig');
         $view->isProfileEnabled = \Piwik\Plugins\Live\Live::isVisitorProfileEnabled();
-        $view->sendHeadersWhenRendering = false;
+        $view->sendHeadersWhenRendering = \false;
         $view->visitor = $visitorDetails;
         return $view->render();
     }
@@ -133,7 +133,7 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
         if (isset($this->details['idvisitor'])) {
             return bin2hex($this->details['idvisitor']);
         }
-        return false;
+        return \false;
     }
     public function getVisitServerHour()
     {
@@ -163,7 +163,7 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
         if (isset($this->details['config_id'])) {
             return bin2hex($this->details['config_id']);
         }
-        return false;
+        return \false;
     }
     public function getTimestampLastAction()
     {
@@ -187,7 +187,7 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
     {
         $site = new Site($this->getIdSite());
         $formatter = new Formatter();
-        $profile['totalVisitDurationPretty'] = $formatter->getPrettyTimeFromSeconds($profile['totalVisitDuration'], true);
+        $profile['totalVisitDurationPretty'] = $formatter->getPrettyTimeFromSeconds($profile['totalVisitDuration'], \true);
         $rows = $visits->getRows();
         $firstVisit = $profile['visit_first'];
         if (count($rows) >= Config::getInstance()->General['live_visitor_profile_max_visits_to_aggregate']) {
@@ -230,13 +230,13 @@ class VisitorDetails extends \Piwik\Plugins\Live\VisitorDetailsAbstract
     public static function getReferrerSummaryForVisit($visit)
     {
         $referrerType = $visit->getColumn('referrerType');
-        if ($referrerType === false || $referrerType == 'direct') {
+        if ($referrerType === \false || $referrerType == 'direct') {
             return Piwik::translate('Referrers_DirectEntry');
         }
         if ($referrerType == 'search') {
             $referrerName = $visit->getColumn('referrerName');
             $keyword = $visit->getColumn('referrerKeyword');
-            if ($keyword !== false && $keyword != APIReferrers::getKeywordNotDefinedString()) {
+            if ($keyword !== \false && $keyword != APIReferrers::getKeywordNotDefinedString()) {
                 $referrerName .= ' (' . $keyword . ')';
             }
             return $referrerName;

@@ -30,7 +30,7 @@ use Piwik\Plugins\TagManager\Template\Variable\VariablesProvider;
 use Piwik\SettingsPiwik;
 class WebContext extends \Piwik\Plugins\TagManager\Context\BaseContext
 {
-    const ID = 'web';
+    public const ID = 'web';
     /**
      * @var JavaScriptTagManagerLoader
      */
@@ -59,13 +59,13 @@ class WebContext extends \Piwik\Plugins\TagManager\Context\BaseContext
     public function generate($container)
     {
         $filesCreated = array();
-        $hasPreviewRelease = false;
+        $hasPreviewRelease = \false;
         $environments = Request::processRequest('TagManager.getAvailableEnvironments');
         $generatedEnvironments = array();
         foreach ($container['releases'] as $release) {
             $generatedEnvironments[] = $release['environment'];
             if ($release['environment'] === Environment::ENVIRONMENT_PREVIEW) {
-                $hasPreviewRelease = true;
+                $hasPreviewRelease = \true;
                 break;
             }
         }
@@ -78,13 +78,13 @@ class WebContext extends \Piwik\Plugins\TagManager\Context\BaseContext
         $baseJs = $this->javaScriptTagManagerLoader->getJavaScriptContent();
         $preconfiguredVariablesResponse = $this->getPreConfiguredVariablesJSCodeResponse(self::ID);
         foreach ($environments as $environment) {
-            $environmentId = $environment['id'];
+            $environmentId = $environment['id'] ?? \false;
             // we make sure to have files even for containers that don't have a release yet, this way they can embed it
             // already nicely into the page and activate it later through the UI
-            if (!in_array($environmentId, $generatedEnvironments, true)) {
+            if ($environmentId && !in_array($environmentId, $generatedEnvironments, \true)) {
                 $isPreviewRelease = $environmentId === Environment::ENVIRONMENT_PREVIEW;
                 if ($isPreviewRelease) {
-                    $hasPreviewRelease = true;
+                    $hasPreviewRelease = \true;
                 }
                 $js = $this->addPreviewCode($baseJs, $hasPreviewRelease, $isPreviewRelease, $container);
                 $path = $this->getJsTargetPath($container['idsite'], $container['idcontainer'], $environmentId, $container['created_date']);
@@ -96,7 +96,7 @@ class WebContext extends \Piwik\Plugins\TagManager\Context\BaseContext
             $this->templateLocator = StaticContainer::getContainer()->make('Piwik\\Plugins\\TagManager\\Context\\BaseContext\\TemplateLocator');
             $isPreviewRelease = $release['environment'] === Environment::ENVIRONMENT_PREVIEW;
             if ($isPreviewRelease) {
-                $hasPreviewRelease = true;
+                $hasPreviewRelease = \true;
             }
             $containerJs = $this->generatePublicContainer($container, $release);
             $replaceMacros = array();
@@ -132,7 +132,7 @@ class WebContext extends \Piwik\Plugins\TagManager\Context\BaseContext
                     $variableTemplates['keys'][] = '{{' . $variable['name'] . '}}';
                     $variableTemplates['values'][] = 'TagManager._buildVariable(' . json_encode($variable) . ", parameters.get('container')).get()";
                 }
-                if (!empty($variable['parameters']['jsFunction']) && strpos($variable['parameters']['jsFunction'], '{{') !== FALSE) {
+                if (!empty($variable['parameters']['jsFunction']) && strpos($variable['parameters']['jsFunction'], '{{') !== \false) {
                     $replaceMacros[] = ['key' => $variableKey, 'methodName' => $variable['Variable']];
                 }
                 if (!$isPreviewRelease) {
@@ -153,7 +153,7 @@ class WebContext extends \Piwik\Plugins\TagManager\Context\BaseContext
             }
             $jsonOptions = 0;
             if (Development::isEnabled()) {
-                $jsonOptions = JSON_PRETTY_PRINT;
+                $jsonOptions = \JSON_PRETTY_PRINT;
             }
             $initContainer = '(function(){';
             $initContainer .= "\nvar Templates = {};\n";
@@ -164,7 +164,8 @@ class WebContext extends \Piwik\Plugins\TagManager\Context\BaseContext
             $js = $this->addPreviewCode($baseJs, $hasPreviewRelease, $isPreviewRelease, $container);
             $js = str_replace(array('/*!! initContainerHook */', '/*!!! initContainerHook */'), $initContainer, $js);
             $ignoreGtmDataLayer = isset($container['ignoreGtmDataLayer']) && $container['ignoreGtmDataLayer'] == 1 ? 'true' : 'false';
-            $windowLevelSettingsJs = "var ignoreGtmDataLayer = {$ignoreGtmDataLayer};";
+            $activelySyncGtmDataLayer = isset($container['activelySyncGtmDataLayer']) && $container['activelySyncGtmDataLayer'] == 1 ? 'true' : 'false';
+            $windowLevelSettingsJs = "var ignoreGtmDataLayer = {$ignoreGtmDataLayer}; var activelySyncGtmDataLayer = {$activelySyncGtmDataLayer};";
             $js = str_replace(array('/*!! windowLevelSettingsHook */', '/*!!! windowLevelSettingsHook */'), $windowLevelSettingsJs, $js);
             $path = $this->getJsTargetPath($container['idsite'], $container['idcontainer'], $release['environment'], $container['created_date']);
             $filesCreated[$path] = $js;

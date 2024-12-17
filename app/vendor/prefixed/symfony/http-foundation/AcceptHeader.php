@@ -29,7 +29,7 @@ class AcceptHeader
     /**
      * @var bool
      */
-    private $sorted = true;
+    private $sorted = \true;
     /**
      * @param AcceptHeaderItem[] $items
      */
@@ -91,7 +91,7 @@ class AcceptHeader
     public function add(AcceptHeaderItem $item)
     {
         $this->items[$item->getValue()] = $item;
-        $this->sorted = false;
+        $this->sorted = \false;
         return $this;
     }
     /**
@@ -139,7 +139,7 @@ class AcceptHeader
                 }
                 return $qA > $qB ? -1 : 1;
             });
-            $this->sorted = true;
+            $this->sorted = \true;
         }
     }
 }

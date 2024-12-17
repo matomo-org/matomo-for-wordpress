@@ -25,12 +25,12 @@ class Csv extends ApiRenderer
      */
     public function renderException($message, $exception)
     {
-        Common::sendHeader('Content-Type: text/html; charset=utf-8', true);
+        Common::sendHeader('Content-Type: text/html; charset=utf-8', \true);
         return 'Error: ' . $message;
     }
     public function renderDataTable($dataTable)
     {
-        $convertToUnicode = Common::getRequestVar('convertToUnicode', true, 'int', $this->request);
+        $convertToUnicode = Common::getRequestVar('convertToUnicode', \true, 'int', $this->request);
         $idSite = Common::getRequestVar('idSite', 0, 'int', $this->request);
         if (empty($idSite)) {
             $idSite = 'all';
@@ -41,7 +41,7 @@ class Csv extends ApiRenderer
         $method = Common::getRequestVar('method', '', 'string', $this->request);
         $tableRenderer->setApiMethod($method);
         $tableRenderer->setIdSite($idSite);
-        $tableRenderer->setTranslateColumnNames(Common::getRequestVar('translateColumnNames', false, 'int', $this->request));
+        $tableRenderer->setTranslateColumnNames(Common::getRequestVar('translateColumnNames', \false, 'int', $this->request));
         return $tableRenderer->render();
     }
     public function renderArray($array)
@@ -50,7 +50,7 @@ class Csv extends ApiRenderer
     }
     public function sendHeader()
     {
-        Common::sendHeader("Content-Type: application/vnd.ms-excel", true);
+        Common::sendHeader("Content-Type: application/vnd.ms-excel", \true);
         ProxyHttp::overrideCacheControlHeaders();
     }
 }

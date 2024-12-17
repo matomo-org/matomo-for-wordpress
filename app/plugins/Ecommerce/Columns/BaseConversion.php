@@ -20,8 +20,8 @@ abstract class BaseConversion extends ConversionDimension
      */
     protected function roundRevenueIfNeeded($revenue)
     {
-        if (false === $revenue) {
-            return false;
+        if (\false === $revenue) {
+            return \false;
         }
         if (round($revenue) == $revenue) {
             return $revenue;

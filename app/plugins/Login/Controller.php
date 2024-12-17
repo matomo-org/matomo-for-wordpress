@@ -40,6 +40,7 @@ use Piwik\View;
 class Controller extends \Piwik\Plugin\ControllerAdmin
 {
     public const NONCE_CONFIRMRESETPASSWORD = 'loginConfirmResetPassword';
+    public const NONCE_CONFIRMCANCELRESETPASSWORD = 'loginConfirmCancelResetPassword';
     /**
      * @var PasswordResetter
      */
@@ -119,7 +120,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      * @return string
      * @internal param string $currentUrl Current URL
      */
-    public function login($messageNoAccess = null, $infoMessage = false)
+    public function login($messageNoAccess = null, $infoMessage = \false)
     {
         $form = new \Piwik\Plugins\Login\FormLogin();
         if ($form->validate()) {
@@ -223,7 +224,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
         $urlToRedirect = Common::getRequestVar('url', $currentUrl, 'string');
         $urlToRedirect = Common::unsanitizeInputValue($urlToRedirect);
-        $this->authenticateAndRedirect($login, $password, $urlToRedirect, $passwordHashed = true);
+        $this->authenticateAndRedirect($login, $password, $urlToRedirect, $passwordHashed = \true);
     }
     public function bruteForceLog()
     {
@@ -241,7 +242,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         return sprintf('<div class="alert alert-danger">
                 <p><strong>%s:</strong> %s</p>
                 <p><a href="%s">%s</a></p>
-            </div>', Piwik::translate('General_Error'), htmlentities($errorMessage, Common::HTML_ENCODING_QUOTE_STYLE, 'UTF-8', $doubleEncode = false), 'index.php?module=' . Piwik::getLoginPluginName(), Piwik::translate('Login_LogIn'));
+            </div>', Piwik::translate('General_Error'), htmlentities($errorMessage, Common::HTML_ENCODING_QUOTE_STYLE, 'UTF-8', $doubleEncode = \false), 'index.php?module=' . Piwik::getLoginPluginName(), Piwik::translate('Login_LogIn'));
     }
     /**
      * Authenticate user and password.  Redirect if successful.
@@ -252,11 +253,11 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      * @param bool $passwordHashed indicates if $password is hashed
      * @return string failure message if unable to authenticate
      */
-    protected function authenticateAndRedirect($login, $password, $urlToRedirect = false, $passwordHashed = false)
+    protected function authenticateAndRedirect($login, $password, $urlToRedirect = \false, $passwordHashed = \false)
     {
         Nonce::discardNonce('Login.login');
         $this->auth->setLogin($login);
-        if ($passwordHashed === false) {
+        if ($passwordHashed === \false) {
             $this->auth->setPassword($password);
         } else {
             $this->auth->setPasswordHash($password);
@@ -265,7 +266,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         // remove password reset entry if it exists
         $this->passwordResetter->removePasswordResetInfo($login);
         $parsedUrl = parse_url($urlToRedirect);
-        if (!empty($urlToRedirect) && false === $parsedUrl || !empty($parsedUrl['scheme']) && empty($parsedUrl['host'])) {
+        if (!empty($urlToRedirect) && \false === $parsedUrl || !empty($parsedUrl['scheme']) && empty($parsedUrl['host'])) {
             $e = new \Piwik\Exception\Exception('The redirect URL is not valid.');
             $e->setIsHtmlMessage();
             throw $e;
@@ -349,6 +350,56 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             return [$ex->getMessage()];
         }
         return null;
+    }
+    public function initiateCancelResetPassword() : string
+    {
+        if (!Url::isValidHost()) {
+            throw new Exception("Cannot invalidate reset password token with untrusted hostname!");
+        }
+        $request = Request::fromRequest();
+        $login = $request->getStringParameter('login');
+        $resetToken = $request->getStringParameter('resetToken');
+        $errorMessage = '';
+        try {
+            $this->passwordResetter->checkValidConfirmPasswordToken($login, $resetToken);
+        } catch (Exception $ex) {
+            $errorMessage = $ex->getMessage();
+        }
+        $nonce = Nonce::getNonce(self::NONCE_CONFIRMCANCELRESETPASSWORD);
+        return $this->renderTemplateAs('@Login/initiateCancelResetPassword', ['nonce' => $nonce, 'errorMessage' => $errorMessage, 'loginPlugin' => Piwik::getLoginPluginName(), 'login' => $login, 'resetToken' => $resetToken], 'basic');
+    }
+    /**
+     * Password reset cancel action. Invalidates a password reset token.
+     * Users visit this action from a link supplied in an email.
+     */
+    public function cancelResetPassword() : string
+    {
+        if (!Url::isValidHost()) {
+            throw new Exception("Cannot invalidate reset password token with untrusted hostname!");
+        }
+        $request = Request::fromRequest();
+        $login = $request->getStringParameter('login');
+        $resetToken = $request->getStringParameter('resetToken');
+        try {
+            Nonce::checkNonce(self::NONCE_CONFIRMCANCELRESETPASSWORD);
+            $this->passwordResetter->cancelPasswordResetProcess($login, $resetToken);
+        } catch (Exception $ex) {
+            Log::debug($ex);
+            $errorMessage = $ex->getMessage();
+        }
+        if (!empty($errorMessage)) {
+            return $this->login($errorMessage);
+        }
+        $cancelResetPasswordContent = '';
+        /**
+         * Overwrite the content displayed on the "reset password process cancelled page".
+         *
+         * Will display default content if no event content returned.
+         *
+         * @param string $cancelResetPasswordContent The content to render.
+         */
+        Piwik::postEvent('Template.loginCancelResetPasswordContent', [&$cancelResetPasswordContent]);
+        return $this->renderTemplateAs('@Login/cancelResetPassword', ['cancelResetPasswordContent' => $cancelResetPasswordContent], 'basic');
     }
     /**
      * Password reset confirmation action. Finishes the password reset process.
@@ -452,7 +503,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             $error = null;
             $password = $request->getStringParameter('password', '');
             $passwordConfirmation = $request->getStringParameter('passwordConfirmation', '');
-            $conditionCheck = $request->getBoolParameter('conditionCheck', false);
+            $conditionCheck = $request->getBoolParameter('conditionCheck', \false);
             if (empty($password)) {
                 $error = Piwik::translate('Login_PasswordRequired');
             }
@@ -514,7 +565,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     {
         $model = new UsersModel();
         $token = Common::getRequestVar('token', null, 'string');
-        $form = Common::getRequestVar('invitation_form', false, 'string');
+        $form = Common::getRequestVar('invitation_form', \false, 'string');
         $user = $model->getUserByInviteToken($token);
         // if no user matches the invite token
         if (!$user) {

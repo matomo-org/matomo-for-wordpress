@@ -124,7 +124,7 @@ class Configuration
     private function decodeExtractions($extractions)
     {
         if (!empty($extractions)) {
-            $extractions = json_decode($extractions, true);
+            $extractions = json_decode($extractions, \true);
         }
         if (empty($extractions) || !is_array($extractions)) {
             $extractions = array();

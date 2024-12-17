@@ -245,7 +245,7 @@ namespace {
          * @param    HTML_QuickForm2_Node     Reference to insert before
          * @return   HTML_QuickForm2_Node     Inserted element
          */
-        public function insertBefore(\HTML_QuickForm2_Node $element, \HTML_QuickForm2_Node $reference = null)
+        public function insertBefore(\HTML_QuickForm2_Node $element, ?\HTML_QuickForm2_Node $reference = null)
         {
             if (null === $reference) {
                 return $this->appendChild($element);

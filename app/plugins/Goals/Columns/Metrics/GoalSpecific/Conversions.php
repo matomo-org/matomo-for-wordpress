@@ -22,7 +22,7 @@ class Conversions extends GoalSpecificProcessedMetric
 {
     public function getName()
     {
-        return Goals::makeGoalColumn($this->idGoal, 'nb_conversions', false);
+        return Goals::makeGoalColumn($this->idGoal, 'nb_conversions', \false);
     }
     public function getTranslatedName()
     {

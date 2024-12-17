@@ -136,12 +136,12 @@ class PluginList
         if (!empty($pluginJsonCache[$pluginName]['require'])) {
             $dependencies = $pluginJsonCache[$pluginName]['require'];
             foreach ($dependencies as $possiblePluginName => $key) {
-                if (in_array($possiblePluginName, $toBeSorted, true) && !in_array($possiblePluginName, $sorted, true)) {
+                if (in_array($possiblePluginName, $toBeSorted, \true) && !in_array($possiblePluginName, $sorted, \true)) {
                     $sorted = $this->sortRequiredPlugin($possiblePluginName, $pluginJsonCache, $toBeSorted, $sorted);
                 }
             }
         }
-        if (!in_array($pluginName, $sorted, true)) {
+        if (!in_array($pluginName, $sorted, \true)) {
             $sorted[] = $pluginName;
         }
         return $sorted;

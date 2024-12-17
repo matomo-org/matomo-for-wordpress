@@ -32,7 +32,7 @@ class PurgeOldArchiveData extends ConsoleCommand
      * @var ArchivePurger
      */
     private $archivePurger;
-    public function __construct(ArchivePurger $archivePurger = null)
+    public function __construct(?ArchivePurger $archivePurger = null)
     {
         parent::__construct();
         $this->archivePurger = $archivePurger;
@@ -41,7 +41,7 @@ class PurgeOldArchiveData extends ConsoleCommand
     {
         $this->setName('core:purge-old-archive-data');
         $this->setDescription('Purges out of date and invalid archive data from archive tables.');
-        $this->addOptionalArgument("dates", sprintf("The months of the archive tables to purge data from. By default, only deletes from the current month. Use '%s' for all dates.", self::ALL_DATES_STRING), [self::getToday()->toString()], true);
+        $this->addOptionalArgument("dates", sprintf("The months of the archive tables to purge data from. By default, only deletes from the current month. Use '%s' for all dates.", self::ALL_DATES_STRING), [self::getToday()->toString()], \true);
         $this->addNoValueOption('exclude-outdated', null, "Do not purge outdated archive data.");
         $this->addNoValueOption('exclude-invalidated', null, "Do not purge invalidated archive data.");
         $this->addNoValueOption('exclude-ranges', null, "Do not purge custom ranges.");
@@ -155,11 +155,11 @@ class PurgeOldArchiveData extends ConsoleCommand
         foreach ($dates as $date) {
             $numericTable = ArchiveTableCreator::getNumericTable($date);
             $this->performTimedPurging("Optimizing table {$numericTable}...", function () use($numericTable) {
-                Db::optimizeTables($numericTable, $force = true);
+                Db\Schema::getInstance()->optimizeTables([$numericTable], $force = \true);
             });
             $blobTable = ArchiveTableCreator::getBlobTable($date);
             $this->performTimedPurging("Optimizing table {$blobTable}...", function () use($blobTable) {
-                Db::optimizeTables($blobTable, $force = true);
+                Db\Schema::getInstance()->optimizeTables([$blobTable], $force = \true);
             });
         }
     }

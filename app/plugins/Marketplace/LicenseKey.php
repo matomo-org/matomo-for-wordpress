@@ -18,14 +18,14 @@ class LicenseKey
     public function has()
     {
         $key = $this->get();
-        return isset($key) && $key !== false && $key !== '';
+        return isset($key) && $key !== \false && $key !== '';
     }
     /**
      * @param string|null|false $licenseKey `null` or `false` will delete an existing a license key
      */
     public function set($licenseKey)
     {
-        if (!isset($licenseKey) || $licenseKey === false) {
+        if (!isset($licenseKey) || $licenseKey === \false) {
             $this->delete();
         } else {
             Option::set('marketplace_license_key', (string) $licenseKey);

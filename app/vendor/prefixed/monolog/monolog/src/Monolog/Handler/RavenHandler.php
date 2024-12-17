@@ -44,9 +44,9 @@ class RavenHandler extends AbstractProcessingHandler
      * @param int          $level       The minimum logging level at which this handler will be triggered
      * @param bool         $bubble      Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(Raven_Client $ravenClient, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(Raven_Client $ravenClient, $level = Logger::DEBUG, $bubble = \true)
     {
-        @trigger_error('The Monolog\\Handler\\RavenHandler class is deprecated. You should rather upgrade to the sentry/sentry 2.x and use Sentry\\Monolog\\Handler, see https://github.com/getsentry/sentry-php/blob/master/src/Monolog/Handler.php', E_USER_DEPRECATED);
+        @trigger_error('The Monolog\\Handler\\RavenHandler class is deprecated. You should rather upgrade to the sentry/sentry 2.x and use Sentry\\Monolog\\Handler, see https://github.com/getsentry/sentry-php/blob/master/src/Monolog/Handler.php', \E_USER_DEPRECATED);
         parent::__construct($level, $bubble);
         $this->ravenClient = $ravenClient;
     }
@@ -106,7 +106,7 @@ class RavenHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $previousUserContext = false;
+        $previousUserContext = \false;
         $options = array();
         $options['level'] = $this->logLevels[$record['level']];
         $options['tags'] = array();
@@ -150,13 +150,13 @@ class RavenHandler extends AbstractProcessingHandler
         if (!empty($this->release) && !isset($options['release'])) {
             $options['release'] = $this->release;
         }
-        if (isset($record['context']['exception']) && ($record['context']['exception'] instanceof \Exception || PHP_VERSION_ID >= 70000 && $record['context']['exception'] instanceof \Throwable)) {
+        if (isset($record['context']['exception']) && ($record['context']['exception'] instanceof \Exception || \PHP_VERSION_ID >= 70000 && $record['context']['exception'] instanceof \Throwable)) {
             $options['message'] = $record['formatted'];
             $this->ravenClient->captureException($record['context']['exception'], $options);
         } else {
             $this->ravenClient->captureMessage($record['formatted'], array(), $options);
         }
-        if ($previousUserContext !== false) {
+        if ($previousUserContext !== \false) {
             $this->ravenClient->user_context($previousUserContext);
         }
     }

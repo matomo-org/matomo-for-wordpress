@@ -25,9 +25,9 @@ abstract class BaseTemplate
 {
     private $pluginName = null;
     protected $templateType = '';
-    const FIELD_TEXTAREA_VARIABLE_COMPONENT = ['plugin' => 'TagManager', 'name' => 'FieldTextareaVariable'];
-    const FIELD_VARIABLE_COMPONENT = ['plugin' => 'TagManager', 'name' => 'FieldVariableTemplate'];
-    const FIELD_VARIABLE_TYPE_COMPONENT = ['plugin' => 'TagManager', 'name' => 'FieldVariableTypeTemplate'];
+    public const FIELD_TEXTAREA_VARIABLE_COMPONENT = ['plugin' => 'TagManager', 'name' => 'FieldTextareaVariable'];
+    public const FIELD_VARIABLE_COMPONENT = ['plugin' => 'TagManager', 'name' => 'FieldVariableTemplate'];
+    public const FIELD_VARIABLE_TYPE_COMPONENT = ['plugin' => 'TagManager', 'name' => 'FieldVariableTypeTemplate'];
     public static $RESERVED_SETTING_NAMES = ['container', 'tag', 'variable', 'trigger', 'length', 'window', 'document', 'get', 'fire', 'setUp', 'set', 'reset', 'type', 'part', 'default_value', 'lookup_table', 'conditions', 'condition', 'fire_limit', 'fire_delay', 'priority', 'parameters', 'start_date', 'end_date', 'type', 'name', 'status'];
     private $settingsStorage;
     /**
@@ -154,7 +154,7 @@ abstract class BaseTemplate
      */
     protected function makeSetting($name, $defaultValue, $type, $fieldConfigCallback)
     {
-        if (in_array(strtolower($name), self::$RESERVED_SETTING_NAMES, true)) {
+        if (in_array(strtolower($name), self::$RESERVED_SETTING_NAMES, \true)) {
             throw new \Exception(sprintf('The setting name "%s" is reserved and cannot be used', $name));
         }
         // we need to make sure to create new instance of storage all the time to prevent "leaking" using values across
@@ -163,7 +163,7 @@ abstract class BaseTemplate
         $setting = new Setting($name, $defaultValue, $type, 'TagManager');
         $setting->setStorage($this->settingsStorage);
         $setting->setConfigureCallback($fieldConfigCallback);
-        $setting->setIsWritableByCurrentUser(true);
+        $setting->setIsWritableByCurrentUser(\true);
         // we validate access on API level.
         return $setting;
     }
@@ -243,7 +243,7 @@ abstract class BaseTemplate
      */
     public function hasAdvancedSettings()
     {
-        return true;
+        return \true;
     }
     /**
      * If your template allows a user to add js/html code to the site for example, you should be overwriting this
@@ -252,7 +252,7 @@ abstract class BaseTemplate
      */
     public function isCustomTemplate()
     {
-        return false;
+        return \false;
     }
     /**
      * @ignore

@@ -106,7 +106,7 @@ class Option
     public static function clearCache()
     {
         $option = self::getInstance();
-        $option->loaded = false;
+        $option->loaded = \false;
         $option->all = array();
     }
     /**
@@ -116,7 +116,7 @@ class Option
     /**
      * @var bool
      */
-    private $loaded = false;
+    private $loaded = \false;
     /**
      * Singleton instance
      * @var \Piwik\Option
@@ -247,7 +247,7 @@ class Option
         foreach ($all as $option) {
             $this->all[$option['option_name']] = $option['option_value'];
         }
-        $this->loaded = true;
+        $this->loaded = \true;
     }
     private function trimOptionNameIfNeeded($name)
     {

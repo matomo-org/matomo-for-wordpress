@@ -62,11 +62,11 @@ class RequiredPhpSetting implements \JsonSerializable
     public function check()
     {
         $currentValue = (int) ini_get($this->setting);
-        $return = false;
+        $return = \false;
         foreach ($this->requiredValues as $key => $requiredValue) {
             $this->requiredValues[$key]['isValid'] = version_compare($currentValue, $requiredValue['requiredValue'], $requiredValue['operator']);
             if ($this->requiredValues[$key]['isValid']) {
-                $return = true;
+                $return = \true;
             }
         }
         return $return;

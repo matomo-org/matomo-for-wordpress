@@ -28,8 +28,8 @@ class PerformanceColumns extends HtmlTable
     public static function canDisplayViewDataTable($viewDataTable)
     {
         $request = $viewDataTable->getRequestArray();
-        if ($viewDataTable->config->show_table_performance === false) {
-            return false;
+        if ($viewDataTable->config->show_table_performance === \false) {
+            return \false;
         }
         $module = $request['module'] ?? '';
         $action = $request['action'] ?? '';
@@ -38,9 +38,9 @@ class PerformanceColumns extends HtmlTable
             $action = $request['actionToWidgetize'] ?: $action;
         }
         if ('Actions' === $module && in_array($action, PagePerformance::$availableForMethods)) {
-            return true;
+            return \true;
         }
-        return false;
+        return \false;
     }
     public function beforeGenericFiltersAreAppliedToLoadedDataTable()
     {
@@ -62,7 +62,7 @@ class PerformanceColumns extends HtmlTable
     }
     protected function isPivoted()
     {
-        return false;
+        return \false;
         // Pivot not supported
     }
 }

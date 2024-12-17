@@ -21,7 +21,7 @@ final class BlackfireDumper
         $data = [];
         $this->dumpProfile('main()', $profile, $data);
         $this->dumpChildren('main()', $profile, $data);
-        $start = \sprintf('%f', microtime(true));
+        $start = \sprintf('%f', microtime(\true));
         $str = <<<EOF
 file-format: BlackfireProbe
 cost-dimensions: wt mu pmu

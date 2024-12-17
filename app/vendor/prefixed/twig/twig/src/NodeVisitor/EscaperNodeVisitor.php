@@ -36,7 +36,7 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
     private $blocks = [];
     private $safeAnalysis;
     private $traverser;
-    private $defaultStrategy = false;
+    private $defaultStrategy = \false;
     private $safeVars = [];
     public function __construct()
     {
@@ -62,12 +62,12 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
     public function leaveNode(Node $node, Environment $env) : ?Node
     {
         if ($node instanceof ModuleNode) {
-            $this->defaultStrategy = false;
+            $this->defaultStrategy = \false;
             $this->safeVars = [];
             $this->blocks = [];
         } elseif ($node instanceof FilterExpression) {
             return $this->preEscapeFilterNode($node, $env);
-        } elseif ($node instanceof PrintNode && false !== ($type = $this->needEscaping())) {
+        } elseif ($node instanceof PrintNode && \false !== ($type = $this->needEscaping())) {
             $expression = $node->getNode('expr');
             if ($expression instanceof ConditionalExpression && $this->shouldUnwrapConditional($expression, $env, $type)) {
                 return new DoNode($this->unwrapConditional($expression, $env, $type), $expression->getTemplateLine());
@@ -153,13 +153,13 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
         if (\count($this->statusStack)) {
             return $this->statusStack[\count($this->statusStack) - 1];
         }
-        return $this->defaultStrategy ?: false;
+        return $this->defaultStrategy ?: \false;
     }
     private function getEscaperFilter(string $type, Node $node) : FilterExpression
     {
         $line = $node->getTemplateLine();
         $name = new ConstantExpression('escape', $line);
-        $args = new Node([new ConstantExpression($type, $line), new ConstantExpression(null, $line), new ConstantExpression(true, $line)]);
+        $args = new Node([new ConstantExpression($type, $line), new ConstantExpression(null, $line), new ConstantExpression(\true, $line)]);
         return new FilterExpression($node, $name, $args, $line);
     }
     public function getPriority() : int

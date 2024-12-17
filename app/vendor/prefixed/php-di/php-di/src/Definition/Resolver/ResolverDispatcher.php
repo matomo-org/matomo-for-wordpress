@@ -78,7 +78,7 @@ class ResolverDispatcher implements DefinitionResolver
      */
     private function getDefinitionResolver(Definition $definition) : DefinitionResolver
     {
-        switch (true) {
+        switch (\true) {
             case $definition instanceof ObjectDefinition:
                 if (!$this->objectResolver) {
                     $this->objectResolver = new ObjectCreator($this, $this->proxyFactory);

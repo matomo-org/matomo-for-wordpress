@@ -20,7 +20,7 @@ class GetName extends \Piwik\Plugins\Events\Reports\Base
         $this->name = Piwik::translate('Events_EventNames');
         $this->documentation = Piwik::translate('Events_EventNamesReportDocumentation');
         $this->metrics = array('nb_events', 'sum_event_value', 'min_event_value', 'max_event_value', 'nb_events_with_value');
-        if (Common::getRequestVar('secondaryDimension', false) == 'eventCategory') {
+        if (Common::getRequestVar('secondaryDimension', \false) == 'eventCategory') {
             $this->actionToLoadSubTables = 'getCategoryFromNameId';
         } else {
             $this->actionToLoadSubTables = 'getActionFromNameId';

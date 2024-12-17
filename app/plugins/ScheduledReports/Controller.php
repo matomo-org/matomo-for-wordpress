@@ -78,7 +78,7 @@ class Controller extends \Piwik\Plugin\Controller
         $reports = array();
         $reportsById = array();
         if (!Piwik::isUserIsAnonymous()) {
-            $reports = \Piwik\Plugins\ScheduledReports\API::getInstance()->getReports($this->idSite, $period = false, $idReport = false, $ifSuperUserReturnOnlySuperUserReports = true);
+            $reports = Request::processRequest('ScheduledReports.getReports', array('idSite' => $this->idSite, 'ifSuperUserReturnOnlySuperUserReports' => \true, 'filter_limit' => -1), []);
             foreach ($reports as &$report) {
                 $report['evolutionPeriodFor'] = $report['evolution_graph_within_period'] ? 'each' : 'prev';
                 $report['evolutionPeriodN'] = (int) $report['evolution_graph_period_n'] ?: ImageGraph::getDefaultGraphEvolutionLastPeriods();
@@ -95,7 +95,7 @@ class Controller extends \Piwik\Plugin\Controller
         $view->defaultHour = \Piwik\Plugins\ScheduledReports\ScheduledReports::DEFAULT_HOUR;
         $view->periodTranslations = \Piwik\Plugins\ScheduledReports\ScheduledReports::getPeriodFrequencyTranslations();
         $view->language = LanguagesManager::getLanguageCodeForCurrentUser();
-        $view->segmentEditorActivated = false;
+        $view->segmentEditorActivated = \false;
         if (\Piwik\Plugins\ScheduledReports\API::isSegmentEditorActivated()) {
             $savedSegmentsById = array('' => Piwik::translate('SegmentEditor_DefaultAllVisits'));
             $allSegments = SegmentEditor::getAllSegmentsForSite($this->idSite);
@@ -103,7 +103,7 @@ class Controller extends \Piwik\Plugin\Controller
                 $savedSegmentsById[$savedSegment['idsegment']] = $savedSegment['name'];
             }
             $view->savedSegmentsById = $savedSegmentsById;
-            $view->segmentEditorActivated = true;
+            $view->segmentEditorActivated = \true;
         }
         return $view->render();
     }
@@ -133,7 +133,7 @@ class Controller extends \Piwik\Plugin\Controller
         if (!empty($confirm) && Nonce::verifyNonce('Report.Unsubscribe', $nonce)) {
             Nonce::discardNonce('Report.Unsubscribe');
             $subscriptionModel->unsubscribe($token);
-            $view->success = true;
+            $view->success = \true;
         } else {
             $view->nonce = Nonce::getNonce('Report.Unsubscribe');
         }

@@ -38,7 +38,7 @@ abstract class BaseItem extends \Piwik\Plugins\Ecommerce\Reports\Base
     public function getMetricsDocumentation()
     {
         // we do not check whether it is abandon carts if not set re performance improvements
-        if ($this->isAbandonedCart($fetchIfNotSet = false)) {
+        if ($this->isAbandonedCart($fetchIfNotSet = \false)) {
             return array('revenue' => Piwik::translate('Goals_ColumnRevenueDocumentation', Piwik::translate('Goals_DocumentationRevenueGeneratedByProductSales')), 'quantity' => Piwik::translate('Goals_ColumnQuantityDocumentation', $this->name), 'orders' => Piwik::translate('Goals_ColumnOrdersDocumentation', $this->name), 'avg_price' => Piwik::translate('Goals_ColumnAveragePriceDocumentation', $this->name), 'avg_quantity' => Piwik::translate('Goals_ColumnAverageQuantityDocumentation', $this->name), 'nb_visits' => Piwik::translate('Goals_ColumnVisitsProductDocumentation', $this->name), 'conversion_rate' => Piwik::translate('Goals_ColumnConversionRateProductDocumentation', $this->name));
         }
         return array();
@@ -50,11 +50,11 @@ abstract class BaseItem extends \Piwik\Plugins\Ecommerce\Reports\Base
     public function configureView(ViewDataTable $view)
     {
         $idSite = Common::getRequestVar('idSite');
-        $view->config->show_ecommerce = true;
-        $view->config->show_table = false;
-        $view->config->show_all_views_icons = false;
-        $view->config->show_exclude_low_population = false;
-        $view->config->show_table_all_columns = false;
+        $view->config->show_ecommerce = \true;
+        $view->config->show_table = \false;
+        $view->config->show_all_views_icons = \false;
+        $view->config->show_exclude_low_population = \false;
+        $view->config->show_table_all_columns = \false;
         if (!$view instanceof Evolution) {
             $moneyColumns = array('revenue');
             $formatter = array(new Formatter(), 'getPrettyMoney');
@@ -63,7 +63,7 @@ abstract class BaseItem extends \Piwik\Plugins\Ecommerce\Reports\Base
         $view->requestConfig->filter_limit = 10;
         $view->requestConfig->filter_sort_column = 'revenue';
         $view->requestConfig->filter_sort_order = 'desc';
-        $view->config->custom_parameters['isFooterExpandedInDashboard'] = true;
+        $view->config->custom_parameters['isFooterExpandedInDashboard'] = \true;
         // set columns/translations which differ based on viewDataTable TODO: shouldn't have to do this check...
         // amount of reports should be dynamic, but metadata should be static
         $columns = array_merge($this->getMetrics(), $this->getProcessedMetrics());
@@ -73,12 +73,12 @@ abstract class BaseItem extends \Piwik\Plugins\Ecommerce\Reports\Base
         $viewDataTable = Common::getRequestVar('viewDataTable', '');
         if ($viewDataTable == 'ecommerceOrder') {
             $view->config->custom_parameters['viewDataTable'] = 'table';
-            $abandonedCart = false;
+            $abandonedCart = \false;
         } elseif ($viewDataTable == 'ecommerceAbandonedCart') {
             $view->config->custom_parameters['viewDataTable'] = 'table';
-            $abandonedCart = true;
+            $abandonedCart = \true;
         } else {
-            $abandonedCart = $this->isAbandonedCart($fetchIfNotSet = true);
+            $abandonedCart = $this->isAbandonedCart($fetchIfNotSet = \true);
         }
         if ($abandonedCart) {
             $columns['abandoned_carts'] = Piwik::translate('General_AbandonedCarts');
@@ -108,7 +108,7 @@ abstract class BaseItem extends \Piwik\Plugins\Ecommerce\Reports\Base
                 $conversion = new Conversions();
                 $conversions = $conversion->getConversionForGoal(Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER, $idSite, $period, $date);
                 $cartNbConversions = $conversion->getConversionForGoal(Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART, $idSite, $period, $date);
-                $preloadAbandonedCart = $cartNbConversions !== false && $conversions == 0;
+                $preloadAbandonedCart = $cartNbConversions !== \false && $conversions == 0;
                 if ($preloadAbandonedCart) {
                     $abandonedCarts = '1';
                 } else {

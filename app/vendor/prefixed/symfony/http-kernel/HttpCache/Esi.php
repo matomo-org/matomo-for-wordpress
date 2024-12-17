@@ -41,7 +41,7 @@ class Esi extends AbstractSurrogate
     /**
      * {@inheritdoc}
      */
-    public function renderIncludeTag(string $uri, ?string $alt = null, bool $ignoreErrors = true, string $comment = '')
+    public function renderIncludeTag(string $uri, ?string $alt = null, bool $ignoreErrors = \true, string $comment = '')
     {
         $html = sprintf('<esi:include src="%s"%s%s />', $uri, $ignoreErrors ? ' onerror="continue"' : '', $alt ? sprintf(' alt="%s"', $alt) : '');
         if (!empty($comment)) {

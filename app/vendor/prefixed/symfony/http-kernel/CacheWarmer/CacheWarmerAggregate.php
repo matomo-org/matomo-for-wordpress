@@ -22,12 +22,12 @@ class CacheWarmerAggregate implements CacheWarmerInterface
     private $warmers;
     private $debug;
     private $deprecationLogsFilepath;
-    private $optionalsEnabled = false;
-    private $onlyOptionalsEnabled = false;
+    private $optionalsEnabled = \false;
+    private $onlyOptionalsEnabled = \false;
     /**
      * @param iterable<mixed, CacheWarmerInterface> $warmers
      */
-    public function __construct(iterable $warmers = [], bool $debug = false, ?string $deprecationLogsFilepath = null)
+    public function __construct(iterable $warmers = [], bool $debug = \false, ?string $deprecationLogsFilepath = null)
     {
         $this->warmers = $warmers;
         $this->debug = $debug;
@@ -35,11 +35,11 @@ class CacheWarmerAggregate implements CacheWarmerInterface
     }
     public function enableOptionalWarmers()
     {
-        $this->optionalsEnabled = true;
+        $this->optionalsEnabled = \true;
     }
     public function enableOnlyOptionalWarmers()
     {
-        $this->onlyOptionalsEnabled = $this->optionalsEnabled = true;
+        $this->onlyOptionalsEnabled = $this->optionalsEnabled = \true;
     }
     /**
      * {@inheritdoc}
@@ -50,7 +50,7 @@ class CacheWarmerAggregate implements CacheWarmerInterface
             $collectedLogs = [];
             $previousHandler = set_error_handler(function ($type, $message, $file, $line) use(&$collectedLogs, &$previousHandler) {
                 if (\E_USER_DEPRECATED !== $type && \E_DEPRECATED !== $type) {
-                    return $previousHandler ? $previousHandler($type, $message, $file, $line) : false;
+                    return $previousHandler ? $previousHandler($type, $message, $file, $line) : \false;
                 }
                 if (isset($collectedLogs[$message])) {
                     ++$collectedLogs[$message]['count'];
@@ -98,6 +98,6 @@ class CacheWarmerAggregate implements CacheWarmerInterface
      */
     public function isOptional() : bool
     {
-        return false;
+        return \false;
     }
 }

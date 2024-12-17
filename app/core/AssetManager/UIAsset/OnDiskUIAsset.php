@@ -69,8 +69,8 @@ class OnDiskUIAsset extends UIAsset
                 throw new Exception("Unable to delete merged file : " . $this->getAbsoluteLocation() . ". Please delete the file and refresh");
             }
             // try to remove compressed version of the merged file.
-            Filesystem::remove($this->getAbsoluteLocation() . ".deflate", true);
-            Filesystem::remove($this->getAbsoluteLocation() . ".gz", true);
+            Filesystem::remove($this->getAbsoluteLocation() . ".deflate", \true);
+            Filesystem::remove($this->getAbsoluteLocation() . ".gz", \true);
         }
     }
     /**

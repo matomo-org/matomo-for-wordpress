@@ -54,7 +54,7 @@ class Logger extends AbstractLogger
         }
         $this->minLevelIndex = self::LEVELS[$minLevel];
         $this->formatter = $formatter ?: [$this, 'format'];
-        if ($output && false === ($this->handle = \is_resource($output) ? $output : @fopen($output, 'a'))) {
+        if ($output && \false === ($this->handle = \is_string($output) ? @fopen($output, 'a') : $output)) {
             throw new InvalidArgumentException(sprintf('Unable to open "%s".', $output));
         }
     }
@@ -75,10 +75,10 @@ class Logger extends AbstractLogger
         if ($this->handle) {
             @fwrite($this->handle, $formatter($level, $message, $context) . \PHP_EOL);
         } else {
-            error_log($formatter($level, $message, $context, false));
+            error_log($formatter($level, $message, $context, \false));
         }
     }
-    private function format(string $level, string $message, array $context, bool $prefixDate = true) : string
+    private function format(string $level, string $message, array $context, bool $prefixDate = \true) : string
     {
         if (str_contains($message, '{')) {
             $replacements = [];

@@ -35,7 +35,7 @@ class IpUtils
     {
         if (null === $requestIp) {
             trigger_deprecation('symfony/http-foundation', '5.4', 'Passing null as $requestIp to "%s()" is deprecated, pass an empty string instead.', __METHOD__);
-            return false;
+            return \false;
         }
         if (!\is_array($ips)) {
             $ips = [$ips];
@@ -43,10 +43,10 @@ class IpUtils
         $method = substr_count($requestIp, ':') > 1 ? 'checkIp6' : 'checkIp4';
         foreach ($ips as $ip) {
             if (self::$method($requestIp, $ip)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Compares two IPv4 addresses.
@@ -60,29 +60,29 @@ class IpUtils
     {
         if (null === $requestIp) {
             trigger_deprecation('symfony/http-foundation', '5.4', 'Passing null as $requestIp to "%s()" is deprecated, pass an empty string instead.', __METHOD__);
-            return false;
+            return \false;
         }
         $cacheKey = $requestIp . '-' . $ip . '-v4';
         if (isset(self::$checkedIps[$cacheKey])) {
             return self::$checkedIps[$cacheKey];
         }
         if (!filter_var($requestIp, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4)) {
-            return self::$checkedIps[$cacheKey] = false;
+            return self::$checkedIps[$cacheKey] = \false;
         }
         if (str_contains($ip, '/')) {
             [$address, $netmask] = explode('/', $ip, 2);
             if ('0' === $netmask) {
-                return self::$checkedIps[$cacheKey] = false !== filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4);
+                return self::$checkedIps[$cacheKey] = \false !== filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4);
             }
             if ($netmask < 0 || $netmask > 32) {
-                return self::$checkedIps[$cacheKey] = false;
+                return self::$checkedIps[$cacheKey] = \false;
             }
         } else {
             $address = $ip;
             $netmask = 32;
         }
-        if (false === ip2long($address)) {
-            return self::$checkedIps[$cacheKey] = false;
+        if (\false === ip2long($address)) {
+            return self::$checkedIps[$cacheKey] = \false;
         }
         return self::$checkedIps[$cacheKey] = 0 === substr_compare(sprintf('%032b', ip2long($requestIp)), sprintf('%032b', ip2long($address)), 0, $netmask);
     }
@@ -104,7 +104,7 @@ class IpUtils
     {
         if (null === $requestIp) {
             trigger_deprecation('symfony/http-foundation', '5.4', 'Passing null as $requestIp to "%s()" is deprecated, pass an empty string instead.', __METHOD__);
-            return false;
+            return \false;
         }
         $cacheKey = $requestIp . '-' . $ip . '-v6';
         if (isset(self::$checkedIps[$cacheKey])) {
@@ -115,22 +115,22 @@ class IpUtils
         }
         // Check to see if we were given a IP4 $requestIp or $ip by mistake
         if (!filter_var($requestIp, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
-            return self::$checkedIps[$cacheKey] = false;
+            return self::$checkedIps[$cacheKey] = \false;
         }
         if (str_contains($ip, '/')) {
             [$address, $netmask] = explode('/', $ip, 2);
             if (!filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
-                return self::$checkedIps[$cacheKey] = false;
+                return self::$checkedIps[$cacheKey] = \false;
             }
             if ('0' === $netmask) {
                 return (bool) unpack('n*', @inet_pton($address));
             }
             if ($netmask < 1 || $netmask > 128) {
-                return self::$checkedIps[$cacheKey] = false;
+                return self::$checkedIps[$cacheKey] = \false;
             }
         } else {
             if (!filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
-                return self::$checkedIps[$cacheKey] = false;
+                return self::$checkedIps[$cacheKey] = \false;
             }
             $address = $ip;
             $netmask = 128;
@@ -138,17 +138,17 @@ class IpUtils
         $bytesAddr = unpack('n*', @inet_pton($address));
         $bytesTest = unpack('n*', @inet_pton($requestIp));
         if (!$bytesAddr || !$bytesTest) {
-            return self::$checkedIps[$cacheKey] = false;
+            return self::$checkedIps[$cacheKey] = \false;
         }
         for ($i = 1, $ceil = ceil($netmask / 16); $i <= $ceil; ++$i) {
             $left = $netmask - 16 * ($i - 1);
             $left = $left <= 16 ? $left : 16;
             $mask = ~(0xffff >> $left) & 0xffff;
             if (($bytesAddr[$i] & $mask) != ($bytesTest[$i] & $mask)) {
-                return self::$checkedIps[$cacheKey] = false;
+                return self::$checkedIps[$cacheKey] = \false;
             }
         }
-        return self::$checkedIps[$cacheKey] = true;
+        return self::$checkedIps[$cacheKey] = \true;
     }
     /**
      * Anonymizes an IP/IPv6.
@@ -157,9 +157,9 @@ class IpUtils
      */
     public static function anonymize(string $ip) : string
     {
-        $wrappedIPv6 = false;
+        $wrappedIPv6 = \false;
         if ('[' === substr($ip, 0, 1) && ']' === substr($ip, -1, 1)) {
-            $wrappedIPv6 = true;
+            $wrappedIPv6 = \true;
             $ip = substr($ip, 1, -1);
         }
         $packedAddress = inet_pton($ip);

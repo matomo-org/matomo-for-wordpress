@@ -60,7 +60,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      *
      * @param OutputFormatterStyleInterface[] $styles Array of "name => FormatterStyle" instances
      */
-    public function __construct(bool $decorated = false, array $styles = [])
+    public function __construct(bool $decorated = \false, array $styles = [])
     {
         $this->decorated = $decorated;
         $this->setStyle('error', new OutputFormatterStyle('white', 'red'));
@@ -243,7 +243,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
     }
     private function addLineBreaks(string $text, int $width) : string
     {
-        $encoding = mb_detect_encoding($text, null, true) ?: 'UTF-8';
-        return b($text)->toCodePointString($encoding)->wordwrap($width, "\n", true)->toByteString($encoding);
+        $encoding = mb_detect_encoding($text, null, \true) ?: 'UTF-8';
+        return b($text)->toCodePointString($encoding)->wordwrap($width, "\n", \true)->toByteString($encoding);
     }
 }

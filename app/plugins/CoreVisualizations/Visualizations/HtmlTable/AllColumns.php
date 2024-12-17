@@ -20,7 +20,7 @@ class AllColumns extends HtmlTable
     public const FOOTER_ICON_TITLE = 'General_DisplayTableWithMoreMetrics';
     public function beforeRender()
     {
-        $this->config->show_extra_columns = true;
+        $this->config->show_extra_columns = \true;
         parent::beforeRender();
     }
     public function beforeGenericFiltersAreAppliedToLoadedDataTable()
@@ -55,7 +55,7 @@ class AllColumns extends HtmlTable
     }
     protected function isPivoted()
     {
-        return false;
+        return \false;
         // Pivot not supported
     }
 }

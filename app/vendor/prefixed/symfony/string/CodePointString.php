@@ -75,7 +75,7 @@ class CodePointString extends AbstractUnicodeString
             $suffix = (string) $suffix;
         }
         if ('' === $suffix || !preg_match('//u', $suffix)) {
-            return false;
+            return \false;
         }
         if ($this->ignoreCase) {
             return preg_match('{' . preg_quote($suffix) . '$}iuD', $this->string);
@@ -109,7 +109,7 @@ class CodePointString extends AbstractUnicodeString
             return null;
         }
         $i = $this->ignoreCase ? mb_stripos($this->string, $needle, $offset, 'UTF-8') : mb_strpos($this->string, $needle, $offset, 'UTF-8');
-        return false === $i ? null : $i;
+        return \false === $i ? null : $i;
     }
     public function indexOfLast($needle, int $offset = 0) : ?int
     {
@@ -124,7 +124,7 @@ class CodePointString extends AbstractUnicodeString
             return null;
         }
         $i = $this->ignoreCase ? mb_strripos($this->string, $needle, $offset, 'UTF-8') : mb_strrpos($this->string, $needle, $offset, 'UTF-8');
-        return false === $i ? null : $i;
+        return \false === $i ? null : $i;
     }
     public function length() : int
     {
@@ -204,7 +204,7 @@ class CodePointString extends AbstractUnicodeString
             $prefix = (string) $prefix;
         }
         if ('' === $prefix || !preg_match('//u', $prefix)) {
-            return false;
+            return \false;
         }
         if ($this->ignoreCase) {
             return 0 === mb_stripos($this->string, $prefix, 0, 'UTF-8');

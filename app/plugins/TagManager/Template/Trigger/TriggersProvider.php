@@ -87,7 +87,7 @@ class TriggersProvider
                 if ($disableCustomTemplates && $triggerInstance->isCustomTemplate()) {
                     continue;
                 }
-                if (in_array(strtolower($triggerInstance->getId()), $blockedTriggers, true)) {
+                if (in_array(strtolower($triggerInstance->getId()), $blockedTriggers, \true)) {
                     continue;
                 }
                 $triggers[] = $triggerInstance;
@@ -117,9 +117,9 @@ class TriggersProvider
     {
         foreach ($this->getAllTriggers() as $trigger) {
             if ($trigger->isCustomTemplate() && $trigger->getId() === $id) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
 }

@@ -14,9 +14,9 @@ class Configuration
     public static $DEFAULT_DISABLED_TAGS = [];
     public static $DEFAULT_DISABLED_TRIGGERS = [];
     public static $DEFAULT_DISABLED_VARIABLES = [];
-    const KEY_DISABLED_TAGS = 'disable_tags';
-    const KEY_DISABLED_TRIGGERS = 'disable_triggers';
-    const KEY_DISABLED_VARIABLES = 'disable_variables';
+    public const KEY_DISABLED_TAGS = 'disable_tags';
+    public const KEY_DISABLED_TRIGGERS = 'disable_triggers';
+    public const KEY_DISABLED_VARIABLES = 'disable_variables';
     public function install()
     {
         $config = $this->getConfig();

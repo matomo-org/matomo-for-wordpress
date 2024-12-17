@@ -29,7 +29,7 @@ abstract class MenuAbstract extends Singleton
     protected $menuEntriesToRemove = array();
     protected $edits = array();
     protected $renames = array();
-    protected $orderingApplied = false;
+    protected $orderingApplied = \false;
     protected $menuIcons = array();
     /**
      * Builds the menu, applies edits, renames
@@ -93,7 +93,7 @@ abstract class MenuAbstract extends Singleton
      * @since 2.7.0
      * @api
      */
-    public function addItem($menuName, $subMenuName, $url, $order = 50, $tooltip = false, $icon = false, $onclick = false, $attribute = false, $help = false, $badgeCount = 0)
+    public function addItem($menuName, $subMenuName, $url, $order = 50, $tooltip = \false, $icon = \false, $onclick = \false, $attribute = \false, $help = \false, $badgeCount = 0)
     {
         // make sure the idSite value used is numeric (hack-y fix for #3426)
         if (isset($url['idSite']) && !is_numeric($url['idSite'])) {
@@ -109,7 +109,7 @@ abstract class MenuAbstract extends Singleton
      * @param bool|string $subMenuName The menu item's name. Can be a translation token.
      * @api
      */
-    public function remove($menuName, $subMenuName = false)
+    public function remove($menuName, $subMenuName = \false)
     {
         $this->menuEntriesToRemove[] = array($menuName, $subMenuName);
     }
@@ -122,10 +122,10 @@ abstract class MenuAbstract extends Singleton
      * @param int $order
      * @param bool|string $tooltip Tooltip to display.
      */
-    private function buildMenuItem($menuName, $subMenuName, $url, $order = 50, $tooltip = false, $icon = false, $onclick = false, $attribute = false, $help = false, $badgeCount = 0)
+    private function buildMenuItem($menuName, $subMenuName, $url, $order = 50, $tooltip = \false, $icon = \false, $onclick = \false, $attribute = \false, $help = \false, $badgeCount = 0)
     {
         if (!isset($this->menu[$menuName])) {
-            $this->menu[$menuName] = array('_hasSubmenu' => false, '_order' => $order);
+            $this->menu[$menuName] = array('_hasSubmenu' => \false, '_order' => $order);
         }
         if (empty($subMenuName)) {
             $this->menu[$menuName]['_url'] = $url;
@@ -154,7 +154,7 @@ abstract class MenuAbstract extends Singleton
             $this->menu[$menuName][$subMenuName]['_onclick'] = $onclick;
             $this->menu[$menuName][$subMenuName]['_help'] = $help ?: '';
             $this->menu[$menuName][$subMenuName]['_badgecount'] = $badgeCount;
-            $this->menu[$menuName]['_hasSubmenu'] = true;
+            $this->menu[$menuName]['_hasSubmenu'] = \true;
             if (!array_key_exists('_tooltip', $this->menu[$menuName])) {
                 $this->menu[$menuName]['_tooltip'] = $tooltip;
             }
@@ -282,7 +282,7 @@ abstract class MenuAbstract extends Singleton
                 uasort($element, array($this, 'menuCompare'));
             }
         }
-        $this->orderingApplied = true;
+        $this->orderingApplied = \true;
     }
     /**
      * Compares two menu entries. Used for ordering.

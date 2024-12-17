@@ -55,8 +55,8 @@ class Locations extends RecordBuilder
     protected function aggregateFromVisits(array $records, LogAggregator $logAggregator) : void
     {
         $additionalSelects = array('MAX(log_visit.location_latitude) as location_latitude', 'MAX(log_visit.location_longitude) as location_longitude');
-        $query = $logAggregator->queryVisitsByDimension(array_values($this->dimensions), $where = false, $additionalSelects);
-        if ($query === false) {
+        $query = $logAggregator->queryVisitsByDimension(array_values($this->dimensions), $where = \false, $additionalSelects);
+        if ($query === \false) {
             return;
         }
         while ($row = $query->fetch()) {

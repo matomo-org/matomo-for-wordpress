@@ -84,6 +84,7 @@ class ArchiveInvalidationsInformational implements \Piwik\Plugins\Diagnostics\Di
         $result['plugins'] = array_unique($result['plugins']);
         $result['plugins'] = array_filter($result['plugins']);
         $result['plugins'] = array_values($result['plugins']);
+        sort($result['plugins']);
         return $result;
     }
 }

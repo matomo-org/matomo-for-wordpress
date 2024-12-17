@@ -29,13 +29,13 @@ class PhpInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnost
     public function execute()
     {
         $results = [];
-        if (defined('PHP_OS') && PHP_OS) {
-            $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('PHP_OS', PHP_OS);
+        if (defined('PHP_OS') && \PHP_OS) {
+            $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('PHP_OS', \PHP_OS);
         }
-        if (SettingsPiwik::isMatomoInstalled() && defined('PHP_BINARY') && PHP_BINARY) {
-            $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('PHP_BINARY', PHP_BINARY);
+        if (SettingsPiwik::isMatomoInstalled() && defined('PHP_BINARY') && \PHP_BINARY) {
+            $results[] = \Piwik\Plugins\Diagnostics\Diagnostic\DiagnosticResult::informationalResult('PHP_BINARY', \PHP_BINARY);
         }
-        $isGlobalConfigIniAccessible = true;
+        $isGlobalConfigIniAccessible = \true;
         // Assume true if not installed yet
         // Only attempt to check file accessibility if the config setting allows it
         $disableFileAccessCheck = GeneralConfig::getConfigValue('enable_required_directories_diagnostic') == 0;
@@ -45,13 +45,13 @@ class PhpInformational implements \Piwik\Plugins\Diagnostics\Diagnostic\Diagnost
                 $isGlobalConfigIniAccessible = $rpd->isGlobalConfigIniAccessible();
             }
         }
-        if (strpos(strtolower(php_sapi_name()), 'fpm-fcgi') !== false && $isGlobalConfigIniAccessible && !$disableFileAccessCheck) {
+        if (strpos(strtolower(php_sapi_name()), 'fpm-fcgi') !== \false && $isGlobalConfigIniAccessible && !$disableFileAccessCheck) {
             // Using PHP-FPM and private files are accessible
             $comment = php_sapi_name() . "<br><br>";
             if (!empty($_SERVER['SERVER_SOFTWARE'])) {
-                if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') !== false) {
+                if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') !== \false) {
                     $comment .= $this->translator->translate('Diagnostics_PHPFPMWarningApache', ['<code>ProxyPass /config !</code>', '<code>mod_proxy_fcgi.c</code>', '<code>ProxyPassMatch</code>']);
-                } elseif (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'nginx') !== false) {
+                } elseif (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'nginx') !== \false) {
                     $comment .= $this->translator->translate('Diagnostics_PHPFPMWarningNginx', ['<a href="https://github.com/matomo-org/matomo-nginx#readme" target="_blank">', '</a>']);
                 } else {
                     $comment .= $this->translator->translate('Diagnostics_PHPFPMWarningGeneric');

@@ -32,7 +32,7 @@ class FilesystemLoader implements LoaderInterface
     public function __construct($paths = [], ?string $rootPath = null)
     {
         $this->rootPath = ($rootPath ?? getcwd()) . \DIRECTORY_SEPARATOR;
-        if (null !== $rootPath && false !== ($realPath = realpath($rootPath))) {
+        if (null !== $rootPath && \false !== ($realPath = realpath($rootPath))) {
             $this->rootPath = $realPath . \DIRECTORY_SEPARATOR;
         }
         if ($paths) {
@@ -124,22 +124,22 @@ class FilesystemLoader implements LoaderInterface
     {
         $name = $this->normalizeName($name);
         if (isset($this->cache[$name])) {
-            return true;
+            return \true;
         }
-        return null !== $this->findTemplate($name, false);
+        return null !== $this->findTemplate($name, \false);
     }
     public function isFresh(string $name, int $time) : bool
     {
         // false support to be removed in 3.0
         if (null === ($path = $this->findTemplate($name))) {
-            return false;
+            return \false;
         }
         return filemtime($path) < $time;
     }
     /**
      * @return string|null
      */
-    protected function findTemplate(string $name, bool $throw = true)
+    protected function findTemplate(string $name, bool $throw = \true)
     {
         $name = $this->normalizeName($name);
         if (isset($this->cache[$name])) {
@@ -172,7 +172,7 @@ class FilesystemLoader implements LoaderInterface
                 $path = $this->rootPath . $path;
             }
             if (is_file($path . '/' . $shortname)) {
-                if (false !== ($realpath = realpath($path . '/' . $shortname))) {
+                if (\false !== ($realpath = realpath($path . '/' . $shortname))) {
                     return $this->cache[$name] = $realpath;
                 }
                 return $this->cache[$name] = $path . '/' . $shortname;
@@ -191,7 +191,7 @@ class FilesystemLoader implements LoaderInterface
     private function parseName(string $name, string $default = self::MAIN_NAMESPACE) : array
     {
         if (isset($name[0]) && '@' == $name[0]) {
-            if (false === ($pos = strpos($name, '/'))) {
+            if (\false === ($pos = strpos($name, '/'))) {
                 throw new LoaderError(\sprintf('Malformed namespaced template name "%s" (expecting "@namespace/template_name").', $name));
             }
             $namespace = substr($name, 1, $pos - 1);

@@ -59,7 +59,7 @@ class LogQueryBuilder
         $from = $join->getJoinString();
         $joinWithSubSelect = $join->shouldJoinWithSelect();
         // hack for https://github.com/piwik/piwik/issues/9194#issuecomment-164321612
-        $useSpecialConversionGroupBy = !empty($segmentSql) && strpos($groupBy, 'log_conversion.idgoal') !== false && $fromInitially == array('log_conversion') && strpos($from, 'log_link_visit_action') !== false;
+        $useSpecialConversionGroupBy = !empty($segmentSql) && strpos($groupBy, 'log_conversion.idgoal') !== \false && $fromInitially == array('log_conversion') && strpos($from, 'log_link_visit_action') !== \false;
         if (!empty($this->forcedInnerGroupBy)) {
             if ($this->forcedInnerGroupBy === self::FORCE_INNER_GROUP_BY_NO_SUBSELECT) {
                 $sql = $this->buildSelectQuery($select, $from, $where, $groupBy, $orderBy, $limitAndOffset);
@@ -101,11 +101,11 @@ class LogQueryBuilder
     {
         $matchTables = $this->getKnownTables();
         foreach ($tables as $table) {
-            if (is_array($table) && isset($table['tableAlias']) && !in_array($table['tableAlias'], $matchTables, $strict = true)) {
+            if (is_array($table) && isset($table['tableAlias']) && !in_array($table['tableAlias'], $matchTables, $strict = \true)) {
                 $matchTables[] = $table['tableAlias'];
-            } elseif (is_array($table) && isset($table['table']) && !in_array($table['table'], $matchTables, $strict = true)) {
+            } elseif (is_array($table) && isset($table['table']) && !in_array($table['table'], $matchTables, $strict = \true)) {
                 $matchTables[] = $table['table'];
-            } elseif (is_string($table) && !in_array($table, $matchTables, $strict = true)) {
+            } elseif (is_string($table) && !in_array($table, $matchTables, $strict = \true)) {
                 $matchTables[] = $table;
             }
         }
@@ -121,7 +121,7 @@ class LogQueryBuilder
         foreach ($neededFields as &$neededField) {
             $parts = explode('.', $neededField);
             if (count($parts) === 2 && !empty($parts[1])) {
-                if (in_array($parts[1], $fieldNames, $strict = true)) {
+                if (in_array($parts[1], $fieldNames, $strict = \true)) {
                     // eg when selecting 2 dimensions log_action_X.name
                     $columnAs = $parts[1] . md5($neededField);
                     $fieldNames[] = $columnAs;
@@ -150,7 +150,7 @@ class LogQueryBuilder
         }
         if ($innerLimitAndOffset) {
             // When LIMITing, no need to GROUP BY (GROUPing by is done before the LIMIT which is super slow when large amount of rows is matched)
-            $innerGroupBy = false;
+            $innerGroupBy = \false;
         }
         if (!isset($innerGroupBy) && in_array('log_visit', $matchesFrom[1])) {
             $innerGroupBy = "log_visit.idvisit";
@@ -172,7 +172,7 @@ class LogQueryBuilder
         $innerQuery = $this->buildSelectQuery($innerSelect, $innerFrom, $innerWhere, $innerGroupBy, $innerOrderBy, $innerLimitAndOffset);
         $select = preg_replace('/' . $matchTables . '\\./', 'log_inner.', $select);
         $from = "\n        (\n            {$innerQuery}\n        ) AS log_inner";
-        $where = false;
+        $where = \false;
         $orderBy = preg_replace('/' . $matchTables . '\\./', 'log_inner.', $orderBy);
         $groupBy = preg_replace('/' . $matchTables . '\\./', 'log_inner.', $groupBy);
         $outerLimitAndOffset = null;

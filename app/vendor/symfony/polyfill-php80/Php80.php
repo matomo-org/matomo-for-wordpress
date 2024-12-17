@@ -25,7 +25,7 @@ final class Php80
     }
     public static function get_debug_type($value) : string
     {
-        switch (true) {
+        switch (\true) {
             case null === $value:
                 return 'null';
             case \is_bool($value):
@@ -52,7 +52,7 @@ final class Php80
                 return "resource ({$type})";
         }
         $class = \get_class($value);
-        if (false === strpos($class, '@')) {
+        if (\false === strpos($class, '@')) {
             return $class;
         }
         return ((get_parent_class($class) ?: key(class_implements($class))) ?: 'class') . '@anonymous';
@@ -87,7 +87,7 @@ final class Php80
     }
     public static function str_contains(string $haystack, string $needle) : bool
     {
-        return '' === $needle || false !== strpos($haystack, $needle);
+        return '' === $needle || \false !== strpos($haystack, $needle);
     }
     public static function str_starts_with(string $haystack, string $needle) : bool
     {
@@ -96,10 +96,10 @@ final class Php80
     public static function str_ends_with(string $haystack, string $needle) : bool
     {
         if ('' === $needle || $needle === $haystack) {
-            return true;
+            return \true;
         }
         if ('' === $haystack) {
-            return false;
+            return \false;
         }
         $needleLength = \strlen($needle);
         return $needleLength <= \strlen($haystack) && 0 === substr_compare($haystack, $needle, -$needleLength);

@@ -22,11 +22,11 @@ class CookieYes extends \Piwik\Plugins\SitesManager\SiteContentDetection\Consent
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = 'cookieyes.com';
-        return strpos($data, $needle) !== false;
+        return strpos($data, $needle) !== \false;
     }
     public function checkIsConnected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = 'document.addEventListener("cookieyes_consent_update", function (eventData)';
-        return strpos($data, $needle) !== false;
+        return strpos($data, $needle) !== \false;
     }
 }

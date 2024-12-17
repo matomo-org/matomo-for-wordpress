@@ -46,10 +46,10 @@ class GetEngagement extends Widget
         $challenges = Request::processRequest('Tour.getChallenges', [], []);
         $level = Request::processRequest('Tour.getLevel', [], []);
         $numCompletedWithoutInterruption = 0;
-        $done = true;
+        $done = \true;
         foreach ($challenges as $challenge) {
             if (!$challenge['isCompleted'] && !$challenge['isSkipped']) {
-                $done = false;
+                $done = \false;
             } elseif ($done) {
                 // as soon as some challenge was not completed, we need to make sure to show that page.
                 $numCompletedWithoutInterruption++;

@@ -21,7 +21,7 @@ class HorizontalBar extends \Piwik\Plugins\ImageGraph\StaticGraph\GridGraph
     public const LOGO_MIN_RIGHT_MARGIN = 3;
     public function renderGraph()
     {
-        $verticalLegend = false;
+        $verticalLegend = \false;
         // create resized copies of logo to match maximum width / height
         foreach ($this->abscissaLogos as &$logoPath) {
             $logoPath = $this->createResizedImageCopyIfNeeded($logoPath);
@@ -31,7 +31,7 @@ class HorizontalBar extends \Piwik\Plugins\ImageGraph\StaticGraph\GridGraph
         // determine the maximum logo width & height
         list($maxLogoWidth, $maxLogoHeight) = self::getMaxLogoSize($this->abscissaLogos);
         // truncate report
-        $graphHeight = $this->getGraphBottom($horizontalGraph = true) - $this->getGridTopMargin($horizontalGraph = true, $verticalLegend);
+        $graphHeight = $this->getGraphBottom($horizontalGraph = \true) - $this->getGridTopMargin($horizontalGraph = \true, $verticalLegend);
         list($abscissaMaxWidth, $abscissaMaxHeight) = $this->getMaximumTextWidthHeight($this->abscissaSeries);
         list($ordinateMaxWidth, $ordinateMaxHeight) = $this->getMaximumTextWidthHeight($this->ordinateSeries);
         $numberOfSeries = count($this->ordinateSeries);
@@ -80,7 +80,7 @@ class HorizontalBar extends \Piwik\Plugins\ImageGraph\StaticGraph\GridGraph
             }
         }
         // determine the maximum label width according to the minimum comfortable graph size
-        $gridRightMargin = $this->getGridRightMargin($horizontalGraph = true);
+        $gridRightMargin = $this->getGridRightMargin($horizontalGraph = \true);
         $minGraphSize = ($this->width - $gridRightMargin) / 2;
         $metricLegendWidth = 0;
         foreach ($this->ordinateLabels as $column => $label) {
@@ -93,24 +93,24 @@ class HorizontalBar extends \Piwik\Plugins\ImageGraph\StaticGraph\GridGraph
                 $minGraphSize = $legendWidth;
             }
         }
-        $gridLeftMarginWithoutLabels = $this->getGridLeftMargin($horizontalGraph = true, $withLabel = false);
+        $gridLeftMarginWithoutLabels = $this->getGridLeftMargin($horizontalGraph = \true, $withLabel = \false);
         $labelWidthLimit = $this->width - $gridLeftMarginWithoutLabels - $gridRightMargin - $paddingWidth - $minGraphSize;
         // truncate labels if needed
         foreach ($this->abscissaSeries as &$label) {
             $label = $this->truncateLabel($label, $labelWidthLimit);
         }
-        $gridLeftMarginBeforePadding = $this->getGridLeftMargin($horizontalGraph = true, $withLabel = true);
+        $gridLeftMarginBeforePadding = $this->getGridLeftMargin($horizontalGraph = \true, $withLabel = \true);
         // pad labels for logo space
         foreach ($this->abscissaSeries as &$label) {
             $label .= $paddingText;
         }
-        $this->initGridChart($displayVerticalGridLines = false, $bulletType = LEGEND_FAMILY_BOX, $horizontalGraph = true, $showTicks = false, $verticalLegend);
+        $this->initGridChart($displayVerticalGridLines = \false, $bulletType = LEGEND_FAMILY_BOX, $horizontalGraph = \true, $showTicks = \false, $verticalLegend);
         $valueColor = $this->textColor;
-        $this->pImage->drawBarChart(array('DisplayValues' => true, 'Interleave' => self::INTERLEAVE, 'DisplayR' => $valueColor['R'], 'DisplayG' => $valueColor['G'], 'DisplayB' => $valueColor['B']));
+        $this->pImage->drawBarChart(array('DisplayValues' => \true, 'Interleave' => self::INTERLEAVE, 'DisplayR' => $valueColor['R'], 'DisplayG' => $valueColor['G'], 'DisplayB' => $valueColor['B']));
         //        // display icons
         $graphData = $this->pData->getData();
         $numberOfRows = count($this->abscissaSeries);
-        $logoInterleave = $this->getGraphHeight(true, $verticalLegend) / $numberOfRows;
+        $logoInterleave = $this->getGraphHeight(\true, $verticalLegend) / $numberOfRows;
         for ($i = 0; $i < $numberOfRows; $i++) {
             if (isset($this->abscissaLogos[$i])) {
                 $currentLogoPath = $this->abscissaLogos[$i];
@@ -119,7 +119,7 @@ class HorizontalBar extends \Piwik\Plugins\ImageGraph\StaticGraph\GridGraph
                     $pathInfo = pathinfo($currentLogoPath);
                     $logoExtension = strtoupper($pathInfo['extension']);
                     $drawingFunction = 'drawFrom' . $logoExtension;
-                    $logoYPosition = $logoInterleave * $i + $this->getGridTopMargin(true, $verticalLegend) + $graphData['Axis'][1]['Margin'] - $logoHeight / 2 + 1;
+                    $logoYPosition = $logoInterleave * $i + $this->getGridTopMargin(\true, $verticalLegend) + $graphData['Axis'][1]['Margin'] - $logoHeight / 2 + 1;
                     if (method_exists($this->pImage, $drawingFunction)) {
                         $this->pImage->{$drawingFunction}($gridLeftMarginBeforePadding, $logoYPosition, $currentLogoPath);
                     }

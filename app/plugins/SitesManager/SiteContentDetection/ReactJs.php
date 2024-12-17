@@ -36,13 +36,13 @@ class ReactJs extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteConte
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
         $needles = ['react.min.js', 'react.development.min.js', 'react-dom.development.min.js', 'react.development.js', 'react-dom.development.js', 'ReactDOM.', 'react.production.min.js', 'react-jsx-dev-runtime.development.js', 'react-jsx-dev-runtime.development.min.js', 'react-jsx-dev-runtime.production.min.js', 'react-jsx-dev-runtime.profiling.min.js', 'react-jsx-runtime.development.js', 'react-jsx-runtime.development.min.js', 'react-jsx-runtime.production.min.js', 'react-jsx-runtime.profiling.min.js', 'react.shared-subset.development.js', 'react.shared-subset.development.min.js', 'react.shared-subset.production.min.js', 'react.profiling.min.js'];
-        $hasReactNative = stripos($data, 'react-native') !== false;
+        $hasReactNative = stripos($data, 'react-native') !== \false;
         foreach ($needles as $needle) {
-            if (stripos($data, $needle) !== false && !$hasReactNative) {
-                return true;
+            if (stripos($data, $needle) !== \false && !$hasReactNative) {
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function renderInstructionsTab(SiteContentDetector $detector) : string
     {

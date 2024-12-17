@@ -31,7 +31,7 @@ class ArchivingQueue extends ConsoleCommand
             $output->write(json_encode($queue));
         } else {
             $headers = ['Invalidation', 'Segment', 'Site', 'Period', 'Date', 'Time Queued', 'Waiting', 'Started', 'Processing', 'Status'];
-            $queue = $archiveTableDao->getInvalidationQueueData(true);
+            $queue = $archiveTableDao->getInvalidationQueueData(\true);
             $this->renderTable($headers, $queue);
         }
         return self::SUCCESS;

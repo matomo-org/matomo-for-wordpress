@@ -25,8 +25,8 @@ class GetBrowserVersions extends \Piwik\Plugins\DevicesDetection\Reports\Base
     }
     public function configureView(ViewDataTable $view)
     {
-        $view->config->show_search = true;
-        $view->config->show_exclude_low_population = false;
+        $view->config->show_search = \true;
+        $view->config->show_exclude_low_population = \false;
     }
     public function getRelatedReports()
     {

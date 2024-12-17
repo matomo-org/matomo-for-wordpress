@@ -43,14 +43,14 @@ class RollbarHandler extends AbstractProcessingHandler
      *
      * @var bool
      */
-    private $hasRecords = false;
-    protected $initialized = false;
+    private $hasRecords = \false;
+    protected $initialized = \false;
     /**
      * @param RollbarNotifier $rollbarNotifier RollbarNotifier object constructed with valid token
      * @param int             $level           The minimum logging level at which this handler will be triggered
      * @param bool            $bubble          Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(RollbarNotifier $rollbarNotifier, $level = Logger::ERROR, $bubble = true)
+    public function __construct(RollbarNotifier $rollbarNotifier, $level = Logger::ERROR, $bubble = \true)
     {
         $this->rollbarNotifier = $rollbarNotifier;
         parent::__construct($level, $bubble);
@@ -63,7 +63,7 @@ class RollbarHandler extends AbstractProcessingHandler
         if (!$this->initialized) {
             // __destructor() doesn't get called on Fatal errors
             register_shutdown_function(array($this, 'close'));
-            $this->initialized = true;
+            $this->initialized = \true;
         }
         $context = $record['context'];
         $payload = array();
@@ -80,13 +80,13 @@ class RollbarHandler extends AbstractProcessingHandler
         } else {
             $this->rollbarNotifier->report_message($record['message'], $context['level'], $context, $payload);
         }
-        $this->hasRecords = true;
+        $this->hasRecords = \true;
     }
     public function flush()
     {
         if ($this->hasRecords) {
             $this->rollbarNotifier->flush();
-            $this->hasRecords = false;
+            $this->hasRecords = \false;
         }
     }
     /**

@@ -45,7 +45,7 @@ class AddSubtableSegmentMetadata extends BaseFilter
         $partDimension = $dimension . '==' . $dimensionValue . $conditionAnd;
         foreach ($table->getRows() as $row) {
             $label = $row->getColumn('label');
-            if ($label !== false) {
+            if ($label !== \false) {
                 $row->setMetadata('segment', $partDimension . 'actionUrl=$' . urlencode($label));
                 $row->setMetadata('url', urlencode($label));
             }

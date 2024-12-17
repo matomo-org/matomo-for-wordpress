@@ -49,7 +49,7 @@ class IPAnonymizer
     public static function deactivate()
     {
         $privacyConfig = new \Piwik\Plugins\PrivacyManager\Config();
-        $privacyConfig->ipAnonymizerEnabled = false;
+        $privacyConfig->ipAnonymizerEnabled = \false;
     }
     /**
      * Activates IP anonymization. This function will not be called by the Tracker.
@@ -57,7 +57,7 @@ class IPAnonymizer
     public static function activate()
     {
         $privacyConfig = new \Piwik\Plugins\PrivacyManager\Config();
-        $privacyConfig->ipAnonymizerEnabled = true;
+        $privacyConfig->ipAnonymizerEnabled = \true;
     }
     /**
      * Returns true if IP anonymization support is enabled, false if otherwise.

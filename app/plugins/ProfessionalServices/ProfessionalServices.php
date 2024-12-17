@@ -19,7 +19,7 @@ class ProfessionalServices extends \Piwik\Plugin
      */
     public function registerEvents()
     {
-        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Template.afterGoalConversionOverviewReport' => array('function' => 'getGoalOverviewPromo', 'after' => true), 'Template.afterGoalCannotAddNewGoal' => array('function' => 'getGoalOverviewPromo', 'after' => true), 'Template.endGoalEditTable' => array('function' => 'getGoalFunnelOverviewPromo', 'after' => true), 'Template.afterEventsReport' => 'getEventsPromo', 'Template.afterCampaignsReport' => 'getCampaignsPromo', 'Template.afterReferrerTypeReport' => 'getReferrerTypePromo', 'Template.afterReferrersKeywordsReport' => 'getSearchKeywordsPerformancePromo', 'Template.afterCustomVariablesReport' => 'getCustomVariablesPromo', 'Template.afterOverlaySidebar' => 'getHeatmapPromo', 'Template.afterVisitorProfileOverview' => 'getSessionRecordingPromo', 'Template.afterPagePerformanceReport' => 'getSeoWebVitalsPromo', 'Template.afterSearchEngines' => 'getSeoWebVitalsPromo', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys');
+        return array('AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Template.afterGoalConversionOverviewReport' => array('function' => 'getGoalOverviewPromo', 'after' => \true), 'Template.afterGoalCannotAddNewGoal' => array('function' => 'getGoalOverviewPromo', 'after' => \true), 'Template.endGoalEditTable' => array('function' => 'getGoalFunnelOverviewPromo', 'after' => \true), 'Template.afterEventsReport' => 'getEventsPromo', 'Template.afterCampaignsReport' => 'getCampaignsPromo', 'Template.afterReferrerTypeReport' => 'getReferrerTypePromo', 'Template.afterReferrersKeywordsReport' => 'getSearchKeywordsPerformancePromo', 'Template.afterCustomVariablesReport' => 'getCustomVariablesPromo', 'Template.afterOverlaySidebar' => 'getHeatmapPromo', 'Template.afterVisitorProfileOverview' => 'getSessionRecordingPromo', 'Template.afterPagePerformanceReport' => 'getSeoWebVitalsPromo', 'Template.afterSearchEngines' => 'getSeoWebVitalsPromo', 'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys');
     }
     public function getStylesheetFiles(&$stylesheets)
     {
@@ -100,7 +100,7 @@ class ProfessionalServices extends \Piwik\Plugin
     }
     private function hasErrorEventCategory(DataTable $dataTable) : bool
     {
-        return $dataTable->getRowIdFromLabel('JavaScript Errors') !== false;
+        return $dataTable->getRowIdFromLabel('JavaScript Errors') !== \false;
     }
     public function getCampaignsPromo(&$out)
     {

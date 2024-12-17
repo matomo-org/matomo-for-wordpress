@@ -73,12 +73,12 @@ class API extends \Piwik\Plugin\API
         try {
             $lastDate = $this->model->getLastDate($date, $period, 1);
         } catch (\Exception $e) {
-            return false;
+            return \false;
         }
         if (empty($lastDate)) {
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * Generates insights for a set of reports. Plugins can add their own reports to be included in the insights
@@ -92,7 +92,7 @@ class API extends \Piwik\Plugin\API
      * @return DataTable\Map   A map containing a dataTable for each insight report. See {@link getInsights()} for more
      *                         information
      */
-    public function getInsightsOverview($idSite, $period, $date, $segment = false)
+    public function getInsightsOverview($idSite, $period, $date, $segment = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $defaultParams = array('limitIncreaser' => 3, 'limitDecreaser' => 3, 'minImpactPercent' => 1, 'minGrowthPercent' => 25);
@@ -111,7 +111,7 @@ class API extends \Piwik\Plugin\API
      * @return DataTable\Map   A map containing a dataTable for each movers and shakers report. See
      *                         {@link getMoversAndShakers()} for more information
      */
-    public function getMoversAndShakersOverview($idSite, $period, $date, $segment = false)
+    public function getMoversAndShakersOverview($idSite, $period, $date, $segment = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $defaultParams = array('limitIncreaser' => 4, 'limitDecreaser' => 4);
@@ -162,7 +162,7 @@ class API extends \Piwik\Plugin\API
      * @throws \Exception In case a report having the given ID does not exist
      * @throws \Exception In case the report exists but does not return a dataTable
      */
-    public function getMoversAndShakers($idSite, $period, $date, $reportUniqueId, $segment = false, $comparedToXPeriods = 1, $limitIncreaser = 4, $limitDecreaser = 4)
+    public function getMoversAndShakers($idSite, $period, $date, $reportUniqueId, $segment = \false, $comparedToXPeriods = 1, $limitIncreaser = 4, $limitDecreaser = 4)
     {
         Piwik::checkUserHasViewAccess(array($idSite));
         $metric = 'nb_visits';
@@ -207,7 +207,7 @@ class API extends \Piwik\Plugin\API
      * @throws \Exception In case a report having the given ID does not exist
      * @throws \Exception In case the report exists but does not return a dataTable
      */
-    public function getInsights($idSite, $period, $date, $reportUniqueId, $segment = false, $limitIncreaser = 5, $limitDecreaser = 5, $filterBy = '', $minImpactPercent = 2, $minGrowthPercent = 20, $comparedToXPeriods = 1, $orderBy = 'absolute')
+    public function getInsights($idSite, $period, $date, $reportUniqueId, $segment = \false, $limitIncreaser = 5, $limitDecreaser = 5, $filterBy = '', $minImpactPercent = 2, $minGrowthPercent = 20, $comparedToXPeriods = 1, $orderBy = 'absolute')
     {
         Piwik::checkUserHasViewAccess(array($idSite));
         $metric = 'nb_visits';

@@ -25,13 +25,13 @@ class GetPageTitles extends \Piwik\Plugins\Actions\Reports\Base
         parent::init();
         $this->dimension = new PageTitle();
         $this->name = Piwik::translate('Actions_SubmenuPageTitles');
-        $this->documentation = Piwik::translate('Actions_PageTitlesReportDocumentation', ['<br />', htmlentities('<title>', ENT_COMPAT | ENT_HTML401, 'UTF-8')]);
+        $this->documentation = Piwik::translate('Actions_PageTitlesReportDocumentation', ['<br />', htmlentities('<title>', \ENT_COMPAT | \ENT_HTML401, 'UTF-8')]);
         $this->order = 5;
         $this->metrics = array('nb_hits', 'nb_visits');
         $this->processedMetrics = array(new AverageTimeOnPage(), new BounceRate(), new ExitRate(), new AveragePageGenerationTime());
         $this->actionToLoadSubTables = $this->action;
         $this->subcategoryId = 'Actions_SubmenuPageTitles';
-        $this->hasGoalMetrics = true;
+        $this->hasGoalMetrics = \true;
     }
     public function getMetrics()
     {
@@ -56,7 +56,7 @@ class GetPageTitles extends \Piwik\Plugins\Actions\Reports\Base
         }
         $this->addPageDisplayProperties($view);
         $this->addBaseDisplayProperties($view);
-        $view->config->show_goals = true;
+        $view->config->show_goals = \true;
     }
     public function getRelatedReports()
     {

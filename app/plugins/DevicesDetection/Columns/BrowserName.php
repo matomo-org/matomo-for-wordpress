@@ -34,14 +34,14 @@ class BrowserName extends \Piwik\Plugins\DevicesDetection\Columns\Base
         $segment->setSegment('browserName');
         $segment->setName('DevicesDetection_ColumnBrowser');
         $segment->setAcceptedValues('FireFox, Internet Explorer, Chrome, Safari, Opera etc.');
-        $segment->setNeedsMostFrequentValues(false);
+        $segment->setNeedsMostFrequentValues(\false);
         $segment->setSqlFilterValue(function ($val) {
             $browsers = Browser::getAvailableBrowsers();
             $browsers = array_map(function ($val) {
                 return mb_strtolower($val);
             }, $browsers);
             $result = array_search(mb_strtolower($val), $browsers);
-            if ($result === false) {
+            if ($result === \false) {
                 $result = 'UNK';
             }
             return $result;

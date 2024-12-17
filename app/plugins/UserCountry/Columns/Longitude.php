@@ -31,7 +31,7 @@ class Longitude extends \Piwik\Plugins\UserCountry\Columns\Base
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $value = $this->getUrlOverrideValueIfAllowed('long', $request);
-        if ($value !== false) {
+        if ($value !== \false) {
             return $value;
         }
         $userInfo = $this->getUserInfo($request, $visitor);

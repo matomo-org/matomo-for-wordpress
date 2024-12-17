@@ -42,14 +42,14 @@ class WildfireFormatter extends NormalizerFormatter
         }
         $record = $this->normalize($record);
         $message = array('message' => $record['message']);
-        $handleError = false;
+        $handleError = \false;
         if ($record['context']) {
             $message['context'] = $record['context'];
-            $handleError = true;
+            $handleError = \true;
         }
         if ($record['extra']) {
             $message['extra'] = $record['extra'];
-            $handleError = true;
+            $handleError = \true;
         }
         if (count($message) === 1) {
             $message = reset($message);

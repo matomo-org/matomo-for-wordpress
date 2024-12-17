@@ -16,7 +16,7 @@ class Email extends BaseValidator
 {
     private $checkUnique;
     private $userLogin;
-    public function __construct($checkUnique = false, $userLogin = null)
+    public function __construct($checkUnique = \false, $userLogin = null)
     {
         $this->checkUnique = $checkUnique;
         $this->userLogin = $userLogin;

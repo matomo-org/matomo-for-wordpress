@@ -37,7 +37,7 @@ class WhatFailureGroupHandler extends GroupHandler
                 // What failure?
             }
         }
-        return false === $this->bubble;
+        return \false === $this->bubble;
     }
     /**
      * {@inheritdoc}

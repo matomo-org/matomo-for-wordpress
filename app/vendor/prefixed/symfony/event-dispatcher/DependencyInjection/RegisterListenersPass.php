@@ -75,7 +75,7 @@ class RegisterListenersPass implements CompilerPassInterface
             $aliases = $container->getParameter($this->eventAliasesParameter);
         }
         $globalDispatcherDefinition = $container->findDefinition($this->dispatcherService);
-        foreach ($container->findTaggedServiceIds($this->listenerTag, true) as $id => $events) {
+        foreach ($container->findTaggedServiceIds($this->listenerTag, \true) as $id => $events) {
             $noPreload = 0;
             foreach ($events as $event) {
                 $priority = $event['priority'] ?? 0;
@@ -92,7 +92,7 @@ class RegisterListenersPass implements CompilerPassInterface
                         return strtoupper($matches[0]);
                     }, $event['event']);
                     $event['method'] = preg_replace('/[^a-z0-9]/i', '', $event['method']);
-                    if (null !== ($class = $container->getDefinition($id)->getClass()) && ($r = $container->getReflectionClass($class, false)) && !$r->hasMethod($event['method'])) {
+                    if (null !== ($class = $container->getDefinition($id)->getClass()) && ($r = $container->getReflectionClass($class, \false)) && !$r->hasMethod($event['method'])) {
                         if (!$r->hasMethod('__invoke')) {
                             throw new InvalidArgumentException(sprintf('None of the "%s" or "__invoke" methods exist for the service "%s". Please define the "method" attribute on "%s" tags.', $event['method'], $id, $this->listenerTag));
                         }
@@ -115,7 +115,7 @@ class RegisterListenersPass implements CompilerPassInterface
             }
         }
         $extractingDispatcher = new ExtractingEventDispatcher();
-        foreach ($container->findTaggedServiceIds($this->subscriberTag, true) as $id => $tags) {
+        foreach ($container->findTaggedServiceIds($this->subscriberTag, \true) as $id => $tags) {
             $def = $container->getDefinition($id);
             // We must assume that the class value has been correctly filled, even if the service is created by a factory
             $class = $def->getClass();
@@ -160,7 +160,7 @@ class RegisterListenersPass implements CompilerPassInterface
     }
     private function getEventFromTypeDeclaration(ContainerBuilder $container, string $id, string $method) : string
     {
-        if (null === ($class = $container->getDefinition($id)->getClass()) || !($r = $container->getReflectionClass($class, false)) || !$r->hasMethod($method) || 1 > ($m = $r->getMethod($method))->getNumberOfParameters() || !($type = $m->getParameters()[0]->getType()) instanceof \ReflectionNamedType || $type->isBuiltin() || Event::class === ($name = $type->getName())) {
+        if (null === ($class = $container->getDefinition($id)->getClass()) || !($r = $container->getReflectionClass($class, \false)) || !$r->hasMethod($method) || 1 > ($m = $r->getMethod($method))->getNumberOfParameters() || !($type = $m->getParameters()[0]->getType()) instanceof \ReflectionNamedType || $type->isBuiltin() || Event::class === ($name = $type->getName())) {
             throw new InvalidArgumentException(sprintf('Service "%s" must define the "event" attribute on "%s" tags.', $id, $this->listenerTag));
         }
         return $name;

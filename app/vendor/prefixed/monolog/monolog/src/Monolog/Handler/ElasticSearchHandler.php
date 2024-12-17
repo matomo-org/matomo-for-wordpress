@@ -47,7 +47,7 @@ class ElasticSearchHandler extends AbstractProcessingHandler
      * @param int    $level   The minimum logging level at which this handler will be triggered
      * @param bool   $bubble  Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(Client $client, array $options = array(), $level = Logger::DEBUG, $bubble = true)
+    public function __construct(Client $client, array $options = array(), $level = Logger::DEBUG, $bubble = \true)
     {
         parent::__construct($level, $bubble);
         $this->client = $client;
@@ -56,7 +56,7 @@ class ElasticSearchHandler extends AbstractProcessingHandler
             // Elastic index name
             'type' => 'record',
             // Elastic document type
-            'ignore_error' => false,
+            'ignore_error' => \false,
         ), $options);
     }
     /**

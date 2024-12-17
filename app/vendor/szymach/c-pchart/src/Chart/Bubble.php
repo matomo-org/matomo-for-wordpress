@@ -58,7 +58,7 @@ class Bubble
         $LastNegative = 0;
         foreach ($DataSeries as $Key => $SerieName) {
             $SerieWeightName = $WeightSeries[$Key];
-            $this->pDataObject->setSerieDrawable($SerieWeightName, false);
+            $this->pDataObject->setSerieDrawable($SerieWeightName, \false);
             $serieData = $this->pDataObject->Data["Series"][$SerieName]["Data"];
             if (count($serieData) > $MaxValues) {
                 $MaxValues = count($serieData);
@@ -121,7 +121,7 @@ class Bubble
     public function drawBubbleChart($DataSeries, $WeightSeries, $Format = "")
     {
         $ForceAlpha = isset($Format["ForceAlpha"]) ? $Format["ForceAlpha"] : VOID;
-        $DrawBorder = isset($Format["DrawBorder"]) ? $Format["DrawBorder"] : true;
+        $DrawBorder = isset($Format["DrawBorder"]) ? $Format["DrawBorder"] : \true;
         $BorderWidth = isset($Format["BorderWidth"]) ? $Format["BorderWidth"] : 1;
         $Shape = isset($Format["Shape"]) ? $Format["Shape"] : BUBBLE_SHAPE_ROUND;
         $Surrounding = isset($Format["Surrounding"]) ? $Format["Surrounding"] : null;
@@ -129,7 +129,7 @@ class Bubble
         $BorderG = isset($Format["BorderG"]) ? $Format["BorderG"] : 0;
         $BorderB = isset($Format["BorderB"]) ? $Format["BorderB"] : 0;
         $BorderAlpha = isset($Format["BorderAlpha"]) ? $Format["BorderAlpha"] : 30;
-        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : false;
+        $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : \false;
         if (!is_array($DataSeries)) {
             $DataSeries = [$DataSeries];
         }
@@ -139,10 +139,10 @@ class Bubble
         $Data = $this->pDataObject->getData();
         $Palette = $this->pDataObject->getPalette();
         if (isset($Data["Series"]["BubbleFakePositiveSerie"])) {
-            $this->pDataObject->setSerieDrawable("BubbleFakePositiveSerie", false);
+            $this->pDataObject->setSerieDrawable("BubbleFakePositiveSerie", \false);
         }
         if (isset($Data["Series"]["BubbleFakeNegativeSerie"])) {
-            $this->pDataObject->setSerieDrawable("BubbleFakeNegativeSerie", false);
+            $this->pDataObject->setSerieDrawable("BubbleFakeNegativeSerie", \false);
         }
         $this->resetSeriesColors();
         list($XMargin, $XDivs) = $this->pChartObject->scaleGetXSettings();

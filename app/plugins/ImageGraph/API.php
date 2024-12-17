@@ -48,7 +48,7 @@ class API extends \Piwik\Plugin\API
         self::WIDTH_KEY => 800,
         self::HEIGHT_KEY => 290,
     ), \Piwik\Plugins\ImageGraph\StaticGraph::GRAPH_TYPE_3D_PIE => array(self::FILENAME_KEY => '3DPie', self::TRUNCATE_KEY => 5, self::WIDTH_KEY => 1044, self::HEIGHT_KEY => 290), \Piwik\Plugins\ImageGraph\StaticGraph::GRAPH_TYPE_BASIC_PIE => array(self::FILENAME_KEY => 'BasicPie', self::TRUNCATE_KEY => 5, self::WIDTH_KEY => 1044, self::HEIGHT_KEY => 290));
-    private static $DEFAULT_GRAPH_TYPE_OVERRIDE = array('Referrers_getReferrerType' => array(false => \Piwik\Plugins\ImageGraph\StaticGraph::GRAPH_TYPE_HORIZONTAL_BAR));
+    private static $DEFAULT_GRAPH_TYPE_OVERRIDE = array('Referrers_getReferrerType' => array(\false => \Piwik\Plugins\ImageGraph\StaticGraph::GRAPH_TYPE_HORIZONTAL_BAR));
     public const GRAPH_OUTPUT_INLINE = 0;
     public const GRAPH_OUTPUT_FILE = 1;
     public const GRAPH_OUTPUT_PHP = 2;
@@ -64,7 +64,7 @@ class API extends \Piwik\Plugin\API
     // number of row evolutions to plot when no labels are specified, can be overridden using &filter_limit
     public const DEFAULT_NB_ROW_EVOLUTIONS = 5;
     public const MAX_NB_ROW_LABELS = 10;
-    public function get($idSite, $period, $date, $apiModule, $apiAction, $graphType = false, $outputType = \Piwik\Plugins\ImageGraph\API::GRAPH_OUTPUT_INLINE, $columns = false, $labels = false, $showLegend = true, $width = false, $height = false, $fontSize = \Piwik\Plugins\ImageGraph\API::DEFAULT_FONT_SIZE, $legendFontSize = false, $aliasedGraph = true, $idGoal = false, $colors = false, $textColor = \Piwik\Plugins\ImageGraph\API::DEFAULT_TEXT_COLOR, $backgroundColor = \Piwik\Plugins\ImageGraph\API::DEFAULT_BACKGROUND_COLOR, $gridColor = \Piwik\Plugins\ImageGraph\API::DEFAULT_GRID_COLOR, $idSubtable = false, $legendAppendMetric = true, $segment = false, $idDimension = false)
+    public function get($idSite, $period, $date, $apiModule, $apiAction, $graphType = \false, $outputType = \Piwik\Plugins\ImageGraph\API::GRAPH_OUTPUT_INLINE, $columns = \false, $labels = \false, $showLegend = \true, $width = \false, $height = \false, $fontSize = \Piwik\Plugins\ImageGraph\API::DEFAULT_FONT_SIZE, $legendFontSize = \false, $aliasedGraph = \true, $idGoal = \false, $colors = \false, $textColor = \Piwik\Plugins\ImageGraph\API::DEFAULT_TEXT_COLOR, $backgroundColor = \Piwik\Plugins\ImageGraph\API::DEFAULT_BACKGROUND_COLOR, $gridColor = \Piwik\Plugins\ImageGraph\API::DEFAULT_GRID_COLOR, $idSubtable = \false, $legendAppendMetric = \true, $segment = \false, $idDimension = \false)
     {
         $idSite = (int) $idSite;
         Piwik::checkUserHasViewAccess($idSite);
@@ -91,7 +91,7 @@ class API extends \Piwik\Plugin\API
                 $apiParameters = array('idDimension' => $idDimension);
             }
             // Fetch the metadata for given api-action
-            $parameters = array('idSite' => $idSite, 'apiModule' => $apiModule, 'apiAction' => $apiAction, 'apiParameters' => $apiParameters, 'language' => $languageLoaded, 'period' => $period, 'date' => $date, 'hideMetricsDoc' => false, 'showSubtableReports' => true);
+            $parameters = array('idSite' => $idSite, 'apiModule' => $apiModule, 'apiAction' => $apiAction, 'apiParameters' => $apiParameters, 'language' => $languageLoaded, 'period' => $period, 'date' => $date, 'hideMetricsDoc' => \false, 'showSubtableReports' => \true);
             $metadata = Request::processRequest('API.getMetadata', $parameters);
             if (!$metadata) {
                 throw new Exception('Invalid API Module and/or API Action');
@@ -192,7 +192,7 @@ class API extends \Piwik\Plugin\API
                         $_GET['filter_limit'] = self::DEFAULT_NB_ROW_EVOLUTIONS;
                     }
                 }
-                $parameters = array('idSite' => $idSite, 'period' => $period, 'date' => $date, 'apiModule' => $apiModule, 'apiAction' => $apiAction, 'label' => $labels, 'segment' => $segment, 'column' => $plottedMetric, 'language' => $languageLoaded, 'idGoal' => $idGoal, 'idDimension' => $idDimension, 'legendAppendMetric' => $legendAppendMetric, 'labelUseAbsoluteUrl' => false);
+                $parameters = array('idSite' => $idSite, 'period' => $period, 'date' => $date, 'apiModule' => $apiModule, 'apiAction' => $apiAction, 'label' => $labels, 'segment' => $segment, 'column' => $plottedMetric, 'language' => $languageLoaded, 'idGoal' => $idGoal, 'idDimension' => $idDimension, 'legendAppendMetric' => $legendAppendMetric, 'labelUseAbsoluteUrl' => \false);
                 $processedReport = Request::processRequest('API.getRowEvolution', $parameters);
                 //@review this test will need to be updated after evaluating the @review comment in API/API.php
                 if (!$processedReport) {
@@ -231,7 +231,7 @@ class API extends \Piwik\Plugin\API
                     $ordinateLabels[$plottedMetric] = $processedReport['label'] . ' (' . $metrics[$plottedMetric]['name'] . ')';
                 }
             } else {
-                $parameters = array('idSite' => $idSite, 'period' => $period, 'date' => $date, 'apiModule' => $apiModule, 'apiAction' => $apiAction, 'segment' => $segment, 'apiParameters' => false, 'idGoal' => $idGoal, 'idDimension' => $idDimension, 'language' => $languageLoaded, 'showTimer' => true, 'hideMetricsDoc' => false, 'idSubtable' => $idSubtable, 'showRawMetrics' => false);
+                $parameters = array('idSite' => $idSite, 'period' => $period, 'date' => $date, 'apiModule' => $apiModule, 'apiAction' => $apiAction, 'segment' => $segment, 'apiParameters' => \false, 'idGoal' => $idGoal, 'idDimension' => $idDimension, 'language' => $languageLoaded, 'showTimer' => \true, 'hideMetricsDoc' => \false, 'idSubtable' => $idSubtable, 'showRawMetrics' => \false);
                 $processedReport = Request::processRequest('API.getProcessedReport', $parameters);
             }
             // prepare abscissa and ordinate series
@@ -240,8 +240,8 @@ class API extends \Piwik\Plugin\API
             $ordinateSeries = array();
             /** @var \Piwik\DataTable\Simple|\Piwik\DataTable\Map $reportData */
             $reportData = $processedReport['reportData'];
-            $hasData = false;
-            $hasNonZeroValue = false;
+            $hasData = \false;
+            $hasNonZeroValue = \false;
             if (!$isMultiplePeriod || !$reportData instanceof Map) {
                 $reportMetadata = $processedReport['reportMetadata']->getRows();
                 $i = 0;
@@ -254,9 +254,9 @@ class API extends \Piwik\Plugin\API
                     $abscissaSeries[] = Common::unsanitizeInputValue($rowData['label']);
                     foreach ($ordinateColumns as $column) {
                         $parsedOrdinateValue = $this->parseOrdinateValue($rowData[$column]);
-                        $hasData = true;
+                        $hasData = \true;
                         if ($parsedOrdinateValue != 0) {
-                            $hasNonZeroValue = true;
+                            $hasNonZeroValue = \true;
                         }
                         $ordinateSeries[$column][] = $parsedOrdinateValue;
                     }
@@ -290,9 +290,9 @@ class API extends \Piwik\Plugin\API
                             }
                             $ordinateValue = $rowData[$column];
                             $parsedOrdinateValue = $this->parseOrdinateValue($ordinateValue);
-                            $hasData = true;
+                            $hasData = \true;
                             if (!empty($parsedOrdinateValue)) {
-                                $hasNonZeroValue = true;
+                                $hasNonZeroValue = \true;
                             }
                             $ordinateSeries[$column][] = $parsedOrdinateValue;
                         }

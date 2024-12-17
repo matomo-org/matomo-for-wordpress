@@ -57,7 +57,7 @@ class Picture
      */
     public function applyBackground(array $backgroundColor)
     {
-        imagesavealpha($this->resource, true);
+        imagesavealpha($this->resource, \true);
         imagefill($this->resource, 0, 0, $this->getBackground($backgroundColor));
     }
     /**
@@ -78,7 +78,7 @@ class Picture
             return;
         }
         $fillColor = imagecolorallocate($this->resource, $fillColor[0], $fillColor[1], $fillColor[2]);
-        if (version_compare(PHP_VERSION, '8.1.0') === -1) {
+        if (version_compare(\PHP_VERSION, '8.1.0') === -1) {
             imagefilledpolygon($this->resource, $polygon, $count + 2, $fillColor);
         } else {
             imagefilledpolygon($this->resource, $polygon, $fillColor);
@@ -120,9 +120,9 @@ class Picture
     public function generate(int $width, int $height)
     {
         $sparkline = imagecreatetruecolor($width, $height);
-        imagealphablending($sparkline, false);
+        imagealphablending($sparkline, \false);
         imagecopyresampled($sparkline, $this->resource, 0, 0, 0, 0, $width, $height, $this->width, $this->height);
-        imagesavealpha($sparkline, true);
+        imagesavealpha($sparkline, \true);
         imagedestroy($this->resource);
         return $sparkline;
     }

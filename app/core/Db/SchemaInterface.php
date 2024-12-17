@@ -60,6 +60,15 @@ interface SchemaInterface
      */
     public function getInstallVersion();
     /**
+     * Returns the supported read isolation transaction level
+     *
+     * For example:
+     *      READ COMMITTED
+     *      or
+     *      READ UNCOMMITTED
+     */
+    public function getSupportedReadIsolationTransactionLevel() : string;
+    /**
      * Truncate all tables
      */
     public function truncateAllTables();
@@ -76,7 +85,7 @@ interface SchemaInterface
      * @param bool $forceReload Invalidate cache
      * @return array  installed Tables
      */
-    public function getTablesInstalled($forceReload = true);
+    public function getTablesInstalled($forceReload = \true);
     /**
      * Get list of installed columns in a table
      *
@@ -128,4 +137,28 @@ interface SchemaInterface
      * @return string
      */
     public function getTableCreateOptions() : string;
+    /**
+     * Returns if performing on `OPTIMIZE TABLE` is supported for InnoDb tables
+     *
+     * @return bool
+     */
+    public function isOptimizeInnoDBSupported() : bool;
+    /**
+     * Runs an `OPTIMIZE TABLE` query on the supplied table or tables.
+     *
+     * Tables will only be optimized if the `[General] enable_sql_optimize_queries` INI config option is
+     * set to **1**.
+     *
+     * @param array $tables The name of the table to optimize or an array of tables to optimize.
+     *                      Table names must be prefixed (see {@link Piwik\Common::prefixTable()}).
+     * @param bool $force If true, the `OPTIMIZE TABLE` query will be run even if InnoDB tables are being used.
+     * @return bool
+     */
+    public function optimizeTables(array $tables, bool $force = \false) : bool;
+    /**
+     * Returns if the database engine is able to use sorted subqueries
+     *
+     * @return bool
+     */
+    public function supportsSortingInSubquery() : bool;
 }

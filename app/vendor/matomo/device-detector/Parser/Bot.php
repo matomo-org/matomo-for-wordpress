@@ -30,13 +30,13 @@ class Bot extends \DeviceDetector\Parser\AbstractBotParser
     /**
      * @var bool
      */
-    protected $discardDetails = false;
+    protected $discardDetails = \false;
     /**
      * Enables information discarding
      */
     public function discardDetails() : void
     {
-        $this->discardDetails = true;
+        $this->discardDetails = \true;
     }
     /**
      * Parses the current UA and checks whether it contains bot information
@@ -61,7 +61,7 @@ class Bot extends \DeviceDetector\Parser\AbstractBotParser
         $result = null;
         if ($this->preMatchOverall()) {
             if ($this->discardDetails) {
-                return [true];
+                return [\true];
             }
             foreach ($this->getRegexes() as $regex) {
                 $matches = $this->matchUserAgent($regex['regex']);

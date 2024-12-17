@@ -51,27 +51,27 @@ class JoinTables extends \ArrayObject
     {
         $tables = in_array($tableName, $this->getTables());
         if ($tables) {
-            return true;
+            return \true;
         }
         foreach ($this as $table) {
             if (is_array($table)) {
                 if (!isset($table['tableAlias']) && $table['table'] === $table) {
-                    return true;
+                    return \true;
                 } elseif (isset($table['tableAlias']) && $table['tableAlias'] === $table) {
-                    return true;
+                    return \true;
                 }
             }
         }
-        return false;
+        return \false;
     }
     public function hasJoinedTableManually($tableToFind, $joinToFind)
     {
         foreach ($this as $table) {
             if (is_array($table) && !empty($table['table']) && $table['table'] === $tableToFind && (!isset($table['tableAlias']) || $table['tableAlias'] === $tableToFind) && (!isset($table['join']) || strtolower($table['join']) === 'left join') && isset($table['joinOn']) && $table['joinOn'] === $joinToFind) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function getLogTable($tableName)
     {
@@ -97,6 +97,10 @@ class JoinTables extends \ArrayObject
         // the first entry is always the FROM table
         $firstTable = array_shift($tables);
         $sorted = [$firstTable];
+        // With the ability to specify which index to use, the $firstTable var may be an array
+        if (is_array($firstTable) && !empty($firstTable['table'])) {
+            $firstTable = $firstTable['table'];
+        }
         if (strpos($firstTable, LogAggregator::LOG_TABLE_SEGMENT_TEMPORARY_PREFIX) === 0) {
             // the first table might be a temporary segment table in which case we need to keep the next one as well
             $sorted[] = array_shift($tables);
@@ -111,44 +115,44 @@ class JoinTables extends \ArrayObject
     {
         $table = $this->getLogTable($tableToCheck);
         if (empty($table)) {
-            return false;
+            return \false;
         }
         if ($table->getColumnToJoinOnIdVisit()) {
-            return true;
+            return \true;
         }
         if ($table->getLinkTableToBeAbleToJoinOnVisit()) {
-            return true;
+            return \true;
         }
         $otherWays = $table->getWaysToJoinToOtherLogTables();
         if (empty($otherWays)) {
-            return false;
+            return \false;
         }
         foreach ($otherWays as $logTable => $column) {
             if ($logTable == 'log_visit' || $this->isTableJoinableOnVisit($logTable)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function isTableJoinableOnAction($tableToCheck)
     {
         $table = $this->getLogTable($tableToCheck);
         if (empty($table)) {
-            return false;
+            return \false;
         }
         if ($table->getColumnToJoinOnIdAction()) {
-            return true;
+            return \true;
         }
         $otherWays = $table->getWaysToJoinToOtherLogTables();
         if (empty($otherWays)) {
-            return false;
+            return \false;
         }
         foreach ($otherWays as $logTable => $column) {
             if ($logTable == 'log_action' || $this->isTableJoinableOnAction($logTable)) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     public function addTableDependency($table, $dependentTable)
     {
@@ -199,13 +203,13 @@ class JoinTables extends \ArrayObject
     {
         foreach ($tables as $entry) {
             if (is_string($entry) && $entry == $table) {
-                return true;
+                return \true;
             }
             if (is_array($entry) && $entry['table'] == $table) {
-                return true;
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     private function parseSqlTables($joinOn, $self)
     {
@@ -230,7 +234,7 @@ class JoinTables extends \ArrayObject
     }
     private function visitTableListDfsSingle($tables, $dependencies, $visitor, $tableToVisitIndex, &$visited)
     {
-        $visited[$tableToVisitIndex] = true;
+        $visited[$tableToVisitIndex] = \true;
         $tableToVisit = $tables[$tableToVisitIndex];
         if (!empty($dependencies[$tableToVisitIndex])) {
             foreach ($dependencies[$tableToVisitIndex] as $dependencyTableName) {

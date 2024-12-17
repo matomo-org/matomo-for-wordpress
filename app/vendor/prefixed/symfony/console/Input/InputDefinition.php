@@ -333,7 +333,7 @@ class InputDefinition
      *
      * @return string
      */
-    public function getSynopsis(bool $short = false)
+    public function getSynopsis(bool $short = \false)
     {
         $elements = [];
         if ($short && $this->getOptions()) {

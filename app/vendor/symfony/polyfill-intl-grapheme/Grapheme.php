@@ -41,9 +41,9 @@ final class Grapheme
             $start = \strlen($s) + $start;
         }
         if (!\is_scalar($s)) {
-            $hasError = false;
+            $hasError = \false;
             set_error_handler(function () use(&$hasError) {
-                $hasError = true;
+                $hasError = \true;
             });
             $next = substr($s, $start);
             restore_error_handler();
@@ -61,12 +61,12 @@ final class Grapheme
         $start = (int) $start;
         if (\GRAPHEME_EXTR_COUNT !== $type && \GRAPHEME_EXTR_MAXBYTES !== $type && \GRAPHEME_EXTR_MAXCHARS !== $type) {
             if (80000 > \PHP_VERSION_ID) {
-                return false;
+                return \false;
             }
             throw new \ValueError('grapheme_extract(): Argument #3 ($type) must be one of GRAPHEME_EXTR_COUNT, GRAPHEME_EXTR_MAXBYTES, or GRAPHEME_EXTR_MAXCHARS');
         }
         if (!isset($s[0]) || 0 > $size || 0 > $start) {
-            return false;
+            return \false;
         }
         if (0 === $size) {
             return '';
@@ -74,7 +74,7 @@ final class Grapheme
         $next = $start;
         $s = preg_split('/(' . SYMFONY_GRAPHEME_CLUSTER_RX . ')/u', "\r\n" . $s, $size + 1, \PREG_SPLIT_NO_EMPTY | \PREG_SPLIT_DELIM_CAPTURE);
         if (!isset($s[1])) {
-            return false;
+            return \false;
         }
         $i = 1;
         $ret = '';
@@ -111,12 +111,12 @@ final class Grapheme
         }
         if (0 > $start) {
             if (\PHP_VERSION_ID < 80000) {
-                return false;
+                return \false;
             }
             $start = 0;
         }
         if ($start >= $slen) {
-            return \PHP_VERSION_ID >= 80000 ? '' : false;
+            return \PHP_VERSION_ID >= 80000 ? '' : \false;
         }
         $rem = $slen - $start;
         if (0 > $len) {
@@ -126,7 +126,7 @@ final class Grapheme
             return '';
         }
         if (0 > $len) {
-            return \PHP_VERSION_ID >= 80000 ? '' : false;
+            return \PHP_VERSION_ID >= 80000 ? '' : \false;
         }
         if ($len > $rem) {
             $len = $rem;
@@ -149,11 +149,11 @@ final class Grapheme
     {
         return self::grapheme_position($s, $needle, $offset, 3);
     }
-    public static function grapheme_stristr($s, $needle, $beforeNeedle = false)
+    public static function grapheme_stristr($s, $needle, $beforeNeedle = \false)
     {
         return mb_stristr($s, $needle, $beforeNeedle, 'UTF-8');
     }
-    public static function grapheme_strstr($s, $needle, $beforeNeedle = false)
+    public static function grapheme_strstr($s, $needle, $beforeNeedle = \false)
     {
         return mb_strstr($s, $needle, $beforeNeedle, 'UTF-8');
     }
@@ -161,11 +161,11 @@ final class Grapheme
     {
         $needle = (string) $needle;
         if (80000 > \PHP_VERSION_ID && !preg_match('/./us', $needle)) {
-            return false;
+            return \false;
         }
         $s = (string) $s;
         if (!preg_match('/./us', $s)) {
-            return false;
+            return \false;
         }
         if ($offset > 0) {
             $s = self::grapheme_substr($s, $offset);
@@ -205,6 +205,6 @@ final class Grapheme
         } else {
             $needlePos = strpos($s, $needle);
         }
-        return false !== $needlePos ? self::grapheme_strlen(substr($s, 0, $needlePos)) + $offset : false;
+        return \false !== $needlePos ? self::grapheme_strlen(substr($s, 0, $needlePos)) + $offset : \false;
     }
 }

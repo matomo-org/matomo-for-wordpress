@@ -91,9 +91,9 @@ class Factory
      * @throws \Exception
      * @return \Piwik\Plugin\ViewDataTable
      */
-    public static function build($defaultType = null, $apiAction = false, $controllerAction = false, $forceDefault = false, $loadViewDataTableParametersForUser = null)
+    public static function build($defaultType = null, $apiAction = \false, $controllerAction = \false, $forceDefault = \false, $loadViewDataTableParametersForUser = null)
     {
-        if (false === $controllerAction) {
+        if (\false === $controllerAction) {
             $controllerAction = $apiAction;
         }
         $report = self::getReport($apiAction);
@@ -112,7 +112,7 @@ class Factory
             $params = \Piwik\ViewDataTable\Manager::getViewDataTableParameters($login, $paramsKey, $containerId);
         }
         if (!self::isDefaultViewTypeForReportFixed($report)) {
-            $savedViewDataTable = false;
+            $savedViewDataTable = \false;
             if (!empty($params['viewDataTable'])) {
                 $savedViewDataTable = $params['viewDataTable'];
             }
@@ -154,7 +154,7 @@ class Factory
      */
     private static function getReport($apiAction)
     {
-        if (strpos($apiAction, '.') === false) {
+        if (strpos($apiAction, '.') === \false) {
             return;
         }
         list($module, $action) = explode('.', $apiAction);
@@ -174,7 +174,7 @@ class Factory
         if (!empty($report) && $report->isEnabled()) {
             return $report->getDefaultTypeViewDataTable();
         }
-        return false;
+        return \false;
     }
     /**
      * Returns if the default viewDataTable ID to use is fixed.
@@ -187,7 +187,7 @@ class Factory
         if (!empty($report) && $report->isEnabled()) {
             return $report->alwaysUseDefaultViewDataTable();
         }
-        return false;
+        return \false;
     }
     /**
      * @param string $klass

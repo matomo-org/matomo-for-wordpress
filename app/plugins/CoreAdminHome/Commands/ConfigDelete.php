@@ -36,7 +36,7 @@ class ConfigDelete extends ConsoleCommand
         $options = array_filter(['section' => $input->getOption('section'), 'key' => $input->getOption('key'), 'value' => $input->getOption('value')]);
         $argument = trim($input->getArgument('argument') ?? '');
         // Sanity check inputs.
-        switch (true) {
+        switch (\true) {
             case empty($argument) && empty($options):
                 throw new \InvalidArgumentException('You must set either an argument or set options --section, --key and optional --value');
             case !empty($argument) && !empty($options):
@@ -54,7 +54,7 @@ class ConfigDelete extends ConsoleCommand
                 throw new \Exception('Some unexpected error occurred parsing input values');
         }
         // Convenience wrapper used to augment SystemConfigSetting without extending SystemConfigSetting or adding random properties to the instance.
-        $settingWrapped = (object) ['setting' => null, 'isArray' => false, 'arrayVal' => ''];
+        $settingWrapped = (object) ['setting' => null, 'isArray' => \false, 'arrayVal' => ''];
         // Parse the $settingStr into a $settingWrapped object.
         $settingWrapped = self::parseSettingStr($settingStr, $settingWrapped);
         // Check the setting exists and user has permissions, then populates the $settingWrapped properties.
@@ -84,7 +84,7 @@ class ConfigDelete extends ConsoleCommand
         }
         $config = Config::getInstance();
         // Check the setting exists and user has permissions. If so, put it in the wrapper.
-        switch (true) {
+        switch (\true) {
             case empty($sectionName = $settingWrapped->setting->getConfigSectionName()):
                 throw new \InvalidArgumentException('A section name must be specified');
             case empty($settingName = $settingWrapped->setting->getName()):
@@ -106,7 +106,7 @@ class ConfigDelete extends ConsoleCommand
             if (empty($settingWrappedNew->arrayVal)) {
                 throw new \InvalidArgumentException('This config setting is an array, but no array value was specified for deletion');
             }
-            if (false === array_search($settingWrappedNew->arrayVal, $section->{$settingName})) {
+            if (\false === array_search($settingWrappedNew->arrayVal, $section->{$settingName})) {
                 return new \stdClass();
             }
         }
@@ -133,13 +133,13 @@ class ConfigDelete extends ConsoleCommand
         $setting = $section[$settingName];
         // Do the delete.
         // This does not do the job with value=null or value='': $config->setSetting($sectionName, $settingName, $value).
-        switch (true) {
-            case $settingWrapped->isArray === true && empty($settingWrapped->arrayVal):
+        switch (\true) {
+            case $settingWrapped->isArray === \true && empty($settingWrapped->arrayVal):
                 throw new \InvalidArgumentException('This function refuses to delete config arrays. See usage for how to delete config array values.');
-            case $settingWrapped->isArray === true:
+            case $settingWrapped->isArray === \true:
                 // Array config values.
                 $key = array_search($settingWrapped->arrayVal, $setting);
-                if ($key !== false) {
+                if ($key !== \false) {
                     unset($setting[$key]);
                 }
                 // Save the setting into the section.
@@ -155,7 +155,7 @@ class ConfigDelete extends ConsoleCommand
         $config->{$sectionName} = $section;
         // Save the config.
         $config->forceSave();
-        return true;
+        return \true;
     }
     /**
      * Build a SystemConfigSetting object from a string.

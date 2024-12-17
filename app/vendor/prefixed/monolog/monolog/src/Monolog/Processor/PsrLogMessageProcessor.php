@@ -29,7 +29,7 @@ class PsrLogMessageProcessor implements ProcessorInterface
      * @param string|null $dateFormat              The format of the timestamp: one supported by DateTime::format
      * @param bool        $removeUsedContextFields If set to true the fields interpolated into message gets unset
      */
-    public function __construct($dateFormat = null, $removeUsedContextFields = false)
+    public function __construct($dateFormat = null, $removeUsedContextFields = \false)
     {
         $this->dateFormat = $dateFormat;
         $this->removeUsedContextFields = $removeUsedContextFields;
@@ -40,13 +40,13 @@ class PsrLogMessageProcessor implements ProcessorInterface
      */
     public function __invoke(array $record)
     {
-        if (false === strpos($record['message'], '{')) {
+        if (\false === strpos($record['message'], '{')) {
             return $record;
         }
         $replacements = array();
         foreach ($record['context'] as $key => $val) {
             $placeholder = '{' . $key . '}';
-            if (strpos($record['message'], $placeholder) === false) {
+            if (strpos($record['message'], $placeholder) === \false) {
                 continue;
             }
             if (is_null($val) || is_scalar($val) || is_object($val) && method_exists($val, "__toString")) {
@@ -56,7 +56,7 @@ class PsrLogMessageProcessor implements ProcessorInterface
             } elseif (is_object($val)) {
                 $replacements[$placeholder] = '[object ' . Utils::getClass($val) . ']';
             } elseif (is_array($val)) {
-                $replacements[$placeholder] = 'array' . Utils::jsonEncode($val, null, true);
+                $replacements[$placeholder] = 'array' . Utils::jsonEncode($val, null, \true);
             } else {
                 $replacements[$placeholder] = '[' . gettype($val) . ']';
             }

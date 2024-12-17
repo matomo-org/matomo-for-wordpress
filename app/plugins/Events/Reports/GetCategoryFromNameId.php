@@ -20,6 +20,6 @@ class GetCategoryFromNameId extends \Piwik\Plugins\Events\Reports\Base
         parent::init();
         $this->dimension = new EventCategory();
         $this->name = Piwik::translate('Events_EventCategories');
-        $this->isSubtableReport = true;
+        $this->isSubtableReport = \true;
     }
 }

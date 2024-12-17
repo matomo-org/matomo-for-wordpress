@@ -40,6 +40,6 @@ class Tasks extends \Piwik\Plugin\Tasks
         $config->database['charset'] = 'utf8mb4';
         $config->forceSave();
         $settings = StaticContainer::get('Piwik\\Plugins\\CoreUpdater\\SystemSettings');
-        $settings->updateToUtf8mb4->setValue(false);
+        $settings->updateToUtf8mb4->setValue(\false);
     }
 }

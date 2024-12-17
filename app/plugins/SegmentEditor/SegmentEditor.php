@@ -91,7 +91,7 @@ class SegmentEditor extends \Piwik\Plugin
     }
     public function getKnownSegmentsToArchiveAllSites(&$segments)
     {
-        $this->getKnownSegmentsToArchiveForSite($segments, $idSite = false);
+        $this->getKnownSegmentsToArchiveForSite($segments, $idSite = \false);
     }
     /**
      * Adds the pre-processed segments to the list of Segments.
@@ -173,13 +173,13 @@ class SegmentEditor extends \Piwik\Plugin
         $notification->context = Notification::CONTEXT_INFO;
         $notification->flags = Notification::FLAG_NO_CLEAR;
         $notification->type = Notification::TYPE_TRANSIENT;
-        $notification->raw = true;
+        $notification->raw = \true;
         $dataTableView->notifications[self::NO_DATA_UNPROCESSED_SEGMENT_ID] = $notification;
     }
     private function getSegmentIfIsUnprocessed()
     {
         // get idSites
-        $idSite = Common::getRequestVar('idSite', false);
+        $idSite = Common::getRequestVar('idSite', \false);
         if (empty($idSite) || !is_numeric($idSite)) {
             return null;
         }
@@ -189,8 +189,8 @@ class SegmentEditor extends \Piwik\Plugin
             return null;
         }
         // get period
-        $date = Common::getRequestVar('date', false);
-        $periodStr = Common::getRequestVar('period', false);
+        $date = Common::getRequestVar('date', \false);
+        $periodStr = Common::getRequestVar('period', \false);
         $period = Period\Factory::build($periodStr, $date);
         $site = new Site($idSite);
         $segment = new Segment($segment, [$idSite], $period->getDateTimeStart()->setTimezone($site->getTimezone()), $period->getDateTimeEnd()->setTimezone($site->getTimezone()));
@@ -206,7 +206,7 @@ class SegmentEditor extends \Piwik\Plugin
             return null;
         }
         $idSites = Site::getIdSitesFromIdSitesString($idSite);
-        if (strpos($date, ',') !== false) {
+        if (strpos($date, ',') !== \false) {
             // if getting multiple periods, check the whole range for visits
             $periodStr = 'range';
         }
@@ -233,11 +233,11 @@ class SegmentEditor extends \Piwik\Plugin
         $earliestDateToRearchive = Piwik::getEarliestDateToRearchive();
         //get the request end period
         $endDate = $period->getDateEnd();
-        $canBeArchived = true;
+        $canBeArchived = \true;
         if (!empty($earliestDateToRearchive) && !empty($endDate)) {
             //if the rearchive won't trigger
             if ($earliestDateToRearchive->isLater($endDate)) {
-                $canBeArchived = false;
+                $canBeArchived = \false;
             }
         }
         return [$segment, $storedSegment, $isSegmentToPreprocess, $canBeArchived];
@@ -324,7 +324,7 @@ class SegmentEditor extends \Piwik\Plugin
             $model = new \Piwik\Plugins\SegmentEditor\Model();
             $updatedAt = Date::factory('now')->toString('Y-m-d H:i:s');
             $superUsers = UsersManagerApi::getInstance()->getUsersHavingSuperUserAccess();
-            $superUserLogin = false;
+            $superUserLogin = \false;
             foreach ($superUsers as $superUser) {
                 if ($superUser['login'] !== $userLogin) {
                     $superUserLogin = $superUser['login'];

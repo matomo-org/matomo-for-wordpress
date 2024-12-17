@@ -73,7 +73,7 @@ class BeautifyRangeLabels extends \Piwik\DataTable\Filter\ColumnCallbackReplace
     public function beautify($value)
     {
         // if there's more than one element, handle as a range w/ an upper bound
-        if (strpos($value, "-") !== false) {
+        if (strpos($value, "-") !== \false) {
             // get the range
             sscanf($value, "%d - %d", $lowerBound, $upperBound);
             // if the lower bound is the same as the upper bound make sure the singular label

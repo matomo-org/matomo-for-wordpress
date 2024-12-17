@@ -26,6 +26,6 @@ class Sharepoint extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteCo
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
         $needle = 'content="Microsoft SharePoint';
-        return strpos($data, $needle) !== false;
+        return strpos($data, $needle) !== \false;
     }
 }

@@ -57,7 +57,7 @@ class Widget
      */
     protected function renderTemplate($template, array $variables = array())
     {
-        if (false === strpos($template, '@') || false === strpos($template, '/')) {
+        if (\false === strpos($template, '@') || \false === strpos($template, '/')) {
             $aPluginName = explode('\\', get_class($this));
             $aPluginName = $aPluginName[2];
             $template = '@' . $aPluginName . '/' . $template;

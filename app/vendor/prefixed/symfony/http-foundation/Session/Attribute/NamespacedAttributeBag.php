@@ -40,7 +40,7 @@ class NamespacedAttributeBag extends AttributeBag
         $attributes = $this->resolveAttributePath($name);
         $name = $this->resolveKey($name);
         if (null === $attributes) {
-            return false;
+            return \false;
         }
         return \array_key_exists($name, $attributes);
     }
@@ -62,7 +62,7 @@ class NamespacedAttributeBag extends AttributeBag
      */
     public function set(string $name, $value)
     {
-        $attributes =& $this->resolveAttributePath($name, true);
+        $attributes =& $this->resolveAttributePath($name, \true);
         $name = $this->resolveKey($name);
         $attributes[$name] = $value;
     }
@@ -90,7 +90,7 @@ class NamespacedAttributeBag extends AttributeBag
      *
      * @return array|null
      */
-    protected function &resolveAttributePath(string $name, bool $writeContext = false)
+    protected function &resolveAttributePath(string $name, bool $writeContext = \false)
     {
         $array =& $this->attributes;
         $name = str_starts_with($name, $this->namespaceCharacter) ? substr($name, 1) : $name;
@@ -128,7 +128,7 @@ class NamespacedAttributeBag extends AttributeBag
      */
     protected function resolveKey(string $name)
     {
-        if (false !== ($pos = strrpos($name, $this->namespaceCharacter))) {
+        if (\false !== ($pos = strrpos($name, $this->namespaceCharacter))) {
             $name = substr($name, $pos + 1);
         }
         return $name;

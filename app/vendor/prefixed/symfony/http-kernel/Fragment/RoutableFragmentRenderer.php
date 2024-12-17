@@ -41,8 +41,8 @@ abstract class RoutableFragmentRenderer implements FragmentRendererInterface
      *
      * @return string
      */
-    protected function generateFragmentUri(ControllerReference $reference, Request $request, bool $absolute = false, bool $strict = true)
+    protected function generateFragmentUri(ControllerReference $reference, Request $request, bool $absolute = \false, bool $strict = \true)
     {
-        return (new FragmentUriGenerator($this->fragmentPath))->generate($reference, $request, $absolute, $strict, false);
+        return (new FragmentUriGenerator($this->fragmentPath))->generate($reference, $request, $absolute, $strict, \false);
     }
 }

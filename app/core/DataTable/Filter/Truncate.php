@@ -61,7 +61,7 @@ class Truncate extends BaseFilter
      * @param bool $filterRecursive If true executes this filter on all subtables descending from
      *                              `$table`.
      */
-    public function __construct($table, $truncateAfter, $labelSummaryRow = null, $columnToSortByBeforeTruncating = null, $filterRecursive = true)
+    public function __construct($table, $truncateAfter, $labelSummaryRow = null, $columnToSortByBeforeTruncating = null, $filterRecursive = \true)
     {
         parent::__construct($table);
         $this->truncateAfter = $truncateAfter;
@@ -100,7 +100,7 @@ class Truncate extends BaseFilter
         if ($table->getRowsCount() <= $this->truncateAfter + 1) {
             return;
         }
-        $table->filter('Sort', [$this->columnToSortByBeforeTruncating, 'desc', $naturalSort = true, $recursiveSort = false]);
+        $table->filter('Sort', [$this->columnToSortByBeforeTruncating, 'desc', $naturalSort = \true, $recursiveSort = \false]);
         $rows = array_values($table->getRows());
         $count = $table->getRowsCount();
         $newRow = new Row([Row::COLUMNS => ['label' => DataTable::LABEL_SUMMARY_ROW]]);
@@ -111,10 +111,10 @@ class Truncate extends BaseFilter
                 $summaryRow = $table->getRowFromId(DataTable::ID_SUMMARY_ROW);
                 //FIXME: I'm not sure why it could return false, but it was reported in: http://forum.piwik.org/read.php?2,89324,page=1#msg-89442
                 if ($summaryRow) {
-                    $newRow->sumRow($summaryRow, $enableCopyMetadata = false, $aggregationOps);
+                    $newRow->sumRow($summaryRow, $enableCopyMetadata = \false, $aggregationOps);
                 }
             } else {
-                $newRow->sumRow($rows[$i], $enableCopyMetadata = false, $aggregationOps);
+                $newRow->sumRow($rows[$i], $enableCopyMetadata = \false, $aggregationOps);
             }
         }
         $table->filter('Limit', [0, $this->truncateAfter]);

@@ -46,7 +46,7 @@ abstract class SiteSearchBase extends \Piwik\Plugins\Actions\Reports\Base
     protected function addSiteSearchDisplayProperties(ViewDataTable $view)
     {
         $view->config->addTranslations(array('nb_visits' => Piwik::translate('Actions_ColumnSearches'), 'exit_rate' => str_replace("% ", "%&nbsp;", Piwik::translate('Actions_ColumnSearchExits')), 'nb_pages_per_search' => Piwik::translate('Actions_ColumnPagesPerSearch')));
-        $view->config->show_bar_chart = false;
-        $view->config->show_table_all_columns = false;
+        $view->config->show_bar_chart = \false;
+        $view->config->show_table_all_columns = \false;
     }
 }

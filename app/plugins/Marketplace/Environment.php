@@ -47,7 +47,7 @@ class Environment
     }
     public function getPhpVersion()
     {
-        return PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION . '.' . PHP_RELEASE_VERSION;
+        return \PHP_MAJOR_VERSION . '.' . \PHP_MINOR_VERSION . '.' . \PHP_RELEASE_VERSION;
     }
     public function getPiwikVersion()
     {
@@ -61,7 +61,7 @@ class Environment
         if (!empty($this->releaseChannel)) {
             return $this->releaseChannel->doesPreferStable();
         }
-        return true;
+        return \true;
     }
     public function getReleaseChannel()
     {

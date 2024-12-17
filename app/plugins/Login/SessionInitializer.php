@@ -149,7 +149,7 @@ class SessionInitializer
     {
         $cookie = $this->getAuthCookie($rememberMe);
         $cookie->setSecure(ProxyHttp::isHttps());
-        $cookie->setHttpOnly(true);
+        $cookie->setHttpOnly(\true);
         $cookie->save();
         return $cookie;
     }

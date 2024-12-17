@@ -88,7 +88,7 @@ class API extends \Piwik\Plugin\API
     public function getPhpVersion()
     {
         Piwik::checkUserHasSuperUserAccess();
-        return array('version' => PHP_VERSION, 'major' => PHP_MAJOR_VERSION, 'minor' => PHP_MINOR_VERSION, 'release' => PHP_RELEASE_VERSION, 'versionId' => PHP_VERSION_ID, 'extra' => PHP_EXTRA_VERSION);
+        return array('version' => \PHP_VERSION, 'major' => \PHP_MAJOR_VERSION, 'minor' => \PHP_MINOR_VERSION, 'release' => \PHP_RELEASE_VERSION, 'versionId' => \PHP_VERSION_ID, 'extra' => \PHP_EXTRA_VERSION);
     }
     /**
      * Get Matomo version
@@ -137,7 +137,7 @@ class API extends \Piwik\Plugin\API
         }
         return $available;
     }
-    public function getSegmentsMetadata($idSites = array(), $_hideImplementationData = true, $_showAllSegments = false)
+    public function getSegmentsMetadata($idSites = array(), $_hideImplementationData = \true, $_showAllSegments = \false)
     {
         if (empty($idSites)) {
             Piwik::checkUserHasSomeViewAccess();
@@ -186,7 +186,7 @@ class API extends \Piwik\Plugin\API
      * Loads reports metadata, then return the requested one,
      * matching optional API parameters.
      */
-    public function getMetadata($idSite, $apiModule, $apiAction, $apiParameters = array(), $language = false, $period = false, $date = false, $hideMetricsDoc = false, $showSubtableReports = false)
+    public function getMetadata($idSite, $apiModule, $apiAction, $apiParameters = array(), $language = \false, $period = \false, $date = \false, $hideMetricsDoc = \false, $showSubtableReports = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         if ($language) {
@@ -209,7 +209,7 @@ class API extends \Piwik\Plugin\API
      * @param int $idSite
      * @return array
      */
-    public function getReportMetadata($idSites = '', $period = false, $date = false, $hideMetricsDoc = false, $showSubtableReports = false, $idSite = false)
+    public function getReportMetadata($idSites = '', $period = \false, $date = \false, $hideMetricsDoc = \false, $showSubtableReports = \false, $idSite = \false)
     {
         if (empty($idSite) && !empty($idSites)) {
             if (is_array($idSites)) {
@@ -224,7 +224,7 @@ class API extends \Piwik\Plugin\API
         $metadata = $this->processedReport->getReportMetadata($idSite, $period, $date, $hideMetricsDoc, $showSubtableReports);
         return $metadata;
     }
-    public function getProcessedReport($idSite, $period, $date, $apiModule, $apiAction, $segment = false, $apiParameters = false, $idGoal = false, $language = false, $showTimer = true, $hideMetricsDoc = false, $idSubtable = false, $showRawMetrics = false, $format_metrics = null, $idDimension = false)
+    public function getProcessedReport($idSite, $period, $date, $apiModule, $apiAction, $segment = \false, $apiParameters = \false, $idGoal = \false, $language = \false, $showTimer = \true, $hideMetricsDoc = \false, $idSubtable = \false, $showRawMetrics = \false, $format_metrics = null, $idDimension = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $processed = $this->processedReport->getProcessedReport($idSite, $period, $date, $apiModule, $apiAction, $segment, $apiParameters, $idGoal, $language, $showTimer, $hideMetricsDoc, $idSubtable, $showRawMetrics, $format_metrics, $idDimension);
@@ -262,14 +262,14 @@ class API extends \Piwik\Plugin\API
     /**
      * Get a combined report of the *.get API methods.
      */
-    public function get($idSite, $period, $date, $segment = false, $columns = false)
+    public function get($idSite, $period, $date, $segment = \false, $columns = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $columns = Piwik::getArrayFromApiParameter($columns);
         // build columns map for faster checks later on
         $columnsMap = array();
         foreach ($columns as $column) {
-            $columnsMap[$column] = true;
+            $columnsMap[$column] = \true;
         }
         // find out which columns belong to which plugin
         $columnsByPlugin = array();
@@ -302,12 +302,12 @@ class API extends \Piwik\Plugin\API
             if ($mergedDataTable === null) {
                 $mergedDataTable = $dataTable;
             } else {
-                $merger = new MergeDataTables(true);
+                $merger = new MergeDataTables(\true);
                 $merger->mergeDataTables($mergedDataTable, $dataTable);
             }
         }
         if (!empty($columnsMap) && !empty($mergedDataTable)) {
-            $mergedDataTable->queueFilter('ColumnDelete', array(false, array_keys($columnsMap)));
+            $mergedDataTable->queueFilter('ColumnDelete', array(\false, array_keys($columnsMap)));
         }
         return $mergedDataTable ?? new DataTable();
     }
@@ -333,7 +333,7 @@ class API extends \Piwik\Plugin\API
      * @param string|int $showGoalMetricsForGoal
      * @return array
      */
-    public function getRowEvolution($idSite, $period, $date, $apiModule, $apiAction, $label = false, $segment = false, $column = false, $language = false, $idGoal = false, $legendAppendMetric = true, $labelUseAbsoluteUrl = true, $idDimension = false, $labelSeries = false, $showGoalMetricsForGoal = false)
+    public function getRowEvolution($idSite, $period, $date, $apiModule, $apiAction, $label = \false, $segment = \false, $column = \false, $language = \false, $idGoal = \false, $legendAppendMetric = \true, $labelUseAbsoluteUrl = \true, $idDimension = \false, $labelSeries = \false, $showGoalMetricsForGoal = \false)
     {
         // check if site exists
         $idSite = (int) $idSite;
@@ -383,7 +383,7 @@ class API extends \Piwik\Plugin\API
                 continue;
             }
             $req = new Request($params);
-            $result[] = json_decode($req->process(), true);
+            $result[] = json_decode($req->process(), \true);
         }
         return $result;
     }
@@ -414,7 +414,7 @@ class API extends \Piwik\Plugin\API
         $maxSuggestionsToReturn = 30;
         $segment = $this->findSegment($segmentName, $idSite);
         // if segment has suggested values callback then return result from it instead
-        $suggestedValuesCallbackRequiresTable = false;
+        $suggestedValuesCallbackRequiresTable = \false;
         if (!empty($segment['suggestedValuesApi']) && is_string($segment['suggestedValuesApi']) && !Rules::isBrowserTriggerEnabled()) {
             $now = Date::now()->setTimezone(Site::getTimezoneFor($idSite));
             if (self::$_autoSuggestLookBack != 60) {
@@ -468,7 +468,7 @@ class API extends \Piwik\Plugin\API
         if (!empty($segment['unionOfSegments'])) {
             $values = array();
             foreach ($segment['unionOfSegments'] as $unionSegmentName) {
-                $unionSegment = $this->findSegment($unionSegmentName, $idSite, $_showAllSegments = true);
+                $unionSegment = $this->findSegment($unionSegmentName, $idSite, $_showAllSegments = \true);
                 try {
                     $result = $this->getSuggestedValuesForSegmentName($idSite, $unionSegment, $maxSuggestionsToReturn);
                     if (!empty($result)) {
@@ -519,10 +519,10 @@ class API extends \Piwik\Plugin\API
         Piwik::postEvent('API.getPagesComparisonsDisabledFor', [&$pages]);
         return $pages;
     }
-    private function findSegment($segmentName, $idSite, $_showAllSegments = false)
+    private function findSegment($segmentName, $idSite, $_showAllSegments = \false)
     {
-        $segmentsMetadata = $this->getSegmentsMetadata($idSite, $_hideImplementationData = false, $_showAllSegments);
-        $segmentFound = false;
+        $segmentsMetadata = $this->getSegmentsMetadata($idSite, $_hideImplementationData = \false, $_showAllSegments);
+        $segmentFound = \false;
         foreach ($segmentsMetadata as $segmentMetadata) {
             if ($segmentMetadata['segment'] == $segmentName) {
                 $segmentFound = $segmentMetadata;
@@ -591,9 +591,9 @@ class API extends \Piwik\Plugin\API
     {
         // If you update this, also update flattenVisitorDetailsArray
         $segmentsNeedActionsInfo = array('visitConvertedGoalId', 'visitConvertedGoalName', 'pageUrl', 'pageTitle', 'siteSearchKeyword', 'siteSearchCategory', 'siteSearchCount', 'entryPageTitle', 'entryPageUrl', 'exitPageTitle', 'exitPageUrl', 'outlinkUrl', 'downloadUrl', 'eventUrl', 'orderId', 'revenueOrder', 'revenueAbandonedCart', 'productViewName', 'productViewSku', 'productViewPrice', 'productViewCategory1', 'productViewCategory2', 'productViewCategory3', 'productViewCategory4', 'productViewCategory5');
-        $isCustomVariablePage = stripos($segmentName, 'customVariablePage') !== false;
-        $isEventSegment = stripos($segmentName, 'event') !== false;
-        $isContentSegment = stripos($segmentName, 'content') !== false;
+        $isCustomVariablePage = stripos($segmentName, 'customVariablePage') !== \false;
+        $isEventSegment = stripos($segmentName, 'event') !== \false;
+        $isContentSegment = stripos($segmentName, 'content') !== \false;
         $doesSegmentNeedActionsInfo = in_array($segmentName, $segmentsNeedActionsInfo) || $isCustomVariablePage || $isEventSegment || $isContentSegment;
         return $doesSegmentNeedActionsInfo;
     }
@@ -629,7 +629,7 @@ class API extends \Piwik\Plugin\API
     }
     private function doesSuggestedValuesCallbackNeedData($suggestedValuesCallback)
     {
-        if (is_string($suggestedValuesCallback) && strpos($suggestedValuesCallback, '::') !== false) {
+        if (is_string($suggestedValuesCallback) && strpos($suggestedValuesCallback, '::') !== \false) {
             $suggestedValuesCallback = explode('::', $suggestedValuesCallback);
         }
         if (is_array($suggestedValuesCallback)) {
@@ -669,7 +669,7 @@ class Plugin extends \Piwik\Plugin
         // Do not perform page comparison check for glossary widget
         // This is performed here and not in Comparison.store.ts, as the widget might be used like on glossary.matomo.org
         // where url parameters are hidden in the request and javascript can't access the current module and action
-        if (Piwik::getModule() === 'API' && Piwik::getAction() === 'glossary' && \Piwik\Request::fromRequest()->getBoolParameter('widget', false)) {
+        if (Piwik::getModule() === 'API' && Piwik::getAction() === 'glossary' && \Piwik\Request::fromRequest()->getBoolParameter('widget', \false)) {
             $out .= "piwik.isPagesComparisonApiDisabled = true;\n";
         }
     }

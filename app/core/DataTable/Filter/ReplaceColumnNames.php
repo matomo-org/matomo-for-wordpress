@@ -105,7 +105,7 @@ class ReplaceColumnNames extends BaseFilter
     }
     protected function getRenamedColumn($column)
     {
-        $newName = false;
+        $newName = \false;
         if (isset($this->mappingToApply[$column]) && $this->mappingToApply[$column] != $column) {
             $newName = $this->mappingToApply[$column];
         }
@@ -147,6 +147,8 @@ class ReplaceColumnNames extends BaseFilter
     protected function flattenGoalColumns($columnValue)
     {
         $newSubColumns = array();
+        // sort by key (idgoal) to ensure a static result
+        ksort($columnValue);
         foreach ($columnValue as $idGoal => $goalValues) {
             $mapping = Metrics::$mappingFromIdToNameGoal;
             if ($idGoal == GoalManager::IDGOAL_CART) {

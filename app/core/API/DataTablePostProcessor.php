@@ -130,8 +130,8 @@ class DataTablePostProcessor
      */
     public function applyArchiveStateFilter(DataTableInterface $dataTable) : DataTableInterface
     {
-        $fetchArchiveState = (new \Piwik\Request($this->request))->getBoolParameter('fetch_archive_state', false);
-        if (false === $fetchArchiveState) {
+        $fetchArchiveState = (new \Piwik\Request($this->request))->getBoolParameter('fetch_archive_state', \false);
+        if (\false === $fetchArchiveState) {
             $dataTable->filter(function (DataTable $table) {
                 $table->deleteMetadata(DataTable::ARCHIVE_STATE_METADATA_NAME);
             });
@@ -144,12 +144,12 @@ class DataTablePostProcessor
      */
     public function applyPivotByFilter(DataTableInterface $dataTable)
     {
-        $pivotBy = Common::getRequestVar('pivotBy', false, 'string', $this->request);
+        $pivotBy = Common::getRequestVar('pivotBy', \false, 'string', $this->request);
         if (!empty($pivotBy)) {
             $this->applyComputeProcessedMetrics($dataTable);
             $dataTable = $this->convertSegmentValueToSegment($dataTable);
-            $pivotByColumn = Common::getRequestVar('pivotByColumn', false, 'string', $this->request);
-            $pivotByColumnLimit = Common::getRequestVar('pivotByColumnLimit', false, 'int', $this->request);
+            $pivotByColumn = Common::getRequestVar('pivotByColumn', \false, 'string', $this->request);
+            $pivotByColumnLimit = Common::getRequestVar('pivotByColumnLimit', \false, 'int', $this->request);
             $dataTable->filter('PivotByDimension', array($this->report, $pivotBy, $pivotByColumn, $pivotByColumnLimit, PivotByDimension::isSegmentFetchingEnabledInConfig()));
             $dataTable->filter('ColumnCallbackDeleteMetadata', array('segment'));
         }
@@ -234,7 +234,7 @@ class DataTablePostProcessor
         }
         $addGoalProcessedMetrics = null;
         try {
-            $addGoalProcessedMetrics = Common::getRequestVar('filter_update_columns_when_show_all_goals', false, 'string', $this->request);
+            $addGoalProcessedMetrics = Common::getRequestVar('filter_update_columns_when_show_all_goals', \false, 'string', $this->request);
             if ((int) $addGoalProcessedMetrics === 0 && $addGoalProcessedMetrics !== '0' && $addGoalProcessedMetrics != Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_ORDER && $addGoalProcessedMetrics != Piwik::LABEL_ID_GOAL_IS_ECOMMERCE_CART) {
                 $addGoalProcessedMetrics = null;
             }
@@ -260,7 +260,7 @@ class DataTablePostProcessor
                 $defaultIdGoal = DataTable\Filter\AddColumnsProcessedMetricsGoal::GOALS_OVERVIEW;
             }
             $idGoal = Common::getRequestVar('idGoal', $defaultIdGoal, 'string', $this->request);
-            $dataTable->filter('AddColumnsProcessedMetricsGoal', array($ignore = true, $idGoal, $goalsToProcess));
+            $dataTable->filter('AddColumnsProcessedMetricsGoal', array($ignore = \true, $idGoal, $goalsToProcess));
         }
         return $dataTable;
     }
@@ -289,7 +289,7 @@ class DataTablePostProcessor
         $hideColumnsRecursively = Common::getRequestVar('hideColumnsRecursively', intval($this->report && $this->report->getModule() == 'Live'), 'int', $this->request);
         $showRawMetrics = Common::getRequestVar('showRawMetrics', 0, 'int', $this->request);
         if (!empty($hideColumns) || !empty($showColumns)) {
-            $dataTable->filter('ColumnDelete', array($hideColumns, $showColumns, $deleteIfZeroOnly = false, $hideColumnsRecursively));
+            $dataTable->filter('ColumnDelete', array($hideColumns, $showColumns, $deleteIfZeroOnly = \false, $hideColumnsRecursively));
         } elseif ($showRawMetrics !== 1) {
             $this->removeTemporaryMetrics($dataTable);
         }
@@ -343,22 +343,22 @@ class DataTablePostProcessor
      * @param bool $forceFormatting if set to true, all metrics will be formatted and request parameter will be ignored
      * @return DataTableInterface
      */
-    public function applyMetricsFormatting($dataTable, bool $forceFormatting = false)
+    public function applyMetricsFormatting($dataTable, bool $forceFormatting = \false)
     {
         $formatMetrics = Common::getRequestVar('format_metrics', 0, 'string', $this->request);
-        if ($formatMetrics == '0' && $forceFormatting === false) {
+        if ($formatMetrics == '0' && $forceFormatting === \false) {
             return $dataTable;
         }
         // in Piwik 2.X & below, metrics are not formatted in API responses except for percents.
         // this code implements this inconsistency
-        $onlyFormatPercents = $forceFormatting === false && $formatMetrics === 'bc';
+        $onlyFormatPercents = $forceFormatting === \false && $formatMetrics === 'bc';
         $metricsToFormat = null;
         if ($onlyFormatPercents) {
             $metricsToFormat = $this->apiInconsistencies->getPercentMetricsToFormat();
         }
         // 'all' is a special value that indicates we should format non-processed metrics that are identified
         // by string, like 'revenue'. this should be removed when all metrics are using the `Metric` class.
-        $formatAll = $forceFormatting === true || $formatMetrics === 'all';
+        $formatAll = $forceFormatting === \true || $formatMetrics === 'all';
         $dataTable->filter([$this->formatter, 'formatMetrics'], [$this->report, $metricsToFormat, $formatAll]);
         return $dataTable;
     }
@@ -386,7 +386,7 @@ class DataTablePostProcessor
         // this is needed because Proxy uses Common::getRequestVar which in turn
         // uses Common::sanitizeInputValue. This causes the > that separates recursive labels
         // to become &gt; and we need to undo that here.
-        $label = str_replace(htmlentities('>', ENT_COMPAT | ENT_HTML401, 'UTF-8'), '>', $label);
+        $label = str_replace(htmlentities('>', \ENT_COMPAT | \ENT_HTML401, 'UTF-8'), '>', $label);
         return $label;
     }
     public function computeProcessedMetrics(DataTable $dataTable)
@@ -399,7 +399,7 @@ class DataTablePostProcessor
         if (empty($processedMetrics)) {
             return;
         }
-        $dataTable->setMetadata(self::PROCESSED_METRICS_COMPUTED_FLAG, true);
+        $dataTable->setMetadata(self::PROCESSED_METRICS_COMPUTED_FLAG, \true);
         foreach ($processedMetrics as $name => $processedMetric) {
             if (!$processedMetric->beforeCompute($this->report, $dataTable)) {
                 continue;
@@ -410,7 +410,7 @@ class DataTablePostProcessor
                     continue;
                 }
                 $computedValue = $processedMetric->compute($row);
-                if ($computedValue !== false) {
+                if ($computedValue !== \false) {
                     $row->addColumn($name, $computedValue);
                     // Add a trend column for evolution metrics
                     if ($processedMetric instanceof EvolutionMetric) {

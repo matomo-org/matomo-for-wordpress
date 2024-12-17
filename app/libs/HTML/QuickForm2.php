@@ -106,7 +106,7 @@ namespace {
         {
             throw new \HTML_QuickForm2_InvalidArgumentException('Attribute \'' . $name . '\' is read-only');
         }
-        protected function setContainer(\HTML_QuickForm2_Container $container = null)
+        protected function setContainer(?\HTML_QuickForm2_Container $container = null)
         {
             throw new \HTML_QuickForm2_Exception('Form cannot be added to container');
         }

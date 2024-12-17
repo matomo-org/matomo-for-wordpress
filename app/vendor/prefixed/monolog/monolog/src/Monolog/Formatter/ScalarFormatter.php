@@ -36,7 +36,7 @@ class ScalarFormatter extends NormalizerFormatter
     {
         $normalized = $this->normalize($value);
         if (is_array($normalized) || is_object($normalized)) {
-            return $this->toJson($normalized, true);
+            return $this->toJson($normalized, \true);
         }
         return $normalized;
     }

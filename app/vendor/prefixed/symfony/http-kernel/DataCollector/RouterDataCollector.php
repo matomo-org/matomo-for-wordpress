@@ -35,7 +35,7 @@ class RouterDataCollector extends DataCollector
     public function collect(Request $request, Response $response, ?\Throwable $exception = null)
     {
         if ($response instanceof RedirectResponse) {
-            $this->data['redirect'] = true;
+            $this->data['redirect'] = \true;
             $this->data['url'] = $response->getTargetUrl();
             if ($this->controllers->contains($request)) {
                 $this->data['route'] = $this->guessRoute($request, $this->controllers[$request]);
@@ -46,7 +46,7 @@ class RouterDataCollector extends DataCollector
     public function reset()
     {
         $this->controllers = new \SplObjectStorage();
-        $this->data = ['redirect' => false, 'url' => null, 'route' => null];
+        $this->data = ['redirect' => \false, 'url' => null, 'route' => null];
     }
     protected function guessRoute(Request $request, $controller)
     {

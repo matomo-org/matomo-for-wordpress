@@ -18,8 +18,8 @@ class RssRenderer
 {
     protected $url = null;
     protected $count = 3;
-    protected $showDescription = false;
-    protected $showContent = false;
+    protected $showDescription = \false;
+    protected $showContent = \false;
     /**
      * @var Lazy
      */
@@ -49,7 +49,7 @@ class RssRenderer
             try {
                 $content = Http::fetchRemoteFile($this->url, null, 0, 15);
                 $rss = @simplexml_load_string($content);
-                if ($rss === false) {
+                if ($rss === \false) {
                     throw new \Exception("Failed to parse XML.");
                 }
             } catch (\Exception $e) {
@@ -65,7 +65,7 @@ class RssRenderer
                 $title = $post->title;
                 $date = @strftime("%B %e, %Y", strtotime($post->pubDate));
                 $link = $post->link;
-                $output .= '<li><a class="rss-title" title="" target="_blank" rel="noreferrer noopener" href="' . htmlspecialchars($link, ENT_COMPAT, 'UTF-8') . '">' . $title . '</a>' . '<span class="rss-date">' . $date . '</span>';
+                $output .= '<li><a class="rss-title" title="" target="_blank" rel="noreferrer noopener" href="' . htmlspecialchars($link, \ENT_COMPAT, 'UTF-8') . '">' . $title . '</a>' . '<span class="rss-date">' . $date . '</span>';
                 if ($this->showDescription) {
                     $output .= '<div class="rss-description">' . $this->addTargetBlankAndNoReferrerToLinks($post->description) . '</div>';
                 }

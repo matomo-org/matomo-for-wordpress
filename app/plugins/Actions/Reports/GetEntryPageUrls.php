@@ -29,7 +29,7 @@ class GetEntryPageUrls extends \Piwik\Plugins\Actions\Reports\Base
         $this->order = 3;
         $this->actionToLoadSubTables = $this->action;
         $this->subcategoryId = 'Actions_SubmenuPagesEntry';
-        $this->hasGoalMetrics = true;
+        $this->hasGoalMetrics = \true;
     }
     public function getProcessedMetrics()
     {
@@ -56,7 +56,7 @@ class GetEntryPageUrls extends \Piwik\Plugins\Actions\Reports\Base
         $view->requestConfig->filter_sort_order = 'desc';
         $this->addPageDisplayProperties($view);
         $this->addBaseDisplayProperties($view);
-        $view->config->show_goals = true;
+        $view->config->show_goals = \true;
     }
     public function getRelatedReports()
     {

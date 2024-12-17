@@ -53,7 +53,7 @@ class ElasticsearchLogstashHandler extends AbstractHandler
     /**
      * @param string|int $level The minimum logging level at which this handler will be triggered
      */
-    public function __construct(string $endpoint = 'http://127.0.0.1:9200', string $index = 'monolog', ?HttpClientInterface $client = null, $level = Logger::DEBUG, bool $bubble = true, string $elasticsearchVersion = '1.0.0')
+    public function __construct(string $endpoint = 'http://127.0.0.1:9200', string $index = 'monolog', ?HttpClientInterface $client = null, $level = Logger::DEBUG, bool $bubble = \true, string $elasticsearchVersion = '1.0.0')
     {
         if (!interface_exists(HttpClientInterface::class)) {
             throw new \LogicException(sprintf('The "%s" handler needs an HTTP client. Try running "composer require symfony/http-client".', __CLASS__));
@@ -68,7 +68,7 @@ class ElasticsearchLogstashHandler extends AbstractHandler
     public function handle(array $record) : bool
     {
         if (!$this->isHandling($record)) {
-            return false;
+            return \false;
         }
         $this->sendToElasticsearch([$record]);
         return !$this->bubble;
@@ -109,7 +109,7 @@ class ElasticsearchLogstashHandler extends AbstractHandler
         }
         $response = $this->client->request('POST', $this->endpoint . '/_bulk', ['body' => $body, 'headers' => ['Content-Type' => 'application/json']]);
         $this->responses->attach($response);
-        $this->wait(false);
+        $this->wait(\false);
     }
     /**
      * @return array
@@ -124,7 +124,7 @@ class ElasticsearchLogstashHandler extends AbstractHandler
     }
     public function __destruct()
     {
-        $this->wait(true);
+        $this->wait(\true);
     }
     private function wait(bool $blocking)
     {

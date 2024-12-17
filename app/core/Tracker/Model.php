@@ -86,9 +86,9 @@ class Model
             $this->getDb()->query($sql, $sqlBind);
         } catch (Exception $e) {
             StaticContainer::get(LoggerInterface::class)->error("There was an error while updating the Conversion: {exception}", ['exception' => $e]);
-            return false;
+            return \false;
         }
-        return true;
+        return \true;
     }
     /**
      * Loads the Ecommerce items from the request and records them in the DB
@@ -103,7 +103,7 @@ class Model
         $sql = "SELECT idaction_sku, idaction_name, idaction_category, idaction_category2, idaction_category3, idaction_category4, idaction_category5, price, quantity, deleted, idorder AS idorder_original_value\n\t\t\t\tFROM " . Common::prefixTable('log_conversion_item') . "\n\t\t\t\tWHERE idvisit = ? AND (idorder = ? OR idorder = ?)";
         $bind = [$goal['idvisit'], isset($goal['idorder']) ? $goal['idorder'] : $defaultIdOrder, $defaultIdOrder];
         $itemsInDb = $this->getDb()->fetchAll($sql, $bind);
-        Common::printDebug("Items found in current cart, for conversion_item (visit,idorder)=" . var_export($bind, true));
+        Common::printDebug("Items found in current cart, for conversion_item (visit,idorder)=" . var_export($bind, \true));
         Common::printDebug($itemsInDb);
         return $itemsInDb;
     }
@@ -136,7 +136,7 @@ class Model
         try {
             $this->getDb()->query($sql, $bind);
         } catch (Exception $e) {
-            if ($e->getCode() == 23000 || false !== strpos($e->getMessage(), 'Duplicate entry') || false !== strpos($e->getMessage(), 'Integrity constraint violation')) {
+            if ($e->getCode() == 23000 || \false !== strpos($e->getMessage(), 'Duplicate entry') || \false !== strpos($e->getMessage(), 'Integrity constraint violation')) {
                 Common::printDebug('Did not create ecommerce item as item was already created');
             } else {
                 throw $e;
@@ -237,7 +237,7 @@ class Model
         }
         // Case URL & Title are empty
         if (empty($bind)) {
-            return false;
+            return \false;
         }
         $rows = $this->getDb()->fetchAll($sql, $bind);
         $actionsPerType = [];
@@ -402,7 +402,7 @@ class Model
             if (!empty($idVisitor)) {
                 $visitRow = $this->findVisitorByVisitorId($idVisitor, $select, $from, $visitorIdWhere, $visitorIdbindSql);
             } else {
-                $visitRow = false;
+                $visitRow = \false;
             }
             if (empty($visitRow)) {
                 if (!empty($userId)) {
@@ -446,7 +446,7 @@ class Model
     {
         $cache = \Piwik\Tracker\Cache::getCacheGeneral();
         // use INDEX index_idsite_idvisitor_time (idsite, idvisitor, visit_last_action_time) if available
-        if (array_key_exists(self::CACHE_KEY_INDEX_IDSITE_IDVISITOR_TIME, $cache) && true === $cache[self::CACHE_KEY_INDEX_IDSITE_IDVISITOR_TIME]) {
+        if (array_key_exists(self::CACHE_KEY_INDEX_IDSITE_IDVISITOR_TIME, $cache) && \true === $cache[self::CACHE_KEY_INDEX_IDSITE_IDVISITOR_TIME]) {
             $from .= ' FORCE INDEX (index_idsite_idvisitor_time) ';
         }
         $where .= ' AND idvisitor = ?';

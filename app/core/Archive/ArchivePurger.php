@@ -62,7 +62,7 @@ class ArchivePurger
      * @var LoggerInterface
      */
     private $logger;
-    public function __construct(Model $model = null, Date $purgeCustomRangesOlderThan = null, LoggerInterface $logger = null)
+    public function __construct(?Model $model = null, ?Date $purgeCustomRangesOlderThan = null, ?LoggerInterface $logger = null)
     {
         $this->model = $model ?: new Model();
         $this->purgeCustomRangesOlderThan = $purgeCustomRangesOlderThan ?: self::getDefaultCustomRangeToPurgeAgeThreshold();

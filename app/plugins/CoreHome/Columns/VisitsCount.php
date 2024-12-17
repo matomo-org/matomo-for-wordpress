@@ -34,7 +34,7 @@ class VisitsCount extends VisitDimension
     public function onNewVisit(Request $request, Visitor $visitor, $action)
     {
         $previousVisitCount = $visitor->getPreviousVisitColumn($this->columnName);
-        if ($previousVisitCount === false || $previousVisitCount === null || $previousVisitCount === '') {
+        if ($previousVisitCount === \false || $previousVisitCount === null || $previousVisitCount === '') {
             return 1;
         }
         $result = $previousVisitCount + 1;

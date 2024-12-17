@@ -23,7 +23,7 @@ class Html extends ApiRenderer
      */
     public function renderException($message, $exception)
     {
-        Common::sendHeader('Content-Type: text/plain; charset=utf-8', true);
+        Common::sendHeader('Content-Type: text/plain; charset=utf-8', \true);
         return nl2br($message);
     }
     public function renderDataTable($dataTable)
@@ -33,8 +33,8 @@ class Html extends ApiRenderer
         $tableRenderer->setTableId($this->request['method']);
         $method = Common::getRequestVar('method', '', 'string', $this->request);
         $tableRenderer->setApiMethod($method);
-        $tableRenderer->setIdSite(Common::getRequestVar('idSite', false, 'int', $this->request));
-        $tableRenderer->setTranslateColumnNames(Common::getRequestVar('translateColumnNames', false, 'int', $this->request));
+        $tableRenderer->setIdSite(Common::getRequestVar('idSite', \false, 'int', $this->request));
+        $tableRenderer->setTranslateColumnNames(Common::getRequestVar('translateColumnNames', \false, 'int', $this->request));
         return $tableRenderer->render();
     }
     public function renderArray($array)
@@ -43,6 +43,6 @@ class Html extends ApiRenderer
     }
     public function sendHeader()
     {
-        Common::sendHeader('Content-Type: text/html; charset=utf-8', true);
+        Common::sendHeader('Content-Type: text/html; charset=utf-8', \true);
     }
 }

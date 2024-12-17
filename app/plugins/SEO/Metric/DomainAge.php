@@ -47,7 +47,7 @@ class DomainAge implements \Piwik\Plugins\SEO\Metric\MetricsProvider
         }
         if (count($ages) > 0) {
             $value = min($ages);
-            $value = $this->formatter->getPrettyTimeFromSeconds(time() - $value, true);
+            $value = $this->formatter->getPrettyTimeFromSeconds(time() - $value, \true);
         } else {
             $value = null;
         }
@@ -62,7 +62,7 @@ class DomainAge implements \Piwik\Plugins\SEO\Metric\MetricsProvider
     private function getAgeArchiveOrg($domain)
     {
         $response = $this->getUrl('https://archive.org/wayback/available?timestamp=19900101&url=' . urlencode($domain));
-        $data = json_decode($response, true);
+        $data = json_decode($response, \true);
         if (empty($data["archived_snapshots"]["closest"]["timestamp"])) {
             return 0;
         }
@@ -80,7 +80,7 @@ class DomainAge implements \Piwik\Plugins\SEO\Metric\MetricsProvider
         preg_match('#(?:Creation Date|Created On|created|Registered on)\\.*:\\s*([ \\ta-z0-9\\/\\-:\\.]+)#si', $data, $p);
         if (!empty($p[1])) {
             $value = strtotime(trim($p[1]));
-            if ($value === false) {
+            if ($value === \false) {
                 return 0;
             }
             return $value;
@@ -99,7 +99,7 @@ class DomainAge implements \Piwik\Plugins\SEO\Metric\MetricsProvider
         preg_match('#(?:Creation Date|Created On|created|Registration Date):\\s*([ \\ta-z0-9\\/\\-:\\.]+)#si', $data, $p);
         if (!empty($p[1])) {
             $value = strtotime(trim($p[1]));
-            if ($value === false) {
+            if ($value === \false) {
                 return 0;
             }
             return $value;

@@ -26,7 +26,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
     {
         $this->title = Piwik::translate('GeoIp2_ServerBasedVariablesConfiguration');
         $geoIpAdminEnabled = UserCountry::isGeoLocationAdminEnabled();
-        $this->useCustomVars = $this->makeSetting('geoip2usecustom', false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        $this->useCustomVars = $this->makeSetting('geoip2usecustom', \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('GeoIp2_ShowCustomServerVariablesConfig');
             $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
         });

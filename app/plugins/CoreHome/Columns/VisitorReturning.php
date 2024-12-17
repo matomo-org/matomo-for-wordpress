@@ -24,7 +24,7 @@ class VisitorReturning extends VisitDimension
     protected $segmentName = 'visitorType';
     protected $nameSingular = 'General_VisitType';
     protected $namePlural = 'General_VisitTypes';
-    protected $conversionField = true;
+    protected $conversionField = \true;
     protected $type = self::TYPE_ENUM;
     public function __construct()
     {

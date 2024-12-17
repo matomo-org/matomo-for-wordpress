@@ -26,7 +26,7 @@ use Zend_Db_Adapter_Exception;
 class FormDatabaseSetup extends QuickForm2
 {
     const MASKED_PASSWORD_VALUE = '**********';
-    function __construct($id = 'databasesetupform', $method = 'post', $attributes = null, $trackSubmit = false)
+    function __construct($id = 'databasesetupform', $method = 'post', $attributes = null, $trackSubmit = \false)
     {
         parent::__construct($id, $method, $attributes = array('autocomplete' => 'off'), $trackSubmit);
     }
@@ -107,13 +107,13 @@ class FormDatabaseSetup extends QuickForm2
             $password = $passwordFromEnv;
         }
         $schema = $this->getSubmitValue('schema');
-        $dbInfos = array('host' => is_null($host) ? $host : trim($host), 'username' => $this->getSubmitValue('username'), 'password' => $password, 'dbname' => $dbname, 'tables_prefix' => is_null($tables_prefix) ? $tables_prefix : trim($tables_prefix), 'adapter' => $adapter, 'port' => Db\Schema::getDefaultPortForSchema($schema), 'schema' => $schema, 'type' => $this->getSubmitValue('type'), 'enable_ssl' => false);
-        if (($portIndex = strpos($dbInfos['host'], '/')) !== false) {
+        $dbInfos = array('host' => is_null($host) ? $host : trim($host), 'username' => $this->getSubmitValue('username'), 'password' => $password, 'dbname' => $dbname, 'tables_prefix' => is_null($tables_prefix) ? $tables_prefix : trim($tables_prefix), 'adapter' => $adapter, 'port' => Db\Schema::getDefaultPortForSchema($schema), 'schema' => $schema, 'type' => $this->getSubmitValue('type'), 'enable_ssl' => \false);
+        if (($portIndex = strpos($dbInfos['host'], '/')) !== \false) {
             // unix_socket=/path/sock.n
             $dbInfos['port'] = substr($dbInfos['host'], $portIndex);
             $dbInfos['host'] = '';
         } else {
-            if (($portIndex = strpos($dbInfos['host'], ':')) !== false) {
+            if (($portIndex = strpos($dbInfos['host'], ':')) !== \false) {
                 // host:port
                 $dbInfos['port'] = substr($dbInfos['host'], $portIndex + 1);
                 $dbInfos['host'] = substr($dbInfos['host'], 0, $portIndex);
@@ -122,7 +122,7 @@ class FormDatabaseSetup extends QuickForm2
         try {
             @Db::createDatabaseObject($dbInfos);
         } catch (Zend_Db_Adapter_Exception $e) {
-            $db = Adapter::factory($adapter, $dbInfos, $connect = false);
+            $db = Adapter::factory($adapter, $dbInfos, $connect = \false);
             // database not found, we try to create  it
             if ($db->isErrNo($e, '1049')) {
                 $dbInfosConnectOnly = $dbInfos;
@@ -167,9 +167,9 @@ class RuleCheckUserPrivileges extends HTML_QuickForm2_Rule
             $this->createDatabaseObject();
         } catch (Exception $ex) {
             if ($this->isAccessDenied($ex)) {
-                return false;
+                return \false;
             } else {
-                return true;
+                return \true;
                 // if we can't create the database object, skip this validation
             }
         }
@@ -179,7 +179,7 @@ class RuleCheckUserPrivileges extends HTML_QuickForm2_Rule
             $this->dropExtraTables($db);
         } catch (Exception $ex) {
             if ($this->isAccessDenied($ex)) {
-                return false;
+                return \false;
             } else {
                 throw $ex;
             }
@@ -198,11 +198,11 @@ class RuleCheckUserPrivileges extends HTML_QuickForm2_Rule
                     }
                     // In case an exception is not thrown check the return
                     if ($ret === -1) {
-                        return false;
+                        return \false;
                     }
                 } catch (Exception $ex) {
                     if ($this->isAccessDenied($ex)) {
-                        return false;
+                        return \false;
                     } else {
                         throw new Exception("Test SQL failed to execute: {$sql}\nError: " . $ex->getMessage());
                     }
@@ -211,7 +211,7 @@ class RuleCheckUserPrivileges extends HTML_QuickForm2_Rule
         }
         // remove extra tables that were created
         $this->dropExtraTables($db);
-        return true;
+        return \true;
     }
     /**
      * Returns an array describing the database privileges required for Matomo to run. The

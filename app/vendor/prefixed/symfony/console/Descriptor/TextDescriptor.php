@@ -119,7 +119,7 @@ class TextDescriptor extends Descriptor
      */
     protected function describeCommand(Command $command, array $options = [])
     {
-        $command->mergeApplicationDefinition(false);
+        $command->mergeApplicationDefinition(\false);
         if ($description = $command->getDescription()) {
             $this->writeText('<comment>Description:</comment>', $options);
             $this->writeText("\n");
@@ -127,7 +127,7 @@ class TextDescriptor extends Descriptor
             $this->writeText("\n\n");
         }
         $this->writeText('<comment>Usage:</comment>', $options);
-        foreach (array_merge([$command->getSynopsis(true)], $command->getAliases(), $command->getUsages()) as $usage) {
+        foreach (array_merge([$command->getSynopsis(\true)], $command->getAliases(), $command->getUsages()) as $usage) {
             $this->writeText("\n");
             $this->writeText('  ' . OutputFormatter::escape($usage), $options);
         }
@@ -214,7 +214,7 @@ class TextDescriptor extends Descriptor
      */
     private function writeText(string $content, array $options = [])
     {
-        $this->write(isset($options['raw_text']) && $options['raw_text'] ? strip_tags($content) : $content, isset($options['raw_output']) ? !$options['raw_output'] : true);
+        $this->write(isset($options['raw_text']) && $options['raw_text'] ? strip_tags($content) : $content, isset($options['raw_output']) ? !$options['raw_output'] : \true);
     }
     /**
      * Formats command aliases to show them in the command description.

@@ -21,8 +21,8 @@ class GetVisitInformationPerServerTime extends \Piwik\Plugins\VisitTime\Reports\
         $this->dimension = new VisitFirstActionTime();
         $this->name = Piwik::translate('VisitTime_SiteTime');
         $this->documentation = Piwik::translate('VisitTime_WidgetSiteTimeDocumentation', array('<strong>', '</strong>'));
-        $this->constantRowsCount = true;
-        $this->hasGoalMetrics = true;
+        $this->constantRowsCount = \true;
+        $this->hasGoalMetrics = \true;
         $this->order = 20;
         $this->subcategoryId = 'VisitTime_SubmenuTimes';
     }
@@ -33,7 +33,7 @@ class GetVisitInformationPerServerTime extends \Piwik\Plugins\VisitTime\Reports\
         $view->requestConfig->request_parameters_to_modify['hideFutureHoursWhenToday'] = 1;
         $view->config->addTranslation('label', Piwik::translate('VisitTime_ColumnServerHour'));
         if ($view->isViewDataTableId(Graph::ID)) {
-            $view->config->max_graph_elements = false;
+            $view->config->max_graph_elements = \false;
         }
     }
 }

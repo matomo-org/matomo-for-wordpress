@@ -10,7 +10,7 @@ namespace Piwik\Plugins\TagManager\Template\Variable\PreConfigured;
 
 class ErrorUrlVariable extends \Piwik\Plugins\TagManager\Template\Variable\PreConfigured\BaseDataLayerVariable
 {
-    const ID = 'ErrorUrl';
+    public const ID = 'ErrorUrl';
     public function getId()
     {
         return self::ID;

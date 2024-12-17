@@ -37,7 +37,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      * @param string|FileLinkFormatter|null $fileLinkFormat
      * @param bool|callable                 $outputBuffer   The output buffer as a string or a callable that should return it
      */
-    public function __construct($debug = false, ?string $charset = null, $fileLinkFormat = null, ?string $projectDir = null, $outputBuffer = '', ?LoggerInterface $logger = null)
+    public function __construct($debug = \false, ?string $charset = null, $fileLinkFormat = null, ?string $projectDir = null, $outputBuffer = '', ?LoggerInterface $logger = null)
     {
         if (!\is_bool($debug) && !\is_callable($debug)) {
             throw new \TypeError(sprintf('Argument 1 passed to "%s()" must be a boolean or a callable, "%s" given.', __METHOD__, \gettype($debug)));
@@ -59,7 +59,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
     {
         $headers = ['Content-Type' => 'text/html; charset=' . $this->charset];
         if (\is_bool($this->debug) ? $this->debug : ($this->debug)($exception)) {
-            $headers['X-Debug-Exception'] = rawurlencode($exception->getMessage());
+            $headers['X-Debug-Exception'] = rawurlencode(substr($exception->getMessage(), 0, 2000));
             $headers['X-Debug-Exception-File'] = rawurlencode($exception->getFile()) . ':' . $exception->getLine();
         }
         $exception = FlattenException::createFromThrowable($exception, null, $headers);
@@ -88,7 +88,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
             if (!($request = $requestStack->getCurrentRequest())) {
                 return $debug;
             }
-            return $debug && $request->attributes->getBoolean('showException', true);
+            return $debug && $request->attributes->getBoolean('showException', \true);
         };
     }
     public static function getAndCleanOutputBuffer(RequestStack $requestStack) : \Closure
@@ -101,7 +101,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
             if (ob_get_level() <= $startObLevel) {
                 return '';
             }
-            Response::closeOutputBuffers($startObLevel + 1, true);
+            Response::closeOutputBuffers($startObLevel + 1, \true);
             return ob_get_clean();
         };
     }
@@ -130,13 +130,13 @@ class HtmlErrorRenderer implements ErrorRendererInterface
             } elseif ('null' === $item[0]) {
                 $formattedValue = '<em>null</em>';
             } elseif ('boolean' === $item[0]) {
-                $formattedValue = '<em>' . strtolower(var_export($item[1], true)) . '</em>';
+                $formattedValue = '<em>' . strtolower(var_export($item[1], \true)) . '</em>';
             } elseif ('resource' === $item[0]) {
                 $formattedValue = '<em>resource</em>';
             } elseif (preg_match('/[^\\x07-\\x0D\\x1B\\x20-\\xFF]/', $item[1])) {
                 $formattedValue = '<em>binary string</em>';
             } else {
-                $formattedValue = str_replace("\n", '', $this->escape(var_export($item[1], true)));
+                $formattedValue = str_replace("\n", '', $this->escape(var_export($item[1], \true)));
             }
             $result[] = \is_int($key) ? $formattedValue : sprintf("'%s' => %s", $this->escape($key), $formattedValue);
         }
@@ -174,7 +174,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         if ($fmt = $this->fileLinkFormat) {
             return \is_string($fmt) ? strtr($fmt, ['%f' => $file, '%l' => $line]) : $fmt->format($file, $line);
         }
-        return false;
+        return \false;
     }
     /**
      * Formats a file path.
@@ -196,7 +196,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         if (0 < $line) {
             $text .= ' at line ' . $line;
         }
-        if (false !== ($link = $this->getFileLink($file, $line))) {
+        if (\false !== ($link = $this->getFileLink($file, $line))) {
             return sprintf('<a href="%s" title="Click to open this file" class="file_link">%s</a>', $this->escape($link), $text);
         }
         return $text;
@@ -213,16 +213,14 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         if (is_file($file) && is_readable($file)) {
             // highlight_file could throw warnings
             // see https://bugs.php.net/25725
-            $code = @highlight_file($file, true);
+            $code = @highlight_file($file, \true);
             if (\PHP_VERSION_ID >= 80300) {
                 // remove main pre/code tags
                 $code = preg_replace('#^<pre.*?>\\s*<code.*?>(.*)</code>\\s*</pre>#s', '\\1', $code);
-                // split multiline code tags
-                $code = preg_replace_callback('#<code ([^>]++)>((?:[^<]*+\\n)++[^<]*+)</code>#', function ($m) {
-                    return "<code {$m[1]}>" . str_replace("\n", "</code>\n<code {$m[1]}>", $m[2]) . '</code>';
+                // split multiline span tags
+                $code = preg_replace_callback('#<span ([^>]++)>((?:[^<\\n]*+\\n)++[^<]*+)</span>#', function ($m) {
+                    return "<span {$m[1]}>" . str_replace("\n", "</span>\n<span {$m[1]}>", $m[2]) . '</span>';
                 }, $code);
-                // Convert spaces to html entities to preserve indentation when rendered
-                $code = str_replace(' ', '&nbsp;', $code);
                 $content = explode("\n", $code);
             } else {
                 // remove main code/span tags
@@ -249,13 +247,13 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         // </span> ending tag from previous line
         $opening = strpos($line, '<span');
         $closing = strpos($line, '</span>');
-        if (false !== $closing && (false === $opening || $closing < $opening)) {
+        if (\false !== $closing && (\false === $opening || $closing < $opening)) {
             $line = substr_replace($line, '', $closing, 7);
         }
         // missing </span> tag at the end of line
         $opening = strrpos($line, '<span');
         $closing = strrpos($line, '</span>');
-        if (false !== $opening && (false === $closing || $closing < $opening)) {
+        if (\false !== $opening && (\false === $closing || $closing < $opening)) {
             $line .= '</span>';
         }
         return trim($line);
@@ -268,7 +266,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
     }
     private function formatLogMessage(string $message, array $context)
     {
-        if ($context && false !== strpos($message, '{')) {
+        if ($context && \false !== strpos($message, '{')) {
             $replacements = [];
             foreach ($context as $key => $val) {
                 if (\is_scalar($val)) {

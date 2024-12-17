@@ -45,7 +45,7 @@ class StringDefinition implements Definition, SelfResolvingDefinition
     }
     public function isResolvable(ContainerInterface $container) : bool
     {
-        return true;
+        return \true;
     }
     public function replaceNestedDefinitions(callable $replacer)
     {

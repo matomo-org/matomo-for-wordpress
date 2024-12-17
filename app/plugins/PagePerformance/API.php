@@ -23,7 +23,7 @@ use Piwik\Plugins\PagePerformance\Columns\Metrics\AverageTimeTransfer;
  */
 class API extends \Piwik\Plugin\API
 {
-    public function get($idSite, $period, $date, $segment = false)
+    public function get($idSite, $period, $date, $segment = \false)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $archive = Archive::build($idSite, $period, $date, $segment);

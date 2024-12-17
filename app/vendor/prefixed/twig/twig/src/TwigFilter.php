@@ -32,7 +32,7 @@ final class TwigFilter
     {
         $this->name = $name;
         $this->callable = $callable;
-        $this->options = array_merge(['needs_environment' => false, 'needs_context' => false, 'needs_charset' => false, 'is_variadic' => false, 'is_safe' => null, 'is_safe_callback' => null, 'pre_escape' => null, 'preserves_safety' => null, 'node_class' => FilterExpression::class, 'deprecated' => false, 'deprecating_package' => '', 'alternative' => null], $options);
+        $this->options = array_merge(['needs_environment' => \false, 'needs_context' => \false, 'needs_charset' => \false, 'is_variadic' => \false, 'is_safe' => null, 'is_safe_callback' => null, 'pre_escape' => null, 'preserves_safety' => null, 'node_class' => FilterExpression::class, 'deprecated' => \false, 'deprecating_package' => '', 'alternative' => null], $options);
     }
     public function getName() : string
     {

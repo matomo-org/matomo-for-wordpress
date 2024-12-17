@@ -41,14 +41,14 @@ class ConfigGet extends ConsoleCommand
         $options = array_filter(['section' => $input->getOption('section'), 'key' => $input->getOption('key')]);
         // If none specified, set default format.
         $format = $input->getOption('format');
-        if (empty($format) || !in_array($format, self::OUTPUT_FORMATS, true)) {
+        if (empty($format) || !in_array($format, self::OUTPUT_FORMATS, \true)) {
             $format = self::OUTPUT_FORMAT_DEFAULT;
         }
         $argument = trim($input->getArgument('argument') ?? '');
         // If there are multiple arguments, just use the last one.
         $argument = array_slice(explode(' ', $argument), -1)[0];
         // Sanity check inputs.
-        switch (true) {
+        switch (\true) {
             case empty($argument) && empty($options):
                 throw new \InvalidArgumentException('You must set either an argument or set options --section and optional --key');
             case !empty($argument) && !empty($options):
@@ -101,7 +101,7 @@ class ConfigGet extends ConsoleCommand
             $sectionContents = $section;
             return (array) $sectionContents;
         }
-        switch (true) {
+        switch (\true) {
             case !isset($section->{$settingName}):
                 $settingValue = null;
                 break;
@@ -168,7 +168,7 @@ class ConfigGet extends ConsoleCommand
     private function toYaml($var) : string
     {
         // Remove leading dash and spaces Spyc adds so we just output the bare value.
-        return trim(ltrim(Spyc::YAMLDump($var, 2, 0, true), '-'));
+        return trim(ltrim(Spyc::YAMLDump($var, 2, 0, \true), '-'));
     }
     /**
      * Convert $var to a JSON string.
@@ -179,8 +179,8 @@ class ConfigGet extends ConsoleCommand
      */
     private function toJson($var) : string
     {
-        $result = json_encode($var, JSON_UNESCAPED_SLASHES);
-        if ($result === false) {
+        $result = json_encode($var, \JSON_UNESCAPED_SLASHES);
+        if ($result === \false) {
             throw new \Exception('Failed to json_encode');
         }
         return $result;
@@ -198,20 +198,20 @@ class ConfigGet extends ConsoleCommand
         $settingName = $setting->getName() === self::NO_SETTING_NAME_FOUND_PLACEHOLDER ? '' : $setting->getName();
         $sectionAndSettingName = implode('.', array_filter([$setting->getConfigSectionName(), $settingName]));
         $output = '';
-        switch (true) {
+        switch (\true) {
             case is_array($var):
-                $output .= $this->wrapInTag('info', ($settingName ? $sectionAndSettingName : "[{$sectionAndSettingName}]") . PHP_EOL);
-                $output .= $this->wrapInTag('info', '--' . PHP_EOL);
+                $output .= $this->wrapInTag('info', ($settingName ? $sectionAndSettingName : "[{$sectionAndSettingName}]") . \PHP_EOL);
+                $output .= $this->wrapInTag('info', '--' . \PHP_EOL);
                 foreach ($var as $thisSettingName => &$val) {
                     if (is_array($val)) {
                         foreach ($val as &$arrayVal) {
-                            $output .= $this->wrapInTag('info', "{$thisSettingName}[] = " . $this->wrapInTag('comment', $arrayVal)) . PHP_EOL;
+                            $output .= $this->wrapInTag('info', "{$thisSettingName}[] = " . $this->wrapInTag('comment', $arrayVal)) . \PHP_EOL;
                         }
                     } else {
-                        $output .= $this->wrapInTag('info', $thisSettingName . ' = ' . $this->wrapInTag('comment', $val)) . PHP_EOL;
+                        $output .= $this->wrapInTag('info', $thisSettingName . ' = ' . $this->wrapInTag('comment', $val)) . \PHP_EOL;
                     }
                 }
-                $output .= $this->wrapInTag('info', '--' . PHP_EOL);
+                $output .= $this->wrapInTag('info', '--' . \PHP_EOL);
                 break;
             case is_scalar($var):
                 $output .= $this->wrapInTag('info', $sectionAndSettingName . ' = ' . $this->wrapInTag('comment', $var));

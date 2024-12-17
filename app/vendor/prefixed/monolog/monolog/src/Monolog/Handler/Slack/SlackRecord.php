@@ -71,7 +71,7 @@ class SlackRecord
      * @var NormalizerFormatter
      */
     private $normalizerFormatter;
-    public function __construct($channel = null, $username = null, $useAttachment = true, $userIcon = null, $useShortAttachment = false, $includeContextAndExtra = false, array $excludeFields = array(), FormatterInterface $formatter = null)
+    public function __construct($channel = null, $username = null, $useAttachment = \true, $userIcon = null, $useShortAttachment = \false, $includeContextAndExtra = \false, array $excludeFields = array(), FormatterInterface $formatter = null)
     {
         $this->channel = $channel;
         $this->username = $username;
@@ -126,7 +126,7 @@ class SlackRecord
             $dataArray['text'] = $message;
         }
         if ($this->userIcon) {
-            if (filter_var($this->userIcon, FILTER_VALIDATE_URL)) {
+            if (filter_var($this->userIcon, \FILTER_VALIDATE_URL)) {
                 $dataArray['icon_url'] = $this->userIcon;
             } else {
                 $dataArray['icon_emoji'] = ":{$this->userIcon}:";
@@ -143,7 +143,7 @@ class SlackRecord
      */
     public function getAttachmentColor($level)
     {
-        switch (true) {
+        switch (\true) {
             case $level >= Logger::ERROR:
                 return self::COLOR_DANGER;
             case $level >= Logger::WARNING:
@@ -164,10 +164,10 @@ class SlackRecord
     public function stringify($fields)
     {
         $normalized = $this->normalizerFormatter->format($fields);
-        $prettyPrintFlag = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 128;
+        $prettyPrintFlag = defined('JSON_PRETTY_PRINT') ? \JSON_PRETTY_PRINT : 128;
         $flags = 0;
-        if (PHP_VERSION_ID >= 50400) {
-            $flags = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+        if (\PHP_VERSION_ID >= 50400) {
+            $flags = \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE;
         }
         $hasSecondDimension = count(array_filter($normalized, 'is_array'));
         $hasNonNumericKeys = !count(array_filter(array_keys($normalized), 'is_numeric'));
@@ -193,7 +193,7 @@ class SlackRecord
     private function generateAttachmentField($title, $value)
     {
         $value = is_array($value) ? sprintf('```%s```', $this->stringify($value)) : $value;
-        return array('title' => ucfirst($title), 'value' => $value, 'short' => false);
+        return array('title' => ucfirst($title), 'value' => $value, 'short' => \false);
     }
     /**
      * Generates a collection of attachment fields from array

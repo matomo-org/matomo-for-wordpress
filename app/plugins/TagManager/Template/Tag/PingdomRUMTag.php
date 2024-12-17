@@ -30,6 +30,7 @@ class PingdomRUMTag extends \Piwik\Plugins\TagManager\Template\Tag\BaseTag
         return array($this->makeSetting('pingdomROMId', '', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_PingdomRUMTagIdTitle');
             $field->description = Piwik::translate('TagManager_PingdomRUMTagIdDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_RaygunTagApiKeyPlaceholder')];
             $field->validators[] = new NotEmpty();
             $field->transform = function ($value) {
                 return trim($value);

@@ -43,7 +43,7 @@ class AddConsoleCommandPass implements CompilerPassInterface
     }
     public function process(ContainerBuilder $container)
     {
-        $commandServices = $container->findTaggedServiceIds($this->commandTag, true);
+        $commandServices = $container->findTaggedServiceIds($this->commandTag, \true);
         $lazyCommandMap = [];
         $lazyCommandRefs = [];
         $serviceIds = [];
@@ -70,7 +70,7 @@ class AddConsoleCommandPass implements CompilerPassInterface
             if (null === $commandName) {
                 if (!$definition->isPublic() || $definition->isPrivate() || $definition->hasTag($this->privateTagName)) {
                     $commandId = 'console.command.public_alias.' . $id;
-                    $container->setAlias($commandId, $id)->setPublic(true);
+                    $container->setAlias($commandId, $id)->setPublic(\true);
                     $id = $commandId;
                 }
                 $serviceIds[] = $id;
@@ -95,7 +95,7 @@ class AddConsoleCommandPass implements CompilerPassInterface
                 $definition->addMethodCall('setAliases', [$aliases]);
             }
             if ($isHidden) {
-                $definition->addMethodCall('setHidden', [true]);
+                $definition->addMethodCall('setHidden', [\true]);
             }
             if (!$description) {
                 if (!($r = $container->getReflectionClass($class))) {
@@ -112,7 +112,7 @@ class AddConsoleCommandPass implements CompilerPassInterface
                 $lazyCommandRefs[$id] = new Reference('.' . $id . '.lazy');
             }
         }
-        $container->register($this->commandLoaderServiceId, ContainerCommandLoader::class)->setPublic(true)->addTag($this->noPreloadTag)->setArguments([ServiceLocatorTagPass::register($container, $lazyCommandRefs), $lazyCommandMap]);
+        $container->register($this->commandLoaderServiceId, ContainerCommandLoader::class)->setPublic(\true)->addTag($this->noPreloadTag)->setArguments([ServiceLocatorTagPass::register($container, $lazyCommandRefs), $lazyCommandMap]);
         $container->setParameter('console.command.ids', $serviceIds);
     }
 }

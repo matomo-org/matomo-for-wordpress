@@ -38,17 +38,17 @@ class EnvironmentValidator
     {
         $this->checkConfigFileExists($this->settingsProvider->getPathGlobal());
         if (SettingsPiwik::isMatomoInstalled()) {
-            $this->checkConfigFileExists($this->settingsProvider->getPathLocal(), $startInstaller = false);
+            $this->checkConfigFileExists($this->settingsProvider->getPathLocal(), $startInstaller = \false);
             return;
         }
-        $startInstaller = true;
+        $startInstaller = \true;
         if (SettingsServer::isTrackerApiRequest()) {
             // if Piwik is not installed yet, the piwik.php should do nothing and not return an error
             throw new NotYetInstalledException("As Matomo is not installed yet, the Tracking API cannot proceed and will exit without error.");
         }
         if (Common::isPhpCliMode()) {
             // in CLI, do not start/redirect to installer, simply output the exception at the top
-            $startInstaller = false;
+            $startInstaller = \false;
         }
         // Start the installation when config file not found
         $this->checkConfigFileExists($this->settingsProvider->getPathLocal(), $startInstaller);
@@ -58,12 +58,15 @@ class EnvironmentValidator
      * @param bool $startInstaller
      * @throws \Exception
      */
-    private function checkConfigFileExists($path, $startInstaller = false)
+    private function checkConfigFileExists($path, $startInstaller = \false)
     {
-        if (is_readable($path)) {
+        if (is_readable($path) && !$startInstaller) {
             return;
         }
         $general = $this->settingsProvider->getSection('General');
+        if (isset($general['installation_in_progress']) && $general['installation_in_progress'] && $startInstaller) {
+            return;
+        }
         if (isset($general['enable_installer']) && !$general['enable_installer']) {
             throw new NotYetInstalledException('Matomo is not set up yet');
         }
@@ -88,7 +91,7 @@ class EnvironmentValidator
          *
          * @param \Exception $exception The exception that was thrown by `Config::getInstance()`.
          */
-        Piwik::postEvent('Config.NoConfigurationFile', array($exception), $pending = true);
+        Piwik::postEvent('Config.NoConfigurationFile', array($exception), $pending = \true);
     }
     /**
      * @param $path

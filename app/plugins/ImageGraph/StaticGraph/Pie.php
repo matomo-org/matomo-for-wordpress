@@ -15,11 +15,11 @@ class Pie extends \Piwik\Plugins\ImageGraph\StaticGraph\PieGraph
 {
     public function renderGraph()
     {
-        $this->initPieGraph(false);
+        $this->initPieGraph(\false);
         $this->pieChart->draw2DPie($this->xPosition, $this->yPosition, $this->pieConfig);
     }
     public function supportsComparison()
     {
-        return false;
+        return \false;
     }
 }

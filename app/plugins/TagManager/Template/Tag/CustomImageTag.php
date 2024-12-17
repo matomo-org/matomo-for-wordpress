@@ -56,7 +56,7 @@ class CustomImageTag extends BaseTag
             $field->description = Piwik::translate('TagManager_CustomImageTagSrcDescription');
             $field->customFieldComponent = self::FIELD_VARIABLE_COMPONENT;
             $field->validators[] = new NotEmpty();
-        }), $this->makeSetting('cacheBusterEnabled', true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        }), $this->makeSetting('cacheBusterEnabled', \true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TagManager_CustomImageTagCacheBusterEnabledTitle');
             $field->description = Piwik::translate('TagManager_CustomImageTagCacheBusterEnabledDescription');
         }));

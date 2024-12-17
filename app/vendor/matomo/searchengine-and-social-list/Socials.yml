@@ -137,6 +137,27 @@ Mastodon:
   - chaos.social
   - cybre.space
   - vis.social
+  - typo.social
+  - front-end.social
+  - hachyderm.io
+  - mastodon.online
+  - newsie.social
+  - mstdn.social
+  - indieweb.social
+  - sfba.social
+  - mas.to
+  - mstdn.party
+  - c.im
+  - mastodonapp.uk
+  - universeodon.com
+  - social.vivaldi.net
+  - ohai.social
+  - toot.community
+  - masto.ai
+  - mastodon.scot
+  - mastodon.world
+  - mastodon.nz
+  - graphics.social
 
 MeinVZ:
   - meinvz.net
@@ -188,15 +209,45 @@ Pinterest:
   - pinterest.ca
   - pinterest.ch
   - pinterest.co.uk
+  - pinterest.com.au
   - pinterest.de
   - pinterest.dk
   - pinterest.es
   - pinterest.fr
   - pinterest.ie
+  - pinterest.info
   - pinterest.jp
   - pinterest.nz
   - pinterest.pt
   - pinterest.se
+  - at.pinterest.com
+  - ch.pinterest.com
+  - cl.pinterest.com
+  - co.pinterest.com
+  - dk.pinterest.com
+  - es.pinterest.com
+  - hu.pinterest.com
+  - id.pinterest.com
+  - ie.pinterest.com
+  - in.pinterest.com
+  - it.pinterest.com
+  - kr.pinterest.com
+  - mx.pinterest.com
+  - nl.pinterest.com
+  - nz.pinterest.com
+  - ph.pinterest.com
+  - pt.pinterest.com
+  - ru.pinterest.com
+  - se.pinterest.com
+
+Pixelfed:
+  - pixelfed.social
+  - pixelfed.de
+  - pxlmo.com
+  - metapixl.com
+  - pix.toot.wales
+  - pixelfed.uno
+  - pixey.org
 
 Plaxo:
   - plaxo.com
@@ -251,6 +302,7 @@ tumblr:
 Twitter:
   - twitter.com
   - t.co
+  - x.com
 
 Sourceforge:
   - sourceforge.net

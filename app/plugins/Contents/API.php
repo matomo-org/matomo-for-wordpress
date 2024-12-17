@@ -19,23 +19,23 @@ use Piwik\Plugins\Contents\Archiver;
  */
 class API extends \Piwik\Plugin\API
 {
-    public function getContentNames($idSite, $period, $date, $segment = false, $idSubtable = false)
+    public function getContentNames($idSite, $period, $date, $segment = \false, $idSubtable = \false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, false, $idSubtable);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, \false, $idSubtable);
     }
-    public function getContentPieces($idSite, $period, $date, $segment = false, $idSubtable = false)
+    public function getContentPieces($idSite, $period, $date, $segment = \false, $idSubtable = \false)
     {
-        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, false, $idSubtable);
+        return $this->getDataTable(__FUNCTION__, $idSite, $period, $date, $segment, \false, $idSubtable);
     }
     private function getDataTable($name, $idSite, $period, $date, $segment, $expanded, $idSubtable)
     {
         Piwik::checkUserHasViewAccess($idSite);
         $recordName = \Piwik\Plugins\Contents\Dimensions::getRecordNameForAction($name);
-        $dataTable = Archive::createDataTableFromArchive($recordName, $idSite, $period, $date, $segment, $expanded, $flat = false, $idSubtable);
+        $dataTable = Archive::createDataTableFromArchive($recordName, $idSite, $period, $date, $segment, $expanded, $flat = \false, $idSubtable);
         if (empty($idSubtable)) {
             $dataTable->filter('AddSegmentValue', array(function ($label) {
                 if ($label === Archiver::CONTENT_PIECE_NOT_SET) {
-                    return false;
+                    return \false;
                 }
                 return $label;
             }));

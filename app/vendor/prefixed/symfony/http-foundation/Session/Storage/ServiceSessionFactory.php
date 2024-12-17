@@ -26,7 +26,7 @@ final class ServiceSessionFactory implements SessionStorageFactoryInterface
     public function createStorage(?Request $request) : SessionStorageInterface
     {
         if ($this->storage instanceof NativeSessionStorage && $request && $request->isSecure()) {
-            $this->storage->setOptions(['cookie_secure' => true]);
+            $this->storage->setOptions(['cookie_secure' => \true]);
         }
         return $this->storage;
     }

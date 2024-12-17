@@ -15,15 +15,15 @@ use Piwik\Plugins\TagManager\Template\BaseTemplate;
  */
 abstract class BaseTag extends BaseTemplate
 {
-    const CATEGORY_ANALYTICS = 'TagManager_CategoryAnalytics';
-    const CATEGORY_CUSTOM = 'TagManager_CategoryCustom';
-    const CATEGORY_DEVELOPERS = 'TagManager_CategoryDevelopers';
-    const CATEGORY_ADS = 'TagManager_CategoryAds';
-    const CATEGORY_EMAIL = 'TagManager_CategoryEmail';
-    const CATEGORY_AFFILIATES = 'TagManager_CategoryAffiliates';
-    const CATEGORY_REMARKETING = 'TagManager_CategoryRemarketing';
-    const CATEGORY_SOCIAL = 'TagManager_CategorySocial';
-    const CATEGORY_OTHERS = 'General_Others';
+    public const CATEGORY_ANALYTICS = 'TagManager_CategoryAnalytics';
+    public const CATEGORY_CUSTOM = 'TagManager_CategoryCustom';
+    public const CATEGORY_DEVELOPERS = 'TagManager_CategoryDevelopers';
+    public const CATEGORY_ADS = 'TagManager_CategoryAds';
+    public const CATEGORY_EMAIL = 'TagManager_CategoryEmail';
+    public const CATEGORY_AFFILIATES = 'TagManager_CategoryAffiliates';
+    public const CATEGORY_REMARKETING = 'TagManager_CategoryRemarketing';
+    public const CATEGORY_SOCIAL = 'TagManager_CategorySocial';
+    public const CATEGORY_OTHERS = 'General_Others';
     protected $templateType = 'Tag';
     /**
      * @inheritdoc

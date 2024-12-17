@@ -35,7 +35,7 @@ class AppendNameToColumnNames extends BaseFilter
      */
     public function filter($table)
     {
-        if (!isset($this->nameToAppend) || '' === $this->nameToAppend || false === $this->nameToAppend) {
+        if (!isset($this->nameToAppend) || '' === $this->nameToAppend || \false === $this->nameToAppend) {
             return;
         }
         foreach ($table->getRows() as $row) {

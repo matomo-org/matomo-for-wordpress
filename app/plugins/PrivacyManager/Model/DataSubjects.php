@@ -117,7 +117,7 @@ class DataSubjects
         $invalidator = StaticContainer::get('Piwik\\Archive\\ArchiveInvalidator');
         foreach ($datesToInvalidateByIdSite as $idSite => $visitDates) {
             $idSites = [$idSite];
-            Piwik::postEvent('Archiving.getIdSitesToMarkArchivesAsInvalidated', array(&$idSites, $visitDates, null, null, null, $isPrivacyDeleteData = true));
+            Piwik::postEvent('Archiving.getIdSitesToMarkArchivesAsInvalidated', array(&$idSites, $visitDates, null, null, null, $isPrivacyDeleteData = \true));
             foreach ($visitDates as $dateStr) {
                 $visitDate = Date::factory($dateStr);
                 foreach ($idSites as $siteId) {
@@ -278,7 +278,7 @@ class DataSubjects
                         break;
                     }
                 }
-                if (!empty($config['Type']) && strpos(strtolower($config['Type']), 'binary') !== false) {
+                if (!empty($config['Type']) && strpos(strtolower($config['Type']), 'binary') !== \false) {
                     $binaryFields[] = $col;
                 }
                 $select[] = sprintf('`%s`.`%s`', $logTableName, $col);
@@ -314,13 +314,13 @@ class DataSubjects
                             $result[$index][$rowColumn] = $dimensionPerCol[$rowColumn]->formatValue($rowValue, $result[$index]['idsite'], new Formatter());
                         } catch (\Exception $e) {
                             // if formatting failes for some reason use the raw value
-                            StaticContainer::get(LoggerInterface::class)->error('Failed to format column {column} with dimension {dimension}: {exception}', ['column' => $rowColumn, 'dimension' => get_class($dimensionPerCol[$rowColumn]), 'exception' => $e, 'ignoreInScreenWriter' => true]);
+                            StaticContainer::get(LoggerInterface::class)->error('Failed to format column {column} with dimension {dimension}: {exception}', ['column' => $rowColumn, 'dimension' => get_class($dimensionPerCol[$rowColumn]), 'exception' => $e, 'ignoreInScreenWriter' => \true]);
                             $result[$index][$rowColumn] = $rowValue;
                         }
                     } elseif (!empty($rowValue)) {
                         // we try to auto detect uncompressed values so plugins have to do less themselves. makes it a bit slower but should be fine
                         $testValue = @gzuncompress($rowValue);
-                        if ($testValue !== false) {
+                        if ($testValue !== \false) {
                             $result[$index][$rowColumn] = $testValue;
                         }
                     }
@@ -350,7 +350,7 @@ class DataSubjects
                         }
                         unset($result[$index]['url_prefix']);
                     }
-                    $result = array_values(array_unique($result, SORT_REGULAR));
+                    $result = array_values(array_unique($result, \SORT_REGULAR));
                     usort($result, function ($a1, $a2) {
                         return $a1['idaction'] > $a2['idaction'] ? 1 : -1;
                     });

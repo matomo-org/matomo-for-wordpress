@@ -57,6 +57,6 @@ class FixedSiteIds
      */
     public function isContinuingPreviousRun() : bool
     {
-        return false;
+        return \false;
     }
 }

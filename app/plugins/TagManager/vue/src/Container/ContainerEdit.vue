@@ -52,9 +52,10 @@
             name="name"
             :model-value="container.name"
             @update:model-value="container.name = $event; setValueHasChanged()"
-            :maxlength="50"
+            :maxlength="255"
             :title="translate('General_Name')"
             :inline-help="translate('TagManager_ContainerNameHelp')"
+            :placeholder="translate('TagManager_ContainerNamePlaceholder')"
           />
         </div>
         <div>
@@ -63,8 +64,9 @@
             name="description"
             :model-value="container.description"
             @update:model-value="container.description = $event; setValueHasChanged()"
-            :title="translate('General_Description')"
+            :title="translate('TagManager_Description')"
             :inline-help="translate('TagManager_ContainerDescriptionHelp')"
+            :placeholder="translate('TagManager_ContainerDescriptionPlaceholder')"
           />
         </div>
         <div>
@@ -75,6 +77,27 @@
             @update:model-value="container.ignoreGtmDataLayer = $event; setValueHasChanged()"
             :title="translate('TagManager_IgnoreGtmDataLaterTitle')"
             :inline-help="translate('TagManager_IgnoreGtmDataLaterDescription')"
+          />
+        </div>
+        <div>
+          <Field
+            uicontrol="checkbox"
+            name="activelySyncGtmDataLayer"
+            :model-value="container.activelySyncGtmDataLayer"
+            @update:model-value="container.activelySyncGtmDataLayer = $event; setValueHasChanged()"
+            :title="translate('TagManager_ActivelySyncGtmDataLayerTitle')"
+            :inline-help="translate('TagManager_ActivelySyncGtmDataLayerDescription')"
+          />
+        </div>
+        <div>
+          <Field
+            uicontrol="checkbox"
+            name="isTagFireLimitAllowedInPreviewMode"
+            :model-value="container.isTagFireLimitAllowedInPreviewMode"
+            @update:model-value="container.isTagFireLimitAllowedInPreviewMode = $event;
+            setValueHasChanged()"
+            :title="translate('TagManager_TagFireLimitAllowedInPreviewModeTitle')"
+            :inline-help="translate('TagManager_TagFireLimitAllowedInPreviewModeDescription')"
           />
         </div>
         <SaveButton
@@ -195,6 +218,7 @@ export default defineComponent({
           name: '',
           context: 'web',
           description: '',
+          activelySyncGtmDataLayer: true,
         } as unknown as Container;
         this.isDirty = false;
       }

@@ -70,10 +70,10 @@ composer install --no-dev -o -q --ignore-platform-reqs
 find . -name .git -exec rm -rf {} +
 cd ..
 
-rm -r "${MATOMO_ROOT:?}/"* "${MATOMO_ROOT:?}/".*
+rm -r "${MATOMO_ROOT:?}/"* "${MATOMO_ROOT:?}/".[!.]*
 rm -r matomo/vendor/phpmailer # removing before scoping so it won't be included in the autoloader files
 cp -R matomo/* $MATOMO_ROOT
-cp -R matomo/.* $MATOMO_ROOT
+cp -R matomo/.[!.]* $MATOMO_ROOT
 rm -r matomo/
 
 echo "Running matomo-scoper..."

@@ -27,7 +27,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
     }
     private function createRequire2FA()
     {
-        $setting = $this->makeSetting('twoFactorAuthRequired', $default = false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        $setting = $this->makeSetting('twoFactorAuthRequired', $default = \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('TwoFactorAuth_RequireTwoFAForAll');
             $field->description = Piwik::translate('TwoFactorAuth_RequireTwoFAForAllInformation');
             $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;

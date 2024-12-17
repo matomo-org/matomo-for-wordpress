@@ -172,7 +172,7 @@ class SearchEngine extends Singleton
             $referrerHost = $referrerParsed['host'];
         }
         if (empty($referrerHost)) {
-            return false;
+            return \false;
         }
         // some search engines (eg. Bing Images) use the same domain
         // as an existing search engine (eg. Bing), we must also use the url path
@@ -190,7 +190,7 @@ class SearchEngine extends Singleton
         }
         $referrerHost = $this->getEngineHostFromUrl($referrerHost, $referrerPath, $query);
         if (empty($referrerHost)) {
-            return false;
+            return \false;
         }
         $definitions = $this->getDefinitionByHost($referrerHost);
         $searchEngineName = $definitions['name'];
@@ -198,12 +198,12 @@ class SearchEngine extends Singleton
         $keywordsHiddenFor = !empty($definitions['hiddenkeyword']) ? $definitions['hiddenkeyword'] : array('/^$/', '/');
         $key = null;
         if ($searchEngineName === 'Google Images') {
-            if (strpos($query, '&prev') !== false) {
+            if (strpos($query, '&prev') !== \false) {
                 $query = urldecode(trim(UrlHelper::getParameterFromQueryString($query, 'prev')));
                 $query = str_replace('&', '&amp;', strstr($query, '?'));
             }
             $searchEngineName = 'Google Images';
-        } elseif ($searchEngineName === 'Google' && (strpos($query, '&as_') !== false || strpos($query, 'as_') === 0)) {
+        } elseif ($searchEngineName === 'Google' && (strpos($query, '&as_') !== \false || strpos($query, 'as_') === 0)) {
             $keys = array();
             $key = UrlHelper::getParameterFromQueryString($query, 'as_q');
             if (!empty($key)) {
@@ -251,10 +251,10 @@ class SearchEngine extends Singleton
                     $key = UrlHelper::getParameterFromQueryString($query, $variableName) ?? '';
                     $key = trim(urldecode($key));
                     // Special cases: empty keywords
-                    if (empty($key) && (strpos($query, sprintf('&%s=', $variableName)) !== false || strpos($query, sprintf('?%s=', $variableName)) !== false)) {
-                        $key = false;
+                    if (empty($key) && (strpos($query, sprintf('&%s=', $variableName)) !== \false || strpos($query, sprintf('?%s=', $variableName)) !== \false)) {
+                        $key = \false;
                     }
-                    if (!empty($key) || $key === false) {
+                    if (!empty($key) || $key === \false) {
                         break;
                     }
                 }
@@ -272,18 +272,18 @@ class SearchEngine extends Singleton
             foreach ($keywordsHiddenFor as $path) {
                 if (strlen($path) > 1 && substr($path, 0, 1) == '/' && substr($path, -1, 1) == '/') {
                     if (preg_match($path, $pathWithQueryAndFragment)) {
-                        $key = false;
+                        $key = \false;
                         break;
                     }
                 } elseif ($path == $pathWithQueryAndFragment) {
-                    $key = false;
+                    $key = \false;
                     break;
                 }
             }
         }
         // $key === false is the special case "No keyword provided" which is a Search engine match
         if ($key === null || $key === '') {
-            return false;
+            return \false;
         }
         if (!empty($key)) {
             if (!empty($definitions['charsets'])) {
@@ -320,14 +320,14 @@ class SearchEngine extends Singleton
             } elseif (!strncmp($path, '/pemonitorhosted/ws/results/', 28)) {
                 // private-label search powered by InfoSpace Metasearch
                 $host = 'wsdsold.infospace.com';
-            } elseif (strpos($host, '.images.search.yahoo.com') != false) {
+            } elseif (strpos($host, '.images.search.yahoo.com') != \false) {
                 // Yahoo! Images
                 $host = 'images.search.yahoo.com';
-            } elseif (strpos($host, '.search.yahoo.com') != false) {
+            } elseif (strpos($host, '.search.yahoo.com') != \false) {
                 // Yahoo!
                 $host = 'search.yahoo.com';
             } else {
-                return false;
+                return \false;
             }
         }
         return $host;
@@ -344,7 +344,7 @@ class SearchEngine extends Singleton
             $charset = $charsets[0];
             if (count($charsets) > 1) {
                 $charset = mb_detect_encoding($string, $charsets);
-                if ($charset === false) {
+                if ($charset === \false) {
                     $charset = $charsets[0];
                 }
             }
@@ -384,7 +384,7 @@ class SearchEngine extends Singleton
         if (strpos($url, '//')) {
             $url = substr($url, strpos($url, '//') + 2);
         }
-        if (($p = strpos($url, '/')) !== false) {
+        if (($p = strpos($url, '/')) !== \false) {
             $url = substr($url, 0, $p);
         }
         return $url;
@@ -425,7 +425,7 @@ class SearchEngine extends Singleton
         $host = substr($url, strpos($url, '//') + 2);
         $definition = $this->getDefinitionByHost($host);
         if (empty($definition['backlink'])) {
-            return false;
+            return \false;
         }
         $path = str_replace("{k}", $keyword, $definition['backlink']);
         return $url . (substr($url, -1) != '/' ? '/' : '') . $path;

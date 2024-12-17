@@ -41,17 +41,17 @@ class VisitorSecondsSinceOrder extends VisitDimension
             return 0;
         }
         $existingValue = $visitor->getVisitorColumn($this->columnName);
-        if ($existingValue !== null && $existingValue !== false) {
+        if ($existingValue !== null && $existingValue !== \false) {
             // already set
             return $existingValue;
         }
         $prevSecondsSinceLastOrder = $visitor->getPreviousVisitColumn($this->columnName);
-        if ($prevSecondsSinceLastOrder === null || $prevSecondsSinceLastOrder === false) {
+        if ($prevSecondsSinceLastOrder === null || $prevSecondsSinceLastOrder === \false) {
             // no order at all for visitor
             return null;
         }
         $visitFirstActionTime = $visitor->getPreviousVisitColumn('visit_first_action_time');
-        if ($visitFirstActionTime === null || $visitFirstActionTime === false) {
+        if ($visitFirstActionTime === null || $visitFirstActionTime === \false) {
             // no previous visit
             return null;
         }

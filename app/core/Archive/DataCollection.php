@@ -141,7 +141,7 @@ class DataCollection
      * @param string        $value  eg 5
      * @param array|null    $meta   Optional metadata to add to the row
      */
-    public function set($idSite, $period, $name, $value, array $meta = null)
+    public function set($idSite, $period, $name, $value, ?array $meta = null)
     {
         $row =& $this->get($idSite, $period);
         $row[$name] = $value;
@@ -251,7 +251,7 @@ class DataCollection
      * @throws Exception
      * @return DataTable|DataTable\Map
      */
-    public function getExpandedDataTable($resultIndices, $idSubTable = null, $depth = null, $addMetadataSubTableId = false)
+    public function getExpandedDataTable($resultIndices, $idSubTable = null, $depth = null, $addMetadataSubTableId = \false)
     {
         $this->checkExpandedMethodPrerequisites();
         $dataTableFactory = new \Piwik\Archive\DataTableFactory($this->dataNames, 'blob', $this->sitesId, $this->periods, $this->segment, $this->defaultRow);

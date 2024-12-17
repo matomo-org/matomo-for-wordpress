@@ -193,7 +193,7 @@ class Archive implements ArchiveQuery
      * @param bool $forceIndexedBySite Whether to force index the result of a query by site ID.
      * @param bool $forceIndexedByDate Whether to force index the result of a query by period.
      */
-    public function __construct(Parameters $params, $forceIndexedBySite = false, $forceIndexedByDate = false)
+    public function __construct(Parameters $params, $forceIndexedBySite = \false, $forceIndexedByDate = \false)
     {
         $this->params = $params;
         $this->forceIndexedBySite = $forceIndexedBySite;
@@ -218,7 +218,7 @@ class Archive implements ArchiveQuery
      * @param bool|false|string $_restrictSitesToLogin Used only when running as a scheduled task.
      * @return ArchiveQuery
      */
-    public static function build($idSites, $period, $strDate, $segment = false, $_restrictSitesToLogin = false)
+    public static function build($idSites, $period, $strDate, $segment = \false, $_restrictSitesToLogin = \false)
     {
         return StaticContainer::get(ArchiveQueryFactory::class)->build($idSites, $period, $strDate, $segment, $_restrictSitesToLogin);
     }
@@ -244,14 +244,14 @@ class Archive implements ArchiveQuery
      *
      * @return ArchiveQuery
      */
-    public static function factory(\Piwik\Segment $segment, array $periods, array $idSites, $idSiteIsAll = false, $isMultipleDate = false)
+    public static function factory(\Piwik\Segment $segment, array $periods, array $idSites, $idSiteIsAll = \false, $isMultipleDate = \false)
     {
         return StaticContainer::get(ArchiveQueryFactory::class)->factory($segment, $periods, $idSites, $idSiteIsAll, $isMultipleDate);
     }
     public static function shouldSkipArchiveIfSkippingSegmentArchiveForToday(\Piwik\Site $site, \Piwik\Period $period, \Piwik\Segment $segment)
     {
         $now = \Piwik\Date::factory('now', $site->getTimezone());
-        return $period->getLabel() === 'day' && !$segment->isEmpty() && $period->getDateStart()->toString() === $now->toString();
+        return !$segment->isEmpty() && $period->getDateStart()->toString() === $now->toString();
     }
     /**
      * Queries and returns metric data in an array.
@@ -401,7 +401,7 @@ class Archive implements ArchiveQuery
      *                                    or not.
      * @return DataTable|DataTable\Map
      */
-    public function getDataTableExpanded($name, $idSubtable = null, $depth = null, $addMetadataSubtableId = true)
+    public function getDataTableExpanded($name, $idSubtable = null, $depth = null, $addMetadataSubtableId = \true)
     {
         $data = $this->get($name, 'blob', self::ID_SUBTABLE_LOAD_ALL_SUBTABLES);
         return $data->getExpandedDataTable($this->getResultIndices(), $idSubtable, $depth, $addMetadataSubtableId);
@@ -446,19 +446,19 @@ class Archive implements ArchiveQuery
      * @param int|null $depth See {@link getDataTableExpanded()}
      * @return DataTable|DataTable\Map
      */
-    public static function createDataTableFromArchive($recordName, $idSite, $period, $date, $segment, $expanded = false, $flat = false, $idSubtable = null, $depth = null)
+    public static function createDataTableFromArchive($recordName, $idSite, $period, $date, $segment, $expanded = \false, $flat = \false, $idSubtable = null, $depth = null)
     {
         \Piwik\Piwik::checkUserHasViewAccess($idSite);
-        if ($idSubtable === false || $idSubtable === '') {
+        if ($idSubtable === \false || $idSubtable === '') {
             $idSubtable = null;
         }
         if (!empty($idSubtable) && (strtolower($idSubtable) !== self::ID_SUBTABLE_LOAD_ALL_SUBTABLES && !is_numeric($idSubtable))) {
             throw new \Exception("idSubtable needs to be a number or '" . self::ID_SUBTABLE_LOAD_ALL_SUBTABLES . "', '{$idSubtable}' given.");
         }
         if ($flat && !$idSubtable) {
-            $expanded = true;
+            $expanded = \true;
         }
-        $archive = \Piwik\Archive::build($idSite, $period, $date, $segment, $_restrictSitesToLogin = false);
+        $archive = \Piwik\Archive::build($idSite, $period, $date, $segment, $_restrictSitesToLogin = \false);
         if ($expanded) {
             $dataTable = $archive->getDataTableExpanded($recordName, $idSubtable, $depth);
         } else {
@@ -558,7 +558,7 @@ class Archive implements ArchiveQuery
         $archiveGroups = [];
         foreach (array_merge($plugins, ['all']) as $plugin) {
             $doneFlag = $this->getDoneStringForPlugin($plugin, $this->params->getIdSites());
-            $doneFlags[$doneFlag] = true;
+            $doneFlags[$doneFlag] = \true;
             if (!isset($this->idarchives[$doneFlag])) {
                 $archiveGroup = $this->getArchiveGroupOfPlugin($plugin);
                 if ($archiveGroup === self::ARCHIVE_ALL_PLUGINS_FLAG) {
@@ -567,10 +567,10 @@ class Archive implements ArchiveQuery
                 $archiveGroups[] = $archiveGroup;
             }
             $doneFlag = Rules::getDoneFlagArchiveContainsOnePlugin($this->params->getSegment(), $plugin);
-            $doneFlags[$doneFlag] = true;
+            $doneFlags[$doneFlag] = \true;
         }
         $globalDoneFlag = Rules::getDoneFlagArchiveContainsAllPlugins($this->params->getSegment());
-        $doneFlags[$globalDoneFlag] = true;
+        $doneFlags[$globalDoneFlag] = \true;
         // cache id archives for plugins we haven't processed yet
         if (!empty($archiveGroups)) {
             if (Rules::isArchivingEnabledFor($this->params->getIdSites(), $this->params->getSegment(), $this->getPeriodLabel()) && !$this->forceFetchingWithoutLaunchingArchiving) {
@@ -692,8 +692,8 @@ class Archive implements ArchiveQuery
     {
         // If there is no dot, we return as is
         // Note: this could be an integer bigger than 32 bits
-        if (strpos($value, '.') === false) {
-            if ($value === false) {
+        if (strpos($value, '.') === \false) {
+            if ($value === \false) {
                 return 0;
             }
             return (float) $value;
@@ -829,7 +829,7 @@ class Archive implements ArchiveQuery
     }
     public function forceFetchingWithoutLaunchingArchiving()
     {
-        $this->forceFetchingWithoutLaunchingArchiving = true;
+        $this->forceFetchingWithoutLaunchingArchiving = \true;
     }
     private function getRequestedReport() : ?string
     {

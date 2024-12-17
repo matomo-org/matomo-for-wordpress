@@ -47,7 +47,7 @@ abstract class CompiledContainer extends Container
             if (isset($this->entriesBeingResolved[$name])) {
                 throw new DependencyException("Circular dependency detected while trying to resolve entry '{$name}'");
             }
-            $this->entriesBeingResolved[$name] = true;
+            $this->entriesBeingResolved[$name] = \true;
             try {
                 $value = $this->{$method}();
             } finally {
@@ -69,7 +69,7 @@ abstract class CompiledContainer extends Container
         }
         // The parent method is overridden to check in our array, it avoids resolving definitions
         if (isset(static::METHOD_MAPPING[$name])) {
-            return true;
+            return \true;
         }
         return parent::has($name);
     }

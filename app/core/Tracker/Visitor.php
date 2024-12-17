@@ -11,7 +11,7 @@ namespace Piwik\Tracker;
 use Piwik\Tracker\Visit\VisitProperties;
 class Visitor
 {
-    private $visitorKnown = false;
+    private $visitorKnown = \false;
     /**
      * @var VisitProperties
      */
@@ -20,13 +20,13 @@ class Visitor
      * @var VisitProperties
      */
     public $previousVisitProperties;
-    public function __construct(VisitProperties $visitProperties, $isVisitorKnown = false, VisitProperties $previousVisitProperties = null)
+    public function __construct(VisitProperties $visitProperties, $isVisitorKnown = \false, ?VisitProperties $previousVisitProperties = null)
     {
         $this->visitProperties = $visitProperties;
         $this->previousVisitProperties = $previousVisitProperties;
         $this->setIsVisitorKnown($isVisitorKnown);
     }
-    public static function makeFromVisitProperties(VisitProperties $visitProperties, \Piwik\Tracker\Request $request, VisitProperties $previousVisitProperties = null)
+    public static function makeFromVisitProperties(VisitProperties $visitProperties, \Piwik\Tracker\Request $request, ?VisitProperties $previousVisitProperties = null)
     {
         $isKnown = $request->getMetadata('CoreHome', 'isVisitorKnown');
         return new \Piwik\Tracker\Visitor($visitProperties, $isKnown, $previousVisitProperties);
@@ -40,7 +40,7 @@ class Visitor
         if (array_key_exists($column, $this->visitProperties->getProperties())) {
             return $this->visitProperties->getProperty($column);
         }
-        return false;
+        return \false;
     }
     /**
      * Get a visitor property that will not have been changed by other request processors
@@ -68,16 +68,16 @@ class Visitor
     public function getPreviousVisitColumn($column)
     {
         if (empty($this->previousVisitProperties)) {
-            return false;
+            return \false;
         }
         if (array_key_exists($column, $this->previousVisitProperties->getProperties())) {
             return $this->previousVisitProperties->getProperty($column);
         }
-        return false;
+        return \false;
     }
     public function isVisitorKnown()
     {
-        return $this->visitorKnown === true;
+        return $this->visitorKnown === \true;
     }
     public function isNewVisit()
     {

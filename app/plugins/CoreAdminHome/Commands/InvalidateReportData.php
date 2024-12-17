@@ -34,10 +34,10 @@ class InvalidateReportData extends ConsoleCommand
     {
         $this->setName('core:invalidate-report-data');
         $this->setDescription('Invalidate archived report data by date range, site and period.');
-        $this->addRequiredValueOption('dates', null, 'List of dates or date ranges to invalidate report data for, eg, 2015-01-03 or 2015-01-05,2015-02-12.', null, true);
+        $this->addRequiredValueOption('dates', null, 'List of dates or date ranges to invalidate report data for, eg, 2015-01-03 or 2015-01-05,2015-02-12.', null, \true);
         $this->addRequiredValueOption('sites', null, 'List of site IDs to invalidate report data for, eg, "1,2,3,4" or "all" for all sites.', self::ALL_OPTION_VALUE);
         $this->addRequiredValueOption('periods', null, 'List of period types to invalidate report data for. Can be one or more of the following values: day, ' . 'week, month, year or "all" for all of them.', self::ALL_OPTION_VALUE);
-        $this->addRequiredValueOption('segment', null, 'List of segments to invalidate report data for. This can be the segment string itself, the segment name from the UI or the ID of the segment.' . ' If specifying the segment definition, make sure it is encoded properly (it should be the same as the segment parameter in the URL.', null, true);
+        $this->addRequiredValueOption('segment', null, 'List of segments to invalidate report data for. This can be the segment string itself, the segment name from the UI or the ID of the segment.' . ' If specifying the segment definition, make sure it is encoded properly (it should be the same as the segment parameter in the URL.', null, \true);
         $this->addNoValueOption('cascade', null, 'If supplied, invalidation will cascade, invalidating child period types even if they aren\'t specified in' . ' --periods. For example, if --periods=week, --cascade will cause the days within those weeks to be ' . 'invalidated as well. If --periods=month, then weeks and days will be invalidated. Note: if a period ' . 'falls partly outside of a date range, then --cascade will also invalidate data for child periods ' . 'outside the date range. For example, if --dates=2015-09-14,2015-09-15 & --periods=week, --cascade will' . ' also invalidate all days within 2015-09-13,2015-09-19, even those outside the date range.');
         $this->addNoValueOption('dry-run', null, 'For tests. Runs the command w/o actually ' . 'invalidating anything.');
         $this->addRequiredValueOption('plugin', null, 'To invalidate data for a specific plugin only.');
@@ -75,7 +75,7 @@ class InvalidateReportData extends ConsoleCommand
                         }
                         $logger->info($message);
                     } else {
-                        $invalidationResult = $invalidator->markArchivesAsInvalidated($sites, $dates, $periodType, $segment, $cascade, false, $plugin, $ignoreLogDeletionLimit);
+                        $invalidationResult = $invalidator->markArchivesAsInvalidated($sites, $dates, $periodType, $segment, $cascade, \false, $plugin, $ignoreLogDeletionLimit);
                         if ($output->getVerbosity() > $output::VERBOSITY_NORMAL) {
                             foreach ($invalidationResult->makeOutputLogs() as $outputLog) {
                                 $logger->info($outputLog);
@@ -239,7 +239,7 @@ class InvalidateReportData extends ConsoleCommand
         if ($this->allSegments === null) {
             $segmentsByDefinition = [];
             if ([] === $idSites) {
-                $idSites = [false];
+                $idSites = [\false];
             }
             foreach ($idSites as $idSite) {
                 $siteSegments = API::getInstance()->getAll($idSite);

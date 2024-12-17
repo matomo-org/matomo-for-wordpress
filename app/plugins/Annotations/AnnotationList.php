@@ -76,7 +76,7 @@ class AnnotationList
      * @return array The added annotation.
      * @throws Exception if $idSite is not an ID that was supplied upon construction.
      */
-    public function add(int $idSite, string $date, string $note, bool $starred = false) : array
+    public function add(int $idSite, string $date, string $note, bool $starred = \false) : array
     {
         $this->checkIdSiteIsLoaded($idSite);
         $date = Date::factory($date)->toString('Y-m-d');
@@ -212,7 +212,7 @@ class AnnotationList
      *                        ),
      *               )
      */
-    public function search($startDate, $endDate, $idSite = false)
+    public function search($startDate, $endDate, $idSite = \false)
     {
         if ($idSite) {
             $idSites = Site::getIdSitesFromIdSitesString($idSite);
@@ -227,7 +227,7 @@ class AnnotationList
                 continue;
             }
             foreach ($this->annotations[$idSite] as $idNote => $annotation) {
-                if ($startDate !== false) {
+                if ($startDate !== \false) {
                     $annotationDate = Date::factory($annotation['date']);
                     if ($annotationDate->getTimestamp() < $startDate->getTimestamp() || $annotationDate->getTimestamp() > $endDate->getTimestamp()) {
                         continue;
@@ -279,7 +279,7 @@ class AnnotationList
      * @param bool $starred
      * @return array
      */
-    private function makeAnnotation(string $date, string $note, bool $starred = false)
+    private function makeAnnotation(string $date, string $note, bool $starred = \false)
     {
         return array('date' => $date, 'note' => $note, 'starred' => (int) $starred, 'user' => Piwik::getCurrentUserLogin());
     }
@@ -295,7 +295,7 @@ class AnnotationList
         foreach ($this->idSites as $id) {
             $optionName = self::getAnnotationCollectionOptionName($id);
             $serialized = Option::get($optionName);
-            if ($serialized !== false) {
+            if ($serialized !== \false) {
                 $result[$id] = Common::safe_unserialize($serialized);
                 if (empty($result[$id])) {
                     // in case unserialize failed
@@ -396,7 +396,7 @@ class AnnotationList
      */
     public static function canUserAddNotesFor($idSite)
     {
-        return Piwik::isUserHasViewAccess($idSite) && !Piwik::isUserIsAnonymous();
+        return Piwik::isUserHasWriteAccess($idSite);
     }
     /**
      * Returns the option name used to store annotations for a site.

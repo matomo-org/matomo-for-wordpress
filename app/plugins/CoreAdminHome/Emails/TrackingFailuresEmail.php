@@ -76,7 +76,7 @@ class TrackingFailuresEmail extends Mail
         $view->emailAddress = $this->emailAddress;
         $view->numFailures = $this->numFailures;
         $sitesId = Access::getInstance()->getSitesIdWithAtLeastViewAccess();
-        $idSite = false;
+        $idSite = \false;
         if (!empty($sitesId)) {
             $idSite = array_shift($sitesId);
         }

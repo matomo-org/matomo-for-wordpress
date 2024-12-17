@@ -86,11 +86,11 @@ class WidgetMetadata
         }
         if ($widget instanceof ReportWidgetConfig) {
             $item['viewDataTable'] = $widget->getViewDataTable();
-            $item['isReport'] = true;
+            $item['isReport'] = \true;
         }
         if ($widget instanceof WidgetContainerConfig) {
             $item['layout'] = $widget->getLayout();
-            $item['isContainer'] = true;
+            $item['isContainer'] = \true;
             // we do not want to create categories to the initial categoryList. Otherwise we'd maybe display more pages
             // etc.
             $subCategoryList = new CategoryList();

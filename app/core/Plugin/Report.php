@@ -116,27 +116,27 @@ class Report
      * @var bool
      * @api
      */
-    protected $hasGoalMetrics = false;
+    protected $hasGoalMetrics = \false;
     /**
      * Set this property to false in case your report can't/shouldn't be flattened.
      * In this case, flattener won't be applied even if parameter is provided in a request
      * @var bool
      * @api
      */
-    protected $supportsFlatten = true;
+    protected $supportsFlatten = \true;
     /**
      * Set it to boolean `true` if your report always returns a constant count of rows, for instance always 24 rows
      * for 1-24 hours.
      * @var bool
      * @api
      */
-    protected $constantRowsCount = false;
+    protected $constantRowsCount = \false;
     /**
      * Set it to boolean `true` if this report is a subtable report and won't be used as a standalone report.
      * @var bool
      * @api
      */
-    protected $isSubtableReport = false;
+    protected $isSubtableReport = \false;
     /**
      * Some reports may require additional URL parameters that need to be sent when a report is requested. For instance
      * a "goal" report might need a "goalId": `array('idgoal' => 5)`.
@@ -182,7 +182,7 @@ class Report
      *
      * @var bool
      */
-    protected $defaultSortOrderDesc = true;
+    protected $defaultSortOrderDesc = \true;
     /**
      * The column that uniquely identifies a row in this report. Normally
      * this is the 'label' column, but it is sometimes the case that the label column is
@@ -231,7 +231,7 @@ class Report
      */
     public function isEnabled()
     {
-        return true;
+        return \true;
     }
     /**
      * This method checks whether the report is available, see {@isEnabled()}. If not, it triggers an exception
@@ -267,7 +267,7 @@ class Report
      */
     public function alwaysUseDefaultViewDataTable()
     {
-        return false;
+        return \false;
     }
     /**
      * Here you can configure how your report should be displayed and which capabilities your report has. For instance
@@ -291,7 +291,7 @@ class Report
      */
     public function render()
     {
-        $viewDataTable = Common::getRequestVar('viewDataTable', false, 'string');
+        $viewDataTable = Common::getRequestVar('viewDataTable', \false, 'string');
         $fixed = Common::getRequestVar('forceView', 0, 'int');
         $module = $this->getModule();
         $action = $this->getAction();
@@ -580,7 +580,7 @@ class Report
         if (!empty($this->onlineGuideUrl)) {
             $report['onlineGuideUrl'] = $this->onlineGuideUrl;
         }
-        if (true === $this->isSubtableReport) {
+        if (\true === $this->isSubtableReport) {
             $report['isSubtableReport'] = $this->isSubtableReport;
         }
         $dimensions = $this->getDimensions();
@@ -597,7 +597,7 @@ class Report
         if (!empty($this->actionToLoadSubTables)) {
             $report['actionToLoadSubTables'] = $this->actionToLoadSubTables;
         }
-        if (true === $this->constantRowsCount) {
+        if (\true === $this->constantRowsCount) {
             $report['constantRowsCount'] = $this->constantRowsCount;
         }
         $relatedReports = $this->getRelatedReports();
@@ -856,7 +856,7 @@ class Report
     }
     private function getSubtableApiMethod()
     {
-        if (strpos($this->actionToLoadSubTables, '.') !== false) {
+        if (strpos($this->actionToLoadSubTables, '.') !== \false) {
             return explode('.', $this->actionToLoadSubTables);
         } else {
             return array($this->module, $this->actionToLoadSubTables);
@@ -920,7 +920,7 @@ class Report
      * @return Metric[]
      * @api
      */
-    public static function getMetricsForTable(DataTable $dataTable, \Piwik\Plugin\Report $report = null, $baseType = 'Piwik\\Plugin\\Metric')
+    public static function getMetricsForTable(DataTable $dataTable, ?\Piwik\Plugin\Report $report = null, $baseType = 'Piwik\\Plugin\\Metric')
     {
         $metrics = $dataTable->getMetadata(DataTable::EXTRA_PROCESSED_METRICS_METADATA_NAME) ?: array();
         if (!empty($report)) {
@@ -946,7 +946,7 @@ class Report
      * @return ProcessedMetric[]
      * @api
      */
-    public static function getProcessedMetricsForTable(DataTable $dataTable, \Piwik\Plugin\Report $report = null)
+    public static function getProcessedMetricsForTable(DataTable $dataTable, ?\Piwik\Plugin\Report $report = null)
     {
         /** @var ProcessedMetric[] $metrics */
         $metrics = self::getMetricsForTable($dataTable, $report, 'Piwik\\Plugin\\ProcessedMetric');
@@ -969,7 +969,7 @@ class Report
             if (!empty($visited[$name])) {
                 continue;
             }
-            $visited[$name] = true;
+            $visited[$name] = \true;
             $dependentMetrics = [];
             foreach ($metric->getDependentMetrics() as $metricName) {
                 if (!empty($metrics[$metricName])) {

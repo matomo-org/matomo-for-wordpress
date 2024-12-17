@@ -28,7 +28,7 @@ class File extends \SplFileInfo
      *
      * @throws FileNotFoundException If the given path is not a file
      */
-    public function __construct(string $path, bool $checkPath = true)
+    public function __construct(string $path, bool $checkPath = \true)
     {
         if ($checkPath && !is_file($path)) {
             throw new FileNotFoundException($path);
@@ -100,7 +100,7 @@ class File extends \SplFileInfo
     public function getContent() : string
     {
         $content = file_get_contents($this->getPathname());
-        if (false === $content) {
+        if (\false === $content) {
             throw new FileException(sprintf('Could not get the content of the file "%s".', $this->getPathname()));
         }
         return $content;
@@ -111,14 +111,14 @@ class File extends \SplFileInfo
     protected function getTargetFile(string $directory, ?string $name = null)
     {
         if (!is_dir($directory)) {
-            if (false === @mkdir($directory, 0777, true) && !is_dir($directory)) {
+            if (\false === @mkdir($directory, 0777, \true) && !is_dir($directory)) {
                 throw new FileException(sprintf('Unable to create the "%s" directory.', $directory));
             }
         } elseif (!is_writable($directory)) {
             throw new FileException(sprintf('Unable to write in the "%s" directory.', $directory));
         }
         $target = rtrim($directory, '/\\') . \DIRECTORY_SEPARATOR . (null === $name ? $this->getBasename() : $this->getName($name));
-        return new self($target, false);
+        return new self($target, \false);
     }
     /**
      * Returns locale independent base name of the given path.
@@ -129,7 +129,7 @@ class File extends \SplFileInfo
     {
         $originalName = str_replace('\\', '/', $name);
         $pos = strrpos($originalName, '/');
-        $originalName = false === $pos ? $originalName : substr($originalName, $pos + 1);
+        $originalName = \false === $pos ? $originalName : substr($originalName, $pos + 1);
         return $originalName;
     }
 }

@@ -60,7 +60,7 @@ class Actions extends BaseFilter
                     if ($url) {
                         $row->setMetadata('segmentValue', urlencode($url));
                         if ($site && strpos($url, 'http://') === 0) {
-                            $host = parse_url($url, PHP_URL_HOST);
+                            $host = parse_url($url, \PHP_URL_HOST);
                             if ($host && PageUrl::shouldUseHttpsHost($site->getId(), $host)) {
                                 $row->setMetadata('url', 'https://' . mb_substr($url, 7));
                             }

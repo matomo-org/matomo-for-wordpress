@@ -35,7 +35,7 @@ class ProxyFactory
      * @var LazyLoadingValueHolderFactory|null
      */
     private $proxyManager;
-    public function __construct(bool $writeProxiesToFile = false, string $proxyDirectory = null)
+    public function __construct(bool $writeProxiesToFile = \false, string $proxyDirectory = null)
     {
         $this->writeProxiesToFile = $writeProxiesToFile;
         $this->proxyDirectory = $proxyDirectory;

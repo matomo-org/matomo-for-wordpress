@@ -58,7 +58,7 @@ class SQLite3Cache extends \Doctrine\Common\Cache\CacheProvider
     {
         $item = $this->findById($id);
         if (!$item) {
-            return false;
+            return \false;
         }
         return unserialize($item[self::DATA_FIELD]);
     }
@@ -67,7 +67,7 @@ class SQLite3Cache extends \Doctrine\Common\Cache\CacheProvider
      */
     protected function doContains($id)
     {
-        return $this->findById($id, false) !== null;
+        return $this->findById($id, \false) !== null;
     }
     /**
      * {@inheritdoc}
@@ -111,7 +111,7 @@ class SQLite3Cache extends \Doctrine\Common\Cache\CacheProvider
      *
      * @return array|null
      */
-    private function findById($id, bool $includeData = true) : ?array
+    private function findById($id, bool $includeData = \true) : ?array
     {
         [$idField] = $fields = $this->getFields();
         if (!$includeData) {
@@ -121,7 +121,7 @@ class SQLite3Cache extends \Doctrine\Common\Cache\CacheProvider
         $statement = $this->sqlite->prepare(sprintf('SELECT %s FROM %s WHERE %s = :id LIMIT 1', implode(',', $fields), $this->table, $idField));
         $statement->bindValue(':id', $id, SQLITE3_TEXT);
         $item = $statement->execute()->fetchArray(SQLITE3_ASSOC);
-        if ($item === false) {
+        if ($item === \false) {
             return null;
         }
         if ($this->isExpired($item)) {

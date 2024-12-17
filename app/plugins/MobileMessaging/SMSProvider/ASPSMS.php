@@ -31,7 +31,7 @@ class ASPSMS extends SMSProvider
     }
     public function getDescription()
     {
-        return 'You can use <a target="_blank" rel="noreferrer noopener" href="http://www.aspsms.com/en/?REF=227830"><img src="plugins/MobileMessaging/images/ASPSMS.png"/></a> to send SMS Reports from Piwik.<br/>
+        return 'You can use <a target="_blank" rel="noreferrer noopener" href="http://www.aspsms.com/en/?REF=227830"><img src="plugins/MobileMessaging/images/ASPSMS.png"/></a> to send SMS Reports from Matomo.<br/>
 			<ul>
 			<li> First, <a target="_blank" rel="noreferrer noopener" href="http://www.aspsms.com/en/registration/?REF=227830">get an Account at ASPSMS</a> (Signup is free!)
 			</li><li> Enter your ASPSMS credentials on this page. </li>
@@ -53,7 +53,7 @@ class ASPSMS extends SMSProvider
     public function verifyCredential($credentials)
     {
         $this->getCreditLeft($credentials);
-        return true;
+        return \true;
     }
     public function sendSMS($credentials, $smsText, $phoneNumber, $from)
     {
@@ -69,11 +69,11 @@ class ASPSMS extends SMSProvider
         $url = self::BASE_API_URL . $resource;
         $timeout = self::SOCKET_TIMEOUT;
         try {
-            $result = Http::sendHttpRequestBy(Http::getTransportMethod(), $url, $timeout, $userAgent = null, $destinationPath = null, $file = null, $followDepth = 0, $acceptLanguage = false, $acceptInvalidSslCertificate = false, $byteRange = false, $getExtendedInfo = false, $httpMethod = 'POST', $httpUserName = null, $httpPassword = null, $requestBody = json_encode($parameters));
+            $result = Http::sendHttpRequestBy(Http::getTransportMethod(), $url, $timeout, $userAgent = null, $destinationPath = null, $file = null, $followDepth = 0, $acceptLanguage = \false, $acceptInvalidSslCertificate = \false, $byteRange = \false, $getExtendedInfo = \false, $httpMethod = 'POST', $httpUserName = null, $httpPassword = null, $requestBody = json_encode($parameters));
         } catch (Exception $e) {
             throw new APIException($e->getMessage());
         }
-        $result = @json_decode($result, true);
+        $result = @json_decode($result, \true);
         if (!$result || $result['StatusCode'] != 1) {
             throw new APIException('ASPSMS API returned the following error message : ' . $result['StatusInfo']);
         }

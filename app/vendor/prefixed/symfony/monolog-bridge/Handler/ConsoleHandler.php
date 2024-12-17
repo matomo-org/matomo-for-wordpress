@@ -51,7 +51,7 @@ class ConsoleHandler extends AbstractProcessingHandler implements EventSubscribe
      * @param array                $verbosityLevelMap Array that maps the OutputInterface verbosity to a minimum logging
      *                                                level (leave empty to use the default mapping)
      */
-    public function __construct(?OutputInterface $output = null, bool $bubble = true, array $verbosityLevelMap = [], array $consoleFormatterOptions = [])
+    public function __construct(?OutputInterface $output = null, bool $bubble = \true, array $verbosityLevelMap = [], array $consoleFormatterOptions = [])
     {
         parent::__construct(Logger::DEBUG, $bubble);
         $this->output = $output;
@@ -123,7 +123,7 @@ class ConsoleHandler extends AbstractProcessingHandler implements EventSubscribe
     protected function write(array $record) : void
     {
         // at this point we've determined for sure that we want to output the record, so use the output's own verbosity
-        $this->output->write((string) $record['formatted'], false, $this->output->getVerbosity());
+        $this->output->write((string) $record['formatted'], \false, $this->output->getVerbosity());
     }
     /**
      * {@inheritdoc}
@@ -146,7 +146,7 @@ class ConsoleHandler extends AbstractProcessingHandler implements EventSubscribe
     private function updateLevel() : bool
     {
         if (null === $this->output) {
-            return false;
+            return \false;
         }
         $verbosity = $this->output->getVerbosity();
         if (isset($this->verbosityLevelMap[$verbosity])) {
@@ -154,6 +154,6 @@ class ConsoleHandler extends AbstractProcessingHandler implements EventSubscribe
         } else {
             $this->setLevel(Logger::DEBUG);
         }
-        return true;
+        return \true;
     }
 }

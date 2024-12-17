@@ -72,7 +72,7 @@ class Tasks extends \Piwik\Plugin\Tasks
         $this->daily('cleanupTrackingFailures', null, self::LOWEST_PRIORITY);
         $this->weekly('notifyTrackingFailures', null, self::LOWEST_PRIORITY);
         $generalConfig = Config::getInstance()->Tracker;
-        if (SettingsPiwik::isInternetEnabled() === true && $generalConfig['enable_spam_filter']) {
+        if (SettingsPiwik::isInternetEnabled() === \true && $generalConfig['enable_spam_filter']) {
             $this->weekly('updateSpammerList');
         }
         $this->scheduleTrackingCodeReminderChecks();
@@ -196,7 +196,7 @@ class Tasks extends \Piwik\Plugin\Tasks
     {
         if ($this->willPurgingCausePotentialProblemInUI() && !Rules::$disablePureOutdatedArchive) {
             $this->logger->info("Purging temporary archives: skipped (browser triggered archiving not enabled & not running after core:archive)");
-            return false;
+            return \false;
         }
         $archiveTables = ArchiveTableCreator::getTablesArchivesInstalled();
         $this->logger->info("Purging archives in {tableCount} archive tables.", array('tableCount' => count($archiveTables)));
@@ -217,7 +217,7 @@ class Tasks extends \Piwik\Plugin\Tasks
                     }
                     $this->archivePurger->purgeOutdatedArchives($dateObj);
                     $this->archivePurger->purgeArchivesWithPeriodRange($dateObj);
-                    $datesPurged[$date] = true;
+                    $datesPurged[$date] = \true;
                 } else {
                     $this->logger->debug("Date {date} already purged.", array('date' => $date));
                 }
@@ -225,7 +225,7 @@ class Tasks extends \Piwik\Plugin\Tasks
                 $this->logger->info("Skipping purging of archive tables *_{year}_{month}, year <= 1990.", array('year' => $year, 'month' => $month));
             }
         }
-        return true;
+        return \true;
     }
     public function purgeInvalidatedArchives()
     {
@@ -234,14 +234,14 @@ class Tasks extends \Piwik\Plugin\Tasks
         foreach ($archivesToPurge->getAllAsDates() as $date) {
             $this->archivePurger->purgeInvalidatedArchivesFrom($date);
             $archivesToPurge->removeDate($date);
-            $purgedDates[$date->toString('Y-m')] = true;
+            $purgedDates[$date->toString('Y-m')] = \true;
         }
         // purge from today if not done already since we will have many archives to remove
         $today = Date::today();
         $todayStr = $today->toString('Y-m');
         if (empty($purgedDates[$todayStr])) {
             $this->archivePurger->purgeInvalidatedArchivesFrom($today);
-            $purgedDates[$todayStr] = true;
+            $purgedDates[$todayStr] = \true;
         }
         // handle yesterday if it belongs to a different month
         $yesterday = Date::yesterday();
@@ -258,7 +258,7 @@ class Tasks extends \Piwik\Plugin\Tasks
     public function optimizeArchiveTable()
     {
         $archiveTables = ArchiveTableCreator::getTablesArchivesInstalled();
-        Db::optimizeTables($archiveTables);
+        Db\Schema::getInstance()->optimizeTables($archiveTables);
     }
     /**
      * Update the referrer spam blacklist
@@ -304,7 +304,7 @@ class Tasks extends \Piwik\Plugin\Tasks
             if (count($deletedSegments)) {
                 $this->archivePurger->purgeDeletedSegmentArchives($dateObj, $deletedSegments);
             }
-            $datesPurged[$date] = true;
+            $datesPurged[$date] = \true;
         }
     }
     /**

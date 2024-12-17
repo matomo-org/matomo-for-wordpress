@@ -87,15 +87,15 @@ class IniReader
      */
     private function readWithNativeFunction($ini)
     {
-        $array = @parse_ini_string($ini, true);
-        if ($array === false) {
+        $array = @parse_ini_string($ini, \true);
+        if ($array === \false) {
             $e = error_get_last();
             throw new \Matomo\Ini\IniReadingException('Syntax error in INI configuration: ' . $e['message']);
         }
         // We cannot use INI_SCANNER_RAW by default because it is buggy under PHP 5.3.14 and 5.4.4
         // http://3v4l.org/m24cT
-        $rawValues = @parse_ini_string($ini, true, INI_SCANNER_RAW);
-        if ($rawValues === false) {
+        $rawValues = @parse_ini_string($ini, \true, \INI_SCANNER_RAW);
+        if ($rawValues === \false) {
             return $this->decode($array, $array);
         }
         $array = $this->decode($array, $rawValues);
@@ -107,7 +107,7 @@ class IniReader
             throw new \Matomo\Ini\IniReadingException(sprintf("The file %s doesn't exist or is not readable", $filename));
         }
         $content = $this->getFileContent($filename);
-        if ($content === false) {
+        if ($content === \false) {
             throw new \Matomo\Ini\IniReadingException(sprintf('Impossible to read the file %s', $filename));
         }
         return $content;
@@ -237,9 +237,9 @@ class IniReader
             $value = trim($value);
             // Special keywords
             if ($value === 'true' || $value === 'yes' || $value === 'on') {
-                $value = true;
+                $value = \true;
             } elseif ($value === 'false' || $value === 'no' || $value === 'off') {
-                $value = false;
+                $value = \false;
             } elseif ($value === '' || $value === 'null') {
                 $value = null;
             }
@@ -288,19 +288,19 @@ class IniReader
             return file_get_contents($filename);
         } elseif (function_exists('file')) {
             $ini = file($filename);
-            if ($ini !== false) {
+            if ($ini !== \false) {
                 return implode("\n", $ini);
             }
         } elseif (function_exists('fopen') && function_exists('fread')) {
             $handle = fopen($filename, 'r');
             if (!$handle) {
-                return false;
+                return \false;
             }
             $ini = fread($handle, filesize($filename));
             fclose($handle);
             return $ini;
         }
-        return false;
+        return \false;
     }
     /**
      * We have to decode values manually because parse_ini_file() has a poor implementation.
@@ -331,10 +331,10 @@ class IniReader
     private function decodeBoolean($value, $rawValue)
     {
         if ($value === '1' && ($rawValue === 'true' || $rawValue === 'yes' || $rawValue === 'on')) {
-            return true;
+            return \true;
         }
         if ($value === '' && ($rawValue === 'false' || $rawValue === 'no' || $rawValue === 'off')) {
-            return false;
+            return \false;
         }
         return $value;
     }

@@ -37,7 +37,7 @@ class Tracker
     // We use hex ID that are 16 chars in length, ie. 64 bits IDs
     public const LENGTH_HEX_ID_STRING = 16;
     public const LENGTH_BINARY_ID = 8;
-    public static $initTrackerMode = false;
+    public static $initTrackerMode = \false;
     private $countOfLoggedRequests = 0;
     protected $isInstalled = null;
     /**
@@ -50,7 +50,7 @@ class Tracker
     }
     public function isDebugModeEnabled()
     {
-        return array_key_exists('PIWIK_TRACKER_DEBUG', $GLOBALS) && $GLOBALS['PIWIK_TRACKER_DEBUG'] === true;
+        return array_key_exists('PIWIK_TRACKER_DEBUG', $GLOBALS) && $GLOBALS['PIWIK_TRACKER_DEBUG'] === \true;
     }
     public function shouldRecordStatistics()
     {
@@ -77,7 +77,7 @@ class Tracker
         if ($this->isDebugModeEnabled()) {
             \Piwik\ErrorHandler::registerErrorHandler();
             \Piwik\ExceptionHandler::setUp();
-            $this->logger->debug("Debug enabled - Input parameters: {params}", ['params' => var_export($_GET + $_POST, true)]);
+            $this->logger->debug("Debug enabled - Input parameters: {params}", ['params' => var_export($_GET + $_POST, \true)]);
         }
     }
     public function isInstalled()
@@ -146,8 +146,8 @@ class Tracker
      */
     public static function initCorePiwikInTrackerMode()
     {
-        if (\Piwik\SettingsServer::isTrackerApiRequest() && self::$initTrackerMode === false) {
-            self::$initTrackerMode = true;
+        if (\Piwik\SettingsServer::isTrackerApiRequest() && self::$initTrackerMode === \false) {
+            self::$initTrackerMode = \true;
             require_once PIWIK_INCLUDE_PATH . '/core/Option.php';
             \Piwik\Access::getInstance();
             \Piwik\Config::getInstance();
@@ -233,23 +233,23 @@ class Tracker
             TrackerConfig::setConfigValue('tracking_requests_require_authentication', 0);
         }
         // Tests can force the use of 3rd party cookie for ID visitor
-        if (\Piwik\Common::getRequestVar('forceEnableFingerprintingAcrossWebsites', false, null, $args) == 1) {
+        if (\Piwik\Common::getRequestVar('forceEnableFingerprintingAcrossWebsites', \false, null, $args) == 1) {
             TrackerConfig::setConfigValue('enable_fingerprinting_across_websites', 1);
         }
         // Tests can simulate the tracker API maintenance mode
-        if (\Piwik\Common::getRequestVar('forceEnableTrackerMaintenanceMode', false, null, $args) == 1) {
+        if (\Piwik\Common::getRequestVar('forceEnableTrackerMaintenanceMode', \false, null, $args) == 1) {
             TrackerConfig::setConfigValue('record_statistics', 0);
         }
         // Tests can force the use of 3rd party cookie for ID visitor
-        if (\Piwik\Common::getRequestVar('forceUseThirdPartyCookie', false, null, $args) == 1) {
+        if (\Piwik\Common::getRequestVar('forceUseThirdPartyCookie', \false, null, $args) == 1) {
             TrackerConfig::setConfigValue('use_third_party_id_cookie', 1);
         }
         // Tests using window_look_back_for_visitor
-        if (\Piwik\Common::getRequestVar('forceLargeWindowLookBackForVisitor', false, null, $args) == 1 || strpos(json_encode($args, true), '"forceLargeWindowLookBackForVisitor":"1"') !== false) {
+        if (\Piwik\Common::getRequestVar('forceLargeWindowLookBackForVisitor', \false, null, $args) == 1 || strpos(json_encode($args, \true), '"forceLargeWindowLookBackForVisitor":"1"') !== \false) {
             TrackerConfig::setConfigValue('window_look_back_for_visitor', 2678400);
         }
         // Tests can force the enabling of IP anonymization
-        if (\Piwik\Common::getRequestVar('forceIpAnonymization', false, null, $args) == 1) {
+        if (\Piwik\Common::getRequestVar('forceIpAnonymization', \false, null, $args) == 1) {
             self::getDatabase();
             // make sure db is initialized
             $privacyConfig = new PrivacyManagerConfig();
@@ -259,22 +259,12 @@ class Tracker
             \Piwik\Filesystem::clearPhpCaches();
         }
     }
-    protected function loadTrackerPlugins()
-    {
-        try {
-            $pluginManager = PluginManager::getInstance();
-            $pluginsTracker = $pluginManager->loadTrackerPlugins();
-            $this->logger->debug("Loading plugins: { {plugins} }", ['plugins' => implode(", ", $pluginsTracker)]);
-        } catch (Exception $e) {
-            $this->logger->error('Error loading tracker plugins: {exception}', ['exception' => $e]);
-        }
-    }
     private function handleFatalErrors()
     {
         register_shutdown_function(function () {
             // TODO: add a log here
             $lastError = error_get_last();
-            if (!empty($lastError) && $lastError['type'] == E_ERROR) {
+            if (!empty($lastError) && $lastError['type'] == \E_ERROR) {
                 \Piwik\Common::sendResponseCode(500);
             }
         });
@@ -284,21 +274,21 @@ class Tracker
         try {
             $debug = (bool) TrackerConfig::getConfigValue('debug');
             if ($debug) {
-                return true;
+                return \true;
             }
             $debugOnDemand = (bool) TrackerConfig::getConfigValue('debug_on_demand');
             if ($debugOnDemand) {
-                return (bool) \Piwik\Common::getRequestVar('debug', false);
+                return (bool) \Piwik\Common::getRequestVar('debug', \false);
             }
         } catch (Exception $e) {
         }
-        return false;
+        return \false;
     }
     public function isPreFlightCorsRequest() : bool
     {
         if (isset($_SERVER['REQUEST_METHOD']) && strtoupper($_SERVER['REQUEST_METHOD']) === 'OPTIONS') {
             return !empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']) || !empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']);
         }
-        return false;
+        return \false;
     }
 }

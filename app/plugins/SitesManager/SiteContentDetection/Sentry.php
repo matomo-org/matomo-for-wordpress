@@ -21,6 +21,6 @@ class Sentry extends \Piwik\Plugins\SitesManager\SiteContentDetection\SiteConten
     }
     public function isDetected(?string $data = null, ?array $headers = null) : bool
     {
-        return false !== stripos($data, 'js.sentry-cdn.com');
+        return \false !== stripos($data, 'js.sentry-cdn.com');
     }
 }

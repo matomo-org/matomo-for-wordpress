@@ -45,7 +45,7 @@ class AveragePageLoadTime extends ProcessedMetric
         if ($formatter instanceof Formatter\Html && !$value) {
             return '-';
         } else {
-            return $formatter->getPrettyTimeFromSeconds($value, $displayAsSentence = true);
+            return $formatter->getPrettyTimeFromSeconds($value, $displayAsSentence = \true);
         }
     }
     public function getDependentMetrics()

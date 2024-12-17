@@ -57,7 +57,7 @@ class Controller extends \Piwik\Plugin\Controller
     {
         parent::__construct();
         $this->translator = $translator;
-        $this->goals = Request::processRequest('Goals.getGoals', ['idSite' => $this->idSite, 'filter_limit' => '-1'], $default = []);
+        $this->goals = Request::processRequest('Goals.getGoals', ['idSite' => $this->idSite, 'filter_limit' => '-1', 'orderByName' => \true], $default = []);
     }
     public function manage()
     {
@@ -102,7 +102,7 @@ class Controller extends \Piwik\Plugin\Controller
         $view = new View('@Goals/addNewGoal');
         $this->setGeneralVariablesView($view);
         $this->setGoalOptions($view);
-        $view->onlyShowAddNewGoal = true;
+        $view->onlyShowAddNewGoal = \true;
         $view->ecommerceEnabled = $this->site->isEcommerceEnabled();
         $this->execAndSetResultsForTwigEvents($view);
         return $view->render();
@@ -150,15 +150,15 @@ class Controller extends \Piwik\Plugin\Controller
         $numConversions = $conversions->getConversionForGoal($idGoal, $this->idSite, $period, $date);
         return json_encode($numConversions > 0);
     }
-    public function getEvolutionGraph(array $columns = array(), $idGoal = false, array $defaultColumns = array())
+    public function getEvolutionGraph(array $columns = array(), $idGoal = \false, array $defaultColumns = array())
     {
         if (empty($columns)) {
-            $columns = Common::getRequestVar('columns', false);
-            if (false !== $columns) {
+            $columns = Common::getRequestVar('columns', \false);
+            if (\false !== $columns) {
                 $columns = Piwik::getArrayFromApiParameter($columns);
             }
         }
-        if (false !== $columns) {
+        if (\false !== $columns) {
             $columns = !is_array($columns) ? array($columns) : $columns;
         }
         if (empty($idGoal)) {
@@ -212,13 +212,13 @@ class Controller extends \Piwik\Plugin\Controller
     public function getSparklines()
     {
         $content = "";
-        $goals = Request::processRequest('Goals.getGoals', ['idSite' => $this->idSite, 'filter_limit' => '-1'], []);
+        $goals = Request::processRequest('Goals.getGoals', ['idSite' => $this->idSite, 'filter_limit' => '-1', 'orderByName' => \true], []);
         foreach ($goals as $goal) {
             $params = ['idGoal' => $goal['idgoal'], 'allow_multiple' => (int) $goal['allow_multiple'], 'only_summary' => 1];
             \Piwik\Context::executeWithQueryParameters($params, function () use(&$content, $goal) {
                 //load Visualisations Sparkline
-                $view = ViewDataTableFactory::build(Sparklines::ID, 'Goals.getMetrics', 'Goals.' . __METHOD__, true);
-                $view->config->show_title = true;
+                $view = ViewDataTableFactory::build(Sparklines::ID, 'Goals.getMetrics', 'Goals.' . __METHOD__, \true);
+                $view->config->show_title = \true;
                 $view->config->custom_parameters = ['idGoal' => $goal['idgoal']];
                 $content .= $view->render();
             });
@@ -230,7 +230,7 @@ class Controller extends \Piwik\Plugin\Controller
         $columnTranslation = '';
         // find the right translation for this column, eg. find 'revenue' if column is Goal_1_revenue
         foreach ($nameToLabel as $metric => $metricTranslation) {
-            if (strpos($columnName, $metric) !== false) {
+            if (strpos($columnName, $metric) !== \false) {
                 $columnTranslation = $this->translator->translate($metricTranslation);
                 break;
             }

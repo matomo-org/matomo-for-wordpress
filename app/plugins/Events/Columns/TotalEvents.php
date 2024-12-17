@@ -44,7 +44,7 @@ class TotalEvents extends VisitDimension
         if ($this->isEventAction($action)) {
             return 'visit_total_events + 1';
         }
-        return false;
+        return \false;
     }
     /**
      * @param Action|null $action

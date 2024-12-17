@@ -23,7 +23,7 @@ class Diagnostics extends Plugin
      */
     public function registerEvents()
     {
-        return array('Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Visualization.onNoData' => ['function' => 'onNoData', 'before' => true]);
+        return array('Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys', 'AssetManager.getStylesheetFiles' => 'getStylesheetFiles', 'Visualization.onNoData' => ['function' => 'onNoData', 'before' => \true]);
     }
     public function getClientSideTranslationKeys(&$translations)
     {
@@ -52,7 +52,7 @@ class Diagnostics extends Plugin
             $notification->context = Notification::CONTEXT_INFO;
             $notification->flags = Notification::FLAG_NO_CLEAR;
             $notification->type = Notification::TYPE_TRANSIENT;
-            $notification->raw = true;
+            $notification->raw = \true;
             $dataTableView->notifications[self::NO_DATA_ARCHIVING_NOT_RUN_NOTIFICATION_ID] = $notification;
         }
     }

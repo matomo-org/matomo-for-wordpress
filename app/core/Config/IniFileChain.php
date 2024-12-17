@@ -132,7 +132,7 @@ class IniFileChain
         $userSettingsFile = $this->getUserSettingsFile();
         $defaultSettings = $this->getMergedDefaultSettings();
         $existingMutableSettings = $this->settingsChain[$userSettingsFile];
-        $dirty = false;
+        $dirty = \false;
         $configToWrite = [];
         foreach ($this->mergedSettings as $sectionName => $changedSection) {
             if (isset($existingMutableSettings[$sectionName])) {
@@ -148,7 +148,7 @@ class IniFileChain
             // if either local/config have non-default values and the other doesn't,
             // OR both have values, but different values, we must write to config.ini.php
             if (empty($changedSection) xor empty($existingMutableSection) || !empty($changedSection) && !empty($existingMutableSection) && self::compareElements($changedSection, $existingMutableSection)) {
-                $dirty = true;
+                $dirty = \true;
             }
             $configToWrite[$sectionName] = $changedSection;
         }
@@ -187,7 +187,7 @@ class IniFileChain
         if (!empty($defaultSettingsFiles) || !empty($userSettingsFile)) {
             $this->resetSettingsChain($defaultSettingsFiles, $userSettingsFile);
         }
-        $hasAbsoluteConfigFile = !empty($userSettingsFile) && strpos($userSettingsFile, DIRECTORY_SEPARATOR) === 0;
+        $hasAbsoluteConfigFile = !empty($userSettingsFile) && strpos($userSettingsFile, \DIRECTORY_SEPARATOR) === 0;
         $useConfigCache = !empty($GLOBALS['ENABLE_CONFIG_PHP_CACHE']) && $hasAbsoluteConfigFile;
         if ($useConfigCache && is_file($userSettingsFile)) {
             $cache = new \Piwik\Config\Cache();
@@ -424,7 +424,7 @@ class IniFileChain
         } elseif (is_float($values)) {
             $values = Common::forceDotAsSeparatorForDecimalPoint($values);
         } elseif (is_string($values)) {
-            $values = htmlentities($values, ENT_COMPAT, 'UTF-8');
+            $values = htmlentities($values, \ENT_COMPAT, 'UTF-8');
             $values = str_replace('$', '&#36;', $values);
         }
         return $values;
@@ -443,7 +443,7 @@ class IniFileChain
             }
             return $values;
         } elseif (is_string($values)) {
-            return html_entity_decode($values, ENT_COMPAT, 'UTF-8');
+            return html_entity_decode($values, \ENT_COMPAT, 'UTF-8');
         }
         return $values;
     }

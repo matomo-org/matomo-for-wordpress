@@ -19,7 +19,7 @@ class ScheduledTasksRunner
         if (Common::isPhpCliMode()) {
             // don't run scheduled tasks in CLI mode from Tracker, this is the case
             // where we bulk load logs & don't want to lose time with tasks
-            return false;
+            return \false;
         }
         return $tracker->shouldRecordStatistics();
     }
@@ -45,7 +45,7 @@ class ScheduledTasksRunner
             return;
         }
         $nextRunTime = $cache['lastTrackerCronRun'] + $minimumInterval;
-        if (defined('DEBUG_FORCE_SCHEDULED_TASKS') && DEBUG_FORCE_SCHEDULED_TASKS || $cache['lastTrackerCronRun'] === false || $nextRunTime < $now) {
+        if (defined('DEBUG_FORCE_SCHEDULED_TASKS') && DEBUG_FORCE_SCHEDULED_TASKS || $cache['lastTrackerCronRun'] === \false || $nextRunTime < $now) {
             $cache['lastTrackerCronRun'] = $now;
             \Piwik\Tracker\Cache::setCacheGeneral($cache);
             Option::set('lastTrackerCronRun', $cache['lastTrackerCronRun']);

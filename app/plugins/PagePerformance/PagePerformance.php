@@ -18,7 +18,7 @@ class PagePerformance extends \Piwik\Plugin
     public static $availableForMethods = ['getPageUrls', 'getEntryPageUrls', 'getExitPageUrls', 'getPageUrlsFollowingSiteSearch', 'getPageTitles', 'getEntryPageTitles', 'getExitPageTitles', 'getPageTitlesFollowingSiteSearch'];
     public function isTrackerPlugin()
     {
-        return true;
+        return \true;
     }
     /**
      * @see \Piwik\Plugin::registerEvents
@@ -53,7 +53,7 @@ class PagePerformance extends \Piwik\Plugin
     public function isLowerValueBetter(&$isLowerBetter, $metric)
     {
         if (array_key_exists($metric, \Piwik\Plugins\PagePerformance\Metrics::getAllPagePerformanceMetrics())) {
-            $isLowerBetter = true;
+            $isLowerBetter = \true;
         }
     }
     public function enrichApi($dataTable, $params)
@@ -63,7 +63,7 @@ class PagePerformance extends \Piwik\Plugin
         }
         // remove additional metrics for action reports that don't have data
         if (!in_array($params['action'], self::$availableForMethods)) {
-            $dataTable->deleteColumns(['sum_time_network', 'nb_hits_with_time_network', 'min_time_network', 'max_time_network', 'sum_time_server', 'nb_hits_with_time_server', 'min_time_server', 'max_time_server', 'sum_time_transfer', 'nb_hits_with_time_transfer', 'min_time_transfer', 'max_time_transfer', 'sum_time_dom_processing', 'nb_hits_with_time_dom_processing', 'min_time_dom_processing', 'max_time_dom_processing', 'sum_time_dom_completion', 'nb_hits_with_time_dom_completion', 'min_time_dom_completion', 'max_time_dom_completion', 'sum_time_on_load', 'nb_hits_with_time_on_load', 'min_time_on_load', 'max_time_on_load'], true);
+            $dataTable->deleteColumns(['sum_time_network', 'nb_hits_with_time_network', 'min_time_network', 'max_time_network', 'sum_time_server', 'nb_hits_with_time_server', 'min_time_server', 'max_time_server', 'sum_time_transfer', 'nb_hits_with_time_transfer', 'min_time_transfer', 'max_time_transfer', 'sum_time_dom_processing', 'nb_hits_with_time_dom_processing', 'min_time_dom_processing', 'max_time_dom_processing', 'sum_time_dom_completion', 'nb_hits_with_time_dom_completion', 'min_time_dom_completion', 'max_time_dom_completion', 'sum_time_on_load', 'nb_hits_with_time_on_load', 'min_time_on_load', 'max_time_on_load'], \true);
             return;
         }
         $dataTable->filter(function (DataTable $dataTable) {

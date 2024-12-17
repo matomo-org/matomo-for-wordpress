@@ -25,7 +25,7 @@ class NativeSessionStorageFactory implements SessionStorageFactoryInterface
     /**
      * @see NativeSessionStorage constructor.
      */
-    public function __construct(array $options = [], $handler = null, ?MetadataBag $metaBag = null, bool $secure = false)
+    public function __construct(array $options = [], $handler = null, ?MetadataBag $metaBag = null, bool $secure = \false)
     {
         $this->options = $options;
         $this->handler = $handler;
@@ -36,7 +36,7 @@ class NativeSessionStorageFactory implements SessionStorageFactoryInterface
     {
         $storage = new NativeSessionStorage($this->options, $this->handler, $this->metaBag);
         if ($this->secure && $request && $request->isSecure()) {
-            $storage->setOptions(['cookie_secure' => true]);
+            $storage->setOptions(['cookie_secure' => \true]);
         }
         return $storage;
     }

@@ -50,7 +50,7 @@ class GetPageTitlesFollowingSiteSearch extends \Piwik\Plugins\Actions\Reports\Si
     {
         $view->config->title = $title;
         $view->config->columns_to_display = array('label', 'nb_hits_following_search', 'nb_hits');
-        $view->config->show_exclude_low_population = false;
+        $view->config->show_exclude_low_population = \false;
         $view->requestConfig->filter_sort_column = 'nb_hits_following_search';
         $view->requestConfig->filter_sort_order = 'desc';
         $this->addExcludeLowPopDisplayProperties($view);

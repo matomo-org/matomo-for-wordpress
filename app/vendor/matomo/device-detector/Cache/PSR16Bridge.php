@@ -30,7 +30,7 @@ class PSR16Bridge implements \DeviceDetector\Cache\CacheInterface
      */
     public function fetch(string $id)
     {
-        return $this->cache->get($id, false);
+        return $this->cache->get($id, \false);
     }
     /**
      * @inheritDoc

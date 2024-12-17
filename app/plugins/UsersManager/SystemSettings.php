@@ -58,7 +58,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
                 }
                 $domains = array_map(function ($domain) {
                     $domain = trim($domain);
-                    if (mb_strpos($domain, '@') !== false) {
+                    if (mb_strpos($domain, '@') !== \false) {
                         // handle incorrect user input such as leading @ or entered email address
                         $allowedEmailDomains = new AllowedEmailDomain($this);
                         $domain = $allowedEmailDomains->getDomainFromEmail($domain);

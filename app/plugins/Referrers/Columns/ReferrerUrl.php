@@ -50,6 +50,6 @@ class ReferrerUrl extends \Piwik\Plugins\Referrers\Columns\Base
         if ($this->isCurrentReferrerDirectEntry($visitor) && $information['referer_type'] != Common::REFERRER_TYPE_DIRECT_ENTRY) {
             return $this->trimUrl($information['referer_url']);
         }
-        return false;
+        return \false;
     }
 }

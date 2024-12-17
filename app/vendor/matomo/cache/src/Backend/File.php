@@ -21,8 +21,8 @@ class File extends PhpFileCache implements Backend
 {
     // for testing purposes since tests run on both CLI/FPM (changes in CLI can't invalidate
     // opcache in FPM, so we have to invalidate before reading)
-    public static $invalidateOpCacheBeforeRead = false;
-    private $supportsParseError = false;
+    public static $invalidateOpCacheBeforeRead = \false;
+    private $supportsParseError = \false;
     /**
      * Constructor.
      *
@@ -36,7 +36,7 @@ class File extends PhpFileCache implements Backend
         if (!is_dir($directory)) {
             $this->createDirectory($directory);
         }
-        $this->supportsParseError = defined('PHP_MAJOR_VERSION') && PHP_MAJOR_VERSION >= 7 && class_exists('\\ParseError');
+        $this->supportsParseError = defined('PHP_MAJOR_VERSION') && \PHP_MAJOR_VERSION >= 7 && class_exists('\\ParseError');
         parent::__construct($directory, $extension);
     }
     public function doFetch($id)
@@ -48,7 +48,7 @@ class File extends PhpFileCache implements Backend
             try {
                 return parent::doFetch($id);
             } catch (\ParseError $e) {
-                return false;
+                return \false;
             }
         }
         return parent::doFetch($id);
@@ -80,7 +80,7 @@ class File extends PhpFileCache implements Backend
     {
         // if the directory does not exist, do not bother to continue clearing
         if (!is_dir($this->directory)) {
-            return false;
+            return \false;
         }
         foreach ($this->getFileIterator() as $name => $file) {
             $this->opCacheInvalidate($name);
@@ -99,7 +99,7 @@ class File extends PhpFileCache implements Backend
      */
     public function getFilename($id)
     {
-        $path = $this->directory . DIRECTORY_SEPARATOR;
+        $path = $this->directory . \DIRECTORY_SEPARATOR;
         $id = preg_replace('@[\\\\/:"*?<>|]+@', '', $id);
         return $path . $id . $this->getExtension();
     }
@@ -107,7 +107,7 @@ class File extends PhpFileCache implements Backend
     {
         if (is_file($filepath)) {
             if (function_exists('opcache_invalidate')) {
-                @opcache_invalidate($filepath, $force = true);
+                @opcache_invalidate($filepath, $force = \true);
             }
             if (function_exists('apc_delete_file')) {
                 @apc_delete_file($filepath);
@@ -128,7 +128,7 @@ class File extends PhpFileCache implements Backend
     {
         if (!is_dir($path)) {
             // the mode in mkdir is modified by the current umask
-            @mkdir($path, 0750, $recursive = true);
+            @mkdir($path, 0750, $recursive = \true);
         }
         // try to overcome restrictive umask (mis-)configuration
         if (!is_writable($path)) {

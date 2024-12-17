@@ -11,6 +11,7 @@ namespace Piwik\Db;
 use Exception;
 use Piwik\Common;
 use Piwik\Config;
+use Piwik\Config\DatabaseConfig;
 use Piwik\Container\StaticContainer;
 use Piwik\Db;
 use Piwik\Log;
@@ -28,7 +29,7 @@ class BatchInsert
      * @param array $values array of data to be inserted
      * @param bool $ignoreWhenDuplicate Ignore new rows that contain unique key values that duplicate old rows
      */
-    public static function tableInsertBatchIterate($tableName, $fields, $values, $ignoreWhenDuplicate = true)
+    public static function tableInsertBatchIterate($tableName, $fields, $values, $ignoreWhenDuplicate = \true)
     {
         $tableName = preg_replace('/[^a-zA-Z\\d_-]/', '', $tableName);
         $fieldList = '(' . join(',', $fields) . ')';
@@ -47,7 +48,7 @@ class BatchInsert
      * @param array $values array of data to be inserted
      * @param bool $ignoreWhenDuplicate Ignore new rows that contain unique key values that duplicate old rows
      */
-    public static function tableInsertBatchSql($tableName, $fields, $values, $ignoreWhenDuplicate = true)
+    public static function tableInsertBatchSql($tableName, $fields, $values, $ignoreWhenDuplicate = \true)
     {
         $insertLines = array();
         $bind = array();
@@ -74,7 +75,7 @@ class BatchInsert
      * @throws Exception
      * @return bool  True if the bulk LOAD was used, false if we fallback to plain INSERTs
      */
-    public static function tableInsertBatch($tableName, $fields, $values, $throwException = false, $charset = 'utf8')
+    public static function tableInsertBatch($tableName, $fields, $values, $throwException = \false, $charset = 'utf8')
     {
         $loadDataInfileEnabled = Config::getInstance()->General['enable_load_data_infile'];
         if ($loadDataInfileEnabled && Db::get()->hasBulkLoader()) {
@@ -84,6 +85,10 @@ class BatchInsert
                 $instanceId = '';
             }
             $filePath = $path . $tableName . '-' . $instanceId . Common::generateUniqId() . '.csv';
+            // always use utf8 for TiDb, as TiDb has problems with latin1
+            if (DatabaseConfig::isTiDb()) {
+                $charset = 'utf8';
+            }
             try {
                 $fileSpec = array(
                     'delim' => "\t",
@@ -105,7 +110,7 @@ class BatchInsert
                 $rc = self::createTableFromCSVFile($tableName, $fields, $filePath, $fileSpec);
                 if ($rc) {
                     unlink($filePath);
-                    return true;
+                    return \true;
                 }
             } catch (Exception $e) {
                 if ($throwException) {
@@ -118,7 +123,7 @@ class BatchInsert
             }
         }
         self::tableInsertBatchIterate($tableName, $fields, $values);
-        return false;
+        return \false;
     }
     private static function getBestPathForLoadData()
     {
@@ -200,7 +205,7 @@ class BatchInsert
                 if (empty($result) || $result < 0) {
                     continue;
                 }
-                return true;
+                return \true;
             } catch (Exception $e) {
                 $code = $e->getCode();
                 $message = $e->getMessage() . ($code ? "[{$code}]" : '');
@@ -215,7 +220,7 @@ class BatchInsert
             Log::info($message);
             throw new Exception($message);
         }
-        return false;
+        return \false;
     }
     /**
      * Create CSV (or other delimited) files
@@ -240,7 +245,7 @@ class BatchInsert
         foreach ($rows as $row) {
             $output = '';
             foreach ($row as $value) {
-                if (!isset($value) || is_null($value) || $value === false) {
+                if (!isset($value) || is_null($value) || $value === \false) {
                     $output .= $null . $delim;
                 } else {
                     $output .= $quote . $escapespecial_cb($value) . $quote . $delim;

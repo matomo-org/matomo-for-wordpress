@@ -29,7 +29,7 @@ abstract class Input implements InputInterface, StreamableInputInterface
     protected $stream;
     protected $options = [];
     protected $arguments = [];
-    protected $interactive = true;
+    protected $interactive = \true;
     public function __construct(?InputDefinition $definition = null)
     {
         if (null === $definition) {

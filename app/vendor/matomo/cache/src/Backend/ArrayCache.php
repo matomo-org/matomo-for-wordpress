@@ -18,7 +18,7 @@ class ArrayCache implements Backend
      */
     public function doFetch($id)
     {
-        return $this->doContains($id) ? $this->data[$id] : false;
+        return $this->doContains($id) ? $this->data[$id] : \false;
     }
     /**
      * {@inheritdoc}
@@ -34,7 +34,7 @@ class ArrayCache implements Backend
     public function doSave($id, $data, $lifeTime = 0)
     {
         $this->data[$id] = $data;
-        return true;
+        return \true;
     }
     /**
      * {@inheritdoc}
@@ -42,11 +42,11 @@ class ArrayCache implements Backend
     public function doDelete($id)
     {
         unset($this->data[$id]);
-        return true;
+        return \true;
     }
     public function doFlush()
     {
         $this->data = array();
-        return true;
+        return \true;
     }
 }

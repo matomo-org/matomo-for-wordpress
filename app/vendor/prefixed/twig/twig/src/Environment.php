@@ -41,11 +41,11 @@ use Matomo\Dependencies\Twig\TokenParser\TokenParserInterface;
  */
 class Environment
 {
-    public const VERSION = '3.11.1';
-    public const VERSION_ID = 301101;
+    public const VERSION = '3.11.3';
+    public const VERSION_ID = 301103;
     public const MAJOR_VERSION = 4;
     public const MINOR_VERSION = 11;
-    public const RELEASE_VERSION = 1;
+    public const RELEASE_VERSION = 3;
     public const EXTRA_VERSION = '';
     private $charset;
     private $loader;
@@ -106,7 +106,7 @@ class Environment
     public function __construct(LoaderInterface $loader, $options = [])
     {
         $this->setLoader($loader);
-        $options = array_merge(['debug' => false, 'charset' => 'UTF-8', 'strict_variables' => false, 'autoescape' => 'html', 'cache' => false, 'auto_reload' => null, 'optimizations' => -1, 'use_yield' => false], $options);
+        $options = array_merge(['debug' => \false, 'charset' => 'UTF-8', 'strict_variables' => \false, 'autoescape' => 'html', 'cache' => \false, 'auto_reload' => null, 'optimizations' => -1, 'use_yield' => \false], $options);
         $this->useYield = (bool) $options['use_yield'];
         $this->debug = (bool) $options['debug'];
         $this->setCharset($options['charset'] ?? 'UTF-8');
@@ -119,7 +119,7 @@ class Environment
         }]);
         $this->addExtension(new CoreExtension());
         $escaperExt = new EscaperExtension($options['autoescape']);
-        $escaperExt->setEnvironment($this, false);
+        $escaperExt->setEnvironment($this, \false);
         $this->addExtension($escaperExt);
         if (\PHP_VERSION_ID >= 80000) {
             $this->addExtension(new YieldNotReadyExtension($this->useYield));
@@ -138,7 +138,7 @@ class Environment
      */
     public function enableDebug()
     {
-        $this->debug = true;
+        $this->debug = \true;
         $this->updateOptionsHash();
     }
     /**
@@ -146,7 +146,7 @@ class Environment
      */
     public function disableDebug()
     {
-        $this->debug = false;
+        $this->debug = \false;
         $this->updateOptionsHash();
     }
     /**
@@ -163,14 +163,14 @@ class Environment
      */
     public function enableAutoReload()
     {
-        $this->autoReload = true;
+        $this->autoReload = \true;
     }
     /**
      * Disables the auto_reload option.
      */
     public function disableAutoReload()
     {
-        $this->autoReload = false;
+        $this->autoReload = \false;
     }
     /**
      * Checks if the auto_reload option is enabled.
@@ -186,7 +186,7 @@ class Environment
      */
     public function enableStrictVariables()
     {
-        $this->strictVariables = true;
+        $this->strictVariables = \true;
         $this->updateOptionsHash();
     }
     /**
@@ -194,7 +194,7 @@ class Environment
      */
     public function disableStrictVariables()
     {
-        $this->strictVariables = false;
+        $this->strictVariables = \false;
         $this->updateOptionsHash();
     }
     /**
@@ -215,7 +215,7 @@ class Environment
      *                                     an absolute path to the compiled templates,
      *                                     or false to disable cache
      */
-    public function getCache($original = true)
+    public function getCache($original = \true)
     {
         return $original ? $this->originalCache : $this->cache;
     }
@@ -231,7 +231,7 @@ class Environment
         if (\is_string($cache)) {
             $this->originalCache = $cache;
             $this->cache = new FilesystemCache($cache, $this->autoReload ? FilesystemCache::FORCE_BYTECODE_INVALIDATION : 0);
-        } elseif (false === $cache) {
+        } elseif (\false === $cache) {
             $this->originalCache = $cache;
             $this->cache = new NullCache();
         } elseif ($cache instanceof CacheInterface) {
@@ -331,17 +331,17 @@ class Environment
         if (isset($this->loadedTemplates[$cls])) {
             return $this->loadedTemplates[$cls];
         }
-        if (!class_exists($cls, false)) {
+        if (!class_exists($cls, \false)) {
             $key = $this->cache->generateKey($name, $mainCls);
             if (!$this->isAutoReload() || $this->isTemplateFresh($name, $this->cache->getTimestamp($key))) {
                 $this->cache->load($key);
             }
-            if (!class_exists($cls, false)) {
+            if (!class_exists($cls, \false)) {
                 $source = $this->getLoader()->getSourceContext($name);
                 $content = $this->compileSource($source);
                 $this->cache->write($key, $content);
                 $this->cache->load($key);
-                if (!class_exists($mainCls, false)) {
+                if (!class_exists($mainCls, \false)) {
                     /* Last line of defense if either $this->bcWriteCacheFile was used,
                      * $this->cache is implemented as a no-op or we have a race condition
                      * where the cache was cleared between the above calls to write to and load from
@@ -349,7 +349,7 @@ class Environment
                      */
                     eval('?>' . $content);
                 }
-                if (!class_exists($cls, false)) {
+                if (!class_exists($cls, \false)) {
                     throw new RuntimeError(\sprintf('Failed to load Twig template "%s", index "%s": cache might be corrupted.', $name, $index), -1, $source);
                 }
             }
@@ -370,7 +370,7 @@ class Environment
      */
     public function createTemplate(string $template, ?string $name = null) : TemplateWrapper
     {
-        $hash = hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $template, false);
+        $hash = hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $template, \false);
         if (null !== $name) {
             $name = \sprintf('%s (string template %s)', $name, $hash);
         } else {

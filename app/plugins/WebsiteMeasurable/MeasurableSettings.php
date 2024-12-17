@@ -72,7 +72,7 @@ class MeasurableSettings extends \Piwik\Settings\Measurable\MeasurableSettings
     /**
      * @var bool
      */
-    private $unsetSiteSearchKeywords = false;
+    private $unsetSiteSearchKeywords = \false;
     public function __construct(SitesManager\API $api, Plugin\Manager $pluginManager, TypeManager $typeManager, $idSite, $idMeasurableType)
     {
         $this->sitesManagerApi = $api;
@@ -84,7 +84,7 @@ class MeasurableSettings extends \Piwik\Settings\Measurable\MeasurableSettings
     {
         $isWebsite = $type === \Piwik\Plugins\WebsiteMeasurable\Type::ID;
         if ($isWebsite) {
-            return true;
+            return \true;
         }
         // if no such type exists, we default to website properties
         return !$this->typeManager->isExistingType($type);
@@ -119,7 +119,7 @@ class MeasurableSettings extends \Piwik\Settings\Measurable\MeasurableSettings
     }
     private function makeExcludeUnknownUrls() : MeasurableProperty
     {
-        return $this->makeProperty('exclude_unknown_urls', $default = false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
+        return $this->makeProperty('exclude_unknown_urls', $default = \false, FieldConfig::TYPE_BOOL, function (FieldConfig $field) {
             $field->title = Piwik::translate('SitesManager_OnlyMatchedUrlsAllowed');
             $field->inlineHelp = Piwik::translate('SitesManager_OnlyMatchedUrlsAllowedHelp') . '<br />' . Piwik::translate('SitesManager_OnlyMatchedUrlsAllowedHelpExamples');
             $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
@@ -217,7 +217,7 @@ class MeasurableSettings extends \Piwik\Settings\Measurable\MeasurableSettings
                         // - with subdomain wildcard like .example.url/path
                         $prefixedUrl = 'https://' . ltrim(preg_replace('/^https?:\\/\\//', '', $url), '.');
                         $parsedUrl = @parse_url($prefixedUrl);
-                        if (false === $parsedUrl || !UrlHelper::isLookLikeUrl($prefixedUrl)) {
+                        if (\false === $parsedUrl || !UrlHelper::isLookLikeUrl($prefixedUrl)) {
                             throw new Exception(Piwik::translate('SitesManager_ExceptionInvalidUrl', [$url]));
                         }
                     }
@@ -240,7 +240,7 @@ class MeasurableSettings extends \Piwik\Settings\Measurable\MeasurableSettings
     private function makeUseDefaultSiteSearchParams(SitesManager\API $sitesManagerApi)
     {
         $settings = $this;
-        return $this->makeSetting('use_default_site_search_params', $default = true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) use($sitesManagerApi, $settings) {
+        return $this->makeSetting('use_default_site_search_params', $default = \true, FieldConfig::TYPE_BOOL, function (FieldConfig $field) use($sitesManagerApi, $settings) {
             if (Piwik::hasUserSuperUserAccess()) {
                 $title = Piwik::translate('SitesManager_SearchUseDefault', ["<a href='#globalSettings'>", "</a>"]);
             } else {
@@ -263,7 +263,7 @@ class MeasurableSettings extends \Piwik\Settings\Measurable\MeasurableSettings
             $field->description .= $searchCategoryGlobal;
             $field->transform = function ($value) use($settings) {
                 if ($value) {
-                    $settings->unsetSiteSearchKeywords = true;
+                    $settings->unsetSiteSearchKeywords = \true;
                 }
                 return null;
                 // never actually save a value for this

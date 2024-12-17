@@ -14,7 +14,7 @@ use Piwik\Validators\NotEmpty;
 use Piwik\Validators\NumberRange;
 class VisualWebsiteOptimizerTag extends \Piwik\Plugins\TagManager\Template\Tag\BaseTag
 {
-    const ID = 'VisualWebsiteOptimizer';
+    public const ID = 'VisualWebsiteOptimizer';
     public function getId()
     {
         return self::ID;
@@ -33,6 +33,7 @@ class VisualWebsiteOptimizerTag extends \Piwik\Plugins\TagManager\Template\Tag\B
             $field->title = Piwik::translate('TagManager_VisualWebsiteOptimizerTagAccountIdTitle');
             $field->uiControl = FieldConfig::UI_CONTROL_TEXT;
             $field->description = Piwik::translate('TagManager_VisualWebsiteOptimizerTagAccountIdDescription');
+            $field->uiControlAttributes = ['placeholder' => Piwik::translate('TagManager_VisualWebsiteOptimizerTagAccountIdPlaceholder')];
             $field->validators[] = new NotEmpty();
             $field->validate = function ($value) {
                 $value = trim($value);

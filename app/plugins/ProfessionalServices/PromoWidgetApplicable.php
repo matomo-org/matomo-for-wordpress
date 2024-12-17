@@ -33,18 +33,18 @@ class PromoWidgetApplicable
     }
     public function check(string $pluginName, string $widgetName) : bool
     {
-        if (Advertising::isAdsEnabledInConfig($this->config->General) === false) {
-            return false;
+        if (Advertising::isAdsEnabledInConfig($this->config->General) === \false) {
+            return \false;
         }
-        if ($this->manager->isPluginActivated('Marketplace') === false) {
-            return false;
+        if ($this->manager->isPluginActivated('Marketplace') === \false) {
+            return \false;
         }
-        if ((bool) $this->config->General['enable_internet_features'] === false) {
-            return false;
+        if ((bool) $this->config->General['enable_internet_features'] === \false) {
+            return \false;
         }
         if ($this->promoWidgetDismissal->isPromoWidgetDismissedForCurrentUser($widgetName)) {
-            return false;
+            return \false;
         }
-        return $this->manager->isPluginActivated($pluginName) === false;
+        return $this->manager->isPluginActivated($pluginName) === \false;
     }
 }

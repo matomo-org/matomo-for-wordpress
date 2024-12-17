@@ -38,10 +38,10 @@ class PhpFileCache extends \Doctrine\Common\Cache\FileCache
     {
         $value = $this->includeFileForId($id);
         if ($value === null) {
-            return false;
+            return \false;
         }
         if ($value['lifetime'] !== 0 && $value['lifetime'] < time()) {
-            return false;
+            return \false;
         }
         return $value['data'];
     }
@@ -52,7 +52,7 @@ class PhpFileCache extends \Doctrine\Common\Cache\FileCache
     {
         $value = $this->includeFileForId($id);
         if ($value === null) {
-            return false;
+            return \false;
         }
         return $value['lifetime'] === 0 || $value['lifetime'] > time();
     }
@@ -67,10 +67,10 @@ class PhpFileCache extends \Doctrine\Common\Cache\FileCache
         $filename = $this->getFilename($id);
         $value = ['lifetime' => $lifeTime, 'data' => $data];
         if (is_object($data) && method_exists($data, '__set_state')) {
-            $value = var_export($value, true);
+            $value = var_export($value, \true);
             $code = sprintf('<?php return %s;', $value);
         } else {
-            $value = var_export(serialize($value), true);
+            $value = var_export(serialize($value), \true);
             $code = sprintf('<?php return unserialize(%s, [\'allowed_classes\' => false]);', $value);
         }
         return $this->writeFile($filename, $code);

@@ -110,14 +110,14 @@ class Social extends Singleton
      *                                 for any.
      * @return bool
      */
-    public function isSocialUrl($url, $socialName = false)
+    public function isSocialUrl($url, $socialName = \false)
     {
         foreach ($this->getDefinitions() as $domain => $name) {
-            if (preg_match('/(^|[\\.\\/])' . $domain . '([\\.\\/]|$)/', $url) && ($socialName === false || $name == $socialName)) {
-                return true;
+            if (preg_match('/(^|[\\.\\/])' . $domain . '([\\.\\/]|$)/', $url) && ($socialName === \false || $name == $socialName)) {
+                return \true;
             }
         }
-        return false;
+        return \false;
     }
     /**
      * Gets social network name from URL.
