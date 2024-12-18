@@ -21,7 +21,7 @@ class ContainerDashboardPage extends TagManagerPage {
     await this.normalizeContainerSelector();
 
     await browser.waitUntil(() => {
-      return browser.execute(() => /"Container ID"/.test($('p.dashboardCreationDate').text()));
+      return browser.execute(() => /Container ID/.test($('p.dashboardCreationDate').text()));
     });
 
     await browser.execute(() => {
