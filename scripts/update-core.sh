@@ -213,6 +213,7 @@ sed -i -e 's/!\/node_modules\/@materializecss\/materialize/!\/node_modules\/@mat
 RED='\033[0;31m'
 NO_COLOR='\033[0m'
 
+npm run matomo:console development:disable || echo -e "${RED}Failed to unset development mode prior to asset preparation.${NO_COLOR}"
 npm run matomo:console wordpress:generate-lang-files || echo -e "${RED}Failed to generate lang files! Make sure to run 'npm run compose -- run console wordpress:generate-lang-files' after fixing the issue!${NO_COLOR}"
 npm run matomo:console wordpress:generate-core-assets || echo -e "${RED}Failed to regenerate core assets.${NO_COLOR}"
 
