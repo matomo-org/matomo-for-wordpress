@@ -9,8 +9,6 @@
 
 namespace WpMatomo\Admin;
 
-// TODO: confluence documentation for this (update release process)
-// TODO: tests
 use WpMatomo\Settings;
 
 /**
@@ -118,8 +116,6 @@ class WhatsNewNotifications {
 			wp_send_json( false );
 			return;
 		}
-
-		// NOTE: we can't check show_if here, as it may not be set correctly when requesting admin-ajax.php
 
 		$statuses                     = $this->get_notification_statuses();
 		$statuses[ $notification_id ] = self::STATUS_DISMISSED;
@@ -260,7 +256,7 @@ class WhatsNewNotifications {
 	}
 
 	private function get_crash_analytics_promo_message() {
-		$matomo_version = (int) explode( '.', $this->settings->get_global_option( 'core_version' ) )[0]; // TODO: code redundancy w/ marketplace.php
+		$matomo_version = $this->settings->get_matomo_major_version();
 		$screenshot_url = plugins_url( 'assets/img/crash_analytics_screenshot.png', MATOMO_ANALYTICS_FILE );
 		$plugin_url     = 'https://plugins.matomo.org/CrashAnalytics?wp=1&pk_campaign=WP&pk_source=Plugin&matomoversion=' . $matomo_version;
 

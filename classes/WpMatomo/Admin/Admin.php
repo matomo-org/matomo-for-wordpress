@@ -32,7 +32,6 @@ class Admin {
 	}
 
 	public static function get_current_page() {
-		// TODO: unit tests
 		return isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 	}
 

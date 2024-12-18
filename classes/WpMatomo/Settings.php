@@ -487,4 +487,16 @@ class Settings {
 	public function is_async_archiving_disabled_by_option() {
 		return (bool) $this->get_global_option( self::DISABLE_ASYNC_ARCHIVING_OPTION_NAME );
 	}
+
+	public function get_matomo_major_version() {
+		$core_version = $this->get_global_option( 'core_version' );
+		$core_version = isset( $core_version ) ? $core_version : '';
+
+		$parts = explode( '.', $core_version );
+		if ( empty( $parts ) ) {
+			return 0;
+		}
+
+		return (int) $parts[0];
+	}
 }

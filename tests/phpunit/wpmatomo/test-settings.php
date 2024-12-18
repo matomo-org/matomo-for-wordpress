@@ -325,4 +325,25 @@ class SettingsTest extends MatomoUnit_TestCase {
 		$this->settings->set_option( 'noscript_code', 'baz' );
 		$this->assertSame( $test_value, $this->settings->get_noscript_tracking_code() );
 	}
+
+	/**
+	 * @dataProvider get_test_data_for_get_matomo_major_version
+	 */
+	public function test_get_matomo_major_version( $core_version, $expected_major ) {
+		$this->settings->set_global_option( 'core_version', $core_version );
+
+		$actual = $this->settings->get_matomo_major_version();
+
+		$this->assertEquals( $expected_major, $actual );
+	}
+
+	public function get_test_data_for_get_matomo_major_version() {
+		return [
+			[ '5.1.3', 5 ],
+			[ '4.3.2-b1', 4 ],
+			[ '5.2.0-rc3', 5 ],
+			[ '', 0 ],
+			[ null, 0 ],
+		];
+	}
 }
