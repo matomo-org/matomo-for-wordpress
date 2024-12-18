@@ -92,7 +92,7 @@ class Website {
     const baseUrl = await this.baseUrl();
 
     await browser.url(`${baseUrl}/wp-admin/admin.php?page=wc-admin&path=%2Fsetup-wizard`);
-
+console.log('setting up woocommerce');
     const skipSetupLink = $('.woocommerce-profiler-navigation-skip-link,.woocommerce-profile-wizard__footer-link');
     try {
       await skipSetupLink.waitForDisplayed();
@@ -102,6 +102,8 @@ class Website {
 
     const alreadyConfigured = !(await skipSetupLink.isExisting());
     if (alreadyConfigured) {
+      console.log('cannot find skip setup link');
+      throw new Error('whooooops');
       return;
     }
 
@@ -148,7 +150,8 @@ class Website {
     const isPaymentsSetup = await browser.execute(() => {
       return window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0;
     });
-throw new Error('before cod payment setup');
+    console.log(`found payment cod payments setup: ${isPaymentsSetup}`);
+
     if (!isPaymentsSetup) {
       if (await $('#woocommerce_cod_enabled').isExisting()) {
         await $('label[for="woocommerce_cod_enabled"]').click();
