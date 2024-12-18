@@ -148,7 +148,7 @@ class Website {
     const isPaymentsSetup = await browser.execute(() => {
       return window.jQuery('tr[data-gateway_id="cod"] .woocommerce-input-toggle--enabled').length > 0;
     });
-
+throw new Error('before cod payment setup');
     if (!isPaymentsSetup) {
       if (await $('#woocommerce_cod_enabled').isExisting()) {
         await $('label[for="woocommerce_cod_enabled"]').click();
