@@ -27,7 +27,7 @@ class ContainerDashboardPage extends TagManagerPage {
     await browser.execute(() => {
       $('p.dashboardCreationDate').html(
         $('p.dashboardCreationDate').html()
-          .replace(/ID "[a-zA-Z0-9]+"/g, 'ID "REMOVED"')
+          .replace(/ID: "[a-zA-Z0-9]+"/g, 'ID: "REMOVED"')
           .replace(/created\s+on\s+.*?\./g, 'created on REMOVED.')
       );
     });
