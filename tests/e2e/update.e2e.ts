@@ -10,7 +10,7 @@ import { browser, $, expect } from '@wdio/globals';
 import fetch from 'node-fetch';
 import Website from './website.js';
 import MatomoCli from './apiobjects/matomo.cli.js';
-import GetStartedPage from './pageobjects/get-started.page.js';
+import GdprToolsPage from './pageobjects/mwp-admin/about.page.js';
 
 describe('MWP Updating', () => {
   const trunkSuffix = process.env.WORDPRESS_VERSION === 'trunk' ? '.trunk' : '';
@@ -75,9 +75,9 @@ describe('MWP Updating', () => {
   });
 
   it('should display whats new notifications on install', async () => {
-    await GetStartedPage.open();
+    await GdprToolsPage.open();
 
-    await GetStartedPage.prepareWpAdminForScreenshot();
+    await GdprToolsPage.prepareWpAdminForScreenshot();
     await expect(
       await browser.checkFullPageScreen(`mwp-admin.whats-new-notifications.${process.env.PHP_VERSION}${trunkSuffix}`)
     ).toEqual(0);

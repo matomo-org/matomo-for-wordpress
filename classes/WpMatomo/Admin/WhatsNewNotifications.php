@@ -67,7 +67,11 @@ class WhatsNewNotifications {
 	public function register_hooks() {
 		add_action( 'admin_enqueue_scripts', [ $this, 'on_admin_enqueue_scripts' ] );
 
-		if ( Admin::is_matomo_admin() ) {
+		$current_page = Admin::get_current_page();
+		if (
+			Admin::is_matomo_admin()
+			&& Menu::SLUG_GET_STARTED !== $current_page
+		) {
 			add_action( 'admin_notices', [ $this, 'on_admin_notices' ] );
 		}
 	}

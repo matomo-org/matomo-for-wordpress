@@ -6,9 +6,6 @@
 use WpMatomo\Admin\WhatsNewNotifications;
 use WpMatomo\Settings;
 
-/**
- * TODO: multisite tests (manual)
- */
 class WhatsNewNotificationsTest extends MatomoUnit_TestCase {
 
 	/**
